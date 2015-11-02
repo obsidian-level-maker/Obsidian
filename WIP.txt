@@ -5,9 +5,20 @@ WORK IN PROGRESS
 
 >>>  organic room growing
 
+     -  sharp isolated voids :
+        if 2+ sides have same area, merge seed into that area
+        (sometimes anyway)
 
-IDEA : do gap-fill AFTER quests done and *closets* are placed
-       [ otherwise closets can split areas into two separate parts ]
+
+>>>  major quests
+
+
++ do gap-fill AFTER quests done and *closets* are placed
+  [ otherwise closets can split areas into two separate parts ]
+
+
+Q/  bring back ROOM_THEMES ??  (place after normal 'THEMES' table)
+A/  yes
 
 
 Edge Stuff
@@ -26,13 +37,6 @@ Edge Stuff
    -  steps
 
 -  rails
-
-
-
-Quests
-------
-
-Quests : start room should be _far_ from exit room/quest door
 
 
 
@@ -62,14 +66,6 @@ Texturing
 
 
 
-Closets
--------
-
-???  really want to add them _AFTER_ large traps/cages have been added
-     (and after outdoor borders too)
-
-
-
 Porches
 -------
 
@@ -84,6 +80,4 @@ Porches
 -  experiment with railings instead of posts (want #conns >= 2)
 
 -  indoors or dark outdoors : light fittings
-
-
 
