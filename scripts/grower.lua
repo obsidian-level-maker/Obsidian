@@ -602,11 +602,12 @@ function Grower_organic_room(P)
 
 
   local function set_seed(S, A)
-assert(S.sx > 1)
-
     S.temp_area = A
     table.insert(A.seeds, S)
-    A.svolume = A.svolume + sel(S.diagonal, 0.5, 1.0)
+
+    local vol = sel(S.diagonal, 0.5, 1.0)
+    A.svolume = A.svolume + vol
+    cur_room.svolume = cur_room.svolume + vol
   end
 
 
@@ -1004,11 +1005,12 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
   cur_room = ROOM_CLASS.new()
 
-  cur_room.want_vol = 251
+  cur_room.want_vol = 21
 
   grow_an_area("from_sprout")
 
-  for loop = 1, 500 do
+  for loop = 1, 50 do
+stderrf("loop %d : svolume %1.1f\n", loop, cur_room.svolume)
     if cur_room.svolume >= cur_room.want_vol then break; end
     grow_an_area()
   end
@@ -2380,8 +2382,6 @@ function Grower_create_rooms()
   Grower_grow_trunk("is_first")
 
   Grower_save_svg()
-
-
   Grower_fill_gaps()
 
   Area_squarify_seeds()
