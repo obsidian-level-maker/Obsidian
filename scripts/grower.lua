@@ -259,8 +259,6 @@ function Grower_preprocess_tiles()
   local function do_parse_element(ch)
     if ch == '.' then return { kind="empty" } end
 
-    if ch == '?' then return { kind="fluff" } end
-
     if ch == '1' then return { kind="area", area=1 } end
     if ch == '2' then return { kind="area", area=2 } end
     if ch == '3' then return { kind="area", area=3 } end
@@ -497,9 +495,6 @@ local AA = S.area or (S.top and S.top.area)
 gui.debugf("  %s : %s / %s\n", S.name, RR.name, (AA and AA.name) or "-noarea-")
       count = count + 1
     end
-    if S.fluff_room then
-      count = count + 1.5
-    end
   end
   end
 
@@ -519,7 +514,7 @@ function Grower_emergency_sprouts()
 
     if not N then return -2 end
 
-    if N.area or N.fluff_room then return -3 end
+    if N.area then return -3 end
 
     -- TODO : CHECK MORE STUFF
 
@@ -1257,14 +1252,6 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
 
 
   local function install_half_seed(T, S, elem)
-    if elem.kind == "fluff" then
-      error("Tiles with fluff are not supported.")
---stderrf("Installing fluff.....\n")
---    S.fluff_room = assert(cur_room)
-      return
-    end
-
-
     if elem.kind != "area" then
       error("Unknown element kind in shape")
     end
@@ -1309,7 +1296,7 @@ gui.debugf("  %s\n", S.name)
     if elem.kind == "diagonal" then
 
       -- whole seed is used?
-      if (not S.diagonal) and (S.area or S.fluff_room) then return false end
+      if (not S.diagonal) and (S.area) then return false end
 
       local dir, E1, E2 = transform_diagonal(T, elem.diagonal, elem.bottom, elem.top)
 
@@ -1320,7 +1307,7 @@ gui.debugf("  %s\n", S.name)
 
       -- seed on map is a full square?
       if not S.diagonal then
-        if S.area or S.fluff_room then return false end
+        if S.area then return false end
 
         if not ROOM then return true end
 
@@ -1335,7 +1322,7 @@ gui.debugf("  %s\n", S.name)
         if E1.kind != "empty" then
 
           -- used?
-          if S1.area or S1.fluff_room then return false end
+          if S1.area then return false end
 
           if ROOM then
             install_half_seed(T, S1, E1)
@@ -1355,7 +1342,6 @@ gui.debugf("  %s\n", S.name)
       -- used?
       if S.area     then return false end
       if S.diagonal then return false end
-      if S.fluff_room then return false end
 
       if ROOM then
         install_half_seed(T, S, elem)
@@ -1415,7 +1401,7 @@ gui.debugf("  %s\n", S.name)
       local N = S:neighbor(P.dir)
 
       if not N  then return true end
-      if N.area or N.fluff_room then return true end
+      if N.area then return true end
 
       if Seed_over_boundary(N) then return true end
 
@@ -1898,7 +1884,6 @@ function Grower_fill_gaps()
   -- and randomly merge them until size of all temp_areas has reached a
   -- certain threshhold.
   --
---!!!!  also does fluff
 
   local temp_areas = {}
 
@@ -1913,13 +1898,6 @@ function Grower_fill_gaps()
       svolume = 0
       seeds = { S }
     }
-
-    if S.fluff_room then
-      TEMP.room = S.fluff_room
-
-      -- no longer need 'fluff_room' field
-      S.fluff_room = nil
-    end
 
     if S.diagonal then
       TEMP.svolume = 0.5
@@ -1967,10 +1945,6 @@ function Grower_fill_gaps()
       A1, A2 = A2, A1
     end
 
-    if A2.room and not A1.room then
-      A1, A2 = A2, A1
-    end
-
     if A2.touches_edge then
        A1.touches_edge = true
     end
@@ -1999,15 +1973,6 @@ function Grower_fill_gaps()
 
   local function eval_merge(A1, A2, dir)
     local score = 1
-
-    -- never merge fluffy areas from different rooms
-    if A1.room and A2.room then
-      if A1.room != A2.room then return -1 end
-    end
-
-    -- never allow fluffy areas to touch edge of map
-    if A1.room and A2.touches_edge then return -2 end
-    if A2.room and A1.touches_edge then return -2 end
 
     if A2.svolume < MIN_SIZE then
       score = 3
@@ -2090,9 +2055,6 @@ function Grower_fill_gaps()
 
     if not (T1 and T2) then return false end
     if T1 == T2 then return false end
-
-    -- FIXME : REVIEW THIS
-    if T1.room != T2.room then return false end
 
 
     if dir == 2 then
