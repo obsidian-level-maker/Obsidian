@@ -206,18 +206,18 @@ function Grower_save_svg()
   fp:write('<svg xmlns="http://www.w3.org/2000/svg" version="1.1">\n')
 
   -- grid
-  local min_x = 1 * SIZE
-  local min_y = 1 * SIZE
+  local min_x = 0
+  local min_y = 0
 
   local max_x = SEED_W * SIZE
   local max_y = SEED_H * SIZE
 
-  for x = 1, SEED_W do
-    wr_line(fp, x * SIZE, SIZE, x * SIZE, max_y, "#bbb")
+  for x = 0, SEED_W do
+    wr_line(fp, x * SIZE, min_y, x * SIZE, max_y, "#bbb")
   end
 
-  for y = 1, SEED_H do
-    wr_line(fp, SIZE, y * SIZE, max_x, y * SIZE, "#bbb")
+  for y = 0, SEED_H do
+    wr_line(fp, min_x, y * SIZE, max_x, y * SIZE, "#bbb")
   end
 
   -- edges
@@ -600,6 +600,8 @@ function Grower_organic_room(P)
 
 
   local function set_seed(S, A)
+assert(S.sx > 1)
+
     S.temp_area = A
     table.insert(A.seeds, S)
     A.svolume = A.svolume + sel(S.diagonal, 0.5, 1.0)
@@ -961,7 +963,7 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
       svolume = 0
       --??? must_edge = {}
       min_vol = 3
-      want_vol = 100 --!!!!  rand.pick({ 3,6,9 })
+      want_vol = 0.1 --!!!!  rand.pick({ 3,6,9 })
     }
 
     cur_area.name = string.format("ORGANIC_%d", cur_area.id)
@@ -998,14 +1000,14 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
   cur_room = ROOM_CLASS.new()
 
-  cur_room.want_vol = 321
+  cur_room.want_vol = 251
 
   grow_an_area("from_sprout")
 
---for loop = 1, 50 do
---  if cur_room.svolume >= cur.want_vol then break; end
---  grow_an_area()
---end
+  for loop = 1, 50 do
+    if cur_room.svolume >= cur_room.want_vol then break; end
+    grow_an_area()
+  end
 
   -- FIXME : merge undersized areas
 
