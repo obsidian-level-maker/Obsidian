@@ -1027,24 +1027,22 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
       room = cur_room
       seeds = {}
       svolume = 0
-      --??? must_edge = {}
-      min_vol  = rand.index_by_probs({ 0, 1, 9, 3 })
-      want_vol = rand.index_by_probs({ 3, 7, 9, 5, 3, 1, 1 })
+      min_vol  = rand.index_by_probs({ 0, 3, 7, 5, 1 })
+      want_vol = rand.index_by_probs({ 0, 1, 9, 7, 4, 2, 1, 1, 1 })
     }
 
     cur_area.name = string.format("ORGANIC_%d", cur_area.id)
 
-    if rand.odds(3) then
-      cur_area.want_vol = cur_area.want_vol + 9
-    end
-
-    table.insert(temp_areas, cur_area)
-
     if from_sprout then
       spot_from_sprout(cur_area)
     else
-      spot_off_existing_area(temp_areas)
+      if not spot_off_existing_area(temp_areas) then
+        -- nothing was possible, so ignore this temp area
+        return
+      end
     end
+
+    table.insert(temp_areas, cur_area)
 
     local cur_area_as_list = { cur_area }
 
@@ -1070,7 +1068,7 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
   cur_room = Grower_add_room(P, false)
 
-  cur_room.want_vol = rand.pick({ 16, 24, 32, 64 })
+  cur_room.want_vol = rand.pick({ 12, 18, 24, 48 })
 
   grow_an_area("from_sprout")
 
