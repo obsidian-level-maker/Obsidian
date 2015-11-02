@@ -939,14 +939,15 @@ stderrf("(done)\n")
     local S = P.S:neighbor(P.dir)
 
     for i = 1, P.long do
-      assert(not S.diagonal)
       assert(not S.temp_area)
 
       assert(seed_usable(S))
 
       apply_group(get_group(S))
 
-      S = S:raw_neighbor(geom.RIGHT[P.dir])
+      if not S.diagonal then
+        S = S:raw_neighbor(geom.RIGHT[P.dir])
+      end
     end
   end
 
@@ -1059,7 +1060,9 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
   ---| Grower_organic_room |---
 
-do return false end --!!!!!!
+  if rand.odds(0) then  -- FIXME
+    return false
+  end
 
   if not check_enough_room() then return false end
 
@@ -1067,7 +1070,7 @@ do return false end --!!!!!!
 
   cur_room = Grower_add_room(P, false)
 
-  cur_room.want_vol = 11
+  cur_room.want_vol = rand.pick({ 16, 24, 32, 64 })
 
   grow_an_area("from_sprout")
 
@@ -1590,7 +1593,7 @@ math.max(ax,bx), math.max(ay,by))
     P.is_outdoor = is_outdoor
     P.is_cave    = is_cave
 
-    if rand.odds(75) and not P.initial_hub then
+    if not P.initial_hub then
       if Grower_organic_room(P) then
         return true
       end
