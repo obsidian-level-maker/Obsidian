@@ -891,6 +891,8 @@ stderrf("(done)\n")
   local function try_spot_off_area(S, dir)
     local N = S:neighbor(dir)
 
+    if Seed_over_boundary(N) then return false end
+
     if not seed_usable(N) then
       return false
     end
@@ -1004,7 +1006,7 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
   grow_an_area("from_sprout")
 
-  for loop = 1, 50 do
+  for loop = 1, 500 do
     if cur_room.svolume >= cur_room.want_vol then break; end
     grow_an_area()
   end
