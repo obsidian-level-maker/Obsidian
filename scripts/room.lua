@@ -124,6 +124,7 @@ function ROOM_CLASS.add_area(R, A)
   assert(R.kind != "DEAD")
 
   A.room = R
+  A.is_outdoor = R.is_outdoor
 
   table.insert(R.areas, A)
 
