@@ -75,6 +75,7 @@ function ROOM_CLASS.new()
 
     svolume = 0
     total_inner_points = 0
+    prelim_conn_num = 0
     num_windows = 0
 
     areas = {}
@@ -1691,6 +1692,7 @@ function Room_set_kind(R, kind, is_outdoor, is_cave)
 
   if kind == "hallway" then
     R.name = string.format("HALLWAY_%d", R.id)
+    R.hallway = R.hallway or {}
   end
 
   R.is_outdoor = is_outdoor

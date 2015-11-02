@@ -91,7 +91,7 @@ function Sprout_pick_next()
     if P.is_emergency then
       score = 1000
     elseif P.room then
-      score = P.room.grow_rank
+      score = P.room.grow_rank or 3 --FIXME
     end
 
     score = score + gui.random()
@@ -607,6 +607,46 @@ end
 
 
 
+function Grower_add_room(P, is_hallway)
+  local ROOM = ROOM_CLASS.new()
+
+  ROOM.grow_parent = P.room
+  ROOM.initial_hub = P.initial_hub
+
+  local kind = sel(is_hallway, "hallway", "normal")
+  
+  Room_set_kind(ROOM, kind, P.is_outdoor, P.is_cave)
+
+  local prev_room = P.room
+
+  if not prev_room then
+    ROOM.grow_rank = 1
+  elseif is_hallway then
+    ROOM.grow_rank = prev_room.grow_rank
+  else
+    ROOM.grow_rank = prev_room.grow_rank + 1
+  end
+
+  -- create a preliminary connection (last room to this one)
+  -- [ we just modify the current sprout ]
+
+  if P.room then
+    assert(not P.initial_hub)
+
+    P.R1 = P.room
+    P.R2 = ROOM
+
+    P.R1.prelim_conn_num = P.R1.prelim_conn_num + 1
+    P.R2.prelim_conn_num = P.R2.prelim_conn_num + 1
+
+    table.insert(LEVEL.prelim_conns, P)
+  end
+
+  return ROOM
+end
+
+
+
 function Grower_organic_room(P)
   --
   -- Creates a few areas "organically", growing them seed-by-seed
@@ -1018,13 +1058,15 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
   ---| Grower_organic_room |---
 
+do return false end --!!!!!!
+
   if not check_enough_room() then return false end
 
   -- create room --
 
-  cur_room = ROOM_CLASS.new()
+  cur_room = Grower_add_room(P, false)
 
-  cur_room.want_vol = 31
+  cur_room.want_vol = 11
 
   grow_an_area("from_sprout")
 
@@ -1072,8 +1114,6 @@ function Grower_grow_trunk(is_first)
   local cur_def
   local cur_grid
   local cur_room
-
-  local new_room_num = 0
 
 
   local function create_areas_for_tile(def, R)
@@ -1366,30 +1406,6 @@ gui.debugf("  %s\n", S.name)
   end
 
 
-  local function create_room(def, prev_room)
-    local ROOM = ROOM_CLASS.new()
-
-    if def.mode == "hallway" then
-      ROOM.kind = "hallway"
-      ROOM.hallway = { }
-    end
-
-    if not prev_room then
-      ROOM.grow_rank = 1
-    elseif def.mode == "hallway" then
-      ROOM.grow_rank = prev_room.grow_rank
-    else
-      ROOM.grow_rank = prev_room.grow_rank + 1
-    end
-
-    new_room_num = new_room_num + 1
-
-    create_areas_for_tile(def, ROOM)
-
-    return ROOM
-  end
-
-
   local function check_sprout_blocked(P)
     local along_dir = geom.RIGHT[P.dir]
 
@@ -1447,20 +1463,6 @@ end
     end
 
     return true
-  end
-
-
-  local function add_prelim_connect(P, R2)
-    -- modify the current sprout
-    local R1 = P.room
-
-    R1.prelim_conn_num = R1.prelim_conn_num + 1
-    R2.prelim_conn_num = R2.prelim_conn_num + 1
-
-    P.R1 = R1
-    P.R2 = R2
-
-    table.insert(LEVEL.prelim_conns, P)
   end
 
 
@@ -1566,30 +1568,18 @@ math.min(ax,bx), math.min(ay,by),
 math.max(ax,bx), math.max(ay,by))
 --]]
 
-    local ROOM = create_room(def, P.room)
-    ROOM.initial_hub = P.initial_hub
-
-    ROOM.prelim_conn_num = 0
-
-    -- FIXME : use "hallway" for hallways !!!
-    local kind = "normal"
-    if def.mode == "hallway" then kind = "hallway" end
-    Room_set_kind(ROOM, kind, P.is_outdoor, P.is_cave)
-
+    local ROOM = Grower_add_room(P, def.mode == "hallway")
+    
     cur_room = ROOM
 
-    if P.room then
-      assert(not P.initial_hub)
-      add_prelim_connect(P, ROOM)
-      ROOM.grow_parent = P.room
-    end
+    create_areas_for_tile(def, ROOM)
 
     -- install into seeds
     test_or_install_tile(P, T, ROOM)
 
     add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
 
---stderrf("SUCCESS !!!!!\n")
+--stderrf("SUCCESS !!\n")
 
     return true  -- OK
   end
@@ -1602,12 +1592,11 @@ math.max(ax,bx), math.max(ay,by))
     P.is_outdoor = is_outdoor
     P.is_cave    = is_cave
 
-if Grower_organic_room(P) then
- return true
-end
-stderrf("\n\n******* Waaaaaaahhhhh *****\n\n")
-do return false end
-
+    if rand.odds(75) and not P.initial_hub then
+      if Grower_organic_room(P) then
+        return true
+      end
+    end
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
@@ -1660,7 +1649,7 @@ do return false end
     {
       S = SEEDS[sx][sy]
       dir = 8
-      long = 1 --!!!!!!  rand.sel(50, 2, 1)
+      long = rand.sel(50, 2, 1)
       mode = "normal"
       initial_hub = true
     }
@@ -1677,7 +1666,7 @@ do return false end
   end
 
 
-  local function add_room(P)
+  local function add_normal_room(P)
     -- P is a sprout
 
     local tab = {}
@@ -1792,7 +1781,7 @@ do return false end
         continue
       end
 
-      add_room(P)
+      add_normal_room(P)
     end
   end
 
@@ -1802,8 +1791,6 @@ do return false end
   if not add_initial_hub() then
     return
   end
-
-do return end --!!!!!!
 
   local MIN_COVERAGE = 0.5
 
