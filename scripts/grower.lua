@@ -154,11 +154,15 @@ function Grower_save_svg()
     if A2 and A2.id < A1.id then return end
 
     local color = "#777"
+    local lin_w = 2
 
     if not A2 then
       -- no change
 --  elseif (A1.is_boundary != A2.is_boundary) then
 --    color = "#f0f"
+    elseif A1 == A2 then
+      color = "#faf"
+      lin_w = 1
     elseif (A1.room == A2.room) and (A1.room or A2.room) then
       color = "#0f0"
     elseif A1.room == A2.room then
@@ -169,6 +173,7 @@ function Grower_save_svg()
       color = "#fb0"
     else
       color = "#00f"
+      lin_w = 3
     end
 
     local sx1, sy1 = S1.sx, S1.sy
@@ -189,7 +194,7 @@ function Grower_save_svg()
     end
 
     wr_line(fp, (sx1 - 1) * SIZE, (sy1 - 1) * SIZE,
-                (sx2 - 1) * SIZE, (sy2 - 1) * SIZE, color, 2)
+                (sx2 - 1) * SIZE, (sy2 - 1) * SIZE, color, lin_w)
   end
 
 
@@ -582,7 +587,21 @@ function Grower_make_areas(temp_areas)
     each S in area.seeds do
       S.area = area
       S.room = T.room
+
+      S.temp_area = nil
     end
+  end
+
+  
+  -- sanity check [ no seeds should have a 'temp_area' now... ]
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+  for pass = 1, 2 do
+    local S = SEEDS[sx][sy]
+    if pass == 2 then S = S.top end
+    if S then assert(not S.temp_area) end
+  end
+  end
   end
 end
 
@@ -2381,7 +2400,6 @@ function Grower_create_rooms()
 
   Grower_grow_trunk("is_first")
 
-  Grower_save_svg()
   Grower_fill_gaps()
 
   Area_squarify_seeds()
@@ -2391,5 +2409,6 @@ function Grower_create_rooms()
 
   Grower_assign_boundary()
 
+  Grower_save_svg()
 end
 
