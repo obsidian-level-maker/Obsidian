@@ -904,28 +904,34 @@ bool Script_RunString(const char *str, ...)
 
 typedef struct load_info_t
 {
-	FILE *f;
-	char buff[2048];
+	PHYSFS_File *f;
+	char buffer[2048];
 
 } load_info_t;
 
 
-static const char * getF(lua_State *L, void *ud, size_t *size)
+static const char * my_reader(lua_State *L, void *ud, size_t *size)
 {
 	load_info_t *lf = (load_info_t *)ud;
 	(void)L;
-	if (feof(lf->f)) return NULL;
-	*size = fread(lf->buff, 1, sizeof(lf->buff), lf->f);
-	return (*size > 0) ? lf->buff : NULL;
+
+	if (PHYSFS_eof(lf->f))
+		return NULL;
+
+	*size = (size_t)PHYSFS_read(lf->f, lf->buffer, 1, sizeof(lf->buffer));
+
+	return (*size > 0) ? lf->buffer : NULL;
 }
 
 
-static int my_errfile (lua_State *L, const char *what, int fnameindex)
+static int my_errfile(lua_State *L, const char *what, int fnameindex)
 {
 	const char *serr = strerror(errno);
 	const char *filename = lua_tostring(L, fnameindex) + 1;
+
 	lua_pushfstring(L, "cannot %s %s: %s", what, filename, serr);
 	lua_remove(L, fnameindex);
+
 	return LUA_ERRFILE;
 }
 
@@ -935,17 +941,26 @@ static int my_loadfile(lua_State *L, const char *filename)
 	load_info_t lf;
 	int status, readstatus;
 	int fnameindex = lua_gettop(L) + 1;  /* index of filename on the stack */
+
 	lua_pushfstring(L, "@%s", filename);
-	lf.f = fopen(filename, "r");
-	if (lf.f == NULL) return my_errfile(L, "open", fnameindex);
-	status = lua_load(L, getF, &lf, lua_tostring(L, -1));
-	readstatus = ferror(lf.f);
-	fclose(lf.f);  /* close file (even in case of errors) */
-	if (readstatus) {
+
+	lf.f = PHYSFS_openRead(filename);
+	if (lf.f == NULL)
+		return my_errfile(L, "open", fnameindex);
+
+	status = lua_load(L, my_reader, &lf, lua_tostring(L, -1));
+
+	readstatus = 0; // FIXME!!! ferror(lf.f);
+
+	PHYSFS_close(lf.f);  /* close file (even in case of errors) */
+
+	if (readstatus)
+	{
 		lua_settop(L, fnameindex);  /* ignore results from `lua_load' */
 		return my_errfile(L, "read", fnameindex);
 	}
 	lua_remove(L, fnameindex);
+
 	return status;
 }
 
@@ -961,9 +976,9 @@ void Script_Load(const char *script_name)
 		script_name = ReplaceExtension(script_name, "lua");
 	}
 
-	char *filename = StringPrintf("%s/%s/%s", install_dir, import_dir, script_name);
+	char *filename = StringPrintf("%s/%s", import_dir, script_name);
 
-	// DebugPrintf("  loading script: '%s'\n", filename);
+	DebugPrintf("  loading script: '%s'\n", filename);
 
 	int status = my_loadfile(LUA_ST, filename);
 
@@ -974,7 +989,7 @@ void Script_Load(const char *script_name)
 	{
 		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-		Main_FatalError("Unable to load script '%s/%s'\n%s", import_dir, script_name, msg);
+		Main_FatalError("Unable to load script '%s'\n%s", filename, msg);
 	}
 
 	StringFree(filename);
