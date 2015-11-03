@@ -920,15 +920,18 @@ static const char * my_reader(lua_State *L, void *ud, size_t *size)
 	if (PHYSFS_eof(info->fp))
 		return NULL;
 
-	*size = (size_t)PHYSFS_read(info->fp, info->buffer, 1, sizeof(info->buffer));
+	PHYSFS_sint64 len = PHYSFS_read(info->fp, info->buffer, 1, sizeof(info->buffer));
 
 	// negative result indicates a "complete failure"
-	if (*size < 0)
+	if (len < 0)
 	{
 		info->error_msg = StringDup(PHYSFS_getLastError());
+		len = 0;
 	}
 
-	if (*size <= 0)
+	*size = (size_t)len;
+
+	if (! size)
 		return NULL;
 
 	return info->buffer;  // OK
@@ -949,7 +952,7 @@ static int my_loadfile(lua_State *L, const char *filename)
 
 	if (! info.fp)
 	{
-		lua_pushfstring(L, "failed to open %s: %s", filename, PHYSFS_getLastError());
+		lua_pushfstring(L, "file open error: %s", PHYSFS_getLastError());
 		lua_remove(L, fnameindex);
 
 		return LUA_ERRFILE;
@@ -966,7 +969,7 @@ static int my_loadfile(lua_State *L, const char *filename)
 		lua_settop(L, fnameindex);
 		status = LUA_ERRFILE;
 
-		lua_pushfstring(L, "failed to read %s: %s", filename, info.error_msg);
+		lua_pushfstring(L, "file read error: %s", info.error_msg);
 	}
 
 	lua_remove(L, fnameindex);
