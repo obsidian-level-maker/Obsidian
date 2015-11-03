@@ -1626,7 +1626,8 @@ ULTDOOM.PREBUILT_LEVELS =
     { prob=50,  file="doom1_boss/anomaly1.wad", map="E1M8" }
     { prob=50,  file="doom1_boss/anomaly2.wad", map="E1M8" }
     { prob=100, file="doom1_boss/anomaly3.wad", map="E1M8" }
-    { prob=200, file="doom1_boss/ult_anomaly.wad", map="E1M8" }
+    { prob=50,  file="doom1_boss/ult_anomaly.wad",  map="E1M8" }
+    { prob=100, file="doom1_boss/ult_anomaly2.wad", map="E1M8" }
   }
 
   E2M8 =
