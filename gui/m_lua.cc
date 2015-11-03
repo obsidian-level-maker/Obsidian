@@ -26,6 +26,8 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include "physfs.h"
+
 #include "lib_file.h"
 #include "lib_signal.h"
 #include "lib_util.h"

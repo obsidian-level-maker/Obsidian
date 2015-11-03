@@ -22,6 +22,8 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 
+#include "physfs.h"
+
 #include "lib_argv.h"
 #include "lib_util.h"
 
@@ -33,9 +35,37 @@
 const char *addon_file = NULL;
 
 
-void VFS_InitAddons()
+void VFS_AddFolder(const char *name)
+{
+	char *path = StringPrintf("%s/%s", install_dir, name);
+
+	if (! PHYSFS_mount(path, name, 1))
+	{
+		Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
+						name, PHYSFS_getLastError());
+		return;  /* NOT REACHED */
+	}
+
+	DebugPrintf("mounted '%s'\n", name);
+}
+
+
+void VFS_InitAddons(const char *argv0)
 {
 	LogPrintf("Initializing VFS...\n");
+
+	if (! PHYSFS_init(argv0))
+	{
+		Main_FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getLastError());
+		return;  /* NOT REACHED */
+	}
+
+	VFS_AddFolder("scripts");
+	VFS_AddFolder("games");
+	VFS_AddFolder("engines");
+	VFS_AddFolder("modules");
+	VFS_AddFolder("prefabs");
+	VFS_AddFolder("data");
 
 	// TODO
 

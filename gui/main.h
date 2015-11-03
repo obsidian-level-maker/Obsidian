@@ -93,7 +93,7 @@ void DLG_SelectAddons(void);
 
 
 // VFS stuff
-void VFS_InitAddons();
+void VFS_InitAddons(const char *argv0);
 
 
 class game_interface_c

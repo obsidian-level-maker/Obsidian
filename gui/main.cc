@@ -746,7 +746,7 @@ int main(int argc, char **argv)
 			addon_file = NULL;
 	}
 
-	VFS_InitAddons();
+	VFS_InitAddons(argv[0]);
 
 
 	if (! batch_mode)
