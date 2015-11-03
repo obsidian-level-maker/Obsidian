@@ -55,12 +55,8 @@ int main_action;
 
 bool need_new_seed;
 
-
 bool batch_mode = false;
-
 const char *batch_output_file = NULL;
-
-const char *addon_file = NULL;
 
 // options
 int  window_size = 0;  // AUTO
@@ -750,11 +746,7 @@ int main(int argc, char **argv)
 			addon_file = NULL;
 	}
 
-	if (addon_file)
-	{
-		// FIXME
-		LogPrintf("Loading addon: %s\n\n", addon_file);
-	}
+	VFS_InitAddons();
 
 
 	if (! batch_mode)

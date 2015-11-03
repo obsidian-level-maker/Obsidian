@@ -29,6 +29,25 @@
 #include "m_cookie.h"
 
 
+// TODO : allow more than one
+const char *addon_file = NULL;
+
+
+void VFS_InitAddons()
+{
+	LogPrintf("Initializing VFS...\n");
+
+	// TODO
+
+	if (addon_file)
+	{
+		// FIXME
+		LogPrintf("Loading addon: %s\n", addon_file);
+	}
+
+	LogPrintf("DONE.\n\n");
+}
+
 
 //----------------------------------------------------------------------
 
