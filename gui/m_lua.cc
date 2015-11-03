@@ -900,6 +900,82 @@ bool Script_RunString(const char *str, ...)
 */
 
 
+typedef struct load_info_t
+{
+	int extraline;
+	FILE *f;
+	char buff[2048];
+
+} load_info_t;
+
+
+static const char * getF(lua_State *L, void *ud, size_t *size)
+{
+  load_info_t *lf = (load_info_t *)ud;
+  (void)L;
+  if (lf->extraline) {
+    lf->extraline = 0;
+    *size = 1;
+    return "\n";
+  }
+  if (feof(lf->f)) return NULL;
+  *size = fread(lf->buff, 1, sizeof(lf->buff), lf->f);
+  return (*size > 0) ? lf->buff : NULL;
+}
+
+
+static int my_errfile (lua_State *L, const char *what, int fnameindex)
+{
+  const char *serr = strerror(errno);
+  const char *filename = lua_tostring(L, fnameindex) + 1;
+  lua_pushfstring(L, "cannot %s %s: %s", what, filename, serr);
+  lua_remove(L, fnameindex);
+  return LUA_ERRFILE;
+}
+
+
+static int my_loadfile(lua_State *L, const char *filename)
+{
+  load_info_t lf;
+  int status, readstatus;
+  int c;
+  int fnameindex = lua_gettop(L) + 1;  /* index of filename on the stack */
+  lf.extraline = 0;
+  if (filename == NULL) {
+    lua_pushliteral(L, "=stdin");
+    lf.f = stdin;
+  }
+  else {
+    lua_pushfstring(L, "@%s", filename);
+    lf.f = fopen(filename, "r");
+    if (lf.f == NULL) return my_errfile(L, "open", fnameindex);
+  }
+  c = getc(lf.f);
+  if (c == '#') {  /* Unix exec. file? */
+    lf.extraline = 1;
+    while ((c = getc(lf.f)) != EOF && c != '\n') ;  /* skip first line */
+    if (c == '\n') c = getc(lf.f);
+  }
+  if (c == LUA_SIGNATURE[0] && filename) {  /* binary file? */
+    lf.f = freopen(filename, "rb", lf.f);  /* reopen in binary mode */
+    if (lf.f == NULL) return my_errfile(L, "reopen", fnameindex);
+    /* skip eventual `#!...' */
+   while ((c = getc(lf.f)) != EOF && c != LUA_SIGNATURE[0]) ;
+    lf.extraline = 0;
+  }
+  ungetc(c, lf.f);
+  status = lua_load(L, getF, &lf, lua_tostring(L, -1));
+  readstatus = ferror(lf.f);
+  if (filename) fclose(lf.f);  /* close file (even in case of errors) */
+  if (readstatus) {
+    lua_settop(L, fnameindex);  /* ignore results from `lua_load' */
+    return my_errfile(L, "read", fnameindex);
+  }
+  lua_remove(L, fnameindex);
+  return status;
+}
+
+
 void Script_Load(const char *script_name)
 {
 	SYS_ASSERT(import_dir);
@@ -915,7 +991,7 @@ void Script_Load(const char *script_name)
 
 	// DebugPrintf("  loading script: '%s'\n", filename);
 
-	int status = luaL_loadfile(LUA_ST, filename);
+	int status = my_loadfile(LUA_ST, filename);
 
 	if (status == 0)
 		status = lua_pcall(LUA_ST, 0, 0, 0);
