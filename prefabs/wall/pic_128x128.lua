@@ -70,27 +70,6 @@ PREFABS.Pic_marbface =
 }
 
 
-PREFABS.Pic_parrot =
-{
-  file   = "wall/pic_128x128.wad"
-  where  = "edge"
-  long   = 192
-  deep   = 16
-
-  x_fit  = "frame"
-  y_fit  = "top"
-  z_fit  = { 0,8, 152,176 }
-
-  bound_z1 = 0
-  bound_z2 = 176
-
-  theme = "urban"
-  prob  = 200
-
-  tex_ZZWOLF7 = "O_PARROT"
-}
-
-
 PREFABS.Pic_adolf =
 {
   file   = "wall/pic_128x128.wad"
