@@ -37,9 +37,10 @@ const char *addon_file = NULL;
 
 void VFS_AddFolder(const char *name)
 {
-	char *path = StringPrintf("%s/%s", install_dir, name);
+	char *path  = StringPrintf("%s/%s", install_dir, name);
+	char *mount = StringPrintf("/%s", name);
 
-	if (! PHYSFS_mount(path, name, 1))
+	if (! PHYSFS_mount(path, mount, 1))
 	{
 		Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
 						name, PHYSFS_getLastError());
