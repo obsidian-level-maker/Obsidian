@@ -130,24 +130,6 @@ function string.is_digit(ch)
          ch == '9'
 end
 
-function read_text_file(filename)
-  local file = io.open(filename, "r")
-
-  if not file then
-    return nil
-  end
-
-  local lines = {}
-
-  for L in file:lines() do
-    table.insert(lines, L .. "\n")
-  end
-
-  file:close()
-  
-  return lines
-end
-
 function style_sel(name, v_none, v_few, v_some, v_heaps)
   local keyword = STYLE[name]
 
