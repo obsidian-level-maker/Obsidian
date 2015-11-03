@@ -904,7 +904,8 @@ bool Script_RunString(const char *str, ...)
 
 typedef struct load_info_t
 {
-	PHYSFS_File *f;
+	PHYSFS_File *fp;
+	char *error_msg;
 	char buffer[2048];
 
 } load_info_t;
@@ -912,53 +913,62 @@ typedef struct load_info_t
 
 static const char * my_reader(lua_State *L, void *ud, size_t *size)
 {
-	load_info_t *lf = (load_info_t *)ud;
 	(void)L;
 
-	if (PHYSFS_eof(lf->f))
+	load_info_t *info = (load_info_t *)ud;
+
+	if (PHYSFS_eof(info->fp))
 		return NULL;
 
-	*size = (size_t)PHYSFS_read(lf->f, lf->buffer, 1, sizeof(lf->buffer));
+	*size = (size_t)PHYSFS_read(info->fp, info->buffer, 1, sizeof(info->buffer));
 
-	return (*size > 0) ? lf->buffer : NULL;
-}
+	// negative result indicates a "complete failure"
+	if (*size < 0)
+	{
+		info->error_msg = StringDup(PHYSFS_getLastError());
+	}
 
+	if (*size <= 0)
+		return NULL;
 
-static int my_errfile(lua_State *L, const char *what, int fnameindex)
-{
-	const char *serr = strerror(errno);
-	const char *filename = lua_tostring(L, fnameindex) + 1;
-
-	lua_pushfstring(L, "cannot %s %s: %s", what, filename, serr);
-	lua_remove(L, fnameindex);
-
-	return LUA_ERRFILE;
+	return info->buffer;  // OK
 }
 
 
 static int my_loadfile(lua_State *L, const char *filename)
 {
-	load_info_t lf;
-	int status, readstatus;
-	int fnameindex = lua_gettop(L) + 1;  /* index of filename on the stack */
+	/* index of filename on the stack */
+	int fnameindex = lua_gettop(L) + 1;
 
 	lua_pushfstring(L, "@%s", filename);
 
-	lf.f = PHYSFS_openRead(filename);
-	if (lf.f == NULL)
-		return my_errfile(L, "open", fnameindex);
+	load_info_t info;
 
-	status = lua_load(L, my_reader, &lf, lua_tostring(L, -1));
+	info.fp = PHYSFS_openRead(filename);
+	info.error_msg = NULL;
 
-	readstatus = 0; // FIXME!!! ferror(lf.f);
-
-	PHYSFS_close(lf.f);  /* close file (even in case of errors) */
-
-	if (readstatus)
+	if (! info.fp)
 	{
-		lua_settop(L, fnameindex);  /* ignore results from `lua_load' */
-		return my_errfile(L, "read", fnameindex);
+		lua_pushfstring(L, "failed to open %s: %s", filename, PHYSFS_getLastError());
+		lua_remove(L, fnameindex);
+
+		return LUA_ERRFILE;
 	}
+
+	int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
+
+	/* close file (even in case of errors) */
+	PHYSFS_close(info.fp);
+
+	if (info.error_msg)
+	{
+		/* ignore results from 'lua_load' */
+		lua_settop(L, fnameindex);
+		status = LUA_ERRFILE;
+
+		lua_pushfstring(L, "failed to read %s: %s", filename, info.error_msg);
+	}
+
 	lua_remove(L, fnameindex);
 
 	return status;
