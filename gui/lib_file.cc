@@ -88,11 +88,11 @@ bool HasExtension(const char *filename)
 //
 // MatchExtension
 //
-// When ext is NULL, checks if the file has no extension.
+// When ext is NULL or "", checks if the file has no extension.
 //
 bool MatchExtension(const char *filename, const char *ext)
 {
-	if (! ext)
+	if (! (ext && ext[0]))
 		return ! HasExtension(filename);
 
 	int A = (int)strlen(filename) - 1;
@@ -114,7 +114,7 @@ bool MatchExtension(const char *filename, const char *ext)
 //
 // ReplaceExtension
 //
-// When ext is NULL, any existing extension is removed.
+// When ext is NULL or "", any existing extension is removed.
 //
 // Returned string is a COPY.
 //
@@ -142,7 +142,7 @@ char *ReplaceExtension(const char *filename, const char *ext)
 	if (dot_pos < buffer || *dot_pos != '.')
 		dot_pos = NULL;
 
-	if (! ext)
+	if (! (ext && ext[0]))
 	{
 		if (dot_pos)
 			dot_pos[0] = 0;
