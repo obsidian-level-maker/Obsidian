@@ -23,6 +23,8 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include "physfs.h"
+
 #include "lib_file.h"
 #include "lib_tga.h"
 #include "lib_util.h"
@@ -804,7 +806,7 @@ int DM_wad_add_binary_lump(lua_State *L)
 }
 
 
-static void TransferFILEtoWAD(FILE *fp, const char *dest_lump)
+static void TransferFILEtoWAD(PHYSFS_File *fp, const char *dest_lump)
 {
 	WAD_NewLump(dest_lump);
 
@@ -813,7 +815,7 @@ static void TransferFILEtoWAD(FILE *fp, const char *dest_lump)
 
 	for (;;)
 	{
-		int got_len = fread(buffer, 1, buf_size, fp);
+		int got_len = (int)PHYSFS_read(fp, buffer, 1, buf_size);
 
 		if (got_len <= 0)
 			break;
@@ -908,23 +910,17 @@ int DM_wad_insert_file(lua_State *L)
 {
 	// LUA: wad_insert_file(filename, lumpname)
 
-	const char *base_name = luaL_checkstring(L, 1);
+	const char *filename  = luaL_checkstring(L, 1);
 	const char *dest_lump = luaL_checkstring(L, 2);
 
-	const char *full_name = FileFindInPath(data_path, base_name);
-	if (! full_name)
-		return luaL_error(L, "wad_insert_file: missing data file: %s", base_name);
-
-	FILE *fp = fopen(full_name, "rb");
+	PHYSFS_File *fp = PHYSFS_openRead(filename);
 
 	if (! fp) // this is unlikely (we know it exists)
-		return luaL_error(L, "wad_insert_file: cannot open file: %s", full_name);
+		return luaL_error(L, "wad_insert_file: cannot open file: %s", filename);
 
 	TransferFILEtoWAD(fp, dest_lump);
 
-	fclose(fp);
-
-	StringFree(full_name);
+	PHYSFS_close(fp);
 
 	return 0;
 }
