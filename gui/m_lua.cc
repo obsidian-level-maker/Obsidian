@@ -217,25 +217,6 @@ int gui_get_install_dir(lua_State *L)
 }
 
 
-// LUA: locate_data(filename) --> string
-//
-int gui_locate_data(lua_State *L)
-{
-	const char *base_name = luaL_checkstring(L, 1);
-
-	const char *full_name = FileFindInPath(data_path, base_name);
-
-	if (! full_name)
-	{
-		lua_pushnil(L);
-		return 1;
-	}
-
-	lua_pushstring(L, full_name);
-	return 1;
-}
-
-
 static bool scan_dir_process_name(const char *name, const char *parent, const char *match)
 {
 	if (name[0] == '.')
@@ -734,9 +715,8 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "import",          gui_import },
 	{ "set_import_dir",  gui_set_import_dir },
 	{ "get_install_dir", gui_get_install_dir },
-	{ "locate_data",     gui_locate_data },
-	{ "mkdir",           gui_mkdir },
 	{ "scan_directory",  gui_scan_directory },
+	{ "mkdir",           gui_mkdir },
 
 	// CSG functions
 	{ "begin_level", CSG_begin_level },
