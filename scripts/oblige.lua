@@ -597,7 +597,7 @@ end
 
 
 
-function ob_load_game(dir, game)
+function ob_load_game(game)
   -- 'game' parameter must be a sub-directory of the games/ folder
   
   -- ignore the template game -- it is only instructional
@@ -617,20 +617,23 @@ end
 function ob_load_all_games()
   gui.printf("Loading all games...\n")
 
-  local dir  = gui.get_install_dir() .. "/games"
-  local list = gui.scan_directory(dir, "DIRS")
+  local list = gui.scan_directory("games", "DIRS")
 
   if not list then
     error("Failed to scan 'games' directory")
   end
 
-  -- FIXME !!!
-  --
-  -- each game in list do
-  --  ob_load_game(dir, game)
-  --end
-  -- TODO support OB_CONFIG.onlygame
-  ob_load_game(dir, "doom")
+  -- FIXME !!!!
+  list = { "doom" }
+
+  if OB_CONFIG.onlygame then
+    gui.printf("Only loading one game: '%s'\n", OB_CONFIG.onlygame)
+    ob_load_game(OB_CONFIG.onlygame)
+  else
+    each game in list do
+      ob_load_game(game)
+    end
+  end
 
   if table.empty(OB_GAMES) then
     error("Failed to load any games at all")
@@ -641,19 +644,18 @@ end
 function ob_load_all_engines()
   gui.printf("Loading all engines...\n")
 
-  gui.set_import_dir("engines")
-
-  local dir  = gui.get_install_dir() .. "/engines"
-  local list = gui.scan_directory(dir, "*.lua")
+  local list = gui.scan_directory("engines", "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'engines' directory\n")
+    return
+  end
 
-  else
-    each filename in list do
-      gui.debugf("  %s\n", filename)
-      gui.import(filename)
-    end
+  gui.set_import_dir("engines")
+
+  each filename in list do
+    gui.debugf("  %s\n", filename)
+    gui.import(filename)
   end
 
   gui.set_import_dir("")
@@ -663,19 +665,18 @@ end
 function ob_load_all_modules()
   gui.printf("Loading all modules...\n")
 
-  gui.set_import_dir("modules")
-
-  local dir  = gui.get_install_dir() .. "/modules"
-  local list = gui.scan_directory(dir, "*.lua")
+  local list = gui.scan_directory("modules", "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'modules' directory\n")
+    return
+  end
 
-  else
-    each filename in list do
-      gui.debugf("  %s\n", filename)
-      gui.import(filename)
-    end
+  gui.set_import_dir("modules")
+
+  each filename in list do
+    gui.debugf("  %s\n", filename)
+    gui.import(filename)
   end
 
   gui.set_import_dir("")

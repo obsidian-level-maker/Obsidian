@@ -721,7 +721,7 @@ end
 ------------------------------------------------------------------------
 
 
-OB_TITLE_DIR = ""
+OB_TITLE_DIR = "data/titles"
 
 
 function Title_add_background()
@@ -1014,8 +1014,6 @@ function Title_generate()
   assert(GAME.title)
   assert(GAME.PALETTES)
   assert(GAME.PALETTES.normal)
-
-  OB_TITLE_DIR = gui.get_install_dir() .. "/data/titles"
 
 
   gui.title_create(320, 200, "#000")
