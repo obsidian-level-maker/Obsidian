@@ -236,9 +236,52 @@ int gui_locate_data(lua_State *L)
 }
 
 
+static bool scan_dir_process_name(const char *name, const char *parent, const char *match)
+{
+	if (name[0] == '.')
+		return false;
+
+// fprintf(stderr, "scan_dir_process_name: '%s'\n", name);
+
+	// check if it is a directory
+	// [ generally skip directories, unless match is "DIRS" ]
+
+	char *temp_name = StringPrintf("%s/%s", parent, name);
+	bool is_dir = PHYSFS_isDirectory(temp_name);
+	StringFree(temp_name);
+
+	if (strcmp(match, "DIRS") == 0)
+		return is_dir;
+
+	if (is_dir)
+		return false;
+
+	if (strcmp(match, "*") == 0)
+	{
+		return true;
+	}
+	else if (match[0] == '*' && match[1] == '.' && isalnum(match[2]))
+	{
+		return MatchExtension(name, match + 2);
+	}
+
+	Main_FatalError("gui.scan_directory: unsupported match expression: %s\n", match);
+	return false;  /* NOT REACHED */
+}
+
+
+struct scan_dir_nocase_CMP
+{
+	inline bool operator() (const std::string& A, const std::string& B) const
+	{
+		return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+	}
+};
+
+
 // LUA: scan_directory(dir, match) --> list
 //
-// Note: match currently must be of the form "*.xxx"
+// Note: 'match' parameter must be of the form "*" or "*.xxx"
 //       or must be "DIRS" to return all the sub-directories
 //
 int gui_scan_directory(lua_State *L)
@@ -246,27 +289,39 @@ int gui_scan_directory(lua_State *L)
 	const char *dir_name = luaL_checkstring(L, 1);
 	const char *match    = luaL_checkstring(L, 2);
 
-	std::vector<std::string> list;
-	int result;
-
-	if (strcmp(match, "DIRS") == 0)
-	{
-		result = ScanDir_GetSubDirs(dir_name, list);
-	}
-	else
-	{
-		if (match[0] != '*' || match[1] != '.' || !isalnum(match[2]))
-			return luaL_argerror(L, 2, "unsupported match expression");
-
-		result = ScanDir_MatchingFiles(dir_name, match + 2, list);
-	}
-
-	if (result < 0)
+	if (! PHYSFS_exists(dir_name))
 	{
 		lua_pushnil(L);
 		lua_pushstring(L, "No such directory");
 		return 2;
 	}
+
+	char ** got_names = PHYSFS_enumerateFiles(dir_name);
+
+	// seems this only happens on out-of-memory error
+	if (! got_names)
+	{
+		return luaL_error(L, "gui.scan_directory: %s", PHYSFS_getLastError());
+	}
+
+	// transfer matching names into another list
+
+	std::vector<std::string> list;
+
+	char ** p;
+
+	for (p = got_names ; *p ; p++)
+	{
+		if (scan_dir_process_name(*p, dir_name, match))
+			list.push_back(*p);
+	}
+
+	PHYSFS_freeList(got_names);
+
+
+	// sort into alphabetical order [ Note: not unicode aware ]
+
+	std::sort(list.begin(), list.end(), scan_dir_nocase_CMP());
 
 	// create the list of filenames / dirnames
 
