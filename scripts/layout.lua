@@ -1710,6 +1710,7 @@ function Layout_build_stairwell(A)
 
   local well = A.is_stairwell
 
+  -- FIXME : use the new EDGE objects !!
   local edge1 = A.edge_loops[1][well.edge1]
   local edge2 = A.edge_loops[1][well.edge2]
 

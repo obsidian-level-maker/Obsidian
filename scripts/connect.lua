@@ -494,6 +494,8 @@ function Connect_stuff()
 
 
   local function try_specific_stairwell(R, A, well)
+    do return false end
+
     local outer_edges = A.edge_loops[1]
 
     local E1 = outer_edges[well.edge1]

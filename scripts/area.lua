@@ -54,10 +54,6 @@
 
     edges : list(EDGE)
 
-    -- an edge loop is a sequence of half-seed sides, going counter-clockwise.
-    -- the first loop is always the outer boundary of the area.
-    edge_loops : list(list(AREA_EDGE))
-
 
     --- connection stuff ---
 
@@ -653,95 +649,6 @@ end
 
 function Area_analyse_areas()
 
-  local function check_is_edge(A, S, dir)
-    local N = S:neighbor(dir, "NODIR")
-
-    if N == "NODIR" then return false end
-
-    if N == nil then return true end
-
-    return (N.area != A)
-  end
-
-
-  local function trace_to_next_edge(A, S, dir, mode)
-    dir = geom.ROTATE[5][dir]
-
-    for pass = 1, 8 do
-      if check_is_edge(A, S, dir) then
-        return S, dir
-      end
-
-      if geom.is_straight(dir) then
-        S = S:neighbor(dir)
-        assert(S and S.area and S.area == A)
-      end
-
-      dir = geom.RIGHT_45[dir]
-    end
-
-    error("Failed to trace next edge at seed corner")
-  end
-
-
-  local function trace_edge_loop(A, S, dir, mode)
-    -- mode is either "outer" or "inner"
-
-    local loop = {}
-
-    local orig_S   = S
-    local orig_dir = dir
-
-    repeat
-      table.insert(loop, { S=S, dir=dir })
-
-      if #loop > 9999 then
-        error("Excessive looping when tracing AREA_" .. tostring(A.id))
-      end
-
-      S, dir = trace_to_next_edge(A, S, dir, mode)
-
-    until S == orig_S and dir == orig_dir
-
-    -- all done
-    table.insert(A.edge_loops, loop)
-  end
-
-
-  local function create_edge_loops(A)
-    A.edge_loops = {}
-
-    -- edge splits can be non-contiguous, so skip them here
-    if A.was_split then return end
-
-    -- find a start seed : vertically lowest
-    local low_S
-
-    each S in A.seeds do
-      if not low_S or S.sy < low_S.sy then
-        low_S = S
-      end
-    end
-
-    assert(low_S)
-
-    -- must be an edge in directions 1, 2 or 3
-
-    for dir = 1,3 do
-      if check_is_edge(A, low_S, dir) then
-        trace_edge_loop(A, low_S, dir, "outer")
-        break;
-      end
-    end
-
-    if not A.edge_loops[1] then
-      error("Failed to trace outer loop of AREA_" .. tostring(A.id))
-    end
-
-    -- FIXME : inner loops
-  end
-
-
   local function spread_CTF_team(A1, visit_list)
     if not A1.team then
       local A2 = A1:get_ctf_peer()
@@ -801,10 +708,6 @@ function Area_analyse_areas()
   ---| Area_analyse_areas |---
 
   Area_calc_volumes()
-
-  each A in LEVEL.areas do
-    create_edge_loops(A)
-  end
 
   if OB_CONFIG.mode == "ctf" then
     error("CTF mode is broken!")

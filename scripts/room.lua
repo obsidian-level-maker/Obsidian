@@ -839,8 +839,8 @@ function Room_detect_porches(R)
   if R.kind == "stairwell" then
     -- never
 
-  elseif R.kind == "hallway" then
-    detect_hallway_porch()
+---??  elseif R.kind == "hallway" then
+---??    detect_hallway_porch()
 
   elseif R.is_outdoor then
     detect_normal_porch("outdoor")
