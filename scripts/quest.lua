@@ -2361,7 +2361,7 @@ function Quest_choose_themes()
   local function collect_usable_themes(kind)
     local tab = {}
 
-    each name,info in GAME.THEMES do
+    each name,info in GAME.ROOM_THEMES do
       if info.kind == kind and match_level_theme(name) then
         tab[name] = info.prob or 50
       end
@@ -2383,7 +2383,7 @@ function Quest_choose_themes()
     -- prefer not to use same theme as the last one
     for n = 1,2 do
       local prev = previous and previous[n]
-      local factor = sel(i == 1, 5, 2)
+      local factor = 4
 
       if prev and tab[prev] then
         tab[prev] = tab[prev] / factor
@@ -2392,7 +2392,7 @@ function Quest_choose_themes()
 
     local name = rand.key_by_probs(tab)
 
-    return assert(GAME.THEMES[name])
+    return assert(GAME.ROOM_THEMES[name])
   end
 
 
