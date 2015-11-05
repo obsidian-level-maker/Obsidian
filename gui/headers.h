@@ -54,6 +54,8 @@
 #include "sys_debug.h"
 #include "sys_endian.h"
 
+#define HAVE_PHYSFS  1
+
 #define MSG_BUF_LEN  2000
 
 #endif /* __OBLIGE_INCLUDES_H__ */
