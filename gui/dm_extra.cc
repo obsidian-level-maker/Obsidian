@@ -1075,12 +1075,8 @@ int DM_wad_merge_sections(lua_State *L)
 	if (! MatchExtension(pkg_name, "wad"))
 		return luaL_error(L, "wad_merge_sections: file extension is not WAD: %s\n", pkg_name);
 
-	const char *full_name = FileFindInPath(data_path, pkg_name);
-	if (! full_name)
-		return luaL_error(L, "wad_merge_sections: missing WAD file: %s\n", pkg_name);
-
-	if (! WAD_OpenRead(full_name))
-		return luaL_error(L, "wad_merge_sections: bad WAD file: %s", full_name);
+	if (! WAD_OpenRead(pkg_name))
+		return luaL_error(L, "wad_merge_sections: bad WAD file: %s", pkg_name);
 
 	DoMergeSection('P', "P_START", "PP_START", "P_END", "PP_END");
 	DoMergeSection('S', "S_START", "SS_START", "S_END", "SS_END");
@@ -1089,8 +1085,6 @@ int DM_wad_merge_sections(lua_State *L)
 	DoMergeSection('T', "TX_START", NULL,      "TX_END", NULL);
 
 	WAD_CloseRead();
-
-	StringFree(full_name);
 
 	return 0;
 }
