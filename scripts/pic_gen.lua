@@ -725,39 +725,15 @@ OB_TITLE_DIR = "data/titles"
 
 
 function Title_add_background()
-  local BACKGROUNDS =
-  {
-    space1 = 10
-    space2 = 30
-    space3 = 30
-    space4 = 30
+  local backgrounds = gui.scan_directory(OB_TITLE_DIR, "*.tga")
 
-    hell_1 = 40
-    hell_2 = 40
-    hell_3 = 40
+  if not backgrounds or table.empty(backgrounds) then
+    error("Failed to scan 'data/titles' directory")
+  end
 
-    city1 = 40
-    city3 = 40
+  local filename = rand.pick(backgrounds)
 
-    cave1 = 40
-
-    landscape1 = 20
-    landscape2 = 20
-    landscape3 = 40
-
-    frozen1 = 20
-    frozen2 = 40
-
-    wiztower = 40
-    necro = 20
-    swamp = 10
-    crowprin = 10
-    darknight = 10
-  }
-
-  local name = rand.key_by_probs(BACKGROUNDS)
-
-  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/" .. name .. ".tga")
+  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/" .. filename)
 end
 
 
