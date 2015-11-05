@@ -33,8 +33,11 @@ QUAKE.THEMES =
       ROCK5_2 = 50
     }
   }
+}
 
 
+QUAKE.ROOM_THEMES =
+{
   generic_Stairwell =
   {
     kind = "stairwell"
