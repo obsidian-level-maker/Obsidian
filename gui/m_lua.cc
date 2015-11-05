@@ -42,8 +42,6 @@
 
 static lua_State *LUA_ST;
 
-const char *data_path;
-
 static bool has_loaded = false;
 static bool has_added_buttons = false;
 
@@ -826,14 +824,6 @@ static int p_init_lua(lua_State *L)
 }
 
 
-static void Script_SetDataPath(void)
-{
-	data_path = StringPrintf("%s/modules/data;%s/data", install_dir, install_dir);
-
-	LogPrintf("data_path: [%s]\n\n", data_path);
-}
-
-
 static bool Script_CallFunc(const char *func_name, int nresult = 0, const char **params = NULL)
 {
 	// Note: the results of the function will be on the Lua stack
@@ -1058,8 +1048,6 @@ void Script_Open()
 	int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
 	if (status != 0)
 		Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
-
-	Script_SetDataPath();
 
 
 	// load main scripts
