@@ -37,6 +37,42 @@ HERETIC.THEMES =
   }
 
 
+  h_urban =
+  {
+    liquids =
+    {
+      water  = 50
+      sludge = 15
+      lava   = 5
+    }
+
+    facades =
+    {
+      GRSTNPB = 50
+    }
+  }
+
+
+  h_castle =
+  {
+    liquids =
+    {
+      lava   = 50
+      magma  = 20
+      sludge = 5
+    }
+
+    facades =
+    {
+      CSTLRCK  = 50
+      GRNBLOK1 = 30
+    }
+  }
+}
+
+
+HERETIC.ROOM_THEMES =
+{
   generic_Stairwell =
   {
     kind = "stairwell"
@@ -54,22 +90,6 @@ HERETIC.THEMES =
 
 
   ---- URBAN THEME ---------------------------------
-
-  h_urban =
-  {
-    liquids =
-    {
-      water  = 50
-      sludge = 15
-      lava   = 5
-    }
-
-    facades =
-    {
-      GRSTNPB = 50
-    }
-  }
-
 
   h_urban_House1 =
   {
@@ -201,23 +221,6 @@ HERETIC.THEMES =
 
 
   ---- CASTLE THEME --------------------------------
-
-  h_castle =
-  {
-    liquids =
-    {
-      lava   = 50
-      magma  = 20
-      sludge = 5
-    }
-
-    facades =
-    {
-      CSTLRCK  = 50
-      GRNBLOK1 = 30
-    }
-  }
-
 
   h_castle_Green =
   {
