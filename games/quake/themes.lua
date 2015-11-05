@@ -33,6 +33,51 @@ QUAKE.THEMES =
       ROCK5_2 = 50
     }
   }
+
+
+  q1_tech =
+  {
+    worldtype = 2
+
+    skies =
+    {
+      sky4 = 80
+      sky1 = 20
+    }
+
+    liquids =
+    {
+      slime0 = 25
+      slime  = 50
+    }
+
+    facades =
+    {
+      TECH14_2 = 50
+    }
+  }
+
+
+  q1_castle =
+  {
+    worldtype = 0
+
+    skies =
+    {
+      sky1 = 80
+      sky4 = 20
+    }
+
+    liquids =
+    {
+      lava1 = 50
+    }
+
+    facades =
+    {
+      BRICKA2_4 = 50
+    }
+  }
 }
 
 
@@ -76,29 +121,6 @@ QUAKE.ROOM_THEMES =
 
 
   ----- TECH BASE ----------------------------------
-
-  q1_tech =
-  {
-    worldtype = 2
-
-    skies =
-    {
-      sky4 = 80
-      sky1 = 20
-    }
-
-    liquids =
-    {
-      slime0 = 25
-      slime  = 50
-    }
-
-    facades =
-    {
-      TECH14_2 = 50
-    }
-  }
-
 
   q1_tech_Room =
   {
@@ -166,28 +188,6 @@ QUAKE.ROOM_THEMES =
 
 
   ----- CASTLE ----------------------------------
-
-  q1_castle =
-  {
-    worldtype = 0
-
-    skies =
-    {
-      sky1 = 80
-      sky4 = 20
-    }
-
-    liquids =
-    {
-      lava1 = 50
-    }
-
-    facades =
-    {
-      BRICKA2_4 = 50
-    }
-  }
-
 
   q1_castle_Room =
   {
