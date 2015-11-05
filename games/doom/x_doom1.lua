@@ -184,10 +184,6 @@ ULTDOOM.MONSTERS =
 
 ULTDOOM.THEMES =
 {
-  -- this field ensures these theme entries REPLACE those of Doom 2.
-  replace_all = true
-
-
   DEFAULTS =
   {
     keys =
@@ -219,6 +215,13 @@ ULTDOOM.THEMES =
       SP_ROCK1 =  5
     }
   }
+}
+
+
+ULTDOOM.ROOM_THEMES =
+{
+  -- this field ensures these theme entries REPLACE those of Doom 2.
+  replace_all = true
 
 
   generic_Stairwell =
