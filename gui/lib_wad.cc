@@ -23,9 +23,12 @@
 
 #include <list>
 
+#ifdef HAVE_PHYSFS
+#include "physfs.h"
+#endif
+
 #include "lib_util.h"
 #include "lib_wad.h"
-
 
 // #define LogPrintf  printf
 
@@ -34,14 +37,22 @@
 //  WAD READING
 //------------------------------------------------------------------------
 
+#ifdef HAVE_PHYSFS
+static PHYSFS_File *wad_R_fp;
+#else
 static FILE *wad_R_fp;
+#endif
 
 static raw_wad_header_t  wad_R_header;
 static raw_wad_lump_t * wad_R_dir;
 
 bool WAD_OpenRead(const char *filename)
 {
+#ifdef HAVE_PHYSFS
+	wad_R_fp = PHYSFS_openRead(filename);
+#else
 	wad_R_fp = fopen(filename, "rb");
+#endif
 
 	if (! wad_R_fp)
 	{
@@ -51,17 +62,29 @@ bool WAD_OpenRead(const char *filename)
 
 	LogPrintf("Opened WAD file: %s\n", filename);
 
+#ifdef HAVE_PHYSFS
+	if (PHYSFS_read(wad_R_fp, &wad_R_header, sizeof(wad_R_header), 1) != 1)
+#else
 	if (fread(&wad_R_header, sizeof(wad_R_header), 1, wad_R_fp) != 1)
+#endif
 	{
 		LogPrintf("WAD_OpenRead: failed reading header\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad_R_fp);
+#else
 		fclose(wad_R_fp);
+#endif
 		return false;
 	}
 
 	if (0 != memcmp(wad_R_header.magic+1, "WAD", 3))
 	{
 		LogPrintf("WAD_OpenRead: not a WAD file!\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad_R_fp);
+#else
 		fclose(wad_R_fp);
+#endif
 		return false;
 	}
 
@@ -73,14 +96,26 @@ bool WAD_OpenRead(const char *filename)
 	if (wad_R_header.num_lumps >= 5000)  // sanity check
 	{
 		LogPrintf("WAD_OpenRead: bad header (%d entries?)\n", wad_R_header.num_lumps);
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad_R_fp);
+#else
 		fclose(wad_R_fp);
+#endif
 		return false;
 	}
 
+#ifdef HAVE_PHYSFS
+	if (! PHYSFS_seek(wad_R_fp, wad_R_header.dir_start))
+#else
 	if (fseek(wad_R_fp, wad_R_header.dir_start, SEEK_SET) != 0)
+#endif
 	{
 		LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x%08x)\n", wad_R_header.dir_start);
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad_R_fp);
+#else
 		fclose(wad_R_fp);
+#endif
 		return false;
 	}
 
@@ -90,18 +125,18 @@ bool WAD_OpenRead(const char *filename)
 	{
 		raw_wad_lump_t *L = &wad_R_dir[i];
 
+#ifdef HAVE_PHYSFS
+		size_t res = PHYSFS_read(wad_R_fp, L, sizeof(raw_wad_lump_t), 1);
+		if (res != 1)
+#else
 		int res = fread(L, sizeof(raw_wad_lump_t), 1, wad_R_fp);
-
 		if (res == EOF || res != 1 || ferror(wad_R_fp))
+#endif
 		{
 			if (i == 0)
 			{
 				LogPrintf("WAD_OpenRead: could not read any dir-entries!\n");
-
-				delete[] wad_R_dir;
-				wad_R_dir = NULL;
-
-				fclose(wad_R_fp);
+				WAD_CloseRead();
 				return false;
 			}
 
@@ -124,7 +159,11 @@ bool WAD_OpenRead(const char *filename)
 
 void WAD_CloseRead(void)
 {
+#ifdef HAVE_PHYSFS
+	PHYSFS_close(wad_R_fp);
+#else
 	fclose(wad_R_fp);
+#endif
 
 	LogPrintf("Closed WAD file\n");
 
@@ -188,11 +227,18 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer)
 	if ((u32_t)offset + (u32_t)length > L->length)  // EOF
 		return false;
 
+#if HAVE_PHYSFS
+	if (! PHYSFS_seek(wad_R_fp, L->start + offset))
+		return false;
+
+	return (PHYSFS_read(wad_R_fp, buffer, length, 1) == 1);
+#else
 	if (fseek(wad_R_fp, L->start + offset, SEEK_SET) != 0)
 		return false;
 
 	int res = fread(buffer, length, 1, wad_R_fp);
 	return (res == 1);
+#endif
 }
 
 
