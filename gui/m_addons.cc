@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-//  Addons Selection
+//  Addons Loading and Selection GUI
 //----------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -28,6 +28,7 @@
 #include "lib_util.h"
 
 #include "main.h"
+#include "m_addons.h"
 #include "m_cookie.h"
 
 

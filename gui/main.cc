@@ -31,6 +31,7 @@
 #include "lib_util.h"
 
 #include "main.h"
+#include "m_addons.h"
 #include "m_cookie.h"
 #include "m_lua.h"
 

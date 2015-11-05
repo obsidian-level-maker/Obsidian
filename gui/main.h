@@ -91,10 +91,6 @@ void DLG_EditSeed(void);
 void DLG_SelectAddons(void);
 
 
-// VFS stuff
-void VFS_InitAddons(const char *argv0);
-
-
 class game_interface_c
 {
 	/* this is an abstract base class */
