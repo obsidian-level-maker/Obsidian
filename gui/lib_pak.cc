@@ -23,6 +23,10 @@
 
 #include <list>
 
+#ifdef HAVE_PHYSFS
+#include "physfs.h"
+#endif
+
 #include "lib_util.h"
 #include "lib_pak.h"
 
@@ -34,7 +38,11 @@
 //  PAK READING
 //------------------------------------------------------------------------
 
+#ifdef HAVE_PHYSFS
+static PHYSFS_File *r_pak_fp;
+#else
 static FILE *r_pak_fp;
+#endif
 
 static raw_pak_header_t r_header;
 
@@ -43,7 +51,11 @@ static raw_pak_entry_t * r_directory;
 
 bool PAK_OpenRead(const char *filename)
 {
+#ifdef HAVE_PHYSFS
+	r_pak_fp = PHYSFS_openRead(filename);
+#else
 	r_pak_fp = fopen(filename, "rb");
+#endif
 
 	if (! r_pak_fp)
 	{
@@ -53,17 +65,29 @@ bool PAK_OpenRead(const char *filename)
 
 	LogPrintf("Opened PAK file: %s\n", filename);
 
+#ifdef HAVE_PHYSFS
+	if (PHYSFS_read(r_pak_fp, &r_header, sizeof(r_header), 1) != 1)
+#else
 	if (fread(&r_header, sizeof(r_header), 1, r_pak_fp) != 1)
+#endif
 	{
 		LogPrintf("PAK_OpenRead: failed reading header\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(r_pak_fp);
+#else
 		fclose(r_pak_fp);
+#endif
 		return false;
 	}
 
 	if (memcmp(r_header.magic, PAK_MAGIC, 4) != 0)
 	{
 		LogPrintf("PAK_OpenRead: not a PAK file!\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(r_pak_fp);
+#else
 		fclose(r_pak_fp);
+#endif
 		return false;
 	}
 
@@ -78,14 +102,26 @@ bool PAK_OpenRead(const char *filename)
 	if (r_header.entry_num >= 5000)  // sanity check
 	{
 		LogPrintf("PAK_OpenRead: bad header (%d entries?)\n", r_header.entry_num);
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(r_pak_fp);
+#else
 		fclose(r_pak_fp);
+#endif
 		return false;
 	}
 
+#ifdef HAVE_PHYSFS
+	if (! PHYSFS_seek(r_pak_fp, r_header.dir_start))
+#else
 	if (fseek(r_pak_fp, r_header.dir_start, SEEK_SET) != 0)
+#endif
 	{
 		LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x%08x)\n", r_header.dir_start);
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(r_pak_fp);
+#else
 		fclose(r_pak_fp);
+#endif
 		return false;
 	}
 
@@ -95,18 +131,18 @@ bool PAK_OpenRead(const char *filename)
 	{
 		raw_pak_entry_t *E = &r_directory[i];
 
+#ifdef HAVE_PHYSFS
+		size_t res = PHYSFS_read(r_pak_fp, E, sizeof(raw_pak_entry_t), 1);
+		if (res != 1)
+#else
 		int res = fread(E, sizeof(raw_pak_entry_t), 1, r_pak_fp);
-
 		if (res == EOF || res != 1 || ferror(r_pak_fp))
+#endif
 		{
 			if (i == 0)
 			{
 				LogPrintf("PAK_OpenRead: could not read any dir-entries!\n");
-
-				delete[] r_directory;
-				r_directory = NULL;
-
-				fclose(r_pak_fp);
+				PAK_CloseRead();
 				return false;
 			}
 
@@ -132,7 +168,11 @@ bool PAK_OpenRead(const char *filename)
 
 void PAK_CloseRead(void)
 {
+#ifdef HAVE_PHYSFS
+	PHYSFS_close(r_pak_fp);
+#else
 	fclose(r_pak_fp);
+#endif
 
 	LogPrintf("Closed PAK file\n");
 
@@ -218,10 +258,17 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 	if ((u32_t)offset + (u32_t)length > E->length)  // EOF
 		return false;
 
+#ifdef HAVE_PHYSFS
+	if (! PHYSFS_seek(r_pak_fp, E->offset + offset))
+		return false;
+
+	size_t res = PHYSFS_read(r_pak_fp, buffer, length, 1);
+#else
 	if (fseek(r_pak_fp, E->offset + offset, SEEK_SET) != 0)
 		return false;
 
 	int res = fread(buffer, length, 1, r_pak_fp);
+#endif
 
 	return (res == 1);
 }
