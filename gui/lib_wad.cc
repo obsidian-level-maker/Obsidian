@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -394,14 +394,22 @@ void WAD_FinishLump(void)
 //  WAD2 READING
 //------------------------------------------------------------------------
 
+#ifdef HAVE_PHYSFS
+static PHYSFS_File *wad2_R_fp;
+#else
 static FILE *wad2_R_fp;
+#endif
 
 static raw_wad2_header_t  wad2_R_header;
 static raw_wad2_lump_t * wad2_R_dir;
 
 bool WAD2_OpenRead(const char *filename)
 {
+#ifdef HAVE_PHYSFS
+	wad2_R_fp = PHYSFS_openRead(filename);
+#else
 	wad2_R_fp = fopen(filename, "rb");
+#endif
 
 	if (! wad2_R_fp)
 	{
@@ -411,17 +419,29 @@ bool WAD2_OpenRead(const char *filename)
 
 	LogPrintf("Opened WAD2 file: %s\n", filename);
 
+#ifdef HAVE_PHYSFS
+	if (PHYSFS_read(wad2_R_fp, &wad2_R_header, sizeof(wad2_R_header), 1) != 1)
+#else
 	if (fread(&wad2_R_header, sizeof(wad2_R_header), 1, wad2_R_fp) != 1)
+#endif
 	{
 		LogPrintf("WAD2_OpenRead: failed reading header\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad2_R_fp);
+#else
 		fclose(wad2_R_fp);
+#endif
 		return false;
 	}
 
 	if (memcmp(wad2_R_header.magic, WAD2_MAGIC, 4) != 0)
 	{
 		LogPrintf("WAD2_OpenRead: not a WAD2 file!\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad2_R_fp);
+#else
 		fclose(wad2_R_fp);
+#endif
 		return false;
 	}
 
@@ -433,14 +453,26 @@ bool WAD2_OpenRead(const char *filename)
 	if (wad2_R_header.num_lumps >= 5000)  // sanity check
 	{
 		LogPrintf("WAD2_OpenRead: bad header (%d entries?)\n", wad2_R_header.num_lumps);
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad2_R_fp);
+#else
 		fclose(wad2_R_fp);
+#endif
 		return false;
 	}
 
+#ifdef HAVE_PHYSFS
+	if (! PHYSFS_seek(wad2_R_fp, wad2_R_header.dir_start))
+#else
 	if (fseek(wad2_R_fp, wad2_R_header.dir_start, SEEK_SET) != 0)
+#endif
 	{
 		LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x%08x)\n", wad2_R_header.dir_start);
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(wad2_R_fp);
+#else
 		fclose(wad2_R_fp);
+#endif
 		return false;
 	}
 
@@ -450,18 +482,18 @@ bool WAD2_OpenRead(const char *filename)
 	{
 		raw_wad2_lump_t *L = &wad2_R_dir[i];
 
+#ifdef HAVE_PHYSFS
+		size_t res = PHYSFS_read(wad2_R_fp, L, sizeof(raw_wad2_lump_t), 1);
+		if (res != 1)
+#else
 		int res = fread(L, sizeof(raw_wad2_lump_t), 1, wad2_R_fp);
-
 		if (res == EOF || res != 1 || ferror(wad2_R_fp))
+#endif
 		{
 			if (i == 0)
 			{
 				LogPrintf("WAD2_OpenRead: could not read any dir-entries!\n");
-
-				delete[] wad2_R_dir;
-				wad2_R_dir = NULL;
-
-				fclose(wad2_R_fp);
+				WAD2_CloseRead();
 				return false;
 			}
 
@@ -488,7 +520,11 @@ bool WAD2_OpenRead(const char *filename)
 
 void WAD2_CloseRead(void)
 {
+#ifdef HAVE_PHYSFS
+	PHYSFS_close(wad2_R_fp);
+#else
 	fclose(wad2_R_fp);
+#endif
 
 	LogPrintf("Closed WAD2 file\n");
 
@@ -552,10 +588,17 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
 	if ((u32_t)offset + (u32_t)length > L->length)  // EOF
 		return false;
 
+#ifdef HAVE_PHYSFS
+	if (! PHYSFS_seek(wad2_R_fp, L->start + offset))
+		return false;
+
+	size_t res = PHYSFS_read(wad2_R_fp, buffer, length, 1);
+#else
 	if (fseek(wad2_R_fp, L->start + offset, SEEK_SET) != 0)
 		return false;
 
 	int res = fread(buffer, length, 1, wad2_R_fp);
+#endif
 
 	return (res == 1);
 }
