@@ -49,7 +49,11 @@ DOOM.THEMES =
       SP_ROCK1 =  5
     }
   }
+}
 
+
+DOOM.ROOM_THEMES =
+{
 
 -----  GENERIC STUFF  ------------------------------
 
