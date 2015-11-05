@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -23,6 +23,10 @@
 
 #include <list>
 
+#ifdef HAVE_PHYSFS
+#include "physfs.h"
+#endif
+
 #include "lib_util.h"
 #include "lib_grp.h"
 
@@ -34,7 +38,11 @@
 //  GRP READING
 //------------------------------------------------------------------------
 
+#ifdef HAVE_PHYSFS
+static PHYSFS_File *grp_R_fp;
+#else
 static FILE *grp_R_fp;
+#endif
 
 static raw_grp_header_t  grp_R_header;
 static raw_grp_lump_t * grp_R_dir;
@@ -50,7 +58,11 @@ static const byte grp_magic_data[12] =
 
 bool GRP_OpenRead(const char *filename)
 {
+#ifdef HAVE_PHYSFS
+	grp_R_fp = PHYSFS_openRead(filename);
+#else
 	grp_R_fp = fopen(filename, "rb");
+#endif
 
 	if (! grp_R_fp)
 	{
@@ -60,17 +72,29 @@ bool GRP_OpenRead(const char *filename)
 
 	LogPrintf("Opened GRP file: %s\n", filename);
 
+#ifdef HAVE_PHYSFS
+	if (PHYSFS_read(grp_R_fp, &grp_R_header, sizeof(grp_R_header), 1) != 1)
+#else
 	if (fread(&grp_R_header, sizeof(grp_R_header), 1, grp_R_fp) != 1)
+#endif
 	{
 		LogPrintf("GRP_OpenRead: failed reading header\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(grp_R_fp);
+#else
 		fclose(grp_R_fp);
+#endif
 		return false;
 	}
 
 	if (grp_R_header.magic[0] != 'K')
 	{
 		LogPrintf("GRP_OpenRead: not a GRP file!\n");
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(grp_R_fp);
+#else
 		fclose(grp_R_fp);
+#endif
 		return false;
 	}
 
@@ -81,7 +105,11 @@ bool GRP_OpenRead(const char *filename)
 	if (grp_R_header.num_lumps >= 5000)  // sanity check
 	{
 		LogPrintf("GRP_OpenRead: bad header (%d entries?)\n", grp_R_header.num_lumps);
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(grp_R_fp);
+#else
 		fclose(grp_R_fp);
+#endif
 		return false;
 	}
 
@@ -95,18 +123,18 @@ bool GRP_OpenRead(const char *filename)
 	{
 		raw_grp_lump_t *L = &grp_R_dir[i];
 
+#ifdef HAVE_PHYSFS
+		size_t res = PHYSFS_read(grp_R_fp, L, sizeof(raw_grp_lump_t), 1);
+		if (res != 1)
+#else
 		int res = fread(L, sizeof(raw_grp_lump_t), 1, grp_R_fp);
-
 		if (res == EOF || res != 1 || ferror(grp_R_fp))
+#endif
 		{
 			if (i == 0)
 			{
 				LogPrintf("GRP_OpenRead: could not read any dir-entries!\n");
-
-				delete[] grp_R_dir;
-				grp_R_dir = NULL;
-
-				fclose(grp_R_fp);
+				GRP_CloseRead();
 				return false;
 			}
 
@@ -131,7 +159,11 @@ bool GRP_OpenRead(const char *filename)
 
 void GRP_CloseRead(void)
 {
+#ifdef HAVE_PHYSFS
+	PHYSFS_close(grp_R_fp);
+#else
 	fclose(grp_R_fp);
+#endif
 
 	LogPrintf("Closed GRP file\n");
 
@@ -198,10 +230,19 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer)
 	if ((u32_t)offset + (u32_t)length > grp_R_dir[entry].length)  // EOF
 		return false;
 
+#ifdef HAVE_PHYSFS
+	if (! PHYSFS_seek(grp_R_fp, L_start + offset))
+		return false;
+
+	size_t res = PHYSFS_read(grp_R_fp, buffer, length, 1);
+
+#else
 	if (fseek(grp_R_fp, L_start + offset, SEEK_SET) != 0)
 		return false;
 
 	int res = fread(buffer, length, 1, grp_R_fp);
+#endif
+
 	return (res == 1);
 }
 
