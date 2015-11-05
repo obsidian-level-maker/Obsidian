@@ -215,36 +215,9 @@ ULTDOOM.THEMES =
       SP_ROCK1 =  5
     }
   }
-}
 
 
-ULTDOOM.ROOM_THEMES =
-{
-  -- this field ensures these theme entries REPLACE those of Doom 2.
-  replace_all = true
-
-
-  generic_Stairwell =
-  {
-    kind = "stairwell"
-
-    walls =
-    {
-      BROWN1  = 50
-      GRAY1   = 50
-      STARGR1 = 50
-      METAL1  = 20
-    }
-
-    floors =
-    {
-      FLAT1 = 30
-      FLOOR7_1 = 50
-    }
-  }
-
-
------- EPISODE 1 : Tech Bases ----------------------
+  ---- Episode 1 ----
 
   tech =
   {
@@ -281,6 +254,180 @@ ULTDOOM.ROOM_THEMES =
     ---!!!  TEMPORARY V3 CRUD  !!!---
   }
 
+
+  ---- Episode 2 ----
+
+  -- Deimos theme by Chris Pisarczyk
+
+  deimos =
+  {
+    liquids =
+    {
+      nukage = 60
+      blood = 20
+      water = 10
+    }
+
+    -- Best facades would be STONE/2/3, BROVINE/2, BROWN1 and maybe a few others as I have not seen many
+    -- other textures on the episode 2 exterior.
+    facades =
+    {
+      STONE2 = 40
+      STONE3 = 60
+      BROVINE = 30
+      BROVINE2 = 25
+      BROWN1 = 50
+      BROWNGRN = 20
+    }
+
+    base_skin =
+    {
+      big_door = "BIGDOOR2"
+    }
+
+    style_list =
+    {
+      naturals = { none=40, few=70, some=20, heaps=2 }
+    }
+
+    techy_doors = true
+  }
+
+
+  ---- Episode 3 ----
+
+  hell =
+  {
+    --  Water is seen in a few locations in episode 3 -Chris
+
+    liquids =
+    {
+      lava = 30
+      blood = 90
+      nukage = 5
+      water = 10
+    }
+
+    keys =
+    {
+      ks_red = 50
+      ks_blue = 50
+      ks_yellow = 50
+    }
+
+    facades =
+    {
+      STONE2 = 10
+      STONE3 = 15
+      WOOD1 = 50
+      GSTONE1 = 45
+      MARBLE1 = 30
+      BROWN1 = 5
+      BROWNGRN = 5
+      WOOD5 = 25
+      SP_HOT1 = 10
+      SKINMET1 = 10
+      SKINMET2 = 10
+      SKINTEK1 = 10
+    }
+
+    base_skin =
+    {
+    }
+
+    monster_prefs =
+    {
+      zombie  = 0.3
+      shooter = 0.6
+      skull   = 2.0
+    }
+
+    archy_arches = true
+  }
+
+
+  ---- Episode 4 ----
+
+  -- Thy Flesh Consumed by Chris Pisarczyk
+  -- Basically a modified version of "hell" to match id's E4 better
+
+  flesh =
+  {
+    liquids =
+    {
+      lava = 30
+      blood = 50
+      nukage = 10
+      water = 20
+    }
+
+    keys =
+    {
+      ks_red = 50
+      ks_blue = 50
+      ks_yellow = 50
+    }
+
+    facades =
+    {
+      STONE2 = 20
+      STONE3 = 15
+      WOOD1 = 50
+      GSTONE1 = 30
+      MARBLE1 = 20
+      BROWN1 = 10
+      BROWNGRN = 10
+      WOOD5 = 40
+      SP_HOT1 = 5
+      SKINMET1 = 10
+      SKINMET2 = 10
+    }
+
+    base_skin =
+    {
+    }
+
+    monster_prefs =
+    {
+      zombie = 0.6
+      shooter = 0.8
+      skull = 1.2
+      demon = 1.5
+    }
+
+    archy_arches = true
+
+  }
+}
+
+
+ULTDOOM.ROOM_THEMES =
+{
+  -- this field ensures these theme entries REPLACE those of Doom 2.
+  replace_all = true
+
+
+  generic_Stairwell =
+  {
+    kind = "stairwell"
+
+    walls =
+    {
+      BROWN1  = 50
+      GRAY1   = 50
+      STARGR1 = 50
+      METAL1  = 20
+    }
+
+    floors =
+    {
+      FLAT1 = 30
+      FLOOR7_1 = 50
+    }
+  }
+
+
+------ EPISODE 1 : Tech Bases ----------------------
 
   tech_Room =
   {
@@ -562,43 +709,6 @@ ULTDOOM.ROOM_THEMES =
 
 
 ------ EPISODE 2 ------------------------------
-
-  -- Deimos theme by Chris Pisarczyk
-
-  deimos =
-  {
-    liquids =
-    {
-      nukage = 60
-      blood = 20
-      water = 10
-    }
-
-    -- Best facades would be STONE/2/3, BROVINE/2, BROWN1 and maybe a few others as I have not seen many
-    -- other textures on the episode 2 exterior.
-    facades =
-    {
-      STONE2 = 40
-      STONE3 = 60
-      BROVINE = 30
-      BROVINE2 = 25
-      BROWN1 = 50
-      BROWNGRN = 20
-    }
-
-    base_skin =
-    {
-      big_door = "BIGDOOR2"
-    }
-
-    style_list =
-    {
-      naturals = { none=40, few=70, some=20, heaps=2 }
-    }
-
-    techy_doors = true
-  }
-
 
   deimos_Room =
   {
@@ -919,56 +1029,6 @@ ULTDOOM.ROOM_THEMES =
 
 ----- EPISODE 3 : Hell ---------------------------
 
-  hell =
-  {
-    --  Water is seen in a few locations in episode 3 -Chris
-
-    liquids =
-    {
-      lava = 30
-      blood = 90
-      nukage = 5
-      water = 10
-    }
-
-    keys =
-    {
-      ks_red = 50
-      ks_blue = 50
-      ks_yellow = 50
-    }
-
-    facades =
-    {
-      STONE2 = 10
-      STONE3 = 15
-      WOOD1 = 50
-      GSTONE1 = 45
-      MARBLE1 = 30
-      BROWN1 = 5
-      BROWNGRN = 5
-      WOOD5 = 25
-      SP_HOT1 = 10
-      SKINMET1 = 10
-      SKINMET2 = 10
-      SKINTEK1 = 10
-    }
-
-    base_skin =
-    {
-    }
-
-    monster_prefs =
-    {
-      zombie  = 0.3
-      shooter = 0.6
-      skull   = 2.0
-    }
-
-    archy_arches = true
-  }
-
-
   hell_Marble =
   {
     kind = "building"
@@ -1274,58 +1334,6 @@ ULTDOOM.ROOM_THEMES =
 
 
 ----- EPISODE 4 -------------------------------
-
-  -- Thy Flesh Consumed by Chris Pisarczyk
-  -- Basically a modified version of doom_hell1 to match id's E4 better
-
-  flesh =
-  {
-    liquids =
-    {
-      lava = 30
-      blood = 50
-      nukage = 10
-      water = 20
-    }
-
-    keys =
-    {
-      ks_red = 50
-      ks_blue = 50
-      ks_yellow = 50
-    }
-
-    facades =
-    {
-      STONE2 = 20
-      STONE3 = 15
-      WOOD1 = 50
-      GSTONE1 = 30
-      MARBLE1 = 20
-      BROWN1 = 10
-      BROWNGRN = 10
-      WOOD5 = 40
-      SP_HOT1 = 5
-      SKINMET1 = 10
-      SKINMET2 = 10
-    }
-
-    base_skin =
-    {
-    }
-
-    monster_prefs =
-    {
-      zombie = 0.6
-      shooter = 0.8
-      skull = 1.2
-      demon = 1.5
-    }
-
-    archy_arches = true
-
-  }
-
 
   flesh_Room =
   {
