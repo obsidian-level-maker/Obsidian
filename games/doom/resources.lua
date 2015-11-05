@@ -182,17 +182,19 @@ end
 function DOOM.all_done()
   DOOM.make_cool_gfx()
 
-  gui.wad_merge_sections("data/doom_falls.wad")
-  gui.wad_merge_sections("data/metal_step.wad")
-  gui.wad_merge_sections("data/vine_dude.wad")
-  gui.wad_merge_sections("data/logos.wad")
+  local dir = "games/doom/data/"
+
+  gui.wad_merge_sections(dir .. "doom_falls.wad")
+  gui.wad_merge_sections(dir .. "metal_step.wad")
+  gui.wad_merge_sections(dir .. "vine_dude.wad")
+  gui.wad_merge_sections(dir .. "logos.wad")
 
   if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
-    gui.wad_merge_sections("data/short_bars.wad")
+    gui.wad_merge_sections(dir .. "short_bars.wad")
   end
 
   if OB_CONFIG.length == "game" then
-    gui.wad_merge_sections("data/freedoom_face.wad")
+    gui.wad_merge_sections(dir .. "freedoom_face.wad")
   end
 end
 
