@@ -59,33 +59,33 @@ DOOM.PREBUILT_LEVELS =
 {
   MAP07 =
   {
-    { prob=50, file="doom2_boss/simple1.wad", map="MAP07" }
-    { prob=50, file="doom2_boss/simple2.wad", map="MAP07" }
-    { prob=50, file="doom2_boss/simple3.wad", map="MAP07" }
-    { prob=50, file="doom2_boss/simple4.wad", map="MAP07" }
+    { prob=50, file="games/doom/data/boss2/simple1.wad", map="MAP07" }
+    { prob=50, file="games/doom/data/boss2/simple2.wad", map="MAP07" }
+    { prob=50, file="games/doom/data/boss2/simple3.wad", map="MAP07" }
+    { prob=50, file="games/doom/data/boss2/simple4.wad", map="MAP07" }
   }
 
   MAP30 =
   {
-    { prob=50, file="doom2_boss/icon1.wad", map="MAP30" }
-    { prob=50, file="doom2_boss/icon2.wad", map="MAP30" }
-    { prob=50, file="doom2_boss/icon3.wad", map="MAP01" }
-    { prob=50, file="doom2_boss/icon3.wad", map="MAP02" }
-    { prob=50, file="doom2_boss/icon3.wad", map="MAP03" }
+    { prob=50, file="games/doom/data/boss2/icon1.wad", map="MAP30" }
+    { prob=50, file="games/doom/data/boss2/icon2.wad", map="MAP30" }
+    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP01" }
+    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP02" }
+    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP03" }
   }
 
   GOTCHA =
   {
-    { prob=50, file="doom2_boss/gotcha1.wad", map="MAP01" }
-    { prob=50, file="doom2_boss/gotcha2.wad", map="MAP01" }
-    { prob=40, file="doom2_boss/gotcha3.wad", map="MAP01" }
-    { prob=20, file="doom2_boss/gotcha4.wad", map="MAP01" }
+    { prob=50, file="games/doom/data/boss2/gotcha1.wad", map="MAP01" }
+    { prob=50, file="games/doom/data/boss2/gotcha2.wad", map="MAP01" }
+    { prob=40, file="games/doom/data/boss2/gotcha3.wad", map="MAP01" }
+    { prob=20, file="games/doom/data/boss2/gotcha4.wad", map="MAP01" }
   }
 
   GALLOW =
   {
-    { prob=50, file="doom2_boss/gallow1.wad", map="MAP01" }
-    { prob=25, file="doom2_boss/gallow2.wad", map="MAP01" }
+    { prob=50, file="games/doom/data/boss2/gallow1.wad", map="MAP01" }
+    { prob=25, file="games/doom/data/boss2/gallow2.wad", map="MAP01" }
   }
 }
 

@@ -15,10 +15,10 @@
 --  NOTE:
 --    Doom 1 and Ultimate Doom are treated here somewhat like a
 --    mod of Doom 2.  Hence the MONSTERS table here removes all
---    the Doom 2 monsters (similarly for 'super' weapon etc....)
+--    the Doom 2 monsters and weapons (etc...)
 --
 --    This is not ideal, but seems better than the previous way
---    of mixing the two games in each file (DOOM1 vs DOOM2 tables)
+--    of mixing the two games in one file (DOOM1 vs DOOM2 tables)
 --    which was probably very confusing to most people.
 --
 
@@ -1623,34 +1623,34 @@ ULTDOOM.PREBUILT_LEVELS =
 {
   E1M8 =
   {
-    { prob=50,  file="doom1_boss/anomaly1.wad", map="E1M8" }
-    { prob=50,  file="doom1_boss/anomaly2.wad", map="E1M8" }
-    { prob=100, file="doom1_boss/anomaly3.wad", map="E1M8" }
-    { prob=50,  file="doom1_boss/ult_anomaly.wad",  map="E1M8" }
-    { prob=100, file="doom1_boss/ult_anomaly2.wad", map="E1M8" }
+    { prob=50,  file="games/doom/data/boss1/anomaly1.wad", map="E1M8" }
+    { prob=50,  file="games/doom/data/boss1/anomaly2.wad", map="E1M8" }
+    { prob=100, file="games/doom/data/boss1/anomaly3.wad", map="E1M8" }
+    { prob=50,  file="games/doom/data/boss1/ult_anomaly.wad",  map="E1M8" }
+    { prob=100, file="games/doom/data/boss1/ult_anomaly2.wad", map="E1M8" }
   }
 
   E2M8 =
   {
-    { prob=40,  file="doom1_boss/tower1.wad", map="E2M8" }
-    { prob=60,  file="doom1_boss/tower2.wad", map="E2M8" }
-    { prob=100, file="doom1_boss/ult_tower.wad", map="E2M8" }
+    { prob=40,  file="games/doom/data/boss1/tower1.wad", map="E2M8" }
+    { prob=60,  file="games/doom/data/boss1/tower2.wad", map="E2M8" }
+    { prob=100, file="games/doom/data/boss1/ult_tower.wad", map="E2M8" }
   }
 
   E3M8 =
   {
-    { prob=50,  file="doom1_boss/dis1.wad", map="E3M8" }
-    { prob=100, file="doom1_boss/ult_dis.wad", map="E3M8" }
+    { prob=50,  file="games/doom/data/boss1/dis1.wad", map="E3M8" }
+    { prob=100, file="games/doom/data/boss1/ult_dis.wad", map="E3M8" }
   }
 
   E4M6 =
   {
-    { prob=50, file="doom1_boss/tower1.wad", map="E2M8" }
+    { prob=50, file="games/doom/data/boss1/tower1.wad", map="E2M8" }
   }
 
   E4M8 =
   {
-    { prob=50, file="doom1_boss/dis1.wad", map="E3M8" }
+    { prob=50, file="games/doom/data/boss1/dis1.wad", map="E3M8" }
   }
 }
 
