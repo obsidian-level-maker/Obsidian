@@ -936,17 +936,11 @@ int DM_wad_transfer_lump(lua_State *L)
 	const char *src_lump  = luaL_checkstring(L, 2);
 	const char *dest_lump = luaL_checkstring(L, 3);
 
-	// TODO: support PK3
-
 	if (! MatchExtension(pkg_name, "wad"))
 		return luaL_error(L, "wad_transfer_lump: file extension is not WAD: %s\n", pkg_name);
 
-	const char *full_name = FileFindInPath(data_path, pkg_name);
-	if (! full_name)
-		return luaL_error(L, "wad_transfer_lump: missing WAD file: %s", pkg_name);
-
-	if (! WAD_OpenRead(full_name))
-		return luaL_error(L, "wad_transfer_lump: bad WAD file: %s", full_name);
+	if (! WAD_OpenRead(pkg_name))
+		return luaL_error(L, "wad_transfer_lump: bad WAD file: %s", pkg_name);
 
 	int entry = WAD_FindEntry(src_lump);
 	if (entry < 0)
@@ -958,8 +952,6 @@ int DM_wad_transfer_lump(lua_State *L)
 	TransferWADtoWAD(entry, dest_lump);
 
 	WAD_CloseRead();
-
-	StringFree(full_name);
 
 	return 0;
 }
@@ -1131,8 +1123,8 @@ int DM_wad_read_text_lump(lua_State *L)
 	// to be text, and a table is returned containing a string for each line.
 	// Certain characters (esp. zero bytes) will be silently removed.
 	//
-	// If the lump does not exist, nil is returned.
-	// If the _file_ does not exist, An error is raised.
+	// If the lump does not exist, NIL is returned.
+	// If the _file_ does not exist, an error is raised.
 
 	const char *pkg_name = luaL_checkstring(L, 1);
 	const char *src_lump = luaL_checkstring(L, 2);
@@ -1140,12 +1132,8 @@ int DM_wad_read_text_lump(lua_State *L)
 	if (! MatchExtension(pkg_name, "wad"))
 		return luaL_error(L, "wad_read_text_lump: file extension is not WAD: %s\n", pkg_name);
 
-	const char *full_name = FileFindInPath(data_path, pkg_name);
-	if (! full_name)
-		return luaL_error(L, "wad_read_text_lump: missing WAD file: %s", pkg_name);
-
-	if (! WAD_OpenRead(full_name))
-		return luaL_error(L, "wad_read_text_lump: bad WAD file: %s", full_name);
+	if (! WAD_OpenRead(pkg_name))
+		return luaL_error(L, "wad_read_text_lump: bad WAD file: %s", pkg_name);
 
 	int entry = WAD_FindEntry(src_lump);
 	if (entry < 0)
@@ -1159,8 +1147,6 @@ int DM_wad_read_text_lump(lua_State *L)
 	qLump_c *lump = DoLoadLump(entry);
 
 	WAD_CloseRead();
-
-	StringFree(full_name);
 
 	// create the table
 	lua_newtable(L);
