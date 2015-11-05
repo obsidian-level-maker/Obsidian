@@ -978,12 +978,8 @@ int DM_wad_transfer_map(lua_State *L)
 	if (! MatchExtension(pkg_name, "wad"))
 		return luaL_error(L, "wad_transfer_map: file extension is not WAD: %s\n", pkg_name);
 
-	const char *full_name = FileFindInPath(data_path, pkg_name);
-	if (! full_name)
-		return luaL_error(L, "wad_transfer_map: missing WAD file: %s", pkg_name);
-
-	if (! WAD_OpenRead(full_name))
-		return luaL_error(L, "wad_transfer_map: bad WAD file: %s", full_name);
+	if (! WAD_OpenRead(pkg_name))
+		return luaL_error(L, "wad_transfer_map: bad WAD file: %s", pkg_name);
 
 	int entry = WAD_FindEntry(src_map);
 	if (entry < 0)
@@ -1011,8 +1007,6 @@ int DM_wad_transfer_map(lua_State *L)
 	}
 
 	WAD_CloseRead();
-
-	StringFree(full_name);
 
 	return 0;
 }
