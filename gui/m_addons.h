@@ -23,6 +23,11 @@
 
 void VFS_InitAddons(const char *argv0);
 
+// util functions
+bool   VFS_CopyFile(const char *src_name, const char *dest_name);
+byte * VFS_LoadFile(const char *filename, int *length);
+void   VFS_FreeFile(const byte *mem);
+
 #endif /* __OBLIGE_ADDONS_H__ */
 
 //--- editor settings ---

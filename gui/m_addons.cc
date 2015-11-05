@@ -83,6 +83,51 @@ void VFS_InitAddons(const char *argv0)
 
 //----------------------------------------------------------------------
 
+//
+// this is useful to "extract" something out of virtual FS to the real
+// file system so we can use normal stdio file operations on it
+// [ especially a _library_ that uses stdio.h ]
+// 
+bool VFS_CopyFile(const char *src_name, const char *dest_name)
+{
+	char buffer[1024];
+
+	PHYSFS_file *src = PHYSFS_openRead(src_name);
+	if (! src)
+		return false;
+
+	FILE *dest = fopen(dest_name, "wb");
+	if (! dest)
+	{
+		PHYSFS_close(src);
+		return false;
+	}
+
+	bool was_OK = true;
+
+	while (was_OK)
+	{
+		int rlen = (int)PHYSFS_read(src, buffer, 1, sizeof(buffer));
+		if (rlen < 0)
+			was_OK = false;
+
+		if (rlen <= 0)
+			break;
+
+		int wlen = fwrite(buffer, 1, rlen, dest);
+		if (wlen < rlen || ferror(dest))
+			was_OK = false;
+	}
+
+	fclose(dest);
+	PHYSFS_close(src);
+
+	return was_OK;
+}
+
+
+//----------------------------------------------------------------------
+
 class UI_Addon : public Fl_Group
 {
 public:
