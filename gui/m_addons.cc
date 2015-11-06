@@ -126,6 +126,50 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name)
 }
 
 
+byte * VFS_LoadFile(const char *filename, int *length)
+{
+	*length = 0;
+
+	PHYSFS_File *fp = PHYSFS_openRead(filename);
+
+	if (! fp)
+		return NULL;
+
+	*length = (int)PHYSFS_fileLength(fp);
+
+	if (*length < 0)
+	{
+		PHYSFS_close(fp);
+		return NULL;
+	}
+
+	byte *data = new byte[*length + 1];
+
+	// ensure buffer is NUL-terminated
+	data[*length] = 0;
+
+	if (PHYSFS_read(fp, data, *length, 1) != 1)
+	{
+		VFS_FreeFile(data);
+		PHYSFS_close(fp);
+		return NULL;
+	}
+
+	PHYSFS_close(fp);
+
+	return data;
+}
+
+
+void VFS_FreeFile(const byte *mem)
+{
+	if (mem)
+	{
+		delete[] mem;
+	}
+}
+
+
 //----------------------------------------------------------------------
 
 class UI_Addon : public Fl_Group
