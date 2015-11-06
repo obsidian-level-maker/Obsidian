@@ -61,6 +61,7 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include "physfs.h"
 #include "ajpoly.h"
 
 #include "lib_file.h"
@@ -127,7 +128,7 @@ int wadfab_load(lua_State *L)
 	const char *filename = luaL_checkstring(L, 1);
 	const char *map      = luaL_checkstring(L, 2);
 
-	if (! FileExists(filename))
+	if (! PHYSFS_exists(filename))
 		return luaL_error(L, "wadfab_load: no such file: %s", filename);
 
 	if (! ajpoly::LoadWAD(filename))
