@@ -297,7 +297,7 @@ DOOM.ROOM_THEMES =
 
 -----  GENERIC STUFF  ------------------------------
 
-  generic_Stairwell =
+  any_Stairwell =
   {
     kind = "stairwell"
 

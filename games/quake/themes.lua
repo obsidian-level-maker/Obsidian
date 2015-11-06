@@ -83,7 +83,7 @@ QUAKE.THEMES =
 
 QUAKE.ROOM_THEMES =
 {
-  generic_Stairwell =
+  any_Stairwell =
   {
     kind = "stairwell"
 
@@ -99,7 +99,7 @@ QUAKE.ROOM_THEMES =
   }
 
 
-  generic_Hallway =
+  any_Hallway =
   {
     kind = "hallway"
 

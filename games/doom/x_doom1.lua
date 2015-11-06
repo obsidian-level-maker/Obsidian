@@ -407,7 +407,7 @@ ULTDOOM.ROOM_THEMES =
   replace_all = true
 
 
-  generic_Stairwell =
+  any_Stairwell =
   {
     kind = "stairwell"
 

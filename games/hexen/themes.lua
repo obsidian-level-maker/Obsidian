@@ -40,7 +40,7 @@ HEXEN.THEMES =
   }
 
 
-  generic_Stairwell =
+  any_Stairwell =
   {
     kind = "stairwell"
 

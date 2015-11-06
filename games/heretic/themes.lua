@@ -73,7 +73,7 @@ HERETIC.THEMES =
 
 HERETIC.ROOM_THEMES =
 {
-  generic_Stairwell =
+  any_Stairwell =
   {
     kind = "stairwell"
 

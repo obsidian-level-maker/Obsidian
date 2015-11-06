@@ -2348,7 +2348,7 @@ function Quest_choose_themes()
   --
 
   local function match_level_theme(name)
-    if string.match(name, "^generic") or
+    if string.match(name, "^any_") or
        string.match(name, "^" .. LEVEL.theme_name .. "_")
     then
       return true
