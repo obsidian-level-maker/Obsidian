@@ -17,9 +17,6 @@ WORK IN PROGRESS
   [ otherwise closets can split areas into two separate parts ]
 
 
-Q/  bring back ROOM_THEMES ??  (place after normal 'THEMES' table)
-A/  yes
-
 
 Edge Stuff
 ----------

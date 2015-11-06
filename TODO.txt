@@ -33,6 +33,7 @@ ______________________________________________________________________
 +  Heretic support
 
 +  Quake support
+   -  load textures directly from the PAK files
    -  bring back lua-based prefabs
    -  incorporate id method to build collision hulls
    -  support slopes
