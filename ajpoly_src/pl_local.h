@@ -29,6 +29,9 @@
 
 #include "ajpoly.h"
 
+#define HAVE_PHYSFS  1
+#include "physfs.h"
+
 namespace ajpoly
 {
 

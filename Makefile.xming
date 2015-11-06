@@ -180,7 +180,7 @@ AJPOLY_OBJS= \
 	$(OBJ_DIR)/ajpoly/pl_util.o  \
 	$(OBJ_DIR)/ajpoly/pl_wad.o
 
-AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall
+AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
 
 $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
 	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
