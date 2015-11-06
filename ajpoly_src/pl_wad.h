@@ -56,7 +56,11 @@ public:
 class wad_c
 {
 private:
+#ifdef HAVE_PHYSFS
+	PHYSFS_File *fp;
+#else
 	FILE *fp;
+#endif
 
 	// directory entries
 	std::vector<lump_c *> lumps;

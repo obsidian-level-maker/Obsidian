@@ -58,7 +58,13 @@ int CheckLevelLump(const char *name)
 wad_c::~wad_c()
 {
 	if (fp)
+	{
+#ifdef HAVE_PHYSFS
+		PHYSFS_close(fp);
+#else
 		fclose(fp);
+#endif
+	}
 
 	FreeData();
 
@@ -95,13 +101,21 @@ bool wad_c::ReadDirEntry()
 {
 	raw_wad_entry_t entry;
 
+#ifdef HAVE_PHYSFS
+	int len = (int)PHYSFS_read(fp, &entry, sizeof(entry), 1);
+	if (len != 1)
+	{
+		SetErrorMsg("Trouble reading wad directory --> %s", PHYSFS_getLastError());
+		return false;
+	}
+#else
 	size_t len = fread(&entry, sizeof(entry), 1, fp);
-
 	if (len != 1)
 	{
 		SetErrorMsg("Trouble reading wad directory --> %s", strerror(errno));
 		return false;
 	}
+#endif
 
 	int start  = LE_U32(entry.start);
 	int length = LE_U32(entry.length);
@@ -127,13 +141,21 @@ bool wad_c::ReadDirectory()
 {
 	raw_wad_header_t header;
 
+#ifdef HAVE_PHYSFS
+	int len = (int)PHYSFS_read(fp, &header, sizeof(header), 1);
+	if (len != 1)
+	{
+		SetErrorMsg("Error reading wad header --> %s", PHYSFS_getLastError());
+		return false;
+	}
+#else
 	size_t len = fread(&header, sizeof(header), 1, fp);
-
 	if (len != 1)
 	{
 		SetErrorMsg("Error reading wad header --> %s", strerror(errno));
 		return false;
 	}
+#endif
 
 	if (! CheckMagic(header.type))
 	{
@@ -146,7 +168,11 @@ bool wad_c::ReadDirectory()
 
 	Appl_Printf("Reading %d dir entries at 0x%X\n", num_entries, dir_start);
 
+#ifdef HAVE_PHYSFS
+	PHYSFS_seek(fp, dir_start);
+#else
 	fseek(fp, dir_start, SEEK_SET);
+#endif
 
 	for (int i = 0 ; i < num_entries ; i++)
 	{
@@ -215,6 +241,15 @@ void wad_c::DetermineLevels()
 
 wad_c * wad_c::Open(const char *filename)
 {
+#ifdef HAVE_PHYSFS
+	PHYSFS_File *in_file = PHYSFS_openRead(filename);
+
+	if (! in_file)
+	{
+		SetErrorMsg("Cannot open WAD file: %s --> %s", filename, PHYSFS_getLastError());
+		return NULL;
+	}
+#else
 	FILE *in_file = fopen(filename, "rb");
 
 	if (! in_file)
@@ -222,6 +257,7 @@ wad_c * wad_c::Open(const char *filename)
 		SetErrorMsg("Cannot open WAD file: %s --> %s", filename, strerror(errno));
 		return NULL;
 	}
+#endif
 
 	Appl_Printf("Opened WAD file : %s\n", filename); 
 
@@ -299,15 +335,25 @@ byte * wad_c::ReadLump(const char *name, int *length, int level)
 
 	if (L->length > 0)
 	{
+#ifdef HAVE_PHYSFS
+		PHYSFS_seek(fp, L->start);
+
+		int len = (int)PHYSFS_read(fp, data, L->length, 1);
+		if (len != 1)
+		{
+			SetErrorMsg("Trouble reading lump '%s' --> %s", name, PHYSFS_getLastError());
+			return NULL;
+		}
+#else
 		fseek(fp, L->start, SEEK_SET);
 
 		size_t len = fread(data, L->length, 1, fp);
-
 		if (len != 1)
 		{
 			SetErrorMsg("Trouble reading lump '%s' --> %s", name, strerror(errno));
 			return NULL;
 		}
+#endif
 	}
 
 	return data;
