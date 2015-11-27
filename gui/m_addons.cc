@@ -154,7 +154,13 @@ void VFS_OptWrite(FILE *fp)
 {
 	fprintf(fp, "---- Enabled Addons ----\n\n");
 
-	// TODO
+	for (unsigned int i = 0 ; i < all_addons.size() ; i++)
+	{
+		const addon_info_t * info = &all_addons[i];
+
+		if (info->enabled)
+			fprintf(fp, "addon = %s\n", info->name);
+	}
 }
 
 
