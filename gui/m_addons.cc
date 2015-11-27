@@ -533,7 +533,7 @@ void UI_AddonsWin::PositionAll()
 
 void UI_AddonsWin::InsertAddon(const addon_info_t *info)
 {
-	UI_Addon *addon = new UI_Addon(mx, my, mw, kf_h(34), info->name, info->name, NULL);
+	UI_Addon *addon = new UI_Addon(mx, my, mw - 4, kf_h(34), info->name, info->name, NULL);
 
 	pack->add(addon);
 
