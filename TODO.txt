@@ -59,10 +59,9 @@ ______________________________________________________________________
 
 +  have a "slow pace weapons" extra setting (idea by flyingdeath)
 
--  grower : unused (or failed hall) sprouts can be good closet spots
++  get stairwells working again
 
--  grower : remove all "fluff" stuff, use different way to create
-   more organic room shapes.
+-  grower : unused (or failed hall) sprouts can be good closet spots
 
 -  sky generator : better checking of themes (esp. w/ control module)
 
@@ -96,7 +95,6 @@ IDEA: have a single thing number for "coop player"
 -  CTF : start with a tile designed for CTF mode, placed in middle of map,
          and when adding a room/hall then also add its sister room
          [ if sister fails, kill the brother ]
-
 
 
 Scenic Borders
@@ -166,6 +164,9 @@ Various:
 -  Courtyard floor should be > Landscape floor.
 
 +  weapon palettes : not varied enough
+
+-  use separated in/out teleporters in very large rooms
+   (especially in Quake maps)
 
 
 Secrets....
@@ -267,65 +268,23 @@ CTF and DM
   V6 STUFF
 ----------------------------------------------
 
-
 +  fix lighting with 3D floors
 
-+  a secret exit may not be possible due to reserved room
-   becoming surrounded by scenic rooms (from connection logic).
-   
-   Need to review/rework connection logic.
-
-+  improve connection logic out of cave rooms
-   (primary criterion should be distance from other conns)
-
-+  intrusions: like "junking" a side, but connects two other rooms
-   (they are really just a hallway, but merging itself with the
-    neighboring room as much as possible)
-
-+  sky-halls (variation of the above, no?)
-
-+  get stairwells working again, have outdoor version w/ rails
-
-+  scenic rooms which player can fall into should have escape
-
-
--  ability to centre doors (on two seeds)
+???  apply nice items gotten in normal rooms to the HMODEL
 
 -  if room before exit room (a) has no locked doors (b) is not small
    and (c) exit room is small, then put guard monster there.
-
-
--  certain cases in DM_AlignTextures don't work well, especially
-   an upper where a crate straddles the periph (but does not directly
-   overlap any linedefs).
-
--  in 2x2 rooms, place key/switch in middle of room
-   [ monster/item spots are the hard part ]
 
 -  outdoor fences should straddle both rooms
    (but need to handle corners and T junctions)
 
 -  ensure normal doors are usually monster-openable, secret doors not
 
-+  apply nice items gotten in normal rooms to the HMODEL
-
 -  wad-fab: "outside bbox" pieces via sector type #987
 
+-  proper handling of windows with 3D floors
 
--  proper handling of windows (eval each combo of floors)
-
--  proper handling of pictures (decide which floor to use)
-
--  64x64 middle beams for some 3D floors
-   (which disables the corner supports)
-
-
-Fences:
--  support dropping them between rooms  [ honor STYLE ]
-
-
-Border pieces:
--  only 25% chance of corner cage [apply style]
+-  proper handling of pictures with 3D floors
 
 
 Bridges:
@@ -337,7 +296,6 @@ Bridges:
 ----------------------------------------------
   LEVEL STUFF
 ----------------------------------------------
-
 
 -  review Dante's ideas : doc/DANTE.txt
 
@@ -351,9 +309,6 @@ Bridges:
 
 Closets:
 !!  get them working again
-
--  support START_SKY_CLOSET, need to recognise when a closet lies
-   between two outdoor border prefabs.
 
 -  put exclusion zones in front of START and TELEPORTER closets
 
@@ -373,8 +328,6 @@ Prefab system:
 -  x_repeat, y_repeat
 
 +  type of prefab is from the NAME
-
--  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 
 -  do mirroring in prefab space (only really need X)
 
@@ -449,29 +402,6 @@ Caves:
    -  for bridges, ensure ceiling cells are high enough
 
 
-Street Mode:
-!!  get it working again
-
-+  fix bug : if one room surrounds another one, the "streets"
-   between them are isolated from the rest.  Need to make multiple
-   "street" rooms.
-
-+  limit number of locked rooms:
-   (a) if too many rooms, merge some
-   (b) make some rooms be optional (storehouses or weapon)
-   (c) connect some rooms via bridges
-
--  better looking "streets" (via prefabs)
-
--  a raised outdoory room might be cool
-
--   5% of the time  : keep the outer ring
-   35% of the time  : expand all rooms into outer ring
-   rest of the time : expand corner rooms 65%, side rooms 35%
-
--  allow big monsters in the street [c.f. MAP12]
-
-
 Outdoor room IDEA:
   -  begin with whole space as "natural", create "constructed"
      intrusions into that space.
@@ -500,14 +430,14 @@ Outdoor Idioms:
 
 
 Theme System:
--  IDEA: fairly rare "mix in" themes, e.g. Egypt for TNT
++  fairly rare "mix in" themes, e.g. Egypt for TNT
+
++  proper themes for QUAKE
 
 -  IDEA: a 'subs' table -- used to substitute a chosen texture with
    another (randomly picked) one.
 
 -  "Mostly Original" theme
-
-+  proper themes for QUAKE
 
 -  if keys are left over, can use them for non-Zone locks
 
@@ -586,8 +516,6 @@ Intrusions:
 
 
 Facades:
--  would be nice to "smooth" any odd-one-outs
-
 -  ability to ensure both inner/outer are the same
    [perhaps a room_theme setting]
    [or: special keyword in building_walls]
@@ -604,14 +532,6 @@ Quests:
      becomes part of the earlier quest).
 
      [especially when next "room" is a hallway]
-
-
-Planner:
--  review / improve 'emergency' connections
-
-
-Sub-rooms:
--  plus shape : a 2x2 room in each corner
 
 
 Cycles:
@@ -679,9 +599,6 @@ IDEA: "weak texturing" (especially on floors) which will try to
    chunk (say no more than 32 units deep, a prefab).
 
 -  3D stairs
-
--  IDEA: recursive room patterns could say that floor '0' should
-         build walls (windows/fences/etc) into other sub-areas
 
 
 -  double or triple switches: each one raises a 24 unit stair,
@@ -838,15 +755,11 @@ Cancellation:
   DOCUMENTATION / WEB SITE
 ----------------------------------------------
 
-+  manpage for the Debian package
-
-+  Usage page: new section: BATCH MODE
++  Usage page: BATCH MODE section
 
 +  need new screenshots for website
 
--  Usage page: document the 'Options' window
-
--  modding guide: information about creating prefabs
+-  modding guide: page about creating prefabs
 
 -  modding guide : code stuff:
    - Lua
@@ -856,8 +769,6 @@ Cancellation:
 
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
-
-IDEA:  new "RUNNING THE MAPS" section (on Usage page)
 
 
 ----------------------------------------------
@@ -872,6 +783,10 @@ IDEA:  new "RUNNING THE MAPS" section (on Usage page)
 
 -  better starting scenarios (e.g. fix raising_starts)
 
+-  certain cases in DM_AlignTextures don't work well, especially
+   an upper where a crate straddles the periph (but does not directly
+   overlap any linedefs).
+
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
 
@@ -883,15 +798,10 @@ IDEA:  new "RUNNING THE MAPS" section (on Usage page)
 -  support per-map Fog via sourceport features (MAPINFO etc)
 -  support lightning in ZDoom etc (via MAPINFO)
 
--  use separated in/out teleporters in very large rooms
-   (especially in Quake maps)
-
 -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
 
 -  IDEA: generate end-of-episode texts
-
--  IDEA: generate a TITLEPIC
 
 +  Dead/gibbed player corpses sprinkled around on each level (Just
    like Doom episode 1) with the chance of a weapon near their
