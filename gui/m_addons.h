@@ -23,6 +23,7 @@
 
 void VFS_InitAddons(const char *argv0);
 void VFS_ParseCommandLine();
+void VFS_ScanForAddons();
 
 void VFS_OptParse(const char *name);
 void VFS_OptWrite(FILE *fp);

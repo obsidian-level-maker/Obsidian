@@ -790,6 +790,9 @@ int main(int argc, char **argv)
 
 	need_new_seed = true;
 
+	// this not only finds PK3 files, but also activates the ones specified in OPTIONS.txt
+	VFS_ScanForAddons();
+
 //???	Default_Location();
 
 	int main_w, main_h;

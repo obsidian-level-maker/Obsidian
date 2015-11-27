@@ -33,6 +33,21 @@
 #include "m_cookie.h"
 
 
+// need this because the OPTIONS file is loaded *before* the addons
+// folder is scanned for PK3 packages, so remember enabled ones here.
+static std::map<std::string, int> initial_enabled_addons;
+
+typedef struct 
+{
+	const char *name;	// base filename, includes ".pk3" extension
+	
+	bool enabled;
+
+} addon_info_t;
+
+static std::vector<addon_info_t> all_addons;
+
+
 void VFS_AddFolder(const char *name)
 {
 	char *path  = StringPrintf("%s/%s", install_dir, name);
@@ -127,13 +142,41 @@ void VFS_ParseCommandLine()
 
 void VFS_OptParse(const char *name)
 {
-	// TODO
+	// just remember it now
+	if (initial_enabled_addons.find(name) == initial_enabled_addons.end())
+	{
+		initial_enabled_addons[name] = 1;
+	}
 }
+
 
 void VFS_OptWrite(FILE *fp)
 {
-	fprintf(fp, "---- Addons ----\n\n");
+	fprintf(fp, "---- Enabled Addons ----\n\n");
 
+	// TODO
+}
+
+
+void VFS_ScanForAddons()
+{
+	all_addons.clear();
+
+	char *dir_name = StringPrintf("%s/addons", install_dir);
+
+	std::vector<std::string> list;
+
+	int result = ScanDir_MatchingFiles(dir_name, "pk3", list);
+
+	if (result < 0)
+	{
+	}
+	else
+	{
+	//....
+	}
+
+	StringFree(dir_name);
 }
 
 
