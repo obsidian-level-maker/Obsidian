@@ -160,23 +160,45 @@ void VFS_OptWrite(FILE *fp)
 
 void VFS_ScanForAddons()
 {
+	LogPrintf("Scanning for addons....\n");
+
 	all_addons.clear();
 
 	char *dir_name = StringPrintf("%s/addons", install_dir);
 
 	std::vector<std::string> list;
-
 	int result = ScanDir_MatchingFiles(dir_name, "pk3", list);
+
+	StringFree(dir_name);
 
 	if (result < 0)
 	{
-	}
-	else
-	{
-	//....
+		LogPrintf("FAILED -- missing folder??\n\n");
+		return;
 	}
 
-	StringFree(dir_name);
+	if (list.size() == 0)
+	{
+		LogPrintf("  None found\n");
+	}
+
+	for (unsigned int i = 0 ; i < list.size() ; i++)
+	{
+		addon_info_t info;
+
+		info.name = StringDup(list[i].c_str());
+
+		info.enabled = false;
+
+		if (initial_enabled_addons.find(list[i]) != initial_enabled_addons.end())
+			info.enabled = true;
+
+		LogPrintf("  found: %s%s\n", info.name, info.enabled ? " (Enabled)" : "");
+
+		all_addons.push_back(info);
+	}
+
+	LogPrintf("\n");
 }
 
 
