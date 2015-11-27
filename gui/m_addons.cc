@@ -89,22 +89,21 @@ void VFS_MountFile(const char *filename)
 
 void VFS_ParseCommandLine()
 {
-/*
-	int addon_arg = ArgvFind('a', "addon");
-	if (addon_arg >= 0)
+	int arg = ArgvFind('a', "addon");
+	int count = 0;
+
+	if (arg < 0)
+		return;
+
+	arg++;
+
+	for (; arg < arg_count && ! ArgvIsOption(arg) ; arg++, count++)
 	{
-		if (addon_arg+1 >= arg_count || ArgvIsOption(addon_arg+1))
-		{
-			fprintf(stderr, "OBLIGE ERROR: missing filename for --addon\n");
-			exit(9);
-		}
-
-		addon_file = arg_list[addon_arg+1];
-
-		if (StringCaseCmp(addon_file, "none") == 0)
-			addon_file = NULL;
+		VFS_MountFile(arg_list[arg]);
 	}
-*/
+
+	if (! count)
+		Main_FatalError("Missing filename for --addon option\n");
 }
 
 
@@ -322,7 +321,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 ///--		color(BUILD_BG, BUILD_BG);
 
 
-	int pad = kf_w(6);
+//	int pad = kf_w(6);
 
 	int dh = kf_h(60);
 
