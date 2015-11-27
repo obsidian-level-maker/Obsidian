@@ -177,11 +177,6 @@ void VFS_ScanForAddons()
 		return;
 	}
 
-	if (list.size() == 0)
-	{
-		LogPrintf("  None found\n");
-	}
-
 	for (unsigned int i = 0 ; i < list.size() ; i++)
 	{
 		addon_info_t info;
@@ -193,10 +188,22 @@ void VFS_ScanForAddons()
 		if (initial_enabled_addons.find(list[i]) != initial_enabled_addons.end())
 			info.enabled = true;
 
+//DEBUG
+//info.enabled = true;
+
 		LogPrintf("  found: %s%s\n", info.name, info.enabled ? " (Enabled)" : "");
 
 		all_addons.push_back(info);
+
+		// if enabled, install into the VFS
+		if (info.enabled)
+			VFS_AddArchive(info.name, true /* options_file */);
 	}
+
+	if (list.size() == 0)
+		LogPrintf("DONE (none found)\n");
+	else
+		LogPrintf("DONE\n");
 
 	LogPrintf("\n");
 }
