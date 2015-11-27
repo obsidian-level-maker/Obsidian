@@ -406,15 +406,14 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	// non-resizable
 	size_range(W, H, W, H);
 
-	box(FL_NO_BOX);
+	box(FL_FLAT_BOX);
 
-///--	if (! alternate_look)
-///--		color(BUILD_BG, BUILD_BG);
+	color(BUILD_BG, BUILD_BG);
 
 
 //	int pad = kf_w(6);
 
-	int dh = kf_h(60);
+	int dh = kf_h(64);
 
 
 	// area for addons list
@@ -442,34 +441,32 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	pack->labeltype(FL_NORMAL_LABEL);
 	pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
-///--	if (alternate_look)
-///--		pack->labelcolor(FL_DARK1);
-
 	pack->box(FL_FLAT_BOX);
-	pack->color(FL_DARK2);
+	pack->color(WINDOW_BG);
 	pack->resizable(NULL);
 
 
 	//----------------
 
-	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
-	darkish->box(FL_FLAT_BOX);
-	darkish->color(BUILD_BG, BUILD_BG);
+	Fl_Box *sep = new Fl_Box(FL_FLAT_BOX, 0, H-dh, W, 3, "");
+	sep->color(FL_BACKGROUND_COLOR);
 
 
-	// finally add the buttons
+	// finally add the close button
 	int bw = kf_w(60);
 	int bh = kf_h(30);
 	int bx = bw;
-	int by = H - dh/2 - bh/2;
+	int by = H - dh/2 - bh/2 + 2;
 
 	Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, "Close");
 	apply_but->callback(callback_Quit, this);
 
-///--- Fl_Button *cancel_but = new Fl_Button(bx, by, bw, bh, "Cancel");
-///--- cancel_but->callback(callback_Quit, this);
 
-	darkish->end();
+	// show warning about needing a restart
+	sep = new Fl_Box(FL_NO_BOX, x(), by, W*3/5, bh, "Changes require a restart");
+	sep->align(FL_ALIGN_INSIDE);
+	sep->labelcolor(FL_DARK1);
+	sep->labelsize(small_font_size);
 
 
 	end();
