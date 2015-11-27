@@ -81,7 +81,7 @@ static void ShowInfo()
 	);
 
 	printf(
-		"Usage: Oblige [options...]\n"
+		"Usage: Oblige [options...] [key=value...]\n"
 		"\n"
 		"Available options:\n"
 		"     --home     <dir>     Home directory\n"
