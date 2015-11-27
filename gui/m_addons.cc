@@ -25,15 +25,12 @@
 #include "physfs.h"
 
 #include "lib_argv.h"
+#include "lib_file.h"
 #include "lib_util.h"
 
 #include "main.h"
 #include "m_addons.h"
 #include "m_cookie.h"
-
-
-// TODO : allow more than one
-const char *addon_file = NULL;
 
 
 void VFS_AddFolder(const char *name)
@@ -49,6 +46,41 @@ void VFS_AddFolder(const char *name)
 	}
 
 	DebugPrintf("mounted '%s'\n", name);
+}
+
+
+bool VFS_AddArchive(const char *filename)
+{
+	if (! HasExtension(filename))
+		filename = ReplaceExtension(filename, "pk3");
+	else
+		filename = StringDup(filename);
+
+	if (! FileExists(filename))
+	{
+		// is it a bare filename (no paths) ??
+		// when yes, look in the standard addons/ directory
+		if (filename == fl_filename_name(filename))
+		{
+			char *new_name = StringPrintf("%s/addons/%s", install_dir, filename);
+			StringFree(filename);
+			filename = new_name;
+		}
+	}
+
+	if (! PHYSFS_mount(filename, "/", 1))
+	{
+		if (batch_mode)
+			Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
+							filename, PHYSFS_getLastError());
+		else
+			LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
+					  filename, PHYSFS_getLastError());
+
+		return false;
+	}
+
+	return true;  // Ok
 }
 
 
@@ -69,21 +101,7 @@ void VFS_InitAddons(const char *argv0)
 	VFS_AddFolder("prefabs");
 	VFS_AddFolder("data");
 
-	// TODO
-
-	if (addon_file)
-	{
-		// FIXME
-		LogPrintf("Loading addon: %s\n", addon_file);
-	}
-
 	LogPrintf("DONE.\n\n");
-}
-
-
-void VFS_MountFile(const char *filename)
-{
-	// TODO
 }
 
 
@@ -99,7 +117,7 @@ void VFS_ParseCommandLine()
 
 	for (; arg < arg_count && ! ArgvIsOption(arg) ; arg++, count++)
 	{
-		VFS_MountFile(arg_list[arg]);
+		VFS_AddArchive(arg_list[arg]);
 	}
 
 	if (! count)
