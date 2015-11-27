@@ -49,7 +49,7 @@ void VFS_AddFolder(const char *name)
 }
 
 
-bool VFS_AddArchive(const char *filename, bool from_config)
+bool VFS_AddArchive(const char *filename, bool options_file)
 {
 	if (! HasExtension(filename))
 		filename = ReplaceExtension(filename, "pk3");
@@ -59,7 +59,7 @@ bool VFS_AddArchive(const char *filename, bool from_config)
 	// when handling "bare" filenames from the command line (i.e. ones
 	// containing no paths or drive spec) and the file does not exist in
 	// the current dir, look for it in the standard addons/ folder.
-	if (from_config ||
+	if (options_file ||
 		(! FileExists(filename) &&
 		 filename == fl_filename_name(filename)))
 	{
@@ -70,7 +70,7 @@ bool VFS_AddArchive(const char *filename, bool from_config)
 
 	if (! PHYSFS_mount(filename, "/", 1))
 	{
-		if (from_config)
+		if (options_file)
 			LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
 					  filename, PHYSFS_getLastError());
 		else
@@ -117,7 +117,7 @@ void VFS_ParseCommandLine()
 
 	for (; arg < arg_count && ! ArgvIsOption(arg) ; arg++, count++)
 	{
-		VFS_AddArchive(arg_list[arg], false /* from_config */);
+		VFS_AddArchive(arg_list[arg], false /* options_file */);
 	}
 
 	if (! count)
@@ -125,14 +125,15 @@ void VFS_ParseCommandLine()
 }
 
 
-void VFS_ReadConfig(const char *name)
+void VFS_OptParse(const char *name)
 {
 	// TODO
 }
 
-void VFS_WriteConfig(FILE *fp)
+void VFS_OptWrite(FILE *fp)
 {
-	// TODO
+	fprintf(fp, "---- Addons ----\n\n");
+
 }
 
 

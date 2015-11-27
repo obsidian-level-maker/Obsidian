@@ -24,8 +24,8 @@
 void VFS_InitAddons(const char *argv0);
 void VFS_ParseCommandLine();
 
-void VFS_ReadConfig(const char *name);
-void VFS_WriteConfig(FILE *fp);
+void VFS_OptParse(const char *name);
+void VFS_OptWrite(FILE *fp);
 
 // util functions
 bool   VFS_CopyFile(const char *src_name, const char *dest_name);

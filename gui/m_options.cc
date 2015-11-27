@@ -40,7 +40,7 @@ static void Parse_Option(const char *name, const char *value)
 
 	if (StringCaseCmp(name, "addon") == 0)
 	{
-		VFS_ReadConfig(value);
+		VFS_OptParse(value);
 	}
 	else if (StringCaseCmp(name, "alternate_look") == 0)
 	{
@@ -195,7 +195,7 @@ bool Options_Save(const char *filename)
 //???	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
 	fprintf(option_fp, "\n");
 
-	VFS_WriteConfig(option_fp);
+	VFS_OptWrite(option_fp);
 
 	Recent_Write(option_fp);
 
