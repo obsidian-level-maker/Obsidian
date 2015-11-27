@@ -74,7 +74,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	misc_menu->add("About",            FL_F+1, menu_do_about);
 	misc_menu->add("Options",          FL_F+4, menu_do_options);
-	misc_menu->add("Addons",           FL_F+3, menu_do_addons);
+	misc_menu->add("Addon List",       FL_F+3, menu_do_addons);
 	misc_menu->add("Set Seed",         FL_F+5, menu_do_edit_seed);
 	misc_menu->add("Manage Config   ", FL_F+9, menu_do_manage_config);
 

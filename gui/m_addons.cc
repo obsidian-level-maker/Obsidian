@@ -365,6 +365,9 @@ public:
 		// nothing needed
 	}
 
+	void Populate();
+	void InsertAddon(const addon_info_t *info);
+
 	bool WantQuit() const
 	{
 		return want_quit;
@@ -375,10 +378,7 @@ public:
 	int handle(int event);
 
 private:
-	void PositionAll(UI_Addon *focus = NULL)
-	{
-		// FIXME
-	}
+	void PositionAll();
 
 	static void callback_Scroll(Fl_Widget *w, void *data)
 	{
@@ -503,6 +503,56 @@ int UI_AddonsWin::handle(int event)
 }
 
 
+void UI_AddonsWin::PositionAll()
+{
+	int spacing = 4;
+
+	int ny = my - offset_y;
+
+	for (int j = 0 ; j < pack->children() ; j++)
+	{
+		UI_Addon *M = (UI_Addon *) pack->child(j);
+		SYS_ASSERT(M);
+
+		int nh = kf_h(34);
+
+		if (ny != M->y() || nh != M->h())
+		{
+			M->resize(M->x(), ny, M->w(), nh);
+		}
+
+		ny += nh + spacing;
+	}
+
+	// p = position, first line displayed
+	// w = window, number of lines displayed
+	// t = top, number of first line
+	// l = length, total number of lines
+	sbar->value(offset_y, mh, 0, total_h);
+
+	pack->redraw();
+}
+
+
+void UI_AddonsWin::InsertAddon(const addon_info_t *info)
+{
+	UI_Addon *addon = new UI_Addon(mx, my, mw, kf_h(34), info->name, info->name, NULL);
+
+	pack->add(addon);
+
+	PositionAll();
+}
+
+
+void UI_AddonsWin::Populate()
+{
+	for (unsigned int i = 0 ; i < all_addons.size() ; i++)
+	{
+		InsertAddon(&all_addons[i]);
+	}
+}
+
+
 void DLG_SelectAddons(void)
 {
 	static UI_AddonsWin * addons_window = NULL;
@@ -513,6 +563,8 @@ void DLG_SelectAddons(void)
 		int opt_h = kf_h(380);
 
 		addons_window = new UI_AddonsWin(opt_w, opt_h, "OBLIGE Addons");
+
+		addons_window->Populate();
 	}
 
 	addons_window->want_quit = false;
