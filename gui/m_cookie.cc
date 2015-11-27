@@ -307,6 +307,16 @@ void Cookie_ParseArguments(void)
 		if (arg[0] == '{' || arg[0] == '}')
 			continue;
 
+		// support an isolated "=", like in: FOO = 3
+		if (i+2 < arg_count &&
+			strcmp(arg_list[i+1], "=") == 0 &&
+			arg_list[i+2][0] != '-')
+		{
+			Cookie_SetValue(arg, arg_list[i+2]);
+			i += 2;
+			continue;
+		}
+
 		const char *eq_pos = strchr(arg, '=');
 		if (! eq_pos)
 		{
