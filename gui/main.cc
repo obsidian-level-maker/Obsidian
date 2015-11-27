@@ -92,7 +92,7 @@ static void ShowInfo()
 		"     --log      <file>    Log file to create\n"
 		"\n"
 		"  -b --batch    <output>  Batch mode (no GUI)\n"
-		"  -a --addon    <name>    Addon to use\n"
+		"  -a --addon    <file>... Addon(s) to use\n"
 		"  -l --load     <file>    Load settings from a file\n"
 		"  -k --keep               Keep SEED from loaded settings\n"
 		"\n"
@@ -731,29 +731,15 @@ int main(int argc, char **argv)
 	LogEnableDebug(debug_messages);
 
 
-	// must do this *after* loading the options file
-	int addon_arg = ArgvFind('a', "addon");
-	if (addon_arg >= 0)
-	{
-		if (addon_arg+1 >= arg_count || ArgvIsOption(addon_arg+1))
-		{
-			fprintf(stderr, "OBLIGE ERROR: missing filename for --addon\n");
-			exit(9);
-		}
-
-		addon_file = arg_list[addon_arg+1];
-
-		if (StringCaseCmp(addon_file, "none") == 0)
-			addon_file = NULL;
-	}
-
-	VFS_InitAddons(argv[0]);
-
-
 	if (! batch_mode)
 	{
 		Main_SetupFLTK();
 	}
+
+
+	VFS_InitAddons(argv[0]);
+
+	VFS_ParseCommandLine();
 
 
 	const char *load_file = NULL;

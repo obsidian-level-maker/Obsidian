@@ -27,6 +27,7 @@
 
 #include "main.h"
 #include "m_cookie.h"
+#include "m_addons.h"
 
 
 static void Parse_Option(const char *name, const char *value)
@@ -39,7 +40,7 @@ static void Parse_Option(const char *name, const char *value)
 
 	if (StringCaseCmp(name, "addon") == 0)
 	{
-		addon_file = StringDup(value);
+		VFS_ReadConfig(value);
 	}
 	else if (StringCaseCmp(name, "alternate_look") == 0)
 	{
@@ -185,9 +186,6 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2015 Andrew Apted\n");
 	fprintf(option_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-	if (addon_file)
-		fprintf(option_fp, "addon = %s\n\n", addon_file);
-
 	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
 	fprintf(option_fp, "window_size    = %d\n", window_size);
 	fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
@@ -196,6 +194,8 @@ bool Options_Save(const char *filename)
 
 //???	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
 	fprintf(option_fp, "\n");
+
+	VFS_WriteConfig(option_fp);
 
 	Recent_Write(option_fp);
 

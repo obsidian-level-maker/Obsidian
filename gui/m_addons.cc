@@ -81,6 +81,44 @@ void VFS_InitAddons(const char *argv0)
 }
 
 
+void VFS_MountFile(const char *filename)
+{
+	// TODO
+}
+
+
+void VFS_ParseCommandLine()
+{
+/*
+	int addon_arg = ArgvFind('a', "addon");
+	if (addon_arg >= 0)
+	{
+		if (addon_arg+1 >= arg_count || ArgvIsOption(addon_arg+1))
+		{
+			fprintf(stderr, "OBLIGE ERROR: missing filename for --addon\n");
+			exit(9);
+		}
+
+		addon_file = arg_list[addon_arg+1];
+
+		if (StringCaseCmp(addon_file, "none") == 0)
+			addon_file = NULL;
+	}
+*/
+}
+
+
+void VFS_ReadConfig(const char *name)
+{
+	// TODO
+}
+
+void VFS_WriteConfig(FILE *fp)
+{
+	// TODO
+}
+
+
 //----------------------------------------------------------------------
 
 //

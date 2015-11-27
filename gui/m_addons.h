@@ -22,6 +22,10 @@
 #define __OBLIGE_ADDONS_H__
 
 void VFS_InitAddons(const char *argv0);
+void VFS_ParseCommandLine();
+
+void VFS_ReadConfig(const char *name);
+void VFS_WriteConfig(FILE *fp);
 
 // util functions
 bool   VFS_CopyFile(const char *src_name, const char *dest_name);
