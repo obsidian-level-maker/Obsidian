@@ -49,33 +49,33 @@ void VFS_AddFolder(const char *name)
 }
 
 
-bool VFS_AddArchive(const char *filename)
+bool VFS_AddArchive(const char *filename, bool from_config)
 {
 	if (! HasExtension(filename))
 		filename = ReplaceExtension(filename, "pk3");
 	else
 		filename = StringDup(filename);
 
-	if (! FileExists(filename))
+	// when handling "bare" filenames from the command line (i.e. ones
+	// containing no paths or drive spec) and the file does not exist in
+	// the current dir, look for it in the standard addons/ folder.
+	if (from_config ||
+		(! FileExists(filename) &&
+		 filename == fl_filename_name(filename)))
 	{
-		// is it a bare filename (no paths) ??
-		// when yes, look in the standard addons/ directory
-		if (filename == fl_filename_name(filename))
-		{
-			char *new_name = StringPrintf("%s/addons/%s", install_dir, filename);
-			StringFree(filename);
-			filename = new_name;
-		}
+		char *new_name = StringPrintf("%s/addons/%s", install_dir, filename);
+		StringFree(filename);
+		filename = new_name;
 	}
 
 	if (! PHYSFS_mount(filename, "/", 1))
 	{
-		if (batch_mode)
-			Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
-							filename, PHYSFS_getLastError());
-		else
+		if (from_config)
 			LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
 					  filename, PHYSFS_getLastError());
+		else
+			Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
+							filename, PHYSFS_getLastError());
 
 		return false;
 	}
@@ -117,7 +117,7 @@ void VFS_ParseCommandLine()
 
 	for (; arg < arg_count && ! ArgvIsOption(arg) ; arg++, count++)
 	{
-		VFS_AddArchive(arg_list[arg]);
+		VFS_AddArchive(arg_list[arg], false /* from_config */);
 	}
 
 	if (! count)
@@ -142,7 +142,7 @@ void VFS_WriteConfig(FILE *fp)
 // this is useful to "extract" something out of virtual FS to the real
 // file system so we can use normal stdio file operations on it
 // [ especially a _library_ that uses stdio.h ]
-// 
+//
 bool VFS_CopyFile(const char *src_name, const char *dest_name)
 {
 	char buffer[1024];
