@@ -498,7 +498,7 @@ gui.debugf("  %s : %s / %s\n", S.name, RR.name, (AA and AA.name) or "-noarea-")
   end
   end
 
-stderrf("coverage: %1.2f (%d seeds / %d)\n", count / total, count, total)
+gui.debugf("coverage: %1.2f (%d seeds / %d)\n", count / total, count, total)
   return count / total
 end
 
@@ -821,7 +821,7 @@ function Grower_organic_room(P)
     -- diagonal seed, 'corner' must be NIL.
     -- 'from_dir' only set when called recursively.
 
-stderrf("get_group @ %s corner:%s\n", S.name, tostring(corner))
+--- stderrf("get_group @ %s corner:%s\n", S.name, tostring(corner))
 
     if corner then
       assert(not S.diagonal)
@@ -842,7 +842,6 @@ stderrf("get_group @ %s corner:%s\n", S.name, tostring(corner))
 
     -- if already there, or upgraded, then nothing more to do
     if add_to_list(S, corner, list) then
-stderrf("(there or upgraded)\n")
       return list
     end
 
@@ -861,17 +860,15 @@ stderrf("(there or upgraded)\n")
 
     else
       -- a full seed, nothing more to do
-      stderrf("(full seed)\n")
       return list
     end
 
-    if rand.odds(50*0) then --!!!!
+    if rand.odds(50) then --!!!!
       x_dir, y_dir = y_dir, x_dir
     end
 
     for pass = 1, 2 do
       local dir = sel(pass >= 2, y_dir, x_dir)
-stderrf("checking dir : %d\n", dir)
 
       local N = S:neighbor(dir)
       assert(N)
@@ -909,7 +906,6 @@ stderrf("checking dir : %d\n", dir)
       get_group(N, new_corn, list, dir)
     end
 
-stderrf("(done)\n")
     return list
   end
 
@@ -976,7 +972,7 @@ stderrf("(done)\n")
       end
     end
 
-stderrf("try_spot_off_area at %s / %s\n", N.name, tostring(corner))
+--stderrf("try_spot_off_area at %s / %s\n", N.name, tostring(corner))
     apply_group(get_group(N, corner))
 
     return true
@@ -1004,7 +1000,7 @@ stderrf("try_spot_off_area at %s / %s\n", N.name, tostring(corner))
 
     each loc in try_list do
       if try_spot_off_area(loc.S, loc.dir) then
-stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
+--stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
         return true -- OK
       end
     end
@@ -1068,7 +1064,6 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
   grow_an_area("from_sprout")
 
   for loop = 1, 50 do
-stderrf("loop %d : svolume %1.1f\n", loop, cur_room.svolume)
     if cur_room.svolume >= cur_room.want_vol then break; end
     grow_an_area()
   end
@@ -2288,7 +2283,7 @@ function Grower_assign_boundary()
 
 
   local function mark_other_inners()
-    local prob = 0 --!!!! FIXME
+    local prob = 20
 
     each A in LEVEL.areas do
       if not A.room and
