@@ -181,8 +181,8 @@ function Connect_through_sprout(P)
 
   E1.kind = "arch"
 
-  C.E1 = E1
-  C.E2 = E2
+  C.E1 = E1 ; E1.conn = C
+  C.E2 = E2 ; E2.conn = C
 
   C.A1 = assert(E1.S.area)
   C.A2 = assert(E2.S.area)
@@ -198,8 +198,8 @@ function Connect_through_sprout(P)
 
     F1.kind = "arch"
 
-    C.F1 = F1
-    C.F2 = F2
+    C.F1 = F1 ; F1.conn = C
+    C.F2 = F2 ; F2.conn = C
   end
 end
 

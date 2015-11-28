@@ -564,93 +564,55 @@ function Room_reckon_doors()
     if C.kind == "teleporter" then return end
     if C.kind == "closet"     then return end
 
-    local S = C.S1
-    local N = C.S2
-    local dir = C.dir
+    local E = C.E1
+    local F = C.F1  -- used for split conns, usually NIL
 
-    local B  = S.border[dir]  -- FIXME
-    local B2 = N.border[10 - dir]
-
-    if B.kind != "arch" then
-      S, N  = N, S
-      B, B2 = B2, B
-      dir = 10 - dir
+    if E.kind != "arch" then
+      E = C.E2
+      F = C.F2
     end
 
-    assert(B.kind == "arch")
+    assert(E.kind == "arch")
 
+    if F then assert(F.kind == "arch") end
 
-    S.thick[     dir] = 40
-    N.thick[10 - dir] = 40
 
     -- locked door?
-
     if C.lock then
-      B.kind = "lock_door"
-      B.conn = C
-      B.lock = C.lock
+      E.kind = "lock_door"
+
+      if F then F.kind = E.kind end
 
       C.is_door = true
-
-      S.has_door = true
-      N.has_door = true
-
-      -- FIXME: smells like a hack!!
-      if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
-        B.kind = "bars"
-      end
-
       C.fresh_floor = true
       return
     end
 
+
     -- secret door ?
+    if C.R1.is_secret != C.R2.is_secret then
+      E.kind = "door"  --!!!!! FIXME secret_door
 
-    if S.room.is_secret != N.room.is_secret then
-      -- TODO: if both rooms are outdoor, make a ''secret fence''
+      if F then F.kind = E.kind end
 
-      B.kind = "secret_door"
       C.is_door = true
 
-      S.has_door = true
-      N.has_door = true
-
       -- mark the first seed so it can have the secret special
-      C.S2.mark_secret = true
-      return
-    end
-
-
-    -- same room?
-    if C.A1.room == C.A2.room then
-      B.kind  = nil
-      B2.kind = nil
+      -- FIXME C.S2.mark_secret = true
       return
     end
 
 
     -- stairwells do their own thing
-    if C.A1.room.kind == "stairwell" or
-       C.A2.room.kind == "stairwell"
-    then
-      B.kind  = "nothing"
-      B2.kind = "nothing"
+    if C.R1.kind == "stairwell" or C.R2.kind == "stairwell" then
+      E.kind = "nothing"
+      assert(not F)
       return
     end
 
 
-    -- don't need anything between two outdoor rooms
-    -- [ the style check prevents silly "free standing" arches ]
-    if (S.room.is_outdoor and N.room.is_outdoor) and
-       (rand.odds(90) or STYLE.fences == "none")
-    then
-      B.kind  = "nothing"
-      B2.kind = "nothing"
-      return
-    end
-
-
-    -- special archways for caves
+    -- special archways for caves FIXME
+--[[
     local R1 = S.room
     local R2 = N.room
 
@@ -664,32 +626,38 @@ function Room_reckon_doors()
         return
       end
     end
+--]]
+
+
+    -- don't need anything between two outdoor rooms
+    -- TODO : allow the arch if have "walls" touching both corners
+    if C.R1.is_outdoor and C.R2.is_outdoor then
+      E.kind = "nothing"
+      if F then F.kind = E.kind end
+      return
+    end
 
 
     -- apply the random check
     local prob = indoor_prob
-    if (S.room.is_outdoor and N.room.kind != "cave") or
-       (N.room.is_outdoor and S.room.kind != "cave")
+    if (C.R1.is_outdoor and C.R2.kind != "cave") or
+       (C.R2.is_outdoor and C.R1.kind != "cave")
     then
       prob = outdoor_prob
     end
 
     if rand.odds(prob) then
-      B.kind = "door"
+      E.kind = "door"
+
+      if F then F.kind = E.kind end
+
       C.is_door = true
-
-      S.has_door = true
-      N.has_door = true
-
-      if rand.odds(30) then
-        C.fresh_floor = true
-      end
-
+      C.fresh_floor = rand.odds(30)
       return
     end
 
 
---[[
+--[[  FIXME
     -- support arches which have a step in them
     if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
       if THEME.archy_arches then return end
@@ -705,6 +673,10 @@ function Room_reckon_doors()
       end
     end
 --]]
+
+
+    -- keep the current ARCH
+    return
   end
 
 
@@ -1918,6 +1890,7 @@ function Room_floor_heights()
   end
 
 
+  -- not used/broken ATM
   local function flow_through_hallway(R, S, enter_dir, floor_h)
 
 -- stderrf("flow_through_hallway @ %s : %s\n", S.name, R.name)
@@ -1945,10 +1918,10 @@ function Room_floor_heights()
         if N.area.room == R.hallway.R1 then R.hallway.touch_R1 = R.hallway.touch_R1 + 1 end
         if N.area.room == R.hallway.R2 then R.hallway.touch_R2 = R.hallway.touch_R2 + 1 end
 
-        -- FIXME
-        if S.border[dir].conn and not N.area.room.entry_h then
-          table.insert(exit_dirs, dir)
-        end
+-- FIXME
+--???        if S.border[dir].conn and not N.area.room.entry_h then
+--???          table.insert(exit_dirs, dir)
+--???        end
         continue
       end
 
@@ -1992,7 +1965,7 @@ function Room_floor_heights()
 
     local dir = next_dirs[1] or exit_dirs[1]
 
-    if not S.diagonal and not saw_fixed and not S.has_door then
+    if not S.diagonal and not saw_fixed and not S:has_door_edge() then
       S.hall_piece = categorize_hall_shape(S, enter_dir, dir, R.hallway.z_dir, R.hallway.z_size)
 
       floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
@@ -2021,15 +1994,7 @@ function Room_floor_heights()
 
 
   local function kill_hallway_arch(conn)
-    local S1 = conn.S1
-    local S2 = conn.S2
-
-    -- FIXME??
-    local B1 = S1.border[conn.dir]
-    local B2 = S2.border[10 - conn.dir]
-
-    if B1.kind == "arch" or B1.kind == "door" then B1.kind = "nothing" end
-    if B2.kind == "arch" or B2.kind == "door" then B2.kind = "nothing" end
+    -- fixme??
   end
 
 
@@ -2514,7 +2479,7 @@ function Room_build_all()
 
   Area_prune_hallways()
 
---FIXME  Room_reckon_doors()
+  Room_reckon_doors()
 
   Room_pool_hacks()
   Room_floor_heights()

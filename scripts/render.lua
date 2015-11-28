@@ -29,7 +29,7 @@ function edge_get_rail(S, dir)
   if not (N and N.area) then return nil end
   if N.area == S.area then return nil end
 
---[[
+--[[  fixme??
   local bord = S.border[dir]
 
   if bord.kind == "rail" then return bord end
@@ -524,11 +524,11 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     assert(E.peer)
     assert(E.peer.area)
 
-    local z = A.floor_h
+    assert(E.conn)
 
-    if E.conn then z = assert(E.conn.door_h) end
+    local z = assert(E.conn.door_h)
 
-    local LOCK = assert(E.lock)
+    local LOCK = assert(E.conn.lock)
 
     local inner_mat = assert(A.wall_mat)
     local outer_mat = assert(E.peer.area.wall_mat)

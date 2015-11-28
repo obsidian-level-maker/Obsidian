@@ -243,7 +243,7 @@ function Cave_generate_cave(R)
 
   local function check_need_wall(S, dir)
     -- don't clobber connections
-    if S.border[dir].kind then return false end
+--FIXME    if S.border[dir].kind then return false end
 
     local N = S:neighbor(dir)
 
@@ -262,7 +262,7 @@ function Cave_generate_cave(R)
     for dir = 2,8,2 do
       if check_need_wall(S, dir) then
         -- merely mark it here, handled by border_up()
-        S.border[dir].cave_gap = true
+--FIXME        S.border[dir].cave_gap = true
       end
     end
   end

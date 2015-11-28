@@ -97,7 +97,10 @@
     -- back-to-back which refer to each other via the 'peer' field.
     --
 
-    kind : keyword  -- "conn", "window", "wall"  [TODO]
+    kind : keyword  -- "nothing"
+                    -- "arch", "door", "lock_door"
+                    -- "wall", "fence", "window"
+                    -- "steps", "trap_wall", "sky_edge"
 
     S : SEED        -- first seed (the "left-most" one when facing the edge)
 
@@ -196,14 +199,6 @@ function SEED_CLASS.join_halves(S)
 
   local S2 = S.top
 
-  for dir = 2,8,2 do
-    S.border[dir].edge_kind = S.border[dir].edge_kind or S2.border[dir].edge_kind
-  end
-
-  each dir in geom.CORNERS do
-    S.border[dir].edge_kind = nil
-  end
-
   S.diagonal = nil
   S.top = nil
 
@@ -214,9 +209,9 @@ function SEED_CLASS.join_halves(S)
   S2.kind = "dead"
   S2.diagonal = "dead"
 
-  S2.border = nil
   S2.area = nil
   S2.room = nil
+  S2.edge = nil
 end
 
 
@@ -521,7 +516,6 @@ function Seed_create(sx, sy, x1, y1)
 
     name = string.format("SEED [%d,%d]", sx, sy)
 
-    thick  = {}
     edge   = {}
     border = {}
     chunk  = {}
@@ -532,11 +526,6 @@ function Seed_create(sx, sy, x1, y1)
   S.y2 = S.y1 + SEED_SIZE
 
   table.set_class(S, SEED_CLASS)
-
-  each dir in geom.ALL_DIRS do
-    S.border[dir] = {}
-    S.thick [dir] = 16
-  end
 
   S:calc_mid_point()
 
