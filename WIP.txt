@@ -9,11 +9,6 @@ Porches
 !! fix missing posts
    [ need to check if a WALL or wall-like edge touches a corner ]
 
-+  one per room (often none)
-
-+  floor MUST be >= nearby floors in room
-   [ do it via floor-heights algorithm)
-
 
 
 Stuff to get working again
