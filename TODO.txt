@@ -82,8 +82,6 @@ ALSO : "mon-zone" for monster/weapon palette changes
 
 -  sometimes incorporate a nearby RANDOM area into a room
 
-Teleporter IDEA : grow one large trunk, then pick a hallway (or room) to remove
-
 REQUEST:  mix it up option for the quiet start setting.
 
 IDEA : an adjustment (of health) for "environment" of a battle
@@ -95,6 +93,14 @@ IDEA: have a single thing number for "coop player"
 -  CTF : start with a tile designed for CTF mode, placed in middle of map,
          and when adding a room/hall then also add its sister room
          [ if sister fails, kill the brother ]
+
+
+Teleporters
+-----------
+
++  grow two/three/four hubs simultaneously and then
+   "connect' them via teleporters
+
 
 
 Scenic Borders
@@ -251,8 +257,6 @@ CTF and DM
 ----------
 
 -  Cycles !
-   -  also: don't kill long hallways, allow to connect to same room
-      [ OR : place a teleporter at the end ]
 
 -  Weapons / Big items
    -  decide mix of weapons and big items

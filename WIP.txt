@@ -13,10 +13,6 @@ WORK IN PROGRESS
 >>>  major quests
 
 
-+ do gap-fill AFTER quests done and *closets* are placed
-  [ otherwise closets can split areas into two separate parts ]
-
-
 
 Edge Stuff
 ----------
