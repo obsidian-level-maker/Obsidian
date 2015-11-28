@@ -472,8 +472,8 @@ end
 
 function Room_reckon_doors()
 
-  local  indoor_prob = style_sel("doors", 0, 20, 40,  80)
-  local outdoor_prob = style_sel("doors", 0, 50, 92, 100)
+  local  indoor_prob = style_sel("doors", 0, 15, 35,  65)
+  local outdoor_prob = style_sel("doors", 0, 70, 95, 100)
 
   local woody = rand.odds(25)
 

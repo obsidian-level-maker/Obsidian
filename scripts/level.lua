@@ -122,8 +122,8 @@ GLOBAL_STYLE_LIST =
   mon_variety = { some=50 }
   teleporters = { none=50 } --!!!!  few=30, some=30, heaps=10 }
   switches    = { none=5, few=50, some=50, heaps=10 }
-  doors       = { none=5, few=50, some=30, heaps=5 }
-  porches     = { few=10, some=50, heaps=10 }
+  doors       = { none=5, few=30, some=60, heaps=5 }
+  porches     = { few=10, some=60, heaps=10 }
 
   -- things that affect stuff in rooms
 
