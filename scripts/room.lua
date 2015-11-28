@@ -757,6 +757,12 @@ function Room_detect_porches(R)
 
   ---| Room_detect_porches |---
 
+  local prob = style_sel("porches", 0, 25, 60, 95)
+
+  if not rand.odds(prob) then
+    return
+  end
+
   if R.kind == "stairwell" then
     -- never
 

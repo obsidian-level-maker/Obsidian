@@ -116,7 +116,6 @@ GLOBAL_STYLE_LIST =
 
   ambushes    = { none=10, some=50, heaps=10 }
   big_rooms   = { none=20, few=50, some=30, heaps=10 }
-  big_juncs   = { none=40, few=30, some=30, heaps=10 }
   cycles      = { none=50, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
 
@@ -124,6 +123,7 @@ GLOBAL_STYLE_LIST =
   teleporters = { none=50 } --!!!!  few=30, some=30, heaps=10 }
   switches    = { none=5, few=50, some=50, heaps=10 }
   doors       = { none=5, few=50, some=30, heaps=5 }
+  porches     = { few=10, some=50, heaps=10 }
 
   -- things that affect stuff in rooms
 

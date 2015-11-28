@@ -64,6 +64,7 @@ OB_MODULES["level_control"] =
     mon_variety = { label="Monster Variety",choices=LEVEL_CONTROL.CHOICES, tooltip="Setting this to NONE will make each level use a single monster type" }
     organics    = { label="Organic Shapes", choices=LEVEL_CONTROL.CHOICES }
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
+    porches     = { label="Porches",        choices=LEVEL_CONTROL.CHOICES }
     secrets     = { label="Secrets",        choices=LEVEL_CONTROL.CHOICES }
 
     switches    = { label="Switched Doors", choices=LEVEL_CONTROL.CHOICES }
@@ -83,10 +84,8 @@ OB_MODULES["level_control"] =
 
 --  barrels     = { label="Barrels",        choices=LEVEL_CONTROL.CHOICES }
 --  bridges     = { label="3D Bridges",     choices=LEVEL_CONTROL.CHOICES }
---  big_juncs   = { label="Big Junctions",  choices=LEVEL_CONTROL.CHOICES }
 --  crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
 --  cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }
---  street_mode = { label="Street Mode",    choices=LEVEL_CONTROL.CHOICES }
 --  symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
   }
 }
