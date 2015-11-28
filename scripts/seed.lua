@@ -91,8 +91,6 @@
     -- Primary use is for connections between a room and another room or
     -- hallway.  Also used for windows and wide walls / pictures.
     --
-    -- Not used between areas of the same room.
-    --
     -- Edges are one-sided.  For connections there will be two edges
     -- back-to-back which refer to each other via the 'peer' field.
     --

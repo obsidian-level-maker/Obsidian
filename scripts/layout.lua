@@ -797,52 +797,6 @@ function Layout_traps_and_cages()
   add_traps()
 
   add_cages()
-
-
-do return end
-
-
---[[ OLD LOGIC, MAY BE USEFUL
-
-  -- or rarely in secrets
-  if R.quest.kind == "secret" and rand.odds(90) then return end
-
-  -- style check...
-  local prob = style_sel("cages", 0, 20, 50, 90)
-
-  if not rand.odds(prob) then return end
-
-  if rand.odds(50)then
-    -- try verticals before horizontals (for symmetry)
-    DIR_LIST = { 2,8,4,6 }
-  else
-    DIR_LIST = { 6,4,8,2 }
-  end
-
-  collect_cage_seeds()
-
-  -- either use the junked seeds OR the solid-room-fab seeds
-  local list
-
-  if #junk_list > 0 and #other_list > 0 then
-    list = rand.sel(35, junk_list, other_list)
-  elseif #junk_list > 0 then
-    list = junk_list
-  else
-    list = other_list
-  end
-
-  -- rarely use ALL the junked seeds
-  local limited
-  if list == junk_list and
-     rand.odds(sel(STYLE.cages == "heaps", 50, 80))
-  then
-    limited = true
-  end
-
-  convert_list(list, limited)
---]]
-
 end
 
 

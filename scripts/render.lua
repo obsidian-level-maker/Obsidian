@@ -1134,11 +1134,6 @@ function Render_seed(A, S)
     return
   end
 
----###  -- scenic done elsewhere (in Layout_build_mountains)
----###  if A.mode == "scenic" then
----###    return
----###  end
-
   if A.mode == "hallway" then
     Render_hallway(A, S)
     return
@@ -1211,10 +1206,6 @@ function Render_all_areas()
   each depot in LEVEL.depots do
     Render_depot(depot)
   end
-
----###  each Z in LEVEL.zones do
----###    Layout_build_mountains(Z)
----###  end
 end
 
 
