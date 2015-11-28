@@ -897,7 +897,7 @@ function Quest_add_major_quests()
 
 
   local function add_double_switch_door(quest)
-    local prob = 35
+    local prob = 25
 
     if OB_CONFIG.mode == "coop" then
       prob = 75
@@ -939,6 +939,8 @@ function Quest_add_major_quests()
 
 
   local function lock_up_a_quest(quest, goal_list)
+    -- the goal is removed from goal_list
+
     local unused = count_unused_leafs(quest)
 
     if quest.no_more_locks then return end
@@ -959,6 +961,16 @@ function Quest_add_major_quests()
   end
 
 
+  local function lock_up_quests(goal_list)
+    local list = table.copy(LEVEL.quests)
+    rand.shuffle(list)
+
+    each Q in list do
+      lock_up_a_quest(Q, goal_list)
+    end
+  end
+
+
   ---| Quest_add_major_quests |---
 
   -- use keys to lock zone connections
@@ -967,30 +979,37 @@ function Quest_add_major_quests()
 
   collect_key_goals(goal_list)
 
----!!  if #LEVEL.zone_conns > 0 then
----!!    if add_triple_key_door(goal_list) then
----!!      LEVEL.has_triple_key = true
----!!    end
----!!  end
+  -- triple key door?
+
+  if rand.odds(50*2) then
+    if add_triple_key_door(goal_list) then
+      LEVEL.has_triple_key = true
+      goal_list = { }
+    end
+  end
+
+  -- normal keyed doors...
+
+  for pass = 1, 6 do
+    lock_up_quests(goal_list)
+  end 
+
+  goal_list = {}
 
 
-  -- lock remaining zone connections with switches
-
-  collect_switch_goals(goal_list)
-
-
-  -- divide the zones further using switch quests
-  -- [ though can use any left over keys ]
+  -- double switched doors
 
   lock_up_double_doors()
 
-  for pass = 1, 4 do
-    local list = table.copy(LEVEL.quests)
 
-    each Q in list do
-      lock_up_a_quest(Q, goal_list, pass)
-    end
+  -- lastly, normal switched doors
+
+  collect_switch_goals(goal_list)
+
+  for pass = 1, 4 do
+    lock_up_quests(goal_list)
   end
+
 
 each Q in LEVEL.quests do
 Q.svolume = size_of_room_set(Q.rooms)
@@ -2545,7 +2564,7 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
---!!!!  Quest_add_major_quests()
+  Quest_add_major_quests()
 
   Quest_start_room()
   Quest_order_by_visit()

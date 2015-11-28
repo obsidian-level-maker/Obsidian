@@ -535,6 +535,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
     -- ensure it faces the correct direction
+--[[ FIXME ???
     if LOCK.conn.A1 != A then
       assert(LOCK.conn.A2 == A)
 
@@ -546,6 +547,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       inner_mat, outer_mat = outer_mat, inner_mat
     end
+--]]
 
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
