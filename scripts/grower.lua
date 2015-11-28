@@ -2352,6 +2352,7 @@ function Grower_create_rooms()
 
   Grower_assign_boundary()
 
-  Grower_save_svg()
+--DEBUG
+-- Grower_save_svg()
 end
 
