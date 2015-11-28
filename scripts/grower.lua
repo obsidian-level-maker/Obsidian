@@ -1049,7 +1049,10 @@ function Grower_organic_room(P)
 
   ---| Grower_organic_room |---
 
-  if rand.odds(0) then  -- FIXME
+  local  in_prob = style_sel("organics", 0, 15, 35, 75)
+  local out_prob = style_sel("organics", 0, 40, 70, 95)
+
+  if not rand.odds(sel(P.is_outdoor, out_prob, in_prob)) then
     return false
   end
 
@@ -2353,6 +2356,6 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
--- Grower_save_svg()
+   Grower_save_svg()
 end
 
