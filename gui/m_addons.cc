@@ -161,6 +161,8 @@ void VFS_OptWrite(FILE *fp)
 		if (info->enabled)
 			fprintf(fp, "addon = %s\n", info->name);
 	}
+
+	fprintf(fp, "\n");
 }
 
 
@@ -309,23 +311,23 @@ void VFS_FreeFile(const byte *mem)
 class UI_Addon : public Fl_Group
 {
 public:
-	std::string id_name;
+	addon_info_t *info;
 
 	Fl_Check_Button *button;
 
 public:
-	UI_Addon(int x, int y, int w, int h, const char *id, const char *label, const char *tip) :
+	UI_Addon(int x, int y, int w, int h, addon_info_t *_info) :
 		Fl_Group(x, y, w, h),
-		id_name(id)
+		info(_info)
 	{
 		box(FL_THIN_UP_BOX);
 
 		if (! alternate_look)
 			color(BUILD_BG, BUILD_BG);
 
-		button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), label);
-		if (tip)
-			button->tooltip(tip);
+		button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), info->name);
+		// if (tip)
+		//	button->tooltip(tip);
 
 		end();
 
@@ -372,7 +374,8 @@ public:
 	}
 
 	void Populate();
-	void InsertAddon(const addon_info_t *info);
+
+	bool ApplyChanges();
 
 	bool WantQuit() const
 	{
@@ -384,6 +387,8 @@ public:
 	int handle(int event);
 
 private:
+	void InsertAddon(addon_info_t *info);
+
 	void PositionAll();
 
 	static void callback_Scroll(Fl_Widget *w, void *data)
@@ -537,9 +542,12 @@ void UI_AddonsWin::PositionAll()
 }
 
 
-void UI_AddonsWin::InsertAddon(const addon_info_t *info)
+void UI_AddonsWin::InsertAddon(addon_info_t *info)
 {
-	UI_Addon *addon = new UI_Addon(mx, my, mw - 4, kf_h(34), info->name, info->name, NULL);
+	UI_Addon *addon = new UI_Addon(mx, my, mw - 4, kf_h(34), info);
+
+	if (info->enabled)
+		addon->button->value(1);
 
 	pack->add(addon);
 
@@ -553,6 +561,28 @@ void UI_AddonsWin::Populate()
 	{
 		InsertAddon(&all_addons[i]);
 	}
+}
+
+
+bool UI_AddonsWin::ApplyChanges()
+{
+	bool has_changes = false;
+
+	for (int j = 0 ; j < pack->children() ; j++)
+	{
+		UI_Addon *M = (UI_Addon *) pack->child(j);
+		SYS_ASSERT(M);
+
+		bool new_val = M->button->value() ? true : false;
+
+		if (M->info->enabled != new_val)
+		{
+			has_changes = true;
+			M->info->enabled = new_val;
+		}
+	}
+
+	return has_changes;
 }
 
 
@@ -577,6 +607,16 @@ void DLG_SelectAddons(void)
 	// run the GUI until the user closes
 	while (! addons_window->WantQuit())
 		Fl::wait();
+
+	if (addons_window->ApplyChanges())
+	{
+		// persist the changed addon list into OPTIONS.txt
+		Options_Save(options_file);
+
+		fl_alert("Changes to addons require a restart.\nOblige will now close.");
+
+		main_action = MAIN_QUIT;
+	}
 
 	addons_window->set_non_modal();
 	addons_window->hide();
