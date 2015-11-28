@@ -3,16 +3,6 @@ WORK IN PROGRESS
 ================
 
 
->>>  organic room growing
-
-     -  sharp isolated voids :
-        if 2+ sides have same area, merge seed into that area
-        (sometimes anyway)
-
-
->>>  major quests
-
-
 
 Edge Stuff
 ----------
@@ -33,32 +23,6 @@ Edge Stuff
 
 
 
-Grower:
--------
-
-+  when a dud hallway is removed, try again on same sprout
-   [ especially if map is undersized ]
-
-   --> store sprouts in ROOM
-
--  IDEA: remember 'blocked' sprouts -- may be good spots for cycles
-
--  when a large room touches/cross the boundary rect, allow it to be a LEAF
-
-
-
-Texturing
----------
-
-+  texture choice for outdoor floors
-   [ Q/ still differentiate between "courtyard" and "natural" ? ]
-
-+  hallways
-
--  texturing on door prefabs (for HELL, URBAN themes)
-
-
-
 Porches
 -------
 
@@ -69,8 +33,4 @@ Porches
 
 +  floor MUST be >= nearby floors in room
    [ do it via floor-heights algorithm)
-
--  experiment with railings instead of posts (want #conns >= 2)
-
--  indoors or dark outdoors : light fittings
 

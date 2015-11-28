@@ -95,6 +95,35 @@ IDEA: have a single thing number for "coop player"
          [ if sister fails, kill the brother ]
 
 
+
+Texturing
+---------
+
++  door prefabs (for HELL, URBAN themes)
+
++  texture choice for outdoor floors
+
++  hallways
+
+
+
+Grower
+------
+
++  when a dud hallway is removed, try again on same sprout
+   [ especially if map is undersized ]
+
+   --> store sprouts in ROOM
+
++  sharp isolated voids :
+   if 2+ sides have same area, merge seed into that area (sometimes)
+
+-  IDEA: remember 'blocked' sprouts -- may be good spots for cycles
+
+-  when a large room touches/cross the boundary rect, allow it to be a LEAF
+
+
+
 Teleporters
 -----------
 
@@ -601,6 +630,10 @@ IDEA: "weak texturing" (especially on floors) which will try to
 -  "mini stairs" : two areas have largish height diff (2-4 * step)
    and the "stair" is a short intrusion in the side of the lower
    chunk (say no more than 32 units deep, a prefab).
+
+-  experiment with railings for Porches (instead of posts)
+
+-  for indoors or dark outdoors porches : light fittings
 
 -  3D stairs
 
