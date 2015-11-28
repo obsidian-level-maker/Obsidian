@@ -112,7 +112,7 @@ GLOBAL_STYLE_LIST =
   scenics    = { few=30, some=50, heaps=10 }
   lakes      = { few=60, heaps=10 }
   islands    = { few=60, heaps=40 }
-  organics   = { few=15, some=60, heaps=10 }
+  organics   = { none=5, few=20, some=60, heaps=20 }
 
   ambushes    = { none=10, some=50, heaps=10 }
   big_rooms   = { none=20, few=50, some=30, heaps=10 }
