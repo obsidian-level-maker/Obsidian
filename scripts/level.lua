@@ -125,8 +125,6 @@ GLOBAL_STYLE_LIST =
   switches    = { none=5, few=50, some=50, heaps=10 }
   doors       = { none=5, few=50, some=30, heaps=5 }
 
-  room_shape  = { none=80, L=5, T=5, O=5, S=5, X=5 }
-
   -- things that affect stuff in rooms
 
   junk       = { few=10, some=60, heaps=30 }
