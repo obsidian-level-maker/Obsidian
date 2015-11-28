@@ -3,34 +3,38 @@ WORK IN PROGRESS
 ================
 
 
-
-Edge Stuff
-----------
-
--  make proper EDGE objects for Windows
-   ( since want to support wide ones )
-
--  make "fake" EDGE objects for other junction kinds
-
-   [ conversion done in render code, but may be better to convert all
-     the edges before hitting the render code ]
-
-   -  walls
-   -  lowering TRAP walls
-   -  steps
-
--  rails
-
-
-
 Porches
 -------
 
 !! fix missing posts
    [ need to check if a WALL or wall-like edge touches a corner ]
 
-+  one per room
++  one per room (often none)
 
 +  floor MUST be >= nearby floors in room
    [ do it via floor-heights algorithm)
+
+
+
+Stuff to get working again
+--------------------------
+
+!!  steps within rooms (but.... use an EDGE??)
+
++  windows (proper EDGE object)
+
++  cages (and railing)
+
++  large traps
+
+
+
+Other important stuff
+---------------------
+
++  placement of items in rooms
+
+-  item closets would be nice
+
+-  wall switches too
 
