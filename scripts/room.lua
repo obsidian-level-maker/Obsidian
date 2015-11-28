@@ -1615,7 +1615,19 @@ function Room_floor_heights()
   end
 
 
+  local function process_room_flat(R, entry_area)
+    each A in R.areas do
+      set_floor(A, R.entry_h)
+    end
+  end
+
+
   local function process_room(R, entry_area)
+    if STYLE.steepness == "none" then
+      process_room_flat(R, entry_area)
+      return
+    end
+
     local start_area = rand.pick(R.areas)
 
     local up_chance = rand.pick({ 10, 50, 90 })
