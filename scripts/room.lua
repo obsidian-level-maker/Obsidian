@@ -707,13 +707,15 @@ function Room_detect_porches(R)
     gui.debugf("Hallway %s is now a PORCH\n", R.name)
 
     set_as_porch(HA)
-    
+
     return true
   end
 
 
   local function eval_porch(A, mode)
     -- mode is either "indoor" or "outdoor"
+
+    if A.pool_hack then return -1 end
 
     -- size check : never too much of room
     if A.svolume > R.svolume / 2 then return -1 end
@@ -725,7 +727,7 @@ function Room_detect_porches(R)
     if #A.neighbors < 2 then return -1 end
 
     -- FIXME.....
-    
+
     local score = 100 + A.svolume - A.openness * 100
 
     -- tie break
@@ -757,7 +759,7 @@ function Room_detect_porches(R)
 
   ---| Room_detect_porches |---
 
-  local prob = style_sel("porches", 0, 25, 60, 95)
+  local prob = style_sel("porches", 0, 25, 50, 75)
 
   if not rand.odds(prob) then
     return
@@ -900,7 +902,7 @@ function Room_border_up()
     end
 
     -- room to room --
- 
+
     if A1.room == A2.room then
       -- nothing absolutely needed if same room
       -- FIXME : too simplistic!
@@ -1120,7 +1122,7 @@ end
 
 
 function Room_determine_spots()
-  
+
   -- Algorithm:
   --
   -- For each area of each room:
@@ -1297,7 +1299,7 @@ STAIRWELL_SHAPES =
   D2 = { dirs={ 11, 13,  9,  7 }, steps=4 }
 
   -- other 2x2 seed shapes
-  
+
   E1 = { dirs={  1, 12,  6,  9, 17 }, steps=6, scx=0.4, scy=0.5 }
   E2 = { dirs={ 11,  2,  6, 19,  7 }, steps=4, fallback=1, straight=1 }
   E3 = { dirs={ 11,  2,  6,  9, 17 }, steps=4 }
@@ -1320,7 +1322,7 @@ STAIRWELL_SHAPES =
   I1 = { dirs={ 1, 2, 2, 16, 8, 9, 17 }, steps=6, scx=0.85, scy=0.35 }
   I2 = { dirs={ 11, 2, 2, 6, 8, 19, 7 }, steps=4, fallback=1, straight=1 }
   I3 = { dirs={ 1, 12, 2, 6, 8, 9, 17 }, steps=6, fallback=1 }
-  I4 = { dirs={ 11, 2, 2, 6, 8, 9, 17 }, steps=6, fallback=1 } 
+  I4 = { dirs={ 11, 2, 2, 6, 8, 9, 17 }, steps=6, fallback=1 }
 
   J1 = { dirs={ 1, 2, 2, 16, 8, 9, 18, 4 }, steps=6, scx=1.6, scy=0.5 }
   J2 = { dirs={ 11, 2, 2, 6, 8, 19, 8, 4 }, steps=4, fallback=1, straight=1 }
@@ -1392,7 +1394,7 @@ function Test_stairwell_shapes()
     -- OK --
   end
 
-  
+
   each name,shape in STAIRWELL_SHAPES do
     if not shape.dirs then
       error("Missing dirs in shape " .. name)
@@ -1609,7 +1611,26 @@ function Room_floor_heights()
       assert(A2.room == A.room)
 
       if not A2.delta_h then
-        area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))      
+        area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))
+      end
+    end
+  end
+
+
+  local function fix_porch_delta(R)
+    -- ensure any porch in the room is the highest area
+
+    local step_h = rand.sel(50, 16, 32)
+
+    each A in R.areas do
+      if A.is_porch then
+        each N in A.neighbors do
+          if N.room != R then continue end
+
+          if N.delta_h then
+            A.delta_h = math.max(A.delta_h, N.delta_h + step_h)
+          end
+        end
       end
     end
   end
@@ -1636,6 +1657,8 @@ function Room_floor_heights()
     local cur_delta_h = rand.irange(-4, 4) * 32
 
     area_assign_delta(start_area, up_chance, cur_delta_h)
+
+    fix_porch_delta(R)
 
     local adjust_h = 0
     if entry_area then adjust_h = entry_area.delta_h end
@@ -1716,7 +1739,7 @@ function Room_floor_heights()
 
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
-      
+
       if not (N and N.area) then continue end
 
       if N.area.room != R then
@@ -1754,7 +1777,7 @@ function Room_floor_heights()
     if total == 0 then
       return
     end
-    
+
     -- branching?
     if total > 1 then
       R.hallway.branched = true
@@ -2171,7 +2194,7 @@ function Room_set_sky_heights()
       end
     end
   end
-  
+
   -- ensure every zone gets a sky_h
   each Z in LEVEL.zones do
     if not Z.sky_h then
@@ -2233,6 +2256,7 @@ function Room_pool_hacks()
 
   local function can_become_pool(A)
     if not A.room then return false end
+    if A.is_porch then return false end
 
     -- room is too simple?
     if #A.room.areas < 2 then return false end
@@ -2261,7 +2285,7 @@ function Room_pool_hacks()
 
   if not LEVEL.liquid then return end
 
-  local prob = style_sel("liquids", 0, 20, 45, 90);
+  local prob = style_sel("liquids", 0, 20, 40, 80);
 
   if prob == 0 then return end
 
@@ -2279,7 +2303,7 @@ end
 
 
 function Room_build_all()
-  
+
   gui.printf("\n---=====  Build Rooms =====---\n\n")
 
   Area_prune_hallways()
