@@ -1185,9 +1185,9 @@ end
 
 
 
-function Layout_handle_corners__OLD()
+function Layout_handle_corners()
 
-  local function need_fencepost(corner)
+  local function need_fencepost(corner) --OLD
     --
     -- need a fence post where :
     --   1. three or more areas meet (w/ different heights)
@@ -1234,9 +1234,35 @@ function Layout_handle_corners__OLD()
   end
 
 
+  local function near_porch(corner)
+    each A in corner.areas do
+      if A.is_porch then return true end
+    end
+
+    return false
+  end
+
+
+  local function check_corner(cx, cy)
+    local corner = Corner_lookup(cx, cy)
+    
+    if not corner.kind and
+       #corner.areas > 1 and
+       near_porch(corner) and
+       not Corner_touches_wall(corner)
+    then
+      corner.kind = "post"
+    end
+  end
+
+
   ---| Layout_handle_corners |---
 
-  check_needed_fenceposts()
+  for cx = 1, SEED_W + 1 do
+  for cy = 1, SEED_H + 1 do
+    check_corner(cx, cy)
+  end
+  end
 end
 
 
