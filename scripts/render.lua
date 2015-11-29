@@ -740,6 +740,19 @@ function Render_corner(cx, cy)
   local function make_post(corner)
     -- TODO
     stderrf("Render_corner : post\n")
+
+    local mx, my = corner.x, corner.y
+    local mat    = corner.post_mat or "METAL"
+    
+    local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
+
+    if corner.post_top_h then
+      brushlib.add_top(brush, corner.post_top_h)
+    end
+
+    brushlib.set_mat(brush, mat, mat)
+
+    Trans.brush(brush)
   end
 
 

@@ -2329,7 +2329,6 @@ function Room_build_all()
   Room_set_sky_heights()
 
   Layout_finish_scenic_borders()
-  Layout_handle_corners()
   Layout_outdoor_shadows()
 
   Render_set_all_properties()
