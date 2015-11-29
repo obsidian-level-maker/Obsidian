@@ -443,6 +443,20 @@ end
 
 
 
+function Corner_touches_wall(corner)
+  each E in corner.edges do
+    if Edge_is_wallish(E) then return true end
+  end
+
+  each junc in corner.junctions do
+    if junc.E1 and Edge_is_wallish(junc.E1) then return true end
+    if junc.E2 and Edge_is_wallish(junc.E2) then return true end
+  end
+
+  return false
+end
+
+
 ------------------------------------------------------------------------
 
 
