@@ -735,6 +735,39 @@ end
 
 
 
+function Render_corner(cx, cy)
+
+  local function make_post(corner)
+    -- TODO
+    stderrf("Render_corner : post\n")
+  end
+
+
+  local function make_pillar(corner)
+    -- TODO
+  end
+
+
+  ---| Render_corner |---
+
+  local corner = Corner_lookup(cx, cy)
+
+  if corner.kind == nil or corner.kind == "nothing" then
+    -- nothing
+
+  elseif corner.kind == "post" then
+    make_post(corner)
+
+  elseif corner.kind == "pillar" then
+    make_pillar(corner)
+
+  else
+    error("Unknown corner kind: " .. tostring(corner.kind))
+  end
+end
+
+
+
 function Render_sink_part(A, S, where, sink)
  
 
@@ -1205,6 +1238,12 @@ function Render_all_areas()
 
   each depot in LEVEL.depots do
     Render_depot(depot)
+  end
+
+  for cx = 1, SEED_W + 1 do
+  for cy = 1, SEED_H + 1 do
+    Render_corner(cx, cy)
+  end
   end
 end
 
