@@ -720,6 +720,21 @@ function Edge_get_line(E)
 end
 
 
+function Edge_is_wallish(E)
+  if E.kind == "wall" or
+     E.kind == "trap_wall" or
+     E.kind == "window" or
+     E.kind == "arch" or
+     E.kind == "door" or
+     E.kind == "locked_door"
+  then
+    return true
+  end
+
+  return false
+end
+
+
 function Seed_coord_range(sx1, sy1, sx2, sy2)
   assert(Seed_valid(sx1, sy1))
   assert(Seed_valid(sx2, sy2))

@@ -1299,21 +1299,6 @@ end
 
 function Layout_outdoor_shadows()
 
-  local function is_wallish(edge_kind)
-    if edge_kind == "wall" or
-       edge_kind == "trap_wall" or
-       edge_kind == "window" or
-       edge_kind == "arch" or
-       edge_kind == "door" or
-       edge_kind == "locked_door"
-    then
-      return true
-    end
-
-    return false
-  end
-
-
   local function need_shadow(S, dir)
     if not S.area then return false end
 
@@ -1337,8 +1322,8 @@ function Layout_outdoor_shadows()
     if not E1 then E1 = junc.E1 end
     if not E2 then E2 = junc.E2 end
 
-    if E1 and is_wallish(E1.kind) then return true end
-    if E2 and is_wallish(E2.kind) then return true end
+    if E1 and Edge_is_wallish(E1) then return true end
+    if E2 and Edge_is_wallish(E2) then return true end
 
     return false
   end
