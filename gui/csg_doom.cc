@@ -2929,7 +2929,7 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 	// ignore light entities and boxes
 	if (strcmp(E->id.c_str(), "light") == 0 ||
 		strcmp(E->id.c_str(), "oblige_secret") == 0 ||
-		strcmp(E->id.c_str(), "box") == 0)
+		strcmp(E->id.c_str(), "oblige_box") == 0)
 		return;
 
 	int type = atoi(E->id.c_str());

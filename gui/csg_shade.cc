@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2013-2014 Andrew Apted
+//  Copyright (C) 2013-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -89,7 +89,7 @@ static void SHADE_CollectBoxes()
 	{
 		csg_entity_c *E = all_entities[i];
 
-		if (strcmp(E->id.c_str(), "box") != 0)
+		if (strcmp(E->id.c_str(), "oblige_box") != 0)
 			continue;
 
 		const char *box_type = E->props.getStr("box_type", "");

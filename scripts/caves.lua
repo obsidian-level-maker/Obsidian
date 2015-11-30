@@ -3086,7 +3086,7 @@ function Cave_outdoor_borders()
 
     local ent =
     {
-      id = "box"
+      id = "oblige_box"
       
       box_type = "outdoor"
 

@@ -1742,8 +1742,10 @@ static void MarkGapsWithEntities()
 			csg_entity_c *E = R->entities[k];
 
 			// ignore lights and boxes
-			if (E->Match("light") || E->Match("oblige_sun") ||
-				E->Match("box")   || E->Match("oblige_secret"))
+			if (E->Match("light") ||
+			    E->Match("oblige_sun") ||
+				E->Match("oblige_box") ||
+				E->Match("oblige_secret"))
 				continue;
 
 			// ignore map models
