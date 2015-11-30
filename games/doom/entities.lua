@@ -139,6 +139,8 @@ DOOM.ENTITIES =
   brain_target  = { id=87, r=20, h=32, pass=true }
 
   light = { id="light", r=1, h=1, pass=true }
+
+  secret = { id="oblige_secret", r=1, h=1, pass=true }
 }
 
 

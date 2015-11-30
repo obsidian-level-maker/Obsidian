@@ -68,4 +68,5 @@ thing 8152 o -  16 NULL "OBL: Nice Item"
 thing 8160 o -  64 NULL "OBL: Goal Spot"
 thing 8166 o -  16 NULL "OBL: Object"
 thing 8181 o -  12 NULL "OBL: Light"
+thing 8199 o -  12 NULL "OBL: Secret Area"
 

@@ -106,6 +106,10 @@ WADFAB_ENTITIES =
   -- lighting
 
   [8181] = { kind="light" }
+
+  -- miscellaneous
+
+  [8199] = { kind="secret" }
 }
 
 

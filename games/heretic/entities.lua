@@ -76,6 +76,8 @@ HERETIC.ENTITIES =
   --- miscellaneous ---
   dummy = { id=49 }
 
+  secret = { id="oblige_secret", r=1, h=1, pass=true }
+
   --- ambient sounds ---
   amb_scream = { id=1200 }
   amb_squish = { id=1201 }
