@@ -1297,7 +1297,7 @@ end
   end
 
 
-  if R then ---???  A.kind == "building" then
+  if R then
     A.wall_mat = assert(R.main_tex)
 
     if R.theme and R.theme.floors then
@@ -1307,19 +1307,6 @@ end
     if R.theme and R.theme.ceilings then
       A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
     end
-
-  elseif A.kind == "courtyard" then
-    A.floor_mat = "BROWN1"
-
-  elseif A.kind == "landscape" then
-    A.floor_mat = "RROCK19"
-    if THEME.base_skin and THEME.base_skin.grass then
-      A.floor_mat = THEME.base_skin.grass
-    end
-
-  elseif A.kind == "cave" then
-    A.wall_mat  = "ASHWALL4"
-    A.floor_mat = "RROCK04"
 
   else
     A.floor_mat = "_ERROR"
