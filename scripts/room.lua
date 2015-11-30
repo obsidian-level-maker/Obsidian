@@ -2101,8 +2101,36 @@ function Room_floor_heights()
   end
 
 
-  local function select_floor_mats(R)
+  local function maintain_material_across_conn(C)
+    if C.kind != "normal" then return false end
+
+    if C.A1.floor_h    != C.A2.floor_h then return false end
+    if C.R1.is_outdoor != C.R2.is_outdoor then return false end
+
+    if not (C.E1.kind == "nothing" or C.E1.kind == "arch") then return false end
+    if not (C.E2.kind == "nothing" or C.E2.kind == "arch") then return false end
+
+    return true
+  end
+
+
+  local function select_floor_mats(R, entry_conn)
     if not R.theme.floors then return end
+
+    -- maintain floor material if same height and no door
+    if entry_conn and maintain_material_across_conn(entry_conn) then
+      local A1 = entry_conn.A1
+      local A2 = entry_conn.A2
+
+      if not A1.floor_mat then
+        A1, A2 = A2, A1
+      end
+
+      assert(A1.floor_mat)
+      assert(A1.floor_h)
+
+      R.floor_mats[A1.floor_h] = A1.floor_mat
+    end
 
     each A in R.areas do
       if A.pool_hack then continue end
@@ -2151,7 +2179,7 @@ function Room_floor_heights()
       process_RANDOM_hallway(R, via_conn, entry_h)
     else
       process_room(R, entry_area)
-      select_floor_mats(R)
+      select_floor_mats(R, via_conn)
     end
 
     -- recurse to neighbors
@@ -2208,7 +2236,6 @@ function Room_floor_heights()
   -- recursively visit all rooms
   visit_room(first)
 
-  -- do hallway porches when all heights are known [ Hmmmm... ]
   each R in LEVEL.rooms do
     -- sanity check : all rooms were visited
 
@@ -2223,6 +2250,7 @@ end
 
     fix_pool_hacks(R)
 
+    -- we do hallway porches when all heights are known
     if R.kind == "hallway" then
 --???  Room_detect_porches(R)
     end

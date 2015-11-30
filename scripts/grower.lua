@@ -1840,8 +1840,8 @@ function Grower_hallway_kinds()
   local function visit_hall(H)
     local R1, R2 = get_room_pair(H)
 
-    local is_outdoor
-    local is_cave
+    local is_outdoor = false
+    local is_cave    = false
 
     if (R1.is_cave and R2.is_cave  and rand.odds(90)) or
        ((R1.is_cave or R2.is_cave) and rand.odds(60))
