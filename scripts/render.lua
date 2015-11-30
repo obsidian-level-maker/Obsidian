@@ -1402,7 +1402,30 @@ function Render_importants()
   local R  -- the current room
 
 
-  local function calc_player_see_dist(S, dir)
+  local function calc_player_see_dist(spot, dir)
+    local dx, dy = geom.delta(dir)
+    local z = spot.z + 48
+
+    local n = 1
+
+    while n < 18 do
+      local x2 = spot.x + n * dx * 64
+      local y2 = spot.y + n * dy * 64
+
+      if gui.trace_ray(spot.x, spot.y, z, x2, y2, z, "v") then
+        break;
+      end
+
+      n = n + 1
+    end
+
+    local dist = (n - 1) / 3
+
+--- stderrf("***** can_see_dist [%d] --> %1.2f\n", dir, dist)
+
+    return dist
+
+--[[ OLD SEED-BASED LOGIC
     -- returns # of whole seeds, zero if a wall directly nearby
 
     local R = S.area and S.area.room
@@ -1429,27 +1452,30 @@ function Render_importants()
 
 stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     return dist
+--]]
   end
 
 
   local function player_dir(spot)
+--[[
     local S = Seed_from_coord(spot.x, spot.y)
 
     -- hacky fix for diagonal seeds
     if not (S.area and S.area.room) and S.top then
       S = S.top
     end
+--]]
 
-    local D2 = calc_player_see_dist(S, 2)
-    local D4 = calc_player_see_dist(S, 4)
-    local D6 = calc_player_see_dist(S, 6)
-    local D8 = calc_player_see_dist(S, 8)
+    local D2 = calc_player_see_dist(spot, 2)
+    local D4 = calc_player_see_dist(spot, 4)
+    local D6 = calc_player_see_dist(spot, 6)
+    local D8 = calc_player_see_dist(spot, 8)
 
     -- up against a wall?
-    if D2 < 1 and D8 >= 1 then D8 = D8 + 10 end
-    if D8 < 1 and D2 >= 1 then D2 = D2 + 10 end
-    if D4 < 1 and D6 >= 1 then D6 = D6 + 10 end
-    if D6 < 1 and D4 >= 1 then D4 = D4 + 10 end
+    if D2 <= 1 and D8 > 1 then D8 = D8 * 1.8 end
+    if D8 <= 1 and D2 > 1 then D2 = D2 * 1.8 end
+    if D4 <= 1 and D6 > 1 then D6 = D6 * 1.8 end
+    if D6 <= 1 and D4 > 1 then D4 = D4 * 1.8 end
 
     local D_max = math.max(D2, D4, D6, D8)
 
