@@ -1293,6 +1293,14 @@ function Fab_load_wad(def)
       return
     end
 
+    if spot_info.kind == "secret" then
+      E.id = "oblige_secret"
+      E.flags = nil
+
+      table.insert(fab.entities, E)
+      return
+    end
+
     -- create a fake brush for the spot
     -- (this brush is never sent to the CSG code -- it is simply a
     --  handy way to get the spot translated and rotated)
