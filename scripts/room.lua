@@ -811,6 +811,15 @@ function simple_fence_edge(A, top_z)
 end
 
 
+function simple_steps_edge(A)
+  return
+  {
+    kind = "steps"
+    steps_mat = assert(A.zone.steps_mat)
+  }
+end
+
+
 function Junction_make_wall(junc)
   junc.E1 = simple_wall_edge(junc.A1)
   junc.E2 = simple_wall_edge(junc.A2)
@@ -831,6 +840,19 @@ function Junction_make_fence(junc)
 
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1
+end
+
+
+function Junction_make_steps(junc)
+  assert(not junc.E1)
+  assert(not junc.E2)
+
+  junc.E1 = simple_steps_edge(junc.A1)
+  junc.E2 = { kind="nothing" }
+
+  if junc.A1.floor_h < junc.A2.floor_h then
+    junc.E1, junc.E2 = junc.E2, junc.E1
+  end
 end
 
 
@@ -1585,6 +1607,9 @@ function Room_floor_heights()
       end
     end
 
+    if STYLE.steepness == "rare" or STYLE.steepness == "few" then h = h / 2 end
+    if STYLE.steepness == "heaps" then h = h * 2 end
+
     if rand.odds(up_chance) then
       return from_h + h
     else
@@ -1593,20 +1618,23 @@ function Room_floor_heights()
   end
 
 
+  local function areaconn_other(C, A)
+    if C.A1 == A then return C.A2 end
+    if C.A2 == A then return C.A1 end
+
+    return nil
+  end
+
+
   local function area_assign_delta(A, up_chance, cur_delta_h)
 
     A.delta_h = cur_delta_h
 
     each C in A.room.area_conns do
-      local A2
-
-      if C.A1 == A then
-        A2 = C.A2
-      elseif C.A2 == A then
-        A2 = C.A1
-      else
-        continue  -- not connected to this area
-      end
+      local A2 = areaconn_other(C, A)
+      
+      -- not connected to this area?
+      if not A2 then continue end
 
       assert(A2.room == A.room)
 
@@ -1622,6 +1650,10 @@ function Room_floor_heights()
 
     local step_h = rand.sel(50, 16, 32)
 
+    if STYLE.steepness == "rare" or STYLE.steepness == "few" then
+      step_h = step_h / 2
+    end
+
     each A in R.areas do
       if A.is_porch then
         each N in A.neighbors do
@@ -1632,6 +1664,24 @@ function Room_floor_heights()
           end
         end
       end
+    end
+  end
+
+
+  local function room_add_steps(A)
+    each C in A.room.area_conns do
+      local A2 = areaconn_other(C, A)
+      if not A2 then continue end
+
+      local diff = math.abs(A.floor_h - A2.floor_h)
+      if diff <= PARAM.jump_height then continue end
+
+      -- FIXME : generally build single staircases (a la V6 and earlier)
+
+      local junc = Junction_lookup(A, A2)
+
+stderrf("Junction_make_steps...\n")
+      Junction_make_steps(junc)
     end
   end
 
@@ -1669,6 +1719,8 @@ function Room_floor_heights()
 
       set_floor(A, R.entry_h + A.delta_h - adjust_h)
     end
+
+    room_add_steps(start_area)
   end
 
 
