@@ -49,6 +49,9 @@
 
     symmetry : keyword   -- symmetry of room, or NIL
                          -- keywords are "x", "y", "xy"
+
+    floor_mats[z] : name
+     ceil_mats[z] : name
 --]]
 
 
@@ -96,6 +99,8 @@ function ROOM_CLASS.new()
     goals = {}
     importants = {}
     teleporters = {}
+    floor_mats = {}
+    ceil_mats = {}
 
     closets = {}
     chunks  = {}    -- NOT USED
@@ -2096,6 +2101,23 @@ function Room_floor_heights()
   end
 
 
+  local function select_floor_mats(R)
+    if not R.theme.floors then return end
+
+    each A in R.areas do
+      if A.pool_hack then continue end
+
+      assert(A.floor_h)
+
+      if not R.floor_mats[A.floor_h] then
+        R.floor_mats[A.floor_h] = rand.key_by_probs(R.theme.floors)
+      end
+
+      A.floor_mat = assert(R.floor_mats[A.floor_h])
+    end
+  end
+
+
   local function visit_room(R, entry_h, entry_area, prev_room, via_conn)
     -- get peered room (for CTF mode)
     local R2 = R.sister or R.brother
@@ -2129,6 +2151,7 @@ function Room_floor_heights()
       process_RANDOM_hallway(R, via_conn, entry_h)
     else
       process_room(R, entry_area)
+      select_floor_mats(R)
     end
 
     -- recurse to neighbors

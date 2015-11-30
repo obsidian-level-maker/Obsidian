@@ -1300,10 +1300,6 @@ end
   if R then
     A.wall_mat = assert(R.main_tex)
 
-    if R.theme and R.theme.floors then
-      A.floor_mat = rand.key_by_probs(R.theme.floors)
-    end
-
     if R.theme and R.theme.ceilings then
       A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
     end
