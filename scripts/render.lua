@@ -443,9 +443,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     local num_steps = 1
 
-    if diff_h > 32 then num_steps = 2 end
-    if diff_h > 64 then num_steps = 3 end
-    if diff_h > 96 then num_steps = 4 end
+    while (diff_h / num_steps) > 24 do
+      num_steps = num_steps + 1
+    end
 
     local thick = 16 * num_steps
 
