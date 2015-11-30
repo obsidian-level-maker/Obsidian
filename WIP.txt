@@ -12,12 +12,14 @@ Stuff to get working again
 
 +  large traps
 
++  secret doors
+
 
 
 Other important stuff
 ---------------------
 
-+  placement of items in rooms
++  big skull locked doors
 
 -  item closets would be nice
 
