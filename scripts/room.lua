@@ -933,24 +933,6 @@ function Room_border_up()
 
     if A1.room == A2.room then
       -- nothing absolutely needed if same room
-      -- FIXME : too simplistic!
-
-      if A1.is_porch or A2.is_porch then
----??????  junc.kind = "pillar"
-      end
-
--- STEP TEST
-      local z1 = math.min(A1.floor_h, A2.floor_h)
-      local z2 = math.max(A1.floor_h, A2.floor_h)
-      if (z2 - z1) >  24 and (z2 - z1) <= 72 then
---!!!!!! FIXME
---[[
-        junc.kind2 = junc.kind
-        junc.kind = "steps"
-        junc.steps_mat = "FLAT1"
---]]
-      end
-
       return
     end
 
