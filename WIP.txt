@@ -3,18 +3,8 @@ WORK IN PROGRESS
 ================
 
 
-Porches
--------
-
-!! fix missing posts
-   [ need to check if a WALL or wall-like edge touches a corner ]
-
-
-
 Stuff to get working again
 --------------------------
-
-!!  steps within rooms (but.... use an EDGE??)
 
 +  windows (proper EDGE object)
 
