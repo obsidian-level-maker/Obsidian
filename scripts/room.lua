@@ -1674,20 +1674,20 @@ function Room_floor_heights()
   end
 
 
-  local function room_add_steps(A)
-    each C in A.room.area_conns do
-      local A2 = areaconn_other(C, A)
-      if not A2 then continue end
+  local function room_add_steps(R)
+    each C in R.area_conns do
+      local A1 = C.A1
+      local A2 = C.A2
 
       -- ignore pools
-      if A.pool_hack or A2.pool_hack then continue end
+      if A1.pool_hack or A2.pool_hack then continue end
 
-      local diff = math.abs(A.floor_h - A2.floor_h)
+      local diff = math.abs(A1.floor_h - A2.floor_h)
       if diff <= PARAM.jump_height then continue end
 
       -- FIXME : generally build single staircases (a la V6 and earlier)
 
-      local junc = Junction_lookup(A, A2)
+      local junc = Junction_lookup(A1, A2)
 
       Junction_make_steps(junc)
     end
@@ -1728,7 +1728,7 @@ function Room_floor_heights()
       set_floor(A, R.entry_h + A.delta_h - adjust_h)
     end
 
-    room_add_steps(start_area)
+    room_add_steps(R)
   end
 
 

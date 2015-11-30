@@ -434,7 +434,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local mat = assert(E.steps_mat)
     local steps_z1 = E.steps_z1
     local steps_z2 = E.steps_z2
-    local thick = E.steps_thick or 48
 
     -- wrong side?
     assert(steps_z2 > steps_z1)
@@ -447,6 +446,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     if diff_h > 32 then num_steps = 2 end
     if diff_h > 64 then num_steps = 3 end
     if diff_h > 96 then num_steps = 4 end
+
+    local thick = 16 * num_steps
 
     -- determine A and B modes (FIXME? quite broken atm)
     local a_mode = calc_step_A_mode(S, dir)
