@@ -1596,7 +1596,8 @@ function Room_floor_heights()
     end
 
     if STYLE.steepness == "rare" or STYLE.steepness == "few" then h = h / 2 end
-    if STYLE.steepness == "heaps" then h = h * 2 end
+    if STYLE.steepness == "more"  then h = h * 1.5 end
+    if STYLE.steepness == "heaps" then h = h * 2.0 end
 
     if rand.odds(up_chance) then
       return from_h + h
