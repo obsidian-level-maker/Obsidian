@@ -2759,6 +2759,31 @@ static doom_sector_c * DM_FindDepotPeer()
 }
 
 
+void DM_ProcessSecrets()
+{
+	// find the "oblige_secret" entities and mark the sector containing
+	// it as SECRET (overriding any existing special).
+
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		if (R->index < 0)
+			continue;
+
+		doom_sector_c *S = dm_sectors[R->index];
+
+		for (unsigned int k = 0 ; k < R->entities.size() ; k++)
+		{
+			csg_entity_c *E = R->entities[k];
+
+			if (strcmp(E->id.c_str(), "oblige_secret") == 0)
+				S->special = 9;
+		}
+	}
+}
+
+
 static void DM_ConvertSectorToOther(doom_sector_c *src, doom_sector_c *dest)
 {
 	for (unsigned int i = 0 ; i < dm_sidedefs.size() ; i++)
@@ -2903,6 +2928,7 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
 	// ignore light entities and boxes
 	if (strcmp(E->id.c_str(), "light") == 0 ||
+		strcmp(E->id.c_str(), "oblige_secret") == 0 ||
 		strcmp(E->id.c_str(), "box") == 0)
 		return;
 
@@ -3089,6 +3115,7 @@ void CSG_DOOM_Write()
 ///???	DM_RoundCorners();
 	DM_AlignTextures();
 
+	DM_ProcessSecrets();
 	DM_ProcessExtraFloors();
 	DM_ProcessLightFX();
 	DM_ProcessDepots();

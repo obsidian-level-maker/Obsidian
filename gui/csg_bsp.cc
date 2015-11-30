@@ -1743,7 +1743,7 @@ static void MarkGapsWithEntities()
 
 			// ignore lights and boxes
 			if (E->Match("light") || E->Match("oblige_sun") ||
-				E->Match("box"))
+				E->Match("box")   || E->Match("oblige_secret"))
 				continue;
 
 			// ignore map models
