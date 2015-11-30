@@ -540,7 +540,7 @@ function Room_reckon_doors()
 
     -- secret door ?
     if C.R1.is_secret != C.R2.is_secret then
-      E.kind = "door"  --!!!!! FIXME secret_door
+      E.kind = "secret_door"
 
       if F then F.kind = E.kind end
 

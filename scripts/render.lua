@@ -448,6 +448,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     end
 
     local thick = 16 * num_steps
+    if thick > 64 then thick = 64 end
 
     -- determine A and B modes (FIXME? quite broken atm)
     local a_mode = calc_step_A_mode(S, dir)
@@ -488,6 +489,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     if E.kind == "arch" then
       fab_name = "Arch_plain"
+    elseif E.kind == "secret_door" then
+      fab_name = "Door_secret"
     else
       fab_name = "Door_manual_big"
     end
@@ -667,7 +670,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif E.kind == "fence" then
     straddle_fence()
 
-  elseif E.kind == "arch" or E.kind == "door" then
+  elseif E.kind == "arch" or E.kind == "door" or E.kind == "secret_door" then
     straddle_door(S, dir)
 
   elseif E.kind == "lock_door" then
