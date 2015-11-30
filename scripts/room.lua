@@ -2200,7 +2200,7 @@ end
     fix_pool_hacks(R)
 
     if R.kind == "hallway" then
---!!!!      Room_detect_porches(R)
+--???  Room_detect_porches(R)
     end
   end
 end

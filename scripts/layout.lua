@@ -81,15 +81,16 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   local function nearest_conn(spot)
     local dist
 
-do return 10 end
-
     each C in R.conns do
-      if C.kind == "normal" or C.kind == "closet" then
-        -- FIXME: use the EDGE, luke
-        local S = C:get_seed(A)
-        local dir = sel(C.R1 == R, C.dir, 10 - C.dir)
+      if C.kind == "teleporter" then continue end
 
-        local ex, ey = S:edge_coord(dir)
+      for pass = 1, 2 do
+        local E = sel(pass == 1, C.E1, C.F1)
+
+        if not E then continue end
+        
+        local ex, ey = Edge_mid_point(E)
+
         local d = geom.dist(ex, ey, spot.x, spot.y) / SEED_SIZE
 
         -- tie breaker
@@ -166,10 +167,6 @@ do return 10 end
       score = score + diff_h / 10
     end
 
----???    -- for symmetrical rooms, prefer a centred item
----???    if sx == bonus_x then score = score + 0.8 end
----???    if sy == bonus_y then score = score + 0.8 end
- 
     -- tie breaker
     score = score + gui.random() ^ 2
 

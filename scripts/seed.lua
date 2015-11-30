@@ -690,6 +690,15 @@ function Seed_create_edge_pair(S, dir, long, kind)
 end
 
 
+function Edge_mid_point(E)
+  -- FIXME: this does not handle long edges
+
+  local S = E.S
+
+  return S:edge_coord(E.dir)
+end
+
+
 function Edge_get_line(E)
   -- returns coordinates of left point edge --> right point
 

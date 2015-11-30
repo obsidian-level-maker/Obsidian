@@ -863,7 +863,7 @@ function Grower_organic_room(P)
       return list
     end
 
-    if rand.odds(50) then --!!!!
+    if rand.odds(50) then
       x_dir, y_dir = y_dir, x_dir
     end
 
