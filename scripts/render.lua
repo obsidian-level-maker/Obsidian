@@ -562,8 +562,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       fab_name = "Locked_double"
     elseif #LOCK.goals == 3 then
       fab_name = "Locked_ks_ALL"
-    elseif string.sub(LOCK.goals[1].item, 1, 2) == "ks" then
-      fab_name = "Locked_small_" .. LOCK.goals[1].item
+---###  elseif string.sub(LOCK.goals[1].item, 1, 2) == "ks" then
+---###    fab_name = "Locked_small_" .. LOCK.goals[1].item
     else
       fab_name = "Locked_" .. LOCK.goals[1].item
     end

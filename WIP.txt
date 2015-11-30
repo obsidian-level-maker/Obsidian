@@ -19,8 +19,6 @@ Stuff to get working again
 Other important stuff
 ---------------------
 
-+  big skull locked doors
-
 -  item closets would be nice
 
 -  wall switches too
