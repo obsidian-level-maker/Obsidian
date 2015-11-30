@@ -1402,25 +1402,71 @@ function Render_importants()
   local R  -- the current room
 
 
-  local function player_dir(spot)
-    -- FIXME : analyse all 4 directions, pick one which can see the most
-    --         [ or opposite of one which can see the least ]
+  local function calc_player_see_dist(S, dir)
+    -- returns # of whole seeds, zero if a wall directly nearby
 
+    local R = S.area and S.area.room
+
+    if not R then return 0 end
+
+    local dist = 0
+
+    while dist < 20 do
+      local N = S:neighbor(dir, "NODIR")
+      if not N then break; end
+
+      -- step across a diagonal boundary
+      if N == "NODIR" then
+        N = S.top or S.bottom
+        if N then N = S:neighbor(dir) end
+        if not N then break; end
+      end
+
+      if (N.area and N.area.room) != R then break; end
+
+      S = N ; dist = dist + 1.0
+    end
+
+stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
+    return dist
+  end
+
+
+  local function player_dir(spot)
     local S = Seed_from_coord(spot.x, spot.y)
 
-    if R.sh > R.sw then
-      if S.sy > (R.sy1 + R.sy2) / 2 then 
-        return 2
-      else
-        return 8
-      end
-    else
-      if S.sx > (R.sx1 + R.sx2) / 2 then 
-        return 4
-      else
-        return 6
-      end
+    -- hacky fix for diagonal seeds
+    if not (S.area and S.area.room) and S.top then
+      S = S.top
     end
+
+    local D2 = calc_player_see_dist(S, 2)
+    local D4 = calc_player_see_dist(S, 4)
+    local D6 = calc_player_see_dist(S, 6)
+    local D8 = calc_player_see_dist(S, 8)
+
+    -- up against a wall?
+    if D2 < 1 and D8 >= 1 then D8 = D8 + 10 end
+    if D8 < 1 and D2 >= 1 then D2 = D2 + 10 end
+    if D4 < 1 and D6 >= 1 then D6 = D6 + 10 end
+    if D6 < 1 and D4 >= 1 then D4 = D4 + 10 end
+
+    local D_max = math.max(D2, D4, D6, D8)
+
+    if D2 < D_max and D4 < D_max and D6 < D_max then return 8 end
+    if D2 < D_max and D4 < D_max and D8 < D_max then return 6 end
+    if D2 < D_max and D6 < D_max and D8 < D_max then return 4 end
+    if D4 < D_max and D6 < D_max and D8 < D_max then return 2 end
+
+    -- more than one direction is maximal, break the tie
+    for loop = 1,50 do
+      if D2 == D_max and rand.odds(20) then return 2 end
+      if D4 == D_max and rand.odds(20) then return 4 end
+      if D6 == D_max and rand.odds(20) then return 6 end
+      if D8 == D_max and rand.odds(20) then return 8 end
+    end
+
+    return rand.dir()
   end
 
 
@@ -1646,7 +1692,7 @@ function Render_importants()
     skin1. in_target = string.format("tele%d", skin1. in_tag)
     skin1.out_target = string.format("tele%d", skin1.out_tag)
 
-    local spot_dir = 2  --!!! FIXME  10 - dir_for_wotsit(S)
+    local spot_dir = player_dir(spot)
 
     local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot_dir)
 
