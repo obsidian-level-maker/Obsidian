@@ -85,9 +85,6 @@ function Render_edge(E)
   local dir = assert(E.dir)
 
 
-  local NA = {}  -- FIXME : all usages of this here are INCORRECT
-
-
   local DIAG_DIR_MAP = { [1]=2, [9]=8, [3]=6, [7]=4 }
 
 
@@ -435,23 +432,23 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
   local function edge_steps()
     local mat = assert(E.steps_mat)
-    local steps_z1 =  A.floor_h
-    local steps_z2 = NA.floor_h
+    local steps_z1 = E.steps_z1
+    local steps_z2 = E.steps_z2
     local thick = E.steps_thick or 48
 
     -- wrong side?
-    if steps_z2 < steps_z1 then return end
+    assert(steps_z2 > steps_z1)
 
     local diff_h = steps_z2 - steps_z1
     assert(diff_h > 8)
-    assert(diff_h <= 96)
 
     local num_steps = 1
 
     if diff_h > 32 then num_steps = 2 end
     if diff_h > 64 then num_steps = 3 end
+    if diff_h > 96 then num_steps = 4 end
 
-    -- determine A and B modes
+    -- determine A and B modes (FIXME? quite broken atm)
     local a_mode = calc_step_A_mode(S, dir)
     local b_mode = calc_step_B_mode(S, dir)
 
@@ -459,7 +456,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       local z = steps_z1 + i * diff_h / (num_steps + 1)
       local TK = thick * (num_steps + 1 - i) / num_steps
 
-      local brush = make_step_brush(S, dir, a_mode, b_mode, TK)
+      local brush = make_step_brush(E.S, E.dir, a_mode, b_mode, TK)
 
       table.insert(brush, { t=z })
 
@@ -602,7 +599,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     assert(E.peer and E.peer.area)
 
     -- FIXME: window_z1 in JUNC/EDGE
-    local z = math.max(A.floor_h or 0, NA.floor_h or 0)
+    local z = E.window_z1
 
     local inner_mat = assert(A.wall_mat)
     local outer_mat = assert(E.peer.area.wall_mat)

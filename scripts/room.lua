@@ -811,11 +811,13 @@ function simple_fence_edge(A, top_z)
 end
 
 
-function simple_steps_edge(A)
+function simple_steps_edge(A, A2)
   return
   {
     kind = "steps"
     steps_mat = assert(A.zone.steps_mat)
+    steps_z1 = math.min(A.floor_h, A2.floor_h)
+    steps_z2 = math.max(A.floor_h, A2.floor_h)
   }
 end
 
@@ -847,12 +849,16 @@ function Junction_make_steps(junc)
   assert(not junc.E1)
   assert(not junc.E2)
 
-  junc.E1 = simple_steps_edge(junc.A1)
+  junc.E1 = simple_steps_edge(junc.A1, junc.A2)
   junc.E2 = { kind="nothing" }
 
-  if junc.A1.floor_h < junc.A2.floor_h then
+  -- ensure edge is on the correct side (the lowest one)
+  if junc.A1.floor_h > junc.A2.floor_h then
     junc.E1, junc.E2 = junc.E2, junc.E1
   end
+
+  junc.E1.area = junc.A1
+  junc.E2.area = junc.A2
 end
 
 
