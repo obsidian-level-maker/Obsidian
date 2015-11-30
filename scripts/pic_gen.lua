@@ -733,6 +733,8 @@ function Title_add_background()
 
   local filename = rand.pick(backgrounds)
 
+  gui.printf("Using title background: %s\n", filename)
+
   gui.title_load_image(0, 0, OB_TITLE_DIR .. "/" .. filename)
 end
 
@@ -981,7 +983,7 @@ function Title_add_credit()
 
   Title_styled_string(T, credit, styles)
 
-  gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
+  gui.title_load_image(282, 162, "data/logo1.tga")
 end
 
 
