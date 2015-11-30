@@ -735,9 +735,6 @@ end
 function Render_corner(cx, cy)
 
   local function make_post(corner)
-    -- TODO
-    stderrf("Render_corner : post\n")
-
     local mx, my = corner.x, corner.y
     local mat    = corner.post_mat or "METAL"
     

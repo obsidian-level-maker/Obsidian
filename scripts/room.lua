@@ -1679,6 +1679,9 @@ function Room_floor_heights()
       local A2 = areaconn_other(C, A)
       if not A2 then continue end
 
+      -- ignore pools
+      if A.pool_hack or A2.pool_hack then continue end
+
       local diff = math.abs(A.floor_h - A2.floor_h)
       if diff <= PARAM.jump_height then continue end
 
@@ -1686,7 +1689,6 @@ function Room_floor_heights()
 
       local junc = Junction_lookup(A, A2)
 
-stderrf("Junction_make_steps...\n")
       Junction_make_steps(junc)
     end
   end
