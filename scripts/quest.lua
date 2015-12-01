@@ -2396,6 +2396,10 @@ function Quest_choose_themes()
       end
     end
 
+    if table.empty(tab) then
+      gui.printf("WARNING: no rooms themes with kind=\"%s\"\n", kind);
+    end
+
     return tab
   end
 
