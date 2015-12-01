@@ -106,3 +106,27 @@ PREFABS.Locked_sw_snake_diag =
   flat_FLAT14  = "SKSNAKE1"
 }
 
+
+--
+-- Heretic support
+--
+PREFABS.Locked_sw_metal =
+{
+  template = "Template_locked_door"
+
+  switch = "sw_metal"
+
+  tex_COMPBLUE = "METL1"
+  flat_FLAT14  = "METL1"
+}
+
+PREFABS.Locked_sw_metal_diag =
+{
+  template = "Template_locked_door_diag"
+
+  switch = "sw_metal"
+
+  tex_COMPBLUE = "METL1"
+  flat_FLAT14  = "METL1"
+}
+
