@@ -730,12 +730,6 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
 
   info.conn.lock = LOCK
 
-  if info.conn.A1.room != info.before_R then
-    assert(info.conn.A2.room == info.before_R)
-
-    info.conn:swap()
-  end
-
   check_special_rooms()
 
 
@@ -784,7 +778,7 @@ gui.debugf("---> NOTHING POSSIBLE\n")
 
 
   gui.printf("Dividing %s @ %s (%s -- %s)\n", info.quest.name,
-             info.conn.name, info.conn.A1.room.name, info.conn.A2.room.name)
+             info.conn.name, info.conn.R1.name, info.conn.R2.name)
 
 gui.debugf("   VIA: %s (x%d)\n", info.new_goals[1].item or "???", #info.new_goals)
 gui.debugf("   Entry: %s\n", (info.quest.entry and info.quest.entry.name) or "--")
@@ -1323,6 +1317,19 @@ function Quest_order_by_visit()
   end
 
 
+  local function do_flip_connections()
+    -- mark which doors needs to be built on the other side
+
+    each C in LEVEL.conns do
+      if C.kind == "normal" then
+        if C.R1.lev_along > C.R2.lev_along then
+          C.flip_it = true
+        end
+      end
+    end
+  end
+
+
   ---| Quest_order_by_visit |---
 
   visit_quest_node(LEVEL.quest_root)
@@ -1364,6 +1371,8 @@ if not R.lev_along then R.lev_along = 0.5 end
   dump_room_order()
 
   do_entry_conns(LEVEL.start_room, nil, {})
+
+  do_flip_connections()
 end
 
 

@@ -359,11 +359,16 @@ function Trans.box_transform(x1, y1, x2, y2, z, dir)
 end
 
 
-function Trans.edge_transform(E, z, ofs_L, ofs_R, deep, over)
+function Trans.edge_transform(E, z, ofs_L, ofs_R, deep, over, flip_it)
   local x1 = E.S.x1
   local y1 = E.S.y1
   local x2 = E.S.x2
   local y2 = E.S.y2
+
+  if flip_it then
+    deep,  over  = over,  deep
+    ofs_L, ofs_R = ofs_R, ofs_L
+  end
 
   if E.long > 1 then
     if E.dir == 8 then x2 = x2 + (E.long - 1) * SEED_SIZE end
@@ -382,7 +387,9 @@ function Trans.edge_transform(E, z, ofs_L, ofs_R, deep, over)
   if E.dir == 4 then y1 = y1 + ofs_L ; y2 = y2 - ofs_R end
   if E.dir == 6 then y2 = y2 - ofs_L ; y1 = y1 + ofs_R end
 
-  return Trans.box_transform(x1,y1, x2,y2, z, E.dir)
+  local new_dir = sel(flip_it, 10 - E.dir, E.dir)
+
+  return Trans.box_transform(x1,y1, x2,y2, z, new_dir)
 end
 
 

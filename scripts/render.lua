@@ -473,12 +473,18 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     assert(E.peer)
     assert(E.peer.area)
 
+    assert(E.conn)
+
     local z = A.floor_h
 
     if E.conn then z = assert(E.conn.door_h) end
 
     local inner_mat = assert(A.wall_mat)
     local outer_mat = assert(E.peer.area.wall_mat)
+
+    if E.conn.flip_it then
+      inner_mat, outer_mat = outer_mat, inner_mat
+    end
 
     local def
     local skin1 = { wall=inner_mat, outer=outer_mat }
@@ -501,6 +507,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local def = Fab_lookup(fab_name)
 
+      if E.conn.flip_it then dir = 10 - dir end
+
       local dir2 = DIAG_DIR_MAP[dir]
 
       local S = E.S
@@ -512,7 +520,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local def = Fab_lookup(fab_name)
 
-      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
+      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn.flip_it)
 
       Fabricate(R, def, T, { skin1 })
 
@@ -534,22 +542,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local inner_mat = assert(A.wall_mat)
     local outer_mat = assert(E.peer.area.wall_mat)
 
-
-    -- ensure it faces the correct direction
---[[ FIXME ???
-    if LOCK.conn.A1 != A then
-      assert(LOCK.conn.A2 == A)
-
-      if not geom.is_corner(dir) then
-        S = S:neighbor(dir)
-      end
-
-      dir = 10 - dir
-
+    if E.conn.flip_it then
       inner_mat, outer_mat = outer_mat, inner_mat
     end
---]]
-
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
 
@@ -579,6 +574,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local def = Fab_lookup(fab_name)
 
+      if E.conn.flip_it then dir = 10 - dir end
+
       local dir2 = DIAG_DIR_MAP[dir]
 
       local S = E.S
@@ -590,7 +587,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local def = Fab_lookup(fab_name)
 
-      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
+      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn.flip_it)
 
       Fabricate(R, def, T, { skin1 })
 
@@ -671,7 +668,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     straddle_fence()
 
   elseif E.kind == "arch" or E.kind == "door" or E.kind == "secret_door" then
-    straddle_door(S, dir)
+    straddle_door()
 
   elseif E.kind == "lock_door" then
     straddle_locked_door()
