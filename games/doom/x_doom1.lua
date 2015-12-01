@@ -1793,9 +1793,9 @@ UNFINISHED["ultdoom"] =
 
 OB_THEMES["deimos"] =
 {
+  game = "doom1"
   label = "Deimos"
   priority = 16
-  game = "doom1"
   name_class = "TECH"
   mixed_prob = 30
 }
@@ -1803,9 +1803,9 @@ OB_THEMES["deimos"] =
 
 OB_THEMES["flesh"] =
 {
+  game = "ultdoom"
   label = "Thy Flesh"
   priority = 12
-  game = "ultdoom"
   name_class = "GOTHIC"
   mixed_prob = 20
 }

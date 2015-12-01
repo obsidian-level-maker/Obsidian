@@ -281,8 +281,8 @@ QUAKE.ROOMS =
 
 OB_THEMES["q1_tech"] =
 {
+  game = "quake"
   label = "Tech"
-  for_games = { quake=1 }
   name_theme = "TECH"
   mixed_prob = 50
 }
@@ -290,8 +290,8 @@ OB_THEMES["q1_tech"] =
 
 OB_THEMES["q1_castle"] =
 {
+  game = "quake"
   label = "Castle"
-  for_games = { quake=1 }
   name_theme = "URBAN"
   mixed_prob = 50
 }

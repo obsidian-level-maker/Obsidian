@@ -69,7 +69,7 @@ QUAKE.PARAMETERS =
 
 ------------------------------------------------------------
 
-OB_GAMES["quake"] =
+UNFINISHED["quake"] =
 {
   label = "Quake"
 

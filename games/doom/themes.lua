@@ -1368,6 +1368,7 @@ DOOM.NAMES =
 
 OB_THEMES["tech"] =
 {
+  game = { doom1=1, doom2=1 }
   label = "Tech"
   priority = 18
   name_class = "TECH"
@@ -1377,6 +1378,7 @@ OB_THEMES["tech"] =
 
 OB_THEMES["hell"] =
 {
+  game = { doom1=1, doom2=1 }
   label = "Hell"
   priority = 14
   name_class = "GOTHIC"
@@ -1386,9 +1388,9 @@ OB_THEMES["hell"] =
 
 OB_THEMES["urban"] =
 {
+  game = "doom2"
   label = "Urban"
   priority = 16
-  game = "doom2"
   name_class = "URBAN"
   mixed_prob = 50
 }
@@ -1397,6 +1399,7 @@ OB_THEMES["urban"] =
 OB_THEMES["mostly_tech"] =
 {
   label = "Mostly Tech"
+  game = { doom1=1, doom2=1 }
   priority = 8
   name_class = "TECH"
 }
@@ -1404,15 +1407,16 @@ OB_THEMES["mostly_tech"] =
 
 OB_THEMES["mostly_urban"] =
 {
+  game = "doom2"
   label = "Mostly Urban"
   priority = 4
-  game = "doom2"
   name_class = "URBAN"
 }
 
 
 OB_THEMES["mostly_hell"] =
 {
+  game = { doom1=1, doom2=1 }
   label = "Mostly Hell"
   priority = 6
   name_class = "HELL"
@@ -1421,9 +1425,9 @@ OB_THEMES["mostly_hell"] =
 
 OB_THEMES["wolf"] =
 {
+  game = "doom2"
   label = "Wolfenstein"
   priority = 2
-  game = "doom2"
   name_class = "URBAN"
 
   -- this theme is special, hence no mixed_prob

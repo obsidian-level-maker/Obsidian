@@ -378,6 +378,7 @@ HERETIC.ROOMS =
 
 OB_THEMES["h_urban"] =
 {
+  game = "heretic"
   label = "Urban"
   name_theme = "URBAN"
   mixed_prob = 50
@@ -386,6 +387,7 @@ OB_THEMES["h_urban"] =
 
 OB_THEMES["h_castle"] =
 {
+  game = "heretic"
   label = "Castle"
   name_theme = "GOTHIC"
   mixed_prob = 50
