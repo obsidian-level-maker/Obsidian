@@ -89,6 +89,33 @@ HERETIC.ROOM_THEMES =
   }
 
 
+  -- TODO: one for each major theme
+  any_Hallway =
+  {
+    kind = "hallway"
+
+    walls =
+    {
+      GRSTNPB  = 60
+      SANDSQ2  = 20
+      SNDCHNKS = 20
+    }
+
+    floors =
+    {
+      FLOOR00 = 50
+      FLOOR18 = 50
+      FLAT521 = 50
+      FLAT506 = 50
+    }
+
+    ceilings =
+    {
+      FLAT523 = 50
+    }
+  }
+
+
   ---- URBAN THEME ---------------------------------
 
   h_urban_House1 =
@@ -294,32 +321,6 @@ HERETIC.ROOM_THEMES =
     {
       FLAT523 = 50
       FLOOR17 = 50
-    }
-  }
-
-
-  h_castle_Hallway =
-  {
-    kind = "hallway"
-
-    walls =
-    {
-      GRSTNPB  = 60
-      SANDSQ2  = 20
-      SNDCHNKS = 20
-    }
-
-    floors =
-    {
-      FLOOR00 = 50
-      FLOOR18 = 50
-      FLAT521 = 50
-      FLAT506 = 50
-    }
-
-    ceilings =
-    {
-      FLAT523 = 50
     }
   }
 
