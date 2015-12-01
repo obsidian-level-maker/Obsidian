@@ -2698,49 +2698,49 @@ HEXEN.NAMES =
 
 --------------------------------------------------
 
-OB_THEMES["x_dungeon"] =
+UNFINISHED["x_dungeon"] =
 {
   label = "Dungeon"
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
-OB_THEMES["x_element"] =
+UNFINISHED["x_element"] =
 {
   label = "Elemental"
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
-OB_THEMES["x_wild"] =
+UNFINISHED["x_wild"] =
 {
   label = "Wilderness"
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
-OB_THEMES["x_cave"] =
+UNFINISHED["x_cave"] =
 {
   label = "Cave"
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
 
-OB_THEMES["x_ice"] =
+UNFINISHED["x_ice"] =
 {
   label = "Ice"
   name_theme = "GOTHIC"
   mixed_prob = 10
 }
 
-OB_THEMES["x_swamp"] =
+UNFINISHED["x_swamp"] =
 {
   label = "Swamp"
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
 
-OB_THEMES["x_village"] =
+UNFINISHED["x_village"] =
 {
   label = "Village"
   name_theme = "URBAN"

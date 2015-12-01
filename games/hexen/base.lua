@@ -57,7 +57,7 @@ HEXEN.PARAMETERS =
 
 ------------------------------------------------------------
 
-OB_GAMES["hexen"] =
+UNFINISHED["hexen"] =
 {
   label = "Hexen"
 
