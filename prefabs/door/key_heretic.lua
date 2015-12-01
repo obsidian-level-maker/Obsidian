@@ -11,7 +11,7 @@ PREFABS.Locked_k_blue =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   line_33 = 32
@@ -28,7 +28,7 @@ PREFABS.Locked_k_yellow =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   line_33 = 34
@@ -45,7 +45,7 @@ PREFABS.Locked_k_green =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   -- prefab has green statue and line special #33
