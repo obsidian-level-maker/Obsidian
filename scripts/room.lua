@@ -592,6 +592,10 @@ function Room_reckon_doors()
     end
 
 
+    -- temp hack for Heretic
+    if THEME.no_doors then return end
+
+
     -- apply the random check
     local prob = indoor_prob
     if (C.R1.is_outdoor and C.R2.kind != "cave") or

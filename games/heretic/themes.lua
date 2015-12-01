@@ -25,7 +25,7 @@ HERETIC.THEMES =
       k_blue   = 30
     }
 
-    switches =
+    ___switches =  -- FIXME
     {
       sw_metal = 50
     }
@@ -34,6 +34,10 @@ HERETIC.THEMES =
     {
       BRWNRCKS = 20
     }
+
+    -- FIXME: temporary crud
+    steps_mat = "FLAT506"
+    no_doors = true
   }
 
 

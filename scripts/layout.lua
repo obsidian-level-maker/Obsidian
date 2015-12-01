@@ -894,8 +894,6 @@ function Layout_create_scenic_borders()
       Z.border_info.kind = "mountain"
     end
 
-    Z.hill_mat = "FLAT10"
-
     each A in Z.border_info.areas do
       A.kind = Z.border_info.kind
       

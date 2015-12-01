@@ -2360,7 +2360,7 @@ function Quest_select_textures()
     assert(THEME.fences)
 
     Z.fence_mat = rand.key_by_probs(THEME.fences)
-    Z.steps_mat = "FLAT1" -- FIXME
+    Z.steps_mat = THEME.steps_mat
 
     Z.corner_mats = Z.building_theme.corners or THEME.corners
   end

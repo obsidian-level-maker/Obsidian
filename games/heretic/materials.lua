@@ -32,6 +32,8 @@ HERETIC.MATERIALS =
 
   -- general purpose --
 
+  METAL    = { t="METL1",    f="FLOOR29" }
+
   -- walls --
 
   BANNER1  = { t="BANNER1",  f="FLOOR03" }
@@ -210,6 +212,13 @@ HERETIC.MATERIALS =
 HERETIC.PREFAB_DEFAULTS =
 {
   -- FIXME : HERETIC.PREFAB_DEFAULTS
+
+  -- compatibility with DOOM prefabs
+  tex_DOORTRAK = "METL1"
+
+  flat_CEIL1_2 = "FLOOR11"
+  flat_CEIL5_2 = "FLOOR28"
+  flat_FLAT1   = "FLAT521"
 }
 
 
