@@ -48,7 +48,12 @@ DOOM.THEMES =
       STUCCO3  = 10
       SP_ROCK1 =  5
     }
+
+    -- FIXME: temp crud
+    has_triple_key_door = true
+    has_double_switch_door = true
   }
+
 
 ----------------------------------------
 

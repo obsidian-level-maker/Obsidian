@@ -869,6 +869,9 @@ function Quest_add_major_quests()
   local function add_triple_key_door(key_list)
     if #key_list < 3 then return false end
 
+    -- FIXME: check "game" field in prefab def
+    if not THEME.has_triple_key_door then return false end
+
     local prob = 25
 
     if OB_CONFIG.mode == "coop" then
@@ -902,6 +905,9 @@ function Quest_add_major_quests()
     -- this is VERY dependent on the sw_pair.wad prefab
     local fab_def = PREFABS["Locked_double"]
     assert(fab_def)
+
+    -- FIXME: check "game" in prefab
+    if not THEME.has_double_switch_door then return false end
 
     local GOAL1 = Goal_new("SWITCH")
     local GOAL2 = Goal_new("SWITCH")
