@@ -1620,6 +1620,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     if secret_exit then fab_name = "Exit_pillar_secret" end
 
+    -- FIXME: hack!
+    if OB_CONFIG.game == "heretic" then fab_name = "Exit_heretic" end
+
     local def = Fab_lookup(fab_name)
 
     local skin1 = { }
