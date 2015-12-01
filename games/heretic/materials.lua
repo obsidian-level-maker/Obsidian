@@ -219,6 +219,8 @@ HERETIC.PREFAB_DEFAULTS =
   flat_CEIL1_2 = "FLOOR11"
   flat_CEIL5_2 = "FLOOR28"
   flat_FLAT1   = "FLAT521"
+
+  line_117 = 1  -- Heretic does not have linetype #117
 }
 
 
