@@ -2332,7 +2332,7 @@ function Quest_select_textures()
   gui.debugf("cave_volume : %d\n", cave_volume)
 
 
-  LEVEL.cliff_mat = "ASHWALL7"  -- FIXME
+  LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
 
 
   each Z in LEVEL.zones do

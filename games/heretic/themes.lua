@@ -35,8 +35,13 @@ HERETIC.THEMES =
       BRWNRCKS = 20
     }
 
+    cliff_mats =
+    {
+      ROOTWALL = 50
+    }
+
     -- FIXME: temporary crud
-    steps_mat = "FLAT506"
+    steps_mat = "FLOOR10"
     no_doors = true
   }
 

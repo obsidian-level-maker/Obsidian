@@ -54,6 +54,11 @@ DOOM.THEMES =
     has_double_switch_door = true
 
     steps_mat = "GRAY7"
+
+    cliff_mats =
+    {
+      ASHWALL4 = 50
+    }
   }
 
 
@@ -251,6 +256,10 @@ DOOM.THEMES =
 
     archy_arches = true
 
+    cliff_mats =
+    {
+      ASHWALL2 = 50
+    }
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
 

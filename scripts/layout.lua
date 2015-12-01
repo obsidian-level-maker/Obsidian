@@ -888,7 +888,7 @@ function Layout_create_scenic_borders()
     -- this only possible if a LOT of void areas
     if not Z.border_info.nb_min_f then
       Z.border_info.kind = "void"
-    elseif LEVEL.liquid and rand.odds(40 - 40) then  --!!! FIXME
+    elseif LEVEL.liquid and rand.odds(40 * 0) then  --!!! FIXME
       Z.border_info.kind = "water"
     else
       Z.border_info.kind = "mountain"
@@ -945,14 +945,12 @@ function Layout_finish_scenic_borders()
       max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 }) / 2
     end
 
-    A.ceil_h  = A.zone.scenic_sky_h
-
+    A. ceil_h = A.zone.scenic_sky_h
     A.floor_h = math.min(max_f + 64, A.ceil_h - 32)
 
-    A.wall_mat  = "SFALL1"
-
-    A.floor_mat = "FLAT10"
+    A.floor_mat = LEVEL.cliff_mat
     A.ceil_mat  = "_SKY"
+    A.wall_mat  = A.floor_mat
   end
 
 
