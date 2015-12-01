@@ -1604,6 +1604,9 @@ function Room_floor_heights()
     if STYLE.steepness == "more"  then h = h * 1.5 end
     if STYLE.steepness == "heaps" then h = h * 2.0 end
 
+    -- limit it for now (due to lack of lifts)
+    if h > 72 then h = 72 end
+
     if rand.odds(up_chance) then
       return from_h + h
     else
