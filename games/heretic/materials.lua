@@ -221,6 +221,11 @@ HERETIC.PREFAB_DEFAULTS =
   flat_FLAT1   = "FLAT521"
 
   line_117 = 1  -- Heretic does not have linetype #117
+
+  thing_4001 = "light"
+  thing_4002 = "light"
+  thing_4003 = "light"
+  thing_4004 = "light"
 }
 
 
