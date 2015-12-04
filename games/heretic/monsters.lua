@@ -20,7 +20,7 @@ HERETIC.MONSTERS =
     r = 16
     h = 36
     level = 1
-    prob = 50
+    prob = 45
     density = 1.5
     health = 20
     damage = 5
@@ -34,7 +34,7 @@ HERETIC.MONSTERS =
     r = 16
     h = 36
     level = 3
-    prob = 20
+    prob = 27
     density = 1.2
     health = 80
     damage = 8
@@ -48,7 +48,7 @@ HERETIC.MONSTERS =
     r = 22
     h = 64
     level = 1
-    prob = 60
+    prob = 30
     health = 80
     damage = 8
     attack = "melee"
@@ -75,7 +75,7 @@ HERETIC.MONSTERS =
     r = 24
     h = 80
     level = 1
-    prob = 70
+    prob = 30
     health = 200
     damage = 12
     attack = "missile"
@@ -102,7 +102,7 @@ HERETIC.MONSTERS =
     r = 22
     h = 64
     level = 4
-    prob = 70
+    prob = 30
     density = 0.6
     health = 100
     damage = 16
@@ -125,13 +125,13 @@ HERETIC.MONSTERS =
     invis = true
   }
 
-  sabreclaw =  -- MT_CLINK
+  sabreclaw =
   {
     id = 90
     r = 20
     h = 64
     level = 3
-    prob = 25
+    prob = 35
     density = 0.8
     health = 150
     damage = 12
@@ -139,13 +139,13 @@ HERETIC.MONSTERS =
     give = { {ammo="rune",count=6} }
   }
 
-  disciple =  -- MT_WIZARD
+  disciple =
   {
     id = 15
     r = 16
     h = 72
     level = 4
-    prob = 25
+    prob = 30
     density = 0.6
     health = 180
     damage = 20
@@ -154,13 +154,13 @@ HERETIC.MONSTERS =
     float = true
   }
 
-  weredragon =  -- MT_BEAST
+  weredragon =
   {
     id = 70
     r = 34
     h = 80
     level = 5
-    prob = 30
+    prob = 18
     density = 0.4
     health = 220
     damage = 25
@@ -168,13 +168,13 @@ HERETIC.MONSTERS =
     give = { {ammo="arrow",count=3} }
   }
 
-  ophidian =  -- MT_SNAKE
+  ophidian =
   {
     id = 92
     r = 22
     h = 72
     level = 6
-    prob = 30
+    prob = 24
     density = 0.4
     health = 280
     damage = 25
@@ -187,13 +187,13 @@ HERETIC.MONSTERS =
 
   -- FIXME: damage values are crap, need 'attack' type
 
-  Ironlich =  -- MT_HEAD
+  Ironlich =
   {
     id = 6
     r = 40
     h = 72 
     level = 7
-    prob = 5
+    prob = 8
     density = 0.2
     health = 700
     attack = "missile"
@@ -208,7 +208,7 @@ HERETIC.MONSTERS =
     r = 28
     h = 104
     level = 8
-    prob = 5
+    prob = 2
     density = 0.2
     health = 3000
     attack = "missile"
@@ -226,7 +226,7 @@ HERETIC.MONSTERS =
     r = 28
     h = 104
     level = 9
-    prob = 1
+    prob = 0.5
     density = 0.1
     health = 5000
     attack = "missile"
