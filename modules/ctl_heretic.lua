@@ -84,24 +84,21 @@ OB_MODULES["heretic_mon_control"] =
 
   options =
   {
-    gargoyle   = { label="Gargoyle",        choices=CTL_HERETIC.MON_CHOICES }
-    fire_garg  = { label="Gargoyle Leader", choices=CTL_HERETIC.MON_CHOICES }
-    sabreclaw  = { label="Sabreclaw",  choices=CTL_HERETIC.MON_CHOICES }
+    gargoyle   = { label="Gargoyle",      choices=CTL_HERETIC.MON_CHOICES }
+    fire_garg  = { label="Fire Gargoyle", choices=CTL_HERETIC.MON_CHOICES }
+    warrior    = { label="Warrior",       choices=CTL_HERETIC.MON_CHOICES }
 
-    knight     = { label="Warrior",         choices=CTL_HERETIC.MON_CHOICES }
---  knight_inv = { label="Warrior Ghost",   choices=CTL_HERETIC.MON_CHOICES }
-    mummy      = { label="Golem",           choices=CTL_HERETIC.MON_CHOICES }
---  mummy_inv  = { label="Golem Ghost",     choices=CTL_HERETIC.MON_CHOICES }
-    leader     = { label="Golem Leader",    choices=CTL_HERETIC.MON_CHOICES }
---  leader_inv = { label="Golem Leader Ghost", choices=CTL_HERETIC.MON_CHOICES }
+    golem      = { label="Golem",         choices=CTL_HERETIC.MON_CHOICES }
+    nitro      = { label="Nitro Golem",   choices=CTL_HERETIC.MON_CHOICES }
+    disciple   = { label="Disciple",      choices=CTL_HERETIC.MON_CHOICES }
 
-    disciple   = { label="Disciple",   choices=CTL_HERETIC.MON_CHOICES }
-    weredragon = { label="Weredragon", choices=CTL_HERETIC.MON_CHOICES }
-    ohpibian   = { label="Mancubus",   choices=CTL_HERETIC.MON_CHOICES }
+    sabreclaw  = { label="Sabreclaw",     choices=CTL_HERETIC.MON_CHOICES }
+    weredragon = { label="Weredragon",    choices=CTL_HERETIC.MON_CHOICES }
+    ophidian   = { label="Ophidian",      choices=CTL_HERETIC.MON_CHOICES }
 
-    Ironlich  = { label="Ironlich",    choices=CTL_HERETIC.MON_CHOICES }
-    Maulotaur = { label="Maulotaur",   choices=CTL_HERETIC.MON_CHOICES }
-    D_Sparil  = { label="D'Sparil",    choices=CTL_HERETIC.MON_CHOICES }
+    Ironlich  = { label="Ironlich",       choices=CTL_HERETIC.MON_CHOICES }
+    Maulotaur = { label="Maulotaur",      choices=CTL_HERETIC.MON_CHOICES }
+    D_Sparil  = { label="D'Sparil",       choices=CTL_HERETIC.MON_CHOICES }
   }
 }
 

@@ -2,7 +2,7 @@
 --  HERETIC MONSTERS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ HERETIC.MONSTERS =
     float = true
   }
 
-  mummy =
+  golem =
   {
     id = 68
     r = 22
@@ -53,13 +53,13 @@ HERETIC.MONSTERS =
     give = { {ammo="crystal",count=1} }
   }
 
-  mummy_inv =
+  golem_inv =
   {
     id = 69
     r = 22
     h = 64
-    replaces = "mummy"
-    replace_prob = 15
+    replaces = "golem"
+    replace_prob = 25
     health = 80
     damage = 8
     attack = "melee"
@@ -67,20 +67,7 @@ HERETIC.MONSTERS =
     invis = true
   }
 
-  sabreclaw =  -- MT_CLINK
-  {
-    id = 90
-    r = 20
-    h = 64
-    level = 5
-    prob = 25
-    health = 150
-    damage = 12
-    attack = "melee"
-    give = { {ammo="rune",count=6} }
-  }
-
-  knight =
+  warrior =
   {
     id = 64
     r = 24
@@ -93,13 +80,13 @@ HERETIC.MONSTERS =
     give = { {ammo="arrow",count=1.6} }
   }
 
-  knight_inv =
+  warrior_inv =
   {
     id = 65
     r = 24
     h = 80
-    replaces = "knight"
-    replace_prob = 15
+    replaces = "warrior"
+    replace_prob = 20
     health = 200
     damage = 14
     attack = "missile"
@@ -107,7 +94,7 @@ HERETIC.MONSTERS =
     invis = true
   }
 
-  leader =
+  nitro =
   {
     id = 45
     r = 22
@@ -120,13 +107,13 @@ HERETIC.MONSTERS =
     give = { {ammo="crystal",count=1} }
   }
 
-  leader_inv =
+  nitro_inv =
   {
     id = 46
     r = 22
     h = 64
-    replaces = "leader"
-    replace_prob = 15
+    replaces = "nitro"
+    replace_prob = 10
     health = 100
     damage = 16
     attack = "missile"
@@ -134,12 +121,25 @@ HERETIC.MONSTERS =
     invis = true
   }
 
+  sabreclaw =  -- MT_CLINK
+  {
+    id = 90
+    r = 20
+    h = 64
+    level = 4
+    prob = 25
+    health = 150
+    damage = 12
+    attack = "melee"
+    give = { {ammo="rune",count=6} }
+  }
+
   disciple =  -- MT_WIZARD
   {
     id = 15
     r = 16
     h = 72
-    level = 6
+    level = 5
     prob = 25
     health = 180
     damage = 20
@@ -184,7 +184,9 @@ HERETIC.MONSTERS =
     id = 6
     r = 40
     h = 72 
+    level = 7
     health = 700
+    attack = "missile"
     damage = 60
     give = { {ammo="claw_orb",count=3} }
     float = true
@@ -195,7 +197,9 @@ HERETIC.MONSTERS =
     id = 9
     r = 28
     h = 104
+    level = 8
     health = 3000
+    attack = "missile"
     damage = 80
     give  = 
     {
@@ -209,7 +213,9 @@ HERETIC.MONSTERS =
     id = 7
     r = 28
     h = 104
-    health = 2000
+    level = 9
+    health = 5000
+    attack = "missile"
     damage = 100
   }
 
