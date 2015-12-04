@@ -37,7 +37,7 @@ HERETIC.MONSTERS =
     prob = 27
     density = 1.2
     health = 80
-    damage = 4
+    damage = 3
     attack = "missile"
     float = true
   }
@@ -50,7 +50,7 @@ HERETIC.MONSTERS =
     level = 1
     prob = 30
     health = 80
-    damage = 2
+    damage = 1
     attack = "melee"
     give = { {ammo="crystal",count=1} }
   }
@@ -63,7 +63,7 @@ HERETIC.MONSTERS =
     replaces = "golem"
     replace_prob = 25
     health = 80
-    damage = 3
+    damage = 2
     attack = "melee"
     give = { {ammo="crystal",count=1} }
     invis = true
@@ -77,7 +77,7 @@ HERETIC.MONSTERS =
     level = 1
     prob = 30
     health = 200
-    damage = 5
+    damage = 3
     attack = "missile"
     give = { {ammo="arrow",count=1.6} }
   }
@@ -90,7 +90,7 @@ HERETIC.MONSTERS =
     replaces = "warrior"
     replace_prob = 20
     health = 200
-    damage = 7
+    damage = 3
     attack = "missile"
     give = { {ammo="arrow",count=1.6} }
     invis = true
@@ -105,7 +105,7 @@ HERETIC.MONSTERS =
     prob = 30
     density = 0.6
     health = 100
-    damage = 10
+    damage = 6
     attack = "missile"
     give = { {ammo="crystal",count=1} }
   }
@@ -119,7 +119,7 @@ HERETIC.MONSTERS =
     replace_prob = 25
     density = 0.6
     health = 100
-    damage = 15
+    damage = 7
     attack = "missile"
     give = { {ammo="crystal",count=1} }
     invis = true
@@ -134,7 +134,7 @@ HERETIC.MONSTERS =
     prob = 35
     density = 0.8
     health = 150
-    damage = 10
+    damage = 5
     attack = "melee"
     give = { {ammo="rune",count=6} }
   }
@@ -148,7 +148,7 @@ HERETIC.MONSTERS =
     prob = 30
     density = 0.6
     health = 180
-    damage = 15
+    damage = 14
     attack = "missile"
     give = { {ammo="claw_orb",count=3} }
     float = true
