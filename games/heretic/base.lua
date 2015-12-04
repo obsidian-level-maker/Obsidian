@@ -57,6 +57,7 @@ HERETIC.PARAMETERS =
 OB_GAMES["heretic"] =
 {
   label = "Heretic"
+  priority = 38
 
   format = "doom"
   game_dir = "heretic"

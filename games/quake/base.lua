@@ -72,6 +72,7 @@ QUAKE.PARAMETERS =
 UNFINISHED["quake"] =
 {
   label = "Quake"
+  priority = 27
 
   format = "quake"
   game_dir = "quake"
