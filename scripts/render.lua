@@ -475,69 +475,11 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     assert(E.conn)
 
-    local z = A.floor_h
+    local z = E.conn.door_h or A.floor_h
+    assert(z)
 
-    if E.conn then z = assert(E.conn.door_h) end
+    local LOCK = E.conn.lock
 
-    local inner_mat = assert(A.wall_mat)
-    local outer_mat = assert(E.peer.area.wall_mat)
-
-    if E.conn.flip_it then
-      inner_mat, outer_mat = outer_mat, inner_mat
-    end
-
-    local def
-    local skin1 = { wall=inner_mat, outer=outer_mat }
-
-
-    -- FIXME : find it properly
-    local fab_name
-
-    if E.kind == "arch" then
-      fab_name = "Arch_plain"
-    elseif E.kind == "secret_door" then
-      fab_name = "Door_secret"
-    else
-      fab_name = "Door_manual_big"
-    end
-
-
-    if geom.is_corner(dir) then
-      fab_name = fab_name .. "_diag"
-
-      local def = Fab_lookup(fab_name)
-
-      if E.conn.flip_it then dir = 10 - dir end
-
-      local dir2 = DIAG_DIR_MAP[dir]
-
-      local S = E.S
-      local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
-
-      Fabricate(R, def, T, { skin1 })
-
-    else  -- axis-aligned edge
-
-      local def = Fab_lookup(fab_name)
-
-      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn.flip_it)
-
-      Fabricate(R, def, T, { skin1 })
-
----???    do_door_base(S, dir, z, w_tex, o_tex)
-    end
-  end
-
-
-  local function straddle_locked_door()
-    assert(E.peer)
-    assert(E.peer.area)
-
-    assert(E.conn)
-
-    local z = assert(E.conn.door_h)
-
-    local LOCK = assert(E.conn.lock)
 
     local inner_mat = assert(A.wall_mat)
     local outer_mat = assert(E.peer.area.wall_mat)
@@ -548,7 +490,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
 
-    if LOCK.goals[1].kind == "SWITCH" then
+    if LOCK and LOCK.goals[1].kind == "SWITCH" then
       skin1.lock_tag = assert(LOCK.goals[1].tag)
     end
 
@@ -556,17 +498,25 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     -- FIXME : find it properly
     local fab_name
 
-    if #LOCK.goals == 2 then
-      fab_name = "Locked_double"
-    elseif #LOCK.goals == 3 then
-      fab_name = "Locked_ks_ALL"
----###  elseif string.sub(LOCK.goals[1].item, 1, 2) == "ks" then
----###    fab_name = "Locked_small_" .. LOCK.goals[1].item
-    else
-      fab_name = "Locked_" .. LOCK.goals[1].item
-    end
+    if LOCK then
+      if #LOCK.goals == 2 then
+        fab_name = "Locked_double"
+      elseif #LOCK.goals == 3 then
+        fab_name = "Locked_ks_ALL"
+      else
+        fab_name = "Locked_" .. LOCK.goals[1].item
+      end
 
-    local def
+    else -- normal door
+
+      if E.kind == "arch" then
+        fab_name = "Arch_plain"
+      elseif E.kind == "secret_door" then
+        fab_name = "Door_secret"
+      else
+        fab_name = "Door_manual_big"
+      end
+    end
 
 
     if geom.is_corner(dir) then
@@ -667,11 +617,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif E.kind == "fence" then
     straddle_fence()
 
-  elseif E.kind == "arch" or E.kind == "door" or E.kind == "secret_door" then
+  elseif E.kind == "arch" or E.kind == "door" or
+         E.kind == "lock_door" or E.kind == "secret_door" then
     straddle_door()
-
-  elseif E.kind == "lock_door" then
-    straddle_locked_door()
 
   elseif E.kind == "window" then
     straddle_window()
