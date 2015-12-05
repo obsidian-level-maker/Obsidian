@@ -121,7 +121,6 @@ DOOM.THEMES =
 
     base_skin =
     {
-      big_door = "BIGDOOR3"
     }
 
     style_list =
@@ -189,6 +188,7 @@ DOOM.THEMES =
 
     base_skin =
     {
+      big_door = "BIGDOOR3"
     }
 
     monster_prefs =
@@ -242,8 +242,6 @@ DOOM.THEMES =
     base_skin =
     {
       big_door = "BIGDOOR7"
-
-      grass = "ASHWALL2"
     }
 
     monster_prefs =

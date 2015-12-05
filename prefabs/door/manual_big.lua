@@ -13,6 +13,9 @@ PREFABS.Door_manual_big =
   long   = 192
   deep   = 16
   over   = 16
+
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
 
@@ -22,5 +25,7 @@ PREFABS.Door_manual_big_diag =
   map    = "MAP02"
   where  = "diagonal"
 
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
