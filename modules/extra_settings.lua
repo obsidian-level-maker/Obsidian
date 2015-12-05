@@ -62,7 +62,7 @@ OB_MODULES["extra_settings"] =
     {
       label="Start Together"
       choices=EXTRA_SETTINGS.YES_NO
-      tooltip="For Co-operative games, this makes sure all players start in the same room (i.e. it disables the separated start rooms)"
+      tooltip="For Co-operative games, ensure all players start in the same room (i.e. disable the separated start rooms)"
     }
   }
 }

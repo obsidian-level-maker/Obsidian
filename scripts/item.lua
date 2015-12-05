@@ -540,15 +540,15 @@ function Item_simulate_battle(R)
       end
     end
 
-    -- gameplay_tweaks : assume weapons from previous levels
-    if PARAM.keep_weapons then
+    if not PARAM.pistol_starts then
+      -- allow weapons from previous levels
       each name,_ in EPISODE.seen_weapons do
-      if not seen[name] then
-        local info = assert(GAME.WEAPONS[name])
-        assert(info.pref)
+        if not seen[name] then
+          local info = assert(GAME.WEAPONS[name])
+          assert(info.pref)
 
-        table.insert(list, { info=info, factor=0.5 })
-      end
+          table.insert(list, { info=info, factor=0.5 })
+        end
       end
     end
 
