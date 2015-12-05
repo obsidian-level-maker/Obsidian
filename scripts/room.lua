@@ -1573,25 +1573,37 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_floor_heights()
+function Room_floor_ceil_heights()
 
   -- the 'entry_h' field of rooms also serves as a "visited already" flag
 
 
-  local function raw_set_floor(A, floor_h)
-    A.floor_h = floor_h
+  local function raw_set_floor(A, h)
+    A.floor_h = h
   end
 
 
-  local function set_floor(A, floor_h)
-    raw_set_floor(A, floor_h)
+  local function set_floor(A, h)
+    raw_set_floor(A, h)
 
     -- floor heights are mirrored in CTF mode
     local A2 = A.sister or A.brother
 
     if A2 then
       assert(not A2.floor_h)
-      raw_set_floor(A2, floor_h)
+      raw_set_floor(A2, h)
+    end
+  end
+
+
+  local function set_ceil(A, h)
+    A.ceil_h = h
+
+    -- floor heights are mirrored in CTF mode
+    local A2 = A.sister or A.brother
+
+    if A2 then
+      A2.ceil_h = h
     end
   end
 
@@ -2231,7 +2243,30 @@ function Room_floor_heights()
   end
 
 
-  ---| Room_floor_heights |---
+  function do_ceilings(R)
+    each A in R.areas do
+      local height = rand.pick({ 128, 192,192,192, 256,320 })
+
+      if A.is_porch then
+        height = 144
+      end
+
+      set_ceil(A, A.floor_h + height)
+    end
+
+    -- ensure enough vertical room for player to travel between areas
+    local SPACE_Z = 80
+
+    each C in R.area_conns do
+      local min_c = math.max(C.A1.floor_h, C.A2.floor_h) + SPACE_Z
+
+      if C.A1.ceil_h < min_c then set_ceil(C.A1, min_c) end
+      if C.A2.ceil_h < min_c then set_ceil(C.A2, min_c) end
+    end
+  end
+
+
+  ---| Room_floor_ceil_heights |---
 
   -- give each zone a preferred hallway z_dir
   each Z in LEVEL.zones do
@@ -2261,6 +2296,8 @@ end
     if R.kind == "hallway" then
 --???  Room_detect_porches(R)
     end
+
+    do_ceilings(R)
   end
 end
 
@@ -2307,7 +2344,7 @@ function Room_set_sky_heights()
   -- transfer final results into areas
 
   each A in LEVEL.areas do
-    if A.floor_h and A.is_outdoor then
+    if A.floor_h and A.is_outdoor and not A.is_porch then
       A.ceil_h = A.zone.sky_h
     end
   end
@@ -2412,7 +2449,7 @@ function Room_build_all()
   Room_reckon_doors()
 
   Room_pool_hacks()
-  Room_floor_heights()
+  Room_floor_ceil_heights()
   Room_prepare_skies()
 
   -- place importants -- done early as traps need to know where they are.

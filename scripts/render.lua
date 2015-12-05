@@ -998,9 +998,7 @@ function Render_floor(A, S)
 
   local tag = S.tag
 -- tag = A.id
--- if A.conn_group then tag = A.conn_group end
--- if A.quest and A.quest.id < 2 then tag = 1 end
--- if A.is_boundary then tag = 1000 + A.id end
+-- if A.room then tag = A.room.id end
 
 
   -- handle railings [ must be done here ]
@@ -1232,13 +1230,6 @@ end
 
   if not A.floor_h then
     A.floor_h = -7
-  end
-
-  if A.is_porch then
-    A.ceil_h = A.floor_h + 144
-
-  elseif not A.ceil_h then
-    A.ceil_h = A.floor_h + rand.pick({ 128, 192,192,192, 256,320 })
   end
 
 
