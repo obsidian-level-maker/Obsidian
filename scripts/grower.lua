@@ -1575,10 +1575,8 @@ math.max(ax,bx), math.max(ay,by))
     P.is_outdoor = is_outdoor
     P.is_cave    = is_cave
 
-    if not P.initial_hub then
-      if Grower_organic_room(P) then
-        return true
-      end
+    if Grower_organic_room(P) then
+      return true
     end
 
     while not table.empty(tab) do
