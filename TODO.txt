@@ -51,15 +51,13 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
-+  better facing angles for players
-   (switches too, but less important)
-
-+  make "keep_weapons" the default behavior, change the module to
-   have "pistol_starts" instead
-
 +  have a "slow pace weapons" extra setting (idea by flyingdeath)
 
 +  get stairwells working again
+
+-  item closets would be nice
+
+-  wall switches too
 
 -  grower : unused (or failed hall) sprouts can be good closet spots
 
@@ -68,6 +66,8 @@ ______________________________________________________________________
 -  the locked switch closet
 
 -  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
+
+??  fix porches causing BIG height diffs
 
 BUG: when "Switched Doors" set to NONE, can still make them because
      there may be more zones than (# of keys + 1).

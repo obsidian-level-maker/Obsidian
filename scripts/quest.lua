@@ -2516,7 +2516,7 @@ function Quest_choose_themes()
 
     --- distribute the pictures amongst the zones ---
 
-    -- FIXME !!!!  bottom up approach...
+    -- FIXME !!!!  bottom up approach...  [eh, what?]
 
     local names = table.keys(THEME.pictures)
 
