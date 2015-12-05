@@ -51,18 +51,11 @@ OB_MODULES["extra_settings"] =
 
   options =
   {
-    keep_weapons =
+    pistol_starts =
     {
-      label="Keep Weapons"
+      label="Pistol Starts"
       choices=EXTRA_SETTINGS.YES_NO
-      tooltip="Assumes the player keeps weapons from previous maps (and will add ammo for them, even if this map does not contain those weapons)"
-    }
-
-    quiet_start =
-    {
-      label="Quiet Start"
-      choices=EXTRA_SETTINGS.YES_NO
-      tooltip="Never add any monsters into the start room"
+      tooltip="Ensure every map can be completed from a pistol start (i.e. ignore weapons obtained from earlier maps)"
     }
 
     start_together =

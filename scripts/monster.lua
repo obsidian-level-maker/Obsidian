@@ -1981,10 +1981,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     if R.kind == "stairwell" then return false end
 
-    -- gameplay_tweaks module
-    if PARAM.quiet_start and R.is_start then
-      return false
-    end
+    -- never in start room [ TODO : new style for this ]
+    if R.is_start then return false end
 
 ---???    if R.kind == "hallway" and #R.sections == 1 then
 ---???      return rand.odds(50)
