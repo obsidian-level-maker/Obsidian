@@ -2165,6 +2165,27 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function select_ceiling_mats(R)
+    -- outdoor room-themes do not specify ceiling materials
+    if not R.theme.ceilings then
+      return
+    end
+
+    each A in R.areas do
+      if A.is_outdoor then continue end
+      if A.is_porch   then continue end
+
+      assert(A.ceil_h)
+
+      if not R.ceil_mats[A.ceil_h] then
+        R.ceil_mats[A.ceil_h] = rand.key_by_probs(R.theme.ceilings)
+      end
+
+      A.ceil_mat = assert(R.ceil_mats[A.ceil_h])
+    end
+  end
+
+
   local function visit_room(R, entry_h, entry_area, prev_room, via_conn)
     -- get peered room (for CTF mode)
     local R2 = R.sister or R.brother
@@ -2263,6 +2284,9 @@ function Room_floor_ceil_heights()
       if C.A1.ceil_h < min_c then set_ceil(C.A1, min_c) end
       if C.A2.ceil_h < min_c then set_ceil(C.A2, min_c) end
     end
+
+    -- now pick textures
+    select_ceiling_mats(R)
   end
 
 
