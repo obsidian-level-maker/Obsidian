@@ -22,8 +22,8 @@ PLUTONIA.PARAMETERS =
 
 PLUTONIA.MATERIALS =
 {
-  -- Note the hyphens in the actual texture names, which have been
-  -- converted to an underscore for the OBLIGE material names.
+  -- Note the actual texture names contain hyphens, but we must use
+  -- an underscore for the OBLIGE material names.
   
   A_BRBRK  = { t="A-BRBRK",  f="RROCK18" }
   A_BRBRK2 = { t="A-BRBRK2", f="RROCK16" }
@@ -73,7 +73,21 @@ PLUTONIA.MATERIALS =
   -- use the TNT name for this
   METALDR  = { t="A-BROWN4", f="CEIL5_2" }
 
-  -- replacement materials
+  -- use Plutonia's waterfall texture instead of our own
+  WFALL1   = { t="WFALL1", f="FWATER1", sane=1 }
+  FWATER1  = { t="WFALL1", f="FWATER1", sane=1 }
+
+
+  -- TODO: Rails
+  --   A_GRATE = { t="A-GRATE", h=129 }
+  --   A_GRATE = { t="A-GRATE", h=129 }
+  --   A_RAIL1 = { t="A-RAIL1", h=32 }
+  --   A_VINE1 = { t="A-VINE1", h=128 }
+  --   A_VINE2 = { t="A-VINE2", h=128 }
+
+
+  -- Overrides for existing DOOM materials --
+
   WOOD1    = { t="A-MYWOOD", f="FLAT5_2" }
   CEIL1_1  = { f="CEIL1_1", t="A-WOOD1", color=0x5b442b }
   CEIL1_3  = { f="CEIL1_3", t="A-WOOD1", color=0x594d3d }
@@ -93,18 +107,6 @@ PLUTONIA.MATERIALS =
 
   ASHWALL4 = { t="A-DROCK2", f="MFLR8_2" }
   ASHWALL7 = { t="A-MUD",    f="RROCK16" }
-
-  -- use Plutonia's waterfall texture instead of our own
-  WFALL1   = { t="WFALL1", f="FWATER1", sane=1 }
-  FWATER1  = { t="WFALL1", f="FWATER1", sane=1 }
-
-
-  -- TODO: Rails
-  --   A_GRATE = { t="A-GRATE", h=129 }
-  --   A_GRATE = { t="A-GRATE", h=129 }
-  --   A_RAIL1 = { t="A-RAIL1", h=32 }
-  --   A_VINE1 = { t="A-VINE1", h=128 }
-  --   A_VINE2 = { t="A-VINE2", h=128 }
 }
 
 

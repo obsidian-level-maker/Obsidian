@@ -42,12 +42,6 @@ TNT.MATERIALS =
   M_RDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
   M_YDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
 
-  -- we replace the existing DOOM material for these two
-  SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" }
-  ASHWALL2 = { t="ASPHALT",  f="MFLR8_4" }
-  MFLR8_4  = { t="ASPHALT",  f="MFLR8_4" }
-  FLAT8    = { f="FLAT8",    t="DOKODO1B" }
-
   CAVERN1  = { t="CAVERN1",  f="RROCK07" }
   CAVERN4  = { t="CAVERN4",  f="MFLR8_3" }
   CAVERN6  = { t="CAVERN6",  f="RROCK17" }
@@ -163,6 +157,13 @@ TNT.MATERIALS =
   TYIRONSM = { t="TYIRONSM", rail_h=72  }
   WEBL = { t="WEBL", rail_h=128 } --Not really useful
   WEBR = { t="WEBR", rail_h=128 } --Not really useful
+
+  -- Overrides for existing DOOM materials --
+
+  SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" }
+  ASHWALL2 = { t="ASPHALT",  f="MFLR8_4" }
+  MFLR8_4  = { t="ASPHALT",  f="MFLR8_4" }
+  FLAT8    = { f="FLAT8",    t="DOKODO1B" }
 }
 
 
