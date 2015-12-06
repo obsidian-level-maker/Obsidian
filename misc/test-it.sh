@@ -22,8 +22,8 @@ base="test_${seed}"
 def_length=game
 
 declare -a GAMES
-GAMES=("doom2" "doom2" "freedoom" "tnt" "tnt" "plutonia")
-index=$(($RANDOM % 6))
+GAMES=("doom2" "doom2" "freedoom" "tnt" "tnt" "plutonia" "heretic")
+index=$(($RANDOM % 7))
 def_game=${GAMES[$index]}
 
 declare -a ENGINES
@@ -37,8 +37,8 @@ index=$(($RANDOM % 5))
 def_size=${SIZES[$index]}
 
 declare -a THEMES
-THEMES=("mixed" "mixed" "jumble" "original" "psycho")
-index=$(($RANDOM % 5))
+THEMES=("mixed" "mixed" "jumble" "original")
+index=$(($RANDOM % 4))
 def_theme=${THEMES[$index]}
 
 set -x
