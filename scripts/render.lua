@@ -549,8 +549,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_window()
     assert(E.peer and E.peer.area)
 
-    -- FIXME: window_z1 in JUNC/EDGE
-    local z = E.window_z1
+    local z = assert(E.window_z)
 
     local inner_mat = assert(A.wall_mat)
     local outer_mat = assert(E.peer.area.wall_mat)
@@ -560,8 +559,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     -- FIXME : find it properly
     local fab_name = "Window_wide"
-
-    local def
 
 
     if geom.is_corner(dir) then

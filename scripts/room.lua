@@ -854,6 +854,25 @@ function Junction_make_fence(junc)
 end
 
 
+function Junction_make_window(junc)
+  junc.E1 =
+  {
+    kind = "window"
+    area = junc.A1
+    window_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
+  }
+
+  junc.E2 =
+  {
+    kind = "nothing"
+    area = junc.A2
+  }
+
+  junc.E1.peer = junc.E2
+  junc.E2.peer = junc.E1
+end
+
+
 function Junction_make_steps(junc)
   assert(not junc.E1)
   assert(not junc.E2)
@@ -873,6 +892,31 @@ end
 
 
 function Room_border_up()
+
+  local function area_can_window(A)
+    if not A.room then return false end
+    if not A.floor_h then return false end
+
+    if A.room.kind == "stairwell" then return false end
+--- if A.room.kind == "hallway"   then return false end
+
+    return true
+  end
+
+
+  local function check_window_heights(A1, A2)
+    local c1 = A1.ceil_h
+    local c2 = A2.ceil_h
+
+    if not c1 or (A1.is_outdoor and not A1.is_porch) then c1 = 9999 end
+    if not c2 or (A2.is_outdoor and not A2.is_porch) then c2 = 9999 end
+
+    local max_f = math.max(A1.floor_h, A2.floor_h)
+    local min_c = math.min(c1, c2)
+
+    return (min_c - max_f) >= 128
+  end
+
 
   local function visit_junction(junc)
     local A1 = junc.A1
@@ -987,29 +1031,23 @@ do return end
 
 
     -- window test [ make A1 be the indoor room ]
---[[
-    local win_prob = style_sel("windows", 0, 15, 35, 75)
+
+    local w_in_prob  = style_sel("windows", 0, 10, 20, 50)
+    local w_out_prob = style_sel("windows", 0, 20, 50, 80)
 
     if A1.is_outdoor and not A2.is_outdoor then
        A1, A2 = A2, A1
     end
 
-    if not A1.is_outdoor and (A2.is_outdoor or rand.odds(30)) and
-       A1.room and A2.room and
-       A1.mode != "hallway" and A2.mode != "hallway" and
-       A1.room.kind != "stairwell" and A2.room.kind != "stairwell" and
-       A1.floor_h and A2.floor_h and
-       A1.floor_h >= A2.floor_h and
-       (A2.is_outdoor or A1.floor_h < A2.floor_h + 200) and
-       rand.odds(win_prob)
+    if not A1.is_outdoor and
+       area_can_window(A1) and
+       area_can_window(A2) and
+       rand.odds(sel(A2.is_outdoor, w_out_prob, w_in_prob)) and
+       check_window_heights(A1, A2)
     then
-      junc.kind = "window"
-      if A2.is_outdoor then
-        A2.window_h = A1.floor_h + 128
-      end
+      Junction_make_window(junc)
       return
     end
---]]
 
 
     -- when in doubt, block it out!
