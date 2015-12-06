@@ -823,9 +823,14 @@ function Quest_add_major_quests()
 
 
   local function collect_switch_goals(list)
-    local switch_tab = THEME.switches or {} 
+    if not THEME.switches then return {} end
+
+    local skip_prob = style_sel("switches", 100, 20, 0, 0)
+    if rand.odds(skip_prob) then return {} end
 
     -- we want at least four kinds, so duplicate some if necessary
+    local switch_tab = THEME.switches
+
     local dup_num
     if table.size(switch_tab) < 2 then
       dup_num = 4
@@ -994,17 +999,21 @@ function Quest_add_major_quests()
     lock_up_quests(goal_list)
   end 
 
+
   goal_list = {}
+
+  collect_switch_goals(goal_list)
 
 
   -- double switched doors
+  -- [ never make them if disabled by "switches" style ]
 
-  lock_up_double_doors()
+  if not table.empty(goal_list) then
+    lock_up_double_doors()
+  end
 
 
   -- lastly, normal switched doors
-
-  collect_switch_goals(goal_list)
 
   for pass = 1, 4 do
     lock_up_quests(goal_list)
