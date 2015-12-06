@@ -400,6 +400,8 @@ OB_GAMES["tnt"] =
 
   extends = "doom2"
 
+  iwad_name = "tnt.wad"
+
   tables =
   {
     TNT

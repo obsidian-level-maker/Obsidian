@@ -1758,6 +1758,7 @@ UNFINISHED["doom1"] =
 
   format = "doom"
   game_dir = "doom"
+  iwad_name = "doom.wad"
 
   tables =
   {

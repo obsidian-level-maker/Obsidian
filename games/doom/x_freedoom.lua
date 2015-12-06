@@ -22,6 +22,8 @@ OB_GAMES["freedoom"] =
 
   extends = "doom2"
 
+  iwad_name = "freedoom2.wad"
+
   tables =
   {
     FREEDOOM

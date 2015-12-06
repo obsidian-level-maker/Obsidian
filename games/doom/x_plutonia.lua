@@ -151,6 +151,8 @@ OB_GAMES["plutonia"] =
 
   extends = "doom2"
 
+  iwad_name = "plutonia.wad"
+
   tables =
   {
     PLUTONIA

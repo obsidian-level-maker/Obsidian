@@ -67,6 +67,7 @@ UNFINISHED["hexen"] =
   sub_format = "hexen"
 
   game_dir = "hexen"
+  iwad_name = "hexen.wad"
 
   tables =
   {

@@ -45,6 +45,7 @@ OB_GAMES["doom2"] =
 
   format = "doom"
   game_dir = "doom"
+  iwad_name = "doom2.wad"
 
   tables =
   {

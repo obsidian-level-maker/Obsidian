@@ -61,6 +61,7 @@ OB_GAMES["heretic"] =
 
   format = "doom"
   game_dir = "heretic"
+  iwad_name = "heretic.wad"
 
   tables =
   {
