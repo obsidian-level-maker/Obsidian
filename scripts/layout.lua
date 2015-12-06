@@ -638,10 +638,8 @@ function Layout_traps_and_cages()
       spot.trigger = TRIGGER
     end
 
-    local junc = Junction_lookup(A, parent_A)
-    
---!!!!!! FIXME    junc.kind = "trap_wall"
---!!!!!! FIXME    junc.trigger = spot.trigger
+    -- trap wall is created in Room_border_up...
+    A.trap_trigger = spot.trigger
   end
 
 
@@ -700,7 +698,7 @@ function Layout_traps_and_cages()
 
 
   local function add_traps()
-    local make_prob = style_sel("traps", 0, 20, 40, 85)
+    local make_prob = style_sel("traps", 0, 20, 40, 75)
    
     if make_prob == 0 then
       gui.printf("Traps: skipped for level (by style).\n")
@@ -738,15 +736,7 @@ function Layout_traps_and_cages()
       if N.room then
         A.floor_h = math.N_max(N.floor_h, A.floor_h)
 
-        local junc = Junction_lookup(A, N)
-
---!!!!!! FIXME
---[[
-        junc.kind = "rail"
-        junc.rail_mat = "MIDBARS3"
-        junc.post_h   = 84
-        junc.blocked  = true
---]]
+        -- railing (etc) is handled in Room_border_up...
       end
     end
 
@@ -793,7 +783,7 @@ function Layout_traps_and_cages()
 
   add_traps()
 
-  add_cages()
+--!!!  add_cages()
 end
 
 

@@ -837,6 +837,28 @@ function Junction_make_wall(junc)
 end
 
 
+function Junction_make_trap_wall(junc, trap_A)
+stderrf("***** Junction_make_trap_wall....\n")
+  junc.E1 =
+  {
+    kind = "trap_wall"
+    trigger = assert(trap_A.trap_trigger)
+  }
+
+  junc.E2 =
+  {
+    kind = "nothing"
+  }
+
+  if junc.A1.mode == "trap" then
+    junc.E1, junc.E2 = junc.E2, junc.E1
+  end
+
+  junc.E1.area = junc.A1
+  junc.E2.area = junc.A2
+end
+
+
 function Junction_make_fence(junc)
   local top_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
 
@@ -954,18 +976,18 @@ function Room_border_up()
     if junc.E1 then return end
 
 
+    if A2.room and not A1.room then
+      A1, A2 = A2, A1
+    end
+
+
     -- void --
 
-    if A1.mode == "void" or A2.mode == "void" or
-       A1.mode == "trap" or A2.mode == "trap"
-    then
+    if A1.mode == "void" or A2.mode == "void" then
       Junction_make_wall(junc)
       return
     end
 
-    if A2.room and not A1.room then
-      A1, A2 = A2, A1
-    end
 
     -- scenic to scenic --
 
@@ -977,32 +999,34 @@ function Room_border_up()
       return
     end
 
-    -- room to scenic --
 
+    -- room to trap / cage --
+    if A2.mode == "trap" then
+      Junction_make_trap_wall(junc, A2)
+      return
+    end
+
+    if A2.mode == "cage" then
+      -- FIXME
+      return
+    end
+
+
+    -- room to scenic --
     if not A2.room then
       -- TODO Sometimes make windows?  [ probably do elsewhere... ]
       Junction_make_wall(junc)
       return
     end
 
-    -- room to room --
 
+    -- inside a single room --
     if A1.room == A2.room then
-      -- nothing absolutely needed if same room
       return
     end
 
 
---[[
---!!!!!!  DEBUG FOR CTF MAPS
-junc.kind = "fence"
-junc.fence_mat = A1.zone.fence_mat
-junc.fence_top_z = 32
-do return end
---]]
-
-
-    -- blended hallways --
+    -- blended hallways --  [ NOTE: NOT USED ATM ]
 
     if A1.mode == "hallway" and
        A1.room.hallway.parent and
