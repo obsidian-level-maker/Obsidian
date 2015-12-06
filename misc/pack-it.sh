@@ -59,8 +59,6 @@ mkdir $dest/addons
 #  Executables
 #
 
-mkdir $dest/tools
-
 if [ $mode == "linux" ]
 then
 cp -av Oblige $dest
