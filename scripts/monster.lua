@@ -1839,17 +1839,23 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     rand.shuffle(list)
 
     -- determine quantity, applying user settings
-    local qty = calc_quantity() + 20
+    local qty = calc_quantity() + 30
+    local f   = gui.random()
 
-    local d = info.cage_density or 0.4
-    local f = gui.random()
+    local want = total * qty / 250 + f * f
 
-    local want = int(total * d * qty / 100 + f * f * 2)
-    want = math.clamp(1, want, total)
+    if spot.use_factor then
+      want = want * spot.use_factor
+
+      -- allow zero here
+      want = math.clamp(0, rand.int(want), total)
+    else
+      want = math.clamp(1, rand.int(want), total)
+    end
 
     gui.debugf("monsters_in_cage: %d (of %d) qty=%1.1f\n", want, total, qty)
 
-    for i = 1,want do
+    for i = 1, want do
       -- ensure first monster in present in all skills
       local all_skills = (i == 1)
       local loc = list[i]
@@ -1868,8 +1874,6 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     local num_kinds = 3
 
     local palette = cage_palette(what, num_kinds)
-
-    local qty = calc_quantity()  -- FIXME: not used
 
     local used_mons = {}
 

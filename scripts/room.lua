@@ -838,7 +838,6 @@ end
 
 
 function Junction_make_trap_wall(junc, trap_A)
-stderrf("***** Junction_make_trap_wall....\n")
   junc.E1 =
   {
     kind = "trap_wall"
@@ -1263,6 +1262,13 @@ function Room_determine_spots()
     if A.mon_focus then
       each spot in mon_spots do
         spot.face = A.mon_focus
+      end
+    end
+
+    -- for large cages/traps, adjust quantities
+    if mode == "cage" or mode == "trap" then
+      each spot in mon_spots do
+        spot.use_factor = 1.0 / (A.svolume ^ 0.64)
       end
     end
 
