@@ -164,6 +164,10 @@ TNT.MATERIALS =
   ASHWALL2 = { t="ASPHALT",  f="MFLR8_4" }
   MFLR8_4  = { t="ASPHALT",  f="MFLR8_4" }
   FLAT8    = { f="FLAT8",    t="DOKODO1B" }
+
+  BIGDOOR2 = { t="METALDR",  f="CEIL5_2" }
+  BIGDOOR3 = { t="METALDR",  f="CEIL5_2" }
+  BIGDOOR4 = { t="METALDR",  f="CEIL5_2" }
 }
 
 

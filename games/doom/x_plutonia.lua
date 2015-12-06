@@ -107,6 +107,10 @@ PLUTONIA.MATERIALS =
 
   ASHWALL4 = { t="A-DROCK2", f="MFLR8_2" }
   ASHWALL7 = { t="A-MUD",    f="RROCK16" }
+
+  BIGDOOR2 = { t="A-BROWN4", f="CEIL5_2" }
+  BIGDOOR3 = { t="A-BROWN4", f="CEIL5_2" }
+  BIGDOOR4 = { t="A-BROWN4", f="CEIL5_2" }
 }
 
 
