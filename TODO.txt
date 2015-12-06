@@ -30,8 +30,6 @@ ______________________________________________________________________
   OTHER GAMES
 ----------------------------------------------
 
-+  Heretic support
-
 +  Quake support
    -  load textures directly from the PAK files
    -  bring back lua-based prefabs
@@ -880,12 +878,10 @@ LEGACY: gui.property("solid_exfloor", 281)
   HERETIC
 ----------------------------------------------
 
-!!  get it working again
-    -  games/heretic directory
-    -  separate files for Lua info (entities.lua, levels.lua, etc) 
-    -  minimal set of prefabs
++  determine new 'damage' values for monsters
+   [ ideally via analysis of some UVmax demos ]
 
-+  new 'damage' values for monsters
++  support title pic generator
 
 -  don't build Blaze doors into maps.
 
