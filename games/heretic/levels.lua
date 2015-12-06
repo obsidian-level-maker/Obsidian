@@ -26,35 +26,45 @@ HERETIC.EPISODES =
 {
   episode1 =
   {
-    theme = "CITY"
+    ep_index = 1
+
+    theme = "h_castle"
     boss = "Ironlich"
     sky_light = 0.65
   }
 
   episode2 =
   {
-    theme = "CITY"
+    ep_index = 2
+
+    theme = "h_urban"
     boss = "Maulotaur"
     sky_light = 0.75
   }
 
   episode3 =
   {
-    theme = "CITY"
+    ep_index = 3
+
+    theme = "h_castle"
     boss = "D_sparil"
     sky_light = 0.75
   }
 
   episode4 =
   {
-    theme = "CITY"
+    ep_index = 4
+
+    theme = "h_urban"
     boss = "Ironlich"
     sky_light = 0.50
   }
 
   episode5 =
   {
-    theme = "CITY"
+    ep_index = 5
+
+    theme = "h_castle"
     boss = "Maulotaur"
     sky_light = 0.65
   }
@@ -74,17 +84,23 @@ function HERETIC.get_levels()
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
-  for ep_index = 1,EP_NUM do
-    -- create episode info...
-    local EPI =
-    {
-      levels = {}
-    }
+  -- create episode info...
 
-    table.insert(GAME.episodes, EPI)
-
+  for ep_index = 1,5 do
     local ep_info = HERETIC.EPISODES["episode" .. ep_index]
     assert(ep_info)
+
+    local EPI = table.copy(ep_info)
+
+    EPI.levels = { }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  -- create level info...
+
+  for ep_index = 1,EP_NUM do
+    local EPI = GAME.episodes[ep_index]
 
     for map = 1,MAP_NUM do
       -- create level info...
