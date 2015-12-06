@@ -127,7 +127,7 @@ Teleporters
 -----------
 
 +  grow two/three/four hubs simultaneously and then
-   "connect' them via teleporters
+   connect them via teleporters
 
 
 
