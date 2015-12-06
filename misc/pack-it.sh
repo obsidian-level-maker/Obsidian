@@ -34,22 +34,14 @@ mkdir $dest
 #
 #  Lua scripts
 #
-mkdir $dest/scripts
-cp -av scripts/*.* $dest/scripts
-
-mkdir $dest/engines
-cp -av engines/*.* $dest/engines
-
-mkdir $dest/modules
-cp -av modules/*.* $dest/modules
+cp -av scripts $dest/scripts
+cp -av engines $dest/engines
+cp -av modules $dest/modules
 
 #
-#  Game data
+#  Games
 #
-mkdir $dest/games
-
-mkdir $dest/games/doom
-cp -av games/doom/*.* $dest/games/doom
+cp -av games $dest/games
 
 #
 #  Prefabs
@@ -59,18 +51,9 @@ cp -av prefabs $dest/prefabs
 #
 #  Data files
 #
-mkdir $dest/data
+cp -av data $dest/data
+
 mkdir $dest/addons
-
-cp -av data/*.lmp $dest/data || true
-cp -av data/*.wad $dest/data || true
-cp -av data/*.pak $dest/data || true
-
-mkdir $dest/data/doom1_boss
-mkdir $dest/data/doom2_boss
-
-cp -av data/doom1_boss/*.* $dest/data/doom1_boss
-cp -av data/doom2_boss/*.* $dest/data/doom2_boss
 
 #
 #  Executables
@@ -81,10 +64,8 @@ mkdir $dest/tools
 if [ $mode == "linux" ]
 then
 cp -av Oblige $dest
-##  cp -av tools/qsavetex/qsavetex $dest/tools
 else
 cp -av Oblige.exe $dest
-##  cp -av tools/qsavetex/qsavetex.exe $dest/tools
 fi
 
 #
