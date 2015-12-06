@@ -55,6 +55,9 @@ cp -av data $dest/data
 
 mkdir $dest/addons
 
+rm -f $dest/data/*.wad
+rm -f $dest/data/*.pak
+
 #
 #  Executables
 #

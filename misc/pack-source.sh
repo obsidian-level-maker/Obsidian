@@ -15,22 +15,14 @@ mkdir $dest
 #
 #  Lua scripts
 #
-mkdir $dest/scripts
-cp -av scripts/*.* $dest/scripts
-
-mkdir $dest/engines
-cp -av engines/*.* $dest/engines
-
-mkdir $dest/modules
-cp -av modules/*.* $dest/modules
+cp -av scripts $dest/scripts
+cp -av engines $dest/engines
+cp -av modules $dest/modules
 
 #
-#  Game data
+#  Games
 #
-mkdir $dest/games
-
-mkdir $dest/games/doom
-cp -av games/doom/*.* $dest/games/doom
+cp -av games $dest/games
 
 #
 #  Prefabs
@@ -38,7 +30,17 @@ cp -av games/doom/*.* $dest/games/doom
 cp -av prefabs $dest/prefabs
 
 #
-#  Source code
+#  Data files
+#
+cp -av data $dest/data
+
+mkdir $dest/addons
+
+rm -f $dest/data/*.wad
+rm -f $dest/data/*.pak
+
+#
+#  C++ Source code
 #
 mkdir $dest/gui
 cp -av gui/*.[chr]* $dest/gui
@@ -58,11 +60,6 @@ cp -av ajpoly_src/*.[chrt]* $dest/ajpoly_src
 mkdir $dest/physfs_src
 cp -av physfs_src/*.[chrt]* $dest/physfs_src
 
-mkdir $dest/tools
-mkdir $dest/tools/qsavetex
-cp -av tools/qsavetex/*.[ch]* $dest/tools/qsavetex
-cp -av tools/qsavetex/Makefile* $dest/tools/qsavetex
-
 mkdir $dest/misc
 cp -av misc/pack*.sh $dest/misc
 
@@ -79,29 +76,15 @@ mkdir $dest/obj_win32/ajpoly
 mkdir $dest/obj_win32/physfs
 
 #
-#  Data files
-#
-mkdir $dest/data
-cp -av data/*.lmp $dest/data || true
-cp -av data/*.wad $dest/data || true
-cp -av data/*.pak $dest/data || true
-
-mkdir $dest/data/doom1_boss
-mkdir $dest/data/doom2_boss
-
-cp -av data/doom1_boss/*.* $dest/data/doom1_boss
-cp -av data/doom2_boss/*.* $dest/data/doom2_boss
-
-#
 #  Documentation
 #
 cp -av *.txt $dest
 
 rm -f $dest/LOGS.txt
 rm -f $dest/CONFIG.txt
+rm -f $dest/OPTIONS.txt
 
-mkdir $dest/doc
-cp -av doc/*.* $dest/doc
+cp -av doc $dest/doc
 
 #
 # all done
