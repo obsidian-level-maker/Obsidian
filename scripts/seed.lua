@@ -408,6 +408,27 @@ function SEED_CLASS.get_corner(S, dir)
 end
 
 
+function SEED_CLASS.get_line(S, dir)
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  if dir == 8 then y1 = y2 end
+  if dir == 2 then y2 = y1 end
+  if dir == 4 then x2 = x1 end
+  if dir == 6 then x1 = x2 end
+
+  if dir == 2 then
+    x1, x2 = x2, x1
+  end
+
+  if dir == 6 or dir == 1 or dir == 9 then
+    y1, y2 = y2, y1
+  end
+
+  return { x1=x1, y1=y1, x2=x2, y2=y2 }
+end
+
+
 function SEED_CLASS.has_inner_point(S, dir)
   local corner = S:get_corner(dir)
 
@@ -696,36 +717,6 @@ function Edge_mid_point(E)
   local S = E.S
 
   return S:edge_coord(E.dir)
-end
-
-
-function Edge_get_line(E)
-  -- returns coordinates of left point edge --> right point
-
-  local x1, y1 = E.S.x1, E.S.y1
-  local x2, y2 = E.S.x2, E.S.y2
-
-  if E.dir == 8 then y1 = y2 end
-  if E.dir == 2 then y2 = y1 end
-  if E.dir == 4 then x2 = x1 end
-  if E.dir == 6 then x1 = x2 end
-
-  if E.dir == 2 then
-    x1, x2 = x2, x1
-  end
-
-  if E.dir == 6 or E.dir == 1 or E.dir == 9 then
-    y1, y2 = y2, y1
-  end
-
-  if E.long > 1 then
-    if E.dir == 8 then x2 = x2 + (E.long - 1) * SEED_SIZE end
-    if E.dir == 2 then x1 = x1 - (E.long - 1) * SEED_SIZE end
-    if E.dir == 4 then y2 = y2 + (E.long - 1) * SEED_SIZE end
-    if E.dir == 6 then y1 = y1 - (E.long - 1) * SEED_SIZE end
-  end
-
-  return { x1=x1, y1=y1, x2=x2, y2=y2 }
 end
 
 
