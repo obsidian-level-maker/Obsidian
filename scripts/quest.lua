@@ -2146,11 +2146,17 @@ function Quest_big_secrets()
     if #R.goals > 0 then return -1 end
 
     -- must be a leaf room
-    if R:total_conns() > 1 then return -1 end
+    if #R.conns > 1 then return -1 end
 
     -- cannot teleport into a secret exit
     -- [ WISH : support this, a secret teleporter closet somewhere ]
-    if R:has_teleporter() then return -1 end
+    local conn = R.conns[1]
+
+    if conn.kind == "teleporter" then return -1 end
+
+    -- split connections are no good because they create TWO sectors with
+    -- the secret special (type #9).
+    if conn.F1 then return -1 end
 
     -- smaller is better (don't waste large rooms)
     return 200 - math.min(R.svolume,99) + gui.random() * 5
