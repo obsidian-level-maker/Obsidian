@@ -2390,6 +2390,10 @@ function Room_set_sky_heights()
     if A.window_top_h then
       A.zone.sky_h = math.max(A.zone.sky_h, A.window_h)
     end
+
+    if A.is_porch then
+      A.zone.sky_h = math.max(A.zone.sky_h, A.ceil_h + 48)
+    end
   end
 
 
