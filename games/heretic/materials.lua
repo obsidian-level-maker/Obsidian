@@ -215,6 +215,7 @@ HERETIC.PREFAB_DEFAULTS =
 
   -- compatibility with DOOM prefabs
   tex_DOORTRAK = "METL1"
+  tex_DOORSTOP = "METL1"
 
   flat_CEIL1_2 = "FLOOR11"
   flat_CEIL5_2 = "FLOOR28"
