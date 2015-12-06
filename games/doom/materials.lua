@@ -671,7 +671,7 @@ DOOM.SKIN_DEFAULTS =
 {
   track = "DOORTRAK"
 
-  big_door = "BIGDOOR7"
+  big_door = "BIGDOOR2"
 
   p1 = "player1"
   p2 = "player2"

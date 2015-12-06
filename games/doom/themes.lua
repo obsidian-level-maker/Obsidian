@@ -121,6 +121,7 @@ DOOM.THEMES =
 
     base_skin =
     {
+      big_door = "BIGDOOR2"
     }
 
     style_list =
