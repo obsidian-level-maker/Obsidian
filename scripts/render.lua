@@ -589,11 +589,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   assert(E)
   assert(E.kind)
 
-
-  -- mark this boundary for spot finding code
-  table.insert(A.side_edges, Edge_get_line(E))
-
-
   if E.kind == "nothing" then
     return
 
@@ -637,7 +632,7 @@ function Render_junction(A, S, dir)
 
   if N == "NODIR" then return end
 
-  -- same area?  nothing needed
+  -- same area?  absolutely nothing needed
   if N and N.area == A then return end
 
   -- find the junction (N.area may be NIL)
@@ -1106,7 +1101,10 @@ end
 function Render_seed(A, S)
   assert(S.area == A)
 
-  -- FIXME : closets
+  if S.is_rendered then
+    -- done elsewhere
+    return
+  end
 
   if S.kind == "void" then
     Render_void(A, S)
@@ -1116,6 +1114,14 @@ function Render_seed(A, S)
   if A.mode == "void" then
 --stderrf("Void area: %s @ %s\n", A.name, A.seeds[1].name)
     return
+  end
+
+  -- create edge-lines for spot finding code
+  each dir in geom.ALL_DIRS do
+    local N = S:neighbor(dir)
+    if N and N.area != A then
+      table.insert(A.side_edges, S:get_line(dir))
+    end
   end
 
   if A.mode == "hallway" then
