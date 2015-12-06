@@ -51,6 +51,8 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
+++  cages (and railing)
+
 +  have a "slow pace weapons" extra setting (idea by flyingdeath)
 
 +  get stairwells working again
@@ -68,9 +70,6 @@ ______________________________________________________________________
 -  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
 
 ??  fix porches causing BIG height diffs
-
-BUG: when "Switched Doors" set to NONE, can still make them because
-     there may be more zones than (# of keys + 1).
 
 IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.
 ALSO : "mon-zone" for monster/weapon palette changes

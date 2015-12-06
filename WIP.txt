@@ -6,8 +6,6 @@ WORK IN PROGRESS
 Stuff to get working again
 --------------------------
 
-+  cages (and railing)
-
 +  large traps
 
 +  windows
