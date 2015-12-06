@@ -838,13 +838,16 @@ end
 
 
 function Junction_make_fence(junc)
-  -- FIXME : use max floor of each room (if any)
-
-  local top_z = math.max(junc.A1.floor_h, junc.A2.floor_h) + 32
+  local top_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
 
   if junc.A1.pool_hack or junc.A2.pool_hack then
     top_z = top_z + 16
   end
+
+  if junc.A1.room then top_z = math.max(top_z, junc.A1.room.max_floor_h) end
+  if junc.A2.room then top_z = math.max(top_z, junc.A2.room.max_floor_h) end
+
+  top_z = top_z + PARAM.jump_height + 8
 
   junc.E1 = simple_fence_edge(junc.A1, top_z)
   junc.E2 = { kind="nothing", area=junc.A2 }
@@ -2302,6 +2305,17 @@ function Room_floor_ceil_heights()
   end
 
 
+  function calc_max_floor(R)
+    R.max_floor_h = -7777
+
+    each A in R.areas do
+      if A.floor_h then
+        R.max_floor_h = math.max(R.max_floor_h, A.floor_h)
+      end
+    end
+  end
+
+
   function do_ceilings(R)
     each A in R.areas do
       local height = rand.pick({ 128, 192,192,192, 256,320 })
@@ -2360,6 +2374,7 @@ end
     end
 
     do_ceilings(R)
+    calc_max_floor(R)
   end
 end
 
