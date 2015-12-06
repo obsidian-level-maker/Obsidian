@@ -1001,12 +1001,12 @@ function Room_border_up()
 
 
     -- room to trap / cage --
-    if A2.mode == "trap" then
+    if A2.mode == "trap" and A2.face_room == A1.room then
       Junction_make_trap_wall(junc, A2)
       return
     end
 
-    if A2.mode == "cage" then
+    if A2.mode == "cage" and A2.face_room == A1.room then
       -- FIXME
       return
     end
