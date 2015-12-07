@@ -1891,7 +1891,6 @@ function Quest_nice_items()
     end
 
     -- collect all secret leafs
-    -- we need to visit them in random order
     local rooms = {}
 
     each R in LEVEL.rooms do
@@ -1900,18 +1899,7 @@ function Quest_nice_items()
       end
     end
 
-    rand.shuffle(rooms)
-
-    -- do not give too many
-    local quota = 3
-    if OB_CONFIG.items == "less" then quota = rand.sel(65, 1, 2) end
-    if OB_CONFIG.items == "more" then quota = #rooms end
-
-    for i = 1, quota do
-      if table.empty(rooms) then break; end
-
-      local R = table.remove(rooms, 1)
-
+    each R in rooms do
       local item = rand.key_by_probs(LEVEL.secret_items)
 
       table.insert(R.items, item)
