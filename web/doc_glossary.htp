@@ -356,12 +356,13 @@ doors.
   
 
 <div id="versions" class="gloss_term">
-V1 &nbsp; V2 &nbsp; V3 &nbsp; V4 &nbsp; V5 &nbsp; V6
+V1 &nbsp; V2 &nbsp; V3 &nbsp; V4 &nbsp; V5 &nbsp; V6 &nbsp; V7
 </div><div class="gloss_define">
 These designate the major versions of OBLIGE.
 V1 was merely a prototype and was never publicly released.
-V2, V3, V4 and V5 are older versions which are no longer being developed.
-V6 is the latest codebase.
+V7 is the currently developed version, and all
+previous versions have ceased development.
+
 
 <p>
 See the <a href="doc_history.html">History</a> page for
