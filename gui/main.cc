@@ -549,7 +549,7 @@ static void Batch_Defaults()
 
 	// Game Settings
 	ob_set_config("mode",   "sp");
-	ob_set_config("length", "single");
+	ob_set_config("length", "game");
 
 	// Level Architecture
 	ob_set_config("size",     "epi");

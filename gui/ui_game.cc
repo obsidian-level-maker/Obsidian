@@ -185,7 +185,7 @@ void UI_Game::Defaults()
 	// Note: game, engine are handled by LUA code (ob_init)
 
 	ParseValue("mode", "sp");
-	ParseValue("length", "few");
+	ParseValue("length", "game");
 }
 
 
