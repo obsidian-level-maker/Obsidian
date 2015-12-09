@@ -801,8 +801,10 @@ Cancellation:
    - things, monsters, weapons, pickups
    - materials, themes
 
+-  Glossary : describe "Area".
+
 -  transfer Lua_Extended.txt document to the website
-   (part of modding guide).
+   probably simplified (part of modding guide).
 
 
 ----------------------------------------------
