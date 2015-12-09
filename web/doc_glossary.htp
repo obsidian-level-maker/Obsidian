@@ -201,7 +201,7 @@ and hence they can be used interchangeably in OBLIGE.
 <p>
 Other games allow textures to be placed anywhere.
 However there are usually some which look good on walls
-but not on floors, and vice versa.
+but not on floors, and vice versa,
 hence this material system can be useful for these games too.
 
 </div>
@@ -338,30 +338,6 @@ Sub-Room
 </div><div class="gloss_define">
 A room which lies inside another room.  The sub-room is also
 called the child and the outer room is the parent.
-</div>
-
-
-<div id="svn" class="gloss_term">
-SVN
-</div><div class="gloss_define">
-SVN is short for Subversion, which is a development tool
-for storing code on a server computer and letting multiple
-people edit that code, using copies on their own computers.
-It ensures that each developer's
-changes get distributed to everyone else.
-It also stores a history of all changes, where each change
-has message describing what was done.
-
-<p>
-More information can be found at the official
-<a href="http://subversion.apache.org/">
-Subversion site</a>.
-
-<p>
-You can view OBLIGE's SVN respository here:
-<a href="http://sourceforge.net/p/oblige/code/HEAD/tree/trunk/">
-Browse Code</a>
-
 </div>
 
 
