@@ -53,7 +53,7 @@ void VFS_AddFolder(const char *name)
 	char *path  = StringPrintf("%s/%s", install_dir, name);
 	char *mount = StringPrintf("/%s", name);
 
-	if (! PHYSFS_mount(path, mount, 1))
+	if (! PHYSFS_mount(path, mount, 0))
 	{
 		Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
 						name, PHYSFS_getLastError());
@@ -83,7 +83,7 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 		filename = new_name;
 	}
 
-	if (! PHYSFS_mount(filename, "/", 1))
+	if (! PHYSFS_mount(filename, "/", 0))
 	{
 		if (options_file)
 			LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
