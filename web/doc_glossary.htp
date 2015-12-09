@@ -276,19 +276,6 @@ for decoration.
 </div>
 
 
-<div id="section" class="gloss_term">
-Section
-</div><div class="gloss_define">
-A rectangular area on the map used for placing rooms
-during the planning phase.
-Each section is between 2 and 6 seeds wide, and similarly for
-its height (on the 2D map).
-While small rooms are just a single section, large rooms can
-be formed from a group of sections -- usually a rectangle --
-but other shapes are possible too.
-</div>
-
-
 <div id="seed" class="gloss_term">
 Seed
 </div><div class="gloss_define">
