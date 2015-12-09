@@ -54,7 +54,7 @@ int screen_h;
 
 int main_action;
 
-bool need_new_seed;
+double next_rand_seed;
 
 bool batch_mode = false;
 const char *batch_output_file = NULL;
@@ -513,7 +513,7 @@ int Main_key_handler(int event)
 }
 
 
-u32_t Main_CalcNewSeed()
+void Main_CalcNewSeed()
 {
 	u32_t val = (u32_t)time(NULL);
 
@@ -528,19 +528,17 @@ u32_t Main_CalcNewSeed()
 		flipped = (flipped << 1) | !! (val & (1 << ((i * 5) % 31)));
 	}
 
-	return val;
+	next_rand_seed = flipped;
 }
 
 
-void Main_SetSeed(u32_t val)
+void Main_SetSeed()
 {
-	char buffer[64];
+	char num_buf[256];
 
-	sprintf(buffer, "%u", val);
+	sprintf(num_buf, "%1.0f", next_rand_seed);
 
-	ob_set_config("seed", buffer);
-
-	need_new_seed = false;
+	ob_set_config("seed", num_buf);
 }
 
 
@@ -652,10 +650,6 @@ bool Build_Cool_Shit()
 
 		Main_ProgStatus("Cancelled");
 	}
-	else
-	{
-		need_new_seed = true;
-	}
 
 	// don't need game object anymore
 	delete game_object;
@@ -736,6 +730,8 @@ int main(int argc, char **argv)
 		Main_SetupFLTK();
 	}
 
+	Main_CalcNewSeed();
+
 
 	VFS_InitAddons(argv[0]);
 
@@ -763,8 +759,6 @@ int main(int argc, char **argv)
 
 		Batch_Defaults();
 
-		Main_SetSeed(Main_CalcNewSeed());
-
 		// batch mode never reads/writes the normal config file.
 		// but we can load settings from a explicitly specified file...
 		if (load_file)
@@ -772,6 +766,8 @@ int main(int argc, char **argv)
 				Main_FatalError("No such config file: %s\n", load_file);
 
 		Cookie_ParseArguments();
+
+		Main_SetSeed();
 
 		if (! Build_Cool_Shit())
 		{
@@ -787,8 +783,6 @@ int main(int argc, char **argv)
 
 
 	/* ---- normal GUI mode ---- */
-
-	need_new_seed = true;
 
 	// this not only finds PK3 files, but also activates the ones specified in OPTIONS.txt
 	VFS_ScanForAddons();
@@ -859,15 +853,15 @@ int main(int argc, char **argv)
 			{
 				main_action = 0;
 
-				if (need_new_seed)
-				{
-					Main_SetSeed(Main_CalcNewSeed());
-				}
+				Main_SetSeed();
 
 				// save config in case everything blows up
 				Cookie_Save(config_file);
 
 				Build_Cool_Shit();
+
+				// regardless of success or fail, compute a new seed
+				Main_CalcNewSeed();
 			}
 		}
 	}

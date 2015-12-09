@@ -81,11 +81,13 @@ static void Cookie_SetValue(const char *name, const char *value)
 	// need special handling for the 'seed' value
 	if (StringCaseCmp(name, "seed") == 0)
 	{
-		// ignore seed when loading a config file unless
-		// the -k / --keep option is given.
+		// ignore seed when loading a config file
+		// unless the -k / --keep option is given.
 
 		if (context == CCTX_Arguments || keep_seed)
-			ob_set_config(name, value);
+		{
+			next_rand_seed = floor(atof(value));
+		}
 
 		return;
 	}

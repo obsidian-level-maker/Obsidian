@@ -42,6 +42,8 @@ extern bool batch_mode;
 
 extern const char *batch_output_file;
 
+extern double next_rand_seed;
+
 
 // this records the user action, e.g. Cancel or Quit buttons
 typedef enum
@@ -72,9 +74,6 @@ void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();
-
-u32_t Main_CalcNewSeed();
-void  Main_SetSeed(u32_t val);
 
 
 // Dialog Windows

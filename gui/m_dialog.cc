@@ -297,7 +297,11 @@ const char * DLG_OutputFilename(const char *ext)
 
 void DLG_EditSeed(void)
 {
-	const char * buf = fl_input("New Seed Number:");
+	char num_buf[256];
+
+	sprintf(num_buf, "%1.0f", next_rand_seed);
+
+	const char * buf = fl_input("Enter New Seed Number:", num_buf);
 
 	// cancelled?
 	if (! buf)
@@ -307,11 +311,12 @@ void DLG_EditSeed(void)
 	if (buf[0] == 0)
 		return;
 
-	// TODO: check for a valid number
+	next_rand_seed = atof(buf);
 
-	u32_t val = (u32_t) atol(buf);
+	if (next_rand_seed < 0)
+		next_rand_seed = -next_rand_seed;
 
-	Main_SetSeed(val);
+	next_rand_seed = floor(next_rand_seed);
 }
 
 //--- editor settings ---
