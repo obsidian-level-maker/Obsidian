@@ -242,6 +242,95 @@ end
 
 
 
+function Grower_preprocess_grammar(grammar)
+  
+  local def
+  local diag_list
+
+
+  local function parse_char(ch, what)
+    -- FIXME
+  end
+
+
+  local function convert_element(what, grid, x, y)
+    local line
+    
+    -- textural representation must be inverted
+    local iy = grid.h + 1 - y
+
+    if what == "input" then
+      line = def.structure[iy*2 - 1]
+    else
+      line = def.structure[iy*2]
+    end
+
+    if #line != W then
+      error("Malformed structure in grammar: " .. def.name)
+    end
+
+    local ch = string.sub(line, x, x)
+
+    grid[x][y] = parse_char(ch, diag_list, def)
+  end
+
+
+  local function convert_structure()
+    local W = #def.structure[1]
+    local H = #def.structure
+
+    if (H % 2) != 0 then
+      error("invalid grammar structure in " .. def.name)
+    end
+
+    H = H / 2
+
+    diag_list = nil
+
+    if def.diagonals then
+      diag_list = table.copy(def.diagonals)
+    end
+
+    def.input  = table.array_2D(W, H)
+    def.output = table.array_2D(W, H)
+
+    -- must iterate line by line, then across each line
+    for y = 1, H do
+    for x = 1, W do
+      convert_element("input",  def.input,  x, y)
+      convert_element("output", def.output, x, y)
+    end
+    end
+  end
+
+
+  local function check_mode(name)
+    if string.match(name, "BUILDING_") then def.environment = "building" end
+    if string.match(name, "OUTDOOR_")  then def.environment = "outdoor" end
+    if string.match(name, "CAVE_")     then def.environment = "cave" end
+  end
+
+
+  ---| Grower_preprocess_grammar |---
+
+  table.name_up(TILES)
+
+  table.expand_templates(TILES)
+
+  each name,cur_def in TILES do
+    def = cur_def
+
+    def.area_list = {}
+    def.processed = {}
+
+    convert_structure()
+
+    check_mode(name)
+  end
+end
+
+
+
 function Grower_preprocess_tiles()
 
   local cur_def
@@ -472,6 +561,8 @@ function Grower_prepare()
 
   LEVEL.boundary_sy1 = LEVEL.boundary_margin
   LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
+
+  Grower_preprocess_grammar(SHAPE_GRAMMAR)
 
   Grower_preprocess_tiles()
 end
