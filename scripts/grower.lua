@@ -252,6 +252,7 @@ function Grower_preprocess_grammar(grammar)
     if ch == '.' then return { kind="not_room" } end
     if ch == '!' then return { kind="free" } end
 
+    if ch == 'x' then return { kind="dont_care" } end
     if ch == 'X' then return { kind="dont_care" } end
 
     if ch == '~' then return { kind="liquid" } end
@@ -351,26 +352,32 @@ function Grower_preprocess_grammar(grammar)
 
 
   local function check_compatible_elements(E1, E2)
+    -- same kind of thing is always acceptable
     if E1.kind == E2.kind then return end
 
-    if E1.kind == "dont_care" or E2 == "dont_care" then
-      error("bad grammar rule : mismatch of 'X' between elements")
+    -- silently fix a "." + "!" mismatch
+    if (E1.kind == "not_room" and E2.kind == "free") or
+       (E2.kind == "not_room" and E1.kind == "free")
+    then
+      E2.kind = E1.kind
+      return
     end
 
-    if (E1.kind == "not_room" or E1.kind == "free") and
-       (E2.kind == "not_room" or E2.kind == "free")
-    then
-      error("bad grammar rule : mismatch of '!' between elements")
+    -- from here on, output element is an ASSIGNMENT
+    -- i.e. setting something new or different into the seed(s)
+
+    if E1.kind == "dont_care" then
+      error("bad element in " .. def.name .. ": cannot overwrite an 'X'")
+    end
+
+    if E2.kind == "dont_care" then
+      error("bad element in " .. def.name .. ": 'X' used in assignment")
     end
 
     -- silently fix using "." in input pattern when output is an assignment
     if E1.kind == "not_room" then
       E1.kind = "free"
       return
-    end
-
-    if E1.kind != "free" then
-      error("bad grammar rule : assignment into a non-free element")
     end
   end
 
@@ -379,25 +386,21 @@ function Grower_preprocess_grammar(grammar)
     local E1 = def.input [x][y]
     local E2 = def.output[x][y]
 
-    -- if only one side is a diagonal, try to make them both diagonal
---[[
-    if E1.diagonal and not E2.diagonal then
-      split_element(E2, E1.diagonal)
-    elseif E2.diagonal and not E1.diagonal then
-      split_element(E1, E2.diagonal)
-    end
---]]
-
     -- check assignment
-    if E1.diagonal and E2.diagonal == E1.diagonal then
+    if not (E1.diagonal or E2.diagonal) then
+      check_compatible_elements(E1, E2)
+
+    elseif E1.diagonal and not E2.diagonal then
+      check_compatible_elements(E1.top,    E2)
+      check_compatible_elements(E1.bottom, E2)
+
+    elseif not E1.diagonal and E2.diagonal then
+      check_compatible_elements(E1, E2.top)
+      check_compatible_elements(E1, E2.bottom)
+
+    else -- both diagonals
       check_compatible_elements(E1.top,    E2.top)
       check_compatible_elements(E1.bottom, E2.bottom)
-
-    elseif E1.diagonal or E2.diagonal then
-      -- FIXME !!!
-
-    else
-      check_compatible_elements(E1, E2)
     end
   end
 
@@ -407,7 +410,7 @@ function Grower_preprocess_grammar(grammar)
     local H = #def.structure
 
     if (H % 2) != 0 then
-      error("invalid grammar structure in " .. def.name)
+      error("Malformed structure in grammar: " .. def.name)
     end
 
     H = H / 2
