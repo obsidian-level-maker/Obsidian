@@ -1094,6 +1094,16 @@ function Grower_grammatical_room(P)
   local temp_areas = {}
 
 
+  local function set_seed(S, A)
+    S.temp_area = A
+    table.insert(A.seeds, S)
+
+    local vol = sel(S.diagonal, 0.5, 1.0)
+    A.svolume = A.svolume + vol
+    cur_room.svolume = cur_room.svolume + vol
+  end
+
+
   local function raw_blocked(S)
     if S.area then return true end
     if S.temp_area then return true end
@@ -1175,6 +1185,23 @@ function Grower_grammatical_room(P)
     cur_area.name = string.format("GRAM_AREA_%d", cur_area.id)
 
     table.insert(temp_areas, cur_area)
+
+    local S = P.S:neighbor(P.dir)
+
+    for i = 1, P.long do
+      assert(not S.temp_area)
+      assert(not raw_blocked(S))
+
+      set_seed(S, cur_area)
+
+      if not S.diagonal then
+        local S2 = S:neighbor(P.dir)
+        assert(not raw_blocked(S2))
+        set_seed(S2, cur_area)
+
+        S = S:raw_neighbor(geom.RIGHT[P.dir])
+      end
+    end
   end
 
 
@@ -1198,6 +1225,8 @@ function Grower_grammatical_room(P)
   end
 
   Grower_make_areas(temp_areas)
+
+  return true
 end
 
 
@@ -2471,7 +2500,6 @@ function Grower_create_rooms()
   Grower_grow_trunk("is_first")
 
 Area_squarify_seeds()
-Grower_save_svg()
 
   Grower_fill_gaps()
 
@@ -2483,5 +2511,6 @@ Grower_save_svg()
   Grower_assign_boundary()
 
 --DEBUG
+Grower_save_svg()
 end
 
