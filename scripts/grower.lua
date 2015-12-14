@@ -248,21 +248,66 @@ function Grower_preprocess_grammar(grammar)
   local diag_list
 
 
+  local function parse_element(ch)
+    if ch == '.' then return { kind="not_room" } end
+    if ch == '!' then return { kind="free" } end
+
+    if ch == 'X' then return { kind="dont_care" } end
+
+    if ch == '~' then return { kind="liquid" } end
+    if ch == '#' then return { kind="solid" } end
+
+    if ch == '1' then return { kind="area", area=1 } end
+    if ch == '2' then return { kind="area", area=2 } end
+    if ch == '3' then return { kind="area", area=3 } end
+    if ch == '4' then return { kind="area", area=4 } end
+    if ch == '5' then return { kind="area", area=5 } end
+    if ch == '6' then return { kind="area", area=6 } end
+    if ch == '7' then return { kind="area", area=7 } end
+    if ch == '8' then return { kind="area", area=8 } end
+    if ch == '9' then return { kind="area", area=9 } end
+
+    -- FIXME: stairs and stuff
+
+    error("Grower_parse_char: unknown symbol: " .. tostring(ch))
+  end
+
+
   local function parse_char(ch, what)
-    -- FIXME
+    -- handle diagonal seeds
+    if ch == '/' or ch == '%' then
+      if not diag_list then
+        error("Grower_parse_char: missing diagonals in: " .. def.name)
+      end
+
+      local D = table.remove(diag_list, 1)
+      if not D then
+        error("Grower_parse_char: not enough diagonals in: " .. def.name)
+      end
+
+      local L = parse_element(string.sub(D, 1, 1))
+      local R = parse_element(string.sub(D, 2, 2))
+
+      local diagonal = sel(ch == '/', 3, 1)
+
+      if ch == '%' then
+        L, R = R, L
+      end
+
+      return { kind="diagonal", diagonal=diagonal, bottom=R, top=L }
+    end
+
+    return parse_element(ch)
   end
 
 
   local function convert_element(what, grid, x, y)
     local line
     
-    -- textural representation must be inverted
-    local iy = grid.h + 1 - y
-
     if what == "input" then
-      line = def.structure[iy*2 - 1]
+      line = def.structure[y*2 - 1]
     else
-      line = def.structure[iy*2]
+      line = def.structure[y*2]
     end
 
     if #line != W then
@@ -271,7 +316,22 @@ function Grower_preprocess_grammar(grammar)
 
     local ch = string.sub(line, x, x)
 
-    grid[x][y] = parse_char(ch, diag_list, def)
+    local elem = parse_char(ch, diag_list, def)
+
+    -- textural representation must be inverted
+    local gy = grid.h + 1 - y
+
+    grid[x][gy] = elem
+
+    -- FIXME : collect area info
+  end
+
+
+  local function finalize_element(x, y)
+    local E1 = grid.input [x][y]
+    local E2 = grid.output[x][y]
+
+    -- TODO : check stuff
   end
 
 
@@ -301,6 +361,13 @@ function Grower_preprocess_grammar(grammar)
       convert_element("output", def.output, x, y)
     end
     end
+
+    -- finalize and check stuff
+    for x = 1, W do
+    for y = 1, H do
+      finalize_element(x, y)
+    end
+    end
   end
 
 
@@ -320,7 +387,7 @@ function Grower_preprocess_grammar(grammar)
   each name,cur_def in TILES do
     def = cur_def
 
-    def.area_list = {}
+---???  def.area_list = {}
     def.processed = {}
 
     convert_structure()
