@@ -267,7 +267,13 @@ function Grower_preprocess_grammar(grammar)
     if ch == '8' then return { kind="area", area=8 } end
     if ch == '9' then return { kind="area", area=9 } end
 
-    -- FIXME: stairs and stuff
+    -- straight stairs
+    if ch == '<' then return { kind="stair", dir=4 } end
+    if ch == '>' then return { kind="stair", dir=6 } end
+    if ch == '^' then return { kind="stair", dir=8 } end
+    if ch == 'v' then return { kind="stair", dir=2 } end
+
+    -- FIXME: other stuff
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -1312,6 +1318,9 @@ function Grower_grammatical_room(P)
 
   local temp_areas = {}
 
+  local grammar
+  local rule_tab
+
 
   local function set_seed(S, A)
     S.temp_area = A
@@ -1424,14 +1433,149 @@ function Grower_grammatical_room(P)
   end
 
 
-  local function apply_a_rule(grammar)
-    -- TODO !!!!
+  local function prob_for_rule(rule)
+    if not rule.prob then return 0 end
+
+    -- if (rule.pass or 1) != cur_pass then return 0 end
+
+    -- TODO style adjustments
+
+    return rule.prob
+  end
+
+
+  local function collect_appropriate_rules()
+    rule_tab = {}
+
+    each name,rule in grammar do
+      local prob = prob_for_rule(rule)
+
+      if prob > 0 then
+        rule_tab[name] = prob
+      end
+    end
+  end
+
+
+  local function transform_coord(T, px, py)
+    px = px - 1
+    py = py - 1
+
+    if T.mirror == "x" then px = cur_grid.w - px end
+    if T.mirror == "y" then py = cur_grid.h - py end
+
+    if T.rotate == 4 then
+      px, py = -px, -py
+    elseif T.rotate == 2 then
+      px, py = py, -px
+    elseif T.rotate == 6 then
+      px, py = -py, px
+    end
+
+    return T.x + px, T.y + py
+  end
+
+
+  local function transform_dir(T, dir)
+    if T.mirror == "x" then dir = geom.MIRROR_X[dir]  end
+    if T.mirror == "y" then dir = geom.MIRROR_Y[dir]  end
+
+    return geom.ROTATE[T.rotate][dir]
+  end
+
+
+  local function transform_diagonal(T, dir, bottom, top)
+    if T.mirror == "x" then
+      dir = geom.MIRROR_X[dir]
+    end
+
+    if T.mirror == "y" then
+      dir = geom.MIRROR_Y[dir]
+      top, bottom = bottom, top
+    end
+
+    if (T.rotate == 4) or
+       (T.rotate == 2 and (dir == 1 or dir == 9)) or
+       (T.rotate == 6 and (dir == 3 or dir == 7))
+    then
+      top, bottom = bottom, top
+    end
+
+    dir = geom.ROTATE[T.rotate][dir]
+
+    return dir, bottom, top
+  end
+
+
+  local function calc_transform(rot, mirror)
+    local T =
+    {
+      rotate = (rot - 1) * 2
+    }
+
+    if mirror > 0 then T.mirror = "x" end
+
+    return T
+  end
+
+
+  local function test_or_install_pattern(what, rule, T, x, y)
+    -- FIXME
+  end
+
+
+  local function bbox_to_test(rule, T)
+    -- FIXME !!!
+
+    return 1, 1, SEED_W, SEED_H
+  end
+
+
+  local function apply_a_rule()
+    local name = rand.key_by_probs(rule_tab)
+    local rule = assert(grammar[name])
+
+    -- Test all eight possible transforms (four rotations + mirroring)
+    -- in all possible locations in the room.  If at least one is
+    -- successful, pick it and apply the substitution.
+
+    local best = { score=-1 }
+
+    for rot = 1, 4 do
+    for mirror = 0, 1 do
+      local T = calc_transform(rot, mirror)
+
+      local sx1,sy1, sx2,sy2 = bbox_to_test(rule, T)
+
+      for x = sx1, sx2 do
+      for y = sy1, sy2 do
+        local score = gui.random() * 100
+
+        if score < best.score then continue end
+
+        if test_or_install_pattern("TEST", rule, T, x, y) then
+          best.T = T
+          best.x = x
+          best.x = y
+          best.score = score
+        end
+      end -- x, y
+      end
+    end -- rot, mirror
+    end
+
+    if best.score > 0 then
+      test_or_install_pattern("INSTALL", rule, best.T, best.x, best.y)
+    end
   end
 
 
   ---| Grower_grammatical_room |---
 
   if not check_enough_room() then return false end
+
+  grammar = SHAPE_GRAMMAR
+  collect_appropriate_rules()
 
   -- create room --
 
@@ -1440,7 +1584,7 @@ function Grower_grammatical_room(P)
   begin_area()
 
   for loop = 1, 20 do
-    apply_a_rule(SHAPE_GRAMMAR)
+    apply_a_rule()
   end
 
   Grower_make_areas(temp_areas)
