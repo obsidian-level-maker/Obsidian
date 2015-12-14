@@ -1525,7 +1525,7 @@ function Grower_grammatical_room(P)
   end
 
 
-  local function test_or_install_element(what, E1, E2, T, px, py)
+  local function match_or_install_element(what, E1, E2, T, px, py)
     -- FIXME : handle diagonals!
     if E1.diagonal or E2.diagonal then return false end
 
@@ -1585,7 +1585,7 @@ function Grower_grammatical_room(P)
   end
 
 
-  local function test_or_install_pattern(what, T, x, y)
+  local function match_or_install_pattern(what, T, x, y)
     -- hmmmm yuck
     T.x = x
     T.y = y
@@ -1595,7 +1595,7 @@ function Grower_grammatical_room(P)
       local E1 = cur_rule.input [px][py]
       local E2 = cur_rule.output[px][py]
 
-      local res = test_or_install_element(what, E1, E2, T, px, py)
+      local res = match_or_install_element(what, E1, E2, T, px, py)
 
       if what == "TEST" and not res then
         -- cannot place this shape here (something in the way)
@@ -1641,7 +1641,7 @@ function Grower_grammatical_room(P)
 
         if score < best.score then continue end
 
-        if test_or_install_pattern("TEST", T, x, y) then
+        if match_or_install_pattern("TEST", T, x, y) then
           best.T = T
           best.x = x
           best.x = y
@@ -1653,7 +1653,7 @@ function Grower_grammatical_room(P)
     end
 
     if best.score > 0 then
-      test_or_install_pattern("INSTALL", best.T, best.x, best.y)
+      match_or_install_pattern("INSTALL", best.T, best.x, best.y)
     end
   end
 
