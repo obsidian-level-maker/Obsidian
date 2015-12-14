@@ -1083,6 +1083,125 @@ end
 
 
 
+function Grower_grammatical_room(P)
+  --
+  -- Creates rooms using Shape Grammars.
+  --
+
+  local cur_room
+  local cur_area
+
+  local temp_areas = {}
+
+
+  local function raw_blocked(S)
+    if S.area then return true end
+    if S.temp_area then return true end
+
+    if S.sx <= 1 or S.sx >= SEED_W then return true end
+    if S.sy <= 1 or S.sy >= SEED_H then return true end
+
+    return false
+  end
+
+
+  local function check_enough_room()
+    cur_area = nil
+
+    local sx1 = P.S.sx
+    local sy1 = P.S.sy
+    local sx2 = sx1
+    local sy2 = sy1
+
+    local dx, dy = geom.delta(P.dir)
+
+    if geom.is_corner(P.dir) then
+      -- diagonal : check 3x3 seeds, the sprout is one corner
+
+      if dx > 0 then sx2 = sx2 + 2 else sx1 = sx1 - 2 end
+      if dy > 0 then sy2 = sy2 + 2 else sy1 = sy1 - 2 end
+
+    else
+      -- straight : check 3x3 seed just beyond the sprout
+
+      sx1 = sx1 - 1 + 2 * dx
+      sy1 = sy1 - 1 + 2 * dy
+
+      sx2 = sx1 + 2
+      sy2 = sy1 + 2
+
+      if P.long >= 2 then
+        local extra = int(P.long / 2)
+
+        if geom.is_vert(P.dir) then
+          sx1 = sx1 - extra
+          sx2 = sx2 + extra
+        else
+          sy1 = sy1 - extra
+          sy2 = sy2 + extra
+        end
+      end
+    end
+
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      if not Seed_valid(x, y) then return false end
+
+      local S = SEEDS[x][y]
+
+      if Seed_over_boundary(S) then return false end
+
+      -- ignore the sprout (for diagonals)
+      if S == P.S then continue end
+
+      if raw_blocked(S) or S.diagonal then return false end
+    end
+    end
+
+    return true -- OK
+  end
+
+
+  local function begin_area()
+    -- create a new temporary area
+    cur_area =
+    {
+      id = alloc_id("gram_area")
+      room = cur_room
+      seeds = {}
+      svolume = 0
+    }
+
+    cur_area.name = string.format("GRAM_AREA_%d", cur_area.id)
+
+    table.insert(temp_areas, cur_area)
+  end
+
+
+  local function apply_a_rule(grammar)
+    -- TODO !!!!
+  end
+
+
+  ---| Grower_grammatical_room |---
+
+  if not check_enough_room() then return false end
+
+  -- create room --
+
+  cur_room = Grower_add_room(P, false)
+
+  begin_area()
+
+  for loop = 1, 20 do
+    apply_a_rule(SHAPE_GRAMMAR)
+  end
+
+  Grower_make_areas(temp_areas)
+end
+
+
+
 function Grower_grow_trunk(is_first)
   --
   --  This builds a whole "trunk", a group of connected rooms.
@@ -1575,9 +1694,12 @@ math.max(ax,bx), math.max(ay,by))
     P.is_outdoor = is_outdoor
     P.is_cave    = is_cave
 
-    if Grower_organic_room(P) then
+    if Grower_grammatical_room(P) then
       return true
     end
+
+--!!!!  GRAMMATICAL TEST
+do return false end
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
@@ -1623,14 +1745,14 @@ math.max(ax,bx), math.max(ay,by))
     local sx1, sy1, sx2, sy2 = biggest_free_rectangle()
 
     local sx  = math.i_mid(sx1, sx2) - 1
-    local sy  = math.i_mid(sy1, sy2) - 2
+    local sy  = sy1  --!!!  math.i_mid(sy1, sy2) - 2
 
     -- create a fake sprout
     local P =
     {
       S = SEEDS[sx][sy]
       dir = 8
-      long = rand.sel(50, 2, 1)
+      long = 1 --!!! rand.sel(50, 2, 1)
       mode = "normal"
       initial_hub = true
     }
@@ -1772,6 +1894,10 @@ math.max(ax,bx), math.max(ay,by))
   if not add_initial_hub() then
     return
   end
+
+--!!!!!  TESTING GRAMMATICAL ROOMS
+do return end
+
 
   local MIN_COVERAGE = 0.5
 
@@ -2344,6 +2470,9 @@ function Grower_create_rooms()
 
   Grower_grow_trunk("is_first")
 
+Area_squarify_seeds()
+Grower_save_svg()
+
   Grower_fill_gaps()
 
   Area_squarify_seeds()
@@ -2354,6 +2483,5 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
--- Grower_save_svg()
 end
 
