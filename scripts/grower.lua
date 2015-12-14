@@ -1320,6 +1320,7 @@ function Grower_grammatical_room(P)
 
   local grammar
   local rule_tab
+  local cur_rule
 
 
   local function set_seed(S, A)
@@ -1335,6 +1336,7 @@ function Grower_grammatical_room(P)
   local function raw_blocked(S)
     if S.area then return true end
     if S.temp_area then return true end
+    if S.kind == "solid" then return true end
 
     if S.sx <= 1 or S.sx >= SEED_W then return true end
     if S.sy <= 1 or S.sy >= SEED_H then return true end
@@ -1439,6 +1441,7 @@ function Grower_grammatical_room(P)
     -- if (rule.pass or 1) != cur_pass then return 0 end
 
     -- TODO style adjustments
+    -- TODO environment check??
 
     return rule.prob
   end
@@ -1461,8 +1464,8 @@ function Grower_grammatical_room(P)
     px = px - 1
     py = py - 1
 
-    if T.mirror == "x" then px = cur_grid.w - px end
-    if T.mirror == "y" then py = cur_grid.h - py end
+    if T.mirror == "x" then px = cur_rule.input.w - px end
+    if T.mirror == "y" then py = cur_rule.input.h - py end
 
     if T.rotate == 4 then
       px, py = -px, -py
@@ -1519,8 +1522,88 @@ function Grower_grammatical_room(P)
   end
 
 
-  local function test_or_install_pattern(what, rule, T, x, y)
-    -- FIXME
+  local function test_or_install_element(what, E1, E2, T, px, py)
+    -- FIXME : handle diagonals!
+    if E1.diagonal or E2.diagonal then return false end
+
+    if E1.kind == "dont_care" then return true end
+
+    local sx, sy = transform_coord(T, px, py)
+
+    -- never allow patterns to touch edge of map
+    -- [ TODO : relax this a bit... ]
+    if sx <= 1 or sx >= (SEED_W - 1) then return false end
+    if sy <= 1 or sy >= (SEED_H - 1) then return false end
+
+    local S = SEEDS[sx][sy]
+
+    -- FIXME : handle diagonals!
+    if S.diagonal then return false end
+
+
+    if what == "INSTALL" then
+      -- FIXME !!!
+      error("INSTALL not yet done")
+
+      return true
+    end
+
+
+    -- test stuff
+
+    if E1.kind == "free" then
+      return not raw_blocked(S)
+
+    elseif E1.kind == "not_room" then
+      return not (S.temp_area)
+
+    elseif E1.kind == "area" then
+      if S.kind == "solid"  then return false end
+
+      local A = S.temp_area
+      if not A then return false end
+
+      if A.mode == "liquid" then return false end
+
+      -- FIXME !!!! : area matching logic
+      return true
+
+    elseif E1.kind == "solid" then
+      return S.kind == "solid"
+
+    elseif E1.kind == "liquid" then
+      if not S.temp_area then return false end
+
+      return (S.temp_area.mode == "liquid")
+
+    else
+      error("Element kind not testable: " .. tostring(E1.kind))
+    end
+  end
+
+
+  local function test_or_install_pattern(what, T, x, y)
+    -- hmmmm yuck
+    T.x = x
+    T.y = y
+
+    for px = 1, cur_rule.input.w do
+    for py = 1, cur_rule.input.h do
+      local E1 = cur_rule.input [px][py]
+      local E2 = cur_rule.output[px][py]
+
+      local res = test_or_install_element(what, E1, E2, T, px, py)
+
+      if what == "TEST" and not res then
+        -- cannot place this shape here (something in the way)
+        return false
+      end
+
+      assert(res)
+    end -- px, py
+    end
+
+    return true
   end
 
 
@@ -1534,6 +1617,8 @@ function Grower_grammatical_room(P)
   local function apply_a_rule()
     local name = rand.key_by_probs(rule_tab)
     local rule = assert(grammar[name])
+
+    cur_rule = rule
 
     -- Test all eight possible transforms (four rotations + mirroring)
     -- in all possible locations in the room.  If at least one is
@@ -1553,7 +1638,7 @@ function Grower_grammatical_room(P)
 
         if score < best.score then continue end
 
-        if test_or_install_pattern("TEST", rule, T, x, y) then
+        if test_or_install_pattern("TEST", T, x, y) then
           best.T = T
           best.x = x
           best.x = y
@@ -1565,7 +1650,7 @@ function Grower_grammatical_room(P)
     end
 
     if best.score > 0 then
-      test_or_install_pattern("INSTALL", rule, best.T, best.x, best.y)
+      test_or_install_pattern("INSTALL", best.T, best.x, best.y)
     end
   end
 
