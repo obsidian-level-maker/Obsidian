@@ -301,6 +301,21 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
+  local function set_area_info(elem, what)
+    if not def.area_map[elem.area] then
+      def.area_map[elem.area] =
+      {
+        area = elem.area
+      }
+    end
+
+    local info = def.area_map[elem.area]
+
+    if what == "input"  then info.input  = true end
+    if what == "output" then info.output = true end
+  end
+
+
   local function convert_element(what, grid, x, y)
     local line
     
@@ -310,7 +325,7 @@ function Grower_preprocess_grammar(grammar)
       line = def.structure[y*2]
     end
 
-    if #line != W then
+    if #line != grid.w then
       error("Malformed structure in grammar: " .. def.name)
     end
 
@@ -323,15 +338,61 @@ function Grower_preprocess_grammar(grammar)
 
     grid[x][gy] = elem
 
-    -- FIXME : collect area info
+    if elem.area then
+      set_area_info(elem, what)
+    end
+  end
+
+
+  local function check_compatible_elements(E1, E2)
+    if E1.kind == E2.kind then return end
+
+    if E1.kind == "dont_care" or E2 == "dont_care" then
+      error("bad grammar rule : mismatch of 'X' between elements")
+    end
+
+    if (E1.kind == "not_room" or E1.kind == "free") and
+       (E2.kind == "not_room" or E2.kind == "free")
+    then
+      error("bad grammar rule : mismatch of '!' between elements")
+    end
+
+    -- silently fix using "." in input pattern when output is an assignment
+    if E1.kind == "not_room" then
+      E1.kind = "free"
+      return
+    end
+
+    if E1.kind != "free" then
+      error("bad grammar rule : assignment into a non-free element")
+    end
   end
 
 
   local function finalize_element(x, y)
-    local E1 = grid.input [x][y]
-    local E2 = grid.output[x][y]
+    local E1 = def.input [x][y]
+    local E2 = def.output[x][y]
 
-    -- TODO : check stuff
+    -- if only one side is a diagonal, try to make them both diagonal
+--[[
+    if E1.diagonal and not E2.diagonal then
+      split_element(E2, E1.diagonal)
+    elseif E2.diagonal and not E1.diagonal then
+      split_element(E1, E2.diagonal)
+    end
+--]]
+
+    -- check assignment
+    if E1.diagonal and E2.diagonal == E1.diagonal then
+      check_compatible_elements(E1.top,    E2.top)
+      check_compatible_elements(E1.bottom, E2.bottom)
+
+    elseif E1.diagonal or E2.diagonal then
+      -- FIXME !!!
+
+    else
+      check_compatible_elements(E1, E2)
+    end
   end
 
 
@@ -353,6 +414,8 @@ function Grower_preprocess_grammar(grammar)
 
     def.input  = table.array_2D(W, H)
     def.output = table.array_2D(W, H)
+
+    def.area_map = {}
 
     -- must iterate line by line, then across each line
     for y = 1, H do
@@ -380,16 +443,14 @@ function Grower_preprocess_grammar(grammar)
 
   ---| Grower_preprocess_grammar |---
 
-  table.name_up(TILES)
+  table.name_up(grammar)
 
-  table.expand_templates(TILES)
+  table.expand_templates(grammar)
 
-  each name,cur_def in TILES do
+  each name,cur_def in grammar do
     def = cur_def
 
----???  def.area_list = {}
-    def.processed = {}
-
+stderrf("Grower_preprocess_grammar... %s\n", name)
     convert_structure()
 
     check_mode(name)
