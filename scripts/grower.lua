@@ -1331,6 +1331,22 @@ function Grower_grammatical_room(P)
   local cur_rule
 
 
+  local function new_temp_area(mode)
+    local A =
+    {
+      id = alloc_id("gram_area")
+      mode = mode
+      room = cur_room
+      seeds = {}
+      svolume = 0
+    }
+
+    A.name = string.format("GRAM_AREA_%d", A.id)
+
+    return A
+  end
+
+
   local function unset_seed(S)
     local A = assert(S.temp_area)
     assert(A.room)
@@ -1436,15 +1452,7 @@ function Grower_grammatical_room(P)
 
   local function begin_area()
     -- create a new temporary area
-    cur_area =
-    {
-      id = alloc_id("gram_area")
-      room = cur_room
-      seeds = {}
-      svolume = 0
-    }
-
-    cur_area.name = string.format("GRAM_AREA_%d", cur_area.id)
+    cur_area = new_temp_area("floor")
 
     table.insert(temp_areas, cur_area)
 
@@ -1619,7 +1627,15 @@ function Grower_grammatical_room(P)
       return
     end
 
-    -- TODO: stairs
+    if E2.kind == "solid" or
+       E2.kind == "liquid"
+    then
+      local new_area = new_temp_area(E2.kind)
+      set_seed(S, new_area)
+      return
+    end
+
+    -- TODO: stairs, "solid", "liquid"
 
     error("INSTALL : unsupported kind: " .. E2.kind)
   end
