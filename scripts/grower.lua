@@ -355,7 +355,7 @@ function Grower_preprocess_grammar(grammar)
     -- same kind of thing is always acceptable
     if E1.kind == E2.kind then return end
 
-    -- silently fix a "." + "!" mismatch
+    -- silently fix a "." / "!" mismatch
     if (E1.kind == "not_room" and E2.kind == "free") or
        (E2.kind == "not_room" and E1.kind == "free")
     then
@@ -1339,7 +1339,6 @@ function Grower_grammatical_room(P)
   local function raw_blocked(S)
     if S.area then return true end
     if S.temp_area then return true end
-    if S.kind == "solid" then return true end
 
     if S.sx <= 1 or S.sx >= SEED_W then return true end
     if S.sy <= 1 or S.sy >= SEED_H then return true end
@@ -1525,6 +1524,57 @@ function Grower_grammatical_room(P)
   end
 
 
+  local function match_temp_area(elem, A)
+    -- FIXME !!!
+    return true
+  end
+
+
+  local function match_an_element(E1, S)
+    local A = S.temp_area
+
+    if E1.kind == "free" then
+      return not raw_blocked(S)
+    end
+
+    if E1.kind == "not_room" then
+      return not (A and A.room == cur_room)
+    end
+
+
+    -- all other tests require an area of this room
+
+    if not A then return false end
+    if A.room != cur_room then return false end
+
+    if E1.kind == "solid" or
+       E1.kind == "liquid"
+    then
+      return (A.mode == E1.kind)
+    end
+
+    if E1.kind == "area" then
+      if A.mode == "solid"  then return false end
+      if A.mode == "liquid" then return false end
+
+      return match_temp_area(E1, A)
+    end
+
+    if E1.kind == "stair" then
+      -- note: we do not check direction of stair
+      return (S.stair_info and true)
+    end
+
+    error("Element kind not testable: " .. tostring(E1.kind))
+  end
+
+
+  local function install_an_element(E1, E2, S)
+    -- FIXME!!!
+    error("INSTALL not yet done")
+  end
+
+
   local function match_or_install_element(what, E1, E2, T, px, py)
     -- FIXME : handle diagonals!
     if E1.diagonal or E2.diagonal then return false end
@@ -1544,43 +1594,11 @@ function Grower_grammatical_room(P)
     if S.diagonal then return false end
 
 
-    if what == "INSTALL" then
-      -- FIXME !!!
-      error("INSTALL not yet done")
-
-      return true
-    end
-
-
-    -- test stuff
-
-    if E1.kind == "free" then
-      return not raw_blocked(S)
-
-    elseif E1.kind == "not_room" then
-      return not (S.temp_area)
-
-    elseif E1.kind == "area" then
-      if S.kind == "solid"  then return false end
-
-      local A = S.temp_area
-      if not A then return false end
-
-      if A.mode == "liquid" then return false end
-
-      -- FIXME !!!! : area matching logic
-      return true
-
-    elseif E1.kind == "solid" then
-      return S.kind == "solid"
-
-    elseif E1.kind == "liquid" then
-      if not S.temp_area then return false end
-
-      return (S.temp_area.mode == "liquid")
-
+    if what == "TEST" then
+      return match_an_element(E1, S)
     else
-      error("Element kind not testable: " .. tostring(E1.kind))
+      install_an_element(E1, E2, S)
+      return true
     end
   end
 
@@ -1644,7 +1662,7 @@ function Grower_grammatical_room(P)
         if match_or_install_pattern("TEST", T, x, y) then
           best.T = T
           best.x = x
-          best.x = y
+          best.y = y
           best.score = score
         end
       end -- x, y
