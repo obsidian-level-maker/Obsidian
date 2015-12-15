@@ -1531,12 +1531,15 @@ function Grower_grammatical_room(P)
 
 
   local function match_an_element(E1, S)
-    -- note: if A exists, it will be part of current room
-    local A = S.temp_area
-
     if E1.kind == "free" then
       return not raw_blocked(S)
     end
+
+
+    -- note: if A exists, it's always part of the current room
+    -- [ that may change though... ]
+    local A = S.temp_area
+    if A and A.room != cur_room then A = nil end
 
     if E1.kind == "not_room" then
       return not A
