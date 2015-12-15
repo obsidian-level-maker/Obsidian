@@ -379,6 +379,11 @@ function Grower_preprocess_grammar(grammar)
       E1.kind = "free"
       return
     end
+
+    -- fix using "!" in an output pattern
+    if E2.kind == "not_room" then
+      E2.kind = "free"
+    end
   end
 
 
@@ -1326,13 +1331,38 @@ function Grower_grammatical_room(P)
   local cur_rule
 
 
+  local function unset_seed(S)
+    local A = assert(S.temp_area)
+    assert(A.room)
+
+    S.temp_area = nil
+
+    table.kill_elem(A.seeds, S)
+
+    -- FIXME: uggghhhh, do this elsewhere!!!
+    local vol = sel(S.diagonal, 0.5, 1.0)
+    A.svolume = A.svolume - vol
+    A.room.svolume = A.room.svolume - vol
+  end
+
+
   local function set_seed(S, A)
+    assert(A.room)
+
+    if S.temp_area == A then return end
+
+    if S.temp_area then
+      unset_seed(S)
+    end
+
     S.temp_area = A
+
     table.insert(A.seeds, S)
 
+    -- FIXME: uggghhhh, do this elsewhere!!!
     local vol = sel(S.diagonal, 0.5, 1.0)
     A.svolume = A.svolume + vol
-    cur_room.svolume = cur_room.svolume + vol
+    A.room.svolume = A.room.svolume + vol
   end
 
 
@@ -1573,8 +1603,25 @@ function Grower_grammatical_room(P)
 
 
   local function install_an_element(E1, E2, S)
-    -- FIXME!!!
-    error("INSTALL not yet done")
+    -- FIXME: too simple!!!
+    if E1.kind == E2.kind then return end
+
+    if E2.kind == "free" then
+      if not (E1.kind == "free" or E1.kind == "not_room") then
+        unset_seed(S)
+      end
+      return
+    end
+
+    -- FIXME : other areas!!!
+    if E2.kind == "area" then
+      set_seed(S, cur_area)
+      return
+    end
+
+    -- TODO: stairs
+
+    error("INSTALL : unsupported kind: " .. E2.kind)
   end
 
 
