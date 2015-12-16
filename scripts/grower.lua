@@ -249,8 +249,8 @@ function Grower_preprocess_grammar(grammar)
 
 
   local function parse_element(ch)
-    if ch == '.' then return { kind="not_room" } end
-    if ch == '!' then return { kind="free" } end
+    if ch == '.' then return { kind="free" } end
+    if ch == '!' then return { kind="free", utterly=1 } end
 
     if ch == 'x' then return { kind="dont_care" } end
     if ch == 'X' then return { kind="dont_care" } end
@@ -355,14 +355,6 @@ function Grower_preprocess_grammar(grammar)
     -- same kind of thing is always acceptable
     if E1.kind == E2.kind then return end
 
-    -- silently fix a "." / "!" mismatch
-    if (E1.kind == "not_room" and E2.kind == "free") or
-       (E2.kind == "not_room" and E1.kind == "free")
-    then
-      E2.kind = E1.kind
-      return
-    end
-
     -- from here on, output element is an ASSIGNMENT
     -- i.e. setting something new or different into the seed(s)
 
@@ -372,17 +364,6 @@ function Grower_preprocess_grammar(grammar)
 
     if E2.kind == "dont_care" then
       error("bad element in " .. def.name .. ": 'X' used in assignment")
-    end
-
-    -- silently fix using "." in input pattern when output is an assignment
-    if E1.kind == "not_room" then
-      E1.kind = "free"
-      return
-    end
-
-    -- fix using "!" in an output pattern
-    if E2.kind == "not_room" then
-      E2.kind = "free"
     end
   end
 
@@ -1569,7 +1550,8 @@ function Grower_grammatical_room(P)
 
 
   local function match_an_element(E1, S)
-    if E1.kind == "free" then
+    -- for "!", require nothing there at all
+    if E1.kind == "free" and E1.utterly then
       return not raw_blocked(S)
     end
 
@@ -1579,7 +1561,7 @@ function Grower_grammatical_room(P)
     local A = S.temp_area
     if A and A.room != cur_room then A = nil end
 
-    if E1.kind == "not_room" then
+    if E1.kind == "free" then
       return not A
     end
 
@@ -1615,7 +1597,7 @@ function Grower_grammatical_room(P)
     if E1.kind == E2.kind then return end
 
     if E2.kind == "free" then
-      if not (E1.kind == "free" or E1.kind == "not_room") then
+      if not (E1.kind == "free") then
         unset_seed(S)
       end
       return
