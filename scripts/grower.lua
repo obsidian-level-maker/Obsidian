@@ -1755,7 +1755,7 @@ function Grower_grammatical_room(P)
 
   begin_area()
 
-  for loop = 1, 20 do
+  for loop = 1, 500 do
     apply_a_rule()
   end
 

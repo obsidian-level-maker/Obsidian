@@ -28,15 +28,30 @@ HALL_A_FORWARD =
 
   structure =
   {
+    "...", "..."
     "...", ".1."
     ".1.", ".1."
   }
 }
 
 
+HALL_A_BRANCH =
+{
+  prob = 30
+
+  structure =
+  {
+    ".....", "....."
+    ".....", "..1.."
+    "11111", "11111"
+  }
+}
+
+
+
 HALL_A_TURN =
 {
-  prob = 50
+  prob = 0
 
   structure =
   {
@@ -46,21 +61,9 @@ HALL_A_TURN =
 }
 
 
-HALL_A_BRANCH =
-{
-  prob = 20
-
-  structure =
-  {
-    "...", "111"
-    ".1.", ".1."
-  }
-}
-
-
 HALL_A_CROSS =
 {
-  prob = 5
+  prob = 0
 
   structure =
   {
@@ -73,7 +76,7 @@ HALL_A_CROSS =
 
 HALL_A_RECONNECT =
 {
-  prob = 10
+  prob = 0
 
   structure =
   {
