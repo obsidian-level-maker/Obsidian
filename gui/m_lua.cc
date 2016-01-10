@@ -227,13 +227,40 @@ static bool scan_dir_process_name(const char *name, const char *parent, const ch
 
 	char *temp_name = StringPrintf("%s/%s", parent, name);
 	bool is_dir = PHYSFS_isDirectory(temp_name);
-	StringFree(temp_name);
 
 	if (strcmp(match, "DIRS") == 0)
+	{
+		StringFree(temp_name);
 		return is_dir;
+	}
 
 	if (is_dir)
+	{
+		StringFree(temp_name);
 		return false;
+	}
+
+	// pretend that zero-length files do not exist
+	// [ allows a PK3 to _remove_ a file ]
+
+	byte buffer[1];
+
+	PHYSFS_File *fp = PHYSFS_openRead(temp_name);
+
+	StringFree(temp_name);
+
+	if (! fp)
+		return false;
+
+	if (PHYSFS_read(fp, buffer, 1, 1) < 1)
+	{
+		PHYSFS_close(fp);
+		return false;
+	}
+
+	PHYSFS_close(fp);
+
+	// lastly, check match
 
 	if (strcmp(match, "*") == 0)
 	{
