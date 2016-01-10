@@ -54,7 +54,7 @@ typedef struct
 	u8_t	id_length;
 	u8_t	colormap_type;
 	u8_t	image_type;
-	u16_t	colormap_index;
+	u16_t	colormap_start;
 	u16_t	colormap_length;
 	u8_t	colormap_bits;
 	u16_t	x_origin;
@@ -108,7 +108,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 	targa_header.colormap_type = *buf_p++;
 	targa_header.image_type = *buf_p++;
 	
-	targa_header.colormap_index = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
+	targa_header.colormap_start = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
 	targa_header.colormap_length = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
 	targa_header.colormap_bits = *buf_p++;
 	targa_header.x_origin = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
@@ -118,14 +118,15 @@ tga_image_c * TGA_LoadImage (const char *path)
 	targa_header.pixel_bits = *buf_p++;
 	targa_header.attributes = *buf_p++;
 
+	if (targa_header.id_length != 0)
+		buf_p += targa_header.id_length;  // skip TARGA image comment
+
 	if (targa_header.image_type != TGA_INDEXED &&
 	    targa_header.image_type != TGA_RGB &&
 		targa_header.image_type != TGA_RGB_RLE) 
 	{
 		Main_FatalError("Bad tga file: type %d is not supported\n", targa_header.image_type);
 	}
-
-
 
 	int width  = targa_header.width;
 	int height = targa_header.height;
@@ -161,17 +162,18 @@ tga_image_c * TGA_LoadImage (const char *path)
 
 		memset(palette, 255, sizeof(palette));
 
-		const u8_t *raw_pal = &buffer[targa_header.colormap_index];
+		int cm_start = targa_header.colormap_start;
+		int cm_end   = cm_start + targa_header.colormap_length;
 
-		for (u16_t n = 0 ; n < targa_header.colormap_length ; n++)
+		for (int n = cm_start ; n < cm_end ; n++)
 		{
-			byte b = *raw_pal++;
-			byte g = *raw_pal++;
-			byte r = *raw_pal++;
+			byte b = *buf_p++;
+			byte g = *buf_p++;
+			byte r = *buf_p++;
 			byte a = 255;
 
 			if (targa_header.colormap_bits == 32)
-				a = *raw_pal++;
+				a = *buf_p++;
 
 			palette[n] = MAKE_RGBA(r, g, b, a);
 		}
@@ -182,9 +184,6 @@ tga_image_c * TGA_LoadImage (const char *path)
 
 	rgb_color_t	*dest = img->pixels;
 	rgb_color_t	*p;
-
-	if (targa_header.id_length != 0)
-		buf_p += targa_header.id_length;  // skip TARGA image comment
 
 	if (targa_header.image_type == TGA_RGB)   // Uncompressed, RGB images
 	{
