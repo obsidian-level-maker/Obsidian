@@ -60,6 +60,20 @@ typedef struct
 } targa_header_t;
 
 
+typedef enum
+{
+	TGA_INDEXED = 1,
+	TGA_INDEXED_RLE = 9,
+
+	TGA_RGB = 2,
+	TGA_RGB_RLE = 10,
+
+	TGA_BW = 3,
+	TGA_BW_RLE = 11
+}
+tga_type_e;
+
+
 tga_image_c * TGA_LoadImage (const char *path)
 {
 // load the file
@@ -103,8 +117,8 @@ tga_image_c * TGA_LoadImage (const char *path)
 	targa_header.pixel_size = *buf_p++;
 	targa_header.attributes = *buf_p++;
 
-	if (targa_header.image_type != 2 &&
-		targa_header.image_type != 10) 
+	if (targa_header.image_type != TGA_RGB &&
+		targa_header.image_type != TGA_RGB_RLE) 
 	{
 		Main_FatalError("Bad tga file: Only type 2 and 10 images supported\n");
 	}
@@ -140,7 +154,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 	if (targa_header.id_length != 0)
 		buf_p += targa_header.id_length;  // skip TARGA image comment
 
-	if (targa_header.image_type == 2)   // Uncompressed, RGB images
+	if (targa_header.image_type == TGA_RGB)   // Uncompressed, RGB images
 	{
 		for (int y = height-1 ; y >= 0 ; y--)
 		{
@@ -165,7 +179,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 			}
 		}
 	}
-	else if (targa_header.image_type == 10)   // Runlength encoded RGB images
+	else if (targa_header.image_type == TGA_RGB_RLE)   // Runlength encoded RGB images
 	{
 		byte r=0, g=0, b=0, a=0;
 
