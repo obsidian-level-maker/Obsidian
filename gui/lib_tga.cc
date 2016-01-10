@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2013-2015 Andrew Apted
+//  Copyright (C) 2013-2016 Andrew Apted
 //  Copyright (C) 1997-2001 Id Software, Inc.
 //
 //  This program is free software; you can redistribute it and/or
@@ -144,39 +144,24 @@ tga_image_c * TGA_LoadImage (const char *path)
 	{
 		for (int y = height-1 ; y >= 0 ; y--)
 		{
-			p = dest + y*width;
+			p = dest + y * width;
 
-			for (int x=0 ; x < width ; x++)
+			for (int x = 0 ; x < width ; x++)
 			{
-				byte red, green, blue, alphabyte;
+				byte b = *buf_p++;
+				byte g = *buf_p++;
+				byte r = *buf_p++;
+				byte a = 255;
 
-				switch (targa_header.pixel_size)
-				{
-					case 24:
-							blue = *buf_p++;
-							green = *buf_p++;
-							red = *buf_p++;
+				if (targa_header.pixel_size == 32)
+					a = *buf_p++;
 
-							*p++ = MAKE_RGBA(red, green, blue, 255);
-							break;
+				*p++ = MAKE_RGBA(r, g, b, a);
 
-					case 32:
-							blue = *buf_p++;
-							green = *buf_p++;
-							red = *buf_p++;
-							alphabyte = *buf_p++;
-
-							*p++ = MAKE_RGBA(red, green, blue, alphabyte);
-
-							if (alphabyte != 255)
-							{
-								if (alphabyte == 0)
-									is_masked = true;
-								else
-									is_complex = true;
-							}
-							break;
-				}
+				if (a == 0)
+					is_masked = true;
+				else if (a != 255)
+					is_complex = true;
 			}
 		}
 	}
