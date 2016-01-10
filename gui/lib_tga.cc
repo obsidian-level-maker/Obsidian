@@ -167,47 +167,37 @@ tga_image_c * TGA_LoadImage (const char *path)
 	}
 	else if (targa_header.image_type == 10)   // Runlength encoded RGB images
 	{
-		byte red=0, green=0, blue=0, alphabyte=0;
-		byte packetHeader, packetSize;
+		byte r=0, g=0, b=0, a=0;
 
-		for (int y=height-1 ; y >= 0 ; y--)
+		byte packet_header, packet_size;
+
+		for (int y = height-1 ; y >= 0 ; y--)
 		{
-			p = dest + y*width;
+			p = dest + y * width;
 
-			for (int x=0 ; x < width ; )
+			for (int x = 0 ; x < width ; )
 			{
-				packetHeader= *buf_p++;
-				packetSize = 1 + (packetHeader & 0x7f);
+				packet_header = *buf_p++;
+				packet_size = 1 + (packet_header & 0x7f);
 
-				if (packetHeader & 0x80)    // run-length packet
+				if (packet_header & 0x80)    // run-length packet
 				{
-					switch (targa_header.pixel_size)
-					{
-						case 24:
-								blue = *buf_p++;
-								green = *buf_p++;
-								red = *buf_p++;
-								alphabyte = 255;
-								break;
-						case 32:
-								blue = *buf_p++;
-								green = *buf_p++;
-								red = *buf_p++;
-								alphabyte = *buf_p++;
+					b = *buf_p++;
+					g = *buf_p++;
+					r = *buf_p++;
+					a = 255;
 
-								if (alphabyte != 255)
-								{
-									if (alphabyte == 0)
-										is_masked = true;
-									else
-										is_complex = true;
-								}
-								break;
-					}
+					if (targa_header.pixel_size == 32)
+						a = *buf_p++;
+
+					if (a == 0)
+						is_masked = true;
+					else if (a != 255)
+						is_complex = true;
 	
-					for (int j=0 ; j < packetSize ; j++)
+					for (int j = 0 ; j < packet_size ; j++)
 					{
-						*p++ = MAKE_RGBA(red, green, blue, alphabyte);
+						*p++ = MAKE_RGBA(r, g, b, a);
 
 						x++;
 
@@ -225,36 +215,23 @@ tga_image_c * TGA_LoadImage (const char *path)
 				}
 				else        // not a run-length packet
 				{
-					for(int j=0 ; j < packetSize; j++)
+					for (int j = 0 ; j < packet_size; j++)
 					{
-						switch (targa_header.pixel_size)
-						{
-							case 24:
-									blue = *buf_p++;
-									green = *buf_p++;
-									red = *buf_p++;
+						b = *buf_p++;
+						g = *buf_p++;
+						r = *buf_p++;
+						a = 255;
 
-									*p++ = MAKE_RGBA(red, green, blue, 255);
-									break;
+						if (targa_header.pixel_size == 32)
+							a = *buf_p++;
 
-							case 32:
-									blue = *buf_p++;
-									green = *buf_p++;
-									red = *buf_p++;
-									alphabyte = *buf_p++;
+						*p++ = MAKE_RGBA(r, g, b, a);
 
-									*p++ = MAKE_RGBA(red, green, blue, alphabyte);
-
-									if (alphabyte != 255)
-									{
-										if (alphabyte == 0)
-											is_masked = true;
-										else
-											is_complex = true;
-									}
-									break;
-						}
-
+						if (a == 0)
+							is_masked = true;
+						else if (a != 255)
+							is_complex = true;
+	
 						x++;
 
 						if (x == width)  // pixel packet run spans across edge
@@ -265,7 +242,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 							else
 								goto breakOut;
 
-							p = dest + y*width;
+							p = dest + y * width;
 						}						
 					}
 				}
