@@ -51,11 +51,18 @@ tga_image_c::~tga_image_c()
 
 typedef struct
 {
-	u8_t	id_length, colormap_type, image_type;
-	u16_t	colormap_index, colormap_length;
-	u8_t	colormap_size;
-	u16_t	x_origin, y_origin, width, height;
-	u8_t	pixel_size, attributes;
+	u8_t	id_length;
+	u8_t	colormap_type;
+	u8_t	image_type;
+	u16_t	colormap_index;
+	u16_t	colormap_length;
+	u8_t	colormap_bits;
+	u16_t	x_origin;
+	u16_t	y_origin;
+	u16_t	width;
+	u16_t	height;
+	u8_t	pixel_bits;
+	u8_t	attributes;
 
 } targa_header_t;
 
@@ -101,33 +108,23 @@ tga_image_c * TGA_LoadImage (const char *path)
 	targa_header.colormap_type = *buf_p++;
 	targa_header.image_type = *buf_p++;
 	
-	targa_header.colormap_index = (buf_p[0]) | (buf_p[1] << 8);
-	buf_p += 2;
-	targa_header.colormap_length = (buf_p[0]) | (buf_p[1] << 8);
-	buf_p += 2;
-	targa_header.colormap_size = *buf_p++;
-	targa_header.x_origin = (buf_p[0]) | (buf_p[1] << 8);
-	buf_p += 2;
-	targa_header.y_origin = (buf_p[0]) | (buf_p[1] << 8);
-	buf_p += 2;
-	targa_header.width = (buf_p[0]) | (buf_p[1] << 8);
-	buf_p += 2;
-	targa_header.height = (buf_p[0]) | (buf_p[1] << 8);
-	buf_p += 2;
-	targa_header.pixel_size = *buf_p++;
+	targa_header.colormap_index = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
+	targa_header.colormap_length = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
+	targa_header.colormap_bits = *buf_p++;
+	targa_header.x_origin = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
+	targa_header.y_origin = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
+	targa_header.width = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
+	targa_header.height = (buf_p[0]) | (buf_p[1] << 8); buf_p += 2;
+	targa_header.pixel_bits = *buf_p++;
 	targa_header.attributes = *buf_p++;
 
-	if (targa_header.image_type != TGA_RGB &&
+	if (targa_header.image_type != TGA_INDEXED &&
+	    targa_header.image_type != TGA_RGB &&
 		targa_header.image_type != TGA_RGB_RLE) 
 	{
-		Main_FatalError("Bad tga file: Only type 2 and 10 images supported\n");
+		Main_FatalError("Bad tga file: type %d is not supported\n", targa_header.image_type);
 	}
 
-	if (targa_header.colormap_type !=0 ||
-	    (targa_header.pixel_size != 24 && targa_header.pixel_size != 32))
-	{
-		Main_FatalError("Bad tga file: only 24 or 32 bit images supported (no colormaps)\n");
-	}
 
 
 	int width  = targa_header.width;
@@ -146,6 +143,41 @@ tga_image_c * TGA_LoadImage (const char *path)
 	bool is_complex = false;  // 
 
 
+// decode the palette, if any
+
+	rgb_color_t palette[256];
+
+	if (targa_header.image_type == TGA_INDEXED ||
+		targa_header.image_type == TGA_INDEXED_RLE)
+	{
+		if (targa_header.colormap_type != 1)
+			Main_FatalError("Bad tga file: colormap type != 1\n");
+
+		if (targa_header.colormap_length > 256)
+			Main_FatalError("Bad tga file: too many colors (over 256)\n");
+
+		if (targa_header.pixel_bits != 8 || targa_header.colormap_bits < 24)
+			Main_FatalError("Bad tga file: unsupported colormap size\n");
+
+		memset(palette, 255, sizeof(palette));
+
+		const u8_t *raw_pal = &buffer[targa_header.colormap_index];
+
+		for (u16_t n = 0 ; n < targa_header.colormap_length ; n++)
+		{
+			byte b = *raw_pal++;
+			byte g = *raw_pal++;
+			byte r = *raw_pal++;
+			byte a = 255;
+
+			if (targa_header.colormap_bits == 32)
+				a = *raw_pal++;
+
+			palette[n] = MAKE_RGBA(r, g, b, a);
+		}
+	}
+
+
 // decode the pixel stream
 
 	rgb_color_t	*dest = img->pixels;
@@ -156,6 +188,9 @@ tga_image_c * TGA_LoadImage (const char *path)
 
 	if (targa_header.image_type == TGA_RGB)   // Uncompressed, RGB images
 	{
+		if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
+			Main_FatalError("Bad tga file: only 24 or 32 bit images supported\n");
+
 		for (int y = height-1 ; y >= 0 ; y--)
 		{
 			p = dest + y * width;
@@ -167,7 +202,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 				byte r = *buf_p++;
 				byte a = 255;
 
-				if (targa_header.pixel_size == 32)
+				if (targa_header.pixel_bits == 32)
 					a = *buf_p++;
 
 				*p++ = MAKE_RGBA(r, g, b, a);
@@ -181,6 +216,9 @@ tga_image_c * TGA_LoadImage (const char *path)
 	}
 	else if (targa_header.image_type == TGA_RGB_RLE)   // Runlength encoded RGB images
 	{
+		if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
+			Main_FatalError("Bad tga file: only 24 or 32 bit images supported\n");
+
 		byte r=0, g=0, b=0, a=0;
 
 		byte packet_header, packet_size;
@@ -201,7 +239,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 					r = *buf_p++;
 					a = 255;
 
-					if (targa_header.pixel_size == 32)
+					if (targa_header.pixel_bits == 32)
 						a = *buf_p++;
 
 					if (a == 0)
@@ -236,7 +274,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 						r = *buf_p++;
 						a = 255;
 
-						if (targa_header.pixel_size == 32)
+						if (targa_header.pixel_bits == 32)
 							a = *buf_p++;
 
 						*p++ = MAKE_RGBA(r, g, b, a);
@@ -262,6 +300,27 @@ tga_image_c * TGA_LoadImage (const char *path)
 				}
 			}
 			breakOut: ;
+		}
+	}
+	else if (targa_header.image_type == TGA_INDEXED)   // Uncompressed, colormapped images
+	{
+		for (int y = height-1 ; y >= 0 ; y--)
+		{
+			p = dest + y * width;
+
+			for (int x = 0 ; x < width ; x++)
+			{
+				rgb_color_t col = palette[*buf_p++];
+
+				*p++ = col;
+
+				byte a = RGB_ALPHA(col);
+
+				if (a == 0)
+					is_masked = true;
+				else if (a != 255)
+					is_complex = true;
+			}
 		}
 	}
 
