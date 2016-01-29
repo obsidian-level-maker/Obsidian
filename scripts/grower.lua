@@ -458,216 +458,6 @@ end
 
 
 
-function Grower_preprocess_tiles()
-
-  local cur_def
-
-
-  local function add_element(E)
-    if E.kind != "area" then return end
-
-    if cur_def.area_list[E.area] then return end
-
-    cur_def.area_list[E.area] = { area=E.area }
-  end
-
-
-  local function do_parse_element(ch)
-    if ch == '.' then return { kind="empty" } end
-
-    if ch == '1' then return { kind="area", area=1 } end
-    if ch == '2' then return { kind="area", area=2 } end
-    if ch == '3' then return { kind="area", area=3 } end
-    if ch == '4' then return { kind="area", area=4 } end
-    if ch == '5' then return { kind="area", area=5 } end
-    if ch == '6' then return { kind="area", area=6 } end
-    if ch == '7' then return { kind="area", area=7 } end
-    if ch == '8' then return { kind="area", area=8 } end
-    if ch == '9' then return { kind="area", area=9 } end
-
-    error("Grower_parse_char: unknown symbol: " .. tostring(ch))
-  end
-
-
-  local function parse_element(ch)
-    local E = do_parse_element(ch)
-
-    add_element(E)
-
-    return E
-  end
-
-
-  local function parse_char(ch, diag_list, def)
-    -- handle diagonal seeds
-    if ch == '/' or ch == '%' then
-      if not diag_list then
-        error("Grower_parse_char: missing diagonals in: " .. def.name)
-      end
-
-      local D = table.remove(diag_list, 1)
-      if not D then
-        error("Grower_parse_char: not enough diagonals in: " .. def.name)
-      end
-
-      local L = parse_element(string.sub(D, 1, 1))
-      local R = parse_element(string.sub(D, 2, 2))
-
-      local diagonal = sel(ch == '/', 3, 1)
-
-      if ch == '%' then
-        L, R = R, L
-      end
-
-      return { kind="diagonal", diagonal=diagonal, bottom=R, top=L }
-    end
-
-    return parse_element(ch)
-  end
-
-
-  local function convert_structure(def, structure)
-    local W = #structure[1]
-    local H = #structure
-
-    local diag_list
-
-    if def.diagonals then
-      diag_list = table.copy(def.diagonals)
-    end
-
-    local grid = table.array_2D(W, H)
-
-    -- must iterate line by line, then across each line
-    for y = 1, H do
-    for x = 1, W do
-      local line = structure[y]
-
-      if #line != W then
-        error("Malformed structure in tile: " .. def.name)
-      end
-
-      local ch = string.sub(line, x, x)
-
-      -- textural representation must be inverted
-      local gy = H + 1 - y
-
-      grid[x][gy] = parse_char(ch, diag_list, def)
-    end -- x, y
-    end
-
-    local INFO =
-    {
-      def  = def
-      grid = grid
-    }
-
-    return INFO
-  end
-
-
-  local function check_connections(def)
-    local grid = def.processed[1].grid
-
-    if not def.conns or table.size(def.conns) < 2 then
-      error("Missing connections in tile: " .. def.name)
-    end
-
-    local default_set = ""
-
-    each letter,conn in def.conns do
-      conn.long = conn.w or 1
-
-      default_set = default_set .. letter
-
-      local is_diag = geom.is_corner(conn.dir)
-
-      if is_diag and conn.long >= 2 then
-        error("Long diagonals not supported, tile: " .. def.name)
-      end
-
-      local x = conn.x
-      local y = conn.y
-
-      if not (x and x >= 1 and x <= grid.w) or
-         not (y and y >= 1 and y <= grid.h)
-      then
-        error("Bad connection coord in tile: " .. def.name)
-      end
-
-      if grid[x][y].kind == "diagonal" then
-        if not is_diag then
-          error("Straight conn on a diagonal seed, tile: " .. def.name)
-        elseif not geom.is_parallel(conn.dir, grid[x][y].diagonal) then
-          error("Diagonal conn mismatches seed, tile: " .. def.name)
-        end
-
-      else -- full seed
-        if is_diag then
-          error("Diagonal conn not on a diagonal seed, tile: " .. def.name)
-        end
-      end
-    end
-
-    if not def.conn_sets then
-      def.conn_sets = { default_set }
-    end
-  end
-
-
-  local function add_stairs(def)
-    local grid = def.processed[1].grid
-
-    each spot in def.stair_spots do
-      local x = spot.x
-      local y = spot.y
-
-      if not (x and x >= 1 and x <= grid.w) or
-         not (y and y >= 1 and y <= grid.h)
-      then
-        error("Bad stair coord in tile: " .. def.name)
-      end
-
-      if grid[x][y].kind == "diagonal" then
-        error("Ambiguous stair coord (on a diagonal) in tile: " .. def.name)
-      end
-
-      grid[x][y].good_stair = { dir=spot.dir }
-    end
-  end
-
-
-  ---| Grower_preprocess_tiles |---
-
-  table.name_up(TILES)
-
-  table.expand_templates(TILES)
-
-  each name,def in TILES do
-    cur_def = def
-
-    def.area_list = {}
-    def.processed = {}
-
-    def.processed[1] = convert_structure(def, def.structure)
-
-    check_connections(def)
-
-    if def.stair_spots then add_stairs(def) end
-
-    if string.match(name, "HALL_")   then def.mode = "hallway" end
-    if string.match(name, "EXTEND_") then def.mode = "extend" end
-
-    if string.match(name, "BUILDING_") then def.environment = "building" end
-    if string.match(name, "OUTDOOR_")  then def.environment = "outdoor" end
-    if string.match(name, "CAVE_")     then def.environment = "cave" end
-
-    if not def.mode then def.mode = "room" end
-  end
-end
-
-
-
 function Grower_prepare()
   --
   -- decide boundary rectangle, etc...
@@ -690,8 +480,6 @@ function Grower_prepare()
   LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
 
   Grower_preprocess_grammar(SHAPE_GRAMMAR)
-
-  Grower_preprocess_tiles()
 end
 
 
@@ -912,6 +700,7 @@ function Grower_grammatical_room(R, pass)
     if S.temp_area == A then return end
 
     if S.temp_area then
+assert(S.temp_area.room == R)
       unset_seed(S)
     end
 
@@ -1087,7 +876,7 @@ function Grower_grammatical_room(R, pass)
   end
 
 
-  local function match_an_element(E1, S)
+  local function match_an_element(E1, E2, S)
     -- for "!", require nothing there at all
     if E1.kind == "free" and E1.utterly then
       return not raw_blocked(S)
@@ -1106,7 +895,7 @@ function Grower_grammatical_room(R, pass)
 
     -- all other tests require an area of this room
 
-    if not A then return false end
+    if not (A and A.room == R) then return false end
 
     if E1.kind == "solid" or
        E1.kind == "liquid"
@@ -1210,7 +999,7 @@ function Grower_grammatical_room(R, pass)
 
 
     if what == "TEST" then
-      return match_an_element(E1, S)
+      return match_an_element(E1, E2, S)
     else
       install_an_element(E1, E2, S)
       return true
