@@ -261,12 +261,6 @@ function Grower_preprocess_grammar(grammar)
     if ch == '1' then return { kind="area", area=1 } end
     if ch == '2' then return { kind="area", area=2 } end
     if ch == '3' then return { kind="area", area=3 } end
-    if ch == '4' then return { kind="area", area=4 } end
-    if ch == '5' then return { kind="area", area=5 } end
-    if ch == '6' then return { kind="area", area=6 } end
-    if ch == '7' then return { kind="area", area=7 } end
-    if ch == '8' then return { kind="area", area=8 } end
-    if ch == '9' then return { kind="area", area=9 } end
 
     -- straight stairs
     if ch == '<' then return { kind="stair", dir=4 } end
@@ -275,8 +269,11 @@ function Grower_preprocess_grammar(grammar)
     if ch == 'v' then return { kind="stair", dir=2 } end
 
     -- other stuff
-    if ch == 'C' then return { kind="cage" } end
+    if ch == 'A' then return { kind="new_area" } end
     if ch == 'R' then return { kind="new_room" } end
+
+    if ch == 'C' then return { kind="closet" } end
+    if ch == 'G' then return { kind="cage" } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -786,7 +783,7 @@ end
 
 
 function Grower_make_areas(temp_areas)
-  each T in temp_areas do
+  each idx,T in temp_areas do
     local area = AREA_CLASS.new("void")
 
     area.seeds = T.seeds
@@ -823,6 +820,23 @@ end
 
 
 
+function Grower_temp_area(R, mode)
+  local A =
+  {
+    id = alloc_id("gram_area")
+    mode = mode
+    room = R
+    seeds = {}
+    svolume = 0
+  }
+
+  A.name = string.format("GRAM_AREA_%d", A.id)
+
+  return A
+end
+
+
+
 function Grower_add_room(parent_R, is_hallway)
   local ROOM = ROOM_CLASS.new()
 
@@ -834,6 +848,10 @@ function Grower_add_room(parent_R, is_hallway)
   local is_outdoor, is_cave = Room_choose_kind(ROOM, parent_R)
 
   Room_set_kind(ROOM, kind, is_outdoor, is_cave)
+
+  -- always need at least one temp-area
+  ROOM.temp_areas = {}
+  ROOM.temp_areas[1] = Grower_temp_area(ROOM, "floor")
 
   -- create a preliminary connection (last room to this one)
 
@@ -860,30 +878,16 @@ function Grower_grammatical_room(R, pass)
   -- Creates rooms using Shape Grammars.
   --
 
+  local grammar = SHAPE_GRAMMAR
+
   local cur_room
   local cur_area
 
-  local temp_areas = {}
-
-  local grammar
   local rule_tab
   local cur_rule
 
-
-  local function new_temp_area(mode)
-    local A =
-    {
-      id = alloc_id("gram_area")
-      mode = mode
-      room = cur_room
-      seeds = {}
-      svolume = 0
-    }
-
-    A.name = string.format("GRAM_AREA_%d", A.id)
-
-    return A
-  end
+  local new_room
+  local new_area
 
 
   local function unset_seed(S)
@@ -986,31 +990,6 @@ function Grower_grammatical_room(R, pass)
     end
 
     return true -- OK
-  end
-
-
-  local function begin_area()
-    -- create a new temporary area
-    cur_area = new_temp_area("floor")
-
-    table.insert(temp_areas, cur_area)
-
-    local S = P.S:neighbor(P.dir)
-
-    for i = 1, P.long do
-      assert(not S.temp_area)
-      assert(not raw_blocked(S))
-
-      set_seed(S, cur_area)
-
-      if not S.diagonal then
-        local S2 = S:neighbor(P.dir)
-        assert(not raw_blocked(S2))
-        set_seed(S2, cur_area)
-
-        S = S:raw_neighbor(geom.RIGHT[P.dir])
-      end
-    end
   end
 
 
@@ -1160,13 +1139,39 @@ function Grower_grammatical_room(R, pass)
       if not (E1.kind == "free") then
         unset_seed(S)
       end
+
       return
     end
 
-    -- FIXME : other areas!!!
     if E2.kind == "area" then
-      set_seed(S, cur_area)
+      -- FIXME WRONG : USE MAPPING FROM MATCH PHASE !!
+      set_seed(S, R.temp_areas[E2.area])
       return
+    end
+
+    if E2.kind == "new_area" then
+      if pass == "root" then
+        set_seed(S, R.temp_areas[1])
+      else
+        if not new_area then
+          new_area = Grower_new_area(R, "floor")
+          table.insert(R.temp_areas, new_area)
+        end
+        set_seed(S, new_area)
+      end
+    end
+
+    if E2.kind == "new_room" then
+      -- for initial shapes, 'R' is the current room
+      if pass == "root" then
+        new_room = R
+      end
+
+      if not new_room then
+        new_room = Grower_add_room(R)
+      end
+
+      set_seed(S, new_room.temp_areas[1])
     end
 
     if E2.kind == "solid" or
@@ -1288,6 +1293,9 @@ function Grower_grammatical_room(R, pass)
 
 
   local function apply_a_rule()
+    new_room = nil
+    new_area = nil
+
     for loop = 1, 500 do
       if try_apply_a_rule() then
         return  -- Ok
@@ -1307,9 +1315,15 @@ function Grower_grammatical_room(R, pass)
 
     R.gy1 = int(SEED_H * 0.25)
     R.gy2 = int(SEED_H * 0.75)
-  end
+  else
+    -- FIXME !!! proper room range
 
-  grammar = SHAPE_GRAMMAR
+    R.gx1 = 4
+    R.gx2 = SEED_W - 3
+
+    R.gy1 = 4
+    R.gy2 = SEED_H - 3
+  end
 
   local apply_num = rand.pick({ 1,3,5,7,9,11 })
 
@@ -1321,13 +1335,9 @@ function Grower_grammatical_room(R, pass)
 
   collect_appropriate_rules()
 
-  begin_area()
-
   for loop = 1, apply_num do
     apply_a_rule()
   end
-
-  Grower_make_areas(temp_areas)
 end
 
 
@@ -1374,6 +1384,8 @@ function Grower_decorate_rooms()
 
   each R in room_list do
     Grower_grammatical_room(R, "decorate")
+
+    Grower_make_areas(R.temp_areas)
   end
 end
 
