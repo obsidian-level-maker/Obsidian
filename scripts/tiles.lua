@@ -1,10 +1,10 @@
 ------------------------------------------------------------------------
---  ROOM TILES
+--  GRAMMAR TILES
 ------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2015 Andrew Apted
+--  Copyright (C) 2015-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -89,6 +89,7 @@ DECORATE_1 =
 
 
 --- Hallway testing crud ---
+--[[
 
 HALL_A_FORWARD =
 {
@@ -153,6 +154,7 @@ HALL_A_RECONNECT =
     "11111", "11111"
   }
 }
+--]]
 
 
 -- end of SHAPE_GRAMMAR

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2015 Andrew Apted
+--  Copyright (C) 2015-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -274,7 +274,9 @@ function Grower_preprocess_grammar(grammar)
     if ch == '^' then return { kind="stair", dir=8 } end
     if ch == 'v' then return { kind="stair", dir=2 } end
 
-    -- FIXME: other stuff
+    -- other stuff
+    if ch == 'C' then return { kind="cage" } end
+    if ch == 'R' then return { kind="new_room" } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -429,10 +431,13 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function check_mode(name)
-    if string.match(name, "BUILDING_") then def.environment = "building" end
-    if string.match(name, "OUTDOOR_")  then def.environment = "outdoor" end
-    if string.match(name, "CAVE_")     then def.environment = "cave" end
+  local function name_to_pass(name)
+    if string.match(name, "ROOT_")     then return "root" end
+    if string.match(name, "GROW_")     then return "grow" end
+    if string.match(name, "SPROUT_")   then return "sprout" end
+    if string.match(name, "DECORATE_") then return "decorate" end
+
+    error("Unknown pass for grammar " .. tostring(name))
   end
 
 
@@ -448,7 +453,9 @@ function Grower_preprocess_grammar(grammar)
 stderrf("Grower_preprocess_grammar... %s\n", name)
     convert_structure()
 
-    check_mode(name)
+    if not cur_def.pass then
+      cur_def.pass = name_to_pass(name)
+    end
   end
 end
 
