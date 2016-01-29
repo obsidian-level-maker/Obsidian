@@ -823,34 +823,23 @@ end
 
 
 
-function Grower_add_room(P, is_hallway)
+function Grower_add_room(parent_R, is_hallway)
   local ROOM = ROOM_CLASS.new()
 
-  ROOM.grow_parent = P.room
-  ROOM.initial_hub = P.initial_hub
+  ROOM.grow_parent = parent_R
 
   local kind = sel(is_hallway, "hallway", "normal")
   
   Room_set_kind(ROOM, kind, P.is_outdoor, P.is_cave)
 
-  local prev_room = P.room
-
-  if not prev_room then
-    ROOM.grow_rank = 1
-  elseif is_hallway then
-    ROOM.grow_rank = prev_room.grow_rank
-  else
-    ROOM.grow_rank = prev_room.grow_rank + 1
-  end
-
   -- create a preliminary connection (last room to this one)
-  -- [ we just modify the current sprout ]
 
-  if P.room then
-    assert(not P.initial_hub)
-
-    P.R1 = P.room
-    P.R2 = ROOM
+  if parent_R then
+    local P =
+    {
+      R1 = parent_R
+      R2 = ROOM
+    }
 
     P.R1.prelim_conn_num = P.R1.prelim_conn_num + 1
     P.R2.prelim_conn_num = P.R2.prelim_conn_num + 1
@@ -897,7 +886,7 @@ function Grower_organic_room(P)
   end
 
 
-  local function check_enough_room()
+  local function check_enough_room__OLD()
     cur_area = nil
 
     local sx1 = P.S.sx
@@ -1304,7 +1293,7 @@ end
 
 
 
-function Grower_grammatical_room(pass, R)
+function Grower_grammatical_room(R, pass)
   --
   -- Creates rooms using Shape Grammars.
   --
@@ -1381,7 +1370,7 @@ function Grower_grammatical_room(pass, R)
   end
 
 
-  local function check_enough_room()
+  local function check_enough_room__OLD()
     cur_area = nil
 
     local sx1 = P.S.sx
@@ -1479,6 +1468,8 @@ function Grower_grammatical_room(pass, R)
     rule_tab = {}
 
     each name,rule in grammar do
+      if rule.pass != pass then continue end
+
       local prob = prob_for_rule(rule)
 
       if prob > 0 then
@@ -1690,7 +1681,7 @@ function Grower_grammatical_room(pass, R)
   end
 
 
-  local function apply_a_rule()
+  local function try_apply_a_rule()
     local name = rand.key_by_probs(rule_tab)
     local rule = assert(grammar[name])
 
@@ -1727,30 +1718,54 @@ function Grower_grammatical_room(pass, R)
 
     if best.score > 0 then
       match_or_install_pattern("INSTALL", best.T, best.x, best.y)
+      return true
+    end
+
+    return false
+  end
+
+
+  local function apply_a_rule()
+    for loop = 1, 500 do
+      if try_apply_a_rule() then
+        return  -- Ok
+      end
     end
   end
 
 
   ---| Grower_grammatical_room |---
 
-  if not check_enough_room() then return false end
+  -- TODO
+  if pass == "decorate" then return end
+
+  if pass == "root" then
+    R.gx1 = int(SEED_W * 0.25)
+    R.gx2 = int(SEED_W * 0.75)
+
+    R.gy1 = int(SEED_H * 0.25)
+    R.gy2 = int(SEED_H * 0.75)
+  end
 
   grammar = SHAPE_GRAMMAR
+
+  local apply_num = rand.pick({ 1,3,5,7,9,11 })
+
+  -- TODO: often no sprouts when room is near edge of map
+
+  if pass == "root" then apply_num = 1 end
+  if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
+  if pass == "decorate" then apply_num = rand.pick({0,1,2}) end
+
   collect_appropriate_rules()
-
-  -- create room --
-
-  cur_room = Grower_add_room(P, false)
 
   begin_area()
 
-  for loop = 1, 500 do
+  for loop = 1, apply_num do
     apply_a_rule()
   end
 
   Grower_make_areas(temp_areas)
-
-  return true
 end
 
 
