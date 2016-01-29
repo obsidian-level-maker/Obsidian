@@ -1111,7 +1111,7 @@ assert(S.temp_area.room == R)
   if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 3 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 12 then return end
 
   if pass == "root" then
     R.gx1 = int(SEED_W * 0.25)
@@ -1129,7 +1129,7 @@ assert(S.temp_area.room == R)
     R.gy2 = SEED_H - 3
   end
 
-  local apply_num = rand.pick({ 1,3,5,7,9,11 })
+  local apply_num = rand.pick({ 1,3,5,7,11,19 })
 
   -- TODO: often no sprouts when room is near edge of map
 
