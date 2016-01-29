@@ -1241,15 +1241,7 @@ function Grower_grammatical_room(R, pass)
   end
 
 
-  local function bbox_to_test(rule, T)
-    -- FIXME !!!
-
-    return 1, 1, SEED_W, SEED_H
-  end
-
-
-  local function try_apply_a_rule()
-    local name = rand.key_by_probs(rule_tab)
+  local function try_apply_a_rule(name)
     local rule = assert(grammar[name])
 
     cur_rule = rule
@@ -1264,10 +1256,8 @@ function Grower_grammatical_room(R, pass)
     for mirror = 0, 1 do
       local T = calc_transform(rot, mirror)
 
-      local sx1,sy1, sx2,sy2 = bbox_to_test(rule, T)
-
-      for x = sx1, sx2 do
-      for y = sy1, sy2 do
+      for x = R.gx1, R.gx2 do
+      for y = R.gy1, R.gy2 do
         local score = gui.random() * 100
 
         if score < best.score then continue end
@@ -1296,8 +1286,15 @@ function Grower_grammatical_room(R, pass)
     new_room = nil
     new_area = nil
 
-    for loop = 1, 500 do
-      if try_apply_a_rule() then
+    local rules2 = table.copy(rule_tab)
+
+    for loop = 1, 20 do
+      local name = rand.key_by_probs(rules2)
+
+      -- don't try it again
+      rules2[name] = nil
+
+      if try_apply_a_rule(name) then
         return  -- Ok
       end
     end
