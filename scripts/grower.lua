@@ -1304,7 +1304,7 @@ end
 
 
 
-function Grower_grammatical_room(P)
+function Grower_grammatical_room(pass, R)
   --
   -- Creates rooms using Shape Grammars.
   --
@@ -1755,7 +1755,7 @@ end
 
 
 
-function Grower_grow_trunk(is_first)
+function Grower_grow_trunk__OLD(is_first)
   --
   --  This builds a whole "trunk", a group of connected rooms.
   --  The map will consist of one or more of these trunks.
@@ -2480,6 +2480,53 @@ end
 
 
 
+function Grower_create_trunk(trunk_id)
+
+  local function grow_some(no_new)
+    local room_list = table.copy(LEVEL.rooms)
+
+    rand.shuffle(room_list)
+
+    each R in room_list do
+      if not R.is_grown then
+        R.is_grown = true
+
+        Grower_grammatical_room(R, "grow")
+
+        if not no_new then
+          Grower_grammatical_room(R, "sprout")
+        end
+      end
+    end
+  end
+
+
+  local trunk_R = Grower_add_room(nil)  -- no parent
+
+  Grower_grammatical_room(trunk_R, "root")
+
+  for loop = 1, 50 do
+    grow_some()
+  end
+
+  grow_some("no_new")
+end
+
+
+
+function Grower_decorate_rooms()
+  local room_list = table.copy(LEVEL.rooms)
+
+  -- TODO : do buildings before outdoor/cave
+  rand.shuffle(room_list)
+
+  each R in room_list do
+    Grower_grammatical_room(R, "decorate")
+  end
+end
+
+
+
 function Grower_hallway_kinds()
   --
   -- Determines kind (building, outdoor, etc) of hallways.
@@ -3021,7 +3068,9 @@ function Grower_create_rooms()
 
   Grower_prepare()
 
-  Grower_grow_trunk("is_first")
+  Grower_create_trunk(1)
+
+  Grower_decorate_rooms()
 
 Area_squarify_seeds()
 
