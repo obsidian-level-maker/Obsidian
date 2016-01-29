@@ -807,6 +807,9 @@ function Grower_make_areas(temp_areas)
 
   
   -- sanity check [ no seeds should have a 'temp_area' now... ]
+  -- NOT TRUE ANYMORE, NEW ROOMS WILL HAVE !
+
+--[[
   for sx = 1, SEED_W do
   for sy = 1, SEED_H do
   for pass = 1, 2 do
@@ -816,6 +819,7 @@ function Grower_make_areas(temp_areas)
   end
   end
   end
+--]]
 end
 
 
@@ -880,9 +884,6 @@ function Grower_grammatical_room(R, pass)
 
   local grammar = SHAPE_GRAMMAR
 
-  local cur_room
-  local cur_area
-
   local rule_tab
   local cur_rule
 
@@ -937,8 +938,6 @@ function Grower_grammatical_room(R, pass)
 
 
   local function check_enough_room__OLD()
-    cur_area = nil
-
     local sx1 = P.S.sx
     local sy1 = P.S.sy
     local sx2 = sx1
@@ -1098,7 +1097,7 @@ function Grower_grammatical_room(R, pass)
     -- note: if A exists, it's always part of the current room
     -- [ that may change though... ]
     local A = S.temp_area
-    if A and A.room != cur_room then A = nil end
+    if A and A.room != R then A = nil end
 
     if E1.kind == "free" then
       return not A
@@ -1159,6 +1158,8 @@ function Grower_grammatical_room(R, pass)
         end
         set_seed(S, new_area)
       end
+
+      return
     end
 
     if E2.kind == "new_room" then
@@ -1172,6 +1173,7 @@ function Grower_grammatical_room(R, pass)
       end
 
       set_seed(S, new_room.temp_areas[1])
+      return
     end
 
     if E2.kind == "solid" or
@@ -1289,12 +1291,18 @@ function Grower_grammatical_room(R, pass)
     local rules2 = table.copy(rule_tab)
 
     for loop = 1, 20 do
+      -- nothing left to try?
+      if table.empty(rules2) then break; end
+
       local name = rand.key_by_probs(rules2)
 
       -- don't try it again
       rules2[name] = nil
 
+--stderrf("Trying rule '%s'...\n", name)
       if try_apply_a_rule(name) then
+--stderrf("  YES !!!!!!!!!!!!!!!!!!!!\n")
+
         return  -- Ok
       end
     end
@@ -1305,6 +1313,9 @@ function Grower_grammatical_room(R, pass)
 
   -- TODO
   if pass == "decorate" then return end
+
+  -- FIXME
+  if pass == "sprout" and #LEVEL.rooms >= 3 then return end
 
   if pass == "root" then
     R.gx1 = int(SEED_W * 0.25)
