@@ -22,9 +22,77 @@
 SHAPE_GRAMMAR =
 {
 
+ROOT_1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "....", "...."
+    "....", ".11."
+    "....", ".11."
+    "....", "...."
+  }
+}
+
+
+------------------------------------------
+
+
+GROW_1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "XX.", "XX."
+    "11.", "111"
+    "11.", "111"
+    "XX.", "XX."
+  }
+}
+
+
+------------------------------------------
+
+
+SPROUT_1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "XX..", "XX.."
+    "11..", "11RR"
+    "11..", "11RR"
+    "XX..", "XX.."
+  }
+}
+
+
+------------------------------------------
+
+
+DECORATE_1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "XX.", "XX."
+    "11.", "11C"
+    "11.", "11C"
+    "XX.", "XX."
+  }
+}
+
+
+
+--- Hallway testing crud ---
+
 HALL_A_FORWARD =
 {
-  prob = 100
+  prob = 0
 
   structure =
   {
@@ -37,7 +105,7 @@ HALL_A_FORWARD =
 
 HALL_A_BRANCH =
 {
-  prob = 30
+  prob = 0
 
   structure =
   {
