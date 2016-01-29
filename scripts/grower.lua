@@ -351,6 +351,10 @@ function Grower_preprocess_grammar(grammar)
 
 
   local function check_compatible_elements(E1, E2)
+    if E1.kind == "new_area" or E1.kind == "new_room" then
+      error("bad element in " .. def.name .. ": cannot use 'A' or 'R' in match")
+    end
+
     -- same kind of thing is always acceptable
     if E1.kind == E2.kind then return end
 
@@ -363,6 +367,11 @@ function Grower_preprocess_grammar(grammar)
 
     if E2.kind == "dont_care" then
       error("bad element in " .. def.name .. ": 'X' used in assignment")
+    end
+
+    -- we cannot assign into a '.' (which means "not part of current room")
+    if E1.kind == "free" then
+      E1.utterly = 1
     end
   end
 
@@ -877,14 +886,14 @@ assert(S.temp_area.room == R)
 
 
   local function match_an_element(E1, E2, S)
+    -- NOTE: "dont_care" is handled earlier
+
     -- for "!", require nothing there at all
     if E1.kind == "free" and E1.utterly then
       return not raw_blocked(S)
     end
 
-
-    -- note: if A exists, it's always part of the current room
-    -- [ that may change though... ]
+    -- do we have an area in current room?
     local A = S.temp_area
     if A and A.room != R then A = nil end
 
@@ -892,9 +901,7 @@ assert(S.temp_area.room == R)
       return not A
     end
 
-
-    -- all other tests require an area of this room
-
+    -- otherwise we require an area of this room
     if not (A and A.room == R) then return false end
 
     if E1.kind == "solid" or
