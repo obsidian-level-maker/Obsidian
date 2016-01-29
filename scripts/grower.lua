@@ -829,8 +829,11 @@ function Grower_add_room(parent_R, is_hallway)
   ROOM.grow_parent = parent_R
 
   local kind = sel(is_hallway, "hallway", "normal")
-  
-  Room_set_kind(ROOM, kind, P.is_outdoor, P.is_cave)
+
+  -- pick room environment (outdoor / cave)
+  local is_outdoor, is_cave = Room_choose_kind(ROOM, parent_R)
+
+  Room_set_kind(ROOM, kind, is_outdoor, is_cave)
 
   -- create a preliminary connection (last room to this one)
 

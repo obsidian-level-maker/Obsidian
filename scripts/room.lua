@@ -1544,7 +1544,7 @@ end
 
 
 
-function Room_choose_kind(P, last_R)
+function Room_choose_kind(R, last_R)
   if last_R and last_R.kind == "hallway" then
     last_R = last_R.grow_parent
   end
@@ -1567,6 +1567,7 @@ function Room_choose_kind(P, last_R)
 
   -- compute a bbox from the sprout (roughly where next room will be)
   -- and check it against cave grid
+--[[ FIXME : use current room bbox
   local S = P.S
 
   local fx, fy = geom.nudge(S.sx, S.sy, P.dir, 4)
@@ -1579,8 +1580,9 @@ function Room_choose_kind(P, last_R)
   local sy2 = math.max(fy, ly, ry)
 
   local is_cave = touches_cave_section(sx1, sy1, sx2, sy2)
+--]]
 
-  return is_outdoor, is_cave
+  return is_outdoor, false  -- is_cave
 end
 
 
