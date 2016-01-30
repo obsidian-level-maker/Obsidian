@@ -474,7 +474,7 @@ function Grower_preprocess_grammar(grammar)
   each name,cur_def in grammar do
     def = cur_def
 
-stderrf("Grower_preprocess_grammar... %s\n", name)
+-- stderrf("Grower_preprocess_grammar... %s\n", name)
     convert_structure()
 
     if not cur_def.pass then
@@ -1094,6 +1094,13 @@ assert(S.temp_area.room == R)
   end
 
 
+local function what_in_there(S)
+if not S.temp_area then return "-" end
+if not S.temp_area.room then return "?" end
+return S.temp_area.name
+end
+
+
   local function match_or_install_element(what, E1, E2, T, px, py)
     -- FIXME : handle diagonals!
     if E1.diagonal then return false end
@@ -1119,6 +1126,7 @@ assert(S.temp_area.room == R)
     -- installation --
 
     if E2.kind == "diagonal" then
+
       local dir, D1, D2 = transform_diagonal(T, E2.diagonal, E2.bottom, E2.top)
 
 --      -- mismatched diagonal?
@@ -1130,7 +1138,7 @@ assert(S.temp_area.room == R)
 
       -- need to split the seed to install this element?
       if not S.diagonal then
-        local A = S.temp_areas
+        local A = S.temp_area
 
         if A then unset_seed(S) end
 
@@ -1142,11 +1150,10 @@ assert(S.temp_area.room == R)
         end
       end
 
-      local S1 = S
-      local S2 = S.top
+      assert(S.diagonal)
 
-      install_an_element(E1, D1, S1)
-      install_an_element(E1, D2, S2)
+      if D1.assignment then install_an_element(E1, D1, S) end
+      if D2.assignment then install_an_element(E1, D2, S.top) end
       
       return true
     end
@@ -1256,7 +1263,7 @@ assert(S.temp_area.room == R)
   if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 12 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 23 then return end
 
   if pass == "root" then
     R.gx1 = int(SEED_W * 0.25)
@@ -1274,7 +1281,7 @@ assert(S.temp_area.room == R)
     R.gy2 = SEED_H - 3
   end
 
-  local apply_num = rand.pick({ 2,3,5,7,11,19 })
+  local apply_num = rand.pick({ 2,3,5,7,11 })
 
   -- TODO: often no sprouts when room is near edge of map
 
