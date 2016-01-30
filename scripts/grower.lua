@@ -1096,7 +1096,7 @@ assert(S.temp_area.room == R)
 
   local function match_or_install_element(what, E1, E2, T, px, py)
     -- FIXME : handle diagonals!
-    if E1.diagonal or E2.diagonal then return false end
+    if E1.diagonal then return false end
 
     if E1.kind == "dont_care" then return true end
 
@@ -1112,13 +1112,47 @@ assert(S.temp_area.room == R)
     -- FIXME : handle diagonals!
     if S.diagonal then return false end
 
-
     if what == "TEST" then
       return match_an_element(E1, E2, S)
-    else
-      install_an_element(E1, E2, S)
+    end
+
+    -- installation --
+
+    if E2.kind == "diagonal" then
+      local dir, D1, D2 = transform_diagonal(T, E2.diagonal, E2.bottom, E2.top)
+
+--      -- mismatched diagonal?
+--      if S.diagonal and not (S.diagonal == dir or S.diagonal == (10-dir)) then
+--        return false
+--      end
+
+      assert(not S.diagonal)
+
+      -- need to split the seed to install this element?
+      if not S.diagonal then
+        local A = S.temp_areas
+
+        if A then unset_seed(S) end
+
+        S:split(math.min(dir, 10 - dir))
+
+        if A then
+          set_seed(S,     A)
+          set_seed(S.top, A)
+        end
+      end
+
+      local S1 = S
+      local S2 = S.top
+
+      install_an_element(E1, D1, S1)
+      install_an_element(E1, D2, S2)
+      
       return true
     end
+
+    install_an_element(E1, E2, S)
+    return true
   end
 
 
