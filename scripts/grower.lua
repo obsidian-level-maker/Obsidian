@@ -674,20 +674,22 @@ function Grower_add_room(parent_R, is_hallway)
 
   -- create a preliminary connection (last room to this one)
 
+  local PC
+
   if parent_R then
-    local P =
+    PC =
     {
       R1 = parent_R
       R2 = ROOM
     }
 
-    P.R1.prelim_conn_num = P.R1.prelim_conn_num + 1
-    P.R2.prelim_conn_num = P.R2.prelim_conn_num + 1
+    PC.R1.prelim_conn_num = PC.R1.prelim_conn_num + 1
+    PC.R2.prelim_conn_num = PC.R2.prelim_conn_num + 1
 
-    table.insert(LEVEL.prelim_conns, P)
+    table.insert(LEVEL.prelim_conns, PC)
   end
 
-  return ROOM
+  return ROOM, PC
 end
 
 
@@ -703,6 +705,7 @@ function Grower_grammatical_room(R, pass)
   local cur_rule
 
   local new_room
+  local new_conn
   local new_area
 
 
@@ -897,6 +900,36 @@ assert(S.temp_area.room == R)
   end
 
 
+  local function check_connection(S)
+    -- find connection between new room and old room
+
+    -- FIXME : this is way too simplistic
+    --         [ really need something in the rule itself ]
+
+    assert(new_conn)
+    if new_conn.S then return end
+
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+
+      if N and N.temp_area and N.temp_area.room == R and
+         N.temp_area.mode == "floor"
+      then
+        assert(new_conn.R1 == R)
+        assert(new_conn.R2 == new_room)
+
+        S.no_assignment = true
+        N.no_assignment = true
+
+        new_conn.S = N
+        new_conn.dir = 10-dir
+        new_conn.long = 1
+        return
+      end
+    end
+  end
+
+
   local function match_temp_area(elem, A)
     -- FIXME !!!
     return true
@@ -968,16 +1001,14 @@ assert(S.temp_area.room == R)
     end
 
     if E2.kind == "new_area" then
-      if pass == "root" then
-        set_seed(S, R.temp_areas[1])
-      else
-        if not new_area then
-          new_area = Grower_new_area(R, "floor")
-          table.insert(R.temp_areas, new_area)
-        end
-        set_seed(S, new_area)
+      assert(pass != "root")
+
+      if not new_area then
+        new_area = Grower_new_area(R, "floor")
+        table.insert(R.temp_areas, new_area)
       end
 
+      set_seed(S, new_area)
       return
     end
 
@@ -988,7 +1019,11 @@ assert(S.temp_area.room == R)
       end
 
       if not new_room then
-        new_room = Grower_add_room(R)
+        new_room, new_conn = Grower_add_room(R)
+      end
+
+      if pass != "root" then
+        check_connection(S)
       end
 
       set_seed(S, new_room.temp_areas[1])
@@ -1105,6 +1140,7 @@ assert(S.temp_area.room == R)
 
   local function apply_a_rule()
     new_room = nil
+    new_conn = nil
     new_area = nil
 
     local rules2 = table.copy(rule_tab)
