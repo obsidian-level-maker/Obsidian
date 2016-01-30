@@ -8,11 +8,11 @@ PREFABS.Arch_plain =
   map    = "MAP01"
   where  = "edge"
 
-  long   = 192
+  long   = 128
   deep   = 16
   over   = 16
 
-  x_fit  = { 0,8, 80,112, 184,192 }
+  x_fit  = { 0,8, 56,72, 120,128 }
 
   bound_z1 = 0
   bound_z2 = 128
