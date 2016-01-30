@@ -1071,8 +1071,8 @@ function Room_border_up()
        rand.odds(sel(A2.is_outdoor, w_out_prob, w_in_prob)) and
        check_window_heights(A1, A2)
     then
-      Junction_make_window(junc)
-      return
+---!!!      Junction_make_window(junc)
+---!!!      return
     end
 
 
@@ -2559,7 +2559,7 @@ function Room_build_all()
 
   Area_prune_hallways()
 
-  Room_reckon_doors()
+---!!!  Room_reckon_doors()
 
   Room_pool_hacks()
   Room_floor_ceil_heights()

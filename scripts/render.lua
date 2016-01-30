@@ -1072,7 +1072,7 @@ function Render_hallway(A, S)
     local z = S.floor_h + S.hall_piece.z_offset
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
 
-    if S.hall_piece.mirror then T.mirror_x = 96 end
+    if S.hall_piece.mirror then T.mirror_x = SEED_SIZE / 2 end
 
     Fabricate(A.room, def, T, { skin })
 

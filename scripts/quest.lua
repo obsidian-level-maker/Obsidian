@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2587,7 +2587,7 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
-  Quest_add_major_quests()
+---!!!  Quest_add_major_quests()
 
   Quest_start_room()
   Quest_order_by_visit()

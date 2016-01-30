@@ -224,10 +224,10 @@ end
   table.insert(R.importants, spot)
 
 
-  local x1 = spot.x - 96
-  local y1 = spot.y - 96
-  local x2 = spot.x + 96
-  local y2 = spot.y + 96
+  local x1 = spot.x - 76
+  local y1 = spot.y - 76
+  local x2 = spot.x + 76
+  local y2 = spot.y + 76
 
   -- no monsters near start spot or teleporters
   -- FIXME: do this later (for chunks)
@@ -313,7 +313,7 @@ function Layout_place_importants(R)
       -- FIXME : wall_dist
       local wall_dist = rand.range(0.5, 2.5)
      local z = assert(A.floor_h)
-     table.insert(R.normal_wotsits, { x=corner.x + 32, y=corner.y + 32, z=z, wall_dist=wall_dist, area=A })
+     table.insert(R.normal_wotsits, { x=corner.x + 0, y=corner.y + 0, z=z, wall_dist=wall_dist, area=A })
     end
     end
 

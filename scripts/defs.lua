@@ -76,7 +76,7 @@ require = function() error("require() is deprecated") end
 
 -- important constants
 
-SEED_SIZE = 192
+SEED_SIZE = 128
 
 EDGE_SIZE  = 3  -- # of seeds
 BOUNDARY_SIZE = 4
