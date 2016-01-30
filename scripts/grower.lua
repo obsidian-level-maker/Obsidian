@@ -915,20 +915,23 @@ assert(S.temp_area.room == R)
     if N.temp_area != new_conn.S.temp_area then return end
 
     -- check that seeds are side-by-side
-
     local SL = new_conn.S:neighbor(geom.LEFT [new_conn.dir])
     local SR = new_conn.S:neighbor(geom.RIGHT[new_conn.dir])
 
-    if N == SR then
-      new_conn.long = 2
-      return
+    if N != SR and N != SL then
+      return  -- no good
     end
+
+    -- OK --
+
+    new_conn.long = 2
 
     if N == SL then
       new_conn.S = N
-      new_conn.long = 2
-      return
     end
+
+    S.no_assignment = true
+    N.no_assignment = true
   end
 
 
