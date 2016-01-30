@@ -248,7 +248,7 @@ function Grower_preprocess_grammar(grammar)
   local diag_list
 
 
-  local function parse_element(ch)
+  local function parse_element(ch, what)
     if ch == '.' then return { kind="free" } end
     if ch == '!' then return { kind="free", utterly=1 } end
 
@@ -291,8 +291,8 @@ function Grower_preprocess_grammar(grammar)
         error("Grower_parse_char: not enough diagonals in: " .. def.name)
       end
 
-      local L = parse_element(string.sub(D, 1, 1))
-      local R = parse_element(string.sub(D, 2, 2))
+      local L = parse_element(string.sub(D, 1, 1), what)
+      local R = parse_element(string.sub(D, 2, 2), what)
 
       local diagonal = sel(ch == '/', 3, 1)
 
@@ -303,7 +303,7 @@ function Grower_preprocess_grammar(grammar)
       return { kind="diagonal", diagonal=diagonal, bottom=R, top=L }
     end
 
-    return parse_element(ch)
+    return parse_element(ch, what)
   end
 
 
@@ -355,11 +355,29 @@ function Grower_preprocess_grammar(grammar)
       error("bad element in " .. def.name .. ": cannot use 'A' or 'R' in match")
     end
 
+    if E1.kind == "stair" then
+      if E2.kind != "stair" or E2.dir != E1.dir then
+        error("bad element in " .. def.name .. ": cannot modify a stair")
+      end
+    end
+
+    -- changing an area is OK
+    if E1.kind == "area" and E2.kind == "area" then
+      if E1.area != E2.area then
+        E2.assignment = true
+        return
+      end
+    end
+
     -- same kind of thing is always acceptable
-    if E1.kind == E2.kind then return end
+    if E1.kind == E2.kind then
+      return
+    end
 
     -- from here on, output element is an ASSIGNMENT
     -- i.e. setting something new or different into the seed(s)
+
+    E2.assignment = true
 
     if E1.kind == "dont_care" then
       error("bad element in " .. def.name .. ": cannot overwrite an 'X'")
@@ -893,6 +911,11 @@ assert(S.temp_area.room == R)
       return not raw_blocked(S)
     end
 
+    -- seed is locked out of further changes?
+    if E2.assignment and S.no_assignment then
+      return false
+    end
+
     -- do we have an area in current room?
     local A = S.temp_area
     if A and A.room != R then A = nil end
@@ -1129,7 +1152,7 @@ assert(S.temp_area.room == R)
     R.gy2 = SEED_H - 3
   end
 
-  local apply_num = rand.pick({ 1,3,5,7,11,19 })
+  local apply_num = rand.pick({ 2,3,5,7,11,19 })
 
   -- TODO: often no sprouts when room is near edge of map
 

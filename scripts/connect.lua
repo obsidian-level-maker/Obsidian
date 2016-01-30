@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -97,6 +97,7 @@ function CONN_CLASS.swap(C)
   C.A1, C.A2 = C.A2, C.A1
 
   -- for split conns, keep E1 on left, F1 on right
+  -- [ not strictly necessary, handy for debugging though ]
   if C.F1 then
     C.E1, C.F1 = C.F1, C.E1
     C.E2, C.F2 = C.F2, C.E2
