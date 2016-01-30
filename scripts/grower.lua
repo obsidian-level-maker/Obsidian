@@ -900,14 +900,49 @@ assert(S.temp_area.room == R)
   end
 
 
+  local function try_widen_connection(S)
+    if not geom.is_straight(new_conn.dir) then return end
+
+    if new_conn.long != 1 then return end
+
+    local N = S:neighbor(10 - new_conn.dir)
+
+    -- check that the area in parent room is the same
+    if not (N and N.temp_area and N.temp_area.room == R) then return end
+
+    if N.temp_area != new_conn.S.temp_area then return end
+
+    -- check that seeds are side-by-side
+
+    local SL = new_conn.S:neighbor(geom.LEFT [new_conn.dir])
+    local SR = new_conn.S:neighbor(geom.RIGHT[new_conn.dir])
+
+    if N == SR then
+      new_conn.long = 2
+      return
+    end
+
+    if N == SL then
+      new_conn.S = N
+      new_conn.long = 2
+      return
+    end
+  end
+
+
   local function check_connection(S)
     -- find connection between new room and old room
 
     -- FIXME : this is way too simplistic
-    --         [ really need something in the rule itself ]
+    --         [ really need some processing of the rule itself ]
 
     assert(new_conn)
-    if new_conn.S then return end
+
+    if new_conn.S then
+      -- try to widen an existing conn
+      try_widen_connection(S)
+      return
+    end
 
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
