@@ -3,3 +3,34 @@ WORK IN PROGRESS
 ================
 
 
++  SHAPE GRAMMARS:
+
+>>>   create edges for connections  [ HOW ??? ]
+
+   -  be more semantically aware, e.g. pick areas where to make
+      staircases / liquid areas / closets
+
+   -  support mirroring along an axis (possibly diagonal)
+
+   IDEA: 'R' does not create a REAL room, but a proto-room, and if
+         it cannot be grown to a sufficient size (etc) then it could
+         become a closet or cage or something decorative.
+
+         similary: prunable hallways if they go nowhere
+
+
+-  titlepic backgrounds (current and new) :
+   determine ones for official package, put rest in an addon
+
+
++  face direction for switches
+
+
+!!  some trap doors do not open
+    [ door next-to door thing.... ]
+
+
++  not enough ammo on early maps
+   [ need to check if just bullet/shell weapons ]
+
+
