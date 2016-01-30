@@ -708,6 +708,8 @@ function Grower_grammatical_room(R, pass)
   local new_conn
   local new_area
 
+  local check_seeds
+
 
   local function unset_seed(S)
     local A = assert(S.temp_area)
@@ -965,6 +967,15 @@ assert(S.temp_area.room == R)
   end
 
 
+  local function check_for_conns()
+    if check_seeds then
+      each S in check_seeds do
+        check_connection(S)
+      end
+    end
+  end
+
+
   local function match_temp_area(elem, A)
     -- FIXME !!!
     return true
@@ -1055,10 +1066,11 @@ assert(S.temp_area.room == R)
 
       if not new_room then
         new_room, new_conn = Grower_add_room(R)
+        check_seeds = {}
       end
 
       if pass != "root" then
-        check_connection(S)
+        table.insert(check_seeds, S)
       end
 
       set_seed(S, new_room.temp_areas[1])
@@ -1166,6 +1178,7 @@ assert(S.temp_area.room == R)
 
     if best.score > 0 then
       match_or_install_pattern("INSTALL", best.T, best.x, best.y)
+      check_for_conns()
       return true
     end
 
@@ -1177,6 +1190,7 @@ assert(S.temp_area.room == R)
     new_room = nil
     new_conn = nil
     new_area = nil
+    check_seeds = nil
 
     local rules2 = table.copy(rule_tab)
 
