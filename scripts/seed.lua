@@ -241,6 +241,8 @@ function Seed_squarify2()
     local S = SEEDS[sx][sy]
 
     if S.diagonal and S.top.temp_area == S.temp_area then
+stderrf("S:join_halves at %s\n", S:tostr())
+stderrf("temp areas: %s  |  %s\n", tostring(S.temp_area), tostring(S.top.temp_area))
       S:join_halves()
     end
   end

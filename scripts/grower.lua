@@ -1079,6 +1079,10 @@ assert(S.temp_area.room == R)
     -- FIXME: too simple!!!
     if E1.kind == E2.kind then return end
 
+if S.sx == 17 and S.sy == 26 then
+stderrf("install_an_element @ %s : %s --> %s\n", S:tostr(), E1.kind, E2.kind)
+end
+
     if E2.kind == "free" then
       if S.temp_area then  ---??  if not (E1.kind == "free") then
         unset_seed(S)
@@ -1140,8 +1144,10 @@ assert(S.temp_area.room == R)
 
   local function match_or_install_B(what, S, E1, E2, T)
     if what == "TEST" then
-      return   match_an_element(S, E1, E2, T)
-    else
+      return match_an_element(S, E1, E2, T)
+    end
+
+    if E2.assignment then
       return install_an_element(S, E1, E2, T)
     end
   end
@@ -1178,12 +1184,16 @@ assert(S.temp_area.room == R)
                match_an_element(S2, E1, E2, T)
       end
 
-      if S .temp_area then unset_seed(S)  end
-      if S2.temp_area then unset_seed(S2) end
+      if E2.assignment then
+        if S .temp_area then unset_seed(S)  end
+        if S2.temp_area then unset_seed(S2) end
 
-      S:join_halves()
+stderrf("Joining halves @ %s\n", S:tostr())
+        S:join_halves()
+        install_an_element(S, E1, E2, T)
+      end
 
-      return install_an_element(S, E1, E2, T)
+      return
     end
 
 
@@ -1202,21 +1212,31 @@ assert(S.temp_area.room == R)
                match_an_element(S, E1T, E2T, T)
       end
 
-      -- split the seed
-      -- [ TODO this logic is unnecessarily complex ]
-      local A = S.temp_area
-      if A then unset_seed(S) end
+      if E2B.assignment or E2T.assignment then
 
-      S:split(math.min(dir, 10 - dir))
-      S2 = S.top
+        -- split the seed
+        -- FIXME: this temp_area logic is unnecessarily complex...
+        local A = S.temp_area
+        if A then unset_seed(S) end
 
-      if A then
-        set_seed(S,  A)
-        set_seed(S2, A)
+stderrf("splitting %s  with dir %d\n", S:tostr(), math.min(dir, 10 - dir))
+        S:split(math.min(dir, 10 - dir))
+        S2 = S.top
+
+        if A then
+          set_seed(S,  A)
+          set_seed(S2, A)
+        end
+
+stderrf("install into bottom: %s --> %s\n", E1B.kind, E2B.kind)
+stderrf("install into top   : %s --> %s\n", E1T.kind, E2T.kind)
+        install_an_element(S,  E1B, E2B, T)
+        install_an_element(S2, E1T, E2T, T)
+
+stderrf("seed at %s\n", S:tostr())
+stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_area))
       end
 
-      install_an_element(S,  E1B, E2B, T)
-      install_an_element(S2, E1T, E2T, T)
       return
     end
 
@@ -1235,56 +1255,6 @@ assert(S.temp_area.room == R)
 
     return match_or_install_B(what, S , E1B, E2B, T) and
            match_or_install_B(what, S2, E1T, E2T, T)
-
---[[
-    if S.diagonal then
-
-
-    -- FIXME : handle diagonals!
-    if E1.diagonal then return false end
-
-
-    -- FIXME : handle diagonals!
-    if S.diagonal then return false end
-
-
-    -- installation --
-
-    if E2.kind == "diagonal" then
-
-      local dir, D1, D2 = transform_diagonal(T, E2.diagonal, E2.bottom, E2.top)
-
---      -- mismatched diagonal?
---      if S.diagonal and not (S.diagonal == dir or S.diagonal == (10-dir)) then
---        return false
---      end
-
-      assert(not S.diagonal)
-
-      -- need to split the seed to install this element?
-      if not S.diagonal then
-        local A = S.temp_area
-
-        if A then unset_seed(S) end
-
-        S:split(math.min(dir, 10 - dir))
-
-        if A then
-          set_seed(S,     A)
-          set_seed(S.top, A)
-        end
-      end
-
-      assert(S.diagonal)
-
-      if D1.assignment then install_an_element(E1, D1, S) end
-      if D2.assignment then install_an_element(E1, D2, S.top) end
-      
-      return true
-    end
-
-    return true
---]]
   end
 
 
@@ -1304,8 +1274,6 @@ assert(S.temp_area.room == R)
         -- cannot place this shape here (something in the way)
         return false
       end
-
-      assert(res)
     end -- px, py
     end
 
