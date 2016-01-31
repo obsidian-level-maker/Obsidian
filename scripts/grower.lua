@@ -350,6 +350,15 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
+  local function split_element(E, new_diagonal)
+    assert(not E.diagonal)
+
+    local top = table.copy(E)
+
+    return { kind="diagonal", diagonal=new_diagonal, bottom=E, top=top }
+  end
+
+
   local function check_compatible_elements(E1, E2)
     if E1.kind == "new_area" or E1.kind == "new_room" then
       error("bad element in " .. def.name .. ": cannot use 'A' or 'R' in match")
@@ -398,21 +407,26 @@ function Grower_preprocess_grammar(grammar)
     local E1 = def.input [x][y]
     local E2 = def.output[x][y]
 
+    if E1.diagonal and E2.diagonal and E1.diagonal != E2.diagonal then
+      error("mismatched diagonals in " .. def.name)
+    end
+
+    -- if only one side is diagonal, split the other side
+    if not E1.diagonal and E2.diagonal then
+      def.input [x][y] = split_element(E1, E2.diagonal)
+    elseif not E2.diagonal and E1.diagonal then
+      def.output[x][y] = split_element(E2, E1.diagonal)
+    end
+
+    E1 = def.input [x][y]
+    E2 = def.output[x][y]
+
     -- check assignment
-    if not (E1.diagonal or E2.diagonal) then
-      check_compatible_elements(E1, E2)
-
-    elseif E1.diagonal and not E2.diagonal then
-      check_compatible_elements(E1.top,    E2)
-      check_compatible_elements(E1.bottom, E2)
-
-    elseif not E1.diagonal and E2.diagonal then
-      check_compatible_elements(E1, E2.top)
-      check_compatible_elements(E1, E2.bottom)
-
-    else -- both diagonals
+    if E1.diagonal then
       check_compatible_elements(E1.top,    E2.top)
       check_compatible_elements(E1.bottom, E2.bottom)
+    else
+      check_compatible_elements(E1, E2)
     end
   end
 
