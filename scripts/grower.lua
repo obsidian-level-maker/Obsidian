@@ -726,6 +726,13 @@ function Grower_grammatical_room(R, pass)
   local check_seeds
 
 
+  local function what_in_there(S)
+    if not S.temp_area then return "-" end
+    if not S.temp_area.room then return "?" end
+    return S.temp_area.name
+  end
+
+
   local function unset_seed(S)
     local A = assert(S.temp_area)
     assert(A.room)
@@ -1020,8 +1027,8 @@ assert(S.temp_area.room == R)
   end
 
 
-  local function match_an_element(E1, E2, S)
-    -- NOTE: "dont_care" is handled earlier
+  local function match_an_element(S, E1, E2, T)
+    if E1.kind == "dont_care" then return true end
 
     -- for "!", require nothing there at all
     if E1.kind == "free" and E1.utterly then
@@ -1066,12 +1073,14 @@ assert(S.temp_area.room == R)
   end
 
 
-  local function install_an_element(E1, E2, S)
+  local function install_an_element(S, E1, E2, T)
+    if E1.kind == "dont_care" then return end
+
     -- FIXME: too simple!!!
     if E1.kind == E2.kind then return end
 
     if E2.kind == "free" then
-      if not (E1.kind == "free") then
+      if S.temp_area then  ---??  if not (E1.kind == "free") then
         unset_seed(S)
       end
 
@@ -1129,18 +1138,16 @@ assert(S.temp_area.room == R)
   end
 
 
-local function what_in_there(S)
-if not S.temp_area then return "-" end
-if not S.temp_area.room then return "?" end
-return S.temp_area.name
-end
+  local function match_or_install_B(what, S, E1, E2, T)
+    if what == "TEST" then
+      return   match_an_element(S, E1, E2, T)
+    else
+      return install_an_element(S, E1, E2, T)
+    end
+  end
 
 
   local function match_or_install_element(what, E1, E2, T, px, py)
-    -- FIXME : handle diagonals!
-    if E1.diagonal then return false end
-
-    if E1.kind == "dont_care" then return true end
 
     local sx, sy = transform_coord(T, px, py)
 
@@ -1151,12 +1158,95 @@ end
 
     local S = SEEDS[sx][sy]
 
+    local S2 = S.top or S
+
+
+    -- simplest case : square on square
+
+    if not E1.diagonal and not S.diagonal then
+      return match_or_install_B(what, S, E1, E2, T)
+    end
+
+
+    -- fairly simple : square on diagonal
+
+    if not E1.diagonal then
+      assert(S.diagonal)
+
+      if what == "TEST" then
+        return match_an_element(S,  E1, E2, T) and
+               match_an_element(S2, E1, E2, T)
+      end
+
+      if S .temp_area then unset_seed(S)  end
+      if S2.temp_area then unset_seed(S2) end
+
+      S:join_halves()
+
+      return install_an_element(S, E1, E2, T)
+    end
+
+
+    local  dir, E1B, E1T = transform_diagonal(T, E1.diagonal, E1.bottom, E1.top)
+    local zdir, E2B, E2T = transform_diagonal(T, E2.diagonal, E2.bottom, E2.top)
+
+
+    -- diagonal on square
+
+    if not S.diagonal then
+      assert(E1.diagonal)
+
+      -- for the test, no need to remap anything
+      if what == "TEST" then
+        return match_an_element(S, E1B, E2B, T) and
+               match_an_element(S, E1T, E2T, T)
+      end
+
+      -- split the seed
+      -- [ TODO this logic is unnecessarily complex ]
+      local A = S.temp_area
+      if A then unset_seed(S) end
+
+      S:split(math.min(dir, 10 - dir))
+      S2 = S.top
+
+      if A then
+        set_seed(S,  A)
+        set_seed(S2, A)
+      end
+
+      install_an_element(S,  E1B, E2B, T)
+      install_an_element(S2, E1T, E2T, T)
+      return
+    end
+
+
+    -- final case : diagonal on diagonal
+
+    assert(E1.diagonal)
+    assert(E2.diagonal)
+    assert( S.diagonal)
+
+    if not geom.is_parallel(S.diagonal, dir) then
+          -- incompatible diagonals
+      return false
+    end
+
+
+    return match_or_install_B(what, S , E1B, E2B, T) and
+           match_or_install_B(what, S2, E1T, E2T, T)
+
+--[[
+    if S.diagonal then
+
+
+    -- FIXME : handle diagonals!
+    if E1.diagonal then return false end
+
+
     -- FIXME : handle diagonals!
     if S.diagonal then return false end
 
-    if what == "TEST" then
-      return match_an_element(E1, E2, S)
-    end
 
     -- installation --
 
@@ -1193,8 +1283,8 @@ end
       return true
     end
 
-    install_an_element(E1, E2, S)
     return true
+--]]
   end
 
 
