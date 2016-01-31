@@ -1263,6 +1263,9 @@ end
 
     match_or_install_pattern("INSTALL", best.T, best.x, best.y)
 
+    -- TODO: this scans whole map, do it better
+    Seed_squarify2()
+
     check_for_conns()
 
     if new_room then

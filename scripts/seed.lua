@@ -210,6 +210,7 @@ function SEED_CLASS.join_halves(S)
   S2.area = nil
   S2.room = nil
   S2.edge = nil
+  S2.temp_area = nil
 end
 
 
@@ -222,6 +223,24 @@ function Seed_squarify()
     local S = SEEDS[sx][sy]
 
     if S.diagonal and S.top.area == S.area then
+      S:join_halves()
+    end
+  end
+  end
+end
+
+
+function Seed_squarify2()
+  -- detects when a diagonal seed has same area on each half, and
+  -- merges the two halves into a full seed
+
+  -- [ same as above but used while growing rooms ]
+
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+    local S = SEEDS[sx][sy]
+
+    if S.diagonal and S.top.temp_area == S.temp_area then
       S:join_halves()
     end
   end
