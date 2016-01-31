@@ -70,6 +70,26 @@ SPROUT_1 =
 }
 
 
+SPROUT_SYMMETRY_TEST =
+{
+  prob = 300
+
+  structure =
+  {
+    "XX..", "XX.."
+    "11..", "11RR"
+    "11..", "11RR"
+    "11..", "11RR"
+    "XX..", "XX.."
+  }
+
+  symmetry =
+  {
+    x = 1, y = 3, dir = 6
+  }
+}
+
+
 SPROUT_DIAG_1 =
 {
   prob = 100
@@ -86,6 +106,11 @@ SPROUT_DIAG_1 =
   {
     "1R"
   }
+
+  symmetry =
+  {
+    x = 1, y = 1, dir = 9
+  }
 }
 
 
@@ -101,6 +126,11 @@ SPROUT_HALL_1 =
     "XX....", "XX..1."
     "XX....", "XX.RRR"
     "XX....", "XX.RRR"
+  }
+
+  symmetry =
+  {
+    x = 5, y = 2, dir = 2
   }
 }
 
