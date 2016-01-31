@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2015 Andrew Apted
+--  Copyright (C) 2008-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -228,7 +228,7 @@ end
 
 
 
-function Monsters_pick_single_for_level()
+function Monster_pick_single_for_level()
   local tab = {}
 
   if not EPISODE.single_mons then
@@ -255,7 +255,7 @@ end
 
 
 
-function Monsters_check_theme(info)
+function Monster_check_theme(info)
   -- if no theme specified, usable in all themes
   if not info.theme then return true end
 
@@ -269,7 +269,7 @@ end
 
 
 
-function Monsters_global_palette()
+function Monster_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
@@ -285,7 +285,7 @@ function Monsters_global_palette()
 
     if info.prob > 0 and
        info.level and info.level <= LEVEL.max_level and
-       Monsters_check_theme(info)
+       Monster_check_theme(info)
     then
       LEVEL.global_pal[name] = 1
     end
@@ -293,7 +293,7 @@ function Monsters_global_palette()
 
   -- only one kind of monster in this level?
   if STYLE.mon_variety == "none" then
-    local the_mon = Monsters_pick_single_for_level()
+    local the_mon = Monster_pick_single_for_level()
 
     LEVEL.global_pal = {}
     LEVEL.global_pal[the_mon] = 1
@@ -323,7 +323,7 @@ end
 
 
 
-function Monsters_set_watchmen()
+function Monster_set_watchmen()
   --
   -- Select guard monsters for each zone.
   --
@@ -481,7 +481,7 @@ function Monsters_set_watchmen()
   end
 
 
-  ---| Monsters_set_watchmen |---
+  ---| Monster_set_watchmen |---
    
   if STYLE.mon_variety == "none" then
     return
@@ -518,7 +518,7 @@ end
 
 
 
-function Monsters_zone_palettes()
+function Monster_zone_palettes()
 
   local function palettes_are_same(A, B)
     if table.size(A) != table.size(B) then
@@ -633,7 +633,7 @@ function Monsters_zone_palettes()
   end
 
 
-  ---| Monsters_zone_palettes |---
+  ---| Monster_zone_palettes |---
 
   local zone_pals = {}
 
@@ -660,7 +660,7 @@ end
 
 
 
-function Monsters_dist_between_spots(A, B, z_penalty)
+function Monster_dist_between_spots(A, B, z_penalty)
   local dist_x = 0
   local dist_y = 0
 
@@ -684,7 +684,7 @@ end
 
 
 
-function Monsters_split_spots(list, max_size)
+function Monster_split_spots(list, max_size)
   -- recreate the spot list
   local new_list = {}
 
@@ -723,7 +723,7 @@ end
 
 
 
-function Monsters_collect_big_spots(R)
+function Monster_collect_big_spots(R)
 
   local function big_spots_from_mon_spots()
     each spot in R.mon_spots do
@@ -755,7 +755,7 @@ function Monsters_collect_big_spots(R)
   end
 
 
-  ---| Monsters_collect_big_spots |---
+  ---| Monster_collect_big_spots |---
 
   big_spots_from_mon_spots()
 
@@ -764,7 +764,7 @@ end
 
 
 
-function Monsters_in_room(R)
+function Monster_fill_room(R)
 
   -- places monsters in a room _or_ hallway
 
@@ -1508,7 +1508,7 @@ function Monsters_in_room(R)
       spot.find_score = score
 
       if near_to then
-        spot.find_cost = Monsters_dist_between_spots(spot, near_to) / 16
+        spot.find_cost = Monster_dist_between_spots(spot, near_to) / 16
       else
         spot.find_cost = 0
 
@@ -1670,7 +1670,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function fill_sized_monsters(wants, palette, r_min, r_max)
-    R.mon_spots = Monsters_split_spots(R.mon_spots, r_max * 2)
+    R.mon_spots = Monster_split_spots(R.mon_spots, r_max * 2)
 
     if r_max < 100 then
       mark_ambush_spots()
@@ -2076,9 +2076,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  ---| Monsters_in_room |---
+  ---| Monster_fill_room |---
 
-  gui.debugf("Monsters_in_room @ %s\n", R.name)
+  gui.debugf("Monster_fill_room @ %s\n", R.name)
 
   prepare_room()
 
@@ -2088,7 +2088,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 end
 
 
-function Monsters_show_stats()
+function Monster_show_stats()
   local total = 0
 
   each _,count in LEVEL.mon_stats do
@@ -2132,20 +2132,20 @@ function Monster_make_battles()
   Player_give_map_stuff()
   Player_weapon_palettes()
 
-  Monsters_global_palette()
-  Monsters_set_watchmen()
-  Monsters_zone_palettes()
+  Monster_global_palette()
+  Monster_set_watchmen()
+  Monster_zone_palettes()
 
   -- Rooms have been sorted into a visitation order, so we just
   -- insert some monsters into each one and simulate each battle.
 
   each R in LEVEL.rooms do
     Player_give_room_stuff(R)
-    Monsters_collect_big_spots(R)
-    Monsters_in_room(R)
+    Monster_collect_big_spots(R)
+    Monster_fill_room(R)
     Item_simulate_battle(R)
   end
 
-  Monsters_show_stats()
+  Monster_show_stats()
 end
 

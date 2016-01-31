@@ -746,7 +746,7 @@ function Item_pickups_for_class(CL)
 
     -- update remaining scores so next one chosen is far away
     each spot in R.big_spots do
-      local dist = Monsters_dist_between_spots(spot, result, 80) / 256
+      local dist = Monster_dist_between_spots(spot, result, 80) / 256
 
       spot.score = spot.score + dist
     end
@@ -791,7 +791,7 @@ function Item_pickups_for_class(CL)
       local dist = 9e9
 
       each prev in prev_spots do
-        local d = Monsters_dist_between_spots(prev, spot)
+        local d = Monster_dist_between_spots(prev, spot)
         dist = math.min(dist, d)
       end
 
@@ -1047,7 +1047,7 @@ function Item_add_pickups()
 
   -- ensure item spots are fairly small
   each R in LEVEL.rooms do
-    R.item_spots = Monsters_split_spots(R.item_spots, 25)
+    R.item_spots = Monster_split_spots(R.item_spots, 25)
   end
 
   each CL,_ in LEVEL.hmodels do
