@@ -30,7 +30,3 @@ WORK IN PROGRESS
     [ door next-to door thing.... ]
 
 
-+  not enough ammo on early maps
-   [ need to check if just bullet/shell weapons ]
-
-

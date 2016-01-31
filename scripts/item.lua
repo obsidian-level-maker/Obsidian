@@ -470,7 +470,7 @@ function Item_simulate_battle(R)
     -- give less ammo in later maps (to counter the build-up over an episode)
     if not PARAM.pistol_starts then
       local along = math.clamp(0, LEVEL.ep_along - 0.2, 0.8)
-      local factor = 1.0 - along * 0.25
+      local factor = 1.15 - along * 0.5
 
       ammo_mul = ammo_mul * factor
     end
@@ -620,8 +620,8 @@ function Item_distribute_stats()
 
   -- health mainly stays in same room (a reward for killing the monsters).
   -- ammo mainly goes back, to prepare player for the fight.
-  local HEALTH_FACTOR  = 0.20
-  local AMMO_FACTOR    = 0.65
+  local HEALTH_FACTOR  = 0.25
+  local AMMO_FACTOR    = 0.70
   local STORAGE_FACTOR = 0.30
 
 
