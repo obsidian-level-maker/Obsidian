@@ -703,6 +703,7 @@ function Grower_grammatical_room(R, pass)
 
   local rule_tab
   local cur_rule
+  local cur_symmetry
 
   local new_room
   local new_conn
@@ -887,6 +888,26 @@ assert(S.temp_area.room == R)
     dir = geom.ROTATE[T.rotate][dir]
 
     return dir, bottom, top
+  end
+
+
+  local function transform_symmetry(T)
+    if not cur_rule.symmetry then return nil end
+
+    -- TODO : proper chance of not using the symmetry
+    -- if not rand.odds(use_symmetry) return nil end
+
+    local sym = {}
+
+    sym.x, sym.y = transform_coord(T, cur_rule.symmetry.x, cur_rule.symmetry.y)
+
+    sym.dir = transform_dir(T, cur_rule.symmetry.dir)
+
+    if cur_rule.symmetry.edge_dir then
+      sym.edge_dir = transform_dir(T, cur_rule.symmetry.edge_dir)
+    end
+
+    return sym
   end
 
 
@@ -1220,13 +1241,23 @@ end
     end -- rot, mirror
     end
 
-    if best.score > 0 then
-      match_or_install_pattern("INSTALL", best.T, best.x, best.y)
-      check_for_conns()
-      return true
+    if best.score < 0 then
+      return false
     end
 
-    return false
+    -- ok --
+
+    match_or_install_pattern("INSTALL", best.T, best.x, best.y)
+
+    check_for_conns()
+
+    if new_room then
+      -- assumes best.T has set X/Y to best.x and best.y
+      new_room.symmetry = transform_symmetry(best.T)
+stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+    end
+
+    return true
   end
 
 
@@ -1263,7 +1294,7 @@ end
   if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 23 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 5 then return end
 
   if pass == "root" then
     R.gx1 = int(SEED_W * 0.25)
