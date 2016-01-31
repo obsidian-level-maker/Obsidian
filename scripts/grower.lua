@@ -1190,6 +1190,7 @@ end
 
 stderrf("Joining halves @ %s\n", S:tostr())
         S:join_halves()
+
         install_an_element(S, E1, E2, T)
       end
 
@@ -1253,8 +1254,10 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
     end
 
 
-    return match_or_install_B(what, S , E1B, E2B, T) and
-           match_or_install_B(what, S2, E1T, E2T, T)
+    local res1 = match_or_install_B(what, S , E1B, E2B, T)
+    local res2 = match_or_install_B(what, S2, E1T, E2T, T)
+
+    return res1 and res2
   end
 
 
@@ -1387,7 +1390,7 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
     R.gy2 = SEED_H - 3
   end
 
-  local apply_num = rand.pick({ 2,3,5,7,11 })
+  local apply_num = rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 

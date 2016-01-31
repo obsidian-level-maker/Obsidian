@@ -200,9 +200,12 @@ function SEED_CLASS.join_halves(S)
   S.diagonal = nil
   S.top = nil
 
+  S.name = string.format("SEED [%d,%d]", S.sx, S.sy)
+
   S:calc_mid_point()
 
   -- kill the other half
+
   S2.name = "DEAD_SEED"
   S2.kind = "dead"
   S2.diagonal = "dead"
