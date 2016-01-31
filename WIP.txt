@@ -5,18 +5,34 @@ WORK IN PROGRESS
 
 +  SHAPE GRAMMARS:
 
+   +  detect if a rule is horizontally symmetrical (preprocess phase)
+
+   -  detect if a rule is diagonally symmetrical (going North-East)
+
+   -  support "w=2" in a symmetry table : then the axis of symmetry is
+      actually the middle line of a pair of seeds
+
+   -  write mapping function(s) for a symmetry table
+      -  straight w=1 case
+      -  straight w=2 case
+      -  diagonal case
+
+
+   +  support mirroring along an axis (possibly diagonal)
+
+
+   -  fix gx1..gy2 to be a useful range to try rules
+      [ Hmmm basically it is current extent of room, i.e. sx1..sy2, so
+        probably just use sx1..sy2 ??? ]
+
+
 >>>   create edges for connections  [ HOW ??? ]
 
    -  be more semantically aware, e.g. pick areas where to make
       staircases / liquid areas / closets
 
-   -  support mirroring along an axis (possibly diagonal)
-
-   IDEA: 'R' does not create a REAL room, but a proto-room, and if
-         it cannot be grown to a sufficient size (etc) then it could
-         become a closet or cage or something decorative.
-
-         similary: prunable hallways if they go nowhere
+   +  prune / re-use rooms which remain small, and hallways which
+      never end up anywhere else
 
 
 -  titlepic backgrounds (current and new) :
