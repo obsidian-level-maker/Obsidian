@@ -248,6 +248,16 @@ function Grower_preprocess_grammar(grammar)
   local diag_list
 
 
+  local function name_to_pass(name)
+    if string.match(name, "ROOT_")     then return "root" end
+    if string.match(name, "GROW_")     then return "grow" end
+    if string.match(name, "SPROUT_")   then return "sprout" end
+    if string.match(name, "DECORATE_") then return "decorate" end
+
+    error("Unknown pass for grammar " .. tostring(name))
+  end
+
+
   local function parse_element(ch, what)
     if ch == '.' then return { kind="free" } end
     if ch == '!' then return { kind="free", utterly=1 } end
@@ -459,8 +469,13 @@ function Grower_preprocess_grammar(grammar)
       convert_element("output", def.output, x, y)
     end
     end
+  end
 
-    -- finalize and check stuff
+
+  local function finalize_structure()
+    local W = def.input.w
+    local H = def.input.h
+
     for x = 1, W do
     for y = 1, H do
       finalize_element(x, y)
@@ -469,13 +484,58 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function name_to_pass(name)
-    if string.match(name, "ROOT_")     then return "root" end
-    if string.match(name, "GROW_")     then return "grow" end
-    if string.match(name, "SPROUT_")   then return "sprout" end
-    if string.match(name, "DECORATE_") then return "decorate" end
+  local function test_horiz_symmetry(grid, x, y)
+    -- FIXME
+  end
 
-    error("Unknown pass for grammar " .. tostring(name))
+
+  local function is_horiz_symmetrical(grid)
+    for x = 1, grid.w do
+    for y = 1, grid.h do
+      if not test_horiz_symmetry(grid, x, y) then
+        return false
+      end
+    end
+    end
+
+    return true
+  end
+
+
+  local function test_diag_symmetry(grid, x, y)
+    -- FIXME
+  end
+
+
+  local function is_diag_symmetrical(grid)
+    if grid.w != grid.h then
+      return false
+    end
+
+    for x = 1, grid.w do
+    for y = 1, grid.h do
+      if not test_diag_symmetry(grid, x, y) then
+        return false
+      end
+    end
+    end
+
+    return true
+  end
+
+
+  local function check_symmetries()
+    if is_horiz_symmetrical(def.input) and
+       is_horiz_symmetrical(def.output)
+    then
+      def.x_symmetry = true
+    end
+
+    if is_diag_symmetrical(def.input) and
+       is_diag_symmetrical(def.output)
+    then
+      def.diag_symmetry = true
+    end
   end
 
 
@@ -490,6 +550,8 @@ function Grower_preprocess_grammar(grammar)
 
 -- stderrf("Grower_preprocess_grammar... %s\n", name)
     convert_structure()
+    finalize_structure()
+    check_symmetries()
 
     if not cur_def.pass then
       cur_def.pass = name_to_pass(name)
