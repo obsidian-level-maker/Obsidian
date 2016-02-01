@@ -484,6 +484,13 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
+  local function test_mirror_elem(E1, E2)
+    -- TODO stair directions
+
+    return E1.kind == E2.kind and E1.area == E2.area
+  end
+
+
   local function test_horiz_symmetry(grid, x, y)
     -- FIXME
   end
@@ -503,7 +510,40 @@ function Grower_preprocess_grammar(grammar)
 
 
   local function test_diag_symmetry(grid, x, y)
-    -- FIXME
+    local E = grid[x][y]
+    local N = grid[y][x]
+
+    -- special check for seeds sitting on the axis
+    if x == y then
+      if E.kind == "stair" then return false end
+
+      if E.kind != "diagonal" then return true end
+
+      if E.diagonal == 1 then return true end
+
+      return test_mirror_elem(E.bottom, E.top)
+    end
+
+    if E.kind != "diagonal" then
+      return test_mirror_elem(E, N)
+    end
+
+    -- if one seed is a diagonal, the other must be too
+    if N.kind != "diagonal" or N.diagonal != E.diagonal then
+      return false
+    end
+
+    -- a diagonal at right angles to the axis of mirroring?
+    if E.diagonal == 1 then
+      return test_mirror_elem(E.bottom, N.bottom) and
+             test_mirror_elem(E.top,    N.top)
+    end
+
+    -- a diagonal in same direction as axis of mirroring: the sides
+    -- will be swapped when mirrored.
+
+    return test_mirror_elem(E.bottom, N.top) and
+           test_mirror_elem(E.top,    N.bottom)
   end
 
 
@@ -529,12 +569,16 @@ function Grower_preprocess_grammar(grammar)
        is_horiz_symmetrical(def.output)
     then
       def.x_symmetry = true
+
+stderrf("@@@ tile '%s' is horizontally symmetrical\n", def.name)
     end
 
     if is_diag_symmetrical(def.input) and
        is_diag_symmetrical(def.output)
     then
       def.diag_symmetry = true
+
+stderrf("@@@ tile '%s' is diagonally symmetrical\n", def.name)
     end
   end
 
