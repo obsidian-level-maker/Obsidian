@@ -950,13 +950,16 @@ function Grower_grammatical_room(R, pass)
 
     table.insert(A.seeds, S)
 
-    -- update the room's growth box
-    local R2 = assert(A.room)
-    if not R2.gx1 or S.sx < R2.gx1 then R2.gx1 = S.sx end
-    if not R2.gy1 or S.sy < R2.gy1 then R2.gy1 = S.sy end
+    -- update the room's growth bbox
+    if A.room then
+      local AR = A.room
 
-    if not R2.gx2 or S.sx > R2.gx2 then R2.gx2 = S.sx end
-    if not R2.gy2 or S.sy > R2.gy2 then R2.gy2 = S.sy end
+      if not AR.gx1 or S.sx < AR.gx1 then AR.gx1 = S.sx end
+      if not AR.gy1 or S.sy < AR.gy1 then AR.gy1 = S.sy end
+
+      if not AR.gx2 or S.sx > AR.gx2 then AR.gx2 = S.sx end
+      if not AR.gy2 or S.sy > AR.gy2 then AR.gy2 = S.sy end
+    end
 
     -- FIXME: uggghhhh, do this elsewhere!!!
     local vol = sel(S.diagonal, 0.5, 1.0)
