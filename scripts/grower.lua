@@ -1128,6 +1128,16 @@ assert(S.temp_area.room == R)
 
 
   local function get_iteration_range(T)
+    if pass == "root" then
+      local dx = math.min(10, int(SEED_W / 4))
+      local dy = math.min(10, int(SEED_H / 4))
+
+      local mx = int(SEED_W / 2)
+      local my = int(SEED_H / 2)
+
+      return mx-dx, my-dy, mx+dx, my+dy
+    end
+
 
     -- firstly compute the bounding box that a pattern will occupy
     -- [ relative to any T.x, T.y coordinate being tried ]
