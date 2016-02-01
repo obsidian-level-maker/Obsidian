@@ -65,6 +65,11 @@ SPROUT_1 =
     "X11X", "X11X"
     "X11X", "X11X"
   }
+
+  new_room =
+  {
+    symmetry = { x=2, y=3, w=2, dir=8 }
+  }
 }
 
 
@@ -74,16 +79,15 @@ SPROUT_SYMMETRY_TEST =
 
   structure =
   {
-    "XX..", "XX.."
-    "11..", "11RR"
-    "11..", "11RR"
-    "11..", "11RR"
-    "XX..", "XX.."
+    ".....", ".RRR."
+    ".....", ".RRR."
+    "X111X", "X111X"
+    "X111X", "X111X"
   }
 
-  symmetry =
+  new_room =
   {
-    x = 1, y = 3, dir = 6
+    symmetry = { x=3, y=3, dir=8 }
   }
 }
 
@@ -105,9 +109,9 @@ SPROUT_DIAG_1 =
     "1R"
   }
 
-  symmetry =
+  new_room =
   {
-    x = 1, y = 1, dir = 9
+    symmetry = { x=1, y=1, dir=9 }
   }
 }
 
@@ -126,9 +130,9 @@ SPROUT_HALL_1 =
     "XX....", "XX.RRR"
   }
 
-  symmetry =
+  new_room =
   {
-    x = 5, y = 2, dir = 2
+    symmetry = { x=5, y=2, dir=2 }
   }
 }
 

@@ -1049,20 +1049,20 @@ assert(S.temp_area.room == R)
 
 
   local function transform_symmetry(T)
-    if not cur_rule.symmetry then return nil end
+    if not cur_rule.new_room then return nil end
+
+    local info = cur_rule.new_room.symmetry
+    if not info then return nil end
 
     -- TODO : proper chance of not using the symmetry
     -- if not rand.odds(use_symmetry) return nil end
 
     local sym = {}
 
-    sym.x, sym.y = transform_coord(T, cur_rule.symmetry.x, cur_rule.symmetry.y)
+    sym.x, sym.y = transform_coord(T, info.x, info.y)
 
-    sym.dir = transform_dir(T, cur_rule.symmetry.dir)
-
-    if cur_rule.symmetry.edge_dir then
-      sym.edge_dir = transform_dir(T, cur_rule.symmetry.edge_dir)
-    end
+    sym.dir = transform_dir(T, info.dir)
+    sym.w   = info.w
 
     return sym
   end
