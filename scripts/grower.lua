@@ -484,15 +484,45 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function test_mirror_elem(E1, E2)
-    -- TODO stair directions
+  local function test_mirror_elem(E1, E2, dir_map)
+    -- check stair directions
+    if dir_map and E1.dir and E2.dir then
+      if E1.dir != dir_map[E2.dir] then return false end
+    end
 
     return E1.kind == E2.kind and E1.area == E2.area
   end
 
 
   local function test_horiz_symmetry(grid, x, y)
-    -- FIXME
+    local x2 = grid.w - x + 1
+
+    local E = grid[x ][y]
+    local N = grid[x2][y]
+
+    -- special check for seeds sitting on the axis
+    if x == x2 then
+      if E.kind == "stair" then return geom.is_vert(E.dir) end
+
+      if E.kind == "diagonal" then return false end
+
+      return true
+    end
+
+    -- if one seed is a diagonal, the other must be too
+    if not (E.diagonal and N.diagonal) then
+      return test_mirror_elem(E, N, geom.MIRROR_X)
+    end
+
+    if N.diagonal == E.diagonal then
+      return false
+    end
+
+    -- the nice thing about X mirroring of diagonals is that the
+    -- bottom and top do not change places.
+
+    return test_mirror_elem(E.bottom, N.bottom) and
+           test_mirror_elem(E.top,    N.top)
   end
 
 
@@ -509,7 +539,7 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function test_diag_symmetry(grid, x, y)
+  local function test_transpose_symmetry(grid, x, y)
     local E = grid[x][y]
     local N = grid[y][x]
 
@@ -524,12 +554,12 @@ function Grower_preprocess_grammar(grammar)
       return test_mirror_elem(E.bottom, E.top)
     end
 
-    if E.kind != "diagonal" then
-      return test_mirror_elem(E, N)
+    -- if one seed is a diagonal, the other must be too
+    if not (E.diagonal and N.diagonal) then
+      return test_mirror_elem(E, N, geom.TRANSPOSE)
     end
 
-    -- if one seed is a diagonal, the other must be too
-    if N.kind != "diagonal" or N.diagonal != E.diagonal then
+    if N.diagonal != E.diagonal then
       return false
     end
 
@@ -547,14 +577,14 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function is_diag_symmetrical(grid)
+  local function is_transpose_symmetrical(grid)
     if grid.w != grid.h then
       return false
     end
 
     for x = 1, grid.w do
     for y = 1, grid.h do
-      if not test_diag_symmetry(grid, x, y) then
+      if not test_transpose_symmetry(grid, x, y) then
         return false
       end
     end
@@ -573,12 +603,12 @@ function Grower_preprocess_grammar(grammar)
 stderrf("@@@ tile '%s' is horizontally symmetrical\n", def.name)
     end
 
-    if is_diag_symmetrical(def.input) and
-       is_diag_symmetrical(def.output)
+    if is_transpose_symmetrical(def.input) and
+       is_transpose_symmetrical(def.output)
     then
-      def.diag_symmetry = true
+      def.transpose_symmetry = true
 
-stderrf("@@@ tile '%s' is diagonally symmetrical\n", def.name)
+stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
     end
   end
 
