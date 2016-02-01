@@ -658,7 +658,7 @@ stderrf("@@@ tile '%s' is vertically symmetrical\n", def.name)
     if is_transpose_symmetrical(def.input) and
        is_transpose_symmetrical(def.output)
     then
-      def.transpose_symmetry = true
+      def.t_symmetry = true
 
 stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
     end
@@ -1529,9 +1529,14 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
     local best = { score=-1 }
 
-    for transpose = 0, 1 do
-    for flip_x = 0, 1 do
-    for flip_y = 0, 1 do
+    -- no need to mirror a symmetrical pattern
+    local transp_max = sel(cur_rule.t_symmetry, 0, 1)
+    local flip_x_max = sel(cur_rule.x_symmetry, 0, 1)
+    local flip_y_max = sel(cur_rule.y_symmetry, 0, 1)
+
+    for transpose = 0, transp_max do
+    for flip_x = 0, flip_x_max do
+    for flip_y = 0, flip_y_max do
       local T = calc_transform(transpose, flip_x, flip_y)
 
       local x1,y1, x2,y2 = get_iteration_range(T)
