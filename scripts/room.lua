@@ -47,8 +47,10 @@
 
     hallway : HALLWAY_INFO   -- for hallways only
 
-    symmetry : keyword   -- symmetry of room, or NIL
-                         -- keywords are "x", "y", "xy"
+    symmetry : SYMMETRY_INFO
+
+    gx1, gy1, gx2, gy2   -- seed range while growing
+
 
     floor_mats[z] : name
      ceil_mats[z] : name

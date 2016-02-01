@@ -942,13 +942,21 @@ function Grower_grammatical_room(R, pass)
     if S.temp_area == A then return end
 
     if S.temp_area then
-assert(S.temp_area.room == R)
+      assert(S.temp_area.room == R)
       unset_seed(S)
     end
 
     S.temp_area = A
 
     table.insert(A.seeds, S)
+
+    -- update the room's growth box
+    local R2 = assert(A.room)
+    if not R2.gx1 or S.sx < R2.gx1 then R2.gx1 = S.sx end
+    if not R2.gy1 or S.sy < R2.gy1 then R2.gy1 = S.sy end
+
+    if not R2.gx2 or S.sx > R2.gx2 then R2.gx2 = S.sx end
+    if not R2.gy2 or S.sy > R2.gy2 then R2.gy2 = S.sy end
 
     -- FIXME: uggghhhh, do this elsewhere!!!
     local vol = sel(S.diagonal, 0.5, 1.0)
@@ -1154,6 +1162,9 @@ assert(S.temp_area.room == R)
     if dx1 > dx2 then dx1, dx2 = dx2, dx1 end
     if dy1 > dy2 then dy1, dy2 = dy2, dy1 end
 
+stderrf("\n\n Rule %s : %dx%d\n", cur_rule.name, W, H)
+stderrf("delta size: (%d %d) .. (%d %d)\n", dx1, dy1, dx2, dy2)
+
     -- secondly, compute the bounding box we *want* to cover
     -- [ namely the current room size expanded by size of pattern,
     --   then limited to the map itself ]
@@ -1166,16 +1177,22 @@ assert(S.temp_area.room == R)
     local x2 = R.gx2 + (W - 1)
     local y2 = R.gy2 + (H - 1)
 
+stderrf("raw want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
+
     x1 = math.max(x1, 1)
     y1 = math.max(y1, 1)
 
     x2 = math.min(x2, SEED_W)
-    y2 = math.min(x2, SEED_W)
+    y2 = math.min(y2, SEED_H)
+
+stderrf("clipped want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
 
     -- finally, combine them
 
     x1 = x1 - dx1 ; y1 = y1 - dy1
     x2 = x2 - dx2 ; y2 = y2 - dy2
+
+stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
 
     assert(x2 >= x1)
     assert(y2 >= y1)
@@ -1624,23 +1641,13 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
   -- TODO
   if pass == "decorate" then return end
 
+stderrf("\n Grow room %s : %s pass\n", R.name, pass)
+
   -- FIXME
   if pass == "sprout" and #LEVEL.rooms >= 7 then return end
 
-  if pass == "root" then
-    R.gx1 = int(SEED_W * 0.25)
-    R.gx2 = int(SEED_W * 0.75)
-
-    R.gy1 = int(SEED_H * 0.25)
-    R.gy2 = int(SEED_H * 0.75)
-  else
-    -- FIXME !!! proper room range
-
-    R.gx1 = 4
-    R.gx2 = SEED_W - 3
-
-    R.gy1 = 4
-    R.gy2 = SEED_H - 3
+  if pass != "root" then
+    assert(R.gx1) ; assert(R.gy2)
   end
 
   local apply_num = rand.pick({ 2,4,7,11,15 })
