@@ -998,51 +998,58 @@ assert(S.temp_area.room == R)
   end
 
 
+  local function calc_transform(transpose, flip_x, flip_y)
+    local T =
+    {
+      flip_x = (flip_x > 0)
+      flip_y = (flip_y > 0)
+
+      transpose = (transpose > 0)
+    }
+
+    return T
+  end
+
+
   local function transform_coord(T, px, py)
     px = px - 1
     py = py - 1
 
-    if T.mirror == "x" then px = cur_rule.input.w - px end
-    if T.mirror == "y" then py = cur_rule.input.h - py end
+    if T.flip_x then px = -px end
+    if T.flip_y then py = -py end
 
-    if T.rotate == 4 then
-      px, py = -px, -py
-    elseif T.rotate == 2 then
-      px, py = py, -px
-    elseif T.rotate == 6 then
-      px, py = -py, px
-    end
+    if T.transpose then px, py = py, px end
 
     return T.x + px, T.y + py
   end
 
 
   local function transform_dir(T, dir)
-    if T.mirror == "x" then dir = geom.MIRROR_X[dir]  end
-    if T.mirror == "y" then dir = geom.MIRROR_Y[dir]  end
+    if T.flip_x then dir = geom.MIRROR_X[dir] end
+    if T.flip_y then dir = geom.MIRROR_Y[dir] end
 
-    return geom.ROTATE[T.rotate][dir]
+    if T.transpose then dir = geom.TRANSPOSE[dir] end
+
+    return dir
   end
 
 
   local function transform_diagonal(T, dir, bottom, top)
-    if T.mirror == "x" then
+    if T.flip_x then
       dir = geom.MIRROR_X[dir]
     end
 
-    if T.mirror == "y" then
+    if T.flip_y then
       dir = geom.MIRROR_Y[dir]
       top, bottom = bottom, top
     end
 
-    if (T.rotate == 4) or
-       (T.rotate == 2 and (dir == 1 or dir == 9)) or
-       (T.rotate == 6 and (dir == 3 or dir == 7))
-    then
-      top, bottom = bottom, top
+    if T.transpose then
+      if dir == 3 or dir == 7 then
+        dir = 10 - dir
+        top, bottom = bottom, top
+      end
     end
-
-    dir = geom.ROTATE[T.rotate][dir]
 
     return dir, bottom, top
   end
@@ -1068,15 +1075,7 @@ assert(S.temp_area.room == R)
   end
 
 
-  local function calc_transform(rot, mirror)
-    local T =
-    {
-      rotate = (rot - 1) * 2
-    }
-
-    if mirror > 0 then T.mirror = "x" end
-
-    return T
+  local function convert_mirrored_transform(sym, T)
   end
 
 
@@ -1431,9 +1430,10 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
     local best = { score=-1 }
 
-    for rot = 1, 4 do
-    for mirror = 0, 1 do
-      local T = calc_transform(rot, mirror)
+    for transpose = 0, 1 do
+    for flip_x = 0, 1 do
+    for flip_y = 0, 1 do
+      local T = calc_transform(transpose, flip_x, flip_y)
 
       for x = R.gx1, R.gx2 do
       for y = R.gy1, R.gy2 do
@@ -1449,7 +1449,8 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
         end
       end -- x, y
       end
-    end -- rot, mirror
+    end -- transp, flip_x, flip_y
+    end
     end
 
     if best.score < 0 then
@@ -1508,7 +1509,7 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
   if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 5 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 7 then return end
 
   if pass == "root" then
     R.gx1 = int(SEED_W * 0.25)
