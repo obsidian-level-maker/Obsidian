@@ -539,6 +539,50 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
+  local function test_vert_symmetry(grid, x, y)
+    local y2 = grid.h - y + 1
+
+    local E = grid[x][y]
+    local N = grid[x][y2]
+
+    -- special check for seeds sitting on the axis
+    if y == y2 then
+      if E.kind == "stair" then return geom.is_horiz(E.dir) end
+
+      if E.kind == "diagonal" then return false end
+
+      return true
+    end
+
+    -- if one seed is a diagonal, the other must be too
+    if not (E.diagonal and N.diagonal) then
+      return test_mirror_elem(E, N, geom.MIRROR_Y)
+    end
+
+    if N.diagonal == E.diagonal then
+      return false
+    end
+
+    -- Y mirroring will swap the bottom and top
+
+    return test_mirror_elem(E.bottom, N.top) and
+           test_mirror_elem(E.top,    N.bottom)
+  end
+
+
+  local function is_vert_symmetrical(grid)
+    for x = 1, grid.w do
+    for y = 1, grid.h do
+      if not test_vert_symmetry(grid, x, y) then
+        return false
+      end
+    end
+    end
+
+    return true
+  end
+
+
   local function test_transpose_symmetry(grid, x, y)
     local E = grid[x][y]
     local N = grid[y][x]
@@ -601,6 +645,14 @@ function Grower_preprocess_grammar(grammar)
       def.x_symmetry = true
 
 stderrf("@@@ tile '%s' is horizontally symmetrical\n", def.name)
+    end
+
+    if is_vert_symmetrical(def.input) and
+       is_vert_symmetrical(def.output)
+    then
+      def.y_symmetry = true
+
+stderrf("@@@ tile '%s' is vertically symmetrical\n", def.name)
     end
 
     if is_transpose_symmetrical(def.input) and
