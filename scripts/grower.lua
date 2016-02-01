@@ -1075,6 +1075,53 @@ assert(S.temp_area.room == R)
   end
 
 
+  local function get_iteration_range(T)
+
+    -- firstly compute the bounding box that a pattern will occupy
+    -- [ relative to any T.x, T.y coordinate being tried ]
+
+    T.x = 0
+    T.y = 0
+
+    local W = cur_rule.input.w
+    local H = cur_rule.input.h
+
+    local dx1, dy1 = transform_coord(T, 1, 1)
+    local dx2, dy2 = transform_coord(T, W, H)
+
+    if dx1 > dx2 then dx1, dx2 = dx2, dx1 end
+    if dy1 > dy2 then dy1, dy2 = dy2, dy1 end
+
+    -- secondly, compute the bounding box we *want* to cover
+    -- [ namely the current room size expanded by size of pattern,
+    --   then limited to the map itself ]
+
+    if T.transpose then W, H = H, W end
+
+    local x1 = R.gx1 - (W - 1)
+    local y1 = R.gy1 - (H - 1)
+
+    local x2 = R.gx2 + (W - 1)
+    local y2 = R.gy2 + (H - 1)
+
+    x1 = math.max(x1, 1)
+    y1 = math.max(y1, 1)
+
+    x2 = math.min(x2, SEED_W)
+    y2 = math.min(x2, SEED_W)
+
+    -- finally, combine them
+
+    x1 = x1 - dx1 ; y1 = y1 - dy1
+    x2 = x2 - dx2 ; y2 = y2 - dy2
+
+    assert(x2 >= x1)
+    assert(y2 >= y1)
+
+    return x1, y1, x2, y2
+  end
+
+
   local function convert_mirrored_transform(sym, T)
   end
 
@@ -1435,8 +1482,10 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
     for flip_y = 0, 1 do
       local T = calc_transform(transpose, flip_x, flip_y)
 
-      for x = R.gx1, R.gx2 do
-      for y = R.gy1, R.gy2 do
+      local x1,y1, x2,y2 = get_iteration_range(T)
+
+      for x = x1, x2 do
+      for y = y1, y2 do
         local score = gui.random() * 100
 
         if score < best.score then continue end
