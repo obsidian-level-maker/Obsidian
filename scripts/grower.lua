@@ -1231,8 +1231,27 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
       return T2
     end
 
-    -- TODO
-    error("convert_mirrored_transform: diagonal not yet supported")
+    if sym.dir == 1 or sym.dir == 9 then
+      T2.x = sym.x + (T.y - sym.y)
+      T2.y = sym.y + (T.x - sym.x)
+
+      T2.transpose = not T.transpose
+
+      return T2
+    end
+
+    if sym.dir == 3 or sym.dir == 7 then
+      T2.x = sym.x - (T.y - sym.y)
+      T2.y = sym.y - (T.x - sym.x)
+
+      T2.transpose = not T.transpose
+      T2.flip_x    = not T.flip_x
+      T2.flip_y    = not T.flip_y
+
+      return T2
+    end
+
+    error("convert_mirrored_transform: weird sym.dir")
   end
 
 
