@@ -1132,7 +1132,7 @@ function Grower_grammatical_room(R, pass)
     sym.x, sym.y = transform_coord(T, info.x, info.y)
 
     sym.dir = transform_dir(T, info.dir)
-    sym.w   = info.w
+    sym.wide = (info.w == 2)
 
     return sym
   end
@@ -1205,6 +1205,34 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
 
 
   local function convert_mirrored_transform(sym, T)
+    local T2 = table.copy(T)
+
+    if sym.dir == 2 or sym.dir == 8 then
+      T2.x = sym.x * 2 + sel(sym.wide, 1, 0) - T.x
+
+      if T.transpose then
+        T2_flip_y = not T.flip_y
+      else
+        T2.flip_x = not T.flip_x
+      end
+
+      return T2
+    end
+
+    if sym.dir == 4 or sym.dir == 6 then
+      T2.y = sym.y * 2 + sel(sym.wide, 1, 0) - T.y
+
+      if T.transpose then
+        T2.flip_x = not T.flip_x
+      else
+        T2_flip_y = not T.flip_y
+      end
+
+      return T2
+    end
+
+    -- TODO
+    error("convert_mirrored_transform: diagonal not yet supported")
   end
 
 
