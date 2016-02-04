@@ -1262,6 +1262,29 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
   end
 
 
+  local function on_axis_of_symmetry(sx, sy)
+    -- on the "wide" version, axis is the line between two seeds
+    if R.symmetry.wide then return false end
+
+    if R.symmetry.dir == 2 or R.symmetry.dir == 8 then
+      return sx == R.symmetry.x
+    end
+
+    if R.symmetry.dir == 4 or R.symmetry.dir == 6 then
+      return sy == R.symmetry.y
+    end
+
+    local dx = R.symmetry.x - sx
+    local dy = R.symmetry.y - sy
+
+    if R.symmetry.dir == 3 or R.symmetry.dir == 7 then
+      dx = -dx
+    end
+
+    return dx == dy
+  end
+
+
   local function try_widen_connection(S)
     if not geom.is_straight(new_conn.dir) then return end
 
@@ -1356,6 +1379,21 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
     -- seed is locked out of further changes?
     if E2.assignment and S.no_assignment then
       return false
+    end
+
+    -- symmetry handling
+    -- [ we prevent a pattern from overlapping its mirror ]
+    -- [[ but we allow setting whole seeds *on* the axis of symmetry ]]
+    if T.is_first and E2.assignment then
+      if not on_axis_of_symmetry(S.sx, S.sy) then
+        S.sym_token = sym_token
+      end
+    end
+
+    if T.is_second and E2.assignment then
+      if S.sym_token == sym_token then
+        return false
+      end
     end
 
     -- do we have an area in current room?
@@ -1468,6 +1506,8 @@ end
     if E2.assignment then
       return install_an_element(S, E1, E2, T)
     end
+
+    return true
   end
 
 
@@ -1512,7 +1552,17 @@ stderrf("Joining halves @ %s\n", S:tostr())
         install_an_element(S, E1, E2, T)
       end
 
-      return
+      return true
+    end
+
+
+    assert(E1.diagonal)
+    assert(E2.diagonal)
+
+
+    -- in symmetrical rooms, forbid diagonals on axis of symmetry
+    if (T.is_first or T.is_second) and on_axis_of_symmetry(sx, sy) then
+      return false
     end
 
 
@@ -1523,8 +1573,6 @@ stderrf("Joining halves @ %s\n", S:tostr())
     -- diagonal on square
 
     if not S.diagonal then
-      assert(E1.diagonal)
-
       -- for the test, no need to remap anything
       if what == "TEST" then
         return match_an_element(S, E1B, E2B, T) and
@@ -1556,21 +1604,18 @@ stderrf("seed at %s\n", S:tostr())
 stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_area))
       end
 
-      return
+      return true
     end
 
 
     -- final case : diagonal on diagonal
 
-    assert(E1.diagonal)
-    assert(E2.diagonal)
     assert( S.diagonal)
 
     if not geom.is_parallel(S.diagonal, dir) then
           -- incompatible diagonals
       return false
     end
-
 
     local res1 = match_or_install_B(what, S , E1B, E2B, T)
     local res2 = match_or_install_B(what, S2, E1T, E2T, T)
