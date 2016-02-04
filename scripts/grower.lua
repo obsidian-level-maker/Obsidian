@@ -913,6 +913,10 @@ function Grower_grammatical_room(R, pass)
 
   local check_seeds
 
+  -- this is used to mark seeds for one side of a mirrored rule
+  -- (in symmetrical rooms).
+  local sym_token
+
 
   local function what_in_there(S)
     if not S.temp_area then return "-" end
@@ -1126,6 +1130,9 @@ function Grower_grammatical_room(R, pass)
 
     -- TODO : proper chance of not using the symmetry
     -- if not rand.odds(use_symmetry) return nil end
+
+--FIXME
+if pass != "root" then return nil end
 
     local sym = {}
 
@@ -1572,10 +1579,30 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
-  local function match_or_install_pattern(what, T, x, y)
-    -- hmmmm yuck
-    T.x = x
-    T.y = y
+  local function pre_install(T)
+    new_room = nil
+    new_area = nil
+    new_conn = nil
+    check_seeds = nil
+  end
+
+
+  local function post_install(T)
+    -- TODO: this scans whole map, do it better
+    Seed_squarify2()
+
+    check_for_conns()
+
+    if new_room then
+      -- assumes best.T has set X/Y to best.x and best.y
+      new_room.symmetry = transform_symmetry(T)
+stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+    end
+  end
+
+
+  local function match_or_install_pat_raw(what, T)
+    if what == "INSTALL" then pre_install(T) end
 
     for px = 1, cur_rule.input.w do
     for py = 1, cur_rule.input.h do
@@ -1591,7 +1618,37 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
     end -- px, py
     end
 
+    if what == "INSTALL" then post_install(T) end
+
     return true
+  end
+
+
+  local function match_or_install_pattern(what, T, x, y)
+    T.x = x
+    T.y = y
+
+    T.is_first  = nil
+    T.is_second = nil
+
+    if R.symmetry then
+      local T2 = convert_mirrored_transform(R.symmetry, T)
+
+      T2.is_first  = true
+      T .is_second = true
+
+stderrf("SYMMETRICAL ROOM : match_or_install_pattern\n")
+stderrf("T = \n%s\n", table.tostr(T))
+stderrf("T2 = \n%s\n", table.tostr(T2))
+
+      sym_token = alloc_id("sym_token")
+
+      if not match_or_install_pat_raw(what, T2) then
+        return false
+      end
+    end
+
+    return match_or_install_pat_raw(what, T)
   end
 
 
@@ -1644,27 +1701,11 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
     match_or_install_pattern("INSTALL", best.T, best.x, best.y)
 
-    -- TODO: this scans whole map, do it better
-    Seed_squarify2()
-
-    check_for_conns()
-
-    if new_room then
-      -- assumes best.T has set X/Y to best.x and best.y
-      new_room.symmetry = transform_symmetry(best.T)
-stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
-    end
-
     return true
   end
 
 
   local function apply_a_rule()
-    new_room = nil
-    new_conn = nil
-    new_area = nil
-    check_seeds = nil
-
     local rules2 = table.copy(rule_tab)
 
     for loop = 1, 20 do
@@ -1694,13 +1735,13 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 7 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 1 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = rand.pick({ 2,4,7,11,15 })
+  local apply_num = 3 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 
