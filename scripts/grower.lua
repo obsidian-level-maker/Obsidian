@@ -1218,7 +1218,7 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
       T2.x = sym.x * 2 + sel(sym.wide, 1, 0) - T.x
 
       if T.transpose then
-        T2_flip_y = not T.flip_y
+        T2.flip_y = not T.flip_y
       else
         T2.flip_x = not T.flip_x
       end
@@ -1232,7 +1232,7 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
       if T.transpose then
         T2.flip_x = not T.flip_x
       else
-        T2_flip_y = not T.flip_y
+        T2.flip_y = not T.flip_y
       end
 
       return T2
