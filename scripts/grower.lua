@@ -857,7 +857,7 @@ function Grower_temp_area(R, mode)
     svolume = 0
   }
 
-  A.name = string.format("GRAM_AREA_%d", A.id)
+  A.name = string.format("TEMP_AREA_%d", A.id)
 
   return A
 end
@@ -952,6 +952,7 @@ function Grower_grammatical_room(R, pass)
     if S.temp_area == A then return end
 
     if S.temp_area then
+stderrf("overwrite seed @ %s\n", S.name)
       assert(S.temp_area.room == R)
       unset_seed(S)
     end
@@ -1377,21 +1378,15 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
   local function match_an_element(S, E1, E2, T)
     if E1.kind == "dont_care" then return true end
 
-    -- for "!", require nothing there at all
-    if E1.kind == "free" and E1.utterly then
-      return not raw_blocked(S)
-    end
-
-    -- seed is locked out of further changes?
-    if E2.assignment and S.no_assignment then
-      return false
-    end
-
     -- symmetry handling
     -- [ we prevent a pattern from overlapping its mirror ]
     -- [[ but we allow setting whole seeds *on* the axis of symmetry ]]
+    -- [[[ except for new rooms, as they are different rooms ]]]
     if T.is_first and E2.assignment then
-      if not on_axis_of_symmetry(S.sx, S.sy) then
+      if E2.kind == "new_room" or
+         E2.kind == "stair" or
+         not on_axis_of_symmetry(S.sx, S.sy)
+      then
         S.sym_token = sym_token
       end
     end
@@ -1400,6 +1395,16 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
       if S.sym_token == sym_token then
         return false
       end
+    end
+
+    -- for "!", require nothing there at all
+    if E1.kind == "free" and E1.utterly then
+      return not raw_blocked(S)
+    end
+
+    -- seed is locked out of further changes?
+    if E2.assignment and S.no_assignment then
+      return false
     end
 
     -- do we have an area in current room?
@@ -1681,6 +1686,7 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
     T.x = x
     T.y = y
 
+stderrf("=== match_or_install_pattern @ (%d %d) ===\n", x, y)
     T.is_first  = nil
     T.is_second = nil
 

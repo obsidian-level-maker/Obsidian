@@ -227,8 +227,8 @@ function Seed_squarify()
 
     if S.diagonal and S.top.temp_area == S.temp_area then
       assert(not S.area)
-stderrf("S:join_halves at %s\n", S:tostr())
-stderrf("temp areas: %s  |  %s\n", tostring(S.temp_area), tostring(S.top.temp_area))
+--## stderrf("S:join_halves at %s\n", S:tostr())
+--## stderrf("temp areas: %s  |  %s\n", tostring(S.temp_area), tostring(S.top.temp_area))
       S:join_halves()
 
       -- remove dead seeds from temp areas

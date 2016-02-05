@@ -2563,7 +2563,8 @@ function Room_build_all()
 
 ---!!!  Room_reckon_doors()
 
-  Room_pool_hacks()
+---????  Room_pool_hacks()
+
   Room_floor_ceil_heights()
   Room_prepare_skies()
 
@@ -2573,7 +2574,8 @@ function Room_build_all()
     Layout_place_importants(R)
   end
 
-  Layout_traps_and_cages()
+---###  Layout_traps_and_cages()
+
   Layout_create_scenic_borders()
   Layout_liquid_stuff()
   Layout_update_cages()
