@@ -321,14 +321,12 @@ function Junction_init()
     if N == "NODIR" then continue end
 
     -- edge of map?
-    if not N then
+    if not (N and N.area) then
       local junc = Junction_lookup(A, "map_edge", "create_it")
 
       junc.perimeter = junc.perimeter + 1
       continue
     end
-
-    assert(N.area)
 
     if N.area == S.area then continue end
 
@@ -458,22 +456,6 @@ end
 
 
 ------------------------------------------------------------------------
-
-
-function Area_squarify_seeds()
-  Seed_squarify()
-
-  -- update areas for merged seeds
-
-  each A in LEVEL.areas do
-    for i = #A.seeds, 1, -1 do
-      if A.seeds[i].kind == "dead" then
-        table.remove(A.seeds, i)
-      end
-    end
-  end
-end
-
 
 
 function Area_calc_volumes()

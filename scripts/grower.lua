@@ -739,7 +739,7 @@ end
 
 
 
-function Grower_emergency_sprouts()
+function Grower_emergency_sprouts__OLD()
 
   local function eval_spot(A, S, dir)
     -- tried this spot before?
@@ -800,33 +800,41 @@ end
 
 
 function Grower_make_areas(temp_areas)
-  each idx,T in temp_areas do
+  each idx,temp in temp_areas do
     local area = AREA_CLASS.new("void")
 
-    area.seeds = T.seeds
+    area.seeds = temp.seeds
 
-    if T.room then
+    if temp.room then
       area.mode = "room"
 
-      area.svolume = T.svolume or 0  -- FIXME: can be used too early
+      area.svolume = temp.svolume or 0  -- FIXME: can be used too early
 
-      T.room:add_area(area)
+      temp.room:add_area(area)
     end
 
     -- install into seeds
     each S in area.seeds do
       S.area = area
-      S.room = T.room
+      S.room = temp.room
 
       S.temp_area = nil
     end
   end
+end
 
-  
+
+function Grower_make_all_areas()
+  each R in LEVEL.rooms do
+    Grower_make_areas(R.temp_areas)
+  end
+
+  if LEVEL.gap_areas then
+    Grower_make_areas(LEVEL.gap_areas)
+  end
+
   -- sanity check [ no seeds should have a 'temp_area' now... ]
-  -- NOT TRUE ANYMORE, NEW ROOMS WILL HAVE !
 
---[[
   for sx = 1, SEED_W do
   for sy = 1, SEED_H do
   for pass = 1, 2 do
@@ -836,9 +844,7 @@ function Grower_make_areas(temp_areas)
   end
   end
   end
---]]
 end
-
 
 
 function Grower_temp_area(R, mode)
@@ -1487,8 +1493,11 @@ end
     if E2.kind == "solid" or
        E2.kind == "liquid"
     then
-      local new_area = new_temp_area(E2.kind)
-      set_seed(S, new_area)
+      if R.temp_areas[E2.kind] == nil then
+         R.temp_areas[E2.kind] = Grower_temp_area(R, E2.kind)
+      end
+
+      set_seed(S, R.temp_areas[E2.kind])
       return
     end
 
@@ -1633,8 +1642,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
 
   local function post_install(T)
-    -- TODO: this scans whole map, do it better
-    Seed_squarify2()
+    Seed_squarify()
 
     check_for_conns()
 
@@ -1774,25 +1782,22 @@ stderrf("T2 = \n%s\n", table.tostr(T2))
 
   ---| Grower_grammatical_room |---
 
-  -- TODO
-  if pass == "decorate" then return end
-
 stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 1 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 3 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 3 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = 9 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
-  if pass == "decorate" then apply_num = rand.pick({0,1,2}) end
+  if pass == "decorate" then apply_num = 1 end --- rand.pick({0,1,2}) end
 
   collect_appropriate_rules()
 
@@ -1841,12 +1846,13 @@ function Grower_decorate_rooms()
   local room_list = table.copy(LEVEL.rooms)
 
   -- TODO : do buildings before outdoor/cave
+  --        __OR__  do certain "phases" in different orders
+  --                e.g. adding cages/traps BEFORE expanding outdoors/caves
+
   rand.shuffle(room_list)
 
   each R in room_list do
     Grower_grammatical_room(R, "decorate")
-
-    Grower_make_areas(R.temp_areas)
   end
 end
 
@@ -1971,15 +1977,15 @@ function Grower_fill_gaps()
     for sy = 1, SEED_H do
       local S = SEEDS[sx][sy]
 
-      if not S.diagonal and not S.area then
+      if not S.diagonal and not S.temp_area then
         -- a whole unused seed : split into two
         S:split(rand.sel(50, 1, 3))
       end
 
       S2 = S.top
 
-      if S  and not S.area  then S .temp_area = new_temp_area(S)  end
-      if S2 and not S2.area then S2.temp_area = new_temp_area(S2) end
+      if S  and not S .temp_area then S .temp_area = new_temp_area(S)  end
+      if S2 and not S2.temp_area then S2.temp_area = new_temp_area(S2) end
     end
     end
   end
@@ -2273,7 +2279,9 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 
   smoothen_out_pokers()
 
-  Grower_make_areas(temp_areas)
+  Seed_squarify()
+
+  LEVEL.gap_areas = temp_areas
 end
 
 
@@ -2395,18 +2403,16 @@ function Grower_create_rooms()
 
   Grower_create_trunk(1)
 
-  Grower_decorate_rooms()
+--!!! Grower_decorate_rooms()
 
-Area_squarify_seeds()
+--!!!  Grower_fill_gaps()
 
-  Grower_fill_gaps()
-
-  Area_squarify_seeds()
+  Grower_make_all_areas()
 
   Area_calc_volumes()
   Area_find_neighbors()
 
-  Grower_assign_boundary()
+--!!!  Grower_assign_boundary()
 
 --DEBUG
 Grower_save_svg()

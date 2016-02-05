@@ -225,28 +225,23 @@ function Seed_squarify()
   for sy = 1, SEED_H do
     local S = SEEDS[sx][sy]
 
-    if S.diagonal and S.top.area == S.area then
-      S:join_halves()
-    end
-  end
-  end
-end
-
-
-function Seed_squarify2()
-  -- detects when a diagonal seed has same area on each half, and
-  -- merges the two halves into a full seed
-
-  -- [ same as above but used while growing rooms ]
-
-  for sx = 1, SEED_W do
-  for sy = 1, SEED_H do
-    local S = SEEDS[sx][sy]
-
     if S.diagonal and S.top.temp_area == S.temp_area then
+      assert(not S.area)
 stderrf("S:join_halves at %s\n", S:tostr())
 stderrf("temp areas: %s  |  %s\n", tostring(S.temp_area), tostring(S.top.temp_area))
       S:join_halves()
+
+      -- remove dead seeds from temp areas
+      local A = S.temp_area
+
+      if A then
+        for i = #A.seeds, 1, -1 do
+          if A.seeds[i].kind == "dead" then
+            table.remove(A.seeds, i)
+          end
+        end
+      end
+
     end
   end
   end
