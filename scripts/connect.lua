@@ -383,10 +383,8 @@ end
 function Connect_areas_in_rooms()
 
   local function check_internally_connected(R)
-    local first = R.areas[1].conn_group
-
     each A in R.areas do
-      if A.conn_group != first then
+      if A.conn_group and A.conn_group != R.canary_area.conn_group then
         return false
       end
     end
@@ -428,6 +426,9 @@ function Connect_areas_in_rooms()
     each A in R.areas do
     each N in A.neighbors do
       if N.room != R then continue end
+
+      if not A.conn_group then continue end
+      if not N.conn_group then continue end
 
       -- only try each pair ONCE
       if N.id > A.id then continue end
@@ -473,9 +474,16 @@ function Connect_areas_in_rooms()
 
     R.area_conns = {}
 
+stderrf("internal_connections @ %s\n", R.name)
     each A in R.areas do
-      A.conn_group = assert(A.id)
+stderrf("   %s mode = %s\n", A.name, tostring(A.mode))
+      if A.mode == "floor" then
+        A.conn_group = assert(A.id)
+        R.canary_area = A
+      end
     end
+
+    assert(R.canary_area)
 
     while not check_internally_connected(R) do
       make_an_internal_connection(R)

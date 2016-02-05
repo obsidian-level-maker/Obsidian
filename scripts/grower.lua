@@ -791,7 +791,7 @@ function Grower_emergency_sprouts__OLD()
 
   -- pick a spot from every normal area of every room
   each A in LEVEL.areas do
-    if A.room and A.mode == "room" then
+    if A.room and A.mode == "floor" then
       scan_area(A)
     end
   end
@@ -806,7 +806,7 @@ function Grower_make_areas(temp_areas)
     area.seeds = temp.seeds
 
     if temp.room then
-      area.mode = "room"
+      area.mode = temp.mode
 
       area.svolume = temp.svolume or 0  -- FIXME: can be used too early
 
@@ -2413,7 +2413,7 @@ function Grower_create_rooms()
 
   Grower_create_trunk(1)
 
---!!! Grower_decorate_rooms()
+  Grower_decorate_rooms()
 
   Grower_fill_gaps()
 

@@ -25,7 +25,7 @@
 
     id, name  -- debugging info
 
-    mode : keyword  -- "room"  (traversible part of a normal room)
+    mode : keyword  -- "floor"  (traversible part of a normal room)
                     -- "hallway" (used for stairwells too)
                     -- "void"
                     -- "scenic"

@@ -1539,7 +1539,6 @@ function Room_set_kind(R, kind, is_outdoor, is_cave)
   R.is_cave    = is_cave
 
   each A in R.areas do
-    A.mode = "room"
     A.is_outdoor = R.is_outdoor
   end
 end
@@ -1778,7 +1777,9 @@ function Room_floor_ceil_heights()
 
   local function process_room_flat(R, entry_area)
     each A in R.areas do
-      set_floor(A, R.entry_h)
+      if A.mode == "floor" then
+        set_floor(A, R.entry_h)
+      end
     end
   end
 
@@ -1804,10 +1805,12 @@ function Room_floor_ceil_heights()
     if entry_area then adjust_h = entry_area.delta_h end
 
     each A in R.areas do
-      -- check each area got a delta_h
-      assert(A.delta_h)
+      if A.mode == "floor" then
+        -- check each area got a delta_h
+        assert(A.delta_h)
 
-      set_floor(A, R.entry_h + A.delta_h - adjust_h)
+        set_floor(A, R.entry_h + A.delta_h - adjust_h)
+      end
     end
 
     room_add_steps(R)
