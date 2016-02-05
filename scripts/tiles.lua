@@ -33,6 +33,11 @@ ROOT_1 =
     "!!!!", ".RR."
     "!!!!", "...."
   }
+
+  new_room =
+  {
+    symmetry = { x=2, y=2, w=1, dir=9 }
+  }
 }
 
 
@@ -41,12 +46,46 @@ ROOT_1 =
 
 GROW_1 =
 {
-  prob = 50
+  prob = 150
 
   structure =
   {
     "....", ".11."
     "X11X", "X11X"
+  }
+}
+
+
+GROW_DIAGTEST_1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "X.", "X."
+    "1.", "11"
+    "1.", "1/"
+    "X.", "X."
+  }
+
+  diagonals = { "1." }
+}
+
+
+GROW_DIAGTEST_2 =
+{
+  prob = 400
+
+  structure =
+  {
+    "/.", "1%"
+    "..", "%/"
+  }
+
+  diagonals =
+  {
+    "1.", "1."
+    ".1", "1."
   }
 }
 
@@ -75,7 +114,7 @@ SPROUT_1 =
 
 SPROUT_SYMMETRY_TEST =
 {
-  prob = 300
+  prob = 30
 
   structure =
   {
@@ -116,6 +155,29 @@ SPROUT_DIAG_1 =
 }
 
 
+SPROUT_DIAG_2 =
+{
+  prob = 100
+
+  structure =
+  {
+    "...", "..."
+    "...", "RR."
+    "%..", "%R."
+  }
+
+  diagonals =
+  {
+    "1.", "1R"
+  }
+
+  new_room =
+  {
+    symmetry = { x=1, y=1, dir=9 }
+  }
+}
+
+
 SPROUT_HALL_1 =
 {
   prob = 10
@@ -142,7 +204,7 @@ SPROUT_HALL_1 =
 
 DECORATE_1 =
 {
-  prob = 50
+  prob = 0
 
   structure =
   {
@@ -152,6 +214,31 @@ DECORATE_1 =
     "XX.", "XX."
   }
 }
+
+
+DECORATE_LIQUID_1 =
+{
+  prob = 250
+
+  structure =
+  {
+    ".", "~"
+    "1", "1"
+  }
+}
+
+
+DECORATE_LIQUID_2 =
+{
+  prob = 500
+
+  structure =
+  {
+    ".", "~"
+    "~", "~"
+  }
+}
+
 
 
 
