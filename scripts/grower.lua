@@ -2038,6 +2038,8 @@ function Grower_fill_gaps()
 
 
   local function try_merge_an_area(A1)
+    assert(A1.room == nil)
+
     local best_A2
     local best_score = 0
 
@@ -2050,6 +2052,8 @@ function Grower_fill_gaps()
       local A2 = N.temp_area
 
       if A2 == A1 then continue end
+
+      if A2.room then continue end
 
       assert(not A2.is_dead)
 
@@ -2405,14 +2409,14 @@ function Grower_create_rooms()
 
 --!!! Grower_decorate_rooms()
 
---!!!  Grower_fill_gaps()
+  Grower_fill_gaps()
 
   Grower_make_all_areas()
 
   Area_calc_volumes()
   Area_find_neighbors()
 
---!!!  Grower_assign_boundary()
+  Grower_assign_boundary()
 
 --DEBUG
 Grower_save_svg()
