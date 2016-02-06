@@ -726,6 +726,8 @@ function Room_detect_porches(R)
   local function eval_porch(A, mode)
     -- mode is either "indoor" or "outdoor"
 
+    if A.mode != "floor" then return -1 end
+
     if A.pool_hack then return -1 end
 
     -- size check : never too much of room
@@ -1784,13 +1786,26 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function pick_start_area(R)
+    local list = {}
+
+    each A in R.areas do
+      if A.mode == "floor" then
+        table.insert(list, A)
+      end
+    end
+
+    return rand.pick(list)
+  end
+
+
   local function process_room(R, entry_area)
     if STYLE.steepness == "none" then
       process_room_flat(R, entry_area)
       return
     end
 
-    local start_area = rand.pick(R.areas)
+    local start_area = pick_start_area(R)
 
     local up_chance = rand.pick({ 10, 50, 90 })
 
@@ -1805,7 +1820,7 @@ function Room_floor_ceil_heights()
     if entry_area then adjust_h = entry_area.delta_h end
 
     each A in R.areas do
-      if A.mode == "floor" then
+      if A.mode == "floor" and A.delta_h then
         -- check each area got a delta_h
         assert(A.delta_h)
 
@@ -2230,6 +2245,8 @@ function Room_floor_ceil_heights()
     end
 
     each A in R.areas do
+      if A.mode != "floor" then continue end
+
       if A.pool_hack then continue end
 
       assert(A.floor_h)
@@ -2324,25 +2341,25 @@ function Room_floor_ceil_heights()
   end
 
 
-  function fix_pool_hacks(R)
+  local function do_liquids(R)
     local function pool_height(A)
       each N in A.neighbors do
-        if N.room == R then
+        if N.room == R and N.floor_h then
           return N.floor_h - 16
         end
       end
-      error("fix_pool_hacks failed")
+      error("do_liquids failed")
     end
 
     each A in R.areas do
-      if A.pool_hack then
+      if A.mode == "liquid" then
         A.floor_h = pool_height(A)
       end
     end
   end
 
 
-  function calc_max_floor(R)
+  local function calc_max_floor(R)
     R.max_floor_h = -7777
 
     each A in R.areas do
@@ -2353,7 +2370,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  function do_ceilings(R)
+  local function do_ceilings(R)
     each A in R.areas do
       local height = rand.pick({ 128, 192,192,192, 256,320 })
 
@@ -2403,7 +2420,7 @@ end
 
     assert(R.entry_h)
 
-    fix_pool_hacks(R)
+    do_liquids(R)
 
     -- we do hallway porches when all heights are known
     if R.kind == "hallway" then
