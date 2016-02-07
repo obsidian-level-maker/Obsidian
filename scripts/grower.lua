@@ -1136,7 +1136,11 @@ stderrf("overwrite seed @ %s\n", S.name)
     if not info then return nil end
 
     -- TODO : proper chance of not using the symmetry
-    -- if not rand.odds(use_symmetry) return nil end
+    -- if not rand.odds(symmetry_prob) return nil end
+
+    if type(info) == "table" then
+      info = rand.pick(info)
+    end
 
 --FIXME
 if pass != "root" then return nil end
@@ -1145,7 +1149,15 @@ if pass != "root" then return nil end
 
     sym.x, sym.y = transform_coord(T, info.x, info.y)
 
-    sym.dir = transform_dir(T, info.dir)
+    if info.x2 then
+      sym.x2, sym.y2 = transform_coord(T, info.x2, info.y2)
+    end
+
+    if info.dir then
+      sym.dir = transform_dir(T, info.dir)
+    end
+
+    sym.kind = info.kind or "mirror"
     sym.wide = (info.w == 2)
 
     return sym
