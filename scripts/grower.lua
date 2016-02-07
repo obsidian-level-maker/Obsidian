@@ -1151,6 +1151,9 @@ if pass != "root" then return nil end
 
     if info.x2 then
       sym.x2, sym.y2 = transform_coord(T, info.x2, info.y2)
+
+      if sym.x > sym.x2 then sym.x, sym.x2 = sym.x2, sym.x end
+      if sym.y > sym.y2 then sym.y, sym.y2 = sym.y2, sym.y end
     end
 
     if info.dir then
@@ -1230,8 +1233,18 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
   end
 
 
-  local function convert_mirrored_transform(sym, T)
+  local function convert_symmetrical_transform(sym, T)
     local T2 = table.copy(T)
+
+    if sym.kind == "rotate" then
+      T2.x = sym.x * 2 + (sym.x2 - sym.x) - T.x
+      T2.y = sym.y * 2 + (sym.y2 - sym.y) - T.y
+
+      T2.flip_x = not T2.flip_x
+      T2.flip_y = not T2.flip_y
+
+      return T2
+    end
 
     if sym.dir == 2 or sym.dir == 8 then
       T2.x = sym.x * 2 + sel(sym.wide, 1, 0) - T.x
@@ -1282,6 +1295,9 @@ stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
 
 
   local function on_axis_of_symmetry(sx, sy)
+    -- no axis for 180-degree rotational symmetry
+    if R.symmetry.kind == "rotate" then return false end
+
     -- on the "wide" version, axis is the line between two seeds
     if R.symmetry.wide then return false end
 
@@ -1703,7 +1719,7 @@ stderrf("=== match_or_install_pattern @ (%d %d) ===\n", x, y)
     T.is_second = nil
 
     if R.symmetry then
-      local T2 = convert_mirrored_transform(R.symmetry, T)
+      local T2 = convert_symmetrical_transform(R.symmetry, T)
 
       T2.is_first  = true
       T .is_second = true

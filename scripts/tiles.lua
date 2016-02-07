@@ -36,7 +36,11 @@ ROOT_1 =
 
   new_room =
   {
-    symmetry = { x=2, y=2, w=1, dir=9 }
+    symmetry =
+    {
+--    { dir=9, x=2, y=2 }
+      { kind="rotate", x=2, y=2, x2=3, y2=3 }
+    }
   }
 }
 
@@ -107,7 +111,7 @@ SPROUT_1 =
 
   new_room =
   {
-    symmetry = { x=2, y=3, w=2, dir=8 }
+    symmetry = { dir=8, x=2, y=3, w=2 }
   }
 }
 
@@ -126,7 +130,7 @@ SPROUT_SYMMETRY_TEST =
 
   new_room =
   {
-    symmetry = { x=3, y=3, dir=8 }
+    symmetry = { dir=8, x=3, y=3 }
   }
 }
 
@@ -150,7 +154,7 @@ SPROUT_DIAG_1 =
 
   new_room =
   {
-    symmetry = { x=1, y=1, dir=9 }
+    symmetry = { dir=9, x=1, y=1 }
   }
 }
 
@@ -173,7 +177,7 @@ SPROUT_DIAG_2 =
 
   new_room =
   {
-    symmetry = { x=1, y=1, dir=9 }
+    symmetry = { dir=9, x=1, y=1 }
   }
 }
 
@@ -194,7 +198,7 @@ SPROUT_HALL_1 =
 
   new_room =
   {
-    symmetry = { x=5, y=2, dir=2 }
+    symmetry = { dir=2, x=5, y=2 }
   }
 }
 
