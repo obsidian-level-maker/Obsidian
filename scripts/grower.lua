@@ -40,88 +40,6 @@
 --]]
 
 
-function Sprout_new(S, dir, conn, room)
-  assert(room)
-
-  local P =
-  {
-    S = S
-    dir = dir
-    long = conn.long
-    mode = conn.mode or "normal"
-    split = conn.split
-    room = room
-  }
-
-  table.insert(LEVEL.sprouts, P)
-
-  return P
-end
-
-
-function Sprout_emergency_new(S, dir, room)
--- stderrf("emergency sprout @ %s dir:%d\n", S.name, dir)
-  local P =
-  {
-    S = S
-    dir = dir
-    long = 1
-    mode = "normal"
-    room = room
-    is_emergency = true
-  }
-
-  table.insert(LEVEL.sprouts, P)
-
-  return P
-end
-
-
-function Sprout_pick_next()
-  if table.empty(LEVEL.sprouts) then
-    return nil
-  end
-
-  local best
-  local best_score = 9e9
-
-  each P in LEVEL.sprouts do
-    local score = 0
-
-    if P.is_emergency then
-      score = 1000
-    elseif P.room then
-      score = P.room.grow_rank or 3 --FIXME
-    end
-
-    score = score + gui.random()
-
-    if score < best_score then
-      best = P
-      best_score = score
-    end
-  end
-
-  assert(best)
-
-  -- remove it from global list
-  table.kill_elem(LEVEL.sprouts, best)
-
-  return best
-end
-
-
-function Sprout_kill_room(R)
-  for i = #LEVEL.sprouts, 1, -1 do
-    local P = LEVEL.sprouts[i]
-
-    if P.room == R then
-      table.remove(LEVEL.sprouts, i)
-      P.S = nil ; P.dir = nil
-    end
-  end
-end
-
 
 ------------------------------------------------------------------------
 
@@ -735,66 +653,6 @@ gui.debugf("  %s : %s / %s\n", S.name, RR.name, (AA and AA.name) or "-noarea-")
 
 gui.debugf("coverage: %1.2f (%d seeds / %d)\n", count / total, count, total)
   return count / total
-end
-
-
-
-function Grower_emergency_sprouts__OLD()
-
-  local function eval_spot(A, S, dir)
-    -- tried this spot before?
-    if S.emergency_sprout then return -1 end
-
-    local N = S:neighbor(dir)
-
-    if not N then return -2 end
-
-    if N.area then return -3 end
-
-    -- TODO : CHECK MORE STUFF
-
-    local score = 1
-
---stderrf("eval_spot : potential @ %s dir:%d\n", S.name, dir)
-    return score + gui.random()
-  end
-
-
-  local function scan_area(A)
-    local best_S
-    local best_dir
-    local best_score = 0
-
-    each S in A.seeds do
-    each dir in geom.ALL_DIRS do
-      local score = eval_spot(A, S, dir)
-
-      if score > best_score then
-        best_S = S
-        best_dir = dir
-        best_score = score
-      end
-    end
-    end
-
-    if not best_S then return end
-
-    -- create a sprout
-    Sprout_emergency_new(best_S, best_dir, A.room)
-
-    -- do not try this seed again
-    best_S.emergency_sprout = true
-  end
-
-
-  --| Grower_emergency_sprouts |--
-
-  -- pick a spot from every normal area of every room
-  each A in LEVEL.areas do
-    if A.room and A.mode == "floor" then
-      scan_area(A)
-    end
-  end
 end
 
 
@@ -1819,7 +1677,7 @@ stderrf("T2 = \n%s\n", table.tostr(T2))
 stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 3 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 1 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
