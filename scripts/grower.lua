@@ -1568,6 +1568,56 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
   end
 
 
+  local function try_straddling_pattern(what, T)
+    -- this handles a pattern which is symmetrical and which is sitting
+    -- exactly at the right spot to be usable ONCE in a symmetrical room
+    -- (i.e. perfectly straddling the axis of symmetry).
+
+    if pass == "root" then return false end
+
+    if R.symmetry.kind != "mirror" then return false end
+
+    if not geom.is_straight(R.symmetry.dir) then return false end
+
+    if not cur_rule.x_symmetry then return false end
+
+    local W = cur_rule.input.w
+    local H = cur_rule.input.h
+
+    -- width must be odd/even to match R.symmetry mode
+    if (W % 2) != sel(R.symmetry.wide, 0, 1) then return false end
+
+    -- get transformed bbox of pattern
+    local bx1, by1 = transform_coord(T, 1, 1)
+    local bx2, by2 = transform_coord(T, W, H)
+
+    if bx1 > bx2 then bx1, bx2 = bx2, bx1 end
+    if by1 > by2 then by1, by2 = by2, by1 end
+
+    -- check that it straddles at right spot
+    if T.transpose then
+      if by1 != R.symmetry.y - int((W-1) / 2) then return false end
+    else
+      if bx1 != R.symmetry.x - int((W-1) / 2) then return false end
+    end
+
+if cur_rule.name != "GROW_MIR_TEST" then return false end
+
+    if match_or_install_pat_raw(what, T) then
+if what == "INSTALL" then
+gui.debugf("did straddle pattern (%s) @ (%d %d)\n", cur_rule.name, bx1, by1)
+end
+
+      do STOP_ALL = (STOP_ALL or 0) + 1; return true; end
+
+      return true
+
+    end
+
+    return false
+  end
+
+
   local function match_or_install_pattern(what, T, x, y)
     T.x = x
     T.y = y
@@ -1575,6 +1625,10 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 stderrf("=== match_or_install_pattern @ (%d %d) ===\n", x, y)
     T.is_first  = nil
     T.is_second = nil
+
+    if R.symmetry and try_straddling_pattern(what, T) then
+      return true
+    end
 
     if R.symmetry then
       local T2 = convert_symmetrical_transform(R.symmetry, T)
@@ -1654,6 +1708,9 @@ stderrf("T2 = \n%s\n", table.tostr(T2))
     local rules2 = table.copy(rule_tab)
 
     for loop = 1, 20 do
+
+if (STOP_ALL or 0) >= 1 then break; end
+
       -- nothing left to try?
       if table.empty(rules2) then break; end
 
