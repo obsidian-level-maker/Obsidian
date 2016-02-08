@@ -5,34 +5,37 @@ WORK IN PROGRESS
 
 +  SHAPE GRAMMARS:
 
-   +  detect if a rule is horizontally symmetrical (preprocess phase)
-
-   -  detect if a rule is diagonally symmetrical (going North-East)
-
-   -  support "w=2" in a symmetry table : then the axis of symmetry is
-      actually the middle line of a pair of seeds
-
-   -  write mapping function(s) for a symmetry table
-      -  straight w=1 case
-      -  straight w=2 case
-      -  diagonal case
-
-
-   +  support mirroring along an axis (possibly diagonal)
-
-
-   -  fix gx1..gy2 to be a useful range to try rules
-      [ Hmmm basically it is current extent of room, i.e. sx1..sy2, so
-        probably just use sx1..sy2 ??? ]
-
-
->>>   create edges for connections  [ HOW ??? ]
-
-   -  be more semantically aware, e.g. pick areas where to make
-      staircases / liquid areas / closets
+   +  better logic for connections, allow explicit ones in each rule,
+      and detect them automatically when none
+      [ not just to new rooms, but also to new areas/closets/etc ]
 
    +  prune / re-use rooms which remain small, and hallways which
       never end up anywhere else
+
+   +  symmetrical rooms
+      +  a way to score "straddling" patterns higher
+         [ they are a very good place for some stuff, e.g. exits ]
+         [[ only first usage of SPROUT/DECOR needs to score higher ]]
+
+      -  join mirrored seeds with 'peer' field
+
+      -  SPROUT pass : try some without a mirrored half
+
+      -  SPROUT: if mirrored and new rooms touch/overlap, only create
+                 a single room
+
+   idea:  'o' used in matches for "open" part of room (floor/stair/liquid)
+
+   idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
+          Q/ does "anything" included empty space / other rooms?
+
+   idea:  a CYCLE pass (after SPROUT) for multiple paths
+
+   idea:  for CTF, create one big room with "rotate" symmetry
+          [ interleave GROW and SPROUT passes ]
+          [[ "new_room" becomes "new_area" but acting like a new room ]]
+
+   idea:  GLOBAL rules : applied to whole map after everything else is done
 
 
 -  titlepic backgrounds (current and new) :
