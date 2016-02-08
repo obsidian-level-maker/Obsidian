@@ -38,7 +38,7 @@ ROOT_1 =
   {
     symmetry =
     {
-      { dir=8, x=2, y=2, w=2 }
+      { dir=6, x=2, y=2, w=2 }
 --    { dir=9, x=2, y=2 }
 --    { kind="rotate", x=2, y=2, x2=3, y2=3 }
     }
@@ -51,7 +51,7 @@ ROOT_1 =
 
 GROW_1 =
 {
-  prob = 150
+  prob = 7500
 
   structure =
   {
@@ -97,7 +97,7 @@ GROW_DIAGTEST_2 =
 
 GROW_MIR_TEST =
 {
-  prob = 50000
+  prob = 5000
 
   structure =
   {

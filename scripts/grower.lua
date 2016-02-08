@@ -1052,8 +1052,8 @@ if pass != "root" then return nil end
     if dx1 > dx2 then dx1, dx2 = dx2, dx1 end
     if dy1 > dy2 then dy1, dy2 = dy2, dy1 end
 
-stderrf("\n\n Rule %s : %dx%d\n", cur_rule.name, W, H)
-stderrf("delta size: (%d %d) .. (%d %d)\n", dx1, dy1, dx2, dy2)
+--stderrf("\n\n Rule %s : %dx%d\n", cur_rule.name, W, H)
+--stderrf("delta size: (%d %d) .. (%d %d)\n", dx1, dy1, dx2, dy2)
 
     -- secondly, compute the bounding box we *want* to cover
     -- [ namely the current room size expanded by size of pattern,
@@ -1067,7 +1067,7 @@ stderrf("delta size: (%d %d) .. (%d %d)\n", dx1, dy1, dx2, dy2)
     local x2 = R.gx2 + (W - 1)
     local y2 = R.gy2 + (H - 1)
 
-stderrf("raw want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
+--stderrf("raw want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
 
     x1 = math.max(x1, 1)
     y1 = math.max(y1, 1)
@@ -1075,14 +1075,14 @@ stderrf("raw want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
     x2 = math.min(x2, SEED_W)
     y2 = math.min(y2, SEED_H)
 
-stderrf("clipped want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
+--stderrf("clipped want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
 
     -- finally, combine them
 
     x1 = x1 - dx1 ; y1 = y1 - dy1
     x2 = x2 - dx2 ; y2 = y2 - dy2
 
-stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
+--stderrf("RESULT : (%d %d) .. (%d %d)\n\n", x1,y1, x2,y2)
 
     assert(x2 >= x1)
     assert(y2 >= y1)
@@ -1564,6 +1564,10 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 
     if what == "INSTALL" then post_install(T) end
 
+if what == "INSTALL" then
+stderrf("=== install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
+end
+
     return true
   end
 
@@ -1577,7 +1581,14 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 
     if R.symmetry.kind != "mirror" then return false end
 
-    if not geom.is_straight(R.symmetry.dir) then return false end
+    if geom.is_vert(R.symmetry.dir) then
+      if T.transpose then return false end
+    elseif geom.is_horiz(R.symmetry.dir) then
+      if not T.transpose then return false end
+    else
+      -- never for diagonal axis of symmetry
+      return false
+    end
 
     if not cur_rule.x_symmetry then return false end
 
@@ -1601,17 +1612,8 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
       if bx1 != R.symmetry.x - int((W-1) / 2) then return false end
     end
 
-if cur_rule.name != "GROW_MIR_TEST" then return false end
-
     if match_or_install_pat_raw(what, T) then
-if what == "INSTALL" then
-gui.debugf("did straddle pattern (%s) @ (%d %d)\n", cur_rule.name, bx1, by1)
-end
-
-      do STOP_ALL = (STOP_ALL or 0) + 1; return true; end
-
       return true
-
     end
 
     return false
@@ -1622,11 +1624,15 @@ end
     T.x = x
     T.y = y
 
-stderrf("=== match_or_install_pattern @ (%d %d) ===\n", x, y)
+--stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, x, y)
     T.is_first  = nil
     T.is_second = nil
 
     if R.symmetry and try_straddling_pattern(what, T) then
+if what == "INSTALL" then
+stderrf("[ straddler ]\n")
+stderrf("T =\n%s\n", table.tostr(T))
+end
       return true
     end
 
@@ -1636,9 +1642,9 @@ stderrf("=== match_or_install_pattern @ (%d %d) ===\n", x, y)
       T2.is_first  = true
       T .is_second = true
 
-stderrf("SYMMETRICAL ROOM : match_or_install_pattern\n")
-stderrf("T = \n%s\n", table.tostr(T))
-stderrf("T2 = \n%s\n", table.tostr(T2))
+--stderrf("SYMMETRICAL ROOM : match_or_install_pattern\n")
+--stderrf("T = \n%s\n", table.tostr(T))
+--stderrf("T2 = \n%s\n", table.tostr(T2))
 
       sym_token = alloc_id("sym_token")
 
@@ -1709,8 +1715,6 @@ stderrf("T2 = \n%s\n", table.tostr(T2))
 
     for loop = 1, 20 do
 
-if (STOP_ALL or 0) >= 1 then break; end
-
       -- nothing left to try?
       if table.empty(rules2) then break; end
 
@@ -1733,6 +1737,8 @@ if (STOP_ALL or 0) >= 1 then break; end
 
 stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
+if pass == "decorate" then return end
+
   -- FIXME
   if pass == "sprout" and #LEVEL.rooms >= 1 then return end
 
@@ -1751,6 +1757,8 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
   collect_appropriate_rules()
 
   for loop = 1, apply_num do
+stderrf("LOOP %d\n", loop)
+gui.debugf("LOOP %d\n", loop)
     apply_a_rule()
   end
 end
