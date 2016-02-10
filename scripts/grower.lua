@@ -864,8 +864,8 @@ function Grower_add_room(parent_R, is_hallway)
   if parent_R then
     PC =
     {
-      R1 = parent_R
-      R2 = ROOM
+      R1 = ROOM
+      R2 = parent_R
     }
 
     PC.R1.prelim_conn_num = PC.R1.prelim_conn_num + 1
