@@ -201,7 +201,7 @@ function Grower_preprocess_grammar(grammar)
     if ch == 'R' then return { kind="new_room" } end
 
     if ch == 'C' then return { kind="closet" } end
-    if ch == 'G' then return { kind="cage" } end
+    if ch == 'L' then return { kind="ledge"  } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -604,6 +604,7 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
   end
 
 
+  -- NOTE: this code not used at the moment
   local function visit_contiguous_elem(x, y, kind, locs, seen)
     table.insert(locs, { x=x, y=y })
 
@@ -615,7 +616,7 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
       if nx < 1 or nx > def.input.w then continue end
       if ny < 1 or ny > def.input.h then continue end
 
-      local E = def.input[x][y]
+      local E = def.output[nx][ny]
 
       if seen[E] then continue end
 
@@ -633,8 +634,36 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
   end
 
 
-  local function mark_part_as_seen(kind, x,y, w,h, seen)
-    -- TODO
+  local function is_contig_part(kind, x, y, seen)
+    local E2 = def.output[x][y]
+
+    if E2.kind != kind then return false end
+
+    if not E2.assignment then return false end
+
+    return not seen[E2]
+  end
+
+
+  local function try_neighbor_part(kind, x, y, seen)
+    if x < 1 or x > def.input.w then return false end
+    if y < 1 or y > def.input.h then return false end
+
+    return is_contig_part(kind, x, y, seen)
+  end
+
+
+  local function mark_part_as_seen(kind, x, y, w, h, seen)
+    for ex = x, x+w-1 do
+    for ey = y, y+h-1 do
+      if not is_contig_part(kind, ex, ey, seen) then
+        error("bad structure: " .. kind .. " is not a pure rectangle")
+      end
+
+      local E2 = def.output[ex][ey]
+      seen[E2] = true
+    end
+    end
   end
 
 
@@ -644,11 +673,13 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
 
     visit_contiguous_elem(x, y, kind, locs, seen)
 --]]
+stderrf("** get_contiguous_part '%s' @ (%d %d)\n", kind, x, y)
+
     local w = 1
     local h = 1
 
-    while try_neighbor_part(kind, x+1, y, seen) do w = w + 1 end
-    while try_neighbor_part(kind, x, y+1, seen) do h = h + 1 end
+    while try_neighbor_part(kind, x+w, y, seen) do w = w + 1 end
+    while try_neighbor_part(kind, x, y+h, seen) do h = h + 1 end
 
     -- this also verifies the rectangle is all the same
     mark_part_as_seen(kind, x, y, w, h, seen)
@@ -658,8 +689,9 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
     local tab_name = kind .. "_list"
 
     -- create list if not already there
-    if not def[tab_name] then def[tab_name] = {} end
+    if not def[tab_name] then def[tab_name] = { } end
 
+stderrf("********* part in %s : %s @ (%d %d) %dx%d\n", def.name, kind, x,y, w,h)
     table.insert(def[tab_name], info)
   end
 
@@ -667,22 +699,14 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
   local function locate_all_contiguous_parts(kind)
     local seen = {}
 
-    for x = 1, def.input.w do
-    for y = 1, def.input.h do
-      local E = def.input[x][y]
-
-      if E.kind == kind then
+stderrf("locate_all_contiguous_parts '%s' in %s......\n", kind, def.name)
+    for x = 1, def.output.w do
+    for y = 1, def.output.h do
+      if is_contig_part(kind, x, y, seen) then
         get_contiguous_part(kind, x, y, seen)
       end
     end
     end
-  end
-
-
-  local function find_stairs()
-    def.stairs = { }
-
-    locate_all_contiguous_parts("stair")
   end
 
 
@@ -701,7 +725,10 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
     check_symmetries()
 
     find_connections()
-    find_stairs()
+
+    locate_all_contiguous_parts("stair")
+    locate_all_contiguous_parts("ledge")
+    locate_all_contiguous_parts("closet")
 
     if not cur_def.pass then
       cur_def.pass = name_to_pass(name)
