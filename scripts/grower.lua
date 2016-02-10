@@ -331,6 +331,17 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
+  local function check_added_stuff(E)
+    if E.kind == "new_room" and not def.new_room then
+      def.new_room = { }
+    end
+
+    if E.kind == "new_area" and not def.new_area then
+      def.new_area = { }
+    end
+  end
+
+
   local function finalize_element(x, y)
     local E1 = def.input [x][y]
     local E2 = def.output[x][y]
@@ -355,6 +366,14 @@ function Grower_preprocess_grammar(grammar)
       check_compatible_elements(E1.bottom, E2.bottom)
     else
       check_compatible_elements(E1, E2)
+    end
+
+    -- check added stuff
+    if E2.diagonal then
+      check_added_stuff(E2.top)
+      check_added_stuff(E2.bottom)
+    else
+      check_added_stuff(E2)
     end
   end
 
@@ -391,11 +410,8 @@ function Grower_preprocess_grammar(grammar)
 
 
   local function finalize_structure()
-    local W = def.input.w
-    local H = def.input.h
-
-    for x = 1, W do
-    for y = 1, H do
+    for x = 1, def.input.w do
+    for y = 1, def.input.h do
       finalize_element(x, y)
     end
     end
@@ -583,6 +599,93 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
   end
 
 
+  local function find_connections()
+    -- TODO
+  end
+
+
+  local function visit_contiguous_elem(x, y, kind, locs, seen)
+    table.insert(locs, { x=x, y=y })
+
+    seen[def.input[x][y]] = true
+
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if nx < 1 or nx > def.input.w then continue end
+      if ny < 1 or ny > def.input.h then continue end
+
+      local E = def.input[x][y]
+
+      if seen[E] then continue end
+
+      -- TODO support diagonals here
+      if E.kind == "diagonal" then
+        if E.top.kind == kind or E.bottom.kind == kind then
+          error("diagonal not supported for element: " .. tostring(kind))
+        end
+      end
+
+      if E.kind == kind then
+        visit_contiguous_elem(nx, ny, kind, locs, seen)
+      end
+    end
+  end
+
+
+  local function mark_part_as_seen(kind, x,y, w,h, seen)
+    -- TODO
+  end
+
+
+  local function get_contiguous_part(kind, x, y, seen)
+--[[
+    local locs = {}
+
+    visit_contiguous_elem(x, y, kind, locs, seen)
+--]]
+    local w = 1
+    local h = 1
+
+    while try_neighbor_part(kind, x+1, y, seen) do w = w + 1 end
+    while try_neighbor_part(kind, x, y+1, seen) do h = h + 1 end
+
+    -- this also verifies the rectangle is all the same
+    mark_part_as_seen(kind, x, y, w, h, seen)
+
+    local info = { x=x, y=y, w=w, h=h, kind=kind }
+
+    local tab_name = kind .. "_list"
+
+    -- create list if not already there
+    if not def[tab_name] then def[tab_name] = {} end
+
+    table.insert(def[tab_name], info)
+  end
+
+
+  local function locate_all_contiguous_parts(kind)
+    local seen = {}
+
+    for x = 1, def.input.w do
+    for y = 1, def.input.h do
+      local E = def.input[x][y]
+
+      if E.kind == kind then
+        get_contiguous_part(kind, x, y, seen)
+      end
+    end
+    end
+  end
+
+
+  local function find_stairs()
+    def.stairs = { }
+
+    locate_all_contiguous_parts("stair")
+  end
+
+
   ---| Grower_preprocess_grammar |---
 
   table.name_up(grammar)
@@ -596,6 +699,9 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
     convert_structure()
     finalize_structure()
     check_symmetries()
+
+    find_connections()
+    find_stairs()
 
     if not cur_def.pass then
       cur_def.pass = name_to_pass(name)
