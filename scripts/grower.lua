@@ -236,21 +236,6 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function set_area_info(elem, what)
-    if not def.area_map[elem.area] then
-      def.area_map[elem.area] =
-      {
-        area = elem.area
-      }
-    end
-
-    local info = def.area_map[elem.area]
-
-    if what == "input"  then info.input  = true end
-    if what == "output" then info.output = true end
-  end
-
-
   local function convert_element(what, grid, x, y)
     local line
     
@@ -272,10 +257,6 @@ function Grower_preprocess_grammar(grammar)
     local gy = grid.h + 1 - y
 
     grid[x][gy] = elem
-
-    if elem.area then
-      set_area_info(elem, what)
-    end
   end
 
 
@@ -397,8 +378,6 @@ function Grower_preprocess_grammar(grammar)
 
     def.input  = table.array_2D(W, H)
     def.output = table.array_2D(W, H)
-
-    def.area_map = {}
 
     -- must iterate line by line, then across each line
     for y = 1, H do
@@ -889,6 +868,10 @@ function Grower_grammatical_room(R, pass)
   local rule_tab
   local cur_rule
   local cur_symmetry
+
+  -- this maps area numbers (1/2/3) in the current rule to temp-areas of
+  -- the current room
+  local area_map = {}
 
   local new_room
   local new_conn
@@ -1412,9 +1395,22 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
-  local function match_temp_area(elem, A)
-    -- FIXME !!!
-    return true
+  local function match_temp_area(E1, A)
+    if A.mode != "floor" then return false end
+
+stderrf("match temp area : map =\n%s\n", table.tostr(area_map))
+    if area_map[1] == A then return (E1.area == 1) end
+    if area_map[2] == A then return (E1.area == 2) end
+    if area_map[3] == A then return (E1.area == 3) end
+
+    if area_map[E1.area] == nil then
+stderrf("---> setting to %s\n", tostring(A))
+       area_map[E1.area] = A
+       return true
+    end
+
+stderrf("---> fail\n")
+    return false
   end
 
 
@@ -1468,9 +1464,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     end
 
     if E1.kind == "area" then
-      if A.mode == "solid"  then return false end
-      if A.mode == "liquid" then return false end
-
       return match_temp_area(E1, A)
     end
 
@@ -1489,10 +1482,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     -- FIXME: too simple!!!
     if E1.kind == E2.kind then return end
 
-if S.sx == 17 and S.sy == 26 then
-stderrf("install_an_element @ %s : %s --> %s\n", S:tostr(), E1.kind, E2.kind)
-end
-
     if E2.kind == "free" then
       if S.temp_area then  ---??  if not (E1.kind == "free") then
         unset_seed(S)
@@ -1502,8 +1491,11 @@ end
     end
 
     if E2.kind == "area" then
-      -- FIXME WRONG : USE MAPPING FROM MATCH PHASE !!
-      set_seed(S, R.temp_areas[E2.area])
+      -- an assertion here usually means the grammar rule uses e.g. '2'
+      -- in the output side but not in the input side.
+stderrf("\narea_map = \n%s\n", table.tostr(area_map))
+      local A = assert(area_map[E2.area])
+      set_seed(S, A)
       return
     end
 
@@ -1686,6 +1678,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
     new_room = nil
     new_area = nil
     new_conn = nil
+
     check_seeds = nil
   end
 
@@ -1785,6 +1778,12 @@ end
     T.x = x
     T.y = y
 
+    if what == "TEST" then
+      area_map[1] = nil
+      area_map[2] = nil
+      area_map[3] = nil
+    end
+
 --stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, x, y)
     T.is_first  = nil
     T.is_second = nil
@@ -1852,6 +1851,11 @@ end
           best.x = x
           best.y = y
           best.score = score
+
+          -- this is less memory hungry than copying the whole table
+          best.area_1 = area_map[1]
+          best.area_2 = area_map[2]
+          best.area_3 = area_map[3]
         end
       end -- x, y
       end
@@ -1864,6 +1868,10 @@ end
     end
 
     -- ok --
+
+    area_map[1] = best.area_1
+    area_map[2] = best.area_2
+    area_map[3] = best.area_3
 
     match_or_install_pattern("INSTALL", best.T, best.x, best.y)
 
