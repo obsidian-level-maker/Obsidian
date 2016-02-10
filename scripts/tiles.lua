@@ -51,7 +51,7 @@ ROOT_1 =
 
 GROW_1 =
 {
-  prob = 7500
+  prob = 250
 
   structure =
   {
@@ -97,7 +97,7 @@ GROW_DIAGTEST_2 =
 
 GROW_MIR_TEST =
 {
-  prob = 5000
+  prob = 50
 
   structure =
   {
@@ -109,6 +109,17 @@ GROW_MIR_TEST =
 }
 
 
+
+GROW_NEWAREA_1 =
+{
+  prob = 150
+
+  structure =
+  {
+    "....", ".AA."
+    "X11X", "X11X"
+  }
+}
 
 
 ------------------------------------------

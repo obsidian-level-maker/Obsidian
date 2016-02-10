@@ -1503,7 +1503,7 @@ stderrf("\narea_map = \n%s\n", table.tostr(area_map))
       assert(pass != "root")
 
       if not new_area then
-        new_area = Grower_new_area(R, "floor")
+        new_area = Grower_temp_area(R, "floor")
         table.insert(R.temp_areas, new_area)
       end
 
@@ -1909,13 +1909,13 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 2 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 4 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 7 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = 11 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 
