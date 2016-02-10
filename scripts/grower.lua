@@ -577,24 +577,18 @@ function Grower_preprocess_grammar(grammar)
        is_horiz_symmetrical(def.output)
     then
       def.x_symmetry = true
-
-stderrf("@@@ tile '%s' is horizontally symmetrical\n", def.name)
     end
 
     if is_vert_symmetrical(def.input) and
        is_vert_symmetrical(def.output)
     then
       def.y_symmetry = true
-
-stderrf("@@@ tile '%s' is vertically symmetrical\n", def.name)
     end
 
     if is_transpose_symmetrical(def.input) and
        is_transpose_symmetrical(def.output)
     then
       def.t_symmetry = true
-
-stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
     end
   end
 
@@ -668,13 +662,6 @@ stderrf("@@@ tile '%s' is transpose symmetrical\n", def.name)
 
 
   local function get_contiguous_part(kind, x, y, seen)
---[[
-    local locs = {}
-
-    visit_contiguous_elem(x, y, kind, locs, seen)
---]]
-stderrf("** get_contiguous_part '%s' @ (%d %d)\n", kind, x, y)
-
     local w = 1
     local h = 1
 
@@ -684,14 +671,13 @@ stderrf("** get_contiguous_part '%s' @ (%d %d)\n", kind, x, y)
     -- this also verifies the rectangle is all the same
     mark_part_as_seen(kind, x, y, w, h, seen)
 
-    local info = { x=x, y=y, w=w, h=h, kind=kind }
+    local info = { x1=x1, y1=y1, x2=x+w-1, y2=y+h-1, kind=kind }
 
     local tab_name = kind .. "_list"
 
     -- create list if not already there
     if not def[tab_name] then def[tab_name] = { } end
 
-stderrf("********* part in %s : %s @ (%d %d) %dx%d\n", def.name, kind, x,y, w,h)
     table.insert(def[tab_name], info)
   end
 
@@ -699,7 +685,6 @@ stderrf("********* part in %s : %s @ (%d %d) %dx%d\n", def.name, kind, x,y, w,h)
   local function locate_all_contiguous_parts(kind)
     local seen = {}
 
-stderrf("locate_all_contiguous_parts '%s' in %s......\n", kind, def.name)
     for x = 1, def.output.w do
     for y = 1, def.output.h do
       if is_contig_part(kind, x, y, seen) then
