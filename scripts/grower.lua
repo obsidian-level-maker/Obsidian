@@ -199,6 +199,7 @@ function Grower_preprocess_grammar(grammar)
     -- other stuff
     if ch == 'A' then return { kind="new_area" } end
     if ch == 'R' then return { kind="new_room" } end
+    if ch == 'H' then return { kind="hallway"  } end
 
     if ch == 'C' then return { kind="closet" } end
     if ch == 'L' then return { kind="ledge"  } end
@@ -893,7 +894,7 @@ function Grower_grammatical_room(R, pass)
   local new_conn
   local new_area
 
-  local check_seeds
+  local check_seeds -- REMOVE?
 
   -- this is used to mark seeds for one side of a mirrored rule
   -- (in symmetrical rooms).
@@ -1143,6 +1144,44 @@ if pass != "root" then return nil end
   end
 
 
+  local function transform_connection(T, info, c_out)
+    local sx, sy = transform_coord(T, info.x, info.y)
+    assert(Seed_valid(sx, sy))
+
+    local S = SEEDS[sx][sy]
+
+    local dir2 = transform_dir(T, info.dir)
+
+    if dir2 == 1 or dir2 == 3 then
+      S = assert(S.top)
+    end
+
+    c_out.S = S
+    c_out.dir = dir2
+    c_out.long = info.w or 1
+stderrf("transform_connection: (%d %d) dir %d --> (%d %d) S=%s dir=%d\n",
+info.x, info.y, info.dir, sx, sy, S.name, dir2)
+  end
+
+
+  local function mark_connection_used(conn)
+    local S = conn.S
+
+    for i = 1, conn.long do
+      local N = S:neighbor(conn.dir)
+      assert(N)
+
+      S.no_assignment = true
+      N.no_assignment = true
+
+      if geom.is_straight(conn.dir) then
+        S = S:raw_neighbor(geom.RIGHT[conn.dir])
+        assert(S)
+      end
+    end
+  end
+
+
   local function get_iteration_range(T)
     if pass == "root" then
       local dx = math.min(10, int(SEED_W / 4))
@@ -1296,7 +1335,7 @@ if pass != "root" then return nil end
   end
 
 
-  local function try_widen_connection(S)
+  local function OLD__try_widen_connection(S)
     if not geom.is_straight(new_conn.dir) then return end
 
     if new_conn.long != 1 then return end
@@ -1329,7 +1368,7 @@ if pass != "root" then return nil end
   end
 
 
-  local function check_connection(S)
+  local function OLD__check_connection(S)
     -- find connection between new room and old room
 
     -- FIXME : this is way too simplistic
@@ -1364,7 +1403,7 @@ if pass != "root" then return nil end
   end
 
 
-  local function check_for_conns()
+  local function OLD__check_for_conns()
     if check_seeds then
       each S in check_seeds do
         check_connection(S)
@@ -1385,7 +1424,7 @@ if pass != "root" then return nil end
     -- symmetry handling
     -- [ we prevent a pattern from overlapping its mirror ]
     -- [[ but we allow setting whole seeds *on* the axis of symmetry ]]
-    -- [[[ except for new rooms, as they are different rooms ]]]
+    -- [[[ except for new rooms, as they must remain distinct ]]]
     if T.is_first and E2.assignment then
       if E2.kind == "new_room" or
          E2.kind == "stair" or
@@ -1495,6 +1534,7 @@ end
         table.insert(check_seeds, S)
       end
 
+stderrf("new_room seed @ %s\n", S.name)
       set_seed(S, new_room.temp_areas[1])
       return
     end
@@ -1653,12 +1693,15 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   local function post_install(T)
     Seed_squarify()
 
-    check_for_conns()
-
     if new_room then
       -- assumes best.T has set X/Y to best.x and best.y
       new_room.symmetry = transform_symmetry(T)
 stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+
+      if pass == "sprout" then
+        transform_connection(T, cur_rule.new_room.conn, new_conn)
+        mark_connection_used(new_conn)
+      end
     end
   end
 
@@ -1680,11 +1723,11 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
     end -- px, py
     end
 
-    if what == "INSTALL" then post_install(T) end
-
 if what == "INSTALL" then
 stderrf("=== install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
 end
+
+    if what == "INSTALL" then post_install(T) end
 
     return true
   end
@@ -1858,13 +1901,13 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 1 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 2 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 9 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = 7 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 

@@ -128,7 +128,9 @@ SPROUT_1 =
 
   new_room =
   {
-    symmetry = { dir=8, x=2, y=3, w=2 }
+    conn = { x=2, y=3, w=2, dir=2 }
+
+    symmetry = { x=2, y=3, w=2, dir=2 }
   }
 }
 
@@ -142,12 +144,13 @@ SPROUT_SYMMETRY_TEST =
     ".....", ".RRR."
     ".....", ".RRR."
     "X111X", "X111X"
-    "X111X", "X111X"
   }
 
   new_room =
   {
-    symmetry = { dir=8, x=3, y=3 }
+    conn = { x=2, y=3, w=3, dir=2 }
+
+    symmetry = { x=3, y=3, dir=2 }
   }
 }
 
@@ -171,7 +174,9 @@ SPROUT_DIAG_1 =
 
   new_room =
   {
-    symmetry = { dir=9, x=1, y=1 }
+    conn = { x=2, y=2, dir=1 }
+
+    symmetry = { x=2, y=2, dir=1 }
   }
 }
 
@@ -194,7 +199,9 @@ SPROUT_DIAG_2 =
 
   new_room =
   {
-    symmetry = { dir=9, x=1, y=1 }
+    conn = { x=1, y=1, dir=1 }
+
+    symmetry = { x=1, y=1, dir=1 }
   }
 }
 
@@ -215,7 +222,9 @@ SPROUT_HALL_1 =
 
   new_room =
   {
-    symmetry = { dir=2, x=5, y=2 }
+    conn = { x=5, y=2, dir=8 }
+
+    symmetry = { x=5, y=2, dir=8 }
   }
 }
 
@@ -223,16 +232,14 @@ SPROUT_HALL_1 =
 ------------------------------------------
 
 
-DECORATE_1 =
+DECORATE_CLOSET_1 =
 {
   prob = 0
 
   structure =
   {
-    "XX.", "XX."
-    "11.", "11C"
-    "11.", "11C"
-    "XX.", "XX."
+    "....", ".CC."
+    "X11X", "X11X"
   }
 }
 
@@ -338,7 +345,7 @@ HALL_A_RECONNECT =
 ------------------------------------------------------------------------
 
 
-TILES =
+OLD__TILES =
 {
  
 --------------------------------
