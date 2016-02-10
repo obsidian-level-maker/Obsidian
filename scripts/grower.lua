@@ -877,8 +877,6 @@ function Grower_grammatical_room(R, pass)
   local new_conn
   local new_area
 
-  local check_seeds -- REMOVE?
-
   -- this is used to mark seeds for one side of a mirrored rule
   -- (in symmetrical rooms).
   local sym_token
@@ -1098,12 +1096,12 @@ stderrf("overwrite seed @ %s\n", S.name)
     -- TODO : proper chance of not using the symmetry
     -- if not rand.odds(symmetry_prob) return nil end
 
-    if type(info) == "table" then
-      info = rand.pick(info)
+    if info.list then
+      info = rand.pick(info.list)
     end
 
 --FIXME
-if pass != "root" then return nil end
+--if pass != "root" then return nil end
 
     local sym = {}
 
@@ -1519,12 +1517,11 @@ stderrf("\narea_map = \n%s\n", table.tostr(area_map))
 
       if not new_room then
         new_room, new_conn = Grower_add_room(R)
-        check_seeds = {}
       end
 
-      if pass != "root" then
-        table.insert(check_seeds, S)
-      end
+---##  if pass != "root" then
+---##    table.insert(check_seeds, S)
+---##  end
 
 stderrf("new_room seed @ %s\n", S.name)
       set_seed(S, new_room.temp_areas[1])
@@ -1676,10 +1673,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
   local function pre_install(T)
     new_room = nil
-    new_area = nil
     new_conn = nil
-
-    check_seeds = nil
   end
 
 
@@ -1782,6 +1776,8 @@ end
       area_map[1] = nil
       area_map[2] = nil
       area_map[3] = nil
+    else
+      new_area = nil
     end
 
 --stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, x, y)
@@ -1915,7 +1911,7 @@ if pass == "decorate" then return end
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 11 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = 14 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 

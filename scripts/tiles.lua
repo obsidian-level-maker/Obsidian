@@ -38,9 +38,12 @@ ROOT_1 =
   {
     symmetry =
     {
-      { dir=6, x=2, y=2, w=2 }
+      list =
+      {
+        { dir=6, x=2, y=2, w=2 }
 --    { dir=9, x=2, y=2 }
 --    { kind="rotate", x=2, y=2, x2=3, y2=3 }
+      }
     }
   }
 }
