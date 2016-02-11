@@ -1826,7 +1826,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- generate list of coordinates to use
     local list = {}
 
-    for mx = 1,w do for my = 1,h do
+    for mx = 1,w do
+    for my = 1,h do
       local loc =
       {
         x = spot.x1 + info.r * 2 * (mx-0.5)
@@ -1834,7 +1835,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
         z = spot.z1
       }
       table.insert(list, loc)
-    end end
+    end
+    end
 
     rand.shuffle(list)
 
@@ -1971,8 +1973,14 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       fill_monster_map(palette, barrel_chance)
     end
 
-    fill_cages(R.cage_spots, "cage")
-    fill_cages(R.trap_spots, "trap")
+    each cage in R.cages do
+gui.debugf("FILLING CAGE in %s\n", R.name)
+      fill_cages(cage.mon_spots, "cage")
+    end
+
+    each trap in R.traps do
+      fill_cages(trap.mon_spots, "trap")
+    end
   end
 
 
@@ -2079,6 +2087,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   ---| Monster_fill_room |---
 
   gui.debugf("Monster_fill_room @ %s\n", R.name)
+gui.debugf("Number of cages: %d\n", #R.cages)
 
   prepare_room()
 

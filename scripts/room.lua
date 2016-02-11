@@ -94,8 +94,6 @@ function ROOM_CLASS.new()
     mon_spots  = {}
     item_spots = {}
     big_spots  = {}
-    cage_spots = {}
-    trap_spots = {}
     important_spots = {}   -- NOT USED ATM
 
     goals = {}
@@ -104,6 +102,8 @@ function ROOM_CLASS.new()
     floor_mats = {}
     ceil_mats = {}
 
+    cages = {}
+    traps = {}
     closets = {}
     chunks  = {}    -- NOT USED
     floors  = {}    -- NOT USED
@@ -1115,11 +1115,11 @@ function Room_distribute_spots(R, list)
   each spot in list do
     seen[spot.kind] = 1
 
-    if spot.kind == "cage" then
-      table.insert(R.cage_spots, spot)
-    elseif spot.kind == "trap" then
-      table.insert(R.trap_spots, spot)
-    elseif spot.kind == "pickup" or spot.kind == "big_item" then
+--FIXME    if spot.kind == "cage" then
+--FIXME      table.insert(R.cage_spots, spot)
+--FIXME    elseif spot.kind == "trap" then
+--FIXME      table.insert(R.trap_spots, spot)
+    if spot.kind == "pickup" or spot.kind == "big_item" then
       table.insert(R.item_spots, spot)
     elseif spot.kind == "important" then
       table.insert(R.important_spots, spot)
@@ -1278,10 +1278,11 @@ function Room_determine_spots()
     end
 
     if mode == "cage" then
-      table.append(R.cage_spots, mon_spots)
+gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
+      table.insert(R.cages, { mon_spots=mon_spots })
 
     elseif mode == "trap" then
-      table.append(R.trap_spots, mon_spots)
+      table.insert(R.traps, { mon_spots=mon_spots })
       table.append(R.item_spots, item_spots)
 
     else
