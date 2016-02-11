@@ -798,6 +798,9 @@ function Grower_make_all_areas()
   for pass = 1, 2 do
     local S = SEEDS[sx][sy]
     if pass == 2 then S = S.top end
+if S and S.temp_area then
+stderrf("FUCKING SHITE : %s\n", tostring(S.temp_area.mode))
+end
     if S then assert(not S.temp_area) end
   end
   end
@@ -878,6 +881,7 @@ function Grower_grammatical_room(R, pass)
   local new_room
   local new_conn
   local new_area
+  local new_cage
 
   -- this is used to mark seeds for one side of a mirrored rule
   -- (in symmetrical rooms).
@@ -1562,14 +1566,22 @@ stderrf("new_room seed @ %s\n", S.name)
     end
 
     if E2.kind == "solid" or
-       E2.kind == "liquid" or
-       E2.kind == "cage"
+       E2.kind == "liquid"
     then
       if R.temp_areas[E2.kind] == nil then
          R.temp_areas[E2.kind] = Grower_temp_area(R, E2.kind)
       end
 
       set_seed(S, R.temp_areas[E2.kind])
+      return
+    end
+
+    if E2.kind == "cage" then
+      if not new_cage then
+        new_cage = Grower_temp_area(R, "cage")
+        table.insert(R.temp_areas, new_cage)
+      end
+      set_seed(S, new_cage)
       return
     end
 
@@ -1813,6 +1825,7 @@ end
       area_map[3] = nil
     else
       new_area = nil
+      new_cage = nil
     end
 
 --stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, x, y)
