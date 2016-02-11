@@ -40,7 +40,7 @@ ROOT_1 =
     {
       list =
       {
-        { dir=6, x=2, y=2, w=2 }
+        { dir=4, x=2, y=2, w=2 }
 --    { dir=9, x=2, y=2 }
 --    { kind="rotate", x=2, y=2, x2=3, y2=3 }
       }
@@ -144,7 +144,7 @@ SPROUT_1 =
   {
     conn = { x=2, y=3, w=2, dir=2 }
 
-    symmetry = { x=2, y=3, w=2, dir=2 }
+    symmetry = { x=2, y=3, w=2, dir=8 }
   }
 }
 

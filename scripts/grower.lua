@@ -1066,6 +1066,18 @@ stderrf("overwrite seed @ %s\n", S.name)
   end
 
 
+  local function transform_is_flippy(T)
+    local res = false
+
+    if T.flip_x then res = not res end
+    if T.flip_y then res = not res end
+
+    if T.transpose then res = not res end
+
+    return res
+  end
+
+
   local function transform_diagonal(T, dir, bottom, top)
     if T.flip_x then
       dir = geom.MIRROR_X[dir]
@@ -1120,6 +1132,16 @@ stderrf("overwrite seed @ %s\n", S.name)
 
     sym.kind = info.kind or "mirror"
     sym.wide = (info.w == 2)
+
+    -- wide mode requires X and Y coord to be the lowest of the pair
+    if sym.wide then
+      local x2, y2 = geom.nudge(info.x, info.y, geom.RIGHT[info.dir])
+
+      x2, y2 = transform_coord(T, x2, y2)
+
+      sym.x = math.min(sym.x, x2)
+      sym.y = math.min(sym.y, y2)
+    end
 
     return sym
   end
@@ -1712,6 +1734,7 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 
 if what == "INSTALL" then
 stderrf("=== install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
+stderrf("T =\n%s\n", table.tostr(T))
 end
 
     if what == "INSTALL" then post_install(T) end
