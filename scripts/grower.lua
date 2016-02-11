@@ -201,8 +201,9 @@ function Grower_preprocess_grammar(grammar)
     if ch == 'R' then return { kind="new_room" } end
     if ch == 'H' then return { kind="hallway"  } end
 
-    if ch == 'C' then return { kind="closet" } end
-    if ch == 'L' then return { kind="ledge"  } end
+    if ch == 'C' then return { kind="cage"   } end
+    if ch == 'T' then return { kind="closet" } end
+    if ch == 'J' then return { kind="junction" } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -692,8 +693,9 @@ function Grower_preprocess_grammar(grammar)
     find_connections()
 
     locate_all_contiguous_parts("stair")
-    locate_all_contiguous_parts("ledge")
+    locate_all_contiguous_parts("cage")
     locate_all_contiguous_parts("closet")
+    locate_all_contiguous_parts("junction")
 
     if not cur_def.pass then
       cur_def.pass = name_to_pass(name)
@@ -1485,7 +1487,9 @@ stderrf("---> fail\n")
     if not (A and A.room == R) then return false end
 
     if E1.kind == "solid" or
-       E1.kind == "liquid"
+       E1.kind == "liquid" or
+       E1.kind == "cage"  or
+       E1.kind == "closet"
     then
       return (A.mode == E1.kind)
     end
@@ -1558,7 +1562,8 @@ stderrf("new_room seed @ %s\n", S.name)
     end
 
     if E2.kind == "solid" or
-       E2.kind == "liquid"
+       E2.kind == "liquid" or
+       E2.kind == "cage"
     then
       if R.temp_areas[E2.kind] == nil then
          R.temp_areas[E2.kind] = Grower_temp_area(R, E2.kind)
@@ -1568,7 +1573,7 @@ stderrf("new_room seed @ %s\n", S.name)
       return
     end
 
-    -- TODO: stairs, "solid", "liquid"
+    -- TODO: stairs
 
     error("INSTALL : unsupported kind: " .. E2.kind)
   end
@@ -1711,7 +1716,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
     if new_room then
       -- assumes best.T has set X/Y to best.x and best.y
-      new_room.symmetry = transform_symmetry(T)
+--!!!!      new_room.symmetry = transform_symmetry(T)
 stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 
       if pass == "sprout" then
@@ -1932,7 +1937,7 @@ end
 
 stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
-if pass == "decorate" then return end
+--if pass == "decorate" then return end
 
   -- FIXME
   if pass == "sprout" and #LEVEL.rooms >= 4 then return end
@@ -1947,7 +1952,7 @@ if pass == "decorate" then return end
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
-  if pass == "decorate" then apply_num = 50 end --- rand.pick({0,1,2}) end
+  if pass == "decorate" then apply_num = 5 end --- rand.pick({0,1,2}) end
 
   collect_appropriate_rules()
 

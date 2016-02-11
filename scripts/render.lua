@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2015 Andrew Apted
+--  Copyright (C) 2008-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1261,6 +1261,12 @@ end
     elseif not A.is_outdoor then
       A.ceil_h = A.floor_h + 80
     end
+  end
+
+
+  if A.mode == "cage" then
+    A.floor_mat = "FLAT1"
+    A. wall_mat = "FLAT1"
   end
 
 

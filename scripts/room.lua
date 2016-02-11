@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1229,6 +1229,7 @@ function Room_determine_spots()
 
   local function spots_for_area(R, A, mode)
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
+    if not mode then mode = A.mode end
 
     -- get bbox of room
     local rx1, ry1, rx2, ry2 = area_get_bbox(A)
@@ -1313,14 +1314,15 @@ function Room_determine_spots()
     R:exclude_monsters()
   end
 
+--[[
   -- handle cages and traps
-
   each A in LEVEL.areas do
     if A.mode == "cage" or A.mode == "trap" then
-      local R = assert(A.face_room)
+      local R = assert(A.room)
       spots_for_area(R, A, A.mode)
     end
   end
+--]]
 end
 
 
@@ -2359,6 +2361,15 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function do_cages(R)
+    each A in R.areas do
+      if A.mode == "cage" then
+        A.floor_h = R.max_floor_h + 48
+      end
+    end
+  end
+
+
   local function calc_max_floor(R)
     R.max_floor_h = -7777
 
@@ -2420,7 +2431,10 @@ end
 
     assert(R.entry_h)
 
+    calc_max_floor(R)
+
     do_liquids(R)
+    do_cages(R)
 
     -- we do hallway porches when all heights are known
     if R.kind == "hallway" then
@@ -2428,7 +2442,6 @@ end
     end
 
     do_ceilings(R)
-    calc_max_floor(R)
   end
 end
 

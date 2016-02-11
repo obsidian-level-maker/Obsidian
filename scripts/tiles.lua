@@ -246,9 +246,22 @@ SPROUT_HALL_1 =
 ------------------------------------------
 
 
-DECORATE_CLOSET_1 =
+DECORATE_CAGE_1 =
 {
-  prob = 0
+  prob = 1000
+
+  structure =
+  {
+    "111", "111"
+    "111", "1C1"
+    "111", "111"
+  }
+}
+
+
+DECORATE_CAGE_2 =
+{
+  prob = 1000
 
   structure =
   {
