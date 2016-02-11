@@ -5,37 +5,43 @@ WORK IN PROGRESS
 
 +  SHAPE GRAMMARS:
 
-   +  better logic for connections, allow explicit ones in each rule,
-      and detect them automatically when none
-      [ not just to new rooms, but also to new areas/closets/etc ]
+   Q/ can do windows using them?  pictures??
+
+   -  support stairs
+
+   -  support 'T' for closets (item/monster/teleport/etc)
+
+   -  support 'C' for cages
+
+   -  allow TWO conns into a new room (become F1/F2 in CONN object)
+
+   idea:  support 'H' for hallways
 
    +  prune / re-use rooms which remain small, and hallways which
       never end up anywhere else
 
    +  symmetrical rooms
+      +  join mirrored seeds with 'peer' field
+
       +  a way to score "straddling" patterns higher
          [ they are a very good place for some stuff, e.g. exits ]
          [[ only first usage of SPROUT/DECOR needs to score higher ]]
-
-      -  join mirrored seeds with 'peer' field
 
       -  SPROUT pass : try some without a mirrored half
 
       -  SPROUT: if mirrored and new rooms touch/overlap, only create
                  a single room
 
-   idea:  'o' used in matches for "open" part of room (floor/stair/liquid)
+   idea:  'O' used in matches for "open" part of room (floor/stair/liquid)
 
    idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
           Q/ does "anything" included empty space / other rooms?
 
-   idea:  a CYCLE pass (after SPROUT) for multiple paths
+   idea:  CYCLE pass (after SPROUT) for multiple paths
 
    idea:  for CTF, create one big room with "rotate" symmetry
           [ interleave GROW and SPROUT passes ]
           [[ "new_room" becomes "new_area" but acting like a new room ]]
-
-   idea:  GLOBAL rules : applied to whole map after everything else is done
 
 
 -  titlepic backgrounds (current and new) :
