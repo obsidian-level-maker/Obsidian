@@ -2264,6 +2264,7 @@ function Grower_fill_gaps()
 
     if not (T1 and T2) then return false end
     if T1 == T2 then return false end
+    if T1.room or T2.room then return false end
 
 
     if dir == 2 then
