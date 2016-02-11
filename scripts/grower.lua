@@ -1159,9 +1159,16 @@ stderrf("overwrite seed @ %s\n", S.name)
       S = assert(S.top)
     end
 
+    local long = info.w or 1
+
+    if long > 1 and geom.is_straight(info.dir) and transform_is_flippy(T) then
+      local across_dir = transform_dir(T, geom.RIGHT[info.dir])
+      S = S:raw_neighbor(across_dir, long - 1)
+    end
+
     c_out.S = S
     c_out.dir = dir2
-    c_out.long = info.w or 1
+    c_out.long = long
 stderrf("transform_connection: (%d %d) dir %d --> (%d %d) S=%s dir=%d\n",
 info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end

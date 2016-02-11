@@ -142,7 +142,7 @@ SPROUT_1 =
 
   new_room =
   {
-    conn = { x=2, y=3, w=2, dir=2 }
+    conn = { x=3, y=3, w=2, dir=2 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
@@ -162,9 +162,9 @@ SPROUT_SYMMETRY_TEST =
 
   new_room =
   {
-    conn = { x=2, y=3, w=3, dir=2 }
+    conn = { x=2, y=2, w=3, dir=2 }
 
-    symmetry = { x=3, y=3, dir=2 }
+    symmetry = { x=3, y=2, dir=8 }
   }
 }
 
