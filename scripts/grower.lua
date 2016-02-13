@@ -1965,7 +1965,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
-  if pass == "decorate" then apply_num = 5 end --- rand.pick({0,1,2}) end
+  if pass == "decorate" then apply_num = 2 end --- rand.pick({0,1,2}) end
 
   collect_appropriate_rules()
 

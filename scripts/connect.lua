@@ -188,6 +188,12 @@ function Connect_through_sprout(P)
   C.A1 = assert(E1.S.area)
   C.A2 = assert(E2.S.area)
 
+--[[
+gui.debugf("Creating conn %s from %s --> %s\n", C.name, C.R1.name, C.R2.name)
+gui.debugf("  seed %s  dir:%d  long:%d\n", P.S.name, P.dir, P.long)
+gui.debugf("  area %s(%s) --> %s(%s)\n", C.A1.name, C.A1.mode, C.A2.name, C.A2.mode)
+--]]
+
 
   -- handle split connections
   if P.split then
