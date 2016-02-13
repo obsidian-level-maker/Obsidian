@@ -185,6 +185,30 @@ function Fab_load_all_definitions()
   end
 
 
+  local function kind_from_filename(filename)
+    assert(filename)
+
+    local kind = string.match(filename, "([%w_]+)/")
+
+    if not kind then
+      error("weird prefab filename: " .. tostring(filename))
+    end
+
+    return kind
+  end
+
+
+  local function preprocess_all()
+    table.expand_templates(PREFABS)
+
+    each name,def in PREFABS do
+      if not def.kind then
+        def.kind = kind_from_filename(def.file)
+      end
+    end
+  end
+
+
   ---| Fab_load_all_definitions |---
 
   PREFABS = {}
@@ -192,7 +216,7 @@ function Fab_load_all_definitions()
   visit_dir("prefabs")
 -- visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
 
-  table.expand_templates(PREFABS)
+  preprocess_all()
 end
 
 
@@ -1854,8 +1878,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Fab_match_user_stuff(tab)
-  -- 'tab' can be a skin or a group table.
+function Fab_match_user_stuff(def)
   -- returns a probability multiplier >= 0
 
   local factor = 1
@@ -1876,24 +1899,24 @@ function Fab_match_user_stuff(tab)
     end
   end
 
-  if tab.game  then match(tab.game,  OB_CONFIG.game) end
-  if tab.theme then match(tab.theme, LEVEL.theme_name) end
+  if def.game  then match(def.game,  OB_CONFIG.game) end
+  if def.theme then match(def.theme, LEVEL.theme_name) end
 
-  if tab.engine   then match(tab.engine,   OB_CONFIG.engine) end
-  if tab.playmode then match(tab.playmode, OB_CONFIG.mode) end
+  if def.engine   then match(def.engine,   OB_CONFIG.engine) end
+  if def.playmode then match(def.playmode, OB_CONFIG.mode) end
 
   if factor <= 0 then return 0 end
 
   -- style stuff
 
-  if tab.liquid then
+  if def.liquid then
     factor = factor * style_sel("liquids", 0, 0.25, 1.0, 3.0)
   end
 
-  if tab.style then
-    local list = tab.style
+  if def.style then
+    local list = def.style
     if type(list) != "table" then
-      list = { tab.style }
+      list = { def.style }
     end
 
     each name in list do
@@ -1901,7 +1924,7 @@ function Fab_match_user_stuff(tab)
         error("Unknown style name in prefab def: " .. tostring(name))
       end
 
-      factor = factor * style_sel(name, 0, 0.25, 1.0, 3.0)
+      factor = factor * style_sel(name, 0, 0.25, 1.0, 4.0)
     end
   end
 
@@ -1910,56 +1933,43 @@ end
 
 
 
-function Fab_matching_skins_for_req(env, reqs)
+function Fab_find_matches(env, reqs)
 
-  local function kind_from_filename(name)
-    assert(name)
-
-    local kind = string.match(name, "([%w_]+)/")
-
-    if not kind then
-      error("weird skin filename: " .. tostring(name))
-    end
-
-    return kind
-  end
-
-
-  local function match_size(env_w, skin_w)
-    -- skin defaults to 1
-    if not skin_w then skin_w = 1 end
+  local function match_size(w, env_w)
+    -- prefab skin defaults to 1
+    if not w then w = 1 end
 
     if type(env_w) == "table" then
       if #env_w != 2 or env_w[1] > env_w[2] then
         error("Bad seed range in env table")
       end
 
-      return env_w[1] <= skin_w and skin_w <= env_w[2]
+      return env_w[1] <= w and w <= env_w[2]
     end
 
-    return env_w == skin_w
+    return w == env_w
   end
 
 
-  local function match_size_with_rot(skin, rotate)
+  local function match_size_with_rot(def, rotate)
     if rotate then
-      if env.seed_w and not match_size(env.seed_w, skin.seed_h) then return false end
-      if env.seed_h and not match_size(env.seed_h, skin.seed_w) then return false end
+      if env.seed_w and not match_size(env.seed_w, def.seed_h) then return false end
+      if env.seed_h and not match_size(env.seed_h, def.seed_w) then return false end
     else
-      if env.seed_w and not match_size(env.seed_w, skin.seed_w) then return false end
-      if env.seed_h and not match_size(env.seed_h, skin.seed_h) then return false end
+      if env.seed_w and not match_size(env.seed_w, def.seed_w) then return false end
+      if env.seed_h and not match_size(env.seed_h, def.seed_h) then return false end
     end
 
     return true
   end
 
 
-  local function match_room_kind(env_k, skin_k)
-    if skin_k == "indoor" then
+  local function match_room_kind(def_k, env_k)
+    if def_k == "indoor" then
       return env_k != "outdoor"
     end
 
-    return env_k == skin_k
+    return env_k == def_k
   end
 
 
@@ -1972,75 +1982,75 @@ function Fab_matching_skins_for_req(env, reqs)
   end
 
 
-  local function match_requirements(skin)
+  local function match_requirements(def)
     -- type check
-    local kind = skin.kind or kind_from_filename(skin.file)
+    local kind = assert(def.kind)
 
     if reqs.kind != kind then return 0 end
 
     -- placement check
-    if reqs.where != skin.where then return 0 end
+    if reqs.where != def.where then return 0 end
 
     -- group check
-    if not match_word_or_table(reqs.group, skin.group) then return 0 end
+    if not match_word_or_table(reqs.group, def.group) then return 0 end
 
     -- shape check
-    if not match_word_or_table(reqs.shape, skin.shape) then return 0 end
+    if not match_word_or_table(reqs.shape, def.shape) then return 0 end
 
     -- complexity check
-    if (skin.complexity or 1) > (reqs.max_complexity or 3) then return 0 end
+    if (def.complexity or 1) > (reqs.max_complexity or 3) then return 0 end
 
     -- key and switch check
-    if reqs.key != skin.key then return 0 end
+    if reqs.key != def.key then return 0 end
 
-    if not match_word_or_table(reqs.switch, skin.switch) then return 0 end
+    if not match_word_or_table(reqs.switch, def.switch) then return 0 end
 
     -- hallway stuff
-    if reqs.narrow != skin.narrow then return 0 end
-    if reqs.door   != skin.door   then return 0 end
-    if reqs.secret != skin.secret then return 0 end
+    if reqs.narrow != def.narrow then return 0 end
+    if reqs.door   != def.door   then return 0 end
+    if reqs.secret != def.secret then return 0 end
 
     return 1
   end
 
 
-  local function match_environment(skin)
+  local function match_environment(def)
     -- size check -- seed based
-    if not match_size_with_rot(skin, false) then
+    if not match_size_with_rot(def, false) then
       if not env.can_rotate then return 0 end
-      if not match_size_with_rot(skin, true) then return 0 end
+      if not match_size_with_rot(def, true) then return 0 end
     end
 
     -- size check -- map units
---!!!! FIXME   if not Fab_size_check(skin, env.long, env.deep) then return 0 end
+--!!!! FIXME   if not Fab_size_check(def, env.long, env.deep) then return 0 end
 
     -- building type checks
-    if skin.room then
-      if not match_room_kind(env.room, skin.room) then return 0 end
+    if def.room then
+      if not match_room_kind(def.room, env.room) then return 0 end
     end
 
-    if skin.neighbor then
-      if not match_room_kind(env.neighbor, skin.neighbor) then return 0 end
+    if def.neighbor then
+      if not match_room_kind(def.neighbor, env.neighbor) then return 0 end
     end
 
     -- door check
-    if env.has_door and skin.no_door then return 0 end
+    if env.has_door and def.no_door then return 0 end
 
     -- liquid check
-    if skin.liquid then
+    if def.liquid then
       if not LEVEL.liquid then return 0 end
-      if skin.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
-      if skin.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
+      if def.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
+      if def.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
     end
 
     -- darkness check
-    if skin.dark_map and not LEVEL.is_dark then return 0 end
+    if def.dark_map and not LEVEL.is_dark then return 0 end
 
     return 1
   end
 
 
-  ---| Fab_matching_skins_for_req |---
+  ---| Fab_find_matches |---
 
   assert(reqs.kind)
 
@@ -2053,7 +2063,7 @@ function Fab_matching_skins_for_req(env, reqs)
     -- game, theme (etc) check
     local prob = Fab_match_user_stuff(def)
 
-    prob = prob * (skin.prob or 50) * (reqs.prob_mul or 1)
+    prob = prob * (def.prob or 50) * (reqs.prob_mul or 1)
 
     if prob > 0 then
       list[name] = prob
@@ -2065,14 +2075,14 @@ end
 
 
 
-function Fab_match_list(env, req_list)
+function Fab_matches_against_list(env, req_list)
   local list = {}
 
   each reqs in req_list do
-    local list2 = Fab_matching_skins_for_req(env, reqs)
+    local list2 = Fab_find_matches(env, reqs)
 
-    -- ensure earlier matches are kept (override later ones)
-    list = table.merge(list2, list)
+    -- keep the earliest matches (they override later matches)
+    table.merge_missing(list, list2)
   end
 
   return list
@@ -2081,7 +2091,7 @@ end
 
 
 function Fab_pick(env, req_list)
-  local list = Fab_match_list(env, req_list)
+  local list = Fab_matches_against_list(env, req_list)
 
 if DEBUG_MULTI_SKIN then
    DEBUG_MULTI_SKIN = nil
