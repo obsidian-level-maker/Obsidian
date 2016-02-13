@@ -2050,7 +2050,7 @@ function Fab_find_matches(env, reqs)
 
   assert(reqs.kind)
 
-  local list = { }
+  local tab = { }
 
   each name,def in GAME.PREFABS do
     if match_requirements(def) <= 0 then continue end
@@ -2062,47 +2062,41 @@ function Fab_find_matches(env, reqs)
     prob = prob * (def.prob or 50) * (reqs.prob_mul or 1)
 
     if prob > 0 then
-      list[name] = prob
+      tab[name] = prob
     end
   end
 
-  return list
+  return tab
 end
 
 
 
-function Fab_matches_against_list(env, req_list)
-  local list = {}
+function Fab_pick(env, reqs)
+  local tab = {}
 
-  each reqs in req_list do
-    local list2 = Fab_find_matches(env, reqs)
+  while reqs do
+    local tab2 = Fab_find_matches(env, reqs)
 
     -- keep the earliest matches (they override later matches)
-    table.merge_missing(list, list2)
+    table.merge_missing(tab, tab2)
+
+    reqs = reqs.alt_req
   end
-
-  return list
-end
-
-
-
-function Fab_pick(env, req_list)
-  local list = Fab_matches_against_list(env, req_list)
 
 if DEBUG_MULTI_SKIN then
    DEBUG_MULTI_SKIN = nil
-   stderrf("\n\nDEBUG MULTI SKIN = \n%s\n\n", table.tostr(list))
+   stderrf("\n\nDEBUG MULTI SKIN = \n%s\n\n", table.tostr(tab))
 end
 
-  if table.empty(list) then
+  if table.empty(tab) then
     gui.debugf("Fab_pick:\n")
     gui.debugf("env   = \n%s\n", table.tostr(env))
-    gui.debugf("reqs1 = \n%s\n", table.tostr(req_list[1]))
+    gui.debugf("reqs1 = \n%s\n", table.tostr(reqs))
 
-    error("No matching prefabs for: " .. req_list[1].kind)
+    error("No matching prefabs for: " .. reqs.kind)
   end
 
-  local name = rand.key_by_probs(list)
+  local name = rand.key_by_probs(tab)
 
   return assert(GAME.PREFABS[name])
 end
