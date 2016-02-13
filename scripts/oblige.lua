@@ -623,9 +623,9 @@ function ob_load_all_games()
     error("Failed to scan 'games' directory")
   end
 
-  if OB_CONFIG.onlygame then
-    gui.printf("Only loading one game: '%s'\n", OB_CONFIG.onlygame)
-    ob_load_game(OB_CONFIG.onlygame)
+  if OB_CONFIG.only_game then
+    gui.printf("Only loading one game: '%s'\n", OB_CONFIG.only_game)
+    ob_load_game(OB_CONFIG.only_game)
   else
     each game in list do
       ob_load_game(game)

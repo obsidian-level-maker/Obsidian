@@ -869,8 +869,8 @@ function Levels_make_level(LEV)
   local total = #GAME.levels
 
   -- debugging aid : ability to build only a particular level
-  if OB_CONFIG.onlymap and
-     string.lower(OB_CONFIG.onlymap) != string.lower(LEV.name)
+  if OB_CONFIG.only_map and
+     string.lower(OB_CONFIG.only_map) != string.lower(LEV.name)
   then
     gui.printf("\nSkipping level: %s....\n\n", LEV.name)
     return
