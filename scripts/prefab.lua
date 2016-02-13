@@ -1883,20 +1883,29 @@ function Fab_match_user_stuff(def)
 
   local factor = 1
 
-  local function match(field, user)
-    if type(field) == "table" then
-      local v = field[user]
-      if not v then v = field["other"] or 0 end
+  local function match(def_k, user)
+    if type(def_k) == "table" then
+      local v = def_k[user]
+      if not v then v = def_k["other"] or 0 end
       factor = factor * v
-
-    else
-      if string.sub(field, 1, 1) == '!' then
-        field = string.sub(field, 2)
-        if field == user then factor = 0 end
-      else
-        if field != user then factor = 0 end
-      end
+      return
     end
+
+    -- negated check?
+    if string.sub(def_k, 1, 1) == '!' then
+      if string.sub(def_k, 2) == user then factor = 0 end
+      return
+    end
+
+    if def_k != user then factor = 0 end
+  end
+
+  local function match_style(style)
+    if not STYLE[name] then
+      error("Unknown style name in prefab def: " .. tostring(name))
+    end
+
+    factor = factor * style_sel(name, 0, 0.25, 1.0, 4.0)
   end
 
   if def.game  then match(def.game,  OB_CONFIG.game) end
@@ -1907,24 +1916,15 @@ function Fab_match_user_stuff(def)
 
   if factor <= 0 then return 0 end
 
-  -- style stuff
-
-  if def.liquid then
-    factor = factor * style_sel("liquids", 0, 0.25, 1.0, 3.0)
-  end
+  -- style checks...
 
   if def.style then
-    local list = def.style
-    if type(list) != "table" then
-      list = { def.style }
-    end
-
-    each name in list do
-      if not STYLE[name] then
-        error("Unknown style name in prefab def: " .. tostring(name))
+    if type(def.style) == "table" then
+      each s in def.style do
+        match_style(s)
       end
-
-      factor = factor * style_sel(name, 0, 0.25, 1.0, 4.0)
+    else
+      match_style(def.style)
     end
   end
 
@@ -1953,11 +1953,11 @@ function Fab_find_matches(env, reqs)
 
   local function match_size_with_rot(def, rotate)
     if rotate then
-      if env.seed_w and not match_size(env.seed_w, def.seed_h) then return false end
-      if env.seed_h and not match_size(env.seed_h, def.seed_w) then return false end
+      if env.seed_w and not match_size(def.seed_h, env.seed_w) then return false end
+      if env.seed_h and not match_size(def.seed_w, env.seed_h) then return false end
     else
-      if env.seed_w and not match_size(env.seed_w, def.seed_w) then return false end
-      if env.seed_h and not match_size(env.seed_h, def.seed_h) then return false end
+      if env.seed_w and not match_size(def.seed_w, env.seed_w) then return false end
+      if env.seed_h and not match_size(def.seed_h, env.seed_h) then return false end
     end
 
     return true
@@ -1969,16 +1969,16 @@ function Fab_find_matches(env, reqs)
       return env_k != "outdoor"
     end
 
-    return env_k == def_k
+    return def_k == env_k
   end
 
 
-  local function match_word_or_table(req, tab)
-    if type(tab) == "table" then
-      return tab[req] and tab[req] > 0
-    else
-      return req == tab
+  local function match_word_or_table(def_k, req_k)
+    if type(def_k) == "table" then
+      return (def_k[req_k] or 0) > 0
     end
+
+    return def_k == req_k
   end
 
 
@@ -1989,24 +1989,20 @@ function Fab_find_matches(env, reqs)
     if reqs.kind != kind then return 0 end
 
     -- placement check
-    if reqs.where != def.where then return 0 end
+    if def.where != reqs.where then return 0 end
 
     -- group check
-    if not match_word_or_table(reqs.group, def.group) then return 0 end
+    if not match_word_or_table(def.group, reqs.group) then return 0 end
 
     -- shape check
-    if not match_word_or_table(reqs.shape, def.shape) then return 0 end
-
-    -- complexity check
-    if (def.complexity or 1) > (reqs.max_complexity or 3) then return 0 end
+    if not match_word_or_table(def.shape, reqs.shape) then return 0 end
 
     -- key and switch check
     if reqs.key != def.key then return 0 end
 
-    if not match_word_or_table(reqs.switch, def.switch) then return 0 end
+    if not match_word_or_table(def.switch, reqs.switch) then return 0 end
 
     -- hallway stuff
-    if reqs.narrow != def.narrow then return 0 end
     if reqs.door   != def.door   then return 0 end
     if reqs.secret != def.secret then return 0 end
 
@@ -2033,8 +2029,8 @@ function Fab_find_matches(env, reqs)
       if not match_room_kind(def.neighbor, env.neighbor) then return 0 end
     end
 
-    -- door check
-    if env.has_door and def.no_door then return 0 end
+    -- door check [WTF?]
+    if def.no_door and env.has_door then return 0 end
 
     -- liquid check
     if def.liquid then
