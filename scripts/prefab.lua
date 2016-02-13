@@ -237,7 +237,7 @@ function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
     G.size2 = G.high2 - G.low2
 
     return { G }
-  
+
   elseif list == "left" or list == "bottom" then
     list = { 0, 1 }
 
@@ -382,7 +382,7 @@ function Fab_determine_bbox(fab)
 
     each C in B do
 
-      if C.x then 
+      if C.x then
         if not x1 then
           x1, y1 = C.x, C.y
           x2, y2 = C.x, C.y
@@ -443,7 +443,7 @@ function Fab_transform_XY(fab, T)
     end
   end
 
-  
+
   local function entity_xy(E)
     if E.x then
       E.x, E.y = Trans.apply_xy(E.x, E.y)
@@ -1848,5 +1848,256 @@ function Fabricate(room, def, T, skins)
   if room then
     Room_distribute_spots(room, Fab_process_spots(fab))
   end
+end
+
+
+------------------------------------------------------------------------
+
+
+function Fab_match_user_stuff(tab)
+  -- 'tab' can be a skin or a group table.
+  -- returns a probability multiplier >= 0
+
+  local factor = 1
+
+  local function match(field, user)
+    if type(field) == "table" then
+      local v = field[user]
+      if not v then v = field["other"] or 0 end
+      factor = factor * v
+
+    else
+      if string.sub(field, 1, 1) == '!' then
+        field = string.sub(field, 2)
+        if field == user then factor = 0 end
+      else
+        if field != user then factor = 0 end
+      end
+    end
+  end
+
+  if tab.game  then match(tab.game,  OB_CONFIG.game) end
+  if tab.theme then match(tab.theme, LEVEL.theme_name) end
+
+  if tab.engine   then match(tab.engine,   OB_CONFIG.engine) end
+  if tab.playmode then match(tab.playmode, OB_CONFIG.mode) end
+
+  if factor <= 0 then return 0 end
+
+  -- style stuff
+
+  if tab.liquid then
+    factor = factor * style_sel("liquids", 0, 0.25, 1.0, 3.0)
+  end
+
+  if tab.style then
+    local list = tab.style
+    if type(list) != "table" then
+      list = { tab.style }
+    end
+
+    each name in list do
+      if not STYLE[name] then
+        error("Unknown style name in prefab def: " .. tostring(name))
+      end
+
+      factor = factor * style_sel(name, 0, 0.25, 1.0, 3.0)
+    end
+  end
+
+  return factor
+end
+
+
+
+function Fab_matching_skins_for_req(env, reqs)
+
+  local function kind_from_filename(name)
+    assert(name)
+
+    local kind = string.match(name, "([%w_]+)/")
+
+    if not kind then
+      error("weird skin filename: " .. tostring(name))
+    end
+
+    return kind
+  end
+
+
+  local function match_size(env_w, skin_w)
+    -- skin defaults to 1
+    if not skin_w then skin_w = 1 end
+
+    if type(env_w) == "table" then
+      if #env_w != 2 or env_w[1] > env_w[2] then
+        error("Bad seed range in env table")
+      end
+
+      return env_w[1] <= skin_w and skin_w <= env_w[2]
+    end
+
+    return env_w == skin_w
+  end
+
+
+  local function match_size_with_rot(skin, rotate)
+    if rotate then
+      if env.seed_w and not match_size(env.seed_w, skin.seed_h) then return false end
+      if env.seed_h and not match_size(env.seed_h, skin.seed_w) then return false end
+    else
+      if env.seed_w and not match_size(env.seed_w, skin.seed_w) then return false end
+      if env.seed_h and not match_size(env.seed_h, skin.seed_h) then return false end
+    end
+
+    return true
+  end
+
+
+  local function match_room_kind(env_k, skin_k)
+    if skin_k == "indoor" then
+      return env_k != "outdoor"
+    end
+
+    return env_k == skin_k
+  end
+
+
+  local function match_word_or_table(req, tab)
+    if type(tab) == "table" then
+      return tab[req] and tab[req] > 0
+    else
+      return req == tab
+    end
+  end
+
+
+  local function match_requirements(skin)
+    -- type check
+    local kind = skin.kind or kind_from_filename(skin.file)
+
+    if reqs.kind != kind then return 0 end
+
+    -- placement check
+    if reqs.where != skin.where then return 0 end
+
+    -- group check
+    if not match_word_or_table(reqs.group, skin.group) then return 0 end
+
+    -- shape check
+    if not match_word_or_table(reqs.shape, skin.shape) then return 0 end
+
+    -- complexity check
+    if (skin.complexity or 1) > (reqs.max_complexity or 3) then return 0 end
+
+    -- key and switch check
+    if reqs.key != skin.key then return 0 end
+
+    if not match_word_or_table(reqs.switch, skin.switch) then return 0 end
+
+    -- hallway stuff
+    if reqs.narrow != skin.narrow then return 0 end
+    if reqs.door   != skin.door   then return 0 end
+    if reqs.secret != skin.secret then return 0 end
+
+    return 1
+  end
+
+
+  local function match_environment(skin)
+    -- size check -- seed based
+    if not match_size_with_rot(skin, false) then
+      if not env.can_rotate then return 0 end
+      if not match_size_with_rot(skin, true) then return 0 end
+    end
+
+    -- size check -- map units
+--!!!! FIXME   if not Fab_size_check(skin, env.long, env.deep) then return 0 end
+
+    -- building type checks
+    if skin.room then
+      if not match_room_kind(env.room, skin.room) then return 0 end
+    end
+
+    if skin.neighbor then
+      if not match_room_kind(env.neighbor, skin.neighbor) then return 0 end
+    end
+
+    -- door check
+    if env.has_door and skin.no_door then return 0 end
+
+    -- liquid check
+    if skin.liquid then
+      if not LEVEL.liquid then return 0 end
+      if skin.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
+      if skin.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
+    end
+
+    -- darkness check
+    if skin.dark_map and not LEVEL.is_dark then return 0 end
+
+    return 1
+  end
+
+
+  ---| Fab_matching_skins_for_req |---
+
+  assert(reqs.kind)
+
+  local list = { }
+
+  each name,def in GAME.PREFABS do
+    if match_requirements(def) <= 0 then continue end
+    if match_environment (def) <= 0 then continue end
+
+    -- game, theme (etc) check
+    local prob = Fab_match_user_stuff(def)
+
+    prob = prob * (skin.prob or 50) * (reqs.prob_mul or 1)
+
+    if prob > 0 then
+      list[name] = prob
+    end
+  end
+
+  return list
+end
+
+
+
+function Fab_match_list(env, req_list)
+  local list = {}
+
+  each reqs in req_list do
+    local list2 = Fab_matching_skins_for_req(env, reqs)
+
+    -- ensure earlier matches are kept (override later ones)
+    list = table.merge(list2, list)
+  end
+
+  return list
+end
+
+
+
+function Fab_pick(env, req_list)
+  local list = Fab_match_list(env, req_list)
+
+if DEBUG_MULTI_SKIN then
+   DEBUG_MULTI_SKIN = nil
+   stderrf("\n\nDEBUG MULTI SKIN = \n%s\n\n", table.tostr(list))
+end
+
+  if table.empty(list) then
+    gui.debugf("Fab_pick:\n")
+    gui.debugf("env   = \n%s\n", table.tostr(env))
+    gui.debugf("reqs1 = \n%s\n", table.tostr(req_list[1]))
+
+    error("No matching prefabs for: " .. req_list[1].kind)
+  end
+
+  local name = rand.key_by_probs(list)
+
+  return assert(GAME.PREFABS[name])
 end
 
