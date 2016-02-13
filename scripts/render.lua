@@ -1135,6 +1135,53 @@ end
 
 
 
+function Render_large_prefab(A)
+  local def
+  local skin
+
+
+  local function do_cage()
+    local env =
+    {
+      seed_w = 1
+      seed_h = 1
+    }
+
+    if A.room then
+      env = A.room.kind
+    end
+
+    local reqs =
+    {
+      kind  = "cage"
+      where = "area"
+    }
+
+    def = Fab_pick(env, reqs)
+
+    skin = {}
+  end
+  
+
+  if A.mode == "cage"   or true then --FIXME
+    do_cage()
+  end
+
+
+  local S1 = A.seeds[1]
+  local S2 = S1
+
+  local floor_h = 77  --FIXME !!!!
+
+  local dir = 2  --FIXME
+
+  local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, floor_h, dir)
+
+  Fabricate(A.room, def, T, { skin })
+end
+
+
+
 function Render_area(A)
   -- stairwells are special little butterflies...
   if A.is_stairwell then
@@ -1145,6 +1192,11 @@ function Render_area(A)
   each E in A.edges do
     assert(E.area == A)
     Render_edge(E)
+  end
+
+  if A.large_prefab then
+    Render_large_prefab(A)
+    return
   end
 
   each S in A.seeds do
