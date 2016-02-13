@@ -66,7 +66,7 @@ GROW_1 =
 
 GROW_DIAGTEST_1 =
 {
-  prob = 50
+  prob = 5
 
   structure =
   {
@@ -82,7 +82,7 @@ GROW_DIAGTEST_1 =
 
 GROW_DIAGTEST_2 =
 {
-  prob = 400
+  prob = 40
 
   structure =
   {
@@ -115,7 +115,7 @@ GROW_MIR_TEST =
 
 GROW_NEWAREA_1 =
 {
-  prob = 150
+  prob = 15
 
   structure =
   {
@@ -162,7 +162,7 @@ SPROUT_SYMMETRY_TEST =
 
   new_room =
   {
-    conn = { x=2, y=2, w=3, dir=2 }
+    conn = { x=4, y=2, w=3, dir=2 }
 
     symmetry = { x=3, y=2, dir=8 }
   }
@@ -248,7 +248,7 @@ SPROUT_HALL_1 =
 
 DECORATE_CAGE_1 =
 {
-  prob = 1000
+  prob = 5000
 
   structure =
   {
