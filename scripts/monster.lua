@@ -1740,16 +1740,19 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function cage_palette(what, num_kinds)
+  local function cage_palette(what, num_kinds, room_pal)
     -- what is either "cage" or "trap"
 
     local list = {}
 
     each mon,info in GAME.MONSTERS do
-      local prob = prob_for_mon(mon)
+      local prob = prob_for_mon(mon, what)
 
       if what == "cage" then prob = prob * (info.cage_factor or 1) end
       if what == "trap" then prob = prob * (info.trap_factor or 1) end
+
+      -- prefer monsters not in the room palette
+      if room_pal[mon] then prob = prob / 10 end
 
       if prob > 0 then
         list[mon] = prob
@@ -1767,46 +1770,27 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       list[mon] = nil
     end
 
+    -- FIXME: pick a backup with small size, prob / 100
+
     return palette
   end
 
 
-  local function decide_cage_monster(spot, what, room_pal, used_mons)
+  local function decide_cage_monster(spot, palette)
     -- Note: this function is used for traps too
 
-    -- FIXME: decide cage_palette EARLIER (before laying out the room)
+    local pal2 = {}
 
-    local list = {}
-
-    local used_num = table.size(used_mons)
-    if used_num > 4 then used_num = 4 end
-
-    each mon,info in GAME.MONSTERS do
-      local prob = prob_for_mon(mon, spot.kind)
-
-      if STYLE.mon_variety == "none" and not LEVEL.global_pal[mon] then continue end
-
-      if mon_fits(mon, spot) <= 0 then continue end
-
-      -- prefer monsters not in the room palette
-      if room_pal[mon] then prob = prob / 100 end
-
-      -- prefer previously used monsters
-      if used_mons[mon] then
-        prob = prob * CAGE_REUSE_FACTORS[used_num]
-      end
-
-      prob = prob * (info.cage_factor or 1)
-
-      if prob > 0 then
-        list[mon] = prob
+    each mon,prob in palette do
+      if mon_fits(mon, spot) > 0 then
+        pal2[mon] = prob
       end
     end
 
     -- Ouch : cage will be empty
-    if table.empty(list) then return nil end
+    if table.empty(pal2) then return nil end
 
-    return rand.key_by_probs(list)
+    return rand.key_by_probs(pal2)
   end
 
 
@@ -1867,24 +1851,17 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function fill_cages(spot_list, what)
-    -- used for traps too!
+  -- used for traps too!
+  local function fill_a_cage(cage, palette)
+    local what = assert(cage.kind)
 
-    if table.empty(spot_list) then return end
+gui.debugf("fill_a_cage : palette =\n%s\n", table.tostr(palette))
+    each spot in cage.mon_spots do
+      local mon = decide_cage_monster(spot, palette)
 
-    -- FIXME : determine this
-    local num_kinds = 3
-
-    local palette = cage_palette(what, num_kinds)
-
-    local used_mons = {}
-
-    each spot in spot_list do
-      local mon = decide_cage_monster(spot, what, palette, used_mons)
-
+gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
       if mon then
         fill_cage_area(mon, what, spot)
-        used_mons[mon] = 1
       end
     end
   end
@@ -1973,13 +1950,19 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       fill_monster_map(palette, barrel_chance)
     end
 
+    -- TODO : determine 'num_kinds' param properly
+    local cage_pal = cage_palette("cage", 2, palette)
+    local trap_pal = cage_palette("trap", 2, palette)
+
     each cage in R.cages do
 gui.debugf("FILLING CAGE in %s\n", R.name)
-      fill_cages(cage.mon_spots, "cage")
+      cage.kind = "cage"
+      fill_a_cage(cage, cage_pal)
     end
 
     each trap in R.traps do
-      fill_cages(trap.mon_spots, "trap")
+      trap.kind = "trap"
+      fill_a_cage(trap, trap_pal)
     end
   end
 
