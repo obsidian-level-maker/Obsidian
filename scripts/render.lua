@@ -1139,6 +1139,8 @@ function Render_large_prefab(A)
   local def
   local skin
 
+stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
+
 
   local function do_cage()
     local env =
@@ -1167,11 +1169,13 @@ function Render_large_prefab(A)
     do_cage()
   end
 
+  assert(def)
+
 
   local S1 = A.seeds[1]
   local S2 = S1
 
-  local floor_h = 77  --FIXME !!!!
+  local floor_h = assert(A.floor_h)
 
   local dir = 2  --FIXME
 

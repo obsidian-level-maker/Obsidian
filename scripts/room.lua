@@ -2366,6 +2366,8 @@ function Room_floor_ceil_heights()
     each A in R.areas do
       if A.mode == "cage" then
         A.floor_h = R.max_floor_h + 48
+
+        A.large_prefab = true
       end
     end
   end

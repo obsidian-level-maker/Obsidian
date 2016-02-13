@@ -199,6 +199,7 @@ function Fab_load_all_definitions()
 
 
   local function preprocess_all()
+    table.name_up(PREFABS)
     table.expand_templates(PREFABS)
 
     each name,def in PREFABS do
@@ -2052,7 +2053,7 @@ function Fab_find_matches(env, reqs)
 
   local tab = { }
 
-  each name,def in GAME.PREFABS do
+  each name,def in PREFABS do
     if match_requirements(def) <= 0 then continue end
     if match_environment (def) <= 0 then continue end
 
@@ -2098,6 +2099,7 @@ end
 
   local name = rand.key_by_probs(tab)
 
-  return assert(GAME.PREFABS[name])
+stderrf("Fab_pick : chose %s\n", tostring(name))
+  return assert(PREFABS[name])
 end
 

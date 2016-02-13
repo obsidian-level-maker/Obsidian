@@ -261,7 +261,7 @@ DECORATE_CAGE_1 =
 
 DECORATE_CAGE_2 =
 {
-  prob = 1000
+  prob =    0
 
   structure =
   {
@@ -270,7 +270,7 @@ DECORATE_CAGE_2 =
   }
 }
 
-
+--[[
 DECORATE_LIQUID_1 =
 {
   prob = 250
@@ -293,7 +293,7 @@ DECORATE_LIQUID_2 =
     "~", "~"
   }
 }
-
+--]]
 
 --- Hallway testing crud ---
 --[[
