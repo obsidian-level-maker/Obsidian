@@ -1885,6 +1885,9 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
   local function add_guarding_monsters()
     if not R.guard_coord then return end
 
+-- FIXME : support guarding closets
+if R.guard_coord.closet then return end
+
     if not R.zone.guard_mon then return end
 
 -- stderrf("add_guarding_monsters '%s' @ %s\n", R.zone.guard_mon, R.name)

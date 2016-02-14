@@ -1188,12 +1188,38 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   end
 
 
+  local function do_exit()
+    local env =
+    {
+      seed_w = 1
+      seed_h = 1
+    }
+
+    if A.room then
+      env = A.room.kind
+    end
+
+    local reqs =
+    {
+      kind  = "exit"
+      where = "closet"
+    }
+
+    def = Fab_pick(env, reqs)
+
+    skin = {}
+  end
+
+
   if A.mode == "cage" then
     do_cage()
 
   elseif A.mode == "closet" then
     if A.closet_kind == "START" then
       do_start()
+
+    elseif A.closet_kind == "LEVEL_EXIT" then
+      do_exit()
 
     else
       -- FIXME

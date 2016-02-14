@@ -181,7 +181,9 @@ end
 
 
   local function evaluate_closet(area)
-    if kind != "START" then return -1 end
+    if not (kind == "START" or kind == "LEVEL_EXIT") then
+      return -1
+    end
 
     -- already used?
     if area.closet_kind then return -1 end

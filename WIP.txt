@@ -3,7 +3,16 @@ WORK IN PROGRESS
 ================
 
 
+!!!  fix facing dir of closets
+
+
 +  SHAPE GRAMMARS:
+
+   -  each level has different factors for all grammar rules
+
+      factor = rand.pick({ 0.1, 0.3, 0.7, 1.0 })
+      if rand.odds(50) then factor = 1 / factor end
+      new_prob = old_prob * factor
 
    idea: have "elements" table indexed by a seed coord
 
