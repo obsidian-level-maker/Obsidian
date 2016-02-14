@@ -1760,6 +1760,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     end
 
     local palette = {}
+    local has_small = false
 
     for i = 1,num_kinds do
       if table.empty(list) then break; end
@@ -1768,9 +1769,23 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       palette[mon] = list[mon]
 
       list[mon] = nil
+
+      if not is_big(mon) then has_small = true end
     end
 
-    -- FIXME: pick a backup with small size, prob / 100
+    -- always have a backup with small size
+    if not has_small then
+      while not table.empty(list) do
+        local mon = rand.key_by_probs(list)
+
+        if not is_big(mon) then
+          palette[mon] = list[mon] / 50
+          break;
+        end
+
+        list[mon] = nil
+      end
+    end
 
     return palette
   end
