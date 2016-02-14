@@ -4,8 +4,8 @@
 
 PREFABS.Trap_1 =
 {
-  file   = "cage/trap_1.wad"
-  where  = "area"
+  file   = "trap/trap_1.wad"
+  where  = "closet"
 --shape  = "T"
 
   seed_w = 1

@@ -1156,7 +1156,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     local reqs =
     {
       kind  = "cage"
-      where = "area"
+      where = "cage"
     }
 
     def = Fab_pick(env, reqs)
@@ -1165,8 +1165,10 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   end
   
 
-  if A.mode == "cage"   or true then --FIXME
+  if A.mode == "cage" then
     do_cage()
+  else
+    error("Unsupported prefab kind: " .. tostring(A.mode))
   end
 
   assert(def)
