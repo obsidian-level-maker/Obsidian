@@ -804,6 +804,13 @@ end
 
 
 function simple_wall_edge(A)
+  -- do not clobber certain areas
+  if A.mode == "stairwell" or
+     (A.mode == "closet" and A.closet_kind)
+  then
+    return { kind = "nothing", area = A }
+  end
+
   return
   {
     kind = "wall"
