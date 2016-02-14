@@ -180,6 +180,36 @@ end
   end
 
 
+  local function evaluate_closet(area)
+    if kind != "START" then return -1 end
+
+    -- already used?
+    if area.closet_kind then return -1 end
+
+    -- OK
+    return 9999
+  end
+
+
+  local function do_exclusions(spot)
+    local x1 = spot.x - 76
+    local y1 = spot.y - 76
+    local x2 = spot.x + 76
+    local y2 = spot.y + 76
+
+    -- no monsters near start spot or teleporters
+    -- Fixme: do this later (for chunks)
+    if kind == "START" then
+      R:add_exclusion("empty",     x1, y1, x2, y2, 96)
+      R:add_exclusion("nonfacing", x1, y1, x2, y2, 512)
+
+    elseif kind == "TELEPORTER" then
+      R:add_exclusion("empty",     x1, y1, x2, y2, 144)
+      R:add_exclusion("nonfacing", x1, y1, x2, y2, 384)
+    end
+  end
+
+
   ---| Layout_spot_for_wotsit |---
 
   if R.mirror_x and R.tw >= 3 then bonus_x = int((R.tx1 + R.tx2) / 2) end
@@ -209,37 +239,39 @@ end
     end
   end
 
+  -- now try closets
+  each area in R.areas do
+    if area.mode == "closet" then
+      local score = evaluate_closet(area)
+
+      if score > best_score then
+        best = { closet=area }
+        best_score = score
+      end
+    end
+  end
 
 
   --- OK ---
 
   local spot = assert(best)
 
+  if spot.closet then
+    -- mark closet area as used
+    spot.closet.closet_kind = kind
+    spot.area = spot.closet
 
-  -- never use it again
-  table.kill_elem(list, spot)
+  else
+    -- never use it again
+    table.kill_elem(list, spot)
 
-  spot.content_kind = kind
-  
-  table.insert(R.importants, spot)
+    spot.content_kind = kind
 
+    table.insert(R.importants, spot)
 
-  local x1 = spot.x - 76
-  local y1 = spot.y - 76
-  local x2 = spot.x + 76
-  local y2 = spot.y + 76
-
-  -- no monsters near start spot or teleporters
-  -- FIXME: do this later (for chunks)
-  if kind == "START" then
-    R:add_exclusion("empty",     x1, y1, x2, y2, 96)
-    R:add_exclusion("nonfacing", x1, y1, x2, y2, 512)
-
-  elseif kind == "TELEPORTER" then
-    R:add_exclusion("empty",     x1, y1, x2, y2, 144)
-    R:add_exclusion("nonfacing", x1, y1, x2, y2, 384)
+    --TODO support closets here too
+    do_exclusions(spot)
   end
-
 
   return spot
 end

@@ -1163,10 +1163,43 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
     skin = {}
   end
-  
+
+
+  local function do_start()
+    local env =
+    {
+      seed_w = 1
+      seed_h = 1
+    }
+
+    if A.room then
+      env = A.room.kind
+    end
+
+    local reqs =
+    {
+      kind  = "start"
+      where = "closet"
+    }
+
+    def = Fab_pick(env, reqs)
+
+    skin = {}
+  end
+
 
   if A.mode == "cage" then
     do_cage()
+
+  elseif A.mode == "closet" then
+    if A.closet_kind == "START" then
+      do_start()
+
+    else
+      -- FIXME
+      do return end
+    end
+
   else
     error("Unsupported prefab kind: " .. tostring(A.mode))
   end
@@ -1200,7 +1233,7 @@ function Render_area(A)
     Render_edge(E)
   end
 
-  if A.rect_info and A.mode != "closet" then
+  if A.rect_info then
     Render_large_prefab(A)
     return
   end
