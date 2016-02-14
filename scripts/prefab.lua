@@ -91,11 +91,11 @@ WADFAB_ENTITIES =
   [8116] = { kind="flyer", r= 64 }
   [8118] = { kind="flyer", r=128 }
 
-  [8122] = { kind="caged", r= 20 }
-  [8123] = { kind="caged", r= 32 }
-  [8124] = { kind="caged", r= 48 }
-  [8126] = { kind="caged", r= 64 }
-  [8128] = { kind="caged", r=128 }
+  [8122] = { kind="cage", r= 20 }
+  [8123] = { kind="cage", r= 32 }
+  [8124] = { kind="cage", r= 48 }
+  [8126] = { kind="cage", r= 64 }
+  [8128] = { kind="cage", r=128 }
 
   -- special spots
 
@@ -795,6 +795,8 @@ function Fab_process_spots(fab, room)
   local function process_spot(B)
     local spot = spot_from_brush(B)
 
+gui.debugf("  got spot kind '%s'\n", spot.kind)
+
     local R = assert(room)
 
     if spot.kind == "cage" then
@@ -826,6 +828,8 @@ function Fab_process_spots(fab, room)
 
 
   ---| Fab_process_spots |---
+
+gui.debugf("Fab_process_spots @ %s\n", room and room.name or "???")
 
   --TODO : review this
   if not room then return end

@@ -1183,6 +1183,9 @@ function Room_determine_spots()
 
 
   local function spots_for_area(R, A, mode)
+    -- uses a prefab? [ they provide their own spots ]
+    if A.large_prefab then return end
+
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
     if not mode then mode = A.mode end
 
