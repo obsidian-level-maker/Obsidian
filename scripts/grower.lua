@@ -805,7 +805,7 @@ end
 end
 
 
-function Grower_temp_area(R, mode)
+function Grower_temp_area(R, mode, no_add)
   local A =
   {
     id = alloc_id("gram_area")
@@ -816,6 +816,10 @@ function Grower_temp_area(R, mode)
   }
 
   A.name = string.format("TEMP_AREA_%d", A.id)
+
+  if not no_add then
+    table.insert(R.temp_areas, A)
+  end
 
   return A
 end
@@ -836,7 +840,7 @@ function Grower_add_room(parent_R, is_hallway)
 
   -- always need at least one temp-area
   ROOM.temp_areas = {}
-  ROOM.temp_areas[1] = Grower_temp_area(ROOM, "floor")
+  Grower_temp_area(ROOM, "floor")
 
   -- create a preliminary connection (last room to this one)
 
@@ -1443,6 +1447,21 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
+  local function find_rect(sx, sy)
+    if new_rects then
+      each r in new_rects do
+        if r.x1 <= sx and sx <= r.x2 and
+           r.y1 <= sy and sy <= r.y2
+        then
+          return r
+        end
+      end
+    end
+
+    return nil
+  end
+
+
   local function match_temp_area(E1, A)
     if A.mode != "floor" then return false end
 
@@ -1540,6 +1559,15 @@ stderrf("---> fail\n")
       return
     end
 
+    -- handle special rectangles (stairs, cages, traps)
+    local rect = find_rect(S.sx, S.sy)
+    if rect then
+      assert(rect.area)
+
+      set_seed(S, rect.area)
+      return
+    end
+
     if E2.kind == "area" then
       -- an assertion here usually means the grammar rule uses e.g. '2'
       -- in the output side but not in the input side.
@@ -1554,7 +1582,6 @@ stderrf("\narea_map = \n%s\n", table.tostr(area_map))
 
       if not new_area then
         new_area = Grower_temp_area(R, "floor")
-        table.insert(R.temp_areas, new_area)
       end
 
       set_seed(S, new_area)
@@ -1584,17 +1611,18 @@ stderrf("new_room seed @ %s\n", S.name)
        E2.kind == "liquid"
     then
       if R.temp_areas[E2.kind] == nil then
-         R.temp_areas[E2.kind] = Grower_temp_area(R, E2.kind)
+         R.temp_areas[E2.kind] = Grower_temp_area(R, E2.kind, "no_add")
       end
 
       set_seed(S, R.temp_areas[E2.kind])
       return
     end
 
+    -- this is for 'free-range' cages, heh
     if E2.kind == "cage" then
+error("WTF")
       if not new_cage then
         new_cage = Grower_temp_area(R, "cage")
-        table.insert(R.temp_areas, new_cage)
       end
       set_seed(S, new_cage)
       return
