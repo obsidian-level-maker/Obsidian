@@ -652,14 +652,11 @@ function Grower_preprocess_grammar(grammar)
     -- this also verifies the rectangle is all the same
     mark_part_as_seen(kind, x, y, w, h, seen)
 
-    local info = { x1=x1, y1=y1, x2=x+w-1, y2=y+h-1, kind=kind }
+    local info = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
 
-    local tab_name = kind .. "_list"
+    if not def.rects then def.rects = {} end
 
-    -- create list if not already there
-    if not def[tab_name] then def[tab_name] = { } end
-
-    table.insert(def[tab_name], info)
+    table.insert(def.rects, info)
   end
 
 
@@ -887,6 +884,9 @@ function Grower_grammatical_room(R, pass)
   -- (in symmetrical rooms).
   local sym_token
 
+  -- list of transformed rectangles (copied from cur_rule.rects)
+  local new_rects
+
 
   local function what_in_there(S)
     if not S.temp_area then return "-" end
@@ -1102,6 +1102,21 @@ stderrf("overwrite seed @ %s\n", S.name)
     end
 
     return dir, bottom, top
+  end
+
+
+  local function transform_rect(T, rect)
+    local x1, y1 = transform_coord(T, rect.x1, rect.y1)
+    local x2, y2 = transform_coord(T, rect.x2, rect.y2)
+
+    if x1 > x2 then x1,x2 = x2,x1 end
+    if y1 > y2 then y1,y2 = y2,y1 end
+
+    rect.x1 = x1 ; rect.y1 = y1
+    rect.x2 = x2 ; rect.y2 = y2
+
+    if rect.dir  then rect.dir  = transform_dir(T, rect.dir)  end
+    if rect.dir2 then rect.dir2 = transform_dir(T, rect.dir2) end
   end
 
 
@@ -1717,9 +1732,31 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
+  local function install_create_rects(T)
+    new_rects = {}
+
+    each r in cur_rule.rects do
+      local rect = table.copy(r)
+
+      transform_rect(T, rect)
+
+      assert(rect.kind)
+      rect.area = Grower_temp_area(R, rect.kind)
+      rect.area.grow_rect = rect
+
+      table.insert(new_rects, rect)
+    end
+  end
+
+
   local function pre_install(T)
     new_room = nil
     new_conn = nil
+    new_rects = nil
+
+    if cur_rule.rects then
+      install_create_rects(T)
+    end
   end
 
 
