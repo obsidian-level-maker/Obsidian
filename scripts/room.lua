@@ -1107,51 +1107,6 @@ end
 
 
 
-function Room_distribute_spots(R, list)
-  local seen = {}
-
-  -- TODO : move this into Fab_process_spots()
-
-  each spot in list do
-    seen[spot.kind] = 1
-
---FIXME    if spot.kind == "cage" then
---FIXME      table.insert(R.cage_spots, spot)
---FIXME    elseif spot.kind == "trap" then
---FIXME      table.insert(R.trap_spots, spot)
-    if spot.kind == "pickup" or spot.kind == "big_item" then
-      table.insert(R.item_spots, spot)
-    elseif spot.kind == "important" then
-      table.insert(R.important_spots, spot)
-    else
-      table.insert(R.mon_spots, spot)
-    end
-  end
-
-  -- FIXME : do this ONCE (perhaps in item.lua) !!!
-
-  -- 1. when no big item spots, convert important spots
-  -- 2. when no small item spots, convert monster spots
-
-  each spot in list do
-
-    if not seen["big_item"] and spot.kind == "important" then
-      local new_spot = table.copy(spot)
-      new_spot.kind = "big_item"
-      table.insert(R.item_spots, new_spot)
-    end
-
-    if not seen["pickup"] and spot.kind == "monster" then
-      local new_spot = table.copy(spot)
-      new_spot.kind = "pickup"
-      table.insert(R.item_spots, new_spot)
-    end
-
-  end
-end
-
-
-
 function Room_find_ambush_focus(R)
   -- Note: computes 'entry_coord' too
 

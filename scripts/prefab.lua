@@ -728,10 +728,10 @@ end
 
 
 
-function Fab_process_spots(fab)
+function Fab_process_spots(fab, room)
   -- prefab must be rendered (or ready to render)
 
-  local function add_spot(list, B)
+  local function spot_from_brush(B)
     local x1,y1, x2,y2
     local z1,z2
 
@@ -743,8 +743,7 @@ function Fab_process_spots(fab)
         if C.t then z2 = C.t end
       end
     else
-      -- FIXME: use original brushes (assume quads), break into squares,
-      --        apply the rotated square formula from Trans.apply_spot
+      -- TODO : calc middle point and largest square
       error("Unimplemented: cage spots on rotated prefabs")
     end
 
@@ -762,20 +761,64 @@ function Fab_process_spots(fab)
       x2 = x2, y2 = y2, z2 = z2
     }
 
-    table.insert(list, SPOT)
+    return SPOT
   end
 
-  ---| Fab_process_spots |---
 
-  local list = {}
+  local function distribute_spots(R, list)
+    local seen = {}
 
-  each B in fab.brushes do
-    if B[1].m == "spot" then
-      add_spot(list, B)
+
+    each spot in list do
+      seen[spot.kind] = 1
+
+  --FIXME    if spot.kind == "cage" then
+  --FIXME      table.insert(R.cage_spots, spot)
+  --FIXME    elseif spot.kind == "trap" then
+  --FIXME      table.insert(R.trap_spots, spot)
+      if spot.kind == "pickup" or spot.kind == "big_item" then
+        table.insert(R.item_spots, spot)
+      elseif spot.kind == "important" then
+        table.insert(R.important_spots, spot)
+      else
+        table.insert(R.mon_spots, spot)
+      end
+    end
+
+    -- FIXME : do this ONCE (perhaps in item.lua) !!!
+
+    -- 1. when no big item spots, convert important spots
+    -- 2. when no small item spots, convert monster spots
+
+    each spot in list do
+
+      if not seen["big_item"] and spot.kind == "important" then
+        local new_spot = table.copy(spot)
+        new_spot.kind = "big_item"
+        table.insert(R.item_spots, new_spot)
+      end
+
+      if not seen["pickup"] and spot.kind == "monster" then
+        local new_spot = table.copy(spot)
+        new_spot.kind = "pickup"
+        table.insert(R.item_spots, new_spot)
+      end
+
     end
   end
 
-  return list
+
+  local function process_spot(B)
+  end
+
+
+  ---| Fab_process_spots |---
+
+  each B in fab.brushes do
+    if B[1].m == "spot" then
+      process_spot(B)
+    end
+  end
 end
 
 
@@ -1870,9 +1913,7 @@ function Fabricate(room, def, T, skins)
   Fab_render(fab)
   Fab_render_sky(fab, room, T)
 
-  if room then
-    Room_distribute_spots(room, Fab_process_spots(fab))
-  end
+  Fab_process_spots(fab, room)
 end
 
 
