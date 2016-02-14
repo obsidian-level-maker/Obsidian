@@ -261,7 +261,7 @@ DECORATE_CAGE_FS_1 =
 
 DECORATE_CAGE_SIDE_1 =
 {
-  prob = 2000
+  prob = 0
 
   structure =
   {
@@ -269,6 +269,19 @@ DECORATE_CAGE_SIDE_1 =
     "X11X", "X11X"
   }
 }
+
+
+DECORATE_CLOSET_1 =
+{
+  prob = 2000
+
+  structure =
+  {
+    "...", ".T."
+    "11X", "11X"
+  }
+}
+
 
 --[[
 DECORATE_LIQUID_1 =

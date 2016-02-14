@@ -1200,7 +1200,7 @@ function Render_area(A)
     Render_edge(E)
   end
 
-  if A.rect_info then
+  if A.rect_info and A.mode != "closet" then
     Render_large_prefab(A)
     return
   end
