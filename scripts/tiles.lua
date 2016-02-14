@@ -171,7 +171,7 @@ SPROUT_SYMMETRY_TEST =
 
 SPROUT_DIAG_1 =
 {
-  prob = 100
+  prob = 2
 
   structure =
   {
@@ -197,7 +197,7 @@ SPROUT_DIAG_1 =
 
 SPROUT_DIAG_2 =
 {
-  prob = 100
+  prob = 2
 
   structure =
   {
