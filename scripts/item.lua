@@ -1045,6 +1045,10 @@ function Item_add_pickups()
 
   Item_distribute_stats()
 
+  -- FIXME:
+  -- 1. when no big item spots, convert important spots
+  -- 2. when no small item spots, convert monster spots
+
   -- ensure item spots are fairly small
   each R in LEVEL.rooms do
     R.item_spots = Monster_split_spots(R.item_spots, 25)

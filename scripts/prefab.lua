@@ -731,6 +731,10 @@ end
 function Fab_process_spots(fab, room)
   -- prefab must be rendered (or ready to render)
 
+  local cur_cage
+  local cur_trap
+
+
   local function spot_from_brush(B)
     local x1,y1, x2,y2
     local z1,z2
@@ -765,33 +769,14 @@ function Fab_process_spots(fab, room)
   end
 
 
-  local function distribute_spots(R, list)
+  local function OLD__distribute_spots(R, list)
     local seen = {}
-
 
     each spot in list do
       seen[spot.kind] = 1
-
-  --FIXME    if spot.kind == "cage" then
-  --FIXME      table.insert(R.cage_spots, spot)
-  --FIXME    elseif spot.kind == "trap" then
-  --FIXME      table.insert(R.trap_spots, spot)
-      if spot.kind == "pickup" or spot.kind == "big_item" then
-        table.insert(R.item_spots, spot)
-      elseif spot.kind == "important" then
-        table.insert(R.important_spots, spot)
-      else
-        table.insert(R.mon_spots, spot)
-      end
     end
 
-    -- FIXME : do this ONCE (perhaps in item.lua) !!!
-
-    -- 1. when no big item spots, convert important spots
-    -- 2. when no small item spots, convert monster spots
-
     each spot in list do
-
       if not seen["big_item"] and spot.kind == "important" then
         local new_spot = table.copy(spot)
         new_spot.kind = "big_item"
@@ -803,22 +788,56 @@ function Fab_process_spots(fab, room)
         new_spot.kind = "pickup"
         table.insert(R.item_spots, new_spot)
       end
-
     end
   end
 
 
   local function process_spot(B)
+    local spot = spot_from_brush(B)
+
+    local R = assert(room)
+
+    if spot.kind == "cage" then
+      if not cur_cage then
+        cur_cage = { mon_spots={} }
+      end
+
+      table.insert(cur_cage.mon_spots, spot)
+      return
+    end
+
+    if spot.kind == "trap" then
+      if not cur_trap then
+        cur_trap = { mon_spots={} }
+      end
+
+      table.insert(cur_trap.mon_spots, spot)
+      return
+    end
+
+    if spot.kind == "pickup" or spot.kind == "big_item" then
+      table.insert(R.item_spots, spot)
+    elseif spot.kind == "important" then
+      table.insert(R.important_spots, spot)
+    else
+      table.insert(R.mon_spots, spot)
+    end
   end
 
 
   ---| Fab_process_spots |---
+
+  --TODO : review this
+  if not room then return end
 
   each B in fab.brushes do
     if B[1].m == "spot" then
       process_spot(B)
     end
   end
+
+  if cur_cage then table.insert(room.cages, cur_cage) end
+  if cur_trap then table.insert(room.traps, cur_trap) end
 end
 
 
