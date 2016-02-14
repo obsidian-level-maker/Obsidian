@@ -1184,7 +1184,7 @@ function Room_determine_spots()
 
   local function spots_for_area(R, A, mode)
     -- uses a prefab? [ they provide their own spots ]
-    if A.large_prefab then return end
+    if A.rect_info then return end
 
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
     if not mode then mode = A.mode end
@@ -2323,9 +2323,7 @@ function Room_floor_ceil_heights()
   local function do_cages(R)
     each A in R.areas do
       if A.mode == "cage" then
-        A.floor_h = R.max_floor_h + 48
-
-        A.large_prefab = true
+        A.floor_h = R.max_floor_h
       end
     end
   end

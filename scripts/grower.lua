@@ -759,6 +759,7 @@ function Grower_make_areas(temp_areas)
     local area = AREA_CLASS.new("void")
 
     area.seeds = temp.seeds
+    area.rect_info = temp.rect_info
 
     if temp.room then
       area.mode = temp.mode
@@ -1770,7 +1771,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
       assert(rect.kind)
       rect.area = Grower_temp_area(R, rect.kind)
-      rect.area.grow_rect = rect
+      rect.area.rect_info = rect
 
       table.insert(new_rects, rect)
     end

@@ -1172,12 +1172,12 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   assert(def)
 
 
-  local S1 = A.seeds[1]
-  local S2 = S1
+  local S1 = SEEDS[A.rect_info.x1][A.rect_info.y1]
+  local S2 = SEEDS[A.rect_info.x2][A.rect_info.y2]
 
-  local floor_h = assert(A.floor_h)
+  local floor_h = assert(A.floor_h) + (def.raise_z or 0)
 
-  local dir = 2  --FIXME
+  local dir = A.rect_info.dir or 2
 
   local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, floor_h, dir)
 
@@ -1198,7 +1198,7 @@ function Render_area(A)
     Render_edge(E)
   end
 
-  if A.large_prefab then
+  if A.rect_info then
     Render_large_prefab(A)
     return
   end

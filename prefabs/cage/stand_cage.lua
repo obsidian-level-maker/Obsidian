@@ -16,6 +16,8 @@ PREFABS.Cage_standing1 =
   bound_z1 = 0
   bound_z2 = 120
 
+  raise_z = 40
+
   prob = 200
 }
 

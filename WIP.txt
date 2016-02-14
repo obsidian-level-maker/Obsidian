@@ -5,7 +5,18 @@ WORK IN PROGRESS
 
 +  SHAPE GRAMMARS:
 
+   idea: have "elements" table indexed by a seed coord
+
+      elements =
+      {
+        3_4  = { .... }
+        2_1B = { ... }
+        2_1T = { ... }
+      }
+
    Q/ can do windows using them?  pictures??
+
+   +  allow "free-range cages" (i.e. not using rects / prefabs)
 
    -  support stairs
 
