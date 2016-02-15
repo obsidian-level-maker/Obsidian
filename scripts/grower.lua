@@ -668,7 +668,7 @@ function Grower_preprocess_grammar(grammar)
       x, y = geom.nudge(x, y, 10 - dir)
       if not is_valid(x, y) then return nil end
 
-      E = def.input[x][y]
+      E = def.output[x][y]
     until E.kind != "stair"
 
     -- FIXME : handle "diagonal"
@@ -692,7 +692,7 @@ function Grower_preprocess_grammar(grammar)
     local info = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
 
     if kind == "stair" then
-      local E = def.input[x][y]
+      local E = def.output[x][y]
       info.dir = assert(E.dir)
       info.off_area = determine_stair_source(x, y, E.dir)
     
