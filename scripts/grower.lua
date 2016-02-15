@@ -698,14 +698,17 @@ function Grower_preprocess_grammar(grammar)
 
   ---| Grower_preprocess_grammar |---
 
+  gui.debugf("Grower_preprocess_grammar...\n")
+
   table.name_up(grammar)
 
   table.expand_templates(grammar)
 
   each name,cur_def in grammar do
+    gui.debugf("processing: %s\n", name)
+
     def = cur_def
 
--- stderrf("Grower_preprocess_grammar... %s\n", name)
     convert_structure()
     finalize_structure()
     check_symmetries()

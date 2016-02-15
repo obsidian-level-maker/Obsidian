@@ -268,6 +268,8 @@ DECORATE_CAGE_SIDE_1 =
     "....", ".CC."
     "X11X", "X11X"
   }
+
+  cage = { dir=2 }
 }
 
 
@@ -280,6 +282,8 @@ DECORATE_CLOSET_1 =
     "...", ".T."
     "11X", "11X"
   }
+
+  closet = { dir=2 }
 }
 
 
