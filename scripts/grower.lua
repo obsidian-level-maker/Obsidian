@@ -314,6 +314,13 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
+  local function add_style(name)
+    if not def.styles then def.styles = {} end
+
+    table.add_unique(def.styles, name)
+  end
+
+
   local function check_added_stuff(E)
     if E.kind == "new_room" and not def.new_room then
       def.new_room = { }
@@ -322,6 +329,11 @@ function Grower_preprocess_grammar(grammar)
     if E.kind == "new_area" and not def.new_area then
       def.new_area = { }
     end
+
+    if E.kind == "cage"    then add_style("cages")    end
+    if E.kind == "closet"  then add_style("closets")  end
+    if E.kind == "liquid"  then add_style("liquids")  end
+    if E.kind == "hallway" then add_style("hallways") end
   end
 
 
@@ -653,6 +665,17 @@ function Grower_preprocess_grammar(grammar)
     mark_part_as_seen(kind, x, y, w, h, seen)
 
     local info = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
+
+    if kind == "stair" then
+      local E = def.input[x][y]
+      info.dir = assert(E.dir)
+    
+    else  -- grab "dir" from corresponding table, if present
+          -- TODO : support multiple cages/closets/junctions
+      if def[kind] then
+        table.merge_missing(info, def[kind])
+      end
+    end
 
     if not def.rects then def.rects = {} end
 
