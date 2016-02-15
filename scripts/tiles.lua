@@ -283,7 +283,7 @@ DECORATE_CLOSET_1 =
     "11X", "11X"
   }
 
-  closet = { dir=2 }
+  closet = { dir=2, face_area=1 }
 }
 
 

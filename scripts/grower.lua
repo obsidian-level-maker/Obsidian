@@ -781,23 +781,27 @@ end
 
 
 function Grower_make_areas(temp_areas)
-  each idx,temp in temp_areas do
-    local area = AREA_CLASS.new("void")
+  table.append(LEVEL.all_temps, temp_areas)
 
-    area.seeds = temp.seeds
-    area.rect_info = temp.rect_info
+  each idx,temp in temp_areas do
+    local A = AREA_CLASS.new("void")
+
+    temp.area = A
+
+    A.seeds = temp.seeds
+    A.rect_info = temp.rect_info
 
     if temp.room then
-      area.mode = temp.mode
+      A.mode = temp.mode
 
-      area.svolume = temp.svolume or 0  -- FIXME: can be used too early
+      A.svolume = temp.svolume or 0  -- FIXME: can be used too early
 
-      temp.room:add_area(area)
+      temp.room:add_area(A)
     end
 
     -- install into seeds
-    each S in area.seeds do
-      S.area = area
+    each S in A.seeds do
+      S.area = A
       S.room = temp.room
 
       S.temp_area = nil
@@ -807,12 +811,26 @@ end
 
 
 function Grower_make_all_areas()
+  LEVEL.all_temps = {}
+
   each R in LEVEL.rooms do
     Grower_make_areas(R.temp_areas)
   end
 
   if LEVEL.gap_areas then
     Grower_make_areas(LEVEL.gap_areas)
+  end
+
+  -- resolve references between temp_areas
+
+  each temp in LEVEL.all_temps do
+    if temp.face_area then
+      assert(temp.area)
+      temp.area.face_area = assert(temp.face_area.area)
+stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
+temp.name, temp.face_area.name,
+temp.area.name, temp.area.face_area.name)
+    end
   end
 
   -- sanity check [ no seeds should have a 'temp_area' now... ]
@@ -823,7 +841,7 @@ function Grower_make_all_areas()
     local S = SEEDS[sx][sy]
     if pass == 2 then S = S.top end
 if S and S.temp_area then
-stderrf("FUCKING SHITE : %s\n", tostring(S.temp_area.mode))
+stderrf("OH HELL : %s\n", tostring(S.temp_area.mode))
 end
     if S then assert(not S.temp_area) end
   end
@@ -1798,6 +1816,11 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       assert(rect.kind)
       rect.area = Grower_temp_area(R, rect.kind)
       rect.area.rect_info = rect
+
+      if rect.face_area then
+        rect.area.face_area = assert(area_map[rect.face_area])
+stderrf("install_create_rects in %s : face_area = %s\n", rect.area.name, rect.area.face_area.name)
+      end
 
       table.insert(new_rects, rect)
     end

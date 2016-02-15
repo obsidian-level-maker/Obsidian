@@ -2327,10 +2327,21 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function do_cages(R)
+    each A in R.areas do
+      if A.mode == "cage" then
+        -- TODO : too simplistic, find highest neighbor floor
+        A.floor_h = R.max_floor_h
+      end
+    end
+  end
+
+
   local function do_closets(R)
     each A in R.areas do
-      if A.mode == "cage" or A.mode == "closet" then
-        A.floor_h = R.max_floor_h
+      if A.mode == "closet" then
+        assert(A.face_area)
+        A.floor_h = assert(A.face_area.floor_h)
       end
     end
   end
@@ -2401,6 +2412,7 @@ end
 
     do_liquids(R)
     do_closets(R)
+    do_cages(R)
 
     -- we do hallway porches when all heights are known
     if R.kind == "hallway" then

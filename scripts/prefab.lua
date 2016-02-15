@@ -1454,6 +1454,8 @@ function Fab_load_wad(def)
 
     local filename = assert(def.dir_name) .. "/" .. def.file
 
+    gui.debugf("Loading wad-fab %s / %s\n", def.file, def.map or "*")
+
     -- load the map structures into memory
     -- [ if map is not specified, use "*" to load the first one ]
     gui.wadfab_load(filename, def.map or "*")
