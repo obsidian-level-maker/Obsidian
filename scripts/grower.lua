@@ -1632,28 +1632,14 @@ stderrf("\narea_map = \n%s\n", table.tostr(area_map))
 
     if E2.kind == "new_area" then
       assert(pass != "root")
-
-      if not new_area then
-        new_area = Grower_temp_area(R, "floor")
-      end
+      assert(new_area)
 
       set_seed(S, new_area)
       return
     end
 
     if E2.kind == "new_room" then
-      -- for initial shapes, 'R' is the current room
-      if pass == "root" then
-        new_room = R
-      end
-
-      if not new_room then
-        new_room, new_conn = Grower_add_room(R)
-      end
-
----##  if pass != "root" then
----##    table.insert(check_seeds, S)
----##  end
+      assert(new_room)
 
 stderrf("new_room seed @ %s\n", S.name)
       set_seed(S, new_room.temp_areas[1])
@@ -1825,7 +1811,9 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       rect.area = Grower_temp_area(R, rect.kind)
       rect.area.rect_info = rect
 
-      if rect.face_area then
+      if rect.kind == "stair" then
+        rect.area.face_area = assert(new_area)
+      elseif rect.face_area then
         rect.area.face_area = assert(area_map[rect.face_area])
       end
 
@@ -1842,6 +1830,19 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
     new_room = nil
     new_conn = nil
     new_rects = nil
+
+    -- for initial shapes, 'R' is the current room
+    if pass == "root" then
+      new_room = R
+    else
+      if cur_rule.new_room then
+        new_room, new_conn = Grower_add_room(R)
+      end
+    end
+
+    if cur_rule.new_area and not new_area then
+      new_area = Grower_temp_area(R, "floor")
+    end
 
     if cur_rule.rects then
       install_create_rects(T)
