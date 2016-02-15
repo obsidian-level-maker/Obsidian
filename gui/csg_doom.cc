@@ -1222,7 +1222,7 @@ static int Default_ZA(csg_brush_c *B)
 	if (z2 < EXTREME_H - 100)
 		return z2;
 	
-	if (z1 > EXTREME_H + 100)
+	if (z1 > 100 - EXTREME_H)
 		return z1;
 	
 	return 0;
