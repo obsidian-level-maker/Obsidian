@@ -3,9 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-!!!  fix facing dir of closets
-
-
 +  SHAPE GRAMMARS:
 
    -  each level has different factors for all grammar rules
