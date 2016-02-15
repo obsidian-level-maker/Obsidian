@@ -2,6 +2,10 @@
 #  Eureka definition for OBLIGE prefabs  #
 #----------------------------------------#
 
+# turn off generalized sectors (they prevent large sector types)
+feature gen_types 0
+
+
 #--- TEXTURES and FLATS ---
 
 texturegroup o "Oblige Fab"
