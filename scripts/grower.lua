@@ -831,6 +831,14 @@ stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
 temp.name, temp.face_area.name,
 temp.area.name, temp.area.face_area.name)
     end
+
+    if temp.off_area then
+      assert(temp.area)
+      temp.area.off_area = assert(temp.off_area.area)
+stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
+temp.name, temp.off_area.name,
+temp.area.name, temp.area.off_area.name)
+    end
   end
 
   -- sanity check [ no seeds should have a 'temp_area' now... ]
@@ -1819,7 +1827,10 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
       if rect.face_area then
         rect.area.face_area = assert(area_map[rect.face_area])
-stderrf("install_create_rects in %s : face_area = %s\n", rect.area.name, rect.area.face_area.name)
+      end
+
+      if rect.off_area then
+        rect.area.off_area = assert(area_map[rect.off_area])
       end
 
       table.insert(new_rects, rect)
