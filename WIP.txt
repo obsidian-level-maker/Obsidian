@@ -3,7 +3,19 @@ WORK IN PROGRESS
 ================
 
 
-+  SHAPE GRAMMARS:
+CLOSETS:
+
++  monster trap!
+
+-  item closet
+
+
+
+SHAPE GRAMMARS:
+
+   +  support stairs
+
+   +  junctions!
 
    -  each level has different factors for all grammar rules
 
@@ -23,12 +35,6 @@ WORK IN PROGRESS
    Q/ can do windows using them?  pictures??
 
    +  allow "free-range cages" (i.e. not using rects / prefabs)
-
-   -  support stairs
-
-   -  support 'T' for closets (item/monster/teleport/etc)
-
-   -  support 'C' for cages
 
    -  allow TWO conns into a new room (become F1/F2 in CONN object)
 
@@ -61,14 +67,10 @@ WORK IN PROGRESS
           [[ "new_room" becomes "new_area" but acting like a new room ]]
 
 
+MISC:
+
 -  titlepic backgrounds (current and new) :
    determine ones for official package, put rest in an addon
 
-
 +  face direction for switches
-
-
-!!  some trap doors do not open
-    [ door next-to door thing.... ]
-
 
