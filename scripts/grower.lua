@@ -632,9 +632,16 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function try_neighbor_part(kind, x, y, seen)
+  local function is_valid(x, y)
     if x < 1 or x > def.input.w then return false end
     if y < 1 or y > def.input.h then return false end
+
+    return true
+  end
+
+
+  local function try_neighbor_part(kind, x, y, seen)
+    if not is_valid(x, y) then return false end
 
     return is_contig_part(kind, x, y, seen)
   end
@@ -654,6 +661,24 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
+  local function determine_stair_source(x, y, dir)
+    local E
+
+    repeat
+      x, y = geom.nudge(x, y, 10 - dir)
+      if not is_valid(x, y) then return nil end
+
+      E = def.input[x][y]
+    until E.kind != "stair"
+
+    -- FIXME : handle "diagonal"
+
+    if E.kind != "area" then return nil end
+
+    return E.area
+  end
+
+
   local function get_contiguous_part(kind, x, y, seen)
     local w = 1
     local h = 1
@@ -669,6 +694,7 @@ function Grower_preprocess_grammar(grammar)
     if kind == "stair" then
       local E = def.input[x][y]
       info.dir = assert(E.dir)
+      info.off_area = determine_stair_source(x, y, E.dir)
     
     else  -- grab "dir" from corresponding table, if present
           -- TODO : support multiple cages/closets/junctions
