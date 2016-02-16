@@ -2141,6 +2141,8 @@ end
 function Fab_pick(env, reqs)
   local tab = {}
 
+  local orig_reqs = reqs
+
   while reqs do
     local tab2 = Fab_find_matches(env, reqs)
 
@@ -2158,9 +2160,9 @@ end
   if table.empty(tab) then
     gui.debugf("Fab_pick:\n")
     gui.debugf("env   = \n%s\n", table.tostr(env))
-    gui.debugf("reqs1 = \n%s\n", table.tostr(reqs))
+    gui.debugf("reqs1 = \n%s\n", table.tostr(orig_reqs))
 
-    error("No matching prefabs for: " .. reqs.kind)
+    error("No matching prefabs for: " .. orig_reqs.kind)
   end
 
   local name = rand.key_by_probs(tab)

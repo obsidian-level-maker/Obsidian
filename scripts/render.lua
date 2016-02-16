@@ -1150,7 +1150,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     if A.room then
-      env = A.room.kind
+      env.room = A.room.kind
     end
 
     local reqs =
@@ -1173,7 +1173,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     if A.room then
-      env = A.room.kind
+      env.room = A.room.kind
     end
 
     local reqs =
@@ -1196,13 +1196,36 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     if A.room then
-      env = A.room.kind
+      env.room = A.room.kind
     end
 
     local reqs =
     {
       kind  = "exit"
       where = "closet"
+    }
+
+    def = Fab_pick(env, reqs)
+
+    skin = {}
+  end
+
+
+  local function do_stairs()
+    local env =
+    {
+      seed_w = 1
+      seed_h = 1
+    }
+
+    if A.room then
+      env.room = A.room.kind
+    end
+
+    local reqs =
+    {
+      kind  = "stairs"
+--??  where = "stairs"
     }
 
     def = Fab_pick(env, reqs)
@@ -1225,6 +1248,9 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
       -- FIXME
       do return end
     end
+
+  elseif A.mode == "stair" then
+    do_stairs()
 
   else
     error("Unsupported prefab kind: " .. tostring(A.mode))
