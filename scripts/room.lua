@@ -86,6 +86,7 @@ function ROOM_CLASS.new()
     areas = {}
     seeds = {}
     conns = {}
+    internal_conns = {}
 
     sections = {}
     weapons = {}
@@ -1687,7 +1688,7 @@ function Room_floor_ceil_heights()
 
     A.delta_h = cur_delta_h
 
-    each C in A.room.area_conns do
+    each C in A.room.internal_conns do
       local A2 = areaconn_other(C, A)
       
       -- not connected to this area?
@@ -1726,9 +1727,11 @@ function Room_floor_ceil_heights()
 
 
   local function room_add_steps(R)
-    each C in R.area_conns do
+    each C in R.internal_conns do
       local A1 = C.A1
       local A2 = C.A2
+
+      if C.kind == "stair" then continue end
 
       -- ignore pools
       if A1.pool_hack or A2.pool_hack then continue end
@@ -2372,7 +2375,7 @@ function Room_floor_ceil_heights()
     -- ensure enough vertical room for player to travel between areas
     local SPACE_Z = 80
 
-    each C in R.area_conns do
+    each C in R.internal_conns do
       local min_c = math.max(C.A1.floor_h, C.A2.floor_h) + SPACE_Z
 
       if C.A1.ceil_h < min_c then set_ceil(C.A1, min_c) end

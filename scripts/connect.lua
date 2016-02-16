@@ -386,7 +386,7 @@ end
 
 
 
-function Connect_areas_in_rooms()
+function Connect_areas_in_rooms__OLD()
 
   local function check_internally_connected(R)
     each A in R.areas do

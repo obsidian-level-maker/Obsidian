@@ -823,7 +823,7 @@ function Area_create_rooms()
 
   Area_collect_seeds()
 
-  Connect_areas_in_rooms()
+---###  Connect_areas_in_rooms()
 
 
   gui.printf("Seed Map:\n")

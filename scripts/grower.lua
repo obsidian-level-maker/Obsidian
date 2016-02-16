@@ -806,66 +806,86 @@ end
 
 
 
-function Grower_make_areas(temp_areas)
-  table.append(LEVEL.all_temps, temp_areas)
+function Grower_make_all_areas()
 
-  each idx,temp in temp_areas do
-    local A = AREA_CLASS.new("void")
+  local function make_areas(temp_areas)
+    table.append(LEVEL.all_temps, temp_areas)
 
-    temp.area = A
+    each idx,temp in temp_areas do
+      local A = AREA_CLASS.new("void")
 
-    A.seeds = temp.seeds
-    A.rect_info = temp.rect_info
+      temp.area = A
 
-    if temp.room then
-      A.mode = temp.mode
+      A.seeds = temp.seeds
+      A.rect_info = temp.rect_info
 
-      A.svolume = temp.svolume or 0  -- FIXME: can be used too early
+      if temp.room then
+        A.mode = temp.mode
 
-      temp.room:add_area(A)
-    end
+        A.svolume = temp.svolume or 0  -- FIXME: can be used too early
 
-    -- install into seeds
-    each S in A.seeds do
-      S.area = A
-      S.room = temp.room
+        temp.room:add_area(A)
+      end
 
-      S.temp_area = nil
+      -- install into seeds
+      each S in A.seeds do
+        S.area = A
+        S.room = temp.room
+
+        S.temp_area = nil
+      end
     end
   end
-end
 
 
-function Grower_make_all_areas()
+  local function resolve_references()
+    each temp in LEVEL.all_temps do
+      if temp.face_area then
+        assert(temp.area)
+        temp.area.face_area = assert(temp.face_area.area)
+  stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
+  temp.name, temp.face_area.name,
+  temp.area.name, temp.area.face_area.name)
+      end
+
+      if temp.off_area then
+        assert(temp.area)
+        temp.area.off_area = assert(temp.off_area.area)
+  stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
+  temp.name, temp.off_area.name,
+  temp.area.name, temp.area.off_area.name)
+      end
+    end
+  end
+
+
+  local function resolve_internal_conns()
+    each R in LEVEL.rooms do
+      each C in R.internal_conns do
+        C.A1 = assert(C.TA1.area)
+        C.A2 = assert(C.TA2.area)
+
+        C.TA1 = nil
+        C.TA2 = nil
+      end
+    end
+  end
+
+
+  ---| Grower_make_all_areas |---
+
   LEVEL.all_temps = {}
 
   each R in LEVEL.rooms do
-    Grower_make_areas(R.temp_areas)
+    make_areas(R.temp_areas)
   end
 
   if LEVEL.gap_areas then
-    Grower_make_areas(LEVEL.gap_areas)
+    make_areas(LEVEL.gap_areas)
   end
 
-  -- resolve references between temp_areas
-
-  each temp in LEVEL.all_temps do
-    if temp.face_area then
-      assert(temp.area)
-      temp.area.face_area = assert(temp.face_area.area)
-stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
-temp.name, temp.face_area.name,
-temp.area.name, temp.area.face_area.name)
-    end
-
-    if temp.off_area then
-      assert(temp.area)
-      temp.area.off_area = assert(temp.off_area.area)
-stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
-temp.name, temp.off_area.name,
-temp.area.name, temp.area.off_area.name)
-    end
-  end
+  resolve_references()
+  resolve_internal_conns()
 
   -- sanity check [ no seeds should have a 'temp_area' now... ]
 
@@ -1825,6 +1845,19 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
+  local function add_internal_conn(TA1, TA2)
+    local C =
+    {
+      kind = "direct"
+
+      TA1 = TA1
+      TA2 = TA2
+    }
+
+    table.insert(R.internal_conns, C)
+  end
+
+
   local function install_create_rects(T)
     new_rects = {}
 
@@ -1868,6 +1901,11 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
     if cur_rule.new_area and not new_area then
       new_area = Grower_temp_area(R, "floor")
+
+      local off_area_idx = cur_rule.new_area.off_area or 1
+      local off_area = assert(area_map[off_area_idx])
+
+      add_internal_conn(off_area, new_area)
     end
 
     if cur_rule.rects then
