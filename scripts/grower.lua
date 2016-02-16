@@ -1889,7 +1889,7 @@ gui.debugf("Stair internal conn in %s\n", R.name)
       if rect.kind == "stair" then
         rect.area.face_area = assert(new_area)
         assert(intl_conn)
-        intl_conn.stair_TA = assert(new_area)
+        intl_conn.stair_TA = assert(rect.area)
 
       elseif rect.face_area then
         rect.area.face_area = assert(area_map[rect.face_area])

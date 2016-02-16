@@ -1665,6 +1665,8 @@ function Room_floor_ceil_heights()
     if STYLE.steepness == "more"  then h = h * 1.5 end
     if STYLE.steepness == "heaps" then h = h * 2.0 end
 
+h = 8
+
     -- limit it for now (due to lack of lifts)
     if h > 72 then h = 72 end
 
@@ -1673,6 +1675,11 @@ function Room_floor_ceil_heights()
     else
       return from_h - h
     end
+  end
+
+
+  local function pick_stair_delta_h(from_h, up_chance)
+    return 32
   end
 
 
@@ -1696,7 +1703,25 @@ function Room_floor_ceil_heights()
 
       assert(A2.room == A.room)
 
-      if not A2.delta_h then
+      if A2.delta_h then
+        if C.kind == "stair" and not C.stair_area.delta_h then
+          C.stair_area.delta_h = math.min(A.delta_h, A2.delta_h)
+        end
+
+        continue
+      end
+
+      if C.kind == "stair" then
+        assert(C.stair_area)
+
+        area_assign_delta(A2, up_chance, pick_stair_delta_h(cur_delta_h, up_chance))
+
+stderrf("Visiting stair in %s\n", C.stair_area.name)
+        C.stair_area.delta_h = math.min(A.delta_h, A2.delta_h)
+
+      else
+        assert(C.kind == "direct")
+
         area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))
       end
     end
@@ -1750,7 +1775,7 @@ function Room_floor_ceil_heights()
 
   local function process_room_flat(R, entry_area)
     each A in R.areas do
-      if A.mode == "floor" then
+      if A.mode == "floor" or A.mode == "stair" then
         set_floor(A, R.entry_h)
       end
     end
@@ -1791,12 +1816,13 @@ function Room_floor_ceil_heights()
     if entry_area then adjust_h = entry_area.delta_h end
 
     each A in R.areas do
-      if A.mode == "floor" and A.delta_h then
+      if (A.mode == "floor" or A.mode == "stair") and A.delta_h then
         -- check each area got a delta_h
         assert(A.delta_h)
 
         set_floor(A, R.entry_h + A.delta_h - adjust_h)
       end
+stderrf("%s/%s mode = %s  floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
     end
 
     room_add_steps(R)
