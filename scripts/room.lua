@@ -1679,7 +1679,7 @@ h = 8
 
 
   local function pick_stair_delta_h(from_h, up_chance)
-    return 32
+    return from_h + 32
   end
 
 
