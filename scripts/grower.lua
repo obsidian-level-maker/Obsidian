@@ -334,6 +334,9 @@ function Grower_preprocess_grammar(grammar)
     if E.kind == "closet"  then add_style("closets")  end
     if E.kind == "liquid"  then add_style("liquids")  end
     if E.kind == "hallway" then add_style("hallways") end
+
+    -- hmmm?
+    if E.kind == "stair"   then add_style("stairs")   end
   end
 
 
@@ -695,7 +698,7 @@ function Grower_preprocess_grammar(grammar)
       local E = def.output[x][y]
       info.dir = assert(E.dir)
       info.off_area = determine_stair_source(x, y, E.dir)
-    
+
     else  -- grab "dir" from corresponding table, if present
           -- TODO : support multiple cages/closets/junctions
       if def[kind] then
@@ -865,8 +868,12 @@ function Grower_make_all_areas()
         C.A1 = assert(C.TA1.area)
         C.A2 = assert(C.TA2.area)
 
-        C.TA1 = nil
-        C.TA2 = nil
+        C.TA1 = nil ; C.TA2 = nil
+
+        if C.stair_TA then
+          C.stair_area = assert(C.stair_TA.area)
+          C.stair_TA = nil
+        end
       end
     end
   end
@@ -982,6 +989,7 @@ function Grower_grammatical_room(R, pass)
   local new_conn
   local new_area
   local new_cage
+  local intl_conn
 
   -- this is used to mark seeds for one side of a mirrored rule
   -- (in symmetrical rooms).
@@ -1854,7 +1862,15 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       TA2 = TA2
     }
 
+    -- hmmm?
+    if cur_rule.styles and table.has_elem(cur_rule.styles, "stairs") then
+      C.kind = "stair"
+gui.debugf("Stair internal conn in %s\n", R.name)
+    end
+
     table.insert(R.internal_conns, C)
+
+    return C
   end
 
 
@@ -1872,6 +1888,9 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
       if rect.kind == "stair" then
         rect.area.face_area = assert(new_area)
+        assert(intl_conn)
+        intl_conn.stair_TA = assert(new_area)
+
       elseif rect.face_area then
         rect.area.face_area = assert(area_map[rect.face_area])
       end
@@ -1905,7 +1924,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       local off_area_idx = cur_rule.new_area.off_area or 1
       local off_area = assert(area_map[off_area_idx])
 
-      add_internal_conn(off_area, new_area)
+      intl_conn = add_internal_conn(off_area, new_area)
     end
 
     if cur_rule.rects then
@@ -2016,6 +2035,7 @@ end
       area_map[3] = nil
     else
       new_area = nil
+      intl_conn = nil
       new_cage = nil
     end
 
