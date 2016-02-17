@@ -1740,9 +1740,9 @@ stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, 
         if A1.floor_h < A2.floor_h then
           A.rect_info.dir = 10 - A.rect_info.dir
 
-          A.stair_tex_ref = A1
+          A.tex_ref = A1
         else
-          A.stair_tex_ref = A2
+          A.tex_ref = A2
         end
       end
     end

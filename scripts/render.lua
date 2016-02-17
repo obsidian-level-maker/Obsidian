@@ -1137,7 +1137,7 @@ end
 
 function Render_large_prefab(A)
   local def
-  local skin
+  local skin = {}
 
 stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
@@ -1160,8 +1160,6 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     def = Fab_pick(env, reqs)
-
-    skin = {}
   end
 
 
@@ -1183,8 +1181,6 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     def = Fab_pick(env, reqs)
-
-    skin = {}
   end
 
 
@@ -1206,8 +1202,6 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     def = Fab_pick(env, reqs)
-
-    skin = {}
   end
 
 
@@ -1229,8 +1223,6 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     def = Fab_pick(env, reqs)
-
-    skin = {}
   end
 
 
@@ -1257,6 +1249,13 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   end
 
   assert(def)
+
+
+  if A.tex_ref then
+    skin.wall  = A.tex_ref.wall_mat
+    skin.floor = A.tex_ref.floor_mat
+    skin.ceil  = A.tex_ref.ceil_mat
+  end
 
 
   local S1 = SEEDS[A.rect_info.x1][A.rect_info.y1]
