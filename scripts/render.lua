@@ -1101,7 +1101,7 @@ end
 function Render_seed(A, S)
   assert(S.area == A)
 
-  if S.is_rendered then
+  if S.is_rendered or A.rect_info then
     -- done elsewhere
     return
   end
@@ -1251,10 +1251,12 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   assert(def)
 
 
-  if A.tex_ref then
-    skin.wall  = A.tex_ref.wall_mat
-    skin.floor = A.tex_ref.floor_mat
-    skin.ceil  = A.tex_ref.ceil_mat
+  local tex_ref = A.tex_ref or A.off_area
+
+  if tex_ref then
+    skin.wall  = tex_ref.wall_mat
+    skin.floor = tex_ref.floor_mat
+    skin.ceil  = tex_ref.ceil_mat
   end
 
 
@@ -1286,7 +1288,6 @@ function Render_area(A)
 
   if A.rect_info then
     Render_large_prefab(A)
-    return
   end
 
   each S in A.seeds do
