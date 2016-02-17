@@ -1704,10 +1704,6 @@ h = 8
       assert(A2.room == A.room)
 
       if A2.delta_h then
-        if C.kind == "stair" and not C.stair_area.delta_h then
-          C.stair_area.delta_h = math.min(A.delta_h, A2.delta_h)
-        end
-
         continue
       end
 
@@ -1717,12 +1713,37 @@ h = 8
         area_assign_delta(A2, up_chance, pick_stair_delta_h(cur_delta_h, up_chance))
 
 stderrf("Visiting stair in %s\n", C.stair_area.name)
-        C.stair_area.delta_h = math.min(A.delta_h, A2.delta_h)
+---     C.stair_area.delta_h = math.min(A.delta_h, A2.delta_h)
 
       else
         assert(C.kind == "direct")
 
         area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))
+      end
+    end
+  end
+
+
+  local function fix_stair_dirs(R)
+    each A in R.areas do
+      if A.mode == "stair" then
+        local A1 = assert(A.off_area)
+        local A2 = assert(A.face_area)
+
+        assert(A1.floor_h)
+        assert(A2.floor_h)
+
+        set_floor(A, math.min(A1.floor_h, A2.floor_h))
+
+stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
+
+        if A1.floor_h < A2.floor_h then
+          A.rect_info.dir = 10 - A.rect_info.dir
+
+          A.stair_tex_ref = A1
+        else
+          A.stair_tex_ref = A2
+        end
       end
     end
   end
@@ -1816,7 +1837,7 @@ stderrf("Visiting stair in %s\n", C.stair_area.name)
     if entry_area then adjust_h = entry_area.delta_h end
 
     each A in R.areas do
-      if (A.mode == "floor" or A.mode == "stair") and A.delta_h then
+      if (A.mode == "floor") and A.delta_h then
         -- check each area got a delta_h
         assert(A.delta_h)
 
@@ -1824,6 +1845,8 @@ stderrf("Visiting stair in %s\n", C.stair_area.name)
       end
 stderrf("%s/%s mode = %s  floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
     end
+
+    fix_stair_dirs(R)
 
     room_add_steps(R)
   end
