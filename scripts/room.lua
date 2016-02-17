@@ -2400,6 +2400,9 @@ stderrf("%s/%s mode = %s  floor_h = %s\n", R.name, A.name, tostring(A.mode), tos
       if A.mode == "closet" then
         assert(A.face_area)
         A.floor_h = assert(A.face_area.floor_h)
+
+        -- FIXME : probably pick prefab HERE, decide if outdoorsy
+        A.is_outdoor = nil
       end
     end
   end
