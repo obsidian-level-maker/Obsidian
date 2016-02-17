@@ -115,7 +115,7 @@ GROW_MIR_TEST =
 
 GROW_NEWAREA_1 =
 {
-  prob = 15
+  prob = 25
 
   structure =
   {
@@ -125,15 +125,15 @@ GROW_NEWAREA_1 =
 }
 
 
-GROW_STAIRS_1 =
+GROW_STAIRS_2 =
 {
-  prob = 1000
+  prob = 100
 
   structure =
   {
-    "...", ".A."
-    "X.X", "X^X"
-    "X1X", "X1X"
+    "....", ".AA."
+    "X..X", "X^^X"
+    "X11X", "X11X"
   }
 }
 
