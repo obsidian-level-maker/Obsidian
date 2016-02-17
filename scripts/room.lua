@@ -1693,11 +1693,12 @@ h = 8
 
   local function area_assign_delta(A, up_chance, cur_delta_h)
 
+stderrf("Area assign delta %d --> %s\n", cur_delta_h, A.name)
     A.delta_h = cur_delta_h
 
     each C in A.room.internal_conns do
       local A2 = areaconn_other(C, A)
-      
+
       -- not connected to this area?
       if not A2 then continue end
 
@@ -1707,13 +1708,14 @@ h = 8
         continue
       end
 
+stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
+
       if C.kind == "stair" then
         assert(C.stair_area)
 
         area_assign_delta(A2, up_chance, pick_stair_delta_h(cur_delta_h, up_chance))
 
-stderrf("Visiting stair in %s\n", C.stair_area.name)
----     C.stair_area.delta_h = math.min(A.delta_h, A2.delta_h)
+--stderrf("Visiting stair in %s\n", C.stair_area.name)
 
       else
         assert(C.kind == "direct")
@@ -1751,6 +1753,9 @@ stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, 
 
   local function fix_porch_delta(R)
     -- ensure any porch in the room is the highest area
+
+    -- this fucks up stair logic, hence disabled
+    do return end
 
     local step_h = rand.sel(50, 16, 32)
 
@@ -1829,6 +1834,7 @@ stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, 
     -- recursively flow delta heights from a random starting area
     local cur_delta_h = rand.irange(-4, 4) * 32
 
+stderrf("ASSIGN DELTA IN %s\n", R.name)
     area_assign_delta(start_area, up_chance, cur_delta_h)
 
     fix_porch_delta(R)
