@@ -35,8 +35,6 @@
                     -- (instead of create a new room)
 
     room : ROOM  -- the room to join onto
-
-    initial_hub  -- if set, this is a fake sprout to grow a hub onto
 --]]
 
 
@@ -87,8 +85,6 @@ function Grower_save_svg()
       color = "#0f0"
     elseif A1.room == A2.room then
       -- no change
-    elseif (A1.room and A1.room.initial_hub) or (A2.room and A2.room.initial_hub) then
-      color = "#f00"
     elseif (A1.room and A1.room.hallway) or (A2.room and A2.room.hallway) then
       color = "#fb0"
     else
@@ -162,7 +158,7 @@ end
 
 
 
-function Grower_preprocess_grammar(grammar)
+function Grower_preprocess_grammar()
   
   local def
   local diag_list
@@ -732,6 +728,8 @@ function Grower_preprocess_grammar(grammar)
 
   gui.debugf("Grower_preprocess_grammar...\n")
 
+  local grammar = SHAPE_GRAMMAR
+
   table.name_up(grammar)
 
   table.expand_templates(grammar)
@@ -780,8 +778,6 @@ function Grower_prepare()
 
   LEVEL.boundary_sy1 = LEVEL.boundary_margin
   LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
-
-  Grower_preprocess_grammar(SHAPE_GRAMMAR)
 end
 
 

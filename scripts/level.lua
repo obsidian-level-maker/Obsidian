@@ -374,6 +374,8 @@ function Levels_setup()
 
   Fab_load_all_definitions()
 
+  Grower_preprocess_grammar()
+
 
   gui.rand_seed(OB_CONFIG.seed + 0)
 
