@@ -203,7 +203,7 @@ function Grower_preprocess_grammar(grammar)
 
     if ch == 'C' then return { kind="cage"   } end
     if ch == 'T' then return { kind="closet" } end
-    if ch == 'J' then return { kind="junction" } end
+    if ch == 'J' then return { kind="joiner" } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -664,7 +664,7 @@ function Grower_preprocess_grammar(grammar)
   end
 
 
-  local function determine_stair_source(x, y, dir)
+  local function determine_off_area(kind, x, y, dir)
     local E
 
     repeat
@@ -672,7 +672,7 @@ function Grower_preprocess_grammar(grammar)
       if not is_valid(x, y) then return nil end
 
       E = def.output[x][y]
-    until E.kind != "stair"
+    until E.kind != kind
 
     -- FIXME : handle "diagonal"
 
@@ -697,12 +697,16 @@ function Grower_preprocess_grammar(grammar)
     if kind == "stair" then
       local E = def.output[x][y]
       info.dir = assert(E.dir)
-      info.off_area = determine_stair_source(x, y, E.dir)
+      info.off_area = determine_off_area("stair", x, y, E.dir)
 
     else  -- grab "dir" from corresponding table, if present
-          -- TODO : support multiple cages/closets/junctions
+          -- TODO : support multiple cages/closets/joiners
       if def[kind] then
         table.merge_missing(info, def[kind])
+      end
+
+      if kind == "joiner" then
+        info.off_area = determine_off_area(kind, x, y, E.dir)
       end
     end
 
@@ -747,7 +751,7 @@ function Grower_preprocess_grammar(grammar)
     locate_all_contiguous_parts("stair")
     locate_all_contiguous_parts("cage")
     locate_all_contiguous_parts("closet")
-    locate_all_contiguous_parts("junction")
+    locate_all_contiguous_parts("joiner")
 
     if not cur_def.pass then
       cur_def.pass = name_to_pass(name)
@@ -1853,10 +1857,10 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
-  local function add_internal_conn(TA1, TA2)
+  local function add_internal_conn(TA1, TA2, kind)
     local C =
     {
-      kind = "direct"
+      kind = kind or "direct"
 
       TA1 = TA1
       TA2 = TA2
@@ -1864,6 +1868,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
     -- hmmm?
     if cur_rule.styles and table.has_elem(cur_rule.styles, "stairs") then
+      assert(not cur_rule.joiner)
       C.kind = "stair"
 gui.debugf("Stair internal conn in %s\n", R.name)
     end
@@ -1897,6 +1902,11 @@ gui.debugf("Stair internal conn in %s\n", R.name)
 
       if rect.off_area then
         rect.area.off_area = assert(area_map[rect.off_area])
+      end
+
+      if rect.kind == "joiner" then
+        new_conn.kind = "joiner"
+        new_conn.joiner_TA = assert(new_area)
       end
 
       table.insert(new_rects, rect)

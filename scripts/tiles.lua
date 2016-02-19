@@ -181,7 +181,7 @@ SPROUT_JUNC_2x1 =
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
 
-  junction =
+  joiner =
   {
     dir = 8
   }
