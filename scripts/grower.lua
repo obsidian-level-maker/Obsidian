@@ -1856,6 +1856,9 @@ gui.debugf("Stair internal conn in %s\n", R.name)
 stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
   R.name, new_conn.TA1.name, new_conn.TA1.room.name,
   new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
+
+        assert(rect.dir)
+        rect.area.joiner_dir = transform_dir(T, rect.dir)
       end
 
       table.insert(new_rects, rect)

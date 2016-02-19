@@ -2019,6 +2019,7 @@ function Fab_find_matches(env, reqs)
 
 
   local function match_size_with_rot(def, rotate)
+--[[ FIXME : this is under review
     if rotate then
       if env.seed_w and not match_size(def.seed_h, env.seed_w) then return false end
       if env.seed_h and not match_size(def.seed_w, env.seed_h) then return false end
@@ -2026,6 +2027,7 @@ function Fab_find_matches(env, reqs)
       if env.seed_w and not match_size(def.seed_w, env.seed_w) then return false end
       if env.seed_h and not match_size(def.seed_h, env.seed_h) then return false end
     end
+--]]
 
     return true
   end
@@ -2078,13 +2080,12 @@ function Fab_find_matches(env, reqs)
 
 
   local function match_environment(def)
-    -- size check -- seed based
+    -- size check (seed based)
     if not match_size_with_rot(def, false) then
-      if not env.can_rotate then return 0 end
-      if not match_size_with_rot(def, true) then return 0 end
+      return 0
     end
 
-    -- size check -- map units
+    -- size check (map units)
 --!!!! FIXME   if not Fab_size_check(def, env.long, env.deep) then return 0 end
 
     -- building type checks

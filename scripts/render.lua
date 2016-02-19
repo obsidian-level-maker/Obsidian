@@ -1226,6 +1226,27 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   end
 
 
+  local function do_joiner()
+    local env =
+    {
+      seed_w = 2
+      seed_h = 1
+    }
+
+    if A.room then
+      env.room = A.room.kind
+    end
+
+    local reqs =
+    {
+      kind  = "joiner"
+--??  where = "joiner"
+    }
+
+    def = Fab_pick(env, reqs)
+  end
+
+
   if A.mode == "cage" then
     do_cage()
 
@@ -1243,6 +1264,9 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
   elseif A.mode == "stair" then
     do_stairs()
+
+  elseif A.mode == "joiner" then
+    do_joiner()
 
   else
     error("Unsupported prefab kind: " .. tostring(A.mode))

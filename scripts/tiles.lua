@@ -183,7 +183,7 @@ SPROUT_JOINER_2x1 =
 
   joiner =
   {
-    dir = 2  -- must match conn.dir above
+    dir = 8  -- must be opposite to conn.dir
   }
 }
 
