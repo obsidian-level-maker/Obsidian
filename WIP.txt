@@ -28,7 +28,20 @@ JOINERS:
 
 PREFAB SYSTEM
 
+-  the "where" fields are rubbish, simplify it, perhaps:
+
+   * "edge" : used at an EDGE object (or straddling it)
+              examples: doors, fences, windows, pictures, walls
+
+   * "rect" : occupies a seed rectangle
+              examples: stairs, closets, joiners,
+
+   * "point" : prefab is centered at (0,0), can place anywhere
+               examples: crate, pillar, free-standing switch
+
 +  figure out semantics of seed_w/seed_h and ROTATING prefabs
+   -  if there is a natural direction (e.g. closet facing into room),
+      then it is simple (rotation not possible)
 
 +  define 'seed_w/h' in a prefab to be minimum size
 
