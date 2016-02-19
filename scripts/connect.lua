@@ -185,6 +185,14 @@ function Connect_through_sprout(P)
     C.A1 = assert(P.A1)
     C.A2 = assert(P.A2)
 
+    C.joiner_area = P.joiner_area
+
+stderrf("CONNECT: %s / %s (%s) --> %s / %s (%s)\n",
+  C.R1.name, C.A1.name, C.A1.room.name,
+  C.R2.name, C.A2.name, C.A2.room.name)
+
+--assert(C.A1.room == C.R1)
+
   else
     local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
 

@@ -888,12 +888,14 @@ function Grower_make_all_areas()
         C.A1 = assert(C.TA1.area)
         C.A2 = assert(C.TA2.area)
 
+stderrf("Resolving joiner in prelim-conn:\n")
+stderrf("  Rooms %s --> %s\n", C.R1.name, C.R2.name)
+stderrf("  %s (%s) --> %s (%s)\n", C.TA1.name, C.TA1.room.name, C.A1.name, C.A1.room.name)
+stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.room.name)
         C.TA1 = nil ; C.TA2 = nil
 
-        if C.joiner_area then
-          C.joiner_area = assert(C.joiner_TA.area)
-          C.joiner_TA = nil
-        end
+        C.joiner_area = assert(C.joiner_TA.area)
+        C.joiner_TA = nil
       end
     end
   end
@@ -1923,9 +1925,14 @@ gui.debugf("Stair internal conn in %s\n", R.name)
 
       if rect.kind == "joiner" then
         new_conn.kind = "joiner"
-        new_conn.TA1  = assert(rect.area.off_area)
-        new_conn.TA2  = assert(new_room.temp_areas[1])
         new_conn.joiner_TA = rect.area
+
+        -- connection goes from NEW ROOM --> CURRENT ROOM
+        new_conn.TA1  = assert(new_room.temp_areas[1])
+        new_conn.TA2  = assert(rect.area.off_area)
+stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
+  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
+  new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
       end
 
       table.insert(new_rects, rect)

@@ -1843,13 +1843,13 @@ stderrf("ASSIGN DELTA IN %s\n", R.name)
     if entry_area then adjust_h = assert(entry_area.delta_h) end
 
     each A in R.areas do
-      if (A.mode == "floor") and A.delta_h then
+      if A.mode == "floor" and A.delta_h then
         -- check each area got a delta_h
         assert(A.delta_h)
 
         set_floor(A, R.entry_h + A.delta_h - adjust_h)
       end
-stderrf("%s/%s mode = %s  floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
+stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
     end
 
     fix_stair_dirs(R)
@@ -2313,6 +2313,7 @@ stderrf("%s/%s mode = %s  floor_h = %s\n", R.name, A.name, tostring(A.mode), tos
 
     if entry_area then
       assert(entry_area.room == R)
+      assert(entry_area.mode != "joiner")
     end
 
     -- handle start rooms and teleported-into rooms
@@ -2355,9 +2356,20 @@ stderrf("%s/%s mode = %s  floor_h = %s\n", R.name, A.name, tostring(A.mode), tos
       -- already visited it?
       if R2.entry_h then continue end
 
+stderrf("Recursing though %s\n", C.name)
+stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
+
+      assert(A1.mode != "joiner")
+      assert(A2.mode != "joiner")
+
       assert(A1.floor_h)
 
       local next_f = R.exit_h or A1.floor_h
+
+      -- TODO : decide prefab, allow a height difference
+      if C.kind == "joiner" then
+        C.joiner_area.floor_h = math.min(A1.floor_h, next_f)
+      end
 
       -- hallway crud (FIXME : HACKY)
       if R2.next_f then next_f = R2.next_f end
@@ -2426,6 +2438,10 @@ stderrf("%s/%s mode = %s  floor_h = %s\n", R.name, A.name, tostring(A.mode), tos
       if A.is_porch then
         height = 144
       end
+
+if not A.floor_h then
+stderrf("do_ceilings : no floor_h in %s %s in %s\n", A.name, A.mode, A.room.name)
+end
 
       set_ceil(A, A.floor_h + height)
     end
