@@ -1,11 +1,11 @@
 --
--- Simple junction
+-- Simple joiner
 --
 
-PREFABS.Junction_1 =
+PREFABS.Joiner_simple1 =
 {
-  file   = "junction/junc1.wad"
-  where  = "junction"
+  file   = "joiner/simple1.wad"
+  where  = "joiner"
 
   seed_w = 2
   seed_h = 1
