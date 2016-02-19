@@ -79,8 +79,10 @@ function Grower_save_svg()
 --  elseif (A1.is_boundary != A2.is_boundary) then
 --    color = "#f0f"
     elseif A1 == A2 then
-      color = "#faf"
+      color = "#ccf"
       lin_w = 1
+    elseif A1.mode == "joiner" or A2.mode == "joiner" then
+      color = "#f0f"
     elseif (A1.room == A2.room) and (A1.room or A2.room) then
       color = "#0f0"
     elseif A1.room == A2.room then
@@ -882,9 +884,16 @@ function Grower_make_all_areas()
 
   local function resolve_joiners()
     each C in LEVEL.prelim_conns do
-      if C.joiner_TA then
-        C.joiner_area = assert(C.joiner_TA.area)
-        C.joiner_TA = nil
+      if C.kind == "joiner" then
+        C.A1 = assert(C.TA1.area)
+        C.A2 = assert(C.TA2.area)
+
+        C.TA1 = nil ; C.TA2 = nil
+
+        if C.joiner_area then
+          C.joiner_area = assert(C.joiner_TA.area)
+          C.joiner_TA = nil
+        end
       end
     end
   end
@@ -1914,6 +1923,8 @@ gui.debugf("Stair internal conn in %s\n", R.name)
 
       if rect.kind == "joiner" then
         new_conn.kind = "joiner"
+        new_conn.TA1  = assert(rect.area.off_area)
+        new_conn.TA2  = assert(new_room.temp_areas[1])
         new_conn.joiner_TA = rect.area
       end
 

@@ -21,15 +21,15 @@
 
 --class CONN
 --[[
-    kind : keyword  -- "normal", "teleporter", "secret"
+    kind : keyword  -- "normal", "joiner", "teleporter", "secret"
 
     lock : LOCK
 
     id : number  -- debugging aid
 
     -- The two areas are the vital (compulsory) information,
-    -- especially for the quest system.  For teleporters the edge
-    -- info will be absent (and area info done when pads are placed)
+    -- especially for the quest system.  For joiners and teleporters
+    -- the edge info will be absent.
 
     R1 : source ROOM
     R2 : destination ROOM
@@ -44,8 +44,9 @@
 
     door_h : floor height for doors straddling the connection
 
-    where1  : usually NIL, otherwise a FLOOR object
-    where2  :
+????  where1  : usually NIL, otherwise a FLOOR object
+????  where2  :
+
 --]]
 
 
@@ -166,7 +167,9 @@ function Connect_through_sprout(P)
 
 --stderrf("Connecting... %s <--> %s\n", P.R1.name, P.R2.name)
 
-  local C = CONN_CLASS.new("normal", P.R1, P.R2)
+  local kind = P.kind or "normal"
+
+  local C = CONN_CLASS.new(kind, P.R1, P.R2)
 
   table.insert(C.R1.conns, C)
   table.insert(C.R2.conns, C)
@@ -178,15 +181,21 @@ function Connect_through_sprout(P)
   if P.split then long = P.split end
 
 
-  local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
+  if kind == "joiner" then
+    C.A1 = assert(P.A1)
+    C.A2 = assert(P.A2)
 
-  E1.kind = "arch"
+  else
+    local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
 
-  C.E1 = E1 ; E1.conn = C
-  C.E2 = E2 ; E2.conn = C
+    E1.kind = "arch"
 
-  C.A1 = assert(E1.S.area)
-  C.A2 = assert(E2.S.area)
+    C.E1 = E1 ; E1.conn = C
+    C.E2 = E2 ; E2.conn = C
+
+    C.A1 = assert(E1.S.area)
+    C.A2 = assert(E2.S.area)
+  end
 
 --[[
 gui.debugf("Creating conn %s from %s --> %s\n", C.name, C.R1.name, C.R2.name)
@@ -196,6 +205,7 @@ gui.debugf("  area %s(%s) --> %s(%s)\n", C.A1.name, C.A1.mode, C.A2.name, C.A2.m
 
 
   -- handle split connections
+  -- [ FIXME : broken, must be done a different way ]
   if P.split then
     assert(not S1.diagonal)
     local S2 = S1:raw_neighbor(geom.RIGHT[P.dir], P.long - P.split)
