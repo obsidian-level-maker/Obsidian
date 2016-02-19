@@ -53,14 +53,13 @@
 CONN_CLASS = {}
 
 
-function CONN_CLASS.new(kind, R1, R2, dir)
+function CONN_CLASS.new(kind, R1, R2)
   local C =
   {
     kind = kind
     id   = alloc_id("conn")
     R1   = R1
     R2   = R2
-    dir  = dir
   }
 
   C.name = string.format("CONN_%d", C.id)
@@ -401,131 +400,4 @@ function Connect_stuff()
 
   connect_grown_rooms()
 end
-
-
-
-function Connect_areas_in_rooms__OLD()
-
-  local function check_internally_connected(R)
-    each A in R.areas do
-      if A.conn_group and A.conn_group != R.canary_area.conn_group then
-        return false
-      end
-    end
-
-    return true
-  end
-
-
-  local function pick_internal_seed(R, A1, A2)
-    local DIRS = table.copy(geom.ALL_DIRS)
-
-    if #A1.seeds > #A2.seeds then
-      A1, A2 = A2, A1
-    end
-
-    local seed_list = rand.shuffle(table.copy(A1.seeds))
-
-    each S in seed_list do
-      rand.shuffle(DIRS)
-
-      each dir in DIRS do
-        local N = S:neighbor(dir)
-
-        if N and N.area == A2 then
-          return S, dir, N
-        end
-      end
-    end
-
-    error("pick_internal_seed failed.")
-  end
-
-
-  local function make_an_internal_connection(R)
-    local best_A1
-    local best_A2
-    local best_score = 0
-
-    each A in R.areas do
-    each N in A.neighbors do
-      if N.room != R then continue end
-
-      if not A.conn_group then continue end
-      if not N.conn_group then continue end
-
-      -- only try each pair ONCE
-      if N.id > A.id then continue end
-
-      if A.conn_group != N.conn_group then
-        local score = 1 + gui.random()
-
-        if score > best_score then
-          best_A1 = A
-          best_A2 = N
-          best_score = score
-        end
-      end
-    end -- A, N
-    end
-
-    if not best_A1 then
-      error("Failed to internally connect " .. R.name)
-    end
-
-    -- OK --
-
-    local A1 = best_A1
-    local A2 = best_A2
-
-    local S, dir = pick_internal_seed(R, A1, A2)
-
-    local AREA_CONN =
-    {
-      A1 = A1, A2 = A2
-      S1 = S,  S2 = S:neighbor(dir)
-      dir = dir
-    }
-
-    table.insert(R.area_conns, AREA_CONN)
-
-    Connect_merge_groups(A1, A2)
-  end
-
-
-  local function internal_connections(R)
-    -- connect the areas inside each room (including hallways)
-
-    R.area_conns = {}
-
-stderrf("internal_connections @ %s\n", R.name)
-    each A in R.areas do
-stderrf("   %s mode = %s\n", A.name, tostring(A.mode))
-      if A.mode == "floor" then
-        A.conn_group = assert(A.id)
-        R.canary_area = A
-      end
-    end
-
-    assert(R.canary_area)
-
-    while not check_internally_connected(R) do
-      make_an_internal_connection(R)
-    end
-
-    if R.sister then
-      assert(check_internally_connected(R.sister))
-    end
-  end
-
-
-  ---| Connect_areas_in_rooms |---
-
-  each R in LEVEL.rooms do
-    if not R.brother then
-      internal_connections(R)
-    end
-  end
-end
-
 

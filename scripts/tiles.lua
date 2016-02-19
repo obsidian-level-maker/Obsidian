@@ -162,7 +162,7 @@ SPROUT_1 =
 }
 
 
-SPROUT_JUNC_2x1 =
+SPROUT_JOINER_2x1 =
 {
   prob = 5000
 
@@ -183,7 +183,7 @@ SPROUT_JUNC_2x1 =
 
   joiner =
   {
-    dir = 8
+    dir = 2  -- must match conn.dir above
   }
 }
 
