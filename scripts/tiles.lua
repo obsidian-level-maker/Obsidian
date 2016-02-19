@@ -162,6 +162,32 @@ SPROUT_1 =
 }
 
 
+SPROUT_JUNC_2x1 =
+{
+  prob = 5000
+
+  structure =
+  {
+    "....", ".RR."
+    "....", ".RR."
+    "....", ".JJ."
+    "X11X", "X11X"
+  }
+
+  new_room =
+  {
+    conn = { x=3, y=3, w=2, dir=2 }
+
+    symmetry = { x=2, y=3, w=2, dir=8 }
+  }
+
+  junction =
+  {
+    dir = 8
+  }
+}
+
+
 SPROUT_SYMMETRY_TEST =
 {
   prob = 30
