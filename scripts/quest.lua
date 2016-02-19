@@ -1336,7 +1336,7 @@ function Quest_order_by_visit()
     -- mark which doors needs to be built on the other side
 
     each C in LEVEL.conns do
-      if C.kind == "normal" then
+      if C.kind != "teleporter" then
         if C.R1.lev_along > C.R2.lev_along then
           C.flip_it = true
         end
@@ -2112,7 +2112,7 @@ function Quest_make_room_secret(R)
   end
 
   -- mark connection to get a secret door
-  C.kind = "secret"
+  C.is_secret = true
 end
 
 

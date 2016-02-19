@@ -21,9 +21,11 @@
 
 --class CONN
 --[[
-    kind : keyword  -- "normal", "joiner", "teleporter", "secret"
+    kind : keyword  -- "edge", "joiner", "teleporter"
 
     lock : LOCK
+
+    is_secret : boolean
 
     id : number  -- debugging aid
 
@@ -166,7 +168,7 @@ function Connect_through_sprout(P)
 
 --stderrf("Connecting... %s <--> %s\n", P.R1.name, P.R2.name)
 
-  local kind = P.kind or "normal"
+  local kind = P.kind or "edge"
 
   local C = CONN_CLASS.new(kind, P.R1, P.R2)
 
@@ -197,6 +199,9 @@ stderrf("CONNECT: %s / %s (%s) --> %s / %s (%s)\n",
     -- clear junctions on each side of joiner
     local junc1 = Junction_lookup(C.A1, C.joiner_area)
     local junc2 = Junction_lookup(C.A2, C.joiner_area)
+
+stderrf("  junc1 : %s --> %s  =  %s\n", C.A1.name, C.joiner_area.name, tostring(junc1))
+stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(junc2))
 
     junc1.keep_empty = true
     junc2.keep_empty = true

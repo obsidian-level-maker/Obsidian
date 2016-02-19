@@ -234,7 +234,7 @@ function ROOM_CLASS.total_conns(R, ignore_secrets)
   local count = 0
 
   each C in R.conns do
-    if ignore_secrets and C.kind == "secret" then
+    if ignore_secrets and C.is_secret then
       continue
     end
 
@@ -2240,7 +2240,7 @@ stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostrin
 
 
   local function maintain_material_across_conn(C)
-    if C.kind != "normal" then return false end
+    if C.kind != "edge" then return false end
 
     if C.A1.floor_h    != C.A2.floor_h then return false end
     if C.R1.is_outdoor != C.R2.is_outdoor then return false end
@@ -2356,7 +2356,7 @@ stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostrin
       -- already visited it?
       if R2.entry_h then continue end
 
-stderrf("Recursing though %s\n", C.name)
+stderrf("Recursing though %s (%s)\n", C.name, C.kind)
 stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
 
       assert(A1.mode != "joiner")
@@ -2368,7 +2368,8 @@ stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
 
       -- TODO : decide prefab, allow a height difference
       if C.kind == "joiner" then
-        C.joiner_area.floor_h = math.min(A1.floor_h, next_f)
+        set_floor(C.joiner_area, math.min(A1.floor_h, next_f))
+stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
       end
 
       -- hallway crud (FIXME : HACKY)
