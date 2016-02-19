@@ -1840,7 +1840,7 @@ stderrf("ASSIGN DELTA IN %s\n", R.name)
     fix_porch_delta(R)
 
     local adjust_h = 0
-    if entry_area then adjust_h = entry_area.delta_h end
+    if entry_area then adjust_h = assert(entry_area.delta_h) end
 
     each A in R.areas do
       if (A.mode == "floor") and A.delta_h then

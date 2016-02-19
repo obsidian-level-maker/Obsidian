@@ -694,20 +694,17 @@ function Grower_preprocess_grammar(grammar)
 
     local info = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
 
-    if kind == "stair" then
-      local E = def.output[x][y]
-      info.dir = assert(E.dir)
-      info.off_area = determine_off_area("stair", x, y, E.dir)
+    local E = def.output[x][y]
 
-    else  -- grab "dir" from corresponding table, if present
-          -- TODO : support multiple cages/closets/joiners
-      if def[kind] then
-        table.merge_missing(info, def[kind])
-      end
+    -- grab "dir" from corresponding table, if present
+    -- TODO : support multiple cages/closets/joiners
+    if def[kind] then
+      table.merge_missing(info, def[kind])
+    end
 
-      if kind == "joiner" then
-        info.off_area = determine_off_area(kind, x, y, E.dir)
-      end
+    if kind == "stair" or kind == "joiner" then
+      info.dir = assert(E.dir or info.dir)
+      info.off_area = determine_off_area(kind, x, y, info.dir)
     end
 
     if not def.rects then def.rects = {} end
@@ -883,6 +880,16 @@ function Grower_make_all_areas()
   end
 
 
+  local function resolve_joiners()
+    each C in LEVEL.prelim_conns do
+      if C.joiner_TA then
+        C.joiner_area = assert(C.joiner_TA.area)
+        C.joiner_TA = nil
+      end
+    end
+  end
+
+
   ---| Grower_make_all_areas |---
 
   LEVEL.all_temps = {}
@@ -897,6 +904,7 @@ function Grower_make_all_areas()
 
   resolve_references()
   resolve_internal_conns()
+  resolve_joiners()
 
   -- sanity check [ no seeds should have a 'temp_area' now... ]
 
@@ -1906,7 +1914,7 @@ gui.debugf("Stair internal conn in %s\n", R.name)
 
       if rect.kind == "joiner" then
         new_conn.kind = "joiner"
-        new_conn.joiner_TA = assert(new_area)
+        new_conn.joiner_TA = rect.area
       end
 
       table.insert(new_rects, rect)
