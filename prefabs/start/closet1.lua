@@ -11,6 +11,6 @@ PREFABS.Start_Closet1 =
   seed_h = 1
 
   x_fit = "frame"
-  y_fit = "bottom"
+  y_fit = "top"
 }
 
