@@ -1037,15 +1037,6 @@ function Room_border_up()
     end
 
 
---??  -- joiners --
---??  if (A1.mode == "joiner" and A1.face_area == A2) or
---??     (A2.mode == "joiner" and A2.face_area == A1)
---??  then
---??    junc.keep_empty = true
---??    return
---??  end
-
-
     -- blended hallways --  [ NOTE: NOT USED ATM ]
 
     if A1.mode == "hallway" and
