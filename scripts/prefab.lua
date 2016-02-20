@@ -2002,6 +2002,9 @@ end
 
 function Fab_find_matches(env, reqs)
 
+  local cur_rank = 1
+
+
   local function match_size(w, env_w)
     -- prefab skin defaults to 1
     if not w then w = 1 end
@@ -2121,6 +2124,8 @@ function Fab_find_matches(env, reqs)
   local tab = { }
 
   each name,def in PREFABS do
+    if (def.rank or 1) < cur_rank then continue end
+
     if match_requirements(def) <= 0 then continue end
     if match_environment (def) <= 0 then continue end
 
@@ -2129,9 +2134,17 @@ function Fab_find_matches(env, reqs)
 
     prob = prob * (def.prob or 50) * (reqs.prob_mul or 1)
 
-    if prob > 0 then
-      tab[name] = prob
+    if prob <= 0 then continue end
+
+    -- Ok, add it
+    -- a higher rank overrides anything lower
+    
+    if (def.rank or 1) > cur_rank then
+      cur_rank = def.rank
+      tab = { }
     end
+
+    tab[name] = prob
   end
 
   return tab
