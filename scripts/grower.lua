@@ -2122,7 +2122,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 --if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 4 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 6 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)

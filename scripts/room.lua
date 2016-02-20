@@ -2366,14 +2366,15 @@ stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
 
       local next_f = R.exit_h or A1.floor_h
 
+      -- hallway crud (FIXME : HACKY)
+      if R2.next_f then next_f = R2.next_f end
+
       -- TODO : decide prefab, allow a height difference
       if C.kind == "joiner" then
+        next_f = next_f + 72 --!!!!! FIXME TEST ONLY
         set_floor(C.joiner_area, math.min(A1.floor_h, next_f))
 stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
       end
-
-      -- hallway crud (FIXME : HACKY)
-      if R2.next_f then next_f = R2.next_f end
 
       visit_room(R2, next_f, A2, R, C)
     end
