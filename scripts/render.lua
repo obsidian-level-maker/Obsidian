@@ -990,7 +990,7 @@ function Render_floor(A, S)
 
   local tag = S.tag
 -- tag = A.id
--- if A.room then tag = A.room.id end
+if A.room then tag = A.room.id end
 
 
   -- handle railings [ must be done here ]
@@ -1138,6 +1138,7 @@ end
 function Render_large_prefab(A)
   local def
   local skin = {}
+  local flip_it
 
 stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
@@ -1244,6 +1245,10 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     }
 
     def = Fab_pick(env, reqs)
+
+    if A.joiner_conn.flip_it then
+      flip_it = true
+    end
   end
 
 
@@ -1290,6 +1295,8 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   local floor_h = assert(A.floor_h) + (def.raise_z or 0)
 
   local dir = A.rect_info.dir or 2
+
+  if flip_it then dir = 10 - dir end
 
   local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, floor_h, dir)
 

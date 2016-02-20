@@ -1339,6 +1339,7 @@ function Quest_order_by_visit()
       if C.kind != "teleporter" then
         if C.R1.lev_along > C.R2.lev_along then
           C.flip_it = true
+stderrf("FLIP_IT @ %s : %s <---> %s\n", C.name, C.R1.name, C.R2.name)
         end
       end
     end
