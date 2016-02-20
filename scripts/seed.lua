@@ -610,8 +610,8 @@ function Seed_init(map_W, map_H)
 
   for row = 0, 1 do
   for col = 0, int(SEED_W / 2) - 1 do
-    local x = depot_x + col * 2 * SEED_SIZE
-    local y = depot_y + row * 4 * SEED_SIZE + 64
+    local x = depot_x + col * 3 * SEED_SIZE
+    local y = depot_y + row * 6 * SEED_SIZE + 64
 
     table.insert(LEVEL.depot_locs, { x=x, y=y })
   end
