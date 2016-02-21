@@ -1405,15 +1405,10 @@ function Fab_load_wad(def)
     B[1].angle = E.angle
     B[1].rank  = skill_to_rank(E.flags)
 
-    -- the "ambush" (aka Deaf) flag means a caged monster
-    local MTF_Ambush = 8
-
-    if spot_info.kind == "monster" and bit.band(E.flags or 0, MTF_Ambush) != 0 then
-      B[1].spot_kind = "cage"
-
-      if def.where == "depot" or def.is_trap then
-        B[1].spot_kind = "trap"
-      end
+    if spot_info.kind == "cage" and
+       (def.kind == "trap" or def.is_trap)
+    then
+      B[1].spot_kind = "trap"
     end
 
     local r = spot_info.r
