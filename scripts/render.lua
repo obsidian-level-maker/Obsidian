@@ -1157,7 +1157,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     local reqs =
     {
       kind  = "cage"
-      where = "cage"
+      where = "seeds"
     }
 
     def = Fab_pick(env, reqs)
@@ -1178,7 +1178,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     local reqs =
     {
       kind  = "start"
-      where = "closet"
+      where = "seeds"
     }
 
     def = Fab_pick(env, reqs)
@@ -1199,7 +1199,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     local reqs =
     {
       kind  = "exit"
-      where = "closet"
+      where = "seeds"
     }
 
     def = Fab_pick(env, reqs)
@@ -1220,7 +1220,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     local reqs =
     {
       kind  = "stairs"
---??  where = "stairs"
+      where = "seeds"
     }
 
     def = Fab_pick(env, reqs)
@@ -1241,7 +1241,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     local reqs =
     {
       kind  = "joiner"
---??  where = "joiner"
+      where = "seeds"
     }
 
     def = Fab_pick(env, reqs)
