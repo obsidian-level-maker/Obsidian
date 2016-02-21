@@ -5,6 +5,6 @@
 PREFABS.Exit_switch =
 {
   file   = "exit/switch.wad"
-  where  = "middle"
+  where  = "point"
 }
 

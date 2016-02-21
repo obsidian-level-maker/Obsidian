@@ -5,7 +5,7 @@
 PREFABS.Switch_small_sw_blue =
 {
   file   = "switch/small.wad"
-  where  = "middle"
+  where  = "point"
 
   switch = "sw_blue"
   tag_1  = "?lock_tag"
@@ -17,7 +17,7 @@ PREFABS.Switch_small_sw_blue =
 PREFABS.Switch_small_sw_red =
 {
   file   = "switch/small.wad"
-  where  = "middle"
+  where  = "point"
 
   switch = "sw_red"
   tag_1  = "?lock_tag"
@@ -30,7 +30,7 @@ PREFABS.Switch_small_sw_red =
 PREFABS.Switch_small_sw_ash =
 {
   file   = "switch/small.wad"
-  where  = "middle"
+  where  = "point"
 
   switch = "sw_ash"
   tag_1  = "?lock_tag"
@@ -43,7 +43,7 @@ PREFABS.Switch_small_sw_ash =
 PREFABS.Switch_small_sw_snake =
 {
   file   = "switch/small.wad"
-  where  = "middle"
+  where  = "point"
 
   switch = "sw_snake"
   tag_1  = "?lock_tag"
@@ -56,7 +56,7 @@ PREFABS.Switch_small_sw_snake =
 PREFABS.Switch_small_sw_metal =
 {
   file   = "switch/small.wad"
-  where  = "middle"
+  where  = "point"
 
   switch = "sw_metal"
   tag_1  = "?lock_tag"

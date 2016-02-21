@@ -5,7 +5,7 @@
 PREFABS.Item_pentagram =
 {
   file  = "item/pentagram.wad"
-  where = "middle"
+  where = "point"
 
   theme = "hell"
 }
