@@ -5,6 +5,6 @@
 PREFABS.Hall_c_stair_small =
 {
   file   = "hall/c_stair1.wad"
-  where  = "chunk"
+  where  = "seeds"
 }
 

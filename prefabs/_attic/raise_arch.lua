@@ -5,7 +5,7 @@
 PREFABS.Stair_raising_arch =
 {
   file   = "stairs/raise_arch.wad"
-  where  = "chunk"
+  where  = "seeds"
 
   bound_x1 = 0
   bound_y1 = 0

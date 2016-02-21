@@ -5,7 +5,7 @@
 PREFABS.Lift_niche =
 {
   file   = "stairs/niche_lift.wad"
-  where  = "chunk"
+  where  = "seeds"
 
   z_fit = "bottom"
 

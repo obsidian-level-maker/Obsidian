@@ -5,7 +5,7 @@
 PREFABS.Start_Closet1 =
 {
   file  = "start/closet1.wad"
-  where = "closet"
+  where = "seeds"
 
   seed_w = 1
   seed_h = 1

@@ -5,6 +5,6 @@
 PREFABS.Hall_c_curve_small =
 {
   file   = "hall/c_curve1.wad"
-  where  = "chunk"
+  where  = "seeds"
 }
 

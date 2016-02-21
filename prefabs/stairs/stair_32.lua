@@ -1,19 +1,16 @@
 --
--- Stair : outie style, 32 units high
+-- basic stair, 32 units high
 --
 
-PREFABS.Stair_outie_32 =
+PREFABS.Stair_32 =
 {
   file   = "stairs/stair_32.wad"
-
---??  where  = "chunk"
+  where  = "seeds"
 
 --bound_x1 = 0
 --bound_y1 = 0
 --bound_x2 = 128
 --bound_y2 = 128
-
---?? z_fit = "stretch"
 
   bound_z1 = 0
   bound_z2 = 32

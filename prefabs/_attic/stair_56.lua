@@ -5,7 +5,7 @@
 PREFABS.Stair_outie_56 =
 {
   file   = "stairs/stair_56.wad"
-  where  = "chunk"
+  where  = "seeds"
 
   bound_x1 = 0
   bound_y1 = 0

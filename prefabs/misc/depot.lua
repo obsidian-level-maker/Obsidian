@@ -5,7 +5,7 @@
 PREFABS.Depot =
 {
   file  = "misc/depot.wad"
-  where = "depot"
+  where = "seeds"
 
   seed_w = 3
   seed_h = 6

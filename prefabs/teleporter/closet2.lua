@@ -5,7 +5,7 @@
 PREFABS.Teleporter_Closet2 =
 {
   file  = "teleporter/closet2.wad"
-  where = "closet"
+  where = "seeds"
 
   seed_w = 1
   seed_h = 1

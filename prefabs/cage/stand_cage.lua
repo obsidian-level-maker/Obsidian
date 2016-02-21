@@ -5,7 +5,7 @@
 PREFABS.Cage_standing1 =
 {
   file   = "cage/stand_cage.wad"
-  where  = "cage"
+  where  = "seeds"
 
   seed_w = 1
   seed_h = 1

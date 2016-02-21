@@ -5,7 +5,7 @@
 PREFABS.Lift_outie =
 {
   file   = "stairs/lift.wad"
-  where  = "chunk"
+  where  = "seeds"
 
   z_fit  = "bottom"
 

@@ -5,7 +5,7 @@
 PREFABS.Switch_niche1 =
 {
   file   = "switch/niche1.wad"
-  where  = "closet"
+  where  = "seeds"
   switch = "sw_blue"
 
   seed_w = 1

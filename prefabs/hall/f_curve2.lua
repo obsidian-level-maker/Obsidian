@@ -5,6 +5,6 @@
 PREFABS.Hall_f_curve_big =
 {
   file   = "hall/f_curve2.wad"
-  where  = "chunk"
+  where  = "seeds"
 }
 

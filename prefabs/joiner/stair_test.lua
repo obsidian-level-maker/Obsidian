@@ -5,7 +5,7 @@
 PREFABS.Joiner_stair_test =
 {
   file   = "joiner/stair_test.wad"
---where  = "joiner"
+  where  = "seeds"
 
   seed_w = 2
   seed_h = 1

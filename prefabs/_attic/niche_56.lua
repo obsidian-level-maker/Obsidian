@@ -5,7 +5,7 @@
 PREFABS.Stair_niche_56 =
 {
   file   = "stairs/niche_56.wad"
-  where  = "chunk"
+  where  = "seeds"
 
   z_fit = "stretch"
 
