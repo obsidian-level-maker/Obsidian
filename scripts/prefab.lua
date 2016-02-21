@@ -136,6 +136,9 @@ WADFAB_DELTA_12  = 997
 function Fab_load_all_definitions()
 
   local function load_from_subdir(top_level, sub)
+    -- ignore the attic (it contains a lot of broken stuff)
+    if sub == "_attic" then return end
+
     local dir = top_level .. "/" .. sub
 
     local list, err = gui.scan_directory(dir, "*.lua")
