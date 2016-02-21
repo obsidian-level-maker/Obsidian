@@ -746,9 +746,9 @@ function Grower_preprocess_grammar()
     find_connections()
 
     locate_all_contiguous_parts("stair")
+    locate_all_contiguous_parts("joiner")
     locate_all_contiguous_parts("cage")
     locate_all_contiguous_parts("closet")
-    locate_all_contiguous_parts("joiner")
 
     if not cur_def.pass then
       cur_def.pass = name_to_pass(name)
@@ -1814,6 +1814,63 @@ gui.debugf("Stair internal conn in %s\n", R.name)
     table.insert(R.internal_conns, C)
 
     return C
+  end
+
+ 
+  local function mark_rect_nb_side(r, dir)
+    assert(geom.is_straight(dir))
+
+    local x1, y1 = r.x1, r.y1
+    local x2, y2 = r.x2, r.y2
+
+    if dir == 2 then y2 = y1 end
+    if dir == 8 then y1 = y2 end
+    if dir == 4 then x2 = x1 end
+    if dir == 6 then x1 = x2 end
+
+    for sx = x1, x2 do
+    for sy = y1, y2 do
+      local S = SEEDS[sx][sy]
+
+      local N = S:neighbor(dir)
+      assert(N)
+
+      N.no_assignment = true
+    end
+    end
+  end
+
+
+  local function mark_rect_neighbors(r)
+    local shape = r.shape
+
+    if not shape then
+      shape = "F"
+
+      if r.kind == "stair" or r.kind == "junction" then
+        shape = "I"
+      end
+    end
+
+    -- the "dir" generally faces its source
+    -- [ but it won't matter when shape is "I" or "P" ]
+    assert(r.dir)
+
+    mark_rect_nb_side(r, r.dir)
+
+    -- this handles "L" shape
+    if r.dir2 then
+      mark_rect_nb_side(r, r.dir2)
+    end
+
+    if shape == "I" or shape == "P" then
+      mark_rect_nb_side(r, 10 - r.dir)
+    end
+
+    if shape == "T" or shape == "P" then
+      mark_rect_nb_side(r, geom.LEFT [r.dir])
+      mark_rect_nb_side(r, geom.RIGHT[r.dir])
+    end
   end
 
 
