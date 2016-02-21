@@ -11,7 +11,7 @@ PREFABS.Locked_small_kc_blue =
   key    = "kc_blue"
 
   x_fit  = "frame"
-  long   = 192
+  long   = 128
   deep   = 32
   over   = 32
 
@@ -29,7 +29,7 @@ PREFABS.Locked_small_kc_yellow =
   key    = "kc_yellow"
 
   x_fit  = "frame"
-  long   = 192
+  long   = 128
   deep   = 32
   over   = 32
 
@@ -47,7 +47,7 @@ PREFABS.Locked_small_kc_red =
   key    = "kc_red"
 
   x_fit  = "frame"
-  long   = 192
+  long   = 128
   deep   = 32
   over   = 32
 
@@ -65,7 +65,7 @@ PREFABS.Locked_small_ks_blue =
   key    = "ks_blue"
 
   x_fit  = "frame"
-  long   = 192
+  long   = 128
   deep   = 32
   over   = 32
 
@@ -83,7 +83,7 @@ PREFABS.Locked_small_ks_yellow =
   key    = "ks_yellow"
 
   x_fit  = "frame"
-  long   = 192
+  long   = 128
   deep   = 32
   over   = 32
 
@@ -101,7 +101,7 @@ PREFABS.Locked_small_ks_red =
   key    = "ks_red"
 
   x_fit  = "frame"
-  long   = 192
+  long   = 128
   deep   = 32
   over   = 32
 
