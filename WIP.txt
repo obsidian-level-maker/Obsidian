@@ -18,6 +18,11 @@ STAIRS:
 
 -  choose prefabs earlier, probably during floor/ceil heights
 
+-  put all stairs made by a rule (INCL. mirrored ones) into a group,
+   and ensure only a single prefab kind is used for that group
+
+   [ do same for "rect" parts of a grammar rule ]
+
 
 
 JOINERS:
@@ -39,6 +44,10 @@ PREFAB SYSTEM
    * "point" : prefab is centered at (0,0), can place anywhere
                examples: crate, pillar, free-standing switch
 
++  remove 'env' from Fab_pick()
+
+-  fix "rank" handling in Fab_pick when alt_req is used
+
 +  figure out semantics of seed_w/seed_h and ROTATING prefabs
    -  if there is a natural direction (e.g. closet facing into room),
       then it is simple (rotation not possible)
@@ -47,6 +56,14 @@ PREFAB SYSTEM
 
 -  allow 'max_seed_w, max_seed_h' to be maximum size
    __OR__ : seed_w = { 1,3 }
+
+
+
+Hard-coded prefab names :
+  Arch_plain
+  Item_pedestal
+
+  (many more not currently used)
 
 
 
