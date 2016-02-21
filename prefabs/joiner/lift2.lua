@@ -12,9 +12,8 @@ PREFABS.Joiner_lift2 =
 
   x_fit = "frame"
 
-  rank = 11  -- FIXME : TEST ONLY
-  prob = 100
+  prob = 5
 
-  delta_h = 96
+  delta_h = 72
 }
 
