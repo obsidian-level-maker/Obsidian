@@ -5,6 +5,9 @@ WORK IN PROGRESS
 
 CLOSETS:
 
+!!  create proper EDGE where it joins room (based on SHAPE)
+    [ needed for JOINERS too ]
+
 +  monster trap!
 
 -  item closet
@@ -16,7 +19,7 @@ STAIRS:
 +  need to support building the ceiling "normally"
    [ specified by prefab ]
 
--  choose prefabs earlier, probably during floor/ceil heights
++  choose prefabs earlier, probably during floor/ceil heights
 
 -  put all stairs made by a rule (INCL. mirrored ones) into a group,
    and ensure only a single prefab kind is used for that group
@@ -27,22 +30,11 @@ STAIRS:
 
 JOINERS:
 
-+  make them!
++  choose prefab earlier, e.g. during floor/ceil heights or earlier
 
 
 
-PREFAB SYSTEM
-
--  the "where" fields are rubbish, simplify it, perhaps:
-
-   * "edge" : used at an EDGE object (or straddling it)
-              examples: doors, fences, windows, pictures, walls
-
-   * "rect" : occupies a seed rectangle
-              examples: stairs, closets, joiners,
-
-   * "point" : prefab is centered at (0,0), can place anywhere
-               examples: crate, pillar, free-standing switch
+PREFAB SYSTEM:
 
 +  remove 'env' from Fab_pick()
 
@@ -67,6 +59,14 @@ Hard-coded prefab names :
 
 
 
+CAGES:
+
+-  probably remove as a rect, only use "C" for LARGE cages
+
+-  ability to make them in "T" closet rects
+
+
+
 SHAPE GRAMMARS:
 
    -  each level has different factors for all grammar rules
@@ -86,17 +86,18 @@ SHAPE GRAMMARS:
 
    Q/ can do windows using them?  pictures??
 
-   +  allow "free-range cages" (i.e. not using rects / prefabs)
-
    -  allow TWO conns into a new room (become F1/F2 in CONN object)
-
-   idea:  support 'H' for hallways
 
    +  prune / re-use rooms which remain small, and hallways which
       never end up anywhere else
 
    +  symmetrical rooms
-      +  join mirrored seeds with 'peer' field
+      +  join mirrored RECTS (the final areas) with 'peer' field
+
+      -  mark a RECT created by a "straddling" rule
+         [ increased score for wotsit finding ]
+
+      ?? join mirrored seeds with 'peer' field
 
       +  a way to score "straddling" patterns higher
          [ they are a very good place for some stuff, e.g. exits ]
@@ -113,10 +114,24 @@ SHAPE GRAMMARS:
           Q/ does "anything" included empty space / other rooms?
 
    idea:  CYCLE pass (after SPROUT) for multiple paths
+          [ probably as 'H' hallways, allow these to grow, prune them
+            when they fail to connect ]
 
    idea:  for CTF, create one big room with "rotate" symmetry
           [ interleave GROW and SPROUT passes ]
           [[ "new_room" becomes "new_area" but acting like a new room ]]
+
+
+
+HALLWAYS:
+
+-  'H' in grammar rules (see above)
+
+-  treat as an area of room which it sprouts off, but have special
+   rules for making them (e.g. low heights, different textures)
+
+-  hallways don't count when checking room size
+
 
 
 MISC:
