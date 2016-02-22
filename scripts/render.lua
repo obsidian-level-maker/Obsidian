@@ -1136,118 +1136,49 @@ end
 
 
 function Render_large_prefab(A)
-  local def
-  local skin = {}
-  local flip_it
 
 stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
+  local dir = A.rect_info.dir or 2
+
+  local skin = {}
+
+  local reqs =
+  {
+    where  = "seeds"
+
+    seed_w = A.rect_info.long
+    seed_H = A.rect_info.deep
+  }
+
+  -- FIXME : reqs.shape
+
+  if A.room then
+    reqs.room_kind = A.room.kind
+  end
+
 
   local function do_cage()
-    local env =
-    {
-      seed_w = 1
-      seed_h = 1
-    }
-
-    if A.room then
-      env.room = A.room.kind
-    end
-
-    local reqs =
-    {
-      kind  = "cage"
-      where = "seeds"
-    }
-
-    def = Fab_pick(env, reqs)
+    reqs.kind = "cage"
   end
-
 
   local function do_start()
-    local env =
-    {
-      seed_w = 1
-      seed_h = 1
-    }
-
-    if A.room then
-      env.room = A.room.kind
-    end
-
-    local reqs =
-    {
-      kind  = "start"
-      where = "seeds"
-    }
-
-    def = Fab_pick(env, reqs)
+    reqs.kind = "start"
   end
-
 
   local function do_exit()
-    local env =
-    {
-      seed_w = 1
-      seed_h = 1
-    }
-
-    if A.room then
-      env.room = A.room.kind
-    end
-
-    local reqs =
-    {
-      kind  = "exit"
-      where = "seeds"
-    }
-
-    def = Fab_pick(env, reqs)
+    reqs.kind = "exit"
   end
-
 
   local function do_stairs()
-    local env =
-    {
-      seed_w = 1
-      seed_h = 1
-    }
-
-    if A.room then
-      env.room = A.room.kind
-    end
-
-    local reqs =
-    {
-      kind  = "stairs"
-      where = "seeds"
-    }
-
-    def = Fab_pick(env, reqs)
+    reqs.kind = "stairs"
   end
 
-
   local function do_joiner()
-    local env =
-    {
-      seed_w = 2
-      seed_h = 1
-    }
-
-    if A.room then
-      env.room = A.room.kind
-    end
-
-    local reqs =
-    {
-      kind  = "joiner"
-      where = "seeds"
-    }
-
-    def = Fab_pick(env, reqs)
+    reqs.kind = "joiner"
 
     if A.joiner_conn.flip_it then
-      flip_it = true
+      dir = 10 - dir
     end
   end
 
@@ -1277,7 +1208,8 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     error("Unsupported prefab kind: " .. tostring(A.mode))
   end
 
-  assert(def)
+
+  local def = Fab_pick(reqs)
 
 
   local tex_ref = A.tex_ref or A.off_area
@@ -1293,10 +1225,6 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   local S2 = SEEDS[A.rect_info.x2][A.rect_info.y2]
 
   local floor_h = assert(A.floor_h) + (def.raise_z or 0)
-
-  local dir = A.rect_info.dir or 2
-
-  if flip_it then dir = 10 - dir end
 
   local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, floor_h, dir)
 

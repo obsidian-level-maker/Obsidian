@@ -1998,7 +1998,7 @@ end
 
 
 
-function Fab_find_matches(env, reqs, match_state)
+function Fab_find_matches(reqs, match_state)
 
   local function match_size(w, env_w)
     -- prefab skin defaults to 1
@@ -2006,7 +2006,7 @@ function Fab_find_matches(env, reqs, match_state)
 
     if type(env_w) == "table" then
       if #env_w != 2 or env_w[1] > env_w[2] then
-        error("Bad seed range in env table")
+        error("Bad seed range in reqs table")
       end
 
       return env_w[1] <= w and w <= env_w[2]
@@ -2017,7 +2017,7 @@ function Fab_find_matches(env, reqs, match_state)
 
 
   local function match_size_with_rot(def, rotate)
---[[ FIXME : this is under review
+--[[ FIXME : this is broken, and needs review
     if rotate then
       if env.seed_w and not match_size(def.seed_h, env.seed_w) then return false end
       if env.seed_h and not match_size(def.seed_w, env.seed_h) then return false end
@@ -2031,12 +2031,12 @@ function Fab_find_matches(env, reqs, match_state)
   end
 
 
-  local function match_room_kind(def_k, env_k)
+  local function match_room_kind(def_k, req_k)
     if def_k == "indoor" then
-      return env_k != "outdoor"
+      return req_k != "outdoor"
     end
 
-    return def_k == env_k
+    return def_k == req_k
   end
 
 
@@ -2084,19 +2084,19 @@ function Fab_find_matches(env, reqs, match_state)
     end
 
     -- size check (map units)
---!!!! FIXME   if not Fab_size_check(def, env.long, env.deep) then return 0 end
+--!!!! FIXME   if not Fab_size_check(def, reqs.long, reqs.deep) then return 0 end
 
-    -- building type checks
-    if def.room then
-      if not match_room_kind(def.room, env.room) then return 0 end
+    -- check on room type (building / outdoor / cave)
+    if def.room_kind then
+      if not match_room_kind(def.room_kind, reqs.room_kind) then return 0 end
     end
 
-    if def.neighbor then
-      if not match_room_kind(def.neighbor, env.neighbor) then return 0 end
+    if def.neighbor_kind then
+      if not match_room_kind(def.neighbor_kind, reqs.neighbor_kind) then return 0 end
     end
 
     -- door check [WTF?]
-    if def.no_door and env.has_door then return 0 end
+    if def.no_door and reqs.has_door then return 0 end
 
     -- liquid check
     if def.liquid then
@@ -2147,7 +2147,7 @@ end
 
 
 
-function Fab_pick(env, reqs)
+function Fab_pick(reqs)
   local tab = {}
 
   local match_state = { rank=1 }
@@ -2156,7 +2156,7 @@ function Fab_pick(env, reqs)
 
   while cur_req do
     -- keep the earliest matches (they override later matches)
-    table.merge_missing(tab, Fab_find_matches(env, cur_req, match_state))
+    table.merge_missing(tab, Fab_find_matches(cur_req, match_state))
 
     cur_req = cur_req.alt_req
   end
@@ -2167,8 +2167,7 @@ function Fab_pick(env, reqs)
 
   if table.empty(tab) then
     gui.debugf("Fab_pick:\n")
-    gui.debugf("env   = \n%s\n", table.tostr(env))
-    gui.debugf("reqs1 = \n%s\n", table.tostr(reqs))
+    gui.debugf("reqs  = \n%s\n", table.tostr(reqs))
 
     error("No matching prefabs for: " .. reqs.kind)
   end
