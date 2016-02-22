@@ -747,7 +747,6 @@ function Grower_preprocess_grammar()
 
     locate_all_contiguous_parts("stair")
     locate_all_contiguous_parts("joiner")
-    locate_all_contiguous_parts("cage")
     locate_all_contiguous_parts("closet")
 
     if not cur_def.pass then
@@ -1653,17 +1652,15 @@ stderrf("new_room seed @ %s\n", S.name)
       return
     end
 
-    -- this is for 'free-range' cages, heh
+    -- this is for LARGE (aka free-range) cages
+    -- [ prefab cages are done via "closet" elements ]
     if E2.kind == "cage" then
-error("WTF")
       if not new_cage then
         new_cage = Grower_temp_area(R, "cage")
       end
       set_seed(S, new_cage)
       return
     end
-
-    -- TODO: stairs
 
     error("INSTALL : unsupported kind: " .. E2.kind)
   end
@@ -2050,8 +2047,8 @@ end
       area_map[3] = nil
     else
       new_area = nil
-      intl_conn = nil
       new_cage = nil
+      intl_conn = nil
     end
 
 --stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, x, y)

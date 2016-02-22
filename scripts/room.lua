@@ -965,7 +965,9 @@ function Room_border_up()
     -- [ normal rooms should not touch the edge ]
 
     if A2 == "map_edge" then
-      if A1.room or A1.mode == "cage" or A1.mode == "trap" or A1.mode == "pool" then
+      if A1.rect_info then return end
+
+      if A1.room then
         junc.E1 = simple_wall_edge(A1)
         junc.E2 = nil
       end

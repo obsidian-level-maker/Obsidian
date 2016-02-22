@@ -1367,7 +1367,7 @@ end
 
 
   if A.mode == "cage" then
-    A.floor_mat = "FLAT1"
+    A.floor_mat = "BLOOD1"
     A. wall_mat = "FLAT1"
   end
 
