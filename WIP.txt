@@ -2,6 +2,22 @@
 WORK IN PROGRESS
 ================
 
+>>>  in rect_info, store "long" and "deep" values
+
+>>>  use Fab_pick() for item pedestals
+
+
+Q/ should '#' just lock out that seed from future usage in the
+   current room (but allow other rooms to use it) ?
+
+
+
+LIQUIDS:
+
+-  if source pattern has no liquid, create a NEW area
+   [ and probably merge liquid areas which touch ]
+
+
 
 CLOSETS:
 
@@ -36,10 +52,6 @@ JOINERS:
 
 PREFAB SYSTEM:
 
-+  remove 'env' from Fab_pick()
-
--  fix "rank" handling in Fab_pick when alt_req is used
-
 +  figure out semantics of seed_w/seed_h and ROTATING prefabs
    -  if there is a natural direction (e.g. closet facing into room),
       then it is simple (rotation not possible)
@@ -61,9 +73,11 @@ Hard-coded prefab names :
 
 CAGES:
 
--  probably remove as a rect, only use "C" for LARGE cages
+-  make railings [ see junction logic in layout.lua ]
 
--  ability to make them in "T" closet rects
+-  pick floor height based on neighbors
+
+-  ability to make them in closets (esp. if shape is "P")
 
 
 
