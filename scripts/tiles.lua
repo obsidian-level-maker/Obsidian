@@ -287,7 +287,7 @@ SPROUT_HALL_1 =
 
 DECORATE_CAGE_FS_1 =
 {
-  prob = 5000
+  prob = 0
 
   structure =
   {
@@ -312,14 +312,29 @@ DECORATE_CAGE_SIDE_1 =
 }
 
 
-DECORATE_CLOSET_1 =
+DECORATE_CLOSET_1x2 =
 {
-  prob = 2000
+  prob = 1
 
   structure =
   {
-    "...", ".T."
-    "11X", "11X"
+    "..", "TT"
+    "11", "11"
+  }
+
+  closet = { dir=2, face_area=1 }
+}
+
+
+DECORATE_CLOSET_2x2 =
+{
+  prob = 200
+
+  structure =
+  {
+    "..", "TT"
+    "..", "TT"
+    "11", "11"
   }
 
   closet = { dir=2, face_area=1 }
