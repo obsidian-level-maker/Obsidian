@@ -733,9 +733,14 @@ end
 
 
 function Levels_choose_liquid()
+  -- always have a '_LIQUID' material.
+  -- this is the default, it usually gets set to a proper material
+  GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS["_ERROR"]
+
+  LEVEL.liquid_usage = 0
+
   if not THEME.liquids then
     gui.printf("Liquid: disabled by theme.\n\n")
-    LEVEL.liquid_usage = 0
     return
   end
 
@@ -743,10 +748,7 @@ function Levels_choose_liquid()
   local skip_prob = style_sel("liquids", 100, 30, 10, 0)
 
   if rand.odds(skip_prob) then
-    -- leave '_LIQUID' unset : it should not be used, but if does then
-    -- the _ERROR texture will appear (like any other unknown material.
     gui.printf("Liquid: skipped for level (by style).\n\n")
-    LEVEL.liquid_usage = 0
     return
   end
 
