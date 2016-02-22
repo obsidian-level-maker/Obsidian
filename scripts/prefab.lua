@@ -1998,10 +1998,7 @@ end
 
 
 
-function Fab_find_matches(env, reqs)
-
-  local cur_rank = 1
-
+function Fab_find_matches(env, reqs, match_state)
 
   local function match_size(w, env_w)
     -- prefab skin defaults to 1
@@ -2122,7 +2119,7 @@ function Fab_find_matches(env, reqs)
   local tab = { }
 
   each name,def in PREFABS do
-    if (def.rank or 1) < cur_rank then continue end
+    if (def.rank or 1) < match_state.rank then continue end
 
     if match_requirements(def) <= 0 then continue end
     if match_environment (def) <= 0 then continue end
@@ -2137,8 +2134,8 @@ function Fab_find_matches(env, reqs)
     -- Ok, add it
     -- a higher rank overrides anything lower
     
-    if (def.rank or 1) > cur_rank then
-      cur_rank = def.rank
+    if (def.rank or 1) > match_state.rank then
+      match_state.rank = def.rank
       tab = { }
     end
 
@@ -2153,33 +2150,35 @@ end
 function Fab_pick(env, reqs)
   local tab = {}
 
-  local orig_reqs = reqs
+  local match_state = { rank=1 }
 
-  while reqs do
-    local tab2 = Fab_find_matches(env, reqs)
+  local cur_req = reqs
 
+  while cur_req do
     -- keep the earliest matches (they override later matches)
-    table.merge_missing(tab, tab2)
+    table.merge_missing(tab, Fab_find_matches(env, cur_req, match_state))
 
-    reqs = reqs.alt_req
+    cur_req = cur_req.alt_req
   end
 
-if DEBUG_MULTI_SKIN then
-   DEBUG_MULTI_SKIN = nil
-   stderrf("\n\nDEBUG MULTI SKIN = \n%s\n\n", table.tostr(tab))
-end
+  if DEBUG_FAB_PICK then
+     gui.debugf("\n\nFAB_PICK = \n%s\n\n", table.tostr(tab))
+  end
 
   if table.empty(tab) then
     gui.debugf("Fab_pick:\n")
     gui.debugf("env   = \n%s\n", table.tostr(env))
-    gui.debugf("reqs1 = \n%s\n", table.tostr(orig_reqs))
+    gui.debugf("reqs1 = \n%s\n", table.tostr(reqs))
 
-    error("No matching prefabs for: " .. orig_reqs.kind)
+    error("No matching prefabs for: " .. reqs.kind)
   end
 
   local name = rand.key_by_probs(tab)
 
-stderrf("Fab_pick : chose %s\n", tostring(name))
+  if DEBUG_FAB_PICK then
+    gui.debugf("Fab_pick : chose %s\n", tostring(name))
+  end
+
   return assert(PREFABS[name])
 end
 
