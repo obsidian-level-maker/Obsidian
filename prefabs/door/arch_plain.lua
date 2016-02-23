@@ -8,7 +8,6 @@ PREFABS.Arch_plain =
   map    = "MAP01"
   where  = "edge"
 
-  long   = 128
   deep   = 16
   over   = 16
 
