@@ -40,32 +40,19 @@ PREFABS.Locked_small_kc_blue_diag =
 
 PREFABS.Locked_small_ks_blue =
 {
-  file   = "door/key_small.wad"
-  map    = "MAP01"
+  template = "Locked_small_kc_blue"
+  key      = "ks_blue"
 
-  where  = "edge"
-  key    = "ks_blue"
-
-  deep   = 32
-  over   = 32
-
-  x_fit  = "frame"
-
-  tex_DOORRED  = "DOORBLU2"
-  line_33 = 32
+  tex_DOORRED = "DOORBLU2"
 }
 
 
 PREFABS.Locked_small_ks_blue_diag =
 {
-  file   = "door/key_small.wad"
-  map    = "MAP02"
-
-  where  = "diagonal"
-  key    = "ks_blue"
+  template = "Locked_small_kc_blue_diag"
+  key      = "ks_blue"
 
   tex_DOORRED  = "DOORBLU2"
-  line_33 = 32
 }
 
 
@@ -106,32 +93,19 @@ PREFABS.Locked_small_kc_yellow_diag =
 
 PREFABS.Locked_small_ks_yellow =
 {
-  file   = "door/key_small.wad"
-  map    = "MAP01"
+  template = "Locked_small_kc_yellow"
+  key      = "ks_yellow"
 
-  where  = "edge"
-  key    = "ks_yellow"
-
-  deep   = 32
-  over   = 32
-
-  x_fit  = "frame"
-
-  tex_DOORRED  = "DOORYEL2"
-  line_33 = 34
+  tex_DOORRED = "DOORYEL2"
 }
 
 
 PREFABS.Locked_small_ks_yellow_diag =
 {
-  file   = "door/key_small.wad"
-  map    = "MAP02"
-
-  where  = "diagonal"
-  key    = "ks_yellow"
+  template = "Locked_small_kc_yellow_diag"
+  key      = "ks_yellow"
 
   tex_DOORRED  = "DOORYEL2"
-  line_33 = 34
 }
 
 
@@ -152,7 +126,7 @@ PREFABS.Locked_small_kc_red =
 
   x_fit  = "frame"
 
-  -- prefab has DOORRED texture and line special #33
+  -- prefab already has DOORRED texture and line special #33
 }
 
 
@@ -164,35 +138,24 @@ PREFABS.Locked_small_kc_red_diag =
   where  = "diagonal"
   key    = "kc_red"
 
-  -- prefab has DOORRED texture and line special #33
+  -- prefab already has DOORRED texture and line special #33
 }
 
 
 PREFABS.Locked_small_ks_red =
 {
-  file   = "door/key_small.wad"
-  map    = "MAP01"
+  template = "Locked_small_kc_red"
+  key      = "ks_red"
 
-  where  = "edge"
-  key    = "ks_red"
-
-  deep   = 32
-  over   = 32
-
-  x_fit  = "frame"
-
-  tex_DOORRED  = "DOORRED2"
+  tex_DOORRED = "DOORRED2"
 }
 
 
 PREFABS.Locked_small_ks_red_diag =
 {
-  file   = "door/key_small.wad"
-  map    = "MAP02"
+  template = "Locked_small_kc_red_diag"
+  key      = "ks_red"
 
-  where  = "diagonal"
-  key    = "ks_red"
-
-  tex_DOORRED  = "DOORRED2"
+  tex_DOORRED = "DOORRED2"
 }
 
