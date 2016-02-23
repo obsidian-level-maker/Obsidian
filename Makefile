@@ -214,7 +214,7 @@ clean:
 halfclean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 
-cleansvg:
+svgclean:
 	rm -f grow*.svg
 
 stripped: $(PROGRAM)
