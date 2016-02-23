@@ -823,6 +823,9 @@ function Quest_add_major_quests()
 
 
   local function collect_switch_goals(list)
+--FIXME
+do return false end
+
     if not THEME.switches then return {} end
 
     local skip_prob = style_sel("switches", 100, 20, 0, 0)
@@ -872,6 +875,9 @@ function Quest_add_major_quests()
 
 
   local function add_triple_key_door(key_list)
+--FIXME
+do return false end
+
     if #key_list < 3 then return false end
 
     -- FIXME: check "game" field in prefab def
@@ -899,6 +905,10 @@ function Quest_add_major_quests()
 
 
   local function add_double_switch_door(quest)
+--FIXME
+do return false end
+
+
     local prob = 25
 
     if OB_CONFIG.mode == "coop" then
@@ -954,8 +964,8 @@ function Quest_add_major_quests()
     if unused > 4 then unused = 4 end
 
     if not rand.odds(LOCK_PROBS[unused]) then
-      quest.no_more_locks = true
-      return
+--!!!! FIXME      quest.no_more_locks = true
+--!!!! FIXME      return
     end
 
     local goal = pick_goal(goal_list)
@@ -2588,7 +2598,7 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
----!!!  Quest_add_major_quests()
+  Quest_add_major_quests()
 
   Quest_start_room()
   Quest_order_by_visit()
