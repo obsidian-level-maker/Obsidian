@@ -2069,6 +2069,8 @@ function Fab_find_matches(reqs, match_state)
 
     if not match_word_or_table(def.switch, reqs.switch) then return 0 end
 
+    if reqs.item_kind != def.item_kind then return 0 end
+
     -- hallway stuff
     if reqs.door   != def.door   then return 0 end
     if reqs.secret != def.secret then return 0 end

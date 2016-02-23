@@ -2,7 +2,7 @@
 -- Hellish pentagram
 --
 
-PREFABS.Item_pentagram =
+UNFINISHED.Item_pentagram =
 {
   file  = "item/pentagram.wad"
   where = "point"

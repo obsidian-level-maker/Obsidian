@@ -221,6 +221,8 @@ end
   if table.empty(list) then list = R.emergency_wotsits end
   if table.empty(list) then list = R.dire_wotsits end
   
+  -- FIXME : won't use closets if spot list is empty
+
   if table.empty(list) then
     if none_OK then return nil end
 --- stderrf("FUCKED UP IN %s\n", R.name)

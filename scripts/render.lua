@@ -1526,15 +1526,17 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
 
   local function content_big_item(spot, item)
-    local fab_name = "Item_pedestal"
+    local reqs =
+    {
+      kind  = "item"
+      where = "point"
+    }
 
-    -- FIXME: TEMP RUBBISH
-    if string.sub(item, 1, 2) == "kc" or
-       string.sub(item, 1, 2) == "ks" then
-      fab_name = "Item_podium"
+    if spot.goal and spot.goal.kind == "KEY" then
+      reqs.item_kind = "key"
     end
 
-    local def = Fab_lookup(fab_name)
+    local def = Fab_pick(reqs)
 
     local skin1 = { object=item }
 

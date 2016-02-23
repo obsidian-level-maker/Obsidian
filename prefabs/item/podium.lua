@@ -9,6 +9,6 @@ PREFABS.Item_podium =
 
   item_kind = "key"
 
-  theme = { urban=1, egypt=1 }
+--!!!  theme = { hell=1, urban=1, egypt=1 }
 }
 
