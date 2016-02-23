@@ -1278,14 +1278,15 @@ function Render_depot(depot)
   local z = assert(LEVEL.player1_z)
 
 
-  local def = Fab_lookup("Depot")
+  local def = PREFABS["Depot"]
+  assert(def)
 
   local x2 = x1 + def.seed_w * SEED_SIZE
   local y2 = y1 + def.seed_h * SEED_SIZE
 
   local skin1 =
   {
-    wall = "COMPSPAN"
+    wall = "_ERROR"
   }
 
   assert(depot.skin)

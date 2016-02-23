@@ -226,6 +226,9 @@ end
 
 
 function Fab_lookup(name)
+  error("Fab_lookup is deprecated, fix the code to use Fab_pick()")
+
+--[[
   local def = PREFABS[name]
 
   if not def then
@@ -233,6 +236,7 @@ function Fab_lookup(name)
   end
 
   return def
+--]]
 end
 
 
