@@ -2,9 +2,9 @@
 WORK IN PROGRESS
 ================
 
->>>  in rect_info, store "long" and "deep" values
 
->>>  use Fab_pick() for item pedestals
+
+!!  keyed doors : back to front!
 
 
 Q/ should '#' just lock out that seed from future usage in the
@@ -50,6 +50,18 @@ JOINERS:
 
 
 
+SPOT SYSTEM:
+
++  after growing/areas/connecting, BUT before quests,
+   visit each room and collect a set of seed rectangles where
+   items/switches/decorations/etc can be placed.  [ include closets ]
+
+   generally only place stuff (goals, weapons, etc) in rooms that
+   contain enough spots.
+   [ later on, investigate splitting large spots/closets ]
+
+
+
 PREFAB SYSTEM:
 
 +  figure out semantics of seed_w/seed_h and ROTATING prefabs
@@ -61,13 +73,10 @@ PREFAB SYSTEM:
 -  allow 'max_seed_w, max_seed_h' to be maximum size
    __OR__ : seed_w = { 1,3 }
 
++  give "point" prefabs (like small switch or teleporter pad)
+   a "seed_w" and "seed_h" field
 
-
-Hard-coded prefab names :
-  Arch_plain
-  Item_pedestal
-
-  (many more not currently used)
+   use "seed_w" instead of "long" for Arch/Door/Window prefabs
 
 
 
@@ -83,57 +92,50 @@ CAGES:
 
 SHAPE GRAMMARS:
 
-   -  each level has different factors for all grammar rules
++  in rect_info, store "seed_w" and "seed_h" values [require a "dir" too]
 
-      factor = rand.pick({ 0.1, 0.3, 0.7, 1.0 })
-      if rand.odds(50) then factor = 1 / factor end
-      new_prob = old_prob * factor
+-  each map gets different factors for all grammar rules
 
-   idea: have "elements" table indexed by a seed coord
+   factor = rand.pick({ 0.1, 0.3, 0.7, 1.0 })
+   if rand.odds(50) then factor = 1 / factor end
+   new_prob = old_prob * factor
 
-      elements =
-      {
-        3_4  = { .... }
-        2_1B = { ... }
-        2_1T = { ... }
-      }
+Q/ can do windows using them?  pictures??
 
-   Q/ can do windows using them?  pictures??
+-  allow TWO conns into a new room (become F1/F2 in CONN object)
 
-   -  allow TWO conns into a new room (become F1/F2 in CONN object)
++  prune / re-use rooms which remain small, and hallways which
+   never end up anywhere else
 
-   +  prune / re-use rooms which remain small, and hallways which
-      never end up anywhere else
++  symmetrical rooms
+   +  join mirrored RECTS (the final areas) with 'peer' field
 
-   +  symmetrical rooms
-      +  join mirrored RECTS (the final areas) with 'peer' field
+   -  mark a RECT created by a "straddling" rule
+      [ increased score for wotsit finding ]
 
-      -  mark a RECT created by a "straddling" rule
-         [ increased score for wotsit finding ]
+   ?? join mirrored seeds with 'peer' field
 
-      ?? join mirrored seeds with 'peer' field
+   +  a way to score "straddling" patterns higher
+      [ they are a very good place for some stuff, e.g. exits ]
+      [[ only first usage of SPROUT/DECOR needs to score higher ]]
 
-      +  a way to score "straddling" patterns higher
-         [ they are a very good place for some stuff, e.g. exits ]
-         [[ only first usage of SPROUT/DECOR needs to score higher ]]
+   -  SPROUT pass : try some without a mirrored half
 
-      -  SPROUT pass : try some without a mirrored half
+   -  SPROUT: if mirrored and new rooms touch/overlap, only create
+              a single room
 
-      -  SPROUT: if mirrored and new rooms touch/overlap, only create
-                 a single room
+idea:  'O' used in matches for "open" part of room (floor/stair/liquid)
 
-   idea:  'O' used in matches for "open" part of room (floor/stair/liquid)
+idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
+       Q/ does "anything" included empty space / other rooms?
 
-   idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
-          Q/ does "anything" included empty space / other rooms?
+idea:  CYCLE pass (after SPROUT) for multiple paths
+       [ probably as 'H' hallways, allow these to grow, prune them
+         when they fail to connect ]
 
-   idea:  CYCLE pass (after SPROUT) for multiple paths
-          [ probably as 'H' hallways, allow these to grow, prune them
-            when they fail to connect ]
-
-   idea:  for CTF, create one big room with "rotate" symmetry
-          [ interleave GROW and SPROUT passes ]
-          [[ "new_room" becomes "new_area" but acting like a new room ]]
+idea:  for CTF, create one big room with "rotate" symmetry
+       [ interleave GROW and SPROUT passes ]
+       [[ "new_room" becomes "new_area" but acting like a new room ]]
 
 
 
@@ -148,7 +150,7 @@ HALLWAYS:
 
 
 
-MISC:
+MISCELLANEOUS:
 
 -  titlepic backgrounds (current and new) :
    determine ones for official package, put rest in an addon
