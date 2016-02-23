@@ -6,6 +6,8 @@ PREFABS.Arch_plain =
 {
   file   = "door/arch_plain.wad"
   map    = "MAP01"
+
+  kind   = "arch"
   where  = "edge"
 
   deep   = 16
@@ -22,6 +24,8 @@ PREFABS.Arch_plain_diag =
 {
   file   = "door/arch_plain.wad"
   map    = "MAP02"
+
+  kind   = "arch"
   where  = "diagonal"
 
   bound_z1 = 0

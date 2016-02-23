@@ -495,54 +495,62 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     end
 
 
-    -- FIXME : find it properly
-    local fab_name
+    -- find the prefab to use
+    local reqs =
+    {
+      kind = "door"
+
+      --TODO: seed_w = ...
+    }
 
     if LOCK then
       if #LOCK.goals == 2 then
-        fab_name = "Locked_double"
+        error("Locked double")
       elseif #LOCK.goals == 3 then
-        fab_name = "Locked_ks_ALL"
+        error("Locked triple")
+      elseif LOCK.goals[1].kind == "SWITCH" then
+        reqs.switch = LOCK.goals[1].item
       else
-        fab_name = "Locked_" .. LOCK.goals[1].item
+        reqs.key = LOCK.goals[1].item
       end
 
     else -- normal door
 
-      if E.kind == "arch" then
-        fab_name = "Arch_plain"
-      elseif E.kind == "secret_door" then
-        fab_name = "Door_secret"
-      else
-        fab_name = "Door_manual_big"
+      if E.kind == "secret_door" then
+        reqs.key = "secret"
+      
+      elseif E.kind == "arch" then
+        reqs.kind = "arch"
       end
     end
 
 
     if geom.is_corner(dir) then
-      fab_name = fab_name .. "_diag"
+      reqs.where = "diagonal"
+    else
+      reqs.where = "edge"
+    end
 
-      local def = Fab_lookup(fab_name)
 
+    local def = Fab_pick(reqs)
+
+    local T
+
+    if geom.is_corner(dir) then
       if E.conn.flip_it then dir = 10 - dir end
 
       local dir2 = DIAG_DIR_MAP[dir]
 
       local S = E.S
-      local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
 
-      Fabricate(R, def, T, { skin1 })
+      T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
 
     else  -- axis-aligned edge
 
-      local def = Fab_lookup(fab_name)
-
-      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn.flip_it)
-
-      Fabricate(R, def, T, { skin1 })
-
----???    do_door_base(S, dir, z, w_tex, o_tex)
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn.flip_it)
     end
+
+    Fabricate(R, def, T, { skin1 })
   end
 
 
