@@ -345,6 +345,7 @@ function Layout_place_importants(R)
     R.normal_wotsits = {}
 
     each A in R.areas do
+    if A.mode == "cage" or A.rect_info then continue end
     each corner in A.inner_points do
       -- FIXME : wall_dist
       local wall_dist = rand.range(0.5, 2.5)
