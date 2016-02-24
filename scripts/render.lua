@@ -1165,6 +1165,8 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     reqs.room_kind = A.room.kind
   end
 
+  -- TODO : for joiners, reqs.neighbor_kind
+
 
   local function do_cage()
     reqs.kind = "cage"
@@ -1190,20 +1192,35 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     end
   end
 
+  local function do_item()
+    reqs.kind = "item"
+
+    assert(A.closet_spot)
+stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
+    skin.object = assert(A.closet_spot.item or A.closet_spot.content_item)
+  end
+
 
   if A.mode == "cage" then
     do_cage()
 
   elseif A.mode == "closet" then
+    -- FIXME : unused closetes
+    if A.closet_kind == nil then return end
+
     if A.closet_kind == "START" then
       do_start()
 
     elseif A.closet_kind == "LEVEL_EXIT" then
       do_exit()
 
+    elseif A.closet_kind == "KEY" or
+           A.closet_kind == "WEAPON" or
+           A.closet_kind == "ITEM" then
+      do_item()
+
     else
-      -- FIXME
-      do return end
+      error("Unsupported closet kind: " .. tostring(A.closet_kind))
     end
 
   elseif A.mode == "stair" then

@@ -181,7 +181,9 @@ end
 
 
   local function evaluate_closet(area)
-    if not (kind == "START" or kind == "LEVEL_EXIT") then
+    if not (kind == "START" or kind == "LEVEL_EXIT" or
+            kind == "KEY"   or kind == "ITEM"  or kind == "WEAPON")
+    then
       return -1
     end
 
@@ -262,6 +264,8 @@ end
   if spot.closet then
     -- mark closet area as used
     spot.closet.closet_kind = kind
+    spot.closet.closet_spot = spot
+
     spot.area = spot.closet
 
   else
