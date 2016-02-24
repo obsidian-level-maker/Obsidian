@@ -4,7 +4,7 @@
 
 PREFABS.Item_alcove_small =
 {
-  file  = "item/alcove.wad"
+  file  = "item/alcove1.wad"
   where = "seeds"
 
   seed_w = 1
