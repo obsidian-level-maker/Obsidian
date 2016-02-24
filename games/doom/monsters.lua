@@ -292,7 +292,7 @@ DOOM.MONSTERS =
     health = 600
     damage = 8.0
     attack = "missile"
-    density = 0.45
+    density = 0.35
     min_weapon = 3
     room_size = "large"
     infight_damage = 70
@@ -309,7 +309,7 @@ DOOM.MONSTERS =
     damage = 10.7
     attack = "missile"
     min_weapon = 1
-    density = 0.6
+    density = 0.5
     room_size = "medium"
     infight_damage = 62
   }
