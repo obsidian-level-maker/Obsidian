@@ -221,15 +221,6 @@ end
   if table.empty(list) then list = R.emergency_wotsits end
   if table.empty(list) then list = R.dire_wotsits end
   
-  -- FIXME : won't use closets if spot list is empty
-
-  if table.empty(list) then
-    if none_OK then return nil end
---- stderrf("FUCKED UP IN %s\n", R.name)
----    do return { x=0, y=0, z=0, wall_dist=0} end
-    error("No usable spots in room!")
-  end
-
 
   local best
   local best_score = 0
@@ -253,6 +244,14 @@ end
         best_score = score
       end
     end
+  end
+
+
+  if not best then
+    if none_OK then return nil end
+--- stderrf("FUCKED UP IN %s\n", R.name)
+---    do return { x=0, y=0, z=0, wall_dist=0} end
+    error("No usable spots in room!")
   end
 
 
