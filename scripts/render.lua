@@ -1616,7 +1616,13 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
 
   local function content_start_pad(spot, dir)
-    local def = Fab_lookup("Start_basic")
+    local reqs =
+    {
+      kind  = "start"
+      where = "point"
+    }
+
+    local def = Fab_pick(reqs)
 
     local T = Trans.spot_transform(spot.x, spot.y, spot.z, 10 - dir)
 
@@ -1690,14 +1696,17 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
 
   local function content_exit(spot, secret_exit)
-    local fab_name = "Exit_switch"
+    local reqs =
+    {
+      kind  = "exit"
+      where = "point"
+    }
 
-    if secret_exit then fab_name = "Exit_pillar_secret" end
+    if secret_exit then
+      reqs.key = "secret"
+    end
 
-    -- FIXME: hack!
-    if OB_CONFIG.game == "heretic" then fab_name = "Exit_heretic" end
-
-    local def = Fab_lookup(fab_name)
+    local def = Fab_pick(reqs)
 
     local skin1 = { }
 
@@ -1710,10 +1719,15 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
 
   local function content_switch(spot)
-    -- TODO: find it properly
-    local fab_name = "Switch_small_" .. spot.goal.item
+    local reqs =
+    {
+      kind  = "switch"
+      where = "point"
 
-    local def = Fab_lookup(fab_name)
+      --??  switch = spot.goal.item
+    }
+
+    local def = Fab_pick(reqs)
 
     local skin1 = { }
 
@@ -1763,7 +1777,13 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function content_teleporter(spot)
     local C = assert(spot.conn)
 
-    local def = Fab_lookup("Teleporter1")
+    local reqs =
+    {
+      kind  = "teleporter"
+      where = "point"
+    }
+
+    local def = Fab_pick(reqs)
 
     local skin1 = {}
 
