@@ -12,7 +12,7 @@ PREFABS.Joiner_lift2 =
 
   x_fit = "frame"
 
-  prob = 5
+  prob = 0
 
   delta_h = 72
 }

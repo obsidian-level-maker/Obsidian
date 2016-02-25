@@ -2373,7 +2373,7 @@ stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
 
       -- TODO : decide prefab, allow a height difference
       if C.kind == "joiner" then
-        next_f = next_f + 72 --!!!!! FIXME TEST ONLY
+        next_f = next_f + 0 --!!!!! FIXME TEST ONLY
         set_floor(C.joiner_area, math.min(A1.floor_h, next_f))
 stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
       end
