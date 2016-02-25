@@ -25,16 +25,10 @@ brushlib = {}
 
 
 function raw_add_brush(brush)
+  -- check for obsolete crud
   each C in brush do
-    -- compatibility cruft
-
-    if C.face then
-      table.merge(C, C.face)
-      C.face = nil
-    end
-
-    if C.x_offset then C.u1 = C.x_offset ; C.x_offset = nil end
-    if C.y_offset then C.v1 = C.y_offset ; C.y_offset = nil end
+    assert(not C.x_offset)
+    assert(not C.y_offset)
   end
 
   gui.add_brush(brush)
