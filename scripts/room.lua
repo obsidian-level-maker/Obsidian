@@ -976,17 +976,17 @@ function Room_border_up()
     end
 
 
+    -- already decided?  [ doorways ]
+    if junc.keep_empty then return end
+    if junc.E1 then return end
+
+
     -- zones : gotta keep 'em separated
 
     if A1.zone != A2.zone then
       Junction_make_wall(junc)
       return
     end
-
-
-    -- already decided?  [ outdoor borders ]
-    if junc.keep_empty then return end
-    if junc.E1 then return end
 
 
     if A2.room and not A1.room then
