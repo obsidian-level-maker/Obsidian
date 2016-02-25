@@ -2201,7 +2201,44 @@ end
 
 
 
-function Grower_create_trunk(trunk_id)
+function Grower_create_trunks()
+  --
+  -- Multiple trunks require teleporters to connect them
+  -- (at the moment, anyway).
+  --
+  -- There are three basic configurations:
+  --    1. a single trunk, can spawn anywhere
+  --    2. two trunks, at two opposite corners of the map
+  --    3. three or four trunks, at each corner of the map
+  --
+
+  local trunk_num = 1
+
+  if PARAM.teleporters then
+    local prob1 = style_sel("teleporters", 0, 30, 60, 99)
+    local prob2 = style_sel("teleporters", 0, 10, 30, 50)
+
+    if rand.odds(prob1) then
+      trunk_num = trunk_num + 1
+
+      if rand.odds(prob2) then trunk_num = trunk_num + 1 end
+      if rand.odds(prob2) then trunk_num = trunk_num + 1 end
+    end
+  end
+
+
+  -- FIXME : do multiple trunks, determine seed ranges
+
+
+  local trunk_R = Grower_add_room(nil)  -- no parent
+
+  Grower_grammatical_room(trunk_R, "root")
+
+end
+
+
+
+function Grower_grow_rooms()
 
   local function grow_some(no_new)
     local room_list = table.copy(LEVEL.rooms)
@@ -2222,9 +2259,7 @@ function Grower_create_trunk(trunk_id)
   end
 
 
-  local trunk_R = Grower_add_room(nil)  -- no parent
-
-  Grower_grammatical_room(trunk_R, "root")
+  ---| Grower_grow_rooms |---
 
   for loop = 1, 50 do
     grow_some()
@@ -2799,8 +2834,8 @@ function Grower_create_rooms()
 
   Grower_prepare()
 
-  Grower_create_trunk(1)
-
+  Grower_create_trunks()
+  Grower_grow_rooms()
   Grower_decorate_rooms()
 
   Grower_fill_gaps()
