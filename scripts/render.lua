@@ -1190,6 +1190,20 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     if A.joiner_conn.flip_it then
       dir = 10 - dir
     end
+
+    local LOCK = A.joiner_conn.lock
+
+    if LOCK then
+      if #LOCK.goals == 2 then
+        error("Locked double")
+      elseif #LOCK.goals == 3 then
+        error("Locked triple")
+      elseif LOCK.goals[1].kind == "SWITCH" then
+        reqs.switch = LOCK.goals[1].item
+      else
+        reqs.key = LOCK.goals[1].item
+      end
+    end
   end
 
   local function do_item()
