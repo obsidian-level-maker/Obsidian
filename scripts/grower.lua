@@ -950,6 +950,27 @@ end
 
 
 
+function Grower_new_prelim_conn(R1, R2, kind)
+  local PC =
+  {
+    R1 = R1
+    R2 = R2
+  }
+
+  if kind then
+    PC.kind = kind
+  end
+
+  PC.R1.prelim_conn_num = PC.R1.prelim_conn_num + 1
+  PC.R2.prelim_conn_num = PC.R2.prelim_conn_num + 1
+
+  table.insert(LEVEL.prelim_conns, PC)
+
+  return PC
+end
+
+
+
 function Grower_add_room(parent_R, is_hallway)
   local ROOM = ROOM_CLASS.new()
 
@@ -967,20 +988,10 @@ function Grower_add_room(parent_R, is_hallway)
   Grower_temp_area(ROOM, "floor")
 
   -- create a preliminary connection (last room to this one)
-
   local PC
 
   if parent_R then
-    PC =
-    {
-      R1 = ROOM
-      R2 = parent_R
-    }
-
-    PC.R1.prelim_conn_num = PC.R1.prelim_conn_num + 1
-    PC.R2.prelim_conn_num = PC.R2.prelim_conn_num + 1
-
-    table.insert(LEVEL.prelim_conns, PC)
+    PC = Grower_new_prelim_conn(ROOM, parent_R)
   end
 
   return ROOM, PC
@@ -2176,19 +2187,19 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 --if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 6 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 1 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 14 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = 3 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
-  if pass == "decorate" then apply_num = 2 end --- rand.pick({0,1,2}) end
+  if pass == "decorate" then apply_num = 3 end --- rand.pick({0,1,2}) end
 
   collect_appropriate_rules()
 
@@ -2214,6 +2225,9 @@ function Grower_create_trunks()
 
   local trunk_num = 1
 
+  local trunk_list = {}
+
+
   if PARAM.teleporters then
     local prob1 = style_sel("teleporters", 0, 30, 60, 99)
     local prob2 = style_sel("teleporters", 0, 10, 30, 50)
@@ -2227,13 +2241,21 @@ function Grower_create_trunks()
   end
 
 
-  -- FIXME : do multiple trunks, determine seed ranges
+-- FIXME TEST ONLY
+trunk_num = 4
 
 
-  local trunk_R = Grower_add_room(nil)  -- no parent
+  for i = 1, trunk_num do
+    local trunk_R = Grower_add_room(nil)  -- no parent
 
-  Grower_grammatical_room(trunk_R, "root")
+    trunk_list[i] = trunk_R
 
+    Grower_grammatical_room(trunk_R, "root")
+
+    if i >= 2 then
+      Grower_new_prelim_conn(trunk_R, trunk_list[i - 1], "teleporter")
+    end
+  end
 end
 
 
