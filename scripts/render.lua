@@ -1801,7 +1801,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local skin1 = {}
 
-    if C.A1.room == R then
+    if C.R1 == R then
       skin1. in_tag = C.tele_tag2
       skin1.out_tag = C.tele_tag1
     else

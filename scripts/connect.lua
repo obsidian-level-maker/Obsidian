@@ -208,7 +208,12 @@ stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(
 
   elseif kind == "teleporter" then
 
-    -- what is needed??
+    table.insert(C.R1.teleporters, C)
+    table.insert(C.R2.teleporters, C)
+
+    -- setup tag information
+    C.tele_tag1 = alloc_id("tag")
+    C.tele_tag2 = alloc_id("tag")
 
   else
     local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
