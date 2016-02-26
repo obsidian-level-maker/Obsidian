@@ -773,6 +773,9 @@ function Room_detect_porches(R)
 
   ---| Room_detect_porches |---
 
+-- FIXME : porches disabled due to blocking pillars
+do return end
+
   local prob = style_sel("porches", 0, 25, 50, 75)
 
   if not rand.odds(prob) then
