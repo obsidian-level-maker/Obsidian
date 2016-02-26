@@ -182,7 +182,8 @@ end
 
   local function evaluate_closet(area)
     if not (kind == "START" or kind == "LEVEL_EXIT" or
-            kind == "KEY"   or kind == "ITEM"  or kind == "WEAPON")
+            kind == "KEY"   or kind == "ITEM"  or kind == "WEAPON" or
+            kind == "TELEPORTER")
     then
       return -1
     end

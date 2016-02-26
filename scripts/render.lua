@@ -1180,6 +1180,24 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     reqs.kind = "exit"
   end
 
+  local function do_teleporter()
+    reqs.kind = "teleporter"
+
+    assert(A.closet_spot)
+    local C = assert(A.closet_spot.conn)
+
+    if C.R1 == A.room then
+      skin. in_tag = C.tele_tag2
+      skin.out_tag = C.tele_tag1
+    else
+      skin. in_tag = C.tele_tag1
+      skin.out_tag = C.tele_tag2
+    end
+
+    skin. in_target = string.format("tele%d", skin. in_tag)
+    skin.out_target = string.format("tele%d", skin.out_tag)
+  end
+
   local function do_stairs()
     reqs.kind = "stairs"
   end
@@ -1227,6 +1245,9 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
 
     elseif A.closet_kind == "LEVEL_EXIT" then
       do_exit()
+
+    elseif A.closet_kind == "TELEPORTER" then
+      do_teleporter()
 
     elseif A.closet_kind == "KEY" or
            A.closet_kind == "WEAPON" or
