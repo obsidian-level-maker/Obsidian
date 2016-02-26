@@ -885,6 +885,8 @@ function Layout_create_scenic_borders()
         local junc = Junction_lookup(A, N)
         assert(junc)
 
+        if A.zone != N.zone then continue end
+
         if A.kind == "water" and N.room.kind == "hallway" then
 --!!!!!! FIXME
 --[[
