@@ -367,10 +367,10 @@ function Quest_eval_divide_at_conn(C, goal, info)
       if not same_quest(C2) then continue end
 
       local R2
-      if C2.A1.room == R then
-        R2 = C2.A2.room
+      if C2.R1 == R then
+        R2 = C2.R2
       else
-        R2 = C2.A1.room
+        R2 = C2.R1
       end
 
       -- already seen?
@@ -413,7 +413,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
       if quest.entry and quest.entry == R then continue end
 
       -- skip the room immediately next to the proposed connection
-      if C.A1.room == R or C.A2.room == R then continue end
+      if C.R1 == R or C.R2 == R then continue end
 
       if room_exits_in_set(R, rooms) == 1 then
         table.add_unique(leafs, R)
@@ -470,23 +470,23 @@ gui.debugf("  goal: %s/%s @ %s / %s\n", goal.kind or "???", goal.item or "???",
 goal.room.name, goal.room.quest.name)
 
   -- must be same quest (caller guarantees this)
-  assert(C.A1.room.quest == C.A2.room.quest)
+  assert(C.R1.quest == C.R2.quest)
 
   -- cannot lock teleporter connections
   if C.kind == "teleporter" then return end
 
-  quest = C.A1.room.quest
+  quest = C.R1.quest
 
 gui.debugf("  quest : %s\n", quest.name)
 
   -- must not divide a room in half
-  if C.A1.room == C.A2.room then
+  if C.R1 == C.R2 then
     return
   end
 
   -- collect rooms on each side of the connection
-  local before = collect_rooms(C.A1.room, {})
-  local  after = collect_rooms(C.A2.room, {})
+  local before = collect_rooms(C.R1, {})
+  local  after = collect_rooms(C.R2, {})
 
 --[[
 stderrf("BEFORE =\n  ")
@@ -495,8 +495,8 @@ stderrf("AFTER =\n  ")
 each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
 --]]
 
-  local before_R = C.A1.room
-  local  after_R = C.A2.room
+  local before_R = C.R1
+  local  after_R = C.R2
 
   if check_has_goal(after) then
     -- OK
@@ -2104,7 +2104,7 @@ function Quest_make_room_secret(R)
   -- if connected to a hallway or stairwell, make it secret too
   -- [ hallways with two or more other rooms are not changed ]
 
-  local H = sel(C.A1.room == R, C.A2.room, C.A1.room)
+  local H = sel(C.R1 == R, C.R2, C.R1)
 
   if (H.kind == "hallway" or H.kind == "stairwell") and
      H:total_conns() <= 2
@@ -2598,7 +2598,7 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
-  Quest_add_major_quests()
+--!!!  Quest_add_major_quests()
 
   Quest_start_room()
   Quest_order_by_visit()

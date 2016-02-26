@@ -206,6 +206,10 @@ stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(
     junc1.keep_empty = true
     junc2.keep_empty = true
 
+  elseif kind == "teleporter" then
+
+    -- what is needed??
+
   else
     local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
 

@@ -2359,7 +2359,15 @@ stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostrin
       if R2.entry_h then continue end
 
 stderrf("Recursing though %s (%s)\n", C.name, C.kind)
+if C.kind != "teleporter"then
 stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
+end
+
+      if C.kind == "teleporter" then
+        visit_room(R2, nil, nil, R, C)
+        continue
+      end
+
 
       assert(A1.mode != "joiner")
       assert(A2.mode != "joiner")
