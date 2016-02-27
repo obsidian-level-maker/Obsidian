@@ -683,6 +683,9 @@ end
 
 function Render_corner(cx, cy)
 
+  local analysis
+
+
   local function make_post(corner)
     local mx, my = corner.x, corner.y
     local mat    = corner.post_mat or "METAL"
@@ -704,12 +707,53 @@ function Render_corner(cx, cy)
   end
 
 
+  local function init_analysis()
+    analysis = {}
+
+    each dir in geom.ALL_DIRS do
+      analysis[dir] = {}
+    end
+
+    each dir in geom.ALL_DIRS do
+      analysis[dir].L = nil
+      analysis[dir].R = nil
+    end
+  end
+
+
+  local function analyse_walls(corner)
+    -- FIXME
+  end
+
+
+  local function polish_walls(corner)
+    --
+    -- Find gaps where two walls meet at a corner, and fill that gap
+    -- (producing a nice polished finish).
+    --
+    -- Algorithm:
+    --   1. analyse the eight lines coming off this corner.
+    --      each line may have a wall on each side (left and right).
+    --
+    --   2. detect the cases where we need a gap filler.
+    --      e.g. they require nothing on the three or four lines
+    --      which lie in-between the two walls.
+    --
+
+    init_analysis()
+
+    analyse_walls(corner)
+
+    -- FIXME detect stuff
+  end
+
+
   ---| Render_corner |---
 
   local corner = Corner_lookup(cx, cy)
 
   if corner.kind == nil or corner.kind == "nothing" then
-    -- nothing
+    polish_walls(corner)
 
   elseif corner.kind == "post" then
     make_post(corner)
