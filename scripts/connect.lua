@@ -46,9 +46,6 @@
 
     door_h : floor height for doors straddling the connection
 
-????  where1  : usually NIL, otherwise a FLOOR object
-????  where2  :
-
 --]]
 
 
@@ -125,32 +122,13 @@ function CONN_CLASS.other_room(C, R)
 end
 
 
-function CONN_CLASS.set_where(C, R, floor)
-  if R == C.R1 then  -- broken
-    C.where1 = floor
-  else
-    C.where2 = floor
-  end
-end
-
-
-function CONN_CLASS.get_where(C, R)
-  if R == C.R1 then  -- broken
-    return C.where1
-  else
-    return C.where2
-  end
-end
-
-
 ------------------------------------------------------------------------
 
 
 function Connect_through_sprout(P)
-
---stderrf("Connecting... %s <--> %s\n", P.R1.name, P.R2.name)
-
   local kind = P.kind or "edge"
+
+  gui.debugf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
 
   local C = CONN_CLASS.new(kind, P.R1, P.R2)
 
@@ -231,16 +209,13 @@ function Connect_teleporters()
 
   local function eval_room(R)
     -- never in hallways
-    if R.kind == "hallway"   then return -1 end
-    if R.kind == "stairwell" then return -1 end
+    if R.kind == "hallway" then return -1 end
 
-    -- score based on size, ignore if too small
-    if R.svolume < 10 then return -1 end
-
-    local score = 100
+    -- FIXME score = #R.closets * 10
+    local score = 0
 
     -- tie breaker
-    return score + gui.random()
+    return score + gui.random() * 10
   end
 
 
@@ -261,29 +236,30 @@ function Connect_teleporters()
   end
 
 
-  local function try_connect_trunks(trunk1, trunk2)
-    local loc_list = collect_teleporter_locs()
+  local function pick_room_in_trunk(trunk)
+    local best
+    local best_score
 
-    -- sort the list, best score at the front
-    table.sort(loc_list, function(A, B) return A.score > B.score end)
+    each R in trunk.rooms do
+      local score = eval_room(R)
 
-    -- need at least a source and a destination
-    -- [we try all possible combinations of rooms)
+      if score < 0 then continue end
 
-gui.debugf("Teleport locs: %d\n", #loc_list)
-    while #loc_list >= 2 do
-      local loc1 = table.remove(loc_list, 1)
-
-      -- try to find a room we can connect to
-      each loc2 in loc_list do
-        if connect_is_possible(loc1, loc2) then
-          add_teleporter(loc1, loc2)
-          return true
-        end
+      if not best or score > best_score then
+        best = R
+        best_score = score
       end
     end
 
-    return false
+    return assert(best)
+  end
+
+
+  local function connect_trunks(trunk1, trunk2)
+    local R1 = pick_room_in_trunk(trunk1)
+    local R2 = pick_room_in_trunk(trunk2)
+
+    add_teleporter(R1, R2)
   end
 
 
@@ -295,7 +271,7 @@ gui.debugf("Teleport locs: %d\n", #loc_list)
     local trunk1 = LEVEL.trunks[k]
     local trunk2 = LEVEL.trunks[i]
 
-    try_connect_trunks(trunk1, trunk2)
+    connect_trunks(trunk1, trunk2)
   end
 end
 
