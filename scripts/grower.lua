@@ -2256,8 +2256,11 @@ trunk_num = 4
   for i = 1, trunk_num do
     local trunk =
     {
+      id = alloc_id("trunk")
       rooms = {}
     }
+
+    trunk.name = string.format("TRUNK_%d", trunk.id)
 
     table.insert(LEVEL.trunks, trunk)
 
