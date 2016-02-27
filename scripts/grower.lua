@@ -2268,12 +2268,6 @@ trunk_num = 4
     table.insert(trunk.rooms, R)
 
     Grower_grammatical_room(R, "root")
-
-    -- TEMP CRUD!!
-    if i >= 2 then
-      local prev_trunk = LEVEL.trunks[i - 1]
-      Grower_new_prelim_conn(R, rand.pick(prev_trunk.rooms), "teleporter")
-    end
   end
 end
 

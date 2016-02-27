@@ -146,24 +146,6 @@ end
 ------------------------------------------------------------------------
 
 
-function Connect_merge_groups(A1, A2)  -- NOTE : only used for internal conns now
-  local gr1 = A1.conn_group
-  local gr2 = A2.conn_group
-
-  assert(gr1 and gr2)
-  assert(gr1 != gr2)
-
-  if gr1 > gr2 then gr1,gr2 = gr2,gr1 end
-
-  each A in LEVEL.areas do
-    if A.conn_group == gr2 then
-       A.conn_group = gr1
-    end
-  end
-end
-
-
-
 function Connect_through_sprout(P)
 
 --stderrf("Connecting... %s <--> %s\n", P.R1.name, P.R2.name)
@@ -181,6 +163,8 @@ function Connect_through_sprout(P)
 
   if P.split then long = P.split end
 
+
+  assert(kind != "teleporter")
 
   if kind == "joiner" then
     C.A1 = assert(P.A1)
@@ -205,15 +189,6 @@ stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(
 
     junc1.keep_empty = true
     junc2.keep_empty = true
-
-  elseif kind == "teleporter" then
-
-    table.insert(C.R1.teleporters, C)
-    table.insert(C.R2.teleporters, C)
-
-    -- setup tag information
-    C.tele_tag1 = alloc_id("tag")
-    C.tele_tag2 = alloc_id("tag")
 
   else
     local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
@@ -254,16 +229,10 @@ end
 
 function Connect_teleporters()
 
-  -- FIXME : COMPLETELY BROKEN!!!  FIX FOR 'TRUNKS' FROM GROWER
-  
   local function eval_room(R)
     -- never in hallways
     if R.kind == "hallway"   then return -1 end
     if R.kind == "stairwell" then return -1 end
-
-    -- can only have one teleporter per room
-    -- TODO : relax this to one per area [ but require a big room ]
-    if R:has_teleporter() then return -1 end
 
     -- score based on size, ignore if too small
     if R.svolume < 10 then return -1 end
@@ -275,57 +244,24 @@ function Connect_teleporters()
   end
 
 
-  local function collect_teleporter_locs()
-    local list = {}
+  local function add_teleporter(R1, R2)
+    gui.debugf("Teleporter connection: %s --> %s\n", R1.name, R2.name)
 
-    each R in LEVEL.rooms do
-      local score = eval_room(R)
+    local C = CONN_CLASS.new("teleporter", R1, R2)
 
-      if score > 0 then
-        table.insert(list, { R=R, A=rand.pick(R.areas), score=score })
-      end
-    end
+    table.insert(C.R1.conns, C)
+    table.insert(C.R2.conns, C)
 
-    return list
-  end
-
-
-  local function connect_is_possible(loc1, loc2)
-    local A1 = loc1.A
-    local A2 = loc2.A
-
-    if A1.room == A2.room then
-      return false
-    end
-
--- FIXME
-    return (A1.conn_group != A2.conn_group)
-  end
-
-
-  local function add_teleporter(loc1, loc2)
-    local A1 = loc1.A
-    local A2 = loc2.A
-
-    gui.debugf("Teleporter connection: %s -- >%s\n", A1.name, A2.name)
-
----##  Connect_merge_groups(A1, A2)
-
-    local C = CONN_CLASS.new("teleporter", A1, A2)
-
-    table.insert(A1.room.conns, C)
-    table.insert(A2.room.conns, C)
+    table.insert(C.R1.teleporters, C)
+    table.insert(C.R2.teleporters, C)
 
     -- setup tag information
     C.tele_tag1 = alloc_id("tag")
     C.tele_tag2 = alloc_id("tag")
-
-    table.insert(A1.room.teleporters, C)
-    table.insert(A2.room.teleporters, C)
   end
 
 
-  local function try_add_teleporter()
+  local function try_connect_trunks(trunk1, trunk2)
     local loc_list = collect_teleporter_locs()
 
     -- sort the list, best score at the front
@@ -353,74 +289,28 @@ gui.debugf("Teleport locs: %d\n", #loc_list)
 
   ---| Connect_teleporters |---
 
-  -- check if game / theme supports them
-  if not PARAM.teleporters or
-     OB_CONFIG.mode == "ctf"  -- TODO: support in CTF maps
-  then
-    gui.printf("Teleporters: not supported\n", quota)
-    return
-  end
+  for i = 2, #LEVEL.trunks do
+    local k = rand.irange(1, i - 1)
 
-  -- determine number to make
-  local skip_prob = style_sel("teleporters", 100, 50, 25, 0)
-  local quota     = style_sel("teleporters", 0, 0.5, 1.0, 2.5)
+    local trunk1 = LEVEL.trunks[k]
+    local trunk2 = LEVEL.trunks[i]
 
-  if rand.odds(skip_prob) then
-    gui.printf("Teleporters: skipped by style\n")
-    return
-  end
-
-  quota = quota * SEED_W / rand.irange(15, 25)
-
-  gui.printf("Teleporters: %d (%1.2f)\n", int(quota), quota)
-
-  for i = 1, quota do
-    try_add_teleporter()
+    try_connect_trunks(trunk1, trunk2)
   end
 end
 
 
-----------------------------------------------------------------
-
 
 function Connect_stuff()
-
-
-  -- this is not used, but may be useful
-  local function is_near_another_conn(S, N)
-    -- returns 0 for OK, 1 for meh, 2 for OMG
-
-    local near_S = 0
-    local near_N = 0
-
-    each dir in geom.ALL_DIRS do
-      local S2 = S:neighbor(dir)
-      local N2 = N:neighbor(dir)
-
-      if S2 and S2.area == S.area and S2.conn then near_S = near_S + 1 end
-      if N2 and N2.area == N.area and N2.conn then near_N = near_N + 1 end
-    end
-
-    return math.min(near_S + near_N, 2)
-  end
-
-
-  local function connect_grown_rooms()
-    -- turn the preliminary connections into real ones
-
-    each P in LEVEL.prelim_conns do
-      Connect_through_sprout(P)
-    end
-  end
-
 
   ---| Connect_stuff |---
 
   gui.printf("\n---| Connect_stuff |---\n")
 
+  each P in LEVEL.prelim_conns do
+    Connect_through_sprout(P)
+  end
 
-  -- TODO Connect_teleporters()
-
-  connect_grown_rooms()
+  Connect_teleporters()
 end
 
