@@ -3,12 +3,24 @@ WORK IN PROGRESS
 ================
 
 
-
-!!  keyed doors : back to front!
-
-
 Q/ should '#' just lock out that seed from future usage in the
    current room (but allow other rooms to use it) ?
+
+A/ yes   [ but prevent other room storing a '#' in it ]
+
+
+
+SPOT SYSTEM:
+
+!! after growing/areas/connecting, BUT before quests,
+   visit each room and collect a set of seed rectangles where
+   items/switches/decorations/etc can be placed.  [ include closets ]
+
+   generally only place stuff (goals, weapons, etc) in rooms that
+   contain enough spots.
+   [ later on, investigate splitting large spots/closets ]
+
+   IDEA : use grammar system to identify these places
 
 
 
@@ -25,8 +37,6 @@ CLOSETS:
     [ needed for JOINERS too ]
 
 +  monster trap!
-
--  item closet
 
 
 
@@ -50,19 +60,17 @@ JOINERS:
 
 
 
-SPOT SYSTEM:
+TELEPORTERS:
 
-+  after growing/areas/connecting, BUT before quests,
-   visit each room and collect a set of seed rectangles where
-   items/switches/decorations/etc can be placed.  [ include closets ]
++  exclusion zone for a closet
 
-   generally only place stuff (goals, weapons, etc) in rooms that
-   contain enough spots.
-   [ later on, investigate splitting large spots/closets ]
+-  improve eval_room() -- it needs to know # of spots/closets in a room 
 
 
 
 PREFAB SYSTEM:
+
+!!  use 'size' keyword (or 'size_w', 'size_h' for rectangles)
 
 +  figure out semantics of seed_w/seed_h and ROTATING prefabs
    -  if there is a natural direction (e.g. closet facing into room),
@@ -91,6 +99,9 @@ CAGES:
 
 
 SHAPE GRAMMARS:
+
+IDEA: rules can specify a "prefab_flavor" for any rects, and when
+      finding a matching prefab require "flavor" field to match.
 
 +  in rect_info, store "seed_w" and "seed_h" values [require a "dir" too]
 
@@ -156,4 +167,6 @@ MISCELLANEOUS:
    determine ones for official package, put rest in an addon
 
 +  face direction for switches
+
+-  why both "item" and "content_item" in a spot table??
 
