@@ -1212,16 +1212,22 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   -- TODO : for joiners, reqs.neighbor_kind
 
 
-  local function do_cage()
-    reqs.kind = "cage"
-  end
-
   local function do_start()
     reqs.kind = "start"
   end
 
   local function do_exit()
     reqs.kind = "exit"
+  end
+
+  local function do_cage()
+    reqs.kind = "cage"
+  end
+
+  local function do_trap()
+    reqs.kind = "trap"
+
+    -- FIXME : tag for trap door!!
   end
 
   local function do_teleporter()
@@ -1277,39 +1283,47 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
   end
 
 
-  if A.mode == "cage" then
+  assert(A.mode != "cage")
+
+
+  local what = A.mode
+
+  if what == "closet" then
+    what = A.closet_kind
+
+    -- FIXME : unused closets  [ i.e. this should not happen ]
+    if what == nil then return end
+  end
+
+  assert(what)
+
+
+  if what == "START" then
+    do_start()
+
+  elseif what == "LEVEL_EXIT" then
+    do_exit()
+
+  elseif what == "TELEPORTER" then
+    do_teleporter()
+
+  elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
+    do_item()
+
+  elseif what == "CAGE" then
     do_cage()
 
-  elseif A.mode == "closet" then
-    -- FIXME : unused closetes
-    if A.closet_kind == nil then return end
+  elseif what == "TRAP" then
+    do_trap()
 
-    if A.closet_kind == "START" then
-      do_start()
-
-    elseif A.closet_kind == "LEVEL_EXIT" then
-      do_exit()
-
-    elseif A.closet_kind == "TELEPORTER" then
-      do_teleporter()
-
-    elseif A.closet_kind == "KEY" or
-           A.closet_kind == "WEAPON" or
-           A.closet_kind == "ITEM" then
-      do_item()
-
-    else
-      error("Unsupported closet kind: " .. tostring(A.closet_kind))
-    end
-
-  elseif A.mode == "stair" then
+  elseif what == "stair" then
     do_stairs()
 
-  elseif A.mode == "joiner" then
+  elseif what == "joiner" then
     do_joiner()
 
   else
-    error("Unsupported prefab kind: " .. tostring(A.mode))
+    error("Unsupported prefab kind: " .. tostring(what))
   end
 
 
