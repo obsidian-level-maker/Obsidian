@@ -460,14 +460,16 @@ Outdoor Idioms:
 
 
 Theme System:
++  fix "As Original" to not pick other themes for a whole episode
+
+-  IDEA: "Mostly Original" theme
+
 +  fairly rare "mix in" themes, e.g. Egypt for TNT
 
 +  proper themes for QUAKE
 
 -  IDEA: a 'subs' table -- used to substitute a chosen texture with
    another (randomly picked) one.
-
--  "Mostly Original" theme
 
 -  if keys are left over, can use them for non-Zone locks
 
