@@ -971,10 +971,18 @@ end
 
 
 
-function Grower_add_room(parent_R, is_hallway)
+function Grower_add_room(parent_R, is_hallway, trunk)
   local ROOM = ROOM_CLASS.new()
 
   ROOM.grow_parent = parent_R
+
+  if trunk == nil then
+    assert(parent_R)
+    trunk = assert(parent_R.trunk)
+  end
+
+  ROOM.trunk = trunk
+  table.insert(trunk.rooms, ROOM)
 
   local kind = sel(is_hallway, "hallway", "normal")
 
@@ -2187,19 +2195,19 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 --if pass == "decorate" then return end
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 1 then return end
+  if pass == "sprout" and #LEVEL.rooms >= 8 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 3 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = 5 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
-  if pass == "decorate" then apply_num = 3 end --- rand.pick({0,1,2}) end
+  if pass == "decorate" then apply_num = 5 end --- rand.pick({0,1,2}) end
 
   collect_appropriate_rules()
 
@@ -2225,7 +2233,7 @@ function Grower_create_trunks()
 
   local trunk_num = 1
 
-  local trunk_list = {}
+  LEVEL.trunks = {}
 
 
   if PARAM.teleporters then
@@ -2246,14 +2254,22 @@ trunk_num = 4
 
 
   for i = 1, trunk_num do
-    local trunk_R = Grower_add_room(nil)  -- no parent
+    local trunk =
+    {
+      rooms = {}
+    }
 
-    trunk_list[i] = trunk_R
+    table.insert(LEVEL.trunks, trunk)
 
-    Grower_grammatical_room(trunk_R, "root")
+    local R = Grower_add_room(nil, false, trunk)  -- no parent
+    table.insert(trunk.rooms, R)
 
+    Grower_grammatical_room(R, "root")
+
+    -- TEMP CRUD!!
     if i >= 2 then
-      Grower_new_prelim_conn(trunk_R, trunk_list[i - 1], "teleporter")
+      local prev_trunk = LEVEL.trunks[i - 1]
+      Grower_new_prelim_conn(R, rand.pick(prev_trunk.rooms), "teleporter")
     end
   end
 end
