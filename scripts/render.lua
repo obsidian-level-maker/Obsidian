@@ -729,7 +729,24 @@ function Render_corner(cx, cy)
 
 
   local function build_filler(dir, L_tex, R_tex)
-    -- FIXME
+    if L_tex != R_tex then
+      L_tex = "METAL"
+    end
+
+    local x = corner.x
+    local y = corner.y
+
+    local ax, ay = geom.delta(geom.RIGHT_45[dir])
+    local bx, by = geom.delta(geom. LEFT_45[dir])
+
+    ax = ax * 16 ; ay = ay * 16
+    bx = bx * 16 ; by = by * 16
+
+    local w_brush = brushlib.triangle(x, y, x+ax, y+ay, x+bx, y+bx)
+
+    brushlib.set_mat(w_brush, L_tex)
+
+    Trans.brush(w_brush)
   end
 
 
@@ -1070,7 +1087,7 @@ end
 
 
 function Render_void(A, S)
-  -- used for VOID areas and prefabs occupying whole seed
+  -- used for VOID areas
 
   local w_brush = S:make_brush()
 
