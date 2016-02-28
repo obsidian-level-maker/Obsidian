@@ -182,7 +182,7 @@ function Grower_preprocess_grammar()
     if ch == 'X' then return { kind="dont_care" } end
 
     if ch == '~' then return { kind="liquid" } end
-    if ch == '#' then return { kind="solid" } end
+    if ch == '#' then return { kind="disable" } end
 
     if ch == '1' then return { kind="area", area=1 } end
     if ch == '2' then return { kind="area", area=2 } end
@@ -299,6 +299,10 @@ function Grower_preprocess_grammar()
 
     if E1.kind == "dont_care" then
       error("bad element in " .. def.name .. ": cannot overwrite an 'X'")
+    end
+
+    if E1.kind == "disable" then
+      error("bad element in " .. def.name .. ": cannot overwrite an '#'")
     end
 
     if E2.kind == "dont_care" then
@@ -1094,7 +1098,9 @@ stderrf("overwrite seed @ %s\n", S.name)
   local function raw_blocked(S)
     if S.area then return true end
     if S.temp_area then return true end
+    if S.disabled_R == R then return true end
 
+    -- never use a seed at edge of map
     if S.sx <= 1 or S.sx >= SEED_W then return true end
     if S.sy <= 1 or S.sy >= SEED_H then return true end
 
@@ -1575,10 +1581,20 @@ stderrf("---> fail\n")
       return not raw_blocked(S)
     end
 
-    -- seed is locked out of further changes?
-    if E2.assignment and S.no_assignment then
+    if E1.kind == "disable" then
+      return (S.disabled_R == R)
+    end
+
+    -- prevent assigning an '#' onto one from a different room
+    if E2.kind == "disable" and S.disable_R then
       return false
     end
+
+    -- seed is locked out of further changes?
+    if E2.assignment and (S.no_assignment or S.disabled_R == R) then
+      return false
+    end
+
 
     -- do we have an area in current room?
     local A = S.temp_area
@@ -1615,14 +1631,24 @@ stderrf("---> fail\n")
   local function install_an_element(S, E1, E2, T)
     if E1.kind == "dont_care" then return end
 
-    -- FIXME: too simple!!!
-    if E1.kind == E2.kind then return end
+    if not E2.assignment then return end
 
     if E2.kind == "free" then
-      if S.temp_area then  ---??  if not (E1.kind == "free") then
+      if S.temp_area then
         unset_seed(S)
       end
 
+      return
+    end
+
+    if E2.kind == "disable" then
+      if S.temp_area then
+        unset_seed(S)
+      end
+
+      -- prevent the seed being used by THIS room ever again
+      -- [ however, OTHER rooms are allowed to use it ]
+      S.disable_R = R
       return
     end
 
