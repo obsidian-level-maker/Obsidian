@@ -6,7 +6,7 @@ PREFABS.Cage_wall_1 =
 {
   file   = "cage/wall_cage.wad"
   where  = "seeds"
-  shape  = "F"
+--!!  shape  = "F"
 
   seed_w = 1
   seed_h = 1

@@ -827,6 +827,11 @@ function Layout_unused_closets()
   end
 
 
+  local function make_cage(A)
+    A.closet_kind = "CAGE"
+  end
+
+
   local function kill_closet(A)
     A.mode = "void"
 
@@ -839,7 +844,7 @@ function Layout_unused_closets()
 
     each A in R.areas do
       if A.mode == "closet" and not A.closet_kind then
-        make_trap(A)
+        make_cage(A)
       end
     end
   end
