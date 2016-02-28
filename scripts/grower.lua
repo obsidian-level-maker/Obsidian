@@ -1095,6 +1095,15 @@ stderrf("overwrite seed @ %s\n", S.name)
   end
 
 
+  local function set_liquid(S)
+    if R.temp_areas["liquid"] == nil then
+       R.temp_areas["liquid"] = Grower_temp_area(R, "liquid", "no_add")
+    end
+
+    set_seed(S, R.temp_areas["liquid"])
+  end
+
+
   local function raw_blocked(S)
     if S.area then return true end
     if S.temp_area then return true end
@@ -1607,9 +1616,8 @@ stderrf("---> fail\n")
     -- otherwise we require an area of this room
     if not (A and A.room == R) then return false end
 
-    if E1.kind == "solid" or
-       E1.kind == "liquid" or
-       E1.kind == "cage"  or
+    if E1.kind == "liquid" or
+       E1.kind == "cage"   or
        E1.kind == "closet"
     then
       return (A.mode == E1.kind)
@@ -1686,14 +1694,8 @@ stderrf("new_room seed @ %s\n", S.name)
       return
     end
 
-    if E2.kind == "solid" or
-       E2.kind == "liquid"
-    then
-      if R.temp_areas[E2.kind] == nil then
-         R.temp_areas[E2.kind] = Grower_temp_area(R, E2.kind, "no_add")
-      end
-
-      set_seed(S, R.temp_areas[E2.kind])
+    if E2.kind == "liquid" then
+      set_liquid(S)
       return
     end
 
