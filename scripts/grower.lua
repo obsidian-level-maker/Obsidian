@@ -843,6 +843,13 @@ function Grower_make_all_areas()
   end
 
 
+  local function make_liquids()
+    -- create areas from contiguous groups of liquid seeds (in a room)
+
+    -- FIXME
+  end
+
+
   local function resolve_references()
     each temp in LEVEL.all_temps do
       if temp.face_area then
@@ -900,6 +907,23 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
   end
 
 
+  local function sanity_check()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      for pass = 1, 2 do
+        local S = SEEDS[sx][sy]
+        if pass == 2 then S = S.top end
+
+        if S and S.temp_area then
+          stderrf("OH HELL : %s\n", tostring(S.temp_area.mode))
+          error("Failed to convert all temp-areas")
+        end
+      end
+    end -- sx, sy
+    end
+  end
+
+
   ---| Grower_make_all_areas |---
 
   LEVEL.all_temps = {}
@@ -907,6 +931,8 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
   each R in LEVEL.rooms do
     make_areas(R.temp_areas)
   end
+
+--FIXME  make_liquids()
 
   if LEVEL.gap_areas then
     make_areas(LEVEL.gap_areas)
@@ -916,20 +942,8 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
   resolve_internal_conns()
   resolve_joiners()
 
-  -- sanity check [ no seeds should have a 'temp_area' now... ]
-
-  for sx = 1, SEED_W do
-  for sy = 1, SEED_H do
-  for pass = 1, 2 do
-    local S = SEEDS[sx][sy]
-    if pass == 2 then S = S.top end
-if S and S.temp_area then
-stderrf("OH HELL : %s\n", tostring(S.temp_area.mode))
-end
-    if S then assert(not S.temp_area) end
-  end
-  end
-  end
+  -- no seeds should have a 'temp_area' now...
+  sanity_check()
 end
 
 
