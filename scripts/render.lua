@@ -1223,13 +1223,8 @@ function Render_seed(A, S)
     return
   end
 
-  if S.kind == "void" then
+  if S.kind == "void" or A.mode == "void" then
     Render_void(A, S)
-    return
-  end
-
-  if A.mode == "void" then
---stderrf("Void area: %s @ %s\n", A.name, A.seeds[1].name)
     return
   end
 
@@ -1504,10 +1499,6 @@ function Render_properties_for_area(A)
 
   local R = A.room
   if not R then R = A.face_room end
-
-if not R then
-  A.mode = "void"
-end
 
 
   if A.mode == "void" then

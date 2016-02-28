@@ -2677,11 +2677,11 @@ function Room_build_all()
     Layout_place_importants(R)
   end
 
----###  Layout_traps_and_cages()
+  -- turn remaining closets into traps, cages, little secrets, etc
+  Layout_unused_closets()
 
   Layout_create_scenic_borders()
   Layout_liquid_stuff()
-  Layout_update_cages()
 
   Room_border_up()
   Room_set_sky_heights()

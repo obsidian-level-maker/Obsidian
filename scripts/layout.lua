@@ -385,6 +385,82 @@ function Layout_place_importants(R)
   end
 
 
+  local function try_teleportation_trap(spot)
+    local A = assert(spot.area)
+    local R = assert(A.room)
+
+    -- we will need several places for teleport destinations
+    if R.total_inner_points < 5 then return false end
+
+    local dests = {}
+
+    dests[1] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
+    dests[2] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
+    dests[3] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
+
+    -- do not use the "dire" emergency spots
+    if not (dests[1] and not dests[1].is_dire) then return false end
+    if not (dests[2] and not dests[2].is_dire) then return false end
+
+    if dests[3] and dests[3].is_dire then dests[3] = nil end
+
+    -- need a free depot too
+    local x1, y1 = Seed_alloc_depot()
+
+    if not x1 then
+      gui.debugf("Cannot make teleportation trap: out of depots\n")
+      return
+    end
+
+    -- OK --
+
+    gui.debugf("Making teleportation trap in %s\n", A.name)
+
+    each dest in dests do
+      dest.tag = alloc_id("tag")
+
+---###  table.insert(R.mon_teleports, dest)
+    end
+
+    local TRIGGER =
+    {
+      r = 64
+      action = 109  -- W1 : open and stay /fast
+      tag = alloc_id("tag")
+    }
+
+    spot.trigger = TRIGGER
+
+    -- create the DEPOT information
+
+    local skin =
+    {
+      trigger_tag = TRIGGER.tag
+
+      out_tag1 = dests[1].tag
+      out_tag2 = dests[2].tag
+      out_tag3 = dests[1].tag  -- not a typo
+    }
+
+    if dests[3] then
+      skin.out_tag3 = dests[3].tag
+    end
+
+    local DEPOT =
+    {
+      room = R
+      x1 = x1
+      y1 = y1
+      skin = skin
+      trigger = spot.trigger
+    }
+
+    table.insert(LEVEL.depots, DEPOT)
+
+    return true
+  end
+
+
   ---| Layout_place_importants |---
 
   if R.kind == "stairwell" then
@@ -416,6 +492,8 @@ function Layout_place_importants(R)
   each name in R.items do
     add_item(name)
   end
+
+  -- TODO : teleportation trap spots
 end
 
 
@@ -449,7 +527,12 @@ end
 
 
 
-function Layout_traps_and_cages()
+function Layout_unused_closets()
+  --
+  -- Handles all the unused closets in a room, turning them
+  -- into traps, cages, secret closets (etc).
+  --
+
   local  junk_list = {}
   local other_list = {}
 
@@ -567,82 +650,6 @@ function Layout_traps_and_cages()
     rand.shuffle(list)
 
     return list, svolume
-  end
-
-
-  local function try_teleportation_trap(spot)
-    local A = assert(spot.area)
-    local R = assert(A.room)
-
-    -- we will need several places for teleport destinations
-    if R.total_inner_points < 5 then return false end
-
-    local dests = {}
-
-    dests[1] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
-    dests[2] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
-    dests[3] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
-
-    -- do not use the "dire" emergency spots
-    if not (dests[1] and not dests[1].is_dire) then return false end
-    if not (dests[2] and not dests[2].is_dire) then return false end
-
-    if dests[3] and dests[3].is_dire then dests[3] = nil end
-
-    -- need a free depot too
-    local x1, y1 = Seed_alloc_depot()
-
-    if not x1 then
-      gui.debugf("Cannot make teleportation trap: out of depots\n")
-      return
-    end
-
-    -- OK --
-
-    gui.debugf("Making teleportation trap in %s\n", A.name)
-
-    each dest in dests do
-      dest.tag = alloc_id("tag")
-
----###  table.insert(R.mon_teleports, dest)
-    end
-
-    local TRIGGER =
-    {
-      r = 64
-      action = 109  -- W1 : open and stay /fast
-      tag = alloc_id("tag")
-    }
-
-    spot.trigger = TRIGGER
-
-    -- create the DEPOT information
-
-    local skin =
-    {
-      trigger_tag = TRIGGER.tag
-
-      out_tag1 = dests[1].tag
-      out_tag2 = dests[2].tag
-      out_tag3 = dests[1].tag  -- not a typo
-    }
-
-    if dests[3] then
-      skin.out_tag3 = dests[3].tag
-    end
-
-    local DEPOT =
-    {
-      room = R
-      x1 = x1
-      y1 = y1
-      skin = skin
-      trigger = spot.trigger
-    }
-
-    table.insert(LEVEL.depots, DEPOT)
-
-    return true
   end
 
 
@@ -815,23 +822,34 @@ function Layout_traps_and_cages()
   end
 
 
-  ---| Layout_traps_and_cages |---
+  local function kill_closet(A)
+    A.mode = "void"
 
-  -- never in DM or CTF maps
+    A.rect_info = nil
+  end
+
+
+  local function visit_room(R)
+    -- FIXME : traps, cages, etc !!!!
+
+    each A in R.areas do
+      if A.mode == "closet" and not A.closet_kind then
+        kill_closet(A)
+      end
+    end
+  end
+
+
+  ---| Layout_unused_closets |---
+
+  each R in LEVEL.rooms do
+    visit_room(R)
+  end
+
+  -- no traps/cages in DM or CTF maps
   if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
     return
   end
-
-  add_traps()
-
---!!!  add_cages()
-end
-
-
-
-function Layout_update_cages()
-  -- TODO
-
 end
 
 
