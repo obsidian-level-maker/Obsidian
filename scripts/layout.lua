@@ -530,7 +530,7 @@ end
 function Layout_unused_closets()
   --
   -- Handles all the unused closets in a room, turning them
-  -- into traps, cages, secret closets (etc).
+  -- into traps, cages, secret items (etc).
   --
 
   local  junk_list = {}
@@ -653,7 +653,7 @@ function Layout_unused_closets()
   end
 
 
-  local function make_trap(A, parent_A, spot)
+  local function make_trap_OLD(A, parent_A, spot)
     gui.debugf("Making big trap in %s\n", A.name)
 
     A.mode = "trap"
@@ -822,6 +822,11 @@ function Layout_unused_closets()
   end
 
 
+  local function make_trap(A)
+    A.closet_kind = "TRAP"
+  end
+
+
   local function kill_closet(A)
     A.mode = "void"
 
@@ -834,7 +839,7 @@ function Layout_unused_closets()
 
     each A in R.areas do
       if A.mode == "closet" and not A.closet_kind then
-        kill_closet(A)
+        make_trap(A)
       end
     end
   end
