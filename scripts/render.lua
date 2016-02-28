@@ -683,10 +683,12 @@ end
 
 function Render_corner(cx, cy)
 
+  local corner
+
   local analysis
 
 
-  local function make_post(corner)
+  local function make_post()
     local mx, my = corner.x, corner.y
     local mat    = corner.post_mat or "METAL"
     
@@ -702,7 +704,7 @@ function Render_corner(cx, cy)
   end
 
 
-  local function make_pillar(corner)
+  local function make_pillar()
     -- TODO
   end
 
@@ -721,12 +723,53 @@ function Render_corner(cx, cy)
   end
 
 
-  local function analyse_walls(corner)
+  local function analyse_walls()
     -- FIXME
   end
 
 
-  local function polish_walls(corner)
+  local function build_filler(dir, L_tex, R_tex)
+    -- FIXME
+  end
+
+
+  local function detect_gap(dir, num_left, num_right)
+    -- dir is a corner direction (1, 3, 7, 9)
+    
+    -- the starting line must be clear
+    if analysis[dir].L or analysis[dir].R then return false end
+
+    local L_dir = dir
+    local R_dir = dir
+
+    for i = 1, num_left do
+      L_dir = geom.LEFT_45[L_dir]
+
+      if analysis[L_dir].L or analysis[L_dir].R then return false end
+    end
+
+    for i = 1, num_right do
+      R_dir = geom.RIGHT_45[R_dir]
+
+      if analysis[R_dir].L or analysis[R_dir].R then return false end
+    end
+
+    L_dir = geom.LEFT_45 [L_dir]
+    R_dir = geom.RIGHT_45[R_dir]
+
+    local L_tex = analysis(L_dir).R
+    local R_tex = analysis(L_dir).L
+    
+    if L_tex and R_tex then
+      build_filler(dir, L_tex, R_tex)
+      return true
+    end
+
+    return false
+  end
+
+
+  local function polish_walls()
     --
     -- Find gaps where two walls meet at a corner, and fill that gap
     -- (producing a nice polished finish).
@@ -742,24 +785,30 @@ function Render_corner(cx, cy)
 
     init_analysis()
 
-    analyse_walls(corner)
+    analyse_walls()
 
-    -- FIXME detect stuff
+    each dir in geom.CORNERS do
+      if detect_gap(dir, 1, 1) or detect_gap(dir, 1, 2) or
+         detect_gap(dir, 2, 1) or detect_gap(dir, 2, 2)
+      then
+        -- Ok, gap was filled
+      end
+    end
   end
 
 
   ---| Render_corner |---
 
-  local corner = Corner_lookup(cx, cy)
+  corner = Corner_lookup(cx, cy)
 
   if corner.kind == nil or corner.kind == "nothing" then
-    polish_walls(corner)
+    polish_walls()
 
   elseif corner.kind == "post" then
-    make_post(corner)
+    make_post()
 
   elseif corner.kind == "pillar" then
-    make_pillar(corner)
+    make_pillar()
 
   else
     error("Unknown corner kind: " .. tostring(corner.kind))
