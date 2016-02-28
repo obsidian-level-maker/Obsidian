@@ -597,6 +597,10 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   assert(E)
   assert(E.kind)
 
+  if Edge_is_wallish(E) then
+    Corner_mark_walls(E)
+  end
+
   if E.kind == "nothing" then
     return
 
@@ -713,18 +717,12 @@ function Render_corner(cx, cy)
     analysis = {}
 
     each dir in geom.ALL_DIRS do
-      analysis[dir] = {}
+      if corner.walls[dir] then
+        analysis[dir] = corner.walls[dir]
+      else
+        analysis[dir] = {}
+      end
     end
-
-    each dir in geom.ALL_DIRS do
-      analysis[dir].L = nil
-      analysis[dir].R = nil
-    end
-  end
-
-
-  local function analyse_walls()
-    -- FIXME
   end
 
 
@@ -774,8 +772,8 @@ function Render_corner(cx, cy)
     L_dir = geom.LEFT_45 [L_dir]
     R_dir = geom.RIGHT_45[R_dir]
 
-    local L_tex = analysis(L_dir).R
-    local R_tex = analysis(L_dir).L
+    local L_tex = analysis[L_dir].R
+    local R_tex = analysis[L_dir].L
     
     if L_tex and R_tex then
       build_filler(dir, L_tex, R_tex)
@@ -794,15 +792,16 @@ function Render_corner(cx, cy)
     -- Algorithm:
     --   1. analyse the eight lines coming off this corner.
     --      each line may have a wall on each side (left and right).
+    --      [ this is done while rendering all the edges ]
     --
     --   2. detect the cases where we need a gap filler.
     --      e.g. they require nothing on the three or four lines
     --      which lie in-between the two walls.
     --
 
-    init_analysis()
+    if table.empty(corner.walls) then return end
 
-    analyse_walls()
+    init_analysis()
 
     each dir in geom.CORNERS do
       if detect_gap(dir, 1, 1) or detect_gap(dir, 1, 2) or
@@ -1480,14 +1479,14 @@ function Render_all_areas()
     Render_area(A)
   end
 
-  each depot in LEVEL.depots do
-    Render_depot(depot)
-  end
-
   for cx = 1, SEED_W + 1 do
   for cy = 1, SEED_H + 1 do
     Render_corner(cx, cy)
   end
+  end
+
+  each depot in LEVEL.depots do
+    Render_depot(depot)
   end
 end
 
