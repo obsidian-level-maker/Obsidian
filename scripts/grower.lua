@@ -2201,7 +2201,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 5 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = 9 --!!! rand.pick({ 2,4,7,11,15 })
 
   -- TODO: often no sprouts when room is near edge of map
 

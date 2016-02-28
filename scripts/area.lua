@@ -452,16 +452,31 @@ function Corner_mark_walls(E)
   if E.dir == 8 or E.dir == 6 or E.dir == 9 or E.dir == 3 then cy = cy + 1 end
 
   -- compute delta and # of corners to visit
-  local dx, dy = geom.delta(geom.RIGHT[E.dir])
+  local along_dir = geom.RIGHT[E.dir]
+  local dx, dy = geom.delta(along_dir)
 
+  -- iterate over both corners of edge (left side then right side)
   for pass = 1, 2 do
     local corner = Corner_lookup(cx, cy)
 
-    -- FIXME
+stderrf("Corner_mark_walls @ (%d %d)  E=%s dir:%d\n", cx, cy, E.kind, E.dir)
+
+    local wall_dir = sel(pass == 1, along_dir, 10 - along_dir)
+
+    if not corner.walls[wall_dir] then
+      corner.walls[wall_dir] = {}
+    end
+
+    if pass == 1 then
+      corner.walls[wall_dir].R = "METAL";
+    else
+      corner.walls[wall_dir].L = "METAL";
+    end
 
     cx = cx + dx * E.long
     cy = cy + dy * E.long
   end
+stderrf("\n")
 end
 
 

@@ -740,7 +740,7 @@ function Render_corner(cx, cy)
     ax = ax * 16 ; ay = ay * 16
     bx = bx * 16 ; by = by * 16
 
-    local w_brush = brushlib.triangle(x, y, x+ax, y+ay, x+bx, y+bx)
+    local w_brush = brushlib.triangle(x, y, x+ax, y+ay, x+bx, y+by)
 
     brushlib.set_mat(w_brush, L_tex)
 
@@ -773,7 +773,7 @@ function Render_corner(cx, cy)
     R_dir = geom.RIGHT_45[R_dir]
 
     local L_tex = analysis[L_dir].R
-    local R_tex = analysis[L_dir].L
+    local R_tex = analysis[R_dir].L
     
     if L_tex and R_tex then
       build_filler(dir, L_tex, R_tex)
