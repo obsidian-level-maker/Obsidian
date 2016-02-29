@@ -7,6 +7,7 @@ PREFABS.Item_secret_niche_small =
   file  = "item/secret_niche.wad"
   where = "seeds"
 
+  kind  = "nice_item"  -- FIXME : under review
   key   = "secret"
 
   seed_w = 1
