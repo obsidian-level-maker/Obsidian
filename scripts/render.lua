@@ -1342,6 +1342,12 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
     skin.object = assert(A.closet_spot.item or A.closet_spot.content_item)
   end
 
+  local function do_nice_item()
+    reqs.kind = "nice_item"
+
+    reqs.key = "secret"  -- FIXME
+  end
+
 
   assert(A.mode != "cage")
 
@@ -1369,6 +1375,9 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
 
   elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
     do_item()
+
+  elseif what == "NICE_ITEM" then
+    do_nice_item()
 
   elseif what == "CAGE" then
     do_cage()

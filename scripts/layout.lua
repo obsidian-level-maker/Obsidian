@@ -826,9 +826,12 @@ function Layout_unused_closets()
     A.closet_kind = "TRAP"
   end
 
-
   local function make_cage(A)
     A.closet_kind = "CAGE"
+  end
+
+  local function make_item_or_secret(A)
+    A.closet_kind = "NICE_ITEM"
   end
 
 
@@ -844,7 +847,7 @@ function Layout_unused_closets()
 
     each A in R.areas do
       if A.mode == "closet" and not A.closet_kind then
-        make_cage(A)
+        make_item_or_secret(A)
       end
     end
   end
