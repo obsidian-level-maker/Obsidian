@@ -836,17 +836,52 @@ function Grower_make_all_areas()
       each S in A.seeds do
         S.area = A
         S.room = temp.room
-
         S.temp_area = nil
       end
     end
   end
 
 
-  local function make_liquids()
-    -- create areas from contiguous groups of liquid seeds (in a room)
+  local function grow_liquid_area(S, A)
+    S.area = A
+    S.room = A.room
+    S.temp_area = nil
 
-    -- FIXME
+    table.insert(A.seeds, S)
+    A.svolume = A.svolume + 1  -- FIXME
+
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+
+      if N and N.temp_area and N.temp_area.mode == "liquid" and
+         N.temp_area.room == A.room
+      then
+        grow_liquid_area(N, A)
+      end
+    end
+  end
+
+
+  local function make_liquids()
+    -- create areas from contiguous groups of liquid seeds in a room
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      for pass = 1, 2 do
+        local S = SEEDS[sx][sy]
+        if pass == 2 then S = S.top end
+
+        if S and S.temp_area and S.temp_area.mode == "liquid" and S.temp_area.room then
+          local A = AREA_CLASS.new("liquid")
+
+          A.room = S.temp_area.room
+          A.room:add_area(A)
+
+          grow_liquid_area(S, A)
+        end
+      end
+    end  -- sx, sy
+    end
   end
 
 
@@ -932,7 +967,7 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
     make_areas(R.temp_areas)
   end
 
---FIXME  make_liquids()
+  make_liquids()
 
   if LEVEL.gap_areas then
     make_areas(LEVEL.gap_areas)
@@ -1110,11 +1145,11 @@ stderrf("overwrite seed @ %s\n", S.name)
 
 
   local function set_liquid(S)
-    if R.temp_areas["liquid"] == nil then
-       R.temp_areas["liquid"] = Grower_temp_area(R, "liquid", "no_add")
+    if R.liquid_temp_area == nil then
+       R.liquid_temp_area = Grower_temp_area(R, "liquid", "no_add")
     end
 
-    set_seed(S, R.temp_areas["liquid"])
+    set_seed(S, R.liquid_temp_area)
   end
 
 
