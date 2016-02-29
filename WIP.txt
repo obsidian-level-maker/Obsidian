@@ -3,10 +3,16 @@ WORK IN PROGRESS
 ================
 
 
-Q/ should '#' just lock out that seed from future usage in the
-   current room (but allow other rooms to use it) ?
+idea: a rule can specify some "children" rules which are
+      applied immediately after the parent (a specified number of times)
 
-A/ yes   [ but prevent other room storing a '#' in it ]
+      e.g. a DECOR rule begins a liquid area, but several children
+      rules are used to spread that area (e.g. staying close to existing
+      geometry in a room).
+
+      e.g. a SPROUT rule begins a hallway, several children rules
+      construct rest of hallway, and some other children rules
+      make the hallway branch into new rooms.
 
 
 
@@ -20,23 +26,32 @@ SPOT SYSTEM:
    contain enough spots.
    [ later on, investigate splitting large spots/closets ]
 
-   IDEA : use grammar system to identify these places
+-  can also use these "rects" for floor prefabs, ceiling prefabs,
+   free-standing prefabs (in middle), wall-extended prefabs,
+   corner-extended prefabs
 
 
 
-LIQUIDS:
+TRAPS:
 
--  if source pattern has no liquid, create a NEW area
-   [ and probably merge liquid areas which touch ]
++  for each trappable item/goal in a room [ upto max of 2 ]
+   decide whether to create a closet trap (using a nearby unused closets)
+   or a teleport trap
 
 
 
 CLOSETS:
 
+>>> handle unused closets
+    [ A.mode = "void", build walls there, NO EDGE ]
+
 !!  create proper EDGE where it joins room (based on SHAPE)
     [ needed for JOINERS too ]
 
 +  monster trap!
+
++  when shape is "F", move them 16 units in the facing dir
+   [ triggered by a field in the prefab definition?? ]
 
 
 
@@ -44,6 +59,8 @@ STAIRS:
 
 +  need to support building the ceiling "normally"
    [ specified by prefab ]
+
+   i.e. stairs are generally "floor prefabs", and require a ceiling
 
 +  choose prefabs earlier, probably during floor/ceil heights
 
@@ -93,8 +110,6 @@ CAGES:
 -  make railings [ see junction logic in layout.lua ]
 
 -  pick floor height based on neighbors
-
--  ability to make them in closets (esp. if shape is "P")
 
 
 
@@ -163,10 +178,12 @@ HALLWAYS:
 
 MISCELLANEOUS:
 
++  properly compute svolume of areas and rooms
+
 -  titlepic backgrounds (current and new) :
    determine ones for official package, put rest in an addon
 
-+  face direction for switches
++  face direction for switches / teleport exits
 
 -  why both "item" and "content_item" in a spot table??
 
