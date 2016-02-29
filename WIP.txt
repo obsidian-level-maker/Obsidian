@@ -12,7 +12,25 @@ idea: a rule can specify some "children" rules which are
 
       e.g. a SPROUT rule begins a hallway, several children rules
       construct rest of hallway, and some other children rules
-      make the hallway branch into new rooms.
+      make the hallway branch into new rooms.  finally, some more
+      child rules prune the unused hallway endings.
+
+
+      in the parent rule:
+
+        child =
+        {
+          kind = "hall_grow"  -- can be a list
+
+          count = { 4,9 } 
+
+          style_adjust = { "hallways", 0.4, 1.0, 4.0 }
+        }
+
+
+      in the children rules:
+
+        child_kind = "hall_grow"  -- can be a list
 
 
 
