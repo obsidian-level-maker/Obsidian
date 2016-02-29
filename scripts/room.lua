@@ -2677,7 +2677,7 @@ function Room_build_all()
     Layout_place_importants(R)
   end
 
-  -- turn remaining closets into traps, cages, little secrets, etc
+  -- turn remaining closets into traps, cages, etc...
   Layout_unused_closets()
 
   Layout_create_scenic_borders()

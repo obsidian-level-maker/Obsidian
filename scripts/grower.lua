@@ -194,14 +194,17 @@ function Grower_preprocess_grammar()
     if ch == '^' then return { kind="stair", dir=8 } end
     if ch == 'v' then return { kind="stair", dir=2 } end
 
+    -- generic stairs (need an info table to set shape, dirs)
+    if ch == 'S' then return { kind="stair"  } end
+
     -- other stuff
     if ch == 'A' then return { kind="new_area" } end
     if ch == 'R' then return { kind="new_room" } end
     if ch == 'H' then return { kind="hallway"  } end
 
     if ch == 'C' then return { kind="cage"   } end
-    if ch == 'T' then return { kind="closet" } end
     if ch == 'J' then return { kind="joiner" } end
+    if ch == 'T' then return { kind="closet" } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -332,13 +335,15 @@ function Grower_preprocess_grammar()
       def.new_area = { }
     end
 
+    if E.kind == "stair" then
+      def.has_stair = true
+    end
+
     if E.kind == "cage"    then add_style("cages")    end
     if E.kind == "closet"  then add_style("closets")  end
     if E.kind == "liquid"  then add_style("liquids")  end
     if E.kind == "hallway" then add_style("hallways") end
-
-    -- hmmm?
-    if E.kind == "stair"   then add_style("stairs")   end
+    if E.kind == "stair"   then add_style("steepness") end
   end
 
 
@@ -434,7 +439,7 @@ function Grower_preprocess_grammar()
 
     -- special check for seeds sitting on the axis
     if x == x2 then
-      if E.kind == "stair" then return geom.is_vert(E.dir) end
+      if E.kind == "stair" then return E.dir and geom.is_vert(E.dir) end
 
       if E.kind == "diagonal" then return false end
 
@@ -479,7 +484,7 @@ function Grower_preprocess_grammar()
 
     -- special check for seeds sitting on the axis
     if y == y2 then
-      if E.kind == "stair" then return geom.is_horiz(E.dir) end
+      if E.kind == "stair" then return E.dir and geom.is_horiz(E.dir) end
 
       if E.kind == "diagonal" then return false end
 
@@ -699,7 +704,7 @@ function Grower_preprocess_grammar()
     local E = def.output[x][y]
 
     -- grab "dir" from corresponding table, if present
-    -- TODO : support multiple cages/closets/joiners
+    -- TODO : support multiple cages/closets/joiners (via _2, _3, _4 suffix)
     if def[kind] then
       table.merge_missing(info, def[kind])
     end
@@ -1678,7 +1683,7 @@ stderrf("---> fail\n")
 
     if E1.kind == "stair" then
       -- note: we do not check direction of stair
-      return (S.stair_info and true)
+      return S.temp_area and S.temp_area.rect_info and S.temp_area.rect_info.kind == "stair"
     end
 
     error("Element kind not testable: " .. tostring(E1.kind))
@@ -1897,11 +1902,9 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       TA2 = TA2
     }
 
-    -- hmmm?
-    if cur_rule.styles and table.has_elem(cur_rule.styles, "stairs") then
+    if cur_rule.has_stair then
       assert(not cur_rule.joiner)
       C.kind = "stair"
-gui.debugf("Stair internal conn in %s\n", R.name)
     end
 
     table.insert(R.internal_conns, C)
@@ -1938,10 +1941,10 @@ gui.debugf("Stair internal conn in %s\n", R.name)
     local shape = r.shape
 
     if not shape then
-      shape = "F"
-
       if r.kind == "stair" or r.kind == "junction" then
         shape = "I"
+      else
+        shape = "F"
       end
     end
 
