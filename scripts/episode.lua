@@ -64,6 +64,30 @@ function Episode_pick_names()
 end
 
 
+function Episode_decide_specials()
+  each EPI in GAME.episodes do
+    -- TODO
+  end
+
+  -- dump the results
+
+  local count = 0
+
+  gui.printf("\nSpecial levels:\n")
+
+  each LEV in GAME.levels do
+    if LEV.special then
+      gui.printf("  %s : %s\n", LEV.name, LEV.special)
+      count = count + 1
+    end
+  end
+
+  if count == 0 then
+    gui.printf("  none\n")
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 
