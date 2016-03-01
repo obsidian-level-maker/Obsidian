@@ -59,7 +59,7 @@ GROW_1 =
   structure =
   {
     "....", ".11."
-    "X11X", "X11X"
+    "x11x", "x11x"
   }
 }
 
@@ -70,10 +70,10 @@ GROW_DIAGTEST_1 =
 
   structure =
   {
-    "X.", "X."
+    "x.", "x."
     "1.", "11"
     "1.", "1/"
-    "X.", "X."
+    "x.", "x."
   }
 
   diagonals = { "1." }
@@ -120,7 +120,7 @@ GROW_NEWAREA_1 =
   structure =
   {
     "....", ".AA."
-    "X11X", "X11X"
+    "x11x", "x11x"
   }
 }
 
@@ -132,8 +132,8 @@ GROW_STAIRS_2 =
   structure =
   {
     "....", ".AA."
-    "X..X", "X^^X"
-    "X11X", "X11X"
+    "x..x", "x^^x"
+    "x11x", "x11x"
   }
 }
 
@@ -149,8 +149,8 @@ SPROUT_1 =
   {
     "....", ".RR."
     "....", ".RR."
-    "X11X", "X11X"
-    "X11X", "X11X"
+    "x11x", "x11x"
+    "x11x", "x11x"
   }
 
   new_room =
@@ -171,7 +171,7 @@ SPROUT_JOINER_2x1 =
     "....", ".RR."
     "....", ".RR."
     "....", ".JJ."
-    "X11X", "X11X"
+    "x11x", "x11x"
   }
 
   new_room =
@@ -196,7 +196,7 @@ SPROUT_SYMMETRY_TEST =
   {
     ".....", ".RRR."
     ".....", ".RRR."
-    "X111X", "X111X"
+    "x111x", "x111x"
   }
 
   new_room =
@@ -268,9 +268,9 @@ SPROUT_HALL_1 =
     "11....", "11...."
     "11....", "11111."
     "11....", "11..1."
-    "XX....", "XX..1."
-    "XX....", "XX.RRR"
-    "XX....", "XX.RRR"
+    "xx....", "xx..1."
+    "xx....", "xx.RRR"
+    "xx....", "xx.RRR"
   }
 
   new_room =
@@ -305,7 +305,7 @@ DECORATE_CAGE_SIDE_1 =
   structure =
   {
     "....", ".CC."
-    "X11X", "X11X"
+    "x11x", "x11x"
   }
 
   cage = { dir=2 }
