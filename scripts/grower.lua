@@ -276,12 +276,6 @@ function Grower_preprocess_grammar()
       error("bad element in " .. def.name .. ": cannot use 'A' or 'R' in match")
     end
 
-    if E1.kind == "stair" then
-      if E2.kind != "stair" or E2.dir != E1.dir then
-        error("bad element in " .. def.name .. ": cannot modify a stair")
-      end
-    end
-
     -- changing an area is OK
     if E1.kind == "area" and E2.kind == "area" then
       if E1.area != E2.area then
@@ -300,16 +294,14 @@ function Grower_preprocess_grammar()
 
     E2.assignment = true
 
-    if E1.kind == "dont_care" then
-      error("bad element in " .. def.name .. ": cannot overwrite an 'X'")
+    if E1.kind == "stair" or E1.kind == "junction" or E1.kind == "closet" or
+       E1.kind == "dont_care" or E1.kind == "disable" or E1.kind == "fuzzy"
+    then
+      error("bad element in " .. def.name .. ": cannot overwrite a " .. E1.kind)
     end
 
-    if E1.kind == "disable" then
-      error("bad element in " .. def.name .. ": cannot overwrite an '#'")
-    end
-
-    if E2.kind == "dont_care" then
-      error("bad element in " .. def.name .. ": 'X' used in assignment")
+    if E2.kind == "dont_care" or E2.kind == "fuzzy" then
+      error("bad element in " .. def.name .. ": cannot assign a " .. E2.kind)
     end
 
     -- we cannot assign into a '.' (which means "not part of current room")
