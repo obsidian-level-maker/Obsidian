@@ -178,9 +178,6 @@ function Grower_preprocess_grammar()
     if ch == '.' then return { kind="free" } end
     if ch == '!' then return { kind="free", utterly=1 } end
 
-    if ch == 'x' then return { kind="dont_care" } end
-    if ch == 'X' then return { kind="dont_care" } end
-
     if ch == '~' then return { kind="liquid" } end
     if ch == '#' then return { kind="disable" } end
 
@@ -196,6 +193,13 @@ function Grower_preprocess_grammar()
 
     -- generic stairs (need an info table to set shape, dirs)
     if ch == 'S' then return { kind="stair"  } end
+
+    -- match-only elements
+    if ch == 'x' then return { kind="magic", what="all"  } end
+    if ch == 'r' then return { kind="magic", what="room" } end
+    if ch == 'f' then return { kind="magic", what="floor" } end
+    if ch == 'o' then return { kind="magic", what="open" } end
+    if ch == 'c' then return { kind="magic", what="closed" } end
 
     -- other stuff
     if ch == 'A' then return { kind="new_area" } end
@@ -294,14 +298,14 @@ function Grower_preprocess_grammar()
 
     E2.assignment = true
 
-    if E1.kind == "stair" or E1.kind == "junction" or E1.kind == "closet" or
-       E1.kind == "dont_care" or E1.kind == "disable" or E1.kind == "fuzzy"
+    if E1.kind == "stair" or E1.kind == "oiner" or E1.kind == "closet" or
+       E1.kind == "disable" or E1.kind == "magic"
     then
       error("bad element in " .. def.name .. ": cannot overwrite a " .. E1.kind)
     end
 
-    if E2.kind == "dont_care" or E2.kind == "fuzzy" then
-      error("bad element in " .. def.name .. ": cannot assign a " .. E2.kind)
+    if E2.kind == "magic" then
+      error("bad element in " .. def.name .. ": cannot assign to a " .. E2.kind)
     end
 
     -- we cannot assign into a '.' (which means "not part of current room")
@@ -1609,8 +1613,53 @@ stderrf("---> fail\n")
   end
 
 
+  local function match_a_magic_element(S, E1)
+    local A = S.temp_area
+
+    if E1.what == "all" then return true end
+
+    -- this one allows other rooms, and the '#' disable element
+    -- FIXME : "closed" elements may not be useful, review this
+    if E1.what == "closed" then
+      if not A then return true end
+      if A.room != R then return true end
+      if S.disable_R == R then return true end
+
+      if A.mode == "closet" then return true end
+      if A.mode == "joiner" then return true end
+
+      return false
+    end
+
+    -- all other magic elements require a temp_area and same room
+    if not A then return false end
+    if A.room != R then return false end
+    if S.disable_R == R then return false end
+
+    if E1.what == "room" then
+      return A and A.room == R
+    end
+
+    if E1.what == "floor" then
+      return A.mode == "floor"
+    end
+
+    -- FIXME : this "open" element may not be useful, review this
+    if E1.what == "open" then
+      if A.mode == "closet" then return false end
+      if A.mode == "joiner" then return false end
+
+      return true
+    end
+
+    error("Unknown element kind: magic/" .. tostring(E1.what))
+  end
+
+
   local function match_an_element(S, E1, E2, T)
-    if E1.kind == "dont_care" then return true end
+    if E1.kind == "magic" then
+      return match_a_magic_element(S, E1)
+    end
 
     -- symmetry handling
     -- [ we prevent a pattern from overlapping its mirror ]
@@ -1683,8 +1732,6 @@ stderrf("---> fail\n")
 
 
   local function install_an_element(S, E1, E2, T)
-    if E1.kind == "dont_care" then return end
-
     if not E2.assignment then return end
 
     if E2.kind == "free" then
@@ -1933,7 +1980,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
     local shape = r.shape
 
     if not shape then
-      if r.kind == "stair" or r.kind == "junction" then
+      if r.kind == "stair" or r.kind == "joiner" then
         shape = "I"
       else
         shape = "F"
