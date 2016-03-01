@@ -71,31 +71,6 @@
 --]]
 
 
---class EPISODE
---[[
-    levels : list(LEVEL)
-
-    is_hub : boolean  -- 'true' if this episode is a hub
-
-    used_keys : table  -- for hubs, remember keys which have been used
-                       -- on any level in the hub (cannot use them again)
-
-    hub_links : list(HUB_LINK)  -- all hub links
-
-    seen_weapons : table   -- all weapons picked up so far
-                           -- the table is indexed by weapon name
---]]
-
-
---class HUB_LINK
---[[
-    kind : keyword  -- "chain" or "branch"
-
-    src  : LEVEL
-    dest : LEVEL
---]]
-
-
 GLOBAL_STYLE_LIST =
 {
   -- these two correspond to buttons in the GUI
@@ -668,26 +643,6 @@ end
 
 
 
-function Levels_episode_names()
-  -- game name
-  GAME.title     = Naming_grab_one("TITLE")
-  GAME.sub_title = Naming_grab_one("SUB_TITLE")
-
-  gui.printf("Game title: %s\n\n", GAME.title)
-  gui.printf("Game sub-title: %s\n\n", GAME.sub_title)
-
-  each EPI in GAME.episodes do
-    -- only generate names for used episodes
-    if table.empty(EPI.levels) then continue end
-
-    EPI.description = Naming_grab_one("EPISODE")
-
-    gui.printf("Episode %d title: %s\n\n", _index, EPI.description)
-  end
-end
-
-
-
 function Levels_do_styles()
   local style_tab = table.copy(GLOBAL_STYLE_LIST)
 
@@ -996,7 +951,7 @@ function Levels_make_all()
 
   Levels_decide_special_kinds()
 
-  Levels_episode_names()
+  Episode_pick_names()
 
   Title_generate()
 

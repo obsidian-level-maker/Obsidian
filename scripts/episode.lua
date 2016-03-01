@@ -19,6 +19,54 @@
 ------------------------------------------------------------------------
 
 
+--class EPISODE
+--[[
+    levels : list(LEVEL)
+
+    is_hub : boolean  -- 'true' if this episode is a hub
+
+    used_keys : table  -- for hubs, remember keys which have been used
+                       -- on any level in the hub (cannot use them again)
+
+    hub_links : list(HUB_LINK)  -- all hub links
+
+    seen_weapons : table   -- all weapons picked up so far
+                           -- the table is indexed by weapon name
+--]]
+
+
+--class HUB_LINK
+--[[
+    kind : keyword  -- "chain" or "branch"
+
+    src  : LEVEL
+    dest : LEVEL
+--]]
+
+
+
+function Episode_pick_names()
+  -- game name (for title screen)
+  GAME.title     = Naming_grab_one("TITLE")
+  GAME.sub_title = Naming_grab_one("SUB_TITLE")
+
+  gui.printf("Game title: %s\n\n", GAME.title)
+  gui.printf("Game sub-title: %s\n\n", GAME.sub_title)
+
+  each EPI in GAME.episodes do
+    -- only generate names for used episodes
+    if table.empty(EPI.levels) then continue end
+
+    EPI.description = Naming_grab_one("EPISODE")
+
+    gui.printf("Episode %d title: %s\n\n", _index, EPI.description)
+  end
+end
+
+
+------------------------------------------------------------------------
+
+
 function Hub_connect_levels(epi, keys)
 
   local function connect(src, dest, kind)
