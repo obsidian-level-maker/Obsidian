@@ -39,7 +39,7 @@ gui.import("fight")
 gui.import("monster")
 gui.import("item")
 gui.import("naming")
-gui.import("pic_gen")
+gui.import("title_gen")
 gui.import("level")
 
 
