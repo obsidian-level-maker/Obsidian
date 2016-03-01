@@ -40,6 +40,7 @@ gui.import("monster")
 gui.import("item")
 gui.import("naming")
 gui.import("title_gen")
+gui.import("episode")
 gui.import("level")
 
 
