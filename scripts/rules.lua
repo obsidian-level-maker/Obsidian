@@ -82,14 +82,7 @@ GROW_DIAGTEST_1 =
   {
     pass = "diag_test"
 
-    count = 2
-  }
-
-  auxiliary2 =
-  {
-    pass = "diag_tidyup"
-
-    count = 4
+    count = { 1,6 }
   }
 }
 
@@ -113,25 +106,6 @@ AUX_DIAGTEST_1 =
   }
 }
 
-
-AUX_DIAG_TIDYUP =
-{
-  pass = "diag_tidyup"
-
-  prob = 50
-
-  structure =
-  {
-    "1%", "1%"
-    "%/", "%1"
-  }
-
-  diagonals =
-  {
-    "1.", "1."
-    ".1", "1.", ".1"
-  }
-}
 
 
 GROW_MIR_TEST =

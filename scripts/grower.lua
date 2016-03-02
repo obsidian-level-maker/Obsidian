@@ -2383,7 +2383,12 @@ gui.debugf("  trying aux '%s' --> %s\n", aux_name, tostring(aux))
       assert(aux.pass)
       local aux_rules = collect_matching_rules(aux.pass)
 
-      local num = aux.count  -- FIXME : support ranges and prob tables
+      -- 'count' can be a number or a range of values: { low,high }
+      local num = aux.count
+
+      if type(num) == "table" then
+        num = rand.irange(num[1], num[2])
+      end
 
       for i = 1, num do
         apply_a_rule(aux_rules, "doing_aux")
