@@ -762,9 +762,47 @@ end
 
 
 
-function Grower_prepare()
+function Grower_calc_rule_probs()
   --
-  -- decide boundary rectangle, etc...
+  -- modify the probability of all rules, based on styles and also a
+  -- random factor to give each level a distinctive feel.
+  --
+
+
+  local function style_factor(rule)
+    -- FIXME : styles factor
+    return 1
+  end
+
+
+  local function random_factor(rule)
+    -- FIXME : random factor
+    return 1
+  end
+
+
+  local function calc_prob(rule)
+    local prob = rule.prob or 0
+
+    prob = prob * style_factor(rule)
+    prob = prob * random_factor(rule)
+
+    return prob
+  end
+
+
+  ---| Grower_calc_rule_probs |---
+
+  each rule in SHAPE_GRAMMAR do
+    rule.use_prob = calc_prob(rule)
+  end
+end
+
+
+
+function Grower_decide_boundary()
+  --
+  -- decide boundary rectangle
   --
 
   local map_size = (SEED_W + SEED_H) / 2
@@ -1222,12 +1260,12 @@ stderrf("overwrite seed @ %s\n", S.name)
 
 
   local function prob_for_rule(rule)
-    if not rule.prob then return 0 end
+    -- the 'use_prob' field is computed earler, and already takes styles
+    -- into account.
 
-    -- if (rule.pass or 1) != cur_pass then return 0 end
+    local prob = rule.use_prob or 0
 
-    -- TODO style adjustments
-    -- TODO environment check??
+    -- TODO environment check
 
     return rule.prob
   end
@@ -3003,7 +3041,8 @@ function Grower_create_rooms()
   -- we don't make real connections until later (Connect_stuff)
   LEVEL.prelim_conns = {}
 
-  Grower_prepare()
+  Grower_calc_rule_probs()
+  Grower_decide_boundary()
 
   Grower_create_trunks()
   Grower_grow_rooms()
