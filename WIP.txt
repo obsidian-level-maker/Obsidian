@@ -3,34 +3,29 @@ WORK IN PROGRESS
 ================
 
 
-idea: a rule can specify some "children" rules which are
-      applied immediately after the parent (a specified number of times)
+AUXILIARY RULES:
 
-      e.g. a DECOR rule begins a liquid area, but several children
-      rules are used to spread that area (e.g. staying close to existing
-      geometry in a room).
++  with 'count' field, support a range like {2,3} and a probability
+   table like { [1]=10, [3]=40, [9]=5 }
 
-      e.g. a SPROUT rule begins a hallway, several children rules
-      construct rest of hallway, and some other children rules
-      make the hallway branch into new rooms.  finally, some more
-      child rules prune the unused hallway endings.
++  support multiple auxiliaries
 
+-  support count adjustments
+      e.g. style_adjust = { "hallways", 0.4, 1.0, 4.0 }
 
-      in the parent rule:
+IDEA: have a flag which means auxiliaries must match something in their parent
+      [ implement by marking parent seeds ]
+      [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
 
-        child =
-        {
-          kind = "hall_grow"  -- can be a list
+USAGE IDEAS:
 
-          count = { 4,9 } 
+  -  a DECOR rule begins a liquid area, and an auxiliary ruleset
+     is used to spread that area, staying close to existing geometry
+     in a room.
 
-          style_adjust = { "hallways", 0.4, 1.0, 4.0 }
-        }
-
-
-      in the children rules:
-
-        child_kind = "hall_grow"  -- can be a list
+  -  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
+     rest of hallway, and another auxiliary ruleset sprouts hallway
+     into new rooms, and a final auxiliary rulset prunes unused branches
 
 
 
@@ -168,7 +163,9 @@ Q/ can do windows using them?  pictures??
    -  SPROUT: if mirrored and new rooms touch/overlap, only create
               a single room
 
-idea:  'O' used in matches for "open" part of room (floor/stair/liquid)
++  for CTF, create one big room with "rotate" symmetry
+   [ interleave GROW and SPROUT passes ]
+   [[ "new_room" becomes "new_area" but acting like a new room ]]
 
 idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
        Q/ does "anything" included empty space / other rooms?
@@ -176,10 +173,6 @@ idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
 idea:  CYCLE pass (after SPROUT) for multiple paths
        [ probably as 'H' hallways, allow these to grow, prune them
          when they fail to connect ]
-
-idea:  for CTF, create one big room with "rotate" symmetry
-       [ interleave GROW and SPROUT passes ]
-       [[ "new_room" becomes "new_area" but acting like a new room ]]
 
 
 
