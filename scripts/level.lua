@@ -925,8 +925,7 @@ function Levels_make_all()
 
   gui.rand_seed(OB_CONFIG.seed + 3)
 
-  Episode_decide_specials()
-  Episode_pick_names()
+  Episode_plan_game()
 
   Title_generate()
 

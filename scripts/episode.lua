@@ -314,3 +314,19 @@ function Hub_find_link(kind)
   return nil  -- none
 end
 
+
+------------------------------------------------------------------------
+
+
+function Episode_plan_game()
+  --
+  -- This plans stuff for the whole game, e.g. what weapons will
+  -- appear on each level, etc....
+  --
+
+  Episode_decide_specials()
+
+  Episode_pick_names()
+
+end
+
