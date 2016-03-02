@@ -2321,42 +2321,47 @@ end
   end
 
 
-  local function apply_a_rule(rule_tab, in_recursion)
-    local rules2 = table.copy(rule_tab)
+  local function apply_a_rule(rule_tab, doing_aux)
+    local rules = table.copy(rule_tab)
 
-    for loop = 1, 20 do
+    local loop = 0
+    local max_loop = 20
+
+    repeat
+      -- tried too many?
+      loop = loop + 1
+
+      if loop > max_loop then return end
+
       -- nothing left to try?
-      if table.empty(rules2) then break; end
+      if table.empty(rules) then break; end
 
-      local name = rand.key_by_probs(rules2)
-
-      -- don't try it again
-      rules2[name] = nil
+      local name = rand.key_by_probs(rules)
 
       cur_rule = assert(grammar[name])
 
+      -- don't try this rule again
+      rules[name] = nil
+
 --stderrf("Trying rule '%s'...\n", name)
 
-      if try_apply_a_rule() then
---stderrf("  YES !!!!!!!!!!!!!!!!!!!!\n")
+    until try_apply_a_rule()
 
-        -- apply any auxiliary rules
-        -- TODO : support multiple sets
-        if cur_rule.auxiliary and not in_recursion then
-stderrf("!!!! APPLYING AUXILIARY RULES FOR %s\n", name)
-          local aux = cur_rule.auxiliary
+--stderrf("Applied grammar rule %s\n", cur_rule.name)
 
-          assert(aux.pass)
-          local aux_rules = collect_matching_rules(aux.pass)
+    -- apply any auxiliary rules
+    -- TODO : support multiple sets
 
-          local num = aux.count  -- FIXME : support ranges and prob tables
+    if cur_rule.auxiliary and not in_recursion then
+      local aux = cur_rule.auxiliary
 
-          for i = 1, num do
-            apply_a_rule(aux_rules, "in_recursion")
-          end
-        end
+      assert(aux.pass)
+      local aux_rules = collect_matching_rules(aux.pass)
 
-        return  -- Ok
+      local num = aux.count  -- FIXME : support ranges and prob tables
+
+      for i = 1, num do
+        apply_a_rule(aux_rules, "doing_aux")
       end
     end
   end
