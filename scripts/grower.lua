@@ -1068,7 +1068,6 @@ function Grower_grammatical_room(R, pass)
 
   local grammar = SHAPE_GRAMMAR
 
-  local rule_tab
   local cur_rule
   local cur_symmetry
 
@@ -1234,18 +1233,20 @@ stderrf("overwrite seed @ %s\n", S.name)
   end
 
 
-  local function collect_appropriate_rules()
-    rule_tab = {}
+  local function collect_matching_rules(want_pass)
+    local tab = {}
 
     each name,rule in grammar do
-      if rule.pass != pass then continue end
+      if rule.pass != want_pass then continue end
 
       local prob = prob_for_rule(rule)
 
       if prob > 0 then
-        rule_tab[name] = prob
+        tab[name] = prob
       end
     end
+
+    return tab
   end
 
 
@@ -2222,14 +2223,12 @@ end
   end
 
 
-  local function try_apply_a_rule(name)
-    local rule = assert(grammar[name])
-
-    cur_rule = rule
-
+  local function try_apply_a_rule()
+    --
     -- Test all eight possible transforms (four rotations + mirroring)
     -- in all possible locations in the room.  If at least one is
     -- successful, pick it and apply the substitution.
+    --
 
     local best = { score=-1 }
 
@@ -2284,11 +2283,10 @@ end
   end
 
 
-  local function apply_a_rule()
+  local function apply_a_rule(rule_tab, in_recursion)
     local rules2 = table.copy(rule_tab)
 
     for loop = 1, 20 do
-
       -- nothing left to try?
       if table.empty(rules2) then break; end
 
@@ -2297,9 +2295,28 @@ end
       -- don't try it again
       rules2[name] = nil
 
+      cur_rule = assert(grammar[name])
+
 --stderrf("Trying rule '%s'...\n", name)
-      if try_apply_a_rule(name) then
+
+      if try_apply_a_rule() then
 --stderrf("  YES !!!!!!!!!!!!!!!!!!!!\n")
+
+        -- apply any auxiliary rules
+        -- TODO : support multiple sets
+        if cur_rule.auxiliary and not in_recursion then
+stderrf("!!!! APPLYING AUXILIARY RULES FOR %s\n", name)
+          local aux = cur_rule.auxiliary
+
+          assert(aux.pass)
+          local aux_rules = collect_matching_rules(aux.pass)
+
+          local num = aux.count  -- FIXME : support ranges and prob tables
+
+          for i = 1, num do
+            apply_a_rule(aux_rules, "in_recursion")
+          end
+        end
 
         return  -- Ok
       end
@@ -2328,12 +2345,12 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
   if pass == "decorate" then apply_num = 5 end --- rand.pick({0,1,2}) end
 
-  collect_appropriate_rules()
+  local rule_tab = collect_matching_rules(pass)
 
   for loop = 1, apply_num do
 stderrf("LOOP %d\n", loop)
 gui.debugf("LOOP %d\n", loop)
-    apply_a_rule()
+    apply_a_rule(rule_tab)
   end
 end
 
@@ -3002,6 +3019,6 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
--- Grower_save_svg()
+   Grower_save_svg()
 end
 

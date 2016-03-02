@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  GRAMMAR TILES
+--  GRAMMAR RULES
 ------------------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -66,22 +66,31 @@ GROW_1 =
 
 GROW_DIAGTEST_1 =
 {
-  prob = 5
+  prob = 500
 
   structure =
   {
     "x.", "x."
-    "1.", "11"
+    "1.", "1%"
     "1.", "1/"
     "x.", "x."
   }
 
-  diagonals = { "1." }
+  diagonals = { "1.", "1." }
+
+  auxiliary =
+  {
+    pass = "diag_test"
+
+    count = 5
+  }
 }
 
 
-GROW_DIAGTEST_2 =
+AUX_DIAGTEST_1 =
 {
+  pass = "diag_test"
+
   prob = 40
 
   structure =
