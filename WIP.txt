@@ -3,32 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-AUXILIARY RULES:
-
-+  with 'count' field, support a range like {2,3} and a probability
-   table like { [1]=10, [3]=40, [9]=5 }
-
-+  support multiple auxiliaries
-
--  support count adjustments
-      e.g. style_adjust = { "hallways", 0.4, 1.0, 4.0 }
-
-IDEA: have a flag which means auxiliaries must match something in their parent
-      [ implement by marking parent seeds ]
-      [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
-
-USAGE IDEAS:
-
-  -  a DECOR rule begins a liquid area, and an auxiliary ruleset
-     is used to spread that area, staying close to existing geometry
-     in a room.
-
-  -  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
-     rest of hallway, and another auxiliary ruleset sprouts hallway
-     into new rooms, and a final auxiliary rulset prunes unused branches
-
-
-
 SPOT SYSTEM:
 
 !! after growing/areas/connecting, BUT before quests,
@@ -173,6 +147,40 @@ idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
 idea:  CYCLE pass (after SPROUT) for multiple paths
        [ probably as 'H' hallways, allow these to grow, prune them
          when they fail to connect ]
+
+
+
+AUXILIARIES:
+
+-  support count adjustments
+      e.g. style_adjust = { "hallways", 0.4, 1.0, 4.0 }
+
+-  min_count, max_count
+
+-  support 'count_tab' with probabilities _OR_ a 'count_list' with a
+   list of a values (one chosen at random)
+
+IDEA: have a flag which means auxiliaries must match something in their parent
+      [ implement by marking parent seeds ]
+      [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
+
+idea: 7/8/9 elements which do not represent anything, but allow
+      rules to create something, then auxiliaries or future rules
+      can transform that shape back into normal geometry
+      [ and instead of "count", some rulesets may say "until X is gone" ]
+
+idea: have rulesets for standard "grow", "sprout", "decor" steps
+      (maybe even "root")
+      
+Usage Ideas:
+
+  -  a DECOR rule begins a liquid area, and an auxiliary ruleset
+     is used to spread that area, staying close to existing geometry
+     in a room.
+
+  -  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
+     rest of hallway, and another auxiliary ruleset sprouts hallway
+     into new rooms, and a final auxiliary rulset prunes unused branches
 
 
 
