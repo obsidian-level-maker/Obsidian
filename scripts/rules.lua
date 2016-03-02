@@ -82,7 +82,14 @@ GROW_DIAGTEST_1 =
   {
     pass = "diag_test"
 
-    count = 5
+    count = 2
+  }
+
+  auxiliary2 =
+  {
+    pass = "diag_tidyup"
+
+    count = 4
   }
 }
 
@@ -103,6 +110,26 @@ AUX_DIAGTEST_1 =
   {
     "1.", "1."
     ".1", "1."
+  }
+}
+
+
+AUX_DIAG_TIDYUP =
+{
+  pass = "diag_tidyup"
+
+  prob = 50
+
+  structure =
+  {
+    "1%", "1%"
+    "%/", "%1"
+  }
+
+  diagonals =
+  {
+    "1.", "1."
+    ".1", "1.", ".1"
   }
 }
 

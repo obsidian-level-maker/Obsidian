@@ -2268,6 +2268,8 @@ end
     -- successful, pick it and apply the substitution.
     --
 
+--stderrf("Trying rule '%s'...\n", cur_rname)
+
     local best = { score=-1 }
 
     -- no need to mirror a symmetrical pattern
@@ -2321,6 +2323,17 @@ end
   end
 
 
+  local function auxiliary_name(index)
+    local name = "auxiliary"
+
+    if index >= 2 then
+      name = name .. index
+    end
+
+    return name
+  end
+
+
   local function apply_a_rule(rule_tab, doing_aux)
     local rules = table.copy(rule_tab)
 
@@ -2343,17 +2356,29 @@ end
       -- don't try this rule again
       rules[name] = nil
 
---stderrf("Trying rule '%s'...\n", name)
-
     until try_apply_a_rule()
 
---stderrf("Applied grammar rule %s\n", cur_rule.name)
+    -- SUCCESS
+
+    gui.debugf("Applied grammar rule %s\n", cur_rule.name)
 
     -- apply any auxiliary rules
     -- TODO : support multiple sets
 
-    if cur_rule.auxiliary and not in_recursion then
-      local aux = cur_rule.auxiliary
+    -- for performance reasons, only support one layer of recursion
+    if doing_aux then return end
+
+    if not cur_rule.auxiliary then return end
+
+    -- we modify 'cur_rule', so need to remember it here
+    local parent_rule = cur_rule
+
+    for aux = 1,9 do
+      local aux_name = auxiliary_name(aux)
+
+      local aux = parent_rule[aux_name]
+gui.debugf("  trying aux '%s' --> %s\n", aux_name, tostring(aux))
+      if aux == nil then continue end
 
       assert(aux.pass)
       local aux_rules = collect_matching_rules(aux.pass)
