@@ -9,6 +9,8 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
+*  Heretic support
+
 *  update documentation for current GUI interface
 
 *  better system to vary "pacing" of monsters
