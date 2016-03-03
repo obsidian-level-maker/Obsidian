@@ -960,69 +960,41 @@ function geom.pick_corner(side, x1,y1, x2,y2)
 end
 
 
-function geom.categorize_links(dir2, dir4, dir6, dir8)
-  local link_str = ""
+function geom.categorize_shape(dir2, dir4, dir6, dir8)
+  local open_str = ""
 
-  if dir2 then link_str = link_str .. '2' end
-  if dir4 then link_str = link_str .. '4' end
-  if dir6 then link_str = link_str .. '6' end
-  if dir8 then link_str = link_str .. '8' end
+  if dir2 then open_str = open_str .. '2' end
+  if dir4 then open_str = open_str .. '4' end
+  if dir6 then open_str = open_str .. '6' end
+  if dir8 then open_str = open_str .. '8' end
 
   -- nothing?
-  if link_str == "" then
-    return 'N', 2
+  if open_str == "" then return '.', 2 end
 
   -- facing one direction
-  elseif link_str == "2" then
-    return 'F', 2
-
-  elseif link_str == "4" then
-    return 'F', 4
-
-  elseif link_str == "6" then
-    return 'F', 6
-
-  elseif link_str == "8" then
-    return 'F', 8
+  if open_str == "2" then return 'U', 2 end
+  if open_str == "4" then return 'U', 4 end
+  if open_str == "6" then return 'U', 6 end
+  if open_str == "8" then return 'U', 8 end
 
   -- straight through
-  elseif link_str == "28" then
-    return 'I', 2
-
-  elseif link_str == "46" then
-    return 'I', 4
+  if open_str == "28" then return 'I', 2 end
+  if open_str == "46" then return 'I', 4 end
   
-  -- corner
-  elseif link_str == "26" then
-    return 'C', 6
+  -- two-way junction (L shape)
+  if open_str == "24" then return 'L', 2, 4 end
+  if open_str == "26" then return 'L', 2, 6 end
+  if open_str == "48" then return 'L', 4, 8 end
+  if open_str == "68" then return 'L', 6, 8 end
 
-  elseif link_str == "24" then
-    return 'C', 2
+  -- three-way junction (T shape)
+  if open_str == "246" then return 'T', 2 end
+  if open_str == "248" then return 'T', 4 end
+  if open_str == "268" then return 'T', 6 end
+  if open_str == "468" then return 'T', 8 end
 
-  elseif link_str == "48" then
-    return 'C', 4
-
-  elseif link_str == "68" then
-    return 'C', 8
-  
-  -- T junction
-  elseif link_str == "246" then
-    return 'T', 2
-
-  elseif link_str == "248" then
-    return 'T', 4
-
-  elseif link_str == "268" then
-    return 'T', 6
-
-  elseif link_str == "468" then
-    return 'T', 8
-
-  -- plus shape, all four directions
-  else
-    return 'P', rand.dir()
-
-  end
+  -- all four directions (plus shape)
+  return 'P', 2
 end
 
 

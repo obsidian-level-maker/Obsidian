@@ -2022,7 +2022,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       if r.kind == "stair" or r.kind == "joiner" then
         shape = "I"
       else
-        shape = "F"
+        shape = "U"
       end
     end
 
