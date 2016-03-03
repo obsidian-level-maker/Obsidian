@@ -40,6 +40,40 @@ For other games please try version 4.28)
 
 <h3>NEWS</h3>
 
+<div class="newsdate">03-Mar-2016:</div>
+<blockquote class="news">
+
+It is almost one year since the 6.20 version was released, and
+believe it or not I am still plugging away on this project......
+
+<p>
+The V7 code has shifted to a new room construction algorithm
+based on the concept of <i>Shape Grammars</i>.
+The system which I am developing is somewhat rudimentary, only
+applying on a coarse scale (the basic grid) and cannot be used
+for fine details.
+However the results so far seem very promising.
+
+<p>
+Another major thing which has changed is the basic grid size,
+which used to be 192x192 units but is now 128x128 units
+(which coincidentally is also the grid size of DOOM's automap).
+That was a hairy decision, as most the existing prefabs
+were designed for the larger grid size
+and will need to be reworked or replaced.
+Nevertheless the new size is working quite nicely in the
+generated maps, and offers more flexibility for the sizes
+of rooms, hallways, closets etc...
+
+<p>
+All in all, I am happy where V7 is going, and hopefully
+the next public release will not take another year :-)
+
+</blockquote>
+
+<hr style="clear: right;">
+
+
 <div class="newsdate">14-Oct-2015:</div>
 <blockquote class="news">
 
