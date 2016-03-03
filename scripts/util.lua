@@ -969,7 +969,7 @@ function geom.categorize_shape(dir2, dir4, dir6, dir8)
   if dir8 then open_str = open_str .. '8' end
 
   -- nothing?
-  if open_str == "" then return '.', 2 end
+  if open_str == "" then return 'N', 2 end
 
   -- facing one direction
   if open_str == "2" then return 'U', 2 end
