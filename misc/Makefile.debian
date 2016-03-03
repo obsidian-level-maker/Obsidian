@@ -1,0 +1,66 @@
+#
+#   Makefile for Oblige  [DEBIAN package]
+#
+#   Note: run this from top level:
+#         >  su -c 'make -f misc/Makefile.debian debbuild'
+#
+
+DEB_BASE = deb_root
+DEB_PREFIX = $(DEB_BASE)/usr
+DEB_DIR = $(DEB_PREFIX)/share/oblige
+DEB_DOCDIR = $(DEB_PREFIX)/share/doc/oblige
+
+DEB_FILES = misc/debian/control
+
+all:
+	@echo "ERROR: target must be 'debbuild' or 'debclean'"
+
+debbuild: debclean
+	install -d $(DEB_BASE)
+	install -d $(DEB_PREFIX)
+	install -d $(DEB_PREFIX)/bin
+	install -d $(DEB_PREFIX)/share
+	install -d $(DEB_PREFIX)/share/applications
+	install -d $(DEB_PREFIX)/share/pixmaps
+	#
+	install -o root -m 755 Oblige $(DEB_PREFIX)/bin/oblige
+	install -o root -m 644 misc/oblige.desktop $(DEB_PREFIX)/share/applications/
+	install -o root -m 644 misc/oblige.xpm $(DEB_PREFIX)/share/pixmaps/
+	#
+	install -d $(DEB_DIR)/scripts
+	install -d $(DEB_DIR)/engines
+	install -d $(DEB_DIR)/modules
+	#
+	install -o root -m 644 scripts/*.lua $(DEB_DIR)/scripts
+	install -o root -m 644 engines/*.lua $(DEB_DIR)/engines
+	install -o root -m 644 modules/*.lua $(DEB_DIR)/modules
+	#
+	install -d $(DEB_DIR)/data
+	install -d $(DEB_DIR)/data/doom1_boss
+	install -d $(DEB_DIR)/data/doom2_boss
+	install -o root -m 644 data/*.* $(DEB_DIR)/data
+	install -o root -m 644 data/doom1_boss/*.* $(DEB_DIR)/data/doom1_boss
+	install -o root -m 644 data/doom2_boss/*.* $(DEB_DIR)/data/doom2_boss
+	#
+	rm -Rf $(DEB_DIR)/games
+	svn export games $(DEB_DIR)/games
+	chown -R root $(DEB_DIR)/games
+	chmod -R g-s  $(DEB_DIR)/games
+	#
+	install -d $(DEB_DOCDIR)
+	install -o root -m 644 misc/debian/copyright $(DEB_DOCDIR)
+	install -o root -m 644 misc/debian/changelog $(DEB_DOCDIR)/changelog.Debian
+	gzip --best $(DEB_DOCDIR)/changelog.Debian
+	#
+	install -d $(DEB_BASE)/DEBIAN
+	cp $(DEB_FILES) $(DEB_BASE)/DEBIAN/
+	#
+	dpkg-deb --build $(DEB_BASE) ..
+
+debclean:
+	rm -Rvf $(DEB_BASE)
+
+.PHONY: debinstall debclean
+
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab

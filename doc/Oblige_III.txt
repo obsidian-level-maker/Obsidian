@@ -1,0 +1,257 @@
+
+ROOMS
+-----
+
+Rooms are areas on the map (bounded by a rectangle) which have
+clearly defined boundaries.  For example, in MAP11 of DOOM 2
+the circle + the nukage areas on both sides would all be part
+of a single (albeit complex) room.  The boundaries will often
+mostly consist of one-sided lines.  Another criterion is that
+the majority area of the room is traversible without taking
+special action (teleporters, doors, bridge switches).
+
+Rooms can contain other rooms, the most usual configuration
+will be one room surrounding (fully or partially) another.
+Take MAP14 of DOOM 2 for example, the blue armor room sits
+within an indoor room (walkway with a few sky holes) which
+in turn sits within an outdoor room (which has full sky and
+a walkway next to water).  MAP16 is another good example of
+room-in-a-room-in-a-room.
+
+How to create such maps:
+
+1) decide how many "huge" rooms to make at very start
+2) allocate space for them on map
+3) give them a THEME (using a key/prob table in GAME)
+4) decide what quests belong in each one
+5) decide how to connect them
+6) repeat process to create sub-rooms in each huge room.
+
+
+
+SYMMETRY
+--------
+
+Many maps use symmetry.  Very often a room will be symmetrical
+along the main path through it (i.e. both left and right sides
+of the path are mirror images).  Sometimes this extends to the
+whole map, nearly always flipped across the Y axis (see MAP02
+of HEXEN for a good example).
+
+Rooms can also be diagonally (transpose) symmetrical, which
+requires exactly two exits which are perpendicular.
+
+
+
+SEEDS
+-----
+
+The bare map consists of a grid (say 28x28) of seed cells.
+Each seed begins at a minimal size (like 3x3 blocks + border).
+
+Some rooms can be a single seed, larger rooms will use a
+block of seeds (e.g. 3x3 seeds).  Hallways might be a thin
+strip (e.g. 1x4 seeds) or could be a tangled network of
+connected seeds.
+
+Seeds represent a section (or the whole) of a room, and
+where two seeds are linked there will be a door between
+the two rooms are (or between a hallway and a room).
+A single seed room can only have four exits (N/S/E/W) but
+multi-seed rooms and hallways can have more exits.
+Other connections, especially WINDOWS, also require a seed.
+
+Room-in-a-room can be achieved by assigning a subset
+of the seeds of the outer room to the inner room.
+Other configurations (partial inclusion) can be done
+similarly.
+
+Once all the connections are decided, the seeds are grown
+to their full size, based on what the room will contain
+(including stairs, ledges, feature prefabs,
+pickup/switch/player spots, etc).
+
+Growing seeds requires certain constraints to be kept:
+  - maintain connections (keep both seeds in contact)
+  - keep symmetrical exits opposite each other.
+  - keep hallways straight (unless 'cavey').
+  - in multi-seed rooms: all seeds stay in a grid.
+
+Perhaps (YES) : seeds also represent important contents
+of a room.  For example: a COOP start room needs at
+least 4 seeds (one for each player start).  Other
+important stuff include: switches, quest items,
+teleporters, and the feature prefab(s) of a room.
+
+QUESTION: should seeds be like chunks? e.g. if the
+room has ledges, does that require an arrangement
+of seeds?? (e.g. an L-shaped ledge would need 2x2).
+---> YES: "significant" height diffs require seeds
+
+Intra-room seeds may need stairs/a lift to connect
+to each other.  Such stairs can be assigned like they
+are now (into chunks).  HOWEVER a big difference is
+that the stair area will be included in the seed size
+(known in advance) hence there can never be errors
+placing stairs into rooms.
+
+Where two rooms meet there will be a link and also
+a border.  
+
+QUESTION: there is always a border between two rooms
+even at places containing no links.  Are seeds
+responsible for containing the border info?  Can the
+whole room get by with a single border definition?
+---> each room makes its own border (NOT SHARED like now)
+
+Borders are normally quite thin.  Sometimes they could
+be fatter, e.g. to accommodate a deep door.  However
+for creating anything long, like a staircase between rooms,
+this should NOT be done with a border, instead use another
+room or seed (a HALLWAY).
+
+
+SECTOR SYSTEM & PREFABS
+-----------------------
+
+The new map system will be purely sector/linedef based.
+The are four different ways of modifying the map:
+
+1. make a sector area SOLID.
+2. replace a sector area's floor with X (ceiling unaffected)
+3. replace a sector area's ceiling with X (floor unaffected)
+4. replace a sector area's floor + ceiling with X
+
+'
+Perhaps: represent SOLID using a ceiling with a very low
+height (-32000), and make the code silently convert this to
+void space (by creating one-sided linedefs).
+
+Sectors here will be contiguous areas (i.e. separate pieces
+require separate sectors) and never contain holes.
+Sectors will have an 'l_tex' and 'u_tex' which are
+used when the linedefs do not specify them (also used when
+the sector is split).
+
+The sector stuffer will decompose sectors into triangles
+(using a BSP algorithm) in order to perform the replacement
+operations.  This will be done in the C++ code for speed.
+
+The initial map will be a single large SOLID rectangle with
+all the textures/flats set to the ERROR textures.
+
+IDEA: Other possible operations would be: MIN/MAX on the FLOOR
+and/or CEILING.  ADD/SUB on the FLOOR/CEILING (e.g. stairs).
+Ability to create extrafloors.  Not needed now, investigate later!
+
+LUA API:
+
+wad.blast_sector(op, region, sector_info, line_loop)
+
+   op = 1 'REPLACE'
+   region = 1 'FLOOR' or 2 'CEILING' or 3 'FLOOR+CEILING'
+
+   sector_info = table: f_h, f_tex, l_tex, c_h, c_tex, u_tex,
+                        light, kind, tag, flags.
+                [for 'FLOOR' then the c_ fields will be absent, etc]
+
+   line_loop = array(line_info)
+   line_info = table: x, y, front (side_info), back, kind, tag, args, flags.
+
+   side_info = table: l_tex, u_tex, rail, x_offset, y_offset
+
+Each line in the loop specifies the start coordinate. The current
+line's end coordinate will be the next line's start.  Line loops
+always join back to the very first start position.  The 'x_offset'
+can take a special value to indicate "last x_offset + last length"
+(to get perfect alignment).  
+
+NOTE: the 'back' sidedef is optional, especially when adding a
+group of touching sectors (e.g. stairs). When both are present on
+one side of a line: they get merged but the 'front' table takes
+precedence.
+
+
+ALGORITHM FOR GROWING SEEDS
+---------------------------
+
+function grow_all()
+
+  set location of each seed using a 3x3 grid.
+
+  repeat
+    for each direction (N|S|E|W) do
+      decide seeds to grow
+      normalise all grow/shrink flags to:
+        1. prevent overlaps
+        2. maintain integrity of multi-seed rooms
+        3. maintain links between rooms
+        4. maintain symmetry
+      actually grow/shrink the seeds
+    end
+  until all seeds have reached their minimum size
+
+end -- grow_all
+
+
+
+SEED INFORMATION
+----------------
+
+f_h, c_h : height range
+
+x1, y1, x2, y2 : block range
+     
+room : room reference
+
+combo : combo ref (for textures)
+
+content : NIL | "stair"    | "lift"   | "teleporter"
+              | "diagonal" | "player" | "pickup"
+              | "switch"   | ...
+
+dir[2/4/6/8] : information for South/East/West/North
+
+     kind : "wall" | "pass" | "door" | "window" | "falloff"
+
+     link: reference to 'joined' seed, or NIL
+
+
+
+DEATHMATCH MAPS
+---------------
+
+Talk about "Cycles" : start at room R and go through rooms S/T/U
+(however many there are) until you get back to R.
+
+Each Cycle will either be Clockwise or Anti-Clockwise.
+Most of the time, some rooms in a Cycle will be at significantly
+different heights than other rooms.  Hence can define the
+"height profile" for a Cycle.
+
+Cycles can be one-way, e.g. using falloffs or teleporters.
+
+Can also talk about the "hallway profile" of a Cycle.
+Also could be "outdoor profile", but that is probably not
+the best way to decide the inside/outside-ness of rooms.
+
+
+Topology Algorithm:
+
+1. create very first room R
+
+2. create N cycles, as follows:
+
+   (1) pick a start room
+   (2) choose turn dir (Clockwise or Anti-Clockwise)
+   (3) branch out from start room at random angle (can be 45deg)
+       to a free spot on node grid.
+   (4) create new room at that spot
+   (5) cur room := new room
+   (6) angle += turn_angle
+   (7) try to branch out, if successful goto (4),
+       else connect back onto the graph
+
+3. [NO] turn node graph into seed matrix.
+   Instead, create whole rooms as we go.
+

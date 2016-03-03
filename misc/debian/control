@@ -1,0 +1,12 @@
+Package: oblige
+Version: 6.10-1
+Section: misc
+Priority: optional
+Maintainer: Andrew Apted <ajapted@users.sf.net>
+Architecture: i386
+Depends: libc6, libstdc++6, libfontconfig1 (>= 2.4.0), libx11-6, libxext6, libxft2 (>> 2.1.1), libxinerama1, libxpm4, zlib1g (>= 1:1.1.4)
+Description: Random level generator for classic FPS games
+ Oblige is a random level generator for various classic FPS games,
+ in particular DOOM.  The goal is to produce good levels which are
+ fun to play.
+Homepage: http://oblige.sourceforge.net/

@@ -1,0 +1,22 @@
+
+TEXTURE COORDINATE SYSTEM
+=========================
+
+'u' means horizontal offset / position
+'v' means vertical offset / position (Z axis)
+
+bottom texture: bu, bv fields in brush sides
+top    texture: tu, tv fields in brush sides
+(usually placed in every side, but if only in a single side
+then the texture is axis aligned and 1:1 scale)
+
+also: tscale in brush top, bscale in brush bottom
+
+side texture: u1 and/or uscale in brush sides
+              v1 and/or vscale in brush sides
+
+new coord kind: za = height, specifies absolute Z anchor coordinate
+(i.e. for top of the texture).
+can be used with or without v1 or vscale.
+default is top of brush, or bottom if no top, otherwise 0.
+

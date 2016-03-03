@@ -1,0 +1,156 @@
+
+body {
+    background-color: black;
+    color: white;
+    padding: 16px;
+    padding-left: 60px;
+    padding-right: 60px;
+/*  font-size: larger;  */
+    font-family: sans-serif;
+}
+
+.rest {
+    background-color: white;
+    color: black;
+    padding: 0.5em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    padding-top: 1px;
+}
+
+.rest a:link { color:#00a }
+.rest a:visited { color:#00a }
+.rest a:hover { color:#04f }
+
+h1 {
+    color: #dd8;
+    font-size: xx-large;
+    text-align: center;
+    margin-bottom: 0.3em;
+}
+
+h2 {
+    color: #cb7;
+    font-size: smaller;
+    text-align: center; margin-top: 0px;
+    padding-bottom: 12px;
+}
+
+h3 { color: #c44; padding-top: 1em; }
+
+.menu {
+    background-color: #554637;
+    color: #ddd;
+    min-height: 28px;
+    line-height: 2.0em;
+    font-size: large;
+}
+
+.menu span { padding-left: 1em; padding-right: 1em; }
+.menu a    { padding-left: 1em; padding-right: 1em; }
+
+.menu a:link    { text-decoration: none; color: #ddd }
+.menu a:visited { text-decoration: none; color: #ddd }
+.menu a:hover   { text-decoration: none; color: white }
+
+.submenu {
+    background-color: #ccbbaa;
+    color: #006;
+    /* height: 32px; */
+    line-height: 2.0em;
+    font-size: small;
+}
+
+.submenu span { padding-left: 1em; padding-right: 1em; }
+.submenu a    { padding-left: 1em; padding-right: 1em; }
+
+.submenu a:link    { text-decoration: none; color: #006 }
+.submenu a:visited { text-decoration: none; color: #006 }
+.submenu a:hover   { text-decoration: none; color: #06f }
+
+.bottomcurve {
+    background-color: white;
+    height: 24px;
+    font-size: small;
+}
+
+.floatL { float: left  !important; }
+.floatR { float: right !important; }
+
+.moneyshot { float: right !important; margin-right: 20px; }
+
+dd { margin-bottom: 1em; }
+
+B { color: #742; }
+
+.button {
+    color: #393;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.newsdate { font-weight: bold; color: #742; }
+.news { margin-bottom: 2em; }
+
+PRE { /* font-size: larger; */ }
+
+.legal {
+    background-color: #ccc;
+    color: black;
+    font-family:mono;
+    font-size: smaller; 
+    border:1px solid black;
+    padding: 1em;
+}
+
+.guioverview {
+    padding: 40px;
+    padding-left: 100px;
+}
+
+.shot_area { text-align: center; }
+
+.screenshot { padding: 16px; margin: 0px; border: 0px solid black; }
+
+.qsavetex li {
+    color: #444;
+    font-size: smaller;
+    margin-left: 1.6em;
+    margin-right: 3em;
+    margin-bottom: 1em;
+}
+
+.spacey_list li {
+    margin-left: 1.2em;
+    margin-bottom: 0.7em;
+}
+
+.contributor {
+    margin-bottom: 1.4em;
+}
+
+.contributor ul {
+    margin-top: 0.3em;
+}
+
+.faq_Q {
+    color: #742;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.faq_A {
+    margin-bottom: 2em;
+}
+
+.gloss_term {
+    color: #393;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.gloss_define {
+    margin-left: 2.5em;
+    margin-bottom: 1.5em;
+}
+

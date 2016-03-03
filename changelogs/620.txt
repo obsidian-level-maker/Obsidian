@@ -1,0 +1,30 @@
+
+CHANGES IN 6.20 (since 6.10)
+============================
+
++  added basic monster closets
+
++  re-implemented diagonal walls
+
++  new Gameplay Tweaks module
+   (can prevent monsters in start room, among other things)
+
++  new "Easier" and "Harder" settings for monster strength
+
++  new "Episodic" setting for monster quantity and level size
+
++  finer control over Outdoors, Caves and all level styles
+   with new "Rare", "Less" and "More" settings
+
+!  removed "Always" setting for Caves and Outdoors
+
+-  ability to set the random seed
+-  in co-op mode prefer steep stairs instead of lifts
+-  better monster selection via new 'min_weapon' field
+-  water and blood are no longer damaging
+
+-  fixed error when all monsters in control module are "None"
+-  fixed map header lumps having size 1 instead of 0
+-  fixed creating "arch with step" when steepness == NONE
+-  fixed using key podiums underneath a 3D floor
+

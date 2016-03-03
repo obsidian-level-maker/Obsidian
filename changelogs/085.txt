@@ -1,0 +1,20 @@
+
+CHANGES IN 0.85 (since 0.81)
+============================
+
++  Hallways!  Crates!  New Exits!
++  better algorithm for choosing floor/ceiling heights.
++  user adjustments for health/ammo/monsters/traps.
++  current settings are remembered when you quit.
+
+-  support for FreeDOOM, TNT Evilution and Plutonia.
+-  levels are watermarked with some Oblige logos.
+-  delete temporary wad when build has finished.
+-  collect all log messages into a file (LOGS.txt).
+-  removed the unnecessary menu bar.
+
+-  fixed the (rare) non-working switches and lifts.
+-  surprise traps: improved placement, fairer monsters.
+-  tweaked battle simulation to provide more ammo.
+-  neater placement for health and ammo items.
+

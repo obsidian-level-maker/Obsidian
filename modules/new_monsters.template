@@ -1,0 +1,34 @@
+----------------------------------------------------------------
+--  TEMPLATE for adding NEW MONSTERS
+----------------------------------------------------------------
+
+CUSTOM = { }
+
+CUSTOM.MONSTERS =
+{
+  monster1 =
+  {
+    id = 1234
+    r = 32
+    h = 80 
+    prob = 30
+    health = 100
+    damage = 10
+    attack = "missile"
+    density = 0.9
+  }
+}
+
+
+OB_MODULES["CUSTOM"] =
+{
+  label = "CUSTOM"
+
+  for_games = { doom2=1 }
+
+  tables =
+  {
+    CUSTOM
+  }
+}
+

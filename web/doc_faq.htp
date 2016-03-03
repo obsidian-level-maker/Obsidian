@@ -1,0 +1,219 @@
+<set O_WHERE="FAQ">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use DocMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use DocUsage>
+<use DocAbout>
+<use DocCredits>
+<use SubWhere where="FAQ">
+<use DocGlossary>
+<use DocHistory>
+</div>
+
+<div class="rest">
+
+
+<h3> FREQUENTLY ASKED QUESTIONS </h3>
+
+<div id="terms" class="faq_Q">
+Q/ What does the term XXX mean?
+</div>
+
+<div class="faq_A">
+Please visit the <A href="doc_glossary.html">Glossary</A>
+for definitions of terms.
+If the phrase is not there, then feel free to ask us
+(preferably on the forums).
+</div>
+
+
+<div id="next_release" class="faq_Q">
+Q/ When is the next release?
+</div>
+
+<div class="faq_A">
+Short answer: <i>When it's ready.</i>
+
+<p>
+Long answer:
+This is just a hobby project, and
+while there is a little bit of long-term planning,
+there is no real roadmap,
+just a bunch of features we'd like to add one day.
+With each release we try to fix as many problems as we can,
+while introducing new features and better ways
+of doing things.
+Sometimes there will be some very experimental code,
+which you won't see because it will stay disabled until
+it's ready for general use.
+
+</div>
+
+
+<div id="games" class="faq_Q">
+Q/ Is game XXX going to be supported?
+</div>
+
+<div class="faq_A">
+It depends greatly on the game...
+
+<p>
+Some games, like Wolf-3D, are simply too old and limited
+for the way that OBLIGE works.
+Supporting them would require a whole different method of
+generating the levels -- and while it is definitely possible
+(as shown by the RANDWOLF program),
+there is absolutely no desire to work on it.
+
+<p>
+Modern games, anything released after 2000 or so
+(like Doom 3, for example) have map formats which are too
+complicated and/or too poorly documented (if at all).
+Hence it becomes too hard to write the CSG code to
+generate those formats.
+
+<p>
+Some games have a style of gameplay which is different
+than the find-all-keys &amp; kill-all-monsters
+style which you see in DOOM or Quake.
+Games with extensive RPG elements, or a game like Thief
+where sneaking around is a primary concern, would probably
+require a lot of new logic to support them well.
+
+<p>
+Finally, I am only one person and can only do so much.
+One day hopefully OBLIGE will become so popular that other
+programmers will volunteer to develop and maintain the code
+for a particular game that they like.
+Until then, it is probably better to have a few games which
+work really well, instead of lots of games where each one is
+only very basic.
+
+<p>
+<i>See also this forum post:</i>
+<a href="http://oblige.sourceforge.net/forum/index.php?topic=118.0">Possible Games</a>.
+</div>
+
+
+<div id="vanilla" class="faq_Q">
+Q/ Why isn't the original game engine ("vanilla" DOOM) supported?
+</div>
+
+<div class="faq_A">
+The original game binaries, like DOOM.EXE and DOOM2.EXE and also the Win95
+version of DOOM, have various limitations.  There are two limitations which
+prevent being supported by OBLIGE:
+
+<p>
+1. Visplane Overflows: when too many "visplanes" are drawn, the game
+suddenly exits to DOS with an error message.  This is very harsh on the
+person playing.  It is not possible for OBLIGE to guarantee that the
+number of visplanes stays under the limit at all times (except to make
+extremely dull maps).
+
+<p>
+2. Save Game Overflow: when a map has too many things (entities) in it
+and the player tries to save the game, it exits to DOS with an error
+message.  It would be difficult to ensure the number of things stays
+under the limit (e.g. removing monsters or pickup items would compromise
+the gameplay of the map).
+
+<p>
+<i>(Note: the above also applies to Chocolate-DOOM, which intentionally
+keeps those limitations in place)</i>
+
+</div>
+
+
+<div id="deathmatch" class="faq_Q">
+Q/ Can Deathmatch maps be created?
+</div>
+
+<div class="faq_A">
+The old version (V2) could make them (for DOOM etc), but this has not been
+implemented in the newest versions.
+Let me explain why:
+
+<p>
+With single player or co-op, you will play the map once
+and move on to the next.
+It doesn't need to be a masterpiece to be fun.
+
+However with DM or CTF you usually play the map for
+long periods of time, learning the layout well so you can
+concentrate on tactics.
+Hence the layout and flow of the map
+is absolutely critical, and it should be nice to look at too
+since you are spending so much time in there.
+The bar is much higher for generating these
+kinds of maps.
+</div>
+
+
+<div id="prebuilt" class="faq_Q">
+Q/ I don't like the pre-built maps, will OBLIGE make its own Boss maps?
+</div>
+
+<div class="faq_A">
+Boss maps usually have special layouts or special requirements
+which are
+hard to account for (e.g. killing all the Barons in E1M8 of
+DOOM lowers a wall, and a teleporter takes you to a small
+dark room with a special floor type).
+
+<p>
+Perhaps one day OBLIGE can make them, but it is not a high
+priority task.
+
+</div>
+
+
+<div id="compile" class="faq_Q">
+Q/ How do I compile the EXE?
+</div>
+
+<div class="faq_A">
+Firstly, be aware you can change the Lua files,
+such as games/doom/monsters.lua or scripts/rooms.lua,
+without having to compile anything.
+OBLIGE will load your changes the next time you run it.
+
+<p>
+Compiling Oblige.exe is fairly complicated,
+and I simply don't have the time or inclination to teach
+complete strangers on the internet the basics of compilers,
+makefiles, libraries and all that stuff.
+Sorry -- it's nothing personal,
+
+<p>
+If you are a programmer and are running Linux, then
+the INSTALL.txt document in the source package has
+some information to get you started.
+</div>
+
+
+<div id="waah" class="faq_Q">
+Q/ You must do such and such, I demand it!
+</div>
+
+<div class="faq_A">
+Hey, you got this program for free and nobody is
+getting paid to work on it.
+That means you have NO RIGHT to demand anything from us.
+
+<p>
+However if you have a request and ask nicely, it <i>will</i> be
+considered.
+
+</div>
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

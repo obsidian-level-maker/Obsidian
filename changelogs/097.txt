@@ -1,0 +1,15 @@
+
+CHANGES IN 0.97 (since 0.94)
+============================
+
++  greatly improved Heretic themes (Sam Trenholme)
++  fixed the stair-building error (Sam)
++  add some Cyberdemons into DOOM maps
+
+-  don't put monsters or things on crates
+-  don't put blaze doors in Heretic maps (Sam)
+-  add a few armor helmets in DOOM maps (Enhas)
+-  removed the Archvile from FreeDoom maps (Enhas)
+-  prevent cross windows being passable (Enhas)
+-  don't use shiny Wolf-3d door in Nature theme
+

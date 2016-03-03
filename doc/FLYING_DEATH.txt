@@ -1,0 +1,408 @@
+
+I said I was going to do it and here it is, a large heap of disorganised
+ideas.
+
+I was going to rewrite this in a more ordered fashion, but this proved too
+daunting, so i'm just going to cobble it together here. Note that there are
+lots of conflicting ideas, and a lot of things not fully thought through, or
+ideas that supersede others, or ideas that have already been considered or
+even planned(or said earlier be me), as I was writing this as a train of
+thought.
+
+Expanded parameters
+-------------------
+I think that the level parameter for items and monsters could be expanded.
+For monsters: First Seen (as mini boss(though could be more than one))
+                       Regular Usage
+
+For Items, and weapons:  Secret
+                         Quest
+                         On Path
+                         Side Rooms
+                         (also secret starting weapons later on)
+
+Just to explain, instead of just having a level parameter to decide when to
+start using monsters, you have a first seen parameter that reserves this
+monster for a single battle in an important location on the map(the room its
+in should look slightly special, and usually be near the end of a level,
+though in the middle or near the start would be fine too).
+
+If i gave a shotgun guy a first seen value of 1, I would find one or a few of
+these guys as an end of level challenge. Demons would work well with a value
+of 1 also(and 2 or 3 for regular usage)
+
+The items are a little more complex.
+[b]The secret value[/b] is the first level this item can be found as a secret. Once a weapon is used as a secret, it may not be reused as a secret on another map.
+[b]Quest[/b] is the first level the item is a Oblige 2 style quest goal, and this item is no longer a secret(though can be found as an extra bonus in a secret).(I like the shotgun found at the end of a quest on map 1, so it can be accidentally skipped) Also one quest max for each weapon.
+[b]On path[/b] is the first level this item/weapon can be placed on the players path, in a special looking room to make a bit of an occasion out of it. It is no longer a quest goal.
+[b]Side rooms[/b] is the first level that the weapon/item is not made a fuss of, and is just tucked away in a side room for those who need it. This does not stop this item being used on path though.
+Also the secret starting weapon thing in brackets is an idea where later on, useful weapons(that are found on earlier levels) are hidden near the start, and oblige assumes you get them.
+
+
+A Random Splotch of ideas
+-------------------------
+I think that levels should be designed monster(and Item) first, rather than
+make a level, and then populate. Create set pieces, with specific
+monsters(and remember what styles of set piece, and what monster composition
+is used, and try not to reuse.)
+
+Packing the level with more and more and tougher monsters is not a satisfying
+way to increase difficulty over the course of a game. Rather the monster
+placement should get more obnoxious and spiteful, and traps get more
+reckless. Rarely slow the player down with big fights. Try to always force
+damage on the player.
+
+
+On monster placement
+--------------------
+Maybe give monsters more parameters.
+
+Found: Open Spaces(good for big enemies eg mancubus), Tight Spaces(good for
+barons), Anywhere.
+
+Range: Close(good for barons), Far, Any. (this would be the range that there
+is line of sight.)
+
+
+Some quick fire ideas : Mostly structural stuff
+---------------------
+
+Can you use the exact method doom uses to calculate if monsters can see and
+hear you.
+
+Make all enemies visible from the entrance of a room have hearing. Calculate
+if a flier can hear you and give you ammo early for it.
+
+You should never be sure if a feature marks out a secret. You should only be
+sure when you try to activate it.
+
+Warp in monsters out of hearing range to back fill, and get wandering
+monsters(warp in at earlier parts of a level you may not need to revisit?
+Probably not.)
+
+Don't put all the enemies in front of the player, use warp-ins and monster
+closets to out flank the player. As the game gets harder the player should
+fear what is behind him more and more, create the "its too quiet" atmosphere
+before surrounding the player with enemies, or warping them in further away
+so the player comes under siege.
+
+Don't use switches for doors. Use them to change a structure in the level,
+and either have the structure close to the switch, or in a large centralised
+location, big and obvious, not hard to get to.( I just don't like switch
+doors in oblige, creates door hunt situations, Though this can be resolved by
+leading the player back with monsters(in closets or warp-ins).
+
+Switches that do trivial things such as open/close windows, switch on/off
+lights, Reveal  circuitry/gore behind a panel/wall. Switches that open up
+monster closets, close areas off later on that are populated by monsters,
+opens a power up closet.
+
+Keys that get you into ammo storage/medic bays. Two routes one that needs a
+hidden(secret) key (sometimes from the last section), and one that is full of
+tough monsters. Secret shortcuts. Two routes, the long way, and the hard way.
+
+Try to avoid dead ends, side rooms are fine.
+
+Windows usage increased(Windows can create some interesting battles), but
+never or rarely put windows between level flat rooms(it looks weird, often
+not interesting).
+
+Design weapon get order at the outset(of a wad)? Choose new weapons more
+carefully.
+
+How good a secret items is should depend on how well hidden, and how
+long/hard the secret quest is.
+
+Don't put time dependent items at the end of long quests. Place very
+carefully.  eg invincibility could be in the center of a big trap set piece,
+in a secret closet near a drawn out battle, near(in secret closet) monster
+filled, deadly liquid filled, lower area that has a path to a secret item.
+
+
+More quick fire ideas : Mostly placement stuff
+---------------------
+
+Try to leave the player with close to 100 health and 50 bullets worth of ammo
+at the end of the level.
+
+Be super careful about armour placement, make sure that its pretty worn out
+by the end of the level.(This and the one above is just so that oblige does
+not have to worry about 2 possible starting  conditions for each level, and
+to make it easier to test later level difficulty by just jumping into it.
+Also oblige is way too liberal with armour making green armour often
+worthless.)
+
+The tougher the monster, the more careful(spiteful) the placement, so hard
+enemies don't become harmless ammo sponges.
+
+Never place more than 100 health(in normal health) in a location, if you need
+more than 100 health, then you died.(I wrote this before v5, and v5 does this
+better, but whatever oblige does to achieve this, it should do more strongly.
+Same counts for next idea.)
+
+Use bigger health packs rather than groups of small health packs.(Just to
+avoid leaving a trail of half collected health bundles, that puts me in the
+position of "should i go back and try to find all those little healths or
+risk going on without." Though backfilling with monsters would also be a nice
+solution.)
+
+
+Some ammo stuff
+---------------
+Rarely give the player more high grade ammo(bullets/nails, rockets, cells)
+than low(shells)
+
+it should actually be hard to max out on bullets/nails let alone higher ammo
+classes.
+
+Try not to let a player max out on all weapons. Maybe never allow more than one full ammo class worth of ammo
+eg no more than 100 shells
+or 50 shells and 200 bullets
+or 300 cells and 50 rockets
+or 25 shells, 25 rockets, 100 bullets and 150 cells.
+
+though more like 35 shells, 140 bullets, 15 rockets and 90 cells.
+
+Too often oblige just starts giving me a monoculture of ammo, which is fine
+for the shotgun, but makes things a little too easy if its bullets(chaingun
+has so much utility and is so unwasteful), disconcerting when its rockets,
+and I just don't know how to use the plasma rifle against the smaller
+enemies, which I always face in dribs and drabs right after I get maxed out
+on plasma ammo and want to use because there is so much plasma ammo around.(I
+think this happens cuz I always try to save my ammo up "just in case".
+
+
+Keeping it fresh : a more elegant version of this later
+----------------
+
+Be aware of player fatigue. Probably the hardest thing to nail is creating a
+variety of situations, pace, challange and enviroment, to draw the player in
+and keep him playing whilst maintaing quality and flow. Make sure the
+enviroment keeps changing. Have sections of;
+- poor lighting
+- excessive liquid
+- brightly lit clean areas
+- barrel fun
+- lots of scary moving tech things
+- twisty corridors and stairs leading all up or all down(so the player feels
+  they are going somewhere)
+- wide flat courtyards
+- narrow back alleys
+- linedef triggers doing random changes to environment to unsettle the player
+- overlooking an epic room.
+- section(sort of a corridor) with lots of windowed side rooms(think half life)
+- Stupidly big wide flat out door enviroments with enemies arranged like
+  medieval armies(big rectangles of monster monocultures, arranged
+  perpendicular to the player, fast monsters on the flanks, tough monsters in
+  middle with weak monster placed in front.(yep, you should probably ignore
+  this)
+- Sewers.
+- Mines.
+- Have a pitch dark area(side quest), player must use minimap to
+  navigate.(maybe not though)
+
+Monster set peices
+- They just keep coming!(but not the way the player has to go, you can run
+  away)
+- Sudden hoard strike
+- They keep sneaking up on me!(coming out of the woodworks as it were)
+- I'm not armed to kill that! RUN!!!
+- Oh shit, they are behind me too!(keep players focus forward, and sneak some
+  monsters behind)
+- I'm trapped(player reaches dead end, and enemies pour in from behind, or,
+  all ways in are shut off, and the way forward opens up to let in a stream of
+  enemies in.)
+
+Item set peices
+- Guess its chainsaw time(stop giving player ammo, and place
+  zombies,imps,demons, cacos, painelementals, arachno-thingies i think are ok
+  too(doom only))
+- This is not the right weapon for this(eg lightning gun in a waterlogged area)
+- Thank god for the (insert)gun.(Player low on ammo, enemies keep spawning behind
+  and coming from sides, pushing player forward, and then, suddenly, a new weapon,
+  and ammo.
+- I need that health, oh dear.(Player low on health, and then in a big room, soulsphere.
+  But when you go to get it a big monster comes out of the ground to block it, or floor
+  gives way, and on one side enemies to run away from, on the other an escape route.
+
+
+Don't use the same trick twice, unless its a level theme.(the old "trick me
+once...")
+
+Each level should be destinct from ajacent levels, but also feel like a
+progression from the start of a mega wad to the end.(this gone into more
+detail later)
+
+Don't put a hoard of enemies in every room. (by default at least)
+
+
+Misc ideas
+----------
+
+Crouch/Jump allowed option, crouch/jump height. If crouch is allowed then you
+can have ventilation shafts as alternate paths between rooms(half-life yes,
+but more like metal gear solid)
+
+Difficulty(and item and monster) progression should have a minimum learning
+curve.  What I mean is that on full mega wads with huge levels, the
+hardness/weapon/enemy progression is determened by how far the player has
+gone in real distance(kinda) rather than percentage completion of the whole
+wad, up to a certain point where it then creates a normal progression ramp
+from current difficulty, to the final difficulty.(ok this is difficult to
+explain so ask if it makes no sense to you.)
+
+Don't have big rooms with a few weak monsters in it. Either have it empty, or
+put something more substantial in it. So avoid using big rooms early on.
+
+The first instance of a new enemy should try to make the most of that enemy,
+so the player can acknowledge it, before it is killed.  Acknowledge: Accept
+or admit the existence or truth of. Recognize the fact or importance or
+quality of.
+
+
+========================================================================
+
+
+I have been meaning to get this idea posted for a while, but now seems an
+appropriate time to get it down.
+
+The Boredom Meter
+-----------------
+
+Ok so this is something I thought I had invented, but apparently the idea
+already exists.
+
+By default try to be as conservative with textures, enemies, items,
+enviroment type etc.  Approximate how much time the player spends surrounded
+by these textures, enemies etc, and how much time the player is using
+specific weapons/wearing specific armour etc.
+
+When too much time has elapsed for a specific element, it is changed for
+another.  Or these values are entered into some kind of boredom
+formula/algorithm and when the threshold of boredom is broken, the most
+overused element is replaced.
+
+eg the player has been using the shotgun for a while now, lets give him a
+chaingun, or some bullets if he has a chaingun already.
+
+Now for the more complex version.
+
+All elements are give a bunch of extra stats(sorry about this) that represent
+the general flavor of the element. For example, colour. Possibly have a hue,
+saturation and lightness(or rgb?), that represents the average(most present)
+colour of an element. Now instead of choosing specific elements to go in an
+area, oblige chooses(in this example) a colour(or several) and uses the
+elements that are closest to this colour. When the player has experienced
+this colour for too long, oblige picks a new one to use.
+
+Variable ideas
+
+Value - How powerful something is - For items and monster
+
+Hellishness - How hellish something is - For everything (except maybe weapons
+and ammo)
+
+Special - How much extra effect something has(high for pain elementals and archviles low for imps and pistol guys) - For item, monsters and maybe textures
+
+Hue - Average hue - For textures, items and monster
+Brightness - ^^
+Saturation - ^^
+
+Artificialness - The opposite of which is natural. So urban bricks, hell
+bricks and former humans are medium values. Tech stuff, marble stuff and
+cyberdemons is high. Mud, rock, water, trees, imps and demons are low - For
+everything
+
+Scariness - For everything except weapons and ammo. Includes Lighting.
+
+The weight of each variable could vary from map to map. Or maybe episode to
+episode.
+
+The purpose of this is to create a balance between theme and variety, between
+giving what is expected, and what is surprising.
+
+We want to have themes(things that stay the same), variety(things that change
+a lot) and progression(thing that gradually change over time). These 3 things
+could be chosen for each episode.  Rough example:- Have this episode use
+mostly tech textures, vary a lot(map to map) between the clean, well lit,
+techy textures, and the green textures that go well with toxic slime.
+Progress from no hell textures to frequent usage of marble hell textures. 
+
+Is theming of health pickups a good idea?
+
+
+Battle Strength Formula
+-----------------------
+
+So I have been playing around with a general formula for calculating the cost
+or value of a unit or minion for strategy games.
+
+It started life as this
+
+[b]Unit value = the square root of (Health*Damage)[/b]
+
+I should mention that damage is damage per second(or go).
+
+This formula says that 
+one unit with Hp:4 Dps:2
+vs
+two units with Hp:2 Dps:1 
+
+is a fair fight (though in this case the top force wins with 1hp (assuming
+that they do 1 damage per shot)
+
+I don't really know what to say about it other than its accuracy depends on
+the situation(eg are there reinforcements?), but that it seems generally
+accurate.
+
+So next I tried adding speed and range of attack into the mix.
+
+[b]Unit value = the square root of (H*D*S*R)[/b]
+
+H=Hit Points
+D=Damage per second
+S=Speed in meters per second
+R=Attack range in meters
+
+Ok now this seems a bit unintuitive to me, but it seems work about as well as
+the first formula(I think).
+
+So whats this got to do with doom. Well I was thinking it might be a good way
+of gauging the players strength vs monsters. Obige can use the formula to
+calculate the players current value, and the strength of enemies can be
+precalculated and replace some of their current stats. Oblige then adds
+enemies up to the players current value * Difficulty(which is <1), and the
+player should be able to win the fight.
+
+I will think about how to add [b]projectile speed[/b] and [b]accuracy[/b]
+into the formula.
+
+Though maybe its just
+
+[b]Unit value = the square root of (H*D*S*R*P*A)[/b]
+
+Where P=Projectile speed in meters per second
+and     A=1 is perfect accuracy and A=0 is shooting randomly about 360[sup]o[/sup]
+would vertical and horizontal accuracy be independant variables?
+
+Im not sure how to test this but I will give it some thought.
+
+
+========================================================================
+
+Rogue-Like mode:
+
+Generates totally nonlinear maps, where the start and finish are in
+fairly random locations. Keys and switches generally allow access to
+useful or necessary weapons, health, ammo etc, and rarely are needed to
+reach the exit.  There's not really enough ammo or health to kill every
+enemy, but there are quite a few parts of the map with no enemies. The
+focus will be on exploring and scavenging as much as possible from a map
+before going to the next, avoiding enemies if possible.
+
+Difficulty should ramp up steeply so that if you do not find a good
+enough weapon, or enough ammo, you may not be able to finish the next
+map. Also maps should become progressively darker as the game goes on.
+Also anyone who plays on this mode must delete the wad if they die, and
+generate a new one :-)
+

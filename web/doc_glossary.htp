@@ -1,0 +1,364 @@
+<set O_WHERE="Glossary">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use DocMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use DocUsage>
+<use DocAbout>
+<use DocCredits>
+<use DocFAQ>
+<use SubWhere where="GLOSSARY">
+<use DocHistory>
+</div>
+
+<div class="rest">
+
+
+<h3> GLOSSARY OF TERMS </h3>
+
+<div id="brush" class="gloss_term">
+Brush
+</div><div class="gloss_define">
+This is a term borrowed from Quake mapping.
+A brush is a solid area in 3D space.
+Levels are built by placing a lot of brushes everywhere.
+For example, the floor you are standing on will be one brush,
+and the ceiling overhead will another one.
+Stuff like doors are built from many brushes.
+
+<p>
+In OBLIGE, brushes consists of a top face, a bottom face, and
+a group of side faces.
+The top and bottom are usually flat but may be sloped,
+whereas the sides are always perfectly vertical.
+
+<p>
+<i>(See also.... CSG, Entity)</i>
+
+</div>
+
+
+<div id="connection" class="gloss_term">
+Connection
+</div><div class="gloss_define">
+A place where two rooms are connected so the player can pass
+between them.
+Connections may be locked, so that the player needs to find a
+key or switch to open it.
+Archways and doors are the normal kinds of connections, but
+other kinds (such as teleporters and one-way drop-offs) are
+possible too.
+</div>
+
+
+<div id="csg" class="gloss_term">
+CSG
+</div><div class="gloss_define">
+CSG stands for "Constructive Solid Geometry".
+For OBLIGE it means the process of taking all the brushes
+which define the map (most of them are solid), and constructing
+the output map format from them, e.g. the Doom WAD file
+or the Quake BSP file.
+</div>
+
+
+<div id="engine" class="gloss_term">
+Engine / Port
+</div><div class="gloss_define">
+When Carmack released the DOOM source code, many different people
+hacked away on it and produced their own version of the EXE,
+often with greatly expanded capabilities.  Examples include BOOM,
+EDGE, Legacy and ZDoom.
+The same thing happened when he released the QUAKE source code,
+people made engines such as Darkplaces, FitzQuake, and ZQuake.
+
+<p>
+Hence the term "Engine" or "Source Port" usually refer to one of
+these enhanced versions of the game, but it can also mean the original
+EXE which the game came with when you bought it.  That one is
+called "Vanilla" since nothing extra has been added to it.
+
+<p>
+<i>(See also.... Limit Removing)</i>
+
+</div>
+
+
+<div id="entity" class="gloss_term">
+Entity
+</div><div class="gloss_define">
+This is another term from Quake, and means an object or thing in the map.
+Monsters, weapons, player starts, ammo, health, barrels, torches (etc etc)
+are all entities.
+</div>
+
+
+<div id="gui" class="gloss_term">
+GUI, EXE
+</div><div class="gloss_define">
+GUI stands for Graphical User Interface,
+but here the term often refers to whole EXE
+(executable program) of OBLIGE.
+which is responsible not only for all the interactive
+elements, like the "Build" button,
+but also for doing CSG operations and
+creating the output map formats.
+
+<p>
+This is in contrast to the Lua scripts which handle all the
+logic for building levels, such as deciding how big to make
+all the rooms and what monsters to put in them.
+The Lua code is not stored inside the EXE,
+instead it is loaded from various folders
+when OBLIGE starts up.
+
+<p>
+<i>(See also.... CSG, Lua)</i>
+
+</div>
+
+
+<div id="limit_removing" class="gloss_term">
+Limit Removing
+</div><div class="gloss_define">
+A "Limit Removing" engine is one which people have removed some
+limitations that the original game had.
+For example, plain DOOM.EXE will crash if there are more than 128
+visplanes on the screen -- the dreaded VPO (Visplane Overflow) error
+which was a real headache for mappers.
+
+<p>
+However source ports like BOOM have removed this limitation
+(and others), so there can be as many visplanes on the screen
+as necessary to draw the level.
+
+<p>
+OBLIGE needs a Limit Removing engine because it is impossible
+for it to figure out when the visplane limit is going to be
+exceeded -- it depends greatly on the architecture of the map.
+The only way to keep within those limitations would be to
+produce very flat, boring, mostly-indoor maps with nothing
+much to look at.
+</div>
+
+
+<div id="lua" class="gloss_term">
+Lua
+</div><div class="gloss_define">
+Lua is a programming language used for all the level building
+logic in OBLIGE.
+The files in the <b>scripts/</b>, <b>games/</b>, <b>engines/</b> and
+<b>modules/</b> folders are all Lua scripts.
+You can edit these ".lua" files with an ordinary
+text editor (like NOTEPAD, but <i>not</i> MS Word),
+and those changes will be loaded the next time OBLIGE is run.
+This is very convenient, because you don't need to compile anything.
+
+<p>
+NOTE: the version of Lua used by OBLIGE has been extended
+with a few extra features, including cleaner data tables
+(commas are optional at end of a line)
+and a new "each" statement.  This means
+our Lua scripts are not compatible with some programming tools,
+since they only work with standard Lua syntax.
+
+<p>
+Visit the <a href="http://www.lua.org">Lua home page</a>
+to discover more about this great programming language.
+</div>
+
+
+<div id="material" class="gloss_term">
+Material
+</div><div class="gloss_define">
+With standard DOOM, there are two types of textures: one for walls
+and one for floors and ceilings.
+The first kind are called "textures" and the second kind "flats".
+This is quite a nuisance, because you cannot use flats on walls
+nor textures on floors and ceilings.
+The terminology can also get confusing.
+
+<p>
+So in OBLIGE, a "Material" is just a single name which specifies
+both parts: the wall texture and the floor flat, and the code
+makes sure they are used in the correct places.
+This makes a lot of things much simpler, as you only need to
+give the material name and not worry about the kind of surface
+it will be used on.
+
+<p>
+While material names can be anything,
+they usually match the name of one of their components.
+For example, the DOOM materials "SHAWN2" and "FLAT23" are equivalent
+(they both specify <b>SHAWN2</b> as the wall texture
+and <b>FLAT23</b> as the flat)
+and hence they can be used interchangeably in OBLIGE.
+
+<p>
+Other games allow textures to be placed anywhere.
+However there are usually some which look good on walls
+but not on floors, and vice versa,
+hence this material system can be useful for these games too.
+
+</div>
+
+
+<div id="palette" class="gloss_term">
+Palette
+</div><div class="gloss_define">
+This means a selection of certain things, especially monsters.
+Each room has its own monster palette, and only those monsters
+will be used in that room.
+There is also a "global" palette which controls what monsters
+may or may not appear in the level.
+These palettes help give each room and each level a distinctive
+feel.
+
+</div>
+
+
+<div id="prefab" class="gloss_term">
+Prefab
+</div><div class="gloss_define">
+A mapping structure, such as a window or door, whose shape
+and texturing have been previously designed by a person.
+This is in contrast to stuff like caves which are generated
+purely by an algorithm.
+
+<p>
+Starting with V5, most prefabs used by OBLIGE are in "wad"
+files, which can be created and edited by a DOOM map editor.
+There must also be a corresponding Lua file which contains
+various properties about the prefab, like its size and how it
+connects to its environment.
+
+<p>
+<i>(See also.... Skin)</i>
+
+</div>
+
+
+<div id="prebuilt_level" class="gloss_term">
+Prebuilt Level
+</div><div class="gloss_define">
+Levels which are not generated by OBLIGE, instead they are
+made by a human and OBLIGE merely copies them into the
+output file.
+Boss maps usually have special requirements which are
+hard to account for.
+It is much easier for someone to simply make them
+in a map editor.
+</div>
+
+
+<div id="quest" class="gloss_term">
+Quest
+</div><div class="gloss_define">
+A group of rooms with a particular goal, usually
+a key or switch which allows progression to the next quest.
+The final quest always leads to the exit room of the level.
+
+<p>
+<i>(See also.... Zone)</i>
+
+</div>
+
+
+<div id="scenic" class="gloss_term">
+Scenic
+</div><div class="gloss_define">
+A room or area which the player never visits, and is only used
+for decoration.
+</div>
+
+
+<div id="seed" class="gloss_term">
+Seed
+</div><div class="gloss_define">
+In the Lua code, a seed is a square region on the 2D map
+which is 192x192 units in size (depending on the game).
+Each seed generally contains a single mapping concept:
+a walkway, a stair, a switch, a pillar, etc...
+The sides of each seed can be used for walls, doors,
+windows, etc...
+The decisions about where to place rooms, how big they are,
+and how they are connected are all done using seeds.
+
+<p>
+Another meaning of "seed" is a number used to setup a
+random number generator.  The same seed value will produce
+the same sequence of random numbers.
+OBLIGE chooses a unique seed number each time you
+build a set of levels, which ensures that the output wad
+is different than any previously built wad.
+
+</div>
+
+
+<div id="skin" class="gloss_term">
+Skin
+</div><div class="gloss_define">
+Skins are used with prefabs, they are tables containing
+various properties about the prefab,
+such as the dimensions of the prefab,
+how it can connect to other prefabs,
+which themes the prefab can be used with,
+and replacements for textures and entities.
+
+<p>
+Hence they are a similar concept to skins used on 3D models,
+where the model defines the 3D shape and the skin defines what
+it looks like.
+In games, models are often re-used by having more than one skin.
+Similarly in OBLIGE
+there can be more than one skin for each prefab.
+
+</div>
+
+
+<div id="sub_room" class="gloss_term">
+Sub-Room
+</div><div class="gloss_define">
+A room which lies inside another room.  The sub-room is also
+called the child and the outer room is the parent.
+</div>
+
+
+<div id="zone" class="gloss_term">
+Zone
+</div><div class="gloss_define">
+Zones divide each level into several large pieces.
+Each zone will usually have a distinct appearance (sub-theme)
+and a distinct monster palette.
+Zones are further sub-divided into quests, and the doors
+connecting two zones are typically locked by a key,
+whereas all the puzzles (quests) inside a zone use switched
+doors.
+
+</div>
+  
+
+<div id="versions" class="gloss_term">
+V1 &nbsp; V2 &nbsp; V3 &nbsp; V4 &nbsp; V5 &nbsp; V6 &nbsp; V7
+</div><div class="gloss_define">
+These designate the major versions of OBLIGE.
+V1 was merely a prototype and was never publicly released.
+V7 is the currently developed version, and all
+previous versions have ceased development.
+
+
+<p>
+See the <a href="doc_history.html">History</a> page for
+more detailed information about OBLIGE versions.</i>
+
+</div>
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

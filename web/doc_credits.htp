@@ -1,0 +1,214 @@
+<set O_WHERE="Credits">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use DocMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use DocUsage>
+<use DocAbout>
+<use SubWhere where="CREDITS">
+<use DocFAQ>
+<use DocGlossary>
+<use DocHistory>
+</div>
+
+<div class="rest">
+
+<h3> DEVELOPER </h3>
+
+<b>Andrew Apted</b> &nbsp; &lt;ajapted@gmail.com&gt;
+
+<p>
+I created OBLIGE and I continue to develop it.
+
+<p>
+Some other projects I have worked on include:
+
+<a href="http://eureka-editor.sourceforge.net/">Eureka</a>,
+a map editor for classic DOOM, and also:
+
+<a href="http://edge.sourceforge.net/">EDGE</a>,
+an OpenGL DOOM source port with many enhanced features.
+
+<!---
+[a href="http://glbsp.sourceforge.net/"]glBSP[/a],
+a node builder for classic DOOM, and also:
+--->
+
+
+<h3> CONTRIBUTORS </h3>
+
+<div class="contributor">
+
+<b>Chris Pisarczyk (Glaice)</b>
+<ul>
+  <li>DOOM prefabs</li>
+  <li>Skulltag Monsters module</li>
+  <li>ZDoom Beastiary module</li>
+  <li>DOOM 1 boss maps (most of them in fact)</li>
+  <li>DOOM 2 boss maps (e.g. "dead simple")</li>
+  <li>DOOM 1/2 theming</li>
+  <li>Egypt theme for TNT Evilution</li>
+  <li>an OBLIGE logo image</li>
+  <li>additions to name generator</li>
+  <li>lots of useful feedback</li>
+  <li>general encouragement and support</li>
+</ul>
+</div>
+
+
+<div class="contributor">
+
+<b>Derek Braun (Dittohead)</b>
+<ul>
+  <li>DOOM tech prefabs</li>
+</ul>
+</div>
+
+
+<div class="contributor">
+
+<b>Enhas</b>
+<ul>
+  <li>ZDoom Marines module
+  <li>Stealth Monsters module
+  <li>Level Control module
+  <li>various Skulltag stuff
+  <li>psychedelic level names
+  <li>Chex Quest game definition
+  <li>a DOOM "gotcha" style boss map
+  <li>lots of useful feedback
+  <li>fixes and tweaks
+</ul>
+</div>
+
+
+<div class="contributor">
+
+<b>Jared Blackburn (blackjar)</b>
+<ul>
+  <li>Hexen theming
+</ul>
+</div>
+
+
+<div class="contributor">
+
+<b>Jon Vail (40oz)</b>
+<ul>
+  <li>extensive work on name generator
+  <li>Cyberdemon arena map
+  <li>DOOM prefabs
+</ul>
+</div>
+
+
+<div class="contributor">
+
+<b>Sam Trenholme</b>
+<ul>
+  <li>Heretic theming
+  <li>workaround for the stair-building error
+  <li>lots of feedback and support
+  <li>numerous fixes
+</ul>
+</div>
+
+
+<div class="contributor">
+
+<b>LakiSoft</b>
+<ul>
+  <li>Heretic boss maps
+</ul>
+</div>
+
+
+<div class="contributor">
+
+<b>SylandroProbopas</b>
+<ul>
+  <li>DOOM 1 boss map
+</ul>
+</div>
+
+
+<h3> THANKS TO... </h3>
+
+<b>DoomJedi</b> : Wolf3D testing, graphics, and list of Wolf3D mods. 
+
+<p>
+<b>esselfortium</b> : encouragement and detailed feedback.
+
+<p>
+<b>gggmork</b> : beta testing, detailed feedback.
+
+<p>
+<b>flyingdeath</b> : various feedback and useful suggestions.
+
+<p>
+<b>leilei</b> : initial Amulets & Armor definition, various feedback.
+
+<p>
+<b>Maxim Samoylenko</b> : encouragement and testing.
+
+<p>
+<b>thesleeve</b> : monster placement analysis.
+
+<p>
+..... and everyone else who provided feedback, bug reports,
+ideas for improvements (etc), both in email and on the forums.
+Your input has been greatly appreciated!
+
+
+<h3> NOTES </h3>
+
+OBLIGE was written from scratch. It does not contain any code
+from SLIGE (by David Chess) or from any other random level
+generator.
+
+<p>
+OBLIGE uses a modified version of the Lua 5.1.5 scripting
+language, which is Copyright 1994-2012 Lua.org, PUC-Rio, which
+is under a permissive "MIT" license.  The original version can
+be found here: <a href="http://www.lua.org/">www.lua.org</a>
+
+<p>
+Part of the cave algorithm used in OBLIGE was described by Jim Babcock
+in his article: "Cellular Automata Method for Generating
+Random Cave-Like Levels".
+
+<p>
+OBLIGE uses the FLTK widget library:
+<a href="http://www.fltk.org">www.fltk.org</a>
+
+
+<h3>COPYRIGHT / LICENSE</h3>
+
+<div class="legal">
+OBLIGE Level Maker
+
+<p>
+Copyright (C) 2006-2016 Andrew Apted, et al
+
+<p>
+OBLIGE is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+<p>
+OBLIGE is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the <a href="http://www.gnu.org/licenses/gpl-2.0.txt">GNU General Public License</a> for more details.
+</div>
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

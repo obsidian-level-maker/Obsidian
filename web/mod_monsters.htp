@@ -1,0 +1,222 @@
+<set O_WHERE="Modding">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use ModMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use SubWhere where="NEW MONSTERS">
+</div>
+
+<div class="rest">
+
+<h3>ADDING NEW MONSTERS</h3>
+
+This tutorial will show how to create a module which adds new monster
+definitions for OBLIGE to use.
+
+
+<h3>Step 1</h3>
+
+Pick a short name for your module.
+It must only contain letters, digits, and the
+underscore '_', and must start with a letter.
+For example, "foobie" and "big_demon3" are OK, but "3d_tiger" and "$#!^"
+are invalid names.
+
+
+<h3>Step 2</h3>
+
+In the <i>modules</i> folder in OBLIGE, there is a file called
+<b>new_monsters.template</b>.  Copy this to a new file, changing the
+name to the name you picked in step 1, and setting the file extension
+(sometimes called the file type) to "lua".
+
+<p>
+Example: <b>foobie.lua</b>
+
+<p>
+Lowercase filenames are best.
+If the file extension is not set correctly,
+OBLIGE will not load it.
+You can see which files are being loaded by looking at the
+<i>LOGS.txt</i> file after running OBLIGE.
+
+
+<h3>Step 3</h3>
+
+Open your file with a text editor, such as NOTEPAD (which comes with
+the Windows operating system) or gedit for Linux.  Do NOT use a
+word processor program, such as Microsoft Word, because they do not
+create plain text files and OBLIGE will not be able to read them.
+
+<p>
+Find all occurrances of the word "CUSTOM" and change it to your
+name for the module, using uppercase letters this time.
+
+<p>
+Example: <b>FOOBIE.MONSTERS =</b>
+
+
+<h3>Step 4</h3>
+
+Here you will create the entries for one or more monsters.
+There is already a single entry in the template, called 'monster1'.
+Each entry is defined by fields in between curly brackets
+<b>{</b> .... <b>}</b>.
+You can add more monsters by copying an existing entry, changing
+the name, and making sure the opening and closing brackets match up.
+If you mess up the brackets, OBLIGE will raise an error when it starts.
+
+<p>
+You can give the monsters custom names, e.g. "demon3", but like
+before you can only use letters, digit and
+the underscore, and it cannot begin with a digit.
+If you added extra monster entries, their names need to be
+different.
+Also, the name should be different to the ones from the game
+itself -- otherwise your monster will <i>replace</i>
+the existing one.
+
+<p>
+Each monster entry consists of a number of field names and their values,
+with a single field on each line.  Here is a description of the
+most common fields you can use:
+
+
+<p>
+<b>Compulsory Fields:</b>
+
+<blockquote>
+<b>id</b> : this is the ID number of the monster, the same number you
+would use in the editor (like Doom Builder).
+</blockquote>
+
+<blockquote>
+<b>r</b> : the radius of the monster.
+If this is too small,
+this monster will probably end up being stuck in a wall or another monster.
+</blockquote>
+
+<blockquote>
+<b>h</b> : the height of the monster.
+</blockquote>
+
+<blockquote>
+<b>prob</b> : the probability of using this monster.
+Higher values make the monster more likely to be used in a room.
+Note this is NOT a percentage or absolute value, so values above 100
+are perfectly valid.
+</blockquote>
+
+<blockquote>
+<b>health</b> : the health points of the monster.
+</blockquote>
+
+<blockquote>
+<b>damage</b> : approximately how much damage the monster would
+do the player (on average).
+This is basically the amount of health which OBLIGE will add
+into the map to compensate for fighting one of these monsters
+(the exact amount depends on user settings).
+</blockquote>
+
+<blockquote>
+<b>attack</b> : the main kind of attack the monster does.
+There are three possible values: "melee", "missile", and "hitscan"
+(these values are strings and must have the double quotes).
+</blockquote>
+
+
+<b>Optional Fields:</b>
+
+<blockquote>
+<b>level</b> : this is an indicator of the toughness of a
+monster.
+Easy monsters should have low numbers (1 to 3),
+tougher monsters are between 4 to 7,
+and bosses have values of 8 or 9.
+This also controls, roughly, how far along in an episode or
+full game the monster will be first introduced.
+The default value is '1'.
+</blockquote>
+
+<blockquote>
+<b>density</b> : this controls how many monsters to use in a room,
+where 1.0 is normal, higher values produce more monsters,
+and lower values produce less monsters.
+For particularly nasty monsters, like the Archvile in DOOM, low
+numbers like 0.2 are good for ensuring they are used sparingly
+in a room.
+</blockquote>
+
+<blockquote>
+<b>crazy_prob</b> : this probability value is used when the
+Strength setting of "Crazy" is selected.  It allows some fine
+tuning of the monster balance, but more importantly allows using
+a monster which would not normally appear, like the SS Nazi of
+DOOM 2.
+</blockquote>
+
+<blockquote>
+<b>float</b> : set this to "true" (without the quotes) for
+monsters which fly.  OBLIGE can place flying monsters in places
+which wouldn't make sense for walking ones, like in liquid areas.
+</blockquote>
+
+<blockquote>
+<b>invis</b> : set to "true" (without the quotes) for monsters
+which are partially or completely invisible.
+</blockquote>
+
+<blockquote>
+<b>nasty</b> : set to "true" (without the quotes) if the monster
+is particularly nasty.  This has a few effects, the main obvious
+one is the monster will not be placed on the map in groups
+(not on purpose, anyway).
+</blockquote>
+
+<i>
+(Note: the are several more fields which are supported by OBLIGE.
+These are beyond the scope of this article.
+If you are interested then I suggest looking at some existing monster
+definitions, such as those for DOOM 2.)
+</i>
+
+
+<h3>Step 5</h3>
+Now you can test your module.
+Start OBLIGE (if it was already open then close it first), and your
+new module should appear in the modules list.  Enable your module,
+and build some levels, and the new monster(s) should appear.
+
+When playing the levels, be sure to load any WADs or PK3s which
+contain the monster graphics (etc) in addition to the WAD created
+by OBLIGE (which only contains the generated levels).
+
+
+<p>
+<b>Testing Tips:</b>
+
+<ol class="spacey_list">
+<li>
+you can set a 'prob' value much higher than normal (like 999) to
+make sure that the monster gets added into the levels.
+Once it is working, then set the 'prob' value back to normal.
+
+<li>
+OBLIGE sometimes skips using a monster for a zone, and possibly
+the whole level, so if it hasn't appeared on the first level,
+check some other levels.
+Also, monsters with a high 'level' value usually don't appear
+in the early levels of an episode or whole game.
+
+</ol>
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

@@ -1,0 +1,76 @@
+#----------------------------------------#
+#  Eureka definition for OBLIGE prefabs  #
+#----------------------------------------#
+
+# turn off generalized sectors (they prevent large sector types)
+feature gen_types 0
+
+
+#--- TEXTURES and FLATS ---
+
+texturegroup o "Oblige Fab"
+
+texture o _NOTHING
+texture o _WALL
+texture o _OUTER
+texture o _FLOOR
+texture o _CEIL
+texture o _LIQUID
+texture o _SKY
+
+flat o _NOTHING
+flat o _WALL
+flat o _OUTER
+flat o _FLOOR
+flat o _CEIL
+flat o _LIQUID
+flat o _SKY
+
+#--- LINE SPECIALS ---
+
+linegroup o "Oblige Fab"
+
+line 888 o "-- OBL: Activate"
+line 991 o "-- OBL: Lower Unpeg"
+
+
+#--- SECTOR SPECIALS ---
+
+sector 988 "OBL: Depot Peer"
+sector 992 "OBL: Reachable"
+sector 993 "OBL: Grab Floor"
+sector 995 "OBL: Moving Floor"
+sector 996 "OBL: Door"
+sector 997 "OBL: Delta 12"
+
+
+#--- THING TYPES ---
+
+thinggroup o F8F "Oblige Fab"
+thinggroup n F84 "Oblige Mon"
+
+thing 8102 n -  20 NULL "OBL: Monster 40"
+thing 8103 n -  32 NULL "OBL: Monster 64"
+thing 8104 n -  48 NULL "OBL: Monster 96"
+thing 8106 n -  64 NULL "OBL: Monster 128"
+thing 8108 n - 128 NULL "OBL: Monster 256"
+
+thing 8112 n -  20 NULL "OBL: Flyer 40"
+thing 8113 n -  32 NULL "OBL: Flyer 64"
+thing 8114 n -  48 NULL "OBL: Flyer 96"
+thing 8116 n -  64 NULL "OBL: Flyer 128"
+thing 8118 n - 128 NULL "OBL: Flyer 256"
+
+thing 8122 n -  20 NULL "OBL: Caged 40"
+thing 8123 n -  32 NULL "OBL: Caged 64"
+thing 8124 n -  48 NULL "OBL: Caged 96"
+thing 8126 n -  64 NULL "OBL: Caged 128"
+thing 8128 n - 128 NULL "OBL: Caged 256"
+
+thing 8151 o n  16 NULL "OBL: Small Item"
+thing 8152 o n  16 NULL "OBL: Nice Item"
+thing 8160 o -  64 NULL "OBL: Goal Spot"
+thing 8166 o n  16 NULL "OBL: Object"
+thing 8181 o n  12 NULL "OBL: Light"
+thing 8199 o n  12 NULL "OBL: Secret Area"
+

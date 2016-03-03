@@ -1,0 +1,80 @@
+Wolf3D MODS coding features (note not all affect mapping)
+=========================================================
+
+Virtually always used:
+---------------------------------------
+1. Seamless level progression (no end levels screens)
+
+Most popular:
+---------------------------------------
+1. 4 keys instead of 2 (most of the wolf3d mods, even the ones that try to stay
+      loyal to the original wolf3d feature list)
+2. Directional scenery (aka "transparent doors")
+      (examples: "False Spear", "End of Destiny", "Operation Todpfad",
+       "Castle Hasselhoff" and many many others.......)
+3. Textured/multitextured floors/ceilings
+      (examples: "Orb of Dilaaria", "False Spear", "Wolfenstein Reloaded",
+       "Lost World".......)
+4. Parallaxed skies (examples: "End of Destiny", "False Spear", "Wolfenstein Reloaded" and too many others to mention)
+5. Weapon bobbing (examples: "False Spear", "Operation Todpfad", and too many others to mention)
+6. Interactive textures (example: "False Spear")
+
+Very popular:
+---------------------------------------
+1. Intermission screens/sub stories (example: "Orb of Dilaaria")
+2. Extensive graphics set
+3. Destructable columns ("End of Destiny", "Castle Hasselhoff" and many others)
+4. Exploding barrels ("End of Destiny", "Castle Hasselhoff" and many others)
+5. Distance shading (example: "False Spear")
+
+Popular:
+---------------------------------------
+1. Animated scenery (examples: "Orb of Dilaaria", "Operation Todpfad" , "Castle Hasselhoff")
+2. Fullscreen (examples: "End of Destiny", "Operation Todpfad", "Castle Hasselhoff"...)
+
+Sometimes used:
+---------------------------------------
+1. Ambient sounds (examples: "Project Eisenritter",  "False Spear", upcoming "Femstein"...)
+2. Pickable weapon silencer (example - "Wolfenstein reloaded")
+3. Balanced weapons (the best example is "Wolfenstein Reloaded")
+4. Extended weapon set ("Wolfenstein Reloaded", "End of Destiny".....)
+5. Weather effects - snow (example - "End of Destiny")
+6. Non-wolf3d palette
+7. Teleporters (examples - "False Spear", "End of Destiny", "Operation Todpfad"....)
+8. Different/unique game file ending instead of "sod/wl6"
+      (examples: "Orb of Dilaaria"(*.orb), "Project Eisenritter"(*.wsj),
+       "End of Destiny"(*.eod), "Operation Todpfad"(*.tod).......)
+9. Pickable armor (example: "Operation Todpfad")
+
+Quite rare:
+---------------------------------------
+1. mines (example: "False Spear")
+2. Suiciders (instead of dogs)  - (example " End of Destiny", aka EOD)
+3. Screen is brighter when near a ceiling lamp (example: "Wolfenstein II")
+4. Heartbeat sound on low health (example: "False Spear")
+
+Very rare  (used a few times):
+----------------------------------------
+1. Wall switches/activators/deactivators ("End of Destiny")
+2. Heavy chaingun that slows you down ("Operation Todpfad")
+3. Weather effects - rain ("Trench Warfare")
+4. Hi-resolution (MAC) scenery ("Lost World - part 5")
+
+Used once or almost once:
+----------------------------------------
+1. Inventory ("Trench Warfare")
+2. Enemy body dragging ("Wolfenstein Reloaded")
+3. Timed inventory ("Orb of Dilaaria")
+4. Extended saved states number ("Orb of Dilaaria")
+5. Hi-resolution textures
+6. More than 60 maps ("All this & wolf3D")
+7. Damaging/animated floor textures ("Orb of Dilaaria")
+8. Split-opening doors ("Lost World 4/5?")
+9. Floor switches ("Orb of Dilaaria")
+
+Already implemented but not used in mods:
+----------------------------------------
+1. Damaging directional scenery
+2. Blowup walls
+
+The list done by DoomJedi, for Oblige

@@ -1,0 +1,62 @@
+
+LUA EXTENSIONS
+==============
+
+The version of Lua used in OBLIGE has been extended to enhance code
+readability and to suit my programming style.  Lua 5.1.4 was the
+base for this, it had worked well for a long time and the changes
+coming in the 5.2 series did not provide anything I wanted.  Hence
+I decided to fork the Lua 5.1.4 code into a custom version.
+
+
+CHANGES
+-------
+
+1. Data tables don't require a separator (comma or semicolon) at
+   the end of a line to separate the next item.  In the middle of
+   a line they are still needed though.  This is analogous to
+   statements where semicolons are optional at the end of a line.
+
+   Example:
+
+   x = {
+     { 123, 234, 345 }
+     { 456, 567, 678 }
+     { 789, 891, 912 }
+   }
+
+
+2. Simpler traversal of lists and tables.  I have introduced a new
+   keyword 'each' which is similar to 'for' but does not require
+   the ipairs() or pairs() functions -- one is called automatically
+   (ipairs for a single variable, pairs for two).
+
+   Example (i):  each V in list do ... end
+
+   Example (ii): each K,V in table do ... end
+
+   For list traversal, a local variable called '_index' contains
+   the current index value.
+
+
+3. Continue statement.  This is something I missed a lot from C
+   and C++, since I prefer to keep indentation to a minimum and
+   to write loops with "filters" near the beginning.
+
+   Example:
+
+      each R in LEVEL.rooms do
+        -- ignore outside rooms
+        if R.outdoor then continue end
+
+        -- ignore cavey rooms
+        if R.kind == "cave" then continue end
+
+        ... do something ...
+      end
+
+
+4. Added != operator with the same meaning as '~=' (not equals)
+   since I find it more readable -- the exclamation mark just
+   stands out more.
+

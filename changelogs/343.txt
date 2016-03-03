@@ -1,0 +1,34 @@
+
+CHANGES IN 3.43 (since v3.39)
+=============================
+
++ fixed too much chaingun/plasma ammo (fight sim bug)
+- fixed non-working lifts and pedestals
+- fixed bug: levels reduced to 2 rooms
+
++ better name generator (thanks to JohnnyRancid)
+- new just-for-kicks theme 'Psychedelic'
+- new choice for Monsters: 'Crazy' 
+- support for huge monsters in maps
+
++ new Material system
+- reorganised DOOM code : doom.lua & dm_tex.lua
+- added 'density' field to MONSTER tables
+- cleaner brush/entity transformations
+
++ boss arenas for E1M8 and E2M8 (thanks Mr. Chris)
+- more color schemes for skies (JohnnyRancid)
+- improved support for DOOM I
+
+- worked on the module system
+- new program for extracting Quake textures
+- a bit of progress with Tiled games (Wolf3d)
+- added 'replaces' field for monsters
+- support monster/weapon preferences again
+
++ various new modules:
+  - Immoral Conduct - Special Edition
+  - Skulltag Monsters (by Mr. Chris)
+  - ZDoom Marines (thanks Enhas)
+  - Stealth Monsters (by Enhas)
+

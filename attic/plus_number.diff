@@ -1,0 +1,96 @@
+Index: WISHLIST.txt
+===================================================================
+--- WISHLIST.txt	(revision 7335)
++++ WISHLIST.txt	(revision 7336)
+@@ -266,7 +266,10 @@
+ -  transfer Lua_Extended.txt document to the website
+    (part of modding guide).
+ 
++?  implement 2D array access: [x, y] --> [x][y]
++   --> there's a power patch for that
+ 
++
+ ----------------------------------------------------------------
+   DOOM and DOOM II
+ ----------------------------------------------------------------
+Index: CHANGES.txt
+===================================================================
+--- CHANGES.txt	(revision 7335)
++++ CHANGES.txt	(revision 7336)
+@@ -47,6 +47,7 @@
+   - ternary operator of the form: (X ? Y ; Z)
+   - continue statement
+   - alternative inequality operator: !=
++  - allow numbers to begin with plus, like: +3
+ 
+ - incorporated glBSP source for easier building
+ 
+Index: lua_src/llex.cc
+===================================================================
+--- lua_src/llex.cc	(revision 7335)
++++ lua_src/llex.cc	(revision 7336)
+@@ -25,7 +25,8 @@
+ 
+ 
+ 
+-#define next(ls) (ls->current = zgetc(ls->z))
++/* -AJA- 2011/06/14: remember the last character */
++#define next(ls) (ls->previous = ls->current, ls->current = zgetc(ls->z))
+ 
+ 
+ 
+@@ -145,6 +146,7 @@
+   ls->lastline = 1;
+   ls->source = source;
+   luaZ_resizebuffer(ls->L, ls->buff, LUA_MINBUFFER);  /* initialize buffer */
++  ls->current = 0;  /* --AJA-- */
+   next(ls);  /* read first char */
+ }
+ 
+@@ -357,6 +359,22 @@
+           next(ls);
+         continue;
+       }
++      /* -AJA- 2011/06/14: hacky support for numbers like +3 */
++      case '+': {
++        if (! (ls->previous == 0   || isspace(ls->previous) ||
++               ls->previous == ',' || ls->previous == '(' ||
++               ls->previous == '[' || ls->previous == '{'))
++        {
++          next(ls); return '+';
++        }
++        next(ls);
++        if (isdigit(ls->current))
++        {
++          read_numeral(ls, seminfo);
++          return TK_NUMBER;
++        }
++        return '+';
++      }
+       case '[': {
+         int sep = skip_sep(ls);
+         if (sep >= 0) {
+Index: lua_src/llex.h
+===================================================================
+--- lua_src/llex.h	(revision 7335)
++++ lua_src/llex.h	(revision 7336)
+@@ -54,6 +54,7 @@
+ 
+ typedef struct LexState {
+   int current;  /* current character (charint) */
++  int previous; /* previous character --AJA-- */
+   int linenumber;  /* input line counter */
+   int lastline;  /* line of last token `consumed' */
+   Token t;  /* current token */
+Index: doc/Lua_Extended.txt
+===================================================================
+--- doc/Lua_Extended.txt	(revision 7335)
++++ doc/Lua_Extended.txt	(revision 7336)
+@@ -73,3 +73,7 @@
+    since I find it more readable -- the exclamation mark just
+    stands out more.
+ 
++
++6. Allow numbers to begin with a plus sign, example: +3
++   Just another little thing I missed from C.
++

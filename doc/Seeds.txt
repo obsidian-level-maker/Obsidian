@@ -1,0 +1,122 @@
+
+Seed Notes
+==========
+
+(this doc supercedes Oblige_III.txt)
+
+
+What are Seeds?
+---------------
+
+The seed map consists of a 3D grid (say 25x20x6) of seed cells.
+
+Some rooms can be a single seed, larger rooms will use a
+block of seeds (e.g. 3x3 seeds).  Hallways might be a thin
+strip (e.g. 1x4 seeds) or could be a tangled network of
+connected seeds.
+
+Seeds represent a section (or the whole) of a room, and
+where two seeds are linked there will be a door or window
+between the two rooms (or between a hallway and a room).
+
+A single seed room can only have four exits (N/S/E/W) but
+multi-seed rooms and hallways can have more exits.
+
+Room-in-a-room can be achieved by assigning a subset
+of the seeds of the outer room to the inner room.
+Other configurations (partial inclusion) can be done
+similarly.
+
+Once all the connections are decided, the seeds are grown
+to their full size, based on what the room will contain
+(including stairs, ledges, feature prefabs,
+pickup/switch/player spots, etc).
+
+
+Seed Contents
+-------------
+
+Seeds also represent important contents of a room.
+For example: a COOP start room needs at least 4 seeds
+(one for each player start).  Other important stuff
+include: switches, quest items, teleporters, stairs
+and lifts, and the feature prefab(s) of a room.
+
+Intra-room seeds may need stairs/a lift to connect
+to each other.  Such stairs can be assigned like they
+are now (into chunks).  HOWEVER a big difference is
+that the stair area will be included in the seed size
+(known in advance) hence there can never be errors
+placing stairs into rooms.
+
+Seeds are responsible for making border walls between
+rooms.  Borders are normally quite thin.  Sometimes they
+could be fatter, e.g. to accommodate a deep door.  However
+for creating anything long, like a staircase between rooms,
+this should NOT be done with a border, instead use another
+room or seed (a HALLWAY).
+
+
+Connections
+-----------
+
+Each seed has a height range (Z) as well as the 2D range (X & Y).
+The height range must be part of the initial seed map (i.e.
+it is decided before seeds are grown).
+
+The seed map is 3D, there can be multiple seeds in the Z dimension
+as well as the X & Y dimensions.  For example, a room with a
+walkway which you can go over _and_ under requires two seeds
+at that point: one for the walkway and one for underneath it.
+
+[For standard DOOM, only one seed can be used in the Z dimension.
+ Engines that support 3D floors can use more]
+
+Seeds can only be connected to adjacent seeds in the initial
+seed map (north, south, east, west, up and down).  Each connection
+always guarantees that the biggest seed "contains" the smaller
+seed along the connection line (if they are the same size, then
+there is no wiggle room).
+
+The following are the possible connection types:
+
+  - LAX: no further restrictions
+
+  - CENTERED: the middle points are as close as possible
+  
+  - FLUSH LOW: the lowest coordinate remains the same
+
+  - FLUSH HIGH: the highest coordinate remains the same
+
+Seeds have a minimum size of 2 blocks (a block == 64 units),
+and a maximum size of 9 blocks.  Seeds a grown from the minimum
+size upto their desired size, and may become larger due to all
+the constraints in the map.
+
+In the worst-case scenario, every seed will become the maximum
+size.  Hence non-LAX connections (etc) should not be overused.
+
+
+Symmetry
+--------
+
+Rooms will often be symmetrical, and this is achieved using
+seeds which have a "twin brother" reference to another seed.
+Both seeds will be created the same, have the same size and
+contents (though mirrored).
+
+There can be three such references (all could be potentially
+used at the same time, in practice only the first two would
+make sense) :-
+
+   - MIRROR X: mirrored horizontally: x = -x
+
+   - MIRROR Y: mirrored vertically: y = -y
+
+   - TRANSPOSE : mirrored diagonally: x,y = y,x
+
+Rooms that are TRANSPOSE symmetrically have to be square,
+and that is an additional constraint on the seed growing
+process.
+
+

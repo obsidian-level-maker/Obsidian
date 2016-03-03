@@ -1,0 +1,209 @@
+
+Quest Planner
+-------------
+
+NxN grid of 768x768 "cells"
+   Each cell  can be subdivided into 64x64 "blocks"
+   Each block can be subdivided into 16x16 "fragments"
+
+- pick start block S (and theme)
+- pick key1 block, find path S -> K1
+- pick key2 block, find path K1 -> K2
+- pick end block, find path K2 -> E
+
+add "mini quests" (get good weapon / etc)
+using spare block along one of the paths.
+
+grow existing areas, e.g. make start area bigger,
+fill empty blocks between used blocks (esp. different
+theme, like outdoor area).
+
+add links between different stages (ensuring player
+cannot skip ahead e.g. key doors, one-way height diffs
+or windows/bars).
+
+when finding paths, add cost for changing direction
+(cost depends on theme).
+
+paths should not cross, but allow it sometimes
+(will need special treatment: raise a bridge).
+Use teleported when a path cannot be found (or
+choose another target block).
+
+paths might be "one-way", no guarantee that you can
+go back the way you came (maybe get there another way).
+
+
+    |    |    | Q0 | Q0 |    |    |
+    |    |    |  ^ |    |    |    |
+----+----+----+----+----+----+----+----
+    | S >| p0>| p0 | q2>|>Q2 | g4 |
+    |    |    |  v |  ^ |    |    |
+----+    +----+----+----+----+----+----
+    | S  | g0 | p0.|.p2>|>E    E  |
+    |    |    |  v |  ^ |         |
+----+----+----+----+----+         +----
+    | K2 | Q1 | p0 | p2 | E    E  |
+    |    |  ^ |  v |  ^ |         |
+----+    +----+----+----+----+----+----
+    | K2<|<p1<|<K1 | p2 | g3 | g3 |
+    |  v |    |    |  ^ |    |    |
+----+----+----+----+----+----+----+----
+    | p2>|>p2>|>p2>|>p2 |    |    |
+    |    |    |    |    |    |    |
+
+
+Result of PLANNING
+==================
+
+For each cell we know:
+-  main architectures (room/hallway/courtyard)
+-  base floor height
+-  exits and see-throughs (where to, which quest)
+-  which stage/quest it is on, how far along
+-  theme (textures, lighting, monsters)
+-  quest item (key/weapon/switch)
+
+
+Floor heights
+-------------
+
+-  +/- 64, 128 or rare: 192/256
+-  prevent repetitive up/down/up/down along the path
+   (skew random to disfavour opposite changes)
+-  consistent in a room: not have all four directions different
+-  prefer going down from inside to outside
+
+
+Monster / Health / Ammo
+-----------------------
+
+Toughness -> set of monsters -> health & ammo for battle.
+
+-  size of a "fight" per cell, e.g. # toughness points
+   (accumulate unused values to neighbour cells like F.S.)
+   Need to take room size into account.
+
+-  target health value per cell, normal areas maybe 75 pt,
+   quest rooms maybe 5 pts.  Give health in order to meet
+   target (in a cell, assume battle damage + health given == target)
+
+-  compute firepower needed in cell to win battle, give ammo
+   some in previous cells, rest in current cell.
+   Assume weapon/ammo in current cell is picked up half-way into battle.
+   Take dropped weapons into account.
+
+
+Player must 
+   kill XXX
+   find YYYY
+   press a switch to ZZZZ
+
+
+keywords
+--------
+  TEMPLE  BASE
+  CITY   ALLEY   WAREHOUSE
+  TOWN   SEWER   BUNKER
+  CANYAN  CLIFF  RIVER
+  TOWER  CRYPT  CASTLE  STATION
+  MINES  LAB
+  GARDENS   CAVE  PIT  COURTYARD
+  COMPUTER_ROOM
+
+  SPACE  HELL(ish)   INDOOR  OUTDOOR
+  BLOOD  LAVA
+  HI-TECH  MILITARY
+  GOTHIC   CRAMPED  SPACIOUS  BRIGHT  DARK
+  SATANIC
+
+
+Lighting
+-------- 
+
+0-96: evil hidden rooms, night in the wild outdoors
+112, 128: sewers, dark tunnels, night/enshadowed outdoors
+144: normal indoors
+160: clouded outdoors
+176: lighted indoors (144+32)
+192: normal outdoors
+208-224: high noon outdoors
+255: strobing/glowing lights, never outside (buggy and ugly)
+
+
+Miscellaneous
+=============
+
+a)  "Incremental Specialisation"  
+
+    First build a vague plan (the quests).  Rough idea
+    of features of each section (e.g. "fairly dark",
+    "hot and hellish", "use zombiemen", "make player
+    descend 256 units").  These can be fleshed-out later.
+
+    The 768x768 grid could be considered as roughly
+    where a room/hallway/xxx goes.
+    Actual room (etc) doesn't have to be limited to that
+    area (though in practice that keeps things simpler).
+
+
+b)  TEMPLATES
+
+    provide a cookie-cutter type approach.  A good example
+    is a door, how to build it is defined by the Template.
+    Works on blocks (and fragments), always aligned to blocks.
+    Can be mirror, then can be rotated 90/180/270. 
+
+    Maybe have sizable and non-sizable ones.
+    Maybe have "sub templates".
+    Sophisticated templates contain LUA code to execute.
+
+    Inheritance: any unset style parameter gained from a
+    parent table.
+
+    Needed templates:
+
+       DOOR  LIFT  SWITCH
+
+       ROOM  HALLWAY  TELEPORTER
+
+       STAIRS  WINDOW  PILLAR  NICHE
+
+
+    DOOR EXAMPLE
+    ------------
+
+    arch parameters: x, y, z
+    
+    style parameters: WALL_TEX, DOOR_TEX, etc...
+
+    front  = new sector (FLOOR, FLOOR+128)
+    back   = new sector (FLOOR, FLOOR+128
+    middle = new sector (FLOOR, FLOOR, door=DOOR_ID
+
+    block[-1][+0] = WALL_TEX
+    block[+0..+1][+0] = { fragment specialised }
+    block[+2][+0] = WALL_TEX
+
+    fragment[1..8][1] = front + WALL_TEX
+    fragment[1..8][2..3] = middle + DOOR_TEX
+    fragment[1..8][4] = back + WALL_TEX
+ 
+
+Template issues:
+
+1) "environment" or "semantics" :
+
+   e.g. a DOOR only exists in-between
+   two areas which need to be connected (ROOM-HALLWAY,
+   ROOM-ROOM, HALLWAY-HALLWAY, etc).
+
+   e.g. a LIFT is used to take the player from a low
+   height to a higher height.  Stairs too.
+   
+   e.g. A WINDOW is placed in similar places as a door,
+   but allows signt and shooting between two areas but
+   not travel.
+
+   keywords: SIGHT / SHOOTING, TRAVEL, HEIGHT_CHANGE
+

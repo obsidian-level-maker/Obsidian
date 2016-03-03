@@ -1,0 +1,32 @@
+
+WEB PAGE REORGANISATION
+=======================
+
+
+BATCH MODE
+
+You can run OBLIGE from the console (it's called "batch mode"), but it cannot
+load a config file, so you need to specify the settings on the command line.
+
+Batch mode needs '-b' followed by the output filename, and then followed by
+settings of the form [i]name[/i]=[i]value[/i].
+
+The defaults are similar to the GUI defaults, DOOM is the default game, but
+the default 'Length' is a single map.
+
+Examples:
+[code]> Oblige -b out.wad
+> Oblige -b out.wad length=full mons=heaps
+> Oblige -b pak2.pak game=quake size=small mons=few
+[/code]
+
+
+USER-GUIDE:
+but stupid windows blocks EXE files unless you go to control
+panel/internet options/security/(change to default level before you
+unzip)
+
+note that Oblige does not merge any third party mods into the
+final WAD file, you need to run e.g. DOOM with both the mod _and_
+the Oblige output together.
+

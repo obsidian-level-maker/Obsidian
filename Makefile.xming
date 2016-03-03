@@ -1,0 +1,228 @@
+#----------------------------------------------------------------
+# OBLIGE
+#----------------------------------------------------------------
+#
+# GNU Makefile for WIN32, using CROSS-COMPILER on Linux
+#
+
+PROGRAM=Oblige.exe
+
+CROSS=i686-w64-mingw32-
+
+CXX=$(CROSS)g++
+
+LIB_LOC=lib_win32
+OBJ_DIR=obj_win32
+
+FLTK_DIR=$(LIB_LOC)/fltk-1.3.3
+ZLIB_DIR=$(LIB_LOC)/zlib-1.2.8
+
+OPTIMISE=-O2 -fno-strict-aliasing
+
+STRIP_FLAGS=--strip-unneeded
+
+OS=WIN32
+
+
+#--- Internal stuff from here -----------------------------------
+
+FLTK_FLAGS=-I$(FLTK_DIR)
+FLTK_LIBS=$(FLTK_DIR)/mingw/lib/libfltk_images.a \
+	  $(FLTK_DIR)/mingw/lib/libfltk.a
+
+ZLIB_FLAGS=-I$(ZLIB_DIR)
+ZLIB_LIBS=$(ZLIB_DIR)/libz.a
+
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
+         -Ilua_src -Iglbsp_src -Iajpoly_src -Iphysfs_src \
+	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
+
+LDFLAGS=-static-libgcc -static-libstdc++
+
+LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
+     -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
+     -lcomctl32 -lwsock32 -lsupc++
+
+
+#----- OBLIGE Objects ----------------------------------------------
+
+OBJS=	$(OBJ_DIR)/main.o      \
+	$(OBJ_DIR)/m_about.o  \
+	$(OBJ_DIR)/m_addons.o  \
+	$(OBJ_DIR)/m_cookie.o  \
+	$(OBJ_DIR)/m_dialog.o  \
+	$(OBJ_DIR)/m_lua.o     \
+	$(OBJ_DIR)/m_manage.o  \
+	$(OBJ_DIR)/m_options.o  \
+	$(OBJ_DIR)/oblige_res.o \
+	$(OBJ_DIR)/lib_argv.o  \
+	$(OBJ_DIR)/lib_file.o  \
+	$(OBJ_DIR)/lib_signal.o \
+	$(OBJ_DIR)/lib_util.o  \
+	$(OBJ_DIR)/lib_grp.o   \
+	$(OBJ_DIR)/lib_pak.o   \
+	$(OBJ_DIR)/lib_tga.o   \
+	$(OBJ_DIR)/lib_wad.o   \
+	$(OBJ_DIR)/lib_zip.o   \
+	$(OBJ_DIR)/sys_assert.o \
+	$(OBJ_DIR)/sys_debug.o \
+	$(OBJ_DIR)/img_bolt.o  \
+	$(OBJ_DIR)/img_pill.o  \
+	$(OBJ_DIR)/img_carve.o \
+	$(OBJ_DIR)/img_relief.o \
+	$(OBJ_DIR)/img_font1.o  \
+	\
+	$(OBJ_DIR)/csg_bsp.o  \
+	$(OBJ_DIR)/csg_clip.o  \
+	$(OBJ_DIR)/csg_main.o  \
+	$(OBJ_DIR)/csg_doom.o  \
+	$(OBJ_DIR)/csg_nukem.o \
+	$(OBJ_DIR)/csg_quake.o \
+	$(OBJ_DIR)/csg_shade.o \
+	$(OBJ_DIR)/csg_spots.o \
+	$(OBJ_DIR)/dm_extra.o  \
+	$(OBJ_DIR)/dm_prefab.o \
+	$(OBJ_DIR)/g_doom.o    \
+	$(OBJ_DIR)/g_nukem.o   \
+	$(OBJ_DIR)/g_quake.o   \
+	$(OBJ_DIR)/g_quake2.o  \
+	$(OBJ_DIR)/g_wolf.o    \
+	$(OBJ_DIR)/q_common.o  \
+	$(OBJ_DIR)/q_light.o   \
+	$(OBJ_DIR)/q_tjuncs.o  \
+	$(OBJ_DIR)/q_vis.o     \
+	$(OBJ_DIR)/vis_buffer.o \
+	$(OBJ_DIR)/vis_occlude.o \
+	\
+	$(OBJ_DIR)/tx_forge.o  \
+	$(OBJ_DIR)/tx_skies.o  \
+	$(OBJ_DIR)/ui_build.o  \
+	$(OBJ_DIR)/ui_game.o   \
+	$(OBJ_DIR)/ui_hyper.o  \
+	$(OBJ_DIR)/ui_level.o  \
+	$(OBJ_DIR)/ui_map.o    \
+	$(OBJ_DIR)/ui_module.o \
+	$(OBJ_DIR)/ui_rchoice.o \
+	$(OBJ_DIR)/ui_play.o   \
+	$(OBJ_DIR)/ui_window.o \
+	\
+	$(OBJ_DIR)/zf_menu.o
+
+$(OBJ_DIR)/%.o: gui/%.cc
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+
+#----- LUA Objects --------------------------------------------------
+
+LUA_OBJS=\
+	$(OBJ_DIR)/lua/lapi.o     \
+	$(OBJ_DIR)/lua/lcode.o    \
+	$(OBJ_DIR)/lua/ldebug.o   \
+	$(OBJ_DIR)/lua/ldo.o      \
+	$(OBJ_DIR)/lua/ldump.o    \
+	$(OBJ_DIR)/lua/lfunc.o    \
+	$(OBJ_DIR)/lua/lgc.o      \
+	$(OBJ_DIR)/lua/llex.o     \
+	$(OBJ_DIR)/lua/lmem.o     \
+	$(OBJ_DIR)/lua/lobject.o  \
+	$(OBJ_DIR)/lua/lopcodes.o \
+	$(OBJ_DIR)/lua/lparser.o  \
+	$(OBJ_DIR)/lua/lstate.o   \
+	$(OBJ_DIR)/lua/lstring.o  \
+	$(OBJ_DIR)/lua/ltable.o   \
+	$(OBJ_DIR)/lua/ltm.o      \
+	$(OBJ_DIR)/lua/lundump.o  \
+	$(OBJ_DIR)/lua/lvm.o      \
+	$(OBJ_DIR)/lua/lzio.o     \
+	\
+	$(OBJ_DIR)/lua/lauxlib.o   \
+	$(OBJ_DIR)/lua/lbaselib.o  \
+	$(OBJ_DIR)/lua/ldblib.o    \
+	$(OBJ_DIR)/lua/liolib.o    \
+	$(OBJ_DIR)/lua/lmathlib.o  \
+	$(OBJ_DIR)/lua/loslib.o    \
+	$(OBJ_DIR)/lua/ltablib.o   \
+	$(OBJ_DIR)/lua/lstrlib.o   \
+	$(OBJ_DIR)/lua/loadlib.o   \
+	$(OBJ_DIR)/lua/linit.o
+
+LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI
+
+$(OBJ_DIR)/lua/%.o: lua_src/%.cc
+	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
+
+
+#----- glBSP Objects ------------------------------------------------
+
+GLBSP_OBJS= \
+	$(OBJ_DIR)/glbsp/analyze.o  \
+	$(OBJ_DIR)/glbsp/blockmap.o \
+	$(OBJ_DIR)/glbsp/glbsp.o    \
+	$(OBJ_DIR)/glbsp/level.o    \
+	$(OBJ_DIR)/glbsp/node.o     \
+	$(OBJ_DIR)/glbsp/reject.o   \
+	$(OBJ_DIR)/glbsp/seg.o      \
+	$(OBJ_DIR)/glbsp/system.o   \
+	$(OBJ_DIR)/glbsp/util.o     \
+	$(OBJ_DIR)/glbsp/wad.o
+
+GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline $(ZLIB_FLAGS)
+
+$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
+	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
+
+
+#----- AJ-Polygonator Objects --------------------------------------
+
+AJPOLY_OBJS= \
+	$(OBJ_DIR)/ajpoly/pl_map.o   \
+	$(OBJ_DIR)/ajpoly/pl_poly.o  \
+	$(OBJ_DIR)/ajpoly/pl_util.o  \
+	$(OBJ_DIR)/ajpoly/pl_wad.o
+
+AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
+
+$(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
+	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
+
+
+#----- PhysFS Objects ---------------------------------------------
+
+PHYSFS_OBJS= \
+	$(OBJ_DIR)/physfs/byteorder.o  \
+	$(OBJ_DIR)/physfs/physfs.o  \
+	$(OBJ_DIR)/physfs/unicode.o  \
+	$(OBJ_DIR)/physfs/arch_dir.o   \
+	$(OBJ_DIR)/physfs/arch_zip.o   \
+	$(OBJ_DIR)/physfs/sys_win.o
+
+PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall $(ZLIB_FLAGS)
+
+$(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
+	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
+
+
+#----- Targets ----------------------------------------------------
+
+all: $(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+	rm -f $(OBJ_DIR)/lua/*.o
+	rm -f $(OBJ_DIR)/glbsp/*.o
+	rm -f $(OBJ_DIR)/ajpoly/*.o
+	rm -f $(OBJ_DIR)/physfs/*.o
+
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
+
+stripped: $(PROGRAM)
+	$(CROSS)strip $(STRIP_FLAGS) $(PROGRAM)
+
+$(OBJ_DIR)/oblige_res.o: gui/oblige.rc
+	$(CROSS)windres $^ -o $@
+
+.PHONY: all clean stripped
+
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab

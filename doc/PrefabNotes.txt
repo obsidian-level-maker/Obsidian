@@ -1,0 +1,123 @@
+
+PLACEMENT TABLE:
+
+   XY_PLACE     Z_PLACE      EXAMPLES:
+--------------------------------------------------------------------
+   chunk        all          small exit room, large cage
+   chunk        floor        plain floor, downward stair
+   chunk        ceil         plain ceiling, sky light
+
+   edge         all          wall, picture, window, buttress
+   edge         floor        fence, quake button, spike shooter,
+                               compute console, upward stair
+   edge         ceil         billboard
+
+   straddle     all          door
+   straddle     floor        lowering bars
+   straddle     ceil         ??
+
+   middle       all          pillar, small cage
+   middle       floor        pedestal, fountain, crate, teleport pad
+   middle       ceil         ceiling light, crusher
+
+   corner       all          diagonal corner, cage
+   corner       floor        torch on platform
+   corner       ceil         ???
+
+   ???                       3D bridge
+
+
+QUESTION 1:
+
+Should a _single_ prefab definition for Pictures be able to support
+different picture sizes (especially widths), while keeping the
+size of the prefab the same (no scaling) ?
+
+
+DISCUSSION:
+
+Essentially this means that sizing of certain brushes would be
+parametric.  Nothing wrong with that in principle, although it
+does run counter to the idea of simply scaling prefabs to get
+what is needed.
+
+Without parametric coordinate, a bunch of different prefabs will
+be needed for each picture size, which is inelegant / inefficient.
+
+The downside of parametric coordinates is the extra complexity,
+making some prefabs harder to make, and could well be a barrier
+for people who want to make their own prefabs.
+
+Other prefab which could use parametric coordinates:
+
+(a) Windows
+(b) Lifts ??  (size of the lift)
+(c) Outy stairs  (size of the stair part)
+(d) Switch  (width and height of switch part)
+
+Another option it to treat the Picture part separately from the
+nearby walls, e.g. the PICTURE prefab would stretch to fit the
+picture width (be it 64 or 128 or whatever), and would have a
+little bit of wall with it -- the rest of the wall would used
+the normal wall prefab.  Like in this diagram:
+
+       +----+------+-+-----------+-+------+----+
+       |CORN| WALL |W|  PICTURE  |W| WALL |CORN|
+       +----+------+-+-----------+-+------+----+
+
+That could be considered a kind of recursion, where the 'outer'
+or 'primary' prefab is resized to fit a certain space (border of a seed)
+and the 'inner' / 'secondary' prefab is resized to give the desired
+picture width.  Which is kinda similar to parametric coordinates
+[the inner prefab is parametrised] but implemented differently.
+
+Perhaps it would be enough if the 'groups' which specify how a
+prefab responds to scaling were able to have a parametric size.
+For example:
+
+   x_sizes = {{ 64 }, { 64,"?width" }, { 64 }}
+   y_sizes = {{ 16 }}
+
+
+========================================================================
+
+
+QUESTION 2: 
+
+The Z dimension needs to be treated somewhat differently than X or Y,
+because of brushes which extend "to infinity" for their bottom or top.
+
+Exactly how and when to treat them differently?
+
+
+DISCUSSION:
+
+It seems that prefabs can exist which are self-contained in the Z
+dimension, for example a 3D bridge spanning a chasm.  Hence there
+should be a mechanism to specify a cuboid in 3D space which will
+contain the prefab.  But this mechanism is not sufficient for
+most prefabs (like walls, pictures, etc).
+
+On the XY plane, there are two mechanisms for placement of prefabs
+(1) give a single point (centre or corner) and allow arbitrary
+    scaling and rotation
+(2) give the rectangle to contain it, with 4 possible rotations
+
+These two mechanisms make sense in the Z dimension as well, I guess
+the solution is that the Z mechanism is chosen independently of the
+XY mechanism.  Option (1) is the main one for Z coords.
+
+The "anchor point" is defined to be (0,0,0) in the prefab space.
+This implies that picture fabs will be "sitting on the ground" when
+built naively.
+
+
+POSSIBLE API:
+
+Trans.set_xy(x, y, scale_x, scale_y, rotate)
+Trans.set_z (z, scale_z)
+
+Trans.fit_xy(x1, y1, x2, y2, rotate)
+Trans.fit_z (z1, z2)
+
+

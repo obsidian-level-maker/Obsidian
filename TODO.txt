@@ -1,0 +1,945 @@
+
+OBLIGE TODO
+===========
+
+
+______________________________________________________________________
+
+  HIGH PRIORITY
+______________________________________________________________________
+
+
+*  Heretic support
+
+*  update documentation for current GUI interface
+
+*  better system to vary "pacing" of monsters
+
+*  support for Traps and free-standing Cages
+
+*  add in more scenery: trees, computers etc
+
+*  better i18n support (esp. non-ASCII characters in filenames)
+
+
+______________________________________________________________________
+
+  LOWER PRIORITY
+______________________________________________________________________
+
+
+----------------------------------------------
+  OTHER GAMES
+----------------------------------------------
+
++  Quake support
+   -  load textures directly from the PAK files
+   -  bring back lua-based prefabs
+   -  incorporate id method to build collision hulls
+   -  support slopes
+
+-  Hexen support
+
+-  Duke Nukem 3D
+
+?  HacX
+?  Chex Quest 3
+?  Harmony
+
+
+----------------------------------------------
+  V7 STUFF
+----------------------------------------------
+
+++  cages (and railing)
+
++  have a "slow pace weapons" extra setting (idea by flyingdeath)
+
++  get stairwells working again
+
+-  item closets would be nice
+
+-  wall switches too
+
+-  grower : unused (or failed hall) sprouts can be good closet spots
+
+-  sky generator : better checking of themes (esp. w/ control module)
+
+-  the locked switch closet
+
+-  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
+
+??  fix porches causing BIG height diffs
+
+IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.
+ALSO : "mon-zone" for monster/weapon palette changes
+
+
+-  pick Exit room: allow picking a large room with two conns but one
+   leading to a small leaf (which becomes the ACTUAL exit) and large
+   room is the "final battle".
+
+-  sometimes incorporate a nearby RANDOM area into a room
+
+REQUEST:  mix it up option for the quiet start setting.
+
+IDEA : an adjustment (of health) for "environment" of a battle
+       (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
+
+IDEA: have a single thing number for "coop player"
+      [ i.e. treat player entities more abstractly ]
+
+-  CTF : start with a tile designed for CTF mode, placed in middle of map,
+         and when adding a room/hall then also add its sister room
+         [ if sister fails, kill the brother ]
+
+
+
+Texturing
+---------
+
++  door prefabs (for HELL, URBAN themes)
+
++  texture choice for outdoor floors
+
++  hallways
+
+
+
+Grower
+------
+
++  when a dud hallway is removed, try again on same sprout
+   [ especially if map is undersized ]
+
+   --> store sprouts in ROOM
+
++  sharp isolated voids :
+   if 2+ sides have same area, merge seed into that area (sometimes)
+
+-  IDEA: remember 'blocked' sprouts -- may be good spots for cycles
+
+-  when a large room touches/cross the boundary rect, allow it to be a LEAF
+
+
+
+Teleporters
+-----------
+
++  grow two/three/four hubs simultaneously and then
+   connect them via teleporters
+
+
+
+Scenic Borders
+--------------
+
++  where an outdoor border area touches X, need a low-sky half-seed brush
+   AND LIMIT floor of whole area to be < zone.sky_h
+
+   (a) X can be:
+       - solid wall (either in normal map or bordery parts, e.g. zone wall)
+       - window
+       - a porch
+       - a roofed cage
+       - a "ceiling-y" prefab
+
+   [ we only know about the walls in FINISH_SCENIC_BORDERS ]
+
+   (b) half-seed brush logic similar to SINKs -- ideally use same code
+
++  proper algorithm for heights
+   (avoid same height of two neighboring areas)
+
+   -  areas touching edge of map need floor_h >= zone's max floor
+
+-  proper texturing (use cliff_mat at edge_of_map)
+
+-  get WATER mode working again
+
+
+Sinks
+-----
+
++  decide them fairly early, e.g. Room_add_sinks() -- or in layout code
+   
+-  add "light" to ceilings with a light texture
+
+-  detect the "whole seed" part early (easy: all corners are inner points)
+   and [for floors only] give the seed a new floor_h/floor_mat, and honor
+   that floor_h when adding importants or decorative prefabs.
+
+-  monsters: should not straddle the line between normal floor and sink
+   [ draw that line in spot code ] and ideally would have correct 'Z'
+
+-  probably should mark seeds (or whatever) so know where can place
+   decorative prefabs.
+
+
+Monster flag IDEAS
+------------------
+
+-  sniper mode (mainly in a cage, or far from entrance yet visible?)
+
+-  middle of large open space  (never ambushy)
+
+-  deafness chance (rare, few, some, more, heaps)
+
+
+Various:
+-  lowering bars between outdoor rooms
+
+-  sometimes make a floor side use same material as top (not room wall)
+
+-  area/room with key/exit/etc are good for windows
+
+-  if area floor is >= all neighbors, sometimes mark as "want rail" (instead of fence)
+
+-  Courtyard floor should be > Landscape floor.
+
++  weapon palettes : not varied enough
+
+-  use separated in/out teleporters in very large rooms
+   (especially in Quake maps)
+
+
+Secrets....
+!!  make the secret door (or fence, etc)
+
+
+Traps....
+-  second pass : traps ON WAY BACK to the ...
+
++  make more traps over a episode/game
+
+
+Map borders
+-----------
+
+++  merge cells into largish groups (esp. based on 'dist')
+    [ sound familiar?  V6 cave 'AREA' system! ]
+
++  fix sky height next to certain walls  (very tall, looks bad)
+
+-  in "water" kind, fix using liquid for some solid cells
+
+
+Liquid pools
+------------
+
++  fences instead of "wall" (c.f. Room_border_up)
+
+
+Fake fences:
+-  a wall built out of floor brush and sky brush (delta_z for no gap)
+
+-  perhaps best place is on a zone boundary
+
+-  placement: between 1 and 3 seeds (no angle > 180 between them)
+   and solid walls on each side and angle on each side < 180
+   (limit to one area, use edge loops to detect)
+
+   do it after (or part of) Room_border_up
+
+-  pick a single height for each zone
+   (e.g. half way between average floor_h and sky_h)
+   don't make in an area if height of fence would be < 64
+   don't make too tall either
+
+-  pick a single texture for each zone
+
+-  stretch goal : if void behind seed(s), have a transition prefab
+   (i.e. showing solid wall above the fence)
+   if sky much higher, occasionally stick a cage monster there
+
+
+Map Borders:
+-  Water : have some islands
+
+-  Water : waterfalls in the far away cliff
+
+-  Low hills : make occasional big rock
+
+-  Mountains : add some largish flat areas (away from map and away from edges)
+               with a lot more of the scenic object (or a different one)
+
+-  mountains : larger groups at further distances (needs a good rethink)
+
+
+Doors:
+-  support wide doors [normal / locked]
+-  make wide prefab with a switch in it [normal door]
+
+
+Weapon choice :
++  when game_along >= 0.3, then ALWAYS have at least one "big" weapon
+   and have before the last zone (or if one zone, before last quest)
+
+   and when game_along >= 0.5, GENERALLY have at least two big weapons,
+   and OFTEN have all three.
+
+   ALWAYS have at least one "small" weapon
+
+
+CTF and DM
+----------
+
+-  Cycles !
+
+-  Weapons / Big items
+   -  decide mix of weapons and big items
+   -  place big stuff as far apart as possible
+   -  big item is often the focus point of an area/room
+
+-  Player starts!
+   -  less travelled areas (with cover e.g. near a wall)
+   -  near a weapon
+
+
+----------------------------------------------
+  V6 STUFF
+----------------------------------------------
+
++  fix lighting with 3D floors
+
+???  apply nice items gotten in normal rooms to the HMODEL
+
+-  if room before exit room (a) has no locked doors (b) is not small
+   and (c) exit room is small, then put guard monster there.
+
+-  outdoor fences should straddle both rooms
+   (but need to handle corners and T junctions)
+
+-  ensure normal doors are usually monster-openable, secret doors not
+
+-  wad-fab: "outside bbox" pieces via sector type #987
+
+-  proper handling of windows with 3D floors
+
+-  proper handling of pictures with 3D floors
+
+
+Bridges:
+-  have an actual bridge [Urban theme]
+-  bridges : check two/three seeds for LONG bridges
+-  add mon/item spots to prefabs
+
+
+----------------------------------------------
+  LEVEL STUFF
+----------------------------------------------
+
+-  review Dante's ideas : doc/DANTE.txt
+
++  Dante's "Head Start" idea
+   -  give player stuff at start of each map
+      (often weapons that "keep weapons" would assume you have)
+
+   -  a button / module to control how much stuff
+      (perhaps replacing "Powerups" setting in GUI)
+
+
+Closets:
+!!  get them working again
+
+-  put exclusion zones in front of START and TELEPORTER closets
+
++  set 'floor' material to match touching area
+
+-  START closets 
+-  EXIT closets
+-  SECRET closets
+-  ITEM closets
+-  TELEPORTER closets
+-  GATE closets for Hexen
+-  HALL closets
+-  MONSTER closets
+
+
+Prefab system:
+-  x_repeat, y_repeat
+
++  type of prefab is from the NAME
+
+-  do mirroring in prefab space (only really need X)
+
++  priority for spots  (skill flag)
+       if EASY set OR nothing set --> priority = 1
+       elseif MEDIUM --> priority = 2
+       else              priority = 3
+
+   ALWAYS prefer a higher priority over a lower one.
+
+
+New Starting Logic
+
+-  three main kinds:
+
+   CLOSET : you begin in a very small room, which is connected to a
+            larger room, often by a door.  The closet would only
+            contain one or two pickups, e.g. a nice health item and
+            (if you're lucky) a weapon.
+
+   SIDE :   you begin in the side or corner of a large-ish room,
+            with nothing particularly special about the start position
+            (except say a pedestal).
+            
+            There are no monsters which can see you (and usually none you
+            can see either).  Again, only a couple of items nearby.
+            The starting weapon and ammo will be further away.
+
+   MIDDLE : you begin in the middle of a large room, and often have
+            to get moving to fight or avoid the monsters scattered
+            around.  There is usually some useful pickups nearby,
+            especially a starting weapon. 
+
+
+V5 STUFF:
+
+-  see why some traps or cages are empty
+
++  Need logic to decide how to light up a room (windows vs wall
+   lights vs ceilings lights etc).
+
++  'action' field in a switch prefab, must match door used
+   values can be: "raise", "lower", "stair"
+
+-  get 'height' value into 'env' pick_skin() tables
+
+-  IDEA: 'override' value for prefabs, default is zero.
+         when > 0, remove all other possible prefabs from the list
+         which have a lower value
+
+-  ability to enter room via an elevator
+
+-  Fight simulator: adjust monster 'damage' value based on Ambush
+   usage, Cage usage, dark rooms, hitscanners/Archies in low cover
+   rooms -- and lower values if killed by BFG or rocket launcher
+
+-  Mons: sometimes look toward important item (esp. keys)
+
+
+Caves:
++  ability to make prefabs in caves
+   (a) replacement walls (e.g. cages)
+   (b) middle of a step
+
+-  handle solid islands, sometimes make pools, or become a step
+
+-  caves with steps: have two floor materials, pick randomly
+
+-  support Cross-Overs
+   -  respect the Room's height limitations
+   -  create channels by lowering the floor cells
+   -  for bridges, ensure ceiling cells are high enough
+
+
+Outdoor room IDEA:
+  -  begin with whole space as "natural", create "constructed"
+     intrusions into that space.
+
+
+Outdoor Idioms:
+
++  Porches: this is 3 or more seeds around a door from outside->inside
+   with a non-sky ceiling and some pillars and a raised floor.
+
++  overhangs (building extensions with pillars, non-different floor)
+
++  at edge of map, have rocky/jagged shape
+   (needed where caves border outdoor room too)
+
++  grassy area with water pool
+
++  large areas with water/blood, must be lowest area
+   (especially good for Heretic maps)
+
++  bridge over a river of lava/nukage
+
++  tower in corner of map (monster cage, possibly enterable)
+
++  gazebo in centre with a nice item (or purpose)
+
+
+Theme System:
++  fix "As Original" to not pick other themes for a whole episode
+
+-  IDEA: "Mostly Original" theme
+
++  fairly rare "mix in" themes, e.g. Egypt for TNT
+
++  proper themes for QUAKE
+
+-  IDEA: a 'subs' table -- used to substitute a chosen texture with
+   another (randomly picked) one.
+
+-  if keys are left over, can use them for non-Zone locks
+
+
+Hallways:
++  use a wad-fab for each part of a hallway
+
++  support for stairs in hallways
+
++  double halls : detect a 6x4 or larger room with one or two exits
+   and place the hallway around it
+
++  flat mismatch where hallways meet rooms
+   (a) have a step (ideally not flush with wall)
+   (b) put a door there
+   (c) use floor texture in hallway (only works at one end)
+
+
+CrossOvers:
++  get them working again!
+
++  support "Crossover Junctions" which have a low path from S -> N
+   and a bridge (etc) going E -> W.
+
+-  automatically create bridges over channels
+
++  build the bridges / channels using prefabs
+
+-  sometimes make a dramatic height difference
+
+-  fix hallway vertical gaps
+
++  make a moving platform in Quake 1/2 maps
+
+-  a version with arches underneath
+
+-  pillars holding up the bridge
+
+-  channels which decrease height  [via prefab??]
+
+-  exclude some areas from height limitation.
+   These areas must be outside a certain bbox, a bbox including the
+   starting area and all crossovers chunks.
+
+   Better yet, give these areas a less restrictive limitation
+   (based on how far the player may jump/fall from a high height)
+   For channels, can remove the limitation.
+
+
+Hollow IDEA:
+   a "hollow" is an open space under the floor of a normal AREA,
+   turning that AREA into a 3D platform.
+   
+   The floor needs to match a touching AREA, perhaps the hollow
+   chunks become part of that AREA.
+
+   The walls can/should have different thickness to the
+   above chunks -- could have own pictures/lights/etc.
+
+   The ceiling should be kept simple -- assume top chunk
+   provides the bare structure, can add a light prefab.
+
+   Both chunks can support monsters and items [unless
+   the hollow has LAVA/WATER for the floor]
+
+
+Intrusions:
+-  this idea is that part of a room is reserved for the player
+   to travel through in an earlier or later quest.  If the
+   quest is earlier, then the player is prevented from entering
+   that room (due to blocking railings or being too low down).
+
+   It's like a kind of window, except the intrusion is built
+   as if it were part of the room you look into.  It may work
+   best in Quake games where the intrusion is a 3D walkway.
+
+
+Facades:
+-  ability to ensure both inner/outer are the same
+   [perhaps a room_theme setting]
+   [or: special keyword in building_walls]
+
+
+Quests:
+-  sometimes lock another connection (ESP: symmetry)
+   with the same lock as one we just added
+   [ESP: when new lock goes to leaf or semi-leaf]
+
+-  Lock postponing:
+     after decided all locked conns, pick one and if next room is a
+     stalk, then can move the lock to the next door (and the next room
+     becomes part of the earlier quest).
+
+     [especially when next "room" is a hallway]
+
+
+Cycles:
++  get them working again [ esp. for CO-OP ]
+
++  cycles: fix the "excess" height problem
+
+-  cycles: limit number of same-lock cycles e.g. 3 for heaps, 2 some, 1 few
+
+-  allow joiners _iff_ the height diff is zero
+
++  less chance if R2 (skipped room) is large
+
+-  create "teleporter cycles" i.e. if R1 -> R2 -> R3 and one
+   connection is a teleporter, try add teleporter from R1 -> R3.
+
+-  prevent using section next door to existing conn & same direction
+   [maybe prevent same dir altogether except in "heaps"]
+
+
+Mazes:
+-  invert maze + thin_out + cave_render --> interesting walkway
+                                            (e.g. over lava)
+
+
+----------------------------------------------
+  MONSTERS / ITEMS
+----------------------------------------------
+
++  in later levels, low-level monsters should be used in bigger swarms
+
+-  support "Swarms" : a group of 3-N monsters (either a
+   single monster or 2-3 of a certain class), and place
+   all the monsters close to each other, perhaps even
+   have swarm patterns.
+
+
+----------------------------------------------
+  MISCELLANEOUS
+----------------------------------------------
+
++  a "layout only" module as a tool for mappers
+
++  when traversibility in a room is poor (exit near entrance),
+   make the exit into a switched door and put a switch at other
+   end of room.
+
++  One-way Routes (see doc/Various_Notes.txt)
+
+IDEA: GAME.SCOPED_VARS table which is like styles but (a) fields can
+      be used in prefabs (b) a _scope field can be "zone", "level",
+      "room", "episode" -- value remains constant over that scope.
+
+IDEA: "weak texturing" (especially on floors) which will try to
+      use a texturing from adjoining floor (via a certain side).
+
+-  a mode to use dynamic lights instead of sector lighting
+   (for ports like EDGE and GZDoom).  Basically just convert
+   the candle thing in prefabs to light-emitting entities.
+
+-  outdoor wall extender: 64x64 block with torch on top
+
+-  "mini stairs" : two areas have largish height diff (2-4 * step)
+   and the "stair" is a short intrusion in the side of the lower
+   chunk (say no more than 32 units deep, a prefab).
+
+-  experiment with railings for Porches (instead of posts)
+
+-  for indoors or dark outdoors porches : light fittings
+
+-  3D stairs
+
+
+-  double or triple switches: each one raises a 24 unit stair,
+   but player can only traverse stairs when ALL are raised.
+   Might work best if stairs are parallel to height diff.
+
+-  ensure sky heights are higher than neighboring indoor rooms.
+
+-  prefab with window above archway (for Quake etc)
+
+-  smarter choosing health items, especially when health target is very high
+
+-  rarity for bfg10k and railgun for Skulltag
+
+-  IDEA: STYLE to control # of lifts
+
++  ability to replace music using MUS/OGG/MP3 from a bunch of files
+   placed in a certain folder (e.g. "music/").  Needs a Lua API to
+   read a directory.
+
+
++  "parallel stairs"  (they run parallel to line between two floors)
+
++  in Co-op mode (DM, CTF too), prefer stairs over lifts, and
+   lifts would ideally have a switch nearby to lower (instead of WR lines)
+
+-  exit via teleporter pad or holes in floor
+
+-  raising bridges (activate by a switch)
+
+-  cage monsters: don't put hitscan snipers up really high.
+
+-  a module to randomly change DOOM monster / weapon stats via
+   DEHACKED / DDF / DECORATE.
+
+
+If one engine "extends" another, and both have an 'all_done' hook
+(for example), then only the extended engine's hook is called.
+Should it be like that, OR call both ???
+
+
+Warzone Mode:
+-  player progresses from one side to the other of the map.
+   it is fairly open and interconnected, and monsters form the
+   main obstacles (instead of a key hunt).
+
+
+Batch Mode:
++  detect invalid game=XXX (etc) keywords
+
+
+Secrets:
+-  fix battle simulator to ignore stuff got in secrets
+   (push state onto stack, pop afterwards).
+
++  timed powerups are best in closet secrets
+
++  support big (room or room+hallway) secret coming off a
+   closet secret.  [ but never the other way around ]
+
+-  prefer lots of small items over one or two big items
+
+-  a secret that provides little more than another way for the
+   player to travel (esp. a shortcut back from a goal room)
+
+-  a secret balcony can be good -- player will see item and
+   wonder how to get it
+
+
+Co-op IDEA:
+-  "checkpoint" areas that players pass through, with loads of
+   ammunition or health, enough to allow players to restock
+
+
+Name generator:
+-  create random weird-looking words for names of Bosses, planets
+   or whatever.  Use them multiple times over an episode or game
+   to make it seem like there is a actual story to the maps.
+
+-  random output filenames (as an option)
+
+
+----------------------------------------------
+  PIPE DREAMS
+----------------------------------------------
+
++  generate the Boss maps (don't use prebuilt)
+   -  controlled via a module
+
+   IDEA: create BOSS maps using the grower system
+         -  start with a special kind of hub
+            [ it could depend on the actual map, e.g. MAP07 vs MAP30 ]
+         -  extend it with compatible tiles
+         -  maybe incorporate some gap-filled areas
+
++  generate random music (incorporate SoundHelix ?)
+
+-  make Oblige easier to mod
+
+-  deathmatch and CTF maps
+      5130 = "Blue flag"
+      5131 = "Red flag"
+      5080 = "Blue Start"      
+      5081 = "Red Start"
+
+-  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
+
+-  more Oblige logos, higher resolution ones too
+
+-  Rooms that lock you in and you have to find the switch on
+   the other side of the room to get out.  All "normal" exits
+   would be closed off by a line trigger near the entry way.
+
+-  Pop-up Traps
+   you make a sector, lower it enough so monsters cannot see
+   the player but are facing him when it springs. The trap walls have
+   no lower texture and you set the trigger line to action 19 ( W1
+   floor lower to highest floor) and you set the trap monsters deaf so
+   they aren't awakened by player gunshots.
+
+   When the player trips the linedef, the floors instantly pop up to
+   the nearest floor height without the rising delay of some other
+   linedef actions. Another thing is to make sure the line that
+   triggers the trap can't be bypassed and thus the player can get
+   stuck in the hole if he falls in.
+
+-  Surprise Lifts:
+   It is a hallway/room section that looks normal but when the player
+   crosses the Lift-Lower-Wait-Rise linedef, it lowers to surprise the
+   player with monsters on one or both sides of the lift.
+
+
+----------------------------------------------
+  GUI and C++ CODE
+----------------------------------------------
+
++  CSG issue: support beam intersects with 3D floor => wrong side texture
+
+-  use fl_utf8.h functions (fl_fopen, etc) for file handling
+   [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
+
+Console:
+  -  display lists better
+
+Cancellation:
+  -  can abort monster code (Fight sim) midstream 
+  -  can abort CSG_BSP() midstream
+  -  can abort DOOM / Duke processing midstream
+  -  can abort Quake I / II BSP generation midstream
+  -  can abort Q1_ClippingHull() midstream
+
+
+----------------------------------------------
+  DOCUMENTATION / WEB SITE
+----------------------------------------------
+
++  Usage page: BATCH MODE section
+
++  need new screenshots for website
+
+-  modding guide: page about creating prefabs
+
+-  modding guide : code stuff:
+   - Lua
+   - OB_CONFIG, OB_GAMES, OB_MODULES, OB_THEMES
+   - things, monsters, weapons, pickups
+   - materials, themes
+
+-  Glossary : describe "Area".
+
+-  transfer Lua_Extended.txt document to the website
+   probably simplified (part of modding guide).
+
+
+----------------------------------------------
+  DOOM and DOOM II
+----------------------------------------------
+
++  move stuff in data/ into games/doom/ (etc)
+
++  support MAPINFO lumps (especially for ZDoom ports).
+
+-  support for the DECORATE lump
+
+-  better starting scenarios (e.g. fix raising_starts)
+
+-  certain cases in DM_AlignTextures don't work well, especially
+   an upper where a crate straddles the periph (but does not directly
+   overlap any linedefs).
+
+-  MAP32: find and kill all the Keens to open the door to the exit.
+          perhaps use Psychedelic theme and a lower qty Crazy mode.
+
+-  support BOOM's 242 linetype for liquids and fake 3D floors
+
+-  Legacy liquids are different (ceiling height is surface)
+   (use legacy method for GZDoom and Skulltag)
+
+-  support per-map Fog via sourceport features (MAPINFO etc)
+-  support lightning in ZDoom etc (via MAPINFO)
+
+-  log-print CSG stats (e.g. linedef count, plane count, etc)
+
+
+-  IDEA: generate end-of-episode texts
+
++  Dead/gibbed player corpses sprinkled around on each level (Just
+   like Doom episode 1) with the chance of a weapon near their
+   remains (Shotgun 35%, chaingun 30%, Supershot 15%, rocket
+   launcher 15% and plasmagun 5%?)? Of course the weapon placement
+   by the body is at a chance (15-20% chance?)
+
+-  ZDoom slopes:
+   340 = 0,   Plane_Align (1, 0)  // Slope front floor
+   341 = 0,   Plane_Align (0, 1)  // Slope front ceiling
+   342 = 0,   Plane_Align (1, 1)  // Slope front floor and ceiling
+   343 = 0,   Plane_Align (2, 0)  // Slope back floor
+   344 = 0,   Plane_Align (0, 2)  // Slope back ceiling
+   345 = 0,   Plane_Align (2, 2)  // Slope back floor and ceiling
+   346 = 0,   Plane_Align (2, 1)  // Slope b.f. and f.c.
+   347 = 0,   Plane_Align (1, 2)  // Slope f.f. and b.c.
+
+EDGE: gui.property("solid_exfloor", 400)
+      gui.property("liquid_exfloor", 406)
+      gui.property("thing_exfloor_flags", "true")
+
+LEGACY: gui.property("solid_exfloor", 281)
+        gui.property("liquid_exfloor", 280)  -- 301
+
+
+----------------------------------------------
+  FINAL DOOM
+----------------------------------------------
+
++  support some of the TNT and Plutonia textures
+
+-  TNT Evilution textures that have been changed:
+     BLODGR1..4  SLADRIP1..3  SW1GSTON    SW1SKULL
+
+-  Plutonia textures that have been changed:
+     DBRAIN1..4  FIREBLU1..2  SW1SKULL
+
+
+----------------------------------------------
+  HERETIC
+----------------------------------------------
+
++  determine new 'damage' values for monsters
+   [ ideally via analysis of some UVmax demos ]
+
++  support title pic generator
+
+-  don't build Blaze doors into maps.
+
+-  monsters: not mixed enough (too repetitive), no bosses.
+
+-  weapons: firemace no good for SP/COOP ??
+
+Sam's suggestions:
+  for Heretic caves should be rare in E1, common in E2, and somewhat common
+  in E3. I would, if going along with the “Egypt Sand” theme I made for
+  ObHack’s E4 in Heretic, make caverns about as common as they are in E3.
+
+  I would give E2 caverns pretty much the same theme as they have in ObHack;
+  E3 should be pretty much like E1, but I would make the occasional cavern in
+  E3 be very watery (water flowing down walls and the floor being full of
+  pools), or be like some areas in the original E3M7.
+
+
+----------------------------------------------
+  HEXEN
+----------------------------------------------
+
+!!  get it working again
+
++  new 'damage' values for monsters
+
++  BOSS map : require the 2/3 hub keys to access boss room
+               NOTE: could use them to restrict progress along chain
+
++  BOSS map : actually add the bosses (whatever else is needed)
+
++  fix weapons, which should be spawned for each class 
+   -  put 'fighter only' bit on fighter's weapons, etc..
+
++  proper hub system
+   -  need exit teleporter in final Hub
+
++  separate prefab for switched vs locked doors
+   [why?]
+
+-  support teleporters (flat X_012)
+
+-  support more skies
+
+
+ _____________________
+|                     |
+|KEY:                 |
+|    !!  critical     |
+|    +   important    |
+|    -   normal       |
+|    >>  in progress  |
+|    ??  not sure     |
+|_____________________|
+

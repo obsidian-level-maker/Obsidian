@@ -1,0 +1,50 @@
+#
+#  Node Viewer
+#
+#  Makefile for Unix/FLTK
+#
+
+PROGRAM=node_view
+
+FLTK_DIR=/home/aapted/other/fltk-1.1.10
+
+FLTK_FLAGS=-I$(FLTK_DIR)
+FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
+          $(FLTK_DIR)/lib/libfltk.a \
+          -lX11 -lXext -lpng -ljpeg
+
+CC=gcc
+CXX=g++
+CFLAGS=-O -g3 -Wall -DUNIX $(FLTK_FLAGS)
+CXXFLAGS=$(CFLAGS)
+LDFLAGS=-L/usr/X11R6/lib
+LIBS=-lm $(FLTK_LIBS)
+
+OBJS=./main.o     \
+     ./asserts.o  \
+     ./dialog.o   \
+     ./grid.o     \
+     ./info.o     \
+     ./level.o    \
+     ./lists.o    \
+     ./menu.o     \
+     ./system.o   \
+     ./util.o     \
+     ./window.o
+
+
+# ----- TARGETS ------------------------------------------------------
+
+all:    $(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM) *.o core core.* ERRS nv_debug.txt
+
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS) $(LIBS)
+
+bin: all
+	strip --strip-unneeded $(PROGRAM)
+
+.PHONY: all clean bin install
+

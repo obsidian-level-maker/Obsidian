@@ -1,0 +1,100 @@
+<set O_WHERE="Blogs">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<div class="menu">
+<use TopCorners>
+<use MenuHome>
+<use MenuWhere where="BLOGS">
+</div>
+
+<div class="submenu">
+<use SubSpacer>
+<use SubWhere where="MAR-2008">
+<use BlogNov2008>
+</div>
+
+<div class="rest">
+
+<h3>DEVELOPMENT BLOG &nbsp;:&nbsp; 13th March 2008</h3>
+
+<p>
+It has been a while since the last OBLIGE release
+(around 8 months), and judging by the web page you
+may think that development has stalled or the project
+has died.  I assure you this is far from the case!
+Lots of work has been going on, and here is a summary
+of what is happening...
+
+<p>
+OBLIGE is being rewritten.  All the of level building
+code (except for the game-specific stuff) has been
+retired and new algorithms are being developed.  The
+new version is called "Oblige III" since it is the third
+major version of this level generator.
+
+<p>
+The first big change is the map representation, which
+was quite limited before, made up of 16x16 blocks, and creating
+architecture with finer detail or arbitrary shapes
+was not possible.  The new representation is similar
+to the Quake map format, made up of "brushes" which
+are solid chunks in 3D space (e.g. the floor is one brush,
+and the ceiling is another one).  This allows to create
+maps with "Extrafloors" for the advanced DOOM ports,
+and also allows creating maps for true 3D engines
+like the Quake series.
+
+<p>
+I have been working on converting this new format
+into DOOM map format, and right now it works, and can
+even generate Extrafloors, but a lot of smaller details
+are not implemented yet, like special line/sector types,
+railing textures, x/y offsets, and lighting.
+
+<p>
+I've also been working on Quake-1 support.  This means
+creating the BSP files directly from the internal
+represenation.  So far the level builds correctly,
+has proper clipping hulls, and flat lighting,
+plus there is a built-in texture extractor.  But it
+lacks a proper lighting method, and visibility info.
+
+<p>
+Talking about lighting: I plan to implement it for DOOM in a
+similar way to QUAKE, by determining how much light reaches
+each sector from light-emitting entities and surfaces
+(as well as the sky).
+
+<p>
+The GUI interface has been revamped.
+The mini-map is nicer, a lot like what you see in an
+editor or the automap in DOOM.
+The GUI has a few more options, like
+being able to select a specific theme for the maps, and some
+options will allow a "MIXED" setting (e.g. for monsters, some
+maps will have Hordes and some maps will have Few).
+Plus I am working on supporting custom mods: you could download
+somebody's mod, put it in the "mods" folder, and OBLIGE will
+load it automatically and you can enable/disable it in the
+MODS panel.  Mods can add new monsters and items, new themes and
+textures, new prefabs, or even change the way levels are built.
+
+<p>
+Finally, I have some ideas for the new level building methods.
+For example, I'm working on "Room-in-a-Room", which will allow
+OBLIGE to create maps like MAP16 of DOOM II, where there is a
+bunch of separate buildings scattered about a large outdoor
+area.  The new code will directly support symmetry, so it can
+make rooms (and possibly large areas) that are mirrored either
+vertically or horizontally (or even both, four-way symmetry).
+There are some new ideas for creating good deathmatch maps too.
+
+<p>
+All this is gonna take a while though :-)
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

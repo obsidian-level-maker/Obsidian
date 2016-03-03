@@ -1,0 +1,95 @@
+<set O_WHERE="About">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use DocMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use DocUsage>
+<use SubWhere where="ABOUT">
+<use DocCredits>
+<use DocFAQ>
+<use DocGlossary>
+<use DocHistory>
+</div>
+
+<div class="rest">
+
+
+<h3>ABOUT OBLIGE</h3>
+
+OBLIGE is a random level maker for a bunch of classic FPS games.
+Just press a few buttons and <i>kazam!</i> out pops some fun maps
+to play.
+Well that's our goal anyway, it may take a long time to fully
+achieve it.
+
+<p>
+OBLIGE is <b>Free Software</b>, released under the GNU General
+Public License (GPL).
+Note that it comes with absolutely NO WARRANTY of any kind.
+Please see the <a href="http://www.gnu.org/licenses/gpl-2.0.txt">
+gpl-2.0.txt</a> document for all the legal stuff.
+
+
+<h3>FEATURES / GOALS</h3>
+
+<p>
+OBLIGE has the following features which set it apart
+from existing random map generators:
+
+<ul class="features">
+  <li>high quality levels, e.g. outdoor areas and caves!
+  <li>easy to use GUI interface (no messing with command lines)
+  <li>built-in node builder, the created levels are ready to play
+  <li>uses the LUA scripting language for easy customisation
+</ul>
+
+<p>
+It is planned to fully support the following games:
+
+<ul class="gamelist">
+  <li>DOOM and DOOM II
+  <li>Heretic
+  <li>Quake
+</ul>
+
+Other games, such as Hexen and Duke Nukem 3D,
+might get supported in the future, but for now the
+focus is mainly on the games listed above.
+
+
+<h3>SYSTEM REQUIREMENTS</h3>
+
+<ul class="sysreq">
+<li>Pentium 500 Mhz CPU or higher.
+<li>128 MB of RAM or higher.
+<li>Windows 2000, XP, Vista or later.  (Linux is supported too)
+</ul>
+
+
+<h3>GETTING IN CONTACT</h3>
+
+The best way of getting in contact, especially when reporting bugs,
+is to visit the
+<a href="http://oblige.sourceforge.net/forum/">Forum</a>.
+Creating a new account there is fairly easy.
+
+<p>
+Alternatively you can email me:
+<a href="mailto:ajapted@users.sf.net">
+&lt;ajapted@users.sf.net&gt;</a>
+
+<p>
+Finally, you can visit the SourceForge
+<a href="http://sourceforge.net/projects/oblige">Project Page</a>
+for OBLIGE by clicking the SourceForge logo at the very bottom
+of these pages.
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

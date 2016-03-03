@@ -1,0 +1,60 @@
+#
+# Makefile for WIN32, using MINGW cross compiler
+#
+
+# --- variables that can be overridden ---
+
+PROGRAM=qsavetex.exe
+
+CXX=i586-mingw32msvc-g++
+STRIP=i586-mingw32msvc-strip
+
+OPTIM=-O2
+
+LIB_LOC=/home/aapted/doom/e/trunk/edge/lib_win32
+
+ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
+ZLIB_FLAGS=-I$(ZLIB_DIR)
+ZLIB_LIBS=$(ZLIB_DIR)/libz.a
+
+PNG_DIR=$(LIB_LOC)/libpng-1.2.12
+PNG_FLAGS=-I$(PNG_DIR)
+PNG_LIBS=$(PNG_DIR)/libpng.a
+
+CPPFLAGS=-I. $(ZLIB_FLAGS) $(PNG_FLAGS)
+CXXFLAGS=-Wall $(OPTIM) -fno-rtti -DWIN32
+
+LDFLAGS=-Xlinker --warn-common
+
+
+# ----- OBJECTS and LIBRARIES ------------------------------------------
+
+OBJS=	u_file.o   \
+	u_util.o   \
+	im_tex.o   \
+	pakfile.o  \
+	main.o
+
+LIBS=-lm $(PNG_LIBS) $(ZLIB_LIBS)
+
+
+# ----- TARGETS ------------------------------------------------------
+
+all: $(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM) *.o core core.* ERRS
+
+relink:
+	rm -f $(PROGRAM)
+	$(MAKE) $(PROGRAM)
+
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJS) -o $@ $(LIBS)
+	$(STRIP) --strip-debug $@
+
+
+.PHONY: all clean relink
+
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab

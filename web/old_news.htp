@@ -1,0 +1,183 @@
+<div class="newsdate">24-Feb-2010:</div>
+<blockquote class="news">
+Another version of OBLIGE, namely 3.51, has just been released.
+The most exciting new feature is the support for natural areas:
+twisty caves and outdoor landscapes.  Other changes include an
+Options window, a system for adding pre-built maps, and better
+support under Linux and similar OSes (such as the new "batch" mode).
+
+<p>
+However some things are not working as well as before, since the
+fundamental grid size which Oblige uses was reduced from 256 to
+192.  For example, the small exit rooms are disabled (they didn't
+fit), and you'll often see things like fences stuck in doors.
+Monster and item placement is out of whack too.
+
+<p>
+Thanks once again to Chris and Enhas for their contributions and
+testing.
+</blockquote>
+
+<hr>
+
+
+<div class="newsdate">22-Sep-2009:</div>
+<blockquote class="news">
+I'm happy to announce OBLIGE 3.47 has been released.
+This version has a larger, more readable GUI window,
+separate buttons to control monster quantity and toughness,
+more DOOM themes (Urban and Hell), and a bunch of new
+modules, plus many tweaks and fixes.
+
+<p>
+Big thanks goes to Enhas and Chris who have contributed a lot
+to this release, including new code, theme stuff
+and heaps of testing.
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">13-Sep-2009:</div>
+<blockquote class="news">
+The web-site has gotten a large overhaul, with a brand new
+look and a lot more information.
+Some things are still missing, e.g. the screenshots page,
+but this paves the way for more pages in the future,
+especially the planned modding guide.
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">03-Sep-2009:</div>
+<blockquote class="news">
+OBLIGE now has a proper forum located on the SourceForge site.
+All you need to join the discussions is a SourceForge account.
+Hope to see you there!
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">11-Aug-2009:</div>
+<blockquote class="news">
+OBLIGE 3.43 is released.
+Not a huge amount has changed, it is mostly code improvments
+under the hood.
+One nasty bug, the too-much-ammo problem, has been fixed.
+
+<p>
+Other changes include: improved name generator (thanks to 40oz),
+a working module system,
+new 'Crazy' setting for monsters,
+new 'Psychedelic' theme,
+a couple of new modules (thanks to Enhas),
+and boss maps for E1M8 and E2M8 (thanks Mr Chris).
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">12-Apr-2009:</div>
+<blockquote class="news">
+Version 3.39 has been released.
+This is the first public release after the big rewrite
+(which is on-going).
+It's very much in the spirit of open source motto
+<i>"release early release often"</i>,
+because this is somewhat premature and lacking many features
+(e.g. it only supports DOOM II right now).
+
+<p>
+The good stuff includes: better GUI interface,
+level name generator, random sky generator,
+big rooms!!, symmetrical rooms, room-in-a-room,
+and some diagonal walls here and there.
+
+<p>
+The bad stuff includes: only supports DOOM II,
+with only one theme: TECH.
+There are no traps or cages, nor any secrets or powerups,
+and the scenery is very limited (lousy crates).
+Fences in outdoor areas also suffer common glitches.
+
+<p>
+Many thanks to all the beta testers:
+Sam Trenholme, Chris Pisarczyk, JohnnyRancid,
+Esselfortium, gggmork, Csonicgo.
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">21-Nov-2008:</div>
+<blockquote class="news">
+Another blog about current developments:
+<a href="blog_nov2008.html">Nov-2008 Blog</a>
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">30-May-2008:</div>
+<blockquote class="news">
+Released Oblige 0.97.
+This is a small update to version 0.94 which fixes the error
+about stair placement that occured sometimes
+(aborting the whole build).
+It also includes Sam Trenholme's expanded set of Heretic themes.
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">13-Mar-2008:</div>
+<blockquote class="news">
+Added a summary of recent development:
+<a href="blog_mar2008.html">Mar-2008 Blog</a>
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">05-Jul-2007:</div>
+<blockquote class="news">
+Oblige 0.94 is released!
+
+<p>
+Major changes in version 0.94 include a new prefab system,
+new theming system, different sized rooms,
+greatly improved Hexen support,
+secret areas and levels, and
+experimental support for Wolfenstein 3D.
+
+<p>
+During development I came to the conclusion that the current algorithms
+are the wrong way to do things, and that a big rewrite of OBLIGE's
+level-building code is urgently needed. So I'm releasing this version
+as-is, even though some things are broken (notably the monster closet
+traps).
+
+<p>
+This version will occasionally abort the map-building process with an
+error message, for example saying it cannot place a stair in a room.
+This is symptom of the messed up level-building code and another reason
+why the rewrite is necessary. The only workaround is to try a different
+SEED value.
+
+</blockquote>
+
+
+<hr>
+
+<div class="newsdate">19-Feb-2007:</div>
+<blockquote class="news">
+Oblige 0.85 has been released.
+This includes many major improvements:
+support for hallways, crates, and new exit rooms,
+better selection of floor and ceiling heights,
+user adjustments for health, ammo, monsters and traps,
+and support for TNT Evilution and Plutonia.
+User settings are also remembered when you quit.
+</blockquote>

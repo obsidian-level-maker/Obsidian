@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <meta name="robots" content="all">
+
+  <title> OBLIGE 3 Home </title>
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" title="currentStyle">
+    @import "main.css";
+  </style>
+</head>
+
+<body>
+
+<h1>OBLIGE Level Maker <font color="#8c4">V3</font></h1>
+
+by Andrew Apted. &nbsp; August 2009
+
+
+<h2>INTRODUCTION</h2>
+
+OBLIGE III is a random level maker for various games,
+only DOOM 2 currently.
+Version 3 was a big rewrite of the code, and not
+everything that used to be supported (like all the
+other games) has been added back yet.
+
+<p>
+Check out <a href="http://oblige.sourceforge.net/index_v2.html">Oblige II</a>
+if you are interested in a Heretic or Hexen map generator,
+or if you just want to see what the previous version was like.
+
+<p>
+OBLIGE will have the following features which set it apart
+from existing programs (like the famous
+<a href="http://www.doomworld.com/slige/">SLIGE</a> by David Chess)
+:-
+
+<ul>
+  <li>higher quality levels, e.g. outdoor areas!
+  <li>easy to use GUI interface (no messing with command lines)
+  <li>built-in node builder, so the created levels are ready to play
+  <li>uses the LUA scripting language for easy customisation
+  <li>more games, like Heretic, Hexen and Quake!
+</ul>
+
+
+<h2>VERSION 3.43 INFO</h2>
+
+<PRE>
+The good:
+
++  nicer GUI interface
++  name generator
++  sky generator
+
++  big rooms!
++  symmetrical rooms
++  room-in-a-room
++  diagonal walls
+
+The bad:
+
+-  only supports DOOM 1 and DOOM 2
+-  only one available theme: TECH
+-  no traps, no cages
+-  no secrets, no powerups
+-  very limited scenery
+
+The ugly:
+
+-  the MAP07 and MAP30 arenas
+-  common glitches on outside borders
+-  occasional wrong textures or misalignments
+-  lousy crates all over the place
+</PRE>
+
+
+<h2>SCREENSHOT</h2>
+
+<img src="stuckie.jpg" width="640" height="480"
+     alt="Picture">
+
+
+<h2>USAGE GUIDE</h2>
+
+The graphical interface for OBLIGE is quite easy to use.
+
+<p>
+The top left corner is the <b>Settings</b> panel,
+which contains the most important settings.
+
+<p>
+The first control is the "SEED" number.
+Each SEED number produces a unique, distinctive level. 
+Using the same SEED number always produces the exact same level
+(as long as the other settings are the same).
+
+<p>
+Other settings include:
+<ul>
+  <li>the "Game" type (DOOM, WOLF3D, HERETIC or HEXEN), 
+  <li>the "Mode" of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
+  <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
+</ul>
+
+In the <b>Level Architecture</b> panel you can control the
+size of the created levels, select a theme, as well as how
+much outdoors the levels will have.  [Note that the 'Lighting'
+and 'Detail' buttons don't do anything yet]
+
+<p>
+The <b>Playing Style</b> panel lets you control the
+how many monsters and traps are added. as well as
+how much health and ammunition.
+OBLIGE also implements the different skill levels
+for each map (e.g. Hurt-me-Plenty vs Ultra-Violence).
+
+<p>
+After you've chosen the desired settings, press the "Build..." button,
+which will open a Save-File dialog asking you what the output file
+should be. Enter something appropriate, e.g. TEST, and after that
+OBLIGE will starting building the levels.
+
+<p>
+In Wolfenstein-3D mode, the "Build..." button does not bring up
+a dialog box.
+OBLIGE simply creates the output files in the same folder where
+it is installed. These files are called <b>GAMEMAPS.WL6</b> and
+<b>MAPHEAD.WL6</b> and you need to copy them into your
+Wolf3d folder (be sure to make a backup first!).
+
+<p>
+To exit, press the "Quit" button in the bottom left panel.
+
+<p>
+The levels created by OBLIGE are ready to play.  There is no
+need to run the output WAD file through a node-builder program,
+since OBLIGE does this automatically.
+
+<p>
+You should use a Source Port to play the levels, because the
+original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
+architecture which OBLIGE creates.  For example, you might
+get the "Visplane Overflow" error which quits the game.
+
+
+<h2>DOWNLOAD</h2>
+
+<b>Windows Package</b>:
+<a href="http://downloads.sourceforge.net/oblige/oblige-343-win.zip">oblige-343-win.zip</a> (680 KB)
+
+<p>
+<b>Linux Package</b>:
+<a href="http://downloads.sourceforge.net/oblige/oblige-343-linux.tar.gz">oblige-343-linux.tar.gz</a> (640 KB)
+
+<p>
+<b>Source Code</b>:
+<a href="http://downloads.sourceforge.net/oblige/oblige-343-src.zip">oblige-343-src.zip</a> (610 KB)
+
+<p>
+<b>Older Versions</b>: click here to
+<a href="http://sourceforge.net/project/showfiles.php?group_id=176314">Browse all Files</a>.
+
+
+<h2>ACKNOWLEDGEMENTS</h2>
+
+Thanks to Sam Trenholme for much expanded Heretic themes
+and various fixes, and for beta-testing Oblige III.
+Check out his "ObHack" modification for even more
+interesting stuff.
+
+<p>
+Thanks to JohnnyRancid for beta-testing Oblige III,
+for big help with the level-name generator,
+and creating heaps of DOOM prefabs.
+
+<p>
+Thanks to Chris Pisarczyk and Esselfortium for very
+detailed feedback and bug reports on OBLIGE.  These guys
+have even made their own Oblige mods -- they must be
+nutters like me :-D
+
+<p>
+I appreciate the feedback received from the other "OB3"
+beta-testers: gggmork and Csonicgo.
+
+<p>
+Big thanks to Derek "Dittohead" Braun for making a whole swag of
+Prefab structures, which kicked off some big improvements to the
+way OBLIGE builds stuff.
+
+<p>
+Thanks to Enhas and DoomJedi for their help.
+
+<p>
+Finally I'm grateful to everyone who provided positive
+feedback, bug reports and ideas for improvements, both in
+email and on the various forums. Cheers guys!
+
+<p>
+OBLIGE uses the cool FLTK widget library
+(<a href="http://www.fltk.org">http://www.fltk.org</a>).
+
+
+<h2>COPYRIGHT and LICENSE</h2>
+
+<div class="legal">
+OBLIGE Level Maker
+
+<p>
+Copyright (C) 2006-2009 Andrew Apted
+
+<p>
+OBLIGE is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+<p>
+OBLIGE is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> for more details.
+
+</div>
+
+
+<h2>CONTACT DETAILS</h2>
+
+Email:
+<a href="mailto:ajapted@users.sf.net">
+&lt;ajapted@users.sf.net&gt;</a>
+
+<p>
+Website:
+<a href="http://oblige.sourceforge.net/">
+http://oblige.sourceforge.net/</a>
+
+<p>
+Project page:
+<a href="http://sourceforge.net/projects/oblige">
+http://sourceforge.net/projects/oblige</a>
+
+<p>
+Browse the code:
+<a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk">
+SVN / oblige / trunk</a>
+
+<div class="logo">
+<!-- Hosted by:&nbsp; -->
+
+      <a HREF="http://sourceforge.net/projects/oblige">
+        <img src="http://sourceforge.net/sflogo.php?group_id=176314&amp;type=4" 
+         width="125" height="37" alt="SourceForge.net" 
+         align="MIDDLE" border="0" hspace="1">
+      </a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+
+Config Handling between GUI and Lua code
+----------------------------------------
+
+The "config state" is all the variables which control how
+levels are built and which the user can change in the GUI
+(for example: game, mode, engine, etc...).
+
+THE MASTER STATE IS STORED IN LUA
+
+In other words, the Lua code always has an up-to-date
+picture of the config state, and nothing needs to be set
+before level building can begin.  [Of course there is a
+small period between the user selecting a new value and
+that value propagating into the Lua script].
+
+All the non-module state is stored in the OB_CONFIG[]
+global table.  The state of modules (enabled / disabled)
+are stored in the module tables in OB_MODULES[], and the
+state of module options are stored inside each option
+table.
+
+Some of the GUI is controlled by Lua.  The 'game', 'engine'
+and 'theme' buttons (what choices are available in the
+widgets) are set by Lua and can be changed.  For example,
+selecting a different 'game' will mean a set different of
+engines and a different set of themes become available.
+The Lua code is responsible for these inter-dependencies.
+
+Modules and Module Options are always controlled by Lua.
+Each module is created by Lua code (add_button), and can
+be enabled or disabled with change_button().  Module options
+are created with add_mod_option() function, and the choices
+available are also setup by Lua, but there is no mechanism
+to change the current value shown by the widget.
+
+Other stuff in the GUI is _not_ controllable by Lua code.
+When the user selects a different 'length', for example,
+the new value is simply propagated to the Lua script and
+stored in OB_CONFIG[].  The same is true for Module Options,
+new values are simply passed to Lua (via ob_set_mod_option)
+and stored in the option table within the module def.
+
+The CONFIG.CFG file, as well as the config stored in DOOM
+WADs and Quake PAKs, is created by Lua code and passed to
+the C++ code.  The Lua function is ob_read_all_config().
+
+When loading the CONFIG.CFG file, some parts (like 'game')
+are sent directly to Lua (and in turn the Lua code updates
+the GUI), while other parts (like 'length') are sent to the
+widgets and they update the Lua code.
+

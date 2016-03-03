@@ -1,0 +1,20 @@
+
+Tailor TODO
+===========
+
++  FILE menu: Open, Save, SaveAs
+
++  allow running without any file  --> scan for .lua files, show browser
+
+-  EDIT menu: Find, FindNext  [see replace.cc]
+
+-  HELP menu: About
+
+-  write a custom fl_input without a beep
+
+-  main.cc: FatalError() function
+
+-  TAB key disabled???
+
+-  reformat to use 2/2 indents in various places
+

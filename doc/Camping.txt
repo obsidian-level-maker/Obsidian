@@ -1,0 +1,31 @@
+
+PREVENT CAMPING
+===============
+
+
+40oz:
+
+Because you can use teleports, ledge dropoffs, tall lifts, or a monster
+closet that opens in the start after you leave the room to reduce
+players returning to player-created safe zones.
+
+
+ESSELFORTIUM:
+
+It can be tricky to avoid camping scenarios, sure, but it's absolutely
+possible without resorting to the cliche of blocking bars in every
+doorway.
+
+- Height dropoffs (which can be done in so many different ways)
+
+- Nukage runs (whether putting nukage leading up to a setpiece area to
+  keep the player in it, or by giving them a radsuit to limit their time
+  spent in the setpiece area itself)
+
+- Teleporting the player to a new section
+
+- Teleporting monsters behind the player to chase them into a bigger fight
+
+- Putting needed supplies where the player can see them but can only get
+  them by crossing the room and waking up monsters
+

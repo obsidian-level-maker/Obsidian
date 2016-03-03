@@ -1,0 +1,50 @@
+#
+#  Tailor Lua Editor
+#
+#  Makefile for Unix/FLTK
+#
+
+PROGRAM=Tailor
+
+FLTK_DIR=../linux_lib/fltk-1.1.9
+
+FLTK_FLAGS=-I$(FLTK_DIR)
+FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
+          $(FLTK_DIR)/lib/libfltk.a \
+          -lX11 -lXext -lpng -ljpeg
+
+CC=gcc
+CXX=g++
+CFLAGS=-O -g3 -Wall -DUNIX $(FLTK_FLAGS)
+CXXFLAGS=$(CFLAGS)
+LDFLAGS=-L/usr/X11R6/lib
+LIBS=-lm $(FLTK_LIBS)
+
+OBJS=./main.o     \
+     ./e_chooser.o  \
+     ./e_dialog.o   \
+     ./e_editor.o   \
+     ./e_menu.o     \
+     ./e_status.o   \
+     ./e_window.o   \
+     ./lib_argv.o \
+     ./lib_file.o \
+     ./lib_util.o \
+     ./sys_assert.o
+
+
+# ----- TARGETS ------------------------------------------------------
+
+all:    $(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM) *.o core core.* ERRS
+
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS) $(LIBS)
+
+bin: all
+	strip --strip-unneeded $(PROGRAM)
+
+.PHONY: all clean bin install
+

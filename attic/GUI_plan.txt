@@ -1,0 +1,34 @@
+
+User Interface Ideas
+====================
+
+RANDOM SEED: ####
+
+GAME: Freedoom  Doom-1/2  Wolf  Cube  Quake-1
+
+LEVELS: One Map  One Episode  Full Set
+ 
+TYPE: Single Player  Deathmatch
+
+OUTPUT FILE: test.wad
+
+
+
+ADJUSTMENT
+
+Monster Count:  Boring 0.7 |  Normal 1.0 |  Hordes 1.5
+
+Level Size:  Snappy  |  Medium  |  Huge  |  Any
+
+Shoot Skill:  Low  |  Medium  |  High
+Dodge Skill:  Low  |  Medium  |  High
+
+
+
+DEATH-MATCH ADJUSTMENT
+
+Weapon Count
+
+Player Count
+
+

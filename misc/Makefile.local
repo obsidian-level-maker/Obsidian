@@ -1,0 +1,200 @@
+#----------------------------------------------------------------
+# OBLIGE
+#----------------------------------------------------------------
+#
+# GNU Makefile for Unix/Linux version (local files)
+#
+# This makefile creates an executable which excepts the script
+# and data files in the same directory as itself, which mirrors
+# how programs under Windows often work.  Use 'Makefile.unixy'
+# if you want the more traditional kind of installation.
+#
+# NOTE: FLTK is statically linked in this version
+#
+
+PROGRAM=Oblige
+
+CXX=g++
+
+LIB_LOC=lib_linux
+OBJ_DIR=obj_linux
+
+FLTK_DIR=$(LIB_LOC)/fltk-1.3.0
+
+OPTIMISE=-O0 -g3
+
+# operating system choices: UNIX WIN32
+OS=UNIX
+
+
+#--- Internal stuff from here -----------------------------------
+
+FLTK_FLAGS=-I$(FLTK_DIR)
+FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
+	  $(FLTK_DIR)/lib/libfltk.a \
+	  -lXext -lXft -lfontconfig -lXinerama -lX11 \
+	  -lpng -ljpeg -ldl
+
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src $(FLTK_FLAGS)
+LDFLAGS=-L/usr/X11R6/lib
+LIBS=-lm -lz $(FLTK_LIBS)
+
+
+#----- OBLIGE Objects ----------------------------------------------
+
+OBJS=	$(OBJ_DIR)/main.o      \
+	$(OBJ_DIR)/m_cookie.o  \
+	$(OBJ_DIR)/m_lua.o     \
+	$(OBJ_DIR)/m_spots.o   \
+	$(OBJ_DIR)/lib_argv.o  \
+	$(OBJ_DIR)/lib_file.o  \
+	$(OBJ_DIR)/lib_signal.o \
+	$(OBJ_DIR)/lib_util.o  \
+	$(OBJ_DIR)/lib_grp.o   \
+	$(OBJ_DIR)/lib_pak.o   \
+	$(OBJ_DIR)/lib_wad.o   \
+	$(OBJ_DIR)/lib_zip.o   \
+	$(OBJ_DIR)/sys_assert.o \
+	$(OBJ_DIR)/sys_debug.o \
+	$(OBJ_DIR)/img_bolt.o  \
+	$(OBJ_DIR)/img_pill.o  \
+	$(OBJ_DIR)/img_carve.o \
+	$(OBJ_DIR)/img_relief.o \
+	$(OBJ_DIR)/img_font1.o  \
+	\
+	$(OBJ_DIR)/csg_bsp.o  \
+	$(OBJ_DIR)/csg_clip.o  \
+	$(OBJ_DIR)/csg_main.o  \
+	$(OBJ_DIR)/csg_doom.o  \
+	$(OBJ_DIR)/csg_nukem.o \
+	$(OBJ_DIR)/csg_quake.o \
+	$(OBJ_DIR)/csg_shade.o \
+	$(OBJ_DIR)/dm_extra.o  \
+	$(OBJ_DIR)/dm_prefab.o \
+	$(OBJ_DIR)/g_doom.o    \
+	$(OBJ_DIR)/g_nukem.o   \
+	$(OBJ_DIR)/g_quake.o   \
+	$(OBJ_DIR)/g_quake2.o  \
+	$(OBJ_DIR)/g_wolf.o    \
+	$(OBJ_DIR)/q_common.o  \
+	$(OBJ_DIR)/q_light.o   \
+	$(OBJ_DIR)/q_tjuncs.o  \
+	$(OBJ_DIR)/q_vis.o     \
+	$(OBJ_DIR)/vis_buffer.o \
+	$(OBJ_DIR)/vis_occlude.o \
+	\
+	$(OBJ_DIR)/twister.o   \
+	$(OBJ_DIR)/tx_forge.o  \
+	$(OBJ_DIR)/tx_skies.o  \
+	$(OBJ_DIR)/ui_about.o  \
+	$(OBJ_DIR)/ui_build.o  \
+	$(OBJ_DIR)/ui_chooser.o \
+	$(OBJ_DIR)/ui_console.o \
+	$(OBJ_DIR)/ui_dialog.o \
+	$(OBJ_DIR)/ui_game.o   \
+	$(OBJ_DIR)/ui_hyper.o  \
+	$(OBJ_DIR)/ui_level.o  \
+	$(OBJ_DIR)/ui_map.o    \
+	$(OBJ_DIR)/ui_module.o \
+	$(OBJ_DIR)/ui_rchoice.o \
+	$(OBJ_DIR)/ui_play.o   \
+	$(OBJ_DIR)/ui_window.o
+
+$(OBJ_DIR)/%.o: gui/%.cc
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+
+#----- LUA Objects --------------------------------------------------
+
+LUA_OBJS=\
+	$(OBJ_DIR)/lua/lapi.o     \
+	$(OBJ_DIR)/lua/lcode.o    \
+	$(OBJ_DIR)/lua/ldebug.o   \
+	$(OBJ_DIR)/lua/ldo.o      \
+	$(OBJ_DIR)/lua/ldump.o    \
+	$(OBJ_DIR)/lua/lfunc.o    \
+	$(OBJ_DIR)/lua/lgc.o      \
+	$(OBJ_DIR)/lua/llex.o     \
+	$(OBJ_DIR)/lua/lmem.o     \
+	$(OBJ_DIR)/lua/lobject.o  \
+	$(OBJ_DIR)/lua/lopcodes.o \
+	$(OBJ_DIR)/lua/lparser.o  \
+	$(OBJ_DIR)/lua/lstate.o   \
+	$(OBJ_DIR)/lua/lstring.o  \
+	$(OBJ_DIR)/lua/ltable.o   \
+	$(OBJ_DIR)/lua/ltm.o      \
+	$(OBJ_DIR)/lua/lundump.o  \
+	$(OBJ_DIR)/lua/lvm.o      \
+	$(OBJ_DIR)/lua/lzio.o     \
+	\
+	$(OBJ_DIR)/lua/lauxlib.o   \
+	$(OBJ_DIR)/lua/lbaselib.o  \
+	$(OBJ_DIR)/lua/ldblib.o    \
+	$(OBJ_DIR)/lua/liolib.o    \
+	$(OBJ_DIR)/lua/lmathlib.o  \
+	$(OBJ_DIR)/lua/loslib.o    \
+	$(OBJ_DIR)/lua/ltablib.o   \
+	$(OBJ_DIR)/lua/lstrlib.o   \
+	$(OBJ_DIR)/lua/loadlib.o   \
+	$(OBJ_DIR)/lua/linit.o
+
+LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI
+
+$(OBJ_DIR)/lua/%.o: lua_src/%.cc
+	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
+
+
+#----- glBSP Objects ------------------------------------------------
+
+GLBSP_OBJS= \
+	$(OBJ_DIR)/glbsp/analyze.o  \
+	$(OBJ_DIR)/glbsp/blockmap.o \
+	$(OBJ_DIR)/glbsp/glbsp.o    \
+	$(OBJ_DIR)/glbsp/level.o    \
+	$(OBJ_DIR)/glbsp/node.o     \
+	$(OBJ_DIR)/glbsp/reject.o   \
+	$(OBJ_DIR)/glbsp/seg.o      \
+	$(OBJ_DIR)/glbsp/system.o   \
+	$(OBJ_DIR)/glbsp/util.o     \
+	$(OBJ_DIR)/glbsp/wad.o
+
+GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
+
+$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
+	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
+
+
+#----- AJ-Polygonator Objects --------------------------------------
+
+AJPOLY_OBJS= \
+	$(OBJ_DIR)/ajpoly/pl_map.o   \
+	$(OBJ_DIR)/ajpoly/pl_poly.o  \
+	$(OBJ_DIR)/ajpoly/pl_util.o  \
+	$(OBJ_DIR)/ajpoly/pl_wad.o
+
+AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall
+
+$(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
+	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
+
+
+#----- Targets ----------------------------------------------------
+
+all: $(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+	rm -f $(OBJ_DIR)/lua/*.o
+	rm -f $(OBJ_DIR)/glbsp/*.o
+	rm -f $(OBJ_DIR)/ajpoly/*.o
+
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
+	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
+
+stripped: $(PROGRAM)
+	strip --strip-unneeded $(PROGRAM)
+
+.PHONY: all clean stripped
+
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab

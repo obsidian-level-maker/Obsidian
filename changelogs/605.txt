@@ -1,0 +1,48 @@
+
+CHANGES IN 6.05 (since 4.28)
+============================
+
+The Good
+--------
+
++ new lighting system
++ WAD-based prefab system
++ restored v3.57 room layout logic (with improvements)
++ secret rooms, with nice items to get
++ more varied monsters, guard monsters
++ better health calculation (no more mountains of it)
++ escapable slime pits
+
+
+The Bad
+-------
+
+! no support for games other than DOOM
+! no closets (for starts, exits, teleporters, etc)
+! no multiple paths between rooms
+! crappy hallways
+
+
+Contributions
+-------------
+
++ Heretic boss maps, thanks to LakiSoft
++ new E2M8 and MAP07 boss maps, thanks to Chris
++ new E1M8 boss map, contributed by SylandroProbopas
++ variations of MAP30 boss map, courtesy Chris
++ DOOM 1 "Ultra" boss maps, by Chris
+
+
+Other Changes
+-------------
+
+- proper installation for Linux / Unix
+- in the GUI replaced 'Secrets' button with 'Caves'
+- added "Always" setting for Outdoors and Caves
+- the occasional dark outdoor level
+
+- better quests, often need to _find_ weapons and armor
+- co-op: sometimes players start in different rooms
+- improved Sky generator module
+- some cave improvements
+

@@ -1,0 +1,53 @@
+#
+#  Node Viewer
+#
+#  GNU Makefile for WIN32, using CROSS-COMPILER on Linux
+#
+
+PROGRAM=NodeView.exe
+
+LIB_LOC=/home/aapted/ebuild
+
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.7
+FLTK_FLAGS=-I$(FLTK_DIR)
+FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
+          $(FLTK_DIR)/lib/libfltk.a
+
+CXX=i586-mingw32msvc-g++
+
+CXXFLAGS=-O -Wall -DWIN32 $(FLTK_FLAGS)
+LDFLAGS=
+LIBS=-lm $(FLTK_LIBS) \
+     -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
+     -lcomctl32 -lwsock32 -lsupc++
+
+OBJS=./main.o     \
+     ./asserts.o  \
+     ./dialog.o   \
+     ./grid.o     \
+     ./info.o     \
+     ./level.o    \
+     ./lists.o    \
+     ./menu.o     \
+     ./system.o   \
+     ./util.o     \
+     ./window.o
+
+
+# ----- TARGETS ------------------------------------------------------
+
+all:    $(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM) *.o core core.* ERRS nv_debug.txt
+
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
+
+stripped: all
+	i586-mingw32msvc-strip --strip-unneeded $(PROGRAM)
+
+.PHONY: all clean stripped
+
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab

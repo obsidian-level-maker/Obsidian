@@ -1,0 +1,296 @@
+----------------------------------------------------------------
+ CLASS DEFINITIONS
+----------------------------------------------------------------
+
+class Plan
+{
+  level : Level
+
+  w, h  : size (cells)
+  cells : array_2D(PlanCell)
+
+  blk_w, blk_h : total blocks
+  blocks : array_2D(Block)
+
+  quests : array(Quest)
+  deathmatch  -- true for deathmatch levels
+  exit_combo : Combo
+  
+  all_cells  : array(Cell)  -- all used cells
+  all_links  : array(Link)
+  all_things : array(Thing)
+
+  floor_min, floor_max : number
+  used_items : table[ITEM_NAME] -> usage count
+
+  hmodels : table[SK] -> HModel, SK = easy|medium|hard
+
+  liquid : liquid type
+
+  free_tag : an available tag number
+}
+
+
+class Quest
+  kind : one of "key" | "switch" | "exit"
+         (for mini-quests: "weapon" | "item")
+  item : name of key / switch_tex / weapon / item
+
+  level : main quest number
+  sub_level : index for sub-quest (0 for main quests)
+
+  parent : Quest -- for sub quests (nil for main quests)
+
+  path  : array(Cell), includes start and end
+  first : Cell  -- convenience, same as path[1]
+  last  : Cell  -- convenience, same as path[#path]
+
+  is_secret : true for secret areas (need a secret door)
+  force_key : must use locked door with this key (Hexen only)
+
+  tag : tag number for switch
+
+  closet : Surprise  -- optional
+  depot  : Surprise  -- optional
+end
+
+
+class Cell
+  x, y  : location (for convenience)
+  quest : Quest reference
+  along : how far along current quest (1 to #path)
+
+  combo : Combo
+  liquid : liquid type (nil for none)
+  scenic : bool -- if true, cell only for scenery (no walk)
+  hallway : bool -- true for hallway cells
+
+  bw, bh           : size in blocks (interior)
+  bx1,by1, bx2,by2 : range of blocks for this cell (interior only)
+
+  link : table[DIR] -> Link
+  exit_dir  : next cell in stage
+  entry_dir : previous cell in stage
+  
+  window : table[DIR] -> Link
+  border : table[DIR] -> Border  -- diagonal are "mini-borders"
+  corner : table[DIR] -> Border
+  vista  : table[DIR] -> boolean
+
+  teleport : array(Cell)
+
+  floor_h, ceil_h : floor/ceiling heights
+  sky_h : height of sky (esp. for indoor rooms)
+
+  f_min/max : lowest/highest floor including all links
+  c_min/max : lowest/highest ceiling including all links
+
+  dm_item : item for deathmatch
+  dm_player : player start for deathmatch
+
+  toughness : amount of monster toughness in this cell
+  
+  rmodel : Block -- model for whole room
+
+  cage_spots
+  free_spots
+
+  mon_set    : array(skill) -> array(MonDat)
+  pickup_set : array(skill0 -> array(PickupDat)
+
+  chunks : array_2D(Chunk)
+
+  no_nudge
+  no_monsters
+end
+
+
+class Link
+  kind  : keyword: "arch" | "door" | "falloff" | "vista"
+
+  cells : array(Cell)
+
+  build : Cell -- which side we build the wall,door (etc)
+                  must equal either src or dest.
+
+                  The _other_ side is responsible for
+                  meeting the correct height (via stairs etc)
+
+                  For Vistas: the cell that leads outward.
+
+  quest : Quest for locked/switched doors.
+
+  where : position of door/arch/etc along side
+               0 = centred
+            +/-1 = partially left/right
+            +/-2 = touching the edge
+
+            "wide"   = using the whole border
+            "double" = BOTH corner chunks
+
+  long : total size of door/arch/etc (in blocks)
+
+  x1, y1, x2, y2 : block range
+end
+
+
+class Border
+
+  x1, y1, x2, y2 : block range
+
+  side : true side of border (2/4/6/8)
+
+  long : number of blocks wide/tall
+
+  cells : array(Cell)
+
+  build : Cell
+  combo : Combo
+
+  window: true if this border can contain windows
+
+  kind : keyword, one of: "solid", "fence", "sky", "window"
+end
+
+
+class Chunk
+
+  kind : keyword, one of: "empty", "room", "link", "void"...
+  
+  link : Link -- for link chunks
+
+  rmodel : Block -- model for this chunk
+
+  x1, y1, x2, y2 : block range
+
+  stair_dir  -- present to build a stair to neighbour chunk
+
+end
+
+
+class Block
+  
+  fragments : array_2D(Block)  -- optional
+  
+  solid  -- texture name for solid areas (void space)
+
+  l_tex, u_tex  -- lower/upper textures
+                   (solid walls use l_tex only)
+
+  f_h, f_tex   -- floor height and texture
+  c_h, c_tex   -- ceiling height and texture
+  
+  light -- sector lighting
+  kind  -- sector special kind  (optional)
+  tag   -- sector tag  (optional)
+
+  mark  -- used to differentiate blocks (prevent merging)
+
+  [2|4|6|8] : overrides, textures etc (e.g. l_tex, rail, x_offset)
+  [1|3|7|9] : corner adjustments
+
+  door_kind  :  DOOM door type -- optional
+  switch_kind : DOOM switch type -- optional
+  lift_kind  :  DOOM lift type -- optional
+  lift_walk
+
+  block_sound : sound blocking, 1 = single, 2 = double
+
+  things : array(Thing)
+
+  has_blocker : this (64x64) block is occupied by a solid thing.
+  has_pickup  : this block occupied by pickup item(s)
+end
+
+
+class Combo
+  outdoor : boolean
+  mat_pri : integer
+  wall, void  : texture name
+  floor, ceil : flat name
+end
+
+
+class Thing
+  x, y   : map coords -- only set when writing
+  dx, dy : delta value (from centre of block)
+  kind   : number
+  angle  : 0 to 359
+
+  options : table[OPT_NAME] --> bool
+       -- EASY, MEDIUM, HARD : skills
+       -- AMBUSH
+end
+
+
+class ThingInfo
+
+   kind : "monster" | "pickup" | "scenery" | "other"
+   id : number (wolf: can be table)
+   r : radius
+   h : height
+   ceil : true
+   pass : true
+   light : number
+   add_mode : "island" or "extend"
+   env : "indoor" or "outdoor"
+end
+
+
+class HModel
+  skill : skill type: "easy" | "medium" | "hard"
+
+  health, armor : numeric
+  <ammo name>   : numeric
+
+  <weapon name>  : boolean (nil == false)
+
+  <powerup name> : countdown: 2 per cell
+
+  toughness : left over toughness
+
+  -- Note: negative values mean player *needs* that
+  -- quantity of health/ammo to win the battle.
+
+  -- Note 2: we don't distinguish green/blue armor.
+end
+
+
+class Surprise  -- Closet or Depot
+  trigger_cell
+  depot_cell  -- only for depots
+  places[N] : { c, tag, spots }
+  spread    : keyword: "first", "last", "linear", "random"
+  toughness : monster toughness of this surprise
+  door_tag
+end
+
+
+class LevelSet
+
+  levels : array(Level)
+
+  episodes : array(Episode)
+end
+
+
+class Level
+
+  name : string  -- e.g. "E1M3" or "MAP05"
+
+  episode   : number
+  ep_along  : 1 .. ep_length
+  ep_length : number
+
+  boss_kind : keyword
+
+  secret_kind : keyword
+  secret_exit : bool
+
+  theme_probs : table
+
+  sky_info : table
+    color : string -- e.g. "gray", "red" etc
+    light : number 80-240
+end
+

@@ -1,0 +1,120 @@
+Esselfortium's overly ambitious suggestions for OBLIGE:
+
+- separate theme settings:
+
+  * e1 techbase
+	- star*, brown1/brown96/browngrn textures mostly, with some stone/stone2, metal1, sladwall, etc...
+	- only using textures, monsters, and things found in the shareware wad, for authenticity.
+	- no crates!
+	- no plasma rifle or bfg. (maybe have separate settings for design theme, monsters and weapons)
+	- lots of computers: big and small, in walls, hanging from the ceiling like in e1m1, etc.
+	- lots of nukage. no water, lava, or blood.
+	- support2 instead of support3 and metal
+	- big sky ceilings, not the small X ones
+	- blue carpet
+	- brn* midtextures in windows! these things are episode 1 as hell.
+	- mostly somewhat open areas
+
+  * e2 subverted base
+	- for tech areas: stone/stone2/stone3, cement*, gray*/ickwall*, brown1/brown96/browngrn, pipe*, metal1...
+	- for subverted areas: wood*, gstone*, marble*, etc.
+	- crates! yay!
+	- crushing ceilings, preferably wood ones but not necessarily all of them
+	- computers in techy areas
+	- skin, fire, and demon faces in subverted areas
+	- vines!
+	- support3 and metal, with much less support2
+	- mostly nukage....the water, lava, and blood would be more e3 material, i think.
+	- midgrate and midbrn1 in windows, especially in more demonic/subverted sections
+	- some 112-128 brightness, cramped underground areas would be really neat!
+	- maybe a couple of separate theme settings for this, one without the demon stuff and just the e2 techbase textures
+
+  * e3 gothic/hell theme
+	- gstone*, marble*, wood*, pipe*, rockred1/sp_rock1/2, sp_hot1, stone3, ashwall, etc...
+	- no techy textures. just because sandy petersen did it in the real e3 doesn't mean you should too :P
+	- midbrn1 and midgrate in windows
+	- demon faces, fire, skin, sp_dude*, skspine*, skulwal*, etc., for decorations
+	- mostly lava and blood. no nukage. some water.
+	- support3 and metal. no support2.
+	- no e2 crates (no UAC logos or anything silvery anywhere in this theme, preferably), but wood crates would be cool.
+
+  * doom2 starport theme
+	- primary textures: bronze*, tekgren*, metal*, brown1/96/grn
+	- other textures: stone/stone4/5/6/7, pipe*, gray*, cement*, brownpip, bigbrik*
+	- a bit of ashwall is okay too (look at the big room in map01, for example)
+	- mostly water, but some nukage is good.
+	- support2.
+	- e2m2-style crates are okay :)
+
+  * doom2 brick/metal theme
+	- pretty simple concept here. tan bricks and lots of 'em, and metal* looks great with them.
+	- brick5/6/7/8/9/lit, metal2 and its variants, bstone1/2/3, stone6/7 and tanrock5 could work here too.
+	- maybe some zimmer1/2/7 in outdoor areas
+	- support3 and metal.
+	- pick either nukage or lava and stick with it, for each map.
+	- decorations: tekwall, comptall/compwerd, sp_dude7/8, spacew3, etc.
+	- crates are a-ok :)
+
+  * okay, i'm not writing all that crap out for any more themes, but here are some other possibilities:
+	- doom2 gothic (similar to the gothic areas in doom1 e2, but with more panel* and tan-colored stuff)
+	- doom2 hell (similar to the doom1 e3 stuff, but with doom2's zimmer* and other hell rock crap)
+	- doom2 wolf3d textures only (keep everything square and 128x128 for this) :P
+
+- considerations for more interesting and humanlike design:
+
+  * 45-degree angles. these are especially important in e1 maps. if there's any way you can get it to even just put
+    a 64x64 45-degree angle on some outwards-pointing corners, checking to make sure it didn't make anything get stuck
+    or block a path, it'd make a huge difference.
+
+  * in rockred/sp_rock/ashwall/zimmer/etc. areas, split each line a random number of times (like 2 or 3) and move the
+    vertices around a bit randomly, for a natural look. do the same checking to make sure no paths are blocked and no
+    things are stuck. run the 45-degree angle code in these areas before doing this, though, for added naturalness.
+
+  * give it a database of which flats look good touching which textures, preferably with priority listings
+    (i.e. a brown96 wall looks fine with floor7_1, ceil5_2, flat1, and a bunch of other things, but ceil5_2 matches it best.
+     so it'd use ceil5_2 whenever building out a small section of wall, like for a computer or something, but for larger areas
+     it'd use any of them from the list).
+
+  * tell it which textures and flats to only use on certain sized walls and surfaces. mostly just tell it not to put lighting
+    flats on anything that doesn't fit the grid (i noticed lots of light flats in doorways, getting cut off)
+
+  * use support2 or support3 when changing textures (unless they're variants of each other, i guess you could group them for
+    that if you haven't already).
+
+  * maybe determine lighting levels based on the number of light textures/things/flats/sky windows in a room, the size of the room,
+    and the light levels of the surrounding rooms.
+
+  * wolf3d textures don't look completely terrible if used well, but it's extremely rare to see them in well-made maps nowadays.
+    maybe do a separate theme setting that uses mostly or all wolf3d textures?
+
+  * ability to adjust prefabs based on sector height. i notice this one doom1 computer prefab getting used a lot and sticking out
+    above the room it's in :P
+
+  * maybe determine ceiling height based on the size of the sector. put a bit of randomness into it, but i think smaller sectors
+    are more likely to work well with short ceilings.
+
+  * when using grate textures, make the light level 1 unit higher (or lower, your choice) on one side of it. the 1-unit light
+    difference will not be visible at all ingame, but it will prevent the midtexture from bleeding into the ceiling or floor if
+    the sector is not as tall as the midtexture is.
+
+  * not a necessary thing, but if you could have it add outer borders to rooms, tormentor667 would be out of a job. :p
+
+  * make sure it only uses poison signs if there is actually nukage in the room :P
+
+  * ditch the custom textures and stuff. they're exceptionally cheesy. the Oblige signs are okay, of course.
+    if you absolutely must have a waterfall texture, there's a much better-matching one floating around. if i remember right, either
+    plutonia or tnt has it, but i could be wrong about that.
+
+I know you're not actually going to implement all this stuff, but they'd be pretty nice I think :)
+
+
+-------
+
+
+Pinkies work well as monsters when they're used to their advantage:
+they're space-blockers. They don't provide much of a threat in and of
+themselves, but when combined with the rest of the monster ensemble,
+they limit and control the player's movement in order to keep players
+confined, where necessary, and keep them from running laps around the
+opposition
+

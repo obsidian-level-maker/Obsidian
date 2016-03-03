@@ -1,0 +1,388 @@
+
+VARIOUS NOTES & IDEAS
+=====================
+
+
+Misc
+----
+
+-  windows and fences DO NOT straddle, and outdoor rooms ARE NOT
+   responsible for the outdoor facade of buildings.
+
+
+
+Connections
+-----------
+
+TERMINOLOGY
+
+  Leaf   : only one exit
+  Stalk  : two exits
+  Branch : three or more exits
+
++  plan connections using sections first
+   i.e. CONN = { sect1, dir, sect2 }
+
+-  The "connect map" is the conns[] list in each room.
+
+   -  need to allow teleporters and intrusions
+   -  intrusions can be locked, teleporters cannot be
+
+-  what makes a good set of connections?
+
+   (1) don't exit a room on same wall as entering it
+       (which has no need to traverse through the room)
+
+   (2) T shape rooms have 3 connections in the three outer
+       sections (ideally same direction as T shape)
+
+       L shape rooms have at least 2 connects in outer tips
+       plus shape rooms have 3 or 4 connections in outer tips
+       Big rect rooms have 3 or 4 connections on 3/4 diff sides
+       
+       (same basic criterion: need to traverse the whole room)
+       This trumps #1.
+
+   (3) in small room, 3 connections is becoming too many.
+       If only two, then prefer to turn 90 degrees.
+
+   (4) need a good number of "hubs" (3 or more connections).
+       
+       too few  --> no locked doors are possible
+       too many --> creates a lot of dead-end paths
+
+       natural areas are most flexible
+
+       limit on 4-exit rooms ("mega-hub") is probably: int(LEVEL.H / 2)
+
+       for each room, count how many other rooms it touches.
+       big rects or plus with >= 4 are candidates for mega-hub
+
+   (5) the connection patterns (T, L, etc) are still a good idea for
+       large rectangular rooms.  But do it using sections instead
+       of seeds.
+
+   (6) large rooms may be best as leafs (can have a big battle
+       to get to the key or switch).
+
+   (7) tiny rooms may be best as in/out (2 exit) rooms, and
+       also OK for start room, and ideal for exit room when
+       using a "small exit" prefab.
+
+
+
+Cycles
+------
+
+  -  Cycles are equivalent to considering the rooms in the cycle
+     as though they were one big room.  So when creating the
+     connection map, there would only be a single node for the
+     group of rooms in a cycle.
+
+  +  each room in a cycle needs at least two connections to
+     other rooms (possibly the same one) in the cycle.
+
+     Two rooms in cycle: AB AB
+
+     Three rooms: AB BC CA / AB AB CB CB / etc..
+
+     Four rooms: AB BC CD DA / etc..
+
+  +  so total number of connections: min = #rooms
+                                     max = (#rooms - 1) * 2
+
+  +  never use teleporters (or as a gimmick use them for all
+     cycle conns and not for normal connections).
+
+  -  I really doubt cycles would add much to a level.
+     However some people may like the non-linearity which it
+     introduces.
+
+  -  Adding extra locked doors between two arenas (especially
+     using different rooms than the main locked door) is another
+     way to create a cycle (these are probably more interesting).
+     An example is the blue keyed door in E1M2 of Quake.
+
+     Extra locked doors can even be placed between two disjoint
+     arenas (like the first and the last), giving the player a
+     shortcut to earlier parts of the level.
+
+  -  a cycle consisting of three rooms, each connected by one-way
+     routes (e.g. fall / fall / one-way lift) could be interesting.
+
+  -  when a cycle (treated as a single node) would have two or more
+     locks coming off it, then it should try hard to ensure that
+     different rooms in the cycle are used for each lock.
+
+     This suggests that the ideal cycles are a group of three or
+     four SMALL rooms, each of which touches 3+ rooms.
+
+  +  TO CREATE CYCLES: first create normal non-cyclical connections
+                       and quest structure.  Then look at where the
+                       rooms in each quest can re-connect.
+
+
+
+One-way Routes
+--------------
+
+  -  TRUE one-way routes mean you never get back.
+
+      These should be rare (max once per episode).
+      It should be a large fall-off (or 3D hole in Quake).
+      Few rooms near start are "high hub", rest of map is "low hub".
+      High hub has only one quest (the hole / fall-off).
+
+      Health/Ammo placement needs to NOT "go back" past a true
+      one-way connection.  Limit placement to rooms in each hub.
+
+  -  Kinds of one way connections:
+
+     (a) fall-offs
+     (b) teleporters
+     (c) lifts that go up (or down) into a hole
+         (activated by a switch only on one side).
+     (d) doors that only open from one side (esp. via a switch)
+
+  -  returnable one-way routes require a way back.
+     
+     The return can occur anywhere where the two arenas touch
+     (for physical connection).  A teleporter back is always
+     possible (desirable when entry was also via teleporter).
+
+     The return MUST be one-way as well.
+
+     QUESTION: how do one-way routes and locked doos interact??
+
+     ANSWER: they don't interact, one-way route splits a quest
+             into two (drop-off is goal of first quest).
+
+             The target key of the 2nd quest makes a good return
+             door (c.f. MAP02 drop-off, MAP05 drop-off).
+
+             Alternatively, a switch (near key or another room)
+             activates some stairs to get back up.
+
+
+
+Monster Selection
+-----------------
+
+  +  add guard monsters first, seeds around the purpose / weapon
+
+  +  "monster map" :
+     (1) select 1-4 types of monster to use in room (palette)
+         (and a pref for each one)
+
+         (a) palette might not include guard monster
+             (bump chance way down)
+
+         (b) from player's current weapons determine a 'firepower'
+             value (average of classes in Hexen).
+             This is roughly how much damage can be done per sec.
+
+             Hence we know how long each kind of monster would
+             take to kill.  TOO LONG = skip monster,
+             TOO SHORT = skip or bump chance way down.
+
+  +  once we have the monster map, all we need then is some
+     idea of QUANTITIES.
+
+     +  the skill level controls how many monsters to add.
+        Each monster is always present in "hard" and may be
+        omitted for lower skills.  Maybe: medium keep 66%,
+        easy keep 33%.  (always keep at least one).
+
+     +  the GUI 'Monsters' setting not only controls how many
+        monsters, but also affects difficulty, though quantity
+        is more significant than the difficulty adjustment.
+
+  +  decide level-wide monster palette (no monsters are used
+     which are not in this palette).  Could save big monsters
+     (arach, mancubus) for later levels and omit small ones
+     (esp. pistol zombie).  Perhaps have a palette for each
+     usage kind (free-range, guard, trap, cage) ??
+
+  +  special places:
+     -  cages & ledges
+     -  monster closets
+     -  pop-ups 
+     -  teleport-in
+     -  facing entry door [blaze D1]
+
+
+
+Room Types
+----------
+
+   (a) storage   (crates, barrels)
+   (b) quarters  (tables, chairs, beds)
+   (c) bathroom
+   (d) computer
+   (e) library
+
+   (f) armoury | supplies
+   (g) processing plant (machines)
+   (h) torture  (wolf3d/SOD)
+
+
+
+HEXEN Notes
+-----------
+
+Minimal BEHAVIOUR lump:
+
+'ACS' 0   // marker
+0x0C      // infoOffset
+0         // code
+0         // scriptCount
+
+
+
+SKIN TABLE FIELDS
+-----------------
+
+1) use a plain word for the main part of something.
+
+   Examples: 'wall', 'floor', 'side', 'switch',
+             'beam', 'trim',  'base', 'door'.
+
+2) the '_f' suffix on the main word can be used to provide
+   a different floor or ceiling material (when the main word
+   refers to the side texture).
+
+3) the '_t' suffix can provide a different side texture
+   when the main word refers to a floor or ceiling.
+
+4) the '_c' suffix should NOT be used for normal DOOM,
+   it is reserved for setting the ceiling material for
+   rare cases when it could be different from the floor
+   material -- e.g. in a QUAKE prefab.
+
+5) the '_ox' '_oy' '_peg' suffixes provide x_offset,
+   y_offset and pegging values.  When pegging is true,
+   an absent y_offset value will be set to 0.
+
+6) the '_w' '_h' '_d' suffixes are reserved for setting
+   width / height (vertical) / depth values.
+
+
+
+THEME SELECTION
+---------------
+
+(a) Each level has a THEME, e.g. "Tech"
+
+(b) User can select what theme to use ---> case closed
+
+(c) For "mixed" select a random theme, bearing in mind:
+    (i) secret levels can choose something whacky
+    (ii) One-Episode: use 'epi_prob', group same themes together
+    (iii) Full-Game: prefer episodes to have whole theme
+                     and prefer theme to match sky
+
+
+
+NAME GENERATOR
+--------------
+
+-  GUI SIDE:
+   -  BOOM: DEHACKED lump   -- comments use '#'
+            [STRINGS] section
+            
+            gui.property("bex_string", "HUSTR_%d = %s")
+
+            (also: HUSTR_ExMy, PHUSTR_%d, THUSTR_%d)
+
+   -  EDGE: DDFLANG lump    -- comments use '//'
+            [ENGLISH] section
+
+            gui.property("ddf_string", "Map01Desc=\"%s\";")
+
+            (also: ExMyDesc="%s")
+
+   -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
+
+             gui.mapinfo_map(lump, description)
+             gui.mapinfo_property("cluster", "1")
+
+             LIMIT = 31 letters
+
+   -  QUAKE 1/2: stored in 'worldspawn' entity
+
+             gui.property("level_desc", "%s") --> 'message' field
+
+             LIMIT = 39 letters
+
+-  WILVxx and CWILVxx creation: need an API!
+
+
+
+SKY GENERATOR
+-------------
+
+-  background part: GRADIENT or CLOUDS or STARS
+
+   GRADIENT params: colors
+   CLOUD param: fracdim, powscale, squish, colors
+   STARS param: powscale, cutoff, colors
+
+-  foreground part: NONE or MOUNTAINS or BUILDINGS
+
+   MOUNTAINS params: min_h, max_h, fracdim, powscale, colors
+   BUILDINGS params: min_h, max_h, gap_size, colors, light_cols
+
+
+
+EXTRA GRAPHICS
+--------------
+
+   { "WALL52_X", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
+   { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
+   { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
+
+   static const char *ext_patches[] =
+   {
+     "W74A_1",   "W74A_2", "W74B_1",         // FIREMAGx (water)
+     "WALL64_2", "W64B_1", "W64B_2",         // ROCKREDx (lava)
+     "RP2_1",    "RP2_2",  "RP2_3", "RP2_4", // BLODRIPx (blood)
+     "TP5_1",    "TP5_2",  "TP5_3", "TP5_4", // BLODGRx  (nukage)
+
+     NULL // end marker
+   }
+
+
+
+MUSIC RE-ORDERING
+-----------------
+
+Track Selection:
+
+*  Doom 1: shuffle each episode
+
+*  Doom 2: if one episode (or less), pick random tracks and
+           ensure that no two tracks have the same three-letter
+           prefix.
+
+*  Doom 2, full game: shuffle tracks, loop a few times looking
+                      for repeats (same three-letter prefix in a
+                      row) and move one to random spot.
+
+Mechanism:
+
+-  BOOM: [MUSIC] section in BEX
+
+       [MUSIC]
+       ROMERO = RUNNIN
+       RUNNIN = STALKS
+       STALKS = ROMERO
+
+-  EDGE native:  DDFPLAY lump:
+
+       <PLAYLISTS>
+       [01]
+       MUSICINFO=MUS:LUMP:"D_RUNNIN";
+
+-  ZDoom : via MAPINFO: music D_RUNNING
+
+

@@ -1,0 +1,83 @@
+<set O_WHERE="Downloads">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use IndexMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use IndexNews>
+<!--- use IndexScreens --->
+<use SubWhere where="DOWNLOAD">
+<use IndexForums>
+</div>
+
+<div class="rest">
+
+
+<span id="current"></span>
+
+<h3>CURRENT STABLE VERSION : 6.20</h3>
+
+<b>Windows package</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.20/oblige-620-win.zip">oblige-620-win.zip</a>
+
+<p>
+<b>Source code</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.20/oblige-620-source.tar.gz">oblige-620-source.tar.gz</a>
+
+
+<h3>OLDER VERSIONS</h3>
+
+All previous releases are available from SourceForge:
+<a href="http://sourceforge.net/projects/oblige/files">
+All Files</a>
+
+
+<h3>GIT REPOSITORY</h3>
+
+The Git repository is the place where the most up-to-date code
+is stored.  Git is a version control system, i.e. software
+used to manage a collection of source code files
+over the internet.
+<p>
+
+This link lets you browse the source code:
+<a href="https://sourceforge.net/p/oblige/code2/ref/master/">
+Browse Code</a>
+
+<p>
+Click here for the
+<a href="http://sourceforge.net/projects/oblige">SourceForge Project</a>
+information about OBLIGE.
+
+
+<h3>COPYRIGHT / LICENSE</h3>
+
+<div class="legal">
+OBLIGE Level Maker
+
+<p>
+Copyright (C) 2006-2015 Andrew Apted, et al
+
+<p>
+OBLIGE is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+<p>
+OBLIGE is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the <a href="http://www.gnu.org/licenses/gpl-2.0.txt">
+GNU General Public License</a> for more details.
+
+</div>
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

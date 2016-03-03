@@ -1,0 +1,49 @@
+
+CHANGES IN 3.57 (since v3.51)
+=============================
+
++ new lighting system
++ early Heretic and Quake support
++ FreeDOOM is supported again
+
+- faster node building (especially on large maps)
+- faster / more robust CSG code
+- faster cave generation logic
+
+- maps are more efficient (less vertices and linedefs)
+- better texture alignment (especially in caves)
+
+- write all relevant settings in the LOGS.txt file
+
+- Enhas improved his Gotcha-style arena maps
+- Chris fixed a Boom-only linetype in his E1M8 map
+- Chris contributed a brand new E1M8 boss map
+
+- preliminary code to create Duke Nukem 3D maps
+- support for 'Outdoor Shadows' (via a new module)
+- separate 'Doom 1' and 'Ultimate Doom' game choices
+- the DOOM CSG code supports rail and lighting brushes
+- amount of natural/cavey areas is now varied
+
+- buildings can have different outer and inner textures
+- improved DOOM's Wolf theme: SS Nazis, silver doors
+- more varied themes when making "a few" maps
+- variation in number of keys and switches per level
+
+- changed shortcut key to toggle module panel --> F5
+- new shortcut keys: F1 = About, F2 = Build, F4 = Options
+- more armor and ammo in the starting room
+- improved fences at the edge of the map
+
+- fixed the Level Control module
+- fixed a bug where an outdoor area was too low to fit in
+- fixed ugliness when outdoor rooms had differing sky heights
+- fixed failure when engine was set to Legacy or Eternity
+- fixed a rare assertion failure in the layout code
+
+- fixed never using switched doors in small maps
+- fixed rare bug of lowering pedestals stuck in ceiling
+- fixed lowering bars, prevent running over them
+- fixed bug where caves could become disconnected
+- fixed weapon probabilities in the start room
+

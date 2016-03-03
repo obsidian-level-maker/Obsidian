@@ -1,0 +1,68 @@
+
+FORUM RULES
+===========
+
+1. CONDUCT
+
+This forum is a place for co-operative discussion.
+Bad behavior such as insults, threats, harassment,
+or other unpleasantness will NOT be tolerated.
+People who give me or other forum members grief like that 
+will be BANNED.
+
+Remember that OBLIGE is just a hobby -- you got it for
+free and nobody is getting paid to work on it.
+That means you have NO right to demand anything from me.
+If you have a request, ask nicely.
+
+Be polite and respectful here, and we'll all get along fine :D
+
+
+2. BUG REPORTS
+
+When reporting bugs, use a new thread for each bug
+(don't put multiple bugs in a single thread unless they are
+all minor things).
+
+Be sure to check the existing bugs and make sure that it
+is not a known problem.
+Check both the Bugs forum and the TODO.txt file which
+comes with OBLIGE.
+
+Please do not use [ ] square brackets in your Subject line,
+that is reserved for me to mark the current state of the bug,
+for example [FIXED] or [NOBUG].
+
+In the bug report, be sure to mention the version of OBLIGE
+you used.  Also there is a file called "LOGS.txt" created by
+OBLIGE after each run -- if you can include a copy of this
+file (directly after the problem occurred)
+then I can usually reproduce the problem and hence fix it
+much faster.  Use the attachment feature of the forums.
+
+When including screenshots, it's a big help to make sure
+they are not too dark.  A program like the GIMP can be used
+to brighten them up.  If in doubt, too bright is better than
+too dark.
+
+
+3. DOCUMENTATION
+
+The FAQ contains answers to some frequently asked questions
+(and some frequent comments too).  Please check it before
+asking a question:
+
+FAQ: http://oblige.sourceforge.net/doc_faq.htm
+
+OBLIGE comes with two documents called TODO.txt and WISHLIST.txt.
+The TODO file contains some known bugs, and other stuff being
+worked on at the moment.  The WISHLIST.txt contains heaps of
+ideas for future features (and other junk), and has sections
+for each supported game.  Check whether your feature idea is
+there before posting a new thread about it.
+
+WISHLIST: http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/WISHLIST.txt
+
+Lastly, don't forget all the other documentation on the website.
+It is there to help you!
+

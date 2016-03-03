@@ -1,0 +1,71 @@
+diff -ru lua-5.1.4/src/lcode.c lua-5.1.4-if/src/lcode.c
+--- lua-5.1.4/src/lcode.c	2007-12-29 00:32:24.000000000 +0900
++++ lua-5.1.4-if/src/lcode.c	2010-09-14 17:09:52.960000000 +0900
+@@ -411,6 +411,13 @@
+ }
+ 
+ 
++void luaK_exp2reg (FuncState *fs, expdesc *e, int reg) {
++  luaK_dischargevars(fs, e);
++  freeexp(fs, e);
++  exp2reg(fs, e, reg);
++}
++
++
+ void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
+   luaK_dischargevars(fs, e);
+   freeexp(fs, e);
+diff -ru lua-5.1.4/src/lcode.h lua-5.1.4-if/src/lcode.h
+--- lua-5.1.4/src/lcode.h	2007-12-27 22:02:26.000000000 +0900
++++ lua-5.1.4-if/src/lcode.h	2010-09-14 17:09:42.241000000 +0900
+@@ -52,6 +52,7 @@
+ LUAI_FUNC int luaK_numberK (FuncState *fs, lua_Number r);
+ LUAI_FUNC void luaK_dischargevars (FuncState *fs, expdesc *e);
+ LUAI_FUNC int luaK_exp2anyreg (FuncState *fs, expdesc *e);
++LUAI_FUNC void luaK_exp2reg (FuncState *fs, expdesc *e, int reg);
+ LUAI_FUNC void luaK_exp2nextreg (FuncState *fs, expdesc *e);
+ LUAI_FUNC void luaK_exp2val (FuncState *fs, expdesc *e);
+ LUAI_FUNC int luaK_exp2RK (FuncState *fs, expdesc *e);
+diff -ru lua-5.1.4/src/lparser.c lua-5.1.4-if/src/lparser.c
+--- lua-5.1.4/src/lparser.c	2010-06-21 11:00:08.596400000 +0900
++++ lua-5.1.4-if/src/lparser.c	2010-09-14 17:09:37.388000000 +0900
+@@ -821,8 +821,29 @@
+ #define UNARY_PRIORITY	8  /* priority for unary operators */
+ 
+ 
++static int cond (LexState *ls);
++static void ifexpr (LexState *ls, expdesc *v) {
++  /* ifexpr -> IF cond THEN expr ELSE expr */
++  FuncState *fs = ls->fs;
++  int condexit;
++  int escapelist = NO_JUMP;
++  int reg;
++  luaX_next(ls);				/* skip IF */
++  condexit = cond(ls);
++  checknext(ls, TK_THEN);
++  expr(ls, v);					/* eval THEN part */
++  reg = luaK_exp2anyreg(fs, v);			/* set result to reg. */
++  luaK_concat(fs, &escapelist, luaK_jump(fs));
++  luaK_patchtohere(fs, condexit);
++  checknext(ls, TK_ELSE);
++  expr(ls, v);					/* eval ELSE part */
++  luaK_exp2reg(fs, v, reg);			/* set result to reg. */
++  luaK_patchtohere(fs, escapelist);
++}
++
++
+ /*
+-** subexpr -> (simpleexp | unop subexpr) { binop subexpr }
++** subexpr -> (simpleexp | ifexpr | unop subexpr) { binop subexpr }
+ ** where `binop' is any binary operator with a priority higher than `limit'
+ */
+ static BinOpr subexpr (LexState *ls, expdesc *v, unsigned int limit) {
+@@ -834,7 +855,7 @@
+     luaX_next(ls);
+     subexpr(ls, v, UNARY_PRIORITY);
+     luaK_prefix(ls->fs, uop, v);
+-  }
++  } else if (ls->t.token == TK_IF) ifexpr(ls, v);
+   else simpleexp(ls, v);
+   /* expand while operators have priorities higher than `limit' */
+   op = getbinopr(ls->t.token);

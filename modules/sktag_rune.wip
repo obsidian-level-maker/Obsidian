@@ -1,0 +1,142 @@
+----------------------------------------------------------------
+--  MODULE: Skulltag Runes and Spheres
+----------------------------------------------------------------
+--
+--  Copyright (C) 2009 Enhas
+--
+--  This program is free software; you can redistribute it and/or
+--  modify it under the terms of the GNU General Public License
+--  as published by the Free Software Foundation; either version 2
+--  of the License, or (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+----------------------------------------------------------------
+
+SKULLTAG_RUNE_PICKUPS =
+{
+  -- This is temporary until powerups are enabled in a future version
+  -- of OBLIGE, and will be updated accordingly then.
+
+  -- The Invisibility Sphere is *not* the same as Partial Invisibility.
+
+  -- Runes are artifacts that give you a special power, until you die
+  -- or pick up another rune (you can only have one at a time), hence
+  -- their rarity.
+
+  -- The give field does nothing, but has to be there to prevent OBLIGE
+  -- from dying when generating a level with any of these powerups.
+
+  turbo_sphere =
+  {
+    prob=3, big_item=true,
+    give={ {health=0} },
+  },
+
+  time_sphere =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  invis_sphere =
+  {
+    prob=3, big_item=true,
+    give={ {health=0} },
+  },
+
+  doom_sphere =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+
+  guard_sphere =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+  
+  random_sphere =
+  {
+    prob=0.1, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_strength =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_rage =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_drain =
+  {
+    prob=0.1, big_item=true,
+    give={ {health=0} },
+  },
+  
+  rune_spread =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_resist =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_regen =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_prosper =
+  {
+    prob=0.1, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_reflect =
+  {
+    prob=0.5, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_hi_jump =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+ 
+  rune_haste =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+}
+
+UNFINSHED["sktag_rune"] =
+{
+  label = "Skulltag Runes and Spheres",
+
+  for_games   = { doom1=1, doom2=1, freedoom=1 },
+  for_modes   = { sp=1, coop=1 },
+  for_engines = { skulltag=1 },
+
+  tables =
+  {
+    "pickups",  SKULLTAG_RUNE_PICKUPS,
+  },
+}

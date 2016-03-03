@@ -1,0 +1,572 @@
+<set O_WHERE="History">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use DocMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use DocUsage>
+<use DocAbout>
+<use DocCredits>
+<use DocFAQ>
+<use DocGlossary>
+<use SubWhere where="HISTORY">
+</div>
+
+<div class="rest">
+
+<h3>HISTORY OF OBLIGE</h3>
+
+<b>Oblige V1</b> was the initial prototype,
+begun around May 2005.
+It was written in pure C++ and had a very limited architecture
+(everything was just 64x64 blocks).
+No monsters or items were added.
+A notable feature was a GUI window which
+showed you the shape of each generated area.
+
+<p>
+<b>Oblige V2</b> started development in June 2006, using Lua scripts
+for the level creation logic and C++ for the GUI front-end
+and WAD output code, and evolved with many features and
+support for several games, culminating in the first public
+release in early 2007.
+
+<p>
+<b>Oblige V3</b> was a huge rethink and rewrite, prompted by
+severe limitations in the previous design.
+The V3 code introduced the concept of constructing maps
+from brushes (similar to how Quake mapping works), and planned
+the levels using a grid of 192x192 unit squares called "seeds".
+
+<p>
+<b>Oblige V4 / V5</b> were both experimental designs,
+sharing a goal of building rooms with very large prefabs
+(a whole room could be a single prefab).
+However it proved to be unsatisfactory, so I scrapped it
+and went back to the previous layouting logic.
+The V5 code also introduced the capability
+of using normal WAD files for prefabs,
+a very useful feature which
+(along with other improvements made during this period)
+has been kept.
+
+<p>
+<b>Oblige V6</b> is the current stable version, which aims to
+meld together the best features of the previous releases.
+My focus has also shifted a bit these days,
+concentrating more on the fun factor of the levels and
+less on the aesthetics.
+
+<p>
+<b>Oblige V7</b> is an experimental version in development.
+
+
+<h3>RELEASE DATES</h3>
+
+<b>Version 7.17</b> : 2015-09-16 &nbsp; (unofficial, experimental package)<br>
+<p>
+
+<b>Version 6.20</b> : 2015-03-10<br>
+<b>Version 6.10</b> : 2014-07-11<br>
+<b>Version 6.05</b> : 2014-04-30
+
+<p>
+<b>Version 5.10</b> : 2013-08-14 &nbsp; (unofficial "work in progress" package)<br>
+
+<p>
+<b>Version 4.28</b> : 2012-09-28<br>
+
+<p>
+<b>Version 3.57</b> : 2010-04-07<br>
+<b>Version 3.51</b> : 2010-02-24<br>
+<b>Version 3.47</b> : 2009-09-22<br>
+<b>Version 3.43</b> : 2009-08-11<br>
+<b>Version 3.39</b> : 2009-04-12<br>
+
+<p>
+<b>Version 0.97</b> : 2008-05-30<br>
+<b>Version 0.94</b> : 2007-07-05<br>
+<b>Version 0.85</b> : 2007-02-19<br>
+<b>Version 0.81</b> : 2007-01-21 &nbsp; (very first public release)<br>
+
+
+<h3 id="changes620">CHANGES IN 6.20</h3>
+<PRE>
++  added basic monster closets
+
++  re-implemented diagonal walls
+
++  new Gameplay Tweaks module
+   (can prevent monsters in start room, among other things)
+
++  new "Easier" and "Harder" settings for monster strength
+
++  new "Episodic" setting for monster quantity and level size
+
++  finer control over Outdoors, Caves and all level styles
+   with new "Rare", "Less" and "More" settings
+
+!  removed "Always" setting for Caves and Outdoors
+
+-  ability to set the random seed
+-  in co-op mode prefer steep stairs instead of lifts
+-  better monster selection via new 'min_weapon' field
+-  water and blood are no longer damaging
+
+-  fixed error when all monsters in control module are "None"
+-  fixed map header lumps having size 1 instead of 0
+-  fixed creating "arch with step" when steepness == NONE
+-  fixed using key podiums underneath a 3D floor
+</pre>
+
+<p> &nbsp;
+
+<hr>
+
+
+<h3 id="changes610">CHANGES IN 6.10</h3>
+<PRE>
++ new 'Weapons' setting
++ implemented the 'Powerups' setting
++ new 'Menu' button, replaces 'About' and 'Options'
+
++ new 'Config Manager' window 
++ better window scaling, new 'Window Size' option
++ store options separately from normal settings
+
++ generate DOOM 1 episode name graphics
++ better outdoor borders (like in V5)
++ preliminary support for 3D floors
+
++ added 'tech_Gray' theme for DOOM, thanks to Chris
++ new 'Egypt' theme for TNT Evilution, courtesy Chris
++ new 'Theme Control' module for DOOM 1 and 2
++ new 'Music Swapper' module (for Boom compatible ports)
+
+! removed the 'Seed' setting
+! removed the 'Hide Modules' option
+! reverted indoor lighting to a simpler model
+! curvey corners are not working atm
+
+- support upto 8 players in CO-OP mode
+- new 'Steepness' setting for Level Control module
+- new theme choices: Mostly Tech, Mostly Urban, Mostly Hell
+- reorganized the 'Theme' menu, added a separator
+
+- tweaked the DOOM monster mix
+- small reduction in the overall health in levels
+- small increase in number of bonus items per level
+- increased size of exclusion zones around teleporters
+- sometimes change the pacing near the exit room
+
+- added a couple of special doorways for caves
+- added arch-shaped doorway for Urban and Hell themes
+- better secret connections in outdoor rooms
+- better texturing for outdoor fences
+- build all doors and fences using the wad-fab system
+- build all stairs and lifts via wad prefabs
+
+- CSG: better handling of Y offsets
+- CSG: improved handling of railing textures
+- support 3D floors in wad prefabs
+- better logic for finding monster and item spots
+
+- caves: improved floor texturing in flat caves
+- caves: never place pickup items in liquid areas
+- caves: if not many caves, keep texturing consistent
+- caves: added some waterfalls near lakes
+
+- fixed error when setting Monster Variety to "none"
+- fixed uncounted secrets that lead into CAVE rooms
+- fixed Psychedelic theme using SKY1/2/3 as a normal texture
+- fixed the silly "free standing" archways and doors
+- fixed the weird metal walls in large scenic areas
+- fixed pegging on lifts in slime pits
+
+- fixed rare infinite loop when planning cave rooms
+- fixed torches in caves to never obstruct the player
+- fixed missing automap names for TNT and Plutonia maps
+- fixed secret sectors from being split by lighting
+- fixed rare problem of co-op player stuck in cave wall
+</pre>
+
+<p> &nbsp;
+
+<hr>
+
+
+<h3 id="changes605">CHANGES IN 6.05</h3>
+<PRE>
+The Good
+--------
+
++ new lighting system
++ WAD-based prefab system
++ restored v3.57 room layout logic (with improvements)
++ secret rooms, with nice items to get
++ more varied monsters, guard monsters
++ better health calculation (no more mountains of it)
++ escapable slime pits
+
+The Bad
+-------
+
+! no support for games other than DOOM
+! no closets (for starts, exits, teleporters, etc)
+! no multiple paths between rooms
+! crappy hallways
+
+Contributions
+-------------
+
++ Heretic boss maps, thanks to LakiSoft
++ new E2M8 and MAP07 boss maps, thanks to Chris
++ new E1M8 boss map, contributed by SylandroProbopas
++ variations of MAP30 boss map, courtesy Chris
++ DOOM 1 "Ultra" boss maps, by Chris
+
+Other Changes
+-------------
+
+- proper installation for Linux / Unix
+- in the GUI replaced 'Secrets' button with 'Caves'
+- added "Always" setting for Outdoors and Caves
+- the occasional dark outdoor level
+
+- better quests, often need to _find_ weapons and armor
+- co-op: sometimes players start in different rooms
+- improved Sky generator module
+- some cave improvements
+</pre>
+
+<p> &nbsp;
+
+<hr>
+
+
+<h3 id="changes428">CHANGES IN 4.28</h3>
+<PRE>
++ Prefab system!
+
++ Quake lighting!
++ Quake visibility!
++ Quake II works!
+
++ Hexen works!
++ much improved Hexen themes, thanks to blackjar
++ proper Hub system for Hexen
+
+- support FreeDoom 0.7
+- support for Absolution, the Doom64 TC
+- support for HacX 1.2 and Harmony
+- support for Chex Quest 3
+- preliminary work on Hexen II and Half-Life [not usable yet]
+
+- DOOM themes for Episodes 2 and 4, courtesy Chris
+- monsters are progressive over a full game in DOOM 2
+- more naming goodies, thanks to Chris
+
+- improved progress bar and status messages
+- output file is deleted if an error occurs
+- backup files now use the .OLD extension
+- qsavetex detects and handles Hexen II
+- cmdline option to load a config file (for Batch mode)
+
++ support for "shaped" rooms (L, T, plus, etc)
++ support for teleporters
+- secret exits are created again
+
+- fixed Quake collision issues
+- new more reliable CSG code
+- monster control modules for Heretic, Quake, Quake II
+- support for liquids in Quake and Quake II
+- support reading and writing PK3 files (not used yet)
+- an exporter to .MAP format
+
++ ability to make multiple paths between rooms
+- preliminary work on truely 3D room layouts
+- improved infighting logic in the Fight Simulator
+
+- new 'Jumbled Up' theme setting
+- new 'Tiny' and 'Extreme' settings for level size
+- new 'Alternative Look' option
+- moved the Seed setting, and increased to 6 digits
+- Seed is automatically bumped after a successful build
+
++ customised Lua language:
+  - commas are optional at end of line in data tables
+  - simpler table traversal with new 'each' syntax
+  - ternary operator of the form: (X ? Y ; Z)
+  - continue statement
+  - alternative inequality operator: !=
+</pre>
+
+<p> &nbsp;
+
+<hr>
+
+
+<h3 id="changes357">CHANGES IN 3.57</h3>
+<PRE>
++ new lighting system
++ early Heretic and Quake support
++ FreeDOOM is supported again
+
+- faster node building (especially on large maps)
+- faster / more robust CSG code
+- faster cave generation logic
+
+- maps are more efficient (less vertices and linedefs)
+- better texture alignment (especially in caves)
+- write all relevant settings in the LOGS.txt file
+
+- Enhas improved his Gotcha-style arena maps
+- Chris fixed a Boom-only linetype in his E1M8 map
+- Chris contributed a brand new E1M8 boss map
+
+- preliminary code to create Duke Nukem 3D maps
+- support for 'Outdoor Shadows' (via a new module)
+- separate 'Doom 1' and 'Ultimate Doom' game choices
+- the DOOM CSG code supports rail and lighting brushes
+- amount of natural/cavey areas is now varied
+
+- buildings can have different outer and inner textures
+- improved DOOM's Wolf theme: SS Nazis, silver doors
+- more varied themes when making "a few" maps
+- variation in number of keys and switches per level
+
+- changed shortcut key to toggle module panel --> F5
+- new shortcut keys: F1 = About, F2 = Build, F4 = Options
+- more armor and ammo in the starting room
+- improved fences at the edge of the map
+
+- fixed the Level Control module
+- fixed a bug where an outdoor area was too low to fit in
+- fixed ugliness when outdoor rooms had differing sky heights
+- fixed failure when engine was set to Legacy or Eternity
+- fixed a rare assertion failure in the layout code
+
+- fixed never using switched doors in small maps
+- fixed rare bug of lowering pedestals stuck in ceiling
+- fixed lowering bars, prevent running over them
+- fixed bug where caves could become disconnected
+- fixed weapon probabilities in the start room
+</pre>
+
+
+<h3 id="changes351">CHANGES IN 3.51</h3>
+<PRE>
++  new code for building Caves and Landscapes!
++  SEED value works differently, less prone to duplicates
++  Unixy type of system-wide installation (Makefile.unixy)
++  batch mode : run Oblige without any GUI at all
++  new system for adding pre-built levels
+
+!  monster and item placement has several problems
+!  no small exit buildings (due to smaller grid size)
+
+-  new "As Original" choice for Theme button
+-  fixed ROCKRED1 material (DOOM 1)
+-  sky generator supports DOOM 1 (courtesy Enhas)
+-  new Options window
+-  can toggle the Modules Panel on/off
+-  can disable making backups
+
+-  new (more random) way of setting monster skill bits
+-  fixed E2M8 / E3M8 maps to work on E4M6 / E4M8
+-  fixed Save dialog (MS Windows) to go back to last place
+-  output directory is checked to be valid
+-  fixed some issues with status bar messages
+</PRE>
+
+
+<h3 id="changes347">CHANGES IN 3.47</h3>
+<PRE>
+-  new GUI layout, more room for modules
+-  GUI uses larger fonts in higher resolutions
+-  new 'Strength' button (for monsters)
+-  new 'Progressive' choice for monster numbers
+-  more choices for the 'Outdoors' button
+-  levels are somewhat smaller
+-  reinstated Co-op mode
+
+-  worked on a new theme system
+-  new URBAN and HELL themes for DOOM games
+-  preliminary work on Strife and HacX
+-  preliminary work on Chex Quest 3 (courtesy Enhas)
+-  further work on Quake (better BSP algorithms etc)
+-  fixed some texture glitches and sky gaps
+
++  new modules:
+   - Monster Control for DOOM
+   - Weapon Control for DOOM
+   - Stealth Monsters : Fine Control (thanks Enhas)
+   - ZDoom Marines : Fine Control (Enhas)
+   - Skulltag : Fine Control (Enhas)
+   - Level Control (Enhas)
+   - ZDoom Beastiary (Mr Chris)
+</PRE>
+
+
+<h3 id="changes343">CHANGES IN 3.43</h3>
+<PRE>
++ fixed too much chaingun/plasma ammo (fight sim bug)
+- fixed non-working lifts and pedestals
+- fixed bug: levels reduced to 2 rooms
+
++ better name generator (thanks to JohnnyRancid)
+- new just-for-kicks theme 'Psychedelic'
+- new choice for Monsters: 'Crazy' 
+- support for huge monsters in maps
+
++ new Material system
+- reorganised DOOM code : doom.lua &amp; dm_tex.lua
+- added 'density' field to MONSTER tables
+- cleaner brush/entity transformations
+
++ boss arenas for E1M8 and E2M8 (thanks Mr. Chris)
+- more color schemes for skies (JohnnyRancid)
+- improved support for DOOM I
+
+- worked on the module system
+- new program for extracting Quake textures
+- a bit of progress with Tiled games (Wolf3d)
+- added 'replaces' field for monsters
+- support monster/weapon preferences again
+
++ various new modules:
+  - Immoral Conduct - Special Edition
+  - Skulltag Monsters (by Mr. Chris)
+  - ZDoom Marines (thanks Enhas)
+  - Stealth Monsters (by Enhas)
+</PRE>
+
+
+<h3 id="changes339">CHANGES IN 3.39</h3>
+
+<PRE>
+Version 3.39 was the huge rewrite, with over 1500 SVN commits
+since the 0.97 release.  The most significant changes were:
+
+* The map representation changed to a completely different system.
+  The old method had 64x64 squares (which could be sub-divided into
+  16x16 "fragments"), with very limited support for angled walls.
+  The new method uses "brushes" like in Quake mapping, which are
+  solid regions of space, and can support arbitrary shapes on the
+  2D map (and will allow more freedom in the Z dimension).
+
+* Nearly all of the level building logic (Lua code) was rewritten
+  from scratch.  A key concept in the rewrite is "seeds", which
+  are a grid of 256x256 blocks on the 2D map, and each seed is
+  responsible for building itself (floor, ceiling, any walls,
+  and anything special in it like a staircase or pillar).
+
+* All the game definitions were moved to a 'games' folder, and
+  each Lua file in that folder is loaded when OBLIGE starts up,
+  hence new games defs can simply be dropped in without having
+  to change anything.  The same system is used for engine defs
+  and module defs too.
+
++ The new planning code supports really big rooms, and also
+  "parent" rooms which can contain other rooms.  Often the parent
+  rooms are outdoor and the child rooms are buildings, leading to
+  areas similar to DOOM II's MAP13.
+
++ The room layout code supports symmetrical rooms, and uses a
+  "room fab" system which selects a usable shape for the room
+  (which major elements like stairs, different height areas,
+  solid and diagonal blocks).  These room fabs can also be used
+  recursively, which can lead to some very interesting rooms.
+
++ The user interface was improved, with distinct panels for
+  Game Settings, Level Architecture and Playing Style, and a
+  scrollable area for custom modules.
+
++ Preliminary support for Quake and Quake II.
+
+With all this work going on, a lot of features which were
+available before have not been re-implemented yet:
+
+-  only supports DOOM 1 and DOOM 2
+-  only one available theme: TECH
+-  no traps, no cages
+-  no secrets, no powerups
+-  very limited scenery
+</PRE>
+
+<p> &nbsp;
+
+<hr>
+
+
+<h3 id="changes097">CHANGES IN 0.97</h3>
+<PRE>
++  greatly improved Heretic themes (Sam Trenholme)
++  fixed the stair-building error (Sam)
++  add some Cyberdemons into DOOM maps
+
+-  don't put monsters or things on crates
+-  don't put blaze doors in Heretic maps (Sam)
+-  add a few armor helmets in DOOM maps (Enhas)
+-  removed the Archvile from FreeDoom maps (Enhas)
+-  prevent cross windows being passable (Enhas)
+-  don't use shiny Wolf-3d door in Nature theme
+</PRE>
+
+
+<h3 id="changes094">CHANGES IN 0.94</h3>
+
+<PRE>
++  new prefab system, lots of cool prefabs.
++  new theme system for more consistent levels.
++  different sized rooms.
++  greatly improved Hexen support.
+
+-  new adjustments for level size and puzzles.
+-  adjustments for deathmatch games.
+-  secret areas and levels.
+-  balconies.
+
+-  experimental Wolfenstein-3D support.
+-  later levels get progressively harder.
+-  slightly better Heretic maps.
+-  more DOOM themes.
+
+Note: some things also broke in this release, e.g. traps :-(
+</PRE>
+
+
+<h3 id="changes085">CHANGES IN 0.85</h3>
+<PRE>
++  Hallways!  Crates!  New Exits!
++  better algorithm for choosing floor/ceiling heights.
++  user adjustments for health/ammo/monsters/traps.
++  current settings are remembered when you quit.
+
+-  support for FreeDOOM, TNT Evilution and Plutonia.
+-  levels are watermarked with some Oblige logos.
+-  delete temporary wad when build has finished.
+-  collect all log messages into a file (LOGS.txt).
+-  removed the unnecessary menu bar.
+
+-  fixed the (rare) non-working switches and lifts.
+-  surprise traps: improved placement, fairer monsters.
+-  tweaked battle simulation to provide more ammo.
+-  neater placement for health and ammo items.
+</pre>
+
+
+<h3 id="changes081">VERSION 0.81</h3>
+
+<PRE>
+This was the first public release of OBLIGE.
+</PRE>
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

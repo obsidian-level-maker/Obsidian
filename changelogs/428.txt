@@ -1,0 +1,65 @@
+
+CHANGES (since 3.57)
+====================
+
+* V4 began as an experiment into a completely new way to layout rooms
+  using prefabs for everything including floors and ceilings.  However
+  this system proved to be unsatisfactory (not flexible enough), so I
+  scrapped it and went back to the drawing board.
+
++ Prefab system!
+
++ Quake lighting!
++ Quake visibility!
++ Quake II works!
+
++ Hexen works!
++ much improved Hexen themes, thanks to blackjar
++ proper Hub system for Hexen
+
+- support FreeDoom 0.7
+- support for Absolution, the Doom64 TC
+- support for HacX 1.2 and Harmony
+- support for Chex Quest 3
+- preliminary work on Hexen II and Half-Life [not usable yet]
+
+- DOOM themes for Episodes 2 and 4, courtesy Mr Chris
+- monsters are progressive over a full game in DOOM 2
+- more naming goodies, thanks to Mr Chris
+
+- improved progress bar and status messages
+- output file is deleted if an error occurs
+- backup files now use the .OLD extension
+- qsavetex detects and handles Hexen II
+- cmdline option to load a config file (for Batch mode)
+
++ support for "shaped" rooms (L, T, plus, etc)
++ support for teleporters
+- secret exits are created again
+
+- fixed Quake collision issues
+- new more reliable CSG code
+- monster control modules for Heretic, Quake, Quake II
+- support for liquids in Quake and Quake II
+- support reading and writing PK3 files (not used yet)
+- an exporter to .MAP format
+
++ ability to make multiple paths between rooms
+- preliminary work on truely 3D room layouts
+- improved infighting logic in the Fight Simulator
+
+- new 'Jumbled Up' theme setting
+- new 'Tiny' and 'Extreme' settings for level size
+- new 'Alternative Look' option
+- moved the Seed setting, and increased to 6 digits
+- Seed is automatically bumped after a successful build
+
++ customised Lua language:
+  - commas are optional at end of line in data tables
+  - simpler table traversal with new 'each' syntax
+  - ternary operator of the form: (X ? Y ; Z)
+  - continue statement
+  - alternative inequality operator: !=
+
+- incorporated glBSP source for easier building
+

@@ -1,0 +1,26 @@
+
+CHANGES IN 3.51 (since v3.47)
+=============================
+
++  new code for building Caves and Landscapes!
++  SEED value works differently, less prone to duplicates
++  Unixy type of system-wide installation (Makefile.unixy)
++  batch mode : run Oblige without any GUI at all
++  new Options window
++  new system for adding pre-built levels
+
+!  monster and item placement has several problems
+!  no small exit buildings (due to smaller seed size)
+
+-  new "As Original" choice for Theme button
+-  fixed ROCKRED1 material (DOOM 1)
+-  sky generator supports DOOM 1 (courtesy Enhas)
+-  can toggle the Modules Panel on/off
+-  can disable making backups
+
+-  new (more random) way of setting monster skill bits
+-  fixed E2M8 / E3M8 maps to work on E4M6 / E4M8
+-  fixed Save dialog (MS Windows) to go back to last place
+-  output directory is checked to be valid
+-  fixed some issues with status bar messages
+

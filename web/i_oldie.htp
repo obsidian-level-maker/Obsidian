@@ -1,0 +1,69 @@
+<set O_WHERE="Older Versions">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use IndexMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use IndexNews>
+<!--- use IndexScreens --->
+<use IndexDownload>
+<use SubWhere where="OLDVER">
+<use IndexForums>
+</div>
+
+<div class="rest">
+
+<h3>OLDER VERSIONS</h3>
+
+Earlier releases of Oblige may still be of interest, since they support
+games and features which have not yet been re-implemented in the current
+release.
+The V2 versions also have a distinct style, more cluttered and claustrophobic,
+which some people may prefer.
+
+<p>
+Below are links to the two best older versions of OBLIGE,
+but of course all previous releases are available from SourceForge:
+<a href="http://sourceforge.net/projects/oblige/files">
+All Files</a>
+
+
+<span id="357"></span>
+
+<h3>LAST V3 VERSION : 3.57</h3>
+
+<b>Windows Package</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/3.57/oblige-357-win.zip">oblige-357-win.zip</a> (1001 KB)
+
+<p>
+<b>Linux Package</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/3.57/oblige-357-linux.tar.gz">oblige-357-linux.tar.gz</a> (914 KB)
+
+<p>
+<b>Source Code</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/3.57/oblige-357-src.zip">oblige-357-src.zip</a> (847 KB)
+
+
+<span id="097"></span>
+
+<h3>LAST V2 VERSION : 0.97</h3>
+
+<b>Windows Package</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/0.97/oblige-097-win.zip">oblige-097-win.zip</a> (598 KB)
+
+<p>
+<b>Linux Package</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/0.97/oblige-097-linux.tar.gz">oblige-097-linux.tar.gz</a> (464 KB)
+
+<p>
+<b>Source Code</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/0.97/oblige-097-src.zip">oblige-097-src.zip</a> (404 KB)
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+

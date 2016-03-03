@@ -1,0 +1,67 @@
+
+CHANGES IN 6.10 (since 6.05)
+============================
+
++ new 'Weapons' setting
++ implemented the 'Powerups' setting
++ new 'Menu' button, replaces 'About' and 'Options'
+
++ new 'Config Manager' window 
++ better window scaling, new 'Window Size' option
++ store options separately from normal settings
+
++ generate DOOM 1 episode name graphics
++ better outdoor borders (like in V5)
++ preliminary support for 3D floors
+
++ added 'tech_Gray' theme for DOOM, thanks to Chris
++ new 'Egypt' theme for TNT Evilution, courtesy Chris
++ new 'Theme Control' module for DOOM 1 and 2
++ new 'Music Swapper' module (for Boom compatible ports)
+
+! removed the 'Seed' setting
+! removed the 'Hide Modules' option
+! reverted indoor lighting to a simpler model
+! curvey corners are not working atm
+
+- support upto 8 players in CO-OP mode
+- new 'Steepness' setting for Level Control module
+- new theme choices: Mostly Tech, Mostly Urban, Mostly Hell
+- reorganized the 'Theme' menu, added a separator
+
+- tweaked the DOOM monster mix
+- small reduction in the overall health in levels
+- small increase in number of bonus items per level
+- increased size of exclusion zones around teleporters
+- sometimes change the pacing near the exit room
+
+- added a couple of special doorways for caves
+- added arch-shaped doorway for Urban and Hell themes
+- better secret connections in outdoor rooms
+- better texturing for outdoor fences
+- build all doors and fences using the wad-fab system
+- build all stairs and lifts via wad prefabs
+
+- CSG: better handling of Y offsets
+- CSG: improved handling of railing textures
+- support 3D floors in wad prefabs
+- better logic for finding monster and item spots
+
+- caves: improved floor texturing in flat caves
+- caves: never place pickup items in liquid areas
+- caves: if not many caves, keep texturing consistent
+- caves: added some waterfalls near lakes
+
+- fixed error when setting Monster Variety to "none"
+- fixed uncounted secrets that lead into CAVE rooms
+- fixed Psychedelic theme using SKY1/2/3 as a normal texture
+- fixed the silly "free standing" archways and doors
+- fixed the weird metal walls in large scenic areas
+- fixed pegging on lifts in slime pits
+
+- fixed rare infinite loop when planning cave rooms
+- fixed torches in caves to never obstruct the player
+- fixed missing automap names for TNT and Plutonia maps
+- fixed secret sectors from being split by lighting
+- fixed rare problem of co-op player stuck in cave wall
+

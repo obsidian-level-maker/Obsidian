@@ -1,0 +1,208 @@
+
+WORK IN PROGRESS
+================
+
+
+SPOT SYSTEM:
+
+!! after growing/areas/connecting, BUT before quests,
+   visit each room and collect a set of seed rectangles where
+   items/switches/decorations/etc can be placed.  [ include closets ]
+
+   generally only place stuff (goals, weapons, etc) in rooms that
+   contain enough spots.
+   [ later on, investigate splitting large spots/closets ]
+
+-  can also use these "rects" for floor prefabs, ceiling prefabs,
+   free-standing prefabs (in middle), wall-extended prefabs,
+   corner-extended prefabs
+
+
+
+TRAPS:
+
++  for each trappable item/goal in a room [ upto max of 2 ]
+   decide whether to create a closet trap (using a nearby unused closets)
+   or a teleport trap
+
+
+
+CLOSETS:
+
+>>> handle unused closets
+    [ A.mode = "void", build walls there, NO EDGE ]
+
+!!  create proper EDGE where it joins room (based on SHAPE)
+    [ needed for JOINERS too ]
+
++  monster trap!
+
++  when shape is "F", move them 16 units in the facing dir
+   [ triggered by a field in the prefab definition?? ]
+
+
+
+STAIRS:
+
++  need to support building the ceiling "normally"
+   [ specified by prefab ]
+
+   i.e. stairs are generally "floor prefabs", and require a ceiling
+
++  choose prefabs earlier, probably during floor/ceil heights
+
+-  put all stairs made by a rule (INCL. mirrored ones) into a group,
+   and ensure only a single prefab kind is used for that group
+
+   [ do same for "rect" parts of a grammar rule ]
+
+
+
+JOINERS:
+
++  choose prefab earlier, e.g. during floor/ceil heights or earlier
+
+
+
+TELEPORTERS:
+
++  exclusion zone for a closet
+
+-  improve eval_room() -- it needs to know # of spots/closets in a room 
+
+
+
+PREFAB SYSTEM:
+
+!!  use 'size' keyword (or 'size_w', 'size_h' for rectangles)
+
++  figure out semantics of seed_w/seed_h and ROTATING prefabs
+   -  if there is a natural direction (e.g. closet facing into room),
+      then it is simple (rotation not possible)
+
++  define 'seed_w/h' in a prefab to be minimum size
+
+-  allow 'max_seed_w, max_seed_h' to be maximum size
+   __OR__ : seed_w = { 1,3 }
+
++  give "point" prefabs (like small switch or teleporter pad)
+   a "seed_w" and "seed_h" field
+
+   use "seed_w" instead of "long" for Arch/Door/Window prefabs
+
+
+
+CAGES:
+
+-  make railings [ see junction logic in layout.lua ]
+
+-  pick floor height based on neighbors
+
+
+
+SHAPE GRAMMARS:
+
+IDEA: rules can specify a "prefab_flavor" for any rects, and when
+      finding a matching prefab require "flavor" field to match.
+
++  in rect_info, store "seed_w" and "seed_h" values [require a "dir" too]
+
+-  each map gets different factors for all grammar rules
+
+   factor = rand.pick({ 0.1, 0.3, 0.7, 1.0 })
+   if rand.odds(50) then factor = 1 / factor end
+   new_prob = old_prob * factor
+
+Q/ can do windows using them?  pictures??
+
+-  allow TWO conns into a new room (become F1/F2 in CONN object)
+
++  prune / re-use rooms which remain small, and hallways which
+   never end up anywhere else
+
++  symmetrical rooms
+   +  join mirrored RECTS (the final areas) with 'peer' field
+
+   -  mark a RECT created by a "straddling" rule
+      [ increased score for wotsit finding ]
+
+   ?? join mirrored seeds with 'peer' field
+
+   +  a way to score "straddling" patterns higher
+      [ they are a very good place for some stuff, e.g. exits ]
+      [[ only first usage of SPROUT/DECOR needs to score higher ]]
+
+   -  SPROUT pass : try some without a mirrored half
+
+   -  SPROUT: if mirrored and new rooms touch/overlap, only create
+              a single room
+
++  for CTF, create one big room with "rotate" symmetry
+   [ interleave GROW and SPROUT passes ]
+   [[ "new_room" becomes "new_area" but acting like a new room ]]
+
+idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
+       Q/ does "anything" included empty space / other rooms?
+
+idea:  CYCLE pass (after SPROUT) for multiple paths
+       [ probably as 'H' hallways, allow these to grow, prune them
+         when they fail to connect ]
+
+
+
+AUXILIARIES:
+
+-  support count adjustments
+      e.g. style_adjust = { "hallways", 0.4, 1.0, 4.0 }
+
+-  min_count, max_count
+
+-  support 'count_tab' with probabilities _OR_ a 'count_list' with a
+   list of a values (one chosen at random)
+
+IDEA: have a flag which means auxiliaries must match something in their parent
+      [ implement by marking parent seeds ]
+      [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
+
+idea: 7/8/9 elements which do not represent anything, but allow
+      rules to create something, then auxiliaries or future rules
+      can transform that shape back into normal geometry
+      [ and instead of "count", some rulesets may say "until X is gone" ]
+
+idea: have rulesets for standard "grow", "sprout", "decor" steps
+      (maybe even "root")
+      
+Usage Ideas:
+
+  -  a DECOR rule begins a liquid area, and an auxiliary ruleset
+     is used to spread that area, staying close to existing geometry
+     in a room.
+
+  -  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
+     rest of hallway, and another auxiliary ruleset sprouts hallway
+     into new rooms, and a final auxiliary rulset prunes unused branches
+
+
+
+HALLWAYS:
+
+-  'H' in grammar rules (see above)
+
+-  treat as an area of room which it sprouts off, but have special
+   rules for making them (e.g. low heights, different textures)
+
+-  hallways don't count when checking room size
+
+
+
+MISCELLANEOUS:
+
++  properly compute svolume of areas and rooms
+
+-  titlepic backgrounds (current and new) :
+   determine ones for official package, put rest in an addon
+
++  face direction for switches / teleport exits
+
+-  why both "item" and "content_item" in a spot table??
+

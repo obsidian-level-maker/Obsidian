@@ -1,0 +1,24 @@
+#----------------------------------------------------------------
+# Testing Makefile
+#----------------------------------------------------------------
+
+all:
+	./lua run_test.lua $(SEED)
+	wadlc TEMP.txt TEMP.wad
+	glbsp -q -pack -warn TEMP.wad -o ../TEST.wad
+
+grow:
+	rm -f pics/*.png
+	./lua grower.lua
+
+room:
+	./lua rooms.lua
+
+clean:
+	rm -f ../TEST.wad ../TEST.bak TEMP.wad
+	rm -f TEMP.txt LOGS.txt CONFIG.cfg
+
+.PHONY: all clean
+
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab

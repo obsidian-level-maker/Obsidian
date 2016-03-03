@@ -1,0 +1,60 @@
+#
+#  Oblige Viewer
+#
+
+BIN=oblige
+
+FLTK_CFLAGS=-I/usr/local/lib
+FLTK_LIBS=-lfltk_images -lfltk -lX11 -lXext -lpng -ljpeg
+
+CC=gcc
+CXX=g++
+CFLAGS=-O -g3 -Wall -fsigned-char -DUNIX $(FLTK_CFLAGS)
+CXXFLAGS=$(CFLAGS)
+LDFLAGS=-L/usr/X11R6/lib
+LIBS=-lm $(FLTK_LIBS)
+
+OBJS=./area.o      \
+     ./a_star.o    \
+     ./environ.o   \
+     ./island.o    \
+     ./l_dwad.o    \
+     ./l_doom.o    \
+     ./l_cube.o    \
+     ./l_wolf.o    \
+     ./l_quake.o   \
+     ./l_block.o   \
+     ./main.o      \
+     ./g_control.o \
+     ./g_dialog.o  \
+     ./g_grid.o    \
+     ./g_menu.o    \
+     ./g_window.o  \
+     ./name_gen.o  \
+     ./path.o      \
+     ./room.o      \
+     ./stage.o     \
+     ./system.o    \
+     ./util.o      \
+     ./u_assert.o  \
+     ./u_heap.o    \
+     ./u_list.o    \
+     ./world.o
+
+
+# ----- TARGETS ------------------------------------------------------
+
+all:    $(BIN)
+
+clean:
+	rm -f $(BIN) *.o core core.* ob_debug.txt
+	rm -f ERRS XXX* MAPHEAD.* GAMEMAPS.*
+
+$(BIN): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $(BIN) $(LDFLAGS) $(LIBS)
+
+bin: all
+	strip --strip-unneeded $(BIN)
+
+.PHONY: all clean bin install
+

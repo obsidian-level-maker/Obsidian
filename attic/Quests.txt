@@ -1,0 +1,159 @@
+
+Quests Structure
+================
+
+A "quest" is a series of connected rooms where the final
+room contains the goal of the quest, such as a key or
+weapon.
+
+There are two basic types: "main" quests and "sub" quests.
+Main quests form the main structure of the level, containing
+all the things you _must_ do (e.g. when playing the level
+without any monsters).  Examples include: getting a key,
+pressing a switch (to open a door or lower bars), or even
+killing a boss monster which causes a pathway to open up
+(such as the Bruiser Brothers in E1M8 of DOOM).
+
+Sub quests are for weapons, powerups or even just a room
+full of health and ammo.  Secrets are always sub quests
+because you never need to find a secret to finish a level.
+Sub quests can be said to "extend" the existing quest,
+making the parent quest larger, as well as providing
+a sub-goal.
+
+The very last quest is called an "end" quest (though
+technically it has the same status as a main quest).
+End quests usually lead to a room with an exit switch
+or an exit elevator (for Wolf3d).
+
+
+Example
+-------
+
+The essential structure of a level might be:
+
+     start
+       |
+       V
+  1. main quest (red key)
+  2. main quest (press blue switch)
+  3. main quest (yellow key)
+  4. end quest
+
+
+Then add in some sub quests:
+
+  1. main quest (red key)
+     1.1 sub quest (super shotgun)
+     1.2 sub quest (rocket launcher)
+     1.3 sub quest (chainsaw)
+
+  2. main quest (press blue switch)
+     2.1 sub quest (invisibility sphere)
+
+  3. main quest (yellow key)
+     3.1 sub quest (backpack full of ammo)
+     3.2 sub quest (plasma rifle)
+
+  4. end quest
+
+
+The level is built up by joining a quest (B say) onto an
+existing quest (A say).  Unless the quests have the same
+status (such as being SUB quests with the same parent),
+then the join requires a locked door.
+
+The rule for what kind of door is simple: assuming B is a
+main quest, then the lock for the door is the one picked up
+(or switched) on the main quest IMMEDIATELY BEFORE quest B.
+Sub quests normally connect to their parent quest and hence
+don't need any lock.
+
+To refer to the example above: Quest 2 needs a red-keyed
+door where it joins onto quest 1.  Quest 3 needs a blue
+switched door where it joins onto quest 2 (or 1), and
+Quest 4 needs a yellow-keyed door where it joins onto
+quest 3 (or 2 or 1).
+
+
+Hexen Details
+-------------
+
+Hexen is more complicated because of the hub system
+which allows the player to travel back-n-forth between
+different maps.
+
+Oblige creates each episode using six maps:
+  1 = starting map
+  2 = map containing key A
+  3 = map containing key B
+  4 = weapon pieces map
+  5 = secret map
+  6 = boss (end) map
+
+Key A is required to get to the boss level, and Key B is
+required to get to the level containing the three pieces
+of the super weapon.
+
+For Hexen maps there are some additional types of quests.
+The "gate" quest leads to a teleporter to a different map,
+and a "back" quest leads to the teleporter that comes back.
+
+Gate quests are usually sub quests, because when the
+player comes back nothing has been unlocked.  Even for
+the two get-the-key levels, the gate quests are still
+sub quests since the keys are not used to control the
+progression of the source map /per se/, the keys are
+used to arbitrate access to the weapon & boss levels.
+
+The exception is the gate quest to the boss map, which
+is always used as the end quest of the start map.
+
+The "back" quests are normally used as end quests to the
+levels that the gate quests lead to.  The exception here
+is the Boss level, because the end quest on boss maps is
+the big bloody battle between the player and the bad-ass
+dude.
+
+
+Finally: the gates to the super weapon level and to the
+boss level are special since they must require a keyed
+door (using a key that might not be given by any quests
+on the map).  Hence they are sub quests which force the
+door to be keyed (nor do they "extend" their parent).
+
+
+Example:
+--------
+
+start_map
+  1. main quest (press moon switch)
+     1.1 sub quest (gate -> key A map)
+     1.2 sub quest (gate -> weapon map)
+
+  2. end quest (gate to boss map)
+     2.1 sub quest (gate -> key B map)
+
+key_A_map
+  1. main quest (key A)
+     1.1 sub quest (gate -> secret level)
+     1.2 sub quest (weapon#2)
+
+  2. end quest (back -> start map)
+
+key_B_map
+  1. main quest (press chain switch)
+     1.1 sub quest (weapon#3)
+
+  2. local quest (key B)
+     2.1 sub quest (item "porkulator")
+
+  3. end quest (back -> start map)
+
+boss_map
+  1. main quest (axe key)
+
+  2. end quest (boss "korax")
+     2.1 sub quest (back -> start map)
+
+

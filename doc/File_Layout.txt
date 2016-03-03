@@ -1,0 +1,85 @@
+
+Win32 File Layout
+=================
+
+Oblige-3.xx/    <<< working & install directory (chdir to it)
+
+  Oblige.exe
+
+  README.txt
+  TODO.txt
+  GPL.txt
+
+  CONFIG.cfg
+  LOGS.txt
+
+  temp/
+    TEMP.wad
+
+  scripts/
+    oblige.lua
+    planner.lua
+    builder.lua
+    ...etc...
+ 
+  games/
+  engines/
+  mods/
+
+  data/
+    doom_falls.wad
+    quake_tex.wd2
+    ...etc...
+ 
+
+
+UNIX Installation Layout
+========================
+
+PREFIX = /usr  |  /usr/local  |  /opt
+
+$PREFIX/bin/Oblige
+
+$PREFIX/share/oblige-3.xx/   <<< install directory
+
+  scripts/
+    oblige.lua
+    planner.lua
+    ...
+   
+  games/
+  engines/
+  mods/
+
+  data/
+    doom_falls.wad
+    quake_tex.wd2
+    ...etc...
+
+  README.txt
+  GPL.txt
+
+$HOME/.oblige/      <<< working directory (chdir to it)
+  CONFIG.cfg
+  LOGS.txt
+
+  temp/
+    TEMP.wad
+    MAPHEAD.tmp
+
+
+
+Paths in the Code:
+==================
+
+1. Working directory, find it, chdir to it.
+   Open CONFIG.cfg, LOGS.txt and temp/XXX using relative paths.
+
+2. Install directory.
+   Open scripts/XXX and data/XXX using absolute paths
+   (But files in the working directory can override them).
+
+3. Default Save directory:
+   working directory on Win32,
+   $(HOME) on Linux.
+

@@ -1,0 +1,72 @@
+<set O_WHERE="Screenshots">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use IndexMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use IndexNews>
+<use SubWhere where="SCREENSHOTS">
+<use IndexDownload>
+<use IndexForums>
+</div>
+
+<div class="rest">
+
+<p>
+NOTE: these screenshots were taken in version 3.57.
+
+
+<h3>DOOM SCREENSHOTS</h3>
+
+<div class="shot_area">
+<img class="screenshot" src="shots/doom_069.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_017.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_026.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_016.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_101.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_086.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_175.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_145.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_024.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_013.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_075.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_112.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_161.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/doom_014.png" alt="SCREENSHOT" width="320" height="240">
+</div>
+
+<h3>HERETIC SCREENSHOTS</h3>
+
+<div class="shot_area">
+<img class="screenshot" src="shots/heretic_08.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/heretic_13.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/heretic_37.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/heretic_56.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/heretic_69.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/heretic_70.png" alt="SCREENSHOT" width="320" height="240">
+</div>
+
+
+<h3>QUAKE SCREENSHOTS</h3>
+
+<div class="shot_area">
+<img class="screenshot" src="shots/quake_018.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_035.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_056.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_062.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_063.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_084.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_095.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_117.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_154.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_193.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_031.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/quake_217.png" alt="SCREENSHOT" width="320" height="240">
+</div>
+
+</div class="rest">
+
+<file include="x_footer.inc">
