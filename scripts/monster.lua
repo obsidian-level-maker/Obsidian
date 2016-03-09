@@ -817,7 +817,16 @@ function Monster_visibility(R)
   end
 
 
-  local function check_point_to_point(ax,ay,az, bx,by,bz)
+  local function check_point_to_point(A, B, x_pos, y_pos)
+    local ax = A.x1 * x_pos + A.x2 * (1 - x_pos)
+    local ay = A.y1 * y_pos + A.y2 * (1 - y_pos)
+
+    local bx = B.x1 * x_pos + B.x2 * (1 - x_pos)
+    local by = B.y1 * y_pos + B.y2 * (1 - y_pos)
+
+    local az = A.z1 + 50
+    local bz = B.z1 + 50
+
     -- FIXME
 
     -- gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v")
@@ -825,49 +834,40 @@ function Monster_visibility(R)
 
 
   local function check_spot_to_spot(A, B)
-    local A_xs = {}
-    local A_ys = {}
+    -- see if spots are close to each other
 
-    local B_xs = {}
-    local B_ys = {}
+    if geom.boxes_overlap(A.x1 - 40, A.y1 - 40, A.x2 + 40, A.y2 + 40,
+                          B.x1 - 40, B.y1 - 40, B.x2 + 40, B.y2 + 40)
+    then
+      return true
+    end
+
+
+    -- now check some rays
+
+    local num_across = 1
+    local num_down   = 1
 
     if (A.x2 - A.x1 > LARGE) or (B.x2 - B.x1 > LARGE) then
-      table.insert(A_xs, A.x1 * 0.8 + A.x2 * 0.2)
-      table.insert(A_xs, A.x1 * 0.2 + A.x2 * 0.8)
-
-      table.insert(B_xs, B.x1 * 0.8 + B.x2 * 0.2)
-      table.insert(B_xs, B.x1 * 0.2 + B.x2 * 0.8)
-    else
-      table.insert(A_xs, (A.x1 + A.x2) / 2)
-      table.insert(B_xs, (B.x1 + B.x2) / 2)
+      num_across = 2
     end
 
     if (A.y2 - A.y1 > LARGE) or (B.y2 - B.y1 > LARGE) then
-      table.insert(A_ys, A.y1 * 0.8 + A.y2 * 0.2)
-      table.insert(A_ys, A.y1 * 0.2 + A.y2 * 0.8)
-
-      table.insert(B_ys, B.y1 * 0.8 + B.y2 * 0.2)
-      table.insert(B_ys, B.y1 * 0.2 + B.y2 * 0.8)
-    else
-      table.insert(A_ys, (A.y1 + A.y2) / 2)
-      table.insert(B_ys, (B.y1 + B.y2) / 2)
+      num_down = 2
     end
 
-    local az = A.z1 + 60
-    local bz = B.z1 + 60
+    for kx = 1, num_across do
+    for ky = 1, num_down do
+      local x_pos = 0.5
+      local y_pos = 0.5
 
-    for kx = 1, #A_xs do
-      local ax = A_xs[kx]
-      local bx = B_xs[kx]
+      if num_across == 2 then x_pos = sel(kx == 1, 0.2, 0.8) end
+      if num_down   == 2 then y_pos = sel(ky == 1, 0.2, 0.8) end
 
-      for ky = 1, #A_ys do
-        local ay = A_ys[ky]
-        local by = B_ys[ky]
-    
-        if check_point_to_point(ax,ay,az, bx,by,bz) then
-          return true  -- there is a LOS
-        end
+      if check_point_to_point(A, B, x_pos, y_pos) then
+        return true  -- there is a LOS
       end
+    end -- kx, ky
     end
 
     return false
