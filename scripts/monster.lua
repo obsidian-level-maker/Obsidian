@@ -817,8 +817,60 @@ function Monster_visibility(R)
   end
 
 
-  local function check_spot_to_spot(A, B)
+  local function check_point_to_point(ax,ay,az, bx,by,bz)
     -- FIXME
+
+    -- gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v")
+  end
+
+
+  local function check_spot_to_spot(A, B)
+    local A_xs = {}
+    local A_ys = {}
+
+    local B_xs = {}
+    local B_ys = {}
+
+    if (A.x2 - A.x1 > LARGE) or (B.x2 - B.x1 > LARGE) then
+      table.insert(A_xs, A.x1 * 0.8 + A.x2 * 0.2)
+      table.insert(A_xs, A.x1 * 0.2 + A.x2 * 0.8)
+
+      table.insert(B_xs, B.x1 * 0.8 + B.x2 * 0.2)
+      table.insert(B_xs, B.x1 * 0.2 + B.x2 * 0.8)
+    else
+      table.insert(A_xs, (A.x1 + A.x2) / 2)
+      table.insert(B_xs, (B.x1 + B.x2) / 2)
+    end
+
+    if (A.y2 - A.y1 > LARGE) or (B.y2 - B.y1 > LARGE) then
+      table.insert(A_ys, A.y1 * 0.8 + A.y2 * 0.2)
+      table.insert(A_ys, A.y1 * 0.2 + A.y2 * 0.8)
+
+      table.insert(B_ys, B.y1 * 0.8 + B.y2 * 0.2)
+      table.insert(B_ys, B.y1 * 0.2 + B.y2 * 0.8)
+    else
+      table.insert(A_ys, (A.y1 + A.y2) / 2)
+      table.insert(B_ys, (B.y1 + B.y2) / 2)
+    end
+
+    local az = A.z1 + 60
+    local bz = B.z1 + 60
+
+    for kx = 1, #A_xs do
+      local ax = A_xs[kx]
+      local bx = B_xs[kx]
+
+      for ky = 1, #A_ys do
+        local ay = A_ys[ky]
+        local by = B_ys[ky]
+    
+        if check_point_to_point(ax,ay,az, bx,by,bz) then
+          return true  -- there is a LOS
+        end
+      end
+    end
+
+    return false
   end
 
 
