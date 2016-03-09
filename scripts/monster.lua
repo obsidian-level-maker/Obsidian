@@ -764,6 +764,66 @@ end
 
 
 
+function Monster_visibility(R)
+  --
+  -- From the entry point(s) of a room, give some spots a "vis" value
+  -- which can be:
+  --   0 : directly visible from entry
+  --   1 : only visible to a vis==0 spot
+  --   2 : only visible to a vis==1 spot
+  --
+  -- One important usage for this is adding monsters to a START room,
+  -- we require that they occupy a spot with vis >= 2.
+  --
+
+  local spot_list = {}
+
+
+  local function is_large(spot)
+    local size = (spot.x2 - spot.x1) + (spot.y2 - spot.y1)
+
+    return size > 256
+  end
+
+
+  local function collect_spots()
+    local small_list = {}
+    local large_list = {}
+
+    each spot in R.mon_spots do
+      if is_large(spot) then
+        table.insert(large_list, spot)
+      else
+        table.insert(small_list, spot)
+      end
+    end
+
+    rand.shuffle(small_list)
+    rand.shuffle(large_list)
+
+    for i = 1, 24 do
+      if small_list[i] then
+        table.insert(spot_list, small_list[i])
+      end
+    end
+
+    for i = 1, 12 do
+      if large_list[i] then
+        table.insert(spot_list, large_list[i])
+      end
+    end
+  end
+
+
+  ---| Monster_visibility |---
+
+  collect_spots()
+
+  -- TODO
+end
+
+
+
 function Monster_fill_room(R)
 
   -- places monsters in a room _or_ hallway
@@ -1002,7 +1062,7 @@ function Monster_fill_room(R)
 
       local ang = ambush_focus.angle
 
-      -- check TWO points separated perpedicular to the entry angle
+      -- check TWO points separated perpendicular to the entry angle
       local pdx = math.sin(ang * math.pi / 180) * 48
       local pdy = math.cos(ang * math.pi / 180) * 48
 
@@ -2151,8 +2211,11 @@ function Monster_make_battles()
 
   each R in LEVEL.rooms do
     Player_give_room_stuff(R)
+    
     Monster_collect_big_spots(R)
+    Monster_visibility(R)
     Monster_fill_room(R)
+
     Item_simulate_battle(R)
   end
 
