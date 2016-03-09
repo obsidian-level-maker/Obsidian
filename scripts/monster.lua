@@ -809,7 +809,7 @@ function Monster_visibility(R)
       end
     end
 
-    for i = 1, 8 do
+    for i = 1, 10 do
       if large_list[i] then
         table.insert(spot_list, large_list[i])
       end
@@ -827,9 +827,13 @@ function Monster_visibility(R)
     local az = A.z1 + 50
     local bz = B.z1 + 50
 
-    -- FIXME
+    if gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v") then
+      -- something in the way
+      return false
+    end
 
-    -- gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v")
+    -- a clear LOS
+    return true
   end
 
 
@@ -891,7 +895,7 @@ function Monster_visibility(R)
 
   collect_spots()
 
-  each A in entry_spots do
+  each A in R.entry_spots do
     each B in spot_list do
       if check_spot_to_spot(A, B) then
         B.vis = 0

@@ -95,6 +95,7 @@ function ROOM_CLASS.new()
     mon_spots  = {}
     item_spots = {}
     big_spots  = {}
+    entry_spots = {}
     important_spots = {}   -- NOT USED ATM
 
     goals = {}
