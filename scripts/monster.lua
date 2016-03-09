@@ -778,11 +778,13 @@ function Monster_visibility(R)
 
   local spot_list = {}
 
+  local LARGE = 128
+
 
   local function is_large(spot)
     local size = (spot.x2 - spot.x1) + (spot.y2 - spot.y1)
 
-    return size > 256
+    return size > (LARGE * 2)
   end
 
 
@@ -801,15 +803,33 @@ function Monster_visibility(R)
     rand.shuffle(small_list)
     rand.shuffle(large_list)
 
-    for i = 1, 24 do
+    for i = 1, 20 do
       if small_list[i] then
         table.insert(spot_list, small_list[i])
       end
     end
 
-    for i = 1, 12 do
+    for i = 1, 8 do
       if large_list[i] then
         table.insert(spot_list, large_list[i])
+      end
+    end
+  end
+
+
+  local function check_spot_to_spot(A, B)
+    -- FIXME
+  end
+
+
+  local function spread_vis(source_vis)
+    each A in spot_list do
+      if A.vis != source_vis then continue end
+
+      each B in spot_list do
+        if not B.vis and check_spot_to_spot(A, B) then
+          B.vis = source_vis + 1
+        end
       end
     end
   end
@@ -819,7 +839,21 @@ function Monster_visibility(R)
 
   collect_spots()
 
-  -- TODO
+  each A in entry_spots do
+    each B in spot_list do
+      if check_spot_to_spot(A, B) then
+        B.vis = 0
+      end
+    end
+  end
+
+  spread_vis(0)
+
+  each B in spot_list do
+    if not B.vis then
+      B.vis = 2
+    end
+  end
 end
 
 
