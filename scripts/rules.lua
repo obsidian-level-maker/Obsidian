@@ -64,9 +64,22 @@ GROW_1 =
 }
 
 
+GROW_3 =
+{
+  prob = 2
+
+  structure =
+  {
+    "....", "1111"
+    "....", "1111"
+    "x11x", "x11x"
+  }
+}
+
+
 GROW_DIAGTEST_1 =
 {
-  prob = 500
+  prob = 10
 
   structure =
   {
@@ -78,7 +91,7 @@ GROW_DIAGTEST_1 =
 
   diagonals = { "1.", "1." }
 
-  auxiliary =
+  __auxiliary =
   {
     pass = "diag_test"
 
