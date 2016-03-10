@@ -300,6 +300,14 @@ function Layout_place_importants(R)
       R.guard_spot = spot
     end
 
+    if goal.kind == "START" then
+      if not spot.closet then
+stderrf("ADD ENTRY SPOT for START PAD\n")
+-- FIXME broken since our "spot" does not have x1/y1/x2/y2 
+--        R:add_entry_spot(spot)
+      end
+    end
+
     -- remember floor height of players (needed by monster depots)
     if goal.kind == "START" and not goal.alt_start then
       LEVEL.player1_z = spot.area.floor_h

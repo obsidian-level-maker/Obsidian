@@ -2410,7 +2410,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = 9 --!!! rand.pick({ 2,4,7,11,15 })
+  local apply_num = rand.pick({ 5,10,20 })
 
   -- TODO: often no sprouts when room is near edge of map
 
@@ -3020,7 +3020,7 @@ function Grower_assign_boundary()
 
 
   local function mark_other_inners()
-    local prob = 20
+    local prob = 20*0
 
     each A in LEVEL.areas do
       if not A.room and
@@ -3093,6 +3093,6 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
-   Grower_save_svg()
+-- Grower_save_svg()
 end
 

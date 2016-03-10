@@ -279,6 +279,18 @@ function secret_entry_conn(R, skip_room)
 end
 
 
+function ROOM_CLASS.add_entry_spot(R, spot)
+  table.insert(R.entry_spots, spot)
+
+  if not R.entry_coord then
+    local mx = (spot.x1 + spot.x2) / 2
+    local my = (spot.y1 + spot.y2) / 2
+
+    R.entry_coord = { x=mx, y=my, z=spot.z1 + 40, angle=spot.angle }
+  end
+end
+
+
 function ROOM_CLASS.furthest_dist_from_entry(R)
   if not R.entry_coord then
     -- rough guess
@@ -1121,62 +1133,6 @@ end
 
 
 
-function Room_find_ambush_focus(R)
-  -- Note: computes 'entry_coord' too
-
-  -- FIXME: handle teleporter entry
-
-  if R.kind == "stairwell" then return end
-
-  if R.kind == "cave" then return end
-
-  local C = R.entry_conn
-
-  if not C then return end
-  if C.kind == "teleporter" then return end
-
-  local S, side
-  if C.R1 == R then
-    S = C.S1
-    side = C.dir
-  else
-    S = C.S2
-    side = 10 - C.dir
-  end
-
-  assert(S)
-  assert(S.floor_h)
-
-
-  local mx, my = S:mid_point()
-
-  local dx, dy = geom.delta(side)
-  local angle  = geom.ANGLES[10 - side]
-
-  mx = mx + dx * 48
-  my = my + dy * 48
-
-  R.entry_coord = { x=mx, y=my, z=S.floor_h + 40, angle=angle }
-
-  R.ambush_focus = R.entry_coord
-end
-
-
-
-function Room_run_builders()
-  each R in LEVEL.scenic_rooms do
-    Room_build_seeds(R)
-  end
-
-  each R in LEVEL.rooms do
-    Room_build_seeds(R)
-
-    Room_find_ambush_focus(R)
-  end
-end
-
-
-
 function Room_determine_spots()
 
   -- Algorithm:
@@ -1279,12 +1235,30 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
   end
 
 
+  local function entry_spot_for_conn(R, C)
+    -- FIXME : entry_spot_for_conn
+  end
+
+
+  local function find_entry_spots(R)
+    if R.entry_conn then
+      entry_spot_for_conn(R, C)
+    end
+
+    -- TODO : start pad, teleporter pad
+
+    -- TODO : closets
+  end
+
+
   ---| Room_determine_spots |---
 
   each R in LEVEL.rooms do
     spots_in_room(R)
 
     R:exclude_monsters()
+
+    find_entry_spots(R)
   end
 
 --[[
@@ -2699,6 +2673,7 @@ function Room_build_all()
   Room_determine_spots()
 
   Room_add_sun()
-  -- TODO intermission camera
+
+  -- TODO intermission camera for Quake
 end
 
