@@ -2436,7 +2436,8 @@ stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
         -- turn closets in start rooms into a plain floor
         if R.is_start then
           A.mode = "floor"
-          A.floor_h = h + 16
+          A.floor_h = h + 4
+          A.floor_mat = rand.key_by_probs(R.theme.floors)
         else
           A.floor_h = h + rand.pick({40,56,72})
         end
