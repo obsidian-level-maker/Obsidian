@@ -26,11 +26,11 @@
     id, name  -- debugging info
 
     mode : keyword  -- "floor"  (traversible part of a normal room)
-                    -- "hallway" (used for stairwells too)
-                    -- "void"
-                    -- "scenic"
+                    -- "liquid"
                     -- "cage", "trap"
-                    -- "pool"
+                    -- "hallway" (used for stairwells too)
+                    -- "scenic"
+                    -- "void"
 
     scenic_kind : keyword  -- "water", "mountain"
 

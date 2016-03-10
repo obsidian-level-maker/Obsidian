@@ -2385,19 +2385,44 @@ stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
   end
 
 
-  local function do_liquids(R)
-    local function pool_height(A)
-      each N in A.neighbors do
-        if N.room == R and N.floor_h then
-          return N.floor_h - 16
-        end
+  local function low_nb_height(A)
+    local h
+
+    each N in A.neighbors do
+      if N.room == A.room and N.mode == "floor" and N.floor_h then
+        if not h or N.floor_h < h then h = N.floor_h end
       end
-      error("do_liquids failed")
     end
 
+    if not h then
+      error("failed to find nb height")
+    end
+
+    return h
+  end
+
+
+  local function high_nb_height(A)
+    local h
+
+    each N in A.neighbors do
+      if N.room == A.room and N.mode == "floor" and N.floor_h then
+        if not h or N.floor_h > h then h = N.floor_h end
+      end
+    end
+
+    if not h then
+      error("failed to find nb height")
+    end
+
+    return h
+  end
+
+
+  local function do_liquids(R)
     each A in R.areas do
       if A.mode == "liquid" then
-        A.floor_h = pool_height(A)
+        A.floor_h = low_nb_height(A) - 16
       end
     end
   end
@@ -2406,8 +2431,15 @@ stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
   local function do_cages(R)
     each A in R.areas do
       if A.mode == "cage" then
-        -- TODO : too simplistic, find highest neighbor floor
-        A.floor_h = R.max_floor_h
+        local h = high_nb_height(A)
+
+        -- turn closets in start rooms into a plain floor
+        if R.is_start then
+          A.mode = "floor"
+          A.floor_h = h + 16
+        else
+          A.floor_h = h + rand.pick({40,56,72})
+        end
       end
     end
   end
