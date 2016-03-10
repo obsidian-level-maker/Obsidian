@@ -64,7 +64,23 @@
 --]]
 
 
---------------------------------------------------------------]]
+--class SPOT
+--[[
+    x1, y1, x2, y2, z1, z2   -- coordinate range
+
+    mx, my, mz   -- middle point
+
+    kind : keyword    -- "monster", "item", "big_item"
+                      -- FIXME : what else?
+
+    where : keyword   -- "floor", "closet",
+                      -- "cage", "trap",
+
+    closet : CLOSET_INFO    -- only present for closets
+--]]
+
+
+------------------------------------------------------------------------
 
 
 ROOM_CLASS = {}
