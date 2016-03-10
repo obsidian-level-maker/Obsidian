@@ -310,29 +310,71 @@ SPROUT_HALL_1 =
 
 DECORATE_CAGE_1 =
 {
-  prob = 29
+  prob = 500
 
   structure =
   {
+    "...", "..."
     "...", ".C."
-    "111", "111"
-    "111", "111"
+    "x1x", "x1x"
+  }
+
+  auxiliary =
+  {
+    pass = "cage_grow"
+
+    count = { 1,4 }
   }
 }
 
 
-DECORATE_CAGE_SIDE_1 =
+AUX_CAGE_GROW1 =
 {
-  prob = 0
+  pass = "cage_grow"
+
+  prob = 50
 
   structure =
   {
-    "....", ".CC."
-    "x11x", "x11x"
+    "C.", "CC"
+    "11", "11"
+  }
+}
+
+
+AUX_CAGE_GROW2 =
+{
+  pass = "cage_grow"
+
+  prob = 50
+
+  structure =
+  {
+    "C.", "CC"
+    "1.", "1C"
+  }
+}
+
+
+AUX_CAGE_GROW3 =
+{
+  pass = "cage_grow"
+
+  prob = 50
+
+  structure =
+  {
+    "...", "C%."
+    "C..", "CC."
+    "11x", "11x"
   }
 
-  cage = { dir=2 }
+  diagonals =
+  {
+    "C."
+  }
 }
+
 
 
 DECORATE_CLOSET_2x1 =
@@ -351,7 +393,7 @@ DECORATE_CLOSET_2x1 =
 
 DECORATE_CLOSET_2x2 =
 {
-  prob = 200
+  prob = 10
 
   structure =
   {
