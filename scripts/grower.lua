@@ -881,7 +881,7 @@ function Grower_make_all_areas()
   end
 
 
-  local function grow_liquid_area(S, A)
+  local function grow_liquid_area(S, A, what)
     S.area = A
     S.room = A.room
     S.temp_area = nil
@@ -892,17 +892,18 @@ function Grower_make_all_areas()
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
 
-      if N and N.temp_area and N.temp_area.mode == "liquid" and
+      if N and N.temp_area and N.temp_area.mode == what and
          N.temp_area.room == A.room
       then
-        grow_liquid_area(N, A)
+        grow_liquid_area(N, A, what)
       end
     end
   end
 
 
-  local function make_liquids()
+  local function make_liquids(what)
     -- create areas from contiguous groups of liquid seeds in a room
+    -- [ also does LARGE cages too ]
 
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
@@ -910,13 +911,13 @@ function Grower_make_all_areas()
         local S = SEEDS[sx][sy]
         if pass == 2 then S = S.top end
 
-        if S and S.temp_area and S.temp_area.mode == "liquid" and S.temp_area.room then
-          local A = AREA_CLASS.new("liquid")
+        if S and S.temp_area and S.temp_area.mode == what and S.temp_area.room then
+          local A = AREA_CLASS.new(what)
 
           A.room = S.temp_area.room
           A.room:add_area(A)
 
-          grow_liquid_area(S, A)
+          grow_liquid_area(S, A, what)
         end
       end
     end  -- sx, sy
@@ -1006,7 +1007,8 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
     make_areas(R.temp_areas)
   end
 
-  make_liquids()
+  make_liquids("liquid")
+  make_liquids("cage")
 
   if LEVEL.gap_areas then
     make_areas(LEVEL.gap_areas)
@@ -1116,7 +1118,6 @@ function Grower_grammatical_room(R, pass)
   local new_room
   local new_conn
   local new_area
-  local new_cage
   local intl_conn
 
   -- this is used to mark seeds for one side of a mirrored rule
@@ -1188,6 +1189,15 @@ stderrf("overwrite seed @ %s\n", S.name)
     end
 
     set_seed(S, R.liquid_temp_area)
+  end
+
+
+  local function set_cage(S)
+    if R.cage_temp_area == nil then
+       R.cage_temp_area = Grower_temp_area(R, "cage", "no_add")
+    end
+
+    set_seed(S, R.cage_temp_area)
   end
 
 
@@ -1831,13 +1841,10 @@ stderrf("new_room seed @ %s\n", S.name)
       return
     end
 
-    -- this is for LARGE (aka free-range) cages
+    -- this is for LARGE (free-range) cages
     -- [ prefab cages are done via "closet" elements ]
     if E2.kind == "cage" then
-      if not new_cage then
-        new_cage = Grower_temp_area(R, "cage")
-      end
-      set_seed(S, new_cage)
+      set_cage(S)
       return
     end
 
@@ -2224,7 +2231,6 @@ end
       area_map[3] = nil
     else
       new_area = nil
-      new_cage = nil
       intl_conn = nil
     end
 
