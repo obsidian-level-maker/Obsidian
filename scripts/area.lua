@@ -1174,28 +1174,39 @@ function Area_locate_chunks()
   local PASSES = { 33, 32, 23,  22, 21, 12,  11 }
 
 
-  local function new_chunk(A, ...)
-    -- FIXME
+  local function new_chunk(A, sx1,sy1, sx2,sy2)
+    local CHUNK =
+    {
+      area = A
+      
+      sx1 = sx1, sy1 = sy1
+      sx2 = sx2, sy2 = sy2
 
-    return {}
+      sw = (sx2 - sx1 + 1)
+      sh = (sy2 - sy1 + 1)
+    }
+
+    local R = assert(A.room)
+
+    if A.mode == "liquid" then
+      table.insert(R.liquid_chunks, CHUNK)
+    elseif CHUNK.sw < 2 or CHUNK.sh < 2 then
+      table.insert(R.emergency_chunks, CHUNK)
+    else
+stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
+      table.insert(R.chunks, CHUNK)
+    end
+
+    return CHUNK
   end
 
 
-  local function test_chunk_at_seed(A, S, dx2, dy2)
-    local dx1 = 0
-    local dy1 = 0
+  local function test_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      if not Seed_valid(x, y) then return false end
 
-    if dx1 > dx2 then dx1, dx2 = dx2, dx1 end
-    if dy1 > dy2 then dy1, dy2 = dy2, dy1 end
-
-    for dx = dx1, dx2 do
-    for dy = dy1, dy2 do
-      local nx = S.sx + dx
-      local ny = S.sy + dy
-
-      if not Seed_valid(nx, ny) then return false end
-
-      local N = SEEDS[nx][ny]
+      local N = SEEDS[x][y]
 
       if not N then return false end
       if N.area != A then return false end
@@ -1207,46 +1218,35 @@ function Area_locate_chunks()
   end
 
 
-  local function install_chunk_at_seed(A, S, dx2, dy2, chunk)
-    local dx1 = 0
-    local dy1 = 0
-
-    local chunk = new_chunk(A)
-
-    table.insert(A.room.chunks, chunk)
-
-    if dx1 > dx2 then dx1, dx2 = dx2, dx1 end
-    if dy1 > dy2 then dy1, dy2 = dy2, dy1 end
-
-    for dx = dx1, dx2 do
-    for dy = dy1, dy2 do
-      local nx = S.sx + dx
-      local ny = S.sy + dy
-
-      local N = SEEDS[nx][ny]
-
-      N.chunk = chunk
+  local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2, chunk)
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      SEEDS[x][y].chunk = chunk
     end
     end
   end
 
 
   local function find_sized_chunks(A, seed_list, pass)
-    local dx2 = floor(pass / 10) - 1
-    local dy2 = (pass % 10) - 1
+    local dx = int(pass / 10) - 1
+    local dy = (pass % 10) - 1
 
     each S in seed_list do
-      if test_chunk_at_seed(A, S, dx2, dy2) then
-         install_chunk_at_seed(A, S, dx2, dy2)
+      local sx1 = S.sx
+      local sy1 = S.sy
+      local sx2 = sx1 + dx
+      local sy2 = sy1 + dy
+
+      if test_chunk_at_seed(A, sx1,sy1, sx2,sy2) then
+        local CHUNK = new_chunk(A, sx1,sy1, sx2,sy2)
+
+        install_chunk_at_seed(A, sx1,sy1, sx2,sy2, CHUNK)
       end
     end
   end
 
 
   local function find_chunks_in_area(A)
-    -- TODO: liquid chunks
-    if A.mode == "liquid" then return end
-
     local seed_list = table.copy(A.seeds)
 
     each pass in PASSES do
