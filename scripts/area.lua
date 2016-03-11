@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1160,9 +1160,111 @@ end
 
 
 function Area_locate_chunks()
-  
+  --  
+  -- locate seed rectangles in areas of rooms, these will be used
+  -- for placing importants (goals, teleporters, etc) and also
+  -- decorative prefabs.
+  --
+
+  -- TODO : handle symmetrical rooms:
+  --    1. peer up chunks either side of the line of symmetry
+  --    2. handle chunks ON the line of symmetry
+
+
+  local PASSES = { 33, 32, 23,  22, 21, 12,  11 }
+
+
+  local function new_chunk(A, ...)
+    -- FIXME
+
+    return {}
+  end
+
+
+  local function test_chunk_at_seed(A, S, dx2, dy2)
+    local dx1 = 0
+    local dy1 = 0
+
+    if dx1 > dx2 then dx1, dx2 = dx2, dx1 end
+    if dy1 > dy2 then dy1, dy2 = dy2, dy1 end
+
+    for dx = dx1, dx2 do
+    for dy = dy1, dy2 do
+      local nx = S.sx + dx
+      local ny = S.sy + dy
+
+      if not Seed_valid(nx, ny) then return false end
+
+      local N = SEEDS[nx][ny]
+
+      if not N then return false end
+      if N.area != A then return false end
+      if N.diagonal or N.chunk then return false end
+    end
+    end
+
+    return true
+  end
+
+
+  local function install_chunk_at_seed(A, S, dx2, dy2, chunk)
+    local dx1 = 0
+    local dy1 = 0
+
+    local chunk = new_chunk(A)
+
+    table.insert(A.room.chunks, chunk)
+
+    if dx1 > dx2 then dx1, dx2 = dx2, dx1 end
+    if dy1 > dy2 then dy1, dy2 = dy2, dy1 end
+
+    for dx = dx1, dx2 do
+    for dy = dy1, dy2 do
+      local nx = S.sx + dx
+      local ny = S.sy + dy
+
+      local N = SEEDS[nx][ny]
+
+      N.chunk = chunk
+    end
+    end
+  end
+
+
+  local function find_sized_chunks(A, seed_list, pass)
+    local dx2 = floor(pass / 10) - 1
+    local dy2 = (pass % 10) - 1
+
+    each S in seed_list do
+      if test_chunk_at_seed(A, S, dx2, dy2) then
+         install_chunk_at_seed(A, S, dx2, dy2)
+      end
+    end
+  end
+
+
+  local function find_chunks_in_area(A)
+    -- TODO: liquid chunks
+    if A.mode == "liquid" then return end
+
+    local seed_list = table.copy(A.seeds)
+
+    each pass in PASSES do
+      rand.shuffle(seed_list)
+
+      find_sized_chunks(A, seed_list, pass)
+    end
+  end
+
 
   ---| Area_locate_chunks |---
 
+  each A in LEVEL.areas do
+    if A.room and
+      (A.mode == "floor" or A.mode == "liquid")
+    then
+      find_chunks_in_area(A)
+    end
+  end
 end
 

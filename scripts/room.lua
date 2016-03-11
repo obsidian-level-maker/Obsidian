@@ -121,10 +121,13 @@ function ROOM_CLASS.new()
     ceil_mats = {}
 
     chunks  = {}
+    closets = {}
     cages = {}
     traps = {}
-    closets = {}
-    decor   = {}
+    decor = {}
+
+    used_chunks  = 0
+    used_closets = 0
 
     sky_rects = {}
     exclusions = {}
