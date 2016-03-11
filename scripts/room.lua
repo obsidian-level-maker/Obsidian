@@ -126,8 +126,7 @@ function ROOM_CLASS.new()
     traps = {}
     decor = {}
 
-    used_chunks  = 0
-    used_closets = 0
+    used_chunks = 0  -- includes closets
 
     emergency_chunks = {}
     liquid_chunks = {}
@@ -346,6 +345,10 @@ function ROOM_CLASS.furthest_dist_from_entry(R)
   return result
 end
 
+
+function ROOM_CLASS.usable_chunks(R)
+  return #R.chunks + #R.closets - R.used_chunks
+end
 
 
 function ROOM_CLASS.add_decor(R, name, x, y, z)

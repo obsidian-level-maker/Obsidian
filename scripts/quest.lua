@@ -214,7 +214,7 @@ function Quest_create_initial_quest()
     local score = R.svolume
 
     -- need somewhere for the exit switch
-    local space = math.max(2, #R.chunks + #R.closets)
+    local space = math.max(2, R:usable_chunks())
     score = score + space * 20
 
     return score + gui.random() * 10
@@ -262,6 +262,8 @@ function Quest_create_initial_quest()
 
     table.insert(R.goals, GOAL)
     table.insert(quest.goals, GOAL)
+
+    R.used_chunks = R.used_chunks + 1
   end
 
 
@@ -289,6 +291,7 @@ function Quest_create_initial_quest()
     local GOAL = Goal_new("SECRET_EXIT")
 
     table.insert(R.goals, GOAL)
+    R.used_chunks = R.used_chunks + 1
   end
 
 
@@ -1144,7 +1147,7 @@ function Quest_start_room()
     end
 
     -- need somewhere for starting pad, weapon and nice item
-    local space = math.max(4, #R.chunks + #R.closets)
+    local space = math.max(4, R:usable_chunks())
     score = score + space * 40
 
     -- not too big !!
@@ -1189,16 +1192,15 @@ function Quest_start_room()
 
     gui.printf("Start room: %s\n", R.name)
 
+    R.is_start = true
+
+    LEVEL.start_room  = R
+    start_quest.entry = R
+
     local GOAL = Goal_new("START")
 
     table.insert(R.goals, GOAL)
-
-    R.is_start = true
-
-    LEVEL.start_room = R
-    LEVEL.start_area = R.areas[1]  -- TODO
-
-    start_quest.entry = LEVEL.start_room
+    R.used_chunks = R.used_chunks + 1
   end
 
 
@@ -1246,15 +1248,16 @@ function Quest_start_room()
 
     gui.printf("Alternate Start room: %s\n", R.name)
 
+    R.is_start = true
+
+    LEVEL.alt_start = R
+
     local GOAL = Goal_new("START")
 
     GOAL.alt_start = true
 
     table.insert(R.goals, GOAL)
-
-    R.is_start = true
-
-    LEVEL.alt_start = R
+    R.used_chunks = R.used_chunks + 1
 
     partition_coop_players()
   end
