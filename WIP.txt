@@ -3,6 +3,11 @@ WORK IN PROGRESS
 ================
 
 
+>>>  Bug placing an item in a "cage" area
+
+     ./Oblige -d -b TEST.wad seed=82 length=single theme=tech strength=higher ammo=less
+
+
 SPOT SYSTEM:
 
 !! after growing/areas/connecting, BUT before quests,
@@ -39,6 +44,8 @@ SPOT SYSTEM:
 MONSTERS:
 
 +  create 'entry_spots' for all rooms
+   [ NOTE : depends on SPOT system above to be in place ]
+
    -  start closets
    -  start pedestals
    -  teleporters
@@ -143,8 +150,6 @@ later: allow resizing "point" prefabs
 CAGES:
 
 -  make railings [ see junction logic in layout.lua ]
-
--  pick floor height based on neighbors
 
 
 
