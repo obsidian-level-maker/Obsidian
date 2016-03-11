@@ -953,13 +953,13 @@ end
 
 
 
-function Area_prune_hallways()
+function Area_prune_hallways__OLD()
   --
   -- In each hallway area (except stairwells), find the shortest path
   -- between the two (or more) connections and mark them as "on_path".
   --
   -- Other parts of the hallway will be rendered solid (for indoor halls)
-  -- abd could potentially be used for closets (etc).
+  -- and could potentially be used for closets (etc).
   --
 
   local INFINITY = 9e9

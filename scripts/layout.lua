@@ -74,9 +74,7 @@ end
 
 
 
-function Layout_spot_for_wotsit(R, kind, none_OK)
-  local bonus_x, bonus_y
-
+function Layout_spot_for_wotsit(R, kind)
 
   local function nearest_conn(spot)
     local dist
@@ -180,16 +178,26 @@ end
   end
 
 
-  local function evaluate_closet(area)
-    if not (kind == "START" or kind == "LEVEL_EXIT" or
-            kind == "KEY"   or kind == "ITEM"  or kind == "WEAPON" or
-            kind == "TELEPORTER")
-    then
-      return -1
-    end
+  local function evaluate_chunk(chunk, is_emergency)
+    -- already used?
+    if chunk.content_kind then return false end
+
+    local score = 0
+
+    if not is_emergency then score = score + 1000 end
+
+    -- FIXME: evaluate_chunk
+
+    -- tie breaker
+    score = score + gui.random() ^ 2
+  end
+
+
+  local function evaluate_closet(chunk)
+    if kind == "MON_TELEPORT" then return -1 end
 
     -- already used?
-    if area.closet_kind then return -1 end
+    if chunk.content_kind then return -1 end
 
     -- OK
     return 9999
@@ -217,50 +225,50 @@ end
 
   ---| Layout_spot_for_wotsit |---
 
-  if R.mirror_x and R.tw >= 3 then bonus_x = int((R.tx1 + R.tx2) / 2) end
-  if R.mirror_y and R.th >= 3 then bonus_y = int((R.ty1 + R.ty2) / 2) end
-
-  local list = R.normal_wotsits
-  if table.empty(list) then list = R.emergency_wotsits end
-  if table.empty(list) then list = R.dire_wotsits end
-  
-
   local best
   local best_score = 0
 
-  each spot in list do
-    local score = evaluate_spot(spot)
+  -- first, try chunks
+  for pass = 1,2 do
+    local list = sel(pass == 1, R.chunks, R.emergency_chunks)
 
-    if score > best_score then
-      best = spot
-      best_score = score
-    end
-  end
+    local is_emergency = (pass == 2)
 
-  -- now try closets
-  each area in R.areas do
-    if area.mode == "closet" then
-      local score = evaluate_closet(area)
+    each chunk in list do
+      local score = evaluate_chunk(chunk, is_emergency)
 
       if score > best_score then
-        best = { closet=area }
+        best = chunk
         best_score = score
       end
     end
   end
 
+  -- now try closets
+  -- FIXME
+--[[
+  each chunk in R.closets do
+    local score = evaluate_closet(chunk)
+
+    if score > best_score then
+      best = chunk
+      best_score = score
+    end
+  end
+--]]
+
 
   if not best then
-    if none_OK then return nil end
---- stderrf("FUCKED UP IN %s\n", R.name)
----    do return { x=0, y=0, z=0, wall_dist=0} end
-    error("No usable spots in room!")
+    return nil
   end
 
 
   --- OK ---
 
   local spot = assert(best)
+
+  -- never use it again
+  spot.content_kind = kind
 
   if spot.closet then
     -- mark closet area as used
@@ -269,17 +277,11 @@ end
 
     spot.area = spot.closet
 
-  else
-    -- never use it again
-    table.kill_elem(list, spot)
-
-    spot.content_kind = kind
-
-    table.insert(R.importants, spot)
-
-    --TODO support closets here too
-    do_exclusions(spot)
+---##  else
+---##    table.insert(R.importants, spot)
   end
+
+  do_exclusions(spot)
 
   return spot
 end
@@ -290,6 +292,10 @@ function Layout_place_importants(R)
 
   local function add_goal(goal)
     local spot = Layout_spot_for_wotsit(R, goal.kind)
+
+    if not spot then
+      error("No spot in room for " .. goal.kind)
+    end
 
 -- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R.name)
 
@@ -318,12 +324,16 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
   local function add_teleporter(conn)
     local spot = Layout_spot_for_wotsit(R, "TELEPORTER")
 
+    if not spot then
+      error("No spot in room for teleporter!")
+    end
+
     spot.conn = conn
   end
 
 
   local function add_weapon(weapon)
-    local spot = Layout_spot_for_wotsit(R, "WEAPON", "none_OK")
+    local spot = Layout_spot_for_wotsit(R, "WEAPON")
 
     if not spot then
       gui.printf("WARNING: no space for %s!\n", weapon)
@@ -339,7 +349,7 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
 
   local function add_item(item)
-    local spot = Layout_spot_for_wotsit(R, "ITEM", "none_OK")
+    local spot = Layout_spot_for_wotsit(R, "ITEM")
 
     if not spot then return end
 
@@ -347,52 +357,6 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
     if not R.guard_spot then
       R.guard_spot = spot
-    end
-  end
-
-
-  local function collect_wotsit_spots()
-    -- main spots are "inner points" of areas
-
-    R.normal_wotsits = {}
-
-    each A in R.areas do
-    if A.mode == "cage" or A.rect_info then continue end
-    each corner in A.inner_points do
-      -- FIXME : wall_dist
-      local wall_dist = rand.range(0.5, 2.5)
-     local z = assert(A.floor_h)
-     table.insert(R.normal_wotsits, { x=corner.x + 0, y=corner.y + 0, z=z, wall_dist=wall_dist, area=A })
-    end
-    end
-
-    -- emergency spots are the middle of whole (square) seeds
-    R.emergency_wotsits = {}
-
-    each S in R.seeds do
-      if S.conn then continue end
-      if not S.area then continue end
-      if S.area.mode != "floor" then continue end
-      if not S.diagonal then
-        local mx, my = S:mid_point()
-        local wall_dist = rand.range(0.4, 0.5)
-        local z = assert(S.area and S.area.floor_h)
-        table.insert(R.emergency_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist, area=S.area })
-      end
-    end
-
-    -- dire emergency spots are inside diagonal seeds
-    R.dire_wotsits = {}
-
-    each S in R.seeds do
-      if not S.area then continue end
-      if S.area.mode != "floor" then continue end
-      if S.diagonal or S.conn then
-        local mx, my = S:mid_point()
-        local wall_dist = rand.range(0.2, 0.3)
-        local z = assert(S.area and S.area.floor_h)
-        table.insert(R.dire_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist, area=S.area, is_dire=true })
-      end
     end
   end
 
@@ -406,9 +370,9 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
     local dests = {}
 
-    dests[1] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
-    dests[2] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
-    dests[3] = Layout_spot_for_wotsit(R, "MON_TELEPORT", "none_OK")
+    dests[1] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
+    dests[2] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
+    dests[3] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
 
     -- do not use the "dire" emergency spots
     if not (dests[1] and not dests[1].is_dire) then return false end
@@ -477,16 +441,6 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
   if R.kind == "stairwell" then
     return
-  end
-
-  collect_wotsit_spots()
-
----???  Layout_compute_wall_dists(R)
-
-  if R.kind == "cave" or
-     (rand.odds(5) and R.sw >= 3 and R.sh >= 3)
-  then
-    R.cave_placement = true
   end
 
   each goal in R.goals do
