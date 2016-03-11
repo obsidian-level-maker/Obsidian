@@ -149,6 +149,21 @@
 --]]
 
 
+--class CHUNK
+--[[
+    -- a rectangle of seeds within an area of a room
+
+    area : AREA
+
+    sx1, sy1, sx2, sy2   -- seed range
+
+    sw, sh  -- seed size
+
+    encroach[SIDE]   -- how much distance is used on each side, often zero
+                     -- [ used by walls, archways, etc... ]
+--]]
+
+
 AREA_CLASS = {}
 
 
@@ -1140,5 +1155,14 @@ do return end
       prune_hallway(R)
     end
   end
+end
+
+
+
+function Area_locate_chunks()
+  
+
+  ---| Area_locate_chunks |---
+
 end
 

@@ -75,11 +75,6 @@
                         -- DIR is the side (2/4/6/8)
                         -- only used in 'bottom' seed
                         -- cells can be absent (for diagonal seeds)
-
-    -- NOTE: THIS NOT USED ATM
-    chunk[1..n] : CHUNK  -- [1] is the ground floor (or liquid), NIL for void (etc)
-                         -- [2] is the 3D floor above (usually NIL)
-                         -- [3] can be yet another 3D floor, etc...
 --]]
 
 
@@ -117,14 +112,6 @@
     floor_h  -- floor height (set during room layouting)
 
     door_kind : keyword   -- can be NIL, or "door" or "arch"
---]]
-
-
---class CHUNK
---[[
-    kind : keyword  -- "floor", "liquid", "void" (etc)
-
-    floor : FLOOR
 --]]
 
 
@@ -556,7 +543,6 @@ function Seed_create(sx, sy, x1, y1)
 
     edge   = {}
     border = {}
-    chunk  = {}
     m_cell = {}
   }
 

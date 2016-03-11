@@ -287,6 +287,10 @@ function Connect_stuff()
     Connect_through_sprout(P)
   end
 
+  -- find chunks now, since teleporters need to know how many there are,
+  -- and other connections will update their side information.
+  Area_locate_chunks()
+
   Connect_teleporters()
 end
 
