@@ -3,21 +3,13 @@ WORK IN PROGRESS
 ================
 
 
->>>  Bug placing an item in a "cage" area
+CHUNK SYSTEM:
 
-     ./Oblige -d -b TEST.wad seed=82 length=single theme=tech strength=higher ammo=less
+>>> after growing/areas/connecting, BUT before quests,
+    visit each room and collect a set of seed rectangles where
+    items/switches/decorations/etc can be placed.  [ include closets ]
 
-
-SPOT SYSTEM:
-
-!! after growing/areas/connecting, BUT before quests,
-   visit each room and collect a set of seed rectangles where
-   items/switches/decorations/etc can be placed.  [ include closets ]
-
-   generally only place stuff (goals, weapons, etc) in rooms that
-   contain enough spots.
-   [ i.e. allocate spots as we go instead of not later on ]
-   [[ later on, investigate splitting large spots/closets ]]
+!!  ACTUALLY USE THE CHUNKS, not the current wotsit spots
 
 -  can also use these "rects" for floor prefabs, ceiling prefabs,
    free-standing prefabs (in middle), wall-extended prefabs,
