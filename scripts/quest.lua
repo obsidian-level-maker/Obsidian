@@ -1593,20 +1593,21 @@ function Quest_add_weapons()
     -- too many weapons already? (very unlikely to occur)
     if #R.weapons >= 2 then return -30 end
 
-    -- basic fitness of the room is the size
-    local score = R.svolume
-
     if is_start and R.is_start and not is_new then
       return rand.pick { 20, 120, 220 }
     end
 
+    -- basic fitness of the room is # of free chunks
+    local score = R:usable_chunks() * 20 + 5
+
     -- big bonus for leaf rooms
     if R:total_conns("ignore_secrets") < 2 then
-      score = score + 60
+      score = score + 50
     end
 
     -- if there is a goal or another weapon, try to avoid it
-    if #R.goals > 0 or #R.weapons > 0 then score = score / 8 end
+    if #R.goals   > 0 then score = score / 4 end
+    if #R.weapons > 0 then score = score / 4 end
 
     return score
   end
@@ -1985,29 +1986,18 @@ function Quest_nice_items()
     if R.is_start   then return -1 end
     if R.is_exit    then return -1 end
 
-    -- unused leaf rooms take priority
-    if R:is_unused_leaf() then
-      if #R.items > 0 then return -1 end
-
-      return 100 + R.svolume + gui.random() * 20
-    end
-
     if R.kind == "hallway"   then return -1 end
     if R.kind == "stairwell" then return -1 end
 
-    -- leafs are already handled
-    if R:total_conns("ignore_secrets") < 2 then return -1 end
+    -- primary criterion is the # of unused chunks
+    local score = R:usable_chunks() * 20
 
-    -- promote the occasional non-leaf room (if large enough)
-    if rand.odds(10) and R.svolume >= 25 then
-      return rand.range(120, 160)
+    -- unused leaf rooms take priority
+    if R:is_unused_leaf() then
+      score = score + 90;
     end
 
-    -- primary criterion is the room size.
-
-    if R.svolume < 10 then return -1 end
-
-    local score = R.svolume
+    if score < 1 then return -1 end
 
     if #R.goals   > 0 then score = score / 2 end
     if #R.weapons > 0 then score = score / 2 end
