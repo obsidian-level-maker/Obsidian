@@ -211,7 +211,13 @@ function Quest_create_initial_quest()
       return 100 - math.min(R.svolume,99) + gui.random()
     end
 
-    return R.svolume + gui.random() * 5
+    local score = R.svolume
+
+    -- need somewhere for the exit switch
+    local space = math.max(2, #R.chunks + #R.closets)
+    score = score + space * 20
+
+    return score + gui.random() * 10
   end
 
 
@@ -1137,8 +1143,12 @@ function Quest_start_room()
       score = score + 1000
     end
 
+    -- need somewhere for starting pad, weapon and nice item
+    local space = math.max(4, #R.chunks + #R.closets)
+    score = score + space * 40
+
     -- not too big !!
-    if R.svolume < 30 then score = score + 200 end
+    if R.svolume < 30 then score = score + 60 end
 
     -- prefer no teleporter
     if not R:has_teleporter() then score = score + 7 end

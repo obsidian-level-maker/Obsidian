@@ -1184,6 +1184,8 @@ function Area_locate_chunks()
 
       sw = (sx2 - sx1 + 1)
       sh = (sy2 - sy1 + 1)
+
+      encroach = {}
     }
 
     local R = assert(A.room)
