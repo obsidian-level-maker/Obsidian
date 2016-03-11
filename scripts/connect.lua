@@ -232,6 +232,9 @@ function Connect_teleporters()
     -- setup tag information
     C.tele_tag1 = alloc_id("tag")
     C.tele_tag2 = alloc_id("tag")
+
+    R1.used_chunks = R1.used_chunks + 1
+    R2.used_chunks = R2.used_chunks + 1
   end
 
 
