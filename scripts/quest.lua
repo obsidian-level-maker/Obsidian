@@ -614,7 +614,9 @@ gui.debugf("   %s\n", targ.name)
   local function eval_goal_room(Q1, R)
     local score = 100
 
-    -- FIXME : compute travel distance from entry (if exists)
+    -- TODO : compute travel distance from R to where goal is used
+
+    score = score + R:usable_chunks() * 10
 
     -- tie breaker
     return score + gui.random()
@@ -622,29 +624,46 @@ gui.debugf("   %s\n", targ.name)
 
 
   local function pick_room_for_goal(Q1)
-    -- TODO : evaluate each leaf room
-    --        especially: far away from Q1.entry
-
-    assert(not table.empty(info.leafs))
-
---[[
     local best
     local best_score = 0
 
     each R in info.leafs do
       local score = eval_goal_room(Q1, R)
+
       if score > best_score then
         best = R
         best_score = score
       end
     end
---]]
 
-    return table.remove(info.leafs, 1)
+    assert(best)
+
+    table.kill_elem(info.leafs, best)
+
+    return best
   end
 
 
-  local function place_new_goals(Q1, LOCK)
+  local function place_goal_in_room(Q1, R, goal)
+    goal.room = R
+
+    table.insert( R.goals, goal)
+    table.insert(Q1.goals, goal)
+
+    R.used_chunks = R.used_chunks + 1
+
+    -- for switched doors we need a tag value
+    if goal.same_tag then
+      goal.tag = assert(info.new_goals[1].tag)
+    elseif goal.kind == "SWITCH" then
+      goal.tag = alloc_id("tag")
+    end
+  end
+
+
+  local function place_new_goals(Q1)
+    assert(#info.leafs >= #info.new_goals)
+
     rand.shuffle(info.leafs)
 
 gui.debugf("PLACING NEW GOALS:\n")
@@ -653,17 +672,8 @@ gui.debugf("PLACING NEW GOALS:\n")
       local R = pick_room_for_goal(Q1)
 
 gui.debugf("  %s @ %s in %s\n", goal.name, R.name, Q1.name)
-      goal.room = R
 
-      table.insert( R.goals, goal)
-      table.insert(Q1.goals, goal)
-
-      -- for switched doors we need a tag value
-      if goal.same_tag then
-        goal.tag = assert(info.new_goals[1].tag)
-      elseif goal.kind == "SWITCH" then
-        goal.tag = alloc_id("tag")
-      end
+      place_goal_in_room(Q1, R, goal)
     end
   end
 
