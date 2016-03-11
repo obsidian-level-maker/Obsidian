@@ -371,6 +371,8 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
     each S in R.seeds do
       if S.conn then continue end
+      if not S.area then continue end
+      if S.area.mode != "floor" then continue end
       if not S.diagonal then
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.4, 0.5)
@@ -383,6 +385,8 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
     R.dire_wotsits = {}
 
     each S in R.seeds do
+      if not S.area then continue end
+      if S.area.mode != "floor" then continue end
       if S.diagonal or S.conn then
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.2, 0.3)
