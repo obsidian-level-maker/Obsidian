@@ -211,11 +211,10 @@ function Connect_teleporters()
     -- never in hallways
     if R.kind == "hallway" then return -1 end
 
-    -- FIXME score = #R.closets * 10
-    local score = 0
+    local score = R:usable_chunks() * 10
 
     -- tie breaker
-    return score + gui.random() * 10
+    return score + gui.random() * 22
   end
 
 
