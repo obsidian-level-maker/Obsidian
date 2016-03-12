@@ -1633,15 +1633,15 @@ function Render_importants()
 
   local function calc_player_see_dist(spot, dir)
     local dx, dy = geom.delta(dir)
-    local z = spot.z + 48
+    local z = spot.z1 + 48
 
     local n = 1
 
     while n < 18 do
-      local x2 = spot.x + n * dx * 64
-      local y2 = spot.y + n * dy * 64
+      local x2 = spot.mx + n * dx * 64
+      local y2 = spot.my + n * dy * 64
 
-      if gui.trace_ray(spot.x, spot.y, z, x2, y2, z, "v") then
+      if gui.trace_ray(spot.mx, spot.my, z, x2, y2, z, "v") then
         break;
       end
 
@@ -1740,11 +1740,11 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local skin1 = { object=item }
 
-    local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot.dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, spot.dir)
 
     Fabricate(R, def, T, { skin1 })
 
-    Trans.entity("light", spot.x, spot.y, spot.z+112, { cave_light=176 })
+--- Trans.entity("light", spot.mx, spot.my, spot.z1+112, { cave_light=176 })
   end
 
 
@@ -1798,7 +1798,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local def = Fab_pick(reqs)
 
-    local T = Trans.spot_transform(spot.x, spot.y, spot.z, 10 - dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, 10 - dir)
 
     Fabricate(R, def, T, { })
   end
@@ -1807,9 +1807,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function content_coop_pair(spot, dir)
     -- no prefab for this : add player entities directly
 
-    local mx = spot.x
-    local my = spot.y
-    local  z = spot.z
+    local mx = spot.mx
+    local my = spot.my
+    local  z = spot.z1
 
     local angle = geom.ANGLES[dir]
 
@@ -1886,7 +1886,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local dir = spot.dir or 2
 
-    local T = Trans.spot_transform(spot.x, spot.y, spot.z, 10 - dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, 10 - dir)
 
     Fabricate(R, def, T, { skin1 })
   end
@@ -1909,7 +1909,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     skin1.action = spot.goal.action  -- can be NIL
 
-    local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot.dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, spot.dir)
 
     Fabricate(R, def, T, { skin1 })
   end
@@ -1920,12 +1920,12 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     if R.is_start or R.kind == "hallway" then
       -- bare item
-      Trans.entity(weapon, spot.x, spot.y, spot.z)
+      Trans.entity(weapon, spot.mx, spot.my, spot.z1)
     else
       content_very_big_item(spot, weapon, "is_weapon")
     end
 
-    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, spot.x, spot.y, spot.z)
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, spot.mx, spot.my, spot.z1)
   end
 
 
@@ -1934,7 +1934,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     if R.is_start or R.kind == "hallway" then
       -- bare item
-      Trans.entity(item, spot.x, spot.y, spot.z)
+      Trans.entity(item, spot.mx, spot.my, spot.z1)
     else
       content_big_item(spot, item)
     end
@@ -1974,7 +1974,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local spot_dir = player_dir(spot)
 
-    local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot_dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, spot_dir)
 
     Fabricate(R, def, T, { skin1 })
   end
@@ -1988,7 +1988,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local r = 16
 
-    local brush = brushlib.quad(spot.x - r, spot.y - r, spot.x + r, spot.y + r)
+    local brush = brushlib.quad(spot.mx - r, spot.my - r, spot.mx + r, spot.my + r)
 
     -- mark as "no draw"
     each C in brush do
@@ -2014,7 +2014,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     Trans.brush(brush)
 
     -- add teleport entity
-    Trans.entity("teleport_spot", spot.x, spot.y, top.t + 1)
+    Trans.entity("teleport_spot", spot.mx, spot.my, top.t + 1)
   end
 
 
@@ -2060,7 +2060,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local action = assert(spot.trigger.action)
     local tag    = assert(spot.trigger.tag)
 
-    local brush = brushlib.quad(spot.x - r, spot.y - r, spot.x + r, spot.y + r)
+    local brush = brushlib.quad(spot.mx - r, spot.my - r, spot.mx + r, spot.my + r)
 
     each C in brush do
       C.special = action
@@ -2078,13 +2078,17 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   each room in LEVEL.rooms do
     R = room
 
-    each spot in R.importants do
-      build_important(spot)
-
-      if spot.trigger then
-        build_trigger(spot)
+    each chunk in R.chunks do
+      if chunk.content_kind then
+        chunk.z1 = assert(chunk.area.floor_h)
+        build_important(chunk)
       end
     end
+
+    -- TODO
+    -- each spot in R.triggers do
+    --   build_trigger(spot)
+    -- end
   end
 end
 
