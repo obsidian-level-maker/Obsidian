@@ -181,7 +181,7 @@ end
 
   local function evaluate_chunk(chunk, is_emergency)
     -- already used?
-    if chunk.content_kind then return false end
+    if chunk.content_kind then return -1 end
 
     local score = 0
 
@@ -190,7 +190,7 @@ end
     -- FIXME: evaluate_chunk
 
     -- tie breaker
-    score = score + gui.random() ^ 2
+    return score + gui.random() ^ 2
   end
 
 
@@ -206,10 +206,10 @@ end
 
 
   local function do_exclusions(spot)
-    local x1 = spot.x - 76
-    local y1 = spot.y - 76
-    local x2 = spot.x + 76
-    local y2 = spot.y + 76
+    local x1 = spot.mx - 76
+    local y1 = spot.my - 76
+    local x2 = spot.mx + 76
+    local y2 = spot.my + 76
 
     -- no monsters near start spot or teleporters
     -- Fixme: do this later (for chunks)
@@ -292,7 +292,7 @@ end
 ---##    table.insert(R.importants, spot)
   end
 
-  do_exclusions(spot)
+--FIXME  do_exclusions(spot)
 
   return spot
 end

@@ -1476,7 +1476,7 @@ function Monster_fill_room(R)
 
     -- look toward something [or away from something]
     if focus then
-      local ang = angle_between_points(x, y, focus.x, focus.y)
+      local ang = angle_between_points(x, y, focus.mx, focus.my)
 
       if away then
         ang = geom.angle_add(ang, 180)
@@ -2045,10 +2045,10 @@ if R.guard_coord.closet then return end
     -- convert coordinate into a fake spot  [no z coords!]
     local guard_spot =
     {
-      x1 = R.guard_coord.x - 16
-      y1 = R.guard_coord.y - 16
-      x2 = R.guard_coord.x + 16
-      y2 = R.guard_coord.y + 16
+      x1 = R.guard_coord.mx - 16
+      y1 = R.guard_coord.my - 16
+      x2 = R.guard_coord.mx + 16
+      y2 = R.guard_coord.my + 16
     }
 
     local mon  = R.zone.guard_mon

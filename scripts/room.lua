@@ -2721,8 +2721,8 @@ function Room_build_all()
 
   Render_set_all_properties()
 
-  Render_all_areas()
   Render_importants()
+  Render_all_areas()
 
   Room_determine_spots()
 
