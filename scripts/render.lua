@@ -1338,9 +1338,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   local function do_item()
     reqs.kind = "item"
 
-    assert(A.closet_spot)
-stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
-    skin.object = assert(A.closet_spot.item or A.closet_spot.content_item)
+    skin.object = assert(chunk.content_item)
   end
 
   local function do_nice_item()
