@@ -2035,7 +2035,7 @@ function Fab_find_matches(reqs, match_state)
   end
 
 
-  local function match_room_kind(def_k, req_k)
+  local function match_room_kind(req_k, def_k)
     if def_k == "indoor" then
       return req_k != "outdoor"
     end
@@ -2044,9 +2044,9 @@ function Fab_find_matches(reqs, match_state)
   end
 
 
-  local function match_word_or_table(def_k, req_k)
-    if type(def_k) == "table" then
-      return (def_k[req_k] or 0) > 0
+  local function match_word_or_table(req_k, def_k)
+    if type(req_k) == "table" then
+      return (req_k[def_k] or 0) > 0
     end
 
     return def_k == req_k
@@ -2060,18 +2060,17 @@ function Fab_find_matches(reqs, match_state)
     if reqs.kind != kind then return 0 end
 
     -- placement check
-    if def.where != reqs.where then return 0 end
+    if not match_word_or_table(reqs.where, def.where) then return 0 end
 
     -- group check
-    if not match_word_or_table(def.group, reqs.group) then return 0 end
+    if not match_word_or_table(reqs.group, def.group) then return 0 end
 
     -- shape check
-    if not match_word_or_table(def.shape, reqs.shape) then return 0 end
+    if not match_word_or_table(reqs.shape, def.shape) then return 0 end
 
     -- key and switch check
-    if reqs.key != def.key then return 0 end
-
-    if not match_word_or_table(def.switch, reqs.switch) then return 0 end
+    if not match_word_or_table(reqs.key,    def.key)    then return 0 end
+    if not match_word_or_table(reqs.switch, def.switch) then return 0 end
 
     if reqs.item_kind != def.item_kind then return 0 end
 
@@ -2094,11 +2093,11 @@ function Fab_find_matches(reqs, match_state)
 
     -- check on room type (building / outdoor / cave)
     if def.room_kind then
-      if not match_room_kind(def.room_kind, reqs.room_kind) then return 0 end
+      if not match_room_kind(reqs.room_kind, def.room_kind) then return 0 end
     end
 
     if def.neighbor_kind then
-      if not match_room_kind(def.neighbor_kind, reqs.neighbor_kind) then return 0 end
+      if not match_room_kind(reqs.neighbor_kind, def.neighbor_kind) then return 0 end
     end
 
     -- door check [WTF?]
