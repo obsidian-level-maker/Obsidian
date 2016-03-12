@@ -927,20 +927,12 @@ function Grower_make_all_areas()
 
   local function resolve_references()
     each temp in LEVEL.all_temps do
-      if temp.face_area then
-        assert(temp.area)
-        temp.area.face_area = assert(temp.face_area.area)
-  stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
-  temp.name, temp.face_area.name,
-  temp.area.name, temp.area.face_area.name)
+      if temp.face_TA then
+        temp.area.face_area = assert(temp.face_TA.area)
       end
 
-      if temp.off_area then
-        assert(temp.area)
-        temp.area.off_area = assert(temp.off_area.area)
-  stderrf("resolving reference : %s --> %s  ===>  %s --> %s\n",
-  temp.name, temp.off_area.name,
-  temp.area.name, temp.area.off_area.name)
+      if temp.off_TA then
+        temp.area.off_area = assert(temp.off_TA.area)
       end
     end
   end
@@ -1137,7 +1129,7 @@ function Grower_grammatical_room(R, pass)
   local sym_token
 
   -- list of transformed rectangles (copied from cur_rule.rects)
-  local new_rects
+  local new_chunks
 
 
   local function what_in_there(S)
@@ -1386,11 +1378,12 @@ stderrf("overwrite seed @ %s\n", S.name)
     if x1 > x2 then x1,x2 = x2,x1 end
     if y1 > y2 then y1,y2 = y2,y1 end
 
-    rect.x1 = x1 ; rect.y1 = y1
-    rect.x2 = x2 ; rect.y2 = y2
+    local dir1, dir2
 
-    if rect.dir  then rect.dir  = transform_dir(T, rect.dir)  end
-    if rect.dir2 then rect.dir2 = transform_dir(T, rect.dir2) end
+    if rect.dir  then dir1 = transform_dir(T, rect.dir)  end
+    if rect.dir2 then dir2 = transform_dir(T, rect.dir2) end
+
+    return x1,y1, x2,y2, dir1,dir2
   end
 
 
@@ -1640,11 +1633,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
-  local function find_rect(sx, sy)
-    if new_rects then
-      each r in new_rects do
-        if r.x1 <= sx and sx <= r.x2 and
-           r.y1 <= sy and sy <= r.y2
+  local function find_chunk(sx, sy)
+    if new_chunks then
+      each r in new_chunks do
+        if r.sx1 <= sx and sx <= r.sx2 and
+           r.sy1 <= sy and sy <= r.sy2
         then
           return r
         end
@@ -1815,11 +1808,11 @@ stderrf("---> fail\n")
     end
 
     -- handle special rectangles (stairs, cages, traps)
-    local rect = find_rect(S.sx, S.sy)
-    if rect then
-      assert(rect.area)
+    local chunk = find_chunk(S.sx, S.sy)
+    if chunk then
+      assert(chunk.TA)
 
-      set_seed(S, rect.area)
+      set_seed(S, chunk.TA)
       return
     end
 
@@ -2010,11 +2003,11 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
  
-  local function mark_rect_nb_side(r, dir)
+  local function mark_chunk_nb_side(r, dir)
     assert(geom.is_straight(dir))
 
-    local x1, y1 = r.x1, r.y1
-    local x2, y2 = r.x2, r.y2
+    local x1, y1 = r.sx1, r.sy1
+    local x2, y2 = r.sx2, r.sy2
 
     if dir == 2 then y2 = y1 end
     if dir == 8 then y1 = y2 end
@@ -2034,7 +2027,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
-  local function mark_rect_neighbors(r)
+  local function mark_chunk_neighbors(r)
     local shape = r.shape
 
     if not shape then
@@ -2049,82 +2042,80 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
     -- [ but it won't matter when shape is "I" or "P" ]
     assert(r.dir)
 
-    mark_rect_nb_side(r, r.dir)
+    mark_chunk_nb_side(r, r.dir)
 
     -- this handles "L" shape
     if r.dir2 then
-      mark_rect_nb_side(r, r.dir2)
+      mark_chunk_nb_side(r, r.dir2)
     end
 
     if shape == "I" or shape == "P" then
-      mark_rect_nb_side(r, 10 - r.dir)
+      mark_chunk_nb_side(r, 10 - r.dir)
     end
 
     if shape == "T" or shape == "P" then
-      mark_rect_nb_side(r, geom.LEFT [r.dir])
-      mark_rect_nb_side(r, geom.RIGHT[r.dir])
+      mark_chunk_nb_side(r, geom.LEFT [r.dir])
+      mark_chunk_nb_side(r, geom.RIGHT[r.dir])
     end
   end
 
 
-  local function rect_to_chunk(rect)
+  local function OLD__rect_to_chunk(rect)
     local chunk = Chunk_new(nil, rect.x1, rect.y1, rect.x2, rect.y2)
-
-    chunk.TA = rect.area
-    
     chunk.__rect = rect
-
     return chunk
   end
 
 
-  local function install_create_rects(T)
-    new_rects = {}
+  local function install_create_chunks(T)
+    new_chunks = {}
 
     each r in cur_rule.rects do
-      local rect = table.copy(r)
+      local x1,y1, x2,y2, dir1,dir2 = transform_rect(T, r)
 
-      transform_rect(T, rect)
+      local chunk = Chunk_new(nil, x1,y1, x2,y2)
 
-      assert(rect.kind)
-      rect.area = Grower_temp_area(R, rect.kind)
-      rect.area.rect_info = rect
+      chunk.dir  = dir1
+      chunk.dir2 = dir2
 
-      if rect.kind == "stair" then
-        rect.area.face_area = assert(new_area)
+      table.insert(new_chunks, chunk)
+
+
+      chunk.kind = assert(r.kind)
+
+      chunk.TA = Grower_temp_area(R, chunk.kind)
+
+      if r.kind == "stair" then
+        chunk.TA.face_TA = assert(new_area)
         assert(intl_conn)
-        intl_conn.stair_TA = assert(rect.area)
+        intl_conn.stair_TA = assert(chunk.TA)
 
-      elseif rect.face_area then
-        rect.area.face_area = assert(area_map[rect.face_area])
+      elseif r.face_area then
+        chunk.TA.face_TA = assert(area_map[r.face_area])
       end
 
-      if rect.off_area then
-        rect.area.off_area = assert(area_map[rect.off_area])
+      if r.off_area then
+        chunk.TA.off_TA = assert(area_map[r.off_TA])
       end
 
-      if rect.kind == "joiner" then
+      if r.kind == "joiner" then
         new_conn.kind = "joiner"
-        new_conn.joiner_TA = rect.area
+        new_conn.joiner_TA = chunk.TA
 
         -- connection goes from NEW ROOM --> CURRENT ROOM
         new_conn.TA1  = assert(new_room.temp_areas[1])
-        new_conn.TA2  = assert(rect.area.off_area)
+        new_conn.TA2  = assert(chunk.TA.off_TA)
 stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
   R.name, new_conn.TA1.name, new_conn.TA1.room.name,
   new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
 
-        assert(rect.dir)
-        rect.area.joiner_dir = transform_dir(T, rect.dir)
+        assert(chunk.dir)
+        chunk.TA.joiner_dir = transform_dir(T, chunk.dir)
       end
 
-      if rect.kind == "closet" then
-        local chunk = rect_to_chunk(rect)
-
+      if r.kind == "closet" then
         table.insert(R.closets, chunk)
       end
-
-      table.insert(new_rects, rect)
     end
   end
 
@@ -2132,7 +2123,7 @@ stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
   local function pre_install(T)
     new_room = nil
     new_conn = nil
-    new_rects = nil
+    new_chunks = nil
 
     -- for initial shapes, 'R' is the current room
     if pass == "root" then
@@ -2153,7 +2144,7 @@ stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
     end
 
     if cur_rule.rects then
-      install_create_rects(T)
+      install_create_chunks(T)
     end
   end
 

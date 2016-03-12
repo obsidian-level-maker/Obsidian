@@ -1424,8 +1424,8 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
   end
 
 
-  local S1 = SEEDS[A.rect_info.x1][A.rect_info.y1]
-  local S2 = SEEDS[A.rect_info.x2][A.rect_info.y2]
+  local S1 = SEEDS[A.rect_info.sx1][A.rect_info.sy1]
+  local S2 = SEEDS[A.rect_info.sx2][A.rect_info.sy2]
 
   local floor_h = assert(A.floor_h) + (def.raise_z or 0)
 

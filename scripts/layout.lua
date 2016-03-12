@@ -200,6 +200,8 @@ end
     -- already used?
     if chunk.content_kind then return -1 end
 
+    -- FIXME: evaluate_closet
+
     -- OK
     return 9999
   end

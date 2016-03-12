@@ -1177,6 +1177,7 @@ function Room_determine_spots()
 
   local function spots_for_area(R, A, mode)
     -- uses a prefab? [ they provide their own spots ]
+    -- FIXME: remove this check, we skip "done" seeds when finding floor_brushes
     if A.rect_info then return end
 
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
