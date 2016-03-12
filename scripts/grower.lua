@@ -861,7 +861,6 @@ function Grower_make_all_areas()
       temp.area = A
 
       A.seeds = temp.seeds
-      A.rect_info = temp.rect_info
 
       if temp.room then
         A.mode = temp.mode
@@ -1714,6 +1713,11 @@ stderrf("---> fail\n")
     if E1.kind == "magic" then
       return match_a_magic_element(S, E1)
     end
+
+--FIXME!!!
+if E2.kind == "stair" then return false end
+if E2.kind == "joiner" then return false end
+
 
     -- symmetry handling
     -- [ we prevent a pattern from overlapping its mirror ]

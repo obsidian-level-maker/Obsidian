@@ -1251,17 +1251,17 @@ end
 
 
 
-function Render_large_prefab(A)
+function Render_large_prefab(chunk)
   --
-  -- this handles prefabs which occupy a seed rectangle and
+  -- this handles prefabs which occupy a seed rectangle (chunk) and
   -- are responsible for making the whole floor and/or ceiling.
   --
-  -- FIXME : parameter should be a chunk (not area)
-  --
+
+  local A = chunk.area
 
 stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
-  local dir = A.rect_info.dir or 2
+  local dir = chunk.dir or 2
 
   local skin = {}
 
@@ -1269,8 +1269,8 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   {
     where  = "seeds"
 
-    seed_w = A.rect_info.long
-    seed_H = A.rect_info.deep
+--???    seed_w = A.rect_info.long
+--???    seed_h = A.rect_info.deep
   }
 
 
@@ -1295,8 +1295,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   local function do_teleporter()
     reqs.kind = "teleporter"
 
-    assert(A.closet_spot)
-    local C = assert(A.closet_spot.conn)
+    local C = assert(chunk.conn)
 
     if C.R1 == A.room then
       skin. in_tag = C.tele_tag2
@@ -1367,7 +1366,7 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
   local what = A.mode
 
   if what == "closet" then
-    what = A.closet_kind
+    what = chunk.content_kind
 
     -- FIXME : unused closets  [ i.e. this should not happen ]
     if what == nil then return end
@@ -1424,8 +1423,8 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
   end
 
 
-  local S1 = SEEDS[A.rect_info.sx1][A.rect_info.sy1]
-  local S2 = SEEDS[A.rect_info.sx2][A.rect_info.sy2]
+  local S1 = SEEDS[chunk.sx1][chunk.sy1]
+  local S2 = SEEDS[chunk.sx2][chunk.sy2]
 
   local floor_h = assert(A.floor_h) + (def.raise_z or 0)
 
@@ -1446,10 +1445,6 @@ function Render_area(A)
   each E in A.edges do
     assert(E.area == A)
     Render_edge(E)
-  end
-
-  if A.rect_info then
-    Render_large_prefab(A)
   end
 
   each S in A.seeds do
@@ -2107,6 +2102,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
         -- temporary crap!!!
         build_a_crate(chunk)
       end
+    end
+
+    each chunk in R.closets do
+      Render_large_prefab(chunk)
     end
 
     -- TODO

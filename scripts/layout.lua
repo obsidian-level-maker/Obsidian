@@ -250,8 +250,6 @@ end
   end
 
   -- now try closets
-  -- FIXME
---[[
   each chunk in R.closets do
     local score = evaluate_closet(chunk)
 
@@ -260,7 +258,6 @@ end
       best_score = score
     end
   end
---]]
 
 
   if not best then
@@ -283,16 +280,9 @@ end
   -- never use it again
   spot.content_kind = kind
 
-  if spot.closet then
-    -- mark closet area as used
-    spot.closet.closet_kind = kind
-    spot.closet.closet_spot = spot
-
-    spot.area = spot.closet
-
----##  else
----##    table.insert(R.importants, spot)
-  end
+---##  if spot.area.mode == "closet" then
+---##    spot.closet_kind = kind
+---##  end
 
 --FIXME  do_exclusions(spot)
 
@@ -456,12 +446,12 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
     return
   end
 
-  each goal in R.goals do
-    add_goal(goal)
-  end
-
   each tel in R.teleporters do
     add_teleporter(tel)
+  end
+
+  each goal in R.goals do
+    add_goal(goal)
   end
 
   each name in R.weapons do
@@ -802,15 +792,15 @@ function Layout_unused_closets()
 
 
   local function make_trap(A)
-    A.closet_kind = "TRAP"
+    chunk.content_kind = "TRAP"
   end
 
   local function make_cage(A)
-    A.closet_kind = "CAGE"
+    chunk.content_kind = "CAGE"
   end
 
   local function make_item_or_secret(A)
-    A.closet_kind = "NICE_ITEM"
+    chunk.content_kind = "NICE_ITEM"
   end
 
 
@@ -824,8 +814,8 @@ function Layout_unused_closets()
   local function visit_room(R)
     -- FIXME : traps, cages, etc !!!!
 
-    each A in R.areas do
-      if A.mode == "closet" and not A.closet_kind then
+    each chunk in R.closets do
+      if not chunk.closet_kind then
         make_item_or_secret(A)
       end
     end
@@ -833,6 +823,8 @@ function Layout_unused_closets()
 
 
   ---| Layout_unused_closets |---
+
+do return end --FIXME re-enable Layout_unused_closets
 
   each R in LEVEL.rooms do
     visit_room(R)
