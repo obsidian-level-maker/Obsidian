@@ -55,6 +55,8 @@
     edge[DIR] : EDGE   -- set when an EDGE object exists at this seed
                        -- Note: it may be several seeds wide
 
+    chunk : CHUNK   -- only set when seed is part of a chunk
+
 
     kind : keyword  -- main usage of seed:
                     --   "walk", "void", "diagonal",
@@ -71,10 +73,6 @@
     floor_h, ceil_h -- floor and ceiling heights
     f_tex,   c_tex  -- floor and ceiling textures
 
-    m_cell[DIR] : CELL  -- use for mountains (normally NIL)
-                        -- DIR is the side (2/4/6/8)
-                        -- only used in 'bottom' seed
-                        -- cells can be absent (for diagonal seeds)
 --]]
 
 
@@ -115,16 +113,18 @@
 --]]
 
 
---class CELL
+--class CHUNK
 --[[
+    -- a rectangle of seeds within an area of a room
+
     area : AREA
 
-    dist  -- how far away from normal parts of the level
+    sx1, sy1, sx2, sy2   -- seed range
 
-    solid : bool
+    sw, sh  -- seed size
 
-    floor_h
-    floor_mat
+    encroach[SIDE]   -- how much distance is used on each side, often zero
+                     -- [ used by walls, archways, etc... ]
 --]]
 
 
@@ -469,59 +469,6 @@ function SEED_CLASS.make_brush(S)
   elseif S.diagonal then
     error("Invalid diagonal seed!")
   end
-
-  return brush
-end
-
-
-function SEED_CLASS.cell_neighbor(S, cell_side, dir)
-  if S.bottom then S = S.bottom end
-
-  if dir == cell_side then
-    S = S:raw_neighbor(dir)
-    if not (S and S.m_cell) then return nil end
-
-    cell_side = 10 - cell_side
-    local cell = S.m_cell[cell_side]
-
-    return cell, S, cell_side
-  end
-
-  -- neighbor is along a diagonal edge, hence in same seed
-
-  if geom.is_vert (cell_side) and geom.is_vert (dir) then return nil end
-  if geom.is_horiz(cell_side) and geom.is_horiz(dir) then return nil end
-
-  local cell = S.m_cell[dir]
-
-  return cell, S, dir
-end
-
-
-function SEED_CLASS.brush_for_cell(S, cell_side)
-  if S.bottom then S = S.bottom end
-
-  -- first vertex of brush is at center point
-  local x1 = S.x1 + (SEED_SIZE / 2)
-  local y1 = S.y1 + (SEED_SIZE / 2)
-
-  local corn2 = S:raw_corner(geom.RIGHT_45[cell_side])
-  local corn3 = S:raw_corner(geom. LEFT_45[cell_side])
-
-  assert(corn2 and corn3)
-
-  local x2 = corn2.x + (corn2.delta_x or 0)
-  local y2 = corn2.y + (corn2.delta_y or 0)
-
-  local x3 = corn3.x + (corn3.delta_x or 0)
-  local y3 = corn3.y + (corn3.delta_y or 0)
-
-  local brush =
-  {
-    { x=x1, y=y1 }
-    { x=x2, y=y2 }
-    { x=x3, y=y3 }
-  }
 
   return brush
 end

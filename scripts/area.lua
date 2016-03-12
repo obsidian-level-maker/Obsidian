@@ -149,21 +149,6 @@
 --]]
 
 
---class CHUNK
---[[
-    -- a rectangle of seeds within an area of a room
-
-    area : AREA
-
-    sx1, sy1, sx2, sy2   -- seed range
-
-    sw, sh  -- seed size
-
-    encroach[SIDE]   -- how much distance is used on each side, often zero
-                     -- [ used by walls, archways, etc... ]
---]]
-
-
 AREA_CLASS = {}
 
 
