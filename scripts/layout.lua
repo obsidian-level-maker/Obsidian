@@ -107,6 +107,7 @@ function Layout_spot_for_wotsit(R, kind)
   local function nearest_important(spot)
     local dist
 
+    -- FIXME : importants not used anymore, use 'chunks' and 'emergency_chunks'
     each imp in R.importants do
       local d = geom.dist(imp.x, imp.y, spot.x, spot.y) / SEED_SIZE
 
@@ -235,6 +236,8 @@ end
     local is_emergency = (pass == 2)
 
     each chunk in list do
+      chunk.is_emergency = is_emergency -- meh
+
       local score = evaluate_chunk(chunk, is_emergency)
 
       if score > best_score then
@@ -260,6 +263,14 @@ end
 
   if not best then
     return nil
+  end
+
+
+  -- if we use an emergency chunk, move it to normal 'chunks' list
+  if best.is_emergency then
+    table.kill_elem(R.emergency_chunks, best)
+
+    table.insert(R.chunks, best)
   end
 
 
