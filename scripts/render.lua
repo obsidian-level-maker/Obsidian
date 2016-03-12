@@ -2073,6 +2073,27 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
+  local function build_a_crate(chunk)
+    if chunk.sw < 2 then return end
+    if chunk.sh < 2 then return end
+
+    local floor_mat = chunk.area.floor_mat
+    if not floor_mat then return end
+
+    local reqs =
+    {
+      kind  = "decor"
+      where = "point"
+    }
+
+    local def = Fab_pick(reqs)
+    local skin1 = { floor=floor_mat }
+    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.area.floor_h, 2)
+
+    Fabricate(chunk.area.room, def, T, { skin1 })
+  end
+
+
   ---| Render_importants |---
 
   each room in LEVEL.rooms do
@@ -2082,6 +2103,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       if chunk.content_kind then
         chunk.z1 = assert(chunk.area.floor_h)
         build_important(chunk)
+      else
+        -- temporary crap!!!
+        build_a_crate(chunk)
       end
     end
 
