@@ -982,6 +982,17 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
   end
 
 
+  local function resolve_closets()
+    each R in LEVEL.rooms do
+      each chunk in R.closets do
+        chunk.area = assert(chunk.TA.area)
+stderrf("resolve_closet in %s --> %s\n", R.name, chunk.area.name)
+        chunk.TA = nil
+      end
+    end
+  end
+
+
   local function sanity_check()
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
@@ -1017,6 +1028,7 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
   resolve_references()
   resolve_internal_conns()
   resolve_joiners()
+  resolve_closets()
 
   -- no seeds should have a 'temp_area' now...
   sanity_check()
@@ -2055,6 +2067,17 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
+  local function rect_to_chunk(rect)
+    local chunk = Chunk_new(nil, rect.x1, rect.y1, rect.x2, rect.y2)
+
+    chunk.TA = rect.area
+    
+    chunk.__rect = rect
+
+    return chunk
+  end
+
+
   local function install_create_rects(T)
     new_rects = {}
 
@@ -2093,6 +2116,12 @@ stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
 
         assert(rect.dir)
         rect.area.joiner_dir = transform_dir(T, rect.dir)
+      end
+
+      if rect.kind == "closet" then
+        local chunk = rect_to_chunk(rect)
+
+        table.insert(R.closets, chunk)
       end
 
       table.insert(new_rects, rect)
