@@ -1098,6 +1098,8 @@ end
 
 
 function Render_floor(A, S)
+  if S.done_floor then return end
+
   local f_brush = S:make_brush()
 
   local f_h = S.floor_h or A.floor_h
@@ -1140,6 +1142,8 @@ end
 
 
 function Render_ceiling(A, S)
+  if S.done_ceil then return end
+
   local c_h = S.ceil_h or A.ceil_h
 
   local c_mat  = S.ceil_mat  or A.ceil_mat
@@ -1218,7 +1222,7 @@ end
 function Render_seed(A, S)
   assert(S.area == A)
 
-  if S.is_rendered or A.rect_info then
+  if S.done_all or A.rect_info then
     -- done elsewhere
     return
   end
@@ -1248,6 +1252,12 @@ end
 
 
 function Render_large_prefab(A)
+  --
+  -- this handles prefabs which occupy a seed rectangle and
+  -- are responsible for making the whole floor and/or ceiling.
+  --
+  -- FIXME : parameter should be a chunk (not area)
+  --
 
 stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
@@ -1262,14 +1272,6 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
     seed_w = A.rect_info.long
     seed_H = A.rect_info.deep
   }
-
-  -- FIXME : reqs.shape
-
-  if A.room then
-    reqs.room_kind = A.room.kind
-  end
-
-  -- TODO : for joiners, reqs.neighbor_kind
 
 
   local function do_start()
@@ -1349,7 +1351,17 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
   end
 
 
+  ---| Render_large_prefab |---
+
   assert(A.mode != "cage")
+
+  -- FIXME : reqs.shape
+
+  if A.room then
+    reqs.room_kind = A.room.kind
+  end
+
+  -- TODO : for joiners, reqs.neighbor_kind
 
 
   local what = A.mode
@@ -1396,8 +1408,12 @@ stderrf("do_item:\n%s\n", table.tostr(A.closet_spot))
   end
 
 
+  --- pick the prefab ---
+
   local def = Fab_pick(reqs)
 
+
+  -- build the prefab --
 
   local tex_ref = A.tex_ref or A.off_area
 
