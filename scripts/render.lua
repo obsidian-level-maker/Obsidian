@@ -636,6 +636,7 @@ end
 
 
 function Render_junction(A, S, dir)
+  if S.done_all then return end
 
   -- proper EDGE objects are handled elsewhere
   if S.edge[dir] then return end
@@ -1251,6 +1252,20 @@ end
 
 
 
+function Render_mark_done(chunk, what)
+  -- what can be "done_all", "done_floor" or "done_ceil"
+
+  for sx = chunk.sx1, chunk.sx2 do
+  for sy = chunk.sy1, chunk.sy2 do
+    local S = SEEDS[sx][sy]
+
+    S[what] = true
+  end
+  end
+end
+
+
+
 function Render_large_prefab(chunk)
   --
   -- this handles prefabs which occupy a seed rectangle (chunk) and
@@ -1429,6 +1444,17 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, floor_h, dir)
 
   Fabricate(A.room, def, T, { skin })
+
+  
+  -- mark seeds as done
+
+  local done_mode = "done_all"
+
+  if what == "stair" then
+    done_mode = "done_floor"
+  end
+
+  Render_mark_done(chunk, done_mode)
 end
 
 
@@ -2087,6 +2113,34 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
+  local function build_a_pool(chunk)
+    if chunk.sw < 2 then return end
+    if chunk.sh < 2 then return end
+
+    local floor_mat = chunk.area.floor_mat
+    if not floor_mat then return end
+
+    local reqs =
+    {
+      kind  = "floor"
+      where = "seeds"
+    }
+
+    local def = Fab_pick(reqs)
+    local skin1 = { floor=floor_mat }
+
+    local S1 = SEEDS[chunk.sx1][chunk.sy1]
+    local S2 = SEEDS[chunk.sx2][chunk.sy2]
+
+    local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, chunk.area.floor_h, 2)
+
+    Fabricate(chunk.area.room, def, T, { skin1 })
+
+    -- only for pit test
+    Render_mark_done(chunk, "done_floor")
+  end
+
+
   ---| Render_importants |---
 
   each room in LEVEL.rooms do
@@ -2098,7 +2152,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
         build_important(chunk)
       else
         -- temporary crap!!!
-        build_a_crate(chunk)
+        build_a_pool(chunk)
       end
     end
 
