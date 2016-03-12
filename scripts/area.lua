@@ -281,6 +281,30 @@ function AREA_CLASS.touches(A, N)
 end
 
 
+function Chunk_new(A, sx1,sy1, sx2,sy2)
+  local CHUNK =
+  {
+    area = A
+    
+    sx1 = sx1, sy1 = sy1
+    sx2 = sx2, sy2 = sy2
+
+    sw = (sx2 - sx1 + 1)
+    sh = (sy2 - sy1 + 1)
+
+    encroach = {}
+  }
+
+  local S1 = SEEDS[sx1][sy1]
+  local S2 = SEEDS[sx2][sy2]
+
+  CHUNK.mx = math.mid(S1.x1, S2.x2)
+  CHUNK.my = math.mid(S1.y1, S2.y2)
+
+  return CHUNK
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -1174,21 +1198,10 @@ function Area_locate_chunks()
   local PASSES = { 33, 32, 23,  22, 21, 12,  11 }
 
 
-  local function new_chunk(A, sx1,sy1, sx2,sy2)
-    local CHUNK =
-    {
-      area = A
-      
-      sx1 = sx1, sy1 = sy1
-      sx2 = sx2, sy2 = sy2
-
-      sw = (sx2 - sx1 + 1)
-      sh = (sy2 - sy1 + 1)
-
-      encroach = {}
-    }
-
+  local function create_chunk(A, sx1,sy1, sx2,sy2)
     local R = assert(A.room)
+
+    local CHUNK = Chunk_new(A, sx1,sy1, sx2,sy2)
 
     if A.mode == "liquid" then
       table.insert(R.liquid_chunks, CHUNK)
@@ -1240,7 +1253,7 @@ stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
       local sy2 = sy1 + dy
 
       if test_chunk_at_seed(A, sx1,sy1, sx2,sy2) then
-        local CHUNK = new_chunk(A, sx1,sy1, sx2,sy2)
+        local CHUNK = create_chunk(A, sx1,sy1, sx2,sy2)
 
         install_chunk_at_seed(A, sx1,sy1, sx2,sy2, CHUNK)
       end
