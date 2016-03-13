@@ -1734,8 +1734,9 @@ stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 
 
   local function fix_stair_dirs(R)
-    each A in R.areas do
-      if A.mode == "stair" then
+    each chunk in R.stairs do
+        local A = assert(chunk.area)
+
         local A1 = assert(A.off_area)
         local A2 = assert(A.face_area)
 
@@ -1747,13 +1748,13 @@ stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
 
         if A1.floor_h < A2.floor_h then
-          chunk.dir.dir = 10 - chunk.dir.dir
+          chunk.dir = 10 - chunk.dir
 
-          A.tex_ref = A1
+          chunk.tex_ref = A1
         else
-          A.tex_ref = A2
+          chunk.tex_ref = A2
         end
-      end
+
     end
   end
 

@@ -1266,7 +1266,7 @@ end
 
 
 
-function Render_large_prefab(chunk)
+function Render_chunk(chunk)
   --
   -- this handles prefabs which occupy a seed rectangle (chunk) and
   -- are responsible for making the whole floor and/or ceiling.
@@ -1274,7 +1274,7 @@ function Render_large_prefab(chunk)
 
   local A = chunk.area
 
-stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
+stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
 
   local dir = chunk.dir or 2
 
@@ -1363,7 +1363,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
   end
 
 
-  ---| Render_large_prefab |---
+  ---| Render_chunk |---
 
   assert(A.mode != "cage")
 
@@ -1427,7 +1427,7 @@ stderrf("\n\n Render_large_prefab in %s (%s)\n", A.name, A.mode)
 
   -- build the prefab --
 
-  local tex_ref = A.tex_ref or A.off_area
+  local tex_ref = chunk.tex_ref or A.off_area
 
   if tex_ref then
     skin.wall  = tex_ref.wall_mat
@@ -2156,9 +2156,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       end
     end
 
-    each chunk in R.closets do
-      Render_large_prefab(chunk)
-    end
+    each chunk in R.closets do Render_chunk(chunk) end
+    each chunk in R.stairs  do Render_chunk(chunk) end
+    each chunk in R.joiners do Render_chunk(chunk) end
 
     -- TODO
     -- each spot in R.triggers do

@@ -973,13 +973,11 @@ stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.
   end
 
 
-  local function resolve_closets()
-    each R in LEVEL.rooms do
-      each chunk in R.closets do
-        chunk.area = assert(chunk.TA.area)
-stderrf("resolve_closet in %s --> %s\n", R.name, chunk.area.name)
-        chunk.TA = nil
-      end
+  local function resolve_chunks(list)
+    each chunk in list do
+      chunk.area = assert(chunk.TA.area)
+stderrf("resolve_chunk in %s --> %s\n", chunk.area.room.name, chunk.area.name)
+      chunk.TA = nil
     end
   end
 
@@ -1019,7 +1017,11 @@ stderrf("resolve_closet in %s --> %s\n", R.name, chunk.area.name)
   resolve_references()
   resolve_internal_conns()
   resolve_joiners()
-  resolve_closets()
+
+  each R in LEVEL.rooms do
+    resolve_chunks(R.closets)
+    resolve_chunks(R.stairs)
+  end
 
   -- no seeds should have a 'temp_area' now...
   sanity_check()
@@ -1715,7 +1717,6 @@ stderrf("---> fail\n")
     end
 
 --FIXME!!!
-if E2.kind == "stair" then return false end
 if E2.kind == "joiner" then return false end
 
 
@@ -2100,7 +2101,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       end
 
       if r.off_area then
-        chunk.TA.off_TA = assert(area_map[r.off_TA])
+        chunk.TA.off_TA = assert(area_map[r.off_area])
       end
 
       if r.kind == "joiner" then
@@ -2118,9 +2119,9 @@ stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
         chunk.TA.joiner_dir = transform_dir(T, chunk.dir)
       end
 
-      if r.kind == "closet" then
-        table.insert(R.closets, chunk)
-      end
+      if r.kind == "closet" then table.insert(R.closets, chunk) end
+      if r.kind == "stair"  then table.insert(R.stairs,  chunk) end
+      if r.kind == "joiner" then table.insert(R.joiners, chunk) end
     end
   end
 
