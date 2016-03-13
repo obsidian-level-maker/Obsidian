@@ -1252,14 +1252,16 @@ end
 
 
 
-function Render_mark_done(chunk, what)
-  -- what can be "done_all", "done_floor" or "done_ceil"
+function Render_mark_done(chunk, mode)
+  -- mode can be "all", "floor" or "ceil"
+
+  mode = "done_" .. mode
 
   for sx = chunk.sx1, chunk.sx2 do
   for sy = chunk.sy1, chunk.sy2 do
     local S = SEEDS[sx][sy]
 
-    S[what] = true
+    S[mode] = true
   end
   end
 end
@@ -1365,6 +1367,11 @@ stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
 
   ---| Render_chunk |---
 
+  -- handle a ceiling paired with a floor
+  if chunk.next_highest then
+    Render_chunk(chunk.next_highest)
+  end
+
   assert(A.mode != "cage")
 
   -- FIXME : reqs.shape
@@ -1446,12 +1453,21 @@ stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
   Fabricate(A.room, def, T, { skin })
 
   
-  -- mark seeds as done
+  -- mark seeds as done --
 
-  local done_mode = "done_all"
+  local done_mode
 
-  if what == "stair" then
-    done_mode = "done_floor"
+  if def.done_mode then
+    done_mode = def.done_mode
+
+  elseif def.kind == "floor" or def.kind == "stairs" then
+    done_mode = "floor"
+
+  elseif def.kind == "ceil" then
+    done_mode = "ceil"
+
+  else
+    done_mode = "all"
   end
 
   Render_mark_done(chunk, done_mode)
@@ -2137,7 +2153,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     Fabricate(chunk.area.room, def, T, { skin1 })
 
     -- only for pit test
-    Render_mark_done(chunk, "done_floor")
+    Render_mark_done(chunk, "floor")
   end
 
 
