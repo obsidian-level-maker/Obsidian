@@ -1180,7 +1180,20 @@ function Area_locate_chunks()
   --    2. handle chunks ON the line of symmetry
 
 
-  local PASSES = { 33, 32, 23,  22, 21, 12,  11 }
+  local PASSES = { 44, 42,24, 33, 32,23,  22, 21,12,  11 }
+
+  -- the large sizes often hog too much space in a room, so we
+  -- don't always keep them
+  local USE_PROBS =
+  {
+    [44] = 67
+    [42] = 22
+    [24] = 22
+
+    [33] = 67
+    [32] = 22
+    [23] = 22
+  }
 
 
   local function create_chunk(A, sx1,sy1, sx2,sy2)
@@ -1231,11 +1244,16 @@ stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
     local dx = int(pass / 10) - 1
     local dy = (pass % 10) - 1
 
+    local use_prob = USE_PROBS[pass] or 99
+
     each S in seed_list do
       local sx1 = S.sx
       local sy1 = S.sy
       local sx2 = sx1 + dx
       local sy2 = sy1 + dy
+
+      -- save time by checking the usage prob *first*
+      if not rand.odds(use_prob) then continue end
 
       if test_chunk_at_seed(A, sx1,sy1, sx2,sy2) then
         local CHUNK = create_chunk(A, sx1,sy1, sx2,sy2)
