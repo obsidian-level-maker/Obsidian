@@ -119,7 +119,7 @@
 
     kind : keyword  -- "floor" (part of a walkable area)
                     -- "liquid"
-                    -- "stairs"
+                    -- "stair"
                     -- "closet" ('T' elements in rules)
                     -- "junction" ('J' elements in rules)
 

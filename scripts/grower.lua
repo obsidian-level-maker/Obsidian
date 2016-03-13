@@ -2096,28 +2096,20 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
-  local function OLD__rect_to_chunk(rect)
-    local chunk = Chunk_new(nil, rect.x1, rect.y1, rect.x2, rect.y2)
-    chunk.__rect = rect
-    return chunk
-  end
-
-
   local function install_create_chunks(T)
     new_chunks = {}
 
     each r in cur_rule.rects do
       local x1,y1, x2,y2, dir1,dir2 = transform_rect(T, r)
 
-      local chunk = Chunk_new(nil, x1,y1, x2,y2)
+      assert(r.kind)
+      local chunk = Chunk_new(r.kind, x1,y1, x2,y2)
 
       chunk.dir  = dir1
       chunk.dir2 = dir2
 
       table.insert(new_chunks, chunk)
 
-
-      chunk.kind = assert(r.kind)
 
       chunk.TA = Grower_temp_area(R, chunk.kind)
 

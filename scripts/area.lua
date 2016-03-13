@@ -27,10 +27,11 @@
 
     mode : keyword  -- "floor"  (traversible part of a normal room)
                     -- "liquid"
-                    -- "cage", "trap"
-                    -- "hallway" (used for stairwells too)
+                    -- "cage"
+                    -- "hallway"
                     -- "scenic"
                     -- "void"
+                    -- "chunk"
 
     scenic_kind : keyword  -- "water", "mountain"
 
@@ -43,6 +44,8 @@
 
     zone : ZONE
 
+    chunk : CHUNK
+
 
     --- geometry of area ---
 
@@ -53,13 +56,6 @@
     neighbors : list(AREA)
 
     edges : list(EDGE)
-
-
-    --- connection stuff ---
-
----##    conns : list(CONN)  -- connections with neighbor rooms
-
----##    entry_conn : CONN
 
 
     --- other stuff ---
@@ -77,21 +73,6 @@
 --[[
     S : seed
     dir : dir
---]]
-
-
---class STAIRWELL
---[[
-    edge1  -- index into outer edge loop
-    edge2
-
-    room1 : ROOM   -- rooms which connect at edge1 and edge2
-    room2 : ROOM   --
-
-    wide1 : bool   -- when true, next edge is used as well
-    wide2 : bool
-
-    info : STAIRWELL_SHAPE
 --]]
 
 
@@ -266,10 +247,10 @@ function AREA_CLASS.touches(A, N)
 end
 
 
-function Chunk_new(A, sx1,sy1, sx2,sy2)
+function Chunk_new(kind, sx1,sy1, sx2,sy2)
   local CHUNK =
   {
-    area = A
+    kind = kind
     
     sx1 = sx1, sy1 = sy1
     sx2 = sx2, sy2 = sy2
@@ -1199,7 +1180,9 @@ function Area_locate_chunks()
   local function create_chunk(A, sx1,sy1, sx2,sy2)
     local R = assert(A.room)
 
-    local CHUNK = Chunk_new(A, sx1,sy1, sx2,sy2)
+    local CHUNK = Chunk_new(A.mode, sx1,sy1, sx2,sy2)
+
+    CHUNK.area = A
 
     if A.mode == "liquid" then
       table.insert(R.liquid_chunks, CHUNK)
