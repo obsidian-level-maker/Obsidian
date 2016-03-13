@@ -38,11 +38,17 @@
     sw, sh, svolume     -- /
 
 
-    conns = list(CONNS)   -- connections to other rooms
+    conns : list(CONNS)   -- connections to other rooms
 
     quest : QUEST
 
     zone : ZONE
+
+
+    chunks   : list(CHUNK)   -- chunks in a walkable area
+    closets  : list(CHUNK)
+    stairs   : list(CHUNK)
+    joiners  : list(CHUNK)
 
 
     hallway : HALLWAY_INFO   -- for hallways only
@@ -104,7 +110,8 @@ function ROOM_CLASS.new()
     conns = {}
     internal_conns = {}
 
-    sections = {}
+    goals = {}
+    teleporters = {}
     weapons = {}
     items = {}
 
@@ -112,16 +119,13 @@ function ROOM_CLASS.new()
     item_spots = {}
     big_spots  = {}
     entry_spots = {}
-    important_spots = {}   -- NOT USED ATM
-
-    goals = {}
-    importants = {}
-    teleporters = {}
-    floor_mats = {}
-    ceil_mats = {}
+    important_spots = {}   -- from prefabs
 
     chunks  = {}
     closets = {}
+    stairs  = {}
+    joiners = {}
+
     cages = {}
     traps = {}
     decor = {}
@@ -130,6 +134,9 @@ function ROOM_CLASS.new()
 
     emergency_chunks = {}
     liquid_chunks = {}
+
+    floor_mats = {}
+    ceil_mats = {}
 
     sky_rects = {}
     exclusions = {}
@@ -1004,8 +1011,6 @@ function Room_border_up()
     -- [ normal rooms should not touch the edge ]
 
     if A2 == "map_edge" then
-      if A1.rect_info then return end
-
       if A1.room then
         junc.E1 = simple_wall_edge(A1)
         junc.E2 = nil
@@ -1177,8 +1182,6 @@ function Room_determine_spots()
 
   local function spots_for_area(R, A, mode)
     -- uses a prefab? [ they provide their own spots ]
-    -- FIXME: remove this check, we skip "done" seeds when finding floor_brushes
-    if A.rect_info then return end
 
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
     if not mode then mode = A.mode end
