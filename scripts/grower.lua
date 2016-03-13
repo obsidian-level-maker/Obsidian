@@ -1634,11 +1634,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
   local function find_chunk(sx, sy)
     if new_chunks then
-      each r in new_chunks do
-        if r.sx1 <= sx and sx <= r.sx2 and
-           r.sy1 <= sy and sy <= r.sy2
+      each K in new_chunks do
+        if K.sx1 <= sx and sx <= K.sx2 and
+           K.sy1 <= sy and sy <= K.sy2
         then
-          return r
+          return K
         end
       end
     end
@@ -1782,7 +1782,7 @@ if E2.kind == "joiner" then return false end
 
     if E1.kind == "stair" then
       -- note: we do not check direction of stair
-      return S.temp_area and S.temp_area.rect_info and S.temp_area.rect_info.kind == "stair"
+      return S.chunk and S.chunk.kind == "stair"
     end
 
     error("Element kind not testable: " .. tostring(E1.kind))
@@ -1817,6 +1817,7 @@ if E2.kind == "joiner" then return false end
       assert(chunk.TA)
 
       set_seed(S, chunk.TA)
+      S.chunk = chunk
       return
     end
 

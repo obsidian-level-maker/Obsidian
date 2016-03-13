@@ -1747,7 +1747,7 @@ stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
 
         if A1.floor_h < A2.floor_h then
-          A.rect_info.dir = 10 - A.rect_info.dir
+          chunk.dir.dir = 10 - chunk.dir.dir
 
           A.tex_ref = A1
         else

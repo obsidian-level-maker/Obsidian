@@ -1223,7 +1223,7 @@ end
 function Render_seed(A, S)
   assert(S.area == A)
 
-  if S.done_all or A.rect_info then
+  if S.done_all then
     -- done elsewhere
     return
   end

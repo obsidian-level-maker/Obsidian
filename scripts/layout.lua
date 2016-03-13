@@ -805,9 +805,8 @@ function Layout_unused_closets()
 
 
   local function kill_closet(A)
-    A.mode = "void"
-
-    A.rect_info = nil
+    chunk.area.mode = "void"
+    chunk.content_kind = "void"
   end
 
 
