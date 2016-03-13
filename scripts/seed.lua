@@ -117,11 +117,26 @@
 --[[
     -- a rectangle of seeds within an area of a room
 
+    kind : keyword  -- "floor" (part of a walkable area)
+                    -- "liquid"
+                    -- "stairs"
+                    -- "closet" ('T' elements in rules)
+                    -- "junction" ('J' elements in rules)
+
     area : AREA
+
+    content_kind : keyword  -- for floor and closet kinds, NIL if unused
+                            -- "START", "LEVEL_EXIT", "TELEPORTER"
+                            -- "KEY", "WEAPON", "ITEM", "SWITCH"
+                            -- "CAGE", "TRAP"
 
     sx1, sy1, sx2, sy2   -- seed range
 
     sw, sh  -- seed size
+
+    dir : DIR        -- main facing direction
+                     -- for closets this faces into the room
+                     -- for stairs/joiners this... uh FIXME
 
     encroach[SIDE]   -- how much distance is used on each side, often zero
                      -- [ used by walls, archways, etc... ]
