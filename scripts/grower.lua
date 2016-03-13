@@ -769,23 +769,51 @@ function Grower_calc_rule_probs()
   --
 
 
-  local function style_factor(rule)
-    -- FIXME : styles factor
-    return 1
+  local function random_factor(rule)
+    local factor = rand.pick({ 0.2, 0.3, 0.5, 0.7, 1.0 })
+
+     if rand.odds(50) then factor = 1 / factor end
+
+    return factor
   end
 
 
-  local function random_factor(rule)
-    -- FIXME : random factor
+  local function style_factor(rule)
+    if not rule.styles then return 1 end
+
+    local factor = 1.0
+
+    each name in rule.styles do
+      if STYLE[name] == nil then
+        error("Unknown style in grammar rule: " .. tostring(name))
+      end
+
+      factor = factor * style_sel(name, 0, 0.4, 1.0, 2.5)
+    end
+
+    return factor
+  end
+
+
+  local function game_factor(rule)
+    -- TODO : game_factor
     return 1
   end
 
 
   local function calc_prob(rule)
+--FIXME!!!!
+do return rule.prob end
+
+    if rule.skip_prob then
+      if rand.odds(rule.skip_prob) then return 0 end
+    end
+
     local prob = rule.prob or 0
 
-    prob = prob * style_factor(rule)
     prob = prob * random_factor(rule)
+    prob = prob *  style_factor(rule)
+    prob = prob *   game_factor(rule)
 
     return prob
   end
@@ -1280,9 +1308,11 @@ stderrf("overwrite seed @ %s\n", S.name)
 
     local prob = rule.use_prob or 0
 
+    if prob <= 0 then return 0 end
+
     -- TODO environment check
 
-    return rule.prob
+    return prob
   end
 
 
