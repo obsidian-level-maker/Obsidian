@@ -853,7 +853,7 @@ end
 function simple_wall_edge(A)
   -- do not clobber certain areas
   if A.mode == "stairwell" or
-     (A.mode == "closet" and A.closet_kind)
+     (A.chunk and A.chunk.kind == "closet")
   then
     return { kind = "nothing", area = A }
   end
@@ -1809,7 +1809,7 @@ stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, 
 
   local function process_room_flat(R, entry_area)
     each A in R.areas do
-      if A.mode == "floor" or A.mode == "stair" then
+      if A.mode == "floor" or A.mode == "chunk" then
         set_floor(A, R.entry_h)
       end
     end
@@ -2459,14 +2459,14 @@ stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
 
 
   local function do_closets(R)
-    each A in R.areas do
-      if A.mode == "closet" then
-        assert(A.face_area)
-        A.floor_h = assert(A.face_area.floor_h)
+    each chunk in R.closets do
+      local A = chunk.area
 
-        -- FIXME : probably pick prefab HERE, decide if outdoorsy
-        A.is_outdoor = nil
-      end
+      assert(A.face_area)
+      A.floor_h = assert(A.face_area.floor_h)
+
+      -- FIXME : probably pick prefab HERE, decide if outdoorsy
+      A.is_outdoor = nil
     end
   end
 

@@ -19,24 +19,18 @@
 ------------------------------------------------------------------------
 
 
---class SPROUT
+--class TEMP_AREA
 --[[
-    S    : SEED     -- where to join onto
-    dir  : DIR      --
+    id, name  :  use for debuggign
 
-    long  : number  -- width of connection (in seeds)
+    mode : keyword   -- the eventual mode of the AREA (q.v.)
 
-    split : number  -- when not NIL, there are two gaps at each side
-                    -- of connection and 'split' is width of the gaps
-                    -- (require split * 2 + 1 <= long)
+    room : ROOM
 
-    mode : keyword  -- usually "normal".
-                    -- can be "extend" to make existing room bigger
-                    -- (instead of create a new room)
+    seeds : list(SEED)
 
-    room : ROOM  -- the room to join onto
+    FIXME
 --]]
-
 
 
 ------------------------------------------------------------------------
@@ -79,7 +73,7 @@ function Grower_save_svg()
     elseif A1 == A2 then
       color = "#ccf"
       lin_w = 1
-    elseif A1.mode == "joiner" or A2.mode == "joiner" then
+    elseif (A1.chunk and A1.chunk.kind == "joiner") or (A2.chunk and A2.chunk.kind == "joiner") then
       color = "#f0f"
     elseif (A1.room == A2.room) and (A1.room or A2.room) then
       color = "#0f0"
@@ -889,6 +883,7 @@ function Grower_make_all_areas()
       temp.area = A
 
       A.seeds = temp.seeds
+      A.chunk = temp.chunk
 
       if temp.room then
         A.mode = temp.mode
@@ -1710,8 +1705,8 @@ stderrf("---> fail\n")
       if A.room != R then return true end
       if S.disable_R == R then return true end
 
-      if A.mode == "closet" then return true end
-      if A.mode == "joiner" then return true end
+      if A.chunk and A.chunk.kind == "closet" then return true end
+      if A.chunk and A.chunk.kind == "joiner" then return true end
 
       return false
     end
@@ -1731,8 +1726,8 @@ stderrf("---> fail\n")
 
     -- FIXME : this "open" element may not be useful, review this
     if E1.what == "open" then
-      if A.mode == "closet" then return false end
-      if A.mode == "joiner" then return false end
+      if A.chunk and A.chunk.kind == "closet" then return false end
+      if A.chunk and A.chunk.kind == "joiner" then return false end
 
       return true
     end
@@ -1800,20 +1795,25 @@ if E2.kind == "joiner" then return false end
     -- otherwise we require an area of this room
     if not (A and A.room == R) then return false end
 
-    if E1.kind == "liquid" or
-       E1.kind == "cage"   or
-       E1.kind == "closet"
-    then
-      return (A.mode == E1.kind)
-    end
-
     if E1.kind == "area" then
       return match_temp_area(E1, A)
     end
 
+    if E1.kind == "liquid" or
+       E1.kind == "cage"
+    then
+      return (A.mode == E1.kind)
+    end
+
+    local chunk = S.chunk
+
     if E1.kind == "stair" then
       -- note: we do not check direction of stair
-      return S.chunk and S.chunk.kind == "stair"
+      return chunk and chunk.kind == "stair"
+    end
+
+    if E1.kind == "closet" then
+      return chunk and chunk.kind == "closet"
     end
 
     error("Element kind not testable: " .. tostring(E1.kind))
@@ -2111,7 +2111,8 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       table.insert(new_chunks, chunk)
 
 
-      chunk.TA = Grower_temp_area(R, chunk.kind)
+      chunk.TA = Grower_temp_area(R, "chunk")
+      chunk.TA.chunk = chunk
 
       if r.kind == "stair" then
         chunk.TA.face_TA = assert(new_area)

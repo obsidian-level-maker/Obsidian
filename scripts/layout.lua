@@ -280,10 +280,6 @@ end
   -- never use it again
   spot.content_kind = kind
 
----##  if spot.area.mode == "closet" then
----##    spot.closet_kind = kind
----##  end
-
 --FIXME  do_exclusions(spot)
 
   return spot
