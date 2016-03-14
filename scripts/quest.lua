@@ -1158,16 +1158,13 @@ function Quest_start_room()
 
     -- need somewhere for starting pad, weapon and nice item
     local space = math.max(4, R:usable_chunks())
-    score = score + space * 40
-
-    -- not too big !!
-    if R.svolume < 30 then score = score + 60 end
-
-    -- prefer no teleporter
-    if not R:has_teleporter() then score = score + 7 end
+    score = score + space * 20
 
     -- far away from first locked door (or exit room)
-    score = score + R.dist_to_exit
+    score = score + R.dist_to_exit * 15
+
+    -- prefer no teleporter
+    if not R:has_teleporter() then score = score + 4 end
 
     -- tie breaker
     return score + gui.random() * 2
