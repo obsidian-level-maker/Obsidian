@@ -51,22 +51,30 @@ function Grower_save_svg()
              10 + x1, TOP - y1, 10 + x2, TOP - y2, color, width or 1))
   end
 
-  local function visit_seed(A1, S1, dir)
+
+  local function visit_seed(S1, dir)
+    if not S1.area then return end
+
     local S2 = S1:neighbor(dir, "NODIR")
 
     if S2 == "NODIR" then return end
 
+    local A1 = S1.area
     local A2 = S2 and S2.area
 
     if A1 == A2 then return end
 
     -- only draw the edge once
-    if A2 and A2.id < A1.id then return end
+--  if A2 and A2.id < A1.id then return end
 
     local color = "#777"
     local lin_w = 2
 
-    if not A2 then
+    if S1.kind == "dead" or (S2 and S2.kind == "dead") then
+      color = "#f00"
+      lin_w = 3
+
+    elseif not A2 then
       -- no change
 --  elseif (A1.is_boundary != A2.is_boundary) then
 --    color = "#f0f"
@@ -136,11 +144,14 @@ function Grower_save_svg()
   end
 
   -- edges
-  each A in LEVEL.areas do
-  each S in A.seeds do
-  each dir in geom.ALL_DIRS do
-    visit_seed(A, S, dir)
-  end
+  for x = 1, SEED_W do
+  for y = 1, SEED_H do
+    local S = SEEDS[x][y]
+
+    each dir in geom.ALL_DIRS do
+      visit_seed(S, dir)
+      if S.top then visit_seed(S.top, dir) end
+    end
   end
   end
 
@@ -3140,18 +3151,19 @@ function Grower_create_rooms()
   Grower_grow_rooms()
   Grower_decorate_rooms()
 
-  Grower_fill_gaps()
+Grower_save_svg()
 
-  Grower_make_other_areas()
+--  Grower_fill_gaps()
 
-  Seed_squarify()
+--  Grower_make_other_areas()
+
+--  Seed_squarify()
 
   Area_calc_volumes()
   Area_find_neighbors()
 
-  Grower_assign_boundary()
+--  Grower_assign_boundary()
 
 --DEBUG
-   Grower_save_svg()
 end
 
