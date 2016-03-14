@@ -1140,6 +1140,19 @@ function Room_border_up()
   end
 
 
+  local function handle_joiner(C)
+    -- clear junctions on each side of joiner
+    local junc1 = Junction_lookup(C.A1, C.joiner_chunk.area)
+    local junc2 = Junction_lookup(C.A2, C.joiner_chunk.area)
+
+--stderrf("  junc1 : %s --> %s  =  %s\n", C.A1.name, C.joiner_area.name, tostring(junc1))
+--stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(junc2))
+
+    junc1.keep_empty = true
+    junc2.keep_empty = true
+  end
+
+
   ---| Room_border_up |---
 
   each _,junc in LEVEL.area_junctions do

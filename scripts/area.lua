@@ -848,7 +848,7 @@ function Area_create_rooms()
 
   Area_collect_seeds()
 
----###  Connect_areas_in_rooms()
+  Connect_teleporters()
 
 
   gui.printf("Seed Map:\n")
@@ -1129,7 +1129,7 @@ end
 
 
 
-function Area_locate_chunks()
+function Area_locate_chunks(R)
   --  
   -- locate seed rectangles in areas of rooms, these will be used
   -- for placing importants (goals, teleporters, etc) and also
@@ -1240,10 +1240,8 @@ stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
 
   ---| Area_locate_chunks |---
 
-  each A in LEVEL.areas do
-    if A.room and
-      (A.mode == "floor" or A.mode == "liquid")
-    then
+  each A in R.areas do
+    if A.mode == "floor" or A.mode == "liquid" then
       find_chunks_in_area(A)
     end
   end

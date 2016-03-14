@@ -2181,7 +2181,10 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 
       if pass == "sprout" then
         transform_connection(T, cur_rule.new_room.conn, new_conn)
+
         mark_connection_used(new_conn)
+
+        Connect_directly(new_conn)
       end
     end
   end
@@ -2573,6 +2576,8 @@ function Grower_decorate_rooms()
 
   each R in room_list do
     Grower_grammatical_room(R, "decorate")
+
+    Area_locate_chunks(R)
   end
 end
 

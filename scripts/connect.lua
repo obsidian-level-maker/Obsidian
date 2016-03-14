@@ -125,7 +125,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Connect_through_sprout(P)
+function Connect_directly(P)
   local kind = P.kind or "edge"
 
   gui.debugf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
@@ -157,15 +157,6 @@ stderrf("CONNECT: %s / %s (%s) --> %s / %s (%s)\n",
 
 --assert(C.A1.room == C.R1)
 
-    -- clear junctions on each side of joiner
-    local junc1 = Junction_lookup(C.A1, C.joiner_chunk.area)
-    local junc2 = Junction_lookup(C.A2, C.joiner_chunk.area)
-
---stderrf("  junc1 : %s --> %s  =  %s\n", C.A1.name, C.joiner_area.name, tostring(junc1))
---stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(junc2))
-
-    junc1.keep_empty = true
-    junc2.keep_empty = true
 
   else
     local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
@@ -188,6 +179,7 @@ gui.debugf("  area %s(%s) --> %s(%s)\n", C.A1.name, C.A1.mode, C.A2.name, C.A2.m
 
   -- handle split connections
   -- [ FIXME : broken, must be done a different way ]
+--[[
   if P.split then
     assert(not S1.diagonal)
     local S2 = S1:raw_neighbor(geom.RIGHT[P.dir], P.long - P.split)
@@ -200,6 +192,7 @@ gui.debugf("  area %s(%s) --> %s(%s)\n", C.A1.name, C.A1.mode, C.A2.name, C.A2.m
     C.F1 = F1 ; F1.conn = C
     C.F2 = F2 ; F2.conn = C
   end
+--]]
 end
 
 
@@ -274,24 +267,5 @@ function Connect_teleporters()
 
     connect_trunks(trunk1, trunk2)
   end
-end
-
-
-
-function Connect_stuff()
-
-  ---| Connect_stuff |---
-
-  gui.printf("\n---| Connect_stuff |---\n")
-
-  each P in LEVEL.prelim_conns do
-    Connect_through_sprout(P)
-  end
-
-  -- find chunks now, since teleporters need to know how many there are,
-  -- and other connections will update their side information.
-  Area_locate_chunks()
-
-  Connect_teleporters()
 end
 

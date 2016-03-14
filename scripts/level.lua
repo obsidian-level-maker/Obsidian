@@ -753,9 +753,6 @@ function Levels_build_it()
   Area_create_rooms()
     if gui.abort() then return "abort" end
 
-  Connect_stuff()
-    if gui.abort() then return "abort" end
-
   Quest_make_quests()
     if gui.abort() then return "abort" end
 
