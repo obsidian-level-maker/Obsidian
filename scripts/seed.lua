@@ -218,29 +218,6 @@ function SEED_CLASS.join_halves(S)
 end
 
 
-function Seed_squarify()
-  -- detects when a diagonal seed has same area on each half, and
-  -- merges the two halves into a full seed
-
-  for sx = 1, SEED_W do
-  for sy = 1, SEED_H do
-    local S = SEEDS[sx][sy]
-
-    if S.diagonal and S.top.area == S.area then
-      S:join_halves()
-
-      -- remove dead seeds from areas
-      local A = S.area
-
-      if A then
-        A:remove_dead_seeds()
-      end
-    end
-  end -- sx, sy
-  end
-end
-
-
 -- NOTE: this is "raw" and does not handle diagonal seeds
 function SEED_CLASS.raw_neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
@@ -610,6 +587,26 @@ function Seed_block_valid_and_free(x1,y1, x2,y2)
   end
 
   return true
+end
+
+
+function Seed_squarify()
+  -- detects when a diagonal seed has same area on each half, and
+  -- merges the two halves into a full seed
+
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+    local S = SEEDS[sx][sy]
+
+    if S.diagonal and S.top.area == S.area then
+      S:join_halves()
+    end
+  end -- sx, sy
+  end
+
+  each A in LEVEL.areas do
+    A:remove_dead_seeds()
+  end
 end
 
 
