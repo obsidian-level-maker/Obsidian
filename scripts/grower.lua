@@ -892,8 +892,6 @@ function Grower_make_other_areas()
     each idx,temp in temp_areas do
       local A = AREA_CLASS.new("void")
 
-      temp.area = A
-
       A.seeds = temp.seeds
       A.chunk = temp.chunk
 
@@ -955,57 +953,6 @@ function Grower_make_other_areas()
         end
       end
     end  -- sx, sy
-    end
-  end
-
-
-  local function resolve_references()
-    each temp in LEVEL.all_temps do
-      if temp.face_TA then
-        temp.area.face_area = assert(temp.face_TA.area)
-      end
-
-      if temp.off_TA then
-        temp.area.off_area = assert(temp.off_TA.area)
-      end
-    end
-  end
-
-
-  local function resolve_connections()
-    each C in LEVEL.prelim_conns do
-      if C.kind == "joiner" then
-        C.A1 = assert(C.TA1.area)
-        C.A2 = assert(C.TA2.area)
-
-        C.TA1 = nil ; C.TA2 = nil
-      end
-    end
-  end
-
-
-  local function resolve_internal_conns()
-    each R in LEVEL.rooms do
-      each C in R.internal_conns do
-        C.A1 = assert(C.TA1.area)
-        C.A2 = assert(C.TA2.area)
-
-        C.TA1 = nil ; C.TA2 = nil
-
-        if C.stair_TA then
-          C.stair_area = assert(C.stair_TA.area)
-          C.stair_TA = nil
-        end
-      end
-    end
-  end
-
-
-  local function resolve_chunks(list)
-    each chunk in list do
-      chunk.area = assert(chunk.TA.area)
-stderrf("resolve_chunk in %s --> %s\n", chunk.area.room.name, chunk.area.name)
-      chunk.TA = nil
     end
   end
 
@@ -1218,22 +1165,28 @@ stderrf("overwrite seed @ %s\n", S.name)
 
 
   local function set_liquid(S)
+error("WTF")
+--[[
     -- FIXME : LEVEL.dummy_liquid_area
     if R.liquid_temp_area == nil then
        R.liquid_temp_area = Grower_temp_area(R, "liquid", "no_add")
     end
 
     set_seed(S, R.liquid_temp_area)
+--]]
   end
 
 
   local function set_cage(S)
+error("WTF")
+--[[
     -- FIXME : LEVEL.dummy_cage_area
     if R.cage_temp_area == nil then
        R.cage_temp_area = Grower_temp_area(R, "cage", "no_add")
     end
 
     set_seed(S, R.cage_temp_area)
+--]]
   end
 
 
@@ -1744,6 +1697,11 @@ stderrf("---> fail\n")
 
 
   local function match_an_element(S, E1, E2, T)
+--FIXME
+if E2.kind == "liquid" or E2.kind == "cage" then
+return false
+end
+
     if E1.kind == "magic" then
       return match_a_magic_element(S, E1)
     end
@@ -1802,11 +1760,6 @@ stderrf("---> fail\n")
     if E1.kind == "area" then
       return match_area(E1, A)
     end
-
---FIXME
-if E2.kind == "liquid" or E2.kind == "cage" then
-return false
-end
 
     if E1.kind == "liquid" or
        E1.kind == "cage"
@@ -2719,15 +2672,15 @@ function Grower_fill_gaps()
     for sy = 1, SEED_H do
       local S = SEEDS[sx][sy]
 
-      if not S.diagonal and not S.temp_area then
+      if not S.diagonal and not S.area and not S.temp_area then
         -- a whole unused seed : split into two
         S:split(rand.sel(50, 1, 3))
       end
 
       S2 = S.top
 
-      if S  and not S .temp_area then S .temp_area = new_temp_area(S)  end
-      if S2 and not S2.temp_area then S2.temp_area = new_temp_area(S2) end
+      if S  and not S .area and not S .temp_area then S .temp_area = new_temp_area(S)  end
+      if S2 and not S2.area and not S2.temp_area then S2.temp_area = new_temp_area(S2) end
     end
     end
   end
@@ -3151,19 +3104,19 @@ function Grower_create_rooms()
   Grower_grow_rooms()
   Grower_decorate_rooms()
 
-Grower_save_svg()
 
---  Grower_fill_gaps()
+  Grower_fill_gaps()
 
---  Grower_make_other_areas()
+  Grower_make_other_areas()
 
---  Seed_squarify()
+  Seed_squarify()
 
   Area_calc_volumes()
   Area_find_neighbors()
 
---  Grower_assign_boundary()
+  Grower_assign_boundary()
 
 --DEBUG
+   Grower_save_svg()
 end
 
