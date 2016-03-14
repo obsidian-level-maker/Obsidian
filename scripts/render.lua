@@ -1333,12 +1333,12 @@ stderrf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.co
   local function do_joiner()
     reqs.kind = "joiner"
 
-    -- FIXME: chunk.conn
-    if A.joiner_conn.flip_it then
+    local C = assert(chunk.conn)
+    if C.flip_it then
       dir = 10 - dir
     end
 
-    local LOCK = A.joiner_conn.lock
+    local LOCK = C.lock
 
     if LOCK then
       if #LOCK.goals == 2 then

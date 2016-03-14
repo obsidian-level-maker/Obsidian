@@ -747,6 +747,7 @@ function Grower_preprocess_grammar()
     locate_all_contiguous_parts("stair")
     locate_all_contiguous_parts("joiner")
     locate_all_contiguous_parts("closet")
+    locate_all_contiguous_parts("hallway")
 
     if not cur_def.pass then
       cur_def.pass = name_to_pass(name)
@@ -960,6 +961,18 @@ function Grower_make_all_areas()
   end
 
 
+  local function resolve_connections()
+    each C in LEVEL.prelim_conns do
+      if C.kind == "joiner" then
+        C.A1 = assert(C.TA1.area)
+        C.A2 = assert(C.TA2.area)
+
+        C.TA1 = nil ; C.TA2 = nil
+      end
+    end
+  end
+
+
   local function resolve_internal_conns()
     each R in LEVEL.rooms do
       each C in R.internal_conns do
@@ -972,25 +985,6 @@ function Grower_make_all_areas()
           C.stair_area = assert(C.stair_TA.area)
           C.stair_TA = nil
         end
-      end
-    end
-  end
-
-
-  local function resolve_joiners()
-    each C in LEVEL.prelim_conns do
-      if C.kind == "joiner" then
-        C.A1 = assert(C.TA1.area)
-        C.A2 = assert(C.TA2.area)
-
-stderrf("Resolving joiner in prelim-conn:\n")
-stderrf("  Rooms %s --> %s\n", C.R1.name, C.R2.name)
-stderrf("  %s (%s) --> %s (%s)\n", C.TA1.name, C.TA1.room.name, C.A1.name, C.A1.room.name)
-stderrf("  %s (%s) --> %s (%s)\n", C.TA2.name, C.TA2.room.name, C.A2.name, C.A2.room.name)
-        C.TA1 = nil ; C.TA2 = nil
-
-        C.joiner_area = assert(C.joiner_TA.area)
-        C.joiner_TA = nil
       end
     end
   end
@@ -1038,12 +1032,13 @@ stderrf("resolve_chunk in %s --> %s\n", chunk.area.room.name, chunk.area.name)
   end
 
   resolve_references()
+  resolve_connections()
   resolve_internal_conns()
-  resolve_joiners()
 
   each R in LEVEL.rooms do
     resolve_chunks(R.closets)
     resolve_chunks(R.stairs)
+    resolve_chunks(R.joiners)
   end
 
   -- no seeds should have a 'temp_area' now...
@@ -1741,9 +1736,6 @@ stderrf("---> fail\n")
       return match_a_magic_element(S, E1)
     end
 
---FIXME!!!
-if E2.kind == "joiner" then return false end
-
 
     -- symmetry handling
     -- [ we prevent a pattern from overlapping its mirror ]
@@ -2129,6 +2121,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
       if r.kind == "joiner" then
         new_conn.kind = "joiner"
+        new_conn.chunk = chunk
         new_conn.joiner_TA = chunk.TA
 
         -- connection goes from NEW ROOM --> CURRENT ROOM

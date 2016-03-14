@@ -148,9 +148,8 @@ function Connect_through_sprout(P)
     C.A1 = assert(P.A1)
     C.A2 = assert(P.A2)
 
-    C.joiner_area = P.joiner_area
-
-    C.joiner_area.joiner_conn = C
+    C.joiner_chunk = assert(P.chunk)
+    C.joiner_chunk.conn = C
 
 stderrf("CONNECT: %s / %s (%s) --> %s / %s (%s)\n",
   C.R1.name, C.A1.name, C.A1.room.name,
@@ -159,11 +158,11 @@ stderrf("CONNECT: %s / %s (%s) --> %s / %s (%s)\n",
 --assert(C.A1.room == C.R1)
 
     -- clear junctions on each side of joiner
-    local junc1 = Junction_lookup(C.A1, C.joiner_area)
-    local junc2 = Junction_lookup(C.A2, C.joiner_area)
+    local junc1 = Junction_lookup(C.A1, C.joiner_chunk.area)
+    local junc2 = Junction_lookup(C.A2, C.joiner_chunk.area)
 
-stderrf("  junc1 : %s --> %s  =  %s\n", C.A1.name, C.joiner_area.name, tostring(junc1))
-stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(junc2))
+--stderrf("  junc1 : %s --> %s  =  %s\n", C.A1.name, C.joiner_area.name, tostring(junc1))
+--stderrf("  junc2 : %s --> %s  =  %s\n", C.A2.name, C.joiner_area.name, tostring(junc2))
 
     junc1.keep_empty = true
     junc2.keep_empty = true

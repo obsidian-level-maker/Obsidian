@@ -2388,8 +2388,8 @@ end
       -- TODO : decide prefab, allow a height difference
       if C.kind == "joiner" then
         next_f = next_f + 0 --!!!!! FIXME TEST ONLY
-        set_floor(C.joiner_area, math.min(A1.floor_h, next_f))
-stderrf("  setting %s to %d\n", C.joiner_area.name, C.joiner_area.floor_h)
+        set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
+stderrf("  setting %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
       end
 
       visit_room(R2, next_f, A2, R, C)
