@@ -1151,17 +1151,18 @@ function Grower_grammatical_room(R, pass)
 
 
   local function what_in_there(S)
-    if not S.temp_area then return "-" end
-    if not S.temp_area.room then return "?" end
-    return S.temp_area.name
+    local A = S.area
+    if not A then return "-" end
+    if not A.room then return "?" end
+    return A.name
   end
 
 
   local function unset_seed(S)
-    local A = assert(S.temp_area)
+    local A = assert(S.area)
     assert(A.room)
 
-    S.temp_area = nil
+    S.area = nil
 
     table.kill_elem(A.seeds, S)
 
@@ -1175,15 +1176,15 @@ function Grower_grammatical_room(R, pass)
   local function set_seed(S, A)
     assert(A.room)
 
-    if S.temp_area == A then return end
+    if S.area == A then return end
 
-    if S.temp_area then
+    if S.area then
 stderrf("overwrite seed @ %s\n", S.name)
-      assert(S.temp_area.room == R)
+      assert(S.area.room == R)
       unset_seed(S)
     end
 
-    S.temp_area = A
+    S.area = A
 
     table.insert(A.seeds, S)
 
@@ -1206,6 +1207,7 @@ stderrf("overwrite seed @ %s\n", S.name)
 
 
   local function set_liquid(S)
+    -- FIXME : LEVEL.dummy_liquid_area
     if R.liquid_temp_area == nil then
        R.liquid_temp_area = Grower_temp_area(R, "liquid", "no_add")
     end
@@ -1215,6 +1217,7 @@ stderrf("overwrite seed @ %s\n", S.name)
 
 
   local function set_cage(S)
+    -- FIXME : LEVEL.dummy_cage_area
     if R.cage_temp_area == nil then
        R.cage_temp_area = Grower_temp_area(R, "cage", "no_add")
     end
@@ -1225,7 +1228,6 @@ stderrf("overwrite seed @ %s\n", S.name)
 
   local function raw_blocked(S)
     if S.area then return true end
-    if S.temp_area then return true end
     if S.disabled_R == R then return true end
 
     -- never use a seed at edge of map
@@ -1668,7 +1670,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
-  local function match_temp_area(E1, A)
+  local function match_area(E1, A)
     if A.mode != "floor" then return false end
 
 stderrf("match temp area : map =\n%s\n", table.tostr(area_map))
@@ -1688,7 +1690,7 @@ stderrf("---> fail\n")
 
 
   local function match_a_magic_element(S, E1)
-    local A = S.temp_area
+    local A = S.area
 
     if E1.what == "all" then return true end
 
@@ -1705,7 +1707,7 @@ stderrf("---> fail\n")
       return false
     end
 
-    -- all other magic elements require a temp_area and same room
+    -- all other magic elements require an area and same room
     if not A then return false end
     if A.room != R then return false end
     if S.disable_R == R then return false end
@@ -1776,7 +1778,7 @@ stderrf("---> fail\n")
 
 
     -- do we have an area in current room?
-    local A = S.temp_area
+    local A = S.area
     if A and A.room != R then A = nil end
 
     if E1.kind == "free" then
@@ -1787,7 +1789,7 @@ stderrf("---> fail\n")
     if not (A and A.room == R) then return false end
 
     if E1.kind == "area" then
-      return match_temp_area(E1, A)
+      return match_area(E1, A)
     end
 
 --FIXME
@@ -1820,7 +1822,7 @@ end
     if not E2.assignment then return end
 
     if E2.kind == "free" then
-      if S.temp_area then
+      if S.area then
         unset_seed(S)
       end
 
@@ -1828,7 +1830,7 @@ end
     end
 
     if E2.kind == "disable" then
-      if S.temp_area then
+      if S.area then
         unset_seed(S)
       end
 
@@ -1868,7 +1870,7 @@ stderrf("\narea_map = \n%s\n", table.tostr(area_map))
       assert(new_room)
 
 stderrf("new_room seed @ %s\n", S.name)
-      set_seed(S, new_room.temp_areas[1])
+      set_seed(S, new_room.areas[1])
       return
     end
 
@@ -1933,8 +1935,8 @@ stderrf("new_room seed @ %s\n", S.name)
       end
 
       if E2.assignment then
-        if S .temp_area then unset_seed(S)  end
-        if S2.temp_area then unset_seed(S2) end
+        if S .area then unset_seed(S)  end
+        if S2.area then unset_seed(S2) end
 
 stderrf("Joining halves @ %s\n", S:tostr())
         S:join_halves()
@@ -1972,8 +1974,8 @@ stderrf("Joining halves @ %s\n", S:tostr())
       if E2B.assignment or E2T.assignment then
 
         -- split the seed
-        -- FIXME: this temp_area logic is unnecessarily complex...
-        local A = S.temp_area
+        -- FIXME: this area shuffling logic is unnecessarily complex...
+        local A = S.area
         if A then unset_seed(S) end
 
 stderrf("splitting %s  with dir %d\n", S:tostr(), math.min(dir, 10 - dir))
@@ -1991,7 +1993,7 @@ stderrf("install into top   : %s --> %s\n", E1T.kind, E2T.kind)
         install_an_element(S2, E1T, E2T, T)
 
 stderrf("seed at %s\n", S:tostr())
-stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_area))
+stderrf("new temp areas:  %s  |  %s\n", tostring(S.area), tostring(S2.area))
       end
 
       return true
@@ -2130,7 +2132,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
         new_conn.chunk = chunk
 
         -- connection goes from NEW ROOM --> CURRENT ROOM
-        new_conn.A1  = assert(new_room.temp_areas[1])
+        new_conn.A1  = assert(new_room.areas[1])
         new_conn.A2  = assert(chunk.area.off_area)
 ---stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
 ---  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
@@ -2163,7 +2165,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
 
     if cur_rule.new_area and not new_area then
       new_area = AREA_CLASS.new("floor")
-      ROOM:add_area(new_area)
+      R:add_area(new_area)
 
       local off_area_idx = cur_rule.new_area.off_area or 1
       local off_area = assert(area_map[off_area_idx])
