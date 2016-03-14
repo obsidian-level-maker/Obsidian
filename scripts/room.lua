@@ -1142,6 +1142,7 @@ function Room_border_up()
 
 
   local function handle_joiner(C)
+
     -- clear junctions on each side of joiner
     local junc1 = Junction_lookup(C.A1, C.joiner_chunk.area)
     local junc2 = Junction_lookup(C.A2, C.joiner_chunk.area)
@@ -1156,10 +1157,15 @@ function Room_border_up()
 
   ---| Room_border_up |---
 
+  each C in LEVEL.conns do
+    if C.kind == "joiner" then
+      handle_joiner(C)
+    end
+  end
+
   each _,junc in LEVEL.area_junctions do
     visit_junction(junc)
   end
-
 end
 
 

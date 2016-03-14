@@ -1701,9 +1701,6 @@ stderrf("---> fail\n")
 if E2.kind == "liquid" or E2.kind == "cage" then
 return false
 end
-if E2.kind == "joiner" or E2.kind == "closet" then
-return false
-end
 
     if E1.kind == "magic" then
       return match_a_magic_element(S, E1)
@@ -2105,8 +2102,8 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.area), tostring(S2.area))
 ---  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
 ---  new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
 
-        assert(chunk.dir)
-        chunk.dir = transform_dir(T, chunk.dir)
+--???        assert(chunk.dir)
+--???        chunk.dir = transform_dir(T, chunk.dir)
       end
 
       if r.kind == "closet" then table.insert(R.closets, chunk) end
@@ -3121,6 +3118,6 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
--- Grower_save_svg()
+   Grower_save_svg()
 end
 
