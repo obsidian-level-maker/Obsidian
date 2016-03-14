@@ -1276,7 +1276,7 @@ function Render_chunk(chunk)
 
   local A = chunk.area
 
-stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
+stderrf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.content_kind or "-")
 
   local dir = chunk.dir or 2
 
@@ -1333,6 +1333,7 @@ stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
   local function do_joiner()
     reqs.kind = "joiner"
 
+    -- FIXME: chunk.conn
     if A.joiner_conn.flip_it then
       dir = 10 - dir
     end
@@ -1372,8 +1373,6 @@ stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
     Render_chunk(chunk.next_highest)
   end
 
-  assert(A.mode != "cage")
-
   -- FIXME : reqs.shape
 
   if A.room then
@@ -1383,19 +1382,23 @@ stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
   -- TODO : for joiners, reqs.neighbor_kind
 
 
-  local what = A.mode
-
-  if what == "closet" then
-    what = chunk.content_kind
-
-    -- FIXME : unused closets  [ i.e. this should not happen ]
-    if what == nil then return end
-  end
-
-  assert(what)
+  local what = chunk.content_kind
 
 
-  if what == "START" then
+  -- FIXME : unused closets  [ i.e. this should not happen ]
+  if chunk.kind == "closet" and what == nil then return end
+
+  -- FIXME : support e.g. kind=="floor" + what=="START" (e.g. a raising start)
+  --         [ most of the checks below assume kind=="closet" ]
+
+
+  if chunk.kind == "stair" then
+    do_stairs()
+
+  elseif chunk.kind == "joiner" then
+    do_joiner()
+
+  elseif what == "START" then
     do_start()
 
   elseif what == "LEVEL_EXIT" then
@@ -1416,14 +1419,8 @@ stderrf("\n\n Render_chunk in %s (%s)\n", A.name, A.mode)
   elseif what == "TRAP" then
     do_trap()
 
-  elseif what == "stair" then
-    do_stairs()
-
-  elseif what == "joiner" then
-    do_joiner()
-
   else
-    error("Unsupported prefab kind: " .. tostring(what))
+    error("Unsupported chunk kind: " .. tostring(chunk.kind) .. " / " .. tostring(what))
   end
 
 
