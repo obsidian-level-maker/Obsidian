@@ -2191,8 +2191,6 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
         transform_connection(T, cur_rule.new_room.conn, new_conn)
 
         mark_connection_used(new_conn)
-
-        Connect_directly(new_conn)
       end
     end
   end
@@ -3154,6 +3152,6 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
--- Grower_save_svg()
+   Grower_save_svg()
 end
 

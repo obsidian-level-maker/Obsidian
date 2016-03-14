@@ -227,6 +227,15 @@ function area_get_bbox(A)
 end
 
 
+function AREA_CLASS.remove_dead_seeds(A)
+  for i = #A.seeds, 1, -1 do
+    if A.seeds[i].kind == "dead" then
+      table.remove(A.seeds, i)
+    end
+  end
+end
+
+
 function AREA_CLASS.calc_volume(A)
   local volume = 0
 
@@ -848,8 +857,6 @@ function Area_create_rooms()
 
   Area_collect_seeds()
 
-  Connect_teleporters()
-
 
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
@@ -857,6 +864,13 @@ function Area_create_rooms()
   each R in LEVEL.rooms do
     gui.debugf("Final %s   size: %dx%d\n", R.name, R.sw, R.sh)
   end
+
+
+  each P in LEVEL.prelim_conns do
+    Connect_directly(P)
+  end
+
+  Connect_teleporters()
 end
 
 

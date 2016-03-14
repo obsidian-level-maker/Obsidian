@@ -227,24 +227,16 @@ function Seed_squarify()
     local S = SEEDS[sx][sy]
 
     if S.diagonal and S.top.area == S.area then
-      assert(not S.area)
---## stderrf("S:join_halves at %s\n", S:tostr())
---## stderrf("temp areas: %s  |  %s\n", tostring(S.temp_area), tostring(S.top.temp_area))
       S:join_halves()
 
-      -- remove dead seeds from temp areas
+      -- remove dead seeds from areas
       local A = S.area
 
       if A then
-        for i = #A.seeds, 1, -1 do
-          if A.seeds[i].kind == "dead" then
-            table.remove(A.seeds, i)
-          end
-        end
+        A:remove_dead_seeds()
       end
-
     end
-  end
+  end -- sx, sy
   end
 end
 
