@@ -815,7 +815,7 @@ do return rule.prob end
 
   ---| Grower_calc_rule_probs |---
 
-  each rule in SHAPE_GRAMMAR do
+  each name,rule in SHAPE_GRAMMAR do
     rule.use_prob = calc_prob(rule)
   end
 end
@@ -2402,7 +2402,7 @@ end
       if loop > max_loop then return end
 
       -- nothing left to try?
-      if table.empty(rules) then break; end
+      if table.empty(rules) then return end
 
       local name = rand.key_by_probs(rules)
 
@@ -2413,7 +2413,7 @@ end
 
     until try_apply_a_rule()
 
-    -- SUCCESS
+    -- SUCCESS --
 
     gui.debugf("Applied grammar rule %s\n", cur_rule.name)
 
