@@ -1098,7 +1098,7 @@ function Grower_grammatical_room(R, pass)
   local new_room
   local new_conn
   local new_area
-  local intl_conn
+  local new_intconn
 
   -- this is used to mark seeds for one side of a mirrored rule
   -- (in symmetrical rooms).
@@ -1701,6 +1701,9 @@ stderrf("---> fail\n")
 if E2.kind == "liquid" or E2.kind == "cage" then
 return false
 end
+if E2.kind == "joiner" or E2.kind == "closet" then
+return false
+end
 
     if E1.kind == "magic" then
       return match_a_magic_element(S, E1)
@@ -2072,7 +2075,7 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.area), tostring(S2.area))
       table.insert(new_chunks, chunk)
 
 
-      local A = AREA_CLASS.new("floor")
+      local A = AREA_CLASS.new("chunk")
       R:add_area(A)
 
       chunk.area = A
@@ -2080,8 +2083,8 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.area), tostring(S2.area))
 
       if r.kind == "stair" then
         chunk.area.face_area = assert(new_area)
-        assert(intl_conn)
-        intl_conn.stair_area = assert(chunk.area)
+        assert(new_intconn)
+        new_intconn.stair_chunk = chunk
 
       elseif r.face_area then
         chunk.area.face_area = assert(area_map[r.face_area])
@@ -2129,12 +2132,13 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.area), tostring(S2.area))
 
     if cur_rule.new_area and not new_area then
       new_area = AREA_CLASS.new("floor")
+
       R:add_area(new_area)
 
       local off_area_idx = cur_rule.new_area.off_area or 1
       local off_area = assert(area_map[off_area_idx])
 
-      intl_conn = add_internal_conn(off_area, new_area)
+      new_intconn = add_internal_conn(off_area, new_area)
     end
 
     if cur_rule.rects then
@@ -2246,7 +2250,7 @@ end
       area_map[3] = nil
     else
       new_area = nil
-      intl_conn = nil
+      new_intconn = nil
     end
 
 --stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, x, y)
@@ -3117,6 +3121,6 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
-   Grower_save_svg()
+-- Grower_save_svg()
 end
 

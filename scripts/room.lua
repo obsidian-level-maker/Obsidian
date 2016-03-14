@@ -1732,11 +1732,11 @@ stderrf("Area assign delta %d --> %s\n", cur_delta_h, A.name)
 stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 
       if C.kind == "stair" then
-        assert(C.stair_area)
+        assert(C.stair_chunk)
 
         area_assign_delta(A2, up_chance, pick_stair_delta_h(cur_delta_h, up_chance))
 
---stderrf("Visiting stair in %s\n", C.stair_area.name)
+--stderrf("Visiting stair in %s\n", C.stair_chunk.area.name)
 
       else
         assert(C.kind == "direct")
@@ -1749,25 +1749,27 @@ stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 
   local function fix_stair_dirs(R)
     each chunk in R.stairs do
-        local A = assert(chunk.area)
+      local A = assert(chunk.area)
 
-        local A1 = assert(A.off_area)
-        local A2 = assert(A.face_area)
+      local A1 = assert(A.off_area)
+      local A2 = assert(A.face_area)
 
-        assert(A1.floor_h)
-        assert(A2.floor_h)
+stderrf("STAIR in %s : off %s --> face %s\n", A.name, A1.name, A2.name)
 
-        set_floor(A, math.min(A1.floor_h, A2.floor_h))
+      assert(A1.floor_h)
+      assert(A2.floor_h)
+
+      set_floor(A, math.min(A1.floor_h, A2.floor_h))
 
 stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
 
-        if A1.floor_h < A2.floor_h then
-          chunk.dir = 10 - chunk.dir
+      if A1.floor_h < A2.floor_h then
+        chunk.dir = 10 - chunk.dir
 
-          chunk.tex_ref = A1
-        else
-          chunk.tex_ref = A2
-        end
+        chunk.tex_ref = A1
+      else
+        chunk.tex_ref = A2
+      end
 
     end
   end
@@ -1821,15 +1823,6 @@ stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, 
   end
 
 
-  local function process_room_flat(R, entry_area)
-    each A in R.areas do
-      if A.mode == "floor" or A.mode == "chunk" then
-        set_floor(A, R.entry_h)
-      end
-    end
-  end
-
-
   local function pick_start_area(R)
     local list = {}
 
@@ -1840,6 +1833,15 @@ stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, 
     end
 
     return rand.pick(list)
+  end
+
+
+  local function process_room_flat(R, entry_area)
+    each A in R.areas do
+      if A.mode == "floor" or A.mode == "chunk" then
+        set_floor(A, R.entry_h)
+      end
+    end
   end
 
 

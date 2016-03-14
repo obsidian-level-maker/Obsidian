@@ -142,7 +142,7 @@ function AREA_CLASS.new(mode)
 
     conns = {}
     seeds = {}
-    neighbors  = {}
+    neighbors = {}
     edges = {}
 
     inner_points = {}
