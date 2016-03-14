@@ -109,6 +109,7 @@ function ROOM_CLASS.new()
     seeds = {}
     conns = {}
     internal_conns = {}
+    temp_areas = {}
 
     goals = {}
     teleporters = {}

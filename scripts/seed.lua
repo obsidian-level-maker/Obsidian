@@ -215,7 +215,6 @@ function SEED_CLASS.join_halves(S)
   S2.area = nil
   S2.room = nil
   S2.edge = nil
-  S2.temp_area = nil
 end
 
 
@@ -227,14 +226,14 @@ function Seed_squarify()
   for sy = 1, SEED_H do
     local S = SEEDS[sx][sy]
 
-    if S.diagonal and S.top.temp_area == S.temp_area then
+    if S.diagonal and S.top.area == S.area then
       assert(not S.area)
 --## stderrf("S:join_halves at %s\n", S:tostr())
 --## stderrf("temp areas: %s  |  %s\n", tostring(S.temp_area), tostring(S.top.temp_area))
       S:join_halves()
 
       -- remove dead seeds from temp areas
-      local A = S.temp_area
+      local A = S.area
 
       if A then
         for i = #A.seeds, 1, -1 do

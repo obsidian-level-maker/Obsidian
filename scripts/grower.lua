@@ -873,7 +873,7 @@ end
 
 
 
-function Grower_make_all_areas()
+function Grower_make_other_areas()
 
   local function make_areas(temp_areas)
     table.append(LEVEL.all_temps, temp_areas)
@@ -1016,7 +1016,7 @@ stderrf("resolve_chunk in %s --> %s\n", chunk.area.room.name, chunk.area.name)
   end
 
 
-  ---| Grower_make_all_areas |---
+  ---| Grower_make_other_areas |---
 
   LEVEL.all_temps = {}
 
@@ -1031,6 +1031,7 @@ stderrf("resolve_chunk in %s --> %s\n", chunk.area.room.name, chunk.area.name)
     make_areas(LEVEL.gap_areas)
   end
 
+--[[
   resolve_references()
   resolve_connections()
   resolve_internal_conns()
@@ -1040,16 +1041,18 @@ stderrf("resolve_chunk in %s --> %s\n", chunk.area.room.name, chunk.area.name)
     resolve_chunks(R.stairs)
     resolve_chunks(R.joiners)
   end
+--]]
 
   -- no seeds should have a 'temp_area' now...
   sanity_check()
 end
 
 
-function Grower_temp_area(R, mode, no_add)
+
+function Grower_temp_area(R, mode)
   local A =
   {
-    id = alloc_id("gram_area")
+    id = alloc_id("temp_area")
     mode = mode
     room = R
     seeds = {}
@@ -1057,10 +1060,6 @@ function Grower_temp_area(R, mode, no_add)
   }
 
   A.name = string.format("TEMP_AREA_%d", A.id)
-
-  if not no_add then
-    table.insert(R.temp_areas, A)
-  end
 
   return A
 end
@@ -1108,9 +1107,9 @@ function Grower_add_room(parent_R, is_hallway, trunk)
 
   Room_set_kind(ROOM, kind, is_outdoor, is_cave)
 
-  -- always need at least one temp-area
-  ROOM.temp_areas = {}
-  Grower_temp_area(ROOM, "floor")
+  -- always need at least one floor area
+  local A = AREA_CLASS.new("floor")
+  ROOM:add_area(A)
 
   -- create a preliminary connection (last room to this one)
   local PC
@@ -1791,6 +1790,11 @@ stderrf("---> fail\n")
       return match_temp_area(E1, A)
     end
 
+--FIXME
+if E2.kind == "liquid" or E2.kind == "cage" then
+return false
+end
+
     if E1.kind == "liquid" or
        E1.kind == "cage"
     then
@@ -1837,9 +1841,8 @@ stderrf("---> fail\n")
     -- handle special rectangles (stairs, cages, traps)
     local chunk = find_chunk(S.sx, S.sy)
     if chunk then
-      assert(chunk.TA)
-
-      set_seed(S, chunk.TA)
+      assert(chunk.area)
+      set_seed(S, chunk.area)
       S.chunk = chunk
       return
     end
@@ -2011,13 +2014,13 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
   end
 
 
-  local function add_internal_conn(TA1, TA2, kind)
+  local function add_internal_conn(A1, A2, kind)
     local C =
     {
       kind = kind or "direct"
 
-      TA1 = TA1
-      TA2 = TA2
+      A1 = A1
+      A2 = A2
     }
 
     if cur_rule.has_stair then
@@ -2103,36 +2106,38 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.temp_area), tostring(S2.temp_
       table.insert(new_chunks, chunk)
 
 
-      chunk.TA = Grower_temp_area(R, "chunk")
-      chunk.TA.chunk = chunk
+      local A = AREA_CLASS.new("floor")
+      R:add_area(A)
+
+      chunk.area = A
+      A.chunk = chunk
 
       if r.kind == "stair" then
-        chunk.TA.face_TA = assert(new_area)
+        chunk.area.face_area = assert(new_area)
         assert(intl_conn)
-        intl_conn.stair_TA = assert(chunk.TA)
+        intl_conn.stair_area = assert(chunk.area)
 
       elseif r.face_area then
-        chunk.TA.face_TA = assert(area_map[r.face_area])
+        chunk.area.face_area = assert(area_map[r.face_area])
       end
 
       if r.off_area then
-        chunk.TA.off_TA = assert(area_map[r.off_area])
+        chunk.area.off_area = assert(area_map[r.off_area])
       end
 
       if r.kind == "joiner" then
         new_conn.kind = "joiner"
         new_conn.chunk = chunk
-        new_conn.joiner_TA = chunk.TA
 
         -- connection goes from NEW ROOM --> CURRENT ROOM
-        new_conn.TA1  = assert(new_room.temp_areas[1])
-        new_conn.TA2  = assert(chunk.TA.off_TA)
-stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
-  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
-  new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
+        new_conn.A1  = assert(new_room.temp_areas[1])
+        new_conn.A2  = assert(chunk.area.off_area)
+---stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
+---  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
+---  new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
 
         assert(chunk.dir)
-        chunk.TA.joiner_dir = transform_dir(T, chunk.dir)
+        chunk.dir = transform_dir(T, chunk.dir)
       end
 
       if r.kind == "closet" then table.insert(R.closets, chunk) end
@@ -2157,7 +2162,8 @@ stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
     end
 
     if cur_rule.new_area and not new_area then
-      new_area = Grower_temp_area(R, "floor")
+      new_area = AREA_CLASS.new("floor")
+      ROOM:add_area(new_area)
 
       local off_area_idx = cur_rule.new_area.off_area or 1
       local off_area = assert(area_map[off_area_idx])
@@ -3009,8 +3015,6 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 
   smoothen_out_pokers()
 
-  Seed_squarify()
-
   LEVEL.gap_areas = temp_areas
 end
 
@@ -3138,7 +3142,9 @@ function Grower_create_rooms()
 
   Grower_fill_gaps()
 
-  Grower_make_all_areas()
+  Grower_make_other_areas()
+
+  Seed_squarify()
 
   Area_calc_volumes()
   Area_find_neighbors()
