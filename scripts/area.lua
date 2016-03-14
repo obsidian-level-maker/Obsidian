@@ -31,7 +31,7 @@
                     -- "hallway"
                     -- "scenic"
                     -- "void"
-                    -- "chunk"
+                    -- "chunk" (whole area is a single chunk)
 
     scenic_kind : keyword  -- "water", "mountain"
 
@@ -44,7 +44,7 @@
 
     zone : ZONE
 
-    chunk : CHUNK
+    chunk : CHUNK   -- only set when mode == "chunk"
 
 
     --- geometry of area ---
@@ -563,26 +563,6 @@ function Area_find_neighbors()
   end
   end
   end
-end
-
-
-
-function Area_largest_area(zone)
-  -- Note : zone can be omitted to give largest area of map
-
-  local best
-
-  each A in LEVEL.areas do
-    if zone and A.zone != zone then continue end
-
-    if A.mode == "normal" then
-      if not best or (A.svolume > best.svolume) then
-        best = A
-      end
-    end
-  end
-
-  return assert(best)
 end
 
 
