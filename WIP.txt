@@ -3,17 +3,27 @@ WORK IN PROGRESS
 ================
 
 
+>>>  monster spots for "floor"/"whole" prefabs
+
+???  off_area / face_area  for stairs/joiners should be in CHUNK
+
+
+GROWER :
+
++  prune "tiny" trunks (e.g. total walk_vol < 10)
+
+-  prune any areas that end up empty
+
+
+
 CHUNK SYSTEM:
-
->>> after growing/areas/connecting, BUT before quests,
-    visit each room and collect a set of seed rectangles where
-    items/switches/decorations/etc can be placed.  [ include closets ]
-
-!!  ACTUALLY USE THE CHUNKS, not the current wotsit spots
 
 -  can also use these "rects" for floor prefabs, ceiling prefabs,
    free-standing prefabs (in middle), wall-extended prefabs,
    corner-extended prefabs
+
+-  probably use these chunks for wall-switches too
+   [ chunk itself is space for player to reach the wall ]
 
 -  check each side of these rects, see if side is "dead space"
    (i.e. a solid wall or map border).
@@ -50,6 +60,7 @@ MONSTERS:
    -  use brushes to show vis=0, vis=1 and vis=2 spots
 
 +  in START rooms, allow monsters in vis==2 spots
+   [ or vis==1 when far enough from entry point ]
 
 ?  when choosing ambush spots, require vis >= 1
    [ review ambush logic, see if should keep the trace_ray calls ]
@@ -107,6 +118,8 @@ TELEPORTERS:
 
 -  improve eval_room() -- it needs to know # of spots/closets in a room 
 
+-  when picking TELEPORTER spots, favor closets!
+
 
 
 PREFAB SYSTEM:
@@ -150,17 +163,9 @@ SHAPE GRAMMARS:
 IDEA: rules can specify a "prefab_flavor" for any rects, and when
       finding a matching prefab require "flavor" field to match.
 
-+  in rect_info, store "seed_w" and "seed_h" values [require a "dir" too]
-
--  each map gets different factors for all grammar rules
-
-   factor = rand.pick({ 0.1, 0.3, 0.7, 1.0 })
-   if rand.odds(50) then factor = 1 / factor end
-   new_prob = old_prob * factor
-
-Q/ can do windows using them?  pictures??
-
 -  allow TWO conns into a new room (become F1/F2 in CONN object)
+
+-  allow TWO stairs into a new area
 
 +  prune / re-use rooms which remain small, and hallways which
    never end up anywhere else
@@ -188,6 +193,7 @@ Q/ can do windows using them?  pictures??
 
 idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
        Q/ does "anything" included empty space / other rooms?
+       A/ yes it would
 
 idea:  CYCLE pass (after SPROUT) for multiple paths
        [ probably as 'H' hallways, allow these to grow, prune them
@@ -231,6 +237,8 @@ Usage Ideas:
 
 HALLWAYS:
 
+Q/ do we always build them with prefabs for every piece?
+
 -  'H' in grammar rules (see above)
 
 -  treat as an area of room which it sprouts off, but have special
@@ -248,6 +256,14 @@ INTRA-ROOM LOCKS
 
 -  another idea: if have a KEY in a closet, then use a barred-key-closet
    and add a switch closet which opens it.
+
+idea: a generic lowering bars prefab to go in front of closets or
+      joiners or exit doors
+
+-  a "raising stairs" prefab, need to find the switch
+   [ hard part is guaranteeing cannot get there another way ]
+
+-  closet that looks like a wall switch but opens a monsters closet
 
 
 
