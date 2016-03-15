@@ -310,7 +310,7 @@ SPROUT_HALL_1 =
 
 DECORATE_CAGE_1 =
 {
-  prob = 500
+  prob = 0  -- FIXME
 
   structure =
   {
@@ -376,7 +376,6 @@ AUX_CAGE_GROW3 =
 }
 
 
-
 DECORATE_CLOSET_2x1 =
 {
   prob = 1
@@ -406,6 +405,69 @@ DECORATE_CLOSET_2x2 =
 }
 
 
+DECORATE_LIQUID_1 =
+{
+  prob = 200
+
+  structure =
+  {
+    ".", "."
+    ".", "~"
+    "1", "1"
+  }
+
+  auxiliary =
+  {
+    pass = "liquid_grow"
+
+    count = { 3,8 }
+  }
+}
+
+
+AUX_LIQUID_GROW1 =
+{
+  pass = "liquid_grow"
+
+  prob = 25
+
+  structure =
+  {
+    ".", "."
+    ".", "~"
+    "~", "~"
+  }
+}
+
+
+AUX_LIQUID_GROW2 =
+{
+  pass = "liquid_grow"
+
+  prob = 50
+
+  structure =
+  {
+    "~.", "~~"
+    "1.", "1~"
+  }
+}
+
+
+AUX_LIQUID_GROW3 =
+{
+  pass = "liquid_grow"
+
+  prob = 50
+
+  structure =
+  {
+    "~~", "~~"
+    "1.", "1~"
+  }
+}
+
+
 --[[
 DECORATE_LIQUID_1 =
 {
@@ -417,7 +479,6 @@ DECORATE_LIQUID_1 =
     "1", "1"
   }
 }
-
 
 DECORATE_LIQUID_2 =
 {

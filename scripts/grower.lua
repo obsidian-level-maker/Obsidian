@@ -982,8 +982,8 @@ function Grower_make_other_areas()
     make_areas(R.temp_areas)
   end
 
-  make_liquids("liquid")
-  make_liquids("cage")
+---FIXME  make_liquids("liquid")
+---FIXME  make_liquids("cage")
 
   if LEVEL.gap_areas then
     make_areas(LEVEL.gap_areas)
@@ -1165,15 +1165,16 @@ stderrf("overwrite seed @ %s\n", S.name)
 
 
   local function set_liquid(S)
-error("WTF")
---[[
-    -- FIXME : LEVEL.dummy_liquid_area
-    if R.liquid_temp_area == nil then
-       R.liquid_temp_area = Grower_temp_area(R, "liquid", "no_add")
+    if R.dummy_liquid == nil then
+       R.dummy_liquid = AREA_CLASS.new("liquid")
+       R.dummy_liquid.room = R
+       -- Note: we do not add the dummy area into the room
+
+       --FIXME
+       R:add_area(R.dummy_liquid)
     end
 
-    set_seed(S, R.liquid_temp_area)
---]]
+    set_seed(S, R.dummy_liquid)
   end
 
 
@@ -1698,7 +1699,7 @@ stderrf("---> fail\n")
 
   local function match_an_element(S, E1, E2, T)
 --FIXME
-if E2.kind == "liquid" or E2.kind == "cage" then
+if E2.kind == "cage" then
 return false
 end
 
@@ -3118,6 +3119,6 @@ function Grower_create_rooms()
   Grower_assign_boundary()
 
 --DEBUG
-   Grower_save_svg()
+-- Grower_save_svg()
 end
 
