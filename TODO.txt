@@ -57,11 +57,7 @@ ______________________________________________________________________
 
 +  get stairwells working again
 
--  item closets would be nice
-
 -  wall switches too
-
--  grower : unused (or failed hall) sprouts can be good closet spots
 
 -  sky generator : better checking of themes (esp. w/ control module)
 
@@ -75,19 +71,10 @@ IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.
 ALSO : "mon-zone" for monster/weapon palette changes
 
 
--  pick Exit room: allow picking a large room with two conns but one
-   leading to a small leaf (which becomes the ACTUAL exit) and large
-   room is the "final battle".
-
--  sometimes incorporate a nearby RANDOM area into a room
-
 REQUEST:  mix it up option for the quiet start setting.
 
 IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
-
-IDEA: have a single thing number for "coop player"
-      [ i.e. treat player entities more abstractly ]
 
 -  CTF : start with a tile designed for CTF mode, placed in middle of map,
          and when adding a room/hall then also add its sister room
@@ -103,23 +90,6 @@ Texturing
 +  texture choice for outdoor floors
 
 +  hallways
-
-
-
-Grower
-------
-
-+  when a dud hallway is removed, try again on same sprout
-   [ especially if map is undersized ]
-
-   --> store sprouts in ROOM
-
-+  sharp isolated voids :
-   if 2+ sides have same area, merge seed into that area (sometimes)
-
--  IDEA: remember 'blocked' sprouts -- may be good spots for cycles
-
--  when a large room touches/cross the boundary rect, allow it to be a LEAF
 
 
 
@@ -213,22 +183,6 @@ Traps....
 +  make more traps over a episode/game
 
 
-Map borders
------------
-
-++  merge cells into largish groups (esp. based on 'dist')
-    [ sound familiar?  V6 cave 'AREA' system! ]
-
-+  fix sky height next to certain walls  (very tall, looks bad)
-
--  in "water" kind, fix using liquid for some solid cells
-
-
-Liquid pools
-------------
-
-+  fences instead of "wall" (c.f. Room_border_up)
-
 
 Fake fences:
 -  a wall built out of floor brush and sky brush (delta_z for no gap)
@@ -304,9 +258,6 @@ CTF and DM
 
 ???  apply nice items gotten in normal rooms to the HMODEL
 
--  if room before exit room (a) has no locked doors (b) is not small
-   and (c) exit room is small, then put guard monster there.
-
 -  outdoor fences should straddle both rooms
    (but need to handle corners and T junctions)
 
@@ -318,11 +269,6 @@ CTF and DM
 
 -  proper handling of pictures with 3D floors
 
-
-Bridges:
--  have an actual bridge [Urban theme]
--  bridges : check two/three seeds for LONG bridges
--  add mon/item spots to prefabs
 
 
 ----------------------------------------------
@@ -340,8 +286,6 @@ Bridges:
 
 
 Closets:
-!!  get them working again
-
 -  put exclusion zones in front of START and TELEPORTER closets
 
 +  set 'floor' material to match touching area
@@ -358,8 +302,6 @@ Closets:
 
 Prefab system:
 -  x_repeat, y_repeat
-
-+  type of prefab is from the NAME
 
 -  do mirroring in prefab space (only really need X)
 
