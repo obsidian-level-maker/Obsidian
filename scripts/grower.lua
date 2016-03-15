@@ -884,57 +884,81 @@ end
 
 
 
-function Grower_make_other_areas()
+function Grower_split_liquids()
+  --
+  -- Ensures the liquid areas in a room are contiguous, splitting them
+  -- if they are consist of separate pieces.
+  --
+  -- Handles large cages too.
+  --
 
-  local function grow_liquid_area(S, A, what)
-    S.area = A
-    S.room = A.room
-    S.temp_area = nil
+  local good_areas = {}
 
-    table.insert(A.seeds, S)
-    A.svolume = A.svolume + 1  -- FIXME
+
+  local function grow_contiguous_area(S, list)
+    S.mark_contiguous = true
+
+    table.insert(list, S)
 
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
 
-      if N and N.temp_area and N.temp_area.mode == what and
-         N.temp_area.room == A.room
-      then
-        grow_liquid_area(N, A, what)
+      if N and N.area == S.area and not N.mark_contiguous then
+        grow_contiguous_area(N, list)
       end
     end
   end
 
 
-  local function make_liquids(what)
-    -- create areas from contiguous groups of liquid seeds in a room
-    -- [ also does LARGE cages too ]
+  local function check_at_seed(S, mode)
+    local A = S.area
 
+    if not A then return end
+    if not A.room then return end
+
+    if A.mode != mode then return end
+
+    -- already know to be contiguous?
+    if good_areas[A] then return end
+
+    local seeds = {}
+
+    grow_contiguous_area(S, list)
+
+    if #list >= #A.seeds then
+      -- all seeds in the area are contiguous
+    
+      -- FIXME
+    end
+
+    -- existing area is not contiguous, need to split it
+
+    local A2 = AREA_CLASS.new(mode)
+    A2.room = A.room
+    A2.room:add_area(A2)
+
+    -- FIXME
+  end
+
+
+  local function check_all_seeds(mode)
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
       for pass = 1, 2 do
         local S = SEEDS[sx][sy]
         if pass == 2 then S = S.top end
 
-        if S and S.temp_area and S.temp_area.mode == what and S.temp_area.room then
-          local A = AREA_CLASS.new(what)
-
-          A.room = S.temp_area.room
-          A.room:add_area(A)
-
-          grow_liquid_area(S, A, what)
-        end
+        check_at_seed(S, mode)
       end
     end  -- sx, sy
     end
   end
 
 
-  ---| Grower_make_other_areas |---
+  ---| Grower_split_liquids |---
 
----FIXME  make_liquids("liquid")
----FIXME  make_liquids("cage")
-
+  check_all_seeds("liquid")
+  check_all_seeds("cage")
 end
 
 
@@ -3053,10 +3077,9 @@ function Grower_create_rooms()
   Grower_grow_rooms()
   Grower_decorate_rooms()
 
+  Grower_split_liquids()
 
   Grower_fill_gaps()
-
-  Grower_make_other_areas()
 
   Seed_squarify()
 
