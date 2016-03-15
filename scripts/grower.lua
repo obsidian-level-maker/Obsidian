@@ -886,33 +886,6 @@ end
 
 function Grower_make_other_areas()
 
-  local function make_areas(temp_areas)
-    table.append(LEVEL.all_temps, temp_areas)
-
-    each idx,temp in temp_areas do
-      local A = AREA_CLASS.new("void")
-
-      A.seeds = temp.seeds
-      A.chunk = temp.chunk
-
-      if temp.room then
-        A.mode = temp.mode
-
-        A.svolume = temp.svolume or 0  -- FIXME: can be used too early
-
-        temp.room:add_area(A)
-      end
-
-      -- install into seeds
-      each S in A.seeds do
-        S.area = A
-        S.room = temp.room
-        S.temp_area = nil
-      end
-    end
-  end
-
-
   local function grow_liquid_area(S, A, what)
     S.area = A
     S.room = A.room
@@ -957,52 +930,11 @@ function Grower_make_other_areas()
   end
 
 
-  local function sanity_check()
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      for pass = 1, 2 do
-        local S = SEEDS[sx][sy]
-        if pass == 2 then S = S.top end
-
-        if S and S.temp_area then
-          stderrf("OH HELL : %s\n", tostring(S.temp_area.mode))
-          error("Failed to convert all temp-areas")
-        end
-      end
-    end -- sx, sy
-    end
-  end
-
-
   ---| Grower_make_other_areas |---
-
-  LEVEL.all_temps = {}
-
-  each R in LEVEL.rooms do
-    make_areas(R.temp_areas)
-  end
 
 ---FIXME  make_liquids("liquid")
 ---FIXME  make_liquids("cage")
 
-  if LEVEL.gap_areas then
-    make_areas(LEVEL.gap_areas)
-  end
-
---[[
-  resolve_references()
-  resolve_connections()
-  resolve_internal_conns()
-
-  each R in LEVEL.rooms do
-    resolve_chunks(R.closets)
-    resolve_chunks(R.stairs)
-    resolve_chunks(R.joiners)
-  end
---]]
-
-  -- no seeds should have a 'temp_area' now...
-  sanity_check()
 end
 
 
@@ -2971,6 +2903,21 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
   end
 
 
+  local function make_real_areas()
+    each temp in temp_areas do
+      local A = AREA_CLASS.new("void")
+
+      A.seeds = temp.seeds
+
+      -- install into seeds
+      each S in A.seeds do
+        S.area = A
+        S.temp_area = nil
+      end
+    end
+  end
+
+
   ---| Grower_fill_gaps |---
 
   create_temp_areas()
@@ -2981,7 +2928,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 
   smoothen_out_pokers()
 
-  LEVEL.gap_areas = temp_areas
+  make_real_areas()
 end
 
 
