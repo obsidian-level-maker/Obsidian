@@ -1104,6 +1104,7 @@ function Render_floor(A, S)
   local f_brush = S:make_brush()
 
   local f_h = S.floor_h or A.floor_h
+  assert(f_h)
 
   local f_mat = S.floor_mat or A.floor_mat
   local f_side = S.floor_side or S.floor_mat or A.floor_side or f_mat
@@ -1146,6 +1147,7 @@ function Render_ceiling(A, S)
   if S.done_ceil then return end
 
   local c_h = S.ceil_h or A.ceil_h
+  assert(c_h)
 
   local c_mat  = S.ceil_mat  or A.ceil_mat
   local c_side = S.ceil_side or S.ceil_mat or A.ceil_side or c_mat
