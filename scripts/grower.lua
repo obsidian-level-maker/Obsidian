@@ -918,37 +918,54 @@ function Grower_split_liquids()
 
     if A.mode != mode then return end
 
-    -- already know to be contiguous?
+    -- already known to be contiguous?
     if good_areas[A] then return end
 
-    local seeds = {}
+    local list = {}
 
     grow_contiguous_area(S, list)
 
-    if #list >= #A.seeds then
-      -- all seeds in the area are contiguous
-    
-      -- FIXME
+    -- clear the marking flag
+    each S in list do
+      S.mark_contiguous = false
     end
 
-    -- existing area is not contiguous, need to split it
+    -- all seeds in the area are contiguous?
+    if #list >= #A.seeds then
+      good_areas[A] = true
+      return
+    end
+
+    -- current area is not contiguous, need to split it
 
     local A2 = AREA_CLASS.new(mode)
     A2.room = A.room
     A2.room:add_area(A2)
 
+    A2.seeds = list
+
+    each S in A2.seeds do
+      S.area = A2
+
+      table.kill_elem(A.seeds, S)
+    end
+
     -- FIXME
+    A2.svolume = #A2.seeds
+
+    good_areas[A2] = true
   end
 
 
   local function check_all_seeds(mode)
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
-      for pass = 1, 2 do
-        local S = SEEDS[sx][sy]
-        if pass == 2 then S = S.top end
+      local S = SEEDS[sx][sy]
 
-        check_at_seed(S, mode)
+      check_at_seed(S, mode)
+
+      if S.top then
+        check_at_seed(S.top, mode)
       end
     end  -- sx, sy
     end
@@ -1124,9 +1141,7 @@ stderrf("overwrite seed @ %s\n", S.name)
     if R.dummy_liquid == nil then
        R.dummy_liquid = AREA_CLASS.new("liquid")
        R.dummy_liquid.room = R
-       -- Note: we do not add the dummy area into the room
 
-       --FIXME
        R:add_area(R.dummy_liquid)
     end
 
