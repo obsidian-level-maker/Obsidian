@@ -2167,7 +2167,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
         build_important(chunk)
       else
         -- temporary crap!!!
-        build_a_pool(chunk)
+        build_a_crate(chunk)
       end
     end
 

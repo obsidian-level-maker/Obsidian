@@ -1178,10 +1178,12 @@ function Area_locate_chunks(R)
 
     CHUNK.area = A
 
+    if CHUNK.sw < 2 or CHUNK.sh < 2 then
+      CHUNK.is_small = true
+    end
+
     if A.mode == "liquid" then
       table.insert(R.liquid_chunks, CHUNK)
-    elseif CHUNK.sw < 2 or CHUNK.sh < 2 then
-      table.insert(R.emergency_chunks, CHUNK)
     else
 stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
       table.insert(R.chunks, CHUNK)

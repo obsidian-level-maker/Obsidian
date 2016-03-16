@@ -19,7 +19,14 @@
 ------------------------------------------------------------------------
 
 
-function Layout_compute_wall_dists(R)
+function Layout_compute_dists(R)
+  --
+  -- Compute various walking distances in a room:
+  --
+  -- (1) give each seed a 'conn_dist' value, which is roughly the #
+  --     of seeds the player must walk to reach a connection in/out
+  --     of the room.  It includes teleporters.
+  --
 
   local function init_dists()
     for x = R.sx1, R.sx2 do
@@ -65,7 +72,7 @@ function Layout_compute_wall_dists(R)
   end
 
 
-  ---| Layout_compute_wall_dists |---
+  ---| Layout_compute_dists |---
 
   init_dists()
 
@@ -107,7 +114,7 @@ function Layout_spot_for_wotsit(R, kind)
   local function nearest_important(spot)
     local dist
 
-    -- FIXME : importants not used anymore, use 'chunks' and 'emergency_chunks'
+    -- FIXME : importants not used anymore, use 'chunks' instead
     each imp in R.importants do
       local d = geom.dist(imp.x, imp.y, spot.x, spot.y) / SEED_SIZE
 
@@ -179,13 +186,13 @@ end
   end
 
 
-  local function evaluate_chunk(chunk, is_emergency)
+  local function evaluate_chunk(chunk)
     -- already used?
     if chunk.content_kind then return -1 end
 
     local score = 0
 
-    if not is_emergency then score = score + 1000 end
+    if not chunk.is_small then score = score + 1000 end
 
     -- FIXME: evaluate_chunk
 
@@ -232,20 +239,12 @@ end
   local best_score = 0
 
   -- first, try chunks
-  for pass = 1,2 do
-    local list = sel(pass == 1, R.chunks, R.emergency_chunks)
+  each chunk in R.chunks do
+    local score = evaluate_chunk(chunk)
 
-    local is_emergency = (pass == 2)
-
-    each chunk in list do
-      chunk.is_emergency = is_emergency -- meh
-
-      local score = evaluate_chunk(chunk, is_emergency)
-
-      if score > best_score then
-        best = chunk
-        best_score = score
-      end
+    if score > best_score then
+      best = chunk
+      best_score = score
     end
   end
 
@@ -262,14 +261,6 @@ end
 
   if not best then
     return nil
-  end
-
-
-  -- if we use an emergency chunk, move it to normal 'chunks' list
-  if best.is_emergency then
-    table.kill_elem(R.emergency_chunks, best)
-
-    table.insert(R.chunks, best)
   end
 
 

@@ -133,7 +133,6 @@ function ROOM_CLASS.new()
 
     used_chunks = 0  -- includes closets
 
-    emergency_chunks = {}
     liquid_chunks = {}
 
     floor_mats = {}
