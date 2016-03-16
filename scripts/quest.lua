@@ -298,6 +298,8 @@ function Quest_create_initial_quest()
   local function compute_dists_to_exit(R, cur_dist)
     R.dist_to_exit = cur_dist
 
+    gui.debugf("dist_to_exit in %s : %1.1f\n", R.name, R.dist_to_exit)
+
     each C in R.conns do
       local R2 = C:other_room(R)
 
@@ -1157,14 +1159,19 @@ function Quest_start_room()
     end
 
     -- need somewhere for starting pad, weapon and nice item
-    local space = math.max(4, R:usable_chunks())
+    local space = math.min(3, R:usable_chunks())
     score = score + space * 20
 
     -- far away from first locked door (or exit room)
-    score = score + R.dist_to_exit * 15
+    score = score + R.dist_to_exit * 25
+
+    -- prefer indoors
+    if not R.is_outdoor then score = score + 7 end
 
     -- prefer no teleporter
-    if not R:has_teleporter() then score = score + 4 end
+    if not R:has_teleporter() then score = score + 1 end
+
+    gui.debugf("eval_start_room in %s --> space:%d dist:%d %1.2f\n", R.name, space, R.dist_to_exit, score)
 
     -- tie breaker
     return score + gui.random() * 2
