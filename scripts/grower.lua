@@ -776,7 +776,7 @@ function Grower_calc_rule_probs()
 
 
   local function random_factor(rule)
-    local factor = rand.pick({ 0.2, 0.3, 0.5, 0.7, 1.0 })
+    local factor = rand.pick({ 0.3, 0.5, 0.7, 1.0 })
 
      if rand.odds(50) then factor = 1 / factor end
 
