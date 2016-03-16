@@ -529,6 +529,59 @@ end
 
 
 
+function Area_collect_seeds()
+  -- FIXME : room method instead??
+
+
+  local function collect_seeds(R)
+    local sx1, sx2 = 999, -999
+    local sy1, sy2 = 999, -999
+
+    local function update(x, y)
+      sx1 = math.min(sx1, x)
+      sy1 = math.min(sy1, y)
+      sx2 = math.max(sx2, x)
+      sy2 = math.max(sy2, y)
+    end
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+
+      if S.area and S.area.room == R then
+        S.room = R
+        table.insert(R.seeds, S)
+        update(sx, sy)
+      end
+
+      if S2 and S2.area and S2.area.room == R then
+        S2.room = R
+        table.insert(R.seeds, S2)
+        update(sx, sy)
+      end
+    end
+    end
+
+    if sx1 > sx2 then
+      error("Room with no seeds!")
+    end
+
+    R.sx1 = sx1 ; R.sx2 = sx2
+    R.sy1 = sy1 ; R.sy2 = sy2
+
+    R.sw = R.sx2 - R.sx1 + 1
+    R.sh = R.sy2 - R.sy1 + 1
+  end
+
+
+  each R in LEVEL.rooms do
+    collect_seeds(R)
+  end
+end
+
+
+
 function Area_find_neighbors()
 
   local function try_pair_up(A1, A2, nb_map)
@@ -697,59 +750,6 @@ end
 
 
 
-function Area_collect_seeds()
-  -- FIXME : room method instead??
-
-
-  local function collect_seeds(R)
-    local sx1, sx2 = 999, -999
-    local sy1, sy2 = 999, -999
-
-    local function update(x, y)
-      sx1 = math.min(sx1, x)
-      sy1 = math.min(sy1, y)
-      sx2 = math.max(sx2, x)
-      sy2 = math.max(sy2, y)
-    end
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S  = SEEDS[sx][sy]
-      local S2 = S.top
-
-      if S.area and S.area.room == R then
-        S.room = R
-        table.insert(R.seeds, S)
-        update(sx, sy)
-      end
-
-      if S2 and S2.area and S2.area.room == R then
-        S2.room = R
-        table.insert(R.seeds, S2)
-        update(sx, sy)
-      end
-    end
-    end
-
-    if sx1 > sx2 then
-      error("Room with no seeds!")
-    end
-
-    R.sx1 = sx1 ; R.sx2 = sx2
-    R.sy1 = sy1 ; R.sy2 = sy2
-
-    R.sw = R.sx2 - R.sx1 + 1
-    R.sh = R.sy2 - R.sy1 + 1
-  end
-
-
-  each R in LEVEL.rooms do
-    collect_seeds(R)
-  end
-end
-
-
-
 function Area_determine_map_size()
   --
   -- Determines size of map (Width x Height) in grid points, based on the
@@ -831,31 +831,36 @@ end
 
 
 
+function Area_init_seed_map()
+  local W, H = Area_determine_map_size()
+
+  W = W - 1
+  H = H - 1
+
+  gui.printf("Map size: %dx%d seeds\n", W, H)
+
+  Seed_init(W, H)
+end
+
+
+
 function Area_create_rooms()
 
   gui.printf("\n--==| Creating Rooms |==--\n\n")
 
-  local W, H = Area_determine_map_size()
-
-  gui.printf("Map size: %dx%d grid points\n", W, H)
-
-
-  Seed_init(W - 1, H - 1)
-
-  Room_create_cave_grid()
+  Area_init_seed_map()
 
   Grower_create_rooms()
 
 ---???  Area_split_map_edges()
 
+  Area_collect_seeds()
   Area_analyse_areas()
 
   Junction_init()
     Corner_init()
 
   Area_find_inner_points()
-
-  Area_collect_seeds()
 
 
   gui.printf("Seed Map:\n")

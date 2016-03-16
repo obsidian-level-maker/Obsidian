@@ -488,8 +488,6 @@ end
 
 
 function Seed_init(map_W, map_H)
-  gui.printf("Seed_init: %dx%d\n", map_W, map_H)
-
   -- setup globals 
   SEED_W = map_W
   SEED_H = map_H
