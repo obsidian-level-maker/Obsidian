@@ -2508,8 +2508,6 @@ function Grower_decorate_rooms()
 
   each R in room_list do
     Grower_grammatical_room(R, "decorate")
-
-    Area_locate_chunks(R)
   end
 end
 

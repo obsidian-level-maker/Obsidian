@@ -237,17 +237,17 @@ end
 
 
 function AREA_CLASS.calc_volume(A)
-  local volume = 0
+  local vol = 0
 
   each S in A.seeds do
     if S.diagonal then
-      volume = volume + 0.5
+      vol = vol + 0.5
     else
-      volume = volume + 1
+      vol = vol + 1
     end
   end
 
-  return volume
+  A.svolume = vol
 end
 
 
@@ -513,13 +513,14 @@ end
 
 
 function Area_calc_volumes()
-  -- compute room volume too!
+  -- Note: computes room volumes too!
+
   each R in LEVEL.rooms do
     R.svolume = 0
   end
 
   each A in LEVEL.areas do
-    A.svolume = A:calc_volume()
+    A:calc_volume()
 
     if A.room then
       A.room.svolume = A.room.svolume + A.svolume
@@ -550,6 +551,7 @@ function Area_find_neighbors()
     nb_map[str] = 1
   end
 
+
   ---| Area_find_neighbors |---
 
   local nb_map = {}
@@ -569,8 +571,130 @@ function Area_find_neighbors()
     if N and N.area and N.area != A then
       try_pair_up(A, N.area, nb_map)
     end
+  end -- A, S, dir
   end
   end
+end
+
+
+
+function Area_locate_chunks(R)
+  --  
+  -- locate seed rectangles in areas of rooms, these will be used
+  -- for placing importants (goals, teleporters, etc) and also
+  -- decorative prefabs.
+  --
+
+  -- TODO : handle symmetrical rooms:
+  --    1. peer up chunks either side of the line of symmetry
+  --    2. handle chunks ON the line of symmetry
+
+
+  local PASSES = { 44, 42,24, 33, 32,23,  22, 21,12,  11 }
+
+  -- the large sizes often hog too much space in a room, so we
+  -- don't always keep them
+  local USE_PROBS =
+  {
+    [44] = 67
+    [42] = 22
+    [24] = 22
+
+    [33] = 67
+    [32] = 22
+    [23] = 22
+  }
+
+
+  local function create_chunk(A, sx1,sy1, sx2,sy2)
+    local R = assert(A.room)
+
+    local CHUNK = Chunk_new(A.mode, sx1,sy1, sx2,sy2)
+
+    CHUNK.area = A
+
+    if CHUNK.sw < 2 or CHUNK.sh < 2 then
+      CHUNK.is_small = true
+    end
+
+    if A.mode == "liquid" then
+      table.insert(R.liquid_chunks, CHUNK)
+    else
+stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
+      table.insert(R.chunks, CHUNK)
+    end
+
+    return CHUNK
+  end
+
+
+  local function test_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      if not Seed_valid(x, y) then return false end
+
+      local N = SEEDS[x][y]
+
+      if not N then return false end
+      if N.area != A then return false end
+      if N.diagonal or N.chunk then return false end
+    end
+    end
+
+    return true
+  end
+
+
+  local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2, chunk)
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      SEEDS[x][y].chunk = chunk
+    end
+    end
+  end
+
+
+  local function find_sized_chunks(A, seed_list, pass)
+    local dx = int(pass / 10) - 1
+    local dy = (pass % 10) - 1
+
+    local use_prob = USE_PROBS[pass] or 99
+
+    each S in seed_list do
+      local sx1 = S.sx
+      local sy1 = S.sy
+      local sx2 = sx1 + dx
+      local sy2 = sy1 + dy
+
+      -- save time by checking the usage prob *first*
+      if not rand.odds(use_prob) then continue end
+
+      if test_chunk_at_seed(A, sx1,sy1, sx2,sy2) then
+        local CHUNK = create_chunk(A, sx1,sy1, sx2,sy2)
+
+        install_chunk_at_seed(A, sx1,sy1, sx2,sy2, CHUNK)
+      end
+    end
+  end
+
+
+  local function find_chunks_in_area(A)
+    local seed_list = table.copy(A.seeds)
+
+    each pass in PASSES do
+      rand.shuffle(seed_list)
+
+      find_sized_chunks(A, seed_list, pass)
+    end
+  end
+
+
+  ---| Area_locate_chunks |---
+
+  each A in R.areas do
+    if A.mode == "floor" or A.mode == "liquid" then
+      find_chunks_in_area(A)
+    end
   end
 end
 
@@ -638,11 +762,13 @@ function Area_analyse_areas()
 
   Area_calc_volumes()
 
-  Area_find_neighbors()
-
   each R in LEVEL.rooms do
     R:collect_seeds()
   end
+
+  Area_find_neighbors()
+
+  Area_locate_chunks(R)
 
   if OB_CONFIG.mode == "ctf" then
     error("CTF mode is broken!")
@@ -913,9 +1039,7 @@ function Area_create_rooms()
   Grower_create_rooms()
 
   Area_analyse_areas()
-
   Area_assign_boundary()
-
 
   Junction_init()
     Corner_init()
@@ -1209,124 +1333,4 @@ do return end
 end
 
 
-
-function Area_locate_chunks(R)
-  --  
-  -- locate seed rectangles in areas of rooms, these will be used
-  -- for placing importants (goals, teleporters, etc) and also
-  -- decorative prefabs.
-  --
-
-  -- TODO : handle symmetrical rooms:
-  --    1. peer up chunks either side of the line of symmetry
-  --    2. handle chunks ON the line of symmetry
-
-
-  local PASSES = { 44, 42,24, 33, 32,23,  22, 21,12,  11 }
-
-  -- the large sizes often hog too much space in a room, so we
-  -- don't always keep them
-  local USE_PROBS =
-  {
-    [44] = 67
-    [42] = 22
-    [24] = 22
-
-    [33] = 67
-    [32] = 22
-    [23] = 22
-  }
-
-
-  local function create_chunk(A, sx1,sy1, sx2,sy2)
-    local R = assert(A.room)
-
-    local CHUNK = Chunk_new(A.mode, sx1,sy1, sx2,sy2)
-
-    CHUNK.area = A
-
-    if CHUNK.sw < 2 or CHUNK.sh < 2 then
-      CHUNK.is_small = true
-    end
-
-    if A.mode == "liquid" then
-      table.insert(R.liquid_chunks, CHUNK)
-    else
-stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
-      table.insert(R.chunks, CHUNK)
-    end
-
-    return CHUNK
-  end
-
-
-  local function test_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-    for x = sx1, sx2 do
-    for y = sy1, sy2 do
-      if not Seed_valid(x, y) then return false end
-
-      local N = SEEDS[x][y]
-
-      if not N then return false end
-      if N.area != A then return false end
-      if N.diagonal or N.chunk then return false end
-    end
-    end
-
-    return true
-  end
-
-
-  local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2, chunk)
-    for x = sx1, sx2 do
-    for y = sy1, sy2 do
-      SEEDS[x][y].chunk = chunk
-    end
-    end
-  end
-
-
-  local function find_sized_chunks(A, seed_list, pass)
-    local dx = int(pass / 10) - 1
-    local dy = (pass % 10) - 1
-
-    local use_prob = USE_PROBS[pass] or 99
-
-    each S in seed_list do
-      local sx1 = S.sx
-      local sy1 = S.sy
-      local sx2 = sx1 + dx
-      local sy2 = sy1 + dy
-
-      -- save time by checking the usage prob *first*
-      if not rand.odds(use_prob) then continue end
-
-      if test_chunk_at_seed(A, sx1,sy1, sx2,sy2) then
-        local CHUNK = create_chunk(A, sx1,sy1, sx2,sy2)
-
-        install_chunk_at_seed(A, sx1,sy1, sx2,sy2, CHUNK)
-      end
-    end
-  end
-
-
-  local function find_chunks_in_area(A)
-    local seed_list = table.copy(A.seeds)
-
-    each pass in PASSES do
-      rand.shuffle(seed_list)
-
-      find_sized_chunks(A, seed_list, pass)
-    end
-  end
-
-
-  ---| Area_locate_chunks |---
-
-  each A in R.areas do
-    if A.mode == "floor" or A.mode == "liquid" then
-      find_chunks_in_area(A)
-    end
-  end
-end
 
