@@ -1495,6 +1495,64 @@ end
 
 
 
+--[[ UNUSED CAVE-GRID SYSTEM......
+
+function create_cave_grid()
+  --
+  -- We divide the map into a large 3x3 grid.
+  -- Each section is either "cavey" or non-cavey.
+  -- Rooms which TOUCH a cavey section become actual caves.
+  --
+
+  local function set_a_cave_section()
+    -- this try to avoid the middle section
+    local COORDS = { 6, 1, 6 }
+
+    for loop = 1,100 do
+      local cx = rand.key_by_probs(COORDS)
+      local cy = rand.key_by_probs(COORDS)
+
+      if not LEVEL.cave_grid[cx][cy] then
+        LEVEL.cave_grid[cx][cy] = true
+        return
+      end
+    end
+  end
+
+
+  --| Room_create_cave_grid |--
+
+  LEVEL.cave_grid_sx1 = int(SEED_W * 0.35)
+  LEVEL.cave_grid_sx2 = int(SEED_W * 0.65)
+
+  LEVEL.cave_grid_sy1 = int(SEED_H * 0.35)
+  LEVEL.cave_grid_sy2 = int(SEED_H * 0.65)
+
+  LEVEL.cave_grid = table.array_2D(3, 3)
+
+
+  -- determine # of cells to become cavey
+
+  local cave_skip  = style_sel("caves", 100, 50, 25, 0)
+
+  if rand.odds(cave_skip) then
+    gui.printf("Cave quota: skipped for level.\n")
+    return
+  end
+
+  local cave_low   = style_sel("caves", 0, 1.2, 2.4, 4.4)
+  local cave_high  = style_sel("caves", 0, 3.2, 4.8, 9.2)
+
+  local cave_qty   = int(rand.range(cave_low, cave_high))
+
+  gui.printf("Cave quota: %d sections (%d%% of map).\n", cave_qty, int(cave_qty * 100 / 9))
+
+  for i = 1, cave_qty do
+    set_a_cave_section()
+  end
+end
+
+
 function calc_cave_section(sx, sy)
   local cx = 2
   local cy = 2
@@ -1521,6 +1579,8 @@ function touches_cave_section(sx1, sy1, sx2, sy2)
 
   return false
 end
+
+................ --]]
 
 
 
@@ -1581,63 +1641,6 @@ function Room_choose_kind(R, last_R)
 --]]
 
   return is_outdoor, false  -- is_cave
-end
-
-
-
-function Room_create_cave_grid()
-  --
-  -- We divide the map into a large 3x3 grid.
-  -- Each section is either "cavey" or non-cavey.
-  -- Rooms which TOUCH a cavey section become actual caves.
-  --
-
-  local function set_a_cave_section()
-    -- this try to avoid the middle section
-    local COORDS = { 6, 1, 6 }
-
-    for loop = 1,100 do
-      local cx = rand.key_by_probs(COORDS)
-      local cy = rand.key_by_probs(COORDS)
-
-      if not LEVEL.cave_grid[cx][cy] then
-        LEVEL.cave_grid[cx][cy] = true
-        return
-      end
-    end
-  end
-
-
-  --| Room_create_cave_grid |--
-
-  LEVEL.cave_grid_sx1 = int(SEED_W * 0.35)
-  LEVEL.cave_grid_sx2 = int(SEED_W * 0.65)
-
-  LEVEL.cave_grid_sy1 = int(SEED_H * 0.35)
-  LEVEL.cave_grid_sy2 = int(SEED_H * 0.65)
-
-  LEVEL.cave_grid = table.array_2D(3, 3)
-
-
-  -- determine # of cells to become cavey
-
-  local cave_skip  = style_sel("caves", 100, 50, 25, 0)
-
-  if rand.odds(cave_skip) then
-    gui.printf("Cave quota: skipped for level.\n")
-    return
-  end
-
-  local cave_low   = style_sel("caves", 0, 1.2, 2.4, 4.4)
-  local cave_high  = style_sel("caves", 0, 3.2, 4.8, 9.2)
-
-  local cave_qty   = int(rand.range(cave_low, cave_high))
-
-  gui.printf("Cave quota: %d sections (%d%% of map).\n", cave_qty, int(cave_qty * 100 / 9))
-
-  for i = 1, cave_qty do
-    set_a_cave_section()
-  end
 end
 
 
