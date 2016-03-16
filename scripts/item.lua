@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -42,12 +42,12 @@
 
 HEALTH_FACTORS =
 {
-  none=0, scarce=0.40, less=0.64, normal=1.00, more=1.50, heaps=2.50
+  none=0, scarce=0.40, less=0.64, normal=1.00, more=1.60, heaps=2.50
 }
 
 AMMO_FACTORS =
 {
-  none=0, scarce=0.60, less=0.80, normal=1.00, more=1.25, heaps=1.80
+  none=0, scarce=0.65, less=0.85, normal=1.00, more=1.20, heaps=1.50
 }
 
 
