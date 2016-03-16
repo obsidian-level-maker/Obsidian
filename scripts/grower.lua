@@ -948,9 +948,6 @@ function Grower_split_liquids()
       table.kill_elem(A.seeds, S)
     end
 
-    -- FIXME
-    A2.svolume = #A2.seeds
-
     good_areas[A2] = true
   end
 
@@ -974,23 +971,6 @@ function Grower_split_liquids()
 
   check_all_seeds("liquid")
   check_all_seeds("cage")
-end
-
-
-
-function Grower_temp_area(R, mode)
-  local A =
-  {
-    id = alloc_id("temp_area")
-    mode = mode
-    room = R
-    seeds = {}
-    svolume = 0
-  }
-
-  A.name = string.format("TEMP_AREA_%d", A.id)
-
-  return A
 end
 
 
@@ -1094,11 +1074,6 @@ function Grower_grammatical_room(R, pass)
     S.area = nil
 
     table.kill_elem(A.seeds, S)
-
-    -- FIXME: uggghhhh, do this elsewhere!!!
-    local vol = sel(S.diagonal, 0.5, 1.0)
-    A.svolume = A.svolume - vol
-    A.room.svolume = A.room.svolume - vol
   end
 
 
@@ -1127,11 +1102,6 @@ stderrf("overwrite seed @ %s\n", S.name)
       if not AR.gx2 or S.sx > AR.gx2 then AR.gx2 = S.sx end
       if not AR.gy2 or S.sy > AR.gy2 then AR.gy2 = S.sy end
     end
-
-    -- FIXME: uggghhhh, do this elsewhere!!!
-    local vol = sel(S.diagonal, 0.5, 1.0)
-    A.svolume = A.svolume + vol
-    A.room.svolume = A.room.svolume + vol
   end
 
 
@@ -2561,7 +2531,7 @@ function Grower_hallway_kinds()
 
     if (R1.is_outdoor and R2.is_outdoor and rand.odds(50)) or
        ((R1.is_outdoor or R2.is_outdoor) and rand.odds(25)) or
-       (H.svolume >= 3 and rand.odds(5))
+       ((H.svolume or 0) >= 3 and rand.odds(5))
     then
       is_outdoor = true
     end
