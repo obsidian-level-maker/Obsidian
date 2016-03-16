@@ -620,9 +620,9 @@ function Item_distribute_stats()
 
   -- health mainly stays in same room (a reward for killing the monsters).
   -- ammo mainly goes back, to prepare player for the fight.
-  local HEALTH_FACTOR  = 0.25
-  local AMMO_FACTOR    = 0.70
-  local STORAGE_FACTOR = 0.30
+  local HEALTH_DISTRIB  = 0.35
+  local AMMO_DISTRIB    = 0.85
+  local STORAGE_DISTRIB = 0.20
 
 
   local function get_other_locs(R)
@@ -641,9 +641,9 @@ function Item_distribute_stats()
       if N.kind == "hallway"   then continue end
       if N.kind == "stairwell" then continue end
 
-      table.insert(list, { room=R, ratio=ratio })
+      table.insert(list, { room=N, ratio=ratio })
 
-      ratio = ratio * 0.5
+      ratio = ratio * 0.7
     end
 
     -- add storage rooms
@@ -668,18 +668,18 @@ function Item_distribute_stats()
         local value = qty * ratio
 
         if N.is_storage then
-          value = value * STORAGE_FACTOR
+          value = value * STORAGE_DISTRIB
         elseif stat == "health" then
-          value = value * HEALTH_FACTOR
+          value = value * HEALTH_DISTRIB
         else 
-          value = value * AMMO_FACTOR
+          value = value * AMMO_DISTRIB
         end
 
         N_stats[stat] = (N_stats[stat] or 0) + value
         R_stats[stat] =  R_stats[stat]       - value
 
----     gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
----                stat, value,  CL, R.name, N.name)
+        gui.debugf("  distributing %s:%1.1f [%s]  %s --> %s\n",
+                   stat, value,  CL, R.name, N.name)
       end
     end
   end
@@ -694,6 +694,8 @@ function Item_distribute_stats()
 
     local list  = get_other_locs(R)  -- may be empty
     local total = 0
+
+    gui.debugf("distribute_from_room %s : locs:%d\n", R.name, #list)
 
     each loc in list do
       total = total + loc.ratio

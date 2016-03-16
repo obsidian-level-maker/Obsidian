@@ -213,10 +213,6 @@ function Quest_create_initial_quest()
 
     local score = R.svolume
 
-    -- need somewhere for the exit switch
-    local space = math.max(2, R:usable_chunks())
-    score = score + space * 20
-
     return score + gui.random() * 10
   end
 
