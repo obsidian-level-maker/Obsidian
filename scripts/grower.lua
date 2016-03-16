@@ -76,17 +76,15 @@ function Grower_save_svg()
 
     elseif not A2 then
       -- no change
---  elseif (A1.is_boundary != A2.is_boundary) then
---    color = "#f0f"
+    elseif not A1.room and not A2.room then
+      -- no change
     elseif A1 == A2 then
       color = "#ccf"
       lin_w = 1
     elseif (A1.chunk and A1.chunk.kind == "joiner") or (A2.chunk and A2.chunk.kind == "joiner") then
       color = "#f0f"
-    elseif (A1.room == A2.room) and (A1.room or A2.room) then
+    elseif A1.room and (A1.room == A2.room) then
       color = "#0f0"
-    elseif A1.room == A2.room then
-      -- no change
     elseif (A1.room and A1.room.hallway) or (A2.room and A2.room.hallway) then
       color = "#fb0"
     else
@@ -2963,113 +2961,6 @@ end
 
 
 
-function Grower_assign_boundary()
-  --
-  -- ALGORITHM:
-  --   1. all the existing room areas are marked as "inner"
-  --
-  --   2. mark some non-room areas which touch a room as "inner"
-  --
-  --   3. visit each non-inner area:
-  --      (a) flood-fill to find all joined non-inner areas
-  --      (b) if this group touches edge of map, mark as boundary,
-  --          otherwise mark as "inner"
-  --
-
-  local function area_touches_a_room(A)
-    each N in A.neighbors do
-      if N.room then return true end
-    end
-
-    return false
-  end
-
-
-  local function area_touches_edge(A)
-    -- this also prevents a single seed gap between area and edge of map
-
-    each S in A.seeds do
-      if S.sx <= 2 or S.sx >= SEED_W-1 then return true end
-      if S.sy <= 2 or S.sy >= SEED_H-1 then return true end
-    end
-
-    return false
-  end
-
-
-  local function area_is_inside_box(A)
-    each S in A.seeds do
-      if LEVEL.boundary_sx1 < S.sx and S.sx < LEVEL.boundary_sx2 and
-         LEVEL.boundary_sy1 < S.sy and S.sy < LEVEL.boundary_sy2
-      then
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  local function mark_room_inners()
-    each A in LEVEL.areas do
-      if A.room then
-        A.is_inner = true
-      end
-    end
-  end
-
-
-  local function mark_other_inners()
-    local prob = 20*0
-
-    each A in LEVEL.areas do
-      if not A.room and
-         rand.odds(prob) and
-         area_touches_a_room(A) and
-         area_is_inside_box(A) and
-         not area_touches_edge(A)
-      then
-        A.is_inner = true
-      end
-    end
-  end
-
-
-  local function mark_outer_recursive(A)
-    assert(not A.room)
-
-    A.is_boundary = true
-    A.mode = "scenic"
-
-    -- recursively handle neighbors
-    each N in A.neighbors do
-      if not (N.is_inner or N.is_boundary) then
-        mark_outer_recursive(N)
-      end
-    end
-  end
-
-
-  local function floodfill_outers()
-    each A in LEVEL.areas do
-      if not (A.is_inner or A.is_boundary) and area_touches_edge(A) then
-        mark_outer_recursive(A)
-      end
-    end
-  end
-
-
-  ---| Grower_assign_boundary |---
-
-  mark_room_inners()
-
-  mark_other_inners()
-
-  floodfill_outers()
-end
-
-
-
 function Grower_create_rooms()
   LEVEL.sprouts = {}
 
@@ -3088,11 +2979,6 @@ function Grower_create_rooms()
   Grower_fill_gaps()
 
   Seed_squarify()
-
-  Area_calc_volumes()
-  Area_find_neighbors()
-
-  Grower_assign_boundary()
 
 --DEBUG
 -- Grower_save_svg()
