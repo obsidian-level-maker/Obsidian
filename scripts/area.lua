@@ -578,7 +578,7 @@ end
 
 
 
-function Area_locate_chunks(R)
+function Area_locate_chunks()
   --  
   -- locate seed rectangles in areas of rooms, these will be used
   -- for placing importants (goals, teleporters, etc) and also
@@ -691,10 +691,12 @@ stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
 
   ---| Area_locate_chunks |---
 
+  each R in LEVEL.rooms do
   each A in R.areas do
     if A.mode == "floor" or A.mode == "liquid" then
       find_chunks_in_area(A)
     end
+  end -- R, A
   end
 end
 
@@ -768,7 +770,7 @@ function Area_analyse_areas()
 
   Area_find_neighbors()
 
-  Area_locate_chunks(R)
+  Area_locate_chunks()
 
   if OB_CONFIG.mode == "ctf" then
     error("CTF mode is broken!")
