@@ -198,6 +198,44 @@ function ROOM_CLASS.kill_it(R)
 end
 
 
+function ROOM_CLASS.try_collect_seed(R, S)
+  if not S.area then return end
+  if S.area.room != R then return end
+
+  S.room = R
+
+  table.insert(R.seeds, S)
+
+  -- update ROOM's bounding box
+
+  R.sx1 = math.min(R.sx1 or  999, S.sx)
+  R.sy1 = math.min(R.sy1 or  999, S.sy)
+  R.sx2 = math.max(R.sx2 or -999, S.sx)
+  R.sy2 = math.max(R.sy2 or -999, S.sy)
+end
+
+
+function ROOM_CLASS.collect_seeds(R)
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+    local S  = SEEDS[sx][sy]
+    local S2 = S.top
+
+    R:try_collect_seed(S)
+
+    if S2 then R:try_collect_seed(S2) end
+  end
+  end
+
+  if not R.sx1 then
+    error("Room with no seeds!")
+  end
+
+  R.sw = R.sx2 - R.sx1 + 1
+  R.sh = R.sy2 - R.sy1 + 1
+end
+
+
 function ROOM_CLASS.contains_seed(R, x, y)
   if x < R.sx1 or x > R.sx2 then return false end
   if y < R.sy1 or y > R.sy2 then return false end

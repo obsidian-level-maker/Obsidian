@@ -529,59 +529,6 @@ end
 
 
 
-function Area_collect_seeds()
-  -- FIXME : room method instead??
-
-
-  local function collect_seeds(R)
-    local sx1, sx2 = 999, -999
-    local sy1, sy2 = 999, -999
-
-    local function update(x, y)
-      sx1 = math.min(sx1, x)
-      sy1 = math.min(sy1, y)
-      sx2 = math.max(sx2, x)
-      sy2 = math.max(sy2, y)
-    end
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S  = SEEDS[sx][sy]
-      local S2 = S.top
-
-      if S.area and S.area.room == R then
-        S.room = R
-        table.insert(R.seeds, S)
-        update(sx, sy)
-      end
-
-      if S2 and S2.area and S2.area.room == R then
-        S2.room = R
-        table.insert(R.seeds, S2)
-        update(sx, sy)
-      end
-    end
-    end
-
-    if sx1 > sx2 then
-      error("Room with no seeds!")
-    end
-
-    R.sx1 = sx1 ; R.sx2 = sx2
-    R.sy1 = sy1 ; R.sy2 = sy2
-
-    R.sw = R.sx2 - R.sx1 + 1
-    R.sh = R.sy2 - R.sy1 + 1
-  end
-
-
-  each R in LEVEL.rooms do
-    collect_seeds(R)
-  end
-end
-
-
-
 function Area_find_neighbors()
 
   local function try_pair_up(A1, A2, nb_map)
@@ -690,6 +637,12 @@ function Area_analyse_areas()
   ---| Area_analyse_areas |---
 
   Area_calc_volumes()
+
+  Area_find_neighbors()
+
+  each R in LEVEL.rooms do
+    R:collect_seeds()
+  end
 
   if OB_CONFIG.mode == "ctf" then
     error("CTF mode is broken!")
@@ -959,13 +912,10 @@ function Area_create_rooms()
 
   Grower_create_rooms()
 
-  Area_calc_volumes()
-  Area_find_neighbors()
+  Area_analyse_areas()
 
   Area_assign_boundary()
 
-  Area_collect_seeds()
-  Area_analyse_areas()
 
   Junction_init()
     Corner_init()
