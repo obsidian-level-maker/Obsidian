@@ -282,6 +282,8 @@ function Quest_create_initial_quest()
 
     R.is_exit = true
 
+    LEVEL.secret_exit = R
+
     Quest_make_room_secret(R)
 
     local GOAL = Goal_new("SECRET_EXIT")
@@ -1099,30 +1101,89 @@ function Quest_calc_exit_dists()
   -- ignoring a secret exit).
   --
 
-  local function compute_dists_to_exit(R, cur_dist)
-    R.dist_to_exit = cur_dist
 
-    gui.debugf("dist_to_exit in %s : %1.1f\n", R.name, R.dist_to_exit)
+  local function mark_exit_to_quest(Q)
+    -- find the room which exits into the given quest
+    local exit_R
 
-    each C in R.conns do
-      local R2 = C:other_room(R)
-
-      local step = 1.0
-
-      if R.kind == "hallway" or R2.kind == "hallway" then
-        step = 0.5
+    each C in LEVEL.conns do
+      if C.R1 == Q.entry then
+        exit_R = C.R2 ; break;
       end
 
-      if not R2.dist_to_exit then
-        compute_dists_to_exit(R2, cur_dist + step)
+      if C.R2 == Q.entry then
+        exit_R = C.R1 ; break;
       end
     end
+
+    if exit_R then
+      assert(exit_R.quest != Q)
+stderrf("mark exit_to_quest : %s --> %s\n", exit_R.name, Q.name)
+      exit_R.dist_to_exit = 0
+    end
+  end
+
+
+  local function spread_through_conn(C)
+    local R1 = C.R1
+    local R2 = C.R2
+
+    -- NEVER cross quest boundaries
+    if R1.quest != R2.quest then return false end
+
+    if not R1.dist_to_exit then
+      R1, R2 = R2, R1
+    end
+
+    if not R1.dist_to_exit then
+      return false
+    end
+
+    local step = 1.0
+
+    if R1.kind == "hallway" or R2.kind == "hallway" then
+      step = 0.5
+    end
+
+    local new_dist = R1.dist_to_exit + step
+
+    if (R2.dist_to_exit or -1) > new_dist then
+      R2.dist_to_exit = new_dist
+      return true
+    end
+
+    return false
+  end
+
+
+  local function spread_dists()
+    local did_spread = false
+
+    each C in R.conns do
+      if spread_through_conn(C) then
+        did_spread = true
+      end
+    end
+
+    return did_spread
   end
 
 
   ---| Quest_calc_exit_dists |---
 
-  -- FIXME
+  LEVEL.exit_room.dist_to_exit = 0
+
+  each Q in LEVEL.quests do
+    mark_exit_to_quest(quest)
+  end
+
+  while spread_dists() do
+  end
+
+  -- sanity check
+  each R in LEVEL.rooms do
+    assert(R.dist_to_exit)
+  end
 end
 
 
