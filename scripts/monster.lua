@@ -161,50 +161,6 @@ end
 
 
 
-function Monster_max_level()
-  local mon_along = LEVEL.game_along
-
-  if LEVEL.is_secret then
-    -- secret levels are easier
-    mon_along = rand.skew(0.4, 0.25)
-
-  elseif OB_CONFIG.length == "single" then
-    -- for single level, use skew to occasionally make extremes
-    mon_along = rand.skew(0.5, 0.35)
-
-  elseif OB_CONFIG.length == "game" then
-    -- reach peak strength after about 70% of the full game
-    mon_along = math.min(1.0, mon_along / 0.70)
-  end
-
-  assert(mon_along >= 0)
-
-  if OB_CONFIG.strength == "crazy" then
-    mon_along = 1.2
-  else
-    local FACTORS = { weak=1.7, lower=1.3, medium=1.0, higher=0.8, tough=0.6 }
-
-    local factor = FACTORS[OB_CONFIG.strength]
-    assert(factor)
-
-    mon_along = mon_along ^ factor
-
-    if OB_CONFIG.strength == "higher" or
-       OB_CONFIG.strength == "tough"
-    then
-      mon_along = mon_along + 0.1
-    end
-  end
-
-  local max_level = 1 + 9 * mon_along
-
-  LEVEL.max_level = max_level
-
-  gui.printf("Monster max_level: %1.1f\n", LEVEL.max_level)
-end
-
-
-
 function Monster_pick_single_for_level()
   local tab = {}
 
@@ -261,7 +217,7 @@ function Monster_global_palette()
 
 
     if info.prob > 0 and
-       info.level and info.level <= LEVEL.max_level and
+       info.level and info.level <= LEVEL.monster_level and
        Monster_check_theme(info)
     then
       LEVEL.global_pal[name] = 1
@@ -292,8 +248,6 @@ function Monster_prepare()
   if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
     return
   end
-
-  Monster_max_level()
 
   Monster_init()
 end
@@ -351,7 +305,7 @@ function Monster_set_watchmen()
     if info.theme then return 0 end
 
     -- too strong for an early map?
-    if info.level > LEVEL.max_level + 3 then return 0 end
+    if info.level > LEVEL.monster_level + 3 then return 0 end
 
     -- base probability : this value is designed to take into account
     -- the settings of the monster control module
@@ -364,9 +318,9 @@ function Monster_set_watchmen()
     if prob < 1 then prob = 1 end
 
     -- "new" (not seen yet) monsters make the best guards in early maps
-    if info.level > LEVEL.max_level + 2 then return prob * 20 end
-    if info.level > LEVEL.max_level + 1 then return prob * 40 end
-    if info.level > LEVEL.max_level     then return prob * 80 end
+    if info.level > LEVEL.monster_level + 2 then return prob * 20 end
+    if info.level > LEVEL.monster_level + 1 then return prob * 40 end
+    if info.level > LEVEL.monster_level     then return prob * 80 end
 
     return prob
   end
@@ -538,7 +492,7 @@ function Monster_zone_palettes()
     local skip_perc = rand.pick(PARAM.skip_monsters or { 25 })
 
     -- skip less monsters in small early maps
-    if #LEVEL.zones == 1 and LEVEL.max_level < 5 then
+    if #LEVEL.zones == 1 and LEVEL.monster_level < 5 then
       skip_perc = skip_perc / 2
     end
 
@@ -1213,7 +1167,7 @@ function Monster_fill_room(R)
     assert(info.level)
 
     if not (#R.goals > 0 or R.final_battle) then
-      local max_level = LEVEL.max_level * (0.5 + R.lev_along / 2)
+      local max_level = LEVEL.monster_level * (0.5 + R.lev_along / 2)
       if max_level < 2 then max_level = 2 end
 
       if info.level > max_level then
@@ -1232,7 +1186,7 @@ function Monster_fill_room(R)
 
     -- level check
     if OB_CONFIG.strength != "crazy" then
-      local max_level = LEVEL.max_level * R.lev_along
+      local max_level = LEVEL.monster_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
       if info.level > max_level then

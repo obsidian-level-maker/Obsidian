@@ -101,12 +101,55 @@ function Episode_monster_stuff()
   -- (1) the boss fights in end-of-episode maps
   -- (2) the boss fights of special maps (like MAP07 of DOOM 2)
   -- (3) the end-of-level boss of each level
-  -- (4) a set of guarding monsters for each level
+  -- (4) guarding monsters (aka "mini bosses")
   --
+
+  local function calc_monster_level(LEV)
+    local mon_along = LEV.game_along
+
+    if LEV.is_secret then
+      -- secret levels are easier
+      mon_along = rand.skew(0.4, 0.25)
+
+    elseif OB_CONFIG.length == "single" then
+      -- for single level, use skew to occasionally make extremes
+      mon_along = rand.skew(0.5, 0.35)
+
+    elseif OB_CONFIG.length == "game" then
+      -- reach peak strength after about 70% of the full game
+      mon_along = math.min(1.0, mon_along / 0.70)
+    end
+
+    assert(mon_along >= 0)
+
+    if OB_CONFIG.strength == "crazy" then
+      mon_along = 1.2
+    else
+      local FACTORS = { weak=1.7, lower=1.3, medium=1.0, higher=0.8, tough=0.6 }
+
+      local factor = FACTORS[OB_CONFIG.strength]
+      assert(factor)
+
+      mon_along = mon_along ^ factor
+
+      if OB_CONFIG.strength == "higher" or
+         OB_CONFIG.strength == "tough"
+      then
+        mon_along = mon_along + 0.1
+      end
+    end
+
+    LEV.monster_level = 1 + 9 * mon_along
+
+    gui.debugf("Monster level in %s : %1.1f\n", LEV.name, LEV.monster_level)
+  end
+
 
   ---| Episode_monster_stuff |---
 
-  -- TODO
+  each LEV in GAME.levels do
+    calc_monster_level(LEV)
+  end
 end
 
 
