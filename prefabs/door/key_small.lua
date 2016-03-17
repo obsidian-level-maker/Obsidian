@@ -19,6 +19,17 @@ PREFABS.Locked_small_kc_red =
   -- prefab already has DOORRED texture and line special #33
 }
 
+PREFABS.Locked_small_kc_red_diag =
+{
+  file   = "door/key_small.wad"
+  map    = "MAP02"
+
+  where  = "diagonal"
+  key    = "kc_red"
+
+  -- prefab already has DOORRED texture and line special #33
+}
+
 
 PREFABS.Locked_small_ks_red =
 {
@@ -28,10 +39,30 @@ PREFABS.Locked_small_ks_red =
   tex_DOORRED = "DOORRED2"
 }
 
+PREFABS.Locked_small_ks_red_diag =
+{
+  template = "Locked_small_kc_red_diag"
+  key      = "ks_red"
+
+  tex_DOORRED = "DOORRED2"
+}
+
+
+------------------------------------------
+
 
 PREFABS.Locked_small_kc_blue =
 {
   template = "Locked_small_kc_red"
+  key      = "kc_blue"
+
+  tex_DOORRED = "DOORBLU"
+  line_33     = 32
+}
+
+PREFABS.Locked_small_kc_blue_diag =
+{
+  template = "Locked_small_kc_red_diag"
   key      = "kc_blue"
 
   tex_DOORRED = "DOORBLU"
@@ -48,6 +79,18 @@ PREFABS.Locked_small_ks_blue =
   line_33     = 32
 }
 
+PREFABS.Locked_small_ks_blue_diag =
+{
+  template = "Locked_small_kc_red_diag"
+  key      = "ks_blue"
+
+  tex_DOORRED = "DOORBLU2"
+  line_33     = 32
+}
+
+
+------------------------------------------
+
 
 PREFABS.Locked_small_kc_yellow =
 {
@@ -58,10 +101,28 @@ PREFABS.Locked_small_kc_yellow =
   line_33     = 34
 }
 
+PREFABS.Locked_small_kc_yellow_diag =
+{
+  template = "Locked_small_kc_red_diag"
+  key      = "kc_yellow"
+
+  tex_DOORRED = "DOORYEL"
+  line_33     = 34
+}
+
 
 PREFABS.Locked_small_ks_yellow =
 {
   template = "Locked_small_kc_red"
+  key      = "ks_yellow"
+
+  tex_DOORRED = "DOORYEL2"
+  line_33     = 34
+}
+
+PREFABS.Locked_small_ks_yellow_diag =
+{
+  template = "Locked_small_kc_red_diag"
   key      = "ks_yellow"
 
   tex_DOORRED = "DOORYEL2"
