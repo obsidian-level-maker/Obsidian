@@ -64,7 +64,12 @@ function Episode_pick_names()
 end
 
 
+
 function Episode_decide_specials()
+
+
+  ---| Episode_decide_specials |---
+
   each EPI in GAME.episodes do
     -- TODO
   end
@@ -85,6 +90,53 @@ function Episode_decide_specials()
   if count == 0 then
     gui.printf("  none\n")
   end
+end
+
+
+
+function Episode_monster_stuff()
+  --
+  -- Decides various monster stuff :
+  --   
+  -- (1) the boss fights in end-of-episode maps
+  -- (2) the boss fights of special maps (like MAP07 of DOOM 2)
+  -- (3) the end-of-level boss of each level
+  -- (4) a set of guarding monsters for each level
+  --
+
+  ---| Episode_monster_stuff |---
+
+  -- TODO
+end
+
+
+
+function Episode_weapon_stuff()
+  --
+  -- Decides weapon stuff for each level:
+  --
+  -- (1) the starting weapon(s) of a level
+  -- (2) other must-give weapons of a level
+  -- (3) optional weapons [ for large maps ]
+  -- (4) a weapon for secrets [ provided earlier than normal ]
+  --
+
+  ---| Episode_weapon_stuff |---
+
+  -- TODO
+end
+
+
+
+function Episode_item_stuff()
+  --
+  -- Handles certain items that should only appear quite rarely and
+  -- not clumped together, e.g. the DOOM invulnerability sphere.
+  --
+
+  ---| Episode_item_stuff |---
+
+  -- TODO
 end
 
 
@@ -328,5 +380,8 @@ function Episode_plan_game()
 
   Episode_pick_names()
 
+  Episode_monster_stuff()
+  Episode_weapon_stuff()
+  Episode_item_stuff()
 end
 
