@@ -3,9 +3,27 @@ WORK IN PROGRESS
 ================
 
 
+
+!!!  no start weapons
+
+-  weapon order swapping does not work without zones???
+
+
+!!  Layout_compute_dists
+
+-  for cave rooms, inhibit rules which add new areas
+   [ grow a single area ]
+
 >>>  monster spots for "floor"/"whole" prefabs
 
 ???  off_area / face_area  for stairs/joiners should be in CHUNK
+
+
+
+CAVES :
+
++  decide if to keep cave-section system, or just use a random
+   chance that each new room will be a cave
 
 
 GROWER :
@@ -45,6 +63,9 @@ CHUNK SYSTEM:
 
 MONSTERS:
 
++  instead of "visit all vis=1 to produce vis=2", limit the vis=1
+   spots we visit by distance from entry coord
+
 +  create 'entry_spots' for all rooms
    [ NOTE : depends on SPOT system above to be in place ]
 
@@ -53,8 +74,6 @@ MONSTERS:
    -  teleporters
    -  direct connections (one for each seed)
    -  joiner connections
-
-   [  'exit_spots' too?  ]
 
 +  debug Monster_visibility()
    -  use brushes to show vis=0, vis=1 and vis=2 spots
@@ -269,12 +288,8 @@ idea: a generic lowering bars prefab to go in front of closets or
 
 MISCELLANEOUS:
 
-+  properly compute svolume of areas and rooms
-
 -  titlepic backgrounds (current and new) :
    determine ones for official package, put rest in an addon
 
 +  face direction for switches / teleport exits
-
--  why both "item" and "content_item" in a spot table??
 
