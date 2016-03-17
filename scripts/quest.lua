@@ -1144,6 +1144,8 @@ function Quest_calc_exit_dists()
       step = 0.3
     end
 
+    local new_dist = R1.dist_to_exit + step
+
     if not R2.dist_to_exit or (R2.dist_to_exit > new_dist) then
       R2.dist_to_exit = new_dist
       return true
@@ -1234,7 +1236,7 @@ function Quest_start_room()
     -- prefer no teleporter
     if not R:has_teleporter() then score = score + 1 end
 
-    gui.debugf("eval_start_room in %s --> space:%d dist:%d %1.2f\n", R.name, space, R.dist_to_exit or 0, score)
+    gui.debugf("eval_start_room in %s --> space:%d dist:%d %1.2f\n", R.name, space, R.dist_to_exit or -1, score)
 
     -- tie breaker
     return score + gui.random() * 2
