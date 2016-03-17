@@ -1978,7 +1978,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function content_flag(spot)
     -- TODO : prefab for flag base
 
-    content_big_item(spot, assert(spot.item))
+    content_big_item(spot, assert(spot.content_item))
   end
 
 
@@ -2063,7 +2063,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       content_exit(spot, "secret_exit")
 
     elseif spot.content_kind == "KEY" then
-      content_very_big_item(spot, assert(spot.item))
+      content_very_big_item(spot, assert(spot.content_item))
 
     elseif spot.content_kind == "SWITCH" then
       content_switch(spot)

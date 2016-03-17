@@ -289,7 +289,7 @@ function Layout_place_importants(R)
 
 -- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R.name)
 
-    spot.item = goal.item
+    spot.content_item = goal.item
     spot.goal = goal
 
     if goal.kind != "START" then
