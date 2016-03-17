@@ -1097,8 +1097,8 @@ end
 function Quest_calc_exit_dists()
   --
   -- For each room, determine a distance metric for the room to the
-  -- nearest exit of the quest (including the level exit room, but
-  -- ignoring a secret exit).
+  -- nearest exit of the quest, which may be the level's exit room.
+  -- If a quest does not have any exits, rooms will lack a dist.
   --
 
 
@@ -1118,7 +1118,6 @@ function Quest_calc_exit_dists()
 
     if exit_R then
       assert(exit_R.quest != Q)
-stderrf("mark exit_to_quest : %s --> %s\n", exit_R.name, Q.name)
       exit_R.dist_to_exit = 0
     end
   end
@@ -1142,12 +1141,10 @@ stderrf("mark exit_to_quest : %s --> %s\n", exit_R.name, Q.name)
     local step = 1.0
 
     if R1.kind == "hallway" or R2.kind == "hallway" then
-      step = 0.5
+      step = 0.3
     end
 
-    local new_dist = R1.dist_to_exit + step
-
-    if (R2.dist_to_exit or -1) > new_dist then
+    if not R2.dist_to_exit or (R2.dist_to_exit > new_dist) then
       R2.dist_to_exit = new_dist
       return true
     end
@@ -1159,7 +1156,7 @@ stderrf("mark exit_to_quest : %s --> %s\n", exit_R.name, Q.name)
   local function spread_dists()
     local did_spread = false
 
-    each C in R.conns do
+    each C in LEVEL.conns do
       if spread_through_conn(C) then
         did_spread = true
       end
@@ -1174,15 +1171,11 @@ stderrf("mark exit_to_quest : %s --> %s\n", exit_R.name, Q.name)
   LEVEL.exit_room.dist_to_exit = 0
 
   each Q in LEVEL.quests do
-    mark_exit_to_quest(quest)
+    mark_exit_to_quest(Q)
   end
 
-  while spread_dists() do
-  end
-
-  -- sanity check
-  each R in LEVEL.rooms do
-    assert(R.dist_to_exit)
+  for loop = 1,99 do
+    if not spread_dists() then break; end
   end
 end
 
@@ -1233,7 +1226,7 @@ function Quest_start_room()
     score = score + space * 20
 
     -- far away from first locked door (or exit room)
-    score = score + R.dist_to_exit * 25
+    score = score + (R.dist_to_exit or 0) * 25
 
     -- prefer indoors
     if not R.is_outdoor then score = score + 7 end
@@ -1241,7 +1234,7 @@ function Quest_start_room()
     -- prefer no teleporter
     if not R:has_teleporter() then score = score + 1 end
 
-    gui.debugf("eval_start_room in %s --> space:%d dist:%d %1.2f\n", R.name, space, R.dist_to_exit, score)
+    gui.debugf("eval_start_room in %s --> space:%d dist:%d %1.2f\n", R.name, space, R.dist_to_exit or 0, score)
 
     -- tie breaker
     return score + gui.random() * 2
