@@ -201,29 +201,6 @@ function Monster_max_level()
   LEVEL.max_level = max_level
 
   gui.printf("Monster max_level: %1.1f\n", LEVEL.max_level)
-
-
-  --- Weapon level ---
-
-  local weap_along = LEVEL.game_along
-
-  -- allow everything in a single level, or the "Mixed" choice
-  if OB_CONFIG.length == "single" or OB_CONFIG.weapons == "mixed" then
-    weap_along = 1.0
-
-  elseif OB_CONFIG.length == "game" then
-    -- reach peak sooner in a full game (after about an episode)
-    weap_along = math.min(1.0, weap_along * 3.0)
-  end
-
-  -- small adjustment for the 'Weapons' setting
-  if OB_CONFIG.weapons == "more" then
-    weap_along = weap_along ^ 0.8 + 0.2
-  end
-
-  LEVEL.weapon_level = 1 + 9 * weap_along
-
-  gui.printf("Weapon max level: %1.1f\n", LEVEL.weapon_level)
 end
 
 

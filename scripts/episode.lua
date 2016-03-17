@@ -121,9 +121,34 @@ function Episode_weapon_stuff()
   -- (4) a weapon for secrets [ provided earlier than normal ]
   --
 
+  local function calc_weapon_level(LEV)
+    local weap_along = LEV.game_along
+
+    -- allow everything in a single level, or the "Mixed" choice
+    if OB_CONFIG.length == "single" or OB_CONFIG.weapons == "mixed" then
+      weap_along = 1.0
+
+    elseif OB_CONFIG.length == "game" then
+      -- reach peak sooner in a full game (after about an episode)
+      weap_along = math.min(1.0, weap_along * 3.0)
+    end
+
+    -- small adjustment for the 'Weapons' setting
+    if OB_CONFIG.weapons == "more" then
+      weap_along = weap_along ^ 0.8 + 0.2
+    end
+
+    LEV.weapon_level = 1 + 9 * weap_along
+
+    gui.debugf("Weapon level in %s : %1.1f\n", LEV.name, LEV.weapon_level)
+  end
+
+
   ---| Episode_weapon_stuff |---
 
-  -- TODO
+  each LEV in GAME.levels do
+    calc_weapon_level(LEV)
+  end
 end
 
 
