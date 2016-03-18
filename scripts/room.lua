@@ -599,8 +599,7 @@ function Room_reckon_doors()
 
 
   local function visit_conn(C)
-    if C.kind == "teleporter" then return end
-    if C.kind == "closet"     then return end
+    if C.kind != "edge" then return end
 
     local E = C.E1
     local F = C.F1  -- used for split conns, usually NIL

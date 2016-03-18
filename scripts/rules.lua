@@ -310,7 +310,7 @@ SPROUT_HALL_1 =
 
 DECORATE_CAGE_1 =
 {
-  prob = 200  -- FIXME
+  prob = 5  -- FIXME
 
   structure =
   {
@@ -392,7 +392,7 @@ DECORATE_CLOSET_2x1 =
 
 DECORATE_CLOSET_2x2 =
 {
-  prob = 10
+  prob = 20
 
   structure =
   {
@@ -407,7 +407,7 @@ DECORATE_CLOSET_2x2 =
 
 DECORATE_LIQUID_1 =
 {
-  prob = 200
+  prob = 5
 
   structure =
   {
