@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2015 Andrew Apted
+--  Copyright (C) 2008-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -661,6 +661,25 @@ function Seed_create_edge_pair(S, dir, long, kind)
   E2.peer = E1
 
   return E1, E2
+end
+
+
+function Seed_create_chunk_edge(chunk, side, kind)
+  local sx, sy
+
+  if side == 2 then sx = chunk.sx1 ; sy = chunk.sy1 - 1 end
+  if side == 8 then sx = chunk.sx2 ; sy = chunk.sy2 + 1 end
+
+  if side == 4 then sx = chunk.sx1 - 1 ; sy = chunk.sy2 end
+  if side == 6 then sx = chunk.sx2 + 1 ; sy = chunk.sy1 end
+
+  assert(Seed_valid(sx, sy))
+
+  local long = geom.vert_sel(side, chunk.sw, chunk.sh)
+
+  local S = SEEDS[sx][sy]
+
+  return Seed_create_edge(S, 10-dir, long, kind)
 end
 
 
