@@ -312,10 +312,10 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
       end
     end
 
-    -- remember floor height of players (needed by monster depots)
-    if goal.kind == "START" and not goal.alt_start then
-      LEVEL.player1_z = spot.area.floor_h
-    end
+---!!!  -- remember floor height of players (needed by monster depots)
+---!!!  if goal.kind == "START" and not goal.alt_start then
+---!!!    LEVEL.player1_z = spot.area.floor_h
+---!!!  end
   end
 
 

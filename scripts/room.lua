@@ -2763,14 +2763,14 @@ function Room_build_all()
 
 ---????  Room_pool_hacks()
 
-  Room_floor_ceil_heights()
-  Room_prepare_skies()
-
   -- place importants -- done early as traps need to know where they are.
   -- it also sets LEVEL.player1_z -- needed for monster depots.
   each R in LEVEL.rooms do
     Layout_place_importants(R)
   end
+
+  Room_floor_ceil_heights()
+  Room_prepare_skies()
 
   -- turn remaining closets into traps, cages, etc...
   Layout_unused_closets()
