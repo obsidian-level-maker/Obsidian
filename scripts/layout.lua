@@ -51,7 +51,7 @@ function Layout_compute_dists(R)
         local E = S.edge[dir]
 
         if E and E.conn then
-          S.sig_dist = 0
+          S.sig_dist = 0.7
         end
       end
     end
@@ -194,20 +194,23 @@ function Layout_spot_for_wotsit(R, kind)
     -- already used?
     if chunk.content_kind then return -1 end
 
-    local score = math.max(20, chunk.sig_dist or 0)
+    local score = (chunk.sig_dist or 0) * 10
 
-    if chunk.kind == "closet" then
-      if kind == "TELEPORTER" and chunk.kind == "closet" then
-        score = score + 200
-      else
-        score = score + 1
+    if kind == "TELEPORTER" then
+      if chunk.kind == "closet" then
+        score = score + 27
       end
-    end
 
-    if chunk.sw >= 2 and chunk.sh >= 2 then
-      score = score + 35
-    elseif chunk.sw >= 2 or chunk.sh >= 2 then
-      score = score + 5
+      if chunk.sw >= 2 or chunk.sh >= 2 then
+        score = score + 7
+      end
+
+    else
+      if chunk.sw >= 2 and chunk.sh >= 2 then
+        score = score + 17
+      elseif chunk.sw >= 2 or chunk.sh >= 2 then
+        score = score + 5
+      end
     end
 
     -- tie breaker
