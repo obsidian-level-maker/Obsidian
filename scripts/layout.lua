@@ -21,11 +21,11 @@
 
 function Layout_compute_dists(R)
   --
-  -- Compute various walking distances in a room:
+  -- Compute various distances in a room:
   --
-  -- (1) give each seed a 'conn_dist' value, which is roughly the #
-  --     of seeds the player must walk to reach a connection in/out
-  --     of the room.  It includes teleporters.
+  -- (1) give each seed a 'sig_dist' value, which is roughly the #
+  --     of seeds the player must walk to reach a significant thing
+  --     in the room (including entry and exit points).
   --
 
   local function can_traverse(S, N)
@@ -34,26 +34,24 @@ function Layout_compute_dists(R)
   end
 
 
-  local function mark_teleporter(chunk)
+  local function mark_chunk(chunk)
     for sx = chunk.sx1, chunk.sx2 do
     for sy = chunk.sy1, chunk.sy2 do
-      SEEDS[sx][sy].conn_dist = 0
+      SEEDS[sx][sy].sig_dist = 0
     end
     end
-
-    -- TODO: seeds LEADING INTO teleporter should also get conn_dist = 0
   end
 
 
-  local function init_conn_dists()
+  local function init_sig_dists()
     each S in R.seeds do
-      S.conn_dist = nil
+      S.sig_dist = nil
 
       each dir in geom.ALL_DIRS do
         local E = S.edge[dir]
 
         if E and E.conn then
-          S.conn_dist = 0
+          S.sig_dist = 0
         end
       end
     end
@@ -63,7 +61,7 @@ function Layout_compute_dists(R)
       if C.kind == "teleporter" then
         local chunk = sel(R == C.R1, C.tele_chunk1, C.tele_chunk2)
         if chunk then
-          mark_teleporter(chunk)
+          mark_chunk(chunk)
         end
       end
     end
@@ -71,25 +69,25 @@ function Layout_compute_dists(R)
     -- finally handle goal spots
     each goal in R.goals do
       if goal.kk_spot then
-        mark_teleporter(goal.kk_spot)
+        mark_chunk(goal.kk_spot)
       end
     end
   end
 
 
-  local function spread_conn_dists()
+  local function spread_sig_dists()
     local did_spread = false
 
     each S in R.seeds do
-      if not S.conn_dist then continue end
+      if not S.sig_dist then continue end
 
       each dir in geom.ALL_DIRS do
         local N = S:neighbor(dir)
 
-        if N and N.room == R and not N.conn_dist and
+        if N and N.room == R and not N.sig_dist and
            can_traverse(S, N)
         then
-          N.conn_dist = S.conn_dist + 1
+          N.sig_dist = S.sig_dist + 1
           did_spread  = true
         end
       end
@@ -99,14 +97,14 @@ function Layout_compute_dists(R)
   end
 
 
-  local function calc_chunk_conn_dist(chunk)
+  local function calc_chunk_sig_dist(chunk)
     -- compute average of all seeds in chunk
     local sum = 0
     local total = 0
 
     for sx = chunk.sx1, chunk.sx2 do
     for sy = chunk.sy1, chunk.sy2 do
-      local dist = SEEDS[sx][sy].conn_dist
+      local dist = SEEDS[sx][sy].sig_dist
 
       if dist then
         sum = sum + dist
@@ -118,14 +116,14 @@ function Layout_compute_dists(R)
     stderrf("chunk %s in %s --> %1.1f / %d\n", chunk.kind or "??", R.name, sum, total)
 
     if total > 0 then
-      chunk.conn_dist = sum / total
+      chunk.sig_dist = sum / total
     end
   end
 
 
   local function visit_chunks(list)
     each chunk in list do
-      calc_chunk_conn_dist(chunk)
+      calc_chunk_sig_dist(chunk)
     end
   end
 
@@ -178,13 +176,14 @@ function Layout_compute_dists(R)
 
   ---| Layout_compute_dists |---
 
-  init_conn_dists()
+  init_sig_dists()
 
   for loop = 1, 999 do
-    if not spread_conn_dists() then break; end
+    if not spread_sig_dists() then break; end
   end
 
   visit_chunks(R.chunks)
+stderrf("closets....\n")
   visit_chunks(R.closets)
 end
 
