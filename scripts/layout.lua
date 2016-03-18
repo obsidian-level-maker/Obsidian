@@ -183,7 +183,6 @@ function Layout_compute_dists(R)
   end
 
   visit_chunks(R.chunks)
-stderrf("closets....\n")
   visit_chunks(R.closets)
 end
 
@@ -191,134 +190,28 @@ end
 
 function Layout_spot_for_wotsit(R, kind)
 
-  local function nearest_conn(spot)
-    local dist
-
-    each C in R.conns do
-      if C.kind == "teleporter" then continue end
-
-      for pass = 1, 2 do
-        local E = sel(pass == 1, C.E1, C.F1)
-
-        if not E then continue end
-        
-        local ex, ey = Edge_mid_point(E)
-
-        local d = geom.dist(ex, ey, spot.x, spot.y) / SEED_SIZE
-
-        -- tie breaker
-        d = d + gui.random() / 1024
-
-        if not dist or d < dist then
-          dist = d
-        end
-      end
-    end
-
-    return dist
-  end
-
-
-  local function nearest_important(spot)
-    local dist
-
-    -- FIXME : importants not used anymore, use 'chunks' instead
-    each imp in R.importants do
-      local d = geom.dist(imp.x, imp.y, spot.x, spot.y) / SEED_SIZE
-
-      -- tie breaker
-      d = d + gui.random() / 1024
-
-      if not dist or d < dist then
-        dist = d
-      end
-    end
-
-    return dist
-  end
-
-
-  local function evaluate_spot(spot)
-    -- Factors we take into account:
-    --   1. distance from walls
-    --   2. distance from entrance / exits
-    --   3. distance from importants
-    --   4. rank value from prefab
-
-    local wall_dist = assert(spot.wall_dist)
-    local conn_dist = nearest_conn(spot) or 20
-    local  imp_dist = nearest_important(spot) or 20
-
-    -- combine conn_dist and imp_dist
-    local score = math.min(imp_dist, conn_dist * 1.5)
-
-    -- now combine with wall_dist.
-    -- in caves we need the spot to be away from the edges of the room
-    if R.cave_placement then
-      if wall_dist >= 1.2 then score = score + 100 end
-    else
-      score = score + wall_dist / 5
-    end
-
-    -- teleporters should never be underneath a 3D floor, because
-    -- player will unexpected activate it while on the floor above,
-    -- and because the sector tag is needed by the teleporter.
---[[ FIXME
-    if kind == "TELEPORTER" and spot.chunk[2] then
-      score = score - 10
-    end
---]]
-
-    -- apply the skill bits from prefab
-    if spot.rank then
-      score = score + (spot.rank - 1) * 5 
-    end
-
-    -- want a different height   [ FIXME !!!! ]
-    if R.entry_conn and R.entry_conn.conn_h and spot.floor_h then
-      local diff_h = math.abs(R.entry_conn.conn_h - spot.floor_h)
-
-      score = score + diff_h / 10
-    end
-
-    -- tie breaker
-    score = score + gui.random() ^ 2
-
---[[
-if R.id == 6 then
-stderrf("  (%2d %2d) : wall:%1.1f conn:%1.1f imp:%1.1f --> score:%1.2f\n",
-    sx, sy, wall_dist, conn_dist,  imp_dist, score)
-end
---]]
-    return score
-  end
-
-
-  local function evaluate_chunk(chunk)
+  local function eval_spot(chunk)
     -- already used?
     if chunk.content_kind then return -1 end
 
-    local score = 0
+    local score = math.max(20, chunk.sig_dist or 0)
 
-    if not chunk.is_small then score = score + 1000 end
+    if chunk.kind == "closet" then
+      if kind == "TELEPORTER" and chunk.kind == "closet" then
+        score = score + 200
+      else
+        score = score + 1
+      end
+    end
 
-    -- FIXME: evaluate_chunk
+    if chunk.sw >= 2 and chunk.sh >= 2 then
+      score = score + 35
+    elseif chunk.sw >= 2 or chunk.sh >= 2 then
+      score = score + 5
+    end
 
     -- tie breaker
     return score + gui.random() ^ 2
-  end
-
-
-  local function evaluate_closet(chunk)
-    if kind == "MON_TELEPORT" then return -1 end
-
-    -- already used?
-    if chunk.content_kind then return -1 end
-
-    -- FIXME: evaluate_closet
-
-    -- OK
-    return 9999
   end
 
 
@@ -350,7 +243,7 @@ end
 
   -- first, try chunks
   each chunk in R.chunks do
-    local score = evaluate_chunk(chunk)
+    local score = eval_spot(chunk)
 
     if score > best_score then
       best = chunk
@@ -360,7 +253,7 @@ end
 
   -- now try closets
   each chunk in R.closets do
-    local score = evaluate_closet(chunk)
+    local score = eval_spot(chunk)
 
     if score > best_score then
       best = chunk
