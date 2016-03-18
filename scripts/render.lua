@@ -1605,8 +1605,11 @@ function Render_properties_for_area(A)
 
 
   if A.mode == "cage" then
-    A.floor_mat = "BLOOD1"
-    A. wall_mat = "FLAT1"
+    if A.is_outdoor then
+      A.floor_mat = LEVEL.cliff_mat
+    else
+      A.floor_mat = A.zone.facade_mat
+    end
   end
 
 
