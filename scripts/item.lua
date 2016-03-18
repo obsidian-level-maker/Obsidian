@@ -470,7 +470,7 @@ function Item_simulate_battle(R)
     -- give less ammo in later maps (to counter the build-up over an episode)
     if not PARAM.pistol_starts then
       local along = math.clamp(0, LEVEL.ep_along - 0.2, 0.8)
-      local factor = 1.15 - along * 0.5
+      local factor = 1.1 - along * 0.35
 
       ammo_mul = ammo_mul * factor
     end
