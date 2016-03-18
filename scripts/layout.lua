@@ -28,7 +28,77 @@ function Layout_compute_dists(R)
   --     of the room.  It includes teleporters.
   --
 
-  local function init_dists()
+  local function can_traverse(S, N)
+    -- FIXME
+    return true
+  end
+
+
+  local function mark_teleporter(chunk)
+    for sx = chunk.sx1, chunk.sx2 do
+    for sy = chunk.sy1, chunk.sy2 do
+      SEEDS[sx][sy].conn_dist = 0
+    end
+    end
+
+    -- TODO: seeds LEADING INTO teleporter should also get conn_dist = 0
+  end
+
+
+  local function init_conn_dists()
+    each S in R.seeds do
+      S.conn_dist = nil
+
+      each dir in geom.ALL_DIRS do
+        local E = S.edge[dir]
+
+        if E and E.conn then
+          S.conn_dist = 0
+        end
+      end
+    end
+
+    -- now check teleporters
+    each C in R.conns do
+      if C.kind == "teleporter" then
+        local chunk = sel(R == C.R1, C.tele_chunk1, C.tele_chunk2)
+        if chunk then
+          mark_teleporter(chunk)
+        end
+      end
+    end
+  end
+
+
+  local function spread_conn_dists()
+    local did_spread = false
+
+    each S in R.seeds do
+      if not S.conn_dist then continue end
+
+      each dir in geom.ALL_DIRS do
+        local N = S:neighbor(dir)
+
+        if N and N.room == R and not N.conn_dist and
+           can_traverse(S, N)
+        then
+          N.conn_dist = S.conn_dist + 1
+          did_spread  = true
+        end
+      end
+    end
+
+    return did_spread
+  end
+
+
+  local function calc_chunk_conn_dist(chunk)
+    -- TODO
+  end
+
+
+--[[
+  local function init_wall_dists()
     for x = R.sx1, R.sx2 do
     for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y]
@@ -47,7 +117,7 @@ function Layout_compute_dists(R)
   end
 
 
-  local function spread_dists()
+  local function spread_wall_dists()
     local changed = false
 
     for x = R.sx1, R.sx2 do
@@ -70,13 +140,16 @@ function Layout_compute_dists(R)
 
     return changed
   end
+--]]
 
 
   ---| Layout_compute_dists |---
 
-  init_dists()
+  init_conn_dists()
 
-  while spread_dists() do end
+  for loop = 1, 999 do
+    if not spread_conn_dists() then break; end
+  end
 end
 
 
@@ -319,6 +392,12 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
     end
 
     spot.conn = conn
+
+    if R == conn.R1 then
+      conn.tele_chunk1 = spot
+    else
+      conn.tele_chunk2 = spot
+    end
   end
 
 
@@ -433,8 +512,12 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
     return
   end
 
+  Layout_compute_dists(R)
+
   each tel in R.teleporters do
     add_teleporter(tel)
+
+    Layout_compute_dists(R)
   end
 
   each goal in R.goals do
