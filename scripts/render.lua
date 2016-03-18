@@ -1433,12 +1433,16 @@ stderrf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.co
 
   -- build the prefab --
 
-  local tex_ref = chunk.tex_ref or A.off_area
+  local tex_ref = chunk.tex_ref or A.off_area or A.face_area
 
   if tex_ref then
     skin.wall  = tex_ref.wall_mat
     skin.floor = tex_ref.floor_mat
     skin.ceil  = tex_ref.ceil_mat
+
+    if tex_ref.is_outdoor then
+      skin.wall = A.zone.facade_mat
+    end
   end
 
 
