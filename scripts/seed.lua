@@ -679,7 +679,7 @@ function Seed_create_chunk_edge(chunk, side, kind)
 
   local S = SEEDS[sx][sy]
 
-  return Seed_create_edge(S, 10-dir, long, kind)
+  return Seed_create_edge(S, 10-side, long, kind)
 end
 
 

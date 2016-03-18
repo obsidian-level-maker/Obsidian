@@ -149,14 +149,12 @@ function Connect_directly(P)
     C.joiner_chunk = assert(P.chunk)
     C.joiner_chunk.conn = C
 
-stderrf("CONNECT: %s / %s (%s) --> %s / %s (%s)\n",
-  C.R1.name, C.A1.name, C.A1.room.name,
-  C.R2.name, C.A2.name, C.A2.room.name)
+    -- TODO : support other shapes
+    Seed_create_chunk_edge(P.chunk,      P.dir, "nothing")
+    Seed_create_chunk_edge(P.chunk, 10 - P.dir, "nothing")
 
---assert(C.A1.room == C.R1)
+  else  -- edge connection
 
-
-  else
     local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
 
     E1.kind = "arch"
