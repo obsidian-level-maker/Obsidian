@@ -938,6 +938,23 @@ end
 
 
 
+function Area_closet_edges()
+
+  local function visit_closet(chunk)
+    local E = Seed_create_chunk_edge(chunk, chunk.dir, "nothing")
+  end
+
+  ---| Area_closet_edges |---
+
+  each R in LEVEL.rooms do
+    each CL in R.closets do
+      visit_closet(CL)
+    end
+  end
+end
+
+
+
 function Area_determine_map_size()
   --
   -- Determines size of map (Width x Height) in grid points, based on the
@@ -1047,6 +1064,7 @@ function Area_create_rooms()
     Corner_init()
 
   Area_find_inner_points()
+  Area_closet_edges()
 
 
   gui.printf("Seed Map:\n")
