@@ -3,27 +3,33 @@ WORK IN PROGRESS
 ================
 
 
-
 !!!  no start weapons
 
 -  weapon order swapping does not work without zones???
 
 
-!!  Layout_compute_dists
-
--  for cave rooms, inhibit rules which add new areas
-   [ grow a single area ]
-
->>>  monster spots for "floor"/"whole" prefabs
-
 ???  off_area / face_area  for stairs/joiners should be in CHUNK
 
+     -->   from_area  [ stairs, joiners and closets ]
+         + dest_area  [ stairs and joiners ]
+
+           from_dir   = number or { 2,4 }
+           dest_dir   = number or { 6,8 }
 
 
 CAVES :
 
 +  decide if to keep cave-section system, or just use a random
    chance that each new room will be a cave
+
+   [ maybe make the grid a 2x2 grid, instead of 3x3 ]
+
+   [[ ALWAYS three corners (the TOP-RIGHT is not cave)
+      control how much by the X and Y cutoff coords ]]
+
+-  for cave rooms, inhibit rules which add new areas (or liquids)
+   [ grow a single large area ]
+
 
 
 GROWER :
@@ -99,22 +105,15 @@ CLOSETS:
 >>> handle unused closets
     [ A.mode = "void", build walls there, NO EDGE ]
 
-!!  create proper EDGE where it joins room (based on SHAPE)
-    [ needed for JOINERS too ]
-
 +  switch closet
 
 +  when shape is "F", move them 16 units in the facing dir
    [ triggered by a field in the prefab definition?? ]
 
+-  if 
 
 
 STAIRS:
-
-+  need to support building the ceiling "normally"
-   [ specified by prefab ]
-
-   i.e. stairs are generally "floor prefabs", and require a ceiling
 
 +  choose prefabs earlier, probably during floor/ceil heights
 
@@ -128,6 +127,8 @@ STAIRS:
 JOINERS:
 
 +  choose prefab earlier, e.g. during floor/ceil heights or earlier
+
+-  a "raising stairs" JOINER, need to find the switch
 
 
 
@@ -257,13 +258,17 @@ Usage Ideas:
 HALLWAYS:
 
 Q/ do we always build them with prefabs for every piece?
+A/ yes
 
--  'H' in grammar rules (see above)
++  the 'H' hallways are always 2 seeds wide
+   [ future: allow 4x4 etc sizes, prefab specifies which parts are exits ]
 
--  treat as an area of room which it sprouts off, but have special
-   rules for making them (e.g. low heights, different textures)
++  have 'V' vents which are always 1 seed wide
+   [ future: allow 2x2 etc sizes, prefab specifies which parts are exits ]
 
--  hallways don't count when checking room size
+-  treat hallways as separate rooms
+
+-  hallway "groups", as per V5
 
 
 
@@ -279,9 +284,6 @@ INTRA-ROOM LOCKS
 idea: a generic lowering bars prefab to go in front of closets or
       joiners or exit doors
 
--  a "raising stairs" prefab, need to find the switch
-   [ hard part is guaranteeing cannot get there another way ]
-
 -  closet that looks like a wall switch but opens a monsters closet
 
 
@@ -292,4 +294,9 @@ MISCELLANEOUS:
    determine ones for official package, put rest in an addon
 
 +  face direction for switches / teleport exits
+
+-  do monster depots differently, make "shared" sector based on
+   an area in the 2nd room
+
+-  add monster spots to lava_pit prefab
 
