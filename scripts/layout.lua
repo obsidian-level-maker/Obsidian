@@ -67,6 +67,13 @@ function Layout_compute_dists(R)
         end
       end
     end
+
+    -- finally handle goal spots
+    each goal in R.goals do
+      if goal.kk_spot then
+        mark_teleporter(goal.kk_spot)
+      end
+    end
   end
 
 
@@ -93,7 +100,33 @@ function Layout_compute_dists(R)
 
 
   local function calc_chunk_conn_dist(chunk)
-    -- TODO
+    -- compute average of all seeds in chunk
+    local sum = 0
+    local total = 0
+
+    for sx = chunk.sx1, chunk.sx2 do
+    for sy = chunk.sy1, chunk.sy2 do
+      local dist = SEEDS[sx][sy].conn_dist
+
+      if dist then
+        sum = sum + dist
+        total = total + 1
+      end
+    end
+    end
+
+    stderrf("chunk %s in %s --> %1.1f / %d\n", chunk.kind or "??", R.name, sum, total)
+
+    if total > 0 then
+      chunk.conn_dist = sum / total
+    end
+  end
+
+
+  local function visit_chunks(list)
+    each chunk in list do
+      calc_chunk_conn_dist(chunk)
+    end
   end
 
 
@@ -150,6 +183,9 @@ function Layout_compute_dists(R)
   for loop = 1, 999 do
     if not spread_conn_dists() then break; end
   end
+
+  visit_chunks(R.chunks)
+  visit_chunks(R.closets)
 end
 
 
@@ -308,6 +344,8 @@ end
 
   ---| Layout_spot_for_wotsit |---
 
+  Layout_compute_dists(R)
+
   local best
   local best_score = 0
 
@@ -364,6 +402,8 @@ function Layout_place_importants(R)
 
     spot.content_item = goal.item
     spot.goal = goal
+
+    goal.kk_spot = spot
 
     if goal.kind != "START" then
       R.guard_spot = spot
@@ -439,6 +479,7 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
     local dests = {}
 
+    -- FIXME : do not use Layout_spot_for_wotsit
     dests[1] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
     dests[2] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
     dests[3] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
@@ -512,12 +553,8 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
     return
   end
 
-  Layout_compute_dists(R)
-
   each tel in R.teleporters do
     add_teleporter(tel)
-
-    Layout_compute_dists(R)
   end
 
   each goal in R.goals do
