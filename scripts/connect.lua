@@ -30,8 +30,10 @@
     id : number  -- debugging aid
 
     -- The two areas are the vital (compulsory) information,
-    -- especially for the quest system.  For joiners and teleporters
-    -- the edge info will be absent.
+    -- especially for the quest system.  For teleporters the
+    --
+    -- For teleporters the edge and area info will be absent.
+    -- For joiners, the edges are NOT peered.
 
     R1 : source ROOM
     R2 : destination ROOM
@@ -89,21 +91,6 @@ function CONN_CLASS.tostr(C)
 end
 
 
-function CONN_CLASS.swap(C)
-  C.R1, C.R2 = C.R2, C.R1
-  C.E1, C.E2 = C.E2, C.E1
-  C.F1, C.F2 = C.F2, C.F1
-  C.A1, C.A2 = C.A2, C.A1
-
-  -- for split conns, keep E1 on left, F1 on right
-  -- [ not strictly necessary, handy for debugging though ]
-  if C.F1 then
-    C.E1, C.F1 = C.F1, C.E1
-    C.E2, C.F2 = C.F2, C.E2
-  end
-end
-
-
 function CONN_CLASS.other_area(C, A)
   if A == C.A1 then
     return C.A2
@@ -122,6 +109,7 @@ function CONN_CLASS.other_room(C, R)
 end
 
 
+--[[
 function CONN_CLASS.edge_for_room(C, R)
   if R == C.R1 then
     return C.E1
@@ -129,6 +117,7 @@ function CONN_CLASS.edge_for_room(C, R)
     return C.E2
   end
 end
+--]]
 
 
 ------------------------------------------------------------------------
