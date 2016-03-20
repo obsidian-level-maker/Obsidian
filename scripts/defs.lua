@@ -92,6 +92,67 @@ SPOT_WALL     = 2
 SPOT_LEDGE    = 3
 
 
+GLOBAL_STYLE_LIST =
+{
+  -- these two correspond to buttons in the GUI
+
+  outdoors   = { few=20, some=60, heaps=30 }
+  caves      = { none=30 }  --!!!!!!  , few=30, some=30, heaps=7 }
+
+  -- things that affect the whole level
+
+  traps      = { few=20, some=80, heaps=20 }
+  secrets    = { few=20, some=50, heaps=10 }
+  hallways   = { few=60, some=30, heaps=10 }
+  liquids    = { few=30, some=50, heaps=10 }
+  scenics    = { few=30, some=50, heaps=10 }
+  lakes      = { few=60, heaps=10 }
+  islands    = { few=60, heaps=40 }
+  organics   = { none=5, few=20, some=60, heaps=20 }
+
+  ambushes    = { none=10, some=50, heaps=10 }
+  big_rooms   = { none=20, few=50, some=30, heaps=10 }
+  cycles      = { none=50, some=50, heaps=50 }
+  crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
+
+  mon_variety = { some=50 }
+  teleporters = { none=50 } --!!!!  few=30, some=30, heaps=10 }
+  switches    = { none=5, few=50, some=50, heaps=10 }
+  doors       = { none=5, few=30, some=60, heaps=5 }
+  porches     = { few=10, some=60, heaps=10 }
+
+  -- things that affect stuff in rooms
+
+  junk       = { few=10, some=60, heaps=30 }
+  pillars    = { few=60, some=30, heaps=10 }
+  beams      = { few=25, some=50, heaps=5  }
+  barrels    = { few=50, some=50, heaps=10 }
+  closets    = { few=10, some=30, heaps=30 }
+
+  ex_floors  = { few=40, some=60, heaps=20 }
+  windows    = { few=20, some=50, heaps=20 }
+  pictures   = { few=10, some=50, heaps=10 }
+  steepness  = { few=20, some=60, heaps=10 }
+
+  symmetry   = { none=10, few=40, some=60, heaps=10 }
+  cages      = { none=20 }  --!!!! , few=20, some=20, heaps=10 }
+  fences     = { none=30, few=30, some=10 }
+  crates     = { none=20, some=40, heaps=10 }
+}
+
+
+GLOBAL_PARAMETERS =
+{
+  map_limit = 10000
+
+  step_height = 16
+  jump_height = 24
+
+  spot_low_h  = 72
+  spot_high_h = 128
+}
+
+
 -- this function is now deprecated
 require = function() error("require() is deprecated") end
 
