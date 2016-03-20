@@ -21,7 +21,7 @@
 
 --class EPISODE
 --[[
-    id : number        -- index number (in GAME.episodes)
+    id : number       -- index number (in GAME.episodes)
 
     description       -- a name generated for this episode
 
@@ -35,8 +35,6 @@
 
 --class LEVEL
 --[[
-    -- FIXME: check this
-
     name : string  -- engine name for this level, e.g. MAP01
 
     description : string  -- level name or title (optional)
@@ -45,37 +43,57 @@
 
     episode : EPISODE
 
-      ep_along   -- how far along the episode:    0.0 --> 1.0
-    game_along   -- how far along the whole game: 0.0 --> 1.0
+    hub : HUB_INFO     -- used in hub-based games (like Hexen)
 
-    areas   : list(AREA)
+      ep_along  -- how far along in the episode:    0.0 --> 1.0
+    game_along  -- how far along in the whole game: 0.0 --> 1.0
+
+
+    === General planning ===
+
+    liquid : table  -- the main liquid in the level (can be nil)
+
+    is_dark : bool  -- true if outdoor rooms will be dark
+
+    special : keyword  -- normally nil
+                       -- [ not used at the moment ]
+
+
+    === Monster planning ===
+
+    monster_level   -- the maximum level of a monster usable here [ except bosses ]
+
+
+    === Weapon planning ===
+
+    weapon_level    -- the maximum level of a weapon we can use [ except secret_weapon ]
+
+    start_weapons   -- a weapon or two for the start room
+      new_weapons   -- weapons which player does not have yet [ may overlap with start_weapons ]
+    other_weapons   -- non-new weapons which MAY be given
+
+    secret_weapon   -- an unseen weapon, for usage in a secret room
+
+
+    === Item planning ===
+
+    usable_keys : prob table  -- if present, can only use these keys
+
+
+    === Other stuff ===
+
+    ids     : table  -- used for allocating tag numbers (etc)
+
     rooms   : list(ROOM)
+    areas   : list(AREA)
     conns   : list(CONN)
 
     quests  : list(QUEST)
     zones   : list(ZONE)
     locks   : list(LOCK)
 
-    liquid : table  -- the main liquid in the level (can be nil)
-
-    is_dark : bool  -- true if outdoor rooms will be dark
-
     start_room : ROOM  -- the starting room
      exit_room : ROOM  -- the exit room
-
-    best_conn : table  -- stores the best current connection
-                       -- (only used while connecting rooms)
-
-    special : keyword  -- normally nil
-                       -- can be: "street", "surround", "wagon"
-
-    hub : HUB_INFO     -- used in hub-based games (like Hexen)
-
-    assume_weapons : table  -- weapons we got in a previous level
-
-    usable_keys : prob table  -- if present, can only use these keys
-
-    ids : table  -- used for allocating tag numbers (etc)
 
     -- TODO: lots of other fields : document important ones
 --]]
@@ -139,7 +157,7 @@ end
 
 
 
-function Episode_monster_stuff()
+function Episode_plan_bosses()
   --
   -- Decides various monster stuff :
   --   
@@ -190,7 +208,7 @@ function Episode_monster_stuff()
   end
 
 
-  ---| Episode_monster_stuff |---
+  ---| Episode_plan_bosses |---
 
   each LEV in GAME.levels do
     calc_monster_level(LEV)
@@ -199,7 +217,7 @@ end
 
 
 
-function Episode_weapon_stuff()
+function Episode_plan_weapons()
   --
   -- Decides weapon stuff for each level:
   --
@@ -232,22 +250,47 @@ function Episode_weapon_stuff()
   end
 
 
-  ---| Episode_weapon_stuff |---
+  local function pick_start_weapons()
+    -- TODO
+  end
+
+
+  local function pick_new_weapons()
+    -- TODO
+  end
+
+
+  local function pick_other_weapons()
+    -- TODO
+  end
+
+
+  local function pick_secret_weapons()
+    -- TODO
+  end
+
+
+  ---| Episode_plan_weapons |---
 
   each LEV in GAME.levels do
     calc_weapon_level(LEV)
   end
+
+  pick_start_weapons()
+  pick_new_weapons()
+  pick_other_weapons()
+  pick_secret_weapons()
 end
 
 
 
-function Episode_item_stuff()
+function Episode_plan_items()
   --
   -- Handles certain items that should only appear quite rarely and
   -- not clumped together, e.g. the DOOM invulnerability sphere.
   --
 
-  ---| Episode_item_stuff |---
+  ---| Episode_plan_items |---
 
   -- TODO
 end
@@ -496,9 +539,9 @@ function Episode_plan_game()
 
   Episode_pick_names()
 
-  Episode_monster_stuff()
-  Episode_weapon_stuff()
-  Episode_item_stuff()
+  Episode_plan_bosses()
+  Episode_plan_weapons()
+  Episode_plan_items()
 end
 
 
