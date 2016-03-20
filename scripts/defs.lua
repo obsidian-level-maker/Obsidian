@@ -43,7 +43,7 @@ OB_ENGINES = {}
 OB_MODULES = {}
 
 
--- various special settings
+-- the default engine (basically Vanilla + limit removing)
 OB_ENGINES["nolimit"] =
 {
   label = "Limit Removing"
@@ -51,6 +51,7 @@ OB_ENGINES["nolimit"] =
 }
 
 
+-- special theme types, usable by all games
 OB_THEMES["original"] =
 {
   label = "As Original"
@@ -70,10 +71,6 @@ OB_THEMES["jumble"] =
 }
 
 
--- this function is now deprecated
-require = function() error("require() is deprecated") end
-
-
 -- important constants
 
 SEED_SIZE = 128
@@ -83,10 +80,14 @@ BOUNDARY_SIZE = 4
 
 EXTREME_H = 32000
 
-SKILLS = { "easy", "medium", "hard" }
 
+-- constants for gui.spots_xxx API functions
 SPOT_CLEAR    = 0
 SPOT_LOW_CEIL = 1
 SPOT_WALL     = 2
 SPOT_LEDGE    = 3
+
+
+-- this function is now deprecated
+require = function() error("require() is deprecated") end
 
