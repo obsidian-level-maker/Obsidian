@@ -48,6 +48,9 @@
       ep_along  -- how far along in the episode:    0.0 --> 1.0
     game_along  -- how far along in the whole game: 0.0 --> 1.0
 
+    is_secret   -- true if level is a secret level
+    prebuilt    -- true if level will is prebuilt (not generated)
+
 
     === General planning ===
 
@@ -250,12 +253,46 @@ function Episode_plan_weapons()
   end
 
 
-  local function pick_start_weapons()
-    -- TODO
+  local function next_level_in_episode(lev_idx)
+    while true do
+      local LEV = GAME.levels[lev_idx + 1]
+
+      if not LEV then return nil end
+
+      if LEV.episode != GAME.levels[lev_idx].episode then return nil end
+
+      lev_idx = lev_idx + 1
+
+      if LEV.is_secret then continue end
+      if LEV.prebuilt  then continue end
+
+      return LEV
+    end
   end
 
 
   local function pick_new_weapons()
+    local seen_weapons = {}
+
+    each LEV in GAME.levels do
+      LEV.new_weapons = {}
+
+      if LEV.prebuilt  then continue end
+      if LEV.is_secret then continue end
+
+      each name,info in GAME.WEAPONS do
+        if (info.level or 1) <= LEV.weapon_level and not seen_weapons[name] then
+          table.insert(LEV.new_weapons, name)
+          seen_weapons[name] = true
+        end
+      end
+    end
+
+    -- TODO : spread them out (esp. when next level has none and previous has >= 2)
+  end
+
+
+  local function pick_start_weapons()
     -- TODO
   end
 
@@ -276,8 +313,9 @@ function Episode_plan_weapons()
     calc_weapon_level(LEV)
   end
 
-  pick_start_weapons()
   pick_new_weapons()
+
+  pick_start_weapons()
   pick_other_weapons()
   pick_secret_weapons()
 end
