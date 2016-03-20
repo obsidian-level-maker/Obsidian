@@ -25,20 +25,20 @@ function int(val)
   return math.floor(val)
 end
 
-function convert_bool(value)
-  if value == nil or value == false or value == 0 or value == "" or value == "0" then
-    return 0
-  else
-    return 1
-  end
-end
-
 function sel(cond, yes_val, no_val)
   -- a poor man's ?: operator
   -- NOTE: both expressions are evaluated!
   if cond then return yes_val end
   return no_val
 end
+
+-- utilitity to allocate room numbers, tag numbers, etc...
+function alloc_id(kind)
+  local result = (LEVEL.ids[kind] or 0) + 1
+  LEVEL.ids[kind] = result
+  return result
+end
+
 
 function warning(fmt, ...)
   if fmt then
@@ -116,6 +116,17 @@ function math.N_max(A, B)
   return A
 end
 
+
+function convert_bool(value)
+  if value == nil or value == false or value == 0 or
+     value == "" or value == "0" or
+     value == "false" or value == "False" or value == "FALSE"
+  then
+    return 0
+  else
+    return 1
+  end
+end
 
 function string.bool(n)
   if n == nil   then return "nil"   end

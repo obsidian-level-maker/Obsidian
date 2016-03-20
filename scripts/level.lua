@@ -31,8 +31,8 @@
 
     episode : EPISODE
 
-      ep_along : float  -- how far along the episode:    0.0 --> 1.0
-    game_along : float  -- how far along the whole game: 0.0 --> 1.0
+      ep_along   -- how far along the episode:    0.0 --> 1.0
+    game_along   -- how far along the whole game: 0.0 --> 1.0
 
     areas   : list(AREA)
     rooms   : list(ROOM)
@@ -55,7 +55,7 @@
     special : keyword  -- normally nil
                        -- can be: "street", "surround", "wagon"
 
-    hub_links : list(HUB_LINK)  -- hub links which _leave_ this level
+    hub : HUB_INFO     -- used in hub-based games (like Hexen)
 
     hub_key    : name   -- goal of this level must be this key
     hub_weapon : name   -- weapon to place on this level
@@ -140,16 +140,6 @@ GLOBAL_PARAMETERS =
   spot_low_h  = 72
   spot_high_h = 128
 }
-
-
---
--- utilitity to allocate room numbers, tag numbers, etc...
---
-function alloc_id(kind)
-  local result = (LEVEL.ids[kind] or 0) + 1
-  LEVEL.ids[kind] = result
-  return result
-end
 
 
 
