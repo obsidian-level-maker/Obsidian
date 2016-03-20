@@ -81,6 +81,10 @@ BOUNDARY_SIZE = 4
 EXTREME_H = 32000
 
 
+-- special value for merging tables
+REMOVE_ME = "__REMOVE__"
+
+
 -- constants for gui.spots_xxx API functions
 SPOT_CLEAR    = 0
 SPOT_LOW_CEIL = 1
