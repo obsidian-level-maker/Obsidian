@@ -21,26 +21,22 @@
 
 --class EPISODE
 --[[
-    levels : list(LEVEL)
+    id : number        -- index number (in GAME.episodes)
 
-    is_hub : boolean  -- 'true' if this episode is a hub
+    description       -- a name generated for this episode
 
-    used_keys : table  -- for hubs, remember keys which have been used
-                       -- on any level in the hub (cannot use them again)
+    hub : HUB_INFO    -- present for hub-based games (esp. Hexen)
 
-    hub_links : list(HUB_LINK)  -- all hub links
+    levels : list(LEVEL)  -- all the levels to generate (may be empty)
 
-    seen_weapons : table   -- all weapons picked up so far
-                           -- the table is indexed by weapon name
+
 --]]
 
 
---class HUB_LINK
+--class HUB_INFO
 --[[
-    kind : keyword  -- "chain" or "branch"
-
-    src  : LEVEL
-    dest : LEVEL
+    used_keys : table  -- for hubs, remember keys which have been used
+                       -- on any level in the hub (cannot use them again)
 --]]
 
 
@@ -443,6 +439,9 @@ function Episode_plan_game()
   -- This plans stuff for the whole game, e.g. what weapons will
   -- appear on each level, etc....
   --
+  each EPI in GAME.episodes do
+    EPI.id = _index
+  end
 
   Episode_decide_specials()
 
