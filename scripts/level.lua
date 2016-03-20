@@ -271,6 +271,19 @@ function Episode_plan_weapons()
   end
 
 
+  local function dump_weapon_info()
+    gui.debugf("Planned weapons:\n\n")
+
+    each LEV in GAME.levels do
+      gui.debugf("%s\n", LEV.name)
+      gui.debugf("  new = %s\n",   table.list_str(LEV.new_weapons))
+      gui.debugf("  start = %s\n", table.list_str(LEV.start_weapons))
+      gui.debugf("  other = %s\n", table.list_str(LEV.other_weapons))
+      gui.debugf("  secret = %s\n", LEV.secret_weapon or "NONE")
+    end
+  end
+
+
   local function pick_new_weapons()
     local seen_weapons = {}
 
@@ -281,6 +294,7 @@ function Episode_plan_weapons()
       if LEV.is_secret then continue end
 
       each name,info in GAME.WEAPONS do
+        if (info.add_prob or 0) == 0 then continue end
         if (info.level or 1) <= LEV.weapon_level and not seen_weapons[name] then
           table.insert(LEV.new_weapons, name)
           seen_weapons[name] = true
@@ -288,7 +302,11 @@ function Episode_plan_weapons()
       end
     end
 
+    -- TODO : if many weapons per map (e.g. length="single"), push some into next
+    --        but if no next then simply drop them
+
     -- TODO : spread them out (esp. when next level has none and previous has >= 2)
+    --        but also sometimes just to randomize it a bit
   end
 
 
@@ -318,6 +336,8 @@ function Episode_plan_weapons()
   pick_start_weapons()
   pick_other_weapons()
   pick_secret_weapons()
+
+  dump_weapon_info()
 end
 
 
