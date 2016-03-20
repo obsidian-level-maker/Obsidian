@@ -1770,31 +1770,9 @@ function Quest_add_weapons()
   end
 
 
-  -- decide how many weapons to give
 
-  -- normal quota should give 1-2 in small maps, 2-3 in regular maps, and 3-4
-  -- in large maps (where 4 is rare).
 
-  local lev_size = math.clamp(30, SEED_W + SEED_H, 100)
-
-  local quota = (lev_size - 20) / 25 + gui.random()
-
-  -- more as game progresses
-  quota = quota + LEVEL.game_along * 2.0
-
-  if OB_CONFIG.weapons == "less" then quota = quota / 1.7 end
-  if OB_CONFIG.weapons == "more" then quota = quota * 1.7 end
-
-  if OB_CONFIG.weapons == "mixed" then
-    quota = quota * rand.pick({ 0.6, 1.0, 1.7 })
-  end
-
-  quota = quota * (PARAM.weapon_factor or 1)
-  quota = int(quota)
-
-  if quota < 1 then quota = 1 end
-
-  gui.printf("Weapon quota: %d\n", quota)
+  local quota = LEVEL.weapon_quota
 
 
   -- decide which weapons to use

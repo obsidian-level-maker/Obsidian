@@ -1227,8 +1227,6 @@ function Area_create_rooms()
 
   gui.printf("\n--==| Creating Rooms |==--\n\n")
 
-  Seed_init(LEVEL.map_W, LEVEL.map_H)
-
   Grower_create_rooms()
 
   Area_analyse_areas()

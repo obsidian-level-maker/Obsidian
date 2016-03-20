@@ -347,6 +347,35 @@ function Episode_plan_weapons()
   end
 
 
+  local function decide_weapon_quota(LEV)
+    -- decide how many weapons to give
+
+    -- normal quota should give 1-2 in small maps, 2-3 in regular maps, and 3-4
+    -- in large maps (where 4 is rare).
+
+    local lev_size = math.clamp(30, LEV.map_W + LEV.map_H, 100)
+
+    local quota = (lev_size - 20) / 25 + gui.random()
+
+    -- more as game progresses
+    quota = quota + LEV.game_along * 2.0
+
+    if OB_CONFIG.weapons == "less" then quota = quota / 1.7 end
+    if OB_CONFIG.weapons == "more" then quota = quota * 1.7 end
+
+    if OB_CONFIG.weapons == "mixed" then
+      quota = quota * rand.pick({ 0.6, 1.0, 1.7 })
+    end
+
+    quota = quota * (PARAM.weapon_factor or 1)
+    quota = int(quota)
+
+    if quota < 1 then quota = 1 end
+
+    LEV.weapon_quota = quota
+  end
+
+
   local function next_level_in_episode(lev_idx)
     while true do
       local LEV = GAME.levels[lev_idx + 1]
@@ -370,6 +399,9 @@ function Episode_plan_weapons()
 
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
+      gui.debugf("  level = %1.2f\n", LEV.weapon_level)
+      gui.debugf("  quota = %d\n",    LEV.weapon_quota)
+
       gui.debugf("  new = %s\n",   table.list_str(LEV.new_weapons))
       gui.debugf("  start = %s\n", table.list_str(LEV.start_weapons))
       gui.debugf("  other = %s\n", table.list_str(LEV.other_weapons))
@@ -423,6 +455,7 @@ function Episode_plan_weapons()
 
   each LEV in GAME.levels do
     calc_weapon_level(LEV)
+    decide_weapon_quota(LEV)
   end
 
   pick_new_weapons()
@@ -1051,9 +1084,7 @@ function Level_choose_darkness()
 end
 
 
-function Level_plan_stuff()
-  assert(LEVEL.ep_along)
-
+function Level_init()
   LEVEL.ids = {}
 
   LEVEL.areas = {}
@@ -1070,7 +1101,9 @@ end
 
 
 function Level_build_it()
-  Level_plan_stuff()
+  Level_init()
+
+  Seed_init(LEVEL.map_W, LEVEL.map_H)
 
   Area_create_rooms()
     if gui.abort() then return "abort" end
