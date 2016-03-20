@@ -51,13 +51,13 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
-++  cages (and railing)
-
 +  have a "slow pace weapons" extra setting (idea by flyingdeath)
 
-+  get stairwells working again
++  get stairwells working again [ as joiners ]
 
--  wall switches too
++  add railings to cages sometimes
+
+-  wall switches
 
 -  sky generator : better checking of themes (esp. w/ control module)
 
@@ -79,6 +79,24 @@ IDEA : an adjustment (of health) for "environment" of a battle
 -  CTF : start with a tile designed for CTF mode, placed in middle of map,
          and when adding a room/hall then also add its sister room
          [ if sister fails, kill the brother ]
+
+
+
+Hallways
+--------
+
+Q/ do we always build them with prefabs for every piece?
+A/ yes
+
++  the 'H' hallways are always 2 seeds wide
+   [ future: allow 4x4 etc sizes, prefab specifies which parts are exits ]
+
++  have 'V' vents which are always 1 seed wide
+   [ future: allow 2x2 etc sizes, prefab specifies which parts are exits ]
+
+-  treat hallways as separate rooms
+
+-  hallway "groups", as per V5
 
 
 

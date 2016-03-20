@@ -3,6 +3,12 @@ WORK IN PROGRESS
 ================
 
 
+!!!!!  inhibit solid walls inside a chunk for "whole" prefabs
+       [ esp. the current closets and joiners ]
+
+(and why no wall inside joiner at 9,19 on west side ???)
+
+
 !!!  no start weapons
 
 -  weapon order swapping does not work without zones???
@@ -172,12 +178,6 @@ later: allow resizing "point" prefabs
 
 
 
-CAGES:
-
--  make railings [ see junction logic in layout.lua ]
-
-
-
 SHAPE GRAMMARS:
 
 IDEA: rules can specify a "prefab_flavor" for any rects, and when
@@ -252,23 +252,6 @@ Usage Ideas:
   -  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
      rest of hallway, and another auxiliary ruleset sprouts hallway
      into new rooms, and a final auxiliary rulset prunes unused branches
-
-
-
-HALLWAYS:
-
-Q/ do we always build them with prefabs for every piece?
-A/ yes
-
-+  the 'H' hallways are always 2 seeds wide
-   [ future: allow 4x4 etc sizes, prefab specifies which parts are exits ]
-
-+  have 'V' vents which are always 1 seed wide
-   [ future: allow 2x2 etc sizes, prefab specifies which parts are exits ]
-
--  treat hallways as separate rooms
-
--  hallway "groups", as per V5
 
 
 
