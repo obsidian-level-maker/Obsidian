@@ -350,6 +350,23 @@ function table.tostr(t, depth, prefix)
   return result
 end
 
+function table.list_str(t)
+  if not t then return "NIL" end
+  if #t < 1 then return "{}" end
+
+  local result = "{ "
+
+  for i = 1, #t do
+    result = result .. tostring(t[i])
+    if i < #t then
+      result = result .. ","
+    end
+    result = result .. " "
+  end
+
+  return result .. "}"
+end
+
 function table.pick_best(list, comp, remove_it)
   assert(list)
 
