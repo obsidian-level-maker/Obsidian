@@ -111,6 +111,98 @@
 
 
 
+function Level_determine_map_size(LEV)
+  --
+  -- Determines size of map (Width x Height) in grid points, based on the
+  -- user's settings and how far along in the episode or game we are.
+  --
+
+  local ob_size = OB_CONFIG.size
+
+  -- there is no real "progression" when making a single level.
+  -- hence use mixed mode instead.
+  if OB_CONFIG.length == "single" then
+    if ob_size == "prog" or ob_size == "epi" then
+      ob_size = "mixed"
+    end
+  end
+
+  -- Mix It Up --
+
+  if ob_size == "mixed" then
+    local SIZES = { 21,23,25, 29,33,37, 41,43,49 }
+
+    if OB_CONFIG.mode == "dm" then
+      SIZES = { 21,23,25, 29,33,39 }
+    end
+
+    local W = rand.pick(SIZES)
+    local H = rand.pick(SIZES)
+
+    -- prefer the map to be wider than it is tall
+    if W < H then W, H = H, W end
+
+    return W, H
+  end
+
+  -- Progressive --
+
+  if ob_size == "prog" or ob_size == "epi" then
+    local along = LEV.game_along ^ 0.66
+
+    if ob_size == "epi" then along = LEV.ep_along end
+
+    local n = int(1 + along * 8.9)
+
+    if n < 1 then n = 1 end
+    if n > 9 then n = 9 end
+
+    local SIZES = { 25,27,29, 31,33,35, 37,39,41 }
+
+    local W = SIZES[n]
+    local H = W - 4
+
+    -- not so big in Deathmatch mode
+    if OB_CONFIG.mode == "dm" then return H, H - 2 end
+
+    return W, H
+  end
+
+  -- Named sizes --
+
+  -- smaller maps for Deathmatch mode
+  if OB_CONFIG.mode == "dm" then
+    local SIZES = { small=21, regular=27, large=35, extreme=51 }
+
+    local W = SIZES[ob_size]
+
+    return W, W
+  end
+
+  local SIZES = { small=27, regular=35, large=45, extreme=61 }
+
+  local W = SIZES[ob_size]
+
+  if not W then
+    error("Unknown size keyword: " .. tostring(ob_size))
+  end
+
+  return W, W - 4
+end
+
+
+
+function Episode_determine_map_sizes()
+  each LEV in GAME.levels do
+    local W, H = Level_determine_map_size(LEV)
+
+    LEV.map_W = W - 1
+    LEV.map_H = H - 1
+  end
+end
+
+
+
 function Episode_pick_names()
   -- game name (for title screen)
   GAME.title     = Naming_grab_one("TITLE")
@@ -239,13 +331,15 @@ function Episode_plan_weapons()
 
     elseif OB_CONFIG.length == "game" then
       -- reach peak sooner in a full game (after about an episode)
-      weap_along = math.min(1.0, weap_along * 3.0)
+      weap_along = weap_along * 3.0
     end
 
     -- small adjustment for the 'Weapons' setting
     if OB_CONFIG.weapons == "more" then
       weap_along = weap_along ^ 0.8 + 0.2
     end
+
+    weap_along = math.min(1.0, weap_along)
 
     LEV.weapon_level = 1 + 9 * weap_along
 
@@ -594,6 +688,8 @@ function Episode_plan_game()
   end
 
   Episode_decide_specials()
+
+  Episode_determine_map_sizes()
 
   Episode_pick_names()
 

@@ -494,6 +494,8 @@ function Seed_init(map_W, map_H)
   SEED_W = map_W
   SEED_H = map_H
 
+  gui.printf("Map size: %dx%d seeds\n", map_W, map_H)
+
 
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
