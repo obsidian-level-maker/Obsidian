@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -185,6 +185,52 @@ GLOBAL_PARAMETERS =
 
   spot_low_h  = 72
   spot_high_h = 128
+}
+
+
+--
+-- prefab stuff
+-- 
+GLOBAL_PREFAB_DEFAULTS =
+{
+   tex__WALL  = "?wall"
+  flat__WALL  = "?wall"
+
+   tex__OUTER = "?outer"
+  flat__OUTER = "?outer"
+
+   tex__FLOOR = "?floor"
+  flat__FLOOR = "?floor"
+
+   tex__CEIL  = "?ceil"
+  flat__CEIL  = "?ceil"
+
+  thing_8166  = "?object"
+
+  line_888    = "?action"
+}
+
+
+GLOBAL_SKIN_DEFAULTS =
+{
+  wall  = "_ERROR"
+
+  outer = "?wall"
+  fence = "?wall"
+  floor = "?wall"
+  ceil  = "?floor"
+
+  -- Doom engine stuff
+  tag = ""
+  light = ""
+  action = ""
+  object = ""
+
+  -- Quake engine stuff
+  style = ""
+  message = ""
+  wait = ""
+  targetname = ""
 }
 
 
