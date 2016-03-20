@@ -505,7 +505,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Levels_choose_themes()
+function Level_choose_themes()
   local theme_tab = {}
 
 
@@ -686,7 +686,7 @@ function Levels_choose_themes()
   end
 
 
-  ---| Levels_choose_themes |---
+  ---| Level_choose_themes |---
 
   gui.printf("\n")
 
@@ -741,7 +741,7 @@ end
 
 
 
-function Levels_do_styles()
+function Level_do_styles()
   local style_tab = table.copy(GLOBAL_STYLE_LIST)
 
   -- adjust styles for Co-operative multiplayer
@@ -785,7 +785,7 @@ end
 
 
 
-function Levels_choose_liquid()
+function Level_choose_liquid()
   -- always have a '_LIQUID' material.
   -- this is the default, it usually gets set to a proper material
   GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS["_ERROR"]
@@ -829,7 +829,7 @@ end
 
 
 
-function Levels_choose_darkness()
+function Level_choose_darkness()
   local prob = EPISODE.dark_prob or 0
 
   -- FIXME: episode control currently off [ lack of decent lighting outdoors ]
@@ -854,7 +854,7 @@ function Levels_choose_darkness()
 end
 
 
-function Levels_plan_stuff()
+function Level_plan_stuff()
   assert(LEVEL.ep_along)
 
   LEVEL.ids = {}
@@ -867,13 +867,13 @@ function Levels_plan_stuff()
   LEVEL.map_borders  = {}
   LEVEL.depots = {}
 
-  Levels_choose_liquid()
-  Levels_choose_darkness()
+  Level_choose_liquid()
+  Level_choose_darkness()
 end
 
 
-function Levels_build_it()
-  Levels_plan_stuff()
+function Level_build_it()
+  Level_plan_stuff()
 
   Area_create_rooms()
     if gui.abort() then return "abort" end
@@ -894,7 +894,7 @@ function Levels_build_it()
 end
 
 
-function Levels_handle_prebuilt()
+function Level_handle_prebuilt()
   -- randomly pick one
   local probs = {}
 
@@ -918,7 +918,7 @@ function Levels_handle_prebuilt()
 end
 
 
-function Levels_between_clean()
+function Level_between_clean()
   LEVEL    = nil
   SEEDS    = nil
   SECTIONS = nil
@@ -927,7 +927,7 @@ function Levels_between_clean()
 end
 
 
-function Levels_make_level(LEV)
+function Level_make_level(LEV)
   assert(LEV)
   assert(LEV.name)
 
@@ -973,7 +973,7 @@ function Levels_make_level(LEV)
   if LEVEL.prebuilt then
     ob_invoke_hook("begin_level")
 
-    local res = Levels_handle_prebuilt()
+    local res = Level_handle_prebuilt()
     if res != "ok" then
       return res
     end
@@ -988,7 +988,7 @@ function Levels_make_level(LEV)
 
   gui.rand_seed(LEVEL.seed + 1)
 
-  Levels_do_styles()
+  Level_do_styles()
 
   ob_invoke_hook("begin_level")
 
@@ -1007,7 +1007,7 @@ function Levels_make_level(LEV)
 
   gui.rand_seed(LEVEL.seed + 2)
 
-  local res = Levels_build_it()
+  local res = Level_build_it()
   if res != "ok" then
     return res
   end
@@ -1023,7 +1023,7 @@ function Levels_make_level(LEV)
 
 
   if index < total then
-    Levels_between_clean()
+    Level_between_clean()
   end
 
   if gui.abort() then return "abort" end
@@ -1032,7 +1032,7 @@ function Levels_make_level(LEV)
 end
 
 
-function Levels_make_all()
+function Level_make_all()
   GAME.levels   = {}
   GAME.episodes = {}
 
@@ -1051,7 +1051,7 @@ function Levels_make_all()
 
   gui.rand_seed(OB_CONFIG.seed + 2)
 
-  Levels_choose_themes()
+  Level_choose_themes()
 
 
   gui.rand_seed(OB_CONFIG.seed + 3)
@@ -1069,7 +1069,7 @@ function Levels_make_all()
     each LEV in EPI.levels do
       LEV.allowances = {}
 
-      if Levels_make_level(LEV) == "abort" then
+      if Level_make_level(LEV) == "abort" then
         return "abort"
       end
     end

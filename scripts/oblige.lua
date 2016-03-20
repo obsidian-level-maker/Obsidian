@@ -1073,7 +1073,7 @@ function ob_build_cool_shit()
 
   ob_build_setup()
 
-  local status = Levels_make_all()
+  local status = Level_make_all()
 
   ob_clean_up()
 
