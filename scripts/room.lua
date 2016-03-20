@@ -1080,9 +1080,10 @@ function Room_border_up()
 
     if not A1.room then
       -- nothing needed if both building or both outdoor
-      if A1.is_outdoor == A2.is_outdoor then return end
+      if (not A1.is_outdoor) != (not A2.is_outdoor) then
+        Junction_make_wall(junc)
+      end
 
-      Junction_make_wall(junc)
       return
     end
 
@@ -1109,6 +1110,11 @@ function Room_border_up()
 
     -- inside a single room --
     if A1.room == A2.room then
+      -- this needed for closets and joiners
+      if (not A1.is_outdoor) != (not A2.is_outdoor) then
+        Junction_make_wall(junc)
+      end
+
       return
     end
 
@@ -1358,149 +1364,6 @@ function sort_areas_by_volume()
   table.sort(list, function(A, B) return A.svolume + A.sort_rand > B.svolume + B.sort_rand end)
 
   return list
-end
-
-
-
-STAIRWELL_SHAPES =
-{
-  --
-  -- each shape is a list of directions
-  -- direction has 10 added for the entry/exit of the stairwell (20 for DOUBLE width)
-  -- we only store a single rotation [ don't need to mirror either ]
-  --
-  -- fallback shapes are ones which don't make good use of the space
-  -- [ we auto-detect 1x1 curve and 1x2 straight fallbacks ]
-  --
-  -- scx,scy and lcx,lcy are coordinates to override control points
-  -- (on "short" and "long" side, respectively).  the four lines which
-  -- join the bezier start/end points form the coordinate space.
-  --
-
-  -- single seed
-  A1 = { dirs={ 12,  6, 18,  4 }, steps=4, straight=1 }
-  A2 = { dirs={ 12, 16,  8,  4 }, steps=4 }
-
-  -- two seeds
-  B1 = { dirs={ 12, 6, 6, 18, 4, 4 }, steps=6, straight=1 }
-  B2 = { dirs={ 22, 6, 28, 4 }, steps=4, straight=1 }
-
-  -- 2x2 box
-  C1 = { dirs={ 12, 2, 6, 16, 8, 8,  4, 4 }, steps=6 }
-
-  C2 = { dirs={ 22,  6, 6, 28, 4, 4 }, steps=6, straight=1 }
-  C3 = { dirs={ 22, 26, 8,  8, 4, 4 }, steps=6 }
-
-  C4 = { dirs={ 22, 6, 16, 8, 8,  4, 4 }, steps=6 }  -- fat to thin
-
-  -- diamond box
-  D1 = { dirs={ 11,  3, 19,  7 }, steps=6, straight=1 }
-  D2 = { dirs={ 11, 13,  9,  7 }, steps=4 }
-
-  -- other 2x2 seed shapes
-
-  E1 = { dirs={  1, 12,  6,  9, 17 }, steps=6, scx=0.4, scy=0.5 }
-  E2 = { dirs={ 11,  2,  6, 19,  7 }, steps=4, fallback=1, straight=1 }
-  E3 = { dirs={ 11,  2,  6,  9, 17 }, steps=4 }
-
-  F1 = { dirs={  1, 12, 6,  9, 8, 14 }, steps=6 }
-  F2 = { dirs={ 11,  2, 6, 19, 8,  4 }, steps=4, fallback=1, straight=1 }
-
-  G1 = { dirs={ 12,  2, 6, 19,  7, 4 }, steps=6, scx=0.4, scy=0.5 }
-  G2 = { dirs={ 22, 6, 19, 7, 4 }, steps=6 } -- fat to thin
-
-  H1 = { dirs={ 12,  2,  6, 19,  8,  4,  4 }, steps=6 }
-  H2 = { dirs={  2,  2, 16,  9, 18,  4,  4 }, steps=6 }
-  H3 = { dirs={  2, 12,  6,  9,  8, 14,  4 }, steps=6 }
-
-  H4 = { dirs={ 22, 6, 19, 8, 4, 4 }, steps=6 }  -- fat to thin
-  H5 = { dirs={ 2, 2, 6, 19, 8, 24 }, steps=6 }  --
-
-  -- larger (2x3 and 3x3) shapes
-
-  I1 = { dirs={ 1, 2, 2, 16, 8, 9, 17 }, steps=6, scx=0.85, scy=0.35 }
-  I2 = { dirs={ 11, 2, 2, 6, 8, 19, 7 }, steps=4, fallback=1, straight=1 }
-  I3 = { dirs={ 1, 12, 2, 6, 8, 9, 17 }, steps=6, fallback=1 }
-  I4 = { dirs={ 11, 2, 2, 6, 8, 9, 17 }, steps=6, fallback=1 }
-
-  J1 = { dirs={ 1, 2, 2, 16, 8, 9, 18, 4 }, steps=6, scx=1.6, scy=0.5 }
-  J2 = { dirs={ 11, 2, 2, 6, 8, 19, 8, 4 }, steps=4, fallback=1, straight=1 }
-  J3 = { dirs={ 1, 12, 2, 6, 8, 9, 8, 14 }, steps=6, fallback=1 }
-
-  K1 = { dirs={ 1, 2, 2, 16, 9, 8, 18, 4 }, steps=6 }
-  K2 = { dirs={ 1, 22, 6, 9, 8, 8, 14 },    steps=6 }
-  K3 = { dirs={ 11, 2, 2, 6, 19, 8, 8, 4 }, steps=6, straight=1 }
-
-  K4 = { dirs={ 1, 12, 2, 6, 9, 8, 8, 14 }, steps=6, fallback=1 }
-  K5 = { dirs={ 1, 12, 2, 6, 19, 8, 8, 4 }, steps=6, fallback=1 }
-
-  -- any larger shapes are very rare (not worth supporting)
-}
-
-
-function Test_stairwell_shapes()
-  --
-  -- check all the shapes are actually closed and have two exits
-  --
-
-  local function test_shape(name, shape)
-    local px = 9
-    local py = 9
-
-    local exits = {}
-
-    each dir in shape.dirs do
-      local is_wide = (dir >= 20)
-      local is_exit = (dir >= 10)
-
-      local d2 = dir % 10
-
-      if d2 == 0 or d2 == 5 or dir >= 30 then
-        error("Bad direction in shape " .. name)
-      end
-
-      if is_exit then
-        table.insert(exits, d2)
-      end
-
-      local dx, dy = geom.delta(geom.LEFT[d2])
-
-      if is_wide then
-        dx = dx * 2
-        dy = dy * 2
-      end
-
-      px = px + dx
-      py = py + dy
-    end
-
-    -- check final position
-
-    if px != 9 or py != 9 then
-      error("Unclosed shape : " .. name)
-    end
-
-    -- check exits
-
-    if #exits != 2 then
-      error("Bad exits in shape " .. name)
-    end
-
-    if exits[1] == exits[2] then
-      error("180 degree found in shape " .. name)
-    end
-
-    -- OK --
-  end
-
-
-  each name,shape in STAIRWELL_SHAPES do
-    if not shape.dirs then
-      error("Missing dirs in shape " .. name)
-    end
-
-    test_shape(name, shape)
-  end
 end
 
 
@@ -2423,7 +2286,9 @@ end
       if C.kind == "joiner" then
         next_f = next_f + 0 --!!!!! FIXME TEST ONLY
         set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
-stderrf("  setting %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
+        C.joiner_chunk.area.is_outdoor = nil
+stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
+stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
       end
 
       visit_room(R2, next_f, A2, R, C)
