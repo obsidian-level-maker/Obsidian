@@ -117,20 +117,6 @@ end
 
 
 
--- replace the standard 'print' function
-print = function(...)
-  local args = { ... }
-  local line = ""
-
-  for i = 1,select("#", ...) do
-    line = line .. "\t" .. tostring(args[i])
-  end
-
-  gui.printf("%s\n", line)
-end
-
-
-
 function ob_ref_table(op, t)
   if not gui.___REFS then
     gui.___REFS = {}

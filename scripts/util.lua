@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -19,7 +19,8 @@
 ------------------------------------------------------------------------
 
 
-----====| GENERAL STUFF |====----
+--------========|  GENERAL STUFF  |========--------
+
 
 function int(val)
   return math.floor(val)
@@ -37,6 +38,19 @@ function alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
   LEVEL.ids[kind] = result
   return result
+end
+
+
+-- replace the standard 'print' function
+print = function(...)
+  local args = { ... }
+  local line = ""
+
+  for i = 1,select("#", ...) do
+    line = line .. "\t" .. tostring(args[i])
+  end
+
+  gui.printf("%s\n", line)
 end
 
 
@@ -160,10 +174,8 @@ end
 
 
 
-----====| TABLE UTILITIES |====----
+--------========|  TABLE UTILITIES  |========--------
 
--- special value for merging
-REMOVE_ME = "__REMOVE__"
 
 function table.size(t)
   local count = 0;
@@ -499,7 +511,7 @@ end
 
 
 
-----====| RANDOM NUMBERS |====----
+--------========|  RANDOM NUMBERS  |========--------
 
 rand = {}
 
@@ -610,7 +622,7 @@ end
 
 
 
-----====| GEOMETRY |====----
+--------========|  GEOMETRY UTILITIES  |========--------
 
 geom = {}
 
@@ -1009,7 +1021,9 @@ function geom.categorize_shape(dir2, dir4, dir6, dir8)
 end
 
 
---===| Bezier curve functions |===--
+
+--------========|  BEZIER CURVES  |========--------
+
 
 function geom.bezier_coord(S, C, E, t)
   -- S = start point
@@ -1066,9 +1080,9 @@ function geom.bezier_length(S, C, E, divisions)
 end
 
 
-----====| A* PATHING ALGORITHM |====----
 
-a_star = {}
+--------========| A* PATHING ALGORITHM |========--------
+
 
 --
 -- Find path from start (sx,sy) to end (ex,ey).
@@ -1078,7 +1092,7 @@ a_star = {}
 -- Score function:
 --   f(x, y, dir, data) --> distance, negative for impossible
 --
-function a_star.find_path(sx, sy, ex, ey, W, H, score_func, data)
+function astar_find_path(sx, sy, ex, ey, W, H, score_func, data)
   local open   = table.array_2D(W, H)
   local closed = table.array_2D(W, H)
 
