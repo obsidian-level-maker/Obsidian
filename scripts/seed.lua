@@ -121,7 +121,7 @@
                     -- "liquid"
                     -- "stair"
                     -- "closet" ('T' elements in rules)
-                    -- "junction" ('J' elements in rules)
+                    -- "joiner" ('J' elements in rules)
 
     area : AREA
 
@@ -133,6 +133,8 @@
     sx1, sy1, sx2, sy2   -- seed range
 
     sw, sh  -- seed size
+
+    -- FIXME have 'from_dir' and 'dest_dir'
 
     dir : DIR        -- main facing direction
                      -- for closets this faces into the room
