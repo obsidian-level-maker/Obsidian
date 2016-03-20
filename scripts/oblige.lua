@@ -247,6 +247,8 @@ function ob_console_dump(info, ...)
 end
 
 
+------------------------------------------------------------------------
+
 
 function ob_match_word_or_table(tab, conf)
   if type(tab) == "table" then
@@ -838,32 +840,254 @@ function ob_game_format()
 end
 
 
+------------------------------------------------------------------------
+
+
+function ob_merge_tab(name, tab)
+  assert(name and tab)
+
+  if not GAME[name] then
+    GAME[name] = table.deep_copy(tab)
+    return
+  end
+
+  -- support replacing _everything_
+  -- [ needed mainly for Doom 1 themes ]
+  if tab.replace_all then
+    GAME[name] = {}
+  end
+
+  table.merge_w_copy(GAME[name], tab)
+
+  GAME[name].replace_all = nil
+end
+
+
+function ob_merge_table_list(tab_list)
+  each GT in tab_list do
+    assert(GT)
+    each name,tab in GT do
+      -- upper-case names should always be tables to copy
+      if string.match(name, "^[A-Z]") then
+        if type(tab) != "table" then
+          error("Game field not a table: " .. tostring(name))
+        end
+        ob_merge_tab(name, tab)
+      end
+    end
+  end
+end
+
+
+function ob_add_current_game()
+  local function recurse(name, child)
+    local def = OB_GAMES[name]
+
+    if not def then
+      error("UNKNOWN GAME: " .. name)
+    end
+
+    -- here is the tricky bit : by recursing now, we can process all the
+    -- definitions in the correct order (children after parents).
+
+    if def.extends then
+      recurse(def.extends, def)
+    end
+
+    if def.tables then
+      ob_merge_table_list(def.tables)
+    end
+
+    if child and def.hooks then
+      child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
+    end
+
+    each keyword in { "format", "sub_format", "game_dir" } do
+      if def[keyword] != nil then
+        GAME[keyword] = def[keyword]
+      end
+    end
+
+    return def
+  end
+
+  table.insert(GAME.modules, 1, recurse(OB_CONFIG.game))
+end
+
+
+function ob_add_current_engine()
+  local function recurse(name, child)
+    local def = OB_ENGINES[name]
+
+    if not def then
+      error("UNKNOWN ENGINE: " .. name)
+    end
+
+    if def.extends then
+      recurse(def.extends, def)
+    end
+
+    if def.tables then
+      ob_merge_table_list(def.tables)
+    end
+
+    if child and def.hooks then
+      child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
+    end
+
+    return def
+  end
+
+  table.insert(GAME.modules, 2, recurse(OB_CONFIG.engine))
+end
+
+
+function ob_sort_modules()
+  GAME.modules = {}
+
+  -- find all the visible & enabled modules
+
+  each _,mod in OB_MODULES do
+    if mod.enabled and mod.shown then
+      table.insert(GAME.modules, mod)
+    end
+  end
+
+  -- sort them : lowest -> highest priority, because later
+  -- entries can override things done by earlier ones.
+
+  local function module_sorter(A, B)
+    if A.priority or B.priority then
+      return (A.priority or 50) < (B.priority or 50)
+    end
+
+    return A.label < B.label
+  end
+
+  if #GAME.modules > 1 then
+    table.sort(GAME.modules, module_sorter)
+  end
+end
+
+
+function ob_invoke_hook(name, ...)
+  -- two passes, for example: setup and setup2
+  for pass = 1,2 do
+    each mod in GAME.modules do
+      local func = mod.hooks and mod.hooks[name]
+
+      if func then
+        func(mod, ...)
+      end
+    end
+
+    name = name .. "2"
+  end
+end
+
+
+function ob_build_setup()
+  ob_clean_up()
+
+  ob_sort_modules()
+
+  -- first entry in module list *must* be the game def, and second entry
+  -- must be the engine definition.  NOTE: neither are real modules!
+  ob_add_current_game()
+  ob_add_current_engine()
+
+  -- merge tables from each module
+  -- [ but skip GAME and ENGINE which are already merged ]
+
+  each mod in GAME.modules do
+    if _index > 2 and mod.tables then
+      ob_merge_table_list(mod.tables)
+    end
+  end
+
+
+  PARAM = assert(GAME.PARAMETERS)
+
+  table.merge_missing(PARAM, GLOBAL_PARAMETERS)
+
+
+  -- load all the prefab definitions
+
+  Fab_load_all_definitions()
+
+  Grower_preprocess_grammar()
+
+
+  gui.rand_seed(OB_CONFIG.seed + 0)
+
+  ob_invoke_hook("setup")
+
+
+  table.name_up(GAME.ROOMS)
+  table.name_up(GAME.THEMES)
+
+
+  if GAME.sub_format then
+    gui.property("sub_format", GAME.sub_format)
+  end
+
+  gui.property("spot_low_h",  PARAM.spot_low_h)
+  gui.property("spot_high_h", PARAM.spot_high_h)
+
+
+  -- backwards compatibility
+  if OB_CONFIG.length == "full" then
+     OB_CONFIG.length = "game"
+  end
+
+  if OB_CONFIG.size == "tiny" then
+     OB_CONFIG.size = "small"
+  end
+end
+
+
+function ob_clean_up()
+  GAME   = {}
+  THEME  = {}
+  PARAM  = {}
+  STYLE  = {}
+
+  LEVEL   = nil
+  EPISODE = nil
+  PREFABS = nil
+  SEEDS   = nil
+
+  collectgarbage("collect")
+end
+
 
 function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
   gui.printf("\n\n")
-  gui.printf("@5~~~~~~~ Making Levels ~~~~~~~\n\n")
+  gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
 
   ob_read_all_config(true)
 
   gui.ticker()
 
-  Levels_setup()
+  ob_build_setup()
 
   local status = Levels_make_all()
 
-  Levels_clean_up()
+  ob_clean_up()
 
   gui.printf("\n")
 
   if status == "abort" then
-    gui.printf("@1~~~~~~~ Build Aborted! ~~~~~~~\n\n")
+    gui.printf("\n")
+    gui.printf("~~~~~~~ Build Aborted! ~~~~~~~\n\n")
     return "abort"
   end
 
-  gui.printf("@5~~~~~~ Finished Making Levels ~~~~~~\n\n")
+  gui.printf("\n")
+  gui.printf("~~~~~~ Finished Making Levels ~~~~~~\n\n")
 
   return "ok"
 end

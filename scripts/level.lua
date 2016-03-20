@@ -72,236 +72,6 @@
 
 
 
-function Levels_clean_up()
-  GAME   = {}
-  THEME  = {}
-  PARAM  = {}
-  STYLE  = {}
-
-  LEVEL   = nil
-  EPISODE = nil
-  PREFABS = nil
-  SEEDS   = nil
-
-  collectgarbage("collect")
-end
-
-
-function Levels_between_clean()
-  LEVEL    = nil
-  SEEDS    = nil
-  SECTIONS = nil
-
-  collectgarbage("collect")
-end
-
-
-function Levels_merge_tab(name, tab)
-  assert(name and tab)
-
-  if not GAME[name] then
-    GAME[name] = table.deep_copy(tab)
-    return
-  end
-
-  -- support replacing _everything_
-  -- [ needed mainly for Doom 1 themes ]
-  if tab.replace_all then
-    GAME[name] = {}
-  end
-
-  table.merge_w_copy(GAME[name], tab)
-
-  GAME[name].replace_all = nil
-end
-
-
-function Levels_merge_table_list(tab_list)
-  each GT in tab_list do
-    assert(GT)
-    each name,tab in GT do
-      -- upper-case names should always be tables to copy
-      if string.match(name, "^[A-Z]") then
-        if type(tab) != "table" then
-          error("Game field not a table: " .. tostring(name))
-        end
-        Levels_merge_tab(name, tab)
-      end
-    end
-  end
-end
-
-
-function Levels_add_game()
-  local function recurse(name, child)
-    local def = OB_GAMES[name]
-
-    if not def then
-      error("UNKNOWN GAME: " .. name)
-    end
-
-    -- here is the tricky bit : by recursing now, we can process all the
-    -- definitions in the correct order (children after parents).
-
-    if def.extends then
-      recurse(def.extends, def)
-    end
-
-    if def.tables then
-      Levels_merge_table_list(def.tables)
-    end
-
-    if child and def.hooks then
-      child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
-    end
-
-    each keyword in { "format", "sub_format", "game_dir" } do
-      if def[keyword] != nil then
-        GAME[keyword] = def[keyword]
-      end
-    end
-
-    return def
-  end
-
-  table.insert(GAME.modules, 1, recurse(OB_CONFIG.game))
-end
-
-
-function Levels_add_engine()
-  local function recurse(name, child)
-    local def = OB_ENGINES[name]
-
-    if not def then
-      error("UNKNOWN ENGINE: " .. name)
-    end
-
-    if def.extends then
-      recurse(def.extends, def)
-    end
-
-    if def.tables then
-      Levels_merge_table_list(def.tables)
-    end
-
-    if child and def.hooks then
-      child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
-    end
-
-    return def
-  end
-
-  table.insert(GAME.modules, 2, recurse(OB_CONFIG.engine))
-end
-
-
-function Levels_sort_modules()
-  GAME.modules = {}
-
-  -- find all the visible & enabled modules
-
-  each _,mod in OB_MODULES do
-    if mod.enabled and mod.shown then
-      table.insert(GAME.modules, mod)
-    end
-  end
-
-  -- sort them : lowest -> highest priority, because later
-  -- entries can override things done by earlier ones.
-
-  local function module_sorter(A, B)
-    if A.priority or B.priority then
-      return (A.priority or 50) < (B.priority or 50)
-    end
-
-    return A.label < B.label
-  end
-
-  if #GAME.modules > 1 then
-    table.sort(GAME.modules, module_sorter)
-  end
-end
-
-
-function Levels_invoke_hook(name, ...)
-  -- two passes, for example: setup and setup2
-  for pass = 1,2 do
-    each mod in GAME.modules do
-      local func = mod.hooks and mod.hooks[name]
-
-      if func then
-        func(mod, ...)
-      end
-    end
-
-    name = name .. "2"
-  end
-end
-
-
-function Levels_setup()
-  Levels_clean_up()
-
-  Levels_sort_modules()
-
-  -- first entry must be the game def, and second entry must be
-  -- the engine def.  NOTE: neither of these are real modules.
-  Levels_add_game()
-  Levels_add_engine()
-
-  -- merge tables from each module
-  -- [ but skip GAME and ENGINE which are already merged ]
-
-  each mod in GAME.modules do
-    if _index > 2 and mod.tables then
-      Levels_merge_table_list(mod.tables)
-    end
-  end
-
-
-  PARAM = assert(GAME.PARAMETERS)
-
-  table.merge_missing(PARAM, GLOBAL_PARAMETERS)
-
-
-  -- load all the prefab definitions
-
-  Fab_load_all_definitions()
-
-  Grower_preprocess_grammar()
-
-
-  gui.rand_seed(OB_CONFIG.seed + 0)
-
-  Levels_invoke_hook("setup")
-
-
-  table.name_up(GAME.ROOMS)
-  table.name_up(GAME.THEMES)
-
-
-  if GAME.sub_format then
-    gui.property("sub_format", GAME.sub_format)
-  end
-
-  gui.property("spot_low_h",  PARAM.spot_low_h)
-  gui.property("spot_high_h", PARAM.spot_high_h)
-
-
-  -- backwards compatibility
-  if OB_CONFIG.length == "full" then
-     OB_CONFIG.length = "game"
-  end
-
-  if OB_CONFIG.size == "tiny" then
-     OB_CONFIG.size = "small"
-  end
-end
-
-
-------------------------------------------------------------------------
-
-
 function Levels_choose_themes()
   local theme_tab = {}
 
@@ -715,6 +485,15 @@ function Levels_handle_prebuilt()
 end
 
 
+function Levels_between_clean()
+  LEVEL    = nil
+  SEEDS    = nil
+  SECTIONS = nil
+
+  collectgarbage("collect")
+end
+
+
 function Levels_make_level(LEV)
   assert(LEV)
   assert(LEV.name)
@@ -759,14 +538,14 @@ function Levels_make_level(LEV)
   -- use a pre-built level ?
 
   if LEVEL.prebuilt then
-    Levels_invoke_hook("begin_level")
+    ob_invoke_hook("begin_level")
 
     local res = Levels_handle_prebuilt()
     if res != "ok" then
       return res
     end
 
-    Levels_invoke_hook("end_level")
+    ob_invoke_hook("end_level")
     return "ok"
   end
 
@@ -778,7 +557,7 @@ function Levels_make_level(LEV)
 
   Levels_do_styles()
 
-  Levels_invoke_hook("begin_level")
+  ob_invoke_hook("begin_level")
 
   gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
@@ -801,7 +580,7 @@ function Levels_make_level(LEV)
   end
 
 
-  Levels_invoke_hook("end_level")
+  ob_invoke_hook("end_level")
 
   if LEVEL.indoor_light then gui.property("indoor_light", LEVEL.indoor_light) end
   if LEVEL.sky_bright   then gui.property("sky_bright", LEVEL.sky_bright) end
@@ -827,7 +606,7 @@ function Levels_make_all()
 
   gui.rand_seed(OB_CONFIG.seed + 1)
 
-  Levels_invoke_hook("get_levels")
+  ob_invoke_hook("get_levels")
 
   if #GAME.levels == 0 then
     error("Level list is empty!")
@@ -863,7 +642,7 @@ function Levels_make_all()
     end
   end
 
-  Levels_invoke_hook("all_done")
+  ob_invoke_hook("all_done")
 
   return "ok"
 end
