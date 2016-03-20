@@ -69,21 +69,6 @@ evolves about same rate IN TERMS OF # MONSTERS ADDED.
 --------------------------------------------------------------]]
 
 
-MONSTER_QUANTITIES =
-{
-  scarce=4, less=8, normal=12, more=20, heaps=32, nuts=100
-}
-
-MONSTER_KIND_TAB =
-{
-  scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
-}
-
-
--- more monsters in Co-operative maps
-COOP_MON_FACTOR = 1.35
-
-
 function Monster_init()
   table.name_up(GAME.MONSTERS)
   table.name_up(GAME.WEAPONS)

@@ -40,21 +40,6 @@
 --]]
 
 
-HEALTH_FACTORS =
-{
-  none=0, scarce=0.40, less=0.64, normal=1.00, more=1.60, heaps=2.50
-}
-
-AMMO_FACTORS =
-{
-  none=0, scarce=0.65, less=0.85, normal=1.00, more=1.20, heaps=1.50
-}
-
-
-COOP_HEALTH_FACTOR = 1.35
-COOP_AMMO_FACTOR   = 1.35
-
-
 -- Doom flags
 DOOM_FLAGS =
 {

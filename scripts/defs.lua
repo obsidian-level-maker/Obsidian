@@ -92,6 +92,38 @@ SPOT_WALL     = 2
 SPOT_LEDGE    = 3
 
 
+-- monster and item stuff
+MONSTER_QUANTITIES =
+{
+  scarce=4, less=8, normal=12, more=20, heaps=32, nuts=100
+}
+
+MONSTER_KIND_TAB =
+{
+  scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
+}
+
+HEALTH_FACTORS =
+{
+  none=0, scarce=0.40, less=0.64, normal=1.00, more=1.60, heaps=2.50
+}
+
+AMMO_FACTORS =
+{
+  none=0, scarce=0.65, less=0.85, normal=1.00, more=1.20, heaps=1.50
+}
+
+
+-- adjustments for Co-operative game mode
+COOP_MON_FACTOR = 1.42
+
+COOP_HEALTH_FACTOR = 1.35
+COOP_AMMO_FACTOR   = 1.35
+
+
+--
+-- styles control quantities of things in each level
+--
 GLOBAL_STYLE_LIST =
 {
   -- these two correspond to buttons in the GUI
@@ -141,6 +173,9 @@ GLOBAL_STYLE_LIST =
 }
 
 
+--
+-- default parameters (each game can override these settings)
+--
 GLOBAL_PARAMETERS =
 {
   map_limit = 10000
