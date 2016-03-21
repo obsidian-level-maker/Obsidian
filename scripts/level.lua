@@ -419,17 +419,24 @@ function Episode_plan_weapons()
       if LEV.prebuilt  then continue end
       if LEV.is_secret then continue end
 
-      each name,info in GAME.WEAPONS do
+      local w_names = table.keys(GAME.WEAPONS)
+      rand.shuffle(w_names)
+
+      each name in w_names do
+        local info = GAME.WEAPONS[name]
         if (info.add_prob or 0) == 0 then continue end
         if (info.level or 1) <= LEV.weapon_level and not seen_weapons[name] then
           table.insert(LEV.new_weapons, name)
           seen_weapons[name] = true
         end
+
+        -- prevent having too many new weapons in this map
+        -- [ they get added to a later map, or simply dropped if no later maps ]
+        if table.size(LEV.new_weapons) >= LEV.weapon_quota then
+          break;
+        end
       end
     end
-
-    -- TODO : if many weapons per map (e.g. length="single"), push some into next
-    --        but if no next then simply drop them
 
     -- TODO : spread them out (esp. when next level has none and previous has >= 2)
     --        but also sometimes just to randomize it a bit
