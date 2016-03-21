@@ -35,6 +35,8 @@
 
 --class LEVEL
 --[[
+    id : number    -- index number (in GAME.levels)
+
     name : string  -- engine name for this level, e.g. MAP01
 
     description : string  -- level name or title (optional)
@@ -451,6 +453,35 @@ function Episode_plan_weapons()
   end
 
 
+  local function should_swap(info1, info2)
+    if info1.upgrades and info1.upgrades == info2.name then
+      return true
+    end
+
+    return false
+  end
+
+
+  local function swap_upgraded_weapons(L1, L2)
+    for idx1 = 1, #L1.new_weapons do
+    for idx2 = 1, #L2.new_weapons do
+      local name1 = L1.new_weapons[idx1]
+      local name2 = L2.new_weapons[idx2]
+
+      local info1 = GAME.WEAPONS[name1]
+      local info2 = GAME.WEAPONS[name2]
+
+      if should_swap(info1, info2) then
+        L1.new_weapons[idx1] = name2
+        L2.new_weapons[idx2] = name1
+
+        gui.debugf("swapped weapon '%s' in %s <--> '%s' in %s\n", name1, L1.name, name2, L2.name)
+      end
+    end      
+    end
+  end
+
+
   local function pick_new_weapons()
     local seen_weapons = {}
 
@@ -488,6 +519,18 @@ function Episode_plan_weapons()
       if NL and _index >= 2 then
         spread_new_weapons(LEV, NL)
       end
+    end
+
+    -- ensure certain weapon pairs occur in the expected order
+    -- [ e.g. regular shotgun is before the super-shotgun ]
+
+    for idx1 = 1, #GAME.levels do
+    for idx2 = idx1 + 1, #GAME.levels do
+      local L1 = GAME.levels[idx1]
+      local L2 = GAME.levels[idx2]
+
+      swap_upgraded_weapons(L1, L2)
+    end
     end
   end
 
@@ -779,9 +822,10 @@ function Episode_plan_game()
   -- This plans stuff for the whole game, e.g. what weapons will
   -- appear on each level, etc....
   --
-  each EPI in GAME.episodes do
-    EPI.id = _index
-  end
+
+  table.name_up(GAME.MONSTERS)
+  table.name_up(GAME.WEAPONS)
+  table.name_up(GAME.PICKUPS)
 
   Episode_decide_specials()
 
@@ -916,7 +960,7 @@ function Level_choose_themes()
 
   local function set_themes_by_episode(episode_list)
     each LEV in GAME.levels do
-      set_level_theme(LEV, episode_list[LEV.episode.index])
+      set_level_theme(LEV, episode_list[LEV.episode.id])
     end
   end
 
@@ -1224,7 +1268,7 @@ function Level_make_level(LEV)
   assert(LEV)
   assert(LEV.name)
 
-  local index = LEV.index
+  local index = LEV.id
   local total = #GAME.levels
 
   -- debugging aid : ability to build only a particular level

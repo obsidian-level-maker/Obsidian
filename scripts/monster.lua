@@ -70,10 +70,6 @@ evolves about same rate IN TERMS OF # MONSTERS ADDED.
 
 
 function Monster_init()
-  table.name_up(GAME.MONSTERS)
-  table.name_up(GAME.WEAPONS)
-  table.name_up(GAME.PICKUPS)
-
   each name,info in GAME.MONSTERS do
     if not info.id then
       error(string.format("Monster '%s' lacks an id field", name))
