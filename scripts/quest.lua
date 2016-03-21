@@ -1505,14 +1505,19 @@ function Quest_add_weapons()
   -- just decides in which rooms to place them.
   --
 
-  local function should_swap(early, later)
-    assert(early and later)
+  local function should_swap(R1, R2, name1, name2)
+    if R1.lev_along > R2.lev_along then
+      R1, R2 = R2, R1
+      name1, name2 = name2, name1
+    end
 
-    local info1 = assert(GAME.WEAPONS[early])
-    local info2 = assert(GAME.WEAPONS[later])
+    local info1 = assert(GAME.WEAPONS[name1])
+    local info2 = assert(GAME.WEAPONS[name2])
 
     -- only swap when the ammo is the same
-    if info1.ammo != info2.ammo then return false end
+    if info1.ammo != info2.ammo then
+      return false
+    end
 
     if info1.level != info2.level then
       return info1.level > info2.level
@@ -1527,17 +1532,25 @@ function Quest_add_weapons()
 
 
   local function reorder_weapons(room_list)
-    for pass = 1,3 do
-      for i = 1, (#list - 1) do
-      for k = (i + 1), #list do
-        if should_swap(list[i], list[k]) then
-          local A, B = list[i], list[k]
+    for idx1 = 1, #room_list do
+    for idx2 = idx1 + 1, #room_list do
+      local R1 = room_list[idx1]
+      local R2 = room_list[idx2]
 
-          list[i], list[k] = B, A
+      for w1 = 1, #R1.weapons do
+      for w2 = 1, #R2.weapons do
+        local name1 = R1.weapons[w1]
+        local name2 = R2.weapons[w2]
+
+        if should_swap(R1, R2, name1, name2) then
+stderrf("@@@@@@!!!!  Swapping %s in %s <--> %s in %s\n", name1, R1.name, name2, R2.name)
+          R1.weapons[w1] = name2
+          R2.weapons[w2] = name1
         end
-      end -- i, k
+      end -- w1, w2
       end
-    end -- pass
+    end -- idx1, idx2
+    end
   end
 
 
@@ -1605,15 +1618,13 @@ function Quest_add_weapons()
 
     local list = LEVEL.rooms
 
-    if Z then
-      list = Z.rooms
-    end
+    if Z then list = Z.rooms end
 
     -- evaluate each room and pick the best
     local best_R
     local best_score
 
-    each R in Z.rooms do
+    each R in list do
       local score = eval_weapon_room(R)
 
       -- unusable room?
@@ -1675,8 +1686,7 @@ function Quest_add_weapons()
       table.insert(rooms, 1, LEVEL.start_room)
     end
 
-    -- FIXME !!!
-    -- reorder_weapons(rooms)
+    reorder_weapons(rooms)
   end
 
 
