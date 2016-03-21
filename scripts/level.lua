@@ -321,8 +321,7 @@ function Episode_plan_weapons()
   --
   -- (1) the starting weapon(s) of a level
   -- (2) other must-give weapons of a level
-  -- (3) optional weapons [ for large maps ]
-  -- (4) a weapon for secrets [ provided earlier than normal ]
+  -- (3) a weapon for secrets [ provided earlier than normal ]
   --
 
   local function calc_weapon_level(LEV)
@@ -460,8 +459,8 @@ function Episode_plan_weapons()
     if not rand.odds(move_prob) then return end
 
     -- Ok, move a weapon
-    -- [ removing one from beginning of L1, append to the end of L2, which
-    --   prevents weapons moving too far ahead ]
+    -- [ we remove one from beginning of L1, append to the end of L2,
+    --   as this prevents weapons moving too far ahead ]
     local name = table.remove(L1.new_weapons, 1)
     table.insert(L2.new_weapons, name)
 
@@ -556,7 +555,7 @@ function Episode_plan_weapons()
 
   local function determine_seen_weapons()
     -- "seen" means weapons which have been given in some previous map
-    -- (not including secret weapons)
+    -- (and does not include secret weapons)
     local seen_weapons = {}
 
     each LEV in GAME.levels do
@@ -668,7 +667,8 @@ function Episode_plan_weapons()
       end
     end
 
-    stderrf("decide_weapon list in %s:\n%s\n", LEV.name, table.tostr(tab))
+--DEBUG
+--  stderrf("decide_weapon list in %s:\n%s\n", LEV.name, table.tostr(tab))
 
     -- nothing is possible? ok...
     if table.empty(tab) then return nil end
