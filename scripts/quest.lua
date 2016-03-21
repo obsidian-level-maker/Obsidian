@@ -1526,7 +1526,7 @@ function Quest_add_weapons()
   end
 
 
-  local function reorder_weapons(list)
+  local function reorder_weapons(room_list)
     for pass = 1,3 do
       for i = 1, (#list - 1) do
       for k = (i + 1), #list do
@@ -1541,53 +1541,16 @@ function Quest_add_weapons()
   end
 
 
-  local function num_weapons_for_zones(quota)
-    local num_zones = #LEVEL.zones
+  local function do_start_weapons(R)
+    if not R then return end
 
-    if num_zones == 1 then
-      return { quota }
-    end
+    R.weapons = table.copy(LEVEL.start_weapons)
 
-
-    local counts = {}
-
-    for k = 1, #LEVEL.zones do
-      counts[k] = 0
-    end
-
-    -- first zone always gets a weapon, often two, occasionally three
-    counts[1] = 1
-
-    if quota >= 2 and rand.odds((quota - 1) * 40) then
-      counts[1] = 2
-    end
-
-    if quota >= 3 and rand.odds((quota - 2) * 25) then
-      counts[1] = 3
-    end
-
-    quota = quota - counts[1]
-
-
-    -- assign remaining quota to other zones
-
-    for i = 0, 99 do
-      if quota <= 0 then break; end
-
-      if rand.odds(80) then
-        local zone_idx = 2 + (i % (num_zones - 1))
-
-        counts[zone_idx] = counts[zone_idx] + 1
-
-        quota = quota - 1
-      end
-    end
-
-    return counts
+    R.used_chunks = R.used_chunks + #R.weapons
   end
 
 
-  local function eval_weapon_room(R, is_new)
+  local function eval_weapon_room(R)
     -- never in hallways!
     if R.kind == "stairwell" then return -250 end
     if R.kind == "hallway"   then return -200 end
@@ -1601,6 +1564,9 @@ function Quest_add_weapons()
     -- putting weapons in the exit room is a tad silly
     if R.is_exit then return -50 end
 
+    -- really don't want more than one per room
+    if #R.weapons > 0 then -20 end
+
     -- basic fitness of the room is # of free chunks
     local score = R:usable_chunks() * 10 + 1
 
@@ -1609,9 +1575,10 @@ function Quest_add_weapons()
       score = score + 45
     end
 
-    -- if there is a goal or another weapon, try to avoid it
-    if #R.goals   > 0 then score = score / 4 end
-    if #R.weapons > 0 then score = score / 2 end
+    -- try to avoid rooms with a goal
+    if #R.goals == 0 then
+      score = score + 17
+    end
 
     -- Note: tie breaker is added by caller
 
@@ -1619,12 +1586,24 @@ function Quest_add_weapons()
   end
 
 
-  local function add_weapon(Z, name, is_start)
-    gui.debugf("Add weapon '%s' --> ZONE_%d\n", name, Z.id)
+  local function usable_rooms_in_zone(Z)
+    local count = 0
 
-    -- check if weapon is "new" (player has never seen it before).
-    -- new weapons deserve their own quest, or at least require
-    -- some exploration to find it.
+    each R in Z.rooms do
+      if eval_weapon_room(R) > 0 then
+        count = count + 1
+      end
+    end
+
+    return count
+  end
+
+
+  local function pick_room(Z)
+    -- Z can be NIL, meaning try ALL rooms
+    -- also, when zone is given then we skip "unusable" rooms
+
+    -- FIXME THIS IS BROKEN !!!!
 
     local is_new = false  -- FIXME?
 
@@ -1655,20 +1634,47 @@ function Quest_add_weapons()
   end
 
 
-  local function do_start_weapons()
-    LEVEL.start_room.weapons = table.copy(LEVEL.start_weapons)
-
-    -- mirror weapons in a Co-op alternate start room
-    if LEVEL.alt_start then
-      LEVEL.alt_start.weapons = table.copy(LEVEL.start_weapons)
-    end
-  end
-
-
   local function do_other_weapons()
-    local list = LEVEL.other_weapons
+    local list  = LEVEL.other_weapons
+    local rooms = {}
 
-    reorder_weapons(list)
+    if table.empty(list) then return end
+
+    -- firstly, assign a weapon to every zone except the first
+
+    for idx = 2, #LEVEL.zones do
+      local Z = LEVEL.zones[idx]
+
+      if usable_rooms_in_zone(Z) > 0 then
+        local R = pick_room(Z)
+        if R then
+          table.insert(R.weapons, table.remove(list, 1))
+          table.insert(rooms, R)
+        end
+      end
+
+      if table.empty(list) then break; end
+    end
+
+    -- secondly, if we have any left over then assign to best scoring rooms
+
+    while list[1] do
+      local R = pick_room(nil)
+      assert(R)
+
+      table.insert(R.weapons, table.remove(list, 1))
+      table.insert(rooms, R)
+    end
+
+
+    -- finally, swap weapons if the order seems strange
+
+    if not LEVEL.alt_start then
+      table.insert(rooms, 1, LEVEL.start_room)
+    end
+
+    -- FIXME !!!
+    -- reorder_weapons(rooms)
   end
 
 
@@ -1679,28 +1685,11 @@ function Quest_add_weapons()
   end
 
 
-  do_start_weapons()
-  
+  -- the Co-op alternate start room gets the same weapons
+  do_start_weapons(LEVEL.start_room)
+  do_start_weapons(LEVEL.alt_start)
+
   do_other_weapons()
-
-
-
-  -- distribute these weapons to the zones
-
-  local counts = num_weapons_for_zones(quota)
-
-  for i = 1, #LEVEL.zones do
-    local Z = LEVEL.zones[i]
-
-    for num = 1, counts[i] do
-      local weapon = table.remove(list, 1)
-      assert(weapon)
-
-      add_weapon(Z, weapon, i == 1)
-    end
-  end
-
-
 end
 
 
