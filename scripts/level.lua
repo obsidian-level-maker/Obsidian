@@ -353,7 +353,7 @@ function Episode_plan_weapons()
   end
 
 
-  local function decide_weapon_quota(LEV)
+  local function calc_weapon_quota(LEV)
     -- decide how many weapons to give
 
     -- normal quota should give 1-2 in small maps, 2-3 in regular maps, and 3-4
@@ -382,6 +382,11 @@ function Episode_plan_weapons()
     quota = int(quota)
 
     if quota < 1 then quota = 1 end
+
+    -- be more generous in the very first level
+    if LEV.id == 1 and quota == 1 and OB_CONFIG.weapons != "less" then
+      quota = 2
+    end
 
     LEV.weapon_quota = quota
   end
@@ -615,11 +620,11 @@ function Episode_plan_weapons()
 
 
   local function prob_for_weapon(LEV, name, info, is_start)
-    local prob  = info.add_prob
+    local prob  = info.add_prob or 0
     local level = info.level or 1
 
     -- ignore weapons which lack a pick-up item
-    if not prob or prob <= 0 then return 0 end
+    if prob <= 0 then return 0 end
 
     -- must be NEW or given in a previous map
     if not table.has_elem(LEV.new_weapons, name) and
@@ -639,6 +644,11 @@ function Episode_plan_weapons()
     if is_start and OB_CONFIG.strength != "crazy" then
       if level <= 2 then prob = prob * 4 end
       if level == 3 then prob = prob * 2 end
+
+      -- also want NEW weapons to appear elsewhere in the level
+      if level >= 3 and table.has_elem(LEV.new_weapons, name) then
+        prob = prob / 1000
+      end
     end
 
     return prob
@@ -657,7 +667,7 @@ function Episode_plan_weapons()
       end
     end
 
-    stderrf("decide_weapon list in %s:\n%s\n", LEV.name, table.tostr(name_tab))
+    stderrf("decide_weapon list in %s:\n%s\n", LEV.name, table.tostr(tab))
 
     -- nothing is possible? ok...
     if table.empty(tab) then return nil end
@@ -675,7 +685,7 @@ function Episode_plan_weapons()
     each LEV in GAME.levels do
       LEV.start_weapons = {}
 
-      local extra_prob = 10 + LEV.ep_along * 80
+      local extra_prob = 10 + math.min(1, LEV.game_along) * 80
 
       local want_num = rand.sel(extra_prob, 2, 1)
 
@@ -705,14 +715,7 @@ function Episode_plan_weapons()
 
   each LEV in GAME.levels do
     calc_weapon_level(LEV)
-
-    decide_weapon_quota(LEV)
-
-    if _index == 1 and LEV.weapon_quota == 1 and
-       OB_CONFIG.weapons != "less"
-    then
-      LEV.weapon_quota = 2
-    end
+    calc_weapon_quota(LEV)
   end
 
   pick_new_weapons()
