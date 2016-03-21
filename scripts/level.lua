@@ -614,12 +614,89 @@ function Episode_plan_weapons()
   end
 
 
-  local function pick_other_weapons()
-    -- TODO
+  local function prob_for_weapon(LEV, name, info, is_start)
+    local prob  = info.add_prob
+    local level = info.level or 1
+
+    -- ignore weapons which lack a pick-up item
+    if not prob or prob <= 0 then return 0 end
+
+    -- must be NEW or given in a previous map
+    if not table.has_elem(LEV.new_weapons, name) and
+       not LEV.seen_weapons[name]
+    then
+      return 0
+    end
+
+    -- must not be used already in this map
+    if LEV.start_weapons and table.has_elem(LEV.start_weapons, name) then return 0 end
+    if LEV.other_weapons and table.has_elem(LEV.other_weapons, name) then return 0 end
+
+    if name == LEV.secret_weapon then return 0 end
+
+    -- prefer simpler weapons for start rooms
+    -- [ except in crazy monsters mode, player may need a bigger weapon! ]
+    if is_start and OB_CONFIG.strength != "crazy" then
+      if level <= 2 then prob = prob * 4 end
+      if level == 3 then prob = prob * 2 end
+    end
+
+    return prob
+  end
+
+
+  local function decide_weapon(LEV, is_start)
+    -- determine probabilities 
+    local tab = {}
+
+    each name,info in GAME.WEAPONS do
+      local prob = prob_for_weapon(LEV, name, info, is_start)
+
+      if prob > 0 then
+        tab[name] = prob
+      end
+    end
+
+    stderrf("decide_weapon list in %s:\n%s\n", LEV.name, table.tostr(name_tab))
+
+    -- nothing is possible? ok...
+    if table.empty(tab) then return nil end
+
+    return rand.key_by_probs(tab)
   end
 
 
   local function pick_start_weapons()
+    -- decide how many we want, either 1 or 2.
+    -- should be more in later levels.
+
+    local last_ones
+
+    each LEV in GAME.levels do
+      LEV.start_weapons = {}
+
+      local extra_prob = 10 + LEV.ep_along * 80
+
+      local want_num = rand.sel(extra_prob, 2, 1)
+
+      if want_num > LEV.weapon_quota then
+         want_num = LEV.weapon_quota
+      end
+
+      for i = 1, want_num do
+        local name = decide_weapon(LEV, "is_start", last_ones)
+
+        if name then
+          table.insert(LEV.start_weapons, name)
+        end
+      end
+
+      last_ones = LEV.start_weapons
+    end
+  end
+
+
+  local function pick_other_weapons()
     -- TODO
   end
 
@@ -643,8 +720,8 @@ function Episode_plan_weapons()
   determine_seen_weapons()
 
   pick_secret_weapons()
-  pick_other_weapons()
   pick_start_weapons()
+  pick_other_weapons()
 
   dump_weapon_info()
 end
