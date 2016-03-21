@@ -405,6 +405,19 @@ function Episode_plan_weapons()
   end
 
 
+  local function next_next_level(lev_idx)
+    local NL = next_level_in_episode(lev_idx)
+    if not NL then return nil end
+
+    for i = 1,3 do
+      local PL = next_level_in_episode(lev_idx + i)
+      if PL and PL != NL then return PL end
+    end
+
+    return nil
+  end
+
+
   local function dump_weapon_info()
     gui.debugf("Planned weapons:\n\n")
 
@@ -522,7 +535,7 @@ function Episode_plan_weapons()
     end
 
     -- ensure certain weapon pairs occur in the expected order
-    -- [ e.g. regular shotgun is before the super-shotgun ]
+    -- [ e.g. regular shotgun comes before the super-shotgun ]
 
     for idx1 = 1, #GAME.levels do
     for idx2 = idx1 + 1, #GAME.levels do
@@ -531,6 +544,21 @@ function Episode_plan_weapons()
 
       swap_upgraded_weapons(L1, L2)
     end
+    end
+  end
+
+
+  local function determine_seen_weapons()
+    -- "seen" means weapons which have been given in some previous map
+    -- (not including secret weapons)
+    local seen_weapons = {}
+
+    each LEV in GAME.levels do
+      LEV.seen_weapons = table.copy(seen_weapons)
+
+      each name in LEV.new_weapons do
+        seen_weapons[name] = true
+      end
     end
   end
 
@@ -546,7 +574,28 @@ function Episode_plan_weapons()
 
 
   local function pick_secret_weapons()
-    -- TODO
+    local last_one
+
+    each LEV in GAME.levels do
+      local NL = next_level_in_episode(_index)
+      local PL = next_next_level(_index)
+
+      -- build up a probability table 
+      local tab = {}
+
+      if NL then each name in NL.new_weapons do tab[name] = 200 end end
+      if PL then each name in PL.new_weapons do tab[name] = 100 end end
+
+      if last_one and tab[last_one] then
+        tab[last_one] = tab[last_one] / 100
+      end
+
+      if not table.empty(tab) then
+        LEV.secret_weapon = rand.key_by_probs(tab)
+
+        last_one = LEV.secret_weapon
+      end
+    end
   end
 
 
@@ -565,6 +614,8 @@ function Episode_plan_weapons()
   end
 
   pick_new_weapons()
+  
+  determine_seen_weapons()
 
   pick_start_weapons()
   pick_other_weapons()
