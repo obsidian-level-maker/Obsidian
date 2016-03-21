@@ -341,6 +341,9 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
     if not spot then
       gui.printf("WARNING: no space for %s!\n", weapon)
+
+      -- try to place it in a future room
+      table.insert(LEVEL.unplaced_weapons, weapon)
       return
     end
 
@@ -444,16 +447,17 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
 
   ---| Layout_place_importants |---
 
-  if R.kind == "stairwell" then
-    return
-  end
-
   each tel in R.teleporters do
     add_teleporter(tel)
   end
 
   each goal in R.goals do
     add_goal(goal)
+  end
+
+  if not table.empty(LEVEL.unplaced_weapons) then
+    table.append(R.weapons, LEVEL.unplaced_weapons)
+    LEVEL.unplaced_weapons = {}
   end
 
   each name in R.weapons do

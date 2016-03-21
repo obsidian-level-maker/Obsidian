@@ -1389,6 +1389,8 @@ function Level_init()
   LEVEL.map_borders  = {}
   LEVEL.depots = {}
 
+  LEVEL.unplaced_weapons = {}
+
   Level_choose_liquid()
   Level_choose_darkness()
 end
