@@ -353,6 +353,11 @@ function Episode_plan_weapons()
     -- normal quota should give 1-2 in small maps, 2-3 in regular maps, and 3-4
     -- in large maps (where 4 is rare).
 
+    if OB_CONFIG.weapons == "none" then
+      LEV.weapon_quota = 0
+      return
+    end
+
     local lev_size = math.clamp(30, LEV.map_W + LEV.map_H, 100)
 
     local quota = (lev_size - 20) / 25 + gui.random()
@@ -410,6 +415,38 @@ function Episode_plan_weapons()
   end
 
 
+  local function spread_new_weapons(L1, L2)
+    local num1 = #L1.new_weapons
+    local num2 = #L2.new_weapons
+
+    if num2 >= L2.weapon_quota then return end
+
+    local diff = num1 - num2
+
+    if num1 < 2 or diff < 0 then return end
+
+    -- chance of moving a single weapon
+    local move_prob = 100
+
+    if diff == 0 then move_prob = 10 end
+    if diff == 1 then move_prob = 33 end
+    if diff == 2 then move_prob = 80 end
+
+    if not rand.odds(move_prob) then return end
+
+    -- Ok, move a weapon
+    -- [ removing one from beginning of L1, append to the end of L2, which
+    --   prevents weapons moving too far ahead ]
+    local name = table.remove(L1.new_weapons, 1)
+    table.insert(L2.new_weapons, name)
+
+    gui.debugf("spread new weapon '%s' : %s --> %s\n", name, L1.name, L2.name)
+
+    -- try again
+    spread_new_weapons(L1, L2)
+  end
+
+
   local function pick_new_weapons()
     local seen_weapons = {}
 
@@ -438,8 +475,16 @@ function Episode_plan_weapons()
       end
     end
 
-    -- TODO : spread them out (esp. when next level has none and previous has >= 2)
-    --        but also sometimes just to randomize it a bit
+    -- spread them out, esp. when next level has none and previous has >= 2,
+    -- but also sometimes just to randomize things a bit.
+
+    each LEV in GAME.levels do
+      local NL = next_level_in_episode(_index)
+
+      if NL and _index >= 2 then
+        spread_new_weapons(LEV, NL)
+      end
+    end
   end
 
 
