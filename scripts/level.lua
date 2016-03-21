@@ -563,13 +563,26 @@ function Episode_plan_weapons()
   end
 
 
-  local function pick_start_weapons()
-    -- TODO
-  end
+  local function choose_hidden_weapon(LEV)
+    local tab = {}
 
+    tab.NONE = 100
 
-  local function pick_other_weapons()
-    -- TODO
+    each name,info in GAME.WEAPONS do
+      if not LEV.seen_weapons[name] then continue end
+
+      local prob = info.hide_prob or 0
+
+      if prob > 0 then
+        tab[name] = prob
+      end
+    end
+
+    local weapon = rand.key_by_probs(tab)
+
+    if weapon != "NONE" then
+      LEV.secret_weapon = weapon
+    end
   end
 
 
@@ -594,8 +607,20 @@ function Episode_plan_weapons()
         LEV.secret_weapon = rand.key_by_probs(tab)
 
         last_one = LEV.secret_weapon
+      else
+        choose_hidden_weapon(LEV)
       end
     end
+  end
+
+
+  local function pick_other_weapons()
+    -- TODO
+  end
+
+
+  local function pick_start_weapons()
+    -- TODO
   end
 
 
@@ -617,9 +642,9 @@ function Episode_plan_weapons()
   
   determine_seen_weapons()
 
-  pick_start_weapons()
-  pick_other_weapons()
   pick_secret_weapons()
+  pick_other_weapons()
+  pick_start_weapons()
 
   dump_weapon_info()
 end
