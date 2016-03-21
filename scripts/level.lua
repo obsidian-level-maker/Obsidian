@@ -71,8 +71,8 @@
 
     weapon_level    -- the maximum level of a weapon we can use [ except secret_weapon ]
 
-    start_weapons   -- a weapon or two for the start room
       new_weapons   -- weapons which player does not have yet [ may overlap with start_weapons ]
+    start_weapons   -- a weapon or two for the start room
     other_weapons   -- non-new weapons which MAY be given
 
     secret_weapon   -- an unseen weapon, for usage in a secret room
@@ -329,6 +329,9 @@ function Episode_plan_weapons()
     if OB_CONFIG.length == "single" or OB_CONFIG.weapons == "mixed" then
       weap_along = 1.0
 
+    elseif OB_CONFIG.length == "episode" then
+      weap_along = weap_along * 1.2
+
     elseif OB_CONFIG.length == "game" then
       -- reach peak sooner in a full game (after about an episode)
       weap_along = weap_along * 3.0
@@ -339,11 +342,12 @@ function Episode_plan_weapons()
       weap_along = weap_along ^ 0.8 + 0.2
     end
 
-    weap_along = math.min(1.0, weap_along)
+    weap_along = 1 + 9 * weap_along
 
-    LEV.weapon_level = 1 + 9 * weap_along
+    -- add some randomness
+    weap_along = weap_along + 1.6 * (gui.random() ^ 2)
 
-    gui.debugf("Weapon level in %s : %1.1f\n", LEV.name, LEV.weapon_level)
+    LEV.weapon_level = weap_along
   end
 
 
@@ -507,7 +511,14 @@ function Episode_plan_weapons()
 
   each LEV in GAME.levels do
     calc_weapon_level(LEV)
+
     decide_weapon_quota(LEV)
+
+    if _index == 1 and LEV.weapon_quota == 1 and
+       OB_CONFIG.weapons != "less"
+    then
+      LEV.weapon_quota = 2
+    end
   end
 
   pick_new_weapons()
