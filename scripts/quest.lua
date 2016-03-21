@@ -1690,6 +1690,16 @@ stderrf("@@@@@@!!!!  Swapping %s in %s <--> %s in %s\n", name1, R1.name, name2, 
   end
 
 
+  local function dump_weapons()
+    gui.debugf("Weapon assignment:\n")
+
+    each R in LEVEL.rooms do
+      gui.debugf("  %s %s weapons = %s\n", R.zone.name, R.name,
+                 table.list_str(R.weapons))
+    end
+  end
+
+
   ---| Quest_add_weapons |---
 
   if OB_CONFIG.weapons == "none" then
@@ -1701,6 +1711,8 @@ stderrf("@@@@@@!!!!  Swapping %s in %s <--> %s in %s\n", name1, R1.name, name2, 
   do_start_weapons(LEVEL.alt_start)
 
   do_other_weapons()
+
+  dump_weapons()
 end
 
 
@@ -2532,7 +2544,7 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
---!!!  Quest_add_major_quests()
+  Quest_add_major_quests()
 
   Quest_start_room()
   Quest_order_by_visit()
