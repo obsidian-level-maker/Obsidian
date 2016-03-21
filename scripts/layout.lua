@@ -57,12 +57,15 @@ function Layout_compute_dists(R)
     end
 
     -- now check teleporters
-    each C in R.conns do
-      if C.kind == "teleporter" then
-        local chunk = sel(R == C.R1, C.tele_chunk1, C.tele_chunk2)
-        if chunk then
-          mark_chunk(chunk)
-        end
+    each chunk in R.chunks do
+      if chunk.content_kind == "TELEPORTER" then
+        mark_chunk(chunk)
+      end
+    end
+
+    each chunk in R.closets do
+      if chunk.content_kind == "TELEPORTER" then
+        mark_chunk(chunk)
       end
     end
 
@@ -75,25 +78,46 @@ function Layout_compute_dists(R)
   end
 
 
-  local function spread_sig_dists()
-    local did_spread = false
+  local function collect_fillable_seeds()
+    local list = {}
 
     each S in R.seeds do
-      if not S.sig_dist then continue end
+      if S.sig_dist then continue end
 
       each dir in geom.ALL_DIRS do
         local N = S:neighbor(dir)
 
-        if N and N.room == R and not N.sig_dist and
-           can_traverse(S, N)
-        then
-          N.sig_dist = S.sig_dist + 1
-          did_spread  = true
+        if N and N.room == R and N.sig_dist and can_traverse(S, N) then
+          table.insert(list, S)
+          break;
         end
       end
     end
 
-    return did_spread
+    return list
+  end
+
+
+  local function spread_sig_dists()
+    local list = collect_fillable_seeds()
+
+    if table.empty(list) then
+      return false
+    end
+
+    each S in list do
+      each dir in geom.ALL_DIRS do
+        local N = S:neighbor(dir)
+
+        if N and N.room == R and N.sig_dist and can_traverse(S, N) then
+          S.sig_dist = math.min(N.sig_dist + 1, S.sig_dist or 999)
+        end
+      end
+
+      assert(S.sig_dist)
+    end
+
+    return true
   end
 
 
@@ -238,7 +262,7 @@ function Layout_spot_for_wotsit(R, kind)
 
 
   ---| Layout_spot_for_wotsit |---
-
+ 
   Layout_compute_dists(R)
 
   local best
@@ -327,12 +351,6 @@ stderrf("ADD ENTRY SPOT for START PAD\n")
     end
 
     spot.conn = conn
-
-    if R == conn.R1 then
-      conn.tele_chunk1 = spot
-    else
-      conn.tele_chunk2 = spot
-    end
   end
 
 
