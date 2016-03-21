@@ -1501,69 +1501,9 @@ end
 
 function Quest_add_weapons()
   --
-  -- Decides which weapons to use for this level, and determines
-  -- which rooms to place them in.
+  -- The weapons to use on the level are already decided, this function
+  -- just decides in which rooms to place them.
   --
-
-  local function prob_for_weapon(name, info, is_start)
-    local prob  = info.add_prob
-    local level = info.level or 1
-
-    -- ignore weapons which lack a pick-up item
-    if not prob or prob <= 0 then return 0 end
-
-    -- ignore weapons already given
-    if LEVEL.added_weapons[name] then return 0 end
-
-    -- for crazy monsters mode, player may need a bigger weapon
-    if is_start and OB_CONFIG.strength != "crazy" then
-      if level <= 2 then
-        prob = prob * 3
-      end
-    end
-
-    -- make powerful weapons only appear in later levels
-    if OB_CONFIG.strength != "crazy" then
-      if level > LEVEL.weapon_level then return 0 end
-    end
-
-    -- theme adjustments
-    if LEVEL.weap_prefs then
-      prob = prob * (LEVEL.weap_prefs[name] or 1)
-    end
-    if THEME.weap_prefs then
-      prob = prob * (THEME.weap_prefs[name] or 1)
-    end
-
-    return prob
-  end
-
-
-  local function decide_weapon(is_start)
-    -- determine probabilities 
-    local name_tab = {}
-
-    each name,info in GAME.WEAPONS do
-      local prob = prob_for_weapon(name, info, is_start)
-
-      if prob > 0 then
-        name_tab[name] = prob
-      end
-    end
-
-    gui.debugf("decide_weapon list:\n%s\n", table.tostr(name_tab))
-
-    -- nothing is possible? ok
-    if table.empty(name_tab) then return nil end
-
-    local weapon = rand.key_by_probs(name_tab)
-
-    -- mark it as used
-    LEVEL.added_weapons[weapon] = true
-
-    return weapon
-  end
-
 
   local function should_swap(early, later)
     assert(early and later)
@@ -1647,7 +1587,7 @@ function Quest_add_weapons()
   end
 
 
-  local function eval_weapon_room(R, is_start, is_new)
+  local function eval_weapon_room(R, is_new)
     -- never in hallways!
     if R.kind == "stairwell" then return -250 end
     if R.kind == "hallway"   then return -200 end
@@ -1655,30 +1595,25 @@ function Quest_add_weapons()
     -- never in secrets!
     if R.is_secret then return -150 end
 
+    -- starting rooms are done separately
+    if R.is_start then return -100 end
+
     -- putting weapons in the exit room is a tad silly
-    if R.is_exit then return -100 end
-
-    -- alternate starting rooms have special handling
-    if R == LEVEL.alt_start then return -60 end
-
-    -- too many weapons already? (very unlikely to occur)
-    if #R.weapons >= 2 then return -30 end
-
-    if is_start and R.is_start and not is_new then
-      return rand.pick { 20, 120, 220 }
-    end
+    if R.is_exit then return -50 end
 
     -- basic fitness of the room is # of free chunks
-    local score = R:usable_chunks() * 20 + 5
+    local score = R:usable_chunks() * 10 + 1
 
     -- big bonus for leaf rooms
     if R:total_conns("ignore_secrets") < 2 then
-      score = score + 50
+      score = score + 45
     end
 
     -- if there is a goal or another weapon, try to avoid it
     if #R.goals   > 0 then score = score / 4 end
-    if #R.weapons > 0 then score = score / 4 end
+    if #R.weapons > 0 then score = score / 2 end
+
+    -- Note: tie breaker is added by caller
 
     return score
   end
@@ -1691,11 +1626,7 @@ function Quest_add_weapons()
     -- new weapons deserve their own quest, or at least require
     -- some exploration to find it.
 
-    local is_new = false
-    if not EPISODE.seen_weapons[name] then
-      is_new = true
-      EPISODE.seen_weapons[name] = 1
-    end
+    local is_new = false  -- FIXME?
 
     -- evaluate each room and pick the best
     local best_R
@@ -1724,83 +1655,34 @@ function Quest_add_weapons()
   end
 
 
-  local function fallback_start_weapon()
-    -- be a meanie sometimes...
-    if rand.odds(70) or OB_CONFIG.weapons == "less" then
-      return
+  local function do_start_weapons()
+    LEVEL.start_room.weapons = table.copy(LEVEL.start_weapons)
+
+    -- mirror weapons in a Co-op alternate start room
+    if LEVEL.alt_start then
+      LEVEL.alt_start.weapons = table.copy(LEVEL.start_weapons)
     end
+  end
 
-    -- collect usable weapons, nothing too powerful
-    local tab = {}
 
-    each name,info in GAME.WEAPONS do
-      local prob = info.add_prob
+  local function do_other_weapons()
+    local list = LEVEL.other_weapons
 
-      if prob and info.level and info.level <= 2 then
-        tab[name] = prob
-      end
-    end
-
-    if table.empty(tab) then
-      gui.printf("No possible fallback weapons!")
-      return
-    end
-
-    local name = rand.key_by_probs(tab)
-
-    table.insert(LEVEL.start_room.weapons, name)
-
-    LEVEL.added_weapons[name] = true
-
-    gui.debugf("Fallback start weapon: %s\n", name)
+    reorder_weapons(list)
   end
 
 
   ---| Quest_add_weapons |---
 
-  LEVEL.added_weapons = {}
-
-  if not EPISODE.seen_weapons then
-    EPISODE.seen_weapons = {}
-  end
-
   if OB_CONFIG.weapons == "none" then
-    gui.printf("Weapon quota: NONE\n")
     return
   end
 
 
+  do_start_weapons()
+  
+  do_other_weapons()
 
-
-  local quota = LEVEL.weapon_quota
-
-
-  -- decide which weapons to use
-
-  local list = {}
-
-  for k = 1, quota do
-    local weapon = decide_weapon(k == 1)
-
-    if not weapon then break; end
-
-    table.insert(list, weapon)
-  end
-
-  if #list == 0 then
-    gui.printf("Weapon list: NONE\n")
-    return
-  end
-
-
-  quota = #list
-
-  reorder_weapons(list)
-
-  gui.printf("Weapon list:\n")
-  each name in list do
-    gui.printf("   %s\n", name)
-  end
 
 
   -- distribute these weapons to the zones
@@ -1818,17 +1700,7 @@ function Quest_add_weapons()
     end
   end
 
-  -- ensure there is usually something (e.g. shotgun) in the
-  -- starting room of the level
 
-  if table.empty(LEVEL.start_room.weapons) then
-    fallback_start_weapon()
-  end
-
-  -- mirror weapons in a Co-op alternate start room
-  if LEVEL.alt_start then
-    LEVEL.alt_start.weapons = table.copy(LEVEL.start_room.weapons)
-  end
 end
 
 
