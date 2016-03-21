@@ -72,10 +72,11 @@
     === Weapon planning ===
 
     weapon_level    -- the maximum level of a weapon we can use [ except secret_weapon ]
+    weapon_quota    -- number of weapons to add in this level [ except secrets ]
 
       new_weapons   -- weapons which player does not have yet [ may overlap with start_weapons ]
     start_weapons   -- a weapon or two for the start room
-    other_weapons   -- non-new weapons which MAY be given
+    other_weapons   -- the weapons for rest of map (#start + #other == quota)
 
     secret_weapon   -- an unseen weapon, for usage in a secret room
 
@@ -655,7 +656,7 @@ function Episode_plan_weapons()
   end
 
 
-  local function decide_weapon(LEV, is_start)
+  local function decide_weapon(LEV, is_start, last_ones)
     -- determine probabilities 
     local tab = {}
 
@@ -680,7 +681,7 @@ function Episode_plan_weapons()
     -- decide how many we want, either 1 or 2.
     -- should be more in later levels.
 
-    local last_ones
+    local prev_ones
 
     each LEV in GAME.levels do
       LEV.start_weapons = {}
@@ -689,25 +690,55 @@ function Episode_plan_weapons()
 
       local want_num = rand.sel(extra_prob, 2, 1)
 
+      -- in very first few maps, only give a single weapon
+      if (LEV.id <= 2 or LEV.game_along < 0.2) and LEV.new_weapons[1] then
+        want_num = 1
+      end
+
       if want_num > LEV.weapon_quota then
          want_num = LEV.weapon_quota
       end
 
       for i = 1, want_num do
-        local name = decide_weapon(LEV, "is_start", last_ones)
+        local name = decide_weapon(LEV, "is_start", prev_ones)
 
         if name then
           table.insert(LEV.start_weapons, name)
         end
       end
 
-      last_ones = LEV.start_weapons
+      prev_ones = LEV.start_weapons
     end
   end
 
 
   local function pick_other_weapons()
-    -- TODO
+    local prev_ones
+
+    each LEV in GAME.levels do
+      -- collect the ones we *must* give
+      LEV.other_weapons = table.copy(LEV.new_weapons)
+
+      -- subtract the ones already given
+      each sw in LEV.start_weapons do
+        table.kill_elem(LEV.other_weapons, sw)
+      end
+
+      -- note that it is possible to exceed the quota
+      -- (it does not happen very often and is not a show-stopper)
+
+      local extra_num = LEV.weapon_quota - (#LEV.start_weapons + #LEV.other_weapons)
+
+      for i = 1, extra_num do
+        local name = decide_weapon(LEV, nil, prev_ones)
+
+        if name then
+          table.insert(LEV.other_weapons, name)
+        end
+      end
+
+      prev_ones = LEV.other_weapons
+    end
   end
 
 
