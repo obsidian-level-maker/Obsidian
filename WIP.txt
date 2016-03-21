@@ -9,11 +9,6 @@ WORK IN PROGRESS
 (and why no wall inside joiner at 9,19 on west side ???)
 
 
-!!!  no start weapons
-
--  weapon order swapping does not work without zones???
-
-
 ???  off_area / face_area  for stairs/joiners should be in CHUNK
 
      -->   from_area  [ stairs, joiners and closets ]
@@ -277,6 +272,8 @@ MISCELLANEOUS:
    determine ones for official package, put rest in an addon
 
 +  face direction for switches / teleport exits
+
++  support 'LEVEL.secret_weapon'
 
 -  do monster depots differently, make "shared" sector based on
    an area in the 2nd room
