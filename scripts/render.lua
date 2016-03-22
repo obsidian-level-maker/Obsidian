@@ -1280,7 +1280,7 @@ function Render_chunk(chunk)
 
   gui.debugf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.content_kind or "-")
 
-  local dir = chunk.dir or 2
+  local dir = chunk.from_dir or chunk.dir or 2
 
   local skin = {}
 
@@ -1433,7 +1433,7 @@ function Render_chunk(chunk)
 
   -- build the prefab --
 
-  local tex_ref = chunk.tex_ref or A.off_area or A.face_area
+  local tex_ref = chunk.tex_ref or A.from_area or A.dest_area
 
   if tex_ref then
     skin.wall  = tex_ref.wall_mat

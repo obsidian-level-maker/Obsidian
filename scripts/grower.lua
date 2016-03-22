@@ -670,7 +670,7 @@ function Grower_preprocess_grammar()
   end
 
 
-  local function determine_off_area(kind, x, y, dir)
+  local function determine_from_area(kind, x, y, dir)
     local E
 
     repeat
@@ -710,7 +710,7 @@ function Grower_preprocess_grammar()
 
     if kind == "stair" or kind == "joiner" then
       info.dir = assert(E.dir or info.dir)
-      info.off_area = determine_off_area(kind, x, y, info.dir)
+      info.from_area = determine_from_area(kind, x, y, info.dir)
     end
 
     if not def.rects then def.rects = {} end
@@ -1298,12 +1298,7 @@ function Grower_grammatical_room(R, pass)
     if x1 > x2 then x1,x2 = x2,x1 end
     if y1 > y2 then y1,y2 = y2,y1 end
 
-    local dir1, dir2
-
-    if rect.dir  then dir1 = transform_dir(T, rect.dir)  end
-    if rect.dir2 then dir2 = transform_dir(T, rect.dir2) end
-
-    return x1,y1, x2,y2, dir1,dir2
+    return x1,y1, x2,y2
   end
 
 
@@ -1980,13 +1975,16 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     new_chunks = {}
 
     each r in cur_rule.rects do
-      local x1,y1, x2,y2, dir1,dir2 = transform_rect(T, r)
+      local x1,y1, x2,y2 = transform_rect(T, r)
 
       assert(r.kind)
       local chunk = Chunk_new(r.kind, x1,y1, x2,y2)
 
-      chunk.dir  = dir1
-      chunk.dir2 = dir2
+      if r.dir  then chunk.dir  = transform_dir(T, r.dir)  end
+      if r.dir2 then chunk.dir2 = transform_dir(T, r.dir2) end
+
+      if r.from_dir then chunk.from_dir = transform_dir(T, r.from_dir) end
+      if r.dest_dir then chunk.dest_dir = transform_dir(T, r.dest_dir) end
 
       table.insert(new_chunks, chunk)
 
@@ -1998,16 +1996,16 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       A.chunk = chunk
 
       if r.kind == "stair" then
-        chunk.area.face_area = assert(new_area)
+        chunk.area.dest_area = assert(new_area)
         assert(new_intconn)
         new_intconn.stair_chunk = chunk
 
-      elseif r.face_area then
-        chunk.area.face_area = assert(area_map[r.face_area])
+      elseif r.dest_area then
+        chunk.area.dest_area = assert(area_map[r.dest_area])
       end
 
-      if r.off_area then
-        chunk.area.off_area = assert(area_map[r.off_area])
+      if r.from_area then
+        chunk.area.from_area = assert(area_map[r.from_area])
       end
 
       if r.kind == "joiner" then
@@ -2016,7 +2014,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
         -- connection goes from NEW ROOM --> CURRENT ROOM
         new_conn.A1  = assert(new_room.areas[1])
-        new_conn.A2  = assert(chunk.area.off_area)
+        new_conn.A2  = assert(chunk.area.from_area)
 ---stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
 ---  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
 ---  new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
@@ -2051,10 +2049,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
       R:add_area(new_area)
 
-      local off_area_idx = cur_rule.new_area.off_area or 1
-      local off_area = assert(area_map[off_area_idx])
+      local from_area_idx = cur_rule.new_area.from_area or 1
+      local from_area = assert(area_map[from_area_idx])
 
-      new_intconn = add_internal_conn(off_area, new_area)
+      new_intconn = add_internal_conn(from_area, new_area)
     end
 
     if cur_rule.rects then

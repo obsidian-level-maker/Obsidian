@@ -386,7 +386,7 @@ DECORATE_CLOSET_2x1 =
     "11", "11"
   }
 
-  closet = { dir=2, face_area=1 }
+  closet = { from_dir=2, from_area=1 }
 }
 
 
@@ -401,7 +401,7 @@ DECORATE_CLOSET_2x2 =
     "11", "11"
   }
 
-  closet = { dir=2, face_area=1 }
+  closet = { from_dir=2, from_area=1 }
 }
 
 

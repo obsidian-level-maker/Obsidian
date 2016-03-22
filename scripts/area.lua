@@ -940,7 +940,7 @@ end
 function Area_closet_edges()
 
   local function visit_closet(chunk)
-    local E = Seed_create_chunk_edge(chunk, chunk.dir, "nothing")
+    local E = Seed_create_chunk_edge(chunk, chunk.from_dir, "nothing")
   end
 
   ---| Area_closet_edges |---

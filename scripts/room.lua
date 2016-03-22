@@ -1632,8 +1632,8 @@ h = 8
     each chunk in R.stairs do
       local A = assert(chunk.area)
 
-      local A1 = assert(A.off_area)
-      local A2 = assert(A.face_area)
+      local A1 = assert(A.from_area)
+      local A2 = assert(A.dest_area)
 
 -- stderrf("STAIR in %s : off %s --> face %s\n", A.name, A1.name, A2.name)
 
@@ -2363,8 +2363,8 @@ h = 8
     each chunk in R.closets do
       local A = chunk.area
 
-      assert(A.face_area)
-      A.floor_h = assert(A.face_area.floor_h)
+      assert(A.from_area)
+      A.floor_h = assert(A.from_area.floor_h)
 
       -- FIXME : probably pick prefab HERE, decide if outdoorsy
       A.is_outdoor = nil
