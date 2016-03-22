@@ -9,36 +9,17 @@ WORK IN PROGRESS
 (and why no wall inside joiner at 9,19 on west side ???)
 
 
-???  off_area / face_area  for stairs/joiners should be in CHUNK
 
-     -->   from_area  [ stairs, joiners and closets ]
-         + dest_area  [ stairs and joiners ]
+-  a "Z" shape for joiners and stairs, which connects two areas
+   diagonally.  Directions specified as per "L" shape, i.e.
+   from_dir will be perpedicular to dest_dir.
+   
+   For example:
 
-           from_dir   = number or { 2,4 }
-           dest_dir   = number or { 6,8 }
-
-
-CAVES :
-
-+  decide if to keep cave-section system, or just use a random
-   chance that each new room will be a cave
-
-   [ maybe make the grid a 2x2 grid, instead of 3x3 ]
-
-   [[ ALWAYS three corners (the TOP-RIGHT is not cave)
-      control how much by the X and Y cutoff coords ]]
-
--  for cave rooms, inhibit rules which add new areas (or liquids)
-   [ grow a single large area ]
-
-
-
-GROWER :
-
-+  prune "tiny" trunks (e.g. total walk_vol < 10)
-
--  prune any areas that end up empty
-
+       ...bbb.
+       ..aZZb.
+       ..aZZb.
+       ..aaa..
 
 
 CHUNK SYSTEM:
@@ -143,33 +124,56 @@ TELEPORTERS:
 
 
 
-PREFAB SYSTEM:
+PREFAB SIZE MATCHING
+--------------------
 
-!! --->  use 'seed_w' for seeds/edge/diagonal prefabs
-         [ and 'seed_h' or default is seed_h == seed_w ]
+1. for "point" prefabs: have a "size" field for the square bbox
 
-         use 'real_w' for "point" prefabs
-         [ and 'real_h' or default is real_h == real_w ]
+2. for "seeds" prefabs:
 
-+  assume seed-rect and edge prefabs are resizable, but allow a
-   range like {1,3} for seed_w and/or seed_h to limit the size
+   (a) prefab have "seed_w" and "seed_h" fields, default to 1 if not present
 
-+  give all "point" prefabs a 'real_w' value
+   (b) prefabs can only occupy a larger space when "x_fit" / "y_fit"
+       is present in the definition
 
-later: allow resizing "point" prefabs
+3. for "edge" prefabs, only have "seed_w", and require "x_fit" to expand
 
-+  figure out semantics of ROTATING prefabs
+4. for "diagonal" prefabs, both seed_w and seed_h must be the same
+   and we NEVER expand them
 
-   -  if has a shape, then ensure a rotation would still match shape
-      [ e.g. closets are "U" shape, hence no rotation can match ]
 
-   -  sometimes want a specific direction
-      [ e.g. start pads and teleporters to face a certain way ]
 
-   -  stairs can be rotated 180 degrees to go down instead of up
-      [ curve-stairs need different logic.... ]
+SEMANTICS of ROTATING PREFABS
+-----------------------------
 
-   -  only swap W/H for a match if a 90/270 degree rotation is possible
+1. "point" prefabs are always a square, and will be rotated by a
+   multiple of 90 degrees to face a certain direction
+
+   Examples: start pad, teleport pad, exit switch, simple switch,
+             crate, pillar, computer.
+
+
+2. "seeds" prefabs can be square or rectangular.
+   
+   (a) if they have a shape, then the from_dir determines the
+       vertical axis and not other rotations are possible.
+
+       Examples: closets (often U shape)
+                 stairs  (often I shape)
+                 joiners (often I shape)
+
+       [ some shapes require TWO directions ]
+
+       [ stairs can be rotated 180 degrees to go down instead of up ]
+
+       
+   (b) no shape, rotatable
+
+       Example:  lava pit (floor prefab)
+                 sky light (ceiling prefab)
+
+
+Rule: if we have a REQUIRED direction, rotation NOT allowed
 
 
 
@@ -263,6 +267,14 @@ idea: a generic lowering bars prefab to go in front of closets or
       joiners or exit doors
 
 -  closet that looks like a wall switch but opens a monsters closet
+
+
+
+GROWER :
+
++  in grower, prune "tiny" trunks (e.g. total walk_vol < 10)
+
+-  prune any areas that end up empty
 
 
 
