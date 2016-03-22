@@ -82,6 +82,21 @@ IDEA : an adjustment (of health) for "environment" of a battle
 
 
 
+CAVES
+-----
+
++  simplify the cave-section system:
+
+   - there is a seed X and Y coord, room becomes a cave if one
+     of the initial seeds is either <= X or <= Y coord
+
+     [ i.e. three sides of map become cave, TOP-RIGHT is not cave ]
+
+-  for cave rooms, inhibit rules which add new areas (or liquids)
+   [ grow a single large area ]
+
+
+
 Hallways
 --------
 
@@ -388,10 +403,6 @@ Caves:
 
 -  caves with steps: have two floor materials, pick randomly
 
--  support Cross-Overs
-   -  respect the Room's height limitations
-   -  create channels by lowering the floor cells
-   -  for bridges, ensure ceiling cells are high enough
 
 
 Outdoor room IDEA:
