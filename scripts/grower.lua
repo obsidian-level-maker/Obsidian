@@ -1996,16 +1996,16 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       A.chunk = chunk
 
       if r.kind == "stair" then
-        chunk.area.dest_area = assert(new_area)
+        chunk.dest_area = assert(new_area)
         assert(new_intconn)
         new_intconn.stair_chunk = chunk
 
       elseif r.dest_area then
-        chunk.area.dest_area = assert(area_map[r.dest_area])
+        chunk.dest_area = assert(area_map[r.dest_area])
       end
 
       if r.from_area then
-        chunk.area.from_area = assert(area_map[r.from_area])
+        chunk.from_area = assert(area_map[r.from_area])
       end
 
       if r.kind == "joiner" then
@@ -2014,7 +2014,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
         -- connection goes from NEW ROOM --> CURRENT ROOM
         new_conn.A1  = assert(new_room.areas[1])
-        new_conn.A2  = assert(chunk.area.from_area)
+        new_conn.A2  = assert(chunk.from_area)
 ---stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
 ---  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
 ---  new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)

@@ -1433,7 +1433,7 @@ function Render_chunk(chunk)
 
   -- build the prefab --
 
-  local tex_ref = chunk.tex_ref or A.from_area or A.dest_area
+  local tex_ref = chunk.tex_ref or chunk.from_area or chunk.dest_area
 
   if tex_ref then
     skin.wall  = tex_ref.wall_mat
