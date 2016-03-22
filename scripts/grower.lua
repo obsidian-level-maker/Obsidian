@@ -1083,7 +1083,6 @@ function Grower_grammatical_room(R, pass)
     if S.area == A then return end
 
     if S.area then
-stderrf("overwrite seed @ %s\n", S.name)
       assert(S.area.room == R)
       unset_seed(S)
     end
@@ -1378,8 +1377,10 @@ stderrf("overwrite seed @ %s\n", S.name)
     c_out.S = S
     c_out.dir = dir2
     c_out.long = long
+--[[
 stderrf("transform_connection: (%d %d) dir %d --> (%d %d) S=%s dir=%d\n",
 info.x, info.y, info.dir, sx, sy, S.name, dir2)
+--]]
   end
 
 
@@ -1572,18 +1573,15 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   local function match_area(E1, A)
     if A.mode != "floor" then return false end
 
-stderrf("match temp area : map =\n%s\n", table.tostr(area_map))
     if area_map[1] == A then return (E1.area == 1) end
     if area_map[2] == A then return (E1.area == 2) end
     if area_map[3] == A then return (E1.area == 3) end
 
     if area_map[E1.area] == nil then
-stderrf("---> setting to %s\n", tostring(A))
        area_map[E1.area] = A
        return true
     end
 
-stderrf("---> fail\n")
     return false
   end
 
@@ -1747,7 +1745,6 @@ stderrf("---> fail\n")
     if E2.kind == "area" then
       -- an assertion here usually means the grammar rule uses e.g. '2'
       -- in the output side but not in the input side.
-stderrf("\narea_map = \n%s\n", table.tostr(area_map))
       local A = assert(area_map[E2.area])
       set_seed(S, A)
       return
@@ -1763,8 +1760,6 @@ stderrf("\narea_map = \n%s\n", table.tostr(area_map))
 
     if E2.kind == "new_room" then
       assert(new_room)
-
-stderrf("new_room seed @ %s\n", S.name)
       set_seed(S, new_room.areas[1])
       return
     end
@@ -1833,7 +1828,6 @@ stderrf("new_room seed @ %s\n", S.name)
         if S .area then unset_seed(S)  end
         if S2.area then unset_seed(S2) end
 
-stderrf("Joining halves @ %s\n", S:tostr())
         S:join_halves()
 
         install_an_element(S, E1, E2, T)
@@ -1873,7 +1867,6 @@ stderrf("Joining halves @ %s\n", S:tostr())
         local A = S.area
         if A then unset_seed(S) end
 
-stderrf("splitting %s  with dir %d\n", S:tostr(), math.min(dir, 10 - dir))
         S:split(math.min(dir, 10 - dir))
         S2 = S.top
 
@@ -1882,13 +1875,8 @@ stderrf("splitting %s  with dir %d\n", S:tostr(), math.min(dir, 10 - dir))
           set_seed(S2, A)
         end
 
-stderrf("install into bottom: %s --> %s\n", E1B.kind, E2B.kind)
-stderrf("install into top   : %s --> %s\n", E1T.kind, E2T.kind)
         install_an_element(S,  E1B, E2B, T)
         install_an_element(S2, E1T, E2T, T)
-
-stderrf("seed at %s\n", S:tostr())
-stderrf("new temp areas:  %s  |  %s\n", tostring(S.area), tostring(S2.area))
       end
 
       return true
@@ -2081,7 +2069,8 @@ stderrf("new temp areas:  %s  |  %s\n", tostring(S.area), tostring(S2.area))
     if new_room then
       -- assumes best.T has set X/Y to best.x and best.y
 --!!!!      new_room.symmetry = transform_symmetry(T)
-stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+
+-- stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 
       if pass == "sprout" then
         transform_connection(T, cur_rule.new_room.conn, new_conn)
@@ -2109,10 +2098,12 @@ stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
     end -- px, py
     end
 
+--[[ DEBUG
 if what == "INSTALL" then
 stderrf("=== install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
 stderrf("T =\n%s\n", table.tostr(T))
 end
+--]]
 
     if what == "INSTALL" then post_install(T) end
 
@@ -2186,10 +2177,13 @@ end
     T.is_second = nil
 
     if R.symmetry and try_straddling_pattern(what, T) then
+
+--[[ DEBUG
 if what == "INSTALL" then
 stderrf("[ straddler ]\n")
 stderrf("T =\n%s\n", table.tostr(T))
 end
+--]]
       return true
     end
 
@@ -2352,9 +2346,7 @@ gui.debugf("  trying aux '%s' --> %s\n", aux_name, tostring(aux))
 
   ---| Grower_grammatical_room |---
 
-stderrf("\n Grow room %s : %s pass\n", R.name, pass)
-
---if pass == "decorate" then return end
+-- stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   -- FIXME
   if pass == "sprout" and #LEVEL.rooms >= 8 then return end
@@ -2374,8 +2366,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
   local rule_tab = collect_matching_rules(pass)
 
   for loop = 1, apply_num do
-stderrf("LOOP %d\n", loop)
-gui.debugf("LOOP %d\n", loop)
+    -- stderrf("LOOP %d\n", loop)
     apply_a_rule(rule_tab)
   end
 end

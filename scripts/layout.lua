@@ -137,7 +137,7 @@ function Layout_compute_dists(R)
     end
     end
 
-    stderrf("chunk %s in %s --> %1.1f / %d\n", chunk.kind or "??", R.name, sum, total)
+--  stderrf("chunk %s in %s --> %1.1f / %d\n", chunk.kind or "??", R.name, sum, total)
 
     if total > 0 then
       chunk.sig_dist = sum / total

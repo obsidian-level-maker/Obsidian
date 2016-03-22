@@ -1278,7 +1278,7 @@ function Render_chunk(chunk)
 
   local A = chunk.area
 
-stderrf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.content_kind or "-")
+  gui.debugf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.content_kind or "-")
 
   local dir = chunk.dir or 2
 

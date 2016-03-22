@@ -1594,8 +1594,8 @@ h = 8
 
 
   local function area_assign_delta(A, up_chance, cur_delta_h)
+    gui.debugf("Area assign delta %d --> %s\n", cur_delta_h, A.name)
 
-stderrf("Area assign delta %d --> %s\n", cur_delta_h, A.name)
     A.delta_h = cur_delta_h
 
     each C in A.room.internal_conns do
@@ -1610,7 +1610,7 @@ stderrf("Area assign delta %d --> %s\n", cur_delta_h, A.name)
         continue
       end
 
-stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
+-- stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 
       if C.kind == "stair" then
         assert(C.stair_chunk)
@@ -1635,14 +1635,14 @@ stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
       local A1 = assert(A.off_area)
       local A2 = assert(A.face_area)
 
-stderrf("STAIR in %s : off %s --> face %s\n", A.name, A1.name, A2.name)
+-- stderrf("STAIR in %s : off %s --> face %s\n", A.name, A1.name, A2.name)
 
       assert(A1.floor_h)
       assert(A2.floor_h)
 
       set_floor(A, math.min(A1.floor_h, A2.floor_h))
 
-stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
+-- stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
 
       if A1.floor_h < A2.floor_h then
         chunk.dir = 10 - chunk.dir
@@ -1739,7 +1739,8 @@ stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, 
     -- recursively flow delta heights from a random starting area
     local cur_delta_h = rand.irange(-4, 4) * 32
 
-stderrf("ASSIGN DELTA IN %s\n", R.name)
+    gui.debugf("ASSIGN DELTAS IN %s\n", R.name)
+
     area_assign_delta(start_area, up_chance, cur_delta_h)
 
     fix_porch_delta(R)
@@ -1754,7 +1755,8 @@ stderrf("ASSIGN DELTA IN %s\n", R.name)
 
         set_floor(A, R.entry_h + A.delta_h - adjust_h)
       end
-stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
+
+--    stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
     end
 
     fix_stair_dirs(R)
@@ -2261,10 +2263,10 @@ stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostrin
       -- already visited it?
       if R2.entry_h then continue end
 
-stderrf("Recursing though %s (%s)\n", C.name, C.kind)
-if C.kind != "teleporter"then
-stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
-end
+      gui.debugf("Recursing though %s (%s)\n", C.name, C.kind)
+-- if C.kind != "teleporter"then
+-- stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
+-- end
 
       if C.kind == "teleporter" then
         visit_room(R2, nil, nil, R, C)
@@ -2287,8 +2289,8 @@ end
         next_f = next_f + 0 --!!!!! FIXME TEST ONLY
         set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
         C.joiner_chunk.area.is_outdoor = nil
-stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
-stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
+-- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
+-- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
       end
 
       visit_room(R2, next_f, A2, R, C)
@@ -2390,7 +2392,7 @@ stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
       end
 
 if not A.floor_h then
-stderrf("do_ceilings : no floor_h in %s %s in %s\n", A.name, A.mode, A.room.name)
+gui.debugf("do_ceilings : no floor_h in %s %s in %s\n", A.name, A.mode, A.room.name)
 end
 
       set_ceil(A, A.floor_h + height)

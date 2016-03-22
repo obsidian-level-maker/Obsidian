@@ -473,7 +473,7 @@ function Corner_mark_walls(E)
   for pass = 1, 2 do
     local corner = Corner_lookup(cx, cy)
 
-stderrf("Corner_mark_walls @ (%d %d)  E=%s dir:%d\n", cx, cy, E.kind, E.dir)
+--  stderrf("Corner_mark_walls @ (%d %d)  E=%s dir:%d\n", cx, cy, E.kind, E.dir)
 
     local wall_dir = sel(pass == 1, along_dir, 10 - along_dir)
 
@@ -490,7 +490,6 @@ stderrf("Corner_mark_walls @ (%d %d)  E=%s dir:%d\n", cx, cy, E.kind, E.dir)
     cx = cx + dx * E.long
     cy = cy + dy * E.long
   end
-stderrf("\n")
 end
 
 
@@ -620,7 +619,7 @@ function Area_locate_chunks()
     if A.mode == "liquid" then
       table.insert(R.liquid_chunks, CHUNK)
     else
-stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
+-- stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
       table.insert(R.chunks, CHUNK)
     end
 
