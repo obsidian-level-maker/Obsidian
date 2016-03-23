@@ -608,7 +608,10 @@ function Area_locate_chunks()
   local function create_chunk(A, sx1,sy1, sx2,sy2)
     local R = assert(A.room)
 
-    local CHUNK = Chunk_new(A.mode, sx1,sy1, sx2,sy2)
+    local kind = "area"
+    if A.mode == "liquid" then kind = "liquid" end
+
+    local CHUNK = Chunk_new(kind, sx1,sy1, sx2,sy2)
 
     CHUNK.area = A
 
@@ -616,7 +619,7 @@ function Area_locate_chunks()
       CHUNK.is_small = true
     end
 
-    if A.mode == "liquid" then
+    if kind == "liquid" then
       table.insert(R.liquid_chunks, CHUNK)
     else
 -- stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)

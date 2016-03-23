@@ -1020,9 +1020,9 @@ function Episode_plan_game()
 
   Episode_pick_names()
 
-  Episode_plan_bosses()
   Episode_plan_weapons()
   Episode_plan_items()
+  Episode_plan_bosses()
 end
 
 

@@ -117,7 +117,7 @@
 --[[
     -- a rectangle of seeds within an area of a room
 
-    kind : keyword  -- "floor" (part of a walkable area)
+    kind : keyword  -- "area" (part of a walkable area)
                     -- "liquid"
                     -- "stair"
                     -- "closet" ('T' elements in rules)
@@ -125,14 +125,18 @@
 
     area : AREA
 
-    content_kind : keyword  -- for floor and closet kinds, NIL if unused
-                            -- "START", "LEVEL_EXIT", "TELEPORTER"
-                            -- "KEY", "WEAPON", "ITEM", "SWITCH"
-                            -- "CAGE", "TRAP"
-
     sx1, sy1, sx2, sy2   -- seed range
 
     sw, sh  -- seed size
+
+    place : keyword  -- "floor" (needs a ceiling)
+                     -- "ceil"  (needs a floor)
+                     -- "whole" (provides both floor and ceiling)
+
+    content_kind : keyword  -- is NIL when unused / free
+                            -- "START", "LEVEL_EXIT", "TELEPORTER"
+                            -- "KEY", "WEAPON", "ITEM", "SWITCH"
+                            -- "CAGE", "TRAP"
 
     -- FIXME have 'from_dir' and 'dest_dir'
 
