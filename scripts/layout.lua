@@ -305,7 +305,9 @@ function Layout_spot_for_wotsit(R, kind)
 
 
   -- TODO : improve this
-  spot.space = 48 * math.min(spot.sw, spot.sh)
+  spot.space = 24
+  if math.min(spot.sw, spot.sh) >= 2 then spot.space = 96 end
+  if math.min(spot.sw, spot.sh) >= 3 then spot.space = 192 end
 
   return spot
 end
