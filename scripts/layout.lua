@@ -303,6 +303,10 @@ function Layout_spot_for_wotsit(R, kind)
 
 --FIXME  do_exclusions(spot)
 
+
+  -- TODO : improve this
+  spot.space = 48 * math.min(spot.sw, spot.sh)
+
   return spot
 end
 

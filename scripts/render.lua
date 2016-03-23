@@ -505,8 +505,15 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     {
       kind = "door"
 
-      --TODO: seed_w = ...
+      seed_w = assert(E.long)
     }
+
+    if geom.is_corner(dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
+    else
+      reqs.where = "edge"
+    end
 
     if LOCK then
       if #LOCK.goals == 2 then
@@ -527,13 +534,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       elseif E.kind == "arch" then
         reqs.kind = "arch"
       end
-    end
-
-
-    if geom.is_corner(dir) then
-      reqs.where = "diagonal"
-    else
-      reqs.where = "edge"
     end
 
 
@@ -1289,9 +1289,14 @@ function Render_chunk(chunk)
   {
     where  = "seeds"
 
---???    seed_w = A.rect_info.long
---???    seed_h = A.rect_info.deep
+    seed_w = chunk.sw
+    seed_h = chunk.sh
   }
+
+  if geom.is_horiz(dir) then
+    reqs.seed_w = chunk.sh
+    reqs.seed_h = chunk.sw
+  end
 
 
   local function do_start()
@@ -1794,6 +1799,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "item"
       where = "point"
+      size  = assert(spot.space)
     }
 
     if spot.goal and spot.goal.kind == "KEY" then
@@ -1858,6 +1864,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "start"
       where = "point"
+      size  = assert(spot.space)
     }
 
     local def = Fab_pick(reqs)
@@ -1938,6 +1945,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "exit"
       where = "point"
+      size  = assert(spot.space)
     }
 
     if secret_exit then
@@ -1961,6 +1969,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "switch"
       where = "point"
+      size  = assert(spot.space)
 
       --??  switch = spot.goal.item
     }
@@ -2019,6 +2028,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "teleporter"
       where = "point"
+      size  = assert(spot.space)
     }
 
     local def = Fab_pick(reqs)
@@ -2148,6 +2158,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "decor"
       where = "point"
+      size  = 96
     }
 
     local def = Fab_pick(reqs)
@@ -2169,6 +2180,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "floor"
       where = "seeds"
+
+      seed_w = chunk.sw
+      seed_h = chunk.sh
     }
 
     local def = Fab_pick(reqs)
