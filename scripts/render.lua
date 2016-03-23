@@ -1368,6 +1368,29 @@ function Render_chunk(chunk)
     reqs.key = "secret"  -- FIXME
   end
 
+  local function chunk_coords(def)
+    local S1 = SEEDS[chunk.sx1][chunk.sy1]
+    local S2 = SEEDS[chunk.sx2][chunk.sy2]
+
+    local x1, y1 = S1.x1, S1.y1
+    local x2, y2 = S2.x2, S2.y2
+
+    -- move closets to align with nearby walls
+
+    if chunk.kind == "closet" and chunk.from_dir
+       -- FIXME and chunk.shape == "U"
+       and def.y_fit == "top"
+    then
+      if chunk.from_dir == 2 then y1 = y1 - 16 end
+      if chunk.from_dir == 8 then y2 = y2 + 16 end
+
+      if chunk.from_dir == 4 then x1 = x1 - 16 end
+      if chunk.from_dir == 6 then x2 = x2 + 16 end
+    end
+
+    return x1,y1, x2,y2
+  end
+
 
   ---| Render_chunk |---
 
@@ -1447,12 +1470,11 @@ function Render_chunk(chunk)
   end
 
 
-  local S1 = SEEDS[chunk.sx1][chunk.sy1]
-  local S2 = SEEDS[chunk.sx2][chunk.sy2]
+  local x1, y1, x2, y2 = chunk_coords(def)
 
   local floor_h = assert(A.floor_h) + (def.raise_z or 0)
 
-  local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, floor_h, dir)
+  local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
   Fabricate(A.room, def, T, { skin })
 
