@@ -306,11 +306,49 @@ function Episode_plan_bosses()
   end
 
 
+  local function mark_new_monsters()
+    -- for each level, determine what monsters can be used, and also
+    -- which ones are NEW for that level.
+    local seen_monsters = {}
+
+    each LEV in GAME.levels do
+      LEV.new_monsters = {}
+
+      if not (LEV.prebuilt or LEV.is_secret) then
+        each mon,info in GAME.MONSTERS do
+          if is_monster_usable(LEV, mon, info) and
+             seen_monsters[mon] == nil
+          then
+            table.insert(LEV.new_monsters, mon)
+            seen_monsters[mon] = true
+          end
+        end
+      end
+
+      LEV.seen_monsters = table.copy(seen_monsters)
+    end
+  end
+
+
+  local function dump_monster_info()
+    gui.debugf("Planned monster stuff:\n\n")
+
+    each LEV in GAME.levels do
+      gui.debugf("%s\n", LEV.name)
+      gui.debugf("  level = %1.2f\n", LEV.monster_level)
+      gui.debugf("  new = %s\n",   table.list_str(LEV.new_monsters))
+    end
+  end
+
   ---| Episode_plan_bosses |---
 
   each LEV in GAME.levels do
     calc_monster_level(LEV)
   end
+
+  mark_new_monsters()
+
+  dump_monster_info()
 end
 
 
