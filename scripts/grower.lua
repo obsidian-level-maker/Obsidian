@@ -1986,6 +1986,12 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       if r.from_dir then chunk.from_dir = transform_dir(T, r.from_dir) end
       if r.dest_dir then chunk.dest_dir = transform_dir(T, r.dest_dir) end
 
+      if r.kind == "stair" then
+        chunk.place = "floor"
+      else
+        chunk.place = "whole"
+      end
+
       table.insert(new_chunks, chunk)
 
 

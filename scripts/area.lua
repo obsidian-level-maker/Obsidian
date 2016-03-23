@@ -614,6 +614,7 @@ function Area_locate_chunks()
     local CHUNK = Chunk_new(kind, sx1,sy1, sx2,sy2)
 
     CHUNK.area = A
+    CHUNK.place = "floor"
 
     if CHUNK.sw < 2 or CHUNK.sh < 2 then
       CHUNK.is_small = true

@@ -1051,8 +1051,8 @@ function Room_border_up()
 
 
     -- already decided?  [ doorways ]
-    if junc.keep_empty then return end
     if junc.E1 then return end
+    if junc.keep_empty then return end
 
 
     -- zones : gotta keep 'em separated
@@ -1110,7 +1110,7 @@ function Room_border_up()
 
     -- inside a single room --
     if A1.room == A2.room then
-      -- this needed for closets and joiners
+      -- this needed for closets and joiners  FIXME WRONG
       if (not A1.is_outdoor) != (not A2.is_outdoor) then
         Junction_make_wall(junc)
       end
@@ -2288,7 +2288,9 @@ h = 8
       if C.kind == "joiner" then
         next_f = next_f + 0 --!!!!! FIXME TEST ONLY
         set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
-        C.joiner_chunk.area.is_outdoor = nil
+        if C.joiner_chunk.place == "whole" then
+          C.joiner_chunk.area.is_outdoor = nil
+        end
 -- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
 -- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
       end
@@ -2332,7 +2334,7 @@ h = 8
   end
 
 
-  local function do_liquids(R)
+  local function do_liquid_areas(R)
     each A in R.areas do
       if A.mode == "liquid" then
         A.floor_h = low_nb_height(A) - 16
@@ -2341,7 +2343,7 @@ h = 8
   end
 
 
-  local function do_cages(R)
+  local function do_cage_areas(R)
     each A in R.areas do
       if A.mode == "cage" then
         local h = high_nb_height(A)
@@ -2367,7 +2369,9 @@ h = 8
       A.floor_h = assert(chunk.from_area.floor_h)
 
       -- FIXME : probably pick prefab HERE, decide if outdoorsy
-      A.is_outdoor = nil
+      if chunk.place == "whole" then
+        A.is_outdoor = nil
+      end
     end
   end
 
@@ -2439,9 +2443,10 @@ end
 
     calc_max_floor(R)
 
-    do_liquids(R)
+    do_liquid_areas(R)
+    do_cage_areas(R)
+
     do_closets(R)
-    do_cages(R)
 
     -- we do hallway porches when all heights are known
     if R.kind == "hallway" then

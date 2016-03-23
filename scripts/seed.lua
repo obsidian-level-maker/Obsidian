@@ -129,9 +129,9 @@
 
     sw, sh  -- seed size
 
-    place : keyword  -- "floor" (needs a ceiling)
-                     -- "ceil"  (needs a floor)
-                     -- "whole" (provides both floor and ceiling)
+    place : keyword  -- "floor" (needs a ceiling + walls)
+                     -- "ceil"  (needs a floor + walls)
+                     -- "whole" (provides both floor, ceiling, walls)
 
     content_kind : keyword  -- is NIL when unused / free
                             -- "START", "LEVEL_EXIT", "TELEPORTER"
