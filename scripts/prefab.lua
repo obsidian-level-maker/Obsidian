@@ -1959,34 +1959,62 @@ end
 
 
 
+--[[
+
+PREFAB SIZE MATCHING
+--------------------
+
+1. for "point" prefabs: have a "size" field for the square bbox
+
+   and require def.size <= reqs.size
+
+2. for "seeds" prefabs:
+
+   (a) prefab have "seed_w" and "seed_h" fields, default to 1 if not present
+
+   (b) prefabs can only occupy a larger space when "x_fit" / "y_fit"
+       is present in the definition
+
+3. for "edge" prefabs, only have "seed_w", and require "x_fit" to expand
+
+4. for "diagonal" prefabs, both seed_w and seed_h must be the same
+   and we NEVER expand them
+
+--]]
+
+
 function Fab_find_matches(reqs, match_state)
 
-  local function match_size(w, env_w)
-    -- prefab skin defaults to 1
-    if not w then w = 1 end
-
-    if type(env_w) == "table" then
-      if #env_w != 2 or env_w[1] > env_w[2] then
-        error("Bad seed range in reqs table")
-      end
-
-      return env_w[1] <= w and w <= env_w[2]
+  local function match_size(def)
+    -- "point" prefabs match a real size
+    if def.where == "point" then
+      if reqs.size == nil then return false end
+      return def.size == nil or def.size <= reqs.size
     end
 
-    return w == env_w
-  end
+    -- prefab definition defaults to 1
+    local sw = def.seed_w or 1
+    local sh = def.seed_h or 1
 
-
-  local function match_size_with_rot(def, rotate)
---[[ FIXME : this is broken, and needs review
-    if rotate then
-      if env.seed_w and not match_size(def.seed_h, env.seed_w) then return false end
-      if env.seed_h and not match_size(def.seed_w, env.seed_h) then return false end
-    else
-      if env.seed_w and not match_size(def.seed_w, env.seed_w) then return false end
-      if env.seed_h and not match_size(def.seed_h, env.seed_h) then return false end
+    -- "diagonal" prefabs need an exact same square
+    if def.where == "diagonal" then
+      return sw == sh and sw == reqs.seed_w and sh == reqs.seed_h
     end
---]]
+
+    -- we only allow expanding a prefab if "x_fit"/"y_fit" is specified
+
+    if not reqs.seed_w then return false end
+    if not (sw == reqs.seed_w or
+            (sw > reqs.seed_w and def.x_fit))
+    then return false end
+
+    -- "edge" prefabs only check width (seed_h is meaningless)
+    if def.where == "edge" then return true end
+      
+    if not reqs.seed_h then return false end
+    if not (sh == reqs.seed_h or
+            (sh > reqs.seed_h and def.y_fit))
+    then return false end
 
     return true
   end
@@ -2017,6 +2045,7 @@ function Fab_find_matches(reqs, match_state)
     if reqs.kind != kind then return 0 end
 
     -- placement check
+    if not def.where then return 0 end
     if not match_word_or_table(reqs.where, def.where) then return 0 end
 
     -- group check
@@ -2041,12 +2070,7 @@ function Fab_find_matches(reqs, match_state)
 
   local function match_environment(def)
     -- size check (seed based)
-    if not match_size_with_rot(def, false) then
-      return 0
-    end
-
-    -- size check (map units)
---!!!! FIXME   if not Fab_size_check(def, reqs.long, reqs.deep) then return 0 end
+    if not match_size(def) then return 0 end
 
     -- check on room type (building / outdoor / cave)
     if def.room_kind then

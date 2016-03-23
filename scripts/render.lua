@@ -1380,6 +1380,7 @@ function Render_chunk(chunk)
     if chunk.kind == "closet" and chunk.from_dir
        -- FIXME and chunk.shape == "U"
        and def.y_fit == "top"
+       and not def.no_align
     then
       if chunk.from_dir == 2 then y1 = y1 - 16 end
       if chunk.from_dir == 8 then y2 = y2 + 16 end
