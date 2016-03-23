@@ -922,9 +922,17 @@ end
 function Junction_make_wall(junc)
   junc.E1 = simple_wall_edge(junc.A1)
   junc.E2 = simple_wall_edge(junc.A2)
+
+  if junc.A1.chunk and junc.A1.chunk.place == "whole" then
+    junc.E1 = { kind="nothing" }
+  end
+  if junc.A2.chunk and junc.A2.chunk.place == "whole" then
+    junc.E1 = { kind="nothing" }
+  end
 end
 
 
+-- NOT USED ATM
 function Junction_make_trap_wall(junc, trap_A)
   junc.E1 =
   {

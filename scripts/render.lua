@@ -81,6 +81,11 @@ end
 
 function Render_edge(E)
 
+  if E.kind == "nothing" then
+    return
+  end
+
+
   local A   = assert(E.area)
   local dir = assert(E.dir)
 
@@ -601,10 +606,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     Corner_mark_walls(E)
   end
 
-  if E.kind == "nothing" then
-    return
-
-  elseif E.kind == "wall" then
+  if E.kind == "wall" then
     local mat = assert(E.wall_mat or A.wall_mat)
     edge_wall(mat)
 
@@ -658,12 +660,11 @@ function Render_junction(A, S, dir)
   end
 
   if not junc then return end
-  if not junc.E1 then return end
 
   for pass = 1, 2 do
     local E
 
-    if (junc.E1.area == A) == (pass == 1) then
+    if (junc.A1 == A) == (pass == 1) then
       E = junc.E1
     else
       E = junc.E2

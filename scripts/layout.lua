@@ -491,6 +491,7 @@ end
 
 
 
+-- NOT USED ATM
 function Layout_choose_face_room(A)
   -- used for big cages and liquid pools (converted from void)
 
