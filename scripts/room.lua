@@ -923,6 +923,8 @@ function Junction_make_wall(junc)
   junc.E1 = simple_wall_edge(junc.A1)
   junc.E2 = simple_wall_edge(junc.A2)
 
+  -- check for "whole" chunks, we never make wall inside them
+
   if junc.A1.chunk and junc.A1.chunk.place == "whole" then
     junc.E1 = { kind="nothing" }
   end
