@@ -6,6 +6,7 @@ PREFABS.Exit_pillar =
 {
   file  = "exit/pillar.wad"
   where = "point"
+  size  = 64
 }
 
 
@@ -13,6 +14,7 @@ PREFABS.Exit_pillar_secret =
 {
   file  = "exit/pillar.wad"
   where = "point"
+  size  = 64
 
   key   = "secret"
 
