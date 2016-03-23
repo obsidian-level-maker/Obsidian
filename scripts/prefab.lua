@@ -1986,35 +1986,36 @@ PREFAB SIZE MATCHING
 function Fab_find_matches(reqs, match_state)
 
   local function match_size(def)
-    -- "point" prefabs match a real size
+    -- "point" prefabs match the real size (a square)
+    -- [ if size is missing, we assume it fits anywhere ]
     if def.where == "point" then
-      if reqs.size == nil then return false end
-      return def.size == nil or def.size <= reqs.size
+      return (def.size or 0) <= (reqs.size or 0)
     end
 
     -- prefab definition defaults to 1
     local sw = def.seed_w or 1
     local sh = def.seed_h or 1
 
+    local req_w = reqs.seed_w or 1
+    local req_h = reqs.seed_h or 1
+
     -- "diagonal" prefabs need an exact same square
     if def.where == "diagonal" then
-      return sw == sh and sw == reqs.seed_w and sh == reqs.seed_h
+      return sw == sh and sw == req_w and sh == req_h
     end
 
     -- we only allow expanding a prefab if "x_fit"/"y_fit" is specified
 
-    if not reqs.seed_w then return false end
-    if not (sw == reqs.seed_w or
-            (sw > reqs.seed_w and def.x_fit))
-    then return false end
+    if not (sw == req_w or (def.x_fit and sw < req_w)) then
+      return false
+    end
 
     -- "edge" prefabs only check width (seed_h is meaningless)
     if def.where == "edge" then return true end
-      
-    if not reqs.seed_h then return false end
-    if not (sh == reqs.seed_h or
-            (sh > reqs.seed_h and def.y_fit))
-    then return false end
+
+    if not (sh == req_h or (def.y_fit and sh < req_h)) then
+      return false
+    end
 
     return true
   end
@@ -2031,6 +2032,7 @@ function Fab_find_matches(reqs, match_state)
 
   local function match_word_or_table(req_k, def_k)
     if type(req_k) == "table" then
+      if def_k == nil then return false end
       return (req_k[def_k] or 0) > 0
     end
 
