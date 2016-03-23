@@ -138,6 +138,7 @@ DOOM.MONSTERS =
     id = 58
     r = 30
     h = 56 
+    level = 3
     replaces = "demon"
     replace_prob = 35
     crazy_prob = 25
