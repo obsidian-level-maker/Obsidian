@@ -169,20 +169,6 @@ end
 
 
 
-function Monster_check_theme(info)
-  -- if no theme specified, usable in all themes
-  if not info.theme then return true end
-
-  -- anything goes in CRAZY mode
-  if OB_CONFIG.strength == "crazy" then return true end
-
-  -- TODO: handle tables and "!" syntax
-
-  return info.theme == LEVEL.theme_name
-end
-
-
-
 function Monster_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
@@ -198,8 +184,7 @@ function Monster_global_palette()
 
 
     if info.prob > 0 and
-       info.level and info.level <= LEVEL.monster_level and
-       Monster_check_theme(info)
+       info.level and info.level <= LEVEL.monster_level
     then
       LEVEL.global_pal[name] = 1
     end

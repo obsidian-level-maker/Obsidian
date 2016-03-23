@@ -255,7 +255,7 @@ end
 
 
 
-function Episode_plan_bosses()
+function Episode_plan_monsters()
   --
   -- Decides various monster stuff :
   --   
@@ -264,6 +264,13 @@ function Episode_plan_bosses()
   -- (3) the end-of-level boss of each level
   -- (4) guarding monsters (aka "mini bosses")
   --
+
+  local function init_monsters()
+  -- FIXME !!!!! give each monster a 'level' if missing
+
+  -- ALSO default prob is 50
+  end
+
 
   local function calc_monster_level(LEV)
     local mon_along = LEV.game_along
@@ -306,6 +313,28 @@ function Episode_plan_bosses()
   end
 
 
+  local function check_theme(LEV, info)
+    -- if no theme specified, monster is usable in all themes
+    if not info.theme then return true end
+
+    -- anything goes in CRAZY mode
+    if OB_CONFIG.strength == "crazy" then return true end
+
+    return info.theme == LEV.theme_name
+  end
+
+
+  local function is_monster_usable(LEV, mon, info)
+    if info.prob <= 0 then return false end
+
+    if info.level > LEV.monster_level then return false end
+
+    if not check_theme(LEV, info) then return false end
+
+    return true
+  end
+
+
   local function mark_new_monsters()
     -- for each level, determine what monsters can be used, and also
     -- which ones are NEW for that level.
@@ -316,9 +345,7 @@ function Episode_plan_bosses()
 
       if not (LEV.prebuilt or LEV.is_secret) then
         each mon,info in GAME.MONSTERS do
-          if is_monster_usable(LEV, mon, info) and
-             seen_monsters[mon] == nil
-          then
+          if not seen_monsters[mon] and is_monster_usable(LEV, mon, info) then
             table.insert(LEV.new_monsters, mon)
             seen_monsters[mon] = true
           end
@@ -340,7 +367,10 @@ function Episode_plan_bosses()
     end
   end
 
-  ---| Episode_plan_bosses |---
+
+  ---| Episode_plan_monsters |---
+
+  init_monsters()
 
   each LEV in GAME.levels do
     calc_monster_level(LEV)
@@ -1060,7 +1090,7 @@ function Episode_plan_game()
 
   Episode_plan_weapons()
   Episode_plan_items()
-  Episode_plan_bosses()
+  Episode_plan_monsters()
 end
 
 
