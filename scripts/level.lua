@@ -265,10 +265,34 @@ function Episode_plan_monsters()
   -- (4) guarding monsters (aka "mini bosses")
   --
 
-  local function init_monsters()
-  -- FIXME !!!!! give each monster a 'level' if missing
+  local function default_level(info)
+    local hp = info.health
 
-  -- ALSO default prob is 50
+    if hp < 45  then return 1 end
+    if hp < 130 then return 3 end
+    if hp < 450 then return 5 end
+
+    return 7
+  end
+
+
+  local function init_monsters()
+    each name,info in GAME.MONSTERS do
+      if not info.id then
+        error(string.format("Monster '%s' lacks an id field", name))
+      end
+
+      -- default probability
+      if not info.prob then
+        info.prob = 50
+      end
+
+      -- default level
+      if not info.level then
+stderrf("MONSTER WITHOUT LEVEL : %s\n", name)
+        info.level = default_level(info)
+      end
+    end
   end
 
 

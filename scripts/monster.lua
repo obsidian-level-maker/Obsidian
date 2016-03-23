@@ -70,17 +70,6 @@ evolves about same rate IN TERMS OF # MONSTERS ADDED.
 
 
 function Monster_init()
-  each name,info in GAME.MONSTERS do
-    if not info.id then
-      error(string.format("Monster '%s' lacks an id field", name))
-    end
-
-    -- default probability
-    if not info.prob then
-      info.prob = 50
-    end
-  end
-
   if not EPISODE.seen_guards then
     EPISODE.seen_guards = {}
   end
@@ -122,15 +111,6 @@ function Monster_init()
       end
     end
 
-    -- calculate a level if not present
-    if not info.level then
-      local hp = info.health * (PARAM.level_factor or 1)
-          if hp < 45  then info.level = 1
-      elseif hp < 130 then info.level = 3
-      elseif hp < 450 then info.level = 5
-      else  info.level = 7
-      end
-    end
   end
 
   -- remove a replacement monster if the monster it replaces
