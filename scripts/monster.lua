@@ -122,71 +122,6 @@ end
 
 
 
-function Monster_pick_single_for_level()
-  local tab = {}
-
-  if not EPISODE.single_mons then
-    EPISODE.single_mons = {}
-  end
-
-  each name,prob in LEVEL.global_pal do
-    local info = GAME.MONSTERS[name]
-    tab[name] = (info.level or 5) * 10
-
-    -- prefer monsters which have not been used before
-    if EPISODE.single_mons[name] then
-      tab[name] = tab[name] / 10
-    end
-  end
-
-  local name = rand.key_by_probs(tab)
-
-  -- mark it as used
-  EPISODE.single_mons[name] = 1
-
-  return name
-end
-
-
-
-function Monster_global_palette()
-  -- Decides which monsters we will use on this level.
-  -- Easiest way is to pick some monsters NOT to use.
-
-  LEVEL.global_pal = {}
-
-  if not LEVEL.monster_prefs then
-    LEVEL.monster_prefs = {}
-  end
-  
-  -- skip monsters that are too strong for this map
-  each name,info in GAME.MONSTERS do
-
-
-    if info.prob > 0 and
-       info.level and info.level <= LEVEL.monster_level
-    then
-      LEVEL.global_pal[name] = 1
-    end
-  end
-
-  -- only one kind of monster in this level?
-  if STYLE.mon_variety == "none" then
-    local the_mon = Monster_pick_single_for_level()
-
-    LEVEL.global_pal = {}
-    LEVEL.global_pal[the_mon] = 1
-
-    LEVEL.single_mon = the_mon
-  end
-
-  gui.debugf("Monster global palette:\n%s\n", table.tostr(LEVEL.global_pal))
-
-  gui.printf("\n")
-end
-
-
-
 function Monster_prepare()
  
   ---| Monster_prepare |---
@@ -1079,10 +1014,6 @@ function Monster_fill_room(R)
       return 0
     end
 
-    -- TODO: merge THEME.monster_prefs into LEVEL.monster_prefs
-    if LEVEL.monster_prefs then
-      prob = prob * (LEVEL.monster_prefs[mon] or 1)
-    end
     if THEME.monster_prefs then
       prob = prob * (THEME.monster_prefs[mon] or 1)
     end
@@ -1222,13 +1153,6 @@ function Monster_fill_room(R)
 
       if info.weap_needed and not Player_has_weapon(info.weap_needed) then
         prob = 0
-      end
-
-      if prob > 0 and LEVEL.monster_prefs then
-        prob = prob * (LEVEL.monster_prefs[mon] or 1)
-        if info.replaces then
-          prob = prob * (LEVEL.monster_prefs[info.replaces] or 1)
-        end
       end
 
       -- weaker monsters in secrets
@@ -2169,7 +2093,6 @@ function Monster_make_battles()
   Player_give_map_stuff()
   Player_weapon_palettes()
 
-  Monster_global_palette()
   Monster_set_watchmen()
   Monster_zone_palettes()
 

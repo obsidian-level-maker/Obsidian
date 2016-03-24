@@ -383,6 +383,60 @@ function Episode_plan_monsters()
   end
 
 
+  local function pick_single_for_level(LEV)
+    local tab = {}
+
+    if not LEV.episode.single_mons then
+      LEV.episode.single_mons = {}
+    end
+
+    each name,_ in LEV.seen_monsters do
+      local info = GAME.MONSTERS[name]
+      tab[name] = info.prob
+
+      -- prefer monsters which have not been used before
+      if LEV.episode.single_mons[name] then
+        tab[name] = tab[name] / 100
+      end
+    end
+
+    if table.empty(tab) then
+      return
+    end
+
+    local name = rand.key_by_probs(tab)
+
+    LEV.global_pal[name] = 1
+
+    -- mark it as used
+    LEV.episode.single_mons[name] = 1
+  end
+
+
+  local function pick_global_palette(LEV)
+    --
+    -- decides which monsters we will use on this level.
+    -- easiest way is to pick some monsters NOT to use.
+    --
+
+    LEV.global_pal = {}
+
+    -- only one kind of monster in this level?
+    if STYLE.mon_variety == "none" then
+      pick_single_for_level(LEV)
+      return
+    end
+
+    -- FIXME : actually skip some monsters (Esp. when # is high)
+
+    each name,_ in LEV.seen_monsters do
+      LEV.global_pal[name] = 1
+    end
+
+--gui.debugf("Monster global palette in %s:\n%s\n", LEV.name, table.tostr(LEV.global_pal))
+  end
+
+
   local function dump_monster_info()
     gui.debugf("Planned monsters:\n\n")
 
@@ -403,6 +457,10 @@ function Episode_plan_monsters()
   end
 
   mark_new_monsters()
+
+  each LEV in GAME.levels do
+    pick_global_palette(LEV)
+  end
 
   dump_monster_info()
 end
