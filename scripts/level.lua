@@ -259,10 +259,10 @@ function Episode_plan_monsters()
   --
   -- Decides various monster stuff :
   --   
-  -- (1) the boss fights in end-of-episode maps
-  -- (2) the boss fights of special maps (like MAP07 of DOOM 2)
-  -- (3) the end-of-level boss of each level
-  -- (4) guarding monsters (aka "mini bosses")
+  -- (1) monster palette for each level
+  -- (2) the end-of-level boss of each level
+  -- (3) guarding monsters (aka "mini bosses")
+  -- (4) one day: boss fights for special levels
   --
 
   local function default_level(info)
@@ -353,6 +353,8 @@ function Episode_plan_monsters()
 
     if info.level > LEV.monster_level then return false end
 
+    if info.min_weapon and info.min_weapon > LEV.max_weapon then return false end
+
     if not check_theme(LEV, info) then return false end
 
     return true
@@ -386,7 +388,7 @@ function Episode_plan_monsters()
 
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
-      gui.debugf("  level = %1.2f (%1.2f)\n", LEV.monster_level)
+      gui.debugf("  level = %1.2f\n", LEV.monster_level)
       gui.debugf("  new = %s\n",   table.list_str(LEV.new_monsters))
     end
   end
@@ -645,6 +647,20 @@ function Episode_plan_weapons()
   end
 
 
+  local function calc_max_level(LEV)
+    local max_level = 1
+
+    each name,_ in LEV.seen_weapons do
+      local info = GAME.WEAPONS[name]
+      local level = info.level or 1
+
+      max_level = math.max(max_level, level)
+    end
+
+    LEV.max_weapon = max_level
+  end
+
+
   local function determine_seen_weapons()
     -- "seen" means weapons which have been given in some previous map
     -- (and does not include secret weapons)
@@ -656,6 +672,8 @@ function Episode_plan_weapons()
       each name in LEV.new_weapons do
         seen_weapons[name] = true
       end
+
+      calc_max_level(LEV)
     end
   end
 
