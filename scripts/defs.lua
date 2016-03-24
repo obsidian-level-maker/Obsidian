@@ -103,6 +103,11 @@ MONSTER_KIND_TAB =
   scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
 }
 
+STRENGTH_FACTORS =
+{
+  weak=0.7, lower=0.85, medium=1.0, higher=1.2, tough=1.5
+}
+
 HEALTH_FACTORS =
 {
   none=0, scarce=0.40, less=0.64, normal=1.00, more=1.60, heaps=2.50

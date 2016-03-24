@@ -289,7 +289,6 @@ function Episode_plan_monsters()
 
       -- default level
       if not info.level then
-stderrf("MONSTER WITHOUT LEVEL : %s\n", name)
         info.level = default_level(info)
       end
     end
@@ -297,43 +296,44 @@ stderrf("MONSTER WITHOUT LEVEL : %s\n", name)
 
 
   local function calc_monster_level(LEV)
+    if OB_CONFIG.strength == "crazy" then
+      LEV.monster_level = 12
+      return
+    end
+
     local mon_along = LEV.game_along
 
     if LEV.is_secret then
       -- secret levels are easier
-      mon_along = rand.skew(0.4, 0.25)
+      mon_along = mon_along * 0.75
 
     elseif OB_CONFIG.length == "single" then
       -- for single level, use skew to occasionally make extremes
-      mon_along = rand.skew(0.5, 0.35)
+      mon_along = rand.skew(0.6, 0.3)
 
     elseif OB_CONFIG.length == "game" then
-      -- reach peak strength after about 70% of the full game
-      mon_along = math.min(1.0, mon_along / 0.70)
+      -- reach peak strength about halfway along
+      mon_along = mon_along * 2.1
     end
 
     assert(mon_along >= 0)
 
-    if OB_CONFIG.strength == "crazy" then
-      mon_along = 1.2
-    else
-      local FACTORS = { weak=1.7, lower=1.3, medium=1.0, higher=0.8, tough=0.6 }
+    -- apply the user Strength setting
 
-      local factor = FACTORS[OB_CONFIG.strength]
-      assert(factor)
+    local factor = STRENGTH_FACTORS[OB_CONFIG.strength]
+    assert(factor)
 
-      mon_along = mon_along ^ factor
+    mon_along = mon_along * factor
 
-      if OB_CONFIG.strength == "higher" or
-         OB_CONFIG.strength == "tough"
-      then
-        mon_along = mon_along + 0.1
-      end
-    end
+    if OB_CONFIG.strength == "higher" then mon_along = mon_along + 0.1 end
+    if OB_CONFIG.strength == "tough"  then mon_along = mon_along + 0.2 end
 
-    LEV.monster_level = 1 + 9 * mon_along
+    mon_along = 1 + 8.4 * mon_along
 
-    gui.debugf("Monster level in %s : %1.1f\n", LEV.name, LEV.monster_level)
+    -- add some randomness
+    mon_along = mon_along + 1.7 * (gui.random() ^ 2)
+
+    LEV.monster_level = mon_along
   end
 
 
@@ -382,11 +382,11 @@ stderrf("MONSTER WITHOUT LEVEL : %s\n", name)
 
 
   local function dump_monster_info()
-    gui.debugf("Planned monster stuff:\n\n")
+    gui.debugf("Planned monsters:\n\n")
 
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
-      gui.debugf("  level = %1.2f\n", LEV.monster_level)
+      gui.debugf("  level = %1.2f (%1.2f)\n", LEV.monster_level)
       gui.debugf("  new = %s\n",   table.list_str(LEV.new_monsters))
     end
   end
