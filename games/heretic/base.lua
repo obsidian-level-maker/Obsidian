@@ -54,7 +54,7 @@ HERETIC.PARAMETERS =
 
 ------------------------------------------------------------
 
-OB_GAMES["heretic"] =
+UNFINISHED["heretic"] =
 {
   label = "Heretic"
   priority = 38
