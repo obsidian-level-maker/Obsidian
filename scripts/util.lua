@@ -27,7 +27,7 @@ require = function() error("require() is deprecated") end
 
 
 -- internationalization / localization
-function _(s) return s end
+function _(s) return gui.gettext(s) end
 
 
 function int(val)

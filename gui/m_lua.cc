@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -105,6 +105,17 @@ int gui_raw_console_print(lua_State *L)
 	// REMOVED
 
 	return 0;
+}
+
+
+// LUA: gettext(str)
+//
+int gui_gettext(lua_State *L)
+{
+	const char *s = luaL_checkstring(L,1);
+
+	lua_pushstring(L, ob_gettext(s));
+	return 1;
 }
 
 
@@ -720,6 +731,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "raw_debug_print",   gui_raw_debug_print },
 	{ "raw_console_print", gui_raw_console_print },
 
+	{ "gettext",        gui_gettext },
 	{ "config_line",    gui_config_line },
 	{ "set_colormap",   gui_set_colormap },
 
