@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -69,14 +69,14 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 
 
-	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h, "     Menu @-3>");
+	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h, _("     Menu @-3>"));
 	misc_menu->selection_color(fl_rgb_color(120,80,20));
 
-	misc_menu->add("About",            FL_F+1, menu_do_about);
-	misc_menu->add("Options",          FL_F+4, menu_do_options);
-	misc_menu->add("Addon List",       FL_F+3, menu_do_addons);
-	misc_menu->add("Set Seed",         FL_F+5, menu_do_edit_seed);
-	misc_menu->add("Manage Config   ", FL_F+9, menu_do_manage_config);
+	misc_menu->add(_("About"),         FL_F+1, menu_do_about);
+	misc_menu->add(_("Options"),       FL_F+4, menu_do_options);
+	misc_menu->add(_("Addon List"),    FL_F+3, menu_do_addons);
+	misc_menu->add(_("Set Seed"),      FL_F+5, menu_do_edit_seed);
+	misc_menu->add(_("Manage Config"), FL_F+9, menu_do_manage_config);
 
 	add(misc_menu);
 
@@ -84,7 +84,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	cy += misc_menu->h() + kf_h(17);
 
 
-	build = new Fl_Button(button_x, cy, button_w, button_h + 4, "Build");
+	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
 	build->labelfont(FL_HELVETICA_BOLD);
 	build->labelsize(FL_NORMAL_SIZE + 2);
 	build->callback(build_callback, this);
@@ -95,7 +95,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	cy += build->h() + kf_h(17);
 
 
-	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
+	quit = new Fl_Button(button_x, cy, button_w, button_h, _("Quit"));
 	quit->callback(quit_callback, this);
 	quit->shortcut(FL_COMMAND + 'q');
 
