@@ -11,13 +11,16 @@ ______________________________________________________________________
 
 *  Heretic support
 
-*  update documentation for current GUI interface
-
 *  better system to vary "pacing" of monsters
 
 *  support for Traps and free-standing Cages
 
 *  add in more scenery: trees, computers etc
+
+
+*  update documentation for current GUI interface
+
+*  support for translation into other languages
 
 *  better i18n support (esp. non-ASCII characters in filenames)
 
