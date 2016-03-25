@@ -22,6 +22,14 @@
 --------========|  GENERAL STUFF  |========--------
 
 
+-- this function is now deprecated
+require = function() error("require() is deprecated") end
+
+
+-- internationalization / localization
+function _(s) return s end
+
+
 function int(val)
   return math.floor(val)
 end

@@ -238,7 +238,3 @@ GLOBAL_SKIN_DEFAULTS =
   targetname = ""
 }
 
-
--- this function is now deprecated
-require = function() error("require() is deprecated") end
-
