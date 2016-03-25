@@ -35,6 +35,7 @@ public:
   int handle(int);
   const Fl_Menu_Item* popup();
   Fl_Menu_Across(int,int,int,int,const char * =0);
+  int add(const char*, int shortcut, Fl_Callback*, void* = 0, int = 0);
 };
 
 #endif

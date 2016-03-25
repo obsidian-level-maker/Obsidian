@@ -103,3 +103,24 @@ Fl_Menu_Across::Fl_Menu_Across(int X,int Y,int W,int H,const char *l)
   down_box(FL_NO_BOX);
 }
 
+
+//
+// andrewj: this appends some spaces to the given label, to fix the
+//          lack of a gap between the labels and the shortcut keys.
+//          [ added this in March 2016 ]
+//
+int Fl_Menu_Across::add(const char *mytext,
+	int sc, Fl_Callback *cb, void *data, int myflags)
+{
+	char buf[1024 + 8];
+
+	strncpy(buf, mytext, 1024);
+	buf[1024] = 0;
+
+	strcat(buf, "    ");
+
+	return Fl_Menu_::add(buf, sc, cb, data, myflags);
+}
+
+//--- editor settings ---
+// vi:ts=4:sw=4:noexpandtab
