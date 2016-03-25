@@ -3,11 +3,19 @@ WORK IN PROGRESS
 ================
 
 
-!!!!!  inhibit solid walls inside a chunk for "whole" prefabs
-       [ esp. the current closets and joiners ]
+Monster planning:
 
-(and why no wall inside joiner at 9,19 on west side ???)
++  end-of-level bosses
 
+-  guarding fights
+
+
+
++  joiners need walls on sides in INDOOR ROOMS too
+   -  handle closets and joiners in separate pass in border_up?
+
+   __OR__ handle the STRADDLING junctions first (fences mainly)
+          then handle each side SEPARATELY
 
 
 -  a "Z" shape for joiners and stairs, which connects two areas
@@ -23,6 +31,11 @@ WORK IN PROGRESS
 
 
 CHUNK SYSTEM:
+
++  do we need to distinguish "open" chunks (which will build walls
+   normally in them) and "closed' chunks (Which never contain walls) ?
+
+   ---> NO    [ "whole" chunks never contain walls ]
 
 -  can also use these "rects" for floor prefabs, ceiling prefabs,
    free-standing prefabs (in middle), wall-extended prefabs,
@@ -87,12 +100,8 @@ CLOSETS:
 >>> handle unused closets
     [ A.mode = "void", build walls there, NO EDGE ]
 
-+  switch closet
++  switch closet / wall_box
 
-+  when shape is "F", move them 16 units in the facing dir
-   [ triggered by a field in the prefab definition?? ]
-
--  if 
 
 
 STAIRS:
@@ -124,59 +133,6 @@ TELEPORTERS:
 
 
 
-PREFAB SIZE MATCHING
---------------------
-
-1. for "point" prefabs: have a "size" field for the square bbox
-
-2. for "seeds" prefabs:
-
-   (a) prefab have "seed_w" and "seed_h" fields, default to 1 if not present
-
-   (b) prefabs can only occupy a larger space when "x_fit" / "y_fit"
-       is present in the definition
-
-3. for "edge" prefabs, only have "seed_w", and require "x_fit" to expand
-
-4. for "diagonal" prefabs, both seed_w and seed_h must be the same
-   and we NEVER expand them
-
-
-
-SEMANTICS of ROTATING PREFABS
------------------------------
-
-1. "point" prefabs are always a square, and will be rotated by a
-   multiple of 90 degrees to face a certain direction
-
-   Examples: start pad, teleport pad, exit switch, simple switch,
-             crate, pillar, computer.
-
-
-2. "seeds" prefabs can be square or rectangular.
-   
-   (a) if they have a shape, then the from_dir determines the
-       vertical axis and not other rotations are possible.
-
-       Examples: closets (often U shape)
-                 stairs  (often I shape)
-                 joiners (often I shape)
-
-       [ some shapes require TWO directions ]
-
-       [ stairs can be rotated 180 degrees to go down instead of up ]
-
-       
-   (b) no shape, rotatable
-
-       Example:  lava pit (floor prefab)
-                 sky light (ceiling prefab)
-
-
-Rule: if we have a REQUIRED direction, rotation NOT allowed
-
-
-
 SHAPE GRAMMARS:
 
 IDEA: rules can specify a "prefab_flavor" for any rects, and when
@@ -190,7 +146,9 @@ IDEA: rules can specify a "prefab_flavor" for any rects, and when
    never end up anywhere else
 
 +  symmetrical rooms
-   +  join mirrored RECTS (the final areas) with 'peer' field
+   +  join mirrored CHUNKS with 'peer' field
+
+      [ including "area" chunks ]
 
    -  mark a RECT created by a "straddling" rule
       [ increased score for wotsit finding ]
@@ -209,6 +167,9 @@ IDEA: rules can specify a "prefab_flavor" for any rects, and when
 +  for CTF, create one big room with "rotate" symmetry
    [ interleave GROW and SPROUT passes ]
    [[ "new_room" becomes "new_area" but acting like a new room ]]
+
+   __OR__ : allow '1', '2', (etc) in rules to match any room
+            but require all room-y elements to match that same room
 
 idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
        Q/ does "anything" included empty space / other rooms?
@@ -234,14 +195,11 @@ IDEA: have a flag which means auxiliaries must match something in their parent
       [ implement by marking parent seeds ]
       [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
 
-idea: 7/8/9 elements which do not represent anything, but allow
+idea: k/m/n elements which do not represent anything, but allow
       rules to create something, then auxiliaries or future rules
       can transform that shape back into normal geometry
       [ and instead of "count", some rulesets may say "until X is gone" ]
 
-idea: have rulesets for standard "grow", "sprout", "decor" steps
-      (maybe even "root")
-      
 Usage Ideas:
 
   -  a DECOR rule begins a liquid area, and an auxiliary ruleset
@@ -291,4 +249,40 @@ MISCELLANEOUS:
    an area in the 2nd room
 
 -  add monster spots to lava_pit prefab
+
+
+
+SEMANTICS of ROTATING PREFABS
+-----------------------------
+
+1. "point" prefabs are always a square, and will be rotated by a
+   multiple of 90 degrees to face a certain direction
+
+   Examples: start pad, teleport pad, exit switch, simple switch,
+             crate, pillar, computer.
+
+
+2. "seeds" prefabs can be square or rectangular.
+   
+   (a) if they have a shape, then the from_dir determines the
+       vertical axis and not other rotations are possible.
+
+       Examples: closets (often U shape)
+                 stairs  (often I shape)
+                 joiners (often I shape)
+
+       [ some shapes require TWO directions ]
+
+       [ stairs can be rotated 180 degrees to go down instead of up ]
+
+       
+   (b) no shape, rotatable
+
+       Example:  lava pit (floor prefab)
+                 sky light (ceiling prefab)
+
+
+Rule: if we have a REQUIRED direction, rotation NOT allowed
+
+
 
