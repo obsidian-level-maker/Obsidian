@@ -49,6 +49,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_lua.o     \
 	$(OBJ_DIR)/m_manage.o  \
 	$(OBJ_DIR)/m_options.o  \
+	$(OBJ_DIR)/m_trans.o  \
 	$(OBJ_DIR)/lib_argv.o  \
 	$(OBJ_DIR)/lib_file.o  \
 	$(OBJ_DIR)/lib_signal.o \

@@ -474,7 +474,7 @@ void DLG_OptionsEditor(void)
 		int opt_w = kf_w(350);
 		int opt_h = kf_h(380);
 
-		option_window = new UI_OptionsWin(opt_w, opt_h, "OBLIGE Options");
+		option_window = new UI_OptionsWin(opt_w, opt_h, _("OBLIGE Options"));
 	}
 
 	option_window->want_quit = false;
