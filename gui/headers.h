@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -57,6 +57,12 @@
 #define HAVE_PHYSFS  1
 
 #define MSG_BUF_LEN  2000
+
+/* Internationalization / Localization */
+
+#define _(s)  ob_gettext(s)
+
+const char * ob_gettext(const char *s);
 
 #endif /* __OBLIGE_INCLUDES_H__ */
 
