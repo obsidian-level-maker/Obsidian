@@ -68,6 +68,13 @@
 
     monster_level   -- the maximum level of a monster usable here [ except bosses ]
 
+    new_monsters    -- monsters which player has not encountered yet
+
+    global_pal      -- global palette, can ONLY use these monsters [ except for bosses ]
+
+     end_boss : BOSS_FIGHT  -- boss to use at end of level, NIL for none
+    mini_boss : BOSS_FIGHT  -- boss to use for somewhere else in level, NIL for none
+
 
     === Weapon planning ===
 
@@ -102,6 +109,13 @@
      exit_room : ROOM  -- the exit room
 
     -- TODO: lots of other fields : document important ones
+--]]
+
+
+--class BOSS_FIGHT
+--[[
+    mon    -- name of monster
+    count  -- number of them to use
 --]]
 
 
