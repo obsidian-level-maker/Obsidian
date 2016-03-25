@@ -60,7 +60,8 @@
 
 /* Internationalization / Localization */
 
-#define _(s)  ob_gettext(s)
+#define  _(s)  ob_gettext(s)
+#define N_(s)  (s)
 
 const char * ob_gettext(const char *s);
 

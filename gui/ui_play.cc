@@ -311,17 +311,17 @@ const char * UI_Play::monster_syms[] =
 {
 	// also used for: Players (DM)
 
-	"none",   "NONE",
-	"scarce", "Scarce",
-	"less",   "Less",
-	"normal", "Normal",
-	"more",   "More",
-	"heaps",  "Hordes",
-	"nuts",   "Nuts!",
+	"none",   N_("NONE"),
+	"scarce", N_("Scarce"),
+	"less",   N_("Less"),
+	"normal", N_("Normal"),
+	"more",   N_("More"),
+	"heaps",  N_("Hordes"),
+	"nuts",   N_("Nuts!"),
 
-	"prog",     "Progressive",
-	"epi",      "Episodic",
-	"mixed",    "Mix It Up",
+	"prog",     N_("Progressive"),
+	"epi",      N_("Episodic"),
+	"mixed",    N_("Mix It Up"),
 
 	NULL, NULL
 };
@@ -374,7 +374,7 @@ void UI_Play::setup_Monsters()
 {
 	for (int i = 0 ; monster_syms[i] ; i += 2)
 	{
-		mons->AddPair(monster_syms[i], monster_syms[i+1]);
+		mons->AddPair(monster_syms[i], _(monster_syms[i+1]));
 		mons->ShowOrHide(monster_syms[i], 1);
 	}
 }
