@@ -338,7 +338,7 @@ function Episode_plan_monsters()
 
     mon_along = mon_along * factor
 
-    if OB_CONFIG.strength == "higher" then mon_along = mon_along + 0.1 end
+    if OB_CONFIG.strength == "harder" then mon_along = mon_along + 0.1 end
     if OB_CONFIG.strength == "tough"  then mon_along = mon_along + 0.2 end
 
     mon_along = 1 + 8.4 * mon_along

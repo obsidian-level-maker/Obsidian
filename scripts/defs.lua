@@ -105,7 +105,7 @@ MONSTER_KIND_TAB =
 
 STRENGTH_FACTORS =
 {
-  weak=0.7, lower=0.85, medium=1.0, higher=1.2, tough=1.5
+  weak=0.7, easier=0.85, medium=1.0, harder=1.2, tough=1.5
 }
 
 HEALTH_FACTORS =

@@ -991,8 +991,8 @@ function Monster_fill_room(R)
     if OB_CONFIG.strength == "weak"   then return low  ^ 1.5 end
     if OB_CONFIG.strength == "tough"  then return high ^ 1.5 end
 
-    if OB_CONFIG.strength == "lower"  then return low  ^ 0.5 end
-    if OB_CONFIG.strength == "higher" then return high ^ 0.5 end
+    if OB_CONFIG.strength == "easier" then return low  ^ 0.5 end
+    if OB_CONFIG.strength == "harder" then return high ^ 0.5 end
 
     return 1.0
   end
