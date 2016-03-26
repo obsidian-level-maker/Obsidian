@@ -464,15 +464,97 @@ function Episode_plan_monsters()
 
       table.insert(LEV.skip_monsters, mon)
     end
+  end
 
---gui.debugf("Monster global palette in %s:\n%s\n", LEV.name, table.tostr(LEV.global_pal))
+
+  local function count_boss_type(LEV, what)
+    assert(what)
+
+    local count = 0
+
+    each name,info in GAME.MONSTERS do
+      if info.boss_type == what and info.level <= LEV.max_level + 2.1 then
+        count = count + 1
+      end
+    end
+
+    return count
+  end
+
+
+  local function pick_boss_quotas(LEV)
+--??  local c_minor = count_boss_type(LEV, "minor")
+--??  local c_nasty = count_boss_type(LEV, "nasty")
+--??  local c_tough = count_boss_type(LEV, "tough")
+
+    LEV.boss_quotas = { minor=0, nasty=0, tough=0 }
+
+    -- Tough quota
+
+    local prob1 = 0
+
+    if LEV.dist_to_end then
+      prob1 = 100 - (LEV.dist_to_end - 1) * 20
+    end
+
+    if rand.odds(prob1) then
+      LEV.boss_quotas.tough = 1
+
+      prob1 = prob1 * LEV.game_along / 2
+
+      if rand.odds(prob1) then
+        LEV.boss_quotas.tough = 2
+      end
+    end
+
+
+    -- Nasty quota
+
+    local prob2 = 70
+
+    if LEV.boss_quotas.tough > 0 then
+      prob2 = prob2 / 2
+    end
+
+    if rand.odds(prob2) then
+      LEV.boss_quotas.nasty = 1
+
+      prob2 = prob2 * LEV.game_along
+
+      if rand.odds(prob2) then
+        LEV.boss_quotas.nasty = 2
+      end
+    end
+
+
+    -- Minor quota
+
+    local prob3 = 70
+
+    if LEV.boss_quotas.nasty > 0 then
+      prob3 = prob3 / 2
+    end
+
+    if rand.odds(prob3) then
+      LEV.boss_quotas.minor = 1
+
+      prob3 = prob3 * LEV.game_along
+
+      if rand.odds(prob3) then
+        LEV.boss_quotas.nasty = 2
+      end
+    end
   end
 
 
   local function decide_boss_fights()
     each LEV in GAME.levels do
       LEV.boss_fights = {}
+
+      pick_boss_quotas(LEV)
     end
+
+
 
     -- TODO : decide_boss_fights
   end
@@ -482,6 +564,17 @@ function Episode_plan_monsters()
     local names = table.keys_sorted(LEV.global_pal)
 
     return table.list_str(names)
+  end
+
+
+  local function boss_quota_str(LEV)
+    local list = {}
+
+    table.insert(list, LEV.boss_quotas.minor)
+    table.insert(list, LEV.boss_quotas.nasty)
+    table.insert(list, LEV.boss_quotas.tough)
+
+    return table.list_str(list)
   end
 
 
@@ -508,6 +601,7 @@ function Episode_plan_monsters()
       gui.debugf("  new  = %s\n", table.list_str(LEV.new_monsters))
       gui.debugf("  pal  = %s\n", palette_str(LEV))
       gui.debugf("  skip = %s\n", table.list_str(LEV.skip_monsters))
+      gui.debugf("  b_quotas = %s\n", boss_quota_str(LEV))
       gui.debugf("  bosses = %s\n", boss_fight_str(LEV))
     end
   end
