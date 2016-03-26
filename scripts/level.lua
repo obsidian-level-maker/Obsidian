@@ -502,7 +502,7 @@ function Episode_plan_monsters()
     if c_tough > 0 and rand.odds(prob1) then
       LEV.boss_quotas.tough = 1
 
-      prob1 = prob1 * LEV.game_along * 0.5
+      prob1 = prob1 * LEV.game_along * 0.6
 
       if rand.odds(prob1) then
         LEV.boss_quotas.tough = 2
@@ -512,7 +512,7 @@ function Episode_plan_monsters()
 
     -- Nasty quota
 
-    local prob2 = 70
+    local prob2 = 64
 
     if LEV.dist_to_end == 2 then
       prob2 = 99
@@ -521,7 +521,7 @@ function Episode_plan_monsters()
     if c_nasty > 0 and rand.odds(prob2) then
       LEV.boss_quotas.nasty = 1
 
-      prob2 = prob2 * LEV.game_along * 0.7
+      prob2 = prob2 * LEV.game_along * 0.6
 
       if rand.odds(prob2) and not LEV.is_secret then
         LEV.boss_quotas.nasty = 2
@@ -531,7 +531,7 @@ function Episode_plan_monsters()
 
     -- Minor quota
 
-    local prob3 = 56
+    local prob3 = 50
 
     if LEV.dist_to_end == 3 then
       prob2 = 99
@@ -540,7 +540,7 @@ function Episode_plan_monsters()
     if c_minor > 0 and rand.odds(prob3) then
       LEV.boss_quotas.minor = 1
 
-      prob3 = prob3 * LEV.game_along * 0.5
+      prob3 = prob3 * LEV.game_along * 0.6
 
       if rand.odds(prob3) and not LEV.is_secret then
         LEV.boss_quotas.minor = 2
