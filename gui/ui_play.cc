@@ -183,12 +183,12 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 
 	if (strcmp(mode, "dm") == 0)
 	{
-		play->mons->label ("Players: ");
+		play->mons->label(_("Players: "));
 		play->strength->deactivate();
 	}
 	else
 	{
-		play->mons->label ("Monsters: ");
+		play->mons->label(_("Monsters: "));
 		play->strength->activate();
 	}
 
@@ -326,12 +326,14 @@ const char * UI_Play::monster_syms[] =
 
 const char * UI_Play::strength_syms[] =
 {
-	"weak",   "Weak",
-	"lower",  "Easier",
-	"medium", "Normal",
-	"higher", "Harder",
-	"tough",  "Tough",
-	"crazy",  "CRAZY",
+	"weak",   N_("Weak"),
+	"easier", N_("Easier"),
+	"medium", N_("Normal"),
+	"harder", N_("Harder"),
+	"tough",  N_("Tough"),
+	"crazy",  N_("CRAZY"),
+
+//TODO	"mixed",  N_("Mix It Up"),
 
 	NULL, NULL
 };
@@ -341,12 +343,11 @@ const char * UI_Play::item_syms[] =
 {
 	// also used for: Weapons
 
-	"none",   "NONE",
-	"less",   "Less",
-	"normal", "Normal",
-	"more",   "More",
-
-	"mixed",  "Mix It Up",
+	"none",   N_("NONE"),
+	"less",   N_("Less"),
+	"normal", N_("Normal"),
+	"more",   N_("More"),
+	"mixed",  N_("Mix It Up"),
 
 	NULL, NULL
 };
@@ -356,12 +357,12 @@ const char * UI_Play::health_syms[] =
 {
 	// also used for: Ammo
 
-	"none",   "NONE",
-	"scarce", "Scarce",
-	"less",   "Less",
-	"normal", "Normal",
-	"more",   "More",
-	"heaps",  "Heaps",
+	"none",   N_("NONE"),
+	"scarce", N_("Scarce"),
+	"less",   N_("Less"),
+	"normal", N_("Normal"),
+	"more",   N_("More"),
+	"heaps",  N_("Heaps"),
 
 	NULL, NULL
 };
@@ -381,7 +382,7 @@ void UI_Play::setup_Strength()
 {
 	for (int i = 0 ; strength_syms[i] ; i += 2)
 	{
-		strength->AddPair(strength_syms[i], strength_syms[i+1]);
+		strength->AddPair(strength_syms[i], _(strength_syms[i+1]));
 		strength->ShowOrHide(strength_syms[i], 1);
 	}
 }
@@ -391,7 +392,7 @@ void UI_Play::setup_Items()
 {
 	for (int i = 0 ; item_syms[i] ; i += 2)
 	{
-		items->AddPair(item_syms[i], item_syms[i+1]);
+		items->AddPair(item_syms[i], _(item_syms[i+1]));
 		items->ShowOrHide(item_syms[i], 1);
 	}
 }
@@ -401,7 +402,7 @@ void UI_Play::setup_Weapons()
 {
 	for (int i = 0 ; item_syms[i] ; i += 2)
 	{
-		weaps->AddPair(item_syms[i], item_syms[i+1]);
+		weaps->AddPair(item_syms[i], _(item_syms[i+1]));
 		weaps->ShowOrHide(item_syms[i], 1);
 	}
 }
@@ -411,7 +412,7 @@ void UI_Play::setup_Health()
 {
 	for (int i = 0 ; health_syms[i] ; i += 2)
 	{
-		health->AddPair(health_syms[i], health_syms[i+1]);
+		health->AddPair(health_syms[i], _(health_syms[i+1]));
 		health->ShowOrHide(health_syms[i], 1);
 	}
 
@@ -422,7 +423,7 @@ void UI_Play::setup_Ammo()
 {
 	for (int i = 0 ; health_syms[i] ; i += 2)
 	{
-		ammo->AddPair(health_syms[i], health_syms[i+1]);
+		ammo->AddPair(health_syms[i], _(health_syms[i+1]));
 		ammo->ShowOrHide(health_syms[i], 1);
 	}
 }
