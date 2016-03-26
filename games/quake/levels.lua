@@ -49,7 +49,7 @@ QUAKE.SECRET_EXITS =
 ----------------------------------------------------
 
 function QUAKE.get_levels()
-  local  EP_NUM = sel(OB_CONFIG.length == "full",   4, 1)
+  local  EP_NUM = sel(OB_CONFIG.length == "game",   4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
   if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
@@ -102,6 +102,12 @@ function QUAKE.get_levels()
       table.insert(GAME.levels, LEV)
 
     end -- for map
+
+    -- set "dist_to_end" value
+    if MAP_NUM >= 3 then
+      EPI.levels[#EPI.levels    ].dist_to_end = 1
+      EPI.levels[#EPI.levels - 1].dist_to_end = 2
+    end
 
   end -- for episode
 end

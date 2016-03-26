@@ -130,6 +130,12 @@ function HERETIC.get_levels()
 
     end -- for map
 
+    -- set "dist_to_end" value
+    if MAP_NUM >= 9 then
+      EPI.levels[7].dist_to_end = 1
+      EPI.levels[6].dist_to_end = 2
+    end
+
   end -- for episode
 end
 

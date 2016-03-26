@@ -456,6 +456,7 @@ function Episode_plan_monsters()
 
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
+      gui.debugf("  dist_to_end = %s\n", tostring(LEV.dist_to_end))
       gui.debugf("  level = %1.2f\n", LEV.monster_level)
       gui.debugf("  new = %s\n",   table.list_str(LEV.new_monsters))
     end

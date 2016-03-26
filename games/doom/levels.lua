@@ -178,6 +178,11 @@ function DOOM.get_levels()
       LEV.style_list = { barrels = { heaps=100 } }
     end
 
+    -- the 'dist_to_end' value is needed for Boss monster decisions
+    if map >= 26 and map <= 29 then
+      LEV.dist_to_end = 30 - map
+    end
+
     -- prebuilt levels
     local pb_name = LEV.name
 
@@ -192,6 +197,15 @@ function DOOM.get_levels()
 
     if MAP_NUM == 1 or (map % 10) == 3 then
       LEV.demo_lump = string.format("DEMO%d", ep_index)
+    end
+  end
+
+  if OB_CONFIG.length != "single" and OB_CONFIG.length != "game" then
+    GAME.levels[#GAME.levels].dist_to_end = 1
+
+    if OB_CONFIG.length == "episode" then
+      GAME.levels[#GAME.levels - 1].dist_to_end = 2
+      GAME.levels[#GAME.levels - 2].dist_to_end = 3
     end
   end
 end
