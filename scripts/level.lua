@@ -72,8 +72,7 @@
 
     global_pal      -- global palette, can ONLY use these monsters [ except for bosses ]
 
-     end_boss : BOSS_FIGHT  -- boss to use at end of level, NIL for none
-    mini_boss : BOSS_FIGHT  -- boss to use for somewhere else in level, NIL for none
+    boss_fights : list(BOSS_FIGHT)   -- boss fighrs, from biggest to smallest
 
 
     === Weapon planning ===
@@ -470,6 +469,33 @@ function Episode_plan_monsters()
   end
 
 
+  local function decide_boss_fights()
+    each LEV in GAME.levels do
+      LEV.boss_fights = {}
+    end
+
+    -- TODO : decide_boss_fights
+  end
+
+
+  local function palette_str(LEV)
+    local names = table.keys_sorted(LEV.global_pal)
+
+    return table.list_str(names)
+  end
+
+
+  local function boss_fight_str(LEV)
+    local names = {}
+
+    each F in LEV.boss_fights do
+      table.insert(names, F.mon)
+    end
+
+    return table.list_str(names)
+  end
+
+
   local function dump_monster_info()
     gui.debugf("Planned monsters:\n\n")
 
@@ -480,7 +506,9 @@ function Episode_plan_monsters()
         gui.debugf("  dist_to_end = %d\n", LEV.dist_to_end)
       end
       gui.debugf("  new  = %s\n", table.list_str(LEV.new_monsters))
+      gui.debugf("  pal  = %s\n", palette_str(LEV))
       gui.debugf("  skip = %s\n", table.list_str(LEV.skip_monsters))
+      gui.debugf("  bosses = %s\n", boss_fight_str(LEV))
     end
   end
 
@@ -498,6 +526,8 @@ function Episode_plan_monsters()
   each LEV in GAME.levels do
     pick_global_palette(LEV)
   end
+
+  decide_boss_fights()
 
   dump_monster_info()
 end
