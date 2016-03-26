@@ -72,6 +72,10 @@ function CTL_DOOM.monster_setup(self)
         M.level = 1
         M.min_weapon = nil
       end
+
+      if M.prob > 200 then
+        M.boss_type = nil
+      end
     end
   end -- for opt
 end
