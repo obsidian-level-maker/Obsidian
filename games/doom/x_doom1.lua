@@ -2,7 +2,7 @@
 --  DOOM 1 / ULTIMATE DOOM
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or

@@ -2,7 +2,7 @@
 --  DOOM LEVELS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -74,6 +74,7 @@ DOOM.PREBUILT_LEVELS =
     { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP03" }
   }
 
+  -- these two are currently disabled
   GOTCHA =
   {
     { prob=50, file="games/doom/data/boss2/gotcha1.wad", map="MAP01" }
@@ -181,18 +182,15 @@ function DOOM.get_levels()
     -- the 'dist_to_end' value is used for Boss monster decisions
     if map >= 26 and map <= 29 then
       LEV.dist_to_end = 30 - map
-    elseif map == 20 or map == 23 then
+    elseif map == 11 or map == 20 then
+      LEV.dist_to_end = 1
+    elseif map == 16 or map == 23 then
       LEV.dist_to_end = 2
-    elseif map == 11 or map == 16 then
-      LEV.dist_to_end = 3
     end
 
     -- prebuilt levels
     local pb_name = LEV.name
 
-    if map == gotcha_map then pb_name = "GOTCHA" end
-    if map == gallow_map then pb_name = "GALLOW" end
-    
     LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
 
     if LEV.prebuilt then
