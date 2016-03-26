@@ -432,6 +432,8 @@ function Episode_plan_monsters()
     -- decides which monsters we will use on this level.
     -- easiest way is to pick some monsters NOT to use.
     --
+    -- Note: we always exclude BOSS monsters here.
+    --
 
     LEV.global_pal = {}
 
@@ -441,10 +443,27 @@ function Episode_plan_monsters()
       return
     end
 
-    -- FIXME : actually skip some monsters (Esp. when # is high)
-
     each name,_ in LEV.seen_monsters do
-      LEV.global_pal[name] = 1
+      local info = GAME.MONSTERS[name]
+      if not info.boss_type then
+        LEV.global_pal[name] = 1
+      end
+    end
+
+    -- actually skip some monsters (esp. when # is high)
+
+    LEV.skip_monsters = {}
+
+    local skip_num = (table.size(LEV.global_pal) - 9) / 6
+
+    skip_num = rand.int(skip_num + LEV.game_along + 0.02)
+
+    for i = 1, skip_num do
+      local mon = rand.key_by_probs(LEV.global_pal)
+
+      LEV.global_pal[mon] = nil
+
+      table.insert(LEV.skip_monsters, mon)
     end
 
 --gui.debugf("Monster global palette in %s:\n%s\n", LEV.name, table.tostr(LEV.global_pal))
@@ -457,8 +476,11 @@ function Episode_plan_monsters()
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
       gui.debugf("  level = %1.2f\n", LEV.monster_level)
-      gui.debugf("  new = %s\n",   table.list_str(LEV.new_monsters))
-      if LEV.dist_to_end then gui.debugf("  dist_to_end = %d\n", LEV.dist_to_end) end
+      if LEV.dist_to_end then
+        gui.debugf("  dist_to_end = %d\n", LEV.dist_to_end)
+      end
+      gui.debugf("  new  = %s\n", table.list_str(LEV.new_monsters))
+      gui.debugf("  skip = %s\n", table.list_str(LEV.skip_monsters))
     end
   end
 
