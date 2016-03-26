@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -251,7 +251,7 @@ void UI_Play::Defaults()
 	ParseValue("mons",    "normal");
 	ParseValue("strength","medium");
 	ParseValue("weapons", "normal");
-	ParseValue("items",  "normal");
+	ParseValue("items",   "normal");
 	ParseValue("health",  "normal");
 	ParseValue("ammo",    "normal");
 }
@@ -318,10 +318,7 @@ const char * UI_Play::monster_syms[] =
 	"more",   N_("More"),
 	"heaps",  N_("Hordes"),
 	"nuts",   N_("Nuts!"),
-
-	"prog",     N_("Progressive"),
-	"epi",      N_("Episodic"),
-	"mixed",    N_("Mix It Up"),
+	"mixed",  N_("Mix It Up"),
 
 	NULL, NULL
 };
@@ -334,7 +331,7 @@ const char * UI_Play::strength_syms[] =
 	"medium", "Normal",
 	"higher", "Harder",
 	"tough",  "Tough",
-	"crazy",  "Crazy",
+	"crazy",  "CRAZY",
 
 	NULL, NULL
 };
