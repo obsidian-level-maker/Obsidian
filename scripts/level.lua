@@ -470,10 +470,12 @@ function Episode_plan_monsters()
   local function count_boss_type(LEV, what)
     assert(what)
 
+    local ahead = 2.1  -- TODO: review this number
+
     local count = 0
 
     each name,info in GAME.MONSTERS do
-      if info.boss_type == what and info.level <= LEV.max_level + 2.1 then
+      if info.boss_type == what and info.level <= LEV.monster_level + ahead then
         count = count + 1
       end
     end
@@ -483,9 +485,9 @@ function Episode_plan_monsters()
 
 
   local function pick_boss_quotas(LEV)
---??  local c_minor = count_boss_type(LEV, "minor")
---??  local c_nasty = count_boss_type(LEV, "nasty")
---??  local c_tough = count_boss_type(LEV, "tough")
+    local c_minor = count_boss_type(LEV, "minor")
+    local c_nasty = count_boss_type(LEV, "nasty")
+    local c_tough = count_boss_type(LEV, "tough")
 
     LEV.boss_quotas = { minor=0, nasty=0, tough=0 }
 
@@ -497,10 +499,10 @@ function Episode_plan_monsters()
       prob1 = 100 - (LEV.dist_to_end - 1) * 20
     end
 
-    if rand.odds(prob1) then
+    if c_tough > 0 and rand.odds(prob1) then
       LEV.boss_quotas.tough = 1
 
-      prob1 = prob1 * LEV.game_along / 2
+      prob1 = prob1 * LEV.game_along * 0.5
 
       if rand.odds(prob1) then
         LEV.boss_quotas.tough = 2
@@ -512,16 +514,16 @@ function Episode_plan_monsters()
 
     local prob2 = 70
 
-    if LEV.boss_quotas.tough > 0 then
-      prob2 = prob2 / 2
+    if LEV.dist_to_end == 2 then
+      prob2 = 99
     end
 
-    if rand.odds(prob2) then
+    if c_nasty > 0 and rand.odds(prob2) then
       LEV.boss_quotas.nasty = 1
 
-      prob2 = prob2 * LEV.game_along
+      prob2 = prob2 * LEV.game_along * 0.7
 
-      if rand.odds(prob2) then
+      if rand.odds(prob2) and not LEV.is_secret then
         LEV.boss_quotas.nasty = 2
       end
     end
@@ -529,19 +531,19 @@ function Episode_plan_monsters()
 
     -- Minor quota
 
-    local prob3 = 70
+    local prob3 = 56
 
-    if LEV.boss_quotas.nasty > 0 then
-      prob3 = prob3 / 2
+    if LEV.dist_to_end == 3 then
+      prob2 = 99
     end
 
-    if rand.odds(prob3) then
+    if c_minor > 0 and rand.odds(prob3) then
       LEV.boss_quotas.minor = 1
 
-      prob3 = prob3 * LEV.game_along
+      prob3 = prob3 * LEV.game_along * 0.5
 
-      if rand.odds(prob3) then
-        LEV.boss_quotas.nasty = 2
+      if rand.odds(prob3) and not LEV.is_secret then
+        LEV.boss_quotas.minor = 2
       end
     end
   end
@@ -553,8 +555,6 @@ function Episode_plan_monsters()
 
       pick_boss_quotas(LEV)
     end
-
-
 
     -- TODO : decide_boss_fights
   end
@@ -590,7 +590,7 @@ function Episode_plan_monsters()
 
 
   local function dump_monster_info()
-    gui.debugf("Planned monsters:\n\n")
+    gui.debugf("\nPlanned monsters:\n\n")
 
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
@@ -737,7 +737,7 @@ function Episode_plan_weapons()
 
 
   local function dump_weapon_info()
-    gui.debugf("Planned weapons:\n\n")
+    gui.debugf("\nPlanned weapons:\n\n")
 
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
