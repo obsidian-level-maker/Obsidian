@@ -2,7 +2,7 @@
 --  DOOM MONSTERS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -172,12 +172,16 @@ DOOM.MONSTERS =
     infight_damage = 21
   }
 
+
+  ---| BOSSES |---
+
   baron =
   {
     id = 3003
     r = 24
     h = 64 
     level = 6
+    boss_type = "minor"
     prob = 6.4
     crazy_prob = 20
     health = 1000
@@ -189,15 +193,13 @@ DOOM.MONSTERS =
     infight_damage = 40
   }
 
-
-  ---| DOOM BOSSES |---
-
   Cyberdemon =
   {
     id = 16
     r = 40
     h = 110
     level = 8
+    boss_type = "tough"
     prob = 1.6
     crazy_prob = 10
     health = 4000
@@ -216,6 +218,7 @@ DOOM.MONSTERS =
     r = 128
     h = 100
     level = 9
+    boss_type = "tough"
     prob = 1.0
     crazy_prob = 10
     health = 3000
@@ -321,6 +324,7 @@ DOOM.MONSTERS =
     r = 20
     h = 56 
     level = 6.7
+    boss_type = "nasty"
     prob = 5
     crazy_prob = 15
     health = 700
@@ -339,6 +343,7 @@ DOOM.MONSTERS =
     r = 31
     h = 56 
     level = 5.5
+    boss_type = "nasty"
     prob = 10
     crazy_prob = 15
     health = 900  -- 400 + 5 skulls
@@ -350,20 +355,16 @@ DOOM.MONSTERS =
     weap_prefs = { launch=0.1 }
     room_size = "large"
     cage_factor = 0  -- never put in cages
-    nasty = true
     infight_damage = 4.5 -- guess
   }
 
-  -- NOTE: not generated in normal levels
+  -- NOTE: this is not normally added to levels
   ss_nazi =
   {
     id = 84
     r = 20
     h = 56 
     level = 1
-    theme = "wolf"
-    prob = 40
-    crazy_prob = 2
     health = 50
     damage = 2.8
     attack = "hitscan"

@@ -2,7 +2,7 @@
 --  HEXEN MONSTERS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2011 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C) 2011-2012 Jared Blackburn
 --
 --  This program is free software; you can redistribute it and/or
@@ -87,7 +87,7 @@ HEXEN.MONSTERS =
     attack = "missile"
   }
 
-  iceguy =
+  wendigo =  -- iceguy
   {
     id = 8020
     r = 24
@@ -164,42 +164,17 @@ HEXEN.MONSTERS =
   }
 
 
-  ---| HEXEN BOSSES |---
+  ---| BOSSES |---
 
   -- FIXME: proper damage and attack fields
-
-  Fighter_boss =
-  {
-    id = 10100
-    r = 16
-    h = 64 
-    health = 5000
-    damage = 90
-  }
-
-  Cleric_boss =
-  {
-    id = 10101
-    r = 16
-    h = 64 
-    health = 5000
-    damage = 90
-  }
-
-  Mage_boss =
-  {
-    id = 10102
-    r = 16
-    h = 64 
-    health = 5000
-    damage = 90
-  }
 
   Wyvern =
   {
     id = 254
     r = 20
     h = 66 
+    level = 7
+    boss_type = "minor"
     health = 640
     damage = 60
     float = true
@@ -210,8 +185,43 @@ HEXEN.MONSTERS =
     id = 10080
     r = 40
     h = 120
+    level = 9
+    boss_type = "tough"
     health = 5000
     damage = 70
+  }
+
+  Zedek =  -- Fighter_boss
+  {
+    id = 10100
+    r = 16
+    h = 64 
+    level = 9
+    boss_type = "tough"
+    health = 5000
+    damage = 90
+  }
+
+  Traductus =  -- Cleric_boss
+  {
+    id = 10101
+    r = 16
+    h = 64 
+    level = 9
+    boss_type = "tough"
+    health = 5000
+    damage = 90
+  }
+
+  Menelkir =  -- Mage_boss
+  {
+    id = 10102
+    r = 16
+    h = 64 
+    level = 9
+    boss_type = "tough"
+    health = 5000
+    damage = 90
   }
 
   Korax =
@@ -219,6 +229,8 @@ HEXEN.MONSTERS =
     id = 10200
     r = 66
     h = 120
+    level = 9
+    boss_type = "singular"
     health = 5000
     damage = 90
   }

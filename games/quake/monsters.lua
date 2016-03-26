@@ -2,7 +2,7 @@
 --  QUAKE MONSTERS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -123,19 +123,6 @@ QUAKE.MONSTERS =
     attack = "melee"
   }
 
-  death_kt =
-  {
-    id = "monster_hell_knight"
-    r = 32
-    h = 80 
-    level = 5
-    prob = 30
-    density  =  0.4
-    health = 250
-    damage = 30
-    attack = "missile"
-  }
-
   ogre =
   {
     id = "monster_ogre"
@@ -164,12 +151,29 @@ QUAKE.MONSTERS =
     weap_prefs = { grenade=0.2 }
   }
 
-  vore =
+  ---| BOSSES |---
+
+  dth_knight =
+  {
+    id = "monster_hell_knight"
+    r = 32
+    h = 80 
+    level = 5
+    boss_type = "minor"
+    prob = 30
+    density  =  0.4
+    health = 250
+    damage = 30
+    attack = "missile"
+  }
+
+  Vore =
   {
     id = "monster_shalrath"
     r = 32
     h = 80 
     level = 7
+    boss_type = "tough"
     prob = 10
     health = 400
     damage = 60
@@ -177,11 +181,12 @@ QUAKE.MONSTERS =
     density  =  0.2
   }
 
-  shambler =
+  Shambler =
   {
     id = "monster_shambler"
     r = 32
     h = 80 
+    boss_type = "tough"
     level = 7
     prob = 10
     health = 600

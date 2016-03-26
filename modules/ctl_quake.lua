@@ -93,15 +93,15 @@ OB_MODULES["quake_mon_control"] =
     enforcer = { label="Enforcer",   choices=CTL_QUAKE.MON_CHOICES }
     zombie   = { label="Zombie",     choices=CTL_QUAKE.MON_CHOICES }
 
-    knight   = { label="Knight",       choices=CTL_QUAKE.MON_CHOICES }
-    death_kt = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES }
-    scrag    = { label="Scrag",        choices=CTL_QUAKE.MON_CHOICES }
-    tarbaby  = { label="Spawn",        choices=CTL_QUAKE.MON_CHOICES }
+    knight   = { label="Knight",     choices=CTL_QUAKE.MON_CHOICES }
+    scrag    = { label="Scrag",      choices=CTL_QUAKE.MON_CHOICES }
+    tarbaby  = { label="Spawn",      choices=CTL_QUAKE.MON_CHOICES }
+    ogre     = { label="Ogre",       choices=CTL_QUAKE.MON_CHOICES }
+    fiend    = { label="Fiend",      choices=CTL_QUAKE.MON_CHOICES }
 
-    ogre     = { label="Ogre",      choices=CTL_QUAKE.MON_CHOICES }
-    fiend    = { label="Fiend",     choices=CTL_QUAKE.MON_CHOICES }
-    vore     = { label="Vore",      choices=CTL_QUAKE.MON_CHOICES }
-    shambler = { label="Schambler", choices=CTL_QUAKE.MON_CHOICES }
+    dth_knight = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES }
+    Vore       = { label="Vore",      choices=CTL_QUAKE.MON_CHOICES }
+    Shambler   = { label="Schambler", choices=CTL_QUAKE.MON_CHOICES }
   }
 }
 

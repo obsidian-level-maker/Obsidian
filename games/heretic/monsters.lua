@@ -183,7 +183,7 @@ HERETIC.MONSTERS =
   }
 
 
-  ---| HERETIC BOSSES |---
+  ---| BOSSES |---
 
   Ironlich =
   {
@@ -191,6 +191,7 @@ HERETIC.MONSTERS =
     r = 40
     h = 72 
     level = 7
+    boss_type = "nasty"
     prob = 8
     density = 0.2
     health = 700
@@ -206,6 +207,7 @@ HERETIC.MONSTERS =
     r = 28
     h = 104
     level = 8
+    boss_type = "tough"
     prob = 2
     density = 0.2
     health = 3000
@@ -224,6 +226,7 @@ HERETIC.MONSTERS =
     r = 28
     h = 104
     level = 9
+    boss_type = "tough"
     prob = 0.5
     density = 0.1
     health = 5000
