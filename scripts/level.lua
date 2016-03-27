@@ -582,7 +582,11 @@ function Episode_plan_monsters()
     local names = {}
 
     each F in LEV.boss_fights do
-      table.insert(names, F.mon)
+      local s = F.mon
+      if F.count > 1 then
+        s = string.format("%dx %s", F.count, F.mon)
+      end
+      table.insert(names, s)
     end
 
     return table.list_str(names)
