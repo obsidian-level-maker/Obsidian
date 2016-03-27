@@ -115,6 +115,7 @@
 --[[
     mon    -- name of monster
     count  -- number of them to use
+    intensity  -- a measure of how tough the fight is
 --]]
 
 
@@ -467,20 +468,25 @@ function Episode_plan_monsters()
   end
 
 
-  local function count_boss_type(LEV, what)
+  local function collect_usable_bosses(LEV, what)
     assert(what)
 
     local ahead = 2.1  -- TODO: review this number
 
-    local count = 0
+    local tab = {}
 
     each name,info in GAME.MONSTERS do
       if info.boss_type == what and info.level <= LEV.monster_level + ahead then
-        count = count + 1
+        tab[name] = info.boss_prob or 50
       end
     end
 
-    return count
+    return tab
+  end
+
+
+  local function count_boss_type(LEV, what)
+    return table.size(collect_usable_bosses(LEV, what))
   end
 
 
@@ -549,14 +555,44 @@ function Episode_plan_monsters()
   end
 
 
+  local function create_fight(LEV, boss_type)
+    local bosses = collect_usable_bosses(LEV, boss_type)
+
+    if table.empty(bosses) then return end
+
+    local mon  = rand.key_by_probs(bosses)
+    local info = GAME.MONSTERS[mon]
+
+    -- select how many
+    -- FIXME : this is too simplistic
+
+    local count = 1
+    if info.level * 1.4 < LEV.monster_level then count = 2 end
+    if info.level * 2.2 < LEV.monster_level and boss_type != "tough" then count = 4 end
+
+    local FIGHT =
+    {
+      mon = mon
+      count = count
+    }
+
+    table.insert(LEV.boss_fights, FIGHT)
+  end
+
+
   local function decide_boss_fights()
     each LEV in GAME.levels do
       LEV.boss_fights = {}
 
       pick_boss_quotas(LEV)
-    end
 
-    -- TODO : decide_boss_fights
+      for i = 1, LEV.boss_quotas.tough do create_fight(LEV, "tough") end
+      for i = 1, LEV.boss_quotas.nasty do create_fight(LEV, "nasty") end
+      for i = 1, LEV.boss_quotas.minor do create_fight(LEV, "minor") end
+
+      --??  table.sort(LEV.boss_fights,
+      --??      function(A, B) return A.intensity > B.intensity end)
+    end
   end
 
 
