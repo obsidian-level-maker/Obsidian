@@ -21,6 +21,9 @@ ______________________________________________________________________
 *  update documentation for current GUI interface
 
 *  support for translation into other languages
+   -  lib_locale to get default "language"
+   -  everything in m_trans.cc
+   -  choice of language in Options window
 
 *  better i18n support (esp. non-ASCII characters in filenames)
 
@@ -53,6 +56,8 @@ ______________________________________________________________________
 ----------------------------------------------
   V7 STUFF
 ----------------------------------------------
+
++  support a "Mix It Up" Strength setting
 
 +  have a "slow pace weapons" extra setting (idea by flyingdeath)
 
