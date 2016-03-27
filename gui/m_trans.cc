@@ -21,10 +21,8 @@
 #include "headers.h"
 #include "hdr_lua.h"
 
-//#include "lib_argv.h"
-//#include "lib_util.h"
-
 #include "main.h"
+#include "m_trans.h"
 
 
 // TODO : stuff to parse PO files
@@ -35,6 +33,7 @@
 
 void Trans_ParseLangLine(const char *line)
 {
+	// TODO
 }
 
 
@@ -43,6 +42,12 @@ void Trans_Init()
 	// TODO : read the language/LANGS.txt file
 
 	// TODO : stuff to create a Lua state to store messages in
+}
+
+
+void Trans_SetLanguageByCode(const char *langcode)
+{
+	// TODO
 }
 
 
@@ -55,11 +60,7 @@ const char * Trans_GetLanguage(int idx)
 
 void Trans_SetLanguage(int idx)
 {
-}
-
-
-void Trans_SetLanguageByCode(const char *langcode)
-{
+	// TODO
 }
 
 
