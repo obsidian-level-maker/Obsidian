@@ -279,6 +279,9 @@ function Episode_plan_monsters()
   -- (4) one day: boss fights for special levels
   --
 
+  local seen_bosses = {}
+
+
   local function default_level(info)
     local hp = info.health
 
@@ -564,11 +567,32 @@ function Episode_plan_monsters()
     local info = GAME.MONSTERS[mon]
 
     -- select how many
-    -- FIXME : this is too simplistic
 
-    local count = 1
-    if info.level * 1.4 < LEV.monster_level then count = 2 end
-    if info.level * 2.2 < LEV.monster_level and boss_type != "tough" then count = 4 end
+    local count = LEV.monster_level / info.level
+
+    if boss_type != "tough" then count = count ^ 1.5 end
+
+    if OB_CONFIG.strength == "weak" or
+       OB_CONFIG.strength == "easier"
+    then count = count / 2 end
+
+    count = rand.int(count)
+    if count < 1 then count = 1 end
+
+    if boss_type == "minor" then
+      count = math.clamp(1, count, 8)
+    elseif boss_type == "nasty" then
+      count = math.clamp(1, count, 5)
+    else
+      count = math.clamp(1, count, 3)
+    end
+
+    -- ensure first encounter with a boss only uses a single one
+    count = math.min(count, 1 + (seen_bosses[mon] or 0))
+
+    seen_bosses[mon] = math.max(seen_bosses[mon] or 0, count)
+
+stderrf("  count %1.2f for '%s'\n", count, mon)
 
     local FIGHT =
     {
@@ -586,6 +610,7 @@ function Episode_plan_monsters()
 
       pick_boss_quotas(LEV)
 
+stderrf("%s:\n", LEV.name)
       for i = 1, LEV.boss_quotas.tough do create_fight(LEV, "tough") end
       for i = 1, LEV.boss_quotas.nasty do create_fight(LEV, "nasty") end
       for i = 1, LEV.boss_quotas.minor do create_fight(LEV, "minor") end
