@@ -556,7 +556,8 @@ function Episode_plan_monsters()
     local prob1 = 0
 
     if LEV.dist_to_end then
-      prob1 = 100 - (LEV.dist_to_end - 1) * 20
+      local factor = sel(c_tough < 2, 40, 20)
+      prob1 = 100 - (LEV.dist_to_end - 1) * factor
     end
 
     if c_tough > 0 and rand.odds(prob1) then
@@ -572,7 +573,7 @@ function Episode_plan_monsters()
 
     -- Nasty quota
 
-    local prob2 = 64
+    local prob2 = sel(c_nasty < 2, 40, 70)
 
     if LEV.dist_to_end == 2 then
       prob2 = 99
@@ -591,7 +592,7 @@ function Episode_plan_monsters()
 
     -- Minor quota
 
-    local prob3 = 50
+    local prob3 = sel(c_minor < 2, 40, 70)
 
     if LEV.dist_to_end == 3 then
       prob2 = 99
