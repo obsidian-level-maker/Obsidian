@@ -27,16 +27,50 @@
 #include "main.h"
 
 
-// TODO : stuff to create a Lua state to store messages in
-
-
 // TODO : stuff to parse PO files
+
+
+//----------------------------------------------------------------------
+
+
+void Trans_ParseLangLine(const char *line)
+{
+}
+
+
+void Trans_Init()
+{
+	// TODO : read the language/LANGS.txt file
+
+	// TODO : stuff to create a Lua state to store messages in
+}
+
+
+const char * Trans_GetLanguage(int idx)
+{
+	// end of list
+	return NULL;
+}
+
+
+void Trans_SetLanguage(int idx)
+{
+}
+
+
+void Trans_SetLanguageByCode(const char *langcode)
+{
+}
+
+
+//----------------------------------------------------------------------
 
 
 const char * ob_gettext(const char *s)
 {
 	return s;
 }
+
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
