@@ -280,6 +280,8 @@ function Episode_plan_monsters()
 
   local seen_bosses = {}
 
+  local BOSS_AHEAD = 2.1  -- TODO : review this number
+
 
   local function default_level(info)
     local hp = info.health
@@ -473,13 +475,54 @@ function Episode_plan_monsters()
   local function collect_usable_bosses(LEV, what)
     assert(what)
 
-    local ahead = 2.1  -- TODO: review this number
-
     local tab = {}
 
     each name,info in GAME.MONSTERS do
-      if info.boss_type == what and info.level <= LEV.monster_level + ahead then
+      if info.boss_type == what and info.level <= LEV.monster_level + BOSS_AHEAD then
         tab[name] = info.boss_prob or 50
+      end
+    end
+
+    return tab
+  end
+
+
+  local function prob_for_guard(LEV, info)
+    if info.prob <= 0 then return 0 end
+
+    if info.min_weapon and info.min_weapon >= LEV.max_weapon then return 0 end
+
+    if info.level > LEV.monster_level + BOSS_AHEAD then return 0 end
+
+    -- ignore theme-specific monsters (SS NAZI)
+    if info.theme then return 0 end
+
+    -- base probability : this value is designed to take into account
+    -- the settings of the monster control module
+    local prob = info.prob * (info.damage or 2)
+    prob = prob ^ 0.6
+
+    local is_avail = LEV.global_pal[info.name]
+    local is_seen  = seen_bosses[info.name]
+
+    if not is_avail then prob = prob * 80 end
+    if not is_seen  then prob = prob * 20 end
+
+    return prob
+  end
+
+
+  local function collect_usable_guards(LEV)
+    local tab = {}
+
+    each name,info in GAME.MONSTERS do
+      -- skip the real boss monsters
+      if info.boss_type then continue end
+
+      local prob = prob_for_guard(LEV, info)
+
+      if prob > 0 then
+        tab[name] = prob
       end
     end
 
@@ -554,6 +597,15 @@ function Episode_plan_monsters()
         LEV.boss_quotas.minor = 2
       end
     end
+
+
+    -- Guard quota
+
+    local total = LEV.boss_quotas.tough +
+                  LEV.boss_quotas.nasty +
+                  LEV.boss_quotas.minor
+
+    LEV.boss_quotas.guard = math.clamp(1, 5 - total, 4)
   end
 
 
@@ -612,6 +664,15 @@ function Episode_plan_monsters()
   end
 
 
+  local function create_guard(LEV, along)
+    local guards = collect_usable_guards(LEV)
+
+    if table.empty(guards) then return end
+
+    -- TODO
+  end
+
+
   local function mark_bosses_seen(LEV)
     each F in LEV.boss_fights do
       seen_bosses[F.mon] = math.max(seen_bosses[F.mon] or 0, F.count)
@@ -630,6 +691,8 @@ function Episode_plan_monsters()
       for i = 1, LEV.boss_quotas.minor do create_fight(LEV, "minor", i) end
 
       mark_bosses_seen(LEV)
+
+      for i = 1, LEV.boss_quotas.guard do create_guard(LEV, i) end
     end
   end
 
