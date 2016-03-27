@@ -115,7 +115,6 @@
 --[[
     mon    -- name of monster
     count  -- number of them to use
-    intensity  -- a measure of how tough the fight is
 --]]
 
 
@@ -558,7 +557,7 @@ function Episode_plan_monsters()
   end
 
 
-  local function create_fight(LEV, boss_type)
+  local function create_fight(LEV, boss_type, along)
     local bosses = collect_usable_bosses(LEV, boss_type)
 
     if table.empty(bosses) then return end
@@ -587,12 +586,21 @@ function Episode_plan_monsters()
       count = math.clamp(1, count, 3)
     end
 
+    -- secondary boss fights should be weaker than primary one
+    if along >= 3 then
+      count = 1
+    elseif along == 2 then
+      if count == 2 or count == 3 then
+        count = rand.sel(75, 1, 2)
+      else
+        count = rand.sel(50, 2, math.ceil(count / 2))
+      end
+    end
+
     -- ensure first encounter with a boss only uses a single one
     count = math.min(count, 1 + (seen_bosses[mon] or 0))
 
-    seen_bosses[mon] = math.max(seen_bosses[mon] or 0, count)
-
-stderrf("  count %1.2f for '%s'\n", count, mon)
+--  stderrf("  count %1.2f for '%s'\n", count, mon)
 
     local FIGHT =
     {
@@ -604,19 +612,24 @@ stderrf("  count %1.2f for '%s'\n", count, mon)
   end
 
 
+  local function mark_bosses_seen(LEV)
+    each F in LEV.boss_fights do
+      seen_bosses[F.mon] = math.max(seen_bosses[F.mon] or 0, F.count)
+    end
+  end
+
+
   local function decide_boss_fights()
     each LEV in GAME.levels do
       LEV.boss_fights = {}
 
       pick_boss_quotas(LEV)
 
-stderrf("%s:\n", LEV.name)
-      for i = 1, LEV.boss_quotas.tough do create_fight(LEV, "tough") end
-      for i = 1, LEV.boss_quotas.nasty do create_fight(LEV, "nasty") end
-      for i = 1, LEV.boss_quotas.minor do create_fight(LEV, "minor") end
+      for i = 1, LEV.boss_quotas.tough do create_fight(LEV, "tough", i) end
+      for i = 1, LEV.boss_quotas.nasty do create_fight(LEV, "nasty", i) end
+      for i = 1, LEV.boss_quotas.minor do create_fight(LEV, "minor", i) end
 
-      --??  table.sort(LEV.boss_fights,
-      --??      function(A, B) return A.intensity > B.intensity end)
+      mark_bosses_seen(LEV)
     end
   end
 
