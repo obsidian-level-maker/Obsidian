@@ -614,7 +614,7 @@ function Episode_plan_monsters()
                   LEV.boss_quotas.nasty +
                   LEV.boss_quotas.minor
 
-    LEV.boss_quotas.guard = 5 -- math.clamp(1, 5 - total, 4)
+    LEV.boss_quotas.guard = math.clamp(2, 4 - total, 4)
   end
 
 
@@ -640,11 +640,11 @@ function Episode_plan_monsters()
     if count < 1 then count = 1 end
 
     if boss_type == "minor" then
-      count = math.clamp(1, count, 8)
+      count = math.clamp(1, count, 6)
     elseif boss_type == "nasty" then
-      count = math.clamp(1, count, 5)
+      count = math.clamp(1, count, 4)
     else
-      count = math.clamp(1, count, 3)
+      count = math.clamp(1, count, 2)
     end
 
     -- secondary boss fights should be weaker than primary one
@@ -687,20 +687,21 @@ function Episode_plan_monsters()
 
     -- select how many
 
-    local count = 1
+    local count = 3.5 * LEV.monster_level / info.level
 
-    count = 3.5 * LEV.monster_level / info.level
+    -- secondary boss fights should be weaker than primary one
+    count = count / (1.8 ^ (along - 1))
 
     -- bump large monsters down a bit
     if info.r > 32 then count = count / 1.6 end
 
-    count = rand.int(count)
-    count = math.clamp(1, count, 12)
+--stderrf("   raw: %1.2f x %s\n", count, mon)
 
-stderrf("   %1.2f x %s\n", count, mon)
+    count = rand.int(count)
+    count = math.clamp(1, count, 8)
 
     -- ensure first encounter with a boss only uses a single one
-    count = math.min(count, 1 + (seen_bosses[mon] or 0))
+    count = math.min(count, 2 + (seen_bosses[mon] or 0))
 
     local FIGHT =
     {
@@ -727,12 +728,12 @@ stderrf("   %1.2f x %s\n", count, mon)
       pick_boss_quotas(LEV)
 
       if LEV.prebuilt then continue end
---[[
+
+-- stderrf("%s:\n", LEV.name)
+
       for i = 1, LEV.boss_quotas.tough do create_fight(LEV, "tough", i) end
       for i = 1, LEV.boss_quotas.nasty do create_fight(LEV, "nasty", i) end
       for i = 1, LEV.boss_quotas.minor do create_fight(LEV, "minor", i) end
---]]
-stderrf("%s:\n", LEV.name)
 
       for k = 1, LEV.boss_quotas.guard do create_guard(LEV, k) end
     end
