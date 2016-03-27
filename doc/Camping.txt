@@ -29,3 +29,33 @@ doorway.
 - Putting needed supplies where the player can see them but can only get
   them by crossing the room and waking up monsters
 
+
+RDWPA:
+
+Anyway, the usual alternatives:
+
+1) Structure your entire map as a single open or semi-open area in which
+there are no safe spots.  Bear in mind that if you want your map to
+contain a second discrete area, one that isn't campable.... well, you
+know where this is going...
+
+2) Restrict monster movement so they can't follow the player to the
+camping spot. Imagine a room with turreted mancs or something.
+
+3) Control the player's resources in such a way that they are obligated
+to move forward into monster-occupied territory to make any sort of
+progress and unable to reliably dispose of monsters from safe spots
+without exposing themselves to harm.  Imagine ammo stashes generally
+being in the midst of monsters.
+
+4) Boss turrets with line-of-sight of campable areas. (This works in
+tandem with #3)
+
+5) Use environmental hazards -- damaging floors, crushers, etc. -- to
+make retreat costly or risky, or alternately, to mandate aggressive play
+(e.g. having to fight on a damaging surface with a limited number of
+radsuits at your disposal).
+
+6) Make camping inherently draining on resources. Viles, for example,
+resurrecting stuff unless you play aggressively and get rid of them.
+
