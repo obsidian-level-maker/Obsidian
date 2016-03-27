@@ -689,6 +689,19 @@ function Episode_plan_monsters()
 
     local count = 1
 
+    count = 3.5 * LEV.monster_level / info.level
+
+    -- bump large monsters down a bit
+    if info.r > 32 then count = count / 1.6 end
+
+    count = rand.int(count)
+    count = math.clamp(1, count, 12)
+
+stderrf("   %1.2f x %s\n", count, mon)
+
+    -- ensure first encounter with a boss only uses a single one
+    count = math.min(count, 1 + (seen_bosses[mon] or 0))
+
     local FIGHT =
     {
       mon = mon
@@ -712,11 +725,15 @@ function Episode_plan_monsters()
       LEV.seen_guards = {}
 
       pick_boss_quotas(LEV)
+
+      if LEV.prebuilt then continue end
 --[[
       for i = 1, LEV.boss_quotas.tough do create_fight(LEV, "tough", i) end
       for i = 1, LEV.boss_quotas.nasty do create_fight(LEV, "nasty", i) end
       for i = 1, LEV.boss_quotas.minor do create_fight(LEV, "minor", i) end
 --]]
+stderrf("%s:\n", LEV.name)
+
       for k = 1, LEV.boss_quotas.guard do create_guard(LEV, k) end
     end
   end
