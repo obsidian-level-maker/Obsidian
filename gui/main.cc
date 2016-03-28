@@ -34,6 +34,7 @@
 #include "m_addons.h"
 #include "m_cookie.h"
 #include "m_lua.h"
+#include "m_trans.h"
 
 #include "csg_main.h"
 #include "g_nukem.h"
@@ -713,6 +714,8 @@ int main(int argc, char **argv)
 	LogPrintf("install_dir: %s\n",   install_dir);
 	LogPrintf("config_file: %s\n\n", config_file);
 
+
+	Trans_Init();
 
 	if (! batch_mode)
 	{

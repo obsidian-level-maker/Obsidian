@@ -44,8 +44,10 @@ typedef struct
 static std::vector<available_language_t> available_langs;
 
 
-void Trans_ParseLangLine(const char *line)
+void Trans_ParseLangLine(char *line)
 {
+	char *pos;
+
 	// skip any BOM (may occur at very start of file)
 	if ((u8_t)(line[0]) == 0xEF &&
 		(u8_t)(line[1]) == 0xBB &&
@@ -54,7 +56,39 @@ void Trans_ParseLangLine(const char *line)
 		line += 3;
 	}
 
-	// TODO
+	// remove CR/LF line ending
+	pos = (char *)strchr(line, '\r');
+	if (pos) pos[0] = 0;
+
+	pos = (char *)strchr(line, '\n');
+	if (pos) pos[0] = 0;
+
+	// ignore blank lines and comments
+	if (line[0] == 0 || line[0] == '#')
+		return;
+
+	// find separator
+	pos = (char *)strchr(line, '=');
+
+	if (! pos)
+		return;  // uh oh
+
+	*pos++ = 0;
+
+	if (strlen(line) < 2 || strlen(pos) < 2)
+		return;	 // uh oh
+
+	// Ok, add the language
+
+	available_language_t lang;
+
+	lang.langcode = StringDup(line);
+	lang.fullname = StringDup(pos);
+
+//DEBUG
+//  LogPrintf("  '%s' --> '%s'\n", lang.langcode, lang.fullname);
+
+	available_langs.push_back(lang);
 }
 
 
@@ -62,7 +96,7 @@ void Trans_Init()
 {
 	// TODO : stuff to create a Lua state to store messages in
 
-	// read the list of languages
+	/* read the list of languages */
 
 	char *path = StringPrintf("%s/language/LANGS.txt", install_dir);
 
@@ -74,9 +108,15 @@ void Trans_Init()
 		return;
 	}
 
-	LogPrintf("Loading the language/LANGS.txt file...\n");
+	LogPrintf("Loading language list: %s\n", path);
 
-	// FIXME
+	// simple line-by-line parser
+	char buffer[MSG_BUF_LEN];
+
+	while (fgets(buffer, MSG_BUF_LEN-2, fp))
+	{
+		Trans_ParseLangLine(buffer);
+	}
 
 	LogPrintf("DONE.\n\n");
 
