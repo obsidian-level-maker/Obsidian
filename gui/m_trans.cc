@@ -21,6 +21,8 @@
 #include "headers.h"
 #include "hdr_lua.h"
 
+#include "lib_util.h"
+
 #include "main.h"
 #include "m_trans.h"
 
@@ -31,36 +33,84 @@
 //----------------------------------------------------------------------
 
 
+typedef struct
+{
+	const char *langcode;
+	const char *fullname;
+
+} available_language_t;
+
+
+static std::vector<available_language_t> available_langs;
+
+
 void Trans_ParseLangLine(const char *line)
 {
+	// skip any BOM (may occur at very start of file)
+	if ((u8_t)(line[0]) == 0xEF &&
+		(u8_t)(line[1]) == 0xBB &&
+		(u8_t)(line[2]) == 0xBF)
+	{
+		line += 3;
+	}
+
 	// TODO
 }
 
 
 void Trans_Init()
 {
-	// TODO : read the language/LANGS.txt file
-
 	// TODO : stuff to create a Lua state to store messages in
+
+	// read the list of languages
+
+	char *path = StringPrintf("%s/language/LANGS.txt", install_dir);
+
+	FILE *fp = fopen(path, "rb");
+
+	if (! fp)
+	{
+		LogPrintf("WARNING: missing language/LANGS.txt file\n");
+		return;
+	}
+
+	LogPrintf("Loading the language/LANGS.txt file...\n");
+
+	// FIXME
+
+	LogPrintf("DONE.\n\n");
+
+	fclose(fp);
 }
 
 
-void Trans_SetLanguageByCode(const char *langcode)
+void Trans_SetLanguage(const char *langcode)
 {
 	// TODO
 }
 
 
-const char * Trans_GetLanguage(int idx)
+const char * Trans_GetAvailCode(int idx)
 {
-	// end of list
-	return NULL;
+	SYS_ASSERT(idx >= 0);
+
+	// end of list?
+	if (idx >= (int)available_langs.size())
+		return NULL;
+
+	return available_langs[idx].langcode;
 }
 
 
-void Trans_SetLanguage(int idx)
+const char * Trans_GetAvailLanguage(int idx)
 {
-	// TODO
+	SYS_ASSERT(idx >= 0);
+
+	// end of list?
+	if (idx >= (int)available_langs.size())
+		return NULL;
+
+	return available_langs[idx].fullname;
 }
 
 
