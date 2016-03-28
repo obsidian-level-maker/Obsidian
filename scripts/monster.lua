@@ -152,7 +152,89 @@ function Monster_pacing()
   --   +  try to prevent two rooms in a row with same pressure
   --
 
-  
+  local room_list
+
+  local amounts = { low=0, medium=0, high=0 }
+
+
+  local function collect_rooms()
+    room_list = {}
+
+    each R in LEVEL.rooms do
+      if R.kind == "hallway" or R.is_secret then
+        R.pressure = "low"
+        continue
+      end
+
+      table.insert(room_list, R)
+    end
+  end
+
+
+  local function set_room(R, what)
+    if R.pressure then
+      amounts[R.pressure] = amounts[R.pressure] - 1
+    end
+
+    R.pressure = what
+
+    amounts[what] = amounts[what] + 1
+  end
+
+
+  local function check_connections()
+    each C in LEVEL.conns do
+      local R1 = C.R1
+      local R2 = C.R2
+
+      if R1.lev_along > R2.lev_along then
+        R1, R2 = R2, R1
+      end
+
+      if C.kind == "teleporter" then
+        R2.is_teleport_dest = true
+      end
+
+      if R1.zone != R2.zone then
+        R2.is_zone_entry = true
+      end
+    end
+  end
+
+
+  local function handle_known_room(R)
+    if R == LEVEL.exit_room then
+      set_room(R, "high")
+      return
+    end
+
+    if R.is_start then
+      set_room(R, "low")
+      return
+    end
+
+    -- TODO
+  end
+
+
+  local function find_isolated_rooms()
+    rand.shuffle(room_list)
+
+    -- TODO
+  end
+
+
+  local function handle_the_rest()
+    rand.shuffle(room_list)
+
+    each R in room_list do
+      if not R.pressure then
+        R.pressure = "medium"
+      end
+    end
+  end
+
+
   local function dump_pacing()
     gui.debugf("\nPacing:\n");
 
@@ -160,7 +242,6 @@ function Monster_pacing()
       gui.debugf("%s:\n", Z.name)
 
       each R in Z.rooms do
-if not R.pressure then R.pressure = "low" end
         assert(R.pressure)
 
         gui.debugf("   %s = %-6s : %s\n", R.name, R.pressure,
@@ -171,6 +252,18 @@ if not R.pressure then R.pressure = "low" end
 
   
   ---| Monster_pacing |---
+
+  collect_rooms()
+
+  check_connections()
+
+  each R in room_list do
+    handle_known_room(R)
+  end
+
+  find_isolated_rooms()
+
+  handle_the_rest()
 
   dump_pacing()
 end
