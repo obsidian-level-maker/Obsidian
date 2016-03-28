@@ -3,12 +3,13 @@ WORK IN PROGRESS
 ================
 
 
-Monster planning:
+MONSTERS:
 
-+  end-of-level bosses
++  actually use the planned boss fights
 
--  guarding fights
-
+   [ if a Boss cannot fit, choose a replacement
+     (unless "tough" and have placed one already) ]
+     
 
 
 +  joiners need walls on sides in INDOOR ROOMS too
@@ -63,6 +64,20 @@ CHUNK SYSTEM:
 
 
 MONSTERS:
+
+++  better system of "pacing" or "pressure" :
+
+    -  EXIT room is always "high" (but include bosses in that)
+    -  START room is always "low"
+    -  hallways are always "low"
+    -  room AFTER start room should usually be "medium", never "low"
+
+    -  goal rooms are "medium" or "high" (but include bosses in that)
+    -  rooms that begin a new zone are usually "low", never "high"
+    -  rooms entered for first time via teleporter should not be "high"
+
+    +  generally want say 30% of rooms to high, 30% low, 40% medium.
+
 
 +  instead of "visit all vis=1 to produce vis=2", limit the vis=1
    spots we visit by distance from entry coord
