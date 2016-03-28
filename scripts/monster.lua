@@ -189,8 +189,6 @@ function Monster_pacing()
 
 
   local function is_isolated(R)
-    if R.pressure then return end
-
     if R.is_teleport_dest then return false end
     if R.is_zone_entry    then return false end
     if R.is_after_start   then return false end
@@ -209,13 +207,19 @@ function Monster_pacing()
 
 
   local function handle_isolated_room(R)
-    if amounts.high < high_quota then
-      set_room(R, "high")
-    elseif amounts.low < low_quota then
-      set_room(R, "low")
-    else
-      set_room(R, "medium")
+    for pass = 1, 4 do
+      if amounts.high < high_quota and rand.odds(50) then
+        set_room(R, "high")
+        return
+      end
+
+      if amounts.low < low_quota and rand.odds(50) then
+        set_room(R, "low")
+        return
+      end
     end
+
+    set_room(R, "medium")
   end
 
 
@@ -223,19 +227,49 @@ function Monster_pacing()
     rand.shuffle(room_list)
 
     each R in room_list do
-      if is_isolated(R) then
+      if not R.pressure and is_isolated(R) then
         handle_isolated_room(R)
       end
     end
   end
 
 
-  local function handle_the_rest()
+  local function handle_remaining_room(R)
+    local tab = { low=100, medium=100, high=100 }
+
+    -- avoid being same as a direct neighbor
+    each C in R.conns do
+      if C.lock then continue end
+      if C.is_secret then continue end
+
+      local N = C:other_room(R)
+
+      if N.pressure then
+        tab[N.pressure] = tab[N.pressure] / 10
+      end
+    end
+
+    -- enforce the quotas
+    if amounts.low  >=  low_quota then tab["low"]  = nil end
+    if amounts.high >= high_quota then tab["high"] = nil end
+
+    -- enforce other logic
+    if R.is_after_start   then tab["low"]  = nil end
+    if R.is_teleport_dest then tab["high"] = nil end
+    if R.is_zone_entry    then tab["high"] = nil end
+
+    local what = rand.key_by_probs(tab)
+
+    set_room(R, what)
+  end
+
+
+  local function visit_the_rest()
     rand.shuffle(room_list)
 
     each R in room_list do
       if not R.pressure then
-        R.pressure = "UNSET"
+        handle_remaining_room(R)
       end
     end
   end
@@ -243,6 +277,9 @@ function Monster_pacing()
 
   local function dump_pacing()
     gui.debugf("\nPacing:\n");
+
+    gui.debugf("  quota : low=%d high=%d\n", low_quota, high_quota)
+    gui.debugf("  totals: low=%d high=%d medium=%d\n", amounts.low, amounts.high, amounts.medium)
 
     each Z in LEVEL.zones do
       gui.debugf("%s:\n", Z.name)
@@ -272,7 +309,7 @@ function Monster_pacing()
 
   find_isolated_rooms()
 
-  handle_the_rest()
+  visit_the_rest()
 
   dump_pacing()
 end
