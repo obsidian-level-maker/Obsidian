@@ -94,16 +94,19 @@ function Monster_pacing()
   -- General rules:
   --   +  START room is always "low"
   --   +  EXIT room is always "high" (but take bosses into account)
-  --   +  room AFTER start room is usualy "medium", never "low"
+  --   +  GOAL rooms are "medium" or "high" (but take bosses into account)
   --   +  hallways are always "low"
   --
-  --   +  GOAL rooms are "medium" or "high" (but take bosses into account)
+  --   +  room AFTER start room is usualy "medium", never "low"
   --   +  rooms that begin a new zone are never "high"
   --   +  rooms entered for first time via teleporter are never "high"
-  --   +  try to prevent two rooms in a row with same pressure
+  --   +  prevent three rooms in a row with same pressure
   --
 
   local room_list
+
+  local  low_quota
+  local high_quota
 
   local amounts = { low=0, medium=0, high=0 }
 
@@ -182,15 +185,48 @@ function Monster_pacing()
       set_room(R, rand.sel(high_prob, "high", "medium"))
       return
     end
+  end
 
-    -- TODO
+
+  local function is_isolated(R)
+    if R.pressure then return end
+
+    if R.is_teleport_dest then return false end
+    if R.is_zone_entry    then return false end
+    if R.is_after_start   then return false end
+
+    each C in R.conns do
+      if C.lock then continue end
+      if C.is_secret then continue end
+
+      local N = C:other_room(R)
+
+      if N.pressure then return false end
+    end
+
+    return true
+  end
+
+
+  local function handle_isolated_room(R)
+    if amounts.high < high_quota then
+      set_room(R, "high")
+    elseif amounts.low < low_quota then
+      set_room(R, "low")
+    else
+      set_room(R, "medium")
+    end
   end
 
 
   local function find_isolated_rooms()
     rand.shuffle(room_list)
 
-    -- TODO
+    each R in room_list do
+      if is_isolated(R) then
+        handle_isolated_room(R)
+      end
+    end
   end
 
 
@@ -224,6 +260,9 @@ function Monster_pacing()
   ---| Monster_pacing |---
 
   collect_rooms()
+
+   low_quota = rand.int(#room_list * 0.3)
+  high_quota = rand.int(#room_list * 0.3)
 
   check_connections()
 
