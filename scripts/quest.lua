@@ -1112,12 +1112,14 @@ function Quest_calc_exit_dists()
     local exit_R
 
     each C in LEVEL.conns do
-      if C.R1 == Q.entry then
-        exit_R = C.R2 ; break;
+      if C.R1 == Q.entry and C.R2.quest != Q then
+        exit_R = C.R2
+        break;
       end
 
-      if C.R2 == Q.entry then
-        exit_R = C.R1 ; break;
+      if C.R2 == Q.entry and C.R1.quest != Q then
+        exit_R = C.R1
+        break;
       end
     end
 
