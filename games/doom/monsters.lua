@@ -222,6 +222,7 @@ DOOM.MONSTERS =
     level = 9
     boss_type = "tough"
     boss_prob = 15
+    boss_limit = 1 -- because they infight
     prob = 1.0
     crazy_prob = 10
     health = 3000

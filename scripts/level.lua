@@ -660,6 +660,11 @@ function Episode_plan_monsters()
       end
     end
 
+    -- this is mainly to prevent Masterminds infighting
+    if info.boss_limit then
+      count = math.min(count, info.boss_limit)
+    end
+
     -- ensure first encounter with a boss only uses a single one
     count = math.min(count, 1 + (seen_bosses[mon] or 0))
 
