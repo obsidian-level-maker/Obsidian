@@ -2353,7 +2353,7 @@ gui.debugf("  trying aux '%s' --> %s\n", aux_name, tostring(aux))
 -- stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   -- FIXME
-  if pass == "sprout" and #LEVEL.rooms >= 8 then return end
+--  if pass == "sprout" and #LEVEL.rooms >= 8 then return end
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)

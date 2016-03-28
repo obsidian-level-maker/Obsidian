@@ -88,16 +88,17 @@ end
 function Monster_pacing()
   --
   -- Give each room a "pressure" value (low / medium / high) which
-  -- controls the quantity of monsters in that room, including in
-  -- cages and the number of traps to use.
+  -- controls the quantity of monsters in that room, including mons
+  -- in cages and the number of traps to use.
   --
   -- General rules:
   --   +  START room is always "low"
   --   +  EXIT room is always "high" (but take bosses into account)
   --   +  room AFTER start room is usualy "medium", never "low"
   --   +  hallways are always "low"
+  --
   --   +  GOAL rooms are "medium" or "high" (but take bosses into account)
-  --   +  rooms that begin a new zone is never "high"
+  --   +  rooms that begin a new zone are never "high"
   --   +  rooms entered for first time via teleporter are never "high"
   --   +  try to prevent two rooms in a row with same pressure
   --
@@ -146,7 +147,13 @@ function Monster_pacing()
       end
 
       if R1.zone != R2.zone then
+        -- TODO : skip a hallway
         R2.is_zone_entry = true
+      end
+
+      if R1.is_start then
+        -- TODO : skip a hallway
+        R2.is_after_start = true
       end
     end
   end
@@ -160,6 +167,19 @@ function Monster_pacing()
 
     if R.is_start then
       set_room(R, "low")
+      return
+    end
+
+    if R.goals[1] then
+      local high_prob = 88
+
+      if R.is_teleport_dest then
+        high_prob = 22
+      elseif R.zone == LEVEL.exit_room.zone then
+        high_prob = 44
+      end
+
+      set_room(R, rand.sel(high_prob, "high", "medium"))
       return
     end
 
@@ -179,7 +199,7 @@ function Monster_pacing()
 
     each R in room_list do
       if not R.pressure then
-        R.pressure = "medium"
+        R.pressure = "UNSET"
       end
     end
   end
