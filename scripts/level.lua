@@ -115,6 +115,7 @@
 --[[
     mon    -- name of monster
     count  -- number of them to use
+    boss_type -- keyword: guard / minor / nasty / tough
 --]]
 
 
@@ -668,6 +669,7 @@ function Episode_plan_monsters()
     {
       mon = mon
       count = count
+      boss_type = boss_type
     }
 
     table.insert(LEV.boss_fights, FIGHT)
@@ -708,6 +710,7 @@ function Episode_plan_monsters()
     {
       mon = mon
       count = count
+      boss_type = "guard"
     }
 
     table.insert(LEV.boss_fights, FIGHT)
