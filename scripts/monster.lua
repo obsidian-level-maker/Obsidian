@@ -298,8 +298,8 @@ function Monster_pacing()
 
   collect_rooms()
 
-   low_quota = rand.int(#room_list * 0.3)
-  high_quota = rand.int(#room_list * 0.3)
+   low_quota = rand.int(#room_list * rand.range(0.21, 0.35))
+  high_quota = rand.int(#room_list * rand.range(0.27, 0.41))
 
   check_connections()
 
