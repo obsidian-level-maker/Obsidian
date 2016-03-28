@@ -135,6 +135,26 @@ end
 
 
 
+function Monster_pacing()
+  --
+  -- Give each room a "pressure" value (low / medium / high) which
+  -- controls the quantity of monsters in that room, including in
+  -- cages and the number of traps to use.
+  --
+  -- General rules:
+  --   +  START room is always "low"
+  --   +  EXIT room is always "high" (but take bosses into account)
+  --   +  room AFTER start room is usualy "medium", never "low"
+  --   +  hallways are always "low"
+  --   +  GOAL rooms are "medium" or "high" (but take bosses into account)
+  --   +  rooms that begin a new zone is never "high"
+  --   +  rooms entered for first time via teleporter are never "high"
+  --
+
+end
+
+
+
 function Monster_set_watchmen()
   --
   -- Select guard monsters for each zone.

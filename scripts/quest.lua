@@ -2512,5 +2512,7 @@ function Quest_make_quests()
 
   Quest_choose_themes()
   Quest_select_textures()
+
+  Monster_pacing()
 end
 
