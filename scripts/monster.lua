@@ -149,8 +149,30 @@ function Monster_pacing()
   --   +  GOAL rooms are "medium" or "high" (but take bosses into account)
   --   +  rooms that begin a new zone is never "high"
   --   +  rooms entered for first time via teleporter are never "high"
+  --   +  try to prevent two rooms in a row with same pressure
   --
 
+  
+  local function dump_pacing()
+    gui.debugf("\nPacing:\n");
+
+    each Z in LEVEL.zones do
+      gui.debugf("%s:\n", Z.name)
+
+      each R in Z.rooms do
+if not R.pressure then R.pressure = "low" end
+        assert(R.pressure)
+
+        gui.debugf("   %s = %-6s : %s\n", R.name, R.pressure,
+                   (R.goals[1] and R.goals[1].kind) or "")
+      end
+    end
+  end
+
+  
+  ---| Monster_pacing |---
+
+  dump_pacing()
 end
 
 
