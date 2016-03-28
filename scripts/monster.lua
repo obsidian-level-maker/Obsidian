@@ -19,56 +19,6 @@
 ------------------------------------------------------------------------
 
 
---[[
-
-MONSTER SELECTION
-=================
-
-Main usages:
-(a) free-range
-(b) guarding something [keys]
-(c) cages
-(d) traps (triggered closets, teleport in)
-(e) surprises (behind entry door, closets on back path)
-
-
-MONSTERS:
-
-(1) have the room palette
-
-(2) simplify selection of room palette:
-    -  use info.prob
-    -  basic criterion is: harder monsters occur later
-    -  want harder monsters in KEY/EXIT rooms
-
-(3) give each mon a 'density' value:
-    -  use info.density (NOT info.prob)
-    -  adjust with time/along/level/purpose
-    -  when all monsters have a density, normalise by dividing by total
-
-(4) give each room a TOTAL count (adjust for along, purpose)
-    -  want[mon] = total * density[mon]
-
-
-IDEAS:
-
-Free range monsters make up the bulk of the level, and are
-subject to the palette.  The palette applies to a fair size
-of a map, on "small" setting --> 1 palette only, upto 2 on
-"regular", between 2-3 on "large" maps.
-
-Trap and Surprise monsters can use any monster (actually
-better when different from palette and different from
-previous traps/surprises).
-
-Cages and Guarding monsters should have a smaller and
-longer-term palette, changing about 4 times less often
-than the free-range palette.  MORE PRECISELY: palette
-evolves about same rate IN TERMS OF # MONSTERS ADDED.
-
---------------------------------------------------------------]]
-
-
 function Monster_init()
   if not EPISODE.seen_guards then
     EPISODE.seen_guards = {}
