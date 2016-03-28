@@ -1088,6 +1088,11 @@ function Quest_group_into_zones()
   dump_zones()
 
   Area_spread_zones()
+
+  each Z in LEVEL.zones do
+    table.sort(Z.rooms, function(A,B)
+        return A.lev_along < B.lev_along end)
+  end
 end
 
 
