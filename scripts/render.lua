@@ -1424,6 +1424,9 @@ function Render_chunk(chunk)
   --         [ most of the checks below assume kind=="closet" ]
 
 
+  -- FIXME : "SECRET_EXIT"
+
+
   if chunk.kind == "stair" then
     do_stairs()
 
@@ -1433,7 +1436,7 @@ function Render_chunk(chunk)
   elseif what == "START" then
     do_start()
 
-  elseif what == "LEVEL_EXIT" then
+  elseif what == "EXIT" then
     do_exit()
 
   elseif what == "TELEPORTER" then
@@ -2096,7 +2099,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     if spot.content_kind == "START" then
       content_start(spot)
 
-    elseif spot.content_kind == "LEVEL_EXIT" then
+    elseif spot.content_kind == "EXIT" then
       content_exit(spot)
 
     elseif spot.content_kind == "SECRET_EXIT" then

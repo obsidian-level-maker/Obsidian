@@ -134,7 +134,7 @@
                      -- "whole" (provides both floor, ceiling, walls)
 
     content_kind : keyword  -- is NIL when unused / free
-                            -- "START", "LEVEL_EXIT", "TELEPORTER"
+                            -- "START", "EXIT", "TELEPORTER"
                             -- "KEY", "WEAPON", "ITEM", "SWITCH"
                             -- "CAGE", "TRAP"
 

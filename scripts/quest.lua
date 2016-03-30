@@ -85,7 +85,7 @@
 
 --class GOAL
 --[[
-    kind : keyword  --  "KEY" or "SWITCH" or "LEVEL_EXIT"
+    kind : keyword  --  "KEY" or "SWITCH" or "EXIT" or "SECRET_EXIT"
 
     item : keyword  -- name of key or switch
 
@@ -252,7 +252,7 @@ function Quest_create_initial_quest()
     LEVEL.exit_room = R
 
     -- create the goal for the entire map
-    local GOAL = Goal_new("LEVEL_EXIT")
+    local GOAL = Goal_new("EXIT")
 
     GOAL.room = R
 
