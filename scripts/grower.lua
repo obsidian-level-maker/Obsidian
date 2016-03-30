@@ -1318,7 +1318,7 @@ function Grower_grammatical_room(R, pass)
 --FIXME
 --if pass != "root" then return nil end
 
-    local sym = {}
+    local sym = Symmetry_new(info.kind or "mirror")
 
     sym.x, sym.y = transform_coord(T, info.x, info.y)
 
@@ -1333,7 +1333,6 @@ function Grower_grammatical_room(R, pass)
       sym.dir = transform_dir(T, info.dir)
     end
 
-    sym.kind = info.kind or "mirror"
     sym.wide = (info.w == 2)
 
     -- wide mode requires X and Y coord to be the lowest of the pair
@@ -1524,32 +1523,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
-  local function on_axis_of_symmetry(sx, sy)
-    -- no axis for 180-degree rotational symmetry
-    if R.symmetry.kind == "rotate" then return false end
-
-    -- on the "wide" version, axis is the line between two seeds
-    if R.symmetry.wide then return false end
-
-    if R.symmetry.dir == 2 or R.symmetry.dir == 8 then
-      return sx == R.symmetry.x
-    end
-
-    if R.symmetry.dir == 4 or R.symmetry.dir == 6 then
-      return sy == R.symmetry.y
-    end
-
-    local dx = R.symmetry.x - sx
-    local dy = R.symmetry.y - sy
-
-    if R.symmetry.dir == 3 or R.symmetry.dir == 7 then
-      dx = -dx
-    end
-
-    return dx == dy
-  end
-
-
   local function find_chunk(sx, sy)
     if new_chunks then
       each K in new_chunks do
@@ -1638,7 +1611,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     if T.is_first and E2.assignment then
       if E2.kind == "new_room" or
          E2.kind == "stair" or
-         not on_axis_of_symmetry(S.sx, S.sy)
+         not R.symmetry:on_axis(S.sx, S.sy)
       then
         S.sym_token = sym_token
       end
@@ -1837,7 +1810,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
 
     -- in symmetrical rooms, forbid diagonals on axis of symmetry
-    if (T.is_first or T.is_second) and on_axis_of_symmetry(sx, sy) then
+    if (T.is_first or T.is_second) and R.symmetry:on_axis(sx, sy) then
       return false
     end
 

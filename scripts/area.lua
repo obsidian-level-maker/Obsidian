@@ -76,6 +76,24 @@
 --]]
 
 
+--class SYMMETRY
+--[[
+    -- contains info about the symmetry in a room
+
+    kind    -- "mirror" or "rotate"
+
+    x, y    -- seed coordinate for focal point
+
+    x2, y2  -- for "rotate" kind, defines the central bbox (with x+y)
+
+    dir     -- for "mirror" kind, direction of axis of symmetry
+
+    transform : function   -- find mirrored peer of a seed
+    conv_dir  : function   -- convert 'dir' for the other side
+    on_axis   : function   -- check if a seed coord is on axis of symmetry
+--]]
+
+
 --class JUNCTION
 --[[
     --
@@ -277,6 +295,88 @@ function Chunk_new(kind, sx1,sy1, sx2,sy2)
   CHUNK.my = math.mid(S1.y1, S2.y2)
 
   return CHUNK
+end
+
+
+------------------------------------------------------------------------
+
+
+function Symmetry_on_axis(sym, x, y)
+  -- no axis for 180-degree rotational symmetry
+  if sym.kind == "rotate" then return false end
+
+  -- on the "wide" version, axis is the line between two seeds
+  if sym.wide then return false end
+
+  if sym.dir == 2 or sym.dir == 8 then
+    return x == sym.x
+  end
+
+  if sym.dir == 4 or sym.dir == 6 then
+    return y == sym.y
+  end
+
+  local dx = sym.x - x
+  local dy = sym.y - y
+
+  if sym.dir == 3 or sym.dir == 7 then
+    dx = -dx
+  end
+
+  return dx == dy
+end
+
+
+function Symmetry_transform(sym, S)
+  if sym.kind == "rotate" then
+    x = sym.x * 2 + (sym.x2 - sym.x) - x
+    y = sym.y * 2 + (sym.y2 - sym.y) - y
+  
+    return 
+  end
+
+  if sym.dir == 2 or sym.dir == 8 then
+    x = sym.x * 2 + sel(sym.wide, 1, 0) - x
+  end
+
+  if sym.dir == 4 or sym.dir == 6 then
+    y = sym.y * 2 + sel(sym.wide, 1, 0) - y
+  end
+
+  if sym.dir == 1 or sym.dir == 9 then
+    x = sym.x + (y - sym.y)
+    y = sym.y + (x - sym.x)
+  end
+
+  if sym.dir == 3 or sym.dir == 7 then
+    x = sym.x - (y - sym.y)
+    y = sym.y - (x - sym.x)
+  end
+
+  error("Symmetry_transform: weird dir")
+end
+
+
+function Symmetry_conv_dir(sym, dir)
+  if sym.kind == "rotate" then
+    return 10 - dir
+  end
+
+  -- FIXME
+end
+
+
+function Symmetry_new(kind)
+  local SYM =
+  {
+    kind = kind
+
+    transform = Symmetry_transform
+    conv_dir  = Symmetry_conv_dir
+    on_axis   = Symmetry_on_axis
+  }
+
+  return SYM
 end
 
 
