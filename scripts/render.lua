@@ -2211,7 +2211,11 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
         build_important(chunk)
       else
         -- temporary crap!!!
-        build_a_crate(chunk)
+        if chunk.is_straddler then
+          build_a_pool(chunk)
+        else
+          build_a_crate(chunk)
+        end
       end
     end
 
