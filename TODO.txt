@@ -67,11 +67,15 @@ ______________________________________________________________________
 
 -  wall switches
 
+-  a "raising stairs" JOINER, need to find the switch
+
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet
 
 -  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
+
+-  closet that looks like a wall switch but opens a monsters closet
 
 ??  fix porches causing BIG height diffs
 
@@ -84,9 +88,126 @@ REQUEST:  mix it up option for the quiet start setting.
 IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
 
--  CTF : start with a tile designed for CTF mode, placed in middle of map,
-         and when adding a room/hall then also add its sister room
-         [ if sister fails, kill the brother ]
+
+-  a "Z" shape for joiners and stairs, which connects two areas
+   diagonally.  Directions specified as per "L" shape, i.e.
+   from_dir will be perpedicular to dest_dir.
+
+   For example:
+
+       ...bbb.
+       ..aZZb.
+       ..aZZb.
+       ..aaa..
+
+
+
+SHAPE GRAMMARS
+--------------
+
++  allow TWO stairs into a new area
+
++  '9', '8', '7' matches anything but "1", "2", "3"
+
+   Q/ does "anything" included empty space / other rooms?
+   A/ yes it would
+
+-  in SPROUT pass of symmetrical room : ability to make non-mirrored
+   [ especially when we are in dire need to grow the map ]
+
+idea:  CYCLE pass (after SPROUT) for multiple paths
+       [ probably as 'H' hallways, allow these to grow, prune them
+         when they fail to connect ]
+
+IDEA: rules can specify a "prefab_flavor" for any rects, and when
+      finding a matching prefab require "flavor" field to match.
+
+
+Auxiliary Ideas
+---------------
+
+-  support count adjustments
+      e.g. style_adjust = { "hallways", 0.4, 1.0, 4.0 }
+
+-  min_count, max_count
+
+-  support 'count_tab' with probabilities _OR_ a 'count_list' with a
+   list of a values (one chosen at random)
+
+IDEA: have a flag which means auxiliaries must match something in their parent
+      [ implement by marking parent seeds ]
+      [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
+
+idea: k/m/n elements which do not represent anything, but allow
+      rules to create something, then auxiliaries or future rules
+      can transform that shape back into normal geometry
+      [ and instead of "count", some rulesets may say "until X is gone" ]
+
+-  a DECOR rule begins a liquid area, and an auxiliary ruleset
+   is used to spread that area, staying close to existing geometry
+   in a room.
+
+-  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
+   rest of hallway, and another auxiliary ruleset sprouts hallway
+   into new rooms, and a final auxiliary rulset prunes unused branches
+
+
+
+Chunks
+------
+
++  check each side of a chunk, see if it is "alive" or "dead"
+   (i.e. dead = a solid wall or map border).
+
+   the alive sides equate to a certain shape (U, I, L, T, P)
+   and can match "floor" prefabs for that shape
+   (or simply compute size for a "point" prefab)
+
+   e.g. an "L" shape will allow a bunch of crates close to one corner
+
+   e.g. a "P" shape requires a prefab with space all around it
+
+
+idea: if have a KEY in a closet, then use a barred-key-closet
+   and add a switch closet which opens it.
+
+idea: a generic lowering bars prefab to go in front of closets or
+      joiners or exit doors
+
+
+
+Monster Visibility
+------------------
+
++  instead of "visit all vis=1 to produce vis=2", limit the vis=1
+   spots we visit by distance from entry coord
+
++  create 'entry_spots' for all rooms
+   [ NOTE : depends on SPOT system above to be in place ]
+
+   -  start closets
+   -  start pedestals
+   -  teleporters
+   -  direct connections (one for each seed)
+   -  joiner connections
+
++  debug Monster_visibility()
+   -  use brushes to show vis=0, vis=1 and vis=2 spots
+
++  in START rooms, allow monsters in vis==2 spots
+   [ or vis==1 when far enough from entry point ]
+
+
+
+CTF Maps
+--------
+
++  spawn a single root rule at middle of map with "rotate" symmetry,
+   and then grow all other rooms with a single sequence of grammar
+   passes (interlieving SPROUT, GROW and DECORATE as needed).
+
+   For this mode, allow '1', '2', (etc) in rules to match ANY room
+   but require ALL subsequent room-y elements to match that same room
 
 
 
@@ -119,6 +240,8 @@ A/ yes
 
 -  treat hallways as separate rooms
 
+-  allow a hallway rule to sprout TWO new rooms
+
 -  hallway "groups", as per V5
 
 
@@ -131,14 +254,6 @@ Texturing
 +  texture choice for outdoor floors
 
 +  hallways
-
-
-
-Teleporters
------------
-
-+  grow two/three/four hubs simultaneously and then
-   connect them via teleporters
 
 
 

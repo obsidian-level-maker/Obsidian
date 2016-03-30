@@ -3,13 +3,11 @@ WORK IN PROGRESS
 ================
 
 
-MONSTERS:
+>>>  stairs/joiners/closets : peer up areas, use same ceiling info
 
-+  actually use the planned boss fights
 
-   [ if a Boss cannot fit, choose a replacement
-     (unless "tough" and have placed one already) ]
-     
++  review "svolume" and "innerpoint" usage
+   e.g. I think "walk_svol" would be a more useful metric
 
 
 +  joiners need walls on sides in INDOOR ROOMS too
@@ -19,86 +17,18 @@ MONSTERS:
           then handle each side SEPARATELY
 
 
--  a "Z" shape for joiners and stairs, which connects two areas
-   diagonally.  Directions specified as per "L" shape, i.e.
-   from_dir will be perpedicular to dest_dir.
-   
-   For example:
-
-       ...bbb.
-       ..aZZb.
-       ..aZZb.
-       ..aaa..
-
-
-CHUNK SYSTEM:
-
-+  do we need to distinguish "open" chunks (which will build walls
-   normally in them) and "closed' chunks (Which never contain walls) ?
-
-   ---> NO    [ "whole" chunks never contain walls ]
-
--  can also use these "rects" for floor prefabs, ceiling prefabs,
-   free-standing prefabs (in middle), wall-extended prefabs,
-   corner-extended prefabs
-
--  probably use these chunks for wall-switches too
-   [ chunk itself is space for player to reach the wall ]
-
--  check each side of these rects, see if side is "dead space"
-   (i.e. a solid wall or map border).
-
-   this will equate to a certain shape (U, I, L, T, P)
-   and can match prefabs for that shape
-
-   e.g. an "L" shape will allow a bunch of crates close to one corner
-
-   e.g. a "P" shape requires a prefab with space all around it
-
-   WE MUST CHECK for staddling stuff..... oh crap
-
-   ---->  means that "freestanding" prefabs must define a true size
-          [ 8 units for walk-over stuff]
-          and we MUST check that the size fits in the spot
-
-
 
 MONSTERS:
 
-++  better system of "pacing" or "pressure" :
+!!  actually use the "pressure" value
 
-    -  EXIT room is always "high" (but include bosses in that)
-    -  START room is always "low"
-    -  hallways are always "low"
-    -  room AFTER start room should usually be "medium", never "low"
+!!  actually use the planned boss fights
 
-    -  goal rooms are "medium" or "high" (but include bosses in that)
-    -  rooms that begin a new zone are usually "low", never "high"
-    -  rooms entered for first time via teleporter should not be "high"
+   [ if a Boss cannot fit, choose a replacement
+     (unless "tough" and have placed one already) ]
 
-    +  generally want say 30% of rooms to high, 30% low, 40% medium.
-
-
-+  instead of "visit all vis=1 to produce vis=2", limit the vis=1
-   spots we visit by distance from entry coord
-
-+  create 'entry_spots' for all rooms
-   [ NOTE : depends on SPOT system above to be in place ]
-
-   -  start closets
-   -  start pedestals
-   -  teleporters
-   -  direct connections (one for each seed)
-   -  joiner connections
-
-+  debug Monster_visibility()
-   -  use brushes to show vis=0, vis=1 and vis=2 spots
-
-+  in START rooms, allow monsters in vis==2 spots
-   [ or vis==1 when far enough from entry point ]
-
-?  when choosing ambush spots, require vis >= 1
-   [ review ambush logic, see if should keep the trace_ray calls ]
++  if room has a boss/guard, in needs a large chunk, allocate those
+   chunks early [ but allow importants to override in emergencies ]
 
 
 
@@ -108,12 +38,21 @@ TRAPS:
    decide whether to create a closet trap (using a nearby unused closets)
    or a teleport trap
 
++  number of traps depends heavily on ROOM.pressure
+
+-  number of traps affected by LEV.game_along
+
++  do monster depots differently, make "shared" sector based on
+   an entry area of second room in the level
+
 
 
 CLOSETS:
 
 >>> handle unused closets
     [ A.mode = "void", build walls there, NO EDGE ]
+
+    -  support decorative closets, e.g. fancy light thingy
 
 +  switch closet / wall_box
 
@@ -123,10 +62,7 @@ STAIRS:
 
 +  choose prefabs earlier, probably during floor/ceil heights
 
--  put all stairs made by a rule (INCL. mirrored ones) into a group,
-   and ensure only a single prefab kind is used for that group
-
-   [ do same for "rect" parts of a grammar rule ]
+-  support two stairs in a rule (to same area)
 
 
 
@@ -134,96 +70,35 @@ JOINERS:
 
 +  choose prefab earlier, e.g. during floor/ceil heights or earlier
 
--  a "raising stairs" JOINER, need to find the switch
-
 
 
 TELEPORTERS:
 
-+  exclusion zone for a closet
-
--  improve eval_room() -- it needs to know # of spots/closets in a room 
-
--  when picking TELEPORTER spots, favor closets!
++  exclusion zone in front of a closet
 
 
 
 SHAPE GRAMMARS:
 
-IDEA: rules can specify a "prefab_flavor" for any rects, and when
-      finding a matching prefab require "flavor" field to match.
-
--  allow TWO conns into a new room (become F1/F2 in CONN object)
-
--  allow TWO stairs into a new area
++  allow TWO conns into a new room (become F1/F2 in CONN object)
 
 +  prune / re-use rooms which remain small, and hallways which
    never end up anywhere else
 
+   [ do this BEFORE converting prelim conns into real conns ]
+   
+   Q/ what about joiners??
+
 +  symmetrical rooms
-   +  join mirrored CHUNKS with 'peer' field
-
-      [ including "area" chunks ]
-
-   -  mark a RECT created by a "straddling" rule
-      [ increased score for wotsit finding ]
-
-   ?? join mirrored seeds with 'peer' field
+   -  find straddling floor chunks in a pre-pass
+      [ esp. even width for "wide" sym, odd width if not wide ]
 
    +  a way to score "straddling" patterns higher
       [ they are a very good place for some stuff, e.g. exits ]
       [[ only first usage of SPROUT/DECOR needs to score higher ]]
 
-   -  SPROUT pass : try some without a mirrored half
-
    -  SPROUT: if mirrored and new rooms touch/overlap, only create
               a single room
-
-+  for CTF, create one big room with "rotate" symmetry
-   [ interleave GROW and SPROUT passes ]
-   [[ "new_room" becomes "new_area" but acting like a new room ]]
-
-   __OR__ : allow '1', '2', (etc) in rules to match any room
-            but require all room-y elements to match that same room
-
-idea:  'a', 'b', 'c' matches anything but "1", "2", "3"
-       Q/ does "anything" included empty space / other rooms?
-       A/ yes it would
-
-idea:  CYCLE pass (after SPROUT) for multiple paths
-       [ probably as 'H' hallways, allow these to grow, prune them
-         when they fail to connect ]
-
-
-
-AUXILIARIES:
-
--  support count adjustments
-      e.g. style_adjust = { "hallways", 0.4, 1.0, 4.0 }
-
--  min_count, max_count
-
--  support 'count_tab' with probabilities _OR_ a 'count_list' with a
-   list of a values (one chosen at random)
-
-IDEA: have a flag which means auxiliaries must match something in their parent
-      [ implement by marking parent seeds ]
-      [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
-
-idea: k/m/n elements which do not represent anything, but allow
-      rules to create something, then auxiliaries or future rules
-      can transform that shape back into normal geometry
-      [ and instead of "count", some rulesets may say "until X is gone" ]
-
-Usage Ideas:
-
-  -  a DECOR rule begins a liquid area, and an auxiliary ruleset
-     is used to spread that area, staying close to existing geometry
-     in a room.
-
-  -  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
-     rest of hallway, and another auxiliary ruleset sprouts hallway
-     into new rooms, and a final auxiliary rulset prunes unused branches
 
 
 
@@ -233,35 +108,18 @@ INTRA-ROOM LOCKS
    closet --> lock exit with a switch and add a switch closet
    [ and sometimes "trap" the switch closet ]
 
--  another idea: if have a KEY in a closet, then use a barred-key-closet
-   and add a switch closet which opens it.
-
-idea: a generic lowering bars prefab to go in front of closets or
-      joiners or exit doors
-
--  closet that looks like a wall switch but opens a monsters closet
-
-
-
-GROWER :
-
-+  in grower, prune "tiny" trunks (e.g. total walk_vol < 10)
-
--  prune any areas that end up empty
-
 
 
 MISCELLANEOUS:
-
--  titlepic backgrounds (current and new) :
-   determine ones for official package, put rest in an addon
 
 +  face direction for switches / teleport exits
 
 +  support 'LEVEL.secret_weapon'
 
--  do monster depots differently, make "shared" sector based on
-   an area in the 2nd room
+-  titlepic backgrounds (current and new) :
+   determine ones for official package, put rest in an addon
+
+-  improve font for titlepic  [ e.g. shaded letters ]
 
 -  add monster spots to lava_pit prefab
 
@@ -298,6 +156,5 @@ SEMANTICS of ROTATING PREFABS
 
 
 Rule: if we have a REQUIRED direction, rotation NOT allowed
-
 
 
