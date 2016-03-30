@@ -302,11 +302,19 @@ end
 
 
 function Symmetry_transform(sym, S)
+  local x, y = S.sx, S.sy
+
   if sym.kind == "rotate" then
-    x = sym.x * 2 + (sym.x2 - sym.x) - x
-    y = sym.y * 2 + (sym.y2 - sym.y) - y
-  
-    return 
+    x = sym.x2 - (x - sym.x)
+    y = sym.y2 - (y - sym.y)
+
+    if not Seed_valid(x, y) then return nil end
+
+    local N = SEEDS[x][y]
+
+    -- for diagonal seeds, always swap bottom and top
+    if S.top then return N.top or N end
+    return N
   end
 
   if sym.dir == 2 or sym.dir == 8 then
@@ -327,7 +335,6 @@ function Symmetry_transform(sym, S)
     y = sym.y - (x - sym.x)
   end
 
-  error("Symmetry_transform: weird dir")
 end
 
 
