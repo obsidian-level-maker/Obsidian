@@ -237,6 +237,12 @@ function Layout_spot_for_wotsit(R, kind)
     else
       if chunk.sw >= 2 and chunk.sh >= 2 then
         score = score + 17
+
+        if chunk.is_straddler then
+          if kind == "LEVEL_EXIT" then score = score + 25 end
+          if kind == "START" then score = score + 25 end
+          if kind == "KEY"   then score = score +  5 end
+        end
       elseif chunk.sw >= 2 or chunk.sh >= 2 then
         score = score + 5
       end
