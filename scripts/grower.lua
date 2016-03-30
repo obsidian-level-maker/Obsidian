@@ -923,6 +923,15 @@ function Grower_split_liquids()
 
     grow_contiguous_area(S, list)
 
+    -- in symmetrical rooms, include the mirrored part
+    -- [ even though the combined area will be non-contiguous! ]
+    if A.room.symmetry then
+      local N = A.room.symmetry:transform(S)
+      if N and N.area == A and not N.mark_contiguous then
+        grow_contiguous_area(N, list)
+      end
+    end
+
     -- clear the marking flag
     each S in list do
       S.mark_contiguous = false
