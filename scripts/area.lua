@@ -309,19 +309,22 @@ function Symmetry_transform(sym, S)
     y = sym.y2 - (y - sym.y)
 
     if not Seed_valid(x, y) then return nil end
-
     local N = SEEDS[x][y]
 
     -- for diagonal seeds, always swap bottom and top
-    if S.top then return N.top or N end
+    if S.top then N = N.top or N end
     return N
   end
 
+  -- mirror cases --
+
   if sym.dir == 2 or sym.dir == 8 then
+    if x == sym.x then return S end
     x = sym.x * 2 + sel(sym.wide, 1, 0) - x
   end
 
   if sym.dir == 4 or sym.dir == 6 then
+    if y == sym.y then return S end
     y = sym.y * 2 + sel(sym.wide, 1, 0) - y
   end
 
@@ -335,6 +338,40 @@ function Symmetry_transform(sym, S)
     y = sym.y - (x - sym.x)
   end
 
+  if not Seed_valid(x, y) then return nil end
+  local N = SEEDS[x][y]
+
+  if sym.dir == 2 or sym.dir == 8 then
+    return N
+  end
+
+  if sym.dir == 4 or sym.dir == 6 then
+    if S.top then N = N.top or N end
+    return N
+  end
+
+  if sym.dir == 1 or sym.dir == 9 then
+    -- only swap top and bottom when diagonal matches axis of symmetry
+    if S.diagonal == 1 or S.diagonal == 9 then
+      if S.top then N = N.top or N end
+      return N
+    else
+      if S.bottom then N = N.top or N end
+      return N
+    end
+  end
+
+  if sym.dir == 3 or sym.dir == 7 then
+    if S.diagonal == 3 or S.diagonal == 7 then
+      if S.top then N = N.top or N end
+      return N
+    else
+      if S.bottom then N = N.top or N end
+      return N
+    end
+  end
+
+  error("Symmetry_conv_dir: weird dir")
 end
 
 
