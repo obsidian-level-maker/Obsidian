@@ -301,32 +301,6 @@ end
 ------------------------------------------------------------------------
 
 
-function Symmetry_on_axis(sym, x, y)
-  -- no axis for 180-degree rotational symmetry
-  if sym.kind == "rotate" then return false end
-
-  -- on the "wide" version, axis is the line between two seeds
-  if sym.wide then return false end
-
-  if sym.dir == 2 or sym.dir == 8 then
-    return x == sym.x
-  end
-
-  if sym.dir == 4 or sym.dir == 6 then
-    return y == sym.y
-  end
-
-  local dx = sym.x - x
-  local dy = sym.y - y
-
-  if sym.dir == 3 or sym.dir == 7 then
-    dx = -dx
-  end
-
-  return dx == dy
-end
-
-
 function Symmetry_transform(sym, S)
   if sym.kind == "rotate" then
     x = sym.x * 2 + (sym.x2 - sym.x) - x
@@ -358,11 +332,41 @@ end
 
 
 function Symmetry_conv_dir(sym, dir)
-  if sym.kind == "rotate" then
-    return 10 - dir
+  if sym.kind == "rotate" then return 10 - dir end
+
+  if sym.dir == 2 or sym.dir == 8 then return geom.MIRROR_X[dir] end
+  if sym.dir == 4 or sym.dir == 6 then return geom.MIRROR_Y[dir] end
+
+  if sym.dir == 1 or sym.dir == 9 then return geom.TRANSPOSE[dir] end
+  if sym.dir == 3 or sym.dir == 7 then return geom.TRANS_37[dir] end
+
+  error("Symmetry_conv_dir: weird dir")
+end
+
+
+function Symmetry_on_axis(sym, x, y)
+  -- no axis for 180-degree rotational symmetry
+  if sym.kind == "rotate" then return false end
+
+  -- on the "wide" version, axis is the line between two seeds
+  if sym.wide then return false end
+
+  if sym.dir == 2 or sym.dir == 8 then
+    return x == sym.x
   end
 
-  -- FIXME
+  if sym.dir == 4 or sym.dir == 6 then
+    return y == sym.y
+  end
+
+  local dx = sym.x - x
+  local dy = sym.y - y
+
+  if sym.dir == 3 or sym.dir == 7 then
+    dx = -dx
+  end
+
+  return dx == dy
 end
 
 

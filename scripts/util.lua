@@ -675,7 +675,9 @@ geom.ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
 
 geom.MIRROR_X  = { 3,2,1, 6,5,4, 9,8,7 }
 geom.MIRROR_Y  = { 7,8,9, 4,5,6, 1,2,3 }
+
 geom.TRANSPOSE = { 1,4,7, 2,5,8, 3,6,9 }
+geom.TRANS_37  = { 9,6,7, 8,5,2, 3,4,1 }
 
 geom.SIDES    = { 2,4,6,8 }
 geom.CORNERS  = { 1,3,7,9 }
