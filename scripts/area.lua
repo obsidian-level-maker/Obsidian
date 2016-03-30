@@ -841,6 +841,7 @@ function Area_locate_chunks()
     if N1.sx == sx1 and N1.sy == sy1 and
        N2.sx == sx2 and N2.sy == sy2
     then
+stderrf("STRADDLER floor chunk in %s\n", A.room.name)
       local CHUNK = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
       CHUNK.is_straddler = true
       return true
@@ -857,6 +858,7 @@ function Area_locate_chunks()
       return false
     end
 
+stderrf("Peered floor chunk in %s\n", A.room.name)
     local CHUNK1 = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
     local CHUNK2 = install_chunk_at_seed(A, nx1,ny1, nx2,ny2)
 
@@ -864,6 +866,21 @@ function Area_locate_chunks()
     CHUNK2.peer = CHUNK1
 
     return true
+  end
+
+
+  local function can_skip_for_symmetry(R, S)
+    if not R then return false end
+    if not R.symmetry then return false end
+
+    if R.symmetry.kind != "mirror" then return false end
+
+    if geom.is_vert (R.symmetry.dir) then return S.sx > R.symmetry.x end
+    if geom.is_horiz(R.symmetry.dir) then return S.sy > R.symmetry.y end
+
+    -- it is not critical that we don't check diagonal symmetry cases
+
+    return false
   end
 
 
@@ -879,7 +896,8 @@ function Area_locate_chunks()
       local sx2 = sx1 + dx
       local sy2 = sy1 + dy
 
-      -- TODO : less checks in symmetrical
+      -- we can do less checks in symmetrical rooms
+      if can_skip_for_symmetry(A.room, S) then continue end
 
       -- save time by checking the usage prob *first*
       if not rand.odds(use_prob) then continue end
