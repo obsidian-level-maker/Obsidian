@@ -1091,7 +1091,7 @@ end
 
 function Area_closet_edges()
 
-  local function visit_closet(chunk)
+  local function visit_closet(chunk, R)
     local E = Seed_create_chunk_edge(chunk, chunk.from_dir, "nothing")
   end
 
@@ -1099,7 +1099,7 @@ function Area_closet_edges()
 
   each R in LEVEL.rooms do
     each CL in R.closets do
-      visit_closet(CL)
+      visit_closet(CL, R)
     end
   end
 end

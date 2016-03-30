@@ -1523,6 +1523,12 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
+  local function is_element_a_chunk(E)
+    return E.kind == "closet" or E.kind == "joiner" or
+           E.kind == "stair"  or E.kind == "hallway"
+  end
+
+
   local function find_chunk(sx, sy)
     if new_chunks then
       each K in new_chunks do
@@ -1607,10 +1613,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     -- symmetry handling
     -- [ we prevent a pattern from overlapping its mirror ]
     -- [[ but we allow setting whole seeds *on* the axis of symmetry ]]
-    -- [[[ except for new rooms, as they must remain distinct ]]]
+    -- [[[ except for new rooms and chunks, as they must remain distinct ]]]
     if T.is_first and E2.assignment then
       if E2.kind == "new_room" or
-         E2.kind == "stair" or
+         is_element_a_chunk(E2) or
          not R.symmetry:on_axis(S.sx, S.sy)
       then
         S.sym_token = sym_token
@@ -2045,9 +2051,9 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     if new_room then
       -- assumes best.T has set X/Y to best.x and best.y
---!!!!      new_room.symmetry = transform_symmetry(T)
+      new_room.symmetry = transform_symmetry(T)
 
--- stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+--##  stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
 
       if pass == "sprout" then
         transform_connection(T, cur_rule.new_room.conn, new_conn)
@@ -2301,7 +2307,6 @@ end
       local aux_name = auxiliary_name(aux)
 
       local aux = parent_rule[aux_name]
-gui.debugf("  trying aux '%s' --> %s\n", aux_name, tostring(aux))
       if aux == nil then continue end
 
       assert(aux.pass)
