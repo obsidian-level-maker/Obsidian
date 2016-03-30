@@ -44,6 +44,8 @@
 
     zone : ZONE
 
+    peer : ROOM     -- links rooms created via symmetry
+
 
     chunks   : list(CHUNK)   -- chunks in a walkable area
     closets  : list(CHUNK)

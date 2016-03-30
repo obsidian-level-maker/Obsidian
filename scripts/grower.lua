@@ -1047,6 +1047,8 @@ function Grower_grammatical_room(R, pass)
   local area_map = {}
 
   local new_room
+  local old_room
+
   local new_conn
   local new_area
   local new_intconn
@@ -1982,8 +1984,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
         local old_chunk = old_chunks[#new_chunks]
         assert(old_chunk)
         assert(old_chunk.kind == chunk.kind)
-stderrf("peering chunks in %s\n", R.name)
-            chunk.peer = old_chunk
+
+        chunk.peer = old_chunk
         old_chunk.peer = chunk
       end
 
@@ -2030,7 +2032,9 @@ stderrf("peering chunks in %s\n", R.name)
 
 
   local function pre_install(T)
+    old_room = new_room
     new_room = nil
+
     new_conn = nil
 
     old_chunks = new_chunks
@@ -2042,6 +2046,13 @@ stderrf("peering chunks in %s\n", R.name)
     else
       if cur_rule.new_room then
         new_room, new_conn = Grower_add_room(R)
+
+        -- link rooms spawned via symmetry
+        if T.is_second then
+          assert(old_room)
+          old_room.peer = new_room
+          new_room.peer = old_room
+        end
       end
     end
 
