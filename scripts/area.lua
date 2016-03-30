@@ -754,8 +754,6 @@ function Area_locate_chunks()
     [23] = 22
   }
 
-  local is_straddler
-
 
   local function create_chunk(A, sx1,sy1, sx2,sy2)
     local R = assert(A.room)
@@ -800,14 +798,26 @@ function Area_locate_chunks()
   end
 
 
-  local function test_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-    is_straddler = false
+  local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+    local CHUNK = create_chunk(A, sx1,sy1, sx2,sy2)
 
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      SEEDS[x][y].chunk = CHUNK
+    end
+    end
+
+    return CHUNK
+  end
+
+
+  local function try_chunk_at_seed(A, sx1,sy1, sx2,sy2)
     if not raw_test_chunk(A, sx1,sy1, sx2,sy2) then
       return false
     end
 
     if not (A.room and A.room.symmetry) then
+      install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
       return true
     end
 
@@ -816,9 +826,11 @@ function Area_locate_chunks()
     local N1 = A.room.symmetry:transform(SEEDS[sx1][sy1])
     local N2 = A.room.symmetry:transform(SEEDS[sx2][sy2])
 
-    if not (N1 and N2) then
-      return false
-    end
+    if not (N1 and N2) then return false end
+
+    -- it *should* be the same area, but sanity check
+    if N1.area != A then return false end
+    if N2.area != A then return false end
 
     local nx1 = math.min(N1.sx, N2.sx)
     local ny1 = math.min(N1.sy, N2.sy)
@@ -829,7 +841,8 @@ function Area_locate_chunks()
     if N1.sx == sx1 and N1.sy == sy1 and
        N2.sx == sx2 and N2.sy == sy2
     then
-      is_straddler = true
+      local CHUNK = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+      CHUNK.is_straddler = true
       return true
     end
 
@@ -840,16 +853,17 @@ function Area_locate_chunks()
     if nx1 > sx2 then return true end
     if ny1 > sy2 then return true end
 
-    return false
-  end
-
-
-  local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2, chunk)
-    for x = sx1, sx2 do
-    for y = sy1, sy2 do
-      SEEDS[x][y].chunk = chunk
+    if not raw_test_chunk(A, nx1,ny1, nx2,ny2) then
+      return false
     end
-    end
+
+    local CHUNK1 = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+    local CHUNK2 = install_chunk_at_seed(A, nx1,ny1, nx2,ny2)
+
+    CHUNK1.peer = CHUNK2
+    CHUNK2.peer = CHUNK1
+
+    return true
   end
 
 
@@ -865,14 +879,12 @@ function Area_locate_chunks()
       local sx2 = sx1 + dx
       local sy2 = sy1 + dy
 
+      -- TODO : less checks in symmetrical
+
       -- save time by checking the usage prob *first*
       if not rand.odds(use_prob) then continue end
 
-      if test_chunk_at_seed(A, sx1,sy1, sx2,sy2) then
-        local CHUNK = create_chunk(A, sx1,sy1, sx2,sy2)
-
-        install_chunk_at_seed(A, sx1,sy1, sx2,sy2, CHUNK)
-      end
+      try_chunk_at_seed(A, sx1,sy1, sx2,sy2)
     end
   end
 
