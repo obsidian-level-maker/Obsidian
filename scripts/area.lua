@@ -280,7 +280,7 @@ function Chunk_new(kind, sx1,sy1, sx2,sy2)
     id = alloc_id("chunk")
 
     kind = kind
-    
+
     sx1 = sx1, sy1 = sy1
     sx2 = sx2, sy2 = sy2
 
@@ -728,7 +728,7 @@ end
 
 
 function Area_locate_chunks()
-  --  
+  --
   -- locate seed rectangles in areas of rooms, these will be used
   -- for placing importants (goals, teleporters, etc) and also
   -- decorative prefabs.
@@ -753,6 +753,8 @@ function Area_locate_chunks()
     [32] = 22
     [23] = 22
   }
+
+  local is_straddler
 
 
   local function create_chunk(A, sx1,sy1, sx2,sy2)
@@ -781,7 +783,7 @@ function Area_locate_chunks()
   end
 
 
-  local function test_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+  local function raw_test_chunk(A, sx1,sy1, sx2,sy2)
     for x = sx1, sx2 do
     for y = sy1, sy2 do
       if not Seed_valid(x, y) then return false end
@@ -791,10 +793,54 @@ function Area_locate_chunks()
       if not N then return false end
       if N.area != A then return false end
       if N.diagonal or N.chunk then return false end
-    end
+    end -- x, y
     end
 
     return true
+  end
+
+
+  local function test_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+    is_straddler = false
+
+    if not raw_test_chunk(A, sx1,sy1, sx2,sy2) then
+      return false
+    end
+
+    if not (A.room and A.room.symmetry) then
+      return true
+    end
+
+    -- handle symmetrical rooms --
+
+    local N1 = A.room.symmetry:transform(SEEDS[sx1][sy1])
+    local N2 = A.room.symmetry:transform(SEEDS[sx2][sy2])
+
+    if not (N1 and N2) then
+      return false
+    end
+
+    local nx1 = math.min(N1.sx, N2.sx)
+    local ny1 = math.min(N1.sy, N2.sy)
+    local nx2 = math.max(N1.sx, N2.sx)
+    local ny2 = math.max(N1.sy, N2.sy)
+
+    -- check if rectangle is exactly the same
+    if N1.sx == sx1 and N1.sy == sy1 and
+       N2.sx == sx2 and N2.sy == sy2
+    then
+      is_straddler = true
+      return true
+    end
+
+    -- check for overlap
+    if nx2 < sx1 then return true end
+    if ny2 < sy1 then return true end
+
+    if nx1 > sx2 then return true end
+    if ny1 > sy2 then return true end
+
+    return false
   end
 
 
