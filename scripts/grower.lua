@@ -1057,6 +1057,7 @@ function Grower_grammatical_room(R, pass)
 
   -- list of transformed rectangles (copied from cur_rule.rects)
   local new_chunks
+  local old_chunks
 
 
   local function what_in_there(S)
@@ -1974,6 +1975,19 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       table.insert(new_chunks, chunk)
 
 
+      -- symmetry handling : peer up mirrored chunks
+      if T.is_second then
+        assert(old_chunks)
+
+        local old_chunk = old_chunks[#new_chunks]
+        assert(old_chunk)
+        assert(old_chunk.kind == chunk.kind)
+stderrf("peering chunks in %s\n", R.name)
+            chunk.peer = old_chunk
+        old_chunk.peer = chunk
+      end
+
+
       local A = AREA_CLASS.new("chunk")
       R:add_area(A)
 
@@ -2018,6 +2032,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   local function pre_install(T)
     new_room = nil
     new_conn = nil
+
+    old_chunks = new_chunks
     new_chunks = nil
 
     -- for initial shapes, 'R' is the current room

@@ -138,6 +138,8 @@
                             -- "KEY", "WEAPON", "ITEM", "SWITCH"
                             -- "CAGE", "TRAP"
 
+    peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk
+
     -- FIXME have 'from_dir' and 'dest_dir'
 
     dir : DIR        -- main facing direction
