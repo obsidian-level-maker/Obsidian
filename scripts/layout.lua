@@ -218,6 +218,11 @@ function Layout_spot_for_wotsit(R, kind)
     -- already used?
     if chunk.content_kind then return -1 end
 
+    -- handle symmetrical room
+    if chunk.peer and chunk.peer.content_kind == kind then
+      return 700 + gui.random()
+    end
+
     local score = (chunk.sig_dist or 0) * 10
 
     if kind == "TELEPORTER" then

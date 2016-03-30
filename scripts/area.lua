@@ -277,6 +277,8 @@ end
 function Chunk_new(kind, sx1,sy1, sx2,sy2)
   local CHUNK =
   {
+    id = alloc_id("chunk")
+
     kind = kind
     
     sx1 = sx1, sy1 = sy1
