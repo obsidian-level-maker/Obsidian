@@ -47,8 +47,8 @@
     F1, F2 : EDGE  -- for "split" connections, the other side
 
     door_h : floor height for doors straddling the connection
-
 --]]
+
 
 
 CONN_CLASS = {}

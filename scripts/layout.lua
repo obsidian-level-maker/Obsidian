@@ -223,6 +223,11 @@ function Layout_spot_for_wotsit(R, kind)
       return 700 + gui.random()
     end
 
+    -- TODO: review this
+    if kind == "SWITCH" then
+      if chunk.kind != "closet" then return -1 end
+    end
+
     local score = (chunk.sig_dist or 0) * 10
 
     if kind == "TELEPORTER" then
@@ -702,7 +707,7 @@ function Layout_decorate_rooms()
   end
 
 
-  local function visit_room(R)
+  local function visit_room_KK(R)
     -- FIXME : traps, cages, etc !!!!
 
     each chunk in R.closets do
@@ -713,19 +718,59 @@ function Layout_decorate_rooms()
   end
 
 
+  local function try_intraroom_lock(R)
+    -- try to lock an unlocked exit and place switch for it
+    
+    if R.is_start then return end
+    if R.is_exit  then return end
+
+    local conn_list = {}
+
+    each C in R.conns do
+      local N = C:other_room(R)
+
+      if C.kind == "joiner" and not C.lock and
+         N.lev_along > R.lev_along
+      then
+        table.insert(conn_list, C)
+      end
+    end
+
+    if table.empty(conn_list) then return end
+
+    local spot = Layout_spot_for_wotsit(R, "SWITCH")
+
+    if spot == nil then return end
+
+    -- Ok, can make it
+
+stderrf(">>>>>>>>>>>>> Intraroom lock in %s\n", R.name)
+
+    local C = rand.pick(conn_list)
+
+    C.lock =
+    {
+      kind = "intraroom"
+      conn = C
+      spot = spot
+    }
+
+    spot.lock = C.lock
+  end
+
+
+  local function visit_room(R)
+    try_intraroom_lock(R)
+    try_intraroom_lock(R)
+  end
+
+
   ---| Layout_decorate_rooms |---
 
   -- TODO : handle unused closets
 
-do return end --FIXME re-enable Layout_unused_closets
-
   each R in LEVEL.rooms do
     visit_room(R)
-  end
-
-  -- no traps/cages in DM or CTF maps
-  if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
-    return
   end
 end
 
