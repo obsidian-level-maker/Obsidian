@@ -28,6 +28,7 @@
 #include "main.h"
 #include "m_cookie.h"
 #include "m_addons.h"
+#include "m_trans.h"
 
 
 static void Parse_Option(const char *name, const char *value)
@@ -41,6 +42,10 @@ static void Parse_Option(const char *name, const char *value)
 	if (StringCaseCmp(name, "addon") == 0)
 	{
 		VFS_OptParse(value);
+	}
+	else if (StringCaseCmp(name, "language") == 0)
+	{
+		t_language = StringDup(value);
 	}
 	else if (StringCaseCmp(name, "alternate_look") == 0)
 	{
@@ -185,6 +190,9 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "-- OPTIONS FILE : OBLIGE %s\n", OBLIGE_VERSION); 
 	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2016 Andrew Apted\n");
 	fprintf(option_fp, "-- http://oblige.sourceforge.net/\n\n");
+
+	fprintf(option_fp, "language = %s\n", t_language);
+	fprintf(option_fp, "\n");
 
 	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
 	fprintf(option_fp, "window_size    = %d\n", window_size);

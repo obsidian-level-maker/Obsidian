@@ -21,6 +21,9 @@
 #ifndef __OBLIGE_I18N_H__
 #define __OBLIGE_I18N_H__
 
+// current selected language, default is "AUTO"
+extern const char *t_language;
+
 void Trans_Init();
 
 void Trans_SetLanguage(const char *langcode);

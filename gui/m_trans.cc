@@ -26,6 +26,24 @@
 #include "main.h"
 #include "m_trans.h"
 
+#ifndef WIN32
+#include <locale.h>
+#endif
+
+
+// current language
+const char * t_language = "AUTO";
+
+
+/* DETERMINE CURRENT LANGUAGE */
+
+static const char * Trans_GetUserLanguage()
+{
+}
+
+
+//----------------------------------------------------------------------
+
 
 // TODO : stuff to parse PO files
 
@@ -94,6 +112,10 @@ void Trans_ParseLangLine(char *line)
 
 void Trans_Init()
 {
+#ifndef WIN32
+	setlocale(LC_ALL, "");
+#endif
+
 	// TODO : stuff to create a Lua state to store messages in
 
 	/* read the list of languages */
