@@ -160,7 +160,6 @@ GLOBAL_STYLE_LIST =
 
   -- things that affect stuff in rooms
 
-  junk       = { few=10, some=60, heaps=30 }
   pillars    = { few=60, some=30, heaps=10 }
   beams      = { few=25, some=50, heaps=5  }
   barrels    = { few=50, some=50, heaps=10 }
