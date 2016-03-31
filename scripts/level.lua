@@ -1820,13 +1820,17 @@ function Level_do_styles()
     end
   end
 
+  -- no traps/cages in DM or CTF maps
+  if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
+    STYLE.traps = "none"
+    STYLE.cages = "none"
+  end
+
   -- if level needs a secret exit, make lots of secrets
   -- (this is not strictly necessary, more an aesthetic choice)
   if LEVEL.secret_exit then
     STYLE.secrets = "heaps"
   end
-
-  SKY_H = rand.sel(5, 768, 512)
 end
 
 
