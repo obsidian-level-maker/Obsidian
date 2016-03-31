@@ -36,6 +36,344 @@
 #endif
 
 
+/* Mingw headers don't have latest language and sublanguage codes. */
+#ifdef WIN32
+# ifndef LANG_AFRIKAANS
+# define LANG_AFRIKAANS 0x36
+# endif
+# ifndef LANG_ALBANIAN
+# define LANG_ALBANIAN 0x1c
+# endif
+# ifndef LANG_ALSATIAN
+# define LANG_ALSATIAN 0x84
+# endif
+# ifndef LANG_AMHARIC
+# define LANG_AMHARIC 0x5e
+# endif
+# ifndef LANG_ARABIC
+# define LANG_ARABIC 0x01
+# endif
+# ifndef LANG_ARMENIAN
+# define LANG_ARMENIAN 0x2b
+# endif
+# ifndef LANG_ASSAMESE
+# define LANG_ASSAMESE 0x4d
+# endif
+# ifndef LANG_AZERI
+# define LANG_AZERI 0x2c
+# endif
+# ifndef LANG_BASHKIR
+# define LANG_BASHKIR 0x6d
+# endif
+# ifndef LANG_BASQUE
+# define LANG_BASQUE 0x2d
+# endif
+# ifndef LANG_BELARUSIAN
+# define LANG_BELARUSIAN 0x23
+# endif
+# ifndef LANG_BENGALI
+# define LANG_BENGALI 0x45
+# endif
+# ifndef LANG_BRETON
+# define LANG_BRETON 0x7e
+# endif
+# ifndef LANG_BURMESE
+# define LANG_BURMESE 0x55
+# endif
+# ifndef LANG_CAMBODIAN
+# define LANG_CAMBODIAN 0x53
+# endif
+# ifndef LANG_CATALAN
+# define LANG_CATALAN 0x03
+# endif
+# ifndef LANG_CHEROKEE
+# define LANG_CHEROKEE 0x5c
+# endif
+# ifndef LANG_CORSICAN
+# define LANG_CORSICAN 0x83
+# endif
+# ifndef LANG_DARI
+# define LANG_DARI 0x8c
+# endif
+# ifndef LANG_DIVEHI
+# define LANG_DIVEHI 0x65
+# endif
+# ifndef LANG_EDO
+# define LANG_EDO 0x66
+# endif
+# ifndef LANG_ESTONIAN
+# define LANG_ESTONIAN 0x25
+# endif
+# ifndef LANG_FAEROESE
+# define LANG_FAEROESE 0x38
+# endif
+# ifndef LANG_FARSI
+# define LANG_FARSI 0x29
+# endif
+# ifndef LANG_FRISIAN
+# define LANG_FRISIAN 0x62
+# endif
+# ifndef LANG_FULFULDE
+# define LANG_FULFULDE 0x67
+# endif
+# ifndef LANG_GAELIC
+# define LANG_GAELIC 0x3c
+# endif
+# ifndef LANG_GALICIAN
+# define LANG_GALICIAN 0x56
+# endif
+# ifndef LANG_GEORGIAN
+# define LANG_GEORGIAN 0x37
+# endif
+# ifndef LANG_GREENLANDIC
+# define LANG_GREENLANDIC 0x6f
+# endif
+# ifndef LANG_GUARANI
+# define LANG_GUARANI 0x74
+# endif
+# ifndef LANG_GUJARATI
+# define LANG_GUJARATI 0x47
+# endif
+# ifndef LANG_HAUSA
+# define LANG_HAUSA 0x68
+# endif
+# ifndef LANG_HAWAIIAN
+# define LANG_HAWAIIAN 0x75
+# endif
+# ifndef LANG_HEBREW
+# define LANG_HEBREW 0x0d
+# endif
+# ifndef LANG_HINDI
+# define LANG_HINDI 0x39
+# endif
+# ifndef LANG_IBIBIO
+# define LANG_IBIBIO 0x69
+# endif
+# ifndef LANG_IGBO
+# define LANG_IGBO 0x70
+# endif
+# ifndef LANG_INDONESIAN
+# define LANG_INDONESIAN 0x21
+# endif
+# ifndef LANG_INUKTITUT
+# define LANG_INUKTITUT 0x5d
+# endif
+# ifndef LANG_KANNADA
+# define LANG_KANNADA 0x4b
+# endif
+# ifndef LANG_KANURI
+# define LANG_KANURI 0x71
+# endif
+# ifndef LANG_KASHMIRI
+# define LANG_KASHMIRI 0x60
+# endif
+# ifndef LANG_KAZAK
+# define LANG_KAZAK 0x3f
+# endif
+# ifndef LANG_KICHE
+# define LANG_KICHE 0x86
+# endif
+# ifndef LANG_KINYARWANDA
+# define LANG_KINYARWANDA 0x87
+# endif
+# ifndef LANG_KONKANI
+# define LANG_KONKANI 0x57
+# endif
+# ifndef LANG_KYRGYZ
+# define LANG_KYRGYZ 0x40
+# endif
+# ifndef LANG_LAO
+# define LANG_LAO 0x54
+# endif
+# ifndef LANG_LATIN
+# define LANG_LATIN 0x76
+# endif
+# ifndef LANG_LATVIAN
+# define LANG_LATVIAN 0x26
+# endif
+# ifndef LANG_LITHUANIAN
+# define LANG_LITHUANIAN 0x27
+# endif
+# ifndef LANG_LUXEMBOURGISH
+# define LANG_LUXEMBOURGISH 0x6e
+# endif
+# ifndef LANG_MACEDONIAN
+# define LANG_MACEDONIAN 0x2f
+# endif
+# ifndef LANG_MALAY
+# define LANG_MALAY 0x3e
+# endif
+# ifndef LANG_MALAYALAM
+# define LANG_MALAYALAM 0x4c
+# endif
+# ifndef LANG_MALTESE
+# define LANG_MALTESE 0x3a
+# endif
+# ifndef LANG_MANIPURI
+# define LANG_MANIPURI 0x58
+# endif
+# ifndef LANG_MAORI
+# define LANG_MAORI 0x81
+# endif
+# ifndef LANG_MAPUDUNGUN
+# define LANG_MAPUDUNGUN 0x7a
+# endif
+# ifndef LANG_MARATHI
+# define LANG_MARATHI 0x4e
+# endif
+# ifndef LANG_MOHAWK
+# define LANG_MOHAWK 0x7c
+# endif
+# ifndef LANG_MONGOLIAN
+# define LANG_MONGOLIAN 0x50
+# endif
+# ifndef LANG_NEPALI
+# define LANG_NEPALI 0x61
+# endif
+# ifndef LANG_OCCITAN
+# define LANG_OCCITAN 0x82
+# endif
+# ifndef LANG_ORIYA
+# define LANG_ORIYA 0x48
+# endif
+# ifndef LANG_OROMO
+# define LANG_OROMO 0x72
+# endif
+# ifndef LANG_PAPIAMENTU
+# define LANG_PAPIAMENTU 0x79
+# endif
+# ifndef LANG_PASHTO
+# define LANG_PASHTO 0x63
+# endif
+# ifndef LANG_PUNJABI
+# define LANG_PUNJABI 0x46
+# endif
+# ifndef LANG_QUECHUA
+# define LANG_QUECHUA 0x6b
+# endif
+# ifndef LANG_ROMANSH
+# define LANG_ROMANSH 0x17
+# endif
+# ifndef LANG_SAMI
+# define LANG_SAMI 0x3b
+# endif
+# ifndef LANG_SANSKRIT
+# define LANG_SANSKRIT 0x4f
+# endif
+# ifndef LANG_SCOTTISH_GAELIC
+# define LANG_SCOTTISH_GAELIC 0x91
+# endif
+# ifndef LANG_SERBIAN
+# define LANG_SERBIAN 0x1a
+# endif
+# ifndef LANG_SINDHI
+# define LANG_SINDHI 0x59
+# endif
+# ifndef LANG_SINHALESE
+# define LANG_SINHALESE 0x5b
+# endif
+# ifndef LANG_SLOVAK
+# define LANG_SLOVAK 0x1b
+# endif
+# ifndef LANG_SOMALI
+# define LANG_SOMALI 0x77
+# endif
+# ifndef LANG_SORBIAN
+# define LANG_SORBIAN 0x2e
+# endif
+# ifndef LANG_SOTHO
+# define LANG_SOTHO 0x6c
+# endif
+# ifndef LANG_SUTU
+# define LANG_SUTU 0x30
+# endif
+# ifndef LANG_SWAHILI
+# define LANG_SWAHILI 0x41
+# endif
+# ifndef LANG_SYRIAC
+# define LANG_SYRIAC 0x5a
+# endif
+# ifndef LANG_TAGALOG
+# define LANG_TAGALOG 0x64
+# endif
+# ifndef LANG_TAJIK
+# define LANG_TAJIK 0x28
+# endif
+# ifndef LANG_TAMAZIGHT
+# define LANG_TAMAZIGHT 0x5f
+# endif
+# ifndef LANG_TAMIL
+# define LANG_TAMIL 0x49
+# endif
+# ifndef LANG_TATAR
+# define LANG_TATAR 0x44
+# endif
+# ifndef LANG_TELUGU
+# define LANG_TELUGU 0x4a
+# endif
+# ifndef LANG_THAI
+# define LANG_THAI 0x1e
+# endif
+# ifndef LANG_TIBETAN
+# define LANG_TIBETAN 0x51
+# endif
+# ifndef LANG_TIGRINYA
+# define LANG_TIGRINYA 0x73
+# endif
+# ifndef LANG_TSONGA
+# define LANG_TSONGA 0x31
+# endif
+# ifndef LANG_TSWANA
+# define LANG_TSWANA 0x32
+# endif
+# ifndef LANG_TURKMEN
+# define LANG_TURKMEN 0x42
+# endif
+# ifndef LANG_UIGHUR
+# define LANG_UIGHUR 0x80
+# endif
+# ifndef LANG_UKRAINIAN
+# define LANG_UKRAINIAN 0x22
+# endif
+# ifndef LANG_URDU
+# define LANG_URDU 0x20
+# endif
+# ifndef LANG_UZBEK
+# define LANG_UZBEK 0x43
+# endif
+# ifndef LANG_VENDA
+# define LANG_VENDA 0x33
+# endif
+# ifndef LANG_VIETNAMESE
+# define LANG_VIETNAMESE 0x2a
+# endif
+# ifndef LANG_WELSH
+# define LANG_WELSH 0x52
+# endif
+# ifndef LANG_WOLOF
+# define LANG_WOLOF 0x88
+# endif
+# ifndef LANG_XHOSA
+# define LANG_XHOSA 0x34
+# endif
+# ifndef LANG_YAKUT
+# define LANG_YAKUT 0x85
+# endif
+# ifndef LANG_YI
+# define LANG_YI 0x78
+# endif
+# ifndef LANG_YIDDISH
+# define LANG_YIDDISH 0x3d
+# endif
+# ifndef LANG_YORUBA
+# define LANG_YORUBA 0x6a
+# endif
+# ifndef LANG_ZULU
+# define LANG_ZULU 0x35
+# endif
+#endif
+
+
 // current language
 const char * t_language = "AUTO";
 
