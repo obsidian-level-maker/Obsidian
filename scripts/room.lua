@@ -2185,6 +2185,11 @@ h = 8
 
       assert(A.floor_h)
 
+      if A.peer and A.peer.floor_mat then
+        A.floor_mat = A.peer.floor_mat
+        continue
+      end
+
       if not R.floor_mats[A.floor_h] then
         R.floor_mats[A.floor_h] = rand.key_by_probs(R.theme.floors)
       end
@@ -2205,6 +2210,11 @@ h = 8
       if A.is_porch   then continue end
 
       assert(A.ceil_h)
+
+      if A.peer and A.peer.ceil_mat then
+        A.ceil_mat = A.peer.ceil_mat
+        continue
+      end
 
       if not R.ceil_mats[A.ceil_h] then
         R.ceil_mats[A.ceil_h] = rand.key_by_probs(R.theme.ceilings)
@@ -2390,6 +2400,11 @@ h = 8
 
   local function do_ceilings(R)
     each A in R.areas do
+      if A.peer and A.peer.ceil_h then
+        A.ceil_h = A.peer.ceil_h
+        continue
+      end
+
       local height = rand.pick({ 128, 192,192,192, 256,320 })
 
       if A.is_porch then

@@ -923,15 +923,6 @@ function Grower_split_liquids()
 
     grow_contiguous_area(S, list)
 
-    -- in symmetrical rooms, include the mirrored part
-    -- [ even though the combined area will be non-contiguous! ]
-    if A.room.symmetry then
-      local N = A.room.symmetry:transform(S)
-      if N and N.area == A and not N.mark_contiguous then
-        grow_contiguous_area(N, list)
-      end
-    end
-
     -- clear the marking flag
     each S in list do
       S.mark_contiguous = false
@@ -976,10 +967,39 @@ function Grower_split_liquids()
   end
 
 
+  local function handle_symmetry(R)
+    each A in R.areas do
+      if A.peer then continue end
+
+      if A.mode == "liquid" or A.mode == "cage" then
+        local S = A.seeds[1]
+
+        assert(S)
+        assert(S.area == A)
+
+        local T = R.symmetry:transform(S)
+
+        if T and T.area and T.area.room == R and T.area.mode == A.mode then
+          A.peer = T.area
+          T.area.peer = A
+stderrf("$$$$$$$$$  Peered areas %s <--> %s in %s\n", A.name, T.area.name, R.name)
+        end
+      end
+    end
+  end
+
+
   ---| Grower_split_liquids |---
 
   check_all_seeds("liquid")
   check_all_seeds("cage")
+
+  -- in symmetrical rooms, peer up the mirrored parts
+  each R in LEVEL.rooms do
+    if R.symmetry then
+      handle_symmetry(R)
+    end
+  end
 end
 
 
