@@ -264,6 +264,7 @@ public:
 
 			opt_language->add(fullname);
 
+			// check for match against current language
 			const char *lc = Trans_GetAvailCode(i);
 
 			if (strcmp(lc, t_language) == 0)
@@ -283,7 +284,20 @@ private:
 	{
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-		// FIXME
+		int val = that->opt_language->value();
+
+		if (val == 0)
+		{
+			t_language = "AUTO";
+		}
+		else
+		{
+			t_language = Trans_GetAvailCode(val - 1);
+
+			// this should not happen
+			if (! t_language)
+				t_language = "AUTO";
+		}
 	}
 
 	static void callback_WinSize(Fl_Widget *w, void *data)
