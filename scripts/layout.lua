@@ -508,6 +508,14 @@ end
 
 
 
+function Layout_place_all_importants()
+  each R in LEVEL.rooms do
+    Layout_place_importants(R)
+  end
+end
+
+
+
 -- NOT USED ATM
 function Layout_choose_face_room(A)
   -- used for big cages and liquid pools (converted from void)
@@ -538,129 +546,14 @@ end
 
 
 
-function Layout_unused_closets()
+function Layout_add_traps()
   --
-  -- Handles all the unused closets in a room, turning them
-  -- into traps, cages, secret items (etc).
+  -- Add traps into rooms, especially monster closets.
   --
 
-  local  junk_list = {}
-  local other_list = {}
 
-  local DIR_LIST
-
-  local function test_seed(S)
-    local best_dir
-    local best_z
-
-    each dir in DIR_LIST do
-      local N = S:neighbor(dir)
-
-      if not (N and N.room == R) then continue end
-
-      if N.kind != "walk" then continue end
-      if N.content then continue end
-      if not N.floor_h then continue end
-
-      best_dir = dir
-      best_z   = N.floor_h + 16
-
-      -- 3D floors [MEH : TODO better logic]
-      if N.chunk[2] and N.chunk[2].floor then
-        local z2 = N.chunk[2].floor.floor_h
-
-        if z2 - best_z < (128 + 32) then
-          best_z = z2 + 16
-        end
-      end
-    end
-
-    if best_dir then
-      local LOC = { S=S, dir=best_dir, z=best_z }
-
-      if S.junked then
-        table.insert(junk_list, LOC)
-      else
-        table.insert(other_list, LOC)
-      end
-    end
-  end
-
-
-  local function collect_cage_seeds()
-    for x = R.sx1, R.sx2 do
-    for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-
-      if S.room != R then continue end
-    
-      if S.kind != "void" then continue end
-
-      test_seed(S)
-    end
-    end
-  end
-
-
-  local function convert_list(list, limited)
-    each loc in list do
-      local S = loc.S
-
-      if limited then
-        if geom.is_vert (loc.dir) and (S.sx % 2) == 0 then continue end
-        if geom.is_horiz(loc.dir) and (S.sy % 2) == 0 then continue end
-      end
-
-      -- convert it
-      S.cage_dir = loc.dir
-      S.cage_z   = loc.z
-    end
-  end
-
-
-  local function eval_area_for_cage(A)
-    -- must be VOID or SCENIC
-    if not (A.mode == "void" or A.mode == "scenic") then return -1 end
-    if A.closety then return -1 end
-
-    if A.svolume > 6 then return -1 end
-
-    -- must touch a room (but not START room)
-    local touch_a_room = false
-
-    each N in A.neighbors do
-      if N.zone != A.zone then continue end
-
-      if N.room and not N.room.is_start then
-        touch_a_room = true
-      end
-    end
-
-    if not touch_a_room then return -1 end
-
-    return 100  -- OK --
-  end
-
-
-  local function collect_big_cages()
-    -- find all void areas that could be turned into a large cage
-
-    local list = {}
-    local svolume = 0
-
-    each A in LEVEL.areas do
-      -- reserved for closets?
-      if A.is_closety then continue end
-
-      if eval_area_for_cage(A) > 0 then
-        table.insert(list, A)
-        svolume = svolume + A.svolume
-      end
-    end
-
-    rand.shuffle(list)
-
-    return list, svolume
+  local function make_trap(A)
+    chunk.content_kind = "TRAP"
   end
 
 
@@ -778,64 +671,21 @@ function Layout_unused_closets()
   end
 
 
-  local function make_cage(A)
-    gui.debugf("Making big cage in %s\n", A.name)
 
-    A.face_room = Layout_choose_face_room(A)
-    if not A.face_room then return end
+  ---| Layout_add_traps |---
 
-    A.mode = "cage"
-    A.is_boundary = nil
-
-    -- determine height and set junctions
-
-    each N in A.neighbors do
-      if N.zone != A.zone then continue end
-
-      if N.room then
-        A.floor_h = math.N_max(N.floor_h, A.floor_h)
-
-        -- railing (etc) is handled in Room_border_up...
-      end
-    end
-
-    assert(A.floor_h)
-
-    A.floor_h = A.floor_h + 40
-  end
+  -- TODO
+end
 
 
-  local function add_cages()
-    local quota     = style_sel("cages", 0, 10, 30, 90)
-    local skip_prob = style_sel("cages", 100, 40, 20, 0)
 
-    if rand.odds(skip_prob) then
-      gui.printf("Cages: skipped for level (by style).\n")
-      return
-    end
-
-    gui.printf("Cages: quota = %d%%\n", quota)
-
-
-    local areas, svolume = collect_big_cages()
-
-    quota = int(svolume * quota * rand.range(1.0, 1.2))
-
-    each A in areas do
-      if quota < 1 then break; end
-
-      if A.svolume <= quota then
-        make_cage(A)
-
-        quota = quota - A.svolume
-      end
-    end
-  end
-
-
-  local function make_trap(A)
-    chunk.content_kind = "TRAP"
-  end
+function Layout_decorate_rooms()
+  -- 
+  -- Decorate the rooms with crates, pillars, etc....
+  --
+  -- Also handles all the unused closets in a room, turning them
+  -- into cages, secret items (etc).
+  --
 
   local function make_cage(A)
     chunk.content_kind = "CAGE"
@@ -863,7 +713,9 @@ function Layout_unused_closets()
   end
 
 
-  ---| Layout_unused_closets |---
+  ---| Layout_decorate_rooms |---
+
+  -- TODO : handle unused closets
 
 do return end --FIXME re-enable Layout_unused_closets
 

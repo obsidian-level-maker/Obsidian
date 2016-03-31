@@ -1197,17 +1197,6 @@ end
 
 
 
-function Room_tizzy_up()
-
-  ---| Room_tizzy_up |---
-
-  each R in LEVEL.rooms do
---    Room_add_crates(R)
-  end
-end
-
-
-
 function Room_determine_spots()
 
   -- Algorithm:
@@ -2620,17 +2609,14 @@ function Room_build_all()
 
 ---????  Room_pool_hacks()
 
-  -- place importants -- done early as traps need to know where they are.
-  -- it also sets LEVEL.player1_z -- needed for monster depots.
-  each R in LEVEL.rooms do
-    Layout_place_importants(R)
-  end
+  -- place importants early as traps need to know where they are.
+  Layout_place_all_importants()
 
   Room_floor_ceil_heights()
   Room_prepare_skies()
 
-  -- turn remaining closets into traps, cages, etc...
-  Layout_unused_closets()
+  Layout_add_traps()
+  Layout_decorate_rooms()
 
   Layout_create_scenic_borders()
   Layout_liquid_stuff()
