@@ -250,6 +250,27 @@ public:
 	// FLTK virtual method for handling input events.
 	int handle(int event);
 
+	void PopulateLanguages()
+	{
+		opt_language->add(_("AUTO"));
+		opt_language->value(0);
+
+		for (int i = 0 ; ; i++)
+		{
+			const char *fullname = Trans_GetAvailLanguage(i);
+
+			if (! fullname)
+				break;
+
+			opt_language->add(fullname);
+
+			const char *lc = Trans_GetAvailCode(i);
+
+			if (strcmp(lc, t_language) == 0)
+				opt_language->value(i + 1);
+		}
+	}
+
 private:
 	static void callback_Quit(Fl_Widget *w, void *data)
 	{
@@ -344,18 +365,18 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += heading->h();
 
 
-	opt_language = new Fl_Choice(125 + KF * 40, cy, kf_w(190), kf_h(24), _("Language: "));
+	opt_language = new Fl_Choice(136 + KF * 40, cy, kf_w(190), kf_h(24), _("Language: "));
 	opt_language->align(FL_ALIGN_LEFT);
-	opt_language->add("AUTO");
 	opt_language->callback(callback_Language, this);
-	opt_language->value(0);
 
 	add(opt_language);
+
+	PopulateLanguages();
 
 	cy += opt_language->h() + y_step;
 
 
-	opt_win_size = new Fl_Choice(125 + KF * 40, cy, kf_w(130), kf_h(24), "Window Size: ");
+	opt_win_size = new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), "Window Size: ");
 	opt_win_size->align(FL_ALIGN_LEFT);
 	opt_win_size->add("AUTO|Tiny|Small|Medium|Large|Huge");
 	opt_win_size->callback(callback_WinSize, this);
