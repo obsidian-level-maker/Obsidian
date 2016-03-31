@@ -1349,7 +1349,10 @@ function Render_chunk(chunk)
     local LOCK = C.lock
 
     if LOCK then
-      if #LOCK.goals == 2 then
+      if LOCK.kind == "intraroom" then
+        reqs.key = "barred"
+        skin.lock_tag = assert(LOCK.tag)
+      elseif #LOCK.goals == 2 then
         error("Locked double")
       elseif #LOCK.goals == 3 then
         error("Locked triple")
@@ -1369,6 +1372,7 @@ function Render_chunk(chunk)
     assert(chunk.lock)
 
     skin.lock_tag = assert(chunk.lock.tag)
+    skin.action   = 103  -- open door
   end
 
   local function do_item()
