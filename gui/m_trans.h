@@ -26,7 +26,7 @@ extern const char *t_language;
 
 void Trans_Init();
 
-void Trans_SetLanguage(const char *langcode);
+void Trans_SetLanguage();
 
 // these are for the UI:
 const char * Trans_GetAvailCode(int idx);

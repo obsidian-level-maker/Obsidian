@@ -720,6 +720,8 @@ int main(int argc, char **argv)
 	if (! batch_mode)
 	{
 		Options_Load(options_file);
+
+		Trans_SetLanguage();
 	}
 
 	if (ArgvFind('d', "debug") >= 0)

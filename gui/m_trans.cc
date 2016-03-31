@@ -26,6 +26,7 @@
 #include "headers.h"
 #include "hdr_lua.h"
 
+#include "lib_file.h"
 #include "lib_util.h"
 
 #include "main.h"
@@ -375,7 +376,7 @@
 
 
 // current language
-const char * t_language = "AUTO";
+const char * t_language = N_("AUTO");
 
 
 /* DETERMINE CURRENT LANGUAGE */
@@ -538,13 +539,14 @@ static const char * Trans_GetUserLanguage()
 		case LANG_YORUBA:       return "yo";
 		case LANG_ZULU:         return "zu";
 
-		default: return NULL;  // unknown
+		default: return "UNKNOWN";
 	}
 
 #else  // Unix
 
 	// FIXME
 
+	return "UNKNOWN";
 #endif
 }
 
@@ -653,9 +655,77 @@ void Trans_Init()
 }
 
 
-void Trans_SetLanguage(const char *langcode)
+static const char * remove_territory(const char *langcode)
 {
-	// TODO
+	char buf[100];
+
+	strncpy(buf, langcode, sizeof(buf));
+	buf[sizeof(buf) - 1] = 0;
+
+	char *p = strchr(buf, '_');
+	if (p)
+		*p = 0;
+
+	return StringDup(buf);
+}
+
+
+void Trans_SetLanguage()
+{
+	// this is called *once*, after user options are read
+
+	const char *langcode = t_language;
+
+	if (strlen(langcode) == 0 ||
+		strcmp(langcode, "AUTO") == 0)
+	{
+		langcode = Trans_GetUserLanguage();
+
+		LogPrintf("Detected user language: '%s'\n", langcode);
+
+		if (strcmp(langcode, "UNKNOWN") == 0)
+			langcode = "en";
+	}
+
+	// English is the default language, nothing else needed
+
+	if (strcmp(langcode, "en") == 0)
+	{
+		LogPrintf("Using the default language (English)\n\n");
+		return;
+	}
+
+	// see if the translation file exists
+	char *path = StringPrintf("%s/language/%s.po", install_dir, langcode);
+
+	if (! FileExists(path))
+	{
+		// if language has a territory field (like zh_TW or en_AU) then
+		// remove it and try again
+
+		if (strchr(langcode, '_'))
+		{
+			langcode = remove_territory(langcode);
+		}
+
+		path = StringPrintf("%s/language/%s.po", install_dir, langcode);
+	}
+
+	FILE * fp = fopen(path, "rb");
+	if (! fp)
+	{
+		LogPrintf("No translation file: language/%s.po\n", langcode);
+		LogPrintf("Using the default language (English)\n\n");
+		return;
+	}
+
+	LogPrintf("Loading translation: %s\n", path);
+
+	//...... FIXME PO PARSING
+
+	fclose(fp);
+
+	LogPrintf("DONE.\n\n");
 }
 
 
