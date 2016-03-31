@@ -224,8 +224,9 @@ public:
 	bool want_quit;
 
 private:
-	Fl_Check_Button *opt_alt_look;
+	Fl_Choice       *opt_language;
 	Fl_Choice       *opt_win_size;
+	Fl_Check_Button *opt_alt_look;
 
 	Fl_Check_Button *opt_backups;
 	Fl_Check_Button *opt_debug;
@@ -257,11 +258,11 @@ private:
 		that->want_quit = true;
 	}
 
-	static void callback_AltLook(Fl_Widget *w, void *data)
+	static void callback_Language(Fl_Widget *w, void *data)
 	{
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-		alternate_look = that->opt_alt_look->value() ? true : false;
+		// FIXME
 	}
 
 	static void callback_WinSize(Fl_Widget *w, void *data)
@@ -269,6 +270,13 @@ private:
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
 		window_size = that->opt_win_size->value();
+	}
+
+	static void callback_AltLook(Fl_Widget *w, void *data)
+	{
+		UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+		alternate_look = that->opt_alt_look->value() ? true : false;
 	}
 
 	static void callback_Backups(Fl_Widget *w, void *data)
@@ -316,7 +324,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = kf_h(6);
+	int y_step = kf_h(9);
 	int pad    = kf_w(6);
 
 	int cx = x() + kf_w(24);
@@ -325,7 +333,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	Fl_Box *heading;
 
 
-	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), "Appearance");
+	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), _("Appearance"));
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -336,7 +344,18 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += heading->h();
 
 
-	opt_win_size = new Fl_Choice(145 + KF * 40, cy, kf_w(120), kf_h(24), "Window Size: ");
+	opt_language = new Fl_Choice(125 + KF * 40, cy, kf_w(190), kf_h(24), _("Language: "));
+	opt_language->align(FL_ALIGN_LEFT);
+	opt_language->add("AUTO");
+	opt_language->callback(callback_Language, this);
+	opt_language->value(0);
+
+	add(opt_language);
+
+	cy += opt_language->h() + y_step;
+
+
+	opt_win_size = new Fl_Choice(125 + KF * 40, cy, kf_w(130), kf_h(24), "Window Size: ");
 	opt_win_size->align(FL_ALIGN_LEFT);
 	opt_win_size->add("AUTO|Tiny|Small|Medium|Large|Huge");
 	opt_win_size->callback(callback_WinSize, this);

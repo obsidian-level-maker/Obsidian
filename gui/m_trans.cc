@@ -389,7 +389,7 @@ static const char * Trans_GetUserLanguage()
        See also http://www.unicode.org/unicode/onlinedat/languages.html .
        For details about languages, see http://www.ethnologue.com/ .  */
 
-	int primary, sub;
+	int primary, sub;  // FIXME !!!!
 
 	// andrewj: special check for traditional Chinese characters
 	if (primary == LANG_CHINESE &&
@@ -682,14 +682,12 @@ void Trans_SetLanguage()
 		langcode = Trans_GetUserLanguage();
 
 		LogPrintf("Detected user language: '%s'\n", langcode);
-
-		if (strcmp(langcode, "UNKNOWN") == 0)
-			langcode = "en";
 	}
 
 	// English is the default language, nothing else needed
 
-	if (strcmp(langcode, "en") == 0)
+	if (strcmp(langcode, "en") == 0 ||
+		strcmp(langcode, "UNKNOWN") == 0)
 	{
 		LogPrintf("Using the default language (English)\n\n");
 		return;
