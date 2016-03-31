@@ -2006,7 +2006,14 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       table.insert(new_chunks, chunk)
 
 
-      -- symmetry handling : peer up mirrored chunks
+      local A = AREA_CLASS.new("chunk")
+      R:add_area(A)
+
+      chunk.area = A
+      A.chunk = chunk
+
+
+      -- symmetry handling : peer up mirrored chunks and their areas
       if T.is_second then
         assert(old_chunks)
 
@@ -2016,14 +2023,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
         chunk.peer = old_chunk
         old_chunk.peer = chunk
+
+        A.peer = old_chunk.area
+        old_chunk.area.peer = A
       end
 
-
-      local A = AREA_CLASS.new("chunk")
-      R:add_area(A)
-
-      chunk.area = A
-      A.chunk = chunk
 
       if r.kind == "stair" then
         chunk.dest_area = assert(new_area)
