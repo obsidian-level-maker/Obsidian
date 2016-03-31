@@ -748,14 +748,16 @@ stderrf(">>>>>>>>>>>>> Intraroom lock in %s\n", R.name)
 
     local C = rand.pick(conn_list)
 
-    C.lock =
+    local LOCK =
     {
       kind = "intraroom"
       conn = C
       spot = spot
+      tag  = alloc_id("tag")
     }
 
-    spot.lock = C.lock
+    C.lock    = LOCK
+    spot.lock = LOCK
   end
 
 

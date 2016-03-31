@@ -2058,7 +2058,8 @@ function Fab_find_matches(reqs, match_state)
 
     -- key and switch check
     if not match_word_or_table(reqs.key,    def.key)    then return 0 end
-    if not match_word_or_table(reqs.switch, def.switch) then return 0 end
+
+--???  if not match_word_or_table(reqs.switch, def.switch) then return 0 end
 
     if reqs.item_kind != def.item_kind then return 0 end
 

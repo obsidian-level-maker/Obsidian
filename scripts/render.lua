@@ -1361,6 +1361,16 @@ function Render_chunk(chunk)
     end
   end
 
+  local function do_switch()
+    reqs.kind = "switch"
+
+    --??? reqs.switch = "intraroom"
+
+    assert(chunk.lock)
+
+    skin.lock_tag = assert(chunk.lock.tag)
+  end
+
   local function do_item()
     reqs.kind = "item"
 
@@ -1372,6 +1382,7 @@ function Render_chunk(chunk)
 
     reqs.key = "secret"  -- FIXME
   end
+
 
   local function chunk_coords(def)
     local S1 = SEEDS[chunk.sx1][chunk.sy1]
@@ -1441,6 +1452,9 @@ function Render_chunk(chunk)
 
   elseif what == "TELEPORTER" then
     do_teleporter()
+
+  elseif what == "SWITCH" then
+    do_switch()
 
   elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
     do_item()
