@@ -251,7 +251,6 @@ ULTDOOM.THEMES =
 
     techy_doors = true
 
-    ---!!!  TEMPORARY V3 CRUD  !!!---
   }
 
 
@@ -399,6 +398,7 @@ ULTDOOM.THEMES =
 
   }
 }
+
 
 
 ULTDOOM.ROOM_THEMES =

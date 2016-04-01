@@ -132,27 +132,6 @@ DOOM.THEMES =
     techy_doors = true
 
 
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    steps = { step1=50, step3=50, step4b=50 }
-    lifts = { shiny=20, platform=40, rusty=10 }
-    ceil_lights =
-    {
-      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30
-      FLAT2=20,    CEIL3_4=10,  FLAT22=10
-      GRNLITE1=10
-    }
-    big_lights =
-    {
-      TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30
-      GRNLITE1=20
-    }
-    pillars = { metal1=70, tekwall4=20
-                teklite=50, silver2=10, shawn2=10, metal1=15 }
-    big_pillars = { big_red=50, big_blue=50 }
-    crates = { crate1=50, crate2=50, comp=70, lite5=20
-               space=90, mod=15 }
-    exits = { skull_pillar=50, stone_pillar=5 }
   }
 
 ----------------------------------------
@@ -201,13 +180,6 @@ DOOM.THEMES =
 
     archy_arches = true
 
-
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30 }
-    steps = { step6=50, }
-    lifts = { shiny=20, platform=20, rusty=50 }
-    big_pillars = { big_slad=30, big_wood6=30, big_garg=60 }
   }
 
 ----------------------------------------
@@ -260,13 +232,6 @@ DOOM.THEMES =
       ASHWALL2 = 50
     }
 
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    exits = { skin_pillar=40, skull_pillar=20
-             demon_pillar2=10, demon_pillar3=10 }
-    steps = { step1=50, step3=50, step4=50 }
-    lifts = { platform=10, rusty=50, spine=30 }
-    big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
   }
 
 ----------------------------------------
@@ -305,6 +270,7 @@ DOOM.THEMES =
     }
   }
 }
+
 
 
 DOOM.ROOM_THEMES =

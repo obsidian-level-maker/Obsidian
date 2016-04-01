@@ -224,13 +224,9 @@ TNT.THEMES =
 
 --Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Chris
 
-
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=40 }
-    big_pillars = { big_slad=30, big_wood6=30, big_garg=60 }
   }
 }
+
 
 
 TNT.ROOM_THEMES =
