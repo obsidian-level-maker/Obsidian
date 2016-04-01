@@ -7,9 +7,7 @@ PREFABS.Arch_barred =
   file   = "door/barred_arch.wad"
   map    = "MAP01"
 
-  kind   = "arch"
   where  = "edge"
-
   key    = "barred"
 
   deep   = 16
@@ -29,9 +27,7 @@ PREFABS.Arch_barred_diag =
   file   = "door/barred_arch.wad"
   map    = "MAP02"
 
-  kind   = "arch"
   where  = "diagonal"
-
   key    = "barred"
 
   bound_z1 = 0
