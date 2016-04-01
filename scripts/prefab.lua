@@ -2139,7 +2139,7 @@ end
 function Fab_pick(reqs)
   local tab = {}
 
-  local match_state = { rank=1 }
+  local match_state = { rank=0 }
 
   local cur_req = reqs
 
