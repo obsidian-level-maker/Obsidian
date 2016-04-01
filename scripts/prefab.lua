@@ -1207,6 +1207,11 @@ function Fab_load_wad(def)
         B[1].mover = 1
       end
 
+      -- give ceiling brush the tag ONLY when floor brush is absent
+      if S.floor_tex == "_NOTHING" and S.tag and S.tag > 0 then
+        C.tag = S.tag
+      end
+
       -- automatically convert to a sky brush
       if C.tex == "_SKY" then
         B[1].m = "sky"
