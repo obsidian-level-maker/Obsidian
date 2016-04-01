@@ -2,7 +2,7 @@
 --  Niche switch
 --
 
-PREFABS.Switch_niche2 =
+UNFINISHED.Switch_niche2 =
 {
   file   = "switch/niche2.wad"
   where  = "seeds"
