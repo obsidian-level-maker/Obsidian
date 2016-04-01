@@ -46,6 +46,9 @@ PREFABS.Locked_medium_ks_red =
   key      = "ks_red"
 
   tex_DOORRED = "DOORRED2"
+
+  tex_BIGDOOR1 = "BIGDOOR5"
+  flat_FLAT23  = "CEIL5_2"
 }
 
 PREFABS.Locked_medium_ks_red_diag =
@@ -54,6 +57,9 @@ PREFABS.Locked_medium_ks_red_diag =
   key      = "ks_red"
 
   tex_DOORRED = "DOORRED2"
+
+  tex_BIGDOOR1 = "BIGDOOR5"
+  flat_FLAT23  = "CEIL5_2"
 }
 
 
@@ -81,7 +87,7 @@ PREFABS.Locked_medium_kc_blue_diag =
 
 PREFABS.Locked_medium_ks_blue =
 {
-  template = "Locked_medium_kc_red"
+  template = "Locked_medium_ks_red"
   key      = "ks_blue"
 
   tex_DOORRED = "DOORBLU2"
@@ -90,7 +96,7 @@ PREFABS.Locked_medium_ks_blue =
 
 PREFABS.Locked_medium_ks_blue_diag =
 {
-  template = "Locked_medium_kc_red_diag"
+  template = "Locked_medium_ks_red_diag"
   key      = "ks_blue"
 
   tex_DOORRED = "DOORBLU2"
@@ -122,7 +128,7 @@ PREFABS.Locked_medium_kc_yellow_diag =
 
 PREFABS.Locked_medium_ks_yellow =
 {
-  template = "Locked_medium_kc_red"
+  template = "Locked_medium_ks_red"
   key      = "ks_yellow"
 
   tex_DOORRED = "DOORYEL2"
@@ -131,7 +137,7 @@ PREFABS.Locked_medium_ks_yellow =
 
 PREFABS.Locked_medium_ks_yellow_diag =
 {
-  template = "Locked_medium_kc_red_diag"
+  template = "Locked_medium_ks_red_diag"
   key      = "ks_yellow"
 
   tex_DOORRED = "DOORYEL2"
