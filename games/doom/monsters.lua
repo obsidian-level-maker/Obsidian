@@ -246,7 +246,7 @@ DOOM.MONSTERS =
     level = 3
     prob = 60
     health = 70
-    damage = 4.5
+    damage = 5.5
     attack = "hitscan"
     give = { {weapon="chain"}, {ammo="bullet",count=10} }
     min_weapon = 1
