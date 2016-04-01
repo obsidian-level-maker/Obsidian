@@ -90,7 +90,7 @@ function Render_edge(E)
   local dir = assert(E.dir)
 
 
-  local DIAG_DIR_MAP = { [1]=2, [9]=8, [3]=6, [7]=4 }
+  local DIAG_DIR_MAP = { [1]=8, [9]=2, [3]=4, [7]=6 }
 
 
   local function raw_wall_brush()
