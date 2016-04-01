@@ -2108,7 +2108,7 @@ function Fab_find_matches(reqs, match_state)
   local tab = { }
 
   each name,def in PREFABS do
-    if (def.rank or 1) < match_state.rank then continue end
+    if (def.rank or 0) < match_state.rank then continue end
 
     if match_requirements(def) <= 0 then continue end
     if match_environment (def) <= 0 then continue end
@@ -2123,7 +2123,7 @@ function Fab_find_matches(reqs, match_state)
     -- Ok, add it
     -- a higher rank overrides anything lower
     
-    if (def.rank or 1) > match_state.rank then
+    if (def.rank or 0) > match_state.rank then
       match_state.rank = def.rank
       tab = { }
     end
