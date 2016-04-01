@@ -1217,8 +1217,6 @@ function Room_determine_spots()
 
 
   local function spots_for_area(R, A, mode)
-    -- uses a prefab? [ they provide their own spots ]
-
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
     if not mode then mode = A.mode end
 
@@ -1277,8 +1275,12 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
       table.append(R.item_spots, item_spots)
 
     else
-      table.append(R.mon_spots,  mon_spots)
-      table.append(R.item_spots, item_spots)
+      -- do not place items in damaging liquids
+      -- [ we skip monsters too because we can place big items in a mon spot ]
+      if A.mode != "liquid" then
+        table.append(R.item_spots, item_spots)
+        table.append(R.mon_spots,  mon_spots)
+      end
     end
 
     gui.spots_end()
