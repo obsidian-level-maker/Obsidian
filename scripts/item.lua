@@ -606,8 +606,8 @@ function Item_distribute_stats()
   -- health mainly stays in same room (a reward for killing the monsters).
   -- ammo mainly goes back, to prepare player for the fight.
   local HEALTH_DISTRIB  = 0.35
-  local AMMO_DISTRIB    = 0.85
-  local STORAGE_DISTRIB = 0.20
+  local AMMO_DISTRIB    = 0.90
+  local STORAGE_DISTRIB = 0.30
 
 
   local function get_other_locs(R)
