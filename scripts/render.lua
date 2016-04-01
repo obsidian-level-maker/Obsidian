@@ -486,6 +486,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local LOCK = E.conn.lock
 
 
+    -- setup skin
     local inner_mat = assert(A.wall_mat)
     local outer_mat = assert(E.peer.area.wall_mat)
 
@@ -494,10 +495,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     end
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
-
-    if LOCK and LOCK.goals[1].kind == "SWITCH" then
-      skin1.lock_tag = assert(LOCK.goals[1].tag)
-    end
 
 
     -- find the prefab to use
@@ -516,12 +513,16 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     end
 
     if LOCK then
-      if #LOCK.goals == 2 then
+      if LOCK.kind == "intraroom" then
+        reqs.key = "barred"
+        skin1.lock_tag = assert(LOCK.tag)
+      elseif #LOCK.goals == 2 then
         error("Locked double")
       elseif #LOCK.goals == 3 then
         error("Locked triple")
       elseif LOCK.goals[1].kind == "SWITCH" then
         reqs.switch = LOCK.goals[1].item
+        skin1.lock_tag = assert(LOCK.goals[1].tag)
       else
         reqs.key = LOCK.goals[1].item
       end

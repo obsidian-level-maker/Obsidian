@@ -729,7 +729,7 @@ function Layout_decorate_rooms()
     each C in R.conns do
       local N = C:other_room(R)
 
-      if C.kind == "joiner" and not C.lock and
+      if (C.kind == "joiner" or C.kind == "edge") and not C.lock and
          N.lev_along > R.lev_along
       then
         table.insert(conn_list, C)
