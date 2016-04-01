@@ -14,3 +14,17 @@ PREFABS.Exit_Closet1 =
   y_fit = "top"
 }
 
+
+PREFABS.Exit_Closet1_tech =
+{
+  template = "Exit_Closet1"
+
+  tex_STEP3 = "STEP1"
+
+  tex_GRAYVINE = "COMPBLUE"
+  tex_SW1VINE  = "SW1BLUE"
+
+  theme = "tech"
+  rank  = 1
+}
+
