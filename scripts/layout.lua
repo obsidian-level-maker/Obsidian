@@ -744,8 +744,6 @@ function Layout_decorate_rooms()
 
     -- Ok, can make it
 
-stderrf(">>>>>>>>>>>>> Intraroom lock in %s\n", R.name)
-
     local C = rand.pick(conn_list)
 
     local LOCK =

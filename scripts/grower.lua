@@ -982,7 +982,6 @@ function Grower_split_liquids()
         if T and T.area and T.area.room == R and T.area.mode == A.mode then
           A.peer = T.area
           T.area.peer = A
-stderrf("$$$$$$$$$  Peered areas %s <--> %s in %s\n", A.name, T.area.name, R.name)
         end
       end
     end
@@ -1339,9 +1338,6 @@ function Grower_grammatical_room(R, pass)
 
     local info = cur_rule.new_room.symmetry
     if not info then return nil end
-
-    -- TODO : proper chance of not using the symmetry
-    -- if not rand.odds(symmetry_prob) return nil end
 
     if info.list then
       info = rand.pick(info.list)
@@ -2110,10 +2106,14 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     Seed_squarify()
 
     if new_room then
-      -- assumes best.T has set X/Y to best.x and best.y
-      new_room.symmetry = transform_symmetry(T)
+      local sym_prob = 25  -- TODO : proper chance (use style)
 
---##  stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+      if rand.odds(sym_prob) then
+        -- assumes best.T has set X/Y to best.x and best.y
+        new_room.symmetry = transform_symmetry(T)
+
+--##    stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+      end
 
       if pass == "sprout" then
         transform_connection(T, cur_rule.new_room.conn, new_conn)
@@ -2403,7 +2403,7 @@ end
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
-  if pass == "decorate" then apply_num = 5 end --- rand.pick({0,1,2}) end
+  if pass == "decorate" then apply_num = 6 end --- TODO
 
   local rule_tab = collect_matching_rules(pass)
 

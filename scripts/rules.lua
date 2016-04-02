@@ -187,7 +187,7 @@ SPROUT_1 =
 
 SPROUT_JOINER_2x1 =
 {
-  prob = 500
+  prob = 300
 
   structure =
   {
@@ -378,7 +378,7 @@ AUX_CAGE_GROW3 =
 
 DECORATE_CLOSET_2x1 =
 {
-  prob = 1
+  prob = 40
 
   structure =
   {
@@ -392,7 +392,7 @@ DECORATE_CLOSET_2x1 =
 
 DECORATE_CLOSET_2x2 =
 {
-  prob = 20
+  prob = 100
 
   structure =
   {
@@ -407,7 +407,7 @@ DECORATE_CLOSET_2x2 =
 
 DECORATE_LIQUID_1 =
 {
-  prob = 5
+  prob = 10
 
   structure =
   {
