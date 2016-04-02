@@ -1070,7 +1070,7 @@ function Quest_create_zones()
 
     R.zone = zone
 
-    table.insert(zone.room, R)
+    table.insert(zone.rooms, R)
 
     each A in R.areas do
       assign_area(A, zone)
@@ -1082,7 +1082,7 @@ function Quest_create_zones()
   end
 
 
-  local function spread_zones_via_conns(mode)
+  local function spread_zones_via_conns()
     local is_done = true
 
     local conn_list = table.copy(LEVEL.conns)
@@ -1092,13 +1092,12 @@ function Quest_create_zones()
       local R = C.R1
       local N = C.R2
 
-      if not R.zone then R, N = N, R end
-
-      if N.zone then continue end
+      if R.zone and N.zone then continue end
 
       -- there are still rooms without a zone
       is_done = false
 
+      if not R.zone then R, N = N, R end
       if not R.zone then continue end
 
       if rand.odds(10) then
@@ -1106,6 +1105,7 @@ function Quest_create_zones()
       end
     end
 
+stderrf("spread_zones_via_conns: done = %s\n", string.bool(is_done))
     return is_done
   end
 
@@ -1161,18 +1161,16 @@ function Quest_create_zones()
 
     if not R or R.zone then continue end
 
---[[  ????
     if table.has_elem(Q.rooms, LEVEL.exit_room) then
-      assign_room(R, exit_zone)
+      --???  assign_room(R, exit_zone)
       continue
     end
---]]
 
     assign_room(R, Zone_new())
   end
 
-  while spread_zones_via_conns() do
-stderrf("spread_zones_via_conns...")
+  -- flow zones between room connections
+  while not spread_zones_via_conns() do
   end
 
   -- sanity check
