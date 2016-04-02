@@ -11,6 +11,8 @@ ______________________________________________________________________
 
 *  Heretic support
 
+*  get secret rooms working again
+
 *  better system to vary "pacing" of monsters
 
 *  support for Traps and free-standing Cages
@@ -21,9 +23,12 @@ ______________________________________________________________________
 *  update documentation for current GUI interface
 
 *  support for translation into other languages
-   -  lib_locale to get default "language"
-   -  everything in m_trans.cc
-   -  choice of language in Options window
+   -  Trans_GetUserLanguage
+      -  Unix
+      -  Win32
+      -  MacOS X
+   -  setting up a Lua state, store and retrieve messages
+   -  PO file parsing
 
 *  better i18n support (esp. non-ASCII characters in filenames)
 
@@ -76,6 +81,8 @@ ______________________________________________________________________
 -  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
 
 -  closet that looks like a wall switch but opens a monsters closet
+
+-  allow monsters in liquids [ but never place items there ]
 
 ??  fix porches causing BIG height diffs
 
