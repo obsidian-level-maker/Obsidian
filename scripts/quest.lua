@@ -1078,7 +1078,20 @@ function Quest_create_zones()
   end
 
 
-  local function other_zone(Z)
+  local function other_zone(unwanted_zone)
+    local list = {}
+
+    each Z in LEVEL.zones do
+      if Z != unwanted_zone then
+        table.insert(list, Z)
+      end
+    end
+
+    if table.empty(list) then
+      return unwanted_zone
+    end
+
+    return rand.pick(list)
   end
 
 
@@ -1100,12 +1113,21 @@ function Quest_create_zones()
       if not R.zone then R, N = N, R end
       if not R.zone then continue end
 
-      if rand.odds(10) then
+      if C.is_secret or C.kind == "teleporter" then
+        assign_room(N, other_zone(R.zone))
+        continue
+      end
+
+      -- prefer not to cross quest boundaries
+      local use_prob = sel(C.lock, 3, 60)
+
+      if rand.odds(use_prob) then
         assign_room(N, R.zone)
       end
     end
 
-stderrf("spread_zones_via_conns: done = %s\n", string.bool(is_done))
+-- stderrf("spread_zones_via_conns: done = %s\n", string.bool(is_done))
+
     return is_done
   end
 
@@ -1121,20 +1143,16 @@ stderrf("spread_zones_via_conns: done = %s\n", string.bool(is_done))
 
   ---| Quest_group_into_zones |---
 
-  local quota = calc_quota()
+  local quota = 3 --!!!!! calc_quota()
 
   if quota > #LEVEL.quests then
      quota = #LEVEL.quests
   end
 
-  -- handle exit room(s) first
+  -- handle exit room first
   local exit_zone = Zone_new()
 
-  each R in LEVEL.rooms do
-    if R.is_exit then
-      assign_room(R, exit_zone)
-    end
-  end
+  assign_room(LEVEL.exit_room, exit_zone)
 
   -- start room(s) are usually the 2nd zone
   local start_zone
