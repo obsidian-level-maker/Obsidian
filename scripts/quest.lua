@@ -1043,7 +1043,7 @@ function Quest_create_zones()
       end
     end
 
-    local num = rand.int(total_svol / 300)
+    local num = rand.int(total_svol / 260)
 
 ---##  stderrf("Map size : %d seeds --> %1.2f ZONES\n", total_svol, num)
 
@@ -1132,6 +1132,20 @@ function Quest_create_zones()
   end
 
 
+  local function sort_zones()
+    each Z in LEVEL.zones do
+      Z.min_along = 99
+
+      each R in Z.rooms do
+        Z.min_along = math.min(Z.min_along, R.lev_along)
+      end
+    end
+
+    table.sort(LEVEL.zones, function(A, B)
+        return A.min_along < B.min_along end)
+  end
+
+
   local function dump_zones()
     gui.printf("Zone list:\n")
 
@@ -1143,7 +1157,7 @@ function Quest_create_zones()
 
   ---| Quest_group_into_zones |---
 
-  local quota = 3 --!!!!! calc_quota()
+  local quota = calc_quota()
 
   if quota > #LEVEL.quests then
      quota = #LEVEL.quests
@@ -1195,6 +1209,8 @@ function Quest_create_zones()
   each R in LEVEL.rooms do
     assert(R.zone)
   end
+
+  sort_zones()
 
   Area_spread_zones()
 
