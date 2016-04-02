@@ -727,14 +727,12 @@ end
 
 function Area_locate_chunks()
   --
-  -- locate seed rectangles in areas of rooms, these will be used
+  -- Locate seed rectangles in areas of rooms, these will be used
   -- for placing importants (goals, teleporters, etc) and also
   -- decorative prefabs.
   --
 
-  -- TODO : handle symmetrical rooms:
-  --    1. peer up chunks either side of the line of symmetry
-  --    2. handle chunks ON the line of symmetry
+  -- TODO : better handle chunks ON the axis of symmetry
 
 
   local PASSES = { 44, 42,24, 33, 32,23,  22, 21,12,  11 }
@@ -780,6 +778,11 @@ function Area_locate_chunks()
 
 
   local function raw_test_chunk(A, sx1,sy1, sx2,sy2)
+    -- size check, disallow occupying the whole area
+    local vol = (sx2 - sx1 + 1) * (sy2 - sy1 + 1)
+
+    if vol > A.svolume * 0.45 then return false end
+
     for x = sx1, sx2 do
     for y = sy1, sy2 do
       if not Seed_valid(x, y) then return false end
