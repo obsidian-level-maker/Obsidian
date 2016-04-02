@@ -813,21 +813,12 @@ function Area_locate_chunks()
 
 
   local function try_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-if A.room.id == 13 then
-  stderrf("trying (%d %d) (%d %d)\n", sx1,sy1, sx2,sy2)
-end
     if not raw_test_chunk(A, sx1,sy1, sx2,sy2) then
-if A.room.id == 13 then
-  stderrf("  FAILED\n")
-end
       return false
     end
 
     if not (A.room and A.room.symmetry) then
       install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-if A.room.id == 13 then
-  stderrf("  NON-SYM SUCCESS\n")
-end
       return true
     end
 
@@ -837,33 +828,21 @@ end
     local N2 = A.room.symmetry:transform(SEEDS[sx2][sy2])
 
     if not (N1 and N2) then
-if A.room.id == 13 then
-  stderrf("  N1 or N2 is NIL\n")
-end
-    return false
-end
+      return false
+    end
 
     -- it *should* be the same area, but sanity check
     if N1.area != A then return false end
     if N2.area != A then return false end
 
-if A.room.id == 13 then
-  stderrf("  other area is same\n")
-end
     local nx1 = math.min(N1.sx, N2.sx)
     local ny1 = math.min(N1.sy, N2.sy)
     local nx2 = math.max(N1.sx, N2.sx)
     local ny2 = math.max(N1.sy, N2.sy)
 
-if A.room.id == 13 then
-  stderrf("  peer chunk --> (%d %d) (%d %d)\n", nx1,ny1, nx2,ny2)
-  stderrf("    N1 = %s   N2 = %s\n", N1.name, N2.name)
-end
-
     -- check for chunks straddling the axis of symmetry
     if nx1 == sx1 and ny1 == sy1 and nx2 == sx2 and ny2 == sy2 then
       local CHUNK = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-stderrf("STRADDLER floor chunk in %s : %dx%d\n", A.room.name, CHUNK.sw, CHUNK.sh)
       CHUNK.is_straddler = true
       return true
     end
@@ -872,16 +851,13 @@ stderrf("STRADDLER floor chunk in %s : %dx%d\n", A.room.name, CHUNK.sw, CHUNK.sh
     if not (nx2 < sx1 or ny2 < sy1 or
             nx1 > sx2 or ny1 > sy2)
     then
-stderrf("  overlap!\n")
       return false
     end
 
     if not raw_test_chunk(A, nx1,ny1, nx2,ny2) then
-stderrf("  FAILED\n")
       return false
     end
 
-stderrf("  SUCCESS, Peered floor chunk in %s\n", A.room.name)
     local CHUNK1 = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
     local CHUNK2 = install_chunk_at_seed(A, nx1,ny1, nx2,ny2)
 
@@ -944,13 +920,11 @@ stderrf("  SUCCESS, Peered floor chunk in %s\n", A.room.name)
   ---| Area_locate_chunks |---
 
   each R in LEVEL.rooms do
-if R.id == 13 then stderrf("ROOM_13.........\n") end
   each A in R.areas do
     if A.mode == "floor" or A.mode == "liquid" then
       find_chunks_in_area(A)
     end
   end -- R, A
-if R.id == 13 then stderrf("Dunnity done.\n") end
   end
 end
 
