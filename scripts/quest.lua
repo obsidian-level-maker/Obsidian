@@ -269,6 +269,9 @@ function Quest_create_initial_quest()
       return
     end
 
+    -- FIXME : support secret exits again
+    do return end
+
     local R = pick_exit_room("secret_mode")
 
     if not R then
@@ -2506,7 +2509,8 @@ function Quest_make_quests()
 
   Grower_hallway_kinds()
 
-  Quest_big_secrets()
+--FIXME : get secrets working again
+--  Quest_big_secrets()
 
   -- special weapon handling for HEXEN and HEXEN II
   if PARAM.hexen_weapons then
