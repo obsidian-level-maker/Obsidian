@@ -1043,6 +1043,30 @@ function Quest_group_into_zones()
   -- Note : assumes quests are in a visit order
 
 
+  local function calc_quota()
+    --
+    -- determine # of zones based on total used seeds
+    --
+    local total_svol = 0
+
+    each A in LEVEL.areas do
+      if A.room then
+        total_svol = total_svol + A.svolume
+      end
+    end
+
+    local num = rand.int(total_svol / 340)
+
+---##  stderrf("Map size : %d seeds --> %1.2f ZONES\n", total_svol, num)
+
+    num = math.clamp(1, num, 5)
+
+    gui.printf("Zone quota: %d\n", num)
+
+    return num
+  end
+
+
   local function assign_zone(Q, zone)
     Q.zone = zone
 
@@ -1072,6 +1096,8 @@ function Quest_group_into_zones()
 
 
   ---| Quest_group_into_zones |---
+
+  local num = calc_quota()
 
   -- this is deliberately quite low, since we generally want each major
   -- quest to become a single zone, and only merge them when a quest is
