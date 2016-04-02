@@ -59,25 +59,18 @@
 
 --class ZONE
 --[[
-    -- A zone is group of quests.
-    -- Each zone is meant to be distinctive (visually and game-play).
+    --
+    -- A zone is a group of rooms and areas which form a distinct
+    -- section of the map.  Zones are always separated by walls,
+    -- except at room connections which cross a zone barrier.
+    --
 
-    id, name   -- debugging aids
-
-    quests : list(QUEST)
+    id, name  -- debugging aids
 
     rooms : list(ROOM)
+    areas : list(AREA)
 
     sky_h : number   -- height of sky for this zone
-
-    is_leaf : bool   -- true if no more than 1 conn to another zone
-
-    num_areas   -- total # of non-border areas in the zone
-    svolume     -- total size of zone (excl. border areas)
-
-    map_group : number   -- used when connecting zones
-
-    storage_rooms : list(ROOM)   -- places to put some health/ammo
 
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
@@ -145,11 +138,8 @@ function Zone_new()
   {
     id = id
     name = "ZONE_" .. id
-    quests = {}
     rooms = {}
-    num_areas = 0
-    svolume = 0
-    storage_rooms = {}
+    areas = {}
   }
 
   table.insert(LEVEL.zones, ZONE)
@@ -1038,10 +1028,10 @@ end
 
 
 
-function Quest_group_into_zones()
-
-  -- Note : assumes quests are in a visit order
-
+function Quest_create_zones()
+  --
+  -- Divides the map into a few distinct sections.
+  --
 
   local function calc_quota()
     --
@@ -1055,7 +1045,7 @@ function Quest_group_into_zones()
       end
     end
 
-    local num = rand.int(total_svol / 340)
+    local num = rand.int(total_svol / 300)
 
 ---##  stderrf("Map size : %d seeds --> %1.2f ZONES\n", total_svol, num)
 
@@ -1067,21 +1057,25 @@ function Quest_group_into_zones()
   end
 
 
-  local function assign_zone(Q, zone)
-    Q.zone = zone
+  local function assign_area(A, zone)
+    if A.zone then return end
 
-    table.insert(zone.quests, Q)
+    A.zone = zone
 
-    zone.svolume = zone.svolume + Q.svolume
-    
-    each id, R in Q.rooms do
-      R.zone = zone
+    table.insert(zone.areas, A)
+  end
 
-      table.add_unique(zone.rooms, R)
 
-      each A in R.areas do
-        A.zone = zone
-      end
+  local function assign_room(R, zone)
+    -- already has a zone?
+    if R.zone then return end
+
+    R.zone = zone
+
+    table.insert(zone.room, R)
+
+    each A in R.areas do
+      assign_area(A, zone)
     end
   end
 
@@ -1090,38 +1084,55 @@ function Quest_group_into_zones()
     gui.printf("Zone list:\n")
 
     each Z in LEVEL.zones do
-      gui.printf("  %s : quests:%d svolume:%d\n", Z.name, #Z.quests, Z.svolume)
+      gui.printf("  %s : rooms:%d areas:%d\n", Z.name, #Z.rooms, #Z.areas)
     end
   end
 
 
   ---| Quest_group_into_zones |---
 
-  local num = calc_quota()
+  local want_zones = calc_quota()
 
-  -- this is deliberately quite low, since we generally want each major
-  -- quest to become a single zone, and only merge them when a quest is
-  -- very small.
-  local rough_size = 100
-
-  local cur_zone = Zone_new()
-
-  each Q in LEVEL.quests do
-    if cur_zone.svolume >= rough_size then
-      cur_zone = Zone_new()
-    end
-
-    assign_zone(Q, cur_zone)
+  if want_zones > #LEVEL.quests then
+     want_zones = #LEVEL.quests
   end
 
-  dump_zones()
+  -- handle exit room(s) first
+  local exit_zone = Zone_new()
+
+  each R in LEVEL.rooms do
+    if R.is_exit then
+      R.zone = exit_zone
+    end
+  end
+
+  -- start room(s) are usually the 2nd zone
+  local start_zone
+
+  if want_zones >= 2 then
+    start_zone = Zone_new()
+  end
+
+  each R in LEVEL.rooms do
+    if R.is_start then
+      R.zone = start_zone
+    end
+  end
+
+  -- handle quest entry rooms
+
+  local quest_list = table.copy(LEVEL.quests)
+  rand.shuffle(quest_list)
+
+  each Q in quest_list do
+    -- FIXME
+  end
+
+  -- !!!! FIXME : spread zones via CONNs
 
   Area_spread_zones()
 
-  each Z in LEVEL.zones do
-    table.sort(Z.rooms, function(A,B)
-        return A.lev_along < B.lev_along end)
-  end
+  dump_zones()
 end
 
 
@@ -2023,7 +2034,6 @@ end
       if R.kind == "hallway" then continue end
 
       if R:is_unused_leaf() and #R.items == 0 then
-        table.insert(R.zone.storage_rooms, R)
         R.is_storage = true
       end
     end
@@ -2530,7 +2540,7 @@ function Quest_make_quests()
   Quest_order_by_visit()
 
   -- this must be after quests have been ordered
-  Quest_group_into_zones()
+  Quest_create_zones()
 
   Grower_hallway_kinds()
 

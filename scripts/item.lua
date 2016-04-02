@@ -632,12 +632,14 @@ function Item_distribute_stats()
     end
 
     -- add storage rooms
+--[[ FIXME
     if R.zone.storage_rooms then
       each N in R.zone.storage_rooms do
         ratio = rand.pick({ 0.25, 0.5, 0.75 })
         table.insert(list, { room=R, ratio=ratio, is_storage=true })
       end
     end
+--]]
 
     return list
   end
