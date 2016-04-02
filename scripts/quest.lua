@@ -34,8 +34,6 @@
 
     goals : list(GOAL)
 
-    zone : ZONE
-
     parent_node : QUEST_NODE
 
 --]]
@@ -1080,6 +1078,38 @@ function Quest_create_zones()
   end
 
 
+  local function other_zone(Z)
+  end
+
+
+  local function spread_zones_via_conns(mode)
+    local is_done = true
+
+    local conn_list = table.copy(LEVEL.conns)
+    rand.shuffle(conn_list)
+
+    each C in conn_list do
+      local R = C.R1
+      local N = C.R2
+
+      if not R.zone then R, N = N, R end
+
+      if N.zone then continue end
+
+      -- there are still rooms without a zone
+      is_done = false
+
+      if not R.zone then continue end
+
+      if rand.odds(10) then
+        assign_room(N, R.zone)
+      end
+    end
+
+    return is_done
+  end
+
+
   local function dump_zones()
     gui.printf("Zone list:\n")
 
@@ -1091,10 +1121,10 @@ function Quest_create_zones()
 
   ---| Quest_group_into_zones |---
 
-  local want_zones = calc_quota()
+  local quota = calc_quota()
 
-  if want_zones > #LEVEL.quests then
-     want_zones = #LEVEL.quests
+  if quota > #LEVEL.quests then
+     quota = #LEVEL.quests
   end
 
   -- handle exit room(s) first
@@ -1102,33 +1132,53 @@ function Quest_create_zones()
 
   each R in LEVEL.rooms do
     if R.is_exit then
-      R.zone = exit_zone
+      assign_room(R, exit_zone)
     end
   end
 
   -- start room(s) are usually the 2nd zone
   local start_zone
 
-  if want_zones >= 2 then
+  if quota >= 2 then
     start_zone = Zone_new()
   end
 
   each R in LEVEL.rooms do
     if R.is_start then
-      R.zone = start_zone
+      assign_room(R, start_zone)
     end
   end
 
   -- handle quest entry rooms
-
   local quest_list = table.copy(LEVEL.quests)
   rand.shuffle(quest_list)
 
   each Q in quest_list do
-    -- FIXME
+    -- hit the quota limit?
+    if #LEVEL.zones >= quota then break; end
+
+    local R = Q.entry
+
+    if not R or R.zone then continue end
+
+--[[  ????
+    if table.has_elem(Q.rooms, LEVEL.exit_room) then
+      assign_room(R, exit_zone)
+      continue
+    end
+--]]
+
+    assign_room(R, Zone_new())
   end
 
-  -- !!!! FIXME : spread zones via CONNs
+  while spread_zones_via_conns() do
+stderrf("spread_zones_via_conns...")
+  end
+
+  -- sanity check
+  each R in LEVEL.rooms do
+    assert(R.zone)
+  end
 
   Area_spread_zones()
 
