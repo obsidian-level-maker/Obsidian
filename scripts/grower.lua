@@ -1591,6 +1591,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       return match_a_magic_element(S, E1)
     end
 
+    -- new rooms must not be placed in boundary spaces
+    if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_over_boundary(S) then
+      return false
+    end
+
 
     -- symmetry handling
     -- [ we prevent a pattern from overlapping its mirror ]
@@ -1627,11 +1632,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     -- seed is locked out of further changes?
     if E2.assignment and (S.no_assignment or S.disabled_R == R) then
-      return false
-    end
-
-    -- new rooms must not be placed in boundary spaces
-    if E2.kind == "new_room" and Seed_over_boundary(S) then
       return false
     end
 
