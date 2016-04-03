@@ -1119,7 +1119,7 @@ function Quest_create_zones()
       end
 
       -- prefer not to cross quest boundaries
-      local use_prob = sel(C.lock, 3, 60)
+      local use_prob = sel(C.lock, 2, 50)
 
       if rand.odds(use_prob) then
         assign_room(N, R.zone)
