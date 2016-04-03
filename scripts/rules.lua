@@ -138,7 +138,7 @@ GROW_MIR_TEST =
 
 GROW_NEWAREA_1 =
 {
-  prob = 25
+  prob = 5
 
   structure =
   {
@@ -150,7 +150,7 @@ GROW_NEWAREA_1 =
 
 GROW_STAIRS_2 =
 {
-  prob = 100
+  prob = 25
 
   structure =
   {
