@@ -2321,7 +2321,8 @@ end
 
 function Quest_room_themes()
   --
-  --  FIXME: describe this...
+  -- This decides the room themes to use in each room, and also
+  -- various textures (e.g. the fence material for each zone).
   --
 
   local function match_level_theme(name)
@@ -2392,9 +2393,21 @@ function Quest_room_themes()
     local tab = table.copy(theme_tab)
 
     each Z in LEVEL.zones do
-      local name = rand.key_by_probs(tab)
+      local tab2 = table.copy(tab)
 
-      tab[name] = tab[name] / 100
+      -- keep the themes unique
+      for k = idx - 1, 1, -1 do
+        local prev = assert(Z.building_themes[k])
+        assert(prev.name)
+
+        if table.size(tab2) >= 2 then
+          tab2[prev.name] = nil
+        end
+      end
+
+      local name = rand.key_by_probs(tab2)
+
+      tab[name] = tab[name] / 20
 
       Z.building_themes[idx] = assert(GAME.ROOM_THEMES[name])
     end
