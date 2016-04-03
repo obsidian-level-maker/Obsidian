@@ -2299,7 +2299,7 @@ end
 
 
 
-function Quest_choose_themes()
+function Quest_room_themes()
   --
   --  FIXME: describe this...
   --
@@ -2315,6 +2315,19 @@ function Quest_choose_themes()
   end
 
 
+  local function total_volume_of_room_kind(kind)
+    local vol = 0
+
+    each R in LEVEL.rooms do
+      if R.kind == kind then
+        vol = vol + R.svolume
+      end
+    end
+
+    return vol
+  end
+
+
   local function collect_usable_themes(kind)
     local tab = {}
 
@@ -2325,7 +2338,7 @@ function Quest_choose_themes()
     end
 
     if table.empty(tab) then
-      gui.printf("WARNING: no rooms themes with kind=\"%s\"\n", kind);
+      error("no rooms themes for: " .. kind)
     end
 
     return tab
@@ -2335,19 +2348,14 @@ function Quest_choose_themes()
   local function pick_zone_theme(theme_tab, previous)
     assert(theme_tab)
 
-    if table.empty(theme_tab) then
-      error("pick_zone_theme: nothing matched!")
-    end
-
     local tab = table.copy(theme_tab)
 
     -- prefer not to use same theme as the last one
     for n = 1,2 do
       local prev = previous and previous[n]
-      local factor = 4
 
       if prev and tab[prev] then
-        tab[prev] = tab[prev] / factor
+        tab[prev] = tab[prev] / 4
       end
     end
 
@@ -2358,22 +2366,15 @@ function Quest_choose_themes()
 
 
   local function themes_for_zones()
-    LEVEL.cave_theme      = pick_zone_theme(collect_usable_themes("cave"))
-    LEVEL.hallway_theme   = pick_zone_theme(collect_usable_themes("hallway"))
-    LEVEL.stairwell_theme = pick_zone_theme(collect_usable_themes("stairwell"))
+    LEVEL.cave_theme    = pick_zone_theme(collect_usable_themes("cave"))
+    LEVEL.hallway_theme = pick_zone_theme(collect_usable_themes("hallway"))
 
     local outdoors_tab = collect_usable_themes("outdoors")
     local building_tab = collect_usable_themes("building")
 
-    -- Note: this logic is not ideal, since zones are not necessarily
-    --       linear, e.g. zones[3] may be entered from zones[1]
-    local previous = {}
-
     each Z in LEVEL.zones do
       Z.outdoors_theme = pick_zone_theme(outdoors_tab, previous)
       Z.building_theme = pick_zone_theme(building_tab, previous)
-
-      table.insert(previous, 1, Z.building_theme)
     end
   end
 
@@ -2384,8 +2385,6 @@ function Quest_choose_themes()
 
     each R in all_rooms do
       local Z = assert(R.zone)
-
-      -- Note: hallways and stairwells have not been decided yet
 
       if R.kind == "cave" then
         R.theme = Z.cave_theme or LEVEL.cave_theme
@@ -2420,58 +2419,6 @@ function Quest_choose_themes()
   end
 
 
-  local function pictures_for_zones()
-    each Z in LEVEL.zones do
-      Z.logo_name = "BLAH" ---##  rand.key_by_probs(THEME.logos)
-      Z.fake_windows = rand.odds(25)
-    end
-
-    if not THEME.pictures or STYLE.pictures == "none" then
-      return
-    end
-
-    each Z in LEVEL.zones do
-      Z.pictures = {}
-    end
-
-    --- distribute the pictures amongst the zones ---
-
-    -- FIXME !!!!  bottom up approach...  [eh, what?]
-
-    local names = table.keys(THEME.pictures)
-
-    assert(#names >= 1)
-
-    -- ensure there are enough pictures to go round
-    while table.size(names) < #LEVEL.zones do
-      names = table.append(names, table.copy(names))
-    end
-
-    rand.shuffle(names)
-
-    each Z in LEVEL.zones do
-      local name = table.remove(names, 1)
-      Z.pictures[name] = THEME.pictures[name]
-    end
-
-    -- one extra picture per zone (unless already there)
-    names = table.keys(THEME.pictures)
-
-    each Z in LEVEL.zones do
-      local name = rand.pick(names)
-
-      Z.pictures[name] = THEME.pictures[name] / 4
-    end
-
---[[ DEBUG
-    gui.debugf("Pictures for zones:\n")
-    each Z in LEVEL.zones do
-      gui.debugf("ZONE_%d =\n%s\n", Z.id, table.tostr(Z.pictures))
-    end
---]]
-  end
-
-
   local function setup_cave_theme(R)
     R.main_tex = R.zone.cave_wall_mat
 
@@ -2492,12 +2439,12 @@ function Quest_choose_themes()
   end
 
 
-  local function setup_theme(R)
+  local function setup_room_theme(R)
     if R.kind == "cave" then
       setup_cave_theme(R)
     else
       if R.is_outdoor then
-        R.main_tex = R.zone.natural_mat
+        R.main_tex = rand.key_by_probs(R.theme.floors)
       else
         R.main_tex = rand.key_by_probs(R.theme.walls)
       end
@@ -2507,26 +2454,20 @@ function Quest_choose_themes()
     R.skin =
     {
       wall  = R.main_tex
-      floor = R.floor_mat
-      ceil  = R.ceil_mat
+      floor = R.floor_mat  -- can be NIL
+      ceil  = R.ceil_mat   -- ditto
     }
   end
 
 
-  local function total_volume_of_room_kind(kind)
-    local vol = 0
-
+  local function select_room_textures()
     each R in LEVEL.rooms do
-      if R.kind == kind then
-        vol = vol + R.svolume
-      end
+      setup_room_theme(R)
     end
-
-    return vol
   end
 
 
-  local function select_room_textures()
+  local function select_misc_textures()
     local outdoor_volume = total_volume_of_room_kind("outdoor")
     local cave_volume    = total_volume_of_room_kind("cave")
 
@@ -2563,24 +2504,18 @@ function Quest_choose_themes()
 
       Z.fence_mat = rand.key_by_probs(THEME.fences)
       Z.steps_mat = THEME.steps_mat
-
-      Z.corner_mats = Z.building_theme.corners or THEME.corners
-    end
-
-
-    each R in LEVEL.rooms do
-      setup_theme(R)
     end
   end
 
 
-  ---| Quest_choose_themes |---
+  ---| Quest_room_themes |---
 
   themes_for_zones()
   themes_for_rooms()
 
   select_facades()
 
+  select_misc_textures()
   select_room_textures()
 end
 
@@ -2616,7 +2551,7 @@ function Quest_make_quests()
 
   Grower_hallway_kinds()
 
---FIXME : get secrets working again
+--FIXME : get secret rooms working again
 --  Quest_big_secrets()
 
   -- special weapon handling for HEXEN and HEXEN II
@@ -2627,8 +2562,7 @@ function Quest_make_quests()
   end
 
   Quest_nice_items()
-
-  Quest_choose_themes()
+  Quest_room_themes()
 
   Monster_pacing()
 end
