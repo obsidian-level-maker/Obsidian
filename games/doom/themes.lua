@@ -503,6 +503,28 @@ DOOM.ROOM_THEMES =
   }
 
 
+  tech_VeryShiny =
+  {
+    kind = "building"
+    rarity = "zone"
+
+    walls =
+    {
+      SHAWN2 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 50
+    }
+
+    ceilings =
+    {
+      FLAT23 = 50
+    }
+  }
+
+
   tech_Cave =
   {
     kind = "cave"
