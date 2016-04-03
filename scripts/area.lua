@@ -1047,9 +1047,7 @@ function Area_assign_boundary()
 
   local function area_is_inside_box(A)
     each S in A.seeds do
-      if LEVEL.boundary_sx1 < S.sx and S.sx < LEVEL.boundary_sx2 and
-         LEVEL.boundary_sy1 < S.sy and S.sy < LEVEL.boundary_sy2
-      then
+      if not Seed_over_boundary(S) then
         return true
       end
     end
@@ -1068,11 +1066,13 @@ function Area_assign_boundary()
 
 
   local function mark_other_inners()
-    local prob = 20*0
+    -- NOT USED ATM
+
+    do return end
 
     each A in LEVEL.areas do
       if not A.room and
-         rand.odds(prob) and
+         rand.odds(20) and
          area_touches_a_room(A) and
          area_is_inside_box(A) and
          not area_touches_edge(A)

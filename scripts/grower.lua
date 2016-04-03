@@ -839,19 +839,29 @@ function Grower_decide_boundary()
 
   local map_size = (SEED_W + SEED_H) / 2
 
-  if map_size < 26 then
+  if map_size < 20 then
     LEVEL.boundary_margin = 4
-  elseif map_size < 36 then
+  elseif map_size < 30 then
     LEVEL.boundary_margin = 5
   else
     LEVEL.boundary_margin = 6
   end
 
   LEVEL.boundary_sx1 = LEVEL.boundary_margin
-  LEVEL.boundary_sx2 = SEED_W + 1 - LEVEL.boundary_margin
-
   LEVEL.boundary_sy1 = LEVEL.boundary_margin
+
+  LEVEL.boundary_sx2 = SEED_W + 1 - LEVEL.boundary_margin
   LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
+
+  -- map edge calculation
+
+  LEVEL.edge_margin = 2
+
+  LEVEL.edge_sx1 = LEVEL.edge_margin
+  LEVEL.edge_sy1 = LEVEL.edge_margin
+
+  LEVEL.edge_sx2 = SEED_W + 1 - LEVEL.edge_margin
+  LEVEL.edge_sy2 = SEED_H + 1 - LEVEL.edge_margin
 end
 
 
@@ -1160,8 +1170,7 @@ function Grower_grammatical_room(R, pass)
     if S.disabled_R == R then return true end
 
     -- never use a seed at edge of map
-    if S.sx <= 1 or S.sx >= SEED_W then return true end
-    if S.sy <= 1 or S.sy >= SEED_H then return true end
+    if Seed_over_map_edge(S) then return true end
 
     return false
   end
@@ -1618,6 +1627,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     -- seed is locked out of further changes?
     if E2.assignment and (S.no_assignment or S.disabled_R == R) then
+      return false
+    end
+
+    -- new rooms must not be placed in boundary spaces
+    if E2.kind == "new_room" and Seed_over_boundary(S) then
       return false
     end
 

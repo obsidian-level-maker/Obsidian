@@ -75,9 +75,6 @@ OB_THEMES["jumble"] =
 
 SEED_SIZE = 128
 
-EDGE_SIZE  = 3  -- # of seeds
-BOUNDARY_SIZE = 4
-
 EXTREME_H = 32000
 
 
