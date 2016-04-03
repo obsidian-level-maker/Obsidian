@@ -1911,8 +1911,7 @@ function Level_init()
   LEVEL.rooms = {}
   LEVEL.conns = {}
 
-  LEVEL.scenic_rooms = {}
-  LEVEL.map_borders  = {}
+  LEVEL.map_borders = {}
   LEVEL.depots = {}
 
   LEVEL.unplaced_weapons = {}
