@@ -125,18 +125,7 @@ function Monster_pacing()
   end
 
 
-  local function set_room(R, what)
-    if R.pressure then
-      amounts[R.pressure] = amounts[R.pressure] - 1
-    end
-
-    R.pressure = what
-
-    amounts[what] = amounts[what] + 1
-  end
-
-
-  local function check_connections()
+  local function mark_connections()
     each C in LEVEL.conns do
       local R1 = C.R1
       local R2 = C.R2
@@ -162,6 +151,17 @@ function Monster_pacing()
   end
 
 
+  local function set_room(R, what)
+    if R.pressure then
+      amounts[R.pressure] = amounts[R.pressure] - 1
+    end
+
+    R.pressure = what
+
+    amounts[what] = (amounts[what] or 0) + 1
+  end
+
+
   local function handle_known_room(R)
     if R == LEVEL.exit_room then
       set_room(R, "high")
@@ -174,12 +174,12 @@ function Monster_pacing()
     end
 
     if R.goals[1] then
-      local high_prob = 88
+      local high_prob = 90
 
       if R.is_teleport_dest then
-        high_prob = 22
+        high_prob = 40
       elseif R.zone == LEVEL.exit_room.zone then
-        high_prob = 44
+        high_prob = 60
       end
 
       set_room(R, rand.sel(high_prob, "high", "medium"))
@@ -193,31 +193,31 @@ function Monster_pacing()
     if R.is_zone_entry    then return false end
     if R.is_after_start   then return false end
 
+    local count = 0
+
     each C in R.conns do
       if C.lock then continue end
       if C.is_secret then continue end
+      if C.kind == "teleporter" then continue end
 
       local N = C:other_room(R)
 
       if N.pressure then return false end
+
+      count = count + 1
     end
 
-    return true
+    return (count >= 2)
   end
 
 
   local function handle_isolated_room(R)
-    for pass = 1, 4 do
-      if amounts.high < high_quota and rand.odds(50) then
-        set_room(R, "high")
-        return
-      end
+    local tab = { low=60, high=40, medium=2 }
 
-      if amounts.low < low_quota and rand.odds(50) then
-        set_room(R, "low")
-        return
-      end
-    end
+    if amounts.low  >=  low_quota then tab["low"]  = nil end
+    if amounts.high >= high_quota then tab["high"] = nil end
+
+    local what = rand.key_by_probs(tab)
 
     set_room(R, "medium")
   end
@@ -235,7 +235,7 @@ function Monster_pacing()
 
 
   local function handle_remaining_room(R)
-    local tab = { low=100, medium=100, high=100 }
+    local tab = { low=32, medium=64, high=32 }
 
     -- avoid being same as a direct neighbor
     each C in R.conns do
@@ -245,7 +245,7 @@ function Monster_pacing()
       local N = C:other_room(R)
 
       if N.pressure then
-        tab[N.pressure] = tab[N.pressure] / 10
+        tab[N.pressure] = tab[N.pressure] / 4
       end
     end
 
@@ -256,7 +256,6 @@ function Monster_pacing()
     -- enforce other logic
     if R.is_after_start   then tab["low"]  = nil end
     if R.is_teleport_dest then tab["high"] = nil end
-    if R.is_zone_entry    then tab["high"] = nil end
 
     local what = rand.key_by_probs(tab)
 
@@ -285,9 +284,7 @@ function Monster_pacing()
       gui.debugf("%s:\n", Z.name)
 
       each R in Z.rooms do
-        assert(R.pressure)
-
-        gui.debugf("   %s = %-6s : %s\n", R.name, R.pressure,
+        gui.debugf("   %s = %-6s : %s\n", R.name, R.pressure or "--UNSET--",
                    (R.goals[1] and R.goals[1].kind) or "")
       end
     end
@@ -298,10 +295,12 @@ function Monster_pacing()
 
   collect_rooms()
 
-   low_quota = rand.int(#room_list * rand.range(0.21, 0.35))
-  high_quota = rand.int(#room_list * rand.range(0.27, 0.41))
+  local QUOTA_LIST = { 0.17, 0.25, 0.33 }
 
-  check_connections()
+   low_quota = rand.int(#room_list * rand.pick(QUOTA_LIST))
+  high_quota = rand.int(#room_list * rand.pick(QUOTA_LIST))
+
+  mark_connections()
 
   each R in room_list do
     handle_known_room(R)
