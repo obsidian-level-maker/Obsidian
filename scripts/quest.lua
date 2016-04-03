@@ -1066,7 +1066,7 @@ function Quest_create_zones()
       end
     end
 
-    local num = rand.int(total_svol / 260)
+    local num = rand.int(total_svol / 240)
 
 ---##  stderrf("Map size : %d seeds --> %1.2f ZONES\n", total_svol, num)
 
@@ -1192,7 +1192,7 @@ function Quest_create_zones()
   assign_room(LEVEL.exit_room, exit_zone)
 
   -- start room(s) are usually the 2nd zone
-  local start_zone
+  local start_zone = exit_zone
 
   if quota >= 2 then
     start_zone = Zone_new()
@@ -2364,7 +2364,10 @@ function Quest_room_themes()
       end
     end
 
-    if table.empty(tab) and rarity == nil then
+    if table.empty(tab) then
+      -- allow nothing for certain cases
+      if rarity then return nil end
+
       error("No rooms themes for: " .. kind)
     end
 
@@ -2429,9 +2432,10 @@ function Quest_room_themes()
 
 
   local function do_rare_buildings(Z, rare_bd_tab)
-    local rare_building = pick_zone_theme(rare_bd_tab)
-
+    -- TODO usage prob
     if #Z.rooms < 2 then return end
+
+    local rare_building = pick_zone_theme(rare_bd_tab)
 
     -- FIXME !!!
 
@@ -2470,13 +2474,12 @@ function Quest_room_themes()
 
     rand.shuffle(room_list)
 
-    local raw_lim = rand.pick({ 0.4, 0.5, 0.6 })
-    local limit = math.floor(#room_list * raw_lim)
+    local limit = math.floor(#room_list * 0.37)
 
     for i = 1, limit do
       local R = table.remove(room_list, 1)
 
-      local idx = rand.sel(70, 2, 3)
+      local idx = rand.sel(75, 2, 3)
 
       R.theme = Z.building_themes[idx]
     end

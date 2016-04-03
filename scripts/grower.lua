@@ -2404,7 +2404,7 @@ function Grower_create_trunks()
 
 
 -- FIXME TEST ONLY
-trunk_num = 4
+trunk_num = 1
 
 
   for i = 1, trunk_num do
