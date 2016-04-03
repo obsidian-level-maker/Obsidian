@@ -2428,24 +2428,40 @@ function Quest_room_themes()
   end
 
 
-  local function themes_for_zones()
-    LEVEL.cave_theme    = pick_zone_theme(collect_usable_themes("cave"))
-    LEVEL.hallway_theme = pick_zone_theme(collect_usable_themes("hallway"))
+  local function do_buildings_in_zones(Z, rare_bd_tab)
+    local rare_building = pick_zone_theme(rare_bd_tab)
+  end
 
+
+  local function choose_themes()
     local outdoors_tab = collect_usable_themes("outdoors")
-    local building_tab = collect_usable_themes("building")
+    local  hallway_tab = collect_usable_themes("hallway")
+    local     cave_tab = collect_usable_themes("cave")
 
-    local rare_bd_tab  = collect_usable_themes("building", "zone")
+    local cave_theme = pick_zone_theme(cave_tab)
 
     each Z in LEVEL.zones do
-      Z.outdoors_theme = pick_zone_theme(outdoors_tab)
+      local outdoors_theme = pick_zone_theme(outdoors_tab)
+      local  hallway_theme = pick_zone_theme(hallway_tab)
+
+      -- apply it to all rooms in this zone
+      each R in Z.rooms do
+        if R.kind == "cave" then
+          R.theme = cave_theme
+        elseif R.kind == "hallway" then
+          R.theme = hallway_theme
+        elseif R.is_outdoor then
+          R.theme = outdoors_theme
+        end
+      end
 
       Z.building_themes = {}
-
-      if rare_bd_tab then
-        Z.rare_building = pick_zone_theme(rare_bd_tab)
-      end
     end
+
+    -- building stuff --
+
+    local building_tab = collect_usable_themes("building")
+    local rare_bd_tab  = collect_usable_themes("building", "zone")
 
     for i = 1, 3 do
       assign_building_theme(building_tab, i)
@@ -2453,6 +2469,8 @@ function Quest_room_themes()
 
     each Z in LEVEL.zones do
       gui.debugf("Building themes for %s : %s\n", Z.name, building_themes_str(Z))
+
+      do_buildings_in_zones(Z, rare_bd_tab)
     end
   end
 
@@ -2486,7 +2504,7 @@ function Quest_room_themes()
   end
 
 
-  local function select_facades()
+  local function facade_textures()
     if not THEME.facades then
       error("Theme is missing facades table")
     end
@@ -2542,6 +2560,7 @@ function Quest_room_themes()
     elseif R.is_outdoor then
       R.theme = Z.outdoors_theme or LEVEL.outdoors_theme
     else
+      -- building theme was chosen earlier
       R.theme = Z.building_theme or LEVEL.building_theme
     end
 
@@ -2549,12 +2568,10 @@ function Quest_room_themes()
 
     if R.kind == "cave" then
       setup_cave_theme(R)
+    elseif R.is_outdoor then
+      R.main_tex = rand.key_by_probs(R.theme.floors)
     else
-      if R.is_outdoor then
-        R.main_tex = rand.key_by_probs(R.theme.floors)
-      else
-        R.main_tex = rand.key_by_probs(R.theme.walls)
-      end
+      R.main_tex = rand.key_by_probs(R.theme.walls)
     end
 
     -- create a skin (for prefabs)
@@ -2576,11 +2593,10 @@ function Quest_room_themes()
 
   ---| Quest_room_themes |---
 
-  themes_for_zones()
+  choose_themes()
 
   miscellaneous_textures()
-
-  select_facades()
+  facade_textures()
 
   select_room_textures()
 end
