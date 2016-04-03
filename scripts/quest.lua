@@ -79,6 +79,9 @@
 
     building_themes : list(ROOM_THEME)  -- first is major one
 
+    facade_mat      -- material for outer walls of buildings
+    other_facade    -- another one
+
     fence_mat       -- material for fences
 
     cave_wall_mat   -- main material for cave walls
@@ -2454,6 +2457,35 @@ function Quest_room_themes()
   end
 
 
+  local function miscellaneous_textures()
+--[[  UNUSED ATM
+    local outdoor_volume = total_volume_of_room_kind("outdoor")
+    local cave_volume    = total_volume_of_room_kind("cave")
+
+    gui.debugf("outdoor_volume : %d\n", outdoor_volume)
+    gui.debugf("cave_volume : %d\n", cave_volume)
+--]]
+    LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
+
+    each Z in LEVEL.zones do
+      Z.cave_wall_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+
+      if LEVEL.hallway_theme then
+        local theme = LEVEL.hallway_theme
+
+        Z.hall_tex   = rand.key_by_probs(theme.walls)
+        Z.hall_floor = rand.key_by_probs(theme.floors)
+        Z.hall_ceil  = rand.key_by_probs(theme.ceilings)
+      end
+
+      assert(THEME.fences)
+
+      Z.fence_mat = rand.key_by_probs(THEME.fences)
+      Z.steps_mat = THEME.steps_mat
+    end
+  end
+
+
   local function select_facades()
     if not THEME.facades then
       error("Theme is missing facades table")
@@ -2461,15 +2493,23 @@ function Quest_room_themes()
 
     local tab = table.copy(THEME.facades)
 
+    for pass = 1,2 do
     each Z in LEVEL.zones do
       local mat = rand.key_by_probs(tab)
-
-      Z.facade_mat = mat
 
       -- less likely to use it again
       tab[mat] = tab[mat] / 20
 
-      gui.printf("Facade for ZONE_%d : %s\n", Z.id, Z.facade_mat)
+      if pass == 1 then
+        Z.facade_mat = mat
+      else
+        Z.other_facade = mat
+      end
+    end -- pass, Z
+    end
+
+    each Z in LEVEL.zones do
+      gui.printf("Facades for ZONE_%d : %s / %s\n", Z.id, Z.facade_mat, Z.other_facade)
     end
   end
 
@@ -2495,17 +2535,18 @@ function Quest_room_themes()
 
 
   local function setup_room_theme(R)
-      local Z = assert(R.zone)
+    local Z = assert(R.zone)
 
-      if R.kind == "cave" then
-        R.theme = Z.cave_theme or LEVEL.cave_theme
-      elseif R.is_outdoor then
-        R.theme = Z.outdoors_theme or LEVEL.outdoors_theme
-      else
-        R.theme = Z.building_theme or LEVEL.building_theme
-      end
+    if R.kind == "cave" then
+      R.theme = Z.cave_theme or LEVEL.cave_theme
+    elseif R.is_outdoor then
+      R.theme = Z.outdoors_theme or LEVEL.outdoors_theme
+    else
+      R.theme = Z.building_theme or LEVEL.building_theme
+    end
 
-      assert(R.theme)
+    assert(R.theme)
+
     if R.kind == "cave" then
       setup_cave_theme(R)
     else
@@ -2533,41 +2574,14 @@ function Quest_room_themes()
   end
 
 
-  local function select_misc_textures()
-    local outdoor_volume = total_volume_of_room_kind("outdoor")
-    local cave_volume    = total_volume_of_room_kind("cave")
-
-    gui.debugf("outdoor_volume : %d\n", outdoor_volume)
-    gui.debugf("cave_volume : %d\n", cave_volume)
-
-    LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
-
-    each Z in LEVEL.zones do
-      Z.cave_wall_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
-
-      if LEVEL.hallway_theme then
-        local theme = LEVEL.hallway_theme
-
-        Z.hall_tex   = rand.key_by_probs(theme.walls)
-        Z.hall_floor = rand.key_by_probs(theme.floors)
-        Z.hall_ceil  = rand.key_by_probs(theme.ceilings)
-      end
-
-      assert(THEME.fences)
-
-      Z.fence_mat = rand.key_by_probs(THEME.fences)
-      Z.steps_mat = THEME.steps_mat
-    end
-  end
-
-
   ---| Quest_room_themes |---
 
   themes_for_zones()
 
+  miscellaneous_textures()
+
   select_facades()
 
-  select_misc_textures()
   select_room_textures()
 end
 
