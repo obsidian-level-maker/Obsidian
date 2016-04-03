@@ -77,7 +77,7 @@
     hallway_theme  : ROOM_THEME
     outdoor_theme  : ROOM_THEME
 
-    building_themes : list(ROOM_THEME)  -- first is major one
+    building_themes : list(ROOM_THEME)  -- has three, first is major one
 
     facade_mat      -- material for outer walls of buildings
     other_facade    -- another one
@@ -2428,8 +2428,60 @@ function Quest_room_themes()
   end
 
 
-  local function do_buildings_in_zones(Z, rare_bd_tab)
+  local function do_rare_buildings(Z, rare_bd_tab)
     local rare_building = pick_zone_theme(rare_bd_tab)
+
+    if #Z.rooms < 2 then return end
+
+    -- FIXME !!!
+
+    Z.rooms[#Z.rooms].theme = rare_building
+  end
+
+
+  local function do_buildings_in_zones(Z)
+    -- sanity check
+    assert(Z.building_themes[1])
+    assert(Z.building_themes[2])
+    assert(Z.building_themes[3])
+
+    -- firstly, collect all unset indoor rooms
+    local room_list = {}
+
+    each R in Z.rooms do
+      if R.kind == "building" and not R.theme then
+        table.insert(room_list, R)
+      end
+    end
+
+    if table.empty(room_list) then return end
+
+    -- a single room is an easy case
+    if #room_list == 1 then
+      room_list[1].theme = Z.building_themes[1]
+      return
+    end
+
+    -- for multiple rooms, we assign the 2nd and 3rd theme to some
+    -- random rooms (upto a certain limit), and the remaining rooms
+    -- simply become the major theme.
+
+    rand.shuffle(room_list)
+
+    local raw_lim = rand.pick({ 0.4, 0.55, 0.7 })
+    local limit = math.floor(#room_list * raw_lim)
+
+    for i = 1, limit do
+      local R = table.remove(room_list, 1)
+
+      local idx = rand.sel(70, 2, 3)
+
+      R.theme = Z.building_themes[idx]
+    end
+
+    each R in room_list do
+      R.theme = Z.building_themes[1]
+    end
   end
 
 
@@ -2470,12 +2522,16 @@ function Quest_room_themes()
     each Z in LEVEL.zones do
       gui.debugf("Building themes for %s : %s\n", Z.name, building_themes_str(Z))
 
-      do_buildings_in_zones(Z, rare_bd_tab)
+      if rare_bd_tab then
+        do_rare_buildings(Z, rare_bd_tab)
+      end
+
+      do_buildings_in_zones(Z)
     end
   end
 
 
-  local function miscellaneous_textures()
+  local function misc_textures()
 --[[  UNUSED ATM
     local outdoor_volume = total_volume_of_room_kind("outdoor")
     local cave_volume    = total_volume_of_room_kind("cave")
@@ -2553,17 +2609,6 @@ function Quest_room_themes()
 
 
   local function setup_room_theme(R)
-    local Z = assert(R.zone)
-
-    if R.kind == "cave" then
-      R.theme = Z.cave_theme or LEVEL.cave_theme
-    elseif R.is_outdoor then
-      R.theme = Z.outdoors_theme or LEVEL.outdoors_theme
-    else
-      -- building theme was chosen earlier
-      R.theme = Z.building_theme or LEVEL.building_theme
-    end
-
     assert(R.theme)
 
     if R.kind == "cave" then
@@ -2584,7 +2629,7 @@ function Quest_room_themes()
   end
 
 
-  local function select_room_textures()
+  local function room_textures()
     each R in LEVEL.rooms do
       setup_room_theme(R)
     end
@@ -2595,10 +2640,9 @@ function Quest_room_themes()
 
   choose_themes()
 
-  miscellaneous_textures()
+    misc_textures()
   facade_textures()
-
-  select_room_textures()
+    room_textures()
 end
 
 
