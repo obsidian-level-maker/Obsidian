@@ -2449,7 +2449,9 @@ function Quest_room_themes()
     local room_list = {}
 
     each R in Z.rooms do
-      if R.kind == "building" and not R.theme then
+      if R.kind == "normal" and not R.theme and
+         not R.is_outdoor and not R.is_cave
+      then
         table.insert(room_list, R)
       end
     end
@@ -2468,7 +2470,7 @@ function Quest_room_themes()
 
     rand.shuffle(room_list)
 
-    local raw_lim = rand.pick({ 0.4, 0.55, 0.7 })
+    local raw_lim = rand.pick({ 0.4, 0.5, 0.6 })
     local limit = math.floor(#room_list * raw_lim)
 
     for i = 1, limit do
@@ -2493,17 +2495,19 @@ function Quest_room_themes()
     local cave_theme = pick_zone_theme(cave_tab)
 
     each Z in LEVEL.zones do
-      local outdoors_theme = pick_zone_theme(outdoors_tab)
-      local  hallway_theme = pick_zone_theme(hallway_tab)
+      Z.cave_theme = cave_theme
+
+      Z.outdoors_theme = pick_zone_theme(outdoors_tab)
+      Z. hallway_theme = pick_zone_theme(hallway_tab)
 
       -- apply it to all rooms in this zone
       each R in Z.rooms do
         if R.kind == "cave" then
-          R.theme = cave_theme
+          R.theme = Z.cave_theme
         elseif R.kind == "hallway" then
-          R.theme = hallway_theme
+          R.theme = Z.hallway_theme
         elseif R.is_outdoor then
-          R.theme = outdoors_theme
+          R.theme = Z.outdoors_theme
         end
       end
 
@@ -2542,10 +2546,10 @@ function Quest_room_themes()
     LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
 
     each Z in LEVEL.zones do
-      Z.cave_wall_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+      Z.cave_wall_mat = rand.key_by_probs(Z.cave_theme.naturals)
 
-      if LEVEL.hallway_theme then
-        local theme = LEVEL.hallway_theme
+      if Z.hallway_theme then
+        local theme = Z.hallway_theme
 
         Z.hall_tex   = rand.key_by_probs(theme.walls)
         Z.hall_floor = rand.key_by_probs(theme.floors)
@@ -2581,10 +2585,6 @@ function Quest_room_themes()
       end
     end -- pass, Z
     end
-
-    each Z in LEVEL.zones do
-      gui.printf("Facades for ZONE_%d : %s / %s\n", Z.id, Z.facade_mat, Z.other_facade)
-    end
   end
 
 
@@ -2609,6 +2609,9 @@ function Quest_room_themes()
 
 
   local function setup_room_theme(R)
+if not R.theme then
+stderrf("\n FUCK!!!!!!!!\n\nR =\n%s\n", table.tostr(R, 1))
+end
     assert(R.theme)
 
     if R.kind == "cave" then
@@ -2636,6 +2639,22 @@ function Quest_room_themes()
   end
 
 
+  local function dump_themes()
+    gui.debugf("\nRoom themes:\n");
+
+    each Z in LEVEL.zones do
+      gui.debugf("%s:\n", Z.name)
+      gui.debugf("   facades   : %s / %s\n", Z.facade_mat, Z.other_facade)
+      gui.debugf("   fence     : %s\n", Z.fence_mat)
+      gui.debugf("   cave_wall : %s\n", Z.cave_wall_mat)
+
+      each R in Z.rooms do
+        gui.debugf("   %s = %s  (main_tex: %s)\n", R.name, R.theme.name, R.main_tex)
+      end
+    end
+  end
+
+
   ---| Quest_room_themes |---
 
   choose_themes()
@@ -2643,6 +2662,8 @@ function Quest_room_themes()
     misc_textures()
   facade_textures()
     room_textures()
+
+  dump_themes()
 end
 
 
