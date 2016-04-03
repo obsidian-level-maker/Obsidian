@@ -1022,8 +1022,9 @@ function ob_build_setup()
   ob_invoke_hook("setup")
 
 
-  table.name_up(GAME.ROOMS)
   table.name_up(GAME.THEMES)
+  table.name_up(GAME.ROOM_THEMES)
+  table.name_up(GAME.ROOMS)
 
 
   if GAME.sub_format then
