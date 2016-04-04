@@ -12,6 +12,8 @@ PREFABS.Exit_Closet1 =
 
   x_fit = "frame"
   y_fit = "top"
+
+  theme = "!tech"
 }
 
 
@@ -25,6 +27,5 @@ PREFABS.Exit_Closet1_tech =
   tex_SW1VINE  = "SW1BLUE"
 
   theme = "tech"
-  rank  = 1
 }
 
