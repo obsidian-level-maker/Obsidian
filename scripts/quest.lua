@@ -1667,6 +1667,8 @@ function Quest_add_weapons()
   --
 
   local function should_swap(R1, R2, name1, name2)
+    if R1 == R2 then return false end
+
     if R1.lev_along > R2.lev_along then
       R1, R2 = R2, R1
       name1, name2 = name2, name1
@@ -1704,7 +1706,6 @@ function Quest_add_weapons()
         local name2 = R2.weapons[w2]
 
         if should_swap(R1, R2, name1, name2) then
-stderrf("@@@@@@!!!!  Swapping %s in %s <--> %s in %s\n", name1, R1.name, name2, R2.name)
           R1.weapons[w1] = name2
           R2.weapons[w2] = name1
         end
