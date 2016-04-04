@@ -287,6 +287,8 @@ function Grower_preprocess_grammar()
     if E1.kind == "area" and E2.kind == "area" then
       if E1.area != E2.area then
         E2.assignment = true
+
+        def.area_growths[E2.area] = (def.area_growths[E2.area] or 0) + 1
         return
       end
     end
@@ -300,6 +302,11 @@ function Grower_preprocess_grammar()
     -- i.e. setting something new or different into the seed(s)
 
     E2.assignment = true
+
+    -- compute the growth of areas (how many seeds they add)
+    if E2.kind == "area" then
+      def.area_growths[E2.area] = (def.area_growths[E2.area] or 0) + 1
+    end
 
     if E1.kind == "stair" or E1.kind == "oiner" or E1.kind == "closet" or
        E1.kind == "disable" or E1.kind == "magic"
@@ -327,11 +334,11 @@ function Grower_preprocess_grammar()
 
   local function check_added_stuff(E)
     if E.kind == "new_room" and not def.new_room then
-      def.new_room = { }
+      def.new_room = {}
     end
 
     if E.kind == "new_area" and not def.new_area then
-      def.new_area = { }
+      def.new_area = {}
     end
 
     if E.kind == "stair" then
@@ -412,6 +419,8 @@ function Grower_preprocess_grammar()
 
 
   local function finalize_structure()
+    def.area_growths = {}
+
     for x = 1, def.input.w do
     for y = 1, def.input.h do
       finalize_element(x, y)
@@ -1058,6 +1067,9 @@ function Grower_add_room(parent_R, is_hallway, trunk)
   local A = AREA_CLASS.new("floor")
   ROOM:add_area(A)
 
+  -- max size of new area
+  A.max_size = 16 -- rand.pick({ 16, 24, 32 })
+
   -- create a preliminary connection (last room to this one)
   local PC
 
@@ -1534,6 +1546,12 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     if area_map[3] == A then return (E1.area == 3) end
 
     if area_map[E1.area] == nil then
+       -- check if the area would grow too big
+       local growth = cur_rule.area_growths[E1.area] or 0
+       if growth > 0 and #A.seeds + growth > A.max_size then
+         return false
+       end
+
        area_map[E1.area] = A
        return true
     end
@@ -2047,6 +2065,9 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     if cur_rule.new_area and not new_area then
       new_area = AREA_CLASS.new("floor")
 
+      -- max size of new area
+      new_area.max_size = 16 -- rand.pick({ 16, 24, 32 })
+
       R:add_area(new_area)
 
       local from_area_idx = cur_rule.new_area.from_area or 1
@@ -2349,20 +2370,17 @@ end
 
 -- stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
-  -- FIXME
---  if pass == "sprout" and #LEVEL.rooms >= 8 then return end
-
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
   end
 
-  local apply_num = rand.pick({ 5,10,20 })
+  local apply_num = rand.pick({ 10,20,30 })
 
   -- TODO: often no sprouts when room is near edge of map
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
-  if pass == "decorate" then apply_num = 6 end --- TODO
+  if pass == "decorate" then apply_num = 7 end --- TODO
 
   local rule_tab = collect_matching_rules(pass)
 
