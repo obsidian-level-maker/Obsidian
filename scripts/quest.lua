@@ -1118,9 +1118,16 @@ function Quest_create_zones()
   end
 
 
-  local function spread_zones_via_conns()
-    local is_done = true
+  local function check_if_finished()
+    each R in LEVEL.rooms do
+      if not R.zone then return false end
+    end
 
+    return true
+  end
+
+
+  local function spread_zones_via_conns(do_locks)
     local conn_list = table.copy(LEVEL.conns)
     rand.shuffle(conn_list)
 
@@ -1130,21 +1137,22 @@ function Quest_create_zones()
 
       if R.zone and N.zone then continue end
 
-      -- there are still rooms without a zone
-      is_done = false
-
       if not R.zone then R, N = N, R end
       if not R.zone then continue end
 
-      if C.is_secret or C.kind == "teleporter" then
+      -- prefer not to cross quest boundaries
+      if C.lock and not do_locks then continue end
+
+      if C.is_secret or C.kind == "teleporter" or C.lock then
         assign_room(N, other_zone(R.zone))
+
+        -- only do one locked connection per group
+        if C.lock then return end
+
         continue
       end
 
-      -- prefer not to cross quest boundaries
-      local use_prob = sel(C.lock, 2, 50)
-
-      if rand.odds(use_prob) then
+      if rand.odds(50) then
         assign_room(N, R.zone)
       end
     end
@@ -1178,7 +1186,7 @@ function Quest_create_zones()
   end
 
 
-  ---| Quest_group_into_zones |---
+  ---| Quest_create_zones |---
 
   local quota = calc_quota()
 
@@ -1225,7 +1233,10 @@ function Quest_create_zones()
   end
 
   -- flow zones between room connections
-  while not spread_zones_via_conns() do
+  while not check_if_finished() do
+    for loop = 1, 50 do
+      spread_zones_via_conns(loop == 50)
+    end
   end
 
   -- sanity check
@@ -2474,7 +2485,7 @@ function Quest_room_themes()
 
     rand.shuffle(room_list)
 
-    local limit = math.floor(#room_list * 0.37)
+    local limit = 0 ---!!! math.floor(#room_list * 0.37)
 
     for i = 1, limit do
       local R = table.remove(room_list, 1)
