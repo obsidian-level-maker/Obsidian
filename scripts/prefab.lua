@@ -2026,6 +2026,12 @@ function Fab_find_matches(reqs, match_state)
   end
 
 
+  local function match_height(def)
+    -- [ if height is missing, we assume it fits anywhere ]
+    return (def.height or 0) <= (reqs.height or 0)
+  end
+
+
   local function match_room_kind(req_k, def_k)
     if def_k == "indoor" then
       return req_k != "outdoor"
@@ -2078,7 +2084,8 @@ function Fab_find_matches(reqs, match_state)
 
   local function match_environment(def)
     -- size check (seed based)
-    if not match_size(def) then return 0 end
+    if not match_size(def)   then return 0 end
+    if not match_height(def) then return 0 end
 
     -- check on room type (building / outdoor / cave)
     if def.room_kind then
