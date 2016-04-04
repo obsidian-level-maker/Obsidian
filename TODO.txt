@@ -86,9 +86,6 @@ ______________________________________________________________________
 
 ??  fix porches causing BIG height diffs
 
-IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.
-ALSO : "mon-zone" for monster/weapon palette changes
-
 
 REQUEST:  mix it up option for the quiet start setting.
 
@@ -339,6 +336,8 @@ Various:
 Secrets....
 !!  make the secret door (or fence, etc)
 
++  support 'LEVEL.secret_weapon'
+
 
 Traps....
 -  second pass : traps ON WAY BACK to the ...
@@ -562,7 +561,7 @@ Outdoor Idioms:
 +  gazebo in centre with a nice item (or purpose)
 
 
-Theme System:
+Level Themes:
 +  fix "As Original" to not pick other themes for a whole episode
 
 -  IDEA: "Mostly Original" theme
@@ -929,7 +928,6 @@ Cancellation:
    overlap any linedefs).
 
 -  MAP32: find and kill all the Keens to open the door to the exit.
-          perhaps use Psychedelic theme and a lower qty Crazy mode.
 
 -  support BOOM's 242 linetype for liquids and fake 3D floors
 
