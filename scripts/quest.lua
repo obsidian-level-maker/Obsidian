@@ -2548,22 +2548,39 @@ function Quest_room_themes()
   end
 
   
-  local function pick_common_building_theme(R, tab)
+  local function pick_common_building(R, last_R, tab)
     assert(R.zone.building_theme)
 
-    if rand.odds(50) then
+    -- use the zone's building theme unless same as previous room
+    if not last_R or last_R.theme != R.zone.building_theme or rand.odds(20) then
       R.theme = R.zone.building_theme
       return
     end
 
-    if table.size(tab) >= 2 then
+    if last_R and table.size(tab) >= 2 then
+      assert(last_R.theme)
       tab = table.copy(tab)
-      tab[R.zone.building_theme.name] = nil
+      tab[last_R.theme.name] = nil
     end
 
     local name = rand.key_by_probs(tab)
 
     R.theme = assert(GAME.ROOM_THEMES[name])
+  end
+
+
+  local function visit_room(R, last_R, common_tab)
+    if is_unset_building(R) then
+      pick_common_building(R, last_R, common_tab)
+    end
+
+    each C in R.conns do
+      local R2 = C:other_room(R)
+
+      if R2.lev_along > R.lev_along then
+        visit_room(R2, R, common_tab)
+      end
+    end
   end
 
 
@@ -2577,13 +2594,8 @@ function Quest_room_themes()
     if level_tab then rare_level_theme(level_tab) end
     if  zone_tab then rare_zone_themes(zone_tab)  end
 
-    -- do the remaining rooms
-
-    each R in LEVEL.rooms do
-      if is_unset_building(R) then
-        pick_common_building_theme(R, common_tab)
-      end
-    end
+    -- recursively flow through the level
+    visit_room(LEVEL.start_room, nil, common_tab)
   end
 
 
