@@ -66,7 +66,7 @@ GROW_1 =
 
 GROW_3 =
 {
-  prob = 2
+  prob = 20
 
   structure =
   {
@@ -121,9 +121,9 @@ AUX_DIAGTEST_1 =
 
 
 
-GROW_MIR_TEST =
+GROW_MIR_TEST =  -- REMOVE
 {
-  prob = 50
+  prob = 0
 
   structure =
   {
@@ -233,7 +233,7 @@ SPROUT_SYMMETRY_TEST =
 
 SPROUT_DIAG_1 =
 {
-  prob = 2
+  prob = 0
 
   structure =
   {
@@ -259,7 +259,7 @@ SPROUT_DIAG_1 =
 
 SPROUT_DIAG_2 =
 {
-  prob = 2
+  prob = 0
 
   structure =
   {
