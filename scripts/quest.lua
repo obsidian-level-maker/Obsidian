@@ -2438,18 +2438,7 @@ function Quest_room_themes()
   end
 
 
-  local function do_rare_buildings(Z, rare_bd_tab)
-    -- TODO usage prob
-    if #Z.rooms < 2 then return end
-
-    local rare_building = pick_zone_theme(rare_bd_tab)
-
-    -- FIXME !!!
-    Z.rooms[#Z.rooms].theme = rare_building
-  end
-
-
-  local function do_buildings_in_zones(Z)
+  local function do_buildings_in_zones__OLD(Z)
     -- sanity check
     assert(Z.building_themes[1])
     assert(Z.building_themes[2])
@@ -2558,6 +2547,25 @@ function Quest_room_themes()
     end
   end
 
+  
+  local function pick_common_building_theme(R, tab)
+    assert(R.zone.building_theme)
+
+    if rand.odds(50) then
+      R.theme = R.zone.building_theme
+      return
+    end
+
+    if table.size(tab) >= 2 then
+      tab = table.copy(tab)
+      tab[R.zone.building_theme.name] = nil
+    end
+
+    local name = rand.key_by_probs(tab)
+
+    R.theme = assert(GAME.ROOM_THEMES[name])
+  end
+
 
   local function choose_building_themes()
     local common_tab = collect_usable_themes("building")
@@ -2569,23 +2577,13 @@ function Quest_room_themes()
     if level_tab then rare_level_theme(level_tab) end
     if  zone_tab then rare_zone_themes(zone_tab)  end
 
---[[ OLD
-    -- building stuff --
+    -- do the remaining rooms
 
-      Z.building_themes = {}
-
-    assign_building_theme(building_tab, 1)
-
-    each Z in LEVEL.zones do
-      gui.debugf("Building themes for %s : %s\n", Z.name, building_themes_str(Z))
-
-      if rare_bd_tab then
-        do_rare_buildings(Z, rare_bd_tab)
+    each R in LEVEL.rooms do
+      if is_unset_building(R) then
+        pick_common_building_theme(R, common_tab)
       end
-
-      do_buildings_in_zones(Z)
     end
---]]
   end
 
 
