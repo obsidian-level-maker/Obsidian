@@ -2175,21 +2175,29 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     if chunk.sw < 2 then return end
     if chunk.sh < 2 then return end
 
-    local floor_mat = chunk.area.floor_mat
+    local A = chunk.area
+
+    local floor_mat = A.floor_mat
     if not floor_mat then return end
 
     local reqs =
     {
       kind  = "decor"
       where = "point"
+
       size  = 96
+      height = A.ceil_h - A.floor_h
     }
 
     local def = Fab_pick(reqs)
     local skin1 = { floor=floor_mat }
-    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.area.floor_h, 2)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, 2)
 
-    Fabricate(chunk.area.room, def, T, { skin1 })
+    if def.z_fit then
+      Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
+    end
+
+    Fabricate(A.room, def, T, { skin1 })
   end
 
 
