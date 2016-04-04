@@ -1202,6 +1202,15 @@ function Grower_grammatical_room(R, pass)
   end
 
 
+  local function prob_for_symmetry(R)
+    if R.is_cave then return 0 end
+
+    if R.is_outdoor then return 15 end
+
+    return 40
+  end
+
+
   local function collect_matching_rules(want_pass)
     local tab = {}
 
@@ -2053,12 +2062,14 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       if cur_rule.new_room then
         new_room, new_conn = Grower_add_room(R)
 
-        -- link rooms spawned via symmetry
+        -- link rooms spawned via symmetry [ WHY ??? ]
+--[[
         if T.is_second then
           assert(old_room)
           old_room.peer = new_room
           new_room.peer = old_room
         end
+--]]
       end
     end
 
@@ -2086,7 +2097,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     Seed_squarify()
 
     if new_room then
-      local sym_prob = 25  -- TODO : proper chance (use style)
+      local sym_prob = prob_for_symmetry(new_room)
 
       if rand.odds(sym_prob) then
         -- assumes best.T has set X/Y to best.x and best.y
