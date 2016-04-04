@@ -1278,6 +1278,11 @@ function Render_chunk(chunk)
   -- are responsible for making the whole floor and/or ceiling.
   --
 
+  -- unused closets will be rendered as void
+  if chunk.kind == "closet" and not chunk.content_kind then
+    return
+  end
+
   local A = chunk.area
 
   gui.debugf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.content_kind or "-")
@@ -1432,9 +1437,6 @@ function Render_chunk(chunk)
 
   local what = chunk.content_kind
 
-
-  -- FIXME : unused closets  [ i.e. this should not happen ]
-  if chunk.kind == "closet" and what == nil then return end
 
   -- FIXME : support e.g. kind=="floor" + what=="START" (e.g. a raising start)
   --         [ most of the checks below assume kind=="closet" ]

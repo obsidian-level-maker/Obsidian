@@ -700,9 +700,9 @@ function Layout_decorate_rooms()
   end
 
 
-  local function kill_closet(A)
+  local function kill_closet(chunk)
     chunk.area.mode = "void"
-    chunk.content_kind = "void"
+    chunk.content_kind = nil
   end
 
 
@@ -761,6 +761,13 @@ function Layout_decorate_rooms()
   local function visit_room(R)
     try_intraroom_lock(R)
     try_intraroom_lock(R)
+
+    -- kill any unused closets
+    each CL in R.closets do
+      if not CL.content_kind then
+        kill_closet(CL)
+      end
+    end
   end
 
 
