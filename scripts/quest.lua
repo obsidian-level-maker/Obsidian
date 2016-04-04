@@ -819,7 +819,7 @@ function Quest_add_major_quests()
 
 
   local function collect_key_goals(list)
-    local key_tab = LEVEL.usable_keys or THEME.keys or {} 
+    local key_tab = LEVEL.usable_keys or THEME.keys or {}
 
     each name,_ in key_tab do
       local GOAL = Goal_new("KEY")
@@ -947,7 +947,7 @@ do return false end
     return Quest_scan_all_conns({ GOAL1, GOAL2 }, quest)
   end
 
-  
+
   local function lock_up_double_doors()
     local list = table.copy(LEVEL.quests)
 
@@ -2014,7 +2014,7 @@ function Quest_nice_items()
 
   local function visit_secret_rooms()
     LEVEL.secret_items = secret_palette()
- 
+
     if table.empty(LEVEL.secret_items) then
       return
     end
@@ -2500,10 +2500,11 @@ function Quest_room_themes()
     tab = table.copy(tab)
     tab["NONE"] = 50
 
-    local room_list = {}
-
     local name = rand.key_by_probs(tab)
+
     if name == "NONE" then return end
+
+    local room_list = {}
 
     each R in LEVEL.rooms do
       if is_unset_building(R) then
@@ -2520,11 +2521,41 @@ function Quest_room_themes()
     local R = rand.pick(room_list)
 
     R.theme = assert(GAME.ROOM_THEMES[name])
-    return
+  end
+
+
+  local function pick_rare_zone_theme(Z, tab)
+    local name = rand.key_by_probs(tab)
+
+    if name == "NONE" then return end
+
+    local room_list = {}
+
+    each R in Z.rooms do
+      if is_unset_building(R) then
+        table.insert(room_list, R)
+      end
+    end
+
+    if #room_list < 1 then return end
+
+    -- when zone only has a few rooms, limit how often we use it
+    local use_prob = 10 + (#room_list - 1) * 20
+    if not rand.odds(use_prob) then return end
+
+    local R = rand.pick(room_list)
+
+    R.theme = assert(GAME.ROOM_THEMES[name])
   end
 
 
   local function rare_zone_themes(tab)
+    tab = table.copy(tab)
+    tab["NONE"] = 50
+
+    each Z in LEVEL.zones do
+      pick_rare_zone_theme(Z, tab)
+    end
   end
 
 
@@ -2535,8 +2566,8 @@ function Quest_room_themes()
 
     major_building_themes(common_tab)
 
-    rare_level_theme(level_tab)
-    rare_zone_themes(zone_tab)
+    if level_tab then rare_level_theme(level_tab) end
+    if  zone_tab then rare_zone_themes(zone_tab)  end
 
 --[[ OLD
     -- building stuff --
