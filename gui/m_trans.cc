@@ -376,7 +376,7 @@
 #endif
 
 
-// current language
+// current Options setting
 const char * t_language = N_("AUTO");
 
 
@@ -385,12 +385,19 @@ const char * t_language = N_("AUTO");
 static const char * Trans_GetUserLanguage()
 {
 #ifdef WIN32
+	/* Use native Windows API locale ID. */
+	LCID lcid = GetThreadLocale ();
 
-    /* Dispatch on language.
-       See also http://www.unicode.org/unicode/onlinedat/languages.html .
-       For details about languages, see http://www.ethnologue.com/ .  */
+	/* Strip off the sorting rules, keep only the language part. */
+	LANGID langid = LANGIDFROMLCID (lcid);
 
-	int primary, sub;  // FIXME !!!!
+	/* Dispatch on language.
+	   See also http://www.unicode.org/unicode/onlinedat/languages.html
+	   For details about languages, see http://www.ethnologue.com/ */
+
+	/* Split into language and territory part. */
+	int primary = PRIMARYLANGID (langid);
+	int sub = SUBLANGID (langid);
 
 	// andrewj: special check for traditional Chinese characters
 	if (primary == LANG_CHINESE &&
