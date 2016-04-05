@@ -2028,9 +2028,11 @@ function Fab_find_matches(reqs, match_state)
 
   local function match_height(def)
     if type(def.height) == "table" then
-      local d_h = def.height or 0
+      local req_h = reqs.height
 
-      return (def.height[1] <= d_h and d_h <= def.height[2])
+      if req_h == nil then return false end
+
+      return (def.height[1] <= reqs_h and reqs_h <= def.height[2])
     end
 
     -- [ if height is missing, we assume it fits anywhere ]
