@@ -506,7 +506,8 @@ DOOM.ROOM_THEMES =
   tech_VeryShiny =
   {
     kind = "building"
-    rarity = "zone"
+    rarity = "level"
+    prob = 50
 
     walls =
     {
@@ -528,6 +529,7 @@ DOOM.ROOM_THEMES =
   tech_Cave =
   {
     kind = "cave"
+    prob = 50
 
     naturals =
     {
@@ -553,6 +555,7 @@ DOOM.ROOM_THEMES =
   tech_Outdoors =
   {
     kind = "outdoors"
+    prob = 50
 
     floors =
     {
@@ -586,6 +589,7 @@ DOOM.ROOM_THEMES =
   tech_Hallway =
   {
     kind = "hallway"
+    prob = 50
 
     walls =
     {
@@ -667,7 +671,7 @@ DOOM.ROOM_THEMES =
   hell_Hotbrick =
   {
     kind = "building"
-    prob = 100
+    prob = 60
 
     walls =
     {
@@ -820,6 +824,7 @@ DOOM.ROOM_THEMES =
   hell_Hallway =
   {
     kind = "hallway"
+    prob = 50
 
     walls =
     {
@@ -859,6 +864,7 @@ DOOM.ROOM_THEMES =
   hell_Cave =
   {
     kind = "cave"
+    prob = 50
 
     naturals =
     {
@@ -882,6 +888,7 @@ DOOM.ROOM_THEMES =
   hell_Outdoors =
   {
     kind = "outdoors"
+    prob = 50
 
     floors =
     {
@@ -1044,6 +1051,7 @@ DOOM.ROOM_THEMES =
   urban_Hallway =
   {
     kind = "hallway"
+    prob = 50
 
     walls =
     {
@@ -1089,6 +1097,7 @@ DOOM.ROOM_THEMES =
   urban_Cave =
   {
     kind = "cave"
+    prob = 50
 
     naturals =
     {
@@ -1112,6 +1121,7 @@ DOOM.ROOM_THEMES =
   urban_Outdoors =
   {
     kind = "outdoors"
+    prob = 50
 
     floors =
     {
