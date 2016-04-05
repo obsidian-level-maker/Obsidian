@@ -162,24 +162,6 @@ function Render_edge(E)
   end
 
 
-  local function edge_trap_wall(mat)
-    assert(E.trigger)
-
-    local brush = raw_wall_brush()
-
-    -- don't want to reveal trap on automap
-    each C in brush do
-      C.draw_secret = true
-    end
-
-    table.insert(brush, { b=A.floor_h + 2, delta_z=-2, tag=E.trigger.tag })
-
-    brushlib.set_mat(brush, mat, mat)
-
-    Trans.brush(brush)
-  end
-
-
   local function edge_inner_sky()
     local floor_h = assert(A.floor_h)
 
@@ -601,10 +583,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   if E.kind == "wall" then
     local mat = assert(E.wall_mat or A.wall_mat)
     edge_wall(mat)
-
-  elseif E.kind == "trap_wall" then
-    local mat = assert(E.wall_mat or A.wall_mat)
-    edge_trap_wall(mat)
 
   elseif E.kind == "sky_edge" and A.floor_h then
     edge_inner_sky()
