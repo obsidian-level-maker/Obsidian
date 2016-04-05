@@ -381,7 +381,7 @@ function Trans.edge_transform(E, z, ofs_L, ofs_R, deep, over, flip_it)
   if E.dir == 4 then y1 = y1 + ofs_L ; y2 = y2 - ofs_R end
   if E.dir == 6 then y2 = y2 - ofs_L ; y1 = y1 + ofs_R end
 
-  local new_dir = sel(flip_it, 10 - E.dir, E.dir)
+  local new_dir = sel(flip_it, E.dir, 10 - E.dir)
 
   return Trans.box_transform(x1,y1, x2,y2, z, new_dir)
 end

@@ -233,7 +233,7 @@ function Render_edge(E)
 
     else  -- axis-aligned edge
 
-      T = Trans.edge_transform(E, z, 0, 0, def.deep, 0, true)
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, 0, false)
     end
 
     Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
@@ -578,7 +578,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     else  -- axis-aligned edge
 
-      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, not E.conn.flip_it)
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn.flip_it)
     end
 
     Fabricate(R, def, T, { skin1 })
