@@ -2,7 +2,7 @@
 -- Fence with two narrow gaps
 --
 
-PREFABS.Fence_tall_gap =
+UNFINISHED.Fence_tall_gap =
 {
   file   = "fence/tall_gap.wad"
   where  = "edge"

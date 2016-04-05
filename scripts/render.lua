@@ -209,55 +209,46 @@ function Render_edge(E)
 
 
   local function straddle_fence()
-    local S = E.S
 
-    local mat = assert(E.fence_mat)
-    local top_z = assert(E.fence_top_z)
-    local TK = E.fence_thick or 16
+    -- find the prefab to use
+    local reqs =
+    {
+      kind = "fence"
 
-    local x1, y1 = S.x1, S.y1
-    local x2, y2 = S.x2, S.y2
+      seed_w = assert(E.long)
+    }
 
-    if dir == 2 then y2 = y1 end
-    if dir == 8 then y1 = y2 end
-
-    if dir == 4 then x2 = x1 end
-    if dir == 6 then x1 = x2 end
-
-    local brush
-
-    if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
-      brush = brushlib.quad(x1 - TK, y1 - TK, x2 + TK, y2 + TK)
-
-    elseif dir == 3 or dir == 7 then
-      brush =
-      {
-        { x=x1 - TK, y=y1 + TK }
-        { x=x1 - TK, y=y1 - TK }
-        { x=x1 + TK, y=y1 - TK }
-
-        { x=x2 + TK, y=y2 - TK }
-        { x=x2 + TK, y=y2 + TK }
-        { x=x2 - TK, y=y2 + TK }
-      }
+    if geom.is_corner(dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
     else
-      brush =
-      {
-        { x=x2 - TK, y=y1 - TK }
-        { x=x2 + TK, y=y1 - TK }
-        { x=x2 + TK, y=y1 + TK }
-
-        { x=x1 + TK, y=y2 + TK }
-        { x=x1 - TK, y=y2 + TK }
-        { x=x1 - TK, y=y2 - TK }
-      }
+      reqs.where = "edge"
     end
 
-    table.insert(brush, { t=top_z })
+    -- TODO : secret fences, barred fences
 
-    brushlib.set_mat(brush, mat, mat)
 
-    Trans.brush(brush)
+    local skin = { wall=E.fence_mat }
+
+
+    local def = Fab_pick(reqs)
+
+    local z = assert(E.fence_top_z) - def.fence_h
+
+    local T
+
+    if geom.is_corner(dir) then
+      local dir2 = DIAG_DIR_MAP[dir]
+      local S = E.S
+
+      T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
+
+    else  -- axis-aligned edge
+
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
+    end
+
+    Fabricate(R, def, T, { skin })
   end
 
 

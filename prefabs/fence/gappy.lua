@@ -2,7 +2,7 @@
 -- Fence with a barred gap
 --
 
-PREFABS.Fence_gappy =
+UNFINISHED.Fence_gappy =
 {
   file   = "fence/gappy.wad"
   where  = "edge"

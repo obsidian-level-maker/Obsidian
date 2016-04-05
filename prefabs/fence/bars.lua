@@ -8,6 +8,8 @@ PREFABS.Bars_shiny =
   map    = "MAP01"
   where  = "edge"
 
+  key    = "barred"
+
   long   = 192
   deep   = 16
   over   = 16
@@ -26,6 +28,8 @@ PREFABS.Bars_shiny_diag =
   file   = "fence/bars.wad"
   map    = "MAP02"
   where  = "diagonal"
+
+  key    = "barred"
 
   z_fit  = "bottom"
 
