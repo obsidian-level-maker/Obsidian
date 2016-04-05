@@ -781,7 +781,7 @@ function Area_locate_chunks()
     -- size check, disallow occupying the whole area
     local vol = (sx2 - sx1 + 1) * (sy2 - sy1 + 1)
 
-    if vol > A.svolume * 0.45 then return false end
+    if vol > A.svolume * 0.51 then return false end
 
     for x = sx1, sx2 do
     for y = sy1, sy2 do
