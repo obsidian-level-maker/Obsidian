@@ -14,6 +14,16 @@ PREFABS.Fence_plain =
   z_fit  = "bottom"
 
   bound_z1 = 0
-  bound_z2 = 128
+}
+
+
+PREFABS.Fence_plain_diag =
+{
+  file   = "fence/fence_16.wad"
+  where  = "diagonal"
+
+  z_fit  = "bottom"
+
+  bound_z1 = 0
 }
 
