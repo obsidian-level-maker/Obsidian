@@ -550,9 +550,18 @@ static const char * Trans_GetUserLanguage()
 		default: return "UNKNOWN";
 	}
 
+// #elif defined(__APPLE__)
+//
+//	return "UNKNOWN";
+
 #else  // Unix
 
-	// FIXME
+	const char *res = NULL;
+
+	res = setlocale(LC_ALL, NULL /* query only */);
+
+	if (res && res[0] && strcmp(res, "C") != 0)
+		return res;
 
 	return "UNKNOWN";
 #endif
@@ -630,7 +639,10 @@ void Trans_ParseLangLine(char *line)
 void Trans_Init()
 {
 #ifndef WIN32
-	setlocale(LC_ALL, "");
+	if (! setlocale(LC_ALL, ""))
+	{
+		LogPrintf("WARNING : failed to initialize locale.\n");
+	}
 #endif
 
 	// TODO : stuff to create a Lua state to store messages in
