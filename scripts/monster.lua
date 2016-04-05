@@ -20,10 +20,6 @@
 
 
 function Monster_init()
-  if not EPISODE.seen_guards then
-    EPISODE.seen_guards = {}
-  end
-
   LEVEL.mon_stats = {}
 
   local low_q  = MONSTER_QUANTITIES.scarce
@@ -311,6 +307,76 @@ function Monster_pacing()
   visit_the_rest()
 
   dump_pacing()
+end
+
+
+
+function Monster_assign_bosses()
+  --
+  -- Distribute the planned boss fights to specific rooms.
+  --
+
+  local function eval_room(R, bf)
+    -- never in secrets
+    if R.is_secret   then return -2 end
+    if R.no_monsters then return -2 end
+
+    -- already has one?
+    if R.boss_fight then return -1 end
+
+    -- require a goal (e.g. a KEY)
+    if #R.goals == 0 then return -1 end
+
+    -- check room size
+    -- [ TODO : this can be vastly improved, check floor chunks, closets and cages ]
+    if R.svolume < 30 and bf.boss_type == "tough" then return -3 end
+    if R.svolume < 15 and bf.boss_type == "nasty" then return -3 end
+
+    if R.is_start and bf.boss_type == "tough" then return -3 end
+
+    -- OK --
+
+    local score = 1
+
+    if not R.is_start then score = score + 500 end
+
+    if R.is_exit then score = score + 40 end
+
+    score = score + R.svolume
+
+    -- tie breaker
+    return score + gui.random() * 3
+  end
+
+
+  local function pick_room(bf)
+    local best
+    local best_score = 0
+
+    each R in LEVEL.rooms do
+      local score = eval_room(R, bf)
+
+      if score > best_score then
+        best = R
+        best_score = score
+      end
+    end
+
+    return best
+  end
+
+
+  ---| Monster_assign_bosses |---
+
+  each bf in LEVEL.boss_fights do
+    local R = pick_room(bf)
+
+    if R then
+      R.boss_fight = bf
+
+      gui.debugf("Boss fight '%s' in %s\n", bf.mon, R.name)
+    end
+  end
 end
 
 
@@ -2003,6 +2069,7 @@ gui.debugf("Number of cages: %d\n", #R.cages)
 end
 
 
+
 function Monster_show_stats()
   local total = 0
 
@@ -2029,6 +2096,7 @@ function Monster_show_stats()
 end
 
 
+
 function Monster_make_battles()
   
   gui.printf("\n--==| Make Battles |==--\n\n")
@@ -2047,6 +2115,7 @@ function Monster_make_battles()
   Player_give_map_stuff()
   Player_weapon_palettes()
 
+  Monster_assign_bosses()
   Monster_zone_palettes()
 
   -- Rooms have been sorted into a visitation order, so we just
