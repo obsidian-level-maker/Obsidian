@@ -675,21 +675,35 @@ void Trans_Init()
 }
 
 
-static const char * remove_territory(const char *langcode)
+static const char * get_plain_language(const char *langcode)
 {
-	if (! strchr(langcode, '_'))
-		return langcode;
-
 	char buf[100];
 
-	strncpy(buf, langcode, sizeof(buf));
-	buf[sizeof(buf) - 1] = 0;
+	if (strchr(langcode, '_'))
+	{
+		strncpy(buf, langcode, sizeof(buf));
+		buf[sizeof(buf) - 1] = 0;
 
-	char *p = strchr(buf, '_');
-	if (p)
-		*p = 0;
+		char *p = strchr(buf, '_');
+		if (p)
+			*p = 0;
 
-	return StringDup(buf);
+		langcode = StringDup(buf);
+	}
+
+	if (strchr(langcode, '.'))
+	{
+		strncpy(buf, langcode, sizeof(buf));
+		buf[sizeof(buf) - 1] = 0;
+
+		char *p = strchr(buf, '.');
+		if (p)
+			*p = 0;
+
+		langcode = StringDup(buf);
+	}
+
+	return langcode;
 }
 
 
@@ -707,7 +721,7 @@ void Trans_SetLanguage()
 		LogPrintf("Detected user language: '%s'\n", langcode);
 	}
 
-	const char *lang_plain = remove_territory(langcode);
+	const char *lang_plain = get_plain_language(langcode);
 
 	// English is the default language, nothing else needed
 
