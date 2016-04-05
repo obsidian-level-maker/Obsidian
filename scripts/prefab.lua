@@ -810,7 +810,7 @@ end
 
 
 
-function Fab_size_check(skin, long, deep)
+function Fab_size_check__OLD(skin, long, deep)
   -- the 'long' and 'deep' parameters can be nil : means anything is OK
 
   if long and skin.long then
@@ -2069,6 +2069,10 @@ function Fab_find_matches(reqs, match_state)
     if not def.where then return 0 end
     if not match_word_or_table(reqs.where, def.where) then return 0 end
 
+    -- size check
+    if not match_size(def)   then return 0 end
+    if not match_height(def) then return 0 end
+
     -- group check
     if not match_word_or_table(reqs.group, def.group) then return 0 end
 
@@ -2076,24 +2080,11 @@ function Fab_find_matches(reqs, match_state)
     if not match_word_or_table(reqs.shape, def.shape) then return 0 end
 
     -- key and switch check
-    if not match_word_or_table(reqs.key,    def.key)    then return 0 end
+    if not match_word_or_table(reqs.key,    def.key)  then return 0 end
 
 --???  if not match_word_or_table(reqs.switch, def.switch) then return 0 end
 
     if reqs.item_kind != def.item_kind then return 0 end
-
-    -- hallway stuff
-    if reqs.door   != def.door   then return 0 end
-    if reqs.secret != def.secret then return 0 end
-
-    return 1
-  end
-
-
-  local function match_environment(def)
-    -- size check (seed based)
-    if not match_size(def)   then return 0 end
-    if not match_height(def) then return 0 end
 
     -- check on room type (building / outdoor / cave)
     if def.room_kind then
@@ -2103,6 +2094,10 @@ function Fab_find_matches(reqs, match_state)
     if def.neighbor_kind then
       if not match_room_kind(reqs.neighbor_kind, def.neighbor_kind) then return 0 end
     end
+
+    -- hallway stuff
+    if reqs.door   != def.door   then return 0 end
+    if reqs.secret != def.secret then return 0 end
 
     -- door check [WTF?]
     if def.no_door and reqs.has_door then return 0 end
@@ -2131,7 +2126,6 @@ function Fab_find_matches(reqs, match_state)
     if (def.rank or 0) < match_state.rank then continue end
 
     if match_requirements(def) <= 0 then continue end
-    if match_environment (def) <= 0 then continue end
 
     -- game, theme (etc) check
     local prob = Fab_match_user_stuff(def)
