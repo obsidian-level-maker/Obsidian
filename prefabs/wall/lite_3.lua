@@ -2,7 +2,7 @@
 -- Triple lighting niche
 --
 
-PREFABS.Pic_lite3_blue =
+UNFINISHED.Pic_lite3_blue =
 {
   file   = "wall/lite_3.wad"
   where  = "edge"
@@ -21,7 +21,7 @@ PREFABS.Pic_lite3_blue =
 }
 
 
-PREFABS.Pic_lite3_white =
+UNFINISHED.Pic_lite3_white =
 {
   file   = "wall/lite_3.wad"
   where  = "edge"
@@ -42,7 +42,7 @@ PREFABS.Pic_lite3_white =
 }
 
 
-PREFABS.Pic_lite3_red =
+UNFINISHED.Pic_lite3_red =
 {
   file   = "wall/lite_3.wad"
   where  = "edge"

@@ -2,7 +2,7 @@
 -- Firewall picture
 --
 
-PREFABS.Pic_firewall =
+UNFINISHED.Pic_firewall =
 {
   file   = "wall/firewall.wad"
   where  = "edge"

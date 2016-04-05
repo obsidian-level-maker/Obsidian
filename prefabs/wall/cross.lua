@@ -2,7 +2,7 @@
 -- Wall with hellish cross
 --
 
-PREFABS.Pic_cross =
+UNFINISHED.Pic_cross =
 {
   file   = "wall/cross.wad"
   where  = "edge"

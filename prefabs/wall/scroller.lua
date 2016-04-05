@@ -5,7 +5,7 @@
 
 ----| TECH |-----
 
-PREFABS.Pic_tekwall1 =
+UNFINISHED.Pic_tekwall1 =
 {
   file   = "wall/scroller.wad"
   where  = "edge"
@@ -26,7 +26,7 @@ PREFABS.Pic_tekwall1 =
 }
 
 
-PREFABS.Pic_tekwall4 =
+UNFINISHED.Pic_tekwall4 =
 {
   file   = "wall/scroller.wad"
   where  = "edge"
@@ -49,7 +49,7 @@ PREFABS.Pic_tekwall4 =
 
 ----| HELL |-----
 
-PREFABS.Pic_scroll_spine =
+UNFINISHED.Pic_scroll_spine =
 {
   file   = "wall/scroller.wad"
   where  = "edge"
@@ -68,7 +68,7 @@ PREFABS.Pic_scroll_spine =
 }
 
 
-PREFABS.Pic_scroll_face =
+UNFINISHED.Pic_scroll_face =
 {
   file   = "wall/scroller.wad"
   where  = "edge"

@@ -2,7 +2,7 @@
 -- Pair of 64x64 pictures
 --
 
-PREFABS.Pic_waste1 =
+UNFINISHED.Pic_waste1 =
 {
   file   = "wall/double_64.wad"
   where  = "edge"
