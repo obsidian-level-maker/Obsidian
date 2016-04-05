@@ -732,7 +732,7 @@ function Monster_fill_room(R)
     if R.kind == "hallway" then return end
 
     -- anything goes for the final battle
-    if R.final_battle then return end
+    if R.is_exit then return end
 
     -- occasionally break the rules
     if rand.odds(6) then return end
@@ -859,7 +859,7 @@ function Monster_fill_room(R)
     end
 
     -- make the final battle (of map) as epic as possible
-    if R.final_battle then
+    if R.is_exit then
       qty = qty * 1.7
 
     -- after the big battle, give player a breather
@@ -1028,7 +1028,7 @@ function Monster_fill_room(R)
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if not (#R.goals > 0 or R.final_battle) then
+    if not (#R.goals > 0 or R.is_exit) then
       local max_level = LEVEL.monster_level * (0.5 + R.lev_along / 2)
       if max_level < 2 then max_level = 2 end
 
@@ -1942,20 +1942,6 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
   local function find_guard_spot()
     -- Finds a KEY or EXIT to guard -- returns coordinate table (or NIL)
 
-    -- in a pseudo-exit room, need to guard the door to real exit.
-    -- we skip teleporters here, the code further down will handle it.
-    if R.final_battle and not R.is_exit then
-      each C in R.conns do
-        if C.kind == "teleporter" then continue end
-
-        local nb = C:other_room(R)
-
-        if nb.is_exit then
-          return guard_spot_for_conn(C)
-        end
-      end
-    end
-
     if R.guard_spot and R.guard_spot.goal and
        (R.guard_spot.goal.kind == "KEY" or
         R.guard_spot.goal.kind == "EXIT" or
@@ -1965,17 +1951,7 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
       return R.guard_spot
     end
 
-  --[[  FUTURE
-    each CL in R.closets do
-      if CL.closet_kind == "exit" or
-         CL.closet_kind == "item"
-      then
-        return guard_spot_for_conn(CL.conn)
-      end
-    end
-  --]]
-
-    return nil  -- none
+    return nil
   end
 
 
