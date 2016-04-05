@@ -2789,10 +2789,12 @@ function Quest_make_quests()
   -- this must be after quests have been ordered
   Quest_create_zones()
 
-  Grower_hallway_kinds()
-
 --FIXME : get secret rooms working again
 --  Quest_big_secrets()
+
+  Grower_hallway_kinds()
+
+  Area_building_facades()
 
   -- special weapon handling for HEXEN and HEXEN II
   if PARAM.hexen_weapons then

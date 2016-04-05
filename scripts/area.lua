@@ -1245,9 +1245,11 @@ end
 
 
 
-function Area_spread_facades()
+function Area_building_facades()
 
-  local function is_closed(A)
+  local function is_indoor(A)
+    if A.room and A.room.is_cave then return false end
+
     if not A.is_outdoor then return true end
     if A.mode == "void" then return true end
 
@@ -1271,7 +1273,7 @@ function Area_spread_facades()
 
     -- handle the case of a single zone
     each A in LEVEL.areas do
-      if not A.is_outdoor then
+      if A.room and A.mode == "floor" and is_indoor(A) then
         A.facade_mat = A.zone.facade_mat
         break;
       end
@@ -1279,19 +1281,23 @@ function Area_spread_facades()
   end
 
 
-  local function try_spread(A, N)
-    -- FIXME
+  local function can_spread(A, N)
+    if not is_indoor(N) then return false end
+
+    if A.zone != N.zone then return false end
+
+    return true
   end
 
 
-  local function spread_pass(allow_any)
+  local function spread_pass()
     local changes = false
 
     each A in LEVEL.areas do
       if not A.facade_mat then continue end
 
       each N in A.neighbors do
-        if (allow_any and not N.facade_mat) or try_spread(A, N) then
+        if can_spread(A, N) then
           N.facade_mat = A.facade_mat
           changes = true
         end
@@ -1307,7 +1313,7 @@ function Area_spread_facades()
     local best_score = -1
 
     each A in LEVEL.areas do
-      if not A.facade_mat and is_closed(A) then
+      if not A.facade_mat and is_indoor(A) then
         local score = gui.random()
 
         if score > best_score then
@@ -1325,7 +1331,7 @@ function Area_spread_facades()
   end
 
 
-  local function set_the_rest()
+  local function set_the_rest__OLD()
     each A in LEVEL.areas do
       if not A.facade_mat then
         A.facade_mat = A.zone.facade_mat
@@ -1334,17 +1340,16 @@ function Area_spread_facades()
   end
 
 
-  ---| Area_spread_facades |---
+  ---| Area_building_facades |---
 
   initial_facades()
 
   for loop = 1,99 do
     while spread_pass() do end
 
+    -- find an unset area and give it a facade mat
     if not assign_one() then break; end
   end
-
-  set_the_rest()
 end
 
 
@@ -1569,7 +1574,6 @@ function Area_create_rooms()
 
   Area_find_inner_points()
   Area_closet_edges()
-  Area_spread_facades()
 
 
   gui.printf("Seed Map:\n")

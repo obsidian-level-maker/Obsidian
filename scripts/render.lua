@@ -1515,7 +1515,7 @@ function Render_chunk(chunk)
     skin.ceil  = tex_ref.ceil_mat
 
     if tex_ref.is_outdoor then
-      skin.wall = A.zone.facade_mat
+      skin.wall = A.facade_mat or A.zone.facade_mat
     end
   end
 
@@ -1637,7 +1637,7 @@ function Render_properties_for_area(A)
 
 
   if A.mode == "void" then
-    A.wall_mat   = A.zone.facade_mat
+    A.wall_mat   = A.facade_mat or A.zone.facade_mat
     A.floor_mat  = A.wall_mat
     return
   end
