@@ -89,6 +89,8 @@ function Render_edge(E)
   local A   = assert(E.area)
   local dir = assert(E.dir)
 
+  if A.mode == "void" then return end
+
 
   local DIAG_DIR_MAP = { [1]=8, [9]=2, [3]=4, [7]=6 }
 
@@ -153,7 +155,7 @@ function Render_edge(E)
   end
 
 
-  local function edge_wall(mat)
+  local function edge_wall__OLD(mat)
     local brush = raw_wall_brush()
 
     brushlib.set_mat(brush, mat, mat)
@@ -187,6 +189,56 @@ function Render_edge(E)
     brushlib.set_mat(brush, "_SKY", "_SKY")
 
     Trans.brush(brush)
+  end
+
+
+  local function edge_wall()
+
+    -- find the prefab to use
+    local reqs =
+    {
+      kind = "wall"
+
+      seed_w = assert(E.long)
+
+      height = A.ceil_h - A.floor_h
+    }
+
+    if geom.is_corner(dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
+    else
+      reqs.where = "edge"
+    end
+
+    -- TODO : pictures, detailed walls
+
+
+    local skin = {}
+
+    skin.wall = assert(E.wall_mat or A.wall_mat)
+
+
+    local def = Fab_pick(reqs)
+
+    local z = A.floor_h
+
+    local T
+
+    if geom.is_corner(dir) then
+      local dir2 = DIAG_DIR_MAP[dir]
+      local S = E.S
+
+      T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
+
+    else  -- axis-aligned edge
+
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, 0, true)
+    end
+
+    Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
+
+    Fabricate(R, def, T, { skin })
   end
 
 
@@ -581,8 +633,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
   if E.kind == "wall" then
-    local mat = assert(E.wall_mat or A.wall_mat)
-    edge_wall(mat)
+    edge_wall()
 
   elseif E.kind == "sky_edge" and A.floor_h then
     edge_inner_sky()
