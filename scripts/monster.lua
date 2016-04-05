@@ -1978,12 +1978,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     if spot.use_factor then
       want = want * spot.use_factor
-
-      -- allow zero here
-      want = math.clamp(0, rand.int(want), total)
-    else
-      want = math.clamp(1, rand.int(want), total)
     end
+
+    want = math.clamp(1, rand.int(want), total)
 
     gui.debugf("monsters_in_cage: %d (of %d) qty=%1.1f\n", want, total, qty)
 
