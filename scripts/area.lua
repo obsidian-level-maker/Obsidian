@@ -1245,6 +1245,110 @@ end
 
 
 
+function Area_spread_facades()
+
+  local function is_closed(A)
+    if not A.is_outdoor then return true end
+    if A.mode == "void" then return true end
+
+    if A.chunk and A.chunk.kind == "closet" then return true end
+    if A.chunk and A.chunk.kind == "joiner" then return true end
+
+    return false
+  end
+
+
+  local function initial_facades()
+    -- areas which touch another zone always use the main facade
+
+    each A in LEVEL.areas do
+      each N in A.neighbors do
+        if N.zone != A.zone then
+          A.facade_mat = A.zone.facade_mat
+        end
+      end
+    end
+
+    -- handle the case of a single zone
+    each A in LEVEL.areas do
+      if not A.is_outdoor then
+        A.facade_mat = A.zone.facade_mat
+        break;
+      end
+    end
+  end
+
+
+  local function try_spread(A, N)
+    -- FIXME
+  end
+
+
+  local function spread_pass(allow_any)
+    local changes = false
+
+    each A in LEVEL.areas do
+      if not A.facade_mat then continue end
+
+      each N in A.neighbors do
+        if (allow_any and not N.facade_mat) or try_spread(A, N) then
+          N.facade_mat = A.facade_mat
+          changes = true
+        end
+      end
+    end
+
+    return changes
+  end
+
+
+  local function assign_one()
+    local best
+    local best_score = -1
+
+    each A in LEVEL.areas do
+      if not A.facade_mat and is_closed(A) then
+        local score = gui.random()
+
+        if score > best_score then
+          best = A
+          best_score = score
+        end
+      end
+    end
+
+    if not best then return false end
+
+    best.facade_mat = rand.sel(70, best.zone.other_facade, best.zone.facade_mat)
+
+    return true
+  end
+
+
+  local function set_the_rest()
+    each A in LEVEL.areas do
+      if not A.facade_mat then
+        A.facade_mat = A.zone.facade_mat
+      end
+    end
+  end
+
+
+  ---| Area_spread_facades |---
+
+  initial_facades()
+
+  for loop = 1,99 do
+    while spread_pass() do end
+
+    if not assign_one() then break; end
+  end
+
+  set_the_rest()
+end
+
+
+
 function Area_prune_hallways__OLD()
   --
   -- In each hallway area (except stairwells), find the shortest path
@@ -1465,6 +1569,7 @@ function Area_create_rooms()
 
   Area_find_inner_points()
   Area_closet_edges()
+  Area_spread_facades()
 
 
   gui.printf("Seed Map:\n")
