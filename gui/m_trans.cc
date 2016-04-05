@@ -677,6 +677,9 @@ void Trans_Init()
 
 static const char * remove_territory(const char *langcode)
 {
+	if (! strchr(langcode, '_'))
+		return langcode;
+
 	char buf[100];
 
 	strncpy(buf, langcode, sizeof(buf));
@@ -704,10 +707,12 @@ void Trans_SetLanguage()
 		LogPrintf("Detected user language: '%s'\n", langcode);
 	}
 
+	const char *lang_plain = remove_territory(langcode);
+
 	// English is the default language, nothing else needed
 
-	if (strcmp(langcode, "en") == 0 ||
-		strcmp(langcode, "UNKNOWN") == 0)
+	if (strcmp(lang_plain, "UNKNOWN") == 0 ||
+		strcmp(lang_plain, "en") == 0)
 	{
 		LogPrintf("Using the default language (English)\n\n");
 		return;
@@ -719,20 +724,15 @@ void Trans_SetLanguage()
 	if (! FileExists(path))
 	{
 		// if language has a territory field (like zh_TW or en_AU) then
-		// remove it and try again
+		// try again with the plain language code.
 
-		if (strchr(langcode, '_'))
-		{
-			langcode = remove_territory(langcode);
-		}
-
-		path = StringPrintf("%s/language/%s.po", install_dir, langcode);
+		path = StringPrintf("%s/language/%s.po", install_dir, lang_plain);
 	}
 
 	FILE * fp = fopen(path, "rb");
 	if (! fp)
 	{
-		LogPrintf("No translation file: language/%s.po\n", langcode);
+		LogPrintf("No translation file: language/%s.po\n", lang_plain);
 		LogPrintf("Using the default language (English)\n\n");
 		return;
 	}
