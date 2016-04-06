@@ -1448,11 +1448,16 @@ function Render_chunk(chunk)
 
   -- FIXME : reqs.shape
 
+  -- room kind and (for joiners) neighbor room kind
   if A.room then
-    reqs.room_kind = A.room.kind
+    reqs.env = A.room:get_env()
   end
 
-  -- TODO : for joiners, reqs.neighbor_kind
+  if chunk.kind == "joiner" then
+    assert(chunk.conn)
+    local A2 = chunk.conn:other_area(A)
+    reqs.neighbor = A2.room:get_env()
+  end
 
 
   local what = chunk.content_kind

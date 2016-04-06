@@ -170,6 +170,15 @@ function ROOM_CLASS.add_area(R, A)
 end
 
 
+function ROOM_CLASS.get_env(R)
+  if R.is_cave then return "cave" end
+
+  if R.is_outdoor then return "outdoor" end
+
+  return "building"
+end
+
+
 function ROOM_CLASS.kill_it(R)
   gui.debugf("Killing %s\n", R.name)
 
