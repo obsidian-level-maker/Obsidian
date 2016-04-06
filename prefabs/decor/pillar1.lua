@@ -7,6 +7,8 @@ PREFABS.Pillar_round1 =
   file   = "decor/pillar1.wad"
   where  = "point"
 
+  env    = "building"
+
   size   = 80
   height = 128
 
