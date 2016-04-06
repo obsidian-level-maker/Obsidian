@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008,2010 Andrew Apted
+--  Copyright (C) 2008,2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -41,6 +41,12 @@ function BOOM.create_dehacked()
     "# BEX LUMP created by OBLIGE\n"
     "#\n\n"
   }
+
+  --- monster stuff ---
+
+  table.insert(data, "Thing 20 (Spiderdemon)\n")
+  table.insert(data, "Width = 5242880\n")
+  table.insert(data, "\n")
 
   --- level names ---
 
@@ -91,11 +97,23 @@ function BOOM.create_dehacked()
 end
 
 
-----------------------------------------------------------------
+function BOOM.setup()
+  -- for BOOM-compatible ports, reduce the size of the Spider Mastermind
+  -- boss from 128 to 80 units (via DEHACKED lump) so that she fits more
+  -- reliably on maps.
+  local info = GAME.MONSTERS["Mastermind"]
+  if info then
+    info.r = 80
+  end
+end
+
 
 function BOOM.all_done()
   BOOM.create_dehacked()
 end
+
+
+----------------------------------------------------------------
 
 
 OB_ENGINES["boom"] =
@@ -112,6 +130,7 @@ OB_ENGINES["boom"] =
 
   hooks =
   {
+    setup2   = BOOM.setup
     all_done = BOOM.all_done
   }
 }
