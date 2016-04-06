@@ -1881,15 +1881,14 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
   end
 
 
-  local function add_guarding_monsters()
+  local function guard_spot_for_boss()
+    -- FIXME !!!
+    do return nil end
+
     if not R.guard_coord then return end
 
 -- FIXME : support guarding closets
 if R.guard_coord.closet then return end
-
-    if not R.zone.guard_mon then return end
-
--- stderrf("add_guarding_monsters '%s' @ %s\n", R.zone.guard_mon, R.name)
 
     -- convert coordinate into a fake spot  [no z coords!]
     local guard_spot =
@@ -1900,36 +1899,44 @@ if R.guard_coord.closet then return end
       y2 = R.guard_coord.my + 16
     }
 
-    local mon  = R.zone.guard_mon
-    local info = GAME.MONSTERS[mon]
+    return guard_spot
+  end
 
-    -- decide how many of them
-    local count = 2
 
-    if R.zone.guard_is_new or info.level >= 8 or
-       (info.nasty and rand.odds(50))
-    then
-      count = 1
-    end
+  local function add_bosses()
+    local bf = R.boss_fight
+
+    -- nothing planned for this room?
+    if not bf then return end
+
+    local guard_spot = guard_spot_for_boss()
 
     local reqs = {}
 
-    for i = 1, count do
+    -- TODO : support bosses in special places (prefabs)
+
+    for i = 1, bf.count do
+      local mon = bf.mon
+
       local spot = grab_monster_spot(mon, guard_spot, reqs)
 
-      -- TODO: have a backup monster, strongest in room palette
+      -- FIXME: for "huge" monsters, try a backup
+      -- if is_huge(mon) and count == 1 and bf.backup_mon then
+      --   mon = bf.backup_mon
+      --   spot = grab_monster_spot(mon, guard_spot, reqs)
+      -- end
 
       if not spot then
-        gui.printf("Cannot place guard monster: %s\n", mon)
+        gui.printf("Cannot place boss monster: %s\n", mon)
         break;
       end
 
       -- look toward the important spot
-      if rand.odds(75) then
-        spot.face = R.guard_coord
+      if guard_spot and rand.odds(80) then
+        spot.face = guard_spot
       end
 
-      local all_skills = (i == 1)
+      local all_skills = (i <= 2)
 
       place_in_spot(mon, spot, all_skills)
     end
@@ -1951,8 +1958,6 @@ if R.guard_coord.closet then return end
       R.no_replacement = true
     end
 
-    add_guarding_monsters()
-
     -- TODO : determine 'num_kinds' param properly
     local cage_pal = cage_palette("cage", 2, palette)
     local trap_pal = cage_palette("trap", 2, palette)
@@ -1970,7 +1975,7 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
   end
 
 
-  local function add_barrels()
+  local function add_destructibles()
     -- add barrels or other DESTRUCTIBLE decorations
     -- [ these objects may block player paths, hence must be destroyable ]
 
@@ -2066,10 +2071,11 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
   prepare_room()
 
   if should_add_monsters() then
+    add_bosses()
     add_monsters()
   end
 
-  add_barrels()
+  add_destructibles()
 end
 
 
