@@ -2214,6 +2214,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       height = A.ceil_h - A.floor_h
     }
 
+    if A.room then
+      reqs.env = A.room:get_env()
+    end
+
     local def = Fab_pick(reqs)
     local skin1 = { floor=floor_mat }
     local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, 2)
