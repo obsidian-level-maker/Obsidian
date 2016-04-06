@@ -1717,7 +1717,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function fill_monster_map(palette, barrel_chance)
+  local function fill_monster_map(palette)
     -- compute total number of monsters wanted
     local qty = calc_quantity()
 
@@ -1945,14 +1945,6 @@ if R.guard_coord.closet then return end
       palette = room_palette()
     end
 
-    local barrel_chance = sel(R.is_outdoor, 2, 15)
---!!    if R.natural then barrel_chance = 3 end
---!!    if R.hallway then barrel_chance = 5 end
-
-    if STYLE.barrels == "heaps" or rand.odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
-    if STYLE.barrels == "few"   or rand.odds(25) then barrel_chance = barrel_chance / 4 end
-
-    if STYLE.barrels == "none" then barrel_chance = 0 end
 
     -- sometimes prevent monster replacements
     if rand.odds(40) or OB_CONFIG.strength == "crazy" then
@@ -1960,12 +1952,6 @@ if R.guard_coord.closet then return end
     end
 
     add_guarding_monsters()
-
-    -- FIXME: add barrels even when no monsters in room
-
-    if not table.empty(palette) then
-      fill_monster_map(palette, barrel_chance)
-    end
 
     -- TODO : determine 'num_kinds' param properly
     local cage_pal = cage_palette("cage", 2, palette)
@@ -1981,6 +1967,23 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
       trap.kind = "trap"
       fill_a_cage(trap, trap_pal)
     end
+  end
+
+
+  local function add_barrels()
+    -- add barrels or other DESTRUCTIBLE decorations
+    -- [ these objects may block player paths, hence must be destroyable ]
+
+    if STYLE.barrels == "none" then return end
+
+    local barrel_chance = sel(R.is_outdoor, 2, 15)
+--??    if R.natural then barrel_chance = 3 end
+--??    if R.hallway then barrel_chance = 5 end
+
+    if STYLE.barrels == "heaps" or rand.odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
+    if STYLE.barrels == "few"   or rand.odds(25) then barrel_chance = barrel_chance / 4 end
+
+    -- FIXME : get barrels working again
   end
 
 
@@ -2059,13 +2062,14 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
   ---| Monster_fill_room |---
 
   gui.debugf("Monster_fill_room @ %s\n", R.name)
-gui.debugf("Number of cages: %d\n", #R.cages)
 
   prepare_room()
 
   if should_add_monsters() then
     add_monsters()
   end
+
+  add_barrels()
 end
 
 
