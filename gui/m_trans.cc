@@ -700,24 +700,77 @@ void parse_PO_string(const char *p, char *dest, size_t dest_size)
 }
 
 
+typedef struct
+{
+	char  id[65536];
+	char str[65536];
+	char ctx[2048];
+
+	bool has_id;
+	bool has_str;
+	bool has_ctx;
+
+	void Clear()
+	{
+		 id[0] = 0;  has_id  = false;
+		str[0] = 0;  has_str = false;
+		ctx[0] = 0;  has_ctx = false;
+	}
+
+	// store the message pair if valid
+	void Push()
+	{
+		if (has_id && has_str)
+		{
+			Trans_AddMessage(id, str);
+			Clear();
+		}
+	}
+
+	void Append(const char *p)
+	{
+		if (has_str)
+			parse_PO_string(p, str, sizeof(str));
+		else if (has_id)
+			parse_PO_string(p, id, sizeof(id));
+		else
+		{
+			// FIXME WARNING
+		}
+	}
+
+	void SetContext(const char *p)
+	{
+		ctx[0] = 0;
+		parse_PO_string(p, ctx, sizeof(ctx));
+		has_ctx = true;
+	}
+
+	void SetId(const char *p)
+	{
+		id[0] = 0;
+		parse_PO_string(p, id, sizeof(id));
+		has_id = true;
+	}
+
+	void SetString(const char *p)
+	{
+		str[0] = 0;
+		parse_PO_string(p, str, sizeof(str));
+		has_str = true;
+	}
+
+} po_parse_state_t;
+
+
 void Trans_Read_PO_File(FILE *fp)
 {
-	// FIXME!!!  we dont distinguish a lack of 'id' (etc) version the empty string!!!
-
 	// the currently read message (not yet added)
-	static char ctx[2048];
-	static char buf[2048];
-
-	static char  id[65536];
-	static char str[65536];
+	static po_parse_state_t po_state;
 
 	// initialize
-	ctx[0] = 0;
-	 id[0] = 0;
-	str[0] = 0;
+	po_state.Clear();
 
-	// what string-only lines will append to (NULL if nothing set yet)
-	char *append_to = NULL;
 
 	char line[2048];
 	char *p;
@@ -739,51 +792,40 @@ void Trans_Read_PO_File(FILE *fp)
 
 		// andrewj: I assume whitespace before keywords is not valid
 
+		if (isspace(*p) || *p == '#')
+			continue;
+
 		// extension string?
 		if (*p == '"')
 		{
-			if (append_to)
-				parse_PO_string(p, append_to, sizeof(id));	
+			po_state.Append(p);
 			continue;
 		}
-
-		if (*p != 'm')
-			continue;
 
 		// if we have a pending translation, add it now
-		if (id[0] && str[0])
-		{
-			Trans_AddMessage(id, str);
-
-			ctx[0] = 0;
-			 id[0] = 0;
-			str[0] = 0;
-
-			append_to = NULL;
-		}
+		po_state.Push();
 
 		if (strcmp(p, "msgctxt ") == 0)
 		{
-			parse_PO_string(p + 7, ctx, sizeof(ctx));
+			po_state.SetContext(p + 7);
 		}
 		else if (strcmp(p, "msgid ") == 0)
 		{
-			parse_PO_string(p + 5, id, sizeof(id));
-			append_to = id;
+			po_state.SetId(p + 5);
 		}
 		else if (strcmp(p, "msgstr ") == 0)
 		{
-			parse_PO_string(p + 6, str, sizeof(str));
-			append_to = str;
+			po_state.SetString(p + 6);
+		}
+		else
+		{
+			// FIXME WARNING UNKNOWN KEYWORD
 		}
 	}
 
 	// all done, add the final pending translation
 
-	if (id[0] && str[0])
-	{
-		Trans_AddMessage(id, str);
-	}
+	po_state.Push();
 }
 
 
