@@ -816,17 +816,17 @@ void Trans_Read_PO_File(FILE *fp)
 		// if we have a pending translation, add it now
 		po_state.Push();
 
-		if (strcmp(p, "msgctxt ") == 0)
+		if (strncmp(p, "msgctxt ", 8) == 0)
 		{
-			po_state.SetContext(p + 7);
+			po_state.SetContext(p + 8);
 		}
-		else if (strcmp(p, "msgid ") == 0)
+		else if (strncmp(p, "msgid ", 6) == 0)
 		{
-			po_state.SetId(p + 5);
+			po_state.SetId(p + 6);
 		}
-		else if (strcmp(p, "msgstr ") == 0)
+		else if (strncmp(p, "msgstr ", 7) == 0)
 		{
-			po_state.SetString(p + 6);
+			po_state.SetString(p + 7);
 		}
 		else
 		{
