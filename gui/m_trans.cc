@@ -672,6 +672,8 @@ void Trans_AddMessage(const char *before, const char *after)
 
 	lua_pushstring(trans_store, after);
 	lua_setfield(trans_store, -2, before);
+
+	lua_pop(trans_store, 1);
 }
 
 
@@ -844,7 +846,7 @@ const char * ob_gettext(const char *s)
 			t = lua_tolstring(trans_store, -1, NULL);
 		}
 
-		lua_pop(trans_store, 1);
+		lua_pop(trans_store, 2);
 
 		if (t)
 			return t;   // OK !
