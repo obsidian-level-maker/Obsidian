@@ -677,6 +677,41 @@ void Trans_AddMessage(const char *before, const char *after)
 }
 
 
+void Trans_Read_PO_File(FILE *fp)
+{
+	// the currently read message (not yet added)
+	static char ctx[2048];
+	static char  id[65536];
+	static char str[65536];
+
+	// initialize
+	ctx[0] = 0;
+	 id[0] = 0;
+	str[0] = 0;
+
+	// what string-only lines will append to (NULL if nothing set yet)
+	char *append_to = NULL;
+
+	char line[2048];
+	char *p;
+
+	int  lnum;
+
+	// process one line on each iteration
+	for (lnum = 1 ; fgets(line, sizeof(line), fp) != NULL ; lnum++)
+	{
+		// FIXME
+	}
+
+	// all done, add any pending translation
+
+	if (id[0] && str[0])
+	{
+		Trans_AddMessage(id, str);
+	}
+}
+
+
 void Trans_Init()
 {
 #ifndef WIN32
@@ -795,7 +830,7 @@ void Trans_SetLanguage()
 
 	LogPrintf("Loading translation: %s\n", path);
 
-	//...... FIXME PO PARSING
+	Trans_Read_PO_File(fp);
 
 	fclose(fp);
 
