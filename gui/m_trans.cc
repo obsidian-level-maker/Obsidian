@@ -668,6 +668,7 @@ void Trans_CreateStorage()
 
 void Trans_AddMessage(const char *before, const char *after)
 {
+fprintf(stderr, "Trans_AddMessage: [%s] --> [%s]\n", before, after);
 	// an empty before string has special meaning in a PO file,
 	// providing a bunch of meta-information (which we ignore).
 
@@ -696,7 +697,17 @@ void parse_PO_string(const char *p, char *dest, size_t dest_size)
 	dest = dest + d_len;
 	dest_size = dest_size - d_len;
 
+	while (*p && isspace(*p))
+		p++;
+
+	if (*p++ != '"')
+	{
+		LogPrintf("WARNING: missing string\n");
+	}
+
 	// FIXME parse_PO_string
+
+//	strcat(dest, p);
 }
 
 
@@ -709,6 +720,8 @@ typedef struct
 	bool has_id;
 	bool has_str;
 	bool has_ctx;
+
+	int line_number;
 
 	void Clear()
 	{
@@ -734,9 +747,7 @@ typedef struct
 		else if (has_id)
 			parse_PO_string(p, id, sizeof(id));
 		else
-		{
-			// FIXME WARNING
-		}
+			LogPrintf("WARNING: unexpected string on line %d\n", line_number);
 	}
 
 	void SetContext(const char *p)
@@ -771,16 +782,16 @@ void Trans_Read_PO_File(FILE *fp)
 	// initialize
 	po_state.Clear();
 
-
-	char line[2048];
-	char *p;
-
-	int  lnum;
-
 	// process one line on each iteration
-	for (lnum = 1 ; fgets(line, sizeof(line), fp) != NULL ; lnum++)
+	char line[2048];
+
+	po_state.line_number = 0;
+
+	while (fgets(line, sizeof(line), fp) != NULL)
 	{
-		p = line;
+		po_state.line_number += 1;
+
+		char *p = line;
 
 		// skip any BOM (can occur at very start of file)
 		if ((u8_t)(p[0]) == 0xEF &&
@@ -790,7 +801,7 @@ void Trans_Read_PO_File(FILE *fp)
 			p += 3;
 		}
 
-		// andrewj: I assume whitespace before keywords is not valid
+		// NOTE: I assume whitespace at start of line is not valid
 
 		if (isspace(*p) || *p == '#')
 			continue;
@@ -819,7 +830,7 @@ void Trans_Read_PO_File(FILE *fp)
 		}
 		else
 		{
-			// FIXME WARNING UNKNOWN KEYWORD
+			LogPrintf("WARNING: unsupported keyword on line %d\n", po_state.line_number);
 		}
 	}
 
