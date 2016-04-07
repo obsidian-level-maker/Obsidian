@@ -233,6 +233,7 @@ DOOM.MONSTERS =
     weap_prefs = { bfg=10.0 }
     room_size = "large"
     infight_damage = 700
+    boss_replacement = "Cyberdemon"
   }
 
 
@@ -320,6 +321,7 @@ DOOM.MONSTERS =
     density = 0.5
     room_size = "medium"
     infight_damage = 62
+    boss_replacement = "revenant"
   }
 
   vile =

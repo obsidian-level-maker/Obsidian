@@ -1729,7 +1729,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- determine how many of each kind of monster we want
     local wants = how_many_dudes(palette, want_total)
 
-    
+
     calc_baddie_dists(palette)
 
 
@@ -1920,14 +1920,30 @@ if R.guard_coord.closet then return end
 
       local spot = grab_monster_spot(mon, guard_spot, reqs)
 
-      -- FIXME: for "huge" monsters, try a backup
-      -- if is_huge(mon) and count == 1 and bf.backup_mon then
-      --   mon = bf.backup_mon
-      --   spot = grab_monster_spot(mon, guard_spot, reqs)
-      -- end
+      -- if it did not fit (e.g. too large), try a backup
+      if not spot then
+        if bf.boss_type == "tough" and i > 1 then break; end
+
+        local info = GAME.MONSTERS[mon]
+        mon = info.boss_replacement
+
+        if mon then
+          -- check the monster exists and can be used
+          info = GAME.MONSTERS[mon]
+          if not info or (info.prob or 0) == 0 then
+            mon = nil
+          end
+        end
+
+        if mon then
+          gui.printf("Using replacement boss: %s --> %s\n", bf.mon, mon)
+
+          spot = grab_monster_spot(mon, guard_spot, reqs)
+        end
+      end
 
       if not spot then
-        gui.printf("Cannot place boss monster: %s\n", mon)
+        gui.printf("Cannot place boss monster: %s\n", bf.mon)
         break;
       end
 
@@ -2111,7 +2127,7 @@ end
 
 
 function Monster_make_battles()
-  
+
   gui.printf("\n--==| Make Battles |==--\n\n")
 
   gui.prog_step("Mons")
