@@ -736,6 +736,8 @@ function Episode_plan_monsters()
 
       pick_boss_quotas(LEV)
 
+      if OB_CONFIG.strength == "crazy" then continue end
+
       if LEV.prebuilt then continue end
 
 -- stderrf("%s:\n", LEV.name)
