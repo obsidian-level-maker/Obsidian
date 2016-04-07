@@ -31,11 +31,25 @@
 #include "lib_util.h"
 
 #include "main.h"
+#include "m_lua.h"
 #include "m_trans.h"
 
 #ifndef WIN32
 #include <locale.h>
 #endif
+
+
+//
+// NOTE WELL:
+//    We assume that strings retrieved from the Lua state will
+//    always be valid, e.g. they will NEVER be garbage collected.
+//
+//    This is probably true, as once all the language strings are
+//    loaded the Lua state is never written to again.
+//
+//    HOWEVER if that proves to be false, then using Lua as our
+//    string store will have to be abandoned.
+//
 
 
 /* Mingw headers don't have latest language and sublanguage codes. */
@@ -379,6 +393,9 @@
 // current Options setting
 const char * t_language = N_("AUTO");
 
+// the Lua state used to store translation strings
+static lua_State * trans_store;
+
 
 /* DETERMINE CURRENT LANGUAGE */
 
@@ -636,6 +653,28 @@ void Trans_ParseLangLine(char *line)
 }
 
 
+void Trans_CreateStorage()
+{
+	trans_store = luaL_newstate();
+
+	if (! trans_store)
+		Main_FatalError("Failed to create storage for translations.\n");
+
+	// create the TRANS table
+	lua_newtable(trans_store);
+	lua_setglobal(trans_store, "TRANS");
+}
+
+
+void Trans_AddMessage(const char *before, const char *after)
+{
+	lua_getglobal(trans_store, "TRANS");
+
+	lua_pushstring(trans_store, after);
+	lua_setfield(trans_store, -2, before);
+}
+
+
 void Trans_Init()
 {
 #ifndef WIN32
@@ -645,7 +684,8 @@ void Trans_Init()
 	}
 #endif
 
-	// TODO : stuff to create a Lua state to store messages in
+	// create a Lua state to store messages in
+	Trans_CreateStorage();
 
 	/* read the list of languages */
 
@@ -790,6 +830,26 @@ const char * Trans_GetAvailLanguage(int idx)
 
 const char * ob_gettext(const char *s)
 {
+	if (trans_store)
+	{
+		lua_getglobal(trans_store, "TRANS");
+
+		lua_getfield(trans_store, -1, s);
+
+		const char *t = NULL;
+
+		// check if the message is known
+		if (! lua_isnil(trans_store, -1))
+		{
+			t = lua_tolstring(trans_store, -1, NULL);
+		}
+
+		lua_pop(trans_store, 1);
+
+		if (t)
+			return t;   // OK !
+	}
+
 	return s;
 }
 
