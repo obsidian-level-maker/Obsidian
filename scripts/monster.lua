@@ -1952,11 +1952,14 @@ if R.guard_coord.closet then return end
       palette = room_palette()
     end
 
-
     -- sometimes prevent monster replacements
     if rand.odds(40) or OB_CONFIG.strength == "crazy" then
       R.no_replacement = true
     end
+
+
+    fill_monster_map(palette)
+
 
     -- TODO : determine 'num_kinds' param properly
     local cage_pal = cage_palette("cage", 2, palette)
