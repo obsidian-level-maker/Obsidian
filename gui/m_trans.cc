@@ -609,7 +609,7 @@ void Trans_ParseLangLine(char *line)
 {
 	char *pos;
 
-	// skip any BOM (may occur at very start of file)
+	// skip any BOM (can occur at very start of file)
 	if ((u8_t)(line[0]) == 0xEF &&
 		(u8_t)(line[1]) == 0xBB &&
 		(u8_t)(line[2]) == 0xBF)
@@ -668,6 +668,18 @@ void Trans_CreateStorage()
 
 void Trans_AddMessage(const char *before, const char *after)
 {
+	// an empty before string has special meaning in a PO file,
+	// providing a bunch of meta-information (which we ignore).
+
+	if (before[0] == 0)
+		return;
+
+	// an empty after string means the translator has not yet
+	// provided a translation.  hence we ignore that too.
+
+	if (after[0] == 0)
+		return;
+
 	lua_getglobal(trans_store, "TRANS");
 
 	lua_pushstring(trans_store, after);
@@ -677,10 +689,25 @@ void Trans_AddMessage(const char *before, const char *after)
 }
 
 
+void parse_PO_string(const char *p, char *dest, size_t dest_size)
+{
+	size_t d_len = strlen(dest);
+
+	dest = dest + d_len;
+	dest_size = dest_size - d_len;
+
+	// FIXME parse_PO_string
+}
+
+
 void Trans_Read_PO_File(FILE *fp)
 {
+	// FIXME!!!  we dont distinguish a lack of 'id' (etc) version the empty string!!!
+
 	// the currently read message (not yet added)
 	static char ctx[2048];
+	static char buf[2048];
+
 	static char  id[65536];
 	static char str[65536];
 
@@ -700,10 +727,58 @@ void Trans_Read_PO_File(FILE *fp)
 	// process one line on each iteration
 	for (lnum = 1 ; fgets(line, sizeof(line), fp) != NULL ; lnum++)
 	{
-		// FIXME
+		p = line;
+
+		// skip any BOM (can occur at very start of file)
+		if ((u8_t)(p[0]) == 0xEF &&
+			(u8_t)(p[1]) == 0xBB &&
+			(u8_t)(p[2]) == 0xBF)
+		{
+			p += 3;
+		}
+
+		// andrewj: I assume whitespace before keywords is not valid
+
+		// extension string?
+		if (*p == '"')
+		{
+			if (append_to)
+				parse_PO_string(p, append_to, sizeof(id));	
+			continue;
+		}
+
+		if (*p != 'm')
+			continue;
+
+		// if we have a pending translation, add it now
+		if (id[0] && str[0])
+		{
+			Trans_AddMessage(id, str);
+
+			ctx[0] = 0;
+			 id[0] = 0;
+			str[0] = 0;
+
+			append_to = NULL;
+		}
+
+		if (strcmp(p, "msgctxt ") == 0)
+		{
+			parse_PO_string(p + 7, ctx, sizeof(ctx));
+		}
+		else if (strcmp(p, "msgid ") == 0)
+		{
+			parse_PO_string(p + 5, id, sizeof(id));
+			append_to = id;
+		}
+		else if (strcmp(p, "msgstr ") == 0)
+		{
+			parse_PO_string(p + 6, str, sizeof(str));
+			append_to = str;
+		}
 	}
 
-	// all done, add any pending translation
+	// all done, add the final pending translation
 
 	if (id[0] && str[0])
 	{
