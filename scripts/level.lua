@@ -1972,7 +1972,6 @@ end
 function Level_between_clean()
   LEVEL    = nil
   SEEDS    = nil
-  SECTIONS = nil
 
   collectgarbage("collect")
 end

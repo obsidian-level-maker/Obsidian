@@ -2631,12 +2631,12 @@ function Room_build_all()
 
   gui.printf("\n---=====  Build Rooms =====---\n\n")
 
----!!!  Room_reckon_doors()
-
----????  Room_pool_hacks()
-
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
+
+---!!!  Room_reckon_doors()
+
+---???  Room_pool_hacks()
 
   Room_floor_ceil_heights()
   Room_prepare_skies()
