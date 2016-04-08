@@ -2322,63 +2322,61 @@ h = 8
   end
 
 
-  local function low_nb_height(A)
-    local h
-
-    each N in A.neighbors do
-      if N.room == A.room and N.mode == "floor" and N.floor_h then
-        if not h or N.floor_h < h then h = N.floor_h end
-      end
-    end
-
-    if not h then
-      error("failed to find nb height")
-    end
-
-    return h
-  end
-
-
-  local function high_nb_height(A)
-    local h
-
-    each N in A.neighbors do
-      if N.room == A.room and N.mode == "floor" and N.floor_h then
-        if not h or N.floor_h > h then h = N.floor_h end
-      end
-    end
-
-    if not h then
-      error("failed to find nb height")
-    end
-
-    return h
-  end
-
-
   local function do_liquid_areas(R)
     each A in R.areas do
       if A.mode == "liquid" then
-        A.floor_h = low_nb_height(A) - 16
+        local N = A:lowest_neighbor()
+        if not N then
+          error("failed to find liquid neighbor")
+        end
+        A.floor_h = N.floor_h - 16
       end
+    end
+  end
+
+
+  local function kill_start_cages(R)
+    -- turn closets in start rooms into a plain floor
+
+    each A in R.areas do
+      if A.mode != "cage" then continue end
+
+      local N
+
+      if A.peer and A.peer.floor_h then
+        N = A.peer
+      else
+        N = A:highest_neighbor()
+      end
+
+      if not N then
+        error("failed to find cage neighbor")
+      end
+
+      A.mode = "floor"
+
+      A.floor_h   = N.floor_h
+      A.floor_mat = N.floor_mat
     end
   end
 
 
   local function do_cage_areas(R)
     each A in R.areas do
-      if A.mode == "cage" then
-        local h = high_nb_height(A)
+      if A.mode != "cage" then continue end
 
-        -- turn closets in start rooms into a plain floor
-        if R.is_start then
-          A.mode = "floor"
-          A.floor_h = h + 4
-          A.floor_mat = rand.key_by_probs(R.theme.floors)
-        else
-          A.floor_h = h + rand.pick({40,56,72})
-        end
+      if A.peer and A.peer.floor_h then
+        A.floor_h = A.peer.floor_h
+        continue
       end
+
+      local N = A:highest_neighbor()
+
+      if not N then
+        error("failed to find cage neighbor")
+      end
+
+      A.floor_h = N.floor_h + rand.pick({40,56,72})
     end
   end
 
@@ -2465,10 +2463,13 @@ R.entry_h = -77
 each A in R.areas do A.floor_h = R.entry_h end
 end
 --]]
-
     assert(R.entry_h)
 
     calc_max_floor(R)
+
+    if R.is_start then
+      kill_start_cages(R)
+    end
 
     do_liquid_areas(R)
     do_cage_areas(R)

@@ -274,6 +274,35 @@ function AREA_CLASS.touches(A, N)
 end
 
 
+function AREA_CLASS.highest_neighbor(A)
+  local best
+
+  each N in A.neighbors do
+    if N.room == A.room and N.mode == "floor" and N.floor_h then
+      if not best or N.floor_h > best.floor_h then best = N end
+    end
+  end
+
+  return best
+end
+
+
+function AREA_CLASS.lowest_neighbor(A)
+  local best
+
+  each N in A.neighbors do
+    if N.room == A.room and N.mode == "floor" and N.floor_h then
+      if not best or N.floor_h < best.floor_h then best = N end
+    end
+  end
+
+  return best
+end
+
+
+------------------------------------------------------------------------
+
+
 function Chunk_new(kind, sx1,sy1, sx2,sy2)
   local CHUNK =
   {
