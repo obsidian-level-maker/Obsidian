@@ -142,6 +142,7 @@ function ROOM_CLASS.new()
 
     sky_rects = {}
     exclusions = {}
+    avoid_mons = {}
 
     hazard_health = 0
   }

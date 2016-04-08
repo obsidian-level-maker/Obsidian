@@ -366,6 +366,26 @@ function Monster_assign_bosses()
   end
 
 
+  local function avoid_guard_monster(R, mon)
+    -- prevent using a guard monster as a normal (fodder) monster
+    -- in this room and some nearby rooms
+
+    R.avoid_mons[mon] = true
+
+    each N in R.quest.rooms do
+      N.avoid_mons[mon] = true
+    end
+
+    for loop = 1, 2 do
+      if R.entry_conn then
+        R = R.entry_conn:other_room(R)
+
+        R.avoid_mons[mon] = true
+      end
+    end
+  end
+
+
   ---| Monster_assign_bosses |---
 
   each bf in LEVEL.boss_fights do
@@ -375,6 +395,10 @@ function Monster_assign_bosses()
       R.boss_fight = bf
 
       gui.debugf("Boss fight '%s' in %s\n", bf.mon, R.name)
+
+      if bf.boss_type == "guard" then
+        avoid_guard_monster(R, bf.mon)
+      end
     end
   end
 end
@@ -1054,6 +1078,10 @@ function Monster_fill_room(R)
     local prob = info.prob
 
     if not LEVEL.global_pal[mon] then
+      return 0
+    end
+
+    if R.avoid_mons[mon] then
       return 0
     end
 
