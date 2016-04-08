@@ -8,7 +8,7 @@ PREFABS.Wall_vertgap =
   map    = "MAP01"
   where  = "edge"
 
-  env    = "outdoors"
+  env    = "outdoor"
 
   deep   = 16
   height = 64
@@ -28,7 +28,7 @@ PREFABS.Wall_vertgap_diag =
   map    = "MAP02"
   where  = "diagonal"
 
-  env    = "outdoors"
+  env    = "outdoor"
 
   deep   = 16
   height = 64
