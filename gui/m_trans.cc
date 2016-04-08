@@ -52,6 +52,11 @@
 //
 
 
+// largest string we can load
+#define MAX_TRANS_STRING	65536
+
+
+
 /* Mingw headers don't have latest language and sublanguage codes. */
 #ifdef WIN32
 # ifndef LANG_AFRIKAANS
@@ -735,9 +740,9 @@ void Trans_AddMessage(const char *before, const char *after)
 
 typedef struct
 {
-	char  id[65536];
-	char str[65536];
-	char ctx[2048];
+	char  id[MAX_TRANS_STRING];
+	char str[MAX_TRANS_STRING];
+	char ctx[256];
 
 	bool has_id;
 	bool has_str;
@@ -875,7 +880,7 @@ void Trans_Read_PO_File(FILE *fp)
 	po_state.Clear();
 
 	// process one line on each iteration
-	char line[2048];
+	static char line[MSG_BUF_LEN];
 
 	po_state.line_number = 0;
 
@@ -959,9 +964,9 @@ void Trans_Init()
 	LogPrintf("Loading language list: %s\n", path);
 
 	// simple line-by-line parser
-	char buffer[MSG_BUF_LEN];
+	static char buffer[MSG_BUF_LEN];
 
-	while (fgets(buffer, MSG_BUF_LEN-2, fp))
+	while (fgets(buffer, sizeof(buffer), fp) != NULL)
 	{
 		Trans_ParseLangLine(buffer);
 	}
