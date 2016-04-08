@@ -69,7 +69,8 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 
 
-	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h, _("     Menu @-3>"));
+	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
+		StringPrintf("     %s @-3>", _("Menu")));
 	misc_menu->selection_color(fl_rgb_color(120,80,20));
 
 	misc_menu->add(_("About"),         FL_F+1, menu_do_about);
