@@ -731,19 +731,31 @@ function ob_init()
     return A.label < B.label
   end
 
+
   local function create_buttons(what, DEFS)
     assert(DEFS)
     gui.debugf("creating buttons for %s\n", what)
   
     local list = {}
 
+    local min_priority = 999
+
     each name,def in DEFS do
       assert(def.name and def.label)
       table.insert(list, def)
+      min_priority = math.min(min_priority, def.priority or 50)
     end
 
-    -- this creates a separator for the 'Theme' menu
-    if what == "theme" then
+    -- add separators for the Game, Engine and Theme menus
+    if what == "game" and min_priority < 49 then
+      table.insert(list, { priority=49, name="_", label="_" })
+    end
+
+    if what == "engine" and min_priority < 92 then
+      table.insert(list, { priority=92, name="_", label="_" })
+    end
+
+    if what == "theme" and min_priority < -1 then
       table.insert(list, { priority=-1, name="_", label="_" })
     end
 
@@ -759,6 +771,7 @@ function ob_init()
 
     return list[1] and list[1].name
   end
+
 
   local function create_mod_options()
     gui.debugf("creating module options\n", what)
@@ -799,6 +812,7 @@ function ob_init()
       end
     end -- for mod
   end
+
 
   OB_CONFIG.seed = 0
   OB_CONFIG.mode = "sp" -- GUI code sets the real default
