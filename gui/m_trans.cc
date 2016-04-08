@@ -678,7 +678,6 @@ void Trans_CreateStorage()
 
 void Trans_AddMessage(const char *before, const char *after)
 {
-fprintf(stderr, "Trans_AddMessage: [%s] --> [%s]\n", before, after);
 	// an empty before string has special meaning in a PO file,
 	// providing a bunch of meta-information (which we ignore).
 
@@ -697,27 +696,6 @@ fprintf(stderr, "Trans_AddMessage: [%s] --> [%s]\n", before, after);
 	lua_setfield(trans_store, -2, before);
 
 	lua_pop(trans_store, 1);
-}
-
-
-void parse_PO_string(const char *p, char *dest, size_t dest_size)
-{
-	size_t d_len = strlen(dest);
-
-	dest = dest + d_len;
-	dest_size = dest_size - d_len;
-
-	while (*p && isspace(*p))
-		p++;
-
-	if (*p++ != '"')
-	{
-		LogPrintf("WARNING: missing string\n");
-	}
-
-	// FIXME parse_PO_string
-
-//	strcat(dest, p);
 }
 
 
@@ -750,12 +728,82 @@ typedef struct
 		}
 	}
 
+	void ParseString(const char *p, char *dest, size_t dest_size)
+	{
+		size_t d_len = strlen(dest);
+
+		char *dest_end = dest + (dest_size - d_len - 4 /* space for NUL */);
+
+		dest = dest + d_len;
+
+		while (*p && isspace(*p))
+			p++;
+
+		if (*p++ != '"')
+		{
+			LogPrintf("WARNING: missing string on line %d\n", line_number);
+			return;
+		}
+
+		while (*p != '"')
+		{
+			if (*p == 0)
+			{
+				LogPrintf("WARNING: unterminated string on line %d\n", line_number);
+				break;
+			}
+
+			if (dest >= dest_end)
+			{
+				LogPrintf("WARNING: string too long on line %d\n", line_number);
+				break;
+			}
+
+			if (*p != '\\')
+			{
+				*dest++ = *p++;
+				continue;
+			}
+
+			// handle escape sequences
+			p++;
+
+			if (*p == 0)
+			{
+				LogPrintf("WARNING: unterminated string on line %d\n", line_number);
+				break;
+			}
+
+			switch (*p++)
+			{
+				case '\\': *dest++ = '\\'; break;
+				case '"':  *dest++ = '"';  break;
+
+				case 'n': *dest++ = '\n'; break;
+				case 'r': *dest++ = '\r'; break;
+				case 't': *dest++ = '\t'; break;
+
+				case 'a': *dest++ = '\a'; break;
+				case 'b': *dest++ = '\b'; break;
+				case 'f': *dest++ = '\f'; break;
+				case 'v': *dest++ = '\v'; break;
+
+				default:
+					LogPrintf("WARNING: strange escape sequence on line %d\n", line_number);
+					break;
+			}
+		}
+
+		// terminate the string buffer
+		*dest = 0;
+	}
+
 	void Append(const char *p)
 	{
 		if (has_str)
-			parse_PO_string(p, str, sizeof(str));
+			ParseString(p, str, sizeof(str));
 		else if (has_id)
-			parse_PO_string(p, id, sizeof(id));
+			ParseString(p, id, sizeof(id));
 		else
 			LogPrintf("WARNING: unexpected string on line %d\n", line_number);
 	}
@@ -763,21 +811,21 @@ typedef struct
 	void SetContext(const char *p)
 	{
 		ctx[0] = 0;
-		parse_PO_string(p, ctx, sizeof(ctx));
+		ParseString(p, ctx, sizeof(ctx));
 		has_ctx = true;
 	}
 
 	void SetId(const char *p)
 	{
 		id[0] = 0;
-		parse_PO_string(p, id, sizeof(id));
+		ParseString(p, id, sizeof(id));
 		has_id = true;
 	}
 
 	void SetString(const char *p)
 	{
 		str[0] = 0;
-		parse_PO_string(p, str, sizeof(str));
+		ParseString(p, str, sizeof(str));
 		has_str = true;
 	}
 

@@ -65,7 +65,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	int cw = W * 0.61;
 	int ch = kf_h(24);
 
-	game = new UI_RChoice(cx, cy, cw, ch, "Game: ");
+	game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
 	game->align(FL_ALIGN_LEFT);
 	game->selection_color(FL_BLUE);
 	game->callback(callback_Game, this);
