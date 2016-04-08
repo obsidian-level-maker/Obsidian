@@ -397,6 +397,46 @@ const char * t_language = N_("AUTO");
 static lua_State * trans_store;
 
 
+static const char * remove_codeset(const char *langcode)
+{
+	char buf[256];
+
+	if (strchr(langcode, '.'))
+	{
+		strncpy(buf, langcode, sizeof(buf));
+		buf[sizeof(buf) - 1] = 0;
+
+		char *p = strchr(buf, '.');
+		if (p)
+			*p = 0;
+
+		langcode = StringDup(buf);
+	}
+
+	return langcode;
+}
+
+
+static const char * remove_territory(const char *langcode)
+{
+	char buf[256];
+
+	if (strchr(langcode, '_'))
+	{
+		strncpy(buf, langcode, sizeof(buf));
+		buf[sizeof(buf) - 1] = 0;
+
+		char *p = strchr(buf, '_');
+		if (p)
+			*p = 0;
+
+		langcode = StringDup(buf);
+	}
+
+	return langcode;
+}
+
+
 /* DETERMINE CURRENT LANGUAGE */
 
 static const char * Trans_GetUserLanguage()
@@ -578,27 +618,21 @@ static const char * Trans_GetUserLanguage()
 	res = setlocale(LC_ALL, NULL /* query only */);
 
 	if (res && res[0] && res[0] != 'C')
-		return res;
+		return remove_codeset(res);
 
 	// check the LC_ALL and LANG environment variables
 
 	res = getenv("LC_ALL");
 	if (res && res[0] && res[0] != 'C')
-		return res;
+		return remove_codeset(res);
 
 	res = getenv("LANG");
 	if (res && res[0] && res[0] != 'C')
-		return res;
+		return remove_codeset(res);
 
 	return "UNKNOWN";
 #endif
 }
-
-
-//----------------------------------------------------------------------
-
-
-// TODO : stuff to parse PO files
 
 
 //----------------------------------------------------------------------
@@ -938,38 +972,6 @@ void Trans_Init()
 }
 
 
-static const char * get_plain_language(const char *langcode)
-{
-	char buf[100];
-
-	if (strchr(langcode, '_'))
-	{
-		strncpy(buf, langcode, sizeof(buf));
-		buf[sizeof(buf) - 1] = 0;
-
-		char *p = strchr(buf, '_');
-		if (p)
-			*p = 0;
-
-		langcode = StringDup(buf);
-	}
-
-	if (strchr(langcode, '.'))
-	{
-		strncpy(buf, langcode, sizeof(buf));
-		buf[sizeof(buf) - 1] = 0;
-
-		char *p = strchr(buf, '.');
-		if (p)
-			*p = 0;
-
-		langcode = StringDup(buf);
-	}
-
-	return langcode;
-}
-
-
 void Trans_SetLanguage()
 {
 	// this is called *once*, after user options are read
@@ -984,7 +986,7 @@ void Trans_SetLanguage()
 		LogPrintf("Detected user language: '%s'\n", langcode);
 	}
 
-	const char *lang_plain = get_plain_language(langcode);
+	const char *lang_plain = remove_territory(langcode);
 
 	// English is the default language, nothing else needed
 
