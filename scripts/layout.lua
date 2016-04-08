@@ -212,7 +212,12 @@ end
 
 
 
-function Layout_spot_for_wotsit(R, kind)
+function Layout_reclaim_floor_chunk(R)
+end
+
+
+
+function Layout_spot_for_wotsit(R, kind, required)
 
   local function eval_spot(chunk)
     -- already used?
@@ -258,25 +263,6 @@ function Layout_spot_for_wotsit(R, kind)
   end
 
 
-  local function do_exclusions(spot)
-    local x1 = spot.mx - 76
-    local y1 = spot.my - 76
-    local x2 = spot.mx + 76
-    local y2 = spot.my + 76
-
-    -- no monsters near start spot or teleporters
-    -- Fixme: do this later (for chunks)
-    if kind == "START" then
-      R:add_exclusion("empty",     x1, y1, x2, y2, 96)
-      R:add_exclusion("nonfacing", x1, y1, x2, y2, 512)
-
-    elseif kind == "TELEPORTER" then
-      R:add_exclusion("empty",     x1, y1, x2, y2, 144)
-      R:add_exclusion("nonfacing", x1, y1, x2, y2, 384)
-    end
-  end
-
-
   ---| Layout_spot_for_wotsit |---
  
   Layout_compute_dists(R)
@@ -284,7 +270,7 @@ function Layout_spot_for_wotsit(R, kind)
   local best
   local best_score = 0
 
-  -- first, try chunks
+  -- first, try floor chunks
   each chunk in R.chunks do
     local score = eval_spot(chunk)
 
@@ -305,35 +291,48 @@ function Layout_spot_for_wotsit(R, kind)
   end
 
 
-  if not best then
-    return nil
+  if best then
+    local spot = assert(best)
+
+    -- never use it again
+    spot.content_kind = kind
+
+    return spot
   end
 
 
-  --- OK ---
+  -- nothing available!
 
-  local spot = assert(best)
-
-  -- never use it again
-  spot.content_kind = kind
-
---FIXME  do_exclusions(spot)
-
-
-  -- TODO : improve this
-  spot.space = 24
-  if math.min(spot.sw, spot.sh) >= 2 then spot.space = 96 end
-  if math.min(spot.sw, spot.sh) >= 3 then spot.space = 192 end
-
-  return spot
+  return nil
 end
 
 
 
 function Layout_place_importants(R)
 
+  local function do_exclusions(spot)
+    -- FIXME : for closets
+
+    local x1 = spot.mx - 76
+    local y1 = spot.my - 76
+    local x2 = spot.mx + 76
+    local y2 = spot.my + 76
+
+    -- no monsters near start spot or teleporters
+    -- Fixme: do this later (for chunks)
+    if kind == "START" then
+      R:add_exclusion("empty",     x1, y1, x2, y2, 96)
+      R:add_exclusion("nonfacing", x1, y1, x2, y2, 512)
+
+    elseif kind == "TELEPORTER" then
+      R:add_exclusion("empty",     x1, y1, x2, y2, 144)
+      R:add_exclusion("nonfacing", x1, y1, x2, y2, 384)
+    end
+  end
+
+
   local function add_goal(goal)
-    local spot = Layout_spot_for_wotsit(R, goal.kind)
+    local spot = Layout_spot_for_wotsit(R, goal.kind, "required")
 
     if not spot then
       error("No spot in room for " .. goal.kind)
@@ -365,13 +364,15 @@ function Layout_place_importants(R)
 
 
   local function add_teleporter(conn)
-    local spot = Layout_spot_for_wotsit(R, "TELEPORTER")
+    local spot = Layout_spot_for_wotsit(R, "TELEPORTER", "required")
 
     if not spot then
       error("No spot in room for teleporter!")
     end
 
     spot.conn = conn
+
+    --FIXME  do_exclusions(spot)
   end
 
 

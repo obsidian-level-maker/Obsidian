@@ -773,6 +773,12 @@ function Area_locate_chunks()
       table.insert(R.chunks, CHUNK)
     end
 
+    -- TODO : improve this [ take nearby walls, conns, closets into account ]
+    CHUNK.space = 24
+    if math.min(CHUNK.sw, CHUNK.sh) >= 2 then CHUNK.space = 104 end
+    if math.min(CHUNK.sw, CHUNK.sh) >= 3 then CHUNK.space = 224 end
+    if math.min(CHUNK.sw, CHUNK.sh) >= 4 then CHUNK.space = 344 end
+
     return CHUNK
   end
 
