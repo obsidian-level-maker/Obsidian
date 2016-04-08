@@ -577,7 +577,17 @@ static const char * Trans_GetUserLanguage()
 
 	res = setlocale(LC_ALL, NULL /* query only */);
 
-	if (res && res[0] && strcmp(res, "C") != 0)
+	if (res && res[0] && res[0] != 'C')
+		return res;
+
+	// check the LC_ALL and LANG environment variables
+
+	res = getenv("LC_ALL");
+	if (res && res[0] && res[0] != 'C')
+		return res;
+
+	res = getenv("LANG");
+	if (res && res[0] && res[0] != 'C')
 		return res;
 
 	return "UNKNOWN";
@@ -845,7 +855,7 @@ void Trans_Init()
 #ifndef WIN32
 	if (! setlocale(LC_ALL, ""))
 	{
-		LogPrintf("WARNING : failed to initialize locale.\n");
+		LogPrintf("WARNING : failed to initialize locale (check localdef)\n\n");
 	}
 #endif
 
