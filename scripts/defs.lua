@@ -47,7 +47,7 @@ OB_MODULES = {}
 OB_ENGINES["nolimit"] =
 {
   label = "Limit Removing"
-  priority = 95  -- top most
+  priority = 95
 }
 
 

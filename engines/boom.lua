@@ -119,7 +119,7 @@ end
 OB_ENGINES["boom"] =
 {
   label = "BOOM Compat"
-  priority = 92
+  priority = 99  -- this makes it top-most, and the default engine
 
   game = { doom1=1, doom2=1 }
 
