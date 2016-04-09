@@ -1685,14 +1685,19 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- do not produce groups of nasties
     if info.nasty then return 1 end
 
-    local horde = 1
+    if R.kind == "hallway" then
+      return rand.sel(50, 1, 2)
+    end
 
-    if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
-    if info.health <= 100 then horde = horde + rand.index_by_probs { 90, 40, 10, 3, 0.5 } end
+    if info.health <= 100 then
+      return rand.index_by_probs { 90, 30, 10, 2 }
+    end
 
-    if R.kind == "hallway" then horde = horde + 1 end
-    
-    return horde
+    if info.health <= 500 and rand.odds(30) then
+      return 2
+    end
+
+    return 1
   end
 
 
