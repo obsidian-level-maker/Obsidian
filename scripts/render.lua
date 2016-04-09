@@ -1719,6 +1719,12 @@ function Render_properties_for_area(A)
 ---  A.floor_mat = "REDWALL"
   end
 
+--[[ PRESSURE TESTING
+if A.room and A.room.pressure == "low"    then A.floor_mat = "FWATER1" end
+if A.room and A.room.pressure == "medium" then A.floor_mat = "NUKAGE1" end
+if A.room and A.room.pressure == "high"   then A.floor_mat = "LAVA1" end
+--]]
+
 --[[ ZONE TESTING
 if A.mode != "hallway" then
 if A.zone.id == 1 then A.floor_mat = "FWATER1" end
