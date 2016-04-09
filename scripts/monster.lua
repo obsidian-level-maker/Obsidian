@@ -22,19 +22,6 @@
 function Monster_init()
   LEVEL.mon_stats = {}
 
-  local low_q  = MONSTER_QUANTITIES.scarce
-  local high_q = MONSTER_QUANTITIES.more
-
-  local low_k  = MONSTER_KIND_TAB.scarce
-  local high_k = MONSTER_KIND_TAB.heaps
-
-  -- progressive and episode-progressive values
-  LEVEL.game_mons_qty  = low_q + LEVEL.game_along * (high_q - low_q)
-  LEVEL.game_mons_kind = low_k + LEVEL.game_along * (high_k - low_k)
-
-  LEVEL.epi_mons_qty  = low_q + LEVEL.ep_along * (high_q - low_q)
-  LEVEL.epi_mons_kind = low_k + LEVEL.ep_along * (high_k - low_k)
-
   -- build replacement table --
 
   LEVEL.mon_replacement = {}
@@ -802,11 +789,13 @@ end
 
 
 function Monster_fill_room(R)
+  --
+  -- Decides what monsters to put in a room or hallway, and places them.
+  -- Handles cages and traps too.
+  --
 
-  -- places monsters in a room _or_ hallway
+  local rough_tally
 
-
-  local CAGE_REUSE_FACTORS = { 5, 20, 60, 200 }
 
   local function is_big(mon)
     return GAME.MONSTERS[mon].r > 30
@@ -814,6 +803,92 @@ function Monster_fill_room(R)
 
   local function is_huge(mon)
     return GAME.MONSTERS[mon].r > 60
+  end
+
+
+  local function number_of_kinds()
+    if R.kind == "hallway" then
+      return rand.sel(66, 1, 2)
+    end
+
+    -- the base number of species depends on room size
+    local base_num = math.sqrt(rough_tally) / 5.0
+
+    -- a pinch of randomness
+    base_num = base_num + 1.5 * gui.random() ^ 2
+
+    local factor
+
+    if OB_CONFIG.mons == "mixed" then
+      factor = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
+    else
+      factor = MONSTER_KIND_TAB[OB_CONFIG.mons]
+      assert(factor)
+    end
+
+    -- apply 'mon_variety' style
+    local variety_factor = style_sel("mon_variety", 0, 0.5, 1.0, 2.5)
+
+    factor = factor * variety_factor
+
+    -- slightly more at end of a game
+    factor = factor * (0.9 + LEVEL.game_along * 0.25)
+
+    -- apply the room "pressure" type
+    if R.pressure == "low"  then factor = factor / 2.0 end
+    if R.pressure == "high" then factor = factor * 1.5 end
+
+    local num = base_num * factor
+
+    num = int(base_num)
+
+    if num < 1 then num = 1 end
+    if num > 5 then num = 5 end
+
+gui.debugf("@@ number_of_kinds in %s : tally:%d  base:%1.2f factor:%1.2f\n", R.name, rough_tally, base_num, factor)
+
+    gui.debugf("number_of_kinds: %d (base: %d)\n", num, base_num)
+
+    return num
+  end
+
+
+  local function calc_quantity()
+    local qty
+
+    if OB_CONFIG.mons == "mixed" then
+      qty = rand.range(MONSTER_QUANTITIES.scarce, MONSTER_QUANTITIES.heaps)
+    else
+      qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
+      assert(qty)
+    end
+
+    assert(qty)
+
+    -- less in secrets (usually much less)
+    if R.is_secret then
+      qty = qty / 4
+    end
+
+    -- game along adjustment
+    qty = qty * (0.8 + LEVEL.game_along * 0.4)
+
+    -- game and theme adjustments
+    qty = qty * (PARAM.monster_factor or 1)
+    qty = qty * (THEME.monster_factor or 1)
+
+    -- more monsters for Co-operative games
+    if OB_CONFIG.mode == "coop" then
+      qty = qty * COOP_MON_FACTOR
+    end
+
+    -- FIXME : pressure value
+
+    -- random adjustment
+    qty = qty * rand.range(0.8, 1.2)
+
+    gui.debugf("Quantity = %1.1f\n", qty)
+    return qty
   end
 
 
@@ -901,80 +976,12 @@ function Monster_fill_room(R)
   end
 
 
-  local function calc_quantity()
-    local qty
-
-    if LEVEL.quantity then
-      qty = LEVEL.quantity
-
-    elseif OB_CONFIG.mons == "mixed" then
-      qty = rand.pick { 4,8,12,20,32 }
-
-    elseif OB_CONFIG.mons == "prog" then
-      qty = LEVEL.game_mons_qty
-
-    elseif OB_CONFIG.mons == "epi" then
-      qty = LEVEL.epi_mons_qty
-
-    else
-      qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
-      assert(qty)
-
-      -- tend to have more monsters in later rooms and levels
-      qty = qty * (4 + LEVEL.ep_along) / 5
-    end
-
-    assert(qty)
-
-    -- tend to have more monsters in later rooms of a level
-    qty = qty * (4 + R.lev_along) / 5
-
-    -- less in secrets (usually much less)
-    if R.kind == "SECRET_EXIT" then
-      qty = qty / 1.5
-    elseif R.is_secret then
-      qty = qty / rand.pick { 2, 3, 4, 9 }
-    end
-
-    -- random adjustment
-    qty = qty * rand.range(0.8, 1.2)
-
-    -- game and theme adjustments
-    qty = qty * (PARAM.monster_factor or 1)
-    qty = qty * (THEME.monster_factor or 1)
-
-    -- more monsters for Co-operative games
-    if OB_CONFIG.mode == "coop" then
-      qty = qty * COOP_MON_FACTOR
-    end
-
-    -- make the final battle (of map) as epic as possible
-    if R.is_exit then
-      qty = qty * 1.7
-
-    -- after the big battle, give player a breather
-    elseif R.cool_down then
-      qty = qty * 0.7
-
-    -- more in KEY rooms
-    elseif #R.goals > 0 then
-      qty = qty * 1.4
-    end
-
-    -- extra boost for small rooms
-    if R.svolume <= 16 then qty = qty * 1.2 end
-
-    gui.debugf("Quantity = %1.1f\n", qty)
-    return qty
-  end
-
-
   local function tally_spots(spot_list)
     -- This is meant to give a rough estimate, and assumes each monster
     -- fits in a 64x64 square and there is no height restrictions.
     -- We can adjust for the real monster size later.
 
-    local count = 0
+    rough_tally = 0
 
     each spot in spot_list do
       local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -982,10 +989,8 @@ function Monster_fill_room(R)
       w = int(w / 64) ; if w < 1 then w = 1 end
       h = int(h / 64) ; if h < 1 then h = 1 end
 
-      count = count + w * h
+      rough_tally = rough_tally + w * h
     end
-
-    return count
   end
 
 
@@ -1168,48 +1173,6 @@ function Monster_fill_room(R)
     d = d * rand.range(0.8, 1.2)
 
     return d
-  end
-
-
-  local function number_of_kinds()
-    local base_num
-
-    if R.kind == "hallway" then
-      return rand.sel(66, 1, 2)
-
-    elseif OB_CONFIG.mons == "mixed" then
-      base_num = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
-
-    elseif OB_CONFIG.mons == "prog" then
-      base_num = LEVEL.game_mons_kind
-
-    elseif OB_CONFIG.mons == "epi" then
-      base_num = LEVEL.epi_mons_kind
-
-    else
-      base_num = MONSTER_KIND_TAB[OB_CONFIG.mons]
-    end
-
-    -- apply 'mon_variety' style
-    local variety_factor = style_sel("mon_variety", 0, 0.5, 1.0, 2.4)
-
-    base_num = base_num * variety_factor
-
-    -- adjust the base number to account for room size
-    local size = math.sqrt(R.svolume)
-    local num  = int(base_num * size / 7 + 0.6 + gui.random())
-
-    if num < 1 then num = 1 end
-    if num > 5 then num = 5 end
-
-    if not R.cool_down then
-      if rand.odds(30) then num = num + 1 end
-      if rand.odds(3)  then num = num + 1 end
-    end
-
-    gui.debugf("number_of_kinds: %d (base: %d)\n", num, base_num)
-
-    return num
   end
 
 
@@ -1749,9 +1712,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- compute total number of monsters wanted
     local qty = calc_quantity()
 
-    local want_total = tally_spots(R.mon_spots)
-
-    want_total = int(want_total * qty / 100 + gui.random())
+    want_total = int(rough_tally * qty / 100 + gui.random())
 
 
     -- determine how many of each kind of monster we want
@@ -1988,17 +1949,21 @@ if R.guard_coord.closet then return end
 
 
   local function add_monsters()
+
+    tally_spots(R.mon_spots)
+
+    -- sometimes prevent monster replacements
+    if rand.odds(40) or OB_CONFIG.strength == "crazy" then
+      R.no_replacement = true
+    end
+
+
     local palette
 
     if OB_CONFIG.strength == "crazy" then
       palette = crazy_palette()
     else
       palette = room_palette()
-    end
-
-    -- sometimes prevent monster replacements
-    if rand.odds(40) or OB_CONFIG.strength == "crazy" then
-      R.no_replacement = true
     end
 
 

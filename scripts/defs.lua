@@ -97,7 +97,7 @@ MONSTER_QUANTITIES =
 
 MONSTER_KIND_TAB =
 {
-  scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
+  scarce=0.5, less=0.75, normal=1, more=1.33, heaps=1.6, nuts=2.0
 }
 
 STRENGTH_FACTORS =
