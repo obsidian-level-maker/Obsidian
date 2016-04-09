@@ -1751,11 +1751,11 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- compute total number of monsters wanted
     local qty = calc_quantity()
 
-    -- prevent small rooms being too empty
+    -- this formula is designed so that # of monsters triples when the
+    -- area quadruples (instead of being linear with area).  hence we
+    -- get more monsters in small rooms and less in large rooms.
     local tally = fodder_tally
-    if tally < 35 then
-      tally = 10 + tally * 0.7
-    end
+    tally = 3 * (1 + tally ^ 0.7)
 
     want_total = int(tally * qty / 100 + gui.random())
 
