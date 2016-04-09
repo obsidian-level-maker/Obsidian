@@ -883,8 +883,8 @@ function Monster_fill_room(R)
     end
 
     -- apply the room "pressure" type
-    if R.pressure == "low"  then qty = qty / 2.0 end
-    if R.pressure == "high" then qty = qty * 1.6 end
+    if R.pressure == "low"  then qty = qty / 1.5 end
+    if R.pressure == "high" then qty = qty * 1.5 end
 
     -- game along adjustment
     qty = qty * (0.8 + LEVEL.game_along * 0.3)
