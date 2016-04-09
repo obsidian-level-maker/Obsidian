@@ -280,8 +280,8 @@ function Monster_pacing()
 
   local QUOTA_LIST = { 0.17, 0.25, 0.33 }
 
-   low_quota = rand.int(#room_list * rand.pick(QUOTA_LIST))
-  high_quota = rand.int(#room_list * rand.pick(QUOTA_LIST))
+   low_quota = rand.int(#room_list * rand.pick(QUOTA_LIST) + 1)
+  high_quota = rand.int(#room_list * rand.pick(QUOTA_LIST) + 1)
 
   mark_connections()
 
@@ -828,9 +828,7 @@ function Monster_fill_room(R)
     end
 
     -- apply 'mon_variety' style
-    local variety_factor = style_sel("mon_variety", 0, 0.5, 1.0, 2.5)
-
-    factor = factor * variety_factor
+    factor = factor * style_sel("mon_variety", 0, 0.5, 1.0, 2.5)
 
     -- slightly more at end of a game
     factor = factor * (0.8 + LEVEL.game_along * 0.3)
@@ -857,6 +855,10 @@ function Monster_fill_room(R)
 
 
   local function calc_quantity()
+    --
+    -- result is a percentage (how many spots to use)
+    --
+
     local qty
 
     if OB_CONFIG.mons == "mixed" then
@@ -866,15 +868,10 @@ function Monster_fill_room(R)
       assert(qty)
     end
 
-    assert(qty)
-
     -- less in secrets (usually much less)
     if R.is_secret then
       qty = qty / 4
     end
-
-    -- game along adjustment
-    qty = qty * (0.8 + LEVEL.game_along * 0.3)
 
     -- game and theme adjustments
     qty = qty * (PARAM.monster_factor or 1)
@@ -885,7 +882,16 @@ function Monster_fill_room(R)
       qty = qty * COOP_MON_FACTOR
     end
 
-    -- FIXME : pressure value
+    -- apply the room "pressure" type
+    if R.pressure == "low"  then qty = qty / 2.0 end
+    if R.pressure == "high" then qty = qty * 1.6 end
+
+    -- game along adjustment
+    qty = qty * (0.8 + LEVEL.game_along * 0.3)
+
+--[[ DEBUG
+    gui.debugf("raw quantity in %s --> %1.2f\n", R.name, qty)
+--]]
 
     -- random adjustment
     qty = qty * rand.range(0.8, 1.2)
