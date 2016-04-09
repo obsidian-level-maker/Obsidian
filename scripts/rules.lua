@@ -28,15 +28,16 @@ ROOT_1 =
 
   structure =
   {
-    "!!!!", "...."
-    "!!!!", ".RR."
-    "!!!!", ".RR."
-    "!!!!", "...."
+    "!!!!!", "....."
+    "!!!!!", ".RRR."
+    "!!!!!", ".RRR."
+    "!!!!!", ".RRR."
+    "!!!!!", "....."
   }
 
   new_room =
   {
-    symmetry =
+    XXsymmetry =
     {
       list =
       {
@@ -138,7 +139,7 @@ GROW_MIR_TEST =  -- REMOVE
 
 GROW_NEWAREA_1 =
 {
-  prob = 5
+  prob = 25
 
   structure =
   {
@@ -150,7 +151,7 @@ GROW_NEWAREA_1 =
 
 GROW_STAIRS_2 =
 {
-  prob = 25
+  prob = 0
 
   structure =
   {
@@ -407,7 +408,7 @@ DECORATE_CLOSET_2x2 =
 
 DECORATE_LIQUID_1 =
 {
-  prob = 10
+  prob = 0
 
   structure =
   {
