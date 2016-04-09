@@ -13,8 +13,6 @@ ______________________________________________________________________
 
 *  get secret rooms working again
 
-*  better system to vary "pacing" of monsters
-
 *  support for Traps and free-standing Cages
 
 *  add in more scenery: trees, computers etc
@@ -23,12 +21,7 @@ ______________________________________________________________________
 *  update documentation for current GUI interface
 
 *  support for translation into other languages
-   -  Trans_GetUserLanguage
-      -  Unix
-      -  Win32
-      -  MacOS X
-   -  setting up a Lua state, store and retrieve messages
-   -  PO file parsing
+   +  use _() and N_() where necessary
 
 *  better i18n support (esp. non-ASCII characters in filenames)
 
@@ -877,6 +870,8 @@ Name generator:
 
 -  use fl_utf8.h functions (fl_fopen, etc) for file handling
    [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
+
+-  consider a --language option
 
 Console:
   -  display lists better
