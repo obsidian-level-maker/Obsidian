@@ -92,12 +92,12 @@ SPOT_LEDGE    = 3
 -- monster and item stuff
 MONSTER_QUANTITIES =
 {
-  scarce=4, less=8, normal=12, more=20, heaps=32, nuts=100
+  scarce=0.35, less=0.7, normal=1.0, more=1.5, heaps=2.5, nuts=7.7
 }
 
 MONSTER_KIND_TAB =
 {
-  scarce=0.5, less=0.75, normal=1, more=1.33, heaps=1.6, nuts=2.0
+  scarce=0.5, less=0.75, normal=1.0, more=1.33, heaps=1.6, nuts=2.0
 }
 
 STRENGTH_FACTORS =

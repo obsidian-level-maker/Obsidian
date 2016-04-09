@@ -816,7 +816,7 @@ function Monster_fill_room(R)
     local base_num = math.sqrt(fodder_tally) / 5.0
 
     -- a pinch of randomness
-    base_num = base_num + 2.0 * gui.random() ^ 2
+    base_num = base_num + 1.5 * gui.random() ^ 2
 
     local factor
 
@@ -828,20 +828,20 @@ function Monster_fill_room(R)
     end
 
     -- apply 'mon_variety' style
-    factor = factor * style_sel("mon_variety", 0, 0.5, 1.0, 2.5)
+    factor = factor * style_sel("mon_variety", 0, 0.5, 1.0, 2.1)
 
     -- slightly more at end of a game
-    factor = factor * (0.8 + LEVEL.game_along * 0.3)
+    factor = factor * (0.8 + LEVEL.game_along * 0.4)
 
     -- apply the room "pressure" type
-    if R.pressure == "low"  then factor = factor / 2.0 end
-    if R.pressure == "high" then factor = factor * 1.5 end
+    if R.pressure == "low"  then factor = factor / 2.1 end
+    if R.pressure == "high" then factor = factor * 1.4 end
 
     local num = base_num * factor
 
 --[[ DEBUG
-    gui.debugf("raw number_of_kinds in %s : tally:%d  base:%1.2f factor:%1.2f ---> %1.2f\n",
-               R.name, fodder_tally, base_num, factor, num)
+    gui.debugf("raw number_of_kinds in %s : tally:%d / %d seeds | base:%1.2f factor:%1.2f ---> %1.2f\n",
+               R.name, fodder_tally, R.svolume, base_num, factor, num)
 --]]
     num = int(base_num)
 
@@ -870,7 +870,9 @@ function Monster_fill_room(R)
 
     -- less in secrets (usually much less)
     if R.is_secret then
-      qty = qty / 4
+      qty = qty * 2
+    else
+      qty = qty * 8
     end
 
     -- game and theme adjustments
@@ -883,20 +885,20 @@ function Monster_fill_room(R)
     end
 
     -- apply the room "pressure" type
-    if R.pressure == "low"  then qty = qty / 1.5 end
+    if R.pressure == "low"  then qty = qty / 2.4 end
     if R.pressure == "high" then qty = qty * 1.5 end
 
     -- game along adjustment
-    qty = qty * (0.8 + LEVEL.game_along * 0.3)
+    qty = qty * (0.9 + LEVEL.game_along * 0.2)
 
 --[[ DEBUG
     gui.debugf("raw quantity in %s --> %1.2f\n", R.name, qty)
 --]]
 
-    -- random adjustment
-    qty = qty * rand.range(0.8, 1.2)
+    -- a small random adjustment
+    qty = qty * rand.range(0.9, 1.1)
 
-    gui.debugf("Quantity = %1.1f\n", qty)
+    gui.debugf("Quantity = %1.1f%%\n", qty)
     return qty
   end
 
@@ -1602,8 +1604,8 @@ function Monster_fill_room(R)
 
   local function how_many_dudes(palette, want_total)
     -- the 'NONE' entry is a stabilizing element, in case we have a
-    -- palette containing mostly undesirable monsters (Archviles etc).
-    local densities = { NONE=1.0 }
+    -- palette containing mostly undesirable monsters.
+    local densities = { NONE=0.3 }
 
     local total_density = densities.NONE
 
@@ -1617,12 +1619,22 @@ gui.debugf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densit
 
     -- convert density map to monster counts
     local wants = {}
+    local total = 0
 
     each mon,d in densities do
       if mon != "NONE" then
         local num = want_total * d / total_density
 
-        wants[mon] = int(num + gui.random())
+        wants[mon] = rand.int(num)
+
+        total = total + wants[mon]
+      end
+    end
+
+    -- ensure we have at least one monster
+    if total == 0 and not R.is_secret then
+      each mon in table.keys(wants) do
+        if wants[mon] == 0 then wants[mon] = 1 end
       end
     end
 
@@ -1736,8 +1748,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     -- prevent small rooms being too empty
     local tally = fodder_tally
-    if tally < 70 then
-      tally = 20 + tally * 0.7
+    if tally < 35 then
+      tally = 10 + tally * 0.7
     end
 
     want_total = int(tally * qty / 100 + gui.random())
