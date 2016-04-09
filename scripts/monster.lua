@@ -1734,7 +1734,13 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- compute total number of monsters wanted
     local qty = calc_quantity()
 
-    want_total = int(fodder_tally * qty / 100 + gui.random())
+    -- prevent small rooms being too empty
+    local tally = fodder_tally
+    if tally < 70 then
+      tally = 20 + tally * 0.7
+    end
+
+    want_total = int(tally * qty / 100 + gui.random())
 
 
     -- determine how many of each kind of monster we want
