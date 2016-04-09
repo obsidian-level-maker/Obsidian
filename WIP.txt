@@ -3,7 +3,13 @@ WORK IN PROGRESS
 ================
 
 
->>>  stairs/joiners/closets : peer up areas, use same ceiling info
+!!!  Fix walls
+[ handle straddlers first, then do each side of a junction separately ]
+
+
+!!  for SWITCH-ed doors (etc), require an "action" in the Lua definition
+    e.g. action = "OPEN_DOOR_FAST", look it up in GAME.ACTIONS
+
 
 
 +  review "svolume" and "innerpoint" usage
@@ -15,20 +21,6 @@ WORK IN PROGRESS
 
    __OR__ handle the STRADDLING junctions first (fences mainly)
           then handle each side SEPARATELY
-
-
-
-MONSTERS:
-
-!!  actually use the "pressure" value
-
-!!  actually use the planned boss fights
-
-   [ if a Boss cannot fit, choose a replacement
-     (unless "tough" and have placed one already) ]
-
-+  if room has a boss/guard, in needs a large chunk, allocate those
-   chunks early [ but allow importants to override in emergencies ]
 
 
 
@@ -53,8 +45,6 @@ CLOSETS:
     [ A.mode = "void", build walls there, NO EDGE ]
 
     -  support decorative closets, e.g. fancy light thingy
-
-+  switch closet / wall_box
 
 
 
@@ -112,7 +102,7 @@ INTRA-ROOM LOCKS
 
 MISCELLANEOUS:
 
-+  face direction for switches / teleport exits
++  face direction for switches / teleport pads / start pad
 
 +  support 'LEVEL.secret_weapon'
 
@@ -120,8 +110,6 @@ MISCELLANEOUS:
    determine ones for official package, put rest in an addon
 
 -  improve font for titlepic  [ e.g. shaded letters ]
-
--  add monster spots to lava_pit prefab
 
 
 

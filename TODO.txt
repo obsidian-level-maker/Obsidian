@@ -63,7 +63,11 @@ ______________________________________________________________________
 
 +  add railings to cages sometimes
 
+-  if room has a boss/guard needing a large chunk, allocate those
+   chunks early [ but allow importants to override in emergencies ]
+
 -  wall switches
+
 
 -  a "raising stairs" JOINER, need to find the switch
 
