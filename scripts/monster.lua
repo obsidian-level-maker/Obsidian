@@ -794,7 +794,8 @@ function Monster_fill_room(R)
   -- Handles cages and traps too.
   --
 
-  local rough_tally
+  local fodder_tally
+  local   cage_tally
 
 
   local function is_big(mon)
@@ -812,10 +813,10 @@ function Monster_fill_room(R)
     end
 
     -- the base number of species depends on room size
-    local base_num = math.sqrt(rough_tally) / 5.0
+    local base_num = math.sqrt(fodder_tally) / 5.0
 
     -- a pinch of randomness
-    base_num = base_num + 1.5 * gui.random() ^ 2
+    base_num = base_num + 2.0 * gui.random() ^ 2
 
     local factor
 
@@ -832,7 +833,7 @@ function Monster_fill_room(R)
     factor = factor * variety_factor
 
     -- slightly more at end of a game
-    factor = factor * (0.9 + LEVEL.game_along * 0.25)
+    factor = factor * (0.8 + LEVEL.game_along * 0.3)
 
     -- apply the room "pressure" type
     if R.pressure == "low"  then factor = factor / 2.0 end
@@ -840,12 +841,14 @@ function Monster_fill_room(R)
 
     local num = base_num * factor
 
+--[[ DEBUG
+    gui.debugf("raw number_of_kinds in %s : tally:%d  base:%1.2f factor:%1.2f ---> %1.2f\n",
+               R.name, fodder_tally, base_num, factor, num)
+--]]
     num = int(base_num)
 
     if num < 1 then num = 1 end
     if num > 5 then num = 5 end
-
-gui.debugf("@@ number_of_kinds in %s : tally:%d  base:%1.2f factor:%1.2f\n", R.name, rough_tally, base_num, factor)
 
     gui.debugf("number_of_kinds: %d (base: %d)\n", num, base_num)
 
@@ -871,7 +874,7 @@ gui.debugf("@@ number_of_kinds in %s : tally:%d  base:%1.2f factor:%1.2f\n", R.n
     end
 
     -- game along adjustment
-    qty = qty * (0.8 + LEVEL.game_along * 0.4)
+    qty = qty * (0.8 + LEVEL.game_along * 0.3)
 
     -- game and theme adjustments
     qty = qty * (PARAM.monster_factor or 1)
@@ -981,7 +984,7 @@ gui.debugf("@@ number_of_kinds in %s : tally:%d  base:%1.2f factor:%1.2f\n", R.n
     -- fits in a 64x64 square and there is no height restrictions.
     -- We can adjust for the real monster size later.
 
-    rough_tally = 0
+    local count = 0
 
     each spot in spot_list do
       local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -989,8 +992,21 @@ gui.debugf("@@ number_of_kinds in %s : tally:%d  base:%1.2f factor:%1.2f\n", R.n
       w = int(w / 64) ; if w < 1 then w = 1 end
       h = int(h / 64) ; if h < 1 then h = 1 end
 
-      rough_tally = rough_tally + w * h
+      count = count + w * h
     end
+
+    return count
+  end
+
+
+  local function tally_cage_spots()
+    local total = 0
+
+    each cage in R.cages do
+      total = total + tally_spots(cage.mon_spots)
+    end
+
+    return total
   end
 
 
@@ -1712,7 +1728,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- compute total number of monsters wanted
     local qty = calc_quantity()
 
-    want_total = int(rough_tally * qty / 100 + gui.random())
+    want_total = int(fodder_tally * qty / 100 + gui.random())
 
 
     -- determine how many of each kind of monster we want
@@ -1950,7 +1966,8 @@ if R.guard_coord.closet then return end
 
   local function add_monsters()
 
-    tally_spots(R.mon_spots)
+    fodder_tally = tally_spots(R.mon_spots)
+      cage_tally = tally_cage_spots()
 
     -- sometimes prevent monster replacements
     if rand.odds(40) or OB_CONFIG.strength == "crazy" then
