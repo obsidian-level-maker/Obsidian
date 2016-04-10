@@ -851,7 +851,7 @@ function Layout_create_scenic_borders()
           junc.blocked  = true
 --]]
         elseif A.kind != "void" then
-          junc.keep_empty = true
+          Junction_make_empty(junc)
         end
       end
     end
@@ -1077,7 +1077,7 @@ function Layout_liquid_stuff()
     -- room which faces into the pool?
 
     if N.room and faces_room(A, N.room) then
-      junc.keep_empty = true
+      Junction_make_empty(junc)
       return
     end
 
@@ -1085,7 +1085,7 @@ function Layout_liquid_stuff()
 
     if N.mode == "pool" then
       if N.pool_id == A.pool_id then
-        junc.keep_empty = true
+        Junction_make_empty(junc)
         return
       end
     end
@@ -1111,7 +1111,7 @@ function Layout_liquid_stuff()
     if N.is_boundary and A.face_rooms[1].is_outdoor then
       -- mountains will prevent travel
       if A.zone.border_info.kind != "water" then
-        junc.keep_empty = true
+        Junction_make_empty(junc)
         return
       end
     end

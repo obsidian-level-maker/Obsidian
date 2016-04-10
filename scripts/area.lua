@@ -113,8 +113,6 @@
     E1 : EDGE
     E2 : EDGE
 
-    keep_empty   -- true if junction should stay as "nothing"
-
     perimeter    -- a measure of length of the border between the areas
                  -- (in units of seed-edges)
 --]]
@@ -537,6 +535,12 @@ function Junction_init()
     gui.printf("Junc %s : perimeter %d\n", name, J.perimeter)
   end
 --]]
+end
+
+
+function Junction_make_empty(junc)
+  junc.E1 = { kind="nothing" }
+  junc.E2 = { kind="nothing" }
 end
 
 

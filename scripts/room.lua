@@ -1074,7 +1074,6 @@ function Room_border_up()
 
     -- already decided?  [ doorways ]
     if junc.E1 then return end
-    if junc.keep_empty then return end
 
 
     -- zones : gotta keep 'em separated
@@ -1147,7 +1146,7 @@ function Room_border_up()
        A1.room.hallway.parent and
        A1.room.hallway.parent == A2.room
     then
-      junc.keep_empty = true
+      Junction_make_empty(junc)
       return
     end
 
@@ -1155,7 +1154,7 @@ function Room_border_up()
        A2.room.hallway.parent and
        A2.room.hallway.parent == A1.room
     then
-      junc.keep_empty = true
+      Junction_make_empty(junc)
       return
     end
 
