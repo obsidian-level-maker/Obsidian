@@ -1049,9 +1049,7 @@ function Room_border_up()
 
     if A2 == "map_edge" then
       if A1.room then
-        -- FIXME: Junction_make_map_edge(junc)
-        junc.E1 = simple_wall_edge(A1)
-        junc.E2 = nil
+        Junction_make_map_edge(junc)
       end
 
       return
@@ -2298,6 +2296,7 @@ h = 8
         set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
         if C.joiner_chunk.place == "whole" then
           C.joiner_chunk.area.is_outdoor = nil
+          C.joiner_chunk.area.facade_mat = "NUKAGE1"
         end
 -- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
 -- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)

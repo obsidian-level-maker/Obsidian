@@ -548,6 +548,23 @@ function Junction_make_empty(junc)
 end
 
 
+function Junction_make_map_edge(junc)
+  local A = junc.A1
+  local mat
+
+  if A.room and not A.is_outdoor then
+    mat = A.room.main_tex
+  else
+    mat = A.zone.facade_mat
+  end
+
+  assert(mat)
+
+  junc.E1 = { kind="wall", area=A, wall_mat=mat }
+  junc.E2 = { kind="nothing" }
+end
+
+
 function Junction_make_wall(junc)
   for pass = 1, 2 do
     local A1 = sel(pass == 1, junc.A1, junc.A2)

@@ -1637,7 +1637,7 @@ function Render_properties_for_area(A)
 
 
   if A.mode == "void" then
-    A.wall_mat   = A.facade_mat or A.zone.facade_mat
+    A.wall_mat   = "COMPSPAN" --!!!!  A.facade_mat or A.zone.facade_mat
     A.floor_mat  = A.wall_mat
     return
   end
