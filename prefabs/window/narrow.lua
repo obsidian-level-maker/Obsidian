@@ -8,28 +8,43 @@ PREFABS.Window_narrow =
   map    = "MAP01"
   where  = "edge"
 
-  long   = 192
   deep   = 16
   over   = 16
 
   bound_z1 = 0
   bound_z2 = 112
 
-  prob = 90
+  height = 128
 }
 
+
+PREFABS.Window_narrow_diag =
+{
+  file   = "window/narrow.wad"
+  map    = "MAP02"
+  where  = "diagonal"
+
+  bound_z1 = 0
+  bound_z2 = 112
+
+  height = 128
+}
+
+
+--------------------------------------------------------
 
 --
 -- Tall version (expands vertically)
 --
 
-PREFABS.Window_narrow_tall =
+UNFINISHED.Window_narrow_tall =
 {
   file   = "window/narrow.wad"
   map    = "MAP01"
   where  = "edge"
 
-  long   = 192
+  group  = "win_tall"
+
   deep   = 16
   over   = 16
 
@@ -42,26 +57,13 @@ PREFABS.Window_narrow_tall =
 }
 
 
-----------------------------------------
---   DIAGONAL VERSIONS
-----------------------------------------
-
-PREFABS.Window_narrow_diag =
+UNFINISHED.Window_narrow_tall_diag =
 {
   file   = "window/narrow.wad"
   map    = "MAP02"
   where  = "diagonal"
 
-  bound_z1 = 0
-  bound_z2 = 112
-}
-
-
-PREFABS.Window_narrow_tall_diag =
-{
-  file   = "window/narrow.wad"
-  map    = "MAP02"
-  where  = "diagonal"
+  group  = "win_tall"
 
   bound_z1 = 0
   bound_z2 = 112
