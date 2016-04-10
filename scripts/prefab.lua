@@ -2162,7 +2162,7 @@ end
 
 
 
-function Fab_pick(reqs)
+function Fab_pick(reqs, allow_none)
   local tab = {}
 
   local match_state = { rank=0 }
@@ -2181,6 +2181,8 @@ function Fab_pick(reqs)
   end
 
   if table.empty(tab) then
+    if allow_none then return nil end
+
     gui.debugf("Fab_pick:\n")
     gui.debugf("reqs  = \n%s\n", table.tostr(reqs))
 
