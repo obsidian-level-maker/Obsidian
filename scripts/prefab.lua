@@ -2056,9 +2056,17 @@ function Fab_find_matches(reqs, match_state)
 
 
   local function match_word_or_table(req_k, def_k)
-    if type(req_k) == "table" then
-      if def_k == nil then return false end
-      return (req_k[def_k] or 0) > 0
+    if type(req_k) == "table" and def_k then
+      -- recursively check each keyword to allow table<-->table matches
+      each r2,_ in req_k do
+        if match_word_or_table(r2, def_k) then return true end
+      end
+
+      return false
+    end
+
+    if type(def_k) == "table" and ref_k then
+      return (def_k[req_k] or 0) > 0
     end
 
     return def_k == req_k
@@ -2081,6 +2089,9 @@ function Fab_find_matches(reqs, match_state)
 
     -- group check
     if not match_word_or_table(reqs.group, def.group) then return 0 end
+
+    -- flavor check
+    if not match_word_or_table(reqs.flavor, def.flavor) then return 0 end
 
     -- shape check
     if not match_word_or_table(reqs.shape, def.shape) then return 0 end
