@@ -106,10 +106,14 @@
     A1 : AREA
     A2 : AREA   -- can be special value "map_edge"
 
-    -- these are "pseudo edges" which will be used to render the junction.
-    -- they do not contain position info (S and dir).
-    -- by default these are absent, which means "do nothing".
-    -- E2 is not used (NIL) for map edges.
+    --
+    -- These are "pseudo edges" which will be used to render the
+    -- junction.  They do not contain position info (S and dir).
+    -- By default these are absent, which means "do nothing".
+    -- For straddlers (like fences) one side should be "nothing".
+    -- For map edges, E2 is not used.
+    --
+
     E1 : EDGE
     E2 : EDGE
 

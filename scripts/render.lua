@@ -659,10 +659,16 @@ end
 
 
 function Render_junction(A, S, dir)
+  -- this actually only does ONE side of the junction
+
   if S.done_all then return end
+
+  -- whole chunks never build walls inside them
+  if A.chunk and A.chunk.place == "whole" then return end
 
   -- proper EDGE objects are handled elsewhere
   if S.edge[dir] then return end
+
 
   local N = S:neighbor(dir, "NODIR")
 
@@ -682,28 +688,17 @@ function Render_junction(A, S, dir)
 
   if not junc then return end
 
-  for pass = 1, 2 do
-    local E
 
-    if (junc.A1 == A) == (pass == 1) then
-      E = junc.E1
-    else
-      E = junc.E2
-    end
+  -- get the corresponding EDGE info
+  local E = sel(junc.A1 == A, junc.E1, junc.E2)
 
-    if E then
-      E.S    = S
-      E.dir  = dir
-      E.long = 1
+  if not E then return end
 
-      Render_edge(E)
-    end
+  E.S    = S
+  E.dir  = dir
+  E.long = 1
 
-    if pass == 1 then
-      S   = S:neighbor(dir)
-      dir = 10 - dir
-    end
-  end
+  Render_edge(E)
 end
 
 
