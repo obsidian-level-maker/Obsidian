@@ -14,6 +14,7 @@ PREFABS.Joiner_barred1 =
 
   x_fit = "frame"
 
-  tag_1 = "?lock_tag"
+  tag_1  = "?lock_tag"
+  action = "S1_OpenDoor"
 }
 
