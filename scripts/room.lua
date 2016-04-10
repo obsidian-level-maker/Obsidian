@@ -2620,6 +2620,8 @@ function Room_build_all()
   Layout_add_traps()
   Layout_decorate_rooms()
 
+  Area_closet_edges()
+
   Layout_create_scenic_borders()
   Layout_liquid_stuff()
 

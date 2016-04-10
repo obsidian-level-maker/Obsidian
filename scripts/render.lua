@@ -1294,7 +1294,7 @@ function Render_chunk(chunk)
   --
 
   -- unused closets will be rendered as void
-  if chunk.kind == "closet" and not chunk.content_kind then
+  if chunk.kind == "closet" and chunk.content_kind == "void" then
     return
   end
 

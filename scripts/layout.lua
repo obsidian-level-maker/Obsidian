@@ -703,7 +703,7 @@ function Layout_decorate_rooms()
 
   local function kill_closet(chunk)
     chunk.area.mode = "void"
-    chunk.content_kind = nil
+    chunk.content_kind = "void"
   end
 
 
