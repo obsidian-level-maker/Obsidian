@@ -2709,7 +2709,7 @@ end
     if R.kind == "cave" then
       setup_cave_theme(R)
     elseif R.is_outdoor then
-      R.main_tex = rand.key_by_probs(R.theme.floors)
+      R.main_tex = R.zone.fence_mat  --- rand.key_by_probs(R.theme.floors)
     else
       R.main_tex = rand.key_by_probs(R.theme.walls)
     end

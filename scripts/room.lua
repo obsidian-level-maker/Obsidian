@@ -931,12 +931,6 @@ function simple_steps_edge(A, A2)
 end
 
 
-function Junction_make_wall(junc)
-  junc.E1 = simple_wall_edge(junc.A1)
-  junc.E2 = simple_wall_edge(junc.A2)
-end
-
-
 -- NOT USED ATM
 function Junction_make_trap_wall(junc, trap_A)
   junc.E1 =
@@ -1055,6 +1049,7 @@ function Room_border_up()
 
     if A2 == "map_edge" then
       if A1.room then
+        -- FIXME: Junction_make_map_edge(junc)
         junc.E1 = simple_wall_edge(A1)
         junc.E2 = nil
       end

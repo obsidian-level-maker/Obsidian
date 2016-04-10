@@ -548,6 +548,34 @@ function Junction_make_empty(junc)
 end
 
 
+function Junction_make_wall(junc)
+  for pass = 1, 2 do
+    local A1 = sel(pass == 1, junc.A1, junc.A2)
+    local A2 = sel(pass == 1, junc.A2, junc.A1)
+
+    assert(A2 != "map_edge")
+
+    local E = { kind="wall", area=A1 }
+
+    if A1.zone != A2.zone then
+      E.wall_mat = A1.zone.facade_mat
+    elseif A1.is_outdoor and not A2.is_outdoor or A2.mode == "void" then
+      E.wall_mat = A2.facade_mat
+    elseif A1.room then
+      E.wall_mat = A1.room.main_tex
+    else
+      E.wall_mat = A1.zone.fence_mat
+    end
+
+    assert(E.wall_mat)
+
+    if pass == 1 then
+      junc.E = E
+    end
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 
