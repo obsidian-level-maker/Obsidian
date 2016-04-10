@@ -11,6 +11,7 @@ PREFABS.Joiner_simple1 =
   seed_h = 1
 
   x_fit = "frame"
+  y_fit = "stretch"
 
   prob = 100
 }
