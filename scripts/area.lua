@@ -558,19 +558,19 @@ function Junction_make_wall(junc)
     local E = { kind="wall", area=A1 }
 
     if A1.zone != A2.zone then
-      E.wall_mat = A1.zone.facade_mat
-    elseif A1.is_outdoor and not A2.is_outdoor or A2.mode == "void" then
-      E.wall_mat = A2.facade_mat
+      E.wall_mat = assert(A1.zone.facade_mat)
+    elseif A1.is_outdoor and (not A2.is_outdoor or A2.mode == "void") then
+      E.wall_mat = assert(A2.facade_mat)
     elseif A1.room then
-      E.wall_mat = A1.room.main_tex
+      E.wall_mat = assert(A1.room.main_tex)
     else
-      E.wall_mat = A1.zone.fence_mat
+      E.wall_mat = assert(A1.zone.fence_mat)
     end
 
-    assert(E.wall_mat)
-
     if pass == 1 then
-      junc.E = E
+      junc.E1 = E
+    else
+      junc.E2 = E
     end
   end
 end
@@ -1337,7 +1337,7 @@ function Area_building_facades()
     each A in LEVEL.areas do
       each N in A.neighbors do
         if N.zone != A.zone then
-          A.facade_mat = A.zone.facade_mat
+          A.facade_mat = assert(A.zone.facade_mat)
         end
       end
     end
@@ -1345,7 +1345,7 @@ function Area_building_facades()
     -- handle the case of a single zone
     each A in LEVEL.areas do
       if A.room and A.mode == "floor" and is_indoor(A) then
-        A.facade_mat = A.zone.facade_mat
+        A.facade_mat = assert(A.zone.facade_mat)
         break;
       end
     end
@@ -1353,6 +1353,9 @@ function Area_building_facades()
 
 
   local function can_spread(A, N)
+    -- already has one?
+    if N.facade_mat then return false end
+
     if not is_indoor(N) then return false end
 
     if A.zone != N.zone then return false end
@@ -1411,6 +1414,23 @@ function Area_building_facades()
   end
 
 
+  local function dump_facades()
+    gui.debugf("Building Facades:\n")
+
+    each Z in LEVEL.zones do
+      gui.debugf("%s:\n", Z.name)
+
+      each A in Z.areas do
+        gui.debugf("  %s (%s / %s) ---> '%s'\n", A.name,
+          A.mode, sel(A.is_outdoor, "outdoor", " indoor"),
+          A.facade_mat or "(nil)")
+      end
+    end
+
+    gui.debugf("\n")
+  end
+
+
   ---| Area_building_facades |---
 
   initial_facades()
@@ -1421,6 +1441,8 @@ function Area_building_facades()
     -- find an unset area and give it a facade mat
     if not assign_one() then break; end
   end
+
+  dump_facades()
 end
 
 
