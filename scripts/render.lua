@@ -2219,7 +2219,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       reqs.env = A.room:get_env()
     end
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(reqs, "none_ok")
+    if not def then return end
+
     local skin1 = { floor=floor_mat }
     local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, 2)
 
