@@ -929,12 +929,17 @@ end
 
 function Room_border_up()
 
+
+  local w_in_prob  = style_sel("windows", 0, 10, 20, 50)
+  local w_out_prob = style_sel("windows", 0, 20, 50, 80)
+
+
   local function area_can_window(A)
     if not A.room then return false end
     if not A.floor_h then return false end
 
     if A.room.kind == "stairwell" then return false end
---- if A.room.kind == "hallway"   then return false end
+    if A.room.kind == "hallway"   then return false end
 
     return true
   end
@@ -951,6 +956,22 @@ function Room_border_up()
     local min_c = math.min(c1, c2)
 
     return (min_c - max_f) >= 128
+  end
+
+
+  local function can_make_window(A1, A2)
+    if A1.is_outdoor and not A2.is_outdoor then
+       A1, A2 = A2, A1
+    end
+
+--!!!    if A1.is_outdoor then return false end
+
+    if area_can_window(A1) and
+       area_can_window(A2) and
+       check_window_heights(A1, A2)
+    then
+      return true
+    end
   end
 
 
@@ -1010,6 +1031,7 @@ function Room_border_up()
 
     if not A2.room then
       -- TODO Sometimes make windows?  [ probably do elsewhere... ]
+
       Junction_make_wall(junc)
       return
     end
@@ -1037,21 +1059,10 @@ function Room_border_up()
 
     -- windows --
 
-    local w_in_prob  = style_sel("windows", 0, 10, 20, 50)
-    local w_out_prob = style_sel("windows", 0, 20, 50, 80)
-
-    if A1.is_outdoor and not A2.is_outdoor then
-       A1, A2 = A2, A1
-    end
-
-    if not A1.is_outdoor and
-       area_can_window(A1) and
-       area_can_window(A2) and
-       rand.odds(sel(A2.is_outdoor, w_out_prob, w_in_prob)) and
-       check_window_heights(A1, A2)
-    then
----!!!      Junction_make_window(junc)
----!!!      return
+    if can_make_window(A1, A2) then
+stderrf("Making a window....\n")
+      Junction_make_window(junc)
+      return
     end
 
 

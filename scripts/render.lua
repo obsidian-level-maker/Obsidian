@@ -492,19 +492,27 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
   local function straddle_door()
-    assert(E.conn)
     assert(E.peer)
 
-    local z = E.conn.door_h or A.floor_h
+    local z
+    local LOCK
+    
+    if E.kind == "window" then
+      z = E.window_z
+    else
+      assert(E.conn)
+      z = E.conn.door_h or A.floor_h
+      LOCK = E.conn.lock
+    end
+
     assert(z)
 
-    local LOCK = E.conn.lock
 
     -- setup skin
     local inner_mat = assert(E.wall_mat)
     local outer_mat = assert(E.peer.wall_mat)
 
-    if E.conn.flip_it then
+    if E.conn and E.conn.flip_it then
       inner_mat, outer_mat = outer_mat, inner_mat
     end
 
@@ -543,11 +551,15 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     else -- normal door
 
-      if E.kind == "secret_door" then
-        reqs.key = "secret"
-      
-      elseif E.kind == "arch" then
+      if E.kind == "arch" then
         reqs.kind = "arch"
+
+      elseif E.kind == "window" then
+        reqs.kind = "window"
+        reqs.height = 192  -- FIXME !!!
+
+      elseif E.kind == "secret_door" then
+        reqs.key = "secret"
       end
     end
 
@@ -567,51 +579,11 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     else  -- axis-aligned edge
 
-      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn.flip_it)
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn and E.conn.flip_it)
     end
 
     Fabricate(R, def, T, { skin1 })
   end
-
-
---[[ FIXME : do this in straddle_door()
-  local function straddle_window()
-    assert(E.peer and E.peer.area)
-
-    local z = assert(E.window_z)
-
-    local inner_mat = assert(A.wall_mat)
-    local outer_mat = assert(E.peer.area.wall_mat)
-
-    local skin1 = { wall=inner_mat, outer=outer_mat }
-
-
-    -- FIXME : find it properly
-    local fab_name = "Window_wide"
-
-
-    if geom.is_corner(dir) then
-      fab_name = fab_name .. "_diag"
-
-      local def = Fab_lookup(fab_name)
-
-      local dir2 = DIAG_DIR_MAP[dir]
-
-      local S = E.S
-      local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
-
-      Fabricate(R, def, T, { skin1 })
-
-    else  -- axis-aligned edge
-
-      local def = Fab_lookup(fab_name)
-
-      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
-
-      Fabricate(R, def, T, { skin1 })
-    end
-  end
---]]
 
 
   ---| Render_edge |---
@@ -636,11 +608,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     straddle_fence()
 
   elseif E.kind == "arch" or E.kind == "door" or
-         E.kind == "lock_door" or E.kind == "secret_door" then
+         E.kind == "lock_door" or E.kind == "secret_door" or
+         E.kind == "window" then
     straddle_door()
-
-  elseif E.kind == "window" then
-    straddle_window()
 
   else
     error("Unknown edge kind: " .. tostring(E.kind))

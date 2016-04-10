@@ -11,6 +11,9 @@ PREFABS.Window_narrow =
   deep   = 16
   over   = 16
 
+  x_fit  = "frame"
+--z_fit  = "top"
+
   bound_z1 = 0
   bound_z2 = 112
 
@@ -23,6 +26,8 @@ PREFABS.Window_narrow_diag =
   file   = "window/narrow.wad"
   map    = "MAP02"
   where  = "diagonal"
+
+--z_fit  = "top"
 
   bound_z1 = 0
   bound_z2 = 112

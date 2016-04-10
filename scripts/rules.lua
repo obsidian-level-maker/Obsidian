@@ -188,7 +188,7 @@ SPROUT_1 =
 
 SPROUT_JOINER_2x1 =
 {
-  prob = 300
+  prob = 3
 
   structure =
   {

@@ -652,6 +652,9 @@ function Junction_make_window(junc)
     area = junc.A2
   }
 
+  junc.E1.wall_mat = Junction_calc_wall_tex(junc.A1, junc.A2)
+  junc.E2.wall_mat = Junction_calc_wall_tex(junc.A2, junc.A1)
+
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1
 end
