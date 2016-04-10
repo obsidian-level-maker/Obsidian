@@ -39,3 +39,24 @@ DOOM.PARAMETERS =
   doom2_skies    = true  -- RSKY# patches
 }
 
+
+DOOM.ACTIONS =
+{
+  --
+  -- These keywords are used by prefabs with an "action" value.
+  --
+
+  S1_OpenDoor = 103    -- opens and stays open
+  W1_OpenDoor = 2      --
+  GR_OpenDoor = 46
+
+  S1_RaiseStair = 127  -- 16 units
+  W1_RaiseStair = 100  --
+
+  S1_FloorUp  = 18     -- up to next highest floor
+  W1_FloorUp  = 119    --
+
+  S1_LowerFloor = 23  -- down to lowest nb floor
+  W1_LowerFloor = 38  --
+}
+
