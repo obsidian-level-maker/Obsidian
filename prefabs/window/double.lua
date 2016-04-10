@@ -2,7 +2,7 @@
 -- Window with two narrow holes
 --
 
-PREFABS.Window_double =
+UNFINISHED.Window_double =
 {
   file   = "window/double.wad"
   where  = "edge"
@@ -21,7 +21,7 @@ PREFABS.Window_double =
 -- Tall version (expands vertically)
 --
 
-PREFABS.Window_double_tall =
+UNFINISHED.Window_double_tall =
 {
   file   = "window/double.wad"
   where  = "edge"

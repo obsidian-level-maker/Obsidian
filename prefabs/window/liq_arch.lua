@@ -2,7 +2,7 @@
 -- Liquid arch
 --
 
-PREFABS.Window_liquid_arch =
+UNFINISHED.Window_liquid_arch =
 {
   file   = "window/liq_arch.wad"
   where  = "edge"

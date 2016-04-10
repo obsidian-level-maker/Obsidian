@@ -2,7 +2,7 @@
 -- Window, wide but vertically short
 --
 
-PREFABS.Window_wide =
+UNFINISHED.Window_wide =
 {
   file   = "window/wide.wad"
   map    = "MAP01"
@@ -20,11 +20,25 @@ PREFABS.Window_wide =
 }
 
 
+UNFINISHED.Window_wide_diag =
+{
+  file   = "window/wide.wad"
+  map    = "MAP02"
+
+  where  = "diagonal"
+
+  bound_z1 = 0
+  bound_z2 = 112
+}
+
+
+----------------------------------------------------
+
 --
 -- Tall version (expands vertically)
 --
 
-PREFABS.Window_wide_tall =
+UNFINISHED.Window_wide_tall =
 {
   file   = "window/wide.wad"
   map    = "MAP01"
@@ -44,23 +58,7 @@ PREFABS.Window_wide_tall =
 }
 
 
-----------------------------------------
---   DIAGONAL VERSIONS
-----------------------------------------
-
-PREFABS.Window_wide_diag =
-{
-  file   = "window/wide.wad"
-  map    = "MAP02"
-
-  where  = "diagonal"
-
-  bound_z1 = 0
-  bound_z2 = 112
-}
-
-
-PREFABS.Window_wide_tall_diag =
+UNFINISHED.Window_wide_tall_diag =
 {
   file   = "window/wide.wad"
   map    = "MAP02"
