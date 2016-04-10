@@ -890,25 +890,6 @@ end
 
 
 
-function simple_wall_mat(A)
-  if A.room and not A.room.is_outdoor then
-    return assert(A.room.main_tex)
-  end
-
-  return assert(A.zone.facade_mat)
-end
-
-
-function simple_wall_edge(A)
-  return
-  {
-    kind = "wall"
-    wall_mat = simple_wall_mat(A)
-    area = A
-  }
-end
-
-
 function simple_fence_edge(A, top_z)
   return
   {
