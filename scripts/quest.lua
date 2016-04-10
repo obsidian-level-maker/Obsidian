@@ -2794,6 +2794,8 @@ function Quest_make_quests()
 
   Grower_hallway_kinds()
 
+  Quest_room_themes()
+
   Area_building_facades()
 
   -- special weapon handling for HEXEN and HEXEN II
@@ -2804,7 +2806,6 @@ function Quest_make_quests()
   end
 
   Quest_nice_items()
-  Quest_room_themes()
 
   Monster_pacing()
 end
