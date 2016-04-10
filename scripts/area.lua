@@ -1254,7 +1254,6 @@ function Area_assign_boundary()
     assert(not A.room)
 
     A.is_boundary = true
-    A.mode = "scenic"
 
     -- recursively handle neighbors
     each N in A.neighbors do
@@ -1274,13 +1273,23 @@ function Area_assign_boundary()
   end
 
 
+  local function void_the_rest()
+    each A in LEVEL.areas do
+      if A.mode == "scenic" and not A.is_boundary then
+        A.mode = "void"
+      end
+    end
+  end
+
+
   ---| Area_assign_boundary |---
 
   mark_room_inners()
-
   mark_other_inners()
 
   floodfill_outers()
+
+  void_the_rest()
 end
 
 
@@ -1430,21 +1439,22 @@ function Area_building_facades()
 
 
   local function initial_facades()
-    -- areas which touch another zone always use the main facade
+    -- give one indoor area in each zone a facade_mat
+
+    local list = {}
 
     each A in LEVEL.areas do
-      each N in A.neighbors do
-        if N.zone != A.zone then
-          A.facade_mat = assert(A.zone.facade_mat)
-        end
+      if A.room and is_indoor(A) then
+        table.insert(list, A)
       end
     end
 
-    -- handle the case of a single zone
-    each A in LEVEL.areas do
-      if A.room and A.mode == "floor" and is_indoor(A) then
+    rand.shuffle(list)
+
+    each A in list do
+      if not A.zone.got_initial_facade then
         A.facade_mat = assert(A.zone.facade_mat)
-        break;
+        A.zone.got_initial_facade = true
       end
     end
   end
@@ -1454,11 +1464,9 @@ function Area_building_facades()
     -- already has one?
     if N.facade_mat then return false end
 
-    if not is_indoor(N) then return false end
-
     if A.zone != N.zone then return false end
 
-    return true
+    return is_indoor(N)
   end
 
 
@@ -1497,18 +1505,11 @@ function Area_building_facades()
 
     if not best then return false end
 
-    best.facade_mat = rand.sel(70, best.zone.other_facade, best.zone.facade_mat)
+    local Z = best.zone
+
+    best.facade_mat = rand.sel(0, Z.facade_mat, Z.other_facade)
 
     return true
-  end
-
-
-  local function set_the_rest__OLD()
-    each A in LEVEL.areas do
-      if not A.facade_mat then
-        A.facade_mat = A.zone.facade_mat
-      end
-    end
   end
 
 

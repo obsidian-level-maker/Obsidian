@@ -834,25 +834,23 @@ function Layout_create_scenic_borders()
         assert(junc)
 
         if A.zone != N.zone then continue end
-
+--[[
         if A.kind == "water" and N.room.kind == "hallway" then
 --!!!!!! FIXME
---[[
           junc.kind = "fence"
           junc.fence_mat = A.zone.fence_mat
           junc.fence_top_z = N.room.hallway.max_h + 32
---]]
         elseif A.kind == "water" then
 --!!!!!! FIXME
---[[
           junc.kind = "rail"
           junc.rail_mat = "MIDBARS3"
           junc.post_h   = 84
           junc.blocked  = true
---]]
+
         elseif A.kind != "void" then
-          Junction_make_empty(junc)
         end
+--]]
+        Junction_make_empty(junc)
       end
     end
   end
@@ -877,7 +875,7 @@ function Layout_create_scenic_borders()
     each A in Z.border_info.areas do
       A.kind = Z.border_info.kind
       
-      if A.kind != "void" then
+      if A.mode != "void" then
         A.is_outdoor = true
       end
     end
@@ -890,8 +888,6 @@ function Layout_create_scenic_borders()
 
   ---| Layout_create_scenic_borders |---
    
-  LEVEL.hill_mode = rand.sel(70, "high", "low")
-
   each Z in LEVEL.zones do
     setup_zone(Z)
   end
@@ -935,7 +931,7 @@ function Layout_finish_scenic_borders()
 
 
   local function do_outer_skies(A)
-    if A.kind == "void" then return end
+    if A.mode == "void" then return end
 
     if not A.floor_h then return end
 

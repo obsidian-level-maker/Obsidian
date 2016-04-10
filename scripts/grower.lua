@@ -2922,7 +2922,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 
   local function make_real_areas()
     each temp in temp_areas do
-      local A = AREA_CLASS.new("void")
+      local A = AREA_CLASS.new("scenic")
 
       A.seeds = temp.seeds
 

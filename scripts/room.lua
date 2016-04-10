@@ -2140,8 +2140,9 @@ h = 8
         next_f = next_f + 0 --!!!!! FIXME TEST ONLY
         set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
         if C.joiner_chunk.place == "whole" then
-          C.joiner_chunk.area.is_outdoor = nil
-          C.joiner_chunk.area.facade_mat = "NUKAGE1"
+          local JA = C.joiner_chunk.area
+          JA.is_outdoor = nil
+          assert(JA.facade_mat)
         end
 -- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
 -- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
