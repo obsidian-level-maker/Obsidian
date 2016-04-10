@@ -2569,6 +2569,15 @@ function Room_add_sun()
 end
 
 
+
+function Room_add_camera()
+  -- this is used for Quake intermissions
+
+  -- TODO
+end
+
+
+
 function Room_pool_hacks()
 
   local function similar_room(A1, A2)
@@ -2664,7 +2673,6 @@ function Room_build_all()
   Room_determine_spots()
 
   Room_add_sun()
-
-  -- TODO intermission camera for Quake
+  Room_add_camera()
 end
 
