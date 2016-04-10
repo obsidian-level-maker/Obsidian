@@ -9,11 +9,14 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
+*  BEFORE RELEASE:
+   +  move 'prefabs' folder to games/doom/
+   -  free-standing cage prefabs  [ a decoration? ]
+
+
 *  Heretic support
 
 *  get secret rooms working again
-
-*  support for Traps and free-standing Cages
 
 *  add in more scenery: trees, computers etc
 
@@ -66,7 +69,11 @@ ______________________________________________________________________
 -  if room has a boss/guard needing a large chunk, allocate those
    chunks early [ but allow importants to override in emergencies ]
 
--  wall switches
+-  intra-room locks : support free-standing switches
+
+-  a lowering pedestal that requires a switch to activate
+   
+-  support decorative closets, e.g. fancy light thingy
 
 
 -  a "raising stairs" JOINER, need to find the switch

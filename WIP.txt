@@ -3,26 +3,16 @@ WORK IN PROGRESS
 ================
 
 
-!!!  Fix walls
-[ handle straddlers first, then do each side of a junction separately ]
+WINDOWS:
 
-
-!!  choose all DOOR and JOINER prefabs earlier than now.
-
-    then for switched ones, use the "action" in the Lua definition
-    as the skin.special for the SWITCH prefab
++  get basic "all along a junction" windows working again
 
 
 
-+  review "svolume" and "innerpoint" usage
-   e.g. I think "walk_svol" would be a more useful metric
+BORDERS:
 
-
-+  joiners need walls on sides in INDOOR ROOMS too
-   -  handle closets and joiners in separate pass in border_up?
-
-   __OR__ handle the STRADDLING junctions first (fences mainly)
-          then handle each side SEPARATELY
+-  sometimes make a liquid area near a room
+   [ esp. if area is large, have a railing and fence-posts ]
 
 
 
@@ -32,7 +22,26 @@ SINKS:
 
 
 
+CEILINGS:
+
+-  better logic for heights
+
+   e.g. group areas into 'floor_group' -- same floor but different
+   ceiling stuff (SKY vs LIGHTS vs PLAIN) and different lighting
+   but same wall decoration
+   
+
+
+WALLS:
+
+-  get the decorative walls working nicely
+   [ pick one per area or floor_group ]
+
+
+
 TRAPS:
+
++  monster closets which open in PREVIOUS (back-track) room
 
 +  for each trappable item/goal in a room [ upto max of 2 ]
    decide whether to create a closet trap (using a nearby unused closets)
@@ -42,17 +51,9 @@ TRAPS:
 
 -  number of traps affected by LEV.game_along
 
-+  do monster depots differently, make "shared" sector based on
++  get teleport traps working again
+   do monster depots differently, make "shared" sector based on
    an entry area of second room in the level
-
-
-
-CLOSETS:
-
->>> handle unused closets
-    [ A.mode = "void", build walls there, NO EDGE ]
-
-    -  support decorative closets, e.g. fancy light thingy
 
 
 
@@ -68,9 +69,18 @@ JOINERS:
 
 +  choose prefab earlier, e.g. during floor/ceil heights or earlier
 
++  support joiners with a height difference
+
+!!  choose all DOOR and JOINER prefabs earlier than now.
+
+    then for switched ones, use the "action" in the Lua definition
+    as the skin.special for the SWITCH prefab
+
 
 
 TELEPORTERS:
+
+-  check exclusion zone around a PAD works
 
 +  exclusion zone in front of a closet
 
@@ -96,15 +106,7 @@ SHAPE GRAMMARS:
       [[ only first usage of SPROUT/DECOR needs to score higher ]]
 
    -  SPROUT: if mirrored and new rooms touch/overlap, only create
-              a single room
-
-
-
-INTRA-ROOM LOCKS
-
--  if room has a unlocked non-teleporter exit, and we have an unused
-   closet --> lock exit with a switch and add a switch closet
-   [ and sometimes "trap" the switch closet ]
+              a single room [ only if ONE conn though ]
 
 
 
@@ -112,10 +114,16 @@ MISCELLANEOUS:
 
 +  face direction for switches / teleport pads / start pad
 
++  monster spots from a prefab : can cause stuck monsters
+   [ ideally shrink them if nearby wall(etc) overlaps ]
+
 -  titlepic backgrounds (current and new) :
    determine ones for official package, put rest in an addon
 
 -  improve font for titlepic  [ e.g. shaded letters ]
+
+-  review "svolume" and "innerpoint" usage
+   e.g. I think "walk_svol" would be a more useful metric
 
 
 
