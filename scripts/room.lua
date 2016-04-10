@@ -890,107 +890,6 @@ end
 
 
 
-function simple_fence_edge(A, top_z)
-  return
-  {
-    kind = "fence"
-    fence_mat = assert(A.zone.fence_mat)
-    fence_top_z = top_z
-    area = A
-  }
-end
-
-
-function simple_steps_edge(A, A2)
-  return
-  {
-    kind = "steps"
-    steps_mat = assert(A.zone.steps_mat)
-    steps_z1 = math.min(A.floor_h, A2.floor_h)
-    steps_z2 = math.max(A.floor_h, A2.floor_h)
-  }
-end
-
-
--- NOT USED ATM
-function Junction_make_trap_wall(junc, trap_A)
-  junc.E1 =
-  {
-    kind = "trap_wall"
-    trigger = assert(trap_A.trap_trigger)
-  }
-
-  junc.E2 =
-  {
-    kind = "nothing"
-  }
-
-  if junc.A1.mode == "trap" then
-    junc.E1, junc.E2 = junc.E2, junc.E1
-  end
-
-  junc.E1.area = junc.A1
-  junc.E2.area = junc.A2
-end
-
-
-function Junction_make_fence(junc)
-  local top_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
-
-  if junc.A1.pool_hack or junc.A2.pool_hack then
-    top_z = top_z + 16
-  end
-
-  if junc.A1.room then top_z = math.max(top_z, junc.A1.room.max_floor_h) end
-  if junc.A2.room then top_z = math.max(top_z, junc.A2.room.max_floor_h) end
-
-  top_z = top_z + PARAM.jump_height + 8
-
-  junc.E1 = simple_fence_edge(junc.A1, top_z)
-  junc.E2 = { kind="nothing", area=junc.A2 }
-
-  junc.E1.peer = junc.E2
-  junc.E2.peer = junc.E1
-end
-
-
-function Junction_make_window(junc)
-  junc.E1 =
-  {
-    kind = "window"
-    area = junc.A1
-    window_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
-  }
-
-  junc.E2 =
-  {
-    kind = "nothing"
-    area = junc.A2
-  }
-
-  junc.E1.peer = junc.E2
-  junc.E2.peer = junc.E1
-end
-
-
-function Junction_make_steps(junc)
-  assert(not junc.E1)
-  assert(not junc.E2)
-
-  junc.E1 = simple_steps_edge(junc.A1, junc.A2)
-  junc.E2 = { kind="nothing" }
-
-  -- ensure edge is on the correct side (the lowest one)
-  if junc.A1.floor_h > junc.A2.floor_h then
-    junc.E1, junc.E2 = junc.E2, junc.E1
-  end
-
-  junc.E1.area = junc.A1
-  junc.E2.area = junc.A2
-end
-
-
-
 function Room_border_up()
 
   local function area_can_window(A)
@@ -1025,20 +924,17 @@ function Room_border_up()
     assert(A1 != A2)
 
 
+    -- already decided?
+    if junc.E1 then return end
+
+
     -- handle edge of map
     -- [ normal rooms should not touch the edge ]
 
     if A2 == "map_edge" then
-      if A1.room then
-        Junction_make_map_edge(junc)
-      end
-
+      Junction_make_map_edge(junc)
       return
     end
-
-
-    -- already decided?  [ doorways ]
-    if junc.E1 then return end
 
 
     -- zones : gotta keep 'em separated
@@ -1046,11 +942,6 @@ function Room_border_up()
     if A1.zone != A2.zone then
       Junction_make_wall(junc)
       return
-    end
-
-
-    if A2.room and not A1.room then
-      A1, A2 = A2, A1
     end
 
 
@@ -1064,6 +955,10 @@ function Room_border_up()
 
     -- scenic to scenic --
 
+    if A2.room and not A1.room then
+      A1, A2 = A2, A1
+    end
+
     if not A1.room then
       -- nothing needed if both building or both outdoor
       if (not A1.is_outdoor) != (not A2.is_outdoor) then
@@ -1074,19 +969,8 @@ function Room_border_up()
     end
 
 
-    -- room to trap / cage --
-    if A2.mode == "trap" and A2.face_room == A1.room then
-      Junction_make_trap_wall(junc, A2)
-      return
-    end
-
-    if A2.mode == "cage" and A2.face_room == A1.room then
-      -- FIXME
-      return
-    end
-
-
     -- room to scenic --
+
     if not A2.room then
       -- TODO Sometimes make windows?  [ probably do elsewhere... ]
       Junction_make_wall(junc)
@@ -1094,9 +978,10 @@ function Room_border_up()
     end
 
 
-    -- inside a single room --
+    -- the same room --
+
     if A1.room == A2.room then
-      -- this needed for closets and joiners  FIXME WRONG
+      -- this needed for closets and joiners  FIXME WRONG [ REALLY ?? ]
       if (not A1.is_outdoor) != (not A2.is_outdoor) then
         Junction_make_wall(junc)
       end
@@ -1105,38 +990,15 @@ function Room_border_up()
     end
 
 
-    -- blended hallways --  [ NOTE: NOT USED ATM ]
+    -- fences --
 
-    if A1.mode == "hallway" and
-       A1.room.hallway.parent and
-       A1.room.hallway.parent == A2.room
-    then
-      Junction_make_empty(junc)
-      return
-    end
-
-    if A2.mode == "hallway" and
-       A2.room.hallway.parent and
-       A2.room.hallway.parent == A1.room
-    then
-      Junction_make_empty(junc)
-      return
-    end
-
-
-    -- outdoor to outdoor
     if A1.is_outdoor and A2.is_outdoor then
       Junction_make_fence(junc)
-
-      if A1.is_porch or A2.is_porch then
---??????  junc.kind2 = "pillar"
-      end
-
       return
     end
 
 
-    -- window test [ make A1 be the indoor room ]
+    -- windows --
 
     local w_in_prob  = style_sel("windows", 0, 10, 20, 50)
     local w_out_prob = style_sel("windows", 0, 20, 50, 80)
@@ -1165,7 +1027,9 @@ function Room_border_up()
   ---| Room_border_up |---
 
   each _,junc in LEVEL.area_junctions do
-    visit_junction(junc)
+    if junc.E1 == nil then
+      visit_junction(junc)
+    end
   end
 end
 

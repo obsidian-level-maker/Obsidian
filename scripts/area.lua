@@ -552,6 +552,11 @@ function Junction_make_map_edge(junc)
   local A = junc.A1
   local mat
 
+  if not A.room then
+    Junction_make_empty(junc)
+    return
+  end
+
   if A.room and not A.is_outdoor then
     mat = A.room.main_tex
   else
@@ -590,6 +595,76 @@ function Junction_make_wall(junc)
       junc.E2 = E
     end
   end
+end
+
+
+function Junction_make_fence(junc)
+  local top_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
+
+  if junc.A1.pool_hack or junc.A2.pool_hack then
+    top_z = top_z + 16
+  end
+
+  if junc.A1.room then top_z = math.max(top_z, junc.A1.room.max_floor_h) end
+  if junc.A2.room then top_z = math.max(top_z, junc.A2.room.max_floor_h) end
+
+  top_z = top_z + PARAM.jump_height + 8
+
+  junc.E1 =
+  {
+    kind = "fence"
+    fence_mat = assert(A.zone.fence_mat)
+    fence_top_z = top_z
+    area = junc.A1
+  }
+
+  junc.E2 = { kind="nothing" }
+
+  junc.E1.peer = junc.E2
+  junc.E2.peer = junc.E1
+end
+
+
+function Junction_make_window(junc)
+  junc.E1 =
+  {
+    kind = "window"
+    area = junc.A1
+    window_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
+  }
+
+  junc.E2 =
+  {
+    kind = "nothing"
+    area = junc.A2
+  }
+
+  junc.E1.peer = junc.E2
+  junc.E2.peer = junc.E1
+end
+
+
+function Junction_make_steps(junc)
+  assert(not junc.E1)
+  assert(not junc.E2)
+
+  junc.E1 =
+  {
+    kind = "steps"
+    steps_mat = assert(A.zone.steps_mat)
+    steps_z1 = math.min(A.floor_h, A2.floor_h)
+    steps_z2 = math.max(A.floor_h, A2.floor_h)
+  }
+
+  junc.E2 = { kind="nothing" }
+
+  -- ensure edge is on the correct side (the lowest one)
+  if junc.A1.floor_h > junc.A2.floor_h then
+    junc.E1, junc.E2 = junc.E2, junc.E1
+  end
+
+  junc.E1.area = junc.A1
+  junc.E2.area = junc.A2
 end
 
 
