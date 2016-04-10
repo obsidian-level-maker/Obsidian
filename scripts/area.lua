@@ -580,7 +580,11 @@ function Junction_make_wall(junc)
     local E = { kind="wall", area=A1 }
 
     if A1.zone != A2.zone then
-      E.wall_mat = assert(A1.zone.facade_mat)
+      if A1.room and not A1.is_outdoor then
+        E.wall_mat = assert(A1.room.main_tex)
+      else
+        E.wall_mat = assert(A1.zone.facade_mat)
+      end
     elseif A1.is_outdoor and (not A2.is_outdoor or A2.mode == "void") then
       E.wall_mat = assert(A2.facade_mat)
     elseif A1.room then
@@ -613,7 +617,7 @@ function Junction_make_fence(junc)
   junc.E1 =
   {
     kind = "fence"
-    fence_mat = assert(A.zone.fence_mat)
+    fence_mat = assert(junc.A1.zone.fence_mat)
     fence_top_z = top_z
     area = junc.A1
   }
