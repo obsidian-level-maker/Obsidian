@@ -1426,6 +1426,8 @@ end
 function Area_building_facades()
 
   local function is_indoor(A)
+    if A.mode == "scenic" then return false end
+
     if A.room and A.room.is_cave then return false end
 
     if not A.is_outdoor then return true end
@@ -1507,7 +1509,7 @@ function Area_building_facades()
 
     local Z = best.zone
 
-    best.facade_mat = rand.sel(0, Z.facade_mat, Z.other_facade)
+    best.facade_mat = rand.sel(50, Z.facade_mat, Z.other_facade)
 
     return true
   end
