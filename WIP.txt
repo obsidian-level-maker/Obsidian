@@ -7,8 +7,10 @@ WORK IN PROGRESS
 [ handle straddlers first, then do each side of a junction separately ]
 
 
-!!  for SWITCH-ed doors (etc), require an "action" in the Lua definition
-    e.g. action = "OPEN_DOOR_FAST", look it up in GAME.ACTIONS
+!!  choose all DOOR and JOINER prefabs earlier than now.
+
+    then for switched ones, use the "action" in the Lua definition
+    as the skin.special for the SWITCH prefab
 
 
 
@@ -21,6 +23,12 @@ WORK IN PROGRESS
 
    __OR__ handle the STRADDLING junctions first (fences mainly)
           then handle each side SEPARATELY
+
+
+
+SINKS:
+
++  get them working again
 
 
 
@@ -103,8 +111,6 @@ INTRA-ROOM LOCKS
 MISCELLANEOUS:
 
 +  face direction for switches / teleport pads / start pad
-
-+  support 'LEVEL.secret_weapon'
 
 -  titlepic backgrounds (current and new) :
    determine ones for official package, put rest in an addon
