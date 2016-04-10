@@ -155,15 +155,6 @@ function Render_edge(E)
   end
 
 
-  local function edge_wall__OLD(mat)
-    local brush = raw_wall_brush()
-
-    brushlib.set_mat(brush, mat, mat)
-
-    Trans.brush(brush)
-  end
-
-
   local function edge_inner_sky()
     local floor_h = assert(A.floor_h)
 
@@ -216,7 +207,7 @@ function Render_edge(E)
 
     local skin = {}
 
-    skin.wall = assert(E.wall_mat or A.wall_mat)
+    skin.wall = assert(E.wall_mat)
 
 
     local def = Fab_pick(reqs)
@@ -262,6 +253,7 @@ function Render_edge(E)
     -- TODO : secret fences, barred fences
 
 
+    assert(E.fence_mat)
     local skin = { wall=E.fence_mat }
 
 
@@ -500,20 +492,17 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
   local function straddle_door()
-    assert(E.peer)
-    assert(E.peer.area)
-
     assert(E.conn)
+    assert(E.peer)
 
     local z = E.conn.door_h or A.floor_h
     assert(z)
 
     local LOCK = E.conn.lock
 
-
     -- setup skin
-    local inner_mat = assert(A.wall_mat)
-    local outer_mat = assert(E.peer.area.wall_mat)
+    local inner_mat = assert(E.wall_mat)
+    local outer_mat = assert(E.peer.wall_mat)
 
     if E.conn.flip_it then
       inner_mat, outer_mat = outer_mat, inner_mat
@@ -585,6 +574,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
+--[[ FIXME : do this in straddle_door()
   local function straddle_window()
     assert(E.peer and E.peer.area)
 
@@ -621,6 +611,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       Fabricate(R, def, T, { skin1 })
     end
   end
+--]]
 
 
   ---| Render_edge |---

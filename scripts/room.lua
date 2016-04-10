@@ -571,6 +571,43 @@ end
 
 
 
+function Room_reckon_door_tex()
+
+
+  local function visit_conn(C, E1, E2)
+    if E1 == nil then return end
+    assert(E2)
+
+    local A1 = assert(E1.area)
+    local A2 = assert(E2.area)
+
+    for pass = 1,2 do
+      E1.wall_mat = Junction_calc_wall_tex(A1, A2)
+
+      A1, A2 = A2, A1
+      E1, E2 = E2, E1
+    end
+  end
+  
+  
+  local function visit_joiner(C)
+    -- FIXME
+  end
+
+  
+  each C in LEVEL.conns do
+    if C.kind == "edge" then
+      visit_conn(C, C.E1, C.E2)
+      visit_conn(C, C.F1, C.F2)
+    
+    elseif C.kind == "joiner" then
+      visit_joiner(C)
+    end
+  end
+end
+
+
+
 function Room_reckon_doors()
 
   local  indoor_prob = style_sel("doors", 0, 15, 35,  65)
@@ -2475,6 +2512,7 @@ function Room_build_all()
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
 
+  Room_reckon_door_tex()
 ---!!!  Room_reckon_doors()
 
 ---???  Room_pool_hacks()

@@ -570,6 +570,27 @@ function Junction_make_map_edge(junc)
 end
 
 
+function Junction_calc_wall_tex(A1, A2)
+  if A1.zone != A2.zone then
+    if A1.room and not A1.is_outdoor then
+      return assert(A1.room.main_tex)
+    else
+      return assert(A1.zone.facade_mat)
+    end
+  end
+
+  if A1.is_outdoor and (not A2.is_outdoor or A2.mode == "void") then
+    return assert(A2.facade_mat)
+  end
+
+  if A1.room then
+    return assert(A1.room.main_tex)
+  else
+    return assert(A1.zone.fence_mat)
+  end
+end
+
+
 function Junction_make_wall(junc)
   for pass = 1, 2 do
     local A1 = sel(pass == 1, junc.A1, junc.A2)
@@ -579,19 +600,7 @@ function Junction_make_wall(junc)
 
     local E = { kind="wall", area=A1 }
 
-    if A1.zone != A2.zone then
-      if A1.room and not A1.is_outdoor then
-        E.wall_mat = assert(A1.room.main_tex)
-      else
-        E.wall_mat = assert(A1.zone.facade_mat)
-      end
-    elseif A1.is_outdoor and (not A2.is_outdoor or A2.mode == "void") then
-      E.wall_mat = assert(A2.facade_mat)
-    elseif A1.room then
-      E.wall_mat = assert(A1.room.main_tex)
-    else
-      E.wall_mat = assert(A1.zone.fence_mat)
-    end
+    E.wall_mat = Junction_calc_wall_tex(A1, A2)
 
     if pass == 1 then
       junc.E1 = E
