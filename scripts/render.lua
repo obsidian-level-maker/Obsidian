@@ -569,7 +569,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local T
 
     if geom.is_corner(dir) then
-      if E.conn.flip_it then dir = 10 - dir end
+      if E.conn and E.conn.flip_it then dir = 10 - dir end
 
       local dir2 = DIAG_DIR_MAP[dir]
 
