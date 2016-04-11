@@ -1017,7 +1017,7 @@ do return false end
 
   for pass = 1, 6 do
     lock_up_quests(goal_list)
-  end 
+  end
 
 
   goal_list = {}
@@ -1540,7 +1540,7 @@ function Quest_order_by_visit()
     quest_along = quest_along + 1
   end
 
- 
+
   local function visit_room(R, quest, via_conn_name)
 --stderrf("visit_room %s (via %s) for %s\n", R.name, via_conn_name or "???", quest.name or "???")
     R.lev_along = room_along / #LEVEL.rooms
@@ -1660,7 +1660,19 @@ end
 
 function Quest_find_backtracks()
 
-  
+  local function get_locked_conn(goal)
+    each C in LEVEL.conns do
+      if C.lock then
+        if table.has_elem(C.lock.goals, goal) then
+          return C
+        end
+      end
+    end
+
+    error("cannot find locked connection for a goal")
+  end
+
+
   local function find_path_between_rooms(R1, R2, seen)
     assert(R1 != R2)
 
@@ -1682,12 +1694,12 @@ function Quest_find_backtracks()
       end
     end
 
-    return nil  -- not found
+    return nil  -- no path
   end
 
 
   local function look_for_path(R, goal)
-    local C = assert(goal.conn)
+    local C = get_locked_conn(goal)
 
     local R2 = C.R1
     if C.R2.lev_along < C.R1.lev_along then
@@ -1712,7 +1724,7 @@ function Quest_find_backtracks()
 
     -- TODO : convert to room list
   end
-  
+
 
   ---| Quest_find_backtracks |---
 
@@ -2617,7 +2629,7 @@ function Quest_room_themes()
     end
   end
 
-  
+
   local function pick_common_building(R, last_R, tab)
     assert(R.zone.building_theme)
 
