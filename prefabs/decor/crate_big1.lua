@@ -2,7 +2,7 @@
 -- Large crate (96x96)
 --
 
-PREFABS.Crate_big1 =
+UNFINISHED.Crate_big1 =
 {
   file   = "decor/crate_big1.wad"
   where  = "point"
