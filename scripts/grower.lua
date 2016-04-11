@@ -864,7 +864,7 @@ function Grower_decide_boundary()
 
   -- map edge calculation
 
-  LEVEL.edge_margin = 2
+  LEVEL.edge_margin = sel(map_size < 35, 2, 3)
 
   LEVEL.edge_sx1 = LEVEL.edge_margin
   LEVEL.edge_sy1 = LEVEL.edge_margin
