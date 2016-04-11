@@ -163,7 +163,7 @@ GLOBAL_STYLE_LIST =
   closets    = { few=10, some=30, heaps=30 }
 
   ex_floors  = { few=40, some=60, heaps=20 }
-  windows    = { few=20, some=50, heaps=20 }
+  windows    = { few=20, some=70, heaps=35 }
   pictures   = { few=10, some=50, heaps=10 }
   steepness  = { few=20, some=60, heaps=10 }
 

@@ -928,11 +928,6 @@ end
 
 function Room_border_up()
 
-
-  local w_in_prob  = style_sel("windows", 0, 10, 20, 50)
-  local w_out_prob = style_sel("windows", 0, 20, 50, 80)
-
-
   local function area_can_window(A)
     if not A.room then return false end
     if not A.floor_h then return false end
@@ -966,14 +961,27 @@ function Room_border_up()
        A1, A2 = A2, A1
     end
 
---!!!    if A1.is_outdoor then return false end
-
     if area_can_window(A1) and
        area_can_window(A2) and
        check_window_heights(A1, A2)
     then
       return true
     end
+  end
+
+
+  local function should_make_window(A1, A2)
+    local prob = style_sel("windows", 0, 20, 50, 80)
+
+    if not A1.is_outdoor and not A2.is_outdoor then prob = prob / 3 end
+
+    if A1.zone != A2.zone then prob = prob / 5 end
+
+    if not rand.odds(prob) then return false end
+
+    if not can_make_window(A1, A2) then return false end
+
+    return true
   end
 
 
@@ -1000,8 +1008,7 @@ function Room_border_up()
     -- zones : gotta keep 'em separated
 
     if A1.zone != A2.zone then
-      if can_make_window(A1, A2) and false then
-stderrf("Making a ZONE window....\n")
+      if should_make_window(A1, A2) then
         Junction_make_window(junc)
         return
       end
@@ -1067,8 +1074,7 @@ stderrf("Making a ZONE window....\n")
 
     -- windows --
 
-    if can_make_window(A1, A2) and false then
-stderrf("Making a window....\n")
+    if should_make_window(A1, A2) then
       Junction_make_window(junc)
       return
     end
