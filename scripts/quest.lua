@@ -104,9 +104,9 @@
 
     special : number  -- linedef special for switches
 
-    lock : LOCK   -- lock which this solves  (NIL for exit goals)
+    room : ROOM   -- where the goal is
 
-    room : AREA   -- where the goal is
+    backtrack : list(ROOMS)  -- rooms player MUST back-track through
 
     tag : number  -- tag number to use for a switched door
 --]]
@@ -1657,6 +1657,75 @@ if not R.lev_along then R.lev_along = 0.5 end
 end
 
 
+
+function Quest_find_backtracks()
+
+  
+  local function find_path_between_rooms(R1, R2, seen)
+    assert(R1 != R2)
+
+    each C in R1.conns do
+      local N = C:other_room(R1)
+
+      if N == R2 then return { C } end
+
+      if seen[N] then continue end
+
+      local seen2 = table.copy(seen)
+      seen2[R1] = true
+
+      local list = find_path_between_rooms(N, R2, seen2)
+
+      if list then
+        table.insert(list, 1, C)
+        return list
+      end
+    end
+
+    return nil  -- not found
+  end
+
+
+  local function look_for_path(R, goal)
+    local C = assert(goal.conn)
+
+    local R2 = C.R1
+    if C.R2.lev_along < C.R1.lev_along then
+      R2 = C.R2
+    end
+
+    if R == R2 then return end
+
+    local path = find_path_between_rooms(R, R2, {})
+
+    gui.debugf("look_for_path : %s --> %s  goal %s/%s\n", R.name, R2.name,
+               goal.kind, goal.item or "---")
+
+    if not path then
+      gui.debugf("   NO PATH\n")
+      return
+    end
+
+    each C2 in path do
+      gui.debugf("   %s  :  %s <--> %s\n", C2.name, C2.R1.name, C2.R2.name)
+    end
+
+    -- TODO : convert to room list
+  end
+  
+
+  ---| Quest_find_backtracks |---
+
+  each R in LEVEL.rooms do
+    each goal in R.goals do
+      if goal.kind == "KEY" or goal.kind == "SWITCH" then
+        look_for_path(R, goal)
+      end
+    end
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -2785,6 +2854,7 @@ function Quest_make_quests()
 
   Quest_start_room()
   Quest_order_by_visit()
+  Quest_find_backtracks()
 
   -- this must be after quests have been ordered
   Quest_create_zones()

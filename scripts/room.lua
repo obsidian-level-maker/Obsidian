@@ -59,7 +59,6 @@
 
     gx1, gy1, gx2, gy2   -- seed range while growing
 
-
     floor_mats[z] : name
      ceil_mats[z] : name
 --]]
