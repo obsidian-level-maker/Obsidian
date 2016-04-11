@@ -107,6 +107,7 @@
     room : ROOM   -- where the goal is
 
     backtrack : list(ROOMS)  -- rooms player MUST back-track through
+                             -- (includes room with the locked conn) 
 
     tag : number  -- tag number to use for a switched door
 --]]
@@ -1722,7 +1723,20 @@ function Quest_find_backtracks()
       gui.debugf("   %s  :  %s <--> %s\n", C2.name, C2.R1.name, C2.R2.name)
     end
 
-    -- TODO : convert to room list
+    -- convert to room a list
+    -- we exclude the goal room, but include the lock-door room
+
+    goal.backtrack = {}
+
+    local cur_room = R
+
+    each C2 in path do
+      assert(cur_room == C2.R1 or cur_room == C2.R2)
+
+      cur_room = C2:other_room(cur_room)
+
+      table.insert(goal.backtrack, cur_room)
+    end
   end
 
 
