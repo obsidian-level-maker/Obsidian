@@ -938,6 +938,9 @@ function Room_border_up()
     if not A.room then return false end
     if not A.floor_h then return false end
 
+    if A.mode == "void" then return false end
+    if A.chunk and A.chunk.kind != "area" then return false end
+
     if A.room.kind == "stairwell" then return false end
     if A.room.kind == "hallway"   then return false end
 
@@ -998,6 +1001,12 @@ function Room_border_up()
     -- zones : gotta keep 'em separated
 
     if A1.zone != A2.zone then
+      if can_make_window(A1, A2) and false then
+stderrf("Making a ZONE window....\n")
+        Junction_make_window(junc)
+        return
+      end
+
       Junction_make_wall(junc)
       return
     end
@@ -1059,7 +1068,7 @@ function Room_border_up()
 
     -- windows --
 
-    if can_make_window(A1, A2) then
+    if can_make_window(A1, A2) and false then
 stderrf("Making a window....\n")
       Junction_make_window(junc)
       return
