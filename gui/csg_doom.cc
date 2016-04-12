@@ -888,6 +888,7 @@ static void DM_LightInSector(doom_sector_c *S, region_c *R,
                              csg_property_set_c *f_face,
                              csg_property_set_c *c_face)
 {
+	// use the shade computed in CSG_Shade()
 	S->light = R->shade;
 
 	S->light = CLAMP(0, S->light, 255);
@@ -1924,6 +1925,8 @@ static void DM_AlignTextures()
 }
 
 
+#if 0  // THIS CORNER ROUNDING LOGIC IS NOT USED
+
 static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
                               const doom_vertex_c *ignore1,
                               const doom_vertex_c *ignore2,
@@ -2200,6 +2203,8 @@ static void DM_RoundCorners()
 	// need this again, since we often create co-linear diagonals
 	DM_MergeColinearLines(false /* show_count */);
 }
+
+#endif
 
 
 //------------------------------------------------------------------------
