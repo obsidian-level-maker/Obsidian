@@ -57,14 +57,17 @@ Lighting Model
    the shadow value (typically 32 units) is subtracted from the
    ambient value.
 
-4. any floor or ceiling brush can supply a "light_add" value in
+4. a SKY_SHADOW brush is a shadow brush which only applies when
+   the ceiling is a SKY brush.
+
+5. any floor or ceiling brush can supply a "light_add" value in
    the top/bottom face.  It is equivalent to having a LIGHT brush
    there with the specified value.
 
    similiary a face can have a "shadow" value, and will act the
    same as a SHADOW brush.
 
-5. for 3D floors, it is expected that the ambient value of each
+6. for 3D floors, it is expected that the ambient value of each
    floor will be the same, then adjusted by "light_add" or "shadow"
    values in the top/bottom faces of the brushes.
 
@@ -401,6 +404,11 @@ static void SHADE_VisitRegion(region_c *R)
 
 		light  = MAX(light,  br_light);
 		shadow = MAX(shadow, br_shadow);
+
+		int sky_shadow = LB->props.getInt("sky_shadow", -1);
+
+		if (sky_shadow > 0 && T->bkind == BKIND_Sky)
+			shadow = MAX(shadow, sky_shadow);
 	}
 
 	// check brush faces
