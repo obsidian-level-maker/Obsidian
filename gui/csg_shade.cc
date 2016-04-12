@@ -70,11 +70,6 @@ Lighting Model
 
 */
 
-int indoor_light;
-
-int sky_bright;
-int sky_shade;
-
 
 #define DEFAULT_AMBIENT_LEVEL  144
 
@@ -371,7 +366,17 @@ static void SHADE_VisitRegion(region_c *R)
 
 	int ambient = -1;	// Unset
 	int light   = -1;
-	bool shadow = false;
+	int shadow  = -1;
+
+	// grab ambient value  [ should always be present ]
+
+	ambient = T->props.getInt("ambient", -1);
+
+	if (ambient < 0)
+		ambient = B->props.getInt("ambient", -1);
+
+	if (ambient < 0)
+		ambient = DEFAULT_AMBIENT_LEVEL;
 
 	// process light brushes
 
@@ -385,17 +390,11 @@ static void SHADE_VisitRegion(region_c *R)
 		if (LB->t.z < B->t.z+1 || LB->b.z > T->b.z-1)
 			continue;
 
-		int new_ambient = LB->props.getInt("ambient");
+		int br_light  = LB->props.getInt("light_add", -1);
+		int br_shadow = LB->props.getInt("shadow", -1);
 
-		if (ambient < 0 && new_ambient > 0)
-			ambient = new_ambient;
-
-		int new_light = LB->props.getInt("light");
-
-		light = MAX(light, new_light);
-
-		if (LB->props.getInt("shadow") > 0)
-			shadow = true;
+		light  = MAX(light,  br_light);
+		shadow = MAX(shadow, br_shadow);
 	}
 
 	// check brush faces
@@ -404,20 +403,21 @@ static void SHADE_VisitRegion(region_c *R)
 	{
 		csg_property_set_c *P = (pass == 0) ? &B->t.face : &T->b.face;
 
-		int new_light = P->getInt("light");
+		int fc_light  = P->getInt("light_add", -1);
+		int fc_shadow = P->getInt("shadow", -1);
 
-		light = MAX(light, new_light);
+		light  = MAX(light,  fc_light);
+		shadow = MAX(shadow, fc_shadow);
 	}
 
-	// combine
+	// combine them
 
-	if (T->bkind == BKIND_Sky)
-		ambient = shadow ? sky_shade : sky_bright;
+	R->shade = ambient;
 
-	if (ambient < 0)
-		ambient = indoor_light;
-
-	R->shade = CLAMP(0, MAX(ambient, light), 255);
+	if (light > 0)
+		R->shade += light;
+	else if (shadow > 0)
+		R->shade -= shadow;
 }
 
 

@@ -46,10 +46,6 @@ extern int ef_solid_type;
 extern int ef_liquid_type;
 extern int ef_thing_mode;
 
-extern int indoor_light;
-extern int sky_bright;
-extern int sky_shade;
-
 
 static char *level_name;
 
@@ -839,18 +835,6 @@ void doom_game_interface_c::Property(const char *key, const char *value)
 	else if (StringCaseCmp(key, "ef_thing_mode") == 0)
 	{
 		ef_thing_mode = atoi(value);
-	}
-	else if (StringCaseCmp(key, "indoor_light") == 0)
-	{
-		indoor_light = atoi(value);
-	}
-	else if (StringCaseCmp(key, "sky_bright") == 0)
-	{
-		sky_bright = atoi(value);
-	}
-	else if (StringCaseCmp(key, "sky_shade") == 0)
-	{
-		sky_shade = atoi(value);
 	}
 	else
 	{
