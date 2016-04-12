@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2013-2015 Andrew Apted
+//  Copyright (C) 2013-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -42,25 +42,31 @@
 Lighting Model
 --------------
 
-1. for indoor (non-sky) areas, default light level is given by the
-   'indoor_light' value.
+1. all brushes are added with a "ambient" value, generally sourced
+   from the current AREA on the map.  With no other lighting stuff,
+   sectors will get this value.
 
-2. an AMBIENT light brush provides a different default for those areas.
+   [ floor and ceiling brushes are expected to have same ambient
+     value, depending on the 2D AREA on the map they exist in ]
 
-3. under a SKY brush, default light level is the 'sky_bright' value.
-   when a SHADOW light brush is present, the 'sky_shade' value is used
-   instead.  [ SHADOW brushes have no other effect than this ]
+2. normal LIGHT brushes have an "light_add" value.  The MAXIMUM of
+   all light brushes is computed, then added to the ambient value.
 
-4. every normal LIGHT brush in an area will test against the above
-   value and the MAXIMUM value will be applied.
+3. a SHADOW brush is a light brush with "shadow" value.  If this
+   brush exists, AND there are no additive light brushes, then
+   the shadow value (typically 32 units) is subtracted from the
+   ambient value.
 
-5. any floor or non-sky ceiling brush can supply a 'light' property in
-   its top/bottom face.  It is equivalent to having a LIGHT brush there
-   with the specified value.  [ liquid areas often use this ]
+4. any floor or ceiling brush can supply a "light_add" value in
+   the top/bottom face.  It is equivalent to having a LIGHT brush
+   there with the specified value.
 
-TODO : handle lighting effects 
+   similiary a face can have a "shadow" value, and will act the
+   same as a SHADOW brush.
 
-TODO : handle 3D floors properly [ move 'shade' field to gap_c ?? ]
+5. for 3D floors, it is expected that the ambient value of each
+   floor will be the same, then adjusted by "light_add" or "shadow"
+   values in the top/bottom faces of the brushes.
 
 */
 
@@ -68,6 +74,9 @@ int indoor_light;
 
 int sky_bright;
 int sky_shade;
+
+
+#define DEFAULT_AMBIENT_LEVEL  144
 
 
 static int current_region_group;
