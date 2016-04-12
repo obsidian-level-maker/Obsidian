@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2008-2015 Andrew Apted
+//  Copyright (C) 2008-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1435,6 +1435,7 @@ int DM_title_set_palette(lua_State *L)
 
 static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 {
+#if 0
 	// width -1 and -2 are special : draw a diagonal line
 	if (w == -1 || w == -2)
 	{
@@ -1453,6 +1454,7 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 
 		return;
 	}
+#endif
 
 	// clip the box
 	int x1 = x;
@@ -1488,18 +1490,15 @@ enum title_outcodes_e
 static int CalcOutcode(int x, int y)
 {
 	return
-		((y < 0)        ? O_BOTTOM : 0) |
-		((y >= title_H) ? O_TOP    : 0) |
-		((x < 0)        ? O_LEFT   : 0) |
-		((x >= title_W) ? O_RIGHT  : 0);
+		((y < 0)         ? O_BOTTOM : 0) |
+		((y >= title_H3) ? O_TOP    : 0) |
+		((x < 0)         ? O_LEFT   : 0) |
+		((x >= title_W3) ? O_RIGHT  : 0);
 }
 
 
 static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int box_w, int box_h)
 {
-	x1 -= box_w / 2;  y1 -= box_h / 2;
-	x2 -= box_w / 2;  y2 -= box_h / 2;
-
 	int out1 = CalcOutcode(x1, y1);
 	int out2 = CalcOutcode(x2, y2);
 
@@ -1516,7 +1515,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		}
 
 		x1 = MAX(0, x1);
-		x2 = MIN(title_W-1, x2);
+		x2 = MIN(title_W3-1, x2);
 
 		for (; x1 <= x2; x1++)
 			TitleDrawBox(x1, y1, box_w, box_h, col);
@@ -1532,7 +1531,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		}
 
 		y1 = MAX(0, y1);
-		y2 = MIN(title_H-1, y2);
+		y2 = MIN(title_H3-1, y2);
 
 		for (; y1 <= y2; y1++)
 			TitleDrawBox(x1, y1, box_w, box_h, col);
@@ -1567,7 +1566,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		}
 		else if (outside & O_TOP)
 		{
-			new_y = title_H-1;
+			new_y = title_H3-1;
 			new_x = x1 + dx * (new_y - y1) / dy;
 		}
 		else if (outside & O_LEFT)
@@ -1579,7 +1578,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		{
 			SYS_ASSERT(outside & O_RIGHT);
 
-			new_x = title_W-1;
+			new_x = title_W3-1;
 			new_y = y1 + dy * (new_x - x1) / dx;
 		}
 
@@ -1718,8 +1717,6 @@ int DM_title_draw_line(lua_State *L)
 {
 	// LUA: title_draw_line(x1, y1, x2, y2, col, box_w, box_h)
 
-return 0; // FIXME !!!
-
 	int x1 = luaL_checkint(L, 1);
 	int y1 = luaL_checkint(L, 2);
 	int x2 = luaL_checkint(L, 3);
@@ -1730,7 +1727,12 @@ return 0; // FIXME !!!
 	int box_w = luaL_optint(L, 6, 1);
 	int box_h = luaL_optint(L, 7, 1);
 
-	TitleDrawLine(x1, y1, x2, y2, col, box_w, box_h);
+#if 1
+	x1 -= box_w / 2;  y1 -= box_h / 2;
+	x2 -= box_w / 2;  y2 -= box_h / 2;
+#endif
+
+	TitleDrawLine(x1*3, y1*3, x2*3, y2*3, col, box_w*3, box_h*3);
 	return 0;
 }
 
