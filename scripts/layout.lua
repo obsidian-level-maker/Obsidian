@@ -1029,58 +1029,6 @@ stderrf("Pool %d in %s : floor_h: %d\n", A.pool_id, A.name, A.floor_h)
   end
 
 
-  local function do_pool_junction__OLDSHIT(A, N)
-
-    local junc = Junction_lookup(A, N)
-
-    -- room which faces into the pool?
-
-    if N.room and faces_room(A, N.room) then
-      Junction_make_empty(junc)
-      return
-    end
-
-    -- handle pool <--> pool
-
-    if N.mode == "pool" then
-      if N.pool_id == A.pool_id then
-        Junction_make_empty(junc)
-        return
-      end
-    end
-
-    -- use railing to with nearby room with higher floor
-
-    if N.room and N.is_outdoor and A.is_outdoor and
-       N.mode != "hallway" and
-       N.floor_h and N.floor_h > A.floor_h
-    then
---!!!!!! FIXME
---[[
-      junc.kind = "rail"
-      junc.rail_mat = "MIDBARS3"
-      junc.post_h   = 84
-      junc.blocked  = true
---]]
-      return
-    end
-
-    -- near a map border ?
-
-    if N.is_boundary and A.face_rooms[1].is_outdoor then
-      -- mountains will prevent travel
-      if A.zone.border_info.kind != "water" then
-        Junction_make_empty(junc)
-        return
-      end
-    end
-
-    -- FIXME : fences !!!
-
---!!!!!!    junc.kind = "wall"
-  end
-
-
   local function do_pool_junction(junc)
     local A = junc.A1
     local N = junc.A2
