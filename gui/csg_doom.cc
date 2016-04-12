@@ -51,6 +51,9 @@ static int map_bound_x1;
 static int map_bound_y1;
 
 
+#define SIMPLE_Y_OFFSETS  1
+
+
 #define SEC_FLOOR_SPECIAL  (1 << 1)
 #define SEC_CEIL_SPECIAL   (1 << 2)
 
@@ -1213,6 +1216,7 @@ static int NormalizeYOffset(int oy)
 }
 
 
+#ifndef SIMPLE_Y_OFFSETS
 static int Default_ZA(csg_brush_c *B)
 {
 	// default anchor point for a brush
@@ -1228,11 +1232,15 @@ static int Default_ZA(csg_brush_c *B)
 	
 	return 0;
 }
+#endif
 
 
 static int CalcYOffset_1S(brush_vert_c *V, int oy, int ceil_h,
 						  int za, bool unpeg_L)
 {
+#ifdef SIMPLE_Y_OFFSETS
+	return oy;
+#else
 	if (unpeg_L)
 		return oy;
 
@@ -1242,12 +1250,16 @@ static int CalcYOffset_1S(brush_vert_c *V, int oy, int ceil_h,
 		za = Default_ZA(B);
 
 	return za - ceil_h + oy;
+#endif
 }
 
 
 static int CalcYOffset_Lower(brush_vert_c *V, int oy, int ceil_h,
 							 int za, bool unpeg_L)
 {
+#ifdef SIMPLE_Y_OFFSETS
+	return oy;
+#else
 	if (! unpeg_L)  // pegged, i.e. rendered top-down
 		return oy;
 
@@ -1257,12 +1269,16 @@ static int CalcYOffset_Lower(brush_vert_c *V, int oy, int ceil_h,
 		za = Default_ZA(B);
 
 	return za - ceil_h + oy;
+#endif
 }
 
 
 static int CalcYOffset_Upper(brush_vert_c *V, int oy, int ceil_h,
 							 int za, bool unpeg_U)
 {
+#ifdef SIMPLE_Y_OFFSETS
+	return oy;
+#else
 	if (! unpeg_U)	// pegged, i.e. rendered bottom-up (doors)
 		return oy;
 
@@ -1272,6 +1288,7 @@ static int CalcYOffset_Upper(brush_vert_c *V, int oy, int ceil_h,
 		za = Default_ZA(B);
 
 	return za - ceil_h + oy;
+#endif
 }
 
 
