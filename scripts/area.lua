@@ -574,9 +574,13 @@ function Junction_calc_wall_tex(A1, A2)
   if A1.zone != A2.zone then
     if A1.room and not A1.is_outdoor then
       return assert(A1.room.main_tex)
-    else
-      return assert(A1.zone.facade_mat)
     end
+
+    if A1.is_boundary and A1.touches_edge and A2.is_boundary then
+      return LEVEL.cliff_mat
+    end
+
+    return assert(A1.zone.facade_mat)
   end
 
   if A1.is_outdoor and (not A2.is_outdoor or A2.mode == "void") then
@@ -1212,7 +1216,7 @@ function Area_assign_boundary()
   end
 
 
-  local function area_touches_edge(A)
+  local function area_nearto_edge(A)
     -- this also prevents a single seed gap between area and edge of map
 
     each S in A.seeds do
@@ -1254,7 +1258,7 @@ function Area_assign_boundary()
          rand.odds(20) and
          area_touches_a_room(A) and
          area_is_inside_box(A) and
-         not area_touches_edge(A)
+         not area_nearto_edge(A)
       then
         A.is_inner = true
       end
@@ -1278,7 +1282,7 @@ function Area_assign_boundary()
 
   local function floodfill_outers()
     each A in LEVEL.areas do
-      if not (A.is_inner or A.is_boundary) and area_touches_edge(A) then
+      if not (A.is_inner or A.is_boundary) and area_nearto_edge(A) then
         mark_outer_recursive(A)
       end
     end
@@ -1289,6 +1293,7 @@ function Area_assign_boundary()
     each A in LEVEL.areas do
       if A.mode == "scenic" and not A.is_boundary then
         A.mode = "void"
+        A.is_outdoor = nil
       end
     end
   end

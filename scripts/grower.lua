@@ -2925,6 +2925,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
       local A = AREA_CLASS.new("scenic")
 
       A.seeds = temp.seeds
+      A.touches_edge = temp.touches_edge
 
       -- install into seeds
       each S in A.seeds do
