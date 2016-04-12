@@ -75,6 +75,8 @@ ______________________________________________________________________
    
 -  support decorative closets, e.g. fancy light thingy
 
+-  one switch opens ALL the barred exits
+
 
 -  a "raising stairs" JOINER, need to find the switch
 

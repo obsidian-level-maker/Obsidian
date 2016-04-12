@@ -3,16 +3,17 @@ WORK IN PROGRESS
 ================
 
 
-WINDOWS:
+NEW LIGHTING:
 
-+  get basic "all along a junction" windows working again
+-  set ambient lighting for each area:
+
+     AMBIENT_LIGHT = A.lighting
+
+-  wad-fab loader : add "shadow" or "light_add" based on (SEC.light - 144)
 
 
 
-BORDERS:
-
--  sometimes make a liquid area near a room
-   [ esp. if area is large, have a railing and fence-posts ]
+>>>  3 new title pics
 
 
 
@@ -63,18 +64,21 @@ STAIRS:
 
 -  support two stairs in a rule (to same area)
 
+-  support "L" and "T" shape stairs
+
 
 
 JOINERS:
 
-+  choose prefab earlier, e.g. during floor/ceil heights or earlier
-
-+  support joiners with a height difference
-
 !!  choose all DOOR and JOINER prefabs earlier than now.
+    e.g. during floor/ceil heights or earlier
 
     then for switched ones, use the "action" in the Lua definition
     as the skin.special for the SWITCH prefab
+
++  support joiners with a height difference
+
+-  support "L" and "T" shape joiners
 
 
 
@@ -112,7 +116,7 @@ SHAPE GRAMMARS:
 
 MISCELLANEOUS:
 
-+  face direction for switches / teleport pads / start pad
++  face direction for start pad / teleport pads
 
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
