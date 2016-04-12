@@ -31,9 +31,12 @@ function raw_add_brush(brush)
     assert(not C.y_offset)
   end
 
-  if brush[1].m then
-     brush[1].ambient = AMBIENT_LIGHT
+  if brush[1].m == nil then
+    brush = table.copy(brush)
+    table.insert(brush, 1, { m="solid" })
   end
+
+  brush[1].ambient = AMBIENT_LIGHT
 
   gui.add_brush(brush)
 
