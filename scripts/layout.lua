@@ -835,6 +835,8 @@ function Layout_create_scenic_borders()
         local junc = Junction_lookup(A, N)
         assert(junc)
 
+        if junc.E1 != nil then continue end
+
         if A.zone != N.zone then continue end
 --[[
         if A.kind == "water" and N.room.kind == "hallway" then
@@ -1013,61 +1015,21 @@ stderrf("Pool %d in %s : floor_h: %d\n", A.pool_id, A.name, A.floor_h)
   end
 
 
-  local function merge_pool_groups(gr1, gr2, floor_h)
-    assert(gr1 and gr2)
-    assert(gr1 != gr2)
-
-    if gr1 > gr2 then gr1,gr2 = gr2,gr1 end
-
-    each A in LEVEL.areas do
-      if A.pool_id == gr2 then
-         A.pool_id = gr1
-      end
-
-      if A.pool_id == gr1 then
-        A.floor_h = floor_h
+  local function merge_pools()
+    for pass = 1, 3 do
+      each A in LEVEL.areas do
+      each N in A.neighbors do
+        if A.pool_id and N.pool_id and A.face_room == N.face_room then
+          A.floor_h = math.min(A.floor_h, N.floor_h)
+          N.floor_h = A.floor_h
+        end
+      end -- A, N
       end
     end
   end
 
 
-  local function try_merge_pools(A, N)
-    if A.zone != N.zone then return end
-
-    -- already done?
-    if A.pool_id == N.pool_id then return end
-
-    local R1 = A.face_rooms[1]
-    local R2 = N.face_rooms[1]
-
-    -- must be same quest
-    if R1.quest != R2.quest then return end
-
-    -- must be same outdoors-ness
-    if A.is_outdoor != N.is_outdoor then return end
-
-    -- OK --
-
-    local new_floor_h = math.min(A.floor_h, N.floor_h)
-
-    merge_pool_groups(A.pool_id, N.pool_id, new_floor_h)
-
-    table.append(A.face_rooms, N.face_rooms)
-    N.face_rooms = A.face_rooms
-  end
-
-
-  local function faces_room(A, room)
-    each R in A.face_rooms do
-      if R == room then return true end
-    end
-
-    return false
-  end
-
-
-  local function do_pool_junction(A, N)
-    if N.zone != A.zone then return end
+  local function do_pool_junction__OLDSHIT(A, N)
 
     local junc = Junction_lookup(A, N)
 
@@ -1113,10 +1075,59 @@ stderrf("Pool %d in %s : floor_h: %d\n", A.pool_id, A.name, A.floor_h)
       end
     end
 
-
     -- FIXME : fences !!!
 
 --!!!!!!    junc.kind = "wall"
+  end
+
+
+  local function do_pool_junction(junc)
+    local A = junc.A1
+    local N = junc.A2
+
+    if N.zone != A.zone then return end
+
+    if not A.pool_id then A, N = N, A end
+
+    -- neither is a pool?
+    if not A.pool_id then return end
+
+    -- pool to pool --
+
+    if N.pool_id then
+      if A.face_room == N.face_room then
+        Junction_make_empty(junc)
+      else
+        -- TODO : liquid fences (if one much higher than other)
+
+        Junction_make_fence(junc)
+      end
+
+      return
+    end
+
+
+    -- pool to room --
+
+    if not N.room then return end
+    if not N.is_outdoor then return end
+    if N.mode == "void" then return end
+
+    if A.face_room == N.room then
+      Junction_make_empty(junc)
+      return
+    end
+
+    Junction_make_fence(junc)
+  end
+
+
+  local function do_junctions()
+    each _,junc in LEVEL.area_junctions do
+      if junc.E1 == nil then
+        do_pool_junction(junc)
+      end
+    end
   end
 
 
@@ -1128,7 +1139,9 @@ stderrf("Pool %d in %s : floor_h: %d\n", A.pool_id, A.name, A.floor_h)
     try_pool_in_area(A)
   end
 
-  -- merge pools where possible
+  merge_pools()
+
+  do_junctions()
 
 --[[
   each A in LEVEL.areas do
@@ -1141,13 +1154,6 @@ stderrf("Pool %d in %s : floor_h: %d\n", A.pool_id, A.name, A.floor_h)
 
   -- do junctions now (to handle two touching pools)
 
-  each A in LEVEL.areas do
-  each N in A.neighbors do
-    if A.mode == "pool" then
-      do_pool_junction(A, N)
-    end
-  end
-  end
 --]]
 end
 
@@ -1213,7 +1219,7 @@ function Layout_handle_corners()
 
   local function check_corner(cx, cy)
     local corner = Corner_lookup(cx, cy)
-    
+
     if not corner.kind and
        #corner.areas > 1 and
        near_porch(corner) and

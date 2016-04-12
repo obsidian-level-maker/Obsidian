@@ -2551,8 +2551,8 @@ function Room_build_all()
 
   Area_closet_edges()
 
-  Layout_create_scenic_borders()
   Layout_liquid_stuff()
+  Layout_create_scenic_borders()
 
   Room_border_up()
   Room_set_sky_heights()
