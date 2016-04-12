@@ -28,8 +28,9 @@ gui.import("rules")
 gui.import("grower")
 gui.import("area")
 gui.import("connect")
-
 gui.import("quest")
+
+gui.import("boss_map")
 gui.import("dm_ctf")
 gui.import("layout")
 gui.import("render")
