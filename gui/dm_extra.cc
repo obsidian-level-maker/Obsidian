@@ -1288,11 +1288,15 @@ static byte PaletteLookup(rgb_color_t col, const rgb_color_t *palette)
 static int title_W;
 static int title_H;
 
+static int title_W3;  // the above values * 3
+static int title_H3;  //
+
 static rgb_color_t * title_pix;
 
 static rgb_color_t title_palette[256];
 
 
+// simple cache for image loading
 static tga_image_c * title_last_tga;
 static const char  * title_last_filename;
 
@@ -1318,14 +1322,45 @@ int DM_title_create(lua_State *L)
 	title_W = W;
 	title_H = H;
 
-	title_pix = new rgb_color_t[W * H];
+	title_W3 = W*3;
+	title_H3 = H*3;
 
-	for (int i = 0 ; i < W*H ; i++)
+	title_pix = new rgb_color_t[W * H * 9];
+
+	for (int i = 0 ; i < W*H*9 ; i++)
 	{
 		title_pix[i] = bg;
 	}
 
 	return 0;
+}
+
+
+static int TitleLookupPixel(int x, int y)
+{
+	x *= 3;
+	y *= 3;
+
+	// compute average
+	int r = 0;
+	int g = 0;
+	int b = 0;
+
+	for (int ky = 0 ; ky < 3 ; ky++)
+	for (int kx = 0 ; kx < 3 ; kx++)
+	{
+		const rgb_color_t c = title_pix[(y + ky) * title_W3 + (x + kx)];
+
+		r += RGB_RED(c);
+		g += RGB_GREEN(c);
+		b += RGB_BLUE(c);
+	}
+
+	r = r / 9;
+	g = g / 9;
+	b = b / 9;
+
+	return PaletteLookup(MAKE_RGBA(r, g, b, 255), title_palette);
 }
 
 
@@ -1341,9 +1376,10 @@ int DM_title_write(lua_State *L)
 
 	byte *conv_pixels = new byte[title_W * title_H];
 
-	for (int i = 0 ; i < title_W * title_H ; i++)
+	for (int y = 0 ; y < title_H ; y++)
+	for (int x = 0 ; x < title_W ; x++)
 	{
-		conv_pixels[i] = PaletteLookup(title_pix[i], title_palette);
+		conv_pixels[y * title_W + x] = TitleLookupPixel(x, y);
 	}
 
 	qLump_c *lump = DM_CreatePatch(title_W, title_H, 0, 0, conv_pixels, title_W, title_H);
@@ -1648,7 +1684,13 @@ static void TitleDrawImage(int x, int y, tga_image_c *img)
 			rgb_color_t pix = img->pixels[dy * img->width + dx];
 
 			if (RGB_ALPHA(pix) & 128)
-				title_pix[y * title_W + nx] = pix;
+			{
+				for (int ky = 0 ; ky < 3 ; ky++)
+				for (int kx = 0 ; kx < 3 ; kx++)
+				{
+					title_pix[(y*3 + ky) * title_W3 + nx*3 + kx] = pix;
+				}
+			}
 		}
 	}
 }
@@ -1657,6 +1699,8 @@ static void TitleDrawImage(int x, int y, tga_image_c *img)
 int DM_title_draw_rect(lua_State *L)
 {
 	// LUA: title_draw_rect(x, y, w, h, col)
+
+return 0; // FIXME !!!
 
 	int x = luaL_checkint(L, 1);
 	int y = luaL_checkint(L, 2);
@@ -1675,6 +1719,8 @@ int DM_title_draw_rect(lua_State *L)
 int DM_title_draw_line(lua_State *L)
 {
 	// LUA: title_draw_line(x1, y1, x2, y2, col, box_w, box_h)
+
+return 0; // FIXME !!!
 
 	int x1 = luaL_checkint(L, 1);
 	int y1 = luaL_checkint(L, 2);
