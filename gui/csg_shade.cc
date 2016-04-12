@@ -122,7 +122,7 @@ static void SHADE_CollectBoxes()
 
 static int SHADE_CalcRegionGroup(region_c *R)
 {
-	if (R->isClosed())
+	if (R->gaps.empty())
 		return -1;
 
 	/* group regions with a tag and same floor height */
@@ -143,6 +143,12 @@ static int SHADE_CalcRegionGroup(region_c *R)
 	tag = c_face->getStr("tag");
 	if (tag)
 		return base + atoi(tag);
+
+	// closed sectors are usually doors
+	if (R->isClosed())
+	{
+		return base + 9999;
+	}
 
 	/* otherwise keep separate */
 
