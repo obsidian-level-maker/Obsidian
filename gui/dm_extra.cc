@@ -1444,10 +1444,10 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 
 		for (int i = 0 ; i < h ; i++, y++, x += dx)
 		{
-			if (x >= 0 && x-1 < title_W && y >= 0 && y < title_H)
+			if (x >= 0 && x-1 < title_W3 && y >= 0 && y < title_H3)
 			{
-				title_pix[y * title_W + x]     = col;
-				title_pix[y * title_W + x + 1] = col;
+				title_pix[y * title_W3 + x]     = col;
+				title_pix[y * title_W3 + x + 1] = col;
 			}
 		}
 
@@ -1463,8 +1463,8 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 	x1 = MAX(x1, 0);
 	y1 = MAX(y1, 0);
 
-	x2 = MIN(x2, title_W);
-	y2 = MIN(y2, title_H);
+	x2 = MIN(x2, title_W3);
+	y2 = MIN(y2, title_H3);
 
 	if (x1 > x2 || y1 > y2)
 		return;
@@ -1472,7 +1472,7 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 	for (int y = y1 ; y < y2 ; y++)
 	for (int x = x1 ; x < x2 ; x++)
 	{
-		title_pix[y * title_W + x] = col;
+		title_pix[y * title_W3 + x] = col;
 	}
 }
 
@@ -1700,8 +1700,6 @@ int DM_title_draw_rect(lua_State *L)
 {
 	// LUA: title_draw_rect(x, y, w, h, col)
 
-return 0; // FIXME !!!
-
 	int x = luaL_checkint(L, 1);
 	int y = luaL_checkint(L, 2);
 	int w = luaL_checkint(L, 3);
@@ -1711,7 +1709,7 @@ return 0; // FIXME !!!
 
 	SYS_ASSERT(title_pix);
 
-	TitleDrawBox(x, y, w, h, col);
+	TitleDrawBox(x*3, y*3, w*3, h*3, col);
 	return 0;
 }
 
