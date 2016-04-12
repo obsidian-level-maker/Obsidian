@@ -2465,12 +2465,15 @@ end
 function Room_add_camera()
   -- this is used for Quake intermissions
 
+  -- game check
+  if not GAME.ENTITIES["camera"] then return end
+
   -- TODO
 end
 
 
 
-function Room_pool_hacks()
+function Room_pool_hacks__OLD()
 
   local function similar_room(A1, A2)
     local R1 = A1.room
@@ -2539,8 +2542,6 @@ function Room_build_all()
 
   Room_reckon_door_tex()
 ---!!!  Room_reckon_doors()
-
----???  Room_pool_hacks()
 
   Room_floor_ceil_heights()
   Room_prepare_skies()

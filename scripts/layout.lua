@@ -1277,7 +1277,7 @@ function Layout_outdoor_shadows()
     if dir == 2 then
       brush =
       {
-        { m = "light", shadow=1 }
+        { m = "light", sky_shadow=LEVEL.sky_shadow }
         { x = S.x1     , y = S.y1      }
         { x = S.x1 - dx, y = S.y1 - dy }
         { x = S.x2 - dx, y = S.y1 - dy }
@@ -1286,7 +1286,7 @@ function Layout_outdoor_shadows()
     elseif dir == 4 then
       brush =
       {
-        { m = "light", shadow=1 }
+        { m = "light", sky_shadow=LEVEL.sky_shadow }
         { x = S.x1     , y = S.y1      }
         { x = S.x1     , y = S.y2      }
         { x = S.x1 - dx, y = S.y2 - dy }
@@ -1295,7 +1295,7 @@ function Layout_outdoor_shadows()
     elseif dir == 1 then
       brush =
       {
-        { m = "light", shadow=1 }
+        { m = "light", sky_shadow=LEVEL.sky_shadow }
         { x = S.x1     , y = S.y2      }
         { x = S.x1 - dx, y = S.y2 - dy }
         { x = S.x2 - dx, y = S.y1 - dy }
@@ -1304,7 +1304,7 @@ function Layout_outdoor_shadows()
     elseif dir == 3 then
       brush =
       {
-        { m = "light", shadow=1 }
+        { m = "light", sky_shadow=LEVEL.sky_shadow }
         { x = S.x1     , y = S.y1      }
         { x = S.x1 - dx, y = S.y1 - dy }
         { x = S.x2 - dx, y = S.y2 - dy }
@@ -1321,14 +1321,18 @@ function Layout_outdoor_shadows()
 
   ---| Layout_outdoor_shadows |---
 
+  if LEVEL.sky_shadow < 8 then
+    return
+  end
+
   each A in LEVEL.areas do
-    each S in A.seeds do
-      each dir in geom.ALL_DIRS do
-        if need_shadow(S, dir) then
-          shadow_from_seed(S, dir)
-        end
-      end
+  each S in A.seeds do
+  each dir in geom.ALL_DIRS do
+    if need_shadow(S, dir) then
+      shadow_from_seed(S, dir)
     end
+  end -- A, S, dir
+  end
   end
 end
 

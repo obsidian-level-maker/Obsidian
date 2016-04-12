@@ -1892,16 +1892,17 @@ function Level_choose_darkness()
     prob = style_sel("darkness", 0, 10, 30, 90)
   end
 
-  LEVEL.indoor_light = 144
-  LEVEL.sky_bright   = rand.sel(75, 192, 176)
-  LEVEL.sky_shade    = LEVEL.sky_bright - 32
+  AMBIENT_LIGHT = 144
+
+  LEVEL.sky_light  = rand.sel(75, 192, 176)
+  LEVEL.sky_shadow = 32
 
   if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n\n")
 
     LEVEL.is_dark = true
-    LEVEL.sky_bright = 128
-    LEVEL.sky_shade  = 128
+    LEVEL.sky_light  = 128
+    LEVEL.sky_shadow = 0
   end
 end
 
@@ -2066,10 +2067,6 @@ function Level_make_level(LEV)
 
 
   ob_invoke_hook("end_level")
-
-  if LEVEL.indoor_light then gui.property("indoor_light", LEVEL.indoor_light) end
-  if LEVEL.sky_bright   then gui.property("sky_bright", LEVEL.sky_bright) end
-  if LEVEL.sky_shade    then gui.property("sky_shade",  LEVEL.sky_shade)  end
 
   gui.end_level()
 

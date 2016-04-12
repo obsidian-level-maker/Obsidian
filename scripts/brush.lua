@@ -31,6 +31,10 @@ function raw_add_brush(brush)
     assert(not C.y_offset)
   end
 
+  if brush[1].m then
+     brush[1].ambient = AMBIENT_LIGHT
+  end
+
   gui.add_brush(brush)
 
   if GAME.add_brush_func then
