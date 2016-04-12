@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2015 Andrew Apted
+--  Copyright (C) 2015-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -721,11 +721,10 @@ end
 ------------------------------------------------------------------------
 
 
-OB_TITLE_DIR = "data/titles"
-
-
 function Title_add_background()
-  local backgrounds = gui.scan_directory(OB_TITLE_DIR, "*.tga")
+  local DIR = "games/" .. assert(GAME.game_dir) .. "/titles"
+
+  local backgrounds = gui.scan_directory(DIR, "*.tga")
 
   if not backgrounds or table.empty(backgrounds) then
     error("Failed to scan 'data/titles' directory")
@@ -735,7 +734,7 @@ function Title_add_background()
 
   gui.printf("Using title background: %s\n", filename)
 
-  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/" .. filename)
+  gui.title_load_image(0, 0, DIR .. "/" .. filename)
 end
 
 
