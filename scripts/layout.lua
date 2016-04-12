@@ -521,24 +521,26 @@ end
 
 
 
--- NOT USED ATM
 function Layout_choose_face_room(A)
-  -- used for big cages and liquid pools (converted from void)
+  -- used for scenic liquid pools
 
   local best
-  local best_score = 0
+  local best_score = -1
 
   each N in A.neighbors do
-    if N.zone != A.zone then continue end
+    if not N.room then continue end
+    if not N.is_outdoor then continue end
     if not N.floor_h then continue end
+
+    if N.zone != A.zone then continue end
+
+    if N.room.kind == "hallway" then continue end
+
+    -- ok --
 
     local junc = Junction_lookup(A, N)
 
-    local score = junc.perimeter + 2.2 * gui.random() ^ 2
-
-    if N.mode == "hallway" then
-      score = score / 10
-    end
+    local score = junc.perimeter + 2.2 * gui.random() ^ 3
 
     if score > best_score then
       best = N.room
@@ -915,18 +917,21 @@ function Layout_finish_scenic_borders()
 
 
   local function temp_properties(A)
+
     local max_f = max_neighbor_floor(A)
 
     if not max_f then
       max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 }) / 2
     end
 
-    A. ceil_h = A.zone.scenic_sky_h
-    A.floor_h = math.min(max_f + 64, A.ceil_h - 32)
+    A.ceil_h   = A.zone.scenic_sky_h
+    A.ceil_mat = "_SKY"
 
-    A.floor_mat = LEVEL.cliff_mat
-    A.ceil_mat  = "_SKY"
-    A.wall_mat  = A.floor_mat
+    if A.mode != "liquid" then
+      A.floor_h = math.min(max_f + 64, A.ceil_h - 32)
+      A.floor_mat = LEVEL.cliff_mat
+      A.wall_mat  = A.floor_mat
+    end
   end
 
 
@@ -968,30 +973,28 @@ function Layout_liquid_stuff()
 
 
   local function try_pool_in_area(A)
-    -- random chance
-    if rand.odds(60) then return end
+    if A.mode != "scenic" then return end
 
-    -- ensure large enough  [ very large is OK too ]
-    if A.svolume < 2.0 then return end
+    -- random chance
+--!!!    if rand.odds(60) then return end
+
+    -- never touching edge of map
+    if A.touches_edge then return end
+
+    -- size check
+    if A.svolume < 4  then return end
+    if A.svolume > 20 then return end
 
     -- choose facing room (might be NIL)
     local face_room = Layout_choose_face_room(A)
     if not face_room then return end
 
-    -- if it is a hallway, it must be flat
-    if face_room.kind == "hallway" and not face_room.hallway.flat then
-      return
-    end
-
     -- OK --
 
-    A.mode = "pool"
+    A.mode = "liquid"
     A.pool_id = alloc_id("pool")
 
-    A.face_rooms = { face_room }
-    A.face_room  = face_room
-    A.is_outdoor = face_room.is_outdoor
-    A.is_boundary = nil
+    A.face_room = face_room
 
     -- determine floor height
     local min_f
@@ -1004,11 +1007,9 @@ function Layout_liquid_stuff()
 
     assert(min_f)
 
-    if face_room.kind == "hallway" and face_room.hallway.min_h then
-      min_f = math.N_min(min_f, face_room.hallway.min_h)
-    end
-
     A.floor_h = min_f - 16
+
+stderrf("Pool %d in %s : floor_h: %d\n", A.pool_id, A.name, A.floor_h)
   end
 
 
@@ -1121,18 +1122,15 @@ function Layout_liquid_stuff()
 
   ---| Layout_liquid_stuff |---
 
-do return end  -- very broken atm
-
   if LEVEL.liquid_usage == 0 then return end
 
   each A in LEVEL.areas do
-    if A.mode == "void" and not A.closety then
-      try_pool_in_area(A)
-    end
+    try_pool_in_area(A)
   end
 
   -- merge pools where possible
 
+--[[
   each A in LEVEL.areas do
   each N in A.neighbors do
     if A.mode == "pool" and N.mode == "pool" then
@@ -1150,6 +1148,7 @@ do return end  -- very broken atm
     end
   end
   end
+--]]
 end
 
 

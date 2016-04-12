@@ -1090,6 +1090,7 @@ function Render_floor(A, S)
   local tag = S.tag
 -- tag = A.id
 -- if A.room then tag = A.room.id end
+if A.pool_id then tag = 1000 + A.pool_id end
 
 
   -- handle railings [ must be done here ]
@@ -1594,11 +1595,12 @@ function Render_properties_for_area(A)
 
 
   local R = A.room
-  if not R then R = A.face_room end
+
+---###  if not R then R = A.face_room end
 
 
   if A.mode == "void" then
-    A.wall_mat   = "COMPSPAN" --!!!!  A.facade_mat or A.zone.facade_mat
+    A.wall_mat   = A.facade_mat or A.zone.facade_mat
     A.floor_mat  = A.wall_mat
     return
   end
