@@ -571,12 +571,26 @@ function Title_get_normal_transform(x, y, w, h)
 
   -- simplest transform: a pure translation
   T.Zfunc = function(T, x, y)
-    return T.x + x, T.y - y
+    return T.x + x * w, T.y - y * h
   end
 
   -- italics !!
-  T.func = function(T, x, y)
+  T.Ifunc = function(T, x, y)
     return T.x + (x + y * 0.5 * T.h / T.w) * T.w, T.y - y * T.h
+  end
+
+  -- text shorter at the top
+  T.func = function(T, x, y)
+    local m = x / T.max_along
+    m = ((m * 2) - 1) / 3
+    return T.x + (x + (1-y) * m) * T.w, T.y - y * T.h
+  end
+
+  -- text shrinking towards the right
+  T.KKfunc = function(T, x, y)
+    local m = x / T.max_along
+    m = ((m * 2) - 1) / 3
+    return T.x + (x + (1-y) * m) * T.w, T.y - y * T.h
   end
 
   return T
@@ -595,12 +609,13 @@ end
 
 function Title_draw_char(T, ch)
   -- we draw lowercase characters as smaller uppercase ones
-  local w = 1.0
-  local h = 1.0
+  local local_w = 1.0
+  local local_h = 1.0
 
   if string.match(ch, "[a-z]") then
-    w = 0.8
-    h = 0.7
+    local_w = 0.8
+    local_h = 0.7
+
     ch = string.upper(ch)
   end
 
@@ -621,14 +636,14 @@ function Title_draw_char(T, ch)
 
     if not x1 or not x2 then continue end
 
-    x1 = T.along + x1 * w ; y1 = y1 * h
-    x2 = T.along + x2 * w ; y2 = y2 * h
+    x1 = T.along + x1 * local_w ; y1 = y1 * local_h
+    x2 = T.along + x2 * local_w ; y2 = y2 * local_h
 
     Title_make_stroke(T, x1,y1, x2,y2)
   end
 
   -- advance horizontally for next character
-  T.along = T.along + w * (info.width + (T.spacing or 0.3))
+  T.along = T.along + local_w * (info.width + (T.spacing or 0.3))
 end
 
 
@@ -703,6 +718,9 @@ end
 
 
 function Title_styled_string_centered(T, text, styles)
+
+  T.max_along = Title_measure_string(text, 1.0, T.spacing)
+
   local width = Title_measure_string(text, T.w, T.spacing)
 
   T.x = int((320 - width) * 0.5) + 4
