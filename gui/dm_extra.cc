@@ -1433,6 +1433,16 @@ int DM_title_set_palette(lua_State *L)
 }
 
 
+static rgb_color_t CalcGradient(rgb_color_t col1, rgb_color_t col2, float along)
+{
+	int r = RGB_RED(col1)   * (1 - along) + RGB_RED(col2)   * along;
+	int g = RGB_GREEN(col1) * (1 - along) + RGB_GREEN(col2) * along;
+	int b = RGB_BLUE(col1)  * (1 - along) + RGB_BLUE(col2)  * along;
+
+	return MAKE_RGBA(r, g, b, 255);
+}
+
+
 static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 {
 #if 0
@@ -1455,7 +1465,6 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 		return;
 	}
 #endif
-
 	// clip the box
 	int x1 = x;
 	int y1 = y;
@@ -1476,6 +1485,60 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 	{
 		title_pix[y * title_W3 + x] = col;
 	}
+}
+
+
+static void TitleDrawCircle(int x, int y, int w, int h, rgb_color_t col)
+{
+	int bmx = x + w / 2;
+	int bmy = y + h / 2;
+	int r2  = w * w / 4;
+
+	// clip the box
+	int x1 = x;
+	int y1 = y;
+	int x2 = x + w;
+	int y2 = y + h;
+
+	x1 = MAX(x1, 0);
+	y1 = MAX(y1, 0);
+
+	x2 = MIN(x2, title_W3);
+	y2 = MIN(y2, title_H3);
+
+	if (x1 > x2 || y1 > y2)
+		return;
+
+	for (int y = y1 ; y < y2 ; y++)
+	for (int x = x1 ; x < x2 ; x++)
+	{
+		int dx = x - bmx;
+		int dy = y - bmy;
+
+		if (dx*dx + dy*dy > r2)
+			continue;
+
+		if (false)
+		{
+			float along = fmod(y * 6.0 / (float)title_H3, 1.0);
+			title_pix[y * title_W3 + x] = CalcGradient(col,MAKE_RGBA(0,0,0,255),along);
+			continue;
+		}
+
+		if (false) // (! (rand() & 0x3000))
+		{
+			title_pix[y * title_W3 + x] = MAKE_RGBA(0, 0, 0, 255);
+			continue;
+		}
+
+		title_pix[y * title_W3 + x] = col;
+	}
+}
+
+
+static void TitleDrawLinePart(int x, int y, int w, int h, rgb_color_t col)
+{
+	TitleDrawCircle(x, y, w, h, col);
 }
 
 
@@ -1518,7 +1581,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		x2 = MIN(title_W3-1, x2);
 
 		for (; x1 <= x2; x1++)
-			TitleDrawBox(x1, y1, box_w, box_h, col);
+			TitleDrawLinePart(x1, y1, box_w, box_h, col);
 
 		return;
 	}
@@ -1534,7 +1597,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		y2 = MIN(title_H3-1, y2);
 
 		for (; y1 <= y2; y1++)
-			TitleDrawBox(x1, y1, box_w, box_h, col);
+			TitleDrawLinePart(x1, y1, box_w, box_h, col);
 
 		return;
 	}
@@ -1623,7 +1686,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 	{
 		int d = ay - ax/2;
 
-		TitleDrawBox(x, y, box_w, box_h, col);
+		TitleDrawLinePart(x, y, box_w, box_h, col);
 
 		while (x != x2)
 		{
@@ -1636,14 +1699,14 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 			x += sx;
 			d += ay;
 
-			TitleDrawBox(x, y, box_w, box_h, col);
+			TitleDrawLinePart(x, y, box_w, box_h, col);
 		}
 	}
 	else   // vertical stepping
 	{
 		int d = ax - ay/2;
 
-		TitleDrawBox(x, y, box_w, box_h, col);
+		TitleDrawLinePart(x, y, box_w, box_h, col);
 
 		while (y != y2)
 		{
@@ -1656,7 +1719,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 			y += sy;
 			d += ax;
 
-			TitleDrawBox(x, y, box_w, box_h, col);
+			TitleDrawLinePart(x, y, box_w, box_h, col);
 		}
 	}
 }
