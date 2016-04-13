@@ -580,17 +580,18 @@ function Title_get_normal_transform(x, y, w, h)
   end
 
   -- text shorter at the top
-  T.func = function(T, x, y)
+  T.KKfunc = function(T, x, y)
     local m = x / T.max_along
     m = ((m * 2) - 1) / 3
     return T.x + (x + (1-y) * m) * T.w, T.y - y * T.h
   end
 
   -- text shrinking towards the right
-  T.KKfunc = function(T, x, y)
+  T.func = function(T, x, y)
     local m = x / T.max_along
-    m = ((m * 2) - 1) / 3
-    return T.x + (x + (1-y) * m) * T.w, T.y - y * T.h
+    m = 1.4 - m * 0.8
+    local n = (1.0 - m) / 2
+    return T.x + x * T.w, T.y - (y * m + n) * T.h
   end
 
   return T
