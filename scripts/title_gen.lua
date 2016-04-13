@@ -570,8 +570,13 @@ function Title_get_normal_transform(x, y, w, h)
   }
 
   -- simplest transform: a pure translation
-  T.func = function(T, x, y)
+  T.Zfunc = function(T, x, y)
     return T.x + x, T.y - y
+  end
+
+  -- italics !!
+  T.func = function(T, x, y)
+    return T.x + (x + y * 0.2) * T.w, T.y - y * T.h
   end
 
   return T
@@ -590,12 +595,12 @@ end
 
 function Title_draw_char(T, ch)
   -- we draw lowercase characters as smaller uppercase ones
-  local w = T.w
-  local h = T.h
+  local w = 1.0
+  local h = 1.0
 
   if string.match(ch, "[a-z]") then
-    w = w * 0.8
-    h = h * 0.7
+    w = 0.8
+    h = 0.7
     ch = string.upper(ch)
   end
 
@@ -870,7 +875,7 @@ if line2 then line2 = string.upper(line2) end
   end
 
 
-gui.title_load_image(322, 0, "data/masks/fireblu.tga")
+gui.title_load_image(322, 0, "data/masks/shawn_r.tga")
 
 
 

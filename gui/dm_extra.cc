@@ -1566,6 +1566,15 @@ static void TitleDrawCircle(int x, int y, int w, int h, rgb_color_t col)
 			continue;
 		}
 
+		if (title_last_tga && (col & 0xFFFFFF00) == 0xFFFFFF00)
+		{
+			int px = (x / 3) % title_last_tga->width;
+			int py = (y / 3) % title_last_tga->height;
+
+			title_pix[y * title_W3 + x] = title_last_tga->pixels[py * title_last_tga->width + px];
+			continue;
+		}
+
 		title_pix[y * title_W3 + x] = col;
 	}
 }
