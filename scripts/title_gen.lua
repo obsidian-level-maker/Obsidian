@@ -286,16 +286,16 @@ TITLE_LETTER_SHAPES =
 
   ["M"] =
   {
-    width = 0.7167
+    width = 0.8600
     points =
     {
       { x=0.00000, y=0.00000 }
       { x=0.00000, y=1.00000 }
-      { x=0.02500, y=1.00000 }
-      { x=0.35833, y=0.21250 }
-      { x=0.69167, y=1.00000 }
-      { x=0.71667, y=1.00000 }
-      { x=0.71667, y=0.00000 }
+      { x=0.03000, y=1.00000 }
+      { x=0.43000, y=0.21250 }
+      { x=0.83000, y=1.00000 }
+      { x=0.86000, y=1.00000 }
+      { x=0.86000, y=0.00000 }
     }
   }
 
@@ -682,8 +682,8 @@ function Title_parse_style(T, style)
 
   T.color = "#" .. color_str
 
-  T.bw = 0 + string.sub(box_str, 1, 1)
-  T.bh = 0 + string.sub(box_str, 2, 2)
+  T.bw = 0 + ("0x" .. string.sub(box_str, 1, 1))
+  T.bh = 0 + ("0x" .. string.sub(box_str, 2, 2))
 end
 
 
@@ -811,8 +811,8 @@ function Title_add_title_and_sub()
     }
 
     {
-      styles = { "00f:77", "aaf:33" }
-      alt    = { "aaf:77", "00a:55" }
+      styles = { "00f:dd", "aaf:bb" }
+      alt    = { "aaf:dd", "00a:bb" }
 
       spacing = 0.45
     }
@@ -823,6 +823,9 @@ function Title_add_title_and_sub()
 
   -- determine if we have one or two main lines
   local line1, line2, mid_line = Title_split_into_lines()
+
+line1 = string.upper(line1)
+if line2 then line2 = string.upper(line2) end
 
 
   local title_y = 95
@@ -862,7 +865,7 @@ function Title_add_title_and_sub()
   local style1 = info.styles
   local style2 = info.alt
 
-  if rand.odds(30*0) and sub_title_mode != "version" then
+  if rand.odds(30*4) and sub_title_mode != "version" then
     style1, style2 = style2, style1
   end
 
@@ -968,21 +971,19 @@ function Title_add_credit()
 
   local CREDIT_STYLES =
   {
-    {"333:33", "aaa:11"}
-    {"321:33", "db4:11"}
-    {"030:33", "4c4:11"}
-    {"004:33", "88f:11"}
-    {"000:33", "d77:11"}
+    {"000:33", "00a:11"}
+    {"000:33", "800:11"}
+    {"000:33", "665:11"}
   }
 
   local credit = rand.pick(CREDIT_LINES)
   local styles = rand.pick(CREDIT_STYLES)
 
-  local T = Title_get_normal_transform(6, 196, 9, 7)
+  local T = Title_get_normal_transform(6, 198, 8, 7)
 
-  Title_styled_string(T, credit, styles)
+  Title_styled_string(T, "Serial number AXNJEZZOKFMNOZP", styles)
 
-  gui.title_load_image(282, 162, "data/logo1.tga")
+  gui.title_load_image(284, 162, "data/logo1.tga")
 end
 
 
