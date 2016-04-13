@@ -321,16 +321,16 @@ TITLE_LETTER_SHAPES =
       { x=0.00000, y=0.50833 }
       { x=0.03750, y=0.75000 }
       { x=0.15000, y=0.92917 }
-      { x=0.29167, y=1.00833 }
-      { x=0.40833, y=1.02083 }
+      { x=0.29167, y=1.00000 }
+      { x=0.40833, y=1.00000 }
       { x=0.62500, y=0.96667 }
       { x=0.75833, y=0.81250 }
       { x=0.81250, y=0.63750 }
       { x=0.82500, y=0.49167 }
       { x=0.78333, y=0.24583 }
       { x=0.65833, y=0.06250 }
-      { x=0.52500, y=-0.00833 }
-      { x=0.40417, y=-0.02500 }
+      { x=0.52500, y=0.00000 }
+      { x=0.40417, y=0.00000 }
       { x=0.26250, y=0.00417 }
       { x=0.10000, y=0.11667 }
       { x=0.02083, y=0.30417 }
@@ -530,6 +530,241 @@ TITLE_LETTER_SHAPES =
     }
   }
 
+  ["0"] =
+  {
+    width = 0.6
+    rx = { 82,145 }
+    ry = { 152,48 }
+    points =
+    {
+      { x=118, y=152 }
+      { x=108, y=149 }
+      { x= 92, y=141 }
+      { x= 85, y=121 }
+
+      { x= 84, y=95 }
+      { x= 87, y=65 }
+      { x=100, y=50 }
+
+      { x=118, y=43 }
+      { x=126, y=48 }
+      { x=137, y=55 }
+      { x=145, y=73 }
+
+      { x=150, y=95 }
+      { x=145, y=124 }
+      { x=136, y=143 }
+      { x=126, y=150 }
+      { x=118, y=152 }
+    }
+  }
+
+  ["1"] =
+  {
+    width = 0.6
+    rx = { 184,249 }
+    ry = { 152,48 }
+    points =
+    {
+      { x=220,151 }
+      { x=220, 48 }
+      { x=190, 53 }
+    }
+  }
+
+  ["2"] =
+  {
+    width = 0.6
+    rx = { 286,347 }
+    ry = { 152,48 }
+    points =
+    {
+      { x=285, y=52 }
+      { x=302, y=46 }
+      { x=320, y=46 }
+      { x=334, y=51 }
+      { x=343, y=64 }
+      { x=343, y=79 }
+      { x=336, y=96 }
+
+      { x=285, y=151 }
+      { x=346, y=151 }
+    }
+  }
+
+  ["3"] =
+  {
+    width = 0.6
+    rx = { 388,450 }
+    ry = { 152,48 }
+    points =
+    {
+      { x=388, y=42 }
+      { x=450, y=42 }
+      { x=444, y=78 }
+      { x=434, y=87 }
+      { x=420, y=93 }
+      { x=408, y=93 }
+      {}
+      { x=420, y=93 }
+      { x=432, y=97 }
+      { x=445, y=105 }
+      { x=450, y=119 }
+      { x=450, y=130 }
+      { x=442, y=143 }
+      { x=426, y=152 }
+      { x=410, y=152 }
+      { x=388, y=147 }
+    }
+  }
+
+  ["4"] =
+  {
+    width = 0.6
+    rx = { 490,556 }
+    ry = { 152,48 }
+    points =
+    {
+      { x=558,y=121 }
+      { x=490,y=121 }
+      { x=539,y=48  }
+      { x=539,y=152 }
+    }
+  }
+
+  ["5"] =
+  {
+    width = 0.6
+    rx = { 82,145 }
+    ry = { 341,234 }
+    points =
+    {
+      { x=137,y=232 }
+      { x=88, y=232 }
+      { x=88, y=275 }
+      { x=102,y=273 }
+      { x=115,y=273 }
+      { x=134,y=282 }
+      { x=142,y=300 }
+      { x=142,y=312 }
+
+      { x=130,y=330 }
+      { x=115,y=338 }
+      { x=100,y=338 }
+      { x= 82,y=332 }
+    }
+  }
+
+  ["6"] =
+  {
+    width = 0.6
+    rx = { 184,249 }
+    ry = { 341,234 }
+    points =
+    {
+      { x=245,y=235 }
+      { x=231,y=231 }
+      { x=221,y=231 }
+      { x=204,y=237 }
+      { x=190,y=255 }
+      { x=185,y=276 }
+      { x=185,y=292 }
+      { x=189,y=319 }
+      { x=202,y=236 }
+      { x=214,y=340 }
+      { x=223,y=340 }
+      { x=242,y=330 }
+      { x=249,y=313 }
+      { x=249,y=298 }
+      { x=241,y=283 }
+      { x=226,y=273 }
+      { x=214,y=273 }
+      { x=201,y=279 }
+      { x=191,y=293 }
+    }
+  }
+
+  ["7"] =
+  {
+    width = 0.6
+    rx = { 286,347 }
+    ry = { 341,232 }
+    points =
+    {
+      { x=285,y=232 }
+      { x=347,y=232 }
+      { x=307,y=341 }
+    }
+  }
+
+  ["8"] =
+  {
+    width = 0.6
+    rx = { 450,388 }
+    ry = { 340,231 }
+    points =
+    {
+      { x=415,y=281 }
+      { x=427,y=281 }
+      { x=442,y=272 }
+      { x=449,y=261 }
+      { x=449,y=250 }
+      { x=441,y=238 }
+
+      { x=427,y=231 }
+      { x=415,y=231 }
+      { x=398,y=238 }
+      { x=392,y=250 }
+      { x=392,y=261 }
+      { x=400,y=272 }
+
+      { x=415,y=281 }
+      { x=427,y=281 }
+      { x=442,y=290 }
+      { x=451,y=302 }
+      { x=451,y=318 }
+      { x=444,y=331 }
+
+      { x=427,y=340 }
+      { x=415,y=340 }
+      { x=397,y=331 }
+      { x=388,y=318 }
+      { x=388,y=302 }
+      { x=398,y=290 }
+      { x=415,y=281 }
+    }
+  }
+
+  ["9"] =
+  {
+    width = 0.6
+    rx = { 490,556 }
+    ry = { 341,234 }
+    points =
+    {
+      { x=494,y=335 }
+      { x=511,y=339 }
+      { x=522,y=339 }
+      { x=534,y=334 }
+      { x=547,y=318 }
+      { x=554,y=294 }
+      { x=554,y=274 }
+      { x=549,y=249 }
+      { x=538,y=236 }
+
+      { x=528,y=232 }
+      { x=516,y=232 }
+      { x=499,y=240 }
+      { x=490,y=257 }
+      { x=490,y=272 }
+      { x=500,y=290 }
+      { x=515,y=297 }
+      { x=526,y=297 }
+      { x=539,y=290 }
+      { x=548,y=277 }
+    }
+  }
+
 -- end of letter_shapes
 }
 
@@ -570,7 +805,7 @@ function Title_get_normal_transform(x, y, w, h)
   }
 
   -- simplest transform: a pure translation
-  T.Zfunc = function(T, x, y)
+  T.func = function(T, x, y)
     return T.x + x * w, T.y - y * h
   end
 
@@ -587,7 +822,7 @@ function Title_get_normal_transform(x, y, w, h)
   end
 
   -- text shrinking towards the right
-  T.func = function(T, x, y)
+  T.RRfunc = function(T, x, y)
     local m = x / T.max_along
     m = 1.4 - m * 0.8
     local n = (1.0 - m) / 2
@@ -790,7 +1025,7 @@ function Title_split_into_lines()
   local single_prob = 40
 
   if #GAME.title <= 11 then single_prob = 75 end
-  if #GAME.title >= 17 then single_prob = 10 end
+  if #GAME.title >= 17 then single_prob =  0 end
 
   if rand.odds(single_prob) then return GAME.title end
 
@@ -1007,9 +1242,9 @@ function Title_add_credit()
   local credit = rand.pick(CREDIT_LINES)
   local styles = rand.pick(CREDIT_STYLES)
 
-  local T = Title_get_normal_transform(2, 198, 8, 7)
+  local T = Title_get_normal_transform(2, 198, 28, 28)
 
--- Title_styled_string(T, "SN: AXNJEZZOKFMNOZP", styles)
+Title_styled_string(T, "0100010011100", styles)
 
   gui.title_load_image(284, 162, "data/logo1.tga")
 end
