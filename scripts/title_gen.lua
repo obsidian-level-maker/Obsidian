@@ -811,8 +811,8 @@ function Title_add_title_and_sub()
     }
 
     {
-      styles = { "00f:dd", "aaf:bb" }
-      alt    = { "aaf:dd", "00a:bb" }
+      styles = { "eee:dd", "fff:bb" }
+      alt    = { "fff:dd", "00a:99" }
 
       spacing = 0.45
     }
@@ -865,9 +865,13 @@ if line2 then line2 = string.upper(line2) end
   local style1 = info.styles
   local style2 = info.alt
 
-  if rand.odds(30*4) and sub_title_mode != "version" then
+  if rand.odds(30*0) and sub_title_mode != "version" then
     style1, style2 = style2, style1
   end
+
+
+gui.title_load_image(322, 0, "data/masks/fireblu.tga")
+
 
 
   Title_styled_string_centered(T, line1, style1)
