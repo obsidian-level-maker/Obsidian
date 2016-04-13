@@ -1295,6 +1295,26 @@ static rgb_color_t * title_pix;
 
 static rgb_color_t title_palette[256];
 
+typedef enum
+{
+	REND_Solid = 0,
+	REND_Textured,
+	REND_Gradient
+
+} title_rendermode_e;
+
+// the current drawing context
+static struct
+{
+	title_rendermode_e rendermode;
+
+	void Reset()
+	{
+		rendermode = REND_Solid;
+	}
+
+} title_drawctx;
+
 
 // simple cache for image loading
 static tga_image_c * title_last_tga;
@@ -1332,6 +1352,8 @@ int DM_title_create(lua_State *L)
 		title_pix[i] = bg;
 	}
 
+	title_drawctx.Reset();
+
 	return 0;
 }
 
@@ -1356,6 +1378,30 @@ int DM_title_free(lua_State *L)
 	}
 
 	return 0;
+}
+
+
+static bool TitleCacheImage(const char *filename)
+{
+	// keep the last image cached in memory
+	if (! (title_last_filename && strcmp(title_last_filename, filename) == 0))
+	{
+		if (title_last_tga)
+		{
+			delete title_last_tga;
+			StringFree(title_last_filename);
+			title_last_filename = NULL;
+		}
+
+		title_last_tga = TGA_LoadImage(filename);
+
+		if (! title_last_tga)
+			return false;
+
+		title_last_filename = StringDup(filename);
+	}
+
+	return true;
 }
 
 
@@ -1566,7 +1612,7 @@ static void TitleDrawCircle(int x, int y, int w, int h, rgb_color_t col)
 			continue;
 		}
 
-		if (title_last_tga && (col & 0xFFFFFF00) == 0xFFFFFF00)
+		if (title_drawctx.rendermode == REND_Textured && title_last_tga)
 		{
 			int px = (x / 3) % title_last_tga->width;
 			int py = (y / 3) % title_last_tga->height;
@@ -1853,23 +1899,8 @@ int DM_title_load_image(lua_State *L)
 
 	const char *filename = luaL_checkstring(L, 3);
 
-	// keep the last image cached in memory
-	if (! (title_last_filename && strcmp(title_last_filename, filename) == 0))
-	{
-		if (title_last_tga)
-		{
-			delete title_last_tga;
-			StringFree(title_last_filename);
-			title_last_filename = NULL;
-		}
-
-		title_last_tga = TGA_LoadImage(filename);
-
-		if (! title_last_tga)
-			luaL_error(L, "title_load_image: no such file: %s", filename);
-
-		title_last_filename = StringDup(filename);
-	}
+	if (! TitleCacheImage(filename))
+		luaL_error(L, "title_load_image: no such file: %s", filename);
 
 	TitleDrawImage(x, y, title_last_tga);
 
