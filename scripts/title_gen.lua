@@ -576,7 +576,7 @@ function Title_get_normal_transform(x, y, w, h)
 
   -- italics !!
   T.func = function(T, x, y)
-    return T.x + (x + y * 0.2) * T.w, T.y - y * T.h
+    return T.x + (x + y * 0.5 * T.h / T.w) * T.w, T.y - y * T.h
   end
 
   return T
@@ -816,7 +816,7 @@ function Title_add_title_and_sub()
     }
 
     {
-      styles = { "eee:dd", "fff:bb" }
+      styles = { "00f:dd", "fff:bb" }
       alt    = { "fff:dd", "00a:99" }
 
       spacing = 0.45
@@ -875,7 +875,7 @@ if line2 then line2 = string.upper(line2) end
   end
 
 
-gui.title_load_image(322, 0, "data/masks/shawn_r.tga")
+gui.title_load_image(322, 0, "data/masks/camo1.tga")
 
 
 
@@ -980,9 +980,9 @@ function Title_add_credit()
 
   local CREDIT_STYLES =
   {
-    {"000:33", "00a:11"}
+--  {"000:33", "00a:11"}
     {"000:33", "800:11"}
-    {"000:33", "555:11"}
+--  {"000:33", "555:11"}
   }
 
   local credit = rand.pick(CREDIT_LINES)
@@ -990,7 +990,7 @@ function Title_add_credit()
 
   local T = Title_get_normal_transform(2, 198, 8, 7)
 
-  Title_styled_string(T, "Serial number AXNJEZZOKFMNOZP", styles)
+-- Title_styled_string(T, "SN: AXNJEZZOKFMNOZP", styles)
 
   gui.title_load_image(284, 162, "data/logo1.tga")
 end
