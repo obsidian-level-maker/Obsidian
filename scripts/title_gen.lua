@@ -973,13 +973,13 @@ function Title_add_credit()
   {
     {"000:33", "00a:11"}
     {"000:33", "800:11"}
-    {"000:33", "665:11"}
+    {"000:33", "555:11"}
   }
 
   local credit = rand.pick(CREDIT_LINES)
   local styles = rand.pick(CREDIT_STYLES)
 
-  local T = Title_get_normal_transform(6, 198, 8, 7)
+  local T = Title_get_normal_transform(2, 198, 8, 7)
 
   Title_styled_string(T, "Serial number AXNJEZZOKFMNOZP", styles)
 
@@ -1008,5 +1008,7 @@ function Title_generate()
   Title_add_title_and_sub()
 
   gui.title_write("TITLEPIC")
+
+  gui.title_free()
 end
 

@@ -1336,6 +1336,29 @@ int DM_title_create(lua_State *L)
 }
 
 
+int DM_title_free(lua_State *L)
+{
+	// LUA: title_free()
+
+	if (title_pix)
+	{
+		delete[] title_pix;
+		title_pix = NULL;
+	}
+
+	if (title_last_tga)
+	{
+		delete title_last_tga;
+		title_last_tga = NULL;
+
+		StringFree(title_last_filename);
+		title_last_filename = NULL;
+	}
+
+	return 0;
+}
+
+
 static int TitleLookupPixel(int x, int y)
 {
 	x *= 3;
@@ -1428,6 +1451,18 @@ int DM_title_set_palette(lua_State *L)
 
 		title_palette[c] = MAKE_RGBA(r, g, b, 255);
 	}
+
+	return 0;
+}
+
+
+int DM_title_property(lua_State *L)
+{
+	// LUA: title_property(name, value)
+
+	const char *propname = luaL_checkstring(L, 1);
+
+	// TODO
 
 	return 0;
 }
