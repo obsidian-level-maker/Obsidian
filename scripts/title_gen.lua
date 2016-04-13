@@ -1250,6 +1250,39 @@ Title_styled_string(T, "0100010011100", styles)
 end
 
 
+--[[
+function process_raw_fonts()
+  local function update(CH)
+    gui.debugf("    points =\n")
+    gui.debugf("    {\n")
+
+    each P in CH.rpoints do
+      local x = P.x
+      local y = P.y
+
+      if x == nil and y == nil then
+        gui.debugf("      {}\n")
+        continue
+      end
+
+      x = (P.x - CH.rx[1]) / (CH.rx[2] - CH.rx[1])
+      y = (P.y - CH.ry[1]) / (CH.ry[2] - CH.ry[1])
+
+      gui.debugf("      { x=%1.4f, y=%1.4f }\n", x, y)
+    end
+
+    gui.debugf("    }\n")
+  end
+
+  each let,CH in TITLE_LETTER_SHAPES do
+    if CH.rpoints then
+      gui.debugf("RAW FONT '%s'\n", let)
+      update(CH)
+    end
+  end
+end
+--]]
+
 
 function Title_generate()
   assert(GAME.title)
