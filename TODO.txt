@@ -25,6 +25,7 @@ ______________________________________________________________________
 
 *  support for translation into other languages
    +  use _() and N_() where necessary
+   -  create TEMPLATE.txt
 
 *  better i18n support (esp. non-ASCII characters in filenames)
 
@@ -45,13 +46,14 @@ ______________________________________________________________________
    -  incorporate id method to build collision hulls
    -  support slopes
 
--  Hexen support
-
 -  Duke Nukem 3D
 
-?  HacX
-?  Chex Quest 3
+-  Hexen support
+
 ?  Harmony
+?  Wolfenstein 3D
+?  Chex Quest 3
+?  HacX
 
 
 ----------------------------------------------
@@ -89,6 +91,9 @@ ______________________________________________________________________
 -  closet that looks like a wall switch but opens a monsters closet
 
 -  allow monsters in liquids [ but never place items there ]
+
+-  review "svolume" and "innerpoint" usage
+   e.g. I think "walk_svol" would be a more useful metric
 
 ??  fix porches causing BIG height diffs
 
@@ -506,8 +511,6 @@ New Starting Logic
 
 V5 STUFF:
 
--  see why some traps or cages are empty
-
 +  Need logic to decide how to light up a room (windows vs wall
    lights vs ceilings lights etc).
 
@@ -515,10 +518,6 @@ V5 STUFF:
    values can be: "raise", "lower", "stair"
 
 -  get 'height' value into 'env' pick_skin() tables
-
--  IDEA: 'override' value for prefabs, default is zero.
-         when > 0, remove all other possible prefabs from the list
-         which have a lower value
 
 -  ability to enter room via an elevator
 
@@ -653,12 +652,6 @@ Intrusions:
    It's like a kind of window, except the intrusion is built
    as if it were part of the room you look into.  It may work
    best in Quake games where the intrusion is a 3D walkway.
-
-
-Facades:
--  ability to ensure both inner/outer are the same
-   [perhaps a room_theme setting]
-   [or: special keyword in building_walls]
 
 
 Quests:

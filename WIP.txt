@@ -3,6 +3,19 @@ WORK IN PROGRESS
 ================
 
 
+>>>  3 new title pics
+
+
+>>>  improve font for titlepic  [ e.g. shaded letters ]
+
+
+>>>  for images support alpha by only doing partial set of pixels
+
+
++  wad-fab loader / AJ-polygonator : fix offset on lines split by a node
+
+
+
 NEW LIGHTING:
 
 -  set ambient lighting for each area:
@@ -10,10 +23,6 @@ NEW LIGHTING:
      AMBIENT_LIGHT = A.lighting
 
 -  wad-fab loader : add "shadow" or "light_add" based on (SEC.light - 144)
-
-
-
->>>  3 new title pics
 
 
 
@@ -120,14 +129,6 @@ MISCELLANEOUS:
 
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
-
--  titlepic backgrounds (current and new) :
-   determine ones for official package, put rest in an addon
-
--  improve font for titlepic  [ e.g. shaded letters ]
-
--  review "svolume" and "innerpoint" usage
-   e.g. I think "walk_svol" would be a more useful metric
 
 
 
