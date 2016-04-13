@@ -1219,39 +1219,17 @@ gui.title_load_image(322, 0, "data/masks/camo1.tga")
   end
 
 
---Title_styled_string_centered(T, GAME.sub_title, info.alt)
+  Title_styled_string_centered(T, GAME.sub_title, info.alt)
 end
 
 
 
 function Title_add_credit()
-  local CREDIT_LINES =
-  {
-    "proudly bought to you by OBLIGE"
-    "another great OBLIGE production"
-    "fresh from the studios of OBLIGE"
-    "copyright MMXV: OBLIGE Level Maker"
-    "a new fun-packed wad by OBLIGE"
-    "revel in the OBLIGE experience"
-  }
+  gui.title_draw_rect(310, 190, 10, 10, "#000")
 
-  local CREDIT_STYLES =
-  {
---  {"000:33", "00a:11"}
---  {"000:33", "800:11"}
---  {"000:33", "555:11"}
-    {"00f:55", "eee:33"}
-  }
-
-  local credit = rand.pick(CREDIT_LINES)
-  local styles = rand.pick(CREDIT_STYLES)
-
-  local T = Title_get_normal_transform(2, 198, 45, 45)
-
-Title_styled_string(T, "567890", styles)
-
---gui.title_load_image(284, 162, "data/logo1.tga")
+  gui.title_load_image(285, 163, "data/logo1.tga")
 end
+
 
 
 function process_raw_fonts()
@@ -1280,6 +1258,9 @@ function process_raw_fonts()
     end
 
     gui.debugf("    }\n")
+
+    CH.rx = nil
+    CH.ry = nil
   end
 
   local keys = table.keys(TITLE_LETTER_SHAPES)
@@ -1293,6 +1274,7 @@ function process_raw_fonts()
     end
   end
 end
+
 
 
 function Title_generate()
@@ -1309,13 +1291,13 @@ process_raw_fonts()
   gui.title_set_palette(GAME.PALETTES.normal)
 
 
---  Title_add_background()
+  Title_add_background()
 
   gui.title_write("INTERPIC")
 
 
   Title_add_credit()
---Title_add_title_and_sub()
+  Title_add_title_and_sub()
 
   gui.title_write("TITLEPIC")
 
