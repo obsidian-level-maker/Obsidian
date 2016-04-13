@@ -534,28 +534,28 @@ TITLE_LETTER_SHAPES =
   {
     width = 0.6
     rx = { 82,145 }
-    ry = { 152,48 }
+    ry = { 150,48 }
     points =
     {
-      { x=118, y=152 }
+      { x=118, y=150 }
       { x=108, y=149 }
-      { x= 92, y=141 }
-      { x= 85, y=121 }
+      { x= 92, y=142 }
+      { x= 85, y=122 }
 
       { x= 84, y=95 }
-      { x= 87, y=65 }
-      { x=100, y=50 }
+      { x= 87, y=70 }
+      { x=100, y=54 }
 
-      { x=118, y=43 }
+      { x=118, y=48 }
       { x=126, y=48 }
-      { x=137, y=55 }
-      { x=145, y=73 }
+      { x=137, y=54 }
+      { x=145, y=70 }
 
       { x=150, y=95 }
-      { x=145, y=124 }
-      { x=136, y=143 }
-      { x=126, y=150 }
-      { x=118, y=152 }
+      { x=145, y=122 }
+      { x=136, y=142 }
+      { x=126, y=149 }
+      { x=118, y=150 }
     }
   }
 
@@ -566,20 +566,23 @@ TITLE_LETTER_SHAPES =
     ry = { 152,48 }
     points =
     {
-      { x=220,151 }
-      { x=220, 48 }
-      { x=190, 53 }
+      { x=220,y=151 }
+      { x=220,y= 48 }
+      { x=190,y= 63 }
+      {}
+      { x=184,y=152 }
+      { x=249,y=152 }
     }
   }
 
   ["2"] =
   {
     width = 0.6
-    rx = { 286,347 }
-    ry = { 152,48 }
+    rx = { 285,347 }
+    ry = { 152,46 }
     points =
     {
-      { x=285, y=52 }
+      { x=285, y=54 }
       { x=302, y=46 }
       { x=320, y=46 }
       { x=334, y=51 }
@@ -596,7 +599,7 @@ TITLE_LETTER_SHAPES =
   {
     width = 0.6
     rx = { 388,450 }
-    ry = { 152,48 }
+    ry = { 152,42 }
     points =
     {
       { x=388, y=42 }
@@ -621,7 +624,7 @@ TITLE_LETTER_SHAPES =
   ["4"] =
   {
     width = 0.6
-    rx = { 490,556 }
+    rx = { 490,558 }
     ry = { 152,48 }
     points =
     {
@@ -635,13 +638,13 @@ TITLE_LETTER_SHAPES =
   ["5"] =
   {
     width = 0.6
-    rx = { 82,145 }
+    rx = { 82,142 }
     ry = { 341,234 }
     points =
     {
       { x=137,y=232 }
       { x=88, y=232 }
-      { x=88, y=275 }
+      { x=88, y=278 }
       { x=102,y=273 }
       { x=115,y=273 }
       { x=134,y=282 }
@@ -658,11 +661,11 @@ TITLE_LETTER_SHAPES =
   ["6"] =
   {
     width = 0.6
-    rx = { 184,249 }
-    ry = { 341,234 }
+    rx = { 185,249 }
+    ry = { 341,231 }
     points =
     {
-      { x=245,y=235 }
+      { x=245,y=238 }
       { x=231,y=231 }
       { x=221,y=231 }
       { x=204,y=237 }
@@ -670,7 +673,7 @@ TITLE_LETTER_SHAPES =
       { x=185,y=276 }
       { x=185,y=292 }
       { x=189,y=319 }
-      { x=202,y=236 }
+      { x=202,y=336 }
       { x=214,y=340 }
       { x=223,y=340 }
       { x=242,y=330 }
@@ -687,7 +690,7 @@ TITLE_LETTER_SHAPES =
   ["7"] =
   {
     width = 0.6
-    rx = { 286,347 }
+    rx = { 285,347 }
     ry = { 341,232 }
     points =
     {
@@ -700,7 +703,7 @@ TITLE_LETTER_SHAPES =
   ["8"] =
   {
     width = 0.6
-    rx = { 450,388 }
+    rx = { 388,451 }
     ry = { 340,231 }
     points =
     {
@@ -713,7 +716,7 @@ TITLE_LETTER_SHAPES =
 
       { x=427,y=231 }
       { x=415,y=231 }
-      { x=398,y=238 }
+      { x=399,y=239 }
       { x=392,y=250 }
       { x=392,y=261 }
       { x=400,y=272 }
@@ -738,8 +741,8 @@ TITLE_LETTER_SHAPES =
   ["9"] =
   {
     width = 0.6
-    rx = { 490,556 }
-    ry = { 341,234 }
+    rx = { 490,554 }
+    ry = { 339,232 }
     points =
     {
       { x=494,y=335 }
@@ -1216,7 +1219,7 @@ gui.title_load_image(322, 0, "data/masks/camo1.tga")
   end
 
 
-  Title_styled_string_centered(T, GAME.sub_title, info.alt)
+--Title_styled_string_centered(T, GAME.sub_title, info.alt)
 end
 
 
@@ -1235,28 +1238,28 @@ function Title_add_credit()
   local CREDIT_STYLES =
   {
 --  {"000:33", "00a:11"}
-    {"000:33", "800:11"}
+--  {"000:33", "800:11"}
 --  {"000:33", "555:11"}
+    {"00f:55", "eee:33"}
   }
 
   local credit = rand.pick(CREDIT_LINES)
   local styles = rand.pick(CREDIT_STYLES)
 
-  local T = Title_get_normal_transform(2, 198, 28, 28)
+  local T = Title_get_normal_transform(2, 198, 45, 45)
 
-Title_styled_string(T, "0100010011100", styles)
+Title_styled_string(T, "567890", styles)
 
-  gui.title_load_image(284, 162, "data/logo1.tga")
+--gui.title_load_image(284, 162, "data/logo1.tga")
 end
 
 
---[[
 function process_raw_fonts()
   local function update(CH)
     gui.debugf("    points =\n")
     gui.debugf("    {\n")
 
-    each P in CH.rpoints do
+    each P in CH.points do
       local x = P.x
       local y = P.y
 
@@ -1268,20 +1271,28 @@ function process_raw_fonts()
       x = (P.x - CH.rx[1]) / (CH.rx[2] - CH.rx[1])
       y = (P.y - CH.ry[1]) / (CH.ry[2] - CH.ry[1])
 
+      x = x * 0.6
+
+      P.x = x
+      P.y = y
+
       gui.debugf("      { x=%1.4f, y=%1.4f }\n", x, y)
     end
 
     gui.debugf("    }\n")
   end
 
-  each let,CH in TITLE_LETTER_SHAPES do
-    if CH.rpoints then
+  local keys = table.keys(TITLE_LETTER_SHAPES)
+  table.sort(keys)
+
+  each let in keys do
+    local CH = TITLE_LETTER_SHAPES[let]
+    if CH.rx then
       gui.debugf("RAW FONT '%s'\n", let)
       update(CH)
     end
   end
 end
---]]
 
 
 function Title_generate()
@@ -1290,18 +1301,21 @@ function Title_generate()
   assert(GAME.PALETTES.normal)
 
 
+process_raw_fonts()
+
+
   gui.title_create(320, 200, "#000")
 
   gui.title_set_palette(GAME.PALETTES.normal)
 
 
-  Title_add_background()
+--  Title_add_background()
 
   gui.title_write("INTERPIC")
 
 
   Title_add_credit()
-  Title_add_title_and_sub()
+--Title_add_title_and_sub()
 
   gui.title_write("TITLEPIC")
 
