@@ -782,7 +782,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 		g->end();
 	}
 
-	close_but = new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, "Close");
+	close_but = new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
 	close_but->labelfont(FL_HELVETICA_BOLD);
 	close_but->labelsize(FL_NORMAL_SIZE + 2);
 	close_but->callback(callback_Quit, this);

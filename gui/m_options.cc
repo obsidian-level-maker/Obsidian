@@ -489,7 +489,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	int bx = W - kf_w(40) - bw;
 	int by = H - dh/2 - bh/2;
 
-	Fl_Button *button = new Fl_Button(bx, by, bw, bh, _("Close"));
+	Fl_Button *button = new Fl_Button(bx, by, bw, bh, fl_close);
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 

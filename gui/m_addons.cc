@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -469,7 +469,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	int bx = bw;
 	int by = H - dh/2 - bh/2 + 2;
 
-	Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, "Close");
+	Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, fl_close);
 	apply_but->callback(callback_Quit, this);
 
 
