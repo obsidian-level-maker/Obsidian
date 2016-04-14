@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2014 Andrew Apted
+//  Copyright (C) 2014-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -271,7 +271,7 @@ public:
 
 	void MarkSource(const char *where)
 	{
-		char *full = StringPrintf(" Text :  [%s]", where);
+		char *full = StringPrintf("[ %s ]", where);
 
 		conf_disp->copy_label(full);
 
@@ -287,9 +287,9 @@ public:
 		int len = strlen(filename);
 
 		if (len < 42)
-			full = StringPrintf(" Text :  [%s]", filename);
+			full = StringPrintf("[ %s ]", filename);
 		else
-			full = StringPrintf(" Text :  [%.10s....%s]", filename, filename + (len - 30));
+			full = StringPrintf("[ %.10s....%s ]", filename, filename + (len - 30));
 
 		conf_disp->copy_label(full);
 
@@ -344,7 +344,7 @@ public:
 
 		Enable();
 
-		MarkSource("CURRENT SETTINGS");
+		MarkSource(_("CURRENT SETTINGS"));
 	}
 
 	void ReplaceWithString(const char *new_text)
@@ -360,7 +360,7 @@ public:
 	{
 		Fl_Native_File_Chooser  chooser;
 
-		chooser.title("Pick file to save to");
+		chooser.title(_("Pick file to save to"));
 		chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 		chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
 		chooser.filter("Text files\t*.txt");
@@ -406,9 +406,9 @@ public:
 		if (res)
 		{
 			const char *reason = (res == 1 && err_no) ? strerror(err_no) :
-								 "Error writing to file.";
+								 _("Error writing to file.");
 
-			DLG_ShowError("Unable to save the file:\n\n%s", reason);
+			DLG_ShowError(_("Unable to save the file:\n\n%s"), reason);
 		}
 		else
 		{
@@ -471,7 +471,7 @@ public:
 	{
 		Fl_Native_File_Chooser chooser;
 
-		chooser.title("Select file to load");
+		chooser.title(_("Select file to load"));
 		chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
 		// These filters (in FLTK's own browser at least) are a choice
@@ -493,7 +493,7 @@ public:
 				LogPrintf("Error choosing load file:\n");
 				LogPrintf("   %s\n", chooser.errmsg());
 
-				DLG_ShowError("Unable to load the file:\n\n%s", chooser.errmsg());
+				DLG_ShowError(_("Unable to load the file:\n\n%s"), chooser.errmsg());
 				return NULL;
 
 			case 1:  // cancelled
@@ -516,7 +516,7 @@ public:
 
 		if (! fp)
 		{
-			DLG_ShowError("Cannot open: %s\n\n%s", filename, strerror(errno));
+			DLG_ShowError(_("Cannot open: %s\n\n%s"), filename, strerror(errno));
 			return false;
 		}
 
@@ -524,7 +524,7 @@ public:
 
 		if (! ExtractConfigData(fp, text_buf))
 		{
-			DLG_ShowError("No config found in file.");
+			DLG_ShowError(_("No config found in file."));
 			fclose(fp);
 			return false;
 		}
@@ -554,7 +554,7 @@ private:
 			else
 			{
 				ReplaceWithString(text);
-				MarkSource("PASTED TEXT");
+				MarkSource(_("PASTED TEXT"));
 			}
 			return 1;
 		}
@@ -739,8 +739,8 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 	int conf_x = W - conf_w - kf_w(10);
 	int conf_y = kf_h(30);
 
-	conf_disp = new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, " Reading Config....");
-	conf_disp->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+	conf_disp = new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, "");
+	conf_disp->align(Fl_Align(FL_ALIGN_TOP));
 	conf_disp->buffer(text_buf);
 	conf_disp->textfont(FL_COURIER);
 	conf_disp->textsize(12 + KF * 2);
@@ -758,24 +758,25 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 		Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
 		g->resizable(NULL);
 
-		load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h, "Load");
+		load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
 		load_but->callback(callback_Load, this);
 		load_but->shortcut(FL_CTRL + 'l');
 
-		o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40), "(can be WAD or PAK)");
+		o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40), _("(can be WAD or PAK)"));
 		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
 		o->labelsize(small_font_size);
 
-		recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h, "   Recent @-3>");
+		const char *recent_title = StringPrintf("   %s @-3>", _("Recent"));
+		recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h, recent_title);
 
-		save_but = new Fl_Button(button_x, kf_h(165), button_w, button_h, "Save");
+		save_but = new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
 		save_but->callback(callback_Save, this);
 		save_but->shortcut(FL_CTRL + 's');
 
-		use_but = new Fl_Button(button_x, kf_h(225), button_w, button_h, "Use");
+		use_but = new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
 		use_but->callback(callback_Use, this);
 
-		o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50), "Note: this will replace\nall current settings!");
+		o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50), _("Note: this will replace\nall current settings!"));
 		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
 		o->labelsize(small_font_size);
 
@@ -799,7 +800,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 		Fl_Group *g = new Fl_Group(conf_x, base_y, conf_w, H - base_y);
 		g->resizable(NULL);
 
-		o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30), " Clipboard Operations");
+		o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30), _(" Clipboard Operations"));
 		o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
 		o->labelsize(small_font_size);
 
@@ -809,21 +810,21 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 		button_w = kf_w(80);
 		button_h = kf_h(25);
 
-		cut_but = new Fl_Button(cx, base_y, button_w, button_h, "Cut");
+		cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
 		cut_but->labelsize(small_font_size);
 		cut_but->shortcut(FL_CTRL + 'x');
 		cut_but->callback(callback_Cut, this);
 
 		cx += kf_w(115);
 
-		copy_but = new Fl_Button(cx, base_y, button_w, button_h, "Copy");
+		copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
 		copy_but->labelsize(small_font_size);
 		copy_but->shortcut(FL_CTRL + 'c');
 		copy_but->callback(callback_Copy, this);
 
 		cx += kf_w(115);
 
-		paste_but = new Fl_Button(cx, base_y, button_w, button_h, "Paste");
+		paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
 		paste_but->labelsize(small_font_size);
 		paste_but->shortcut(FL_CTRL + 'v');
 		paste_but->callback(callback_Paste, this);
@@ -854,7 +855,7 @@ void DLG_ManageConfig(void)
 		int manage_w = kf_w(600);
 		int manage_h = kf_h(380);
 
-		config_window = new UI_Manage_Config(manage_w, manage_h, "OBLIGE Config Manager");
+		config_window = new UI_Manage_Config(manage_w, manage_h, _("OBLIGE Config Manager"));
 	}
 
 	config_window->want_quit = false;
