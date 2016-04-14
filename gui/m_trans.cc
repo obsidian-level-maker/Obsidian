@@ -31,7 +31,6 @@
 #include "lib_util.h"
 
 #include "main.h"
-#include "m_lua.h"
 #include "m_trans.h"
 
 #ifndef WIN32
@@ -40,16 +39,21 @@
 
 
 //
-// NOTE WELL:
-//    We assume that strings retrieved from the Lua state will
-//    always be valid, e.g. they will NEVER be garbage collected.
+// NOTE :
+//    We assume that any string retrieved from our 'trans_store'
+//    will always be valid.  Since we never change anything in it
+//    once the PO file is loaded, that assumptions should hold.
 //
-//    This is probably true, as once all the language strings are
-//    loaded the Lua state is never written to again.
-//
-//    HOWEVER if that proves to be false, then using Lua as our
-//    string store will have to be abandoned.
-//
+#include <map>
+
+static std::map<std::string, std::string> trans_store;
+
+
+// current Options setting
+const char * t_language = N_("AUTO");
+
+
+//----------------------------------------------------------------------
 
 
 // largest string we can load
@@ -395,13 +399,6 @@
 #endif
 
 
-// current Options setting
-const char * t_language = N_("AUTO");
-
-// the Lua state used to store translation strings
-static lua_State * trans_store;
-
-
 static const char * remove_codeset(const char *langcode)
 {
 	char buf[256];
@@ -702,19 +699,6 @@ void Trans_ParseLangLine(char *line)
 }
 
 
-void Trans_CreateStorage()
-{
-	trans_store = luaL_newstate();
-
-	if (! trans_store)
-		Main_FatalError("Failed to create storage for translations.\n");
-
-	// create the TRANS table
-	lua_newtable(trans_store);
-	lua_setglobal(trans_store, "TRANS");
-}
-
-
 void Trans_AddMessage(const char *before, const char *after)
 {
 	// an empty before string has special meaning in a PO file,
@@ -729,12 +713,7 @@ void Trans_AddMessage(const char *before, const char *after)
 	if (after[0] == 0)
 		return;
 
-	lua_getglobal(trans_store, "TRANS");
-
-	lua_pushstring(trans_store, after);
-	lua_setfield(trans_store, -2, before);
-
-	lua_pop(trans_store, 1);
+	trans_store[before] = std::string(after);
 }
 
 
@@ -946,9 +925,6 @@ void Trans_Init()
 	}
 #endif
 
-	// create a Lua state to store messages in
-	Trans_CreateStorage();
-
 	/* read the list of languages */
 
 	char *path = StringPrintf("%s/language/LANGS.txt", install_dir);
@@ -1081,25 +1057,12 @@ const char * ob_gettext(const char *s)
 	return mucked_up_string(s);
 #endif
 
-	if (trans_store)
-	{
-		lua_getglobal(trans_store, "TRANS");
+	std::map<std::string, std::string>::iterator IT;
 
-		lua_getfield(trans_store, -1, s);
+	IT = trans_store.find(s);
 
-		const char *t = NULL;
-
-		// check if the message is known
-		if (! lua_isnil(trans_store, -1))
-		{
-			t = lua_tolstring(trans_store, -1, NULL);
-		}
-
-		lua_pop(trans_store, 2);
-
-		if (t)
-			return t;   // OK !
-	}
+	if (IT != trans_store.end())
+		return IT->second.c_str();
 
 	return s;
 }
