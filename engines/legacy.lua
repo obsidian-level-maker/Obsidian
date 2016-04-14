@@ -38,7 +38,8 @@ end
 
 OB_ENGINES["legacy"] =
 {
-  label = "Legacy"
+  label = _("Legacy")
+
   extends = "boom"
 
   game = { doom1=1, doom2=1 }

@@ -34,7 +34,7 @@ end
 
 OB_ENGINES["fitz"] =
 {
-  label = "FitzQuake"
+  label = _("FitzQuake")
 
   game = "quake"
 

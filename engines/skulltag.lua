@@ -94,7 +94,7 @@ end
 
 OB_ENGINES["skulltag"] =
 {
-  label = "Skulltag"
+  label = _("Skulltag")
 
   extends = "zdoom"
 

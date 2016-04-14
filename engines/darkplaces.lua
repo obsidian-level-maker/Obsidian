@@ -33,7 +33,7 @@ end
 
 OB_ENGINES["darkplaces"] =
 {
-  label = "DarkPlaces"
+  label = _("DarkPlaces")
 
   game = "quake"
 

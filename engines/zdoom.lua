@@ -53,7 +53,7 @@ ZDOOM.PARAMETERS =
 
 OB_ENGINES["zdoom"] =
 {
-  label = "ZDoom"
+  label = _("ZDoom")
 
   extends = "boom"
 
@@ -94,7 +94,7 @@ end
 
 OB_ENGINES["gzdoom"] =
 {
-  label = "GZDoom"
+  label = _("GZDoom")
   priority = -1  -- keep at bottom with ZDoom
 
   extends = "zdoom"

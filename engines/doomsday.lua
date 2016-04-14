@@ -20,7 +20,7 @@
 
 OB_ENGINES["doomsday"] =
 {
-  label = "Doomsday"
+  label = _("Doomsday")
 
   -- not yet BOOM compatible
 

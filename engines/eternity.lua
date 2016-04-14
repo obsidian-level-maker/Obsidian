@@ -22,7 +22,7 @@ ETERNITY = { }
 
 OB_ENGINES["eternity"] =
 {
-  label = "Eternity"
+  label = _("Eternity")
 
   extends = "boom"
   

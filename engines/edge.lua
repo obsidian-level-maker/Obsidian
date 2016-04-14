@@ -140,7 +140,7 @@ end
 
 OB_ENGINES["edge"] =
 {
-  label = "EDGE"
+  label = _("EDGE")
 
   extends = "boom"
 

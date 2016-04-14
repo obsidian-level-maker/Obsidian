@@ -39,7 +39,8 @@ end
 
 OB_ENGINES["odamex"] =
 {
-  label = "Odamex"
+  label = _("Odamex")
+
   extends = "boom"
 
   game = { doom1=1, doom2=1 }
