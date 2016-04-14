@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -49,7 +49,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	int cy = Y + y_step;
 
 
-	const char *heading_text = "Game Settings";
+	const char *heading_text = _("Game Settings");
 
 	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
@@ -75,7 +75,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy += game->h() + y_step;
 
 
-	engine = new UI_RChoice(cx, cy, cw, ch, "Engine: ");
+	engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
 	engine->align(FL_ALIGN_LEFT);
 	engine->selection_color(FL_BLUE);
 	engine->callback(callback_Engine, this);
@@ -85,7 +85,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy += engine->h() + y_step * 2;
 
 
-	mode = new UI_RChoice(cx, cy, cw, ch, "Mode: ");
+	mode = new UI_RChoice(cx, cy, cw, ch, _("Mode: "));
 	mode->align(FL_ALIGN_LEFT);
 	mode->selection_color(FL_BLUE);
 	mode->callback(callback_Mode, this);
@@ -97,7 +97,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy += mode->h() + y_step;
 
 
-	length = new UI_RChoice(cx, cy, cw, ch, "Length: ");
+	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
 	length->align(FL_ALIGN_LEFT);
 	length->selection_color(FL_BLUE);
 	length->callback(callback_Length, this);
@@ -214,20 +214,20 @@ bool UI_Game::ParseValue(const char *key, const char *value)
 
 const char * UI_Game::mode_syms[] =
 {
-	"sp",   "Single Player",
-	"coop", "Co-op",
-///	"dm",   "Deathmatch",
-///	"ctf",  "Capture Flag",
+	"sp",   N_("Single Player"),
+	"coop", N_("Co-op"),
+///	"dm",   N_("Deathmatch"),
+///	"ctf",  N_("Capture Flag"),
 
 	NULL, NULL
 };
 
 const char * UI_Game::length_syms[] =
 {
-	"single",  "Single Level",
-	"few",     "A Few Maps",
-	"episode", "One Episode",
-	"game",    "Full Game",
+	"single",  N_("Single Level"),
+	"few",     N_("A Few Maps"),
+	"episode", N_("One Episode"),
+	"game",    N_("Full Game"),
 
 	NULL, NULL
 };
@@ -237,7 +237,7 @@ void UI_Game::setup_Mode()
 {
 	for (int i = 0; mode_syms[i]; i += 2)
 	{
-		mode->AddPair(mode_syms[i], mode_syms[i+1]);
+		mode->AddPair(mode_syms[i], _(mode_syms[i+1]));
 		mode->ShowOrHide(mode_syms[i], 1);
 	}
 }
@@ -247,7 +247,7 @@ void UI_Game::setup_Length()
 {
 	for (int i = 0; length_syms[i]; i += 2)
 	{
-		length->AddPair(length_syms[i], length_syms[i+1]);
+		length->AddPair(length_syms[i], _(length_syms[i+1]));
 		length->ShowOrHide(length_syms[i], 1);
 	}
 }

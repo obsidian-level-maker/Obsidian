@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -50,7 +50,7 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	int cx = X + W * 0.42;
 	int cy = Y + y_step;
 
-	const char *heading_text = "Level Architecture";
+	const char *heading_text = _("Level Architecture");
 
 	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
@@ -66,7 +66,7 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	int cw = W * 0.54;
 	int ch = kf_h(24);
 
-	size = new UI_RChoice(cx, cy, cw, ch, "Size: ");
+	size = new UI_RChoice(cx, cy, cw, ch, _("Size: "));
 	size->align(FL_ALIGN_LEFT);
 	size->selection_color(MY_GREEN);
 	size->callback(callback_Size, this);
@@ -78,7 +78,7 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	cy += size->h() + y_step;
 
 
-	theme = new UI_RChoice(cx, cy, cw, ch, "Theme: ");
+	theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
 	theme->align(FL_ALIGN_LEFT);
 	theme->selection_color(MY_GREEN);
 	theme->callback(callback_Theme, this);
@@ -88,7 +88,7 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	cy += theme->h() + y_step * 2;
 
 
-	outdoors = new UI_RChoice(cx, cy, cw, ch, "Outdoors: ");
+	outdoors = new UI_RChoice(cx, cy, cw, ch, _("Outdoors: "));
 	outdoors->align(FL_ALIGN_LEFT);
 	outdoors->selection_color(MY_GREEN);
 	outdoors->callback(callback_Outdoors, this);
@@ -100,7 +100,7 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	cy += outdoors->h() + y_step;
 
 
-	caves = new UI_RChoice(cx, cy, cw, ch, "Caves: ");
+	caves = new UI_RChoice(cx, cy, cw, ch, _("Caves: "));
 	caves->align(FL_ALIGN_LEFT);
 	caves->selection_color(MY_GREEN);
 	caves->callback(callback_Caves, this);
@@ -221,14 +221,14 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 
 const char * UI_Level::size_syms[] =
 {
-	"small",   "Small",
-	"regular", "Regular",
-	"large",   "Large",
-	"extreme", "Extreme",
+	"small",   N_("Small"),
+	"regular", N_("Regular"),
+	"large",   N_("Large"),
+	"extreme", N_("Extreme"),
 
-	"prog",     "Progressive",
-	"epi",      "Episodic",
-	"mixed",    "Mix It Up",
+	"prog",    N_("Progressive"),
+	"epi",     N_("Episodic"),
+	"mixed",   N_("Mix It Up"),
 
 	NULL, NULL
 };
@@ -238,15 +238,15 @@ const char * UI_Level::outdoor_syms[] =
 {
 	// also used for Caves
 
-	"none",   "NONE",
-	"rare",   "Rare",
-	"few",    "Few",
-	"less",   "Less",
-	"some",   "Some",
-	"more",   "More",
-	"heaps",  "Heaps",
+	"none",   N_("NONE"),
+	"rare",   N_("Rare"),
+	"few",    N_("Few"),
+	"less",   N_("Less"),
+	"some",   N_("Some"),
+	"more",   N_("More"),
+	"heaps",  N_("Heaps"),
 
-	"mixed",  "Mix It Up",
+	"mixed",  N_("Mix It Up"),
 
 	NULL, NULL
 };
@@ -256,7 +256,7 @@ void UI_Level::setup_Size()
 {
 	for (int i = 0; size_syms[i]; i += 2)
 	{
-		size->AddPair(size_syms[i], size_syms[i+1]);
+		size->AddPair(size_syms[i], _(size_syms[i+1]));
 		size->ShowOrHide(size_syms[i], 1);
 	}
 }
@@ -266,7 +266,7 @@ void UI_Level::setup_Outdoors()
 {
 	for (int i = 0; outdoor_syms[i]; i += 2)
 	{
-		outdoors->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
+		outdoors->AddPair(outdoor_syms[i], _(outdoor_syms[i+1]));
 		outdoors->ShowOrHide(outdoor_syms[i], 1);
 	}
 }
@@ -276,7 +276,7 @@ void UI_Level::setup_Caves()
 {
 	for (int i = 0; outdoor_syms[i]; i += 2)
 	{
-		caves->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
+		caves->AddPair(outdoor_syms[i], _(outdoor_syms[i+1]));
 		caves->ShowOrHide(outdoor_syms[i], 1);
 	}
 }
