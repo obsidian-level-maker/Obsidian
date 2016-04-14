@@ -178,9 +178,9 @@ ZDOOM_MARINE.MONSTERS =
 
 ZDOOM_MARINE.CHOICES =
 {
-  "plenty",  "Plenty",
-  "scarce",  "Scarce",
-  "heaps",   "Heaps",
+  "plenty", _("Plenty"),
+  "scarce", _("Scarce"),
+  "heaps",  _("Heaps"),
 }
 
 ZDOOM_MARINE.FACTORS =
@@ -213,7 +213,7 @@ end
 
 OB_MODULES["zdoom_marines"] =
 {
-  label = "ZDoom Marines"
+  label = _("ZDoom Marines")
 
   game = { doom1=1, doom2=1 }
   playmode = { sp=1, coop=1 }
@@ -233,7 +233,7 @@ OB_MODULES["zdoom_marines"] =
   {
     qty =
     {
-      label = "Default Quantity"
+      label = _("Default Quantity")
       choices = ZDOOM_MARINE.CHOICES
     }
   }
@@ -245,14 +245,14 @@ OB_MODULES["zdoom_marines"] =
 
 ZDOOM_MARINE.CTL_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "insane",  "INSANE",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plenty"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "insane",  _("INSANE"),
 }
 
 -- these probabilities are lower than in the Monster Control module
@@ -289,7 +289,7 @@ end
 
 OB_MODULES["zdoom_marine_control"] =
 {
-  label = "ZDoom Marines : Fine Control"
+  label = _("ZDoom Marines : Fine Control")
 
   mod = "zdoom_marines"
 

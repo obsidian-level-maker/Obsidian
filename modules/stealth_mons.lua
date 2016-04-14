@@ -226,9 +226,9 @@ STEALTH.EDGE_IDS =
 
 STEALTH.CHOICES =
 {
-  "normal", "Normal",
-  "less",   "Less",
-  "more",   "More",
+  "normal", _("Normal"),
+  "less",   _("Less"),
+  "more",   _("More"),
 }
 
 
@@ -259,7 +259,7 @@ end
 
 OB_MODULES["stealth_mons"] =
 {
-  label = "Stealth Monsters"
+  label = _("Stealth Monsters")
 
   game = { doom1=1, doom2=1 }
   playmode = { sp=1, coop=1 }
@@ -279,7 +279,7 @@ OB_MODULES["stealth_mons"] =
   {
     qty =
     {
-      label = "Default Quantity"
+      label = _("Default Quantity")
       choices = STEALTH.CHOICES
     }
   }
@@ -291,14 +291,14 @@ OB_MODULES["stealth_mons"] =
 
 STEALTH.CONTROL_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "insane",  "INSANE",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plenty"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "insane",  _("INSANE"),
 }
 
 STEALTH.CONTROL_PROBS =
@@ -332,7 +332,7 @@ end
 
 OB_MODULES["stealth_mon_control"] =
 {
-  label = "Stealth Monsters : Fine Control"
+  label = _("Stealth Monsters : Fine Control")
 
   mod = "stealth_mons"
 
