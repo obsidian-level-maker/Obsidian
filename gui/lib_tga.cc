@@ -325,8 +325,6 @@ tga_image_c * TGA_LoadImage (const char *path)
 	}
 	else if (targa_header.image_type == TGA_INDEXED_RLE)   // Runlength encoded colormapped image
 	{
-		rgb_color_t col = MAKE_RGBA(0, 0, 0, 0);
-
 		byte packet_header, packet_size;
 
 		for (int y = height-1 ; y >= 0 ; y--)
