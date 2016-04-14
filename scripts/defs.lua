@@ -43,10 +43,14 @@ OB_ENGINES = {}
 OB_MODULES = {}
 
 
+-- internationalization / localization
+function _(s) return gui.gettext(s) end
+
+
 -- the default engine (basically Vanilla + limit removing)
 OB_ENGINES["nolimit"] =
 {
-  label = "Limit Removing"
+  label = _("Limit Removing")
   priority = 95
 }
 
@@ -54,19 +58,19 @@ OB_ENGINES["nolimit"] =
 -- special theme types, usable by all games
 OB_THEMES["original"] =
 {
-  label = "As Original"
+  label = _("As Original")
   priority = -80
 }
 
 OB_THEMES["mixed"] =
 {
-  label = "A Bit Mixed"
+  label = _("A Bit Mixed")
   priority = -85,
 }
 
 OB_THEMES["jumble"] =
 {
-  label = "Jumbled Up"
+  label = _("Jumbled Up")
   priority = -90
 }
 

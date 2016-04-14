@@ -2700,49 +2700,49 @@ HEXEN.NAMES =
 
 UNFINISHED["x_dungeon"] =
 {
-  label = "Dungeon"
+  label = _("Dungeon")
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
 UNFINISHED["x_element"] =
 {
-  label = "Elemental"
+  label = _("Elemental")
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
 UNFINISHED["x_wild"] =
 {
-  label = "Wilderness"
+  label = _("Wilderness")
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
 UNFINISHED["x_cave"] =
 {
-  label = "Cave"
+  label = _("Cave")
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
 
 UNFINISHED["x_ice"] =
 {
-  label = "Ice"
+  label = _("Ice")
   name_theme = "GOTHIC"
   mixed_prob = 10
 }
 
 UNFINISHED["x_swamp"] =
 {
-  label = "Swamp"
+  label = _("Swamp")
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
 
 UNFINISHED["x_village"] =
 {
-  label = "Village"
+  label = _("Village")
   name_theme = "URBAN"
   mixed_prob = 20
 }

@@ -2,7 +2,7 @@
 --  HERETIC THEMES
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -388,8 +388,8 @@ HERETIC.ROOMS =
 
 OB_THEMES["h_urban"] =
 {
+  label = _("Urban")
   game = "heretic"
-  label = "Urban"
   name_theme = "URBAN"
   mixed_prob = 50
 }
@@ -397,8 +397,8 @@ OB_THEMES["h_urban"] =
 
 OB_THEMES["h_castle"] =
 {
+  label = _("Castle")
   game = "heretic"
-  label = "Castle"
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
