@@ -373,7 +373,7 @@ public:
 				LogPrintf("Error choosing save file:\n");
 				LogPrintf("   %s\n", chooser.errmsg());
 
-				DLG_ShowError("Unable to save the file:\n\n%s", chooser.errmsg());
+				DLG_ShowError(_("Unable to save the file:\n\n%s"), chooser.errmsg());
 				return NULL;
 
 			case 1:  // cancelled

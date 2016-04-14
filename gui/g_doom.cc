@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -201,7 +201,7 @@ bool DM_StartWAD(const char *filename)
 {
 	if (! WAD_OpenWrite(filename))
 	{
-		DLG_ShowError("Unable to create wad file:\n%s", strerror(errno));
+		DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
 		return false;
 	}
 

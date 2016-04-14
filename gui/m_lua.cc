@@ -902,7 +902,7 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0, const char *
 
 		// this will appear in the log file too
 
-		DLG_ShowError("Script Error: %s", err_msg);
+		DLG_ShowError(_("Script Error: %s"), err_msg);
 
 		lua_pop(LUA_ST, 2);  // ob_traceback, message
 		return false;
