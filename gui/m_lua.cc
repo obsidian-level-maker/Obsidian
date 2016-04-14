@@ -793,7 +793,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "title_free",        DM_title_free },
 	{ "title_write",       DM_title_write },
 	{ "title_set_palette", DM_title_set_palette },
-	{ "title_property",    DM_title_property },
+	{ "title_prop",        DM_title_property },
 	{ "title_draw_rect",   DM_title_draw_rect },
 	{ "title_draw_line",   DM_title_draw_line },
 	{ "title_load_image",  DM_title_load_image },

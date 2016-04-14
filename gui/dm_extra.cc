@@ -1308,9 +1308,14 @@ static struct
 {
 	title_rendermode_e rendermode;
 
+	rgb_color_t colors[4];
+
 	void Reset()
 	{
 		rendermode = REND_Solid;
+
+		for (int i = 0 ; i < 4 ; i++)
+			colors[i] = MAKE_RGBA(0, 0, 0, 255);
 	}
 
 } title_drawctx;
@@ -1514,8 +1519,11 @@ int DM_title_property(lua_State *L)
 }
 
 
-static rgb_color_t CalcGradient(rgb_color_t col1, rgb_color_t col2, float along)
+static rgb_color_t CalcGradient(float along)
 {
+	rgb_color_t col1 = title_drawctx.colors[0];
+	rgb_color_t col2 = title_drawctx.colors[1];
+
 	int r = RGB_RED(col1)   * (1 - along) + RGB_RED(col2)   * along;
 	int g = RGB_GREEN(col1) * (1 - along) + RGB_GREEN(col2) * along;
 	int b = RGB_BLUE(col1)  * (1 - along) + RGB_BLUE(col2)  * along;
@@ -1569,7 +1577,7 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 }
 
 
-static void TitleDrawCircle(int x, int y, int w, int h, rgb_color_t col)
+static void TitleDrawPart_Circle(int x, int y, int w, int h, rgb_color_t col)
 {
 	int bmx = x + w / 2;
 	int bmy = y + h / 2;
@@ -1599,10 +1607,14 @@ static void TitleDrawCircle(int x, int y, int w, int h, rgb_color_t col)
 		if (dx*dx + dy*dy > r2)
 			continue;
 
-		if (false)
+		if (title_drawctx.rendermode == REND_Gradient)
 		{
-			float along = fmod(y * 6.0 / (float)title_H3, 1.0);
-			title_pix[y * title_W3 + x] = CalcGradient(col,MAKE_RGBA(0,0,0,255),along);
+			// FIXME
+			float along = fmod(y * 5.0 / (float)title_H3, 1.0);
+
+			along = ((rand() >> 8) & 0xff) / 255;
+
+			title_pix[y * title_W3 + x] = CalcGradient(along);
 			continue;
 		}
 
@@ -1628,7 +1640,7 @@ static void TitleDrawCircle(int x, int y, int w, int h, rgb_color_t col)
 
 static void TitleDrawLinePart(int x, int y, int w, int h, rgb_color_t col)
 {
-	TitleDrawCircle(x, y, w, h, col);
+	TitleDrawPart_Circle(x, y, w, h, col);
 }
 
 
