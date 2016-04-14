@@ -23,6 +23,7 @@
 #include "hdr_ui.h"
 
 #include "main.h"
+#include "lib_util.h"
 
 
 #define TITLE_COLOR  fl_color_cube(0,3,1)
@@ -85,6 +86,7 @@ private:
 
 
 const char *UI_About::Text =
+	N_(
 	"OBLIGE is a random level generator\n"
 	"for classic FPS games like DOOM\n"
 	"\n"
@@ -95,7 +97,7 @@ const char *UI_About::Text =
 	"the GNU General Public License\n"
 	"\n"
 	"There is ABSOLUTELY NO WARRANTY\n"
-	"Use at your OWN RISK";
+	"Use at your OWN RISK");
 
 
 const char *UI_About::URL = "http://oblige.sourceforge.net";
@@ -123,7 +125,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 	int cy = kf_h(6);
 
 	// nice big logo text
-	const char *logo_text = OBLIGE_TITLE " " OBLIGE_VERSION;
+	const char *logo_text = StringPrintf("%s %s", _(OBLIGE_TITLE), OBLIGE_VERSION);
 
 	Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
@@ -139,7 +141,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 	int text_h = H * 0.55;
 
-	box = new Fl_Box(pad, cy, W-pad-pad, text_h, Text);
+	box = new Fl_Box(pad, cy, W-pad-pad, text_h, _(Text));
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	box->box(FL_UP_BOX);
 	box->color(alternate_look ? INFO_COLOR2 : INFO_COLOR);
@@ -177,7 +179,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 	int bh = kf_h(30);
 	int by = H - (H - cy + bh)/2;
 
-	Fl_Button *button = new Fl_Button(W - bw*2, by, bw, bh, "OK");
+	Fl_Button *button = new Fl_Button(W - bw*2, by, bw, bh, fl_ok);
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 }
@@ -192,7 +194,7 @@ void DLG_AboutText(void)
 		int about_w = kf_w(400);
 		int about_h = kf_h(400) + KF * 20;
 
-		about_window = new UI_About(about_w, about_h, "About OBLIGE");
+		about_window = new UI_About(about_w, about_h, _("About OBLIGE"));
 	}
 
 	about_window->want_quit = false;
