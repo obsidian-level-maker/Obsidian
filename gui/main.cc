@@ -775,7 +775,7 @@ int main(int argc, char **argv)
 		// but we can load settings from a explicitly specified file...
 		if (load_file)
 			if (! Cookie_Load(load_file))
-				Main_FatalError("No such config file: %s\n", load_file);
+				Main_FatalError(_("No such config file: %s\n"), load_file);
 
 		Cookie_ParseArguments();
 
@@ -804,7 +804,8 @@ int main(int argc, char **argv)
 	int main_w, main_h;
 	UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
-	main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
+	const char *main_title = StringPrintf("%s %s", _(OBLIGE_TITLE), OBLIGE_VERSION);
+	main_win = new UI_MainWin(main_w, main_h, main_title);
 
 	Script_Open();
 
@@ -821,7 +822,7 @@ int main(int argc, char **argv)
 
 	if (load_file)
 		if (! Cookie_Load(load_file))
-			Main_FatalError("No such config file: %s\n", load_file);
+			Main_FatalError(_("No such config file: %s\n"), load_file);
 
 	Cookie_ParseArguments();
 
@@ -879,11 +880,11 @@ int main(int argc, char **argv)
 	}
 	catch (assert_fail_c err)
 	{
-		Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
+		Main_FatalError(_("Sorry, an internal error occurred:\n%s"), err.GetMessage());
 	}
 	catch (...)
 	{
-		Main_FatalError("An unknown problem occurred (UI code)");
+		Main_FatalError(_("An unknown problem occurred (UI code)"));
 	}
 
 

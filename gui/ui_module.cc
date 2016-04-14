@@ -222,11 +222,11 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 	add(sbar);
 
 
-	mod_pack = new Fl_Group(mx, my, mw, mh, "\n\n\n\nCustom Modules");
+	mod_pack = new Fl_Group(mx, my, mw, mh, _("Custom Modules\n"));
 	mod_pack->clip_children(1);
 	mod_pack->end();
 
-	mod_pack->align(FL_ALIGN_INSIDE);
+	mod_pack->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM);
 	mod_pack->labeltype(FL_NORMAL_LABEL);
 	mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
