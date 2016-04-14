@@ -615,7 +615,7 @@ bool Build_Cool_Shit()
 	{
 		main_win->Locked(true);
 		main_win->build_box->SetAbortButton(true);
-		main_win->build_box->SetStatus("Preparing...");
+		main_win->build_box->SetStatus(_("Preparing..."));
 	}
 
 	u32_t start_time = TimeGetMillies();
@@ -636,7 +636,7 @@ bool Build_Cool_Shit()
 
 	if (was_ok)
 	{
-		Main_ProgStatus("Success");
+		Main_ProgStatus(_("Success"));
 
 		u32_t end_time = TimeGetMillies();
 		u32_t total_time = end_time - start_time;
@@ -656,7 +656,7 @@ bool Build_Cool_Shit()
 	{
 		main_action = 0;
 
-		Main_ProgStatus("Cancelled");
+		Main_ProgStatus(_("Cancelled"));
 	}
 
 	// don't need game object anymore

@@ -1410,16 +1410,17 @@ public:
 private:
 	const char *StepsForGame(int sub)
 	{
+		// FIXME: i18n : separate these
 		switch (sub)
 		{
 		case SUBFMT_HalfLife:
-			return "CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3";
+			return N_("CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3");
 
 		case SUBFMT_Hexen2:
-			return "CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5";
+			return N_("CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5");
 
 		default:
-			return "CSG,BSP,Vis,Light,Hull 1,Hull 2";
+			return N_("CSG,BSP,Vis,Light,Hull 1,Hull 2");
 		}
 	}
 };
@@ -1438,7 +1439,7 @@ bool quake1_game_interface_c::Start()
 
 	if (! filename)
 	{
-		Main_ProgStatus("Cancelled");
+		Main_ProgStatus(_("Cancelled"));
 		return false;
 	}
 
@@ -1447,7 +1448,7 @@ bool quake1_game_interface_c::Start()
 
 	if (! PAK_OpenWrite(filename))
 	{
-		Main_ProgStatus("Error (create file)");
+		Main_ProgStatus(_("Error (create file)"));
 		return false;
 	}
 

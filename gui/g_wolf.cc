@@ -462,7 +462,7 @@ bool wolf_game_interface_c::Start()
   {
     LogPrintf("Unable to create %s:\n%s", TEMP_GAMEFILE, strerror(errno));
 
-    Main_ProgStatus("Error (create file)");
+    Main_ProgStatus(_("Error (create file)"));
     return false;
   }
 
@@ -474,7 +474,7 @@ bool wolf_game_interface_c::Start()
 
     LogPrintf("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
 
-    Main_ProgStatus("Error (create file)");
+    Main_ProgStatus(_("Error (create file)"));
     return false;
   }
 
@@ -522,7 +522,7 @@ bool wolf_game_interface_c::Finish(bool build_ok)
 
   if (write_errors_seen > 0 || ! Rename())
   {
-    Main_ProgStatus("Error (write file)");
+    Main_ProgStatus(_("Error (write file)"));
     Tidy();
     return false;
   }

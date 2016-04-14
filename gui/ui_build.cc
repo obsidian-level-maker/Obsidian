@@ -110,7 +110,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	int pad = kf_w(14);
 
-	status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad*2, kf_h(26), "Ready to go!");
+	status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad*2, kf_h(26), _("Ready to go!"));
 	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
 
 	if (! alternate_look)
@@ -188,7 +188,7 @@ void UI_Build::Prog_AtLevel(int index, int total)
 	level_index = index;
 	level_total = total;
 
-	Prog_Step("Plan");
+	Prog_Step(N_("Plan"));
 }
 
 
@@ -215,7 +215,7 @@ void UI_Build::Prog_Step(const char *step_name)
 	progress->value(val);
 	progress->label(prog_label);
 
-	AddStatusStep(step_name);
+	AddStatusStep(_(step_name));
 
 	Main_Ticker();
 }
@@ -264,7 +264,7 @@ void UI_Build::SetAbortButton(bool abort)
 {
 	if (abort)
 	{
-		quit->label("Cancel");
+		quit->label(_("Cancel"));
 		quit->labelcolor(ABORT_COLOR);
 		quit->labelfont(FL_HELVETICA_BOLD);
 
@@ -274,7 +274,7 @@ void UI_Build::SetAbortButton(bool abort)
 	}
 	else
 	{
-		quit->label("Quit");
+		quit->label(_("Quit"));
 		quit->labelcolor(FL_FOREGROUND_COLOR);
 		quit->labelfont(FL_HELVETICA);
 
@@ -290,9 +290,9 @@ void UI_Build::ParseSteps(const char *names)
 	step_names.clear();
 
 	// these three are done by Lua (no variation)
-	step_names.push_back("Plan");
-	step_names.push_back("Rooms");
-	step_names.push_back("Mons");
+	step_names.push_back(N_("Plan"));
+	step_names.push_back(N_("Rooms"));
+	step_names.push_back(N_("Mons"));
 
 	while (*names)
 	{

@@ -525,7 +525,7 @@ int gui_at_level(lua_State *L)
 	int index = luaL_checkint(L, 2);
 	int total = luaL_checkint(L, 3);
 
-	Main_ProgStatus("Making %s", name);
+	Main_ProgStatus(_("Making %s"), name);
 
 	if (main_win)
 		main_win->build_box->Prog_AtLevel(index, total);
@@ -1215,7 +1215,7 @@ bool ob_build_cool_shit(void)
 {
 	if (! Script_CallFunc("ob_build_cool_shit", 1))
 	{
-		Main_ProgStatus("Script Error");
+		Main_ProgStatus(_("Script Error"));
 		return false;
 	}
 
@@ -1227,7 +1227,7 @@ bool ob_build_cool_shit(void)
 	if (res && strcmp(res, "ok") == 0)
 		return true;
 
-	Main_ProgStatus("Cancelled");
+	Main_ProgStatus(_("Cancelled"));
 	return false;
 }
 

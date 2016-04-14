@@ -1124,7 +1124,7 @@ bool quake2_game_interface_c::Start()
 
 	if (! filename)
 	{
-		Main_ProgStatus("Cancelled");
+		Main_ProgStatus(_("Cancelled"));
 		return false;
 	}
 
@@ -1133,12 +1133,13 @@ bool quake2_game_interface_c::Start()
 
 	if (! PAK_OpenWrite(filename))
 	{
-		Main_ProgStatus("Error (create file)");
+		Main_ProgStatus(_("Error (create file)"));
 		return false;
 	}
 
 	BSP_AddInfoFile();
 
+	// FIXME: i18n : separate the names
 	if (main_win)
 		main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
 

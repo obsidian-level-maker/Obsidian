@@ -495,7 +495,7 @@ bool nukem_game_interface_c::Start()
 
 	if (! filename)
 	{
-		Main_ProgStatus("Cancelled");
+		Main_ProgStatus(_("Cancelled"));
 		return false;
 	}
 
@@ -504,12 +504,12 @@ bool nukem_game_interface_c::Start()
 
 	if (! NK_StartGRP(filename))
 	{
-		Main_ProgStatus("Error (create file)");
+		Main_ProgStatus(_("Error (create file)"));
 		return false;
 	}
 
 	if (main_win)
-		main_win->build_box->Prog_Init(0, "CSG");
+		main_win->build_box->Prog_Init(0, N_("CSG"));
 
 	return true;
 }

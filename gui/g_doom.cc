@@ -502,28 +502,28 @@ static const char *GetErrorString(glbsp_ret_e ret)
 	switch (ret)
 	{
 		case GLBSP_E_OK:
-			return "OK";
+			return _("OK");
 
 		// the arguments were bad/inconsistent.
 		case GLBSP_E_BadArgs:
-			return "Bad Arguments";
+			return _("Bad Arguments");
 
 		// the info was bad/inconsistent, but has been fixed
 		case GLBSP_E_BadInfoFixed:
-			return "Bad Args (fixed)";
+			return _("Bad Args (fixed)");
 
 		// file errors
-		case GLBSP_E_ReadError:  return "Read Error";
-		case GLBSP_E_WriteError: return "Write Error";
+		case GLBSP_E_ReadError:  return _("Read Error");
+		case GLBSP_E_WriteError: return _("Write Error");
 
 		// building was cancelled
 		case GLBSP_E_Cancelled:
-			return "Cancelled by User";
+			return _("Cancelled by User");
 
 		// an unknown error occurred (this is the catch-all value)
 		case GLBSP_E_Unknown:
 		default:
-			return "Unknown Error";
+			return _("Unknown Error");
 	}
 }
 
@@ -555,7 +555,7 @@ static void GB_FatalError(const char *str, ...)
 
 	message_buf[MSG_BUF_LEN-1] = 0;
 
-	Main_FatalError("glBSP Failure:\n%s", message_buf);
+	Main_FatalError(_("glBSP Failure:\n%s"), message_buf);
 	/* NOT REACHED */
 }
 
@@ -597,7 +597,7 @@ static void GB_DisplaySetBarLimit(int barnum, int limit)
 	{
 		progress_limit = limit;
 
-		main_win->build_box->SetStatus("Building nodes");
+		main_win->build_box->SetStatus(_("Building nodes"));
 		main_win->build_box->Prog_Nodes(0, limit);
 	}
 }
@@ -655,7 +655,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
 		GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
 
-		Main_ProgStatus("glBSP Error");
+		Main_ProgStatus(_("glBSP Error"));
 		return false;
 	}
 
@@ -664,7 +664,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	if (ret == GLBSP_E_Cancelled)
 	{
 		GB_PrintMsg("Building CANCELLED.\n\n");
-		Main_ProgStatus("Cancelled");
+		Main_ProgStatus(_("Cancelled"));
 		return false;
 	}
 
@@ -674,7 +674,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
 		GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
 
-		Main_ProgStatus("glBSP Error");
+		Main_ProgStatus(_("glBSP Error"));
 		return false;
 	}
 
@@ -725,7 +725,7 @@ bool doom_game_interface_c::Start()
 
 	if (! filename)
 	{
-		Main_ProgStatus("Cancelled");
+		Main_ProgStatus(_("Cancelled"));
 		return false;
 	}
 
@@ -734,12 +734,12 @@ bool doom_game_interface_c::Start()
 
 	if (! DM_StartWAD(filename))
 	{
-		Main_ProgStatus("Error (create file)");
+		Main_ProgStatus(_("Error (create file)"));
 		return false;
 	}
 
 	if (main_win)
-		main_win->build_box->Prog_Init(20, "CSG");
+		main_win->build_box->Prog_Init(20, N_("CSG"));
 
 	return true;
 }

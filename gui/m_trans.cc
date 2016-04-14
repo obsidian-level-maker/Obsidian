@@ -1066,6 +1066,7 @@ const char * mucked_up_string(const char *s)
 	for (p = strlen(s) - 1, q=0 ; p >= 0 && q < 250 ; p--, q++)
 	{
 		int ch = s[p];
+		if (ch == '%') ch = '#';
 		ch = (isupper(ch) ? tolower(ch) : toupper(ch));
 		buffer[q] = ch;
 	}
