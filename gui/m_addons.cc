@@ -37,10 +37,10 @@
 // folder is scanned for PK3 packages, so remember enabled ones here.
 static std::map<std::string, int> initial_enabled_addons;
 
-typedef struct 
+typedef struct
 {
 	const char *name;	// base filename, includes ".pk3" extension
-	
+
 	bool enabled;
 
 } addon_info_t;
@@ -444,7 +444,9 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 		sbar->color(FL_DARK3+1, FL_DARK3+1);
 
 
-	pack = new Fl_Group(mx, my, mw, mh, "\n\n\n\nList of Addons");
+	const char *pack_title = StringPrintf("\n\n\n\n%s", _("List of Addons"));
+
+	pack = new Fl_Group(mx, my, mw, mh, pack_title);
 	pack->clip_children(1);
 	pack->end();
 
@@ -474,7 +476,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 
 
 	// show warning about needing a restart
-	sep = new Fl_Box(FL_NO_BOX, x(), by, W*3/5, bh, "Changes require a restart");
+	sep = new Fl_Box(FL_NO_BOX, x(), by, W*3/5, bh, _("Changes require a restart"));
 	sep->align(FL_ALIGN_INSIDE);
 	sep->labelcolor(FL_DARK1);
 	sep->labelsize(small_font_size);
@@ -595,7 +597,7 @@ void DLG_SelectAddons(void)
 		int opt_w = kf_w(350);
 		int opt_h = kf_h(380);
 
-		addons_window = new UI_AddonsWin(opt_w, opt_h, "OBLIGE Addons");
+		addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBLIGE Addons"));
 
 		addons_window->Populate();
 	}
@@ -613,7 +615,7 @@ void DLG_SelectAddons(void)
 		// persist the changed addon list into OPTIONS.txt
 		Options_Save(options_file);
 
-		fl_alert("Changes to addons require a restart.\nOblige will now close.");
+		fl_alert(_("Changes to addons require a restart.\nOblige will now close."));
 
 		main_action = MAIN_QUIT;
 	}
