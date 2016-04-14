@@ -222,7 +222,7 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 	add(sbar);
 
 
-	mod_pack = new Fl_Group(mx, my, mw, mh, _("Custom Modules\n"));
+	mod_pack = new Fl_Group(mx, my, mw, mh, _("Custom Modules\n "));
 	mod_pack->clip_children(1);
 	mod_pack->end();
 

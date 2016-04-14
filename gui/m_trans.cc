@@ -1077,7 +1077,7 @@ const char * mucked_up_string(const char *s)
 
 const char * ob_gettext(const char *s)
 {
-#if 1  // DEBUGGING CRUD
+#if 0  // DEBUGGING CRUD
 	return mucked_up_string(s);
 #endif
 
