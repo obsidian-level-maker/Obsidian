@@ -118,7 +118,7 @@ static void DialogShowAndRun(const char *message, const char *title,
 	// create button...
 	Fl_Button *button =
 		new Fl_Button(total_W - BTN_W - kf_w(20), total_H - BTN_H - kf_h(12),
-				BTN_W, BTN_H, "Close");
+				BTN_W, BTN_H, fl_close);
 
 	button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
 	button->callback((Fl_Callback *) dialog_close_CB);
@@ -202,7 +202,7 @@ void DLG_ShowError(const char *msg, ...)
 	ParseHyperLink(buffer, sizeof(buffer), &link_title, &link_url);
 
 	if (! batch_mode)
-		DialogShowAndRun(buffer, "OBLIGE - Error Message", link_title, link_url);
+		DialogShowAndRun(buffer, _("OBLIGE - Error Message"), link_title, link_url);
 }
 
 
@@ -228,7 +228,7 @@ const char * DLG_OutputFilename(const char *ext)
 
 	Fl_Native_File_Chooser  chooser;
 
-	chooser.title("Select output file");
+	chooser.title(_("Select output file"));
 	chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 	chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
 	chooser.filter(kind_buf);
@@ -246,7 +246,7 @@ const char * DLG_OutputFilename(const char *ext)
 			LogPrintf("Error choosing output file:\n");
 			LogPrintf("   %s\n", chooser.errmsg());
 
-			DLG_ShowError("Unable to select the file:\n\n%s", chooser.errmsg());
+			DLG_ShowError(_("Unable to select the file:\n\n%s"), chooser.errmsg());
 			return NULL;
 
 		case 1:  // cancelled
@@ -301,7 +301,7 @@ void DLG_EditSeed(void)
 
 	sprintf(num_buf, "%1.0f", next_rand_seed);
 
-	const char * buf = fl_input("Enter New Seed Number:", num_buf);
+	const char * buf = fl_input(_("Enter New Seed Number:"), num_buf);
 
 	// cancelled?
 	if (! buf)
