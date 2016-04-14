@@ -263,7 +263,7 @@ end
 
 OB_MODULES["export_map"] =
 {
-  label = "Export .MAP for Debugging"
+  label = _("Export .MAP files")
 
   priority = -75
 

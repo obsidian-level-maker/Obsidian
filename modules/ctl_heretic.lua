@@ -20,14 +20,14 @@ CTL_HERETIC = {}
 
 CTL_HERETIC.MON_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "insane",  "INSANE",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plenty"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "insane",  _("INSANE"),
 }
 
 CTL_HERETIC.MON_PROBS =
@@ -72,7 +72,7 @@ end
 
 OB_MODULES["heretic_mon_control"] =
 {
-  label = "Heretic Monster Control"
+  label = _("Heretic Monster Control")
 
   game = { heretic=1 }
   playmode = { sp=1, coop=1 }
@@ -108,14 +108,14 @@ OB_MODULES["heretic_mon_control"] =
 
 CTL_HERETIC.WEAPON_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "loveit",  "I LOVE IT",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plenty"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "loveit",  _("I LOVE IT"),
 }
 
 CTL_HERETIC.WEAPON_PROBS =
@@ -158,7 +158,7 @@ end
 
 OB_MODULES["heretic_weapon_control"] =
 {
-  label = "Heretic Weapon Control"
+  label = _("Heretic Weapon Control")
 
   game = { heretic=1 }
   playmode = { sp=1, coop=1 }

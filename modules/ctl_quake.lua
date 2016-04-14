@@ -20,14 +20,14 @@ CTL_QUAKE = {}
 
 CTL_QUAKE.MON_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "insane",  "INSANE",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plenty"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "insane",  _("INSANE"),
 }
 
 CTL_QUAKE.MON_PROBS =
@@ -75,7 +75,7 @@ end
 
 OB_MODULES["quake_mon_control"] =
 {
-  label = "Quake Monster Control"
+  label = _("Quake Monster Control")
 
   game = { quake=1 }
   playmode = { sp=1, coop=1 }
@@ -111,14 +111,14 @@ OB_MODULES["quake_mon_control"] =
 
 CTL_QUAKE.WEAPON_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "loveit",  "I LOVE IT",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plenty"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "loveit",  _("I LOVE IT"),
 }
 
 CTL_QUAKE.WEAPON_PROBS =
@@ -161,7 +161,7 @@ end
 
 OB_MODULES["quake_weapon_control"] =
 {
-  label = "Quake Weapon Control"
+  label = _("Quake Weapon Control")
 
   game = { quake=1 }
   playmode = { sp=1, coop=1 }

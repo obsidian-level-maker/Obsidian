@@ -20,14 +20,14 @@ CTL_DOOM = {}
 
 CTL_DOOM.MON_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "insane",  "INSANE",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plenty"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "insane",  _("INSANE"),
 }
 
 CTL_DOOM.MON_PROBS =
@@ -83,7 +83,7 @@ end
 
 OB_MODULES["doom_mon_control"] =
 {
-  label = "Doom Monster Control"
+  label = _("Doom Monster Control")
 
   game = { doom1=1, doom2=1 }
   playmode = { sp=1, coop=1 }
@@ -125,14 +125,14 @@ OB_MODULES["doom_mon_control"] =
 
 CTL_DOOM.WEAPON_CHOICES =
 {
-  "default", "DEFAULT",
-  "none",    "None at all",
-  "scarce",  "Scarce",
-  "less",    "Less",
-  "plenty",  "Plenty",
-  "more",    "More",
-  "heaps",   "Heaps",
-  "loveit",  "I LOVE IT",
+  "default", _("DEFAULT"),
+  "none",    _("None at all"),
+  "scarce",  _("Scarce"),
+  "less",    _("Less"),
+  "plenty",  _("Plent)y"),
+  "more",    _("More"),
+  "heaps",   _("Heaps"),
+  "loveit",  _("I LOVE IT"),
 }
 
 CTL_DOOM.WEAPON_PROBS =
@@ -175,7 +175,7 @@ end
 
 OB_MODULES["doom_weapon_control"] =
 {
-  label = "Doom Weapon Control"
+  label = _("Doom Weapon Control")
 
   game = { doom1=1, doom2=1 }
   playmode = { sp=1, coop=1 }

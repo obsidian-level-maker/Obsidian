@@ -2,7 +2,7 @@
 --  MODULE: Theme Control for DOOM
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2014 Andrew Apted
+--  Copyright (C) 2014-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -63,9 +63,9 @@ function THEME_CONTROL.get_levels(self)
 end
 
 
-OB_MODULES["theme_ctl_doom2"] =
+UNFINISHED["theme_ctl_doom2"] =
 {
-  label = "Doom 2 Theme Control"
+  label = _("Doom 2 Theme Control")
 
   game = { doom2=1 }
 
@@ -98,9 +98,9 @@ THEME_CONTROL.DOOM1_CHOICES =
 }
 
 
-OB_MODULES["theme_ctl_doom1"] =
+UNFINISHED["theme_ctl_doom1"] =
 {
-  label = "Doom 1 Theme Control"
+  label = _("Doom 1 Theme Control")
 
   game = { doom1=1 }
 
