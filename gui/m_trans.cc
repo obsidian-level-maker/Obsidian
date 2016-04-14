@@ -1058,8 +1058,28 @@ const char * Trans_GetAvailLanguage(int idx)
 //----------------------------------------------------------------------
 
 
+// debugging crud
+const char * mucked_up_string(const char *s)
+{
+	char buffer[256];
+	int p, q;
+	for (p = strlen(s) - 1, q=0 ; p >= 0 && q < 250 ; p--, q++)
+	{
+		int ch = s[p];
+		ch = (isupper(ch) ? tolower(ch) : toupper(ch));
+		buffer[q] = ch;
+	}
+	buffer[q] = 0;
+	return StringDup(buffer);
+}
+
+
 const char * ob_gettext(const char *s)
 {
+#if 1  // DEBUGGING CRUD
+	return mucked_up_string(s);
+#endif
+
 	if (trans_store)
 	{
 		lua_getglobal(trans_store, "TRANS");
