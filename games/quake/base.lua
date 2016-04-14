@@ -71,7 +71,7 @@ QUAKE.PARAMETERS =
 
 UNFINISHED["quake"] =
 {
-  label = "Quake"
+  label = _("Quake")
   priority = 27
 
   format = "quake"

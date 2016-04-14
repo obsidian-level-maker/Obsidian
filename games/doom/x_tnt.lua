@@ -392,7 +392,7 @@ TNT.EPISODES =
 
 OB_GAMES["tnt"] =
 {
-  label = "TNT Evilution"
+  label = _("TNT Evilution")
 
   extends = "doom2"
 
@@ -409,8 +409,8 @@ OB_THEMES["egypt"] =
 {
   -- TNT Evilution theme
 
+  label = _("Egypt")
   game = "tnt"
-  label = "Egypt"
   priority = 3
   name_class = "GOTHIC"
   mixed_prob = 5

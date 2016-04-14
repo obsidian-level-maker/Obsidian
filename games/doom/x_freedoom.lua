@@ -18,7 +18,7 @@ FREEDOOM = { }
 
 OB_GAMES["freedoom"] =
 {
-  label = "FreeDoom"
+  label = _("FreeDoom")
 
   extends = "doom2"
 

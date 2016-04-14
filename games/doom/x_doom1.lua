@@ -1758,7 +1758,7 @@ end
 
 UNFINISHED["doom1"] =
 {
-  label = "Doom 1"
+  label = _("Doom 1")
 
   priority = 98  -- keep at second spot
 
@@ -1784,7 +1784,7 @@ UNFINISHED["doom1"] =
 
 UNFINISHED["ultdoom"] =
 {
-  label = "Ultimate Doom"
+  label = _("Ultimate Doom")
 
   extends = "doom1"
 
@@ -1800,8 +1800,8 @@ UNFINISHED["ultdoom"] =
 
 OB_THEMES["deimos"] =
 {
+  label = _("Deimos")
   game = "doom1"
-  label = "Deimos"
   priority = 16
   name_class = "TECH"
   mixed_prob = 30
@@ -1810,8 +1810,8 @@ OB_THEMES["deimos"] =
 
 OB_THEMES["flesh"] =
 {
+  label = _("Thy Flesh")
   game = "ultdoom"
-  label = "Thy Flesh"
   priority = 12
   name_class = "GOTHIC"
   mixed_prob = 20

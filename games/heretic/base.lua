@@ -56,7 +56,7 @@ HERETIC.PARAMETERS =
 
 UNFINISHED["heretic"] =
 {
-  label = "Heretic"
+  label = _("Heretic")
   priority = 38
 
   format = "doom"

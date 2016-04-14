@@ -147,7 +147,7 @@ PLUTONIA.EPISODES =
 
 OB_GAMES["plutonia"] =
 {
-  label = "Plutonia Exp."
+  label = _("Plutonia")
 
   extends = "doom2"
 
