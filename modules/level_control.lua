@@ -21,14 +21,14 @@ LEVEL_CONTROL = { }
 
 LEVEL_CONTROL.CHOICES =
 {
-  "mixed",  "Mix It Up",
-  "none",   "NONE",
-  "rare",   "Rare"
-  "few",    "Few",
-  "less",   "Less",
-  "some",   "Some",
-  "more",   "More",
-  "heaps",  "Heaps",
+  "mixed",  _("Mix It Up"),
+  "none",   _("NONE"),
+  "rare",   _("Rare"),
+  "few",    _("Few"),
+  "less",   _("Less"),
+  "some",   _("Some"),
+  "more",   _("More"),
+  "heaps",  _("Heaps"),
 }
 
 
@@ -45,7 +45,7 @@ end
 
 OB_MODULES["level_control"] =
 {
-  label = "Level Control"
+  label = _("Level Control")
   priority = 70
 
   hooks =
@@ -55,38 +55,38 @@ OB_MODULES["level_control"] =
 
   options =
   {
-    cages       = { label="Cages",          choices=LEVEL_CONTROL.CHOICES }
-    darkness    = { label="Dark Outdoors",  choices=LEVEL_CONTROL.CHOICES }
-    doors       = { label="Doors",          choices=LEVEL_CONTROL.CHOICES }
-    hallways    = { label="Hallways",       choices=LEVEL_CONTROL.CHOICES }
-    liquids     = { label="Liquids",        choices=LEVEL_CONTROL.CHOICES }
+    cages       = { label=_("Cages"),          choices=LEVEL_CONTROL.CHOICES }
+    darkness    = { label=_("Dark Outdoors"),  choices=LEVEL_CONTROL.CHOICES }
+    doors       = { label=_("Doors"),          choices=LEVEL_CONTROL.CHOICES }
+    hallways    = { label=_("Hallways"),       choices=LEVEL_CONTROL.CHOICES }
+    liquids     = { label=_("Liquids"),        choices=LEVEL_CONTROL.CHOICES }
 
-    mon_variety = { label="Monster Variety",choices=LEVEL_CONTROL.CHOICES, tooltip="Setting this to NONE will make each level use a single monster type" }
-    organics    = { label="Organic Shapes", choices=LEVEL_CONTROL.CHOICES }
-    pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
-    porches     = { label="Porches",        choices=LEVEL_CONTROL.CHOICES }
-    secrets     = { label="Secrets",        choices=LEVEL_CONTROL.CHOICES }
+    mon_variety = { label=_("Monster Variety"),choices=LEVEL_CONTROL.CHOICES, tooltip="Setting this to NONE will make each level use a single monster type" }
+    organics    = { label=_("Organic Shapes"), choices=LEVEL_CONTROL.CHOICES }
+    pictures    = { label=_("Pictures"),       choices=LEVEL_CONTROL.CHOICES }
+    porches     = { label=_("Porches"),        choices=LEVEL_CONTROL.CHOICES }
+    secrets     = { label=_("Secrets"),        choices=LEVEL_CONTROL.CHOICES }
 
-    steepness   = { label="Steepness",      choices=LEVEL_CONTROL.CHOICES }
-    switches    = { label="Switched Doors", choices=LEVEL_CONTROL.CHOICES }
-    teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }
-    traps       = { label="Traps",          choices=LEVEL_CONTROL.CHOICES }
-    windows     = { label="Windows",        choices=LEVEL_CONTROL.CHOICES }
+    steepness   = { label=_("Steepness"),      choices=LEVEL_CONTROL.CHOICES }
+    switches    = { label=_("Switched Doors"), choices=LEVEL_CONTROL.CHOICES }
+    teleporters = { label=_("Teleporters"),    choices=LEVEL_CONTROL.CHOICES }
+    traps       = { label=_("Traps"),          choices=LEVEL_CONTROL.CHOICES }
+    windows     = { label=_("Windows"),        choices=LEVEL_CONTROL.CHOICES }
 
---  crates      = { label="Crates",         choices=LEVEL_CONTROL.CHOICES }
---  pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
+--  crates      = { label=_("Crates"),         choices=LEVEL_CONTROL.CHOICES }
+--  pillars     = { label=_("Pillars"),        choices=LEVEL_CONTROL.CHOICES }
 
---  big_rooms   = { label="Big Rooms",      choices=LEVEL_CONTROL.CHOICES }
---  closets     = { label="Closets",        choices=LEVEL_CONTROL.CHOICES }
---  ex_floors   = { label="3D Floors",      choices=LEVEL_CONTROL.CHOICES }
---  lakes       = { label="Lakes",          choices=LEVEL_CONTROL.CHOICES }
---  scenics     = { label="Scenic Rooms",   choices=LEVEL_CONTROL.CHOICES }
+--  big_rooms   = { label=_("Big Rooms"),      choices=LEVEL_CONTROL.CHOICES }
+--  closets     = { label=_("Closets"),        choices=LEVEL_CONTROL.CHOICES }
+--  ex_floors   = { label=_("3D Floors"),      choices=LEVEL_CONTROL.CHOICES }
+--  lakes       = { label=_("Lakes"),          choices=LEVEL_CONTROL.CHOICES }
+--  scenics     = { label=_("Scenic Rooms"),   choices=LEVEL_CONTROL.CHOICES }
 
---  barrels     = { label="Barrels",        choices=LEVEL_CONTROL.CHOICES }
---  bridges     = { label="3D Bridges",     choices=LEVEL_CONTROL.CHOICES }
---  crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
---  cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }
---  symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
+--  barrels     = { label=_("Barrels"),        choices=LEVEL_CONTROL.CHOICES }
+--  bridges     = { label=_("3D Bridges"),     choices=LEVEL_CONTROL.CHOICES }
+--  crossovers  = { label=_("Cross-Overs"),    choices=LEVEL_CONTROL.CHOICES }
+--  cycles      = { label=_("Multiple Paths"), choices=LEVEL_CONTROL.CHOICES }
+--  symmetry    = { label=_("Symmetry"),       choices=LEVEL_CONTROL.CHOICES }
   }
 }
 

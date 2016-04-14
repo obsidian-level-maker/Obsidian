@@ -2,7 +2,7 @@
 --  MODULE: sky generator
 ----------------------------------------------------------------
 --
---  Copyright (C) 2008-2013 Andrew Apted
+--  Copyright (C) 2008-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -391,7 +391,7 @@ end
 
 OB_MODULES["sky_generator"] =
 {
-  label = "Sky Generator (DOOM)"
+  label = _("Sky Generator")
   priority = 85
 
   game = { doom1=1, doom2=1 }
