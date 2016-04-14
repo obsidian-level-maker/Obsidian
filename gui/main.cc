@@ -399,6 +399,13 @@ void Main_SetupFLTK()
 #ifndef WIN32
 	Fl_File_Icon::load_system_icons();
 #endif
+
+	// translate some FLTK strings
+	fl_no  = _("No");
+	fl_yes = _("Yes");
+	fl_ok  = _("OK");
+	fl_cancel = _("Cancel");
+	fl_close = _("Close");
 }
 
 
