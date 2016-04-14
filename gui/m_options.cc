@@ -390,9 +390,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_language->h() + y_step;
 
 
-	opt_win_size = new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), "Window Size: ");
+	opt_win_size = new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Window Size: "));
 	opt_win_size->align(FL_ALIGN_LEFT);
-	opt_win_size->add("AUTO|Tiny|Small|Medium|Large|Huge");
+	opt_win_size->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
 	opt_win_size->callback(callback_WinSize, this);
 	opt_win_size->value(window_size);
 
@@ -401,7 +401,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_win_size->h() + y_step;
 
 
-	opt_alt_look = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Alternate Look");
+	opt_alt_look = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Alternate Look"));
 	opt_alt_look->value(alternate_look ? 1 : 0);
 	opt_alt_look->callback(callback_AltLook, this);
 
@@ -414,7 +414,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	cy += y_step + y_step/2;
 
-	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), "File Options");
+	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), _("File Options"));
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -425,7 +425,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	opt_backups = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Create Backups");
+	opt_backups = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Create Backups"));
 	opt_backups->value(create_backups ? 1 : 0);
 	opt_backups->callback(callback_Backups, this);
 
@@ -434,7 +434,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_backups->h() + y_step;
 
 
-	opt_debug = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Debugging Messages (in LOGS.txt)");
+	opt_debug = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Debugging Messages (in LOGS.txt)"));
 	opt_debug->value(debug_messages ? 1 : 0);
 	opt_debug->callback(callback_Debug, this);
 
@@ -489,13 +489,14 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	int bx = W - kf_w(40) - bw;
 	int by = H - dh/2 - bh/2;
 
-	Fl_Button *button = new Fl_Button(bx, by, bw, bh, "Close");
+	Fl_Button *button = new Fl_Button(bx, by, bw, bh, _("Close"));
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 
 
 	// restart needed warning
-	heading = new Fl_Box(FL_NO_BOX, x()+pad, H - dh - kf_h(30), W-pad*2, kf_h(14), "Note: some options require a restart.");
+	heading = new Fl_Box(FL_NO_BOX, x()+pad, H - dh - kf_h(30), W-pad*2, kf_h(14),
+						 _("Note: some options require a restart."));
 	heading->align(FL_ALIGN_INSIDE);
 	heading->labelsize(small_font_size);
 	add(heading);
