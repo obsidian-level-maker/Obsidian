@@ -198,6 +198,17 @@ $(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
 	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
 
 
+#----- Language Analysis ------------------------------------------
+
+LANG_FILES= \
+	gui/*.cc \
+	gui/*.h  \
+	scripts/*.lua \
+	engines/*.lua \
+	modules/*.lua \
+	games/*/*.lua
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -211,6 +222,7 @@ clean:
 	rm -f $(OBJ_DIR)/glbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 	rm -f $(OBJ_DIR)/physfs/*.o
+	rm -f LANG_TEMPLATE.txt
 
 halfclean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
@@ -259,7 +271,10 @@ uninstall:
 	xdg-desktop-menu  uninstall --novendor misc/oblige.desktop
 	xdg-icon-resource uninstall --novendor --size 32 oblige
 
-.PHONY: all clean halfclean stripped install uninstall
+xgettext:
+	xgettext -o LANG_TEMPLATE.txt -k_ -kN_ -s $(LANG_FILES)
+
+.PHONY: all clean halfclean stripped install uninstall xgettext
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
