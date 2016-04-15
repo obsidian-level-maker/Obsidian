@@ -1661,7 +1661,7 @@ static void TDraw_Box(int x, int y, int w, int h)
 
 static void TDraw_Slash(int x, int y, int w, int dir)
 {
-	if (dir)
+	if (! dir)
 		y = y - w;
 
 	for (int i = 0 ; i <= w ; i++)
