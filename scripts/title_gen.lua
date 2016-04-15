@@ -946,13 +946,20 @@ function Title_parse_style(T, style)
   gui.title_prop("box_w", bw)
   gui.title_prop("box_h", bh)
 
-  gui.title_prop("pen_type", "slash2")
+--gui.title_prop("pen_type", "slash2")
 
 -- TEST CRUD
   gui.title_prop("render_mode", "gradmirror")
-  gui.title_prop("color2", "#600")
+  gui.title_prop("color2", "#321")
   gui.title_prop("grad_y1", 50)
   gui.title_prop("grad_y2", 100)
+
+-- MORE TEST CRUD
+  gui.title_prop("render_mode", "random")
+  gui.title_prop("color",  "#000")
+  gui.title_prop("color2", "#fff")
+  gui.title_prop("color3", "#fff")
+  gui.title_prop("color4", "#fff")
 end
 
 
@@ -1083,8 +1090,8 @@ function Title_add_title()
     }
 
     {
-      styles = { "00f:99", "ff4:55" }
-      alt    = { "ff4:99", "00a:55" }
+      styles = { "00f:99", "fed:55" }
+      alt    = { "fed:99", "00a:55" }
 
       spacing = 0.45
     }
