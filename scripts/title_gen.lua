@@ -946,7 +946,7 @@ function Title_parse_style(T, style)
   gui.title_prop("box_w", bw)
   gui.title_prop("box_h", bh)
 
-  gui.title_prop("pen_type", "slash")
+  gui.title_prop("pen_type", "slash2")
 end
 
 
@@ -1077,8 +1077,8 @@ function Title_add_title()
     }
 
     {
-      styles = { "00f:55", "fff:33" }
-      alt    = { "fff:55", "00a:33" }
+      styles = { "00f:99", "fff:55" }
+      alt    = { "fff:99", "00a:55" }
 
       spacing = 0.45
     }

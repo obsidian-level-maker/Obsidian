@@ -1307,7 +1307,8 @@ typedef enum
 {
 	PEN_Circle = 0,
 	PEN_Box,
-	PEN_Slash
+	PEN_Slash,
+	PEN_Slash2,
 
 } title_pentype_e;
 
@@ -1533,6 +1534,8 @@ static void TitleParsePen(const char *what)
 		title_drawctx.pen_type = PEN_Box;
 	else if (strcmp(what, "slash") == 0)
 		title_drawctx.pen_type = PEN_Slash;
+	else if (strcmp(what, "slash2") == 0)
+		title_drawctx.pen_type = PEN_Slash2;
 }
 
 
@@ -1656,16 +1659,17 @@ static void TDraw_Box(int x, int y, int w, int h)
 }
 
 
-static void TDraw_Slash(int x, int y, int w)
+static void TDraw_Slash(int x, int y, int w, int dir)
 {
-	y = y - w;
+	if (dir)
+		y = y - w;
 
 	for (int i = 0 ; i <= w ; i++)
 	{
-		TDraw_Box(x, y, w, w);
+		TDraw_Box(x, y, 3, 3);
 
 		x += 1;
-		y += 1;
+		y += dir ? 1 : -1;
 	}
 }
 
@@ -1718,7 +1722,11 @@ static void TDraw_LinePart(int x, int y)
 			break;
 
 		case PEN_Slash:
-			TDraw_Slash(x, y, title_drawctx.box_w * 3);
+			TDraw_Slash(x, y, title_drawctx.box_w * 3, 0);
+			break;
+
+		case PEN_Slash2:
+			TDraw_Slash(x, y, title_drawctx.box_w * 3, 1);
 			break;
 	}
 }
