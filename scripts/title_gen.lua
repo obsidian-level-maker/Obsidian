@@ -949,10 +949,10 @@ function Title_parse_style(T, style)
   gui.title_prop("pen_type", "slash2")
 
 -- TEST CRUD
-  gui.title_prop("render_mode", "gradient")
-  gui.title_prop("color2", "#830")
-  gui.title_prop("grad_y1", 60)
-  gui.title_prop("grad_y2", 90)
+  gui.title_prop("render_mode", "gradmirror")
+  gui.title_prop("color2", "#600")
+  gui.title_prop("grad_y1", 50)
+  gui.title_prop("grad_y2", 100)
 end
 
 

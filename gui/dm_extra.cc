@@ -1647,9 +1647,10 @@ static inline rgb_color_t CalcPixel(int x, int y)
 		case REND_GradMirror:
 			if (title_drawctx.grad_y2 > title_drawctx.grad_y1)
 				along = (float)(y - 3*title_drawctx.grad_y1) / (float)(3*title_drawctx.grad_y2 - 3*title_drawctx.grad_y1);
-			along = along * 2.0;
-			if (along > 1.0)
-				along = 2.0 - along;
+			if (along > 0.5)
+				along = along * 2 - 1.0;
+			else
+				along = 1.0 - along * 2;
 			return CalcGradient(along);
 	}
 
