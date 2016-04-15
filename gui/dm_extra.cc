@@ -2031,14 +2031,6 @@ int DM_title_draw_line(lua_State *L)
 	int x2 = luaL_checkint(L, 3);
 	int y2 = luaL_checkint(L, 4);
 
-	int box_w = title_drawctx.box_w;
-	int box_h = title_drawctx.box_h;
-
-#if 1
-	x1 -= box_w / 2;  y1 -= box_h / 2;
-	x2 -= box_w / 2;  y2 -= box_h / 2;
-#endif
-
 	TDraw_Line(x1*3, y1*3, x2*3, y2*3);
 	return 0;
 }
