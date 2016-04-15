@@ -790,10 +790,6 @@ TITLE_LETTER_SHAPES =
 
     w, h    -- size of characters
 
-    color   -- color to draw the characters
-
-    bw, bh  -- thickness of drawn strokes
-
     spacing -- optional field, adds onto the info.width field
 --]]
 
@@ -949,6 +945,8 @@ function Title_parse_style(T, style)
 
   gui.title_prop("box_w", bw)
   gui.title_prop("box_h", bh)
+
+  gui.title_prop("pen_type", "slash")
 end
 
 

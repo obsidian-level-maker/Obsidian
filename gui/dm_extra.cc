@@ -1303,11 +1303,21 @@ typedef enum
 
 } title_rendermode_e;
 
+typedef enum
+{
+	PEN_Circle = 0,
+	PEN_Box,
+	PEN_Slash
+
+} title_pentype_e;
+
 
 // the current drawing context
 static struct
 {
-	title_rendermode_e rendermode;
+	title_pentype_e pen_type;
+
+	title_rendermode_e render_mode;
 
 	rgb_color_t color[4];
 
@@ -1315,7 +1325,9 @@ static struct
 
 	void Reset()
 	{
-		rendermode = REND_Solid;
+		pen_type = PEN_Circle;
+
+		render_mode = REND_Solid;
 
 		for (int i = 0 ; i < 4 ; i++)
 			color[i] = MAKE_RGBA(0, 0, 0, 255);
@@ -1513,6 +1525,17 @@ int DM_title_set_palette(lua_State *L)
 }
 
 
+static void TitleParsePen(const char *what)
+{
+	if (strcmp(what, "circle") == 0)
+		title_drawctx.pen_type = PEN_Circle;
+	else if (strcmp(what, "box") == 0)
+		title_drawctx.pen_type = PEN_Box;
+	else if (strcmp(what, "slash") == 0)
+		title_drawctx.pen_type = PEN_Slash;
+}
+
+
 int DM_title_property(lua_State *L)
 {
 	// LUA: title_property(name, value)
@@ -1532,6 +1555,9 @@ int DM_title_property(lua_State *L)
 		title_drawctx.box_w = luaL_checkint(L, 2);
 	else if (strcmp(propname, "box_h") == 0)
 		title_drawctx.box_h = luaL_checkint(L, 2);
+
+	else if (strcmp(propname, "pen_type") == 0)
+		TitleParsePen(luaL_checkstring(L, 2));
 
 	return 0;
 }
@@ -1681,7 +1707,20 @@ static void TDraw_Circle(int x, int y, int w)
 
 static void TDraw_LinePart(int x, int y)
 {
-	TDraw_Slash(x, y, title_drawctx.box_w * 3);
+	switch (title_drawctx.pen_type)
+	{
+		case PEN_Circle:
+			TDraw_Circle(x, y, title_drawctx.box_w * 3);
+			break;
+
+		case PEN_Box:
+			TDraw_Box(x, y, title_drawctx.box_w * 3, title_drawctx.box_h * 3);
+			break;
+
+		case PEN_Slash:
+			TDraw_Slash(x, y, title_drawctx.box_w * 3);
+			break;
+	}
 }
 
 
