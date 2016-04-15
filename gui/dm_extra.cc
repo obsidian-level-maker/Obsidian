@@ -1519,6 +1519,23 @@ int DM_title_property(lua_State *L)
 }
 
 
+static rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2, int alpha)
+{
+	if (alpha == 255) return C2;
+	if (alpha ==   0) return C1;
+
+	int r = RGB_RED(C1)   * (256 - alpha) + RGB_RED(C2)   * alpha;
+	int g = RGB_GREEN(C1) * (256 - alpha) + RGB_GREEN(C2) * alpha;
+	int b = RGB_BLUE(C1)  * (256 - alpha) + RGB_BLUE(C2)  * alpha;
+
+	r >>= 8;
+	g >>= 8;
+	b >>= 8;
+
+	return MAKE_RGBA(r, g, b, 255);
+}
+
+
 static rgb_color_t CalcGradient(float along)
 {
 	rgb_color_t col1 = title_drawctx.colors[0];
@@ -1532,28 +1549,17 @@ static rgb_color_t CalcGradient(float along)
 }
 
 
-static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
+static inline rgb_color_t CalcPixel(int x, int y)
 {
-#if 0
-	// width -1 and -2 are special : draw a diagonal line
-	if (w == -1 || w == -2)
-	{
-		int dx = (w == -2) ? -1 : 1;
+	// FIXME
 
-		if (w == -2) x += h - 1;
+	// int hash = (IntHash(((y*3+ky) << 16) | (nx*3+kx)) >> 8) & 255;
 
-		for (int i = 0 ; i < h ; i++, y++, x += dx)
-		{
-			if (x >= 0 && x-1 < title_W3 && y >= 0 && y < title_H3)
-			{
-				title_pix[y * title_W3 + x]     = col;
-				title_pix[y * title_W3 + x + 1] = col;
-			}
-		}
+}
 
-		return;
-	}
-#endif
+
+static void TDraw_Box(int x, int y, int w, int h, rgb_color_t col)
+{
 	// clip the box
 	int x1 = x;
 	int y1 = y;
@@ -1577,7 +1583,7 @@ static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 }
 
 
-static void TitleDrawPart_Circle(int x, int y, int w, int h, rgb_color_t col)
+static void TDraw_Circle(int x, int y, int w, int h, rgb_color_t col)
 {
 	int bmx = x + w / 2;
 	int bmy = y + h / 2;
@@ -1638,9 +1644,9 @@ static void TitleDrawPart_Circle(int x, int y, int w, int h, rgb_color_t col)
 }
 
 
-static void TitleDrawLinePart(int x, int y, int w, int h, rgb_color_t col)
+static void TDraw_LinePart(int x, int y, int w, int h, rgb_color_t col)
 {
-	TitleDrawPart_Circle(x, y, w, h, col);
+	TDraw_Circle(x, y, w, h, col);
 }
 
 
@@ -1662,7 +1668,7 @@ static int CalcOutcode(int x, int y)
 }
 
 
-static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int box_w, int box_h)
+static void TDraw_Line(int x1, int y1, int x2, int y2, rgb_color_t col, int box_w, int box_h)
 {
 	int out1 = CalcOutcode(x1, y1);
 	int out2 = CalcOutcode(x2, y2);
@@ -1683,7 +1689,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		x2 = MIN(title_W3-1, x2);
 
 		for (; x1 <= x2; x1++)
-			TitleDrawLinePart(x1, y1, box_w, box_h, col);
+			TDraw_LinePart(x1, y1, box_w, box_h, col);
 
 		return;
 	}
@@ -1699,7 +1705,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 		y2 = MIN(title_H3-1, y2);
 
 		for (; y1 <= y2; y1++)
-			TitleDrawLinePart(x1, y1, box_w, box_h, col);
+			TDraw_LinePart(x1, y1, box_w, box_h, col);
 
 		return;
 	}
@@ -1788,7 +1794,7 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 	{
 		int d = ay - ax/2;
 
-		TitleDrawLinePart(x, y, box_w, box_h, col);
+		TDraw_LinePart(x, y, box_w, box_h, col);
 
 		while (x != x2)
 		{
@@ -1801,14 +1807,14 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 			x += sx;
 			d += ay;
 
-			TitleDrawLinePart(x, y, box_w, box_h, col);
+			TDraw_LinePart(x, y, box_w, box_h, col);
 		}
 	}
 	else   // vertical stepping
 	{
 		int d = ax - ay/2;
 
-		TitleDrawLinePart(x, y, box_w, box_h, col);
+		TDraw_LinePart(x, y, box_w, box_h, col);
 
 		while (y != y2)
 		{
@@ -1821,18 +1827,14 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 			y += sy;
 			d += ax;
 
-			TitleDrawLinePart(x, y, box_w, box_h, col);
+			TDraw_LinePart(x, y, box_w, box_h, col);
 		}
 	}
 }
 
 
-static void TitleDrawImage(int x, int y, tga_image_c *img)
+static void TDraw_Image(int x, int y, tga_image_c *img)
 {
-	// Note: only supports basic masking (alpha 0 or 255)
-
-	// Note 2: clipping is not optimized
-
 	for (int dy = 0 ; dy < img->height ; dy++, y++)
 	{
 		if (y < 0) continue;
@@ -1847,13 +1849,19 @@ static void TitleDrawImage(int x, int y, tga_image_c *img)
 
 			rgb_color_t pix = img->pixels[dy * img->width + dx];
 
-			if (RGB_ALPHA(pix) & 128)
+			int alpha = RGB_ALPHA(pix);
+			if (alpha == 0)
+				continue;
+
+			for (int ky = 0 ; ky < 3 ; ky++)
+			for (int kx = 0 ; kx < 3 ; kx++)
 			{
-				for (int ky = 0 ; ky < 3 ; ky++)
-				for (int kx = 0 ; kx < 3 ; kx++)
-				{
-					title_pix[(y*3 + ky) * title_W3 + nx*3 + kx] = pix;
-				}
+				int pos = (y*3 + ky) * title_W3 + nx*3 + kx;
+
+				if (alpha == 255)
+					title_pix[pos] = pix;
+				else
+					title_pix[pos] = CalcAlphaBlend(title_pix[pos], pix, alpha);
 			}
 		}
 	}
@@ -1873,7 +1881,7 @@ int DM_title_draw_rect(lua_State *L)
 
 	SYS_ASSERT(title_pix);
 
-	TitleDrawBox(x*3, y*3, w*3, h*3, col);
+	TDraw_Box(x*3, y*3, w*3, h*3, col);
 	return 0;
 }
 
@@ -1897,7 +1905,7 @@ int DM_title_draw_line(lua_State *L)
 	x2 -= box_w / 2;  y2 -= box_h / 2;
 #endif
 
-	TitleDrawLine(x1*3, y1*3, x2*3, y2*3, col, box_w*3, box_h*3);
+	TDraw_Line(x1*3, y1*3, x2*3, y2*3, col, box_w*3, box_h*3);
 	return 0;
 }
 
@@ -1914,7 +1922,7 @@ int DM_title_load_image(lua_State *L)
 	if (! TitleCacheImage(filename))
 		luaL_error(L, "title_load_image: no such file: %s", filename);
 
-	TitleDrawImage(x, y, title_last_tga);
+	TDraw_Image(x, y, title_last_tga);
 
 	return 0;
 }
