@@ -955,11 +955,18 @@ function Title_parse_style(T, style)
   gui.title_prop("grad_y2", 100)
 
 -- MORE TEST CRUD
-  gui.title_prop("render_mode", "random")
-  gui.title_prop("color",  "#000")
+  gui.title_prop("render_mode", "solid")
+  gui.title_prop("color",  "#300")
   gui.title_prop("color2", "#fff")
   gui.title_prop("color3", "#fff")
   gui.title_prop("color4", "#fff")
+
+  if bw == 7 then
+    gui.title_prop("texture", "games/doom/titles/masks/skin1.tga")
+
+    T.x = T.x + 1
+    T.y = T.y + 1
+  end
 end
 
 
@@ -1090,8 +1097,8 @@ function Title_add_title()
     }
 
     {
-      styles = { "00f:99", "fed:55" }
-      alt    = { "fed:99", "00a:55" }
+      styles = { "00f:99", "fed:77" }
+      alt    = { "fed:99", "00a:77" }
 
       spacing = 0.45
     }

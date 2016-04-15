@@ -1644,6 +1644,8 @@ static inline rgb_color_t CalcGradient(float along)
 static inline rgb_color_t CalcPixel(int x, int y)
 {
 	float along = 0;
+
+	int px, py;
 	int hash;
 
 	switch (title_drawctx.render_mode)
@@ -1655,8 +1657,10 @@ static inline rgb_color_t CalcPixel(int x, int y)
 			if (! title_last_tga)
 				return MAKE_RGBA(0, 255, 255, 255);
 
-			// TODO
-			return 0;
+			px = (x / 3) % title_last_tga->width;
+			py = (y / 3) % title_last_tga->height;
+
+			return title_last_tga->pixels[py * title_last_tga->width + px];
 
 		case REND_Gradient:
 			if (title_drawctx.grad_y2 > title_drawctx.grad_y1)
@@ -1681,17 +1685,6 @@ static inline rgb_color_t CalcPixel(int x, int y)
 	}
 
 	return title_drawctx.color[0];
-
-#if 0  // TODO
-		if (title_drawctx.rendermode == REND_Textured && title_last_tga)
-		{
-			int px = (x / 3) % title_last_tga->width;
-			int py = (y / 3) % title_last_tga->height;
-
-			title_pix[y * title_W3 + x] = title_last_tga->pixels[py * title_last_tga->width + px];
-			continue;
-		}
-#endif
 }
 
 
