@@ -1299,7 +1299,8 @@ typedef enum
 {
 	REND_Solid = 0,
 	REND_Textured,
-	REND_Gradient
+	REND_Gradient,
+	REND_GradMirror
 
 } title_rendermode_e;
 
@@ -1323,6 +1324,9 @@ static struct
 	rgb_color_t color[4];
 
 	int box_w, box_h;
+
+	int grad_y1, grad_y2;
+
 
 	void Reset()
 	{
@@ -1539,6 +1543,19 @@ static void TitleParsePen(const char *what)
 }
 
 
+static void TitleParseRenderMode(const char *what)
+{
+	// Note: REND_Textured is handled differently
+
+	if (strcmp(what, "solid") == 0)
+		title_drawctx.render_mode = REND_Solid;
+	else if (strcmp(what, "gradient") == 0)
+		title_drawctx.render_mode = REND_Gradient;
+	else if (strcmp(what, "gradmirror") == 0)
+		title_drawctx.render_mode = REND_GradMirror;
+}
+
+
 int DM_title_property(lua_State *L)
 {
 	// LUA: title_property(name, value)
@@ -1559,14 +1576,21 @@ int DM_title_property(lua_State *L)
 	else if (strcmp(propname, "box_h") == 0)
 		title_drawctx.box_h = luaL_checkint(L, 2);
 
+	else if (strcmp(propname, "grad_y1") == 0)
+		title_drawctx.grad_y1 = luaL_checkint(L, 2);
+	else if (strcmp(propname, "grad_y2") == 0)
+		title_drawctx.grad_y2 = luaL_checkint(L, 2);
+
 	else if (strcmp(propname, "pen_type") == 0)
 		TitleParsePen(luaL_checkstring(L, 2));
+	else if (strcmp(propname, "render_mode") == 0)
+		TitleParseRenderMode(luaL_checkstring(L, 2));
 
 	return 0;
 }
 
 
-static rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2, int alpha)
+static inline rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2, int alpha)
 {
 	if (alpha == 255) return C2;
 	if (alpha ==   0) return C1;
@@ -1583,8 +1607,14 @@ static rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2, int alpha)
 }
 
 
-static rgb_color_t CalcGradient(float along)
+static inline rgb_color_t CalcGradient(float along)
 {
+	if (along < 0) along = 0;
+	if (along > 1) along = 1;
+
+	// this assumes top color is brigher than bottom color
+	along = pow(along, 0.75);
+
 	rgb_color_t col1 = title_drawctx.color[0];
 	rgb_color_t col2 = title_drawctx.color[1];
 
@@ -1598,6 +1628,31 @@ static rgb_color_t CalcGradient(float along)
 
 static inline rgb_color_t CalcPixel(int x, int y)
 {
+	float along = 0;
+
+	switch (title_drawctx.render_mode)
+	{
+		case REND_Solid:
+			break;
+
+		case REND_Textured:
+			// TODO
+			return 0;
+
+		case REND_Gradient:
+			if (title_drawctx.grad_y2 > title_drawctx.grad_y1)
+				along = (float)(y - 3*title_drawctx.grad_y1) / (float)(3*title_drawctx.grad_y2 - 3*title_drawctx.grad_y1);
+			return CalcGradient(along);
+
+		case REND_GradMirror:
+			if (title_drawctx.grad_y2 > title_drawctx.grad_y1)
+				along = (float)(y - 3*title_drawctx.grad_y1) / (float)(3*title_drawctx.grad_y2 - 3*title_drawctx.grad_y1);
+			along = along * 2.0;
+			if (along > 1.0)
+				along = 2.0 - along;
+			return CalcGradient(along);
+	}
+
 	return title_drawctx.color[0];
 
 	// FIXME

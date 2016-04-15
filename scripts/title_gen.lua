@@ -947,6 +947,12 @@ function Title_parse_style(T, style)
   gui.title_prop("box_h", bh)
 
   gui.title_prop("pen_type", "slash2")
+
+-- TEST CRUD
+  gui.title_prop("render_mode", "gradient")
+  gui.title_prop("color2", "#830")
+  gui.title_prop("grad_y1", 60)
+  gui.title_prop("grad_y2", 90)
 end
 
 
@@ -1077,8 +1083,8 @@ function Title_add_title()
     }
 
     {
-      styles = { "00f:99", "fff:55" }
-      alt    = { "fff:99", "00a:55" }
+      styles = { "00f:99", "ff4:55" }
+      alt    = { "ff4:99", "00a:55" }
 
       spacing = 0.45
     }
