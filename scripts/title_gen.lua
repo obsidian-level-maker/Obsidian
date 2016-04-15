@@ -809,7 +809,7 @@ function Title_get_normal_transform(x, y, w, h)
 
   -- simplest transform: a pure translation
   T.func = function(T, x, y)
-    return T.x + x * w, T.y - y * h
+    return T.x + x * T.w, T.y - y * T.h
   end
 
   -- italics !!
@@ -861,6 +861,7 @@ function Title_draw_char(T, ch)
 
   local info = TITLE_LETTER_SHAPES[ch]
 
+  -- ignore any unknown characters
   if not info then return end
 
 
@@ -966,8 +967,6 @@ function Title_styled_string_centered(T, text, styles)
   T.max_along = Title_measure_string(text, 1.0, T.spacing)
 
   local width = Title_measure_string(text, T.w, T.spacing)
-
-stderrf("measure with size %dx%d --> %d\n", T.w, T.h, width)
 
   T.x = int((320 - width) * 0.5) + 4
 
