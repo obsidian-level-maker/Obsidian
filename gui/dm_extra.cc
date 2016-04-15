@@ -1303,6 +1303,7 @@ typedef enum
 
 } title_rendermode_e;
 
+
 // the current drawing context
 static struct
 {
@@ -1310,12 +1311,17 @@ static struct
 
 	rgb_color_t color[4];
 
+	int box_w, box_h;
+
 	void Reset()
 	{
 		rendermode = REND_Solid;
 
 		for (int i = 0 ; i < 4 ; i++)
 			color[i] = MAKE_RGBA(0, 0, 0, 255);
+
+		box_w = 1;
+		box_h = 1;
 	}
 
 } title_drawctx;
@@ -1522,6 +1528,11 @@ int DM_title_property(lua_State *L)
 	else if (strcmp(propname, "color4") == 0)
 		title_drawctx.color[3] = Grab_Color(L, 2);
 
+	else if (strcmp(propname, "box_w") == 0)
+		title_drawctx.box_w = luaL_checkint(L, 2);
+	else if (strcmp(propname, "box_h") == 0)
+		title_drawctx.box_h = luaL_checkint(L, 2);
+
 	return 0;
 }
 
@@ -1619,17 +1630,17 @@ static void TDraw_Box(int x, int y, int w, int h)
 }
 
 
-static void TDraw_Circle(int x, int y, int w, int h)
+static void TDraw_Circle(int x, int y, int r)
 {
-	int bmx = x + w / 2;
-	int bmy = y + h / 2;
-	int r2  = w * w / 4;
+	int bmx = x + r / 2;
+	int bmy = y + r / 2;
+	int r2  = r * r / 4;
 
 	// clip the box
 	int x1 = x;
 	int y1 = y;
-	int x2 = x + w;
-	int y2 = y + h;
+	int x2 = x + r;
+	int y2 = y + r;
 
 	x1 = MAX(x1, 0);
 	y1 = MAX(y1, 0);
@@ -1654,9 +1665,9 @@ static void TDraw_Circle(int x, int y, int w, int h)
 }
 
 
-static void TDraw_LinePart(int x, int y, int w, int h)
+static void TDraw_LinePart(int x, int y)
 {
-	TDraw_Circle(x, y, w, h);
+	TDraw_Circle(x, y, title_drawctx.box_w * 3);
 }
 
 
@@ -1678,7 +1689,7 @@ static int CalcOutcode(int x, int y)
 }
 
 
-static void TDraw_Line(int x1, int y1, int x2, int y2, int box_w, int box_h)
+static void TDraw_Line(int x1, int y1, int x2, int y2)
 {
 	int out1 = CalcOutcode(x1, y1);
 	int out2 = CalcOutcode(x2, y2);
@@ -1699,7 +1710,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, int box_w, int box_h)
 		x2 = MIN(title_W3-1, x2);
 
 		for (; x1 <= x2; x1++)
-			TDraw_LinePart(x1, y1, box_w, box_h);
+			TDraw_LinePart(x1, y1);
 
 		return;
 	}
@@ -1715,7 +1726,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, int box_w, int box_h)
 		y2 = MIN(title_H3-1, y2);
 
 		for (; y1 <= y2; y1++)
-			TDraw_LinePart(x1, y1, box_w, box_h);
+			TDraw_LinePart(x1, y1);
 
 		return;
 	}
@@ -1804,7 +1815,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, int box_w, int box_h)
 	{
 		int d = ay - ax/2;
 
-		TDraw_LinePart(x, y, box_w, box_h);
+		TDraw_LinePart(x, y);
 
 		while (x != x2)
 		{
@@ -1817,14 +1828,14 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, int box_w, int box_h)
 			x += sx;
 			d += ay;
 
-			TDraw_LinePart(x, y, box_w, box_h);
+			TDraw_LinePart(x, y);
 		}
 	}
 	else   // vertical stepping
 	{
 		int d = ax - ay/2;
 
-		TDraw_LinePart(x, y, box_w, box_h);
+		TDraw_LinePart(x, y);
 
 		while (y != y2)
 		{
@@ -1837,7 +1848,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, int box_w, int box_h)
 			y += sy;
 			d += ax;
 
-			TDraw_LinePart(x, y, box_w, box_h);
+			TDraw_LinePart(x, y);
 		}
 	}
 }
@@ -1896,22 +1907,22 @@ int DM_title_draw_rect(lua_State *L)
 
 int DM_title_draw_line(lua_State *L)
 {
-	// LUA: title_draw_line(x1, y1, x2, y2, box_w, box_h)
+	// LUA: title_draw_line(x1, y1, x2, y2)
 
 	int x1 = luaL_checkint(L, 1);
 	int y1 = luaL_checkint(L, 2);
 	int x2 = luaL_checkint(L, 3);
 	int y2 = luaL_checkint(L, 4);
 
-	int box_w = luaL_optint(L, 5, 1);
-	int box_h = luaL_optint(L, 6, 1);
+	int box_w = title_drawctx.box_w;
+	int box_h = title_drawctx.box_h;
 
 #if 1
 	x1 -= box_w / 2;  y1 -= box_h / 2;
 	x2 -= box_w / 2;  y2 -= box_h / 2;
 #endif
 
-	TDraw_Line(x1*3, y1*3, x2*3, y2*3, box_w*3, box_h*3);
+	TDraw_Line(x1*3, y1*3, x2*3, y2*3);
 	return 0;
 }
 

@@ -841,7 +841,7 @@ function Title_make_stroke(T, x1,y1, x2,y2)
   x1, y1 = T.func(T, x1, y1)
   x2, y2 = T.func(T, x2, y2)
 
-  gui.title_draw_line(x1, y1, x2, y2, T.bw, T.bh)
+  gui.title_draw_line(x1, y1, x2, y2)
 end
 
 
@@ -905,8 +905,6 @@ end
 function Title_draw_string(T, text)
   T.along = 0
 
-  gui.title_prop("color", T.color)
-
   for i = 1, #text do
     local ch = string.sub(text, i, i)
 
@@ -941,10 +939,15 @@ function Title_parse_style(T, style)
     error("Title-gen: bad style string: " .. style)
   end
 
-  T.color = "#" .. color_str
+  color_str = "#" .. color_str
 
-  T.bw = 0 + ("0x" .. string.sub(box_str, 1, 1))
-  T.bh = 0 + ("0x" .. string.sub(box_str, 2, 2))
+  gui.title_prop("color", color_str)
+
+  local bw = 0 + ("0x" .. string.sub(box_str, 1, 1))
+  local bh = 0 + ("0x" .. string.sub(box_str, 2, 2))
+
+  gui.title_prop("box_w", bw)
+  gui.title_prop("box_h", bh)
 end
 
 
