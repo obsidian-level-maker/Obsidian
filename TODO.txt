@@ -13,6 +13,9 @@ ______________________________________________________________________
    +  move 'prefabs' folder to games/doom/
    -  free-standing cage prefabs  [ a decoration? ]
 
+   -  update Credits page (title authors)
+   +  update documentation for current GUI interface
+
 
 *  Heretic support
 
@@ -21,10 +24,8 @@ ______________________________________________________________________
 *  add in more scenery: trees, computers etc
 
 
-*  update documentation for current GUI interface
 
 *  support for translation into other languages
-   +  use _() and N_() where necessary
    -  create TEMPLATE.txt
 
 *  better i18n support (esp. non-ASCII characters in filenames)
