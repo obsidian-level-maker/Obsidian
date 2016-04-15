@@ -1308,14 +1308,14 @@ static struct
 {
 	title_rendermode_e rendermode;
 
-	rgb_color_t colors[4];
+	rgb_color_t color[4];
 
 	void Reset()
 	{
 		rendermode = REND_Solid;
 
 		for (int i = 0 ; i < 4 ; i++)
-			colors[i] = MAKE_RGBA(0, 0, 0, 255);
+			color[i] = MAKE_RGBA(0, 0, 0, 255);
 	}
 
 } title_drawctx;
@@ -1513,7 +1513,14 @@ int DM_title_property(lua_State *L)
 
 	const char *propname = luaL_checkstring(L, 1);
 
-	// TODO
+	if (strcmp(propname, "color") == 0)
+		title_drawctx.color[0] = Grab_Color(L, 2);
+	else if (strcmp(propname, "color2") == 0)
+		title_drawctx.color[1] = Grab_Color(L, 2);
+	else if (strcmp(propname, "color3") == 0)
+		title_drawctx.color[2] = Grab_Color(L, 2);
+	else if (strcmp(propname, "color4") == 0)
+		title_drawctx.color[3] = Grab_Color(L, 2);
 
 	return 0;
 }
@@ -1538,8 +1545,8 @@ static rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2, int alpha)
 
 static rgb_color_t CalcGradient(float along)
 {
-	rgb_color_t col1 = title_drawctx.colors[0];
-	rgb_color_t col2 = title_drawctx.colors[1];
+	rgb_color_t col1 = title_drawctx.color[0];
+	rgb_color_t col2 = title_drawctx.color[1];
 
 	int r = RGB_RED(col1)   * (1 - along) + RGB_RED(col2)   * along;
 	int g = RGB_GREEN(col1) * (1 - along) + RGB_GREEN(col2) * along;
@@ -1551,14 +1558,43 @@ static rgb_color_t CalcGradient(float along)
 
 static inline rgb_color_t CalcPixel(int x, int y)
 {
+	return title_drawctx.color[0];
+
 	// FIXME
 
 	// int hash = (IntHash(((y*3+ky) << 16) | (nx*3+kx)) >> 8) & 255;
 
+#if 0  // TODO
+		if (title_drawctx.rendermode == REND_Gradient)
+		{
+			// FIXME
+			float along = fmod(y * 5.0 / (float)title_H3, 1.0);
+
+			along = ((rand() >> 8) & 0xff) / 255;
+
+			title_pix[y * title_W3 + x] = CalcGradient(along);
+			continue;
+		}
+
+		if (false) // (! (rand() & 0x3000))
+		{
+			title_pix[y * title_W3 + x] = MAKE_RGBA(0, 0, 0, 255);
+			continue;
+		}
+
+		if (title_drawctx.rendermode == REND_Textured && title_last_tga)
+		{
+			int px = (x / 3) % title_last_tga->width;
+			int py = (y / 3) % title_last_tga->height;
+
+			title_pix[y * title_W3 + x] = title_last_tga->pixels[py * title_last_tga->width + px];
+			continue;
+		}
+#endif
 }
 
 
-static void TDraw_Box(int x, int y, int w, int h, rgb_color_t col)
+static void TDraw_Box(int x, int y, int w, int h)
 {
 	// clip the box
 	int x1 = x;
@@ -1578,12 +1614,12 @@ static void TDraw_Box(int x, int y, int w, int h, rgb_color_t col)
 	for (int y = y1 ; y < y2 ; y++)
 	for (int x = x1 ; x < x2 ; x++)
 	{
-		title_pix[y * title_W3 + x] = col;
+		title_pix[y * title_W3 + x] = CalcPixel(x, y);
 	}
 }
 
 
-static void TDraw_Circle(int x, int y, int w, int h, rgb_color_t col)
+static void TDraw_Circle(int x, int y, int w, int h)
 {
 	int bmx = x + w / 2;
 	int bmy = y + h / 2;
@@ -1613,40 +1649,14 @@ static void TDraw_Circle(int x, int y, int w, int h, rgb_color_t col)
 		if (dx*dx + dy*dy > r2)
 			continue;
 
-		if (title_drawctx.rendermode == REND_Gradient)
-		{
-			// FIXME
-			float along = fmod(y * 5.0 / (float)title_H3, 1.0);
-
-			along = ((rand() >> 8) & 0xff) / 255;
-
-			title_pix[y * title_W3 + x] = CalcGradient(along);
-			continue;
-		}
-
-		if (false) // (! (rand() & 0x3000))
-		{
-			title_pix[y * title_W3 + x] = MAKE_RGBA(0, 0, 0, 255);
-			continue;
-		}
-
-		if (title_drawctx.rendermode == REND_Textured && title_last_tga)
-		{
-			int px = (x / 3) % title_last_tga->width;
-			int py = (y / 3) % title_last_tga->height;
-
-			title_pix[y * title_W3 + x] = title_last_tga->pixels[py * title_last_tga->width + px];
-			continue;
-		}
-
-		title_pix[y * title_W3 + x] = col;
+		title_pix[y * title_W3 + x] = CalcPixel(x, y);
 	}
 }
 
 
-static void TDraw_LinePart(int x, int y, int w, int h, rgb_color_t col)
+static void TDraw_LinePart(int x, int y, int w, int h)
 {
-	TDraw_Circle(x, y, w, h, col);
+	TDraw_Circle(x, y, w, h);
 }
 
 
@@ -1668,7 +1678,7 @@ static int CalcOutcode(int x, int y)
 }
 
 
-static void TDraw_Line(int x1, int y1, int x2, int y2, rgb_color_t col, int box_w, int box_h)
+static void TDraw_Line(int x1, int y1, int x2, int y2, int box_w, int box_h)
 {
 	int out1 = CalcOutcode(x1, y1);
 	int out2 = CalcOutcode(x2, y2);
@@ -1689,7 +1699,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, rgb_color_t col, int box_
 		x2 = MIN(title_W3-1, x2);
 
 		for (; x1 <= x2; x1++)
-			TDraw_LinePart(x1, y1, box_w, box_h, col);
+			TDraw_LinePart(x1, y1, box_w, box_h);
 
 		return;
 	}
@@ -1705,7 +1715,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, rgb_color_t col, int box_
 		y2 = MIN(title_H3-1, y2);
 
 		for (; y1 <= y2; y1++)
-			TDraw_LinePart(x1, y1, box_w, box_h, col);
+			TDraw_LinePart(x1, y1, box_w, box_h);
 
 		return;
 	}
@@ -1794,7 +1804,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, rgb_color_t col, int box_
 	{
 		int d = ay - ax/2;
 
-		TDraw_LinePart(x, y, box_w, box_h, col);
+		TDraw_LinePart(x, y, box_w, box_h);
 
 		while (x != x2)
 		{
@@ -1807,14 +1817,14 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, rgb_color_t col, int box_
 			x += sx;
 			d += ay;
 
-			TDraw_LinePart(x, y, box_w, box_h, col);
+			TDraw_LinePart(x, y, box_w, box_h);
 		}
 	}
 	else   // vertical stepping
 	{
 		int d = ax - ay/2;
 
-		TDraw_LinePart(x, y, box_w, box_h, col);
+		TDraw_LinePart(x, y, box_w, box_h);
 
 		while (y != y2)
 		{
@@ -1827,7 +1837,7 @@ static void TDraw_Line(int x1, int y1, int x2, int y2, rgb_color_t col, int box_
 			y += sy;
 			d += ax;
 
-			TDraw_LinePart(x, y, box_w, box_h, col);
+			TDraw_LinePart(x, y, box_w, box_h);
 		}
 	}
 }
@@ -1870,42 +1880,38 @@ static void TDraw_Image(int x, int y, tga_image_c *img)
 
 int DM_title_draw_rect(lua_State *L)
 {
-	// LUA: title_draw_rect(x, y, w, h, col)
+	// LUA: title_draw_rect(x, y, w, h)
 
 	int x = luaL_checkint(L, 1);
 	int y = luaL_checkint(L, 2);
 	int w = luaL_checkint(L, 3);
 	int h = luaL_checkint(L, 4);
 
-	rgb_color_t col = Grab_Color(L, 5);
-
 	SYS_ASSERT(title_pix);
 
-	TDraw_Box(x*3, y*3, w*3, h*3, col);
+	TDraw_Box(x*3, y*3, w*3, h*3);
 	return 0;
 }
 
 
 int DM_title_draw_line(lua_State *L)
 {
-	// LUA: title_draw_line(x1, y1, x2, y2, col, box_w, box_h)
+	// LUA: title_draw_line(x1, y1, x2, y2, box_w, box_h)
 
 	int x1 = luaL_checkint(L, 1);
 	int y1 = luaL_checkint(L, 2);
 	int x2 = luaL_checkint(L, 3);
 	int y2 = luaL_checkint(L, 4);
 
-	rgb_color_t col = Grab_Color(L, 5);
-
-	int box_w = luaL_optint(L, 6, 1);
-	int box_h = luaL_optint(L, 7, 1);
+	int box_w = luaL_optint(L, 5, 1);
+	int box_h = luaL_optint(L, 6, 1);
 
 #if 1
 	x1 -= box_w / 2;  y1 -= box_h / 2;
 	x2 -= box_w / 2;  y2 -= box_h / 2;
 #endif
 
-	TDraw_Line(x1*3, y1*3, x2*3, y2*3, col, box_w*3, box_h*3);
+	TDraw_Line(x1*3, y1*3, x2*3, y2*3, box_w*3, box_h*3);
 	return 0;
 }
 

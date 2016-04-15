@@ -841,7 +841,7 @@ function Title_make_stroke(T, x1,y1, x2,y2)
   x1, y1 = T.func(T, x1, y1)
   x2, y2 = T.func(T, x2, y2)
 
-  gui.title_draw_line(x1, y1, x2, y2, T.color, T.bw, T.bh)
+  gui.title_draw_line(x1, y1, x2, y2, T.bw, T.bh)
 end
 
 
@@ -904,6 +904,8 @@ end
 
 function Title_draw_string(T, text)
   T.along = 0
+
+  gui.title_prop("color", T.color)
 
   for i = 1, #text do
     local ch = string.sub(text, i, i)
@@ -1042,7 +1044,7 @@ end
 
 
 
-function Title_add_title_and_sub()
+function Title_add_title()
 
   -- determine what kind of sub-title we will draw (if any)
   local sub_title_mode = "none"
@@ -1132,7 +1134,7 @@ if line2 then line2 = string.upper(line2) end
   end
 
 
-gui.title_load_image(322, 0, "data/masks/camo1.tga")
+--gui.title_load_image(322, 0, "data/masks/camo1.tga")
 
 
 
@@ -1225,7 +1227,9 @@ end
 
 
 function Title_add_credit()
-  gui.title_draw_rect(310, 190, 10, 10, "#000")
+  gui.title_prop("color", "#000")
+
+  gui.title_draw_rect(310, 190, 10, 10)
 
   gui.title_load_image(285, 163, "data/logo1.tga")
 end
@@ -1290,14 +1294,12 @@ process_raw_fonts()
 
   gui.title_set_palette(GAME.PALETTES.normal)
 
-
   Title_add_background()
 
   gui.title_write("INTERPIC")
 
-
   Title_add_credit()
-  Title_add_title_and_sub()
+  Title_add_title()
 
   gui.title_write("TITLEPIC")
 
