@@ -1300,7 +1300,8 @@ typedef enum
 	REND_Solid = 0,
 	REND_Textured,
 	REND_Gradient,
-	REND_GradMirror
+	REND_GradMirror,
+	REND_Random
 
 } title_rendermode_e;
 
@@ -1553,6 +1554,17 @@ static void TitleParseRenderMode(const char *what)
 		title_drawctx.render_mode = REND_Gradient;
 	else if (strcmp(what, "gradmirror") == 0)
 		title_drawctx.render_mode = REND_GradMirror;
+	else if (strcmp(what, "random") == 0)
+		title_drawctx.render_mode = REND_Random;
+}
+
+
+static void TitleParseTexture(lua_State *L, const char *filename)
+{
+	if (! TitleCacheImage(filename))
+		luaL_error(L, "title_prop: no such image: %s", filename);
+
+	title_drawctx.render_mode = REND_Textured;
 }
 
 
@@ -1585,6 +1597,9 @@ int DM_title_property(lua_State *L)
 		TitleParsePen(luaL_checkstring(L, 2));
 	else if (strcmp(propname, "render_mode") == 0)
 		TitleParseRenderMode(luaL_checkstring(L, 2));
+
+	else if (strcmp(propname, "texture") == 0)
+		TitleParseTexture(L, luaL_checkstring(L, 2));
 
 	return 0;
 }
@@ -1629,6 +1644,7 @@ static inline rgb_color_t CalcGradient(float along)
 static inline rgb_color_t CalcPixel(int x, int y)
 {
 	float along = 0;
+	int hash;
 
 	switch (title_drawctx.render_mode)
 	{
@@ -1636,6 +1652,9 @@ static inline rgb_color_t CalcPixel(int x, int y)
 			break;
 
 		case REND_Textured:
+			if (! title_last_tga)
+				return MAKE_RGBA(0, 255, 255, 255);
+
 			// TODO
 			return 0;
 
@@ -1652,32 +1671,18 @@ static inline rgb_color_t CalcPixel(int x, int y)
 			else
 				along = 1.0 - along * 2;
 			return CalcGradient(along);
+
+		case REND_Random:
+			x = x | 1;
+			y = y | 1;
+			hash = IntHash((y << 16) | x);
+			hash = (hash >> 8) & 3;
+			return title_drawctx.color[hash];
 	}
 
 	return title_drawctx.color[0];
 
-	// FIXME
-
-	// int hash = (IntHash(((y*3+ky) << 16) | (nx*3+kx)) >> 8) & 255;
-
 #if 0  // TODO
-		if (title_drawctx.rendermode == REND_Gradient)
-		{
-			// FIXME
-			float along = fmod(y * 5.0 / (float)title_H3, 1.0);
-
-			along = ((rand() >> 8) & 0xff) / 255;
-
-			title_pix[y * title_W3 + x] = CalcGradient(along);
-			continue;
-		}
-
-		if (false) // (! (rand() & 0x3000))
-		{
-			title_pix[y * title_W3 + x] = MAKE_RGBA(0, 0, 0, 255);
-			continue;
-		}
-
 		if (title_drawctx.rendermode == REND_Textured && title_last_tga)
 		{
 			int px = (x / 3) % title_last_tga->width;
