@@ -967,6 +967,8 @@ function Title_styled_string_centered(T, text, styles)
 
   local width = Title_measure_string(text, T.w, T.spacing)
 
+stderrf("measure with size %dx%d --> %d\n", T.w, T.h, width)
+
   T.x = int((320 - width) * 0.5) + 4
 
   Title_styled_string(T, text, styles)
@@ -1078,8 +1080,8 @@ function Title_add_title()
     }
 
     {
-      styles = { "00f:dd", "fff:bb" }
-      alt    = { "fff:dd", "00a:99" }
+      styles = { "00f:55", "fff:33" }
+      alt    = { "fff:55", "00a:33" }
 
       spacing = 0.45
     }

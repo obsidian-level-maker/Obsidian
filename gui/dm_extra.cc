@@ -1630,17 +1630,31 @@ static void TDraw_Box(int x, int y, int w, int h)
 }
 
 
-static void TDraw_Circle(int x, int y, int r)
+static void TDraw_Slash(int x, int y, int w)
 {
-	int bmx = x + r / 2;
-	int bmy = y + r / 2;
-	int r2  = r * r / 4;
+	y = y - w;
+
+	for (int i = 0 ; i <= w ; i++)
+	{
+		TDraw_Box(x, y, w, w);
+
+		x += 1;
+		y += 1;
+	}
+}
+
+
+static void TDraw_Circle(int x, int y, int w)
+{
+	int bmx = x + w / 2;
+	int bmy = y + w / 2;
+	int r2  = w * w / 4;
 
 	// clip the box
 	int x1 = x;
 	int y1 = y;
-	int x2 = x + r;
-	int y2 = y + r;
+	int x2 = x + w;
+	int y2 = y + w;
 
 	x1 = MAX(x1, 0);
 	y1 = MAX(y1, 0);
@@ -1667,7 +1681,7 @@ static void TDraw_Circle(int x, int y, int r)
 
 static void TDraw_LinePart(int x, int y)
 {
-	TDraw_Circle(x, y, title_drawctx.box_w * 3);
+	TDraw_Slash(x, y, title_drawctx.box_w * 3);
 }
 
 
