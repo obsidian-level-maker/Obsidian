@@ -82,13 +82,14 @@ Your input has been greatly appreciated!
 
 TITLE ARTWORK:
 
-city1.tga: by Sergei Churbanov, under CC-BY 3.0 license.
+city1.tga : by Sergei Churbanov, under CC-BY 3.0 license.
+city3.tga : by Emil Persson, under CC-BY 3.0 license.
+crowprin.tga : by dogchicken (user on OGA), under CC-BY 3.0 license.
+necro.tga : by kirill777 (user on OGA), under CC-BY 3.0 license.
 
-city3.tga: by Emil Persson, under CC-BY 3.0 license.
-
-crowprin.tga: by dogchicken (user on OGA), under CC-BY 3.0 license.
-
-necro.tga: by kirill777 (user on OGA), under CC-BY 3.0 license.
+ochre_pit.tga  : by Toby Hudson (from Wikipedia), under CC-BY-SA 3.0 license.
+chartres.tga   : by Nina Aldin Thune (from Wikipedia), under CC-BY 2.5 license.
+lone_house.tga : by Mayqel (from Wikipedia), under CC-BY-SA 3.0 license.
 
 (All other title artwork is under CC0 license / public domain)
 
