@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2015 Andrew Apted
+--  Copyright (C) 2008-2016 Andrew Apted
 --  Copyright (C) 2008-2009 Jon Vail
 --  Copyright (C)      2009 Enhas
 --  Copyright (C) 2010-2011 Chris Pisarczyk
@@ -1659,6 +1659,9 @@ namelib.NAMES =
       -- <place> of <desc>  e.g. city of souls
       ["%p of %d"] = 40
 
+      -- <place> of the <entity>  e.g. realm of the devil
+      ["%p of the %e"] = 60
+
       ["Beyond the %p"] = 2
     }
 
@@ -1693,8 +1696,14 @@ namelib.NAMES =
         Haunted = 10
         Cruel = 10
 
-        Hallowed = 5
+        Hallowed = 10
         Unholy = 10
+        Tortured = 10
+        Forgotten = 10
+
+        Hidden = 10
+        Wretched = 15
+        Nefarious = 15
       }
 
       p =
@@ -1707,7 +1716,7 @@ namelib.NAMES =
         Temple = 15
 
         World = 10
-        Planet = 5
+        Planet = 10
         Realm = 10
         Shores = 20
         Land = 10
@@ -1726,12 +1735,15 @@ namelib.NAMES =
         House = 10
 
         Island = 10
-        Mazes = 5
+        Mazes = 10
         Cult = 10
         Ruins = 10
         Caverns = 10
+
+        Knowledge = 10
       }
 
+      -- these are quite abstract
       d =
       {
         Death = 20
@@ -1739,7 +1751,7 @@ namelib.NAMES =
         Hell = 10
         Fury = 10
         Horror = 10
-        Slime = 5
+        Slime = 10
 
         Pain = 10
         Agony = 20
@@ -1753,7 +1765,33 @@ namelib.NAMES =
         Hate = 10
         Desire = 10
         Magic = 15
-        Heroes = 5
+
+        Heroes = 10
+        Insanity = 10
+        Silence = 20
+      }
+
+      e =
+      {
+        Devil = 20
+        Gods  = 20
+        Ancients = 20
+        Infidel = 20
+
+        Beast = 20
+        Demons = 20
+        Undead = 20
+        Zombies = 10
+        Trolls = 10
+        Aliens = 20
+
+        Dead = 20
+        Doomed = 30
+        Fearless = 20
+        Tormented = 20
+        Wretched = 20
+
+        ["Evil One"] = 20
       }
     }
   }
