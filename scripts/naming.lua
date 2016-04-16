@@ -1656,26 +1656,27 @@ namelib.NAMES =
       -- <adj> <thing>  e.g. eternal gore
       ["%a %d"] = 40
 
-      ["%d Forever"]  = 5
-      ["%d Revealed"] = 5
+      ["%d Forever"]  = 6
+      ["%d Revealed"] = 3
 
       -- <place> of <desc>  e.g. city of souls
       ["%p of %d"] = 40
-      ["%d of the %p"] = 5
+      ["%d in the %p"] = 6
 
-      ["%e of %d"] = 10
-      ["%e in the %p"] = 5
+      ["%e of %d"] = 3
+      ["%e in the %p"] = 3
 
       -- <place> of the <entity>  e.g. realm of the devil
-      ["%p of the %e"] = 70
+      ["%p of the %e"] = 60
 
       -- miscellaneous
-      ["Beyond the %p"] = 2
-      ["Journey to the %p"] = 2
+      ["Beyond the %p"] = 3
+      ["Journey to the %p"] = 3
 
       ["The %e Cometh"] = 3
       ["The %e will Rise"] = 3
       ["The %e must Die"] = 3
+      ["Fight the %e"] = 3
     }
 
     lexicon =
@@ -1766,7 +1767,7 @@ namelib.NAMES =
         Hell = 10
         Fury = 10
         Horror = 10
-        Slime = 10
+        Slime = 5
 
         Pain = 10
         Agony = 20
@@ -2080,6 +2081,7 @@ function namelib.test()
   test_theme("URBAN")
   test_theme("BOSS")
   test_theme("EPISODE")
+  test_theme("TITLE")
 end
 
 
