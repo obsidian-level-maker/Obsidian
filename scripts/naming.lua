@@ -62,7 +62,6 @@ namelib.NAMES =
         ["Fear the"]=10
         ["Dodge the"]=10
         ["Beware the"]=10
-        ["Escape the"]=10
         ["Bane of the"]=10
         ["Scourge of the"]=10
         ["Ordeal of the"]=10
@@ -1652,17 +1651,31 @@ namelib.NAMES =
     {
       -- <adj> <place>  e.g. dark dimension
       ["%a %p"] = 40
+      ["The %a %p"] = 10
 
       -- <adj> <thing>  e.g. eternal gore
       ["%a %d"] = 40
 
+      ["%d Forever"]  = 5
+      ["%d Revealed"] = 5
+
       -- <place> of <desc>  e.g. city of souls
       ["%p of %d"] = 40
+      ["%d of the %p"] = 5
+
+      ["%e of %d"] = 10
+      ["%e in the %p"] = 5
 
       -- <place> of the <entity>  e.g. realm of the devil
-      ["%p of the %e"] = 60
+      ["%p of the %e"] = 70
 
+      -- miscellaneous
       ["Beyond the %p"] = 2
+      ["Journey to the %p"] = 2
+
+      ["The %e Cometh"] = 3
+      ["The %e will Rise"] = 3
+      ["The %e must Die"] = 3
     }
 
     lexicon =
@@ -1704,6 +1717,7 @@ namelib.NAMES =
         Hidden = 10
         Wretched = 15
         Nefarious = 15
+        Extreme = 10
       }
 
       p =
@@ -1741,6 +1755,7 @@ namelib.NAMES =
         Caverns = 10
 
         Knowledge = 10
+        Vengeance = 10
       }
 
       -- these are quite abstract
@@ -1775,8 +1790,10 @@ namelib.NAMES =
       {
         Devil = 20
         Gods  = 20
+        Overlord = 20
         Ancients = 20
         Infidel = 20
+        Wicked = 20
 
         Beast = 20
         Demons = 20
@@ -1790,8 +1807,6 @@ namelib.NAMES =
         Fearless = 20
         Tormented = 20
         Wretched = 20
-
-        ["Evil One"] = 20
       }
     }
   }
