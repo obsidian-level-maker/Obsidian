@@ -639,7 +639,7 @@ TITLE_LETTER_SHAPES =
   {
     width = 0.6
     rx = { 82,142 }
-    ry = { 341,234 }
+    ry = { 338,232 }
     points =
     {
       { x=137,y=232 }
@@ -948,18 +948,18 @@ function Title_parse_style(T, style)
 
 --gui.title_prop("pen_type", "slash2")
 
--- TEST CRUD
+--[[
   gui.title_prop("render_mode", "gradmirror")
   gui.title_prop("color2", "#321")
   gui.title_prop("grad_y1", 50)
   gui.title_prop("grad_y2", 100)
 
--- MORE TEST CRUD
   gui.title_prop("render_mode", "solid")
   gui.title_prop("color",  "#300")
   gui.title_prop("color2", "#fff")
   gui.title_prop("color3", "#fff")
   gui.title_prop("color4", "#fff")
+--]]
 
   if bw == 7 then
     gui.title_prop("texture", "games/doom/titles/masks/skin1.tga")
