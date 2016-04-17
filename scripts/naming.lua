@@ -1656,8 +1656,8 @@ namelib.NAMES =
       -- <adj> <thing>  e.g. eternal gore
       ["%a %d"] = 40
 
-      ["%d Forever"]  = 6
-      ["%d Revealed"] = 3
+      ["%d Forever"]  = 5
+      ["%d Revealed"] = 2
 
       -- <place> of <desc>  e.g. city of souls
       ["%p of %d"] = 40
@@ -1670,13 +1670,14 @@ namelib.NAMES =
       ["%p of the %e"] = 60
 
       -- miscellaneous
-      ["Beyond the %p"] = 3
-      ["Journey to the %p"] = 3
+      ["Beyond the %p"] = 2
+      ["Journey to the %p"] = 2
 
-      ["The %e Cometh"] = 3
-      ["The %e will Rise"] = 3
-      ["The %e must Die"] = 3
-      ["Fight the %e"] = 3
+      ["The %e Cometh"] = 2
+      ["The %e will Rise"] = 2
+      ["The %e must Die"] = 2
+      ["Fight the %e"] = 2
+      ["Age of the %e"] = 2
     }
 
     lexicon =
@@ -1756,7 +1757,6 @@ namelib.NAMES =
         Caverns = 10
 
         Knowledge = 10
-        Vengeance = 10
       }
 
       -- these are quite abstract
@@ -1785,6 +1785,7 @@ namelib.NAMES =
         Heroes = 10
         Insanity = 10
         Silence = 20
+        Vengeance = 20
       }
 
       e =
@@ -1794,20 +1795,24 @@ namelib.NAMES =
         Overlord = 20
         Ancients = 20
         Infidel = 20
+        Oracle = 10
         Wicked = 20
+        Titans = 20
 
         Beast = 20
         Demons = 20
         Undead = 20
+        Vampire = 20
         Zombies = 10
         Trolls = 10
-        Aliens = 20
+        Aliens = 10
 
         Dead = 20
         Doomed = 30
         Fearless = 20
         Tormented = 20
         Wretched = 20
+        Destroyer = 10
       }
     }
   }
