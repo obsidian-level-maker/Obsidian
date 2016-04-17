@@ -837,7 +837,7 @@ function Title_make_stroke(T, x1,y1, x2,y2)
   x1, y1 = T.func(T, x1, y1)
   x2, y2 = T.func(T, x2, y2)
 
-  gui.title_draw_line(x1, y1, x2, y2)
+  gui.title_draw_line(x1 + T.ofs_x, y1 + T.ofs_y, x2 + T.ofs_x, y2 + T.ofs_y)
 end
 
 
@@ -943,6 +943,10 @@ function Title_parse_style(T, style)
   local bw = 0 + ("0x" .. string.sub(box_str, 1, 1))
   local bh = 0 + ("0x" .. string.sub(box_str, 2, 2))
 
+  -- TODO : in "shadow" mode leave these as zero
+  T.ofs_x = 0 - int(bw / 2)
+  T.ofs_y = 0 - int(bh / 2)
+
   gui.title_prop("box_w", bw)
   gui.title_prop("box_h", bh)
 
@@ -962,13 +966,15 @@ function Title_parse_style(T, style)
   gui.title_prop("color3", "#fff")
   gui.title_prop("color4", "#fff")
 
-  if bw == 7 then
-    gui.title_prop("texture", "games/doom/titles/masks/compblue.tga")
+  if bw == 9 then
+    gui.title_prop("texture", "data/masks/groovy1.tga")
+    gui.title_prop("pen_type", "slashs")
 
     T.x = T.x + 1
     T.y = T.y + 1
   else
-    gui.title_prop("render_mode", "gradient")
+    gui.title_prop("pen_type", "slash2")
+    gui.title_prop("render_mode", "solid")
     gui.title_prop("color2", "#ddd")
     gui.title_prop("grad_y1", 50)
     gui.title_prop("grad_y2", 90)
@@ -1113,8 +1119,8 @@ function Title_add_title()
 --]]
 
     {
-      styles = { "000:99", "fed:77" }
-      alt    = { "fed:99", "000:77" }
+      styles = { "000:dd", "975:bb", "321:99", "ca8:77" }
+      alt    = { "fed:bb", "000:99" }
 
       spacing = 0.45
     }
