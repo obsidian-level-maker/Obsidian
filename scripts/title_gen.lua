@@ -989,7 +989,7 @@ end
 
 
 
-function Title_centered_string(T, mx, my, text, styles)
+function Title_centered_string(T, mx, my, text, fw, fh, styles)
   local width = Title_measure_string(text, T.spacing)
 
   T.max_along = width
@@ -999,6 +999,9 @@ function Title_centered_string(T, mx, my, text, styles)
   T.x = int(mx - width * 0.5)
   T.y = int(my + T.h * 0.4)
 
+  T.w = fw
+  T.h = fh
+
   each style in styles do
     Title_parse_style(T, style)
     Title_draw_string(T, text)
@@ -1006,14 +1009,10 @@ function Title_centered_string(T, mx, my, text, styles)
 end
 
 
-function Title_styled_string_centered()  -- FIXME temp crud
-end
-
-
 
 function Title_widest_size_to_fit(text, box_w, max_w, spacing)
   for w = max_w, 11, -1 do
-    if Title_measure_string(text, w, spacing) <= box_w then
+    if w * Title_measure_string(text, spacing) <= box_w then
       return w
     end
   end
@@ -1175,10 +1174,12 @@ function Title_add_title()
     end
   end
 
+
   local main_lines = 1 + sel(line2, 1, 0)
 
-  local num_lines  = 1 + sel(line2, 1, 0) + sel(top_line, 1, 0) +
-                         sel(mid_line, 1, 0) + sel(bottom_line, 1, 0)
+  local other_lines = sel(top_line, 1, 0) + sel(mid_line, 1, 0) + sel(bottom_line, 1, 0)
+
+  local num_lines  = main_lines + other_lines
 
 
   -- figure out sizes of main area and sub-title area
@@ -1220,21 +1221,19 @@ function Title_add_title()
   local info = rand.pick(TITLE_MAIN_STYLES)
 
 
-  local title_y = 95
-
-  if line2 then title_y = title_y - 35 end
-  if not sub_title then title_y = title_y + 10 end
+  -- vertical sizing of the main title
+  local line_h = bb_main.h / (main_lines * 2 + other_lines)
 
 
   -- choose font sizes for the main lines
   local w1, w2
 
   if not line2 then
-    w1 = Title_widest_size_to_fit(line1, 312, 50, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, bb_main.w, 50, info.spacing)
     w2 = w1
   else
-    w1 = Title_widest_size_to_fit(line1, 246, 50, info.spacing)
-    w2 = Title_widest_size_to_fit(line2, 216, 50, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, bb_main.w, 50, info.spacing)
+    w2 = Title_widest_size_to_fit(line2, bb_main.w, 50, info.spacing)
 
     if false then
       w1 = math.min(w1, w2)
@@ -1242,15 +1241,23 @@ function Title_add_title()
     end
   end
 
+  local w3 = math.min(w1, w2) * 0.6
+  
 
-  local hh = 40
+  local h1 = math.ceil(line_h * 1.8)
+  local h2 = math.ceil(line_h * 1.8)
 
-  if line2 and mid_line then hh = 30 end
+  local h3 = math.ceil(line_h)
+
+
+
+  local mx = 160
+  local my = bb_main.y + line_h / 2
 
 
   -- draw the main title lines
 
-  local T = Title_get_normal_transform(0, title_y, w1, hh)
+  local T = Title_get_normal_transform(0, 0, w1, h1)
 
   if info.spacing then T.spacing = info.spacing end
 
@@ -1263,48 +1270,36 @@ function Title_add_title()
 
 
   if top_line then
-    T.w = math.min(w1, w2) * 0.5
-    T.h = T.h * 0.5
-    T.y = title_y + 26
+    Title_centered_string(T, mx, my, mid_line, w3, h3, style2)
 
-    Title_styled_string_centered(T, mid_line, style2)
+    my = my + line_h
   end
 
   if line1 then
-    Title_styled_string_centered(T, line1, style1)
+    Title_centered_string(T, mx, my, line1, w1, h1, style1)
+
+    my = my + line_h * 2
   end
 
   if mid_line then
-    T.w = math.min(w1, w2) * 0.5
-    T.h = T.h * 0.5
-    T.y = title_y + 26
-
-    Title_styled_string_centered(T, mid_line, style2)
+    Title_centered_string(T, mx, my, mid_line, w3, h3, style2)
   end
 
   if line2 then
-    title_y = title_y + 60
+    Title_centered_string(T, mx, my, line2, w2, h2, style1)
 
-    T.w = w2
-    T.h = hh
-    T.y = title_y
-
-    Title_styled_string_centered(T, line2, style1)
+    my = my + line_h * 2
   end
 
   if bottom_line then
-    T.w = math.min(w1, w2)
-    T.h = T.w
-
+    -- TODO: keep this?
     if line2 then
       T.h = T.h * 0.5
     else
       T.w = T.w * 1.5
     end
 
-    T.y = title_y + 26
-
-    Title_styled_string_centered(T, bottom_line, style2)
+    Title_centered_string(T, mx, my, bottom_line, w3, h3, style2)
   end
 
 
@@ -1312,16 +1307,15 @@ function Title_add_title()
 
   if sub_title then
     local mx = 160
-    local my = bb_sub.y + int(bb_sub.h / 2)
-stderrf("sub_h = %d --> my = %d\n", bb_sub.h, my)
+    local my = bb_sub.y + bb_sub.h / 2
 
     info = rand.pick(TITLE_SUB_STYLES)
 
     -- FIXME
-    T.w = 12
-    T.h = 16
+    local fw = 12
+    local fh = 16
 
-    Title_centered_string(T, mx, my, GAME.sub_title, info.alt)
+    Title_centered_string(T, mx, my, GAME.sub_title, fw, fh, info.alt)
   end
 end
 
