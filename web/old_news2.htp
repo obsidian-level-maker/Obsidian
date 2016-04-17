@@ -1,0 +1,260 @@
+<hr style="clear: right;">
+
+<div class="newsdate">05-Jan-2014:</div>
+<blockquote class="news">
+
+Report on current activity:
+
+<p>
+Early last year (2013) I began work on another major version, V5,
+which had some big changes: a better lighting system,
+storing prefabs in standard Doom WAD format, and using large
+prefabs (768x768 units) for laying out rooms.  There were
+improvements in other areas too, such as better way to calculate
+how much health to put into maps.
+
+<p>
+However the large prefabs for rooms proved to be unsatisfactory.
+While they often looked good, it tended to make very repetitive
+levels.
+This could have been alleviated by making lots and lots of
+different prefabs, but I feel that was the wrong way to go.
+Instead I think a random map generator should be able to
+create interesting things by the combination of a moderate set
+of primitives and idioms.
+
+<p>
+So right now I am working on merging the 3.57 room layout logic
+with the rest of the V5 codebase.  This is major surgery,
+made harder by changing the grid size back to 192x192 units,
+and it will take a while to get everything into a usable state again.
+But progress is being made, and I'm excited at being able to
+really take version 3.57 forward, and add lots of "new" stuff
+to it....
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">02-Feb-2013:</div>
+<blockquote class="news">
+
+The 4.28 source package has been updated, since it was missing the
+lua_src and glbsp_src directories (oops!).
+
+<p>
+In other news, I have been working on a new prefab system where the
+prefabs are stored in ordinary WAD files (rather than using Lua code),
+which I hope will make it easier to create custom content.
+I have also implemented a new algorithm for DOOM lighting, which
+should be better than the system used in 3.57, since it properly
+accounts for blocking walls and distance to lighting sources.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">28-Sep-2012:</div>
+<blockquote class="news">
+
+I hadn't been doing much with OBLIGE for a long time,
+but for the sake of moving forward with the V4 codebase I am
+happy to announce that.....
+
+<p>
+VERSION 4.28 HAS BEEN RELEASED
+
+<p>
+OK, it's true that this is not exactly an Earth-shattering release,
+and compared with previous versions all the rooms are very plain.
+However there are still some good things in this version:
+
+<ul class="spacey_list">
+
+<li>Quake support is much better than V3, there are no collision
+problems, and the maps now have proper lighting and vis.
+<li>Quake 2 support!
+<li>Hexen is supported again, with hubs
+<li>support for Absolution, the Doom64 TC
+<li>support for HacX and Harmony
+<li>multiple paths between rooms
+<li>teleporters
+
+</ul>
+
+I'm not sure exactly what I'm going to work on now,
+but I definitely have some ideas that I want to experiment with.
+The same vision that I had five
+years ago -- that a random level generator can create levels
+genuinely worth playing -- that is still something which
+I want to achieve.
+
+<p>
+Anyway, I hope you have some fun with this release.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">01-Jan-2012:</div>
+<blockquote class="news">
+
+Well it's a brand new year and work continues on OBLIGE.
+I had hoped to get a full release of the new "V4" code out by
+the end of 2011, but unfortunately that never happened.
+
+<p>
+Currently I am working on various aspects: outdoor bordering,
+caves, hallways, and will start working on windows and fences soon.
+When all that is sorted out, another WIP testing package will be
+made available on the forums.
+Hopefully that will be sometime before the end of February,
+but it may take longer.
+
+<p>
+After that, I will work on making the levels a bit prettier,
+such as pictures in walls, diagonal corners in rooms, normal doors,
+etc...
+Then I think OBLIGE will be ready for a proper release
+(with a period of testing to shake out any outstanding issues).
+
+<p>
+I hope everyone had a nice Christmas and here's wishing everybody
+a great year in 2012 :-)
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">17-Aug-2011:</div>
+<blockquote class="news">
+
+OBLIGE now has a new forum.
+
+This move was prompted by various problems and annoyances
+with the existing "hosted app" phpBB3 forum.
+
+<p>
+All of the users and topics from the previous forum have been
+successfully converted into the new forum, although certain
+things did not make the transition, in particular: avatar images,
+images in posts, and post attachments.
+
+Users will need to re-upload their avatar images.
+
+<p>
+The existing phpBB3 forum will be kept around in a
+read-only state for a few months, and
+hopefully a method can be found to restore the
+attachments and images in the posts
+(otherwise I will fix the most important ones by hand and
+not worry about the rest).
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">02-Jul-2011:</div>
+<blockquote class="news">
+Wow, hard to believe it's been five months since the last update!
+
+<p>
+OBLIGE development has been continuing and progress
+<i>is</i> being made (slowly but surely).
+
+Recently I have been working on improving the overall
+structure of levels, such as creating multiple paths between
+rooms and better hallway logic.  I have also worked on
+adding some 3D architecture into the maps, as well as
+getting more games (like Hexen) into a usable state.
+
+<p>
+I expect to make a new release by the end of the
+year -- though for anyone really curious there will
+be a couple of "WIP" (Work In Progress) testing
+packages made available on the forums before then.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">28-Jan-2011:</div>
+<blockquote class="news">
+Quick note to say that I am still hacking
+away on OBLIGE :-)
+
+<p>
+Several months ago I started work on "V4",
+which was a completely new way of layouting rooms.
+
+However I was not satisfied with that new system,
+so I have been exploring
+what kinds of algorithms are going to
+work best.
+
+Once this been sorted out, development should
+pick up pace again....
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">31-Aug-2010:</div>
+<blockquote class="news">
+Update on latest work:
+
+<p>
+It has been a while since the last release,
+but a lot has been happening in OBLIGE's codebase.
+The planning, room connection and quest code have
+gotten an overhaul, with support for special room shapes
+and teleporters.
+Another large (and on-going) change is the introduction of
+a Prefab system, which will be used to build nearly all
+architecture in a level.
+
+<p>
+Most of the work has been on the QUAKE support.
+I starting off with some new CSG code aiming to fix
+the collision problems, but then continued on to
+implement proper lighting, visibility and liquid areas.
+Plus I'm really stoked that QUAKE 2 maps are now being
+built correctly, and plan to support it well in the
+next release.
+There is still a lot left to do though.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
+<div class="newsdate">07-Apr-2010:</div>
+<blockquote class="news">
+Version 3.57 of OBLIGE has been released.
+
+<p>
+Major changes include a new system of lighting the levels,
+which is rather simplistic and blocky
+but a big improvement over what was there before.
+Also this is the first version of V3 to include support for
+other games, namely: Heretic and Quake, although they are
+still in their early stages (especially Quake).
+
+<p>
+There is also lots of bug fixes and general improvements in this release,
+like Chris's new E1M8 boss map,
+faster CSG and node building code,
+support for FreeDOOM,
+and more restrained use of cavey areas
+(TECH themes in particular).
+So what are you waiting for, go grab it!
+
+</blockquote>
+
