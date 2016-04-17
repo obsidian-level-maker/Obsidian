@@ -622,7 +622,6 @@ namelib.NAMES =
         Reckoning=5, Minos=3, Hades=7, Acheron=5,
         Leviathan=5, Baphomet=5, Devils=10,
 
-        ["the Antichrist"]=10
         ["the Acolyte"]=10
         ["the Ancient"]=10
         ["the Apostates"]=10
@@ -1743,8 +1742,9 @@ namelib.NAMES =
         Dungeons = 10
         Underworld = 10
         Dimension = 20
+        Catacombs = 10
 
-        Bases = 10
+        Base = 10
         Facility = 10
         Complex = 10
         Domain = 10
@@ -1757,6 +1757,10 @@ namelib.NAMES =
         Caverns = 10
 
         Knowledge = 10
+        Twilight = 10
+        Gateway = 10
+        Prison = 10
+        Tomb = 15
       }
 
       -- these are quite abstract
@@ -1786,6 +1790,7 @@ namelib.NAMES =
         Insanity = 10
         Silence = 20
         Vengeance = 20
+        Wrath = 10
       }
 
       e =
@@ -1795,12 +1800,16 @@ namelib.NAMES =
         Overlord = 20
         Ancients = 20
         Infidel = 20
+
+        Antichrist = 10
+        Necromancer = 20
         Oracle = 10
         Wicked = 20
         Titans = 20
 
         Beast = 20
         Demons = 20
+        Hellspawn = 20
         Undead = 20
         Vampire = 20
         Zombies = 10
