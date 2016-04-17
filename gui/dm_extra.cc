@@ -1718,9 +1718,11 @@ static void TDraw_Slash(int x, int y, int w, int dir)
 	if (! dir)
 		y = y + w;
 
+	int box_size = title_drawctx.box_h * 3;
+
 	for (int i = 0 ; i <= w ; i++)
 	{
-		TDraw_Box(x, y, 3, 3);
+		TDraw_Box(x, y, box_size, box_size);
 
 		x += 1;
 		y += dir ? 1 : -1;
