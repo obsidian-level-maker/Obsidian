@@ -1650,8 +1650,8 @@ namelib.NAMES =
     patterns =
     {
       -- <adj> <place>  e.g. dark dimension
-      ["%a %p"] = 40
-      ["The %a %p"] = 10
+      ["%a %p"] = 20
+      ["The %a %p"] = 30
 
       -- <adj> <thing>  e.g. eternal gore
       ["%a %d"] = 40
@@ -1663,7 +1663,7 @@ namelib.NAMES =
       ["%p of %d"] = 40
       ["%d in the %p"] = 6
 
-      ["%e of %d"] = 3
+      ["The %e of %d"] = 3
       ["%e in the %p"] = 3
 
       -- <place> of the <entity>  e.g. realm of the devil

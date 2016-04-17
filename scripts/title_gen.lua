@@ -946,6 +946,8 @@ function Title_parse_style(T, style)
   gui.title_prop("box_w", bw)
   gui.title_prop("box_h", bh)
 
+  gui.title_prop("render_mode", "solid")
+
 --gui.title_prop("pen_type", "slash2")
 
 --[[
@@ -959,14 +961,19 @@ function Title_parse_style(T, style)
   gui.title_prop("color2", "#fff")
   gui.title_prop("color3", "#fff")
   gui.title_prop("color4", "#fff")
---]]
 
   if bw == 7 then
-    gui.title_prop("texture", "games/doom/titles/masks/skin1.tga")
+    gui.title_prop("texture", "games/doom/titles/masks/compblue.tga")
 
     T.x = T.x + 1
     T.y = T.y + 1
+  else
+    gui.title_prop("render_mode", "gradient")
+    gui.title_prop("color2", "#ddd")
+    gui.title_prop("grad_y1", 50)
+    gui.title_prop("grad_y2", 90)
   end
+--]]
 end
 
 
@@ -1033,11 +1040,18 @@ function Title_split_into_lines()
   --   (a) a single string -- use it on a single line
   --   (b) two or three words -- first two are main lines, third is the
   --       little "of", "in", etc.. to be placed in-between
+  --   (c) fourth value can be "The"
   --
   local words = {}
 
   for w in string.gmatch(GAME.title, "%w+") do
     table.insert(words, w)
+  end
+
+  local top_line
+
+  if words[1] == "The" then
+    top_line = table.remove(words, 1)
   end
 
   -- handle titles like "X of the Y"
@@ -1058,9 +1072,9 @@ function Title_split_into_lines()
 
   -- multiple lines
   if words[3] then
-    return words[1], words[3], words[2]
+    return words[1], words[3], words[2], top_line
   else
-    return words[1], words[2]
+    return words[1], words[2], nil,      top_line
   end
 end
 
@@ -1082,6 +1096,7 @@ function Title_add_title()
 
   local TITLE_STYLES =
   {
+--[[
     {
       styles = { "999:77", "000:55" }
       alt    = { "000:77", "bbb:33" }
@@ -1095,10 +1110,11 @@ function Title_add_title()
 
       spacing = 0.45
     }
+--]]
 
     {
-      styles = { "00f:99", "fed:77" }
-      alt    = { "fed:99", "00a:77" }
+      styles = { "000:99", "fed:77" }
+      alt    = { "fed:99", "000:77" }
 
       spacing = 0.45
     }
@@ -1108,10 +1124,13 @@ function Title_add_title()
 
 
   -- determine if we have one or two main lines
-  local line1, line2, mid_line = Title_split_into_lines()
+  local line1, line2, mid_line, top_line = Title_split_into_lines()
 
 line1 = string.upper(line1)
 if line2 then line2 = string.upper(line2) end
+
+
+  -- FIXME : draw the "The" !!
 
 
   local title_y = 95
