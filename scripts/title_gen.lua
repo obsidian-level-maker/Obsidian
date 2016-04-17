@@ -1181,20 +1181,39 @@ function Title_add_title()
                          sel(mid_line, 1, 0) + sel(bottom_line, 1, 0)
 
 
-  -- figure out vertical ranges
-  local main_h = 120 + num_lines * 5
-  local sub_h  =  55 - num_lines * 5
+  -- figure out sizes of main area and sub-title area
+  local bb_main = { w=300 }
+  local bb_sub  = { w=260 }
+
+  bb_main.h = 120 + num_lines * 5
+  bb_sub.h  =  55 - num_lines * 5
+
+  bb_main.x = 10
+  bb_main.y = 8
+
+  bb_sub.x  = 30
+  bb_sub.y  = 188 - bb_sub.h
 
   if not sub_title then
-    main_h = main_h + sub_h
-    sub_h  = 0
+    bb_main.w = 280
+    bb_main.x =  20
+
+    bb_main.h = 150
+    bb_main.y =  15
+
+    -- dummy values (not used)
+    bb_sub.h = 5
+    bb_sub.y = 195
   end
 
+  stderrf("bb_main =\n%s\n\n", table.tostr(bb_main))
+  stderrf("bb_sub  =\n%s\n\n", table.tostr(bb_sub))
+
   gui.title_prop("color", "#070")
-  gui.title_draw_rect(10,8, 300,main_h)
+  gui.title_draw_rect(bb_main.x, bb_main.y, bb_main.w, bb_main.h)
 
   gui.title_prop("color", "#00f")
-  gui.title_draw_rect(10,188 - sub_h, 300,sub_h)
+  gui.title_draw_rect(bb_sub.x, bb_sub.y, bb_sub.w, bb_sub.h)
 
 
   -- pick the style to use
@@ -1292,8 +1311,9 @@ function Title_add_title()
   -- draw the sub-title
 
   if sub_title then
-    local my = 188 - int(sub_h / 2)
-stderrf("sub_h = %d --> my = %d\n", sub_h, my)
+    local mx = 160
+    local my = bb_sub.y + int(bb_sub.h / 2)
+stderrf("sub_h = %d --> my = %d\n", bb_sub.h, my)
 
     info = rand.pick(TITLE_SUB_STYLES)
 
@@ -1301,7 +1321,7 @@ stderrf("sub_h = %d --> my = %d\n", sub_h, my)
     T.w = 12
     T.h = 16
 
-    Title_centered_string(T, 160, my, GAME.sub_title, info.alt)
+    Title_centered_string(T, mx, my, GAME.sub_title, info.alt)
   end
 end
 
