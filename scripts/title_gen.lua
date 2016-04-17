@@ -1120,7 +1120,7 @@ function Title_split_into_lines()
 
   local top_line
 
-  if words[1] == "The" then
+  if words[1] == "The" or words[1] == "A" or words[1] == "An" then
     top_line = table.remove(words, 1)
   end
 
