@@ -950,9 +950,9 @@ function Title_parse_style(T, style)
   gui.title_prop("box_w", bw)
   gui.title_prop("box_h", bh)
 
-  gui.title_prop("render_mode", "solid")
+  gui.title_prop("pen_type", "box")
 
---gui.title_prop("pen_type", "slash2")
+  gui.title_prop("render_mode", "solid")
 
 --[[
   gui.title_prop("render_mode", "gradmirror")
@@ -966,20 +966,23 @@ function Title_parse_style(T, style)
   gui.title_prop("color3", "#fff")
   gui.title_prop("color4", "#fff")
 
-  if bw == 9 then
-    gui.title_prop("texture", "data/masks/groovy1.tga")
-    gui.title_prop("pen_type", "slashs")
-
-    T.x = T.x + 1
-    T.y = T.y + 1
-  else
-    gui.title_prop("pen_type", "slash2")
-    gui.title_prop("render_mode", "solid")
-    gui.title_prop("color2", "#ddd")
-    gui.title_prop("grad_y1", 50)
-    gui.title_prop("grad_y2", 90)
-  end
 --]]
+  if bw == 7 then
+    gui.title_prop("render_mode", "gradient3")
+    gui.title_prop("color",  "#00f")
+    gui.title_prop("color2", "#000")
+    gui.title_prop("color3", "#f00")
+    gui.title_prop("grad_y1", 25)
+    gui.title_prop("grad_y2", 70)
+
+    -- gui.title_prop("texture", "data/masks/groovy1.tga")
+
+  else
+--    gui.title_prop("render_mode", "solid")
+--    gui.title_prop("color2", "#ddd")
+--    gui.title_prop("grad_y1", 50)
+--    gui.title_prop("grad_y2", 90)
+  end
 end
 
 
@@ -1088,18 +1091,6 @@ end
 
 function Title_add_title()
 
-  -- determine what kind of sub-title we will draw (if any)
-  local sub_title_mode = "none"
-
-  if rand.odds(67) then
-    sub_title_mode = "phrase"
-
-    if #GAME.sub_title <= 4 and string.upper(GAME.sub_title) == GAME.sub_title then
-      sub_title_mode = "version"
-    end
-  end
-
-
   local TITLE_STYLES =
   {
 --[[
@@ -1132,8 +1123,25 @@ function Title_add_title()
   -- determine if we have one or two main lines
   local line1, line2, mid_line, top_line = Title_split_into_lines()
 
-line1 = string.upper(line1)
-if line2 then line2 = string.upper(line2) end
+  if line1 then line1 = string.upper(line1) end
+  if line2 then line2 = string.upper(line2) end
+
+  if mid_line then mid_line = string.upper(mid_line) end
+
+
+  -- determine what kind of sub-title we will draw (if any)
+  local sub_title
+
+  local bottom_line
+
+  if rand.odds(67) then
+    if #GAME.sub_title <= 4 and string.upper(GAME.sub_title) == GAME.sub_title then
+      -- this will be part of main title (a "version" string)
+      bottom_line = GAME.sub_title
+    else
+      sub_title = GAME.sub_title
+    end
+  end
 
 
   -- FIXME : draw the "The" !!
@@ -1142,7 +1150,7 @@ if line2 then line2 = string.upper(line2) end
   local title_y = 95
 
   if line2 then title_y = title_y - 35 end
-  if sub_title_mode == "none" then title_y = title_y + 10 end
+  if not sub_title then title_y = title_y + 10 end
 
 
   -- choose font sizes for the main lines
@@ -1176,20 +1184,26 @@ if line2 then line2 = string.upper(line2) end
   local style1 = info.styles
   local style2 = info.alt
 
-  if rand.odds(30*0) and sub_title_mode != "version" then
-    style1, style2 = style2, style1
+---???  if rand.odds(30*0) and sub_title_mode != "version" then
+---???    style1, style2 = style2, style1
+---???  end
+
+
+  if top_line then
+    T.w = math.min(w1, w2) * 0.5
+    T.h = T.h * 0.5
+    T.y = title_y + 26
+
+    Title_styled_string_centered(T, mid_line, style2)
   end
 
-
---gui.title_load_image(322, 0, "data/masks/camo1.tga")
-
-
-
-  Title_styled_string_centered(T, line1, style1)
+  if line1 then
+    Title_styled_string_centered(T, line1, style1)
+  end
 
   if mid_line then
-    T.w = math.min(w1, w2) * 0.7
-    T.h = T.h * 0.7
+    T.w = math.min(w1, w2) * 0.5
+    T.h = T.h * 0.5
     T.y = title_y + 26
 
     Title_styled_string_centered(T, mid_line, style2)
@@ -1205,10 +1219,23 @@ if line2 then line2 = string.upper(line2) end
     Title_styled_string_centered(T, line2, style1)
   end
 
+  if bottom_line then
+    T.w = math.min(w1, w2)
+    T.h = T.w
+
+    if line2 then
+      T.h = T.h * 0.5
+    else
+      T.w = T.w * 1.5
+    end
+
+    T.y = title_y + 26
+
+    Title_styled_string_centered(T, bottom_line, style2)
+  end
+
 
   -- draw the sub-title
-
-  if sub_title_mode == "none" then return end
 
   local SUB_STYLES =
   {
@@ -1238,37 +1265,18 @@ if line2 then line2 = string.upper(line2) end
     }
   }
 
-  T.y = 160
+  if sub_title then
+    T.y = 160
 
-  if not line2 then T.y = T.y - 25 end
-
-  if sub_title_mode == "version" then
-    -- often use the same style
-    if rand.odds(35) then
-      info = rand.pick(TITLE_STYLES)
-    end
-
-    T.w = math.min(w1, w2)
-    T.h = T.w
-
-    if line2 then
-      T.h = T.h * 0.7
-    else
-      T.w = T.w * 1.5
-    end
-
-    T.y = T.y + 10
-
-  else  -- a phrase
+    if not line2 then T.y = T.y - 25 end
 
     info = rand.pick(SUB_STYLES)
 
     T.w = 12
     T.h = 16
+
+    Title_styled_string_centered(T, GAME.sub_title, info.alt)
   end
-
-
-  Title_styled_string_centered(T, GAME.sub_title, info.alt)
 end
 
 
