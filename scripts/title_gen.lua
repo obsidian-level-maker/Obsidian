@@ -884,9 +884,11 @@ end
 
 
 
-function Title_measure_char(ch, w, spacing)
+function Title_measure_char(ch, spacing)
+  local local_w = 1.0
+
   if string.match(ch, "[a-z]") then
-    w = w * 0.8
+    local_w = 0.8
     ch = string.upper(ch)
   end
 
@@ -894,7 +896,7 @@ function Title_measure_char(ch, w, spacing)
 
   if not info then return 0 end
 
-  return w * (info.width + (spacing or 0.3))
+  return local_w * (info.width + (spacing or 0.3))
 end
 
 
@@ -911,13 +913,13 @@ end
 
 
 
-function Title_measure_string(text, w, spacing)
+function Title_measure_string(text, spacing)
   local width = 0
 
   for i = 1, #text do
     local ch = string.sub(text, i, i)
 
-    width = width + Title_measure_char(ch, w, spacing)
+    width = width + Title_measure_char(ch, spacing)
   end
 
   return width
@@ -987,7 +989,16 @@ end
 
 
 
-function Title_styled_string(T, text, styles)
+function Title_centered_string(T, mx, my, text, styles)
+  local width = Title_measure_string(text, T.spacing)
+
+  T.max_along = width
+
+  width = width * T.w
+
+  T.x = int(mx - width * 0.5)
+  T.y = int(my + T.h * 0.4)
+
   each style in styles do
     Title_parse_style(T, style)
     Title_draw_string(T, text)
@@ -995,16 +1006,7 @@ function Title_styled_string(T, text, styles)
 end
 
 
-
-function Title_styled_string_centered(T, text, styles)
-
-  T.max_along = Title_measure_string(text, 1.0, T.spacing)
-
-  local width = Title_measure_string(text, T.w, T.spacing)
-
-  T.x = int((320 - width) * 0.5) + 4
-
-  Title_styled_string(T, text, styles)
+function Title_styled_string_centered()  -- FIXME temp crud
 end
 
 
@@ -1018,6 +1020,65 @@ function Title_widest_size_to_fit(text, box_w, max_w, spacing)
 
   return 10
 end
+
+
+------------------------------------------------------------------------
+
+
+TITLE_MAIN_STYLES =
+{
+--[[
+  {
+    styles = { "999:77", "000:55" }
+    alt    = { "000:77", "bbb:33" }
+
+    spacing = 0.45
+  }
+
+  {
+    styles = { "ff0:77", "730:55" }
+    alt    = { "730:77", "ff0:33" }
+
+    spacing = 0.45
+  }
+--]]
+
+  {
+    styles = { "000:dd", "975:bb", "321:99", "ca8:77" }
+    alt    = { "fed:bb", "000:99" }
+
+    spacing = 0.45
+  }
+}
+
+
+TITLE_SUB_STYLES =
+{
+  {
+    alt = { "300:44", "f00:22" }
+    spacing = 0.4
+  }
+  {
+    alt = { "242:44", "6c6:22" }
+    spacing = 0.3
+  }
+  {
+    alt = {"300:44", "f94:22"}
+    spacing = 0.3
+  }
+  {
+    alt = {"00c:44", "005:22"}
+    spacing = 0.4
+  }
+  {
+    alt = {"431:44", "a86:22"}
+    spacing = 0.3
+  }
+  {
+    alt = {"707:44", "f0f:22"}
+    spacing = 0.5
+  }
+}
 
 
 ------------------------------------------------------------------------
@@ -1091,35 +1152,6 @@ end
 
 function Title_add_title()
 
-  local TITLE_STYLES =
-  {
---[[
-    {
-      styles = { "999:77", "000:55" }
-      alt    = { "000:77", "bbb:33" }
-
-      spacing = 0.45
-    }
-
-    {
-      styles = { "ff0:77", "730:55" }
-      alt    = { "730:77", "ff0:33" }
-
-      spacing = 0.45
-    }
---]]
-
-    {
-      styles = { "000:dd", "975:bb", "321:99", "ca8:77" }
-      alt    = { "fed:bb", "000:99" }
-
-      spacing = 0.45
-    }
-  }
-
-  local info = rand.pick(TITLE_STYLES)
-
-
   -- determine if we have one or two main lines
   local line1, line2, mid_line, top_line = Title_split_into_lines()
 
@@ -1143,8 +1175,30 @@ function Title_add_title()
     end
   end
 
+  local main_lines = 1 + sel(line2, 1, 0)
 
-  -- FIXME : draw the "The" !!
+  local num_lines  = 1 + sel(line2, 1, 0) + sel(top_line, 1, 0) +
+                         sel(mid_line, 1, 0) + sel(bottom_line, 1, 0)
+
+
+  -- figure out vertical ranges
+  local main_h = 120 + num_lines * 5
+  local sub_h  =  55 - num_lines * 5
+
+  if not sub_title then
+    main_h = main_h + sub_h
+    sub_h  = 0
+  end
+
+  gui.title_prop("color", "#070")
+  gui.title_draw_rect(10,8, 300,main_h)
+
+  gui.title_prop("color", "#00f")
+  gui.title_draw_rect(10,188 - sub_h, 300,sub_h)
+
+
+  -- pick the style to use
+  local info = rand.pick(TITLE_MAIN_STYLES)
 
 
   local title_y = 95
@@ -1237,45 +1291,17 @@ function Title_add_title()
 
   -- draw the sub-title
 
-  local SUB_STYLES =
-  {
-    {
-      alt = { "300:44", "f00:22" }
-      spacing = 0.4
-    }
-    {
-      alt = { "242:44", "6c6:22" }
-      spacing = 0.3
-    }
-    {
-      alt = {"300:44", "f94:22"}
-      spacing = 0.3
-    }
-    {
-      alt = {"00c:44", "005:22"}
-      spacing = 0.4
-    }
-    {
-      alt = {"431:44", "a86:22"}
-      spacing = 0.3
-    }
-    {
-      alt = {"707:44", "f0f:22"}
-      spacing = 0.5
-    }
-  }
-
   if sub_title then
-    T.y = 160
+    local my = 188 - int(sub_h / 2)
+stderrf("sub_h = %d --> my = %d\n", sub_h, my)
 
-    if not line2 then T.y = T.y - 25 end
+    info = rand.pick(TITLE_SUB_STYLES)
 
-    info = rand.pick(SUB_STYLES)
-
+    -- FIXME
     T.w = 12
     T.h = 16
 
-    Title_styled_string_centered(T, GAME.sub_title, info.alt)
+    Title_centered_string(T, 160, my, GAME.sub_title, info.alt)
   end
 end
 
