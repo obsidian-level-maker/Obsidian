@@ -1300,7 +1300,7 @@ typedef enum
 	REND_Solid = 0,
 	REND_Textured,
 	REND_Gradient,
-	REND_GradMirror,
+	REND_Gradient3,
 	REND_Random
 
 } title_rendermode_e;
@@ -1552,8 +1552,8 @@ static void TitleParseRenderMode(const char *what)
 		title_drawctx.render_mode = REND_Solid;
 	else if (strcmp(what, "gradient") == 0)
 		title_drawctx.render_mode = REND_Gradient;
-	else if (strcmp(what, "gradmirror") == 0)
-		title_drawctx.render_mode = REND_GradMirror;
+	else if (strcmp(what, "gradient3") == 0)
+		title_drawctx.render_mode = REND_Gradient3;
 	else if (strcmp(what, "random") == 0)
 		title_drawctx.render_mode = REND_Random;
 }
@@ -1627,11 +1627,24 @@ static inline rgb_color_t CalcGradient(float along)
 	if (along < 0) along = 0;
 	if (along > 1) along = 1;
 
-	// this assumes top color is brigher than bottom color
-	along = pow(along, 0.75);
-
 	rgb_color_t col1 = title_drawctx.color[0];
 	rgb_color_t col2 = title_drawctx.color[1];
+
+	if (title_drawctx.render_mode == REND_Gradient3)
+	{
+		along = along * 2.0;
+
+		if (along > 1)
+		{
+			col1 = col2;
+			col2 = title_drawctx.color[2];
+		}
+	}
+	else
+	{
+		// this assumes top color is brigher than bottom color
+		along = pow(along, 0.75);
+	}
 
 	int r = RGB_RED(col1)   * (1 - along) + RGB_RED(col2)   * along;
 	int g = RGB_GREEN(col1) * (1 - along) + RGB_GREEN(col2) * along;
@@ -1663,17 +1676,9 @@ static inline rgb_color_t CalcPixel(int x, int y)
 			return title_last_tga->pixels[py * title_last_tga->width + px];
 
 		case REND_Gradient:
+		case REND_Gradient3:
 			if (title_drawctx.grad_y2 > title_drawctx.grad_y1)
 				along = (float)(y - 3*title_drawctx.grad_y1) / (float)(3*title_drawctx.grad_y2 - 3*title_drawctx.grad_y1);
-			return CalcGradient(along);
-
-		case REND_GradMirror:
-			if (title_drawctx.grad_y2 > title_drawctx.grad_y1)
-				along = (float)(y - 3*title_drawctx.grad_y1) / (float)(3*title_drawctx.grad_y2 - 3*title_drawctx.grad_y1);
-			if (along > 0.5)
-				along = along * 2 - 1.0;
-			else
-				along = 1.0 - along * 2;
 			return CalcGradient(along);
 
 		case REND_Random:
