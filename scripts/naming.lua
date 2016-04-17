@@ -1723,25 +1723,27 @@ namelib.NAMES =
 
       p =
       {
+        City = 15
         Citadel = 15
-        City = 20
         Ghetto = 15
         Towers = 15
         Kingdom = 10
         Temple = 15
 
-        World = 10
-        Planet = 10
-        Realm = 10
+        World = 15
+        Planet = 15
+        Realm = 15
+        Dimension = 10
+
         Shores = 20
+        Valley = 20
         Land = 10
-        Fields = 15
-        Valley = 10
+        Fields = 10
+        River = 10
 
         Crypt = 10
         Dungeons = 10
         Underworld = 10
-        Dimension = 20
         Catacombs = 10
 
         Base = 10
@@ -1750,11 +1752,11 @@ namelib.NAMES =
         Domain = 10
         House = 10
 
-        Island = 10
+        Island = 15
         Mazes = 10
         Cult = 10
         Ruins = 10
-        Caverns = 10
+        Caverns = 15
 
         Knowledge = 10
         Twilight = 10
