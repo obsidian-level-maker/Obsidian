@@ -919,6 +919,9 @@ function Title_measure_string(text, spacing)
   for i = 1, #text do
     local ch = string.sub(text, i, i)
 
+    -- do not include the spacing on the final letter
+    if i == #text then spacing = 0 end
+
     width = width + Title_measure_char(ch, spacing)
   end
 
@@ -994,13 +997,13 @@ function Title_centered_string(T, mx, my, text, fw, fh, styles)
 
   T.max_along = width
 
-  width = width * T.w
-
-  T.x = int(mx - width * 0.5)
-  T.y = int(my + T.h * 0.4)
-
   T.w = fw
   T.h = fh
+
+  width = width * fw
+
+  T.x = int(mx - width * 0.5)
+  T.y = int(my + fh * 0.5)
 
   each style in styles do
     Title_parse_style(T, style)
@@ -1043,8 +1046,11 @@ TITLE_MAIN_STYLES =
 --]]
 
   {
-    styles = { "000:dd", "975:bb", "321:99", "ca8:77" }
-    alt    = { "fed:bb", "000:99" }
+    styles = { "fff:11" }
+    alt    = { "f00:11" }
+
+    styles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
+    altxx    = { "fed:bb", "000:99" }
 
     spacing = 0.45
   }
@@ -1200,7 +1206,11 @@ function Title_add_title()
     bb_main.x =  20
 
     bb_main.h = 150
-    bb_main.y =  15
+    bb_main.y =   8
+
+    if bottom_line then
+      bb_main.h = 168
+    end
 
     -- dummy values (not used)
     bb_sub.h = 5
@@ -1224,6 +1234,7 @@ function Title_add_title()
   -- vertical sizing of the main title
   local line_h = bb_main.h / (main_lines * 2 + other_lines)
 
+stderrf("line_h = %1.1f\n", line_h)
 
   -- choose font sizes for the main lines
   local w1, w2
@@ -1249,10 +1260,21 @@ function Title_add_title()
 
   local h3 = math.ceil(line_h)
 
+stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
+
+
+  gui.title_prop("color", "#030")
+  gui.title_draw_rect(bb_main.x, bb_main.y, bb_main.w, line_h)
+
+  gui.title_prop("color", "#030")
+  gui.title_draw_rect(bb_main.x, bb_main.y + line_h*2, bb_main.w, line_h)
+
+  gui.title_prop("color", "#030")
+  gui.title_draw_rect(bb_main.x, bb_main.y + line_h*4, bb_main.w, line_h)
 
 
   local mx = 160
-  local my = bb_main.y + line_h / 2
+  local my = bb_main.y
 
 
   -- draw the main title lines
@@ -1270,23 +1292,25 @@ function Title_add_title()
 
 
   if top_line then
-    Title_centered_string(T, mx, my, mid_line, w3, h3, style2)
+    Title_centered_string(T, mx, my + line_h/2, mid_line, w3, h3, style2)
 
     my = my + line_h
   end
 
   if line1 then
-    Title_centered_string(T, mx, my, line1, w1, h1, style1)
+    Title_centered_string(T, mx, my + line_h, line1, w1, h1, style1)
 
     my = my + line_h * 2
   end
 
   if mid_line then
-    Title_centered_string(T, mx, my, mid_line, w3, h3, style2)
+    Title_centered_string(T, mx, my + line_h/2, mid_line, w3, h3, style2)
+
+    my = my + line_h
   end
 
   if line2 then
-    Title_centered_string(T, mx, my, line2, w2, h2, style1)
+    Title_centered_string(T, mx, my + line_h, line2, w2, h2, style1)
 
     my = my + line_h * 2
   end
@@ -1299,7 +1323,7 @@ function Title_add_title()
       T.w = T.w * 1.5
     end
 
-    Title_centered_string(T, mx, my, bottom_line, w3, h3, style2)
+    Title_centered_string(T, mx, my + line_h/2, bottom_line, w3, h3, style2)
   end
 
 
@@ -1314,6 +1338,11 @@ function Title_add_title()
     -- FIXME
     local fw = 12
     local fh = 16
+
+    -- adjust for a mix of upper/lower case
+    if string.upper(GAME.sub_title) != GAME.sub_title then
+      my = my - fh / 8
+    end
 
     Title_centered_string(T, mx, my, GAME.sub_title, fw, fh, info.alt)
   end
