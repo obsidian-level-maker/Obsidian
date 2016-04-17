@@ -1046,7 +1046,7 @@ TITLE_MAIN_STYLES =
 --]]
 
   {
-    styles = { "fff:11" }
+    styles = { "000:33", "fff:11" }
     alt    = { "f00:11" }
 
     styles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
@@ -1220,11 +1220,13 @@ function Title_add_title()
   stderrf("bb_main =\n%s\n\n", table.tostr(bb_main))
   stderrf("bb_sub  =\n%s\n\n", table.tostr(bb_sub))
 
+--[[
   gui.title_prop("color", "#070")
   gui.title_draw_rect(bb_main.x, bb_main.y, bb_main.w, bb_main.h)
 
   gui.title_prop("color", "#00f")
   gui.title_draw_rect(bb_sub.x, bb_sub.y, bb_sub.w, bb_sub.h)
+--]]
 
 
   -- pick the style to use
@@ -1263,16 +1265,6 @@ stderrf("line_h = %1.1f\n", line_h)
 stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 
 
-  gui.title_prop("color", "#030")
-  gui.title_draw_rect(bb_main.x, bb_main.y, bb_main.w, line_h)
-
-  gui.title_prop("color", "#030")
-  gui.title_draw_rect(bb_main.x, bb_main.y + line_h*2, bb_main.w, line_h)
-
-  gui.title_prop("color", "#030")
-  gui.title_draw_rect(bb_main.x, bb_main.y + line_h*4, bb_main.w, line_h)
-
-
   local mx = 160
   local my = bb_main.y
 
@@ -1292,7 +1284,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 
 
   if top_line then
-    Title_centered_string(T, mx, my + line_h/2, mid_line, w3, h3, style2)
+    Title_centered_string(T, mx, my + line_h/2, top_line, w3, h3, style2)
 
     my = my + line_h
   end
