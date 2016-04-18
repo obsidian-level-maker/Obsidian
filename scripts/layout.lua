@@ -1223,9 +1223,10 @@ function Layout_outdoor_shadows()
 
   local function shadow_from_seed(S, dir)
     local dx = 64
-    local dy = 128
+    local dy = 96
 
     local brush
+    local wall
     
     if dir == 2 then
       brush =
@@ -1234,6 +1235,7 @@ function Layout_outdoor_shadows()
         { x = S.x1     , y = S.y1      }
         { x = S.x1 - dx, y = S.y1 - dy }
         { x = S.x2 - dx, y = S.y1 - dy }
+        { x = S.x2     , y = S.y1 - 16 }
         { x = S.x2     , y = S.y1      }
       }
     elseif dir == 4 then
@@ -1242,6 +1244,7 @@ function Layout_outdoor_shadows()
         { m = "light", sky_shadow=LEVEL.sky_shadow }
         { x = S.x1     , y = S.y1      }
         { x = S.x1     , y = S.y2      }
+        { x = S.x1 - 16, y = S.y2      }
         { x = S.x1 - dx, y = S.y2 - dy }
         { x = S.x1 - dx, y = S.y1 - dy }
       }
