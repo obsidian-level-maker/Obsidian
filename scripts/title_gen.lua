@@ -1189,32 +1189,33 @@ function Title_add_title()
 
 
   -- figure out sizes of main area and sub-title area
-  local bb_main = { w=300 }
-  local bb_sub  = { w=260 }
+  local bb_main = { w=280 }
+  local bb_sub  = { w=240 }
 
-  bb_main.h = 120 + num_lines * 5
-  bb_sub.h  =  55 - num_lines * 5
+  bb_main.h = 110 + num_lines * 5
+  bb_sub.h  =  50 - num_lines * 5
 
-  bb_main.x = 10
-  bb_main.y = 8
+  bb_main.x = (320 - bb_main.w) / 2
+  bb_main.y = 20
 
-  bb_sub.x  = 30
-  bb_sub.y  = 188 - bb_sub.h
+  bb_sub.x  = (320 - bb_sub.w) / 2
+  bb_sub.y  = 190 - bb_sub.h
 
   if not sub_title then
-    bb_main.w = 280
-    bb_main.x =  20
+    bb_main.w = 260
+    bb_main.x = (320 - bb_main.w) / 2
 
-    bb_main.h = 150
-    bb_main.y =   8
-
-    if bottom_line then
-      bb_main.h = 168
-    end
+    bb_main.h = sel(bottom_line, 145, 135)
+    bb_main.y = sel(bottom_line,  20,  22)
 
     -- dummy values (not used)
     bb_sub.h = 5
     bb_sub.y = 195
+  end
+
+  if top_line then
+    bb_main.y = bb_main.y - 5
+    bb_main.h = bb_main.h + 5
   end
 
   stderrf("bb_main =\n%s\n\n", table.tostr(bb_main))
@@ -1245,7 +1246,7 @@ stderrf("line_h = %1.1f\n", line_h)
     w1 = Title_widest_size_to_fit(line1, bb_main.w, 50, info.spacing)
     w2 = w1
   else
-    w1 = Title_widest_size_to_fit(line1, bb_main.w, 50, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, bb_main.w - 30, 50, info.spacing)
     w2 = Title_widest_size_to_fit(line2, bb_main.w, 50, info.spacing)
 
     if false then
@@ -1257,10 +1258,10 @@ stderrf("line_h = %1.1f\n", line_h)
   local w3 = math.min(w1, w2) * 0.6
   
 
-  local h1 = math.ceil(line_h * 1.8)
-  local h2 = math.ceil(line_h * 1.8)
+  local h1 = math.ceil(line_h * 1.2)
+  local h2 = math.ceil(line_h * 1.4)
 
-  local h3 = math.ceil(line_h)
+  local h3 = math.ceil(line_h * 0.7)
 
 stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 
@@ -1308,14 +1309,12 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   end
 
   if bottom_line then
-    -- TODO: keep this?
-    if line2 then
-      T.h = T.h * 0.5
-    else
-      T.w = T.w * 1.5
-    end
+    local w4 = w3 * 2
+    local h4 = h3 * 1.4
 
-    Title_centered_string(T, mx, my + line_h/2, bottom_line, w3, h3, style2)
+    my = my + 10
+
+    Title_centered_string(T, mx, my + line_h/2, bottom_line, w4, h4, style2)
   end
 
 
@@ -1328,8 +1327,8 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     info = rand.pick(TITLE_SUB_STYLES)
 
     -- FIXME
-    local fw = 12
-    local fh = 16
+    local fw = 11
+    local fh = 13
 
     -- adjust for a mix of upper/lower case
     if string.upper(GAME.sub_title) != GAME.sub_title then
