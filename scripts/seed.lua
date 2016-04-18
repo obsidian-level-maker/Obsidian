@@ -703,13 +703,15 @@ end
 
 
 function Edge_is_wallish(E)
-  if E.kind == "wall" or
-     E.kind == "trap_wall" or
-     E.kind == "window" or
-     E.kind == "arch" or
-     E.kind == "door" or
-     E.kind == "locked_door"
+  if E.kind == "wall" or E.kind == "window" or
+     E.kind == "arch" or E.kind == "door" or
+     E.kind == "locked_door" or
+     E.kind == "secret_door"
   then
+    return true
+  end
+
+  if E.to_chunk and E.to_chunk.kind == "closet" then
     return true
   end
 

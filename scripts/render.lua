@@ -80,6 +80,12 @@ end
 
 
 function Render_edge(E)
+  assert(E)
+  assert(E.kind)
+
+  if Edge_is_wallish(E) then
+    Corner_mark_walls(E)
+  end
 
   if E.kind == "nothing" then
     return
@@ -587,13 +593,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
   ---| Render_edge |---
-
-  assert(E)
-  assert(E.kind)
-
-  if Edge_is_wallish(E) then
-    Corner_mark_walls(E)
-  end
 
   if E.kind == "wall" then
     edge_wall()
