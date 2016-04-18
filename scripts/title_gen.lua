@@ -970,6 +970,11 @@ function Title_parse_style(T, style)
   local bw = 0 + ("0x" .. string.sub(box_str, 1, 1))
   local bh = 0 + ("0x" .. string.sub(box_str, 2, 2))
 
+assert(T.thick)
+
+  bw = T.thick
+  bh = T.thick
+
   -- TODO : in "shadow" mode leave these as zero
   T.ofs_x = 0 - int(bw / 2)
   T.ofs_y = 0 - int(bh / 2)
@@ -1025,6 +1030,8 @@ function Title_centered_string(T, mx, my, text, styles)
   T.y = my + T.fh  * 0.5
 
   each style in styles do
+    if _index != #styles then continue end
+
     Title_parse_style(T, style)
     Title_draw_string(T, text)
   end
@@ -1162,6 +1169,18 @@ end
 
 
 
+function Title_calc_max_thickness(fw, fh)
+  fw = math.min(fw, fh)
+
+  fw = int(fw / 5 + 0.5)
+
+  if fw < 1 then return 1 end
+
+  return fw
+end
+
+
+
 function Title_add_title()
 
   -- determine if we have one or two main lines
@@ -1286,6 +1305,12 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     mid_T.func = TITLE_TRANSFORM_LIST["straight"]
 
 
+  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh)
+  line1_T.thick = line2_T.thick
+
+  mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh)
+
+
   --- draw main title lines ---
 
   local mx = 160
@@ -1350,6 +1375,8 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     sub_T.fw = 11
     sub_T.fh = 13
     sub_T.spacing = rand.sel(50, 0.3, 0.4)
+
+    sub_T.thick = Title_calc_max_thickness(sub_T.fw, sub_T.fh)
 
     -- adjust for a mix of upper/lower case
     if string.upper(GAME.sub_title) != GAME.sub_title then
