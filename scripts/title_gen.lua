@@ -806,6 +806,29 @@ function Title_transform_Italics(T, x, y)
 end
 
 
+function Title_transform_Perspective(T, x, y)
+  local m = x / T.max_along
+
+  m = m ^ 0.7
+  x = m * T.max_along
+
+  m = 1.2 - m * 0.6
+
+  local n = (1.0 - m) / 2
+
+  return T.x + x * T.w, T.y - (y * m + n) * T.h
+end
+
+
+
+TITLE_TRANSFORM_LIST =
+{
+  straight    = Title_transform_Straight
+  italics     = Title_transform_Italics
+  perspective = Title_transform_Perspective
+}
+
+
 --[[ FIXME
 
   -- text shorter at the top
@@ -817,10 +840,6 @@ end
 
   -- text shrinking towards the right
   T.RRfunc = function(T, x, y)
-    local m = x / T.max_along
-    m = 1.4 - m * 0.8
-    local n = (1.0 - m) / 2
-    return T.x + x * T.w, T.y - (y * m + n) * T.h
   end
 
   return T
@@ -1253,7 +1272,7 @@ stderrf("line_h = %1.1f\n", line_h)
   end
 
   local w3 = math.min(w1, w2) * 0.6
-  
+
 
   local h1 = math.ceil(line_h * 1.2)
   local h2 = math.ceil(line_h * 1.4)
@@ -1267,7 +1286,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   local T = {}
 
   if true then
-    T.func = Title_transform_Straight
+    T.func = TITLE_TRANSFORM_LIST["perspective"]
   end
 
 
@@ -1326,7 +1345,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     -- create the transform
     local T = {}
 
-    T.func = Title_transform_Italics
+    T.func = TITLE_TRANSFORM_LIST["italics"]
 
     local mx = 160
     local my = bb_sub.y + bb_sub.h / 2
