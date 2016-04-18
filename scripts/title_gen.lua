@@ -796,13 +796,12 @@ TITLE_LETTER_SHAPES =
 
 function Title_transform_Straight(T, x, y)
   -- simplest transform: a pure translation
-
   return T.x + x * T.w, T.y - y * T.h
 end
 
 
 function Title_transform_Italics(T, x, y)
-  return T.x + (x + y * 0.3 * T.h / T.w) * T.w, T.y - y * T.h
+  return T.x + x * T.w + y * 0.3 * T.h, T.y - y * T.h
 end
 
 
@@ -820,32 +819,36 @@ function Title_transform_Perspective(T, x, y)
 end
 
 
+function Title_transform_FatTop(T, x, y)
+  local m = x / T.max_along
+
+  m = ((m * 2) - 1) / 3
+
+  return T.x + x * T.w + y * m * T.h, T.y - y * T.h
+end
+
+
+function Title_transform_FatBottom(T, x, y)
+  local m = x / T.max_along
+
+  m = ((m * 2) - 1) / 3
+
+  return T.x + x * T.w + (1-y) * m * T.h, T.y - y * T.h
+end
+
+
 
 TITLE_TRANSFORM_LIST =
 {
   straight    = Title_transform_Straight
   italics     = Title_transform_Italics
   perspective = Title_transform_Perspective
+  fat_top     = Title_transform_FatTop
+  fat_bottom  = Title_transform_FatBottom
 }
 
 
---[[ FIXME
-
-  -- text shorter at the top
-  T.KKfunc = function(T, x, y)
-    local m = x / T.max_along
-    m = ((m * 2) - 1) / 3
-    return T.x + (x + (1-y) * m) * T.w, T.y - y * T.h
-  end
-
-  -- text shrinking towards the right
-  T.RRfunc = function(T, x, y)
-  end
-
-  return T
-end
---]]
-
+------------------------------------------------------------------------
 
 
 function Title_make_stroke(T, x1,y1, x2,y2)
@@ -1286,7 +1289,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   local T = {}
 
   if true then
-    T.func = TITLE_TRANSFORM_LIST["perspective"]
+    T.func = TITLE_TRANSFORM_LIST["fat_bottom"]
   end
 
 
