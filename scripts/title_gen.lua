@@ -777,20 +777,24 @@ TITLE_LETTER_SHAPES =
 
 --struct TRANSFORM
 --[[
-    x, y    -- reference coord for transform function
-            -- e.g. x is left coord, y is the baseline
+    x, y     -- origin coordinate for transform function
+             -- x is the left coord, y is the baseline
 
-    func    -- function(T, x, y) to transform a coord
+    func     -- function(T, x, y) to transform coords to screen space
 
-    curved  -- true if lines will be bent (become curved), which
-            -- means we need to split them into small segments
+    along    -- current horizontal position when drawing a string
+             -- starts at 0.  units are "local" (NOT screen space)
 
-    along   -- current horizontal position when drawing a string
-            -- starts at 0
+    spacing  -- space between characters (in "local" space)
 
-    w, h    -- size of characters
+    max_along  -- measured width of current string (in "local" space)
 
-    spacing -- optional field, adds onto the info.width field
+
+    ==== style stuff ====
+
+    fw, fh   -- font width / height
+
+    thick    -- thickness of the drawing pen
 --]]
 
 
@@ -1020,8 +1024,8 @@ function Title_centered_string(T, mx, my, text, fw, fh, styles)
 
   width = width * fw
 
-  T.x = int(mx - width * 0.5)
-  T.y = int(my + fh * 0.5)
+  T.x = mx - width * 0.5
+  T.y = my + fh * 0.5
 
   each style in styles do
     Title_parse_style(T, style)
@@ -1277,15 +1281,15 @@ stderrf("line_h = %1.1f\n", line_h)
   local w3 = math.min(w1, w2) * 0.6
 
 
-  local h1 = math.ceil(line_h * 1.2)
-  local h2 = math.ceil(line_h * 1.4)
+  local h1 = line_h * 1.2
+  local h2 = line_h * 1.4
 
-  local h3 = math.ceil(line_h * 0.7)
+  local h3 = line_h * 0.7
 
 stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 
 
-  -- create the transform
+  -- create the transforms
   local T = {}
 
   if true then
@@ -1306,6 +1310,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 ---???  if rand.odds(30*0) and sub_title_mode != "version" then
 ---???    style1, style2 = style2, style1
 ---???  end
+
 
 
   if top_line then
