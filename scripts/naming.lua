@@ -1758,6 +1758,7 @@ namelib.NAMES =
         Ruins = 10
         Caverns = 15
 
+        Night = 30
         Knowledge = 10
         Twilight = 10
         Gateway = 10
@@ -1792,6 +1793,7 @@ namelib.NAMES =
         Insanity = 10
         Silence = 20
         Vengeance = 20
+        Shadows = 10
         Wrath = 10
       }
 
