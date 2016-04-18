@@ -1000,6 +1000,8 @@ function Fab_load_wad(def)
 
     local C2 = { x=C.x, y=C.y }
 
+    C2.u1_along = C.along
+
     -- these will be NIL for mini-segs (i.e. sector splits)
     local side
     local line
@@ -1812,8 +1814,8 @@ function Fab_replacements(fab)
   local function fixup_x_offsets(C)
     -- adjust X offset for split edges
 
-    if C.u1 and C.along then
-      C.u1 = C.u1 + C.along
+    if C.u1 and C.u1_along then
+      C.u1 = C.u1 + C.u1_along
     end
   end
 
