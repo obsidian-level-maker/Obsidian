@@ -901,7 +901,7 @@ function Title_draw_char(T, ch)
   end
 
   -- advance horizontally for next character
-  T.along = T.along + local_w * info.width + (T.spacing or 0.3)
+  T.along = T.along + local_w * info.width + T.spacing
 end
 
 
@@ -918,7 +918,7 @@ function Title_measure_char(ch, spacing)
 
   if not info then return 0 end
 
-  return local_w * info.width + (spacing or 0.3)
+  return local_w * info.width + spacing
 end
 
 
@@ -1052,15 +1052,11 @@ TITLE_MAIN_STYLES =
   {
     styles = { "999:77", "000:55" }
     alt    = { "000:77", "bbb:33" }
-
-    spacing = 0.45
   }
 
   {
     styles = { "ff0:77", "730:55" }
     alt    = { "730:77", "ff0:33" }
-
-    spacing = 0.45
   }
 --]]
 
@@ -1070,8 +1066,6 @@ TITLE_MAIN_STYLES =
 
     styles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
     altxx    = { "fed:bb", "000:99" }
-
-    spacing = 0.45
   }
 }
 
@@ -1080,27 +1074,21 @@ TITLE_SUB_STYLES =
 {
   {
     alt = { "300:44", "f00:11" }
-    spacing = 0.4
   }
   {
     alt = { "242:44", "6c6:11" }
-    spacing = 0.3
   }
   {
     alt = {"300:44", "f94:11"}
-    spacing = 0.3
   }
   {
     alt = {"00c:44", "005:11"}
-    spacing = 0.4
   }
   {
     alt = {"431:44", "a86:11"}
-    spacing = 0.3
   }
   {
     alt = {"707:44", "f0f:11"}
-    spacing = 0.5
   }
 }
 
@@ -1262,12 +1250,14 @@ stderrf("line_h = %1.1f\n", line_h)
   -- choose font sizes for the main lines
   local w1, w2
 
+  local spacing = 0.45
+
   if not line2 then
-    w1 = Title_widest_size_to_fit(line1, bb_main.w, 50, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, bb_main.w, 50, spacing)
     w2 = w1
   else
-    w1 = Title_widest_size_to_fit(line1, bb_main.w - 30, 50, info.spacing)
-    w2 = Title_widest_size_to_fit(line2, bb_main.w, 50, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, bb_main.w - 30, 50, spacing)
+    w2 = Title_widest_size_to_fit(line2, bb_main.w,      50, spacing)
 
     if false then
       w1 = math.min(w1, w2)
@@ -1287,19 +1277,19 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 
 
   -- create the transforms
-  local T = {}
+  local line1_T = { fw=w1, fh=h1, spacing=spacing }
+  local line2_T = { fw=w2, fh=h2, spacing=spacing }
+  local   mid_T = { fw=w3, fh=h3, spacing=spacing }
 
-  if true then
-    T.func = TITLE_TRANSFORM_LIST["fat_bottom"]
-  end
+  line1_T.func = TITLE_TRANSFORM_LIST["fat_bottom"]
+  line2_T.func = TITLE_TRANSFORM_LIST["fat_bottom"]
+    mid_T.func = TITLE_TRANSFORM_LIST["straight"]
 
 
-  -- draw the main title lines
+  --- draw main title lines ---
 
   local mx = 160
   local my = bb_main.y
-
-  if info.spacing then T.spacing = info.spacing end
 
   local style1 = info.styles
   local style2 = info.alt
@@ -1307,22 +1297,6 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 ---???  if rand.odds(30*0) and sub_title_mode != "version" then
 ---???    style1, style2 = style2, style1
 ---???  end
-
-
-  -- FIXME temp crud
-  local line1_T = table.copy(T)
-  local line2_T = table.copy(T)
-  local   mid_T = table.copy(T)
-
-  line1_T.fw = w1
-  line1_T.fh = h1
-
-  line2_T.fw = w2
-  line2_T.fh = h2
-
-  mid_T.fw = w3
-  mid_T.fh = h3
-
 
 
   if top_line then
@@ -1375,6 +1349,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     -- FIXME
     sub_T.fw = 11
     sub_T.fh = 13
+    sub_T.spacing = rand.sel(50, 0.3, 0.4)
 
     -- adjust for a mix of upper/lower case
     if string.upper(GAME.sub_title) != GAME.sub_title then
