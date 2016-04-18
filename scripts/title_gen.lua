@@ -800,12 +800,12 @@ TITLE_LETTER_SHAPES =
 
 function Title_transform_Straight(T, x, y)
   -- simplest transform: a pure translation
-  return T.x + x * T.w, T.y - y * T.h
+  return T.x + x * T.fw, T.y - y * T.fh
 end
 
 
 function Title_transform_Italics(T, x, y)
-  return T.x + x * T.w + y * 0.3 * T.h, T.y - y * T.h
+  return T.x + x * T.fw + y * 0.3 * T.fh, T.y - y * T.fh
 end
 
 
@@ -819,7 +819,7 @@ function Title_transform_Perspective(T, x, y)
 
   local n = (1.0 - m) / 2
 
-  return T.x + x * T.w, T.y - (y * m + n) * T.h
+  return T.x + x * T.fw, T.y - (y * m + n) * T.fh
 end
 
 
@@ -828,7 +828,7 @@ function Title_transform_FatTop(T, x, y)
 
   m = ((m * 2) - 1) / 3
 
-  return T.x + x * T.w + y * m * T.h, T.y - y * T.h
+  return T.x + x * T.fw + y * m * T.fh, T.y - y * T.fh
 end
 
 
@@ -837,7 +837,7 @@ function Title_transform_FatBottom(T, x, y)
 
   m = ((m * 2) - 1) / 3
 
-  return T.x + x * T.w + (1-y) * m * T.h, T.y - y * T.h
+  return T.x + x * T.fw + (1-y) * m * T.fh, T.y - y * T.fh
 end
 
 
@@ -1014,18 +1014,15 @@ end
 
 
 
-function Title_centered_string(T, mx, my, text, fw, fh, styles)
+function Title_centered_string(T, mx, my, text, styles)
   local width = Title_measure_string(text, T.spacing)
 
   T.max_along = width
 
-  T.w = fw
-  T.h = fh
-
-  width = width * fw
+  width = width * T.fw
 
   T.x = mx - width * 0.5
-  T.y = my + fh * 0.5
+  T.y = my + T.fh  * 0.5
 
   each style in styles do
     Title_parse_style(T, style)
@@ -1312,48 +1309,63 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 ---???  end
 
 
+  -- FIXME temp crud
+  local line1_T = table.copy(T)
+  local line2_T = table.copy(T)
+  local   mid_T = table.copy(T)
+
+  line1_T.fw = w1
+  line1_T.fh = h1
+
+  line2_T.fw = w2
+  line2_T.fh = h2
+
+  mid_T.fw = w3
+  mid_T.fh = h3
+
+
 
   if top_line then
-    Title_centered_string(T, mx, my + line_h/2, top_line, w3, h3, style2)
+    Title_centered_string(mid_T, mx, my + line_h/2, top_line, style2)
 
     my = my + line_h
   end
 
   if line1 then
-    Title_centered_string(T, mx, my + line_h, line1, w1, h1, style1)
+    Title_centered_string(line1_T, mx, my + line_h, line1, style1)
 
     my = my + line_h * 2
   end
 
   if mid_line then
-    Title_centered_string(T, mx, my + line_h/2, mid_line, w3, h3, style2)
+    Title_centered_string(mid_T, mx, my + line_h/2, mid_line, style2)
 
     my = my + line_h
   end
 
   if line2 then
-    Title_centered_string(T, mx, my + line_h, line2, w2, h2, style1)
+    Title_centered_string(line2_T, mx, my + line_h, line2, style1)
 
     my = my + line_h * 2
   end
 
   if bottom_line then
-    local w4 = w3 * 2
-    local h4 = h3 * 1.4
+    mid_T.fw = mid_T.fw * 2
+    mid_T.fh = mid_T.fh * 1.4
 
     my = my + 10
 
-    Title_centered_string(T, mx, my + line_h/2, bottom_line, w4, h4, style2)
+    Title_centered_string(mid_T, mx, my + line_h/2, bottom_line, style2)
   end
 
 
-  -- draw the sub-title
+  --- draw the sub-title ---
 
   if sub_title then
     -- create the transform
-    local T = {}
+    local sub_T = {}
 
-    T.func = TITLE_TRANSFORM_LIST["italics"]
+    sub_T.func = TITLE_TRANSFORM_LIST["italics"]
 
     local mx = 160
     local my = bb_sub.y + bb_sub.h / 2
@@ -1361,15 +1373,15 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     info = rand.pick(TITLE_SUB_STYLES)
 
     -- FIXME
-    local fw = 11
-    local fh = 13
+    sub_T.fw = 11
+    sub_T.fh = 13
 
     -- adjust for a mix of upper/lower case
     if string.upper(GAME.sub_title) != GAME.sub_title then
-      my = my - fh / 8
+      my = my - sub_T.fh / 8
     end
 
-    Title_centered_string(T, mx, my, GAME.sub_title, fw, fh, info.alt)
+    Title_centered_string(sub_T, mx, my, GAME.sub_title, info.alt)
   end
 end
 
