@@ -805,7 +805,7 @@ end
 
 
 function Title_transform_Italics(T, x, y)
-  return T.x + x * T.fw + y * 0.3 * T.fh, T.y - y * T.fh
+  return T.x + x * T.fw + (y - 0.5) * T.fh * 0.3, T.y - y * T.fh
 end
 
 
@@ -1170,6 +1170,10 @@ end
 
 
 function Title_calc_max_thickness(fw, fh)
+  -- TODO (1) : if pen style is thin_horiz/thin_vert, ignore that axis
+
+  -- TODO (2) : slighly reduced value for perspective/fat_top/fat_bottom
+
   fw = math.min(fw, fh)
 
   fw = int(fw / 5 + 0.5)
