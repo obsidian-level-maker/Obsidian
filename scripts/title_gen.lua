@@ -879,7 +879,7 @@ function Title_draw_char(T, ch)
   end
 
   -- advance horizontally for next character
-  T.along = T.along + local_w * (info.width + (T.spacing or 0.3))
+  T.along = T.along + local_w * info.width + (T.spacing or 0.3)
 end
 
 
@@ -896,7 +896,7 @@ function Title_measure_char(ch, spacing)
 
   if not info then return 0 end
 
-  return local_w * (info.width + (spacing or 0.3))
+  return local_w * info.width + (spacing or 0.3)
 end
 
 
