@@ -794,24 +794,19 @@ TITLE_LETTER_SHAPES =
 --]]
 
 
-function Title_get_normal_transform(x, y, w, h)
-  local T =
-  {
-    x = x
-    y = y
-    w = w
-    h = h
-  }
-
+function Title_transform_Straight(T, x, y)
   -- simplest transform: a pure translation
-  T.func = function(T, x, y)
-    return T.x + x * T.w, T.y - y * T.h
-  end
 
-  -- italics !!
-  T.Ifunc = function(T, x, y)
-    return T.x + (x + y * 0.5 * T.h / T.w) * T.w, T.y - y * T.h
-  end
+  return T.x + x * T.w, T.y - y * T.h
+end
+
+
+function Title_transform_Italics(T, x, y)
+  return T.x + (x + y * 0.3 * T.h / T.w) * T.w, T.y - y * T.h
+end
+
+
+--[[ FIXME
 
   -- text shorter at the top
   T.KKfunc = function(T, x, y)
@@ -830,6 +825,7 @@ function Title_get_normal_transform(x, y, w, h)
 
   return T
 end
+--]]
 
 
 
@@ -1060,27 +1056,27 @@ TITLE_MAIN_STYLES =
 TITLE_SUB_STYLES =
 {
   {
-    alt = { "300:44", "f00:22" }
+    alt = { "300:44", "f00:11" }
     spacing = 0.4
   }
   {
-    alt = { "242:44", "6c6:22" }
+    alt = { "242:44", "6c6:11" }
     spacing = 0.3
   }
   {
-    alt = {"300:44", "f94:22"}
+    alt = {"300:44", "f94:11"}
     spacing = 0.3
   }
   {
-    alt = {"00c:44", "005:22"}
+    alt = {"00c:44", "005:11"}
     spacing = 0.4
   }
   {
-    alt = {"431:44", "a86:22"}
+    alt = {"431:44", "a86:11"}
     spacing = 0.3
   }
   {
-    alt = {"707:44", "f0f:22"}
+    alt = {"707:44", "f0f:11"}
     spacing = 0.5
   }
 }
@@ -1239,6 +1235,7 @@ function Title_add_title()
 
 stderrf("line_h = %1.1f\n", line_h)
 
+
   -- choose font sizes for the main lines
   local w1, w2
 
@@ -1266,13 +1263,18 @@ stderrf("line_h = %1.1f\n", line_h)
 stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 
 
-  local mx = 160
-  local my = bb_main.y
+  -- create the transform
+  local T = {}
+
+  if true then
+    T.func = Title_transform_Straight
+  end
 
 
   -- draw the main title lines
 
-  local T = Title_get_normal_transform(0, 0, w1, h1)
+  local mx = 160
+  local my = bb_main.y
 
   if info.spacing then T.spacing = info.spacing end
 
@@ -1321,6 +1323,11 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   -- draw the sub-title
 
   if sub_title then
+    -- create the transform
+    local T = {}
+
+    T.func = Title_transform_Italics
+
     local mx = 160
     local my = bb_sub.y + bb_sub.h / 2
 
