@@ -1788,6 +1788,7 @@ namelib.NAMES =
         Hate = 10
         Desire = 10
         Magic = 15
+        Rage = 10
 
         Heroes = 10
         Insanity = 10
