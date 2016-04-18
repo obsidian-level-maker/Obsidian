@@ -826,18 +826,18 @@ end
 function Title_transform_FatTop(T, x, y)
   local m = x / T.max_along
 
-  m = ((m * 2) - 1) / 3
+  m = (1 - (m * 2)) / 3
 
-  return T.x + x * T.fw + y * m * T.fh, T.y - y * T.fh
+  return T.x + x * T.fw + (1-y) * m * T.fh, T.y - y * T.fh
 end
 
 
 function Title_transform_FatBottom(T, x, y)
   local m = x / T.max_along
 
-  m = ((m * 2) - 1) / 3
+  m = (1 - (m * 2)) / 3
 
-  return T.x + x * T.fw + (1-y) * m * T.fh, T.y - y * T.fh
+  return T.x + x * T.fw + y * m * T.fh, T.y - y * T.fh
 end
 
 
