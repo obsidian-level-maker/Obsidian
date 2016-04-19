@@ -1151,6 +1151,25 @@ function Fab_load_wad(def)
   end
 
 
+  local function decode_lighting(S, C)
+    -- closed sectors never specify a light
+    if S.floor_h >= S.ceil_h then return end
+
+    if S.light < 144 then
+      C.shadow = 144 - S.light
+    elseif S.light > 144 then
+      C.light_add = S.light - 144
+    end
+
+    -- lighting specials need a 'light_delta' field (for best results)
+    local delta = WADFAB_LIGHT_DELTAS[S.special or 0]
+
+    if delta then
+      C.light_delta = delta
+    end
+  end
+
+
   local function create_brush(S, coords, pass)
     
     -- pass: 1 = create a floor brush (or solid wall)
@@ -1186,17 +1205,15 @@ function Fab_load_wad(def)
         C.tag = S.tag
       end
 
-      -- lighting specials need a 'light_delta' field (for best results)
-      local delta = WADFAB_LIGHT_DELTAS[S.special or 0]
-      if delta then
-        C.light_delta = delta
+      -- give floor brush lighting ONLY when ceiling brush is absent
+      if S.ceil_tex == "_NOTHING" then
+        decode_lighting(S, C)
       end
 
       table.insert(B, C)
 
     else
       local C = { b=S.ceil_h, tex=S.ceil_tex }
-      table.insert(B, C)
 
       -- to make closed doors we need to force a gap, otherwise the CSG
       -- code will create void space.
@@ -1209,6 +1226,8 @@ function Fab_load_wad(def)
         B[1].mover = 1
       end
 
+      decode_lighting(S, C)
+
       -- give ceiling brush the tag ONLY when floor brush is absent
       if S.floor_tex == "_NOTHING" and S.tag and S.tag > 0 then
         C.tag = S.tag
@@ -1218,6 +1237,8 @@ function Fab_load_wad(def)
       if C.tex == "_SKY" then
         B[1].m = "sky"
       end
+
+      table.insert(B, C)
     end
 
     each C in coords do
