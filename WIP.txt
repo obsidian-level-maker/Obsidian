@@ -2,6 +2,8 @@
 WORK IN PROGRESS
 ================
 
+I18n : do the control modules
+
 
 TITLE GENERATOR
 
@@ -25,6 +27,10 @@ NEW LIGHTING:
 
 -  for wall prefabs and closets in outdoor rooms, ones facing a
    certain direction should use "shadow" light value as ambient
+
+-  for joiners and doors/windows : pick a value roughly between
+   the two sides.  E.g. if diff == 32, use lowest + 16
+   When diff == 16, use the ENTRY side.
 
 
 
@@ -62,6 +68,7 @@ WALLS:
 TRAPS:
 
 +  monster closets which open in PREVIOUS (back-track) room
+   [ visit rooms with goals in them _before_ other rooms ]
 
 +  for each trappable item/goal in a room [ upto max of 2 ]
    decide whether to create a closet trap (using a nearby unused closets)
@@ -117,23 +124,15 @@ SHAPE GRAMMARS:
    [ do this BEFORE converting prelim conns into real conns ]
    
    Q/ what about joiners??
+   A/ joiner becomes a closet, room becomes void
 
 +  symmetrical rooms
    -  find straddling floor chunks in a pre-pass
       [ esp. even width for "wide" sym, odd width if not wide ]
 
-   +  a way to score "straddling" patterns higher
+   -  a way to score "straddling" patterns higher
       [ they are a very good place for some stuff, e.g. exits ]
       [[ only first usage of SPROUT/DECOR needs to score higher ]]
-
-   -  SPROUT: if mirrored and new rooms touch/overlap, only create
-              a single room [ only if ONE conn though ]
-
-
-
-MISCELLANEOUS:
-
-+  face direction for start pad / teleport pads
 
 
 
