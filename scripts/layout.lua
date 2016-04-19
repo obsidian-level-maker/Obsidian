@@ -1010,8 +1010,6 @@ function Layout_liquid_stuff()
     assert(min_f)
 
     A.floor_h = min_f - 16
-
-stderrf("Pool %d in %s : floor_h: %d\n", A.pool_id, A.name, A.floor_h)
   end
 
 
