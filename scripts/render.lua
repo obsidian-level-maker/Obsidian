@@ -1488,6 +1488,14 @@ function Render_chunk(chunk)
 
   local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
+  if chunk.kind == "stair" and
+     chunk.shape == "L" and
+     chunk.dest_dir == geom.LEFT[chunk.from_dir]
+  then
+    T.mirror_x = chunk.sw * SEED_SIZE / 2
+  end
+
+
   Fabricate(A.room, def, T, { skin })
 
   

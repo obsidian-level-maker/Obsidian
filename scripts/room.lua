@@ -1551,7 +1551,12 @@ h = 8
         chunk.tex_ref = A1
       else
         chunk.tex_ref = A2
-        chunk.from_dir = 10 - chunk.from_dir
+
+        if chunk.dest_dir then
+          chunk.from_dir, chunk.dest_dir = chunk.dest_dir, chunk.from_dir
+        else
+          chunk.from_dir = 10 - chunk.from_dir
+        end
       end
 
     end
