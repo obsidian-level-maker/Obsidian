@@ -683,7 +683,7 @@ function Grower_preprocess_grammar()
     local E
 
     repeat
-      x, y = geom.nudge(x, y, 10 - dir)
+      x, y = geom.nudge(x, y, dir)
       if not is_valid(x, y) then return nil end
 
       E = def.output[x][y]
@@ -707,24 +707,38 @@ function Grower_preprocess_grammar()
     -- this also verifies the rectangle is all the same
     mark_part_as_seen(kind, x, y, w, h, seen)
 
-    local info = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
+    local rect = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
 
     local E = def.output[x][y]
 
     -- grab "dir" from corresponding table, if present
     -- TODO : support multiple cages/closets/joiners (via _2, _3, _4 suffix)
     if def[kind] then
-      table.merge_missing(info, def[kind])
+      table.merge_missing(rect, def[kind])
     end
 
-    if kind == "stair" or kind == "joiner" then
-      info.dir = assert(E.dir or info.dir)
-      info.from_area = determine_from_area(kind, x, y, info.dir)
+    if E.dir then
+      rect.from_dir = 10 - E.dir
+    else
+      assert(rect.from_dir)
+    end
+
+    rect.from_area = determine_from_area(kind, x, y, rect.from_dir)
+
+    if not rect.shape then
+      if rect.dest_dir then
+        rect.shape = "L"
+      elseif kind == "closet" then
+        rect.shape = "U"
+      else
+        rect.shape = "I"
+      end
     end
 
     if not def.rects then def.rects = {} end
 
-    table.insert(def.rects, info)
+stderrf("ADDING RECT:\n%s\n", table.tostr(rect))
+    table.insert(def.rects, rect)
   end
 
 
@@ -1931,16 +1945,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
-  local function mark_chunk_neighbors(r)
-    local shape = r.shape
-
-    if not shape then
-      if r.kind == "stair" or r.kind == "joiner" then
-        shape = "I"
-      else
-        shape = "U"
-      end
-    end
+  local function mark_chunk_neighbors(r)  -- UNUSED ????
+    local shape = assert(r.shape)
 
     -- the "dir" generally faces its source
     -- [ but it won't matter when shape is "I" or "P" ]
@@ -1973,9 +1979,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       assert(r.kind)
       local chunk = Chunk_new(r.kind, x1,y1, x2,y2)
 
-      if r.dir  then chunk.dir  = transform_dir(T, r.dir)  end
-      if r.dir2 then chunk.dir2 = transform_dir(T, r.dir2) end
-
       if r.from_dir then chunk.from_dir = transform_dir(T, r.from_dir) end
       if r.dest_dir then chunk.dest_dir = transform_dir(T, r.dest_dir) end
 
@@ -1983,6 +1986,12 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
         chunk.place = "floor"
       else
         chunk.place = "whole"
+      end
+
+      chunk.shape = r.shape
+
+      if r.from_area then
+        chunk.from_area = assert(area_map[r.from_area])
       end
 
       table.insert(new_chunks, chunk)
@@ -2018,10 +2027,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
       elseif r.dest_area then
         chunk.dest_area = assert(area_map[r.dest_area])
-      end
-
-      if r.from_area then
-        chunk.from_area = assert(area_map[r.from_area])
       end
 
       if r.kind == "joiner" then

@@ -1548,7 +1548,7 @@ h = 8
 -- stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
 
       if A1.floor_h < A2.floor_h then
-        chunk.dir = 10 - chunk.dir
+        chunk.from_dir = 10 - chunk.from_dir
 
         chunk.tex_ref = A1
       else

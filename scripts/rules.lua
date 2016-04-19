@@ -149,9 +149,9 @@ GROW_NEWAREA_1 =
 }
 
 
-GROW_STAIRS_2 =
+GROW_STAIRS_1 =
 {
-  prob = 0
+  prob = 9999
 
   structure =
   {
@@ -159,6 +159,20 @@ GROW_STAIRS_2 =
     "x..x", "x^^x"
     "x11x", "x11x"
   }
+}
+
+
+GROW_CURVE_STAIR_1 =
+{
+  prob = 0
+
+  structure =
+  {
+    "....", "AAS."
+    "xx1x", "xx1x"
+  }
+
+  stair = { from_dir=2, dest_dir=4 }
 }
 
 
@@ -207,7 +221,7 @@ SPROUT_JOINER_2x1 =
 
   joiner =
   {
-    dir = 8  -- must be opposite to conn.dir
+    from_dir = 2
   }
 }
 
@@ -387,7 +401,7 @@ DECORATE_CLOSET_2x1 =
     "11", "11"
   }
 
-  closet = { from_dir=2, from_area=1 }
+  closet = { from_dir=2 }
 }
 
 
@@ -402,7 +416,7 @@ DECORATE_CLOSET_2x2 =
     "11", "11"
   }
 
-  closet = { from_dir=2, from_area=1 }
+  closet = { from_dir=2 }
 }
 
 

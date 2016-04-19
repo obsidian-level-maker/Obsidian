@@ -133,6 +133,9 @@
                      -- "ceil"  (needs a floor + walls)
                      -- "whole" (provides both floor, ceiling, walls)
 
+    shape : keyword  -- "U" or "I" or "L" or "T" or "P"
+                     -- only used for stairs, closets, joiners
+
     content_kind : keyword  -- is NIL when unused / free
                             -- "START", "EXIT", "TELEPORTER"
                             -- "KEY", "WEAPON", "ITEM", "SWITCH"
