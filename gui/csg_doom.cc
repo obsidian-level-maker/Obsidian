@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -897,20 +897,20 @@ static void DM_LightInSector(doom_sector_c *S, region_c *R,
 	S->light = CLAMP(0, S->light, 255);
 
 
-	// handle 'light_delta' property for light effects
+	// handle "fx_delta" property for light effects
 
-	int delta = 0;
-
-	if (S->misc_flags & SEC_FLOOR_SPECIAL)
-		delta = f_face->getInt("light_delta");
-	else if (S->misc_flags & SEC_CEIL_SPECIAL)
-		delta = c_face->getInt("light_delta");
-
-	if (delta > 0)
+	if (S->special)
 	{
-		S->light2 = S->light - delta;
-	}
+		int delta = c_face->getInt("fx_delta");
 
+		if (delta == 0)
+			delta = f_face->getInt("fx_delta");
+
+		if (delta > 0)
+		{
+			S->light2 = S->light - delta;
+		}
+	}
 
 	// TODO: Doom 64 TC support : colored sectors
 	//       this value is a sector type, and has lowest priority

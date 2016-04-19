@@ -70,7 +70,7 @@ WADFAB_ENTITIES =
 }
 
 
-WADFAB_LIGHT_DELTAS =
+WADFAB_FX_DELTAS =
 {
   [1]  =  48  -- random off
   [2]  =  48  -- blink fast
@@ -1165,11 +1165,11 @@ function Fab_load_wad(def)
       C.light_add = S.light - 144
     end
 
-    -- lighting specials need a 'light_delta' field (for best results)
-    local delta = WADFAB_LIGHT_DELTAS[S.special or 0]
+    -- lighting specials need a 'fx_delta' field (for best results)
+    local delta = WADFAB_FX_DELTAS[S.special or 0]
 
     if delta then
-      C.light_delta = delta
+      C.fx_delta = delta
     end
   end
 
