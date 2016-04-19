@@ -3,16 +3,17 @@ WORK IN PROGRESS
 ================
 
 
->>>  3 new title pics
+TITLE GENERATOR
 
+-  support outlines
+   IDEA : instead of thickness == 2, just repeat a color
 
->>>  improve font for titlepic  [ e.g. shaded letters ]
++  proper style system....
 
+-  support offseting of the pen (in Lua code)
+   -  main ones are centered and top-right (as now)
 
->>>  for images support alpha by only doing partial set of pixels
-
-
-+  wad-fab loader / AJ-polygonator : fix offset on lines split by a node
+-  specify outline as a DW/DH/DX/DY (plus colors etc...)
 
 
 
@@ -22,7 +23,8 @@ NEW LIGHTING:
 
      AMBIENT_LIGHT = A.lighting
 
--  wad-fab loader : add "shadow" or "light_add" based on (SEC.light - 144)
+-  for wall prefabs and closets in outdoor rooms, ones facing a
+   certain direction should use "shadow" light value as ambient
 
 
 
@@ -44,8 +46,16 @@ CEILINGS:
 
 WALLS:
 
--  get the decorative walls working nicely
++  get the decorative walls working nicely
    [ pick one per area or floor_group ]
+
+   -  support GROUP objects in 'GROUPS' table
+
+   -  the name is always: kind .. "_" .. groupname
+
+   -  support "env", "theme" (etc??) fields
+
+   -  if nothing found, fall back to non-group lookup
 
 
 
@@ -73,7 +83,7 @@ STAIRS:
 
 -  support two stairs in a rule (to same area)
 
--  support "L" and "T" shape stairs
+-  a large curved stair?
 
 
 
@@ -86,8 +96,6 @@ JOINERS:
     as the skin.special for the SWITCH prefab
 
 +  support joiners with a height difference
-
--  support "L" and "T" shape joiners
 
 
 
@@ -126,9 +134,6 @@ SHAPE GRAMMARS:
 MISCELLANEOUS:
 
 +  face direction for start pad / teleport pads
-
-+  monster spots from a prefab : can cause stuck monsters
-   [ ideally shrink them if nearby wall(etc) overlaps ]
 
 
 

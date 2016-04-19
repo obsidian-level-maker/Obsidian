@@ -69,6 +69,9 @@ ______________________________________________________________________
 
 +  add railings to cages sometimes
 
++  monster spots from a prefab : can cause stuck monsters
+   [ ideally shrink them if nearby wall(etc) overlaps ]
+
 -  if room has a boss/guard needing a large chunk, allocate those
    chunks early [ but allow importants to override in emergencies ]
 
@@ -77,6 +80,10 @@ ______________________________________________________________________
 -  a lowering pedestal that requires a switch to activate
    
 -  support decorative closets, e.g. fancy light thingy
+
+-  support "T" shape stairs  [ cannot simply reverse to go down! ]
+
+-  support "L" and "T" shape joiners
 
 -  one switch opens ALL the barred exits
 
