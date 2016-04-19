@@ -28,6 +28,7 @@ SEEDS  = {}
 
 EPISODE = {}
 PREFABS = {}
+GROUPS  = {}
 
 
 -- a place for unfinished stuff

@@ -2,11 +2,21 @@
 -- Wall with horizontal band
 --
 
+GROUPS.wall_mid_band =
+{
+  env = "indoor"
+
+  theme = "tech"
+}
+
+
 PREFABS.Wall_midband =
 {
   file   = "wall/mid_band.wad"
   map    = "MAP01"
   where  = "edge"
+
+  group  = "mid_band"
 
   long   = 128
   deep   = 16
@@ -17,8 +27,6 @@ PREFABS.Wall_midband =
   bound_z2 = 64
 
   z_fit  = "frame"
-
-  rank = 2
 }
 
 
@@ -28,6 +36,8 @@ PREFABS.Wall_midband_diag =
   map    = "MAP02"
   where  = "diagonal"
 
+  group  = "mid_band"
+
   long   = 128
   deep   = 16
 
@@ -37,7 +47,5 @@ PREFABS.Wall_midband_diag =
   bound_z2 = 64
 
   z_fit  = "frame"
-
-  rank = 2
 }
 

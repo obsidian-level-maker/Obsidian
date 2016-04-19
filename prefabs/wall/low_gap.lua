@@ -2,11 +2,21 @@
 -- Wall with gap at bottom
 --
 
+GROUPS.wall_low_gap =
+{
+  env = "indoor"
+
+  theme = "tech"
+}
+
+
 PREFABS.Wall_lowgap =
 {
   file   = "wall/low_gap.wad"
   map    = "MAP01"
   where  = "edge"
+
+  group  = "low_gap"
 
   long   = 128
   deep   = 16
@@ -17,8 +27,6 @@ PREFABS.Wall_lowgap =
   bound_z2 = 64
 
   z_fit  = "top"
-
-  rank = 3
 }
 
 
@@ -28,6 +36,8 @@ PREFABS.Wall_lowgap_diag =
   map    = "MAP02"
   where  = "diagonal"
 
+  group  = "low_gap"
+
   long   = 128
   deep   = 16
 
@@ -37,7 +47,5 @@ PREFABS.Wall_lowgap_diag =
   bound_z2 = 64
 
   z_fit  = "top"
-
-  rank = 3
 }
 
