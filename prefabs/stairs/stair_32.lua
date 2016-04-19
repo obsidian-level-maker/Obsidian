@@ -6,6 +6,7 @@ PREFABS.Stair_32 =
 {
   file   = "stairs/stair_32.wad"
   where  = "seeds"
+  shape  = "I"
 
   x_fit  = "stretch"
 

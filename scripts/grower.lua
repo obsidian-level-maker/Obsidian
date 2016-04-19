@@ -737,7 +737,6 @@ function Grower_preprocess_grammar()
 
     if not def.rects then def.rects = {} end
 
-stderrf("ADDING RECT:\n%s\n", table.tostr(rect))
     table.insert(def.rects, rect)
   end
 

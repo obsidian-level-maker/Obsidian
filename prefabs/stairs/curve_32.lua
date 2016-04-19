@@ -2,11 +2,10 @@
 -- curved stair, 32 units high
 --
 
-PREFABS.Stair_curved_32 =
+PREFABS.Stair_curve_32 =
 {
-  file   = "stairs/curved_32.wad"
+  file   = "stairs/curve_32.wad"
   where  = "seeds"
-
   shape  = "L"
 
   bound_z1 = 0

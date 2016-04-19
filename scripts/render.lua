@@ -1317,7 +1317,8 @@ function Render_chunk(chunk)
   end
 
   local function do_stairs()
-    reqs.kind = "stairs"
+    reqs.kind  = "stairs"
+    reqs.shape = assert(chunk.shape)
   end
 
   local function do_joiner()

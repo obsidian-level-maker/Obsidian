@@ -151,7 +151,7 @@ GROW_NEWAREA_1 =
 
 GROW_STAIRS_1 =
 {
-  prob = 9999
+  prob = 0
 
   structure =
   {
@@ -164,7 +164,7 @@ GROW_STAIRS_1 =
 
 GROW_CURVE_STAIR_1 =
 {
-  prob = 0
+  prob = 9999
 
   structure =
   {
