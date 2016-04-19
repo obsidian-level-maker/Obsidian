@@ -79,7 +79,7 @@ WADFAB_LIGHT_DELTAS =
   [13] =  48  -- blink slow, sync
   [17] =  48  -- flickers
 
-  [8]  =  96  -- oscillates
+  [8]  = 128  -- oscillates
 }
 
 
@@ -1155,8 +1155,12 @@ function Fab_load_wad(def)
     -- closed sectors never specify a light
     if S.floor_h >= S.ceil_h then return end
 
-    if S.light < 144 then
+    if S.light < 80 then
+      C.shadow = 64
+    elseif S.light < 144 then
       C.shadow = 144 - S.light
+    elseif S.light > 240 then
+      C.light_add = 96
     elseif S.light > 144 then
       C.light_add = S.light - 144
     end
