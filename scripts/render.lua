@@ -1534,6 +1534,60 @@ end
 
 
 
+function Render_full_chunks()
+
+  -- FIXME : support this in Render_chunk()
+  local function build_a_pool(chunk)
+    if chunk.sw < 2 then return end
+    if chunk.sh < 2 then return end
+
+    local floor_mat = chunk.area.floor_mat
+    if not floor_mat then return end
+
+    local reqs =
+    {
+      kind  = "floor"
+      where = "seeds"
+
+      seed_w = chunk.sw
+      seed_h = chunk.sh
+    }
+
+    local def = Fab_pick(reqs)
+    local skin1 = { floor=floor_mat }
+
+    local S1 = SEEDS[chunk.sx1][chunk.sy1]
+    local S2 = SEEDS[chunk.sx2][chunk.sy2]
+
+    local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, chunk.area.floor_h, 2)
+
+    Fabricate(chunk.area.room, def, T, { skin1 })
+
+    -- only for pit test
+    Render_mark_done(chunk, "floor")
+  end
+
+  
+  ---| Render_full_chunks |---
+
+  each R in LEVEL.rooms do
+    each chunk in R.chunks do
+      if chunk.content_kind then continue end
+
+      -- temporary crap!!!
+      if chunk.is_straddler then
+        build_a_pool(chunk)
+      end
+    end
+
+    each chunk in R.closets do Render_chunk(chunk) end
+    each chunk in R.stairs  do Render_chunk(chunk) end
+    each chunk in R.joiners do Render_chunk(chunk) end
+  end
+end
+
+
+
 function Render_depot(depot)
   -- dest_R is the room which gets the trap spots
   local dest_R = assert(depot.room)
@@ -1566,6 +1620,8 @@ end
 
 
 function Render_all_areas()
+  Render_full_chunks()
+
   each A in LEVEL.areas do
     Render_area(A)
   end
@@ -1766,20 +1822,13 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function player_dir(spot)
---[[
-    local S = Seed_from_coord(spot.x, spot.y)
-
-    -- hacky fix for diagonal seeds
-    if not (S.area and S.area.room) and S.top then
-      S = S.top
-    end
---]]
-
+  local function player_face_dir(spot)
     local D2 = calc_player_see_dist(spot, 2)
     local D4 = calc_player_see_dist(spot, 4)
     local D6 = calc_player_see_dist(spot, 6)
     local D8 = calc_player_see_dist(spot, 8)
+
+stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
     -- up against a wall?
     if D2 <= 1 and D8 > 1 then D8 = D8 * 1.8 end
@@ -1914,7 +1963,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
 
   local function content_start(spot)
-    local dir = player_dir(spot)
+    local dir = player_face_dir(spot)
 
 ---???    if OB_CONFIG.game == "quake" then
 ---???      local skin = { floor="SLIP2", wall="SLIPSIDE" }
@@ -2058,7 +2107,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     skin1. in_target = string.format("tele%d", skin1. in_tag)
     skin1.out_target = string.format("tele%d", skin1.out_tag)
 
-    local spot_dir = player_dir(spot)
+    local spot_dir = player_face_dir(spot)
 
     local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, spot_dir)
 
@@ -2195,37 +2244,6 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function build_a_pool(chunk)
-    if chunk.sw < 2 then return end
-    if chunk.sh < 2 then return end
-
-    local floor_mat = chunk.area.floor_mat
-    if not floor_mat then return end
-
-    local reqs =
-    {
-      kind  = "floor"
-      where = "seeds"
-
-      seed_w = chunk.sw
-      seed_h = chunk.sh
-    }
-
-    local def = Fab_pick(reqs)
-    local skin1 = { floor=floor_mat }
-
-    local S1 = SEEDS[chunk.sx1][chunk.sy1]
-    local S2 = SEEDS[chunk.sx2][chunk.sy2]
-
-    local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, chunk.area.floor_h, 2)
-
-    Fabricate(chunk.area.room, def, T, { skin1 })
-
-    -- only for pit test
-    Render_mark_done(chunk, "floor")
-  end
-
-
   ---| Render_importants |---
 
   each room in LEVEL.rooms do
@@ -2236,18 +2254,12 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
         chunk.z1 = assert(chunk.area.floor_h)
         build_important(chunk)
       else
-        -- temporary crap!!!
-        if chunk.is_straddler then
-          build_a_pool(chunk)
-        else
+        -- temporary crud!!!
+        if not chunk.is_straddler then
           build_a_crate(chunk)
         end
       end
     end
-
-    each chunk in R.closets do Render_chunk(chunk) end
-    each chunk in R.stairs  do Render_chunk(chunk) end
-    each chunk in R.joiners do Render_chunk(chunk) end
 
     -- TODO
     -- each spot in R.triggers do
