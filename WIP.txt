@@ -2,8 +2,6 @@
 WORK IN PROGRESS
 ================
 
-I18n : do the control modules
-
 
 TITLE GENERATOR
 
@@ -88,9 +86,8 @@ STAIRS:
 
 +  choose prefabs earlier, probably during floor/ceil heights
 
--  support two stairs in a rule (to same area)
-
--  a large curved stair?
+   ---> in Fab_pick, support a "want_fab = name" in the reqs
+        [ if that name matches all the rules, use it ]
 
 
 
@@ -115,8 +112,6 @@ TELEPORTERS:
 
 
 SHAPE GRAMMARS:
-
-+  allow TWO conns into a new room (become F1/F2 in CONN object)
 
 +  prune / re-use rooms which remain small, and hallways which
    never end up anywhere else

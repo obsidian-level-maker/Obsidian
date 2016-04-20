@@ -90,6 +90,8 @@ ______________________________________________________________________
 
 -  a "raising stairs" JOINER, need to find the switch
 
+-  allow TWO conns into a new room (become F1/F2 in CONN object)
+
 -  SPROUT: if mirrored and new rooms touch/overlap, only create
            a single room [ only if ONE conn though ]
 
