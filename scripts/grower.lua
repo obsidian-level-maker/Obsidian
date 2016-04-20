@@ -3095,9 +3095,10 @@ function Grower_create_rooms()
 
   Grower_create_trunks()
   Grower_grow_rooms()
-  Grower_decorate_rooms()
 
   Grower_prune_small_rooms()
+
+  Grower_decorate_rooms()
   Grower_split_liquids()
 
   Grower_fill_gaps()
