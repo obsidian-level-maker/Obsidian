@@ -2525,10 +2525,74 @@ end
 
 function Grower_prune_small_rooms()
 
+  local function is_leaf(R)
+    local conns = 0
+
+    each PC in LEVEL.prelim_conns do
+      if PC.R1 == R or PC.R2 == R then
+        conns = conns + 1
+      end
+    end
+
+    return conns < 2
+  end
+
+
+  local function is_too_small(R)
+    return R:calc_walk_vol() < 8
+  end
+
+
+  local function kill_room(R)
+    -- TODO : possibly give areas to a connected neighbor room
+
+stderrf("Killing small room %s\n", R.name)
+
+    -- remove any prelim conns
+    for idx = #LEVEL.prelim_conns, 1, -1 do
+      local PC = LEVEL.prelim_conns[idx]
+
+      if PC.R1 == R or PC.R2 == R then
+        table.remove(LEVEL.prelim_conns, idx)
+      end
+    end
+
+    R:kill_it()
+  end
+
+
+  local function become_hallway(R)
+
+stderrf("Hallwaying small room %s\n", R.name)
+
+    R.kind = "hallway"
+  end
+
+
   ---| Grower_prune_small_rooms |---
 
+  -- killing a room may cause another room to become a leaf, hence
+  -- we need multiple passes.
+
+  repeat
+    local changes = false
+
+    for idx = #LEVEL.rooms, 1, -1 do
+      local R = LEVEL.rooms[idx]
+
+      if is_leaf(R) and is_too_small(R) then
+        kill_room(R)
+        changes = true
+      end
+    end
+  until not changes
+
+  -- any other small rooms are non-leaf, turn into hallways
+
   each R in LEVEL.rooms do
-    gui.debugf("%s walk_vol = %1.1f\n", R.name, R:calc_walk_vol())
+    if is_too_small(R) then
+      become_hallway(R)
+    end
   end
 end
 
