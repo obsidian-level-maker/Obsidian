@@ -2543,6 +2543,32 @@ function Grower_prune_small_rooms()
   end
 
 
+  local function kill_joiner(N, chunk)
+    stderrf("  killing joiner in %s\n", N.name)
+
+    -- the chunk becomes a closet
+
+    chunk.kind = "closet"
+
+    chunk.dest_dir  = nil
+    chunk.dest_area = nil
+    chunk.shape = "U"
+
+    table.kill_elem(N.joiners, chunk)
+    table.insert(N.closets, chunk)
+  end
+
+
+  local function kill_prelim_conn(PC)
+    PC.kind  = "DEAD"
+    PC.R1    = nil
+    PC.R2    = nil
+    PC.chunk = nil
+
+    table.kill_elem(LEVEL.prelim_conns, PC)
+  end
+
+
   local function kill_room(R)
     -- TODO : possibly give areas to a connected neighbor room
 
@@ -2552,9 +2578,20 @@ stderrf("Killing small room %s\n", R.name)
     for idx = #LEVEL.prelim_conns, 1, -1 do
       local PC = LEVEL.prelim_conns[idx]
 
-      if PC.R1 == R or PC.R2 == R then
-        table.remove(LEVEL.prelim_conns, idx)
+      -- get neighbor room
+      local N
+      if PC.R1 == R then N = PC.R2 end
+      if PC.R2 == R then N = PC.R1 end
+
+      if not N then continue end
+
+stderrf("  killing prelim conn to %s\n", N.name)
+
+      if PC.kind == "joiner" and PC.chunk.area.room == N then
+        kill_joiner(N, PC.chunk)
       end
+
+      kill_prelim_conn(PC)
     end
 
     R:kill_it()
@@ -2573,6 +2610,8 @@ stderrf("Hallwaying small room %s\n", R.name)
 
   -- killing a room may cause another room to become a leaf, hence
   -- we need multiple passes.
+
+if OB_CONFIG.no_prune then return end
 
   repeat
     local changes = false
