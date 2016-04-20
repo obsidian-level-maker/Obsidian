@@ -129,7 +129,7 @@ CTL_DOOM.WEAPON_CHOICES =
   "none",    _("None at all"),
   "scarce",  _("Scarce"),
   "less",    _("Less"),
-  "plenty",  _("Plent)y"),
+  "plenty",  _("Plenty"),
   "more",    _("More"),
   "heaps",   _("Heaps"),
   "loveit",  _("I LOVE IT"),
