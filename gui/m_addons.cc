@@ -615,7 +615,7 @@ void DLG_SelectAddons(void)
 		// persist the changed addon list into OPTIONS.txt
 		Options_Save(options_file);
 
-		fl_alert(_("Changes to addons require a restart.\nOblige will now close."));
+		fl_alert(_("Changes to addons require a restart.\nOBLIGE will now close."));
 
 		main_action = MAIN_QUIT;
 	}
