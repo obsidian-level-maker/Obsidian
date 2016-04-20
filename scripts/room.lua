@@ -193,6 +193,9 @@ function ROOM_CLASS.kill_it(R)
 
   table.kill_elem(LEVEL.rooms, R)
 
+  -- remove from the trunk object
+  table.kill_elem(R.trunk.rooms, R)
+
   each A in R.areas do
     gui.debugf("   kill %s\n", A.name)
     A:kill_it()

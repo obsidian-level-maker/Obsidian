@@ -1248,10 +1248,10 @@ function Title_add_title()
     bb_main.h = bb_main.h + 5
   end
 
+--[[
   stderrf("bb_main =\n%s\n\n", table.tostr(bb_main))
   stderrf("bb_sub  =\n%s\n\n", table.tostr(bb_sub))
 
---[[
   gui.title_prop("color", "#070")
   gui.title_draw_rect(bb_main.x, bb_main.y, bb_main.w, bb_main.h)
 
@@ -1266,8 +1266,6 @@ function Title_add_title()
 
   -- vertical sizing of the main title
   local line_h = bb_main.h / (main_lines * 2 + other_lines)
-
-stderrf("line_h = %1.1f\n", line_h)
 
 
   -- choose font sizes for the main lines
@@ -1296,7 +1294,10 @@ stderrf("line_h = %1.1f\n", line_h)
 
   local h3 = line_h * 0.7
 
+--[[
+stderrf("line_h = %1.1f\n", line_h)
 stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
+--]]
 
 
   -- create the transforms

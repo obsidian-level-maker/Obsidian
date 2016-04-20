@@ -2452,7 +2452,7 @@ function Grower_create_trunks()
 
 
 -- FIXME TEST ONLY
-trunk_num = 1
+trunk_num = 5
 
 
   for i = 1, trunk_num do
@@ -2606,12 +2606,22 @@ stderrf("Hallwaying small room %s\n", R.name)
   end
 
 
+  local function prune_trunks()
+    for idx = #LEVEL.trunks, 1, -1 do
+      local trunk = LEVEL.trunks[idx]
+
+      if table.empty(trunk.rooms) then
+        stderrf("!!!!!!  Pruned empty trunk : %s\n", trunk.id)
+        table.remove(LEVEL.trunks, idx)
+      end
+    end
+  end
+
+
   ---| Grower_prune_small_rooms |---
 
   -- killing a room may cause another room to become a leaf, hence
   -- we need multiple passes.
-
-if OB_CONFIG.no_prune then return end
 
   repeat
     local changes = false
@@ -2632,6 +2642,14 @@ if OB_CONFIG.no_prune then return end
     if is_too_small(R) then
       become_hallway(R)
     end
+  end
+
+  -- a trunk may have become empty, prune these too
+  prune_trunks()
+
+  -- sanity check
+  if table.empty(LEVEL.rooms) then
+    error("All rooms were pruned")
   end
 end
 
