@@ -911,7 +911,7 @@ function Area_locate_chunks()
   -- decorative prefabs.
   --
 
-  -- TODO : better handle chunks ON the axis of symmetry
+  local sym_pass
 
 
   local PASSES = { 44, 42,24, 33, 32,23,  22, 21,12,  11 }
@@ -1026,7 +1026,12 @@ function Area_locate_chunks()
     local ny2 = math.max(N1.sy, N2.sy)
 
     -- check for chunks straddling the axis of symmetry
-    if nx1 == sx1 and ny1 == sy1 and nx2 == sx2 and ny2 == sy2 then
+    local is_straddler = (nx1 == sx1 and ny1 == sy1 and nx2 == sx2 and ny2 == sy2)
+
+    if sym_pass == 1 and not is_straddler then return false end
+    if sym_pass != 1 and     is_straddler then return false end
+
+    if is_straddler then
       local CHUNK = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
       CHUNK.is_straddler = true
       return true
@@ -1084,7 +1089,7 @@ function Area_locate_chunks()
       if can_skip_for_symmetry(A.room, S) then continue end
 
       -- save time by checking the usage prob *first*
-      if not rand.odds(use_prob) then continue end
+      if pass != 11 and not rand.odds(use_prob) then continue end
 
       try_chunk_at_seed(A, sx1,sy1, sx2,sy2)
     end
@@ -1102,14 +1107,25 @@ function Area_locate_chunks()
   end
 
 
+  local function visit_room(R)
+    each A in R.areas do
+      if A.mode == "floor" or A.mode == "liquid" then
+        find_chunks_in_area(A)
+      end
+    end
+  end
+
+
   ---| Area_locate_chunks |---
 
+  -- in symmetrical rooms, perform two passes, where the first
+  -- pass ONLY checks for straddling chunks
+
   each R in LEVEL.rooms do
-  each A in R.areas do
-    if A.mode == "floor" or A.mode == "liquid" then
-      find_chunks_in_area(A)
+    for pass = sel(R.symmetry, 1, 2), 2 do
+      sym_pass = pass
+      visit_room(R)
     end
-  end -- R, A
   end
 end
 
