@@ -8,6 +8,14 @@ idea : each rule can specify a prob_skew
 
 
 
+TELEPORTERS:
+
+-  check exclusion zone around a PAD works
+
++  exclusion zone in front of a closet
+
+
+
 TITLE GENERATOR
 
 -  support outlines
@@ -106,47 +114,5 @@ JOINERS:
 
 +  support joiners with a height difference
 
-
-
-TELEPORTERS:
-
--  check exclusion zone around a PAD works
-
-+  exclusion zone in front of a closet
-
-
-
-
-SEMANTICS of ROTATING PREFABS
------------------------------
-
-1. "point" prefabs are always a square, and will be rotated by a
-   multiple of 90 degrees to face a certain direction
-
-   Examples: start pad, teleport pad, exit switch, simple switch,
-             crate, pillar, computer.
-
-
-2. "seeds" prefabs can be square or rectangular.
-   
-   (a) if they have a shape, then the from_dir determines the
-       vertical axis and not other rotations are possible.
-
-       Examples: closets (often U shape)
-                 stairs  (often I shape)
-                 joiners (often I shape)
-
-       [ some shapes require TWO directions ]
-
-       [ stairs can be rotated 180 degrees to go down instead of up ]
-
-       
-   (b) no shape, rotatable
-
-       Example:  lava pit (floor prefab)
-                 sky light (ceiling prefab)
-
-
-Rule: if we have a REQUIRED direction, rotation NOT allowed
 
 
