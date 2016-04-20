@@ -1388,6 +1388,14 @@ int Q1_add_tex_wad(lua_State *L)
 
 //------------------------------------------------------------------------
 
+// progress step names, only here for xgettext to find
+#define stepword_CSG   N_("CSG")
+#define stepword_BSP   N_("BSP")
+#define stepword_Vis   N_("Vis")
+#define stepword_Light N_("Light")
+#define stepword_Hull  N_("Hull")
+
+
 class quake1_game_interface_c : public game_interface_c
 {
 private:
@@ -1410,17 +1418,16 @@ public:
 private:
 	const char *StepsForGame(int sub)
 	{
-		// FIXME: i18n : separate these
 		switch (sub)
 		{
 		case SUBFMT_HalfLife:
-			return N_("CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3");
+			return "CSG,BSP,Vis,Light,Hull,Hull,Hull";
 
 		case SUBFMT_Hexen2:
-			return N_("CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5");
+			return "CSG,BSP,Vis,Light,Hull,Hull,Hull,Hull,Hull";
 
 		default:
-			return N_("CSG,BSP,Vis,Light,Hull 1,Hull 2");
+			return "CSG,BSP,Vis,Light,Hull,Hull";
 		}
 	}
 };

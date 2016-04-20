@@ -1254,11 +1254,8 @@ void Q1_ClippingHull(int hull)
 	LogPrintf("\nClipping Hull %d...\n", hull);
 
 	if (main_win)
-	{
-		char hull_name[32];
-		sprintf(hull_name, "Hull %d", hull);
-		main_win->build_box->Prog_Step(hull_name);
-	}
+		main_win->build_box->Prog_Step("Hull");
+
 
 	///???  FreeAll();
 
