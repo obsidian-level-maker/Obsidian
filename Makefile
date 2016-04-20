@@ -272,7 +272,7 @@ uninstall:
 	xdg-icon-resource uninstall --novendor --size 32 oblige
 
 xgettext:
-	xgettext -o LANG_TEMPLATE.txt -k_ -kN_ -F $(LANG_FILES)
+	xgettext -o LANG_TEMPLATE.txt -k_ -kN_ -F -i $(LANG_FILES)
 
 .PHONY: all clean halfclean stripped install uninstall xgettext
 
