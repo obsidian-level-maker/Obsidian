@@ -2452,7 +2452,7 @@ function Grower_create_trunks()
 
 
 -- FIXME TEST ONLY
-trunk_num = 5
+trunk_num = 1
 
 
   for i = 1, trunk_num do
@@ -2538,7 +2538,7 @@ function Grower_prune_small_rooms()
 
 
   local function is_too_small(R)
-    return R:calc_walk_vol() < 8
+    return R:calc_walk_vol() < 9
   end
 
 
@@ -2598,8 +2598,7 @@ stderrf("  killing prelim conn to %s\n", N.name)
 
 
   local function become_hallway(R)
-
-stderrf("Hallwaying small room %s\n", R.name)
+stderrf("!!!!  Hallwaying small room %s\n", R.name)
 
     R.kind = "hallway"
   end
@@ -2622,7 +2621,6 @@ stderrf("Hallwaying small room %s\n", R.name)
       local trunk = LEVEL.trunks[idx]
 
       if table.empty(trunk.rooms) then
-        stderrf("!!!!!!  Pruned empty trunk : %s\n", trunk.id)
         kill_trunk(trunk)
       end
     end
@@ -2647,7 +2645,8 @@ stderrf("Hallwaying small room %s\n", R.name)
     end
   until not changes
 
-  -- any other small rooms are non-leaf, turn into hallways
+  -- turn any other small rooms into hallways
+  -- [ cannot remove them since they are not leafs ]
 
   each R in LEVEL.rooms do
     if is_too_small(R) then
