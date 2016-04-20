@@ -214,7 +214,7 @@ DOOM.MONSTERS =
     infight_damage = 1600
   }
 
-  Mastermind =
+  Spiderdemon =
   {
     id = 7
     r = 128

@@ -101,7 +101,7 @@ function BOOM.setup()
   -- for BOOM-compatible ports, reduce the size of the Spider Mastermind
   -- boss from 128 to 80 units (via DEHACKED lump) so that she fits more
   -- reliably on maps.
-  local info = GAME.MONSTERS["Mastermind"]
+  local info = GAME.MONSTERS["Spiderdemon"]
   if info then
     info.r = 80
   end

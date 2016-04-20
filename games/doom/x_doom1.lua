@@ -1748,9 +1748,7 @@ end
 
 
 function ULTDOOM.setup()
-  -- tweak monster probabilities
-  GAME.MONSTERS["Cyberdemon"].crazy_prob = 5
-  GAME.MONSTERS["Mastermind"].crazy_prob = 12
+  -- nothing needed
 end
 
 
