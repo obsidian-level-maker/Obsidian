@@ -246,7 +246,7 @@ const char * DLG_OutputFilename(const char *ext)
 			LogPrintf("Error choosing output file:\n");
 			LogPrintf("   %s\n", chooser.errmsg());
 
-			DLG_ShowError(_("Unable to select the file:\n\n%s"), chooser.errmsg());
+			DLG_ShowError(_("Unable to create the file:\n\n%s"), chooser.errmsg());
 			return NULL;
 
 		case 1:  // cancelled

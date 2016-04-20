@@ -332,7 +332,7 @@ end
 
 OB_MODULES["stealth_mon_control"] =
 {
-  label = _("Stealth Monsters") .. _(" : Fine Control")
+  label = _("Stealth Monsters : Fine Control")
 
   mod = "stealth_mons"
 

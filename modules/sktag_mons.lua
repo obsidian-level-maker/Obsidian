@@ -259,7 +259,7 @@ end
 
 OB_MODULES["sktag_mons"] =
 {
-  label = "Skulltag : Monsters and Items"
+  label = _("Skulltag : Monsters and Items")
 
   game = { doom1=1, doom2=1 }
   playmode = { sp=1, coop=1 }
@@ -279,12 +279,14 @@ OB_MODULES["sktag_mons"] =
   {
     def_mon =
     {
-      label = "Default Monsters", choices = SKTAG_MONS.CHOICES
+      label = _("Default Monsters")
+      choices = SKTAG_MONS.CHOICES
     }
 
     def_weap =
     {
-      label = "Default Weapons", choices = SKTAG_MONS.CHOICES
+      label = _("Default Weapons")
+      choices = SKTAG_MONS.CHOICES
     }
   }
 }
@@ -336,7 +338,7 @@ end
 
 OB_MODULES["sktag_mon_control"] =
 {
-  label = _("Skulltag Monsters") .. _(" : Fine Control")
+  label = _("Skulltag Monsters : Fine Control")
 
   mod = "sktag_mons"
 
@@ -385,7 +387,7 @@ end
 
 OB_MODULES["sktag_weap_control"] =
 {
-  label = "Skulltag Weapons : Fine Control"
+  label = _("Skulltag Weapons : Fine Control")
 
   mod = "sktag_mons"
 
