@@ -306,6 +306,23 @@ function ROOM_CLASS.has_teleporter(R)
 end
 
 
+function ROOM_CLASS.calc_walk_vol(R)
+  local vol = 0
+
+  each A in R.areas do
+    if A.mode == "floor" or
+      (A.chunk and A.chunk.kind == "area") or
+      (A.chunk and A.chunk.kind == "stair")
+    then
+      A:calc_volume()
+      vol = vol + A.svolume
+    end
+  end
+
+  return vol
+end
+
+
 function ROOM_CLASS.total_conns(R, ignore_secrets)
   local count = 0
 

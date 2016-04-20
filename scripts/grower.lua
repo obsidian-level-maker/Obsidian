@@ -2523,6 +2523,17 @@ end
 
 
 
+function Grower_prune_small_rooms()
+
+  ---| Grower_prune_small_rooms |---
+
+  each R in LEVEL.rooms do
+    gui.debugf("%s walk_vol = %1.1f\n", R.name, R:calc_walk_vol())
+  end
+end
+
+
+
 function Grower_hallway_kinds()
   --
   -- Determines kind (building, outdoor, etc) of hallways.
@@ -2983,6 +2994,7 @@ function Grower_create_rooms()
   Grower_grow_rooms()
   Grower_decorate_rooms()
 
+  Grower_prune_small_rooms()
   Grower_split_liquids()
 
   Grower_fill_gaps()
