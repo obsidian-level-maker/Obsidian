@@ -697,6 +697,17 @@ function Grower_preprocess_grammar()
   end
 
 
+  local function find_info_for_part(kind, lx, ly)
+    -- lx, ly is the lowest left corner of the part
+    -- look for coordinate specific entry, e.g. "stair3_2"
+    -- if that fails, look for generic entry e.g. "stair"
+
+    local full_name = kind .. lx .. "_" .. ly
+
+    return def[full_name] or def[kind]
+  end
+
+
   local function get_contiguous_part(kind, x, y, seen)
     local w = 1
     local h = 1
@@ -712,14 +723,18 @@ function Grower_preprocess_grammar()
     local E = def.output[x][y]
 
     -- grab "dir" from corresponding table, if present
-    -- TODO : support multiple cages/closets/joiners (via _2, _3, _4 suffix)
-    if def[kind] then
-      table.merge_missing(rect, def[kind])
+    local info = find_info_for_part(kind, x, y)
+    if info then
+      table.merge_missing(rect, info)
     end
 
     if E.dir then
       rect.from_dir = 10 - E.dir
     else
+      if not info then
+        error("Missing " .. kind .. " info in grammar rule: " .. tostring(def.name))
+      end
+
       assert(rect.from_dir)
     end
 

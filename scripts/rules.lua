@@ -162,9 +162,22 @@ GROW_STAIRS_1 =
 }
 
 
+GROW_STAIRPAIR_1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "...", "AAA"
+    "...", "^1^"
+    "111", "111"
+  }
+}
+
+
 GROW_CURVE_STAIR_1 =
 {
-  prob = 9999
+  prob = 0
 
   structure =
   {
@@ -173,6 +186,22 @@ GROW_CURVE_STAIR_1 =
   }
 
   stair = { from_dir=2, dest_dir=4 }
+}
+
+
+GROW_CURVE_STAIRPAIR_1 =
+{
+  prob = 999
+
+  structure =
+  {
+    "..x..", "AAxAA"
+    ".....", "AS#SA"
+    "x111x", "x111x"
+  }
+
+  stair2_2 = { from_dir=2, dest_dir=4 }
+  stair4_2 = { from_dir=2, dest_dir=6 }
 }
 
 
