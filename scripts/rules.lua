@@ -255,6 +255,33 @@ SPROUT_JOINER_2x1 =
 }
 
 
+SPROUT_DOUBLE_TEST =
+{
+  prob = 0  -- not supported yet
+
+  structure =
+  {
+    "....", "RR%."
+    "....", "RRR%"
+    "11..", "11RR"
+    "11..", "11RR"
+  }
+
+  diagonals =
+  {
+    "R.", "R."
+  }
+
+  new_room =
+  {
+    conn  = { x=2, y=3, w=2, dir=2 }
+    conn2 = { x=3, y=1, w=2, dir=4 }
+
+    symmetry = { x=3, y=3, dir=9 }
+  }
+}
+
+
 SPROUT_SYMMETRY_TEST =
 {
   prob = 30
