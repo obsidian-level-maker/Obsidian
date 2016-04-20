@@ -61,6 +61,8 @@
 
     floor_mats[z] : name
      ceil_mats[z] : name
+
+    guard_chunk : CHUNK   -- what a bossy monster is guarding
 --]]
 
 

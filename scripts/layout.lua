@@ -346,7 +346,7 @@ function Layout_place_importants(R)
     goal.kk_spot = spot
 
     if goal.kind != "START" then
-      R.guard_spot = spot
+      R.guard_chunk = spot
     end
 
     if goal.kind == "START" then
@@ -389,8 +389,8 @@ function Layout_place_importants(R)
 
     spot.content_item = weapon
 
-    if not R.guard_spot then
-      R.guard_spot = spot
+    if not R.guard_chunk then
+      R.guard_chunk = spot
     end
   end
 
@@ -402,8 +402,8 @@ function Layout_place_importants(R)
 
     spot.content_item = item
 
-    if not R.guard_spot then
-      R.guard_spot = spot
+    if not R.guard_chunk then
+      R.guard_chunk = spot
     end
   end
 

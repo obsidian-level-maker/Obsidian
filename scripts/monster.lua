@@ -1550,8 +1550,6 @@ function Monster_fill_room(R)
     end
 
     -- pick the best and remove it from the list
-    -- TODO: for 'near_to' mode maybe trace_ray() to check spot
-
     local spot = table.pick_best(R.mon_spots, spot_compare, "remove")
 
     if not near_to then
@@ -1915,35 +1913,11 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
   end
 
 
-  local function guard_spot_for_boss()
-    -- FIXME !!!
-    do return nil end
-
-    if not R.guard_coord then return end
-
--- FIXME : support guarding closets
-if R.guard_coord.closet then return end
-
-    -- convert coordinate into a fake spot  [no z coords!]
-    local guard_spot =
-    {
-      x1 = R.guard_coord.mx - 16
-      y1 = R.guard_coord.my - 16
-      x2 = R.guard_coord.mx + 16
-      y2 = R.guard_coord.my + 16
-    }
-
-    return guard_spot
-  end
-
-
   local function add_bosses()
     local bf = R.boss_fight
 
     -- nothing planned for this room?
     if not bf then return end
-
-    local guard_spot = guard_spot_for_boss()
 
     local reqs = {}
 
@@ -1952,7 +1926,7 @@ if R.guard_coord.closet then return end
     for i = 1, bf.count do
       local mon = bf.mon
 
-      local spot = grab_monster_spot(mon, guard_spot, reqs)
+      local spot = grab_monster_spot(mon, R.guard_chunk, reqs)
 
       -- if it did not fit (e.g. too large), try a backup
       if not spot then
@@ -1972,7 +1946,7 @@ if R.guard_coord.closet then return end
         if mon then
           gui.printf("Using replacement boss: %s --> %s\n", bf.mon, mon)
 
-          spot = grab_monster_spot(mon, guard_spot, reqs)
+          spot = grab_monster_spot(mon, R.guard_chunk, reqs)
         end
       end
 
@@ -1982,9 +1956,9 @@ if R.guard_coord.closet then return end
       end
 
       -- look toward the important spot
-      if guard_spot and rand.odds(80) then
-        spot.face = guard_spot
-      end
+---???   if guard_spot and rand.odds(80) then
+---???     spot.face = guard_spot
+---???   end
 
       local all_skills = (i <= 2)
 
@@ -2066,37 +2040,12 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
   end
 
 
-  local function guard_spot_for_conn(C)
-    --!!!! FIXME use the EDGE, luke
-  end
-
-
-  local function find_guard_spot()
-    -- Finds a KEY or EXIT to guard -- returns coordinate table (or NIL)
-
-    if R.guard_spot and R.guard_spot.goal and
-       (R.guard_spot.goal.kind == "KEY" or
-        R.guard_spot.goal.kind == "EXIT" or
-        R.is_exit or R.final_battle)
-    then
-      -- the wotsit placement code will have set this
-      return R.guard_spot
-    end
-
-    return nil
-  end
-
-
   local function prepare_room()
     R.monster_list = {}
 
     R.firepower = Player_firepower()
 
     categorize_room_size()
-
-    if R.kind != "hallway" then
-      R.guard_coord = find_guard_spot()
-    end
 
     R.sneakiness = rand.sel(30, 95, 25)
 

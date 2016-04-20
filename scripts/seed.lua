@@ -129,6 +129,10 @@
 
     sw, sh  -- seed size
 
+    x1, y1, x2, y2   -- map coordinates
+
+    mx, my           -- coordinate of middle point
+
     place : keyword  -- "floor" (needs a ceiling + walls)
                      -- "ceil"  (needs a floor + walls)
                      -- "whole" (provides both floor, ceiling, walls)
