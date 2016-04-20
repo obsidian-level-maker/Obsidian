@@ -3,6 +3,11 @@ WORK IN PROGRESS
 ================
 
 
+idea : each rule can specify a prob_skew
+       (e.g. if 5, then can multiply or divide by rand.range(1,5))
+
+
+
 TITLE GENERATOR
 
 -  support outlines
@@ -109,25 +114,6 @@ TELEPORTERS:
 
 +  exclusion zone in front of a closet
 
-
-
-SHAPE GRAMMARS:
-
-+  prune / re-use rooms which remain small, and hallways which
-   never end up anywhere else
-
-   [ do this BEFORE converting prelim conns into real conns ]
-   
-   Q/ what about joiners??
-   A/ joiner becomes a closet, room becomes void
-
-+  symmetrical rooms
-   -  find straddling floor chunks in a pre-pass
-      [ esp. even width for "wide" sym, odd width if not wide ]
-
-   -  a way to score "straddling" patterns higher
-      [ they are a very good place for some stuff, e.g. exits ]
-      [[ only first usage of SPROUT/DECOR needs to score higher ]]
 
 
 
