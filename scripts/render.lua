@@ -1372,11 +1372,8 @@ function Render_chunk(chunk)
 
 
   local function chunk_coords(def)
-    local S1 = SEEDS[chunk.sx1][chunk.sy1]
-    local S2 = SEEDS[chunk.sx2][chunk.sy2]
-
-    local x1, y1 = S1.x1, S1.y1
-    local x2, y2 = S2.x2, S2.y2
+    local x1, y1 = chunk.x1, chunk.y1
+    local x2, y2 = chunk.x2, chunk.y2
 
     -- move closets to align with nearby walls
 
