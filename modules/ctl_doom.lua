@@ -95,27 +95,27 @@ OB_MODULES["doom_mon_control"] =
 
   options =
   {
-    zombie   = { label="Zombieman",      choices=CTL_DOOM.MON_CHOICES }
-    shooter  = { label="Shotgun Guy",    choices=CTL_DOOM.MON_CHOICES }
-    gunner   = { label="Chaingunner",    choices=CTL_DOOM.MON_CHOICES }
-    ss_nazi  = { label="SS Nazi",        choices=CTL_DOOM.MON_CHOICES }
-    imp      = { label="Imp",            choices=CTL_DOOM.MON_CHOICES }
+    zombie   = { label=_("Zombieman"),      choices=CTL_DOOM.MON_CHOICES }
+    shooter  = { label=_("Shotgun Guy"),    choices=CTL_DOOM.MON_CHOICES }
+    gunner   = { label=_("Chaingunner"),    choices=CTL_DOOM.MON_CHOICES }
+    ss_nazi  = { label=_("SS Nazi"),        choices=CTL_DOOM.MON_CHOICES }
+    imp      = { label=_("Imp"),            choices=CTL_DOOM.MON_CHOICES }
 
-    skull    = { label="Lost Soul",      choices=CTL_DOOM.MON_CHOICES }
-    demon    = { label="Demon",          choices=CTL_DOOM.MON_CHOICES }
-    spectre  = { label="Spectre",        choices=CTL_DOOM.MON_CHOICES }
-    pain     = { label="Pain Elemental", choices=CTL_DOOM.MON_CHOICES }
-    caco     = { label="Cacodemon",      choices=CTL_DOOM.MON_CHOICES }
-    knight   = { label="Hell Knight",    choices=CTL_DOOM.MON_CHOICES }
+    skull    = { label=_("Lost Soul"),      choices=CTL_DOOM.MON_CHOICES }
+    demon    = { label=_("Demon"),          choices=CTL_DOOM.MON_CHOICES }
+    spectre  = { label=_("Spectre"),        choices=CTL_DOOM.MON_CHOICES }
+    pain     = { label=_("Pain Elemental"), choices=CTL_DOOM.MON_CHOICES }
+    caco     = { label=_("Cacodemon"),      choices=CTL_DOOM.MON_CHOICES }
+    knight   = { label=_("Hell Knight"),    choices=CTL_DOOM.MON_CHOICES }
 
-    revenant = { label="Revenant",       choices=CTL_DOOM.MON_CHOICES }
-    mancubus = { label="Mancubus",       choices=CTL_DOOM.MON_CHOICES }
-    arach    = { label="Arachnotron",    choices=CTL_DOOM.MON_CHOICES }
-    vile     = { label="Archvile",       choices=CTL_DOOM.MON_CHOICES }
-    baron    = { label="Baron of Hell",  choices=CTL_DOOM.MON_CHOICES }
+    revenant = { label=_("Revenant"),       choices=CTL_DOOM.MON_CHOICES }
+    mancubus = { label=_("Mancubus"),       choices=CTL_DOOM.MON_CHOICES }
+    arach    = { label=_("Arachnotron"),    choices=CTL_DOOM.MON_CHOICES }
+    vile     = { label=_("Arch-vile"),      choices=CTL_DOOM.MON_CHOICES }
+    baron    = { label=_("Baron of Hell"),  choices=CTL_DOOM.MON_CHOICES }
 
-    Cyberdemon = { label="Cyberdemon",   choices=CTL_DOOM.MON_CHOICES }
-    Mastermind = { label="Mastermind",   choices=CTL_DOOM.MON_CHOICES }
+    Cyberdemon  = { label=_("Cyberdemon"),   choices=CTL_DOOM.MON_CHOICES }
+    Spiderdemon = { label=_("Spiderdemon"),  choices=CTL_DOOM.MON_CHOICES }
   }
 }
 
@@ -187,12 +187,12 @@ OB_MODULES["doom_weapon_control"] =
 
   options =
   {
-    shotty   = { label="Shotgun",          choices=CTL_DOOM.WEAPON_CHOICES }
-    super    = { label="Super Shotty",     choices=CTL_DOOM.WEAPON_CHOICES }
-    chain    = { label="Chaingun",         choices=CTL_DOOM.WEAPON_CHOICES }
-    launch   = { label="Rocket Launcher",  choices=CTL_DOOM.WEAPON_CHOICES }
-    plasma   = { label="Plasma Rifle",     choices=CTL_DOOM.WEAPON_CHOICES }
-    bfg      = { label="B.F.G",            choices=CTL_DOOM.WEAPON_CHOICES }
+    shotty   = { label=_("Shotgun"),         choices=CTL_DOOM.WEAPON_CHOICES }
+    super    = { label=_("Super Shotgun"),   choices=CTL_DOOM.WEAPON_CHOICES }
+    chain    = { label=_("Chaingun"),        choices=CTL_DOOM.WEAPON_CHOICES }
+    launch   = { label=_("Rocket Launcher"), choices=CTL_DOOM.WEAPON_CHOICES }
+    plasma   = { label=_("Plasma Rifle"),    choices=CTL_DOOM.WEAPON_CHOICES }
+    bfg      = { label=_("BFG"),             choices=CTL_DOOM.WEAPON_CHOICES }
   }
 }
 

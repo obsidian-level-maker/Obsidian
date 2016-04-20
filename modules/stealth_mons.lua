@@ -332,7 +332,7 @@ end
 
 OB_MODULES["stealth_mon_control"] =
 {
-  label = _("Stealth Monsters : Fine Control")
+  label = _("Stealth Monsters") .. _(" : Fine Control")
 
   mod = "stealth_mons"
 
@@ -343,19 +343,19 @@ OB_MODULES["stealth_mon_control"] =
 
   options =
   {
-    stealth_zombie   = { label="Zombieman",     choices=STEALTH.CONTROL_CHOICES }
-    stealth_shooter  = { label="Shotgunner",    choices=STEALTH.CONTROL_CHOICES }
-    stealth_imp      = { label="Imp",           choices=STEALTH.CONTROL_CHOICES }
-    stealth_demon    = { label="Demon",         choices=STEALTH.CONTROL_CHOICES }
-    stealth_caco     = { label="Cacodemon",     choices=STEALTH.CONTROL_CHOICES }
-    stealth_baron    = { label="Baron",         choices=STEALTH.CONTROL_CHOICES }
+    stealth_zombie   = { label=_("Zombieman"),     choices=STEALTH.CONTROL_CHOICES }
+    stealth_shooter  = { label=_("Shotgun Guy"),   choices=STEALTH.CONTROL_CHOICES }
+    stealth_imp      = { label=_("Imp"),           choices=STEALTH.CONTROL_CHOICES }
+    stealth_demon    = { label=_("Demon"),         choices=STEALTH.CONTROL_CHOICES }
+    stealth_caco     = { label=_("Cacodemon"),     choices=STEALTH.CONTROL_CHOICES }
+    stealth_baron    = { label=_("Baron of Hell"), choices=STEALTH.CONTROL_CHOICES }
 
-    stealth_gunner   = { label="Chaingunner",   choices=STEALTH.CONTROL_CHOICES }
-    stealth_knight   = { label="Hell Knight",   choices=STEALTH.CONTROL_CHOICES }
-    stealth_revenant = { label="Revenant",      choices=STEALTH.CONTROL_CHOICES }
-    stealth_mancubus = { label="Mancubus",      choices=STEALTH.CONTROL_CHOICES }
-    stealth_arach    = { label="Arachnotron",   choices=STEALTH.CONTROL_CHOICES }
-    stealth_vile     = { label="Archvile",      choices=STEALTH.CONTROL_CHOICES }
+    stealth_gunner   = { label=_("Chaingunner"),   choices=STEALTH.CONTROL_CHOICES }
+    stealth_knight   = { label=_("Hell Knight"),   choices=STEALTH.CONTROL_CHOICES }
+    stealth_revenant = { label=_("Revenant"),      choices=STEALTH.CONTROL_CHOICES }
+    stealth_mancubus = { label=_("Mancubus"),      choices=STEALTH.CONTROL_CHOICES }
+    stealth_arach    = { label=_("Arachnotron"),   choices=STEALTH.CONTROL_CHOICES }
+    stealth_vile     = { label=_("Arch-vile"),     choices=STEALTH.CONTROL_CHOICES }
   }
 }
 

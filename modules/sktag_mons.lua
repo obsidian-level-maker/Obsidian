@@ -336,7 +336,7 @@ end
 
 OB_MODULES["sktag_mon_control"] =
 {
-  label = "Skulltag Monsters : Fine Control"
+  label = _("Skulltag Monsters") .. _(" : Fine Control")
 
   mod = "sktag_mons"
 

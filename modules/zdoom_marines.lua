@@ -289,7 +289,7 @@ end
 
 OB_MODULES["zdoom_marine_control"] =
 {
-  label = _("ZDoom Marines : Fine Control")
+  label = _("ZDoom Marines") .. _(" : Fine Control")
 
   mod = "zdoom_marines"
 
