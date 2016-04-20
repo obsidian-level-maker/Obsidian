@@ -2467,7 +2467,6 @@ trunk_num = 5
     table.insert(LEVEL.trunks, trunk)
 
     local R = Grower_add_room(nil, false, trunk)  -- no parent
-    table.insert(trunk.rooms, R)
 
     Grower_grammatical_room(R, "root")
   end
@@ -2606,13 +2605,25 @@ stderrf("Hallwaying small room %s\n", R.name)
   end
 
 
+  local function kill_trunk(TR)
+    TR.name = "DEAD_" .. TR.name
+
+    table.kill_elem(LEVEL.trunks, TR)
+
+    -- sanity check
+    each R in LEVEL.rooms do
+      assert(R.trunk != TR)
+    end
+  end
+
+
   local function prune_trunks()
     for idx = #LEVEL.trunks, 1, -1 do
       local trunk = LEVEL.trunks[idx]
 
       if table.empty(trunk.rooms) then
         stderrf("!!!!!!  Pruned empty trunk : %s\n", trunk.id)
-        table.remove(LEVEL.trunks, idx)
+        kill_trunk(trunk)
       end
     end
   end

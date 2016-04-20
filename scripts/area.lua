@@ -189,7 +189,7 @@ function AREA_CLASS.kill_it(A)
   table.kill_elem(LEVEL.areas, A)
 
   A.id   = -1
-  A.name = "DEAD_AREA"
+  A.name = "DEAD_" .. A.name
 
   A.mode = "DEAD"
   A.kind = "DEAD"

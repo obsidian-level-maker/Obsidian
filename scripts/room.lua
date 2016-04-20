@@ -203,9 +203,10 @@ function ROOM_CLASS.kill_it(R)
 
   R.areas = nil
 
-  R.name = "DEAD_ROOM"
+  R.name = "DEAD_" .. R.name
   R.kind = "DEAD"
   R.hallway = nil
+  R.trunk = nil
 
   R.sx1   = nil
   R.areas = nil
