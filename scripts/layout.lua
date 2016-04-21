@@ -256,6 +256,10 @@ function Layout_spot_for_wotsit(R, kind, required)
       elseif chunk.sw >= 2 or chunk.sh >= 2 then
         score = score + 5
       end
+
+      if kind == "START" and chunk.kind != "closet" then
+        score = score + 12
+      end
     end
 
     -- tie breaker
