@@ -2440,7 +2440,7 @@ function Grower_create_trunks()
 
   if PARAM.teleporters then
     local prob1 = style_sel("teleporters", 0, 30, 60, 99)
-    local prob2 = style_sel("teleporters", 0, 10, 30, 50)
+    local prob2 = style_sel("teleporters", 0, 20, 40, 60)
 
     if rand.odds(prob1) then
       trunk_num = trunk_num + 1
@@ -2449,10 +2449,6 @@ function Grower_create_trunks()
       if rand.odds(prob2) then trunk_num = trunk_num + 1 end
     end
   end
-
-
--- FIXME TEST ONLY
-trunk_num = 1
 
 
   for i = 1, trunk_num do
