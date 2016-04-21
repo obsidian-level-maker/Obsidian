@@ -1042,7 +1042,7 @@ function Title_centered_string(T, mx, my, text, style)
   local thick
 
 
-outline_mode = "shadow"
+outline_mode = "surround"
 
 
   if style.outlines then
@@ -1068,8 +1068,8 @@ outline_mode = "shadow"
       else  -- the normal "surround" mode
         thick = T.thick + i * 2
 
-        T.ofs_x = base_ofs - i / 2
-        T.ofs_y = base_ofs - i / 2
+        T.ofs_x = base_ofs - i
+        T.ofs_y = base_ofs - i
       end
 
       gui.title_prop("box_w", thick)
@@ -1086,6 +1086,11 @@ outline_mode = "shadow"
     if style.colors[k] then
       gui.title_prop("color" .. k, style.colors[k])
     end
+  end
+
+  if style.mode == "gradient" or style.mode == "gradient3" then
+    gui.title_prop("grad_y1", T.y - T.fh + 1)
+    gui.title_prop("grad_y2", T.y - 1)
   end
 
   gui.title_prop("box_w", T.thick)
@@ -1125,7 +1130,7 @@ TITLE_MAIN_STYLES =
     styles = { "ff0:77", "730:55" }
     alt    = { "730:77", "ff0:33" }
   }
---]]
+
 
   {
     mode = "solid"
@@ -1139,6 +1144,16 @@ TITLE_MAIN_STYLES =
 
     zzstyles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
     zzaltxx    = { "fed:bb", "000:99" }
+  }
+--]]
+
+
+  {
+    mode = "gradient3"
+
+    colors = { "#fff", "#f00", "#000" }
+
+    outlines = { "#c00" }
   }
 }
 
@@ -1378,7 +1393,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     mid_T.func = TITLE_TRANSFORM_LIST["straight"]
 
 
-  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * 0.35
+  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh)
   line1_T.thick = line2_T.thick
 
   mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh)
