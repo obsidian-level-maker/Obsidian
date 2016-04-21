@@ -773,8 +773,13 @@ function Layout_decorate_rooms()
 
 
   local function visit_room(R)
-    try_intraroom_lock(R)
-    try_intraroom_lock(R)
+    local switch_prob = style_sel("switches", 0, 35, 70, 99)
+
+    for loop = 1, 2 do
+      if rand.odds(switch_prob) then
+        try_intraroom_lock(R)
+      end
+    end
 
     -- kill any unused closets
     each CL in R.closets do
