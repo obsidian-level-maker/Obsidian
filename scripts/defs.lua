@@ -134,48 +134,52 @@ COOP_AMMO_FACTOR   = 1.35
 GLOBAL_STYLE_LIST =
 {
   -- these two correspond to buttons in the GUI
+  outdoors    = { none=0,  few=20, some=60, heaps=30 }
+  caves       = { none=30 }  --!!!!!!  , few=30, some=30, heaps=7 }
 
-  outdoors   = { few=20, some=60, heaps=30 }
-  caves      = { none=30 }  --!!!!!!  , few=30, some=30, heaps=7 }
+  symmetry    = { none=10, few=40, some=60, heaps=10 }
+  steepness   = { none=0,  few=20, some=60, heaps=10 }
+  hallways    = { none=0,  few=60, some=30, heaps=10 }
 
-  -- things that affect the whole level
+  cages       = { none=10, few=20, some=40, heaps=10 }
+  traps       = { none=0,  few=20, some=60, heaps=20 }
+  secrets     = { none=0,  few=20, some=50, heaps=10 }
+  closets     = { none=0,  few=0,  some=60, heaps=20 }
 
-  traps      = { few=20, some=80, heaps=20 }
-  secrets    = { few=20, some=50, heaps=10 }
-  hallways   = { few=60, some=30, heaps=10 }
-  liquids    = { few=30, some=50, heaps=10 }
-  scenics    = { few=30, some=50, heaps=10 }
-  lakes      = { few=60, heaps=10 }
-  islands    = { few=60, heaps=40 }
-  organics   = { none=5, few=20, some=60, heaps=20 }
+  -- room connections --
 
-  ambushes    = { none=10, some=50, heaps=10 }
+  teleporters = { none=5,  few=20, some=40, heaps=30 }
+  doors       = { none=5,  few=30, some=60, heaps=5 }
+  windows     = { none=0,  few=20, some=70, heaps=35 }
+  fences      = { none=30, few=30, some=10 }
+  switches    = { none=0,  few=10, some=60, heaps=30 }
+
+  -- decoration stuff --
+
+  liquids     = { none=0,  few=30, some=50, heaps=10 }
+  porches     = { none=0,  few=10, some=60, heaps=10 }
+  pictures    = { none=0,  few=10, some=50, heaps=10 }
+
+  pillars     = { none=0,  few=60, some=30, heaps=10 }
+  crates      = { none=20, few=0,  some=40, heaps=10 }
+  barrels     = { none=0,  few=50, some=50, heaps=10 }
+
+  -- monster stuff --
+
+  ambushes    = { none=10, few=0,  some=50, heaps=10 }
+
+  -- these are currently broken --
+
   big_rooms   = { none=20, few=50, some=30, heaps=10 }
-  cycles      = { none=50, some=50, heaps=50 }
+  cycles      = { none=50, few=0,  some=50, heaps=50 }
+  ex_floors   = { none=0,  few=40, some=60, heaps=20 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
 
-  mon_variety = { some=50 }
-  teleporters = { none=50 } --!!!!  few=30, some=30, heaps=10 }
-  switches    = { none=5, few=50, some=50, heaps=10 }
-  doors       = { none=5, few=30, some=60, heaps=5 }
-  porches     = { few=10, some=60, heaps=10 }
-
-  -- things that affect stuff in rooms
-
-  pillars    = { few=60, some=30, heaps=10 }
-  beams      = { few=25, some=50, heaps=5  }
-  barrels    = { few=50, some=50, heaps=10 }
-  closets    = { few=10, some=30, heaps=30 }
-
-  ex_floors  = { few=40, some=60, heaps=20 }
-  windows    = { few=20, some=70, heaps=35 }
-  pictures   = { few=10, some=50, heaps=10 }
-  steepness  = { few=20, some=60, heaps=10 }
-
-  symmetry   = { none=10, few=40, some=60, heaps=10 }
-  cages      = { none=20 }  --!!!! , few=20, some=20, heaps=10 }
-  fences     = { none=30, few=30, some=10 }
-  crates     = { none=20, some=40, heaps=10 }
+  scenics     = { none=0,  few=30, some=50, heaps=10 }
+  lakes       = { none=0,  few=60, some=0,  heaps=10 }
+  islands     = { none=0,  few=60, some=0,  heaps=40 }
+  organics    = { none=5,  few=20, some=60, heaps=20 }
+  beams       = { none=0,  few=25, some=50, heaps=5  }
 }
 
 
