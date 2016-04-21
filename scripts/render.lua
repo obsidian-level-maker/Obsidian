@@ -1838,7 +1838,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local D6 = calc_player_see_dist(spot, 6)
     local D8 = calc_player_see_dist(spot, 8)
 
-stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
+--- stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
     -- up against a wall?
     if D2 <= 1 and D8 > 1 then D8 = D8 * 1.8 end

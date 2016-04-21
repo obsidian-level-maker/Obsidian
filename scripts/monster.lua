@@ -2033,9 +2033,6 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
 
     if R.kind == "stairwell" then return false end
 
-    -- never in start room [ FIXME : allow in out-of-sight places ]
-    if R.is_start then return false end
-
     return true  -- OK --
   end
 

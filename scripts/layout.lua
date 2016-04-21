@@ -310,23 +310,6 @@ end
 
 function Layout_place_importants(R)
 
-  local function do_exclusions(spot)
-    -- FIXME : for closets
-
-    local x1 = spot.mx - 76
-    local y1 = spot.my - 76
-    local x2 = spot.mx + 76
-    local y2 = spot.my + 76
-
-    -- no monsters near start spot or teleporters
-    -- Fixme: do this later (for chunks)
-    if kind == "START" then
-      R:add_exclusion("keep_empty", x1, y1, x2, y2, 96)
-      R:add_exclusion("non_facing", x1, y1, x2, y2, 512)
-    end
-  end
-
-
   local function point_in_front_of_closet(chunk, r)
     local mx, my = chunk.mx, chunk.my
 
@@ -363,6 +346,16 @@ function Layout_place_importants(R)
 -- FIXME broken since our "spot" does not have x1/y1/x2/y2 
 --        R:add_entry_spot(spot)
       end
+
+      -- exclude monsters
+      local mx, my = spot.mx, spot.my
+
+      if spot.kind == "closet" then
+        mx, my = point_in_front_of_closet(spot, 96)
+      end
+
+      R:add_exclusion("keep_empty", mx, my,  640)
+      R:add_exclusion("non_facing", mx, my, 1280)
     end
 
 ---!!!  -- remember floor height of players (needed by monster depots)
