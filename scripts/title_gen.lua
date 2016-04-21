@@ -1046,7 +1046,7 @@ function Title_centered_string(T, mx, my, text, style)
   local thick
 
 
-outline_mode = "surround"
+outline_mode = "zoom"
 
 
   if style.outlines then
@@ -1063,11 +1063,17 @@ outline_mode = "surround"
         T.ofs_x = base_ofs
         T.ofs_y = base_ofs
 
+      elseif outline_mode == "shadow2" then
+        thick = T.thick + i
+
+        T.ofs_x = base_ofs - i
+        T.ofs_y = base_ofs
+
       elseif outline_mode == "zoom" then
         thick = T.thick + i
 
-        T.ofs_x = base_ofs
-        T.ofs_y = base_ofs + i
+        T.ofs_x = base_ofs - i / 2
+        T.ofs_y = base_ofs + i * 1.5
 
       else  -- the normal "surround" mode
         thick = T.thick + i * 2
@@ -1181,7 +1187,6 @@ TITLE_MAIN_STYLES =
     -- outlines = { "#33f", "#003" }
     outlines = { "#000", "#4a4" }
   }
---]]
 
   yellowish_1 =
   {
@@ -1190,6 +1195,16 @@ TITLE_MAIN_STYLES =
     texture = "yellowish"
 
     outlines = { "#654", "#ca8", "#000" }
+  }
+--]]
+
+  redrock_1 =
+  {
+    mode = "texture"
+
+    texture = "redrock"
+
+    outlines = { "#c66", "#933", "#622", "#511" }
   }
 }
 
