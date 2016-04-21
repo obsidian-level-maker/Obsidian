@@ -1033,11 +1033,16 @@ function Title_centered_string(T, mx, my, text, style)
   T.x = mx - width * 0.5
   T.y = my + T.fh  * 0.5
 
+  local base_ofs = 0 - T.thick / 2
+
  
   -- FIXME
   gui.title_prop("pen_type", "box")
 
   local thick
+
+
+outline_mode = "shadow"
 
 
   if style.outlines then
@@ -1048,13 +1053,27 @@ function Title_centered_string(T, mx, my, text, style)
 
       gui.title_prop("color", outline)
 
-      thick = T.thick + i
+      if outline_mode == "shadow" then
+        thick = T.thick + i
+
+        T.ofs_x = base_ofs
+        T.ofs_y = base_ofs
+
+      elseif outline_mode == "zoom" then
+        thick = T.thick + i
+
+        T.ofs_x = base_ofs
+        T.ofs_y = base_ofs + i
+
+      else  -- the normal "surround" mode
+        thick = T.thick + i * 2
+
+        T.ofs_x = base_ofs - i / 2
+        T.ofs_y = base_ofs - i / 2
+      end
 
       gui.title_prop("box_w", thick)
       gui.title_prop("box_h", thick)
-
-      T.ofs_x = 0 - thick / 2
-      T.ofs_y = (i - 1)
 
       Title_draw_string(T, text)
     end
@@ -1072,8 +1091,8 @@ function Title_centered_string(T, mx, my, text, style)
   gui.title_prop("box_w", T.thick)
   gui.title_prop("box_h", T.thick)
 
-  T.ofs_x = 0
-  T.ofs_y = 0
+  T.ofs_x = base_ofs
+  T.ofs_y = base_ofs
 
   Title_draw_string(T, text)
 end
@@ -1359,7 +1378,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     mid_T.func = TITLE_TRANSFORM_LIST["straight"]
 
 
-  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * 0.25
+  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * 0.35
   line1_T.thick = line2_T.thick
 
   mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh)
