@@ -59,12 +59,10 @@ OB_MODULES["level_control"] =
     darkness    = { label=_("Dark Outdoors"),  choices=LEVEL_CONTROL.CHOICES }
     doors       = { label=_("Doors"),          choices=LEVEL_CONTROL.CHOICES }
     hallways    = { label=_("Hallways"),       choices=LEVEL_CONTROL.CHOICES }
-    liquids     = { label=_("Liquids"),        choices=LEVEL_CONTROL.CHOICES }
 
+    liquids     = { label=_("Liquids"),        choices=LEVEL_CONTROL.CHOICES }
     mon_variety = { label=_("Monster Variety"),choices=LEVEL_CONTROL.CHOICES, tooltip="Setting this to NONE will make each level use a single monster type" }
-    organics    = { label=_("Organic Shapes"), choices=LEVEL_CONTROL.CHOICES }
     pictures    = { label=_("Pictures"),       choices=LEVEL_CONTROL.CHOICES }
-    porches     = { label=_("Porches"),        choices=LEVEL_CONTROL.CHOICES }
     secrets     = { label=_("Secrets"),        choices=LEVEL_CONTROL.CHOICES }
 
     steepness   = { label=_("Steepness"),      choices=LEVEL_CONTROL.CHOICES }
@@ -75,6 +73,7 @@ OB_MODULES["level_control"] =
 
 --  crates      = { label=_("Crates"),         choices=LEVEL_CONTROL.CHOICES }
 --  pillars     = { label=_("Pillars"),        choices=LEVEL_CONTROL.CHOICES }
+--  porches     = { label=_("Porches"),        choices=LEVEL_CONTROL.CHOICES }
 
 --  big_rooms   = { label=_("Big Rooms"),      choices=LEVEL_CONTROL.CHOICES }
 --  closets     = { label=_("Closets"),        choices=LEVEL_CONTROL.CHOICES }

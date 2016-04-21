@@ -178,7 +178,6 @@ GLOBAL_STYLE_LIST =
   scenics     = { none=0,  few=30, some=50, heaps=10 }
   lakes       = { none=0,  few=60, some=0,  heaps=10 }
   islands     = { none=0,  few=60, some=0,  heaps=40 }
-  organics    = { none=5,  few=20, some=60, heaps=20 }
   beams       = { none=0,  few=25, some=50, heaps=5  }
 }
 
