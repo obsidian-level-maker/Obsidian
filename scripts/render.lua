@@ -1940,7 +1940,7 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
     local def = Fab_pick(reqs)
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, 10 - dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
 
     Fabricate(R, def, T, { })
   end
@@ -2117,9 +2117,9 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
     skin1. in_target = string.format("tele%d", skin1. in_tag)
     skin1.out_target = string.format("tele%d", skin1.out_tag)
 
-    local spot_dir = player_face_dir(spot)
+    local dir = player_face_dir(spot)
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, spot_dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
