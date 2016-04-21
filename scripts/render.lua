@@ -1866,6 +1866,8 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
 
   local function content_big_item(spot, item)
+    local dir = player_face_dir(spot)
+
     local reqs =
     {
       kind  = "item"
@@ -1881,52 +1883,9 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
     local skin1 = { object=item }
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, spot.dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
 
     Fabricate(R, def, T, { skin1 })
-
---- Trans.entity("light", spot.mx, spot.my, spot.z1+112, { cave_light=176 })
-  end
-
-
-  local function content_very_big_item(spot, item, is_weapon)
---[[  FIXME : LOWERING PEDESTALS
-
-    -- sometimes make a lowering pedestal
-    local prob = sel(is_weapon, 40, 20)
-
-    if rand.odds(prob) and
-       THEME.lowering_pedestal_skin and
-       not S.chunk[2]
-    then
-      local mx, my = spot.x, spot.y
-      local z1 = spot.z
-
-      local z_top
-
-      if R.kind == "cave" then
-        z_top = z1 + rand.pick({ 64, 96 })
-
-      else
-        local z2 = S.ceil_h or S.room.ceil_h or (z1 + 256)
-
-        if z2 < z1 + 170 then
-          z_top = z1 + 64
-        else
-          z_top = z1 + 128
-        end
-      end
-
-      Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
-
-      Trans.entity(item, mx, my, z_top)
-      Trans.entity("light", mx, my, z_top + 24, { cave_light=176 })
-
-      return
-    end
---]]
-
-    content_big_item(spot, item)
   end
 
 
@@ -1975,43 +1934,17 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
   local function content_start(spot)
     local dir = player_face_dir(spot)
 
----???    if OB_CONFIG.game == "quake" then
----???      local skin = { floor="SLIP2", wall="SLIPSIDE" }
----???
----???      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
-
     if R.player_set then
       content_coop_pair(spot, dir)
-
---[[
-    elseif false and PARAM.raising_start and R.svolume >= 20 and
-       R.kind != "cave" and
-       THEME.raising_start_switch and rand.odds(25)
-    then
-      -- TODO: fix this
-      gui.debugf("Raising Start made\n")
-
-      local skin =
-      {
-        f_tex = S.f_tex or R.main_tex,
-        switch_w = THEME.raising_start_switch,
-      }
-
-      Build.raising_start(S, 6, z1, skin)
-      angle = 0
-
-      S.no_floor = true
-      S.raising_start = true
-      R.has_raising_start = true
---]]
     else
-
       content_start_pad(spot, dir)
     end
   end
 
 
   local function content_exit(spot, secret_exit)
+    local dir = player_face_dir(spot)
+
     local reqs =
     {
       kind  = "exit"
@@ -2027,15 +1960,15 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
     local skin1 = { }
 
-    local dir = spot.dir or 2
-
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, 10 - dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
 
 
   local function content_switch(spot)
+    local dir = player_face_dir(spot)
+
     local reqs =
     {
       kind  = "switch"
@@ -2053,7 +1986,7 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
     skin1.action = spot.goal.action  -- can be NIL
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, spot.dir)
+    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
@@ -2066,7 +1999,7 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
       -- bare item
       Trans.entity(weapon, spot.mx, spot.my, spot.z1)
     else
-      content_very_big_item(spot, weapon, "is_weapon")
+      content_big_item(spot, weapon)
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, spot.mx, spot.my, spot.z1)
@@ -2174,7 +2107,7 @@ stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
       content_exit(spot, "secret_exit")
 
     elseif spot.content_kind == "KEY" then
-      content_very_big_item(spot, assert(spot.content_item))
+      content_big_item(spot, assert(spot.content_item))
 
     elseif spot.content_kind == "SWITCH" then
       content_switch(spot)
