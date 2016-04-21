@@ -191,7 +191,7 @@ GROW_CURVE_STAIR_1 =
 
 GROW_CURVE_STAIRPAIR_1 =
 {
-  prob = 999
+  prob = 15
 
   structure =
   {
