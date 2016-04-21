@@ -21,7 +21,7 @@
 
 --
 -- The shapes of these characters are based on the DejaVu TTF font.
--- Only contains uppercase letters and a few punctuation symbols.
+-- Only contains uppercase letters, digits, and some punctuation.
 --
 
 TITLE_LETTER_SHAPES =
@@ -1019,7 +1019,11 @@ end
 
 
 
-function Title_centered_string(T, mx, my, text, styles)
+function Title_centered_string(T, mx, my, text, style)
+  -- TEMPORARY!!
+  if not style.mode then return end
+
+
   local width = Title_measure_string(text, T.spacing)
 
   T.max_along = width
@@ -1029,12 +1033,49 @@ function Title_centered_string(T, mx, my, text, styles)
   T.x = mx - width * 0.5
   T.y = my + T.fh  * 0.5
 
-  each style in styles do
-    if _index != #styles then continue end
+ 
+  -- FIXME
+  gui.title_prop("pen_type", "box")
 
-    Title_parse_style(T, style)
-    Title_draw_string(T, text)
+  local thick
+
+
+  if style.outlines then
+    gui.title_prop("render_mode", "solid")
+
+    for i = #style.outlines, 1, -1 do
+      local outline = style.outlines[i]
+
+      gui.title_prop("color", outline)
+
+      thick = T.thick + i --- * 2
+
+      gui.title_prop("box_w", thick)
+      gui.title_prop("box_h", thick)
+
+      T.ofs_x = 0 ---  0 - int(thick / 2)
+      T.ofs_y = 0 ---  0 - int(thick / 2)
+
+      Title_draw_string(T, text)
+    end
   end
+
+
+  gui.title_prop("render_mode", style.mode)
+
+  for k = 1, 4 do
+    if style.colors[k] then
+      gui.title_prop("color" .. k, style.colors[k])
+    end
+  end
+
+  gui.title_prop("box_w", T.thick)
+  gui.title_prop("box_h", T.thick)
+
+  T.ofs_x = 0
+  T.ofs_y = 0
+
+  Title_draw_string(T, text)
 end
 
 
@@ -1068,11 +1109,17 @@ TITLE_MAIN_STYLES =
 --]]
 
   {
-    styles = { "000:33", "fff:11" }
-    alt    = { "f00:11" }
+    mode = "solid"
 
-    styles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
-    altxx    = { "fed:bb", "000:99" }
+    colors = { "#fff" }
+
+    outlines = { "#bbf", "#88f", "#44f", "#00f", "#009", "#003" }
+
+    zzstyles = { "000:33", "fff:11" }
+    zzalt    = { "f00:11" }
+
+    zzstyles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
+    zzaltxx    = { "fed:bb", "000:99" }
   }
 }
 
@@ -1095,7 +1142,9 @@ TITLE_SUB_STYLES =
     alt = {"431:44", "a86:11"}
   }
   {
-    alt = {"707:44", "f0f:11"}
+    mode = "solid"
+    colors = { "#f0f" }
+    outlines = { "#707" }
   }
 }
 
@@ -1310,7 +1359,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     mid_T.func = TITLE_TRANSFORM_LIST["straight"]
 
 
-  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh)
+  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * 0.25
   line1_T.thick = line2_T.thick
 
   mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh)
@@ -1321,8 +1370,8 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   local mx = 160
   local my = bb_main.y
 
-  local style1 = info.styles
-  local style2 = info.alt
+  local style1 = info
+  local style2 = info
 
 ---???  if rand.odds(30*0) and sub_title_mode != "version" then
 ---???    style1, style2 = style2, style1
@@ -1374,7 +1423,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     local mx = 160
     local my = bb_sub.y + bb_sub.h / 2
 
-    info = rand.pick(TITLE_SUB_STYLES)
+    style = rand.pick(TITLE_SUB_STYLES)
 
     -- FIXME
     sub_T.fw = 11
@@ -1388,7 +1437,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
       my = my - sub_T.fh / 8
     end
 
-    Title_centered_string(sub_T, mx, my, GAME.sub_title, info.alt)
+    Title_centered_string(sub_T, mx, my, GAME.sub_title, style)
   end
 end
 
