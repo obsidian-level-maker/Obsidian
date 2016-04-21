@@ -321,13 +321,22 @@ function Layout_place_importants(R)
     -- no monsters near start spot or teleporters
     -- Fixme: do this later (for chunks)
     if kind == "START" then
-      R:add_exclusion("empty",     x1, y1, x2, y2, 96)
-      R:add_exclusion("nonfacing", x1, y1, x2, y2, 512)
-
-    elseif kind == "TELEPORTER" then
-      R:add_exclusion("empty",     x1, y1, x2, y2, 144)
-      R:add_exclusion("nonfacing", x1, y1, x2, y2, 384)
+      R:add_exclusion("keep_empty", x1, y1, x2, y2, 96)
+      R:add_exclusion("non_facing", x1, y1, x2, y2, 512)
     end
+  end
+
+
+  local function point_in_front_of_closet(chunk, r)
+    local mx, my = chunk.mx, chunk.my
+
+    if chunk.from_dir == 2 then return mx, chunk.y1 - r end
+    if chunk.from_dir == 8 then return mx, chunk.y2 + r end
+
+    if chunk.from_dir == 4 then return chunk.x1 - r, my end
+    if chunk.from_dir == 6 then return chunk.x2 + r, my end
+
+    error("point_in_front_of_closet : unknown dir")
   end
 
 
@@ -372,7 +381,16 @@ function Layout_place_importants(R)
 
     spot.conn = conn
 
-    --FIXME  do_exclusions(spot)
+    -- exclude monsters from being nearby
+
+    local mx, my = spot.mx, spot.my
+
+    if spot.kind == "closet" then
+      mx, my = point_in_front_of_closet(spot, 96)
+    end
+
+    R:add_exclusion("keep_empty", mx, my, 192)
+    R:add_exclusion("non_facing", mx, my, 384)
   end
 
 

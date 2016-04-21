@@ -480,14 +480,19 @@ function ROOM_CLASS.spots_do_decor(R, floor_h)
 end
 
 
-function ROOM_CLASS.add_exclusion(R, kind, x1, y1, x2, y2, extra_dist)
+function ROOM_CLASS.add_exclusion(R, kind, x1, y1, r, x2, y2)
+  -- x2 and y2 are optional
+  if x2 == nil then x2 = x1 end
+  if y2 == nil then y2 = y1 end
+
   local area =
   {
     kind = kind
-    x1 = x1 - (extra_dist or 0)
-    y1 = y1 - (extra_dist or 0)
-    x2 = x2 + (extra_dist or 0)
-    y2 = y2 + (extra_dist or 0)
+
+    x1 = x1 - r
+    y1 = y1 - r
+    x2 = x2 + r
+    y2 = y2 + r
   }
 
   table.insert(R.exclusions, area)
@@ -561,7 +566,7 @@ end
 
 function ROOM_CLASS.exclude_monsters(R)
   each box in R.exclusions do
-    if box.kind == "empty" then
+    if box.kind == "keep_empty" then
       R:clip_spots(box.x1, box.y1, box.x2, box.y2)
     end
   end
