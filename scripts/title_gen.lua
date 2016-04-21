@@ -952,7 +952,7 @@ end
 
 
 
-function Title_parse_style(T, style)
+function Title_parse_style__OLD(T, style)
   --
   -- style is 3 hex digits, a ':', then two thickness digits
   --
@@ -1048,13 +1048,13 @@ function Title_centered_string(T, mx, my, text, style)
 
       gui.title_prop("color", outline)
 
-      thick = T.thick + i --- * 2
+      thick = T.thick + i
 
       gui.title_prop("box_w", thick)
       gui.title_prop("box_h", thick)
 
-      T.ofs_x = 0 ---  0 - int(thick / 2)
-      T.ofs_y = 0 ---  0 - int(thick / 2)
+      T.ofs_x = 0 - thick / 2
+      T.ofs_y = (i - 1)
 
       Title_draw_string(T, text)
     end
@@ -1113,7 +1113,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#fff" }
 
-    outlines = { "#bbf", "#88f", "#44f", "#00f", "#009", "#003" }
+    outlines = { "#bbf", "#99f", "#55f", "#22f", "#00f", "#009", "#004", "#000" }
 
     zzstyles = { "000:33", "fff:11" }
     zzalt    = { "f00:11" }
