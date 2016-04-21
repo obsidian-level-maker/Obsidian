@@ -10,8 +10,13 @@ ______________________________________________________________________
 
 
 *  BEFORE RELEASE:
+   -  create language/TEMPLATE.txt
+
    +  move 'prefabs' folder to games/doom/
    -  free-standing cage prefabs  [ a decoration? ]
+
+   -  fix map offsetting
+   -  honor styles for grammar rules
 
    -  update Credits page (title authors)
    +  update documentation for current GUI interface
@@ -23,12 +28,7 @@ ______________________________________________________________________
 
 *  add in more scenery: trees, computers etc
 
-
-
-*  support for translation into other languages
-   -  create TEMPLATE.txt
-
-*  better i18n support (esp. non-ASCII characters in filenames)
+*  fix i18n issues (esp. non-ASCII characters in filenames)
 
 
 ______________________________________________________________________
