@@ -1036,6 +1036,10 @@ function Title_centered_string(T, mx, my, text, style)
   local base_ofs = 0 - T.thick / 2
 
  
+  -- TODO : support "thin_horiz" and "thin_vert" pens
+  -- [ not real pens, just use different box_w than box_h ]
+
+
   -- FIXME
   gui.title_prop("pen_type", "box")
 
@@ -1080,11 +1084,15 @@ outline_mode = "surround"
   end
 
 
-  gui.title_prop("render_mode", style.mode)
+  if style.mode == "texture" then
+    gui.title_prop("texture", "data/masks/" .. style.texture .. ".tga")
+  else
+    gui.title_prop("render_mode", style.mode)
 
-  for k = 1, 4 do
-    if style.colors[k] then
-      gui.title_prop("color" .. k, style.colors[k])
+    for k = 1, 4 do
+      if style.colors[k] then
+        gui.title_prop("color" .. k, style.colors[k])
+      end
     end
   end
 
@@ -1131,7 +1139,7 @@ TITLE_MAIN_STYLES =
     alt    = { "730:77", "ff0:33" }
   }
 
-
+  shaded_white_n_blue =
   {
     mode = "solid"
 
@@ -1145,9 +1153,8 @@ TITLE_MAIN_STYLES =
     zzstyles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
     zzaltxx    = { "fed:bb", "000:99" }
   }
---]]
 
-
+  gradient_white_n_red =
   {
     mode = "gradient3"
 
@@ -1155,11 +1162,22 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#c00" }
   }
+--]]
+
+  groovy_1 =
+  {
+    mode = "texture"
+
+    texture = "groovy1"
+
+    outlines = { "#000", "#975" }
+  }
 }
 
 
 TITLE_SUB_STYLES =
 {
+--[[
   {
     alt = { "300:44", "f00:11" }
   }
@@ -1175,6 +1193,9 @@ TITLE_SUB_STYLES =
   {
     alt = {"431:44", "a86:11"}
   }
+--]]
+
+  purple =
   {
     mode = "solid"
     colors = { "#f0f" }
@@ -1268,6 +1289,26 @@ end
 
 
 
+function Title_pick_style(style_tab, reqs)
+  local tab = {}
+
+  each name,style in style_tab do
+    if true --[[ matches reqs ]] then
+      tab[name] = 50
+    end
+  end
+
+  if table.empty(tab) then
+    error("No title styles matching requirements")
+  end
+
+  local name = rand.key_by_probs(tab)
+
+  return style_tab[name]
+end
+
+
+
 function Title_add_title()
 
   -- determine if we have one or two main lines
@@ -1344,7 +1385,10 @@ function Title_add_title()
 
 
   -- pick the style to use
-  local info = rand.pick(TITLE_MAIN_STYLES)
+  local style1 = Title_pick_style(TITLE_MAIN_STYLES, {})
+
+  -- FIXME : this used for the smaller words, often make it different (and simpler)
+  local style2 = style1
 
 
   -- vertical sizing of the main title
@@ -1393,10 +1437,10 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     mid_T.func = TITLE_TRANSFORM_LIST["straight"]
 
 
-  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh)
+  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * (style1.narrow or 1)
   line1_T.thick = line2_T.thick
 
-  mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh)
+  mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh) * (style2.narrow or 1)
 
 
   --- draw main title lines ---
@@ -1404,35 +1448,23 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   local mx = 160
   local my = bb_main.y
 
-  local style1 = info
-  local style2 = info
-
----???  if rand.odds(30*0) and sub_title_mode != "version" then
----???    style1, style2 = style2, style1
----???  end
-
-
   if top_line then
     Title_centered_string(mid_T, mx, my + line_h/2, top_line, style2)
-
     my = my + line_h
   end
 
   if line1 then
     Title_centered_string(line1_T, mx, my + line_h, line1, style1)
-
     my = my + line_h * 2
   end
 
   if mid_line then
     Title_centered_string(mid_T, mx, my + line_h/2, mid_line, style2)
-
     my = my + line_h
   end
 
   if line2 then
     Title_centered_string(line2_T, mx, my + line_h, line2, style1)
-
     my = my + line_h * 2
   end
 
@@ -1457,7 +1489,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     local mx = 160
     local my = bb_sub.y + bb_sub.h / 2
 
-    style = rand.pick(TITLE_SUB_STYLES)
+    style = Title_pick_style(TITLE_SUB_STYLES, {})
 
     -- FIXME
     sub_T.fw = 11
