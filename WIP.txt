@@ -7,12 +7,10 @@ idea : each rule can specify a prob_skew
        (e.g. if 5, then can multiply or divide by rand.range(1,5))
 
 
+>>>  less start closets
 
-TELEPORTERS:
 
--  check exclusion zone around a PAD works
-
-+  exclusion zone in front of a closet
+>>>  limit # of floor areas per room
 
 
 
@@ -113,6 +111,5 @@ JOINERS:
     as the skin.special for the SWITCH prefab
 
 +  support joiners with a height difference
-
 
 
