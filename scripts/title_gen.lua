@@ -1162,7 +1162,6 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#c00" }
   }
---]]
 
   groovy_1 =
   {
@@ -1170,7 +1169,27 @@ TITLE_MAIN_STYLES =
 
     texture = "groovy1"
 
-    outlines = { "#000", "#975" }
+    outlines = { "#000", "#864", "#000" }
+  }
+
+  compblue_1 =
+  {
+    mode = "texture"
+
+    texture = "compblue"
+
+    -- outlines = { "#33f", "#003" }
+    outlines = { "#000", "#4a4" }
+  }
+--]]
+
+  yellowish_1 =
+  {
+    mode = "texture"
+
+    texture = "yellowish"
+
+    outlines = { "#654", "#ca8", "#000" }
   }
 }
 
@@ -1432,9 +1451,9 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   local line2_T = { fw=w2, fh=h2, spacing=spacing }
   local   mid_T = { fw=w3, fh=h3, spacing=spacing }
 
-  line1_T.func = TITLE_TRANSFORM_LIST["fat_bottom"]
-  line2_T.func = TITLE_TRANSFORM_LIST["fat_bottom"]
-    mid_T.func = TITLE_TRANSFORM_LIST["straight"]
+  line1_T.func = TITLE_TRANSFORM_LIST["straight"]
+  line2_T.func = TITLE_TRANSFORM_LIST["straight"]
+    mid_T.func = TITLE_TRANSFORM_LIST["italics"]
 
 
   line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * (style1.narrow or 1)
