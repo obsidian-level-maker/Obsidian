@@ -1046,9 +1046,6 @@ function Title_centered_string(T, mx, my, text, style)
   local thick
 
 
-outline_mode = "zoom"
-
-
   if style.outlines then
     gui.title_prop("render_mode", "solid")
 
@@ -1057,19 +1054,19 @@ outline_mode = "zoom"
 
       gui.title_prop("color", outline)
 
-      if outline_mode == "shadow" then
+      if style.outline_mode == "shadow" then
         thick = T.thick + i
 
         T.ofs_x = base_ofs
         T.ofs_y = base_ofs
 
-      elseif outline_mode == "shadow2" then
+      elseif style.outline_mode == "shadow2" then
         thick = T.thick + i
 
         T.ofs_x = base_ofs - i
         T.ofs_y = base_ofs
 
-      elseif outline_mode == "zoom" then
+      elseif style.outline_mode == "zoom" then
         thick = T.thick + i
 
         T.ofs_x = base_ofs - i / 2
@@ -1151,6 +1148,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#fff" }
 
+    outline_mode = "shadow"
     outlines = { "#bbf", "#99f", "#55f", "#22f", "#00f", "#009", "#004", "#000" }
 
     zzstyles = { "000:33", "fff:11" }
@@ -1177,17 +1175,17 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#000", "#864", "#000" }
   }
-
-  compblue_1 =
+--]]
+  compgreen_1 =
   {
     mode = "texture"
 
-    texture = "compblue"
+    texture = "compgreen"
 
     -- outlines = { "#33f", "#003" }
-    outlines = { "#000", "#4a4" }
+    outlines = { "#000", "#cb4" }
   }
-
+--[[
   yellowish_1 =
   {
     mode = "texture"
@@ -1196,7 +1194,6 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#654", "#ca8", "#000" }
   }
---]]
 
   redrock_1 =
   {
@@ -1204,8 +1201,10 @@ TITLE_MAIN_STYLES =
 
     texture = "redrock"
 
+    outline_mode = "zoom"
     outlines = { "#c66", "#933", "#622", "#511" }
   }
+--]]
 }
 
 
