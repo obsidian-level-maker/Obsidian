@@ -65,6 +65,8 @@ function Render_outer_sky(S, dir, floor_h)
     C.flags = DOOM_LINE_FLAGS.draw_never
   end
 
+  AMBIENT_LIGHT = LEVEL.sky_light
+
   local c_brush = brushlib.copy(f_brush)
 
   table.insert(f_brush, { t=floor_h, reachable=true })
@@ -594,6 +596,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
   ---| Render_edge |---
 
+  AMBIENT_LIGHT = A.lighting
+
   if E.kind == "wall" then
     edge_wall()
 
@@ -675,6 +679,9 @@ function Render_corner(cx, cy)
     local mat    = corner.post_mat or "METAL"
     
     local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
+
+    -- TODO: fix this
+    AMBIENT_LIGHT = LEVEL.sky_light
 
     if corner.post_top_h then
       brushlib.add_top(brush, corner.post_top_h)
@@ -1078,6 +1085,8 @@ end
 function Render_floor(A, S)
   if S.done_floor then return end
 
+  AMBIENT_LIGHT = A.lighting
+
   local f_brush = S:make_brush()
 
   local f_h = S.floor_h or A.floor_h
@@ -1124,6 +1133,8 @@ end
 function Render_ceiling(A, S)
   if S.done_ceil then return end
 
+  AMBIENT_LIGHT = A.lighting
+
   local c_h = S.ceil_h or A.ceil_h
   assert(c_h)
 
@@ -1147,6 +1158,8 @@ end
 
 function Render_hallway(A, S)
   local R = A.room
+
+  AMBIENT_LIGHT = A.lighting
 
   -- determine common part of prefab name
   local fab_common
@@ -1262,6 +1275,8 @@ function Render_chunk(chunk)
   local A = chunk.area
 
   gui.debugf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.content_kind or "-")
+
+  AMBIENT_LIGHT = A.lighting
 
   local dir = chunk.from_dir or chunk.dir or 2
 
@@ -1528,6 +1543,8 @@ function Render_area(A)
     return
   end
 
+  AMBIENT_LIGHT = A.lighting
+
   each E in A.edges do
     assert(E.area == A)
     Render_edge(E)
@@ -1653,15 +1670,21 @@ end
 
 function Render_properties_for_area(A)
 
+  local R = A.room
+
   -- scenic parts done elsewhere...
   if A.mode == "scenic" then
     return
   end
 
 
-  local R = A.room
-
----###  if not R then R = A.face_room end
+  if not A.lighting then
+    if A.is_outdoor or (A.room and A.room.is_outdoor) then
+      A.lighting = LEVEL.sky_light
+    else
+      A.lighting = 144
+    end
+  end
 
 
   if A.mode == "void" then
@@ -2097,6 +2120,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
 
   local function build_important(spot)
+    if spot.area then
+      AMBIENT_LIGHT = spot.area.lighting
+    end
+
     if spot.content_kind == "START" then
       content_start(spot)
 
