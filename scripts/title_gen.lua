@@ -953,9 +953,15 @@ end
 
 
 function Title_centered_string(T, mx, my, text, style)
-  -- TEMPORARY!!
-  if not style.mode then return end
+  assert(style.mode)
 
+  -- do not create really tall letters
+  if T.fh / T.fw > 2.5 then
+     T.fh = T.fw * 2.5
+  end
+
+
+  -- measure string and set position --
 
   local width = Title_measure_string(text, T.spacing)
 
