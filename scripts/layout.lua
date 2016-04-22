@@ -818,11 +818,22 @@ function Layout_create_scenic_borders()
   -- The actual brushwork is done by normal area-building code.
   --
 
+  local function collect_border_areas(Z)
+    Z.border_areas = {}
+
+    each A in LEVEL.areas do
+      if A.is_boundary and A.zone == Z then
+        table.insert(Z.border_areas, A)
+      end
+    end
+  end
+
+
   local function neighbor_min_max(Z)
     local min_f
     local max_f
 
-    each A in Z.border_info.areas do
+    each A in Z.border_areas do
     each N in A.neighbors do
       if N.zone != Z then continue end
 
@@ -840,17 +851,6 @@ function Layout_create_scenic_borders()
   end
 
 
-  local function collect_border_areas(Z)
-    Z.border_info.areas = {}
-
-    each A in LEVEL.areas do
-      if A.is_boundary and A.zone == Z then
-        table.insert(Z.border_info.areas, A)
-      end
-    end
-  end
-
-
   local function set_junctions(A)
     each N in A.neighbors do
       if N.room and N.is_outdoor then
@@ -860,22 +860,7 @@ function Layout_create_scenic_borders()
         if junc.E1 != nil then continue end
 
         if A.zone != N.zone then continue end
---[[
-        if A.kind == "water" and N.room.kind == "hallway" then
---!!!!!! FIXME
-          junc.kind = "fence"
-          junc.fence_mat = A.zone.fence_mat
-          junc.fence_top_z = N.room.hallway.max_h + 32
-        elseif A.kind == "water" then
---!!!!!! FIXME
-          junc.kind = "rail"
-          junc.rail_mat = "MIDBARS3"
-          junc.post_h   = 84
-          junc.blocked  = true
 
-        elseif A.kind != "void" then
-        end
---]]
         Junction_make_empty(junc)
       end
     end
@@ -889,24 +874,25 @@ function Layout_create_scenic_borders()
 
     neighbor_min_max(Z)
 
+--[[  UNUSED STUFF
     -- this only possible if a LOT of void areas
     if not Z.border_info.nb_min_f then
       Z.border_info.kind = "void"
-    elseif LEVEL.liquid and rand.odds(40 * 0) then  --!!! FIXME
+    elseif LEVEL.liquid and rand.odds(40) then
       Z.border_info.kind = "water"
     else
       Z.border_info.kind = "mountain"
     end
+--]]
 
-    each A in Z.border_info.areas do
-      A.kind = Z.border_info.kind
-      
+    each A in Z.border_areas do
       if A.mode != "void" then
         A.is_outdoor = true
+        A.lighting   = LEVEL.sky_light
       end
     end
 
-    each A in Z.border_info.areas do
+    each A in Z.border_areas do
       set_junctions(A)
     end
   end
