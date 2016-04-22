@@ -1884,9 +1884,6 @@ end
 function Level_choose_darkness()
   local prob = EPISODE.dark_prob or 0
 
-  -- FIXME: episode control currently off [ lack of decent lighting outdoors ]
-  prob = 0
-
   -- NOTE: this style is only set via the Level Control module
   if STYLE.darkness then
     prob = style_sel("darkness", 0, 10, 30, 90)
@@ -1894,15 +1891,15 @@ function Level_choose_darkness()
 
   AMBIENT_LIGHT = 144
 
-  LEVEL.sky_light  = rand.sel(75, 192, 176)
+  LEVEL.sky_light  = rand.pick({ 160, 176,176, 192,192 })
   LEVEL.sky_shadow = 32
 
   if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n\n")
 
     LEVEL.is_dark = true
-    LEVEL.sky_light  = 128
-    LEVEL.sky_shadow = 0
+    LEVEL.sky_light  = 144
+    LEVEL.sky_shadow = 32
   end
 end
 
