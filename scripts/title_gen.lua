@@ -1100,6 +1100,18 @@ TITLE_MAIN_STYLES =
 
   --- Gradient styles ---
 
+--]]
+
+  gradient_white_black =
+  {
+    mode = "gradient"
+
+    colors = { "#fff", "#000" }
+
+    outlines = { "#000", "#444" }
+  }
+
+--[[
   gradient_green_black =
   {
     mode = "gradient"
@@ -1162,7 +1174,6 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#000" }
   }
---]]
 
   gradmirror_yellow_orange =
   {
@@ -1175,7 +1186,6 @@ TITLE_MAIN_STYLES =
     narrow = 0.7
   }
 
---[[
   --- Textured styles ---
 
   groovy_1 =
