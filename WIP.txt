@@ -10,19 +10,18 @@ idea : each rule can specify a prob_skew
 
 TITLE GENERATOR
 
-+  pick a PEN  [ check style.pens ]
-
--  pick geometry for PRIMARY, SECONDARY, TERTIARY lines
-
--  complementary styles for MID/TOP/BOTTOM lines
++  fix up the SUB STYLES
 
 
 
 NEW LIGHTING:
 
--  set ambient lighting for each area:
-
-     AMBIENT_LIGHT = A.lighting
++  compute better "AREA.lighting" values
+   +  use logic like for "pressure" to make some dark rooms
+   -  walls/pictures/etc with lights are summed
+   -  floor/ceiling prefabs with lights also add to sum
+   -  if has sink with ceiling light or sky, use an absolute value
+   -  if neighbor areas is much higher, increase us  [ but no flow-on! ]
 
 -  for wall prefabs and closets in outdoor rooms, ones facing a
    certain direction should use "shadow" light value as ambient
