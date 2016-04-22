@@ -231,9 +231,9 @@ DOOM.THEMES =
 
     cliff_mats =
     {
-      ASHWALL2 = 60
-      ROCKRED1 = 60
+      ROCKRED1 = 80
       SP_ROCK1 = 40
+      ASHWALL2 = 40
       ROCK3    = 40
       CRACKLE4 = 40
       SKSNAKE1 = 20
