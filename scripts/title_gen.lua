@@ -1084,6 +1084,8 @@ TITLE_MAIN_STYLES =
     alt    = { "730:77", "ff0:33" }
   }
 
+  --- Solid styles ---
+
   shaded_white_n_blue =
   {
     mode = "solid"
@@ -1093,12 +1095,10 @@ TITLE_MAIN_STYLES =
     outline_mode = "shadow"
     outlines = { "#bbf", "#99f", "#55f", "#22f", "#00f", "#009", "#004", "#000" }
 
-    zzstyles = { "000:33", "fff:11" }
-    zzalt    = { "f00:11" }
-
-    zzstyles44 = { "000:dd", "975:bb", "321:99", "ca8:77" }
-    zzaltxx    = { "fed:bb", "000:99" }
+    narrow = 0.4
   }
+
+  --- Gradient styles ---
 
   gradient_white_n_red =
   {
@@ -1108,6 +1108,8 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#c00" }
   }
+
+  --- Textured styles ---
 
   groovy_1 =
   {
@@ -1120,6 +1122,8 @@ TITLE_MAIN_STYLES =
 
   compgreen_1 =
   {
+    prob = 10
+
     mode = "texture"
 
     texture = "compgreen"
@@ -1148,7 +1152,6 @@ TITLE_MAIN_STYLES =
     outline_mode = "zoom"
     outlines = { "#c66", "#933", "#622", "#511" }
   }
---]]
 
   fireblu_1 =
   {
@@ -1157,6 +1160,18 @@ TITLE_MAIN_STYLES =
     texture = "fireblu"
 
     outlines = { "#ccc", "#000" }
+  }
+--]]
+
+  shawn_1 =
+  {
+    mode = "texture"
+
+    texture = "shawn_r"
+
+    outlines = { "#643", "#321", "#000" }
+
+    narrow = 0.8
   }
 }
 
