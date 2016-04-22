@@ -1073,19 +1073,20 @@ end
 
 TITLE_MAIN_STYLES =
 {
---[[
-  {
-    styles = { "999:77", "000:55" }
-    alt    = { "000:77", "bbb:33" }
-  }
-
-  {
-    styles = { "ff0:77", "730:55" }
-    alt    = { "730:77", "ff0:33" }
-  }
-
   --- Solid styles ---
 
+  solid_black_lightblue =
+  {
+    mode = "solid"
+
+    colors = { "#000" }
+
+    outlines = { "#009", "#99f", "#ddd" }
+
+    narrow = 0.7
+  }
+
+--[[
   shaded_white_n_blue =
   {
     mode = "solid"
@@ -1100,18 +1101,15 @@ TITLE_MAIN_STYLES =
 
   --- Gradient styles ---
 
---]]
-
   gradient_white_black =
   {
     mode = "gradient"
 
     colors = { "#fff", "#000" }
 
-    outlines = { "#000", "#444" }
+    outlines = { "#000", "#555" }
   }
 
---[[
   gradient_green_black =
   {
     mode = "gradient"
