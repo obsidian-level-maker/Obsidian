@@ -1126,6 +1126,8 @@ TITLE_MAIN_STYLES =
 
     -- outlines = { "#33f", "#003" }
     outlines = { "#000", "#cb4" }
+
+    narrow = 0.9
   }
 --[[
   yellowish_1 =
@@ -1402,14 +1404,30 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 --]]
 
 
-  -- create the transforms
+  -- FIXME !!! find a good naming scheme for the title parts
+
+
+  -- decide geometry for major parts --
+
   local line1_T = { fw=w1, fh=h1, spacing=spacing }
   local line2_T = { fw=w2, fh=h2, spacing=spacing }
   local   mid_T = { fw=w3, fh=h3, spacing=spacing }
 
-  line1_T.func = TITLE_TRANSFORM_LIST["straight"]
-  line2_T.func = TITLE_TRANSFORM_LIST["straight"]
-    mid_T.func = TITLE_TRANSFORM_LIST["italics"]
+  local GEOMETRIES = { straight=60, italics=30, perspective=20, fat_bottom=20, fat_top=10 }
+
+  local geometry1 = rand.key_by_probs(GEOMETRIES)
+
+  line1_T.func = TITLE_TRANSFORM_LIST[geometry1]
+  line2_T.func = TITLE_TRANSFORM_LIST[geometry1]
+    mid_T.func = TITLE_TRANSFORM_LIST[geometry1]
+
+  if rand.odds(50) or geometry1 == "perspective" then
+    if geometry1 == "straight" then
+      mid_T.func = TITLE_TRANSFORM_LIST["italics"]
+    else
+      mid_T.func = TITLE_TRANSFORM_LIST["straight"]
+    end
+  end
 
 
   line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * (style.narrow or 1)
@@ -1471,15 +1489,18 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     -- create the transform
     local sub_T = {}
 
-    sub_T.func = TITLE_TRANSFORM_LIST["italics"]
+    -- TODO : more variety than this [ depends on the other parts though! ]
+    local sub_geometry = "straight"
+
+    sub_T.func = TITLE_TRANSFORM_LIST[sub_geometry]
+    assert(sub_T.func)
 
     local mx = 160
     local my = bb_sub.y + bb_sub.h / 2
 
     style = Title_pick_style(TITLE_SUB_STYLES, {})
 
-    -- FIXME
-    sub_T.fw = 11
+    sub_T.fw = rand.sel(25, 13, 11)
     sub_T.fh = 13
     sub_T.spacing = rand.sel(50, 0.3, 0.4)
 
