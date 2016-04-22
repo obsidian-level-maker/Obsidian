@@ -1108,7 +1108,6 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#231", "#342" }
   }
---]]
 
   gradient_pink_black =
   {
@@ -1119,7 +1118,15 @@ TITLE_MAIN_STYLES =
     outlines = { "#000", "#933" }
   }
 
---[[
+  gradient_black_brown =
+  {
+    mode = "gradient3"
+
+    colors = { "#000", "#752", "#fb8" }
+
+    outlines = { "#432", "#000" }
+  }
+
   grad3_white_red_black =
   {
     mode = "gradient3"
@@ -1155,7 +1162,20 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#000" }
   }
+--]]
 
+  gradmirror_yellow_orange =
+  {
+    mode = "gradient3"
+
+    colors = { "#ff7", "#620", "#ff7" }
+
+    outlines = { "#000", "#000", "#000" }
+
+    narrow = 0.7
+  }
+
+--[[
   --- Textured styles ---
 
   groovy_1 =
