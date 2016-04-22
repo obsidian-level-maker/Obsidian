@@ -536,7 +536,7 @@ end
 
 
 
-function Layout_choose_face_room(A)
+function Layout_choose_face_area(A)
   -- used for scenic liquid pools
 
   local best
@@ -545,6 +545,8 @@ function Layout_choose_face_room(A)
   each N in A.neighbors do
     if not N.room then continue end
     if not N.is_outdoor then continue end
+
+    if N.mode != "floor" then continue end
     if not N.floor_h then continue end
 
     if N.zone != A.zone then continue end
@@ -558,7 +560,7 @@ function Layout_choose_face_room(A)
     local score = junc.perimeter + 2.2 * gui.random() ^ 3
 
     if score > best_score then
-      best = N.room
+      best = N
       best_score = score
     end
   end
@@ -1008,8 +1010,10 @@ function Layout_liquid_stuff()
     if A.svolume > 20 then return end
 
     -- choose facing room (might be NIL)
-    local face_room = Layout_choose_face_room(A)
-    if not face_room then return end
+    local face_area = Layout_choose_face_area(A)
+    if not face_area then return end
+
+    local face_room = face_area.room
 
     -- OK --
 
@@ -1022,7 +1026,7 @@ function Layout_liquid_stuff()
     local min_f
 
     each N in A.neighbors do
-      if N.room == face_room and N.floor_h then
+      if N.room == face_room and N.mode == "floor" and N.floor_h then
         min_f = math.N_min(N.floor_h, min_f)
       end
     end
