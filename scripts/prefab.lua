@@ -1769,8 +1769,8 @@ function Fab_replacements(fab)
 
     -- give liquid brushes lighting and/or special type
     if val == "_LIQUID" and LEVEL.liquid then
-      C.special = C.special or LEVEL.liquid.special
-      C.light   = LEVEL.liquid.light
+      C.special   = C.special or LEVEL.liquid.special
+      C.light_add = LEVEL.liquid.light_add
     end
 
     local mat = Mat_lookup_flat(val)

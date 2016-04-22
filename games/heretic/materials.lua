@@ -2,7 +2,7 @@
 --  HERETIC MATERIALS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -14,11 +14,11 @@
 
 HERETIC.LIQUIDS =
 {
-  water  = { mat="FLTFLWW1", light=168, special=0 }
-  water2 = { mat="FLTWAWA1", light=168, special=0 }
-  sludge = { mat="FLTSLUD1", light=168, special=16, damage=20 }
-  lava   = { mat="FLATHUH1", light=192, special=16, damage=20 }
-  magma  = { mat="FLTLAVA1", light=184, special=16, damage=20 }
+  water  = { mat="FLTFLWW1", light_add=16, special=0 }
+  water2 = { mat="FLTWAWA1", light_add=16, special=0 }
+  sludge = { mat="FLTSLUD1", light_add=16, special=16, damage=20 }
+  lava   = { mat="FLATHUH1", light_add=24, special=16, damage=20 }
+  magma  = { mat="FLTLAVA1", light_add=16, special=16, damage=20 }
 }
 
 

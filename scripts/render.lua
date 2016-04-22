@@ -1105,7 +1105,7 @@ function Render_floor(A, S)
   end
 
 
-  table.insert(f_brush, { t=f_h, light=S.light, tag=tag })
+  table.insert(f_brush, { t=f_h, tag=tag })
 
   brushlib.set_mat(f_brush, f_side, f_mat)
 

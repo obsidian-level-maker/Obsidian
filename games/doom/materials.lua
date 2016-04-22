@@ -2,7 +2,7 @@
 --  DOOM MATERIALS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -14,13 +14,13 @@
 
 DOOM.LIQUIDS =
 {
-  water  = { mat="FWATER1", light=156, special=0 }
-  blood  = { mat="BLOOD1",  light=172, special=0 }
-  nukage = { mat="NUKAGE1", light=172, special=5,  damage=10 }
-  lava   = { mat="LAVA1",   light=172, special=16, damage=20 }
+  water  = { mat="FWATER1", light_add=16, special=0 }
+  blood  = { mat="BLOOD1",  light_add=16, special=0 }
+  nukage = { mat="NUKAGE1", light_add=16, special=5,  damage=10 }
+  lava   = { mat="LAVA1",   light_add=24, special=16, damage=20 }
 
   -- Doom II only --
-  slime  = { mat="SLIME01", light=156, special=5, damage=10 }
+  slime  = { mat="SLIME01", light_add=16, special=5, damage=10 }
 }
 
 

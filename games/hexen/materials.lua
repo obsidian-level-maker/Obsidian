@@ -2,7 +2,7 @@
 --  HEXEN MATERIALS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2011 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C) 2011-2012 Jared Blackburn
 --
 --  This program is free software; you can redistribute it and/or
@@ -18,10 +18,10 @@ HEXEN.LIQUIDS =
 
   -- water and muck sometimes flow in a direction, but I'll leave that to 
   -- later code development.
-  water  = { mat="X_005", light=168, special=0 }
-  muck   = { mat="X_009", light=168, special=0 }
-  lava   = { mat="X_001", light=192, special=0, damage=20 }
-  
+  water  = { mat="X_005", light_add=16, special=0 }
+  muck   = { mat="X_009", light_add=16, special=0 }
+  lava   = { mat="X_001", light_add=24, special=0, damage=20 }
+
   -- Ice isn't really a liquid, but may be placed like one in some ice levels
   icefloor = { mat="F_033", special=0 }
 }
