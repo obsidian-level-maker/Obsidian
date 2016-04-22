@@ -1636,6 +1636,8 @@ static inline rgb_color_t CalcGradient(float along)
 
 		if (along > 1)
 		{
+			along = along - 1;
+
 			col1 = col2;
 			col2 = title_drawctx.color[2];
 		}
