@@ -1231,12 +1231,12 @@ function Title_split_into_lines()
   -- no choice?
   if #words < 2 then return GAME.title end
 
-  local single_prob = 40
+  local split_prob = 70
 
-  if #GAME.title <= 11 then single_prob = 75 end
-  if #GAME.title >= 17 then single_prob =  0 end
+  if #GAME.title <= 12 then split_prob =  30 end
+  if #GAME.title >= 17 then split_prob = 100 end
 
-  if rand.odds(single_prob) then return GAME.title end
+  if not rand.odds(split_prob) then return GAME.title end
 
   -- multiple lines
   if words[3] then
