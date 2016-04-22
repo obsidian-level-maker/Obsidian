@@ -1075,8 +1075,52 @@ TITLE_MAIN_STYLES =
 {
   --- Solid styles ---
 
+  solid_blue =
+  {
+    prob = 25
+
+    mode = "solid"
+
+    colors = { "#00f" }
+
+    outline_mode = "shadow2"
+    outlines = { "#00c", "#009", "#006", "#000" }
+
+    narrow = 0.6
+  }
+
+  solid_red =
+  {
+    prob = 25
+
+    mode = "solid"
+
+    colors = { "#f00" }
+
+    outline_mode = "shadow2"
+    outlines = { "#c00", "#900", "#600", "#000" }
+
+    narrow = 0.6
+  }
+
+  solid_green =
+  {
+    prob = 25
+
+    mode = "solid"
+
+    colors = { "#0f0" }
+
+    outline_mode = "shadow"
+    outlines = { "#0c0", "#090", "#060", "#000" }
+
+    narrow = 0.4
+  }
+
   solid_black_lightblue =
   {
+    prob = 25
+
     mode = "solid"
 
     colors = { "#000" }
@@ -1086,7 +1130,6 @@ TITLE_MAIN_STYLES =
     narrow = 0.7
   }
 
---[[
   shaded_white_n_blue =
   {
     mode = "solid"
@@ -1197,13 +1240,12 @@ TITLE_MAIN_STYLES =
 
   compgreen_1 =
   {
-    prob = 10
+    prob = 15
 
     mode = "texture"
 
     texture = "compgreen"
 
-    -- outlines = { "#33f", "#003" }
     outlines = { "#000", "#cb4" }
 
     narrow = 0.9
@@ -1247,7 +1289,6 @@ TITLE_MAIN_STYLES =
 
     narrow = 0.8
   }
---]]
 }
 
 
