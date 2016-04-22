@@ -1108,7 +1108,6 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#c00" }
   }
---]]
 
   gradient_white_blue_black =
   {
@@ -1117,6 +1116,25 @@ TITLE_MAIN_STYLES =
     colors = { "#fff", "#00f", "#000" }
 
     outlines = { "#00c" }
+  }
+
+  gradient_white_orange_black =
+  {
+    mode = "gradient3"
+
+    colors = { "#fff", "#720", "#000" }
+
+    outlines = { "#000" }
+  }
+--]]
+
+  gradmirror_orange_white =
+  {
+    mode = "gradient3"
+
+    colors = { "#720", "#fff", "#720" }
+
+    outlines = { "#000" }
   }
 
 --[[
