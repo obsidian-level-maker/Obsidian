@@ -1117,7 +1117,7 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#000", "#864", "#000" }
   }
---]]
+
   compgreen_1 =
   {
     mode = "texture"
@@ -1129,7 +1129,7 @@ TITLE_MAIN_STYLES =
 
     narrow = 0.9
   }
---[[
+
   yellowish_1 =
   {
     mode = "texture"
@@ -1149,6 +1149,15 @@ TITLE_MAIN_STYLES =
     outlines = { "#c66", "#933", "#622", "#511" }
   }
 --]]
+
+  fireblu_1 =
+  {
+    mode = "texture"
+
+    texture = "fireblu"
+
+    outlines = { "#ccc", "#000" }
+  }
 }
 
 
@@ -1176,7 +1185,7 @@ TITLE_SUB_STYLES =
   {
     mode = "solid"
     colors = { "#f0f" }
-    outlines = { "#707" }
+    outlines = { "#505" }
   }
 }
 
