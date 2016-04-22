@@ -319,7 +319,7 @@ function Monster_assign_bosses()
     if R.svolume < 30 and bf.boss_type == "tough" then return -3 end
     if R.svolume < 15 and bf.boss_type == "nasty" then return -3 end
 
-    if R.is_start and bf.boss_type == "tough" then return -3 end
+    if R.is_start and bf.boss_type != "guard" then return -3 end
 
     -- OK --
 
