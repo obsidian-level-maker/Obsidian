@@ -1652,7 +1652,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 	if (x1 == x2 && y1 == y2)
 	{
-		LogPrintf("WARNING: degenerate linedef @ (%1.0f %1.0f)\n", S->x1, S->y1);
+//		LogPrintf("WARNING: degenerate linedef @ (%1.0f %1.0f)\n", S->x1, S->y1);
 		return;
 	}
 

@@ -239,7 +239,7 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag)
 
 	if (x1 == x2 && y1 == y2)
 	{
-		LogPrintf("WARNING: degenerate wall @ (%d %d)\n", x1, y1);
+//		LogPrintf("WARNING: degenerate wall @ (%d %d)\n", x1, y1);
 		return;
 	}
 
