@@ -57,12 +57,16 @@ DOOM.THEMES =
 
     cliff_mats =
     {
-      ASHWALL4 = 50
+      ASHWALL4 = 60
+      STONE5   = 40
+      STONE7   = 40
+      TANROCK3 = 60
+      ZIMMER8  = 40
+      ZIMMER1  = 40
     }
   }
 
-
-----------------------------------------
+  ------------------------------------
 
   tech =
   {
@@ -130,11 +134,9 @@ DOOM.THEMES =
     }
 
     techy_doors = true
-
-
   }
 
-----------------------------------------
+  ------------------------------------
 
   urban =
   {
@@ -158,6 +160,18 @@ DOOM.THEMES =
       METAL2 = 3
     }
 
+    cliff_mats =
+    {
+      BSTONE1  = 60
+      ROCK2    = 60
+      ASHWALL6 = 40
+      TANROCK5 = 40
+      TANROCK8 = 40
+      ZIMMER5  = 40
+      ZIMMER7  = 40
+      ROCK5    = 20
+    }
+
     outdoor_torches =
     {
       blue_torch = 50
@@ -179,10 +193,9 @@ DOOM.THEMES =
     }
 
     archy_arches = true
-
   }
 
-----------------------------------------
+  ------------------------------------
 
   hell =
   {
@@ -212,6 +225,16 @@ DOOM.THEMES =
       BROWN1   = 5
     }
 
+    cliff_mats =
+    {
+      ASHWALL2 = 60
+      ROCKRED1 = 60
+      ROCK3    = 30
+      ASHWALL7 = 30
+      SKSNAKE1 = 30
+      SKIN2    = 30
+    }
+
     base_skin =
     {
       big_door = "BIGDOOR7"
@@ -227,14 +250,9 @@ DOOM.THEMES =
 
     archy_arches = true
 
-    cliff_mats =
-    {
-      ASHWALL2 = 50
-    }
-
   }
 
-----------------------------------------
+  ------------------------------------
 
   wolf =
   {
