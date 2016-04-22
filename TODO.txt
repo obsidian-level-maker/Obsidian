@@ -72,6 +72,9 @@ ______________________________________________________________________
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
 
++  limit # of floor areas per room
+
+
 -  if room has a boss/guard needing a large chunk, allocate those
    chunks early [ but allow importants to override in emergencies ]
 
@@ -108,10 +111,6 @@ ______________________________________________________________________
 -  review "svolume" and "innerpoint" usage
    e.g. I think "walk_svol" would be a more useful metric
 
-??  fix porches causing BIG height diffs
-
-
-REQUEST:  mix it up option for the quiet start setting.
 
 IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)

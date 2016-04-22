@@ -7,24 +7,14 @@ idea : each rule can specify a prob_skew
        (e.g. if 5, then can multiply or divide by rand.range(1,5))
 
 
->>>  less start closets
-
-
->>>  limit # of floor areas per room
-
-
 
 TITLE GENERATOR
 
--  support outlines
-   IDEA : instead of thickness == 2, just repeat a color
++  pick a PEN  [ check style.pens ]
 
-+  proper style system....
+-  pick geometry for PRIMARY, SECONDARY, TERTIARY lines
 
--  support offseting of the pen (in Lua code)
-   -  main ones are centered and top-right (as now)
-
--  specify outline as a DW/DH/DX/DY (plus colors etc...)
+-  complementary styles for MID/TOP/BOTTOM lines
 
 
 
@@ -95,7 +85,7 @@ TRAPS:
 
 STAIRS:
 
-+  choose prefabs earlier, probably during floor/ceil heights
+!!  choose prefabs earlier, probably during floor/ceil heights
 
    ---> in Fab_pick, support a "want_fab = name" in the reqs
         [ if that name matches all the rules, use it ]
