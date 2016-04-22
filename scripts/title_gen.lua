@@ -968,16 +968,17 @@ function Title_centered_string(T, mx, my, text, style)
 
   local base_ofs = 0 - T.thick / 2
 
+  local thick
+
+
  
   -- TODO : support "thin_horiz" and "thin_vert" pens
   -- [ not real pens, just use different box_w than box_h ]
 
+  gui.title_prop("pen_type", T.pen_type or "circle")
 
-  -- FIXME
-  gui.title_prop("pen_type", "box")
 
-  local thick
-
+  -- do the outlines --
 
   if style.outlines then
     gui.title_prop("render_mode", "solid")
@@ -1019,6 +1020,8 @@ function Title_centered_string(T, mx, my, text, style)
     end
   end
 
+
+  -- do central part of text --
 
   if style.mode == "texture" then
     gui.title_prop("texture", "data/masks/" .. style.texture .. ".tga")
@@ -1350,11 +1353,11 @@ function Title_add_title()
 --]]
 
 
-  -- pick the style to use
-  local style1 = Title_pick_style(TITLE_MAIN_STYLES, {})
+  -- pick the styles to use
+  local style = Title_pick_style(TITLE_MAIN_STYLES, {})
 
   -- FIXME : this used for the smaller words, often make it different (and simpler)
-  local style2 = style1
+  local mid_style = style
 
 
   -- vertical sizing of the main title
@@ -1403,10 +1406,22 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
     mid_T.func = TITLE_TRANSFORM_LIST["italics"]
 
 
-  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * (style1.narrow or 1)
+  line2_T.thick = Title_calc_max_thickness(line2_T.fw, line2_T.fh) * (style.narrow or 1)
   line1_T.thick = line2_T.thick
 
-  mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh) * (style2.narrow or 1)
+  mid_T.thick = Title_calc_max_thickness(mid_T.fw, mid_T.fh) * (mid_style.narrow or 1)
+
+
+  -- decide pen type
+  local PEN_TYPES = { circle=50, box=50 }
+
+  if not style.texture then
+    PEN_TYPES.slash  = 15
+    PEN_TYPES.slash2 = 15
+  end
+
+  line1_T.pen_type = rand.key_by_probs(PEN_TYPES)
+  line2_T.pen_type = line1_T.pen_type
 
 
   --- draw main title lines ---
@@ -1415,22 +1430,22 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   local my = bb_main.y
 
   if top_line then
-    Title_centered_string(mid_T, mx, my + line_h/2, top_line, style2)
+    Title_centered_string(mid_T, mx, my + line_h/2, top_line, mid_style)
     my = my + line_h
   end
 
   if line1 then
-    Title_centered_string(line1_T, mx, my + line_h, line1, style1)
+    Title_centered_string(line1_T, mx, my + line_h, line1, style)
     my = my + line_h * 2
   end
 
   if mid_line then
-    Title_centered_string(mid_T, mx, my + line_h/2, mid_line, style2)
+    Title_centered_string(mid_T, mx, my + line_h/2, mid_line, mid_style)
     my = my + line_h
   end
 
   if line2 then
-    Title_centered_string(line2_T, mx, my + line_h, line2, style1)
+    Title_centered_string(line2_T, mx, my + line_h, line2, style)
     my = my + line_h * 2
   end
 
@@ -1440,7 +1455,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 
     my = my + 10
 
-    Title_centered_string(mid_T, mx, my + line_h/2, bottom_line, style2)
+    Title_centered_string(mid_T, mx, my + line_h/2, bottom_line, mid_style)
   end
 
 
