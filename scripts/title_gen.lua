@@ -1100,7 +1100,7 @@ TITLE_MAIN_STYLES =
 
   --- Gradient styles ---
 
-  gradient_white_n_red =
+  gradient_white_red_black =
   {
     mode = "gradient3"
 
@@ -1108,7 +1108,18 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#c00" }
   }
+--]]
 
+  gradient_white_blue_black =
+  {
+    mode = "gradient3"
+
+    colors = { "#fff", "#00f", "#000" }
+
+    outlines = { "#00c" }
+  }
+
+--[[
   --- Textured styles ---
 
   groovy_1 =
@@ -1161,7 +1172,6 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#ccc", "#000" }
   }
---]]
 
   shawn_1 =
   {
@@ -1173,6 +1183,7 @@ TITLE_MAIN_STYLES =
 
     narrow = 0.8
   }
+--]]
 }
 
 
