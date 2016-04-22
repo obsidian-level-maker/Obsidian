@@ -1267,11 +1267,16 @@ end
 
 
 function Title_pick_style(style_tab, reqs)
+
+  local function matches(def)
+    return true
+  end
+
   local tab = {}
 
-  each name,style in style_tab do
-    if true --[[ matches reqs ]] then
-      tab[name] = 50
+  each name,def in style_tab do
+    if matches(def) then
+      tab[name] = def.prob or 50
     end
   end
 
@@ -1365,7 +1370,7 @@ function Title_add_title()
   local style = Title_pick_style(TITLE_MAIN_STYLES, {})
 
   -- FIXME : this used for the smaller words, often make it different (and simpler)
-  local mid_style = style
+  local mid_style = style.alt or style
 
 
   -- vertical sizing of the main title
