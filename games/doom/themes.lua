@@ -2,7 +2,7 @@
 --  DOOM THEMES
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -46,7 +46,6 @@ DOOM.THEMES =
       BRICK11  = 10
       SLADWALL = 20
       STUCCO3  = 10
-      SP_ROCK1 =  5
     }
 
     -- FIXME: temp crud
@@ -57,12 +56,7 @@ DOOM.THEMES =
 
     cliff_mats =
     {
-      ASHWALL4 = 60
-      STONE5   = 40
-      STONE7   = 40
-      TANROCK3 = 60
-      ZIMMER8  = 40
-      ZIMMER1  = 40
+      GRAYVINE = 60
     }
   }
 
@@ -91,6 +85,17 @@ DOOM.THEMES =
       SLADWALL = 20
       METAL2   = 10
       METAL1   = 5
+    }
+
+    cliff_mats =
+    {
+      ASHWALL4 = 60
+      ASHWALL7 = 40
+      ZIMMER1  = 40
+      STONE5   = 40
+      STONE7   = 40
+      SP_ROCK1 = 20
+      BROVINE2 = 20
     }
 
     corners =
@@ -162,13 +167,12 @@ DOOM.THEMES =
 
     cliff_mats =
     {
-      BSTONE1  = 60
       ROCK2    = 60
       ASHWALL6 = 40
-      TANROCK5 = 40
       TANROCK8 = 40
       ZIMMER5  = 40
       ZIMMER7  = 40
+      BSTONE1  = 20
       ROCK5    = 20
     }
 
@@ -229,10 +233,12 @@ DOOM.THEMES =
     {
       ASHWALL2 = 60
       ROCKRED1 = 60
-      ROCK3    = 30
-      ASHWALL7 = 30
-      SKSNAKE1 = 30
-      SKIN2    = 30
+      SP_ROCK1 = 40
+      ROCK3    = 40
+      CRACKLE4 = 40
+      SKSNAKE1 = 20
+      SKSNAKE2 = 20
+      SKIN2    = 20
     }
 
     base_skin =
@@ -266,6 +272,11 @@ DOOM.THEMES =
       ZZWOLF9  = 50
       ZZWOLF11 = 20
       ZZWOLF5  = 5
+    }
+
+    cliff_mats =
+    {
+      ROCK4 = 60
     }
 
     monster_prefs =
