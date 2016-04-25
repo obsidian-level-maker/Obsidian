@@ -1637,7 +1637,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   end
 
   if mid_line then
-    Title_centered_string(mid_T, mx, my + line_h/2, mid_line, mid_style)
+    Title_centered_string(mid_T, mx, my + line_h/2 + 1, mid_line, mid_style)
     my = my + line_h
   end
 
