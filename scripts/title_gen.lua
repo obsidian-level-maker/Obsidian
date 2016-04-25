@@ -1322,23 +1322,48 @@ TITLE_MAIN_STYLES =
 
 TITLE_SUB_STYLES =
 {
---[[
+  white =
   {
-    alt = { "300:44", "f00:11" }
+    mode = "solid"
+    colors = { "#ddd" }
+    outlines = { "#000" }
   }
+
+  yellow =
   {
-    alt = { "242:44", "6c6:11" }
+    prob = 25
+    mode = "solid"
+    colors = { "#ff7" }
+    outlines = { "#431" }
   }
+
+  yellow_outline =
   {
-    alt = {"300:44", "f94:11"}
+    mode = "solid"
+    colors = { "#000" }
+    outlines = { "#ff7" }
   }
+
+  red_outline =
   {
-    alt = {"00c:44", "005:11"}
+    mode = "solid"
+    colors = { "#000" }
+    outlines = { "#f44" }
   }
+
+  lightbrown =
   {
-    alt = {"431:44", "a86:11"}
+    mode = "solid"
+    colors = { "#ea7" }
+    outlines = { "#431" }
   }
---]]
+
+  green =
+  {
+    mode = "solid"
+    colors = { "#6d5" }
+    outlines = { "#242" }
+  }
 
   purple =
   {
