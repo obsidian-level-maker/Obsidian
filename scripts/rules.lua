@@ -191,7 +191,7 @@ GROW_CURVE_STAIR_1 =
 
 GROW_CURVE_STAIRPAIR_1 =
 {
-  prob = 15
+  prob = 10
 
   structure =
   {
@@ -231,7 +231,7 @@ SPROUT_1 =
 
 SPROUT_JOINER_2x1 =
 {
-  prob = 3
+  prob = 30
 
   structure =
   {

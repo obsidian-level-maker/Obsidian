@@ -800,7 +800,32 @@ do return end
 
 
   local function handle_joiner(C)
-    -- TODO
+    local chunk = assert(C.joiner_chunk)
+
+    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+
+    reqs.kind = "joiner"
+
+    local A2 = C:other_area(chunk.area)
+    reqs.neighbor = A2.room:get_env()
+
+    local LOCK = C.lock
+
+    if LOCK then
+      if LOCK.kind == "intraroom" then
+        reqs.key = "barred"
+      elseif #LOCK.goals == 2 then
+        error("Locked double")
+      elseif #LOCK.goals == 3 then
+        error("Locked triple")
+      elseif LOCK.goals[1].kind == "SWITCH" then
+        reqs.switch = LOCK.goals[1].item
+      else
+        reqs.key = LOCK.goals[1].item
+      end
+    end
+
+    chunk.prefab_def = Fab_pick(reqs)
   end
 
 
@@ -2586,14 +2611,14 @@ function Room_build_all()
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
 
+  Layout_add_traps()
+  Layout_decorate_rooms()
+
   Room_reckon_door_tex()
   Room_reckon_doors()
 
   Room_floor_ceil_heights()
   Room_prepare_skies()
-
-  Layout_add_traps()
-  Layout_decorate_rooms()
 
   Area_closet_edges()
 

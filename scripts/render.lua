@@ -1261,6 +1261,24 @@ end
 
 
 
+function Chunk_base_reqs(chunk, dir)
+  local reqs =
+  {
+    where  = "seeds"
+
+    seed_w = chunk.sw
+    seed_h = chunk.sh
+  }
+
+  if geom.is_horiz(dir) then
+    reqs.seed_w = chunk.sh
+    reqs.seed_h = chunk.sw
+  end
+
+  return reqs
+end
+
+
 function Render_chunk(chunk)
   --
   -- this handles prefabs which occupy a seed rectangle (chunk) and
@@ -1282,18 +1300,7 @@ function Render_chunk(chunk)
 
   local skin = {}
 
-  local reqs =
-  {
-    where  = "seeds"
-
-    seed_w = chunk.sw
-    seed_h = chunk.sh
-  }
-
-  if geom.is_horiz(dir) then
-    reqs.seed_w = chunk.sh
-    reqs.seed_h = chunk.sw
-  end
+  local reqs = Chunk_base_reqs(chunk, dir)
 
 
   local function do_start()
@@ -1337,28 +1344,15 @@ function Render_chunk(chunk)
   end
 
   local function do_joiner()
-    reqs.kind = "joiner"
+    assert(chunk.prefab_def)
 
     local C = assert(chunk.conn)
     if C.flip_it then
       dir = 10 - dir
     end
 
-    local LOCK = C.lock
-
-    if LOCK then
-      if LOCK.kind == "intraroom" then
-        reqs.key = "barred"
-        skin.lock_tag = assert(LOCK.tag)
-      elseif #LOCK.goals == 2 then
-        error("Locked double")
-      elseif #LOCK.goals == 3 then
-        error("Locked triple")
-      elseif LOCK.goals[1].kind == "SWITCH" then
-        reqs.switch = LOCK.goals[1].item
-      else
-        reqs.key = LOCK.goals[1].item
-      end
+    if C.lock and C.lock.kind == "intraroom" then
+      skin.lock_tag = assert(C.lock.tag)
     end
   end
 
@@ -1422,12 +1416,6 @@ function Render_chunk(chunk)
     reqs.env = A.room:get_env()
   end
 
-  if chunk.kind == "joiner" then
-    assert(chunk.conn)
-    local A2 = chunk.conn:other_area(A)
-    reqs.neighbor = A2.room:get_env()
-  end
-
 
   local what = chunk.content_kind
 
@@ -1476,7 +1464,7 @@ function Render_chunk(chunk)
 
   --- pick the prefab ---
 
-  local def = Fab_pick(reqs)
+  local def = chunk.prefab_def or Fab_pick(reqs)
 
 
   -- build the prefab --
