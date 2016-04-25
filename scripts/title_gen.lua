@@ -980,6 +980,7 @@ function Title_centered_string(T, mx, my, text, style)
  
   -- TODO : support "thin_horiz" and "thin_vert" pens
   -- [ not real pens, just use different box_w than box_h ]
+  -- FIXME : the "slash" pens should adjust box_h too
 
   gui.title_prop("pen_type", T.pen_type or "circle")
 
@@ -1637,9 +1638,8 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
   -- decide pen type
   local PEN_TYPES = { circle=50, box=50 }
 
-  if not style.texture then
-    PEN_TYPES.slash  = 15
-    PEN_TYPES.slash2 = 15
+  if not style.texture and (style.narrow or 1) < 0.62 then
+    PEN_TYPES.slash = 50
   end
 
   line1_T.pen_type = rand.key_by_probs(PEN_TYPES)
