@@ -833,6 +833,10 @@ do return end
     if A1.room.lev_along > A2.room.lev_along then
       chunk.flipped = true
     end
+
+    if chunk.prefab_def.can_flip and rand.odds(35) then
+      chunk.flipped = not chunk.flipped
+    end
   end
 
 

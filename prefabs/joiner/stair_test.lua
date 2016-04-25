@@ -14,6 +14,7 @@ PREFABS.Joiner_stair_test =
 
   prob = 2000
 
-  delta_h = 60
+  delta_h  = 48
+  can_flip = true
 }
 
