@@ -640,8 +640,6 @@ function Room_reckon_doors()
   local  indoor_prob = style_sel("doors", 0, 15, 35,  65)
   local outdoor_prob = style_sel("doors", 0, 70, 95, 100)
 
-  local woody = rand.odds(25)
-
 
   local DEFAULT_PROBS = {}
 
@@ -674,8 +672,12 @@ function Room_reckon_doors()
   end
 
 
-  local function visit_conn(C)
-    if C.kind != "edge" then return end
+  local function handle_edge(C)
+
+-- FIXME : decide between DOOR or ARCH, but also PICK the PREFAB now.
+--         [ prefabs are currently  picked in render.lua ]
+do return end
+
 
     local E = C.E1
     local F = C.F1  -- used for split conns, usually NIL
@@ -794,6 +796,20 @@ function Room_reckon_doors()
 
     -- keep the current ARCH
     return
+  end
+
+
+  local function handle_joiner(C)
+    -- TODO
+  end
+
+
+  local function visit_conn(C)
+    if C.kind == "edge" then
+      handle_edge(C)
+    elseif C.kind == "joiner" then
+      handle_joiner(C)
+    end
   end
 
 
@@ -2571,7 +2587,7 @@ function Room_build_all()
   Layout_place_all_importants()
 
   Room_reckon_door_tex()
----!!!  Room_reckon_doors()
+  Room_reckon_doors()
 
   Room_floor_ceil_heights()
   Room_prepare_skies()
