@@ -17,9 +17,8 @@ PREFABS.Pillar_round1 =
 
   z_fit  = { 56,72 }
 
-  prob   = 200
-
-  theme = "!tech"
+  prob   = 70
+  theme  = "!tech"
 }
 
 
@@ -27,7 +26,8 @@ PREFABS.Pillar_round1_tech =
 {
   template = "Pillar_round1"
 
-  theme = "tech"
+  prob   = 50
+  theme  = "tech"
 
   tex_WOOD6     = "TEKLITE"
   tex_WOOD12    = "COMPSPAN"
