@@ -822,13 +822,17 @@ function Quest_add_major_quests()
   local function collect_key_goals(list)
     local key_tab = LEVEL.usable_keys or THEME.keys or {}
 
+    local use_prob = style_sel("keys", 0, 40, 80, 100)
+
     each name,_ in key_tab do
-      local GOAL = Goal_new("KEY")
+      if rand.odds(use_prob) then
+        local GOAL = Goal_new("KEY")
 
-      GOAL.item = name
-      GOAL.prob = 100
+        GOAL.item = name
+        GOAL.prob = 100
 
-      table.insert(list, GOAL)
+        table.insert(list, GOAL)
+      end
     end
   end
 

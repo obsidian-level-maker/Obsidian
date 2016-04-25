@@ -153,6 +153,7 @@ GLOBAL_STYLE_LIST =
   windows     = { none=0,  few=20, some=70, heaps=35 }
   fences      = { none=30, few=30, some=10 }
   switches    = { none=0,  few=10, some=60, heaps=30 }
+  keys        = { none=0,  few=10, some=20, heaps=60 }
 
   -- decoration stuff --
 
