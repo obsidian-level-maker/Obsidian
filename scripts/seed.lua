@@ -147,11 +147,13 @@
 
     peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk
 
-    -- FIXME have 'from_dir' and 'dest_dir'
+    from_dir  : DIR
+    from_area : AREA
 
-    dir : DIR        -- main facing direction
-                     -- for closets this faces into the room
-                     -- for stairs/joiners this... uh FIXME
+    dest_dir  : DIR
+    dest_area : AREA
+
+    flipped          -- when TRUE, joiner should be rotated 180 deg
 
     encroach[SIDE]   -- how much distance is used on each side, often zero
                      -- [ used by walls, archways, etc... ]

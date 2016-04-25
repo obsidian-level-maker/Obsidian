@@ -798,6 +798,8 @@ function Layout_decorate_rooms()
 
   ---| Layout_decorate_rooms |---
 
+  Layout_add_traps()
+
   -- TODO : handle unused closets
 
   each R in LEVEL.rooms do

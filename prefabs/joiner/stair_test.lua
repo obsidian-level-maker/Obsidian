@@ -12,8 +12,7 @@ PREFABS.Joiner_stair_test =
 
   x_fit = "frame"
 
---  rank = 9  -- FIXME : TEST ONLY
-  prob = 0
+  prob = 2000
 
   delta_h = 60
 }

@@ -516,11 +516,14 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     assert(z)
 
 
+    local flip_it = false
+
+
     -- setup skin
     local inner_mat = assert(E.wall_mat)
     local outer_mat = assert(E.peer.wall_mat)
 
-    if E.conn and E.conn.flip_it then
+    if flip_it then
       inner_mat, outer_mat = outer_mat, inner_mat
     end
 
@@ -577,7 +580,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local T
 
     if geom.is_corner(dir) then
-      if E.conn and E.conn.flip_it then dir = 10 - dir end
+      if flip_it then dir = 10 - dir end
 
       local dir2 = DIAG_DIR_MAP[dir]
 
@@ -587,7 +590,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     else  -- axis-aligned edge
 
-      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, E.conn and E.conn.flip_it)
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, flip_it)
     end
 
     Fabricate(R, def, T, { skin1 })
@@ -1097,7 +1100,7 @@ function Render_floor(A, S)
 
   local tag = S.tag
 -- tag = A.id
--- if A.room then tag = A.room.id end
+if A.room then tag = A.room.id end
 -- if A.pool_id then tag = 1000 + A.pool_id end
 
 
@@ -1346,10 +1349,11 @@ function Render_chunk(chunk)
   local function do_joiner()
     assert(chunk.prefab_def)
 
-    local C = assert(chunk.conn)
-    if C.flip_it then
+    if chunk.flipped then
       dir = 10 - dir
     end
+
+    local C = assert(chunk.conn)
 
     if C.lock and C.lock.kind == "intraroom" then
       skin.lock_tag = assert(C.lock.tag)

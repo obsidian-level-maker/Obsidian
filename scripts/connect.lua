@@ -29,8 +29,8 @@
 
     id : number  -- debugging aid
 
-    -- The two areas are the vital (compulsory) information,
-    -- especially for the quest system.  For teleporters the
+    -- The two rooms are the vital (compulsory) information,
+    -- especially for the quest system.
     --
     -- For teleporters the edge and area info will be absent.
     -- For joiners, the edges are NOT peered.
@@ -47,6 +47,8 @@
     F1, F2 : EDGE  -- for "split" connections, the other side
 
     door_h : floor height for doors straddling the connection
+
+    backwards : true if travel from R2 --> R1
 --]]
 
 

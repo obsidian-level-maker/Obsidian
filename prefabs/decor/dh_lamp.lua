@@ -13,6 +13,6 @@ PREFABS.Decor_dittohead_lamp =
   bound_z2 = 128
 
   env    = "outdoor"
-  theme  = "!hell"
+  theme  = "tech"
 }
 

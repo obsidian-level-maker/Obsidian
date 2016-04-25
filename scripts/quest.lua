@@ -1599,14 +1599,10 @@ function Quest_order_by_visit()
   end
 
 
-  local function do_flip_connections()
-    -- mark which doors needs to be built on the other side
-
+  local function check_conn_movement()
     each C in LEVEL.conns do
-      if C.kind != "teleporter" then
-        if C.R1.lev_along > C.R2.lev_along then
-          C.flip_it = true
-        end
+      if C.R1.lev_along > C.R2.lev_along then
+        C.backwards = true
       end
     end
   end
@@ -1654,7 +1650,7 @@ if not R.lev_along then R.lev_along = 0.5 end
 
   do_entry_conns(LEVEL.start_room, nil, {})
 
-  do_flip_connections()
+  check_conn_movement()
 end
 
 

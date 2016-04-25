@@ -802,11 +802,13 @@ do return end
   local function handle_joiner(C)
     local chunk = assert(C.joiner_chunk)
 
+    local A1 = chunk.area
+    local A2 = C:other_area(A1)
+
     local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
     reqs.kind = "joiner"
 
-    local A2 = C:other_area(chunk.area)
     reqs.neighbor = A2.room:get_env()
 
     local LOCK = C.lock
@@ -826,6 +828,11 @@ do return end
     end
 
     chunk.prefab_def = Fab_pick(reqs)
+
+    -- should we flip the joiner?
+    if A1.room.lev_along > A2.room.lev_along then
+      chunk.flipped = true
+    end
   end
 
 
@@ -2268,14 +2275,23 @@ h = 8
       -- hallway crud (FIXME : HACKY)
       if R2.next_f then next_f = R2.next_f end
 
-      -- TODO : decide prefab, allow a height difference
       if C.kind == "joiner" then
-        next_f = next_f + 0 --!!!!! FIXME TEST ONLY
+        local chunk = assert(C.joiner_chunk)
+        assert(chunk.prefab_def)
+        local delta_h = chunk.prefab_def.delta_h or 0
+
+        local flipped = chunk.flipped
+        if chunk.area.room != R then flipped = not flipped end
+
+        if flipped then delta_h = - delta_h end
+
+        next_f = next_f + delta_h
+
         set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
-        if C.joiner_chunk.place == "whole" then
-          local JA = C.joiner_chunk.area
-          JA.is_outdoor = nil
-          assert(JA.facade_mat)
+
+        if chunk.place == "whole" then
+          chunk.area.is_outdoor = nil
+          assert(chunk.area.facade_mat)
         end
 -- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
 -- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
@@ -2611,9 +2627,10 @@ function Room_build_all()
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
 
-  Layout_add_traps()
+  -- this may add switches and lock doors / joiners
   Layout_decorate_rooms()
 
+  -- do doors before floor heights, they may have a delta_h (esp. joiners)
   Room_reckon_door_tex()
   Room_reckon_doors()
 
