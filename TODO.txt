@@ -13,7 +13,6 @@ ______________________________________________________________________
    -  create language/TEMPLATE.txt
 
    +  move 'prefabs' folder to games/doom/
-   -  free-standing cage prefabs  [ a decoration? ]
 
    -  fix map offsetting
    -  honor styles for grammar rules
@@ -89,6 +88,9 @@ ______________________________________________________________________
 -  support "L" and "T" shape joiners
 
 -  one switch opens ALL the barred exits
+
+-  for switched doors / joiners, use the "action" in the Lua
+   definition as the skin.special for the SWITCH prefab
 
 
 -  a "raising stairs" JOINER, need to find the switch
@@ -526,9 +528,6 @@ V5 STUFF:
 +  Need logic to decide how to light up a room (windows vs wall
    lights vs ceilings lights etc).
 
-+  'action' field in a switch prefab, must match door used
-   values can be: "raise", "lower", "stair"
-
 -  get 'height' value into 'env' pick_skin() tables
 
 -  ability to enter room via an elevator
@@ -888,8 +887,6 @@ Name generator:
 
 -  use fl_utf8.h functions (fl_fopen, etc) for file handling
    [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
-
--  consider a --language option
 
 Console:
   -  display lists better

@@ -3,8 +3,31 @@ WORK IN PROGRESS
 ================
 
 
+Idea : a "keys" style
+
+
+
+JOINERS:
+
++  have a _FLOOR2 material which matches the area on other side
+   of the joiner
+
+-  use it for stair prefabs too (instead of _OUTER)
+
+
+
+STAIRS:
+
+!!  choose prefabs earlier, probably during floor/ceil heights
+
+   ---> in Fab_pick, support a "want_fab = name" in the reqs
+        [ if that name matches all the rules, use it ]
+
+
 
 NEW LIGHTING:
+
+!!  pillars being built NOT with area.lighting
 
 +  compute better "AREA.lighting" values
    +  use logic like for "pressure" to make some dark rooms
@@ -26,6 +49,8 @@ CAGES:
 
 -  some free-standing cages (similar to decorative prefabs)
    [ don't add into a room unless cage style == heaps ]
+
+-  wall cages in unused closets
 
 
 
@@ -77,25 +102,5 @@ TRAPS:
    do monster depots differently, make "shared" sector based on
    an entry area of second room in the level
 
-
-
-STAIRS:
-
-!!  choose prefabs earlier, probably during floor/ceil heights
-
-   ---> in Fab_pick, support a "want_fab = name" in the reqs
-        [ if that name matches all the rules, use it ]
-
-
-
-JOINERS:
-
-!!  choose all DOOR and JOINER prefabs earlier than now.
-    e.g. during floor/ceil heights or earlier
-
-    then for switched ones, use the "action" in the Lua definition
-    as the skin.special for the SWITCH prefab
-
-+  support joiners with a height difference
 
 
