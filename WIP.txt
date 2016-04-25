@@ -3,10 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-idea : each rule can specify a prob_skew
-       (e.g. if 5, then can multiply or divide by rand.range(1,5))
-
-
 
 NEW LIGHTING:
 
@@ -23,6 +19,13 @@ NEW LIGHTING:
 -  for joiners and doors/windows : pick a value roughly between
    the two sides.  E.g. if diff == 32, use lowest + 16
    When diff == 16, use the ENTRY side.
+
+
+
+CAGES:
+
+-  some free-standing cages (similar to decorative prefabs)
+   [ don't add into a room unless cage style == heaps ]
 
 
 

@@ -805,15 +805,31 @@ end
 
 function Grower_calc_rule_probs()
   --
-  -- modify the probability of all rules, based on styles and also a
-  -- random factor to give each level a distinctive feel.
+  -- Modify the probability of all rules, based on current game and
+  -- theme, the chosen styles for the level, and a random factor.
+  -- This gives each level a distinctive feel.
   --
+
+  local function game_factor(rule)
+    -- TODO : game_factor
+    return 1
+  end
+
+
+  local function theme_factor(rule)
+    -- TODO : theme_factor
+    return 1
+  end
 
 
   local function random_factor(rule)
-    local factor = rand.pick({ 0.3, 0.5, 0.7, 1.0 })
+    local default_skew = 2.0
+    if string.match(rule.name, "AUX_") then default_skew = 1.2 end
 
-     if rand.odds(50) then factor = 1 / factor end
+    local prob_skew = rule.prob_skew or default_skew
+    local half_skew = (1.0 + prob_skew) / 2.0
+
+    local factor = rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
 
     return factor
   end
@@ -829,32 +845,24 @@ function Grower_calc_rule_probs()
         error("Unknown style in grammar rule: " .. tostring(name))
       end
 
-      factor = factor * style_sel(name, 0, 0.4, 1.0, 2.5)
+      factor = factor * style_sel(name, 0, 0.3, 1.0, 4.0)
     end
 
     return factor
   end
 
 
-  local function game_factor(rule)
-    -- TODO : game_factor
-    return 1
-  end
-
-
   local function calc_prob(rule)
---FIXME!!!!
-do return rule.prob end
-
     if rule.skip_prob then
       if rand.odds(rule.skip_prob) then return 0 end
     end
 
     local prob = rule.prob or 0
 
-    prob = prob * random_factor(rule)
-    prob = prob *  style_factor(rule)
     prob = prob *   game_factor(rule)
+    prob = prob *  theme_factor(rule)
+    prob = prob *  style_factor(rule)
+    prob = prob * random_factor(rule)
 
     return prob
   end
