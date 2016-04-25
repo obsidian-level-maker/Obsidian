@@ -1142,6 +1142,18 @@ TITLE_MAIN_STYLES =
     narrow = 0.4
   }
 
+  shaded_white_n_red =
+  {
+    mode = "solid"
+
+    colors = { "#fff" }
+
+    outline_mode = "zoom"
+    outlines = { "#f99", "#f66", "#e00", "#b00", "#800", "#400", "#000" }
+
+    narrow = 0.4
+  }
+
   --- Gradient styles ---
 
   gradient_white_black =
