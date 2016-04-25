@@ -1087,6 +1087,14 @@ TITLE_MAIN_STYLES =
     outlines = { "#00c", "#009", "#006", "#000" }
 
     narrow = 0.6
+
+    alt =
+    {
+      mode = "solid"
+      colors = { "#ccf" }
+      outline_mode = "zoom"
+      outlines = { "#77f", "#00f", "#000" }
+    }
   }
 
   solid_red =
@@ -1101,6 +1109,14 @@ TITLE_MAIN_STYLES =
     outlines = { "#c00", "#900", "#600", "#000" }
 
     narrow = 0.6
+
+    alt =
+    {
+      mode = "solid"
+      colors = { "#fff" }
+      outline_mode = "surround"
+      outlines = { "#f44", "#900", "#000" }
+    }
   }
 
   solid_green =
