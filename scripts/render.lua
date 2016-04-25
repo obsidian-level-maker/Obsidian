@@ -1100,7 +1100,7 @@ function Render_floor(A, S)
 
   local tag = S.tag
 -- tag = A.id
-if A.room then tag = A.room.id end
+-- if A.room then tag = A.room.id end
 -- if A.pool_id then tag = 1000 + A.pool_id end
 
 
