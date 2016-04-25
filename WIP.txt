@@ -8,12 +8,6 @@ idea : each rule can specify a prob_skew
 
 
 
-TITLE GENERATOR
-
-+  fix up the SUB STYLES
-
-
-
 NEW LIGHTING:
 
 +  compute better "AREA.lighting" values
