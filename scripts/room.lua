@@ -837,6 +837,11 @@ do return end
     if chunk.prefab_def.can_flip and rand.odds(35) then
       chunk.flipped = not chunk.flipped
     end
+
+    if chunk.flipped then
+      -- reverse from_dir, swap from_area and dest_area
+      Chunk_flip(chunk)
+    end
   end
 
 

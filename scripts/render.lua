@@ -1331,9 +1331,9 @@ function Render_chunk(chunk)
   local function do_joiner()
     assert(chunk.prefab_def)
 
-    if chunk.flipped then
-      dir = 10 - dir
-    end
+---###  if chunk.flipped then
+---###    dir = 10 - dir
+---###  end
 
     local C = assert(chunk.conn)
 
