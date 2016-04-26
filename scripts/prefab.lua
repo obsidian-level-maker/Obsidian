@@ -2216,11 +2216,17 @@ function Fab_pick(reqs, allow_none)
     error("No matching prefabs for: " .. reqs.kind)
   end
 
+  if reqs.NONE_prob then
+    tab["NONE"] = reqs.NONE_prob
+  end
+
   local name = rand.key_by_probs(tab)
 
   if DEBUG_FAB_PICK then
     gui.debugf("Fab_pick : chose %s\n", tostring(name))
   end
+
+  if name == "NONE" then return nil end
 
   return assert(PREFABS[name])
 end
