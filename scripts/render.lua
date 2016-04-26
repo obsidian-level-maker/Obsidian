@@ -2111,9 +2111,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function build_important(chunk)
     chunk.z1 = assert(chunk.area.floor_h)
 
-    if chunk.area then
-      AMBIENT_LIGHT = chunk.area.lighting
-    end
+    AMBIENT_LIGHT = chunk.area.lighting
 
     if chunk.content_kind == "START" then
       content_start(chunk)
