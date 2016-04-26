@@ -2112,52 +2112,6 @@ h = 8
   end
 
 
-  local function process_stairwell(R, prev_room)
-    local A = R.areas[1]
-    local well = A.is_stairwell
-
-    local num_steps = well.info.steps
-
-    local diff_h
-
-    -- stairwells are never locked [ they are "downgraded" in quest code ]
-    assert(not R:has_any_lock())
-
-    do
-      -- TODO : better logic to decide Z direction
-      local z_dir = rand.sel(70, 1, -1)
-
-      diff_h = rand.sel(50, 8, 12)
-      if rand.odds(10) then diff_h = 16 end
-
-      diff_h = diff_h * z_dir
-    end
-
-    -- with this logic, last step is same height as next room
-    R.exit_h = R.entry_h + num_steps * diff_h
-
-    A.floor_h = math.min(R.entry_h, R.exit_h)
-    A.ceil_h  = A.floor_h + 192  -- dummy
-
-    -- update the STAIRWELL information
-
-    well.start_z    = R.entry_h
-    well.num_steps  = num_steps
-    well.diff_h     = diff_h
-
-    assert(prev_room)
-
-    if prev_room == well.room1 then
-      -- OK
-    elseif prev_room == well.room2 then
-      well.edge1, well.edge2 = well.edge2, well.edge1
-      well.wide1, well.wide2 = well.wide2, well.wide1
-    else
-      error("Bad stairwell (no match for prev_room)")
-    end
-  end
-
-
   local function maintain_material_across_conn(C)
     if C.kind != "edge" then return false end
 
@@ -2291,12 +2245,11 @@ h = 8
       Room_detect_porches(R)
     end
 
-    if R.kind == "stairwell" then
-      process_stairwell(R, prev_room)
-    elseif R.kind == "RANDOM_hallway" then  -- not used ATM
+    if R.kind == "RANDOM_hallway" then  -- not used ATM
       process_RANDOM_hallway(R, via_conn, entry_h)
     else
       process_room(R, entry_area)
+
       select_floor_mats(R, via_conn)
     end
 
