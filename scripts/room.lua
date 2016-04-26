@@ -1653,14 +1653,7 @@ h = 8
 -- stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
 
       if A1.floor_h > A2.floor_h then
-        chunk.from_area = A2
-        chunk.dest_area = A1
-
-        if chunk.shape == "L" then
-          chunk.from_dir, chunk.dest_dir = chunk.dest_dir, chunk.from_dir
-        else
-          chunk.from_dir = 10 - chunk.from_dir
-        end
+        Chunk_flip(chunk)
       end
     end
   end

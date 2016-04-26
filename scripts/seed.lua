@@ -926,3 +926,23 @@ function Chunk_base_reqs(chunk, dir)
   return reqs
 end
 
+
+function Chunk_flip(chunk)
+  local A1 = chunk.from_area
+  local A2 = chunk.dest_area
+
+  chunk.from_area = A2
+  chunk.dest_area = A1
+
+  if chunk.shape == "L" then
+    chunk.from_dir, chunk.dest_dir = chunk.dest_dir, chunk.from_dir
+  else
+    chunk.from_dir = 10 - chunk.from_dir
+
+    -- TODO : review this  [ main point of dest_dir is for "L" shapes ]
+    if chunk.dest_dir then
+      chunk.dest_dir = 10 - chunk.dest_dir
+    end
+  end
+end
+
