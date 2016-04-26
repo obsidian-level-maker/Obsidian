@@ -2098,7 +2098,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local A   = chunk.area
 
     local skin1 = { floor=floor_mat }
-    local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, 2)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, chunk.prefab_dir or 2)
 
     if def.z_fit then
       Trans.set_fitted_z(T, A.floor_h, A.ceil_h)

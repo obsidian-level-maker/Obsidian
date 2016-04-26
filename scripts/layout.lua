@@ -802,6 +802,7 @@ function Layout_decorate_rooms(KKK_PASS)
 
     chunk.content_kind = "DECORATION"
     chunk.prefab_def = def
+    chunk.prefab_dir = rand.dir()
   end
 
 
