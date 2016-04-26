@@ -2550,7 +2550,7 @@ function Grower_prune_small_rooms()
 
 
   local function kill_joiner(N, chunk)
-    stderrf("  killing joiner in %s\n", N.name)
+    gui.debugf("  killing joiner in %s\n", N.name)
 
     -- the chunk becomes a closet
 
@@ -2578,7 +2578,7 @@ function Grower_prune_small_rooms()
   local function kill_room(R)
     -- TODO : possibly give areas to a connected neighbor room
 
-stderrf("Killing small room %s\n", R.name)
+    gui.debugf("Killing small room %s\n", R.name)
 
     -- remove any prelim conns
     for idx = #LEVEL.prelim_conns, 1, -1 do
@@ -2591,7 +2591,7 @@ stderrf("Killing small room %s\n", R.name)
 
       if not N then continue end
 
-stderrf("  killing prelim conn to %s\n", N.name)
+      gui.debugf("  killing prelim conn to %s\n", N.name)
 
       if PC.kind == "joiner" and PC.chunk.area.room == N then
         kill_joiner(N, PC.chunk)
@@ -2605,7 +2605,7 @@ stderrf("  killing prelim conn to %s\n", N.name)
 
 
   local function become_hallway(R)
-stderrf("!!!!  Hallwaying small room %s\n", R.name)
+    gui.debugf("Hallwaying small room %s\n", R.name)
 
     R.kind = "hallway"
   end

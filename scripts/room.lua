@@ -2449,9 +2449,23 @@ end
   end
 
 
+  local function sanity_check()
+    each R in LEVEL.rooms do
+      if not R.entry_h then
+--[[ "fubar" debug stuff
+R.entry_h = -77
+each A in R.areas do A.floor_h = R.entry_h end
+end
+--]]
+        error("Room did not get an entry_h")
+      end
+    end
+  end
+
+
   ---| Room_floor_ceil_heights |---
 
-  -- give each zone a preferred hallway z_dir
+  -- give each zone a preferred hallway z_dir  [ NOT USED ATM ]
   each Z in LEVEL.zones do
     Z.hall_up_prob = rand.sel(70, 80, 20)
   end
@@ -2461,17 +2475,10 @@ end
   -- recursively visit all rooms
   visit_room(first)
 
+  -- sanity check : all rooms were visited
+  sanity_check()
+
   each R in LEVEL.rooms do
-    -- sanity check : all rooms were visited
-
---[[ "fubar" debug stuff
-if not R.entry_h then
-R.entry_h = -77
-each A in R.areas do A.floor_h = R.entry_h end
-end
---]]
-    assert(R.entry_h)
-
     calc_max_floor(R)
 
     if R.is_start then
@@ -2480,13 +2487,7 @@ end
 
     do_liquid_areas(R)
     do_cage_areas(R)
-
     do_closets(R)
-
-    -- we do hallway porches when all heights are known
-    if R.kind == "hallway" then
---???  Room_detect_porches(R)
-    end
 
     do_ceilings(R)
   end
@@ -2654,7 +2655,7 @@ function Room_build_all()
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
 
-  -- this may add switches and lock doors / joiners
+  -- this does traps, and may add switches which lock a door / joiner
   Layout_decorate_rooms(1)
 
   -- do doors before floor heights, they may have a delta_h (esp. joiners)
@@ -2664,6 +2665,7 @@ function Room_build_all()
   Room_floor_ceil_heights()
   Room_prepare_skies()
 
+  -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
 
   Area_closet_edges()
