@@ -832,8 +832,10 @@ function Layout_decorate_rooms(KKK_PASS)
 
   local function tizzy_up_room(R)
     -- decorative bling
+    local decor_prob = rand.pick({ 20, 50, 50, 80 })
+
     each chunk in R.chunks do
-      if chunk.content_kind == nil then
+      if chunk.content_kind == nil and rand.odds(decor_prob) then
         try_decoration_in_chunk(chunk)
       end
     end
