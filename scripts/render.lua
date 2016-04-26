@@ -446,7 +446,7 @@ do return "narrow" end
 stderrf("dir = %d\n", dir)
 stderrf("A = (%d %d)  B = (%d %d)\n", ax - S.x1, ay - S.y1, bx - S.x1, by - S.y1)
 stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
---]] 
+--]]
 
     local brush =
     {
@@ -504,7 +504,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     local z
     local LOCK
-    
+
     if E.kind == "window" then
       z = E.window_z
     else
@@ -646,7 +646,7 @@ function Render_junction(A, S, dir)
 
   -- find the junction (N.area may be NIL)
   local junc
-  
+
   if N and N.area then
     junc = Junction_lookup(A, N.area)
   else
@@ -680,7 +680,7 @@ function Render_corner(cx, cy)
   local function make_post()
     local mx, my = corner.x, corner.y
     local mat    = corner.post_mat or "METAL"
-    
+
     local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
 
     -- TODO: fix this
@@ -738,7 +738,7 @@ function Render_corner(cx, cy)
 
   local function detect_gap(dir, num_left, num_right)
     -- dir is a corner direction (1, 3, 7, 9)
-    
+
     -- the starting line must be clear
     if analysis[dir].L or analysis[dir].R then return false end
 
@@ -762,7 +762,7 @@ function Render_corner(cx, cy)
 
     local L_tex = analysis[L_dir].R
     local R_tex = analysis[R_dir].L
-    
+
     if L_tex and R_tex then
       build_filler(dir, L_tex, R_tex)
       return true
@@ -822,7 +822,7 @@ end
 
 
 function Render_sink_part(A, S, where, sink)
- 
+
 
   local function check_inner_point(cx, cy)
     local corner = Corner_lookup(cx, cy)
@@ -1060,7 +1060,7 @@ stderrf("away = %s\n\n", string.bool(away))
     -- the "alternative" way : connects the two sub-areas
     if p_val ==  6 then do_triangle(7,1,3, true) ; do_triangle(3,9,7, true) end
     if p_val ==  9 then do_triangle(9,7,1, true) ; do_triangle(1,3,9, true) end
-    
+
     -- three corners open
 
     if p_val == 14 then do_triangle(7,1,9, true)  ; do_triangle(9,1,3, true)  end
@@ -1489,7 +1489,7 @@ function Render_chunk(chunk)
 
   Fabricate(A.room, def, T, { skin })
 
-  
+
   -- mark seeds as done --
 
   local done_mode
@@ -1538,8 +1538,10 @@ end
 
 function Render_full_chunks()
 
-  -- FIXME : support this in Render_chunk()
   local function build_a_pool(chunk)
+
+    -- TEMPORARY TESTING STUFF, NOT USED ATM
+
     if chunk.sw < 2 then return end
     if chunk.sh < 2 then return end
 
@@ -1569,16 +1571,13 @@ function Render_full_chunks()
     Render_mark_done(chunk, "floor")
   end
 
-  
+
   ---| Render_full_chunks |---
 
   each R in LEVEL.rooms do
     each chunk in R.chunks do
-      if chunk.content_kind then continue end
-
-      -- temporary crap!!!
-      if chunk.is_straddler then
-        build_a_pool(chunk)
+      if chunk.content_kind == "floor_fab" then
+        Render_chunk(chunk)
       end
     end
 
