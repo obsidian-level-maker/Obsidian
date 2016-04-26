@@ -1486,7 +1486,8 @@ function Render_chunk(chunk)
   end
 
   if chunk.dest_area then
-    skin.outer = chunk.dest_area.floor_mat
+    skin.outer  = chunk.dest_area. wall_mat
+    skin.floor2 = chunk.dest_area.floor_mat
   end
 
 

@@ -203,32 +203,36 @@ GLOBAL_PARAMETERS =
 -- 
 GLOBAL_PREFAB_DEFAULTS =
 {
-   tex__WALL  = "?wall"
-  flat__WALL  = "?wall"
+   tex__WALL   = "?wall"
+  flat__WALL   = "?wall"
 
-   tex__OUTER = "?outer"
-  flat__OUTER = "?outer"
+   tex__OUTER  = "?outer"
+  flat__OUTER  = "?outer"
 
-   tex__FLOOR = "?floor"
-  flat__FLOOR = "?floor"
+   tex__FLOOR  = "?floor"
+  flat__FLOOR  = "?floor"
 
-   tex__CEIL  = "?ceil"
-  flat__CEIL  = "?ceil"
+   tex__CEIL   = "?ceil"
+  flat__CEIL   = "?ceil"
 
-  thing_8166  = "?object"
+   tex__FLOOR2 = "?floor2"
+  flat__FLOOR2 = "?floor2"
 
-  line_888    = "?action"
+  thing_8166   = "?object"
+
+  line_888     = "?action"
 }
 
 
 GLOBAL_SKIN_DEFAULTS =
 {
-  wall  = "_ERROR"
+  wall   = "_ERROR"
 
-  outer = "?wall"
-  fence = "?wall"
-  floor = "?wall"
-  ceil  = "?floor"
+  outer  = "?wall"
+  fence  = "?wall"
+  floor  = "?wall"
+  ceil   = "?wall"
+  floor2 = "?outer"
 
   -- Doom engine stuff
   tag = ""

@@ -2052,6 +2052,9 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       end
 
       if r.kind == "joiner" then
+        assert(new_room)
+        chunk.dest_area = new_room.areas[1]
+
         new_conn.kind = "joiner"
         new_conn.chunk = chunk
 

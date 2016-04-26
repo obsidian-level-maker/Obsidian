@@ -14,6 +14,7 @@ texture o _NOTHING
 texture o _WALL
 texture o _OUTER
 texture o _FLOOR
+texture o _FLOOR2
 texture o _CEIL
 texture o _LIQUID
 texture o _SKY
@@ -22,6 +23,7 @@ flat o _NOTHING
 flat o _WALL
 flat o _OUTER
 flat o _FLOOR
+flat o _FLOOR2
 flat o _CEIL
 flat o _LIQUID
 flat o _SKY
@@ -41,7 +43,7 @@ sector 992 "OBL: Reachable"
 sector 993 "OBL: Grab Floor"
 sector 995 "OBL: Moving Floor"
 sector 996 "OBL: Door"
-sector 997 "OBL: Delta 12"
+sector 997 "OBL: Delta -12"
 
 
 #--- THING TYPES ---
