@@ -1007,6 +1007,13 @@ end
 
 
 function Room_border_up()
+  --
+  -- Decide the default bordering between any two adjacent areas.
+  -- [ This default can be overridden by EDGE objects, e.g. for doors ]
+  --
+
+  local omit_fence_prob = rand.pick({ 10,50,90 })
+
 
   local function area_can_window(A)
     if not A.room then return false end
@@ -1062,6 +1069,18 @@ function Room_border_up()
     if not can_make_window(A1, A2) then return false end
 
     return true
+  end
+
+
+  local function can_omit_fence(A1, A2)
+    if not (A1.mode == "floor" and A1.room) then return false end
+    if not (A2.mode == "floor" and A2.room) then return false end
+
+    if A1.room.lev_along > A2.room.lev_along then
+      return A1.floor_h > A2.floor_h + 78
+    else
+      return A2.floor_h > A1.floor_h + 78
+    end
   end
 
 
@@ -1147,7 +1166,13 @@ function Room_border_up()
     -- fences --
 
     if A1.is_outdoor and A2.is_outdoor then
-      Junction_make_fence(junc)
+      -- occasionally omit it when big height difference
+      if can_omit_fence(A1, A2) and rand.odds(omit_fence_prob) then
+        Junction_make_empty(junc)
+      else
+        Junction_make_fence(junc)
+      end
+
       return
     end
 
