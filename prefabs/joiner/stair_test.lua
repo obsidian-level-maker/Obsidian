@@ -12,7 +12,7 @@ PREFABS.Joiner_stair_test =
 
   x_fit = "frame"
 
-  prob = 2
+  prob = 10
 
   delta_h  = 48
   can_flip = true

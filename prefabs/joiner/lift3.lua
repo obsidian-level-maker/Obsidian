@@ -12,7 +12,7 @@ PREFABS.Joiner_lift3 =
 
   x_fit = "frame"
 
-  prob = 2000
+  prob = 5
 
   delta_h  = 104
   can_flip = true
