@@ -2093,42 +2093,63 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function build_important(spot)
-    if spot.area then
-      AMBIENT_LIGHT = spot.area.lighting
+  local function content_decoration(chunk)
+    local def = assert(chunk.prefab_def)
+    local A   = chunk.area
+
+    local skin1 = { floor=floor_mat }
+    local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, 2)
+
+    if def.z_fit then
+      Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
     end
 
-    if spot.content_kind == "START" then
-      content_start(spot)
+    Fabricate(A.room, def, T, { skin1 })
+  end
 
-    elseif spot.content_kind == "EXIT" then
-      content_exit(spot)
 
-    elseif spot.content_kind == "SECRET_EXIT" then
-      content_exit(spot, "secret_exit")
+  local function build_important(chunk)
+    chunk.z1 = assert(chunk.area.floor_h)
 
-    elseif spot.content_kind == "KEY" then
-      content_big_item(spot, assert(spot.content_item))
+    if chunk.area then
+      AMBIENT_LIGHT = chunk.area.lighting
+    end
 
-    elseif spot.content_kind == "SWITCH" then
-      content_switch(spot)
+    if chunk.content_kind == "START" then
+      content_start(chunk)
 
-    elseif spot.content_kind == "WEAPON" then
-      content_weapon(spot)
+    elseif chunk.content_kind == "EXIT" then
+      content_exit(chunk)
 
-    elseif spot.content_kind == "ITEM" then
-      content_item(spot)
+    elseif chunk.content_kind == "SECRET_EXIT" then
+      content_exit(chunk, "secret_exit")
 
-    elseif spot.content_kind == "FLAG" then
-      content_flag(spot)
+    elseif chunk.content_kind == "KEY" then
+      content_big_item(chunk, assert(chunk.content_item))
 
-    elseif spot.content_kind == "TELEPORTER" then
-      content_teleporter(spot)
+    elseif chunk.content_kind == "SWITCH" then
+      content_switch(chunk)
 
-    elseif spot.content_kind == "MON_TELEPORT" then
-      content_mon_teleport(spot)
+    elseif chunk.content_kind == "WEAPON" then
+      content_weapon(chunk)
+
+    elseif chunk.content_kind == "ITEM" then
+      content_item(chunk)
+
+    elseif chunk.content_kind == "FLAG" then
+      content_flag(chunk)
+
+    elseif chunk.content_kind == "TELEPORTER" then
+      content_teleporter(chunk)
+
+    elseif chunk.content_kind == "MON_TELEPORT" then
+      content_mon_teleport(chunk)
+
+    elseif chunk.content_kind == "DECORATION" then
+      content_decoration(chunk)
+
     else
-      error("unknown important: " .. tostring(spot.content_kind))
+      error("unknown important: " .. tostring(chunk.content_kind))
     end
   end
 
@@ -2152,42 +2173,6 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function build_a_crate(chunk)
-    if chunk.sw < 2 then return end
-    if chunk.sh < 2 then return end
-
-    local A = chunk.area
-
-    local floor_mat = A.floor_mat
-    if not floor_mat then return end
-
-    local reqs =
-    {
-      kind  = "decor"
-      where = "point"
-
-      size  = 96
-      height = A.ceil_h - A.floor_h
-    }
-
-    if A.room then
-      reqs.env = A.room:get_env()
-    end
-
-    local def = Fab_pick(reqs, "none_ok")
-    if not def then return end
-
-    local skin1 = { floor=floor_mat }
-    local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, 2)
-
-    if def.z_fit then
-      Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
-    end
-
-    Fabricate(A.room, def, T, { skin1 })
-  end
-
-
   ---| Render_importants |---
 
   each room in LEVEL.rooms do
@@ -2195,13 +2180,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     each chunk in R.chunks do
       if chunk.content_kind then
-        chunk.z1 = assert(chunk.area.floor_h)
         build_important(chunk)
-      else
-        -- temporary crud!!!
-        if not chunk.is_straddler then
-          build_a_crate(chunk)
-        end
       end
     end
 

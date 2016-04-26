@@ -143,7 +143,7 @@
     content_kind : keyword  -- is NIL when unused / free
                             -- "START", "EXIT", "TELEPORTER"
                             -- "KEY", "WEAPON", "ITEM", "SWITCH"
-                            -- "CAGE", "TRAP"
+                            -- "CAGE", "TRAP", "DECORATION"
 
     peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk
 

@@ -2655,7 +2655,7 @@ function Room_build_all()
   Layout_place_all_importants()
 
   -- this may add switches and lock doors / joiners
-  Layout_decorate_rooms()
+  Layout_decorate_rooms(1)
 
   -- do doors before floor heights, they may have a delta_h (esp. joiners)
   Room_reckon_door_tex()
@@ -2663,6 +2663,8 @@ function Room_build_all()
 
   Room_floor_ceil_heights()
   Room_prepare_skies()
+
+  Layout_decorate_rooms(2)
 
   Area_closet_edges()
 

@@ -703,7 +703,7 @@ end
 
 
 
-function Layout_decorate_rooms()
+function Layout_decorate_rooms(KKK_PASS)
   -- 
   -- Decorate the rooms with crates, pillars, etc....
   --
@@ -778,7 +778,36 @@ function Layout_decorate_rooms()
   end
 
 
-  local function visit_room(R)
+  local function try_decoration_in_chunk(chunk)
+    if chunk.sw < 2 then return end
+    if chunk.sh < 2 then return end
+
+    local A = chunk.area
+
+    local reqs =
+    {
+      kind  = "decor"
+      where = "point"
+
+      size  = 96
+      height = A.ceil_h - A.floor_h
+    }
+
+    if A.room then
+      reqs.env = A.room:get_env()
+    end
+
+    local def = Fab_pick(reqs, "none_ok")
+    if not def then return end
+
+    chunk.content_kind = "DECORATION"
+    chunk.prefab_def = def
+  end
+
+
+  local function switch_up_room(R)
+    -- locking exits
+
     local switch_prob = style_sel("switches", 0, 35, 70, 99)
 
     for loop = 1, 2 do
@@ -786,6 +815,18 @@ function Layout_decorate_rooms()
         try_intraroom_lock(R)
       end
     end
+  end
+
+
+  local function tizzy_up_room(R)
+    -- decorative bling
+    each chunk in R.chunks do
+      if chunk.content_kind == nil then
+        try_decoration_in_chunk(chunk)
+      end
+    end
+
+    -- TODO : handle unused closets
 
     -- kill any unused closets
     each CL in R.closets do
@@ -798,12 +839,18 @@ function Layout_decorate_rooms()
 
   ---| Layout_decorate_rooms |---
 
+  if KKK_PASS == 1 then
   Layout_add_traps()
+  end
 
-  -- TODO : handle unused closets
+  -- TODO : free-standing cages
 
   each R in LEVEL.rooms do
-    visit_room(R)
+    if KKK_PASS == 1 then
+      switch_up_room(R)
+    else
+      tizzy_up_room(R)
+    end
   end
 end
 
