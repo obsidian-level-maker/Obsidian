@@ -1534,8 +1534,12 @@ end
 
 
 function Room_floor_ceil_heights()
+  --
+  -- Computes the floor and ceiling heights of all the areas of
+  -- each room, including liquids and closets.
+  --
 
-  -- the 'entry_h' field of rooms also serves as a "visited already" flag
+  -- Note: the 'entry_h' field also serves as a "visited already" flag
 
 
   local function raw_set_floor(A, h)
@@ -2232,6 +2236,33 @@ h = 8
   end
 
 
+  local function do_joiner(R, C, next_h)
+    local chunk = assert(C.joiner_chunk)
+    assert(chunk.prefab_def)
+
+    if chunk.place == "whole" then
+      chunk.area.is_outdoor = nil
+      assert(chunk.area.facade_mat)
+    end
+
+    local delta_h = chunk.prefab_def.delta_h or 0
+
+    local flipped = chunk.flipped
+    if chunk.area.room != R then flipped = not flipped end
+
+    if flipped then delta_h = - delta_h end
+
+    local joiner_h = math.min(next_h, next_h + delta_h)
+
+    set_floor(C.joiner_chunk.area, joiner_h)
+
+-- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
+-- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
+
+    return next_h + delta_h
+  end
+
+
   local function visit_room(R, entry_h, entry_area, prev_room, via_conn)
     -- get peered room (for CTF mode)
     local R2 = R.sister or R.brother
@@ -2291,40 +2322,22 @@ h = 8
         continue
       end
 
-
       assert(A1.mode != "joiner")
       assert(A2.mode != "joiner")
 
       assert(A1.floor_h)
 
-      local next_f = R.exit_h or A1.floor_h
+      -- exit_h is for stairwells [ OLD CRUD, REMOVE ]
+      local next_h = R.exit_h or A1.floor_h
 
-      -- hallway crud (FIXME : HACKY)
-      if R2.next_f then next_f = R2.next_f end
+---###   -- hallway crud (FIXME : HACKY)
+---###   if R2.next_f then next_h = R2.next_f end
 
       if C.kind == "joiner" then
-        local chunk = assert(C.joiner_chunk)
-        assert(chunk.prefab_def)
-        local delta_h = chunk.prefab_def.delta_h or 0
-
-        local flipped = chunk.flipped
-        if chunk.area.room != R then flipped = not flipped end
-
-        if flipped then delta_h = - delta_h end
-
-        next_f = next_f + delta_h
-
-        set_floor(C.joiner_chunk.area, math.min(A1.floor_h, next_f))
-
-        if chunk.place == "whole" then
-          chunk.area.is_outdoor = nil
-          assert(chunk.area.facade_mat)
-        end
--- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
--- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
+        next_h = do_joiner(R, C, next_h)
       end
 
-      visit_room(R2, next_f, A2, R, C)
+      visit_room(R2, next_h, A2, R, C)
     end
   end
 
