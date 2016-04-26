@@ -782,6 +782,9 @@ function Layout_decorate_rooms(KKK_PASS)
     if chunk.sw < 2 then return end
     if chunk.sh < 2 then return end
 
+    -- only try mirrored chunks *once*
+    if chunk.peer and chunk.peer.id < chunk.id then return end
+
     local A = chunk.area
 
     local reqs =
@@ -803,6 +806,14 @@ function Layout_decorate_rooms(KKK_PASS)
     chunk.content_kind = "DECORATION"
     chunk.prefab_def = def
     chunk.prefab_dir = rand.dir()
+
+    if chunk.peer then
+      assert(A.room.symmetry)
+
+      chunk.peer.content_kind = chunk.content_kind
+      chunk.peer.prefab_def   = chunk.prefab_def
+      chunk.peer.prefab_dir   = A.room.symmetry:conv_dir(chunk.prefab_dir)
+    end
   end
 
 
