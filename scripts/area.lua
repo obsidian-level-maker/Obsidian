@@ -305,38 +305,6 @@ end
 ------------------------------------------------------------------------
 
 
-function Chunk_new(kind, sx1,sy1, sx2,sy2)
-  local CHUNK =
-  {
-    id = alloc_id("chunk")
-
-    kind = kind
-
-    sx1 = sx1, sy1 = sy1
-    sx2 = sx2, sy2 = sy2
-
-    sw = (sx2 - sx1 + 1)
-    sh = (sy2 - sy1 + 1)
-
-    encroach = {}
-  }
-
-  local S1 = SEEDS[sx1][sy1]
-  local S2 = SEEDS[sx2][sy2]
-
-  CHUNK.x1, CHUNK.y1 = S1.x1, S1.y1
-  CHUNK.x2, CHUNK.y2 = S2.x2, S2.y2
-
-  CHUNK.mx = math.mid(S1.x1, S2.x2)
-  CHUNK.my = math.mid(S1.y1, S2.y2)
-
-  return CHUNK
-end
-
-
-------------------------------------------------------------------------
-
-
 function Symmetry_transform(sym, S)
   local x, y = S.sx, S.sy
 

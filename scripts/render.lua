@@ -1264,24 +1264,6 @@ end
 
 
 
-function Chunk_base_reqs(chunk, dir)
-  local reqs =
-  {
-    where  = "seeds"
-
-    seed_w = chunk.sw
-    seed_h = chunk.sh
-  }
-
-  if geom.is_horiz(dir) then
-    reqs.seed_w = chunk.sh
-    reqs.seed_h = chunk.sw
-  end
-
-  return reqs
-end
-
-
 function Render_chunk(chunk)
   --
   -- this handles prefabs which occupy a seed rectangle (chunk) and
