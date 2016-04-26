@@ -110,6 +110,8 @@ ______________________________________________________________________
 
 -  allow monsters in liquids [ but never place items there ]
 
+-  support prob_skew, skip_prob for prefabs (like for rules)
+
 -  review "svolume" and "innerpoint" usage
    e.g. I think "walk_svol" would be a more useful metric
 
