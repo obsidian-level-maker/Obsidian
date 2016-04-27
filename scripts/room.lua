@@ -325,6 +325,9 @@ function ROOM_CLASS.calc_walk_vol(R)
     end
   end
 
+  -- this should not happen
+  if vol < 1 then vol = 1 end
+
   return vol
 end
 

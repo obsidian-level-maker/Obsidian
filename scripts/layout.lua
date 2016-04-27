@@ -830,7 +830,33 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
+  local function try_extra_cages(R)
+    -- determine current quantity of free-range cages
+    local cage_vol = 0
+
+    each A in R.areas do
+      if A.mode == "cage" then
+        cage_vol = cage_vol + A.svolume
+      end
+    end
+
+    cage_vol = cage_vol / R:calc_walk_vol()
+
+--- stderrf("Cage vol = %1.2f  in %s\n", cage_vol, R.name)
+
+
+    -- TODO collect usable chunks
+
+    -- TODO decide quota (closets + floors)
+
+    -- TODO fill quota 
+  end
+
+
   local function tizzy_up_room(R)
+    -- more cages, oh yes!
+    try_extra_cages(R)
+
     -- decorative bling
     local decor_prob = rand.pick({ 20, 50, 50, 80 })
 
@@ -854,10 +880,8 @@ function Layout_decorate_rooms(KKK_PASS)
   ---| Layout_decorate_rooms |---
 
   if KKK_PASS == 1 then
-  Layout_add_traps()
+    Layout_add_traps()
   end
-
-  -- TODO : free-standing cages
 
   each R in LEVEL.rooms do
     if KKK_PASS == 1 then
