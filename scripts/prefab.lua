@@ -2220,7 +2220,14 @@ function Fab_pick(reqs, allow_none)
     tab["NONE"] = reqs.NONE_prob
   end
 
-  local name = rand.key_by_probs(tab)
+  local name
+
+  -- see if a desired prefab *can* be used -- if so, use it
+  if reqs.want_fab and (tab[reqs.want_fab] or 0) > 0 then
+    name = reqs.want_fab
+  else
+    name = rand.key_by_probs(tab)
+  end
 
   if DEBUG_FAB_PICK then
     gui.debugf("Fab_pick : chose %s\n", tostring(name))
