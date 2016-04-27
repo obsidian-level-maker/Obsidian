@@ -5,6 +5,9 @@ WORK IN PROGRESS
 
 STAIRS:
 
++  for floor heights, pick an area to be the LOWEST *or* HIGHEST
+   in the room, and recurse from there.
+
 !!  choose prefabs earlier, probably during floor/ceil heights
 
    ---> in Fab_pick, support a "want_fab = name" in the reqs
@@ -12,17 +15,22 @@ STAIRS:
 
 
 
-CAGES:
+TRAPS:
 
--  some free-standing cages (similar to decorative prefabs)
-   [ don't add into a room unless cage style == heaps ]
++  monster closets which open in PREVIOUS (back-track) room
+   [ visit rooms with goals in them _before_ other rooms ]
 
-   -  compute a quota for each room
++  for each trappable item/goal in a room [ upto max of 2 ]
+   decide whether to create a closet trap (using a nearby unused closets)
+   or a teleport trap
 
-   -  divide quota by a factor based on number of cage-area seeds
-      already in the room
++  number of traps depends heavily on ROOM.pressure
 
--  wall cages in unused closets
+-  number of traps affected by LEV.game_along
+
++  get teleport traps working again
+   do monster depots differently, make "shared" sector based on
+   an entry area of second room in the level
 
 
 
@@ -72,25 +80,4 @@ WALLS:
    -  support "env", "theme" (etc??) fields
 
    -  if nothing found, fall back to non-group lookup
-
-
-
-TRAPS:
-
-+  monster closets which open in PREVIOUS (back-track) room
-   [ visit rooms with goals in them _before_ other rooms ]
-
-+  for each trappable item/goal in a room [ upto max of 2 ]
-   decide whether to create a closet trap (using a nearby unused closets)
-   or a teleport trap
-
-+  number of traps depends heavily on ROOM.pressure
-
--  number of traps affected by LEV.game_along
-
-+  get teleport traps working again
-   do monster depots differently, make "shared" sector based on
-   an entry area of second room in the level
-
-
 
