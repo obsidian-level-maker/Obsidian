@@ -870,6 +870,9 @@ function Layout_decorate_rooms(KKK_PASS)
 
 
   local function try_extra_cages(R)
+    -- never have cages in a start room
+    if R.is_start then return end
+
     -- determine current quantity of free-range cages
     local cage_vol = 0
 
