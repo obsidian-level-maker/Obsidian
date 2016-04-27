@@ -383,7 +383,7 @@ SPROUT_HALL_1 =
 
 DECORATE_CAGE_1 =
 {
-  prob = 5  -- FIXME
+  prob = 10
 
   structure =
   {

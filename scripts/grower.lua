@@ -2362,6 +2362,8 @@ end
 
       local name = rand.key_by_probs(rules)
 
+      if name == "STOP" then return end
+
       cur_rule = assert(grammar[name])
 
       -- don't try this rule again
@@ -2424,6 +2426,9 @@ end
   if pass == "decorate" then apply_num = 7 end --- TODO
 
   local rule_tab = collect_matching_rules(pass)
+
+  if pass == "grow"     then rule_tab["STOP"] =  5 end
+  if pass == "decorate" then rule_tab["STOP"] = 10 end
 
   for loop = 1, apply_num do
     -- stderrf("LOOP %d\n", loop)
