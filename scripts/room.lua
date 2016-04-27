@@ -1580,33 +1580,33 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function pick_delta_h(from_h, up_chance)
-    local h = 12
-    if rand.odds(33) then h = 24
-      if rand.odds(75) then h = 40
-        if rand.odds(33) then h = 64 end
-      end
+  local function usable_delta_h(R, from_h, h)
+    if not rand.odds(R.delta_up_chance) then
+      h = - h
     end
 
-    if STYLE.steepness == "rare" or STYLE.steepness == "few" then h = h / 2 end
-    if STYLE.steepness == "more"  then h = h * 1.5 end
-    if STYLE.steepness == "heaps" then h = h * 2.0 end
-
-h = 8
-
-    -- limit it for now (due to lack of lifts)
-    if h > 72 then h = 72 end
-
-    if rand.odds(up_chance) then
-      return from_h + h
+    if R.delta_limit_mode == "positive" then
+      if from_h + h <= 0 then h = - h end
     else
-      return from_h - h
+      if from_h + h >= 0 then h = - h end
     end
+
+    return from_h + h
   end
 
 
-  local function pick_stair_delta_h(from_h, up_chance)
-    return from_h + 32
+  local function pick_direct_delta_h(R, from_h)
+    local h = 8
+
+    return usable_delta_h(R, from_h, h)
+  end
+
+
+  local function pick_stair_delta_h(R, from_h)
+    -- FIXME : get value from prefab
+    local h = 32
+
+    return usable_delta_h(R, from_h, h)
   end
 
 
@@ -1618,12 +1618,14 @@ h = 8
   end
 
 
-  local function area_assign_delta(A, up_chance, cur_delta_h)
-    gui.debugf("Area assign delta %d --> %s\n", cur_delta_h, A.name)
+  local function flow_through_room(A, cur_delta_h)
+    gui.debugf("flow_through_room: delta %d --> %s\n", cur_delta_h, A.name)
 
     A.delta_h = cur_delta_h
 
-    each C in A.room.internal_conns do
+    local R = A.room
+
+    each C in R.internal_conns do
       local A2 = areaconn_other(C, A)
 
       -- not connected to this area?
@@ -1640,20 +1642,22 @@ h = 8
       if C.kind == "stair" then
         assert(C.stair_chunk)
 
-        area_assign_delta(A2, up_chance, pick_stair_delta_h(cur_delta_h, up_chance))
+        flow_through_room(A2, pick_stair_delta_h(R, cur_delta_h))
 
 --stderrf("Visiting stair in %s\n", C.stair_chunk.area.name)
 
       else
         assert(C.kind == "direct")
 
-        area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))
+        flow_through_room(A2, pick_direct_delta_h(R, cur_delta_h))
       end
     end
   end
 
 
   local function fix_stair_dirs(R)
+    -- FIXME : this should be done as we flow through the room
+
     each chunk in R.stairs do
       local A = assert(chunk.area)
 
@@ -1676,33 +1680,9 @@ h = 8
   end
 
 
-  local function fix_porch_delta(R)
-    -- ensure any porch in the room is the highest area
-
-    -- this fucks up stair logic, hence disabled
-    do return end
-
-    local step_h = rand.sel(50, 16, 32)
-
-    if STYLE.steepness == "rare" or STYLE.steepness == "few" then
-      step_h = step_h / 2
-    end
-
-    each A in R.areas do
-      if A.is_porch then
-        each N in A.neighbors do
-          if N.room != R then continue end
-
-          if N.delta_h then
-            A.delta_h = math.max(A.delta_h, N.delta_h + step_h)
-          end
-        end
-      end
-    end
-  end
-
-
   local function room_add_steps(R)
+    -- NOT USED ATM [ should be done while flowing through room ]
+
     each C in R.internal_conns do
       local A1 = C.A1
       local A2 = C.A2
@@ -1754,25 +1734,30 @@ h = 8
 
     local start_area = pick_start_area(R)
 
-    local up_chance = rand.pick({ 10, 50, 90 })
+    R.delta_limit_mode = rand.sel(50, "positive", "negative")
+    R.delta_up_chance  = 50
+
+    if rand.odds(70) then
+      if R.delta_limit_mode == "positive" then
+        R.delta_up_chance = 90
+      else
+        R.delta_up_chance = 10
+      end
+    end
 
     -- recursively flow delta heights from a random starting area
-    local cur_delta_h = rand.irange(-4, 4) * 32
 
     gui.debugf("ASSIGN DELTAS IN %s\n", R.name)
 
-    area_assign_delta(start_area, up_chance, cur_delta_h)
-
-    fix_porch_delta(R)
+    flow_through_room(start_area, 0)
 
     local adjust_h = 0
+
     if entry_area then adjust_h = assert(entry_area.delta_h) end
 
+    -- compute the actual floor heights, ensuring entry_area stays the same
     each A in R.areas do
-      if A.mode == "floor" and A.delta_h then
-        -- check each area got a delta_h
-        assert(A.delta_h)
-
+      if A.delta_h then
         set_floor(A, R.entry_h + A.delta_h - adjust_h)
       end
 
@@ -1780,8 +1765,6 @@ h = 8
     end
 
     fix_stair_dirs(R)
-
-    room_add_steps(R)
   end
 
 
