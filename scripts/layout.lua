@@ -851,8 +851,21 @@ function Layout_decorate_rooms(KKK_PASS)
 
 
   local function pick_cage_spot(locs)
-    -- TODO : improve this
-    return rand.pick(locs) 
+    local best
+    local best_score = -1
+
+    each chunk in locs do
+      local score = gui.random()
+
+      if chunk.kind == "closet" then score = score * 3 end
+
+      if score > best_score then
+        best = chunk
+        best_score = score
+      end
+    end
+
+    return assert(best)
   end
 
 
@@ -873,13 +886,12 @@ function Layout_decorate_rooms(KKK_PASS)
     -- collect usable chunks
     local locs = {}
 
---[[
     each chunk in R.chunks do
       if chunk.sw >= 2 and chunk.sh >= 2 and not chunk.content_kind then
         table.insert(locs, chunk)
       end
     end
---]]
+
     each chunk in R.closets do
       if not chunk.content_kind then
         table.insert(locs, chunk)
