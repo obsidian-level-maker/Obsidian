@@ -742,6 +742,20 @@ function Layout_decorate_rooms(KKK_PASS)
     end
 
     chunk.prefab_def = Fab_pick(reqs)
+
+    -- in symmetrical rooms, handle the peer too
+    if chunk.peer and not chunk.peer.content_kind then
+      local peer = chunk.peer
+
+      peer.content_kind = chunk.content_kind
+      peer.prefab_def   = chunk.prefab_def
+
+      if chunk.kind != "closet" and chunk.prefab_dir then
+        local A = chunk.area
+        assert(A.room.symmetry)
+        peer.prefab_dir = A.room.symmetry:conv_dir(chunk.prefab_dir)
+      end
+    end
   end
 
 
@@ -802,7 +816,7 @@ function Layout_decorate_rooms(KKK_PASS)
     if chunk.sh < 2 then return end
 
     -- only try mirrored chunks *once*
-    if chunk.peer and chunk.peer.id < chunk.id then return end
+    if Chunk_is_slave(chunk) then return end
 
     local A = chunk.area
 
@@ -869,9 +883,9 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
-  local function extra_cage_quota(R, locs)
+  local function extra_cage_prob(R, locs)
     --
-    -- Factors determining the quota:
+    -- Factors determining the probability:
     --   (a) the "cages" style
     --   (b) number of existing cages (ones grown from rules)
     --   (c) the "pressure" value of the room
@@ -893,21 +907,28 @@ function Layout_decorate_rooms(KKK_PASS)
 
 --- stderrf("Cage vol = %1.2f  in %s\n", cage_vol, R.name)
 
-    local use_prob = style_sel("cages", 0, 40, 70, 90)
-    local quota    = style_sel("cages", 0, 15, 30, 60)
 
-    use_prob = use_prob * (1 - cage_vol * 2)
+    local any_prob = style_sel("cages", 0, 40, 70, 90)
 
----    if use_prob <= 0 or not rand.odds(use_prob) then return 0 end
+    if R.pressure == "high" or rand.odds(20) then any_prob = any_prob * 1.5 end
+    if R.pressure == "low"  or rand.odds(10) then any_prob = any_prob / 2.5 end
+
+    if not rand.odds(any_prob) then return 0 end
 
 
-    -- not too much more when "high", leave room for roaming monsters!
-    if R.pressure == "high" then quota = quota * 1.5 end
-    if R.pressure == "low"  then quota = quota / 2.5 end
+    local per_prob = style_sel("cages", 0, 15, 30, 60)
 
-stderrf("Quota in %s + pressure '%s' --> use_prob=%d%%  quota=%d%%\n", R.name, R.pressure, use_prob, quota)
+    per_prob = per_prob * (1 - cage_vol * 2)
+    per_prob = per_prob * rand.pick({ 0.7, 0.9, 1.1, 1.4 })
 
-    return 1
+    per_prob = math.clamp(1, per_prob, 99)
+
+--[[ DEBUG
+stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
+        R.name, R.pressure, any_prob, per_prob)
+--]]
+
+    return per_prob
   end
 
 
@@ -919,46 +940,27 @@ stderrf("Quota in %s + pressure '%s' --> use_prob=%d%%  quota=%d%%\n", R.name, R
     local locs = {}
 
     each chunk in R.chunks do
-      if chunk.sw >= 2 and chunk.sh >= 2 and not chunk.content_kind then
+      if not chunk.content_kind and not Chunk_is_slave(chunk) and
+         chunk.sw >= 2 and chunk.sh >= 2 and not chunk.content_kind
+      then
         table.insert(locs, chunk)
       end
     end
 
     each chunk in R.closets do
-      if not chunk.content_kind then
+      if not chunk.content_kind and not Chunk_is_slave(chunk) then
         table.insert(locs, chunk)
       end
     end
 
+    -- decide probability (for use in each spot)
+    -- [ not using a quota here -- tried it and it was too non-random ]
+    local prob = extra_cage_prob(R, locs)
 
-    -- decide quota (closets + floors)
-    local quota = extra_cage_quota(R, locs)
-
-
-    -- fill the quota
-    while quota > 0 and not table.empty(locs) do
-      local chunk = pick_cage_spot(locs)
-      if not chunk then break; end
-
-      make_cage(chunk)
-
-      table.kill_elem(locs, chunk)
-      quota = quota - 1
-
-      if chunk.peer and not chunk.peer.content_kind then
-        local peer = chunk.peer
-
-        peer.content_kind = chunk.content_kind
-        peer.prefab_def   = chunk.prefab_def
-
-        if chunk.kind != "closet" and chunk.prefab_dir then
-          local A = chunk.area
-          assert(A.room.symmetry)
-          peer.prefab_dir = A.room.symmetry:conv_dir(chunk.prefab_dir)
-        end
-
-        table.kill_elem(locs, chunk.peer)
-        quota = quota - 1
+    -- make the cages
+    each chunk in locs do
+      if rand.odds(prob) then
+        make_cage(chunk)
       end
     end
   end

@@ -927,6 +927,15 @@ function Chunk_base_reqs(chunk, dir)
 end
 
 
+function Chunk_is_slave(chunk)
+  -- the "slave" chunk is a peered chunk with a higher ID number
+
+  if not chunk.peer then return false end
+
+  return chunk.id > chunk.peer.id
+end
+
+
 function Chunk_flip(chunk)
   local A1 = chunk.from_area
   local A2 = chunk.dest_area
