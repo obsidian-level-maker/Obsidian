@@ -713,7 +713,33 @@ function Layout_decorate_rooms(KKK_PASS)
 
   local function make_cage(chunk)
     chunk.content_kind = "CAGE"
+
+    -- select cage prefab
+    local A = chunk.area
+    local reqs
+
+    if chunk.kind == "closet" then
+      -- FIXME !!!
+      error("TODO")
+
+    else
+      reqs =
+      {
+        kind  = "cage"
+        where = "point"
+
+        size  = 96
+        height = A.ceil_h - A.floor_h
+      }
+    end
+
+    if A.room then
+      reqs.env = A.room:get_env()
+    end
+
+    chunk.prefab_def = Fab_pick(reqs)
   end
+
 
   local function make_item_or_secret(A)
     chunk.content_kind = "NICE_ITEM"
@@ -798,10 +824,11 @@ function Layout_decorate_rooms(KKK_PASS)
 
     if chunk.peer then
       assert(A.room.symmetry)
+      local peer = chunk.peer
 
-      chunk.peer.content_kind = chunk.content_kind
-      chunk.peer.prefab_def   = chunk.prefab_def
-      chunk.peer.prefab_dir   = A.room.symmetry:conv_dir(chunk.prefab_dir)
+      peer.content_kind = chunk.content_kind
+      peer.prefab_def   = chunk.prefab_def
+      peer.prefab_dir   = A.room.symmetry:conv_dir(chunk.prefab_dir)
     end
   end
 
@@ -847,13 +874,13 @@ function Layout_decorate_rooms(KKK_PASS)
         table.insert(locs, chunk)
       end
     end
-
+--[[
     each chunk in R.closets do
       if not chunk.content_kind then
         table.insert(locs, chunk)
       end
     end
-
+--]]
 
     -- FIXME decide quota (closets + floors)
     local quota = 99
@@ -865,11 +892,22 @@ function Layout_decorate_rooms(KKK_PASS)
       if not chunk then break; end
 
       make_cage(chunk)
+
       table.kill_elem(locs, chunk)
       quota = quota - 1
 
       if chunk.peer and not chunk.peer.content_kind then
-        make_cage(chunk.peer)
+        local peer = chunk.peer
+
+        peer.content_kind = chunk.content_kind
+        peer.prefab_def   = chunk.prefab_def
+
+        if chunk.prefab_dir then
+          local A = chunk.area
+          assert(A.room.symmetry)
+          peer.prefab_dir = A.room.symmetry:conv_dir(chunk.prefab_dir)
+        end
+
         table.kill_elem(locs, chunk.peer)
         quota = quota - 1
       end

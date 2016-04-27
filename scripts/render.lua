@@ -2143,7 +2143,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     elseif chunk.content_kind == "MON_TELEPORT" then
       content_mon_teleport(chunk)
 
-    elseif chunk.content_kind == "DECORATION" then
+    elseif chunk.content_kind == "DECORATION" or chunk.content_kind == "CAGE" then
       content_decoration(chunk)
 
     else
