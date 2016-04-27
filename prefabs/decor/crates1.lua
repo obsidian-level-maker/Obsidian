@@ -28,9 +28,26 @@ PREFABS.Crate_small_gray =
 }
 
 
+-- a tall narrow crate
+
+PREFABS.Crate_tall_brown =
+{
+  file   = "decor/crates1.wad"
+  map    = "MAP02"
+
+  where  = "point"
+  size   = 64
+  height = 160
+
+  bound_z1 = 0
+
+  prob   = 8
+}
+
+
 -- a medium-size crate (96x96)
 
-PREFABS.Crate_medium_brown =
+PREFABS.Crate_medium_gray =
 {
   file   = "decor/crates1.wad"
   map    = "MAP03"
