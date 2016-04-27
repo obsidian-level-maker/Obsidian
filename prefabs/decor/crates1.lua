@@ -1,10 +1,15 @@
 --
--- Large crate (96x96)
+-- Various crates
 --
 
-UNFINISHED.Crate_big1 =
+
+-- a medium-size crate (96x96)
+
+UNFINISHED.Crate_medium1 =
 {
-  file   = "decor/crate_big1.wad"
+  file   = "decor/crates1.wad"
+  map    = "MAP03"
+
   where  = "point"
   size   = 96
 
