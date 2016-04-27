@@ -711,7 +711,7 @@ function Layout_decorate_rooms(KKK_PASS)
   -- into cages, secret items (etc).
   --
 
-  local function make_cage(A)
+  local function make_cage(chunk)
     chunk.content_kind = "CAGE"
   end
 
@@ -723,17 +723,6 @@ function Layout_decorate_rooms(KKK_PASS)
   local function kill_closet(chunk)
     chunk.area.mode = "void"
     chunk.content_kind = "void"
-  end
-
-
-  local function visit_room_KK(R)
-    -- FIXME : traps, cages, etc !!!!
-
-    each chunk in R.closets do
-      if not chunk.closet_kind then
-        make_item_or_secret(A)
-      end
-    end
   end
 
 
@@ -830,6 +819,12 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
+  local function pick_cage_spot(locs)
+    -- TODO : improve this
+    return rand.pick(locs) 
+  end
+
+
   local function try_extra_cages(R)
     -- determine current quantity of free-range cages
     local cage_vol = 0
@@ -844,12 +839,41 @@ function Layout_decorate_rooms(KKK_PASS)
 
 --- stderrf("Cage vol = %1.2f  in %s\n", cage_vol, R.name)
 
+    -- collect usable chunks
+    local locs = {}
 
-    -- TODO collect usable chunks
+    each chunk in R.chunks do
+      if chunk.sw >= 2 and chunk.sh >= 2 and not chunk.content_kind then
+        table.insert(locs, chunk)
+      end
+    end
 
-    -- TODO decide quota (closets + floors)
+    each chunk in R.closets do
+      if not chunk.content_kind then
+        table.insert(locs, chunk)
+      end
+    end
 
-    -- TODO fill quota 
+
+    -- FIXME decide quota (closets + floors)
+    local quota = 99
+
+
+    -- fill the quota
+    while quota > 0 and not table.empty(locs) do
+      local chunk = pick_cage_spot(locs)
+      if not chunk then break; end
+
+      make_cage(chunk)
+      table.kill_elem(locs, chunk)
+      quota = quota - 1
+
+      if chunk.peer and not chunk.peer.content_kind then
+        make_cage(chunk.peer)
+        table.kill_elem(locs, chunk.peer)
+        quota = quota - 1
+      end
+    end
   end
 
 
