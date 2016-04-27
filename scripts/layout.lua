@@ -719,8 +719,12 @@ function Layout_decorate_rooms(KKK_PASS)
     local reqs
 
     if chunk.kind == "closet" then
-      -- FIXME !!!
-      error("TODO")
+      reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+
+      reqs.kind  = "cage"
+      reqs.shape = "U"   -- TODO: chunk.shape
+
+      chunk.prefab_dir = chunk.from_dir
 
     else
       reqs =
@@ -869,18 +873,19 @@ function Layout_decorate_rooms(KKK_PASS)
     -- collect usable chunks
     local locs = {}
 
+--[[
     each chunk in R.chunks do
       if chunk.sw >= 2 and chunk.sh >= 2 and not chunk.content_kind then
         table.insert(locs, chunk)
       end
     end
---[[
+--]]
     each chunk in R.closets do
       if not chunk.content_kind then
         table.insert(locs, chunk)
       end
     end
---]]
+
 
     -- FIXME decide quota (closets + floors)
     local quota = 99
@@ -902,7 +907,7 @@ function Layout_decorate_rooms(KKK_PASS)
         peer.content_kind = chunk.content_kind
         peer.prefab_def   = chunk.prefab_def
 
-        if chunk.prefab_dir then
+        if chunk.kind != "closet" and chunk.prefab_dir then
           local A = chunk.area
           assert(A.room.symmetry)
           peer.prefab_dir = A.room.symmetry:conv_dir(chunk.prefab_dir)
