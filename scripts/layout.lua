@@ -869,9 +869,16 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
-  local function try_extra_cages(R)
-    -- never have cages in a start room
-    if R.is_start then return end
+  local function extra_cage_quota(R, locs)
+    --
+    -- Factors determining the quota:
+    --   (a) the "cages" style
+    --   (b) number of existing cages (ones grown from rules)
+    --   (c) the "pressure" value of the room
+    --   (d) a dose of randomness
+    --
+
+    if #locs == 0 then return 0 end
 
     -- determine current quantity of free-range cages
     local cage_vol = 0
@@ -885,6 +892,28 @@ function Layout_decorate_rooms(KKK_PASS)
     cage_vol = cage_vol / R:calc_walk_vol()
 
 --- stderrf("Cage vol = %1.2f  in %s\n", cage_vol, R.name)
+
+    local use_prob = style_sel("cages", 0, 40, 70, 90)
+    local quota    = style_sel("cages", 0, 15, 30, 60)
+
+    use_prob = use_prob * (1 - cage_vol * 2)
+
+---    if use_prob <= 0 or not rand.odds(use_prob) then return 0 end
+
+
+    -- not too much more when "high", leave room for roaming monsters!
+    if R.pressure == "high" then quota = quota * 1.5 end
+    if R.pressure == "low"  then quota = quota / 2.5 end
+
+stderrf("Quota in %s + pressure '%s' --> use_prob=%d%%  quota=%d%%\n", R.name, R.pressure, use_prob, quota)
+
+    return 1
+  end
+
+
+  local function try_extra_cages(R)
+    -- never have cages in a start room
+    if R.is_start then return end
 
     -- collect usable chunks
     local locs = {}
@@ -902,8 +931,8 @@ function Layout_decorate_rooms(KKK_PASS)
     end
 
 
-    -- FIXME decide quota (closets + floors)
-    local quota = 99
+    -- decide quota (closets + floors)
+    local quota = extra_cage_quota(R, locs)
 
 
     -- fill the quota
