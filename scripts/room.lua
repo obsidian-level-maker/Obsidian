@@ -586,9 +586,10 @@ function Room_prepare_skies()
   --
 
   local function new_sky_add_h()
-    if rand.odds(2)  then return 320 end
+    if rand.odds(2)  then return 256 end
+    if rand.odds(10) then return 192 end
 
-    return rand.pick({ 144, 160, 176, 192, 208 })
+    return 144
   end
 
 
