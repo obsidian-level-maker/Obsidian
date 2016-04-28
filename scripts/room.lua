@@ -1580,6 +1580,14 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function areaconn_other(C, A)
+    if C.A1 == A then return C.A2 end
+    if C.A2 == A then return C.A1 end
+
+    return nil
+  end
+
+
   local function usable_delta_h(R, from_h, h)
     if not rand.odds(R.delta_up_chance) then
       h = - h
@@ -1602,19 +1610,44 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function pick_stair_delta_h(R, from_h)
-    -- FIXME : get value from prefab
-    local h = 32
+  local function pick_stair_delta_h(R, from_h, chunk)
+    local h = chunk.prefab_def.delta_h
+    assert(h)
 
     return usable_delta_h(R, from_h, h)
   end
 
 
-  local function areaconn_other(C, A)
-    if C.A1 == A then return C.A2 end
-    if C.A2 == A then return C.A1 end
+  local function pick_stair_prefab(chunk)
+    local A = chunk.area
 
-    return nil
+    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+
+    reqs.kind  = "stairs"
+    reqs.shape = assert(chunk.shape)
+
+    if A.room then
+      reqs.env = A.room:get_env()
+    end
+
+    local def = Fab_pick(reqs)
+
+    -- handle symmetrical rooms AND stair groups
+
+    for pass = 1, 2 do
+      local K2 = sel(pass == 1, chunk, chunk.peer)
+      if not K2 then continue end
+
+      if K2.stair_group then
+        each K3 in K2.stair_group.chunks do
+          K3.prefab_def = def
+        end
+      else
+        K2.prefab_def = def
+      end
+    end
+
+    assert(chunk.prefab_def)
   end
 
 
@@ -1639,25 +1672,28 @@ function Room_floor_ceil_heights()
 
 -- stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 
-      if C.kind == "stair" then
-        assert(C.stair_chunk)
-
-        flow_through_room(A2, pick_stair_delta_h(R, cur_delta_h))
+      if C.kind == "direct" then
+        flow_through_room(A2, pick_direct_delta_h(R, cur_delta_h))
+        return
+      end
 
 --stderrf("Visiting stair in %s\n", C.stair_chunk.area.name)
 
-      else
-        assert(C.kind == "direct")
+      assert(C.kind == "stair")
+      assert(C.stair_chunk)
 
-        flow_through_room(A2, pick_direct_delta_h(R, cur_delta_h))
-      end
+      assert(not C.stair_chunk.prefab_def)
+
+      pick_stair_prefab(C.stair_chunk)
+
+      local new_delta = pick_stair_delta_h(R, cur_delta_h, C.stair_chunk)
+
+      flow_through_room(A2, new_delta)
     end
   end
 
 
   local function fix_stair_dirs(R)
-    -- FIXME : this should be done as we flow through the room
-
     each chunk in R.stairs do
       local A = assert(chunk.area)
 

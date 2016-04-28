@@ -896,6 +896,8 @@ function Chunk_new(kind, sx1,sy1, sx2,sy2)
     encroach = {}
   }
 
+  CHUNK.name = string.format("CHUNK_%d", CHUNK.id)
+
   local S1 = SEEDS[sx1][sy1]
   local S2 = SEEDS[sx2][sy2]
 

@@ -1324,8 +1324,7 @@ function Render_chunk(chunk)
   end
 
   local function do_stairs()
-    reqs.kind  = "stairs"
-    reqs.shape = assert(chunk.shape)
+    assert(chunk.prefab_def)
   end
 
   local function do_joiner()
