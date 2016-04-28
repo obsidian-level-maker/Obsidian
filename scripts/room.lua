@@ -1674,7 +1674,7 @@ function Room_floor_ceil_heights()
 
       if C.kind == "direct" then
         flow_through_room(A2, pick_direct_delta_h(R, cur_delta_h))
-        return
+        continue
       end
 
 --stderrf("Visiting stair in %s\n", C.stair_chunk.area.name)
