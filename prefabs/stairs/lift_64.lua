@@ -16,6 +16,6 @@ PREFABS.Lift_64 =
 
   bound_z1 = 0
 
-  prob = 15
+  prob = 30
 }
 
