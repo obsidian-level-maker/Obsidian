@@ -3,15 +3,13 @@ WORK IN PROGRESS
 ================
 
 
-STAIRS:
+CEILINGS:
 
-+  for floor heights, pick an area to be the LOWEST *or* HIGHEST
-   in the room, and recurse from there.
+-  better logic for heights
 
-!!  choose prefabs earlier, probably during floor/ceil heights
-
-   ---> in Fab_pick, support a "want_fab = name" in the reqs
-        [ if that name matches all the rules, use it ]
+   e.g. group areas into 'floor_group' -- same floor but different
+   ceiling stuff (SKY vs LIGHTS vs PLAIN) and different lighting
+   but same wall decoration
 
 
 
@@ -57,15 +55,6 @@ SINKS:
 +  get them working again
 
 
-
-CEILINGS:
-
--  better logic for heights
-
-   e.g. group areas into 'floor_group' -- same floor but different
-   ceiling stuff (SKY vs LIGHTS vs PLAIN) and different lighting
-   but same wall decoration
-   
 
 
 WALLS:
