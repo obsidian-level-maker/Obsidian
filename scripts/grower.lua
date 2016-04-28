@@ -1995,6 +1995,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   local function install_create_chunks(T)
     new_chunks = {}
 
+    local new_stairs = {}
+
     each r in cur_rule.rects do
       local x1,y1, x2,y2 = transform_rect(T, r)
 
@@ -2047,6 +2049,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
         assert(new_intconn)
         new_intconn.stair_chunk = chunk
 
+        table.insert(new_stairs, chunk)
+
       elseif r.dest_area then
         chunk.dest_area = assert(area_map[r.dest_area])
       end
@@ -2072,6 +2076,16 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       if r.kind == "closet" then table.insert(R.closets, chunk) end
       if r.kind == "stair"  then table.insert(R.stairs,  chunk) end
       if r.kind == "joiner" then table.insert(R.joiners, chunk) end
+    end
+
+    -- if a rule adds multiple stairs, link them so we can use
+    -- the same prefab for them all.
+
+    if #new_stairs >= 2 then
+      local stair_group = { chunks=new_stairs }
+      each chunk in new_stairs do
+        chunk.stair_group = stair_group
+      end
     end
   end
 
