@@ -1605,6 +1605,10 @@ function Room_floor_ceil_heights()
 
 
   local function pick_direct_delta_h(R, from_h)
+    if STYLE.steepness == "none" then
+      return 0
+    end
+
     local h = 8
 
     return usable_delta_h(R, from_h, h)
@@ -1754,21 +1758,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function process_room_flat(R, entry_area)
-    each A in R.areas do
-      if A.mode == "floor" or A.mode == "chunk" then
-        set_floor(A, R.entry_h)
-      end
-    end
-  end
-
-
   local function process_room(R, entry_area)
-    if STYLE.steepness == "none" then
-      process_room_flat(R, entry_area)
-      return
-    end
-
     local start_area = pick_start_area(R)
 
     R.delta_limit_mode = rand.sel(50, "positive", "negative")
