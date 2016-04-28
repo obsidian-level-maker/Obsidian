@@ -139,7 +139,7 @@ GROW_MIR_TEST =  -- REMOVE
 
 GROW_NEWAREA_1 =
 {
-  prob = 25
+  prob = 40
 
   structure =
   {
@@ -151,8 +151,8 @@ GROW_NEWAREA_1 =
 
 GROW_STAIRS_1 =
 {
-  prob = 30
-  prob_skew = 5
+  prob = 20
+  prob_skew = 4
 
   structure =
   {
@@ -165,8 +165,8 @@ GROW_STAIRS_1 =
 
 GROW_STAIRPAIR_1 =
 {
-  prob = 30
-  prob_skew = 5
+  prob = 20
+  prob_skew = 4
 
   structure =
   {
