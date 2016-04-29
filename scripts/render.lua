@@ -1277,7 +1277,7 @@ function Render_chunk(chunk)
 
   local A = chunk.area
 
-  gui.debugf("\n\n Render_chunk in %s (%s / %s)\n", A.room.name, chunk.kind, chunk.content_kind or "-")
+  gui.debugf("\n\n Render_chunk %d in %s (%s / %s)\n", chunk.id, A.room.name, chunk.kind, chunk.content_kind or "-")
 
   AMBIENT_LIGHT = A.lighting
 
@@ -1330,10 +1330,6 @@ function Render_chunk(chunk)
   local function do_joiner()
     assert(chunk.prefab_def)
 
----###  if chunk.flipped then
----###    dir = 10 - dir
----###  end
-
     local C = assert(chunk.conn)
 
     if C.lock and C.lock.kind == "intraroom" then
@@ -1344,12 +1340,15 @@ function Render_chunk(chunk)
   local function do_switch()
     reqs.kind = "switch"
 
-    --??? reqs.switch = "intraroom"
-
     assert(chunk.lock)
 
     skin.lock_tag = assert(chunk.lock.tag)
     skin.action   = 103  -- open door
+
+    -- FIXME BIG HACK for LOWERING PEDESTALS
+    if chunk.lock.item then
+      skin.action = 23
+    end
   end
 
   local function do_item()
@@ -1864,24 +1863,33 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function content_big_item(spot, item)
     local dir = player_face_dir(spot)
 
+    --TODO : area_base_reqs()
+
     local reqs =
     {
       kind  = "item"
       where = "point"
-      size  = assert(spot.space)
+
+      size   = assert(spot.space)
+      height = spot.area.ceil_h - spot.area.floor_h
     }
+
+    local skin = { object=item }
 
     if spot.goal and spot.goal.kind == "KEY" then
       reqs.item_kind = "key"
     end
 
-    local def = Fab_pick(reqs)
+    if spot.lock then
+      reqs.key = "lowering"  -- UGH
+      skin.lock_tag = assert(spot.lock.tag)
+    end
 
-    local skin1 = { object=item }
+    local def = Fab_pick(reqs)
 
     local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
 
-    Fabricate(R, def, T, { skin1 })
+    Fabricate(R, def, T, { skin })
   end
 
 
@@ -1890,7 +1898,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "start"
       where = "point"
+
       size  = assert(spot.space)
+      height = spot.area.ceil_h - spot.area.floor_h
     }
 
     local def = Fab_pick(reqs)
@@ -1945,7 +1955,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "exit"
       where = "point"
+
       size  = assert(spot.space)
+      height = spot.area.ceil_h - spot.area.floor_h
     }
 
     if secret_exit then
@@ -1969,7 +1981,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "switch"
       where = "point"
-      size  = assert(spot.space)
+
+      size   = assert(spot.space)
+      height = spot.area.ceil_h - spot.area.floor_h
 
       --??  switch = spot.goal.item
     }
@@ -2028,7 +2042,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       kind  = "teleporter"
       where = "point"
-      size  = assert(spot.space)
+
+      size   = assert(spot.space)
+      height = spot.area.ceil_h - spot.area.floor_h
     }
 
     local def = Fab_pick(reqs)

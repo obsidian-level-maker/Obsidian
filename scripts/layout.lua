@@ -839,8 +839,10 @@ stderrf("**** DOING LOWERING PED\n")
       tag  = alloc_id("tag")
     }
 
-    spot.lock = LOCK
     item.lock = LOCK
+    spot.lock = LOCK
+
+stderrf("Item is in %s : lock = %s\n", item.name, tostring(item.lock))
   end
 
 
