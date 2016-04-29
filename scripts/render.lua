@@ -2168,11 +2168,11 @@ end
 
 function Render_triggers()
 
-  local function build_trigger(R, trig)
+  local function do_spot_trigger(R, trig)
+    local spot   = assert(trig.spot)
     local action = assert(trig.action)
     local tag    = assert(trig.tag)
 
-    -- FIXME
     local r = spot.trigger.r
 
     local brush = brushlib.quad(spot.mx - r, spot.my - r, spot.mx + r, spot.my + r)
@@ -2185,6 +2185,23 @@ function Render_triggers()
     brushlib.set_kind(brush, "trigger")
 
     Trans.brush(brush)
+  end
+
+
+  local function do_edge_trigger(R, trig)
+  end
+
+
+  local function build_trigger(R, trig)
+    if trig.kind == "spot" then
+      do_spot_trigger(R, trig)
+
+    elseif trig.kind == "edge" then
+      do_edge_trigger(R, trig)
+
+    else
+      error("Unknown trigger kind: " .. tostring(trig.kind))
+    end
   end
 
 

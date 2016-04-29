@@ -93,7 +93,10 @@
 
 --class TRIGGER
 --[[
-    spot   : CHUNK    -- where to place the trigger brush
+    kind : keyword    -- "edge" or "spot"
+
+    edge   : EDGE     -- place trigger near this edge (of a door/joiner/closet)
+    spot   : CHUNK    -- place trigger around this floor chunk (of an item/switch)
 
     action : number   -- the "special" to use
     tag    : number   -- the tag for the trap-doors
