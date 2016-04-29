@@ -2184,8 +2184,8 @@ function Render_triggers()
   local function do_spot_trigger(R, trig)
     local chunk  = assert(trig.spot)
 
-    local w = chunk.sw * 20
-    local h = chunk.sh * 20
+    local w = chunk.sw * 24
+    local h = chunk.sh * 24
 
     local brush = brushlib.quad(chunk.x1 + w, chunk.y1 + h, chunk.x2 - w, chunk.y2 - h)
 

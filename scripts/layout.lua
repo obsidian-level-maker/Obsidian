@@ -807,6 +807,43 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
+  local function try_lock_item(R)
+    -- convert a key (etc) goal into a lowering pedestal with a
+    -- switch to find.
+
+    local item
+
+    each chunk in R.chunks do
+      if chunk.kind == "area" and chunk.content_kind == "KEY" and not chunk.lock then
+        item = chunk
+        break;
+      end
+    end
+
+    if not item then return end
+
+    -- see if we can place a switch
+    local spot = Layout_spot_for_wotsit(R, "SWITCH")
+
+    if spot == nil then return end
+
+    -- OK !!
+
+stderrf("**** DOING LOWERING PED\n") 
+
+    local LOCK =
+    {
+      kind = "itemlock"
+      item = item
+      spot = spot
+      tag  = alloc_id("tag")
+    }
+
+    spot.lock = LOCK
+    item.lock = LOCK
+  end
+
+
   local function try_decoration_in_chunk(chunk)
     if chunk.sw < 2 then return end
     if chunk.sh < 2 then return end
@@ -848,12 +885,13 @@ function Layout_decorate_rooms(KKK_PASS)
 
 
   local function switch_up_room(R)
-    -- locking exits
+    -- locking exits and items
 
     local switch_prob = style_sel("switches", 0, 35, 70, 99)
 
     for loop = 1, 2 do
       if rand.odds(switch_prob) then
+        try_lock_item(R)
         try_intraroom_lock(R)
       end
     end

@@ -118,6 +118,8 @@
     goals : list(GOAL)  -- the goal(s) which solve the lock
 
     conn : CONN         -- connection which is locked
+
+    -- FIXME : "intraroom" and "itemlock" stuff
 --]]
 
 
