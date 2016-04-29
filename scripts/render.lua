@@ -2225,7 +2225,7 @@ function Render_triggers()
       assert(C.x)
 
       -- two sides have the trigger info, other two sides are empty
-      if side_num <= 2 then
+      if side_num >= 3 then
         setup_coord(C, trig)
       end
 
@@ -2243,6 +2243,7 @@ function Render_triggers()
 
     if geom.is_corner(E.dir) then
       do_diagonal_trigger(R, trig)
+      return
     end
 
     local out_dist = trig.out_dist or 64
@@ -2262,7 +2263,7 @@ function Render_triggers()
     -- construct the brush
     local brush = {}
 
-    local side_dir = geom.RIGHT[E.dir]
+    local side_dir = E.dir
 
     for side_num = 1, 4 do
       local C = {}
@@ -2275,7 +2276,7 @@ function Render_triggers()
       assert(C.x)
 
       -- three sides have the trigger info, other one is empty
-      if side_num <= 3 then
+      if side_num >= 2 then
         setup_coord(C, trig)
       end
 
@@ -2297,6 +2298,24 @@ function Render_triggers()
 
     else
       error("Unknown trigger kind: " .. tostring(trig.kind))
+    end
+  end
+
+
+  local function test_triggers()
+    each C in LEVEL.conns do
+      local E = C.E1
+      if C.R1.lev_along > C.R2.lev_along then E = C.E2 end
+      if E then
+        local TRIG =
+        {
+          kind = "edge"
+          edge = E
+          action = 1
+          tag = C.R1.id
+        }
+        build_trigger(R, TRIG)
+      end
     end
   end
 
