@@ -52,6 +52,8 @@
     stairs   : list(CHUNK)
     joiners  : list(CHUNK)
 
+    triggers : list(TRIGGER)  -- used for traps
+
 
     hallway : HALLWAY_INFO   -- for hallways only
 
@@ -86,6 +88,15 @@
                       -- "cage", "trap",
 
     closet : CLOSET_INFO    -- only present for closets
+--]]
+
+
+--class TRIGGER
+--[[
+    spot   : CHUNK    -- where to place the trigger brush
+
+    action : number   -- the "special" to use
+    tag    : number   -- the tag for the trap-doors
 --]]
 
 
@@ -133,6 +144,7 @@ function ROOM_CLASS.new()
     cages = {}
     traps = {}
     decor = {}
+    triggers = {}
 
     used_chunks = 0  -- includes closets
 
@@ -2672,6 +2684,7 @@ function Room_build_all()
 
   -- this does other decorative prefabs too
   Render_importants()
+  Render_triggers()
 
   Room_determine_spots()
 

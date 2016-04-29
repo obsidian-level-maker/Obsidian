@@ -2151,11 +2151,29 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function build_trigger(spot)
-    local r = spot.trigger.r
+  ---| Render_importants |---
 
-    local action = assert(spot.trigger.action)
-    local tag    = assert(spot.trigger.tag)
+  each room in LEVEL.rooms do
+    R = room
+
+    each chunk in R.chunks do
+      if chunk.content_kind then
+        build_important(chunk)
+      end
+    end
+  end
+end
+
+
+
+function Render_triggers()
+
+  local function build_trigger(R, trig)
+    local action = assert(trig.action)
+    local tag    = assert(trig.tag)
+
+    -- FIXME
+    local r = spot.trigger.r
 
     local brush = brushlib.quad(spot.mx - r, spot.my - r, spot.mx + r, spot.my + r)
 
@@ -2170,21 +2188,12 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  ---| Render_importants |---
+  ---| Render_triggers |---
 
-  each room in LEVEL.rooms do
-    R = room
-
-    each chunk in R.chunks do
-      if chunk.content_kind then
-        build_important(chunk)
-      end
+  each R in LEVEL.rooms do
+    each trig in R.triggers do
+      build_trigger(trig)
     end
-
-    -- TODO
-    -- each spot in R.triggers do
-    --   build_trigger(spot)
-    -- end
   end
 end
 
