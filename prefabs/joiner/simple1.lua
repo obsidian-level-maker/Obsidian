@@ -13,6 +13,7 @@ PREFABS.Joiner_simple1 =
   x_fit = "frame"
   y_fit = "stretch"
 
-  prob = 100
+  theme = "tech"
+  prob  = 100
 }
 
