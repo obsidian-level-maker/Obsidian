@@ -2168,34 +2168,84 @@ end
 
 function Render_triggers()
 
-  local function do_spot_trigger(R, trig)
-    local chunk  = assert(trig.spot)
-    local action = assert(trig.action)
-    local tag    = assert(trig.tag)
+  local function setup_coord(C, trig)
+    C.special = assert(trig.action)
+    C.tag     = assert(trig.tag)
+  end
 
-    local w = chunk.sw * 20
-    local h = chunk.sh * 20
 
-    local brush = brushlib.quad(chunk.x1 + w, chunk.y1 + h, chunk.x2 - w, chunk.y2 - h)
-
-    local action = assert(trig.action)
-    local tag    = assert(trig.tag)
-
-    each C in brush do
-      C.special = action
-      C.tag     = tag
-    end
-
+  local function apply_brush(brush, trig)
     brushlib.set_kind(brush, "trigger")
 
     Trans.brush(brush)
   end
 
 
-  local function do_edge_trigger(R, trig)
-    local edge = assert(trig.edge)
+  local function do_spot_trigger(R, trig)
+    local chunk  = assert(trig.spot)
 
-    -- TODO
+    local w = chunk.sw * 20
+    local h = chunk.sh * 20
+
+    local brush = brushlib.quad(chunk.x1 + w, chunk.y1 + h, chunk.x2 - w, chunk.y2 - h)
+
+    each C in brush do
+      setup_coord(C, trig)
+    end
+
+    apply_brush(brush, trig)
+  end
+
+
+  local function do_diagonal_trigger(R, trig)
+    local E = assert(trig.edge)
+
+    -- FIXME : handle long diagonal edges
+
+    local x1, y1 = E.S.x1, E.S.y1
+    local x2, y2 = E.S.x2, E.S.y2
+
+    -- offset from the sides, in case another trigger would overlap us
+    x1 = x1 + 16 ; y1 = y1 + 16
+    x2 = x2 - 16 ; y2 = y2 - 16
+
+    local brush = {}
+
+    local side_dir = geom.RIGHT_45[E.dir]
+
+    for side_num = 1, 4 do
+      local C = {}
+
+      if side_dir == 2 then C.x = x1 ; C.y = y1 end
+      if side_dir == 4 then C.x = x1 ; C.y = y2 end
+      if side_dir == 6 then C.x = x2 ; C.y = y1 end
+      if side_dir == 8 then C.x = x2 ; C.y = y2 end
+
+      assert(C.x)
+
+      -- two sides have the trigger info, other two sides are empty
+      if side_num <= 2 then
+        setup_coord(C, trig)
+      end
+
+      table.insert(brush, C)
+
+      side_dir = geom.LEFT[side_dir]
+    end
+
+    apply_brush(brush, trig)
+  end
+
+
+  local function do_edge_trigger(R, trig)
+    local E = assert(trig.edge)
+
+    if geom.is_corner(E.dir) then
+      do_diagonal_trigger(R, trig)
+    end
+
+    local out_dist = trig.out_dist or 64
+
   end
 
 

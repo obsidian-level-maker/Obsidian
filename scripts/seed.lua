@@ -87,6 +87,10 @@
     -- Edges are one-sided.  For connections there will be two edges
     -- back-to-back which refer to each other via the 'peer' field.
     --
+    -- For long edges, the seed in 'S' here is the left-most one
+    -- (relative to the 'dir' value).  So when dir == 8 then 'S' has
+    -- the lowest sx coord, and when dir == 4 it has lowest sy coord.
+    --
 
     kind : keyword  -- "nothing"
                     -- "arch", "door", "lock_door"
