@@ -2174,7 +2174,7 @@ function Render_triggers()
   end
 
 
-  local function apply_brush(brush, trig)
+  local function handle_brush(brush, trig)
     brushlib.set_kind(brush, "trigger")
 
     Trans.brush(brush)
@@ -2193,7 +2193,7 @@ function Render_triggers()
       setup_coord(C, trig)
     end
 
-    apply_brush(brush, trig)
+    handle_brush(brush, trig)
   end
 
 
@@ -2209,6 +2209,7 @@ function Render_triggers()
     x1 = x1 + 16 ; y1 = y1 + 16
     x2 = x2 - 16 ; y2 = y2 - 16
 
+    -- construct the brush
     local brush = {}
 
     local side_dir = geom.RIGHT_45[E.dir]
@@ -2233,7 +2234,7 @@ function Render_triggers()
       side_dir = geom.LEFT[side_dir]
     end
 
-    apply_brush(brush, trig)
+    handle_brush(brush, trig)
   end
 
 
@@ -2246,6 +2247,44 @@ function Render_triggers()
 
     local out_dist = trig.out_dist or 64
 
+    -- compute the bounding box of the trigger
+    local x1, y1 = E.S.x1, E.S.y1
+    local x2, y2 = E.S.x2, E.S.y2
+
+    local l_add = (E.long - 1) * SEED_SIZE - 16
+
+    if E.dir == 8 then x1 = x1 + 16 ; x2 = x2 + l_add ; y1 = y2 - out_dist end
+    if E.dir == 4 then y1 = y1 + 16 ; y2 = y2 + l_add ; x2 = x1 + out_dist end
+
+    if E.dir == 2 then x1 = x1 - l_add ; x2 = x2 - 16 ; y2 = y1 + out_dist end
+    if E.dir == 6 then y1 = y1 - l_add ; y2 = y2 - 16 ; x1 = x2 - out_dist end
+
+    -- construct the brush
+    local brush = {}
+
+    local side_dir = geom.RIGHT[E.dir]
+
+    for side_num = 1, 4 do
+      local C = {}
+
+      if side_dir == 2 then C.x = x1 ; C.y = y1 end
+      if side_dir == 4 then C.x = x1 ; C.y = y2 end
+      if side_dir == 6 then C.x = x2 ; C.y = y1 end
+      if side_dir == 8 then C.x = x2 ; C.y = y2 end
+
+      assert(C.x)
+
+      -- three sides have the trigger info, other one is empty
+      if side_num <= 3 then
+        setup_coord(C, trig)
+      end
+
+      table.insert(brush, C)
+
+      side_dir = geom.LEFT[side_dir]
+    end
+
+    handle_brush(brush, trig)
   end
 
 
