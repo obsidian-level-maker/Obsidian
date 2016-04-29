@@ -2169,13 +2169,17 @@ end
 function Render_triggers()
 
   local function do_spot_trigger(R, trig)
-    local spot   = assert(trig.spot)
+    local chunk  = assert(trig.spot)
     local action = assert(trig.action)
     local tag    = assert(trig.tag)
 
-    local r = spot.trigger.r
+    local w = chunk.sw * 20
+    local h = chunk.sh * 20
 
-    local brush = brushlib.quad(spot.mx - r, spot.my - r, spot.mx + r, spot.my + r)
+    local brush = brushlib.quad(chunk.x1 + w, chunk.y1 + h, chunk.x2 - w, chunk.y2 - h)
+
+    local action = assert(trig.action)
+    local tag    = assert(trig.tag)
 
     each C in brush do
       C.special = action
@@ -2189,6 +2193,9 @@ function Render_triggers()
 
 
   local function do_edge_trigger(R, trig)
+    local edge = assert(trig.edge)
+
+    -- TODO
   end
 
 
