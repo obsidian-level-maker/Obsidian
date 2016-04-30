@@ -381,6 +381,44 @@ SPROUT_HALL_1 =
 ------------------------------------------
 
 
+-- this one is experimental crud
+DECORATE_SMOOTHER =
+{
+  prob = 0
+
+  structure =
+  {
+    ".", "."
+  }
+
+  auxiliary =
+  {
+    pass = "smoothing"
+
+    count = 20
+  }
+}
+
+AUX_SMOOTHER_1 =
+{
+  pass = "smoothing"
+
+  prob = 50
+
+  structure =
+  {
+    "xxx", "xxx"
+    "1..", "1%."
+    "11x", "11x"
+  }
+
+  diagonals =
+  {
+    "1."
+  }
+}
+
+
 DECORATE_CAGE_1 =
 {
   prob = 10
