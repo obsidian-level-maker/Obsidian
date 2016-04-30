@@ -2,11 +2,11 @@
 -- Simple trap
 --
 
-PREFABS.Trap_1 =
+PREFABS.Trap_simple1 =
 {
   file   = "trap/trap1.wad"
   where  = "seeds"
---shape  = "F"
+  shape  = "U"
 
   seed_w = 1
   seed_h = 1
@@ -19,6 +19,6 @@ PREFABS.Trap_1 =
 
   is_trap = true
 
-  tag_1 = "?tag"
+  tag_1 = "?trap_tag"
 }
 

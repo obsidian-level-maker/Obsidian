@@ -1301,9 +1301,12 @@ function Render_chunk(chunk)
   end
 
   local function do_trap()
-    reqs.kind = "trap"
+    reqs.kind  = "trap"
+    reqs.shape = "U"
 
-    -- FIXME : tag for trap door!!
+    assert(chunk.trigger)
+
+    skin.trap_tag = assert(chunk.trigger.tag)
   end
 
   local function do_teleporter()
@@ -2198,12 +2201,19 @@ function Render_triggers()
 
 
   local function do_spot_trigger(R, trig)
-    local chunk  = assert(trig.spot)
+    local chunk = assert(trig.spot)
+    local brush
 
-    local w = chunk.sw * 24
-    local h = chunk.sh * 24
+    if chunk.trig_radius then
+      local r = chunk.trig_radius
 
-    local brush = brushlib.quad(chunk.x1 + w, chunk.y1 + h, chunk.x2 - w, chunk.y2 - h)
+      brush = brushlib.quad(chunk.mx - r, chunk.my - r, chunk.mx + r, chunk.my + r)
+    else
+      local w = chunk.sw * 24
+      local h = chunk.sh * 24
+
+      brush = brushlib.quad(chunk.x1 + w, chunk.y1 + h, chunk.x2 - w, chunk.y2 - h)
+    end
 
     each C in brush do
       setup_coord(C, trig)
@@ -2340,7 +2350,7 @@ function Render_triggers()
 
   each R in LEVEL.rooms do
     each trig in R.triggers do
-      build_trigger(trig)
+      build_trigger(R, trig)
     end
   end
 end

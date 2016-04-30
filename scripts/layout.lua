@@ -568,54 +568,10 @@ end
 
 function Layout_add_traps()
   --
-  -- Add traps into rooms, especially monster closets.
+  -- Add traps to rooms, especially monster closets.
   --
 
-
-  local function make_trap(A)
-    chunk.content_kind = "TRAP"
-  end
-
-
-  local function make_trap_OLD(A, parent_A, spot)
-    gui.debugf("Making big trap in %s\n", A.name)
-
-    A.mode = "trap"
-    A.is_boundary = false
-
-    A.floor_h   = parent_A.floor_h
-    A.face_room = parent_A.room
-
-    A.kind  = parent_A.kind
-    A.zone  = parent_A.zone
-
-    -- if facing room is outdoor, make trap have a ceiling
-    -- (better than walls going all the way up to the sky)
-    if parent_A.is_outdoor then
-      A.is_outdoor = nil
-    end
-
-    -- make monsters in trap look at spot
-    A.mon_focus = spot
-
-    if not spot.trigger then
-      local TRIGGER =
-      {
-        r = 64
-        action = 2
-        tag = alloc_id("tag")
-      }
-
-      -- the trigger brush is done by Render_importants()
-      spot.trigger = TRIGGER
-    end
-
-    -- trap wall is created in Room_border_up...
-    A.trap_trigger = spot.trigger
-  end
-
-
-  local function try_trapify_important(spot, areas)
+  local function OLD__try_trapify_important(spot, areas)
     if not
        (spot.content_kind == "KEY"    or spot.content_kind == "SWITCH" or
         spot.content_kind == "WEAPON" or spot.content_kind == "ITEM")
@@ -669,7 +625,7 @@ function Layout_add_traps()
   end
 
 
-  local function add_traps()
+  local function OLD__add_traps()
     local make_prob = style_sel("traps", 0, 20, 40, 75)
    
     if make_prob == 0 then
@@ -691,10 +647,119 @@ function Layout_add_traps()
   end
 
 
+  ------------------------------------------>>>>>
+
+
+  local function make_trap(closet, trig)
+    closet.content_kind = "TRAP"
+    closet.trigger = trig
+
+    if closet.peer and not closet.peer.content_kind then
+      closet = closet.peer
+
+      closet.content_kind = "TRAP"
+      closet.trigger = trig
+    end
+  end
+
+
+  local function trigger_for_entry(R)
+    local C = R.entry_conn
+    
+    if not C then return nil end
+
+    if C.kind == "teleporter" then
+      -- TODO : find teleporter chunk
+      return nil
+    end
+
+    -- split conn?  [ TODO : return a list of TRIGs ]
+    if C.F1 then return nil end
+
+    local E = C.E1
+    if C.R2 == R then E = C.E2 end
+
+    if not E then return nil end
+
+    local TRIG =
+    {
+      kind = "edge"
+      edge = E
+    }
+
+    table.insert(R.triggers, TRIG)
+
+    return TRIG
+  end
+
+
+  local function trigger_for_goal(R, goal)
+    local chunk = goal.kk_spot
+    local TRIG
+
+    if not chunk then return nil end
+
+    if chunk.kind == "closet" then
+      if not chunk.edges then return nil end
+
+      -- TODO : handle multiple edges [ return a list ]
+
+      TRIG =
+      {
+        kind = "edge"
+        edge = chunk.edges[1]
+      }
+    else
+      TRIG =
+      {
+        kind = "spot"
+        spot = chunk
+      }
+    end
+
+    table.insert(R.triggers, TRIG)
+
+    return TRIG
+  end
+
+
+  local function trap_up_room(R)
+    if R.is_start then return end
+
+    -- collect free closets
+    local locs = {}
+
+    each chunk in R.closets do
+      if not chunk.content_kind and not Chunk_is_slave(chunk) then
+        table.insert(locs, chunk)
+      end
+    end
+
+    if table.empty(locs) then return end
+
+    -- TODO odds of making traps...
+
+    if R.goals[1] then
+      local trig = trigger_for_goal(R, R.goals[1])
+
+      if trig then
+stderrf("Trapped up %s\n", R.name)
+        trig.action = 109  -- W1 : open and stay /fast
+        trig.tag = alloc_id("tag")
+
+        each chunk in locs do
+          make_trap(chunk, trig)
+        end
+      end
+    end
+  end
+
 
   ---| Layout_add_traps |---
 
-  -- TODO
+  each R in LEVEL.rooms do
+    trap_up_room(R)
+  end
 end
 
 

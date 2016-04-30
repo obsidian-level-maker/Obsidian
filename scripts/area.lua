@@ -1355,6 +1355,7 @@ function Area_closet_edges()
       local E = Seed_create_chunk_edge(chunk, chunk.from_dir, "nothing")
 
       E.to_chunk = chunk
+      chunk.edges = { E }
     end
   end
 
