@@ -740,6 +740,14 @@ function Layout_add_traps()
     -- TODO odds of making traps...
 
     if R.goals[1] then
+      local goal = R.goals[1]
+
+      -- do not trap the exit switch, as player may exit too soon and
+      -- not notice the released monsters
+      if goal.kind == "EXIT" or goal.kind == "SECRET_EXIT" then
+        return
+      end
+
       local trig = trigger_for_goal(R, R.goals[1])
 
       if trig then
