@@ -945,7 +945,7 @@ stderrf("Item is in %s : lock = %s\n", item.name, tostring(item.lock))
     chunk.prefab_def = def
     chunk.prefab_dir = rand.dir()
 
-    if chunk.peer then
+    if chunk.peer and not chunk.peer.content_kind then
       assert(A.room.symmetry)
       local peer = chunk.peer
 
