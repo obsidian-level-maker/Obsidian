@@ -14,6 +14,7 @@ PREFABS.Wall_plain =
   bound_z1 = 0
   bound_z2 = 2
 
+  x_fit  = "stretch"
   z_fit  = "stretch"
 }
 

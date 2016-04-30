@@ -2667,8 +2667,6 @@ function Room_build_all()
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
 
-  Area_closet_edges()
-
   Layout_liquid_stuff()
   Layout_create_scenic_borders()
 

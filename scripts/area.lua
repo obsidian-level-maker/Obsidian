@@ -1351,12 +1351,12 @@ end
 function Area_closet_edges()
 
   local function visit_closet(chunk, R)
-    if chunk.content_kind != "void" then
-      local E = Seed_create_chunk_edge(chunk, chunk.from_dir, "nothing")
+    -- TODO : different shapes (L/T/P) need more edges
 
-      E.to_chunk = chunk
-      chunk.edges = { E }
-    end
+    local E = Seed_create_chunk_edge(chunk, chunk.from_dir, "nothing")
+
+    E.to_chunk = chunk
+    chunk.edges = { E }
   end
 
   ---| Area_closet_edges |---
@@ -1776,6 +1776,7 @@ function Area_create_rooms()
     Corner_init()
 
   Area_find_inner_points()
+  Area_closet_edges()
 
 
   gui.printf("Seed Map:\n")

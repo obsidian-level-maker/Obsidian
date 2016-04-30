@@ -828,6 +828,11 @@ function Layout_decorate_rooms(KKK_PASS)
   local function kill_closet(chunk)
     chunk.area.mode = "void"
     chunk.content_kind = "void"
+
+    each E in chunk.edges do
+      E.kind = "wall"
+      E.wall_mat = Junction_calc_wall_tex(E.area, chunk.area)
+    end
   end
 
 
