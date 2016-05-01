@@ -1276,8 +1276,9 @@ function Room_determine_spots()
     -- remove walls and blockers (using nearby brushes)
     gui.spots_apply_brushes()
 
-    -- add the spots to the room
+--- gui.spots_dump("Spot dump in " .. R.name .. "/" .. A.mode)
 
+    -- add the spots to the room
     local item_spots = {}
     local  mon_spots = {}
 
@@ -2415,8 +2416,20 @@ function Room_floor_ceil_heights()
 
   local function do_ceilings(R)
     each A in R.areas do
+      -- outdoor heights are done later, get a dummy now
+      if A.is_outdoor then
+        A.ceil_h = A.floor_h + R.zone.sky_add_h - 8
+        continue
+      end
+
       if A.peer and A.peer.ceil_h then
         A.ceil_h = A.peer.ceil_h
+        continue
+      end
+
+      if A.mode == "cage" then
+        -- FIXME : check neighbors
+        A.ceil_h = A.floor_h + 80
         continue
       end
 
@@ -2430,7 +2443,7 @@ if not A.floor_h then
 gui.debugf("do_ceilings : no floor_h in %s %s in %s\n", A.name, A.mode, A.room.name)
 end
 
-      set_ceil(A, A.floor_h + height)
+      set_ceil(A, R.max_floor_h + 128)
     end
 
     -- ensure enough vertical room for player to travel between areas
@@ -2661,8 +2674,8 @@ function Room_build_all()
   Room_reckon_door_tex()
   Room_reckon_doors()
 
-  Room_floor_ceil_heights()
   Room_prepare_skies()
+  Room_floor_ceil_heights()
 
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
