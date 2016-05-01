@@ -185,6 +185,7 @@ function DOOM.all_done()
   local dir = "games/doom/data/"
 
   gui.wad_merge_sections(dir .. "doom_falls.wad")
+  gui.wad_merge_sections(dir .. "lift_flat.wad")
   gui.wad_merge_sections(dir .. "metal_step.wad")
   gui.wad_merge_sections(dir .. "vine_dude.wad")
   gui.wad_merge_sections(dir .. "logos.wad")
