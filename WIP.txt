@@ -3,6 +3,20 @@ WORK IN PROGRESS
 ================
 
 
+Things that could use adjustment/changes:
+
+-Wall cages I hope don't always use SHAWN2 as an interior. Hopefully the
+ inside matches the themes (METAL/SUPPORT3 for hell/flesh, SHAWN2/SUPPORT3 for
+ deimos, etc) as I'd think seeing high tech silver in a pure Hell level would
+ look a bit silly.
+
+-Liquids on the edges bordering stairs/elevation reduction seen in some screenshots I took. Reminds me of V2's handling of the liquid edges. Perhaps add a tiny lip so it's not "spilling" down?
+
+
+?  multiple ways into a room
+
+
+
 CEILINGS:
 
 -  better logic for heights
@@ -25,6 +39,7 @@ TRAPS:
 +  number of traps depends heavily on ROOM.pressure
 
 -  number of traps affected by LEV.game_along
+   [ e.g. double at end of wad than start ]
 
 +  get teleport traps working again
    do monster depots differently, make "shared" sector based on
@@ -33,6 +48,9 @@ TRAPS:
 
 
 NEW LIGHTING:
+
+-  outdoor closets/joiners should NOT have AMBIENT = sky_light
+   [ unless they are "open top" -- but not handled yet ]
 
 +  compute better "AREA.lighting" values
    +  use logic like for "pressure" to make some dark rooms
@@ -54,6 +72,12 @@ SINKS:
 
 +  get them working again
 
+-  treat areas with same 'floor_group'/'ceil_group' as same when
+   deciding sink boundaries
+
+-  floor sinks inhibit floor-decorations (similar for ceiling sinks)
+
+?  don't make sink if floor_group contains a chunk used for a key/switch
 
 
 

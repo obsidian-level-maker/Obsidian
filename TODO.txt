@@ -136,6 +136,8 @@ IDEA : an adjustment (of health) for "environment" of a battle
 SHAPE GRAMMARS
 --------------
 
+-  flags to make a new area as "no grow" and/or "no sprout"
+
 +  allow TWO stairs into a new area
 
 +  '9', '8', '7' matches anything but "1", "2", "3"
