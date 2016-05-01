@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2010,2014 Andrew Apted
+//  Copyright (C) 2010,2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -265,6 +265,27 @@ static void remove_dud_cells()
 }
 
 
+static bool test_mon_area(int x1, int y1, int x2, int y2, int want)
+{
+	if (x1 < 0 or x2 >= grid_W or y1 < 0 or y2 >= grid_H)
+		return false;
+
+	for (int x = x1 ; x <= x2 ; x++)
+	for (int y = y1 ; y <= y2 ; y++)
+	{
+		byte content = spot_grid[x][y];
+
+		if (content & (HAS_MON | IS_DUD))
+			return false;
+
+		if ((content & 3) > want)
+			return false;
+	}
+
+	return true;
+}
+
+
 static int biggest_gap(int *y1, int *y2, int want)
 {
 	// Note: this also duds any single square spots, which will never
@@ -279,14 +300,14 @@ static int biggest_gap(int *y1, int *y2, int want)
 
 		while (y < grid_H-1)
 		{
-			if (spot_grid[x][y])
+			if (! test_mon_area(x, y, x, y, want))
 			{
 				y++; continue;
 			}
 
 			int ey = y;
 
-			while (ey < grid_H-1 && ! spot_grid[x][ey+1])
+			while (ey < grid_H-1 && test_mon_area(x, ey+1, x, ey+1, want))
 				ey++;
 
 			int num = ey - y + 1;
@@ -310,27 +331,6 @@ static int biggest_gap(int *y1, int *y2, int want)
 	}
 
 	return best_x;
-}
-
-
-static bool test_mon_area(int x1, int y1, int x2, int y2, int want)
-{
-	if (x1 < 0 or x2 >= grid_W or y1 < 0 or y2 >= grid_H)
-		return false;
-
-	for (int x = x1 ; x <= x2 ; x++)
-	for (int y = y1 ; y <= y2 ; y++)
-	{
-		byte content = spot_grid[x][y];
-
-		if (content & (HAS_MON | IS_DUD))
-			return false;
-
-		if ((content & 3) > want)
-			return false;
-	}
-
-	return true;
 }
 
 
