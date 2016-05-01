@@ -1032,7 +1032,7 @@ stderrf("Item is in %s : lock = %s\n", item.name, tostring(item.lock))
 
     local per_prob = style_sel("cages", 0, 15, 30, 60)
 
-    per_prob = per_prob * (1 - cage_vol * 2)
+    per_prob = per_prob * (1 - cage_vol * 4)
     per_prob = per_prob * rand.pick({ 0.7, 0.9, 1.1, 1.4 })
 
     per_prob = math.clamp(1, per_prob, 99)
