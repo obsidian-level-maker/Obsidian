@@ -2,42 +2,44 @@
 -- Wall with vertical gap
 --
 
-UNFINISHED.Wall_vertgap =
+PREFABS.Wall_vertgap =
 {
   file   = "wall/vert_gap.wad"
   map    = "MAP01"
   where  = "edge"
 
-  env    = "outdoor"
+--env    = "outdoor"
 
   deep   = 16
-  height = 64
+--height = 64
 
   bound_z1 = 0
-  bound_z2 = 4
+  bound_z2 = 24
 
-  z_fit  = "stretch"
+  z_fit  = "top"
 
+  prob = 0
   rank = 4
 }
 
 
-UNFINISHED.Wall_vertgap_diag =
+PREFABS.Wall_vertgap_diag =
 {
   file   = "wall/vert_gap.wad"
   map    = "MAP02"
   where  = "diagonal"
 
-  env    = "outdoor"
+--env    = "outdoor"
 
   deep   = 16
-  height = 64
+--height = 64
 
   bound_z1 = 0
-  bound_z2 = 4
+  bound_z2 = 24
 
-  z_fit  = "stretch"
+  z_fit  = "top"
 
+  prob = 0
   rank = 4
 }
 
