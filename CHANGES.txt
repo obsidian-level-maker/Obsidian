@@ -2,3 +2,15 @@
 CHANGELOG
 =========
 
+Major stuff:
+
++  new "Shape Grammar" level generation system
+
++  support for Add-on packages
+
++  title-pic generator
+
++  better planning for Boss monsters
+
++  localization support
+
