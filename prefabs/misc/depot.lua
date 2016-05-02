@@ -11,6 +11,8 @@ PREFABS.Depot_raise =
   seed_w = 3
   seed_h = 6
 
+  is_trap = true
+
   tag_9 = "?trap_tag"
 
   tag_1 = "?out_tag1"
@@ -21,17 +23,8 @@ PREFABS.Depot_raise =
 
 PREFABS.Depot_lower =
 {
-  file  = "misc/depot.wad"
-  map   = "MAP02"
-  where = "seeds"
+  template = "Depot_raise"
 
-  seed_w = 3
-  seed_h = 6
-
-  tag_9 = "?trap_tag"
-
-  tag_1 = "?out_tag1"
-  tag_2 = "?out_tag2"
-  tag_3 = "?out_tag3"
+  map = "MAP02"
 }
 
