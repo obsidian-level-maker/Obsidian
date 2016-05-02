@@ -1597,7 +1597,7 @@ function Render_depot(depot)
   local x1 = depot.x1
   local y1 = depot.y1
 
-  local z = assert(LEVEL.player1_z)
+  local z = 0
 
 
   local def = PREFABS["Depot"]
