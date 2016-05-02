@@ -1121,6 +1121,14 @@ function Render_floor(A, S)
 
   brushlib.set_mat(f_brush, f_side, f_mat)
 
+
+  -- sound blocking for border areas
+  if A.is_boundary and A.mode != "liquid" then
+    local top_C = f_brush[#f_brush]
+    top_C.sound_area = 70000 + A.id
+  end
+
+
   Trans.brush(f_brush)
 
   -- remember floor brush for the spot logic
