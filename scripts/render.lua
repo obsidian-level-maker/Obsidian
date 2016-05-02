@@ -2075,22 +2075,22 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function content_mon_teleport(spot)
+  local function content_mon_teleport(chunk)
     -- creates a small sector with a tag and teleportman entity
 
-    -- ignore unused spots [ can validly happen ]
-    if not spot.tag then return end
+    local mx = chunk.mx
+    local my = chunk.my
 
     local r = 16
 
-    local brush = brushlib.quad(spot.mx - r, spot.my - r, spot.mx + r, spot.my + r)
+    local brush = brushlib.quad(mx - r, my - r, mx + r, my + r)
 
     -- mark as "no draw"
     each C in brush do
       C.draw_never = 1
     end
 
-    local A = assert(spot.area)
+    local A = assert(chunk.area)
 
     -- make it higher to ensure it doesn't get eaten by the floor brush
     -- (use delta_z to lower to real height)
@@ -2099,7 +2099,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     {
       t = A.floor_h + 1
       delta_z = -1
-      tag = assert(spot.tag)
+      tag = assert(chunk.out_tag)
     }
 
     table.insert(brush, top)
@@ -2109,7 +2109,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     Trans.brush(brush)
 
     -- add teleport entity
-    Trans.entity("teleport_spot", spot.mx, spot.my, top.t + 1)
+    Trans.entity("teleport_spot", mx, my, top.t + 1)
   end
 
 

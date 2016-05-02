@@ -656,7 +656,7 @@ function Layout_add_traps()
 
 
   local function make_teleport_trap(chunk, trig)
-    chunk.content_kind = "TELEPORT_MON"
+    chunk.content_kind = "MON_TELEPORT"
     chunk.trigger = trig
     chunk.out_tag = alloc_id("tag")
   end
