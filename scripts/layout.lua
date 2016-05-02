@@ -723,8 +723,38 @@ function Layout_add_traps()
   end
 
 
+  local function install_a_trap(R, locs, trig)
+    -- trig can be NIL
+    if not trig then return end
+
+    trig.action = 109  -- W1 : open and stay /fast
+    trig.tag = alloc_id("tag")
+
+    -- TODO : often pick closets near the goal [ideally facing it]
+    rand.shuffle(locs)
+
+    local qty = rand.index_by_probs({ 40,40,20,5 })
+
+    if STYLE.traps == "few"   then int((qty + 1) / 2) end
+    if STYLE.traps == "more"  then qty = qty + 1 end
+    if STYLE.traps == "heaps" then qty = qty + 2 end
+
+    for i = 1, qty do
+      if table.empty(locs) then return end
+
+      local chunk = table.remove(locs, 1)
+
+      make_trap(chunk, trig)
+    end
+  end
+
+
   local function trap_up_room(R)
     if R.is_start then return end
+
+    -- skip some rooms
+    local use_prob = style_sel("traps", 0, 20, 50, 90)
+    if not rand.odds(use_prob) then return end
 
     -- collect free closets
     local locs = {}
@@ -737,33 +767,29 @@ function Layout_add_traps()
 
     if table.empty(locs) then return end
 
-    -- TODO odds of making traps...
-
-    if R.goals[1] then
-      local goal = R.goals[1]
+    if #R.goals > 0 then
+      local goal = rand.pick(R.goals)
 
       -- do not trap the exit switch, as player may exit too soon and
       -- not notice the released monsters
-      if goal.kind == "EXIT" or goal.kind == "SECRET_EXIT" then
-        return
+      if goal.kind != "EXIT" and goal.kind != "SECRET_EXIT" then
+        install_a_trap(R, locs, trigger_for_goal(R, goal))
       end
+    end
 
-      local trig = trigger_for_goal(R, R.goals[1])
+    if #R.weapons > 0 and rand.odds(50) then
+---      local item = rand.pick(R.weapons)
+    end
 
-      if trig then
-stderrf("Trapped up %s\n", R.name)
-        trig.action = 109  -- W1 : open and stay /fast
-        trig.tag = alloc_id("tag")
-
-        each chunk in locs do
-          make_trap(chunk, trig)
-        end
-      end
+    if #R.items > 0 and rand.odds(50) then
+---      local item = rand.pick(R.weapons)
     end
   end
 
 
   ---| Layout_add_traps |---
+
+  if STYLE.traps == "none" then return end
 
   each R in LEVEL.rooms do
     trap_up_room(R)
