@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1744,8 +1744,7 @@ static void MarkGapsWithEntities()
 			// ignore lights and boxes
 			if (E->Match("light") ||
 			    E->Match("oblige_sun") ||
-				E->Match("oblige_box") ||
-				E->Match("oblige_secret"))
+				E->Match("oblige_box"))
 				continue;
 
 			// ignore map models

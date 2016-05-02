@@ -2763,8 +2763,7 @@ static void DM_ProcessLightFX()
 
 static doom_sector_c * DM_FindDepotPeer()
 {
-	// this is very hacky -- we find the sector containing 'player1' entity.
-	// [ TODO: have a special entity kind, associate it with depot ]
+	// find the sector containing the "oblige_depot" entity
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -2779,14 +2778,12 @@ static doom_sector_c * DM_FindDepotPeer()
 		{
 			csg_entity_c *E = R->entities[k];
 
-			int type = atoi(E->id.c_str());
-
-			if (type == 1)
+			if (strcmp(E->id.c_str(), "oblige_depot") == 0)
 				return S;
 		}
 	}
 
-	LogPrintf("WARNING: cannot find sector peer for monster depot.\n");
+	LogPrintf("WARNING: cannot find peer for monster depot.\n");
 	return NULL;
 }
 
@@ -2960,8 +2957,7 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
 	// ignore light entities and boxes
 	if (strcmp(E->id.c_str(), "light") == 0 ||
-		strcmp(E->id.c_str(), "oblige_secret") == 0 ||
-		strcmp(E->id.c_str(), "oblige_box") == 0)
+		strncmp(E->id.c_str(), "oblige_", 7) == 0)
 		return;
 
 	int type = atoi(E->id.c_str());
