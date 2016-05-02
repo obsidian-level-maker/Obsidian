@@ -837,9 +837,11 @@ function Layout_decorate_rooms(KKK_PASS)
     chunk.area.mode = "void"
     chunk.content_kind = "void"
 
+    -- TODO : sometimes make a picture
+
     each E in chunk.edges do
-      E.kind = "wall"
-      E.wall_mat = Junction_calc_wall_tex(E.area, chunk.area)
+      E.kind = "ignore"
+--##  E.wall_mat = Junction_calc_wall_tex(E.area, chunk.area)
     end
   end
 

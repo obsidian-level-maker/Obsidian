@@ -1154,6 +1154,15 @@ function Room_border_up()
     end
 
 
+    -- closets --
+
+    if (A1.mode == "chunk" and A1.chunk.place == "whole") or
+       (A2.mode == "chunk" and A2.chunk.place == "whole")
+    then
+      Junction_make_wall(junc)
+      return
+    end
+
     -- scenic to scenic --
 
     if A2.room and not A1.room then

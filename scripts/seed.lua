@@ -92,7 +92,8 @@
     -- the lowest sx coord, and when dir == 4 it has lowest sy coord.
     --
 
-    kind : keyword  -- "nothing"
+    kind : keyword  -- "nothing" (keep it empty)
+                    -- "ignore" (use the junction instead)
                     -- "arch", "door", "lock_door"
                     -- "wall", "fence", "window"
                     -- "steps", "trap_wall", "sky_edge"

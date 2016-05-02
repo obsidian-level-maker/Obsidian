@@ -89,7 +89,7 @@ function Render_edge(E)
     Corner_mark_walls(E)
   end
 
-  if E.kind == "nothing" then
+  if E.kind == "nothing" or E.kind == "ignore" then
     return
   end
 
@@ -634,7 +634,7 @@ function Render_junction(A, S, dir)
   if A.chunk and A.chunk.place == "whole" then return end
 
   -- proper EDGE objects are handled elsewhere
-  if S.edge[dir] then return end
+  if S.edge[dir] and S.edge[dir].kind != "ignore" then return end
 
 
   local N = S:neighbor(dir, "NODIR")
