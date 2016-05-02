@@ -138,9 +138,9 @@ DOOM.ENTITIES =
   brain_shooter = { id=89, r=20, h=32 }
   brain_target  = { id=87, r=20, h=32, pass=true }
 
-  light = { id="light", r=1, h=1, pass=true }
-
+  light  = { id="light", r=1, h=1, pass=true }
   secret = { id="oblige_secret", r=1, h=1, pass=true }
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true }
 }
 
 

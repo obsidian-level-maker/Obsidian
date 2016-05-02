@@ -1484,6 +1484,13 @@ function Monster_fill_room(R)
     end
 
     place_monster(mon, spot, x, y, z, all_skills)
+
+    -- the sector containing the first monster becomes the "depot peer"
+    -- [ used to wake up the depot monsters via sound propagation ]
+    if not LEVEL.has_depot_thing and GAME.ENTITIES["depot_ref"] then
+      Trans.entity("depot_ref", x, y, z + 1)
+      LEVEL.has_depot_thing = true
+    end
   end
 
 
