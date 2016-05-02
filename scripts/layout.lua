@@ -1353,6 +1353,29 @@ function Layout_liquid_stuff()
   end
 
 
+  local function make_fence_near_stair(junc, A, N)
+    local top_z = math.max(N.stair_top_h, A.floor_h + 8)
+
+    local high_A = N.chunk.from_area
+    if N.chunk.dest_area.floor_h > high_A.floor_h then
+      high_A = N.chunk.dest_area
+    end
+
+    junc.E1 =
+    {
+      kind = "fence"
+      fence_mat = assert(high_A.floor_mat)
+      fence_top_z = top_z
+      area = junc.A1
+    }
+
+    junc.E2 = { kind="nothing" }
+
+    junc.E1.peer = junc.E2
+    junc.E2.peer = junc.E1
+  end
+
+
   local function do_pool_junction(junc)
     local A = junc.A1
     local N = junc.A2
@@ -1386,6 +1409,12 @@ function Layout_liquid_stuff()
     if N.mode == "void" then return end
 
     if A.face_room == N.room then
+      -- prevent visible sides of pools near stairs
+      if N.chunk and N.chunk.kind == "stair" and A.floor_h > N.floor_h then
+         make_fence_near_stair(junc, A, N)
+         return
+      end
+
       Junction_make_empty(junc)
       return
     end

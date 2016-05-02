@@ -1192,10 +1192,10 @@ function Room_border_up()
     -- the same room --
 
     if A1.room == A2.room then
-      -- this needed for closets and joiners  FIXME WRONG [ REALLY ?? ]
-      if (not A1.is_outdoor) != (not A2.is_outdoor) then
-        Junction_make_wall(junc)
-      end
+---???      -- this needed for closets and joiners  FIXME WRONG [ REALLY ?? ]
+---???      if (not A1.is_outdoor) != (not A2.is_outdoor) then
+---???        Junction_make_wall(junc)
+---???      end
 
       return
     end
@@ -1736,6 +1736,8 @@ function Room_floor_ceil_heights()
       assert(A2.floor_h)
 
       set_floor(A, math.min(A1.floor_h, A2.floor_h))
+
+      A.stair_top_h = math.max(A1.floor_h, A2.floor_h)
 
 -- stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
 
