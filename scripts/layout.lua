@@ -655,6 +655,13 @@ function Layout_add_traps()
   end
 
 
+  local function make_teleport_trap(chunk, trig)
+    chunk.content_kind = "TELEPORT_MON"
+    chunk.trigger = trig
+    chunk.out_tag = alloc_id("tag")
+  end
+
+
   local function trigger_for_entry(R)
     local C = R.entry_conn
     
@@ -741,6 +748,41 @@ function Layout_add_traps()
   end
 
 
+  local function install_a_teleport_trap(R, locs, trig)
+    -- trig can be NIL
+    if not trig then return end
+
+    local DEPOT = Seed_alloc_depot(R)
+
+    if not DEPOT then
+      gui.debugf("Cannot make teleportation trap: out of depots\n")
+      return
+    end
+
+    trig.action = 109  -- W1 : open and stay /fast
+    trig.tag = alloc_id("tag")
+
+    DEPOT.skin.trap_tag = trig.tag
+
+    if #locs < 2 then table.insert(locs, locs[1]) end
+    if #locs < 3 then table.insert(locs, locs[2]) end
+
+    rand.shuffle(locs)
+
+    local chunk1 = table.remove(locs, 1)
+    local chunk2 = table.remove(locs, 1)
+    local chunk3 = table.remove(locs, 1)
+
+    make_teleport_trap(chunk1, trig)
+    make_teleport_trap(chunk2, trig)
+    make_teleport_trap(chunk3, trig)
+
+    DEPOT.skin.out_tag1 = chunk1.out_tag
+    DEPOT.skin.out_tag2 = chunk2.out_tag
+    DEPOT.skin.out_tag3 = chunk3.out_tag
+  end
+
+
   local function trap_up_room(R)
     if R.is_start then return end
 
@@ -779,13 +821,42 @@ function Layout_add_traps()
   end
 
 
+  local function trap_up_room_TELEPORT(R)
+    if R.is_start then return end
+
+    -- skip some rooms
+    local use_prob = style_sel("traps", 0, 20, 50, 90)
+    if not rand.odds(use_prob) then return end
+
+    -- collect free chunks (teleport targets)
+    local locs = {}
+
+    each chunk in R.chunks do
+      if not chunk.content_kind and (chunk.sw < 2 or chunk.sh < 2) then
+        table.insert(locs, chunk)
+      end
+    end
+
+    if #locs < 2 then return end
+
+    if #R.goals > 0 then
+      local goal = rand.pick(R.goals)
+
+      -- do not trap the exit switch, as player may exit too soon and
+      -- not notice the released monsters
+      if goal.kind != "EXIT" and goal.kind != "SECRET_EXIT" then
+        install_a_teleport_trap(R, locs, trigger_for_goal(R, goal))
+      end
+    end
+  end
+
+
   ---| Layout_add_traps |---
 
   if STYLE.traps == "none" then return end
 
   each R in LEVEL.rooms do
-    trap_up_room(R)
---TEST   Seed_alloc_depot(R)
+    trap_up_room_TELEPORT(R)
   end
 end
 
