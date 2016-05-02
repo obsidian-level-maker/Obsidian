@@ -11,7 +11,7 @@ PREFABS.Depot_raise =
   seed_w = 3
   seed_h = 6
 
-  tag_9 = "?trigger_tag"
+  tag_9 = "?trap_tag"
 
   tag_1 = "?out_tag1"
   tag_2 = "?out_tag2"
@@ -28,7 +28,7 @@ PREFABS.Depot_lower =
   seed_w = 3
   seed_h = 6
 
-  tag_9 = "?trigger_tag"
+  tag_9 = "?trap_tag"
 
   tag_1 = "?out_tag1"
   tag_2 = "?out_tag2"
