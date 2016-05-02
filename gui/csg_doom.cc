@@ -149,7 +149,9 @@ public:
 
 	int misc_flags;
 	int valid_count;
+
 	int light2;
+	int sound_area;
 
 	bool unused;
 
@@ -209,7 +211,8 @@ public:
 				(c_h == other->c_h) &&
 				(light == other->light) &&
 				(special == other->special) &&
-				(tag  == other->tag)  &&
+				(tag == other->tag) &&
+				(sound_area == other->sound_area) &&
 
 				(strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
 				(strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
@@ -967,6 +970,8 @@ static void DM_MakeSector(region_c *R)
 	int c_mark = c_face->getInt("mark");
 
 	S->mark = f_mark ? f_mark : c_mark;
+
+	S->sound_area = f_face->getInt("sound_area");
 
 
 	// floors have priority over ceilings
@@ -1771,6 +1776,11 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	{
 		L->special = 0;
 		L->flags |= MLF_LowerUnpeg;
+	}
+
+	if (L->front && L->back && L->front->sector->sound_area != L->back->sector->sound_area)
+	{
+		L->flags |= MLF_SoundBlock;
 	}
 }
 
