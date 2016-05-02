@@ -5,16 +5,21 @@
 PREFABS.Arch_curved =
 {
   file   = "door/arch_curved.wad"
+  kind   = "arch"
   where  = "edge"
-  long   = 192
+
+  seed_w = 2
+
   deep   = 16
   over   = 16
 
-  x_fit  = "stretch" -- { 0,8, 92,100, 184,192 }
+  x_fit  = "frame"
 
   bound_z1 = 0
-  bound_z2 = 128
 
-  prob = 90
+  theme  = "!tech"
+
+  rank   = 1
+  prob   = 50
 }
 
