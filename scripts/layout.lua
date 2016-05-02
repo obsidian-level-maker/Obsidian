@@ -440,9 +440,9 @@ function Layout_place_importants(R)
     if dests[3] and dests[3].is_dire then dests[3] = nil end
 
     -- need a free depot too
-    local x1, y1 = Seed_alloc_depot()
+    local DEPOT = Seed_alloc_depot()
 
-    if not x1 then
+    if not DEPOT then
       gui.debugf("Cannot make teleportation trap: out of depots\n")
       return
     end
@@ -481,16 +481,8 @@ function Layout_place_importants(R)
       skin.out_tag3 = dests[3].tag
     end
 
-    local DEPOT =
-    {
-      room = R
-      x1 = x1
-      y1 = y1
-      skin = skin
-      trigger = spot.trigger
-    }
-
-    table.insert(LEVEL.depots, DEPOT)
+    DEPOT.skin = skin
+    DEPOT.trigger = spot.trigger
 
     return true
   end
@@ -793,6 +785,7 @@ function Layout_add_traps()
 
   each R in LEVEL.rooms do
     trap_up_room(R)
+--TEST   Seed_alloc_depot(R)
   end
 end
 

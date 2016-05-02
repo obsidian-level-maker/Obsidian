@@ -801,16 +801,28 @@ function Seed_over_boundary(S)
 end
 
 
-function Seed_alloc_depot()
+function Seed_alloc_depot(room)
   -- returns NIL if no more are possible
 
   if table.empty(LEVEL.depot_locs) then
-    return nil, nil
+    return nil
   end
 
   local loc = table.remove(LEVEL.depot_locs, 1)
 
-  return loc.x, loc.y
+  local DEPOT =
+  {
+    room = room
+    x1 = loc.x
+    y1 = loc.y
+    skin = {}
+  }
+
+  DEPOT.skin.wall = "METAL"
+
+  table.insert(LEVEL.depots, DEPOT)
+
+  return DEPOT
 end
 
 

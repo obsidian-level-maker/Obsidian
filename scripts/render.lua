@@ -1602,29 +1602,23 @@ function Render_depot(depot)
   -- dest_R is the room which gets the trap spots
   local dest_R = assert(depot.room)
 
+stderrf("Render_depot for %s\n", dest_R.name)
+
   local x1 = depot.x1
   local y1 = depot.y1
 
-  local z = 0
+  local z1 = 0
 
-
-  local def = PREFABS["Depot"]
+  -- TODO : use Fab_pick() system
+  local def = PREFABS["Depot_raise"]
   assert(def)
 
   local x2 = x1 + def.seed_w * SEED_SIZE
   local y2 = y1 + def.seed_h * SEED_SIZE
 
-  local skin1 =
-  {
-    wall = "_ERROR"
-  }
+  local T = Trans.box_transform(x1, y1, x2, y2, z1, 2)
 
-  assert(depot.skin)
-
-
-  local T = Trans.box_transform(x1, y1, x2, y2, z, 2)
-
-  Fabricate(dest_R, def, T, { skin1, depot.skin })
+  Fabricate(dest_R, def, T, { depot.skin })
 end
 
 
