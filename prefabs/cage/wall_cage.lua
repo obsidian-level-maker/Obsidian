@@ -2,7 +2,7 @@
 -- Wall Cage
 --
 
-PREFABS.Cage_wall_1 =
+PREFABS.Cage_Wall =
 {
   file   = "cage/wall_cage.wad"
   where  = "seeds"
@@ -12,7 +12,7 @@ PREFABS.Cage_wall_1 =
   seed_h = 1
 
   x_fit = "stretch"
-  y_fit = { 32,96 }
+  y_fit = "top"
 
   bound_z1 = 0
 
@@ -20,9 +20,9 @@ PREFABS.Cage_wall_1 =
 }
 
 
-PREFABS.Cage_wall_1H =
+PREFABS.Cage_Wall_hell =
 {
-  template = "Cage_wall_1"
+  template = "Cage_Wall"
 
   theme = "hell"
 
