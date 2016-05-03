@@ -2,16 +2,24 @@
 -- Wall with vertical gap
 --
 
+GROUPS.wall_vert_gap =
+{
+  env = "indoor"
+
+  theme = "tech"
+}
+
+
 PREFABS.Wall_vertgap =
 {
   file   = "wall/vert_gap.wad"
   map    = "MAP01"
   where  = "edge"
 
---env    = "outdoor"
+  group  = "vert_gap"
 
   deep   = 16
---height = 64
+--height = 24
 
   bound_z1 = 0
   bound_z2 = 24
@@ -29,7 +37,7 @@ PREFABS.Wall_vertgap_diag =
   map    = "MAP02"
   where  = "diagonal"
 
---env    = "outdoor"
+  group  = "vert_gap"
 
   deep   = 16
 --height = 64
