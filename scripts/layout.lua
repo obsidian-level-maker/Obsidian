@@ -419,75 +419,6 @@ function Layout_place_importants(R)
   end
 
 
-  local function try_teleportation_trap(spot)
-    local A = assert(spot.area)
-    local R = assert(A.room)
-
-    -- we will need several places for teleport destinations
-    if R.total_inner_points < 5 then return false end
-
-    local dests = {}
-
-    -- FIXME : do not use Layout_spot_for_wotsit
-    dests[1] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
-    dests[2] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
-    dests[3] = Layout_spot_for_wotsit(R, "MON_TELEPORT")
-
-    -- do not use the "dire" emergency spots
-    if not (dests[1] and not dests[1].is_dire) then return false end
-    if not (dests[2] and not dests[2].is_dire) then return false end
-
-    if dests[3] and dests[3].is_dire then dests[3] = nil end
-
-    -- need a free depot too
-    local DEPOT = Seed_alloc_depot()
-
-    if not DEPOT then
-      gui.debugf("Cannot make teleportation trap: out of depots\n")
-      return
-    end
-
-    -- OK --
-
-    gui.debugf("Making teleportation trap in %s\n", A.name)
-
-    each dest in dests do
-      dest.tag = alloc_id("tag")
-
----###  table.insert(R.mon_teleports, dest)
-    end
-
-    local TRIGGER =
-    {
-      r = 64
-      action = 109  -- W1 : open and stay /fast
-      tag = alloc_id("tag")
-    }
-
-    spot.trigger = TRIGGER
-
-    -- create the DEPOT information
-
-    local skin =
-    {
-      trigger_tag = TRIGGER.tag
-
-      out_tag1 = dests[1].tag
-      out_tag2 = dests[2].tag
-      out_tag3 = dests[1].tag  -- not a typo
-    }
-
-    if dests[3] then
-      skin.out_tag3 = dests[3].tag
-    end
-
-    DEPOT.skin = skin
-    DEPOT.trigger = spot.trigger
-
-    return true
-  end
-
-
   ---| Layout_place_importants |---
 
   each tel in R.teleporters do
@@ -820,7 +751,6 @@ stderrf("Monster depot for %s\n", R.name)
 
 
   local function trap_up_item(R)
-    -- TODO
 
     if #R.weapons > 0 and rand.odds(50) then
 ---      local item = rand.pick(R.weapons)
