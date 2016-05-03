@@ -568,7 +568,6 @@ function Layout_add_traps()
     -- returns a list of all possible monster closets / teleport spots.
     -- [ in symmetrical rooms, peered closets only return a single one ]
 
-    if R.is_start  then return nil end
     if R.is_secret then return nil end
 
     local locs = {}
@@ -607,7 +606,7 @@ function Layout_add_traps()
     local places = {}
     local result = {}
 
-    if rand.odds(main_prob) then
+    if not R.is_start and rand.odds(main_prob) then
       table.insert(places, { room=R })
     end
 
