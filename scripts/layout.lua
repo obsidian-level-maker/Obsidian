@@ -525,12 +525,16 @@ function Layout_add_traps()
   end
 
 
-  local function places_for_backtracking(R, backtrack)
+  local function places_for_backtracking(R, backtrack, is_weapon)
     -- main thing this does is pick which rooms to trap up and
     -- which ones to skip.
 
     local main_prob = style_sel("traps", 0, 30, 50, 70)
     local back_prob = style_sel("traps", 0, 15, 35, 70)
+
+    if is_weapon then
+      main_prob = main_prob * 1.7
+    end
 
     local places = {}
     local result = {}
@@ -763,11 +767,11 @@ stderrf("Monster depot for %s\n", R.name)
     local item = assert(chunk.content_item)
 
     if chunk.content_kind == "ITEM" then
-      prob = 66
+      prob = 70
     elseif table.has_elem(LEVEL.new_weapons, item) then
       prob = 95
     else
-      prob = 33
+      prob = 40
     end 
 
     -- tie breaker
@@ -802,7 +806,7 @@ stderrf("Monster depot for %s\n", R.name)
     -- determine places and trigger, and install trap
     local is_weapon = (best.content_kind == "WEAPON")
 
-    local places = places_for_backtracking(R, {})
+    local places = places_for_backtracking(R, {}, is_weapon)
     if table.empty(places) then return end
 
     local trig = trigger_for_chunk(R, best)
@@ -816,11 +820,9 @@ stderrf("Monster depot for %s\n", R.name)
 
   if STYLE.traps == "none" then return end
 
---[[
   each R in LEVEL.rooms do
     trap_up_goal(R)
   end
---]]
 
   each R in LEVEL.rooms do
     trap_up_item(R)
