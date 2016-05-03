@@ -441,8 +441,6 @@ function Layout_place_importants(R)
   each name in R.items do
     add_item(name)
   end
-
-  -- TODO : teleportation trap spots
 end
 
 
@@ -655,6 +653,9 @@ stderrf("Monster depot for %s\n", R.name)
 
 
   local function install_a_trap(places, trig)
+    trig.action = 109  -- W1 : open and stay /fast
+    trig.tag = alloc_id("tag")
+
     each info in places do
       if info.kind == "teleport" then
         install_a_teleport_trap(info, trig)
@@ -743,22 +744,71 @@ stderrf("Monster depot for %s\n", R.name)
     local trig = trigger_for_chunk(R, assert(goal.kk_spot))
     if not trig then return end
 
-    trig.action = 109  -- W1 : open and stay /fast
-    trig.tag = alloc_id("tag")
-
     install_a_trap(places, trig)
   end
 
 
+  local function eval_item_for_trap(chunk)
+    -- returns a probability
+
+    if chunk.content_kind == "WEAPON" or
+       chunk.content_kind == "ITEM"
+    then
+      -- ok
+    else
+      return -1
+    end
+
+    local prob
+    local item = assert(chunk.content_item)
+
+    if chunk.content_kind == "ITEM" then
+      prob = 66
+    elseif table.has_elem(LEVEL.new_weapons, item) then
+      prob = 95
+    else
+      prob = 33
+    end 
+
+    -- tie breaker
+    return prob + gui.random()
+  end
+
+
   local function trap_up_item(R)
+    if R.is_start  then return end
+    if R.is_secret then return end
 
-    if #R.weapons > 0 and rand.odds(50) then
----      local item = rand.pick(R.weapons)
+    -- pick an item to target
+
+    local ch_list = table.copy(R.chunks)
+    table.append(ch_list, R.closets)
+
+    local best
+    local best_prob = 0
+
+    each chunk in ch_list do
+      local prob = eval_item_for_trap(chunk)
+      if prob > best_prob then
+        best = chunk
+        best_prob = prob
+      end
     end
 
-    if #R.items > 0 and rand.odds(50) then
----      local item = rand.pick(R.weapons)
-    end
+    if not best then return end
+
+    if not rand.odds(best_prob) then return end
+
+    -- determine places and trigger, and install trap
+    local is_weapon = (best.content_kind == "WEAPON")
+
+    local places = places_for_backtracking(R, {})
+    if table.empty(places) then return end
+
+    local trig = trigger_for_chunk(R, best)
+    if not trig then return end
+
+    install_a_trap(places, trig)
   end
 
 
@@ -766,9 +816,11 @@ stderrf("Monster depot for %s\n", R.name)
 
   if STYLE.traps == "none" then return end
 
+--[[
   each R in LEVEL.rooms do
     trap_up_goal(R)
   end
+--]]
 
   each R in LEVEL.rooms do
     trap_up_item(R)
