@@ -39,6 +39,8 @@
 
     is_boundary   -- true for areas outside the boundary line
 
+    lighting      -- ambient lighting for the area
+
 
     room : ROOM
 

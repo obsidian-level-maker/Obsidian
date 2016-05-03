@@ -65,7 +65,7 @@ function Render_outer_sky(S, dir, floor_h)
     C.flags = DOOM_LINE_FLAGS.draw_never
   end
 
-  AMBIENT_LIGHT = LEVEL.sky_light
+  Ambient_push(LEVEL.sky_light)
 
   local c_brush = brushlib.copy(f_brush)
 
@@ -77,6 +77,8 @@ function Render_outer_sky(S, dir, floor_h)
 
   Trans.brush(f_brush)
   Trans.brush(c_brush)
+
+  Ambient_pop()
 end
 
 
@@ -599,8 +601,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
   ---| Render_edge |---
 
-  AMBIENT_LIGHT = A.lighting
-
   if E.kind == "wall" then
     edge_wall()
 
@@ -682,9 +682,6 @@ function Render_corner(cx, cy)
     local mat    = corner.post_mat or "METAL"
 
     local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
-
-    -- TODO: fix this
-    AMBIENT_LIGHT = LEVEL.sky_light
 
     if corner.post_top_h then
       brushlib.add_top(brush, corner.post_top_h)
@@ -805,6 +802,9 @@ function Render_corner(cx, cy)
 
   corner = Corner_lookup(cx, cy)
 
+  -- TODO: fix this
+  Ambient_push(LEVEL.sky_light)
+
   if corner.kind == nil or corner.kind == "nothing" then
     polish_walls()
 
@@ -817,6 +817,8 @@ function Render_corner(cx, cy)
   else
     error("Unknown corner kind: " .. tostring(corner.kind))
   end
+
+  Ambient_pop()
 end
 
 
@@ -1088,8 +1090,6 @@ end
 function Render_floor(A, S)
   if S.done_floor then return end
 
-  AMBIENT_LIGHT = A.lighting
-
   local f_brush = S:make_brush()
 
   local f_h = S.floor_h or A.floor_h
@@ -1144,8 +1144,6 @@ end
 function Render_ceiling(A, S)
   if S.done_ceil then return end
 
-  AMBIENT_LIGHT = A.lighting
-
   local c_h = S.ceil_h or A.ceil_h
   assert(c_h)
 
@@ -1169,8 +1167,6 @@ end
 
 function Render_hallway(A, S)
   local R = A.room
-
-  AMBIENT_LIGHT = A.lighting
 
   -- determine common part of prefab name
   local fab_common
@@ -1245,10 +1241,12 @@ function Render_seed(A, S)
     end
   end
 
+--[[
   if A.mode == "hallway" then
     Render_hallway(A, S)
     return
   end
+--]]
 
   Render_floor  (A, S)
   Render_ceiling(A, S)
@@ -1286,8 +1284,6 @@ function Render_chunk(chunk)
   local A = chunk.area
 
   gui.debugf("\n\n Render_chunk %d in %s (%s / %s)\n", chunk.id, A.room.name, chunk.kind, chunk.content_kind or "-")
-
-  AMBIENT_LIGHT = A.lighting
 
   local dir = chunk.from_dir or chunk.dir or 2
 
@@ -1501,7 +1497,11 @@ function Render_chunk(chunk)
   end
 
 
+  Ambient_push(A.lighting)
+
   Fabricate(A.room, def, T, { skin })
+
+  Ambient_pop()
 
 
   -- mark seeds as done --
@@ -1532,7 +1532,7 @@ function Render_area(A)
     return
   end
 
-  AMBIENT_LIGHT = A.lighting
+  Ambient_push(A.lighting)
 
   each E in A.edges do
     assert(E.area == A)
@@ -1546,6 +1546,8 @@ function Render_area(A)
       Render_junction(A, S, dir)
     end
   end
+
+  Ambient_pop()
 end
 
 
@@ -1623,7 +1625,11 @@ stderrf("Render_depot for %s\n", dest_R.name)
 
   local T = Trans.box_transform(x1, y1, x2, y2, z1, 2)
 
+  Ambient_push(96)
+
   Fabricate(dest_R, def, T, { depot.skin })
+
+  Ambient_pop()
 end
 
 
@@ -2136,7 +2142,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function build_important(chunk)
     chunk.z1 = assert(chunk.area.floor_h)
 
-    AMBIENT_LIGHT = chunk.area.lighting
+    Ambient_push(chunk.area.lighting)
 
     if chunk.content_kind == "START" then
       content_start(chunk)
@@ -2174,6 +2180,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     else
       error("unknown important: " .. tostring(chunk.content_kind))
     end
+
+    Ambient_pop()
   end
 
 

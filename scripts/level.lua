@@ -1889,8 +1889,6 @@ function Level_choose_darkness()
     prob = style_sel("darkness", 0, 10, 30, 90)
   end
 
-  AMBIENT_LIGHT = 144
-
   LEVEL.sky_light  = rand.pick({ 160, 176,176, 192,192 })
   LEVEL.sky_shadow = 32
 
@@ -1918,6 +1916,8 @@ function Level_init()
 
   Level_choose_liquid()
   Level_choose_darkness()
+
+  Ambient_reset()
 end
 
 

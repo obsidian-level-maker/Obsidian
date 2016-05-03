@@ -23,6 +23,8 @@ Trans = {}
 
 brushlib = {}
 
+AMBIENT_LIGHT = {}
+
 
 function raw_add_brush(brush)
   -- check for obsolete crud
@@ -36,7 +38,7 @@ function raw_add_brush(brush)
     table.insert(brush, 1, { m="solid" })
   end
 
-  brush[1].ambient = AMBIENT_LIGHT
+  brush[1].ambient = AMBIENT_LIGHT[1]
 
   gui.add_brush(brush)
 
@@ -77,6 +79,33 @@ function raw_add_model(model)
 
   if GAME.add_model_func then
      GAME.add_model_func(model)
+  end
+end
+
+
+------------------------------------------------------------------------
+--  Ambient Lighting
+------------------------------------------------------------------------
+
+function Ambient_reset()
+  AMBIENT_LIGHT = {}
+end
+
+
+function Ambient_push(value)
+  if value == nil then
+    error("Ambient_push : missing value")
+  end
+
+  table.insert(AMBIENT_LIGHT, 1, value)
+end
+
+
+function Ambient_pop(value)
+  if table.empty(AMBIENT_LIGHT) then
+    error("Ambient_pop : stack is empty")
+  else
+    table.remove(AMBIENT_LIGHT, 1)
   end
 end
 
