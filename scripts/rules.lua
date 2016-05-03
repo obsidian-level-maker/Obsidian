@@ -191,19 +191,19 @@ GROW_CURVE_STAIR_1 =
 }
 
 
-GROW_CURVE_STAIRPAIR_1 =
+GROW_STAIRPAIR_2 =
 {
   prob = 10
 
   structure =
   {
     "..x..", "AAxAA"
-    ".....", "AS#SA"
+    ".....", "A^#^A"
     "x111x", "x111x"
   }
 
-  stair2_2 = { from_dir=2, dest_dir=4 }
-  stair4_2 = { from_dir=2, dest_dir=6 }
+---##  stair2_2 = { from_dir=2, dest_dir=4 }
+---##  stair4_2 = { from_dir=2, dest_dir=6 }
 }
 
 
