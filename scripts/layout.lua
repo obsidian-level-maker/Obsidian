@@ -563,6 +563,83 @@ function Layout_add_traps()
   -- Add traps to rooms, especially monster closets.
   --
 
+  local function locs_for_room(R, kind)
+    -- kind is either "closet" or "teleport".
+    -- returns a list of all possible monster closets / teleport spots.
+    -- [ in symmetrical rooms, peered closets only return a single one ]
+
+    local locs = {}
+
+    if kind == "closet" then
+      each chunk in R.closets do
+        if not chunk.content_kind and not Chunk_is_slave(chunk) then
+          table.insert(locs, chunk)
+        end
+      end
+
+    elseif kind == "teleport" then
+      each chunk in R.chunks do
+        if not chunk.content_kind and (chunk.sw < 2 or chunk.sh < 2 or rand.odds(20)) then
+          table.insert(locs, chunk)
+        end
+      end
+
+    else
+      error("locs_for_room: unknown kind")
+    end
+
+    if table.empty(locs) then return nil end
+
+    return locs
+  end
+
+
+  local function locs_for_backtracking(R, backtrack)
+    -- main thing this does is pick which rooms to trap up and
+    -- which ones to skip.
+
+    local main_prob = style_sel("traps", 0, 20, 50, 80)
+    local back_prob = style_sel("traps", 0, 10, 30, 80)
+
+    local list = {}
+
+    if rand.odds(main_prob) then
+      table.insert(list, { room=R })
+    end
+
+    each N in backtrack do
+      if rand.odds(back_prob) then
+        table.insert(list, { room=N })
+      end
+    end
+
+    each info in list do
+      local closet_locs = locs_for_room(info.room, "closet")
+      local tele_locs   = locs_for_room(info.room, "teleport")
+
+      if closet_locs and tele_locs then
+        -- closets are much rarer than teleport spots, so favor them
+        if rand.odds(95) then
+          tele_locs = nil
+        else
+          closet_locs = nil
+        end
+      end
+
+      if closet_locs then
+        info.kind = "closet"
+        info.locs = closet_locs
+
+      elseif tele_locs then
+        info.kind = "teleport"
+        info.locs = tele_locs
+      end
+    end
+
+    return list
+  end
+
+
   local function make_trap(closet, trig)
     closet.content_kind = "TRAP"
     closet.trigger = trig
