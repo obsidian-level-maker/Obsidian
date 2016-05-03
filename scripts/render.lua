@@ -1667,9 +1667,15 @@ function Render_properties_for_area(A)
 
 
   if not A.lighting then
-    if A.is_outdoor or (A.room and A.room.is_outdoor) then
+    if A.is_outdoor then
       A.lighting = LEVEL.sky_light
+
+    elseif A.room and A.room.is_outdoor then
+      -- this for outdoor closets
+      A.lighting = LEVEL.sky_light - LEVEL.sky_shadow
+
     else
+      -- FIXME UGH
       A.lighting = 144
     end
   end
