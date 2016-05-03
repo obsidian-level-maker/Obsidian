@@ -157,7 +157,7 @@ GLOBAL_STYLE_LIST =
 
   -- decoration stuff --
 
-  liquids     = { none=0,  few=30, some=50, heaps=10 }
+  liquids     = { none=0,  few=20, some=20, heaps=80 }
   porches     = { none=0,  few=10, some=60, heaps=10 }
   pictures    = { none=0,  few=10, some=50, heaps=10 }
 
