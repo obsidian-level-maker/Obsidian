@@ -563,85 +563,6 @@ function Layout_add_traps()
   -- Add traps to rooms, especially monster closets.
   --
 
-  local function OLD__try_trapify_important(spot, areas)
-    if not
-       (spot.content_kind == "KEY"    or spot.content_kind == "SWITCH" or
-        spot.content_kind == "WEAPON" or spot.content_kind == "ITEM")
-    then
-      return false
-    end
-
-    -- less chance for mere items
-    if (spot.content_kind == "WEAPON" or spot.content_kind == "ITEM") and
-       rand.odds(5) then
-      return false
-    end
-
-    local A = assert(spot.area)
-    local R = assert(A.room)
-
-    -- never in secrets
-    if R.is_secret then return end
-
-    -- never in a start room
-    if R.is_start then return end
-
-    -- check for a usable trap area neighboring the spot area
-    -- TODO : this is too restrictive
-
-    if rand.odds(10) and try_teleportation_trap(spot) then
-      return true
-    end
-
-    local prob = 100
-    local count = 0
-
-    local neighbors = rand.shuffle(table.copy(A.neighbors))
-
-    each N in neighbors do
-      if table.has_elem(areas, N) and rand.odds(prob) then
-        make_trap(N, A, spot)
-
-        table.kill_elem(areas, N)
-        count = count + 1
-
-        prob = prob / 2
-      end
-    end
-
-    if count == 0 and rand.odds(50) then
-      return try_teleportation_trap(spot)
-    end
-
-    return (count > 0)
-  end
-
-
-  local function OLD__add_traps()
-    local make_prob = style_sel("traps", 0, 20, 40, 75)
-   
-    if make_prob == 0 then
-      gui.printf("Traps: skipped for level (by style).\n")
-      return
-    end
-
-    local areas = collect_big_cages()
-
-    -- FIXME : visit importants in random order
-
-    each R in LEVEL.rooms do
-      each spot in R.importants do
-        if rand.odds(make_prob) then
-          try_trapify_important(spot, areas)
-        end
-      end
-    end
-  end
-
-
-  ------------------------------------------>>>>>
-
-
   local function make_trap(closet, trig)
     closet.content_kind = "TRAP"
     closet.trigger = trig
@@ -690,6 +611,9 @@ function Layout_add_traps()
 
     return TRIG
   end
+
+
+  -- TODO : trigger_for_exit(R)
 
 
   local function trigger_for_goal(R, goal)

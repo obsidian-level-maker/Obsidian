@@ -107,7 +107,8 @@
     room : ROOM   -- where the goal is
 
     backtrack : list(ROOMS)  -- rooms player MUST back-track through
-                             -- (includes room with the locked conn) 
+                             -- (includes room with the locked conn,
+                             --  but excludes room with the goal).
 
     tag : number  -- tag number to use for a switched door
 --]]
