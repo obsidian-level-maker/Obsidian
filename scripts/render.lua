@@ -2266,9 +2266,7 @@ function Render_triggers()
   end
 
 
-  local function do_edge_trigger(R, trig)
-    local E = assert(trig.edge)
-
+  local function do_edge_trigger(R, trig, E)
     if geom.is_corner(E.dir) then
       do_diagonal_trigger(R, trig)
       return
@@ -2322,7 +2320,9 @@ function Render_triggers()
       do_spot_trigger(R, trig)
 
     elseif trig.kind == "edge" then
-      do_edge_trigger(R, trig)
+      each E in trig.edges do
+        do_edge_trigger(R, trig, E)
+      end
 
     else
       error("Unknown trigger kind: " .. tostring(trig.kind))

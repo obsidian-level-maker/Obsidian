@@ -546,7 +546,7 @@ function Seed_init(map_W, map_H)
   local depot_x = BASE_X
   local depot_y = BASE_Y + SEED_H * SEED_SIZE
 
-  for row = 0, 1 do
+  for row = 0, 2 do
   for col = 0, int(SEED_W / 3) - 1 do
     local x = depot_x + col * 3 * SEED_SIZE
     local y = depot_y + row * 6 * SEED_SIZE + 64

@@ -601,8 +601,8 @@ function Layout_add_traps()
     -- main thing this does is pick which rooms to trap up and
     -- which ones to skip.
 
-    local main_prob = style_sel("traps", 0, 20, 50, 80)
-    local back_prob = style_sel("traps", 0, 10, 30, 80)
+    local main_prob = 100 --!!!! style_sel("traps", 0, 20, 50, 80)
+    local back_prob = 100 --!!!! style_sel("traps", 0, 10, 30, 80)
 
     local places = {}
     local result = {}
@@ -648,7 +648,7 @@ function Layout_add_traps()
   end
 
 
-  local function make_trap(closet, trig)
+  local function make_closet_trap(closet, trig)
     closet.content_kind = "TRAP"
     closet.trigger = trig
 
@@ -672,9 +672,6 @@ function Layout_add_traps()
     local R    = info.room
     local locs = info.locs
 
-    trig.action = 109  -- W1 : open and stay /fast
-    trig.tag = alloc_id("tag")
-
     -- TODO : often pick closets near the goal [ideally facing it]
     rand.shuffle(locs)
 
@@ -685,11 +682,10 @@ function Layout_add_traps()
     if STYLE.traps == "heaps" then qty = qty + 2 end
 
     for i = 1, qty do
-      if table.empty(locs) then return end
-
-      local chunk = table.remove(locs, 1)
-
-      make_trap(chunk, trig)
+      if locs[i] then
+stderrf("Monster closet in %s\n", R.name)
+        make_closet_trap(locs[i], trig)
+      end
     end
   end
 
@@ -704,6 +700,8 @@ function Layout_add_traps()
       gui.debugf("Cannot make teleportation trap: out of depots\n")
       return
     end
+
+stderrf("Monster depot for %s\n", R.name)
 
     DEPOT.skin.trap_tag = trig.tag
 
@@ -727,9 +725,6 @@ function Layout_add_traps()
 
 
   local function install_a_trap(places, trig)
-    -- trig can be NIL
-    if not trig then return end
-
     each info in places do
       if info.kind == "teleport" then
         install_a_teleport_trap(info, trig)
@@ -774,19 +769,15 @@ function Layout_add_traps()
 
 
   local function trigger_for_chunk(R, chunk)
-    if not chunk then return nil end
-
     local TRIG
 
     if chunk.kind == "closet" then
       if not chunk.edges then return nil end
 
-      -- TODO : handle multiple edges [ return a list ]
-
       TRIG =
       {
         kind = "edge"
-        edge = chunk.edges[1]
+        edges = chunk.edges
       }
     else
       TRIG =
@@ -817,10 +808,10 @@ function Layout_add_traps()
     end
 
     local places = places_for_backtracking(R, goal.backtrack)
-
     if table.empty(places) then return end
 
     local trig = trigger_for_chunk(R, assert(goal.kk_spot))
+    if not trig then return end
 
     trig.action = 109  -- W1 : open and stay /fast
     trig.tag = alloc_id("tag")
