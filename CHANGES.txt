@@ -8,7 +8,7 @@ Major stuff:
 
 +  support for Add-on packages
 
-+  title-pic generator
++  a title-pic generator
 
 +  better planning for Boss monsters
 
