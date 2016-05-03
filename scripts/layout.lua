@@ -568,6 +568,9 @@ function Layout_add_traps()
     -- returns a list of all possible monster closets / teleport spots.
     -- [ in symmetrical rooms, peered closets only return a single one ]
 
+    if R.is_start  then return nil end
+    if R.is_secret then return nil end
+
     local locs = {}
 
     if kind == "closet" then
@@ -594,26 +597,27 @@ function Layout_add_traps()
   end
 
 
-  local function locs_for_backtracking(R, backtrack)
+  local function places_for_backtracking(R, backtrack)
     -- main thing this does is pick which rooms to trap up and
     -- which ones to skip.
 
     local main_prob = style_sel("traps", 0, 20, 50, 80)
     local back_prob = style_sel("traps", 0, 10, 30, 80)
 
-    local list = {}
+    local places = {}
+    local result = {}
 
     if rand.odds(main_prob) then
-      table.insert(list, { room=R })
+      table.insert(places, { room=R })
     end
 
     each N in backtrack do
       if rand.odds(back_prob) then
-        table.insert(list, { room=N })
+        table.insert(places, { room=N })
       end
     end
 
-    each info in list do
+    each info in places do
       local closet_locs = locs_for_room(info.room, "closet")
       local tele_locs   = locs_for_room(info.room, "teleport")
 
@@ -634,9 +638,13 @@ function Layout_add_traps()
         info.kind = "teleport"
         info.locs = tele_locs
       end
+
+      if info.locs then
+        table.insert(result, info)
+      end
     end
 
-    return list
+    return result
   end
 
 
@@ -657,6 +665,78 @@ function Layout_add_traps()
     chunk.content_kind = "MON_TELEPORT"
     chunk.trigger = trig
     chunk.out_tag = alloc_id("tag")
+  end
+
+
+  local function install_a_closet_trap(info, trig)
+    local R    = info.room
+    local locs = info.locs
+
+    trig.action = 109  -- W1 : open and stay /fast
+    trig.tag = alloc_id("tag")
+
+    -- TODO : often pick closets near the goal [ideally facing it]
+    rand.shuffle(locs)
+
+    local qty = rand.index_by_probs({ 40,40,20,5 })
+
+    if STYLE.traps == "few"   then int((qty + 1) / 2) end
+    if STYLE.traps == "more"  then qty = qty + 1 end
+    if STYLE.traps == "heaps" then qty = qty + 2 end
+
+    for i = 1, qty do
+      if table.empty(locs) then return end
+
+      local chunk = table.remove(locs, 1)
+
+      make_trap(chunk, trig)
+    end
+  end
+
+
+  local function install_a_teleport_trap(info, trig)
+    local R    = info.room
+    local locs = info.locs
+
+    local DEPOT = Seed_alloc_depot(R)
+
+    if not DEPOT then
+      gui.debugf("Cannot make teleportation trap: out of depots\n")
+      return
+    end
+
+    DEPOT.skin.trap_tag = trig.tag
+
+    if #locs < 2 then table.insert(locs, locs[1]) end
+    if #locs < 3 then table.insert(locs, locs[2]) end
+
+    rand.shuffle(locs)
+
+    local chunk1 = table.remove(locs, 1)
+    local chunk2 = table.remove(locs, 1)
+    local chunk3 = table.remove(locs, 1)
+
+    make_teleport_trap(chunk1, trig)
+    make_teleport_trap(chunk2, trig)
+    make_teleport_trap(chunk3, trig)
+
+    DEPOT.skin.out_tag1 = chunk1.out_tag
+    DEPOT.skin.out_tag2 = chunk2.out_tag
+    DEPOT.skin.out_tag3 = chunk3.out_tag
+  end
+
+
+  local function install_a_trap(places, trig)
+    -- trig can be NIL
+    if not trig then return end
+
+    each info in places do
+      if info.kind == "teleport" then
+        install_a_teleport_trap(info, trig)
+      else
+        install_a_closet_trap(info, trig)
+      end
+    end
   end
 
 
@@ -693,11 +773,10 @@ function Layout_add_traps()
   -- TODO : trigger_for_exit(R)
 
 
-  local function trigger_for_goal(R, goal)
-    local chunk = goal.kk_spot
-    local TRIG
-
+  local function trigger_for_chunk(R, chunk)
     if not chunk then return nil end
+
+    local TRIG
 
     if chunk.kind == "closet" then
       if not chunk.edges then return nil end
@@ -723,94 +802,35 @@ function Layout_add_traps()
   end
 
 
-  local function install_a_trap(R, locs, trig)
-    -- trig can be NIL
-    if not trig then return end
+  local function trap_up_goal(R)
+    if table.empty(R.goals) then return end
 
-    trig.action = 109  -- W1 : open and stay /fast
-    trig.tag = alloc_id("tag")
+    local goal = rand.pick(R.goals)
 
-    -- TODO : often pick closets near the goal [ideally facing it]
-    rand.shuffle(locs)
-
-    local qty = rand.index_by_probs({ 40,40,20,5 })
-
-    if STYLE.traps == "few"   then int((qty + 1) / 2) end
-    if STYLE.traps == "more"  then qty = qty + 1 end
-    if STYLE.traps == "heaps" then qty = qty + 2 end
-
-    for i = 1, qty do
-      if table.empty(locs) then return end
-
-      local chunk = table.remove(locs, 1)
-
-      make_trap(chunk, trig)
-    end
-  end
-
-
-  local function install_a_teleport_trap(R, locs, trig)
-    -- trig can be NIL
-    if not trig then return end
-
-    local DEPOT = Seed_alloc_depot(R)
-
-    if not DEPOT then
-      gui.debugf("Cannot make teleportation trap: out of depots\n")
+    -- do not trap the exit switch, as player may exit too soon and
+    -- not notice the released monsters
+    if goal.kind == "START" or
+       goal.kind == "EXIT" or
+       goal.kind == "SECRET_EXIT"
+    then
       return
     end
 
+    local places = places_for_backtracking(R, goal.backtrack)
+
+    if table.empty(places) then return end
+
+    local trig = trigger_for_chunk(R, assert(goal.kk_spot))
+
     trig.action = 109  -- W1 : open and stay /fast
     trig.tag = alloc_id("tag")
 
-    DEPOT.skin.trap_tag = trig.tag
-
-    if #locs < 2 then table.insert(locs, locs[1]) end
-    if #locs < 3 then table.insert(locs, locs[2]) end
-
-    rand.shuffle(locs)
-
-    local chunk1 = table.remove(locs, 1)
-    local chunk2 = table.remove(locs, 1)
-    local chunk3 = table.remove(locs, 1)
-
-    make_teleport_trap(chunk1, trig)
-    make_teleport_trap(chunk2, trig)
-    make_teleport_trap(chunk3, trig)
-
-    DEPOT.skin.out_tag1 = chunk1.out_tag
-    DEPOT.skin.out_tag2 = chunk2.out_tag
-    DEPOT.skin.out_tag3 = chunk3.out_tag
+    install_a_trap(places, trig)
   end
 
 
-  local function trap_up_room(R)
-    if R.is_start then return end
-
-    -- skip some rooms
-    local use_prob = style_sel("traps", 0, 20, 50, 90)
-    if not rand.odds(use_prob) then return end
-
-    -- collect free closets
-    local locs = {}
-
-    each chunk in R.closets do
-      if not chunk.content_kind and not Chunk_is_slave(chunk) then
-        table.insert(locs, chunk)
-      end
-    end
-
-    if table.empty(locs) then return end
-
-    if #R.goals > 0 then
-      local goal = rand.pick(R.goals)
-
-      -- do not trap the exit switch, as player may exit too soon and
-      -- not notice the released monsters
-      if goal.kind != "EXIT" and goal.kind != "SECRET_EXIT" then
-        install_a_trap(R, locs, trigger_for_goal(R, goal))
-      end
-    end
+  local function trap_up_item(R)
+    -- TODO
 
     if #R.weapons > 0 and rand.odds(50) then
 ---      local item = rand.pick(R.weapons)
@@ -822,42 +842,16 @@ function Layout_add_traps()
   end
 
 
-  local function trap_up_room_TELEPORT(R)
-    if R.is_start then return end
-
-    -- skip some rooms
-    local use_prob = style_sel("traps", 0, 20, 50, 90)
-    if not rand.odds(use_prob) then return end
-
-    -- collect free chunks (teleport targets)
-    local locs = {}
-
-    each chunk in R.chunks do
-      if not chunk.content_kind and (chunk.sw < 2 or chunk.sh < 2) then
-        table.insert(locs, chunk)
-      end
-    end
-
-    if #locs < 2 then return end
-
-    if #R.goals > 0 then
-      local goal = rand.pick(R.goals)
-
-      -- do not trap the exit switch, as player may exit too soon and
-      -- not notice the released monsters
-      if goal.kind != "EXIT" and goal.kind != "SECRET_EXIT" then
-        install_a_teleport_trap(R, locs, trigger_for_goal(R, goal))
-      end
-    end
-  end
-
-
   ---| Layout_add_traps |---
 
   if STYLE.traps == "none" then return end
 
   each R in LEVEL.rooms do
-    trap_up_room_TELEPORT(R)
+    trap_up_goal(R)
+  end
+
+  each R in LEVEL.rooms do
+    trap_up_item(R)
   end
 end
 
