@@ -3,8 +3,6 @@ WORK IN PROGRESS
 ================
 
 
--  create an Archy arch
-
 ?  multiple ways into a room
 
 
@@ -21,21 +19,7 @@ CEILINGS:
 
 TRAPS:
 
-+  monster closets which open in PREVIOUS (back-track) room
-   [ visit rooms with goals in them _before_ other rooms ]
-
-+  for each trappable item/goal in a room [ upto max of 2 ]
-   decide whether to create a closet trap (using a nearby unused closets)
-   or a teleport trap
-
-+  number of traps depends heavily on ROOM.pressure
-
--  number of traps affected by LEV.game_along
-   [ e.g. double at end of wad than start ]
-
-+  get teleport traps working again
-   do monster depots differently, make "shared" sector based on
-   an entry area of second room in the level
++  support weapons (esp. new ones) and nice items
 
 
 
