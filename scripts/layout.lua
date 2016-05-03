@@ -601,8 +601,8 @@ function Layout_add_traps()
     -- main thing this does is pick which rooms to trap up and
     -- which ones to skip.
 
-    local main_prob = 100 --!!!! style_sel("traps", 0, 20, 50, 80)
-    local back_prob = 100 --!!!! style_sel("traps", 0, 10, 30, 80)
+    local main_prob = style_sel("traps", 0, 30, 50, 70)
+    local back_prob = style_sel("traps", 0, 15, 35, 70)
 
     local places = {}
     local result = {}
