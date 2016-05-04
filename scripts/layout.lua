@@ -1618,7 +1618,7 @@ function Layout_indoor_lighting()
     bright   = 160
     normal   = 144
     dark     = 128
-    verydark = 96
+    verydark = 112
   }
 
   local function sky_light_to_keyword()
@@ -1643,6 +1643,10 @@ function Layout_indoor_lighting()
 
   local function visit_room(R, prev_room)
     local tab = { bright=50, normal=90, dark=50, verydark=10 }
+
+    if R.is_start then
+      tab["verydark"] = nil
+    end
 
     if prev_room then
       assert(prev_room.light_level)

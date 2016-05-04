@@ -1609,7 +1609,7 @@ function Render_depot(depot)
   -- dest_R is the room which gets the trap spots
   local dest_R = assert(depot.room)
 
-stderrf("Render_depot for %s\n", dest_R.name)
+  gui.debugf("Render_depot for %s\n", dest_R.name)
 
   local x1 = depot.x1
   local y1 = depot.y1
@@ -1676,7 +1676,7 @@ function Render_properties_for_area(A)
 
     else
       -- this generally won't occur, rooms have setup their lighting already
-      A.lighting = 144
+      A.lighting = A.base_light or 144
     end
   end
 
