@@ -55,6 +55,8 @@
     triggers : list(TRIGGER)  -- used for traps
 
 
+    light_level : keyword    -- "bright", "normal", "dark" or "verydark"
+
     hallway : HALLWAY_INFO   -- for hallways only
 
     symmetry : SYMMETRY_INFO

@@ -1609,9 +1609,17 @@ function Layout_indoor_lighting()
   -- Outdoor rooms are not affected here, but get a keyword which
   -- depends on the global 'sky_light' value.
   --
-  -- Individual areas can be increased by +16 or +32 due to light
-  -- sources in that area (such as windows, ceiling lights, etc...)
+  -- Individual areas can be increased by +16 or +32 based on what
+  -- light sources are in that area (including windows).
   --
+
+  local LIGHT_LEVELS =
+  {
+    bright   = 160
+    normal   = 144
+    dark     = 128
+    verydark = 96
+  }
 
   local function sky_light_to_keyword()
     if LEVEL.sky_light >= 168 then return "bright" end
@@ -1621,9 +1629,57 @@ function Layout_indoor_lighting()
   end
 
 
+  local function set_room(R, what)
+    R.light_level = what
+
+    local base_light = LIGHT_LEVELS[what]
+    assert(base_light)
+
+    each A in R.areas do
+      A.base_light = base_light
+    end
+  end
+
+
+  local function visit_room(R, prev_room)
+    local tab = { bright=50, normal=90, dark=50, verydark=10 }
+
+    if prev_room then
+      assert(prev_room.light_level)
+
+      if prev_room.light_level != "normal" or rand.odds(30) then
+        tab[prev_room.light_level] = nil
+      end
+    end
+
+    if not R.light_level then
+      set_room(R, rand.key_by_probs(tab))
+    end
+
+    -- recurse to neighbors
+    each C in R.conns do
+      if C.is_cycle then continue end
+      
+      local R2 = C:other_room(R)
+
+      if R2.lev_along > R.lev_along then
+        visit_room(R2, R)
+      end
+    end
+  end
+
+
   ---| Layout_indoor_lighting |---
 
-  -- TODO
+  -- setup outdoor rooms first
+  each R in LEVEL.rooms do
+    if R.is_outdoor then
+      -- cannot use set_room() here
+      R.light_level = sky_light_to_keyword()
+    end
+  end
+
+  visit_room(LEVEL.start_room)
 end
 
 
