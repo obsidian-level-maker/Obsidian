@@ -615,7 +615,6 @@ function Layout_add_traps()
 
     for i = 1, qty do
       if locs[i] then
-stderrf("Monster closet in %s\n", R.name)
         make_closet_trap(locs[i], trig)
       end
     end
@@ -632,8 +631,6 @@ stderrf("Monster closet in %s\n", R.name)
       gui.debugf("Cannot make teleportation trap: out of depots\n")
       return
     end
-
-stderrf("Monster depot for %s\n", R.name)
 
     DEPOT.skin.trap_tag = trig.tag
 
@@ -1028,7 +1025,7 @@ stderrf("Item is in %s : lock = %s\n", item.name, tostring(item.lock))
   local function switch_up_room(R)
     -- locking exits and items
 
-    local switch_prob = style_sel("switches", 0, 35, 70, 99)
+    local switch_prob = style_sel("switches", 0, 35, 70, 90)
 
     for loop = 1, 2 do
       if rand.odds(switch_prob) then
