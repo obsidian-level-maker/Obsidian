@@ -1675,7 +1675,7 @@ function Render_properties_for_area(A)
       A.lighting = LEVEL.sky_light - LEVEL.sky_shadow
 
     else
-      -- FIXME UGH
+      -- this generally won't occur, rooms have setup their lighting already
       A.lighting = 144
     end
   end

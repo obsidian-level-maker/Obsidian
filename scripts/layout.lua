@@ -1598,6 +1598,36 @@ end
 
 
 
+function Layout_indoor_lighting()
+  --
+  -- Give each indoor non-cave room a lighting keyword:
+  --    "bright"   (160 units)
+  --    "normal"   (144 units)
+  --    "dark"     (128 units)
+  --    "verydark" ( 96 units)
+  --
+  -- Outdoor rooms are not affected here, but get a keyword which
+  -- depends on the global 'sky_light' value.
+  --
+  -- Individual areas can be increased by +16 or +32 due to light
+  -- sources in that area (such as windows, ceiling lights, etc...)
+  --
+
+  local function sky_light_to_keyword()
+    if LEVEL.sky_light >= 168 then return "bright" end
+    if LEVEL.sky_light >= 136 then return "normal" end
+    if LEVEL.sky_light >= 120 then return "dark" end
+    return "verydark"
+  end
+
+
+  ---| Layout_indoor_lighting |---
+
+  -- TODO
+end
+
+
+
 function Layout_outdoor_shadows()
 
   local function need_shadow(S, dir)
