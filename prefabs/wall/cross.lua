@@ -2,21 +2,25 @@
 -- Wall with hellish cross
 --
 
-UNFINISHED.Pic_cross =
+GROUPS.wall_cross =
+{
+  env = "indoor"
+
+  theme = "hell"
+}
+
+
+UNFINISHED.Wall_Cross1 =
 {
   file   = "wall/cross.wad"
   where  = "edge"
 
-  long   = 192
   deep   = 16
 
   x_fit  = "frame"
-  z_fit  = "top"
+  z_fit  = "frame"
 
   bound_z1 = 0
   bound_z2 = 128
-
-  theme  = "hell"
-  prob   = 50
 }
 
