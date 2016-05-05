@@ -1655,6 +1655,7 @@ function Room_floor_ceil_heights()
 
   local function pick_stair_prefab(chunk)
     local A = chunk.area
+    local R = A.room
 
     local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
@@ -1663,6 +1664,15 @@ function Room_floor_ceil_heights()
 
     if A.room then
       reqs.env = A.room:get_env()
+    end
+
+    -- prevent small areas connected with a lift
+    -- [ TODO : this could be done better.... ]
+    local vol_1 = chunk.from_area.svolume / sel(R.symmetry, 2, 1)
+    local vol_2 = chunk.dest_area.svolume / sel(R.symmetry, 2, 1)
+
+    if vol_1 < 7 or vol_2 < 7 then
+      reqs.max_delta_h = 32
     end
 
     local def = Fab_pick(reqs)

@@ -2054,6 +2054,10 @@ function Fab_find_matches(reqs, match_state)
 
 
   local function match_height(def)
+    if def.delta_h and reqs.max_delta_h and math.abs(def.delta_h) > reqs.max_delta_h then
+      return false
+    end
+
     if type(def.height) == "table" then
       local req_h = reqs.height
 
