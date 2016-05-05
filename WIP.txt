@@ -3,7 +3,7 @@ WORK IN PROGRESS
 ================
 
 
->>>  lite_2.wad
+>>  review strength of TRAP monsters
 
 
 GROWER:
@@ -27,21 +27,22 @@ CEILINGS:
 
 NEW LIGHTING:
 
-+  compute better "AREA.lighting" values
-   +  use logic like for "pressure" to make some dark rooms
-   -  walls/pictures/etc with lights are summed
-   -  floor/ceiling prefabs with lights also add to sum
-   -  if has sink with ceiling light or sky, use an absolute value
-   -  if neighbor areas is much higher, increase us  [ but no flow-on! ]
+DONE:  pick base lighting of each room
+
++  decide if each area will be BASE + 0, BASE + 16, or BASE + 32
+   and that decides what kinds of light prefabs to add
+   [ i.e. ceiling light fittings or "big" light decorations ]
+
+-  sink-based lights / sky should force/require the brightest area in room
+
+-  ignore area light for wall stuff
 
 +  some ceiling light fixtures
 
--  wall prefabs in outdoor rooms facing a certain direction
-   should use "shadow" light value as ambient
-
 ??  for joiners and doors/windows : pick a value roughly between
     the two sides.  E.g. if diff == 32, use lowest + 16
-    When diff == 16, use the ENTRY side.
+    When diff == 16, use the darkest side.
+    Remember to take shadow side into account for straddlers.
 
 
 

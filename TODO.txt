@@ -117,6 +117,9 @@ ______________________________________________________________________
 -  review "svolume" and "innerpoint" usage
    e.g. I think "walk_svol" would be a more useful metric
 
+-  wall prefabs in outdoor rooms facing a certain direction
+   should use "shadow" light value as ambient
+
 
 IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
@@ -930,6 +933,9 @@ Cancellation:
 ----------------------------------------------
   DOOM and DOOM II
 ----------------------------------------------
+
++  for Doom 1, monster/weapon levels should reset for each episode
+   [ probably not back to 1.0 -- use a blend of game_along and ep_along ]
 
 +  move stuff in data/ into games/doom/ (etc)
 
