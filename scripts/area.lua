@@ -762,6 +762,8 @@ function Corner_mark_walls(E)
   local cx = E.S.sx
   local cy = E.S.sy
 
+  local wall_mat = Edge_calc_wallish_mat(E)
+
   if E.dir == 2 or E.dir == 6 or E.dir == 1 or E.dir == 3 then cx = cx + 1 end
   if E.dir == 8 or E.dir == 6 or E.dir == 9 or E.dir == 3 then cy = cy + 1 end
 
@@ -782,9 +784,9 @@ function Corner_mark_walls(E)
     end
 
     if pass == 1 then
-      corner.walls[wall_dir].R = "METAL";
+      corner.walls[wall_dir].R = wall_mat;
     else
-      corner.walls[wall_dir].L = "METAL";
+      corner.walls[wall_dir].L = wall_mat;
     end
 
     cx = cx + dx * E.long

@@ -744,6 +744,33 @@ function Edge_is_wallish(E)
 end
 
 
+function Edge_calc_wallish_mat(E)
+  -- this handles most cases
+  if E.wall_mat then
+    return E.wall_mat
+  end
+
+  -- closets
+  if E.to_chunk and E.to_chunk.kind == "closet" then
+    local A = E.to_chunk.area
+    local tex_ref = E.to_chunk.tex_ref or E.to_chunk.from_area
+
+    if tex_ref then
+      if tex_ref.is_outdoor then
+        return A.facade_mat or A.zone.facade_mat
+      end
+
+      return assert(tex_ref.wall_mat)
+    end
+  end
+
+  -- TODO : straddling stuff??
+
+  -- fallback
+  return "METAL"
+end
+
+
 function Seed_coord_range(sx1, sy1, sx2, sy2)
   assert(Seed_valid(sx1, sy1))
   assert(Seed_valid(sx2, sy2))

@@ -965,7 +965,7 @@ function Layout_decorate_rooms(KKK_PASS)
 
     -- OK !!
 
-stderrf("**** DOING LOWERING PED\n") 
+-- stderrf("**** DOING LOWERING PED\n") 
 
     local LOCK =
     {
@@ -977,8 +977,6 @@ stderrf("**** DOING LOWERING PED\n")
 
     item.lock = LOCK
     spot.lock = LOCK
-
-stderrf("Item is in %s : lock = %s\n", item.name, tostring(item.lock))
   end
 
 
@@ -1041,7 +1039,8 @@ stderrf("Item is in %s : lock = %s\n", item.name, tostring(item.lock))
     local def = Fab_pick(reqs, "none_ok")
     if not def then return end
 
-stderrf("Ceiling light: %s\n", def.name)
+-- stderrf("Ceiling light: %s\n", def.name)
+
     chunk.content_kind = "DECORATION"
     chunk.prefab_def = def
     chunk.prefab_dir = rand.dir()
