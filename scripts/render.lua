@@ -2216,13 +2216,13 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     R = room
 
     each chunk in R.floor_chunks do
-      if chunk.content_kind then
+      if chunk.content_kind and chunk.content_kind != "NOTHING" then
         build_important(chunk)
       end
     end
 
     each chunk in R.ceil_chunks do
-      if chunk.content_kind then
+      if chunk.content_kind and chunk.content_kind != "NOTHING" then
         build_ceiling_thang(chunk)
       end
     end

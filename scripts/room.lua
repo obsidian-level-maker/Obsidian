@@ -2693,6 +2693,8 @@ function Room_build_all()
   Room_prepare_skies()
   Room_floor_ceil_heights()
 
+  Layout_indoor_lighting()
+
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
 
@@ -2704,8 +2706,6 @@ function Room_build_all()
 
   Layout_finish_scenic_borders()
   Layout_handle_corners()
-
-  Layout_indoor_lighting()
   Layout_outdoor_shadows()
 
   Render_set_all_properties()

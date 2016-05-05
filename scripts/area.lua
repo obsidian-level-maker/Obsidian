@@ -940,6 +940,10 @@ function Area_locate_chunks()
       if not A.is_outdoor then
         local CEIL = make_chunk(kind, "ceil", A, sx1,sy1, sx2,sy2)
         table.insert(R.ceil_chunks, CEIL)
+
+        -- link the floor and ceiling chunks
+         CEIL.floor_below = CHUNK
+        CHUNK. ceil_above = CEIL
       end
     end
 

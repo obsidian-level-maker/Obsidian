@@ -1022,6 +1022,32 @@ stderrf("Item is in %s : lock = %s\n", item.name, tostring(item.lock))
   end
 
 
+  local function try_ceiling_light_in_chunk(chunk)
+    local A = chunk.area
+
+    local reqs =
+    {
+      kind  = "light"
+      where = "point"
+
+      size  = 96
+      height = A.ceil_h - A.floor_h
+    }
+
+    if A.room then
+      reqs.env = A.room:get_env()
+    end
+
+    local def = Fab_pick(reqs, "none_ok")
+    if not def then return end
+
+stderrf("Ceiling light: %s\n", def.name)
+    chunk.content_kind = "DECORATION"
+    chunk.prefab_def = def
+    chunk.prefab_dir = rand.dir()
+  end
+
+
   local function switch_up_room(R)
     -- locking exits and items
 
@@ -1148,6 +1174,12 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     each chunk in R.floor_chunks do
       if chunk.content_kind == nil and rand.odds(decor_prob) then
         try_decoration_in_chunk(chunk)
+      end
+    end
+
+    each chunk in R.ceil_chunks do
+      if chunk.content_kind == nil and rand.odds(100) then
+        try_ceiling_light_in_chunk(chunk)
       end
     end
 
