@@ -2588,6 +2588,12 @@ function Grower_prune_small_rooms()
 
     table.kill_elem(N.joiners, chunk)
     table.insert(N.closets, chunk)
+
+    -- remove peering too
+    if chunk.peer then
+      chunk.peer.peer = nil
+      chunk.peer = nil
+    end
   end
 
 
