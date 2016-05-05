@@ -5,6 +5,8 @@
 PREFABS.Light_1 =
 {
   file   = "decor/ceil_light.wad"
+  map    = "MAP02"
+
   kind   = "light"
   where  = "point"
 
