@@ -2134,14 +2134,14 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local def = assert(chunk.prefab_def)
     local A   = chunk.area
 
-    local skin1 = { floor=floor_mat }
+    local skin = { floor=A.floor_mat }
     local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, chunk.prefab_dir or 2)
 
     if def.z_fit then
       Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
     end
 
-    Fabricate(A.room, def, T, { skin1 })
+    Fabricate(A.room, def, T, { skin })
   end
 
 
@@ -2191,7 +2191,22 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function build_ceiling_thing(chunk)
+  local function build_ceiling_thang(chunk)
+    if chunk.content_kind != "DECORATION" then
+      error("Unknown ceiling thang: " .. tostring(chunk.content_kind))
+    end
+
+    local def = assert(chunk.prefab_def)
+    local A   = chunk.area
+
+    assert(A.ceil_h)
+
+    local skin = { ceil=A.ceil_mat }
+    local T = Trans.spot_transform(chunk.mx, chunk.my, A.ceil_h, chunk.prefab_dir or 2)
+
+    assert(def.z_fit == nil)
+
+    Fabricate(A.room, def, T, { skin })
   end
 
 
@@ -2203,6 +2218,12 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     each chunk in R.floor_chunks do
       if chunk.content_kind then
         build_important(chunk)
+      end
+    end
+
+    each chunk in R.ceil_chunks do
+      if chunk.content_kind then
+        build_ceiling_thang(chunk)
       end
     end
   end
