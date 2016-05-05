@@ -14,8 +14,6 @@ ______________________________________________________________________
 
    +  move 'prefabs' folder to games/doom/
 
-   -  fix map offsetting
-
    -  update History page (better describe V7)
    -  update Credits page (title authors)
    +  update documentation for current GUI interface
