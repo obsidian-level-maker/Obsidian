@@ -1591,14 +1591,21 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     if area_map[3] == A then return (E1.area == 3) end
 
     if area_map[E1.area] == nil then
-       -- check if the area would grow too big
-       local growth = cur_rule.area_growths[E1.area] or 0
-       if growth > 0 and #A.seeds + growth > A.max_size then
-         return false
-       end
+      -- check if the area would grow too big
+      local growth = cur_rule.area_growths[E1.area] or 0
+      if growth > 0 and #A.seeds + growth > A.max_size then
+        return false
+      end
 
-       area_map[E1.area] = A
-       return true
+      -- prevent a new area if existing area is too small
+      if cur_rule.new_area and E1.area == 1 then
+        A:calc_volume()
+        local area_min_size = sel(R.symmetry, 8, 4)
+        if A.svolume < area_min_size then return false end
+      end
+
+      area_map[E1.area] = A
+      return true
     end
 
     return false
