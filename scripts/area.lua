@@ -922,7 +922,7 @@ function Area_locate_chunks()
       table.insert(R.liquid_chunks, CHUNK)
     else
 -- stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
-      table.insert(R.chunks, CHUNK)
+      table.insert(R.floor_chunks, CHUNK)
     end
 
     -- TODO : improve this [ take nearby walls, conns, closets into account ]

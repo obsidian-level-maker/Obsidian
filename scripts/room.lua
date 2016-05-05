@@ -47,7 +47,9 @@
     peer : ROOM     -- links rooms created via symmetry
 
 
-    chunks   : list(CHUNK)   -- chunks in a walkable area
+    floor_chunks : list(CHUNK)   -- chunks in a walkable area
+     ceil_chunks : list(CHUNK)
+
     closets  : list(CHUNK)
     stairs   : list(CHUNK)
     joiners  : list(CHUNK)
@@ -141,7 +143,10 @@ function ROOM_CLASS.new()
     entry_spots = {}
     important_spots = {}   -- from prefabs
 
-    chunks  = {}
+    floor_chunks  = {}
+     ceil_chunks  = {}
+    liquid_chunks = {}
+
     closets = {}
     stairs  = {}
     joiners = {}
@@ -152,8 +157,6 @@ function ROOM_CLASS.new()
     triggers = {}
 
     used_chunks = 0  -- includes closets
-
-    liquid_chunks = {}
 
     floor_mats = {}
     ceil_mats = {}
@@ -446,7 +449,7 @@ end
 
 
 function ROOM_CLASS.usable_chunks(R)
-  return #R.chunks + #R.closets - R.used_chunks
+  return #R.floor_chunks + #R.closets - R.used_chunks
 end
 
 

@@ -57,7 +57,7 @@ function Layout_compute_dists(R)
     end
 
     -- now check teleporters
-    each chunk in R.chunks do
+    each chunk in R.floor_chunks do
       if chunk.content_kind == "TELEPORTER" then
         mark_chunk(chunk)
       end
@@ -206,7 +206,7 @@ function Layout_compute_dists(R)
     if not spread_sig_dists() then break; end
   end
 
-  visit_chunks(R.chunks)
+  visit_chunks(R.floor_chunks)
   visit_chunks(R.closets)
 end
 
@@ -271,7 +271,7 @@ function Layout_spot_for_wotsit(R, kind, required)
   local best_score = 0
 
   -- first, try floor chunks
-  each chunk in R.chunks do
+  each chunk in R.floor_chunks do
     local score = eval_spot(chunk)
 
     if score > best_score then
@@ -509,7 +509,7 @@ function Layout_add_traps()
       end
 
     elseif kind == "teleport" then
-      each chunk in R.chunks do
+      each chunk in R.floor_chunks do
         if not chunk.content_kind and (chunk.sw < 2 or chunk.sh < 2 or rand.odds(20)) then
           table.insert(locs, chunk)
         end
@@ -782,7 +782,7 @@ function Layout_add_traps()
 
     -- pick an item to target
 
-    local ch_list = table.copy(R.chunks)
+    local ch_list = table.copy(R.floor_chunks)
     table.append(ch_list, R.closets)
 
     local best
@@ -949,7 +949,7 @@ function Layout_decorate_rooms(KKK_PASS)
 
     local item
 
-    each chunk in R.chunks do
+    each chunk in R.floor_chunks do
       if chunk.kind == "area" and chunk.content_kind == "KEY" and not chunk.lock then
         item = chunk
         break;
@@ -1111,7 +1111,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     -- collect usable chunks
     local locs = {}
 
-    each chunk in R.chunks do
+    each chunk in R.floor_chunks do
       if not chunk.content_kind and not Chunk_is_slave(chunk) and
          chunk.sw >= 2 and chunk.sh >= 2 and not chunk.content_kind
       then
@@ -1145,7 +1145,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     -- decorative bling
     local decor_prob = rand.pick({ 20, 50, 50, 80 })
 
-    each chunk in R.chunks do
+    each chunk in R.floor_chunks do
       if chunk.content_kind == nil and rand.odds(decor_prob) then
         try_decoration_in_chunk(chunk)
       end

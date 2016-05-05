@@ -1591,7 +1591,7 @@ function Render_full_chunks()
   ---| Render_full_chunks |---
 
   each R in LEVEL.rooms do
-    each chunk in R.chunks do
+    each chunk in R.floor_chunks do
       if chunk.content_kind == "floor_fab" then
         Render_chunk(chunk)
       end
@@ -2191,12 +2191,16 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
+  local function build_ceiling_thing(chunk)
+  end
+
+
   ---| Render_importants |---
 
   each room in LEVEL.rooms do
     R = room
 
-    each chunk in R.chunks do
+    each chunk in R.floor_chunks do
       if chunk.content_kind then
         build_important(chunk)
       end
