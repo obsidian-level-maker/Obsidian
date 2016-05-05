@@ -4,7 +4,7 @@
 
 GROUPS.wall_vert_gap =
 {
-  env = "indoor"
+  env = "building"
 
   theme = "tech"
 }

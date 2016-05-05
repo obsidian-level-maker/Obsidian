@@ -4,7 +4,7 @@
 
 GROUPS.wall_mid_band =
 {
-  env = "indoor"
+  env = "building"
 
   theme = "tech"
 }

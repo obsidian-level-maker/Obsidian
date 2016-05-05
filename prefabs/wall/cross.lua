@@ -4,7 +4,7 @@
 
 GROUPS.wall_cross =
 {
-  env = "indoor"
+  env = "building"
 
   theme = "hell"
 }

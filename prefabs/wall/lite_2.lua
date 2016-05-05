@@ -4,7 +4,7 @@
 
 GROUPS.wall_lite2 =
 {
-  env = "indoor"
+  env = "building"
 
   theme = "tech"
 }

@@ -4,7 +4,7 @@
 
 GROUPS.wall_low_gap =
 {
-  env = "indoor"
+  env = "building"
 
   theme = "tech"
 }
