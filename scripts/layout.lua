@@ -1009,6 +1009,11 @@ function Layout_decorate_rooms(KKK_PASS)
     chunk.prefab_def = def
     chunk.prefab_dir = rand.dir()
 
+    -- prevent pillars clobbering ceiling lights
+    if def.z_fit and chunk.ceil_above then
+      chunk.ceil_above.content_kind = "NOTHING"
+    end
+
     if chunk.peer and not chunk.peer.content_kind then
       assert(A.room.symmetry)
       local peer = chunk.peer
@@ -1016,6 +1021,10 @@ function Layout_decorate_rooms(KKK_PASS)
       peer.content_kind = chunk.content_kind
       peer.prefab_def   = chunk.prefab_def
       peer.prefab_dir   = A.room.symmetry:conv_dir(chunk.prefab_dir)
+
+      if def.z_fit and peer.ceil_above then
+        peer.ceil_above.content_kind = "NOTHING"
+      end
     end
   end
 
