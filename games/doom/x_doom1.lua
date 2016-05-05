@@ -216,6 +216,11 @@ ULTDOOM.THEMES =
       GSTVINE2 = 15
       SP_ROCK1 =  5
     }
+
+    cliff_mats =
+    {
+      GRAYVINE = 60
+    }
   }
 
 
@@ -241,6 +246,13 @@ ULTDOOM.THEMES =
       STARG3 = 20
     }
 
+    cliff_mats =
+    {
+      ASHWALL  = 40
+      BROVINE  = 40
+      SP_ROCK1 = 20
+    }
+
     base_skin =
     {
       big_door = "BIGDOOR2"
@@ -250,9 +262,6 @@ ULTDOOM.THEMES =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
     }
-
-    techy_doors = true
-
   }
 
 
@@ -281,6 +290,14 @@ ULTDOOM.THEMES =
       BROWNGRN = 20
     }
 
+    cliff_mats =
+    {
+      ROCKRED1 = 60
+      ASHWALL  = 40
+      SP_ROCK1 = 40
+      GRAYVINE = 20
+    }
+
     base_skin =
     {
       big_door = "BIGDOOR2"
@@ -290,8 +307,6 @@ ULTDOOM.THEMES =
     {
       naturals = { none=40, few=70, some=20, heaps=2 }
     }
-
-    techy_doors = true
   }
 
 
@@ -332,6 +347,14 @@ ULTDOOM.THEMES =
       SKINTEK1 = 10
     }
 
+    cliff_mats =
+    {
+      ROCKRED1 = 60
+      ASHWALL  = 40
+      SP_ROCK1 = 40
+      GRAYVINE = 20
+    }
+
     base_skin =
     {
     }
@@ -342,8 +365,6 @@ ULTDOOM.THEMES =
       shooter = 0.6
       skull   = 2.0
     }
-
-    archy_arches = true
   }
 
 
@@ -384,6 +405,14 @@ ULTDOOM.THEMES =
       SKINMET2 = 10
     }
 
+    cliff_mats =
+    {
+      ROCKRED1 = 60
+      ASHWALL  = 40
+      SP_ROCK1 = 40
+      GRAYVINE = 20
+    }
+
     base_skin =
     {
     }
@@ -395,9 +424,6 @@ ULTDOOM.THEMES =
       skull = 1.2
       demon = 1.5
     }
-
-    archy_arches = true
-
   }
 }
 
