@@ -322,6 +322,11 @@ function Episode_plan_monsters()
 
     local mon_along = LEV.game_along
 
+    -- this is for Doom 1 / Ultimate Doom / Heretic
+    if PARAM.episodic_monsters then
+      mon_along = (LEV.ep_along + LEV.game_along) / 2
+    end
+
     if LEV.is_secret then
       -- secret levels are easier
       mon_along = mon_along * 0.75

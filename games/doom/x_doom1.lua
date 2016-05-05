@@ -29,6 +29,8 @@ ULTDOOM.PARAMETERS =
 {
   skip_monsters = { 15,25,35 }
 
+  episodic_monsters = true
+
   doom2_monsters = false
   doom2_weapons  = false
   doom2_skies    = false
@@ -1754,7 +1756,7 @@ end
 
 --------------------------------------------------------------------
 
-UNFINISHED["doom1"] =
+OB_GAMES["doom1"] =
 {
   label = _("Doom 1")
 
@@ -1780,7 +1782,7 @@ UNFINISHED["doom1"] =
 }
 
 
-UNFINISHED["ultdoom"] =
+OB_GAMES["ultdoom"] =
 {
   label = _("Ultimate Doom")
 
