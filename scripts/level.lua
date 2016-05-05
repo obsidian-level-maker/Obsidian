@@ -505,7 +505,7 @@ function Episode_plan_monsters()
     -- simply too weak
     if info.level < 3 then return 0 end
 
-    if info.min_weapon and info.min_weapon >= LEV.max_weapon then return 0 end
+    if info.min_weapon and info.min_weapon > LEV.max_weapon then return 0 end
 
     if info.level > LEV.monster_level + BOSS_AHEAD then return 0 end
 
