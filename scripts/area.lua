@@ -1045,6 +1045,15 @@ function Area_locate_chunks()
     CHUNK1.peer = CHUNK2
     CHUNK2.peer = CHUNK1
 
+    -- peer up ceiling chunks too
+    local CEIL1 = CHUNK1.ceil_above
+    local CEIL2 = CHUNK2.ceil_above
+
+    if CEIL1 and CEIL2 then
+      CEIL1.peer = CEIL2
+      CEIL2.peer = CEIL1
+    end
+
     return true
   end
 
