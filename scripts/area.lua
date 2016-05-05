@@ -903,33 +903,45 @@ function Area_locate_chunks()
   }
 
 
+  local function make_chunk(kind, place, A, sx1,sy1, sx2,sy2)
+    local CHUNK = Chunk_new(kind, sx1,sy1, sx2,sy2)
+
+    CHUNK.area  = A
+    CHUNK.place = place
+
+    if CHUNK.sw < 2 or CHUNK.sh < 2 then
+      CHUNK.is_small = true
+    end
+
+    return CHUNK
+  end
+
+
   local function create_chunk(A, sx1,sy1, sx2,sy2)
     local R = assert(A.room)
 
     local kind = "area"
     if A.mode == "liquid" then kind = "liquid" end
 
-    local CHUNK = Chunk_new(kind, sx1,sy1, sx2,sy2)
-
-    CHUNK.area = A
-    CHUNK.place = "floor"
-
-    if CHUNK.sw < 2 or CHUNK.sh < 2 then
-      CHUNK.is_small = true
-    end
-
-    if kind == "liquid" then
-      table.insert(R.liquid_chunks, CHUNK)
-    else
--- stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
-      table.insert(R.floor_chunks, CHUNK)
-    end
+    local CHUNK = make_chunk(kind, "floor", A, sx1,sy1, sx2,sy2)
 
     -- TODO : improve this [ take nearby walls, conns, closets into account ]
     CHUNK.space = 24
     if math.min(CHUNK.sw, CHUNK.sh) >= 2 then CHUNK.space = 104 end
     if math.min(CHUNK.sw, CHUNK.sh) >= 3 then CHUNK.space = 224 end
     if math.min(CHUNK.sw, CHUNK.sh) >= 4 then CHUNK.space = 344 end
+
+    if kind == "liquid" then
+      table.insert(R.liquid_chunks, CHUNK)
+    else
+-- stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
+      table.insert(R.floor_chunks, CHUNK)
+
+      if not A.is_outdoor then
+        local CEIL = make_chunk(kind, "ceil", A, sx1,sy1, sx2,sy2)
+        table.insert(R.ceil_chunks, CEIL)
+      end
+    end
 
     return CHUNK
   end
