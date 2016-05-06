@@ -1619,6 +1619,46 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function merge_floor_groups(R, group1, group2)
+    if group1.id > group2.id then
+      group1, group2 = group2, group1
+    end
+
+    each A in R.areas do
+      if A.floor_group == group2 then
+         A.floor_group =  group1
+      end
+    end
+
+    group2.id = "DEAD"
+  end
+
+
+  local function can_merge_floors(A1, A2)
+  end
+
+
+  local function group_floor_pass(R)
+  end
+
+
+  local function group_floors(R)
+    -- initial setup -- each area gets a unique floor group
+
+    each A in R.areas do
+      if A.mode == "floor" then
+        A.floor_group = { id=alloc_id("floor_group") }
+      end
+    end
+
+    -- secondly, perform some merge passes
+
+    for loop = 1, 5 do
+      group_floor_pass(R)
+    end
+  end
+
+
   local function usable_delta_h(R, from_h, h)
     if not rand.odds(R.delta_up_chance) then
       h = - h
@@ -1634,9 +1674,14 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function pick_direct_delta_h(R, from_h)
+  local function pick_direct_delta_h(R, from_h, A1, A2)
     if STYLE.steepness == "none" then
-      return 0
+      return from_h
+    end
+
+    -- for indoor rooms, only change height if floor_groups are different
+    if not R.is_outdoor and A1.floor_group == A2.floor_group then
+      return from_h
     end
 
     local h = 8
@@ -1718,7 +1763,7 @@ function Room_floor_ceil_heights()
 -- stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
 
       if C.kind == "direct" then
-        flow_through_room(A2, pick_direct_delta_h(R, cur_delta_h))
+        flow_through_room(A2, pick_direct_delta_h(R, cur_delta_h, A, A2))
         continue
       end
 
@@ -2506,6 +2551,10 @@ end
   -- give each zone a preferred hallway z_dir  [ NOT USED ATM ]
   each Z in LEVEL.zones do
     Z.hall_up_prob = rand.sel(70, 80, 20)
+  end
+
+  each R in LEVEL.rooms do
+    group_floors(R)
   end
 
   local first = LEVEL.start_room or LEVEL.blue_base or LEVEL.rooms[1]
