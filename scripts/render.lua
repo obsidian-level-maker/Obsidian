@@ -1145,6 +1145,7 @@ function Render_ceiling(A, S)
   if S.done_ceil then return end
 
   local c_h = S.ceil_h or A.ceil_h
+if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.tostr(A)) end
   assert(c_h)
 
   local c_mat  = S.ceil_mat  or A.ceil_mat
@@ -1294,14 +1295,17 @@ function Render_chunk(chunk)
 
   local function do_start()
     reqs.kind = "start"
+    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
   local function do_exit()
     reqs.kind = "exit"
+    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
   local function do_cage()
     reqs.kind = "cage"
+    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
   local function do_trap()
@@ -2223,7 +2227,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     each chunk in R.ceil_chunks do
       if chunk.content_kind and chunk.content_kind != "NOTHING" then
-        build_ceiling_thang(chunk)
+--!!!   build_ceiling_thang(chunk)
       end
     end
   end
