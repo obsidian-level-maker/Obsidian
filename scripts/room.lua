@@ -2669,7 +2669,9 @@ end
       if A.mode != "cage" then continue end
 
       if A.peer and A.peer.floor_h then
-        A.floor_h = A.peer.floor_h
+        A.floor_h  = A.peer.floor_h
+        A.ceil_h   = A.peer.ceil_h
+        A.ceil_mat = A.peer.ceil_mat
         continue
       end
 
@@ -2679,9 +2681,8 @@ end
         error("failed to find cage neighbor")
       end
 
-      A.floor_h = N.floor_h + rand.pick({40,56,72})
-      A.ceil_h  = A.floor_h + 80
-
+      A.floor_h  = N.floor_h + rand.pick({40,56,72})
+      A.ceil_h   = A.floor_h + 80
       A.ceil_mat = N.ceil_mat
     end
   end
@@ -2733,46 +2734,6 @@ end
   end
 
 
-  local function highest_unvisited_floor_group(R)
-    local best
-
-    each A in R.areas do
-      if A.floor_group and not A.floor_group.CEIL_DONE then
-        if not best or A.floor_group.h > best.h then
-          best = A.floor_group
-        end
-      end
-    end
-
-    return best
-  end
-
-
-  local function BLEH__assign_ceiling_group_heights(R)
-    local space_h = 96
-
-    while true do
-      local fg = highest_unvisited_floor_group(R)
-      if not fg then break; end
-
-      while true do
-        local cg = unvisited_ceiling_group(R, fg, space_h)
-        if not cg then break; end
-
-        cg.h = fg.h + space_h
-      end
-
-      space_h = space_h + 32
-    end
-
-    while true do
-      local cg = unvisited_ceiling_group(R, "any", space_h)
-      if not cg then break; end
-      cg.h = fg.h + space_h
-    end
-  end
-
-
   local function calc_ceil_stuff(R, group)
     group.vol = 0
 
@@ -2791,6 +2752,24 @@ end
 
 stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
         group.vol, group.min_floor_h, group.max_floor_h)
+  end
+
+
+  local function calc_a_ceiling_height(R, group)
+    local add_h
+
+        if group.vol <  8 then add_h = 96
+    elseif group.vol < 16 then add_h = 128
+    elseif group.vol < 32 then add_h = 160
+    elseif group.vol < 48 then add_h = 192
+    else                       add_h = 256
+    end
+
+    if add_h > 128 and group.max_floor_h >= group.min_floor_h + 64 then
+      add_h = add_h - 32
+    end
+
+    group.h = group.max_floor_h + add_h
   end
 
 
@@ -2816,12 +2795,15 @@ stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
       calc_ceil_stuff(R, group)
     end
 
-    -- TEMP RUBBISH
     rand.shuffle(groups)
 
-    each G in groups do
-      G.h = R.max_floor_h + 96 + (_index - 1) * 16
+    each group in groups do
+      calc_a_ceiling_height(R, group)
     end
+
+    -- TODO ensure traversibility over internal conns
+
+    -- TODO if largest ceil-group is same as a neighbor, raise by 32 until different
   end
 
 
