@@ -278,6 +278,17 @@ function AREA_CLASS.touches(A, N)
 end
 
 
+function AREA_CLASS.has_conn(A)
+  each C in LEVEL.conns do
+    if C.kind != "teleporter" and (C.A1 == A or C.A2 == A) then
+      return true
+    end
+  end
+
+  return false
+end
+
+
 function AREA_CLASS.highest_neighbor(A)
   local best
 

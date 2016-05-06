@@ -2713,7 +2713,6 @@ end
       assert(chunk.from_area)
       A.floor_h = assert(chunk.from_area.floor_h)
 
-      -- FIXME : probably pick prefab HERE, decide if outdoorsy
       if chunk.place == "whole" then
         A.is_outdoor = nil
       end
@@ -2733,6 +2732,17 @@ end
     end
   end
 
+  
+  local function check_joiner_nearby_h(A)
+    each C in LEVEL.conns do
+      if C.kind == "joiner" and (C.A1 == A or C.A2 == A) then
+        return C.joiner_chunk.prefab_def.nearby_h
+      end
+    end
+
+    return nil
+  end
+
 
   local function calc_ceil_stuff(R, group)
     group.vol = 0
@@ -2749,6 +2759,22 @@ end
     if R.symmetry then group.vol = group.vol / 2 end
 
     assert(group.max_floor_h)
+
+    group.min_h = 96
+
+    each A in R.areas do
+      if A.ceil_group == group and A:has_conn() then
+        -- TODO : get nearby_h from arch/door prefab  [ but it aint picked yet... ]
+        local min_h = A.floor_h + 128 - group.max_floor_h
+        group.min_h = math.max(group.min_h, min_h)
+
+        min_h = check_joiner_nearby_h(A)
+        if min_h then
+          min_h = A.floor_h + min_h - group.max_floor_h
+          group.min_h = math.max(group.min_h, min_h)
+        end
+      end
+    end
 
 stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
         group.vol, group.min_floor_h, group.max_floor_h)
@@ -2768,6 +2794,8 @@ stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
     if add_h > 128 and group.max_floor_h >= group.min_floor_h + 64 then
       add_h = add_h - 32
     end
+
+    add_h = math.max(group.min_h, add_h)
 
     group.h = group.max_floor_h + add_h
   end
