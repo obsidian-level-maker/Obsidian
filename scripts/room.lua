@@ -1619,113 +1619,51 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function floors_must_stay_separated(R, A1, A2)
-    assert(A1 != A2)
+  local function prob_for_new_floor_group(A1, A2)
+    local vol_1 = A1.svolume / sel(A1.room.symmetry, 2, 1) 
+    local vol_2 = A2.svolume / sel(A2.room.symmetry, 2, 1) 
+
+    -- TODO
+
+    return 0
+  end
+
+
+  local function visit_floor_area(R, A, grp)
+    if grp == "new" then
+      grp = { id=alloc_id("floor_group") }
+    end
+
+    A.floor_group = grp
 
     each IC in R.internal_conns do
-      if (IC.A1 == A1 and IC.A2 == A2) or
-         (IC.A1 == A2 and IC.A2 == A1)
-      then
-        if IC.kind != "direct" then return true end
+      local A2 = areaconn_other(IC, A)
 
-        return IC.keep_separate
+      if not A2 then continue end
+      if A2.floor_group then continue end
+
+      -- stair connections *must* use another group.
+      -- direct connections generally use the same group.
+
+      if IC.kind != "direct" or rand.odds(prob_for_new_floor_group(A, A2)) then
+        visit_floor_area(R, A2, "new")
+      else
+        visit_floor_area(R, A2, A.floor_group)
       end
     end
-
-    return false
-  end
-
-
-  local function merge_floor_groups(R, group1, group2)
-    if group1.id > group2.id then
-      group1, group2 = group2, group1
-    end
-
---stderrf("%s : merging %d --> %d\n", R.name, group2.id, group1.id)
-
-    each A in R.areas do
-      if A.floor_group == group2 then
-         A.floor_group =  group1
-      end
-    end
-
-    group2.id = "DEAD"
-  end
-
-
-  local function try_merge_floor_groups(R, group1, group2)
-    assert(group1 != group2)
-
-    local do_touch = false
-
-    each A1 in R.areas do
-    each A2 in R.areas do
-      if A1.floor_group == group1 and A2.floor_group == group2 then
-
-        if floors_must_stay_separated(R, A1, A2) then return false end
-
-        if A1:touches(A2) then do_touch = true end
-      end
-    end
-    end
-
-    if not do_touch then return false end
-
-    merge_floor_groups(R, group1, group2)
-    return true
-  end
-
-
-  local function group_floor_pass(R)
-    local groups = {}
-
-    each A in R.areas do
-      if A.floor_group then
-        table.add_unique(groups, A.floor_group)
-      end
-    end
-
-    if #groups < 2 then return false end
-
-    rand.shuffle(groups)
-
-    for i = 2, #groups do
-    for k = 1, i - 1 do
-      if try_merge_floor_groups(R, groups[i], groups[k]) then
-        return true
-      end
-    end
-    end
-
-    return false
   end
 
 
   local function group_floors(R)
     if R.is_outdoor then return end
 
-    -- initial setup -- each area gets a unique floor group
+    local start_area
 
-    each A in R.areas do
-      if A.mode == "floor" then
-        A.floor_group = { id=alloc_id("floor_group") }
-      end
-    end
+    repeat
+      start_area = rand.pick(R.areas)
+    until start_area.mode == "floor"
 
-    -- pick some direct internal connections that should stay separate
-    -- TODO: make this smarter, check if combined size is over a threshhold
-
-    each IC in R.internal_conns do
-      if IC.kind == "direct" and rand.odds(30*0) then
-        IC.keep_separate = true
-      end
-    end
-
-    -- perform some merge passes
-
-    for loop = 1, 20 do
-      group_floor_pass(R)
-    end
+    visit_floor_area(R, start_area, "new")
   end
 
 
@@ -1949,6 +1887,13 @@ end
     gui.debugf("flow_through_room: delta %d --> %s\n", cur_delta_h, A.name)
 
     A.delta_h = cur_delta_h
+
+    if A.floor_group then
+if A.floor_group.delta_h and A.floor_group.delta_h != cur_delta_h then
+stderrf("WARNING : floor group got different heights!\n")
+end
+      A.floor_group.delta_h = cur_delta_h
+    end
 
     local R = A.room
 
