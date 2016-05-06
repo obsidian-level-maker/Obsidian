@@ -1611,11 +1611,31 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function areaconn_other(C, A)
-    if C.A1 == A then return C.A2 end
-    if C.A2 == A then return C.A1 end
+  local function areaconn_other(IC, A)
+    if IC.A1 == A then return IC.A2 end
+    if IC.A2 == A then return IC.A1 end
 
     return nil
+  end
+
+
+  local function can_merge_areas(R, A1, A2)
+    assert(A1 != A2)
+
+    each IC in R.internal_conns do
+      if (IC.A1 == A1 and IC.A2 == A2) or
+         (IC.A1 == A2 and IC.A2 == A1)
+      then
+        if IC.kind != "direct" then return false end
+
+        if IC.keep_separate then return false end
+
+        return true
+      end
+    end
+
+    -- no internal connection, so check if they are neighbors
+    return A1:touches(A2)
   end
 
 
@@ -1634,15 +1654,29 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function can_merge_floors(A1, A2)
+  local function can_merge_floor_groups(R, group1, group2)
+    assert(group1 != group2)
+
+    each A1 in R.areas do
+    each A2 in R.areas do
+      if A1.floor_group == group1 and A2.floor_group == group2 then
+        if not can_merge_areas(A1, A2) then return false end
+      end
+    end
+    end
+
+    return true
   end
 
 
   local function group_floor_pass(R)
+    -- TODO
   end
 
 
   local function group_floors(R)
+    if R.is_outdoor then return end
+
     -- initial setup -- each area gets a unique floor group
 
     each A in R.areas do
@@ -1651,7 +1685,16 @@ function Room_floor_ceil_heights()
       end
     end
 
-    -- secondly, perform some merge passes
+    -- pick some direct internal connections that should stay separate
+    -- TODO: make this smarter, check if combined size is over a threshhold
+
+    each IC in R.internal_conns do
+      if IC.kind == "direct" and rand.odds(25) then
+        IC.keep_separate = true
+      end
+    end
+
+    -- perform some merge passes
 
     for loop = 1, 5 do
       group_floor_pass(R)
