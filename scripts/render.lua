@@ -1102,7 +1102,7 @@ function Render_floor(A, S)
 -- tag = A.id
 -- if A.room then tag = A.room.id end
 -- if A.pool_id then tag = 1000 + A.pool_id end
-
+-- if A.ceil_group then tag = A.ceil_group.id end
 
   -- handle railings [ must be done here ]
   each C in f_brush do

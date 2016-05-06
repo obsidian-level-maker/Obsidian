@@ -1619,7 +1619,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function areas_must_stay_separated(R, A1, A2)
+  local function floors_must_stay_separated(R, A1, A2)
     assert(A1 != A2)
 
     each IC in R.internal_conns do
@@ -1641,7 +1641,7 @@ function Room_floor_ceil_heights()
       group1, group2 = group2, group1
     end
 
-stderrf("%s : merging %d --> %d\n", R.name, group2.id, group1.id)
+--stderrf("%s : merging %d --> %d\n", R.name, group2.id, group1.id)
 
     each A in R.areas do
       if A.floor_group == group2 then
@@ -1662,7 +1662,7 @@ stderrf("%s : merging %d --> %d\n", R.name, group2.id, group1.id)
     each A2 in R.areas do
       if A1.floor_group == group1 and A2.floor_group == group2 then
 
-        if areas_must_stay_separated(R, A1, A2) then return false end
+        if floors_must_stay_separated(R, A1, A2) then return false end
 
         if A1:touches(A2) then do_touch = true end
       end
@@ -1716,7 +1716,7 @@ stderrf("%s : merging %d --> %d\n", R.name, group2.id, group1.id)
     -- TODO: make this smarter, check if combined size is over a threshhold
 
     each IC in R.internal_conns do
-      if IC.kind == "direct" and rand.odds(25*0) then
+      if IC.kind == "direct" and rand.odds(30) then
         IC.keep_separate = true
       end
     end
@@ -1725,6 +1725,140 @@ stderrf("%s : merging %d --> %d\n", R.name, group2.id, group1.id)
 
     for loop = 1, 20 do
       group_floor_pass(R)
+    end
+  end
+
+
+  local function ceilings_must_stay_separated(R, A1, A2)
+    assert(A1 != A2)
+
+    each IC in R.internal_conns do
+      if (IC.A1 == A1 and IC.A2 == A2) or
+         (IC.A1 == A2 and IC.A2 == A1)
+      then
+        if IC.foobie_bletch then return false end
+        
+        return (IC.kind == "direct")
+      end
+    end
+
+--[[
+    if not A1:touches(A2) then return false end
+
+    return (A1.floor_group == A2.floor_group)
+--]]
+    return false
+  end
+
+
+  local function merge_ceil_groups(R, group1, group2)
+    if group1.id > group2.id then
+      group1, group2 = group2, group1
+    end
+
+stderrf("%s : merging ceil %d --> %d\n", R.name, group2.id, group1.id)
+
+    each A in R.areas do
+      if A.ceil_group == group2 then
+         A.ceil_group =  group1
+      end
+    end
+
+    group2.id = "DEAD"
+  end
+
+
+  local function try_merge_ceil_groups(R, group1, group2)
+    assert(group1 != group2)
+
+    local do_touch = false
+
+DEBUG_CEIL = nil
+if (group1.id == 14 and group2.id == 16) or
+   (group1.id == 16 and group2.id == 14)
+then DEBUG_CEIL = true
+stderrf("try_merge_ceil_groups 14..16\n")
+end
+
+    each A1 in R.areas do
+    each A2 in R.areas do
+      if A1.ceil_group == group1 and A2.ceil_group == group2 then
+
+if DEBUG_CEIL then
+stderrf("  %s <--> %s\n", A1.name, A2.name)
+stderrf("  must_stay_sep = %s\n", string.bool(ceilings_must_stay_separated(R, A1, A2)))
+end
+        if ceilings_must_stay_separated(R, A1, A2) then return false end
+
+    each IC in R.internal_conns do
+      if (IC.A1 == A1 and IC.A2 == A2) or
+         (IC.A1 == A2 and IC.A2 == A1)
+      then
+        do_touch = true
+      end
+    end
+
+        if A1:touches(A2) then do_touch = true end
+      end
+    end
+    end
+
+if DEBUG_CEIL then
+stderrf("---> do_touch = %s\n", string.bool(do_touch))
+end
+    if not do_touch then return false end
+
+    merge_ceil_groups(R, group1, group2)
+    return true
+  end
+
+
+  local function group_ceiling_pass(R)
+    local groups = {}
+
+    each A in R.areas do
+      if A.ceil_group then
+        table.add_unique(groups, A.ceil_group)
+      end
+    end
+
+    if #groups < 2 then return false end
+
+    rand.shuffle(groups)
+
+    for i = 2, #groups do
+    for k = 1, i - 1 do
+      if try_merge_ceil_groups(R, groups[i], groups[k]) then
+        return true
+      end
+    end
+    end
+
+    return false
+  end
+
+
+
+  local function group_ceilings(R)
+    if R.is_outdoor then return end
+
+    each A in R.areas do
+      if A.mode == "floor" then
+        A.ceil_group = { id=alloc_id("ceil_group") }
+      end
+    end
+
+--[[
+    -- pick some internal connections that should BLAH BLAH
+    each IC in R.internal_conns do
+      if IC.kind == "stair" or rand.odds(30) then
+        IC.same_ceiling = true
+      end
+    end
+--]]
+
+    for loop = 1, 20 do
+      group_ceiling_pass(R)
     end
   end
 
@@ -2625,6 +2759,7 @@ end
 
   each R in LEVEL.rooms do
     group_floors(R)
+    group_ceilings(R)
   end
 
   local first = LEVEL.start_room or LEVEL.blue_base or LEVEL.rooms[1]
