@@ -1716,7 +1716,7 @@ function Room_floor_ceil_heights()
     -- TODO: make this smarter, check if combined size is over a threshhold
 
     each IC in R.internal_conns do
-      if IC.kind == "direct" and rand.odds(30) then
+      if IC.kind == "direct" and rand.odds(30*0) then
         IC.keep_separate = true
       end
     end
@@ -2483,6 +2483,8 @@ end
       if A.is_outdoor then continue end
       if A.is_porch   then continue end
 
+      if A.mode != "floor" then continue end
+
       assert(A.ceil_h)
 
       if A.peer and A.peer.ceil_mat then
@@ -2527,6 +2529,8 @@ end
 
 
   local function visit_room(R, entry_h, entry_area, prev_room, via_conn)
+    group_floors(R)
+
     -- get peered room (for CTF mode)
     local R2 = R.sister or R.brother
 
@@ -2639,11 +2643,19 @@ end
 
       A.floor_h   = N.floor_h
       A.floor_mat = N.floor_mat
+
+      A.ceil_h    = N.ceil_h
+      A.ceil_mat  = N.ceil_mat
     end
   end
 
 
   local function do_cage_areas(R)
+    if R.is_start then
+      kill_start_cages(R)
+      return
+    end
+
     each A in R.areas do
       if A.mode != "cage" then continue end
 
@@ -2659,6 +2671,20 @@ end
       end
 
       A.floor_h = N.floor_h + rand.pick({40,56,72})
+      A.ceil_h  = A.floor_h + 80
+
+      A.ceil_mat = N.ceil_mat
+    end
+  end
+
+
+  local function do_stairs(R)
+    each chunk in R.stairs do
+      local A = chunk.area
+
+      -- FIXME !!!!
+      A.ceil_h   = A.floor_h + 256
+      A.ceil_mat = "REDWALL"
     end
   end
 
@@ -2690,7 +2716,11 @@ end
 
 
   local function do_ceilings(R)
+    group_ceilings(R)
+
     each A in R.areas do
+      if A.mode != "floor" then continue end
+
       -- outdoor heights are done later, get a dummy now
       if A.is_outdoor then
         A.ceil_h = A.floor_h + R.zone.sky_add_h - 8
@@ -2699,12 +2729,6 @@ end
 
       if A.peer and A.peer.ceil_h then
         A.ceil_h = A.peer.ceil_h
-        continue
-      end
-
-      if A.mode == "cage" then
-        -- FIXME : check neighbors
-        A.ceil_h = A.floor_h + 80
         continue
       end
 
@@ -2757,11 +2781,6 @@ end
     Z.hall_up_prob = rand.sel(70, 80, 20)
   end
 
-  each R in LEVEL.rooms do
-    group_floors(R)
-    group_ceilings(R)
-  end
-
   local first = LEVEL.start_room or LEVEL.blue_base or LEVEL.rooms[1]
 
   -- recursively visit all rooms
@@ -2773,15 +2792,12 @@ end
   each R in LEVEL.rooms do
     calc_max_floor(R)
 
-    if R.is_start then
-      kill_start_cages(R)
-    end
+    do_ceilings(R)
 
     do_liquid_areas(R)
     do_cage_areas(R)
+    do_stairs(R)
     do_closets(R)
-
-    do_ceilings(R)
   end
 end
 
