@@ -8,6 +8,7 @@ PREFABS.Start_Dropoff =
   where = "seeds"
 
   seed_w = 2
+  height = 128
 
   x_fit = "frame"
   y_fit = "top"
