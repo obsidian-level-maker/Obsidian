@@ -1667,6 +1667,70 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function merge_floor_groups(R, group1, group2)
+    if group1.id > group2.id then
+      group1, group2 = group2, group1
+    end
+
+stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
+
+    each A in R.areas do
+      if A.floor_group == group2 then
+         A.floor_group =  group1
+      end
+    end
+
+    group2.id = "DEAD"
+  end
+
+
+  local function do_floor_groups_touch(R, group1, group2)
+    each A3 in R.areas do
+    each A4 in R.areas do
+      if A3.floor_group == group1 and
+         A4.floor_group == group2 and
+         A3:touches(A4)
+      then
+        return true
+      end
+    end
+    end
+
+    return false
+  end
+
+
+  local function try_regroup_floors(R, A1, A2)
+    local group1 = A1.floor_group
+    local group2 = A2.floor_group
+
+    if not (group1 and group2) then return end
+
+    if group1 == group2 then return end
+
+    if group1.h != group2.h then return end
+
+    if do_floor_groups_touch(R, group1, group2) then
+stderrf("****** MERGING FLOOR GROUPS after HEIGHTS\n")
+      merge_floor_groups(R, group1, group2)
+    end
+  end
+
+
+  local function regroup_floors(R)
+    -- after setting floor heights in the room, this checks if two
+    -- groups which touch each other have the same height
+
+    for pass = 1, 3 do
+      each A1 in R.areas do
+      each A2 in R.areas do
+        try_regroup_floors(R, A1, A2)
+      end
+      end
+    end
+  end
+
+
   local function ceilings_must_stay_separated(R, A1, A2)
     assert(A1 != A2)
 
@@ -1694,7 +1758,7 @@ function Room_floor_ceil_heights()
       group1, group2 = group2, group1
     end
 
-stderrf("%s : merging ceil %d --> %d\n", R.name, group2.id, group1.id)
+-- stderrf("%s : merging ceil %d --> %d\n", R.name, group2.id, group1.id)
 
     each A in R.areas do
       if A.ceil_group == group2 then
@@ -2655,6 +2719,8 @@ end
     each A in R.areas do
       if A.floor_h then
         R.max_floor_h = math.max(R.max_floor_h, A.floor_h)
+
+        if A.floor_group then A.floor_group.h = A.floor_h end
       end
     end
   end
@@ -2736,6 +2802,8 @@ end
 
   each R in LEVEL.rooms do
     calc_max_floor(R)
+
+    regroup_floors(R)
 
     do_ceilings(R)
 
