@@ -8,7 +8,7 @@ PREFABS.Cage_small_1 =
   where  = "point"
 
   size   = 80
-  height = 128
+  height = 96
 
   bound_z1 = 0
   bound_z2 = 127
