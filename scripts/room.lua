@@ -1619,23 +1619,20 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function can_merge_areas(R, A1, A2)
+  local function areas_must_stay_separated(R, A1, A2)
     assert(A1 != A2)
 
     each IC in R.internal_conns do
       if (IC.A1 == A1 and IC.A2 == A2) or
          (IC.A1 == A2 and IC.A2 == A1)
       then
-        if IC.kind != "direct" then return false end
+        if IC.kind != "direct" then return true end
 
-        if IC.keep_separate then return false end
-
-        return true
+        return IC.keep_separate
       end
     end
 
-    -- no internal connection, so check if they are neighbors
-    return A1:touches(A2)
+    return false
   end
 
 
@@ -1643,6 +1640,8 @@ function Room_floor_ceil_heights()
     if group1.id > group2.id then
       group1, group2 = group2, group1
     end
+
+stderrf("%s : merging %d --> %d\n", R.name, group2.id, group1.id)
 
     each A in R.areas do
       if A.floor_group == group2 then
@@ -1654,23 +1653,51 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function can_merge_floor_groups(R, group1, group2)
+  local function try_merge_floor_groups(R, group1, group2)
     assert(group1 != group2)
+
+    local do_touch = false
 
     each A1 in R.areas do
     each A2 in R.areas do
       if A1.floor_group == group1 and A2.floor_group == group2 then
-        if not can_merge_areas(A1, A2) then return false end
+
+        if areas_must_stay_separated(R, A1, A2) then return false end
+
+        if A1:touches(A2) then do_touch = true end
       end
     end
     end
 
+    if not do_touch then return false end
+
+    merge_floor_groups(R, group1, group2)
     return true
   end
 
 
   local function group_floor_pass(R)
-    -- TODO
+    local groups = {}
+
+    each A in R.areas do
+      if A.floor_group then
+        table.add_unique(groups, A.floor_group)
+      end
+    end
+
+    if #groups < 2 then return false end
+
+    rand.shuffle(groups)
+
+    for i = 2, #groups do
+    for k = 1, i - 1 do
+      if try_merge_floor_groups(R, groups[i], groups[k]) then
+        return true
+      end
+    end
+    end
+
+    return false
   end
 
 
@@ -1689,14 +1716,14 @@ function Room_floor_ceil_heights()
     -- TODO: make this smarter, check if combined size is over a threshhold
 
     each IC in R.internal_conns do
-      if IC.kind == "direct" and rand.odds(25) then
+      if IC.kind == "direct" and rand.odds(25*0) then
         IC.keep_separate = true
       end
     end
 
     -- perform some merge passes
 
-    for loop = 1, 5 do
+    for loop = 1, 20 do
       group_floor_pass(R)
     end
   end
