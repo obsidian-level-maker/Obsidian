@@ -1711,7 +1711,6 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
     if group1.h != group2.h then return end
 
     if do_floor_groups_touch(R, group1, group2) then
-stderrf("****** MERGING FLOOR GROUPS after HEIGHTS\n")
       merge_floor_groups(R, group1, group2)
     end
   end
@@ -1775,39 +1774,25 @@ stderrf("****** MERGING FLOOR GROUPS after HEIGHTS\n")
 
     local do_touch = false
 
-DEBUG_CEIL = nil
-if (group1.id == 14 and group2.id == 16) or
-   (group1.id == 16 and group2.id == 14)
-then DEBUG_CEIL = true
-stderrf("try_merge_ceil_groups 14..16\n")
-end
-
     each A1 in R.areas do
     each A2 in R.areas do
-      if A1.ceil_group == group1 and A2.ceil_group == group2 then
+      if A1.ceil_group != group1 then continue end
+      if A2.ceil_group != group2 then continue end
 
-if DEBUG_CEIL then
-stderrf("  %s <--> %s\n", A1.name, A2.name)
-stderrf("  must_stay_sep = %s\n", string.bool(ceilings_must_stay_separated(R, A1, A2)))
-end
-        if ceilings_must_stay_separated(R, A1, A2) then return false end
+      if ceilings_must_stay_separated(R, A1, A2) then return false end
 
-    each IC in R.internal_conns do
-      if (IC.A1 == A1 and IC.A2 == A2) or
-         (IC.A1 == A2 and IC.A2 == A1)
-      then
-        do_touch = true
+      if A1:touches(A2) then do_touch = true end
+
+      each IC in R.internal_conns do
+        if (IC.A1 == A1 and IC.A2 == A2) or
+           (IC.A1 == A2 and IC.A2 == A1)
+        then
+          do_touch = true
+        end
       end
+    end  -- A1, A2
     end
 
-        if A1:touches(A2) then do_touch = true end
-      end
-    end
-    end
-
-if DEBUG_CEIL then
-stderrf("---> do_touch = %s\n", string.bool(do_touch))
-end
     if not do_touch then return false end
 
     merge_ceil_groups(R, group1, group2)
@@ -2776,8 +2761,10 @@ end
       end
     end
 
-stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
+--[[
+    stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
         group.vol, group.min_floor_h, group.max_floor_h)
+--]]
   end
 
 
