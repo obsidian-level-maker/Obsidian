@@ -2691,9 +2691,16 @@ end
     each chunk in R.stairs do
       local A = chunk.area
 
-      -- FIXME !!!!
-      A.ceil_h   = A.floor_h + 256
-      A.ceil_mat = "REDWALL"
+      if A.is_outdoor then
+        A.ceil_h = A.floor_h + 256
+        continue
+      end
+
+      local N = chunk.from_area
+      assert(N.ceil_h)
+
+      A.ceil_h   = N.ceil_h
+      A.ceil_mat = N.ceil_mat
     end
   end
 
@@ -2809,7 +2816,12 @@ stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
       calc_ceil_stuff(R, group)
     end
 
-    -- TODO
+    -- TEMP RUBBISH
+    rand.shuffle(groups)
+
+    each G in groups do
+      G.h = R.max_floor_h + 96 + (_index - 1) * 16
+    end
   end
 
 
@@ -2834,6 +2846,11 @@ stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
         continue
       end
 
+      if A.ceil_group then
+        set_ceil(A, assert(A.ceil_group.h))
+        continue
+      end
+
       local height = rand.pick({ 128, 192,192,192, 256,320 })
 
       if A.is_porch then
@@ -2847,6 +2864,7 @@ end
       set_ceil(A, R.max_floor_h + 128)
     end
 
+--[[ REVIEW THIS
     -- ensure enough vertical room for player to travel between areas
     local SPACE_Z = 80
 
@@ -2856,6 +2874,7 @@ end
       if C.A1.ceil_h < min_c then set_ceil(C.A1, min_c) end
       if C.A2.ceil_h < min_c then set_ceil(C.A2, min_c) end
     end
+--]]
 
     -- now pick textures
     select_ceiling_mats(R)
