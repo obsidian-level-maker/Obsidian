@@ -2726,8 +2726,99 @@ end
   end
 
 
+  local function highest_unvisited_floor_group(R)
+    local best
+
+    each A in R.areas do
+      if A.floor_group and not A.floor_group.CEIL_DONE then
+        if not best or A.floor_group.h > best.h then
+          best = A.floor_group
+        end
+      end
+    end
+
+    return best
+  end
+
+
+  local function BLEH__assign_ceiling_group_heights(R)
+    local space_h = 96
+
+    while true do
+      local fg = highest_unvisited_floor_group(R)
+      if not fg then break; end
+
+      while true do
+        local cg = unvisited_ceiling_group(R, fg, space_h)
+        if not cg then break; end
+
+        cg.h = fg.h + space_h
+      end
+
+      space_h = space_h + 32
+    end
+
+    while true do
+      local cg = unvisited_ceiling_group(R, "any", space_h)
+      if not cg then break; end
+      cg.h = fg.h + space_h
+    end
+  end
+
+
+  local function calc_ceil_stuff(R, group)
+    group.vol = 0
+
+    each A in R.areas do
+      if A.ceil_group == group then
+        group.vol = group.vol + A.svolume
+
+        group.min_floor_h = math.N_min(A.floor_h, group.min_floor_h)
+        group.max_floor_h = math.N_max(A.floor_h, group.max_floor_h)
+      end
+    end
+
+    if R.symmetry then group.vol = group.vol / 2 end
+
+    assert(group.max_floor_h)
+
+stderrf("%s : ceil group %d : vol=%d  min=%d  max=%d\n", R.name, group.id,
+        group.vol, group.min_floor_h, group.max_floor_h)
+  end
+
+
+  local function ceiling_group_heights(R)
+    --
+    -- Notes:
+    --   a major requirement is the ceiling groups which neighbor
+    --   each other (incl. via a stair) get a unique ceil_h.
+    --
+    --   a lesser goal is that larger ceiling groups get a higher
+    --   ceiling than smaller ones.
+    --
+
+    local groups = {}
+
+    each A in R.areas do
+      if A.ceil_group then
+        table.add_unique(groups, A.ceil_group)
+      end
+    end
+
+    each group in groups do
+      calc_ceil_stuff(R, group)
+    end
+
+    -- TODO
+  end
+
+
   local function do_ceilings(R)
     group_ceilings(R)
+
+    if not R.is_outdoor then
+      ceiling_group_heights(R)
+    end
 
     each A in R.areas do
       if A.mode != "floor" then continue end
