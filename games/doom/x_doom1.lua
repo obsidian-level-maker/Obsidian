@@ -115,6 +115,7 @@ ULTDOOM.MATERIALS =
   CONS1_5  = { f="CONS1_5", t="COMPWERD" }
   CONS1_7  = { f="CONS1_7", t="COMPWERD" }
 
+  FLAT8    = { f="FLAT8",   t="BROWN1" }
   FLAT10   = { f="FLAT10",  t="BROWNHUG" }
   FLAT1_1  = { f="FLAT1_1", t="BROWN1" }
   FLAT1_2  = { f="FLAT1_2", t="BROWN1" }
