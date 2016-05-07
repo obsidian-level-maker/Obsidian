@@ -994,7 +994,7 @@ function Layout_decorate_rooms(KKK_PASS)
       kind  = "decor"
       where = "point"
 
-      size  = 96
+      size   = assert(chunk.space)
       height = A.ceil_h - A.floor_h
     }
 

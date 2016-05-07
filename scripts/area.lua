@@ -898,21 +898,23 @@ function Area_locate_chunks()
   --
 
   local sym_pass
+  local walk_vol
 
 
-  local PASSES = { 44, 42,24, 33, 32,23,  22, 21,12,  11 }
+  local PASSES = { 44, 33, 42,24,32,23, 22, 21,12,  11 }
 
   -- the large sizes often hog too much space in a room, so we
   -- don't always keep them
   local USE_PROBS =
   {
-    [44] = 67
-    [42] = 22
-    [24] = 22
+    [44] = 60
+    [33] = 90
 
-    [33] = 67
-    [32] = 22
-    [23] = 22
+    [42] = 15
+    [24] = 15
+
+    [32] = 15
+    [23] = 15
   }
 
 
@@ -924,6 +926,9 @@ function Area_locate_chunks()
 
     if CHUNK.sw < 2 or CHUNK.sh < 2 then
       CHUNK.is_small = true
+    elseif CHUNK.sw > 2 and CHUNK.sh > 2 then
+stderrf("Large chunk!\n")
+      CHUNK.is_large = true
     end
 
     return CHUNK
@@ -965,10 +970,10 @@ function Area_locate_chunks()
 
 
   local function raw_test_chunk(A, sx1,sy1, sx2,sy2)
-    -- size check, disallow occupying the whole area
+    -- size check, disallow occupying the whole room
     local vol = (sx2 - sx1 + 1) * (sy2 - sy1 + 1)
 
-    if vol > A.svolume * 0.51 then return false end
+    if vol > walk_vol * 0.35 then return false end
 
     for x = sx1, sx2 do
     for y = sy1, sy2 do
@@ -1133,6 +1138,8 @@ function Area_locate_chunks()
   -- pass ONLY checks for straddling chunks
 
   each R in LEVEL.rooms do
+    walk_vol = R:calc_walk_vol()
+
     for pass = sel(R.symmetry, 1, 2), 2 do
       sym_pass = pass
       visit_room(R)
