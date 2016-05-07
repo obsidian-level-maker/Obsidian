@@ -1152,7 +1152,7 @@ function Monster_fill_room(R)
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if not (#R.goals > 0 or R.is_exit) then
+    if not (#R.goals > 0 or R.is_exit or spot_kind == "trap") then
       local max_level = LEVEL.monster_level * (0.5 + R.lev_along / 2)
       if max_level < 2 then max_level = 2 end
 
@@ -2000,7 +2000,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
 
     -- TODO : determine 'num_kinds' param properly
     local cage_pal = cage_palette("cage", 2, palette)
-    local trap_pal = cage_palette("trap", 2, palette)
+    local trap_pal = cage_palette("trap", 3, palette)
 
     each cage in R.cages do
 gui.debugf("FILLING CAGE in %s\n", R.name)
@@ -2009,6 +2009,7 @@ gui.debugf("FILLING CAGE in %s\n", R.name)
     end
 
     each trap in R.traps do
+gui.debugf("FILLING TRAP in %s\n", R.name)
       trap.kind = "trap"
       fill_a_cage(trap, trap_pal)
     end
