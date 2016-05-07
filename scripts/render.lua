@@ -908,9 +908,10 @@ function Render_sink_part(A, S, where, sink)
     -- C is the corner either near or away from where the sink goes
     -- the brush formed by A->C->B should be valid (anti-clockwise)
 
-    local curve_it
+    local curve_mode = away
 
-    if away == "curve" then curve_it = true ; away = false end
+    if away == "curve" then away = false end
+    if away == "outie" then away = true  end
 
     local cx, cy = corner_coord(C)
     local ax, ay = corner_coord(A)
@@ -927,15 +928,27 @@ function Render_sink_part(A, S, where, sink)
     local ax3, ay3 = ax * k2 + cx * k1, ay * k2 + cy * k1
     local bx3, by3 = bx * k2 + cx * k1, by * k2 + cy * k1
 
-    if curve_it then
+    if curve_mode == "curve" or curve_mode == "outie" then
+      -- either B and C are on the diagonal line, otherwise A and C are
+
       if B + C == 10 then
-        bx3, by3 = bx2, by2
+        if curve_mode == "outie" then
+          bx3 = bx * 0.25 + cx * 0.75
+          by3 = by * 0.25 + cy * 0.75
+        else
+          bx3, by3 = bx2, by2
+        end
 
         bx2 = bx * 0.375 + cx * 0.625
         by2 = by * 0.375 + cy * 0.625
 
       elseif A + C == 10 then
-        ax3, ay3 = ax2, ay2
+        if curve_mode == "outie" then
+          ax3 = ax * 0.25 + cx * 0.75
+          ay3 = ay * 0.25 + cy * 0.75
+        else
+          ax3, ay3 = ax2, ay2
+        end
 
         ax2 = ax * 0.375 + cx * 0.625
         ay2 = ay * 0.375 + cy * 0.625
@@ -1092,11 +1105,11 @@ stderrf("away = %s\n\n", string.bool(away))
 
     -- three corners open
 
-    if p_val == 14 then do_triangle(7,1,9, true)  ; do_triangle(9,1,3, true)  end
-    if p_val == 13 then do_triangle(1,3,7, true)  ; do_triangle(7,3,9, true)  end
+    if p_val == 14 then do_triangle(7,1,9, "outie")  ; do_triangle(9,1,3, "outie")  end
+    if p_val == 13 then do_triangle(1,3,7, "outie")  ; do_triangle(7,3,9, "outie")  end
 
-    if p_val == 11 then do_triangle(3,7,1, true)  ; do_triangle(9,7,3, true)  end
-    if p_val ==  7 then do_triangle(1,9,7, true)  ; do_triangle(3,9,1, true)  end
+    if p_val == 11 then do_triangle(3,7,1, "outie")  ; do_triangle(9,7,3, "outie")  end
+    if p_val ==  7 then do_triangle(1,9,7, "outie")  ; do_triangle(3,9,1, "outie")  end
   end
 end
 
