@@ -850,7 +850,6 @@ function Render_sink_part(A, S, where, sink)
 
 
   local function apply_brush(brush, is_trim)
-stderrf("apply_brush for sink part...\n")
     local mul
 
     if where == "floor" then
@@ -916,13 +915,13 @@ stderrf("apply_brush for sink part...\n")
     local ax2, ay2 = (ax + cx) / 2, (ay + cy) / 2
     local bx2, by2 = (bx + cx) / 2, (by + cy) / 2
 
-    local k1 = 0.41666
+    local k1 = 0.375
     local k2 = 1 - k1
 
     if away then k1, k2 = k2, k1 end
 
-    local ax3, ay3 = ax * k1 + cx * k2, ay * k1 + cy * k2
-    local bx3, by3 = bx * k1 + cx * k2, by * k1 + cy * k2
+    local ax3, ay3 = ax * k2 + cx * k1, ay * k2 + cy * k1
+    local bx3, by3 = bx * k2 + cx * k1, by * k2 + cy * k1
 
 --[[ DEBUG
 stderrf("C = (%d %d)\n", cx, cy)
@@ -937,33 +936,33 @@ stderrf("away = %s\n\n", string.bool(away))
       brush =
       {
         { x = ax,  y = ay  }
-        { x = ax3, y = ay3 }
-        { x = bx3, y = by3 }
+        { x = ax2, y = ay2 }
+        { x = bx2, y = by2 }
         { x = bx,  y = by  }
       }
 
       trim =
       {
-        { x = bx2, y = by2 }
-        { x = bx3, y = by3 }
-        { x = ax3, y = ay3 }
         { x = ax2, y = ay2 }
+        { x = ax3, y = ay3 }
+        { x = bx3, y = by3 }
+        { x = bx2, y = by2 }
       }
 
     else -- near
       brush =
       {
-        { x = ax3, y = ay3 }
+        { x = ax2, y = ay2 }
         { x = cx,  y = cy  }
-        { x = bx3, y = by3 }
+        { x = bx2, y = by2 }
       }
 
       trim =
       {
-        { x = ax2, y = ay2 }
         { x = ax3, y = ay3 }
-        { x = bx3, y = by3 }
+        { x = ax2, y = ay2 }
         { x = bx2, y = by2 }
+        { x = bx3, y = by3 }
       }
     end
 
@@ -1166,7 +1165,6 @@ if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.to
   Trans.brush(c_brush)
 
   if A.ceil_group and A.ceil_group.sink then
-stderrf("Render sink part for CEILING....\n")
     Render_sink_part(A, S, "ceil", A.ceil_group.sink)
   end
 end
