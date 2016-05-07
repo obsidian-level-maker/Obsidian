@@ -1148,7 +1148,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     each chunk in R.floor_chunks do
       if not chunk.content_kind and not Chunk_is_slave(chunk) and
          chunk.sw >= 2 and chunk.sh >= 2 and
-         not chunk.content_kind and rand.odds(50)
+         not chunk.content_kind and rand.odds(35)
       then
         table.insert(locs, chunk)
       end
