@@ -1727,6 +1727,18 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
       end
       end
     end
+
+    R.floor_groups = {}
+
+    each A in R.areas do
+      if A.floor_group then
+        table.add_unique(R.floor_groups, A.floor_group)
+      end
+    end
+
+    each group in R.floor_groups do
+      Area_inner_points_for_group(R, group, "floor")
+    end
   end
 
 
@@ -1846,6 +1858,18 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
 
     for loop = 1, 20 do
       group_ceiling_pass(R)
+    end
+
+    R.ceil_groups = {}
+
+    each A in R.areas do
+      if A.ceil_group then
+        table.add_unique(R.ceil_groups, A.ceil_group)
+      end
+    end
+
+    each group in R.ceil_groups do
+      Area_inner_points_for_group(R, group, "ceil")
     end
   end
 

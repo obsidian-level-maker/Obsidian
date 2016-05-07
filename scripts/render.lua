@@ -969,6 +969,9 @@ stderrf("away = %s\n\n", string.bool(away))
   end
 
 
+  ---| Render_sink_part |---
+
+
   -- categorize corners
   local p1 = check_inner_point(S.sx    , S.sy)
   local p3 = check_inner_point(S.sx + 1, S.sy)

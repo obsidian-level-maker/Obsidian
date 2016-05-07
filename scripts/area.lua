@@ -1464,7 +1464,9 @@ function Area_inner_points_for_group(R, group, what)
 
   -- compute openness
 
-  G.openness = num_inner / #seeds
+  group.openness = num_inner / #seeds
+
+stderrf("Group %s in %s : total %d  openness : %1.2f\n", what, R.name, num_inner, group.openness)
 end
 
 
