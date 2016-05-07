@@ -60,3 +60,20 @@ PREFABS.Crate_medium_gray =
   prob   = 8
 }
 
+
+-- a group of three and a half crates
+
+PREFABS.Crate_group_medium =
+{
+  file   = "decor/crates1.wad"
+  map    = "MAP04"
+
+  where  = "point"
+  size   = 128
+  height = 160
+
+  bound_z1 = 0
+
+  prob   = 300
+}
+
