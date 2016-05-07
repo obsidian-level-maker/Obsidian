@@ -14,7 +14,7 @@ PREFABS.Decor_water_fountain =
   bound_z1 = 0
 
   env    = "outdoor"
-  theme  = "!hell"
-  prob   = 900
+  theme  = "urban"
+  prob   = 1000
 }
 
