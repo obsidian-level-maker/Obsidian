@@ -115,7 +115,7 @@ ULTDOOM.MATERIALS =
   CONS1_5  = { f="CONS1_5", t="COMPWERD" }
   CONS1_7  = { f="CONS1_7", t="COMPWERD" }
 
-  FLAT10   = { f="FLAT10", t="BROWNHUG" }
+  FLAT10   = { f="FLAT10",  t="BROWNHUG" }
   FLAT1_1  = { f="FLAT1_1", t="BROWN1" }
   FLAT1_2  = { f="FLAT1_2", t="BROWN1" }
   FLAT1_3  = { f="FLAT1_3", t="BROWN1" }
@@ -144,8 +144,8 @@ ULTDOOM.MATERIALS =
   --
   -- Compatibility stuff
   --
-  -- These allows prefabs containing DOOM 2 specific flats or textures
-  -- to at least work in DOOM / Ultimate DOOM (albeit a bit mucked up).
+  -- These allow prefabs containing DOOM 2 specific flats or textures
+  -- to at least work in DOOM / Ultimate DOOM (a bit mucked up though).
   --
   -- Big thanks to Chris Pisarczyk for doing the grunt work.
   --
@@ -360,7 +360,9 @@ ULTDOOM.MATERIALS =
   ZIMMER8  = { t="SP_ROCK1", f="MFLR8_3" }
 
   -- rails
-  -- FIXME
+  MIDBARS1 = { t="MIDGRATE", rail_h=128 }
+  MIDBRONZ = { t="MIDGRATE", rail_h=128 }
+  MIDSPACE = { t="MIDGRATE", rail_h=128 }
 }
 
 
