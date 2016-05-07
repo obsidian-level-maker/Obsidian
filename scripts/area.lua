@@ -1370,6 +1370,7 @@ function Area_find_inner_points()
 
       if not (NC and NC.area == A) then continue end
 
+      -- we should reach the same seed going both ways
       if ND != NC then continue end
 
       -- OK --
@@ -1391,6 +1392,79 @@ function Area_find_inner_points()
 
     A.openness = #A.inner_points / A.svolume
   end
+end
+
+
+
+function Area_inner_points_for_group(R, group, what)
+  --
+  -- this uses same logic as Area_find_inner_points()
+  -- [ probably not worth trying to merge the code though ]
+  --
+  -- what is either "floor" or "ceil".
+  --
+
+  local   area_field = what .. "_group"
+  local corner_field = what .. "_inner"
+
+  local seeds = {}
+
+  local num_inner = 0
+
+
+  local function same_group(S)
+    if not S      then return false end
+    if not S.area then return false end
+
+    return S.area[area_field] == group
+  end
+
+
+  -- collect seeds
+
+  each A in R.areas do
+    if A[area_field] == group then
+      table.append(seeds, A.seeds)
+    end
+  end
+
+
+  -- check bottom-left corner of each seed
+
+  each S in seeds do
+    -- point is outside of area
+    if S.diagonal == 9 then continue end
+
+    -- point is part of boundary, skip it
+    if S.diagonal == 3 or S.diagonal == 7 then continue end
+
+    local NA = S:neighbor(4)
+    local NB = S:neighbor(2)
+
+    if not same_group(NA) then continue end
+    if not same_group(NB) then continue end
+
+    local NC = NA:neighbor(2)
+    local ND = NB:neighbor(4)
+
+    if not same_group(NC) then continue end
+
+    -- we should reach the same seed going both ways
+    if ND != NC then continue end
+
+    -- OK --
+
+    local corner = Corner_lookup(S.sx, S.sy)
+    assert(corner)
+
+    corner[corner_field] = group
+
+    num_inner = num_inner + 1
+  end
+
+  -- compute openness
+
+  G.openness = num_inner / #seeds
 end
 
 
