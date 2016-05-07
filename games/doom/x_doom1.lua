@@ -141,17 +141,14 @@ ULTDOOM.MATERIALS =
   NUKAGE1  = { t="SLADRIP1", f="NUKAGE1", sane=1 }
 
 
-  -- compatibility with DOOM 2 prefabs
-  -- [ big thanks to Chris Pisarczyk for doing the grunt work here ]
-
-  ASHWALL2 = { t="ASHWALL",  f="FLOOR6_2" }
-  BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
-  PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
-  SPACEW3  = { t="COMPUTE1", f="FLAT1" }
-  SILVER3  = { t="PLANET1",  f="FLAT23" }
-  WOOD9    = { t="WOOD1",    f="FLAT5_2" }
-  WOOD10   = { t="WOOD1",    f="FLAT5_2" }
-
+  --
+  -- Compatibility stuff
+  --
+  -- These allows prefabs containing DOOM 2 specific flats or textures
+  -- to at least work in DOOM / Ultimate DOOM (albeit a bit mucked up).
+  --
+  -- Big thanks to Chris Pisarczyk for doing the grunt work.
+  --
 
   -- flats
   GRASS1   = { f="DEM1_5",   t="MARBLE1" }
@@ -221,7 +218,7 @@ ULTDOOM.MATERIALS =
   BRICK7   = { t="BROWN96",  f="FLOOR7_1" }
   BRICK8   = { t="BROWN96",  f="FLOOR7_1" }
   BRICK9   = { t="BROWN144", f="FLOOR7_1" }
-  BRICKLIT = { t="LITE5",    f="FLAT19" }
+  BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
   BRONZE1  = { t="BROWN96",  f="FLOOR7_1" }
   BRONZE2  = { t="BROWN96",  f="FLOOR7_1" }
   BRONZE3  = { t="BROWN96",  f="FLOOR7_1" }
@@ -283,9 +280,9 @@ ULTDOOM.MATERIALS =
 
   SILVER1  = { t="SHAWN2",   f="FLAT23" }
   SILVER2  = { t="SHAWN2",   f="FLAT23" }
-  SILVER3  = { t="LITE3",    f="FLAT19" }
+  SILVER3  = { t="PLANET1",  f="FLAT23" }
   SPACEW2  = { t="TEKWALL4", f="CEIL5_1" }
-  SPACEW3  = { t="COMPWERD", f="CEIL5_1" }
+  SPACEW3  = { t="COMPUTE1", f="FLAT1" }
   SPACEW4  = { t="TEKWALL1", f="CEIL5_1" }
   SPCDOOR1 = { t="BIGDOOR4", f="FLOOR3_3" }
   SPCDOOR2 = { t="BIGDOOR2", f="FLAT1" }
@@ -338,12 +335,12 @@ ULTDOOM.MATERIALS =
   TEKLITE2 = { t="LITE4",    f="FLAT19" }
   TEKWALL6 = { t="TEKWALL4", f="CEIL5_1" }
 
-  WOOD10   = { t="WOOD1",    f="FLAT5_2" }
-  WOOD12   = { t="WOOD1",    f="FLAT5_2" }
   WOOD6    = { t="WOOD5",    f="CEIL5_2" }
   WOOD7    = { t="WOOD3",    f="FLAT5_1" }
   WOOD8    = { t="WOOD3",    f="FLAT5_1" }
-  WOOD9    = { t="WOOD3",    f="FLAT5_1" }
+  WOOD9    = { t="WOOD1",    f="FLAT5_2" }
+  WOOD10   = { t="WOOD1",    f="FLAT5_2" }
+  WOOD12   = { t="WOOD1",    f="FLAT5_2" }
   WOODMET1 = { t="WOOD5",    f="CEIL5_2" }
   WOODMET2 = { t="WOOD5",    f="CEIL5_2" }
   WOODMET3 = { t="WOOD5",    f="CEIL5_2" }
