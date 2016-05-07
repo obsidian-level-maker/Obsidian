@@ -825,11 +825,13 @@ end
 
 function Render_sink_part(A, S, where, sink)
 
+  local corner_field = where .. "_inner"
+
 
   local function check_inner_point(cx, cy)
     local corner = Corner_lookup(cx, cy)
 
-    if corner and corner.inner_point then
+    if corner and corner[corner_field] then
       return true
     else
       return false
@@ -848,6 +850,7 @@ function Render_sink_part(A, S, where, sink)
 
 
   local function apply_brush(brush, is_trim)
+stderrf("apply_brush for sink part...\n")
     local mul
 
     if where == "floor" then
@@ -1137,8 +1140,8 @@ function Render_floor(A, S)
   -- remember floor brush for the spot logic
   table.insert(A.floor_brushes, f_brush)
 
-  if A.floor_sink then
-    Render_sink_part(A, S, "floor",   A.floor_sink)
+  if A.floor_group and A.floor_group.sink then
+    Render_sink_part(A, S, "floor",   A.floor_group.sink)
   end
 end
 
@@ -1162,8 +1165,9 @@ if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.to
 
   Trans.brush(c_brush)
 
-  if A.ceil_sink then
-    Render_sink_part(A, S, "ceiling", A.ceil_sink)
+  if A.ceil_group and A.ceil_group.sink then
+stderrf("Render sink part for CEILING....\n")
+    Render_sink_part(A, S, "ceil", A.ceil_group.sink)
   end
 end
 
