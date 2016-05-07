@@ -1726,16 +1726,20 @@ end
 
 
 function process_raw_fonts()
+  local function dump_line(...)
+    -- gui.debugf(...)
+  end
+
   local function update(CH)
-    gui.debugf("    points =\n")
-    gui.debugf("    {\n")
+    dump_line("    points =\n")
+    dump_line("    {\n")
 
     each P in CH.points do
       local x = P.x
       local y = P.y
 
       if x == nil and y == nil then
-        gui.debugf("      {}\n")
+        dump_line("      {}\n")
         continue
       end
 
@@ -1747,10 +1751,10 @@ function process_raw_fonts()
       P.x = x
       P.y = y
 
-      gui.debugf("      { x=%1.4f, y=%1.4f }\n", x, y)
+      dump_line("      { x=%1.4f, y=%1.4f }\n", x, y)
     end
 
-    gui.debugf("    }\n")
+    dump_line("    }\n")
 
     CH.rx = nil
     CH.ry = nil
@@ -1762,7 +1766,7 @@ function process_raw_fonts()
   each let in keys do
     local CH = TITLE_LETTER_SHAPES[let]
     if CH.rx then
-      gui.debugf("RAW FONT '%s'\n", let)
+      dump_line("RAW FONT '%s'\n", let)
       update(CH)
     end
   end
@@ -1775,8 +1779,7 @@ function Title_generate()
   assert(GAME.PALETTES)
   assert(GAME.PALETTES.normal)
 
-
-process_raw_fonts()
+  process_raw_fonts()
 
 
   gui.title_create(320, 200, "#000")
