@@ -3,26 +3,24 @@ WORK IN PROGRESS
 ================
 
 
->>  review strength of TRAP monsters
+DOOM 1:
 
-
-GROWER:
-
-+  two connections into a room  [ NOT joiners though ]
+-  get the compatibility materials in
 
 
 
-CEILINGS:
+SINKS:
 
--  better logic for heights
++  set ceiling of stairs to highest nearby ceil group
 
-   e.g. group areas into 'floor_group' -- same floor but different
-   ceiling stuff (SKY vs LIGHTS vs PLAIN) and different lighting
-   but same wall decoration
+-  floor sinks inhibit floor-decorations (similar for ceiling sinks)
 
-   IDEA: use 'floor_ref' in 2+ areas to refer to an area to copy
-   [ the master area will reference itself ]
+   -  check inner point of middle of 2x2 chunk (more if bigger)
+      and if it is "floor_inner" then *can* allow a decoration
+      [ depending on, um, ..... def.no_sink ]
 
+   -  for non-decorative usage (mainly KEYS), make *them* inhibit sinks
+      
 
 
 NEW LIGHTING:
@@ -46,19 +44,6 @@ DONE:  pick base lighting of each room
 
 
 
-SINKS:
-
-+  get them working again
-
--  treat areas with same 'floor_group'/'ceil_group' as same when
-   deciding sink boundaries
-
--  floor sinks inhibit floor-decorations (similar for ceiling sinks)
-
-?  don't make sink if floor_group contains a chunk used for a key/switch
-
-
-
 WALLS:
 
 +  get the decorative walls working nicely
@@ -71,4 +56,14 @@ WALLS:
    -  support "env", "theme" (etc??) fields
 
    -  if nothing found, fall back to non-group lookup
+
+
+
+GROWER:
+
++  two connections into a room  [ NOT joiners though ]
+
+
+MISC:
+
 
