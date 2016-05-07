@@ -908,6 +908,10 @@ function Render_sink_part(A, S, where, sink)
     -- C is the corner either near or away from where the sink goes
     -- the brush formed by A->C->B should be valid (anti-clockwise)
 
+    local curve_it
+
+    if away == "curve" then curve_it = true ; away = false end
+
     local cx, cy = corner_coord(C)
     local ax, ay = corner_coord(A)
     local bx, by = corner_coord(B)
@@ -922,6 +926,24 @@ function Render_sink_part(A, S, where, sink)
 
     local ax3, ay3 = ax * k2 + cx * k1, ay * k2 + cy * k1
     local bx3, by3 = bx * k2 + cx * k1, by * k2 + cy * k1
+
+    if curve_it then
+      if B + C == 10 then
+        bx3, by3 = bx2, by2
+
+        bx2 = bx * 0.375 + cx * 0.625
+        by2 = by * 0.375 + cy * 0.625
+
+      elseif A + C == 10 then
+        ax3, ay3 = ax2, ay2
+
+        ax2 = ax * 0.375 + cx * 0.625
+        ay2 = ay * 0.375 + cy * 0.625
+
+      else
+        error("do_triangle problem")
+      end
+    end
 
 --[[ DEBUG
 stderrf("C = (%d %d)\n", cx, cy)
@@ -1046,11 +1068,11 @@ stderrf("away = %s\n\n", string.bool(away))
 
     -- one corner open
 
-    if p_val ==  1 then do_triangle(7,1,9, false) ; do_triangle(9,1,3, false) end
-    if p_val ==  2 then do_triangle(1,3,7, false) ; do_triangle(7,3,9, false) end
+    if p_val ==  1 then do_triangle(7,1,9, "curve") ; do_triangle(9,1,3, "curve") end
+    if p_val ==  2 then do_triangle(1,3,7, "curve") ; do_triangle(7,3,9, "curve") end
 
-    if p_val ==  4 then do_triangle(3,7,1, false) ; do_triangle(9,7,3, false) end
-    if p_val ==  8 then do_triangle(1,9,7, false) ; do_triangle(3,9,1, false) end
+    if p_val ==  4 then do_triangle(3,7,1, "curve") ; do_triangle(9,7,3, "curve") end
+    if p_val ==  8 then do_triangle(1,9,7, "curve") ; do_triangle(3,9,1, "curve") end
 
     -- two open, two closed
 

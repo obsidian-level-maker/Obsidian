@@ -1739,7 +1739,7 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
     each group in R.floor_groups do
       Area_inner_points_for_group(R, group, "floor")
 
-group.sink = { dz=12, mat="FLOOR5_4", xxtrim_dz=6, xxtrim_mat="METAL" }
+---group.sink = { dz=12, mat="FLOOR5_4", xxtrim_dz=6, xxtrim_mat="METAL" }
 
     end
   end
@@ -1874,7 +1874,7 @@ group.sink = { dz=12, mat="FLOOR5_4", xxtrim_dz=6, xxtrim_mat="METAL" }
     each group in R.ceil_groups do
       Area_inner_points_for_group(R, group, "ceil")
 
-group.sink = { dz=12, mat="FLAT4", xxtrim_dz=6, xxtrim_mat="FLAT23" }
+group.sink = { dz=48, mat="_SKY", trim_dz=0, trim_mat="FLAT23" }
     end
   end
 
