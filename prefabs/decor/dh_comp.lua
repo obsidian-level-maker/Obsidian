@@ -18,6 +18,6 @@ PREFABS.Decor_dittohead_computer =
 
   env    = "building"
   theme  = "tech"
-  prob   = 800
+  prob   = 8000
 }
 
