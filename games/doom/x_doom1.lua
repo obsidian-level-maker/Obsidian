@@ -141,7 +141,8 @@ ULTDOOM.MATERIALS =
   NUKAGE1  = { t="SLADRIP1", f="NUKAGE1", sane=1 }
 
 
-  -- compatibility stuff
+  -- compatibility with DOOM 2 prefabs
+  -- [ big thanks to Chris Pisarczyk for doing the grunt work here ]
 
   ASHWALL2 = { t="ASHWALL",  f="FLOOR6_2" }
   BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
@@ -150,6 +151,219 @@ ULTDOOM.MATERIALS =
   SILVER3  = { t="PLANET1",  f="FLAT23" }
   WOOD9    = { t="WOOD1",    f="FLAT5_2" }
   WOOD10   = { t="WOOD1",    f="FLAT5_2" }
+
+
+  -- flats
+  GRASS1   = { f="DEM1_5",   t="MARBLE1" }
+  GRASS2   = { f="DEM1_5",   t="MARBLE1" }
+  GRNLITE1 = { f="TLITE6_5", t="METAL" }
+  GRNROCK  = { f="MFLR8_3",  t="SP_ROCK1" }
+
+  RROCK01  = { f="FLOOR6_1", t="REDWALL" }
+  RROCK02  = { f="LAVA1",    t="FIREMAG1" }
+  RROCK03  = { f="FLOOR6_2", t="ASHWALL" }
+  RROCK04  = { f="FLOOR6_2", t="ASHWALL" }
+  RROCK05  = { f="FLOOR6_1", t="REDWALL" }
+  RROCK06  = { f="FLOOR6_1", t="REDWALL" }
+  RROCK07  = { f="FLOOR6_1", t="REDWALL" }
+  RROCK08  = { f="FLOOR6_1", t="REDWALL" }
+  RROCK09  = { f="FLOOR7_1", t="BROWNHUG" }
+  RROCK10  = { f="FLAT5",    t="BROWNHUG" }
+  RROCK11  = { f="FLAT5",    t="BROWNHUG" }
+  RROCK12  = { f="FLAT5",    t="BROWNHUG" }
+  RROCK13  = { f="MFLR8_3",  t="SP_ROCK1" }
+  RROCK14  = { f="FLOOR7_1", t="BROWNHUG" }
+  RROCK15  = { f="FLOOR7_1", t="BROWNHUG" }
+  RROCK16  = { f="FLOOR7_1", t="BROWNHUG" }
+  RROCK17  = { f="FLOOR7_1", t="BROWNHUG" }
+  RROCK18  = { f="FLOOR7_1", t="BROWNHUG" }
+  RROCK19  = { f="FLOOR7_1", t="BROWNHUG" }
+  RROCK20  = { f="FLOOR7_2", t="MARBLE1" }
+
+  SLIME01  = { f="NUKAGE1",  t="SLADRIP1" }
+  SLIME02  = { f="NUKAGE1",  t="SLADRIP1" }
+  SLIME03  = { f="NUKAGE1",  t="SLADRIP1" }
+  SLIME04  = { f="NUKAGE1",  t="SLADRIP1" }
+  SLIME05  = { f="BLOOD1",   t="BLODGR1" }
+  SLIME06  = { f="BLOOD1",   t="BLODGR1" }
+  SLIME07  = { f="BLOOD1",   t="BLODGR1" }
+  SLIME08  = { f="BLOOD1",   t="BLODGR1" }
+  SLIME09  = { f="FLOOR6_1", t="REDWALL" }
+  SLIME10  = { f="FLOOR6_1", t="REDWALL" }
+  SLIME11  = { f="FLOOR6_1", t="REDWALL" }
+  SLIME12  = { f="FLOOR6_1", t="REDWALL" }
+  SLIME13  = { f="FLOOR7_2", t="MARBLE1" }
+  SLIME14  = { f="FLOOR4_8", t="METAL1" }
+  SLIME15  = { f="FLOOR4_8", t="METAL1" }
+  SLIME16  = { f="FLAT1_1",  t="BROWN1" }
+
+  -- textures
+  ASHWALL2 = { t="ASHWALL",  f="FLOOR6_2" }
+  ASHWALL3 = { t="BROWNHUG", f="FLOOR7_1" }
+  ASHWALL4 = { t="BROWNHUG", f="FLOOR7_1" }
+  ASHWALL6 = { t="PIPE2",    f="FLOOR4_5" }
+  ASHWALL7 = { t="PIPE4",    f="FLOOR4_5" }
+  BIGBRIK1 = { t="BROWN96",  f="FLOOR7_1" }
+  BIGBRIK2 = { t="STONE2",   f="MFLR8_1" }
+  BIGBRIK3 = { t="LITE3",    f="FLAT19" }
+  BLAKWAL1 = { t="COMPSPAN", f="CEIL5_1" }
+  BLAKWAL2 = { t="COMPSPAN", f="CEIL5_1" }
+
+  BRICK1   = { t="BROWN1",   f="FLOOR0_1" }
+  BRICK10  = { t="BROWNGRN", f="FLOOR7_1" }
+  BRICK11  = { t="REDWALL",  f="FLAT5_3" }
+  BRICK12  = { t="BROWN1",   f="FLOOR0_1" }
+  BRICK2   = { t="BROWN1",   f="FLOOR0_1" }
+  BRICK3   = { t="BROWN1",   f="FLOOR0_1" }
+  BRICK4   = { t="BROVINE",  f="FLOOR0_1" }
+  BRICK5   = { t="BROVINE2", f="FLOOR7_1" }
+  BRICK6   = { t="BROWN1",   f="FLOOR0_1" }
+  BRICK7   = { t="BROWN96",  f="FLOOR7_1" }
+  BRICK8   = { t="BROWN96",  f="FLOOR7_1" }
+  BRICK9   = { t="BROWN144", f="FLOOR7_1" }
+  BRICKLIT = { t="LITE5",    f="FLAT19" }
+  BRONZE1  = { t="BROWN96",  f="FLOOR7_1" }
+  BRONZE2  = { t="BROWN96",  f="FLOOR7_1" }
+  BRONZE3  = { t="BROWN96",  f="FLOOR7_1" }
+  BRONZE4  = { t="LITE96",   f="FLOOR7_1" }
+  BRWINDOW = { t="BROWN1",   f="FLOOR0_1" }
+  BSTONE1  = { t="SLADWALL", f="FLOOR7_1" }
+  BSTONE2  = { t="SLADWALL", f="FLOOR7_1" }
+  BSTONE3  = { t="LITE3",    f="FLAT19" }
+
+  CEMENT7  = { t="GRAY1",    f="FLAT18" }
+  CEMENT8  = { t="GRAY5",    f="FLAT18" }
+  CEMENT9  = { t="GRAYVINE", f="FLAT1" }
+  CRACKLE2 = { t="ROCKRED1", f="FLOOR6_1" }
+  CRACKLE4 = { t="ROCKRED1", f="FLOOR6_1" }
+  CRATE3   = { t="CRATELIT", f="CRATOP1" }
+  DBRAIN1  = { t="FIREBLU1", f="FLOOR6_1" }
+  DBRAIN2  = { t="FIREBLU1", f="FLOOR6_1" }
+  DBRAIN3  = { t="FIREBLU1", f="FLOOR6_1" }
+  DBRAIN4  = { t="FIREBLU1", f="FLOOR6_1" }
+  MARBFAC4 = { t="SP_DUDE6", f="DEM1_5" }
+  MARBGRAY = { t="GSTONE1",  f="FLOOR7_2" }
+
+  METAL2   = { t="METAL1",   f="FLOOR4_8" }
+  METAL3   = { t="METAL1",   f="FLOOR4_8" }
+  METAL4   = { t="METAL1",   f="FLOOR4_8" }
+  METAL5   = { t="METAL1",   f="FLOOR4_8" }
+  METAL6   = { t="METAL1",   f="FLOOR4_8" }
+  METAL7   = { t="LITE3",    f="FLAT19" }
+  MODWALL1 = { t="ICKWALL1", f="FLAT19" }
+  MODWALL2 = { t="ICKWALL1", f="FLAT19" }
+  MODWALL3 = { t="ICKWALL3", f="FLAT19" }
+  MODWALL4 = { t="ICKWALL3", f="FLAT19" }
+
+  PANBLACK = { t="LITE5",    f="FLAT19" }
+  PANBLUE  = { t="LITEBLU4", f="FLAT1" }
+  PANBOOK  = { t="WOODSKUL", f="FLAT5_2" }
+  PANBORD1 = { t="WOOD1",    f="FLAT5_2" }
+  PANBORD2 = { t="WOOD1",    f="FLAT5_2" }
+  PANCASE1 = { t="WOOD1",    f="FLAT5_2" }
+  PANCASE2 = { t="WOOD1",    f="FLAT5_2" }
+  PANEL1   = { t="SKINMET1", f="CEIL5_2" }
+  PANEL2   = { t="SKINMET1", f="CEIL5_2" }
+  PANEL3   = { t="SKINMET1", f="CEIL5_2" }
+  PANEL4   = { t="WOOD1",    f="FLAT5_2" }
+  PANEL5   = { t="WOODGARG", f="FLAT5_2" }
+  PANEL6   = { t="WOOD3",    f="FLAT5_1" }
+  PANEL7   = { t="WOOD3",    f="FLAT5_1" }
+  PANEL8   = { t="WOOD3",    f="FLAT5_1" }
+  PANEL9   = { t="WOOD3",    f="FLAT5_1" }
+  PANRED   = { t="LITERED",  f="FLOOR1_6" }
+  PIPES    = { t="BROWNPIP", f="FLOOR0_1" }
+  PIPEWAL1 = { t="PIPE2",    f="FLOOR4_5" }
+  PIPEWAL2 = { t="PIPE2",    f="FLOOR4_5" }
+  ROCK1    = { t="STONE2",   f="MFLR8_1" }
+  ROCK2    = { t="STONE3",   f="MFLR8_1" }
+  ROCK3    = { t="STONE2",   f="MFLR8_1" }
+  ROCK4    = { t="SP_ROCK1", f="MFLR8_3" }
+  ROCK5    = { t="SP_ROCK1", f="MFLR8_3" }
+
+  SILVER1  = { t="SHAWN2",   f="FLAT23" }
+  SILVER2  = { t="SHAWN2",   f="FLAT23" }
+  SILVER3  = { t="LITE3",    f="FLAT19" }
+  SPACEW2  = { t="TEKWALL4", f="CEIL5_1" }
+  SPACEW3  = { t="COMPWERD", f="CEIL5_1" }
+  SPACEW4  = { t="TEKWALL1", f="CEIL5_1" }
+  SPCDOOR1 = { t="BIGDOOR4", f="FLOOR3_3" }
+  SPCDOOR2 = { t="BIGDOOR2", f="FLAT1" }
+  SPCDOOR3 = { t="BIGDOOR2", f="FLAT1" }
+  SPCDOOR4 = { t="BIGDOOR4", f="FLOOR3_3" }
+
+  SK_LEFT  = { t="SKULWAL3", f="FLAT5_6" }
+  SK_RIGHT = { t="SKULWAL3", f="FLAT5_6" }
+  SLOPPY1  = { t="SKULWAL3", f="FLAT5_6" }
+  SLOPPY2  = { t="SKULWAL3", f="FLAT5_6" }
+  SP_DUDE7 = { t="SKULWAL3", f="FLAT5_6" }
+  SP_DUDE8 = { t="SKULWALL", f="FLAT5_6" }
+  SP_FACE2 = { t="SKULWAL3", f="FLAT5_6" }
+
+  STONE4   = { t="STONE",    f="FLAT5_4" }
+  STONE5   = { t="STONE",    f="FLAT5_4" }
+  STONE6   = { t="BROWNHUG", f="FLOOR7_1" }
+  STONE7   = { t="BROWNHUG", f="FLOOR7_1" }
+  STUCCO   = { t="SKINTEK1", f="FLAT5_5" }
+  STUCCO1  = { t="SKINTEK1", f="FLAT5_5" }
+  STUCCO2  = { t="SKINTEK2", f="FLAT5_5" }
+  STUCCO3  = { t="SKINTEK2", f="FLAT5_5" }
+
+  SW1BRIK  = { t="SW1STONE", f="FLAT1" }
+  SW1MARB  = { t="SW1GSTON", f="FLOOR7_2" }
+  SW1MET2  = { t="SW1GARG",  f="CEIL5_2" }
+  SW1MOD1  = { t="SW1GRAY1", f="FLAT19" }
+  SW1PANEL = { t="SW1WOOD",  f="FLAT5_2" }
+  SW1ROCK  = { t="SW1SATYR", f="CEIL5_2" }
+  SW1SKULL = { t="SW1SKIN",  f="CRATOP2" }
+  SW1STON6 = { t="SW1DIRT",  f="FLOOR7_1" }
+  SW1TEK   = { t="SW1STRTN", f="FLOOR4_1" }
+  SW1WDMET = { t="SW1LION",  f="CEIL5_2" }
+  SW1ZIM   = { t="SW1SLAD",  f="FLOOR7_1" }
+
+  TANROCK2 = { t="BROWNHUG", f="FLOOR7_1" }
+  TANROCK3 = { t="BROWNHUG", f="FLOOR7_1" }
+  TANROCK4 = { t="BROWNHUG", f="FLOOR7_1" }
+  TANROCK5 = { t="BROWNHUG", f="FLOOR7_1" }
+  TANROCK7 = { t="BROWN144", f="FLOOR7_1" }
+  TANROCK8 = { t="BROVINE",  f="FLOOR0_1" }
+  TEKBRON1 = { t="TEKWALL4", f="CEIL5_1" }
+  TEKBRON2 = { t="TEKWALL4", f="CEIL5_1" }
+  TEKGREN1 = { t="STARG1",   f="FLAT23" }
+  TEKGREN2 = { t="STARG1",   f="FLAT23" }
+  TEKGREN3 = { t="STARG1",   f="FLAT23" }
+  TEKGREN4 = { t="STARG2",   f="FLAT23" }
+  TEKGREN5 = { t="LITE3",    f="FLAT19" }
+  TEKLITE  = { t="LITE3",    f="FLAT19" }
+  TEKLITE2 = { t="LITE4",    f="FLAT19" }
+  TEKWALL6 = { t="TEKWALL4", f="CEIL5_1" }
+
+  WOOD10   = { t="WOOD1",    f="FLAT5_2" }
+  WOOD12   = { t="WOOD1",    f="FLAT5_2" }
+  WOOD6    = { t="WOOD5",    f="CEIL5_2" }
+  WOOD7    = { t="WOOD3",    f="FLAT5_1" }
+  WOOD8    = { t="WOOD3",    f="FLAT5_1" }
+  WOOD9    = { t="WOOD3",    f="FLAT5_1" }
+  WOODMET1 = { t="WOOD5",    f="CEIL5_2" }
+  WOODMET2 = { t="WOOD5",    f="CEIL5_2" }
+  WOODMET3 = { t="WOOD5",    f="CEIL5_2" }
+  WOODMET4 = { t="WOOD5",    f="CEIL5_2" }
+  WOODVERT = { t="WOOD3",    f="FLAT5_1" }
+
+  ZDOORB1  = { t="SHAWN2",   f="FLAT23" }
+  ZDOORF1  = { t="SHAWN2",   f="FLAT23" }
+  ZELDOOR  = { t="BIGDOOR2", f="FLAT1" }
+
+  ZIMMER1  = { t="SP_ROCK1", f="MFLR8_3" }
+  ZIMMER2  = { t="SP_ROCK1", f="MFLR8_3" }
+  ZIMMER3  = { t="BROWNHUG", f="FLOOR7_1" }
+  ZIMMER4  = { t="BROWNHUG", f="FLOOR7_1" }
+  ZIMMER5  = { t="ASHWALL",  f="FLOOR6_2" }
+  ZIMMER7  = { t="ASHWALL",  f="FLOOR6_2" }
+  ZIMMER8  = { t="SP_ROCK1", f="MFLR8_3" }
+
+  -- rails
+  -- FIXME
 }
 
 
