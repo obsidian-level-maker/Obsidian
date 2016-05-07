@@ -62,6 +62,7 @@ DOOM.MONSTERS =
     density = 1.5
     room_size = "small"
     disloyal = true
+    trap_factor = 0.1
     infight_damage = 1.9
   }
 
@@ -80,6 +81,7 @@ DOOM.MONSTERS =
     species = "zombie"
     room_size = "small"
     disloyal = true
+    trap_factor = 2.0
     infight_damage = 6.1
   }
 
@@ -113,6 +115,7 @@ DOOM.MONSTERS =
     weap_prefs = { launch=0.3 }
     room_size = "small"
     disloyal = true
+    trap_factor = 0.1
     infight_damage = 2.1
   }
 
@@ -152,6 +155,7 @@ DOOM.MONSTERS =
     weap_prefs = { launch=0.1 }
     species = "demon"
     room_size = "any"
+    trap_factor = 0.3
     infight_damage = 2.5
   }
 
@@ -169,6 +173,7 @@ DOOM.MONSTERS =
     min_weapon = 1
     float = true
     room_size = "large"
+    trap_factor = 0.5
     infight_damage = 21
   }
 
@@ -255,6 +260,7 @@ DOOM.MONSTERS =
     species = "zombie"
     room_size = "large"
     disloyal = true
+    trap_factor = 2.4
     infight_damage = 25
   }
 
@@ -264,13 +270,14 @@ DOOM.MONSTERS =
     r = 20
     h = 64 
     level = 4.6
-    prob = 32
+    prob = 28
     health = 300
     damage = 8.5
     attack = "missile"
     min_weapon = 1
     density = 0.6
     room_size = "any"
+    trap_factor = 4.0
     infight_damage = 20
   }
 
