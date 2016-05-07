@@ -42,11 +42,12 @@ TNT.MATERIALS =
   M_RDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
   M_YDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
 
-  CAVERN1  = { t="CAVERN1",  f="RROCK07" }
+  CAVERN1  = { t="CAVERN1",  f="RROCK17" }
   CAVERN4  = { t="CAVERN4",  f="MFLR8_3" }
   CAVERN6  = { t="CAVERN6",  f="RROCK17" }
   CAVERN7  = { t="CAVERN7",  f="RROCK16" }
 
+  ASPHALT  = { t="ASPHALT",  f="MFLR8_4" }
   SMSTONE6 = { t="SMSTONE6", f="RROCK09" }
   STONEW1  = { t="STONEW1",  f="RROCK09" }
   STONEW5  = { t="STONEW5",  f="MFLR8_3" }
@@ -104,7 +105,7 @@ TNT.MATERIALS =
   DOGRMSC  = { t="DOGRMSC",  f="RROCK20" }
   DOKGRIR  = { t="DOKGRIR",  f="RROCK09" }
   DOKODO1B = { t="DOKODO1B", f="FLAT5" }
-  DOKODO1B = { t="DOKODO2B", f="FLAT5" }
+  DOKODO2B = { t="DOKODO2B", f="FLAT5" }
   DOKGRIR  = { t="DOKGRIR",  f="RROCK20" }
   DOPUNK4  = { t="DOPUNK4",  f="CEIL5_1" }
   DORED    = { t="DORES",    f="CEIL5_1" }
