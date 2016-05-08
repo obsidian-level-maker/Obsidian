@@ -14,19 +14,17 @@ PREFABS.Wall_midband =
 {
   file   = "wall/mid_band.wad"
   map    = "MAP01"
+
   where  = "edge"
+  deep   = 16
+  height = 96
 
   group  = "mid_band"
 
-  long   = 128
-  deep   = 16
-
-  height = 64
-
   bound_z1 = 0
-  bound_z2 = 64
+  bound_z2 = 80
 
-  z_fit  = "frame"
+  z_fit  = "top"
 }
 
 
@@ -34,18 +32,15 @@ PREFABS.Wall_midband_diag =
 {
   file   = "wall/mid_band.wad"
   map    = "MAP02"
+
   where  = "diagonal"
+  height = 96
 
   group  = "mid_band"
 
-  long   = 128
-  deep   = 16
-
-  height = 64
-
   bound_z1 = 0
-  bound_z2 = 64
+  bound_z2 = 80
 
-  z_fit  = "frame"
+  z_fit  = "top"
 }
 
