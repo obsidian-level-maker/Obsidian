@@ -10,12 +10,16 @@ GROUPS.wall_lite2 =
 }
 
 
-UNFINISHED.Wall_lite2_blue =
+PREFABS.Wall_lite2_blue =
 {
   file   = "wall/lite_2.wad"
-  where  = "edge"
+  map    = "MAP01"
 
+  where  = "edge"
+  height = 128
   deep   = 16
+
+  group  = "lite2"
 
   x_fit  = "frame"
   z_fit  = "frame"
