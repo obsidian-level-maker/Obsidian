@@ -3,24 +3,25 @@ WORK IN PROGRESS
 ================
 
 
-DOOM 1:
-
--  get the compatibility materials in
-
-
-
 SINKS:
 
 +  set ceiling of stairs to highest nearby ceil group
+   -  BUT test stair prefab for "plain_ceiling" flag
 
--  floor sinks inhibit floor-decorations (similar for ceiling sinks)
+-  support sink.light and sink.trim_light
+
+-  fix interaction with importants / decorations / fs-cages :
+
+   -  ceiling sinks always inhibit ceiling decoration
+
+   -  floor sinks *can* inhibit floor-decorations :
 
    -  check inner point of middle of 2x2 chunk (more if bigger)
       and if it is "floor_inner" then *can* allow a decoration
       [ depending on, um, ..... def.no_sink ]
 
-   -  for non-decorative usage (mainly KEYS), make *them* inhibit sinks
-      
+   -  for importants (like KEYS), make *them* inhibit sinks
+
 
 
 NEW LIGHTING:
@@ -44,26 +45,7 @@ DONE:  pick base lighting of each room
 
 
 
-WALLS:
-
-+  get the decorative walls working nicely
-   [ pick one per area or floor_group ]
-
-   -  support GROUP objects in 'GROUPS' table
-
-   -  the name is always: kind .. "_" .. groupname
-
-   -  support "env", "theme" (etc??) fields
-
-   -  if nothing found, fall back to non-group lookup
-
-
-
-GROWER:
-
-+  two connections into a room  [ NOT joiners though ]
-
-
 MISC:
 
+-  see what looks bad in DOOM 1 ;)
 

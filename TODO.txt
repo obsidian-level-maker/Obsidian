@@ -57,6 +57,8 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
++  two connections into a room
+
 +  move 'prefabs' folder to games/doom/
 
 +  support a "Mix It Up" Strength setting
