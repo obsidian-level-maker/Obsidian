@@ -558,6 +558,33 @@ DOOM.ROOM_THEMES =
   }
 
 
+  tech_VeryTekky =
+  {
+    kind = "building"
+    rarity = "level"
+    prob = 40
+
+    walls =
+    {
+      TEKWALL4 = 50
+    }
+
+    floors =
+    {
+      CEIL4_3  = 60
+      FLOOR0_2 = 60
+      FLOOR5_1 = 40
+      SLIME14  = 20
+      CEIL5_1  = 20
+    }
+
+    ceilings =
+    {
+      CEIL5_1 = 50
+    }
+  }
+
+
   tech_Cave =
   {
     kind = "cave"
