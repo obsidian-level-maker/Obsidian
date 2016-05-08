@@ -2,7 +2,7 @@
 -- Wall with hellish cross
 --
 
-GROUPS.wall_cross =
+GROUPS.wall_cross1 =
 {
   env = "building"
 
@@ -10,12 +10,17 @@ GROUPS.wall_cross =
 }
 
 
-UNFINISHED.Wall_Cross1 =
+PREFABS.Wall_Cross1 =
 {
   file   = "wall/cross.wad"
-  where  = "edge"
+  map    = "MAP01"
 
+  where  = "edge"
   deep   = 16
+
+  height = 128
+
+  group  = "cross1"
 
   x_fit  = "frame"
   z_fit  = "frame"
