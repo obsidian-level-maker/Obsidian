@@ -123,9 +123,9 @@ void csg_property_set_c::DebugDump()
 }
 
 
-const char * csg_property_set_c::getStr(const char *key, const char *def_val)
+const char * csg_property_set_c::getStr(const char *key, const char *def_val) const
 {
-	std::map<std::string, std::string>::iterator PI = dict.find(key);
+	std::map<std::string, std::string>::const_iterator PI = dict.find(key);
 
 	if (PI == dict.end())
 		return def_val;
@@ -133,14 +133,14 @@ const char * csg_property_set_c::getStr(const char *key, const char *def_val)
 	return PI->second.c_str();
 }
 
-double csg_property_set_c::getDouble(const char *key, double def_val)
+double csg_property_set_c::getDouble(const char *key, double def_val) const
 {
 	const char *str = getStr(key);
 
 	return str ? atof(str) : def_val;
 }
 
-int csg_property_set_c::getInt(const char *key, int def_val)
+int csg_property_set_c::getInt(const char *key, int def_val) const
 {
 	const char *str = getStr(key);
 
@@ -148,7 +148,7 @@ int csg_property_set_c::getInt(const char *key, int def_val)
 }
 
 
-void csg_property_set_c::getHexenArgs(u8_t *arg5)
+void csg_property_set_c::getHexenArgs(u8_t *arg5) const
 {
 	arg5[0] = getInt("arg1");
 	arg5[1] = getInt("arg2");

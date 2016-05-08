@@ -84,12 +84,12 @@ public:
 	void Add(const char *key, const char *value);
 	void Remove(const char *key);
 
-	const char * getStr(const char *key, const char *def_val = NULL);
+	const char * getStr(const char *key, const char *def_val = NULL) const;
 
-	double getDouble(const char *key, double def_val = 0);
-	int    getInt   (const char *key, int def_val = 0);
+	double getDouble(const char *key, double def_val = 0) const;
+	int    getInt   (const char *key, int def_val = 0) const;
 
-	void getHexenArgs(u8_t *arg5);
+	void getHexenArgs(u8_t *arg5) const;
 
 	void DebugDump();
 
