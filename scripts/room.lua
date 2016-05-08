@@ -159,7 +159,10 @@ function ROOM_CLASS.new()
     used_chunks = 0  -- includes closets
 
     floor_mats = {}
-    ceil_mats = {}
+     ceil_mats = {}
+
+    floor_groups = {}
+     ceil_groups = {}
 
     sky_rects = {}
     exclusions = {}
@@ -1672,8 +1675,6 @@ function Room_floor_ceil_heights()
       group1, group2 = group2, group1
     end
 
-stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
-
     each A in R.areas do
       if A.floor_group == group2 then
          A.floor_group =  group1
@@ -1728,8 +1729,6 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
       end
     end
 
-    R.floor_groups = {}
-
     each A in R.areas do
       if A.floor_group then
         table.add_unique(R.floor_groups, A.floor_group)
@@ -1739,8 +1738,7 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
     each group in R.floor_groups do
       Area_inner_points_for_group(R, group, "floor")
 
----group.sink = { dz=12, mat="FLOOR5_4", xxtrim_dz=6, xxtrim_mat="METAL" }
-
+---group.sink = { dz=-20, mat="_LIQUID", trim_dz=4, trim_mat="METAL" }
     end
   end
 
@@ -1863,8 +1861,6 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
       group_ceiling_pass(R)
     end
 
-    R.ceil_groups = {}
-
     each A in R.areas do
       if A.ceil_group then
         table.add_unique(R.ceil_groups, A.ceil_group)
@@ -1874,7 +1870,7 @@ stderrf("%s : merging floor %d --> %d\n", R.name, group2.id, group1.id)
     each group in R.ceil_groups do
       Area_inner_points_for_group(R, group, "ceil")
 
-group.sink = { dz=48, mat="_SKY", trim_dz=4, trim_mat="FLAT23" }
+---group.sink = { dz=44, mat="TLITE6_5", light=32, special=8, trim_dz=-4, trim_mat="FLAT23" }
     end
   end
 
@@ -1967,9 +1963,11 @@ group.sink = { dz=48, mat="_SKY", trim_dz=4, trim_mat="FLAT23" }
     A.delta_h = cur_delta_h
 
     if A.floor_group then
-if A.floor_group.delta_h and A.floor_group.delta_h != cur_delta_h then
-stderrf("WARNING : floor group got different heights!\n")
-end
+      -- sanity check
+      if A.floor_group.delta_h and A.floor_group.delta_h != cur_delta_h then
+        error("WARNING : floor group got different heights")
+      end
+
       A.floor_group.delta_h = cur_delta_h
     end
 

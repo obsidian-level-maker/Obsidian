@@ -1173,7 +1173,47 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
+  local function pick_wall_detail(R)
+    if R.is_cave    then return end
+    if R.is_outdoor then return end
+
+    local tab = R.theme.wall_groups or THEME.wall_groups
+
+    -- IDEA : adjust PLAIN prob to get more/less detail
+    assert(tab["PLAIN"])
+
+    each fg in R.floor_groups do
+      local what = rand.key_by_probs(tab)
+
+      if what != "PLAIN" then
+        fg.wall_group = what
+      end
+    end
+  end
+
+
+  local function pick_floor_sinks(R)
+    if R.is_cave    then return end
+    if R.is_outdoor then return end
+
+    -- TODO
+  end
+
+
+  local function pick_ceiling_sinks(R)
+    if R.is_cave    then return end
+    if R.is_outdoor then return end
+
+    -- TODO
+  end
+
+
   local function tizzy_up_room(R)
+    pick_wall_detail(R)
+
+    pick_floor_sinks(R)
+    pick_ceiling_sinks(R)
+
     -- more cages, oh yes!
     try_extra_cages(R)
 
@@ -1191,8 +1231,6 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
         try_ceiling_light_in_chunk(chunk)
       end
     end
-
-    -- TODO : handle unused closets
 
     -- kill any unused closets
     each CL in R.closets do

@@ -927,7 +927,6 @@ function Area_locate_chunks()
     if CHUNK.sw < 2 or CHUNK.sh < 2 then
       CHUNK.is_small = true
     elseif CHUNK.sw > 2 and CHUNK.sh > 2 then
-stderrf("Large chunk!\n")
       CHUNK.is_large = true
     end
 
