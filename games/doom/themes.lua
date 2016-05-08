@@ -48,6 +48,11 @@ DOOM.THEMES =
       STUCCO3  = 10
     }
 
+    wall_groups =
+    {
+      PLAIN = 100
+    }
+
     -- FIXME: temp crud
     has_triple_key_door = true
     has_double_switch_door = true
@@ -112,6 +117,14 @@ DOOM.THEMES =
       TEKBRON1 = 5
       COMPTALL = 5
       COMPBLUE = 5
+    }
+
+    wall_groups =
+    {
+      PLAIN = 70
+      low_gap = 50
+      mid_band = 25
+      lite2 = 15
     }
 
     monster_prefs =
@@ -239,6 +252,12 @@ DOOM.THEMES =
       SKSNAKE1 = 20
       SKSNAKE2 = 20
       SKIN2    = 20
+    }
+
+    wall_groups =
+    {
+      PLAIN = 100
+      cross1 = 10
     }
 
     base_skin =

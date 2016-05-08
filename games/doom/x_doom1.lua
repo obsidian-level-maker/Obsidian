@@ -435,6 +435,11 @@ ULTDOOM.THEMES =
     {
       GRAYVINE = 60
     }
+
+    wall_groups =
+    {
+      PLAIN = 100
+    }
   }
 
 
@@ -465,6 +470,14 @@ ULTDOOM.THEMES =
       ASHWALL  = 40
       BROVINE  = 40
       SP_ROCK1 = 20
+    }
+
+    wall_groups =
+    {
+      PLAIN = 70
+      low_gap = 50
+      mid_band = 25
+      lite2 = 15
     }
 
     base_skin =
