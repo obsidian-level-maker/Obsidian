@@ -833,16 +833,20 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLAT5_1 = 30
-      FLAT5_2 = 30
-      FLAT5 = 5
-      FLOOR4_6 = 3
+      FLAT5_1 = 50
+      FLAT5_2 = 50
+      MFLR8_1 = 50
+      FLOOR7_1 = 50
+      FLAT5_4 = 30
+      FLOOR4_6 = 10
     }
 
     ceilings =
     {
       CEIL1_1 = 30
+      RROCK14 = 30
       FLAT5_2 = 10
+      FLAT5_7 = 10
       FLOOR7_1 = 5
     }
   }
