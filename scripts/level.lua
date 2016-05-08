@@ -612,7 +612,7 @@ function Episode_plan_monsters()
     local prob3 = sel(c_minor < 2, 40, 70)
 
     if LEV.dist_to_end == 3 then
-      prob2 = 99
+      prob3 = 99
     end
 
     if c_minor > 0 and rand.odds(prob3) then
