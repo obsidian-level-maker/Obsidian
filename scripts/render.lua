@@ -853,9 +853,9 @@ function Render_sink_part(A, S, where, sink)
     local mul
 
     if where == "floor" then
-      mul = -1 ; brushlib.add_top(brush, A.floor_h + 2)
+      brushlib.add_top(brush, A.floor_h + 2)
     else
-      mul =  1 ; brushlib.add_bottom(brush, A.ceil_h - 2)
+      brushlib.add_bottom(brush, A.ceil_h - 2)
     end
 
     local T = brush[#brush]
@@ -863,10 +863,16 @@ function Render_sink_part(A, S, where, sink)
     if is_trim then
       if not sink.trim_mat then return end
 
-      T.delta_z = (2 + sink.trim_dz) * mul
+      T.light_add = sink.trim_light
+
+      T.delta_z = (2 + sink.trim_dz)
       brushlib.set_mat(brush, sink.trim_mat, sink.trim_mat)
+
     else
-      T.delta_z = (2 + sink.dz) * mul
+      T.light_add = sink.light  -- can be nil
+      T.special   = sink.special
+
+      T.delta_z = (2 + sink.dz)
       brushlib.set_mat(brush, sink.mat, sink.mat)
     end
 
