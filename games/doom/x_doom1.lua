@@ -1983,6 +1983,11 @@ function ULTDOOM.get_levels()
     if MAP_NUM >= 9 then
       EPI.levels[7].dist_to_end = 1
       EPI.levels[6].dist_to_end = 2
+      EPI.levels[5].dist_to_end = 3
+
+    elseif MAP_NUM == 4 then
+      EPI.levels[4].dist_to_end = 1
+      EPI.levels[3].dist_to_end = 3
     end
 
   end -- for episode
