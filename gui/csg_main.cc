@@ -508,22 +508,28 @@ private:
 		    B->max_y <= y1 || B->min_y >= y2)
 			return;
 
+		double t_delta = B->t.face.getDouble("delta_z", 0);
+		double b_delta = B->b.face.getDouble("delta_z", 0);
+
+		int t_z = I_ROUND(B->t.z + t_delta);
+		int b_z = I_ROUND(B->b.z + b_delta);
+
 		// skip brushes underneath the floor (or the floor itself)
-		if (B->t.z < floor_h + 1)
+		if (t_z < floor_h + 1)
 			return;
 
 		// skip brushes far above the floor (like ceilings)
-		if (B->b.z >= floor_h + spot_high_h)
+		if (b_z >= floor_h + spot_high_h)
 			return;
 
 		/* this brush is a potential blocker */
 
 		int content = SPOT_LEDGE;
 
-		if (B->b.z >= floor_h + spot_low_h)
+		if (b_z >= floor_h + spot_low_h)
 			content = SPOT_LOW_CEIL;
 
-		else if (B->b.z <= floor_h && B->t.z >= floor_h + spot_low_h)
+		else if (b_z <= floor_h && t_z >= floor_h + spot_low_h)
 			content = SPOT_WALL;
 
 		// build the polygon
