@@ -212,6 +212,12 @@ function Render_edge(E)
       reqs.where = "edge"
     end
 
+
+    if E.area.floor_group and E.area.floor_group.wall_group then
+      reqs.group = E.area.floor_group.wall_group
+    end
+
+
     -- TODO : pictures, detailed walls
 
 
@@ -220,7 +226,14 @@ function Render_edge(E)
     skin.wall = assert(E.wall_mat)
 
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(reqs, sel(reqs.group, "none_ok", nil))
+
+    -- when a fancy wall is not available, use the plain one
+    if not def then
+      reqs.group = nil
+      def = Fab_pick(reqs)
+    end
+
 
     local z = A.floor_h
 
