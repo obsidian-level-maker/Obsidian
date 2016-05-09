@@ -1,0 +1,1079 @@
+# Language Translation for Oblige Level Maker.
+# This file is put in the public domain.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: Oblige Level Maker\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2016-05-09 23:41+1000\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=CHARSET\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: engines/boom.lua:121
+msgid   "BOOM Compat"
+msgstr  ""
+
+#: engines/darkplaces.lua:36
+msgid   "DarkPlaces"
+msgstr  ""
+
+#: engines/doomsday.lua:23
+msgid   "Doomsday"
+msgstr  ""
+
+#: engines/edge.lua:143
+msgid   "EDGE"
+msgstr  ""
+
+#: engines/eternity.lua:25
+msgid   "Eternity"
+msgstr  ""
+
+#: engines/fitz.lua:37
+msgid   "FitzQuake"
+msgstr  ""
+
+#: engines/legacy.lua:41
+msgid   "Legacy"
+msgstr  ""
+
+#: engines/odamex.lua:42
+msgid   "Odamex"
+msgstr  ""
+
+#: engines/skulltag.lua:97
+msgid   "Skulltag"
+msgstr  ""
+
+#: engines/zdoom.lua:56
+msgid   "ZDoom"
+msgstr  ""
+
+#: engines/zdoom.lua:97
+msgid   "GZDoom"
+msgstr  ""
+
+#: games/doom/base.lua:42
+msgid   "Doom 2"
+msgstr  ""
+
+#: games/doom/themes.lua:1477 games/quake/themes.lua:284
+msgid   "Tech"
+msgstr  ""
+
+#: games/doom/themes.lua:1487
+msgid   "Hell"
+msgstr  ""
+
+#: games/doom/themes.lua:1497 games/heretic/themes.lua:391
+msgid   "Urban"
+msgstr  ""
+
+#: games/doom/themes.lua:1507
+msgid   "Mostly Tech"
+msgstr  ""
+
+#: games/doom/themes.lua:1516
+msgid   "Mostly Urban"
+msgstr  ""
+
+#: games/doom/themes.lua:1525
+msgid   "Mostly Hell"
+msgstr  ""
+
+#: games/doom/themes.lua:1535
+msgid   "Wolfenstein"
+msgstr  ""
+
+#: games/doom/x_doom1.lua:2023
+msgid   "Doom 1"
+msgstr  ""
+
+#: games/doom/x_doom1.lua:2049
+msgid   "Ultimate Doom"
+msgstr  ""
+
+#: games/doom/x_doom1.lua:2065
+msgid   "Deimos"
+msgstr  ""
+
+#: games/doom/x_doom1.lua:2075
+msgid   "Thy Flesh"
+msgstr  ""
+
+#: games/doom/x_freedoom.lua:21
+msgid   "FreeDoom"
+msgstr  ""
+
+#: games/doom/x_plutonia.lua:150
+msgid   "Plutonia"
+msgstr  ""
+
+#: games/doom/x_tnt.lua:396
+msgid   "TNT Evilution"
+msgstr  ""
+
+#: games/doom/x_tnt.lua:413
+msgid   "Egypt"
+msgstr  ""
+
+#: games/heretic/base.lua:61
+msgid   "Heretic"
+msgstr  ""
+
+#: games/heretic/themes.lua:400 games/quake/themes.lua:293
+msgid   "Castle"
+msgstr  ""
+
+#: games/hexen/base.lua:62
+msgid   "Hexen"
+msgstr  ""
+
+#: games/hexen/themes.lua:2703
+msgid   "Dungeon"
+msgstr  ""
+
+#: games/hexen/themes.lua:2710
+msgid   "Elemental"
+msgstr  ""
+
+#: games/hexen/themes.lua:2717
+msgid   "Wilderness"
+msgstr  ""
+
+#: games/hexen/themes.lua:2724
+msgid   "Cave"
+msgstr  ""
+
+#: games/hexen/themes.lua:2731
+msgid   "Ice"
+msgstr  ""
+
+#: games/hexen/themes.lua:2738
+msgid   "Swamp"
+msgstr  ""
+
+#: games/hexen/themes.lua:2745
+msgid   "Village"
+msgstr  ""
+
+#: games/quake/base.lua:76
+msgid   "Quake"
+msgstr  ""
+
+#: gui/g_doom.cc:204
+#, c-format
+msgid   "Unable to create wad file:\n"
+        "\n"
+        "%s"
+msgstr  ""
+
+#: gui/g_doom.cc:505 gui/main.cc:406
+msgid   "OK"
+msgstr  ""
+
+#: gui/g_doom.cc:509
+msgid   "Bad Arguments"
+msgstr  ""
+
+#: gui/g_doom.cc:513
+msgid   "Bad Args (fixed)"
+msgstr  ""
+
+#: gui/g_doom.cc:516
+msgid   "Read Error"
+msgstr  ""
+
+#: gui/g_doom.cc:517
+msgid   "Write Error"
+msgstr  ""
+
+#: gui/g_doom.cc:521
+msgid   "Cancelled by User"
+msgstr  ""
+
+#: gui/g_doom.cc:526
+msgid   "Unknown Error"
+msgstr  ""
+
+#: gui/g_doom.cc:558
+#, c-format
+msgid   "glBSP Failure:\n"
+        "%s"
+msgstr  ""
+
+#: gui/g_doom.cc:600
+msgid   "Building nodes"
+msgstr  ""
+
+#: gui/g_doom.cc:658 gui/g_doom.cc:677
+msgid   "glBSP Error"
+msgstr  ""
+
+#: gui/g_doom.cc:667 gui/g_doom.cc:728 gui/g_nukem.cc:498 gui/g_quake.cc:1449
+#: gui/g_quake2.cc:1127 gui/m_lua.cc:1230 gui/main.cc:659
+msgid   "Cancelled"
+msgstr  ""
+
+#: gui/g_doom.cc:737 gui/g_nukem.cc:507 gui/g_quake.cc:1458
+#: gui/g_quake2.cc:1136 gui/g_wolf.cc:465 gui/g_wolf.cc:477
+msgid   "Error (create file)"
+msgstr  ""
+
+#: gui/g_doom.cc:742 gui/g_nukem.cc:512 gui/g_quake.cc:1392
+msgid   "CSG"
+msgstr  ""
+
+#: gui/g_quake.cc:1393
+msgid   "BSP"
+msgstr  ""
+
+#: gui/g_quake.cc:1394
+msgid   "Vis"
+msgstr  ""
+
+#: gui/g_quake.cc:1395
+msgid   "Light"
+msgstr  ""
+
+#: gui/g_quake.cc:1396
+msgid   "Hull"
+msgstr  ""
+
+#: gui/g_wolf.cc:525
+msgid   "Error (write file)"
+msgstr  ""
+
+#: gui/m_about.cc:90
+msgid   "OBLIGE is a random level generator\n"
+        "for classic FPS games like DOOM\n"
+        "\n"
+        "Copyright (C) 2006-2016 Andrew Apted, et al\n"
+        "\n"
+        "This program is free software, and may be\n"
+        "distributed and modified under the terms of\n"
+        "the GNU General Public License\n"
+        "\n"
+        "There is ABSOLUTELY NO WARRANTY\n"
+        "Use at your OWN RISK"
+msgstr  ""
+
+#: gui/m_about.cc:197
+msgid   "About OBLIGE"
+msgstr  ""
+
+#: gui/m_addons.cc:447
+msgid   "List of Addons"
+msgstr  ""
+
+#: gui/m_addons.cc:479
+msgid   "Changes require a restart"
+msgstr  ""
+
+#: gui/m_addons.cc:600
+msgid   "OBLIGE Addons"
+msgstr  ""
+
+#: gui/m_addons.cc:618
+msgid   "Changes to addons require a restart.\n"
+        "OBLIGE will now close."
+msgstr  ""
+
+#: gui/m_dialog.cc:205
+msgid   "OBLIGE - Error Message"
+msgstr  ""
+
+#: gui/m_dialog.cc:231
+msgid   "Select output file"
+msgstr  ""
+
+#: gui/m_dialog.cc:249
+#, c-format
+msgid   "Unable to create the file:\n"
+        "\n"
+        "%s"
+msgstr  ""
+
+#: gui/m_dialog.cc:304
+msgid   "Enter New Seed Number:"
+msgstr  ""
+
+#: gui/m_lua.cc:528
+#, c-format
+msgid   "Making %s"
+msgstr  ""
+
+#: gui/m_lua.cc:905
+#, c-format
+msgid   "Script Error: %s"
+msgstr  ""
+
+#: gui/m_lua.cc:1218
+msgid   "Script Error"
+msgstr  ""
+
+#: gui/m_manage.cc:347
+msgid   "CURRENT SETTINGS"
+msgstr  ""
+
+#: gui/m_manage.cc:363
+msgid   "Pick file to save to"
+msgstr  ""
+
+#: gui/m_manage.cc:376 gui/m_manage.cc:411
+#, c-format
+msgid   "Unable to save the file:\n"
+        "\n"
+        "%s"
+msgstr  ""
+
+#: gui/m_manage.cc:409
+msgid   "Error writing to file."
+msgstr  ""
+
+#: gui/m_manage.cc:474
+msgid   "Select file to load"
+msgstr  ""
+
+#: gui/m_manage.cc:496
+#, c-format
+msgid   "Unable to load the file:\n"
+        "\n"
+        "%s"
+msgstr  ""
+
+#: gui/m_manage.cc:519
+#, c-format
+msgid   "Cannot open: %s\n"
+        "\n"
+        "%s"
+msgstr  ""
+
+#: gui/m_manage.cc:527
+msgid   "No config found in file."
+msgstr  ""
+
+#: gui/m_manage.cc:557
+msgid   "PASTED TEXT"
+msgstr  ""
+
+#: gui/m_manage.cc:761
+msgid   "Load"
+msgstr  ""
+
+#: gui/m_manage.cc:765
+msgid   "(can be WAD or PAK)"
+msgstr  ""
+
+#: gui/m_manage.cc:769
+msgid   "Recent"
+msgstr  ""
+
+#: gui/m_manage.cc:772
+msgid   "Save"
+msgstr  ""
+
+#: gui/m_manage.cc:776
+msgid   "Use"
+msgstr  ""
+
+#: gui/m_manage.cc:779
+msgid   "Note: this will replace\n"
+        "all current settings!"
+msgstr  ""
+
+#: gui/m_manage.cc:803
+msgid   " Clipboard Operations"
+msgstr  ""
+
+#: gui/m_manage.cc:813
+msgid   "Cut"
+msgstr  ""
+
+#: gui/m_manage.cc:820
+msgid   "Copy"
+msgstr  ""
+
+#: gui/m_manage.cc:827
+msgid   "Paste"
+msgstr  ""
+
+#: gui/m_manage.cc:858
+msgid   "OBLIGE Config Manager"
+msgstr  ""
+
+#: gui/m_options.cc:255 gui/m_trans.cc:53
+msgid   "AUTO"
+msgstr  ""
+
+#: gui/m_options.cc:371
+msgid   "Appearance"
+msgstr  ""
+
+#: gui/m_options.cc:382
+msgid   "Language: "
+msgstr  ""
+
+#: gui/m_options.cc:393
+msgid   "Window Size: "
+msgstr  ""
+
+#: gui/m_options.cc:395
+msgid   "AUTO|Tiny|Small|Medium|Large|Huge"
+msgstr  ""
+
+#: gui/m_options.cc:404
+msgid   " Alternate Look"
+msgstr  ""
+
+#: gui/m_options.cc:417
+msgid   "File Options"
+msgstr  ""
+
+#: gui/m_options.cc:428
+msgid   " Create Backups"
+msgstr  ""
+
+#: gui/m_options.cc:437
+msgid   " Debugging Messages (in LOGS.txt)"
+msgstr  ""
+
+#: gui/m_options.cc:499
+msgid   "Note: some options require a restart."
+msgstr  ""
+
+#: gui/m_options.cc:540
+msgid   "OBLIGE Options"
+msgstr  ""
+
+#: gui/main.cc:404 modules/extra_settings.lua:24
+msgid   "No"
+msgstr  ""
+
+#: gui/main.cc:405 modules/extra_settings.lua:25
+msgid   "Yes"
+msgstr  ""
+
+#: gui/main.cc:407 gui/ui_build.cc:267
+msgid   "Cancel"
+msgstr  ""
+
+#: gui/main.cc:408
+msgid   "Close"
+msgstr  ""
+
+#: gui/main.cc:618
+msgid   "Preparing..."
+msgstr  ""
+
+#: gui/main.cc:639
+msgid   "Success"
+msgstr  ""
+
+#: gui/main.cc:778 gui/main.cc:825
+#, c-format
+msgid   "No such config file: %s\n"
+msgstr  ""
+
+#: gui/main.cc:883
+#, c-format
+msgid   "Sorry, an internal error occurred:\n"
+        "%s"
+msgstr  ""
+
+#: gui/main.cc:887
+msgid   "An unknown problem occurred (UI code)"
+msgstr  ""
+
+#: gui/ui_build.cc:73
+msgid   "Menu"
+msgstr  ""
+
+#: gui/ui_build.cc:76
+msgid   "About"
+msgstr  ""
+
+#: gui/ui_build.cc:77
+msgid   "Options"
+msgstr  ""
+
+#: gui/ui_build.cc:78
+msgid   "Addon List"
+msgstr  ""
+
+#: gui/ui_build.cc:79
+msgid   "Set Seed"
+msgstr  ""
+
+#: gui/ui_build.cc:80
+msgid   "Manage Config"
+msgstr  ""
+
+#: gui/ui_build.cc:88
+msgid   "Build"
+msgstr  ""
+
+#: gui/ui_build.cc:99 gui/ui_build.cc:277
+msgid   "Quit"
+msgstr  ""
+
+#: gui/ui_build.cc:113
+msgid   "Ready to go!"
+msgstr  ""
+
+#: gui/ui_build.cc:191 gui/ui_build.cc:293
+msgid   "Plan"
+msgstr  ""
+
+#: gui/ui_build.cc:294
+msgid   "Rooms"
+msgstr  ""
+
+#: gui/ui_build.cc:295
+msgid   "Mons"
+msgstr  ""
+
+#: gui/ui_game.cc:52
+msgid   "Game Settings"
+msgstr  ""
+
+#: gui/ui_game.cc:68
+msgid   "Game: "
+msgstr  ""
+
+#: gui/ui_game.cc:78
+msgid   "Engine: "
+msgstr  ""
+
+#: gui/ui_game.cc:88
+msgid   "Mode: "
+msgstr  ""
+
+#: gui/ui_game.cc:100
+msgid   "Length: "
+msgstr  ""
+
+#: gui/ui_game.cc:217
+msgid   "Single Player"
+msgstr  ""
+
+#: gui/ui_game.cc:218
+msgid   "Co-op"
+msgstr  ""
+
+#: gui/ui_game.cc:227
+msgid   "Single Level"
+msgstr  ""
+
+#: gui/ui_game.cc:228
+msgid   "A Few Maps"
+msgstr  ""
+
+#: gui/ui_game.cc:229
+msgid   "One Episode"
+msgstr  ""
+
+#: gui/ui_game.cc:230
+msgid   "Full Game"
+msgstr  ""
+
+#: gui/ui_level.cc:53
+msgid   "Level Architecture"
+msgstr  ""
+
+#: gui/ui_level.cc:69
+msgid   "Size: "
+msgstr  ""
+
+#: gui/ui_level.cc:81
+msgid   "Theme: "
+msgstr  ""
+
+#: gui/ui_level.cc:91
+msgid   "Outdoors: "
+msgstr  ""
+
+#: gui/ui_level.cc:103
+msgid   "Caves: "
+msgstr  ""
+
+#: gui/ui_level.cc:224
+msgid   "Small"
+msgstr  ""
+
+#: gui/ui_level.cc:225
+msgid   "Regular"
+msgstr  ""
+
+#: gui/ui_level.cc:226
+msgid   "Large"
+msgstr  ""
+
+#: gui/ui_level.cc:227
+msgid   "Extreme"
+msgstr  ""
+
+#: gui/ui_level.cc:229
+msgid   "Progressive"
+msgstr  ""
+
+#: gui/ui_level.cc:230
+msgid   "Episodic"
+msgstr  ""
+
+#: gui/ui_level.cc:231 gui/ui_level.cc:249 gui/ui_play.cc:321
+#: gui/ui_play.cc:350 modules/level_control.lua:24
+msgid   "Mix It Up"
+msgstr  ""
+
+#: gui/ui_level.cc:241 gui/ui_play.cc:314 gui/ui_play.cc:346
+#: gui/ui_play.cc:360 modules/level_control.lua:25
+msgid   "NONE"
+msgstr  ""
+
+#: gui/ui_level.cc:242 modules/level_control.lua:26
+msgid   "Rare"
+msgstr  ""
+
+#: gui/ui_level.cc:243 modules/level_control.lua:27
+msgid   "Few"
+msgstr  ""
+
+#: gui/ui_level.cc:244 gui/ui_play.cc:316 gui/ui_play.cc:347
+#: gui/ui_play.cc:362 modules/ctl_doom.lua:26 modules/ctl_doom.lua:131
+#: modules/ctl_heretic.lua:26 modules/ctl_heretic.lua:114
+#: modules/ctl_quake.lua:26 modules/ctl_quake.lua:117
+#: modules/ctl_quake2.lua:26 modules/ctl_quake2.lua:125
+#: modules/level_control.lua:28 modules/stealth_mons.lua:230
+#: modules/stealth_mons.lua:297 modules/zdoom_marines.lua:251
+msgid   "Less"
+msgstr  ""
+
+#: gui/ui_level.cc:245 modules/level_control.lua:29
+msgid   "Some"
+msgstr  ""
+
+#: gui/ui_level.cc:246 gui/ui_play.cc:318 gui/ui_play.cc:349
+#: gui/ui_play.cc:364 modules/ctl_doom.lua:28 modules/ctl_doom.lua:133
+#: modules/ctl_heretic.lua:28 modules/ctl_heretic.lua:116
+#: modules/ctl_quake.lua:28 modules/ctl_quake.lua:119
+#: modules/ctl_quake2.lua:28 modules/ctl_quake2.lua:127
+#: modules/level_control.lua:30 modules/stealth_mons.lua:231
+#: modules/stealth_mons.lua:299 modules/zdoom_marines.lua:253
+msgid   "More"
+msgstr  ""
+
+#: gui/ui_level.cc:247 gui/ui_play.cc:365 modules/ctl_doom.lua:29
+#: modules/ctl_doom.lua:134 modules/ctl_heretic.lua:29
+#: modules/ctl_heretic.lua:117 modules/ctl_quake.lua:29
+#: modules/ctl_quake.lua:120 modules/ctl_quake2.lua:29
+#: modules/ctl_quake2.lua:128 modules/level_control.lua:31
+#: modules/stealth_mons.lua:300 modules/zdoom_marines.lua:183
+#: modules/zdoom_marines.lua:254
+msgid   "Heaps"
+msgstr  ""
+
+#: gui/ui_module.cc:225
+msgid   "Custom Modules\n"
+        " "
+msgstr  ""
+
+#: gui/ui_play.cc:54
+msgid   "Playing Style"
+msgstr  ""
+
+#: gui/ui_play.cc:70 gui/ui_play.cc:191
+msgid   "Monsters: "
+msgstr  ""
+
+#: gui/ui_play.cc:82
+msgid   "Strength: "
+msgstr  ""
+
+#: gui/ui_play.cc:94
+msgid   "Weapons: "
+msgstr  ""
+
+#: gui/ui_play.cc:106
+msgid   "Items: "
+msgstr  ""
+
+#: gui/ui_play.cc:118
+msgid   "Health: "
+msgstr  ""
+
+#: gui/ui_play.cc:130
+msgid   "Ammo: "
+msgstr  ""
+
+#: gui/ui_play.cc:186
+msgid   "Players: "
+msgstr  ""
+
+#: gui/ui_play.cc:315 gui/ui_play.cc:361 modules/ctl_doom.lua:25
+#: modules/ctl_doom.lua:130 modules/ctl_heretic.lua:25
+#: modules/ctl_heretic.lua:113 modules/ctl_quake.lua:25
+#: modules/ctl_quake.lua:116 modules/ctl_quake2.lua:25
+#: modules/ctl_quake2.lua:124 modules/stealth_mons.lua:296
+#: modules/zdoom_marines.lua:182 modules/zdoom_marines.lua:250
+msgid   "Scarce"
+msgstr  ""
+
+#: gui/ui_play.cc:317 gui/ui_play.cc:331 gui/ui_play.cc:348 gui/ui_play.cc:363
+#: modules/stealth_mons.lua:229
+msgid   "Normal"
+msgstr  ""
+
+#: gui/ui_play.cc:319
+msgid   "Hordes"
+msgstr  ""
+
+#: gui/ui_play.cc:320
+msgid   "Nuts!"
+msgstr  ""
+
+#: gui/ui_play.cc:329
+msgid   "Weak"
+msgstr  ""
+
+#: gui/ui_play.cc:330
+msgid   "Easier"
+msgstr  ""
+
+#: gui/ui_play.cc:332
+msgid   "Harder"
+msgstr  ""
+
+#: gui/ui_play.cc:333
+msgid   "Tough"
+msgstr  ""
+
+#: gui/ui_play.cc:334
+msgid   "CRAZY"
+msgstr  ""
+
+#: modules/ctl_doom.lua:23 modules/ctl_doom.lua:128 modules/ctl_heretic.lua:23
+#: modules/ctl_heretic.lua:111 modules/ctl_quake.lua:23
+#: modules/ctl_quake.lua:114 modules/ctl_quake2.lua:23
+#: modules/ctl_quake2.lua:122 modules/stealth_mons.lua:294
+#: modules/zdoom_marines.lua:248
+msgid   "DEFAULT"
+msgstr  ""
+
+#: modules/ctl_doom.lua:24 modules/ctl_doom.lua:129 modules/ctl_heretic.lua:24
+#: modules/ctl_heretic.lua:112 modules/ctl_quake.lua:24
+#: modules/ctl_quake.lua:115 modules/ctl_quake2.lua:24
+#: modules/ctl_quake2.lua:123 modules/stealth_mons.lua:295
+#: modules/zdoom_marines.lua:249
+msgid   "None at all"
+msgstr  ""
+
+#: modules/ctl_doom.lua:27 modules/ctl_doom.lua:132 modules/ctl_heretic.lua:27
+#: modules/ctl_heretic.lua:115 modules/ctl_quake.lua:27
+#: modules/ctl_quake.lua:118 modules/ctl_quake2.lua:27
+#: modules/ctl_quake2.lua:126 modules/stealth_mons.lua:298
+#: modules/zdoom_marines.lua:181 modules/zdoom_marines.lua:252
+msgid   "Plenty"
+msgstr  ""
+
+#: modules/ctl_doom.lua:30 modules/ctl_heretic.lua:30 modules/ctl_quake.lua:30
+#: modules/ctl_quake2.lua:30 modules/stealth_mons.lua:301
+#: modules/zdoom_marines.lua:255
+msgid   "INSANE"
+msgstr  ""
+
+#: modules/ctl_doom.lua:86
+msgid   "Doom Monster Control"
+msgstr  ""
+
+#: modules/ctl_doom.lua:98 modules/stealth_mons.lua:346
+msgid   "Zombieman"
+msgstr  ""
+
+#: modules/ctl_doom.lua:99 modules/stealth_mons.lua:347
+msgid   "Shotgun Guy"
+msgstr  ""
+
+#: modules/ctl_doom.lua:100 modules/stealth_mons.lua:353
+msgid   "Chaingunner"
+msgstr  ""
+
+#: modules/ctl_doom.lua:101
+msgid   "SS Nazi"
+msgstr  ""
+
+#: modules/ctl_doom.lua:102 modules/stealth_mons.lua:348
+msgid   "Imp"
+msgstr  ""
+
+#: modules/ctl_doom.lua:104
+msgid   "Lost Soul"
+msgstr  ""
+
+#: modules/ctl_doom.lua:105 modules/stealth_mons.lua:349
+msgid   "Demon"
+msgstr  ""
+
+#: modules/ctl_doom.lua:106
+msgid   "Spectre"
+msgstr  ""
+
+#: modules/ctl_doom.lua:107
+msgid   "Pain Elemental"
+msgstr  ""
+
+#: modules/ctl_doom.lua:108 modules/stealth_mons.lua:350
+msgid   "Cacodemon"
+msgstr  ""
+
+#: modules/ctl_doom.lua:109 modules/stealth_mons.lua:354
+msgid   "Hell Knight"
+msgstr  ""
+
+#: modules/ctl_doom.lua:111 modules/stealth_mons.lua:355
+msgid   "Revenant"
+msgstr  ""
+
+#: modules/ctl_doom.lua:112 modules/stealth_mons.lua:356
+msgid   "Mancubus"
+msgstr  ""
+
+#: modules/ctl_doom.lua:113 modules/stealth_mons.lua:357
+msgid   "Arachnotron"
+msgstr  ""
+
+#: modules/ctl_doom.lua:114 modules/stealth_mons.lua:358
+msgid   "Arch-vile"
+msgstr  ""
+
+#: modules/ctl_doom.lua:115 modules/stealth_mons.lua:351
+msgid   "Baron of Hell"
+msgstr  ""
+
+#: modules/ctl_doom.lua:117
+msgid   "Cyberdemon"
+msgstr  ""
+
+#: modules/ctl_doom.lua:118
+msgid   "Spiderdemon"
+msgstr  ""
+
+#: modules/ctl_doom.lua:135 modules/ctl_heretic.lua:118
+#: modules/ctl_quake.lua:121 modules/ctl_quake2.lua:129
+msgid   "I LOVE IT"
+msgstr  ""
+
+#: modules/ctl_doom.lua:178
+msgid   "Doom Weapon Control"
+msgstr  ""
+
+#: modules/ctl_doom.lua:190
+msgid   "Shotgun"
+msgstr  ""
+
+#: modules/ctl_doom.lua:191
+msgid   "Super Shotgun"
+msgstr  ""
+
+#: modules/ctl_doom.lua:192
+msgid   "Chaingun"
+msgstr  ""
+
+#: modules/ctl_doom.lua:193
+msgid   "Rocket Launcher"
+msgstr  ""
+
+#: modules/ctl_doom.lua:194
+msgid   "Plasma Rifle"
+msgstr  ""
+
+#: modules/ctl_doom.lua:195
+msgid   "BFG"
+msgstr  ""
+
+#: modules/ctl_heretic.lua:75
+msgid   "Heretic Monster Control"
+msgstr  ""
+
+#: modules/ctl_heretic.lua:161
+msgid   "Heretic Weapon Control"
+msgstr  ""
+
+#: modules/ctl_quake.lua:78
+msgid   "Quake Monster Control"
+msgstr  ""
+
+#: modules/ctl_quake.lua:164
+msgid   "Quake Weapon Control"
+msgstr  ""
+
+#: modules/ctl_quake2.lua:75
+msgid   "Quake2 Monster Control"
+msgstr  ""
+
+#: modules/ctl_quake2.lua:172
+msgid   "Quake2 Weapon Control"
+msgstr  ""
+
+#: modules/export_map.lua:266
+msgid   "Export .MAP files"
+msgstr  ""
+
+#: modules/extra_settings.lua:44
+msgid   "Extra Settings"
+msgstr  ""
+
+#: modules/extra_settings.lua:56
+msgid   "Pistol Starts"
+msgstr  ""
+
+#: modules/extra_settings.lua:58
+msgid   "Ensure every map can be completed from a pistol start (ignore "
+        "weapons obtained from earlier maps)"
+msgstr  ""
+
+#: modules/extra_settings.lua:63
+msgid   "Start Together"
+msgstr  ""
+
+#: modules/extra_settings.lua:65
+msgid   "For Co-operative games, ensure all players start in the same room "
+        "(disable the separated start rooms)"
+msgstr  ""
+
+#: modules/level_control.lua:48
+msgid   "Level Control"
+msgstr  ""
+
+#: modules/level_control.lua:58
+msgid   "Cages"
+msgstr  ""
+
+#: modules/level_control.lua:59
+msgid   "Dark Outdoors"
+msgstr  ""
+
+#: modules/level_control.lua:60
+msgid   "Doors"
+msgstr  ""
+
+#: modules/level_control.lua:61
+msgid   "Hallways"
+msgstr  ""
+
+#: modules/level_control.lua:63
+msgid   "Keyed Doors"
+msgstr  ""
+
+#: modules/level_control.lua:64
+msgid   "Liquids"
+msgstr  ""
+
+#: modules/level_control.lua:65
+msgid   "Monster Variety"
+msgstr  ""
+
+#: modules/level_control.lua:66
+msgid   "Pictures"
+msgstr  ""
+
+#: modules/level_control.lua:67
+msgid   "Secrets"
+msgstr  ""
+
+#: modules/level_control.lua:69
+msgid   "Steepness"
+msgstr  ""
+
+#: modules/level_control.lua:70
+msgid   "Switched Doors"
+msgstr  ""
+
+#: modules/level_control.lua:71
+msgid   "Teleporters"
+msgstr  ""
+
+#: modules/level_control.lua:72
+msgid   "Traps"
+msgstr  ""
+
+#: modules/level_control.lua:73
+msgid   "Windows"
+msgstr  ""
+
+#: modules/music_swap.lua:115
+msgid   "Music Swapper"
+msgstr  ""
+
+#: modules/sktag_mons.lua:262
+msgid   "Skulltag : Monsters and Items"
+msgstr  ""
+
+#: modules/sktag_mons.lua:282
+msgid   "Default Monsters"
+msgstr  ""
+
+#: modules/sktag_mons.lua:288
+msgid   "Default Weapons"
+msgstr  ""
+
+#: modules/sktag_mons.lua:341
+msgid   "Skulltag Monsters : Fine Control"
+msgstr  ""
+
+#: modules/sktag_mons.lua:390
+msgid   "Skulltag Weapons : Fine Control"
+msgstr  ""
+
+#: modules/sky_generator.lua:394
+msgid   "Sky Generator"
+msgstr  ""
+
+#: modules/stealth_mons.lua:262
+msgid   "Stealth Monsters"
+msgstr  ""
+
+#: modules/stealth_mons.lua:282 modules/zdoom_marines.lua:236
+msgid   "Default Quantity"
+msgstr  ""
+
+#: modules/stealth_mons.lua:335
+msgid   "Stealth Monsters : Fine Control"
+msgstr  ""
+
+#: modules/theme_control.lua:68
+msgid   "Doom 2 Theme Control"
+msgstr  ""
+
+#: modules/theme_control.lua:103
+msgid   "Doom 1 Theme Control"
+msgstr  ""
+
+#: modules/zdoom_marines.lua:216
+msgid   "ZDoom Marines"
+msgstr  ""
+
+#: modules/zdoom_marines.lua:292
+msgid   "ZDoom Marines : Fine Control"
+msgstr  ""
+
+#: scripts/defs.lua:54
+msgid   "Limit Removing"
+msgstr  ""
+
+#: scripts/defs.lua:62
+msgid   "As Original"
+msgstr  ""
+
+#: scripts/defs.lua:68
+msgid   "A Bit Mixed"
+msgstr  ""
+
+#: scripts/defs.lua:74
+msgid   "Jumbled Up"
+msgstr  ""
