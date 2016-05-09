@@ -67,7 +67,7 @@ PREFABS.Light_tech1 =
   map      = "MAP02"
 
   theme  = "tech"
-  prob   = 120
+  prob   = 100
 
   flat_TLITE6_1 = "TLITE6_5"
 }
@@ -79,7 +79,7 @@ PREFABS.Light_tech2 =
   map      = "MAP02"
 
   theme  = "tech"
-  prob   = 100
+  prob   = 50
 
   flat_TLITE6_1 = "TLITE6_6"
 }
