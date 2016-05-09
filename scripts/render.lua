@@ -2286,7 +2286,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     each chunk in R.ceil_chunks do
       if chunk.content_kind and chunk.content_kind != "NOTHING" then
---!!!   build_ceiling_thang(chunk)
+        build_ceiling_thang(chunk)
       end
     end
   end

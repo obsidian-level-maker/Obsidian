@@ -1029,33 +1029,6 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
-  local function try_ceiling_light_in_chunk(chunk)
-    local A = chunk.area
-
-    local reqs =
-    {
-      kind  = "light"
-      where = "point"
-
-      size  = 96
-      height = A.ceil_h - A.floor_h
-    }
-
-    if A.room then
-      reqs.env = A.room:get_env()
-    end
-
-    local def = Fab_pick(reqs, "none_ok")
-    if not def then return end
-
--- stderrf("Ceiling light: %s\n", def.name)
-
-    chunk.content_kind = "DECORATION"
-    chunk.prefab_def = def
-    chunk.prefab_dir = rand.dir()
-  end
-
-
   local function switch_up_room(R)
     -- locking exits and items
 
@@ -1193,18 +1166,62 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function pick_floor_sinks(R)
-    if R.is_cave    then return end
-    if R.is_outdoor then return end
+    if R.is_cave or R.is_outdoor then return end
 
     -- TODO
   end
 
 
   local function pick_ceiling_sinks(R)
-    if R.is_cave    then return end
-    if R.is_outdoor then return end
+    if R.is_cave or R.is_outdoor then return end
 
     -- TODO
+  end
+
+
+  local function select_lamp_for_group(R, cg)
+    local reqs =
+    {
+      kind  = "light"
+      where = "point"
+
+      size  = 80
+      height = cg.h - cg.max_floor_h
+
+      env = R:get_env()
+    }
+
+    return Fab_pick(reqs, "none_ok")
+  end
+
+
+  local function pick_ceiling_lights(R)
+    if R.is_cave or R.is_outdoor then return end
+
+    local groups = {}
+
+    each cg in R.ceil_groups do
+      if cg.sink then continue end
+
+--    if rand.odds(50) then continue end
+
+      local def = select_lamp_for_group(R, cg)
+      if not def then continue end
+      
+      each chunk in R.ceil_chunks do
+        if chunk.area.ceil_group != cg then continue end
+        if chunk.content_kind then continue end
+        if chunk.floor_below and chunk.floor_below.content_kind then continue end
+
+        if true then
+          chunk.content_kind = "DECORATION"
+          chunk.prefab_def = def
+          chunk.prefab_dir = 2
+
+          chunk.area.bump_light = 16
+        end
+      end
+    end
   end
 
 
@@ -1226,11 +1243,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       end
     end
 
-    each chunk in R.ceil_chunks do
-      if chunk.content_kind == nil and rand.odds(100) then
-        try_ceiling_light_in_chunk(chunk)
-      end
-    end
+    pick_ceiling_lights(R)
 
     -- kill any unused closets
     each CL in R.closets do
