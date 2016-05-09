@@ -31,8 +31,8 @@ PREFABS.Light_urban1 =
   theme  = "urban"
   prob   = 50
 
-   tex_METAL    = "WOOD10"
   flat_TLITE6_4 = "CEIL1_3"
+   tex_METAL    = "WOOD10"
 }
 
 
@@ -118,5 +118,6 @@ PREFABS.Light_tech_blue =
   prob   = 50
 
   flat_TLITE6_4 = "FLAT22"
+   tex_METAL    = "SHAWN2"
 }
 
