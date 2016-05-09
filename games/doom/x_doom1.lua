@@ -440,6 +440,8 @@ ULTDOOM.THEMES =
     {
       PLAIN = 100
     }
+
+    ceil_light_prob = 60
   }
 
 
@@ -592,6 +594,8 @@ ULTDOOM.THEMES =
       shooter = 0.6
       skull   = 2.0
     }
+
+    ceil_light_prob = 20
   }
 
 

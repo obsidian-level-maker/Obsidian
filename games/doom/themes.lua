@@ -53,6 +53,8 @@ DOOM.THEMES =
       PLAIN = 100
     }
 
+    ceil_light_prob = 40
+
     -- FIXME: temp crud
     has_triple_key_door = true
     has_double_switch_door = true
@@ -150,6 +152,8 @@ DOOM.THEMES =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
     }
+
+    ceil_light_prob = 70
 
     techy_doors = true
   }
@@ -273,8 +277,7 @@ DOOM.THEMES =
       skull   = 2.0
     }
 
-    archy_arches = true
-
+    ceil_light_prob = 20
   }
 
   ------------------------------------
