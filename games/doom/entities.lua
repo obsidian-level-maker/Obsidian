@@ -102,7 +102,6 @@ DOOM.ENTITIES =
   gutted_torso4  = { id=78, r=16, h=64, ceil=true }
 
   hang_arm_pair  = { id=59, r=20, h=84, ceil=true, pass=true }
-  hang_leg_pair  = { id=60, r=20, h=68, ceil=true, pass=true }
   hang_leg_gone  = { id=61, r=20, h=52, ceil=true, pass=true }
   hang_leg       = { id=62, r=20, h=52, ceil=true, pass=true }
   hang_twitching = { id=63, r=20, h=68, ceil=true, pass=true }
@@ -123,6 +122,9 @@ DOOM.ENTITIES =
   dead_caco    = { id=22, r=16, h=16, pass=true }
   dead_skull   = { id=23, r=16, h=16, pass=true }
 
+  -- replacement sprite (normally this is a gore sprite)
+  hang_lamp  = { id=60, r=20, h=68, ceil=true, pass=true }
+
   -- CTF things (NOTE: these don't exist in vanilla DOOM)
   ctf_blue_flag  = { id=5130, r=16, h=56, pass=true }
   ctf_blue_start = { id=5080, r=16, h=56, pass=true }
@@ -130,13 +132,13 @@ DOOM.ENTITIES =
   ctf_red_start  = { id=5081, r=16, h=56, pass=true }
 
   -- special stuff --
-  dummy = { id=23, r=16, h=16, pass=true }
-
   keen  = { id=72, r=16, h=72, ceil=true }
 
   brain_boss    = { id=88, r=16, h=16 }
   brain_shooter = { id=89, r=20, h=32 }
   brain_target  = { id=87, r=20, h=32, pass=true }
+
+  dummy = { id=23, r=16, h=16, pass=true }
 
   light  = { id="light", r=1, h=1, pass=true }
   secret = { id="oblige_secret", r=1, h=1, pass=true }
