@@ -17,6 +17,6 @@ PREFABS.Light_hanging =
   bound_z2 = 0
 
   theme  = "urban"
-  prob   = 500
+  prob   = 400
 }
 
