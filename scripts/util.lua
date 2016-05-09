@@ -495,6 +495,10 @@ function table.expand_templates(t)
         error("Missing template: " .. tostring(sub.template) .. " in: " .. name)
       end
 
+      if orig.template then
+        error("Template reference cannot use templates (" .. tostring(sub.template) .. ")")
+      end
+
       table.merge_missing(sub, orig)
 
       -- can safely remove the template name now
