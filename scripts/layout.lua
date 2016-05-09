@@ -1200,12 +1200,12 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     local groups = {}
 
-    local prob = THEME.ceil_light_prob or 50
+    local prob = R.theme.ceil_light_prob or THEME.ceil_light_prob or 50
 
     each cg in R.ceil_groups do
       if cg.sink then continue end
 
-      if rand.odds(prob) then continue end
+      if not rand.odds(prob) then continue end
 
       local def = select_lamp_for_group(R, cg)
       if not def then continue end
