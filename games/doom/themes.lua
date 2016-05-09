@@ -1142,8 +1142,8 @@ DOOM.ROOM_THEMES =
   urban_RedBrick =
   {
     kind = "building"
-    rarity = "level"
-    prob = 50
+    rarity = "zone"
+    prob = 40
 
     walls =
     {
@@ -1162,9 +1162,41 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      FLOOR6_1 = 20
+      FLOOR6_1 = 30
       FLAT5_1  = 20
       CEIL3_5  = 20
+      FLAT8    = 10
+    }
+  }
+
+
+  urban_GreenBrick =
+  {
+    kind = "building"
+    rarity = "zone"
+    prob = 60
+
+    walls =
+    {
+      BRICK10 = 50
+    }
+
+    floors =
+    {
+      RROCK14  = 40
+      MFLR8_1  = 40
+      FLAT5_8  = 30
+      FLAT1    = 20
+      FLOOR7_1 = 10
+      FLOOR3_3 = 10
+    }
+
+    ceilings =
+    {
+      FLOOR7_2 = 40
+      FLAT10   = 20
+      CEIL3_5  = 20
+      CEIL5_1  = 20
       FLAT8    = 10
     }
   }
