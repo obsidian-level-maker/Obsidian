@@ -154,7 +154,7 @@ ULTDOOM.MATERIALS =
   -- flats
   GRASS1   = { f="DEM1_5",   t="MARBLE1" }
   GRASS2   = { f="DEM1_5",   t="MARBLE1" }
-  GRNLITE1 = { f="TLITE6_5", t="METAL" }
+  GRNLITE1 = { f="TLITE6_6", t="METAL" }
   GRNROCK  = { f="MFLR8_3",  t="SP_ROCK1" }
 
   RROCK01  = { f="FLOOR6_1", t="REDWALL" }

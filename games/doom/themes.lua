@@ -53,8 +53,6 @@ DOOM.THEMES =
       PLAIN = 100
     }
 
-    ceil_light_prob = 40
-
     -- FIXME: temp crud
     has_triple_key_door = true
     has_double_switch_door = true
@@ -143,6 +141,8 @@ DOOM.THEMES =
       short_lamp   = 40
     }
 
+    ceil_light_prob = 60
+
     base_skin =
     {
       big_door = "BIGDOOR2"
@@ -152,8 +152,6 @@ DOOM.THEMES =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
     }
-
-    ceil_light_prob = 70
 
     techy_doors = true
   }
@@ -212,6 +210,8 @@ DOOM.THEMES =
       knight   = 1.5
       gunner   = 1.5
     }
+
+    ceil_light_prob = 75
 
     archy_arches = true
   }
@@ -277,7 +277,7 @@ DOOM.THEMES =
       skull   = 2.0
     }
 
-    ceil_light_prob = 20
+    ceil_light_prob = 25
   }
 
   ------------------------------------
@@ -301,6 +301,11 @@ DOOM.THEMES =
       ROCK4 = 60
     }
 
+    wall_groups =
+    {
+      PLAIN = 100
+    }
+
     monster_prefs =
     {
       ss_nazi = 100
@@ -309,6 +314,8 @@ DOOM.THEMES =
       demon   = 20  -- kinda like a dog
       imp     =  5  -- kinda like a mutant
     }
+
+    ceil_light_prob = 0
 
     base_skin =
     {
@@ -783,11 +790,36 @@ DOOM.ROOM_THEMES =
   }
 
 
-  -- Hmmm, probably better as a 'speciality' theme...
+  hell_Stone =
+  {
+    kind = "building"
+    prob = 40
+
+    walls =
+    {
+      STONE3 = 50
+      STONE2 = 10
+    }
+
+    floors =
+    {
+      FLAT1 = 10
+      FLAT5_4 = 5
+    }
+
+    ceilings =
+    {
+      FLAT1 = 10
+      FLAT5_4 = 3
+    }
+  }
+
+
   hell_Viney =
   {
     kind = "building"
-    prob = 20
+    rarity = "zone"
+    prob = 50
 
     walls =
     {
@@ -813,36 +845,11 @@ DOOM.ROOM_THEMES =
   }
 
 
-  hell_Stone =
-  {
-    kind = "building"
-    prob = 50
-
-    walls =
-    {
-      STONE3 = 50
-      STONE2 = 10
-    }
-
-    floors =
-    {
-      FLAT1 = 10
-      FLAT5_4 = 5
-    }
-
-    ceilings =
-    {
-      FLAT1 = 10
-      FLAT5_4 = 3
-    }
-  }
-
-
-  -- TODO: this also probably better as 'speciality' theme
   hell_Wood =
   {
     kind = "building"
-    prob = 40
+    rarity = "zone"
+    prob = 50
 
     walls =
     {
@@ -865,8 +872,9 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
+      FLOOR7_2 = 50
+      RROCK14 = 40
       CEIL1_1 = 30
-      RROCK14 = 30
       FLAT5_2 = 10
       FLAT5_7 = 10
       FLOOR7_1 = 5
@@ -877,7 +885,8 @@ DOOM.ROOM_THEMES =
   hell_Skin =
   {
     kind = "building"
-    prob = 20
+    rarity = "zone"
+    prob = 30
 
     walls =
     {
@@ -980,9 +989,9 @@ DOOM.ROOM_THEMES =
       FLOOR6_2 = 10
       FLAT5_7 = 20
       FLAT5_8 = 10
-      RROCK03 = 30  -- REMOVE
-      RROCK04 = 30  -- REMOVE
-      RROCK09 = 15  -- REMOVE
+      RROCK03 = 30
+      RROCK04 = 30
+      RROCK09 = 15
     }
 
     naturals =
