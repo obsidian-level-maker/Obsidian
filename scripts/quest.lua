@@ -2586,7 +2586,7 @@ function Quest_room_themes()
 
   local function rare_level_theme(tab)
     tab = table.copy(tab)
-    tab["NONE"] = 50
+    tab["NONE"] = 20
 
     local name = rand.key_by_probs(tab)
 
@@ -2603,7 +2603,7 @@ function Quest_room_themes()
     if #room_list < 1 then return end
 
     -- when level only has a few rooms, limit how often we use it
-    local use_prob = 5 + (#room_list - 1) * 15
+    local use_prob = 20 + (#room_list - 1) * 30
     if not rand.odds(use_prob) then return end
 
     local R = rand.pick(room_list)
@@ -2628,7 +2628,7 @@ function Quest_room_themes()
     if #room_list < 1 then return end
 
     -- when zone only has a few rooms, limit how often we use it
-    local use_prob = 10 + (#room_list - 1) * 20
+    local use_prob = 60 + (#room_list - 1) * 18
     if not rand.odds(use_prob) then return end
 
     local R = rand.pick(room_list)
@@ -2639,7 +2639,7 @@ function Quest_room_themes()
 
   local function rare_zone_themes(tab)
     tab = table.copy(tab)
-    tab["NONE"] = 50
+    tab["NONE"] = 20
 
     each Z in LEVEL.zones do
       pick_rare_zone_theme(Z, tab)

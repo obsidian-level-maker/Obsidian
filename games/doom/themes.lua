@@ -565,7 +565,7 @@ DOOM.ROOM_THEMES =
   {
     kind = "building"
     rarity = "level"
-    prob = 50
+    prob = 40
 
     walls =
     {
