@@ -1583,6 +1583,8 @@ function Room_floor_ceil_heights()
 
   -- Note: the 'entry_h' field also serves as a "visited already" flag
 
+  local TRAVERSE_H = 80
+
 
   local function raw_set_floor(A, h)
     A.floor_h = h
@@ -2744,7 +2746,7 @@ function Room_floor_ceil_heights()
     end
   end
 
-  
+
   local function check_joiner_nearby_h(A)
     each C in LEVEL.conns do
       if C.kind == "joiner" and (C.A1 == A or C.A2 == A) then
@@ -2815,6 +2817,36 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function ceil_ensure_traversibility(R)
+    -- ensure enough vertical room for player to travel between two
+    -- internally connected areas
+
+    each IC in R.internal_conns do
+      local A1 = IC.A1
+      local A2 = IC.A2
+
+      local top_z = math.max(A1.floor_h, A2.floor_h)
+
+      if A1.stair_top_h then top_z = math.max(top_z, A1.stair_top_h) end
+      if A2.stair_top_h then top_z = math.max(top_z, A2.stair_top_h) end
+
+      top_z = top_z + TRAVERSE_H
+
+      if A1.ceil_group then
+        while A1.ceil_group.h < top_z do A1.ceil_group.h = A1.ceil_group.h + 32 end
+      else
+        A1.traverse_ceil_h = top_z
+      end
+
+      if A2.ceil_group then
+        while A2.ceil_group.h < top_z do A2.ceil_group.h = A2.ceil_group.h + 32 end
+      else
+        A2.traverse_ceil_h = top_z
+      end
+    end
+  end
+
+
   local function ceiling_group_heights(R)
     --
     -- Notes:
@@ -2843,7 +2875,7 @@ function Room_floor_ceil_heights()
       calc_a_ceiling_height(R, group)
     end
 
-    -- TODO ensure traversibility over internal conns
+    ceil_ensure_traversibility(R)
 
     -- TODO if largest ceil-group is same as a neighbor, raise by 32 until different
   end
@@ -2881,24 +2913,17 @@ function Room_floor_ceil_heights()
         height = 144
       end
 
-if not A.floor_h then
-gui.debugf("do_ceilings : no floor_h in %s %s in %s\n", A.name, A.mode, A.room.name)
-end
+---## if not A.floor_h then
+---## gui.debugf("do_ceilings : no floor_h in %s %s in %s\n", A.name, A.mode, A.room.name)
+---## end
+      assert(A.floor_h)
 
-      set_ceil(A, R.max_floor_h + 128)
+      local new_h = R.max_floor_h + 128
+
+      if A.traverse_ceil_h then new_h = math.max(new_h, A.traverse_ceil_h) end
+
+      set_ceil(A, new_h)
     end
-
---[[ REVIEW THIS
-    -- ensure enough vertical room for player to travel between areas
-    local SPACE_Z = 80
-
-    each C in R.internal_conns do
-      local min_c = math.max(C.A1.floor_h, C.A2.floor_h) + SPACE_Z
-
-      if C.A1.ceil_h < min_c then set_ceil(C.A1, min_c) end
-      if C.A2.ceil_h < min_c then set_ceil(C.A2, min_c) end
-    end
---]]
 
     -- now pick textures
     select_ceiling_mats(R)
