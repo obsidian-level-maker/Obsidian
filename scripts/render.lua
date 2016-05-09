@@ -1738,8 +1738,8 @@ function Render_properties_for_area(A)
       A.lighting = LEVEL.sky_light - LEVEL.sky_shadow
 
     else
-      -- this generally won't occur, rooms have setup their lighting already
       A.lighting = A.base_light or 144
+      A.lighting = A.lighting + (A.bump_light or 0)
     end
   end
 
