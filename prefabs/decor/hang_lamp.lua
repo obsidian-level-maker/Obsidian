@@ -4,14 +4,14 @@
 
 PREFABS.Light_hanging =
 {
-  file   = "decor/ceil_light.wad"
-  map    = "MAP03"
+  file   = "decor/hang_lamp.wad"
+  map    = "MAP01"
 
   kind   = "light"
   where  = "point"
 
   env    = "building"
-  height = 192
+  height = 160
 
   bound_z1 = -64
   bound_z2 = 0
