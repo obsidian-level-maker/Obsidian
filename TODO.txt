@@ -59,6 +59,8 @@ ______________________________________________________________________
 
 +  two connections into a room
 
++  have a special "OBL: Light Brush" for use in NOTHING sectors
+
 +  move 'prefabs' folder to games/doom/
 
 +  support a "Mix It Up" Strength setting

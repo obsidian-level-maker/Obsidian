@@ -6,9 +6,9 @@ WORK IN PROGRESS
 SINKS:
 
 +  set ceiling of stairs to highest nearby ceil group
-   -  BUT test stair prefab for "plain_ceiling" flag
+   !!  test stair prefab for "plain_ceiling" flag
 
--  support sink.light and sink.trim_light
+-  for SKY holes, require group.h > max_floor + 130
 
 -  fix interaction with importants / decorations / fs-cages :
 
@@ -22,30 +22,4 @@ SINKS:
 
    -  for importants (like KEYS), make *them* inhibit sinks
 
-
-
-NEW LIGHTING:
-
-DONE:  pick base lighting of each room
-
-+  decide if each area will be BASE + 0, BASE + 16, or BASE + 32
-   and that decides what kinds of light prefabs to add
-   [ i.e. ceiling light fittings or "big" light decorations ]
-
--  sink-based lights / sky should force/require the brightest area in room
-
--  ignore area light for wall stuff
-
-+  some ceiling light fixtures
-
-??  for joiners and doors/windows : pick a value roughly between
-    the two sides.  E.g. if diff == 32, use lowest + 16
-    When diff == 16, use the darkest side.
-    Remember to take shadow side into account for straddlers.
-
-
-
-MISC:
-
--  see what looks bad in DOOM 1 ;)
 
