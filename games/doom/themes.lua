@@ -1067,8 +1067,6 @@ DOOM.ROOM_THEMES =
       BRICK8  = 15
       BRICK9  = 20
       BRICK12 = 30
-      BRICK11 = 3
-      BRICK10 = 5
 
       BIGBRIK1 = 90
       BIGBRIK2 = 90
@@ -1137,6 +1135,37 @@ DOOM.ROOM_THEMES =
       CEIL3_5 = 25
       MFLR8_1 = 30
       FLAT5_4 = 20
+    }
+  }
+
+
+  urban_RedBrick =
+  {
+    kind = "building"
+    rarity = "level"
+    prob = 50
+
+    walls =
+    {
+      BRICK11 = 50
+    }
+
+    floors =
+    {
+      RROCK14  = 40
+      MFLR8_2  = 40
+      FLAT1_1  = 40
+      FLOOR3_3 = 20
+      FLOOR5_4 = 20
+      FLOOR6_2 = 10
+    }
+
+    ceilings =
+    {
+      FLOOR6_1 = 20
+      FLAT5_1  = 20
+      CEIL3_5  = 20
+      FLAT8    = 10
     }
   }
 
