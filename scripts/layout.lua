@@ -1000,6 +1000,13 @@ function Layout_decorate_rooms(KKK_PASS)
     local def = Fab_pick(reqs, "none_ok")
     if not def then return end
 
+    -- don't create pillars under ceiling sinks
+    -- TODO : allow it in certain circumstances
+    -- FIXME: use 'reqs' to prevent picking them at all
+    if def.z_fit and chunk.ceil_above and chunk.ceil_above.content_kind then
+      return
+    end
+
     chunk.content_kind = "DECORATION"
     chunk.prefab_def = def
     chunk.prefab_dir = rand.dir()
@@ -1210,6 +1217,13 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
           error("Unknown ceiling sink: " .. what)
         end
       end
+
+      -- inhibit ceiling lights and pillars
+      each chunk in R.ceil_chunks do
+        if chunk.area.ceil_group == cg and not chunk.content_kind then
+          chunk.content_kind = "NOTHING"
+        end
+      end
     end
   end
 
@@ -1230,6 +1244,17 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
+  local function pick_decorative_bling(R)
+    local decor_prob = rand.pick({ 20, 50, 50, 80 })
+
+    each chunk in R.floor_chunks do
+      if chunk.content_kind == nil and rand.odds(decor_prob) then
+        try_decoration_in_chunk(chunk)
+      end
+    end
+  end
+
+
   local function pick_ceiling_lights(R)
     if R.is_cave or R.is_outdoor then return end
 
@@ -1238,8 +1263,6 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     local prob = R.theme.ceil_light_prob or THEME.ceil_light_prob or 50
 
     each cg in R.ceil_groups do
-      if cg.sink then continue end
-
       if not rand.odds(prob) then continue end
 
       local def = select_lamp_for_group(R, cg)
@@ -1271,15 +1294,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     -- more cages, oh yes!
     try_extra_cages(R)
 
-    -- decorative bling
-    local decor_prob = rand.pick({ 20, 50, 50, 80 })
-
-    each chunk in R.floor_chunks do
-      if chunk.content_kind == nil and rand.odds(decor_prob) then
-        try_decoration_in_chunk(chunk)
-      end
-    end
-
+    pick_decorative_bling(R)
     pick_ceiling_lights(R)
 
     -- kill any unused closets
