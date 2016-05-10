@@ -357,11 +357,6 @@ function Layout_place_importants(R)
       R:add_exclusion("keep_empty", mx, my,  640)
       R:add_exclusion("non_facing", mx, my, 1280)
     end
-
----!!!  -- remember floor height of players (needed by monster depots)
----!!!  if goal.kind == "START" and not goal.alt_start then
----!!!    LEVEL.player1_z = spot.area.floor_h
----!!!  end
   end
 
 

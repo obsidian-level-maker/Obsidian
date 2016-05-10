@@ -1400,7 +1400,7 @@ function Area_inner_points_for_group(R, group, what)
   -- this uses same logic as Area_find_inner_points()
   -- [ probably not worth trying to merge the code though ]
   --
-  -- what is either "floor" or "ceil".
+  -- the 'what' parameter is either "floor" or "ceil".
   --
 
   local   area_field = what .. "_group"
