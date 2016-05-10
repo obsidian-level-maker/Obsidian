@@ -155,6 +155,12 @@ DOOM.SINKS =
     dz  = -8
   }
 
+  floor_green =
+  {
+    mat = "DEM1_6"
+    dz  = -8
+  }
+
 
   -- misc ceiling --
 
@@ -376,6 +382,24 @@ DOOM.THEMES =
       ZIMMER7  = 40
       BSTONE1  = 20
       ROCK5    = 20
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 100
+      liquid_plain = 20
+      liquid_metal = 10
+      floor_green = 10
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 50
+      sky_metal = 30
+      sky_plain = 10
+      light_urban1 = 15
+      light_diamond = 5
+      ceil_redash = 5
     }
 
     outdoor_torches =
