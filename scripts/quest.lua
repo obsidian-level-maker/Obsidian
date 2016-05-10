@@ -2653,30 +2653,43 @@ function Quest_room_themes()
   local function pick_common_building(R, last_R, tab)
     assert(R.zone.building_theme)
 
+    local last_theme = last_R and last_R.theme
+
     -- when last theme is different from zone's building theme, then
     -- generally use the zone building theme, but when the same then
     -- often pick a new one.
-    local zb_prob
+    local zone_prob = 75
+    local keep_prob = 0
 
-    if not last_R then
-      zb_prob = 65
-    elseif last_R.theme == R.zone.building_theme then
-      zb_prob = 35
-    elseif last_R.theme.rarity then
-      zb_prob = 95
-    else
-      zb_prob = 85
+    if last_theme then
+      if last_theme == R.zone.building_theme then
+        zone_prob = 35
+        keep_prob = 0
+      else
+        zone_prob = 75
+        keep_prob = sel(last_theme.rarity, 10, 50)
+      end
     end
 
-    if rand.odds(zb_prob) then
+    if rand.odds(zone_prob) then
       R.theme = R.zone.building_theme
       return
     end
 
-    if last_R and table.size(tab) >= 2 then
-      assert(last_R.theme)
+    if rand.odds(keep_prob) then
+      R.theme = assert(last_theme)
+      return
+    end
+
+    -- remove zone's building theme from tab
+    if table.size(tab) >= 2 then
       tab = table.copy(tab)
-      tab[last_R.theme.name] = nil
+      tab[R.zone.building_theme.name] = nil
+    end
+
+    if last_theme and table.size(tab) >= 2 then
+      tab = table.copy(tab)
+      tab[last_theme.name] = nil
     end
 
     local name = rand.key_by_probs(tab)
