@@ -417,45 +417,6 @@ DOOM.ROOM_THEMES =
   }
 
 
-  fixme_tech_Stargray =
-  {
---- env = "building"
-    rarity = "minor"
---- prob = 50
-
-    walls =
-    {
-      STARGR2 = 50
-      STARGR1 = 50
-      SHAWN2 = 5
-    }
-
-    floors =
-    {
-      FLOOR4_8 = 50
-      FLOOR5_1 = 20
-      FLOOR5_3 = 30
-      FLOOR3_3 = 20
-      FLOOR0_3 = 30
-      FLOOR0_5 = 15
-      SLIME15 = 10
-      SLIME16 = 10
-      FLAT4 = 15
-    }
-
-    ceilings =
-    {
-      CEIL3_5 = 20
-      CEIL3_1 = 20
-      FLAT4 = 20
-      CEIL4_3 = 10
-      FLAT23 = 10
-      FLAT9 = 20
-      SLIME14 = 10
-    }
-  }
-
-
   tech_Tekgren =
   {
     env  = "building"
@@ -528,7 +489,8 @@ DOOM.ROOM_THEMES =
   tech_Gray =
   {
     env  = "building"
-    prob = 25
+    rarity = "zone"
+    prob = 50
 
     walls =
     {
@@ -563,6 +525,37 @@ DOOM.ROOM_THEMES =
       FLAT4   = 10
       FLAT5_5 = 5
       FLAT1   = 5
+    }
+  }
+
+
+  tech_Sladwall =
+  {
+    env = "building"
+    rarity = "zone"
+    prob = 50
+
+    walls =
+    {
+      SLADWALL = 50
+    }
+
+    floors =
+    {
+      FLOOR5_1 = 50
+      FLOOR0_1 = 40
+      FLAT5    = 30
+      FLOOR0_5 = 30
+      SLIME15  = 20
+      FLOOR3_3 = 10
+    }
+
+    ceilings =
+    {
+      CEIL3_2 = 30
+      CEIL3_5 = 30
+      FLAT1 = 30
+      FLAT4 = 20
     }
   }
 
