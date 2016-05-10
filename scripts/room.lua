@@ -1536,15 +1536,15 @@ function Room_choose_kind(R, last_R)
   end
 
   -- these outdoor probs carefully chosen so that:
-  --    few   is about 18%
+  --    few   is about 15%
   --    some  is about 35%
   --    heaps is about 75%
   local out_prob
 
   if not last_R then
-    out_prob = style_sel("outdoors", 0, 18, 35, 75)
+    out_prob = style_sel("outdoors", 0, 15, 30, 75)
   elseif last_R.is_outdoor then
-    out_prob = style_sel("outdoors", 0, 10, 25, 70)
+    out_prob = style_sel("outdoors", 0,  7, 20, 70)
   else
     out_prob = style_sel("outdoors", 0, 20, 40, 90)
   end
