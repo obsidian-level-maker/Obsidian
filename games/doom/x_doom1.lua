@@ -668,7 +668,7 @@ ULTDOOM.ROOM_THEMES =
 
   any_Stairwell =
   {
-    kind = "stairwell"
+    env = "stairwell"
 
     walls =
     {
@@ -690,7 +690,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Room =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -744,7 +744,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Brown =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -784,8 +784,8 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Computer =
   {
+    env = "building"
     prob = 10
-    kind = "building"
 
     walls =
     {
@@ -818,7 +818,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Shiny =
   {
-    kind = "building"
+    env = "building"
     prob = 10
 
     walls =
@@ -844,7 +844,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Gray =
   {
-    kind = "building"
+    env = "building"
     prob = 20
 
     walls =
@@ -879,7 +879,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Hallway =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -932,7 +932,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
@@ -946,7 +946,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -971,7 +971,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Room =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -1043,7 +1043,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Hellish =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -1097,7 +1097,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Lab =
   {
-    kind = "building"
+    env = "building"
     prob = 10
 
     walls =
@@ -1131,7 +1131,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Hallway =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -1194,7 +1194,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Hallway_hell =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -1252,7 +1252,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
@@ -1266,7 +1266,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
 --Makes sense for high prob for SP_ROCK1 because the intermission screen shows
 --Deimos has a desolate, gray ground.
@@ -1290,7 +1290,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Marble =
   {
-    kind = "building"
+    env = "building"
     prob = 90
 
     walls =
@@ -1345,7 +1345,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Wood =
   {
-    kind = "building"
+    env = "building"
     prob = 20
 
     walls =
@@ -1373,7 +1373,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Skin =
   {
-    kind = "building"
+    env = "building"
     prob = 20
 
     walls =
@@ -1410,7 +1410,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Hot =
   {
-    kind = "building"
+    env = "building"
     prob = 60
 
     walls =
@@ -1465,7 +1465,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Hallway =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -1514,7 +1514,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -1544,7 +1544,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Outdoors_hot =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -1576,7 +1576,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
@@ -1596,7 +1596,7 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Room =
   {
-    kind = "building"
+    env = "building"
     prob = 90
 
     walls =
@@ -1654,7 +1654,7 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Wood =
   {
-    kind = "building"
+    env = "building"
     prob = 50
 
     walls =
@@ -1689,7 +1689,7 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Marble =
   {
-    kind = "building"
+    env = "building"
     prob = 30
 
     walls =
@@ -1722,7 +1722,7 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Hallway_hell =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -1780,7 +1780,7 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
@@ -1799,7 +1799,7 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {

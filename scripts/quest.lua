@@ -2461,11 +2461,15 @@ function Quest_room_themes()
   end
 
 
-  local function collect_usable_themes(kind, rarity)
+  local function collect_usable_themes(env, rarity)
     local tab = {}
 
     each name,info in GAME.ROOM_THEMES do
-      if info.kind == kind and
+      if info.kind then
+        error("Room theme uses old 'kind' keyword: " .. name)
+      end
+
+      if info.env == env and
          info.rarity == rarity and
          match_level_theme(name)
       then
@@ -2477,7 +2481,7 @@ function Quest_room_themes()
       -- allow nothing for certain cases
       if rarity then return nil end
 
-      error("No rooms themes for: " .. kind)
+      error("No rooms themes for env: " .. env)
     end
 
     return tab

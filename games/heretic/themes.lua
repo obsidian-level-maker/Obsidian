@@ -84,7 +84,7 @@ HERETIC.ROOM_THEMES =
 {
   any_Stairwell =
   {
-    kind = "stairwell"
+    env = "stairwell"
 
     walls =
     {
@@ -101,7 +101,7 @@ HERETIC.ROOM_THEMES =
   -- TODO: one for each major theme
   any_Hallway =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -129,7 +129,7 @@ HERETIC.ROOM_THEMES =
 
   h_urban_House1 =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -154,7 +154,7 @@ HERETIC.ROOM_THEMES =
 
   h_urban_House2 =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -178,7 +178,7 @@ HERETIC.ROOM_THEMES =
 
   h_urban_Stone =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -203,7 +203,7 @@ HERETIC.ROOM_THEMES =
 
   h_urban_Wood =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -229,7 +229,7 @@ HERETIC.ROOM_THEMES =
 
   h_urban_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
@@ -240,7 +240,7 @@ HERETIC.ROOM_THEMES =
 
   h_urban_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -260,7 +260,7 @@ HERETIC.ROOM_THEMES =
 
   h_castle_Green =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -286,7 +286,7 @@ HERETIC.ROOM_THEMES =
 
   h_castle_Gray =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -311,7 +311,7 @@ HERETIC.ROOM_THEMES =
 
   h_castle_Orange =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -338,7 +338,7 @@ HERETIC.ROOM_THEMES =
 
   h_castle_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
@@ -349,7 +349,7 @@ HERETIC.ROOM_THEMES =
 
   h_castle_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {

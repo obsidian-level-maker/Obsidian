@@ -42,7 +42,7 @@ HEXEN.THEMES =
 
   any_Stairwell =
   {
-    kind = "stairwell"
+    env = "stairwell"
 
     walls =
     {

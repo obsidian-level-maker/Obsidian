@@ -85,7 +85,7 @@ QUAKE.ROOM_THEMES =
 {
   any_Stairwell =
   {
-    kind = "stairwell"
+    env = "stairwell"
 
     walls =
     {
@@ -101,7 +101,7 @@ QUAKE.ROOM_THEMES =
 
   any_Hallway =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -124,7 +124,7 @@ QUAKE.ROOM_THEMES =
 
   q1_tech_Room =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -155,7 +155,7 @@ QUAKE.ROOM_THEMES =
 
   q1_tech_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
@@ -168,7 +168,7 @@ QUAKE.ROOM_THEMES =
 
   q1_tech_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -191,7 +191,7 @@ QUAKE.ROOM_THEMES =
 
   q1_castle_Room =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -226,7 +226,7 @@ QUAKE.ROOM_THEMES =
 
   q1_castle_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -247,7 +247,7 @@ QUAKE.ROOM_THEMES =
 
   q1_castle_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {

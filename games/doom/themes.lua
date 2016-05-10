@@ -344,7 +344,7 @@ DOOM.ROOM_THEMES =
 
   any_Stairwell =
   {
-    kind = "stairwell"
+    env = "stairwell"
 
     walls =
     {
@@ -366,7 +366,7 @@ DOOM.ROOM_THEMES =
 
   tech_Startan =
   {
-    kind = "building"
+    env  = "building"
     prob = 50
 
     walls =
@@ -419,7 +419,7 @@ DOOM.ROOM_THEMES =
 
   fixme_tech_Stargray =
   {
---- kind = "building"
+--- env = "building"
     rarity = "minor"
 --- prob = 50
 
@@ -458,7 +458,7 @@ DOOM.ROOM_THEMES =
 
   tech_Tekgren =
   {
-    kind = "building"
+    env  = "building"
     prob = 25
 
     walls =
@@ -490,7 +490,7 @@ DOOM.ROOM_THEMES =
 
   tech_Metal =
   {
-    kind = "building"
+    env  = "building"
     prob = 50
 
     walls =
@@ -527,7 +527,7 @@ DOOM.ROOM_THEMES =
 
   tech_Gray =
   {
-    kind = "building"
+    env  = "building"
     prob = 25
 
     walls =
@@ -569,7 +569,7 @@ DOOM.ROOM_THEMES =
 
   tech_VeryShiny =
   {
-    kind = "building"
+    env = "building"
     rarity = "level"
     prob = 40
 
@@ -595,7 +595,7 @@ DOOM.ROOM_THEMES =
 
   tech_VeryTekky =
   {
-    kind = "building"
+    env = "building"
     rarity = "level"
     prob = 40
 
@@ -622,7 +622,7 @@ DOOM.ROOM_THEMES =
 
   tech_Cave =
   {
-    kind = "cave"
+    env  = "cave"
     prob = 50
 
     naturals =
@@ -648,7 +648,7 @@ DOOM.ROOM_THEMES =
 
   tech_Outdoors =
   {
-    kind = "outdoors"
+    env  = "outdoors"
     prob = 50
 
     floors =
@@ -682,7 +682,7 @@ DOOM.ROOM_THEMES =
 
   tech_Hallway =
   {
-    kind = "hallway"
+    env  = "hallway"
     prob = 50
 
     walls =
@@ -729,7 +729,7 @@ DOOM.ROOM_THEMES =
 
   hell_Marble =
   {
-    kind = "building"
+    env  = "building"
     prob = 100
 
     walls =
@@ -764,7 +764,7 @@ DOOM.ROOM_THEMES =
 
   hell_Hotbrick =
   {
-    kind = "building"
+    env  = "building"
     prob = 60
 
     walls =
@@ -798,7 +798,7 @@ DOOM.ROOM_THEMES =
 
   hell_Stone =
   {
-    kind = "building"
+    env  = "building"
     prob = 40
 
     walls =
@@ -823,7 +823,7 @@ DOOM.ROOM_THEMES =
 
   hell_Viney =
   {
-    kind = "building"
+    env = "building"
     rarity = "zone"
     prob = 50
 
@@ -853,7 +853,7 @@ DOOM.ROOM_THEMES =
 
   hell_Wood =
   {
-    kind = "building"
+    env = "building"
     rarity = "zone"
     prob = 50
 
@@ -890,7 +890,7 @@ DOOM.ROOM_THEMES =
 
   hell_Skin =
   {
-    kind = "building"
+    env = "building"
     rarity = "zone"
     prob = 30
 
@@ -923,7 +923,7 @@ DOOM.ROOM_THEMES =
 
   hell_Hallway =
   {
-    kind = "hallway"
+    env  = "hallway"
     prob = 50
 
     walls =
@@ -963,7 +963,7 @@ DOOM.ROOM_THEMES =
 
   hell_Cave =
   {
-    kind = "cave"
+    env  = "cave"
     prob = 50
 
     naturals =
@@ -987,7 +987,7 @@ DOOM.ROOM_THEMES =
 
   hell_Outdoors =
   {
-    kind = "outdoors"
+    env  = "outdoors"
     prob = 50
 
     floors =
@@ -1021,7 +1021,7 @@ DOOM.ROOM_THEMES =
 
   urban_Panel =
   {
-    kind = "building"
+    env  = "building"
     prob = 50
 
     walls =
@@ -1060,7 +1060,7 @@ DOOM.ROOM_THEMES =
 
   urban_Brick =
   {
-    kind = "building"
+    env  = "building"
     prob = 70
 
     walls =
@@ -1113,7 +1113,7 @@ DOOM.ROOM_THEMES =
 
   urban_Stone =
   {
-    kind = "building"
+    env  = "building"
     prob = 20
 
     walls =
@@ -1147,7 +1147,7 @@ DOOM.ROOM_THEMES =
 
   urban_RedBrick =
   {
-    kind = "building"
+    env = "building"
     rarity = "zone"
     prob = 40
 
@@ -1178,7 +1178,7 @@ DOOM.ROOM_THEMES =
 
   urban_GreenBrick =
   {
-    kind = "building"
+    env = "building"
     rarity = "zone"
     prob = 60
 
@@ -1210,7 +1210,7 @@ DOOM.ROOM_THEMES =
 
   urban_Hallway =
   {
-    kind = "hallway"
+    env  = "hallway"
     prob = 50
 
     walls =
@@ -1256,7 +1256,7 @@ DOOM.ROOM_THEMES =
 
   urban_Cave =
   {
-    kind = "cave"
+    env  = "cave"
     prob = 50
 
     naturals =
@@ -1280,7 +1280,7 @@ DOOM.ROOM_THEMES =
 
   urban_Outdoors =
   {
-    kind = "outdoors"
+    env  = "outdoors"
     prob = 50
 
     floors =
@@ -1305,7 +1305,7 @@ DOOM.ROOM_THEMES =
 
   wolf_Cells =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -1326,7 +1326,7 @@ DOOM.ROOM_THEMES =
 
   wolf_Stone =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -1348,7 +1348,7 @@ DOOM.ROOM_THEMES =
 
   wolf_Brick =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -1369,7 +1369,7 @@ DOOM.ROOM_THEMES =
 
   wolf_Hallway =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -1391,7 +1391,7 @@ DOOM.ROOM_THEMES =
 
   wolf_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -1410,7 +1410,7 @@ DOOM.ROOM_THEMES =
 
   wolf_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     square_caves = true
 

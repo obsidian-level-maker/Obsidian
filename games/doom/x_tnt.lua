@@ -234,7 +234,7 @@ TNT.ROOM_THEMES =
 {
   egypt_Tomb =
   {
-    kind = "building"
+    env = "building"
 
     walls =
     {
@@ -278,7 +278,7 @@ TNT.ROOM_THEMES =
 
   egypt_Hallway =
   {
-    kind = "hallway"
+    env = "hallway"
 
     walls =
     {
@@ -313,7 +313,7 @@ TNT.ROOM_THEMES =
 
   egypt_Outdoors =
   {
-    kind = "outdoors"
+    env = "outdoors"
 
     floors =
     {
@@ -334,7 +334,7 @@ TNT.ROOM_THEMES =
 
   egypt_Cave =
   {
-    kind = "cave"
+    env = "cave"
 
     naturals =
     {
