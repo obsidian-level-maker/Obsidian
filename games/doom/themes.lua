@@ -102,10 +102,18 @@ DOOM.SINKS =
   {
     mat = "FLOOR1_7"
     dz  = 4
-    light = 16
+    light = 32
 
     trim_mat = "METAL"
-    dz  = -4
+    trim_dz  = -4
+    trim_light = 16
+  }
+
+  light_diamond =
+  {
+    mat = "TLIGHT6_1"
+    dz  = 8
+    light = 16
   }
 
   light_urban1 =
@@ -135,12 +143,26 @@ DOOM.SINKS =
 
   -- misc floor --
 
-  -- TODO
+  floor_glowingrock =
+  {
+    mat = "RROCK05"
+    dz  = -8
+  }
+
+  floor_skulls =
+  {
+    mat = "FLAT5_6"
+    dz  = -8
+  }
 
 
   -- misc ceiling --
 
-  -- TODO
+  ceil_redash =
+  {
+    mat = "FLOOR6_1"
+    dz  = 8
+  }
 }
 
 
@@ -179,6 +201,16 @@ DOOM.THEMES =
       BRICK11  = 10
       SLADWALL = 20
       STUCCO3  = 10
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 100
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 100
     }
 
     wall_groups =
@@ -250,6 +282,22 @@ DOOM.THEMES =
       TEKBRON1 = 5
       COMPTALL = 5
       COMPBLUE = 5
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 100
+      liquid_shiny = 5
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 100
+      sky_shiny = 20
+      sky_metal = 5
+      light_red_shiny = 20
+      light_orange_shiny = 5
+      light_brightred_metal = 5
     }
 
     wall_groups =
@@ -395,6 +443,25 @@ DOOM.THEMES =
       SKSNAKE1 = 20
       SKSNAKE2 = 20
       SKIN2    = 20
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 100
+      liquid_plain = 40
+      floor_skulls = 20
+      floor_glowingrock = 10
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 50
+      sky_metal = 30
+      sky_plain = 5
+      light_diamond = 15
+      light_hell_red = 20
+      light_hell_lava = 5
+      ceil_redash = 5
     }
 
     wall_groups =
