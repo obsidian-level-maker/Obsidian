@@ -1739,8 +1739,6 @@ function Room_floor_ceil_heights()
 
     each group in R.floor_groups do
       Area_inner_points_for_group(R, group, "floor")
-
----group.sink = { dz=-20, mat="_LIQUID", trim_dz=4, trim_mat="METAL" }
     end
   end
 
@@ -1871,8 +1869,6 @@ function Room_floor_ceil_heights()
 
     each group in R.ceil_groups do
       Area_inner_points_for_group(R, group, "ceil")
-
----group.sink = { dz=44, mat="TLITE6_5", light=32, special=8, trim_dz=-4, trim_mat="FLAT23" }
     end
   end
 

@@ -1163,14 +1163,44 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   local function pick_floor_sinks(R)
     if R.is_cave or R.is_outdoor then return end
 
-    -- TODO
+    local tab = R.theme.floor_sinks or THEME.floor_sinks
+    assert(tab["PLAIN"])
+
+    each fg in R.floor_groups do
+      if fg.openness < 0.4 then continue end
+
+      local what = rand.key_by_probs(tab)
+
+      if what != "PLAIN" then
+        fg.sink = GAME.SINKS[what]
+
+        if not fg.sink then
+          error("Unknown floor sink: " .. what)
+        end
+      end
+    end
   end
 
 
   local function pick_ceiling_sinks(R)
     if R.is_cave or R.is_outdoor then return end
 
-    -- TODO
+    local tab = R.theme.ceiling_sinks or THEME.ceiling_sinks
+    assert(tab["PLAIN"])
+
+    each cg in R.ceil_groups do
+      if cg.openness < 0.4 then continue end
+
+      local what = rand.key_by_probs(tab)
+
+      if what != "PLAIN" then
+        cg.sink = GAME.SINKS[what]
+
+        if not cg.sink then
+          error("Unknown ceiling sink: " .. what)
+        end
+      end
+    end
   end
 
 
