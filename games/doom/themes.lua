@@ -267,6 +267,7 @@ DOOM.THEMES =
     wall_groups =
     {
       PLAIN = 100
+      low_gap = 30
       cross1 = 10
     }
 
