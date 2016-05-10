@@ -20,7 +20,7 @@ DOOM.LIQUIDS =
   lava   = { mat="LAVA1",   light_add=24, special=16, damage=20 }
 
   -- Doom II only --
-  slime  = { mat="SLIME01", light_add=16, special=5, damage=10 }
+  slime  = { mat="SLIME01", light_add=16, special=0 }
 }
 
 
