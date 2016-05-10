@@ -1199,11 +1199,44 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      FLOOR7_2 = 40
+      GRNROCK  = 40
+      FLOOR7_2 = 20
       FLAT10   = 20
       CEIL3_5  = 20
       CEIL5_1  = 20
       FLAT8    = 10
+    }
+  }
+
+
+  urban_Cement =
+  {
+    env = "building"
+    rarity = "level"
+    prob = 40
+
+    walls =
+    {
+      CEMENT7 = 50
+    }
+
+    floors =
+    {
+      FLAT1    = 40
+      FLAT3    = 40
+      FLAT10   = 20
+      FLOOR3_3 = 20
+      FLOOR6_2 = 20
+      MFLR8_2  = 20
+    }
+
+    ceilings =
+    {
+      RROCK13  = 30
+      MFLR8_1  = 30
+      SLIME13  = 20
+      FLOOR7_1 = 10
+      FLAT4    = 10
     }
   }
 
