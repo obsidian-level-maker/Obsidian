@@ -1208,6 +1208,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     each cg in R.ceil_groups do
       if cg.openness < 0.4 then continue end
 
+      local height = cg.h - cg.max_floor_h
+      if height < 128 then continue end
+
       local what = rand.key_by_probs(tab)
 
       if what != "PLAIN" then
