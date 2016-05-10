@@ -8,11 +8,11 @@ SINKS:
 +  set ceiling of stairs to highest nearby ceil group
    !!  test stair prefab for "plain_ceiling" flag
 
--  for SKY holes, require group.h > max_floor + 130
+   -  allow ceiling sinks to span simple stairs
+   -  prevent spanning lifts
+   -  fix ambient lighting for stairs / lifts
 
--  fix interaction with importants / decorations / fs-cages :
-
-   -  ceiling sinks always inhibit ceiling decoration
+-  fix interaction with decorations :
 
    -  floor sinks *can* inhibit floor-decorations :
 
@@ -20,6 +20,6 @@ SINKS:
       and if it is "floor_inner" then *can* allow a decoration
       [ depending on, um, ..... def.no_sink ]
 
-   -  for importants (like KEYS), make *them* inhibit sinks
-
+DONE: for importants (like KEYS), make *them* inhibit sinks
+DONE: for SKY holes, require group.h >= max_floor + 128
 
