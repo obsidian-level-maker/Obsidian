@@ -12,6 +12,139 @@
 --
 --------------------------------------------------------------------
 
+
+DOOM.SINKS =
+{
+  -- sky holes --
+
+  sky_plain =
+  {
+    mat   = "_SKY"
+    dz    = 64
+    light = 16
+  }
+
+  sky_metal =
+  {
+    mat   = "_SKY"
+    dz    = 48
+    light = 16
+
+    trim_mat = "METAL"
+    trim_dz  = -8
+    trim_light = 16
+  }
+
+  sky_shiny =
+  {
+    mat   = "_SKY"
+    dz    = 32
+    light = 16
+
+    trim_mat = "FLAT23"
+    trim_dz  = -4
+    trim_light = 16
+  }
+
+  sky_red =
+  {
+    mat   = "_SKY"
+    dz    = 32
+    light = 16
+
+    trim_mat = "REDWALL"
+    trim_dz  = -4
+    trim_light = 16
+  }
+
+
+  -- liquid floor --
+
+  liquid_plain =
+  {
+    mat = "_LIQUID"
+    dz  = -12
+  }
+
+  liquid_shiny =
+  {
+    mat = "_LIQUID"
+    dz  = -12
+
+    trim_mat = "FLAT23"
+    dz  = 4
+  }
+
+
+  -- ceiling lights --
+
+  light_red_shiny =
+  {
+    mat = "TLITE6_5"
+    dz  = 4
+    light = 16
+
+    trim_mat = "FLAT23"
+    trim_dz  = -4
+  }
+
+  light_orange_shiny =
+  {
+    mat = "TLITE6_6"
+    dz  = 4
+    light = 16
+
+    trim_mat = "FLAT23"
+    trim_dz  = -4
+  }
+
+  light_brightred_metal =
+  {
+    mat = "FLOOR1_7"
+    dz  = 4
+    light = 16
+
+    trim_mat = "METAL"
+    dz  = -4
+  }
+
+  light_urban1 =
+  {
+    mat = "CEIL3_4"
+    dz  = -4
+    light = 16
+
+    trim_mat = "FLAT1"
+    trim_dz  = -2
+  }
+
+  light_hell_red =
+  {
+    mat = "FLAT5_3"
+    dz  = 16
+    light = 16
+  }
+
+  light_hell_lava =
+  {
+    mat = "LAVA1"
+    dz  = 16
+    light = 32
+  }
+
+
+  -- misc floor --
+
+  -- TODO
+
+
+  -- misc ceiling --
+
+  -- TODO
+}
+
+
+
 DOOM.THEMES =
 {
   DEFAULTS =
