@@ -1395,16 +1395,16 @@ end
 
 
 
-function Area_inner_points_for_group(R, group, what)
+function Area_inner_points_for_group(R, group, where)
   --
   -- this uses same logic as Area_find_inner_points()
   -- [ probably not worth trying to merge the code though ]
   --
-  -- the 'what' parameter is either "floor" or "ceil".
+  -- the 'where' parameter is either "floor" or "ceil".
   --
 
-  local   area_field = what .. "_group"
-  local corner_field = what .. "_inner"
+  local   area_field = where .. "_group"
+  local corner_field = where .. "_inner"
 
   local seeds = {}
 

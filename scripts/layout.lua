@@ -1285,11 +1285,45 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
+  local function unsink_chunk(chunk, where)
+    local corner_field = where .. "_inner"
+
+    local cx1 = chunk.sx1
+    local cx2 = chunk.sx2 + 1
+
+    local cy1 = chunk.sy1
+    local cy2 = chunk.sy2 + 1
+
+    for cx = cx1, cx2 do
+    for cy = cy1, cy2 do
+      local corner = Corner_lookup(cx, cy)
+      assert(corner)
+
+      corner[corner_field] = nil
+    end
+    end
+  end
+
+
+  local function unsink_importants(R)
+    -- ensure importants do not sit on a floor sink
+    -- TODO : review this, e.g. key pedestal can be OK (but need right floor_z)
+
+    each chunk in R.floor_chunks do
+      if chunk.content_kind and chunk.content_kind != "NOTHING" then
+        unsink_chunk(chunk, "floor")
+      end
+    end
+  end
+
+
   local function tizzy_up_room(R)
     pick_wall_detail(R)
 
     pick_floor_sinks(R)
     pick_ceiling_sinks(R)
+
+    unsink_importants(R)
 
     -- more cages, oh yes!
     try_extra_cages(R)
