@@ -66,13 +66,29 @@ DOOM.SINKS =
     dz  = -12
   }
 
+  liquid_blood =
+  {
+    mat = "BLOOD1"
+    dz  = -12
+    light = 16
+  }
+
   liquid_shiny =
   {
     mat = "_LIQUID"
-    dz  = -12
+    dz  = -8
 
     trim_mat = "FLAT23"
-    dz  = 4
+    trim_dz  = 4
+  }
+
+  liquid_metal =
+  {
+    mat = "_LIQUID"
+    dz  = -8
+
+    trim_mat = "METAL"
+    trim_dz  = 4
   }
 
 
@@ -111,7 +127,7 @@ DOOM.SINKS =
 
   light_diamond =
   {
-    mat = "TLIGHT6_1"
+    mat = "TLITE6_1"
     dz  = 8
     light = 16
   }
@@ -119,11 +135,11 @@ DOOM.SINKS =
   light_urban1 =
   {
     mat = "CEIL3_4"
-    dz  = -4
+    dz  = 4
     light = 16
 
-    trim_mat = "FLAT1"
-    trim_dz  = -2
+    trim_mat = "METAL"
+    trim_dz  = -4
   }
 
   light_hell_red =
@@ -472,7 +488,8 @@ DOOM.THEMES =
     floor_sinks =
     {
       PLAIN = 100
-      liquid_plain = 40
+      liquid_blood = 12
+      liquid_plain = 5
       floor_skulls = 20
       floor_glowingrock = 10
     }
