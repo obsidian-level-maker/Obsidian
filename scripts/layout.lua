@@ -1146,6 +1146,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     if R.is_outdoor then return end
 
     local tab = R.theme.wall_groups or THEME.wall_groups
+    if not tab then return end
 
     -- IDEA : adjust PLAIN prob to get more/less detail
     assert(tab["PLAIN"])
@@ -1164,6 +1165,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     if R.is_cave or R.is_outdoor then return end
 
     local tab = R.theme.floor_sinks or THEME.floor_sinks
+    if not tab then return end
+
     assert(tab["PLAIN"])
 
     each fg in R.floor_groups do
@@ -1191,6 +1194,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     if R.is_cave or R.is_outdoor then return end
 
     local tab = R.theme.ceiling_sinks or THEME.ceiling_sinks
+    if not tab then return end
+
     assert(tab["PLAIN"])
 
     each cg in R.ceil_groups do
