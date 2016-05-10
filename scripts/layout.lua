@@ -1177,6 +1177,11 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
         if not fg.sink then
           error("Unknown floor sink: " .. what)
         end
+
+        -- TODO : prune liquid sinks first
+        if fg.sink.mat == "_LIQUID" and not LEVEL.liquid then
+          fg.sink = nil
+        end
       end
     end
   end
