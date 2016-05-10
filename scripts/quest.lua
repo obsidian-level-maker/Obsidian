@@ -2461,7 +2461,9 @@ function Quest_room_themes()
   end
 
 
-  local function collect_usable_themes(env, rarity)
+  local function collect_usable_themes(env, max_rarity)
+    max_rarity = max_rarity or 0
+
     local tab = {}
 
     each name,info in GAME.ROOM_THEMES do
@@ -2470,7 +2472,7 @@ function Quest_room_themes()
       end
 
       if info.env == env and
-         info.rarity == rarity and
+         (info.rarity or 0) <= max_rarity and
          match_level_theme(name)
       then
         tab[name] = info.prob or 50
@@ -2478,9 +2480,6 @@ function Quest_room_themes()
     end
 
     if table.empty(tab) then
-      -- allow nothing for certain cases
-      if rarity then return nil end
-
       error("No rooms themes for env: " .. env)
     end
 
@@ -2654,8 +2653,22 @@ function Quest_room_themes()
   local function pick_common_building(R, last_R, tab)
     assert(R.zone.building_theme)
 
-    -- use the zone's building theme unless same as previous room
-    if not last_R or last_R.theme != R.zone.building_theme or rand.odds(20) then
+    -- when last theme is different from zone's building theme, then
+    -- generally use the zone building theme, but when the same then
+    -- often pick a new one.
+    local zb_prob
+
+    if not last_R then
+      zb_prob = 65
+    elseif last_R.theme == R.zone.building_theme then
+      zb_prob = 35
+    elseif last_R.theme.rarity then
+      zb_prob = 95
+    else
+      zb_prob = 85
+    end
+
+    if rand.odds(zb_prob) then
       R.theme = R.zone.building_theme
       return
     end
@@ -2672,33 +2685,29 @@ function Quest_room_themes()
   end
 
 
-  local function visit_room(R, last_R, common_tab)
+  local function visit_room(R, last_R, theme_tab)
     if is_unset_building(R) then
-      pick_common_building(R, last_R, common_tab)
+      pick_common_building(R, last_R, theme_tab)
     end
 
     each C in R.conns do
       local R2 = C:other_room(R)
 
       if R2.lev_along > R.lev_along then
-        visit_room(R2, R, common_tab)
+        visit_room(R2, R, theme_tab)
       end
     end
   end
 
 
   local function choose_building_themes()
-    local common_tab = collect_usable_themes("building")
-    local   zone_tab = collect_usable_themes("building", "zone")
-    local  level_tab = collect_usable_themes("building", "level")
+    local common_tab = collect_usable_themes("building", 0)
+    local   full_tab = collect_usable_themes("building", 1)
 
     major_building_themes(common_tab)
 
-    if level_tab then rare_level_theme(level_tab) end
-    if  zone_tab then rare_zone_themes(zone_tab)  end
-
     -- recursively flow through the level
-    visit_room(LEVEL.start_room, nil, common_tab)
+    visit_room(LEVEL.start_room, nil, full_tab)
   end
 
 

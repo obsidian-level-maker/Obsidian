@@ -489,8 +489,8 @@ DOOM.ROOM_THEMES =
   tech_Gray =
   {
     env  = "building"
-    rarity = "zone"
     prob = 50
+    rarity = 1
 
     walls =
     {
@@ -531,9 +531,9 @@ DOOM.ROOM_THEMES =
 
   tech_Sladwall =
   {
-    env = "building"
-    rarity = "zone"
+    env  = "building"
     prob = 50
+    rarity = 1
 
     walls =
     {
@@ -563,8 +563,8 @@ DOOM.ROOM_THEMES =
   tech_VeryShiny =
   {
     env = "building"
-    rarity = "level"
-    prob = 40
+    prob = 10
+    rarity = 1
 
     walls =
     {
@@ -588,9 +588,9 @@ DOOM.ROOM_THEMES =
 
   tech_VeryTekky =
   {
-    env = "building"
-    rarity = "level"
-    prob = 40
+    env  = "building"
+    prob = 10
+    rarity = 1
 
     walls =
     {
@@ -816,9 +816,9 @@ DOOM.ROOM_THEMES =
 
   hell_Viney =
   {
-    env = "building"
-    rarity = "zone"
-    prob = 50
+    env  = "building"
+    prob = 40
+    rarity = 1
 
     walls =
     {
@@ -846,9 +846,9 @@ DOOM.ROOM_THEMES =
 
   hell_Wood =
   {
-    env = "building"
-    rarity = "zone"
-    prob = 50
+    env  = "building"
+    prob = 40
+    rarity = 1
 
     walls =
     {
@@ -883,9 +883,9 @@ DOOM.ROOM_THEMES =
 
   hell_Skin =
   {
-    env = "building"
-    rarity = "zone"
-    prob = 30
+    env  = "building"
+    prob = 20
+    rarity = 1
 
     walls =
     {
@@ -1140,9 +1140,9 @@ DOOM.ROOM_THEMES =
 
   urban_RedBrick =
   {
-    env = "building"
-    rarity = "zone"
-    prob = 40
+    env  = "building"
+    prob = 30
+    rarity = 1
 
     walls =
     {
@@ -1171,9 +1171,9 @@ DOOM.ROOM_THEMES =
 
   urban_GreenBrick =
   {
-    env = "building"
-    rarity = "zone"
-    prob = 60
+    env  = "building"
+    prob = 50
+    rarity = 1
 
     walls =
     {
@@ -1204,9 +1204,9 @@ DOOM.ROOM_THEMES =
 
   urban_Cement =
   {
-    env = "building"
-    rarity = "level"
-    prob = 40
+    env  = "building"
+    prob = 15
+    rarity = 1
 
     walls =
     {
