@@ -136,7 +136,7 @@ DOOM.SINKS =
   {
     mat = "CEIL3_4"
     dz  = 4
-    light = 16
+    light = 32
 
     trim_mat = "METAL"
     trim_dz  = -4
@@ -310,16 +310,17 @@ DOOM.THEMES =
     {
       PLAIN = 100
       liquid_shiny = 5
+      floor_green = 5
     }
 
     ceiling_sinks =
     {
-      PLAIN = 100
+      PLAIN = 90
       sky_shiny = 20
-      sky_metal = 5
+      sky_metal = 10
       light_red_shiny = 20
-      light_orange_shiny = 5
-      light_brightred_metal = 5
+      light_orange_shiny = 7
+      light_brightred_metal = 7
     }
 
     wall_groups =
@@ -410,7 +411,7 @@ DOOM.THEMES =
 
     ceiling_sinks =
     {
-      PLAIN = 50
+      PLAIN = 60
       sky_metal = 30
       sky_plain = 10
       light_urban1 = 15
@@ -498,7 +499,7 @@ DOOM.THEMES =
     {
       PLAIN = 50
       sky_metal = 30
-      sky_plain = 5
+      sky_plain = 10
       light_diamond = 15
       light_hell_red = 20
       light_hell_lava = 5
@@ -1257,7 +1258,7 @@ DOOM.ROOM_THEMES =
   urban_Panel =
   {
     env  = "building"
-    prob = 50
+    prob = 30
 
     walls =
     {
