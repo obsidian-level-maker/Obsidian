@@ -1141,7 +1141,7 @@ DOOM.ROOM_THEMES =
   urban_RedBrick =
   {
     env  = "building"
-    prob = 30
+    prob = 40
     rarity = 1
 
     walls =
@@ -1172,7 +1172,7 @@ DOOM.ROOM_THEMES =
   urban_GreenBrick =
   {
     env  = "building"
-    prob = 50
+    prob = 40
     rarity = 1
 
     walls =
@@ -1205,7 +1205,7 @@ DOOM.ROOM_THEMES =
   urban_Cement =
   {
     env  = "building"
-    prob = 15
+    prob = 40
     rarity = 1
 
     walls =
