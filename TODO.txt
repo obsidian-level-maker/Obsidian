@@ -10,8 +10,6 @@ ______________________________________________________________________
 
 
 *  BEFORE RELEASE:
-   -  create language/TEMPLATE.txt
-
    -  update History page (better describe V7)
    -  update Credits page (title authors)
    +  update documentation for current GUI interface
@@ -269,7 +267,8 @@ Hallways
 --------
 
 Q/ do we always build them with prefabs for every piece?
-A/ yes
+A/ probably distinguish "simple" ones from "prefab" ones
+   [ simple ones can grow organically, like the free-range cages ]
 
 +  the 'H' hallways are always 2 seeds wide
    [ future: allow 4x4 etc sizes, prefab specifies which parts are exits ]
@@ -374,13 +373,6 @@ Secrets....
 +  support 'LEVEL.secret_weapon'
 
 
-Traps....
--  second pass : traps ON WAY BACK to the ...
-
-+  make more traps over a episode/game
-
-
-
 Fake fences:
 -  a wall built out of floor brush and sky brush (delta_z for no gap)
 
@@ -482,21 +474,6 @@ CTF and DM
       (perhaps replacing "Powerups" setting in GUI)
 
 
-Closets:
--  put exclusion zones in front of START and TELEPORTER closets
-
-+  set 'floor' material to match touching area
-
--  START closets 
--  EXIT closets
--  SECRET closets
--  ITEM closets
--  TELEPORTER closets
--  GATE closets for Hexen
--  HALL closets
--  MONSTER closets
-
-
 Prefab system:
 -  x_repeat, y_repeat
 
@@ -534,13 +511,6 @@ New Starting Logic
 
 
 V5 STUFF:
-
-+  Need logic to decide how to light up a room (windows vs wall
-   lights vs ceilings lights etc).
-
--  get 'height' value into 'env' pick_skin() tables
-
--  ability to enter room via an elevator
 
 -  Fight simulator: adjust monster 'damage' value based on Ambush
    usage, Cage usage, dark rooms, hitscanners/Archies in low cover
@@ -597,7 +567,7 @@ Level Themes:
 +  proper themes for QUAKE
 
 -  IDEA: a 'subs' table -- used to substitute a chosen texture with
-   another (randomly picked) one.
+   another (randomly picked) one.  Applies to PREFABS too.
 
 -  if keys are left over, can use them for non-Zone locks
 
@@ -675,12 +645,7 @@ Intrusions:
    best in Quake games where the intrusion is a 3D walkway.
 
 
-Quests:
--  sometimes lock another connection (ESP: symmetry)
-   with the same lock as one we just added
-   [ESP: when new lock goes to leaf or semi-leaf]
-
--  Lock postponing:
+Lock postponing:
      after decided all locked conns, pick one and if next room is a
      stalk, then can move the lock to the next door (and the next room
      becomes part of the earlier quest).
