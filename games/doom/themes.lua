@@ -170,14 +170,20 @@ DOOM.THEMES =
 
     facades =
     {
-      BIGBRIK1 = 30
-      BIGBRIK2 = 15
-      BLAKWAL2 = 10
-      MODWALL1 = 20
-      MODWALL3 = 10
-      CEMENT7 = 5
-      CEMENT9 = 5
-      METAL2 = 3
+      BIGBRIK1 = 40
+      BIGBRIK2 = 30
+      MODWALL1 = 30
+      STONE3   = 30
+
+      BLAKWAL2 = 20
+      CEMENT7  = 20
+      BRICK12  = 20
+      BRICK7   = 20
+
+      BRICK10 = 10
+      BRICK11 = 10
+      STONE   = 10
+      METAL2  = 10
     }
 
     cliff_mats =
