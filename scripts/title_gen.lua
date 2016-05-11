@@ -1501,7 +1501,7 @@ function Title_add_title()
 
   local bottom_line
 
-  if rand.odds(67) then
+  if rand.odds(56) then
     if #GAME.sub_title <= 4 and string.upper(GAME.sub_title) == GAME.sub_title then
       -- this will be part of main title (a "version" string)
       bottom_line = GAME.sub_title
