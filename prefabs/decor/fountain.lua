@@ -16,5 +16,7 @@ PREFABS.Decor_water_fountain =
   env    = "outdoor"
   theme  = "urban"
   prob   = 1000
+
+  sink_mode = "never"
 }
 

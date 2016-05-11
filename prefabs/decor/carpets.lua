@@ -15,6 +15,8 @@ PREFABS.Decor_techfloor1 =
 
   env    = "building"
   theme  = "tech"
+
+  sink_mode = "never"
 }
 
 
@@ -31,5 +33,7 @@ PREFABS.Decor_sunkgrate =
 
   env    = "building"
   theme  = "urban"
+
+  sink_mode = "never"
 }
 
