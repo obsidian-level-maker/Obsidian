@@ -42,7 +42,7 @@ index=$(($RANDOM % 4))
 def_theme=${THEMES[$index]}
 
 set -x
-./Oblige --nolight -d seed=${seed} length=${def_length} \
+./Oblige -d seed=${seed} length=${def_length} \
 		game=${def_game} engine=${def_engine} \
 		size=${def_size} theme=${def_theme} \
 		$@ -b ${base}.out > ${base}.log
