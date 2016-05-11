@@ -21,7 +21,7 @@ CXX=g++
 
 OBJ_DIR=obj_linux
 
-OPTIMISE=-g3 -O0
+OPTIMISE=-O2
 
 # operating system choices: UNIX WIN32
 OS=UNIX
