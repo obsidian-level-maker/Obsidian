@@ -1324,6 +1324,18 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
+  local function fix_stair_lighting(R)
+    each chunk in R.stairs do
+      local N1 = chunk.from_area
+      local N2 = chunk.dest_area
+
+      if N1.bump_light and N2.bump_light then
+        chunk.area.bump_light = N1.bump_light
+      end
+    end
+  end
+
+
   local function tizzy_up_room(R)
     pick_wall_detail(R)
 
@@ -1337,6 +1349,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     pick_decorative_bling(R)
     pick_ceiling_lights(R)
+
+    fix_stair_lighting(R)
 
     -- kill any unused closets
     each CL in R.closets do
