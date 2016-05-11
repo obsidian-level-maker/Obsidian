@@ -975,6 +975,71 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
+  local function analyse_chunk_sinkage(chunk, where)
+    --
+    -- returns a three digit string, each digit represents a particular
+    -- part of the chunk (middle, sides, corners).
+    --
+    -- each digit is 0 if not part of the sink (at all), 1 if partially
+    -- part of a sink, and 2 if completely part of the sink.
+    --
+    -- e.g. "000" --> not touching the sink at all
+    --      "222" --> the whole chunk is in the sink
+    --      "200" --> only middle part is in the sink
+    --      "022" --> only outer parts are in the sink (an island)
+    --
+
+    local   area_field = where .. "_group"
+    local corner_field = where .. "_inner"
+
+    if not chunk.area[area_field] then return "000" end
+
+    local  mid_count,  mid_total = 0, 0
+    local side_count, side_total = 0, 0
+    local corn_count, corn_total = 0, 0
+
+    local cx1 = chunk.sx1
+    local cy1 = chunk.sy1
+    local cx2 = chunk.sx2 + 1
+    local cy2 = chunk.sy2 + 1
+
+    for cx = cx1, cx2 do
+    for cy = cy1, cy2 do
+      local corner = Corner_lookup(cx, cy)
+      assert(corner)
+
+      local A = corner[corner_field]
+
+      local mx = (cx == cx1 or cx == cx2)
+      local my = (cy == cy1 or cy == cy2)
+
+      if mx and my then
+        mid_count = mid_count + sel(A, 1, 0)
+        mid_total = mid_total + 1
+
+      elseif mx or my then
+        side_count = side_count + sel(A, 1, 0)
+        side_total = side_total + 1
+
+      else
+        corn_count = corn_count + sel(A, 1, 0)
+        corn_total = corn_total + 1
+      end
+    end
+    end
+
+    local function part_to_str(count, total)
+      if count == 0 then return "0" end
+      if count == total then return "2" end
+      return "1"
+    end
+
+    return part_to_str( mid_count,  mid_total) ..
+           part_to_str(side_count, side_total) ..
+           part_to_str(corn_count, corn_total)
+  end
+
+
   local function try_decoration_in_chunk(chunk)
     if chunk.sw < 2 then return end
     if chunk.sh < 2 then return end
