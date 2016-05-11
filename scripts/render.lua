@@ -2197,11 +2197,14 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local def = assert(chunk.prefab_def)
     local A   = chunk.area
 
+    local floor_h = A.floor_h + (chunk.floor_dz or 0)
+    local ceil_h  = A.ceil_h  + (chunk.ceil_dz  or 0)
+
     local skin = { floor=A.floor_mat }
-    local T = Trans.spot_transform(chunk.mx, chunk.my, A.floor_h, chunk.prefab_dir or 2)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, floor_h, chunk.prefab_dir or 2)
 
     if def.z_fit then
-      Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
+      Trans.set_fitted_z(T, floor_h, ceil_h)
     end
 
     Fabricate(A.room, def, T, { skin })
@@ -2262,10 +2265,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local def = assert(chunk.prefab_def)
     local A   = chunk.area
 
-    assert(A.ceil_h)
+    local ceil_h = assert(A.ceil_h) + (chunk.ceil_dz or 0)
 
     local skin = { ceil=A.ceil_mat }
-    local T = Trans.spot_transform(chunk.mx, chunk.my, A.ceil_h, chunk.prefab_dir or 2)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, ceil_h, chunk.prefab_dir or 2)
 
     assert(def.z_fit == nil)
 

@@ -992,7 +992,8 @@ function Layout_decorate_rooms(KKK_PASS)
     local   area_field = where .. "_group"
     local corner_field = where .. "_inner"
 
-    if not chunk.area[area_field] then return "000" end
+    if not chunk.area[area_field]      then return "000" end
+    if not chunk.area[area_field].sink then return "000" end
 
     local  mid_count,  mid_total = 0, 0
     local side_count, side_total = 0, 0
@@ -1010,20 +1011,20 @@ function Layout_decorate_rooms(KKK_PASS)
 
       local A = corner[corner_field]
 
-      local mx = (cx == cx1 or cx == cx2)
-      local my = (cy == cy1 or cy == cy2)
+      local ox = (cx == cx1 or cx == cx2)
+      local oy = (cy == cy1 or cy == cy2)
 
-      if mx and my then
-        mid_count = mid_count + sel(A, 1, 0)
-        mid_total = mid_total + 1
+      if ox and oy then
+        corn_count = corn_count + sel(A, 1, 0)
+        corn_total = corn_total + 1
 
-      elseif mx or my then
+      elseif ox or oy then
         side_count = side_count + sel(A, 1, 0)
         side_total = side_total + 1
 
       else
-        corn_count = corn_count + sel(A, 1, 0)
-        corn_total = corn_total + 1
+        mid_count = mid_count + sel(A, 1, 0)
+        mid_total = mid_total + 1
       end
     end
     end
@@ -1062,6 +1063,23 @@ function Layout_decorate_rooms(KKK_PASS)
       reqs.env = A.room:get_env()
     end
 
+    local sinkstat = analyse_chunk_sinkage(chunk, "floor")
+
+    if sinkstat != "000" then
+      -- require middle of chunk to be in the sink
+      if string.sub(sinkstat, 1, 1) != "2" then return end
+
+      -- ignore very small sinks (limited to just this chunk)
+      if string.sub(sinkstat, 1, 1) == "0" then return end
+
+      reqs.is_sink = true
+
+      -- reduce maximum size unless *whole* chunk is in the sink
+      if sinkstat != "222" then
+        reqs.size = 64
+      end
+    end
+
     local def = Fab_pick(reqs, "none_ok")
     if not def then return end
 
@@ -1070,6 +1088,11 @@ function Layout_decorate_rooms(KKK_PASS)
     -- FIXME: use 'reqs' to prevent picking them at all
     if def.z_fit and chunk.ceil_above and chunk.ceil_above.content_kind then
       return
+    end
+
+    -- for stuff in a sink, ensure it is built at correct Z height
+    if reqs.is_sink and chunk.area.floor_group.sink then
+      chunk.floor_dz = chunk.area.floor_group.sink.dz
     end
 
     chunk.content_kind = "DECORATION"
