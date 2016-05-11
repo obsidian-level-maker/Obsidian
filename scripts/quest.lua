@@ -2825,9 +2825,6 @@ function Quest_room_themes()
 
 
   local function setup_room_theme(R)
-if not R.theme then
-stderrf("\n FUCK!!!!!!!!\n\nR =\n%s\n", table.tostr(R, 1))
-end
     assert(R.theme)
 
     if R.kind == "cave" then
