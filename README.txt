@@ -1,8 +1,8 @@
 
-OBLIGE 7.17-WEIRD
-=================
+OBLIGE 7.37
+===========
 
-by Andrew Apted.  September 2015
+by Andrew Apted.  May 2016
 
 
 ** PREFACE **
@@ -62,7 +62,7 @@ COPYRIGHT and LICENSE
 
   OBLIGE Level Maker
 
-  Copyright (C) 2006-2015 Andrew Apted, et al
+  Copyright (C) 2006-2016 Andrew Apted, et al
 
   OBLIGE is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published
