@@ -1861,6 +1861,21 @@ function Room_floor_ceil_heights()
       group_ceiling_pass(R)
     end
 
+    -- handle stairs
+    each A in R.areas do
+      if A.chunk and A.chunk.kind == "stair" and not A.chunk.prefab_def.plain_ceiling then
+        local N1 = A.chunk.from_area
+        local N2 = A.chunk.dest_area
+
+        if N1.floor_h < N2.floor_h then
+          A.ceil_group = N1.ceil_group
+        else
+          A.ceil_group = N2.ceil_group
+        end
+      end
+    end
+
+
     each A in R.areas do
       if A.ceil_group then
         table.add_unique(R.ceil_groups, A.ceil_group)
