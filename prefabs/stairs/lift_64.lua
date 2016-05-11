@@ -8,14 +8,15 @@ PREFABS.Lift_64 =
   where  = "seeds"
   shape  = "I"
 
+  prob = 30
+
   seed_w = 2
 
   delta_h = 64
+  plain_ceiling = true
 
   x_fit  = "stretch"
 
   bound_z1 = 0
-
-  prob = 30
 }
 

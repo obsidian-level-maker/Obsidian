@@ -12,5 +12,6 @@ PREFABS.Stair_curve_32 =
   bound_z2 = 32
 
   delta_h = 32
+  plain_ceiling = true
 }
 
