@@ -2152,6 +2152,9 @@ function Fab_find_matches(reqs, match_state)
       if def.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
     end
 
+    -- sink check
+    if reqs.is_sink and def.sink_mode == "never" then return 0 end
+
     -- darkness check
     if def.dark_map and not LEVEL.is_dark then return 0 end
 
