@@ -780,6 +780,9 @@ function Grower_preprocess_grammar()
   table.expand_templates(grammar)
 
   each name,cur_def in grammar do
+    if cur_def.is_processed then continue end
+    cur_def.is_processed = true
+
     gui.debugf("processing: %s\n", name)
 
     def = cur_def
