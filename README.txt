@@ -5,13 +5,6 @@ OBLIGE 7.37
 by Andrew Apted.  May 2016
 
 
-** PREFACE **
-
-This package is just a SNAPSHOT or "Work In Progress" of
-current Oblige development.  This it NOT a proper release and
-is only intended for testing or for curiosity.
-
-
 INTRODUCTION
 
   OBLIGE is a random level generator for various classic FPS
