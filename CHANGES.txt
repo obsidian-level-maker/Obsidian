@@ -1,16 +1,21 @@
 
-CHANGELOG
-=========
+CHANGES IN 7.37
+===============
 
 Major stuff:
 
 +  new "Shape Grammar" level generation system
-
 +  support for Add-on packages
-
 +  a title-pic generator
-
 +  better planning for Boss monsters
-
++  better indoor lighting
 +  localization support
+
+Regressions:
+
+-  no caves
+-  no secrets at all
+-  no 3D floors
+-  less usage of water/nukage/lava
+-  no scenery outside map borders
 
