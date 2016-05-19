@@ -55,15 +55,18 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
++  don't make "Empty Quests", especially 2 or more rooms
+
 +  two connections into a room
 
-+  have a special "OBL: Light Brush" for use in NOTHING sectors
-
-+  move 'prefabs' folder to games/doom/
++  control over room size (big room setting in Level Control)
 
 +  support a "Mix It Up" Strength setting
 
-+  have a "slow pace weapons" extra setting (idea by flyingdeath)
++  move 'prefabs' folder to games/doom/
+
+
++  have a special "OBL: Light Brush" for use in NOTHING sectors
 
 +  get stairwells working again [ as joiners ]
 
@@ -75,13 +78,16 @@ ______________________________________________________________________
 +  limit # of floor areas per room
 
 
+-  fix cages next to low ceilings
+   e.g. floor height of 32 + blocking bars
+
+-  a "slow pace weapons" extra setting (idea by flyingdeath)
+
 -  if room has a boss/guard needing a large chunk, allocate those
    chunks early [ but allow importants to override in emergencies ]
 
 -  intra-room locks : support free-standing switches
 
--  a lowering pedestal that requires a switch to activate
-   
 -  support decorative closets, e.g. fancy light thingy
 
 -  support "T" shape stairs  [ cannot simply reverse to go down! ]
@@ -881,6 +887,8 @@ Cancellation:
 +  Usage page: BATCH MODE section
 
 +  need new screenshots for website
+
++  modding Monsters guide: mention boss stuff
 
 -  modding guide: page about creating prefabs
 
