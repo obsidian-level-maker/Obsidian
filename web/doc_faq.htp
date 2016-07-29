@@ -32,6 +32,7 @@ If the phrase is not there, then feel free to ask us
 </div>
 
 
+
 <div id="next_release" class="faq_Q">
 Q/ When is the next release?
 </div>
@@ -53,6 +54,7 @@ which you won't see because it will stay disabled until
 it's ready for general use.
 
 </div>
+
 
 
 <div id="games" class="faq_Q">
@@ -100,6 +102,7 @@ only very basic.
 </div>
 
 
+
 <div id="vanilla" class="faq_Q">
 Q/ Why isn't the original game engine ("vanilla" DOOM) supported?
 </div>
@@ -130,6 +133,7 @@ keeps those limitations in place)</i>
 </div>
 
 
+
 <div id="deathmatch" class="faq_Q">
 Q/ Can Deathmatch maps be created?
 </div>
@@ -155,6 +159,21 @@ kinds of maps.
 </div>
 
 
+
+<div id="hodgepodge" class="faq_Q">
+Q/ Wouldn't it be cool if OBLIGE could build maps using all the
+different methods of previous versions?
+</div>
+
+<div class="faq_A">
+No, that would mean having three or four different level
+generators in the same program, and thus require three or four
+times the amount of work for me!
+
+</div>
+
+
+
 <div id="prebuilt" class="faq_Q">
 Q/ I don't like the pre-built maps, will OBLIGE make its own Boss maps?
 </div>
@@ -171,6 +190,7 @@ Perhaps one day OBLIGE can make them, but it is not a high
 priority task.
 
 </div>
+
 
 
 <div id="compile" class="faq_Q">
