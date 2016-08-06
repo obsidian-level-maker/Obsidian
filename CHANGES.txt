@@ -17,5 +17,5 @@ Regressions:
 -  no secrets at all
 -  no 3D floors
 -  less usage of water/nukage/lava
--  no scenery outside map borders
+-  no scenery outside the map borders
 
