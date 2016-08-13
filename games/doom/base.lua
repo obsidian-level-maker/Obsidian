@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -68,5 +68,4 @@ OB_GAMES["doom2"] =
 gui.import("x_doom1")
 gui.import("x_tnt")
 gui.import("x_plutonia")
-gui.import("x_freedoom")
 
