@@ -479,11 +479,12 @@ function Episode_plan_monsters()
 
 
   local function is_boss_usable(LEV, mon, info)
+    if info.prob <= 0 then return false end
+    if info.boss_prob == 0 then return false end
+
     if info.level > LEV.monster_level + BOSS_AHEAD then return false end
 
     if info.min_weapon and info.min_weapon > LEV.max_weapon then return false end
-
-    if info.boss_prob == 0 then return false end
 
     return true
   end
