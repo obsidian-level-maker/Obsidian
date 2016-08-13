@@ -54,18 +54,23 @@ a very useful feature which
 has been kept.
 
 <p>
-<b>Oblige V6</b> is the current stable version, which aims to
-meld together the best features of the previous releases.
-My focus has also shifted a bit these days,
-concentrating more on the fun factor of the levels and
-less on the aesthetics.
+<b>Oblige V6</b> was the previous stable version,
+which aimed to meld together the level generation of V3
+with all the good features developed later on
+(as many as possible, anyway).
 
 <p>
-<b>Oblige V7</b> is an experimental version in development.
+<b>Oblige V7</b> is an current version.
+It began as a rewrite of the level generator using a new
+system nicknamed the "weird" generator.
+That system proved to be too inflexible, and was
+ultimately replaced by a different system
+inspired by the concept of "Shape Grammars".
 
 
 <h3>RELEASE DATES</h3>
 
+<b>Version 7.XX</b> : 201X-XX-XX<br>
 <b>Version 7.17</b> : 2015-09-16 &nbsp; (unofficial, experimental package)<br>
 <p>
 
