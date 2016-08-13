@@ -63,6 +63,8 @@ ______________________________________________________________________
 
 +  support a "Mix It Up" Strength setting
 
++  prevent decor which obstruct movement near doors (etc) too much
+
 +  move 'prefabs' folder to games/doom/
 
 
@@ -106,6 +108,8 @@ ______________________________________________________________________
 
 -  SPROUT: if mirrored and new rooms touch/overlap, only create
            a single room [ only if ONE conn though ]
+
+-  overlapping items in monster closets
 
 -  sky generator : better checking of themes (esp. w/ control module)
 
