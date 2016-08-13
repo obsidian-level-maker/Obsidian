@@ -651,12 +651,17 @@ function Episode_plan_monsters()
 
     if boss_type != "tough" then count = count ^ 1.5 end
 
+    -- user quantity setting
+    local factor = MONSTER_QUANTITIES[OB_CONFIG.mons] or 1
+    if factor > 1 then factor = (factor + 1) / 2 end
+
+    count = count * factor
+
     if OB_CONFIG.strength == "weak" or
        OB_CONFIG.strength == "easier"
     then count = count / 2 end
 
     count = rand.int(count)
-    if count < 1 then count = 1 end
 
     if boss_type == "minor" then
       count = math.clamp(1, count, 6)
@@ -672,12 +677,12 @@ function Episode_plan_monsters()
     elseif along == 2 then
       if count == 2 or count == 3 then
         count = rand.sel(75, 1, 2)
-      else
+      elseif count > 1 then
         count = rand.sel(50, 2, math.ceil(count / 2))
       end
     end
 
-    -- this is mainly to prevent Masterminds infighting
+    -- this is to prevent Masterminds infighting
     if info.boss_limit then
       count = math.min(count, info.boss_limit)
     end
@@ -713,6 +718,12 @@ function Episode_plan_monsters()
     -- select how many
 
     local count = 3.5 * LEV.monster_level / info.level
+
+    -- user quantity setting
+    local factor = MONSTER_QUANTITIES[OB_CONFIG.mons] or 1
+    if factor > 1 then factor = (factor + 1) / 2 end
+
+    count = count * factor
 
     -- secondary boss fights should be weaker than primary one
     count = count / (1.8 ^ (along - 1))
