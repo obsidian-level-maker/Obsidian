@@ -528,54 +528,6 @@ DOOM.THEMES =
 
     ceil_light_prob = 25
   }
-
-  ------------------------------------
-
-  wolf =
-  {
-    prob = 10
-
-    square_caves = 1
-
-    facades =
-    {
-      ZZWOLF1  = 50
-      ZZWOLF9  = 50
-      ZZWOLF11 = 20
-      ZZWOLF5  = 5
-    }
-
-    cliff_mats =
-    {
-      ROCK4 = 60
-    }
-
-    wall_groups =
-    {
-      PLAIN = 100
-    }
-
-    monster_prefs =
-    {
-      ss_nazi = 100
-      zombie  = 20
-      shooter = 20
-      demon   = 20  -- kinda like a dog
-      imp     =  5  -- kinda like a mutant
-    }
-
-    ceil_light_prob = 0
-
-    base_skin =
-    {
-      big_door = "ZELDOOR"
-    }
-
-    style_list =
-    {
-      caves = { none=40, few=60, some=10 }
-    }
-  }
 }
 
 
@@ -1568,127 +1520,6 @@ DOOM.ROOM_THEMES =
     }
   }
 
-
-----  Wolfenstein 3D Secret Levels  ------------
-
-
-  wolf_Cells =
-  {
-    env = "building"
-
-    walls =
-    {
-      ZZWOLF9 = 50
-    }
-
-    floors =
-    {
-      FLAT1 = 50
-    }
-
-    ceilings =
-    {
-      FLAT1 = 50
-    }
-  }
-
-
-  wolf_Stone =
-  {
-    env = "building"
-
-    walls =
-    {
-      ZZWOLF1 = 50
-    }
-
-    floors =
-    {
-      FLAT1 = 50
-      MFLR8_1 = 50
-    }
-
-    ceilings =
-    {
-      FLAT1 = 50
-    }
-  }
-
-
-  wolf_Brick =
-  {
-    env = "building"
-
-    walls =
-    {
-      ZZWOLF11 = 50
-    }
-
-    floors =
-    {
-      FLAT1 = 50
-    }
-
-    ceilings =
-    {
-      FLAT5_3 = 30
-    }
-  }
-
-
-  wolf_Hallway =
-  {
-    env = "hallway"
-
-    walls =
-    {
-      ZZWOLF5 = 50
-    }
-
-    floors =
-    {
-      CEIL5_1 = 50
-    }
-
-    ceilings =
-    {
-      CEIL1_1 = 50
-      FLAT5_1 = 50
-    }
-  }
-
-
-  wolf_Outdoors =
-  {
-    env = "outdoors"
-
-    floors =
-    {
-      MFLR8_1 = 20
-      FLAT1_1 = 10
-      RROCK13 = 20
-    }
-
-    naturals =
-    {
-      ROCK4 = 50
-      SP_ROCK1 = 10
-    }
-  }
-
-
-  wolf_Cave =
-  {
-    env = "cave"
-
-    square_caves = true
-
-    naturals =
-    {
-      ROCK4 = 50
-      SP_ROCK1 = 10
-    }
-  }
 }
 
 
@@ -1730,7 +1561,7 @@ DOOM.ROOMS =
 
   TORTURE =
   {
-    theme = { hell=1, wolf=0.5, urban=0.2 }
+    theme = { hell=1, urban=0.2 }
     prob  = 50
   }
 
@@ -1862,16 +1693,5 @@ OB_THEMES["mostly_hell"] =
   game = { doom1=1, doom2=1 }
   priority = 6
   name_class = "HELL"
-}
-
-
-OB_THEMES["wolf"] =
-{
-  game = "doom2"
-  label = _("Wolfenstein")
-  priority = 2
-  name_class = "URBAN"
-
-  -- this theme is special, hence no mixed_prob
 }
 
