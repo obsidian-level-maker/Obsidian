@@ -162,7 +162,7 @@ end
 
 
 function Grower_preprocess_grammar()
-  
+
   local def
   local diag_list
 
@@ -247,7 +247,7 @@ function Grower_preprocess_grammar()
 
   local function convert_element(what, grid, x, y)
     local line
-    
+
     if what == "input" then
       line = def.structure[y*2 - 1]
     else
@@ -1082,7 +1082,7 @@ end
 
 
 
-function Grower_add_room(parent_R, is_hallway, trunk)
+function Grower_add_room(parent_R, force_env, trunk)
   local ROOM = ROOM_CLASS.new()
 
   ROOM.grow_parent = parent_R
@@ -1095,19 +1095,37 @@ function Grower_add_room(parent_R, is_hallway, trunk)
   ROOM.trunk = trunk
   table.insert(trunk.rooms, ROOM)
 
-  local kind = sel(is_hallway, "hallway", "normal")
+  local kind = "normal"
+
+  if force_env == "hallway" then
+    kind = "hallway"
+  end
 
   -- pick room environment (outdoor / cave)
-  local is_outdoor, is_cave = Room_choose_kind(ROOM, parent_R)
+  local is_outdoor = false
+  local is_cave = false
+
+  if force_env == "outdoor" then
+    is_outdoor = true
+  elseif force_env == "building" then
+    is_outdoor = false
+  else
+    is_outdoor, is_cave = Room_choose_kind(ROOM, parent_R)
+  end
 
   Room_set_kind(ROOM, kind, is_outdoor, is_cave)
+
+  -- FIXME : this 'grow_parent' is not used, keep it??
+  if parent_R and parent_R.kind == "hallway" then
+    parent_R = parent_R.grow_parent
+  end
 
   -- always need at least one floor area
   local A = AREA_CLASS.new("floor")
   ROOM:add_area(A)
 
   -- max size of new area
-  A.max_size = 16 -- rand.pick({ 16, 24, 32 })
+  A.max_size = rand.pick({ 16, 24, 32 })
 
   -- create a preliminary connection (last room to this one)
   local PC
@@ -1958,7 +1976,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     return C
   end
 
- 
+
   local function mark_chunk_nb_side(r, dir)
     assert(geom.is_straight(dir))
 
@@ -2120,16 +2138,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       new_room = R
     else
       if cur_rule.new_room then
-        new_room, new_conn = Grower_add_room(R)
-
-        -- link rooms spawned via symmetry [ WHY ??? ]
---[[
-        if T.is_second then
-          assert(old_room)
-          old_room.peer = new_room
-          new_room.peer = old_room
-        end
---]]
+        new_room, new_conn = Grower_add_room(R, cur_rule.new_room.env)
       end
     end
 
@@ -2137,7 +2146,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       new_area = AREA_CLASS.new("floor")
 
       -- max size of new area
-      new_area.max_size = 16 -- rand.pick({ 16, 24, 32 })
+      new_area.max_size = rand.pick({ 16, 24, 32 })
 
       R:add_area(new_area)
 
@@ -2508,7 +2517,7 @@ function Grower_create_trunks()
 
     table.insert(LEVEL.trunks, trunk)
 
-    local R = Grower_add_room(nil, false, trunk)  -- no parent
+    local R = Grower_add_room(nil, nil, trunk)  -- no parent
 
     Grower_grammatical_room(R, "root")
   end
