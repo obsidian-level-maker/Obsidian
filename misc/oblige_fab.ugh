@@ -39,6 +39,7 @@ line 991 o "-- OBL: Lower Unpeg"
 #--- SECTOR SPECIALS ---
 
 sector 988 "OBL: Depot Peer"
+sector 987 "OBL: Light Brush"
 sector 992 "OBL: Reachable"
 sector 993 "OBL: Grab Floor"
 sector 995 "OBL: Moving Floor"

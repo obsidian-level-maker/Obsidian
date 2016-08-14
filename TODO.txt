@@ -30,22 +30,24 @@ ______________________________________________________________________
   OTHER GAMES
 ----------------------------------------------
 
-+  Heretic support
-
 +  Quake support
    -  load textures directly from the PAK files
    -  bring back lua-based prefabs
-   -  incorporate id method to build collision hulls
    -  support slopes
 
--  Duke Nukem 3D
+   -  ensure textures offsets are handled properly
+   -  incorporate id method to build collision hulls
+   -  support bmodels with two brushes meeting at a plane
 
--  Hexen support
+-  Heretic support
 
+?  Hexen
 ?  Harmony
+?  HacX
+
+?  Duke Nukem 3D
 ?  Wolfenstein 3D
 ?  Chex Quest 3
-?  HacX
 
 
 ----------------------------------------------
@@ -64,8 +66,6 @@ ______________________________________________________________________
 
 +  move 'prefabs' folder to games/doom/
 
-
-+  have a special "OBL: Light Brush" for use in NOTHING sectors
 
 +  get stairwells working again [ as joiners ]
 

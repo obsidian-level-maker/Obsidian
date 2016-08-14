@@ -83,10 +83,11 @@ WADFAB_FX_DELTAS =
 }
 
 
-WADFAB_REACHABLE = 992
-WADFAB_MOVER     = 995
-WADFAB_DOOR      = 996
-WADFAB_DELTA_12  = 997
+WADFAB_REACHABLE   = 992
+WADFAB_MOVER       = 995
+WADFAB_DOOR        = 996
+WADFAB_DELTA_12    = 997
+WADFAB_LIGHT_BRUSH = 987
 
 
 
@@ -367,7 +368,8 @@ function Fab_determine_bbox(fab)
 
   each B in fab.brushes do
     if B[1].outlier then continue end
-    if B[1].m == "spot" then continue end
+    if B[1].m == "light" then continue end
+    if B[1].m == "spot"  then continue end
 
     each C in B do
 
@@ -1152,9 +1154,6 @@ function Fab_load_wad(def)
 
 
   local function decode_lighting(S, C)
-    -- closed sectors never specify a light
-    if S.floor_h >= S.ceil_h then return end
-
     if S.light < 80 then
       C.shadow = 64
     elseif S.light < 144 then
@@ -1174,11 +1173,35 @@ function Fab_load_wad(def)
   end
 
 
+  local function create_light_brush(S, coords)
+    -- clear the special (but allow light effects)
+    S.special = S.tag
+    S.tag = 0
+
+    local B =
+    {
+      { m="light" }
+    }
+
+    decode_lighting(S, B[1])
+
+    each C in coords do
+      table.insert(B, decode_polygon_side(S, C, 1))
+    end
+
+    table.insert(fab.brushes, B)
+  end
+
+
   local function create_brush(S, coords, pass)
     
     -- pass: 1 = create a floor brush (or solid wall)
     --       2 = create a ceiling brush
-    
+
+    if pass == 1 and S.special == WADFAB_LIGHT_BRUSH then
+      create_light_brush(S, coords)
+    end
+
     -- skip making a brush when the flat is '_NOTHING'
     if pass == 1 and S.floor_tex == "_NOTHING" then return end
     if pass == 2 and S.ceil_tex  == "_NOTHING" then return end
@@ -1210,7 +1233,7 @@ function Fab_load_wad(def)
       end
 
       -- give floor brush lighting ONLY when ceiling brush is absent
-      if S.ceil_tex == "_NOTHING" then
+      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h then
         decode_lighting(S, C)
       end
 
@@ -1230,7 +1253,10 @@ function Fab_load_wad(def)
         B[1].mover = 1
       end
 
-      decode_lighting(S, C)
+      -- closed sectors never specify a light
+      if S.floor_h < S.ceil_h then
+        decode_lighting(S, C)
+      end
 
       -- give ceiling brush the tag ONLY when floor brush is absent
       if S.floor_tex == "_NOTHING" and S.tag and S.tag > 0 then
