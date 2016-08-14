@@ -1531,10 +1531,6 @@ end
 
 
 function Room_choose_kind(R, last_R)
-  if last_R and last_R.kind == "hallway" then
-    last_R = last_R.grow_parent
-  end
-
   -- these outdoor probs carefully chosen so that:
   --    few   is about 15%
   --    some  is about 35%
