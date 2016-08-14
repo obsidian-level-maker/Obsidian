@@ -21,7 +21,7 @@
 
 --class TEMP_AREA
 --[[
-    id, name  :  use for debuggign
+    id, name  :  use for debugging
 
     mode : keyword   -- the eventual mode of the AREA (q.v.)
 
@@ -29,7 +29,7 @@
 
     seeds : list(SEED)
 
-    FIXME
+    FIXME : other fields??
 --]]
 
 
@@ -1477,11 +1477,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     if T.transpose then W, H = H, W end
 
-    local x1 = R.gx1 - (W - 1)
-    local y1 = R.gy1 - (H - 1)
+    local x1 = R.gx1 - W
+    local y1 = R.gy1 - H
 
-    local x2 = R.gx2 + (W - 1)
-    local y2 = R.gy2 + (H - 1)
+    local x2 = R.gx2 + W
+    local y2 = R.gy2 + H
 
 --stderrf("raw want area : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
 
@@ -1603,8 +1603,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
         return false
       end
 
-      -- prevent a new area if existing area is too small
-      if cur_rule.new_area and E1.area == 1 then
+      -- don't create a brand new area when existing area is tiny
+      if cur_rule.new_area then
         A:calc_volume()
         local area_min_size = sel(R.symmetry, 8, 4)
         if A.svolume < area_min_size then return false end
@@ -1835,9 +1835,12 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     local sx, sy = transform_coord(T, px, py)
 
     -- never allow patterns to touch edge of map
-    -- [ TODO : relax this a bit... ]
-    if sx <= 1 or sx >= (SEED_W - 1) then return false end
-    if sy <= 1 or sy >= (SEED_H - 1) then return false end
+    -- [ TODO : relax this a bit? ]
+    if sx <= 1 or sx >= SEED_W or
+       sy <= 1 or sy >= SEED_H
+    then
+      return false
+    end
 
     local S = SEEDS[sx][sy]
 
@@ -2577,7 +2580,7 @@ function Grower_prune_small_rooms()
 
 
   local function is_too_small(R)
-    return R:calc_walk_vol() < 9
+    return R:calc_walk_vol() < 8
   end
 
 
@@ -2613,10 +2616,10 @@ function Grower_prune_small_rooms()
   end
 
 
-  local function kill_room(R)
+  local function prune_room(R)
     -- TODO : possibly give areas to a connected neighbor room
 
-    gui.debugf("Killing small room %s\n", R.name)
+    gui.debugf("Prune small room %s\n", R.name)
 
     -- remove any prelim conns
     for idx = #LEVEL.prelim_conns, 1, -1 do
@@ -2684,7 +2687,7 @@ function Grower_prune_small_rooms()
       local R = LEVEL.rooms[idx]
 
       if is_leaf(R) and is_too_small(R) then
-        kill_room(R)
+        prune_room(R)
         changes = true
       end
     end
