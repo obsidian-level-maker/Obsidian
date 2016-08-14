@@ -1235,7 +1235,10 @@ function Grower_grammatical_room(R, pass)
 
     if prob <= 0 then return 0 end
 
-    -- TODO environment check
+    -- environment check
+    if rule.env != nil and rule.env != "any" then
+      if rule.env != R:get_env() then return 0 end
+    end
 
     return prob
   end
