@@ -80,49 +80,6 @@ Lighting Model
 static int current_region_group;
 
 
-#if 0  // NOT USED, BUT POTENTIALLY USEFUL
-
-struct outdoor_box_t
-{
-	int x1, y1, x2, y2;
-};
-
-
-static void SHADE_CollectBoxes()
-{
-	outdoor_box_t box;
-
-	for (unsigned int i = 0 ; i < all_entities.size() ; i++)
-	{
-		csg_entity_c *E = all_entities[i];
-
-		if (strcmp(E->id.c_str(), "oblige_box") != 0)
-			continue;
-
-		const char *box_type = E->props.getStr("box_type", "");
-
-		if (strcmp(box_type, "outdoor") != 0)
-			continue;
-
-		box.x1 = E->props.getInt("x1");
-		box.y1 = E->props.getInt("y1");
-		box.x2 = E->props.getInt("x2");
-		box.y2 = E->props.getInt("y2");
-
-		if (box.x1 >= box.x2 || box.y1 >= box.y2)
-		{
-			LogPrintf("WARNING: bad outdoor box: (%d %d) .. (%d %d)\n",
-					  box.x1, box.y1, box.x2, box.y2);
-			continue;
-		}
-
-		outdoor_boxes.push_back(box);
-	}
-}
-#endif
-
-
-
 static int SHADE_CalcRegionGroup(region_c *R)
 {
 	if (R->gaps.empty())
