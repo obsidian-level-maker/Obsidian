@@ -231,6 +231,31 @@ SPROUT_1 =
 }
 
 
+SPROUT_CASTLE1 =
+{
+  prob = 6000
+  env = "outdoor"
+
+  structure =
+  {
+    "!!xxxx!!", "11xxxx11"
+    "!!!!!!!!", "11RRRR11"
+    "!!!!!!!!", "11RRRR11"
+    "!!!!!!!!", "11111111"
+    "xxx11xxx", "xxx11xxx"
+  }
+
+  new_room =
+  {
+    env = "building"
+
+    conn = { x=5, y=3, w=2, dir=2 }
+
+--  symmetry = { x=4, y=3, w=2, dir=8 }
+  }
+}
+
+
 SPROUT_JOINER_2x1 =
 {
   prob = 1000
