@@ -308,7 +308,7 @@ function Grower_preprocess_grammar()
       def.area_growths[E2.area] = (def.area_growths[E2.area] or 0) + 1
     end
 
-    if E1.kind == "stair" or E1.kind == "oiner" or E1.kind == "closet" or
+    if E1.kind == "stair" or E1.kind == "joiner" or E1.kind == "closet" or
        E1.kind == "disable" or E1.kind == "magic"
     then
       error("bad element in " .. def.name .. ": cannot overwrite a " .. E1.kind)
