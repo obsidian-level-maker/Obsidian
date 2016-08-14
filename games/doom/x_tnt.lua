@@ -313,7 +313,7 @@ TNT.ROOM_THEMES =
 
   egypt_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {

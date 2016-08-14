@@ -168,7 +168,7 @@ QUAKE.ROOM_THEMES =
 
   q1_tech_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {
@@ -226,7 +226,7 @@ QUAKE.ROOM_THEMES =
 
   q1_castle_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {
@@ -271,7 +271,7 @@ QUAKE.ROOMS =
 {
   GENERIC =
   {
-    environment = "any"
+    env = "any"
   }
 }
 

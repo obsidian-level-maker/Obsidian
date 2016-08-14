@@ -946,7 +946,7 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {
@@ -1266,7 +1266,7 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
 --Makes sense for high prob for SP_ROCK1 because the intermission screen shows
 --Deimos has a desolate, gray ground.
@@ -1514,7 +1514,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {
@@ -1544,7 +1544,7 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Outdoors_hot =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {
@@ -1799,7 +1799,7 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {

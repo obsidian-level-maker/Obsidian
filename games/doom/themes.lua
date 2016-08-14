@@ -836,7 +836,7 @@ DOOM.ROOM_THEMES =
 
   tech_Outdoors =
   {
-    env  = "outdoors"
+    env  = "outdoor"
     prob = 50
 
     floors =
@@ -1175,7 +1175,7 @@ DOOM.ROOM_THEMES =
 
   hell_Outdoors =
   {
-    env  = "outdoors"
+    env  = "outdoor"
     prob = 50
 
     floors =
@@ -1501,7 +1501,7 @@ DOOM.ROOM_THEMES =
 
   urban_Outdoors =
   {
-    env  = "outdoors"
+    env  = "outdoor"
     prob = 50
 
     floors =
@@ -1529,7 +1529,7 @@ DOOM.ROOMS =
 {
   GENERIC =
   {
-    environment = "any"
+    env = "any"
   }
 
 
@@ -1582,21 +1582,21 @@ DOOM.ROOMS =
 
   LAUNCH =
   {
-    environment = "outdoor"
+    env = "outdoor"
     theme = "tech"
     prob = 10
   }
 
   GARDEN =
   {
-    environment = "outdoor"
+    env = "outdoor"
     theme = "urban"
     prob = 50
   }
 
   GRAVEYARD =
   {
-    environment = "outdoor"
+    env = "outdoor"
     theme = { hell=1, urban=0.4 }
     prob = 20
   }

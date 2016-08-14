@@ -240,7 +240,7 @@ HERETIC.ROOM_THEMES =
 
   h_urban_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {
@@ -349,7 +349,7 @@ HERETIC.ROOM_THEMES =
 
   h_castle_Outdoors =
   {
-    env = "outdoors"
+    env = "outdoor"
 
     floors =
     {
@@ -378,7 +378,7 @@ HERETIC.ROOMS =
 {
   GENERIC =
   {
-    environment = "any"
+    env = "any"
   }
 }
 

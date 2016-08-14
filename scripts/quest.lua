@@ -2725,7 +2725,7 @@ function Quest_room_themes()
 
 
   local function choose_other_themes()
-    local outdoors_tab = collect_usable_themes("outdoors")
+    local outdoors_tab = collect_usable_themes("outdoor")
     local  hallway_tab = collect_usable_themes("hallway")
     local     cave_tab = collect_usable_themes("cave")
 
