@@ -3191,6 +3191,8 @@ function Grower_create_rooms()
   Seed_squarify()
 
 --DEBUG
--- Grower_save_svg()
+  if OB_CONFIG.svg then
+    Grower_save_svg()
+  end
 end
 
