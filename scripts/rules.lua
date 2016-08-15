@@ -37,15 +37,71 @@ ROOT_1 =
 
   new_room =
   {
-    XXsymmetry =
-    {
-      list =
-      {
-        { dir=4, x=2, y=2, w=2 }
---    { dir=9, x=2, y=2 }
---    { kind="rotate", x=2, y=2, x2=3, y2=3 }
-      }
-    }
+  }
+}
+
+
+ROOT_L1 =
+{
+  prob = 40
+
+  structure =
+  {
+    "!!!!!!", "......"
+    "!!!!!!", ".RR##."
+    "!!!!!!", ".RR%#."
+    "!!!!!!", "#RRRR."
+    "!!!!!!", ".%RRR."
+    "!!!!!!", "..#..."
+  }
+
+  diagonals = { "R.", ".R" }
+
+  new_room =
+  {
+  }
+}
+
+
+ROOT_T1 =
+{
+  prob = 40
+
+  structure =
+  {
+    "!!!!!!", "..##.."
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "#%RR/#"
+    "!!!!!!", "##RR##"
+    "!!!!!!", "......"
+  }
+
+  diagonals = { ".R", "R." }
+
+  new_room =
+  {
+  }
+}
+
+
+ROOT_CAGES4 =
+{
+  prob = 30
+
+  structure =
+  {
+    "!!!!!", ".#.#."
+    "!!!!!", "RCRCR"
+    "!!!!!", "RRRRR"
+    "!!!!!", "RRRRR"
+    "!!!!!", "RCRCR"
+    "!!!!!", ".#.#."
+  }
+
+  new_room =
+  {
+    symmetry = { dir=4, x=2, y=3, w=2 }
   }
 }
 
@@ -73,14 +129,7 @@ ROOT_LIQUID_1A =
 
   new_room =
   {
-    symmetry =
-    {
-      list =
-      {
-        { dir=4, x=2, y=2, w=2 }
-        { kind="rotate", x=2, y=2, x2=4, y2=4 }
-      }
-    }
+    symmetry = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
 }
 
@@ -89,7 +138,7 @@ ROOT_LIQUID_1B =
 {
   template = "ROOT_LIQUID_1A"
 
-  prob = 20
+  prob = 40
 
   structure =
   {
@@ -134,7 +183,7 @@ ROOT_LIQUID_CAGE2 =
 
 ROOT_LIQUID_CAGE3 =
 {
-  prob = 40
+  prob = 70
 
   structure =
   {
@@ -158,7 +207,6 @@ ROOT_LIQUID_CAGE3 =
   {
   }
 }
-
 
 
 ------------------------------------------
