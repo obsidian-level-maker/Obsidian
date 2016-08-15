@@ -78,25 +78,40 @@ GROW_3 =
 }
 
 
-GROW_DIAGTEST_1 =
+GROW_CURVE_1 =
 {
-  prob = 10
+  prob = 100
 
   structure =
   {
-    "x.", "x."
     "1.", "1%"
+    "1.", "11"
     "1.", "1/"
-    "x.", "x."
   }
 
   diagonals = { "1.", "1." }
+}
 
-  __auxiliary =
+
+GROW_CURVE_2 =
+{
+  prob = 300
+
+  structure =
   {
-    pass = "diag_test"
+    "..", "A%"
+    "%.", "%A"
+    "1.", "1A"
+    "/.", "/A"
+    "..", "A/"
+  }
 
-    count = { 1,6 }
+  diagonals =
+  {
+          "A."
+    "1.", "1A"
+    "1.", "1A"
+          "A."
   }
 }
 
@@ -231,9 +246,9 @@ SPROUT_1 =
 }
 
 
-SPROUT_CASTLE1 =
+SPROUT_CASTLE_1 =
 {
-  prob = 6000
+  prob = 4000
   env = "outdoor"
 
   structure =
@@ -252,6 +267,33 @@ SPROUT_CASTLE1 =
     conn = { x=5, y=3, w=2, dir=2 }
 
 --  symmetry = { x=4, y=3, w=2, dir=8 }
+  }
+}
+
+
+SPROUT_CASTLE_2 =
+{
+  prob = 8000
+  env = "outdoor"
+
+  structure =
+  {
+    "!!!!!!!!", "11RRRR11"
+    "!!!!!!!!", "11RRRR11"
+    "!!!!!!!!", "11%RR/11"
+    "!!!!!!!!", "11111111"
+    "xxx11xxx", "xxx11xxx"
+  }
+
+  diagonals = { ".R", "R." }
+
+  new_room =
+  {
+    env = "building"
+
+    conn = { x=5, y=3, w=2, dir=2 }
+
+    symmetry = { x=4, y=3, w=2, dir=8 }
   }
 }
 
