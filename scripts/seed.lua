@@ -854,38 +854,6 @@ function Seed_alloc_depot(room)
 end
 
 
-function Seed_setup_CTF()
-
-  local function mirror(S, N)
-    if S != N then
-      S.ctf_peer = N
-      N.ctf_peer = S
-    end
-  end
-
-  local mid_SW = int((SEED_W + 1) / 2)
-
-  for sx = 1, mid_SW do
-  for sy = 1, SEED_H do
-    local nx = SEED_W + 1 - sx
-    local ny = SEED_H + 1 - sy
-
-    local S = SEEDS[sx][sy]
-    local N = SEEDS[nx][ny]
-
-    if S.diagonal then
-      assert(N.diagonal)
-
-      mirror(S, N.top)
-      mirror(S.top, N)
-    else
-      mirror(S, N)
-    end
-  end
-  end
-end
-
-
 function Seed_dump_rooms()
   local function seed_to_char(S)
     if not S then return "!" end

@@ -1397,9 +1397,6 @@ function walkable_svolume()
   local vol = 0
 
   each A in LEVEL.areas do
-    -- in CTF mode, don't count the mirrored parts
-    if A.brother then continue end
-
     if A.mode == "normal" then
       vol = vol + A.svolume
     end
@@ -1582,33 +1579,13 @@ function Room_floor_ceil_heights()
   local TRAVERSE_H = 80
 
 
-  local function raw_set_floor(A, h)
-    A.floor_h = h
-  end
-
-
   local function set_floor(A, h)
-    raw_set_floor(A, h)
-
-    -- floor heights are mirrored in CTF mode
-    local A2 = A.sister or A.brother
-
-    if A2 then
-      assert(not A2.floor_h)
-      raw_set_floor(A2, h)
-    end
+    A.floor_h = h
   end
 
 
   local function set_ceil(A, h)
     A.ceil_h = h
-
-    -- floor heights are mirrored in CTF mode
-    local A2 = A.sister or A.brother
-
-    if A2 then
-      A2.ceil_h = h
-    end
   end
 
 
@@ -2561,9 +2538,6 @@ function Room_floor_ceil_heights()
   local function visit_room(R, entry_h, entry_area, prev_room, via_conn)
     group_floors(R)
 
-    -- get peered room (for CTF mode)
-    local R2 = R.sister or R.brother
-
     if entry_area then
       assert(entry_area.room == R)
       assert(entry_area.mode != "joiner")
@@ -2578,10 +2552,6 @@ function Room_floor_ceil_heights()
 
     if via_conn then
       via_conn.door_h = entry_h
-    end
-
-    if R2 then
-      R2.entry_h = entry_h
     end
 
     if not (R.kind == "hallway" or R.kind == "stairwell") then

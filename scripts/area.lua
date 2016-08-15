@@ -1150,57 +1150,17 @@ end
 
 function Area_analyse_areas()
 
-  local function spread_CTF_team(A1, visit_list)
-    if not A1.team then
-      local A2 = A1:get_ctf_peer()
-
-      if not A2 then
-        A1.team = "neutral"
-        A1.no_ctf_peer = true
-      else
-        assert(not A2.team)
-
-        A1.team = "blue"
-        A2.team = "red"
-
-        A1.sister  = A2
-        A2.brother = A1
-
-        stderrf("peering CTF: brother %s <--> %s sister\n", A1.name, A2.name)
-      end
-    end
-
-    each N in A1.neighbors do
-      if not N.team then
-        table.insert(visit_list, N)
-      end
-    end
-  end
-
-
   local function find_CTF_peers()
     --
-    -- Setup 'brother' and 'sister' relationship between mirrored areas
+    -- FIXME : REWRITE to be SEED based !
+    --         [ because areas are shared on each side of map ]
+    --
+    -- i.e. give each non-neutral seed a 'team' value
     --
 
     -- Do a flood fill through the level.
     -- This spreading logic tries to keep teamed areas contiguous
     -- (i.e. PREVENT pockets of one color surrounded by the other color).
-
-    -- begin at first area (usually at bottom left, but it doesn't matter)
-
-    local visit_list = { LEVEL.areas[1] }
-
-    while not table.empty(visit_list) do
-      local A1 = table.remove(visit_list, 1)
-
-      spread_CTF_team(A1, visit_list)
-    end
-
-    -- sanity check
-    each A in LEVEL.areas do
-      assert(A.team)
-    end
 
     -- TODO : add/grow the central neutral area [ upto a quota ]
   end
@@ -1220,8 +1180,6 @@ function Area_analyse_areas()
 
   if OB_CONFIG.mode == "ctf" then
     error("CTF mode is broken!")
-
-    Seed_setup_CTF()
 
     find_CTF_peers()
   end

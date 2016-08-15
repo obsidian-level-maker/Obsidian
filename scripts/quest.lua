@@ -677,10 +677,6 @@ gui.debugf("  %s @ %s in %s\n", goal.name, R.name, Q1.name)
     A.room.kind = "hallway"
 
     A.is_stairwell = nil
-
-    if A.sister then
-      downgrade_stairwell(A)
-    end
   end
 
 
