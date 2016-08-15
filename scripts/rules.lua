@@ -24,7 +24,7 @@ SHAPE_GRAMMAR =
 
 ROOT_1 =
 {
-  prob = 50
+  prob = 200
 
   structure =
   {
@@ -46,6 +46,58 @@ ROOT_1 =
 --    { kind="rotate", x=2, y=2, x2=3, y2=3 }
       }
     }
+  }
+}
+
+
+ROOT_LIQUID_1A =
+{
+  prob = 30
+
+  structure =
+  {
+    "!!!!!", "/RRR%"
+    "!!!!!", "R/~%R"
+    "!!!!!", "R~#~R"
+    "!!!!!", "R%~/R"
+    "!!!!!", "%RRR/"
+  }
+
+  diagonals =
+  {
+    ".R", "R."
+    "R~", "~R"
+    "R~", "~R"
+    ".R", "R."
+  }
+
+  new_room =
+  {
+    symmetry =
+    {
+      list =
+      {
+        { dir=4, x=2, y=2, w=2 }
+        { kind="rotate", x=2, y=2, x2=4, y2=4 }
+      }
+    }
+  }
+}
+
+
+ROOT_LIQUID_1B =
+{
+  template = "ROOT_LIQUID_1A"
+
+  prob = 20
+
+  structure =
+  {
+    "!!!!!", "/RRR%"
+    "!!!!!", "R/~%R"
+    "!!!!!", "R~C~R"
+    "!!!!!", "R%~/R"
+    "!!!!!", "%RRR/"
   }
 }
 
