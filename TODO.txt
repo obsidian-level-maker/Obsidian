@@ -156,6 +156,9 @@ SHAPE GRAMMARS
    Q/ does "anything" included empty space / other rooms?
    A/ yes it would
 
+   ISSUE: must be handled in second pass, once '1' etc have been
+          determined
+
 -  in SPROUT pass of symmetrical room : ability to make non-mirrored
    [ especially when we are in dire need to grow the map ]
 
@@ -273,17 +276,15 @@ CAVES
 Hallways
 --------
 
-Q/ do we always build them with prefabs for every piece?
-A/ probably distinguish "simple" ones from "prefab" ones
-   [ simple ones can grow organically, like the free-range cages ]
++  'H' is for simple hallways, can grow organically like the
+   free-range cages, and are built like normal areas in a room
 
-+  the 'H' hallways are always 2 seeds wide
-   [ future: allow 4x4 etc sizes, prefab specifies which parts are exits ]
++  'P' is for prefab hallway pieces, will be rectangular and
+   must specify the shape for connections
 
-+  have 'V' vents which are always 1 seed wide
-   [ future: allow 2x2 etc sizes, prefab specifies which parts are exits ]
++  the 'P' and 'H' parts can connect to each other
 
--  treat hallways as separate rooms
++  treat hallways as separate rooms
 
 -  allow a hallway rule to sprout TWO new rooms
 
