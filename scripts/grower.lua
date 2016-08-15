@@ -298,6 +298,10 @@ function Grower_preprocess_grammar()
       return
     end
 
+    if E2.kind == "disable" and E1.kind != "free" then
+      error("bad element in " .. def.name .. ": disable cannot remove stuff")
+    end
+
     -- from here on, output element is an ASSIGNMENT
     -- i.e. setting something new or different into the seed(s)
 
@@ -1646,7 +1650,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     if E1.what == "closed" then
       if not A then return true end
       if A.room != R then return true end
-      if S.disable_R == R then return true end
+      if S.disabled_R == R then return true end
 
       if A.chunk and A.chunk.kind == "closet" then return true end
       if A.chunk and A.chunk.kind == "joiner" then return true end
@@ -1657,7 +1661,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     -- all other magic elements require an area and same room
     if not A then return false end
     if A.room != R then return false end
-    if S.disable_R == R then return false end
+    if S.disabled_R == R then return false end
 
     if E1.what == "room" then
       return A and A.room == R
@@ -1720,8 +1724,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     end
 
     -- prevent assigning an '#' onto one from a different room
-    if E2.kind == "disable" and S.disable_R then
-      return false
+    if E2.kind == "disable" then
+      return not (S.disabled_R and S.disabled_R != R)
     end
 
     -- seed is locked out of further changes?
@@ -1784,7 +1788,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
       -- prevent the seed being used by THIS room ever again
       -- [ however, OTHER rooms are allowed to use it ]
-      S.disable_R = R
+      S.disabled_R = R
       return
     end
 
