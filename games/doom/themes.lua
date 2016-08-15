@@ -31,7 +31,7 @@ DOOM.SINKS =
     light = 16
 
     trim_mat = "METAL"
-    trim_dz  = -8
+    trim_dz  = -9
     trim_light = 16
   }
 
@@ -42,7 +42,7 @@ DOOM.SINKS =
     light = 16
 
     trim_mat = "FLAT23"
-    trim_dz  = -4
+    trim_dz  = -5
     trim_light = 16
   }
 
@@ -53,7 +53,7 @@ DOOM.SINKS =
     light = 16
 
     trim_mat = "REDWALL"
-    trim_dz  = -4
+    trim_dz  = -5
     trim_light = 16
   }
 
@@ -76,10 +76,10 @@ DOOM.SINKS =
   liquid_shiny =
   {
     mat = "_LIQUID"
-    dz  = -8
+    dz  = -10
 
     trim_mat = "FLAT23"
-    trim_dz  = 4
+    trim_dz  = 3
   }
 
   liquid_metal =
@@ -88,7 +88,7 @@ DOOM.SINKS =
     dz  = -8
 
     trim_mat = "METAL"
-    trim_dz  = 4
+    trim_dz  = 3
   }
 
 
@@ -101,7 +101,7 @@ DOOM.SINKS =
     light = 16
 
     trim_mat = "FLAT23"
-    trim_dz  = -4
+    trim_dz  = -5
   }
 
   light_orange_shiny =
@@ -111,7 +111,7 @@ DOOM.SINKS =
     light = 16
 
     trim_mat = "FLAT23"
-    trim_dz  = -4
+    trim_dz  = -5
   }
 
   light_brightred_metal =
@@ -121,7 +121,7 @@ DOOM.SINKS =
     light = 32
 
     trim_mat = "METAL"
-    trim_dz  = -4
+    trim_dz  = -5
     trim_light = 16
   }
 
@@ -139,7 +139,7 @@ DOOM.SINKS =
     light = 32
 
     trim_mat = "METAL"
-    trim_dz  = -4
+    trim_dz  = -5
   }
 
   light_hell_red =
