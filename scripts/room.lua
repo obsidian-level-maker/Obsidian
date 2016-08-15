@@ -2655,6 +2655,19 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function get_cage_neighbor(A)
+    local N = A:highest_neighbor()
+
+    if N then return N end
+
+    each N2 in A.neighbors do
+      if N2.mode == "liquid" then return N2 end
+    end
+
+    error("failed to find cage neighbor")
+  end
+
+
   local function kill_start_cages(R)
     -- turn closets in start rooms into a plain floor
 
@@ -2666,14 +2679,10 @@ function Room_floor_ceil_heights()
       if A.peer and A.peer.floor_h then
         N = A.peer
       else
-        N = A:highest_neighbor()
+        N = get_cage_neighbor(A)
       end
 
-      if not N then
-        error("failed to find cage neighbor")
-      end
-
-      A.mode = "floor"
+      A.mode = N.mode
 
       A.floor_h   = N.floor_h
       A.floor_mat = N.floor_mat
@@ -2700,11 +2709,7 @@ function Room_floor_ceil_heights()
         continue
       end
 
-      local N = A:highest_neighbor()
-
-      if not N then
-        error("failed to find cage neighbor")
-      end
+      local N = get_cage_neighbor(A)
 
       A.floor_h  = N.floor_h + rand.pick({40,56,72})
       A.ceil_h   = A.floor_h + 80
