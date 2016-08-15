@@ -95,7 +95,7 @@ GROW_CURVE_1 =
 
 GROW_CURVE_2 =
 {
-  prob = 300
+  prob = 200
 
   structure =
   {
@@ -219,6 +219,32 @@ GROW_STAIRPAIR_2 =
 
 ---##  stair2_2 = { from_dir=2, dest_dir=4 }
 ---##  stair4_2 = { from_dir=2, dest_dir=6 }
+}
+
+
+GROW_DBLSTAIR_CURVE =
+{
+  prob = 2000
+
+  structure =
+  {
+    "...", "SA%"
+    "1%.", "1%A"
+    "11.", "11A"
+    "1/.", "1/A"
+    "...", "SA/"
+  }
+
+  diagonals =
+  {
+          "A."
+    "1.", "1A"
+    "1.", "1A"
+          "A."
+  }
+
+  stair1_5 = { from_dir=2, dest_dir=6 }
+  stair1_1 = { from_dir=8, dest_dir=6 }
 }
 
 
