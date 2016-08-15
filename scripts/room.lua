@@ -2642,10 +2642,14 @@ function Room_floor_ceil_heights()
     each A in R.areas do
       if A.mode == "liquid" then
         local N = A:lowest_neighbor()
+
         if not N then
           error("failed to find liquid neighbor")
         end
-        A.floor_h = N.floor_h - 16
+
+        A.floor_h  = N.floor_h - 16
+        A.ceil_h   = N.ceil_h
+        A.ceil_mat = N.ceil_mat
       end
     end
   end
