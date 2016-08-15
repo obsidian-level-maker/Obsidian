@@ -240,7 +240,8 @@ ROOT_LIQUID_CAGE3 =
 
 GROW_1 =
 {
-  prob = 250
+  prob = 100
+  prob_skew = 2
 
   structure =
   {
@@ -250,9 +251,9 @@ GROW_1 =
 }
 
 
-GROW_3 =
+GROW_BLOB_1 =
 {
-  prob = 20
+  prob = 15
 
   structure =
   {
@@ -260,6 +261,36 @@ GROW_3 =
     "....", "1111"
     "x11x", "x11x"
   }
+}
+
+
+GROW_FUNNEL_1 =
+{
+  prob = 25
+
+  structure =
+  {
+    "....", "1111"
+    "....", "%11/"
+    ".11.", ".11."
+  }
+
+  diagonals = { ".1", "1." }
+}
+
+
+GROW_FUNNEL_2 =
+{
+  prob = 25
+
+  structure =
+  {
+    "....", "#11#"
+    "....", "/11%"
+    "1111", "1111"
+  }
+
+  diagonals = { "#1", "1#" }
 }
 
 
@@ -280,7 +311,7 @@ GROW_CURVE_1 =
 
 GROW_CURVE_2 =
 {
-  prob = 200
+  prob = 140
 
   structure =
   {
@@ -321,22 +352,6 @@ AUX_DIAGTEST_1 =
 }
 
 
-
-GROW_MIR_TEST =  -- REMOVE
-{
-  prob = 0
-
-  structure =
-  {
-    "....", "1111"
-    "....", "~~~~"
-    "....", "1~~1"
-    "1111", "1111"
-  }
-}
-
-
-
 GROW_NEWAREA_1 =
 {
   prob = 40
@@ -366,34 +381,34 @@ GROW_STAIRS_1 =
 GROW_STAIRPAIR_1 =
 {
   prob = 20
-  prob_skew = 4
+  prob_skew = 3
 
   structure =
   {
     "...", "AAA"
-    "...", "^1^"
+    "...", "^~^"
     "111", "111"
   }
-}
-
-
-GROW_CURVE_STAIR_1 =
-{
-  prob = 0
-
-  structure =
-  {
-    "....", "AAS."
-    "xx1x", "xx1x"
-  }
-
-  stair = { from_dir=2, dest_dir=4 }
 }
 
 
 GROW_STAIRPAIR_2 =
 {
   prob = 10
+  prob_skew = 3
+
+  structure =
+  {
+    "...", "AAA"
+    "...", "^C^"
+    "111", "111"
+  }
+}
+
+
+GROW_STAIRPAIR_3 =
+{
+  prob = 2
 
   structure =
   {
@@ -401,9 +416,6 @@ GROW_STAIRPAIR_2 =
     ".....", "A^#^A"
     "x111x", "x111x"
   }
-
----##  stair2_2 = { from_dir=2, dest_dir=4 }
----##  stair4_2 = { from_dir=2, dest_dir=6 }
 }
 
 
