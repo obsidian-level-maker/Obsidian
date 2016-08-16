@@ -67,6 +67,26 @@ ROOT_2 =
 }
 
 
+ROOT_3 =
+{
+  prob = 20
+
+  structure =
+  {
+    "!!!!!!", "......"
+    "!!!!!!", ".RRRR."
+    "!!!!!!", ".RRRR."
+    "!!!!!!", ".RRRR."
+    "!!!!!!", ".RRRR."
+    "!!!!!!", "......"
+  }
+
+  new_room =
+  {
+  }
+}
+
+
 ROOT_L1 =
 {
   prob = 40
@@ -395,7 +415,7 @@ GROW_NEWAREA_1 =
 GROW_STAIRS_1 =
 {
   prob = 20
-  prob_skew = 4
+  prob_skew = 3
 
   structure =
   {
@@ -408,7 +428,7 @@ GROW_STAIRS_1 =
 
 GROW_STAIRPAIR_1 =
 {
-  prob = 20
+  prob = 15
   prob_skew = 3
 
   structure =
@@ -493,6 +513,56 @@ GROW_DBLSTAIR_CURVE =
 
   stair1_5 = { from_dir=2, dest_dir=6 }
   stair1_1 = { from_dir=8, dest_dir=6 }
+}
+
+
+GROW_STAIR_POOL1 =
+{
+  prob = 30
+
+  structure =
+  {
+    "x.....", "xAAA%."
+    "1.....", "1/~%A."
+    "1.....", "1~~~A."
+    "1.....", "1%~/A#"
+    "1.....", "1>AA/."
+    "x....x", "x##..x"
+  }
+
+  diagonals =
+  {
+    "A."
+    "1~", "~A"
+    "1~", "~A"
+    "A."
+  }
+}
+
+
+GROW_STAIR_POOL2 =
+{
+  -- this one is higher than STAIR_POOL1
+
+  prob = 80
+
+  structure =
+  {
+    "x.....", "xAAA%."
+    "1.....", "1/~%A."
+    "1.....", "1~~~A."
+    "1.....", "1%~/A#"
+    "1.....", "1>>A/."
+    "x....x", "x##..x"
+  }
+
+  diagonals =
+  {
+    "A."
+    "1~", "~A"
+    "1~", "~A"
+    "A."
+  }
 }
 
 
