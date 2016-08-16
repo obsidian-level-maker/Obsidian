@@ -311,7 +311,7 @@ GROW_CURVE_1 =
 
 GROW_CURVE_2 =
 {
-  prob = 140
+  prob = 70
 
   structure =
   {
@@ -332,22 +332,50 @@ GROW_CURVE_2 =
 }
 
 
-AUX_DIAGTEST_1 =
+GROW_DIAG_BLOB1 =
 {
-  pass = "diag_test"
-
-  prob = 40
+  prob = 10
 
   structure =
   {
-    "/.", "1%"
-    "..", "%/"
+    "...", "AA%"
+    "%..", "%AA"
+    "x%.", "x%A"
+    "x1.", "x1."
   }
 
   diagonals =
   {
-    "1.", "1."
-    ".1", "1."
+          "A."
+    "1.", "1A"
+    "1.", "1A"
+  }
+}
+
+
+GROW_DIAG_BLOB2 =
+{
+  prob = 20
+
+  structure =
+  {
+    "...", "AA%"
+    "%..", "%AA"
+    "x%.", "x%A"
+    "x1.", "x1."
+    "x/.", "x/A"
+    "/..", "/AA"
+    "...", "AA/"
+  }
+
+  diagonals =
+  {
+          "A."
+    "1.", "1A"
+    "1.", "1A"
+    "1.", "1A"
+    "1.", "1A"
+          "A."
   }
 }
 
