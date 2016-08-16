@@ -258,7 +258,7 @@ ROOT_LIQUID_CAGE3 =
 ------------------------------------------
 
 
-GROW_1 =
+GROW_2 =
 {
   prob = 100
   prob_skew = 2
@@ -267,6 +267,19 @@ GROW_1 =
   {
     "....", ".11."
     "x11x", "x11x"
+  }
+}
+
+
+GROW_3 =
+{
+  prob = 20
+  prob_skew = 2
+
+  structure =
+  {
+    ".....", ".111."
+    "x111x", "x111x"
   }
 }
 
@@ -412,7 +425,7 @@ GROW_NEWAREA_1 =
 }
 
 
-GROW_STAIRS_1 =
+GROW_STAIRS_2 =
 {
   prob = 20
   prob_skew = 3
@@ -426,7 +439,7 @@ GROW_STAIRS_1 =
 }
 
 
-GROW_STAIRPAIR_1 =
+GROW_STAIRS_3 =
 {
   prob = 15
   prob_skew = 3
@@ -434,7 +447,7 @@ GROW_STAIRPAIR_1 =
   structure =
   {
     "...", "AAA"
-    "...", "^~^"
+    "...", "^^^"
     "111", "111"
   }
 }
