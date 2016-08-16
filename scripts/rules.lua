@@ -447,9 +447,32 @@ GROW_STAIRPAIR_3 =
 }
 
 
+GROW_STAIR_CURVE =
+{
+  prob = 200
+
+  structure =
+  {
+    "x..x", "xA%x"
+    "1%..", "1%A%"
+    "11..", "11>A"
+    "1/..", "1/A/"
+    "x..x", "xA/x"
+  }
+
+  diagonals =
+  {
+          "A."
+    "1.", "1A", "A."
+    "1.", "1A", "A."
+          "A."
+  }
+}
+
+
 GROW_DBLSTAIR_CURVE =
 {
-  prob = 2000
+  prob = 200
 
   structure =
   {
