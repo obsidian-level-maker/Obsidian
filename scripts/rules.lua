@@ -531,7 +531,7 @@ GROW_DBLSTAIR_CURVE =
 
 GROW_STAIR_POOL1 =
 {
-  prob = 30
+  prob = 20
 
   structure =
   {
@@ -557,7 +557,7 @@ GROW_STAIR_POOL2 =
 {
   -- this one is higher than STAIR_POOL1
 
-  prob = 80
+  prob = 60
 
   structure =
   {
