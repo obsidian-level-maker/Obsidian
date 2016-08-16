@@ -1914,12 +1914,14 @@ function Room_floor_ceil_heights()
     end
 
     -- prevent small areas connected with a lift
-    -- [ TODO : this could be done better.... ]
-    local vol_1 = chunk.from_area.svolume / sel(R.symmetry, 2, 1)
-    local vol_2 = chunk.dest_area.svolume / sel(R.symmetry, 2, 1)
+    -- [ FIXME : this is broken due to deep staircases ]
+    if false then
+      local vol_1 = chunk.from_area.svolume / sel(R.symmetry, 2, 1)
+      local vol_2 = chunk.dest_area.svolume / sel(R.symmetry, 2, 1)
 
-    if vol_1 < 7 or vol_2 < 7 then
-      reqs.max_delta_h = 32
+      if vol_1 < 7 or vol_2 < 7 then
+        reqs.max_delta_h = 32
+      end
     end
 
     local def = Fab_pick(reqs)
