@@ -154,7 +154,7 @@ ROOT_CAGES4 =
 
 ROOT_LIQUID_1A =
 {
-  prob = 30
+  prob = 25
 
   structure =
   {
@@ -184,7 +184,7 @@ ROOT_LIQUID_1B =
 {
   template = "ROOT_LIQUID_1A"
 
-  prob = 40
+  prob = 30
 
   structure =
   {
@@ -624,6 +624,25 @@ SPROUT_1 =
 }
 
 
+SPROUT_HALLWAY_1 =
+{
+  prob = 5*1000
+
+  structure =
+  {
+    "...", "..."
+    "...", ".@."
+    "...", ".H."
+    "x1x", "x1x"
+  }
+
+  new_room =
+  {
+    conn = { x=2, y=2, dir=2 }
+  }
+}
+
+
 SPROUT_CASTLE_1 =
 {
   prob = 4000
@@ -800,9 +819,9 @@ SPROUT_DIAG_2 =
 }
 
 
-SPROUT_HALL_1 =
+SPROUT_HALCRUD_1 =
 {
-  prob = 10
+  prob = 0
 
   structure =
   {
@@ -1048,73 +1067,65 @@ DECORATE_LIQUID_2 =
 }
 --]]
 
---- Hallway testing crud ---
---[[
 
-HALL_A_FORWARD =
+------------------------------------------
+--   Hallway stuff
+------------------------------------------
+
+
+HALL_GROW_I1 =
 {
-  prob = 0
+  prob = 100
 
   structure =
   {
-    "...", "..."
-    "...", ".1."
-    ".1.", ".1."
+    "xxx", "x@x"
+    "x@x", "xHx"
+    "x1x", "x1x"
   }
 }
 
 
-HALL_A_BRANCH =
+HALL_GROW_L1 =
 {
-  prob = 0
+  prob = 30
 
   structure =
   {
-    ".....", "....."
-    ".....", "..1.."
-    "11111", "11111"
+    ".@x", "@Hx"
+    "x1x", "x1x"
   }
 }
 
 
-
-HALL_A_TURN =
+HALL_GROW_T1 =
 {
-  prob = 0
+  prob = 30
 
   structure =
   {
-    "...", ".11"
-    ".1.", ".1."
+    ".@.", "@H@"
+    "x1x", "x1x"
   }
 }
 
 
-HALL_A_CROSS =
+HALL_TERMINATE_1 =
 {
-  prob = 0
+  prob = 100
 
   structure =
   {
-    "...", ".1."
-    "...", "111"
-    ".1.", ".1."
+    "...", "RRR"
+    ".@.", "RRR"
+    "x1x", "x1x"
   }
-}
 
-
-HALL_A_RECONNECT =
-{
-  prob = 0
-
-  structure =
+  new_room =
   {
-    "11111", "11111"
-    ".....", "..1.."
-    "11111", "11111"
+    conn = { x=2, y=2, dir=2 }
   }
 }
---]]
 
 
 -- end of SHAPE_GRAMMAR
