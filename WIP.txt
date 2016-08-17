@@ -2,4 +2,17 @@
 WORK IN PROGRESS
 ================
 
+-  more pillars in rooms
+
+-  sometimes have flashing/oscillate FX for free-range cages
+
+-  F/R cages: also want mid-bars and/or corner posts [ esp. cages surrounded by liquids ]
+
+-  smaller rooms (more variation on size)
+
+-  doors  (esp. for outdoor-->indoor)
+
+-  IDEA: build "landscape" rooms as a hallway network, but after
+         sprout phase convert seeds to "landscape" and _then_
+         expand outwards to hit buildings / edge of map.
 
