@@ -1079,7 +1079,7 @@ HALL_GROW_I1 =
 
   structure =
   {
-    "xxx", "x@x"
+    "x.x", "x@x"
     "x@x", "xHx"
     "x1x", "x1x"
   }
