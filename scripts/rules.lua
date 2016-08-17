@@ -531,7 +531,7 @@ GROW_DBLSTAIR_CURVE =
 
 GROW_STAIR_POOL1 =
 {
-  prob = 20
+  prob = 10
 
   structure =
   {
@@ -557,7 +557,7 @@ GROW_STAIR_POOL2 =
 {
   -- this one is higher than STAIR_POOL1
 
-  prob = 60
+  prob = 35
 
   structure =
   {
@@ -575,6 +575,27 @@ GROW_STAIR_POOL2 =
     "1~", "~A"
     "1~", "~A"
     "A."
+  }
+}
+
+
+GROW_STAIR_HUGE =
+{
+  prob = 20
+
+  structure =
+  {
+    "x....x", "xAAAAx"
+    "......", "~%^^/~"
+    "......", "~~^^~~"
+    "......", "~/^^%~"
+    "x1111x", "x1111x"
+  }
+
+  diagonals =
+  {
+    "~A", "A~"
+    "~1", "1~"
   }
 }
 
