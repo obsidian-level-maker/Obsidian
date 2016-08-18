@@ -198,6 +198,8 @@ end
 
 
 function ROOM_CLASS.get_env(R)
+  if R.kind == "hallway" then return "hallway" end
+
   if R.is_cave then return "cave" end
 
   if R.is_outdoor then return "outdoor" end
