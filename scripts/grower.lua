@@ -604,16 +604,25 @@ function Grower_preprocess_grammar()
 
     local rect = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
 
+    if kind == "hall2" or kind == "hall3" then
+      rect.kind = "hallway"
+    end
+
     local E = def.output[x][y]
 
     -- grab "dir" from corresponding table, if present
-    local info = find_info_for_part(kind, x, y)
+    local info = find_info_for_part(rect.kind, x, y)
     if info then
       table.merge_missing(rect, info)
     end
 
     if E.dir then
+      -- directional stair
       rect.from_dir = 10 - E.dir
+
+    elseif rect.kind == "hallway" or kind == "link" then
+      -- TODO
+
     else
       if not info then
         error("Missing " .. kind .. " info in grammar rule: " .. tostring(def.name))
@@ -622,15 +631,20 @@ function Grower_preprocess_grammar()
       assert(rect.from_dir)
     end
 
-    rect.from_area = determine_from_area(kind, x, y, rect.from_dir)
+    if rect.kind == "hallway" or kind == "link" then
+      -- TODO
 
-    if not rect.shape then
-      if rect.dest_dir then
-        rect.shape = "L"
-      elseif kind == "closet" then
-        rect.shape = "U"
-      else
-        rect.shape = "I"
+    else
+      rect.from_area = determine_from_area(kind, x, y, rect.from_dir)
+
+      if not rect.shape then
+        if rect.dest_dir then
+          rect.shape = "L"
+        elseif kind == "closet" then
+          rect.shape = "U"
+        else
+          rect.shape = "I"
+        end
       end
     end
 
@@ -1015,6 +1029,10 @@ function Grower_add_room(parent_R, force_env, trunk)
   local A = AREA_CLASS.new("floor")
   ROOM:add_area(A)
 
+---???  if kind == "hallway" then
+---???    A.mode = "hallway"
+---???  end
+
   -- max size of new area
   A.max_size = rand.pick({ 16, 24, 32 })
 
@@ -1043,6 +1061,10 @@ function Grower_grammatical_room(R, pass)
   -- this maps area numbers (1/2/3) in the current rule to temp-areas of
   -- the current room
   local area_map = {}
+
+  -- if rule matches a link ('@'), this is the link chunk (in seeds)
+  local link_chunk
+  local link_matches
 
   local new_room
   local old_room
@@ -1154,9 +1176,11 @@ function Grower_grammatical_room(R, pass)
 
 
   local function prob_for_symmetry(R)
+    if R.kind == "hallway" then return 0 end
+
     if R.is_cave then return 0 end
 
-    if R.is_outdoor then return 15 end
+    if R.is_outdoor then return 10 end
 
     return 40
   end
@@ -1527,6 +1551,22 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
+  local function match_link(E1, S)
+    local chunk = S.chunk
+
+    if chunk == nil then return false end
+    if chunk.kind != "link" then return false end
+
+    if not link_chunk then
+      link_chunk = S.chunk
+      link_matches = 1
+      return true
+    end
+
+    return (chunk == link_chunk)
+  end
+
+
   local function match_a_magic_element(S, E1)
     local A = S.area
 
@@ -1634,6 +1674,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     if E1.kind == "area" then
       return match_area(E1, A)
+    end
+
+    if E1.kind == "link" then
+      return match_link(E1, S)
     end
 
     if E1.kind == "liquid" or
@@ -2092,6 +2136,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     end -- px, py
     end
 
+    -- hallway links need to match exactly
+    if link_chunk and link_matches != (link_chunk.sw * link_chunk.sh) then
+      return false
+    end
+
 --[[ DEBUG
 if what == "INSTALL" then
 stderrf("=== install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
@@ -2161,6 +2210,9 @@ end
       area_map[1] = nil
       area_map[2] = nil
       area_map[3] = nil
+
+      link_chunk = nil
+      link_matches = nil
     else
       new_area = nil
       new_intconn = nil
@@ -2458,7 +2510,9 @@ function Grower_decorate_rooms()
   rand.shuffle(room_list)
 
   each R in room_list do
-    Grower_grammatical_room(R, "decorate")
+    if R.kind != "hallway" then
+      Grower_grammatical_room(R, "decorate")
+    end
   end
 end
 
@@ -3081,7 +3135,7 @@ function Grower_create_rooms()
 
   Seed_squarify()
 
---DEBUG
+  -- debugging aid
   if OB_CONFIG.svg then
     Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
   end

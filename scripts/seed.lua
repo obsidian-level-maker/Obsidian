@@ -127,6 +127,8 @@
                     -- "stair"
                     -- "closet" ('T' elements in rules)
                     -- "joiner" ('J' elements in rules)
+                    -- "hallway" piece
+                    -- "link"
 
     area : AREA
 

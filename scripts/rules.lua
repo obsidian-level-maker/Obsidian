@@ -626,7 +626,7 @@ SPROUT_1 =
 
 SPROUT_HALLWAY_1 =
 {
-  prob = 5*1000
+  prob = 1*9000
 
   structure =
   {
@@ -638,6 +638,8 @@ SPROUT_HALLWAY_1 =
 
   new_room =
   {
+    env = "hallway"
+
     conn = { x=2, y=2, dir=2 }
   }
 }
@@ -1088,7 +1090,7 @@ HALL_GROW_I1 =
 
 HALL_GROW_L1 =
 {
-  prob = 30
+  prob = 30*0
 
   structure =
   {
@@ -1100,7 +1102,7 @@ HALL_GROW_L1 =
 
 HALL_GROW_T1 =
 {
-  prob = 30
+  prob = 30*0
 
   structure =
   {

@@ -36,7 +36,6 @@
     scenic_kind : keyword  -- "water", "mountain"
 
     is_outdoor    -- true if outdoors (sky ceiling)
-
     is_boundary   -- true for areas outside the boundary line
 
     lighting      -- ambient lighting for the area
