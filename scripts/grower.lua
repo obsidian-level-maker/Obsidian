@@ -703,8 +703,8 @@ function Grower_preprocess_grammar()
        cur_def.pass = name_to_pass(name)
     end
 
-    if cur_def.is_hallway == nil then
-       cur_def.is_hallway = string.match(name, "HALL_") and true
+    if string.match(name, "HALL_") then
+      cur_def.env = "hallway"
     end
   end
 end
@@ -990,6 +990,8 @@ end
 function Grower_add_room(parent_R, force_env, trunk)
   local ROOM = ROOM_CLASS.new()
 
+gui.debugf("new room %s : env = %s\n", ROOM.name, tostring(force_env))
+
   ROOM.grow_parent = parent_R
 
   if trunk == nil then
@@ -1026,15 +1028,17 @@ function Grower_add_room(parent_R, force_env, trunk)
   end
 
   -- always need at least one floor area
-  local A = AREA_CLASS.new("floor")
-  ROOM:add_area(A)
+  -- [ except for hallways, every piece is an area ]
 
----???  if kind == "hallway" then
----???    A.mode = "hallway"
----???  end
+  if kind == "hallway" then
+    ROOM.max_hall_size = 20
+  else
+    local A = AREA_CLASS.new("floor")
+    ROOM:add_area(A)
 
-  -- max size of new area
-  A.max_size = rand.pick({ 16, 24, 32 })
+    -- max size of new area
+    A.max_size = rand.pick({ 16, 24, 32 })
+  end
 
   -- create a preliminary connection (last room to this one)
   local PC
@@ -1094,7 +1098,8 @@ function Grower_grammatical_room(R, pass)
     local A = assert(S.area)
     assert(A.room)
 
-    S.area = nil
+    S.area   = nil
+    S.h_link = nil
 
     table.kill_elem(A.seeds, S)
   end
@@ -1111,6 +1116,7 @@ function Grower_grammatical_room(R, pass)
     end
 
     S.area = A
+    S.h_link = nil
 
     table.insert(A.seeds, S)
 
@@ -1552,18 +1558,18 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
 
   local function match_link(E1, S)
-    local chunk = S.chunk
+    local HL = S.h_link
 
-    if chunk == nil then return false end
-    if chunk.kind != "link" then return false end
+    if HL == nil then return false end
+    if HL.kind != "link" then return false end
 
     if not link_chunk then
-      link_chunk = S.chunk
+      link_chunk = HL
       link_matches = 1
       return true
     end
 
-    return (chunk == link_chunk)
+    return (HL == link_chunk)
   end
 
 
@@ -1725,10 +1731,20 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     -- handle special rectangles (stairs, cages, traps)
     local chunk = find_chunk(S.sx, S.sy)
+
     if chunk then
-      assert(chunk.area)
-      set_seed(S, chunk.area)
-      S.chunk = chunk
+      if chunk.kind == "link" then
+        assert(not S.h_link)
+        S.h_link = chunk
+      else
+if chunk.kind == "hallway" then
+stderrf("    hallway chunk @ %s\n", S.name)
+end
+        assert(chunk.area)
+        set_seed(S, chunk.area)
+        S.chunk = chunk
+      end
+
       return
     end
 
@@ -1990,11 +2006,21 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       table.insert(new_chunks, chunk)
 
 
-      local A = AREA_CLASS.new("chunk")
-      R:add_area(A)
+      local A
+      local R2 = R
 
-      chunk.area = A
-      A.chunk = chunk
+      -- link chunks have no area
+      if r.kind != "link" then
+        if r.kind == "hallway" then
+          R2 = assert(new_room)
+        end
+
+        A = AREA_CLASS.new("chunk")
+        R2:add_area(A)
+
+        chunk.area = A
+        A.chunk = chunk
+      end
 
 
       -- symmetry handling : peer up mirrored chunks and their areas
@@ -2008,8 +2034,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
         chunk.peer = old_chunk
         old_chunk.peer = chunk
 
-        A.peer = old_chunk.area
-        old_chunk.area.peer = A
+        if A then
+          A.peer = old_chunk.area
+          old_chunk.area.peer = A
+        end
       end
 
 
@@ -2045,6 +2073,8 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       if r.kind == "closet" then table.insert(R.closets, chunk) end
       if r.kind == "stair"  then table.insert(R.stairs,  chunk) end
       if r.kind == "joiner" then table.insert(R.joiners, chunk) end
+
+      if r.kind == "hallway" then table.insert(R2.pieces, chunk) end
     end
 
     -- if a rule adds multiple stairs, link them so we can use
@@ -2393,7 +2423,7 @@ end
 
   ---| Grower_grammatical_room |---
 
--- stderrf("\n Grow room %s : %s pass\n", R.name, pass)
+stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
@@ -2482,7 +2512,11 @@ function Grower_grow_rooms()
         Grower_grammatical_room(R, "grow")
 
         if not no_new then
-          Grower_grammatical_room(R, "sprout")
+          if R.kind == "hallway" then
+            Grower_grammatical_room(R, "terminate")
+          else
+            Grower_grammatical_room(R, "sprout")
+          end
         end
       end
     end
@@ -2599,9 +2633,8 @@ function Grower_prune_small_rooms()
   end
 
 
-  local function become_hallway(R)
+  local function OLD__become_hallway(R)
     gui.debugf("Hallwaying small room %s\n", R.name)
-
     R.kind = "hallway"
   end
 
@@ -2647,14 +2680,14 @@ function Grower_prune_small_rooms()
     end
   until not changes
 
-  -- turn any other small rooms into hallways
-  -- [ cannot remove them since they are not leafs ]
-
-  each R in LEVEL.rooms do
-    if is_too_small(R) then
-      become_hallway(R)
-    end
-  end
+--!!!!  -- turn any other small rooms into hallways
+--!!!!  -- [ cannot remove them since they are not leafs ]
+--!!!!
+--!!!!  each R in LEVEL.rooms do
+--!!!!    if is_too_small(R) then
+--!!!!      become_hallway(R)
+--!!!!    end
+--!!!!  end
 
   -- a trunk may have become empty, prune these too
   prune_trunks()
@@ -3126,7 +3159,7 @@ function Grower_create_rooms()
   Grower_create_trunks()
   Grower_grow_rooms()
 
-  Grower_prune_small_rooms()
+--!!!!  Grower_prune_small_rooms()
 
   Grower_decorate_rooms()
   Grower_split_liquids()

@@ -53,6 +53,7 @@
     closets  : list(CHUNK)
     stairs   : list(CHUNK)
     joiners  : list(CHUNK)
+    pieces   : list(CHUNK)  -- for hallways
 
     triggers : list(TRIGGER)  -- used for traps
 
@@ -150,6 +151,7 @@ function ROOM_CLASS.new()
     closets = {}
     stairs  = {}
     joiners = {}
+    pieces  = {}
 
     cages = {}
     traps = {}
