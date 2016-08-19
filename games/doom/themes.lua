@@ -555,6 +555,12 @@ DOOM.ROOM_THEMES =
       FLAT1 = 30
       FLOOR7_1 = 50
     }
+
+    ceilings =
+    {
+      FLAT1 = 30
+      FLOOR7_1 = 50
+    }
   }
 
 
