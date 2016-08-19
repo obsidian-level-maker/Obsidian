@@ -537,9 +537,10 @@ DOOM.ROOM_THEMES =
 
 -----  GENERIC STUFF  ------------------------------
 
-  any_Stairwell =
+  any_Hallway =
   {
-    env = "stairwell"
+    env = "hallway"
+    prob = 1
 
     walls =
     {

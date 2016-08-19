@@ -40,22 +40,6 @@ HEXEN.THEMES =
   }
 
 
-  any_Stairwell =
-  {
-    env = "stairwell"
-
-    walls =
-    {
-      STEEL08 = 50
-    }
-
-    floors =
-    {
-      F_073 = 30
-    }
-  }
-
-
   --------------------------------------------------
 
   -- FIXME

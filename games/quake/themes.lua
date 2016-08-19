@@ -83,22 +83,6 @@ QUAKE.THEMES =
 
 QUAKE.ROOM_THEMES =
 {
-  any_Stairwell =
-  {
-    env = "stairwell"
-
-    walls =
-    {
-      BRICKA2_1 = 30
-    }
-
-    floors =
-    {
-      WOOD1_1 = 50
-    }
-  }
-
-
   any_Hallway =
   {
     env = "hallway"

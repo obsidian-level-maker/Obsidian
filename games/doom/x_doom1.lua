@@ -666,26 +666,6 @@ ULTDOOM.ROOM_THEMES =
   replace_all = true
 
 
-  any_Stairwell =
-  {
-    env = "stairwell"
-
-    walls =
-    {
-      BROWN1  = 50
-      GRAY1   = 50
-      STARGR1 = 50
-      METAL1  = 20
-    }
-
-    floors =
-    {
-      FLAT1 = 30
-      FLOOR7_1 = 50
-    }
-  }
-
-
 ------ EPISODE 1 : Tech Bases ----------------------
 
   tech_Room =

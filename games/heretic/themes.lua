@@ -82,22 +82,6 @@ HERETIC.THEMES =
 
 HERETIC.ROOM_THEMES =
 {
-  any_Stairwell =
-  {
-    env = "stairwell"
-
-    walls =
-    {
-      WOODWL = 50
-    }
-
-    floors =
-    {
-      FLOOR03 = 30
-    }
-  }
-
-
   -- TODO: one for each major theme
   any_Hallway =
   {
