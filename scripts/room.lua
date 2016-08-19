@@ -22,7 +22,7 @@
 --class ROOM
 --[[
     kind : keyword  -- "normal" (layoutable room, can place items)
-                    -- "hallway", "stairwell"
+                    -- "hallway"
                     -- "scenic" (unvisitable room)
 
     is_outdoor : bool  -- true for outdoor rooms / caves
@@ -375,8 +375,7 @@ end
 
 
 function ROOM_CLASS.is_unused_leaf(R)
-  if R.kind == "hallway"   then return false end
-  if R.kind == "stairwell" then return false end
+  if R.kind == "hallway" then return false end
 
   if R.is_secret  then return false end
   if R.is_start   then return false end
@@ -685,9 +684,6 @@ function Room_reckon_doors()
     elseif R1.is_outdoor or R2.is_outdoor then
       return door_probs.out_diff or 80
 
-    elseif R1.kind == "stairwell" or R2.kind == "stairwell" then
-      return door_probs.stairwell or 1
-
     elseif R1.hallway and R2.hallway then
       return door_probs.hall_both or 2
 
@@ -745,14 +741,6 @@ do return end
 
       -- mark the first seed so it can have the secret special
       -- FIXME C.S2.mark_secret = true
-      return
-    end
-
-
-    -- stairwells do their own thing
-    if C.R1.kind == "stairwell" or C.R2.kind == "stairwell" then
-      E.kind = "nothing"
-      assert(not F)
       return
     end
 
@@ -1026,13 +1014,10 @@ do return end
     return
   end
 
-  if R.kind == "stairwell" then
-    -- never
-
----??  elseif R.kind == "hallway" then
+---??  if R.kind == "hallway" then
 ---??    detect_hallway_porch()
 
-  elseif R.is_outdoor then
+  if R.is_outdoor then
     detect_normal_porch("outdoor")
 
   else
@@ -1058,8 +1043,7 @@ function Room_border_up()
     if A.mode == "void" then return false end
     if A.chunk and A.chunk.kind != "area" then return false end
 
-    if A.room.kind == "stairwell" then return false end
-    if A.room.kind == "hallway"   then return false end
+    if A.room.kind == "hallway" then return false end
 
     return true
   end
@@ -1347,7 +1331,6 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
 
 
   local function spots_in_room(R)
-    if R.kind == "stairwell" then return end
     if R.kind == "smallexit" then return end
 
     each A in R.areas do
@@ -2560,7 +2543,7 @@ function Room_floor_ceil_heights()
       via_conn.door_h = entry_h
     end
 
-    if not (R.kind == "hallway" or R.kind == "stairwell") then
+    if R.kind != "hallway" then
       Room_detect_porches(R)
     end
 
@@ -2599,11 +2582,7 @@ function Room_floor_ceil_heights()
 
       assert(A1.floor_h)
 
-      -- exit_h is for stairwells [ OLD CRUD, REMOVE ]
-      local next_h = R.exit_h or A1.floor_h
-
----###   -- hallway crud (FIXME : HACKY)
----###   if R2.next_f then next_h = R2.next_f end
+      local next_h = A1.floor_h
 
       if C.kind == "joiner" then
         next_h = do_joiner(R, C, next_h)
@@ -3133,8 +3112,8 @@ function Room_build_all()
   -- do doors before floor heights, they may have a delta_h (esp. joiners)
   Room_reckon_door_tex()
   Room_reckon_doors()
-
   Room_prepare_skies()
+
   Room_floor_ceil_heights()
 
   Layout_indoor_lighting()

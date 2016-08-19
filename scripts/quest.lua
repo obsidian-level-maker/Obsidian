@@ -208,8 +208,7 @@ function Quest_create_initial_quest()
   --
 
   local function eval_exit_room(R, secret_mode)
-    if R.kind == "hallway"   then return -1 end
-    if R.kind == "stairwell" then return -1 end
+    if R.kind == "hallway" then return -1 end
 
     if R.is_exit then return -1 end
 
@@ -408,8 +407,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
     each id, R in rooms do
       if R.is_secret then continue end
 
-      if R.kind == "hallway"   then continue end
-      if R.kind == "stairwell" then continue end
+      if R.kind == "hallway" then continue end
 
       -- some goals already?
       if #R.goals > 0 then continue end
@@ -444,9 +442,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
     local score = 300
 
     -- strongly prefer not to enter a hallway from a locked door
-    if after_R.kind == "stairwell" then
-      score = score - 200
-    elseif after_R.kind == "hallway" then
+    if after_R.kind == "hallway" then
       score = score - 100
     end
 
@@ -520,7 +516,7 @@ each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
   end
 
   -- no locking end of hallways
-  if before_R.kind == "hallway" or before_R.kind == "stairwell" then
+  if before_R.kind == "hallway" then
     return
   end
 
@@ -673,23 +669,6 @@ gui.debugf("  %s @ %s in %s\n", goal.name, R.name, Q1.name)
   end
 
 
-  local function downgrade_stairwell(A)
-    A.room.kind = "hallway"
-
-    A.is_stairwell = nil
-  end
-
-
-  local function check_special_rooms()
-    -- we don't want stairwells to be locked
-
-    local C = info.conn
-
-    if C.A1.is_stairwell then downgrade_stairwell(C.A1) end
-    if C.A2.is_stairwell then downgrade_stairwell(C.A2) end
-  end
-
-
   ---| Quest_perform_division |---
 
   -- create the node
@@ -739,8 +718,6 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
   local LOCK = create_lock()
 
   info.conn.lock = LOCK
-
-  check_special_rooms()
 
 
   -- finally, add the new goals to the first quest
@@ -1370,11 +1347,6 @@ function Quest_start_room()
   local function eval_start_room(R, alt_mode)
     local score = 1
 
-    -- never in a stairwell
-    if R.kind == "stairwell" then
-      return -1
-    end
-
     -- never in a hallway
     -- TODO : occasionally allow it -- but require a closety void area nearby
     --        which we can use for a start closet
@@ -1821,8 +1793,7 @@ function Quest_add_weapons()
 
   local function eval_weapon_room(R)
     -- never in hallways!
-    if R.kind == "stairwell" then return -250 end
-    if R.kind == "hallway"   then return -200 end
+    if R.kind == "hallway" then return -200 end
 
     -- never in secrets!
     if R.is_secret then return -150 end
@@ -2175,8 +2146,7 @@ function Quest_nice_items()
     if R.is_start   then return -1 end
     if R.is_exit    then return -1 end
 
-    if R.kind == "hallway"   then return -1 end
-    if R.kind == "stairwell" then return -1 end
+    if R.kind == "hallway" then return -1 end
 
     -- primary criterion is the # of unused chunks
     local score = R:usable_chunks() * 20
@@ -2307,17 +2277,8 @@ function Quest_make_room_secret(R)
 
   local H = sel(C.R1 == R, C.R2, C.R1)
 
-  if (H.kind == "hallway" or H.kind == "stairwell") and
-     H:total_conns() <= 2
-  then
-
+  if H.kind == "hallway" and H:total_conns() <= 2 then
     H.is_secret = true
-
-    -- downgrade a stairwell
-    if H.kind == "stairwell" then
-      H.kind = "hallway"
-      H.areas[1].is_stairwell = nil
-    end
 
     C = secret_entry_conn(H, R)
     assert(C)
@@ -2337,8 +2298,7 @@ function Quest_big_secrets()
   --
 
   local function eval_secret_room(R)
-    if R.kind == "hallway"   then return -1 end
-    if R.kind == "stairwell" then return -1 end
+    if R.kind == "hallway" then return -1 end
 
     if R.is_start   then return -1 end
     if R.is_exit    then return -1 end

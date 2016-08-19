@@ -2040,8 +2040,6 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
     if R.no_monsters then return false end
 
-    if R.kind == "stairwell" then return false end
-
     return true  -- OK --
   end
 

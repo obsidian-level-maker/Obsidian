@@ -1590,11 +1590,6 @@ end
 
 
 function Render_area(A)
-  if A.is_stairwell then
-    error("A.is_stairwell")
-    return
-  end
-
   Ambient_push(A.lighting)
 
   each E in A.edges do

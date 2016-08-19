@@ -63,10 +63,6 @@
 
     inner_points : list(CORNER)
 
-    stairwells : list(STAIRWELL)  -- possible stairwell usages (for a hallway)
-
-    is_stairwell : STAIRWELL
-
 --]]
 
 

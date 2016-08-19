@@ -46,8 +46,7 @@ function Multiplayer_flag_rooms()
 
   local function eval_flag_room(R)
     -- never in a hallway
-    if R.kind == "hallway"   then return -1 end
-    if R.kind == "stairwell" then return -1 end
+    if R.kind == "hallway" then return -1 end
 
     local score = 300
 
