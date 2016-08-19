@@ -1573,6 +1573,9 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     if not HL then return false end
     if HL.kind != "link" then return false end
 
+    -- link must be in same hallway
+    if HL.room != R then return false end
+
     if not link_chunk then
       link_chunk = HL
       link_matches = 1
@@ -2026,12 +2029,14 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       local A
       local R2 = R
 
-      -- link chunks have no area
-      if r.kind != "link" then
-        if r.kind == "hallway" and R.kind != "hallway" then
-          R2 = assert(new_room)
-        end
+      if new_room and new_room.kind == "hallway" then
+        R2 = new_room
+      end
 
+      -- link chunks have no area
+      if r.kind == "link" then
+        chunk.room = R2
+      else
         A = AREA_CLASS.new("chunk")
         R2:add_area(A)
 
@@ -2456,6 +2461,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = 2 end --!!!!!!  rand.pick({ 1,1,2,2,2,3 }) end
+  if pass == "terminate" then apply_num = 10 end --- TODO : number of active links
   if pass == "decorate" then apply_num = 7 end --- TODO
 
   local rule_tab = collect_matching_rules(pass)
@@ -2524,17 +2530,30 @@ end
 
 function Grower_grow_rooms()
 
-  local function clean_unused_links()
-    -- remove links that never attached any more hallway pieces
+  local function clean_up_links(R)
+    -- remove hallway links that were never used
     -- (so they don't block stuff in future rooms)
+
+    -- FIXME : manage links more explicitly
 
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
       local S = SEEDS[sx][sy]
 
-      S.h_link = nil
+      if S.h_link and S.h_link.room == R then
+        S.h_link = nil
+      end
     end
     end
+  end
+
+
+  local function check_all_grown()
+    each R in LEVEL.rooms do
+      if not R.is_grown then return false end
+    end
+
+    return true
   end
 
 
@@ -2552,16 +2571,13 @@ if R.kind == "hallway" then
         Grower_grammatical_room(R, "grow")
 end
 
-        if not no_new then
-          if R.kind == "hallway" then
-            Grower_grammatical_room(R, "terminate")
-          else
-            Grower_grammatical_room(R, "sprout")
-          end
-        end
-
         if R.kind == "hallway" then
-          clean_unused_links()
+          Grower_grammatical_room(R, "terminate")
+          -- TODO : prune parts of hallway not reaching a room
+          --        [ when WHOLE thing, often try "grow" again ]
+          clean_up_links(R)
+        else
+          Grower_grammatical_room(R, "sprout")
         end
       end
     end
@@ -2570,11 +2586,9 @@ end
 
   ---| Grower_grow_rooms |---
 
-  for loop = 1, 50 do
+  while not check_all_grown() do
     grow_some()
   end
-
-  grow_some("no_new")
 end
 
 
@@ -2808,6 +2822,9 @@ function Grower_hallway_kinds()
 
 
   ---| Grower_hallway_kinds |---
+
+--???  TODO : review this, see if needed
+do return end
 
   each H in LEVEL.rooms do
     if H.kind == "hallway" then
