@@ -1799,7 +1799,6 @@ function Room_floor_ceil_heights()
   end
 
 
-
   local function group_ceilings(R)
     if R.is_outdoor then return end
 
@@ -2359,6 +2358,9 @@ function Room_floor_ceil_heights()
 
     each P in R.pieces do
       set_floor(P.area, R.hallway.max_h)
+
+      -- FIXME!!! TEMP RUBBISH
+      P.prefab_def = assert(PREFABS.Vent_p1)
     end
 
     -- set ceiling heights
