@@ -909,19 +909,12 @@ function Seed_save_svg_image(filename)
 
 
   local function visit_seed(S1, dir)
-    if not S1.area then return end
-
     local S2 = S1:neighbor(dir, "NODIR")
 
     if S2 == "NODIR" then return end
 
     local A1 = S1.area
     local A2 = S2 and S2.area
-
-    if A1 == A2 then return end
-
-    -- only draw the edge once
---  if A2 and A2.id < A1.id then return end
 
     local color = "#777"
     local lin_w = 2
@@ -930,13 +923,23 @@ function Seed_save_svg_image(filename)
       color = "#f00"
       lin_w = 3
 
+    elseif (S1.h_link or (S2 and S2.h_link)) and S1.h_link != (S2 and S2.h_link) then
+      color = "#f00"
+
+    elseif not A1 then
+      return
+
     elseif not A2 then
       -- no change
-    elseif not A1.room and not A2.room then
-      -- no change
+
     elseif A1 == A2 then
       color = "#ccf"
       lin_w = 1
+      return
+
+    elseif not A1.room and not A2.room then
+      -- no change
+
     elseif (A1.chunk and A1.chunk.kind == "joiner") or (A2.chunk and A2.chunk.kind == "joiner") then
       color = "#f0f"
     elseif A1.room and (A1.room == A2.room) then
