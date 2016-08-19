@@ -1621,6 +1621,7 @@ function Room_floor_ceil_heights()
 
   local function group_floors(R)
     if R.is_outdoor then return end
+    if R.kind == "hallway" then return end
 
     local start_area
 
@@ -2082,7 +2083,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function categorize_hall_shape(S, enter_dir, leave_dir, z_dir, z_size)
+  local function OLD__categorize_hall_shape(S, enter_dir, leave_dir, z_dir, z_size)
     local info =
     {
       dir = enter_dir
@@ -2128,8 +2129,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  -- not used/broken ATM
-  local function flow_through_hallway(R, S, enter_dir, floor_h)
+  local function OLD__flow_through_hallway(R, S, enter_dir, floor_h)
 
 -- stderrf("flow_through_hallway @ %s : %s\n", S.name, R.name)
 
@@ -2218,7 +2218,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function hallway_other_end(R, entry_R)
+  local function OLD__hallway_other_end(R, entry_R)
     -- if the hallway has multiple exits, then one is picked arbitrarily
 
     each C in R.conns do
@@ -2231,62 +2231,8 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function kill_hallway_arch(conn)
-    -- fixme??
-  end
-
-
-  local function try_blend_hallway(R, which)
-    -- which is either 1 or 2 (entry or exit)
-
-    if R.hallway.no_blend then return end
-
-    -- already blended?
-    if R.hallway.parent then return end
-
-    -- check height difference
-    if R.hallway.max_h - R.hallway.min_h < 32 then return end
-
-    -- random chance
-    if not rand.odds(sel(which == 1, 75, 25)) then return end
-
-    local parent  = sel(which == 1, R.hallway.R1, R.hallway.R2)
-    local touches = sel(which == 1, R.hallway.touch_R1, R.hallway.touch_R2)
-
-    -- different quest? (hence locked door)
-    if R.quest != parent.quest then return end
-
-    -- find the connection
-    local conn
-
-    each C in R.conns do
-      if C.A1.room == parent or C.A2.room == parent then
-        conn = C
-      end
-    end
-
-    -- enough joinage?
-    if touches < 3 then return end
-    if (touches - 1) / #R.hallway.path < 0.48 then return end
-
-    -- OK --
-
-    assert(conn)
-
-    R.hallway.parent = parent
-
-    -- copy some parent properties, especially outdoors-ness
-    R.is_outdoor = R.hallway.parent.is_outdoor
-
-    each A in R.areas do
-      A.is_outdoor = R.is_outdoor
-    end
-
-    kill_hallway_arch(conn)
-  end
-
-
   local function do_hallway_ceiling(R)
+--[[
     if R.is_outdoor then
       -- will be zone.sky_h
 
@@ -2304,16 +2250,18 @@ function Room_floor_ceil_heights()
         S.ceil_h = S.floor_h + R.hallway.height
       end
     end
+--]]
   end
 
 
-  local function process_RANDOM_hallway(R, conn)
+  local function process_hallway(R, conn)
     -- Note: this would be a problem if player starts could exist in a hallway
     assert(conn)
 
     R.hallway.max_h = R.entry_h
     R.hallway.min_h = R.entry_h
 
+--[[
     local S, S_dir
     local from_A
 
@@ -2404,13 +2352,14 @@ function Room_floor_ceil_heights()
         N.area.room.next_f = next_f
       end
     end
+--]]
 
     -- use highest floor for "the" floor_h (so that fences are high enough)
     set_floor(R.areas[1], R.hallway.max_h)
 
-    -- check if can make hallway "blend" into one of connecting rooms
-    try_blend_hallway(R, 1)
-    try_blend_hallway(R, 2)
+    each P in R.pieces do
+      set_floor(P.area, R.hallway.max_h)
+    end
 
     -- set ceiling heights
     do_hallway_ceiling(R)
@@ -2422,6 +2371,8 @@ function Room_floor_ceil_heights()
 
     if C.A1.floor_h    != C.A2.floor_h then return false end
     if C.R1.is_outdoor != C.R2.is_outdoor then return false end
+
+    if C.R1.kind == "hallway" or C.R2.kind == "hallway" then return false end
 
     if not (C.E1.kind == "nothing" or C.E1.kind == "arch") then return false end
     if not (C.E2.kind == "nothing" or C.E2.kind == "arch") then return false end
@@ -2547,8 +2498,8 @@ function Room_floor_ceil_heights()
       Room_detect_porches(R)
     end
 
-    if R.kind == "RANDOM_hallway" then  -- not used ATM
-      process_RANDOM_hallway(R, via_conn, entry_h)
+    if R.kind == "hallway" then
+      process_hallway(R, via_conn)
     else
       process_room(R, entry_area)
 

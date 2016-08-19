@@ -1225,7 +1225,7 @@ end
 
 
 
-function Render_hallway(A, S)
+function Render_hallway__OLD(A, S)
   local R = A.room
 
   -- determine common part of prefab name
@@ -1300,13 +1300,6 @@ function Render_seed(A, S)
       table.insert(A.side_edges, S:get_line(dir))
     end
   end
-
---[[
-  if A.mode == "hallway" then
-    Render_hallway(A, S)
-    return
-  end
---]]
 
   Render_floor  (A, S)
   Render_ceiling(A, S)
@@ -1407,6 +1400,10 @@ function Render_chunk(chunk)
     end
   end
 
+  local function do_hallway()
+    assert(chunk.prefab_def)
+  end
+
   local function do_switch()
     reqs.kind = "switch"
 
@@ -1491,6 +1488,9 @@ function Render_chunk(chunk)
 
   elseif chunk.kind == "joiner" then
     do_joiner()
+
+  elseif chunk.kind == "hallway" then
+    do_hallway()
 
   elseif what == "START" then
     do_start()
@@ -1658,6 +1658,7 @@ function Render_full_chunks()
     each chunk in R.closets do Render_chunk(chunk) end
     each chunk in R.stairs  do Render_chunk(chunk) end
     each chunk in R.joiners do Render_chunk(chunk) end
+    each chunk in R.pieces  do Render_chunk(chunk) end
   end
 end
 
