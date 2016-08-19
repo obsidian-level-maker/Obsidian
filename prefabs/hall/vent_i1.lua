@@ -4,7 +4,7 @@
 
 PREFABS.Vent_i1 =
 {
-  file   = "stairs/vent_i1.wad"
+  file   = "hall/vent_i1.wad"
   where  = "seeds"
   shape  = "I"
 
