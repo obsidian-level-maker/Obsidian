@@ -1077,7 +1077,7 @@ DECORATE_LIQUID_2 =
 
 HALL_GROW_I1 =
 {
-  prob = 100
+  prob = 100*0
 
   structure =
   {

@@ -992,9 +992,7 @@ end
 function Grower_add_room(parent_R, force_env, trunk)
   local ROOM = ROOM_CLASS.new()
 
-gui.debugf("new room %s : env = %s\n", ROOM.name, tostring(force_env))
-
-  ROOM.grow_parent = parent_R
+gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), tostring(parent_R and parent_R.name))
 
   if trunk == nil then
     assert(parent_R)
@@ -1023,11 +1021,6 @@ gui.debugf("new room %s : env = %s\n", ROOM.name, tostring(force_env))
   end
 
   Room_set_kind(ROOM, kind, is_outdoor, is_cave)
-
-  -- FIXME : this 'grow_parent' is not used, keep it??
-  if parent_R and parent_R.kind == "hallway" then
-    parent_R = parent_R.grow_parent
-  end
 
   -- always need at least one floor area
   -- [ except for hallways, every piece is an area ]
@@ -1641,7 +1634,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     -- new rooms must not be placed in boundary spaces
     if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_over_boundary(S) then
-stderrf(" new room over boundary...\n")
       return false
     end
 
@@ -1765,9 +1757,6 @@ stderrf(" new room over boundary...\n")
         assert(not S.h_link)
         S.h_link = chunk
       else
-if chunk.kind == "hallway" then
-stderrf("    hallway chunk @ %s\n", S.name)
-end
         assert(chunk.area)
         set_seed(S, chunk.area)
         S.chunk = chunk
@@ -2168,7 +2157,7 @@ end
 --##    stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
       end
 
-      if pass == "sprout" then
+      if pass == "sprout" or pass == "terminate" then
         transform_connection(T, cur_rule.new_room.conn, new_conn)
 
         mark_connection_used(new_conn)
@@ -2323,7 +2312,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
-stderrf("Trying rule '%s'...\n", cur_rule.name)
+-- stderrf("Trying rule '%s'...\n", cur_rule.name)
 
     local best = { score=-1 }
 
@@ -2535,6 +2524,20 @@ end
 
 function Grower_grow_rooms()
 
+  local function clean_unused_links()
+    -- remove links that never attached any more hallway pieces
+    -- (so they don't block stuff in future rooms)
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S = SEEDS[sx][sy]
+
+      S.h_link = nil
+    end
+    end
+  end
+
+
   local function grow_some(no_new)
     local room_list = table.copy(LEVEL.rooms)
 
@@ -2555,6 +2558,10 @@ end
           else
             Grower_grammatical_room(R, "sprout")
           end
+        end
+
+        if R.kind == "hallway" then
+          clean_unused_links()
         end
       end
     end
@@ -2606,7 +2613,10 @@ function Grower_prune_small_rooms()
 
 
   local function is_too_small(R)
-    return R:calc_walk_vol() < 8
+    -- always prune dead-end hallways
+    if R.kind == "hallway" then return true end
+
+    return R:calc_walk_vol() < 6 --!!!!
   end
 
 
@@ -3197,11 +3207,9 @@ function Grower_create_rooms()
   Grower_create_trunks()
   Grower_grow_rooms()
 
-    Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
+  Grower_prune_small_rooms()
 
---!!!!  Grower_prune_small_rooms()
-
-  Grower_decorate_rooms()
+--!!!  Grower_decorate_rooms()
   Grower_split_liquids()
 
   Grower_fill_gaps()
@@ -3210,6 +3218,7 @@ function Grower_create_rooms()
 
   -- debugging aid
   if OB_CONFIG.svg then
+    Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
   end
 end
 
