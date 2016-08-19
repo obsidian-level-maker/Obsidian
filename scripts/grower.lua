@@ -1177,6 +1177,8 @@ function Grower_grammatical_room(R, pass)
       if rule.env != R:get_env() then return 0 end
     end
 
+    if R.kind == "hallway" and rule.env != "hallway" then return 0 end
+
     return prob
   end
 
@@ -1529,6 +1531,19 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
 
   local function match_area(E1, A)
+    -- hallways are a bit different (and simpler)
+    if cur_rule.env == "hallway" then
+      if A.mode != "chunk" then return false end
+
+      assert(E1.area == 1)
+
+      if area_map[1] == nil then
+        area_map[1] = A
+      end
+
+      return (area_map[1] == A)
+    end
+
     if A.mode != "floor" then return false end
 
     if area_map[1] == A then return (E1.area == 1) end
@@ -1560,7 +1575,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   local function match_link(E1, S)
     local HL = S.h_link
 
-    if HL == nil then return false end
+    if not HL then return false end
     if HL.kind != "link" then return false end
 
     if not link_chunk then
@@ -1667,6 +1682,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     end
 
 
+    if E1.kind == "link" then
+      return match_link(E1, S)
+    end
+
+
     -- do we have an area in current room?
     local A = S.area
     if A and A.room != R then A = nil end
@@ -1680,10 +1700,6 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     if E1.kind == "area" then
       return match_area(E1, A)
-    end
-
-    if E1.kind == "link" then
-      return match_link(E1, S)
     end
 
     if E1.kind == "liquid" or
@@ -2011,7 +2027,7 @@ end
 
       -- link chunks have no area
       if r.kind != "link" then
-        if r.kind == "hallway" then
+        if r.kind == "hallway" and R.kind != "hallway" then
           R2 = assert(new_room)
         end
 
@@ -2291,7 +2307,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
---stderrf("Trying rule '%s'...\n", cur_rname)
+stderrf("Trying rule '%s'...\n", cur_rule.name)
 
     local best = { score=-1 }
 
@@ -2434,7 +2450,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
   -- TODO: often no sprouts when room is near edge of map
 
   if pass == "root" then apply_num = 1 end
-  if pass == "sprout" then apply_num = rand.pick({ 1,1,2,2,2,3 }) end
+  if pass == "sprout" then apply_num = 2 end --!!!!!!  rand.pick({ 1,1,2,2,2,3 }) end
   if pass == "decorate" then apply_num = 7 end --- TODO
 
   local rule_tab = collect_matching_rules(pass)
@@ -2479,6 +2495,9 @@ function Grower_create_trunks()
   end
 
 
+trunk_num = 1  --!!!!!!
+
+
   for i = 1, trunk_num do
     local trunk =
     {
@@ -2509,7 +2528,10 @@ function Grower_grow_rooms()
       if not R.is_grown then
         R.is_grown = true
 
+--!!!!!!
+if R.kind == "hallway" then
         Grower_grammatical_room(R, "grow")
+end
 
         if not no_new then
           if R.kind == "hallway" then
@@ -3159,6 +3181,8 @@ function Grower_create_rooms()
   Grower_create_trunks()
   Grower_grow_rooms()
 
+    Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
+
 --!!!!  Grower_prune_small_rooms()
 
   Grower_decorate_rooms()
@@ -3170,7 +3194,6 @@ function Grower_create_rooms()
 
   -- debugging aid
   if OB_CONFIG.svg then
-    Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
   end
 end
 
