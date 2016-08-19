@@ -158,8 +158,8 @@ function Grower_preprocess_grammar()
 
 
   local function check_compatible_elements(E1, E2)
-    if E1.kind == "new_area" or E1.kind == "new_room" then
-      error("bad element in " .. def.name .. ": cannot use 'A' or 'R' in match")
+    if E1.kind == "new_area" or E1.kind == "new_room" or E1.kind == "hallway" then
+      error("bad element in " .. def.name .. ": cannot use A/R/H' in match")
     end
 
     -- changing an area is OK
@@ -171,6 +171,8 @@ function Grower_preprocess_grammar()
         return
       end
     end
+
+    -- FIXME : check for links ('@')
 
     -- same kind of thing is always acceptable
     if E1.kind == E2.kind then
@@ -1639,6 +1641,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     -- new rooms must not be placed in boundary spaces
     if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_over_boundary(S) then
+stderrf(" new room over boundary...\n")
       return false
     end
 
@@ -1660,6 +1663,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       if S.sym_token == sym_token then
         return false
       end
+    end
+
+    -- new hallways links cannot overwrite old ones
+    if E2.kind == "link" and S.h_link then
+      return false
     end
 
     -- for "!", require nothing there at all
@@ -1684,6 +1692,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     if E1.kind == "link" then
       return match_link(E1, S)
+    end
+
+    if S.h_link then
+      return false
     end
 
 
@@ -2177,6 +2189,10 @@ end
 
       if what == "TEST" and not res then
         -- cannot place this shape here (something in the way)
+
+--if pass == "terminate" then
+--stderrf("  failed at (%d %d) : %s -> %s\n", px, py, E1.kind, E2.kind)
+--end
         return false
       end
     end -- px, py
