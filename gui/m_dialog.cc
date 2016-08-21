@@ -270,7 +270,7 @@ const char * DLG_OutputFilename(const char *ext)
 	strcpy(filename, chooser.filename());
 #endif
 
-	// add extension is missing
+	// add extension if missing
 	char *pos = (char *)fl_filename_ext(filename);
 	if (! *pos)
 	{
