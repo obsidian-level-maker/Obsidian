@@ -274,18 +274,6 @@ CAVES
 Hallways
 --------
 
-+  'H' is for simple hallways, can grow organically like the
-   free-range cages, and are built like normal areas in a room
-
-+  'P' is for prefab hallway pieces, will be rectangular and
-   must specify the shape for connections
-
-+  the 'P' and 'H' parts can connect to each other
-
-+  treat hallways as separate rooms
-
--  allow a hallway rule to sprout TWO new rooms
-
 -  hallway "groups", as per V5
 
 

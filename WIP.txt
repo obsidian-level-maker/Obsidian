@@ -16,3 +16,16 @@ WORK IN PROGRESS
          sprout phase convert seeds to "landscape" and _then_
          expand outwards to hit buildings / edge of map.
 
+
+-  IDEA: level_usage, zone_usage, room_usage
+   [ OR: level_skip,  zone_skip,  room_skip ]
+
+
+Hallways :
+
++  determine shape of each piece/chunk
+
++  use shape to pick prefabs properly (see joiner logic)
+
+-  allow a hallway rule to sprout TWO new rooms
+
