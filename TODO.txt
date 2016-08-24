@@ -144,6 +144,21 @@ IDEA : an adjustment (of health) for "environment" of a battle
 
 
 
+Hallways
+--------
+
++  determine shape of each piece/chunk in the rule
+   -  simple shapes like I/L/T/P/U
+   -  complex shapes like "11./.../1./.." (s/n/w/e)
+
++  use shape to pick prefabs properly (see joiner logic)
+
+-  allow a hallway rule to sprout TWO new rooms
+
+-  hallway "groups", as per V5
+
+
+
 SHAPE GRAMMARS
 --------------
 
@@ -268,13 +283,6 @@ CAVES
 
 -  for cave rooms, inhibit rules which add new areas (or liquids)
    [ grow a single large area ]
-
-
-
-Hallways
---------
-
--  hallway "groups", as per V5
 
 
 

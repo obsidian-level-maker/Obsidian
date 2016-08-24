@@ -21,11 +21,3 @@ WORK IN PROGRESS
    [ OR: level_skip,  zone_skip,  room_skip ]
 
 
-Hallways :
-
-+  determine shape of each piece/chunk
-
-+  use shape to pick prefabs properly (see joiner logic)
-
--  allow a hallway rule to sprout TWO new rooms
-
