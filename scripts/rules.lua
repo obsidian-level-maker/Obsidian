@@ -626,7 +626,7 @@ SPROUT_1 =
 
 SPROUT_HALLWAY_1 =
 {
-  prob = 1*9000
+  prob = 0
 
   structure =
   {
