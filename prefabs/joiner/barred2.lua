@@ -1,10 +1,10 @@
 --
--- Joiner with opening bars
+-- Joiner with opening door
 --
 
-PREFABS.Joiner_barred1 =
+PREFABS.Joiner_barred2 =
 {
-  file   = "joiner/barred1.wad"
+  file   = "joiner/barred2.wad"
   where  = "seeds"
 
   key    = "barred"
@@ -18,6 +18,6 @@ PREFABS.Joiner_barred1 =
   tag_1  = "?lock_tag"
   action = "S1_OpenDoor"
 
-  prob  = 50
+  prob   = 200
 }
 
