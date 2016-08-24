@@ -1,5 +1,5 @@
 --
--- Joiner with opening door
+-- Joiner with remote door
 --
 
 PREFABS.Joiner_barred2 =
