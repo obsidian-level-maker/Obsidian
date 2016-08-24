@@ -413,7 +413,7 @@ GROW_DIAG_BLOB2 =
 }
 
 
-GROW_NEWAREA_1 =
+GROW_AREA_1 =
 {
   prob = 40
 
@@ -421,6 +421,19 @@ GROW_NEWAREA_1 =
   {
     "....", ".AA."
     "x11x", "x11x"
+  }
+}
+
+
+GROW_AREA_2 =
+{
+  prob = 3
+
+  structure =
+  {
+    "...", "AAA"
+    "11.", "11A"
+    "11.", "11A"
   }
 }
 
