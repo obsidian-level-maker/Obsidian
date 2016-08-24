@@ -2449,7 +2449,7 @@ end
 
   ---| Grower_grammatical_room |---
 
-stderrf("\n Grow room %s : %s pass\n", R.name, pass)
+--stderrf("\n Grow room %s : %s pass\n", R.name, pass)
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
@@ -2460,7 +2460,7 @@ stderrf("\n Grow room %s : %s pass\n", R.name, pass)
   -- TODO: often no sprouts when room is near edge of map
 
   if pass == "root" then apply_num = 1 end
-  if pass == "sprout" then apply_num = 2 end --!!!!!!  rand.pick({ 1,1,2,2,2,3 }) end
+  if pass == "sprout" then apply_num = rand.pick({ 1,2,2,3 }) end
   if pass == "terminate" then apply_num = 10 end --- TODO : number of active links
   if pass == "decorate" then apply_num = 7 end --- TODO
 
@@ -2504,9 +2504,6 @@ function Grower_create_trunks()
       if rand.odds(prob2) then trunk_num = trunk_num + 1 end
     end
   end
-
-
-trunk_num = 1  --!!!!!!
 
 
   for i = 1, trunk_num do
@@ -2566,10 +2563,7 @@ function Grower_grow_rooms()
       if not R.is_grown then
         R.is_grown = true
 
---!!!!!!
-if R.kind == "hallway" then
         Grower_grammatical_room(R, "grow")
-end
 
         if R.kind == "hallway" then
           Grower_grammatical_room(R, "terminate")
@@ -2630,7 +2624,7 @@ function Grower_prune_small_rooms()
     -- always prune dead-end hallways
     if R.kind == "hallway" then return true end
 
-    return R:calc_walk_vol() < 6 --!!!!
+    return R:calc_walk_vol() < 8
   end
 
 
