@@ -963,6 +963,7 @@ AUX_CAGE_GROW3 =
 DECORATE_CLOSET_2x1 =
 {
   prob = 40
+  prob_skew = 2
 
   structure =
   {
@@ -976,13 +977,45 @@ DECORATE_CLOSET_2x1 =
 
 DECORATE_CLOSET_2x2 =
 {
-  prob = 100
+  prob = 60
+  prob_skew = 3
 
   structure =
   {
     "..", "TT"
     "..", "TT"
     "11", "11"
+  }
+
+  closet = { from_dir=2 }
+}
+
+
+DECORATE_CLOSET_3x1 =
+{
+  prob = 20
+  prob_skew = 2
+
+  structure =
+  {
+    "...", "TTT"
+    "111", "111"
+  }
+
+  closet = { from_dir=2 }
+}
+
+
+DECORATE_CLOSET_3x2 =
+{
+  prob = 40
+  prob_skew = 4
+
+  structure =
+  {
+    "...", "TTT"
+    "...", "TTT"
+    "111", "111"
   }
 
   closet = { from_dir=2 }
