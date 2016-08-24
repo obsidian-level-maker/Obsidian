@@ -425,7 +425,7 @@ GROW_NEWAREA_1 =
 }
 
 
-GROW_STAIRS_2 =
+GROW_STAIR_2 =
 {
   prob = 20
   prob_skew = 3
@@ -439,7 +439,7 @@ GROW_STAIRS_2 =
 }
 
 
-GROW_STAIRS_3 =
+GROW_STAIR_3 =
 {
   prob = 15
   prob_skew = 3
@@ -575,6 +575,38 @@ GROW_STAIR_POOL2 =
     "1~", "~A"
     "1~", "~A"
     "A."
+  }
+}
+
+
+GROW_STAIR_SIDE2 =
+{
+  prob = 80
+  prob_skew = 3
+
+  structure =
+  {
+    "....", "#AAA"
+    "..1x", "#^1x"
+    "..1x", "#^1x"
+    "..1x", "#11x"
+  }
+}
+
+
+GROW_STAIR_SIDE3 =
+{
+  prob = 80
+  prob_skew = 3
+
+  structure =
+  {
+    "...", "#AA"
+    "...", "#AA"
+    "..1", "#^1"
+    "..1", "#^1"
+    "..1", "#^1"
+    "..1", "#11"
   }
 }
 
