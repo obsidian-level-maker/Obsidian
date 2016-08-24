@@ -748,6 +748,10 @@ function Grower_calc_rule_probs()
   local function style_factor(rule)
     if not rule.styles then return 1 end
 
+    if table.has_elem(rule.styles, "liquids") and not LEVEL.liquid then
+      return 0
+    end
+
     local factor = 1.0
 
     each name in rule.styles do
@@ -3220,7 +3224,7 @@ function Grower_create_rooms()
 
   Grower_prune_small_rooms()
 
---!!!  Grower_decorate_rooms()
+  Grower_decorate_rooms()
   Grower_split_liquids()
 
   Grower_fill_gaps()

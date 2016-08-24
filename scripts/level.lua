@@ -1887,7 +1887,7 @@ function Level_choose_liquid()
 
   -- allow liquids, but control how much we use
   LEVEL.liquid_usage = usage
-  
+
   -- pick the liquid to use
   local name = rand.key_by_probs(THEME.liquids)
   local liquid = GAME.LIQUIDS[name]
