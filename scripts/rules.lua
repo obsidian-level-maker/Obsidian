@@ -768,6 +768,58 @@ SPROUT_JOINER_2x1 =
 }
 
 
+SPROUT_JOINER_3x1 =
+{
+  prob = 2000
+
+  structure =
+  {
+    ".....", ".RRR."
+    ".....", ".RRR."
+    ".....", ".JJJ."
+    "x111x", "x111x"
+  }
+
+  new_room =
+  {
+    conn = { x=4, y=3, w=3, dir=2 }
+
+    symmetry = { x=3, y=3, dir=8 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+  }
+}
+
+
+SPROUT_JOINER_4x1 =
+{
+  prob = 2000
+
+  structure =
+  {
+    "....", "RRRR"
+    "....", "RRRR"
+    "....", "JJJJ"
+    "1111", "1111"
+  }
+
+  new_room =
+  {
+    conn = { x=4, y=3, w=4, dir=2 }
+
+    symmetry = { x=2, y=3, w=2, dir=8 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+  }
+}
+
+
 SPROUT_DOUBLE_TEST =
 {
   prob = 0  -- not supported yet
