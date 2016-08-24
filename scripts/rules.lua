@@ -648,9 +648,9 @@ GROW_STAIR_HUGE =
 ------------------------------------------
 
 
-SPROUT_1 =
+SPROUT_DIRECT_2 =
 {
-  prob = 50
+  prob = 100
 
   structure =
   {
@@ -663,6 +663,46 @@ SPROUT_1 =
   new_room =
   {
     conn = { x=3, y=3, w=2, dir=2 }
+
+    symmetry = { x=2, y=3, w=2, dir=8 }
+  }
+}
+
+
+SPROUT_DIRECT_3 =
+{
+  prob = 400
+
+  structure =
+  {
+    ".....", ".RRR."
+    ".....", ".RRR."
+    "x111x", "x111x"
+  }
+
+  new_room =
+  {
+    conn = { x=4, y=2, w=3, dir=2 }
+
+    symmetry = { x=3, y=2, dir=8 }
+  }
+}
+
+
+SPROUT_DIRECT_4 =
+{
+  prob = 4000
+
+  structure =
+  {
+    "....", "RRRR"
+    "....", "RRRR"
+    "1111", "1111"
+  }
+
+  new_room =
+  {
+    conn = { x=4, y=2, w=4, dir=2 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
@@ -744,7 +784,7 @@ SPROUT_CASTLE_2 =
 
 SPROUT_JOINER_2x1 =
 {
-  prob = 1000
+  prob = 500
 
   structure =
   {
@@ -796,7 +836,7 @@ SPROUT_JOINER_3x1 =
 
 SPROUT_JOINER_4x1 =
 {
-  prob = 2000
+  prob = 4000
 
   structure =
   {
@@ -847,7 +887,7 @@ SPROUT_DOUBLE_TEST =
 }
 
 
-SPROUT_SYMMETRY_TEST =
+SPROUT_SYMMETRY_3 =
 {
   prob = 30
 
