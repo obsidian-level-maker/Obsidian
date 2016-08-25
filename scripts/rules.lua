@@ -816,7 +816,7 @@ SPROUT_JOINER_3x1 =
   {
     ".....", ".RRR."
     ".....", ".RRR."
-    ".....", ".JJJ."
+    "x...x", "xJJJx"
     "x111x", "x111x"
   }
 
@@ -851,6 +851,33 @@ SPROUT_JOINER_4x1 =
     conn = { x=4, y=3, w=4, dir=2 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+  }
+}
+
+
+SPROUT_JOINER_3x2 =
+{
+  prob = 6000
+
+  structure =
+  {
+    ".....", ".RRR."
+    ".....", ".RRR."
+    "x...x", "xJJJx"
+    "x...x", "xJJJx"
+    "x111x", "x111x"
+  }
+
+  new_room =
+  {
+    conn = { x=4, y=4, w=3, dir=2 }
+
+    symmetry = { x=3, y=4, dir=8 }
   }
 
   joiner =
