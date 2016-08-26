@@ -821,13 +821,16 @@ do return end
   local function handle_joiner(C)
     local chunk = assert(C.joiner_chunk)
 
+--stderrf("Joiner chunk:\n%s\n", table.tostr(chunk))
     local A1 = chunk.area
     local A2 = C:other_area(A1)
 
     local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
-    reqs.kind = "joiner"
+    reqs.kind  = "joiner"
+    reqs.shape = assert(chunk.shape)
 
+    reqs.env      = A1.room:get_env()
     reqs.neighbor = A2.room:get_env()
 
     local LOCK = C.lock
@@ -850,7 +853,11 @@ do return end
 
     -- should we flip the joiner?
     if A1.room.lev_along > A2.room.lev_along then
-      chunk.flipped = true
+      if chunk.shape == "I" then
+        chunk.flipped = true
+      else
+        -- FIXME L SHAPES, do what??
+      end
     end
 
     if chunk.prefab_def.can_flip and rand.odds(35) then

@@ -1039,14 +1039,7 @@ gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), 
     A.max_size = rand.pick({ 16, 24, 32 })
   end
 
-  -- create a preliminary connection (last room to this one)
-  local PC
-
-  if parent_R then
-    PC = Grower_new_prelim_conn(ROOM, parent_R)
-  end
-
-  return ROOM, PC
+  return ROOM
 end
 
 
@@ -1341,6 +1334,7 @@ function Grower_grammatical_room(R, pass)
     local S = SEEDS[sx][sy]
 
     local dir2 = transform_dir(T, info.dir)
+stderrf("transform_connection @ %s : dir %d --> %d\n", S.name, info.dir, dir2)
 
     if dir2 == 1 or dir2 == 3 then
       S = assert(S.top)
@@ -2129,7 +2123,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       new_room = R
     else
       if cur_rule.new_room then
-        new_room, new_conn = Grower_add_room(R, cur_rule.new_room.env)
+        new_room = Grower_add_room(R, cur_rule.new_room.env)
+
+        -- create a preliminary connection (last room to this one)
+        new_conn = Grower_new_prelim_conn(new_room, R)
       end
     end
 

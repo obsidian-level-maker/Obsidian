@@ -151,9 +151,11 @@ function Connect_directly(P)
     C.joiner_chunk = assert(P.chunk)
     C.joiner_chunk.conn = C
 
-    -- TODO : support other shapes
-    local E1 = Seed_create_chunk_edge(P.chunk, 10 - P.dir, "nothing")
-    local E2 = Seed_create_chunk_edge(P.chunk,      P.dir, "nothing")
+    local dir1 = P.chunk.from_dir or (10 - P.dir)
+    local dir2 = P.chunk.dest_dir or (10 - dir1)
+stderrf("create_chunk_edge @ %s : dir1=%d dir2=%d\n", P.chunk.name, dir1, dir2)
+    local E1 = Seed_create_chunk_edge(P.chunk, dir1, "nothing")
+    local E2 = Seed_create_chunk_edge(P.chunk, dir2, "nothing")
 
     C.E1 = E1 ; E1.conn = C
     C.E2 = E2 ; E2.conn = C

@@ -897,6 +897,15 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
+  local function joiner_not_large(C)
+    if not C.joiner_chunk then return true end
+
+    local vol = C.joiner_chunk.sw * C.joiner_chunk.sh
+
+    return vol < 4
+  end
+
+
   local function try_intraroom_lock(R)
     -- try to lock an unlocked exit and place switch for it
     
@@ -909,7 +918,8 @@ function Layout_decorate_rooms(KKK_PASS)
       local N = C:other_room(R)
 
       if (C.kind == "joiner" or C.kind == "edge") and not C.lock and
-         N.lev_along > R.lev_along
+         N.lev_along > R.lev_along and
+         joiner_not_large(C)
       then
         table.insert(conn_list, C)
       end

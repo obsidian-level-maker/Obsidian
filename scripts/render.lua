@@ -1552,7 +1552,7 @@ function Render_chunk(chunk)
 
   local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
-  if chunk.kind == "stair" and
+  if (chunk.kind == "stair" or chunk.kind == "joiner") and
      chunk.shape == "L" and
      chunk.dest_dir == geom.LEFT[chunk.from_dir]
   then
