@@ -464,14 +464,16 @@ DOOM.THEMES =
 
     facades =
     {
-      MARBLE2  = 50
+      MARBGRAY = 60
       SP_HOT1  = 50
-      MARBGRAY = 30
       STONE3   = 30
+      BROWN1   = 30
+
+      SKINMET2 = 20
+      SKINLOW  = 20
       GSTVINE1 = 20
       GSTVINE2 = 20
-      BRONZE1  = 5
-      BROWN1   = 5
+      MARBLE2  = 10
     }
 
     cliff_mats =
@@ -960,7 +962,7 @@ DOOM.ROOM_THEMES =
   hell_Hotbrick =
   {
     env  = "building"
-    prob = 60
+    prob = 40
 
     walls =
     {
