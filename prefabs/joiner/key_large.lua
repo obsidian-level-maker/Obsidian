@@ -13,10 +13,9 @@ PREFABS.Locked_joiner_kc_red =
   seed_w = 2
   seed_h = 1
 
-  nearby_h = 160
-
   x_fit  = "frame"
-  y_fit  = "frame"
+
+  nearby_h = 160
 
   prob   = 100
 

@@ -10,7 +10,7 @@ PREFABS.Joiner_simple1 =
   seed_w = 2
   seed_h = 1
 
-  x_fit = "frame"
+  x_fit = { 96,160 }
   y_fit = "stretch"
 
   theme = "tech"
