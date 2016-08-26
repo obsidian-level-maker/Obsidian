@@ -985,6 +985,31 @@ SPROUT_JOINER_3x2 =
 }
 
 
+SPROUT_JOINER_L =
+{
+  prob = 5000
+
+  structure =
+  {
+    "....", "####"
+    "....", "RRJJ"
+    "....", "RRJJ"
+    "xx11", "xx11"
+  }
+
+  new_room =
+  {
+    conn = { x=2, y=3, w=2, dir=6 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+    dest_dir = 4
+  }
+}
+
+
 ------------------------------------------
 
 
