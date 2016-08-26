@@ -13,13 +13,12 @@ PREFABS.Locked_huge_kc_red =
   seed_w = 3
   seed_h = 2
 
-  x_fit  = "frame"
-
-  nearby_h = 160
-
   prob   = 100
 
-  -- prefab already has DOORRED texture and line special #33
+  delta_h  = 16
+  nearby_h = 160
+
+  -- prefab already has DOORRED texture and line special #135
 }
 
 
@@ -38,7 +37,7 @@ PREFABS.Locked_huge_kc_blue =
   key      = "kc_blue"
 
   tex_DOORRED = "DOORBLU"
-  line_33     = 32
+  line_135    = 133
 }
 
 
@@ -48,7 +47,7 @@ PREFABS.Locked_huge_ks_blue =
   key      = "ks_blue"
 
   tex_DOORRED = "DOORBLU2"
-  line_33     = 32
+  line_135    = 133
 }
 
 
@@ -58,7 +57,7 @@ PREFABS.Locked_huge_kc_yellow =
   key      = "kc_yellow"
 
   tex_DOORRED = "DOORYEL"
-  line_33     = 34
+  line_135    = 137
 }
 
 
@@ -68,6 +67,6 @@ PREFABS.Locked_huge_ks_yellow =
   key      = "ks_yellow"
 
   tex_DOORRED = "DOORYEL2"
-  line_33     = 34
+  line_135    = 137
 }
 
