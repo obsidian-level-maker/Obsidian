@@ -668,66 +668,48 @@ end
 function Room_reckon_doors()
 
   local  indoor_prob = style_sel("doors", 0, 15, 35,  65)
-  local outdoor_prob = style_sel("doors", 0, 70, 95, 100)
+  local outdoor_prob = style_sel("doors", 0, 70, 90, 100)
 
 
-  local DEFAULT_PROBS = {}
+  local function handle_edge_part(C, E)
+    -- requirements for the prefab
+    local reqs =
+    {
+      kind = "door"
 
-  local function door_chance(R1, R2)  -- NOTE : NOT USED ATM
-    local door_probs = THEME.door_probs or
-                       GAME.door_probs or
-                       DEFAULT_PROBS
+      seed_w = assert(E.long)
+    }
 
-    if R1.is_outdoor and R2.is_outdoor then
-      return door_probs.out_both or 0
-
-    elseif R1.is_outdoor or R2.is_outdoor then
-      return door_probs.out_diff or 80
-
-    elseif R1.hallway and R2.hallway then
-      return door_probs.hall_both or 2
-
-    elseif R1.hallway or R2.hallway then
-      return door_probs.hall_diff or 60
-
-    elseif R1.main_tex != R2.main_tex then
-      return door_probs.combo_diff or 40
-
+    if geom.is_corner(E.dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
     else
-      return door_probs.normal or 20
+      reqs.where = "edge"
     end
-  end
-
-
-  local function handle_edge(C)
-
--- FIXME : decide between DOOR or ARCH, but also PICK the PREFAB now.
---         [ prefabs are currently  picked in render.lua ]
-do return end
-
-
-    local E = C.E1
-    local F = C.F1  -- used for split conns, usually NIL
-
-    if E.kind != "arch" then
-      E = C.E2
-      F = C.F2
-    end
-
-    assert(E.kind == "arch")
-
-    if F then assert(F.kind == "arch") end
 
 
     -- locked door?
-    if C.lock then
-      E.kind = "lock_door"
+    local LOCK = C.lock
 
-      if F then F.kind = E.kind end
+    if LOCK then
+      if LOCK.kind == "intraroom" then
+        reqs.key = "barred"
+      elseif #LOCK.goals == 2 then
+        error("Locked double")
+      elseif #LOCK.goals == 3 then
+        error("Locked triple")
+      elseif LOCK.goals[1].kind == "SWITCH" then
+        reqs.switch = LOCK.goals[1].item
+      else
+        reqs.key = LOCK.goals[1].item
+      end
+
+      E.kind = "lock_door"
 
       C.is_door = true
       C.fresh_floor = true
-      return
+
+      return reqs
     end
 
 
@@ -735,13 +717,11 @@ do return end
     if C.R1.is_secret != C.R2.is_secret then
       E.kind = "secret_door"
 
-      if F then F.kind = E.kind end
-
       C.is_door = true
 
-      -- mark the first seed so it can have the secret special
-      -- FIXME C.S2.mark_secret = true
-      return
+      reqs.key = "secret"
+
+      return reqs
     end
 
 
@@ -757,7 +737,7 @@ do return end
     if R1.kind == "cave" and not R1.is_outdoor then
       if R2.kind != "building" then
         B.fab_name = sel(woody, "Arch_woody", "Arch_viney")
-        return
+        return reqs
       end
     end
 --]]
@@ -765,15 +745,12 @@ do return end
 
     -- don't need anything between two outdoor rooms
     -- TODO : allow the arch if have "walls" touching both corners
+--[[
     if C.R1.is_outdoor and C.R2.is_outdoor then
       E.kind = "nothing"
-      if F then F.kind = E.kind end
-      return
+      return reqs
     end
-
-
-    -- temp hack for Heretic
-    if THEME.no_doors then return end
+--]]
 
 
     -- apply the random check
@@ -787,15 +764,15 @@ do return end
     if rand.odds(prob) then
       E.kind = "door"
 
-      if F then F.kind = E.kind end
-
       C.is_door = true
       C.fresh_floor = rand.odds(30)
-      return
+
+      return reqs
     end
 
 
---[[  FIXME
+--[[  FIXME  (PROBABLY check prefab_def.delta_h after Fab_pick, NOT the following crud)
+
     -- support arches which have a step in them
     if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
       if THEME.archy_arches then return end
@@ -814,7 +791,43 @@ do return end
 
 
     -- keep the current ARCH
-    return
+    reqs.kind = "arch"
+
+    return reqs
+  end
+
+
+  local function handle_edge(C)
+    -- hack for unfinished games
+    if THEME.no_doors then return end
+
+
+    local E = C.E1
+    local F = C.F1  -- used for split conns, usually NIL
+
+    if E.kind != "arch" then
+      E = C.E2
+      F = C.F2
+    end
+
+    assert(E.kind == "arch")
+
+    if F then assert(F.kind == "arch") end
+
+
+    local reqs = handle_edge_part(C, E)
+
+    if reqs then
+gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tostr(reqs))
+
+      E.prefab_def = Fab_pick(reqs)
+    end
+
+    -- use exact same thing on split conn
+    if F then
+      F.kind = E.kind
+      F.prefab_def = E.prefab_def
+    end
   end
 
 

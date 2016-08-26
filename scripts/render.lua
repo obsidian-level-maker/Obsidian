@@ -218,7 +218,7 @@ function Render_edge(E)
     end
 
 
-    -- TODO : pictures, detailed walls
+    -- TODO : pictures
 
 
     local skin = {}
@@ -280,7 +280,7 @@ function Render_edge(E)
     local skin = { wall=E.fence_mat }
 
 
-    local def = Fab_pick(reqs)
+    local def = E.prefab_def or Fab_pick(reqs)
 
     local z = assert(E.fence_top_z) - def.fence_h
 
@@ -590,7 +590,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     end
 
 
-    local def = Fab_pick(reqs)
+    local def = E.prefab_def or Fab_pick(reqs)
 
     local T
 
@@ -623,11 +623,15 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif E.kind == "steps" then
     edge_steps()
 
-  elseif E.kind == "fence" then
+  elseif E.kind == "fence" or
+         E.kind == "lock_fence" or
+         E.kind == "secret_fence" then
     straddle_fence()
 
-  elseif E.kind == "arch" or E.kind == "door" or
-         E.kind == "lock_door" or E.kind == "secret_door" or
+  elseif E.kind == "arch" or
+         E.kind == "door" or
+         E.kind == "lock_door" or
+         E.kind == "secret_door" or
          E.kind == "window" then
     straddle_door()
 
