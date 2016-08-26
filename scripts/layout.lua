@@ -917,7 +917,9 @@ function Layout_decorate_rooms(KKK_PASS)
     each C in R.conns do
       local N = C:other_room(R)
 
-      if (C.kind == "joiner" or C.kind == "edge") and not C.lock and
+      if (C.kind == "joiner" or C.kind == "edge") and
+         not C.lock and
+         not (C.R1.is_secret or C.R2.is_secret) and
          N.lev_along > R.lev_along and
          joiner_not_large(C)
       then
@@ -1212,8 +1214,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function try_extra_cages(R)
-    -- never have cages in a start room
-    if R.is_start then return end
+    -- never have cages in a start room, or secrets
+    if R.is_start  then return end
+    if R.is_secret then return end
 
     -- collect usable chunks
     local locs = {}
