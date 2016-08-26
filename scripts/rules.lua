@@ -782,6 +782,104 @@ SPROUT_CASTLE_2 =
 }
 
 
+SPROUT_DOUBLE_TEST =
+{
+  prob = 0  -- not supported yet
+
+  structure =
+  {
+    "....", "RR%."
+    "....", "RRR%"
+    "11..", "11RR"
+    "11..", "11RR"
+  }
+
+  diagonals =
+  {
+    "R.", "R."
+  }
+
+  new_room =
+  {
+    conn  = { x=2, y=3, w=2, dir=2 }
+    conn2 = { x=3, y=1, w=2, dir=4 }
+
+    symmetry = { x=3, y=3, dir=9 }
+  }
+}
+
+
+SPROUT_SYMMETRY_3 =
+{
+  prob = 30
+
+  structure =
+  {
+    ".....", ".RRR."
+    ".....", ".RRR."
+    "x111x", "x111x"
+  }
+
+  new_room =
+  {
+    conn = { x=4, y=2, w=3, dir=2 }
+
+    symmetry = { x=3, y=2, dir=8 }
+  }
+}
+
+
+SPROUT_DIAG_1 =
+{
+  prob = 0
+
+  structure =
+  {
+    "....", "...."
+    "....", ".RR."
+    "11..", "1%R."
+    "11..", "11.."
+  }
+
+  diagonals =
+  {
+    "1R"
+  }
+
+  new_room =
+  {
+    conn = { x=2, y=2, dir=1 }
+
+    symmetry = { x=2, y=2, dir=1 }
+  }
+}
+
+
+SPROUT_DIAG_2 =
+{
+  prob = 0
+
+  structure =
+  {
+    "...", "..."
+    "...", "RR."
+    "%..", "%R."
+  }
+
+  diagonals =
+  {
+    "1.", "1R"
+  }
+
+  new_room =
+  {
+    conn = { x=1, y=1, dir=1 }
+
+    symmetry = { x=1, y=1, dir=1 }
+  }
+}
+
+
 SPROUT_JOINER_2x1 =
 {
   prob = 500
@@ -883,104 +981,6 @@ SPROUT_JOINER_3x2 =
   joiner =
   {
     from_dir = 2
-  }
-}
-
-
-SPROUT_DOUBLE_TEST =
-{
-  prob = 0  -- not supported yet
-
-  structure =
-  {
-    "....", "RR%."
-    "....", "RRR%"
-    "11..", "11RR"
-    "11..", "11RR"
-  }
-
-  diagonals =
-  {
-    "R.", "R."
-  }
-
-  new_room =
-  {
-    conn  = { x=2, y=3, w=2, dir=2 }
-    conn2 = { x=3, y=1, w=2, dir=4 }
-
-    symmetry = { x=3, y=3, dir=9 }
-  }
-}
-
-
-SPROUT_SYMMETRY_3 =
-{
-  prob = 30
-
-  structure =
-  {
-    ".....", ".RRR."
-    ".....", ".RRR."
-    "x111x", "x111x"
-  }
-
-  new_room =
-  {
-    conn = { x=4, y=2, w=3, dir=2 }
-
-    symmetry = { x=3, y=2, dir=8 }
-  }
-}
-
-
-SPROUT_DIAG_1 =
-{
-  prob = 0
-
-  structure =
-  {
-    "....", "...."
-    "....", ".RR."
-    "11..", "1%R."
-    "11..", "11.."
-  }
-
-  diagonals =
-  {
-    "1R"
-  }
-
-  new_room =
-  {
-    conn = { x=2, y=2, dir=1 }
-
-    symmetry = { x=2, y=2, dir=1 }
-  }
-}
-
-
-SPROUT_DIAG_2 =
-{
-  prob = 0
-
-  structure =
-  {
-    "...", "..."
-    "...", "RR."
-    "%..", "%R."
-  }
-
-  diagonals =
-  {
-    "1.", "1R"
-  }
-
-  new_room =
-  {
-    conn = { x=1, y=1, dir=1 }
-
-    symmetry = { x=1, y=1, dir=1 }
   }
 }
 
