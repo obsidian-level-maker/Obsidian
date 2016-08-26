@@ -594,7 +594,7 @@ GROW_STAIR_POOL2 =
 
 GROW_STAIR_SIDE2 =
 {
-  prob = 80
+  prob = 60
   prob_skew = 3
 
   structure =
@@ -609,7 +609,7 @@ GROW_STAIR_SIDE2 =
 
 GROW_STAIR_SIDE3 =
 {
-  prob = 80
+  prob = 60
   prob_skew = 3
 
   structure =
