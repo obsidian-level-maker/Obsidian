@@ -2,15 +2,15 @@
 -- Joiner with stairs
 --
 
-PREFABS.Joiner_stair_test =
+PREFABS.Joiner_stair1 =
 {
-  file   = "joiner/stair_test.wad"
+  file   = "joiner/stair1.wad"
   where  = "seeds"
 
   seed_w = 2
   seed_h = 1
 
-  x_fit = "frame"
+  x_fit = "stretch"
 
   prob = 15
 
