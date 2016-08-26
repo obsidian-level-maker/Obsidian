@@ -17,6 +17,8 @@ PREFABS.Arch_plain =
 
   bound_z1 = 0
   bound_z2 = 128
+
+  prob = 100
 }
 
 
@@ -30,6 +32,8 @@ PREFABS.Arch_plain_diag =
 
   bound_z1 = 0
   bound_z2 = 128
+
+  prob = 100
 }
 
 
