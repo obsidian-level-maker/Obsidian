@@ -2314,12 +2314,20 @@ function Quest_big_secrets()
 
     if conn.kind == "teleporter" then return -1 end
 
+    -- no joiners YET!
+    if conn.kind != "edge" then return -1 end
+
     -- split connections are no good because they create TWO sectors with
     -- the secret special (type #9).
     if conn.F1 then return -1 end
 
     -- smaller is better (don't waste large rooms)
-    return 200 - math.min(R.svolume,99) + gui.random() * 5
+    local score = 100 - math.min(R.svolume, 99)
+
+    if conn.kind == "edge" then score = score + 12 end
+
+    -- tie breaker
+    return score + gui.random() * 6
   end
 
 
@@ -2330,7 +2338,7 @@ function Quest_big_secrets()
       local score = eval_secret_room(R)
 
       if score > 0 then
-        table.insert(list, R)
+        list[R.id] = score
       end
     end
 
@@ -2339,14 +2347,18 @@ function Quest_big_secrets()
 
 
   local function pick_room(list)
-    -- TODO (a) use score !
-    --      (b) a preference for secrets in different zones
-
     assert(not table.empty(list))
 
-    rand.shuffle(list)
+    local id = rand.key_by_probs(list)
+    list[id] = nil
 
-    return table.remove(list, 1)
+    each R in LEVEL.rooms do
+      if R.id == id then
+        return R
+      end
+    end
+
+    error("pick secret room failed.")
   end
 
 
@@ -2357,8 +2369,8 @@ function Quest_big_secrets()
     return
   end
 
-  local poss_list = collect_possible_secrets()
-  local poss_count = #poss_list
+  local poss_list  = collect_possible_secrets()
+  local poss_count = table.size(poss_list)
 
   -- quantities : use first possible secret + using the rest
   local first = style_sel("secrets", 0, 0.40, 0.70, 0.90)
@@ -2378,7 +2390,7 @@ function Quest_big_secrets()
 
   for i = 1, quota do
     local R = pick_room(poss_list)
-
+stderrf("Secret %d/%d : %s\n", i, quota, R.name)
     Quest_make_room_secret(R)
 
     gui.debugf("Secret room in %s\n", R.name)
@@ -2867,8 +2879,7 @@ function Quest_make_quests()
   -- this must be after quests have been ordered
   Quest_create_zones()
 
---FIXME : get secret rooms working again
---  Quest_big_secrets()
+  Quest_big_secrets()
 
   Grower_hallway_kinds()
 
