@@ -6,6 +6,7 @@ PREFABS.Joiner_stair1 =
 {
   file   = "joiner/stair1.wad"
   where  = "seeds"
+  shape  = "I"
 
   seed_w = 2
   seed_h = 1

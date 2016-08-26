@@ -6,6 +6,7 @@ PREFABS.Joiner_barred2 =
 {
   file   = "joiner/barred2.wad"
   where  = "seeds"
+  shape  = "I"
 
   key    = "barred"
 

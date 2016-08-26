@@ -6,6 +6,7 @@ PREFABS.Joiner_lift3 =
 {
   file   = "joiner/lift3.wad"
   where  = "seeds"
+  shape  = "I"
 
   seed_w = 2
   seed_h = 1

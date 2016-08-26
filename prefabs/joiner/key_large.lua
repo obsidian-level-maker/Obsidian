@@ -7,6 +7,7 @@ PREFABS.Locked_joiner_kc_red =
 {
   file   = "joiner/key_large.wad"
   where  = "seeds"
+  shape  = "I"
 
   key    = "kc_red"
 

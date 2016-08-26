@@ -6,6 +6,7 @@ PREFABS.Joiner_y3 =
 {
   file   = "joiner/y3.wad"
   where  = "seeds"
+  shape  = "I"
 
   seed_w = 3
   seed_h = 2
