@@ -383,10 +383,10 @@ DOOM.THEMES =
       CEMENT7  = 20
       BRICK12  = 20
       BRICK7   = 20
+      STONE    = 20
 
       BRICK10 = 10
       BRICK11 = 10
-      STONE   = 10
       METAL2  = 10
     }
 
@@ -473,6 +473,7 @@ DOOM.THEMES =
       SKINLOW  = 20
       GSTVINE1 = 20
       GSTVINE2 = 20
+      STONE    = 10
       MARBLE2  = 10
     }
 
