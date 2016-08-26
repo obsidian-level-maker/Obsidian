@@ -14,5 +14,7 @@ PREFABS.Start_Dropoff =
   y_fit = "top"
 
   prob = 80
+
+  nearby_h = 160
 }
 
