@@ -165,6 +165,87 @@ function Render_edge(E)
   end
 
 
+  local function pick_window_fab()
+    -- find a window prefab to use
+    local reqs =
+    {
+      kind = "window"
+
+      height = 192  -- FIXME
+
+      seed_w = assert(E.long)
+    }
+
+    if geom.is_corner(E.dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
+    else
+      reqs.where = "edge"
+    end
+
+    local def = Fab_pick(reqs)
+
+    return def
+  end
+
+
+  local function pick_wall_prefab()
+    local reqs =
+    {
+      kind = "wall"
+
+      seed_w = assert(E.long)
+
+      height = A.ceil_h - A.floor_h
+    }
+
+    if geom.is_corner(dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
+    else
+      reqs.where = "edge"
+    end
+
+
+    if E.area.floor_group and E.area.floor_group.wall_group then
+      reqs.group = E.area.floor_group.wall_group
+    end
+
+    local def = Fab_pick(reqs, sel(reqs.group, "none_ok", nil))
+
+    -- when a fancy wall is not available, use the plain one
+    if not def then
+      reqs.group = nil
+      def = Fab_pick(reqs)
+    end
+
+    return def
+  end
+
+
+  local function pick_fence_prefab()
+    local reqs =
+    {
+      kind = "fence"
+
+      seed_w = assert(E.long)
+    }
+
+    if geom.is_corner(dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
+    else
+      reqs.where = "edge"
+    end
+
+    -- TODO : secret fences, barred fences
+
+    local def = Fab_pick(reqs)
+
+    return def
+  end
+
+
   local function edge_inner_sky()
     local floor_h = assert(A.floor_h)
 
@@ -195,45 +276,13 @@ function Render_edge(E)
 
   local function edge_wall()
 
-    -- find the prefab to use
-    local reqs =
-    {
-      kind = "wall"
-
-      seed_w = assert(E.long)
-
-      height = A.ceil_h - A.floor_h
-    }
-
-    if geom.is_corner(dir) then
-      reqs.where = "diagonal"
-      reqs.seed_h = reqs.seed_w
-    else
-      reqs.where = "edge"
-    end
-
-
-    if E.area.floor_group and E.area.floor_group.wall_group then
-      reqs.group = E.area.floor_group.wall_group
-    end
-
-
     -- TODO : pictures
-
 
     local skin = {}
 
     skin.wall = assert(E.wall_mat)
 
-
-    local def = Fab_pick(reqs, sel(reqs.group, "none_ok", nil))
-
-    -- when a fancy wall is not available, use the plain one
-    if not def then
-      reqs.group = nil
-      def = Fab_pick(reqs)
-    end
-
+    local def = pick_wall_prefab()
 
     local z = A.floor_h
 
@@ -257,30 +306,11 @@ function Render_edge(E)
 
 
   local function straddle_fence()
-
-    -- find the prefab to use
-    local reqs =
-    {
-      kind = "fence"
-
-      seed_w = assert(E.long)
-    }
-
-    if geom.is_corner(dir) then
-      reqs.where = "diagonal"
-      reqs.seed_h = reqs.seed_w
-    else
-      reqs.where = "edge"
-    end
-
-    -- TODO : secret fences, barred fences
-
-
     assert(E.fence_mat)
     local skin = { wall=E.fence_mat }
 
 
-    local def = E.prefab_def or Fab_pick(reqs)
+    local def = pick_fence_prefab()
 
     local z = assert(E.fence_top_z) - def.fence_h
 
@@ -518,14 +548,12 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     assert(E.peer)
 
     local z
-    local LOCK
 
     if E.kind == "window" then
       z = E.window_z
     else
       assert(E.conn)
       z = E.conn.door_h or A.floor_h
-      LOCK = E.conn.lock
     end
 
     assert(z)
@@ -544,53 +572,15 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
 
+    skin1.lock_tag = E.lock_tag
 
-    -- find the prefab to use
-    local reqs =
-    {
-      kind = "door"
+    local def
 
-      seed_w = assert(E.long)
-    }
-
-    if geom.is_corner(dir) then
-      reqs.where = "diagonal"
-      reqs.seed_h = reqs.seed_w
+    if E.kind == "window" then
+      def = pick_window_fab()
     else
-      reqs.where = "edge"
+      def = assert(E.prefab_def)
     end
-
-    if LOCK then
-      if LOCK.kind == "intraroom" then
-        reqs.key = "barred"
-        skin1.lock_tag = assert(LOCK.tag)
-      elseif #LOCK.goals == 2 then
-        error("Locked double")
-      elseif #LOCK.goals == 3 then
-        error("Locked triple")
-      elseif LOCK.goals[1].kind == "SWITCH" then
-        reqs.switch = LOCK.goals[1].item
-        skin1.lock_tag = assert(LOCK.goals[1].tag)
-      else
-        reqs.key = LOCK.goals[1].item
-      end
-
-    else -- normal door
-
-      if E.kind == "arch" then
-        reqs.kind = "arch"
-
-      elseif E.kind == "window" then
-        reqs.kind = "window"
-        reqs.height = 192  -- FIXME !!!
-
-      elseif E.kind == "secret_door" then
-        reqs.key = "secret"
-      end
-    end
-
-
-    local def = E.prefab_def or Fab_pick(reqs)
 
     local T
 

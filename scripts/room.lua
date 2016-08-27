@@ -671,7 +671,7 @@ function Room_reckon_doors()
   local outdoor_prob = style_sel("doors", 0, 70, 90, 100)
 
 
-  local function handle_edge_part(C, E)
+  local function reqs_for_edge(C, E)
     -- requirements for the prefab
     local reqs =
     {
@@ -692,19 +692,21 @@ function Room_reckon_doors()
     local LOCK = C.lock
 
     if LOCK then
+      E.kind = "lock_door"
+
       if LOCK.kind == "intraroom" then
         reqs.key = "barred"
+        E.lock_tag = assert(LOCK.tag)
       elseif #LOCK.goals == 2 then
         error("Locked double")
       elseif #LOCK.goals == 3 then
         error("Locked triple")
       elseif LOCK.goals[1].kind == "SWITCH" then
         reqs.switch = LOCK.goals[1].item
+        E.lock_tag  = assert(LOCK.goals[1].tag)
       else
         reqs.key = LOCK.goals[1].item
       end
-
-      E.kind = "lock_door"
 
       C.is_door = true
       C.fresh_floor = true
@@ -797,7 +799,7 @@ function Room_reckon_doors()
   end
 
 
-  local function handle_edge(C)
+  local function pick_edge_prefab(C)
     -- hack for unfinished games
     if THEME.no_doors then return end
 
@@ -815,7 +817,7 @@ function Room_reckon_doors()
     if F then assert(F.kind == "arch") end
 
 
-    local reqs = handle_edge_part(C, E)
+    local reqs = reqs_for_edge(C, E)
 
     if reqs then
 gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tostr(reqs))
@@ -825,13 +827,14 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
 
     -- use exact same thing on split conn
     if F then
-      F.kind = E.kind
+      F.kind       = E.kind
       F.prefab_def = E.prefab_def
+      F.lock_tag   = E.lock_tag
     end
   end
 
 
-  local function handle_joiner(C)
+  local function pick_joiner_prefab(C)
     local chunk = assert(C.joiner_chunk)
 
 --stderrf("Joiner chunk:\n%s\n", table.tostr(chunk))
@@ -886,9 +889,9 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
 
   local function visit_conn(C)
     if C.kind == "edge" then
-      handle_edge(C)
+      pick_edge_prefab(C)
     elseif C.kind == "joiner" then
-      handle_joiner(C)
+      pick_joiner_prefab(C)
     end
   end
 
