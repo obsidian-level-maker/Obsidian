@@ -987,7 +987,7 @@ SPROUT_JOINER_3x2 =
 
 SPROUT_JOINER_L =
 {
-  prob = 5000
+  prob = 600
 
   structure =
   {
