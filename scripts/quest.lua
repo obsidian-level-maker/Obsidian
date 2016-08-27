@@ -1748,8 +1748,11 @@ function Quest_add_weapons()
       return false
     end
 
-    if info1.level != info2.level then
-      return info1.level > info2.level
+    local lev1 = info1.level or 1
+    local lev2 = info2.level or 1
+
+    if lev1 != lev2 then
+      return lev1 > lev2
     end
 
     -- same level, so test the firepower
