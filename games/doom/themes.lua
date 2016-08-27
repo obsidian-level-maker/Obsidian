@@ -470,7 +470,6 @@ DOOM.THEMES =
       BROWN1   = 30
 
       SKINMET2 = 20
-      SKINLOW  = 20
       GSTVINE1 = 20
       GSTVINE2 = 20
       STONE    = 10
