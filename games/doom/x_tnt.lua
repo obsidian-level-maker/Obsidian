@@ -200,8 +200,11 @@ TNT.THEMES =
       SMSTONE6 = 10
     }
 
-    prefab_fields =
+    prefab_remap =
     {
+      DOORBLU  = "DOORBLU2"
+      DOORRED  = "DOORRED2"
+      DOORYEL  = "DOORYEL2"
     }
 
     outdoor_torches =

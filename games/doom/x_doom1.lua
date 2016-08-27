@@ -474,7 +474,7 @@ ULTDOOM.THEMES =
       SP_ROCK1 = 20
     }
 
-    prefab_fields =
+    prefab_remap =
     {
     }
 
@@ -526,7 +526,7 @@ ULTDOOM.THEMES =
       GRAYVINE = 20
     }
 
-    prefab_fields =
+    prefab_remap =
     {
     }
 
@@ -582,8 +582,11 @@ ULTDOOM.THEMES =
       GRAYVINE = 20
     }
 
-    prefab_fields =
+    prefab_remap =
     {
+      DOORBLU  = "DOORBLU2"
+      DOORRED  = "DOORRED2"
+      DOORYEL  = "DOORYEL2"
     }
 
     monster_prefs =
@@ -642,8 +645,11 @@ ULTDOOM.THEMES =
       GRAYVINE = 20
     }
 
-    prefab_fields =
+    prefab_remap =
     {
+      DOORBLU  = "DOORBLU2"
+      DOORRED  = "DOORRED2"
+      DOORYEL  = "DOORYEL2"
     }
 
     monster_prefs =

@@ -306,7 +306,7 @@ DOOM.THEMES =
       COMPBLUE = 5
     }
 
-    prefab_fields =
+    prefab_remap =
     {
     }
 
@@ -400,7 +400,7 @@ DOOM.THEMES =
       ROCK5    = 20
     }
 
-    prefab_fields =
+    prefab_remap =
     {
     }
 
@@ -486,8 +486,11 @@ DOOM.THEMES =
       SKIN2    = 20
     }
 
-    prefab_fields =
+    prefab_remap =
     {
+      DOORBLU  = "DOORBLU2"
+      DOORRED  = "DOORRED2"
+      DOORYEL  = "DOORYEL2"
     }
 
     floor_sinks =
