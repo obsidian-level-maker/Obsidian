@@ -11,7 +11,7 @@ PREFABS.Joiner_curve1 =
   seed_w = 2
   seed_h = 2
 
-  prob = 50
+  prob = 100
 
   delta_h  = 64
   nearby_h = 128

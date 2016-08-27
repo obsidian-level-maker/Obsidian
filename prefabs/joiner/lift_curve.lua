@@ -11,7 +11,7 @@ PREFABS.Joiner_lift_curve =
   seed_w = 2
   seed_h = 2
 
-  prob = 40
+  prob = 30
 
   delta_h  = 128
   nearby_h = 128

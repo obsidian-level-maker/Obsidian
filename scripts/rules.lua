@@ -329,7 +329,7 @@ GROW_FUNNEL_2 =
 
 GROW_CURVE_1 =
 {
-  prob = 100
+  prob = 80
 
   structure =
   {
@@ -344,7 +344,7 @@ GROW_CURVE_1 =
 
 GROW_CURVE_2 =
 {
-  prob = 70
+  prob = 40
 
   structure =
   {
@@ -732,7 +732,7 @@ SPROUT_HALLWAY_1 =
 
 SPROUT_CASTLE_1 =
 {
-  prob = 4000
+  prob = 1000
   env = "outdoor"
 
   structure =
