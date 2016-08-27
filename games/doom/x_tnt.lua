@@ -184,11 +184,11 @@ TNT.THEMES =
       lava  = 10
     }
 
-    keys =
+    entity_remap =
     {
-      ks_red  = 50
-      ks_blue = 50
-      ks_yellow = 50
+      k_red    = "ks_red"
+      k_blue   = "ks_blue"
+      k_yellow = "ks_yellow"
     }
 
 --May need new themage!!

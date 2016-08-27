@@ -33,9 +33,9 @@ DOOM.ENTITIES =
 
   --- KEYS ---
 
-  kc_red     = { id=13 }
-  kc_yellow  = { id=6  }
-  kc_blue    = { id=5  }
+  k_red      = { id=13 }
+  k_yellow   = { id=6  }
+  k_blue     = { id=5  }
 
   ks_red     = { id=38 }
   ks_yellow  = { id=39 }

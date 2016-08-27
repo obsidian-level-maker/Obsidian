@@ -404,9 +404,9 @@ ULTDOOM.THEMES =
   {
     keys =
     {
-      kc_red    = 50
-      kc_blue   = 50
-      kc_yellow = 50
+      k_red    = 50
+      k_blue   = 50
+      k_yellow = 50
     }
 
     switches = { sw_blue=50 }
@@ -551,11 +551,11 @@ ULTDOOM.THEMES =
       water = 10
     }
 
-    keys =
+    entity_remap =
     {
-      ks_red = 50
-      ks_blue = 50
-      ks_yellow = 50
+      k_red    = "ks_red"
+      k_blue   = "ks_blue"
+      k_yellow = "ks_yellow"
     }
 
     facades =
@@ -612,11 +612,11 @@ ULTDOOM.THEMES =
       water = 20
     }
 
-    keys =
+    entity_remap =
     {
-      ks_red = 50
-      ks_blue = 50
-      ks_yellow = 50
+      k_red    = "ks_red"
+      k_blue   = "ks_blue"
+      k_yellow = "ks_yellow"
     }
 
     facades =
