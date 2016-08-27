@@ -1,0 +1,36 @@
+----------------------------------------------------------------
+--  TEMPLATE for adding new WEAPONS
+----------------------------------------------------------------
+
+CUSTOMW = { }
+
+CUSTOMW.WEAPONS =
+{
+  weapon1 =
+  {
+    id = 1234
+    level = 1
+    pref = 40
+    add_prob = 70
+    attack = "hitscan"
+    rate = 0.9
+    damage = 50
+    ammo = "shell"
+    per = 1
+    give = { {ammo="shell",count=8} }
+  }
+}
+
+
+OB_MODULES["CUSTOMW"] =
+{
+  label = "CUSTOMW"
+
+  for_games = { doom2=1 }
+
+  tables =
+  {
+    CUSTOMW
+  }
+}
+
