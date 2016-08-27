@@ -1020,11 +1020,15 @@ gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), 
     is_outdoor = true
   elseif force_env == "building" then
     is_outdoor = false
+  elseif force_env == "cave" then
+    is_cave = true
   else
     is_outdoor, is_cave = Room_choose_kind(ROOM, parent_R)
   end
 
   Room_set_kind(ROOM, kind, is_outdoor, is_cave)
+
+  Room_choose_size(ROOM)
 
   -- always need at least one floor area
   -- [ except for hallways, every piece is an area ]
@@ -1334,7 +1338,6 @@ function Grower_grammatical_room(R, pass)
     local S = SEEDS[sx][sy]
 
     local dir2 = transform_dir(T, info.dir)
-stderrf("transform_connection @ %s : dir %d --> %d\n", S.name, info.dir, dir2)
 
     if dir2 == 1 or dir2 == 3 then
       S = assert(S.top)
@@ -2123,7 +2126,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       new_room = R
     else
       if cur_rule.new_room then
-        new_room = Grower_add_room(R, cur_rule.new_room.env)
+        -- estimate sprout position (for caves)
+        local x, y = transform_coord(T, int(cur_rule.input.w / 2), cur_rule.input.h)
+        local env  = cur_rule.new_room.env
+
+        new_room = Grower_add_room(R, env)
 
         -- create a preliminary connection (last room to this one)
         new_conn = Grower_new_prelim_conn(new_room, R)

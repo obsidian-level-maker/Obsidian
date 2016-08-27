@@ -1590,6 +1590,30 @@ function Room_choose_kind(R, last_R)
 end
 
 
+
+function Room_choose_size(R)
+  -- decides whether room will be "big" or not.
+  -- the room kind should have been set already.
+
+  if R.is_cave then
+    R.is_big = true
+    return
+  end
+
+  local prob
+
+  if R.is_outdoor then
+    prob = style_sel("big_rooms", 0, 10, 30, 60)
+  else
+    prob = style_sel("big_rooms", 0, 20, 50, 90)
+  end
+
+  if rand.odds(prob) then
+    R.is_big = true
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 

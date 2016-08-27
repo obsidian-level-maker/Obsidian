@@ -153,7 +153,7 @@ function Connect_directly(P)
 
     local dir1 = P.chunk.from_dir or (10 - P.dir)
     local dir2 = P.chunk.dest_dir or (10 - dir1)
-stderrf("create_chunk_edge @ %s : dir1=%d dir2=%d\n", P.chunk.name, dir1, dir2)
+
     local E1 = Seed_create_chunk_edge(P.chunk, dir1, "nothing")
     local E2 = Seed_create_chunk_edge(P.chunk, dir2, "nothing")
 

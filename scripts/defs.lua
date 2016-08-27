@@ -137,6 +137,7 @@ GLOBAL_STYLE_LIST =
   outdoors    = { none=0,  few=60, some=40, heaps=20 }
   caves       = { none=30 }  --!!!!!!  , few=30, some=30, heaps=7 }
 
+  big_rooms   = { none=10, few=20, some=40, heaps=70 }
   symmetry    = { none=10, few=40, some=60, heaps=10 }
   steepness   = { none=0,  few=20, some=60, heaps=10 }
   hallways    = { none=0,  few=60, some=30, heaps=10 }
@@ -171,7 +172,6 @@ GLOBAL_STYLE_LIST =
 
   -- these are currently broken --
 
-  big_rooms   = { none=20, few=50, some=30, heaps=10 }
   cycles      = { none=50, few=0,  some=50, heaps=50 }
   ex_floors   = { none=0,  few=40, some=60, heaps=20 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
