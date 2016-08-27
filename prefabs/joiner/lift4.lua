@@ -13,7 +13,7 @@ PREFABS.Joiner_lift4 =
 
   x_fit = "frame"
 
-  prob = 900
+  prob = 50
 
   delta_h  = 128
   nearby_h = 128
