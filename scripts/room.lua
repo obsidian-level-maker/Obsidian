@@ -817,6 +817,21 @@ function Room_reckon_doors()
     if F then assert(F.kind == "arch") end
 
 
+    -- get orientation right, "front" of prefab faces earlier room
+    local R1 = C.R1
+    local R2 = C.R2
+
+    if R1 != E.area.room then
+      R1, R2 = R2, R1
+    end
+
+    if R1.lev_along > R2.lev_along then
+      E.flip_it = true
+
+      if F then F.flip_it = true end
+    end
+
+
     local reqs = reqs_for_edge(C, E)
 
     if reqs then

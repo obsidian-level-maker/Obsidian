@@ -559,7 +559,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     assert(z)
 
 
-    local flip_it = false
+    local flip_it = E.flip_it
 
 
     -- setup skin
