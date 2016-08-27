@@ -201,7 +201,7 @@ GLOBAL_PARAMETERS =
 --
 -- prefab stuff
 -- 
-GLOBAL_PREFAB_DEFAULTS =
+GLOBAL_PREFAB_FIELDS =
 {
    tex__WALL   = "?wall"
   flat__WALL   = "?wall"

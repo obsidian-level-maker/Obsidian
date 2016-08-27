@@ -1448,15 +1448,7 @@ function Fab_load_wad(def)
 
 
   function create_it()
-    fab = table.copy(GLOBAL_PREFAB_DEFAULTS)
-
-    if GAME.PREFAB_DEFAULTS then
-      table.merge(fab, GAME.PREFAB_DEFAULTS)
-    end
-
-    -- cannot have THEME defaults, due to caching
-
-    table.merge(fab, def)
+    fab = table.copy(def)
 
     fab.state = "raw"
 
@@ -1575,16 +1567,19 @@ end
 
 function Fab_merge_skins(fab, room, list)
   --
-  -- merges the skin list into the main skin (from GAMES.SKIN table)
+  -- merges the skin list into the global / game / theme skins,
   -- and also includes various default values.
   --
 
   local result = table.copy(GLOBAL_SKIN_DEFAULTS)
 
-  if GAME.SKIN_DEFAULTS then table.merge(result,  GAME.SKIN_DEFAULTS) end
+  if GAME.SKIN_DEFAULTS then
+    table.merge(result, GAME.SKIN_DEFAULTS)
+  end
 
-  if THEME.base_skin then table.merge(result, THEME.base_skin) end
-  if THEME.skin      then table.merge(result, THEME.skin) end
+  if THEME.skin_defaults then
+    table.merge(result, THEME.skin_defaults)
+  end
 
   if room and room.skin then
     table.merge(result, room.skin)
@@ -1604,6 +1599,8 @@ function Fab_collect_fields(fab)
   -- Find all the prefab fields with special prefixes (like tex_)
   -- used for replacing textures (etc) in a prefab, and collect
   -- them into a table.
+  --
+  -- Also merges fields from global and game/theme specific tables.
   --
 
   local function match_prefix(name)
@@ -1641,6 +1638,16 @@ function Fab_collect_fields(fab)
   each k in matching_fields() do
     fab.fields[k] = fab[k] ; fab[k] = nil
   end
+
+  if THEME.prefab_fields then
+    table.merge_missing(fab.fields, THEME.prefab_fields)
+  end
+
+  if GAME.PREFAB_FIELDS then
+    table.merge_missing(fab.fields, GAME.PREFAB_FIELDS)
+  end
+
+  table.merge_missing(fab.fields, GLOBAL_PREFAB_FIELDS)
 end
 
 
