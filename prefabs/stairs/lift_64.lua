@@ -8,7 +8,7 @@ PREFABS.Lift_64 =
   where  = "seeds"
   shape  = "I"
 
-  prob = 30
+  prob = 5
 
   seed_w = 2
 
