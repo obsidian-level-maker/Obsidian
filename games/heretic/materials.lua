@@ -209,10 +209,8 @@ HERETIC.MATERIALS =
 
 ------------------------------------------------------------------------
 
-HERETIC.PREFAB_DEFAULTS =
+HERETIC.PREFAB_FIELDS =
 {
-  -- FIXME : HERETIC.PREFAB_DEFAULTS
-
   -- compatibility with DOOM prefabs
   tex_DOORTRAK = "METL1"
   tex_DOORSTOP = "METL1"
@@ -232,6 +230,5 @@ HERETIC.PREFAB_DEFAULTS =
 
 HERETIC.SKIN_DEFAULTS =
 {
-  -- FIXME : HERETIC.SKIN_DEFAULTS
 }
 

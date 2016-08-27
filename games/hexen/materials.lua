@@ -446,14 +446,13 @@ HEXEN.MATERIALS =
 
 ------------------------------------------------------------------------
 
-HEXEN.PREFAB_DEFAULTS =
+HEXEN.PREFAB_FIELDS =
 {
-  -- FIXME : HERETIC.PREFAB_DEFAULTS
+  -- TODO : compatibility with DOOM prefabs
 }
 
 
 HEXEN.SKIN_DEFAULTS =
 {
-  -- FIXME : HERETIC.SKIN_DEFAULTS
 }
 

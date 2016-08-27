@@ -596,9 +596,9 @@ QUAKE.MATERIALS =
 
 ------------------------------------------------------------------------
 
-QUAKE.PREFAB_DEFAULTS =
+QUAKE.PREFAB_FIELDS =
 {
-  -- FIXME : QUAKE.PREFAB_DEFAULTS
+  -- compatibility with DOOM prefabs
 
   thing_1 = "player1"
   thing_2 = "player2"
@@ -609,6 +609,5 @@ QUAKE.PREFAB_DEFAULTS =
 
 QUAKE.SKIN_DEFAULTS =
 {
-  -- FIXME : QUAKE.SKIN_DEFAULTS
 }
 
