@@ -306,6 +306,10 @@ DOOM.THEMES =
       COMPBLUE = 5
     }
 
+    prefab_fields =
+    {
+    }
+
     floor_sinks =
     {
       PLAIN = 100
@@ -346,11 +350,6 @@ DOOM.THEMES =
     }
 
     ceil_light_prob = 60
-
-    base_skin =
-    {
-      big_door = "BIGDOOR2"
-    }
 
     style_list =
     {
@@ -401,6 +400,10 @@ DOOM.THEMES =
       ROCK5    = 20
     }
 
+    prefab_fields =
+    {
+    }
+
     floor_sinks =
     {
       PLAIN = 100
@@ -425,11 +428,6 @@ DOOM.THEMES =
       candelabra = 30
       skull_rock = 30
       burning_barrel = 10
-    }
-
-    base_skin =
-    {
-      big_door = "BIGDOOR3"
     }
 
     monster_prefs =
@@ -488,6 +486,10 @@ DOOM.THEMES =
       SKIN2    = 20
     }
 
+    prefab_fields =
+    {
+    }
+
     floor_sinks =
     {
       PLAIN = 100
@@ -513,11 +515,6 @@ DOOM.THEMES =
       PLAIN = 100
       low_gap = 30
       cross1 = 10
-    }
-
-    base_skin =
-    {
-      big_door = "BIGDOOR7"
     }
 
     monster_prefs =

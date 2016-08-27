@@ -200,17 +200,16 @@ TNT.THEMES =
       SMSTONE6 = 10
     }
 
+    prefab_fields =
+    {
+    }
+
     outdoor_torches =
     {
       blue_torch = 50
       green_torch = 50
       red_torch = 50
       candelabra = 20
-    }
-
-    base_skin =
-    {
-      big_door = "METALDR"
     }
 
 --Mostly based on what is seen in TNT.WAD MAP31

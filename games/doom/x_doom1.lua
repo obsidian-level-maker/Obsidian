@@ -474,17 +474,16 @@ ULTDOOM.THEMES =
       SP_ROCK1 = 20
     }
 
+    prefab_fields =
+    {
+    }
+
     wall_groups =
     {
       PLAIN = 70
       low_gap = 50
       mid_band = 25
       lite2 = 15
-    }
-
-    base_skin =
-    {
-      big_door = "BIGDOOR2"
     }
 
     style_list =
@@ -527,9 +526,8 @@ ULTDOOM.THEMES =
       GRAYVINE = 20
     }
 
-    base_skin =
+    prefab_fields =
     {
-      big_door = "BIGDOOR2"
     }
 
     style_list =
@@ -584,7 +582,7 @@ ULTDOOM.THEMES =
       GRAYVINE = 20
     }
 
-    base_skin =
+    prefab_fields =
     {
     }
 
@@ -644,7 +642,7 @@ ULTDOOM.THEMES =
       GRAYVINE = 20
     }
 
-    base_skin =
+    prefab_fields =
     {
     }
 
