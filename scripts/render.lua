@@ -1415,7 +1415,8 @@ function Render_chunk(chunk)
   local function do_item()
     reqs.kind = "item"
 
-    skin.object = assert(Trans.remap_entity(chunk.content_item))
+    -- for entity remapping (e.g. skull keys), rely on prefab system
+    skin.object = assert(chunk.content_item)
   end
 
   local function do_nice_item()
@@ -1949,7 +1950,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       height = spot.area.ceil_h - spot.area.floor_h
     }
 
-    local skin = { object=Trans.remap_entity(item) }
+    local skin = { object=item }
 
     if spot.goal and spot.goal.kind == "KEY" then
       reqs.item_kind = "key"

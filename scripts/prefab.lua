@@ -1833,34 +1833,41 @@ function Fab_replacements(fab)
   end
 
 
+  local function get_entity_number(name)
+    -- allow specifying a raw ID number
+    if type(name) == "number" then return name end
+
+    local info = GAME.ENTITIES[name] or
+                 GAME.MONSTERS[name] or
+                 GAME.WEAPONS[name]  or
+                 GAME.PICKUPS[name] or
+                 GAME.NICE_ITEMS[name]
+
+    if info then
+      return assert(info.id)
+    end
+
+    return nil  -- not found
+  end
+
+
   local function check_thing(val)
     local k = "thing_" .. val
 
     if fab.fields[k] then
       local name = fab.fields[k]
 
-      -- allow specifying a raw ID number
-      if type(name) == "number" then return name end
+      val = get_entity_number(name)
 
-      local info = GAME.ENTITIES[name] or
-                   GAME.MONSTERS[name] or
-                   GAME.WEAPONS[name]  or
-                   GAME.PICKUPS[name] or
-                   GAME.NICE_ITEMS[name]
-
-      if info then
-        return assert(info.id)
+      if val == nil then
+        -- show a warning (but silently ignore non-standard players)
+        if not string.match(name, "^player") then
+          gui.printf("\nLACKING ENTITY : %s\n\n", name)
+        end
       end
-
-      -- show a warning (but silently ignore non-standard players)
-      if not string.match(name, "^player") then
-        gui.printf("\nLACKING ENTITY : %s\n\n", name)
-      end
-
-      return nil
     end
 
-    return val
+    return THEME.entity_remap_by_id[val] or val
   end
 
 
@@ -1886,7 +1893,27 @@ function Fab_replacements(fab)
   end
 
 
+  local function build_entity_remap_table()
+    if THEME.entity_remap_by_id then return end
+
+    THEME.entity_remap_by_id = {}
+
+    if not THEME.entity_remap then return end
+
+    each name1,name2 in THEME.entity_remap do
+      local id1 = get_entity_number(name1)
+      local id2 = get_entity_number(name2)
+
+      if id1 and id2 and id1 != id2 then
+        THEME.entity_remap_by_id[id1] = id2
+      end
+    end
+  end
+
+
   ---| Fab_replacements |---
+
+  build_entity_remap_table()
 
   each B in fab.brushes do
     each C in B do
