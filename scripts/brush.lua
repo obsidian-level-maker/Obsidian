@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -290,8 +290,20 @@ end
 
 
 
+function Trans.remap_entity(name)
+  if THEME.entity_remap and name != nil then
+    return THEME.entity_remap[name] or name
+  end
+
+  return name
+end
+
+
+
 function Trans.entity(name, x, y, z, props)
   assert(name)
+
+  name = Trans.remap_entity(name)
 
   if not props then
     props = {}
