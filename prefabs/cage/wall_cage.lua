@@ -16,6 +16,8 @@ PREFABS.Cage_Wall =
 
   bound_z1 = 0
 
+  prob  = 100
+
   theme = "!hell"
 }
 

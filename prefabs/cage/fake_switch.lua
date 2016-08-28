@@ -15,6 +15,6 @@ PREFABS.Cage_fake_switch =
 
   bound_z1 = 0
 
-  prob  = 999
+  prob  = 10
 }
 
