@@ -716,7 +716,7 @@ function Room_reckon_doors()
 
 
     -- secret door ?
-    if C.R1.is_secret != C.R2.is_secret then
+    if C.is_secret then
       E.kind = "secret_door"
 
       C.is_door = true
@@ -878,6 +878,10 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
       else
         reqs.key = LOCK.goals[1].item
       end
+    end
+
+    if C.is_secret then
+      reqs.key = "secret"
     end
 
     chunk.prefab_def = Fab_pick(reqs)

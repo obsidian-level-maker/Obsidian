@@ -2300,6 +2300,9 @@ function Quest_big_secrets()
   -- elsewhere (ONLY PLANNED ATM).
   --
 
+  local max_size = 199
+
+
   local function eval_secret_room(R)
     if R.kind == "hallway" then return -1 end
 
@@ -2317,17 +2320,21 @@ function Quest_big_secrets()
 
     if conn.kind == "teleporter" then return -1 end
 
-    -- no joiners YET!
-    if conn.kind != "edge" then return -1 end
+    if conn.kind == "joiner" then
+      -- no L-shape joiners!
+      if conn.joiner_chunk.shape != "I" then return -1 end
+    end
 
     -- split connections are no good because they create TWO sectors with
     -- the secret special (type #9).
     if conn.F1 then return -1 end
 
     -- smaller is better (don't waste large rooms)
-    local score = 100 - math.min(R.svolume, 99)
+    if R.svolume > max_size then return -1 end
 
-    if conn.kind == "edge" then score = score + 12 end
+    local score = max_size - R.svolume + 1
+
+    if conn.kind == "edge" then score = score + 10 end
 
     -- tie breaker
     return score + gui.random() * 6
