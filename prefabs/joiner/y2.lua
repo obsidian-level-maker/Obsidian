@@ -15,6 +15,6 @@ PREFABS.Joiner_y2 =
 
   delta_h  = 32
   nearby_h = 200
-  can_flip = true
+  can_flip = false
 }
 
