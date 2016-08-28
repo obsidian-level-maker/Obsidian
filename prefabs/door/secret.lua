@@ -41,6 +41,7 @@ PREFABS.Door_secret_diag =
 }
 
 
+-- wall is lit up
 PREFABS.Door_secret3 =
 {
   template = "Door_secret"
@@ -51,6 +52,7 @@ PREFABS.Door_secret3 =
 }
 
 
+-- small gap at bottom
 PREFABS.Door_secret4 =
 {
   template = "Door_secret"
@@ -58,5 +60,16 @@ PREFABS.Door_secret4 =
   map    = "MAP04"
 
   prob   = 100
+}
+
+
+-- looks like a window
+PREFABS.Door_secret5 =
+{
+  template = "Door_secret"
+
+  map    = "MAP05"
+
+  prob   = 150
 }
 
