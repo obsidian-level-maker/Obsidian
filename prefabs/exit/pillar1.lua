@@ -7,7 +7,7 @@ PREFABS.Exit_pillar1 =
   file  = "exit/pillar1.wad"
   where = "point"
 
---  size  = 64
+  height = 144
 
   prob  = 5
 }

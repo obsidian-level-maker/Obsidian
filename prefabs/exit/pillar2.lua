@@ -23,10 +23,20 @@ PREFABS.Exit_pillar2_secret =
 }
 
 
+PREFABS.Exit_pillar2_hell =
+{
+  template = "Exit_pillar2"
+
+  theme = "hell"
+  prob  = 100
+
+  tex_SW1STRTN = "SW2GARG"
+}
+
+
 PREFABS.Exit_pillar2_urban =
 {
-  file  = "exit/pillar2.wad"
-  where = "point"
+  template = "Exit_pillar2"
 
   theme = "urban"
   prob  = 50
