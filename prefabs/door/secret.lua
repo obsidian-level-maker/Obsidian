@@ -15,7 +15,19 @@ PREFABS.Door_secret =
 
   x_fit  = "frame"
 
-  prob   = 100
+  prob   = 200
+
+  -- pick some different objects for the hint, often none
+  thing_34 =
+  {
+    nothing = 30
+    barrel = 10
+    candle = 10
+    dead_player = 10
+    gibs = 10
+    gibbed_player = 5
+    pool_brains = 5
+  }
 }
 
 
@@ -29,7 +41,7 @@ PREFABS.Door_secret_diag =
 }
 
 
-PREFABS.Door_secret2 =
+PREFABS.Door_secret3 =
 {
   template = "Door_secret"
 
@@ -39,7 +51,7 @@ PREFABS.Door_secret2 =
 }
 
 
-PREFABS.Door_secret3 =
+PREFABS.Door_secret4 =
 {
   template = "Door_secret"
 
