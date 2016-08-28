@@ -505,6 +505,7 @@ DOOM.THEMES =
       BIGDOOR4 = "BIGDOOR5"
 
       SW1COMP  = "SW1LION"
+      SW1PIPE  = "SW1BROWN"
       SILVER3  = "MARBFACE"
     }
 
