@@ -2528,6 +2528,12 @@ function Grower_create_trunks()
     local R = Grower_add_room(nil, nil, trunk)  -- no parent
 
     Grower_grammatical_room(R, "root")
+
+    -- if a root failed to establish itself, kill the room
+    if not R.gx1 then
+      gui.debugf("%s could not establish a root, killing it\n", R.name)
+      R:kill_it()
+    end
   end
 end
 
