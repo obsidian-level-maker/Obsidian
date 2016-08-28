@@ -89,10 +89,6 @@ ______________________________________________________________________
 
 -  support decorative closets, e.g. fancy light thingy
 
--  support "T" shape stairs  [ cannot simply reverse to go down! ]
-
--  support "L" and "T" shape joiners
-
 -  one switch opens ALL the barred exits
 
 -  for switched doors / joiners, use the "action" in the Lua
@@ -202,14 +198,6 @@ idea: k/m/n elements which do not represent anything, but allow
       rules to create something, then auxiliaries or future rules
       can transform that shape back into normal geometry
       [ and instead of "count", some rulesets may say "until X is gone" ]
-
--  a DECOR rule begins a liquid area, and an auxiliary ruleset
-   is used to spread that area, staying close to existing geometry
-   in a room.
-
--  a SPROUT rule begins a hallway, an auxiliary ruleset constructs
-   rest of hallway, and another auxiliary ruleset sprouts hallway
-   into new rooms, and a final auxiliary rulset prunes unused branches
 
 
 
@@ -693,8 +681,6 @@ Mazes:
 ----------------------------------------------
   MISCELLANEOUS
 ----------------------------------------------
-
-+  a "layout only" module as a tool for mappers
 
 +  when traversibility in a room is poor (exit near entrance),
    make the exit into a switched door and put a switch at other
