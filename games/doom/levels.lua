@@ -57,14 +57,6 @@ DOOM.EPISODES =
 
 DOOM.PREBUILT_LEVELS =
 {
-  MAP07 =
-  {
-    { prob=50, file="games/doom/data/boss2/simple1.wad", map="MAP07" }
-    { prob=50, file="games/doom/data/boss2/simple2.wad", map="MAP07" }
-    { prob=50, file="games/doom/data/boss2/simple3.wad", map="MAP07" }
-    { prob=50, file="games/doom/data/boss2/simple4.wad", map="MAP07" }
-  }
-
   MAP30 =
   {
     { prob=50, file="games/doom/data/boss2/icon1.wad", map="MAP30" }
@@ -72,21 +64,6 @@ DOOM.PREBUILT_LEVELS =
     { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP01" }
     { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP02" }
     { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP03" }
-  }
-
-  -- these two are currently disabled
-  GOTCHA =
-  {
-    { prob=50, file="games/doom/data/boss2/gotcha1.wad", map="MAP01" }
-    { prob=50, file="games/doom/data/boss2/gotcha2.wad", map="MAP01" }
-    { prob=40, file="games/doom/data/boss2/gotcha3.wad", map="MAP01" }
-    { prob=20, file="games/doom/data/boss2/gotcha4.wad", map="MAP01" }
-  }
-
-  GALLOW =
-  {
-    { prob=50, file="games/doom/data/boss2/gallow1.wad", map="MAP01" }
-    { prob=25, file="games/doom/data/boss2/gallow2.wad", map="MAP01" }
   }
 }
 
@@ -98,9 +75,6 @@ function DOOM.get_levels()
   local MAP_LEN_TAB = { few=4, episode=11, game=32 }
 
   local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
-
-  gotcha_map = rand.pick({ 17,18,19 })
-  gallow_map = rand.pick({ 24,25,26 })
 
   local EP_NUM = 1
   if MAP_NUM > 11 then EP_NUM = 2 end
