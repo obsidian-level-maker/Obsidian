@@ -1787,6 +1787,10 @@ function Fab_replacements(fab)
       val = "_DEFAULT"
     end
 
+    if THEME.prefab_remap then
+      val = THEME.prefab_remap[val] or val
+    end
+
     local mat = Mat_lookup_tex(val)
 
     return assert(mat.t)
@@ -1804,6 +1808,10 @@ function Fab_replacements(fab)
     if val == "_LIQUID" and LEVEL.liquid then
       C.special   = C.special or LEVEL.liquid.special
       C.light_add = LEVEL.liquid.light_add
+    end
+
+    if THEME.prefab_remap then
+      val = THEME.prefab_remap[val] or val
     end
 
     local mat = Mat_lookup_flat(val)
