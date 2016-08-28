@@ -17,5 +17,7 @@ PREFABS.Joiner_barred2 =
   action = "S1_OpenDoor"
 
   prob   = 200
+
+  flat_FLAT23 = "SILVER3"
 }
 

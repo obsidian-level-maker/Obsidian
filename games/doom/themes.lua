@@ -310,6 +310,11 @@ DOOM.THEMES =
     {
     }
 
+    entity_remap =
+    {
+      green_torch = "mercury_lamp"
+    }
+
     floor_sinks =
     {
       PLAIN = 100
