@@ -402,6 +402,8 @@ DOOM.THEMES =
 
     prefab_remap =
     {
+      SW1COMP  = "SW1PANEL"
+      SILVER3  = "WOODGARG"
     }
 
     floor_sinks =
@@ -491,6 +493,14 @@ DOOM.THEMES =
       DOORBLU  = "DOORBLU2"
       DOORRED  = "DOORRED2"
       DOORYEL  = "DOORYEL2"
+
+      BIGDOOR1 = "BIGDOOR6"
+      BIGDOOR2 = "BIGDOOR7"
+      BIGDOOR3 = "BIGDOOR7"
+      BIGDOOR4 = "BIGDOOR5"
+
+      SW1COMP  = "SW1LION"
+      SILVER3  = "MARBFACE"
     }
 
     floor_sinks =
