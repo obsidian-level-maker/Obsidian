@@ -19,5 +19,17 @@ PREFABS.Joiner_secret2_A =
   y_fit  = "frame"
 
   prob   = 100
+
+  -- pick some different objects for the hint, often none
+  thing_34 =
+  {
+    nothing = 40
+    barrel = 10
+    dead_player = 10
+    dead_imp = 10
+    gibs = 10
+    gibbed_player = 5
+    pool_brains = 5
+  }
 }
 
