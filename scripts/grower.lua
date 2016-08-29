@@ -1185,7 +1185,11 @@ function Grower_grammatical_room(R, pass)
     end
 
     if rule.new_room and rule.new_room.env == "cave" then
-      prob = prob * LEVEL.cave_sprout_factor
+      if R.is_cave then
+        prob = prob * LEVEL.cave_extend_factor
+      else
+        prob = prob * LEVEL.cave_new_factor
+      end
     end
 
     return prob
@@ -3241,9 +3245,12 @@ function Grower_setup_caves()
   -- the chance that any ROOT pattern will be a cave
   LEVEL.cave_trunk_prob = style_sel("caves", 0, 10, 30, 90)
 
-  -- the factor to apply to rules which SPROUT a cave room
-  -- [ the probs of those rules reflect the "some" setting ]
-  LEVEL.cave_sprout_factor = style_sel("caves", 0, 0.2, 1.0, 9.0)
+  -- the factors to apply to rules which SPROUT a cave room:
+  --    "new_factor" is used when source room is not a cave, and
+  --    "extend_factor" is used when it is a cave.
+
+  LEVEL.cave_new_factor    = style_sel("caves", 0, 0.1, 0.5, 9.0)
+  LEVEL.cave_extend_factor = style_sel("caves", 0, 0.7, 2.0, 9.0)
 end
 
 
