@@ -2461,10 +2461,11 @@ function Room_floor_ceil_heights()
         A1, A2 = A2, A1
       end
 
-      assert(A1.floor_mat)
-      assert(A1.floor_h)
+      if A1.floor_mat then
+        assert(A1.floor_h)
 
-      R.floor_mats[A1.floor_h] = A1.floor_mat
+        R.floor_mats[A1.floor_h] = A1.floor_mat
+      end
     end
 
     each A in R.areas do
