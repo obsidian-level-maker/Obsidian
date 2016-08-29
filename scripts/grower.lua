@@ -705,8 +705,8 @@ function Grower_preprocess_grammar()
        cur_def.pass = name_to_pass(name)
     end
 
-    if string.match(name, "HALL_") then cur_def.env = "hallway" end
-    if string.match(name, "CAVE_") then cur_def.env = "cave" end
+    if string.match(name, "^HALL_") then cur_def.env = "hallway" end
+    if string.match(name, "^CAVE_") then cur_def.env = "cave" end
   end
 end
 
@@ -994,9 +994,6 @@ end
 
 function Grower_add_room(parent_R, force_env, trunk)
 
---!!!!!!
---force_env ="cave"
-
   local ROOM = ROOM_CLASS.new()
 
 gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), tostring(parent_R and parent_R.name))
@@ -1186,6 +1183,12 @@ function Grower_grammatical_room(R, pass)
         return 0
       end
     end
+
+--[[
+if rule.new_room and rule.new_room.env == "cave" then
+  prob = prob * 100
+end
+--]]
 
     return prob
   end
@@ -2337,7 +2340,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
--- stderrf("Trying rule '%s'...\n", cur_rule.name)
+--stderrf("Trying rule '%s'...\n", cur_rule.name)
 
     local best = { score=-1 }
 
