@@ -637,7 +637,7 @@ SPROUT_DIRECT_1 =
 
   new_room =
   {
-    conn = { x=3, y=3, w=2, dir=2 }
+    conn = { x=3, y=2, w=2, dir=2 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
@@ -707,8 +707,8 @@ SPROUT_DIRECT_4 =
 
 SPROUT_CASTLE_1 =
 {
-  prob = 1000
   env = "outdoor"
+  prob = 1000
 
   structure =
   {
@@ -732,8 +732,8 @@ SPROUT_CASTLE_1 =
 
 SPROUT_CASTLE_2 =
 {
-  prob = 8000
   env = "outdoor"
+  prob = 8000
 
   structure =
   {
@@ -1167,7 +1167,7 @@ CAVE_ROOT_3 =
 }
 
 
-SPROUT_TOCAVE_DIRECT_2 =
+SPROUT_DIRECT_2_cave =
 {
   prob = 100
 
@@ -1184,12 +1184,12 @@ SPROUT_TOCAVE_DIRECT_2 =
   {
     env = "cave"
 
-    conn = { x=3, y=3, w=2, dir=2 }
+    conn = { x=3, y=2, w=2, dir=2 }
   }
 }
 
 
-SPROUT_TOCAVE_DIRECT_3 =
+SPROUT_DIRECT_3_cave =
 {
   prob = 300
 
@@ -1211,7 +1211,7 @@ SPROUT_TOCAVE_DIRECT_3 =
 }
 
 
-SPROUT_TOCAVE_JOINER_2x1 =
+SPROUT_JOINER_2x1_cave =
 {
   prob = 500
 
@@ -1239,7 +1239,7 @@ SPROUT_TOCAVE_JOINER_2x1 =
 }
 
 
-SPROUT_TOCAVE_JOINER_3x1 =
+SPROUT_JOINER_3x1_cave =
 {
   prob = 2000
 
@@ -1267,7 +1267,9 @@ SPROUT_TOCAVE_JOINER_3x1 =
 }
 
 
-SPROUT_TOCAVE_JOINER_3x2 =
+--[[ disabled for now....
+
+SPROUT_JOINER_3x2_cave =
 {
   prob = 4000
 
@@ -1294,6 +1296,7 @@ SPROUT_TOCAVE_JOINER_3x2 =
     from_dir = 2
   }
 }
+--]]
 
 
 CAVE_GROW_3x1 =
@@ -1401,7 +1404,7 @@ CAVE_GROW_FILL_B =
 ------------------------------------------
 
 
-SPROUT_TOHALL_1 =
+SPROUT_1_hallway =
 {
   prob = 0
 
