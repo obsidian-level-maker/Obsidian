@@ -3,14 +3,6 @@ WORK IN PROGRESS
 ================
 
 
->>  support a "nothing" entity
-
-
--  wall-detail ideas
-   (a) Runes  (w/ fireblue? scrolling snskin?)
-   (b) square-wave
-
-
 
 Level Size:
 
@@ -31,6 +23,23 @@ Door Logic:
 -  REVIEW : "rarity" for themes  [ remove it and KISS ?? ]
 
 
+
+Secrets Joiner/Closet Ideas:
+
+-  looks like an ident with low height and a light (which flickers)
+
+-  looks like a normal item closet, but opens up
+
+-  looks like a cage in a wall, but floor lowers to provide a hole
+
+-  a monster closet with a secret behind it
+
+-  joiner looks like a secret item closet, but another secret behind it
+
+
+
+Miscellaneous:
+
 +  F/R cages: also want mid-bars and/or corner posts [ esp. cages surrounded by liquids ]
 
 -  sometimes have flashing/oscillate FX for free-range cages
@@ -41,10 +50,12 @@ Door Logic:
          sprout phase convert seeds to "landscape" and _then_
          expand outwards to hit buildings / edge of map.
 
-
 -  IDEA: aversion for rules, decreases prob of using rule again in a room
 
 -  IDEA: level_usage, room_usage
    [ OR: level_skip,  room_skip ]
 
+-  wall-detail ideas
+   (a) Runes  (w/ fireblue? scrolling snskin?)
+   (b) square-wave
 
