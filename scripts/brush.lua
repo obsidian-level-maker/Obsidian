@@ -305,6 +305,8 @@ function Trans.entity(name, x, y, z, props)
 
   name = Trans.remap_entity(name)
 
+  if name == "nothing" then return end
+
   if not props then
     props = {}
   end

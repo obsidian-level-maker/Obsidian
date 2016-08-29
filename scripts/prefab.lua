@@ -688,7 +688,9 @@ function Fab_render(fab)
   end
 
   each E in fab.entities do
-    raw_add_entity(E)
+    if E.id then
+      raw_add_entity(E)
+    end
   end
 end
 
@@ -1833,7 +1835,7 @@ function Fab_replacements(fab)
   end
 
 
-  local function get_entity_number(name)
+  local function get_entity_id(name)
     -- allow specifying a raw ID number
     if type(name) == "number" then return name end
 
@@ -1857,7 +1859,9 @@ function Fab_replacements(fab)
     if fab.fields[k] then
       local name = fab.fields[k]
 
-      val = get_entity_number(name)
+      if name == "nothing" then return nil end
+
+      val = get_entity_id(name)
 
       if val == nil then
         -- show a warning (but silently ignore non-standard players)
@@ -1901,8 +1905,8 @@ function Fab_replacements(fab)
     if not THEME.entity_remap then return end
 
     each name1,name2 in THEME.entity_remap do
-      local id1 = get_entity_number(name1)
-      local id2 = get_entity_number(name2)
+      local id1 = get_entity_id(name1)
+      local id2 = get_entity_id(name2)
 
       if id1 and id2 and id1 != id2 then
         THEME.entity_remap_by_id[id1] = id2
@@ -1942,7 +1946,7 @@ function Fab_replacements(fab)
     check_props(E)
 
     -- unknown entities set the 'id' to NIL
-    -- (which the CSG code will reject)
+    -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
   end
 
