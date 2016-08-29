@@ -1153,8 +1153,10 @@ function Grower_grammatical_room(R, pass)
     if S.area then return true end
     if S.disabled_R == R then return true end
 
-    -- never use a seed at edge of map
-    if Seed_over_map_edge(S) then return true end
+    -- never use a seed at edge of map  [ except for caves! ]
+    if not (cur_rule.new_room and cur_rule.new_room.env == "cave") then
+      if Seed_over_map_edge(S) then return true end
+    end
 
     return false
   end
@@ -3255,6 +3257,32 @@ end
 
 
 
+function Grower_cave_stats()
+  local rooms = 0
+
+  -- seed counts
+  local cave  = 0
+  local total = 0
+
+  each R in LEVEL.rooms do
+    if R.is_cave then rooms = rooms + 1 end
+
+    each A in R.areas do
+      if R.is_cave then
+        cave = cave + #A.seeds
+      end
+      total = total + #A.seeds
+    end
+  end
+
+  if total < 1 then total = 1 end
+
+  stderrf("Cave stats : %d/%d rooms : %d/%d seeds (%d%%)\n",
+          rooms, #LEVEL.rooms, cave, total, math.floor(cave*100/total))
+end
+
+
+
 function Grower_create_rooms()
   -- we don't make real connections until later (Connect_stuff)
   LEVEL.prelim_conns = {}
@@ -3266,6 +3294,7 @@ function Grower_create_rooms()
 
   Grower_create_trunks()
   Grower_grow_rooms()
+  Grower_cave_stats()
 
   Grower_prune_small_rooms()
 
