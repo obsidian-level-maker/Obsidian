@@ -1614,6 +1614,15 @@ function Area_building_facades()
   end
 
 
+  local function do_caves()
+    each A in LEVEL.areas do
+      if A.room and A.room.is_cave then
+        A.facade_mat = assert(A.room.zone.cave_wall_mat)
+      end
+    end
+  end
+
+
   ---| Area_building_facades |---
 
   initial_facades()
@@ -1624,6 +1633,8 @@ function Area_building_facades()
     -- find an unset area and give it a facade mat
     if not assign_one() then break; end
   end
+
+  do_caves()
 
   dump_facades()
 end
