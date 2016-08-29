@@ -828,24 +828,25 @@ function Grower_determine_coverage()
   local count = 0
   local total = 0
 
-gui.debugf("Grower_determine_coverage...\n")
   for sx = LEVEL.boundary_sx1 + 1, LEVEL.boundary_sx2 - 1 do
   for sy = LEVEL.boundary_sy1 + 1, LEVEL.boundary_sy2 - 1 do
-    total = total + 1
-
     local S = SEEDS[sx][sy]
 
-    if S.room or (S.top and S.top.room) then
-local RR = S.room or (S.top and S.top.room)
-local AA = S.area or (S.top and S.top.area)
-gui.debugf("  %s : %s / %s\n", S.name, RR.name, (AA and AA.name) or "-noarea-")
+    if S.area or (S.top and S.top.area) then
       count = count + 1
     end
+
+    total = total + 1
   end
   end
 
-gui.debugf("coverage: %1.2f (%d seeds / %d)\n", count / total, count, total)
-  return count / total
+  if total < 1 then total = 1 end
+
+  local coverage = count * 100 / total
+
+stderrf("=== coverage: %d%% (%d seeds / %d)\n", coverage, count, total)
+
+  return coverage
 end
 
 
@@ -1048,7 +1049,7 @@ end
 
 
 
-function Grower_grammatical_room(R, pass)
+function Grower_grammatical_room(R, pass, is_emergency)
   --
   -- Creates rooms using Shape Grammars.
   --
@@ -1656,8 +1657,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     end
 
     -- new rooms must not be placed in boundary spaces
+    -- [ this is relaxed when we really need to grow the map ]
     if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_over_boundary(S) then
-      return false
+      if not is_emergency then
+        return false
+      end
     end
 
 
@@ -2564,6 +2568,9 @@ end
 
 function Grower_grow_rooms()
 
+  local MIN_COVERAGE = 66
+
+
   local function clean_up_links(R)
     -- remove hallway links that were never used
     -- (so they don't block stuff in future rooms)
@@ -2591,7 +2598,7 @@ function Grower_grow_rooms()
   end
 
 
-  local function grow_some(no_new)
+  local function grow_some()
     local room_list = table.copy(LEVEL.rooms)
 
     rand.shuffle(room_list)
@@ -2615,10 +2622,37 @@ function Grower_grow_rooms()
   end
 
 
+  local function grow_until_done()
+    while not check_all_grown() do
+      grow_some()
+    end
+  end
+
+
+  local function emergency_sprouts()
+    local room_list = table.copy(LEVEL.rooms)
+
+    rand.shuffle(room_list)
+
+    each R in room_list do
+      Grower_grammatical_room(R, "sprout", "is_emergency")
+    end
+  end
+
+
   ---| Grower_grow_rooms |---
 
-  while not check_all_grown() do
-    grow_some()
+  grow_until_done()
+
+  for loop = 1, 3 do
+    local coverage = Grower_determine_coverage()
+
+    if coverage >= MIN_COVERAGE then break; end
+
+    -- map is too small, try to sprout some more rooms
+    emergency_sprouts()
+
+    grow_until_done()
   end
 end
 
