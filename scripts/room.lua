@@ -1686,7 +1686,6 @@ function Room_floor_ceil_heights()
 
 
   local function group_floors(R)
-    if R.is_outdoor then return end
     if R.kind == "hallway" then return end
 
     local start_area
@@ -1934,8 +1933,8 @@ function Room_floor_ceil_heights()
       return from_h
     end
 
-    -- for indoor rooms, only change height if floor_groups are different
-    if not R.is_outdoor and A1.floor_group == A2.floor_group then
+    -- only change height if floor_groups are different
+    if A1.floor_group and A1.floor_group == A2.floor_group then
       return from_h
     end
 
