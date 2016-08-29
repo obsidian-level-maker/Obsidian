@@ -2707,10 +2707,8 @@ function Quest_room_themes()
     local  hallway_tab = collect_usable_themes("hallway")
     local     cave_tab = collect_usable_themes("cave")
 
-    local cave_theme = pick_zone_theme(cave_tab)
-
     each Z in LEVEL.zones do
-      Z.cave_theme = cave_theme
+      Z.cave_theme = pick_zone_theme(cave_tab)
 
       Z.outdoors_theme = pick_zone_theme(outdoors_tab)
       Z. hallway_theme = pick_zone_theme(hallway_tab)
