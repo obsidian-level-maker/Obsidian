@@ -1,5 +1,5 @@
 --
--- huge joiner with a little balcony
+-- huge joiner with a round glowy thing
 --
 
 PREFABS.Joiner_y2 =
@@ -11,7 +11,7 @@ PREFABS.Joiner_y2 =
   seed_w = 3
   seed_h = 2
 
-  prob  = 900
+  prob  = 30
 
   delta_h  = 32
   nearby_h = 200
