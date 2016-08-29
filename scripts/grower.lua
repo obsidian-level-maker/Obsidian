@@ -1184,11 +1184,9 @@ function Grower_grammatical_room(R, pass)
       end
     end
 
---[[
-if rule.new_room and rule.new_room.env == "cave" then
-  prob = prob * 100
-end
---]]
+    if rule.new_room and rule.new_room.env == "cave" then
+      prob = prob * LEVEL.cave_sprout_factor
+    end
 
     return prob
   end
@@ -2141,9 +2139,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       new_room = R
     else
       if cur_rule.new_room then
-        -- estimate sprout position (for caves)
-        local x, y = transform_coord(T, int(cur_rule.input.w / 2), cur_rule.input.h)
-        local env  = cur_rule.new_room.env
+        local env = cur_rule.new_room.env  -- often NIL
 
         new_room = Grower_add_room(R, env)
 
@@ -2540,7 +2536,13 @@ function Grower_create_trunks()
 
     table.insert(LEVEL.trunks, trunk)
 
-    local R = Grower_add_room(nil, nil, trunk)  -- no parent
+    local env
+
+    if rand.odds(LEVEL.cave_trunk_prob) then
+      env = "cave"
+    end
+
+    local R = Grower_add_room(nil, env, trunk)  -- no parent
 
     Grower_grammatical_room(R, "root")
 
@@ -3235,13 +3237,24 @@ end
 
 
 
-function Grower_create_rooms()
-  LEVEL.sprouts = {}
+function Grower_setup_caves()
+  -- the chance that any ROOT pattern will be a cave
+  LEVEL.cave_trunk_prob = style_sel("caves", 0, 10, 30, 90)
 
+  -- the factor to apply to rules which SPROUT a cave room
+  -- [ the probs of those rules reflect the "some" setting ]
+  LEVEL.cave_sprout_factor = style_sel("caves", 0, 0.2, 1.0, 9.0)
+end
+
+
+
+function Grower_create_rooms()
   -- we don't make real connections until later (Connect_stuff)
   LEVEL.prelim_conns = {}
 
+  Grower_setup_caves()
   Grower_calc_rule_probs()
+
   Grower_decide_boundary()
 
   Grower_create_trunks()
