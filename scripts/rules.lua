@@ -624,6 +624,26 @@ GROW_STAIR_HUGE =
 ------------------------------------------
 
 
+SPROUT_DIRECT_1 =
+{
+  prob = 2
+
+  structure =
+  {
+    "....", ".RR."
+    "....", ".RR."
+    "x11x", "x11x"
+  }
+
+  new_room =
+  {
+    conn = { x=3, y=3, w=2, dir=2 }
+
+    symmetry = { x=2, y=3, w=2, dir=8 }
+  }
+}
+
+
 SPROUT_DIRECT_2 =
 {
   prob = 100
@@ -681,27 +701,6 @@ SPROUT_DIRECT_4 =
     conn = { x=4, y=2, w=4, dir=2 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
-  }
-}
-
-
-SPROUT_HALLWAY_1 =
-{
-  prob = 0
-
-  structure =
-  {
-    "...", "..."
-    "...", ".@."
-    "...", ".H."
-    "x1x", "x1x"
-  }
-
-  new_room =
-  {
-    env = "hallway"
-
-    conn = { x=2, y=2, dir=2 }
   }
 }
 
@@ -1168,6 +1167,135 @@ CAVE_ROOT_3 =
 }
 
 
+SPROUT_TOCAVE_DIRECT_2 =
+{
+  prob = 100
+
+  structure =
+  {
+    "....", "RRRR"
+    "....", "RRRR"
+    "....", "RRRR"
+    "....", "RRRR"
+    "x11x", "x11x"
+  }
+
+  new_room =
+  {
+    env = "cave"
+
+    conn = { x=3, y=3, w=2, dir=2 }
+  }
+}
+
+
+SPROUT_TOCAVE_DIRECT_3 =
+{
+  prob = 300
+
+  structure =
+  {
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    "x111x", "x111x"
+  }
+
+  new_room =
+  {
+    env = "cave"
+
+    conn = { x=4, y=2, w=3, dir=2 }
+  }
+}
+
+
+SPROUT_TOCAVE_JOINER_2x1 =
+{
+  prob = 500
+
+  structure =
+  {
+    "....", "RRRR"
+    "....", "RRRR"
+    "....", "RRRR"
+    "....", "RRRR"
+    "....", ".JJ."
+    "x11x", "x11x"
+  }
+
+  new_room =
+  {
+    env = "cave"
+
+    conn = { x=3, y=3, w=2, dir=2 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+  }
+}
+
+
+SPROUT_TOCAVE_JOINER_3x1 =
+{
+  prob = 2000
+
+  structure =
+  {
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    "x...x", "xJJJx"
+    "x111x", "x111x"
+  }
+
+  new_room =
+  {
+    env = "cave"
+
+    conn = { x=4, y=3, w=3, dir=2 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+  }
+}
+
+
+SPROUT_TOCAVE_JOINER_3x2 =
+{
+  prob = 4000
+
+  structure =
+  {
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    "x...x", "xJJJx"
+    "x...x", "xJJJx"
+    "x111x", "x111x"
+  }
+
+  new_room =
+  {
+    env = "cave"
+
+    conn = { x=4, y=4, w=3, dir=2 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+  }
+}
+
+
 CAVE_GROW_3x1 =
 {
   prob = 50
@@ -1271,6 +1399,27 @@ CAVE_GROW_FILL_B =
 ------------------------------------------
 --   Hallway stuff
 ------------------------------------------
+
+
+SPROUT_TOHALL_1 =
+{
+  prob = 0
+
+  structure =
+  {
+    "...", "..."
+    "...", ".@."
+    "...", ".H."
+    "x1x", "x1x"
+  }
+
+  new_room =
+  {
+    env = "hallway"
+
+    conn = { x=2, y=2, dir=2 }
+  }
+}
 
 
 HALL_GROW_I1 =
