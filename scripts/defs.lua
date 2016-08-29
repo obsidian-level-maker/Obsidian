@@ -135,7 +135,7 @@ GLOBAL_STYLE_LIST =
 {
   -- these two correspond to buttons in the GUI
   outdoors    = { none=0,  few=60, some=40, heaps=20 }
-  caves       = { none=30 }  --!!!!!!  , few=30, some=30, heaps=7 }
+  caves       = { none=60, few=40, some=20, heaps=5 }
 
   big_rooms   = { none=10, few=20, some=40, heaps=70 }
   symmetry    = { none=10, few=40, some=60, heaps=10 }
