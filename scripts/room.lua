@@ -732,11 +732,11 @@ function Room_reckon_doors()
     local R1 = S.room
     local R2 = N.room
 
-    if R2.kind == "cave" and not R2.is_outdoor then
+    if R2.is_cave and not R2.is_outdoor then
       R1, R2 = R2, R1
     end
 
-    if R1.kind == "cave" and not R1.is_outdoor then
+    if R1.is_cave and not R1.is_outdoor then
       if R2.kind != "building" then
         B.fab_name = sel(woody, "Arch_woody", "Arch_viney")
         return reqs
@@ -757,8 +757,8 @@ function Room_reckon_doors()
 
     -- apply the random check
     local prob = indoor_prob
-    if (C.R1.is_outdoor and C.R2.kind != "cave") or
-       (C.R2.is_outdoor and C.R1.kind != "cave")
+    if (C.R1.is_outdoor and not C.R2.is_cave) or
+       (C.R2.is_outdoor and not C.R1.is_cave)
     then
       prob = outdoor_prob
     end
@@ -2522,7 +2522,7 @@ function Room_floor_ceil_heights()
 
     if chunk.place == "whole" then
       chunk.area.is_outdoor = nil
-      assert(chunk.area.facade_mat)
+--!!!!????  assert(chunk.area.facade_mat)
     end
 
     local delta_h = chunk.prefab_def.delta_h or 0

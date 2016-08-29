@@ -659,7 +659,7 @@ function Cave_create_areas(R)
 
   local function alternate_floor_mat()
     for loop = 1,3 do
-      R.alt_floor_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+      R.alt_floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
 
       if R.alt_floor_mat != R.floor_mat then
         break;
@@ -3030,7 +3030,7 @@ function Cave_outdoor_borders()
     if R.kind == "outdoor" then return true end
     if R.kind == "scenic" and R.is_outdoor then return true end
 
-    if R.kind != "cave" then return false end
+    if not R.is_cave then return false end
 
     local info = R.cave_info
 

@@ -2717,10 +2717,10 @@ function Quest_room_themes()
 
       -- apply it to all rooms in this zone
       each R in Z.rooms do
-        if R.kind == "cave" then
-          R.theme = Z.cave_theme
-        elseif R.kind == "hallway" then
+        if R.kind == "hallway" then
           R.theme = Z.hallway_theme
+        elseif R.is_cave then
+          R.theme = Z.cave_theme
         elseif R.is_outdoor then
           R.theme = Z.outdoors_theme
         end
@@ -2786,13 +2786,13 @@ function Quest_room_themes()
     R.main_tex = R.zone.cave_wall_mat
 
     for loop = 1,2 do
-      R.floor_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+      R.floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
       if R.floor_mat != R.main_tex then break; end
     end
 
     if not R.is_outdoor then
       if rand.odds(20) then
-        R.ceil_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+        R.ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
       elseif rand.odds(20) then
         R.ceil_mat = R.floor_mat
       else
@@ -2805,7 +2805,7 @@ function Quest_room_themes()
   local function setup_room_theme(R)
     assert(R.theme)
 
-    if R.kind == "cave" then
+    if R.is_cave then
       setup_cave_theme(R)
     elseif R.is_outdoor then
       R.main_tex = R.zone.fence_mat  --- rand.key_by_probs(R.theme.floors)

@@ -993,6 +993,10 @@ end
 
 
 function Grower_add_room(parent_R, force_env, trunk)
+
+--!!!!!!
+--force_env ="cave"
+
   local ROOM = ROOM_CLASS.new()
 
 gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), tostring(parent_R and parent_R.name))
@@ -1178,7 +1182,7 @@ function Grower_grammatical_room(R, pass)
     end
 
     if pass == "root" or pass == "grow" then
-      if R.kind == "cave" and rule.env != "cave" then
+      if R.is_cave and rule.env != "cave" then
         return 0
       end
     end
