@@ -705,9 +705,8 @@ function Grower_preprocess_grammar()
        cur_def.pass = name_to_pass(name)
     end
 
-    if string.match(name, "HALL_") then
-      cur_def.env = "hallway"
-    end
+    if string.match(name, "HALL_") then cur_def.env = "hallway" end
+    if string.match(name, "CAVE_") then cur_def.env = "cave" end
   end
 end
 
@@ -1173,7 +1172,16 @@ function Grower_grammatical_room(R, pass)
       if rule.env != R:get_env() then return 0 end
     end
 
-    if R.kind == "hallway" and rule.env != "hallway" then return 0 end
+    -- hallways and caves are more restrictive than normal
+    if R.kind == "hallway" and rule.env != "hallway" then
+      return 0
+    end
+
+    if pass == "root" or pass == "grow" then
+      if R.kind == "cave" and rule.env != "cave" then
+        return 0
+      end
+    end
 
     return prob
   end
