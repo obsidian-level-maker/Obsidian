@@ -34,10 +34,6 @@ ROOT_1 =
     "!!!!!", ".RRR."
     "!!!!!", "....."
   }
-
-  new_room =
-  {
-  }
 }
 
 
@@ -60,10 +56,6 @@ ROOT_2 =
     ".R", "R."
     ".R", "R."
   }
-
-  new_room =
-  {
-  }
 }
 
 
@@ -79,10 +71,6 @@ ROOT_3 =
     "!!!!!!", ".RRRR."
     "!!!!!!", ".RRRR."
     "!!!!!!", "......"
-  }
-
-  new_room =
-  {
   }
 }
 
@@ -102,10 +90,6 @@ ROOT_L1 =
   }
 
   diagonals = { "R.", ".R" }
-
-  new_room =
-  {
-  }
 }
 
 
@@ -124,10 +108,6 @@ ROOT_T1 =
   }
 
   diagonals = { ".R", "R." }
-
-  new_room =
-  {
-  }
 }
 
 
@@ -247,10 +227,6 @@ ROOT_LIQUID_CAGE3 =
     "C~"
     "~R"
     "R!"
-  }
-
-  new_room =
-  {
   }
 }
 
@@ -1140,6 +1116,155 @@ DECORATE_CLOSET_3x2 =
   }
 
   closet = { from_dir=2 }
+}
+
+
+------------------------------------------
+--   Cave stuff
+------------------------------------------
+
+CAVE_ROOT_1 =
+{
+  prob = 1
+
+  structure =
+  {
+    "!!!!", "RRRR"
+    "!!!!", "RRRR"
+    "!!!!", "RRRR"
+    "!!!!", "RRRR"
+  }
+}
+
+
+CAVE_ROOT_2 =
+{
+  prob = 10
+
+  structure =
+  {
+    "!!!!!", "RRRRR"
+    "!!!!!", "RRRRR"
+    "!!!!!", "RRRRR"
+    "!!!!!", "RRRRR"
+    "!!!!!", "RRRRR"
+  }
+}
+
+
+CAVE_ROOT_3 =
+{
+  prob = 100
+
+  structure =
+  {
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "RRRRRR"
+  }
+}
+
+
+CAVE_GROW_3x1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "...", "111"
+    "111", "111"
+  }
+}
+
+
+CAVE_GROW_3x2 =
+{
+  prob = 50
+
+  structure =
+  {
+    "...", "111"
+    "...", "111"
+    "111", "111"
+  }
+}
+
+
+CAVE_GROW_4x1 =
+{
+  prob = 100
+
+  structure =
+  {
+    "....", "1111"
+    "1111", "1111"
+  }
+}
+
+
+CAVE_GROW_4x2 =
+{
+  prob = 100
+
+  structure =
+  {
+    "....", "1111"
+    "....", "1111"
+    "1111", "1111"
+  }
+}
+
+
+CAVE_GROW_5x1 =
+{
+  prob = 150
+
+  structure =
+  {
+    ".....", "11111"
+    "11111", "11111"
+  }
+}
+
+
+CAVE_GROW_5x2 =
+{
+  prob = 150
+
+  structure =
+  {
+    ".....", "11111"
+    ".....", "11111"
+    "11111", "11111"
+  }
+}
+
+
+CAVE_GROW_FILL_A =
+{
+  prob = 0
+
+  structure =
+  {
+    "1.", "11"
+    "11", "11"
+  }
+}
+
+
+CAVE_GROW_FILL_B =
+{
+  prob = 0
+
+  structure =
+  {
+    "1xx", "1xx"
+    "1.x", "11x"
+    "111", "111"
+  }
 }
 
 
