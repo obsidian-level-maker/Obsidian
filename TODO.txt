@@ -95,12 +95,11 @@ ______________________________________________________________________
    definition as the skin.special for the SWITCH prefab
 
 
++  allow TWO conns into a new room (become F1/F2 in CONN object)
+
 -  a "raising stairs" JOINER, need to find the switch
 
--  allow TWO conns into a new room (become F1/F2 in CONN object)
-
--  SPROUT: if mirrored and new rooms touch/overlap, only create
-           a single room [ only if ONE conn though ]
+-  support T-shape joiners (the new room on both sides)
 
 -  overlapping items in monster closets
 
@@ -109,8 +108,6 @@ ______________________________________________________________________
 -  the locked switch closet
 
 -  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
-
--  closet that looks like a wall switch but opens a monsters closet
 
 -  allow monsters in liquids [ but never place items there ]
 

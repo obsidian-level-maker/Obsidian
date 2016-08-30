@@ -3,12 +3,13 @@ WORK IN PROGRESS
 ================
 
 
+>>  item choice for secret closets
+    [ differentiate between whole-room secrets ]
 
-Level Size:
 
-+  levels sometimes too small -- do extra sprout passes (WHEN?)
+Caves:
 
-+  smaller rooms (when "is_big" is not set)
++  actually make them again
 
 
 
@@ -39,6 +40,11 @@ Secrets Joiner/Closet Ideas:
 
 
 Miscellaneous:
+
+-  for "big" boss monster rooms, add a big health item / invuln
+   [ insert into R.items ]
+
++  prevent decor in liquid sinks
 
 +  F/R cages: also want mid-bars and/or corner posts [ esp. cages surrounded by liquids ]
 
