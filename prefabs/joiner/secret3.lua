@@ -18,6 +18,17 @@ PREFABS.Joiner_secret3_cage =
   x_fit  = "frame"
 --y_fit  = "top"
 
-  prob   = 40
+  prob   = 50
+}
+
+
+-- this looks like a small niche with a light
+PREFABS.Joiner_secret3_niche =
+{
+  template = "Joiner_secret3_cage"
+  map    = "MAP02"
+
+  env    = "building"
+  prob   = 50
 }
 
