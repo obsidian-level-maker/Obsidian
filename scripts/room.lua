@@ -37,6 +37,9 @@
     sx1, sy1, sx2, sy2  -- \ Seed range
     sw, sh, svolume     -- /
 
+     size_limit   -- \  limits on ergonomic growth
+    floor_limit   -- /
+
 
     conns : list(CONNS)   -- connections to other rooms
 
@@ -1621,23 +1624,28 @@ end
 
 function Room_choose_size(R)
   -- decides whether room will be "big" or not.
-  -- the room kind should have been set already.
-
-  if R.is_cave then
-    R.is_big = true
-    return
-  end
+  -- room kind (building, cave, etc) should have been set already.
 
   local prob
 
-  if R.is_outdoor then
-    prob = style_sel("big_rooms", 0, 10, 30, 60)
+  if R.is_cave then
+    prob = 100
+  elseif R.is_outdoor then
+    prob = style_sel("big_rooms", 0, 10, 20, 50)
   else
-    prob = style_sel("big_rooms", 0, 20, 50, 90)
+    prob = style_sel("big_rooms", 0, 20, 40, 80)
   end
 
   if rand.odds(prob) then
     R.is_big = true
+  end
+
+  if R.is_big then
+    R.floor_limit = rand.pick({ 9,10,11,12 })
+    R. size_limit = SEED_W * 5
+  else
+    R.floor_limit = rand.pick({ 4,5,5,6,6,7 })
+    R. size_limit = SEED_W * 3
   end
 end
 

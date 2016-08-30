@@ -1082,6 +1082,9 @@ function Grower_grammatical_room(R, pass, is_emergency)
   local new_chunks
   local old_chunks
 
+  -- true when room has reached the limit on floor areas
+  local hit_floor_limit
+
 
   local function what_in_there(S)
     local A = S.area
@@ -1210,17 +1213,23 @@ function Grower_grammatical_room(R, pass, is_emergency)
   end
 
 
-  local function collect_matching_rules(want_pass)
+  local function collect_matching_rules(want_pass, no_new_areas)
     local tab = {}
 
     each name,rule in grammar do
       if rule.pass != want_pass then continue end
+
+      if no_new_areas and rule.new_area then continue end
 
       local prob = prob_for_rule(rule)
 
       if prob > 0 then
         tab[name] = prob
       end
+    end
+
+    if table.empty(tab) then
+      error("No rules found for " .. tostring(want_pass) .. " pass")
     end
 
     return tab
@@ -2501,6 +2510,17 @@ end
   for loop = 1, apply_num do
     -- stderrf("LOOP %d\n", loop)
     apply_a_rule(rule_tab)
+
+    -- stop if we surpass the size limit
+    if pass == "grow" and R:rough_size() >= R.size_limit then
+      break
+    end
+
+    -- if we surpass the floor limit, remove rules which add new areas
+    if pass == "grow" and not hit_floor_limit and R:num_floors() >= R.floor_limit then
+      hit_floor_limit = true
+      rule_tab = collect_matching_rules(pass, "no_new_areas")
+    end
   end
 end
 
@@ -3305,6 +3325,9 @@ function Grower_cave_stats()
       rooms = rooms + 1
       cave  = cave  + size
     end
+
+---- DEBUG FOR SIZES ----
+-- stderrf("  %s : %d rough seeds, %d floors\n", R.name, size, R:num_floors())
 
     total = total + size
   end
