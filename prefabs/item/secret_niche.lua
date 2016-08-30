@@ -2,12 +2,11 @@
 --  Secret item niche
 --
 
-PREFABS.Item_secret_niche_small =
+PREFABS.Item_secret_niche1 =
 {
   file  = "item/secret_niche.wad"
   where = "seeds"
 
-  kind  = "nice_item"  -- FIXME : under review
   key   = "secret"
 
   seed_w = 1
