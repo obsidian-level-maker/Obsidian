@@ -16,6 +16,7 @@ PREFABS.Stair_64_red =
 
   bound_z1 = 0
 
-  prob = 5
+  theme = "!tech"
+  prob  = 10
 }
 
