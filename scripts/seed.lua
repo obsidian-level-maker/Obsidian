@@ -152,6 +152,8 @@
                             -- "KEY", "WEAPON", "ITEM", "SWITCH"
                             -- "CAGE", "TRAP", "DECORATION"
 
+    is_secret      -- boolean
+
     peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk
 
     from_dir  : DIR

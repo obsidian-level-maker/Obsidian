@@ -1417,12 +1417,10 @@ function Render_chunk(chunk)
 
     -- for entity remapping (e.g. skull keys), rely on prefab system
     skin.object = assert(chunk.content_item)
-  end
 
-  local function do_nice_item()
-    reqs.kind = "nice_item"
-
-    reqs.key = "secret"  -- FIXME
+    if chunk.is_secret then
+      reqs.key = "secret"
+    end
   end
 
 
@@ -1501,9 +1499,6 @@ function Render_chunk(chunk)
 
   elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
     do_item()
-
-  elseif what == "NICE_ITEM" then
-    do_nice_item()
 
   elseif what == "CAGE" then
     do_cage()

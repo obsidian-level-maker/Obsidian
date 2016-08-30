@@ -879,8 +879,15 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
-  local function make_item_or_secret(A)
-    chunk.content_kind = "NICE_ITEM"
+  local function make_secret_closet(chunk)
+    chunk.content_kind = "ITEM"
+
+    chunk.is_secret = true
+
+    -- !!!! FIXME : pick item properly
+    chunk.content_item = "green_armor"
+
+    -- let the code in render.lua select the prefab
   end
 
 
@@ -1253,6 +1260,31 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
+  local function try_secret_closets(R)
+    if R.is_secret then return end
+
+    -- chance of using *any* closets in this room
+    local any_prob = style_sel("secrets", 0, 20, 40, 70)
+any_prob = 100
+    if not rand.odds(any_prob) then
+      return
+    end
+
+    local per_prob = style_sel("secrets", 0, 10, 20, 30)
+per_prob = 100 --!!!!
+
+    each chunk in R.closets do
+      if not chunk.content_kind and
+         ---???  not Chunk_is_slave(chunk) and
+         rand.odds(per_prob)
+      then
+stderrf("***** secret closet in %s\n", R.name)
+        make_secret_closet(chunk)
+      end
+    end
+  end
+
+
   local function pick_wall_detail(R)
     if R.is_cave    then return end
     if R.is_outdoor then return end
@@ -1444,6 +1476,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     pick_ceiling_sinks(R)
 
     unsink_importants(R)
+
+    try_secret_closets(R)
 
     -- more cages, oh yes!
     try_extra_cages(R)
