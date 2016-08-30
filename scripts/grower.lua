@@ -3299,14 +3299,14 @@ function Grower_cave_stats()
   local total = 0
 
   each R in LEVEL.rooms do
-    if R.is_cave then rooms = rooms + 1 end
+    local size = R:rough_size()
 
-    each A in R.areas do
-      if R.is_cave then
-        cave = cave + #A.seeds
-      end
-      total = total + #A.seeds
+    if R.is_cave then
+      rooms = rooms + 1
+      cave  = cave  + size
     end
+
+    total = total + size
   end
 
   if total < 1 then total = 1 end

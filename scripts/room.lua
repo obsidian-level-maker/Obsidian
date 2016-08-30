@@ -208,6 +208,30 @@ function ROOM_CLASS.get_env(R)
 end
 
 
+function ROOM_CLASS.rough_size(R)
+  local count = 0
+
+  each A in R.areas do
+    count = count + #A.seeds
+  end
+
+  return count
+end
+
+
+function ROOM_CLASS.num_floors(R)
+  local count = 0
+
+  each A in R.areas do
+    if A.mode == "floor" then
+      count = count + 1
+    end
+  end
+
+  return count
+end
+
+
 function ROOM_CLASS.kill_it(R)
   gui.debugf("Killing %s\n", R.name)
 
