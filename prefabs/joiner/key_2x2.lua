@@ -15,10 +15,10 @@ PREFABS.Locked_2x2_red =
   seed_w = 2
   seed_h = 2
 
-  prob   = 70
+  prob   = 70*99
 
-  delta_h  = 16
-  nearby_h = 160
+  delta_h  = -40
+  nearby_h = 128
 
   -- texture is already "DOORRED"
   -- line special is already #135 (open red door)
