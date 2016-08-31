@@ -1482,8 +1482,10 @@ stderrf("***** secret closet in %s\n", R.name)
     -- more cages, oh yes!
     try_extra_cages(R)
 
-    pick_decorative_bling(R)
-    pick_ceiling_lights(R)
+    if not R.is_cave then
+      pick_decorative_bling(R)
+      pick_ceiling_lights(R)
+    end
 
     fix_stair_lighting(R)
 
