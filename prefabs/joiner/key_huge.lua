@@ -45,3 +45,44 @@ PREFABS.Locked_huge_yellow =
   line_135    = 137
 }
 
+
+--------------------------------------------
+------- Another huge locked door -----------
+--------------------------------------------
+
+PREFABS.Locked_huge3_red =
+{
+  template = "Locked_huge_red"
+
+  map = "MAP03"
+
+  -- texture is already "DOORRED"
+  -- line special is already #33 (open red door)
+}
+
+
+PREFABS.Locked_huge3_blue =
+{
+  template = "Locked_huge_red"
+
+  map = "MAP03"
+
+  key = "k_blue"
+
+  tex_DOORRED = "DOORBLU"
+  line_33     = 32
+}
+
+
+PREFABS.Locked_huge3_yellow =
+{
+  template = "Locked_huge_red"
+
+  map = "MAP03"
+
+  key = "k_yellow"
+
+  tex_DOORRED = "DOORYEL"
+  line_33    = 34
+}
+
