@@ -320,7 +320,7 @@ GROW_CURVE_1 =
 
 GROW_CURVE_2 =
 {
-  prob = 40
+  prob = 30
 
   structure =
   {
@@ -863,7 +863,7 @@ SPROUT_JOINER_2x1 =
   {
     "....", ".RR."
     "....", ".RR."
-    "....", ".JJ."
+    "x..x", "xJJx"
     "x11x", "x11x"
   }
 
@@ -933,6 +933,33 @@ SPROUT_JOINER_4x1 =
 }
 
 
+SPROUT_JOINER_2x2 =
+{
+  prob = 120
+
+  structure =
+  {
+    "....", ".RR."
+    "....", ".RR."
+    "x..x", "xJJx"
+    "x..x", "xJJx"
+    "x11x", "x11x"
+  }
+
+  new_room =
+  {
+    conn = { x=3, y=4, w=2, dir=2 }
+
+    symmetry = { x=2, y=4, dir=8 }
+  }
+
+  joiner =
+  {
+    from_dir = 2
+  }
+}
+
+
 SPROUT_JOINER_3x2 =
 {
   prob = 4000
@@ -962,7 +989,7 @@ SPROUT_JOINER_3x2 =
 
 SPROUT_JOINER_L =
 {
-  prob = 240
+  prob = 200
 
   structure =
   {
