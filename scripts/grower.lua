@@ -1157,11 +1157,6 @@ function Grower_grammatical_room(R, pass, is_emergency)
     if S.area then return true end
     if S.disabled_R == R then return true end
 
-    -- never use a seed at edge of map  [ except for caves! ]
-    if not (cur_rule.new_room and cur_rule.new_room.env == "cave") then
-      if Seed_over_map_edge(S) then return true end
-    end
-
     return false
   end
 
@@ -1555,7 +1550,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
   end
 
 
-  local function match_area(E1, A)
+  local function match_floor(E1, A)
     -- hallways are a bit different (and simpler)
     if cur_rule.env == "hallway" then
       if A.mode != "chunk" then return false end
@@ -1700,7 +1695,17 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
     -- for "!", require nothing there at all
     if E1.kind == "free" and E1.utterly then
-      return not raw_blocked(S)
+      if raw_blocked(S) then return false end
+
+      -- never use a seed near edge of map  [ except for caves! ]
+      local doing_cave = (E2.kind == "area" and R.is_cave) or
+                         (E2.kind == "room" and cur_rule.new_room and cur_rule.new_room.env == "cave")
+
+      if not doing_cave and Seed_over_map_edge(S) then
+        return false
+      end
+
+      return true
     end
 
     if E1.kind == "disable" then
@@ -1739,7 +1744,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
     if not (A and A.room == R) then return false end
 
     if E1.kind == "area" then
-      return match_area(E1, A)
+      return match_floor(E1, A)
     end
 
     if E1.kind == "liquid" or
@@ -2197,7 +2202,7 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
         -- assumes best.T has set X/Y to best.x and best.y
         new_room.symmetry = transform_symmetry(T)
 
---##    stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
+----    stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
       end
 
       if pass == "sprout" or pass == "terminate" then
@@ -2222,9 +2227,11 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       if what == "TEST" and not res then
         -- cannot place this shape here (something in the way)
 
---if pass == "terminate" then
---stderrf("  failed at (%d %d) : %s -> %s\n", px, py, E1.kind, E2.kind)
---end
+--[[ DEBUG
+if pass == "grow" then
+gui.debugf("  failed at (%d %d) : %s -> %s\n", px, py, E1.kind, E2.kind)
+end
+--]]
         return false
       end
     end -- px, py
@@ -2355,7 +2362,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
---stderrf("Trying rule '%s'...\n", cur_rule.name)
+--  gui.debugf("Trying rule '%s'...\n", cur_rule.name)
 
     local best = { score=-1 }
 
@@ -2487,7 +2494,7 @@ end
 
   ---| Grower_grammatical_room |---
 
---stderrf("\n Grow room %s : %s pass\n", R.name, pass)
+  gui.debugf("\nGrow room %s : %s pass\n", R.name, pass)
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)
@@ -3327,7 +3334,7 @@ function Grower_cave_stats()
     end
 
 ---- DEBUG FOR SIZES ----
--- stderrf("  %s : %d rough seeds, %d floors\n", R.name, size, R:num_floors())
+-- stderrf("  %s : %d rough seeds (limit %d), %d floors\n", R.name, size, R.size_limit, R:num_floors())
 
     total = total + size
   end
