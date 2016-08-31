@@ -1133,6 +1133,10 @@ function Room_border_up()
 
 
   local function can_make_window(A1, A2)
+    -- disable windows into caves [ for now... ]
+    if A1.room and A1.room.is_cave then return false end
+    if A2.room and A2.room.is_cave then return false end
+
     if A1.is_outdoor and not A2.is_outdoor then
        A1, A2 = A2, A1
     end
