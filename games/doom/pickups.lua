@@ -22,8 +22,8 @@
 -- start_prob  : if present, use instead of add_prob in start rooms
 -- crazy_prob  : if present, use instead of add_prob in "crazy" mode
 --
--- secret_prob : chance of using in large secret rooms
--- closet_prob : chance of using in small secret closets
+-- closet_prob : chance of using in a small secret closet
+-- secret_prob : chance of using in a large secret room
 --
 -- level       : how far along (over episode) it should appear (1..9)
 --
@@ -31,6 +31,8 @@
 -- rank        : the general niceness of the item (1..3)
 -- cluster     : how many to place together (a range of values)
 -- give        : list of what the player gets (e.g. quantity of ammo)
+--
+-- time_limit  : how long a powerup lasts (in seconds)
 --
 
 
@@ -62,6 +64,8 @@ DOOM.PICKUPS =
     kind = "health"
     rank = 2
     add_prob = 120
+    closet_prob = 20
+    secret_prob = 5
     give = { {health=25} }
   }
 
@@ -111,6 +115,7 @@ DOOM.PICKUPS =
     kind = "ammo"
     rank = 2
     add_prob = 40
+    closet_prob = 20
     give = { {ammo="shell",count=20} }
   }
 
@@ -129,6 +134,8 @@ DOOM.PICKUPS =
     kind = "ammo"
     rank = 2
     add_prob = 40
+    closet_prob = 20
+    secret_prob = 5
     give = { {ammo="rocket",count=5} }
   }
 
@@ -147,6 +154,8 @@ DOOM.PICKUPS =
     kind = "ammo"
     rank = 2
     add_prob = 40
+    closet_prob = 20
+    secret_prob = 5
     give = { {ammo="cell",count=100} }
   }
 
@@ -174,6 +183,7 @@ DOOM.NICE_ITEMS =
     add_prob = 30
     start_prob = 60
     crazy_prob = 5
+    closet_prob = 10
     give = { {health=30} }
   }
 
@@ -183,7 +193,7 @@ DOOM.NICE_ITEMS =
     kind = "armor"
     add_prob = 5
     start_prob = 10
-    secret_prob = 50
+    secret_prob = 60
     give = { {health=80} }
   }
 
@@ -193,7 +203,8 @@ DOOM.NICE_ITEMS =
     kind = "health"
     add_prob = 20
     start_prob = 5
-    secret_prob = 50
+    closet_prob = 5
+    secret_prob = 40
     give = { {health=150} }
   }
 
@@ -203,7 +214,7 @@ DOOM.NICE_ITEMS =
     kind = "other"
     add_prob = 40
     start_prob = 80
-    secret_prob = 10
+    closet_prob = 10
     give = { {ammo="bullet",count=10 }, {ammo="shell", count=4 },
              {ammo="cell",  count=20 }, {ammo="rocket",count=1 } }
   }
@@ -214,7 +225,8 @@ DOOM.NICE_ITEMS =
   {
     id = 2005
     kind = "other"  -- really a weapon
-    secret_prob = 20
+    secret_prob = 10
+    once_only = true
   }
 
   berserk =
@@ -222,7 +234,7 @@ DOOM.NICE_ITEMS =
     id = 2023
     kind = "health"  -- treat it like a big health item
     add_prob = 15
-    secret_prob = 40
+    secret_prob = 20
     give = { {health=70} }
   }
 
@@ -233,7 +245,7 @@ DOOM.NICE_ITEMS =
     id = 2024
     kind = "powerup"
     add_prob = 6
-    secret_prob = 70
+    closet_prob = 20
     time_limit = 100
   }
 
@@ -243,7 +255,8 @@ DOOM.NICE_ITEMS =
     kind = "powerup"
     level = 6
     add_prob = 2
-    secret_prob = 110
+    closet_prob = 5
+    secret_prob = 5
     time_limit = 30
   }
 
@@ -251,7 +264,23 @@ DOOM.NICE_ITEMS =
   {
     id = 2026
     kind = "powerup"
-    secret_prob = 90
+    secret_prob = 10
+    once_only = true
+  }
+
+  goggles =
+  {
+    id = 2045
+    kind = "powerup"
+    closet_prob = 10
+    time_limit = 120
+  }
+
+  radsuit =
+  {
+    id = 2025
+    kind = "powerup"
+    time_limit = 60
   }
 
   -- Doom II only --
@@ -262,21 +291,18 @@ DOOM.NICE_ITEMS =
     kind = "health"
     level = 4
     add_prob = 2
-    secret_prob = 70
+    secret_prob = 20
     give = { {health=200} }
   }
 
   --
   -- NOTES:
   --
-  -- Radiation suit is not here, since it needs special logic
-  -- (namely to create areas with a nukage or lava floor which the
-  --  player is forced to cross).
+  -- The All-map is for secrets only, hence has no add_prob.
   --
-  -- Night-vision goggles also needs special logic and hence is
-  -- not here either.
-  --
-  -- The All-map is for secrets only, hence has no 'add_prob'.
+  -- Radiation suit has no probs (and hence is never added) since it
+  -- needs special logic, e.g. when creating areas of nukage or lava
+  -- which the player is forced to cross.
   --
 }
 
