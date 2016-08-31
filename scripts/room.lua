@@ -1646,10 +1646,10 @@ function Room_choose_size(R)
 
   if R.is_big then
     R.floor_limit = rand.pick({ 9,10,11,12 })
-    R. size_limit = SEED_W * 5
+    R. size_limit = SEED_W * 4.4
   else
     R.floor_limit = rand.pick({ 4,5,5,6,6,7 })
-    R. size_limit = SEED_W * 3
+    R. size_limit = SEED_W * 2.7
   end
 end
 
