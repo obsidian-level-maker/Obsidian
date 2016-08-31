@@ -1963,30 +1963,6 @@ function Quest_nice_items()
   local max_level
 
 
-  local function adjust_powerup_probs(pal, factor)  -- NOT USED ATM
-    -- apply the "Powerups" setting from the GUI
-
-    if not factor then factor = 5 end
-
-    each name,info in GAME.NICE_ITEMS do
-      if info.kind != "powerup" then continue end
-
-      if not pal[name] then continue end
---[[
-      if OB_CONFIG.powers == "none" then
-        pal[name] = nil
-      elseif OB_CONFIG.powers == "less" then
-        pal[name] = pal[name] / factor
-      elseif OB_CONFIG.powers == "more" then
-        pal[name] = pal[name] * factor
-      elseif OB_CONFIG.powers == "mixed" then
-        pal[name] = pal[name] * mixed_mul
-      end
---]]
-    end
-  end
-
-
   local function secret_palette()
     local pal = {}
 
@@ -1999,8 +1975,6 @@ function Quest_nice_items()
         pal[name] = info.secret_prob
       end
     end
-
----##    adjust_powerup_probs(pal)
 
     return pal
   end
@@ -2018,8 +1992,6 @@ function Quest_nice_items()
         pal[name] = info.add_prob
       end
     end
-
----##    adjust_powerup_probs(pal)
 
     return pal
   end
@@ -2058,8 +2030,6 @@ function Quest_nice_items()
 
       pal[name] = info.crazy_prob or 50
     end
-
----##    adjust_powerup_probs(pal)
 
     return pal
   end
