@@ -2,7 +2,7 @@
 --  DOOM PICKUPS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -11,6 +11,28 @@
 --  of the License, or (at your option) any later version.
 --
 --------------------------------------------------------------------
+
+--
+-- Usable keywords
+-- ===============
+--
+-- id          : editor number used to place item on the map
+--
+-- add_prob    : probabiliiy of adding as a general pickup [absent = never]
+-- start_prob  : if present, use instead of add_prob in start rooms
+-- crazy_prob  : if present, use instead of add_prob in "crazy" mode
+--
+-- secret_prob : chance of using in large secret rooms
+-- closet_prob : chance of using in small secret closets
+--
+-- level       : how far along (over episode) it should appear (1..9)
+--
+-- kind        : a keyword: health / armor / ammo / powerup / other
+-- rank        : the general niceness of the item (1..3)
+-- cluster     : how many to place together (a range of values)
+-- give        : list of what the player gets (e.g. quantity of ammo)
+--
+
 
 DOOM.PICKUPS =
 {
@@ -191,7 +213,7 @@ DOOM.NICE_ITEMS =
   saw =
   {
     id = 2005
-    kind = "weapon"
+    kind = "other"  -- really a weapon
     secret_prob = 20
   }
 

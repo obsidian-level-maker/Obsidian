@@ -2,7 +2,7 @@
 --  DOOM WEAPONS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -16,10 +16,13 @@
 -- Usable keywords
 -- ===============
 --
--- pref       : usage preference [absent = never]
+-- id         : editor number used to place weapon on the map
+--
+-- level      : how far along (over episode) it should appear (1..9)
 -- add_prob   : probabiliiy of adding into level [absent = never]
 -- dm_prob    : chance of being used in a Death-Match map
 --
+-- pref       : usage preference [absent = never]
 -- upgrades   : when present, always prefer this weapon over named one
 --              (e.g. always use chaingun instead of the pistol)
 --
@@ -28,7 +31,7 @@
 -- damage   : damage can inflict per shot (maximum possible)
 -- splash   : splash damage done to monsters (1st, 2nd, etc)
 --
--- attack : kind of attack (hitscan | missile | melee)
+-- attack : kind of attack: hitscan / missile / melee
 -- ammo   : ammo type [absent for no ammo weapons]
 -- per    : ammo per shot
 -- give   : ammo given when weapon is picked up

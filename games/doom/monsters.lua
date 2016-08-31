@@ -15,6 +15,9 @@
 -- Usable keywords
 -- ===============
 --
+-- id         : editor number used to place monster on the map
+-- level      : how far along (over episode) it should appear (1..9)
+--
 -- prob       : general probability of being used
 -- crazy_prob : probability for "Crazy" setting (default is 50)
 --
