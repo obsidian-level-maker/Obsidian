@@ -849,10 +849,9 @@ function Item_pickups_for_class(CL)
     local item_tab = {}
 
     each name,info in GAME.PICKUPS do
-      -- compatibilty crud...
-      local prob = info.add_prob or info.prob
+      local prob = info.add_prob or 0
 
-      if prob and
+      if prob > 0 and
          (stat == "health" and info.give[1].health) or
          (info.give[1].ammo == stat)
       then

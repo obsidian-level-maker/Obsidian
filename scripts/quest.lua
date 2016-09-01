@@ -1962,6 +1962,37 @@ function Quest_nice_items()
 
   local max_level
 
+  local  start_items
+  local normal_items
+  local closet_items
+  local secret_items
+
+
+  local function pick_item(pal)
+    if table.empty(pal) then return nil end
+
+    local name = rand.key_by_probs(pal)
+
+    local info = GAME.NICE_ITEMS[name] or GAME.PICKUPS[name]
+    assert(info)
+
+    if info.once_only then
+       start_items[name] = nil
+      normal_items[name] = nil
+      closet_items[name] = nil
+      secret_items[name] = nil
+    end
+
+    --[[ TODO : REVIEW THIS
+    if info.kind == "powerup" or info.kind == "weapon" then
+      local old_prob = secret_items[name]
+      secret_items[name] = old_prob / 8
+    end
+    --]]
+
+    return name
+  end
+
 
   local function secret_palette()
     local pal = {}
@@ -2035,29 +2066,7 @@ function Quest_nice_items()
   end
 
 
-  local function mark_item_seen(name)
-    -- prefer not to use this item again
-
-    local info = GAME.NICE_ITEMS[name]
-    assert(info)
-
-    if not LEVEL.secret_items[name] then return end
-
-    if info.kind == "powerup" or info.kind == "weapon" then
-      local old_prob = LEVEL.secret_items[name]
-
-      LEVEL.secret_items[name] = old_prob / 8
-    end
-  end
-
-
   local function visit_secret_rooms()
-    LEVEL.secret_items = secret_palette()
-
-    if table.empty(LEVEL.secret_items) then
-      return
-    end
-
     -- collect all secret leafs
     local rooms = {}
 
@@ -2068,23 +2077,23 @@ function Quest_nice_items()
     end
 
     each R in rooms do
-      local item = rand.key_by_probs(LEVEL.secret_items)
+      local item = pick_item(secret_items)
+
+      if item == nil then break end
 
       table.insert(R.items, item)
-      mark_item_seen(item)
 
       gui.debugf("Secret item '%s' --> %s\n", item, R.name)
     end
   end
 
 
+  local function handle_secret_closets()
+    -- TODO
+  end
+
+
   local function visit_start_rooms()
-    local start_items = start_palette()
-
-    if table.empty(start_items) then
-      return
-    end
-
     -- collect start rooms
     local rooms = {}
 
@@ -2102,11 +2111,12 @@ function Quest_nice_items()
 
     for loop = 1, quota do
       -- add the same item into each start room
-      local item = rand.key_by_probs(start_items)
+      local item = pick_item(start_items)
+
+      if item == nil then break end
 
       each R in rooms do
         table.insert(R.items, item)
-        mark_item_seen(item)
 
         gui.debugf("Start item '%s' --> %s\n", item, R.name)
       end
@@ -2172,10 +2182,10 @@ end
 
       local R = table.remove(locs)
 
-      local item = rand.key_by_probs(normal_items)
+      local item = pick_item(normal_items)
+      if item == nil then break end
 
       table.insert(R.items, item)
-      mark_item_seen(item)
 
       gui.debugf("Nice item '%s' --> %s\n", item, R.name)
     end
@@ -2203,14 +2213,31 @@ end
 
   max_level = 1 + LEVEL.ep_along * 9
 
+  -- collect all the items we might use
+  start_items = start_palette()
+
+  if OB_CONFIG.strength == "crazy" then
+    normal_items = crazy_palette()
+  else
+    normal_items = normal_palette()
+  end
+
+  closet_items = secret_palette("do_closet")
+  secret_items = secret_palette()
+
+
   visit_secret_rooms()
+
+  handle_secret_closets()
 
   -- start rooms usually get one (occasionally two)
   visit_start_rooms()
 
-  -- everything else uses a quota...
+  -- TODO exit room stuff (help fight big bad bosses...)
 
-  local quota = (SEED_W + SEED_H) / rand.pick({ 15, 25, 45 })
+  -- other rooms use a quota...
+
+  local quota = (SEED_W + SEED_H + 40) / rand.pick({ 25, 40, 65 })
 
   if OB_CONFIG.items == "less"  then quota = quota / 2.0 end
   if OB_CONFIG.items == "more"  then quota = quota * 2.0 end
@@ -2219,13 +2246,6 @@ end
   quota = rand.int(quota)
 
   gui.printf("Item quota : %1.2f\n", quota)
-
-
-  local normal_items = normal_palette()
-
-  if OB_CONFIG.strength == "crazy" then
-    normal_items = crazy_palette()
-  end
 
   local locs = collect_other_rooms()
 

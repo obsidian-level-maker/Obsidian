@@ -50,6 +50,12 @@
     peer : ROOM     -- links rooms created via symmetry
 
 
+    goals    : list(GOAL)   -- what goals are here (e.g. keys)
+    weapons  : list(NAME)   -- what weapons to place in this room
+    items    : list(NAME)   -- what nice items to place
+    closet_items : list     -- what items to use in secret closets
+
+
     floor_chunks : list(CHUNK)   -- chunks in a walkable area
      ceil_chunks : list(CHUNK)
 
@@ -140,6 +146,7 @@ function ROOM_CLASS.new()
     teleporters = {}
     weapons = {}
     items = {}
+    closet_items = {}
 
     mon_spots  = {}
     item_spots = {}
