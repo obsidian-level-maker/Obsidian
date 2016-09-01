@@ -2088,8 +2088,37 @@ function Quest_nice_items()
   end
 
 
+  local function secret_closets_in_room(R)
+    if R.kind == "hallway" then return end
+    if R.is_secret then return end
+
+    -- chance of using *any* closets in this room
+    local any_prob = style_sel("secrets", 0, 30, 60, 90)
+any_prob = 100
+    if not rand.odds(any_prob) then
+      return
+    end
+
+    -- estimate number of usable closets
+    local usable = (#R.closets - #R.items - #R.goals)
+    if usable < 0 then usable = 0 end
+    if usable > 5 then usable = 5 end
+
+    -- choose how many to use
+    usable = usable * style_sel("secrets", 0, 0.2, 0.3, 0.4)
+    usable = rand.int(usable)
+
+    -- FIXME : pick the items
+  end
+
+
   local function handle_secret_closets()
-    -- TODO
+    local rooms = table.copy(LEVEL.rooms)
+    rand.shuffle(rooms)
+
+    each R in rooms do
+      secret_closets_in_room(R)
+    end
   end
 
 
