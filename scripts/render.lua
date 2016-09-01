@@ -1349,6 +1349,11 @@ function Render_chunk(chunk)
     reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
+  local function do_secret_exit()
+    reqs.kind = "secret_exit"
+    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
+  end
+
   local function do_cage()
     reqs.kind = "cage"
     reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
@@ -1490,6 +1495,9 @@ function Render_chunk(chunk)
 
   elseif what == "EXIT" then
     do_exit()
+
+  elseif what == "SECRET_EXIT" then
+    do_secret_exit()
 
   elseif what == "TELEPORTER" then
     do_teleporter()
