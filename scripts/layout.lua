@@ -233,6 +233,10 @@ function Layout_spot_for_wotsit(R, kind, required)
       if chunk.kind != "closet" then return -1 end
     end
 
+    if kind == "SECRET_EXIT" then
+      if chunk.kind != "closet" then return -1 end
+    end
+
     local score = (chunk.sig_dist or 0) * 10
 
     if kind == "TELEPORTER" then
@@ -308,7 +312,11 @@ end
 
 
 
-function Layout_place_importants(R)
+function Layout_place_importants(R, imp_pass)
+  --
+  -- imp_pass is '1' for vital stuff (goals and teleporters)
+  -- imp_pass is '2' for less vital stuff (weapons and items)
+  --
 
   local function point_in_front_of_closet(chunk, r)
     local mx, my = chunk.mx, chunk.my
@@ -416,33 +424,56 @@ function Layout_place_importants(R)
 
   ---| Layout_place_importants |---
 
-  each tel in R.teleporters do
-    add_teleporter(tel)
-  end
+  if imp_pass == 1 then
+    each tel in R.teleporters do
+      add_teleporter(tel)
+    end
 
-  each goal in R.goals do
-    add_goal(goal)
-  end
+    each goal in R.goals do
+      add_goal(goal)
+    end
 
-  if not table.empty(LEVEL.unplaced_weapons) then
-    table.append(R.weapons, LEVEL.unplaced_weapons)
-    LEVEL.unplaced_weapons = {}
-  end
+  elseif imp_pass == 2 then
+    -- try weapons which failed to be placed in the previous room
+    if not table.empty(LEVEL.unplaced_weapons) then
+      table.append(R.weapons, LEVEL.unplaced_weapons)
+      LEVEL.unplaced_weapons = {}
+    end
 
-  each name in R.weapons do
-    add_weapon(name)
-  end
+    each name in R.weapons do
+      add_weapon(name)
+    end
 
-  each name in R.items do
-    add_item(name)
+    each name in R.items do
+      add_item(name)
+    end
+
+  else
+    error("bad imp_pass")
   end
+end
+
+
+
+function Layout_place_hub_gates()
+  -- this also does secret exit closets
+
+  -- TODO : place secret exit closets
+
 end
 
 
 
 function Layout_place_all_importants()
   each R in LEVEL.rooms do
-    Layout_place_importants(R)
+    Layout_place_importants(R, 1)
+  end
+
+  -- this also does secret exit closets
+  Layout_place_hub_gates()
+
+  each R in LEVEL.rooms do
+    Layout_place_importants(R, 2)
   end
 end
 
