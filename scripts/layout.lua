@@ -460,6 +460,50 @@ function Layout_place_hub_gates()
 
   -- TODO : place secret exit closets
 
+  local function num_free_closets(R)
+    local count = 0
+
+    each chunk in R.closets do
+      if chunk.content_kind == nil then
+        count = count + 1
+      end
+    end
+
+    return count
+  end
+
+
+  local function eval_exit_room(R)
+    local spots = num_free_closets(R)
+
+    if spots == 0 then return -1 end
+
+    local score = 1
+
+    if R.is_secret then
+      score = score + 200
+    elseif not (R.is_start or R.is_exit) then
+      score = score + 100
+    end
+
+    -- prefer it near the end of the map
+    if R.lev_along > 0.7 then
+      score = score + 50
+    elseif R.lev_along > 0.4 then
+      score = score + 20
+    end
+
+    -- try to leave some closets for weapons and items
+    if spots > (#R.weapons + #R.items) then
+      score = score + 10
+    end
+
+    -- tie breaker
+    return score + gui.random()
+  end
+
+
+  -- TODO
 end
 
 
