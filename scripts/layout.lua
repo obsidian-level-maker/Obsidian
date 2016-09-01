@@ -879,15 +879,13 @@ function Layout_decorate_rooms(KKK_PASS)
   end
 
 
-  local function make_secret_closet(chunk)
+  local function make_secret_closet(chunk, item)
     chunk.content_kind = "ITEM"
+    chunk.content_item = item
 
     chunk.is_secret = true
 
-    -- !!!! FIXME : pick item properly
-    chunk.content_item = "green_armor"
-
-    -- let the code in render.lua select the prefab
+    -- code in render.lua selects the actual prefab
   end
 
 
@@ -1261,26 +1259,25 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function try_secret_closets(R)
-    if R.is_secret then return end
+    if table.empty(R.closet_items) then return end
 
-    -- chance of using *any* closets in this room
-    local any_prob = style_sel("secrets", 0, 20, 40, 70)
-any_prob = 100
-    if not rand.odds(any_prob) then
-      return
-    end
-
-    local per_prob = style_sel("secrets", 0, 10, 20, 30)
-per_prob = 100 --!!!!
+    local locs = {}
 
     each chunk in R.closets do
-      if not chunk.content_kind and
-         ---???  not Chunk_is_slave(chunk) and
-         rand.odds(per_prob)
-      then
-stderrf("***** secret closet in %s\n", R.name)
-        make_secret_closet(chunk)
+      if not chunk.content_kind then
+        table.insert(locs, chunk)
       end
+    end
+
+    -- WISH : prefer chunks which are not near each other
+    rand.shuffle(locs)
+
+    each item in R.closet_items do
+      if table.empty(locs) then break; end
+
+      local chunk = table.remove(locs, 1)
+
+      make_secret_closet(chunk, item)
     end
   end
 

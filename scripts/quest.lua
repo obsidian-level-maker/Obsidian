@@ -1967,13 +1967,15 @@ function Quest_nice_items()
   local closet_items
   local secret_items
 
+  local ALL_ITEMS = table.merge(table.copy(GAME.NICE_ITEMS), GAME.PICKUPS)
+
 
   local function pick_item(pal)
     if table.empty(pal) then return nil end
 
     local name = rand.key_by_probs(pal)
 
-    local info = GAME.NICE_ITEMS[name] or GAME.PICKUPS[name]
+    local info = ALL_ITEMS[name]
     assert(info)
 
     if info.once_only then
@@ -1994,16 +1996,24 @@ function Quest_nice_items()
   end
 
 
-  local function secret_palette()
+  local function secret_palette(do_closet)
     local pal = {}
 
-    each name,info in GAME.NICE_ITEMS do
+    each name,info in ALL_ITEMS do
       if (info.level or 1) > max_level then
         continue
       end
 
-      if info.secret_prob then
-        pal[name] = info.secret_prob
+      local prob
+
+      if do_closet then
+        prob = info.closet_prob
+      else
+        prob = info.secret_prob
+      end
+
+      if prob and prob > 0 then
+        pal[name] = prob
       end
     end
 
@@ -2083,13 +2093,12 @@ function Quest_nice_items()
 
       table.insert(R.items, item)
 
-      gui.debugf("Secret item '%s' --> %s\n", item, R.name)
+      gui.debugf("Secret Item '%s' --> %s\n", item, R.name)
     end
   end
 
 
   local function secret_closets_in_room(R)
-    if R.kind == "hallway" then return end
     if R.is_secret then return end
 
     -- chance of using *any* closets in this room
@@ -2104,11 +2113,23 @@ any_prob = 100
     if usable < 0 then usable = 0 end
     if usable > 5 then usable = 5 end
 
+    -- rare in start rooms
+    if R.is_start then usable = usable * 0.3 end
+
     -- choose how many to use
     usable = usable * style_sel("secrets", 0, 0.2, 0.3, 0.4)
     usable = rand.int(usable)
 
-    -- FIXME : pick the items
+    -- pick the items
+    for loop = 1, usable do
+      local item = pick_item(closet_items)
+
+      if item == nil then break end
+
+      table.insert(R.closet_items, item)
+
+      gui.debugf("Closet Item '%s' --> %s\n", item, R.name)
+    end
   end
 
 
@@ -2147,7 +2168,7 @@ any_prob = 100
       each R in rooms do
         table.insert(R.items, item)
 
-        gui.debugf("Start item '%s' --> %s\n", item, R.name)
+        gui.debugf("Start Item '%s' --> %s\n", item, R.name)
       end
     end
   end
@@ -2216,7 +2237,7 @@ end
 
       table.insert(R.items, item)
 
-      gui.debugf("Nice item '%s' --> %s\n", item, R.name)
+      gui.debugf("Nice Item '%s' --> %s\n", item, R.name)
     end
   end
 
@@ -2235,7 +2256,7 @@ end
   ---| Quest_nice_items |---
 
   if OB_CONFIG.items == "none" then
-    gui.printf("Nice items : disabled (user setting).\n")
+    gui.printf("Nice Items : disabled (user setting).\n")
     find_storage_rooms()
     return
   end
