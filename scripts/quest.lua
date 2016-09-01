@@ -2181,21 +2181,26 @@ any_prob = 100
 
     if R.kind == "hallway" then return -1 end
 
-    -- primary criterion is the # of unused chunks
-    local score = R:usable_chunks() * 20
+    if R:usable_chunks() < 2 then return -1 end
 
     -- unused leaf rooms take priority
     if R:is_unused_leaf() then
-      score = score + 90;
+      return 100 + gui.random()
     end
 
-    if score < 1 then return -1 end
+    local score = 10
 
-    if #R.goals   > 0 then score = score / 2 end
-    if #R.weapons > 0 then score = score / 2 end
+    if #R.weapons > 0 then return -1 end
+    if #R.items   > 0 then return -1 end
+
+    if #R.goals == 0 then score = score + 50 end
+
+    if R:total_conns("ignore_secrets") < 2 then
+      score = score + 20
+    end
 
     -- tie breaker
-    return score + gui.random() * 4
+    return score + gui.random()
   end
 
 
@@ -2215,18 +2220,23 @@ any_prob = 100
     -- sort them (best first)
     table.sort(list, function(A, B) return A.nice_item_score > B.nice_item_score end)
 
---[[ DEBUG
-stderrf("Other rooms:\n")
-each LOC in list do
-stderrf("  %1.2f = %s  unused_leaf = %s\n", LOC.nice_item_score, LOC.name, string.bool(LOC:is_unused_leaf()))
-end
---]]
-
     return list
   end
 
 
-  local function visit_other_rooms(locs, normal_items)
+  local function visit_other_rooms()
+    local quota = (SEED_W + SEED_H + 40) / rand.pick({ 30, 55, 90 })
+
+    if OB_CONFIG.items == "less"  then quota = quota / 2.0 end
+    if OB_CONFIG.items == "more"  then quota = quota * 2.0 end
+    if OB_CONFIG.items == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
+
+    quota = rand.int(quota)
+
+    gui.printf("Other Item quota : %1.2f\n", quota)
+
+    local locs = collect_other_rooms()
+
     for i = 1, quota do
       if table.empty(locs) then break; end
 
@@ -2237,7 +2247,7 @@ end
 
       table.insert(R.items, item)
 
-      gui.debugf("Nice Item '%s' --> %s\n", item, R.name)
+      gui.debugf("Other Item '%s' --> %s\n", item, R.name)
     end
   end
 
@@ -2283,25 +2293,10 @@ end
   -- start rooms usually get one (occasionally two)
   visit_start_rooms()
 
-  -- TODO exit room stuff (help fight big bad bosses...)
+  -- TODO help for fighting big bosses
+  -- visit_boss_rooms()
 
-  -- other rooms use a quota...
-
-  local quota = (SEED_W + SEED_H + 40) / rand.pick({ 25, 40, 65 })
-
-  if OB_CONFIG.items == "less"  then quota = quota / 2.0 end
-  if OB_CONFIG.items == "more"  then quota = quota * 2.0 end
-  if OB_CONFIG.items == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
-
-  quota = rand.int(quota)
-
-  gui.printf("Item quota : %1.2f\n", quota)
-
-  local locs = collect_other_rooms()
-
---WTF   no 'quota' value FIXME
---!!!!  visit_other_rooms(locs, normal_items)
-
+  visit_other_rooms()
 
   -- mark all remaining unused leafs as STORAGE rooms
   find_storage_rooms()
@@ -2869,7 +2864,7 @@ function Quest_room_themes()
 
 
   local function dump_themes()
-    gui.debugf("\nRoom themes:\n");
+    gui.debugf("\nRoom themes:\n")
 
     each Z in LEVEL.zones do
       gui.debugf("%s:\n", Z.name)
