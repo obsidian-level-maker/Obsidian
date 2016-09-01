@@ -503,7 +503,45 @@ function Layout_place_hub_gates()
   end
 
 
-  -- TODO
+  local function make_secret_exit(R)
+    gui.debugf("Secret exit closet in %s\n", R.name)
+
+    local chunk = Layout_spot_for_wotsit(R, "SECRET_EXIT")
+
+    -- should not fail, as our eval function detects free closets
+    assert(chunk)
+
+    chunk.kind = "SECRET_EXIT"
+  end
+
+
+  local function add_a_secret_exit()
+    local best_R
+    local best_score = 0
+
+    each R in LEVEL.rooms do
+      local score = eval_exit_room(R)
+
+      if score > best_score then
+        best_R = R
+        best_score = score
+      end
+    end
+
+    if not best_R then
+      gui.printf("WARNING: could not add a secret exit to the map!\n")
+      return
+    end
+
+    make_secret_exit(best_R)
+  end
+
+
+  ---| Layout_place_hub_gates |---
+
+  if LEVEL.need_secret_exit or true then  --!!!!!
+    add_a_secret_exit()
+  end
 end
 
 

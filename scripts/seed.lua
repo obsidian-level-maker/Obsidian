@@ -148,8 +148,9 @@
                      -- only used for stairs, closets, joiners
 
     content_kind : keyword  -- is NIL when unused / free
-                            -- "START", "EXIT", "TELEPORTER"
-                            -- "KEY", "WEAPON", "ITEM", "SWITCH"
+                            -- "START", "EXIT", "SECRET_EXIT"
+                            -- "TELEPORTER", "SWITCH"
+                            -- "KEY", "WEAPON", "ITEM"
                             -- "CAGE", "TRAP", "DECORATION"
 
     is_secret      -- boolean
