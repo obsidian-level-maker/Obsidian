@@ -1130,7 +1130,7 @@ function astar_find_path(sx, sy, ex, ey, W, H, score_func, data)
     return geom.dist(x, y, ex, ey)
   end
 
-  function lowest_F()  -- brute force search (SLOW!)
+  local function lowest_F()  -- brute force search (SLOW!)
     local rx, ry
     local best_F = 9e20
 

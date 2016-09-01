@@ -1449,7 +1449,7 @@ function Fab_load_wad(def)
   end
 
 
-  function create_it()
+  local function create_it()
     fab = table.copy(def)
 
     fab.state = "raw"
@@ -1460,7 +1460,7 @@ function Fab_load_wad(def)
   end
 
 
-  function load_it()
+  local function load_it()
     create_it()
 
     local filename = assert(def.dir_name) .. "/" .. def.file

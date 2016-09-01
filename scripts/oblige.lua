@@ -201,7 +201,8 @@ function ob_console_dump(info, ...)
     gui.conprintf("@2%s}\n", string.rep("   ",indent))
   end
 
-  function dump_value(val)
+
+  local function dump_value(val)
     local t = type(val)
 
     if val == nil then
