@@ -2085,10 +2085,12 @@ function Quest_nice_items()
     local rooms = {}
 
     each R in LEVEL.rooms do
-      if R.is_secret and R.kind != "hallway" then
+      if R.is_secret and not R.is_exit and R.kind != "hallway" then
         table.insert(rooms, R)
       end
     end
+
+    rand.shuffle(rooms)
 
     each R in rooms do
       local item = pick_item(secret_items)
@@ -2107,7 +2109,6 @@ function Quest_nice_items()
 
     -- chance of using *any* closets in this room
     local any_prob = style_sel("secrets", 0, 30, 60, 90)
-any_prob = 100
     if not rand.odds(any_prob) then
       return
     end
