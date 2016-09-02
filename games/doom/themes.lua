@@ -174,7 +174,7 @@ DOOM.SINKS =
   floor_snakes =
   {
     mat = "SFLR6_4"
-    dz  = -4
+    dz  = -8
   }
 
   floor_green =
@@ -186,19 +186,19 @@ DOOM.SINKS =
   floor_red =
   {
     mat = "FLOOR1_6"
-    dz  = -4
+    dz  = -8
   }
 
   floor_blue =
   {
-    mat = "CEIL4_2"
-    dz  = -4
+    mat = "FLAT14"
+    dz  = -8
   }
 
   floor_blue2 =
   {
     mat = "CEIL4_3"
-    dz  = -4
+    dz  = -8
   }
 
 
