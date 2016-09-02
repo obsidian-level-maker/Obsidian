@@ -76,7 +76,6 @@
     cave_theme     : ROOM_THEME
     hallway_theme  : ROOM_THEME
     outdoor_theme  : ROOM_THEME
-    building_theme : ROOM_THEME
 
     facade_mat      -- material for outer walls of buildings
     other_facade    -- another one
@@ -2474,9 +2473,7 @@ function Quest_room_themes()
   end
 
 
-  local function collect_usable_themes(env, max_rarity)
-    max_rarity = max_rarity or 0
-
+  local function collect_usable_themes(env)
     local tab = {}
 
     each name,info in GAME.ROOM_THEMES do
@@ -2484,11 +2481,11 @@ function Quest_room_themes()
         error("Room theme uses old 'kind' keyword: " .. name)
       end
 
-      if info.env == env and
-         (info.rarity or 0) <= max_rarity and
+      if info.prob and
+         info.env == env and
          match_level_theme(name)
       then
-        tab[name] = info.prob or 50
+        tab[name] = info.prob
       end
     end
 
@@ -2520,220 +2517,60 @@ function Quest_room_themes()
   end
 
 
-  local function major_building_themes(theme_tab)
-    local tab = table.copy(theme_tab)
+  local function pick_building_theme(R, last_R, conn, tab)
+    local last_theme
 
-    each Z in LEVEL.zones do
-      local name = rand.key_by_probs(tab)
-
-      tab[name] = tab[name] / 20
-
-      Z.building_theme = assert(GAME.ROOM_THEMES[name])
-    end
-  end
-
-
-  local function building_themes_str(Z)
-    local names = {}
-
-    each RT in Z.building_themes do
-      table.insert(names, RT.name)
-    end
-
-    return table.list_str(names)
-  end
-
-
-  local function is_unset_building(R)
-    if R.kind != "normal" then return false end
-
-    if R.theme then return false end
-
-    return (not R.is_outdoor and not R.is_cave)
-  end
-
-
-  local function do_buildings_in_zones__OLD(Z)
-    -- sanity check
-    assert(Z.building_themes[1])
-    assert(Z.building_themes[2])
-    assert(Z.building_themes[3])
-
-    -- firstly, collect all unset indoor rooms
-    local room_list = {}
-
-    each R in Z.rooms do
-      if R.kind == "normal" and not R.theme and
-         not R.is_outdoor and not R.is_cave
-      then
-        table.insert(room_list, R)
-      end
-    end
-
-    if table.empty(room_list) then return end
-
-    -- a single room is an easy case
-    if #room_list == 1 then
-      room_list[1].theme = Z.building_themes[1]
-      return
-    end
-
-    -- for multiple rooms, we assign the 2nd and 3rd theme to some
-    -- random rooms (upto a certain limit), and the remaining rooms
-    -- simply become the major theme.
-
-    rand.shuffle(room_list)
-
-    local limit = 0 ---!!! math.floor(#room_list * 0.37)
-
-    for i = 1, limit do
-      local R = table.remove(room_list, 1)
-
-      local idx = rand.sel(75, 2, 3)
-
-      R.theme = Z.building_themes[idx]
-    end
-
-    each R in room_list do
-      R.theme = Z.building_themes[1]
-    end
-  end
-
-
-  local function rare_level_theme(tab)
-    tab = table.copy(tab)
-    tab["NONE"] = 20
-
-    local name = rand.key_by_probs(tab)
-
-    if name == "NONE" then return end
-
-    local room_list = {}
-
-    each R in LEVEL.rooms do
-      if is_unset_building(R) then
-        table.insert(room_list, R)
-      end
-    end
-
-    if #room_list < 1 then return end
-
-    -- when level only has a few rooms, limit how often we use it
-    local use_prob = 20 + (#room_list - 1) * 30
-    if not rand.odds(use_prob) then return end
-
-    local R = rand.pick(room_list)
-
-    R.theme = assert(GAME.ROOM_THEMES[name])
-  end
-
-
-  local function pick_rare_zone_theme(Z, tab)
-    local name = rand.key_by_probs(tab)
-
-    if name == "NONE" then return end
-
-    local room_list = {}
-
-    each R in Z.rooms do
-      if is_unset_building(R) then
-        table.insert(room_list, R)
-      end
-    end
-
-    if #room_list < 1 then return end
-
-    -- when zone only has a few rooms, limit how often we use it
-    local use_prob = 60 + (#room_list - 1) * 18
-    if not rand.odds(use_prob) then return end
-
-    local R = rand.pick(room_list)
-
-    R.theme = assert(GAME.ROOM_THEMES[name])
-  end
-
-
-  local function rare_zone_themes(tab)
-    tab = table.copy(tab)
-    tab["NONE"] = 20
-
-    each Z in LEVEL.zones do
-      pick_rare_zone_theme(Z, tab)
-    end
-  end
-
-
-  local function pick_common_building(R, last_R, tab)
-    assert(R.zone.building_theme)
-
-    local last_theme = last_R and last_R.theme
-
-    -- when last theme is different from zone's building theme, then
-    -- generally use the zone building theme, but when the same then
-    -- often pick a new one.
-    local zone_prob = 75
-    local keep_prob = 0
-
-    if last_theme then
-      if last_theme == R.zone.building_theme then
-        zone_prob = 35
-        keep_prob = 0
-      else
-        zone_prob = 75
-        keep_prob = sel(last_theme.rarity, 10, 50)
-      end
-    end
-
-    if rand.odds(zone_prob) then
-      R.theme = R.zone.building_theme
-      return
-    end
-
-    if rand.odds(keep_prob) then
-      R.theme = assert(last_theme)
-      return
-    end
-
-    -- remove zone's building theme from tab
-    if table.size(tab) >= 2 then
-      tab = table.copy(tab)
-      tab[R.zone.building_theme.name] = nil
+    if last_R and last_R:get_env() == "building" then
+      last_theme = last_R and last_R.theme
     end
 
     if last_theme and table.size(tab) >= 2 then
+      assert(conn)
+
+      -- IDEA : make this depend on combined size of both rooms
+      local keep_prob = 35
+
+      -- force theme change over zone boundaries or teleporters
+      if R.zone != last_R.zone or conn.keyword == "teleporter" then
+        keep_prob = 0
+      end
+
+      if rand.odds(keep_prob) then
+        R.theme = last_theme
+        return
+      end
+
       tab = table.copy(tab)
       tab[last_theme.name] = nil
     end
 
     local name = rand.key_by_probs(tab)
 
-    R.theme = assert(GAME.ROOM_THEMES[name])
+    R.theme = GAME.ROOM_THEMES[name]
+    assert(R.theme)
   end
 
 
-  local function visit_room(R, last_R, theme_tab)
-    if is_unset_building(R) then
-      pick_common_building(R, last_R, theme_tab)
+  local function visit_room(R, last_R, via_conn, theme_tab)
+    if R:get_env() == "building" and not R.theme then
+      pick_building_theme(R, last_R, via_conn, theme_tab)
     end
 
     each C in R.conns do
       local R2 = C:other_room(R)
 
       if R2.lev_along > R.lev_along then
-        visit_room(R2, R, theme_tab)
+        visit_room(R2, R, C, theme_tab)
       end
     end
   end
 
 
   local function choose_building_themes()
-    local common_tab = collect_usable_themes("building", 0)
-    local   full_tab = collect_usable_themes("building", 1)
-
-    major_building_themes(common_tab)
+    local building_tab = collect_usable_themes("building")
 
     -- recursively flow through the level
-    visit_room(LEVEL.start_room, nil, full_tab)
+    visit_room(LEVEL.start_room, nil, nil, building_tab)
   end
 
 
