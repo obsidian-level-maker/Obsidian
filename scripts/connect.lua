@@ -206,7 +206,7 @@ function Connect_teleporters()
     -- never in hallways
     if R.kind == "hallway" then return -1 end
 
-    local score = R:usable_chunks() * 10
+    local score = R:usable_chunks() * 10 + 1
 
     -- tie breaker
     return score + gui.random() * 22
@@ -235,14 +235,12 @@ function Connect_teleporters()
 
   local function pick_room_in_trunk(trunk)
     local best
-    local best_score
+    local best_score = 0
 
     each R in trunk.rooms do
       local score = eval_room(R)
 
-      if score < 0 then continue end
-
-      if not best or score > best_score then
+      if score > best_score then
         best = R
         best_score = score
       end

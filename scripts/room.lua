@@ -489,7 +489,9 @@ end
 
 
 function ROOM_CLASS.usable_chunks(R)
-  return #R.floor_chunks + #R.closets - R.used_chunks
+  local num = #R.floor_chunks + #R.closets - R.used_chunks
+  if num < 0 then num = 0 end
+  return num
 end
 
 
