@@ -563,6 +563,7 @@ DOOM.THEMES =
     {
       PLAIN = 100
       low_gap = 30
+      runes1 = 20
       cross1 = 10
     }
 

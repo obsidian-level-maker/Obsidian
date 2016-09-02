@@ -2,7 +2,7 @@
 -- Wall with satanic runes
 --
 
-GROUPS.wall_runes =
+GROUPS.wall_runes1 =
 {
   env = "building"
 
@@ -10,7 +10,7 @@ GROUPS.wall_runes =
 }
 
 
-PREFABS.Wall_runes1 =
+PREFABS.Wall_runes1_A =
 {
   file   = "wall/runes.wad"
   map    = "MAP01"
@@ -20,7 +20,7 @@ PREFABS.Wall_runes1 =
 
   height = 128
 
-  group  = "runes"
+  group  = "runes1"
 
   x_fit  = "frame"
   z_fit  = "frame"
@@ -30,37 +30,37 @@ PREFABS.Wall_runes1 =
 }
 
 
-PREFABS.Wall_runes2 =
+PREFABS.Wall_runes1_B =
 {
-  template = "Wall_runes1"
+  template = "Wall_runes1_A"
   map      = "MAP02"
 }
 
 
-PREFABS.Wall_runes3 =
+PREFABS.Wall_runes1_C =
 {
-  template = "Wall_runes1"
+  template = "Wall_runes1_A"
   map      = "MAP03"
 }
 
 
-PREFABS.Wall_runes4 =
+PREFABS.Wall_runes1_D =
 {
-  template = "Wall_runes1"
+  template = "Wall_runes1_A"
   map      = "MAP04"
 }
 
 
-PREFABS.Wall_runes5 =
+PREFABS.Wall_runes1_E =
 {
-  template = "Wall_runes1"
+  template = "Wall_runes1_A"
   map      = "MAP05"
 }
 
 
-PREFABS.Wall_runes6 =
+PREFABS.Wall_runes1_F =
 {
-  template = "Wall_runes1"
+  template = "Wall_runes1_A"
   map      = "MAP06"
 }
 
