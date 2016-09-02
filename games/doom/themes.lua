@@ -1258,63 +1258,23 @@ DOOM.ROOM_THEMES =
 ----  URBAN / CITY / EARTH  -----------------------
 
 
-  urban_Panel =
-  {
-    env  = "building"
-    prob = 40
-
-    walls =
-    {
-      PANEL6 = 50
-      PANEL8 = 50
-      PANEL9 = 30
-      PANEL7 = 20
-      PANEL3 = 50
-      PANEL2 = 50
-      PANCASE2 = 30
-    }
-
-    floors =
-    {
-      FLOOR0_2 = 15
-      FLOOR5_3 = 20
-      FLOOR5_4 = 15
-      FLAT1_1 = 50
-      FLAT1 = 30
-      FLAT8 = 10
-      FLAT5_5 = 30
-      FLAT5 = 20
-    }
-
-    ceilings =
-    {
-      FLAT1 = 50
-      CEIL1_1 = 20
-      FLAT5_2 = 20
-      CEIL3_3 = 10
-      RROCK10 = 20
-    }
-  }
-
-
   urban_Brick =
   {
     env  = "building"
-    prob = 70
+    prob = 100
 
     walls =
     {
-      BRICK1  = 10
-      BRICK2  = 15
-      BRICK5  = 50
-      BRICK6  = 20
-      BRICK7  = 30
-      BRICK8  = 15
-      BRICK9  = 20
-      BRICK12 = 30
+      BIGBRIK1 = 80
+      BIGBRIK2 = 80
 
-      BIGBRIK1 = 90
-      BIGBRIK2 = 90
+      BRICK12 = 60
+      BRICK5  = 40
+      BRICK7  = 40
+
+      BRICK2  = 20
+      BRICK1  = 10
+      BRICK9  = 10
     }
 
     floors =
@@ -1350,15 +1310,56 @@ DOOM.ROOM_THEMES =
   }
 
 
+  urban_Panel =
+  {
+    env  = "building"
+    prob = 50
+
+    walls =
+    {
+      PANEL6 = 50
+      PANEL8 = 50
+      PANEL9 = 30
+      PANEL7 = 20
+      PANEL3 = 50
+      PANEL2 = 50
+      PANCASE2 = 30
+    }
+
+    floors =
+    {
+      FLOOR0_2 = 15
+      FLOOR5_3 = 20
+      FLOOR5_4 = 15
+      FLAT1_1 = 50
+      FLAT1 = 30
+      FLAT8 = 10
+      FLAT5_5 = 30
+      FLAT5 = 20
+    }
+
+    ceilings =
+    {
+      FLAT1 = 50
+      CEIL1_1 = 20
+      FLAT5_2 = 20
+      CEIL3_3 = 10
+      RROCK10 = 20
+    }
+  }
+
+
   urban_Stone =
   {
     env  = "building"
-    prob = 40
+    prob = 50
 
     walls =
     {
       STONE2 = 50
       STONE3 = 50
+      ROCK1  = 10
+      ROCK3  = 10
     }
 
     floors =
@@ -1387,7 +1388,7 @@ DOOM.ROOM_THEMES =
   urban_RedBrick =
   {
     env  = "building"
-    prob = 15
+    prob = 20
 
     walls =
     {
@@ -1417,7 +1418,7 @@ DOOM.ROOM_THEMES =
   urban_GreenBrick =
   {
     env  = "building"
-    prob = 15
+    prob = 20
 
     walls =
     {
@@ -1449,7 +1450,7 @@ DOOM.ROOM_THEMES =
   urban_Cement =
   {
     env  = "building"
-    prob = 15
+    prob = 20
 
     walls =
     {
@@ -1477,10 +1478,47 @@ DOOM.ROOM_THEMES =
   }
 
 
+  -- TODO : this is same as hell_Wood, differentiate it...
+  urban_Wood =
+  {
+    env  = "building"
+    prob = 20
+
+    walls =
+    {
+      WOOD1 = 50
+      WOOD3 = 30
+      WOOD5 = 30
+      WOOD12 = 30
+      WOODVERT = 10
+    }
+
+    floors =
+    {
+      FLAT5_1 = 50
+      FLAT5_2 = 50
+      MFLR8_1 = 50
+      FLOOR7_1 = 50
+      FLAT5_4 = 30
+      FLOOR4_6 = 10
+    }
+
+    ceilings =
+    {
+      FLOOR7_2 = 50
+      RROCK14 = 40
+      CEIL1_1 = 30
+      FLAT5_2 = 10
+      FLAT5_7 = 10
+      FLOOR7_1 = 5
+    }
+  }
+
+
   urban_Stucco =
   {
     env  = "building"
-    prob = 7
+    prob = 10
 
     walls =
     {
