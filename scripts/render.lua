@@ -1432,10 +1432,6 @@ function Render_chunk(chunk)
 
     -- for entity remapping (e.g. skull keys), rely on prefab system
     skin.object = assert(chunk.content_item)
-
-    if chunk.is_secret then
-      reqs.key = "secret"
-    end
   end
 
 
@@ -1480,16 +1476,12 @@ function Render_chunk(chunk)
     reqs.env = A.room:get_env()
   end
 
+  -- handle secret closets and joiners to a secret room
+  if chunk.is_secret then
+    reqs.key = "secret"
+  end
 
   local what = chunk.content_kind
-
-
-  -- FIXME : support e.g. kind=="floor" + what=="START" (e.g. a raising start)
-  --         [ most of the checks below assume kind=="closet" ]
-
-
-  -- FIXME : "SECRET_EXIT"
-
 
   if chunk.kind == "stair" then
     do_stairs()

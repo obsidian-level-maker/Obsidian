@@ -511,7 +511,10 @@ function Layout_place_hub_gates()
     -- should not fail, as our eval function detects free closets
     assert(chunk)
 
-    chunk.kind = "SECRET_EXIT"
+    chunk.content_kind = "SECRET_EXIT"
+
+    -- mark the closet as hidden in the room
+    chunk.is_secret = true
   end
 
 
