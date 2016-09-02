@@ -220,7 +220,7 @@ function Quest_create_initial_quest()
 
     -- don't waste big rooms on a secret exit
     if secret_mode then
-      return 100 - math.min(R.svolume,99) + gui.random()
+      return 200 - math.min(R.svolume, 190) + gui.random()
     end
 
     local score = R.svolume
@@ -238,7 +238,7 @@ function Quest_create_initial_quest()
     local best_score = 0
 
     each R in LEVEL.rooms do
-      local score = eval_exit_room(R)
+      local score = eval_exit_room(R, secret_mode)
 
       if score > best_score then
         best = R
@@ -276,18 +276,11 @@ function Quest_create_initial_quest()
 
 
   local function add_secret_exit()
-    -- check if needed ?
-    if not LEVEL.secret_exit then
-      return
-    end
-
-    -- FIXME : support secret exits again
-    do return end
-
     local R = pick_exit_room("secret_mode")
 
     if not R then
-      gui.printf("WARNING : no room for secret exit!\n")
+      -- invoke plan B : use a secret closet somewhere
+      LEVEL.need_secret_exit = true
       return
     end
 
@@ -296,8 +289,6 @@ function Quest_create_initial_quest()
     gui.printf("Secret Exit: %s\n", R.name)
 
     R.is_exit = true
-
-    LEVEL.secret_exit = R
 
     Quest_make_room_secret(R)
 
@@ -323,7 +314,10 @@ function Quest_create_initial_quest()
   end
 
   add_normal_exit(Q)
-  add_secret_exit()
+
+  if LEVEL.secret_exit then
+    add_secret_exit()
+  end
 end
 
 

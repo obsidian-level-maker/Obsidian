@@ -515,7 +515,7 @@ function Layout_place_hub_gates()
   end
 
 
-  local function add_a_secret_exit()
+  local function add_secret_exit()
     local best_R
     local best_score = 0
 
@@ -533,14 +533,16 @@ function Layout_place_hub_gates()
       return
     end
 
+    gui.printf("Secret Exit: %s (in a closet)\n", R.name)
+
     make_secret_exit(best_R)
   end
 
 
   ---| Layout_place_hub_gates |---
 
-  if LEVEL.need_secret_exit or true then  --!!!!!
-    add_a_secret_exit()
+  if LEVEL.need_secret_exit then
+    add_secret_exit()
   end
 end
 
