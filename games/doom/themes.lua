@@ -739,8 +739,7 @@ DOOM.ROOM_THEMES =
   tech_Gray =
   {
     env  = "building"
-    prob = 50
-    rarity = 1
+    prob = 20
 
     walls =
     {
@@ -782,8 +781,7 @@ DOOM.ROOM_THEMES =
   tech_Sladwall =
   {
     env  = "building"
-    prob = 50
-    rarity = 1
+    prob = 20
 
     walls =
     {
@@ -814,7 +812,6 @@ DOOM.ROOM_THEMES =
   {
     env = "building"
     prob = 10
-    rarity = 1
 
     walls =
     {
@@ -840,7 +837,6 @@ DOOM.ROOM_THEMES =
   {
     env  = "building"
     prob = 10
-    rarity = 1
 
     walls =
     {
@@ -1070,8 +1066,7 @@ DOOM.ROOM_THEMES =
   hell_Viney =
   {
     env  = "building"
-    prob = 40
-    rarity = 1
+    prob = 10
 
     walls =
     {
@@ -1100,8 +1095,7 @@ DOOM.ROOM_THEMES =
   hell_Wood =
   {
     env  = "building"
-    prob = 40
-    rarity = 1
+    prob = 15
 
     walls =
     {
@@ -1137,8 +1131,7 @@ DOOM.ROOM_THEMES =
   hell_Skin =
   {
     env  = "building"
-    prob = 20
-    rarity = 1
+    prob = 10
 
     walls =
     {
@@ -1268,7 +1261,7 @@ DOOM.ROOM_THEMES =
   urban_Panel =
   {
     env  = "building"
-    prob = 30
+    prob = 40
 
     walls =
     {
@@ -1360,7 +1353,7 @@ DOOM.ROOM_THEMES =
   urban_Stone =
   {
     env  = "building"
-    prob = 20
+    prob = 40
 
     walls =
     {
@@ -1394,8 +1387,7 @@ DOOM.ROOM_THEMES =
   urban_RedBrick =
   {
     env  = "building"
-    prob = 40
-    rarity = 1
+    prob = 15
 
     walls =
     {
@@ -1425,8 +1417,7 @@ DOOM.ROOM_THEMES =
   urban_GreenBrick =
   {
     env  = "building"
-    prob = 40
-    rarity = 1
+    prob = 15
 
     walls =
     {
@@ -1458,8 +1449,7 @@ DOOM.ROOM_THEMES =
   urban_Cement =
   {
     env  = "building"
-    prob = 40
-    rarity = 1
+    prob = 15
 
     walls =
     {
@@ -1483,6 +1473,41 @@ DOOM.ROOM_THEMES =
       SLIME13  = 20
       FLOOR7_1 = 10
       FLAT4    = 10
+    }
+  }
+
+
+  urban_Stucco =
+  {
+    env  = "building"
+    prob = 7
+
+    walls =
+    {
+      STUCCO3 = 60
+      STUCCO1 = 30
+    }
+
+    floors =
+    {
+      FLAT8    = 20
+      FLOOR4_6 = 20
+      FLOOR5_4 = 20
+
+      FLAT9    = 30
+      CEIL3_5  = 30
+      MFLR8_2  = 20
+      FLOOR1_6 = 10
+    }
+
+    ceilings =
+    {
+      CEIL1_1  = 30
+      FLAT5_5  = 10
+
+      CEIL1_5  = 30
+      FLAT19   = 30
+      RROCK03  = 10
     }
   }
 
