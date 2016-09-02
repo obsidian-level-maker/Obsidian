@@ -13,8 +13,6 @@ ______________________________________________________________________
 
 *  get caves working again
 
-*  get secret rooms working again
-
 *  add in more scenery: trees, computers etc
 
 *  fix i18n issues (esp. non-ASCII characters in filenames)
@@ -80,6 +78,9 @@ ______________________________________________________________________
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars
 
+-  for "big" boss monster rooms, add a big health item / invuln
+   [ insert into R.items ]
+
 -  a "slow pace weapons" extra setting (idea by flyingdeath)
 
 -  if room has a boss/guard needing a large chunk, allocate those
@@ -106,8 +107,6 @@ ______________________________________________________________________
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet
-
--  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
 
 -  allow monsters in liquids [ but never place items there ]
 
@@ -167,6 +166,12 @@ SHAPE GRAMMARS
 
 -  in SPROUT pass of symmetrical room : ability to make non-mirrored
    [ especially when we are in dire need to grow the map ]
+
+-  IDEA: aversion for rules, decreases prob of using rule again in a room
+   [ also: aversion for NICE_ITEMS ]
+
+-  IDEA: level_usage, room_usage
+   [ OR: level_skip,  room_skip ]
 
 idea:  CYCLE pass (after SPROUT) for multiple paths
        [ probably as 'H' hallways, allow these to grow, prune them
@@ -355,9 +360,25 @@ Various:
 
 
 Secrets....
-!!  make the secret door (or fence, etc)
++  secret fences
 
 +  support 'LEVEL.secret_weapon'
+
+-  support big (room) secret coming off a closet secret
+
+-  a secret that provides little more than another way for the
+   player to travel (esp. a shortcut back from a goal room)
+
+-  a secret balcony can be good -- player will see item and
+   wonder how to get it
+
+
+Secret Joiner/Closet Ideas:
+
+-  looks like a normal item closet, but opens up
+
+-  a monster closet with a secret behind it
+
 
 
 Fake fences:
@@ -436,8 +457,6 @@ CTF and DM
 
 -  outdoor fences should straddle both rooms
    (but need to handle corners and T junctions)
-
--  ensure normal doors are usually monster-openable, secret doors not
 
 -  wad-fab: "outside bbox" pieces via sector type #987
 
@@ -756,24 +775,6 @@ Warzone Mode:
 
 Batch Mode:
 +  detect invalid game=XXX (etc) keywords
-
-
-Secrets:
--  fix battle simulator to ignore stuff got in secrets
-   (push state onto stack, pop afterwards).
-
-+  timed powerups are best in closet secrets
-
-+  support big (room or room+hallway) secret coming off a
-   closet secret.  [ but never the other way around ]
-
--  prefer lots of small items over one or two big items
-
--  a secret that provides little more than another way for the
-   player to travel (esp. a shortcut back from a goal room)
-
--  a secret balcony can be good -- player will see item and
-   wonder how to get it
 
 
 Co-op IDEA:

@@ -3,65 +3,56 @@ WORK IN PROGRESS
 ================
 
 
->>  item choice for secret closets
-    [ differentiate between whole-room secrets ]
+Runes : tidy up, make a SNKSKIN or BFALL or ROCKRED variation 
+
+
+IDEA : a sharp corner removal pass [ before border stuff ]
+       ] preserve symmetry, e.g. by preferring horizontal direction to merge ]
+
+
+!!  apply_num  for different passes [ especially DECORATE ]
 
 
 Caves:
 
-+  actually make them again
+!!  actually make them again
 
 
 
-Door Logic:
+Doors and Joiners:
 
-+  check how prefabs are marked as "lifts" and "doors"
-   [ using "kind" is insufficent for joiners ]
++  I shape joiners can have "deep" and "over" values,
+   allow them to overlap nearby room as per doors
 
-   ??  is_lift / is_door fields
+   [ update all joiner prefabs with 16 unit deep and over ]
 
+-  support "deep" and "over" for L-shape joiners
 
--  REVIEW : "rarity" for themes  [ remove it and KISS ?? ]
++  env field for doors and joiners are two values separated by a
+   slash, e.g. "building/outdoor".  first value is front side,
+   second value is back side.
 
+   - if env field is a single keyword, equivalent to doubling it
+     e.g. "cave" ---> "cave/cave"
 
+   - support the word "any", e.g. "outdoor/any"
+     [ so default value is "any/any" ]
 
-Secrets Joiner/Closet Ideas:
+   - support negation, e.g. "cave/!cave"
 
--  looks like an ident with low height and a light (which flickers)
+   - "indoor" is equivalent to "!outdoor"
 
--  looks like a normal item closet, but opens up
-
--  looks like a cage in a wall, but floor lowers to provide a hole
-
--  a monster closet with a secret behind it
-
--  joiner looks like a secret item closet, but another secret behind it
+-  fix level control "Doors" setting for joiners
 
 
 
 Miscellaneous:
 
--  for "big" boss monster rooms, add a big health item / invuln
-   [ insert into R.items ]
-
-+  prevent decor in liquid sinks
++  prevent decor in liquid sinks  [ EXCEPT liquid_pipe...  "liquid_decor" kind ]
 
 +  F/R cages: also want mid-bars and/or corner posts [ esp. cages surrounded by liquids ]
 
 -  sometimes have flashing/oscillate FX for free-range cages
 
 -  more pillars in rooms
-
--  IDEA: build "landscape" rooms as a hallway network, but after
-         sprout phase convert seeds to "landscape" and _then_
-         expand outwards to hit buildings / edge of map.
-
--  IDEA: aversion for rules, decreases prob of using rule again in a room
-
--  IDEA: level_usage, room_usage
-   [ OR: level_skip,  room_skip ]
-
--  wall-detail ideas
-   (a) Runes  (w/ fireblue? scrolling snskin?)
-   (b) square-wave
 
