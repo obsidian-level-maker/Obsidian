@@ -233,7 +233,7 @@ function Layout_spot_for_wotsit(R, kind, required)
       if chunk.kind != "closet" then return -1 end
     end
 
-    if kind == "SECRET_EXIT" then
+    if kind == "MINI_SECRET_EXIT" then
       if chunk.kind != "closet" then return -1 end
     end
 
@@ -504,9 +504,9 @@ function Layout_place_hub_gates()
 
 
   local function make_secret_exit(R)
-    gui.debugf("Secret exit closet in %s\n", R.name)
+    gui.printf("Secret Exit: %s (in a closet)\n", R.name)
 
-    local chunk = Layout_spot_for_wotsit(R, "SECRET_EXIT")
+    local chunk = Layout_spot_for_wotsit(R, "MINI_SECRET_EXIT")
 
     -- should not fail, as our eval function detects free closets
     assert(chunk)
@@ -532,8 +532,6 @@ function Layout_place_hub_gates()
       gui.printf("WARNING: could not add a secret exit to the map!\n")
       return
     end
-
-    gui.printf("Secret Exit: %s (in a closet)\n", R.name)
 
     make_secret_exit(best_R)
   end

@@ -17,10 +17,13 @@ PREFABS.Exit_pillar1_secret =
 {
   template = "Exit_pillar1"
 
-  key = "secret"
+  kind = "secret_exit"
+
+height = 16  ---FIXME
+
   line_11 = 51
 
-  tex_SW1COMP  = "SW1SKIN"
+  tex_SW1SKULL = "SW1SKIN"
   flat_CEIL5_1 = "SW1SKIN"
 }
 

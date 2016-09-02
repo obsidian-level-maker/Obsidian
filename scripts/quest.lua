@@ -214,13 +214,24 @@ function Quest_create_initial_quest()
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
 
-    -- cannot teleport into a secret exit
-    -- [ WISH : support this, a secret teleporter closet somewhere ]
-    if secret_mode and R:has_teleporter() then return -1 end
-
-    -- don't waste big rooms on a secret exit
     if secret_mode then
-      return 200 - math.min(R.svolume, 190) + gui.random()
+      local conn = R.conns[1]
+
+      -- cannot teleport into a secret exit
+      if conn.kind == "teleporter" then return -1 end
+
+      if conn.kind == "joiner" then
+        -- no L-shape joiners!
+        if conn.joiner_chunk.shape != "I" then return -1 end
+      end
+
+      -- don't waste big rooms on a secret exit
+      local score = 200 - math.min(R.svolume, 190)
+
+      --TODO: prefer room near the exit room
+      --      [ but we do not have "lev_along" values yet ]
+
+      return score + gui.random()
     end
 
     local score = R.svolume
@@ -2344,7 +2355,7 @@ function Quest_big_secrets()
     -- must be a leaf room
     if #R.conns > 1 then return -1 end
 
-    -- cannot teleport into a secret exit
+    -- cannot teleport into a secret room
     -- [ WISH : support this, a secret teleporter closet somewhere ]
     local conn = R.conns[1]
 

@@ -2050,7 +2050,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     }
 
     if secret_exit then
-      reqs.key = "secret"
+      reqs.kind = "secret_exit"
     end
 
     local def = Fab_pick(reqs)
