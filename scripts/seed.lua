@@ -452,6 +452,16 @@ function SEED_CLASS.has_inner_point(S, dir)
 end
 
 
+function SEED_CLASS.has_connection(S)
+  each dir in geom.ALL_DIRS do
+    local E = S.edge[dir]
+    if E and E.conn then return true end
+  end
+
+  return false
+end
+
+
 function SEED_CLASS.make_brush(S)
   -- get parent seed
   local PS = S.bottom or S

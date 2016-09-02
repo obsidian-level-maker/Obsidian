@@ -978,6 +978,8 @@ function Area_locate_chunks()
       if not N then return false end
       if N.area != A then return false end
       if N.diagonal or N.chunk then return false end
+
+      if N:has_connection() then return false end
     end -- x, y
     end
 
@@ -1170,8 +1172,6 @@ function Area_analyse_areas()
   end
 
   Area_find_neighbors()
-
-  Area_locate_chunks()
 
   if OB_CONFIG.mode == "ctf" then
     error("CTF mode is broken!")
@@ -1876,5 +1876,8 @@ function Area_create_rooms()
   end
 
   Connect_teleporters()
+
+  Area_locate_chunks()
+
 end
 
