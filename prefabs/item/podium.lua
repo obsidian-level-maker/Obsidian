@@ -10,6 +10,17 @@ PREFABS.Item_podium =
 
   item_kind = "key"
 
---!!!  theme = { hell=1, urban=1, egypt=1 }
+  theme = "!tech"
+  prob  = 100
+}
+
+
+PREFABS.Item_podium_tech =
+{
+  template = "Item_podium"
+
+  map = "MAP02"
+
+  theme = "tech"
 }
 
