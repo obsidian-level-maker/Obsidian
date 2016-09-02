@@ -2272,12 +2272,6 @@ function Quest_nice_items()
 
   ---| Quest_nice_items |---
 
-  if OB_CONFIG.items == "none" then
-    gui.printf("Nice Items : disabled (user setting).\n")
-    find_storage_rooms()
-    return
-  end
-
   max_level = 1 + LEVEL.ep_along * 9
 
   -- collect all the items we might use
@@ -2292,18 +2286,22 @@ function Quest_nice_items()
   closet_items = secret_palette("do_closet")
   secret_items = secret_palette()
 
-
+  -- handle the secret sauces first
   visit_secret_rooms()
 
   handle_secret_closets()
 
-  -- start rooms usually get one (occasionally two)
-  visit_start_rooms()
+  if OB_CONFIG.items == "none" then
+    gui.printf("Nice Items : disabled (user setting).\n")
+  else
+    -- start rooms usually get one (occasionally two)
+    visit_start_rooms()
 
-  -- TODO help for fighting big bosses
-  -- visit_boss_rooms()
+    -- TODO help for fighting big bosses
+    -- visit_boss_rooms()
 
-  visit_other_rooms()
+    visit_other_rooms()
+  end
 
   -- mark all remaining unused leafs as STORAGE rooms
   find_storage_rooms()
