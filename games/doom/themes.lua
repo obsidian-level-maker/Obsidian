@@ -171,10 +171,34 @@ DOOM.SINKS =
     dz  = -8
   }
 
+  floor_snakes =
+  {
+    mat = "SFLR6_4"
+    dz  = -4
+  }
+
   floor_green =
   {
     mat = "DEM1_6"
     dz  = -8
+  }
+
+  floor_red =
+  {
+    mat = "FLOOR1_6"
+    dz  = -4
+  }
+
+  floor_blue =
+  {
+    mat = "CEIL4_2"
+    dz  = -4
+  }
+
+  floor_blue2 =
+  {
+    mat = "CEIL4_3"
+    dz  = -4
   }
 
 
@@ -317,9 +341,12 @@ DOOM.THEMES =
 
     floor_sinks =
     {
-      PLAIN = 100
+      PLAIN = 200
+      liquid_plain = 10
       liquid_shiny = 5
-      floor_green = 5
+      liquid_metal = 5
+      floor_green = 10
+      floor_blue2 = 5
     }
 
     ceiling_sinks =
@@ -416,6 +443,8 @@ DOOM.THEMES =
       PLAIN = 100
       liquid_plain = 20
       liquid_metal = 10
+      floor_red = 20
+      floor_blue = 10
       floor_green = 10
     }
 
@@ -511,19 +540,20 @@ DOOM.THEMES =
 
     floor_sinks =
     {
-      PLAIN = 100
-      liquid_blood = 12
-      liquid_plain = 5
+      PLAIN = 120
+      liquid_plain = 10
+      liquid_blood = 10
       floor_skulls = 20
       floor_glowingrock = 10
+      floor_snakes = 5
     }
 
     ceiling_sinks =
     {
       PLAIN = 50
-      sky_metal = 30
-      sky_plain = 10
-      light_diamond = 15
+      sky_metal = 20
+      sky_plain = 20
+      light_diamond = 10
       light_hell_red = 20
       light_hell_lava = 5
       ceil_redash = 5
