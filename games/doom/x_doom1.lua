@@ -674,7 +674,8 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Room =
   {
-    env = "building"
+    env  = "building"
+    prob = 50
 
     walls =
     {
@@ -728,7 +729,8 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Brown =
   {
-    env = "building"
+    env  = "building"
+    prob = 50
 
     walls =
     {
@@ -864,6 +866,7 @@ ULTDOOM.ROOM_THEMES =
   tech_Hallway =
   {
     env = "hallway"
+    prob = 50
 
     walls =
     {
@@ -917,6 +920,7 @@ ULTDOOM.ROOM_THEMES =
   tech_Cave =
   {
     env = "cave"
+    prob = 50
 
     naturals =
     {
@@ -931,6 +935,7 @@ ULTDOOM.ROOM_THEMES =
   tech_Outdoors =
   {
     env = "outdoor"
+    prob = 50
 
     floors =
     {
@@ -956,6 +961,7 @@ ULTDOOM.ROOM_THEMES =
   deimos_Room =
   {
     env = "building"
+    prob = 50
 
     walls =
     {
@@ -1028,6 +1034,7 @@ ULTDOOM.ROOM_THEMES =
   deimos_Hellish =
   {
     env = "building"
+    prob = 50
 
     walls =
     {
@@ -1116,6 +1123,7 @@ ULTDOOM.ROOM_THEMES =
   deimos_Hallway =
   {
     env = "hallway"
+    prob = 50
 
     walls =
     {
@@ -1179,6 +1187,7 @@ ULTDOOM.ROOM_THEMES =
   deimos_Hallway_hell =
   {
     env = "hallway"
+    prob = 50
 
     walls =
     {
@@ -1237,6 +1246,7 @@ ULTDOOM.ROOM_THEMES =
   deimos_Cave =
   {
     env = "cave"
+    prob = 50
 
     naturals =
     {
@@ -1251,6 +1261,7 @@ ULTDOOM.ROOM_THEMES =
   deimos_Outdoors =
   {
     env = "outdoor"
+    prob = 50
 
 --Makes sense for high prob for SP_ROCK1 because the intermission screen shows
 --Deimos has a desolate, gray ground.
@@ -1450,6 +1461,7 @@ ULTDOOM.ROOM_THEMES =
   hell_Hallway =
   {
     env = "hallway"
+    prob = 50
 
     walls =
     {
@@ -1499,6 +1511,7 @@ ULTDOOM.ROOM_THEMES =
   hell_Outdoors =
   {
     env = "outdoor"
+    prob = 50
 
     floors =
     {
@@ -1529,6 +1542,7 @@ ULTDOOM.ROOM_THEMES =
   hell_Outdoors_hot =
   {
     env = "outdoor"
+    prob = 50
 
     floors =
     {
@@ -1561,6 +1575,7 @@ ULTDOOM.ROOM_THEMES =
   hell_Cave =
   {
     env = "cave"
+    prob = 50
 
     naturals =
     {
@@ -1707,6 +1722,7 @@ ULTDOOM.ROOM_THEMES =
   flesh_Hallway_hell =
   {
     env = "hallway"
+    prob = 50
 
     walls =
     {
@@ -1765,6 +1781,7 @@ ULTDOOM.ROOM_THEMES =
   flesh_Cave =
   {
     env = "cave"
+    prob = 50
 
     naturals =
     {
@@ -1784,6 +1801,7 @@ ULTDOOM.ROOM_THEMES =
   flesh_Outdoors =
   {
     env = "outdoor"
+    prob = 50
 
     floors =
     {

@@ -236,7 +236,8 @@ TNT.ROOM_THEMES =
 {
   egypt_Tomb =
   {
-    env = "building"
+    env  = "building"
+    prob = 50
 
     walls =
     {
@@ -280,7 +281,8 @@ TNT.ROOM_THEMES =
 
   egypt_Hallway =
   {
-    env = "hallway"
+    env  = "hallway"
+    prob = 50
 
     walls =
     {
@@ -315,7 +317,8 @@ TNT.ROOM_THEMES =
 
   egypt_Outdoors =
   {
-    env = "outdoor"
+    env  = "outdoor"
+    prob = 50
 
     floors =
     {
@@ -336,7 +339,8 @@ TNT.ROOM_THEMES =
 
   egypt_Cave =
   {
-    env = "cave"
+    env  = "cave"
+    prob = 50
 
     naturals =
     {
