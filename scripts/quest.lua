@@ -2082,7 +2082,7 @@ function Quest_nice_items()
     each R in rooms do
       local item = pick_item(secret_items)
 
-      if item == nil then break end
+      if item == nil then break; end
 
       table.insert(R.items, item)
 
@@ -2117,7 +2117,7 @@ any_prob = 100
     for loop = 1, usable do
       local item = pick_item(closet_items)
 
-      if item == nil then break end
+      if item == nil then break; end
 
       table.insert(R.closet_items, item)
 
@@ -2156,7 +2156,7 @@ any_prob = 100
       -- add the same item into each start room
       local item = pick_item(start_items)
 
-      if item == nil then break end
+      if item == nil then break; end
 
       each R in rooms do
         table.insert(R.items, item)
@@ -2182,6 +2182,8 @@ any_prob = 100
     end
 
     local score = 10
+
+    -- TODO : allow a weapon or goal BUT only if room is really large
 
     if #R.weapons > 0 then return -1 end
     if #R.items   > 0 then return -1 end
@@ -2233,10 +2235,10 @@ any_prob = 100
     for i = 1, quota do
       if table.empty(locs) then break; end
 
-      local R = table.remove(locs)
+      local R = table.remove(locs, 1)
 
       local item = pick_item(normal_items)
-      if item == nil then break end
+      if item == nil then break; end
 
       table.insert(R.items, item)
 
