@@ -1013,8 +1013,6 @@ DOOM.ROOM_THEMES =
     walls =
     {
       SP_HOT1 = 50
-
-      -- TODO: need more
     }
 
     floors =
@@ -1042,7 +1040,7 @@ DOOM.ROOM_THEMES =
   hell_Stone =
   {
     env  = "building"
-    prob = 40
+    prob = 60
 
     walls =
     {
@@ -1052,14 +1050,19 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLAT1 = 10
-      FLAT5_4 = 5
+      FLOOR6_2 = 30
+      RROCK13  = 30
+      GRNROCK  = 30
+      DEM1_6   = 30
+      SLIME13  = 30
     }
 
     ceilings =
     {
-      FLAT1 = 10
-      FLAT5_4 = 3
+      RROCK12  = 30
+      RROCK03  = 30
+      MFLR8_2  = 30
+      FLAT5_1  = 30
     }
   }
 
