@@ -58,6 +58,15 @@
 
     edges : list(EDGE)
 
+    floor_h     -- floor height
+    ceil_h      -- ceiling height
+
+    floor_mat   -- floor material
+    ceil_mat    -- ceiling material  [ "_SKY" for outdoor areas ]
+
+    floor_side  -- floor side material (optional)
+    ceil_side   -- ceiling side material (optional)
+
 
     --- other stuff ---
 
