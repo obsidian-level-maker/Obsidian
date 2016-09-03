@@ -24,40 +24,36 @@
 --
 ------------------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
 
-class AUTOMATA_GRID
-{
-  w, h   -- width and height (in cells)
-  
-  cells : array_2D(number)  -- > 0 means solid
-                            -- < 0 means empty
+--class AUTOMATA_GRID
+--[[
+    w, h   -- width and height (in cells)
 
-  flood : array_2D(number)  -- contiguous areas have the same value
-                            -- (positive for solid, negative for empty)
+    cells : array_2D(number)  -- > 0 means solid
+                              -- < 0 means empty
 
-  empty_id  -- the main empty area in the flood_fill
-            -- this is set by the validate_conns() method
+    flood : array_2D(number)  -- contiguous areas have the same value
+                              -- (positive for solid, negative for empty)
 
-  islands : list(GRID)
+    empty_id  -- the main empty area in the flood_fill
+              -- this is set by the validate_conns() method
 
-  regions : table[id] -> REGION
+    islands : list(GRID)
 
-  square  -- if set, render() method won't smooth out the 64x64 blocks
-}
+    regions : table[id] -> REGION
 
-
-class REGION
-{
-  id : number
-
-  x1, y1, x2, y2  -- bounding box (in cell coordinates)
-
-  size : number of cells
-}
+    square  -- if set, render() method won't smooth out the 64x64 blocks
+--]]
 
 
---------------------------------------------------------------]]
+--class REGION
+--[[
+    id : number
+
+    x1, y1, x2, y2  -- bounding box (in cell coordinates)
+
+    size : number of cells
+--]]
 
 
 AUTOMATA_CLASS = {}
@@ -146,7 +142,7 @@ function AUTOMATA_CLASS.dump(grid, title)
 
   for y = grid.h,1,-1 do
     local line = "| "
-    
+
     for x = 1,grid.w do
       local ch = " "
       local cell = grid.cells[x][y]
@@ -322,7 +318,7 @@ end
 
 
 function AUTOMATA_CLASS.gen_empty(grid)
-  
+
   -- this is akin to generate(), but making all target cells empty
 
   local W = grid.w
@@ -594,7 +590,7 @@ end
 
 
 function AUTOMATA_CLASS.find_islands(grid)
-  
+
   -- an "island" is contiguous solid area which never touches NIL
 
   local islands = {}

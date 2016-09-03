@@ -18,65 +18,63 @@
 --
 ------------------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
 
-class CAVE_INFO
-{
-  W, H  -- size of cave (# of cells)
+--class CAVE_INFO
+--[[
+    W, H  -- size of cave (# of cells)
 
-  x1, y1, x2, y2  -- bounding coords
+    x1, y1, x2, y2  -- bounding coords
 
-  liquid_mode : keyword  -- "none", "some", "lake"
+    liquid_mode : keyword  -- "none", "some", "lake"
 
-  step_mode   : keyword  -- "walkway", "up", "down", "mixed"
+    step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
-  sky_mode    : keyword  -- "none"
-                         -- "some", "walkway"  (indoor rooms only)
-                         -- "low_wall", "high_wall"  (outdoor rooms)
+    sky_mode    : keyword  -- "none"
+                           -- "some", "walkway"  (indoor rooms only)
+                           -- "low_wall", "high_wall"  (outdoor rooms)
 
-  cave : CAVE  -- raw generated cave
+    cave : CAVE  -- raw generated cave
 
-  blocks : array(AREA)  -- info for each 64x64 block
+    blocks : array(AREA)  -- info for each 64x64 block
 
-  floors : list(AREA)
-  lakes  : list(AREA)
+    floors : list(AREA)
+    lakes  : list(AREA)
 
-  wall   : AREA
-  fence  : AREA
-}
+    wall   : AREA
+    fence  : AREA
+--]]
 
 
-class CAVE_AREA
-{
-  --| this info is used to describe cave cells
-  --| [ generally shared between multiple cells ]
+--class CAVE_AREA
+--[[
+    --
+    -- This info describes a group of cave cells.
+    --
 
-  wall   : boolean  -- true for solid walls
-  fence  : boolean  -- true for a lake fence
+    wall   : boolean  -- true for solid walls
+    fence  : boolean  -- true for a lake fence
 
-  liquid : boolean  -- true for a liquid floor
-  sky    : boolean  -- true for a sky ceiling
+    liquid : boolean  -- true for a liquid floor
+    sky    : boolean  -- true for a sky ceiling
 
-  cx1, cy1, cx2, cy2   -- cell bounding box
+    cx1, cy1, cx2, cy2   -- cell bounding box
 
-  floor_h  -- floor height
-   ceil_h  -- ceiling height
+    floor_h  -- floor height
+     ceil_h  -- ceiling height
 
-  floor_mat  -- floor material
-   ceil_mat  -- ceiling material
+    floor_mat  -- floor material
+     ceil_mat  -- ceiling material
 
-  goal_type : keyword  -- set if area contains a goal (normally nil)
-                       -- can be "portal" or "important".
+    goal_type : keyword  -- set if area contains a goal (normally nil)
+                         -- can be "portal" or "important".
 
-  touching : list(AREA)   -- only used for visitable floors
+    touching : list(AREA)   -- only used for visitable floors
 
-  host_spots : list(BBOX)  -- spots which can host a torch/prefab
+    host_spots : list(BBOX)  -- spots which can host a torch/prefab
 
-  -- stuff for walkways only
-  children : list[AREA]
-}
-
---------------------------------------------------------------]]
+    -- stuff for walkways only
+    children : list[AREA]
+--]]
 
 
 CELL_CORNERS = { 1,3,9,7 }
