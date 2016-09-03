@@ -2478,13 +2478,24 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function process_cave(R)
+    if R.is_cave then
+      Cave_build_room(R, R.entry_h)
+
+      -- FIXME : TEMP RUBBISH
+      R.areas[1].floor_h = R.entry_h
+    end
+  end
+
+
   local function maintain_material_across_conn(C)
     if C.kind != "edge" then return false end
 
+    if C.R1.is_cave or C.R2.is_cave then return false end
+    if C.R1.kind == "hallway" or C.R2.kind == "hallway" then return false end
+
     if C.A1.floor_h    != C.A2.floor_h then return false end
     if C.R1.is_outdoor != C.R2.is_outdoor then return false end
-
-    if C.R1.kind == "hallway" or C.R2.kind == "hallway" then return false end
 
     if not (C.E1.kind == "nothing" or C.E1.kind == "arch") then return false end
     if not (C.E2.kind == "nothing" or C.E2.kind == "arch") then return false end
@@ -2607,15 +2618,20 @@ function Room_floor_ceil_heights()
       via_conn.door_h = entry_h
     end
 
+--[[  do this elsewhere?
     if R.kind != "hallway" then
       Room_detect_porches(R)
     end
+--]]
 
     if R.kind == "hallway" then
       process_hallway(R, via_conn)
+
+    elseif R.is_cave then
+      process_cave(R)
+
     else
       process_room(R, entry_area)
-
       select_floor_mats(R, via_conn)
     end
 
