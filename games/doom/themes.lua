@@ -877,7 +877,6 @@ DOOM.ROOM_THEMES =
 
       ASHWALL2 = 20
       ASHWALL6 = 10
-      TANROCK2 = 10
       TANROCK5 = 10
 
       STONE6   = 10
