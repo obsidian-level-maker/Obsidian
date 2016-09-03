@@ -145,7 +145,7 @@ function AUTOMATA_CLASS.dump(grid, title)
   end
 
   for y = grid.h,1,-1 do
-    local line = "| ";
+    local line = "| "
     
     for x = 1,grid.w do
       local ch = " "
@@ -157,6 +157,8 @@ function AUTOMATA_CLASS.dump(grid, title)
 
       line = line .. ch
     end
+
+    line = line .. " |"
 
     gui.debugf("%s\n", line)
   end
@@ -1227,7 +1229,7 @@ function AUTOMATA_CLASS.maze_render(maze, brush_func, data)
         { x=bx,    y=by }
       })
 
-      return;
+      return
     end
 
     -- FIXME: better method, find "wall spans"
