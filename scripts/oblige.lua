@@ -30,6 +30,8 @@ gui.import("area")
 gui.import("connect")
 gui.import("quest")
 
+gui.import("automata")
+gui.import("caves")
 gui.import("boss_map")
 gui.import("dm_ctf")
 gui.import("layout")
