@@ -3,6 +3,29 @@ WORK IN PROGRESS
 ================
 
 
+Caves:
+
+(a) rename caves.lua --> cave.lua
+
+(b) rename "touching" in caves.lua --> neighbors
+
+(c) treat CAVE_AREA as an extension to AREA class, mode == "cave"
+    [ what about the dummy area used to grow the cave? ]
+
+(d) get connections working properly
+
+
+(e) get closets working properly  (clear seeds, right floor_h)
+
+(f) get free-standing importants working properly
+    [ probably use the chunks "found" by area code ]
+
+(g) get SPOTS working again
+
+(h) get the torch lighting working again
+
+
+
 Runes : tidy up, make a SNKSKIN or BFALL or ROCKRED variation 
 
 
@@ -10,12 +33,16 @@ IDEA : a sharp corner removal pass [ before border stuff ]
        ] preserve symmetry, e.g. by preferring horizontal direction to merge ]
 
 
+!!  give *every* prefab a "prob" value
+
+
+
+Grower :
+
 !!  apply_num  for different passes [ especially DECORATE ]
 
-
-Caves:
-
-!!  actually make them again
+!!  compute a score early, do a check on first whole-seed "area" element
+    and do the "max_size" check here too
 
 
 
@@ -25,6 +52,8 @@ Doors and Joiners:
    allow them to overlap nearby room as per doors
 
    [ update all joiner prefabs with 16 unit deep and over ]
+
+   [[ NOTE : can still use y_fit for deeper rects??? ]]
 
 -  support "deep" and "over" for L-shape joiners
 
@@ -55,4 +84,7 @@ Miscellaneous:
 -  sometimes have flashing/oscillate FX for free-range cages
 
 -  more pillars in rooms
+
+-  gameplay : prefer to teleport monsters into PREVIOUS rooms
+   [ teleport ambushes suck, especially in very small rooms ]
 
