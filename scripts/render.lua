@@ -1292,6 +1292,11 @@ function Render_seed(A, S)
     return
   end
 
+  -- caves are done elsewhere
+  if A.room and A.room.is_cave then
+    return
+  end
+
   if S.kind == "void" or A.mode == "void" then
     Render_void(A, S)
     return

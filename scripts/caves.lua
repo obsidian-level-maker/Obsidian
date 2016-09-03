@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2009-2014 Andrew Apted
+--  Copyright (C) 2009-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -46,10 +46,10 @@ class CAVE_INFO
 }
 
 
-class AREA
+class CAVE_AREA
 {
-  --| this info is used to describe each cave cell
-  --| (and generally shared between multiple cells).
+  --| this info is used to describe cave cells
+  --| [ generally shared between multiple cells ]
 
   wall   : boolean  -- true for solid walls
   fence  : boolean  -- true for a lake fence
@@ -123,12 +123,12 @@ function Cave_generate_cave(R)
   local function cave_box_for_seed(sx, sy)
     local box =
     {
-      cx1 = (sx - R.sx1) * 3 + 1
-      cy1 = (sy - R.sy1) * 3 + 1
+      cx1 = (sx - R.sx1) * 2 + 1
+      cy1 = (sy - R.sy1) * 2 + 1
     }
 
-    box.cx2 = box.cx1 + 2
-    box.cy2 = box.cy1 + 2
+    box.cx2 = box.cx1 + 1
+    box.cy2 = box.cy1 + 1
     
     return box
   end
@@ -149,8 +149,8 @@ function Cave_generate_cave(R)
 
 
   local function create_map()
-    info.W = R.sw * 3
-    info.H = R.sh * 3
+    info.W = R.sw * 2
+    info.H = R.sh * 2
 
     info.blocks = table.array_2D(info.W, info.H)
 
@@ -182,20 +182,25 @@ function Cave_generate_cave(R)
 
       if S.room != R then continue end
 
-      local cx = (sx - R.sx1) * 3 + 1
-      local cy = (sy - R.sy1) * 3 + 1
+      -- ignore closets and joiners
+--      if S.chunk then continue end
 
-      map:fill(cx, cy, cx+2, cy+2, 0)
+      local cx = (sx - R.sx1) * 2 + 1
+      local cy = (sy - R.sy1) * 2 + 1
+
+      map:fill(cx, cy, cx+1, cy+1, 0)
+
+      do continue; end
 
       for dir = 2,8,2 do
         if not S:same_room(dir) then
-          set_side(cx, cy, cx+2, cy+2, dir, sel(is_lake, -1, 1))
+          set_side(cx, cy, cx+1, cy+1, dir, sel(is_lake, -1, 1))
         end
 
         -- in lake mode, clear whole seeds that touch edge of map
         -- (i.e. which will have a sky border next to them)
         if is_lake and S:need_lake_fence(dir) then
-          map:fill(cx, cy, cx+2, cy+2, -1)
+          map:fill(cx, cy, cx+1, cy+1, -1)
         end
       end
 
@@ -203,9 +208,9 @@ function Cave_generate_cave(R)
         if not S:same_room(dir) then
           -- lakes require whole seed to be cleared (esp. at "innie corners")
           if is_lake then
-            map:fill(cx, cy, cx+2, cy+2, -1)
+            map:fill(cx, cy, cx+1, cy+1, -1)
           else
-            set_corner(cx, cy, cx+2, cy+2, dir, 1)
+            set_corner(cx, cy, cx+1, cy+1, dir, 1)
           end
         end
       end end
@@ -275,14 +280,14 @@ function Cave_generate_cave(R)
 
       if S.room != R then continue end
 
-      if S.wall_dist < 1.1 then continue end
+--FIXME    if S.wall_dist < 1.1 then continue end
 
       if rand.odds(85) then continue end
 
-      local cx = 1 + (sx - R.sx1) * 3
-      local cy = 1 + (sy - R.sy1) * 3
+      local cx = 1 + (sx - R.sx1) * 2
+      local cy = 1 + (sy - R.sy1) * 2
 
-      map:fill(cx, cy, cx+2, cy+2, -1)
+      map:fill(cx, cy, cx+1, cy+1, -1)
     end
     end
   end
@@ -453,6 +458,24 @@ function Cave_generate_cave(R)
 
 
   local function collect_important_points()
+
+--!!!! FIXME TEMP RUBBISH
+
+local S1 = SEEDS[R.sx1 + 1][R.sy1 + 1]
+assert(S1.room == R)
+
+local b  = cave_box_for_seed(S1.sx, S1.sy)
+
+local POINT =
+{
+  x = b.cx1
+  y = b.cy1
+}
+
+table.insert(point_list, POINT)
+
+
+--[[
     each C in R.conns do
       if R == C.R1 and C.S1 then
         point_for_conn(C, C.S1, C.dir)
@@ -465,6 +488,7 @@ function Cave_generate_cave(R)
     each G in R.goals do
       point_for_goal(G)
     end
+]]
 
     assert(#point_list > 0)
 
@@ -478,8 +502,8 @@ function Cave_generate_cave(R)
       map:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, -1)
 
       if imp.conn or true then
-        local sx = R.sx1 + int(imp.cx1 / 3)
-        local sy = R.sy1 + int(imp.cy1 / 3)
+        local sx = R.sx1 + int(imp.cx1 / 2)
+        local sy = R.sy1 + int(imp.cy1 / 2)
 
         add_needed_cave_walls(SEEDS[sx][sy])
       end
@@ -1754,7 +1778,7 @@ function Cave_render_cave(R)
     -- for outdoor non-dark rooms, sub-divide the floor cell into
     -- smaller pieces to allow the Sun lighting to work better.
     if not A.wall and R.is_outdoor and not LEVEL.is_dark then
-      return render_floor_subdiv(x, y, A, f_mat, f_liquid)
+---????  return render_floor_subdiv(x, y, A, f_mat, f_liquid)
     end
 
 
@@ -1762,6 +1786,9 @@ function Cave_render_cave(R)
 
     if f_h then
       local top = { t=f_h }
+
+--!!!! FIXME TEMP
+top.reachable = 1
 
       if info.cave_lighting then
         top.cavelit = 1
@@ -1771,10 +1798,10 @@ function Cave_render_cave(R)
     end
 
     if f_liquid then
-      brushlib.mark_liquid(f_brush)
-    else
-      brushlib.set_mat(f_brush, f_mat, f_mat)
+      f_mat = "_LIQUID"
     end
+
+    brushlib.set_mat(f_brush, f_mat, f_mat)
 
     Trans.brush(f_brush)
   end
@@ -1789,11 +1816,9 @@ function Cave_render_cave(R)
 
     brushlib.add_bottom(c_brush, A.ceil_h)
 
-    if A.sky then
-      brushlib.mark_sky(c_brush)
-    else
-      brushlib.set_mat(c_brush, c_mat, c_mat)
-    end
+    if A.sky then c_mat = "_SKY" end
+
+    brushlib.set_mat(c_brush, c_mat, c_mat)
 
     Trans.brush(c_brush)
   end
@@ -2097,11 +2122,11 @@ function Cave_lake_fences(R)
 
     local S2 = S:neighbor(along_dir, count - 1)
 
-    local cx1 = 1 + (S.sx - R.sx1) * 3
-    local cy1 = 1 + (S.sy - R.sy1) * 3
+    local cx1 = 1 + (S.sx - R.sx1) * 2
+    local cy1 = 1 + (S.sy - R.sy1) * 2
 
-    local cx2 = 1 + (S2.sx - R.sx1) * 3 + 2
-    local cy2 = 1 + (S2.sy - R.sy1) * 3 + 2
+    local cx2 = 1 + (S2.sx - R.sx1) * 2 + 1
+    local cy2 = 1 + (S2.sy - R.sy1) * 2 + 1
 
     assert(cx2 > cx1 and cy2 > cy1)
 
@@ -2128,8 +2153,8 @@ function Cave_lake_fences(R)
       local S = SEEDS[x][y]
       if S.room != R then continue end
 
-      cx1 = (x - R.sx1) * 3 + 1
-      cy1 = (y - R.sy1) * 3 + 1
+      cx1 = (x - R.sx1) * 2 + 1
+      cy1 = (y - R.sy1) * 2 + 1
 
       for dir = 1,9,2 do if dir != 5 then
         if S:same_room(dir) then continue end
@@ -2146,7 +2171,7 @@ function Cave_lake_fences(R)
         if A:need_lake_fence(B_dir) or
            B:need_lake_fence(A_dir)
         then
-          local cx, cy = geom.pick_corner(dir, cx1, cy1, cx1+2, cy1+2)
+          local cx, cy = geom.pick_corner(dir, cx1, cy1, cx1+1, cy1+1)
           info.blocks[cx][cy] = info.fence
         end
 
@@ -2494,11 +2519,11 @@ function Cave_make_waterfalls(R)
     if N2 and N2.room == R then return end
 
 
-    local cx1 = 1 + (S.sx - R.sx1) * 3
-    local cy1 = 1 + (S.sy - R.sy1) * 3
+    local cx1 = 1 + (S.sx - R.sx1) * 2
+    local cy1 = 1 + (S.sy - R.sy1) * 2
 
-    if dir == 4 then cx1 = cx1 + 2 end
-    if dir == 2 then cy1 = cy1 + 2 end
+    if dir == 4 then cx1 = cx1 + 1 end
+    if dir == 2 then cy1 = cy1 + 1 end
 
     local cx2, cy2 = cx1, cy1
 
@@ -2704,7 +2729,7 @@ function Cave_decide_properties(R)
   local info = R.cave_info
 
   local   STEP_MODES = { walkway=25, up=20, down=20, mixed=75 }
-  local LIQUID_MODES = { none=50, some=80, lake=80 }
+  local LIQUID_MODES = { none=50, some=80 }  -- lake=0
 
   -- decide liquid mode
   if not LEVEL.liquid then
@@ -2729,7 +2754,7 @@ function Cave_decide_properties(R)
   if R.is_outdoor then
     info.sky_mode = rand.sel(50, "high_wall", "low_wall")
   else
-    info.sky_mode = rand.sel(25, "some", "none")
+    info.sky_mode = rand.sel(40, "some", "none")
   end
 
   if info.liquid_mode == "lake" then
@@ -2993,6 +3018,9 @@ function Cave_determine_spots(R)
 
 
   ---| Cave_determine_spots |---
+
+--!!!! FIXME
+do return end
 
   each A in info.floors do
     determine_spots(A)
