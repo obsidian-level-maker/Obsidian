@@ -17,6 +17,5 @@ Regressions:
 
 -  no caves
 -  no 3D floors
--  less usage of water/nukage/lava
 -  no scenery outside the map borders
 
