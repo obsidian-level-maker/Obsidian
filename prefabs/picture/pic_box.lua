@@ -2,9 +2,7 @@
 -- Pictures (via the closet system)
 --
 
------ TECH THEME ------------------------------
-
-PREFABS.Pic_box_base =
+TEMPLATES.Pic_box_template =
 {
   file   = "picture/pic_box.wad"
   map    = "MAP01"
@@ -16,19 +14,34 @@ PREFABS.Pic_box_base =
   x_fit = "frame"
   y_fit = "top"
 
-  offset_1000 = 0   -- X offset
-  offset_2000 = 0   -- Y offset
+  env   = "building"
+  prob  = 100
 
-  tex_PIPES = "LITEBLU1"
+  sector_1 = 0   -- sector special
+  line_2   = 0   -- line special
+
+  offset_1 = 0   -- X offset
+  offset_2 = 0   -- Y offset
+}
+
+
+----- TECH THEME ------------------------------
+
+PREFABS.Pic_box_liteblu1 =
+{
+  template = "Pic_box_template"
 
   theme = "tech"
-  prob  = 100
+
+  tex_PIPES = "LITEBLU1"
 }
 
 
 PREFABS.Pic_box_tekgren3 =
 {
-  template = "Pic_box_base"
+  template = "Pic_box_template"
+
+  theme = "tech"
 
   tex_PIPES = "TEKGREN3"
 }
@@ -36,8 +49,10 @@ PREFABS.Pic_box_tekgren3 =
 
 PREFABS.Pic_box_silver3 =
 {
-  template = "Pic_box_base"
+  template = "Pic_box_template"
   map = "MAP02"
+
+  theme = "tech"
 
   tex_PIPES = "SILVER3"
 }
