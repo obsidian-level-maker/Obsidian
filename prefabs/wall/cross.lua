@@ -10,7 +10,7 @@ GROUPS.wall_cross1 =
 }
 
 
-PREFABS.Wall_Cross1 =
+PREFABS.Wall_cross1 =
 {
   file   = "wall/cross.wad"
   map    = "MAP01"

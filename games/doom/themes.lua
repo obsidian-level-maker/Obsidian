@@ -361,10 +361,11 @@ DOOM.THEMES =
 
     wall_groups =
     {
-      PLAIN = 70
+      PLAIN = 80
       low_gap = 50
       mid_band = 25
       lite2 = 15
+      torches1 = 15
     }
 
     monster_prefs =
@@ -561,9 +562,11 @@ DOOM.THEMES =
 
     wall_groups =
     {
-      PLAIN = 100
+      PLAIN = 80
+      torches1 = 40
+      torches2 = 15
       low_gap = 30
-      runes1 = 20
+      runes1 = 10
       cross1 = 10
     }
 

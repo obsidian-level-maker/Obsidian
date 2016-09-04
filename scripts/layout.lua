@@ -1406,7 +1406,6 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     if not tab then return end
 
     -- IDEA : adjust PLAIN prob to get more/less detail
-    assert(tab["PLAIN"])
 
     each fg in R.floor_groups do
       local what = rand.key_by_probs(tab)
