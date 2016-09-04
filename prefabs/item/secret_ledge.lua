@@ -14,7 +14,7 @@ PREFABS.Item_secret_ledge =
   height = 160
 
   x_fit = "frame"
-  y_fit = "frame"
+  y_fit = "top"
 
   prob  = 5000
 }
