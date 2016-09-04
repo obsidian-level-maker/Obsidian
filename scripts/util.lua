@@ -491,7 +491,11 @@ function table.expand_templates(t)
     if sub.template then
       local orig = t[sub.template]
 
-      if not orig then
+      if orig == nil then
+        orig = TEMPLATES[sub.template]
+      end
+
+      if orig == nil then
         error("Missing template: " .. tostring(sub.template) .. " in: " .. name)
       end
 
