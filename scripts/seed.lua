@@ -1078,6 +1078,17 @@ function Chunk_base_reqs(chunk, dir)
     reqs.seed_h = chunk.sw
   end
 
+  local h1, h2
+
+  if chunk.from_area then h1 = chunk.from_area:get_height() end
+  if chunk.dest_area then h2 = chunk.dest_area:get_height() end
+
+  if h1 and h2 then
+    reqs.height = math.min(h1, h2)
+  else
+    reqs.height = h1 or h2
+  end
+
   return reqs
 end
 

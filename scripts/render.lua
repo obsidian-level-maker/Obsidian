@@ -1356,22 +1356,18 @@ function Render_chunk(chunk)
 
   local function do_start()
     reqs.kind = "start"
-    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
   local function do_exit()
     reqs.kind = "exit"
-    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
   local function do_secret_exit()
     reqs.kind = "secret_exit"
-    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
   local function do_cage()
     reqs.kind = "cage"
-    reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
   end
 
   local function do_trap()
@@ -1796,12 +1792,6 @@ function Render_properties_for_area(A)
 
   if A.mode == "liquid" then
     A.floor_mat = "_LIQUID"
---    A.wall_mat  = "ASHWALL7"
-  end
-
-
-  if A.mode == "trap" and not A.is_outdoor then
-    A.ceil_h = A.floor_h + 144
   end
 
 

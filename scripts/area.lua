@@ -293,6 +293,14 @@ function AREA_CLASS.has_conn(A)
 end
 
 
+function AREA_CLASS.get_height(A)
+  if not A.floor_h then return nil end
+  if not A.ceil_h  then return nil end
+
+  return A.ceil_h - A.floor_h
+end
+
+
 function AREA_CLASS.highest_neighbor(A)
   local best
 
