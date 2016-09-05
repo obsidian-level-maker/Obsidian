@@ -1386,6 +1386,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     -- WISH : prefer chunks which are not near each other
+    --        [ or: larger chunks ]
     rand.shuffle(locs)
 
     each item in R.closet_items do
@@ -1396,6 +1397,58 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       make_secret_closet(chunk, item)
     end
   end
+
+
+  local function try_make_decor_closet(R, chunk)
+    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+
+    -- TODO : REVIEW THIS
+    --        [ probably should be "decor" once have a proper picture system ]
+    reqs.kind  = "picture"
+
+    reqs.env = R:get_env()
+
+    chunk.prefab_def = Fab_pick(reqs, "none_ok")
+
+    if not chunk.prefab_def then
+      return
+    end
+
+stderrf("decor closet : %s\n", chunk.prefab_def.name)
+    chunk.content_kind = "DECORATION"
+
+--????  chunk.prefab_dir = chunk.from_dir
+
+    -- in symmetrical rooms, handle the peer too
+    if chunk.peer and not chunk.peer.content_kind then
+      local peer = chunk.peer
+
+      peer.content_kind = chunk.content_kind
+      peer.prefab_def   = chunk.prefab_def
+    end
+  end
+
+
+  local function try_decor_closets(R)
+    local locs = {}
+
+    each chunk in R.closets do
+      if not chunk.content_kind then
+        table.insert(locs, chunk)
+      end
+    end
+
+    rand.shuffle(locs)
+
+    local use_prob = 100
+
+    each chunk in locs do
+      if rand.odds(use_prob) then
+        try_make_decor_closet(R, chunk)
+      end
+    end
+  end
+
 
 
   local function pick_wall_detail(R)
@@ -1593,6 +1646,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     -- more cages, oh yes!
     try_extra_cages(R)
+
+    try_decor_closets(R)
 
     if not R.is_cave then
       pick_decorative_bling(R)

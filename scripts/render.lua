@@ -1379,6 +1379,11 @@ function Render_chunk(chunk)
     skin.trap_tag = assert(chunk.trigger.tag)
   end
 
+  local function do_decoration()
+    -- prefab already chosen
+    assert(chunk.prefab_def)
+  end
+
   local function do_teleporter()
     reqs.kind = "teleporter"
 
@@ -1516,6 +1521,9 @@ function Render_chunk(chunk)
 
   elseif what == "TRAP" then
     do_trap()
+
+  elseif what == "DECORATION" then
+    do_decoration()
 
   else
     error("Unsupported chunk kind: " .. tostring(chunk.kind) .. " / " .. tostring(what))
