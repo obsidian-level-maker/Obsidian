@@ -211,11 +211,52 @@ static void SHADE_MergeResults()
 }
 
 
-static int SHADE_CaveLighting(region_c *R)
+static int SHADE_CaveLighting(region_c *R, double z2)
 {
-	// TODO
+	int result = 0;
 
-	return 0;
+	double x2 = R->mid_x;
+	double y2 = R->mid_y;
+
+	for (unsigned int k = 0 ; k < cave_lights.size() ; k++)
+	{
+		csg_entity_c *E = cave_lights[k];
+
+		double x1 = E->x;
+		double y1 = E->y;
+		double z1 = E->z + 64.0;
+
+//??	int brightness = E->props.getInt("cave_light", 0);
+
+		// basic distance check
+		if (fabs(x1 - x2) > 800 || fabs(y1 - y2) > 800)
+			continue;
+
+		// more complex distance check
+		double dist = ComputeDist(x1, y1, x2, y2);
+
+		int level;
+
+		if (dist <= 104)
+			level = 48;
+		else if (dist <= 488)
+			level = 32;
+		else if (dist <= 744)
+			level = 16;
+		else
+			continue;
+
+		if (level < result)
+			continue;
+
+		// line of sight blocked?
+		if (CSG_TraceRay(x1,y1,z1, x2,y2,z2, "v"))
+			continue;
+
+		result = level;
+	}
+
+	return result;
 }
 
 
@@ -279,7 +320,9 @@ static void SHADE_VisitRegion(region_c *R)
 
 	if (B->t.face.getInt("cavelit"))
 	{
-		int cave = SHADE_CaveLighting(R);
+		double z2 = B->t.z + 80.0;
+
+		int cave = SHADE_CaveLighting(R, z2);
 
 		if (cave > 0)
 			light = MAX(light, cave);
