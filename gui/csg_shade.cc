@@ -229,7 +229,7 @@ static int SHADE_CaveLighting(region_c *R, double z2)
 //??	int brightness = E->props.getInt("cave_light", 0);
 
 		// basic distance check
-		if (fabs(x1 - x2) > 800 || fabs(y1 - y2) > 800)
+		if (fabs(x1 - x2) > 500 || fabs(y1 - y2) > 500)
 			continue;
 
 		// more complex distance check
@@ -239,9 +239,9 @@ static int SHADE_CaveLighting(region_c *R, double z2)
 
 		if (dist <= 104)
 			level = 48;
-		else if (dist <= 488)
+		else if (dist <= 232)
 			level = 32;
-		else if (dist <= 744)
+		else if (dist <= 488)
 			level = 16;
 		else
 			continue;
