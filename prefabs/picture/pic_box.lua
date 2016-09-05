@@ -28,6 +28,7 @@ TEMPLATES.Pic_box_template =
 
 ----- TECH THEME ------------------------------
 
+
 PREFABS.Pic_box_liteblu1 =
 {
   template = "Pic_box_template"
@@ -102,7 +103,7 @@ PREFABS.Pic_box_computer =
   tex_PIPES = { COMPSTA1=40, COMPSTA2=40 }
 
   -- use the occasional-blink FX (fairly rarely)
-  sector_1  = { [0]=50, [1]=10 }
+  sector_1  = { [0]=30, [1]=10 }
 }
 
 
@@ -110,4 +111,30 @@ PREFABS.Pic_box_computer =
 
 
 ----- HELL THEME ------------------------------
+
+
+PREFABS.Pic_box_marbfac4 =
+{
+  template = "Pic_box_template"
+
+  theme = "hell"
+
+  tex_PIPES = "MARBFAC4"
+  offset_2  = 13
+}
+
+
+PREFABS.Pic_box_huge_demon =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP08"
+  seed_w = 3
+  height = 176
+
+  theme = "hell"
+  prob  = 4000
+
+  tex_PIPES = "ZZZFACE4"
+}
 
