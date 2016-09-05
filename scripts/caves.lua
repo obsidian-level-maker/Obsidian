@@ -458,9 +458,12 @@ function Cave_generate_cave(R)
   local function collect_important_points()
 
 --!!!! FIXME TEMP RUBBISH
-
-local S1 = SEEDS[R.sx1 + 1][R.sy1 + 1]
-assert(S1.room == R)
+local S1
+for i = 1,4 do
+  S1 = SEEDS[R.sx1 + i][R.sy1 + i]
+  if S1.room == R then break; end
+end
+assert(S1)
 
 local b  = cave_box_for_seed(S1.sx, S1.sy)
 
@@ -1812,7 +1815,8 @@ top.reachable = 1
 
     local c_brush = Cave_brush(info, x, y)
 
-    brushlib.add_bottom(c_brush, A.ceil_h)
+    local bottom = { b=A.ceil_h }
+    table.insert(c_brush, bottom)
 
     if A.sky then c_mat = "_SKY" end
 
@@ -1975,6 +1979,8 @@ top.reachable = 1
   
   Trans.clear()
 
+  Ambient_push(128)
+
   create_delta_map()
 
 ---???  add_liquid_pools()
@@ -1984,6 +1990,8 @@ top.reachable = 1
     render_cell(x, y)
   end
   end
+
+  Ambient_pop()
 
   if R.is_outdoor then
     add_sky_rects()
@@ -2672,7 +2680,7 @@ function Cave_decorations(R)
     local mx = info.x1 + (x-1) * 64 + 32
     local my = info.y1 + (y-1) * 64 + 32
 
-    Trans.entity(torch_ent, mx, my, A.floor_h, { cave_light=192, factor=1.2 })
+    Trans.entity(torch_ent, mx, my, A.floor_h, { cave_light=48 })
     R:add_decor (torch_ent, mx, my, A.floor_h)
   end
 
@@ -2775,7 +2783,7 @@ function Cave_decide_properties(R)
     info.torch_mode = rand.key_by_probs({ none=2, few=10, some=90 })
   end
 
-  if LEVEL.is_dark or not R.is_outdoor then
+  if true then ---????  LEVEL.is_dark or not R.is_outdoor then
     info.cave_lighting = 1
   end
 
