@@ -1468,12 +1468,12 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
         if not cg.sink then
           error("Unknown ceiling sink: " .. what)
         end
-      end
 
-      -- inhibit ceiling lights and pillars
-      each chunk in R.ceil_chunks do
-        if chunk.area.ceil_group == cg and not chunk.content_kind then
-          chunk.content_kind = "NOTHING"
+        -- inhibit ceiling lights and pillars
+        each chunk in R.ceil_chunks do
+          if chunk.area.ceil_group == cg and not chunk.content_kind then
+            chunk.content_kind = "NOTHING"
+          end
         end
       end
     end
