@@ -44,3 +44,22 @@ PREFABS.Wall_midband_diag =
   z_fit  = "top"
 }
 
+
+PREFABS.Wall_midband2 =
+{
+  template = "Wall_midband"
+
+  group  = "mid_band2"
+
+  tex_LITE3 = "LITEBLU4"
+}
+
+PREFABS.Wall_midband2_diag =
+{
+  template = "Wall_midband_diag"
+
+  group  = "mid_band2"
+
+  tex_LITE3 = "LITEBLU4"
+}
+
