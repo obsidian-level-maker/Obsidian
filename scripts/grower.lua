@@ -60,6 +60,7 @@ function Grower_preprocess_grammar()
     if ch == '~' then return { kind="liquid" } end
     if ch == '#' then return { kind="disable" } end
     if ch == '@' then return { kind="link" } end
+    if ch == '=' then return { kind="bridge", dir=6 } end
 
     if ch == '1' then return { kind="area", area=1 } end
     if ch == '2' then return { kind="area", area=2 } end
