@@ -101,7 +101,7 @@ function Ambient_push(value)
 end
 
 
-function Ambient_pop(value)
+function Ambient_pop()
   if table.empty(AMBIENT_LIGHT) then
     error("Ambient_pop : stack is empty")
   else
