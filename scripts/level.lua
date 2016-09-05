@@ -189,14 +189,14 @@ function Level_determine_map_size(LEV)
 
   -- smaller maps for Deathmatch mode
   if OB_CONFIG.mode == "dm" then
-    local SIZES = { small=21, regular=27, large=35, extreme=51 }
+    local SIZES = { small=21, regular=27, large=35, extreme=45 }
 
     local W = SIZES[ob_size]
 
     return W, W
   end
 
-  local SIZES = { small=27, regular=35, large=45, extreme=61 }
+  local SIZES = { small=27, regular=35, large=45, extreme=57 }
 
   local W = SIZES[ob_size]
 
