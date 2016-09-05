@@ -20,6 +20,8 @@ PREFABS.Pillar_tech2_A =
 
   theme  = "tech"
   prob   = 200
+
+  sink_mode = "never"
 }
 
 

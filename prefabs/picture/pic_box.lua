@@ -10,6 +10,7 @@ TEMPLATES.Pic_box_template =
   where  = "seeds"
   seed_w = 1
   seed_h = 1
+  height = 128
 
   x_fit = "frame"
   y_fit = "top"
@@ -50,11 +51,58 @@ PREFABS.Pic_box_tekgren3 =
 PREFABS.Pic_box_silver3 =
 {
   template = "Pic_box_template"
-  map = "MAP02"
+
+  map    = "MAP02"
+  height = 176
 
   theme = "tech"
 
   tex_PIPES = "SILVER3"
+}
+
+
+PREFABS.Pic_box_silver2 =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP06"
+  seed_w = 2
+  height = 176
+
+  theme = "tech"
+
+  tex_PIPES = "SILVER2"
+}
+
+
+PREFABS.Pic_box_UAC =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP04"
+  seed_w = 2
+
+  theme = "tech"
+  prob  = 50
+
+  tex_PIPES = "SHAWN1"
+}
+
+
+PREFABS.Pic_box_computer =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP03"
+  seed_w = 2
+
+  theme = "tech"
+  prob  = 300
+
+  tex_PIPES = { COMPSTA1=40, COMPSTA2=40 }
+
+  -- use the occasional-blink FX (fairly rarely)
+  sector_1  = { [0]=50, [1]=10 }
 }
 
 
