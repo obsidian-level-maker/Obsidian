@@ -122,6 +122,9 @@ ______________________________________________________________________
 IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
 
+IDEA : a sharp corner removal pass [ before border stuff ]
+       [ preserve symmetry, e.g. by preferring horizontal direction to merge ]
+
 
 -  a "Z" shape for joiners and stairs, which connects two areas
    diagonally.  Directions specified as per "L" shape, i.e.
@@ -226,6 +229,26 @@ idea: a generic lowering bars prefab to go in front of closets or
 
 
 
+Doors and Joiners:
+
+-  support "deep" and "over" for L-shape joiners
+
++  env field for doors and joiners are two values separated by a
+   slash, e.g. "building/outdoor".  first value is front side,
+   second value is back side.
+
+   - if env field is a single keyword, equivalent to doubling it
+     e.g. "cave" ---> "cave/cave"
+
+   - support the word "any", e.g. "outdoor/any"
+     [ so default value is "any/any" ]
+
+   - support negation, e.g. "cave/!cave"
+
+   - "indoor" is equivalent to "!outdoor"
+
+
+
 Monster Visibility
 ------------------
 
@@ -258,32 +281,6 @@ CTF Maps
 
    For this mode, allow '1', '2', (etc) in rules to match ANY room
    but require ALL subsequent room-y elements to match that same room
-
-
-
-CAVES
------
-
-+  simplify the cave-section system:
-
-   - there is a seed X and Y coord, room becomes a cave if one
-     of the initial seeds is either <= X or <= Y coord
-
-     [ i.e. three sides of map become cave, TOP-RIGHT is not cave ]
-
--  for cave rooms, inhibit rules which add new areas (or liquids)
-   [ grow a single large area ]
-
-
-
-Texturing
----------
-
-+  door prefabs (for HELL, URBAN themes)
-
-+  texture choice for outdoor floors
-
-+  hallways
 
 
 
