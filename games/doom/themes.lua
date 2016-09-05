@@ -386,7 +386,7 @@ DOOM.THEMES =
       short_lamp   = 40
     }
 
-    ceil_light_prob = 60
+    ceil_light_prob = 50
 
     style_list =
     {
