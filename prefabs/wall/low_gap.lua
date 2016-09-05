@@ -6,9 +6,11 @@ GROUPS.wall_low_gap =
 {
   env = "building"
 
-  theme = "tech"
+--  theme = "tech"
 }
 
+
+----------- TECH THEME -------------------------
 
 PREFABS.Wall_lowgap =
 {
@@ -44,6 +46,46 @@ PREFABS.Wall_lowgap_diag =
   bound_z2 = 64
 
   z_fit  = "top"
+}
+
+
+PREFABS.Wall_lowgap2 =
+{
+  template = "Wall_lowgap"
+
+  group = "low_gap2"
+
+  tex_TEKWALL4 = "TEKBRON2"
+}
+
+PREFABS.Wall_lowgap2_diag =
+{
+  template = "Wall_lowgap_diag"
+  map = "MAP03"
+
+  group = "low_gap2"
+
+  tex_TEKWALL4 = "TEKBRON2"
+}
+
+
+PREFABS.Wall_lowgap3 =
+{
+  template = "Wall_lowgap"
+
+  group = "low_gap3"
+
+  tex_TEKWALL4 = "METAL6"
+}
+
+PREFABS.Wall_lowgap3_diag =
+{
+  template = "Wall_lowgap_diag"
+  map = "MAP03"
+
+  group = "low_gap3"
+
+  tex_TEKWALL4 = "METAL6"
 }
 
 

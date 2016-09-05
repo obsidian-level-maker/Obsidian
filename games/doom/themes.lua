@@ -362,7 +362,9 @@ DOOM.THEMES =
     wall_groups =
     {
       PLAIN = 80
-      low_gap = 50
+      low_gap = 35
+      low_gap2 = 15
+      low_gap3 = 5
       mid_band = 25
       lite2 = 15
       torches1 = 15
