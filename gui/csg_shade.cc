@@ -67,7 +67,14 @@ Lighting Model
    similiary a face can have a "shadow" value, and will act the
    same as a SHADOW brush.
 
-6. for 3D floors, it is expected that the ambient value of each
+6. in caves, certain entities (torches) are used as light sources,
+   and we trace rays to see what nearby cells should be lit by them
+   (less light for further distances).
+
+   floor brushes need "cavelit = 1" in top face of floor brushes,
+   and torch entities need a "cave_light = 48" field.
+
+7. for 3D floors, it is expected that the ambient value of each
    floor will be the same, then adjusted by "light_add" or "shadow"
    values in the top/bottom faces of the brushes.
 
@@ -77,7 +84,32 @@ Lighting Model
 #define DEFAULT_AMBIENT_LEVEL  144
 
 
+static std::vector< csg_entity_c *> cave_lights;
+
 static int current_region_group;
+
+
+static void SHADE_CollectLights()
+{
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c * R = all_regions[i];
+
+		// closed regions never provide light
+		if (R->isClosed())
+			continue;
+
+		for (unsigned int k = 0 ; k < R->entities.size() ; k++)
+		{
+			csg_entity_c *E = R->entities[k];
+
+			if (E->props.getInt("cave_light", 0) > 0)
+				cave_lights.push_back(E);
+		}
+	}
+
+	LogPrintf("Found %d cave light entities\n", (int)cave_lights.size());
+}
 
 
 static int SHADE_CalcRegionGroup(region_c *R)
@@ -179,6 +211,14 @@ static void SHADE_MergeResults()
 }
 
 
+static int SHADE_CaveLighting(region_c *R)
+{
+	// TODO
+
+	return 0;
+}
+
+
 static void SHADE_VisitRegion(region_c *R)
 {
 	csg_brush_c *B = R->gaps.front()->bottom;
@@ -235,6 +275,16 @@ static void SHADE_VisitRegion(region_c *R)
 		shadow = MAX(shadow, fc_shadow);
 	}
 
+	// check torch entities in caves
+
+	if (B->t.face.getInt("cavelit"))
+	{
+		int cave = SHADE_CaveLighting(R);
+
+		if (cave > 0)
+			light = MAX(light, cave);
+	}
+
 	// combine them
 
 	R->shade = ambient;
@@ -267,7 +317,7 @@ static void SHADE_LightWorld()
 		}
 
 		SHADE_VisitRegion(R);
-	} 
+	}
 }
 
 
@@ -275,9 +325,14 @@ void CSG_Shade()
 {
 	LogPrintf("Lighting level...\n");
 
+	cave_lights.clear();
+
+	SHADE_CollectLights();
 	SHADE_GroupRegions();
 	SHADE_LightWorld();
 	SHADE_MergeResults();
+
+	cave_lights.clear();
 }
 
 //--- editor settings ---
