@@ -110,6 +110,32 @@ PREFABS.Pic_box_computer =
 ----- URBAN THEME -----------------------------
 
 
+PREFABS.Pic_box_gargoyles =
+{
+  template = "Pic_box_template"
+
+  theme = "urban"
+
+  tex_PIPES = { GSTGARG=20, GSTLION=20, GSTSATYR=20 }
+  offset_2  = 9
+}
+
+
+PREFABS.Pic_box_big_faces =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP06"
+  seed_w = 2
+  height = 176
+
+  theme  = "!tech"
+  prob   = 300
+
+  tex_PIPES = { MARBFACE=10, MARBFACE2=20, MARBFACE3=40 }
+}
+
+
 ----- HELL THEME ------------------------------
 
 
@@ -121,6 +147,39 @@ PREFABS.Pic_box_marbfac4 =
 
   tex_PIPES = "MARBFAC4"
   offset_2  = 13
+}
+
+
+PREFABS.Pic_box_sp_face1 =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP05"
+  seed_w = 2
+  height = 160
+
+  theme  = "hell"
+  prob   = 70
+
+  tex_PIPES = "SP_FACE1"
+  line_2    = 48  -- scrolling
+}
+
+
+PREFABS.Pic_box_skinface =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP05"
+  seed_w = 2
+  height = 160
+
+  theme  = "hell"
+  prob   = 70
+
+  tex_PIPES = "SKINFACE"
+  offset_2  = 16
+  line_2    = 48  -- scrolling
 }
 
 
