@@ -115,9 +115,36 @@ PREFABS.Pic_box_gargoyles =
   template = "Pic_box_template"
 
   theme = "urban"
+  prob  = 50
 
   tex_PIPES = { GSTGARG=20, GSTLION=20, GSTSATYR=20 }
   offset_2  = 9
+}
+
+
+PREFABS.Pic_box_gargoyles2 =
+{
+  template = "Pic_box_template"
+
+  theme = "urban"
+  prob  = 150
+
+  tex_PIPES = { SW1GARG=20, SW1LION=20, SW1GARG=20 }
+  offset_2  = 55
+}
+
+
+PREFABS.Pic_box_woodskull =
+{
+  template = "Pic_box_template"
+
+  map    = "MAP04"
+  seed_w = 2
+
+  theme  = "urban"
+  prob   = 150
+
+  tex_PIPES = "WOOD4"
 }
 
 
