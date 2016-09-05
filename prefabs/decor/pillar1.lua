@@ -26,7 +26,7 @@ PREFABS.Pillar_round1_tech =
 {
   template = "Pillar_round1"
 
-  prob   = 50
+  prob   = 1
   theme  = "tech"
 
   tex_WOOD6     = "TEKLITE"
