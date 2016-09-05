@@ -2135,7 +2135,7 @@ function Fab_find_matches(reqs, match_state)
 
       if req_h == nil then return false end
 
-      return (def.height[1] <= reqs_h and reqs_h <= def.height[2])
+      return (def.height[1] <= req_h and req_h <= def.height[2])
     end
 
     -- [ if height is missing, we assume it fits anywhere ]
