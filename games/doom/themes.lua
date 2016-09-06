@@ -363,8 +363,8 @@ DOOM.THEMES =
     {
       PLAIN = 90
       low_gap = 35
-      low_gap2 = 15
-      low_gap3 = 5
+      low_gap2 = 5
+      low_gap3 = 10
       mid_band = 25
       mid_band2 = 10
       lite1 = 5
