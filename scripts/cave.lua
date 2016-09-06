@@ -68,7 +68,7 @@
     goal_type : keyword  -- set if area contains a goal (normally nil)
                          -- can be "portal" or "important".
 
-    touching : list(AREA)   -- only used for visitable floors
+    neighbors : list(AREA)   -- only used for visitable floors
 
     host_spots : list(BBOX)  -- spots which can host a torch/prefab
 
@@ -699,7 +699,7 @@ function Cave_create_areas(R)
 
     local AREA =
     {
-      touching = {}
+      neighbors = {}
 
       children = {}
 
@@ -959,7 +959,7 @@ step:dump("Step:")
       else
         local AREA =
         {
-          touching = {}
+          neighbors = {}
         }
 
         table.insert(info.floors, AREA)
@@ -1020,7 +1020,7 @@ step:dump("Step:")
     for y = 1, H do
       local A1 = info.blocks[x][y]
 
-      if not (A1 and A1.touching) then continue end
+      if not (A1 and A1.neighbors) then continue end
 
       for dir = 2,4,2 do
         local nx, ny = geom.nudge(x, y, dir)
@@ -1029,11 +1029,11 @@ step:dump("Step:")
 
         local A2 = info.blocks[nx][ny]
 
-        if not (A2 and A2.touching) then continue end
+        if not (A2 and A2.neighbors) then continue end
 
         if A2 != A1 then
-          table.add_unique(A1.touching, A2)
-          table.add_unique(A2.touching, A1)
+          table.add_unique(A1.neighbors, A2)
+          table.add_unique(A2.neighbors, A1)
         end
       end
     end  -- x, y
@@ -1042,7 +1042,7 @@ step:dump("Step:")
     -- verify all areas touch at least one other
     if #info.floors > 1 then
       each A in info.floors do
-        assert(not table.empty(A.touching))
+        assert(not table.empty(A.neighbors))
       end
     end
   end
@@ -1118,7 +1118,7 @@ function Cave_bunch_areas(R, mode)
 
 
   local function touches_the_list(N, list, except)
-    each N2 in N.touching do
+    each N2 in N.neighbors do
       if list[N2] and N2 != except then
         return true
       end
@@ -1132,7 +1132,7 @@ function Cave_bunch_areas(R, mode)
     local poss = {}
 
     each A,_ in list do
-      each N in A.touching do
+      each N in A.neighbors do
         if list[N] then continue end
         if N.near_bunch then continue end
 
@@ -1163,7 +1163,7 @@ function Cave_bunch_areas(R, mode)
 
       A.near_bunch = 0
 
-      each N in A.touching do
+      each N in A.neighbors do
         if not N.near_bunch or N.near_bunch > 1 then
           N.near_bunch = 1
         end
@@ -1294,7 +1294,7 @@ function Cave_floor_heights(R, entry_h)
     each A in info.floors do
       if A.liquid_bunch != bunch_A then continue end
 
-      each N in A.touching do
+      each N in A.neighbors do
         if N.liquid_bunch then continue end
 
         if N.floor_h then
@@ -1320,7 +1320,7 @@ function Cave_floor_heights(R, entry_h)
     each A in info.floors do
       if A.liquid_bunch != bunch_A then continue end
 
-      each N in A.touching do
+      each N in A.neighbors do
         if N.liquid_bunch then continue end
 
         if not N.floor_h then
@@ -1371,9 +1371,9 @@ function Cave_floor_heights(R, entry_h)
     end
 
 
-    rand.shuffle(A.touching)
+    rand.shuffle(A.neighbors)
 
-    each N in A.touching do
+    each N in A.neighbors do
       if not N.visited then
         local new_h = h + z_dir * rand.sel(35, 8, 16)
         visit_area(N, z_dir, new_h)
@@ -1491,7 +1491,7 @@ function Cave_floor_heights(R, entry_h)
     each A in info.floors do
       if A.sky_bunch != bunch_A then continue end
 
-      each N in A.touching do
+      each N in A.neighbors do
         if N.sky_bunch then continue end
 
         if N.ceil_h then
