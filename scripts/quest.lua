@@ -2440,7 +2440,7 @@ function Quest_big_secrets()
 
   for i = 1, quota do
     local R = pick_room(poss_list)
-stderrf("Secret %d/%d : %s\n", i, quota, R.name)
+
     Quest_make_room_secret(R)
 
     gui.debugf("Secret room in %s\n", R.name)

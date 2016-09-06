@@ -1414,7 +1414,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       return
     end
 
-stderrf("decor closet : %s\n", chunk.prefab_def.name)
+--stderrf("decor closet : %s\n", chunk.prefab_def.name)
+
     chunk.content_kind = "DECORATION"
 
 --????  chunk.prefab_dir = chunk.from_dir

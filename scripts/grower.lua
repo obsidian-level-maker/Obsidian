@@ -845,7 +845,7 @@ function Grower_determine_coverage()
 
   local coverage = count * 100 / total
 
-stderrf("=== coverage: %d%% (%d seeds / %d)\n", coverage, count, total)
+  gui.printf("=== Coverage: %d%% (%d seeds / %d)\n", coverage, count, total)
 
   return coverage
 end
