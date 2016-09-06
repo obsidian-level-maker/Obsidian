@@ -1164,21 +1164,7 @@ DECORATE_CLOSET_3x2 =
 --   Cave stuff
 ------------------------------------------
 
-CAVE_ROOT_1 =
-{
-  prob = 1
-
-  structure =
-  {
-    "!!!!", "RRRR"
-    "!!!!", "RRRR"
-    "!!!!", "RRRR"
-    "!!!!", "RRRR"
-  }
-}
-
-
-CAVE_ROOT_2 =
+CAVE_ROOT_5x5 =
 {
   prob = 10
 
@@ -1193,7 +1179,7 @@ CAVE_ROOT_2 =
 }
 
 
-CAVE_ROOT_3 =
+CAVE_ROOT_6x6 =
 {
   prob = 100
 
@@ -1215,11 +1201,12 @@ SPROUT_DIRECT_2_cave =
 
   structure =
   {
-    "....", "RRRR"
-    "....", "RRRR"
-    "....", "RRRR"
-    "....", "RRRR"
-    "x11x", "x11x"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    "xx11x", "xx11x"
   }
 
   new_room =
@@ -1237,6 +1224,7 @@ SPROUT_DIRECT_3_cave =
 
   structure =
   {
+    ".....", "RRRRR"
     ".....", "RRRRR"
     ".....", "RRRRR"
     ".....", "RRRRR"
@@ -1259,12 +1247,13 @@ SPROUT_JOINER_2x1_cave =
 
   structure =
   {
-    "....", "RRRR"
-    "....", "RRRR"
-    "....", "RRRR"
-    "....", "RRRR"
-    "....", ".JJ."
-    "x11x", "x11x"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    ".....", "RRRRR"
+    "xx..x", "xxJJx"
+    "xx11x", "xx11x"
   }
 
   new_room =
@@ -1287,6 +1276,7 @@ SPROUT_JOINER_3x1_cave =
 
   structure =
   {
+    ".....", "RRRRR"
     ".....", "RRRRR"
     ".....", "RRRRR"
     ".....", "RRRRR"
@@ -1317,6 +1307,7 @@ SPROUT_JOINER_3x2_cave =
 
   structure =
   {
+    ".....", "RRRRR"
     ".....", "RRRRR"
     ".....", "RRRRR"
     ".....", "RRRRR"
