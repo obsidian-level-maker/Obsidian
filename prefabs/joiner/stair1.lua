@@ -11,9 +11,14 @@ PREFABS.Joiner_stair1 =
   seed_w = 2
   seed_h = 1
 
-  x_fit = "stretch"
+  deep   = 16
+  over   = 16
 
-  prob = 15
+  x_fit  = "stretch"
+  x_fit  = "stretch"
+
+  theme  = "urban"
+  prob   = 60
 
   delta_h  = 48
   nearby_h = 160
