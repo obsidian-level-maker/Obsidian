@@ -2030,7 +2030,7 @@ function Fab_match_user_stuff(def)
     if def_k != user then factor = 0 end
   end
 
-  local function match_style(style)
+  local function match_style(name)
     if not STYLE[name] then
       error("Unknown style name in prefab def: " .. tostring(name))
     end
