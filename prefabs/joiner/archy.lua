@@ -13,6 +13,9 @@ PREFABS.Joiner_archy1 =
   seed_w = 2
   seed_h = 1
 
+  deep   = 16
+  over   = 16
+
   y_fit = "stretch"
 
   theme = "!tech"
@@ -30,6 +33,9 @@ PREFABS.Joiner_archy1_wide =
 
   seed_w = 3
   seed_h = 1
+
+  deep   = 16
+  over   = 16
 
   x_fit = "frame"
 

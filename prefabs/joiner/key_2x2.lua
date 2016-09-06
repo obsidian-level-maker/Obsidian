@@ -15,6 +15,9 @@ PREFABS.Locked_2x2_red =
   seed_w = 2
   seed_h = 2
 
+  deep   = 16
+  over   = 16
+
   prob   = 70*99
 
   delta_h  = -40
