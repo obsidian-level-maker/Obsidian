@@ -441,6 +441,7 @@ DOOM.THEMES =
     {
       SW1COMP  = "SW1PANEL"
       SILVER3  = "WOODGARG"
+      BIGDOOR4 = "BIGDOOR3"
     }
 
     floor_sinks =
