@@ -16,6 +16,8 @@ PREFABS.Joiner_door2 =
 
   x_fit  = "frame"
 
-  prob   = 300
+  prob   = 200
+
+  style  = "doors"
 }
 
