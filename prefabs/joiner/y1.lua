@@ -11,7 +11,11 @@ PREFABS.Joiner_y1 =
   seed_w = 3
   seed_h = 2
 
-  prob  = 100
+  deep   = 16
+  over   = 16
+
+  theme  = "!hell"
+  prob   = 100
 
   delta_h  = 24
   nearby_h = 128

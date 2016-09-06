@@ -11,8 +11,11 @@ PREFABS.Joiner_y3 =
   seed_w = 3
   seed_h = 2
 
-  theme = "!tech"
-  prob  = 500
+  deep   = 16
+  over   = 16
+
+  theme  = "!tech"
+  prob   = 500
 
   delta_h  = 32
   nearby_h = 160
