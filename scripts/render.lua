@@ -1445,23 +1445,23 @@ function Render_chunk(chunk)
     local x1, y1 = chunk.x1, chunk.y1
     local x2, y2 = chunk.x2, chunk.y2
 
-    -- move closets to align with nearby walls
+    -- move closets and joiners to align with nearby walls
     local dir = chunk.from_dir
 
-    if chunk.kind == "closet" and dir and not def.no_align
-       -- FIXME and chunk.shape == "U"
-    then
-      if dir == 2 then y1 = y1 - 16 end
-      if dir == 8 then y2 = y2 + 16 end
-      if dir == 4 then x1 = x1 - 16 end
-      if dir == 6 then x2 = x2 + 16 end
+    if not dir then return end
 
-      if true then   --???  def.y_fit != "top" then
-        if dir == 2 then y2 = y2 - 16 end
-        if dir == 8 then y1 = y1 + 16 end
-        if dir == 4 then x2 = x2 - 16 end
-        if dir == 6 then x1 = x1 + 16 end
-      end
+    if def.deep then
+      if dir == 2 then y1 = y1 - def.deep end
+      if dir == 8 then y2 = y2 + def.deep end
+      if dir == 4 then x1 = x1 - def.deep end
+      if dir == 6 then x2 = x2 + def.deep end
+    end
+
+    if def.over then
+      if dir == 2 then y2 = y2 + def.over end
+      if dir == 8 then y1 = y1 - def.over end
+      if dir == 4 then x2 = x2 + def.over end
+      if dir == 6 then x1 = x1 - def.over end
     end
 
     return x1,y1, x2,y2
