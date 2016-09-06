@@ -10,6 +10,9 @@ PREFABS.Start_Closet1 =
   x_fit = "frame"
   y_fit = "top"
 
+  deep  =  16
+  over  = -16
+
   prob  = 80
 
   -- door variations

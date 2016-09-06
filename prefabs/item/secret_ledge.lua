@@ -13,6 +13,9 @@ PREFABS.Item_secret_ledge =
   seed_h = 1
   height = 160
 
+  deep =  16
+  over = -16
+
   x_fit = "frame"
   y_fit = "top"
 

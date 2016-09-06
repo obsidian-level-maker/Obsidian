@@ -11,6 +11,9 @@ PREFABS.Trap_simple1 =
   seed_w = 1
   seed_h = 1
 
+  deep   =  16
+  over   = -16
+
   x_fit = { 40,88 }
   y_fit = "stretch"
 

@@ -13,6 +13,9 @@ PREFABS.Item_secret_cage =
   seed_h = 2
   height = 120
 
+  deep =  16
+  over = -16
+
   x_fit = "frame"
 
   prob  = 200

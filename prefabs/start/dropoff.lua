@@ -10,6 +10,9 @@ PREFABS.Start_Dropoff =
   seed_w = 2
   height = 128
 
+  deep  =  16
+  over  = -16
+
   x_fit = "frame"
   y_fit = "top"
 
