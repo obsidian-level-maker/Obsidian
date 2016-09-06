@@ -1551,7 +1551,7 @@ DOOM.ROOM_THEMES =
       CEIL1_1  = 30
       FLAT5_5  = 10
 
-      CEIL1_5  = 30
+      CEIL3_5  = 30
       FLAT19   = 30
       RROCK03  = 10
     }
