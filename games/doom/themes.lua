@@ -625,7 +625,7 @@ DOOM.ROOM_THEMES =
   tech_Startan =
   {
     env  = "building"
-    prob = 50
+    prob = 70
 
     walls =
     {
@@ -678,7 +678,7 @@ DOOM.ROOM_THEMES =
   tech_Tekgren =
   {
     env  = "building"
-    prob = 25
+    prob = 20
 
     walls =
     {
@@ -819,7 +819,7 @@ DOOM.ROOM_THEMES =
   tech_VeryShiny =
   {
     env = "building"
-    prob = 10
+    prob = 5
 
     walls =
     {
@@ -844,7 +844,7 @@ DOOM.ROOM_THEMES =
   tech_VeryTekky =
   {
     env  = "building"
-    prob = 10
+    prob = 5
 
     walls =
     {
