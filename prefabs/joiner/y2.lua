@@ -11,7 +11,10 @@ PREFABS.Joiner_y2 =
   seed_w = 3
   seed_h = 2
 
-  prob  = 30
+  deep   = 16
+  over   = 16
+
+  prob   = 30
 
   delta_h  = 32
   nearby_h = 200
