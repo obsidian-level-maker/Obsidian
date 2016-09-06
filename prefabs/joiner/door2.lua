@@ -11,7 +11,10 @@ PREFABS.Joiner_door2 =
   seed_w = 2
   seed_h = 1
 
-  x_fit = "frame"
+  deep   = 16
+  over   = 16
+
+  x_fit  = "frame"
 
   prob   = 300
 }

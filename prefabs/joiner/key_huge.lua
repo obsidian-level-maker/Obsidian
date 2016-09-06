@@ -16,6 +16,9 @@ PREFABS.Locked_huge_red =
   seed_w = 3
   seed_h = 2
 
+  deep   = 16
+  over   = 16
+
   prob   = 100
 
   delta_h  = 16
@@ -62,7 +65,7 @@ PREFABS.Locked_huge3_red =
   -- texture is already "DOORRED"
   -- line special is already #33 (open red door)
 
-prob = 9999
+  prob = 3000
 }
 
 
@@ -77,7 +80,8 @@ PREFABS.Locked_huge3_blue =
 
   tex_DOORRED = "DOORBLU"
   line_33     = 32
-prob = 9999
+
+  prob = 3000
 }
 
 
@@ -91,7 +95,8 @@ PREFABS.Locked_huge3_yellow =
   delta_h  = 0
 
   tex_DOORRED = "DOORYEL"
-  line_33    = 34
-prob = 9999
+  line_33     = 34
+
+  prob = 3000
 }
 

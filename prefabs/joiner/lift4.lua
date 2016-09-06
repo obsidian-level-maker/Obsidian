@@ -11,7 +11,10 @@ PREFABS.Joiner_lift4 =
   seed_w = 3
   seed_h = 2
 
-  x_fit = "frame"
+  deep   = 16
+  over   = 16
+
+  x_fit  = "frame"
 
   prob = 150
 

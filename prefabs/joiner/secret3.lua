@@ -15,8 +15,11 @@ PREFABS.Joiner_secret3_cage =
   seed_w = 2
   seed_h = 1
 
+  deep   = 16
+  over   = 16
+
   x_fit  = "frame"
---y_fit  = "top"
+  y_fit  = "top"
 
   prob   = 50
 }
