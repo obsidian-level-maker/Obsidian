@@ -807,9 +807,9 @@ function Corner_mark_walls(E)
     end
 
     if pass == 1 then
-      corner.walls[wall_dir].R = wall_mat;
+      corner.walls[wall_dir].R = wall_mat
     else
-      corner.walls[wall_dir].L = wall_mat;
+      corner.walls[wall_dir].L = wall_mat
     end
 
     cx = cx + dx * E.long

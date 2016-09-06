@@ -733,6 +733,8 @@ end
 
 
 function Edge_is_wallish(E)
+  if E.is_wallish then return true end
+
   if E.kind == "wall" or E.kind == "window" or
      E.kind == "arch" or E.kind == "locked_door" or
      E.kind == "door" or E.kind == "secret_door"

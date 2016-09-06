@@ -157,6 +157,12 @@ function Connect_directly(P)
     local E1 = Seed_create_chunk_edge(P.chunk, dir1, "nothing")
     local E2 = Seed_create_chunk_edge(P.chunk, dir2, "nothing")
 
+    -- TODO : this shape check is hacky
+    if P.chunk.shape == "I" then
+      E1.is_wallish = true
+      E2.is_wallish = true
+    end
+
     C.E1 = E1 ; E1.conn = C
     C.E2 = E2 ; E2.conn = C
 
