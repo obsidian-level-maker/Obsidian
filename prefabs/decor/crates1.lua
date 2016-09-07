@@ -10,12 +10,12 @@ PREFABS.Crate_small_brown =
   file   = "decor/crates1.wad"
   map    = "MAP01"
 
+  prob   = 20
+
   where  = "point"
   size   = 64
 
   bound_z1 = 0
-
-  prob   = 20
 }
 
 
@@ -35,13 +35,13 @@ PREFABS.Crate_tall_brown =
   file   = "decor/crates1.wad"
   map    = "MAP02"
 
+  prob   = 8
+
   where  = "point"
   size   = 64
   height = 160
 
   bound_z1 = 0
-
-  prob   = 8
 }
 
 
@@ -52,12 +52,12 @@ PREFABS.Crate_medium_gray =
   file   = "decor/crates1.wad"
   map    = "MAP03"
 
+  prob   = 8
+
   where  = "point"
   size   = 96
 
   bound_z1 = 0
-
-  prob   = 8
 }
 
 
@@ -68,12 +68,12 @@ PREFABS.Crate_group_medium =
   file   = "decor/crates1.wad"
   map    = "MAP04"
 
+  prob   = 300
+
   where  = "point"
   size   = 128
   height = 160
 
   bound_z1 = 0
-
-  prob   = 300
 }
 

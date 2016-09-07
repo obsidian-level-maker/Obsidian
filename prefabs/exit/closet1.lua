@@ -5,20 +5,19 @@
 PREFABS.Exit_closet1 =
 {
   file   = "exit/closet1.wad"
-  where  = "seeds"
 
+  prob   = 100
+  theme  = "!tech"
+
+  where  = "seeds"
   seed_w = 1
   seed_h = 1
 
-  deep  =  16
-  over  = -16
+  deep   =  16
+  over   = -16
 
-  x_fit = "frame"
-  y_fit = "top"
-
-  theme = "!tech"
-
-  prob  = 100
+  x_fit  = "frame"
+  y_fit  = "top"
 }
 
 
@@ -42,10 +41,10 @@ PREFABS.Exit_closet1_trap =
   template = "Exit_closet1"
   map      = "MAP02"
 
+  prob   = 20
+
   seed_w = 1
   seed_h = 2
-
-  prob   = 20
 }
 
 
@@ -54,6 +53,9 @@ PREFABS.Exit_closet1_trap_tech =
   template = "Exit_closet1"
   map      = "MAP02"
 
+  prob   = 20
+  theme  = "tech"
+
   seed_w = 1
   seed_h = 2
 
@@ -61,9 +63,5 @@ PREFABS.Exit_closet1_trap_tech =
 
   tex_GRAYVINE = "COMPBLUE"
   tex_SW1VINE  = "SW1BLUE"
-
-  theme  = "tech"
-
-  prob   = 20
 }
 

@@ -7,6 +7,10 @@ PREFABS.Decor_dittohead_computer =
   file   = "decor/dh_comp.wad"
   map    = "MAP01"
 
+  prob   = 8000
+  theme  = "tech"
+  env    = "building"
+
   where  = "point"
   size   = 128
   height = 160
@@ -15,9 +19,5 @@ PREFABS.Decor_dittohead_computer =
   bound_z2 = 160
 
   z_fit  = { 128,136 }
-
-  env    = "building"
-  theme  = "tech"
-  prob   = 8000
 }
 

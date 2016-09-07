@@ -5,13 +5,15 @@
 PREFABS.Exit_secret_box1 =
 {
   file  = "exit/secret_box.wad"
-  where = "seeds"
+
+  prob  = 100
 
   -- the kind means "an exit to a secret level"
   -- the key  means "a closet which is hidden in the room"
   kind  = "secret_exit"
   key   = "secret"
 
+  where  = "seeds"
   seed_w = 1
   seed_h = 1
 
@@ -20,8 +22,6 @@ PREFABS.Exit_secret_box1 =
 
   x_fit = "frame"
   y_fit = "top"
-
-  prob  = 100
 
   thing_34 =
   {
