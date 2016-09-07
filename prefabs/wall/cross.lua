@@ -29,3 +29,16 @@ PREFABS.Wall_cross1 =
   bound_z2 = 128
 }
 
+
+PREFABS.Wall_cross2 =
+{
+  template = "Wall_cross1"
+
+  group = "cross2"
+
+  tex_REDWALL = "FIREWALL"
+
+  -- disable oscillating light FX
+  sector_8 = 0
+}
+

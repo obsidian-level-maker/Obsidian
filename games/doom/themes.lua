@@ -570,9 +570,10 @@ DOOM.THEMES =
       PLAIN = 80
       torches1 = 40
       torches2 = 15
-      low_gap = 30
+      low_gap = 20
       runes1 = 10
-      cross1 = 10
+      cross1 = 5
+      cross2 = 15
     }
 
     monster_prefs =
