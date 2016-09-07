@@ -636,9 +636,27 @@ function Layout_add_traps()
   end
 
 
+  local function fake_backtrack(R)
+    -- this is used for trapped items
+    -- [ goals have "real" backtracking info ]
+
+    local result = {}
+
+    if #R.conns == 1 then
+      local C = R.conns[1]
+      R = C:other_room(R)
+      table.insert(result, R)
+    end
+
+    return result
+  end
+
+
   local function places_for_backtracking(R, backtrack, is_weapon)
-    -- main thing this does is pick which rooms to trap up and
-    -- which ones to skip.
+    --
+    -- Main thing this does is pick which rooms to trap up and
+    -- which ones to skip.  This is where the style is applied.
+    --
 
     local main_prob = style_sel("traps", 0, 30, 50, 70)
     local back_prob = style_sel("traps", 0, 15, 35, 70)
@@ -914,7 +932,7 @@ function Layout_add_traps()
     -- determine places and trigger, and install trap
     local is_weapon = (best.content_kind == "WEAPON")
 
-    local places = places_for_backtracking(R, {}, is_weapon)
+    local places = places_for_backtracking(R, fake_backtrack(R), is_weapon)
     if table.empty(places) then return end
 
     local trig = trigger_for_chunk(R, best)
