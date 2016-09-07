@@ -179,7 +179,7 @@ DOOM.SINKS =
 
   floor_green =
   {
-    mat = "DEM1_6"
+    mat = "DEM1_5"
     dz  = -8
   }
 
