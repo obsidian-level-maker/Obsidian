@@ -882,8 +882,10 @@ function Layout_add_traps()
       prob = 40
     end 
 
+    if not rand.odds(prob) then return -2 end
+
     -- tie breaker
-    return prob + gui.random()
+    return 1 + gui.random()
   end
 
 
@@ -897,19 +899,17 @@ function Layout_add_traps()
     table.append(ch_list, R.closets)
 
     local best
-    local best_prob = 0
+    local best_score = -1
 
     each chunk in ch_list do
-      local prob = eval_item_for_trap(chunk)
-      if prob > best_prob then
+      local score = eval_item_for_trap(chunk)
+      if score > best_score then
         best = chunk
-        best_prob = prob
+        best_score = score
       end
     end
 
     if not best then return end
-
-    if not rand.odds(best_prob) then return end
 
     -- determine places and trigger, and install trap
     local is_weapon = (best.content_kind == "WEAPON")
