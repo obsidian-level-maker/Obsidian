@@ -64,3 +64,129 @@ PREFABS.Wall_runes1_F =
   map      = "MAP06"
 }
 
+
+----------- FIRELAVA variation --------------------
+
+
+PREFABS.Wall_runes2_A =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP02"
+
+  group = "runes2"
+  tex_FIREBLU1 = "FIRELAVA"
+}
+
+
+PREFABS.Wall_runes2_B =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP02"
+
+  group = "runes2"
+  tex_FIREBLU1 = "FIRELAVA"
+}
+
+
+PREFABS.Wall_runes2_C =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP03"
+
+  group = "runes2"
+  tex_FIREBLU1 = "FIRELAVA"
+}
+
+
+PREFABS.Wall_runes2_D =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP04"
+
+  group = "runes2"
+  tex_FIREBLU1 = "FIRELAVA"
+}
+
+
+PREFABS.Wall_runes2_E =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP05"
+
+  group = "runes2"
+  tex_FIREBLU1 = "FIRELAVA"
+}
+
+
+PREFABS.Wall_runes2_F =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP06"
+
+  group = "runes2"
+  tex_FIREBLU1 = "FIRELAVA"
+}
+
+
+----------- CRACKLE2 variation --------------------
+
+
+PREFABS.Wall_runes3_A =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP02"
+
+  group = "runes3"
+  tex_FIREBLU1 = "CRACKLE2"
+}
+
+
+PREFABS.Wall_runes3_B =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP02"
+
+  group = "runes3"
+  tex_FIREBLU1 = "CRACKLE2"
+}
+
+
+PREFABS.Wall_runes3_C =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP03"
+
+  group = "runes3"
+  tex_FIREBLU1 = "CRACKLE2"
+}
+
+
+PREFABS.Wall_runes3_D =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP04"
+
+  group = "runes3"
+  tex_FIREBLU1 = "CRACKLE2"
+}
+
+
+PREFABS.Wall_runes3_E =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP05"
+
+  group = "runes3"
+  tex_FIREBLU1 = "CRACKLE2"
+}
+
+
+PREFABS.Wall_runes3_F =
+{
+  template = "Wall_runes1_A"
+  map      = "MAP06"
+
+  group = "runes3"
+  tex_FIREBLU1 = "CRACKLE2"
+}
+
