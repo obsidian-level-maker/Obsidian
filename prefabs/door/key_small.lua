@@ -7,6 +7,8 @@ PREFABS.Locked_small_red =
   file   = "door/key_small.wad"
   map    = "MAP01"
 
+  prob   = 10
+
   where  = "edge"
   key    = "k_red"
 
@@ -21,10 +23,13 @@ PREFABS.Locked_small_red =
   -- line special is already #33
 }
 
+
 PREFABS.Locked_small_red_diag =
 {
   file   = "door/key_small.wad"
   map    = "MAP02"
+
+  prob   = 10
 
   where  = "diagonal"
   key    = "k_red"

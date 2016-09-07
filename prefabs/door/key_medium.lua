@@ -7,6 +7,8 @@ PREFABS.Locked_medium_red =
   file   = "door/key_medium.wad"
   map    = "MAP01"
 
+  prob   = 50
+
   where  = "edge"
   key    = "k_red"
 
@@ -23,10 +25,13 @@ PREFABS.Locked_medium_red =
   -- line special is already #33
 }
 
+
 PREFABS.Locked_medium_red_diag =
 {
   file   = "door/key_medium.wad"
   map    = "MAP02"
+
+  prob   = 50
 
   where  = "diagonal"
   key    = "k_red"

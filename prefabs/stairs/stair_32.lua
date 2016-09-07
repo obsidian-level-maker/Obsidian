@@ -5,6 +5,9 @@
 PREFABS.Stair_32 =
 {
   file   = "stairs/stair_32.wad"
+
+  prob   = 90
+
   where  = "seeds"
   shape  = "I"
 
@@ -14,7 +17,5 @@ PREFABS.Stair_32 =
   bound_z2 = 32
 
   delta_h = 32
-
-  prob = 90
 }
 

@@ -5,6 +5,9 @@
 PREFABS.Stair_long_1x2 =
 {
   file   = "stairs/long_1x2.wad"
+
+  prob   = 90
+
   where  = "seeds"
   shape  = "I"
   
@@ -16,7 +19,5 @@ PREFABS.Stair_long_1x2 =
   bound_z2 = 64
 
   delta_h = 64
-
-  prob = 90
 }
 

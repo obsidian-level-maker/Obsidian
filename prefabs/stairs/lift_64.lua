@@ -5,18 +5,19 @@
 PREFABS.Lift_64 =
 {
   file   = "stairs/lift_64.wad"
+
+  prob   = 1
+
   where  = "seeds"
   shape  = "I"
 
-  prob = 1
-
   seed_w = 2
-
-  delta_h = 64
-  plain_ceiling = true
 
   x_fit  = "stretch"
 
   bound_z1 = 0
+
+  delta_h = 64
+  plain_ceiling = true
 }
 

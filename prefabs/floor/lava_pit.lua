@@ -2,9 +2,12 @@
 -- Lava / slime pit
 --
 
-PREFABS.Floor_lavapit =
+UNFINISHED.Floor_lavapit =
 {
   file   = "floor/lava_pit.wad"
+
+  prob   = 50
+
   where  = "seeds"
 
   seed_w = 2

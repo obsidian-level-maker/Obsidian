@@ -6,6 +6,9 @@ PREFABS.Stair_wide_3x1 =
 {
   file   = "stairs/wide_3x1.wad"
   map    = "MAP01"
+
+  prob   = 900
+
   where  = "seeds"
   shape  = "I"
 
@@ -15,8 +18,6 @@ PREFABS.Stair_wide_3x1 =
   bound_z2 = 32
 
   delta_h = 32
-
-  prob = 900
 }
 
 
@@ -24,6 +25,11 @@ PREFABS.Stair_wide_3x1_torch =
 {
   file   = "stairs/wide_3x1.wad"
   map    = "MAP02"
+
+  prob  = 500
+  rank  = 2
+  theme = "!tech"
+
   where  = "seeds"
   shape  = "I"
 
@@ -33,9 +39,5 @@ PREFABS.Stair_wide_3x1_torch =
   bound_z2 = 32
 
   delta_h = 32
-
-  theme = "!tech"
-  rank  = 2
-  prob  = 500
 }
 
