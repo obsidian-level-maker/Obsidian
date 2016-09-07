@@ -632,6 +632,8 @@ function Layout_add_traps()
 
     if table.empty(locs) then return nil end
 
+    if kind == "teleport" and #locs < 3 then return nil end
+
     return locs
   end
 
@@ -652,42 +654,82 @@ function Layout_add_traps()
   end
 
 
-  local function places_for_backtracking(R, backtrack, is_weapon)
-    --
-    -- Main thing this does is pick which rooms to trap up and
-    -- which ones to skip.  This is where the style is applied.
-    --
+  local function closet_dice(is_same)
+    -- chance of using a monster closet to release monsters
+    local prob
 
-    local main_prob = style_sel("traps", 0, 30, 50, 70)
-    local back_prob = style_sel("traps", 0, 15, 35, 70)
-
-    if is_weapon then
-      main_prob = main_prob * 1.7
+    if is_same then
+      prob = style_sel("traps", 0, 30, 55, 80)
+    else
+      prob = style_sel("traps", 0, 10, 35, 60)
     end
 
-    local places = {}
-    local result = {}
+    return rand.odds(prob)
+  end
 
-    if not R.is_start and rand.odds(main_prob) then
+
+  local function teleport_dice(is_same)
+    -- chance of using teleporting-in monsters
+    local prob
+
+    if is_same then
+      prob = style_sel("traps", 0,  2,  6, 12)
+    else
+      prob = style_sel("traps", 0, 10, 25, 40)
+    end
+
+    return rand.odds(prob)
+  end
+
+
+  local function places_for_backtracking(R, backtrack, p_kind)
+    --
+    -- The main thing this does is pick which rooms to trap up and
+    -- which ones to skip.  This is where the style is applied.
+    --
+    -- p_kind is either "goal", "item" or "weapon".
+    --
+
+--[[  REVIEW this....
+    if p_kind == "weapon" then
+      same_prob = same_prob * 1.5
+    end
+--]]
+
+    -- create list of potential rooms for da monsters
+    local places = {}
+
+    if not R.is_start then
       table.insert(places, { room=R })
     end
 
     each N in backtrack do
-      if rand.odds(back_prob) then
-        table.insert(places, { room=N })
-      end
+      table.insert(places, { room=N })
     end
 
-    each info in places do
-      local closet_locs = locs_for_room(info.room, "closet")
-      local tele_locs   = locs_for_room(info.room, "teleport")
+    -- visit each place, decide what method to use (or to skip it)
+    local result = {}
 
-      if closet_locs and tele_locs then
-        -- closets are much rarer than teleport spots, so favor them
-        if rand.odds(95) then
-          tele_locs = nil
-        else
+    each info in places do
+      local closet_locs
+      local  telep_locs
+
+      local is_same = (info.room == R)
+
+      if closet_dice(is_same) then
+         closet_locs = locs_for_room(info.room, "closet")
+      end
+
+      if teleport_dice(is_same) then
+         telep_locs = locs_for_room(info.room, "teleport")
+      end
+
+      -- break ties
+      if closet_locs and telep_locs then
+        if is_same or rand.odds(50) then
           closet_locs = nil
+        else
+          telep_locs = nil
         end
       end
 
@@ -695,10 +737,14 @@ function Layout_add_traps()
         info.kind = "closet"
         info.locs = closet_locs
 
-      elseif tele_locs then
+      elseif telep_locs then
         info.kind = "teleport"
-        info.locs = tele_locs
+        info.locs = telep_locs
       end
+
+gui.debugf("MonRelease in %s : kind --> %s\n",
+           sel(info.room == R, "SAME", "EARLIER"),
+           info.kind or "NOTHING")
 
       if info.locs then
         table.insert(result, info)
@@ -868,7 +914,7 @@ function Layout_add_traps()
       return
     end
 
-    local places = places_for_backtracking(R, goal.backtrack)
+    local places = places_for_backtracking(R, goal.backtrack, "goal")
     if table.empty(places) then return end
 
     local trig = trigger_for_chunk(R, assert(goal.kk_spot))
@@ -930,9 +976,13 @@ function Layout_add_traps()
     if not best then return end
 
     -- determine places and trigger, and install trap
-    local is_weapon = (best.content_kind == "WEAPON")
+    local p_kind = "item"
 
-    local places = places_for_backtracking(R, fake_backtrack(R), is_weapon)
+    if best.content_kind == "WEAPON" then
+      p_kind = "weapon"
+    end
+
+    local places = places_for_backtracking(R, fake_backtrack(R), p_kind)
     if table.empty(places) then return end
 
     local trig = trigger_for_chunk(R, best)

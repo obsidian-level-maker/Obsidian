@@ -144,7 +144,7 @@ GLOBAL_STYLE_LIST =
   hallways    = { none=0,  few=60, some=30, heaps=10 }
 
   cages       = { none=10, few=20, some=40, heaps=10 }
-  traps       = { none=0,  few=20, some=60, heaps=20 }
+  traps       = { none=0,  few=20, some=65, heaps=15 }
   secrets     = { none=0,  few=20, some=50, heaps=10 }
   closets     = { none=0,  few=0,  some=60, heaps=20 }
 
