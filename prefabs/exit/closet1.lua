@@ -34,7 +34,25 @@ PREFABS.Exit_closet1_tech =
 }
 
 
+------- Exit-to-Secret ---------------------------
+
+
+PREFABS.Exit_closet1_secret =
+{
+  template = "Exit_closet1"
+
+  kind = "secret_exit"
+
+  -- replace normal exit special with "exit to secret" special
+  line_11 = 51
+
+  tex_GRAYVINE = "SP_HOT1"
+  tex_SW1VINE  = "SW1HOT"
+}
+
+
 ------- Trappy variation -------------------------
+
 
 PREFABS.Exit_closet1_trap =
 {
