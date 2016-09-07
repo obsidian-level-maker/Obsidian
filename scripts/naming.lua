@@ -73,6 +73,7 @@ namelib.NAMES =
         ["Pain from the"]=10
 
         -- command-like prefixes, some by Dante
+--[[
         ["Attack the"]=20
         ["Destroy the"]=20
         ["Shut Down the"]=15
@@ -80,6 +81,7 @@ namelib.NAMES =
         ["Secure the"]=15
         ["Clear this"]=5
         ["Defend this"]=10
+--]]
       }
     }
 
@@ -121,9 +123,11 @@ namelib.NAMES =
       ["%v %a %n"] = 24
       ["%v %b %n"] = 24
 
+--[[
       ["%r the %n"] = 12
       ["%r the %a %n"] = 12
       ["%r the %b %n"] = 12
+--]]
 
       ["%s"] = 16
     }
