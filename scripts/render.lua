@@ -839,7 +839,6 @@ function Render_corner(cx, cy)
          detect_gap(dir, 2, 2)
       then
         -- Ok, gap was filled
-        return
       end
     end
 
@@ -849,7 +848,6 @@ function Render_corner(cx, cy)
          detect_gap(dir, 2, 3, "is_sharp")
       then
         -- Ok, gap at sharp corner was filled
-        return
       end
     end
   end
