@@ -2,23 +2,17 @@
 -- Single lighting niche
 --
 
-GROUPS.wall_lite1 =
-{
-  env = "building"
-  theme = "tech"
-}
-
-
 PREFABS.Wall_lite1 =
 {
   file   = "wall/lite_1.wad"
   map    = "MAP01"
 
+  prob   = 50
+  group  = "lite1"
+
   where  = "edge"
   height = 128
   deep   = 16
-
-  group  = "lite1"
 
   x_fit  = "frame"
   z_fit  = "frame"

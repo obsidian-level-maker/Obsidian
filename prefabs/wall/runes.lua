@@ -2,25 +2,18 @@
 -- Wall with satanic runes
 --
 
-GROUPS.wall_runes1 =
-{
-  env = "building"
-
-  theme = "hell"
-}
-
-
 PREFABS.Wall_runes1_A =
 {
   file   = "wall/runes.wad"
   map    = "MAP01"
 
+  prob   = 50
+  group  = "runes1"
+
   where  = "edge"
   deep   = 16
 
   height = 128
-
-  group  = "runes1"
 
   x_fit  = "frame"
   z_fit  = "frame"
