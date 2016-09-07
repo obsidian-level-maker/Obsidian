@@ -718,10 +718,8 @@ function Render_corner(cx, cy)
   end
 
 
-  local function build_filler(dir, L_tex, R_tex)
-    if L_tex != R_tex then
-      L_tex = "METAL"
-    end
+  local function build_filler_normal(dir, L_tex, R_tex)
+    -- builds a triangle at the given corner.
 
     local x = corner.x
     local y = corner.y
@@ -740,7 +738,32 @@ function Render_corner(cx, cy)
   end
 
 
-  local function detect_gap(dir, num_left, num_right)
+  local function build_filler_sharp(dir, L_tex, R_tex)
+    -- builds a wedge shape suitable for a sharp-ish corner.
+    -- 'dir' parameter is a side (2, 4, 6 or 8).
+
+    local x = corner.x
+    local y = corner.y
+
+    local nx, ny = geom.delta(dir)
+    local ax, ay = geom.delta(geom.LEFT[dir])
+
+    local w_brush =
+    {
+      { x = x + ax*16, y = y + ay*16 }
+      { x = x - ax*16, y = y - ay*16 }
+
+      { x = x - ax*8 + nx*8, y = y - ay*8 + ny*8 }
+      { x = x + ax*8 + nx*8, y = y + ay*8 + ny*8 }
+    }
+
+    brushlib.set_mat(w_brush, L_tex)
+
+    Trans.brush(w_brush)
+  end
+
+
+  local function detect_gap(dir, num_left, num_right, is_sharp)
     -- dir is a corner direction (1, 3, 7, 9)
 
     -- the starting line must be clear
@@ -749,12 +772,14 @@ function Render_corner(cx, cy)
     local L_dir = dir
     local R_dir = dir
 
+    -- require given number of lines to the left to be clear
     for i = 1, num_left do
       L_dir = geom.LEFT_45[L_dir]
 
       if analysis[L_dir].L or analysis[L_dir].R then return false end
     end
 
+    -- require given number of lines to the right to be clear
     for i = 1, num_right do
       R_dir = geom.RIGHT_45[R_dir]
 
@@ -767,12 +792,23 @@ function Render_corner(cx, cy)
     local L_tex = analysis[L_dir].R
     local R_tex = analysis[R_dir].L
 
-    if L_tex and R_tex then
-      build_filler(dir, L_tex, R_tex)
-      return true
+    -- need solid walls now
+    if not (L_tex and R_tex) then return false end
+
+    -- OK --
+
+    -- handle different textures, use a neutral value
+    if L_tex != R_tex then
+      L_tex = "METAL"
     end
 
-    return false
+    if is_sharp then
+      build_filler_sharp(dir, L_tex)
+    else
+      build_filler_normal(dir, L_tex)
+    end
+
+    return true
   end
 
 
@@ -784,11 +820,12 @@ function Render_corner(cx, cy)
     -- Algorithm:
     --   1. analyse the eight lines coming off this corner.
     --      each line may have a wall on each side (left and right).
-    --      [ this is done while rendering all the edges ]
+    --      [ this data is collected while rendering all the edges ]
     --
     --   2. detect the cases where we need a gap filler.
-    --      e.g. they require nothing on the three or four lines
-    --      which lie in-between the two walls.
+    --      e.g. two axis-aligned walls 90 degrees apart do not need
+    --      anything (no gap), but two diagonal walls with a 180 degree
+    --      gap needs to be filled at the corner.
     --
 
     if table.empty(corner.walls) then return end
@@ -796,10 +833,23 @@ function Render_corner(cx, cy)
     init_analysis()
 
     each dir in geom.CORNERS do
-      if detect_gap(dir, 1, 1) or detect_gap(dir, 1, 2) or
-         detect_gap(dir, 2, 1) or detect_gap(dir, 2, 2)
+      if detect_gap(dir, 1, 1) or
+         detect_gap(dir, 1, 2) or
+         detect_gap(dir, 2, 1) or
+         detect_gap(dir, 2, 2)
       then
         -- Ok, gap was filled
+        return
+      end
+    end
+
+    each dir in geom.SIDES do
+      if detect_gap(dir, 2, 2, "is_sharp") or
+         detect_gap(dir, 3, 2, "is_sharp") or
+         detect_gap(dir, 2, 3, "is_sharp")
+      then
+        -- Ok, gap at sharp corner was filled
+        return
       end
     end
   end
