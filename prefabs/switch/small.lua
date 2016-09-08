@@ -5,10 +5,12 @@
 PREFABS.Switch_small_sw_blue =
 {
   file   = "switch/small.wad"
+
+  prob   = 50
+  switch = "sw_blue"
+
   where  = "point"
   size   = 64
-
-  switch = "sw_blue"
 
   tag_1  = "?lock_tag"
 

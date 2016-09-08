@@ -6,9 +6,11 @@ PREFABS.Fence_plain =
 {
   file   = "fence/fence_16.wad"
   map    = "MAP01"
+
+  prob   = 50
+
   where  = "edge"
 
-  long   = 192
   deep   = 16
   over   = 16
 
@@ -22,6 +24,9 @@ PREFABS.Fence_plain_diag =
 {
   file   = "fence/fence_16.wad"
   map    = "MAP02"
+
+  prob   = 50
+
   where  = "diagonal"
 
   fence_h = 32

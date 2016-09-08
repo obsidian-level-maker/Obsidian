@@ -2,7 +2,7 @@
 -- Bridge (jump over) with curves
 --
 
-PREFABS.Bridge_curvey =
+UNFINISHED.Bridge_curvey =
 {
   file   = "bridge/curvey.wad"
 

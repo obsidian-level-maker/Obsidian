@@ -5,6 +5,10 @@
 PREFABS.Cage_Wall =
 {
   file   = "cage/wall_cage.wad"
+
+  prob  = 100
+  theme = "!hell"
+
   where  = "seeds"
   shape  = "U"
 
@@ -18,10 +22,6 @@ PREFABS.Cage_Wall =
   y_fit = "top"
 
   bound_z1 = 0
-
-  prob  = 100
-
-  theme = "!hell"
 }
 
 

@@ -7,7 +7,6 @@ UNFINISHED.Fence_tall_gap =
   file   = "fence/tall_gap.wad"
   where  = "edge"
 
-  long   = 192
   deep   = 16
   over   = 16
 

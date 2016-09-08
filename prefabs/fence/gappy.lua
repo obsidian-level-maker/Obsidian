@@ -7,7 +7,6 @@ UNFINISHED.Fence_gappy =
   file   = "fence/gappy.wad"
   where  = "edge"
 
-  long   = 192
   deep   = 16
   over   = 16
 

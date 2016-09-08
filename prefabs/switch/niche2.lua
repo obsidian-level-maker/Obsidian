@@ -5,8 +5,11 @@
 UNFINISHED.Switch_niche2 =
 {
   file   = "switch/niche2.wad"
-  where  = "seeds"
+
+  prob   = 50
   switch = "any"
+
+  where  = "seeds"
 
   seed_w = 1
   seed_h = 1

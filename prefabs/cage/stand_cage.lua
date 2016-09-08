@@ -5,6 +5,9 @@
 PREFABS.Cage_standing1 =
 {
   file   = "cage/stand_cage.wad"
+
+  prob   = 50
+
   where  = "seeds"
   shape  = "P"
 

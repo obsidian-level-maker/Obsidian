@@ -5,15 +5,15 @@
 UNFINISHED.Window_double =
 {
   file   = "window/double.wad"
+
+  prob   = 90
+
   where  = "edge"
-  long   = 192
   deep   = 16
   over   = 16
 
   bound_z1 = 0
   bound_z2 = 112
-
-  prob = 90
 }
 
 
@@ -24,8 +24,10 @@ UNFINISHED.Window_double =
 UNFINISHED.Window_double_tall =
 {
   file   = "window/double.wad"
+
+  prob   = 90
+
   where  = "edge"
-  long   = 192
   deep   = 16
   over   = 16
 
@@ -33,7 +35,5 @@ UNFINISHED.Window_double_tall =
   bound_z2 = 112
 
   z_fit = { 64, 88 }
-
-  prob = 90
 }
 

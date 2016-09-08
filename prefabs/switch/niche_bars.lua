@@ -5,8 +5,11 @@
 PREFABS.Switch_niche_bars =
 {
   file   = "switch/niche_bars.wad"
-  where  = "seeds"
+
+  prob   = 50
   switch = "sw_blue"
+
+  where  = "seeds"
 
   seed_w = 1
   seed_h = 1

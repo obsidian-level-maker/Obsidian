@@ -5,6 +5,9 @@
 PREFABS.Cage_fake_switch =
 {
   file   = "cage/fake_switch.wad"
+
+  prob   = 20
+
   where  = "seeds"
   shape  = "U"
 
@@ -14,10 +17,8 @@ PREFABS.Cage_fake_switch =
   deep   =  16
   over   = -16
 
-  y_fit = "top"
+  y_fit  = "top"
 
   bound_z1 = 0
-
-  prob  = 20
 }
 

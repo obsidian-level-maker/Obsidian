@@ -5,11 +5,12 @@
 PREFABS.Fence_secret =
 {
   file   = "fence/secr_fence.wad"
-  where  = "edge"
 
+  prob   = 50
+
+  where  = "edge"
   key    = "secret"
 
-  long   = 192
   deep   = 16
   over   = 16
 

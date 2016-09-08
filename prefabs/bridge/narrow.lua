@@ -2,7 +2,7 @@
 -- Narrow wooden bridge
 --
 
-PREFABS.Bridge_narrow =
+UNFINISHED.Bridge_narrow =
 {
   file   = "bridge/narrow.wad"
 

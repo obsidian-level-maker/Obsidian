@@ -5,9 +5,10 @@
 UNFINISHED.Window_liquid_arch =
 {
   file   = "window/liq_arch.wad"
-  where  = "edge"
 
-  long   = 192
+  prob   = 90
+
+  where  = "edge"
   deep   = 16
   over   = 16
 
@@ -15,7 +16,5 @@ UNFINISHED.Window_liquid_arch =
 
   bound_z1 = 0
   bound_z2 = 128
-
-  prob = 90
 }
 

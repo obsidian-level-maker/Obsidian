@@ -5,6 +5,9 @@
 PREFABS.Trap_simple1 =
 {
   file   = "trap/trap1.wad"
+
+  prob   = 50
+
   where  = "seeds"
   shape  = "U"
 

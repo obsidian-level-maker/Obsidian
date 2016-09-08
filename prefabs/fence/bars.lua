@@ -6,8 +6,10 @@ PREFABS.Bars_shiny =
 {
   file   = "fence/bars.wad"
   map    = "MAP01"
-  where  = "edge"
 
+  prob   = 50
+
+  where  = "edge"
   key    = "barred"
 
   long   = 192
@@ -27,8 +29,10 @@ PREFABS.Bars_shiny_diag =
 {
   file   = "fence/bars.wad"
   map    = "MAP02"
-  where  = "diagonal"
 
+  prob   = 50
+
+  where  = "diagonal"
   key    = "barred"
 
   z_fit  = "bottom"
