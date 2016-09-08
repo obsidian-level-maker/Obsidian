@@ -659,9 +659,9 @@ function Layout_add_traps()
     local prob
 
     if is_same then
-      prob = style_sel("traps", 0, 30, 55, 80)
+      prob = style_sel("traps", 0, 25, 50, 85)
     else
-      prob = style_sel("traps", 0, 10, 35, 60)
+      prob = style_sel("traps", 0, 15, 30, 70)
     end
 
     return rand.odds(prob)
@@ -673,9 +673,9 @@ function Layout_add_traps()
     local prob
 
     if is_same then
-      prob = style_sel("traps", 0,  2,  6, 12)
+      prob = style_sel("traps", 0,  2,  5, 12)
     else
-      prob = style_sel("traps", 0, 10, 25, 40)
+      prob = style_sel("traps", 0,  8, 25, 50)
     end
 
     return rand.odds(prob)
@@ -725,11 +725,12 @@ function Layout_add_traps()
       end
 
       -- break ties
+      -- [ preference for closets since they are less common ]
       if closet_locs and telep_locs then
-        if is_same or rand.odds(50) then
-          closet_locs = nil
-        else
+        if is_same or rand.odds(66) then
           telep_locs = nil
+        else
+          closet_locs = nil
         end
       end
 
@@ -742,9 +743,11 @@ function Layout_add_traps()
         info.locs = telep_locs
       end
 
+--[[ QUANTITY DEBUG
 gui.debugf("MonRelease in %s : kind --> %s\n",
            sel(info.room == R, "SAME", "EARLIER"),
            info.kind or "NOTHING")
+--]]
 
       if info.locs then
         table.insert(result, info)
