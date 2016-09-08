@@ -2248,7 +2248,7 @@ function Fab_find_matches(reqs, match_state)
     -- game, theme (etc) check
     local prob = Fab_match_user_stuff(def)
 
-    prob = prob * (def.prob or 50) * (reqs.prob_mul or 1)
+    prob = prob * (def.prob or 0) * (reqs.prob_mul or 1)
 
     if prob <= 0 then continue end
 
