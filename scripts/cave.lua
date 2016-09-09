@@ -137,8 +137,8 @@ function Cave_generate_cave(R)
     chunk.cx1 = (chunk.sx1 - R.sx1) * 2 + 1
     chunk.cy1 = (chunk.sy1 - R.sy1) * 2 + 1
 
-    chunk.cx2 = chunk.cx1 + chunk.sw * 2 + 1
-    chunk.cy2 = chunk.cy1 + chunk.sh * 2 + 1
+    chunk.cx2 = chunk.cx1 + chunk.sw * 2 - 1
+    chunk.cy2 = chunk.cy1 + chunk.sh * 2 - 1
   end
 
 
@@ -170,7 +170,8 @@ if E.long > 1 then
 stderrf("ROOM @ (%d %d)\n", R.sx1, R.sy1)
 stderrf("-----> cells (%d %d) .. (%d %d)\n", WC.cx1, WC.cy1, WC.cx2, WC.cy2)
 end
-assert(WC.cx1 > 0)
+assert(map:valid_cell(WC.cx1, WC.cy1))
+assert(map:valid_cell(WC.cx2, WC.cy2))
 --]]
 
     table.insert(info.walk_chunks, WC)
@@ -217,6 +218,7 @@ end
   local function walk_for_closet(chunk)
     -- ignored unused closets
     if not chunk.content_kind then return end
+    if chunk.content_kind == "void" then return end
 
     local E = assert(chunk.edges[1])
 
@@ -280,6 +282,8 @@ end
   local function create_map()
     info.W = R.sw * 2
     info.H = R.sh * 2
+
+--stderrf("create_map %d x %d : %s\n", info.W, info.H, R.name)
 
     info.blocks = table.array_2D(info.W, info.H)
 
@@ -663,10 +667,10 @@ end
 
   ---| Cave_generate_cave |---
 
+  create_map()
+
   collect_walk_chunks()
   walk_chunks_to_points()
-
-  create_map()
 
   mark_boundaries()
   clear_walk_chunks()
@@ -775,6 +779,7 @@ function Cave_create_areas(R)
 
     table.insert(info.floors, AREA)
 
+    -- FIXME
     each imp in R.cave_imps do
       imp.area = AREA
     end
@@ -794,7 +799,7 @@ function Cave_create_areas(R)
 
     local walk_way = copy_cave_without_fences()
 
-    -- remove importants from it
+    -- remove importants from it  [ FIXME ]
     each imp in R.cave_imps do
       walk_way:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, 1)
     end
@@ -856,9 +861,9 @@ function Cave_create_areas(R)
 
     group_map = AUTOMATA_CLASS.blank_copy(info.cave)
 
-    each G in R.cave_imps do
-      add_group_to_map(G)
-    end
+---##  each G in R.cave_imps do
+---##    add_group_to_map(G)
+---##  end
   end
 
 
@@ -1450,12 +1455,14 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function find_entry_area()
+--[[ FIXME
     each imp in R.cave_imps do
       assert(imp.area)
       if imp.conn and imp.conn.conn_h then
         return imp.area
       end
     end
+--]]
 
     return rand.pick(info.floors)
   end
@@ -1463,6 +1470,7 @@ function Cave_floor_heights(R, entry_h)
 
   local function transfer_heights()
     -- transfer heights to importants and portals
+    -- FIXME
     each imp in R.cave_imps do
       assert(imp.area)
       assert(imp.area.floor_h)
@@ -1602,7 +1610,7 @@ function Cave_floor_heights(R, entry_h)
 
   visit_area(entry_area, z_dir, entry_h)
 
-  transfer_heights()
+--!!!!  transfer_heights()
 
   update_min_max_floor()
   update_walk_ways()
@@ -3049,7 +3057,7 @@ function Cave_determine_spots(R)
     end
     end
 
-    -- remove importants
+    -- remove importants   FIXME
     each imp in R.cave_imps do
       do_spot_important(imp)
     end
