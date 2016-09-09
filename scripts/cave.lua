@@ -152,12 +152,26 @@ function Cave_generate_cave(R)
     if E.long > 1 then
       local along_dir = geom.RIGHT[E.dir]
       sx2, sy2 = geom.nudge(sx1, sy1, along_dir, E.long - 1)
+--[[
+stderrf("EDGE : %s dir=%d ---> along:%d (%d %d) .. (%d %d)\n",
+E.S.name, E.dir, along_dir, sx1,sy1, sx2,sy2)
+--]]
     end
 
     if sx2 < sx1 then sx1, sx2 = sx2, sx1 end
     if sy2 < sy1 then sy1, sy2 = sy2, sy1 end
 
     local WC = Chunk_new("cave_walk", sx1, sy1, sx2, sy2)
+
+    cave_box_for_chunk(WC)
+
+--[[
+if E.long > 1 then
+stderrf("ROOM @ (%d %d)\n", R.sx1, R.sy1)
+stderrf("-----> cells (%d %d) .. (%d %d)\n", WC.cx1, WC.cy1, WC.cx2, WC.cy2)
+end
+assert(WC.cx1 > 0)
+--]]
 
     table.insert(info.walk_chunks, WC)
 
@@ -171,6 +185,15 @@ function Cave_generate_cave(R)
 
     local E = C:edge_for_room(R)
     assert(E)
+
+--[[
+if C.kind == "joiner" then
+stderrf("Joiner walk in %s.....\n", R.name)
+stderrf("   conn  : %s --> %s\n", C.R1.name, C.R2.name)
+stderrf("   edge1 : %s dir:%d\n", C.E1.S.name, C.E1.dir)
+stderrf("   edge2 : %s dir:%d\n", C.E2.S.name, C.E2.dir)
+end
+--]]
 
     WC = walk_for_edge(E)
 
@@ -225,10 +248,12 @@ function Cave_generate_cave(R)
     info.point_list = {}
 
     each chunk in info.walk_chunks do
+      assert(chunk.cx1)
+
       local POINT =
       {
         x = math.i_mid(chunk.cx1, chunk.cx2)
-        y = math.i_mid(chukn.cy1, chunk.cy2)
+        y = math.i_mid(chunk.cy1, chunk.cy2)
       }
 
       table.insert(info.point_list, POINT)
@@ -291,18 +316,6 @@ function Cave_generate_cave(R)
       local cx = (sx - R.sx1) * 2 + 1
       local cy = (sy - R.sy1) * 2 + 1
 
-      -- keep connections clear
-      if S:has_connection() then
-        map:fill(cx, cy, cx+1, cy+1, -1)
-        continue
-      end
-
-      -- check for closets
-      if S:near_closet() then
-        map:fill(cx, cy, cx+1, cy+1, -1)
-        continue
-      end
-
       map:fill(cx, cy, cx+1, cy+1, 0)
 
       for dir = 2,8,2 do
@@ -329,6 +342,15 @@ function Cave_generate_cave(R)
       end
 
     end -- sx, sy
+    end
+  end
+
+
+  local function clear_walk_chunks()
+    each chunk in info.walk_chunks do
+      assert(chunk.cx1)
+
+      map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, -1)
     end
   end
 

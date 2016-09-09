@@ -87,6 +87,9 @@
     -- Edges are one-sided.  For connections there will be two edges
     -- back-to-back which refer to each other via the 'peer' field.
     --
+    -- Closets and joiners are considered self-contained and hence
+    -- do not use/require edges in their inside region.
+    --
     -- For long edges, the seed in 'S' here is the left-most one
     -- (relative to the 'dir' value).  So when dir == 8 then 'S' has
     -- the lowest sx coord, and when dir == 4 it has lowest sy coord.
@@ -706,6 +709,8 @@ end
 
 
 function Seed_create_chunk_edge(chunk, side, kind)
+  -- the edge faces *into* the chunk (on the given side)
+
   local sx, sy
 
   if side == 2 then sx = chunk.sx1 ; sy = chunk.sy1 - 1 end
