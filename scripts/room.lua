@@ -688,6 +688,10 @@ function Room_reckon_door_tex()
     --        materials -- probably create the whole skin table here.
     --
     -- [ some hackitude in Render_chunk currently does joiners Ok ]
+
+
+    -- compute wall mats on the edges
+    visit_conn(C, C.E1, C.E2)
   end
 
   
