@@ -33,9 +33,9 @@ DOOM.MATERIALS =
 
   -- special materials --
 
-  _ERROR   = { t="METAL",    f="CEIL5_2" }
-  _DEFAULT = { t="GRAY1",    f="FLAT1" }
-  _SKY     = { t="CEMENT3",  f="F_SKY1" }
+  _ERROR   = { t="METAL",  f="CEIL5_2" }
+  _DEFAULT = { t="GRAY1",  f="FLAT1" }
+  _SKY     = { t="METAL",  f="F_SKY1" }
 
 
   -- general purpose --
@@ -228,6 +228,7 @@ DOOM.MATERIALS =
   SW1BRN2  = { t="SW1BRN2",  f="FLOOR0_1" }
   SW1BRNGN = { t="SW1BRNGN", f="FLOOR7_1" }
   SW1BROWN = { t="SW1BROWN", f="FLOOR7_1" }
+  SW1CMT   = { t="SW1CMT",   f="FLAT1" }
   SW1COMM  = { t="SW1COMM",  f="FLAT23" }
   SW1COMP  = { t="SW1COMP",  f="CEIL5_1" }
   SW1DIRT  = { t="SW1DIRT",  f="FLOOR7_1" }
@@ -376,6 +377,9 @@ DOOM.MATERIALS =
 
   O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 }
 
+  -- new flat, added by data/lift_flat.wad
+  LIFTFLAT = { f="LIFTFLAT", t="SUPPORT2" }
+
 
   -- Missing stuff:
   --   CEMENT#  : used by OBLIGE for various logos
@@ -383,7 +387,7 @@ DOOM.MATERIALS =
   --
   -- Note too that STEP1/2 are ambiguous, the flats are quite
   -- different to the textures, hence renamed the flats as
-  -- F_STEP1 and F_STEP2.
+  -- F_STEP1 and F_STEP2 here.
 
 
   -----------------------------------
@@ -544,6 +548,8 @@ DOOM.MATERIALS =
   ZDOORB1  = { t="ZDOORB1",  f="FLAT23" }
   ZDOORF1  = { t="ZDOORF1",  f="FLAT23" }
   ZELDOOR  = { t="ZELDOOR",  f="FLAT23" }
+
+  ZZZFACE4 = { t="ZZZFACE4", f="CEIL5_1" }
 
   ZZWOLF1  = { t="ZZWOLF1",  f="FLAT18" }
   ZZWOLF2  = { t="ZZWOLF2",  f="FLAT18" }

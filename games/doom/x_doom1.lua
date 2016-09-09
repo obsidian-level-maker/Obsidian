@@ -142,8 +142,9 @@ ULTDOOM.MATERIALS =
   NUKAGE1  = { t="SLADRIP1", f="NUKAGE1", sane=1 }
 
 
+  --------------------------------------------------------------------
   --
-  -- Compatibility stuff
+  -- Compatibility section
   --
   -- These allow prefabs containing DOOM 2 specific flats or textures
   -- to at least work in DOOM / Ultimate DOOM (a bit mucked up though).
@@ -359,6 +360,8 @@ ULTDOOM.MATERIALS =
   ZIMMER5  = { t="ASHWALL",  f="FLOOR6_2" }
   ZIMMER7  = { t="ASHWALL",  f="FLOOR6_2" }
   ZIMMER8  = { t="SP_ROCK1", f="MFLR8_3" }
+
+  ZZZFACE4 = { t="MARBFACE", f="DEM1_5" }
 
   -- rails
   MIDBARS1 = { t="MIDGRATE", rail_h=128 }
