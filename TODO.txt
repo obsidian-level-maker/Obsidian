@@ -54,26 +54,24 @@ ______________________________________________________________________
 
 +  don't make "Empty Quests", especially 2 or more rooms
 
-+  two connections into a room
-
-+  control over room size (big room setting in Level Control)
-
 +  support a "Mix It Up" Strength setting
-
-+  prevent decor which obstruct movement near doors (etc) too much
 
 +  move 'prefabs' folder to games/doom/
 
++  proper "apply_num" calculation [ especially DECORATE ]
 
-+  get stairwells working again [ as joiners ]
 
 +  add railings to cages sometimes
+
++  polish corners : get correct texture for joiners
 
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
 
 +  limit # of floor areas per room
 
+
+-  two connections into a room
 
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars

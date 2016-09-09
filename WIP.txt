@@ -5,7 +5,7 @@ WORK IN PROGRESS
 
 Caves:
 
-(b) rename "touching" in caves.lua --> neighbors
+!!  fix grower (max_size on dummy area)
 
 (c) treat CAVE_AREA as an extension to AREA class, mode == "cave"
     [ what about the dummy area used to grow the cave? ]
@@ -22,46 +22,16 @@ Caves:
 
 
 
-Runes : tidy up, make a SNKSKIN or BFALL or ROCKRED variation 
-
-
-
-!!  give *every* prefab a "prob" value
-
-
-
-Grower :
-
-!!  apply_num  for different passes [ especially DECORATE ]
+Grower:
 
 !!  compute a score early, do a check on first whole-seed "area" element
     and do the "max_size" check here too
 
 
 
-Doors and Joiners:
-
-+  I shape joiners can have "deep" and "over" values,
-   allow them to overlap nearby room as per doors
-
-   [ update all joiner prefabs with 16 unit deep and over ]
-
-   [[ NOTE : can still use y_fit for deeper rects??? ]]
-
--  fix level control "Doors" setting for joiners
-
-
-
 Miscellaneous:
-
-+  prevent decor in liquid sinks  [ EXCEPT liquid_pipe...  "liquid_decor" kind ]
 
 +  F/R cages: also want mid-bars and/or corner posts [ esp. cages surrounded by liquids ]
 
 -  sometimes have flashing/oscillate FX for free-range cages
-
--  more pillars in rooms
-
--  gameplay : prefer to teleport monsters into PREVIOUS rooms
-   [ teleport ambushes suck, especially in very small rooms ]
 
