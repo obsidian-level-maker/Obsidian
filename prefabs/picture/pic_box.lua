@@ -162,7 +162,7 @@ PREFABS.Pic_box_big_faces =
   theme  = "!tech"
   prob   = 300
 
-  tex_PIPES = { MARBFACE=10, MARBFACE2=20, MARBFACE3=40 }
+  tex_PIPES = { MARBFACE=10, MARBFAC2=20, MARBFAC3=40 }
 }
 
 
