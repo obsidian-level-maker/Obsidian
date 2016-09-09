@@ -910,7 +910,7 @@ function Area_locate_chunks()
   --
 
   local sym_pass
-  local walk_vol
+  local max_vol
 
 
   local PASSES = { 44, 33, 42,24,32,23, 22, 21,12,  11 }
@@ -930,6 +930,40 @@ function Area_locate_chunks()
   }
 
 
+  local function check_touches_wall(sx1,sy1, sx2,sy2)
+    -- this is mainly for caves
+
+    each dir in geom.SIDES do
+      local tx1, ty1 = sx1, sy1
+      local tx2, ty2 = sx2, sy2
+
+      if dir == 2 then ty2 = ty1 end
+      if dir == 8 then ty1 = ty2 end
+      if dir == 4 then tx2 = tx1 end
+      if dir == 6 then tx1 = tx2 end
+
+      for x = tx1,tx2 do
+      for y = ty1,ty2 do
+        local S = SEEDS[x][y]
+
+        -- NOTE: we assume S is never a diagonal
+
+        local N = S:neighbor(dir)
+
+        if not N then return true end
+        if N.room != S.room then return true end
+
+        if N.chunk and not (N.chunk == "floor" or N.chunk == "liquid") then
+          return true
+        end
+      end  -- x, y
+      end
+    end  -- dir
+
+    return false
+  end
+
+
   local function make_chunk(kind, place, A, sx1,sy1, sx2,sy2)
     local CHUNK = Chunk_new(kind, sx1,sy1, sx2,sy2)
 
@@ -941,6 +975,8 @@ function Area_locate_chunks()
     elseif CHUNK.sw > 2 and CHUNK.sh > 2 then
       CHUNK.is_large = true
     end
+
+    CHUNK.touches_wall = check_touches_wall(sx1,sy1, sx2,sy2)
 
     return CHUNK
   end
@@ -982,9 +1018,10 @@ function Area_locate_chunks()
 
   local function raw_test_chunk(A, sx1,sy1, sx2,sy2)
     -- size check, disallow occupying the whole room
-    local vol = (sx2 - sx1 + 1) * (sy2 - sy1 + 1)
+    local sw = (sx2 - sx1 + 1)
+    local sh = (sy2 - sy1 + 1)
 
-    if vol > walk_vol * 0.35 then return false end
+    if sw * sh > max_vol then return false end
 
     for x = sx1, sx2 do
     for y = sy1, sy2 do
@@ -1151,7 +1188,15 @@ function Area_locate_chunks()
   -- pass ONLY checks for straddling chunks
 
   each R in LEVEL.rooms do
-    walk_vol = R:calc_walk_vol()
+    max_vol = R:calc_walk_vol()
+
+    -- smaller max_vol for caves
+    -- [ to get more chunks which do not touch the room edge ]
+    if R.is_cave then
+      max_vol = max_vol * 0.15
+    else
+      max_vol = max_vol * 0.35
+    end
 
     for pass = sel(R.symmetry, 1, 2), 2 do
       sym_pass = pass
