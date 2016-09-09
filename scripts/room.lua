@@ -681,8 +681,8 @@ function Room_reckon_door_tex()
       E1, E2 = E2, E1
     end
   end
-  
-  
+
+
   local function visit_joiner(C)
     -- TODO : here is probably best place to decide "wall" and "outer"
     --        materials -- probably create the whole skin table here.
@@ -1660,12 +1660,17 @@ function Room_choose_size(R)
     R.is_big = true
   end
 
-  if R.is_big then
-    R.floor_limit = rand.pick({ 9,10,11,12 })
+  if R.is_cave then
+    R.size_limit  = SEED_W * rand.pick({ 3.0, 4.0, 5.0 })
+    R.floor_limit = 2
+
+  elseif R.is_big then
     R. size_limit = SEED_W * 4.4
+    R.floor_limit = rand.pick({ 9,10,11,12 })
+
   else
-    R.floor_limit = rand.pick({ 4,5,5,6,6,7 })
     R. size_limit = SEED_W * 2.7
+    R.floor_limit = rand.pick({ 4,5,5,6,6,7 })
   end
 end
 

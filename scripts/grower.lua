@@ -1045,8 +1045,12 @@ gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), 
     local A = AREA_CLASS.new("floor")
     ROOM:add_area(A)
 
-    -- max size of new area
-    A.max_size = rand.pick({ 16, 24, 32 })
+    -- max size of new area  [ for caves it is whole room ]
+    if ROOM.is_cave then
+      A.max_size = ROOM.size_limit
+    else
+      A.max_size = rand.pick({ 16, 24, 32 })
+    end
   end
 
   return ROOM
