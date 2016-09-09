@@ -2,7 +2,7 @@
 -- Simple start closet
 --
 
-PREFABS.Start_Closet1 =
+PREFABS.Start_closet1 =
 {
   file  = "start/closet1.wad"
 
