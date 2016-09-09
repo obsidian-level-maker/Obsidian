@@ -262,6 +262,13 @@ function Layout_spot_for_wotsit(R, kind, required)
       end
     end
 
+    -- in caves, prefer spots which do not touch the room edge
+    if R.is_cave and chunk.kind != "closet" then
+      if chunk.touches_wall then
+        score = score / 8
+      end
+    end
+
     -- tie breaker
     return score + gui.random() ^ 2
   end
