@@ -134,21 +134,48 @@ function Cave_generate_cave(R)
 
 
   local function cave_box_for_chunk(chunk)
-    local box =
-    {
-      cx1 = (chunk.sx1 - R.sx1) * 2 + 1
-      cy1 = (chunk.sy1 - R.sy1) * 2 + 1
-    }
+    chunk.cx1 = (chunk.sx1 - R.sx1) * 2 + 1
+    chunk.cy1 = (chunk.sy1 - R.sy1) * 2 + 1
 
-    box.cx2 = box.cx1 + chunk.sw * 2 + 1
-    box.cy2 = box.cy1 + chunk.sh * 2 + 1
+    chunk.cx2 = chunk.cx1 + chunk.sw * 2 + 1
+    chunk.cy2 = chunk.cy1 + chunk.sh * 2 + 1
+  end
 
-    return box
+
+  local function walk_for_edge(E)
+    local sx1 = E.S.sx
+    local sy1 = E.S.sy
+
+    local sx2 = sx1
+    local sy2 = sy1
+
+    if E.long > 1 then
+      local along_dir = geom.RIGHT[E.dir]
+      sx2, sy2 = geom.nudge(sx1, sy1, along_dir, E.long - 1)
+    end
+
+    if sx2 < sx1 then sx1, sx2 = sx2, sx1 end
+    if sy2 < sy1 then sy1, sy2 = sy2, sy1 end
+
+    local WC = Chunk_new("cave_walk", sx1, sy1, sx2, sy2)
+
+    table.insert(info.walk_chunks, WC)
+
+    return WC
   end
 
 
   local function walk_for_connection(C)
-    -- TODO
+    -- teleporters will be handled elsewhere (e.g. as a floor_chunk)
+    if C.kind == "teleporter" then return end
+
+    local E = C:edge_for_room(R)
+    assert(E)
+
+    WC = walk_for_edge(E)
+
+    WC.walk_kind = "conn"
+    WC.walk_conn = C
   end
 
 
@@ -156,7 +183,11 @@ function Cave_generate_cave(R)
     -- ignored unused floor chunks
     if not chunk.content_kind then return end
 
-    -- TODO
+    cave_box_for_chunk(chunk)
+
+    chunk.walk_kind = "floor"
+
+    table.insert(info.walk_chunks, chunk)
   end
 
 
@@ -164,7 +195,12 @@ function Cave_generate_cave(R)
     -- ignored unused closets
     if not chunk.content_kind then return end
 
-    -- TODO
+    local E = assert(chunk.edges[1])
+
+    local WC = walk_for_edge(E)
+
+    WC.walk_kind   = "closet"
+    WC.walk_closet = chunk
   end
 
 

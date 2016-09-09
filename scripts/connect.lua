@@ -111,15 +111,13 @@ function CONN_CLASS.other_room(C, R)
 end
 
 
---[[
 function CONN_CLASS.edge_for_room(C, R)
   if R == C.R1 then
-    return C.E1
+    return C.E1, C.F1
   else
-    return C.E2
+    return C.E2, C.F2
   end
 end
---]]
 
 
 ------------------------------------------------------------------------
