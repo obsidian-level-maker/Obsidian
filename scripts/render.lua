@@ -1592,14 +1592,25 @@ function Render_chunk(chunk)
     skin.floor = tex_ref.floor_mat
     skin.ceil  = tex_ref.ceil_mat
 
+    -- FIXME : something very wrong here!
     if tex_ref.is_outdoor then
-      skin.wall = A.facade_mat or A.zone.facade_mat
+      skin.wall = tex_ref.facade_mat or tex_ref.zone.facade_mat
+
+      if chunk.kind == "closet" then
+        skin.wall = A.facade_mat or A.zone.facade_mat
+      end
     end
   end
 
-  if chunk.dest_area then
-    skin.outer  = chunk.dest_area. wall_mat
-    skin.floor2 = chunk.dest_area.floor_mat
+  local outer_ref = chunk.outer_ref or chunk.dest_area
+
+  if outer_ref then
+    skin.outer  = outer_ref. wall_mat
+    skin.floor2 = outer_ref.floor_mat
+
+    if outer_ref.is_outdoor then
+      skin.outer = outer_ref.facade_mat or outer_ref.zone.facade_mat
+    end
   end
 
 
