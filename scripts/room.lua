@@ -684,7 +684,10 @@ function Room_reckon_door_tex()
   
   
   local function visit_joiner(C)
-    -- FIXME
+    -- TODO : here is probably best place to decide "wall" and "outer"
+    --        materials -- probably create the whole skin table here.
+    --
+    -- [ some hackitude in Render_chunk currently does joiners Ok ]
   end
 
   
