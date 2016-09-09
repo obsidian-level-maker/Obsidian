@@ -652,7 +652,7 @@ SPROUT_DIRECT_1 =
 
   new_room =
   {
-    conn = { x=3, y=2, w=2, dir=2 }
+    conn = { x=2, y=1, w=2, dir=8 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
@@ -673,7 +673,7 @@ SPROUT_DIRECT_2 =
 
   new_room =
   {
-    conn = { x=3, y=3, w=2, dir=2 }
+    conn = { x=2, y=2, w=2, dir=8 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
@@ -693,7 +693,7 @@ SPROUT_DIRECT_3 =
 
   new_room =
   {
-    conn = { x=4, y=2, w=3, dir=2 }
+    conn = { x=2, y=1, w=3, dir=8 }
 
     symmetry = { x=3, y=2, dir=8 }
   }
@@ -713,7 +713,7 @@ SPROUT_DIRECT_4 =
 
   new_room =
   {
-    conn = { x=4, y=2, w=4, dir=2 }
+    conn = { x=1, y=1, w=4, dir=8 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
@@ -738,7 +738,7 @@ SPROUT_CASTLE_1 =
   {
     env = "building"
 
-    conn = { x=5, y=3, w=2, dir=2 }
+    conn = { x=4, y=2, w=2, dir=8 }
 
 --  symmetry = { x=4, y=3, w=2, dir=8 }
   }
@@ -765,7 +765,7 @@ SPROUT_CASTLE_2 =
   {
     env = "building"
 
-    conn = { x=5, y=3, w=2, dir=2 }
+    conn = { x=4, y=2, w=2, dir=8 }
 
     symmetry = { x=4, y=3, w=2, dir=8 }
   }
@@ -791,8 +791,8 @@ SPROUT_DOUBLE_TEST =
 
   new_room =
   {
-    conn  = { x=2, y=3, w=2, dir=2 }
-    conn2 = { x=3, y=1, w=2, dir=4 }
+    conn  = { x=1, y=2, w=2, dir=8 }
+    conn2 = { x=2, y=2, w=2, dir=6 }
 
     symmetry = { x=3, y=3, dir=9 }
   }
@@ -812,7 +812,7 @@ SPROUT_SYMMETRY_3 =
 
   new_room =
   {
-    conn = { x=4, y=2, w=3, dir=2 }
+    conn = { x=2, y=1, w=3, dir=8 }
 
     symmetry = { x=3, y=2, dir=8 }
   }
@@ -838,7 +838,7 @@ SPROUT_DIAG_1 =
 
   new_room =
   {
-    conn = { x=2, y=2, dir=1 }
+    conn = { x=2, y=2, dir=9 }
 
     symmetry = { x=2, y=2, dir=1 }
   }
@@ -863,7 +863,7 @@ SPROUT_DIAG_2 =
 
   new_room =
   {
-    conn = { x=1, y=1, dir=1 }
+    conn = { x=1, y=1, dir=9 }
 
     symmetry = { x=1, y=1, dir=1 }
   }
@@ -884,8 +884,6 @@ SPROUT_JOINER_2x1 =
 
   new_room =
   {
-    conn = { x=3, y=3, w=2, dir=2 }
-
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
 
@@ -910,8 +908,6 @@ SPROUT_JOINER_3x1 =
 
   new_room =
   {
-    conn = { x=4, y=3, w=3, dir=2 }
-
     symmetry = { x=3, y=3, dir=8 }
   }
 
@@ -936,8 +932,6 @@ SPROUT_JOINER_4x1 =
 
   new_room =
   {
-    conn = { x=4, y=3, w=4, dir=2 }
-
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
 
@@ -963,8 +957,6 @@ SPROUT_JOINER_2x2 =
 
   new_room =
   {
-    conn = { x=3, y=4, w=2, dir=2 }
-
     symmetry = { x=2, y=4, dir=8 }
   }
 
@@ -990,8 +982,6 @@ SPROUT_JOINER_3x2 =
 
   new_room =
   {
-    conn = { x=4, y=4, w=3, dir=2 }
-
     symmetry = { x=3, y=4, dir=8 }
   }
 
@@ -1016,7 +1006,6 @@ SPROUT_JOINER_L =
 
   new_room =
   {
-    conn = { x=2, y=3, w=2, dir=6 }
   }
 
   joiner =
@@ -1214,7 +1203,7 @@ SPROUT_DIRECT_2_cave =
   {
     env = "cave"
 
-    conn = { x=3, y=2, w=2, dir=2 }
+    conn = { x=2, y=1, w=2, dir=8 }
   }
 }
 
@@ -1237,7 +1226,7 @@ SPROUT_DIRECT_3_cave =
   {
     env = "cave"
 
-    conn = { x=4, y=2, w=3, dir=2 }
+    conn = { x=2, y=1, w=3, dir=8 }
   }
 }
 
@@ -1260,8 +1249,6 @@ SPROUT_JOINER_2x1_cave =
   new_room =
   {
     env = "cave"
-
-    conn = { x=3, y=3, w=2, dir=2 }
   }
 
   joiner =
@@ -1289,8 +1276,6 @@ SPROUT_JOINER_3x1_cave =
   new_room =
   {
     env = "cave"
-
-    conn = { x=4, y=3, w=3, dir=2 }
   }
 
   joiner =
@@ -1321,8 +1306,6 @@ SPROUT_JOINER_3x2_cave =
   new_room =
   {
     env = "cave"
-
-    conn = { x=4, y=4, w=3, dir=2 }
   }
 
   joiner =
@@ -1454,7 +1437,7 @@ SPROUT_1_hallway =
   {
     env = "hallway"
 
-    conn = { x=2, y=2, dir=2 }
+    conn = { x=2, y=1, dir=8 }
   }
 }
 
@@ -1511,7 +1494,7 @@ HALL_TERMINATE_1 =
 
   new_room =
   {
-    conn = { x=2, y=2, dir=2 }
+    conn = { x=2, y=1, dir=8 }
   }
 }
 

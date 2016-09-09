@@ -641,13 +641,17 @@ function Grower_preprocess_grammar()
       rect.from_area = determine_from_area(kind, x, y, rect.from_dir)
 
       if not rect.shape then
-        if rect.dest_dir then
-          rect.shape = "L"
-        elseif kind == "closet" then
+        if kind == "closet" then
           rect.shape = "U"
         else
           rect.shape = "I"
         end
+      end
+    end
+
+    if kind == "joiner" then
+      if not rect.dest_dir then
+        rect.dest_dir = 10 - rect.from_dir
       end
     end
 
@@ -1379,14 +1383,18 @@ function Grower_grammatical_room(R, pass, is_emergency)
     c_out.dir = dir2
     c_out.long = long
 --[[
-stderrf("transform_connection: (%d %d) dir %d --> (%d %d) S=%s dir=%d\n",
-info.x, info.y, info.dir, sx, sy, S.name, dir2)
+stderrf("transform_connection: (%d %d) dir %d --> (%d %d) S=%s A=%s dir=%d\n",
+info.x, info.y, info.dir, sx, sy, S.name, S.area.name, dir2)
+stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S.name, c_out.dir)
 --]]
   end
 
 
   local function mark_connection_used(conn)
     local S = conn.S
+
+    -- FIXME : handle joiners
+    if not S then return end
 
     for i = 1, conn.long do
       local N = S:neighbor(conn.dir)
@@ -2120,9 +2128,9 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
         new_conn.kind = "joiner"
         new_conn.chunk = chunk
 
-        -- connection goes from NEW ROOM --> CURRENT ROOM
-        new_conn.A1  = assert(new_room.areas[1])
-        new_conn.A2  = assert(chunk.from_area)
+        -- connection goes from CURRENT ROOM --> NEW ROOM
+        new_conn.A1  = assert(chunk.from_area)
+        new_conn.A2  = assert(new_room.areas[1])
 ---stderrf("JOINER : %s / %s (%s) --> %s / %s (%s)\n",
 ---  R.name, new_conn.TA1.name, new_conn.TA1.room.name,
 ---  new_room.name, new_conn.TA2.name, new_conn.TA2.room.name)
@@ -2168,8 +2176,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
 
         new_room = Grower_add_room(R, env)
 
-        -- create a preliminary connection (last room to this one)
-        new_conn = Grower_new_prelim_conn(new_room, R)
+        -- create a preliminary connection (last room to this one).
+        -- the seed and direction are determined later.
+        new_conn = Grower_new_prelim_conn(R, new_room)
+stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
       end
     end
 
@@ -2207,8 +2217,10 @@ info.x, info.y, info.dir, sx, sy, S.name, dir2)
       end
 
       if pass == "sprout" or pass == "terminate" then
-        transform_connection(T, cur_rule.new_room.conn, new_conn)
-
+        -- joiners connections are handled later
+        if cur_rule.new_room.conn then
+          transform_connection(T, cur_rule.new_room.conn, new_conn)
+        end
         mark_connection_used(new_conn)
       end
     end
@@ -2730,9 +2742,12 @@ function Grower_prune_small_rooms()
   local function kill_joiner(N, chunk)
     gui.debugf("  killing joiner in %s\n", N.name)
 
-    -- the chunk becomes a closet
+    -- TODO : make the chunk becomes a USABLE closet
 
     chunk.kind = "closet"
+
+    chunk.area.mode = "void"
+    chunk.content_kind = "void"
 
     chunk.dest_dir  = nil
     chunk.dest_area = nil

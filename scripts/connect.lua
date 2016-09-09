@@ -149,8 +149,14 @@ function Connect_directly(P)
     C.joiner_chunk = assert(P.chunk)
     C.joiner_chunk.conn = C
 
-    local dir1 = P.chunk.from_dir or (10 - P.dir)
-    local dir2 = P.chunk.dest_dir or (10 - dir1)
+    local dir1 = assert(P.chunk.from_dir)
+    local dir2 = assert(P.chunk.dest_dir)
+
+--[[
+stderrf("Connect %s/%s --> %s/%s : from_dir:%d  dest_dir:%d\n",
+P.R1.name, C.A1.name,
+P.R2.name, C.A2.name, dir1, dir2)
+--]]
 
     local E1 = Seed_create_chunk_edge(P.chunk, dir1, "nothing")
     local E2 = Seed_create_chunk_edge(P.chunk, dir2, "nothing")
@@ -166,9 +172,14 @@ function Connect_directly(P)
 
   else  -- edge connection
 
-    local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
+    local E1, E2 = Seed_create_edge_pair(P.S, P.dir, long, "nothing")
 
     E1.kind = "arch"
+
+--[[
+gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)
+gui.debugf("E2.S = %s  dir = %d  area = %s\n", E2.S.name, E2.dir, E2.S.area.name)
+--]]
 
     C.E1 = E1 ; E1.conn = C
     C.E2 = E2 ; E2.conn = C
@@ -180,8 +191,13 @@ function Connect_directly(P)
 --[[
 gui.debugf("Creating conn %s from %s --> %s\n", C.name, C.R1.name, C.R2.name)
 gui.debugf("  seed %s  dir:%d  long:%d\n", P.S.name, P.dir, P.long)
-gui.debugf("  area %s(%s) --> %s(%s)\n", C.A1.name, C.A1.mode, C.A2.name, C.A2.mode)
+gui.debugf("  area %s(%s) of %s --> %s(%s) of %s\n",
+C.A1.name, C.A1.mode, C.A1.room.name,
+C.A2.name, C.A2.mode, C.A2.room.name)
 --]]
+
+  assert(C.A1.room == C.R1)
+  assert(C.A2.room == C.R2)
 
 
   -- handle split connections
