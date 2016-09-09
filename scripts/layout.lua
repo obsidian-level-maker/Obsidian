@@ -1047,6 +1047,7 @@ function Layout_decorate_rooms(KKK_PASS)
         where = "point"
 
         size  = 96
+
         height = A.ceil_h - A.floor_h
       }
     end
@@ -1509,6 +1510,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function try_decor_closets(R)
+    if R.is_cave then return end
+
     local locs = {}
 
     each chunk in R.closets do
@@ -1714,6 +1717,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function tizzy_up_room(R)
+    if R.is_cave then return end
+
     pick_wall_detail(R)
 
     pick_floor_sinks(R)
@@ -1721,19 +1726,18 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     unsink_importants(R)
 
-    try_secret_closets(R)
+    pick_decorative_bling(R)
+    pick_ceiling_lights(R)
 
+    fix_stair_lighting(R)
+  end
+
+
+  local function tizzy_all_closets(R)
     -- more cages, oh yes!
     try_extra_cages(R)
 
     try_decor_closets(R)
-
-    if not R.is_cave then
-      pick_decorative_bling(R)
-      pick_ceiling_lights(R)
-    end
-
-    fix_stair_lighting(R)
 
     -- kill any unused closets
     each CL in R.closets do
@@ -1752,9 +1756,18 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
   each R in LEVEL.rooms do
     if KKK_PASS == 1 then
+      -- do secret closets early for caves
+      if R.is_cave then
+        try_secret_closets(R)
+      end
+
       switch_up_room(R)
     else
       tizzy_up_room(R)
+      if not R.is_cave then
+        try_secret_closets(R)
+      end
+      tizzy_all_closets(R)
     end
   end
 end
