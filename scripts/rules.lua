@@ -1203,7 +1203,7 @@ SPROUT_DIRECT_2_cave =
   {
     env = "cave"
 
-    conn = { x=2, y=1, w=2, dir=8 }
+    conn = { x=3, y=1, w=2, dir=8 }
   }
 }
 
