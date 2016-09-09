@@ -69,8 +69,7 @@
     floor_mat  -- floor material
      ceil_mat  -- ceiling material
 
-    goal_type : keyword  -- set if area contains a goal (normally nil)
-                         -- can be "portal" or "important".
+    goal_type : keyword      -- set if area contains a goal
 
     neighbors : list(AREA)   -- only used for visitable floors
 
@@ -129,8 +128,77 @@ function Cave_generate_cave(R)
 
     box.cx2 = box.cx1 + 1
     box.cy2 = box.cy1 + 1
-    
+
     return box
+  end
+
+
+  local function cave_box_for_chunk(chunk)
+    local box =
+    {
+      cx1 = (chunk.sx1 - R.sx1) * 2 + 1
+      cy1 = (chunk.sy1 - R.sy1) * 2 + 1
+    }
+
+    box.cx2 = box.cx1 + chunk.sw * 2 + 1
+    box.cy2 = box.cy1 + chunk.sh * 2 + 1
+
+    return box
+  end
+
+
+  local function walk_for_connection(C)
+    -- TODO
+  end
+
+
+  local function walk_for_floor_chunk(chunk)
+    -- ignored unused floor chunks
+    if not chunk.content_kind then return end
+
+    -- TODO
+  end
+
+
+  local function walk_for_closet(chunk)
+    -- ignored unused closets
+    if not chunk.content_kind then return end
+
+    -- TODO
+  end
+
+
+  local function collect_walk_chunks()
+    info.walk_chunks = {}
+
+    each C in R.conns do
+      walk_for_connection(C)
+    end
+
+    each chunk in R.floor_chunks do
+      walk_for_floor_chunk(chunk)
+    end
+
+    each chunk in R.closets do
+      walk_for_closet(chunk)
+    end
+  end
+
+
+  local function walk_chunks_to_points()
+    info.point_list = {}
+
+    each chunk in info.walk_chunks do
+      local POINT =
+      {
+        x = math.i_mid(chunk.cx1, chunk.cx2)
+        y = math.i_mid(chukn.cy1, chunk.cy2)
+      }
+
+      table.insert(info.point_list, POINT)
+    end
+
+    assert(#info.point_list > 0)
   end
 
 
@@ -440,66 +508,6 @@ function Cave_generate_cave(R)
   end
 
 
-  local function walk_chunks_to_points()
-    info.point_list = {}
-
-    each chunk in info.walk_chunks do
-      local POINT =
-      {
-        x = math.i_mid(chunk.cx1, chunk.cx2)
-        y = math.i_mid(chukn.cy1, chunk.cy2)
-      }
-
-      table.insert(info.point_list, POINT)
-    end
-
-    assert(#info.point_list > 0)
-  end
-
-
-  local function collect_walk_chunks()
-
---!!!! FIXME TEMP RUBBISH
-local S1
-for i = 1,4 do
-  S1 = SEEDS[R.sx1 + i][R.sy1 + i]
-  if S1.room == R then break; end
-end
-assert(S1)
-
-local b  = cave_box_for_seed(S1.sx, S1.sy)
-
-local POINT =
-{
-  x = b.cx1
-  y = b.cy1
-}
-
-table.insert(point_list, POINT)
-
-
---[[
-    each C in R.conns do
-      if R == C.R1 and C.S1 then
-        point_for_conn(C, C.S1, C.dir)
-      end
-      if R == C.R2 and C.S2 then
-        point_for_conn(C, C.S2, 10 - C.dir)
-      end
-    end
-
-    each G in R.goals do
-      point_for_goal(G)
-    end
-]]
-
-    assert(#point_list > 0)
-
-    R.point_list = point_list
-    R.cave_imps  = importants
-  end
-
-
   local function clear_importants()
     each imp in importants do
       map:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, -1)
@@ -598,6 +606,7 @@ table.insert(point_list, POINT)
   ---| Cave_generate_cave |---
 
   collect_walk_chunks()
+  walk_chunks_to_points()
 
   create_map()
 
