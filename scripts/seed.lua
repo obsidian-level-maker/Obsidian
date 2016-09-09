@@ -133,6 +133,7 @@
     area : AREA
 
     sx1, sy1, sx2, sy2   -- seed range
+    cx1, cy1, cx2, cy2   -- cell range (for CAVES only)
 
     sw, sh  -- seed size
 

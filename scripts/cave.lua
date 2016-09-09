@@ -33,7 +33,11 @@
                            -- "some", "walkway"  (indoor rooms only)
                            -- "low_wall", "high_wall"  (outdoor rooms)
 
+
     cave : CAVE  -- raw generated cave
+
+    walk_chunks : list(CHUNK)  -- all places the player MUST be able
+                               -- walk to (conns, goals, etc...)
 
     blocks : array(AREA)  -- info for each 64x64 block
 
@@ -108,12 +112,10 @@ end
 
 function Cave_generate_cave(R)
   local info = R.cave_info
+  local base_area = R.areas[1]
 
   local map
   local cave
-
-  local importants = {}
-  local point_list = {}
 
   local is_lake = (info.liquid_mode == "lake")
 
@@ -173,22 +175,31 @@ function Cave_generate_cave(R)
 
   local function mark_boundaries()
     -- this also sets most parts of the cave to zero
+    -- [ zero means "can make cave here" ]
 
     for sx = R.sx1, R.sx2 do
     for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
 
-      if S.room != R then continue end
-
-      -- ignore closets and joiners
---      if S.chunk then continue end
+      -- this ignores different rooms, AND closets and joiners too
+      if S.area != base_area then continue end
 
       local cx = (sx - R.sx1) * 2 + 1
       local cy = (sy - R.sy1) * 2 + 1
 
-      map:fill(cx, cy, cx+1, cy+1, 0)
+      -- keep connections clear
+      if S:has_connection() then
+        map:fill(cx, cy, cx+1, cy+1, -1)
+        continue
+      end
 
-      do continue; end
+      -- check for closets
+      if S:near_closet() then
+        map:fill(cx, cy, cx+1, cy+1, -1)
+        continue
+      end
+
+      map:fill(cx, cy, cx+1, cy+1, 0)
 
       for dir = 2,8,2 do
         if not S:same_room(dir) then
@@ -202,7 +213,7 @@ function Cave_generate_cave(R)
         end
       end
 
-      for dir = 1,9,2 do if dir != 5 then
+      each dir in geom.CORNERS do
         if not S:same_room(dir) then
           -- lakes require whole seed to be cleared (esp. at "innie corners")
           if is_lake then
@@ -211,37 +222,11 @@ function Cave_generate_cave(R)
             set_corner(cx, cy, cx+1, cy+1, dir, 1)
           end
         end
-      end end
+      end
 
     end -- sx, sy
     end
   end
-
-
---[[
-  local function clear_walks()
-    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room != R then continue end
-
-      if S.is_walk and rand.odds(25) then
-
-        local cx = (sx - R.sx1) * 4 + 1
-        local cy = (sy - R.sy1) * 4 + 1
-
-        for cx = cx, cx+3 do
-          for cy = cy, cy+3 do
-            if map:get(cx, cy) == 0 and rand.odds(25) then
-              map:set(cx, cy, -1)
-            end
-          end
-        end
-
-      end
-    end end -- sx, sy
-  end
---]]
 
 
   local function check_need_wall(S, dir)
@@ -276,9 +261,9 @@ function Cave_generate_cave(R)
     for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
 
-      if S.room != R then continue end
+      if S.area != base_area then continue end
 
---FIXME    if S.wall_dist < 1.1 then continue end
+--FIXME    if touches_wall(S) then continue end
 
       if rand.odds(85) then continue end
 
@@ -455,7 +440,24 @@ function Cave_generate_cave(R)
   end
 
 
-  local function collect_important_points()
+  local function walk_chunks_to_points()
+    info.point_list = {}
+
+    each chunk in info.walk_chunks do
+      local POINT =
+      {
+        x = math.i_mid(chunk.cx1, chunk.cx2)
+        y = math.i_mid(chukn.cy1, chunk.cy2)
+      }
+
+      table.insert(info.point_list, POINT)
+    end
+
+    assert(#info.point_list > 0)
+  end
+
+
+  local function collect_walk_chunks()
 
 --!!!! FIXME TEMP RUBBISH
 local S1
@@ -515,12 +517,12 @@ table.insert(point_list, POINT)
   local function is_cave_good(cave)
     -- check that all important parts are connected
 
-    if not cave:validate_conns(point_list) then
+    if not cave:validate_conns(info.point_list) then
       gui.debugf("cave failed connection check\n")
       return false
     end
 
-    local p1 = point_list[1]
+    local p1 = info.point_list[1]
 
     cave.empty_id = cave.flood[p1.x][p1.y]
 
@@ -595,14 +597,12 @@ table.insert(point_list, POINT)
 
   ---| Cave_generate_cave |---
 
-  -- create the cave object and make the boundaries solid
+  collect_walk_chunks()
+
   create_map()
 
-  collect_important_points()
-
   mark_boundaries()
-
-  clear_importants()
+  clear_walk_chunks()
 
   generate_cave()
 end
@@ -801,8 +801,8 @@ function Cave_create_areas(R)
 
     pos_list[1] =
     {
-      x = R.point_list[1].x
-      y = R.point_list[1].y
+      x = info.point_list[1].x
+      y = info.point_list[1].y
     }
 
 
@@ -2048,7 +2048,7 @@ function Cave_fill_lakes(R)
   if info.liquid_mode != "lake" then return end
 
   -- determine region id for the main walkway
-  local p1 = R.point_list[1]
+  local p1 = info.point_list[1]
 
   local path_id = cave.flood[p1.x][p1.y]
 
@@ -2734,7 +2734,7 @@ end
 function Cave_decide_properties(R)
   local info = R.cave_info
 
-  local   STEP_MODES = { walkway=25, up=20, down=20, mixed=75 }
+  local   STEP_MODES = { up=20, down=20, mixed=75 }  --TODO: walkway=25
   local LIQUID_MODES = { none=50, some=80 }  -- lake=0
 
   -- decide liquid mode
