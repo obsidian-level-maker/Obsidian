@@ -513,8 +513,8 @@ GROW_DBLSTAIR_CURVE =
           "A."
   }
 
-  stair1_5 = { from_dir=2, dest_dir=6 }
-  stair1_1 = { from_dir=8, dest_dir=6 }
+  stair1_5 = { shape="L", from_dir=2, dest_dir=6 }
+  stair1_1 = { shape="L", from_dir=8, dest_dir=6 }
 }
 
 
@@ -1021,6 +1021,7 @@ SPROUT_JOINER_L =
 
   joiner =
   {
+    shape = "L"
     from_dir = 2
     dest_dir = 4
   }
