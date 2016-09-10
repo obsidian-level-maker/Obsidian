@@ -1418,6 +1418,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     if R.is_start  then return end
     if R.is_secret then return end
 
+    -- they look silly in caves
+    if R.is_cave then return end
+
     -- collect usable chunks
     local locs = {}
 
