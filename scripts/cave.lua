@@ -1741,20 +1741,29 @@ function Cave_render_cave(R)
 
     assert(A)
 
+    -- get nearby values
+    local prev_x, prev_y
+
+    if y >= 2 then prev_x = delta_x_map[x][y-1] end
+    if x >= 2 then prev_y = delta_y_map[x-1][y] end
+
+    prev_x = (prev_x or 0) * x_mul
+    prev_y = (prev_y or 0) * y_mul
+
     --- ANALYSE! ---
 
     if not B and not C and not D then
       -- sticking out corner
-      if rand.odds(90) then delta_x_map[x][y] = -16 * x_mul end
-      if rand.odds(90) then delta_y_map[x][y] = -16 * y_mul end
+      if prev_x == 0 or (prev_x > 0 and rand.odds(75)) then delta_x_map[x][y] = -16 * x_mul end
+      if prev_y == 0 or (prev_y > 0 and rand.odds(75)) then delta_y_map[x][y] = -16 * y_mul end
 
     elseif B and not C and not D then
       -- horizontal wall
-      if rand.odds(55) then delta_y_map[x][y] = -24 * y_mul end
+      if prev_y == 0 or (prev_y > 0 and rand.odds(25)) then delta_y_map[x][y] = -24 * y_mul end
 
     elseif C and not B and not D then
       -- vertical wall
-      if rand.odds(55) then delta_x_map[x][y] = -24 * x_mul end
+      if prev_x == 0 or (prev_x > 0 and rand.odds(25)) then delta_x_map[x][y] = -24 * x_mul end
 
     elseif D and not B and not C then
       -- checkerboard
@@ -1767,8 +1776,8 @@ function Cave_render_cave(R)
       elseif not C then x_mul = -x_mul
       end
 
-      if rand.odds(80) then delta_x_map[x][y] = 12 * x_mul end
-      if rand.odds(80) then delta_y_map[x][y] = 12 * y_mul end
+      if prev_x == 0 or (prev_x < 0 and rand.odds(90)) then delta_x_map[x][y] = 12 * x_mul end
+      if prev_y == 0 or (prev_y < 0 and rand.odds(90)) then delta_y_map[x][y] = 12 * y_mul end
     end
   end
 
