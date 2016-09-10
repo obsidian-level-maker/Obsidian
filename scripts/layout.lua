@@ -233,7 +233,7 @@ function Layout_spot_for_wotsit(R, kind, required)
       if chunk.kind != "closet" then return -1 end
     end
 
-    if kind == "MINI_SECRET_EXIT" then
+    if kind == "SECRET_EXIT_CLOSET" then
       if chunk.kind != "closet" then return -1 end
     end
 
@@ -262,10 +262,13 @@ function Layout_spot_for_wotsit(R, kind, required)
       end
     end
 
-    -- in caves, prefer spots which do not touch the room edge
-    if R.is_cave and chunk.kind != "closet" then
-      if chunk.touches_wall then
-        score = score / 8
+    -- in caves, prefer spots which do not touch the room edge,
+    -- and prefer not to use closets (which don't look good).
+    if R.is_cave then
+      if chunk.kind == "closet" then
+        score = score / 3
+      elseif not chunk.touches_wall then
+        score = score * 3
       end
     end
 
@@ -513,7 +516,7 @@ function Layout_place_hub_gates()
   local function make_secret_exit(R)
     gui.printf("Secret Exit: %s (in a closet)\n", R.name)
 
-    local chunk = Layout_spot_for_wotsit(R, "MINI_SECRET_EXIT")
+    local chunk = Layout_spot_for_wotsit(R, "SECRET_EXIT_CLOSET")
 
     -- should not fail, as our eval function detects free closets
     assert(chunk)
