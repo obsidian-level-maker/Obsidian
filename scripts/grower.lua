@@ -882,6 +882,24 @@ function Grower_split_liquids()
   end
 
 
+  local function split_area(A, mode, seed_list)
+    local A2 = AREA_CLASS.new(mode)
+
+    A2.room = A.room
+    A2.room:add_area(A2)
+
+    A2.seeds = seed_list
+
+    each S in A2.seeds do
+      S.area = A2
+
+      table.kill_elem(A.seeds, S)
+    end
+
+    return A2
+  end
+
+
   local function check_at_seed(S, mode)
     local A = S.area
 
@@ -910,17 +928,7 @@ function Grower_split_liquids()
 
     -- current area is not contiguous, need to split it
 
-    local A2 = AREA_CLASS.new(mode)
-    A2.room = A.room
-    A2.room:add_area(A2)
-
-    A2.seeds = list
-
-    each S in A2.seeds do
-      S.area = A2
-
-      table.kill_elem(A.seeds, S)
-    end
+    local A2 = split_area(A, mode, list)
 
     good_areas[A2] = true
   end
@@ -2183,7 +2191,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         -- create a preliminary connection (last room to this one).
         -- the seed and direction are determined later.
         new_conn = Grower_new_prelim_conn(R, new_room)
-stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
+--stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
       end
     end
 
