@@ -111,6 +111,33 @@ end
 
 
 
+function Cave_is_edge(S, dir)
+  local N = S:raw_neighbor(dir)
+
+  if not N then return true end
+
+  if N.room != S.room then return true end
+
+  -- check for dead closets
+  if N.area and N.area.mode == "void" then return true end
+
+  -- edge of a closet?
+  if N.chunk and N.chunk.kind == "closet" then
+    return dir != (10 - N.chunk.from_dir)
+  end
+
+  -- edge of a joiner?
+  if N.chunk and N.chunk == "joiner" then
+    if dir == (10 - N.chunk.from_dir) then return false end
+    if dir == (10 - N.chunk.dest_dir) then return false end
+    return true
+  end
+
+  return false
+end
+
+
+
 function Cave_generate_cave(R)
   local info = R.cave_info
   local base_area = R.areas[1]
@@ -271,7 +298,7 @@ end
     local cx = (S.sx - R.sx1) * 2 + 1
     local cy = (S.sy - R.sy1) * 2 + 1
 
-    map:fill(cx, cy, cx+1, cy+1, 0)
+    map:fill(cx, cy, cx+1, cy+1, value)
   end
 
 
@@ -336,7 +363,7 @@ end
       set_whole(S, 0)
 
       for dir = 2,8,2 do
-        if not S:same_room(dir) then
+        if Cave_is_edge(S, dir) then
           set_side(S, dir, sel(is_lake, -1, 1))
         end
 
@@ -348,8 +375,7 @@ end
       end
 
       each dir in geom.CORNERS do
-        local N = S:raw_neighbor(dir)
-        if not (N and N.room == R) then
+        if Cave_is_edge(S, dir) then
           -- lakes require whole seed to be cleared (esp. at "innie corners")
           if is_lake then
             set_whole(S, -1)
@@ -402,9 +428,7 @@ end
 
   local function is_fully_interior(S)
     each dir in geom.ALL_DIRS do
-      local N = S:raw_neighbor(dir)
-
-      if not (N and N.room == R) then return false end
+      if Cave_is_edge(S, dir) then return false end
     end
 
     return true
@@ -629,7 +653,7 @@ end
 
 
   local function generate_cave()
-    map:dump("Empty Cave:")
+    map:dump(R.name .. " Empty Cave:")
 
     local solid_prob = 38
 
@@ -2210,7 +2234,7 @@ function Cave_lake_fences(R)
 
 
   local function do_innie_corners()
-    -- logic in mark_boundaries() assures that the whole seed at an
+    -- the mark boundaries logic assures that the whole seed at an
     -- "innie corner" is cleared (and walkable).  Here we ensure there
     -- is a single fence block touching that corner, to make the lake
     -- fence flow nicely around the innie corner.
@@ -2223,9 +2247,8 @@ function Cave_lake_fences(R)
       cx1 = (x - R.sx1) * 2 + 1
       cy1 = (y - R.sy1) * 2 + 1
 
-      for dir = 1,9,2 do if dir != 5 then
-        -- FIXME : cannot use same_room
-        if S:same_room(dir) then continue end
+      each dir in geom.CORNERS do
+        if not Cave_is_edge(S, dir) then continue end
 
         local A_dir = geom. LEFT_45[dir]
         local B_dir = geom.RIGHT_45[dir]
@@ -2243,7 +2266,7 @@ function Cave_lake_fences(R)
           info.blocks[cx][cy] = info.fence
         end
 
-      end end -- dir
+      end
 
     end -- x, y
     end
