@@ -265,17 +265,31 @@ end
   end
 
 
-  local function set_side(cx1, cy1, cx2, cy2, side, value)
-    local x1,y1, x2,y2 = geom.side_coords(side, cx1,cy1, cx2,cy2)
+  local function set_whole(S, value)
+    local cx = (S.sx - R.sx1) * 2 + 1
+    local cy = (S.sy - R.sy1) * 2 + 1
+
+    map:fill(cx, cy, cx+1, cy+1, 0)
+  end
+
+
+  local function set_side(S, side, value)
+    local cx = (S.sx - R.sx1) * 2 + 1
+    local cy = (S.sy - R.sy1) * 2 + 1
+
+    local x1,y1, x2,y2 = geom.side_coords(side, cx,cy, cx+1,cy+1)
 
     map:fill(x1, y1, x2, y2, value)
   end
 
 
-  local function set_corner(cx1, cy1, cx2, cy2, side, value)
-    local cx, cy = geom.pick_corner(side, cx1, cy1, cx2, cy2)
+  local function set_corner(S, side, value)
+    local cx = (S.sx - R.sx1) * 2 + 1
+    local cy = (S.sy - R.sy1) * 2 + 1
 
-    map:set(cx, cy, value)
+    local nx, ny = geom.pick_corner(side, cx, cy, cx+1, cy+1)
+
+    map:set(nx, ny, value)
   end
 
 
@@ -317,30 +331,28 @@ end
       -- this ignores different rooms, AND closets and joiners too
       if S.area != base_area then continue end
 
-      local cx = (sx - R.sx1) * 2 + 1
-      local cy = (sy - R.sy1) * 2 + 1
-
-      map:fill(cx, cy, cx+1, cy+1, 0)
+      set_whole(S, 0)
 
       for dir = 2,8,2 do
         if not S:same_room(dir) then
-          set_side(cx, cy, cx+1, cy+1, dir, sel(is_lake, -1, 1))
+          set_side(S, dir, sel(is_lake, -1, 1))
         end
 
         -- in lake mode, clear whole seeds that touch edge of map
         -- (i.e. which will have a sky border next to them)
         if is_lake and S:need_lake_fence(dir) then
-          map:fill(cx, cy, cx+1, cy+1, -1)
+          set_whole(S, -1)
         end
       end
 
       each dir in geom.CORNERS do
-        if not S:same_room(dir) then
+        local N = S:raw_neighbor(dir)
+        if not (N and N.room == R) then
           -- lakes require whole seed to be cleared (esp. at "innie corners")
           if is_lake then
-            map:fill(cx, cy, cx+1, cy+1, -1)
+            set_whole(S, -1)
           else
-            set_corner(cx, cy, cx+1, cy+1, dir, 1)
+            set_corner(S, dir, 1)
           end
         end
       end
@@ -2238,6 +2250,7 @@ function Cave_lake_fences(R)
       cy1 = (y - R.sy1) * 2 + 1
 
       for dir = 1,9,2 do if dir != 5 then
+        -- FIXME : cannot use same_room
         if S:same_room(dir) then continue end
 
         local A_dir = geom. LEFT_45[dir]
