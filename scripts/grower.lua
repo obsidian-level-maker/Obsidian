@@ -888,6 +888,8 @@ function Grower_split_liquids()
     A2.room = A.room
     A2.room:add_area(A2)
 
+    A2.cage_mode = A.cage_mode
+
     A2.seeds = seed_list
 
     each S in A2.seeds do
@@ -1167,6 +1169,18 @@ function Grower_grammatical_room(R, pass, is_emergency)
     end
 
     set_seed(S, R.dummy_cage)
+  end
+
+
+  local function set_cage_fancy(S)
+    if not R.fancy_cage then
+       R.fancy_cage = AREA_CLASS.new("cage")
+       R.fancy_cage.cage_mode = "fancy"
+
+       R:add_area(R.fancy_cage)
+    end
+
+    set_seed(S, R.fancy_cage)
   end
 
 
@@ -1857,7 +1871,12 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     -- this is for LARGE (free-range) cages
     -- [ prefab cages are done via "closet" elements ]
     if E2.kind == "cage" then
-      set_cage(S)
+      if cur_rule.cage_mode then
+        set_cage_fancy(S)
+      else
+        set_cage(S)
+      end
+
       return
     end
 

@@ -113,7 +113,7 @@ ROOT_T1 =
 
 ROOT_CAGES4 =
 {
-  prob = 30
+  prob = 30*99
 
   structure =
   {
@@ -129,6 +129,8 @@ ROOT_CAGES4 =
   {
     symmetry = { dir=4, x=2, y=3, w=2 }
   }
+
+  cage_mode = "fancy"
 }
 
 
@@ -204,6 +206,8 @@ ROOT_LIQUID_CAGE2 =
   new_room =
   {
   }
+
+  cage_mode = "fancy"
 }
 
 
@@ -228,6 +232,8 @@ ROOT_LIQUID_CAGE3 =
     "~R"
     "R!"
   }
+
+  cage_mode = "fancy"
 }
 
 
@@ -453,6 +459,8 @@ GROW_STAIRPAIR_2 =
     "...", "^C^"
     "111", "111"
   }
+
+  cage_mode = "fancy"
 }
 
 

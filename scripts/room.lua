@@ -2738,6 +2738,22 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function add_cage_rails(A)
+    each N in A.neighbors do
+      if N.room != A.room then continue end
+
+      if N.mode == "floor" or N.mode == "liquid" or
+         (N.mode == "chunk" and N.chunk.kind == "stair")
+      then
+        local junc = Junction_lookup(A, N)
+
+        junc.rail_mat   = "MIDBARS3"
+        junc.rail_block = true
+      end
+    end
+  end
+
+
   local function do_cage_areas(R)
     if R.is_start then
       kill_start_cages(R)
@@ -2759,6 +2775,20 @@ function Room_floor_ceil_heights()
       A.floor_h  = N.floor_h + rand.pick({40,56,72})
       A.ceil_h   = A.floor_h + 80
       A.ceil_mat = N.ceil_mat
+
+      -- fancy cages
+      if A.cage_mode then
+        if not R.is_outdoor then
+          A.bump_light = 48
+          A.sector_fx  = 13  -- flashes, 2 hz
+
+          if N.ceil_h and N.ceil_h > A.ceil_h + 64 then
+            A.ceil_h = N.ceil_h
+          end
+        end
+
+        add_cage_rails(A)
+      end
     end
   end
 

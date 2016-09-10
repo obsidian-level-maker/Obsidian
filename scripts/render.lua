@@ -40,7 +40,7 @@ function edge_get_rail(S, dir)
   local junc = Junction_lookup(S.area, N.area)
 
 --!!!! FIXME
-  if junc.kind == "rail" then return junc end
+  if junc.rail_mat then return junc end
 
   return nil
 end
@@ -1227,12 +1227,14 @@ function Render_floor(A, S)
       C.v1 = 0
       C.back_rail = C.rail
       C.back_v1 = 0
-      C.blocked = info.blocked
+      C.blocked = info.rail_block
     end
   end
 
 
   table.insert(f_brush, { t=f_h, tag=tag })
+
+  if A.sector_fx then f_brush[#f_brush].special = A.sector_fx end
 
   brushlib.set_mat(f_brush, f_side, f_mat)
 
