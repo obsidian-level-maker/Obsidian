@@ -398,6 +398,17 @@ end
   end
 
 
+  local function is_fully_interior(S)
+    each dir in geom.ALL_DIRS do
+      local N = S:raw_neighbor(dir)
+
+      if not (N and N.room == R) then return false end
+    end
+
+    return true
+  end
+
+
   local function clear_some_seeds()
     for sx = R.sx1, R.sx2 do
     for sy = R.sy1, R.sy2 do
@@ -405,14 +416,9 @@ end
 
       if S.area != base_area then continue end
 
---FIXME    if touches_wall(S) then continue end
-
-      if rand.odds(85) then continue end
-
-      local cx = 1 + (sx - R.sx1) * 2
-      local cy = 1 + (sy - R.sy1) * 2
-
-      map:fill(cx, cy, cx+1, cy+1, -1)
+      if rand.odds(10) and is_fully_interior(S) then
+        set_whole(S, -1)
+      end
     end
     end
   end
