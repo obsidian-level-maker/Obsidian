@@ -206,6 +206,10 @@ function Render_edge(E)
       reqs.where = "edge"
     end
 
+    if A.room then
+      reqs.env = A.room:get_env()
+    end
+
 
     if E.area.floor_group and E.area.floor_group.wall_group then
       reqs.group = E.area.floor_group.wall_group
