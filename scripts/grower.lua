@@ -3326,14 +3326,14 @@ end
 
 function Grower_setup_caves()
   -- the chance that any ROOT pattern will be a cave
-  LEVEL.cave_trunk_prob = style_sel("caves", 0, 10, 30, 90)
+  LEVEL.cave_trunk_prob = style_sel("caves", 0, 10, 35, 90)
 
   -- the factors to apply to rules which SPROUT a cave room:
   --    "new_factor" is used when source room is not a cave, and
   --    "extend_factor" is used when it is a cave.
 
-  LEVEL.cave_new_factor    = style_sel("caves", 0, 0.1, 0.5, 9.0)
-  LEVEL.cave_extend_factor = style_sel("caves", 0, 0.7, 2.0, 9.0)
+  LEVEL.cave_new_factor    = style_sel("caves", 0, 0.1, 1.0, 9.0)
+  LEVEL.cave_extend_factor = style_sel("caves", 0, 0.0, 0.1, 1.0)
 end
 
 
