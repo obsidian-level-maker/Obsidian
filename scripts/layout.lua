@@ -664,11 +664,13 @@ function Layout_add_traps()
   end
 
 
-  local function closet_dice(is_same)
+  local function closet_dice(R, is_same)
     -- chance of using a monster closet to release monsters
     local prob
 
-    if is_same then
+    if R.is_cave then
+      prob = style_sel("traps", 0,  0,  5, 15)
+    elseif is_same then
       prob = style_sel("traps", 0, 25, 50, 85)
     else
       prob = style_sel("traps", 0, 15, 30, 70)
@@ -678,11 +680,11 @@ function Layout_add_traps()
   end
 
 
-  local function teleport_dice(is_same)
+  local function teleport_dice(R, is_same)
     -- chance of using teleporting-in monsters
     local prob
 
-    if is_same then
+    if is_same and not R.is_cave then
       prob = style_sel("traps", 0,  2,  5, 12)
     else
       prob = style_sel("traps", 0,  8, 25, 50)
@@ -726,18 +728,21 @@ function Layout_add_traps()
 
       local is_same = (info.room == R)
 
-      if closet_dice(is_same) then
+      if closet_dice(info.room, is_same) then
          closet_locs = locs_for_room(info.room, "closet")
       end
 
-      if teleport_dice(is_same) then
+      if teleport_dice(info.room, is_same) then
          telep_locs = locs_for_room(info.room, "teleport")
       end
 
       -- break ties
       -- [ preference for closets since they are less common ]
+      -- [[ but in caves, prefer teleporting in ]]
       if closet_locs and telep_locs then
-        if is_same or rand.odds(66) then
+        if info.room.is_cave then
+          closet_locs = nil
+        elseif is_same or rand.odds(66) then
           telep_locs = nil
         else
           closet_locs = nil
