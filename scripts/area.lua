@@ -1193,7 +1193,8 @@ function Area_locate_chunks()
     -- smaller max_vol for caves
     -- [ to get more chunks which do not touch the room edge ]
     if R.is_cave then
-      max_vol = max_vol * 0.15
+      max_vol = max_vol * 0.10
+      if max_vol > 9 then max_vol = 9 end
     else
       max_vol = max_vol * 0.35
     end
