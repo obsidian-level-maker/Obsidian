@@ -1773,12 +1773,17 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       end
 
       switch_up_room(R)
+
+      if R.is_cave then
+        tizzy_all_closets(R)
+      end
+
     else
       tizzy_up_room(R)
       if not R.is_cave then
         try_secret_closets(R)
+        tizzy_all_closets(R)
       end
-      tizzy_all_closets(R)
     end
   end
 end
