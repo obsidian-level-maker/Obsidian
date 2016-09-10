@@ -55,11 +55,13 @@
     -- This info describes a group of cave cells.
     --
 
-    wall   : boolean  -- true for solid walls
-    fence  : boolean  -- true for a lake fence
+    is_wall   : boolean  -- true for solid walls
+    is_fence  : boolean  -- true for a lake fence
 
-    liquid : boolean  -- true for a liquid floor
-    sky    : boolean  -- true for a sky ceiling
+    is_liquid : boolean  -- true for a liquid floor
+    is_sky    : boolean  -- true for a sky ceiling
+
+    is_waterfall : boolean
 
     cx1, cy1, cx2, cy2   -- cell bounding box
 
@@ -311,7 +313,7 @@ end
 
     local WALL_AREA =
     {
-      wall = true
+      is_wall = true
     }
 
     info.wall = WALL_AREA
@@ -731,14 +733,14 @@ function Cave_create_areas(R)
   local group_map
 
 
-  local function install_area(A, a_cave, mul, empty_ok)
+  local function install_area(A, template, mul, empty_ok)
     for cx = 1, info.W do
     for cy = 1, info.H do
-      if ((a_cave:get(cx, cy) or 0) * mul) > 0 then
+      if ((template:get(cx, cy) or 0) * mul) > 0 then
         info.blocks[cx][cy] = A
 
-        A.cx1 = math.min(A.cx1 or 9999, cx)
-        A.cy1 = math.min(A.cy1 or 9999, cy)
+        A.cx1 = math.min(A.cx1 or  9999, cx)
+        A.cy1 = math.min(A.cy1 or  9999, cy)
 
         A.cx2 = math.max(A.cx2 or -9999, cx)
         A.cy2 = math.max(A.cy2 or -9999, cy)
@@ -760,7 +762,7 @@ function Cave_create_areas(R)
       for cy = 1, info.H do
         local A = info.blocks[cx][cy]
 
-        if A and A.fence then
+        if A and A.is_fence then
           new_cave:set(cx, cy, nil)
         end
       end
@@ -797,9 +799,8 @@ function Cave_create_areas(R)
 
     table.insert(info.floors, AREA)
 
-    -- FIXME
-    each imp in R.cave_imps do
-      imp.area = AREA
+    each WC in info.walk_chunks do
+      WC.cave_area = AREA
     end
 
     install_area(AREA, cave, -1)
@@ -808,6 +809,7 @@ function Cave_create_areas(R)
     if info.liquid_mode == "lake" then return end
 
 
+--[[
     local WALK1 =
     {
       indent = 1
@@ -829,15 +831,20 @@ function Cave_create_areas(R)
 
     install_area(WALK1, walk_way, 1, "empty_ok")
 
+    table.insert(AREA.children, WALK1)
+--]]
 
+
+--[[
     local WALK2 =
     {
       indent = 2
-      liquid = true
+
+      is_liquid = true
     }
 
     if info.sky_mode == "some" then
-      WALK2.sky = true
+      WALK2.is_sky = true
     end
 
     walk_way:shrink8(true)
@@ -846,9 +853,8 @@ function Cave_create_areas(R)
 
     install_area(WALK2, walk_way, 1, "empty_ok")
 
-
-    table.insert(AREA.children, WALK1)
     table.insert(AREA.children, WALK2)
+--]]
   end
 
 
@@ -1139,6 +1145,8 @@ step:dump("Step:")
 
 
   local function set_walls()
+    assert(info.wall)
+
     for x = 1, info.W do
     for y = 1, info.H do
       local val = cave:get(x, y)
@@ -1248,8 +1256,8 @@ function Cave_bunch_areas(R, mode)
     each A,_ in list do
       if not head_A then head_A = A end
 
-      if mode == "sky"    then A.sky_bunch    = head_A ; A.sky    = true end
-      if mode == "liquid" then A.liquid_bunch = head_A ; A.liquid = true end
+      if mode == "sky"    then A.sky_bunch    = head_A ; A.is_sky    = true end
+      if mode == "liquid" then A.liquid_bunch = head_A ; A.is_liquid = true end
 
       A.near_bunch = 0
 
@@ -1668,7 +1676,7 @@ function Cave_render_cave(R)
     if A == nil then return nil end
 
     -- check for a solid cell
-    if A.wall then return EXTREME_H end
+    if A.is_wall then return EXTREME_H end
 
     -- otherwise there should be a floor area here
 
@@ -1826,7 +1834,7 @@ function Cave_render_cave(R)
 
     local f_mat = A.floor_mat or R.floor_mat or R.main_tex
 
-    if A.wall or A.fence then
+    if A.is_wall or A.is_fence then
       f_mat = A.wall_mat or R.main_tex or R.main_tex
     end
 
@@ -2064,7 +2072,7 @@ function Cave_fill_lakes(R)
 
     local LAKE =
     {
-      liquid = true
+      is_liquid = true
 
       region = reg
 
@@ -2250,7 +2258,7 @@ function Cave_lake_fences(R)
 
   local FENCE =  
   {
-    fence = true
+    is_fence = true
 
     -- floor_h
   }
@@ -2302,8 +2310,8 @@ function Cave_make_waterfalls(R)
 
     if not A or not B then return false end
 
-    if A.wall or not A.floor_h then return false end
-    if B.wall or not B.floor_h then return false end
+    if A.is_wall or not A.floor_h then return false end
+    if B.is_wall or not B.floor_h then return false end
 
     return math.abs(A.floor_h - B.floor_h) < 4
   end
@@ -2321,7 +2329,8 @@ function Cave_make_waterfalls(R)
     local B = info.blocks[nx][ny]
 
     if not B or B == lake then return false end
-    if B.liquid or B.fence or B.wall then return false end
+
+    if B.is_liquid or B.is_fence or B.is_wall then return false end
 
     local length = 1
     local max_length = 4
@@ -2343,7 +2352,7 @@ function Cave_make_waterfalls(R)
         break;
       end
 
-      if B.fence or B.wall then return false end
+      if B.is_fence or B.is_wall then return false end
 
       length = length + 1
     end
@@ -2420,7 +2429,7 @@ function Cave_make_waterfalls(R)
     for y = cy1, cy2 do
       assert(cave:valid_cell(x, y))
       local B = info.blocks[x][y]
-      if not (B and B.fence) then return false end
+      if not (B and B.is_fence) then return false end
     end
     end
 
@@ -2440,13 +2449,13 @@ function Cave_make_waterfalls(R)
       if not N then return false end
 
       -- allow fences
-      if N.fence then continue end
+      if N.is_fence then continue end
 
       -- this check prevents odd-looking falls (want only a single side of
       -- the LOW_POOL to be visible)
-      if N.liquid then return false end
+      if N.is_liquid then return false end
 
-      if N.wall or not N.floor_h then return false end
+      if N.is_wall or not N.floor_h then return false end
 
       if N != walk_A then return false end
 
@@ -2469,14 +2478,14 @@ function Cave_make_waterfalls(R)
       if not cave:valid_cell(nx, ny) then return false end
       
       local BL = info.blocks[nx][ny]
-      if not BL or BL.wall or BL.goal_type then return false end
+      if not BL or BL.is_wall or BL.goal_type then return false end
 
       -- do not join onto a previously built waterfall
-      if BL.waterfall then return false end
+      if BL.is_waterfall then return false end
       
-      if BL.fence then
+      if BL.is_fence then
         str = str .. "F"
-      elseif BL.liquid then
+      elseif BL.is_liquid then
         str = str .. "L"
         liq_area = BL
       elseif BL.floor_h then
@@ -2523,16 +2532,16 @@ function Cave_make_waterfalls(R)
 
     local HIGH_POOL =
     {
-      liquid  = true
+      is_liquid  = true
+      is_waterfall = true
       floor_h = F1.floor_h - 16
-      waterfall = true
     }
 
     local LOW_POOL =
     {
-      liquid  = true
+      is_liquid  = true
+      is_waterfall = true
       floor_h = low_floor.floor_h - 12
-      waterfall = true
     }
 
     info.blocks[cx][cy] = HIGH_POOL
@@ -2658,7 +2667,7 @@ function Cave_decorations(R)
     local N = info.blocks[nx][ny]
 
     if not (N and N.floor_h) then return true end
-    if N.wall or N.fence or N.liquid then return true end
+    if N.is_wall or N.is_fence or N.is_liquid then return true end
 
     if math.abs(N.floor_h - A.floor_h) > 16 then return true end
 
@@ -2788,7 +2797,7 @@ end
 function Cave_decide_properties(R)
   local info = R.cave_info
 
-  local   STEP_MODES = { up=20, down=20, mixed=75 }  --TODO: walkway=25
+  local   STEP_MODES = { walkway=25 }  -- TODO: up=20, down=20, mixed=75
   local LIQUID_MODES = { none=50, some=80 }  -- lake=0
 
   -- decide liquid mode
@@ -2837,7 +2846,10 @@ function Cave_decide_properties(R)
     info.torch_mode = rand.key_by_probs({ none=2, few=10, some=90 })
   end
 
-  if true then ---????  LEVEL.is_dark or not R.is_outdoor then
+  --???
+  info.torch_mode = "none"
+
+  if false then ---????  LEVEL.is_dark or not R.is_outdoor then
     info.cave_lighting = 1
   end
 
@@ -2903,7 +2915,8 @@ function Cave_determine_spots(R)
     if A2 == A then return end
 
     -- higher floors are handled by gui.spots_apply_brushes()
-    if A.wall or A.fence then return end
+    if A.is_wall or A.is_fence then return end
+
     if A2.floor_h and A2.floor_h > A.floor_h + 1 then return end
 
     -- skip area if not near the floor
@@ -2933,7 +2946,7 @@ function Cave_determine_spots(R)
         A = info.blocks[nx][ny]
       end
 
-      if not A or A.fence then
+      if not A or A.is_fence then
         local poly = Cave_brush(info, x, y)
         gui.spots_fill_poly(poly, SPOT_WALL)
         return
@@ -2967,7 +2980,7 @@ function Cave_determine_spots(R)
     if touches then 
       local poly = Cave_brush(info, x, y)
 
-      if not A2 or A2.wall then
+      if not A2 or A2.is_wall then
         gui.spots_fill_poly(poly, SPOT_WALL)
       else
         gui.spots_fill_poly(poly, SPOT_LEDGE)
