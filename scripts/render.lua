@@ -1490,6 +1490,10 @@ function Render_chunk(chunk)
   local function do_item()
     reqs.kind = "item"
 
+    if chunk.content_kind == "KEY" then
+      reqs.item_kind = "key"
+    end
+
     -- for entity remapping (e.g. skull keys), rely on prefab system
     skin.object = assert(chunk.content_item)
   end

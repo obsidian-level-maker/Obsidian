@@ -2204,7 +2204,7 @@ function Fab_find_matches(reqs, match_state)
 
 --???  if not match_word_or_table(reqs.switch, def.switch) then return 0 end
 
-    if reqs.item_kind != def.item_kind then return 0 end
+    if def.item_kind and reqs.item_kind != def.item_kind then return 0 end
 
     -- check on room type (building / outdoor / cave)
     if not match_room_kind(reqs.env,      def.env)      then return 0 end
