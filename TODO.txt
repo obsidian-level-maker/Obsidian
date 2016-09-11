@@ -61,14 +61,13 @@ ______________________________________________________________________
 +  proper "apply_num" calculation [ especially DECORATE ]
 
 
-+  add railings to cages sometimes
-
-+  polish corners : get correct texture for joiners
++  cages : better floor_mat choice, e.g. THEME.cage_mats
 
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
 
-+  limit # of floor areas per room
++  compute a score early, do a check on first whole-seed "area" element
+   and do the "max_size" check here too
 
 
 -  two connections into a room
@@ -134,6 +133,18 @@ IDEA : a sharp corner removal pass [ before border stuff ]
        ..aZZb.
        ..aZZb.
        ..aaa..
+
+
+
+Caves:
+
+-  work on having different floor areas, maybe treat CAVE_AREA
+   as an extension to AREA class, mode == "cave"
+   [ the area used to grow the cave becomes the ENTRY cave area ]
+
+   -  get connections to work with that (proper floor_h)
+   -  make floor chunks get right floor_h
+   -  make closets get right floor_h
 
 
 

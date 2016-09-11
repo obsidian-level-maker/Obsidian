@@ -5,33 +5,19 @@ WORK IN PROGRESS
 
 Caves:
 
-!!  fix grower (max_size on dummy area)
+!!! get SPOTS working again
 
-(c) treat CAVE_AREA as an extension to AREA class, mode == "cave"
-    [ what about the dummy area used to grow the cave? ]
+-  ensure walk chunks with content are handled correctly
 
-(d) get connections working properly
+-  cavey bling, especially the stalagmite, also the waterfall
 
-
-(e) get closets working properly  (clear seeds, right floor_h)
-
-(f) get free-standing importants working properly
-    [ probably use the chunks "found" by area code ]
-
-(g) get SPOTS working again
-
-
-
-Grower:
-
-!!  compute a score early, do a check on first whole-seed "area" element
-    and do the "max_size" check here too
+-  cavey cage prefab
 
 
 
 Miscellaneous:
 
-+  F/R cages: also want mid-bars and/or corner posts [ esp. cages surrounded by liquids ]
++  entities from wall prefabs NOT removed from spots??
 
--  sometimes have flashing/oscillate FX for free-range cages
++  fake_switch trap : monsters too weak
 
