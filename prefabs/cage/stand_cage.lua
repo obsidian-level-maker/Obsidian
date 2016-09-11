@@ -2,20 +2,16 @@
 -- Standing Cage
 --
 
-PREFABS.Cage_standing1 =
+PREFABS.Cage_stand1 =
 {
   file   = "cage/stand_cage.wad"
 
-  prob   = 50
+  prob   = 400
 
-  where  = "seeds"
-  shape  = "P"
+  where  = "point"
 
-  seed_w = 1
-  seed_h = 1
-
-  x_fit = { 56,72 }
-  y_fit = { 56,72 }
+  size   = 128
+  height = 128
 
   bound_z1 = 0
   bound_z2 = 120
