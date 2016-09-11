@@ -306,7 +306,12 @@ function AREA_CLASS.highest_neighbor(A)
 
   each N in A.neighbors do
     if N.room == A.room and N.mode == "floor" and N.floor_h then
-      if not best or N.floor_h > best.floor_h then best = N end
+      if not best or N.floor_h > best.floor_h or
+         -- use ceiling heights to break ties
+         (N.floor_h == best.floor_h and (N.ceil_h or 9999) < (best.ceil_h or 9999))
+      then
+        best = N
+      end
     end
   end
 
@@ -319,7 +324,12 @@ function AREA_CLASS.lowest_neighbor(A)
 
   each N in A.neighbors do
     if N.room == A.room and N.mode == "floor" and N.floor_h then
-      if not best or N.floor_h < best.floor_h then best = N end
+      if not best or N.floor_h < best.floor_h or
+         -- use ceiling heights to break ties
+         (N.floor_h == best.floor_h and (N.ceil_h or 9999) > (best.ceil_h or 9999))
+      then
+        best = N
+      end
     end
   end
 

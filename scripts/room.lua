@@ -2793,8 +2793,12 @@ function Room_floor_ceil_heights()
 
     local N = get_cage_neighbor(A)
 
-    A.floor_h  = N.floor_h + rand.pick({40,56,72})
-    A.ceil_h   = A.floor_h + 80
+    if not N.cage_floor_h then
+      N.cage_floor_h = N.floor_h + rand.pick({40,56,72})
+    end
+
+    A.floor_h  = N.cage_floor_h
+    A.ceil_h   = A.floor_h + 72
     A.ceil_mat = N.ceil_mat
 
     -- fancy cages
@@ -2804,8 +2808,6 @@ function Room_floor_ceil_heights()
       if not R.is_outdoor then
         if N.ceil_h and N.ceil_h > A.ceil_h + 72 then
           A.ceil_h = N.ceil_h
-        else
-          A.ceil_h = A.floor_h + 72
         end
 
         add_cage_lighting(R, A)
