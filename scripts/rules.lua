@@ -113,7 +113,7 @@ ROOT_T1 =
 
 ROOT_CAGES4 =
 {
-  prob = 30*99
+  prob = 35
 
   structure =
   {
