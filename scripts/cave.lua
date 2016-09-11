@@ -2826,7 +2826,7 @@ function Cave_decide_properties(R)
   -- decide liquid mode
   if not LEVEL.liquid then
     info.liquid_mode = "none"
-    STEP_MODES.walkway = nil
+---!!    STEP_MODES.walkway = nil
   else
     if not R.is_outdoor then
       LIQUID_MODES.lake = nil
