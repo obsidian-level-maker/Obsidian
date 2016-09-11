@@ -85,6 +85,7 @@ TITLE ARTWORK:
 city1.tga : by Sergei Churbanov, under CC-BY 3.0 license.
 city3.tga : by Emil Persson, under CC-BY 3.0 license.
 crowprin.tga : by dogchicken (user on OGA), under CC-BY 3.0 license.
+eden2.tga : by p0ss (user on OGA), under CC-BY 3.0 license.
 necro.tga : by kirill777 (user on OGA), under CC-BY 3.0 license.
 
 ochre_pit.tga  : by Toby Hudson (from Wikipedia), under CC-BY-SA 3.0 license.
