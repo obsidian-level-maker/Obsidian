@@ -584,10 +584,12 @@ GROW_STAIR_SIDE2 =
   structure =
   {
     "....", "#AAA"
-    "..1x", "#^1x"
+    "..1x", "#^/x"
     "..1x", "#^1x"
     "..1x", "#11x"
   }
+
+  diagonals = { "A1" }
 }
 
 
