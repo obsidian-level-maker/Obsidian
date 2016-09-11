@@ -1503,6 +1503,11 @@ function Area_closet_edges()
 
     E.to_chunk = chunk
     chunk.edges = { E }
+
+    -- killed joiners need the edge to be ignored
+    if chunk.content_kind == "void" then
+      E.kind = "ignore"
+    end
   end
 
   ---| Area_closet_edges |---
