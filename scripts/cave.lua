@@ -812,6 +812,8 @@ function Cave_create_areas(R)
     -- only have one area : the indentation / liquidy bits are
     -- considered to be a variation of it (child areas)
 
+    assert(info.liquid_mode != "lake")
+
     local AREA =
     {
       neighbors = {}
@@ -830,10 +832,19 @@ function Cave_create_areas(R)
     install_area(AREA, cave, -1)
 
 
-    if info.liquid_mode == "lake" then return end
+    -- create the sink
+    local walk_way = copy_cave_without_fences()
+
+    --[[ remove importants from it  [ FIXME ]
+    each imp in R.cave_imps do
+      walk_way:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, 1)
+    end ]]
+
+    walk_way:negate()
+    walk_way:shrink8(true)
+    walk_way:remove_dots()
 
 
---[[
     local WALK1 =
     {
       indent = 1
@@ -841,25 +852,16 @@ function Cave_create_areas(R)
       floor_mat = R.alt_floor_mat
     }
 
-    local walk_way = copy_cave_without_fences()
-
-    -- remove importants from it  [ FIXME ]
-    each imp in R.cave_imps do
-      walk_way:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, 1)
-    end
-
-    walk_way:negate()
-    walk_way:shrink8(true)
---    walk_way:shrink(true)
-    walk_way:remove_dots()
-
     install_area(WALK1, walk_way, 1, "empty_ok")
 
     table.insert(AREA.children, WALK1)
---]]
 
 
---[[
+    -- shrink the walkway further
+    walk_way:shrink8(true)
+    walk_way:remove_dots()
+
+
     local WALK2 =
     {
       indent = 2
@@ -867,18 +869,19 @@ function Cave_create_areas(R)
       is_liquid = true
     }
 
+    if not LEVEL.liquid or rand.odds(100) then
+      WALK2.is_liquid = nil
+      WALK2.floor_mat = AREA.floor_mat
+    end
+
+
     if info.sky_mode == "some" then
       WALK2.is_sky = true
     end
 
-    walk_way:shrink8(true)
---    walk_way:shrink(true)
-    walk_way:remove_dots()
-
     install_area(WALK2, walk_way, 1, "empty_ok")
 
     table.insert(AREA.children, WALK2)
---]]
   end
 
 
@@ -1489,7 +1492,7 @@ function Cave_floor_heights(R, entry_h)
     elseif A.goal_type then
       A.ceil_h = h + 192
     else
-      A.ceil_h = h + rand.pick { 128, 192,192,192, 288 }
+      A.ceil_h = h + rand.pick { 160, 192,192, 224 }
     end
 
 
@@ -1559,14 +1562,16 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function update_walk_ways()
+    local ceil_bump = 96 -- FIXME  rand.sel(80, 64, 96)
+
     each A in info.floors do
       if not A.children then continue end
 
       each WALK in A.children do
-        WALK.floor_h = A.floor_h - WALK.indent * 12
+        WALK.floor_h = A.floor_h - WALK.indent * 8
 
         if A.ceil_h then
-          WALK.ceil_h = A.ceil_h + WALK.indent * 64
+          WALK.ceil_h = A.ceil_h + WALK.indent * ceil_bump
         end
       end
     end
