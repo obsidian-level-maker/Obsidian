@@ -7,7 +7,7 @@ PREFABS.Cage_small_1 =
   file   = "cage/small_cage.wad"
 
   prob   = 50
-  env    = "!cave"
+--env    = "!cave"
 
   where  = "point"
 
