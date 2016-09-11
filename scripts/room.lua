@@ -2774,9 +2774,11 @@ function Room_floor_ceil_heights()
     if A.peer and A.peer.floor_h then
       local P = A.peer
 
-      A.floor_h  = P.floor_h
-      A.ceil_h   = P.ceil_h
-      A.ceil_mat = P.ceil_mat
+      A.floor_h   = P.floor_h
+      A.floor_mat = P.floor_mat
+
+      A.ceil_h    = P.ceil_h
+      A.ceil_mat  = P.ceil_mat
 
       A.bump_light = P.bump_light
       A.sector_fx  = P.sector_fx
@@ -2798,13 +2800,24 @@ function Room_floor_ceil_heights()
     A.ceil_h   = A.floor_h + 72
     A.ceil_mat = N.ceil_mat
 
+    if A.is_outdoor then
+      A.floor_mat = LEVEL.cliff_mat
+    else
+      A.floor_mat = A.zone.cage_mat
+    end
+    assert(A.floor_mat)
+
     -- fancy cages
     if A.cage_mode or (#A.seeds >= 4 and rand.odds(50)) then
+      A.floor_mat = A.zone.cage_mat
+
       add_cage_rails(A)
 
       if not R.is_outdoor then
         if N.ceil_h and N.ceil_h > A.ceil_h + 72 then
           A.ceil_h = N.ceil_h
+        else
+          A.ceil_mat = A.floor_mat
         end
 
         add_cage_lighting(R, A)

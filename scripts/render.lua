@@ -1854,15 +1854,6 @@ function Render_properties_for_area(A)
   end
 
 
-  if A.mode == "cage" then
-    if A.is_outdoor then
-      A.floor_mat = LEVEL.cliff_mat
-    else
-      A.floor_mat = A.zone.facade_mat
-    end
-  end
-
-
   if A.mode == "liquid" then
     A.floor_mat = "_LIQUID"
   end
