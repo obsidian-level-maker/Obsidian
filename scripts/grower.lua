@@ -3388,8 +3388,10 @@ function Grower_cave_stats()
 
   if total < 1 then total = 1 end
 
+--[[
   stderrf("Cave stats : %d/%d rooms : %d/%d seeds (%d%%)\n",
           rooms, #LEVEL.rooms, cave, total, math.floor(cave*100/total))
+--]]
 end
 
 

@@ -2752,6 +2752,68 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function add_cage_lighting(R, A)
+    if not R.cage_light_fx then
+      --  8 = oscillates
+      -- 17 = flickering
+      -- 12 = flashes @ 1 hz
+      -- 13 = flashes @ 2 hz
+      R.cage_light_fx = rand.pick({ 0,8,12,13,17 })
+    end
+
+    if R.cage_light_fx == 0 then
+      -- no effect
+      A.bump_light = 32
+      return
+    end
+
+    A.bump_light = 48
+    A.sector_fx  = R.cage_light_fx
+  end
+
+
+  local function do_a_cage(R, A)
+    -- for symmetry, ensure second cage is same as first
+    if A.peer and A.peer.floor_h then
+      local P = A.peer
+
+      A.floor_h  = P.floor_h
+      A.ceil_h   = P.ceil_h
+      A.ceil_mat = P.ceil_mat
+
+      A.bump_light = P.bump_light
+      A.sector_fx  = P.sector_fx
+
+      if A.cage_mode then
+        add_cage_rails(A)
+      end
+
+      return
+    end
+
+    local N = get_cage_neighbor(A)
+
+    A.floor_h  = N.floor_h + rand.pick({40,56,72})
+    A.ceil_h   = A.floor_h + 80
+    A.ceil_mat = N.ceil_mat
+
+    -- fancy cages
+    if A.cage_mode or (#A.seeds >= 4 and rand.odds(50)) then
+      add_cage_rails(A)
+
+      if not R.is_outdoor then
+        if N.ceil_h and N.ceil_h > A.ceil_h + 72 then
+          A.ceil_h = N.ceil_h
+        else
+          A.ceil_h = A.floor_h + 72
+        end
+
+        add_cage_lighting(R, A)
+      end
+    end
+  end
+
+
   local function do_cage_areas(R)
     if R.is_start then
       kill_start_cages(R)
@@ -2759,46 +2821,8 @@ function Room_floor_ceil_heights()
     end
 
     each A in R.areas do
-      if A.mode != "cage" then continue end
-
-      if A.peer and A.peer.floor_h then
-        local N = A.peer
-
-        A.floor_h  = N.floor_h
-        A.ceil_h   = N.ceil_h
-        A.ceil_mat = N.ceil_mat
-
-        A.bump_light = N.bump_light
-        A.sector_fx  = N.sector_fx
-
-        if A.cage_mode then
-          add_cage_rails(A)
-        end
-
-        continue
-      end
-
-      local N = get_cage_neighbor(A)
-
-      A.floor_h  = N.floor_h + rand.pick({40,56,72})
-      A.ceil_h   = A.floor_h + 80
-      A.ceil_mat = N.ceil_mat
-
-      -- fancy cages
-      if A.cage_mode then
-        if not R.is_outdoor then
-          if N.ceil_h and N.ceil_h > A.ceil_h + 64 and rand.odds(75) then
-            A.ceil_h = N.ceil_h
-          else
-            A.ceil_h = A.floor_h + 64
-          end
-
-          -- TODO : do this randomly for other cages too
-          A.bump_light = 48
-          A.sector_fx  = 13  -- flashes, 2 hz
-        end
-
-        add_cage_rails(A)
+      if A.mode == "cage" then
+        do_a_cage(R, A)
       end
     end
   end
