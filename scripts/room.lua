@@ -2492,9 +2492,6 @@ function Room_floor_ceil_heights()
 
   local function process_cave(R)
     Cave_build_room(R, R.entry_h)
-
-    -- FIXME : TEMP RUBBISH
-    R.areas[1].floor_h = R.entry_h
   end
 
 
