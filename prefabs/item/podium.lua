@@ -5,13 +5,14 @@
 PREFABS.Item_podium =
 {
   file  = "item/podium.wad"
-  where = "point"
-  size  = 24
+
+  prob  = 100
+  theme = "!tech"
 
   item_kind = "key"
 
-  theme = "!tech"
-  prob  = 100
+  where = "point"
+  size  = 24
 }
 
 
