@@ -1876,8 +1876,6 @@ function Cave_render_cave(R)
       f_mat = A.wall_mat or R.main_tex or R.main_tex
     end
 
-    local f_liquid = A.liquid
-
 
     local f_brush = Cave_brush(info, x, y)
 
@@ -1894,7 +1892,7 @@ top.reachable = 1
       table.insert(f_brush, top)
     end
 
-    if f_liquid then
+    if A.is_liquid then
       f_mat = "_LIQUID"
     end
 
