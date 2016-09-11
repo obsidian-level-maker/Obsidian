@@ -694,12 +694,12 @@ function Room_reckon_door_tex()
     visit_conn(C, C.E1, C.E2)
   end
 
-  
+
   each C in LEVEL.conns do
     if C.kind == "edge" then
       visit_conn(C, C.E1, C.E2)
       visit_conn(C, C.F1, C.F2)
-    
+
     elseif C.kind == "joiner" then
       visit_joiner(C)
     end
@@ -1708,8 +1708,8 @@ function Room_floor_ceil_heights()
 
 
   local function prob_for_new_floor_group(A1, A2)
-    local vol_1 = A1.svolume / sel(A1.room.symmetry, 2, 1) 
-    local vol_2 = A2.svolume / sel(A2.room.symmetry, 2, 1) 
+    local vol_1 = A1.svolume / sel(A1.room.symmetry, 2, 1)
+    local vol_2 = A2.svolume / sel(A2.room.symmetry, 2, 1)
 
     -- TODO
 
@@ -2740,11 +2740,9 @@ function Room_floor_ceil_heights()
 
   local function add_cage_rails(A)
     each N in A.neighbors do
-      if N.room != A.room then continue end
+      if N.zone != A.zone then continue end
 
-      if N.mode == "floor" or N.mode == "liquid" or
-         (N.mode == "chunk" and N.chunk.kind == "stair")
-      then
+      if true then
         local junc = Junction_lookup(A, N)
 
         junc.rail_mat   = "MIDBARS3"
@@ -2764,9 +2762,19 @@ function Room_floor_ceil_heights()
       if A.mode != "cage" then continue end
 
       if A.peer and A.peer.floor_h then
-        A.floor_h  = A.peer.floor_h
-        A.ceil_h   = A.peer.ceil_h
-        A.ceil_mat = A.peer.ceil_mat
+        local N = A.peer
+
+        A.floor_h  = N.floor_h
+        A.ceil_h   = N.ceil_h
+        A.ceil_mat = N.ceil_mat
+
+        A.bump_light = N.bump_light
+        A.sector_fx  = N.sector_fx
+
+        if A.cage_mode then
+          add_cage_rails(A)
+        end
+
         continue
       end
 
@@ -2779,12 +2787,15 @@ function Room_floor_ceil_heights()
       -- fancy cages
       if A.cage_mode then
         if not R.is_outdoor then
+          if N.ceil_h and N.ceil_h > A.ceil_h + 64 and rand.odds(75) then
+            A.ceil_h = N.ceil_h
+          else
+            A.ceil_h = A.floor_h + 64
+          end
+
+          -- TODO : do this randomly for other cages too
           A.bump_light = 48
           A.sector_fx  = 13  -- flashes, 2 hz
-
-          if N.ceil_h and N.ceil_h > A.ceil_h + 64 then
-            A.ceil_h = N.ceil_h
-          end
         end
 
         add_cage_rails(A)
