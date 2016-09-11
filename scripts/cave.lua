@@ -749,6 +749,8 @@ function Cave_create_areas(R)
   local info = R.cave_info
   local cave = info.cave
 
+  local base_area = R.areas[1]
+
   local is_lake = (info.liquid_mode == "lake")
 
   -- groups are areas (rectangles) belonging to portals or importants
@@ -797,6 +799,13 @@ function Cave_create_areas(R)
   end
 
 
+  local function apply_walk_chunks(map)
+    each chunk in info.walk_chunks do
+      map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, 1)
+    end
+  end
+
+
   local function alternate_floor_mat()
     for loop = 1,3 do
       R.alt_floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
@@ -831,30 +840,30 @@ function Cave_create_areas(R)
 
     install_area(AREA, cave, -1)
 
+    -- this fixes MON_TELEPORT spots [ so they blend in ]
+    base_area.floor_mat = AREA.floor_mat
+
 
     -- create the sink
     local walk_way = copy_cave_without_fences()
 
-    --[[ remove importants from it  [ FIXME ]
-    each imp in R.cave_imps do
-      walk_way:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, 1)
-    end ]]
+    apply_walk_chunks(walk_way)
 
     walk_way:negate()
     walk_way:shrink8(true)
     walk_way:remove_dots()
 
 
-    local WALK1 =
+    local SINK1 =
     {
       indent = 1
 
       floor_mat = R.alt_floor_mat
     }
 
-    install_area(WALK1, walk_way, 1, "empty_ok")
+    install_area(SINK1, walk_way, 1, "empty_ok")
 
-    table.insert(AREA.children, WALK1)
+    table.insert(AREA.children, SINK1)
 
 
     -- shrink the walkway further
@@ -862,7 +871,7 @@ function Cave_create_areas(R)
     walk_way:remove_dots()
 
 
-    local WALK2 =
+    local SINK2 =
     {
       indent = 2
 
@@ -870,18 +879,18 @@ function Cave_create_areas(R)
     }
 
     if not LEVEL.liquid or rand.odds(100) then
-      WALK2.is_liquid = nil
-      WALK2.floor_mat = AREA.floor_mat
+      SINK2.is_liquid = nil
+      SINK2.floor_mat = AREA.floor_mat
     end
 
 
     if info.sky_mode == "some" then
-      WALK2.is_sky = true
+      SINK2.is_sky = true
     end
 
-    install_area(WALK2, walk_way, 1, "empty_ok")
+    install_area(SINK2, walk_way, 1, "empty_ok")
 
-    table.insert(AREA.children, WALK2)
+    table.insert(AREA.children, SINK2)
   end
 
 
@@ -1562,16 +1571,16 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function update_walk_ways()
-    local ceil_bump = 96 -- FIXME  rand.sel(80, 64, 96)
+    local ceil_bump = rand.sel(50, 64, 96)
 
     each A in info.floors do
       if not A.children then continue end
 
-      each WALK in A.children do
-        WALK.floor_h = A.floor_h - WALK.indent * 8
+      each SINK in A.children do
+        SINK.floor_h = A.floor_h - SINK.indent * 8
 
         if A.ceil_h then
-          WALK.ceil_h = A.ceil_h + WALK.indent * ceil_bump
+          SINK.ceil_h = A.ceil_h + SINK.indent * ceil_bump
         end
       end
     end
