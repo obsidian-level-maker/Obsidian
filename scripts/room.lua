@@ -2797,6 +2797,10 @@ function Room_floor_ceil_heights()
     end
 
     A.floor_h  = N.cage_floor_h
+    if N.ceil_h then
+      A.floor_h = math.min(A.floor_h, N.ceil_h - 64)
+    end
+
     A.ceil_h   = A.floor_h + 72
     A.ceil_mat = N.ceil_mat
 
