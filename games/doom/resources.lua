@@ -128,7 +128,7 @@ function DOOM.make_cool_gfx()
   gui.wad_logo_gfx("WALL53_1", "p", "BOLT",   128,128, 2)
   gui.wad_logo_gfx("WALL55_1", "p", "RELIEF", 128,128, 3)
 --gui.wad_logo_gfx("WALL54_1", "p", "CARVE",  128,128, 4)
---gui.wad_logo_gfx("WALL52_2", "p", "CARVE",  128,128, 5)
+  gui.wad_logo_gfx("WALL52_2", "p", "CARVE",  128,128, 5) -- O_BLACK
 
   -- flats
   gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
