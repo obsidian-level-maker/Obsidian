@@ -1025,9 +1025,11 @@ end
 
 
 
-function Layout_decorate_rooms(KKK_PASS)
+function Layout_decorate_rooms(pass)
   -- 
   -- Decorate the rooms with crates, pillars, etc....
+  --
+  -- The 'pass' parameter is 1 for early pass, 2 for later pass.
   --
   -- Also handles all the unused closets in a room, turning them
   -- into cages, secret items (etc).
@@ -1653,6 +1655,11 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
+  local function pick_cavey_bling(R)
+    -- TODO
+  end
+
+
   local function pick_ceiling_lights(R)
     if R.is_cave or R.is_outdoor then return end
 
@@ -1728,8 +1735,6 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function tizzy_up_room(R)
-    if R.is_cave then return end
-
     pick_wall_detail(R)
 
     pick_floor_sinks(R)
@@ -1745,6 +1750,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function tizzy_all_closets(R)
+    try_secret_closets(R)
+
     -- more cages, oh yes!
     try_extra_cages(R)
 
@@ -1759,31 +1766,33 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  ---| Layout_decorate_rooms |---
+  local function decor_early_pass(R)
+    switch_up_room(R)
 
-  if KKK_PASS == 1 then
-    Layout_add_traps()
+    -- closets must be decided early for caves
+    if R.is_cave then
+      pick_cavey_bling(R)
+
+      tizzy_all_closets(R)
+    end
   end
 
-  each R in LEVEL.rooms do
-    if KKK_PASS == 1 then
-      -- do secret closets early for caves
-      if R.is_cave then
-        try_secret_closets(R)
-      end
 
-      switch_up_room(R)
-
-      if R.is_cave then
-        tizzy_all_closets(R)
-      end
-
-    else
+  local function decor_later_pass(R)
+    if not R.is_cave then
       tizzy_up_room(R)
-      if not R.is_cave then
-        try_secret_closets(R)
-        tizzy_all_closets(R)
-      end
+      tizzy_all_closets(R)
+    end
+  end
+
+
+  ---| Layout_decorate_rooms |---
+
+  each R in LEVEL.rooms do
+    if pass == 1 then
+      decor_early_pass(R)
+    else
+      decor_later_pass(R)
     end
   end
 end

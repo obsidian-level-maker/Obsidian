@@ -3264,6 +3264,7 @@ function Room_build_all()
   Layout_place_all_importants()
 
   -- this does traps, and may add switches which lock a door / joiner
+  Layout_add_traps()
   Layout_decorate_rooms(1)
 
   -- do doors before floor heights, they may have a delta_h (esp. joiners)
