@@ -5,8 +5,10 @@
 PREFABS.Item_alcove_small =
 {
   file  = "item/alcove1.wad"
-  where = "seeds"
 
+  prob  = 50
+
+  where  = "seeds"
   seed_w = 1
   seed_h = 1
 
@@ -15,7 +17,5 @@ PREFABS.Item_alcove_small =
 
   x_fit = "frame"
   y_fit = "top"
-
-  prob = 50
 }
 
