@@ -176,6 +176,8 @@ ROOT_LIQUID_1B =
     "!!!!!", "R%~/R"
     "!!!!!", "%RRR/"
   }
+
+  cage_mode = "fancy"
 }
 
 
