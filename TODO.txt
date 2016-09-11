@@ -61,8 +61,6 @@ ______________________________________________________________________
 +  proper "apply_num" calculation [ especially DECORATE ]
 
 
-+  cages : better floor_mat choice, e.g. THEME.cage_mats
-
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
 

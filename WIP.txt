@@ -7,17 +7,18 @@ Caves:
 
 !!! get SPOTS working again
 
--  ensure walk chunks with content are handled correctly
++  get walkway working again
 
--  cavey bling, especially the stalagmite, also the waterfall
+-  cavey bling, especially the stalagmite
 
--  cavey cage prefab
+-  review all cave themes [ some are FUGLY! ]
 
 
 
 Miscellaneous:
 
 +  entities from wall prefabs NOT removed from spots??
+   -->  have a "solid_entities = true" in def, apply it... somewhere
 
-+  fake_switch trap : monsters too weak
++  some traps : monsters too weak
 
