@@ -1037,6 +1037,7 @@ SPROUT_JOINER_L =
 DECORATE_CAGE_1 =
 {
   prob = 10
+  env  = "!cave"
 
   structure =
   {

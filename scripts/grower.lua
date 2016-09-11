@@ -1202,7 +1202,12 @@ function Grower_grammatical_room(R, pass, is_emergency)
 
     -- environment check
     if rule.env != nil and rule.env != "any" then
-      if rule.env != R:get_env() then return 0 end
+      -- FIXME: support "!xxx" properly [ see prefab code ]
+      if rule.env == "!cave" then 
+        if R:get_env() == "cave" then return 0 end
+      else
+        if rule.env != R:get_env() then return 0 end
+      end
     end
 
     -- hallways and caves are more restrictive than normal
