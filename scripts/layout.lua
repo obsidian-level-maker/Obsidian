@@ -1050,16 +1050,21 @@ function Layout_decorate_rooms(pass)
 
       chunk.prefab_dir = chunk.from_dir
 
-    else
+    else  -- free standing
       reqs =
       {
         kind  = "cage"
         where = "point"
 
-        size  = 96
-
-        height = A.ceil_h - A.floor_h
+        size  = assert(chunk.space)
       }
+
+      -- FIXME : hack for caves
+      if A.room.is_cave then
+        reqs.height = A.room.walkway_height
+      else
+        reqs.height = A.ceil_h - A.floor_h
+      end
     end
 
     if A.room then
@@ -1407,6 +1412,10 @@ function Layout_decorate_rooms(pass)
     if not rand.odds(any_prob) then return 0 end
 
 
+    -- fairly rare in caves
+    if R.is_cave then return 10 end
+
+
     local per_prob = style_sel("cages", 0, 15, 30, 60)
 
     per_prob = per_prob * (1 - cage_vol * 4)
@@ -1427,9 +1436,6 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     -- never have cages in a start room, or secrets
     if R.is_start  then return end
     if R.is_secret then return end
-
-    -- they look silly in caves
-    if R.is_cave then return end
 
     -- collect usable chunks
     local locs = {}
@@ -1500,6 +1506,12 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     reqs.env = R:get_env()
 
+    if R.is_cave then
+      reqs.kind = "decor"
+      reqs.shape = "U"   -- TODO: chunk.shape,  FIXME: use for pictures too
+      reqs.height = R.walkway_height
+    end
+
     chunk.prefab_def = Fab_pick(reqs, "none_ok")
 
     if not chunk.prefab_def then
@@ -1523,8 +1535,6 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function try_decor_closets(R)
-    if R.is_cave then return end
-
     local locs = {}
 
     each chunk in R.closets do

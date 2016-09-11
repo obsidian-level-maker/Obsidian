@@ -1502,7 +1502,7 @@ function Cave_floor_heights(R, entry_h)
     elseif A.goal_type then
       A.ceil_h = h + 192
     else
-      A.ceil_h = h + info.main_height
+      A.ceil_h = h + R.walkway_height
     end
 
 
@@ -1671,11 +1671,9 @@ function Cave_floor_heights(R, entry_h)
     z_dir = rand.sel(37, 1, -1)
   end
 
-  info.main_height = rand.pick { 160, 192,192, 224 }
-
   -- TEMP RUBBISH
   base_area.floor_h = entry_h
-  base_area.ceil_h  = entry_h + info.main_height
+  base_area.ceil_h  = entry_h + R.walkway_height
 
   local entry_area = find_entry_area()
 
