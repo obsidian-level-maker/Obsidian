@@ -94,29 +94,26 @@ end
 
 
 function CONN_CLASS.other_area(C, A)
-  if A == C.A1 then
-    return C.A2
-  else
-    return C.A1
-  end
+  if A == C.A1 then return C.A2 end
+  if A == C.A2 then return C.A1 end
+
+  error("wrong area for CONN_CLASS.other_area")
 end
 
 
 function CONN_CLASS.other_room(C, R)
-  if R == C.R1 then
-    return C.R2
-  else
-    return C.R1
-  end
+  if R == C.R1 then return C.R2 end
+  if R == C.R2 then return C.R1 end
+
+  error("wrong room for CONN_CLASS.other_room")
 end
 
 
 function CONN_CLASS.edge_for_room(C, R)
-  if R == C.R1 then
-    return C.E1, C.F1
-  else
-    return C.E2, C.F2
-  end
+  if R == C.R1 then return C.E1, C.F1 end
+  if R == C.R2 then return C.E2, C.F2 end
+
+  error("wrong room for CONN_CLASS.edge_for_room")
 end
 
 
