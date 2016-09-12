@@ -3104,13 +3104,16 @@ end
   each R in LEVEL.rooms do
     calc_max_floor(R)
 
-    regroup_floors(R)
+    if not R.is_cave then
+      regroup_floors(R)
 
-    do_ceilings(R)
+      do_ceilings(R)
+      do_liquid_areas(R)
+    end
 
-    do_liquid_areas(R)
     do_cage_areas(R)
     do_stairs(R)
+
     do_closets(R)
   end
 end
