@@ -460,9 +460,9 @@ DOOM.THEMES =
       PLAIN = 100
       liquid_plain = 20
       liquid_metal = 10
-      floor_red = 20
-      floor_blue = 10
-      floor_green = 10
+      floor_red = 40
+      floor_blue = 30
+      floor_green = 20
     }
 
     ceiling_sinks =
