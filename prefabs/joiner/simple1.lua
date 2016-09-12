@@ -5,6 +5,11 @@
 PREFABS.Joiner_simple1 =
 {
   file   = "joiner/simple1.wad"
+  map    = "MAP01"
+
+  prob   = 100
+  theme  = "tech"
+
   where  = "seeds"
   shape  = "I"
 
@@ -16,8 +21,21 @@ PREFABS.Joiner_simple1 =
 
   x_fit = { 96,160 }
   y_fit = { 48,112 }
+}
 
-  theme = "tech"
-  prob  = 100
+
+-- a version of above with a little surprise
+PREFABS.Joiner_simple1_trappy =
+{
+  template = "Joiner_simple1"
+  map      = "MAP02"
+
+  prob     = 100
+  style    = "traps"
+
+  seed_w   = 3
+  seed_h   = 1
+
+  x_fit    = "frame"
 }
 
