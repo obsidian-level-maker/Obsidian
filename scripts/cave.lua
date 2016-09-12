@@ -1697,6 +1697,8 @@ function Cave_render_cave(R)
 
   local info = R.cave_info
 
+  local base_area = R.areas[1]
+
 
   local cave = info.cave
 
@@ -2084,7 +2086,7 @@ top.reachable = 1
   
   Trans.clear()
 
-  Ambient_push(128)
+  Ambient_push(base_area.base_light)
 
   create_delta_map()
 
