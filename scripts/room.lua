@@ -3280,6 +3280,8 @@ function Room_build_all()
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
 
+  Layout_indoor_lighting()
+
   -- this does traps, and may add switches which lock a door / joiner
   Layout_add_traps()
   Layout_decorate_rooms(1)
@@ -3290,8 +3292,6 @@ function Room_build_all()
   Room_prepare_skies()
 
   Room_floor_ceil_heights()
-
-  Layout_indoor_lighting()
 
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)

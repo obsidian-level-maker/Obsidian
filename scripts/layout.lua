@@ -2241,14 +2241,16 @@ end
 
 function Layout_indoor_lighting()
   --
-  -- Give each indoor non-cave room a lighting keyword:
+  -- Give each indoor/cave room a lighting keyword:
   --    "bright"   (160 units)
   --    "normal"   (144 units)
   --    "dark"     (128 units)
   --    "verydark" ( 96 units)
   --
+  -- (Note: light levels are lower in caves)
+  --
   -- Outdoor rooms are not affected here, but get a keyword which
-  -- depends on the global 'sky_light' value.
+  -- depends on the global "sky_light" value.
   --
   -- Individual areas can be increased by +16 or +32 based on what
   -- light sources are in that area (including windows).
@@ -2258,6 +2260,14 @@ function Layout_indoor_lighting()
   {
     bright   = 160
     normal   = 144
+    dark     = 128
+    verydark = 112
+  }
+
+  local CAVE_LEVELS =
+  {
+    bright   = 144
+    normal   = 128
     dark     = 128
     verydark = 112
   }
@@ -2273,11 +2283,16 @@ function Layout_indoor_lighting()
   local function set_room(R, what)
     R.light_level = what
 
-    local base_light = LIGHT_LEVELS[what]
-    assert(base_light)
+    local base_light
+
+    if R.is_cave then
+      base_light = CAVE_LEVELS[what]
+    else
+      base_light = LIGHT_LEVELS[what]
+    end
 
     each A in R.areas do
-      A.base_light = base_light
+      A.base_light = assert(base_light)
     end
   end
 
