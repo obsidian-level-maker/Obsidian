@@ -842,6 +842,7 @@ function Cave_create_areas(R)
 
     -- this fixes MON_TELEPORT spots [ so they blend in ]
     base_area.floor_mat = AREA.floor_mat
+    base_area.ceil_mat  = R.ceil_mat
 
 
     -- create the sink

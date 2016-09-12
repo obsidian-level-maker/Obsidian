@@ -1268,7 +1268,7 @@ function Layout_decorate_rooms(pass)
   end
 
 
-  local function try_decoration_in_chunk(chunk)
+  local function try_decoration_in_chunk(chunk, is_cave)
     if chunk.sw < 2 then return end
     if chunk.sh < 2 then return end
 
@@ -1283,8 +1283,13 @@ function Layout_decorate_rooms(pass)
       where = "point"
 
       size   = assert(chunk.space)
-      height = A.ceil_h - A.floor_h
     }
+
+    if is_cave then
+      reqs.height = A.room.walkway_height
+    else
+      reqs.height = A.ceil_h - A.floor_h
+    end
 
     if A.room then
       reqs.env = A.room:get_env()
@@ -1666,7 +1671,13 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function pick_cavey_bling(R)
-    -- TODO
+    local decor_prob = 50  -- TODO
+
+    each chunk in R.floor_chunks do
+      if chunk.content_kind == nil and rand.odds(decor_prob) then
+        try_decoration_in_chunk(chunk, "is_cave")
+      end
+    end
   end
 
 
@@ -1744,7 +1755,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function tizzy_up_room(R)
+  local function tizzy_up_normal_room(R)
     pick_wall_detail(R)
 
     pick_floor_sinks(R)
@@ -1790,7 +1801,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
   local function decor_later_pass(R)
     if not R.is_cave then
-      tizzy_up_room(R)
+      tizzy_up_normal_room(R)
       tizzy_all_closets(R)
     end
   end
