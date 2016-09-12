@@ -896,8 +896,8 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
     local chunk = assert(C.joiner_chunk)
 
 --stderrf("Joiner chunk:\n%s\n", table.tostr(chunk))
-    local A1 = chunk.area
-    local A2 = C:other_area(A1)
+    local A1 = chunk.from_area
+    local A2 = chunk.dest_area
 
     local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
