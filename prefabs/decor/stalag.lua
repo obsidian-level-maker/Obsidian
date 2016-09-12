@@ -37,7 +37,7 @@ PREFABS.Decor_stalag3 =
   template = "Decor_stalag1"
   map      = "MAP03"
 
-  prob   = 30
+  prob   = 70
 
   z_fit  = "stretch"
 }
