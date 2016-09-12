@@ -115,7 +115,7 @@ DOOM.PICKUPS =
     kind = "ammo"
     rank = 2
     add_prob = 40
-    closet_prob = 20
+    closet_prob = 5
     give = { {ammo="shell",count=20} }
   }
 

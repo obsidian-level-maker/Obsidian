@@ -6,7 +6,7 @@ PREFABS.Start_closet3 =
 {
   file  = "start/closet3.wad"
 
-  prob  = 160
+  prob  = 30
   theme = "!tech"
 
   where  = "seeds"

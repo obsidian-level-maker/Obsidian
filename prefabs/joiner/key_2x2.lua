@@ -18,7 +18,7 @@ PREFABS.Locked_2x2_red =
   deep   = 16
   over   = 16
 
-  prob   = 70*99
+  prob   = 150
 
   delta_h  = -40
   nearby_h = 128

@@ -6,7 +6,7 @@ UNFINISHED.Decor_cave_waterfall =
 {
   file   = "decor/waterfall.wad"
 
-  prob   = 20*99
+  prob   = 100
   env    = "cave"
 
   where  = "seeds"

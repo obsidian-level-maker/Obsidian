@@ -1151,8 +1151,8 @@ DECORATE_CLOSET_3x1 =
 
 DECORATE_CLOSET_3x2 =
 {
-  prob = 40
-  prob_skew = 4
+  prob = 60
+--prob_skew = 4
 
   structure =
   {
