@@ -25,13 +25,15 @@
 
     x1, y1, x2, y2  -- bounding coords
 
-    liquid_mode : keyword  -- "none", "some", "lake"
-
     step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
+    liquid_mode : keyword  -- "none", "some", "lake"
+
     sky_mode    : keyword  -- "none"
-                           -- "some", "walkway"  (indoor rooms only)
+                           -- "some" (indoor rooms only)
                            -- "low_wall", "high_wall"  (outdoor rooms)
+
+    torch_mode  : keyword  -- "none", "few", "some"
 
 
     cave : CAVE  -- raw generated cave
@@ -2840,16 +2842,16 @@ function Cave_decide_properties(R)
   --  V7 NOTES
   -- ==========
   --
-  -- (1) Outdoor caves, including the "lake" mode, are disabled.
+  -- (1) Outdoor caves are disabled, including the "lake" mode.
   --
   --     This is partly because I think a better system for outdoor
   --     rooms is necessary, which uses this cave system, but plans
-  --     areas in a more deliberate way -- e.g. having a river, or
+  --     areas in a more deliberate way -- e.g. placing a river, or
   --     having porches in front of entrances to buildings.
   --
   --     This new "landscape" system would probably be used for the
   --     border areas of the map too.  Investigation into this idea
-  --     is planned for a later time though.
+  --     is planned for a later time.
   --
   -- (2) Only flat caves are currently generated.
   --
@@ -2862,67 +2864,54 @@ function Cave_decide_properties(R)
 
   local info = R.cave_info
 
-  local   STEP_MODES = { walkway=25 }  -- TODO: up=20, down=20, mixed=75
-  local LIQUID_MODES = { none=50, some=80 }  -- lake=0
+  -- step mode --
 
-  -- decide liquid mode
+  info.step_mode = "walkway"
+
+  -- liquid mode --
+
+  local LIQUID_MODES = { none=40, some=60 }
+
   if not LEVEL.liquid then
     info.liquid_mode = "none"
----!!    STEP_MODES.walkway = nil
   else
-    if not R.is_outdoor then
-      LIQUID_MODES.lake = nil
-    end
-
     info.liquid_mode = rand.key_by_probs(LIQUID_MODES)
   end
 
-  -- decide step mode
-  if info.liquid_mode == "lake" then
-    STEP_MODES.walkway = nil
-  end
+  -- sky mode --
 
-  info.step_mode = rand.key_by_probs(STEP_MODES)
+  local SKY_MODES = { none=40, some=60 }
 
-  -- decide sky mode
-  if R.is_outdoor then
-    info.sky_mode = rand.sel(50, "high_wall", "low_wall")
-  else
-    info.sky_mode = rand.sel(40, "some", "none")
-  end
+  if R.light_level == "verydark" then SKY_MODES.some = 10 end
+  if R.light_level == "bright"   then SKY_MODES.none = 10 end
 
-  if info.liquid_mode == "lake" then
-    info.sky_mode = "low_wall"
-  end
+  info.sky_mode = rand.key_by_probs(SKY_MODES)
 
-  if info.sky_mode == "high_wall" then
-    R.high_wall = true
-  end
+  -- torch mode --
 
-  -- decide torch mode
-  if R.is_outdoor and not LEVEL.is_dark then
+  local TORCH_MODES = { none=60, few=40, some=20 }
+
+  if R.light_level == "bright" or
+     (info.sky_mode != "none" and not LEVEL.is_dark) or
+     info.liquid_mode != "none"
+  then
+    -- we have another source of light (sky or liquid)
     info.torch_mode = "none"
-  elseif info.sky_mode != "none" and not LEVEL.is_dark then
-    info.torch_mode = "few"
-  elseif info.liquid_mode != "none" then
-    info.torch_mode = rand.key_by_probs({ none=10, few=40, some=40 })
+
   else
-    -- no other light sources!
-    info.torch_mode = rand.key_by_probs({ none=2, few=10, some=90 })
+    if R.light_level == "verydark" then TORCH_MODES.none = 10 end
+    if R.light_level == "dark"     then TORCH_MODES.none = 20 end
+
+    info.torch_mode = rand.key_by_probs(TORCH_MODES)
   end
 
-  --???
-  info.torch_mode = "none"
-
-  if false then ---????  LEVEL.is_dark or not R.is_outdoor then
+  if info.torch_mode != "none" then
     info.cave_lighting = 1
   end
 
   -- extra health for damaging liquid
-  if LEVEL.liquid and LEVEL.liquid.damage then
-    if info.liquid_mode != "none" then
-      R.hazard_health = R.hazard_health + R.svolume * 0.7
-    end
+  if info.liquid_mode != "none" and LEVEL.liquid.damage then
+    R.hazard_health = R.hazard_health + R.svolume * 0.7
   end
 
   gui.debugf("Cave properties in %s\n", R.name)
