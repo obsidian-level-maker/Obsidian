@@ -1671,7 +1671,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function pick_cavey_bling(R)
-    local decor_prob = 50  -- TODO
+    local decor_prob = rand.pick({ 2, 6, 12, 32 })
 
     each chunk in R.floor_chunks do
       if chunk.content_kind == nil and rand.odds(decor_prob) then
