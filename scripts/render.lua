@@ -2259,7 +2259,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local floor_h = A.floor_h + (chunk.floor_dz or 0)
     local ceil_h  = A.ceil_h  + (chunk.ceil_dz  or 0)
 
-    local skin = { floor=A.floor_mat }
+    local skin = { floor=A.floor_mat, ceil=A.ceil_mat }
+
     local T = Trans.spot_transform(chunk.mx, chunk.my, floor_h, chunk.prefab_dir or 2)
 
     if def.z_fit then
