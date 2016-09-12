@@ -2836,6 +2836,30 @@ end
 
 
 function Cave_decide_properties(R)
+  --
+  --  V7 NOTES
+  -- ==========
+  --
+  -- (1) Outdoor caves, including the "lake" mode, are disabled.
+  --
+  --     This is partly because I think a better system for outdoor
+  --     rooms is necessary, which uses this cave system, but plans
+  --     areas in a more deliberate way -- e.g. having a river, or
+  --     having porches in front of entrances to buildings.
+  --
+  --     This new "landscape" system would probably be used for the
+  --     border areas of the map too.  Investigation into this idea
+  --     is planned for a later time though.
+  --
+  -- (2) Only flat caves are currently generated.
+  --
+  --     Getting the other STEP_MODES working again is non-trivial.
+  --     But I also think that the steppy caves are too random, and
+  --     an approach of making a small number of distinct areas which
+  --     border each other (and connect via cavey stairs or a lift
+  --     prefab) is going to better results.
+  --
+
   local info = R.cave_info
 
   local   STEP_MODES = { walkway=25 }  -- TODO: up=20, down=20, mixed=75
@@ -2948,7 +2972,7 @@ function Cave_determine_spots(R)
     -- need to remove cells which are not part of the cave
     if not A2 then
       local x1 = info.x1 + (x - 1) * 64
-      local y1 = info.y1 + (y - 1) * 64 
+      local y1 = info.y1 + (y - 1) * 64
 
       gui.spots_fill_box(x1, y1, x1+64, y1+64, SPOT_WALL)
       return
