@@ -65,7 +65,7 @@ DOOM.MONSTERS =
     density = 1.5
     room_size = "small"
     disloyal = true
-    trap_factor = 0.1
+    trap_factor = 0.01
     infight_damage = 1.9
   }
 
@@ -118,7 +118,7 @@ DOOM.MONSTERS =
     weap_prefs = { launch=0.3 }
     room_size = "small"
     disloyal = true
-    trap_factor = 0.1
+    trap_factor = 0.2
     infight_damage = 2.1
   }
 
