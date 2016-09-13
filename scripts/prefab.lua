@@ -54,6 +54,12 @@ WADFAB_ENTITIES =
   [8126] = { kind="cage", r= 64 }
   [8128] = { kind="cage", r=128 }
 
+  [8132] = { kind="trap", r= 20 }
+  [8133] = { kind="trap", r= 32 }
+  [8134] = { kind="trap", r= 48 }
+  [8136] = { kind="trap", r= 64 }
+  [8138] = { kind="trap", r=128 }
+
   -- special spots
 
   [8151] = { kind="pickup",    r=16 }
@@ -1428,12 +1434,6 @@ function Fab_load_wad(def)
     B[1].spot_kind = spot_info.kind
     B[1].angle = E.angle
     B[1].rank  = skill_to_rank(E.flags)
-
-    if spot_info.kind == "cage" and
-       (def.kind == "trap" or def.is_trap)
-    then
-      B[1].spot_kind = "trap"
-    end
 
     local r = spot_info.r
 

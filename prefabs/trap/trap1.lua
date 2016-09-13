@@ -23,8 +23,6 @@ PREFABS.Trap_simple1 =
   bound_z1 = 0
   bound_z2 = 160
 
-  is_trap = true
-
   tag_1 = "?trap_tag"
 }
 

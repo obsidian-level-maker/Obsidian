@@ -13,8 +13,6 @@ PREFABS.Depot_raise =
   seed_w = 3
   seed_h = 6
 
-  is_trap = true
-
   tag_9 = "?trap_tag"
 
   tag_1 = "?out_tag1"
