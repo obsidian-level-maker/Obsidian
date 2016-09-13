@@ -30,12 +30,26 @@ PREFABS.Joiner_simple1_trappy =
   template = "Joiner_simple1"
   map      = "MAP02"
 
-  prob     = 100
+  prob     = 200
   style    = "traps"
 
   seed_w   = 3
   seed_h   = 1
 
   x_fit    = "frame"
+}
+
+
+PREFABS.Joiner_simple1_wide =
+{
+  template = "Joiner_simple1"
+  map      = "MAP03"
+
+  prob     = 400
+
+  seed_w   = 3
+  seed_h   = 1
+
+  x_fit    = { 176,224 }
 }
 
