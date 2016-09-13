@@ -25,6 +25,8 @@ PREFABS.Locked_2x2_red =
 
   -- texture is already "DOORRED"
   -- line special is already #135 (open red door)
+
+  flat_FLAT23 = "BIGDOOR2"
 }
 
 
