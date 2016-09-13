@@ -2789,7 +2789,8 @@ function Cave_decorations(R)
     local my = info.y1 + (y-1) * 64 + 32
 
     Trans.entity(torch_ent, mx, my, A.floor_h, { cave_light=48 })
-    R:add_decor (torch_ent, mx, my, A.floor_h)
+
+    R:add_solid_ent(torch_ent, mx, my, A.floor_h)
   end
 
 

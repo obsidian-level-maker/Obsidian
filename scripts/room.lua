@@ -165,7 +165,6 @@ function ROOM_CLASS.new()
 
     cages = {}
     traps = {}
-    decor = {}
     triggers = {}
 
     used_chunks = 0  -- includes closets
@@ -176,7 +175,8 @@ function ROOM_CLASS.new()
     floor_groups = {}
      ceil_groups = {}
 
-    sky_rects = {}
+    solid_ents = {}
+    sky_rects  = {}
     exclusions = {}
     avoid_mons = {}
 
@@ -495,28 +495,35 @@ function ROOM_CLASS.usable_chunks(R)
 end
 
 
-function ROOM_CLASS.add_decor(R, name, x, y, z)
-  local info = GAME.ENTITIES[name]
+function ROOM_CLASS.add_solid_ent(R, id, x, y, z)
+  -- the "id" can be a name or a number.
+  -- for names, we can use the proper size and ignore passable ents.
+
+  local info
+
+  if type(id) != "number" then
+    info = GAME.ENTITIES[id]
+  end
 
   if not info then
-    warning("Unknown decor entity: %s\n", tostring(name))
-
     info = { r=32, h=96 }
   end
 
-  local DECOR =
+  if info.pass then return end
+
+  local SOLID_ENT =
   {
-    name = name
+    id = id
+
     x = x
     y = y
     z = z
 
     r = info.r
     h = info.h
-    pass = info.pass
   }
 
-  table.insert(R.decor, DECOR)
+  table.insert(R.solid_ents, SOLID_ENT)
 end
 
 
@@ -524,12 +531,9 @@ function ROOM_CLASS.spots_do_decor(R, floor_h)
   local low_h  = PARAM.spot_low_h
   local high_h = PARAM.spot_high_h
 
-  each D in R.decor do
-    -- not solid?
-    if D.pass then continue end
-
-    local z1 = D.z
-    local z2 = D.z + D.h
+  each ent in R.solid_ents do
+    local z1 = ent.z
+    local z2 = ent.z + ent.h
 
     if z1 >= floor_h + high_h then continue end
     if z2 <= floor_h then continue end
@@ -537,8 +541,8 @@ function ROOM_CLASS.spots_do_decor(R, floor_h)
     local content = SPOT_LEDGE
     if z1 >= floor_h + low_h then content = SPOT_LOW_CEIL end
 
-    local x1, y1 = D.x - D.r, D.y - D.r
-    local x2, y2 = D.x + D.r, D.y + D.r
+    local x1, y1 = ent.x - ent.r, ent.y - ent.r
+    local x2, y2 = ent.x + ent.r, ent.y + ent.r
 
     gui.spots_fill_box(x1, y1, x2, y2, content)
   end
@@ -1834,7 +1838,7 @@ function Room_floor_ceil_heights()
          (IC.A1 == A2 and IC.A2 == A1)
       then
         if IC.foobie_bletch then return false end
-        
+
         return (IC.kind == "direct")
       end
     end
