@@ -7,6 +7,7 @@ PREFABS.Cage_fake_switch =
   file   = "cage/fake_switch.wad"
 
   prob   = 20
+  style  = "traps"
 
   where  = "seeds"
   shape  = "U"
