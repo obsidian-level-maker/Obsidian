@@ -305,7 +305,7 @@ function Render_edge(E)
 
     Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
 
-    Fabricate(R, def, T, { skin })
+    Fabricate(A.room, def, T, { skin })
   end
 
 
@@ -331,7 +331,7 @@ function Render_edge(E)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
     end
 
-    Fabricate(R, def, T, { skin })
+    Fabricate(A.room, def, T, { skin })
   end
 
 
@@ -602,7 +602,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, flip_it)
     end
 
-    Fabricate(R, def, T, { skin1 })
+    Fabricate(A.room, def, T, { skin1 })
   end
 
 

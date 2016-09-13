@@ -702,6 +702,24 @@ end
 
 
 
+function Fab_solid_entities(fab, room)
+  -- prefab must be rendered (or ready to render)
+
+  -- TODO : for doors and joiners, store ent in BOTH rooms
+
+  if not room then return end
+
+  if fab.solid_ents != true then return end
+
+  each E in fab.entities do
+    if E.id then
+      room:add_solid_ent(E.id, E.x, E.y, E.z)
+    end
+  end
+end
+
+
+
 function Fab_process_spots(fab, room)
   -- prefab must be rendered (or ready to render)
 
@@ -2001,6 +2019,7 @@ function Fabricate(room, def, T, skins)
   Fab_render(fab)
   Fab_render_sky(fab, room, T)
 
+  Fab_solid_entities(fab, room)
   Fab_process_spots(fab, room)
 end
 
