@@ -147,10 +147,10 @@ function Level_determine_map_size(LEV)
   -- Mix It Up --
 
   if ob_size == "mixed" then
-    local SIZES = { 21,23,25, 29,33,37, 41,43,49 }
+    local SIZES = { 21,23,25, 29,32,35, 39,41,47 }
 
     if OB_CONFIG.mode == "dm" then
-      SIZES = { 21,23,25, 29,33,39 }
+      SIZES = { 21,23,25, 29,32,35 }
     end
 
     local W = rand.pick(SIZES)
@@ -174,7 +174,7 @@ function Level_determine_map_size(LEV)
     if n < 1 then n = 1 end
     if n > 9 then n = 9 end
 
-    local SIZES = { 25,27,29, 31,33,35, 37,39,41 }
+    local SIZES = { 25,26,27, 29,31,33, 35,37,37 }
 
     local W = SIZES[n]
     local H = W - 4
@@ -196,7 +196,7 @@ function Level_determine_map_size(LEV)
     return W, W
   end
 
-  local SIZES = { small=27, regular=35, large=45, extreme=57 }
+  local SIZES = { small=24, regular=32, large=44, extreme=60 }
 
   local W = SIZES[ob_size]
 
