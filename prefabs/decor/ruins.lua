@@ -8,7 +8,7 @@ PREFABS.Decor_ruins1 =
   map    = "MAP01"
 
   prob   = 50
-  theme  = "!tech"
+  theme  = "urban"
   env    = "outdoor"
 
   where  = "point"
