@@ -11,8 +11,6 @@ ______________________________________________________________________
 
 *  update Usage page to match current GUI interface
 
-*  get caves working again
-
 *  add in more scenery: trees, computers etc
 
 *  fix i18n issues (esp. non-ASCII characters in filenames)

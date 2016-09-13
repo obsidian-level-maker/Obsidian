@@ -7,18 +7,53 @@ Caves:
 
 !!! get SPOTS working again
 
-+  get walkway working again
+>>>  get walkway working again
+   +  honor the liquid and sky modes
 
--  cavey bling, especially the stalagmite
+   -  sometimes have no WALK2  (then WALK1 is liquid)
+   -  occasionally have WALK2 is indent
+   -  sometimes WALK1+WALK2 both sky, or just WALK2
+   -  occasionally have WALK1 as liquid, WALK2 floor same as AREA
+
+-  for adjust_corner, generate a string for each cell
+
+      e.g. "S-FFFFF-CCCCC-LLL"
+
+-  review torches, e.g. occasionally use candelabra in Hell,
+   and lamps in Tech
 
 -  review all cave themes [ some are FUGLY! ]
+   also want more variety
+
+-  investigate using RoundCorners on cave sectors
+   to improve torch lighting
 
 
 
 Miscellaneous:
 
++  outdoor decor : when prefab is picked, we DONT KNOW real sky height
+   [ see if can pick prefab later on... ]
+
 +  entities from wall prefabs NOT removed from spots??
    -->  have a "solid_entities = true" in def, apply it... somewhere
 
-+  some traps : monsters too weak
++  outdoor borders : check more seeds
+
+
+
+Tidying Up / Release stuff:
+
+-  check for !!! in code
+
+-  check for prob=30*99 in rules and prefabs
+
+-  update i18n language template
+
+-  test: Doom 1
+-  test: Ultimate Doom
+-  test: TNT and Egypt theme
+-  test: Plutonia
+
+-  test the addon-package system
 
