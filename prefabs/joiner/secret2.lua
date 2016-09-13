@@ -34,6 +34,9 @@ PREFABS.Joiner_secret2_A =
     gibbed_player = 5
     pool_brains = 5
   }
+
+  -- prevent monsters stuck in a barrel
+  solid_ents = true
 }
 
 

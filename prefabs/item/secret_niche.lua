@@ -42,5 +42,8 @@ PREFABS.Item_secret_niche2 =
     dead_player = 10
     candle = 10
   }
+
+  -- prevent monsters stuck in a barrel
+  solid_ents = true
 }
 

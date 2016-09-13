@@ -20,8 +20,7 @@ PREFABS.Door_secret =
   -- pick some different objects for the hint, often none
   thing_34 =
   {
-    nothing = 30
-    barrel = 10
+    nothing = 25
     candle = 10
     dead_player = 10
     gibs = 10
