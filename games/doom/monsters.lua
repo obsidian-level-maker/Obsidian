@@ -100,6 +100,7 @@ DOOM.MONSTERS =
     attack = "missile"
     density = 1.0
     room_size = "small"
+    trap_factor = 0.3
     infight_damage = 4.0
   }
 
