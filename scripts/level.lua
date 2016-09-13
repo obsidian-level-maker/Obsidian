@@ -442,7 +442,7 @@ function Episode_plan_monsters()
     -- decides which monsters we will use on this level.
     -- easiest way is to pick some monsters NOT to use.
     --
-    -- Note: we always exclude BOSS monsters here.
+    -- Note: we exclude BOSS monsters here, except in CRAZY mode.
     --
 
     LEV.global_pal = {}
@@ -455,7 +455,7 @@ function Episode_plan_monsters()
 
     each name,_ in LEV.seen_monsters do
       local info = GAME.MONSTERS[name]
-      if not info.boss_type then
+      if not info.boss_type or OB_CONFIG.strength == "crazy" then
         LEV.global_pal[name] = 1
       end
     end
