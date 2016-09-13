@@ -16,5 +16,6 @@ Major stuff:
 Regressions:
 
 -  no 3D floors
+-  no outdoor cavey rooms
 -  no scenery outside the map borders
 
