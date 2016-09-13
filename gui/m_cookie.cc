@@ -241,7 +241,7 @@ bool Cookie_LoadString(const char *str)
 
 	active_module.clear();
 
-	LogPrintf("Reading Config (from manager)...\n");
+	LogPrintf("Reading config data...\n");
 
 	// simple line-by-line parser
 	char buffer[MSG_BUF_LEN];

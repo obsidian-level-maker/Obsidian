@@ -550,6 +550,14 @@ void Main_SetSeed()
 }
 
 
+static void Module_Defaults()
+{
+	ob_set_mod_option("extra_settings",  "self", "1");
+	ob_set_mod_option("mini_mastermind", "self", "1");
+	ob_set_mod_option("sky_generator",   "self", "1");
+}
+
+
 static void Batch_Defaults()
 {
 	// inform Lua code about batch mode (the value doesn't matter)
@@ -770,6 +778,7 @@ int main(int argc, char **argv)
 		Script_Open();
 
 		Batch_Defaults();
+		Module_Defaults();
 
 		// batch mode never reads/writes the normal config file.
 		// but we can load settings from a explicitly specified file...
@@ -813,6 +822,9 @@ int main(int argc, char **argv)
 	main_win->game_box ->Defaults();
 	main_win->level_box->Defaults();
 	main_win->play_box ->Defaults();
+
+	// enable certain modules by default
+	Module_Defaults();
 
 	// load config after creating window (will set widget values)
 	if (! Cookie_Load(config_file))
