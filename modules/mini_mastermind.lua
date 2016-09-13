@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  MODULE: Minified Mastermind
+--  MODULE: Smaller Spiderdemon
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2014-2016 Andrew Apted
@@ -27,7 +27,7 @@ end
 
 OB_MODULES["mini_mastermind"] =
 {
-  label = _("Smaller Mastermind")
+  label = _("Smaller Spiderdemon")
   priority = 88
 
   engine = "boom"
@@ -38,8 +38,8 @@ OB_MODULES["mini_mastermind"] =
   }
 
   tooltip=_(
-    "Make the Spider Mastermind monster smaller via a DEHACKED lump," ..
-    "which allows her to be placed in maps more often" ..
+    "Makes the Spider Mastermind smaller via a DEHACKED lump, " ..
+    "which allows her to be placed in maps more often " ..
     "(her default size is so large that there is rarely enough space)")
 
 }
