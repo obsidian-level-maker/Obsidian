@@ -1714,6 +1714,13 @@ function Cave_render_cave(R)
 
 
   local function grab_cell(x, y)
+    -- Produce a string representing the cell, or NIL for invalid cells.
+    -- The string is of the form "S-FFFFF-CCCCC-LLL", where:
+    --    S is solidity (2 for solid, 1 is normal)
+    --    F is floor height (adjusted to prevent negative values)
+    --    C is ceiling height (negated, since lower ceils can block the player)
+    --    L is lighting [ planned for future ]
+
     if not cave:valid_cell(x, y) then
       return nil
     end
@@ -1724,22 +1731,17 @@ function Cave_render_cave(R)
     if A == nil then return nil end
 
     -- check for a solid cell
-    if A.is_wall then return EXTREME_H end
+    if A.is_wall then return "2-99999-99999-999" end
 
     -- otherwise there should be a floor area here
 
     assert(A)
+    assert(A.floor_h)
+    assert(A.ceil_h)
 
-    local f_h = assert(A.floor_h)
+    local light = 0
 
-    -- take ceiling into account too
-    local c_h = A.ceil_h
-
-    if c_h then
-      f_h = f_h + bit.band(c_h, 511) / 1024
-    end
-
-    return f_h
+    return string.format("1-%5d-%5d-%3d", A.floor_h + 50000, 50000 - A.ceil_h, light)
   end
 
 
@@ -1758,18 +1760,21 @@ function Cave_render_cave(R)
       return
     end
 
-    -- pick highest floor (since that can block a lower floor)
-    -- [solid cells will always override floor cells]
+    -- pick highest floor (since that can block a lower floor).
+    -- solid cells will always override floor cells.
 
-    local max_h = math.max(A, B, C, D) - 0.01
+    local max_h = A
+    if B > A then max_h = B end
+    if C > A then max_h = C end
+    if D > A then max_h = D end
 
-    A = (A > max_h)
-    B = (B > max_h)
-    C = (C > max_h)
-    D = (D > max_h)
+    -- convert A/B/C/D to boolean values
+    A = (A == max_h)
+    B = (B == max_h)
+    C = (C == max_h)
+    D = (D == max_h)
 
     -- no need to move when all cells are the same
-
     if A == B and A == C and A == D then
       return
     end
