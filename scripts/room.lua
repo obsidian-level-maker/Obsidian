@@ -3150,11 +3150,11 @@ function Room_set_sky_heights()
 
       -- include nearby buildings in same zone
       -- [ TODO : perhaps limit to where areas share a window or doorway ]
-      each N in A.neighbors do
-        if N.zone == A.zone and N.floor_h and not N.is_outdoor and not N.is_boundary then
-          do_area(N)
-        end
-      end
+--???      each N in A.neighbors do
+--???        if N.zone == A.zone and N.floor_h and not N.is_outdoor and not N.is_boundary then
+--???          do_area(N)
+--???        end
+--???      end
     end
   end
 
@@ -3296,6 +3296,7 @@ function Room_build_all()
   Room_prepare_skies()
 
   Room_floor_ceil_heights()
+  Room_set_sky_heights()
 
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
@@ -3304,7 +3305,6 @@ function Room_build_all()
   Layout_create_scenic_borders()
 
   Room_border_up()
-  Room_set_sky_heights()
 
   Layout_finish_scenic_borders()
   Layout_handle_corners()

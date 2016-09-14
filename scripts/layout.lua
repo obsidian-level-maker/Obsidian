@@ -2009,7 +2009,7 @@ function Layout_finish_scenic_borders()
 
   each Z in LEVEL.zones do
     local add_h = rand.pick({ 128,256,384 })
-    Z.scenic_sky_h = Z.sky_h ---!!! + add_h
+    Z.scenic_sky_h = Z.sky_h ---??? + add_h
   end
 
   each A in LEVEL.areas do
