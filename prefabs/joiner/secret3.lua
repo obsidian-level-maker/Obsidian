@@ -7,10 +7,11 @@ PREFABS.Joiner_secret3_cage =
   file   = "joiner/secret3.wad"
   map    = "MAP01"
 
+  prob   = 50
+  key    = "secret"
+
   where  = "seeds"
   shape  = "I"
-
-  key    = "secret"
 
   seed_w = 2
   seed_h = 1
@@ -21,7 +22,7 @@ PREFABS.Joiner_secret3_cage =
   x_fit  = "frame"
   y_fit  = "top"
 
-  prob   = 50
+  y_fit  = { 128,144 }
 }
 
 
@@ -31,7 +32,9 @@ PREFABS.Joiner_secret3_niche =
   template = "Joiner_secret3_cage"
   map    = "MAP02"
 
-  env    = "building"
   prob   = 50
+  env    = "building"
+
+  y_fit  = { 16,32 }
 }
 
