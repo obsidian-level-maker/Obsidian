@@ -1883,18 +1883,16 @@ function Render_cave(R)
 
 
   local function dist_to_light_level(d)
-    if d >= 488 then return 0  end
-    if d >= 232 then return 16 end
+    if d >= 312 then return 0  end
+    if d >= 208 then return 16 end
     if d >= 104 then return 32 end
     return 48
   end
 
 
-  local function calc_lighting_for_cell(x, y)
-    local A = info.blocks[x][y]
-
-    if not A then return end
-    if not A.floor_h then return end
+  local function calc_lighting_for_cell(x, y, A)
+    if not A then return 0 end
+    if not A.floor_h then return 0 end
 
     local cell_x, cell_y = cell_middle(x, y)
     local cell_z = A.floor_h + 80
@@ -1925,15 +1923,6 @@ function Render_cave(R)
   end
 
 
-  local function do_torch_lighting()
-    for x = 1, info.W do
-    for y = 1, info.H do
-      calc_lighting_for_cell(x, y)
-    end
-    end
-  end
-
-
   local function render_floor(x, y, A)
     local f_h = A.floor_h
 
@@ -1952,8 +1941,12 @@ function Render_cave(R)
 --!!!! FIXME TEMP
 top.reachable = 1
 
-      if info.cave_lighting then
----???   top.cavelit = 1
+      if info.torch_mode != "none" then
+        local val = calc_lighting_for_cell(x, y, A)
+
+        if val > 0 then
+          top.light_add = val
+        end
       end
 
       table.insert(f_brush, top)
