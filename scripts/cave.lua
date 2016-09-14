@@ -1901,7 +1901,7 @@ function Render_cave(R)
 top.reachable = 1
 
       if info.cave_lighting then
-        top.cavelit = 1
+---???   top.cavelit = 1
       end
 
       table.insert(f_brush, top)
@@ -1938,10 +1938,18 @@ top.reachable = 1
   end
 
 
-  local function render_cell(x, y)
+  local function render_cell(x, y, pass)
     local A = info.blocks[x][y]
 
-    if A then
+    if not A then return end
+
+    local is_solid = (A.floor_h == nil)
+
+    if is_solid and pass == 1 then
+      render_floor(x, y, A)
+    end
+
+    if not is_solid and pass == 2 then
       render_floor  (x, y, A)
       render_ceiling(x, y, A)
     end
@@ -2087,6 +2095,22 @@ top.reachable = 1
   end
 
 
+  local function render_all_cells(pass)
+    -- pass is 1 for solid cells, 2 for normal (open) cells
+
+    for x = 1, info.W do
+    for y = 1, info.H do
+      render_cell(x, y, pass)
+    end
+    end
+  end
+
+
+  local function do_torch_lighting()
+    -- TODO
+  end
+
+
   ---| Render_cave |---
   
   Trans.clear()
@@ -2097,11 +2121,11 @@ top.reachable = 1
 
 ---???  add_liquid_pools()
 
-  for x = 1, info.W do
-  for y = 1, info.H do
-    render_cell(x, y)
-  end
-  end
+  render_all_cells(1)
+
+  do_torch_lighting()
+
+  render_all_cells(2)
 
   Ambient_pop()
 
@@ -2791,7 +2815,7 @@ function Cave_decorations(R)
     local mx = info.x1 + (x-1) * 64 + 32
     local my = info.y1 + (y-1) * 64 + 32
 
-    Trans.entity(torch_ent, mx, my, A.floor_h, { cave_light=48 })
+    Trans.entity(torch_ent, mx, my, A.floor_h) ---??  { cave_light=48 })
 
     R:add_solid_ent(torch_ent, mx, my, A.floor_h)
   end
@@ -2910,6 +2934,8 @@ function Cave_decide_properties(R)
 
     info.torch_mode = rand.key_by_probs(TORCH_MODES)
   end
+
+--info.torch_mode = "some"
 
   if info.torch_mode != "none" then
     info.cave_lighting = 1
