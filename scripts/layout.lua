@@ -278,7 +278,7 @@ function Layout_spot_for_wotsit(R, kind, required)
 
 
   ---| Layout_spot_for_wotsit |---
- 
+
   Layout_compute_dists(R)
 
   local best
@@ -1693,7 +1693,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       local def = select_lamp_for_group(R, cg)
       if not def then continue end
-      
+
       each chunk in R.ceil_chunks do
         if chunk.area.ceil_group != cg then continue end
         if chunk.content_kind then continue end
@@ -1912,7 +1912,7 @@ function Layout_create_scenic_borders()
 
 
   ---| Layout_create_scenic_borders |---
-   
+
   each Z in LEVEL.zones do
     setup_zone(Z)
   end
@@ -1922,29 +1922,59 @@ end
 
 function Layout_finish_scenic_borders()
 
+  local cur_max_f
+
+
+  local function try_neighbor_at_seed(A, S2)
+    if not S2 then return end
+
+    local N = S2.area
+    if not N then return end
+
+    if not N.room then return end
+    if not N.is_outdoor then return end
+    if not N.floor_h then return end
+
+    -- zones are strictly separated
+    if N.zone != A.zone then return end
+
+    cur_max_f = math.N_max(N.floor_h, cur_max_f)
+  end
+
+
   local function max_neighbor_floor(A)
-    local max_f
+    cur_max_f = nil
 
-    each N in A.neighbors do
-      if N.is_boundary then continue end
-      if N.zone != A.zone then continue end
-      if not N.is_outdoor then continue end  -- TODO check for window junctions?
+    each S in A.seeds do
+      for dx = -3, 3 do
+      for dy = -3, 3 do
+        if dx == 0 and dy == 0 then continue end
 
-      if N.room and N.floor_h then
-        max_f = math.N_max(N.floor_h, max_f)
+--??    if math.abs(dx) == 3 and dy != 0 then continue end
+--??    if math.abs(dy) == 3 and dx != 0 then continue end
+
+        local sx = S.sx + dx
+        local sy = S.sy + dy
+
+        if not Seed_valid(sx, sy) then continue end
+
+        local S2 = SEEDS[sx][sy]
+
+        try_neighbor_at_seed(A, S2)
+        try_neighbor_at_seed(A, S2.top)
+      end
       end
     end
 
-    return max_f
+    return cur_max_f
   end
 
 
   local function temp_properties(A)
-
     local max_f = max_neighbor_floor(A)
 
     if not max_f then
-      max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 }) / 2
+      max_f = A.zone.scenic_sky_h - rand.pick({ 96, 160, 192, 224, 400 }) / 2
     end
 
     A.ceil_h   = A.zone.scenic_sky_h
@@ -2319,7 +2349,7 @@ function Layout_indoor_lighting()
     -- recurse to neighbors
     each C in R.conns do
       if C.is_cycle then continue end
-      
+
       local R2 = C:other_room(R)
 
       if R2.lev_along > R.lev_along then
@@ -2374,7 +2404,7 @@ function Layout_outdoor_shadows()
 
     return false
   end
- 
+
 
   local function shadow_from_seed(S, dir)
     local dx = 64
@@ -2382,7 +2412,7 @@ function Layout_outdoor_shadows()
 
     local brush
     local wall
-    
+
     if dir == 2 then
       brush =
       {
@@ -2426,7 +2456,7 @@ function Layout_outdoor_shadows()
       return
     end
 
-    raw_add_brush(brush)    
+    raw_add_brush(brush)
   end
 
 
