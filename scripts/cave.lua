@@ -1882,6 +1882,58 @@ function Render_cave(R)
   end
 
 
+  local function dist_to_light_level(d)
+    if d >= 488 then return 0  end
+    if d >= 232 then return 16 end
+    if d >= 104 then return 32 end
+    return 48
+  end
+
+
+  local function calc_lighting_for_cell(x, y)
+    local A = info.blocks[x][y]
+
+    if not A then return end
+    if not A.floor_h then return end
+
+    local cell_x, cell_y = cell_middle(x, y)
+    local cell_z = A.floor_h + 80
+
+    local result = 0
+
+    each L in info.lights do
+      -- compute distance
+      local dx = L.x - cell_x
+      local dy = L.y - cell_y
+
+      local dist = math.sqrt(dx * dx + dy * dy)
+
+      local val = dist_to_light_level(dist)
+
+      -- check if result would be updated.
+      -- this does a distance check too (val is zero for far away lights)
+      if val <= result then continue end
+
+      -- check if line of sight is blocked
+      -- [ this is expensive, so call it AFTER distance test ]
+      if not gui.trace_ray(L.x, L.y, L.z, cell_x, cell_y, cell_z, "v") then
+        result = val
+      end
+    end
+
+    return result
+  end
+
+
+  local function do_torch_lighting()
+    for x = 1, info.W do
+    for y = 1, info.H do
+      calc_lighting_for_cell(x, y)
+    end
+    end
+  end
+
+
   local function render_floor(x, y, A)
     local f_h = A.floor_h
 
@@ -2106,11 +2158,6 @@ top.reachable = 1
   end
 
 
-  local function do_torch_lighting()
-    -- TODO
-  end
-
-
   ---| Render_cave |---
   
   Trans.clear()
@@ -2121,9 +2168,14 @@ top.reachable = 1
 
 ---???  add_liquid_pools()
 
+  -- send all solid cells to the CSG system
+  -- [ to allow gui.trace_ray() to hit them ]
+
   render_all_cells(1)
 
-  do_torch_lighting()
+  if info.torch_mode != "none" then
+---    do_torch_lighting()
+  end
 
   render_all_cells(2)
 
@@ -2722,6 +2774,7 @@ function Cave_make_waterfalls(R)
 end
 
 
+
 function Cave_decorations(R)
   --|
   --| add torches (etc)
@@ -2818,6 +2871,8 @@ function Cave_decorations(R)
     Trans.entity(torch_ent, mx, my, A.floor_h) ---??  { cave_light=48 })
 
     R:add_solid_ent(torch_ent, mx, my, A.floor_h)
+
+    table.insert(info.lights, { x=mx, y=my, z=A.floor_h + 64 })
   end
 
 
@@ -2892,7 +2947,13 @@ function Cave_decide_properties(R)
   --     prefab) is going to better results.
   --
 
-  local info = R.cave_info
+  local info =
+  {
+    lakes  = {}
+    lights = {}
+  }
+
+  R.cave_info = info
 
   -- step mode --
 
@@ -2956,8 +3017,6 @@ end
 
 
 function Cave_build_room(R, entry_h)
-  R.cave_info = {}
-  R.cave_info.lakes = {}
 
   Cave_decide_properties(R)
   Cave_generate_cave(R)
