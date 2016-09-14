@@ -5,6 +5,10 @@
 PREFABS.Joiner_lift4 =
 {
   file   = "joiner/lift4.wad"
+
+  prob   = 150
+  style  = "steepness"
+
   where  = "seeds"
   shape  = "I"
 
@@ -15,8 +19,6 @@ PREFABS.Joiner_lift4 =
   over   = 16
 
   x_fit  = "frame"
-
-  prob = 150
 
   delta_h  = 128
   nearby_h = 128

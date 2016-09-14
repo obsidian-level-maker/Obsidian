@@ -5,6 +5,11 @@
 PREFABS.Joiner_stair1 =
 {
   file   = "joiner/stair1.wad"
+
+  prob   = 60
+  theme  = "urban"
+  style  = "steepness"
+
   where  = "seeds"
   shape  = "I"
 
@@ -16,9 +21,6 @@ PREFABS.Joiner_stair1 =
 
   x_fit  = "stretch"
   x_fit  = "stretch"
-
-  theme  = "urban"
-  prob   = 60
 
   delta_h  = 48
   nearby_h = 160

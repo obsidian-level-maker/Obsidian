@@ -7,6 +7,7 @@ PREFABS.Lift_64 =
   file   = "stairs/lift_64.wad"
 
   prob   = 1
+  style  = "steepness"
 
   where  = "seeds"
   shape  = "I"
