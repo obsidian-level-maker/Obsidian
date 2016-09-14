@@ -19,7 +19,7 @@ PREFABS.Joiner_secret2_A =
   over   = 16
 
   x_fit  = "frame"
-  y_fit  = "stretch"
+  y_fit  = { 64,96 }
 
   prob   = 150
 
@@ -44,9 +44,7 @@ PREFABS.Joiner_secret2_A =
 PREFABS.Joiner_secret2_B =
 {
   template = "Joiner_secret2_A"
-
-  map    = "MAP02"
-  y_fit  = "top"
+  map      = "MAP02"
 
   prob   = 50
 }
@@ -56,9 +54,7 @@ PREFABS.Joiner_secret2_B =
 PREFABS.Joiner_secret2_C1 =
 {
   template = "Joiner_secret2_A"
-
-  map    = "MAP03"
-  y_fit  = "top"
+  map      = "MAP03"
 
   theme  = "tech"
   prob   = 100
@@ -67,9 +63,7 @@ PREFABS.Joiner_secret2_C1 =
 PREFABS.Joiner_secret2_C2 =
 {
   template = "Joiner_secret2_A"
-
-  map    = "MAP03"
-  y_fit  = "top"
+  map      = "MAP03"
 
   theme  = "!tech"
   prob   = 100
