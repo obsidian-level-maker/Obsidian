@@ -424,7 +424,7 @@ GROW_AREA_2 =
 
 GROW_STAIR_2 =
 {
-  prob = 20
+  prob = 12
   prob_skew = 3
 
   structure =
