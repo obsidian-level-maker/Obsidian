@@ -1693,7 +1693,7 @@ end
 
 
 
-function Cave_render_cave(R)
+function Render_cave(R)
 
   local info = R.cave_info
 
@@ -2087,7 +2087,7 @@ top.reachable = 1
   end
 
 
-  ---| Cave_render_cave |---
+  ---| Render_cave |---
   
   Trans.clear()
 
@@ -2154,8 +2154,6 @@ function Cave_fill_lakes(R)
 
 
   ---| Cave_fill_lakes |---
-
-  info.lakes = {}
 
   if info.liquid_mode != "lake" then return end
 
@@ -2933,24 +2931,24 @@ end
 
 function Cave_build_room(R, entry_h)
   R.cave_info = {}
+  R.cave_info.lakes = {}
 
   Cave_decide_properties(R)
   Cave_generate_cave(R)
 
-  Cave_lake_fences(R)
-  Cave_fill_lakes(R)
+---  Cave_lake_fences(R)
+---  Cave_fill_lakes(R)
 
   Cave_create_areas(R)
 
-  Cave_bunch_areas(R, "liquid")
-  Cave_bunch_areas(R, "sky")
+---  Cave_bunch_areas(R, "liquid")
+---  Cave_bunch_areas(R, "sky")
 
   Cave_floor_heights(R, entry_h)
 
-  Cave_make_waterfalls(R)
-  Cave_decorations(R)
+---  Cave_make_waterfalls(R)
 
-  Cave_render_cave(R)
+  Cave_decorations(R)
 end
 
 

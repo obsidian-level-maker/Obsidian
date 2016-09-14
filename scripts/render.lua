@@ -1778,6 +1778,12 @@ function Render_all_areas()
     Render_area(A)
   end
 
+  each R in LEVEL.rooms do
+    if R.is_cave then
+      Render_cave(R)
+    end
+  end
+
   for cx = 1, SEED_W + 1 do
   for cy = 1, SEED_H + 1 do
     Render_corner(cx, cy)
