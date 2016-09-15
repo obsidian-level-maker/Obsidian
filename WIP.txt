@@ -7,38 +7,31 @@ Caves:
 
 !!! get SPOTS working again
 
->>>  get walkway working again
-   +  honor the liquid and sky modes
++  floor sinks:
+   -  occasionally have SINK1 as liquid, SINK2 == AREA
+      [ and SINK1 floor_dz = -24 ]
 
-   -  sometimes have no WALK2  (then WALK1 is liquid)
-   -  occasionally have WALK2 is indent
-   -  sometimes WALK1+WALK2 both sky, or just WALK2
-   -  occasionally have WALK1 as liquid, WALK2 floor same as AREA
+   -  occasionally have SINK2 = SINK1 (when no liquid)
 
--  for adjust_corner, generate a string for each cell
+   -  rarely have SINK1 = AREA, SINK2 is what SINK1 would have been
 
-      e.g. "S-FFFFF-CCCCC-LLL"
++  review all cave themes [ some are FUGLY! ]
+   also want more variety, e.g. ROCKRED in Urban/Tech theme
 
--  review torches, e.g. occasionally use candelabra in Hell,
-   and lamps in Tech
-
--  review all cave themes [ some are FUGLY! ]
-   also want more variety
-
--  investigate using RoundCorners on cave sectors
-   to improve torch lighting
+-  think about WHEN it make sense for cave to "see" the walls of
+   a room (like outdoor rooms do)
 
 
 
 Miscellaneous:
 
-+  outdoor decor : when prefab is picked, we DONT KNOW real sky height
-   [ see if can pick prefab later on... ]
+-  cage railings : add them later (after finish_scenic_borders)
+                   since we have no height info until then.
 
-+  entities from wall prefabs NOT removed from spots??
-   -->  have a "solid_entities = true" in def, apply it... somewhere
++  joiner facades STILL borked
+   [ perhaps they can have TWO facades ?? ]
 
-+  outdoor borders : check more seeds
++  generally improve facade assignment
 
 
 
