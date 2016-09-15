@@ -20,7 +20,6 @@ PREFABS.Joiner_stair1 =
   over   = 16
 
   x_fit  = "stretch"
-  x_fit  = "stretch"
 
   delta_h  = 48
   nearby_h = 160

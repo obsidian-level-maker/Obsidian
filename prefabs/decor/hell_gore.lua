@@ -7,13 +7,13 @@ PREFABS.Decor_hellgore1 =
   file   = "decor/hell_gore.wad"
   map    = "MAP01"
 
-  prob   = 10
+  prob   = 10*99
   theme  = "hell"
   env    = "outdoor"
 
   where  = "point"
   size   = 100
-  height = 192
+  height = 128  -- FIXME 192
 
   bound_z1 = 0
   bound_z2 = 192
@@ -105,7 +105,7 @@ PREFABS.Decor_hellgore5 =
   bound_z1 = 0
   bound_z2 = 128
 
-  z_fit  = "bottom"
+  z_fit  = "top"
 
   thing_34 =
   {
