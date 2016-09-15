@@ -1142,8 +1142,7 @@ function Room_border_up()
     local c1 = A1.ceil_h
     local c2 = A2.ceil_h
 
-    if not c1 or (A1.is_outdoor and not A1.is_porch) then c1 = 9999 end
-    if not c2 or (A2.is_outdoor and not A2.is_porch) then c2 = 9999 end
+    if not c1 or not c2 then return false end
 
     local max_f = math.max(A1.floor_h, A2.floor_h)
     local min_c = math.min(c1, c2)
@@ -3133,10 +3132,6 @@ function Room_set_sky_heights()
     local sky_h = A.floor_h + A.zone.sky_add_h
 
     A.zone.sky_h = math.N_max(A.zone.sky_h, sky_h)
-
-    if A.window_top_h then
-      A.zone.sky_h = math.max(A.zone.sky_h, A.window_h)
-    end
 
     if A.is_porch then
       A.zone.sky_h = math.max(A.zone.sky_h, A.ceil_h + 48)
