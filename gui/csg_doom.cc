@@ -155,6 +155,8 @@ public:
 
 	bool unused;
 
+	bool is_cave;
+
 	std::vector<extrafloor_c *> exfloors;
 
 	std::vector<doom_sector_c *> ef_neighbors;
@@ -164,7 +166,7 @@ public:
 		f_h(0), c_h(0), f_tex(), c_tex(),
 		light(0), special(0), tag(0), mark(0), index(-1),
 		region(NULL), misc_flags(0), valid_count(0),
-		light2(0), unused(false),
+		light2(0), unused(false), is_cave(false),
 		exfloors(), ef_neighbors()
 	{ }
 
@@ -973,6 +975,8 @@ static void DM_MakeSector(region_c *R)
 
 	S->sound_area = f_face->getInt("sound_area");
 
+	S->is_cave = (f_face->getInt("is_cave") > 0);
+
 
 	// floors have priority over ceilings
 	int f_special = f_face->getInt("special");
@@ -1137,6 +1141,8 @@ static int DM_CoalescePass()
 				D2->MarkUnused();
 
 				N->index = R->index;
+
+				D1->is_cave |= D2->is_cave;
 
 				changes++;
 			}
@@ -1952,8 +1958,6 @@ static void DM_AlignTextures()
 }
 
 
-#if 0  // THIS CORNER ROUNDING LOGIC IS NOT USED
-
 static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
                               const doom_vertex_c *ignore1,
                               const doom_vertex_c *ignore2,
@@ -2023,6 +2027,10 @@ static int TryRoundAtVertex(doom_vertex_c *V)
 	// must be two-sided lines, sectors only differ by light level
 	if (! (LX->front && LX->back)) return 0;
 	if (! (LY->front && LY->back)) return 0;
+
+	// must be in a cave
+	if (! LX->front->sector->is_cave) return 0;
+	if (! LY->front->sector->is_cave) return 0;
 
 	if (! LX->front->sector->MatchNoLight(LX->back->sector))
 		return 0;
@@ -2214,8 +2222,8 @@ static void DM_RoundCorners()
 	 * the linedefs are axis-aligned, and tries to add a diagonal at
 	 * the corner.
 	 *
-	 * This is mainly to help reduce jaggies produces by the lighting
-	 * algorithm.
+	 * This is mainly to help reduce jaggies produces by the cave
+	 * lighting algorithm, and is only used in caves.
 	 */
 
 	int count = 0;
@@ -2230,8 +2238,6 @@ static void DM_RoundCorners()
 	// need this again, since we often create co-linear diagonals
 	DM_MergeColinearLines(false /* show_count */);
 }
-
-#endif
 
 
 //------------------------------------------------------------------------
@@ -3140,7 +3146,7 @@ void CSG_DOOM_Write()
 	DM_CreateLinedefs();
 	DM_MergeColinearLines();
 
-///???	DM_RoundCorners();
+	DM_RoundCorners();
 	DM_AlignTextures();
 
 	DM_ProcessSecrets();
