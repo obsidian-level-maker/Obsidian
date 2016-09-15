@@ -1850,8 +1850,6 @@ function Render_cave(R)
     info.delta_x_map = delta_x_map
     info.delta_y_map = delta_y_map
 
-    if square_cave then return end
-
     for x = 1, dw do
     for y = 1, dh do
       analyse_corner(x, y)
@@ -1883,9 +1881,10 @@ function Render_cave(R)
 
 
   local function dist_to_light_level(d)
-    if d >= 312 then return 0  end
-    if d >= 208 then return 16 end
-    if d >= 104 then return 32 end
+    if d >  276 then return 0  end
+    if d >  104 then return 16 end
+    if d >   40 then return 32 end
+    if R.light_level != "verydark" then return 32 end
     return 48
   end
 
@@ -1942,6 +1941,8 @@ function Render_cave(R)
 top.reachable = 1
 
       if info.torch_mode != "none" then
+        top.is_cave = 1
+
         local val = calc_lighting_for_cell(x, y, A)
 
         if val > 0 then
