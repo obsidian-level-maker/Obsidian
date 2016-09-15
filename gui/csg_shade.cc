@@ -67,16 +67,16 @@ Lighting Model
    similiary a face can have a "shadow" value, and will act the
    same as a SHADOW brush.
 
-6. in caves, certain entities (torches) are used as light sources,
-   and we trace rays to see what nearby cells should be lit by them
-   (less light for further distances).
-
-   floor brushes need "cavelit = 1" in top face of floor brushes,
-   and torch entities need a "cave_light = 48" field.
-
-7. for 3D floors, it is expected that the ambient value of each
+6. for 3D floors, it is expected that the ambient value of each
    floor will be the same, then adjusted by "light_add" or "shadow"
    values in the top/bottom faces of the brushes.
+
+---##  in caves, certain entities (torches) are used as light sources,
+---##  and we trace rays to see what nearby cells should be lit by them
+---##  (less light for further distances).
+---##
+---##  floor brushes need "is_cave = 1" in top face of floor brushes,
+---##  and torch entities need a "cave_light = 48" field.
 
 */
 
@@ -84,13 +84,17 @@ Lighting Model
 #define DEFAULT_AMBIENT_LEVEL  144
 
 
-static std::vector< csg_entity_c *> cave_lights;
-
 static int current_region_group;
 
 
+#if 0   // DISABLED, WE DO TORCH RAY-TRACING IN LUA CODE
+
+static std::vector< csg_entity_c *> cave_lights;
+
 static void SHADE_CollectLights()
 {
+	cave_lights.clear();
+
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
 		region_c * R = all_regions[i];
@@ -110,6 +114,7 @@ static void SHADE_CollectLights()
 
 	LogPrintf("Found %d cave light entities\n", (int)cave_lights.size());
 }
+#endif
 
 
 static int SHADE_CalcRegionGroup(region_c *R)
@@ -211,6 +216,7 @@ static void SHADE_MergeResults()
 }
 
 
+#if 0
 static int SHADE_CaveLighting(region_c *R, double z2)
 {
 	int result = 0;
@@ -258,6 +264,7 @@ static int SHADE_CaveLighting(region_c *R, double z2)
 
 	return result;
 }
+#endif
 
 
 static void SHADE_VisitRegion(region_c *R)
@@ -316,9 +323,9 @@ static void SHADE_VisitRegion(region_c *R)
 		shadow = MAX(shadow, fc_shadow);
 	}
 
+#if 0  // DISABLED, WE DO THIS IN LUA CODE NOW
 	// check torch entities in caves
-
-	if (B->t.face.getInt("cavelit"))
+	if (B->t.face.getInt("is_cave"))
 	{
 		double z2 = B->t.z + 80.0;
 
@@ -327,6 +334,7 @@ static void SHADE_VisitRegion(region_c *R)
 		if (cave > 0)
 			light = MAX(light, cave);
 	}
+#endif
 
 	// combine them
 
@@ -368,14 +376,11 @@ void CSG_Shade()
 {
 	LogPrintf("Lighting level...\n");
 
-	cave_lights.clear();
+//	SHADE_CollectLights();
 
-	SHADE_CollectLights();
 	SHADE_GroupRegions();
 	SHADE_LightWorld();
 	SHADE_MergeResults();
-
-	cave_lights.clear();
 }
 
 //--- editor settings ---
