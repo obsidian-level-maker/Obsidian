@@ -857,12 +857,23 @@ function Cave_create_areas(R)
     walk_way:remove_dots()
 
 
+    local ceil_bump = rand.sel(50, 64, 96)
+
     local SINK1 =
     {
-      indent = 1
+      floor_dz  = -8
+      ceil_dz   = ceil_bump
 
       floor_mat = R.alt_floor_mat
     }
+
+    if info.liquid_mode == "heaps" then
+      SINK1.is_liquid = true
+    end
+
+    if info.sky_mode == "heaps" then
+      SINK1.is_sky = true
+    end
 
     install_area(SINK1, walk_way, 1, "empty_ok")
 
@@ -876,18 +887,17 @@ function Cave_create_areas(R)
 
     local SINK2 =
     {
-      indent = 2
+      floor_dz  = -16
+      ceil_dz   = ceil_bump * 2
 
-      is_liquid = true
+      floor_mat = AREA.floor_mat
     }
 
-    if not LEVEL.liquid or rand.odds(100) then
-      SINK2.is_liquid = nil
-      SINK2.floor_mat = AREA.floor_mat
+    if info.liquid_mode != "none" then
+      SINK2.is_liquid = true
     end
 
-
-    if info.sky_mode == "some" then
+    if info.sky_mode != "none" then
       SINK2.is_sky = true
     end
 
@@ -1575,16 +1585,14 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function update_walk_ways()
-    local ceil_bump = rand.sel(50, 64, 96)
-
     each A in info.floors do
       if not A.children then continue end
 
       each SINK in A.children do
-        SINK.floor_h = A.floor_h - SINK.indent * 8
+        SINK.floor_h = A.floor_h + SINK.floor_dz
 
         if A.ceil_h then
-          SINK.ceil_h = A.ceil_h + SINK.indent * ceil_bump
+          SINK.ceil_h = A.ceil_h + SINK.ceil_dz
         end
       end
     end
@@ -2955,7 +2963,7 @@ function Cave_decide_properties(R)
 
   -- liquid mode --
 
-  local LIQUID_MODES = { none=40, some=60 }
+  local LIQUID_MODES = { none=60, some=30, heaps=10 }
 
   if not LEVEL.liquid then
     info.liquid_mode = "none"
@@ -2965,9 +2973,9 @@ function Cave_decide_properties(R)
 
   -- sky mode --
 
-  local SKY_MODES = { none=40, some=60 }
+  local SKY_MODES = { none=40, some=40, heaps=40 }
 
-  if R.light_level == "verydark" then SKY_MODES.some = 10 end
+  if R.light_level == "verydark" then SKY_MODES.none = 300 end
   if R.light_level == "bright"   then SKY_MODES.none = 10 end
 
   info.sky_mode = rand.key_by_probs(SKY_MODES)
