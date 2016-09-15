@@ -8,6 +8,9 @@ PREFABS.Joiner_secret3_cage =
   map    = "MAP01"
 
   prob   = 50
+  env    = "!cave"
+  style  = "cages"
+
   key    = "secret"
 
   where  = "seeds"
