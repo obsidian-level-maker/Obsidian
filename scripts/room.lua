@@ -2743,6 +2743,9 @@ function Room_floor_ceil_heights()
     each N in A.neighbors do
       if N.zone != A.zone then continue end
 
+      -- don't place railings on higher floors (it looks silly)
+      if N.floor_h and N.floor_h > A.floor_h then continue end
+
       if true then
         local junc = Junction_lookup(A, N)
 

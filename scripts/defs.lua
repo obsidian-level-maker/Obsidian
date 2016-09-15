@@ -123,10 +123,8 @@ AMMO_FACTORS =
 
 
 -- adjustments for Co-operative game mode
-COOP_MON_FACTOR = 1.3
-
-COOP_HEALTH_FACTOR = 1.2
-COOP_AMMO_FACTOR   = 1.2
+COOP_HEALTH_FACTOR = 1.25
+COOP_AMMO_FACTOR   = 1.25
 
 
 --

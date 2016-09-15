@@ -880,13 +880,8 @@ function Monster_fill_room(R)
     qty = qty * (PARAM.monster_factor or 1)
     qty = qty * (THEME.monster_factor or 1)
 
-    -- more monsters for Co-operative games
-    if OB_CONFIG.mode == "coop" then
-      qty = qty * COOP_MON_FACTOR
-    end
-
     -- apply the room "pressure" type
-    if R.pressure == "low"  then qty = qty / 2.4 end
+    if R.pressure == "low"  then qty = qty / 2.5 end
     if R.pressure == "high" then qty = qty * 1.5 end
 
     -- game along adjustment
