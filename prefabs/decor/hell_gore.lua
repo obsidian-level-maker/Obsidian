@@ -7,13 +7,13 @@ PREFABS.Decor_hellgore1 =
   file   = "decor/hell_gore.wad"
   map    = "MAP01"
 
-  prob   = 10*99
+  prob   = 80
   theme  = "hell"
   env    = "outdoor"
 
   where  = "point"
   size   = 100
-  height = 128  -- FIXME 192
+  height = 192
 
   bound_z1 = 0
   bound_z2 = 192
@@ -25,7 +25,7 @@ PREFABS.Decor_hellgore2 =
   file   = "decor/hell_gore.wad"
   map    = "MAP02"
 
-  prob   = 40
+  prob   = 20
   theme  = "hell"
   env    = "outdoor"
 
@@ -54,10 +54,8 @@ PREFABS.Decor_hellgore3 =
 
   thing_34 =
   {
-    skull_pole  = 20
-    skull_kebab = 40
+    impaled_twitch = 60
     skull_cairn = 10
-    impaled_twitch = 30
   }
 }
 
@@ -67,7 +65,7 @@ PREFABS.Decor_hellgore4 =
   file   = "decor/hell_gore.wad"
   map    = "MAP04"
 
-  prob   = 80
+  prob   = 60
   theme  = "hell"
   env    = "outdoor"
 
@@ -94,7 +92,7 @@ PREFABS.Decor_hellgore5 =
   file   = "decor/hell_gore.wad"
   map    = "MAP05"
 
-  prob   = 80
+  prob   = 60
   theme  = "hell"
   env    = "outdoor"
 
