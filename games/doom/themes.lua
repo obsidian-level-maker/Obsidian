@@ -293,9 +293,9 @@ DOOM.THEMES =
   {
     liquids =
     {
-      nukage = 90
+      nukage = 70
       water  = 30
-      slime  = 20
+      slime  = 10
       lava   = 5
     }
 
@@ -413,9 +413,9 @@ DOOM.THEMES =
   {
     liquids =
     {
-      water = 80
-      slime = 40
-      blood = 25
+      water = 60
+      blood = 40
+      slime = 20
       lava  = 5
     }
 
@@ -501,8 +501,9 @@ DOOM.THEMES =
   {
     liquids =
     {
-      lava   = 70
-      blood  = 40
+      lava   = 60
+      blood  = 20
+      slime  = 10
       nukage = 5
     }
 
@@ -731,7 +732,7 @@ DOOM.ROOM_THEMES =
     {
       METAL2 = 70
       METAL4 = 15
-      METAL1 = 15
+      METAL1 = 25
       STARGR2 = 10
       PIPE4 = 10
     }

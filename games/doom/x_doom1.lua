@@ -454,9 +454,9 @@ ULTDOOM.THEMES =
   {
     liquids =
     {
-      nukage = 90
-      water = 15
-      lava = 10
+      nukage = 80
+      water  = 20
+      lava   = 10
     }
 
     facades =
@@ -505,8 +505,8 @@ ULTDOOM.THEMES =
     liquids =
     {
       nukage = 60
-      blood = 20
-      water = 10
+      blood  = 20
+      water  = 10
     }
 
     -- Best facades would be STONE/2/3, BROVINE/2, BROWN1 and maybe a few others as I have not seen many
@@ -548,10 +548,10 @@ ULTDOOM.THEMES =
 
     liquids =
     {
-      lava = 30
-      blood = 90
+      lava   = 90
+      blood  = 30
+      water  = 10
       nukage = 5
-      water = 10
     }
 
     entity_remap =
@@ -612,10 +612,10 @@ ULTDOOM.THEMES =
   {
     liquids =
     {
-      lava = 30
-      blood = 50
+      blood  = 60
+      lava   = 30
+      water  = 20
       nukage = 10
-      water = 20
     }
 
     entity_remap =
