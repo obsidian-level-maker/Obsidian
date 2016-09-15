@@ -228,9 +228,7 @@ DOOM.THEMES =
 
     cave_torches =
     {
-      red_torch   = 60
-      green_torch = 40
-      blue_torch  = 20
+      red_torch = 50
     }
 
     fences =
@@ -383,11 +381,14 @@ DOOM.THEMES =
       torches1 = 15
     }
 
-    monster_prefs =
+    cave_torches =
     {
-      zombie  = 1.5
-      shooter = 1.2
-      arach   = 1.5
+      blue_torch  = 60
+      red_torch   = 20
+
+      lamp = 30
+      short_lamp = 30
+      mercury_lamp = 10
     }
 
     outdoor_torches =
@@ -399,9 +400,11 @@ DOOM.THEMES =
 
     ceil_light_prob = 50
 
-    style_list =
+    monster_prefs =
     {
-      naturals = { none=30, few=70, some=30, heaps=2 }
+      zombie  = 1.5
+      shooter = 1.2
+      arach   = 1.5
     }
 
     techy_doors = true
@@ -473,6 +476,18 @@ DOOM.THEMES =
       light_urban1 = 15
       light_diamond = 5
       ceil_redash = 5
+    }
+
+    cave_torches =
+    {
+      green_torch = 50
+      blue_torch  = 10
+      red_torch   = 10
+
+      lamp = 10
+      hang_lamp  = 10
+      candelabra = 10
+      burning_barrel = 20
     }
 
     outdoor_torches =
@@ -588,6 +603,17 @@ DOOM.THEMES =
       runes3 = 7
       cross1 = 7
       cross2 = 15
+    }
+
+    cave_torches =
+    {
+      red_torch   = 70
+      green_torch = 30
+      blue_torch  = 10
+
+      candelabra = 30
+      skull_rock = 10
+      evil_eye   = 10
     }
 
     monster_prefs =
