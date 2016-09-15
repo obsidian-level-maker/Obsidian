@@ -819,11 +819,54 @@ function Cave_create_areas(R)
   end
 
 
+  local function compute_floor_sinks(SINK1, SINK2, R, AREA)
+    -- properties for sink #1
+    SINK1.floor_dz  = -8
+    SINK1.floor_mat = R.alt_floor_mat
+
+    if info.liquid_mode == "heaps" then
+      SINK1.is_liquid = true
+    end
+
+    -- properties for sink #2
+    SINK2.floor_dz  = -16
+    SINK2.floor_mat = AREA.floor_mat
+
+    if info.liquid_mode != "none" then
+      SINK2.is_liquid = true
+    end
+
+    -- when both sinks are liquid, synchronise floor heights
+    if SINK1.is_liquid and SINK2.is_liquid then
+      SINK1.floor_dz = -12
+      SINK2.floor_dz = SINK1.floor_dz
+    end
+  end
+
+
+  local function compute_ceiling_sinks(SINK1, SINK2, R, AREA)
+    local ceil_bump = rand.sel(50, 64, 96)
+
+    SINK1.ceil_dz = ceil_bump
+    SINK2.ceil_dz = ceil_bump * 2
+
+    if info.sky_mode == "heaps" then
+      SINK1.is_sky = true
+    end
+
+    if info.sky_mode != "none" then
+      SINK2.is_sky = true
+
+      -- no big need to synchronise skies (as per liquids)
+    end
+  end
+
+
   local function make_walkway()
     --
-    -- we have one main area
-    -- [ the indentation / liquid / sky bits are considered to be
-    --   modifications to the main area ]
+    -- We have one main area, always walkable.
+    -- The indentation / liquid / sky bits are considered to be
+    -- modifications of the main area.
     --
 
     assert(info.liquid_mode != "lake")
@@ -831,8 +874,7 @@ function Cave_create_areas(R)
     local AREA =
     {
       neighbors = {}
-
-      children = {}
+      children  = {}
 
       floor_mat = R.floor_mat
     }
@@ -850,58 +892,15 @@ function Cave_create_areas(R)
     base_area.ceil_mat  = R.ceil_mat
 
 
-    -- properties for sink #1 --
+    -- compute properties of each sink
+    local SINK1 = {}
+    local SINK2 = {}
 
-    local ceil_bump = rand.sel(50, 64, 96)
-
-    local SINK1 =
-    {
-      floor_dz  = -8
-      ceil_dz   = ceil_bump
-
-      floor_mat = R.alt_floor_mat
-    }
-
-    if info.liquid_mode == "heaps" then
-      SINK1.is_liquid = true
-    end
-
-    if info.sky_mode == "heaps" then
-      SINK1.is_sky = true
-    end
-
-
-    -- properties for sink #2 --
-
-    local SINK2 =
-    {
-      floor_dz  = -16
-      ceil_dz   = ceil_bump * 2
-
-      floor_mat = AREA.floor_mat
-    }
-
-    if info.liquid_mode != "none" then
-      SINK2.is_liquid = true
-
-      -- when both sinks are liquid, use same floor height
-      if SINK1.is_liquid then
-        SINK1.floor_dz = -12
-        SINK2.floor_dz = SINK1.floor_dz
-      end
-    end
-
-    if info.sky_mode != "none" then
-      SINK2.is_sky = true
-
-      -- no big need to synchronise skies (as per liquids)
-    end
+    compute_floor_sinks  (SINK1, SINK2, R, AREA)
+    compute_ceiling_sinks(SINK1, SINK2, R, AREA)
 
 
     -- actually install the sinks...
-
-    if not SINK1 then return end
-
     local walk_way = copy_cave_without_fences()
 
     apply_walk_chunks(walk_way)
@@ -913,9 +912,6 @@ function Cave_create_areas(R)
     install_area(SINK1, walk_way, 1, "empty_ok")
 
     table.insert(AREA.children, SINK1)
-
-
-    if not SINK2 then return end
 
     -- shrink the walkway further
     walk_way:shrink8(true)
