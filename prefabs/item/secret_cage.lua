@@ -7,6 +7,9 @@ PREFABS.Item_secret_cage =
   file  = "item/secret_cage.wad"
   where = "seeds"
 
+  prob  = 200
+  env   = "building"
+
   key   = "secret"
 
   seed_w = 2
@@ -17,8 +20,5 @@ PREFABS.Item_secret_cage =
   over = -16
 
   x_fit = "frame"
-
-  prob  = 200
-  env   = "building"
 }
 

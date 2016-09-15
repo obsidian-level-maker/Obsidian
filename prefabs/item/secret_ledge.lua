@@ -7,6 +7,9 @@ PREFABS.Item_secret_ledge =
   file  = "item/secret_ledge.wad"
   where = "seeds"
 
+  prob  = 2000
+  env   = "!cave"
+
   key   = "secret"
 
   seed_w = 3
@@ -18,7 +21,5 @@ PREFABS.Item_secret_ledge =
 
   x_fit = "frame"
   y_fit = "top"
-
-  prob  = 5000
 }
 
