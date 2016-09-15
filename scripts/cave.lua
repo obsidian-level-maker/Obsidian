@@ -845,7 +845,7 @@ function Cave_create_areas(R)
 
 
   local function compute_ceiling_sinks(SINK1, SINK2, R, AREA)
-    local ceil_bump = rand.sel(50, 64, 96)
+    local ceil_bump = rand.pick({ 48,64,80,96 })
 
     SINK1.ceil_dz = ceil_bump
     SINK2.ceil_dz = ceil_bump * 2

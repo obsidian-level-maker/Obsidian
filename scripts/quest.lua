@@ -2662,7 +2662,7 @@ function Quest_room_themes()
   local function setup_cave_theme(R)
     R.main_tex = R.zone.cave_wall_mat
 
-    R.walkway_height = rand.pick { 160, 192,192, 224 }
+    R.walkway_height = rand.pick { 160, 176, 192, 224 }
 
     for loop = 1,2 do
       R.floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
