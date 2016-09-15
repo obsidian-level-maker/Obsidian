@@ -148,7 +148,7 @@ GLOBAL_STYLE_LIST =
 
   -- room connections --
 
-  teleporters = { none=20, few=20, some=40, heaps=30 }
+  teleporters = { none=20, few=40, some=40, heaps=20 }
   doors       = { none=5,  few=30, some=60, heaps=5 }
   windows     = { none=0,  few=20, some=70, heaps=35 }
   fences      = { none=30, few=30, some=10 }
