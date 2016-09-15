@@ -1981,9 +1981,12 @@ top.reachable = 1
     local bottom = { b=A.ceil_h }
     table.insert(c_brush, bottom)
 
-    if A.sky then
+    if A.is_sky then
       c_mat = "_SKY"
-      bottom.light_add = 32
+
+      if not LEVEL.is_dark then
+        bottom.light_add = 32
+      end
     end
 
     brushlib.set_mat(c_brush, c_mat, c_mat)
