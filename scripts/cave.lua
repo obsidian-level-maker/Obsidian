@@ -820,8 +820,11 @@ function Cave_create_areas(R)
 
 
   local function make_walkway()
-    -- only have one area : the indentation / liquidy bits are
-    -- considered to be a variation of it (child areas)
+    --
+    -- we have one main area
+    -- [ the indentation / liquid / sky bits are considered to be
+    --   modifications to the main area ]
+    --
 
     assert(info.liquid_mode != "lake")
 
@@ -847,15 +850,7 @@ function Cave_create_areas(R)
     base_area.ceil_mat  = R.ceil_mat
 
 
-    -- create the sink
-    local walk_way = copy_cave_without_fences()
-
-    apply_walk_chunks(walk_way)
-
-    walk_way:negate()
-    walk_way:shrink8(true)
-    walk_way:remove_dots()
-
+    -- properties for sink #1 --
 
     local ceil_bump = rand.sel(50, 64, 96)
 
@@ -875,15 +870,8 @@ function Cave_create_areas(R)
       SINK1.is_sky = true
     end
 
-    install_area(SINK1, walk_way, 1, "empty_ok")
 
-    table.insert(AREA.children, SINK1)
-
-
-    -- shrink the walkway further
-    walk_way:shrink8(true)
-    walk_way:remove_dots()
-
+    -- properties for sink #2 --
 
     local SINK2 =
     {
@@ -895,11 +883,43 @@ function Cave_create_areas(R)
 
     if info.liquid_mode != "none" then
       SINK2.is_liquid = true
+
+      -- when both sinks are liquid, use same floor height
+      if SINK1.is_liquid then
+        SINK1.floor_dz = -12
+        SINK2.floor_dz = SINK1.floor_dz
+      end
     end
 
     if info.sky_mode != "none" then
       SINK2.is_sky = true
+
+      -- no big need to synchronise skies (as per liquids)
     end
+
+
+    -- actually install the sinks...
+
+    if not SINK1 then return end
+
+    local walk_way = copy_cave_without_fences()
+
+    apply_walk_chunks(walk_way)
+
+    walk_way:negate()
+    walk_way:shrink8(true)
+    walk_way:remove_dots()
+
+    install_area(SINK1, walk_way, 1, "empty_ok")
+
+    table.insert(AREA.children, SINK1)
+
+
+    if not SINK2 then return end
+
+    -- shrink the walkway further
+    walk_way:shrink8(true)
+    walk_way:remove_dots()
 
     install_area(SINK2, walk_way, 1, "empty_ok")
 
