@@ -684,10 +684,18 @@ function Cave_create_areas(R)
 
 
   local function compute_ceiling_sinks(SINK1, SINK2, R, AREA)
-    local ceil_bump = rand.pick({ 48,64,80,96 })
+    local bump1 = rand.pick({ 48,64,80,96 })
+    local bump2 = rand.pick({ 48,64,80,96 })
 
-    SINK1.ceil_dz = ceil_bump
-    SINK2.ceil_dz = ceil_bump * 2
+    SINK1.ceil_dz  = bump1
+    SINK2.ceil_dz  = bump1 + bump2
+
+    SINK1.ceil_mat = R.alt_ceil_mat
+    SINK2.ceil_mat = R.ceil_mat
+
+    if rand.odds(25) then
+      SINK1.ceil_mat, SINK2.ceil_mat = SINK2.ceil_mat, SINK1.ceil_mat
+    end
 
     if info.sky_mode == "heaps" then
       SINK1.is_sky = true
@@ -716,6 +724,7 @@ function Cave_create_areas(R)
       children  = {}
 
       floor_mat = R.floor_mat
+       ceil_mat = R.ceil_mat
     }
 
     table.insert(info.floors, AREA)
@@ -728,7 +737,7 @@ function Cave_create_areas(R)
 
     -- this fixes MON_TELEPORT spots [ so they blend in ]
     base_area.floor_mat = AREA.floor_mat
-    base_area.ceil_mat  = R.ceil_mat
+    base_area.ceil_mat  = AREA.ceil_mat
 
 
     -- compute properties of each sink
@@ -2829,7 +2838,7 @@ function Cave_decide_properties(R)
 
   -- sky mode --
 
-  local SKY_MODES = { none=40, some=40, heaps=40 }
+  local SKY_MODES = { none=60, some=40, heaps=40 }
 
   if R.light_level == "verydark" then SKY_MODES.none = 300 end
   if R.light_level == "bright"   then SKY_MODES.none = 10 end
