@@ -1807,17 +1807,8 @@ function Render_cave(R)
     if f_h then
       local top = { t=f_h }
 
---!!!! FIXME TEMP
-top.reachable = 1
-
       if info.torch_mode != "none" then
         top.is_cave = 1
-
-        local val = calc_lighting_for_cell(x, y, A)
-
-        if val > 0 then
-          top.light_add = val
-        end
       end
 
       table.insert(f_brush, top)
@@ -1857,6 +1848,27 @@ top.reachable = 1
   end
 
 
+  local function render_lit_cell(x, y, A)
+    local light
+
+    if info.torch_mode != "none" then
+      light = calc_lighting_for_cell(x, y, A)
+      if light <= 0 then light = nil end
+    end
+
+    if light then
+      Ambient_push(base_area.base_light + light)
+    end
+
+    render_floor  (x, y, A)
+    render_ceiling(x, y, A)
+
+    if light then
+      Ambient_pop()
+    end
+  end
+
+
   local function render_cell(x, y, pass)
     local A = info.blocks[x][y]
 
@@ -1869,8 +1881,7 @@ top.reachable = 1
     end
 
     if not is_solid and pass == 2 then
-      render_floor  (x, y, A)
-      render_ceiling(x, y, A)
+      render_lit_cell(x, y, A)
     end
   end
 
