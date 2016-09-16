@@ -838,6 +838,14 @@ function Cave_create_areas(R)
       SINK1.is_liquid = true
     end
 
+    -- when no liquid, often make a larger area of the alternate floor
+    if info.liquid_mode == "none" and rand.odds(50) then
+      SINK2.floor_dz  = SINK1.floor_dz
+      SINK2.floor_mat = SINK1.floor_mat
+      return
+    end
+
+
     SINK2.floor_dz  = -16
     SINK2.floor_mat = AREA.floor_mat
 
