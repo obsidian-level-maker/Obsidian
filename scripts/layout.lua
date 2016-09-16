@@ -1660,7 +1660,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function pick_decorative_bling(R)
-    local decor_prob = rand.pick({ 20, 50, 50, 80 })
+    local decor_prob = rand.pick({ 15, 30, 50, 70 })
 
     each chunk in R.floor_chunks do
       if chunk.content_kind == nil and rand.odds(decor_prob) then
