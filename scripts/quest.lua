@@ -2666,17 +2666,28 @@ function Quest_room_themes()
 
     for loop = 1,2 do
       R.floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+
       if R.floor_mat != R.main_tex then break; end
     end
 
-    if not R.is_outdoor then
-      if rand.odds(20) then
-        R.ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
-      elseif rand.odds(20) then
-        R.ceil_mat = R.floor_mat
-      else
-        R.ceil_mat = R.main_tex
-      end
+    for loop = 1,9 do
+      R.alt_floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+
+      if R.alt_floor_mat != R.floor_mat then break; end
+    end
+
+    if rand.odds(20) then
+      R.ceil_mat = R.floor_mat
+    elseif rand.odds(60) then
+      R.ceil_mat = R.main_tex
+    else
+      R.ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+    end
+
+    for loop = 1,9 do
+      R.alt_ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+
+      if R.alt_ceil_mat != R.floor_mat then break; end
     end
   end
 

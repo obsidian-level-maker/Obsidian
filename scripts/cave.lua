@@ -242,6 +242,10 @@ end
 
     chunk.walk_kind = "floor"
 
+    if chunk.sw >= 2 and chunk.sh >= 2 then
+      chunk.walk_shrinkage = 2
+    end
+
     table.insert(info.walk_chunks, chunk)
   end
 
@@ -625,17 +629,13 @@ function Cave_create_areas(R)
 
   local function apply_walk_chunks(map)
     each chunk in info.walk_chunks do
-      map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, 1)
-    end
-  end
+      local cx1, cy1 = chunk.cx1, chunk.cy1
+      local cx2, cy2 = chunk.cx2, chunk.cy2
 
-
-  local function alternate_floor_mat()
-    for loop = 1,3 do
-      R.alt_floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
-
-      if R.alt_floor_mat != R.floor_mat then
-        break;
+      if chunk.walk_shrinkage == 2 then
+        map:fill(cx1 + 1, cy1 + 1, cx2 - 1, cy2 - 1, 1)
+      else
+        map:fill(cx1, cy1, cx2, cy2, 1)
       end
     end
   end
@@ -1064,8 +1064,6 @@ step:dump("Step:")
 
 
   ---| Cave_create_areas |---
-
-  alternate_floor_mat()
 
   if info.step_mode == "walkway" then
     make_walkway()
