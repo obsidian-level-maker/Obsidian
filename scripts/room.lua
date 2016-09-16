@@ -884,6 +884,9 @@ function Room_reckon_doors()
     if reqs then
 gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tostr(reqs))
 
+      reqs.env      = R1:get_env()
+      reqs.neighbor = R2:get_env()
+
       E.prefab_def = Fab_pick(reqs)
     end
 
