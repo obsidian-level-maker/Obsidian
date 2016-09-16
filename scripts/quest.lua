@@ -2687,7 +2687,7 @@ function Quest_room_themes()
     for loop = 1,9 do
       R.alt_ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
 
-      if R.alt_ceil_mat != R.floor_mat then break; end
+      if R.alt_ceil_mat != R.ceil_mat then break; end
     end
   end
 
