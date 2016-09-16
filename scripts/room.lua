@@ -2741,23 +2741,6 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function add_cage_rails(A)
-    each N in A.neighbors do
-      if N.zone != A.zone then continue end
-
-      -- don't place railings on higher floors (it looks silly)
-      if N.floor_h and N.floor_h > A.floor_h then continue end
-
-      if true then
-        local junc = Junction_lookup(A, N)
-
-        junc.rail_mat   = "MIDBARS3"
-        junc.rail_block = true
-      end
-    end
-  end
-
-
   local function add_cage_lighting(R, A)
     if not R.cage_light_fx then
       --  8 = oscillates
@@ -2792,8 +2775,8 @@ function Room_floor_ceil_heights()
       A.bump_light = P.bump_light
       A.sector_fx  = P.sector_fx
 
-      if A.cage_mode then
-        add_cage_rails(A)
+      if table.has_elem(R.cage_rail_areas, P) then
+        table.insert(R.cage_rail_areas, A)
       end
 
       return
@@ -2824,7 +2807,7 @@ function Room_floor_ceil_heights()
     if A.cage_mode or (#A.seeds >= 4 and rand.odds(50)) then
       A.floor_mat = A.zone.cage_mat
 
-      add_cage_rails(A)
+      table.insert(R.cage_rail_areas, A)
 
       if not R.is_outdoor then
         if N.ceil_h and N.ceil_h > A.ceil_h + 72 then
@@ -2844,6 +2827,8 @@ function Room_floor_ceil_heights()
       kill_start_cages(R)
       return
     end
+
+    R.cage_rail_areas = {}
 
     each A in R.areas do
       if A.mode == "cage" then
@@ -3129,6 +3114,40 @@ end
 
 
 
+function Room_add_cage_rails()
+  -- this must be called AFTER scenic borders are finished, since
+  -- otherwise we won't know the floor_h of border areas.
+
+  local function rails_in_cage(A)
+    each N in A.neighbors do
+      if N.zone != A.zone then continue end
+
+      -- don't place railings on higher floors (it looks silly)
+      if N.floor_h and N.floor_h > A.floor_h then continue end
+
+      if true then
+        local junc = Junction_lookup(A, N)
+
+        junc.rail_mat   = "MIDBARS3"
+        junc.rail_block = true
+      end
+    end
+  end
+
+
+  ---| Room_add_cage_rails |---
+
+  each R in LEVEL.rooms do
+    if R.cage_rail_areas then
+      each A in R.cage_rail_areas do
+        rails_in_cage(A)
+      end
+    end
+  end
+end
+
+
+
 function Room_set_sky_heights()
 
   local function do_area(A)
@@ -3308,6 +3327,8 @@ function Room_build_all()
   Room_border_up()
 
   Layout_finish_scenic_borders()
+  Room_add_cage_rails()
+
   Layout_handle_corners()
   Layout_outdoor_shadows()
 
