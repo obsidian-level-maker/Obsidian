@@ -820,7 +820,17 @@ function Cave_create_areas(R)
 
 
   local function compute_floor_sinks(SINK1, SINK2, R, AREA)
-    -- properties for sink #1
+    -- sometimes make sink1 be liquid but sink2 be solid
+    if info.liquid_mode == "some" and rand.odds(25) then
+      SINK1.floor_dz  = -12
+      SINK1.is_liquid = true
+
+      SINK2.floor_dz  = -4
+      SINK2.floor_mat = AREA.floor_mat
+      return
+    end
+
+
     SINK1.floor_dz  = -8
     SINK1.floor_mat = R.alt_floor_mat
 
@@ -828,7 +838,6 @@ function Cave_create_areas(R)
       SINK1.is_liquid = true
     end
 
-    -- properties for sink #2
     SINK2.floor_dz  = -16
     SINK2.floor_mat = AREA.floor_mat
 
