@@ -9,6 +9,9 @@ PREFABS.Joiner_lift_curve =
   prob   = 30
   style  = "steepness"
 
+  env      = "!cave"
+  neighbor = "!cave"
+
   where  = "seeds"
   shape  = "L"
 

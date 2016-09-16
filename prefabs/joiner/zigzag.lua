@@ -11,6 +11,9 @@ UNFINISHED.Joiner_zigzag1 =
   theme  = "tech"
   style  = "steepness"
 
+  env      = "!cave"
+  neighbor = "!cave"
+
   where  = "seeds"
   shape  = "I"
 

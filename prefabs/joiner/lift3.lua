@@ -9,6 +9,9 @@ PREFABS.Joiner_lift3 =
   prob   = 5
   style  = "steepness"
 
+  env      = "!cave"
+  neighbor = "!cave"
+
   where  = "seeds"
   shape  = "I"
 

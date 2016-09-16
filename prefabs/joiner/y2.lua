@@ -8,6 +8,7 @@ PREFABS.Joiner_y2 =
 
   prob   = 30
   theme  = "!hell"
+  env    = "!cave"
 
   where  = "seeds"
   shape  = "I"
