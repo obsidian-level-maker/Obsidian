@@ -7,26 +7,18 @@ Caves:
 
 !!! get SPOTS working again
 
-+  floor sinks:
-   -  occasionally have SINK1 as liquid, SINK2 == AREA
-      [ and SINK1 floor_dz = -24 ]
-
-   -  occasionally have SINK2 = SINK1 (when no liquid)
-
-   -  rarely have SINK1 = AREA, SINK2 is what SINK1 would have been
-
 +  review all cave themes [ some are FUGLY! ]
    also want more variety, e.g. ROCKRED in Urban/Tech theme
 
--  think about WHEN it make sense for cave to "see" the walls of
-   a room (like outdoor rooms do)
+-  ensure ceiling brush gets same "light_add" as floor brush
+   [ OR: use Ambient_push / pop.... ]
+
+-  some smaller / different stalagmites
+   [ for floor-to-ceiling ones, use _FLOOR or _CEIL, never _WALL ]
 
 
 
 Miscellaneous:
-
--  cage railings : add them later (after finish_scenic_borders)
-                   since we have no height info until then.
 
 +  joiner facades STILL borked
    [ perhaps they can have TWO facades ?? ]
@@ -42,6 +34,8 @@ Tidying Up / Release stuff:
 -  check for prob=30*99 in rules and prefabs
 
 -  update i18n language template
+
+-  ensure the linux "make install" works
 
 -  test: Doom 1
 -  test: Ultimate Doom
