@@ -2664,16 +2664,12 @@ function Quest_room_themes()
 
     R.walkway_height = rand.pick { 160, 176, 192, 224 }
 
+    -- floor and ceiling materials --
+
     for loop = 1,2 do
       R.floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
 
       if R.floor_mat != R.main_tex then break; end
-    end
-
-    for loop = 1,9 do
-      R.alt_floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
-
-      if R.alt_floor_mat != R.floor_mat then break; end
     end
 
     if rand.odds(20) then
@@ -2684,10 +2680,24 @@ function Quest_room_themes()
       R.ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
     end
 
-    for loop = 1,9 do
-      R.alt_ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+    -- alternate floor and ceiling materials --
 
-      if R.alt_ceil_mat != R.ceil_mat then break; end
+    for loop = 1,9 do
+      R.alt_floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+
+      if R.alt_floor_mat != R.floor_mat then break; end
+    end
+
+    if R.floor_mat != R.ceil_mat and rand.odds(50) then
+      R.alt_ceil_mat = R.floor_mat
+    elseif R.alt_floor_mat != R.ceil_mat and rand.odds(50) then
+      R.alt_ceil_mat = R.alt_floor_mat
+    else
+      for loop = 1,9 do
+        R.alt_ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+
+        if R.alt_ceil_mat != R.ceil_mat then break; end
+      end
     end
   end
 

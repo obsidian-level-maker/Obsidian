@@ -693,7 +693,7 @@ function Cave_create_areas(R)
     SINK1.ceil_mat = R.alt_ceil_mat
     SINK2.ceil_mat = R.ceil_mat
 
-    if rand.odds(25) then
+    if rand.odds(10) then
       SINK1.ceil_mat, SINK2.ceil_mat = SINK2.ceil_mat, SINK1.ceil_mat
     end
 
