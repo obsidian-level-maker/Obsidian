@@ -611,7 +611,7 @@ function Junction_calc_wall_tex(A1, A2)
       return LEVEL.cliff_mat
     end
 
-    return "O_BLACK" -- FIXME assert(A1.zone.facade_mat)
+    return assert(A1.zone.facade_mat)
   end
 
   if A1.is_outdoor and A2:is_indoor() then
@@ -619,7 +619,7 @@ function Junction_calc_wall_tex(A1, A2)
       return A2.facade_crap
     end
 
-    return "ZZZFACE4"  -- FIXME assert(A1.zone.facade_mat)
+    return assert(A1.zone.facade_mat)
   end
 
   if A1.room then
@@ -1673,6 +1673,7 @@ function Area_building_facades()
   local all_groups = {}
 
 
+--[[
 local test_textures =
 {
   "FWATER1",  "NUKAGE1", "LAVA1",
@@ -1681,6 +1682,7 @@ local test_textures =
   "BRICK10",  "CEMENT9",
   "DOORBLU2", "DOORRED2", "DOORYEL2"
 }
+--]]
 
 
   local function new_group()
@@ -1688,9 +1690,10 @@ local test_textures =
 
     GROUP.name = "FCGROUP_" .. alloc_id("facade_group")
 
+--[[ DEBUG STUFF
     GROUP.mat = table.remove(test_textures, 1)
     table.insert(test_textures, GROUP.mat)
-
+--]]
     return GROUP
   end
 
@@ -1742,7 +1745,7 @@ seen[A.facade_group] = 1
 stderrf("%s / %s : zone_diff=%s\n", Z.name, A.facade_group.name, tostring(A.facade_group.zone_diff))
 end
       if A.facade_group and not A.facade_group.zone_diff then
-        A.facade_crap = A.facade_group.mat
+        A.facade_crap = A.zone.other_facade  ---???  A.facade_group.mat
       end
     end
   end
