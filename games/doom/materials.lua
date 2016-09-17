@@ -15,7 +15,7 @@
 DOOM.LIQUIDS =
 {
   water  = { mat="FWATER1", light_add=16, special=0 }
-  blood  = { mat="BLOOD1",  light_add=16, special=0 }
+  blood  = { mat="BLOOD1",  light_add=32, special=0 }
   nukage = { mat="NUKAGE1", light_add=32, special=5,  damage=10 }
   lava   = { mat="LAVA1",   light_add=48, special=16, damage=20 }
 

@@ -418,8 +418,8 @@ DOOM.THEMES =
     {
       water = 60
       blood = 40
-      slime = 20
-      lava  = 5
+      slime = 25
+      lava  = 7
     }
 
     facades =
