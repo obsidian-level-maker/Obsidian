@@ -55,6 +55,7 @@
     svolume : number   -- number of seeds (0.5 for diagonals)
 
     neighbors : list(AREA)
+    corner_neighbors : list(AREA)
 
     edges : list(EDGE)
 
@@ -180,6 +181,7 @@ function AREA_CLASS.new(mode)
     conns = {}
     seeds = {}
     neighbors = {}
+    corner_neighbors = {}
     edges = {}
 
     inner_points = {}
@@ -782,11 +784,17 @@ function Corner_init()
 
     for i = 1, #corner.areas do
     for k = i + 1, #corner.areas do
-      local junc = Junction_lookup(corner.areas[i], corner.areas[k])
+      local A1 = corner.areas[i]
+      local A2 = corner.areas[k]
+
+      local junc = Junction_lookup(A1, A2)
 
       if junc then
         table.add_unique(corner.junctions, junc)
       end
+
+      table.add_unique(A1.corner_neighbors, A2)
+      table.add_unique(A2.corner_neighbors, A1)
     end
     end
   end
@@ -1652,7 +1660,7 @@ local test_textures =
 
 
   local function spread_group(Z, A)
-    each N in A.neighbors do
+    each N in A.corner_neighbors do
       if not N.facade_group and kinda_in_zone(N, Z) and N:is_indoor() then
         N.facade_group = A.facade_group
         N.facade_crap  = A.facade_group.mat
