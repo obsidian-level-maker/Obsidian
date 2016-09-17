@@ -803,9 +803,10 @@ end
 
 
 function Corner_detect_zone_diffs()
-  for cx = 1, LEVEL.area_corners.w do
-  for cy = 1, LEVEL.area_corners.h do
-    local corner = LEVEL.area_corners[cx][cy]
+
+  local function has_zone_diff(corner)
+    local has_diff    = false
+    local has_outdoor = false
 
     for i = 1, #corner.areas do
     for k = i + 1, #corner.areas do
@@ -813,11 +814,38 @@ function Corner_detect_zone_diffs()
       local A2 = corner.areas[k]
 
       if A1.zone != A2.zone then
-        if A1.facade_group then A1.facade_group.zone_diff = true end
-        if A2.facade_group then A2.facade_group.zone_diff = true end
+        has_diff = true
       end
-    end  -- i, k
+
+      if A1.is_outdoor or A2.is_outdoor then
+        has_outdoor = true
+      end
     end
+    end
+
+    return has_diff and has_outdoor
+  end
+
+
+  local function update_groups(corner)
+    each A in corner.areas do
+      if A.facade_group then
+         A.facade_group.zone_diff = true
+      end
+    end
+  end
+
+
+  ---| Corner_detect_zone_diffs |---
+
+  for cx = 1, LEVEL.area_corners.w do
+  for cy = 1, LEVEL.area_corners.h do
+    local corner = LEVEL.area_corners[cx][cy]
+
+    if has_zone_diff(corner) then
+       update_groups(corner)
+    end
+
   end -- cx, cy
   end
 end
