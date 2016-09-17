@@ -796,7 +796,29 @@ function Corner_init()
       table.add_unique(A2.corner_neighbors, A1)
     end
     end
+  end -- cx, cy
   end
+end
+
+
+
+function Corner_detect_zone_diffs()
+  for cx = 1, LEVEL.area_corners.w do
+  for cy = 1, LEVEL.area_corners.h do
+    local corner = LEVEL.area_corners[cx][cy]
+
+    for i = 1, #corner.areas do
+    for k = i + 1, #corner.areas do
+      local A1 = corner.areas[i]
+      local A2 = corner.areas[k]
+
+      if A1.zone != A2.zone then
+        if A1.facade_group then A1.facade_group.zone_diff = true end
+        if A2.facade_group then A2.facade_group.zone_diff = true end
+      end
+    end  -- i, k
+    end
+  end -- cx, cy
   end
 end
 
@@ -1662,7 +1684,6 @@ local test_textures =
     each N in A.corner_neighbors do
       if not N.facade_group and kinda_in_zone(N, Z) and N:is_indoor() then
         N.facade_group = A.facade_group
-        N.facade_crap  = A.facade_group.mat
 
         spread_group(Z, N)
       end
@@ -1671,8 +1692,6 @@ local test_textures =
 
 
   local function visit_zone(Z)
-    Z.facade_mat = "LITE3"
-
     -- clear previous groups  [ DUE TO JOINERS... ]
     each A in LEVEL.areas do
       A.facade_group = nil
@@ -1681,10 +1700,21 @@ local test_textures =
     each A in LEVEL.areas do
       if not A.facade_group and kinda_in_zone(A, Z) and A:is_indoor() then
         A.facade_group = new_group(A)
-        A.facade_crap  = A.facade_group.mat
 
-stderrf("%s : added %s\n", Z.name, A.facade_group.name)
         spread_group(Z, A)
+      end
+    end
+
+    Corner_detect_zone_diffs()
+
+local seen = {}
+    each A in LEVEL.areas do
+if A.facade_group and not seen[A.facade_group] then
+seen[A.facade_group] = 1
+stderrf("%s / %s : zone_diff=%s\n", Z.name, A.facade_group.name, tostring(A.facade_group.zone_diff))
+end
+      if A.facade_group and not A.facade_group.zone_diff then
+        A.facade_crap = A.facade_group.mat
       end
     end
   end
