@@ -777,15 +777,8 @@ function Edge_calc_wallish_mat(E)
   -- closets
   if E.to_chunk and E.to_chunk.kind == "closet" then
     local A = E.to_chunk.area
-    local tex_ref = E.to_chunk.tex_ref or E.to_chunk.from_area
 
-    if tex_ref then
-      if tex_ref.is_outdoor then
-        return A.facade_mat or A.zone.facade_mat
-      end
-
-      return assert(tex_ref.wall_mat)
-    end
+    return Junction_calc_wall_tex(E.area, A)
   end
 
   -- TODO : straddling stuff??

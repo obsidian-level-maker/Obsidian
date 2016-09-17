@@ -610,15 +610,15 @@ function Junction_calc_wall_tex(A1, A2)
       return LEVEL.cliff_mat
     end
 
-    return assert(A1.zone.facade_mat)
+    return "O_BLACK" -- FIXME assert(A1.zone.facade_mat)
   end
 
   if A1.is_outdoor and A2:is_indoor() then
-    if A2.facade_group then
-      return A2.facade_group.mat
+    if A2.facade_crap then
+      return A2.facade_crap
     end
 
-    return assert(A1.zone.facade_mat)
+    return "ZZZFACE4"  -- FIXME assert(A1.zone.facade_mat)
   end
 
   if A1.room then
@@ -1619,15 +1619,17 @@ function Area_building_facades()
 local test_textures =
 {
   "FWATER1",  "NUKAGE1", "LAVA1",
-  "BLOOD1",   "COMPSPAN", "SHAWN2",
+  "BLOOD1",   "ASHWALL2", "SHAWN2",
   "TEKWALL4", "ASHWALL4", "ASHWALL7",
-  "BRICK10",  "CEMENT9",  "LITE3",
+  "BRICK10",  "CEMENT9",
   "DOORBLU2", "DOORRED2", "DOORYEL2"
 }
 
 
   local function new_group()
-    local GROUP = { id=alloc_id("facade_group") }
+    local GROUP = {}
+
+    GROUP.name = "FCGROUP_" .. alloc_id("facade_group")
 
     GROUP.mat = table.remove(test_textures, 1)
     table.insert(test_textures, GROUP.mat)
@@ -1636,20 +1638,45 @@ local test_textures =
   end
 
 
+  local function kinda_in_zone(A, Z)
+    if A.zone == Z then return true end
+
+    -- allow joiners which straddle two zones
+    if A.chunk and A.chunk.kind == "joiner" then
+      return (A.chunk.from_area.zone == Z) or
+             (A.chunk.dest_area.zone == Z)
+    end
+
+    return false
+  end
+
+
   local function spread_group(Z, A)
     each N in A.neighbors do
-      if not N.facade_group and N.zone == Z and N:is_indoor() then
+      if not N.facade_group and kinda_in_zone(N, Z) and N:is_indoor() then
         N.facade_group = A.facade_group
+        N.facade_crap  = A.facade_group.mat
+
         spread_group(Z, N)
       end
     end
   end
 
 
-  local function groups_for_zone(Z)
+  local function visit_zone(Z)
+    Z.facade_mat = "LITE3"
+
+    -- clear previous groups  [ DUE TO JOINERS... ]
     each A in LEVEL.areas do
-      if not A.facade_group and A.zone == Z and A:is_indoor() then
-        A.facade_group = new_group()
+      A.facade_group = nil
+    end
+
+    each A in LEVEL.areas do
+      if not A.facade_group and kinda_in_zone(A, Z) and A:is_indoor() then
+        A.facade_group = new_group(A)
+        A.facade_crap  = A.facade_group.mat
+
+stderrf("%s : added %s\n", Z.name, A.facade_group.name)
         spread_group(Z, A)
       end
     end
@@ -1759,16 +1786,11 @@ local test_textures =
 
   ---| Area_building_facades |---
 
-  initial_facades()
-
-  for loop = 1,99 do
-    while spread_pass() do end
-
-    -- find an unset area and give it a facade mat
-    if not assign_one() then break; end
+  each Z in LEVEL.zones do
+    visit_zone(Z)
   end
 
-  dump_facades()
+--  dump_facades()
 end
 
 

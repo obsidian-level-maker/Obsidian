@@ -1107,7 +1107,6 @@ function Layout_decorate_rooms(pass)
 
     each E in chunk.edges do
       E.kind = "ignore"
---##  E.wall_mat = Junction_calc_wall_tex(E.area, chunk.area)
     end
   end
 

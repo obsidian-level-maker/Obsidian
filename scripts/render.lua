@@ -1195,7 +1195,9 @@ function Render_void(A, S)
 
   local w_brush = S:make_brush()
 
-  brushlib.set_mat(w_brush, A.wall_mat)
+  local mat = "_DEFAULT" -- A.zone.facade_mat
+
+  brushlib.set_mat(w_brush, mat)
 
   Trans.brush(w_brush)
 end
@@ -1595,32 +1597,18 @@ function Render_chunk(chunk)
 
   -- build the prefab --
 
-  local tex_ref = chunk.tex_ref or chunk.from_area
+  if chunk.from_area then
+    skin.wall  = Junction_calc_wall_tex(chunk.from_area, A)
 
-  if tex_ref then
-    skin.wall  = tex_ref.wall_mat
-    skin.floor = tex_ref.floor_mat
-    skin.ceil  = tex_ref.ceil_mat
-
-    -- FIXME : something very wrong here!
-    if tex_ref.is_outdoor then
-      skin.wall = tex_ref.facade_mat or tex_ref.zone.facade_mat
-
-      if chunk.kind == "closet" then
-        skin.wall = A.facade_mat or A.zone.facade_mat
-      end
-    end
+    skin.floor = chunk.from_area.floor_mat
+    skin.ceil  = chunk.from_area.ceil_mat
   end
 
-  local outer_ref = chunk.outer_ref or chunk.dest_area
+  if chunk.dest_area then
+    skin.outer  = Junction_calc_wall_tex(chunk.dest_area, A)
 
-  if outer_ref then
-    skin.outer  = outer_ref. wall_mat
-    skin.floor2 = outer_ref.floor_mat
-
-    if outer_ref.is_outdoor then
-      skin.outer = outer_ref.facade_mat or outer_ref.zone.facade_mat
-    end
+    skin.floor2 = chunk.dest_area.floor_mat
+    skin.ceil2  = chunk.dest_area.ceil_mat
   end
 
 
@@ -1808,6 +1796,12 @@ function Render_properties_for_area(A)
     return
   end
 
+  -- nothing needed for void areas
+  if A.mode == "void" then
+    A.lighting = 144
+    return
+  end
+
 
   if not A.lighting then
     if A.is_outdoor then
@@ -1824,63 +1818,30 @@ function Render_properties_for_area(A)
   end
 
 
-  if A.mode == "void" then
-    A.wall_mat   = A.facade_mat or A.zone.facade_mat
-    A.floor_mat  = A.wall_mat
-    return
-  end
-
-
   if not A.floor_h then
     A.floor_h = -7
   end
 
 
   if R then
-    A.wall_mat = assert(R.main_tex)
+---##  A.wall_mat = assert(R.main_tex)
 
   else
     A.floor_mat = "_ERROR"
   end
 
-  if A.mode == "hallway" then
-    A.floor_mat = "FLAT5_1"
-    A.wall_mat  = "WOOD1"
-    A.ceil_mat  = "WOOD1"
-
-    -- TEMP CRUD to match 'hall_piece' texture usage
-    if A.room and A.room.skin and A.room.skin.wall then
-      A.floor_mat = A.room.skin.wall
-      A. ceil_mat = A.room.skin.wall
-    end
-
-    if A.ceil_h then
-      -- done already
-    elseif A.is_porch then
-      A.ceil_h = A.floor_h + 128
-    elseif not A.is_outdoor then
-      A.ceil_h = A.floor_h + 80
-    end
-  end
-
-
   if A.mode == "liquid" then
     A.floor_mat = "_LIQUID"
   end
-
-
-  if A.is_outdoor then
-    A.wall_mat = assert(A.zone.facade_mat)
-  end
-
 
   if A.is_outdoor and not A.is_porch then
     A.ceil_mat = "_SKY"
   end
 
 
-  A.wall_mat = A.wall_mat or A.floor_mat
-  A.ceil_mat = A.ceil_mat or A.wall_mat
+  A.floor_mat = A.floor_mat or R.main_tex
+  A.ceil_mat  = A.ceil_mat  or R.main_tex
+
 
   --DEBUG FOR SECRETS
   if A.room and A.room.is_secret then
@@ -1901,8 +1862,6 @@ if A.zone.id == 3 then A.floor_mat = "LAVA1" end
 if A.zone.id == 4 then A.floor_mat = "CEIL5_2" end
 end
 --]]
-
-  assert(A.wall_mat)
 end
 
 
