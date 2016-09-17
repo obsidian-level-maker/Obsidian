@@ -87,10 +87,9 @@
 
 --class FACADE_GROUP
 --[[
-    zone_diffy  -- true if this group of areas touches a zone
-                   difference
+    zone_diff  -- true if this group touches a zone difference
 
-    mat     -- facade material to use
+    mat     -- facade material to use (NIL when zone_diff is true)
 --]]
 
 
@@ -1691,81 +1690,6 @@ stderrf("%s : added %s\n", Z.name, A.facade_group.name)
   end
 
 
-  local function initial_facades()
-    -- give one indoor area in each zone a facade_mat
-
-    local list = {}
-
-    each A in LEVEL.areas do
-      if A.room and A:is_indoor() then
-        table.insert(list, A)
-      end
-    end
-
-    rand.shuffle(list)
-
-    each A in list do
-      if not A.zone.got_initial_facade then
-        A.facade_mat = assert(A.zone.facade_mat)
-        A.zone.got_initial_facade = true
-      end
-    end
-  end
-
-
-  local function can_spread(A, N)
-    -- already has one?
-    if N.facade_mat then return false end
-
-    if A.zone != N.zone then return false end
-
-    return N:is_indoor()
-  end
-
-
-  local function spread_pass()
-    local changes = false
-
-    each A in LEVEL.areas do
-      if not A.facade_mat then continue end
-
-      each N in A.neighbors do
-        if can_spread(A, N) then
-          N.facade_mat = A.facade_mat
-          changes = true
-        end
-      end
-    end
-
-    return changes
-  end
-
-
-  local function assign_one()
-    local best
-    local best_score = -1
-
-    each A in LEVEL.areas do
-      if not A.facade_mat and A:is_indoor() then
-        local score = gui.random()
-
-        if score > best_score then
-          best = A
-          best_score = score
-        end
-      end
-    end
-
-    if not best then return false end
-
-    local Z = best.zone
-
-    best.facade_mat = rand.sel(50, Z.facade_mat, Z.other_facade)
-
-    return true
-  end
-
-
   local function dump_facades()
     gui.debugf("Building Facades:\n")
 
@@ -1780,15 +1704,6 @@ stderrf("%s : added %s\n", Z.name, A.facade_group.name)
     end
 
     gui.debugf("\n")
-  end
-
-
-  local function do_caves__OLD()
-    each A in LEVEL.areas do
-      if A.room and A.room.is_cave then
-        A.facade_mat = assert(A.room.zone.cave_wall_mat)
-      end
-    end
   end
 
 
