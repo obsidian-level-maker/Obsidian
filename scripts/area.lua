@@ -70,6 +70,8 @@
 
     --- other stuff ---
 
+    facade_group : FACADE_GROUP   -- used for indoor-y areas
+
     inner_points : list(CORNER)
 
 --]]
@@ -79,6 +81,15 @@
 --[[
     S : seed
     dir : dir
+--]]
+
+
+--class FACADE_GROUP
+--[[
+    zone_diffy  -- true if this group of areas touches a zone
+                   difference
+
+    mat     -- facade material to use
 --]]
 
 
@@ -288,6 +299,19 @@ function AREA_CLASS.has_conn(A)
       return true
     end
   end
+
+  return false
+end
+
+
+function AREA_CLASS.is_indoor(A)
+  if A.mode == "scenic" then return false end
+
+  if not A.is_outdoor then return true end
+  if A.mode == "void" then return true end
+
+  if A.chunk and A.chunk.kind == "closet" then return true end
+  if A.chunk and A.chunk.kind == "joiner" then return true end
 
   return false
 end
@@ -589,8 +613,12 @@ function Junction_calc_wall_tex(A1, A2)
     return assert(A1.zone.facade_mat)
   end
 
-  if A1.is_outdoor and (not A2.is_outdoor or A2.mode == "void") then
-    return assert(A2.facade_mat)
+  if A1.is_outdoor and A2:is_indoor() then
+    if A2.facade_group then
+      return A2.facade_group.mat
+    end
+
+    return assert(A1.zone.facade_mat)
   end
 
   if A1.room then
@@ -1585,18 +1613,46 @@ end
 
 function Area_building_facades()
 
-  local function is_indoor(A)
-    if A.mode == "scenic" then return false end
+  local all_groups = {}
 
-    if A.room and A.room.is_cave then return false end
 
-    if not A.is_outdoor then return true end
-    if A.mode == "void" then return true end
+local test_textures =
+{
+  "FWATER1",  "NUKAGE1", "LAVA1",
+  "BLOOD1",   "COMPSPAN", "SHAWN2",
+  "TEKWALL4", "ASHWALL4", "ASHWALL7",
+  "BRICK10",  "CEMENT9",  "LITE3",
+  "DOORBLU2", "DOORRED2", "DOORYEL2"
+}
 
-    if A.chunk and A.chunk.kind == "closet" then return true end
-    if A.chunk and A.chunk.kind == "joiner" then return true end
 
-    return false
+  local function new_group()
+    local GROUP = { id=alloc_id("facade_group") }
+
+    GROUP.mat = table.remove(test_textures, 1)
+    table.insert(test_textures, GROUP.mat)
+
+    return GROUP
+  end
+
+
+  local function spread_group(Z, A)
+    each N in A.neighbors do
+      if not N.facade_group and N.zone == Z and N:is_indoor() then
+        N.facade_group = A.facade_group
+        spread_group(Z, N)
+      end
+    end
+  end
+
+
+  local function groups_for_zone(Z)
+    each A in LEVEL.areas do
+      if not A.facade_group and A.zone == Z and A:is_indoor() then
+        A.facade_group = new_group()
+        spread_group(Z, A)
+      end
+    end
   end
 
 
@@ -1606,7 +1662,7 @@ function Area_building_facades()
     local list = {}
 
     each A in LEVEL.areas do
-      if A.room and is_indoor(A) then
+      if A.room and A:is_indoor() then
         table.insert(list, A)
       end
     end
@@ -1628,7 +1684,7 @@ function Area_building_facades()
 
     if A.zone != N.zone then return false end
 
-    return is_indoor(N)
+    return N:is_indoor()
   end
 
 
@@ -1655,7 +1711,7 @@ function Area_building_facades()
     local best_score = -1
 
     each A in LEVEL.areas do
-      if not A.facade_mat and is_indoor(A) then
+      if not A.facade_mat and A:is_indoor() then
         local score = gui.random()
 
         if score > best_score then
@@ -1692,7 +1748,7 @@ function Area_building_facades()
   end
 
 
-  local function do_caves()
+  local function do_caves__OLD()
     each A in LEVEL.areas do
       if A.room and A.room.is_cave then
         A.facade_mat = assert(A.room.zone.cave_wall_mat)
@@ -1711,8 +1767,6 @@ function Area_building_facades()
     -- find an unset area and give it a facade mat
     if not assign_one() then break; end
   end
-
-  do_caves()
 
   dump_facades()
 end
