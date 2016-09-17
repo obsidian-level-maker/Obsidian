@@ -652,6 +652,25 @@ function Cave_create_areas(R)
       return
     end
 
+    -- sometimes make a completely liquid floor [ if non-damaging ]
+    if info.liquid_mode == "heaps" and not LEVEL.liquid.damage and rand.odds(25) then
+       AREA.is_liquid = true
+      SINK1.is_liquid = true
+      SINK2.is_liquid = true
+
+      SINK1.floor_dz = 0
+      SINK2.floor_dz = 0
+
+      -- occasionally some islands
+      if rand.odds(30) then
+        SINK2.is_liquid = nil
+        SINK2.floor_mat = R.floor_mat
+        SINK2.floor_dz  = 8
+      end
+
+      return
+    end
+
 
     SINK1.floor_dz  = -8
     SINK1.floor_mat = R.alt_floor_mat
