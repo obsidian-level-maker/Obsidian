@@ -991,7 +991,7 @@ do return false end
 
   -- triple key door?
 
-  if rand.odds(50*2) then
+  if rand.odds(60) then
     if add_triple_key_door(goal_list) then
       LEVEL.has_triple_key = true
       goal_list = { }
