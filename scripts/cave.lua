@@ -1755,20 +1755,6 @@ function Render_cave(R)
   end
 
 
-  local function choose_tex(last, tab)
-    local tex = rand.key_by_probs(tab)
-
-    if last then
-      for loop = 1,5 do
-        if not Mat_similar(last, tex) then break; end
-        tex = rand.key_by_probs(tab)
-      end
-    end
-
-    return tex
-  end
-
-
   local function dist_to_light_level(d)
     if d >  276 then return 0  end
     if d >  104 then return 16 end
