@@ -2558,10 +2558,11 @@ function Room_floor_ceil_heights()
 
 
   local function select_ceiling_mats(R)
-    -- outdoor room-themes do not specify ceiling materials
-    if not R.theme.ceilings then
-      return
-    end
+    -- outdoor rooms do not require ceiling materials
+    if R.is_outdoor then return end
+
+    local tab = R.theme.ceilings or R.theme.floors
+    assert(tab)
 
     each A in R.areas do
       if A.is_outdoor then continue end
@@ -2577,7 +2578,7 @@ function Room_floor_ceil_heights()
       end
 
       if not R.ceil_mats[A.ceil_h] then
-        R.ceil_mats[A.ceil_h] = rand.key_by_probs(R.theme.ceilings)
+        R.ceil_mats[A.ceil_h] = rand.key_by_probs(tab)
       end
 
       A.ceil_mat = assert(R.ceil_mats[A.ceil_h])

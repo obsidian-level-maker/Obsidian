@@ -2622,7 +2622,7 @@ function Quest_room_themes()
 
         Z.hall_tex   = rand.key_by_probs(theme.walls)
         Z.hall_floor = rand.key_by_probs(theme.floors)
-        Z.hall_ceil  = rand.key_by_probs(theme.ceilings)
+        Z.hall_ceil  = rand.key_by_probs(theme.ceilings or theme.floors)
       end
 
       assert(THEME.fences)
