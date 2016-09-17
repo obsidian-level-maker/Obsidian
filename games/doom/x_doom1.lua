@@ -922,10 +922,18 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Cave =
   {
-    env = "cave"
+    env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
+    {
+      ASHWALL = 30
+      SP_ROCK1 = 60
+      GRAYVINE = 20
+      TEKWALL4 = 3
+    }
+
+    floors =
     {
       ASHWALL = 30
       SP_ROCK1 = 60
@@ -1248,10 +1256,18 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Cave =
   {
-    env = "cave"
+    env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
+    {
+      SP_ROCK1 = 90
+      ASHWALL = 20
+      BROWNHUG = 15
+      GRAYVINE = 10
+    }
+
+    floors =
     {
       SP_ROCK1 = 90
       ASHWALL = 20
@@ -1577,10 +1593,22 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Cave =
   {
-    env = "cave"
+    env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
+    {
+      ROCKRED1 = 90
+      SKIN2 = 30
+      SKINFACE = 25
+      SKSNAKE1 = 35
+      SKSNAKE2 = 35
+      FIREBLU1 = 50
+      FIRELAVA = 50
+      ASHWALL  = 20
+    }
+
+    floors =
     {
       ROCKRED1 = 90
       SKIN2 = 30
@@ -1786,7 +1814,20 @@ ULTDOOM.ROOM_THEMES =
     env = "cave"
     prob = 50
 
-    naturals =
+    walls =
+    {
+      ROCKRED1 = 70
+      SP_ROCK1 = 50
+      BROWNHUG = 15
+      SKIN2 = 10
+      SKINFACE = 20
+      SKSNAKE1 = 5
+      SKSNAKE2 = 5
+      FIREBLU1 = 10
+      FIRELAVA = 10
+    }
+
+    floors =
     {
       ROCKRED1 = 70
       SP_ROCK1 = 50

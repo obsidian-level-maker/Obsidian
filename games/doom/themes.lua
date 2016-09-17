@@ -914,7 +914,25 @@ DOOM.ROOM_THEMES =
     env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
+    {
+      GRAYVINE = 50
+      BROVINE2 = 10
+
+      ZIMMER8  = 40
+      ZIMMER7  = 20
+      BROWN144 = 30
+      BSTONE1  = 30
+
+      ASHWALL2 = 20
+      ASHWALL6 = 10
+      TANROCK5 = 10
+
+      STONE6   = 10
+      TEKWALL4 = 10
+    }
+
+    floors =
     {
       GRAYVINE = 50
       BROVINE2 = 10
@@ -1254,7 +1272,24 @@ DOOM.ROOM_THEMES =
     env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
+    {
+      ROCKRED1 = 40
+      SP_ROCK1 = 30
+      GSTVINE1 = 30
+
+      ASHWALL2 = 30
+      RROCK04  = 20
+      STONE    = 10
+
+      FIRELAVA = 10
+      FIREBLU1 = 10
+      SKINEDGE = 10
+      CRACKLE4 = 10
+      SKSNAKE1 = 10
+    }
+
+    floors =
     {
       ROCKRED1 = 40
       SP_ROCK1 = 30
@@ -1650,7 +1685,24 @@ DOOM.ROOM_THEMES =
     env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
+    {
+      ROCK2    = 40
+      ASHWALL2 = 40
+      ASHWALL4 = 30
+      ZIMMER1  = 30
+
+      BSTONE2  = 10
+      ZIMMER5  = 20
+      ZIMMER3  = 20
+
+      STONE5   = 10
+      ASHWALL7 = 10
+      ROCK5    = 10
+      WOOD9    = 10
+    }
+
+    floors =
     {
       ROCK2    = 40
       ASHWALL2 = 40

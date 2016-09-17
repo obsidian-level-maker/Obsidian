@@ -2615,7 +2615,7 @@ function Quest_room_themes()
     LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
 
     each Z in LEVEL.zones do
-      Z.cave_wall_mat = rand.key_by_probs(Z.cave_theme.naturals)
+      Z.cave_wall_mat = rand.key_by_probs(Z.cave_theme.walls)
 
       if Z.hallway_theme then
         local theme = Z.hallway_theme
@@ -2665,8 +2665,13 @@ function Quest_room_themes()
 
     -- floor and ceiling materials --
 
+    local floor_tab = R.zone.cave_theme.floors
+    local  ceil_tab = R.zone.cave_theme.ceilings
+
+    if not ceil_tab then ceil_tab = floor_tab end
+
     for loop = 1,2 do
-      R.floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+      R.floor_mat = rand.key_by_probs(floor_tab)
 
       if R.floor_mat != R.main_tex then break; end
     end
@@ -2676,13 +2681,13 @@ function Quest_room_themes()
     elseif rand.odds(60) then
       R.ceil_mat = R.main_tex
     else
-      R.ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+      R.ceil_mat = rand.key_by_probs(ceil_tab)
     end
 
     -- alternate floor and ceiling materials --
 
     for loop = 1,9 do
-      R.alt_floor_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+      R.alt_floor_mat = rand.key_by_probs(floor_tab)
 
       if R.alt_floor_mat != R.floor_mat then break; end
     end
@@ -2693,7 +2698,7 @@ function Quest_room_themes()
       R.alt_ceil_mat = R.alt_floor_mat
     else
       for loop = 1,9 do
-        R.alt_ceil_mat = rand.key_by_probs(R.zone.cave_theme.naturals)
+        R.alt_ceil_mat = rand.key_by_probs(ceil_tab)
 
         if R.alt_ceil_mat != R.ceil_mat then break; end
       end

@@ -337,12 +337,13 @@ TNT.ROOM_THEMES =
     }
   }
 
+
   egypt_Cave =
   {
     env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
     {
 -- these do not tile well vertically
 --    CAVERN6 = 50
@@ -350,6 +351,16 @@ TNT.ROOM_THEMES =
 
       ALTAQUA = 50
 
+      ROCK4 = 30
+      ROCK5 = 30
+      TANROCK4 = 30
+      TANROCK5 = 30
+      ASHWALL7 = 20
+      BROWNHUG = 10
+    }
+
+    floors =
+    {
       ROCK4 = 30
       ROCK5 = 30
       TANROCK4 = 30
