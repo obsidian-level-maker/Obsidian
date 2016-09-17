@@ -2581,15 +2581,14 @@ function Quest_room_themes()
 
 
   local function choose_other_themes()
-    local outdoors_tab = collect_usable_themes("outdoor")
-    local  hallway_tab = collect_usable_themes("hallway")
-    local     cave_tab = collect_usable_themes("cave")
+    local outdoor_tab = collect_usable_themes("outdoor")
+    local hallway_tab = collect_usable_themes("hallway")
+    local    cave_tab = collect_usable_themes("cave")
 
     each Z in LEVEL.zones do
-      Z.cave_theme = pick_zone_theme(cave_tab)
-
-      Z.outdoors_theme = pick_zone_theme(outdoors_tab)
-      Z. hallway_theme = pick_zone_theme(hallway_tab)
+      Z.outdoor_theme = pick_zone_theme(outdoor_tab)
+      Z.hallway_theme = pick_zone_theme(hallway_tab)
+      Z.   cave_theme = pick_zone_theme(cave_tab)
 
       -- apply it to all rooms in this zone
       each R in Z.rooms do
@@ -2598,7 +2597,7 @@ function Quest_room_themes()
         elseif R.is_cave then
           R.theme = Z.cave_theme
         elseif R.is_outdoor then
-          R.theme = Z.outdoors_theme
+          R.theme = Z.outdoor_theme
         end
       end
     end
