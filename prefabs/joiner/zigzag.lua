@@ -7,7 +7,7 @@ UNFINISHED.Joiner_zigzag1 =
   file   = "joiner/zigzag.wad"
   map    = "MAP01"
 
-  prob   = 60*99
+  prob   = 100
   theme  = "tech"
   style  = "steepness"
 
