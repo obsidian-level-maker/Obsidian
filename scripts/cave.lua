@@ -2863,6 +2863,10 @@ function Cave_decide_properties(R)
   if not LEVEL.liquid then
     info.liquid_mode = "none"
   else
+    local factor = style_sel("liquids", 33, 3, 1, 0.3)
+
+    LIQUID_MODES.none = LIQUID_MODES.none * factor
+
     info.liquid_mode = rand.key_by_probs(LIQUID_MODES)
   end
 
