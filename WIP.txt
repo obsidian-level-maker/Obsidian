@@ -10,9 +10,6 @@ Caves:
 +  review all cave themes [ some are FUGLY! ]
    also want more variety, e.g. ROCKRED in Urban/Tech theme
 
--  some smaller / different stalagmites
-   [ for floor-to-ceiling ones, use _FLOOR or _CEIL, never _WALL ]
-
 
 
 Tidying Up / Release stuff:
