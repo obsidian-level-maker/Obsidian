@@ -72,23 +72,19 @@ OB_MODULES["level_control"] =
     traps       = { label=_("Traps"),          choices=LEVEL_CONTROL.CHOICES }
     windows     = { label=_("Windows"),        choices=LEVEL_CONTROL.CHOICES }
 
---  symmetry    = { label=_("Symmetry"),       choices=LEVEL_CONTROL.CHOICES }
+---- PLANNED (UNFINISHED) STUFF ----
 
 --  hallways    = { label=_("Hallways"),       choices=LEVEL_CONTROL.CHOICES }
+--  symmetry    = { label=_("Symmetry"),       choices=LEVEL_CONTROL.CHOICES }
 --  pictures    = { label=_("Pictures"),       choices=LEVEL_CONTROL.CHOICES }
---  crates      = { label=_("Crates"),         choices=LEVEL_CONTROL.CHOICES }
---  pillars     = { label=_("Pillars"),        choices=LEVEL_CONTROL.CHOICES }
---  porches     = { label=_("Porches"),        choices=LEVEL_CONTROL.CHOICES }
-
---  closets     = { label=_("Closets"),        choices=LEVEL_CONTROL.CHOICES }
+--  cycles      = { label=_("Multiple Paths"), choices=LEVEL_CONTROL.CHOICES }
 --  ex_floors   = { label=_("3D Floors"),      choices=LEVEL_CONTROL.CHOICES }
---  lakes       = { label=_("Lakes"),          choices=LEVEL_CONTROL.CHOICES }
---  scenics     = { label=_("Scenic Rooms"),   choices=LEVEL_CONTROL.CHOICES }
 
 --  barrels     = { label=_("Barrels"),        choices=LEVEL_CONTROL.CHOICES }
+--  porches     = { label=_("Porches"),        choices=LEVEL_CONTROL.CHOICES }
+--  lakes       = { label=_("Lakes"),          choices=LEVEL_CONTROL.CHOICES }
 --  bridges     = { label=_("3D Bridges"),     choices=LEVEL_CONTROL.CHOICES }
 --  crossovers  = { label=_("Cross-Overs"),    choices=LEVEL_CONTROL.CHOICES }
---  cycles      = { label=_("Multiple Paths"), choices=LEVEL_CONTROL.CHOICES }
   }
 }
 

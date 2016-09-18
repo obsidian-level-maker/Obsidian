@@ -232,7 +232,6 @@ function Grower_preprocess_grammar()
     end
 
     if E.kind == "cage"    then add_style("cages")    end
-    if E.kind == "closet"  then add_style("closets")  end
     if E.kind == "liquid"  then add_style("liquids")  end
     if E.kind == "hallway" then add_style("hallways") end
     if E.kind == "hall2"   then add_style("hallways") end

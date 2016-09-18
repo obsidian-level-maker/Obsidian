@@ -136,49 +136,41 @@ GLOBAL_STYLE_LIST =
   outdoors    = { none=0,  few=60, some=40, heaps=20 }
   caves       = { none=60, few=20, some=20, heaps=5 }
 
+  traps       = { none=0,  few=20, some=65, heaps=15 }
+  secrets     = { none=0,  few=20, some=50, heaps=10 }
+  cages       = { none=10, few=20, some=40, heaps=10 }
+
   big_rooms   = { none=10, few=20, some=40, heaps=20 }
   symmetry    = { none=10, few=40, some=60, heaps=10 }
   steepness   = { none=0,  few=20, some=60, heaps=10 }
   hallways    = { none=0,  few=60, some=30, heaps=10 }
-
-  cages       = { none=10, few=20, some=40, heaps=10 }
-  traps       = { none=0,  few=20, some=65, heaps=15 }
-  secrets     = { none=0,  few=20, some=50, heaps=10 }
-  closets     = { none=0,  few=0,  some=60, heaps=20 }
 
   -- room connections --
 
   teleporters = { none=20, few=40, some=40, heaps=20 }
   doors       = { none=5,  few=30, some=60, heaps=5 }
   windows     = { none=0,  few=20, some=70, heaps=35 }
-  fences      = { none=30, few=30, some=10 }
   switches    = { none=20, few=20, some=40, heaps=10 }
   keys        = { none=0,  few=10, some=20, heaps=60 }
 
   -- decoration stuff --
 
   liquids     = { none=0,  few=20, some=20, heaps=80 }
-  porches     = { none=0,  few=10, some=60, heaps=10 }
   pictures    = { none=0,  few=10, some=50, heaps=10 }
-
-  pillars     = { none=0,  few=60, some=30, heaps=10 }
-  crates      = { none=20, few=0,  some=40, heaps=10 }
-  barrels     = { none=0,  few=50, some=50, heaps=10 }
 
   -- monster stuff --
 
   ambushes    = { none=10, few=0,  some=50, heaps=10 }
 
-  -- these are currently broken --
+  -- PLANNED or UNFINISHED stuff --
 
   cycles      = { none=50, few=0,  some=50, heaps=50 }
   ex_floors   = { none=0,  few=40, some=60, heaps=20 }
-  crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
-
-  scenics     = { none=0,  few=30, some=50, heaps=10 }
+  barrels     = { none=0,  few=50, some=50, heaps=10 }
+  porches     = { none=0,  few=10, some=60, heaps=10 }
+  fences      = { none=30, few=30, some=10, heaps=10 }
   lakes       = { none=0,  few=60, some=0,  heaps=10 }
   islands     = { none=0,  few=60, some=0,  heaps=40 }
-  beams       = { none=0,  few=25, some=50, heaps=5  }
 }
 
 
