@@ -10,28 +10,12 @@ Caves:
 +  review all cave themes [ some are FUGLY! ]
    also want more variety, e.g. ROCKRED in Urban/Tech theme
 
--  ensure ceiling brush gets same "light_add" as floor brush
-   [ OR: use Ambient_push / pop.... ]
-
 -  some smaller / different stalagmites
    [ for floor-to-ceiling ones, use _FLOOR or _CEIL, never _WALL ]
 
 
 
-Miscellaneous:
-
-+  joiner facades STILL borked
-   [ perhaps they can have TWO facades ?? ]
-
-+  generally improve facade assignment
-
-
-
 Tidying Up / Release stuff:
-
--  check for !!! in code
-
--  check for prob=30*99 in rules and prefabs
 
 -  update i18n language template
 
@@ -41,6 +25,8 @@ Tidying Up / Release stuff:
 -  test: Ultimate Doom
 -  test: TNT and Egypt theme
 -  test: Plutonia
+
+-  test co-op mode
 
 -  test the addon-package system
 

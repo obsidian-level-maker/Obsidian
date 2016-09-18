@@ -62,8 +62,11 @@ ______________________________________________________________________
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
 
-+  compute a score early, do a check on first whole-seed "area" element
-   and do the "max_size" check here too
++  grower: compute a score early, do a check on first whole-seed
+   "area" element and do the "max_size" check here too
+
++  level_usage for: rules, prefabs, rooms themes.
+   (maybe have "room_usage" and "zone_usage" for prefabs too)
 
 
 -  two connections into a room
@@ -177,9 +180,6 @@ SHAPE GRAMMARS
 
 -  IDEA: aversion for rules, decreases prob of using rule again in a room
    [ also: aversion for NICE_ITEMS ]
-
--  IDEA: level_usage, room_usage
-   [ OR: level_skip,  room_skip ]
 
 idea:  CYCLE pass (after SPROUT) for multiple paths
        [ probably as 'H' hallways, allow these to grow, prune them
