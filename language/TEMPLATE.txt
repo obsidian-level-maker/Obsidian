@@ -6,7 +6,7 @@ msgid   ""
 msgstr  "Project-Id-Version: Oblige Level Maker\n"
         "Report-Msgid-Bugs-To: \n"
         "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "PO-Revision-Date: 2016-09-18 19:54+1000\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
         "Language: \n"
@@ -14,7 +14,7 @@ msgstr  "Project-Id-Version: Oblige Level Maker\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: engines/boom.lua:121
+#: engines/boom.lua:126
 msgid   "BOOM Compat"
 msgstr  ""
 
@@ -62,63 +62,55 @@ msgstr  ""
 msgid   "Doom 2"
 msgstr  ""
 
-#: games/doom/themes.lua:1477 games/quake/themes.lua:284
+#: games/doom/themes.lua:1866 games/quake/themes.lua:268
 msgid   "Tech"
 msgstr  ""
 
-#: games/doom/themes.lua:1487
+#: games/doom/themes.lua:1876
 msgid   "Hell"
 msgstr  ""
 
-#: games/doom/themes.lua:1497 games/heretic/themes.lua:391
+#: games/doom/themes.lua:1886 games/heretic/themes.lua:375
 msgid   "Urban"
 msgstr  ""
 
-#: games/doom/themes.lua:1507
+#: games/doom/themes.lua:1896
 msgid   "Mostly Tech"
 msgstr  ""
 
-#: games/doom/themes.lua:1516
+#: games/doom/themes.lua:1905
 msgid   "Mostly Urban"
 msgstr  ""
 
-#: games/doom/themes.lua:1525
+#: games/doom/themes.lua:1914
 msgid   "Mostly Hell"
 msgstr  ""
 
-#: games/doom/themes.lua:1535
-msgid   "Wolfenstein"
-msgstr  ""
-
-#: games/doom/x_doom1.lua:2023
+#: games/doom/x_doom1.lua:2069
 msgid   "Doom 1"
 msgstr  ""
 
-#: games/doom/x_doom1.lua:2049
+#: games/doom/x_doom1.lua:2095
 msgid   "Ultimate Doom"
 msgstr  ""
 
-#: games/doom/x_doom1.lua:2065
+#: games/doom/x_doom1.lua:2111
 msgid   "Deimos"
 msgstr  ""
 
-#: games/doom/x_doom1.lua:2075
+#: games/doom/x_doom1.lua:2121
 msgid   "Thy Flesh"
-msgstr  ""
-
-#: games/doom/x_freedoom.lua:21
-msgid   "FreeDoom"
 msgstr  ""
 
 #: games/doom/x_plutonia.lua:150
 msgid   "Plutonia"
 msgstr  ""
 
-#: games/doom/x_tnt.lua:396
+#: games/doom/x_tnt.lua:413
 msgid   "TNT Evilution"
 msgstr  ""
 
-#: games/doom/x_tnt.lua:413
+#: games/doom/x_tnt.lua:430
 msgid   "Egypt"
 msgstr  ""
 
@@ -126,7 +118,7 @@ msgstr  ""
 msgid   "Heretic"
 msgstr  ""
 
-#: games/heretic/themes.lua:400 games/quake/themes.lua:293
+#: games/heretic/themes.lua:384 games/quake/themes.lua:277
 msgid   "Castle"
 msgstr  ""
 
@@ -134,31 +126,31 @@ msgstr  ""
 msgid   "Hexen"
 msgstr  ""
 
-#: games/hexen/themes.lua:2703
+#: games/hexen/themes.lua:2687
 msgid   "Dungeon"
 msgstr  ""
 
-#: games/hexen/themes.lua:2710
+#: games/hexen/themes.lua:2694
 msgid   "Elemental"
 msgstr  ""
 
-#: games/hexen/themes.lua:2717
+#: games/hexen/themes.lua:2701
 msgid   "Wilderness"
 msgstr  ""
 
-#: games/hexen/themes.lua:2724
+#: games/hexen/themes.lua:2708
 msgid   "Cave"
 msgstr  ""
 
-#: games/hexen/themes.lua:2731
+#: games/hexen/themes.lua:2715
 msgid   "Ice"
 msgstr  ""
 
-#: games/hexen/themes.lua:2738
+#: games/hexen/themes.lua:2722
 msgid   "Swamp"
 msgstr  ""
 
-#: games/hexen/themes.lua:2745
+#: games/hexen/themes.lua:2729
 msgid   "Village"
 msgstr  ""
 
@@ -216,7 +208,7 @@ msgid   "glBSP Error"
 msgstr  ""
 
 #: gui/g_doom.cc:667 gui/g_doom.cc:728 gui/g_nukem.cc:498 gui/g_quake.cc:1449
-#: gui/g_quake2.cc:1127 gui/m_lua.cc:1230 gui/main.cc:659
+#: gui/g_quake2.cc:1127 gui/m_lua.cc:1230 gui/main.cc:667
 msgid   "Cancelled"
 msgstr  ""
 
@@ -467,26 +459,26 @@ msgstr  ""
 msgid   "Close"
 msgstr  ""
 
-#: gui/main.cc:618
+#: gui/main.cc:626
 msgid   "Preparing..."
 msgstr  ""
 
-#: gui/main.cc:639
+#: gui/main.cc:647
 msgid   "Success"
 msgstr  ""
 
-#: gui/main.cc:778 gui/main.cc:825
+#: gui/main.cc:787 gui/main.cc:837
 #, c-format
 msgid   "No such config file: %s\n"
 msgstr  ""
 
-#: gui/main.cc:883
+#: gui/main.cc:895
 #, c-format
 msgid   "Sorry, an internal error occurred:\n"
         "%s"
 msgstr  ""
 
-#: gui/main.cc:887
+#: gui/main.cc:899
 msgid   "An unknown problem occurred (UI code)"
 msgstr  ""
 
@@ -602,49 +594,49 @@ msgstr  ""
 msgid   "Caves: "
 msgstr  ""
 
-#: gui/ui_level.cc:224
+#: gui/ui_level.cc:222
 msgid   "Small"
 msgstr  ""
 
-#: gui/ui_level.cc:225
+#: gui/ui_level.cc:223
 msgid   "Regular"
 msgstr  ""
 
-#: gui/ui_level.cc:226
+#: gui/ui_level.cc:224
 msgid   "Large"
 msgstr  ""
 
-#: gui/ui_level.cc:227
+#: gui/ui_level.cc:225
 msgid   "Extreme"
 msgstr  ""
 
-#: gui/ui_level.cc:229
+#: gui/ui_level.cc:227
 msgid   "Progressive"
 msgstr  ""
 
-#: gui/ui_level.cc:230
+#: gui/ui_level.cc:228
 msgid   "Episodic"
 msgstr  ""
 
-#: gui/ui_level.cc:231 gui/ui_level.cc:249 gui/ui_play.cc:321
+#: gui/ui_level.cc:229 gui/ui_level.cc:247 gui/ui_play.cc:321
 #: gui/ui_play.cc:350 modules/level_control.lua:24
 msgid   "Mix It Up"
 msgstr  ""
 
-#: gui/ui_level.cc:241 gui/ui_play.cc:314 gui/ui_play.cc:346
+#: gui/ui_level.cc:239 gui/ui_play.cc:314 gui/ui_play.cc:346
 #: gui/ui_play.cc:360 modules/level_control.lua:25
 msgid   "NONE"
 msgstr  ""
 
-#: gui/ui_level.cc:242 modules/level_control.lua:26
+#: gui/ui_level.cc:240 modules/level_control.lua:26
 msgid   "Rare"
 msgstr  ""
 
-#: gui/ui_level.cc:243 modules/level_control.lua:27
+#: gui/ui_level.cc:241 modules/level_control.lua:27
 msgid   "Few"
 msgstr  ""
 
-#: gui/ui_level.cc:244 gui/ui_play.cc:316 gui/ui_play.cc:347
+#: gui/ui_level.cc:242 gui/ui_play.cc:316 gui/ui_play.cc:347
 #: gui/ui_play.cc:362 modules/ctl_doom.lua:26 modules/ctl_doom.lua:131
 #: modules/ctl_heretic.lua:26 modules/ctl_heretic.lua:114
 #: modules/ctl_quake.lua:26 modules/ctl_quake.lua:117
@@ -654,11 +646,11 @@ msgstr  ""
 msgid   "Less"
 msgstr  ""
 
-#: gui/ui_level.cc:245 modules/level_control.lua:29
+#: gui/ui_level.cc:243 modules/level_control.lua:29
 msgid   "Some"
 msgstr  ""
 
-#: gui/ui_level.cc:246 gui/ui_play.cc:318 gui/ui_play.cc:349
+#: gui/ui_level.cc:244 gui/ui_play.cc:318 gui/ui_play.cc:349
 #: gui/ui_play.cc:364 modules/ctl_doom.lua:28 modules/ctl_doom.lua:133
 #: modules/ctl_heretic.lua:28 modules/ctl_heretic.lua:116
 #: modules/ctl_quake.lua:28 modules/ctl_quake.lua:119
@@ -668,7 +660,7 @@ msgstr  ""
 msgid   "More"
 msgstr  ""
 
-#: gui/ui_level.cc:247 gui/ui_play.cc:365 modules/ctl_doom.lua:29
+#: gui/ui_level.cc:245 gui/ui_play.cc:365 modules/ctl_doom.lua:29
 #: modules/ctl_doom.lua:134 modules/ctl_heretic.lua:29
 #: modules/ctl_heretic.lua:117 modules/ctl_quake.lua:29
 #: modules/ctl_quake.lua:120 modules/ctl_quake2.lua:29
@@ -951,18 +943,22 @@ msgid   "Level Control"
 msgstr  ""
 
 #: modules/level_control.lua:58
-msgid   "Cages"
+msgid   "Big Rooms"
 msgstr  ""
 
 #: modules/level_control.lua:59
-msgid   "Dark Outdoors"
+msgid   "Cages"
 msgstr  ""
 
 #: modules/level_control.lua:60
-msgid   "Doors"
+msgid   "Dark Outdoors"
 msgstr  ""
 
 #: modules/level_control.lua:61
+msgid   "Doors"
+msgstr  ""
+
+#: modules/level_control.lua:62
 msgid   "Hallways"
 msgstr  ""
 
@@ -978,19 +974,15 @@ msgstr  ""
 msgid   "Monster Variety"
 msgstr  ""
 
-#: modules/level_control.lua:66
-msgid   "Pictures"
-msgstr  ""
-
 #: modules/level_control.lua:67
 msgid   "Secrets"
 msgstr  ""
 
-#: modules/level_control.lua:69
+#: modules/level_control.lua:68
 msgid   "Steepness"
 msgstr  ""
 
-#: modules/level_control.lua:70
+#: modules/level_control.lua:69
 msgid   "Switched Doors"
 msgstr  ""
 
@@ -1004,6 +996,16 @@ msgstr  ""
 
 #: modules/level_control.lua:73
 msgid   "Windows"
+msgstr  ""
+
+#: modules/mini_mastermind.lua:30
+msgid   "Smaller Spiderdemon"
+msgstr  ""
+
+#: modules/mini_mastermind.lua:41
+msgid   "Makes the Spider Mastermind smaller via a DEHACKED lump, which "
+        "allows her to be placed in maps more often (her default size is so "
+        "large that there is rarely enough space)"
 msgstr  ""
 
 #: modules/music_swap.lua:115
@@ -1062,18 +1064,18 @@ msgstr  ""
 msgid   "ZDoom Marines : Fine Control"
 msgstr  ""
 
-#: scripts/defs.lua:54
+#: scripts/defs.lua:55
 msgid   "Limit Removing"
 msgstr  ""
 
-#: scripts/defs.lua:62
+#: scripts/defs.lua:63
 msgid   "As Original"
 msgstr  ""
 
-#: scripts/defs.lua:68
+#: scripts/defs.lua:69
 msgid   "A Bit Mixed"
 msgstr  ""
 
-#: scripts/defs.lua:74
+#: scripts/defs.lua:75
 msgid   "Jumbled Up"
 msgstr  ""
