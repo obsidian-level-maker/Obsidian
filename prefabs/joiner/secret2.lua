@@ -7,10 +7,12 @@ PREFABS.Joiner_secret2_A =
   file   = "joiner/secret2.wad"
   map    = "MAP01"
 
-  where  = "seeds"
-  shape  = "I"
+  prob   = 150
 
   key    = "secret"
+
+  where  = "seeds"
+  shape  = "I"
 
   seed_w = 2
   seed_h = 1
@@ -20,8 +22,6 @@ PREFABS.Joiner_secret2_A =
 
   x_fit  = "frame"
   y_fit  = { 64,96 }
-
-  prob   = 150
 
   -- pick some different objects for the hint, often none
   thing_33 =
@@ -56,8 +56,9 @@ PREFABS.Joiner_secret2_C1 =
   template = "Joiner_secret2_A"
   map      = "MAP03"
 
-  theme  = "tech"
   prob   = 100
+  theme  = "tech"
+  env    = "!cave"
 }
 
 PREFABS.Joiner_secret2_C2 =
@@ -65,8 +66,9 @@ PREFABS.Joiner_secret2_C2 =
   template = "Joiner_secret2_A"
   map      = "MAP03"
 
-  theme  = "!tech"
   prob   = 100
+  theme  = "!tech"
+  env    = "!cave"
 
   tex_SILVER2 = "MARBFAC3"
 }
