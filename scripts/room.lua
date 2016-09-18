@@ -670,7 +670,6 @@ end
 
 function Room_reckon_door_tex()
 
-
   local function visit_conn(C, E1, E2)
     if E1 == nil then return end
     assert(E2)
@@ -688,14 +687,7 @@ function Room_reckon_door_tex()
 
 
   local function visit_joiner(C)
-    -- TODO : here is probably best place to decide "wall" and "outer"
-    --        materials -- probably create the whole skin table here.
-    --
-    -- [ some hackitude in Render_chunk currently does joiners Ok ]
-
-
-    -- compute wall mats on the edges
-    visit_conn(C, C.E1, C.E2)
+    -- nothing needed
   end
 
 
@@ -2592,7 +2584,6 @@ function Room_floor_ceil_heights()
 
     if chunk.place == "whole" then
       chunk.area.is_outdoor = nil
---!!!!????  assert(chunk.area.facade_mat)
     end
 
     local delta_h = chunk.prefab_def.delta_h or 0

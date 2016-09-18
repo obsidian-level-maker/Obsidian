@@ -114,6 +114,8 @@
 
     peer : EDGE  -- for connections and windows, the edge on other side
 
+    other_area : AREA   -- used for closets and joiners
+
 
     floor_h  -- floor height (set during room layouting)
 
@@ -725,7 +727,11 @@ function Seed_create_chunk_edge(chunk, side, kind)
 
   local S = SEEDS[sx][sy]
 
-  return Seed_create_edge(S, 10-side, long, kind)
+  local E = Seed_create_edge(S, 10-side, long, kind)
+
+  E.other_area = chunk.area
+
+  return E
 end
 
 
@@ -748,10 +754,6 @@ function Edge_is_wallish(E)
     return true
   end
 
-  if E.to_chunk and E.to_chunk.kind == "closet" then
-    return true
-  end
-
   -- handle straddling stuff
   if E.peer and E.kind == "nothing" then
     local kind2 = E.peer.kind
@@ -768,23 +770,19 @@ function Edge_is_wallish(E)
 end
 
 
-function Edge_calc_wallish_mat(E)
+function Edge_wallish_tex(E)
   -- this handles most cases
   if E.wall_mat then
     return E.wall_mat
   end
 
-  -- closets
-  if E.to_chunk and E.to_chunk.kind == "closet" then
-    local A = E.to_chunk.area
-
-    return Junction_calc_wall_tex(E.area, A)
+  -- closets and joiners
+  if E.other_area then
+    return Junction_calc_wall_tex(E.area, E.other_area)
   end
 
-  -- TODO : straddling stuff??
-
   -- fallback
-  return "METAL"
+  return "_ERROR"
 end
 
 
@@ -862,7 +860,7 @@ function Seed_alloc_depot(room)
     skin = {}
   }
 
-  DEPOT.skin.wall = "METAL"
+  DEPOT.skin.wall = "_ERROR"
 
   table.insert(LEVEL.depots, DEPOT)
 

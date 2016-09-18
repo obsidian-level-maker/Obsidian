@@ -878,7 +878,7 @@ function Corner_mark_walls(E)
   local cx = E.S.sx
   local cy = E.S.sy
 
-  local wall_mat = Edge_calc_wallish_mat(E)
+  local wall_mat = Edge_wallish_tex(E)
 
   if E.dir == 2 or E.dir == 6 or E.dir == 1 or E.dir == 3 then cx = cx + 1 end
   if E.dir == 8 or E.dir == 6 or E.dir == 9 or E.dir == 3 then cy = cy + 1 end
@@ -1584,7 +1584,8 @@ function Area_closet_edges()
 
     local E = Seed_create_chunk_edge(chunk, chunk.from_dir, "nothing")
 
-    E.to_chunk = chunk
+    E.is_wallish = true
+
     chunk.edges = { E }
 
     -- killed joiners need the edge to be ignored
