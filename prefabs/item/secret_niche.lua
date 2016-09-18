@@ -53,7 +53,7 @@ PREFABS.Item_secret_trappy =
   template = "Item_secret_niche1"
   map      = "MAP03"
 
-  prob  = 12
+  prob  = 20
   style = "traps"
 
   thing_34 =
