@@ -635,6 +635,9 @@ function Junction_make_wall(junc)
 
     assert(A2 != "map_edge")
 
+    -- do not need walls inside a void area
+    if A1.mode == "void" then continue end
+
     local E = { kind="wall", area=A1 }
 
     E.wall_mat = Junction_calc_wall_tex(A1, A2)
