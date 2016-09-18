@@ -956,12 +956,13 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     local prob
     local item = assert(chunk.content_item)
 
-    if chunk.content_kind == "ITEM" then
-      prob = 70
-    elseif table.has_elem(LEVEL.new_weapons, item) then
-      prob = 95
+    if table.has_elem(LEVEL.new_weapons, item) then
+      prob = 99
+    -- very rarely trap weapons you already have
+    elseif chunk.content_kind == "WEAPON" then
+      prob = 1
     else
-      prob = 40
+      prob = 60
     end 
 
     if not rand.odds(prob) then return -2 end
