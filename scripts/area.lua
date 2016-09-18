@@ -71,9 +71,9 @@
 
     --- other stuff ---
 
-    facade_group : FACADE_GROUP   -- used for indoor-y areas
-
     inner_points : list(CORNER)
+
+    facade_group : FACADE_GROUP   -- used by facade logic (temporarily)
 
 --]]
 
@@ -88,8 +88,6 @@
 --class FACADE_GROUP
 --[[
     zone_diff  -- true if this group touches a zone difference
-
-    mat     -- facade material to use (NIL when zone_diff is true)
 --]]
 
 
@@ -1698,10 +1696,7 @@ local test_textures =
   end
 
 
-  local function kinda_in_zone(A, Z)
-    if A.zone == Z then return true end
-
-    -- allow joiners which straddle two zones
+  local function is_straddling_joiner(A)
     if A.chunk and A.chunk.kind == "joiner" then
       return (A.chunk.from_area.zone == Z) or
              (A.chunk.dest_area.zone == Z)
@@ -1711,7 +1706,21 @@ local test_textures =
   end
 
 
+  local function kinda_in_zone(A, Z)
+    if A.zone == Z then return true end
+
+    -- allow joiners which straddle two zones
+    if is_straddling_joiner(A) then return true end
+
+    return false
+  end
+
+
   local function spread_group(Z, A)
+    if is_straddling_joiner(A) then
+      A.facade_group.zone_diff = true
+    end
+
     each N in A.corner_neighbors do
       if not N.facade_group and kinda_in_zone(N, Z) and N:is_indoor() then
         N.facade_group = A.facade_group
@@ -1723,11 +1732,6 @@ local test_textures =
 
 
   local function visit_zone(Z)
-    -- clear previous groups  [ DUE TO JOINERS... ]
-    each A in LEVEL.areas do
-      A.facade_group = nil
-    end
-
     each A in LEVEL.areas do
       if not A.facade_group and kinda_in_zone(A, Z) and A:is_indoor() then
         A.facade_group = new_group(A)
@@ -1738,15 +1742,16 @@ local test_textures =
 
     Corner_detect_zone_diffs()
 
-local seen = {}
+    -- assign a facade to groups which don't touch a zone difference
     each A in LEVEL.areas do
-if A.facade_group and not seen[A.facade_group] then
-seen[A.facade_group] = 1
-stderrf("%s / %s : zone_diff=%s\n", Z.name, A.facade_group.name, tostring(A.facade_group.zone_diff))
-end
       if A.facade_group and not A.facade_group.zone_diff then
-        A.facade_crap = A.zone.other_facade  ---???  A.facade_group.mat
+        A.facade_crap = A.zone.other_facade
       end
+    end
+
+    -- clear the groups (for the sake of straddling joiners)
+    each A in LEVEL.areas do
+      A.facade_group = nil
     end
   end
 
@@ -1760,7 +1765,7 @@ end
       each A in Z.areas do
         gui.debugf("  %s (%s / %s) ---> '%s'\n", A.name,
           A.mode, sel(A.is_outdoor, "outdoor", " indoor"),
-          A.facade_mat or "(nil)")
+          A.facade_crap or "(nil)")
       end
     end
 
