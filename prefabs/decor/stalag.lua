@@ -1,11 +1,14 @@
 --
--- Cavey stalagmite / stalactite
+-- Cavey stalagmites & stalactites
 --
+
+
+---- jutting up from floor ----
 
 PREFABS.Decor_stalag1 =
 {
   file   = "decor/stalag.wad"
-  map    = "MAP02"
+  map    = "MAP01"
 
   prob   = 100
   env    = "cave"
@@ -20,6 +23,28 @@ PREFABS.Decor_stalag1 =
   z_fit  = "top"
 }
 
+PREFABS.Decor_stalag1_big =
+{
+  template = "Decor_stalag1"
+  map      = "MAP02"
+
+  prob   = 140
+
+  z_fit  = "bottom"
+}
+
+
+---- jutting down from ceiling ----
+
+PREFABS.Decor_stalag2 =
+{
+  template = "Decor_stalag1"
+  map      = "MAP04"
+
+  prob   = 140
+
+  z_fit  = "bottom"
+}
 
 PREFABS.Decor_stalag2_big =
 {
@@ -31,6 +56,18 @@ PREFABS.Decor_stalag2_big =
   z_fit  = "bottom"
 }
 
+
+---- both floor and ceiling ----
+
+PREFABS.Decor_stalag3 =
+{
+  template = "Decor_stalag1"
+  map      = "MAP07"
+
+  prob   = 70
+
+  z_fit  = "stretch"
+}
 
 PREFABS.Decor_stalag3_big =
 {
