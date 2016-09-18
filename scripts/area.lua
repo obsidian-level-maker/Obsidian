@@ -1716,7 +1716,7 @@ local test_textures =
   end
 
 
-  local function spread_group(Z, A)
+  local function spread_facade(Z, A)
     if is_straddling_joiner(A) then
       A.facade_group.zone_diff = true
     end
@@ -1725,7 +1725,7 @@ local test_textures =
       if not N.facade_group and kinda_in_zone(N, Z) and N:is_indoor() then
         N.facade_group = A.facade_group
 
-        spread_group(Z, N)
+        spread_facade(Z, N)
       end
     end
   end
@@ -1736,7 +1736,7 @@ local test_textures =
       if not A.facade_group and kinda_in_zone(A, Z) and A:is_indoor() then
         A.facade_group = new_group(A)
 
-        spread_group(Z, A)
+        spread_facade(Z, A)
       end
     end
 
