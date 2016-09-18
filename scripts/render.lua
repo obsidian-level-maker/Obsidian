@@ -2030,8 +2030,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     Trans.entity(R.player_set[2], mx + dy, my - dx, z, { angle=angle })
 
     if GAME.ENTITIES["player8"] then
-      mx = mx - dx * 2
-      my = my - dy * 2
+      mx = mx + dx * 2
+      my = my + dy * 2
 
       Trans.entity(R.player_set[3], mx - dy, my + dx, z, { angle=angle })
       Trans.entity(R.player_set[4], mx + dy, my - dx, z, { angle=angle })
