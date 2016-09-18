@@ -20,5 +20,7 @@ PREFABS.Teleporter_Closet2 =
 
   tag_1 = "?out_tag"
   tag_2 = "?in_tag"
+
+  flat_FLAT5_3 = "REDWALL"
 }
 
