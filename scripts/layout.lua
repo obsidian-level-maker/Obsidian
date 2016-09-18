@@ -1134,7 +1134,8 @@ function Layout_decorate_rooms(pass)
 
       if (C.kind == "joiner" or C.kind == "edge") and
          not C.lock and
-         not (C.R1.is_secret or C.R2.is_secret) and
+         not (N.is_secret or R.is_secret) and
+         not N.is_start and
          N.lev_along > R.lev_along and
          joiner_not_large(C)
       then
