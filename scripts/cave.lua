@@ -1571,7 +1571,9 @@ function Cave_floor_heights(R, entry_h)
 
   visit_area(entry_area, z_dir, entry_h)
 
---!!!!  transfer_heights()
+--TODO : only needed for caves with varying floor heights
+--       [ currently caves are always flat ]
+--  transfer_heights()
 
   update_min_max_floor()
   update_walk_ways()
@@ -1891,7 +1893,8 @@ function Render_cave(R)
   end
 
 
---[[ OLD
+--[[ OLD STUFF.... TODO: REVIEW IF USEFUL
+
   local function heights_near_island(island)
     local min_floor =  9e9
     local max_ceil  = -9e9
@@ -1914,7 +1917,7 @@ function Render_cave(R)
     end  -- x, y
     end
 
---!!! FIXME  assert(min_floor < max_ceil)
+--FIXME  assert(min_floor < max_ceil)
 
     return min_floor, max_ceil
   end
@@ -1929,7 +1932,7 @@ function Render_cave(R)
 
     local f_h, c_h = heights_near_island(island)
 
-    -- FIXME!! should not happen
+    -- FIXME! should not happen
     if f_h >= c_h then return end
 
     f_h = f_h - 24

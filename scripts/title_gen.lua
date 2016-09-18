@@ -980,6 +980,7 @@ function Title_centered_string(T, mx, my, text, style)
  
   -- TODO : support "thin_horiz" and "thin_vert" pens
   -- [ not real pens, just use different box_w than box_h ]
+
   -- FIXME : the "slash" pens should adjust box_h too
 
   gui.title_prop("pen_type", T.pen_type or "circle")
@@ -1603,7 +1604,7 @@ stderrf("font sizes: %d x %d  |  %d x %d  |  %d x %d\n", w1,h1, w2,h2, w3,h3)
 --]]
 
 
-  -- FIXME !!! find a good naming scheme for the title parts
+  -- TODO: find a good naming scheme for these title parts
 
 
   -- decide geometry for major parts --

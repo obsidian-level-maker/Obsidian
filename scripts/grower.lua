@@ -2885,14 +2885,17 @@ function Grower_prune_small_rooms()
     end
   until not changes
 
---!!!!  -- turn any other small rooms into hallways
---!!!!  -- [ cannot remove them since they are not leafs ]
---!!!!
---!!!!  each R in LEVEL.rooms do
---!!!!    if is_too_small(R) then
---!!!!      become_hallway(R)
---!!!!    end
---!!!!  end
+--[[  TODO : REVIEW this idea
+
+  -- turn any other small rooms into hallways
+  -- [ cannot remove them since they are not leafs ]
+
+  each R in LEVEL.rooms do
+    if is_too_small(R) then
+      become_hallway(R)
+    end
+  end
+--]]
 
   -- a trunk may have become empty, prune these too
   prune_trunks()

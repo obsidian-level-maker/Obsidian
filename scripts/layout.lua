@@ -2028,7 +2028,7 @@ function Layout_liquid_stuff()
     if A.mode != "scenic" then return end
 
     -- random chance
---!!!    if rand.odds(60) then return end
+    if not rand.odds(90) then return end
 
     -- never touching edge of map
     if A.touches_edge then return end

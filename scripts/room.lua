@@ -2479,7 +2479,7 @@ function Room_floor_ceil_heights()
     each P in R.pieces do
       set_floor(P.area, R.hallway.max_h)
 
-      -- FIXME!!! TEMP RUBBISH
+      -- FIXME TEMP RUBBISH
       P.prefab_def = assert(PREFABS.Vent_p1)
     end
 

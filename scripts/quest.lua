@@ -958,10 +958,12 @@ do return false end
     if unused < 1 then return end
     if unused > 4 then unused = 4 end
 
+--[[ TODO : REVIEW (I think it makes more sense when we have remote-switch quests)
     if not rand.odds(LOCK_PROBS[unused]) then
---!!!! FIXME      quest.no_more_locks = true
---!!!! FIXME      return
+      quest.no_more_locks = true
+      return
     end
+--]]
 
     local goal = pick_goal(goal_list)
 
