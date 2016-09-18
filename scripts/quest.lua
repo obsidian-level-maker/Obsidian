@@ -1429,26 +1429,26 @@ function Quest_start_room()
 
   local function partition_coop_players()
     --
-    -- partition players between the two rooms.  Since Co-op is often
-    -- played by two people, have a large tendency to place 'player1'
-    -- and 'player2' in different rooms.
+    -- Partition players between the two rooms.  Since Co-op is often
+    -- played by two people, have a large tendency to place player #1
+    -- and player #2 in different rooms.
+    --
+    -- Also don't place both player #1 and player #2 in the alternate
+    -- start room -- as it is possible for the path from an alt start
+    -- room to be blocked off be an intraroom lock.
     --
 
     local set1, set2
 
     if rand.odds(10) then
       set1 = { "player1", "player2", "player5", "player6" }
-      set2 = { "player3", "player4", "player7", "player8" } 
+      set2 = { "player3", "player4", "player7", "player8" }
     elseif rand.odds(50) then
       set1 = { "player1", "player3", "player5", "player7" }
-      set2 = { "player2", "player4", "player6", "player8" } 
+      set2 = { "player2", "player4", "player6", "player8" }
     else
-      set1 = { "player1", "player4", "player6", "player7" }
-      set2 = { "player2", "player3", "player5", "player8" } 
-    end
-
-    if rand.odds(50) then
-      set1, set2 = set2, set1
+      set1 = { "player2", "player3", "player5", "player8" }
+      set2 = { "player1", "player4", "player6", "player7" }
     end
 
     LEVEL.start_room.player_set = set1
