@@ -5,7 +5,7 @@
 PREFABS.Decor_stalag1 =
 {
   file   = "decor/stalag.wad"
-  map    = "MAP01"
+  map    = "MAP02"
 
   prob   = 100
   env    = "cave"
@@ -21,21 +21,21 @@ PREFABS.Decor_stalag1 =
 }
 
 
-PREFABS.Decor_stalag2 =
+PREFABS.Decor_stalag2_big =
 {
   template = "Decor_stalag1"
-  map      = "MAP02"
+  map      = "MAP05"
 
-  prob   = 100
+  prob   = 140
 
   z_fit  = "bottom"
 }
 
 
-PREFABS.Decor_stalag3 =
+PREFABS.Decor_stalag3_big =
 {
   template = "Decor_stalag1"
-  map      = "MAP03"
+  map      = "MAP08"
 
   prob   = 70
 
