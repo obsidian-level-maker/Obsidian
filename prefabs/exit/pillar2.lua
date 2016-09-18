@@ -32,7 +32,7 @@ PREFABS.Exit_pillar2_hell =
   template = "Exit_pillar2"
 
   prob  = 100
-  theme = "hell"
+  theme = "!tech"
 
   tex_SW1STRTN = "SW2GARG"
 }
@@ -42,7 +42,7 @@ PREFABS.Exit_pillar2_urban =
 {
   template = "Exit_pillar2"
 
-  prob  = 50
+  prob  = 500
   theme = "urban"
 
   tex_SW1STRTN = "SW1CMT"
