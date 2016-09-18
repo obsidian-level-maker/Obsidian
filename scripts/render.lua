@@ -29,17 +29,10 @@ function edge_get_rail(S, dir)
   if not (N and N.area) then return nil end
   if N.area == S.area then return nil end
 
---[[  fixme??
-  local bord = S.border[dir]
-
-  if bord.kind == "rail" then return bord end
-
-  if bord.kind != nil then return nil end
---]]
+  local E = S.edge[dir]
+  if E and E.rail_mat then return E end
 
   local junc = Junction_lookup(S.area, N.area)
-
---!!!! FIXME
   if junc.rail_mat then return junc end
 
   return nil
