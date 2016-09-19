@@ -371,15 +371,15 @@ DOOM.THEMES =
       red_torch   = 20
 
       lamp = 30
-      short_lamp = 30
-      mercury_lamp = 10
+      mercury_small = 30
+      mercury_lamp  = 10
     }
 
     outdoor_torches =
     {
       lamp   = 10
-      mercury_lamp = 40
-      short_lamp   = 40
+      mercury_lamp  = 40
+      mercury_small = 20
     }
 
     ceil_light_prob = 50

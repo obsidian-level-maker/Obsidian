@@ -46,9 +46,11 @@ DOOM.ENTITIES =
 
   -- lights --
   lamp         = { id=2028,r=16, h=48, light=255 }
-  mercury_lamp = { id=85,  r=16, h=80, light=255 }
-  short_lamp   = { id=86,  r=16, h=60, light=255 }
   tech_column  = { id=48,  r=16, h=128,light=255 }
+
+  -- these two lamps are not available in DOOM 1
+  mercury_lamp   = { id=85,  r=16, h=80, light=255 }
+  mercury_small  = { id=86,  r=16, h=60, light=255 }
 
   candle         = { id=34, r=16, h=16, light=111, pass=true }
   candelabra     = { id=35, r=16, h=56, light=255 }
@@ -86,6 +88,7 @@ DOOM.ENTITIES =
   impaled_human  = { id=25,r=20, h=64 }
   impaled_twitch = { id=26,r=16, h=64 }
 
+  -- these "gutted_XXX" things are not available in DOOM 1
   gutted_victim1 = { id=73, r=16, h=88, ceil=true }
   gutted_victim2 = { id=74, r=16, h=88, ceil=true }
   gutted_torso1  = { id=75, r=16, h=64, ceil=true }
@@ -100,6 +103,8 @@ DOOM.ENTITIES =
 
   gibs          = { id=24, r=20, h=16, pass=true }
   gibbed_player = { id=10, r=20, h=16, pass=true }
+
+  -- these three are not available in DOOM 1
   pool_blood_1  = { id=79, r=20, h=16, pass=true }
   pool_blood_2  = { id=80, r=20, h=16, pass=true }
   pool_brains   = { id=81, r=20, h=16, pass=true }
