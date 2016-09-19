@@ -2,7 +2,7 @@
 --  The Plutonia Experiment
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -89,10 +89,10 @@ PLUTONIA.MATERIALS =
   -- Overrides for existing DOOM materials --
 
   WOOD1    = { t="A-MYWOOD", f="FLAT5_2" }
-  CEIL1_1  = { f="CEIL1_1", t="A-WOOD1", color=0x5b442b }
-  CEIL1_3  = { f="CEIL1_3", t="A-WOOD1", color=0x594d3d }
-  FLAT5_1  = { f="FLAT5_1", t="A-WOOD1", color=0x503b22 }
-  FLAT5_2  = { f="FLAT5_2", t="A-WOOD1", color=0x503c24 }
+  CEIL1_1  = { f="CEIL1_1", t="A-WOOD1" }
+  CEIL1_3  = { f="CEIL1_3", t="A-WOOD1" }
+  FLAT5_1  = { f="FLAT5_1", t="A-WOOD1" }
+  FLAT5_2  = { f="FLAT5_2", t="A-WOOD1" }
 
   STONE   = { t="A-CONCTE", f="FLAT5_4" }
   FLAT5_4 = { t="A-CONCTE", f="FLAT5_4" }
@@ -119,7 +119,7 @@ PLUTONIA.EPISODES =
   episode1 =
   {
     theme = "tech"
-    sky_patch  = "SKY1"
+    sky_patch = "SKY1"
     dark_prob = 10
   }
 
