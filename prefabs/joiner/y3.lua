@@ -6,7 +6,7 @@ PREFABS.Joiner_y3 =
 {
   file   = "joiner/y3.wad"
 
-  prob   = 350
+  prob   = 300
   theme  = "!tech"
 
   where  = "seeds"

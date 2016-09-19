@@ -58,7 +58,7 @@ PREFABS.Joiner_secret2_C1 =
 
   prob   = 100
   theme  = "tech"
-  env    = "!cave"
+  env    = "building"
 }
 
 PREFABS.Joiner_secret2_C2 =
@@ -68,7 +68,7 @@ PREFABS.Joiner_secret2_C2 =
 
   prob   = 100
   theme  = "!tech"
-  env    = "!cave"
+  env    = "building"
 
   tex_SILVER2 = "MARBFAC3"
 }
