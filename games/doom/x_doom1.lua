@@ -492,6 +492,26 @@ ULTDOOM.THEMES =
     {
     }
 
+    floor_sinks =
+    {
+      PLAIN = 200
+      liquid_plain = 10
+      liquid_shiny = 5
+      liquid_metal = 5
+      floor_green = 10
+      floor_blue2 = 5
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 90
+      sky_shiny = 20
+      sky_metal = 10
+      light_red_shiny = 20
+      light_orange_shiny = 7
+      light_brightred_metal = 7
+    }
+
     wall_groups =
     {
       PLAIN = 70
@@ -542,6 +562,26 @@ ULTDOOM.THEMES =
 
     prefab_remap =
     {
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 200
+      liquid_plain = 10
+      liquid_shiny = 5
+      liquid_metal = 5
+      floor_green = 10
+      floor_blue2 = 5
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 90
+      sky_shiny = 20
+      sky_metal = 10
+      light_red_shiny = 20
+      light_orange_shiny = 7
+      light_brightred_metal = 7
     }
 
     style_list =
@@ -601,6 +641,27 @@ ULTDOOM.THEMES =
       DOORBLU  = "DOORBLU2"
       DOORRED  = "DOORRED2"
       DOORYEL  = "DOORYEL2"
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 120
+      liquid_plain = 10
+      liquid_blood = 10
+      floor_skulls = 20
+      floor_glowingrock = 10
+      floor_snakes = 5
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 50
+      sky_metal = 20
+      sky_plain = 20
+      light_diamond = 10
+      light_hell_red = 20
+      light_hell_lava = 5
+      ceil_redash = 5
     }
 
     monster_prefs =
@@ -664,6 +725,27 @@ ULTDOOM.THEMES =
       DOORBLU  = "DOORBLU2"
       DOORRED  = "DOORRED2"
       DOORYEL  = "DOORYEL2"
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 120
+      liquid_plain = 10
+      liquid_blood = 10
+      floor_skulls = 20
+      floor_glowingrock = 10
+      floor_snakes = 5
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 50
+      sky_metal = 20
+      sky_plain = 20
+      light_diamond = 10
+      light_hell_red = 20
+      light_hell_lava = 5
+      ceil_redash = 5
     }
 
     monster_prefs =
