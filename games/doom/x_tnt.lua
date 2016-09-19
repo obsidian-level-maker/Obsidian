@@ -212,7 +212,7 @@ TNT.THEMES =
       SILVER3  = "MURAL1"
       GATE4    = "FLAT22"
       REDWALL  = "DOKGRIR"
-      SW1COMP  = "SW1STON1"
+      SW1COMP  = "SW1CMT"
     }
 
     outdoor_torches =
