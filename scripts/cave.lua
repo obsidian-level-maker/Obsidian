@@ -2932,12 +2932,20 @@ function Cave_determine_spots(R)
   local info = R.cave_info
   local cave = info.cave
 
+  local base_area = R.areas[1]
 
-  local function do_spot_cell(A, x, y)
+
+  local function do_floor_cell(x, y)
     if x < 1 or x > info.W then return end
     if y < 1 or y > info.H then return end
 
-    local A2 = info.blocks[x][y]
+    local A = info.blocks[x][y]
+
+    if not A then return end
+
+    if not A.floor_h then return end
+
+--[[ TODO : review this, could be needed for multi-floor caves
 
     -- need to remove cells which are not part of the cave
     if not A2 then
@@ -2963,12 +2971,15 @@ function Cave_determine_spots(R)
       if A2.cx1 > A.cx2 then return end
       if A2.cy1 > A.cy2 then return end
     end
+--]]
 
     local poly = Cave_brush(info, x, y)
 
-    gui.spots_fill_poly(poly, SPOT_LEDGE)
+    gui.spots_fill_poly(poly, SPOT_CLEAR)
   end
 
+
+--[[ OLD CRUD, PROBABLY NOT NEEDED
 
   local function do_spot_at_border(A, x, y)  -- NOT NEEDED ??
     -- only needed for lake mode
@@ -3049,78 +3060,54 @@ function Cave_determine_spots(R)
 
     gui.spots_fill_box(S.x1, S.y1, S.x2, S.y2, SPOT_LEDGE)
   end
+--]]
 
 
-  local function determine_spots(A)
+  local function spots_for_cave_area(A)
     assert(A.cx1 and A.cy2)
 
-    -- determine bbox
-    local x1 = info.x1 + (A.cx1 - 1) * 64
-    local y1 = info.y1 + (A.cy1 - 1) * 64 
+    -- determine bbox (with a bit extra)
+    local x1 = info.x1 + (A.cx1 - 2) * 64
+    local y1 = info.y1 + (A.cy1 - 2) * 64 
 
-    local x2 = info.x1 + (A.cx2) * 64
-    local y2 = info.y1 + (A.cy2) * 64
+    local x2 = info.x1 + (A.cx2 + 1) * 64
+    local y2 = info.y1 + (A.cy2 + 1) * 64
 
-    gui.spots_begin(x1, y1, x2, y2, A.floor_h, SPOT_CLEAR)
+    -- initialize grid to "ledge"
+    gui.spots_begin(x1, y1, x2, y2, A.floor_h, SPOT_LEDGE)
 
-
-    -- start with room edges
-    R:spots_do_edges()
-
-    -- handle nearby areas
-    for cx = A.cx1 - 1, A.cx2 + 1 do
-    for cy = A.cy1 - 1, A.cy2 + 1 do
-      do_spot_cell(A, cx, cy)
+    -- clear the floors
+    for cx = A.cx1, A.cx2 do
+    for cy = A.cy1, A.cy2 do
+      do_floor_cell(cx, cy)
     end
     end
 
-    -- handle connections
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room == R then
-        do_spot_conn(S)
-      end
-    end
+    -- set the edges of the room
+    each E in base_area.side_edges do
+      gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
     end
 
-    -- remove importants   FIXME
-    each imp in R.cave_imps do
-      do_spot_important(imp)
-    end
-
-    -- remove decorations
+    -- remove decoration entities
     R:spots_do_decor(A.floor_h)
 
     -- remove walls and blockers (using nearby brushes)
     gui.spots_apply_brushes()
 
 
---- gui.spots_dump("Spot dump")
+gui.spots_dump("Cave spot dump")
 
 
     -- now grab all the spots...
 
     local item_spots = {}
+    local  mon_spots = {}
 
-    if not A.liquid then
-      gui.spots_get_items(item_spots)
-    end
-
-    each spot in item_spots do
-      table.insert(R.item_spots, spot)
-    end
-
-
-    local mon_spots = {}
-
+    gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
 
-    each spot in mon_spots do
---FIXME  spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
-      table.insert(R.mon_spots, spot)
-    end
+    table.append(R.item_spots, item_spots)
+    table.append(R.mon_spots,  mon_spots)
 
     gui.spots_end()
   end
@@ -3128,11 +3115,8 @@ function Cave_determine_spots(R)
 
   ---| Cave_determine_spots |---
 
---!!!! FIXME
-do return end
-
   each A in info.floors do
-    determine_spots(A)
+    spots_for_cave_area(A)
   end
 end
 

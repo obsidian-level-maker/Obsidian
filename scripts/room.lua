@@ -1418,7 +1418,10 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
 
 
   local function spots_in_room(R)
-    if R.kind == "smallexit" then return end
+    if R.is_cave then
+      Cave_determine_spots(R)
+      return
+    end
 
     each A in R.areas do
       spots_for_area(R, A)

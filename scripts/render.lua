@@ -1341,11 +1341,6 @@ function Render_seed(A, S)
     return
   end
 
-  -- caves are done elsewhere
-  if A.room and A.room.is_cave then
-    return
-  end
-
   if S.kind == "void" or A.mode == "void" then
     Render_void(A, S)
     return
@@ -1357,6 +1352,11 @@ function Render_seed(A, S)
     if N and N.area != A then
       table.insert(A.side_edges, S:get_line(dir))
     end
+  end
+
+  -- caves are done elsewhere
+  if A.room and A.room.is_cave then
+    return
   end
 
   Render_floor  (A, S)
