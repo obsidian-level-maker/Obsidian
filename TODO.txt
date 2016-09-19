@@ -68,6 +68,16 @@ ______________________________________________________________________
 +  level_usage for: rules, prefabs, rooms themes.
    (maybe have "room_usage" and "zone_usage" for prefabs too)
 
++  separate the cave room themes:
+   -  any_Cave_WhiteRock   (wall is SP_ROCK1)
+   -  any_Cave_Ashy        (wall is ASHWALL2)
+   -  any_Cave_Muddy       (wall is ASHWALL4)
+   -  any_Cave_BrownRock   (wall is BSTONE1 or STONE6)
+
+   -  urban_Cave_GrayRock
+   -  urban_Cave_Grassy
+   -  hell_Cave_Snakes
+
 
 -  two connections into a room
 
@@ -495,7 +505,7 @@ Prefab system:
    ALWAYS prefer a higher priority over a lower one.
 
 
-New Starting Logic
+Starting Ideas:
 
 -  three main kinds:
 
