@@ -7,12 +7,13 @@ PREFABS.Arch_viney1 =
   file   = "door/viney_arch.wad"
   map    = "MAP02"
 
-  rank = 3
-  prob = 50
+  rank = 1
+  prob = 400
 
   env      = "cave"
   neighbor = "any"
 
+  kind   = "arch"
   where  = "edge"
   seed_w = 2
 
@@ -32,6 +33,15 @@ PREFABS.Arch_viney1_B =
 
   env      = "any"
   neighbor = "cave"
+}
+
+
+PREFABS.Door_viney1 =
+{
+  template = "Arch_viney1"
+
+  rank  = 2
+  kind  = "door"
 }
 
 
