@@ -185,7 +185,6 @@ function DOOM.all_done()
   local dir = "games/doom/data/"
 
   gui.wad_merge_sections(dir .. "doom_falls.wad")
-  gui.wad_merge_sections(dir .. "hang_lamp.wad")
   gui.wad_merge_sections(dir .. "lift_flat.wad")
   gui.wad_merge_sections(dir .. "metal_step.wad")
   gui.wad_merge_sections(dir .. "vine_dude.wad")
@@ -193,6 +192,8 @@ function DOOM.all_done()
 
   if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
     gui.wad_merge_sections(dir .. "short_bars.wad")
+  else
+    gui.wad_merge_sections(dir .. "hang_lamp.wad")
   end
 
   if OB_CONFIG.length == "game" then
