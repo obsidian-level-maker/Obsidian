@@ -439,6 +439,17 @@ ULTDOOM.THEMES =
       GRAYVINE = 60
     }
 
+    cage_mats =
+    {
+      METAL1   = 60
+      BROWN144 = 60
+      ICKWALL3 = 60
+
+      STONE    = 20
+      SLADWALL = 20
+      WOOD1    = 20
+    }
+
     wall_groups =
     {
       PLAIN = 100
