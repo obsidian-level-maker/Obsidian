@@ -917,26 +917,20 @@ DOOM.ROOM_THEMES =
     walls =
     {
       GRAYVINE = 50
-      BROVINE2 = 10
+      BROVINE2 = 20
 
       ZIMMER8  = 40
       ZIMMER7  = 20
       BROWN144 = 30
-      BSTONE1  = 30
 
       ASHWALL2 = 20
-      ASHWALL6 = 10
       TANROCK5 = 10
-
       STONE6   = 10
       TEKWALL4 = 10
     }
 
     floors =
     {
-      GRAYVINE = 50
-      BROVINE2 = 10
-
       ZIMMER8  = 40
       ZIMMER7  = 20
       BROWN144 = 30
@@ -945,8 +939,6 @@ DOOM.ROOM_THEMES =
       ASHWALL2 = 20
       ASHWALL6 = 10
       TANROCK5 = 10
-
-      STONE6   = 10
       TEKWALL4 = 10
     }
   }
@@ -963,6 +955,8 @@ DOOM.ROOM_THEMES =
       BRICK12 = 20
       SLIME14 = 20
       SLIME16 = 20
+
+      GRASS1 = 40
       STONE3 = 40
       FLOOR4_8 = 10
       FLOOR5_4 = 20
@@ -974,7 +968,6 @@ DOOM.ROOM_THEMES =
       ASHWALL2 = 50
       ASHWALL4 = 50
       SP_ROCK1 = 50
-      GRASS1   = 40
 
       ASHWALL6 = 20
       TANROCK4 = 15
@@ -1274,7 +1267,6 @@ DOOM.ROOM_THEMES =
 
     walls =
     {
-      ROCKRED1 = 40
       SP_ROCK1 = 30
       GSTVINE1 = 30
 
@@ -1282,8 +1274,6 @@ DOOM.ROOM_THEMES =
       RROCK04  = 20
       STONE    = 10
 
-      FIRELAVA = 10
-      FIREBLU1 = 10
       SKINEDGE = 10
       CRACKLE4 = 10
       SKSNAKE1 = 10
@@ -1291,19 +1281,40 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      ROCKRED1 = 40
-      SP_ROCK1 = 30
-      GSTVINE1 = 30
+      MFLR8_3  = 20
+      RROCK16  = 30
 
       ASHWALL2 = 30
       RROCK04  = 20
+      FLOOR6_1 = 20
       STONE    = 10
 
-      FIRELAVA = 10
-      FIREBLU1 = 10
-      SKINEDGE = 10
-      CRACKLE4 = 10
+      RROCK02  = 10
       SKSNAKE1 = 10
+    }
+  }
+
+
+  hell_Cave_Hot =
+  {
+    env  = "cave"
+    prob = 100
+
+    walls =
+    {
+      ROCKRED1 = 50
+      FIRELAVA = 20
+      CRACKLE2 = 10
+    }
+
+    floors =
+    {
+      FLOOR6_2 = 40
+      FLOOR6_1 = 20
+
+      RROCK01  = 20
+      RROCK05  = 20
+      RROCK08  = 10
     }
   }
 
@@ -1689,34 +1700,29 @@ DOOM.ROOM_THEMES =
     {
       ROCK2    = 40
       ASHWALL2 = 40
-      ASHWALL4 = 30
-      ZIMMER1  = 30
+      ASHWALL4 = 40
 
-      BSTONE2  = 10
-      ZIMMER5  = 20
+      ZIMMER1  = 10
       ZIMMER3  = 20
+      ZIMMER5  = 20
 
+      BSTONE1  = 10
       STONE5   = 10
       ASHWALL7 = 10
-      ROCK5    = 10
-      WOOD9    = 10
     }
 
     floors =
     {
       ROCK2    = 40
       ASHWALL2 = 40
-      ASHWALL4 = 30
-      ZIMMER1  = 30
+      ASHWALL4 = 40
+
+      ZIMMER1  = 10
+      ZIMMER5  = 20
 
       BSTONE2  = 10
-      ZIMMER5  = 20
-      ZIMMER3  = 20
-
       STONE5   = 10
-      ASHWALL7 = 10
-      ROCK5    = 10
-      WOOD9    = 10
+      RROCK18  = 20
     }
   }
 
@@ -1728,8 +1734,10 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      STONE = 50
-      FLAT5_2 = 50
+      STONE    = 50
+      FLAT5_2  = 50
+      RROCK19  = 25
+      MFLR8_3  = 10
     }
 
     naturals =
