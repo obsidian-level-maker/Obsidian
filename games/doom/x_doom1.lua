@@ -1348,12 +1348,6 @@ ULTDOOM.ROOM_THEMES =
       FLAT5_2 = 5
       CEIL1_1 = 5
     }
-
-    corners =
-    {
-      SKULWALL = 8
-      SKULWAL3 = 7
-    }
   }
 
 
@@ -1466,13 +1460,6 @@ ULTDOOM.ROOM_THEMES =
       FLAT5_1 = 5
       FLAT5_2 = 5
       CEIL1_1 = 5
-    }
-
-    corners =
-    {
-      SKULWALL = 10
-      SKULWAL3 = 10
-      REDWALL1 = 15
     }
   }
 

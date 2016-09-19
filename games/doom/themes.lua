@@ -323,22 +323,6 @@ DOOM.THEMES =
       BROVINE2 = 20
     }
 
-    corners =
-    {
-      STARGR1 = 50
-      METAL1 = 30
-      METAL7 = 50
-      METAL2 = 15
-      METAL4 = 15
-
-      ICKWALL3 = 10
-      TEKWALL4 = 10
-      TEKWALL6 = 15
-      TEKBRON1 = 5
-      COMPTALL = 5
-      COMPBLUE = 5
-    }
-
     prefab_remap =
     {
     }
@@ -960,7 +944,7 @@ DOOM.ROOM_THEMES =
       ASHWALL2 = 20
       TANROCK5 = 10
       STONE6   = 10
-      TEKWALL4 = 10
+      TEKWALL4 =  2
     }
 
     floors =
