@@ -5,6 +5,10 @@
 PREFABS.Joiner_y1 =
 {
   file   = "joiner/y1.wad"
+
+  prob   = 100
+  theme  = "tech"
+
   where  = "seeds"
   shape  = "I"
 
@@ -13,9 +17,6 @@ PREFABS.Joiner_y1 =
 
   deep   = 16
   over   = 16
-
-  theme  = "!hell"
-  prob   = 100
 
   delta_h  = 24
   nearby_h = 128
