@@ -399,19 +399,22 @@ ULTDOOM.MONSTERS =
 
 ULTDOOM.ENTITIES =
 {
-  mercury_lamp  = REMOVE_ME
-  mercury_small = REMOVE_ME
+  -- compatible replacements for things lacking in DOOM 1 / Ultimate DOOM
 
-  gutted_victim1 = REMOVE_ME
-  gutted_victim2 = REMOVE_ME
-  gutted_torso1  = REMOVE_ME
-  gutted_torso2  = REMOVE_ME
-  gutted_torso3  = REMOVE_ME
-  gutted_torso4  = REMOVE_ME
+  mercury_lamp  = { id=2028, r=16, h=48 }
+  mercury_small = { id=2028, r=16, h=48 }
 
-  pool_blood_1  = REMOVE_ME
-  pool_blood_2  = REMOVE_ME
-  pool_brains   = REMOVE_ME
+  gutted_victim1 = { id=59, r=20, h=84, ceil=true, pass=true }
+  gutted_victim2 = { id=61, r=20, h=52, ceil=true, pass=true }
+
+  gutted_torso1  = { id=59, r=20, h=84, ceil=true, pass=true }
+  gutted_torso2  = { id=61, r=20, h=52, ceil=true, pass=true }
+  gutted_torso3  = { id=63, r=20, h=68, ceil=true, pass=true }
+  gutted_torso4  = { id=63, r=20, h=68, ceil=true, pass=true }
+
+  pool_blood_1  = { id=24, r=20, h=16, pass=true }
+  pool_blood_2  = { id=24, r=20, h=16, pass=true }
+  pool_brains   = { id=10, r=20, h=16, pass=true }
 }
 
 
@@ -1395,14 +1398,14 @@ ULTDOOM.ROOM_THEMES =
 
 --Makes sense for high prob for SP_ROCK1 because the intermission screen shows
 --Deimos has a desolate, gray ground.
-    floors = 
-    { 
+    floors =
+    {
       BROWN144 = 30
       BROWN1 = 10
-      STONE = 10 
+      STONE = 10
     }
 
-    naturals = 
+    naturals =
     { 
       SP_ROCK1 = 60
       ASHWALL = 2

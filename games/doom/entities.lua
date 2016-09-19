@@ -45,8 +45,8 @@ DOOM.ENTITIES =
   --- SCENERY ---
 
   -- lights --
-  lamp         = { id=2028,r=16, h=48, light=255 }
-  tech_column  = { id=48,  r=16, h=128,light=255 }
+  lamp         = { id=2028, r=16, h=48,  light=255 }
+  tech_column  = { id=48,   r=16, h=128, light=255 }
 
   -- these two lamps are not available in DOOM 1
   mercury_lamp   = { id=85,  r=16, h=80, light=255 }
