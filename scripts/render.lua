@@ -1218,9 +1218,12 @@ function Render_floor(A, S)
   each C in f_brush do
     local info = edge_get_rail(S, C.__dir)
     if info then
-      C.rail = assert(info.rail_mat)
+      local mat = Mat_lookup_tex(assert(info.rail_mat))
+      assert(mat.t)
+
+      C.rail = mat.t
       C.v1 = 0
-      C.back_rail = C.rail
+      C.back_rail = mat.t
       C.back_v1 = 0
       C.blocked = info.rail_block
     end
