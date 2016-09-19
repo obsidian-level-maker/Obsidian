@@ -249,7 +249,7 @@ DOOM.MATERIALS =
   SW1STRTN = { t="SW1STRTN", f="FLOOR4_1" }
   SW1VINE  = { t="SW1VINE",  f="FLAT1" }
   SW1WOOD  = { t="SW1WOOD",  f="FLAT5_2" }
-  
+
 
   -- floors --
 
@@ -330,7 +330,7 @@ DOOM.MATERIALS =
   GATE2    = { f="GATE2", t="METAL" }
   GATE3    = { f="GATE3", t="METAL" }
   GATE4    = { f="GATE4", t="METAL" }
-  
+
   MFLR8_1  = { f="MFLR8_1", t="STONE2" }
   MFLR8_2  = { f="MFLR8_2", t="BROWNHUG" }
   MFLR8_3  = { f="MFLR8_3", t="SP_ROCK1" }
@@ -339,7 +339,7 @@ DOOM.MATERIALS =
   SFLR6_4  = { f="SFLR6_4", t="SKSNAKE2" }
   SFLR7_1  = { f="SFLR7_1", t="SKSNAKE1" }
   SFLR7_4  = { f="SFLR7_4", t="SKSNAKE1" }
-  
+
   F_STEP1  = { f="STEP1", t="SHAWN2" }
   F_STEP2  = { f="STEP2", t="SHAWN2" }
 
@@ -544,7 +544,7 @@ DOOM.MATERIALS =
   ZIMMER5  = { t="ZIMMER5",  f="RROCK16" }
   ZIMMER7  = { t="ZIMMER7",  f="RROCK20" }
   ZIMMER8  = { t="ZIMMER8",  f="MFLR8_3" }
-                          
+
   ZDOORB1  = { t="ZDOORB1",  f="FLAT23" }
   ZDOORF1  = { t="ZDOORF1",  f="FLAT23" }
   ZELDOOR  = { t="ZELDOOR",  f="FLAT23" }
@@ -604,7 +604,8 @@ DOOM.MATERIALS =
   RROCK02  = { f="RROCK02", t="CRACKLE4" }
   RROCK03  = { f="RROCK03", t="ASHWALL3" }
   RROCK04  = { f="RROCK04", t="ASHWALL3" }
-  RROCK05  = { f="RROCK05", t="ROCKRED1" }  -- animated
+  RROCK05  = { f="RROCK05", t="ROCKRED1" } -- animated (using 05..08)
+
   RROCK09  = { f="RROCK09", t="TANROCK4" }
   RROCK10  = { f="RROCK10", t="BRICK1" }
   RROCK11  = { f="RROCK11", t="BSTONE1" }

@@ -1348,7 +1348,8 @@ DOOM.ROOM_THEMES =
 
       RROCK01  = 20
       RROCK05  = 20
-      RROCK08  = 10
+      RROCK03  = 10
+      RROCK02  = 5
     }
   }
 
