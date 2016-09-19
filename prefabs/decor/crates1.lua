@@ -71,6 +71,7 @@ PREFABS.Crate_medium_gray =
 
   prob   = 8
   theme  = "!hell"
+  env    = "!cave"
 
   where  = "point"
   size   = 96
@@ -87,6 +88,7 @@ PREFABS.Crate_group_medium =
   map    = "MAP04"
 
   prob   = 300
+  env    = "!cave"
 
   where  = "point"
   size   = 128
