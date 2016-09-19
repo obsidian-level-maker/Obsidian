@@ -934,10 +934,10 @@ DOOM.ROOM_THEMES =
 
     walls =
     {
-      GRAYVINE = 50
+      GRAYVINE = 40
       BROVINE2 = 20
 
-      ZIMMER8  = 40
+      ZIMMER8  = 20
       ZIMMER7  = 20
       BROWN144 = 30
 
@@ -949,13 +949,12 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      ZIMMER8  = 40
+      ZIMMER8  = 20
       ZIMMER7  = 20
       BROWN144 = 30
       BSTONE1  = 30
 
       ASHWALL2 = 20
-      ASHWALL6 = 10
       TANROCK5 = 10
       TEKWALL4 = 10
     }
