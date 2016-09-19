@@ -397,6 +397,24 @@ ULTDOOM.MONSTERS =
 }
 
 
+ULTDOOM.ENTITIES =
+{
+  mercury_lamp  = REMOVE_ME
+  mercury_small = REMOVE_ME
+
+  gutted_victim1 = REMOVE_ME
+  gutted_victim2 = REMOVE_ME
+  gutted_torso1  = REMOVE_ME
+  gutted_torso2  = REMOVE_ME
+  gutted_torso3  = REMOVE_ME
+  gutted_torso4  = REMOVE_ME
+
+  pool_blood_1  = REMOVE_ME
+  pool_blood_2  = REMOVE_ME
+  pool_brains   = REMOVE_ME
+}
+
+
 --------------------------------------------------------------------
 
 --Fixed up for future use in V6 -Chris
