@@ -937,7 +937,9 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
       end
     end
 
-    if chunk.prefab_def.can_flip and rand.odds(35) then
+    if chunk.prefab_dir.must_flip or
+       (chunk.prefab_def.can_flip and rand.odds(35))
+    then
       chunk.flipped = not chunk.flipped
     end
 
