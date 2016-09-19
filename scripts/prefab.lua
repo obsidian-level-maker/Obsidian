@@ -2162,7 +2162,7 @@ function Fab_find_matches(reqs, match_state)
   end
 
 
-  local function match_room_kind(req_k, def_k)
+  local function match_environment(req_k, def_k)
     -- for this, the prefab definition says the *required* thing
     if def_k == nil or def_k == "any" then return true end
 
@@ -2226,8 +2226,8 @@ function Fab_find_matches(reqs, match_state)
     if def.item_kind and reqs.item_kind != def.item_kind then return 0 end
 
     -- check on room type (building / outdoor / cave)
-    if not match_room_kind(reqs.env,      def.env)      then return 0 end
-    if not match_room_kind(reqs.neighbor, def.neighbor) then return 0 end
+    if not match_environment(reqs.env,      def.env)      then return 0 end
+    if not match_environment(reqs.neighbor, def.neighbor) then return 0 end
 
     -- hallway stuff
     if reqs.door   != def.door   then return 0 end
