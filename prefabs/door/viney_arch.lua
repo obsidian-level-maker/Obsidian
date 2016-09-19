@@ -2,12 +2,12 @@
 -- Cavey archway with vines
 --
 
-UNFINISHED.Arch_viney1 =
+PREFABS.Arch_viney1 =
 {
   file   = "door/viney_arch.wad"
   map    = "MAP02"
 
-  rank = 2
+  rank = 3
   prob = 50
 
   env      = "cave"
@@ -26,7 +26,7 @@ UNFINISHED.Arch_viney1 =
 }
 
 
-UNFINISHED.Arch_viney1_B =
+PREFABS.Arch_viney1_B =
 {
   template = "Arch_viney1"
 
@@ -38,17 +38,18 @@ UNFINISHED.Arch_viney1_B =
 ---------- JOINER VERSIONS -----------------------
 
 
-UNFINISHED.Joiner_viney1_CC =
+PREFABS.Joiner_viney1 =
 {
   file   = "door/viney_arch.wad"
-  map    = "MAP04"
+  map    = "MAP05"
 
-  rank   = 2
+  rank   = 3
   prob   = 50
 
-  env      = "cave"
+  env      = "!cave"
   neighbor = "cave"
 
+  kind   = "joiner"
   where  = "seeds"
   shape  = "I"
 
@@ -59,28 +60,29 @@ UNFINISHED.Joiner_viney1_CC =
   over   = 16
 
   x_fit  = "frame"
-  y_fit  = "stretch"
+  y_fit  = { 32,144 }
 }
 
 
-UNFINISHED.Joiner_viney1_CN =
+PREFABS.Joiner_viney1_B =
 {
   template = "Joiner_viney1"
   map      = "MAP05"
 
   env      = "cave"
-  neighbor = "!cave"
+  neighbor = "any"
+
+  must_flip = true
 }
 
 
-UNFINISHED.Joiner_viney1_NC =
+-- TODO : cave-to-cave version
+UNFINISHED.Joiner_viney1_CC =
 {
   template = "Joiner_viney1"
-  map      = "MAP05"
+  map      = "MAP04"
 
-  env      = "!cave"
+  env      = "cave"
   neighbor = "cave"
-
-  must_flip = true
 }
 
