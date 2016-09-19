@@ -909,6 +909,40 @@ DOOM.ROOM_THEMES =
   }
 
 
+  tech_VeryBluey =
+  {
+    env = "building"
+    prob = 5
+
+    walls =
+    {
+      COMPBLUE = 50
+    }
+
+    floors =
+    {
+      FLAT14 = 30
+      FLOOR1_1 = 10
+
+      CEIL4_1 = 20
+      CEIL4_2 = 20
+
+      FLAT4   = 10
+      CEIL5_1 = 20
+    }
+
+    ceilings =
+    {
+      CEIL5_1 = 40
+      CEIL4_1 = 25
+      CEIL4_2 = 15
+
+      FLOOR4_1 = 10
+      FLAT23 = 10
+    }
+  }
+
+
   tech_Cave =
   {
     env  = "cave"
