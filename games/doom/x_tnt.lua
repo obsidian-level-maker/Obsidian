@@ -210,6 +210,7 @@ TNT.THEMES =
       DOORYEL  = "DOORYEL2"
 
       SILVER3  = "MURAL1"
+      GATE3    = "FLAT22"
       GATE4    = "FLAT22"
       REDWALL  = "DOKGRIR"
       SW1COMP  = "SW1CMT"
