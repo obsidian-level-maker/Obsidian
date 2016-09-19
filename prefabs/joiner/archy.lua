@@ -7,6 +7,9 @@ PREFABS.Joiner_archy1 =
   file   = "joiner/archy.wad"
   map    = "MAP01"
 
+  prob  = 140
+  theme = "!tech"
+
   where  = "seeds"
   shape  = "I"
 
@@ -17,9 +20,6 @@ PREFABS.Joiner_archy1 =
   over   = 16
 
   y_fit = "stretch"
-
-  theme = "!tech"
-  prob  = 140
 }
 
 
@@ -27,6 +27,9 @@ PREFABS.Joiner_archy1_wide =
 {
   file   = "joiner/archy.wad"
   map    = "MAP02"
+
+  prob  = 400
+  theme = "!tech"
 
   where  = "seeds"
   shape  = "I"
@@ -38,8 +41,5 @@ PREFABS.Joiner_archy1_wide =
   over   = 16
 
   x_fit = "frame"
-
-  theme = "!tech"
-  prob  = 400
 }
 
