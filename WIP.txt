@@ -3,23 +3,12 @@ WORK IN PROGRESS
 ================
 
 
-Caves:
-
-!!! get SPOTS working again
-
-+  review all cave themes [ some are FUGLY! ]
-   also want more variety, e.g. ROCKRED in Urban/Tech theme
-
-
-
 Tidying Up / Release stuff:
 
 -  ensure the linux "make install" works
 
 -  test: Doom 1
 -  test: Ultimate Doom
--  test: TNT and Egypt theme
--  test: Plutonia
 
 -  test the addon-package system
 
