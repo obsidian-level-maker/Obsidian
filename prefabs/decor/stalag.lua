@@ -43,7 +43,7 @@ PREFABS.Decor_stalag2 =
 
   prob   = 170
 
-  z_fit  = "bottom"
+  z_fit  = "stretch"
 }
 
 PREFABS.Decor_stalag2_big =
