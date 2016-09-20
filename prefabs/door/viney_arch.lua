@@ -71,6 +71,8 @@ PREFABS.Joiner_viney1 =
 
   x_fit  = "frame"
   y_fit  = { 32,144 }
+
+  force_flip = false
 }
 
 
@@ -82,7 +84,7 @@ PREFABS.Joiner_viney1_B =
   env      = "cave"
   neighbor = "any"
 
-  must_flip = true
+  force_flip = true
 }
 
 
@@ -94,5 +96,7 @@ UNFINISHED.Joiner_viney1_CC =
 
   env      = "cave"
   neighbor = "cave"
+
+  force_flip = true
 }
 

@@ -937,10 +937,15 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
       end
     end
 
-    if chunk.prefab_def.must_flip or
-       (chunk.prefab_def.can_flip and rand.odds(35))
+    if (chunk.prefab_def.can_flip and rand.odds(35))
     then
       chunk.flipped = not chunk.flipped
+    end
+
+    -- this is needed when the environment on each side is important,
+    -- such as the joiner connecting a normal room to a cave.
+    if chunk.prefab_def.force_flip != nil then
+      chunk.flipped = chunk.prefab_def.force_flip
     end
 
     if chunk.flipped then
