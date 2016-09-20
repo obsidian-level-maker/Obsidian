@@ -60,7 +60,6 @@ namelib.NAMES =
 
         -- these by Chris
         ["Fear the"]=10
-        ["Dodge the"]=10
         ["Beware the"]=10
         ["Bane of the"]=10
         ["Scourge of the"]=10
