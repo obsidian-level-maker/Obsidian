@@ -1,8 +1,8 @@
 
-OBLIGE 7.37
+OBLIGE 7.45
 ===========
 
-by Andrew Apted.  May 2016
+by Andrew Apted.  September 2016
 
 
 INTRODUCTION
