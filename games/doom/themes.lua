@@ -927,7 +927,7 @@ DOOM.ROOM_THEMES =
   }
 
 
-  tech_Cave =
+  tech_Cave_generic =
   {
     env  = "cave"
     prob = 50
@@ -961,7 +961,7 @@ DOOM.ROOM_THEMES =
   }
 
 
-  tech_Outdoors =
+  tech_Outdoors_generic =
   {
     env  = "outdoor"
     prob = 50
@@ -1277,7 +1277,7 @@ DOOM.ROOM_THEMES =
   }
 
 
-  hell_Cave =
+  hell_Cave_generic =
   {
     env  = "cave"
     prob = 50
@@ -1320,8 +1320,8 @@ DOOM.ROOM_THEMES =
     walls =
     {
       ROCKRED1 = 50
-      FIRELAVA = 20
-      CRACKLE2 = 10
+      FIRELAVA = 15
+      CRACKLE2 =  5
     }
 
     floors =
@@ -1337,7 +1337,7 @@ DOOM.ROOM_THEMES =
   }
 
 
-  hell_Outdoors =
+  hell_Outdoors_generic =
   {
     env  = "outdoor"
     prob = 50
@@ -1709,7 +1709,7 @@ DOOM.ROOM_THEMES =
   }
 
 
-  urban_Cave =
+  urban_Cave_generic =
   {
     env  = "cave"
     prob = 50
@@ -1745,7 +1745,7 @@ DOOM.ROOM_THEMES =
   }
 
 
-  urban_Outdoors =
+  urban_Outdoors_generic =
   {
     env  = "outdoor"
     prob = 50
