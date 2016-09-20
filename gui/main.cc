@@ -756,8 +756,6 @@ int main(int argc, char **argv)
 
 	VFS_InitAddons(argv[0]);
 
-	VFS_ParseCommandLine();
-
 
 	const char *load_file = NULL;
 
@@ -776,6 +774,8 @@ int main(int argc, char **argv)
 
 	if (batch_mode)
 	{
+		VFS_ParseCommandLine();
+
 		Script_Open();
 
 		Batch_Defaults();
@@ -809,13 +809,15 @@ int main(int argc, char **argv)
 	// this not only finds PK3 files, but also activates the ones specified in OPTIONS.txt
 	VFS_ScanForAddons();
 
-//???	Default_Location();
+	VFS_ParseCommandLine();
 
 	int main_w, main_h;
 	UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
 	const char *main_title = StringPrintf("%s %s", _(OBLIGE_TITLE), OBLIGE_VERSION);
 	main_win = new UI_MainWin(main_w, main_h, main_title);
+
+//???	Default_Location();
 
 	Script_Open();
 
