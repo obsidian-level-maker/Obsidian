@@ -469,9 +469,9 @@ DOOM.THEMES =
       red_torch   = 10
 
       lamp = 10
-      hang_lamp  = 10
       candelabra = 10
       burning_barrel = 20
+      hang_lamp  = 3
     }
 
     outdoor_torches =
