@@ -7,8 +7,5 @@ Tidying Up / Release stuff:
 
 -  ensure the linux "make install" works
 
--  test: Doom 1
--  test: Ultimate Doom
-
--  test the addon-package system
+WISH : a "View Logs" option
 
