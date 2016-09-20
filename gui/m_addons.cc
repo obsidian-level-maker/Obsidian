@@ -60,12 +60,14 @@ void VFS_AddFolder(const char *name)
 		return;  /* NOT REACHED */
 	}
 
-	DebugPrintf("mounted '%s'\n", name);
+	DebugPrintf("mounted folder '%s'\n", name);
 }
 
 
 bool VFS_AddArchive(const char *filename, bool options_file)
 {
+	LogPrintf("  using: %s\n", filename);
+
 	if (! HasExtension(filename))
 		filename = ReplaceExtension(filename, "pk3");
 	else
@@ -130,6 +132,8 @@ void VFS_ParseCommandLine()
 
 	arg++;
 
+	LogPrintf("Command-line addons....\n");
+
 	for (; arg < arg_count && ! ArgvIsOption(arg) ; arg++, count++)
 	{
 		VFS_AddArchive(arg_list[arg], false /* options_file */);
@@ -137,6 +141,8 @@ void VFS_ParseCommandLine()
 
 	if (! count)
 		Main_FatalError("Missing filename for --addon option\n");
+
+	LogPrintf("DONE\n\n");
 }
 
 
@@ -199,7 +205,7 @@ void VFS_ScanForAddons()
 //DEBUG
 //info.enabled = true;
 
-		LogPrintf("  found: %s%s\n", info.name, info.enabled ? " (Enabled)" : "");
+		LogPrintf("  found: %s%s\n", info.name, info.enabled ? " (Enabled)" : " (Disabled)");
 
 		all_addons.push_back(info);
 
