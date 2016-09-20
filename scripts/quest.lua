@@ -82,8 +82,6 @@
 
     fence_mat       -- material for fences
 
-    cave_wall_mat   -- main material for cave walls
-
 
     === Monster stuff ===
 
@@ -2617,8 +2615,6 @@ function Quest_room_themes()
     LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
 
     each Z in LEVEL.zones do
-      Z.cave_wall_mat = rand.key_by_probs(Z.cave_theme.walls)
-
       if Z.hallway_theme then
         local theme = Z.hallway_theme
 
@@ -2661,7 +2657,7 @@ function Quest_room_themes()
 
 
   local function setup_cave_theme(R)
-    R.main_tex = R.zone.cave_wall_mat
+    R.main_tex = rand.key_by_probs(R.zone.cave_theme.walls)
 
     R.walkway_height = rand.pick { 160, 176, 192, 224 }
 
@@ -2743,7 +2739,6 @@ function Quest_room_themes()
       gui.debugf("%s:\n", Z.name)
       gui.debugf("   facades   : %s / %s\n", Z.facade_mat, Z.other_facade)
       gui.debugf("   fence     : %s\n", Z.fence_mat)
-      gui.debugf("   cave_wall : %s\n", Z.cave_wall_mat)
 
       each R in Z.rooms do
         gui.debugf("   %s = %s  (main_tex: %s)\n", R.name, R.theme.name, R.main_tex)
