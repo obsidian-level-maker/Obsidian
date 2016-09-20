@@ -713,8 +713,12 @@ int main(int argc, char **argv)
 
 	LogInit(logging_file);
 
-	if (batch_mode || ArgvFind('t', "terminal") >= 0)
+	if (ArgvFind('d', "debug") >= 0)
+		debug_messages = true;
+
+	if (ArgvFind('t', "terminal") >= 0 || (debug_messages && batch_mode))
 		LogEnableTerminal(true);
+
 
 	LogPrintf("\n");
 	LogPrintf("********************************************************\n");
@@ -730,6 +734,8 @@ int main(int argc, char **argv)
 	LogPrintf("config_file: %s\n\n", config_file);
 
 
+	LogEnableDebug(debug_messages);
+
 	Trans_Init();
 
 	if (! batch_mode)
@@ -738,11 +744,6 @@ int main(int argc, char **argv)
 
 		Trans_SetLanguage();
 	}
-
-	if (ArgvFind('d', "debug") >= 0)
-		debug_messages = true;
-
-	LogEnableDebug(debug_messages);
 
 
 	if (! batch_mode)
