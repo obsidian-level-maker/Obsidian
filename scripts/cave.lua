@@ -1758,12 +1758,21 @@ function Render_cave(R)
 
 
   local function dist_to_light_level(d)
+    if d >= 312 then return 0  end
+    if d >= 208 then return 16 end
+    if d >= 104 then return 32 end
+    return 48
+  end
+
+--[[
+  local function OLD__dist_to_light_level(d)
     if d >  276 then return 0  end
     if d >  104 then return 16 end
     if d >   40 then return 32 end
     if R.light_level != "verydark" then return 32 end
     return 48
   end
+--]]
 
 
   local function calc_lighting_for_cell(x, y, A)
@@ -2885,8 +2894,6 @@ function Cave_decide_properties(R)
 
     info.torch_mode = rand.key_by_probs(TORCH_MODES)
   end
-
---info.torch_mode = "some"
 
   if info.torch_mode != "none" then
     info.cave_lighting = 1
