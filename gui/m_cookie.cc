@@ -526,7 +526,8 @@ void Recent_AddFile(int group, const char *filename)
 	}
 
 	// push to disk now -- why wait?
-	Options_Save(options_file);
+	if (! batch_mode)
+		Options_Save(options_file);
 }
 
 
@@ -546,7 +547,8 @@ void Recent_RemoveFile(int group, const char *filename)
 	}
 
 	// push to disk now -- why wait?
-	Options_Save(options_file);
+	if (! batch_mode)
+		Options_Save(options_file);
 }
 
 
