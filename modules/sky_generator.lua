@@ -256,7 +256,14 @@ function SKY_GEN.generate_skies()
   -- select episode for the starry starry night
   local starry_ep = rand.irange(1, # GAME.episodes)
 
-  if rand.odds(37) then
+  -- less chance of it being the first episode
+  -- [ for people who usually make a single episode or less ]
+  if starry_ep == 1 then
+    starry_ep = rand.irange(1, # GAME.episodes)
+  end
+
+  -- often have no starry sky at all
+  if rand.odds(40) then
     starry_ep = -7
   end
 
