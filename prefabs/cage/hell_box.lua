@@ -2,7 +2,7 @@
 -- Hell-ish medium size cage
 --
 
-PREFABS.Cage_hellbox1 =
+UNFINISHED.Cage_hellbox1 =
 {
   file   = "cage/hell_box.wad"
   map    = "MAP01"
@@ -10,7 +10,7 @@ PREFABS.Cage_hellbox1 =
   rank   = 2
   prob   = 100
   theme  = "hell"
-  env    = "indoor"
+  env    = "building"
 
   where  = "point"
   size   = 128
