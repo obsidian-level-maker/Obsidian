@@ -20,10 +20,10 @@
 
 <h3>ABOUT OBLIGE</h3>
 
-OBLIGE is a random level maker for a bunch of classic FPS games.
+OBLIGE is a random level maker for the classic FPS game '<b>DOOM</b>'.
 Just press a few buttons and <i>kazam!</i> out pops some fun maps
 to play.
-Well that's our goal anyway, it may take a long time to fully
+Well that's the goal anyway, it may take a long time to fully
 achieve it.
 
 <p>
@@ -43,29 +43,23 @@ from existing random map generators:
 <ul class="features">
   <li>high quality levels, e.g. outdoor areas and caves!
   <li>easy to use GUI interface (no messing with command lines)
-  <li>built-in node builder, the created levels are ready to play
+  <li>built-in node builder, so the levels are ready to play
   <li>uses the LUA scripting language for easy customisation
 </ul>
 
 <p>
-It is planned to fully support the following games:
+OBLIGE currently supports the DOOM family of games, i.e.
+Ultimate DOOM, DOOM 2, TNT Evilution and The Plutonia Experiment.
 
-<ul class="gamelist">
-  <li>DOOM and DOOM II
-  <li>Heretic
-  <li>Quake
-</ul>
-
-Other games, such as Hexen and Duke Nukem 3D,
-might get supported in the future, but for now the
-focus is mainly on the games listed above.
+It is planned to support more games in the future,
+such as Heretic and Hexen.
 
 
 <h3>SYSTEM REQUIREMENTS</h3>
 
 <ul class="sysreq">
-<li>Pentium 500 Mhz CPU or higher.
-<li>128 MB of RAM or higher.
+<li>A 500 MHz CPU or higher.
+<li>256 MB of RAM or higher.
 <li>Windows 2000, XP, Vista or later.  (Linux is supported too)
 </ul>
 

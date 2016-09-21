@@ -182,7 +182,7 @@ OBLIGE will starting building the levels.
 
 <p>
 The levels created by OBLIGE are ready to play.  There is no
-need to run the output WAD file through a nodes-builder,
+need to run the output WAD file through a node builder,
 since OBLIGE includes a built-in version of glBSP.
 
 
