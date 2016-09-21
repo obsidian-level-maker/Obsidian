@@ -47,10 +47,12 @@ mods with that game, e.g. with modern DOOM source ports
 dragging -n- dropping the WAD file onto the EXE
 is usually enough.
 
+<!---
 <p>
 <i>(Some games, especially Quake, may need special setup before
 running Oblige.  See below for more information)
 </i>
+--->
 
 
 <h3>WINDOW LAYOUT</h3>
@@ -146,7 +148,7 @@ to disappear.
 
 <p>
 Modules are enabled or disabled by the check-box which appears
-to the left of the module's name.  
+to the left of the module's name.
 Modules must be both enabled and shown
 in order to have any effect, otherwise they do nothing.
 When a module has options,
@@ -170,13 +172,14 @@ since OBLIGE includes a built-in version of glBSP.
 
 
 
-<!--- 
+<!---
 <h3>OPTIONS WINDOW</h3>
 
 Blah blah blag
 --->
 
 
+<!---
 <h3 id="quake">QUAKE SETUP</h3>
 
 <p>
@@ -184,7 +187,7 @@ Quake levels have the unusual feature of including a full copy
 of every texture which they use.
 But this is a problem for OBLIGE, as it needs to get
 these textures from somewhere.
-We are not allowed to put a copy of them on 
+We are not allowed to put a copy of them on
 SourceForge for you to download, because they are copyrighted
 material belonging to Id Software.
 
@@ -215,9 +218,10 @@ in the 'tools' folder.  Here is what you need to do:
 
 You will know it has worked when OBLIGE can build some Quake
 maps without any error message about missing texture wads.
+--->
 
 
-<h3 id="misc">MISC NOTES</h3>
+<h3 id="misc">IMPORTANT NOTES</h3>
 
 OBLIGE requires the full version of each game it supports.
 It will NOT work properly with shareware or demo versions,
@@ -231,16 +235,17 @@ Easier skill levels will have less monsters than harder skill levels,
 while health and ammo remain the same.
 
 <p>
-You should use a
+You need to use a
 <a href="doc_glossary.html#engine">Source Port</a>
 to play the levels, because the original DOS versions,
 such as DOOM.EXE and DOOM2.EXE,
 cannot cope with the architecture which OBLIGE creates.
 For example, you will probably get the "Visplane Overflow" error
 which quits the game, or a crash when saving to a savegame.
-(Note that <b>Chocolate-Doom</b> has the same limitations
-as the original DOS versions, and should not be used either).
+Note that <b>Chocolate-Doom</b> has the same limitations
+as the original DOS versions, and hence cannot be used either.
 
+<!---
 <p>
 For Quake, call the output file <b>PAK2.pak</b> and place it
 in the ID1 folder where Quake is installed.
@@ -252,6 +257,7 @@ Quake levels.
 Playing Quake 2 maps is similar to Quake, but place the <b>PAK2.pak</b>
 file into the BASEQ2 folder where Quake 2 is installed, and
 start a game normally.
+--->
 
 </div class="rest">
 
