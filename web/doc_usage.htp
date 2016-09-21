@@ -135,34 +135,40 @@ drive you insane.
 
 <h3 id="modules">MODULES PANEL</h3>
 
-Modules are a great new feature in Oblige V3.
-The idea is that new functionality can be implemented
-as a module file (Lua code),
-and simply dropped into the 'modules' folder, and OBLIGE
-will load it automatically and allow that module to
-be enabled or disabled.
-Modules can even have their own option buttons.
+Modules allow for additional customisation of various
+aspects of the level generation process, or to support
+features specific to a certain source port.
 
 <p>
-First thing you need to know is: modules are usually
-specific to a single game, and will only show up in the
-module panel when that game is selected.
-Similarly they can depend on a certain engine (source port),
-and might even depend on other modules.
-E.g. a module which requires ZDoom will not be visible
-until ZDoom is chosen in the Game Settings panel.
-So changing the current game or the current engine
+Modules are enabled or disabled by the check-box next to
+the module's name.
+Modules must be both enabled and visible
+in order to have any effect, otherwise they do nothing.
+When a module has options,
+those options are hidden while the module is disabled.
+
+<p>
+Modules can depend on a certain game,
+or a certain engine (source port),
+or even on other modules.
+
+When a module is not usable with the current settings,
+it stays hidden.
+For example, a module which requires ZDoom will not be visible
+until ZDoom is chosen for the <span class="button">Engine</span>
+button.
+Changing the current game or the current engine
 can cause some modules to appear and/or other modules
 to disappear.
 
 <p>
-Modules are enabled or disabled by the check-box which appears
-to the left of the module's name.
-Modules must be both enabled and shown
-in order to have any effect, otherwise they do nothing.
-When a module has options,
-those options are not shown while the module is disabled
-(though the option settings are not forgotten).
+The Level Control module is always available and provides
+numerous things you may want to control.
+Especially useful are the
+<span class="button">Secrets</span> and
+<span class="button">Traps</span> settings.
+The "DEFAULT" setting means that Oblige will just
+do what it normally does.
 
 
 <h3 id="build">BUILD PANEL</h3>
