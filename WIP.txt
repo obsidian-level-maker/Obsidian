@@ -9,3 +9,18 @@ Tidying Up / Release stuff:
 
 WISH : a "View Logs" option
 
+
+Web / Usage:
+
+-  mention Menu in the BUILD panel ??
+
+-  a section about Addons
+
+-  a section about Batch mode
+
+-  mention ability to set/see the random seed
+
+WISH: a section about the Config manager
+
+WISH: a section for the Options screen
+
