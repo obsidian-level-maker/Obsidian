@@ -115,7 +115,18 @@ static void ShowInfo()
 		"for more details, or visit http://www.gnu.org/licenses/gpl-2.0.txt\n"
 		"\n"
 	);
+
+	fflush(stdout);
 }
+
+
+static void ShowVersion()
+{
+	printf("Oblige version " OBLIGE_VERSION " (" __DATE__ ")\n");
+
+	fflush(stdout);
+}
+
 
 
 void Determine_WorkingPath(const char *argv0)
@@ -685,6 +696,11 @@ int main(int argc, char **argv)
 	if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0)
 	{
 		ShowInfo();
+		exit(1);
+	}
+	else if (ArgvFind(0, "version") >= 0)
+	{
+		ShowVersion();
 		exit(1);
 	}
 
