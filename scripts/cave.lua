@@ -1610,7 +1610,6 @@ function Render_cave(R)
     --    S is solidity (2 for solid, 1 is normal)
     --    F is floor height (adjusted to prevent negative values)
     --    C is ceiling height (negated, since lower ceils can block the player)
-    --    L is lighting [ planned for future ]
 
     if not cave:valid_cell(x, y) then
       return nil
@@ -1622,7 +1621,7 @@ function Render_cave(R)
     if A == nil then return nil end
 
     -- check for a solid cell
-    if A.is_wall then return "2-99999-99999-999" end
+    if A.is_wall then return "2-99999-99999" end
 
     -- otherwise there should be a floor area here
 
@@ -1630,9 +1629,7 @@ function Render_cave(R)
     assert(A.floor_h)
     assert(A.ceil_h)
 
-    local light = 0
-
-    return string.format("1-%5d-%5d-%3d", A.floor_h + 50000, 50000 - A.ceil_h, light)
+    return string.format("1-%5d-%5d", A.floor_h + 50000, 50000 - A.ceil_h)
   end
 
 
