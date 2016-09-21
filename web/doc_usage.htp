@@ -93,7 +93,7 @@ For example, using it with the <span class="button">Size</span> button
 causes the maps to be a mixture of small, regular and large.
 
 <p>
-For the <span class="button">Theme</span> button,
+For the <span class="button">Theme</span> button
 the "A Bit Mixed" setting means each whole episode will stick to a
 single theme, but the episodes will have different themes.
 Constrast with the "Jumbled Up" setting which means every
@@ -109,25 +109,28 @@ there are new or custom themes present.
 <h3 id="playing">PLAYING STYLE</h3>
 
 This panel is all about the gameplay.
-Here you can control the amount and strength of the
-monsters, how much health and ammunition should be added, etc...
+Here you can control the quantity and strength of the
+monsters, how much health and ammunition should be added,
+etc....
 
 <p>
 The <span class="button">Strength</span> button determines the
 overall toughness of the monsters.
-The "Medium" setting is designed to give a mix
+The "Normal" setting is designed to give a mix
 of monsters similar to the levels in the original game.
 Compared to that, the "Weak" setting produces weaker
 monsters and the "Tough" setting gives tougher ones.
-In all three cases the toughness increases over the
-course of each episode.
+
+Note that the toughness increases over the course of an episode
+or game, it starts off quite weak and ramps up to the
+chosen setting by the end.
 
 <p>
-The "Crazy" strength works a bit differently.
+The "Crazy" strength setting works a bit differently.
 It forgets all about trying to make battles which are fair,
 and throws any or all of the monsters at you, including bosses!
 Be warned though, playing maps on this setting can actually
-drive you insane -- hence the name.
+drive you insane.
 
 
 <h3 id="modules">MODULES PANEL</h3>
