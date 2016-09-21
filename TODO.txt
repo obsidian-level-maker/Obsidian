@@ -3,52 +3,11 @@ OBLIGE TO-DO
 ============
 
 
-______________________________________________________________________
-
-  HIGH PRIORITY
-______________________________________________________________________
-
-
-*  update Usage page to match current GUI interface
-
-*  add in more scenery: trees, computers etc
-
-*  fix i18n issues (esp. non-ASCII characters in filenames)
-
-
-______________________________________________________________________
-
-  LOWER PRIORITY
-______________________________________________________________________
-
-
-----------------------------------------------
-  OTHER GAMES
-----------------------------------------------
-
-+  Quake support
-   -  load textures directly from the PAK files
-   -  bring back lua-based prefabs
-   -  support slopes
-
-   -  ensure textures offsets are handled properly
-   -  incorporate id method to build collision hulls
-   -  support bmodels with two brushes meeting at a plane
-
--  Heretic support
-
-?  Hexen
-?  Harmony
-?  HacX
-
-?  Duke Nukem 3D
-?  Wolfenstein 3D
-?  Chex Quest 3
-
-
 ----------------------------------------------
   V7 STUFF
 ----------------------------------------------
+
++  add in more scenery: trees, computers etc
 
 +  don't make "Empty Quests", especially 2 or more rooms
 
@@ -803,6 +762,30 @@ Name generator:
 
 
 ----------------------------------------------
+  POSSIBLE GAMES
+----------------------------------------------
+
++  Quake support
+   -  load textures directly from the PAK files
+   -  bring back lua-based prefabs
+   -  support slopes
+
+   -  ensure textures offsets are handled properly
+   -  incorporate id method to build collision hulls
+   -  support bmodels with two brushes meeting at a plane
+
+-  Heretic support
+
+?  Hexen
+?  Harmony
+?  HacX
+
+?  Duke Nukem 3D
+?  Wolfenstein 3D
+?  Chex Quest 3
+
+
+----------------------------------------------
   PIPE DREAMS
 ----------------------------------------------
 
@@ -855,6 +838,8 @@ Name generator:
 ----------------------------------------------
   GUI and C++ CODE
 ----------------------------------------------
+
++  i18n issues (like non-ASCII characters in filenames)
 
 +  CSG issue: support beam intersects with 3D floor => wrong side texture
 
@@ -1018,12 +1003,6 @@ Sam's suggestions:
 -  support teleporters (flat X_012)
 
 -  support more skies
-
-
-______________________________________________________________________
-
-  NOT TO-DO
-______________________________________________________________________
 
 
 
