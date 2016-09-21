@@ -39,13 +39,12 @@ and enter an output filename, for example "TEST"
 (without the quotes).
 
 <p>
-OBLIGE will then build all the maps, showing a blueprint of
+OBLIGE will then build all the maps, showing a small blueprint of
 each one as it goes, and if everything goes smoothly the output
 file, for example "TEST.WAD", will have been created.
 Then you can play it using the normal method for playing
-mods with that game, e.g. with modern DOOM source ports
-dragging -n- dropping the WAD file onto the EXE
-is usually enough.
+mods with that game, e.g. modern DOOM source ports allow you
+drag-and-drop the WAD file onto the EXE to play it.
 
 <!---
 <p>
@@ -80,24 +79,31 @@ These settings include:
   <li>the <span class="button">Length</span> of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
 
+
 <h3 id="level">LEVEL ARCHITECTURE</h3>
 
 The Level Architecture panel lets you control general features
 of the maps, like what size they should be, what theme to use,
-how much outdoor areas to make, and so forth.
+and how many outdoor areas and caves to make.
 
 <p>
-Choosing "Mix It Up" as a setting means that different levels
-will get different values (randomly).
-For example, it makes the Size of maps vary between small and large.
-However when using it for the Theme and
-making a full game, each episode will stick to a single theme.
+Choosing "Mix It Up" as a setting means that each map
+will get different values, chosen at random.
+For example, using it with the <span class="button">Size</span> button
+causes the maps to be a mixture of small, regular and large.
 
 <p>
-The "As Original" theme setting causes the themes in each episode
-to try and match the original game.  Note: when there are custom
-themes (from a module) the same ordering is not guaranteed
-since a custom theme can replace one (or more) of them.
+For the <span class="button">Theme</span> button,
+the "A Bit Mixed" setting means each whole episode will stick to a
+single theme, but the episodes will have different themes.
+Constrast with the "Jumbled Up" setting which means every
+map can have a different theme.
+
+<p>
+The "As Original" setting causes the themes in each episode
+to try and match the original game.
+Note that this may not always be possible, especially when
+there are new or custom themes present.
 
 
 <h3 id="playing">PLAYING STYLE</h3>
