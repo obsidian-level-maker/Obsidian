@@ -239,17 +239,17 @@ install: stripped
 	install -d $(SCRIPT_DIR)/scripts
 	install -d $(SCRIPT_DIR)/engines
 	install -d $(SCRIPT_DIR)/modules
+	install -d $(SCRIPT_DIR)/addons
 	#
 	install -o root -m 644 scripts/*.lua $(SCRIPT_DIR)/scripts
 	install -o root -m 644 engines/*.lua $(SCRIPT_DIR)/engines
 	install -o root -m 644 modules/*.lua $(SCRIPT_DIR)/modules
+	install -o root -m 644  addons/*.pk3 $(SCRIPT_DIR)/addons
 	#
 	install -d $(SCRIPT_DIR)/data
-	install -d $(SCRIPT_DIR)/data/doom1_boss
-	install -d $(SCRIPT_DIR)/data/doom2_boss
+	install -d $(SCRIPT_DIR)/data/masks
 	install -o root -m 644 data/*.* $(SCRIPT_DIR)/data
-	install -o root -m 644 data/doom1_boss/*.* $(SCRIPT_DIR)/data/doom1_boss
-	install -o root -m 644 data/doom2_boss/*.* $(SCRIPT_DIR)/data/doom2_boss
+	install -o root -m 644 data/masks/*.* $(SCRIPT_DIR)/data/masks
 	#
 	rm -Rf $(SCRIPT_DIR)/games
 	cp -a games $(SCRIPT_DIR)/games
