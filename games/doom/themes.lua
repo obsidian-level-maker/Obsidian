@@ -1280,7 +1280,7 @@ DOOM.ROOM_THEMES =
   hell_Cave_generic =
   {
     env  = "cave"
-    prob = 50
+    prob = 40
 
     walls =
     {
@@ -1315,7 +1315,9 @@ DOOM.ROOM_THEMES =
   hell_Cave_Hot =
   {
     env  = "cave"
-    prob = 100
+    prob = 60
+
+    light_adjusts = { 32,48,64 }
 
     walls =
     {
