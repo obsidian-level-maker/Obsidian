@@ -281,7 +281,7 @@ ULTDOOM.MATERIALS =
   ROCK5    = { t="SP_ROCK1", f="MFLR8_3" }
 
   SILVER1  = { t="SHAWN2",   f="FLAT23" }
-  SILVER2  = { t="SHAWN2",   f="FLAT23" }
+  SILVER2  = { t="COMPUTE1", f="FLAT23" }
   SILVER3  = { t="PLANET1",  f="FLAT23" }
   SPACEW2  = { t="TEKWALL4", f="CEIL5_1" }
   SPACEW3  = { t="COMPUTE1", f="FLAT1" }
@@ -668,6 +668,15 @@ ULTDOOM.THEMES =
       DOORBLU  = "DOORBLU2"
       DOORRED  = "DOORRED2"
       DOORYEL  = "DOORYEL2"
+
+      BIGDOOR1 = "BIGDOOR6"
+      BIGDOOR2 = "BIGDOOR7"
+      BIGDOOR3 = "BIGDOOR7"
+      BIGDOOR4 = "BIGDOOR5"
+
+      SW1COMP  = "SW1LION"
+      SW1PIPE  = "SW1BROWN"
+      SILVER3  = "MARBFACE"
     }
 
     floor_sinks =
@@ -765,6 +774,15 @@ ULTDOOM.THEMES =
       DOORBLU  = "DOORBLU2"
       DOORRED  = "DOORRED2"
       DOORYEL  = "DOORYEL2"
+
+      BIGDOOR1 = "BIGDOOR6"
+      BIGDOOR2 = "BIGDOOR7"
+      BIGDOOR3 = "BIGDOOR7"
+      BIGDOOR4 = "BIGDOOR5"
+
+      SW1COMP  = "SW1GARG"
+      SW1PIPE  = "SW1BROWN"
+      SILVER3  = "STONGARG"
     }
 
     floor_sinks =
