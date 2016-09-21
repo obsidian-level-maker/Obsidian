@@ -147,10 +147,10 @@ function Level_determine_map_size(LEV)
   -- Mix It Up --
 
   if ob_size == "mixed" then
-    local SIZES = { 21,23,25, 29,32,35, 39,41,47 }
+    local SIZES = { 24,26,29, 32,34,36, 40,44,48 }
 
     if OB_CONFIG.mode == "dm" then
-      SIZES = { 21,23,25, 29,32,35 }
+      SIZES = { 22,24,26, 30,34,38 }
     end
 
     local W = rand.pick(SIZES)
@@ -174,7 +174,7 @@ function Level_determine_map_size(LEV)
     if n < 1 then n = 1 end
     if n > 9 then n = 9 end
 
-    local SIZES = { 25,26,27, 29,31,33, 35,37,37 }
+    local SIZES = { 26,28,30, 32,34,34, 36,38,38 }
 
     local W = SIZES[n]
     local H = W - 4
@@ -189,14 +189,14 @@ function Level_determine_map_size(LEV)
 
   -- smaller maps for Deathmatch mode
   if OB_CONFIG.mode == "dm" then
-    local SIZES = { small=21, regular=27, large=35, extreme=45 }
+    local SIZES = { small=22, regular=30, large=38, extreme=48 }
 
     local W = SIZES[ob_size]
 
     return W, W
   end
 
-  local SIZES = { small=24, regular=32, large=44, extreme=60 }
+  local SIZES = { small=24, regular=34, large=44, extreme=60 }
 
   local W = SIZES[ob_size]
 
