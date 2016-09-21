@@ -98,7 +98,7 @@ static void ShowInfo()
 		"  -k --keep                Keep SEED from loaded settings\n"
 		"\n"
 		"  -d --debug               Enable debugging\n"
-		"  -t --terminal            Print log messages to stdout\n"
+		"  -v --verbose             Print log messages to stdout\n"
 		"  -h --help                Show this help message\n"
 		"\n"
 	);
@@ -732,7 +732,8 @@ int main(int argc, char **argv)
 	if (ArgvFind('d', "debug") >= 0)
 		debug_messages = true;
 
-	if (ArgvFind('t', "terminal") >= 0 || (debug_messages && batch_mode))
+	// accept -t and --terminal for backwards compatibility
+	if (ArgvFind('v', "verbose") >= 0 || ArgvFind('t', "terminal") >= 0)
 		LogEnableTerminal(true);
 
 
