@@ -21,8 +21,8 @@ LEVEL_CONTROL = { }
 
 LEVEL_CONTROL.CHOICES =
 {
-  "mixed",  _("Mix It Up"),
-  "none",   _("NONE"),
+  "mixed",  _("DEFAULT"),
+  "none",   _("None at all"),
   "rare",   _("Rare"),
   "few",    _("Few"),
   "less",   _("Less"),
