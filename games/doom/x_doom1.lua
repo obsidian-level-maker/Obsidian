@@ -605,6 +605,12 @@ ULTDOOM.THEMES =
       light_brightred_metal = 7
     }
 
+    wall_groups =
+    {
+      -- TODO : appropriate wall detail for Deimos
+      PLAIN = 100
+    }
+
     style_list =
     {
       naturals = { none=40, few=70, some=20, heaps=2 }
@@ -683,6 +689,19 @@ ULTDOOM.THEMES =
       light_hell_red = 20
       light_hell_lava = 5
       ceil_redash = 5
+    }
+
+    wall_groups =
+    {
+      PLAIN = 80
+      torches1 = 40
+      torches2 = 15
+      low_gap = 20
+      runes1 = 7
+      runes2 = 7
+      runes3 = 7
+      cross1 = 7
+      cross2 = 15
     }
 
     monster_prefs =
@@ -767,6 +786,19 @@ ULTDOOM.THEMES =
       light_hell_red = 20
       light_hell_lava = 5
       ceil_redash = 5
+    }
+
+    wall_groups =
+    {
+      PLAIN = 80
+      torches1 = 40
+      torches2 = 15
+      low_gap = 20
+      runes1 = 7
+      runes2 = 7
+      runes3 = 7
+      cross1 = 7
+      cross2 = 15
     }
 
     monster_prefs =
