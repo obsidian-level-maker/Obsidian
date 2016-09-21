@@ -49,7 +49,7 @@ drag-and-drop the WAD file onto the EXE to play it.
 <!---
 <p>
 <i>(Some games, especially Quake, may need special setup before
-running Oblige.  See below for more information)
+running OBLIGE.  See below for more information)
 </i>
 --->
 
@@ -150,7 +150,7 @@ those options are hidden while the module is disabled.
 <p>
 Modules can depend on a certain game,
 or a certain engine (source port),
-or even on other modules.
+or even on another module.
 
 When a module is not usable with the current settings,
 it stays hidden.
@@ -166,17 +166,17 @@ The Level Control module is always available and provides
 numerous things you may want to control.
 Especially useful are the
 <span class="button">Secrets</span> and
-<span class="button">Traps</span> settings.
-The "DEFAULT" setting means that Oblige will just
-do what it normally does.
+<span class="button">Traps</span> buttons.
+For most modules, the "DEFAULT" setting means that
+OBLIGE will just do what it normally does.
 
 
 <h3 id="build">BUILD PANEL</h3>
 
-Once you have chosen the desired settings,
+Once you have chosen your desired settings,
 press the <span class="button">Build</span> button.
-This will open a Save-File dialog asking you what the output file
-should be.
+This will open a Save-File dialog asking you what
+the output file should be.
 Enter something appropriate, e.g. TEST, and after that
 OBLIGE will starting building the levels.
 
