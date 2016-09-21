@@ -45,7 +45,7 @@ set -x
 ./Oblige -d seed=${seed} length=${def_length} \
 		game=${def_game} engine=${def_engine} \
 		size=${def_size} theme=${def_theme} \
-		$@ -b ${base}.out > ${base}.log
+		$@ -b ${base}.out --log ${base}.log
 set +x
 
 # --- editor settings ---
