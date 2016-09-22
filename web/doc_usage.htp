@@ -54,7 +54,7 @@ running OBLIGE.  See below for more information)
 --->
 
 
-<h3>WINDOW LAYOUT</h3>
+<h3 id="window">WINDOW LAYOUT</h3>
 
 The following diagram shows the GUI for OBLIGE.
 You can see that the window is divided into five distinct panels.
@@ -188,10 +188,68 @@ since OBLIGE includes a built-in version of glBSP.
 
 
 <!---
-<h3>OPTIONS WINDOW</h3>
-
+<h3 id="options">OPTIONS WINDOW</h3>
 Blah blah blag
 --->
+
+
+<!---
+<h3>CONFIG MANAGER</h3>
+Blah blah blag
+--->
+
+
+<!---
+<h3 id="confman">CONFIG MANAGER</h3>
+Blah blah blag
+--->
+
+
+<h3 id="batch">BATCH MODE</h3>
+
+Batch mode allows running OBLIGE non-interactively
+(without any GUI), e.g. from the command-line in a
+terminal window or from a script.
+Since there is no user interface, all settings must be
+given as command-line arguments, or loaded from a
+pre-existing config file.
+
+<p>
+Here is a simple example:
+
+<div class="legal">
+Oblige --batch OUTPUT.wad game=doom2 length=episode theme=tech
+</div>
+
+<p>
+The "--batch" option is essential, and it must be followed
+by the output filename.
+There are other options which begin with "--",
+for example "--verbose" causes
+lots of messages to be displayed in your terminal window.
+
+<p>
+Options of the form "name=keyword" are used to set OBLIGE
+settings.
+Note that there must not be any spaces around the "=" sign.
+Running OBLIGE normally and using the Config Manager (F9 key)
+is a good way to get familiar for what settings are available,
+and which keywords they require.
+
+<p>
+When you want to control many settings,
+there is a better way than simply adding lots of arguments
+to the command-line.
+Instead you can use the Config Manager to save your chosen
+settings into a file, such as "MYCONF.txt",
+and use the "--load" option to use those settings in
+batch mode.
+For example:
+
+<div class="legal">
+Oblige --batch OUTPUT.wad --load MYCONF.txt
+</div>
+
 
 
 <!---
