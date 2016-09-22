@@ -103,7 +103,24 @@ inspired by the concept of "shape grammars".
 
 <h3 id="changes7XX">CHANGES IN 7.XX</h3>
 <PRE>
-+  heaps of super cool awesome shit
+Major stuff
+-----------
+
++  new "Shape Grammar" level generation system
++  add-on package system
++  a title-pic generator
++  localization support
+
++  better planning for Boss monsters
++  better indoor lighting
++  better secrets
+
+Regressions
+-----------
+
+-  no 3D floors
+-  no outdoor cavey rooms
+-  no scenery outside the map borders
 </PRE>
 
 <p> &nbsp;
