@@ -1,5 +1,5 @@
 
-CHANGES IN 7.xx
+CHANGES IN 7.45
 ===============
 
 Major stuff:

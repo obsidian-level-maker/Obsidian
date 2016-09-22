@@ -102,7 +102,7 @@ from SLIGE (by David Chess) or from any other random level
 generator.
 
 OBLIGE uses a modified version of the Lua 5.1.5 scripting
-language, which is Copyright 1994-2012 Lua.org, PUC-Rio, which
+language, which is Copyright 1994-2012 Lua.org, PUC-Rio, and
 is under a permissive "MIT" license.
 
 Part of the cave algorithm used in OBLIGE was described by Jim
