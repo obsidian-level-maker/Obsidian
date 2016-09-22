@@ -187,7 +187,7 @@ generator.
 
 <p>
 OBLIGE uses a modified version of the Lua 5.1.5 scripting
-language, which is Copyright 1994-2012 Lua.org, PUC-Rio, which
+language, which is Copyright 1994-2012 Lua.org, PUC-Rio, and is
 is under a permissive "MIT" license.  The original version can
 be found here: <a href="http://www.lua.org/">www.lua.org</a>
 
