@@ -268,6 +268,20 @@ The final quest always leads to the exit room of the level.
 </div>
 
 
+<div id="randomseed" class="gloss_term">
+Random Seed
+</div><div class="gloss_define">
+This is a number used to setup a random number generator.
+The same seed value produces the same sequence of random numbers,
+and hence the same set of maps
+(assuming <i>all</i> other settings are the same).
+OBLIGE chooses a unique seed number each time you
+build a set of levels, ensuring that the output wad
+is different than any previously built one.
+
+</div>
+
+
 <div id="scenic" class="gloss_term">
 Scenic
 </div><div class="gloss_define">
@@ -289,12 +303,7 @@ The decisions about where to place rooms, how big they are,
 and how they are connected are all done using seeds.
 
 <p>
-Another meaning of "seed" is a number used to setup a
-random number generator.  The same seed value will produce
-the same sequence of random numbers.
-OBLIGE chooses a unique seed number each time you
-build a set of levels, which ensures that the output wad
-is different than any previously built wad.
+<i>(See also.... Random Seed)</i>
 
 </div>
 
