@@ -223,11 +223,6 @@ function Layout_spot_for_wotsit(R, kind, required)
     -- already used?
     if chunk.content_kind then return -1 end
 
-    -- handle symmetrical room
-    if chunk.peer and chunk.peer.content_kind == kind then
-      return 700 + gui.random()
-    end
-
     -- TODO: review this
     if kind == "SWITCH" then
       if chunk.kind != "closet" then return -1 end
@@ -235,6 +230,16 @@ function Layout_spot_for_wotsit(R, kind, required)
 
     if kind == "SECRET_EXIT_CLOSET" then
       if chunk.kind != "closet" then return -1 end
+    end
+
+    -- when we have alternate start rooms, cannot use closets
+    if kind == "START" and R.player_set then
+      if chunk.kind == "closet" then return -1 end
+    end
+
+    -- handle symmetrical room
+    if chunk.peer and chunk.peer.content_kind == kind then
+      return 700 + gui.random()
     end
 
     local score = (chunk.sig_dist or 0) * 10
