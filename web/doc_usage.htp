@@ -168,7 +168,7 @@ Especially useful are the
 <span class="button">Secrets</span> and
 <span class="button">Traps</span> buttons.
 For most modules, the "DEFAULT" setting means that
-OBLIGE will just do what it normally does.
+OBLIGE will simply do what it normally does.
 
 
 <h3 id="build">BUILD PANEL</h3>
@@ -201,7 +201,9 @@ window/font.
 and disable add-on packages, which are PK3 files used to modify
 the scripts and other data files of OBLIGE.
 
-<li><span class="button">Set Seed</span> : @@@
+<li><span class="button">Set Seed</span> : here you can change
+the <a href="doc_glossary.html#randomseed">Random Seed</a>
+that OBLIGE will use to build the next set of levels.
 
 <li><span class="button">Config Manager</span> : lets you
 manage config files (files containing OBLIGE settings),
@@ -225,7 +227,7 @@ Batch mode allows running OBLIGE non-interactively
 (without any GUI), e.g. from the command-line in a
 terminal window or from a script.
 Since there is no user interface, all settings must be
-given as command-line arguments, or loaded from a
+given as command-line arguments or loaded from a
 pre-existing config file.
 
 <p>
