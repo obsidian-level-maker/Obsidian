@@ -187,22 +187,36 @@ since OBLIGE includes a built-in version of glBSP.
 
 
 
-<!---
-<h3 id="options">OPTIONS WINDOW</h3>
-Blah blah blag
---->
+<h3 id="menu">MENU FUNCTIONS</h3>
+The Build panel contains a menu which
+provides access to some additional functionality:
 
+<ul class="menuinfo">
 
-<!---
-<h3>CONFIG MANAGER</h3>
-Blah blah blag
---->
+<li><span class="button">Options</span> : allows setting some
+UI-related stuff, such as the current language and the size of the
+window/font.
 
+<li><span class="button">Addon List</span> : lets you enable
+and disable add-on packages, which are PK3 files used to modify
+the scripts and other data files of OBLIGE.
 
-<!---
-<h3 id="confman">CONFIG MANAGER</h3>
-Blah blah blag
---->
+<li><span class="button">Set Seed</span> : @@@
+
+<li><span class="button">Config Manager</span> : lets you
+manage config files (files containing OBLIGE settings),
+such as loading settings from a file (including previously
+created WAD files) and saving the settings to a new file.
+
+</ul>
+
+<p>
+Note that settings in the Options and Addon windows typically
+require OBLIGE to be restarted before they take effect.
+Changes to add-ons mean that all the Lua scripts that OBLIGE
+has loaded are now invalidated, hence OBLIGE is forced to
+shut down.
+
 
 
 <h3 id="batch">BATCH MODE</h3>
@@ -239,10 +253,10 @@ and which keywords they require.
 <p>
 When you want to control many settings,
 there is a better way than simply adding lots of arguments
-to the command-line.
-Instead you can use the Config Manager to save your chosen
+to the command line.
+Instead you can use the Config Manager to save your desired
 settings into a file, such as "MYCONF.txt",
-and use the "--load" option to use those settings in
+and use the "--load" option to load those settings in
 batch mode.
 For example:
 

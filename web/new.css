@@ -112,6 +112,10 @@ PRE { /* font-size: larger; */ }
 
 .screenshot { padding: 16px; margin: 0px; border: 0px solid black; }
 
+.menuinfo li {
+    margin-bottom: 1em;
+}
+
 .qsavetex li {
     color: #444;
     font-size: smaller;
