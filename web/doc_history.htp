@@ -71,7 +71,7 @@ inspired by the concept of "shape grammars".
 
 <h3>RELEASE DATES</h3>
 
-<b>Version 7.XX</b> : 201X-XX-XX<br>
+<b>Version 7.50</b> : 2016-09-XX<br>
 
 <p>
 <b>Version 7.17</b> : 2015-09-16 &nbsp; (unofficial, experimental package)<br>
@@ -101,7 +101,7 @@ inspired by the concept of "shape grammars".
 <b>Version 0.81</b> : 2007-01-21 &nbsp; (very first public release)<br>
 
 
-<h3 id="changes7XX">CHANGES IN 7.XX</h3>
+<h3 id="changes750">CHANGES IN 7.50</h3>
 <PRE>
 Major stuff
 -----------
@@ -118,6 +118,7 @@ Major stuff
 Regressions
 -----------
 
+-  no hallways
 -  no 3D floors
 -  no outdoor cavey rooms
 -  no scenery outside the map borders
