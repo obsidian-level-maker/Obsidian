@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -27,9 +27,12 @@ void LogClose(void);
 void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
-void LogPrintf(const char *str, ...);
-
+void   LogPrintf(const char *str, ...);
 void DebugPrintf(const char *str, ...);
+
+typedef void (* log_display_func_t)(const char *line);
+
+void LogReadLines(log_display_func_t display_func);
 
 #endif /* __SYS_DEBUG_H__ */
 
