@@ -3,24 +3,18 @@ WORK IN PROGRESS
 ================
 
 
-Tidying Up / Release stuff:
+Tidying Up / Release stuff
+--------------------------
 
 -  ensure the linux "make install" works
+
+WISH : tooltips for addons : parse addons/<name>.txt
 
 WISH : a "View Logs" option
 
 
-Web / Usage:
+Web site
+--------
 
--  mention Menu in the BUILD panel ??
-
--  a section about Addons
-
--  a section about Batch mode
-
--  mention ability to set/see the random seed
-
-WISH: a section about the Config manager
-
-WISH: a section for the Options screen
+!!  news item for front page
 
