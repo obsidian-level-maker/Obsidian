@@ -2,9 +2,9 @@
 --  TEMPLATE for adding new WEAPONS
 ----------------------------------------------------------------
 
-CUSTOMW = { }
+CUSTOMWEAP = { }
 
-CUSTOMW.WEAPONS =
+CUSTOMWEAP.WEAPONS =
 {
   weapon1 =
   {
@@ -22,15 +22,15 @@ CUSTOMW.WEAPONS =
 }
 
 
-OB_MODULES["CUSTOMW"] =
+OB_MODULES["CUSTOMWEAP"] =
 {
-  label = "CUSTOMW"
+  label = "CUSTOMWEAP"
 
   for_games = { doom2=1 }
 
   tables =
   {
-    CUSTOMW
+    CUSTOMWEAP
   }
 }
 
