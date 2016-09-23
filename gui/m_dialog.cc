@@ -319,5 +319,14 @@ void DLG_EditSeed(void)
 	next_rand_seed = floor(next_rand_seed);
 }
 
+
+//----------------------------------------------------------------------
+
+
+void DLG_ViewLogs(void)
+{
+	// TODO
+}
+
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

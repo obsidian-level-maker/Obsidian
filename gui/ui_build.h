@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -76,6 +76,7 @@ private:
 	static void menu_do_options(Fl_Widget *, void*);
 	static void menu_do_addons(Fl_Widget *, void*);
 	static void menu_do_edit_seed(Fl_Widget *, void*);
+	static void menu_do_view_logs(Fl_Widget *, void*);
 	static void menu_do_manage_config(Fl_Widget *, void*);
 };
 

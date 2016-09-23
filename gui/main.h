@@ -83,9 +83,11 @@ const char * DLG_OutputFilename(const char *ext);
 
 void DLG_AboutText(void);
 void DLG_OptionsEditor(void);
-void DLG_ManageConfig(void);
-void DLG_EditSeed(void);
 void DLG_SelectAddons(void);
+
+void DLG_EditSeed(void);
+void DLG_ViewLogs(void);
+void DLG_ManageConfig(void);
 
 
 class game_interface_c

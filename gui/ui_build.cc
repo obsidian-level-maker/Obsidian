@@ -77,6 +77,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	misc_menu->add(_("Options"),       FL_F+4, menu_do_options);
 	misc_menu->add(_("Addon List"),    FL_F+3, menu_do_addons);
 	misc_menu->add(_("Set Seed"),      FL_F+5, menu_do_edit_seed);
+	misc_menu->add(_("View Logs"),     FL_F+6, menu_do_view_logs);
 	misc_menu->add(_("Manage Config"), FL_F+9, menu_do_manage_config);
 
 	add(misc_menu);
@@ -384,6 +385,11 @@ void UI_Build::menu_do_addons(Fl_Widget *w, void *data)
 void UI_Build::menu_do_edit_seed(Fl_Widget *w, void *data)
 {
 	DLG_EditSeed();
+}
+
+void UI_Build::menu_do_view_logs(Fl_Widget *w, void *data)
+{
+	DLG_ViewLogs();
 }
 
 void UI_Build::menu_do_manage_config(Fl_Widget *w, void *data)
