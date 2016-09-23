@@ -329,12 +329,14 @@ there can be more than one skin for each prefab.
 </div>
 
 
+<!---
 <div id="sub_room" class="gloss_term">
 Sub-Room
 </div><div class="gloss_define">
 A room which lies inside another room.  The sub-room is also
 called the child and the outer room is the parent.
 </div>
+--->
 
 
 <div id="zone" class="gloss_term">
