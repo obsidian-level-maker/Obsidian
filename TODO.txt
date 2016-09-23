@@ -839,6 +839,12 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
++  info files for addons: addons/<name>.txt
+   [ tricky since need to find it inside disabled PK3 files ]
+
+   parse "author" and "description" strings
+   (and ideally support [[ .. ]] strings as per Lua)
+
 +  i18n issues (like non-ASCII characters in filenames)
 
 +  CSG issue: support beam intersects with 3D floor => wrong side texture

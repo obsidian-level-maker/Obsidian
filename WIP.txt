@@ -6,9 +6,5 @@ WORK IN PROGRESS
 Tidying Up / Release stuff
 --------------------------
 
--  ensure the linux "make install" works
-
-WISH : tooltips for addons : parse addons/<name>.txt
-
 WISH : a "View Logs" option
 
