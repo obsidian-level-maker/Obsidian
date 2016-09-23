@@ -17,10 +17,8 @@
 
 <h3>INTRODUCTION</h3>
 
-OBLIGE is a random level generator for various classic
-games, including DOOM, DOOM II, and Heretic.
-The goal is to produce
-high quality levels which are fun to play.
+OBLIGE is a random level generator for the classic FPS game 'DOOM'.
+The goal is to produce high quality levels which are fun to play.
 
 <p>
 <i>(see the <a href="doc_about.html">About</a> page for more information)</i>
@@ -30,7 +28,7 @@ high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 6.20 is the current stable version.
+OBLIGE 7.50 is the current stable version.
 
 <p>
 <i>(Note: this version only supports the DOOM games.
@@ -39,6 +37,32 @@ For other games please try version 4.28)
 
 
 <h3>NEWS</h3>
+
+<div class="newsdate">XX-Sep-2016:</div>
+<blockquote class="news">
+I am delighted to announce that version 7.50 of OBLIGE
+has been released!
+
+<p>
+This version is a major rework compared to 6.20,
+introducing a new system of generating levels based
+on the concept of <i>Shape Grammars</i>.
+Part of the reason this release took so long is that I
+wanted it to reach feature parity with V6,
+though there are some regressions (no hallways and
+a lack of 3D floors, to cite two examples).
+
+<p>
+I feel that this is the best version of OBLIGE so far,
+and I hope everyone enjoys playing the levels it can
+generate.
+
+</blockquote>
+
+
+<!--- ------------------------------------ --->
+
+<hr style="clear: right;">
 
 <div class="newsdate">03-Mar-2016:</div>
 <blockquote class="news">
@@ -71,8 +95,10 @@ the next public release will not take another year :-)
 
 </blockquote>
 
-<hr style="clear: right;">
 
+<!--- ------------------------------------ --->
+
+<hr style="clear: right;">
 
 <div class="newsdate">14-Oct-2015:</div>
 <blockquote class="news">
@@ -87,8 +113,10 @@ approach of "growing" a set of rooms, branching off earlier rooms.
 
 </blockquote>
 
-<hr style="clear: right;">
 
+<!--- ------------------------------------ --->
+
+<hr style="clear: right;">
 
 <div class="newsdate">10-Mar-2015:</div>
 <blockquote class="news">
@@ -105,8 +133,10 @@ plus several bug fixes.
 
 </blockquote>
 
-<hr style="clear: right;">
 
+<!--- ------------------------------------ --->
+
+<hr style="clear: right;">
 
 <div class="newsdate">24-Dec-2014:</div>
 <blockquote class="news">
@@ -127,8 +157,10 @@ Merry Christmas everyone!
 
 </blockquote>
 
-<hr style="clear: right;">
 
+<!--- ------------------------------------ --->
+
+<hr style="clear: right;">
 
 <div class="newsdate">11-Jul-2014:</div>
 <blockquote class="news">
@@ -163,6 +195,8 @@ See the full list of changes here:
 
 </blockquote>
 
+
+<!--- ------------------------------------ --->
 
 <hr style="clear: right;">
 

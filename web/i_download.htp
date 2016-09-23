@@ -18,14 +18,14 @@
 
 <span id="current"></span>
 
-<h3>CURRENT STABLE VERSION : 6.20</h3>
+<h3>CURRENT STABLE VERSION : 7.50</h3>
 
 <b>Windows package</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.20/oblige-620-win.zip">oblige-620-win.zip</a>
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/7.50/oblige-750-win.zip">oblige-750-win.zip</a>
 
 <p>
 <b>Source code</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.20/oblige-620-source.tar.gz">oblige-620-source.tar.gz</a>
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/7.50/oblige-750-source.tar.gz">oblige-750-source.tar.gz</a>
 
 
 <h3>OLDER VERSIONS</h3>
@@ -59,7 +59,7 @@ information about OBLIGE.
 OBLIGE Level Maker
 
 <p>
-Copyright (C) 2006-2015 Andrew Apted, et al
+Copyright (C) 2006-2016 Andrew Apted, et al
 
 <p>
 OBLIGE is free software; you can redistribute it and/or
