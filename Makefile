@@ -240,11 +240,13 @@ install: stripped
 	install -d $(SCRIPT_DIR)/engines
 	install -d $(SCRIPT_DIR)/modules
 	install -d $(SCRIPT_DIR)/addons
+	install -d $(SCRIPT_DIR)/language
 	#
 	install -o root -m 644 scripts/*.lua $(SCRIPT_DIR)/scripts
 	install -o root -m 644 engines/*.lua $(SCRIPT_DIR)/engines
 	install -o root -m 644 modules/*.lua $(SCRIPT_DIR)/modules
 	install -o root -m 644  addons/*.pk3 $(SCRIPT_DIR)/addons
+	install -o root -m 644 language/*.*  $(SCRIPT_DIR)/language
 	#
 	install -d $(SCRIPT_DIR)/data
 	install -d $(SCRIPT_DIR)/data/masks
