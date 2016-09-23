@@ -12,9 +12,3 @@ WISH : tooltips for addons : parse addons/<name>.txt
 
 WISH : a "View Logs" option
 
-
-Web site
---------
-
-!!  news item for front page
-
