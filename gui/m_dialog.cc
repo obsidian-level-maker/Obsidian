@@ -327,6 +327,8 @@ void DLG_EditSeed(void)
 class UI_LogViewer : public Fl_Double_Window
 {
 private:
+	bool want_quit;
+
 	Fl_Multi_Browser * browser;
 
 	Fl_Button * copy_but;
@@ -334,6 +336,11 @@ private:
 public:
 	UI_LogViewer();
 	virtual ~UI_LogViewer();
+
+	bool WantQuit() const
+	{
+		return want_quit;
+	}
 
 	void Add(const char *line);
 
@@ -349,7 +356,7 @@ private:
 
 	char * GetSelectedText() const;
 
-	static void     ok_callback(Fl_Widget *, void *);
+	static void   quit_callback(Fl_Widget *, void *);
 	static void   save_callback(Fl_Widget *, void *);
 	static void select_callback(Fl_Widget *, void *);
 	static void   copy_callback(Fl_Widget *, void *);
@@ -357,11 +364,14 @@ private:
 
 
 UI_LogViewer::UI_LogViewer() :
-	Fl_Double_Window(580, 400, _("OBLIGE Log Viewer"))
+	Fl_Double_Window(580, 400, _("OBLIGE Log Viewer")),
+	want_quit(false)
 {
 	box(FL_NO_BOX);
 
 	size_range(520, 200);
+
+	callback(quit_callback, this);
 
 	int ey = h() - 65;
 
@@ -382,7 +392,7 @@ UI_LogViewer::UI_LogViewer() :
 		{
 			Fl_Button * but = new Fl_Button(bx, ey + 15, 80, 35, _("Close"));
 			but->labelfont(1);
-			but->callback(ok_callback, this);
+			but->callback(quit_callback, this);
 		}
 
 		bx = 30;
@@ -501,11 +511,11 @@ void UI_LogViewer::WriteLogs(FILE *fp)
 }
 
 
-void UI_LogViewer::ok_callback(Fl_Widget *w, void *data)
+void UI_LogViewer::quit_callback(Fl_Widget *w, void *data)
 {
 	UI_LogViewer *that = (UI_LogViewer *)data;
 
-	that->do_callback();
+	that->want_quit = true;
 }
 
 
@@ -594,6 +604,12 @@ void DLG_ViewLogs(void)
 
 	log_viewer->set_modal();
 	log_viewer->show();
+
+	// run the dialog until the user closes it
+	while (! log_viewer->WantQuit())
+		Fl::wait();
+
+	delete log_viewer;
 }
 
 //--- editor settings ---

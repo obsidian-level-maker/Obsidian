@@ -865,7 +865,7 @@ void DLG_ManageConfig(void)
 	config_window->SetupRecent();
 	config_window->ReadCurrentSettings();
 
-	// run the GUI until the user closes
+	// run the window until the user closes it
 	while (! config_window->WantQuit())
 		Fl::wait();
 
