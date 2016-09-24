@@ -26,8 +26,6 @@ OB_MODULES["CUSTOMWEAP"] =
 {
   label = "CUSTOMWEAP"
 
-  for_games = { doom2=1 }
-
   tables =
   {
     CUSTOMWEAP

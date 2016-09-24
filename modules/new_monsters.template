@@ -24,8 +24,6 @@ OB_MODULES["CUSTOM"] =
 {
   label = "CUSTOM"
 
-  for_games = { doom2=1 }
-
   tables =
   {
     CUSTOM
