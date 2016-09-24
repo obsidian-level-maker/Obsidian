@@ -373,7 +373,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) :
 
 	callback(quit_callback, this);
 
-	int ey = h() - 65;
+	int ey = h() - kf_h(65);
 
 	browser = new Fl_Multi_Browser(0, 0, w(), ey);
 	browser->textfont(FL_COURIER);
@@ -382,35 +382,40 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) :
 
 	resizable(browser);
 
+	int button_w = kf_w(80);
+	int button_h = kf_h(35);
+
+	int button_y = ey + (kf_h(65) - button_h) / 2;
+
 	{
 		Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
 		o->box(FL_FLAT_BOX);
 
 		o->color(WINDOW_BG);
 
-		int bx  = w() - 110;
+		int bx  = w() - button_w - kf_w(25);
 		int bx2 = bx;
 		{
-			Fl_Button * but = new Fl_Button(bx, ey + 15, 80, 35, _("Close"));
-			but->labelfont(1);
+			Fl_Button * but = new Fl_Button(bx, button_y, button_w, button_h, _("Close"));
+			but->labelfont(FL_HELVETICA_BOLD);
 			but->callback(quit_callback, this);
 		}
 
-		bx = 30;
+		bx = kf_w(25);
 		{
-			Fl_Button * but = new Fl_Button(bx, ey + 15, 80, 35, _("Save"));
+			Fl_Button * but = new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
 			but->callback(save_callback, this);
 		}
 
-		bx += 180;
+		bx += kf_w(140);
 		{
-			copy_but = new Fl_Button(bx, ey + 15, 80, 35, _("Copy"));
+			copy_but = new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
 			copy_but->callback(copy_callback, this);
 			copy_but->shortcut(FL_CTRL + 'c');
 			copy_but->deactivate();
 		}
 
-		bx += 80;
+		bx += button_w + 10;
 
 		Fl_Group *resize_box = new Fl_Group(bx + 10, ey + 2, bx2 - bx - 20, h() - ey - 4);
 		resize_box->box(FL_NO_BOX);
