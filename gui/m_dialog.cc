@@ -376,7 +376,8 @@ UI_LogViewer::UI_LogViewer() :
 	int ey = h() - 65;
 
 	browser = new Fl_Multi_Browser(0, 0, w(), ey);
-	browser->textsize(16);
+	browser->textfont(FL_COURIER);
+	browser->textsize(small_font_size);
 	browser->callback(select_callback, this);
 
 	resizable(browser);

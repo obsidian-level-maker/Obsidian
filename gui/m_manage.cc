@@ -743,7 +743,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 	conf_disp->align(Fl_Align(FL_ALIGN_TOP));
 	conf_disp->buffer(text_buf);
 	conf_disp->textfont(FL_COURIER);
-	conf_disp->textsize(12 + KF * 2);
+	conf_disp->textsize(small_font_size);
 
 
 	/* Main Buttons */
