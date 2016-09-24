@@ -159,6 +159,18 @@ void StringFree(const char *str)
 }
 
 
+void StringRemoveCRLF(char *str)
+{
+	size_t len = strlen(str);
+
+	if (len > 0 && str[len - 1] == '\n')
+		str[--len] = 0;
+
+	if (len > 0 && str[len - 1] == '\r')
+		str[--len] = 0;
+}
+
+
 char *mem_gets(char *buf, int size, const char ** str_ptr)
 {
 	// This is like fgets() but reads lines from a string.
