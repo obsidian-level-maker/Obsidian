@@ -30,9 +30,9 @@ void LogEnableTerminal(bool enable);
 void   LogPrintf(const char *str, ...);
 void DebugPrintf(const char *str, ...);
 
-typedef void (* log_display_func_t)(const char *line);
+typedef void (* log_display_func_t)(const char *line, void *priv_data);
 
-void LogReadLines(log_display_func_t display_func);
+void LogReadLines(log_display_func_t display_func, void *priv_data);
 
 #endif /* __SYS_DEBUG_H__ */
 

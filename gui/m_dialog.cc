@@ -337,10 +337,12 @@ public:
 
 	void Add(const char *line);
 
-	void Deselect();
-
 	// ensure the very last line is visible
 	void JumpEnd();
+
+	void ReadLogs();
+
+	void WriteLogs(FILE *fp);
 
 private:
 	int CountSelectedLines() const;
@@ -359,7 +361,7 @@ UI_LogViewer::UI_LogViewer() :
 {
 	box(FL_NO_BOX);
 
-	size_range(480, 200);
+	size_range(520, 200);
 
 	int ey = h() - 65;
 
@@ -389,7 +391,7 @@ UI_LogViewer::UI_LogViewer() :
 			but->callback(save_callback, this);
 		}
 
-		bx += 205;
+		bx += 180;
 		{
 			copy_but = new Fl_Button(bx, ey + 15, 80, 35, _("Copy"));
 			copy_but->callback(copy_callback, this);
@@ -413,14 +415,6 @@ UI_LogViewer::UI_LogViewer() :
 
 UI_LogViewer::~UI_LogViewer()
 { }
-
-
-void UI_LogViewer::Deselect()
-{
-	browser->deselect();
-
-	copy_but->deactivate();
-}
 
 
 void UI_LogViewer::JumpEnd()
@@ -487,6 +481,26 @@ void UI_LogViewer::Add(const char *line)
 }
 
 
+static void logviewer_display_func(const char *line, void *priv_data)
+{
+	UI_LogViewer *log_viewer = (UI_LogViewer *)priv_data;
+
+	log_viewer->Add(line);
+}
+
+
+void UI_LogViewer::ReadLogs()
+{
+	LogReadLines(logviewer_display_func, (void *)this);
+}
+
+
+void UI_LogViewer::WriteLogs(FILE *fp)
+{
+	// FIXME
+}
+
+
 void UI_LogViewer::ok_callback(Fl_Widget *w, void *data)
 {
 	UI_LogViewer *that = (UI_LogViewer *)data;
@@ -524,6 +538,8 @@ void UI_LogViewer::copy_callback(Fl_Widget *w, void *data)
 
 void UI_LogViewer::save_callback(Fl_Widget *w, void *data)
 {
+	UI_LogViewer *that = (UI_LogViewer *)data;
+
 	Fl_Native_File_Chooser chooser;
 
 	chooser.title(_("Pick file to save to"));
@@ -564,7 +580,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data)
 		return;
 	}
 
-	// FIXME : LogSaveTo(fp);
+	that->WriteLogs(fp);
 
 	fclose(fp);
 }
@@ -572,7 +588,12 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data)
 
 void DLG_ViewLogs(void)
 {
-	// TODO
+	UI_LogViewer *log_viewer = new UI_LogViewer();
+
+	log_viewer->ReadLogs();
+
+	log_viewer->set_modal();
+	log_viewer->show();
 }
 
 //--- editor settings ---

@@ -143,7 +143,7 @@ void DebugPrintf(const char *str, ...)
 }
 
 
-void LogReadLines(log_display_func_t display_func)
+void LogReadLines(log_display_func_t display_func, void *priv_data)
 {
 	if (! log_file)
 		return;
@@ -165,7 +165,7 @@ void LogReadLines(log_display_func_t display_func)
 
 	while (fgets(buffer, MSG_BUF_LEN-2, log_file))
 	{
-		display_func(buffer);
+		display_func(buffer, priv_data);
 	}
 
 	// open the log file for writing again
