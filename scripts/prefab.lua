@@ -2057,6 +2057,15 @@ function Fab_match_user_stuff(def)
     factor = factor * style_sel(name, 0, 0.25, 1.0, 4.0)
   end
 
+
+  ---| Fab_match_user_stuff |---
+
+  -- special check: if required game is "doomish" then allow any
+  -- of the DOOM games to match.
+  if def.game == "doomish" then
+     def.game = { doom1=1, doom2=1 }
+  end
+
   if def.game  then match(def.game,  OB_CONFIG.game) end
   if def.theme then match(def.theme, LEVEL.theme_name) end
 

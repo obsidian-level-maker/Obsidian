@@ -268,6 +268,12 @@ function ob_match_conf(T)
   assert(OB_CONFIG.mode)
   assert(OB_CONFIG.engine)
 
+  -- special check: if required game is "doomish" then allow any
+  -- of the DOOM games to match.
+  if T.game == "doomish" then
+     T.game = { doom1=1, doom2=1 }
+  end
+
   if T.game and not ob_match_word_or_table(T.game, OB_CONFIG.game) then
     local game_def = OB_GAMES[OB_CONFIG.game]
 
