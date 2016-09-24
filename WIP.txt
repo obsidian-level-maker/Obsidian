@@ -3,9 +3,3 @@ WORK IN PROGRESS
 ================
 
 
-Tidying Up / Release stuff
---------------------------
-
--  the new_xxx templates use obsolete "for_game", and
-   probably use add "engine = zdoom" too
-
