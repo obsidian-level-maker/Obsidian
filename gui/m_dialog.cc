@@ -334,7 +334,7 @@ private:
 	Fl_Button * copy_but;
 
 public:
-	UI_LogViewer();
+	UI_LogViewer(int W, int H, const char *l);
 	virtual ~UI_LogViewer();
 
 	bool WantQuit() const
@@ -363,13 +363,13 @@ private:
 };
 
 
-UI_LogViewer::UI_LogViewer() :
-	Fl_Double_Window(580, 400, _("OBLIGE Log Viewer")),
+UI_LogViewer::UI_LogViewer(int W, int H, const char *l) :
+	Fl_Double_Window(W, H, l),
 	want_quit(false)
 {
 	box(FL_NO_BOX);
 
-	size_range(520, 200);
+	size_range(W * 3 / 4, H * 3 / 4);
 
 	callback(quit_callback, this);
 
@@ -599,7 +599,10 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data)
 
 void DLG_ViewLogs(void)
 {
-	UI_LogViewer *log_viewer = new UI_LogViewer();
+	int log_w = kf_w(560);
+	int log_h = kf_h(380);
+
+	UI_LogViewer *log_viewer = new UI_LogViewer(log_w, log_h, _("OBLIGE Log Viewer"));
 
 	log_viewer->ReadLogs();
 
