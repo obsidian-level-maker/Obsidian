@@ -6,5 +6,6 @@ WORK IN PROGRESS
 Tidying Up / Release stuff
 --------------------------
 
-WISH : a "View Logs" option
+-  the new_xxx templates use obsolete "for_game", and
+   probably use add "engine = zdoom" too
 

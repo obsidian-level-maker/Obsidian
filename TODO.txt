@@ -867,8 +867,6 @@ Cancellation:
   DOCUMENTATION / WEB SITE
 ----------------------------------------------
 
-+  Usage page: BATCH MODE section
-
 +  need new screenshots for website
 
 +  modding Monsters guide: mention boss stuff
@@ -882,6 +880,9 @@ Cancellation:
    - materials, themes
 
 -  Glossary : describe "Area".
+
+-  Glossary : define "Joiner" and/or "Junction" ??
+            : define "Chunk" ??
 
 -  transfer Lua_Extended.txt document to the website
    probably simplified (part of modding guide).
