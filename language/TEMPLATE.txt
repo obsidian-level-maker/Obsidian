@@ -6,7 +6,7 @@ msgid   ""
 msgstr  "Project-Id-Version: Oblige Level Maker\n"
         "Report-Msgid-Bugs-To: \n"
         "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-        "PO-Revision-Date: 2016-09-18 19:54+1000\n"
+        "PO-Revision-Date: 2016-09-24 19:54+1000\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
         "Language: \n"
@@ -295,6 +295,10 @@ msgstr  ""
 msgid   "Enter New Seed Number:"
 msgstr  ""
 
+#: gui/m_dialog.cc:620
+msgid   "OBLIGE Log Viewer"
+msgstr  ""
+
 #: gui/m_lua.cc:528
 #, c-format
 msgid   "Making %s"
@@ -503,6 +507,10 @@ msgid   "Set Seed"
 msgstr  ""
 
 #: gui/ui_build.cc:80
+msgid   "View Logs"
+msgstr  ""
+
+#: gui/ui_build.cc:81
 msgid   "Manage Config"
 msgstr  ""
 
