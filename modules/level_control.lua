@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2009      Enhas
---  Copyright (C) 2009-2015 Andrew Apted
+--  Copyright (C) 2009-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
