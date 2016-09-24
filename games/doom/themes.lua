@@ -1892,7 +1892,7 @@ DOOM.NAMES =
 OB_THEMES["tech"] =
 {
   label = _("Tech")
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
   priority = 18
   name_class = "TECH"
   mixed_prob = 80
@@ -1902,7 +1902,7 @@ OB_THEMES["tech"] =
 OB_THEMES["hell"] =
 {
   label = _("Hell")
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
   priority = 14
   name_class = "GOTHIC"
   mixed_prob = 40
@@ -1922,7 +1922,7 @@ OB_THEMES["urban"] =
 OB_THEMES["mostly_tech"] =
 {
   label = _("Mostly Tech")
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
   priority = 8
   name_class = "TECH"
 }
@@ -1940,7 +1940,7 @@ OB_THEMES["mostly_urban"] =
 OB_THEMES["mostly_hell"] =
 {
   label = _("Mostly Hell")
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
   priority = 6
   name_class = "HELL"
 }

@@ -127,7 +127,7 @@ OB_ENGINES["boom"] =
 
   priority = 99  -- this makes it top-most, and the default engine
 
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
 
   tables =
   {

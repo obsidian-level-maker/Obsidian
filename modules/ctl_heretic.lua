@@ -74,8 +74,7 @@ OB_MODULES["heretic_mon_control"] =
 {
   label = _("Heretic Monster Control")
 
-  game = { heretic=1 }
-  playmode = { sp=1, coop=1 }
+  game = "heretic"
 
   hooks =
   {
@@ -160,8 +159,7 @@ OB_MODULES["heretic_weapon_control"] =
 {
   label = _("Heretic Weapon Control")
 
-  game = { heretic=1 }
-  playmode = { sp=1, coop=1 }
+  game = "heretic"
 
   hooks =
   {

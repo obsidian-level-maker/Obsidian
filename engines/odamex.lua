@@ -43,7 +43,7 @@ OB_ENGINES["odamex"] =
 
   extends = "boom"
 
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
 
   tables =
   {

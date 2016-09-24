@@ -115,9 +115,9 @@ OB_MODULES["music_swapper"] =
   label = _("Music Swapper")
   priority = 80
 
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
 
-  engine = { boom=1 }
+  engine = "boom"
 
   hooks =
   {

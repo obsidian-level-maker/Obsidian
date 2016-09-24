@@ -215,8 +215,8 @@ OB_MODULES["zdoom_marines"] =
 {
   label = _("ZDoom Marines")
 
-  game = { doom1=1, doom2=1 }
-  playmode = { sp=1, coop=1 }
+  game = "doomish"
+
   engine = { zdoom=1, gzdoom=1, skulltag=1 }
 
   tables =

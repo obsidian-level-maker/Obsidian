@@ -401,7 +401,7 @@ OB_MODULES["sky_generator"] =
   label = _("Sky Generator")
   priority = 85
 
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
 
   hooks =
   {

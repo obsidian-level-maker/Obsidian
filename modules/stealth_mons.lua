@@ -261,8 +261,8 @@ OB_MODULES["stealth_mons"] =
 {
   label = _("Stealth Monsters")
 
-  game = { doom1=1, doom2=1 }
-  playmode = { sp=1, coop=1 }
+  game = "doomish"
+
   engine = { edge=1, zdoom=1, gzdoom=1, skulltag=1 }
 
   tables =

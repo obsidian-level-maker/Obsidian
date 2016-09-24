@@ -261,9 +261,9 @@ OB_MODULES["sktag_mons"] =
 {
   label = _("Skulltag : Monsters and Items")
 
-  game = { doom1=1, doom2=1 }
-  playmode = { sp=1, coop=1 }
-  engine = { skulltag=1 }
+  game = "doomish"
+
+  engine = "skulltag"
 
   tables =
   {

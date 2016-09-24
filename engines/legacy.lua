@@ -42,7 +42,7 @@ OB_ENGINES["legacy"] =
 
   extends = "boom"
 
-  game = { doom1=1, doom2=1 }
+  game = "doomish"
 
   tables =
   {

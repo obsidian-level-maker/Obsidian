@@ -85,8 +85,7 @@ OB_MODULES["doom_mon_control"] =
 {
   label = _("Doom Monster Control")
 
-  game = { doom1=1, doom2=1 }
-  playmode = { sp=1, coop=1 }
+  game = "doomish"
 
   hooks =
   {
@@ -177,8 +176,7 @@ OB_MODULES["doom_weapon_control"] =
 {
   label = _("Doom Weapon Control")
 
-  game = { doom1=1, doom2=1 }
-  playmode = { sp=1, coop=1 }
+  game = "doomish"
 
   hooks =
   {
