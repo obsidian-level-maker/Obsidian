@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@
 #include "hdr_ui.h"
 
 #include "lib_util.h"
+#include "lib_file.h"
 
 #include "main.h"
 
@@ -306,7 +307,7 @@ void DLG_EditSeed(void)
 	// cancelled?
 	if (! buf)
 		return;
-	
+
 	// nothing entered?
 	if (buf[0] == 0)
 		return;
@@ -321,6 +322,252 @@ void DLG_EditSeed(void)
 
 
 //----------------------------------------------------------------------
+
+
+class UI_LogViewer : public Fl_Double_Window
+{
+private:
+	Fl_Multi_Browser * browser;
+
+	Fl_Button * copy_but;
+
+public:
+	UI_LogViewer();
+	virtual ~UI_LogViewer();
+
+	void Add(const char *line);
+
+	void Deselect();
+
+	// ensure the very last line is visible
+	void JumpEnd();
+
+private:
+	int CountSelectedLines() const;
+
+	char * GetSelectedText() const;
+
+	static void     ok_callback(Fl_Widget *, void *);
+	static void   save_callback(Fl_Widget *, void *);
+	static void select_callback(Fl_Widget *, void *);
+	static void   copy_callback(Fl_Widget *, void *);
+};
+
+
+UI_LogViewer::UI_LogViewer() :
+	Fl_Double_Window(580, 400, _("OBLIGE Log Viewer"))
+{
+	box(FL_NO_BOX);
+
+	size_range(480, 200);
+
+	int ey = h() - 65;
+
+	browser = new Fl_Multi_Browser(0, 0, w(), ey);
+	browser->textsize(16);
+	browser->callback(select_callback, this);
+
+	resizable(browser);
+
+	{
+		Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
+		o->box(FL_FLAT_BOX);
+
+		o->color(WINDOW_BG);
+
+		int bx  = w() - 110;
+		int bx2 = bx;
+		{
+			Fl_Button * but = new Fl_Button(bx, ey + 15, 80, 35, _("Close"));
+			but->labelfont(1);
+			but->callback(ok_callback, this);
+		}
+
+		bx = 30;
+		{
+			Fl_Button * but = new Fl_Button(bx, ey + 15, 80, 35, _("Save"));
+			but->callback(save_callback, this);
+		}
+
+		bx += 205;
+		{
+			copy_but = new Fl_Button(bx, ey + 15, 80, 35, _("Copy"));
+			copy_but->callback(copy_callback, this);
+			copy_but->shortcut(FL_CTRL + 'c');
+			copy_but->deactivate();
+		}
+
+		bx += 80;
+
+		Fl_Group *resize_box = new Fl_Group(bx + 10, ey + 2, bx2 - bx - 20, h() - ey - 4);
+		resize_box->box(FL_NO_BOX);
+
+		o->resizable(resize_box);
+
+		o->end();
+	}
+
+	end();
+}
+
+
+UI_LogViewer::~UI_LogViewer()
+{ }
+
+
+void UI_LogViewer::Deselect()
+{
+	browser->deselect();
+
+	copy_but->deactivate();
+}
+
+
+void UI_LogViewer::JumpEnd()
+{
+	if (browser->size() > 0)
+	{
+		browser->bottomline(browser->size());
+	}
+}
+
+
+int UI_LogViewer::CountSelectedLines() const
+{
+	int count = 0;
+
+	for (int i = 1 ; i <= browser->size() ; i++)
+		if (browser->selected(i))
+			count++;
+
+	return count;
+}
+
+
+char * UI_LogViewer::GetSelectedText() const
+{
+	char *buf = StringDup("");
+
+	for (int i = 1 ; i <= browser->size() ; i++)
+	{
+		if (! browser->selected(i))
+			continue;
+
+		const char *line_text = browser->text(i);
+		if (! line_text)
+			continue;
+
+		// append current line onto previous ones
+
+		int new_len = (int)strlen(buf) + (int)strlen(line_text);
+
+		char *new_buf = StringNew(new_len + 1 /* newline */ );
+
+		strcpy(new_buf, buf);
+		strcat(new_buf, line_text);
+
+		if (new_len > 0 && new_buf[new_len - 1] != '\n')
+		{
+			new_buf[new_len++] = '\n';
+			new_buf[new_len]   = 0;
+		}
+
+		StringFree(buf);
+
+		buf = new_buf;
+	}
+
+	return buf;
+}
+
+
+void UI_LogViewer::Add(const char *line)
+{
+	browser->add(line);
+}
+
+
+void UI_LogViewer::ok_callback(Fl_Widget *w, void *data)
+{
+	UI_LogViewer *that = (UI_LogViewer *)data;
+
+	that->do_callback();
+}
+
+
+void UI_LogViewer::select_callback(Fl_Widget *w, void *data)
+{
+	UI_LogViewer *that = (UI_LogViewer *)data;
+
+	// require 2 or more lines to activate Copy button
+	if (that->CountSelectedLines() >= 2)
+		that->copy_but->activate();
+	else
+		that->copy_but->deactivate();
+}
+
+
+void UI_LogViewer::copy_callback(Fl_Widget *w, void *data)
+{
+	UI_LogViewer *that = (UI_LogViewer *)data;
+
+	const char *text = that->GetSelectedText();
+
+	if (text[0])
+	{
+		Fl::copy(text, (int)strlen(text), 1);
+	}
+
+	StringFree(text);
+}
+
+
+void UI_LogViewer::save_callback(Fl_Widget *w, void *data)
+{
+	Fl_Native_File_Chooser chooser;
+
+	chooser.title(_("Pick file to save to"));
+	chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+	chooser.filter("Text files\t*.txt");
+
+	switch (chooser.show())
+	{
+		case -1:
+			DLG_ShowError(_("Unable to save the file:\n\n%s"), chooser.errmsg());
+			return;
+
+		case 1:
+			// cancelled
+			return;
+
+		default:
+			break;  // OK
+	}
+
+
+	// add an extension if missing
+	static char filename[FL_PATH_MAX];
+
+	strcpy(filename, chooser.filename());
+
+	if (! HasExtension(filename))
+		strcat(filename, ".txt");
+
+
+	FILE *fp = fopen(filename, "w");
+
+	if (! fp)
+	{
+		sprintf(filename, "%s", strerror(errno));
+
+		DLG_ShowError(_("Unable to save the file:\n\n%s"), filename);
+		return;
+	}
+
+	// FIXME : LogSaveTo(fp);
+
+	fclose(fp);
+}
 
 
 void DLG_ViewLogs(void)
