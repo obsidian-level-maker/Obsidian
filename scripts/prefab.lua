@@ -2066,6 +2066,8 @@ function Fab_match_user_stuff(def)
      def.game = { doom1=1, doom2=1 }
   end
 
+  -- !!! FIXME: handle "extends" for games (like in oblige.lua)
+
   if def.game  then match(def.game,  OB_CONFIG.game) end
   if def.theme then match(def.theme, LEVEL.theme_name) end
 

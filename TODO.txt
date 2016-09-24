@@ -452,6 +452,8 @@ CTF and DM
 
 
 Prefab system:
++  handle extended games when checking "game" field
+
 -  x_repeat, y_repeat
 
 -  do mirroring in prefab space (only really need X)
