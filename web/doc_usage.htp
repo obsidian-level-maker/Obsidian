@@ -189,7 +189,8 @@ since OBLIGE includes a built-in version of glBSP.
 
 <h3 id="menu">MENU FUNCTIONS</h3>
 The Build panel contains a menu which
-provides access to some additional functionality:
+provides access to some additional functionality,
+such as:
 
 <ul class="menuinfo">
 
