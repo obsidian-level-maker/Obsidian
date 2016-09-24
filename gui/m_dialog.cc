@@ -380,7 +380,11 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) :
 	browser->textsize(small_font_size);
 	browser->callback(select_callback, this);
 
+	// disable the special '@' formatting
+	browser->format_char(0);
+
 	resizable(browser);
+
 
 	int button_w = kf_w(80);
 	int button_h = kf_h(35);
