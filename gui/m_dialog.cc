@@ -400,7 +400,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) :
 		int bx  = w() - button_w - kf_w(25);
 		int bx2 = bx;
 		{
-			Fl_Button * but = new Fl_Button(bx, button_y, button_w, button_h, _("Close"));
+			Fl_Button * but = new Fl_Button(bx, button_y, button_w, button_h, fl_close);
 			but->labelfont(FL_HELVETICA_BOLD);
 			but->callback(quit_callback, this);
 		}
