@@ -517,7 +517,13 @@ void UI_LogViewer::ReadLogs()
 
 void UI_LogViewer::WriteLogs(FILE *fp)
 {
-	// FIXME
+	for (int n = 1 ; n <= browser->size() ; n++)
+	{
+		const char *str = browser->text(n);
+
+		if (str)
+			fprintf(fp, "%s\n", str);
+	}
 }
 
 
