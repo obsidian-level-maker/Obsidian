@@ -165,6 +165,9 @@ void LogReadLines(log_display_func_t display_func, void *priv_data)
 
 	while (fgets(buffer, MSG_BUF_LEN-2, log_file))
 	{
+		// remove any newline at the end (LF or CR/LF)
+		StringRemoveCRLF(buffer);
+
 		display_func(buffer, priv_data);
 	}
 
