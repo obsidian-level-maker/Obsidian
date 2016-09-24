@@ -3301,7 +3301,7 @@ end
 
 function Room_build_all()
 
-  gui.printf("\n---=====  Build Rooms =====---\n\n")
+  gui.printf("\n--==|  Build Rooms |==--\n\n")
 
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
