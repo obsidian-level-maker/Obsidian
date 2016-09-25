@@ -1083,21 +1083,29 @@ function Seed_draw_minimap()
     -- only have lines at room boundaries
     if not (R1 or R2) then return end
 
-    -- in same room, draw area boundaries in a light blue
+    -- in same room, draw area boundaries in a light green
     if R1 == R2 then
-      if A1 == A2 then return end
-
-      if A1.name < A2.name then return end
-
-      draw_edge(S1, dir, "#6699cc")
-    else
-      -- only draw edges between two rooms once
-      if R1 and R2 then
-        if R1.name > R2.name then return end
+      if A1.name < A2.name then
+---???   draw_edge(S1, dir, "#55aa55")
       end
 
-      draw_edge(S1, dir, "#ffffff")
+      return
     end
+
+    -- only draw edges between two rooms once
+    if R1 and R2 then
+      if R1.name > R2.name then return end
+    end
+
+    local color = "#ffffff"
+
+    if (R1 and R1.is_cave) or (R2 and R2.is_cave) then
+      color = "#ff9933"
+    elseif (R1 and R1.is_outdoor) or (R2 and R2.is_outdoor) then
+      color = "#22aaff"
+    end
+
+    draw_edge(S1, dir, color)
   end
 
 
