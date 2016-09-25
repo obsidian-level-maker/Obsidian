@@ -430,7 +430,7 @@ function SEED_CLASS.get_corner(S, dir)
 end
 
 
-function SEED_CLASS.get_line(S, dir)
+function SEED_CLASS.get_raw_line(S, dir)
   local x1, y1 = S.x1, S.y1
   local x2, y2 = S.x2, S.y2
 
@@ -446,6 +446,13 @@ function SEED_CLASS.get_line(S, dir)
   if dir == 6 or dir == 1 or dir == 9 then
     y1, y2 = y2, y1
   end
+
+  return x1,y1, x2,y2
+end
+
+
+function SEED_CLASS.get_line(S, dir)
+  local x1,y1 = x2,y2 = S:get_raw_line(dir)
 
   return { x1=x1, y1=y1, x2=x2, y2=y2 }
 end
@@ -1026,6 +1033,78 @@ function Seed_save_svg_image(filename)
   fp:write('</svg>\n')
 
   fp:close()
+end
+
+
+function Seed_draw_minimap()
+  local map_W  -- size in the GUI
+  local map_H  --
+
+  local min_x = SEEDS[1][1].x1
+  local min_y = SEEDS[1][1].y1
+
+  local  width = SEEDS[SEED_W][SEED_H].x2 - min_x
+  local height = SEEDS[SEED_W][SEED_H].y2 - min_y
+
+  local size = math.max(width. height)
+
+  local ofs_x = (size -  width) / 2
+  local ofs_y = (size - height) / 2
+
+
+  local function draw_edge(S, dir, color)
+    local x1,y1, x2,y2 = S:get_raw_line(dir)
+
+    x1 = (x1 - min_x + ofs_x) * map_W / size
+    x2 = (x2 - min_x + ofs_x) * map_W / size
+
+    y1 = (y1 - min_y + ofs_y) * map_H / size
+    y2 = (y2 - min_y + ofs_y) * map_H / size
+
+    gui.minimap_draw_line(x1,y1, x2,y2, color)
+  end
+
+
+  local function visit_seed(S1, dir)
+    local S2 = S1:neighbor(dir, "NODIR")
+
+    if S2 == "NODIR" then return end
+
+    local A1 = S1.area
+    local A2 = S2 and S2.area
+
+    local R1 = A1 and A1.room
+    local R2 = A2 and A2.room
+
+    -- only have lines at room boundaries
+    if not (R1 or R2) then return end
+    if R1 == R2 then return end
+
+    -- only draw edges between two room once
+    if R1 and R2 then
+      if R1.name > R2.name then return end
+    end
+
+    draw_edge(S1, dir, "#ff00ff")
+  end
+
+
+  ---| Seed_draw_minimap |---
+
+  map_W, map_H = gui.minimap_begin()
+
+  for x = 1, SEED_W do
+  for y = 1, SEED_H do
+    local S = SEEDS[x][y]
+
+    each dir in geom.ALL_DIRS do
+      visit_seed(S, dir)
+      if S.top then visit_seed(S.top, dir) end
+    end
+  end
+  end
+
+  gui.minimap_finish()
 end
 
 
