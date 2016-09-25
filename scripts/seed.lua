@@ -1076,16 +1076,28 @@ function Seed_draw_minimap()
     local R1 = A1 and A1.room
     local R2 = A2 and A2.room
 
+    -- treat closets as not part of the room
+    if R1 and A1.chunk and A1.chunk.kind == "closet" then R1 = nil end
+    if R2 and A2.chunk and A2.chunk.kind == "closet" then R2 = nil end
+
     -- only have lines at room boundaries
     if not (R1 or R2) then return end
-    if R1 == R2 then return end
 
-    -- only draw edges between two room once
-    if R1 and R2 then
-      if R1.name > R2.name then return end
+    -- in same room, draw area boundaries in a light blue
+    if R1 == R2 then
+      if A1 == A2 then return end
+
+      if A1.name < A2.name then return end
+
+      draw_edge(S1, dir, "#6699cc")
+    else
+      -- only draw edges between two rooms once
+      if R1 and R2 then
+        if R1.name > R2.name then return end
+      end
+
+      draw_edge(S1, dir, "#ffffff")
     end
-
-    draw_edge(S1, dir, "#ff00ff")
   end
 
 
