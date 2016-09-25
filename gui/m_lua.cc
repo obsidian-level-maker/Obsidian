@@ -663,6 +663,83 @@ int gui_bit_not(lua_State *L)
 }
 
 
+int gui_minimap_begin(lua_State *L)
+{
+	// dummy size when running in batch mode
+	int map_W = 50;
+	int map_H = 50;
+
+	if (main_win)
+	{
+		map_W = main_win->build_box->mini_map->GetWidth();
+		map_H = main_win->build_box->mini_map->GetHeight();
+
+		main_win->build_box->mini_map->MapBegin();
+	}
+
+	lua_pushinteger(L, map_W);
+	lua_pushinteger(L, map_H);
+
+	return 2;
+}
+
+int gui_minimap_finish(lua_State *L)
+{
+	if (main_win)
+		main_win->build_box->mini_map->MapFinish();
+
+	return 0;
+}
+
+int gui_minimap_draw_line(lua_State *L)
+{
+	int x1 = luaL_checkint(L, 1);
+	int y1 = luaL_checkint(L, 2);
+
+	int x2 = luaL_checkint(L, 3);
+	int y2 = luaL_checkint(L, 4);
+
+	const char *color_str = luaL_checkstring(L, 5);
+
+	int r = 255;
+	int g = 255;
+	int b = 255;
+
+	sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
+
+	if (main_win)
+	{
+		main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, (u8_t)r, (u8_t)g, (u8_t)b);
+	}
+
+	return 0;
+}
+
+int gui_minimap_fill_box(lua_State *L)
+{
+	int x1 = luaL_checkint(L, 1);
+	int y1 = luaL_checkint(L, 2);
+
+	int x2 = luaL_checkint(L, 3);
+	int y2 = luaL_checkint(L, 4);
+
+	const char *color_str = luaL_checkstring(L, 5);
+
+	int r = 255;
+	int g = 255;
+	int b = 255;
+
+	sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
+
+	if (main_win)
+	{
+		main_win->build_box->mini_map->DrawBox(x1,y1, x2,y2, (u8_t)r, (u8_t)g, (u8_t)b);
+	}
+
+	return 0;
+}
+
+
 //------------------------------------------------------------------------
 
 
@@ -764,6 +841,12 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "add_brush",   CSG_add_brush  },
 	{ "add_entity",  CSG_add_entity },
 	{ "trace_ray",   CSG_trace_ray },
+
+	// Mini-Map functions
+	{ "minimap_begin",     gui_minimap_begin },
+	{ "minimap_finish",    gui_minimap_finish },
+	{ "minimap_draw_line", gui_minimap_draw_line },
+	{ "minimap_fill_box",  gui_minimap_fill_box },
 
 	// Wolf-3D functions
 	{ "wolf_block",     WF_wolf_block },
