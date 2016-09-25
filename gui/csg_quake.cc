@@ -1878,8 +1878,6 @@ void CSG_QUAKE_Build()
 
 	CSG_BSP(1.0);
 
-	CSG_MakeMiniMap();
-
 	if (main_win)
 		main_win->build_box->Prog_Step("BSP");
 

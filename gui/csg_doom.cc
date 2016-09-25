@@ -3136,8 +3136,6 @@ void CSG_DOOM_Write()
 
 	CSG_BSP(4.0);
 
-	CSG_MakeMiniMap();
-
 	CSG_Shade();
 
 	DM_CreateSectors();

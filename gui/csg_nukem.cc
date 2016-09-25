@@ -784,8 +784,6 @@ void CSG_NUKEM_Write()
 
 	CSG_BSP(1.0);
 
-	CSG_MakeMiniMap();
-
 	NK_CreateSectors();
 	NK_PartnerWalls();
 
