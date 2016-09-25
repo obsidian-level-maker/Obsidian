@@ -115,7 +115,6 @@ DOOM.PICKUPS =
     kind = "ammo"
     rank = 2
     add_prob = 40
-    closet_prob = 5
     give = { {ammo="shell",count=20} }
   }
 
@@ -273,7 +272,7 @@ DOOM.NICE_ITEMS =
   {
     id = 2045
     kind = "powerup"
-    closet_prob = 10
+    secret_prob = 10
     time_limit = 120
   }
 
