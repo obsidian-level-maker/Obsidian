@@ -3429,5 +3429,7 @@ function Grower_create_rooms()
   if OB_CONFIG.svg then
     Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
   end
+
+  Seed_draw_minimap()
 end
 

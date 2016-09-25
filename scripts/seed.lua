@@ -452,7 +452,7 @@ end
 
 
 function SEED_CLASS.get_line(S, dir)
-  local x1,y1 = x2,y2 = S:get_raw_line(dir)
+  local x1,y1, x2,y2 = S:get_raw_line(dir)
 
   return { x1=x1, y1=y1, x2=x2, y2=y2 }
 end
@@ -1046,7 +1046,7 @@ function Seed_draw_minimap()
   local  width = SEEDS[SEED_W][SEED_H].x2 - min_x
   local height = SEEDS[SEED_W][SEED_H].y2 - min_y
 
-  local size = math.max(width. height)
+  local size = math.max(width, height)
 
   local ofs_x = (size -  width) / 2
   local ofs_y = (size - height) / 2
@@ -1105,6 +1105,7 @@ function Seed_draw_minimap()
   end
 
   gui.minimap_finish()
+  gui.ticker()
 end
 
 
