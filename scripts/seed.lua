@@ -1040,11 +1040,14 @@ function Seed_draw_minimap()
   local map_W  -- size in the GUI
   local map_H  --
 
-  local min_x = SEEDS[1][1].x1
-  local min_y = SEEDS[1][1].y1
+  local min_x = SEEDS[1][1].x1 - 64
+  local min_y = SEEDS[1][1].y1 - 64
 
-  local  width = SEEDS[SEED_W][SEED_H].x2 - min_x
-  local height = SEEDS[SEED_W][SEED_H].y2 - min_y
+  local max_x = SEEDS[SEED_W][SEED_H].x2 + 64
+  local max_y = SEEDS[SEED_W][SEED_H].y2 + 64
+
+  local  width = max_x - min_x
+  local height = max_y - min_y
 
   local size = math.max(width, height)
 
@@ -1080,19 +1083,18 @@ function Seed_draw_minimap()
     if R1 and A1.chunk and A1.chunk.kind == "closet" then R1 = nil end
     if R2 and A2.chunk and A2.chunk.kind == "closet" then R2 = nil end
 
-    -- only have lines at room boundaries
     if not (R1 or R2) then return end
 
-    -- in same room, draw area boundaries in a light green
     if R1 == R2 then
+      -- in same room, draw area boundaries in a not-too-bright color
       if A1.name < A2.name then
----???   draw_edge(S1, dir, "#55aa55")
+        draw_edge(S1, dir, "#aaaaaa")
       end
 
       return
     end
 
-    -- only draw edges between two rooms once
+    -- ensure we only draw edges between two rooms once
     if R1 and R2 then
       if R1.name > R2.name then return end
     end
@@ -1102,7 +1104,7 @@ function Seed_draw_minimap()
     if (R1 and R1.is_cave) or (R2 and R2.is_cave) then
       color = "#ff9933"
     elseif (R1 and R1.is_outdoor) or (R2 and R2.is_outdoor) then
-      color = "#22aaff"
+      color = "#11aaff"
     end
 
     draw_edge(S1, dir, color)
