@@ -32,7 +32,7 @@ PREFABS.Item_secret_niche2 =
 
   thing_34 =
   {
-    nothing = 70
+    nothing = 50
     pool_blood_1 = 30
     pool_blood_2 = 30
     pool_brains = 30

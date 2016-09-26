@@ -26,7 +26,7 @@ PREFABS.Joiner_secret2_A =
   -- pick some different objects for the hint, often none
   thing_33 =
   {
-    nothing = 30
+    nothing = 17
     barrel = 10
     dead_player = 10
     dead_imp = 10
