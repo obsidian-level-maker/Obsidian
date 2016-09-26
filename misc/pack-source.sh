@@ -63,6 +63,7 @@ cp -av physfs_src/*.[chrt]* $dest/physfs_src
 mkdir $dest/misc
 cp -av misc/*.sh $dest/misc
 cp -av misc/oblige.* $dest/misc
+cp -av misc/icon*.* $dest/misc
 
 mkdir $dest/obj_linux
 mkdir $dest/obj_linux/lua
