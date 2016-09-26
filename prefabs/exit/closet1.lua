@@ -25,12 +25,12 @@ PREFABS.Exit_closet1_tech =
 {
   template = "Exit_closet1"
 
+  theme = "tech"
+
   tex_STEP3 = "STEP1"
 
   tex_GRAYVINE = "COMPBLUE"
   tex_SW1VINE  = "SW1BLUE"
-
-  theme = "tech"
 }
 
 
@@ -59,7 +59,9 @@ PREFABS.Exit_closet1_trap =
   template = "Exit_closet1"
   map      = "MAP02"
 
-  prob   = 20
+  prob   = 30
+  theme  = "!tech"
+  style  = "traps"
 
   seed_w = 1
   seed_h = 2
@@ -71,8 +73,9 @@ PREFABS.Exit_closet1_trap_tech =
   template = "Exit_closet1"
   map      = "MAP02"
 
-  prob   = 20
+  prob   = 30
   theme  = "tech"
+  style  = "traps"
 
   seed_w = 1
   seed_h = 2
