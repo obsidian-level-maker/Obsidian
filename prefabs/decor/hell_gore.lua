@@ -2,6 +2,7 @@
 -- Hellish gore (outdoor stuff)
 --
 
+-- a cross
 PREFABS.Decor_hellgore1 =
 {
   file   = "decor/hell_gore.wad"
@@ -17,6 +18,8 @@ PREFABS.Decor_hellgore1 =
 
   bound_z1 = 0
   bound_z2 = 192
+
+  face_open = true
 }
 
 

@@ -2222,6 +2222,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local skin = { floor=A.floor_mat, ceil=A.ceil_mat }
 
+    if def.face_open then
+      chunk.prefab_dir = player_face_dir(chunk)
+    end
+
     local T = Trans.spot_transform(chunk.mx, chunk.my, floor_h, chunk.prefab_dir or 2)
 
     if def.z_fit then
