@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -52,10 +52,6 @@ static int current_offset;
 
 static u16_t *solid_plane;
 static u16_t *thing_plane;
-
-static int * minimap_colors;
-static int minimap_x1, minimap_y1;
-static int minimap_x2, minimap_y2;
 
 static char *level_name;
 
@@ -292,37 +288,6 @@ int WF_wolf_read(lua_State *L)
 }
 
 
-// LUA: wolf_mini_map(x, y, color)
-//
-int WF_wolf_mini_map(lua_State *L)
-{
-  int x = luaL_checkint(L, 1);
-  int y = luaL_checkint(L, 2);
-
-  const char *color = luaL_checkstring(L, 3);
-
-  // validate coords
-  SYS_ASSERT(1 <= x && x <= 64);
-  SYS_ASSERT(1 <= y && y <= 64);
-
-  // Note: we don't invert the Y coordinate here
-  x--;  y--;
-
-  if (color[0] == '#')
-  {
-    minimap_colors[y*64 + x] = strtol(color+1, NULL, 16);
-  }
-
-  minimap_x2 = MAX(x, minimap_x2);
-  minimap_y2 = MAX(y, minimap_y2);
-
-  minimap_x1 = MIN(x, minimap_x1);
-  minimap_y1 = MIN(y, minimap_y1);
-
-  return 0;
-}
-
-
 static void WF_DumpMap(void)
 {
   static const char *turning_points = ">/^\\</v\\";
@@ -376,47 +341,10 @@ static void WF_DumpMap(void)
 }
 
 
-static void WF_MakeMiniMap(void)
-{
-  if (! main_win)
-    return;
-
-  int map_W = main_win->build_box->mini_map->GetWidth();
-  int map_H = main_win->build_box->mini_map->GetHeight();
-
-  main_win->build_box->mini_map->MapBegin();
-
-  int mini_mid_x = minimap_x1 + (minimap_x2 - minimap_x1) / 2;
-  int mini_mid_y = minimap_y1 + (minimap_y2 - minimap_y1) / 2;
-
-  for (int y = 0 ; y < 64 ; y++)
-  for (int x = 0 ; x < 64 ; x++)
-  {
-    int hue = minimap_colors[y*64 + x];
-
-    if (hue < 0)
-      continue;
-
-    byte r = ((hue >> 8) & 0xF) * 17;
-    byte g = ((hue >> 4) & 0xF) * 17;
-    byte b = ((hue     ) & 0xF) * 17;
-
-    int bx = map_W / 2 + (x - mini_mid_x) * 2;
-    int by = map_H / 2 + (y - mini_mid_y) * 2;
-
-    main_win->build_box->mini_map->DrawBox(bx, by, bx+1, by+1, r, g, b);
-  }
-
-  main_win->build_box->mini_map->MapFinish();
-}
-
-
 static void WF_FreeStuff()
 {
   delete[] solid_plane;  solid_plane  = NULL;
   delete[] thing_plane;  thing_plane  = NULL;
-
-  delete[] minimap_colors;  minimap_colors = NULL;
 }
 
 
@@ -487,8 +415,6 @@ bool wolf_game_interface_c::Start()
  
   solid_plane = new u16_t[64*64 + 8]; // extra space for compressor
   thing_plane = new u16_t[64*64 + 8];
-
-  minimap_colors = new int[64*64];
 
 
   if (main_win)
@@ -561,12 +487,7 @@ void wolf_game_interface_c::BeginLevel()
   {
     solid_plane[PL_START + i] = NO_TILE;
     thing_plane[PL_START + i] = NO_OBJ;
-
-    minimap_colors[i] = -1;
   }
-
-  minimap_x1 = minimap_y1 = +99;
-  minimap_x2 = minimap_y2 = -99;
 
   current_map += 1;
 
@@ -577,7 +498,6 @@ void wolf_game_interface_c::BeginLevel()
 void wolf_game_interface_c::EndLevel()
 {
   WF_DumpMap();
-  WF_MakeMiniMap();
 
   WF_WriteMap();
   WF_WriteHead();
