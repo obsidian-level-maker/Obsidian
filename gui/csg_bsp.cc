@@ -21,7 +21,6 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
-#include "hdr_ui.h"   // for mini map
 
 #include <algorithm>
 
@@ -38,10 +37,6 @@
 double QUANTIZE_GRID;
 
 static bool csg_is_clip_hull;
-
-static double mini_centre_x;
-static double mini_centre_y;
-static  float mini_scale;
 
 static std::vector<region_c*> dead_regions;
 
@@ -1503,10 +1498,6 @@ static void AddBoundingRegion(group_c & group)
 	SYS_ASSERT(map_x1 < map_x2);
 	SYS_ASSERT(map_y1 < map_y2);
 
-	// compute middle for the mini map
-	mini_centre_x = (map_x1 + map_x2) / 2.0;
-	mini_centre_y = (map_y1 + map_y2) / 2.0;
-
 	// make the coords integers
 	map_x1 = floor(map_x1); map_x2 = ceil(map_x2);
 	map_y1 = floor(map_y1); map_y2 = ceil(map_y2);
@@ -2147,114 +2138,6 @@ void CSG_BSP_Free()
 
 	delete bsp_root;
 	bsp_root = NULL;
-}
-
-
-//------------------------------------------------------------------------
-
-static bool MiniMap_CheckNoDraw(snag_c *S)
-{
-	for (unsigned int k = 0 ; k < S->sides.size() ; k++)
-	{
-		brush_vert_c *BV = S->sides[k];
-
-		int flags = BV->face.getInt("flags");
-
-		if (flags & MLF_DontDraw)
-			return true;
-	}
-
-	return false;
-}
-
-
-static void MiniMap_AddLine(region_c *R, snag_c *S, bool two_sided)
-{
-	int map_W = main_win->build_box->mini_map->GetWidth();
-	int map_H = main_win->build_box->mini_map->GetHeight();
-
-	// the map centre is computed within CSG_BSP()
-
-	int x1 = map_W/2 + (S->x1 - mini_centre_x) * mini_scale;
-	int y1 = map_H/2 + (S->y1 - mini_centre_y) * mini_scale;
-
-	int x2 = map_W/2 + (S->x2 - mini_centre_x) * mini_scale;
-	int y2 = map_H/2 + (S->y2 - mini_centre_y) * mini_scale;
-
-	u8_t r = 255;
-	u8_t g = 255;
-	u8_t b = 255;
-
-	region_c *N = S->partner ? S->partner->region : NULL;
-
-	if (two_sided)
-	{
-		// only draw partnered snags ONCE
-		if (S->partner && S->partner < S)
-			return;
-
-		double f1 = R->gaps.front()->bottom->t.z;
-		double f2 = N->gaps.front()->bottom->t.z;
-
-		double c1 = R->gaps.back()->top->b.z;
-		double c2 = N->gaps.back()->top->b.z;
-
-		if (fabs(f1 - f2) < 0.1 && fabs(c1 - c2) < 0.1)
-			return;
-
-		if (MIN(c1, c2) - MAX(f1, f2) >= 56)
-		{
-			r = 96;
-			g = 160;
-			b = 224;
-		}
-	}
-
-	main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
-}
-
-
-static void MiniMap_VisitAll(bool two_sided)
-{
-	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-	{
-		region_c *R = all_regions[i];
-
-		if (R->gaps.empty())
-			continue;
-
-		for (unsigned int k = 0 ; k < R->snags.size() ; k++)
-		{
-			snag_c *S = R->snags[k];
-
-			if (two_sided != S->IsTwoSided())
-				continue;
-
-			if (MiniMap_CheckNoDraw(S) ||
-				// need to check the partner snag too
-				(S->partner && MiniMap_CheckNoDraw(S->partner)))
-				continue;
-
-			MiniMap_AddLine(R, S, two_sided);
-		}
-	}
-}
-
-
-void CSG_MakeMiniMap(void)
-{
-	if (! main_win)
-		return;
-
-	mini_scale = kf_w(100) / 6400.0;
-
-	main_win->build_box->mini_map->MapBegin();
-
-	// draw all two-sided lines before all the one-sided ones
-	MiniMap_VisitAll(true);
-	MiniMap_VisitAll(false);
-
-	main_win->build_box->mini_map->MapFinish();
 }
 
 
