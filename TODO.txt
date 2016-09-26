@@ -7,13 +7,19 @@ OBLIGE TO-DO
   V7 STUFF
 ----------------------------------------------
 
+*  ensure player cannot climb over fences or windows due to a
+   nearby start pad, teleport pad (etc), and get stuck in a
+   future area of the map
+
+*  when a secret exit cannot be placed in a concealed spot,
+   add a switch in a normal spot somewhere
+
+
 +  add in more scenery: trees, computers etc
 
 +  don't make "Empty Quests", especially 2 or more rooms
 
 +  support a "Mix It Up" Strength setting
-
-+  move 'prefabs' folder to games/doom/
 
 +  proper "apply_num" calculation [ especially DECORATE ]
 
@@ -38,7 +44,10 @@ OBLIGE TO-DO
    -  hell_Cave_Snakes
 
 
--  two connections into a room
+-  traps : distinguish "short-range" (same room) and "long-range"
+           (another room) when deciding monsters to use
+
+-  move 'prefabs' folder to games/doom/
 
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars
