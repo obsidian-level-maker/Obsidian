@@ -890,6 +890,16 @@ DOOM.ROOM_THEMES =
     {
       CEIL5_1 = 50
     }
+
+    wall_groups =
+    {
+      PLAIN = 90
+      mid_band = 25
+      mid_band2 = 10
+      lite1 = 5
+      lite2 = 15
+      torches1 = 15
+    }
   }
 
 
