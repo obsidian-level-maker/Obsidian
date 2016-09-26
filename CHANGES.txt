@@ -6,8 +6,8 @@ Major stuff:
 
 +  new "Shape Grammar" level generation system
 +  add-on package system
++  support other languages (localization)
 +  a title-pic generator
-+  localization support
 +  a log-file viewer
 
 +  better planning for Boss monsters
