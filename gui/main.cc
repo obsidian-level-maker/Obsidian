@@ -811,6 +811,7 @@ int main(int argc, char **argv)
 		if (! Build_Cool_Shit())
 		{
 			fprintf(stderr, "FAILED!\n");
+			LogPrintf("FAILED!\n");
 
 			Main_Shutdown(false);
 			return 3;
