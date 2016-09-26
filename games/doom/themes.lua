@@ -561,8 +561,8 @@ DOOM.THEMES =
       liquid_plain = 10
       liquid_blood = 10
       floor_skulls = 20
-      floor_glowingrock = 10
-      floor_snakes = 5
+      floor_glowingrock = 12
+      floor_snakes = 10
     }
 
     ceiling_sinks =
