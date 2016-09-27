@@ -1,6 +1,6 @@
 
-CHANGES IN 7.50
-===============
+CHANGES IN 7.50 (since 6.20)
+============================
 
 Major stuff:
 
