@@ -33,16 +33,8 @@ OBLIGE TO-DO
 +  level_usage for: rules, prefabs, rooms themes.
    (maybe have "room_usage" and "zone_usage" for prefabs too)
 
-+  separate the cave room themes:
-   -  any_Cave_WhiteRock   (wall is SP_ROCK1)
-   -  any_Cave_Ashy        (wall is ASHWALL2)
-   -  any_Cave_Muddy       (wall is ASHWALL4)
-   -  any_Cave_BrownRock   (wall is BSTONE1 or STONE6)
-
-   -  urban_Cave_GrayRock
-   -  urban_Cave_Grassy
-   -  hell_Cave_Snakes
-
++  if room has a boss/guard needing a large chunk, allocate those
+   chunks early [ but allow importants to override in emergencies ]
 
 -  traps : distinguish "short-range" (same room) and "long-range"
            (another room) when deciding monsters to use
@@ -52,13 +44,7 @@ OBLIGE TO-DO
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars
 
--  for "big" boss monster rooms, add a big health item / invuln
-   [ insert into R.items ]
-
 -  a "slow pace weapons" extra setting (idea by flyingdeath)
-
--  if room has a boss/guard needing a large chunk, allocate those
-   chunks early [ but allow importants to override in emergencies ]
 
 -  intra-room locks : support free-standing switches
 
@@ -66,23 +52,12 @@ OBLIGE TO-DO
 
 -  one switch opens ALL the barred exits
 
--  for switched doors / joiners, use the "action" in the Lua
-   definition as the skin.special for the SWITCH prefab
-
 
 +  allow TWO conns into a new room (become F1/F2 in CONN object)
-
--  a "raising stairs" JOINER, need to find the switch
-
--  support T-shape joiners (the new room on both sides)
-
--  overlapping items in monster closets
 
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet
-
--  allow monsters in liquids [ but never place items there ]
 
 -  support prob_skew, skip_prob for prefabs (like for rules)
 
@@ -92,9 +67,6 @@ OBLIGE TO-DO
 -  wall prefabs in outdoor rooms facing a certain direction
    should use "shadow" light value as ambient
 
-
-IDEA : an adjustment (of health) for "environment" of a battle
-       (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
 
 IDEA : a sharp corner removal pass [ before border stuff ]
        [ preserve symmetry, e.g. by preferring horizontal direction to merge ]
@@ -112,8 +84,26 @@ IDEA : a sharp corner removal pass [ before border stuff ]
        ..aaa..
 
 
+Caves
+-----
 
-Caves:
++  separate the cave room themes:
+   -  any_Cave_WhiteRock   (wall is SP_ROCK1)
+   -  any_Cave_Ashy        (wall is ASHWALL2)
+   -  any_Cave_Muddy       (wall is ASHWALL4)
+   -  any_Cave_BrownRock   (wall is BSTONE1 or STONE6)
+
+   -  urban_Cave_GrayRock
+   -  urban_Cave_Grassy
+   -  hell_Cave_Snakes
+
++  ability to make prefabs in caves
+   (a) replacement walls (e.g. cages)
+   (b) middle of a step
+
+-  handle solid islands, sometimes make pools, or become a step
+
+-  caves with steps: have two floor materials, pick randomly
 
 -  work on having different floor areas, maybe treat CAVE_AREA
    as an extension to AREA class, mode == "cave"
@@ -124,9 +114,10 @@ Caves:
    -  make closets get right floor_h
 
 
-
 Hallways
 --------
+
++  use a wad-fab for each part of a hallway
 
 +  determine shape of each piece/chunk in the rule
    -  simple shapes like I/L/T/P/U
@@ -137,6 +128,16 @@ Hallways
 -  allow a hallway rule to sprout TWO new rooms
 
 -  hallway "groups", as per V5
+
+-  support for stairs in hallways
+
+-  double halls : detect a 6x4 or larger room with one or two exits
+   and place the hallway around it
+
+-  flat mismatch where hallways meet rooms
+   (a) have a step (ideally not flush with wall)
+   (b) put a door there
+   (c) use floor texture in hallway (only works at one end)
 
 
 
@@ -159,7 +160,7 @@ SHAPE GRAMMARS
 -  IDEA: aversion for rules, decreases prob of using rule again in a room
    [ also: aversion for NICE_ITEMS ]
 
-idea:  CYCLE pass (after SPROUT) for multiple paths
+IDEA:  CYCLE pass (after SPROUT) for multiple paths
        [ probably as 'H' hallways, allow these to grow, prune them
          when they fail to connect ]
 
@@ -167,8 +168,8 @@ IDEA: rules can specify a "prefab_flavor" for any rects, and when
       finding a matching prefab require "flavor" field to match.
 
 
-Auxiliary Ideas
----------------
+Auxiliaries
+-----------
 
 -  support count adjustments
       e.g. style_adjust = { "hallways", 0.4, 1.0, 4.0 }
@@ -182,11 +183,10 @@ IDEA: have a flag which means auxiliaries must match something in their parent
       [ implement by marking parent seeds ]
       [[ when an auxiliaries rule succeeds, it marks seeds the same as parent ]]
 
-idea: k/m/n elements which do not represent anything, but allow
+IDEA: k/m/n elements which do not represent anything, but allow
       rules to create something, then auxiliaries or future rules
       can transform that shape back into normal geometry
       [ and instead of "count", some rulesets may say "until X is gone" ]
-
 
 
 Chunks
@@ -203,18 +203,26 @@ Chunks
 
    e.g. a "P" shape requires a prefab with space all around it
 
+IDEA: if have a KEY in a closet, then use a barred-key-closet
+      and add a switch closet which opens it.
 
-idea: if have a KEY in a closet, then use a barred-key-closet
-   and add a switch closet which opens it.
-
-idea: a generic lowering bars prefab to go in front of closets or
+IDEA: a generic lowering bars prefab to go in front of closets or
       joiners or exit doors
 
 
+Doors and Joiners
+-----------------
 
-Doors and Joiners:
+-  a "raising stairs" JOINER, need to find the switch
+
+-  support T-shape joiners (the new room on both sides)
 
 -  support "deep" and "over" for L-shape joiners
+
+-  for switched doors / joiners, use the "action" in the Lua
+   definition as the skin.special for the SWITCH prefab
+
+-  make wide door prefab with a switch in it
 
 +  env field for doors and joiners are two values separated by a
    slash, e.g. "building/outdoor".  first value is front side,
@@ -229,42 +237,6 @@ Doors and Joiners:
    - support negation, e.g. "cave/!cave"
 
    - "indoor" is equivalent to "!outdoor"
-
-
-
-Monster Visibility
-------------------
-
-+  instead of "visit all vis=1 to produce vis=2", limit the vis=1
-   spots we visit by distance from entry coord
-
-+  create 'entry_spots' for all rooms
-   [ NOTE : depends on SPOT system above to be in place ]
-
-   -  start closets
-   -  start pedestals
-   -  teleporters
-   -  direct connections (one for each seed)
-   -  joiner connections
-
-+  debug Monster_visibility()
-   -  use brushes to show vis=0, vis=1 and vis=2 spots
-
-+  in START rooms, allow monsters in vis==2 spots
-   [ or vis==1 when far enough from entry point ]
-
-
-
-CTF Maps
---------
-
-+  spawn a single root rule at middle of map with "rotate" symmetry,
-   and then grow all other rooms with a single sequence of grammar
-   passes (interlieving SPROUT, GROW and DECORATE as needed).
-
-   For this mode, allow '1', '2', (etc) in rules to match ANY room
-   but require ALL subsequent room-y elements to match that same room
-
 
 
 Scenic Borders
@@ -293,6 +265,17 @@ Scenic Borders
 
 -  get WATER mode working again
 
+-  Water : have some islands
+
+-  Water : waterfalls in the far away cliff
+
+-  Low hills : make occasional big rock
+
+-  Mountains : add some largish flat areas (away from map and away from edges)
+               with a lot more of the scenic object (or a different one)
+
+-  mountains : larger groups at further distances (needs a good rethink)
+
 
 Sinks
 -----
@@ -312,16 +295,6 @@ Sinks
    decorative prefabs.
 
 
-Monster flag IDEAS
-------------------
-
--  sniper mode (mainly in a cage, or far from entrance yet visible?)
-
--  middle of large open space  (never ambushy)
-
--  deafness chance (rare, few, some, more, heaps)
-
-
 Various:
 -  lowering bars between outdoor rooms
 
@@ -339,7 +312,9 @@ Various:
    (especially in Quake maps)
 
 
-Secrets....
+Secrets
+-------
+
 +  secret fences
 
 +  support 'LEVEL.secret_weapon'
@@ -352,16 +327,14 @@ Secrets....
 -  a secret balcony can be good -- player will see item and
    wonder how to get it
 
+IDEA:  looks like a normal item closet, but opens up
 
-Secret Joiner/Closet Ideas:
-
--  looks like a normal item closet, but opens up
-
--  a monster closet with a secret behind it
+IDEA:  a monster closet with a secret behind it
 
 
+Fake fence IDEA
+---------------
 
-Fake fences:
 -  a wall built out of floor brush and sky brush (delta_z for no gap)
 
 -  perhaps best place is on a zone boundary
@@ -384,24 +357,6 @@ Fake fences:
    if sky much higher, occasionally stick a cage monster there
 
 
-Map Borders:
--  Water : have some islands
-
--  Water : waterfalls in the far away cliff
-
--  Low hills : make occasional big rock
-
--  Mountains : add some largish flat areas (away from map and away from edges)
-               with a lot more of the scenic object (or a different one)
-
--  mountains : larger groups at further distances (needs a good rethink)
-
-
-Doors:
--  support wide doors [normal / locked]
--  make wide prefab with a switch in it [normal door]
-
-
 Weapon choice :
 +  when game_along >= 0.3, then ALWAYS have at least one "big" weapon
    and have before the last zone (or if one zone, before last quest)
@@ -414,6 +369,13 @@ Weapon choice :
 
 CTF and DM
 ----------
+
++  spawn a single root rule at middle of map with "rotate" symmetry,
+   and then grow all other rooms with a single sequence of grammar
+   passes (interlieving SPROUT, GROW and DECORATE as needed).
+
+   For this mode, allow '1', '2', (etc) in rules to match ANY room
+   but require ALL subsequent room-y elements to match that same room
 
 -  Cycles !
 
@@ -500,22 +462,6 @@ Starting Ideas:
 
 V5 STUFF:
 
--  Fight simulator: adjust monster 'damage' value based on Ambush
-   usage, Cage usage, dark rooms, hitscanners/Archies in low cover
-   rooms -- and lower values if killed by BFG or rocket launcher
-
--  Mons: sometimes look toward important item (esp. keys)
-
-
-Caves:
-+  ability to make prefabs in caves
-   (a) replacement walls (e.g. cages)
-   (b) middle of a step
-
--  handle solid islands, sometimes make pools, or become a step
-
--  caves with steps: have two floor materials, pick randomly
-
 
 
 Outdoor room IDEA:
@@ -524,7 +470,6 @@ Outdoor room IDEA:
 
 
 Outdoor Idioms:
-
 +  Porches: this is 3 or more seeds around a door from outside->inside
    with a non-sky ceiling and some pillars and a raised floor.
 
@@ -560,50 +505,6 @@ Level Themes:
 -  if keys are left over, can use them for non-Zone locks
 
 
-Hallways:
-+  use a wad-fab for each part of a hallway
-
-+  support for stairs in hallways
-
-+  double halls : detect a 6x4 or larger room with one or two exits
-   and place the hallway around it
-
-+  flat mismatch where hallways meet rooms
-   (a) have a step (ideally not flush with wall)
-   (b) put a door there
-   (c) use floor texture in hallway (only works at one end)
-
-
-CrossOvers:
-+  get them working again!
-
-+  support "Crossover Junctions" which have a low path from S -> N
-   and a bridge (etc) going E -> W.
-
--  automatically create bridges over channels
-
-+  build the bridges / channels using prefabs
-
--  sometimes make a dramatic height difference
-
--  fix hallway vertical gaps
-
-+  make a moving platform in Quake 1/2 maps
-
--  a version with arches underneath
-
--  pillars holding up the bridge
-
--  channels which decrease height  [via prefab??]
-
--  exclude some areas from height limitation.
-   These areas must be outside a certain bbox, a bbox including the
-   starting area and all crossovers chunks.
-
-   Better yet, give these areas a less restrictive limitation
-   (based on how far the player may jump/fall from a high height)
-   For channels, can remove the limitation.
-
 
 Hollow IDEA:
    a "hollow" is an open space under the floor of a normal AREA,
@@ -633,14 +534,6 @@ Intrusions:
    best in Quake games where the intrusion is a 3D walkway.
 
 
-Lock postponing:
-     after decided all locked conns, pick one and if next room is a
-     stalk, then can move the lock to the next door (and the next room
-     becomes part of the earlier quest).
-
-     [especially when next "room" is a hallway]
-
-
 Cycles:
 +  get them working again [ esp. for CO-OP ]
 
@@ -668,12 +561,58 @@ Mazes:
   MONSTERS / ITEMS
 ----------------------------------------------
 
+-  for "big" boss monster rooms, add a big health item / invuln
+   [ insert into R.items ]
+
+-  overlapping items in monster closets
+
 +  in later levels, low-level monsters should be used in bigger swarms
 
 -  support "Swarms" : a group of 3-N monsters (either a
    single monster or 2-3 of a certain class), and place
    all the monsters close to each other, perhaps even
    have swarm patterns.
+
+-  Fight simulator: adjust monster 'damage' value based on Ambush
+   usage, Cage usage, dark rooms, hitscanners/Archies in low cover
+   rooms -- and lower values if killed by BFG or rocket launcher
+
+IDEA : an adjustment (of health) for "environment" of a battle
+       (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
+
+-  Mons: sometimes look toward important item (esp. keys)
+
+-  allow monsters in liquids [ but never place items there ]
+
+
+Monster flag IDEAS:
+-  sniper mode (mainly in a cage, or far from entrance yet visible?)
+
+-  middle of large open space  (never ambushy)
+
+-  deafness chance (rare, few, some, more, heaps)
+
+
+Visibility:
++  instead of "visit all vis=1 to produce vis=2", limit the vis=1
+   spots we visit by distance from entry coord
+
++  create 'entry_spots' for all rooms
+   [ NOTE : depends on SPOT system above to be in place ]
+
+   -  start closets
+   -  start pedestals
+   -  teleporters
+   -  direct connections (one for each seed)
+   -  joiner connections
+
++  debug Monster_visibility()
+   -  use brushes to show vis=0, vis=1 and vis=2 spots
+
++  in START rooms, allow monsters in vis==2 spots
+   [ or vis==1 when far enough from entry point ]
+
+
 
 
 ----------------------------------------------
