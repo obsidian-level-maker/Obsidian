@@ -298,6 +298,7 @@ function Quest_create_initial_quest()
     gui.printf("Secret Exit: %s\n", R.name)
 
     R.is_exit = true
+    R.is_secret_exit = true
 
     Quest_make_room_secret(R)
 
@@ -1357,6 +1358,10 @@ function Quest_start_room()
     if R.kind == "hallway" then
       return -1
     end
+
+    -- never in a secret exit room
+    -- [ this is a fix for some two-room levels ]
+    if R.is_secret_exit then return -1 end
 
     -- really really don't want to see a goal (like a key)
     if #R.goals > 0 then
