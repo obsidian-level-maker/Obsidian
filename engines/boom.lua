@@ -50,6 +50,9 @@ function BOOM.create_dehacked()
       strings_marker = true
     end
 
+    -- escape any newlines in the text
+    text = string.gsub(text, "\n", "\\n")
+
     table.insert(data, string.format("%s = %s\n", id, text))
   end
 
