@@ -27,14 +27,24 @@ function TEXT_GEN.make_a_screen(info, where)
   if where == "first" then return "Firstly...." end
   if where == "last"  then return "T H E    E N D" end
 
-  return "Middly......."
+  return "a\n b\nc\n d\n" ..
+         "e\n f\ng\n h\n" ..
+         "i\n j\nk\n l\n" ..
+         "m\n n\no\n p"
 end
 
 
 function TEXT_GEN.validate_screen(text)
-  -- check the screen is not too long
+  -- check that the screen is not too long
 
-  -- FIXME
+  local s, num_lines = string.gsub(text, "\n", "\n")
+
+  num_lines = num_lines + 1
+
+stderrf("num_lines = %d\n", num_lines)
+  if num_lines > PARAM.max_screen_lines then
+    return false
+  end
 
   return true
 end

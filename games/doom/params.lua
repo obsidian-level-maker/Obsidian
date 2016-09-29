@@ -24,6 +24,9 @@ DOOM.PARAMETERS =
   -- reflect any buffer limits in the DOOM.EXE
   max_name_length = 28
 
+  -- number of lines for intermission and end-of-episode texts
+  max_screen_lines = 16
+
   skip_monsters = { 20,30,45 }
 
   monster_factor = 1.25
