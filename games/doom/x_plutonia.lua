@@ -16,7 +16,10 @@ PLUTONIA = { }
 
 PLUTONIA.PARAMETERS =
 {
-  bex_map_prefix = "PHUSTR_"
+  bex_map_prefix  = "PHUSTR_"
+
+  bex_secret_name  = "P5TEXT"
+  bex_secret2_name = "P6TEXT"
 }
 
 
@@ -121,6 +124,8 @@ PLUTONIA.EPISODES =
     theme = "tech"
     sky_patch = "SKY1"
     dark_prob = 10
+    bex_mid_name = "P1TEXT"
+    bex_end_name = "P2TEXT"
   }
 
   episode2 =
@@ -131,6 +136,7 @@ PLUTONIA.EPISODES =
     sky_patch3 = "SKY2C"
     sky_patch4 = "SKY2D"
     dark_prob = 10
+    bex_end_name = "P3TEXT"
   }
 
   episode3 =
@@ -139,6 +145,7 @@ PLUTONIA.EPISODES =
     sky_patch  = "SKY3A"
     sky_patch2 = "SKY3B"
     dark_prob = 40
+    bex_end_name = "P4TEXT"
   }
 }
 

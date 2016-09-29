@@ -33,6 +33,8 @@ DOOM.EPISODES =
     theme = "tech"
     sky_patch = "RSKY1"
     dark_prob = 10
+    bex_mid_name = "C1TEXT"
+    bex_end_name = "C2TEXT"
   }
 
   episode2 =
@@ -42,6 +44,7 @@ DOOM.EPISODES =
     theme = "urban"
     sky_patch = "RSKY2"
     dark_prob = 40
+    bex_end_name = "C3TEXT"
   }
 
   episode3 =
@@ -51,6 +54,7 @@ DOOM.EPISODES =
     theme = "hell"
     sky_patch = "RSKY3"
     dark_prob = 10
+    bex_end_name = "C4TEXT"
   }
 }
 

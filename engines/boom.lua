@@ -42,6 +42,19 @@ function BOOM.create_dehacked()
     "#\n\n"
   }
 
+  local strings_marker = false;
+
+  local function add_string(id, text)
+    if not strings_marker then
+      table.insert(data, "[STRINGS]\n")
+      strings_marker = true
+    end
+
+    table.insert(data, string.format("%s = %s\n", id, text))
+  end
+
+
+
   --- monster stuff ---
 
   -- honor the "Smaller Mastermind" module, use the DEHACKED lump to
@@ -54,8 +67,6 @@ function BOOM.create_dehacked()
   end
 
   --- level names ---
-
-  local strings_marker = false;
 
   each L in GAME.levels do
     local prefix = PARAM.bex_map_prefix
@@ -79,17 +90,29 @@ function BOOM.create_dehacked()
 
       local text = L.name .. ": " .. L.description;
 
-      if not strings_marker then
-        table.insert(data, "[STRINGS]\n")
-        strings_marker = true
-      end
-
-      table.insert(data, string.format("%s = %s\n", id, text))
+      add_string(id, text)
     end
   end -- for L
 
-  table.insert(data, "\n");
+  --- episode texts ---
 
+  each EPI in GAME.episodes do
+    if EPI.mid_text and EPI.bex_mid_name then
+      add_string(EPI.bex_mid_name, EPI.mid_text)
+    end
+    if EPI.end_text and EPI.bex_end_name then
+      add_string(EPI.bex_end_name, EPI.end_text)
+    end
+  end
+
+  if GAME.secret_text and PARAM.bex_secret_name then
+    add_string(PARAM.bex_secret_name, GAME.secret_text)
+  end
+  if GAME.secret2_text and PARAM.bex_secret2_name then
+    add_string(PARAM.bex_secret2_name, GAME.secret2_text)
+  end
+
+  table.insert(data, "\n");
 
   --- music replacement ---
 

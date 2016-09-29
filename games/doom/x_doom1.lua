@@ -2046,6 +2046,7 @@ ULTDOOM.EPISODES =
 
     name_patch = "M_EPI1"
     description = "Knee-Deep in the Dead"
+    bex_end_name = "E1TEXT"
   }
 
   episode2 =
@@ -2058,6 +2059,7 @@ ULTDOOM.EPISODES =
 
     name_patch = "M_EPI2"
     description = "The Shores of Hell"
+    bex_end_name = "E2TEXT"
   }
 
   episode3 =
@@ -2070,6 +2072,7 @@ ULTDOOM.EPISODES =
 
     name_patch = "M_EPI3"
     description = "Inferno"
+    bex_end_name = "E3TEXT"
   }
 
   episode4 =
@@ -2082,6 +2085,7 @@ ULTDOOM.EPISODES =
 
     name_patch = "M_EPI4"
     description  = "Thy Flesh Consumed"
+    bex_end_name = "E4TEXT"
   }
 }
 

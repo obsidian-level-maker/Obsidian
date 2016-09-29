@@ -2,7 +2,7 @@
 --  DOOM PARAMETERS (Feature Set)
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2016 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -32,6 +32,9 @@ DOOM.PARAMETERS =
   time_factor    = 1.0
 
   bex_map_prefix = "HUSTR_"
+
+  bex_secret_name  = "C5TEXT"
+  bex_secret2_name = "C6TEXT"
 
   -- meh, get rid of these (find a better way)
   doom2_monsters = true

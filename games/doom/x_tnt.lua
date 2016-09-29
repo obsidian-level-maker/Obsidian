@@ -17,7 +17,10 @@ TNT = { }
 
 TNT.PARAMETERS =
 {
-  bex_map_prefix = "THUSTR_"
+  bex_map_prefix  = "THUSTR_"
+
+  bex_secret_name  = "T5TEXT"
+  bex_secret2_name = "T6TEXT"
 }
 
 
@@ -390,6 +393,8 @@ TNT.EPISODES =
     sky_patch3 = "DOWDAY"
     sky_patch4 = "DOSDAY"
     dark_prob = 10
+    bex_mid_name = "T1TEXT"
+    bex_end_name = "T2TEXT"
   }
 
   episode2 =
@@ -400,6 +405,7 @@ TNT.EPISODES =
     sky_patch3 = "DOWNITE"
     sky_patch4 = "DOSNITE"
     dark_prob = 80
+    bex_end_name = "T3TEXT"
   }
 
   episode3 =
@@ -410,6 +416,7 @@ TNT.EPISODES =
     sky_patch3 = "DOWHELL"
     sky_patch4 = "DOSHELL"
     dark_prob = 10
+    bex_end_name = "T4TEXT"
   }
 }
 
