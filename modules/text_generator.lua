@@ -19,20 +19,46 @@
 TEXT_GEN = {}
 
 
+function TEXT_GEN.create_story(num_parts)
+  -- FIXME
+  return { "a", "b", "c", "d", "e", "f", "g", "h" }
+end
+
+
+function TEXT_GEN.handle_secrets()
+  local list1 = namelib.generate("TEXT_SECRET",  1, 500)
+  local list2 = namelib.generate("TEXT_SECRET2", 1, 500)
+
+  GAME.secret_text  = list1[1]
+  GAME.secret2_text = list2[1]
+end
+
+
 function TEXT_GEN.generate_texts()
-  local sec1 = namelib.generate("TEXT_SECRET",  1, 500)
-  local sec2 = namelib.generate("TEXT_SECRET2", 1, 500)
-
-  GAME.secret_text  = sec1[1]
-  GAME.secret2_text = sec2[1]
-
-  -- TODO : an actual story for the other texts
-
-  GAME.episodes[1].mid_text = "Middler....."
+  -- count needed parts (generally 3 or 4)
+  local num_parts = 0
 
   each EPI in GAME.episodes do
-    EPI.end_text = "Blah blah..."
+    if EPI.bex_mid_name then num_parts = num_parts + 1 end
+    if EPI.bex_end_name then num_parts = num_parts + 1 end
   end
+
+stderrf("num_parts = %d\n", num_parts)
+
+  if num_parts == 0 then return end
+
+  local texts = TEXT_GEN.create_story(num_parts)
+
+  local function get_part()
+    return table.remove(texts, 1)
+  end
+
+  each EPI in GAME.episodes do
+    if EPI.bex_mid_name then EPI.mid_text = get_part() end
+    if EPI.bex_end_name then EPI.end_text = get_part() end
+  end
+
+  TEXT_GEN.handle_secrets()
 end
 
 
