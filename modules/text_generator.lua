@@ -20,8 +20,8 @@ TEXT_GEN = {}
 
 
 function TEXT_GEN.generate_texts()
-  local sec1 = namelib.generate("SECRET",  1, 500)
-  local sec2 = namelib.generate("SECRET2", 1, 500)
+  local sec1 = namelib.generate("TEXT_SECRET",  1, 500)
+  local sec2 = namelib.generate("TEXT_SECRET2", 1, 500)
 
   GAME.secret_text  = sec1[1]
   GAME.secret2_text = sec2[1]

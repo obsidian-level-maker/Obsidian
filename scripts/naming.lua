@@ -1909,7 +1909,7 @@ namelib.NAMES =
 
   --------------------------------------------------
 
-  SECRET =
+  TEXT_SECRET =
   {
     patterns =
     {
@@ -1957,7 +1957,7 @@ namelib.NAMES =
   }
 
 
-  SECRET2 =
+  TEXT_SECRET2 =
   {
     patterns =
     {
@@ -1995,7 +1995,7 @@ namelib.NAMES =
       }
     }
   }
-  -- end of 'SECRET' and 'SECRET2' themes
+  -- end of 'TEXT_SECRET' themes
 }
 
 
