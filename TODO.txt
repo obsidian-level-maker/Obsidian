@@ -797,10 +797,15 @@ Name generator:
 
 +  i18n issues (like non-ASCII characters in filenames)
 
-+  CSG issue: support beam intersects with 3D floor => wrong side texture
-
 -  use fl_utf8.h functions (fl_fopen, etc) for file handling
    [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
+
++  CSG issue: support beam intersects with 3D floor => wrong side texture
+
+-  TGA writing code, use it for ZDoom title screens
+
+IDEA: a better Set Seed dialog, show a few previously used seeds
+      and allow choosing them again
 
 Console:
   -  display lists better
