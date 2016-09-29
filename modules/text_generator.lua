@@ -19,9 +19,57 @@
 TEXT_GEN = {}
 
 
-function TEXT_GEN.create_story(num_parts)
+function TEXT_GEN.make_a_screen(info, where)
+  -- where can be: "first", "last" or "middle"
+
   -- FIXME
-  return { "a", "b", "c", "d", "e", "f", "g", "h" }
+
+  if where == "first" then return "Firstly...." end
+  if where == "last"  then return "T H E    E N D" end
+
+  return "Middly......."
+end
+
+
+function TEXT_GEN.validate_screen(text)
+  -- check the screen is not too long
+
+  -- FIXME
+
+  return true
+end
+
+
+function TEXT_GEN.create_story(num_parts)
+  local info  = {}
+
+  -- TODO : decide some story elements (like who's the boss)
+
+  local parts = {}
+
+  for i = 1, num_parts do
+    local where
+
+    -- a single part is treated as the final screen
+        if i >= num_parts then where = "last"
+    elseif i <= 1 then where = "first"
+    else where = "middle"
+    end
+
+    local text
+
+    for loop = 1,20 do
+      text = TEXT_GEN.make_a_screen(info, where)
+
+      if TEXT_GEN.validate_screen(text) then
+        break;
+      end
+    end
+
+    table.insert(parts, text)
+  end
+
+  return parts
 end
 
 
