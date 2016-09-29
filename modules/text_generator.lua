@@ -19,6 +19,38 @@
 TEXT_GEN = {}
 
 
+function TEXT_GEN.estimate_width(line)
+  local width = 0
+
+  local WIDTH_TABLE =
+  {
+    [' '] = 0.6
+    ['.'] = 0.6
+    [','] = 0.6
+    ['!'] = 0.6
+    ['\''] = 0.6
+    ['i'] = 0.6
+    ['I'] = 0.6
+  }
+
+  for i = 1, #line do
+    local ch = string.gsub(line, i, i)
+
+    width = width + (WIDTH_TABLE[ch] or 1.0)
+  end
+
+  return width
+end
+
+
+function TEXT_GEN.reformat_text(info, text)
+  -- perform some replacements (e.g. name of the big boss), and
+  -- split lines which are too long to fit on the screen.
+
+  -- FIXME
+end
+
+
 function TEXT_GEN.make_a_screen(info, where)
   -- where can be: "first", "last" or "middle"
 
