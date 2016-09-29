@@ -1905,6 +1905,97 @@ namelib.NAMES =
     }
   }
   -- end of 'TITLE' and 'SUB_TITLE' themes
+
+
+  --------------------------------------------------
+
+  SECRET =
+  {
+    patterns =
+    {
+      ["%c %f\\n\\n%p %m\\n\\n%e"] = 50
+
+      ["%s"] = 5*999
+    }
+
+    lexicon =
+    {
+      c =
+      {
+        ["Congratulations,"] = 50
+        ["Well done!"] = 50
+        ["Woohoo!"] = 50
+        ["Oh yes!"] = 50
+      }
+
+      f =
+      {
+        ["You found the secret level!"] = 50
+      }
+
+      p =
+      {
+        ["This place looks very weird..."] = 50
+      }
+
+      m =
+      {
+        ["The monsters will kill you!"] = 50
+      }
+
+      e =
+      {
+        ["So, better not stay too long..."] = 50
+      }
+
+      -- complete replacements
+      s =
+      {
+        ["Welcome...... to the Twilight Zone"] = 10
+      }
+    }
+  }
+
+
+  SECRET2 =
+  {
+    patterns =
+    {
+      ["%c %f\\n\\n%e"] = 50
+
+      ["%s"] = 5*999
+    }
+
+    lexicon =
+    {
+      c =
+      {
+        ["Congratulations!"] = 20
+        ["Very well done!"] = 50
+        ["Holy shit, "] = 50
+        ["This is incredible, "] = 50
+      }
+
+      f =
+      {
+        ["You found the super secret level!"] = 50
+      }
+
+      e =
+      {
+        ["Are you ready for what is ahead?"] = 50
+      }
+
+      -- complete replacements
+      s =
+      {
+        ["Human!\\n\\n" ..
+         "You will be punished for entering our\\n" ..
+         "secret chambers!"] = 10
+      }
+    }
+  }
+  -- end of 'SECRET' and 'SECRET2' themes
 }
 
 
@@ -2101,6 +2192,7 @@ function namelib.test()
   test_theme("TECH")
   test_theme("GOTHIC")
   test_theme("URBAN")
+
   test_theme("BOSS")
   test_theme("EPISODE")
   test_theme("TITLE")
