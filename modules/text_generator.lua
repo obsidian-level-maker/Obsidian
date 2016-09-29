@@ -24,6 +24,8 @@ function TEXT_GEN.generate_texts()
   local info = {}
 
 
+  local MAX_WIDTH = 35
+
   local WIDTH_TABLE =
   {
     [' '] = 0.6
@@ -39,7 +41,7 @@ function TEXT_GEN.generate_texts()
     local width = 0
 
     for i = 1, #line do
-      local ch = string.gsub(line, i, i)
+      local ch = string.sub(line, i, i)
 
       width = width + (WIDTH_TABLE[ch] or 1.0)
     end
@@ -48,26 +50,72 @@ function TEXT_GEN.generate_texts()
   end
 
 
-  local function reformat_text(text)
-    -- perform some replacements (e.g. name of the big boss), and
-    -- split lines which are too long to fit on the screen.
+  local function do_substitutions(text)
+    -- perform some replacements (e.g. name of the big boss)
 
     -- FIXME
+
+    return text
   end
 
 
-  local function make_a_screen(where)
-    -- where can be: "first", "last" or "middle"
-
+  local function tokenize(text)
+    -- returns a list of words
     -- FIXME
 
-    if where == "first" then return "Firstly...." end
-    if where == "last"  then return "T H E    E N D" end
+    return {}
+  end
 
-    return "a\n b\nc\n d\n" ..
-           "e\n f\ng\n h\n" ..
-           "i\n j\nk\n l\n" ..
-           "m\n n\no\n p"
+
+  local function format_text(raw_text)
+    -- Convert the unformatted text to a formatted one,
+    -- splitting lines which are too long to fit on the screen.
+    -- [ and capitalising words that begin a new sentence ??? ]
+    --
+    -- We handle a few special symbols:
+    --    '|' begins a new paragraph.
+    --
+
+    local text = ""
+
+    local function add_line(line)
+      if line == "" then return end
+      if text != "" then text = text .. "\n" end
+      text = text .. line
+    end
+
+    local cur_line = ""
+    local new_line
+
+    each word in tokenize(raw_text) do
+      if string.sub(word, 1, 1) == '|' then
+        add_line(cur_line)
+        cur_line = string.sub(word, 2)
+        continue
+      end
+
+      if cur_line == "" then
+        new_line = word
+      else
+        new_line = cur_line .. " " .. word
+      end
+
+      local e1 = estimate_width(cur_line)
+      local e2 = estimate_width(new_line)
+
+      if e2 < MAX_WIDTH then
+        cur_line = new_line
+        continue
+      end
+
+      add_line(cur_line)
+
+      cur_line = word
+    end
+
+    add_line(cur_line)
+
+    return raw_text
   end
 
 
@@ -84,6 +132,18 @@ stderrf("num_lines = %d\n", num_lines)
     end
 
     return true
+  end
+
+
+  local function make_a_screen(where)
+    -- where can be: "first", "last" or "middle".
+
+    -- FIXME
+
+    if where == "first" then return "Firstly...." end
+    if where == "last"  then return "T H E    E N D" end
+
+    return "zzzzz"
   end
 
 
@@ -106,6 +166,7 @@ stderrf("num_lines = %d\n", num_lines)
 
       for loop = 1,20 do
         text = make_a_screen(where)
+        text = format_text(do_substitutions(text))
 
         if validate_screen(text) then
           break;
