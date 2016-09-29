@@ -61,15 +61,22 @@ function TEXT_GEN.generate_texts()
 
   local function tokenize(text)
     -- returns a list of words
-    -- FIXME
+    local words = {}
 
-    return {}
+    text = " " .. text .. " "
+    text = string.gsub(text, "%s%s+", " ")
+
+    for w in string.gmatch(text, "(%S+)") do
+      table.insert(words, w)
+    end
+
+    return words
   end
 
 
   local function format_text(raw_text)
-    -- Convert the unformatted text to a formatted one,
-    -- splitting lines which are too long to fit on the screen.
+    -- Convert the unformatted text to a formatted one, splitting
+    -- lines which are too long to fit on the screen.
     -- [ and capitalising words that begin a new sentence ??? ]
     --
     -- We handle a few special symbols:
@@ -79,9 +86,12 @@ function TEXT_GEN.generate_texts()
     local text = ""
 
     local function add_line(line)
-      if line == "" then return end
       if text != "" then text = text .. "\n" end
       text = text .. line
+    end
+
+    local function maybe_add_line(line)
+      if line != "" then add_line(line) end
     end
 
     local cur_line = ""
@@ -89,7 +99,9 @@ function TEXT_GEN.generate_texts()
 
     each word in tokenize(raw_text) do
       if string.sub(word, 1, 1) == '|' then
-        add_line(cur_line)
+        maybe_add_line(cur_line)
+        add_line("")
+
         cur_line = string.sub(word, 2)
         continue
       end
@@ -108,14 +120,14 @@ function TEXT_GEN.generate_texts()
         continue
       end
 
-      add_line(cur_line)
+      maybe_add_line(cur_line)
 
       cur_line = word
     end
 
-    add_line(cur_line)
+    maybe_add_line(cur_line)
 
-    return raw_text
+    return text
   end
 
 
@@ -210,8 +222,10 @@ stderrf("num_lines = %d\n", num_lines)
     local list1 = namelib.generate("TEXT_SECRET",  1, 500)
     local list2 = namelib.generate("TEXT_SECRET2", 1, 500)
 
-    GAME.secret_text  = list1[1]
-    GAME.secret2_text = list2[1]
+    -- we assume secret texts will be valid (not too long)
+
+    GAME.secret_text  = format_text(do_substitutions(list1[1]))
+    GAME.secret2_text = format_text(do_substitutions(list2[1]))
   end
 
 

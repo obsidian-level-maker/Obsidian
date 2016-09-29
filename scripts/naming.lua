@@ -1913,9 +1913,9 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["%c %f\\n\\n%p %m\\n\\n%e"] = 50
+      ["%c %f |%p |%m %e"] = 50
 
-      ["%s"] = 5*999
+      ["%s"] = 10
     }
 
     lexicon =
@@ -1924,8 +1924,8 @@ namelib.NAMES =
       {
         ["Congratulations,"] = 50
         ["Well done!"] = 50
-        ["Woohoo!"] = 50
         ["Oh yes!"] = 50
+        ["Woohoo!"] = 50
       }
 
       f =
@@ -1951,7 +1951,7 @@ namelib.NAMES =
       -- complete replacements
       s =
       {
-        ["Welcome...... to the Twilight Zone"] = 10
+        ["Welcome . . . . . . |. . . . . to the Twilight Zone"] = 10
       }
     }
   }
@@ -1961,9 +1961,9 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["%c %f\\n\\n%e"] = 50
+      ["%c %f |%e"] = 50
 
-      ["%s"] = 5*999
+      ["%s"] = 10
     }
 
     lexicon =
@@ -1972,8 +1972,10 @@ namelib.NAMES =
       {
         ["Congratulations!"] = 20
         ["Very well done!"] = 50
-        ["Holy shit, "] = 50
-        ["This is incredible, "] = 50
+        ["Holy shit,"] = 50
+        ["Woah,"] = 50
+        ["This is incredible,"] = 40
+        ["This is almost unbelievable, because"] = 20
       }
 
       f =
@@ -1989,8 +1991,7 @@ namelib.NAMES =
       -- complete replacements
       s =
       {
-        ["Human!\\n\\n" ..
-         "You will be punished for entering our\\n" ..
+        ["Human! |You will be punished for entering our " ..
          "secret chambers!"] = 10
       }
     }
