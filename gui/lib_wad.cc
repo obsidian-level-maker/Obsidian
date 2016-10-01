@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -347,7 +347,8 @@ void WAD_CloseWrite(void)
 
 void WAD_NewLump(const char *name)
 {
-	SYS_ASSERT(strlen(name) <= 8);  // FIXME: error
+	if (strlen(name) > 8)
+		Main_FatalError("WAD_NewLump: name too long: '%s'\n", name);
 
 	memset(&wad_W_lump, 0, sizeof(wad_W_lump));
 

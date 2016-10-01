@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2015 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -49,7 +49,7 @@ static raw_grp_lump_t * grp_R_dir;
 static u32_t * grp_R_starts;
 
 
-static const byte grp_magic_data[12] =
+static const byte grp_magic_data[GRP_MAGIC_LEN] =
 {
 	0xb4, 0x9a, 0x91, 0xac, 0x96, 0x93,
 	0x89, 0x9a, 0x8d, 0x92, 0x9e, 0x91
@@ -119,7 +119,7 @@ bool GRP_OpenRead(const char *filename)
 	u32_t L_start = sizeof(raw_grp_header_t) +
 		sizeof(raw_grp_lump_t) * grp_R_header.num_lumps;
 
-	for (int i = 0; i < (int)grp_R_header.num_lumps; i++)
+	for (int i = 0 ; i < (int)grp_R_header.num_lumps ; i++)
 	{
 		raw_grp_lump_t *L = &grp_R_dir[i];
 
@@ -183,11 +183,12 @@ int GRP_NumEntries(void)
 
 int GRP_FindEntry(const char *name)
 {
-	for (unsigned int i = 0; i < grp_R_header.num_lumps; i++)
+	for (unsigned int i = 0 ; i < grp_R_header.num_lumps ; i++)
 	{
-		char buffer[16];
-		strncpy(buffer, grp_R_dir[i].name, 12);
-		buffer[12] = 0;
+		char buffer[GRP_NAME_LEN + 4];
+
+		strncpy(buffer, grp_R_dir[i].name, GRP_NAME_LEN);
+		buffer[GRP_NAME_LEN] = 0;
 
 		if (StringCaseCmp(name, buffer) == 0)
 			return i;
@@ -207,13 +208,13 @@ int GRP_EntryLen(int entry)
 
 const char * GRP_EntryName(int entry)
 {
-	static char name_buf[16];
+	static char name_buf[GRP_NAME_LEN + 4];
 
 	SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
 
 	// entries are often not NUL terminated, hence return a static copy
-	strncpy(name_buf, grp_R_dir[entry].name, 12);
-	name_buf[12] = 0;
+	strncpy(name_buf, grp_R_dir[entry].name, GRP_NAME_LEN);
+	name_buf[GRP_NAME_LEN] = 0;
 
 	return name_buf;
 }
@@ -257,7 +258,7 @@ void GRP_ListEntries(void)
 	}
 	else
 	{
-		for (int i = 0; i < (int)grp_R_header.num_lumps; i++)
+		for (int i = 0 ; i < (int)grp_R_header.num_lumps ; i++)
 		{
 			raw_grp_lump_t *L = &grp_R_dir[i];
 
@@ -284,7 +285,7 @@ static raw_grp_lump_t grp_W_lump;
 
 // hackish workaround for the GRP format which places the
 // directory before all the data files.
-#define MAX_GRP_WRITE_ENTRIES  96
+#define GRP_MAX_LUMPS  200
 
 
 bool GRP_OpenWrite(const char *filename)
@@ -307,12 +308,12 @@ bool GRP_OpenWrite(const char *filename)
 	fflush(grp_W_fp);
 
 	// write out a dummy directory
-	for (int i = 0; i < MAX_GRP_WRITE_ENTRIES; i++)
+	for (int i = 0 ; i < GRP_MAX_LUMPS ; i++)
 	{
 		raw_grp_lump_t entry;
 		memset(&entry, 0, sizeof(entry));
 
-		sprintf(entry.name, "__%03d.ZZZ", i);
+		sprintf(entry.name, "__%03d.ZZZ", i + 1);
 
 		entry.length = LE_U32(1);
 
@@ -328,7 +329,7 @@ bool GRP_OpenWrite(const char *filename)
 void GRP_CloseWrite(void)
 {
 	// add dummy data for the dummy entries
-	byte zero_buf[MAX_GRP_WRITE_ENTRIES];
+	byte zero_buf[GRP_MAX_LUMPS];
 	memset(zero_buf, 0, sizeof(zero_buf));
 
 	fwrite(zero_buf, sizeof(zero_buf), 1, grp_W_fp);
@@ -341,10 +342,10 @@ void GRP_CloseWrite(void)
 
 	raw_grp_header_t header;
 
-	for (unsigned int i = 0; i < sizeof(header.magic); i++)
+	for (unsigned int i = 0 ; i < GRP_MAGIC_LEN ; i++)
 		header.magic[i] = ~grp_magic_data[i];
 
-	header.num_lumps = LE_U32(MAX_GRP_WRITE_ENTRIES); /// grp_W_directory.size());
+	header.num_lumps = LE_U32(GRP_MAX_LUMPS);
 
 	fwrite(&header, sizeof(header), 1, grp_W_fp);
 	fflush(grp_W_fp);
@@ -355,7 +356,9 @@ void GRP_CloseWrite(void)
 
 	std::list<raw_grp_lump_t>::iterator WDI;
 
-	for (WDI = grp_W_directory.begin(); WDI != grp_W_directory.end(); WDI++)
+	for (WDI  = grp_W_directory.begin() ;
+	     WDI != grp_W_directory.end() ;
+		 WDI++)
 	{
 		raw_grp_lump_t *L = & (*WDI);
 
@@ -373,14 +376,15 @@ void GRP_CloseWrite(void)
 
 void GRP_NewLump(const char *name)
 {
-	// FIXME: proper error messages
-	SYS_ASSERT(grp_W_directory.size() < MAX_GRP_WRITE_ENTRIES);
+	if (grp_W_directory.size() >= GRP_MAX_LUMPS)
+		Main_FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
 
-	SYS_ASSERT(strlen(name) <= 12);
+	if (strlen(name) > GRP_NAME_LEN)
+		Main_FatalError("GRP_NewLump: name too long: '%s'\n", name);
 
 	memset(&grp_W_lump, 0, sizeof(grp_W_lump));
 
-	strncpy(grp_W_lump.name, name, 12);
+	strncpy(grp_W_lump.name, name, GRP_NAME_LEN);
 }
 
 

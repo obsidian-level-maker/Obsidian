@@ -50,9 +50,12 @@ void GRP_FinishLump(void);
 
 /* ----- GRP structure ---------------------- */
 
+#define GRP_MAGIC_LEN   12
+#define GRP_NAME_LEN    12
+
 typedef struct
 {
-	char magic[12];
+	char magic[GRP_MAGIC_LEN];
 	u32_t num_lumps;
 
 } PACKEDATTR raw_grp_header_t;
@@ -60,7 +63,7 @@ typedef struct
 
 typedef struct
 {
-	char name[12];
+	char name[GRP_NAME_LEN];
 	u32_t length;
 
 } PACKEDATTR raw_grp_lump_t;
