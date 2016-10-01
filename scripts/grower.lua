@@ -2543,6 +2543,7 @@ end
   ---| Grower_grammatical_room |---
 
   gui.debugf("\nGrow room %s : %s pass\n", R.name, pass)
+  gui.ticker()
 
   if pass != "root" then
     assert(R.gx1) ; assert(R.gy2)

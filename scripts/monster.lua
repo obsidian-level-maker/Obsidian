@@ -2145,6 +2145,8 @@ function Monster_make_battles()
     Monster_fill_room(R)
 
     Item_simulate_battle(R)
+
+    gui.ticker()
   end
 
   Monster_show_stats()
