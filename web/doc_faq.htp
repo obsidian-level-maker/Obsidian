@@ -188,15 +188,13 @@ Q/ I don't like the pre-built maps, will OBLIGE make its own Boss maps?
 </div>
 
 <div class="faq_A">
-Boss maps usually have special layouts or special requirements
-which are
-hard to account for (e.g. killing all the Barons in E1M8 of
-DOOM lowers a wall, and a teleporter takes you to a small
-dark room with a special floor type).
+Not yet, though it is planned to eventually generate Boss maps.
 
 <p>
-Perhaps one day OBLIGE can make them, but it is not a high
-priority task.
+Boss maps usually have special layouts or special requirements,
+like killing all the Barons in E1M8 of DOOM will lower a wall,
+so the code will have to support all those special things, and
+it will be a lot of work.
 
 </div>
 
