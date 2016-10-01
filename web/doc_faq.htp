@@ -43,15 +43,12 @@ Short answer: <i>When it's ready.</i>
 <p>
 Long answer:
 This is just a hobby project, and
-while there is a little bit of long-term planning,
-there is no real roadmap,
-just a bunch of features we'd like to add one day.
-With each release we try to fix as many problems as we can,
-while introducing new features and better ways
-of doing things.
-Sometimes there will be some very experimental code,
-which you won't see because it will stay disabled until
-it's ready for general use.
+development simply takes a long time.
+
+There is no roadmap or milestones,
+just a little bit of long-term planning and
+a whole bunch of features we'd like to add,
+plus a never-ending list of bugs to be fixed.
 
 </div>
 
@@ -62,43 +59,50 @@ Q/ Is game XXX going to be supported?
 </div>
 
 <div class="faq_A">
-It depends greatly on the game...
+<i>(Answer updated: September 2016)</i>
 
 <p>
-Some games, like Wolf-3D, are simply too old and limited
-for the way that OBLIGE works.
-Supporting them would require a whole different method of
-generating the levels -- and while it is definitely possible
-(as shown by the RANDWOLF program),
-there is absolutely no desire to work on it.
+Right now, development is concentrated purely on the
+DOOM family of games.
+Other games are not even on the radar at the moment.
 
 <p>
-Modern games, anything released after 2000 or so
-(like Doom 3, for example) have map formats which are too
-complicated and/or too poorly documented (if at all).
-Hence it becomes too hard to write the CSG code to
-generate those formats.
+That is because I want the generation of DOOM maps
+to become as good as possible, ironing out all the
+issues with the new shape grammar system, and getting the
+code to be really clean, stable and robust.
+
+Only when that is achieved does it make sense to
+begin to target other games, having a solid
+foundation to build upon.
 
 <p>
-Some games have a style of gameplay which is different
-than the find-all-keys &amp; kill-all-monsters
-style which you see in DOOM or Quake.
-Games with extensive RPG elements, or a game like Thief
-where sneaking around is a primary concern, would probably
-require a lot of new logic to support them well.
+Turning to the question of <i>which</i> games to support:
+
+the most likely candidates will be games which are based
+on the DOOM engine, such as Heretic and Hexen.
+
+Games like Wolfenstein-3D and Blakestone are simply too
+limited, and actually make me nauseous when playing them,
+so I have no desire to work on them.
+
+Games released after the year 2000 or so,
+like Doom 3, have map formats which are too
+complicated or too poorly documented,
+making it almost impossible to write the necessary CSG code.
 
 <p>
-Finally, I am only one person and can only do so much.
-One day hopefully OBLIGE will become so popular that other
-programmers will volunteer to develop and maintain the code
-for a particular game that they like.
-Until then, it is probably better to have a few games which
-work really well, instead of lots of games where each one is
-only very basic.
+Also some games have a style of gameplay which is differs
+from the find-all-keys &amp; kill-all-monsters
+style which you see in DOOM.
+So games which have extensive RPG elements,
+or a game like Thief where sneaking around is a primary concern,
+would probably require a lot of new logic to support them well.
 
 <p>
-<i>See also this forum post:</i>
-<a href="http://oblige.sourceforge.net/forum/index.php?topic=118.0">Possible Games</a>.
+<i>(See also this forum post:</i>
+<a href="http://oblige.sourceforge.net/forum/index.php?topic=118.0">Possible Games)</a>
+
 </div>
 
 
@@ -229,11 +233,11 @@ Q/ You must do such and such, I demand it!
 <div class="faq_A">
 Hey, you got this program for free and nobody is
 getting paid to work on it.
-That means you have NO RIGHT to demand anything from us.
+So you have no right to demand anything from us.
 
 <p>
-However if you have a request and ask nicely, it <i>will</i> be
-considered.
+So please don't whine or nag us to implement something.
+If you have a request and ask nicely, we will consider it!
 
 </div>
 
