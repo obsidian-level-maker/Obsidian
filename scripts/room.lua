@@ -2070,7 +2070,7 @@ function Room_floor_ceil_heights()
     if A.floor_group then
       -- sanity check
       if A.floor_group.delta_h and A.floor_group.delta_h != cur_delta_h then
-        error("WARNING : floor group got different heights")
+        error("floor group got different heights")
       end
 
       A.floor_group.delta_h = cur_delta_h

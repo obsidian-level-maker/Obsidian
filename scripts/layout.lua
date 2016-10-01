@@ -409,8 +409,6 @@ function Layout_place_importants(R, imp_pass)
     local spot = Layout_spot_for_wotsit(R, "WEAPON")
 
     if not spot then
-      gui.printf("WARNING: no space for %s!\n", weapon)
-
       -- try to place it in a future room
       table.insert(LEVEL.unplaced_weapons, weapon)
       return
@@ -427,7 +425,10 @@ function Layout_place_importants(R, imp_pass)
   local function add_item(item)
     local spot = Layout_spot_for_wotsit(R, "ITEM")
 
-    if not spot then return end
+    if not spot then
+      warning("unable to place nice item: %s\n", item)
+      return
+    end
 
     spot.content_item = item
 
@@ -547,7 +548,7 @@ function Layout_place_hub_gates()
     end
 
     if not best_R then
-      gui.printf("WARNING: could not add a secret exit to the map!\n")
+      warning("could not add a secret exit to the map!\n")
       return
     end
 
@@ -574,6 +575,11 @@ function Layout_place_all_importants()
 
   each R in LEVEL.rooms do
     Layout_place_importants(R, 2)
+  end
+
+  -- warn about weapons that could not be placed anywhere
+  each weapon in LEVEL.unplaced_weapons do
+    warning("unable to place weapon: %s!\n", weapon)
   end
 end
 
