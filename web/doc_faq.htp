@@ -100,8 +100,8 @@ or a game like Thief where sneaking around is a primary concern,
 would probably require a lot of new logic to support them well.
 
 <p>
-<i>(See also this forum post:</i>
-<a href="http://oblige.sourceforge.net/forum/index.php?topic=118.0">Possible Games)</a>
+<i>(See also this forum post:
+<a href="http://oblige.sourceforge.net/forum/index.php?topic=118.0">Possible Games</a>)</i>
 
 </div>
 
@@ -143,23 +143,61 @@ Q/ Can Deathmatch maps be created?
 </div>
 
 <div class="faq_A">
-The old version (V2) could make them (for DOOM etc), but this has not been
-implemented in the newest versions.
-Let me explain why:
+Not at the moment.
+One reason is that there hasn't been much demand for
+such maps to be generated.
 
 <p>
+The other reason is the nature of these maps.
+<!--- let me explain in more detail.... --->
+
 With single player or co-op, you will play the map once
 and move on to the next.
 It doesn't need to be a masterpiece to be fun.
 
+<p>
 However with DM or CTF you usually play the map for
 long periods of time, learning the layout well so you can
 concentrate on tactics.
 Hence the layout and flow of the map
 is absolutely critical, and it should be nice to look at too
-since you are spending so much time in there.
-The bar is much higher for generating these
-kinds of maps.
+since you are spending a lot of time in there.
+Generating maps of sufficient quality is much harder to achieve.
+</div>
+
+
+
+<div id="map_names" class="faq_Q">
+Q/ Map names should depend on what elements are present,
+or vice versa.
+</div>
+
+<div class="faq_A">
+That would be really nice, but it's also really hard to achieve.
+
+<p>
+One possible way would be to generate the name first,
+before the map itself,
+then check the name for various keywords to
+decide what elements to use on the map.
+For example, if the name mentioned "Lava" then force the liquid
+areas in the map to use the lava texture.
+The problem is that this can conflict with the
+settings chosen by the user.
+So if the user has set "liquids" to NONE,
+then they're gonna be annoyed when they discover a level
+with lava in it.
+
+<p>
+That leaves the only other possible way:
+generate the map first, remembering what elements were used,
+then generate the name of the map, and somehow make the
+components in the name match the actual elements used.
+For example, if the liquid of the map was lava, then we
+should favor names containing "Lava" and skip names
+containing "Water" or "Nukage".
+It is not clear how to achieve that with the current naming system.
+
 </div>
 
 
