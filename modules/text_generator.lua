@@ -59,21 +59,6 @@ function TEXT_GEN.generate_texts()
   end
 
 
-  local function tokenize(text)
-    -- returns a list of words
-    local words = {}
-
-    text = " " .. text .. " "
-    text = string.gsub(text, "%s%s+", " ")
-
-    for w in string.gmatch(text, "(%S+)") do
-      table.insert(words, w)
-    end
-
-    return words
-  end
-
-
   local function format_text(raw_text)
     -- Convert the unformatted text to a formatted one, splitting
     -- lines which are too long to fit on the screen.
@@ -97,7 +82,7 @@ function TEXT_GEN.generate_texts()
     local cur_line = ""
     local new_line
 
-    each word in tokenize(raw_text) do
+    each word in string.tokenize(raw_text) do
       if string.sub(word, 1, 1) == '|' then
         maybe_add_line(cur_line)
         add_line("")

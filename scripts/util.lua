@@ -159,6 +159,21 @@ function string.is_digit(ch)
          ch == '9'
 end
 
+function string.tokenize(text)
+  -- returns a list of words
+  local words = {}
+
+--##  text = " " .. text .. " "
+--##  text = string.gsub(text, "%s%s+", " ")
+
+  for w in string.gmatch(text, "(%S+)") do
+    table.insert(words, w)
+  end
+
+  return words
+end
+
+
 function style_sel(name, v_none, v_few, v_some, v_heaps)
   local keyword = STYLE[name]
 
@@ -724,7 +739,7 @@ function geom.along_dist(x, y, sx,sy, ex,ey)
   y = y - sy ; ey = ey - sy
 
   local len = math.sqrt(ex*ex + ey*ey)
-  
+
   if len < 0.001 then
     error("perp_dist: zero-length line")
   end
@@ -1034,7 +1049,7 @@ function geom.categorize_shape(dir2, dir4, dir6, dir8)
   -- straight through
   if open_str == "28" then return 'I', 2 end
   if open_str == "46" then return 'I', 4 end
-  
+
   -- two-way junction (L shape)
   if open_str == "24" then return 'L', 2, 4 end
   if open_str == "26" then return 'L', 2, 6 end
@@ -1106,7 +1121,7 @@ function geom.bezier_length(S, C, E, divisions)
 
     cx, cy = nx, ny
   end
-  
+
   return length
 end
 
