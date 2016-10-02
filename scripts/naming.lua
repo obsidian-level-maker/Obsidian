@@ -1915,19 +1915,41 @@ namelib.NAMES =
     patterns =
     {
       ["The Spider Mastermind"] = 40
+
       ["The Leader of Hell"] = 20
       ["The Necromancer"] = 20
       ["The Demon Queen"] = 20
       ["The Cyber-Devil"] = 20
       ["The Shadow Council"] = 20
-      ["The Dark Archon"] = 20
       ["The Witch-King"] = 20
       ["The Alien Faction"] = 20
+      ["The Cruel One"] = 20
 
       ["Satan"] = 10
       ["Beelzebub"] = 10
       ["Baal"] = 10
       ["Moloch"] = 10
+    }
+
+    lexicon = {}
+  }
+
+
+  -- name of lesser bosses, minions of the mastermind
+  NAME_BOSS =
+  {
+    patterns =
+    {
+      ["The Arch-Vile"] = 40
+      ["The Baron of Hell"] = 40
+
+      ["The Demon Prince"] = 20
+      ["The Gatekeeper"] = 20
+      ["The Wicked Acolyte"] = 20
+      ["The Dark Archon"] = 20
+      ["The Evil Beast"] = 20
+
+      ["Doctor Kruger"] = 10
     }
 
     lexicon = {}
