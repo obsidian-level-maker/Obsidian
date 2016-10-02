@@ -206,6 +206,7 @@ namelib.NAMES =
         Construction=5, Assembly=5, Management=5,
         Development=5, Foundation=5,
         Aegis=3, Stockade=3, Refuge=5,
+
         Munitions=5, Armament=5, Drainage=5,
         Support=5, Counteraction=3, Holding=5,
         Testing=5, Quarantine=5, Authorization=5,
@@ -239,6 +240,7 @@ namelib.NAMES =
         Chemical=15, Slige=10, Waste=10, Stibine=3,
         Mining=15, Fusion=15, Thermal=10,
         Infrared=10, Radiation=5, Hydro=3,
+
         Parallax=5, Ultraviolet=5, Slime=7,
         Steel=5, Fluid=3, Iron=3, Combustion=5,
         Steam=5, Carbon=5, Pressure=5, Pyrolosis=3,
@@ -1957,7 +1959,27 @@ namelib.NAMES =
   }
 
 
-  -- name of the player's friend
+  -- name of a powerful thing needed to defeat the big boss
+  NAME_ARTIFACT =
+  {
+    patterns =
+    {
+      ["Khronos Device"] = 10
+      ["Soulex Agitator"] = 10
+      ["Quantum Disrupter"] = 10
+
+      ["Sphere of Invincibility"] = 10
+      ["Ring of Power"] = 10
+      ["Crystal Sceptre"] = 10
+      ["Diamond Skull"] = 10
+      ["Sword of the Infidel"] = 10
+    }
+
+    lexicon = {}
+  }
+
+
+  -- name of the player's friend, for capture/rescue sub-plots
   NAME_FRIEND =
   {
     patterns =
