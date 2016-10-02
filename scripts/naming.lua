@@ -1957,6 +1957,29 @@ namelib.NAMES =
   }
 
 
+  -- name of the player's friend
+  NAME_FRIEND =
+  {
+    patterns =
+    {
+      ["Professor Braun"] = 20
+      ["Doctor Stine"] = 20
+      ["Colonel Howard"] = 20
+      ["Major Halderman"] = 20
+
+      ["Christopher"] = 10
+      ["Michael"] = 10
+      ["Jonathon"] = 10
+
+      ["Alice"] = 10
+      ["Cassandra"] = 10
+      ["Elizabeth"] = 10
+    }
+
+    lexicon = {}
+  }
+
+
   --------------------------------------------------
 
   TEXT_SECRET =
