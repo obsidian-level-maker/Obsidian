@@ -67,7 +67,7 @@ DOOM family of games.
 Other games are not even on the radar at the moment.
 
 <p>
-That is because I want the generation of DOOM maps
+That is because we want the generation of DOOM maps
 to become as good as possible, ironing out all the
 issues with the new shape grammar system, and getting the
 code to be really clean, stable and robust.
@@ -84,7 +84,7 @@ on the DOOM engine, such as Heretic and Hexen.
 
 Games like Wolfenstein-3D and Blakestone are simply too
 limited, and actually make me nauseous when playing them,
-so I have no desire to work on them.
+so there is no desire to work on them.
 
 Games released after the year 2000 or so,
 like Doom 3, have map formats which are too
@@ -149,8 +149,6 @@ such maps to be generated.
 
 <p>
 The other reason is the nature of these maps.
-<!--- let me explain in more detail.... --->
-
 With single player or co-op, you will play the map once
 and move on to the next.
 It doesn't need to be a masterpiece to be fun.
@@ -210,12 +208,12 @@ different methods of previous versions?
 <div class="faq_A">
 No, that would mean having three or four different level
 generators in the same program, and thus require three or four
-times the amount of work for me!
+times the amount of work!
 
 <p>
-Instead of that, I am looking for a method to generate levels
+Instead of that, we are looking for a method to generate levels
 that is as simple as possible while still producing very good
-results, and I think the V7 system can achieve that.
+results, and it seems the V7 system can achieve that.
 
 </div>
 
@@ -243,14 +241,14 @@ Q/ How do I compile the EXE?
 </div>
 
 <div class="faq_A">
-Firstly, be aware you can change the Lua files,
-such as games/doom/monsters.lua or scripts/rooms.lua,
+Firstly, be aware you can edit the Lua code,
+like the <code>games/doom/monsters.lua</code> file,
 without having to compile anything.
 OBLIGE will load your changes the next time you run it.
 
 <p>
 Compiling Oblige.exe is fairly complicated,
-and I simply don't have the time or inclination to teach
+and we simply don't have the time or inclination to teach
 complete strangers on the internet the basics of compilers,
 makefiles, libraries and all that stuff.
 Sorry -- it's nothing personal,
@@ -273,7 +271,8 @@ So you have no right to demand anything from us.
 
 <p>
 So please don't whine or nag us to implement something.
-If you have a request and ask nicely, we will consider it!
+If you have a request and ask nicely,
+we will definitely consider it.
 
 </div>
 
