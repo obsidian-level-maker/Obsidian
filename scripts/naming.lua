@@ -1910,7 +1910,7 @@ namelib.NAMES =
   --------------------------------------------------
 
   -- name of the mastermind behind all the evil
-  NAME_MASTER =
+  NAME_BOSS =
   {
     patterns =
     {
@@ -1936,7 +1936,7 @@ namelib.NAMES =
 
 
   -- name of lesser bosses, minions of the mastermind
-  NAME_BOSS =
+  NAME_MINION =
   {
     patterns =
     {
@@ -1948,6 +1948,7 @@ namelib.NAMES =
       ["The Wicked Acolyte"] = 20
       ["The Dark Archon"] = 20
       ["The Evil Beast"] = 20
+      ["The Zombie Lord"] = 20
 
       ["Doctor Kruger"] = 10
     }
