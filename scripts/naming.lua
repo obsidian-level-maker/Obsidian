@@ -1909,6 +1909,33 @@ namelib.NAMES =
 
   --------------------------------------------------
 
+  -- name of the mastermind behind all the evil
+  NAME_MASTER =
+  {
+    patterns =
+    {
+      ["The Spider Mastermind"] = 40
+      ["The Leader of Hell"] = 20
+      ["The Necromancer"] = 20
+      ["The Demon Queen"] = 20
+      ["The Cyber-Devil"] = 20
+      ["The Shadow Council"] = 20
+      ["The Dark Archon"] = 20
+      ["The Witch-King"] = 20
+      ["The Alien Faction"] = 20
+
+      ["Satan"] = 10
+      ["Beelzebub"] = 10
+      ["Baal"] = 10
+      ["Moloch"] = 10
+    }
+
+    lexicon = {}
+  }
+
+
+  --------------------------------------------------
+
   TEXT_SECRET =
   {
     patterns =
