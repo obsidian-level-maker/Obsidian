@@ -23,6 +23,9 @@ OBLIGE TO-DO
 
 +  proper "apply_num" calculation [ especially DECORATE ]
 
+-  bug: mon-teleport dests can be wrong lighting in an outdoor
+   shadow (or split by it), and wrong texture in liquidy caves
+
 
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
@@ -400,7 +403,7 @@ CTF and DM
 -  outdoor fences should straddle both rooms
    (but need to handle corners and T junctions)
 
--  wad-fab: "outside bbox" pieces via sector type #987
+-  wad-fab: "outside bbox" pieces via sector type #977
 
 -  proper handling of windows with 3D floors
 
@@ -613,11 +616,13 @@ Visibility:
    [ or vis==1 when far enough from entry point ]
 
 
-
-
 ----------------------------------------------
   MISCELLANEOUS
 ----------------------------------------------
+
++  use no-draw ("draw_never") flag between two border areas
+
++  a setting (style?) for inescapable slime pits
 
 +  when traversibility in a room is poor (exit near entrance),
    make the exit into a switched door and put a switch at other
@@ -715,7 +720,9 @@ Name generator:
   POSSIBLE GAMES
 ----------------------------------------------
 
-+  Quake support
++  Heretic support
+
+?  Quake support
    -  load textures directly from the PAK files
    -  bring back lua-based prefabs
    -  support slopes
@@ -724,15 +731,13 @@ Name generator:
    -  incorporate id method to build collision hulls
    -  support bmodels with two brushes meeting at a plane
 
--  Heretic support
-
 ?  Hexen
 ?  Harmony
 ?  HacX
+?  Chex Quest 3
 
 ?  Duke Nukem 3D
-?  Wolfenstein 3D
-?  Chex Quest 3
+?  Strife
 
 
 ----------------------------------------------
@@ -807,6 +812,8 @@ Name generator:
 IDEA: a better Set Seed dialog, show a few previously used seeds
       and allow choosing them again
 
+IDEA: Menu / Rebuild Last : used seed and filename of previous build
+
 Console:
   -  display lists better
 
@@ -825,6 +832,12 @@ Cancellation:
 +  need new screenshots for website
 
 +  modding Monsters guide: mention boss stuff
+
++  tutorial for new prefabs
+
++  tutorial for new themes
+
+-  tutorial for room shapes (grammar rules)
 
 -  modding guide: page about creating prefabs
 
