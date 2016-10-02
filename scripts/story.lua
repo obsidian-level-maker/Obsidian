@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  MODULE: Text Generator
+--  Story Text Generator
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2016 Andrew Apted
@@ -16,10 +16,8 @@
 --
 ------------------------------------------------------------------------
 
-TEXT_GEN = {}
 
-
-function TEXT_GEN.generate_texts()
+function Story_generate()
 
   local info = {}
 
@@ -138,7 +136,7 @@ stderrf("num_lines = %d\n", num_lines)
     -- FIXME
 
     if where == "first" then return "Firstly...." end
-    if where == "last"  then return "T H E    E N D" end
+    if where == "last"  then return "T H E ... E N D" end
 
     return "zzzzz"
   end
@@ -214,24 +212,9 @@ stderrf("num_lines = %d\n", num_lines)
   end
 
 
-  ---| generate_texts |---
+  ---| Story_generate |---
 
   handle_main_texts()
   handle_secrets()
 end
-
-
-OB_MODULES["text_generator"] =
-{
-  label = _("Text Generator")
-  priority = 84
-
-  game = "doomish"
-  engine = "boom"
-
-  hooks =
-  {
-    get_levels = TEXT_GEN.generate_texts
-  }
-}
 
