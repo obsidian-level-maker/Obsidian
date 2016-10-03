@@ -1947,6 +1947,7 @@ namelib.NAMES =
 
       ["The Demon Prince"] = 20
       ["The Gatekeeper"] = 20
+      ["The Guardian"] = 20
       ["The Wicked Acolyte"] = 20
       ["The Dark Archon"] = 20
       ["The Evil Beast"] = 20
@@ -1996,6 +1997,40 @@ namelib.NAMES =
       ["Arlene"] = 30
       ["Cassandra"] = 10
       ["Elizabeth"] = 10
+    }
+
+    lexicon = {}
+  }
+
+
+  -- location for the early action, neutral-ish places
+  NAME_PLACE1 =
+  {
+    patterns =
+    {
+      ["Phobos"] = 20
+      ["Demios Base"] = 20
+      ["Lunar Base"] = 20
+      ["Martian Complex"] = 20
+
+      ["UAC Complex"] = 20
+      ["Terran Starport"] = 20
+    }
+
+    lexicon = {}
+  }
+
+
+  -- locations for later battles or the finale, hell-ish places
+  NAME_PLACE2 =
+  {
+    patterns =
+    {
+      ["Shores of Hell"] = 20
+      ["Land of the Undead"] = 20
+      ["Crimson Underworld"] = 20
+      ["Dimension of Evil"] = 20
+      ["Kingdom of Fire"] = 20
     }
 
     lexicon = {}
