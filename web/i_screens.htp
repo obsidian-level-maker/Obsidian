@@ -15,57 +15,30 @@
 
 <div class="rest">
 
-<p>
-NOTE: these screenshots were taken in version 3.57.
-
 
 <h3>DOOM SCREENSHOTS</h3>
 
 <div class="shot_area">
-<img class="screenshot" src="shots/doom_069.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_017.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_026.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_016.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_101.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_086.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_175.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_145.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_024.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_013.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_075.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_112.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_161.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/doom_014.png" alt="SCREENSHOT" width="320" height="240">
+<img class="screenshot" src="shots/750_t1.jpg" alt="SCREENSHOT" width="682" height="384">
+<img class="screenshot" src="shots/750_t2.jpg" alt="SCREENSHOT" width="682" height="384">
+
+<img class="screenshot" src="shots/750_g1.jpg" alt="SCREENSHOT" width="640" height="400">
+<img class="screenshot" src="shots/750_g2.jpg" alt="SCREENSHOT" width="640" height="400">
+<img class="screenshot" src="shots/750_g3.jpg" alt="SCREENSHOT" width="640" height="400">
+<img class="screenshot" src="shots/750_g4.jpg" alt="SCREENSHOT" width="640" height="400">
+<img class="screenshot" src="shots/750_g5.jpg" alt="SCREENSHOT" width="640" height="400">
+<img class="screenshot" src="shots/750_g6.jpg" alt="SCREENSHOT" width="640" height="400">
+
+<img class="screenshot" src="shots/740_a1.jpg" alt="SCREENSHOT" width="640" height="480">
+<img class="screenshot" src="shots/742_a1.jpg" alt="SCREENSHOT" width="640" height="480">
+<img class="screenshot" src="shots/750_a2.jpg" alt="SCREENSHOT" width="640" height="480">
+<img class="screenshot" src="shots/750_a3.jpg" alt="SCREENSHOT" width="640" height="480">
+<img class="screenshot" src="shots/750_a1.jpg" alt="SCREENSHOT" width="640" height="480">
+<img class="screenshot" src="shots/742_a2.jpg" alt="SCREENSHOT" width="640" height="480">
 </div>
 
-<h3>HERETIC SCREENSHOTS</h3>
-
-<div class="shot_area">
-<img class="screenshot" src="shots/heretic_08.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/heretic_13.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/heretic_37.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/heretic_56.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/heretic_69.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/heretic_70.png" alt="SCREENSHOT" width="320" height="240">
-</div>
-
-
-<h3>QUAKE SCREENSHOTS</h3>
-
-<div class="shot_area">
-<img class="screenshot" src="shots/quake_018.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_035.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_056.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_062.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_063.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_084.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_095.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_117.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_154.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_193.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_031.png" alt="SCREENSHOT" width="320" height="240">
-<img class="screenshot" src="shots/quake_217.png" alt="SCREENSHOT" width="320" height="240">
-</div>
+<p>
+<i>(all screenshots above are from OBLIGE 7.40 or later)</i>
 
 </div class="rest">
 
