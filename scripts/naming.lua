@@ -1993,7 +1993,7 @@ namelib.NAMES =
       ["Michael"] = 10
       ["Jonathon"] = 10
 
-      ["Alice"] = 10
+      ["Arlene"] = 30
       ["Cassandra"] = 10
       ["Elizabeth"] = 10
     }
