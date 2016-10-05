@@ -178,7 +178,7 @@ void UI_Level::callback_Caves(Fl_Widget *w, void *data)
 
 void UI_Level::Defaults()
 {
-	// Note: theme handled by LUA code (ob_init)
+	// Note: "theme" is handled by LUA code (ob_init)
 
 	ParseValue("size",     "epi");
 	ParseValue("outdoors", "mixed");
@@ -219,14 +219,16 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 
 const char * UI_Level::size_syms[] =
 {
+	"epi",     N_("Episodic"),
+	"prog",    N_("Progressive"),
+	"mixed",   N_("Mix It Up"),
+
+	"_",       "_",
+
 	"small",   N_("Small"),
 	"regular", N_("Regular"),
 	"large",   N_("Large"),
 	"extreme", N_("Extreme"),
-
-	"prog",    N_("Progressive"),
-	"epi",     N_("Episodic"),
-	"mixed",   N_("Mix It Up"),
 
 	NULL, NULL
 };
@@ -252,7 +254,7 @@ const char * UI_Level::outdoor_syms[] =
 
 void UI_Level::setup_Size()
 {
-	for (int i = 0; size_syms[i]; i += 2)
+	for (int i = 0 ; size_syms[i] ; i += 2)
 	{
 		size->AddPair(size_syms[i], _(size_syms[i+1]));
 		size->ShowOrHide(size_syms[i], 1);
@@ -262,7 +264,7 @@ void UI_Level::setup_Size()
 
 void UI_Level::setup_Outdoors()
 {
-	for (int i = 0; outdoor_syms[i]; i += 2)
+	for (int i = 0 ; outdoor_syms[i] ; i += 2)
 	{
 		outdoors->AddPair(outdoor_syms[i], _(outdoor_syms[i+1]));
 		outdoors->ShowOrHide(outdoor_syms[i], 1);
@@ -272,7 +274,7 @@ void UI_Level::setup_Outdoors()
 
 void UI_Level::setup_Caves()
 {
-	for (int i = 0; outdoor_syms[i]; i += 2)
+	for (int i = 0 ; outdoor_syms[i] ; i += 2)
 	{
 		caves->AddPair(outdoor_syms[i], _(outdoor_syms[i+1]));
 		caves->ShowOrHide(outdoor_syms[i], 1);
