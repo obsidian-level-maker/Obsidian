@@ -39,8 +39,6 @@
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	Fl_Group(X, Y, W, H, label)
 {
-	end(); // cancel begin() in Fl_Group constructor
-
 	box(FL_THIN_UP_BOX);
 
 	if (! alternate_look)
@@ -65,8 +63,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	mini_map = new UI_MiniMap(mini_x, cy + kf_h(14), mini_w, mini_h);
 
-	add(mini_map);
-
 
 
 	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
@@ -80,8 +76,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	misc_menu->add(_("View Logs"),     FL_F+6, menu_do_view_logs);
 	misc_menu->add(_("Manage Config"), FL_F+9, menu_do_manage_config);
 
-	add(misc_menu);
-
 
 	cy += misc_menu->h() + kf_h(17);
 
@@ -92,16 +86,12 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	build->callback(build_callback, this);
 	build->shortcut(FL_F+2);
 
-	add(build);
-
 	cy += build->h() + kf_h(17);
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, _("Quit"));
 	quit->callback(quit_callback, this);
 	quit->shortcut(FL_COMMAND + 'q');
-
-	add(quit);
 
 
 	/* --- Status Area --- */
@@ -117,8 +107,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	if (! alternate_look)
 		status->color(FL_DARK2 - 2, FL_DARK2 - 2);
 
-	add(status);
-
 	cy += status->h() + kf_h(14);
 
 
@@ -129,7 +117,9 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	progress->value(0.0);
 	progress->labelsize(FL_NORMAL_SIZE + 2);
 
-	add(progress);
+
+	end();
+
 }
 
 

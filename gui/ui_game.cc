@@ -35,8 +35,6 @@
 UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	Fl_Group(X, Y, W, H, label)
 {
-	end(); // cancel begin() in Fl_Group constructor
-
 	box(FL_THIN_UP_BOX);
 
 	if (! alternate_look)
@@ -57,8 +55,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	heading->labelfont(FL_HELVETICA_BOLD);
 	heading->labelsize(header_font_size);
 
-	add(heading);
-
 	cy += heading->h() + y_step;
 
 
@@ -70,8 +66,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	game->selection_color(FL_BLUE);
 	game->callback(callback_Game, this);
 
-	add(game);
-
 	cy += game->h() + y_step;
 
 
@@ -79,8 +73,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	engine->align(FL_ALIGN_LEFT);
 	engine->selection_color(FL_BLUE);
 	engine->callback(callback_Engine, this);
-
-	add(engine);
 
 	cy += engine->h() + y_step * 2;
 
@@ -92,8 +84,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	setup_Mode();
 
-	add(mode);
-
 	cy += mode->h() + y_step;
 
 
@@ -104,10 +94,10 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	setup_Length();
 
-	add(length);
-
 	cy += length->h() + y_step;
 
+
+	end();
 
 	resizable(NULL);  // don't resize our children
 

@@ -38,8 +38,6 @@
 UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 	Fl_Group(X, Y, W, H, label)
 {
-	end(); // cancel begin() in Fl_Group constructor
-
 	box(FL_THIN_UP_BOX);
 
 	if (! alternate_look)
@@ -59,8 +57,6 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 	heading->labelfont(FL_HELVETICA_BOLD);
 	heading->labelsize(header_font_size);
 
-	add(heading);
-
 	cy += heading->h() + y_step;
 
 
@@ -74,8 +70,6 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 
 	setup_Monsters();
 
-	add(mons);
-
 	cy += mons->h() + y_step;
 
 
@@ -85,8 +79,6 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 	strength->callback(callback_Strength, this);
 
 	setup_Strength();
-
-	add(strength);
 
 	cy += strength->h() + y_step * 2.3;
 
@@ -98,8 +90,6 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 
 	setup_Weapons();
 
-	add(weaps);
-
 	cy += weaps->h() + y_step;
 
 
@@ -109,8 +99,6 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 	items->callback(callback_Items, this);
 
 	setup_Items();
-
-	add(items);
 
 	cy += items->h() + y_step * 2.3;
 
@@ -134,7 +122,8 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 
 	setup_Ammo();
 
-	add(ammo);
+
+	end();
 
 
 	Signal_Watch("mode", notify_Mode, this);

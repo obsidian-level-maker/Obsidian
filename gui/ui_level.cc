@@ -37,8 +37,6 @@
 UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
     Fl_Group(X, Y, W, H, label)
 {
-	end(); // cancel begin() in Fl_Group constructor
-
 	box(FL_THIN_UP_BOX);
 
 	if (! alternate_look)
@@ -58,8 +56,6 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	heading->labelfont(FL_HELVETICA_BOLD);
 	heading->labelsize(header_font_size);
 
-	add(heading);
-
 	cy += heading->h() + y_step;
 
 
@@ -73,8 +69,6 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 
 	setup_Size();
 
-	add(size);
-
 	cy += size->h() + y_step;
 
 
@@ -82,8 +76,6 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	theme->align(FL_ALIGN_LEFT);
 	theme->selection_color(MY_GREEN);
 	theme->callback(callback_Theme, this);
-
-	add(theme);
 
 	cy += theme->h() + y_step * 2;
 
@@ -95,8 +87,6 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 
 	setup_Outdoors();
 
-	add(outdoors);
-
 	cy += outdoors->h() + y_step;
 
 
@@ -107,8 +97,8 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 
 	setup_Caves();
 
-	add(caves);
 
+	end();
 
 	resizable(NULL);  // don't resize our children
 }
