@@ -110,8 +110,6 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 
 	setup_Health();
 
-	add(health);
-
 	cy += health->h() + y_step;
 
 
