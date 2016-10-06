@@ -723,7 +723,6 @@ namelib.NAMES =
         ["Burning Sea"]=10
         ["Cato's Escort"]=10
         ["Centromere"]=10
-        ["Charon"]=10
         ["Charred Flesh"]=10
         ["Cocoon of Filth"]=10
         ["Cold Comfort"]=10
@@ -1966,14 +1965,19 @@ namelib.NAMES =
     patterns =
     {
       ["Khronos Device"] = 10
-      ["Soulex Agitator"] = 10
+      ["Soul-X Agitator"] = 10
       ["Quantum Disrupter"] = 10
+      ["Gravitronic Amplifier"] = 10
+      ["Ectoplasmic Deflector"] = 10
 
       ["Sphere of Invincibility"] = 10
       ["Ring of Power"] = 10
       ["Crystal Sceptre"] = 10
       ["Diamond Skull"] = 10
+
       ["Sword of the Infidel"] = 10
+      ["Staff of Ulysses"] = 10
+      ["Hand of Charon"] = 10
     }
 
     lexicon = {}
@@ -2010,11 +2014,16 @@ namelib.NAMES =
     {
       ["Phobos"] = 20
       ["Demios Base"] = 20
+      ["UAC Complex"] = 20
+
       ["Lunar Base"] = 20
       ["Martian Complex"] = 20
+      ["Jupiter Station"] = 20
+      ["Orbital Station"] = 20
 
-      ["UAC Complex"] = 20
       ["Terran Starport"] = 20
+      ["Egyptian Portal"] = 20
+      ["Mayan Temple"] = 20
     }
 
     lexicon = {}
@@ -2031,6 +2040,8 @@ namelib.NAMES =
       ["Crimson Underworld"] = 20
       ["Dimension of Evil"] = 20
       ["Kingdom of Fire"] = 20
+      ["Nether-Sphere"] = 20
+      ["Ghostly Realm"] = 20
     }
 
     lexicon = {}
