@@ -2047,9 +2047,95 @@ namelib.NAMES =
 
     lexicon = {}
   }
+  -- end of all the 'NAME_*' themes
 
 
   --------------------------------------------------
+
+  TEXT_BEFORE_MINION =
+  {
+    patterns =
+    {
+      ["Now you must find *minion*, who holds the key "..
+       "to this infernal mystery."
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+  TEXT_DEFEAT_MINION =
+  {
+    patterns =
+    {
+      ["With one last blow you finish off *minion*, " ..
+       "its hideous body laying at your feet."
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+
+  TEXT_BEFORE_BOSS =
+  {
+    patterns =
+    {
+      ["Ahead lies the dominion of *boss*, "..
+       "an evil place where even fools fear to tread. "..
+       "Daunted, yet determined, you emerge from the "..
+       "inter-dimensional portal and begin to explore "..
+       "this alien world...."
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+  TEXT_DEFEAT_BOSS =
+  {
+    patterns =
+    {
+      ["Your skillful use of the *artifact* was glorious, " ..
+       "defeating *boss* once and for all time."
+       -- FIXME : more stuff...
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+
+  TEXT_LEARN_ARTIFACT =
+  {
+    patterns =
+    {
+      ["You have learned of a powerful artifact, "..
+       "the *artifact*.  "..
+       "But is it real, or only a myth or legend? "..
+       "Somehow, you know you are going to find out."
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+  TEXT_FOUND_ARTIFACT =
+  {
+    patterns =
+    {
+      ["Now the *artifact* is yours! "..
+       "But your jubilation soon turns into a grim "..
+       "realization of what this means: it will be "..
+       "your fate to use this artifact against the "..
+       "most evil entity in the universe."
+       -- to save the entire human race
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
 
   TEXT_SECRET =
   {
@@ -2138,7 +2224,7 @@ namelib.NAMES =
       }
     }
   }
-  -- end of 'TEXT_SECRET' themes
+  -- end of all the 'TEXT_*' themes
 }
 
 
