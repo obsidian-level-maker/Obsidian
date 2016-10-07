@@ -1991,16 +1991,17 @@ namelib.NAMES =
     {
       ["Professor Braun"] = 20
       ["Doctor Stine"] = 20
-      ["Colonel Howard"] = 20
       ["Major Halderman"] = 20
+      ["Sergeant Kelly"] = 20
+      ["Private Swann"] = 20
 
       ["Christopher"] = 10
       ["Michael"] = 10
       ["Jonathon"] = 10
 
-      ["Arlene"] = 30
-      ["Cassandra"] = 10
-      ["Elizabeth"] = 10
+      ["Arlene"] = 40
+      ["Cassandra"] = 20
+      ["Samantha"] = 20
     }
 
     lexicon = {}
