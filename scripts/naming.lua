@@ -2137,6 +2137,58 @@ namelib.NAMES =
   }
 
 
+  TEXT_LEARN_FRIEND =
+  {
+    patterns =
+    {
+      ["You receive communication that your dear friend, "..
+       "*friend*, has been abducted by the army of *minion*!"
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+  TEXT_RESCUE_FRIEND =
+  {
+    patterns =
+    {
+      ["In a nearby dungeon cell you discover your friend, "..
+       "*friend*, who is still alive!"..
+       "|Quickly you remove their shackles and free them. "..
+       "Almost too weak to talk, a barely audible \"Thank you\" "..
+       "is followed by some surprising information: "..
+       "the location of the *artifact*!" ..
+       "|Relieved that *friend* is now safe, you set forth to "..
+       "retreive the *artifact* from its secret location."
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+  -- gosh, this will cause some tears
+  TEXT_LOSE_FRIEND =
+  {
+    patterns =
+    {
+      ["In the distance you recognize your friend, "..
+       "*friend*, who is waiting for you. "..
+       "You hurry toward them, but all too soon your "..
+       "joy turns to repulsion as you discover they have "..
+       "been turned into a demon!"..
+       "|\"Noooo!\" you scream, "..
+       "and shudder as you realize what you must now do... "..
+       "|Your soul feels ripped apart, the only consolation "..
+       "is that *friend* can finally rest in piece. "..
+       "*boss* will pay for this!"
+      ] = 10
+    }
+
+    lexicon = {}
+  }
+
+
   TEXT_SECRET =
   {
     patterns =
