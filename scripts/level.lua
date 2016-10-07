@@ -1770,11 +1770,18 @@ function Level_choose_themes()
   collect_mixed_themes()
 
 
+  -- backwards compat
+  if OB_CONFIG.theme == "mixed" then
+     OB_CONFIG.theme = "epi"
+  end
+
+
   local mostly_theme = string.match(OB_CONFIG.theme, "mostly_(%w+)")
 
   -- the user can specify the main theme
-  if OB_CONFIG.theme != "mixed"    and OB_CONFIG.theme != "jumble" and
-     OB_CONFIG.theme != "original" and not mostly_theme
+  if OB_CONFIG.theme != "original" and
+     OB_CONFIG.theme != "jumble" and
+     OB_CONFIG.theme != "epi" and not mostly_theme
   then
     set_single_theme(OB_CONFIG.theme)
     return

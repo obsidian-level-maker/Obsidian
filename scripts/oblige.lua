@@ -373,8 +373,8 @@ function ob_update_themes()
       end
     end
 
-    -- otherwise revert to Mix It Up
-    OB_CONFIG.theme = "mixed"
+    -- otherwise revert to As Original
+    OB_CONFIG.theme = "original"
     gui.change_button("theme", OB_CONFIG.theme)
   end
 end
@@ -531,7 +531,7 @@ function ob_set_config(name, value)
   end
 
   -- this is required for parsing the CONFIG.CFG file
-  -- [but redundant when the user merely changed the widget]
+  -- [ but redundant when the user merely changed the widget ]
   if (name == "game") or (name == "engine") or (name == "theme") then
     gui.change_button(name, OB_CONFIG[name])
   end
@@ -766,8 +766,8 @@ function ob_init()
       table.insert(list, { priority=92, name="_", label="_" })
     end
 
-    if what == "theme" and min_priority < -1 then
-      table.insert(list, { priority=-1, name="_", label="_" })
+    if what == "theme" and min_priority < 79 then
+      table.insert(list, { priority=79, name="_", label="_" })
     end
 
     table.sort(list, button_sorter)
@@ -831,8 +831,6 @@ function ob_init()
   OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
   OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
   OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
-
-  OB_CONFIG.theme  = "mixed"
 
   create_buttons("module", OB_MODULES)
   create_mod_options()
