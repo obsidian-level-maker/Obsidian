@@ -2047,7 +2047,7 @@ namelib.NAMES =
 
     lexicon = {}
   }
-  -- end of all the 'NAME_*' themes
+  -- end of all the 'NAME_XXX' themes
 
 
   --------------------------------------------------
@@ -2056,7 +2056,7 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["Now you must find *minion*, who holds the key "..
+      ["Now you must find <minion>, who holds the key "..
        "to this infernal mystery."
       ] = 10
     }
@@ -2068,7 +2068,7 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["With one last blow you finish off *minion*, " ..
+      ["With one last blow you finish off <minion>, " ..
        "its hideous body laying at your feet."
       ] = 10
     }
@@ -2081,7 +2081,7 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["Ahead lies the dominion of *boss*, "..
+      ["Ahead lies the dominion of <boss>, "..
        "an evil place where even fools fear to tread. "..
        "Daunted, yet determined, you emerge from the "..
        "inter-dimensional portal and begin to explore "..
@@ -2096,8 +2096,8 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["Your skillful use of the *artifact* was glorious, " ..
-       "defeating *boss* once and for all time."
+      ["Your skillful use of the <artifact> was glorious, " ..
+       "defeating <boss> once and for all time."
        -- FIXME : more stuff...
       ] = 10
     }
@@ -2111,7 +2111,7 @@ namelib.NAMES =
     patterns =
     {
       ["You have learned of a powerful artifact, "..
-       "the *artifact*.  "..
+       "the <artifact>.  "..
        "But is it real, or only a myth or legend? "..
        "Somehow, you know you are going to find out."
       ] = 10
@@ -2124,10 +2124,10 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["Now the *artifact* is yours! "..
+      ["The <artifact> is yours! "..
        "But your jubilation soon turns into a grim "..
-       "realization of what this means: it will be "..
-       "your fate to use this artifact against the "..
+       "realization of what this means: it shall be "..
+       "your fate to use it against the "..
        "most evil entity in the universe."
        -- to save the entire human race
       ] = 10
@@ -2142,7 +2142,7 @@ namelib.NAMES =
     patterns =
     {
       ["You receive communication that your dear friend, "..
-       "*friend*, has been abducted by the army of *minion*!"
+       "<friend>, has been abducted by the army of <minion>!"
       ] = 10
     }
 
@@ -2154,13 +2154,13 @@ namelib.NAMES =
     patterns =
     {
       ["In a nearby dungeon cell you discover your friend, "..
-       "*friend*, who is still alive!"..
+       "<friend>, who is still alive!"..
        "|Quickly you remove their shackles and free them. "..
        "Almost too weak to talk, a barely audible \"Thank you\" "..
        "is followed by some surprising information: "..
-       "the location of the *artifact*!" ..
-       "|Relieved that *friend* is now safe, you set forth to "..
-       "retreive the *artifact* from its secret location."
+       "the location of the <artifact>!" ..
+       "|Relieved that <friend> is now safe, you set forth to "..
+       "retreive the <artifact> from its secret location."
       ] = 10
     }
 
@@ -2172,16 +2172,16 @@ namelib.NAMES =
   {
     patterns =
     {
-      ["In the distance you recognize your friend, "..
-       "*friend*, who is waiting for you. "..
+      ["In the distance you recognize your friend "..
+       "<friend>, waiting for you. "..
        "You hurry toward them, but all too soon your "..
        "joy turns to repulsion as you discover they have "..
        "been turned into a demon!"..
        "|\"Noooo!\" you scream, "..
        "and shudder as you realize what you must now do... "..
        "|Your soul feels ripped apart, the only consolation "..
-       "is that *friend* can finally rest in piece. "..
-       "*boss* will pay for this!"
+       "is that <friend> can finally rest in piece. "..
+       "<boss> will pay for this!"
       ] = 10
     }
 
@@ -2276,7 +2276,7 @@ namelib.NAMES =
       }
     }
   }
-  -- end of all the 'TEXT_*' themes
+  -- end of all the 'TEXT_XXX' themes
 }
 
 
