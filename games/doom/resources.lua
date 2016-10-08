@@ -159,14 +159,14 @@ end
 
 
 function DOOM.make_episode_gfx()
+  -- this is for Doom 1 / Ultimate Doom.
+  -- does nothing for Doom 2 / Final Doom (they lack "name_patch" field).
+
   local colors = assert(DOOM.LEVEL_GFX_COLORS["red"])
 
   gui.set_colormap(2, colors)
 
-  for idx = 1, 4 do
-    local EPI = GAME.episodes[idx]
-    assert(EPI)
-
+  each EPI in GAME.episodes do
     if EPI.name_patch and EPI.description then
       gui.wad_name_gfx(EPI.name_patch, EPI.description, 2)
     end
@@ -181,6 +181,7 @@ end
 
 function DOOM.all_done()
   DOOM.make_cool_gfx()
+  DOOM.make_episode_gfx()
 
   local dir = "games/doom/data/"
 
