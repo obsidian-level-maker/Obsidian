@@ -47,6 +47,7 @@ PREFABS.Pic_box_tekgren3 =
   template = "Pic_box_template"
 
   theme = "tech"
+  game  = "doom2"
 
   tex_PIPES = "TEKGREN3"
 }
