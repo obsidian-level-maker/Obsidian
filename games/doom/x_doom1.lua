@@ -959,12 +959,20 @@ ULTDOOM.ROOM_THEMES =
       CEIL5_1 = 20
     }
 
-
     ceilings =
     {
       CEIL5_1 = 50
       CEIL4_1 = 15
       CEIL4_2 = 15
+    }
+
+    wall_groups =
+    {
+      PLAIN = 90
+      mid_band = 25
+      mid_band2 = 10
+      lite1 = 5
+      lite2 = 15
     }
   }
 
