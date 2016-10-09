@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -58,6 +58,9 @@ public:
 	UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
 	virtual ~UI_RChoice();
 
+	// FLTK method override
+	int handle(int event);
+
 public:
 	void AddPair(const char *id, const char *label);
 	// add a new option to the list.  If an option with the same 'id'
@@ -81,14 +84,17 @@ private:
 	choice_data_c * FindID(const char *id) const;
 	choice_data_c * FindMapped() const;
 
-	void Recreate();
-	// The available choices will be updated to reflect the
+	// call this to update the available choices to reflect their
 	// 'shown' values.  If the previous selected item is still
 	// valid, it remains set, otherwise we try and find a shown
 	// value with the same label, and failing that: select the
 	// first entry.
+	void Recreate();
 
 	const char *GetLabel() const;  // ????
+
+	void GotoPrevious();
+	void GotoNext();
 };
 
 

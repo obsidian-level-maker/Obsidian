@@ -3,4 +3,5 @@ CHANGES IN x.xx
 ===============
 
 
+-  UI: can use mousewheel to change settings
 

@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -209,6 +209,60 @@ choice_data_c * UI_RChoice::FindMapped() const
 	return NULL;
 }
 
+
+void UI_RChoice::GotoPrevious()
+{
+	int v = value();
+
+	if (v > 0)
+	{
+		v--; value(v);
+
+		// skip dividers
+		while (v > 0 && (mvalue()->flags & FL_MENU_INACTIVE))
+		{
+			v--; value(v);
+		}
+
+		do_callback();
+	}
+}
+
+
+void UI_RChoice::GotoNext()
+{
+	int v = value();
+	int last = size() - 2;
+
+	if (v < last)
+	{
+		v++; value(v);
+
+		// skip dividers
+		while (v < last && (mvalue()->flags & FL_MENU_INACTIVE))
+		{
+			v++; value(v);
+		}
+
+		do_callback();
+	}
+}
+
+
+int UI_RChoice::handle(int event)
+{
+	if (event == FL_MOUSEWHEEL && Fl::belowmouse() == this)
+	{
+		if (Fl::event_dy() < 0)
+			GotoPrevious();
+		else if (Fl::event_dy() > 0)
+			GotoNext();
+
+		return 1;  // eat it
+	}
+
+	return Fl_Choice::handle(event);
+}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
