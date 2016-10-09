@@ -149,6 +149,13 @@ function DOOM.get_levels()
     -- secret levels
     if map == 31 or map == 32 then
       LEV.is_secret = true
+
+      -- TODO : a more generic mechanism
+      if (OB_CONFIG.theme == "original") and
+         OB_CONFIG.game == "tnt"
+      then
+        LEV.theme_name = "egypt"
+      end
     end
 
     if map == 23 then
