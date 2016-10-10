@@ -2,8 +2,9 @@
 
 /* This sets the overall frame for the site */
 body {
-  margin:0px; background-color:#f7f7f7; 
-  font-family:Arial,Helvetica,sans-serif; font-size:11pt;
+  margin: 0px;
+  background-color: #ffffff;
+  font-family: Arial,Helvetica,sans-serif;
 }
 
 /* These control the fixed-width text elements of the page */
@@ -13,7 +14,8 @@ pre { line-height:1.2em; }
 pre code, code code, pre pre { font-size:100%; }
 
 /* These primarily adjust the size and spacing of heading elements,
-** most browsers have atrocious defaults for these. */
+ * most browsers have atrocious defaults for these.
+ */
 h1, h2, h3, h4, h5, h6 { margin-top:1.0em; margin-bottom:0.6em; }
 h1, h2, h3, h6 { font-weight:normal; }
 h4, h5 { font-weight:bold; }
@@ -29,16 +31,16 @@ h6 { font-size:1.0em; }
 #wikilogo { margin-top:4px; padding:6px; border-bottom:1px #cccccc solid; }
 
 /* This controls the rest of the heading (primarily the search box) */
-#wikihead { 
-  position:absolute; right:10px; top:10px; 
-  font-family:Verdana,sans-serif; font-size:85%; 
+#wikihead {
+  position:absolute; right:10px; top:10px;
+  font-family:Verdana,sans-serif; font-size:85%;
 }
-#wikihead input { font-size:85%; } 
+#wikihead input { font-size:85%; }
 
 /* These are for the left-sidebar. */
-#wikileft { 
-  width:155px; 
-  padding:6px; border-right:1px #cccccc solid; 
+#wikileft {
+  width:155px;
+  padding:6px; border-right:1px #cccccc solid;
   line-height:1.33em;
   font-size:9.4pt; font-family:Verdana,sans-serif;
 }
@@ -49,19 +51,19 @@ h6 { font-size:1.0em; }
 #wikileft li { margin:0px; padding-left: 6px; }
 .sidehead {
   margin:0px; padding:4px 2px 2px 2px;
-  font-size:11pt; font-weight:bold; font-style:normal; 
+  font-size:11pt; font-weight:bold; font-style:normal;
 }
-.sidehead a 
+.sidehead a
   { color:#505050; font-weight:bold; font-style:normal; }
 
 /* These affect the main content area. */
-#wikibody { 
-  padding:0px 10px 10px 10px; background-color:white; 
-  font-size:11pt; 
+#wikibody {
+  padding:0px 10px 10px 10px; background-color:white;
+  font-size:11pt;
 }
-#wikicmds { 
-  float:right; white-space:nowrap; 
-  font-family:Verdana,sans-serif; font-size:80%; 
+#wikicmds {
+  float:right; white-space:nowrap;
+  font-family:Verdana,sans-serif; font-size:80%;
 }
 #wikicmds ul { list-style:none; margin:0px; padding:0px; }
 #wikicmds li { display:inline; margin:0px 5px; }
@@ -80,13 +82,14 @@ h6 { font-size:1.0em; }
 .wikimessage { margin-top:4px; margin-bottom:4px; font-style:italic; }
 
 /* These affect the lines at the very bottom. */
-#wikifoot { 
+#wikifoot {
   padding-left:178px; padding-bottom:4px; border-top:1px #cccccc solid;
-  font-family:Verdana,sans-serif; font-size:80%; 
+  font-family:Verdana,sans-serif; font-size:80%;
 }
 
 /* These affect the printed appearance of the web view (not the separate
-** print view) of pages.  The sidebar and action links aren't printed. */
+ * print view) of pages.  The sidebar and action links aren't printed.
+ */
 @media print {
   body { width:auto; margin:0px; padding:0.5em; }
   #wikihead, #wikileft, #wikicmds, .footnav { display:none; }
