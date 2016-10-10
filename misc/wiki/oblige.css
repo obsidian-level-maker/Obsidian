@@ -95,3 +95,38 @@ h6 { font-size:1.0em; }
   #wikihead, #wikileft, #wikicmds, .footnav { display:none; }
   #wikifoot { padding:2px; }
 }
+
+/* ---------- AJA's stuff ------------ */
+
+.floatL { float: left  !important; }
+.floatR { float: right !important; }
+
+.oblige_title {
+    color: #dd8;
+    font-size: xx-large;
+    text-align: center;
+    margin-bottom: 0.3em;
+}
+
+.menu {
+    background-color: #744a20;
+    color: #ddd;
+    min-height: 28px;
+    line-height: 2.0em;
+    font-size: large;
+}
+
+.menu span { padding-left: 1em; padding-right: 1em; }
+.menu a    { padding-left: 1em; padding-right: 1em; }
+
+.menu a:link    { text-decoration: none; color: #ddd }
+.menu a:visited { text-decoration: none; color: #ddd }
+.menu a:hover   { text-decoration: none; color: white }
+
+.submenu {
+    background-color: #ccbbaa;
+    color: #006;
+    /* height: 32px; */
+    line-height: 2.0em;
+    font-size: small;
+}
