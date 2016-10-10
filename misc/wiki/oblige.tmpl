@@ -6,12 +6,12 @@
   <title>$WikiTitle | {$Group} / {$Title} $ActionTitle</title>
   <meta http-equiv='Content-Style-Type' content='text/css' />
   <link rel='stylesheet' href='$SkinDirUrl/oblige.css' type='text/css' />
+  <link rel="shortcut icon" href="http://oblige.sourceforge.net/favicon.ico" type="image/vnd.microsoft.icon">
   <!--HTMLHeader-->
 </head>
 <body>
+<h1 class="oblige_title"> OBLIGE Modding Wiki </h1>
 <!--PageHeaderFmt-->
-  <div id='wikilogo'><a href='{$ScriptUrl}'><img src='$PageLogoUrl'
-    alt='$WikiTitle' border='0' /></a></div>
   <div id='wikihead'>
   <form action='{$ScriptUrl}'>
     <span class='headnav'><a href='{$ScriptUrl}/$[{$Group}/RecentChanges]'
@@ -21,32 +21,37 @@
     <a href='{$ScriptUrl}/$[{$SiteGroup}/Search]'>$[Search]</a>:
     <input type='text' name='q' value='' class='inputbox searchbox' />
     <input type='submit' class='inputbutton searchbutton'
-      value='$[Go]' /></form></div>
+      value='$[Go]' />
+  </form>
+  </div>
 <!--/PageHeaderFmt-->
+<!--PageActionFmt-->
+        <div class='submenu'>
+          <a rel="nofollow" href='{$PageUrl}?action=edit'>$[Edit]</a> -
+          <a rel="nofollow" href='{$PageUrl}?action=diff'>$[History]</a> -
+          <a rel="nofollow" href='{$PageUrl}?action=print' target='_blank'>$[Print]</a> -
+          <a href='{$ScriptUrl}/$[{$Group}/RecentChanges]'>$[Recent Changes]</a> -
+          <a href='{$ScriptUrl}/$[{$SiteGroup}/Search]'>$[Search]</a>
+        </div>
   <table id='wikimid' width='100%' cellspacing='0' cellpadding='0'><tr>
 <!--PageLeftFmt-->
       <td id='wikileft' valign='top'>
         <!--wiki:{$Group}.SideBar {$SiteGroup}.SideBar--></td>
 <!--/PageLeftFmt-->
       <td id='wikibody' valign='top'>
-<!--PageActionFmt-->
-        <div id='wikicmds'><!--wiki:{$Group}.PageActions {$SiteGroup}.PageActions--></div>
 <!--PageTitleFmt-->
         <div id='wikititle'>
           <div class='pagegroup'><a href='{$ScriptUrl}/{$Group}'>{$Group}</a> /</div>
-          <h1 class='pagetitle'>{$Title}</h1></div>
+          <h1 class='pagetitle'>{$Title}</h1>
+        </div>
 <!--PageText-->
       </td>
-    </tr></table>
+    </tr>
+  </table>
 <!--PageFooterFmt-->
   <div id='wikifoot'>
-    <div class='footnav'>
-      <a rel="nofollow" href='{$PageUrl}?action=edit'>$[Edit]</a> -
-      <a rel="nofollow" href='{$PageUrl}?action=diff'>$[History]</a> -
-      <a rel="nofollow" href='{$PageUrl}?action=print' target='_blank'>$[Print]</a> -
-      <a href='{$ScriptUrl}/$[{$Group}/RecentChanges]'>$[Recent Changes]</a> -
-      <a href='{$ScriptUrl}/$[{$SiteGroup}/Search]'>$[Search]</a></div>
-    <div class='lastmod'>$[Page last modified on {$LastModified}]</div></div>
+    <div class='lastmod'>Page last modified on {$LastModified}</div>
+  </div>
 <!--HTMLFooter-->
 </body>
 </html>
