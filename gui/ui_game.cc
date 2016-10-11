@@ -94,18 +94,15 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	setup_Mode();
 
-
 	cy += mode->h() + y_step*2;
 
 
-	UI_RChoice *ccc;
-	ccc = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
-	ccc->align(FL_ALIGN_LEFT);
-	ccc->selection_color(FL_BLUE);
-	ccc->add("Original");
-	ccc->value(0);
+	theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
+	theme->align(FL_ALIGN_LEFT);
+	theme->selection_color(FL_BLUE);
+	theme->callback(callback_Theme, this);
 
-	cy += length->h() + y_step;
+	cy += theme->h() + y_step;
 
 
 	end();
@@ -113,7 +110,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	resizable(NULL);  // don't resize our children
 
 
-	length->SetID("episode");
+///---	length->SetID("episode");
 }
 
 
@@ -130,15 +127,6 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data)
 
 	ob_set_config("game", that->game->GetID());
 	Signal_Raise("game");
-}
-
-
-void UI_Game::callback_Mode(Fl_Widget *w, void *data)
-{
-	UI_Game *that = (UI_Game *)data;
-
-	ob_set_config("mode", that->mode->GetID());
-	Signal_Raise("mode");
 }
 
 
@@ -159,31 +147,47 @@ void UI_Game::callback_Length(Fl_Widget *w, void *data)
 }
 
 
+void UI_Game::callback_Mode(Fl_Widget *w, void *data)
+{
+	UI_Game *that = (UI_Game *)data;
+
+	ob_set_config("mode", that->mode->GetID());
+	Signal_Raise("mode");
+}
+
+
+void UI_Game::callback_Theme(Fl_Widget *w, void *data)
+{
+	UI_Game *that = (UI_Game *) data;
+
+	ob_set_config("theme", that->theme->GetID());
+}
+
+
 void UI_Game::Locked(bool value)
 {
 	if (value)
 	{
-		game->deactivate();
-		mode->deactivate();
-		length->deactivate();
+		game  ->deactivate();
 		engine->deactivate();
+		length->deactivate();
+		mode  ->deactivate();
+		theme ->deactivate();
 	}
 	else
 	{
-		game->activate();
-		mode->activate();
-		length->activate();
+		game  ->activate();
 		engine->activate();
-
-		// ????    game_callback(this, this);
-		// ????    mode_callback(this, this);
+		length->activate();
+		mode  ->activate();
+		theme ->activate();
 	}
 }
 
 
 void UI_Game::Defaults()
 {
-	// Note: game, engine are handled by LUA code (ob_init)
+	// Note: game, engine, theme are handled by LUA code (ob_init)
 
 	ParseValue("mode", "sp");
 	ParseValue("length", "game");
@@ -192,7 +196,7 @@ void UI_Game::Defaults()
 
 bool UI_Game::ParseValue(const char *key, const char *value)
 {
-	// Note: game, engine are handled by LUA code
+	// Note: game, engine, theme are handled by LUA code
 	//
 	if (StringCaseCmp(key, "mode") == 0)
 	{

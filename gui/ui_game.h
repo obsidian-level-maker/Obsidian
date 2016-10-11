@@ -25,10 +25,12 @@ class UI_Game : public Fl_Group
 {
 public:
 	UI_RChoice *game;
+	UI_RChoice *engine;
+
+	UI_RChoice *length;
 	UI_RChoice *mode;
 
-	UI_RChoice *engine;
-	UI_RChoice *length;
+	UI_RChoice *theme;
 
 public:
 	UI_Game(int x, int y, int w, int h, const char *label = NULL);
@@ -50,9 +52,10 @@ private:
 	void setup_Length();
 
 	static void callback_Game  (Fl_Widget *, void*);
-	static void callback_Mode  (Fl_Widget *, void*);
 	static void callback_Engine(Fl_Widget *, void*);
 	static void callback_Length(Fl_Widget *, void*);
+	static void callback_Mode  (Fl_Widget *, void*);
+	static void callback_Theme (Fl_Widget *, void*);
 
 	static const char *mode_syms[];
 	static const char *length_syms[];

@@ -381,7 +381,7 @@ int gui_add_button(lua_State *L)
 		main_win->game_box->engine->AddPair(id, label);
 
 	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->level_box->theme->AddPair(id, label);
+		main_win->game_box->theme->AddPair(id, label);
 
 	else if (StringCaseCmp(what, "module") == 0)
 		main_win->mod_box->AddModule(id, label, tip);
@@ -448,7 +448,7 @@ int gui_show_button(lua_State *L)
 		main_win->game_box->engine->ShowOrHide(id, shown);
 
 	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->level_box->theme->ShowOrHide(id, shown);
+		main_win->game_box->theme->ShowOrHide(id, shown);
 
 	else if (StringCaseCmp(what, "module") == 0)
 		main_win->mod_box->ShowOrHide(id, shown);
@@ -483,7 +483,7 @@ int gui_change_button(lua_State *L)
 		main_win->game_box->engine->SetID(id);
 
 	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->level_box->theme->SetID(id);
+		main_win->game_box->theme->SetID(id);
 
 	else if (StringCaseCmp(what, "module") == 0)
 		main_win->mod_box->ChangeValue(id, opt_val);

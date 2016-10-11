@@ -75,15 +75,6 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 
 
 
-	theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
-	theme->align(FL_ALIGN_LEFT);
-	theme->selection_color(MY_GREEN);
-	theme->callback(callback_Theme, this);
-theme->hide();
-
-//	cy += theme->h() + y_step * 1;
-
-
 	ccc = new UI_RChoice(cx, cy, cw, ch, "Hallways: ");
 	ccc->align(FL_ALIGN_LEFT);
 	ccc->add("Mix It Up");
@@ -185,7 +176,6 @@ void UI_Level::Locked(bool value)
 	if (value)
 	{
 		size ->deactivate();
-		theme->deactivate();
 
 		outdoors->deactivate();
 		caves   ->deactivate();
@@ -193,7 +183,6 @@ void UI_Level::Locked(bool value)
 	else
 	{
 		size ->activate();
-		theme->activate();
 
 		outdoors->activate();
 		caves   ->activate();
@@ -202,14 +191,6 @@ void UI_Level::Locked(bool value)
 
 
 //----------------------------------------------------------------
-
-void UI_Level::callback_Theme(Fl_Widget *w, void *data)
-{
-	UI_Level *that = (UI_Level *) data;
-
-	ob_set_config("theme", that->theme->GetID());
-}
-
 
 void UI_Level::callback_Size(Fl_Widget *w, void *data)
 {
@@ -237,8 +218,6 @@ void UI_Level::callback_Caves(Fl_Widget *w, void *data)
 
 void UI_Level::Defaults()
 {
-	// Note: "theme" is handled by LUA code (ob_init)
-
 	ParseValue("size",     "epi");
 	ParseValue("outdoors", "mixed");
 	ParseValue("caves",    "mixed");
@@ -247,8 +226,6 @@ void UI_Level::Defaults()
 
 bool UI_Level::ParseValue(const char *key, const char *value)
 {
-	// Note: theme handled by LUA code
-
 	if (StringCaseCmp(key, "size") == 0)
 	{
 		size->SetID(value);
