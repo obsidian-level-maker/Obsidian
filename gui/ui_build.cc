@@ -77,7 +77,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	misc_menu->add(_("Manage Config"), FL_F+9, menu_do_manage_config);
 
 
-	cy += misc_menu->h() + kf_h(17);
+	cy += misc_menu->h() + kf_h(12);
 
 
 	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
@@ -86,7 +86,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	build->callback(build_callback, this);
 	build->shortcut(FL_F+2);
 
-	cy += build->h() + kf_h(17);
+	cy += build->h() + kf_h(12);
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, _("Quit"));
@@ -96,7 +96,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	/* --- Status Area --- */
 
-	cy = Y + H - kf_h(90);
+	cy = Y + H - kf_h(82);
 
 
 	int pad = kf_w(14);

@@ -77,6 +77,16 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy += engine->h() + y_step * 2;
 
 
+	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
+	length->align(FL_ALIGN_LEFT);
+	length->selection_color(FL_BLUE);
+	length->callback(callback_Length, this);
+
+	setup_Length();
+
+	cy += length->h() + y_step;
+
+
 	mode = new UI_RChoice(cx, cy, cw, ch, _("Mode: "));
 	mode->align(FL_ALIGN_LEFT);
 	mode->selection_color(FL_BLUE);
@@ -84,15 +94,16 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	setup_Mode();
 
-	cy += mode->h() + y_step;
+
+	cy += mode->h() + y_step*2;
 
 
-	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
-	length->align(FL_ALIGN_LEFT);
-	length->selection_color(FL_BLUE);
-	length->callback(callback_Length, this);
-
-	setup_Length();
+	UI_RChoice *ccc;
+	ccc = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->selection_color(FL_BLUE);
+	ccc->add("Original");
+	ccc->value(0);
 
 	cy += length->h() + y_step;
 

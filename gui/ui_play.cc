@@ -49,7 +49,7 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 	int cx = X + W * 0.45;
 	int cy = Y + y_step;
 
-	const char *heading_text = _("Playing Style");
+	const char *heading_text = _("Monsters");
 
 	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
@@ -60,10 +60,10 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	int cw = W * 0.51;
+	int cw = W / 2;
 	int ch = kf_h(24);
 
-	mons = new UI_RChoice(cx, cy, cw, ch, _("Monsters: "));
+	mons = new UI_RChoice(cx, cy, cw, ch, _("Quantity: "));
 	mons->align(FL_ALIGN_LEFT);
 	mons->selection_color(MY_RED);
 	mons->callback(callback_Monsters, this);
@@ -80,7 +80,52 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 
 	setup_Strength();
 
-	cy += strength->h() + y_step * 2.3;
+	cy += strength->h() + y_step;
+
+
+	UI_RChoice *ccc;
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Ramp Up: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Quicker");
+	ccc->value(0);
+
+	cy += strength->h() + y_step * 3;
+
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Bosses: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Normal");
+	ccc->value(0);
+
+	cy += strength->h() + y_step;
+
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Mix It Up");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step;
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Cages: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Mix It Up");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step*2;
+
+
+
+	const char *heading_text2 = _("Items");
+
+	heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text2);
+	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	heading->labeltype(FL_NORMAL_LABEL);
+	heading->labelfont(FL_HELVETICA_BOLD);
+	heading->labelsize(header_font_size);
+
+	cy += heading->h() + y_step;
 
 
 	weaps = new UI_RChoice(cx, cy, cw, ch, _("Weapons: "));
@@ -100,7 +145,14 @@ UI_Play::UI_Play(int X, int Y, int W, int H, const char *label) :
 
 	setup_Items();
 
-	cy += items->h() + y_step * 2.3;
+	cy += strength->h() + y_step;
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Secrets: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Normal");
+	ccc->value(0);
+
+	cy += items->h() + y_step * 3;
 
 
 	health = new UI_RChoice(cx, cy, cw, ch, _("Health: "));
@@ -175,7 +227,7 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 	}
 	else
 	{
-		play->mons->label(_("Monsters: "));
+		play->mons->label(_("Quantity: "));
 		play->strength->activate();
 	}
 

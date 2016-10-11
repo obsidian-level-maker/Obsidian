@@ -34,8 +34,8 @@
 #endif
 
 
-#define BASE_WINDOW_W  732
-#define BASE_WINDOW_H  432
+#define BASE_WINDOW_W  932
+#define BASE_WINDOW_H  442
 
 
 UI_MainWin *main_win;
@@ -67,19 +67,19 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	color(WINDOW_BG, WINDOW_BG);
 
-	int MOD_W   = W * 2 / 5;
-	int TOP_H   = H * 2 / 5;
+	int MOD_W   = W * 2 / 6;
+	int TOP_H   = H * 48 / 100;
 
-	int PANEL_W = (W - MOD_W) / 2 - 4;
+	int PANEL_W = (W - MOD_W) / 3 - 4;
 	int BOT_H   = H - TOP_H - 4;
 
 	game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
 	add(game_box);
 
-	level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, TOP_H);
+	level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, H);
 	add(level_box);
 
-	play_box = new UI_Play(PANEL_W+4, TOP_H+4, PANEL_W, BOT_H);
+	play_box = new UI_Play(PANEL_W*2+8, 0, W - MOD_W-4 - PANEL_W*2 - 8, H);
 	add(play_box);
 
 
@@ -87,7 +87,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	add(build_box);
 
 
-	mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, TOP_H+4 + BOT_H);
+	mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H);
 	add(mod_box);
 
 

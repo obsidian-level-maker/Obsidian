@@ -43,12 +43,12 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = kf_h(6) + KF;
+	int y_step = kf_h(7) + KF;
 
-	int cx = X + W * 0.42;
+	int cx = X + W * 0.45;
 	int cy = Y + y_step;
 
-	const char *heading_text = _("Level Architecture");
+	const char *heading_text = _("Architecture");
 
 	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
@@ -59,7 +59,7 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	int cw = W * 0.54;
+	int cw = W * 0.5;
 	int ch = kf_h(24);
 
 	size = new UI_RChoice(cx, cy, cw, ch, _("Size: "));
@@ -69,15 +69,52 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 
 	setup_Size();
 
-	cy += size->h() + y_step;
+	cy += size->h() + y_step * 3;
+
+	UI_RChoice *ccc;
+
 
 
 	theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
 	theme->align(FL_ALIGN_LEFT);
 	theme->selection_color(MY_GREEN);
 	theme->callback(callback_Theme, this);
+theme->hide();
 
-	cy += theme->h() + y_step * 2;
+//	cy += theme->h() + y_step * 1;
+
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Hallways: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Mix It Up");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step;
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Big Rooms: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Mix It Up");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step;
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Teleports: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Mix It Up");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step*3;
+
+
+	const char *heading_text2 = _("Environment");
+
+	heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text2);
+	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	heading->labeltype(FL_NORMAL_LABEL);
+	heading->labelfont(FL_HELVETICA_BOLD);
+	heading->labelsize(header_font_size);
+
+	cy += heading->h() + y_step;
 
 
 	outdoors = new UI_RChoice(cx, cy, cw, ch, _("Outdoors: "));
@@ -96,6 +133,38 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	caves->callback(callback_Caves, this);
 
 	setup_Caves();
+
+	cy += outdoors->h() + y_step;
+
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Liquids: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Mix It Up");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step*3;
+
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Steepness: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Normal");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step;
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Lighting: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Normal");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step;
+
+	ccc = new UI_RChoice(cx, cy, cw, ch, "Detail: ");
+	ccc->align(FL_ALIGN_LEFT);
+	ccc->add("Normal");
+	ccc->value(0);
+
+	cy += ccc->h() + y_step;
 
 
 	end();
