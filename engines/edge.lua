@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  Engine: EDGE (Enhanced Doom Gaming Engine)
+--  Engine: 3DGE (Enhanced Doom Gaming Engine)
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -140,7 +140,7 @@ end
 
 OB_ENGINES["edge"] =
 {
-  label = _("EDGE")
+  label = _("3DGE")
 
   extends = "boom"
 
