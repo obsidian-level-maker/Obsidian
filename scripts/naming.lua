@@ -2052,7 +2052,7 @@ namelib.NAMES =
 
   --------------------------------------------------
 
-  TEXT_BEFORE_MINION =
+  TEXT_FACE_MINION =
   {
     patterns =
     {
@@ -2077,7 +2077,7 @@ namelib.NAMES =
   }
 
 
-  TEXT_BEFORE_BOSS =
+  TEXT_FACE_BOSS =
   {
     patterns =
     {
