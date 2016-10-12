@@ -28,6 +28,8 @@ end
 OB_MODULES["mini_mastermind"] =
 {
   label = _("Smaller Spiderdemon")
+
+  side = "left"
   priority = 88
 
   engine = "boom"

@@ -34,8 +34,9 @@ UI_ARCH.CHOICES =
 OB_MODULES["ui_arch"] =
 {
   label = _("Architecture")
-  priority = 202
+
   side = "left"
+  priority = 104
 
   options =
   {

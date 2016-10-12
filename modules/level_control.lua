@@ -46,6 +46,8 @@ end
 OB_MODULES["level_control"] =
 {
   label = _("Level Control")
+
+  side = "left"
   priority = 70
 
   hooks =

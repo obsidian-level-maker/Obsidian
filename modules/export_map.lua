@@ -265,6 +265,7 @@ OB_MODULES["export_map"] =
 {
   label = _("Export .MAP files")
 
+  side = "left"
   priority = -75
 
   tables =

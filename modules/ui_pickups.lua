@@ -34,6 +34,8 @@ UI_PICKUPS.CHOICES =
 OB_MODULES["ui_pickups"] =
 {
   label = _("Pickups")
+
+  side = "right"
   priority = 101
 
   options =

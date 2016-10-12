@@ -34,8 +34,9 @@ UI_ENVIRON.CHOICES =
 OB_MODULES["ui_env"] =
 {
   label = _("Environment")
-  priority = 201
+
   side = "left"
+  priority = 103
 
   options =
   {

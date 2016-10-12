@@ -42,6 +42,8 @@ end
 OB_MODULES["extra_settings"] =
 {
   label = _("Extra Settings")
+
+  side = "left"
   priority = 90
 
   hooks =
