@@ -31,7 +31,7 @@ UI_ENVIRON.CHOICES =
 }
 
 
-OB_MODULES["ui_environ"] =
+OB_MODULES["ui_env"] =
 {
   label = _("Environment")
   priority = 201
