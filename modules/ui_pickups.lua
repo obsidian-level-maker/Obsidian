@@ -31,9 +31,10 @@ UI_PICKUPS.CHOICES =
 }
 
 
-OB_PANELS["ui_pickups"] =
+OB_MODULES["ui_pickups"] =
 {
   label = _("Pickups")
+  priority = 101
 
   options =
   {

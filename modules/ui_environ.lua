@@ -31,9 +31,11 @@ UI_ENVIRON.CHOICES =
 }
 
 
-OB_PANELS["ui_environ"] =
+OB_MODULES["ui_environ"] =
 {
   label = _("Environment")
+  priority = 201
+  side = "left"
 
   options =
   {

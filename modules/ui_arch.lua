@@ -31,9 +31,11 @@ UI_ARCH.CHOICES =
 }
 
 
-OB_PANELS["ui_arch"] =
+OB_MODULES["ui_arch"] =
 {
   label = _("Architecture")
+  priority = 202
+  side = "left"
 
   options =
   {

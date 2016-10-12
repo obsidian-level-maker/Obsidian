@@ -31,9 +31,10 @@ UI_MONS.CHOICES =
 }
 
 
-OB_PANELS["ui_mons"] =
+OB_MODULES["ui_mons"] =
 {
   label = _("Monsters")
+  priority = 102
 
   options =
   {
