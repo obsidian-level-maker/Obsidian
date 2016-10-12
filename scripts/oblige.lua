@@ -414,6 +414,22 @@ end
 
 
 
+function ob_find_mod_option(mod, opt_name)
+  if not mod.options then return nil end
+
+  -- if 'options' is a list, search it one-by-one
+  if mod.options[1] then
+    each opt in mod.options do
+      if opt.name == opt_name then
+        return opt
+      end
+    end
+  end
+
+  return mod.options[name]
+end
+
+
 function ob_defs_conflict(def1, def2)
   if not def1.conflicts then return false end
   if not def2.conflicts then return false end
@@ -464,20 +480,20 @@ function ob_set_mod_option(name, option, value)
   end
 
 
-  local def = mod.options and mod.options[option]
-  if not def then
+  local opt = ob_find_mod_option(mod, option)
+  if not opt then
     gui.printf("Ignoring unknown option: %s.%s\n", name, option)
     return
   end
 
   -- this can only happen while parsing the CONFIG.CFG file
   -- (containing some no-longer-used value).
-  if not def.avail_choices[value] then
+  if not opt.avail_choices[value] then
     warning("invalid choice: %s (for option %s.%s)\n", value, name, option)
     return
   end
 
-  def.value = value
+  opt.value = value
 
   -- no need to call ob_update_all
   -- (nothing ever depends on custom options)
@@ -551,14 +567,23 @@ function ob_read_all_config(print_to_log)
 
   local unknown = "XXX"
 
+  if OB_CONFIG.seed then
+    do_line("seed = %d",   OB_CONFIG.seed)
+    do_line("")
+  end
+
+  do_line("---- Game Settings ----")
+  do_line("")
   do_line("game = %s",   OB_CONFIG.game or unknown)
   do_line("mode = %s",   OB_CONFIG.mode or unknown)
   do_line("engine = %s", OB_CONFIG.engine or unknown)
   do_line("length = %s", OB_CONFIG.length or unknown)
-  do_line("seed = %d",   OB_CONFIG.seed or 0)
+  do_line("theme = %s",  OB_CONFIG.theme or unknown)
   do_line("")
 
-  do_line("theme = %s",   OB_CONFIG.theme or unknown)
+  do_line("---- Panels ----")
+  do_line("")
+
   do_line("size = %s",    OB_CONFIG.size or unknown)
   do_line("outdoors = %s",OB_CONFIG.outdoors or unknown)
   do_line("caves = %s",   OB_CONFIG.caves or unknown)
@@ -583,8 +608,14 @@ function ob_read_all_config(print_to_log)
 
     -- module options
     if def.options and not table.empty(def.options) then
-      each o_name,opt in def.options do
-        do_line("%s = %s", o_name, opt.value or unknown)
+      if def.options[1] then
+        each opt in def.options do
+          do_line("%s = %s", opt.name, opt.value or unknown)
+        end
+      else
+        each o_name,opt in def.options do
+          do_line("%s = %s", o_name, opt.value or unknown)
+        end
       end
 
       do_line("")
