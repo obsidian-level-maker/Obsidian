@@ -466,7 +466,7 @@ void UI_CustomMods::PositionAll(UI_Module *focus)
 void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
 {
 	Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
-	UI_CustomMods *that = main_win->mod_box;
+	UI_CustomMods *that = main_win->mod_box; // FIXME !!!
 
 	int previous_y = that->offset_y;
 
@@ -493,7 +493,7 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data)
 
 	M->update_Enable();
 
-	UI_CustomMods *that = main_win->mod_box;
+	UI_CustomMods *that = main_win->mod_box; // FIXME !!!
 
 	// no options => no height change => no need to reposition
 	if (M->choice_map.size() > 0)

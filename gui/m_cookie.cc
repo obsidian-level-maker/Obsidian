@@ -72,7 +72,10 @@ static void Cookie_SetValue(const char *name, const char *value)
 		ob_set_mod_option(module, name, value);
 
 		if (main_win)
+		{
 			main_win->mod_box->ParseOptValue(module, name, value);
+			main_win->sod_box->ParseOptValue(module, name, value);
+		}
 
 		return;
 	}
@@ -122,7 +125,10 @@ static void Cookie_SetValue(const char *name, const char *value)
 		ob_set_mod_option(module, option, value);
 
 		if (main_win)
+		{
 			main_win->mod_box->ParseOptValue(module, option, value);
+			main_win->sod_box->ParseOptValue(module, option, value);
+		}
 
 		StringFree(module);
 		return;

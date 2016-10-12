@@ -360,8 +360,8 @@ int Main_DetermineScaling()
 		return window_size - 2;
 
 	// automatic selection
-	if (screen_w >= 1600 && screen_h >= 720) return 2;
-	if (screen_w >= 1200 && screen_h >= 600) return 1;
+	if (screen_w >= 1600 && screen_h >= 800) return 2;
+	if (screen_w >= 1200 && screen_h >= 672) return 1;
 	if (screen_w <= 640  && screen_h <= 480) return -1;
 
 	return 0;

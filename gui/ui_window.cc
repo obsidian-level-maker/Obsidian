@@ -34,8 +34,8 @@
 #endif
 
 
-#define BASE_WINDOW_W  932
-#define BASE_WINDOW_H  442
+#define BASE_WINDOW_W  800
+#define BASE_WINDOW_H  532
 
 
 UI_MainWin *main_win;
@@ -58,8 +58,6 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
 UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	Fl_Double_Window(W, H, title)
 {
-	end(); // cancel begin() in Fl_Group constructor
-
 	// not resizable!
 	size_range(W, H, W, H);
 
@@ -67,29 +65,33 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	color(WINDOW_BG, WINDOW_BG);
 
-	int MOD_W   = W * 2 / 6;
-	int TOP_H   = H * 48 / 100;
+	int LEFT_W = W * 3 / 10;
+	int MOD_W   = (W - LEFT_W) / 2 - 4;
 
-	int PANEL_W = (W - MOD_W) / 3 - 4;
+	int TOP_H   = H * 48 / 100;
 	int BOT_H   = H - TOP_H - 4;
 
-	game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
-	add(game_box);
 
-	level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, H);
-	add(level_box);
-
-	play_box = new UI_Play(PANEL_W*2+8, 0, W - MOD_W-4 - PANEL_W*2 - 8, H);
-	add(play_box);
+	game_box = new UI_Game(0, 0, LEFT_W, TOP_H);
 
 
-	build_box = new UI_Build(0, TOP_H+4, PANEL_W, BOT_H);
-	add(build_box);
+level_box = new UI_Level(LEFT_W+4, 0, LEFT_W, H);
+level_box->hide();
+
+play_box = new UI_Play(LEFT_W*2+8, 0, W - MOD_W-4 - LEFT_W*2 - 8, H);
+play_box->hide();
+
+
+
+	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
 
 
 	mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H);
-	add(mod_box);
 
+	sod_box = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H);
+
+
+	end();
 
 	resizable(NULL);
 }
@@ -107,7 +109,15 @@ void UI_MainWin::CalcWindowSize(int *W, int *H)
 	*W = kf_w(BASE_WINDOW_W);
 	*H = kf_h(BASE_WINDOW_H);
 
-	if (KF < 0) *W -= 20;
+	// tweak for "Tiny" setting
+	if (KF < 0)
+	{
+		*W -= 24;
+		*H -= 24;
+	}
+
+//// DEBUG
+//	fprintf(stderr, "\n\nCalcWindowSize --> %d x %d\n", *W, *H);
 }
 
 

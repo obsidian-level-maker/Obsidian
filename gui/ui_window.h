@@ -48,7 +48,9 @@ public:
 	UI_Play   *play_box;
 
 	UI_Build  *build_box;
+
 	UI_CustomMods *mod_box;
+	UI_CustomMods *sod_box;
 
 public:
 	UI_MainWin(int W, int H, const char *title);
