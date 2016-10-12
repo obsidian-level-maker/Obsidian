@@ -43,6 +43,7 @@ OB_GAMES   = {}
 OB_THEMES  = {}
 OB_ENGINES = {}
 OB_MODULES = {}
+OB_PANELS  = {}
 
 
 -- internationalization / localization
