@@ -773,7 +773,11 @@ function ob_init()
     table.sort(list, button_sorter)
 
     each def in list do
-      gui.add_button(what, def.name, def.label, def.tooltip)
+      if def.side == "left" then
+        gui.add_button("leftie", def.name, def.label, def.tooltip)
+      else
+        gui.add_button(what, def.name, def.label, def.tooltip)
+      end
 
       if what == "game" then
         gui.show_button(what, def.name, true)
@@ -791,14 +795,19 @@ function ob_init()
       if not mod.options then
         mod.options = {}
       else
-        local list = {}
+        local list = mod.options
 
-        each name,opt in mod.options do
-          opt.name = name
-          table.insert(list, opt)
+        -- handle lists (for UI modules) different from key/value tables
+        if list[1] == nil then
+          list = {}
+
+          each name,opt in mod.options do
+            opt.name = name
+            table.insert(list, opt)
+          end
+
+          table.sort(list, button_sorter)
         end
-
-        table.sort(list, button_sorter)
 
         each opt in list do
           assert(opt.label)
