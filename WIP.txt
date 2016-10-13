@@ -9,11 +9,11 @@ Revamped UI:
 -  different kind of checkbox for UI modules? like "v" and "^"
 -  rename sod_box
 
-+  transfer ui_xxx options into OB_CONFIG[], maybe mirror as-we-go
-+  ensure ob_set_config() can find options in the ui modules
-+  improve ui_xxx handling in ob_read_all_config()
++  FIX ALL THE CHOICES
 
 -  remove the old code: ui_level.* ui_play.*
+
+-  split gui.add_mod_option ---> gui.add_option_choice
 
 
 
