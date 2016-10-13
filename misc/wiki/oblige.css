@@ -3,8 +3,9 @@
 /* This sets the overall frame for the site */
 body {
   margin: 0px;
-  background-color: #ffffff;
-  font-family: Arial,Helvetica,sans-serif;
+  background-color: black;
+  color: white;
+  font-family: sans-serif;  /* ???  Arial,Helvetica,sans-serif; */
 }
 
 /* These control the fixed-width text elements of the page */
@@ -41,9 +42,13 @@ h6 { font-size:1.0em; }
 /* These are for the left-sidebar. */
 #wikileft {
   width:155px;
-  padding:6px; border-right:1px #cccccc solid;
+  padding:6px;
+  border-right:1px #cccccc solid;
   line-height:1.33em;
-  font-size:9.4pt; font-family:Verdana,sans-serif;
+  font-size:9.4pt;
+  font-family:Verdana,sans-serif;
+  background-color: white;
+  color: black;
 }
 #wikileft .vspace { margin-top:1.125em; }
 #wikileft a { text-decoration:none; color:black; }
@@ -66,11 +71,15 @@ h6 { font-size:1.0em; }
 
 /* These affect the main content area. */
 #wikibody {
-  padding:0px 10px 10px 10px; background-color:white;
+  padding: 0px 10px 10px 10px;
+  background-color: white;
+  color: black;
 }
 #wikicmds {
-  float:right; white-space:nowrap;
-  font-family:Verdana,sans-serif; font-size:80%;
+  float:right;
+  white-space:nowrap;
+  font-family:Verdana,sans-serif;
+  font-size:80%;
 }
 #wikicmds ul { list-style:none; margin:0px; padding:0px; }
 #wikicmds li { display:inline; margin:0px 5px; }
@@ -103,7 +112,7 @@ h6 { font-size:1.0em; }
   #wikifoot { padding:2px; }
 }
 
-/* ---------- AJA's stuff ------------ */
+/* ---- stuff from Oblige website CSS ---- */
 
 .floatL { float: left  !important; }
 .floatR { float: right !important; }
@@ -111,8 +120,9 @@ h6 { font-size:1.0em; }
 .oblige_title {
     color: #dd8;
     font-size: xx-large;
+    font-weight: bold;
     text-align: center;
-    margin-bottom: 0.3em;
+    margin-bottom: 0.8em;
 }
 
 .menu {
