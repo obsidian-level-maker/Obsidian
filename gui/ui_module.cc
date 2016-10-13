@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -61,10 +61,10 @@ UI_Module::~UI_Module()
 
 typedef struct
 {
-	UI_Module *M;
+	UI_Module  *mod;
 	const char *opt_name;
 }
-opt_callback_data_t;
+opt_change_callback_data_t;
 
 
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip)
@@ -89,8 +89,8 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip)
 		tip = "";
 	rch->tooltip(tip);
 
-	opt_callback_data_t *cb_data = new opt_callback_data_t;
-	cb_data->M = this;
+	opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
+	cb_data->mod = this;
 	cb_data->opt_name = StringDup(opt);
 
 	rch->callback(callback_OptChange, cb_data);
@@ -177,12 +177,12 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data)
 {
 	UI_RChoice *rch = (UI_RChoice*) w;
 
-	opt_callback_data_t *cb_data = (opt_callback_data_t*) data;
+	opt_change_callback_data_t *cb_data = (opt_change_callback_data_t*) data;
 
 	SYS_ASSERT(rch);
 	SYS_ASSERT(cb_data);
 
-	UI_Module *M = cb_data->M;
+	UI_Module *M = cb_data->mod;
 
 	ob_set_mod_option(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
 }
@@ -245,18 +245,27 @@ UI_CustomMods::~UI_CustomMods()
 { }
 
 
+typedef struct
+{
+	UI_Module     *mod;
+	UI_CustomMods *parent;
+}
+mod_enable_callback_data_t;
+
+
 void UI_CustomMods::AddModule(const char *id, const char *label, const char *tip)
 {
 	UI_Module *M = new UI_Module(mx, my, mw-4, kf_h(34), id, label, tip);
 
-	M->mod_button->callback(callback_ModEnable, M);
+	mod_enable_callback_data_t *cb_data = new mod_enable_callback_data_t;
+	cb_data->mod = M;
+	cb_data->parent = this;
+
+	M->mod_button->callback(callback_ModEnable, cb_data);
 
 	mod_pack->add(M);
 
-
 	PositionAll();
-
-	///???  M->redraw();
 }
 
 
@@ -275,8 +284,6 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
 	M->AddOption(option, label, tip);
 
 	PositionAll();
-
-	//???  M->redraw();
 }
 
 
@@ -301,7 +308,7 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
 	if (! M)
 		return false;
 
-	if ( (M->visible()?1:0) == (new_shown ? 1:0) )
+	if ((M->visible() ? 1:0) == (new_shown ? 1:0))
 		return true;
 
 	// visibility definitely changed
@@ -312,8 +319,6 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
 		M->hide();
 
 	PositionAll();
-
-	///???  M->redraw();
 
 	return true;
 }
@@ -347,12 +352,17 @@ void UI_CustomMods::ChangeValue(const char *id, bool enable)
 	if (! M)
 		return;
 
-	if ( (M->mod_button->value()?1:0) == (enable ? 1:0) )
+	if ((M->mod_button->value() ? 1:0) == (enable ? 1:0))
 		return; // no change
 
 	M->mod_button->value(enable ? 1 : 0);
+	M->update_Enable();
 
-	callback_ModEnable(NULL, M);  // FIXME: dirty hack
+	// no options => no height change => no need to reposition
+	if (M->choice_map.size() > 0)
+	{
+		PositionAll(M);
+	}
 }
 
 
@@ -465,8 +475,9 @@ void UI_CustomMods::PositionAll(UI_Module *focus)
 
 void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
 {
+	UI_CustomMods *that = (UI_CustomMods *)data;
+
 	Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
-	UI_CustomMods *that = main_win->mod_box; // FIXME !!!
 
 	int previous_y = that->offset_y;
 
@@ -489,20 +500,20 @@ void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
 
 void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data)
 {
-	UI_Module *M = (UI_Module *)data;
+	mod_enable_callback_data_t *cb_data = (mod_enable_callback_data_t*) data;
+	SYS_ASSERT(cb_data);
+
+	UI_Module *M = cb_data->mod;
 
 	M->update_Enable();
-
-	UI_CustomMods *that = main_win->mod_box; // FIXME !!!
 
 	// no options => no height change => no need to reposition
 	if (M->choice_map.size() > 0)
 	{
-		that->PositionAll(M);
+		cb_data->parent->PositionAll(M);
 	}
 
-	if (w)
-		ob_set_mod_option(M->id_name.c_str(), "self", M->mod_button->value() ? "true" : "false");
+	ob_set_mod_option(M->id_name.c_str(), "self", M->mod_button->value() ? "true" : "false");
 }
 
 
