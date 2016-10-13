@@ -44,6 +44,8 @@ UI_Module::UI_Module(int x, int y, int w, int h,
 		color(BUILD_BG, BUILD_BG);
 
 	mod_button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), label);
+	mod_button->labelfont(FL_HELVETICA_BOLD);
+
 	if (tip)
 		mod_button->tooltip(tip);
 
@@ -57,6 +59,14 @@ UI_Module::UI_Module(int x, int y, int w, int h,
 
 UI_Module::~UI_Module()
 { }
+
+
+bool UI_Module::Is_UI() const
+{
+	return (id_name[0] == 'u' &&
+			id_name[1] == 'i' &&
+			id_name[2] == '_');
+}
 
 
 typedef struct
@@ -222,7 +232,7 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 	add(sbar);
 
 
-	mod_pack = new Fl_Group(mx, my, mw, mh, _("Custom Modules\n "));
+	mod_pack = new Fl_Group(mx, my, mw, mh);
 	mod_pack->clip_children(1);
 	mod_pack->end();
 

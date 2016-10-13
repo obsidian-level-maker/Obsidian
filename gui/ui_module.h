@@ -43,6 +43,8 @@ public:
 
 	bool ParseValue(const char *option, const char *value);
 
+	bool Is_UI() const;
+
 public:
 	int CalcHeight() const;
 
