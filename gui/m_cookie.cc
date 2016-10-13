@@ -112,29 +112,6 @@ static void Cookie_SetValue(const char *name, const char *value)
 	}
 
 
-	// old style module syntax (for compatibility)
-	const char *option = strchr(name, '.');
-
-	if (option)
-	{
-		char *module = StringDup(name);
-		module[option - name] = 0;
-
-		option++;
-
-		ob_set_mod_option(module, option, value);
-
-		if (main_win)
-		{
-			main_win->mod_box->ParseOptValue(module, option, value);
-			main_win->sod_box->ParseOptValue(module, option, value);
-		}
-
-		StringFree(module);
-		return;
-	}
-
-
 	// everything else goes to the script
 	ob_set_config(name, value);
 }
