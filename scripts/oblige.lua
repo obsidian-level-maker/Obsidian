@@ -477,7 +477,7 @@ function ob_set_mod_option(name, option, value)
       end
     end
 
-    -- this is required for parsing the CONFIG.CFG file
+    -- this is required for parsing the CONFIG.TXT file
     -- [but redundant when the user merely changed the widget]
     gui.change_button("module", name, mod.enabled)
 
@@ -492,7 +492,7 @@ function ob_set_mod_option(name, option, value)
     return
   end
 
-  -- this can only happen while parsing the CONFIG.CFG file
+  -- this can only happen while parsing the CONFIG.TXT file
   -- (containing some no-longer-used value).
   if not opt.avail_choices[value] then
     warning("invalid choice: %s (for option %s.%s)\n", value, name, option)
@@ -517,6 +517,21 @@ function ob_set_config(name, value)
   if name == "seed" then
     OB_CONFIG[name] = tonumber(value) or 0
     return
+  end
+
+
+  -- check all the UI modules for a matching option
+  -- [ this is only needed when parsing the CONFIG.txt file ]
+  each _,mod in OB_MODULES do
+    if ob_check_ui_module(mod) then
+      each opt in mod.options do
+        if opt.name == name then
+              ob_set_mod_option(mod.name, name, value)
+          gui.change_mod_option(mod.name, name, value)
+          return
+        end
+      end
+    end
   end
 
 
@@ -552,7 +567,7 @@ function ob_set_config(name, value)
     ob_update_all()
   end
 
-  -- this is required for parsing the CONFIG.CFG file
+  -- this is required for parsing the CONFIG.TXT file
   -- [ but redundant when the user merely changed the widget ]
   if (name == "game") or (name == "engine") or (name == "theme") then
     gui.change_button(name, OB_CONFIG[name])
@@ -592,9 +607,9 @@ function ob_read_all_config(print_to_log)
   do_line("")
 
   each name in table.keys_sorted(OB_MODULES) do
-    if string.match(name, "^ui_") then
-      local def = OB_MODULES[name]
+    local def = OB_MODULES[name]
 
+    if ob_check_ui_module(def) then
       do_line("---- %s ----", def.label)
       do_line("")
 
@@ -610,9 +625,9 @@ function ob_read_all_config(print_to_log)
   do_line("")
 
   each name in table.keys_sorted(OB_MODULES) do
-    if string.match(name, "^ui_") then continue end
-
     local def = OB_MODULES[name]
+
+    if ob_check_ui_module(def) then continue end
 
     do_line("@%s = %s", name, sel(def.enabled, "1", "0"))
     do_line("")
