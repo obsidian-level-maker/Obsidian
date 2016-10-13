@@ -254,6 +254,12 @@ end
 ------------------------------------------------------------------------
 
 
+function ob_check_ui_module(def)
+  return string.match(def.name, "^ui") != nil
+end
+
+
+
 function ob_match_word_or_table(tab, conf)
   if type(tab) == "table" then
     return tab[conf] and tab[conf] > 0
