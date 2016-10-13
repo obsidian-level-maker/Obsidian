@@ -565,7 +565,9 @@ function ob_read_all_config(print_to_log)
     end
   end
 
-  local unknown = "XXX"
+  local function do_value(name, value)
+    do_line("%s = %s", name, value or "XXX")
+  end
 
   if OB_CONFIG.seed then
     do_line("seed = %d",   OB_CONFIG.seed)
@@ -574,16 +576,18 @@ function ob_read_all_config(print_to_log)
 
   do_line("---- Game Settings ----")
   do_line("")
-  do_line("game = %s",   OB_CONFIG.game or unknown)
-  do_line("mode = %s",   OB_CONFIG.mode or unknown)
-  do_line("engine = %s", OB_CONFIG.engine or unknown)
-  do_line("length = %s", OB_CONFIG.length or unknown)
-  do_line("theme = %s",  OB_CONFIG.theme or unknown)
+
+  do_value("game",   OB_CONFIG.game)
+  do_value("mode",   OB_CONFIG.mode)
+  do_value("engine", OB_CONFIG.engine)
+  do_value("length", OB_CONFIG.length)
+  do_value("theme",  OB_CONFIG.theme)
+
+  do_line("")
+  do_line("---- Architecture ----")
   do_line("")
 
-  do_line("---- Panels ----")
-  do_line("")
-
+--[[
   do_line("size = %s",    OB_CONFIG.size or unknown)
   do_line("outdoors = %s",OB_CONFIG.outdoors or unknown)
   do_line("caves = %s",   OB_CONFIG.caves or unknown)
@@ -596,6 +600,7 @@ function ob_read_all_config(print_to_log)
   do_line("health = %s",  OB_CONFIG.health or unknown)
   do_line("ammo = %s",    OB_CONFIG.ammo or unknown)
   do_line("")
+--]]
 
   do_line("---- Modules ----")
   do_line("")
@@ -610,11 +615,11 @@ function ob_read_all_config(print_to_log)
     if def.options and not table.empty(def.options) then
       if def.options[1] then
         each opt in def.options do
-          do_line("%s = %s", opt.name, opt.value or unknown)
+          do_value(opt.name, opt.value)
         end
       else
         each o_name,opt in def.options do
-          do_line("%s = %s", o_name, opt.value or unknown)
+          do_value(o_name, opt.value)
         end
       end
 
