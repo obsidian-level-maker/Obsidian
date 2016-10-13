@@ -584,28 +584,28 @@ function ob_read_all_config(print_to_log)
   do_value("theme",  OB_CONFIG.theme)
 
   do_line("")
-  do_line("---- Architecture ----")
-  do_line("")
 
---[[
-  do_line("size = %s",    OB_CONFIG.size or unknown)
-  do_line("outdoors = %s",OB_CONFIG.outdoors or unknown)
-  do_line("caves = %s",   OB_CONFIG.caves or unknown)
-  do_line("")
+  each name in table.keys_sorted(OB_MODULES) do
+    if string.match(name, "^ui_") then
+      local def = OB_MODULES[name]
 
-  do_line("mons = %s",    OB_CONFIG.mons or unknown)
-  do_line("strength = %s",OB_CONFIG.strength or unknown)
-  do_line("weapons = %s", OB_CONFIG.weapons or unknown)
-  do_line("items = %s",   OB_CONFIG.items or unknown)
-  do_line("health = %s",  OB_CONFIG.health or unknown)
-  do_line("ammo = %s",    OB_CONFIG.ammo or unknown)
-  do_line("")
---]]
+      do_line("---- %s ----", def.label)
+      do_line("")
 
-  do_line("---- Modules ----")
+      each opt in def.options do
+        do_value(opt.name, opt.value)
+      end
+
+      do_line("")
+    end
+  end
+
+  do_line("---- Other Modules ----")
   do_line("")
 
   each name in table.keys_sorted(OB_MODULES) do
+    if string.match(name, "^ui_") then continue end
+
     local def = OB_MODULES[name]
 
     do_line("@%s = %s", name, sel(def.enabled, "1", "0"))
