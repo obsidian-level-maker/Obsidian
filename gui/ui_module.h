@@ -37,7 +37,8 @@ public:
 	UI_Module(int x, int y, int w, int h, const char *id, const char *label, const char *tip);
 	virtual ~UI_Module();
 
-	void AddOption(const char *option, const char *label, const char *tip);
+	void AddOption(const char *option, const char *label, const char *tip,
+	               Fl_Color select_col);
 
 	void OptionPair(const char *option, const char *id, const char *label);
 
@@ -74,8 +75,11 @@ private:
 	// total height of all shown modules
 	int total_h;
 
+	// highlight color for option buttons
+	Fl_Color button_col;
+
 public:
-	UI_CustomMods(int x, int y, int w, int h, const char *label = NULL);
+	UI_CustomMods(int x, int y, int w, int h, Fl_Color _button_col);
 	virtual ~UI_CustomMods();
 
 public:

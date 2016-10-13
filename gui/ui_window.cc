@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -44,6 +44,9 @@ int KF = 0;
 
 int  small_font_size;
 int header_font_size;
+
+#define MODULE_GREEN	fl_rgb_color(0,160,0)
+#define MODULE_RED		fl_rgb_color(224,0,0)
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -86,9 +89,9 @@ play_box->hide();
 	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
 
 
-	mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H);
+	mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, MODULE_RED);
 
-	sod_box = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H);
+	sod_box = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H, MODULE_GREEN);
 
 
 	end();

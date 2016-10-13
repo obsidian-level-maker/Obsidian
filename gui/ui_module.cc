@@ -77,7 +77,8 @@ typedef struct
 opt_change_callback_data_t;
 
 
-void UI_Module::AddOption(const char *opt, const char *label, const char *tip)
+void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
+						  Fl_Color select_col)
 {
 	int nw = kf_w(112);
 	int nh = kf_h(30);
@@ -93,7 +94,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip)
 
 	UI_RChoice *rch = new UI_RChoice(nx, ny, nw, kf_h(24), new_label);
 	rch->align(FL_ALIGN_LEFT);
-	rch->selection_color(MY_PURPLE);
+	rch->selection_color(select_col);
 
 	if (! tip)
 		tip = "";
@@ -201,11 +202,10 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data)
 //----------------------------------------------------------------
 
 
-UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
-	Fl_Group(x, y, w, h, label)
+UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, Fl_Color _button_col) :
+	Fl_Group(x, y, w, h),
+	button_col(_button_col)
 {
-	end(); // cancel begin() in Fl_Group constructor
-
 	box(FL_FLAT_BOX);
 	color(WINDOW_BG, WINDOW_BG);
 
@@ -229,8 +229,6 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 	if (! alternate_look)
 		sbar->color(FL_DARK3+1, FL_DARK3+1);
 
-	add(sbar);
-
 
 	mod_pack = new Fl_Group(mx, my, mw, mh);
 	mod_pack->clip_children(1);
@@ -247,7 +245,8 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 	mod_pack->color(WINDOW_BG);  
 	mod_pack->resizable(NULL);
 
-	add(mod_pack);
+
+	end();
 }
 
 
@@ -291,7 +290,7 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
 		return;
 	}
 
-	M->AddOption(option, label, tip);
+	M->AddOption(option, label, tip, button_col);
 
 	PositionAll();
 }
