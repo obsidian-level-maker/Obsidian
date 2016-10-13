@@ -590,6 +590,8 @@ function ob_read_all_config(print_to_log)
     do_line("%s = %s", name, value or "XXX")
   end
 
+  ---| ob_read_all_config |---
+
   if OB_CONFIG.seed then
     do_line("seed = %d",   OB_CONFIG.seed)
     do_line("")
@@ -606,6 +608,7 @@ function ob_read_all_config(print_to_log)
 
   do_line("")
 
+  -- the UI modules/panels use bare option names
   each name in table.keys_sorted(OB_MODULES) do
     local def = OB_MODULES[name]
 
@@ -967,6 +970,7 @@ function ob_merge_table_list(tab_list)
 end
 
 
+
 function ob_add_current_game()
   local function recurse(name, child)
     local def = OB_GAMES[name]
@@ -1003,6 +1007,7 @@ function ob_add_current_game()
 end
 
 
+
 function ob_add_current_engine()
   local function recurse(name, child)
     local def = OB_ENGINES[name]
@@ -1030,13 +1035,15 @@ function ob_add_current_engine()
 end
 
 
+
 function ob_sort_modules()
   GAME.modules = {}
 
   -- find all the visible & enabled modules
+  -- [ ignore the special UI modules/panels ]
 
   each _,mod in OB_MODULES do
-    if mod.enabled and mod.shown then
+    if mod.enabled and mod.shown and not ob_check_ui_module(mod) then
       table.insert(GAME.modules, mod)
     end
   end
@@ -1058,6 +1065,7 @@ function ob_sort_modules()
 end
 
 
+
 function ob_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
@@ -1074,8 +1082,32 @@ function ob_invoke_hook(name, ...)
 end
 
 
+
+function ob_transfer_ui_options()
+  each _,mod in OB_MODULES do
+    if ob_check_ui_module(mod) then
+      each opt in mod.options do
+        OB_CONFIG[opt.name] = opt.value or "UNSET"
+      end
+    end
+  end
+
+  -- fixes for backwards compatibility
+  if OB_CONFIG.length == "full" then
+     OB_CONFIG.length = "game"
+  end
+
+  if OB_CONFIG.size == "tiny" then
+     OB_CONFIG.size = "small"
+  end
+end
+
+
+
 function ob_build_setup()
   ob_clean_up()
+
+  ob_transfer_ui_options()
 
   ob_sort_modules()
 
@@ -1085,7 +1117,7 @@ function ob_build_setup()
   ob_add_current_engine()
 
   -- merge tables from each module
-  -- [ but skip GAME and ENGINE which are already merged ]
+  -- [ but skip GAME and ENGINE, which are already merged ]
 
   each mod in GAME.modules do
     if _index > 2 and mod.tables then
@@ -1122,17 +1154,8 @@ function ob_build_setup()
 
   gui.property("spot_low_h",  PARAM.spot_low_h)
   gui.property("spot_high_h", PARAM.spot_high_h)
-
-
-  -- backwards compatibility
-  if OB_CONFIG.length == "full" then
-     OB_CONFIG.length = "game"
-  end
-
-  if OB_CONFIG.size == "tiny" then
-     OB_CONFIG.size = "small"
-  end
 end
+
 
 
 function ob_clean_up()
@@ -1148,6 +1171,7 @@ function ob_clean_up()
 
   collectgarbage("collect")
 end
+
 
 
 function ob_build_cool_shit()
