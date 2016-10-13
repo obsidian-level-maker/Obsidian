@@ -15,6 +15,10 @@ OBLIGE TO-DO
    add a switch in a normal spot somewhere
 
 
++  ability to truly add new textures
+   -  use TX_START/TX_END in ZDoom ports
+   -  use TEXTURES2 + PNAMES in other ports
+
 +  add in more scenery: trees, computers etc
 
 +  don't make "Empty Quests", especially 2 or more rooms
@@ -26,6 +30,8 @@ OBLIGE TO-DO
 -  bug: mon-teleport dests can be wrong lighting in an outdoor
    shadow (or split by it), and wrong texture in liquidy caves
 
+
++  health and ammo : "A Bit Less", "A Bit More".
 
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]

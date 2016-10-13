@@ -3,3 +3,46 @@ WORK IN PROGRESS
 ================
 
 
+Revamped UI:
+
+-  support gaps between options
+-  different kind of checkbox for UI modules? like "v" and "^"
+-  rename sod_box
+
++  transfer ui_xxx options into OB_CONFIG[], maybe mirror as-we-go
++  ensure ob_set_config() can find options in the ui modules
++  improve ui_xxx handling in ob_read_all_config()
+
+-  remove the old code: ui_level.* ui_play.*
+
+
+
+Modding wiki:
+
++  get template/CSS to match website style
++  transfer "New Monster" docs to Wiki
++  enable wiki on main page
+
+
+
+Fix the stupid "As Original" logic
+
+
+
+REQUEST:  An option to select "progressive" for weapons to reflect the
+          IWAD's pacing would be appreciated"
+
+          "or just spread the intro of weapons out more"
+
+
+Review "weak" strength, esp. guard monsters
+
+  I agree that TWO of the hell knights and revenants is too much for the
+  first level of "weak" strength, and maybe revenant is too strong a monster
+  to appear that early.
+
+  Adjust the calculations based on level size, e.g. when first
+  level or two are small, then spread the guards/bosses out more
+
+  "It's sort of weird to be fighting arachnotrons on map 02"
+
