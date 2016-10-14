@@ -33,12 +33,15 @@ private:
 
 	std::map<std::string, UI_RChoice *> choice_map;
 
+	// only used while positioning the options (as they are added)
+	int cur_opt_y;
+
 public:
 	UI_Module(int X, int Y, int W, int H, const char *id, const char *label, const char *tip);
 	virtual ~UI_Module();
 
 	void AddOption(const char *option, const char *label, const char *tip,
-	               Fl_Color select_col);
+	               int gap, Fl_Color select_col);
 
 	void OptionPair(const char *option, const char *id, const char *label);
 
@@ -89,7 +92,8 @@ public:
 
 	void ChangeValue(const char *id, bool enable);
 
-	void AddOption (const char *module, const char *option, const char *label, const char *tip);
+	void AddOption (const char *module, const char *option, const char *label,
+	                const char *tip, int gap);
 
 	void OptionPair(const char *module, const char *option,
 			const char *id, const char *label);

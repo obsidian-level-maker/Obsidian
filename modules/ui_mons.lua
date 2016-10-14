@@ -44,7 +44,8 @@ OB_MODULES["ui_mons"] =
 
     { name="mons",          label=_("Quantity"),  choices=UI_MONS.CHOICES }
     { name="strength",      label=_("Strength"),  choices=UI_MONS.CHOICES }
-    { name="ramp_up",       label=_("Ramp Up"),   choices=UI_MONS.CHOICES }
+    { name="variety",       label=_("Variety"),   choices=UI_MONS.CHOICES }
+    { name="ramp_up",       label=_("Ramp Up"),   choices=UI_MONS.CHOICES,  gap=1 }
 
     { name="bosses",        label=_("Bosses"),    choices=UI_MONS.CHOICES }
     { name="traps",         label=_("Traps"),     choices=UI_MONS.CHOICES }

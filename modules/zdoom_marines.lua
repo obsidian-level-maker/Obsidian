@@ -305,7 +305,7 @@ OB_MODULES["zdoom_marine_control"] =
     marine_saw       = { label="Chainsaw Marine",    choices=ZDOOM_MARINE.CTL_CHOICES }
     marine_pistol    = { label="Pistol Marine",      choices=ZDOOM_MARINE.CTL_CHOICES }
     marine_shotty    = { label="Shotgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES }
-    marine_ssg       = { label="Super Shotgunner",   choices=ZDOOM_MARINE.CTL_CHOICES }
+    marine_ssg       = { label="SSG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES }
     marine_chain     = { label="Chaingun Marine",    choices=ZDOOM_MARINE.CTL_CHOICES }
     marine_rocket    = { label="Rocket Marine",      choices=ZDOOM_MARINE.CTL_CHOICES }
     marine_plasma    = { label="Plasma Marine",      choices=ZDOOM_MARINE.CTL_CHOICES }

@@ -44,7 +44,7 @@ OB_MODULES["ui_env"] =
 
     { name="outdoors",      label=_("Outdoors"),    choices=UI_ENVIRON.CHOICES }
     { name="caves",         label=_("Caves"),       choices=UI_ENVIRON.CHOICES }
-    { name="liquids",       label=_("Liquids"),     choices=UI_ENVIRON.CHOICES }
+    { name="liquids",       label=_("Liquids"),     choices=UI_ENVIRON.CHOICES,  gap=1 }
      
     { name="steepness",     label=_("Steepness"),  choices=UI_ENVIRON.CHOICES }
     { name="lighting",      label=_("Lighting"),   choices=UI_ENVIRON.CHOICES }

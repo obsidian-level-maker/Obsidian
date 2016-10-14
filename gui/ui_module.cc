@@ -33,7 +33,8 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 					 const char *tip) :
 	Fl_Group(X, Y, W, H),
 	id_name(id),
-	choice_map()
+	choice_map(),
+	cur_opt_y(0)
 {
 	box(FL_THIN_UP_BOX);
 
@@ -51,7 +52,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 		mod_button->hide();
 	}
 
-	int tx = Is_UI() ? 8 : 32;
+	int tx = Is_UI() ? 8 : 28;
 
 	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx+8), kf_h(24), label);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
@@ -59,6 +60,8 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 
 	if (Is_UI())
 		heading->labelsize(header_font_size);
+
+	cur_opt_y += kf_h(30);
 
 	end();
 
@@ -89,15 +92,13 @@ opt_change_callback_data_t;
 
 
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
-						  Fl_Color select_col)
+						  int gap, Fl_Color select_col)
 {
-	int exist_num = (int) choice_map.size();
-
 	int nw = kf_w(112);
-	int nh = kf_h(30);
+//	int nh = kf_h(30);
 
 	int nx = x() + w() - nw - kf_w(10);
-	int ny = y() + nh + exist_num * nh;
+	int ny = y() + cur_opt_y;
 
 	// make label with ': ' suffixed
 	int len = strlen(label);
@@ -124,6 +125,8 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	add(rch);
 
+	cur_opt_y += gap ? kf_h(44) : kf_h(30);
+
 	resize(x(), y(), w(), CalcHeight());
 	redraw();
 
@@ -133,23 +136,10 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 int UI_Module::CalcHeight() const
 {
-	int h = kf_h(34);  // the title line
-
 	if (mod_button->value())
-	{
-		std::map<std::string, UI_RChoice *>::const_iterator IT;
-
-		for (IT = choice_map.begin() ; IT != choice_map.end() ; IT++)
-		{
-			UI_RChoice *M = IT->second;
-
-			h += kf_h(30);
-		}
-
-		h += kf_h(4);
-	}
-
-	return h;
+		return cur_opt_y + kf_h(6);
+	else
+		return kf_h(34);
 }
 
 
@@ -305,7 +295,8 @@ void UI_CustomMods::AddModule(const char *id, const char *label, const char *tip
 
 
 void UI_CustomMods::AddOption(const char *module, const char *option,
-							  const char *label, const char *tip)
+							  const char *label, const char *tip,
+							  int gap)
 {
 	UI_Module *M = FindID(module);
 
@@ -316,7 +307,7 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
 		return;
 	}
 
-	M->AddOption(option, label, tip, button_col);
+	M->AddOption(option, label, tip, gap, button_col);
 
 	PositionAll();
 }

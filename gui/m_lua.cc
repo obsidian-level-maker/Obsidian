@@ -410,6 +410,8 @@ int gui_add_mod_option(lua_State *L)
 	const char *label  = luaL_checkstring(L,4);
 	const char *tip    = luaL_optstring  (L,5, NULL);
 
+	int gap = luaL_optint(L,6, 0);
+
 	SYS_ASSERT(module && option);
 
 	if (! main_win)
@@ -421,8 +423,8 @@ int gui_add_mod_option(lua_State *L)
 
 	if (! id)
 	{
-		main_win->mod_box->AddOption(module, option, label, tip);
-		main_win->sod_box->AddOption(module, option, label, tip);
+		main_win->mod_box->AddOption(module, option, label, tip, gap);
+		main_win->sod_box->AddOption(module, option, label, tip, gap);
 	}
 	else
 	{

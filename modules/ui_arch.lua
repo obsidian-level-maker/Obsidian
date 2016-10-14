@@ -42,7 +42,7 @@ OB_MODULES["ui_arch"] =
   {
     -- FIXME : size choices
 
-    { name="size",          label=_("Size"),       choices=UI_ARCH.CHOICES }
+    { name="size",          label=_("Size"),       choices=UI_ARCH.CHOICES,  gap=1 }
      
     { name="hallways",      label=_("Hallways"),   choices=UI_ARCH.CHOICES }
     { name="big_rooms",     label=_("Big Rooms"),  choices=UI_ARCH.CHOICES }

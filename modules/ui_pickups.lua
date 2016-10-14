@@ -42,12 +42,12 @@ OB_MODULES["ui_pickups"] =
   {
     -- FIXME : choices
 
+    { name="health",     label=_("Health"),    choices=UI_PICKUPS.CHOICES }
+    { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.CHOICES,  gap=1 }
+
     { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.CHOICES }
     { name="items",      label=_("Items"),     choices=UI_PICKUPS.CHOICES }
     { name="secrets",    label=_("Secrets"),   choices=UI_PICKUPS.CHOICES }
-     
-    { name="health",     label=_("Health"),    choices=UI_PICKUPS.CHOICES }
-    { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.CHOICES }
   }
 }
 

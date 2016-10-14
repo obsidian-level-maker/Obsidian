@@ -873,7 +873,7 @@ function ob_init()
           assert(opt.label)
           assert(opt.choices)
 
-          gui.add_mod_option(mod.name, opt.name, nil, opt.label, opt.tooltip)
+          gui.add_mod_option(mod.name, opt.name, nil, opt.label, opt.tooltip, opt.gap)
 
           opt.value = opt.default or opt.choices[1]
 
