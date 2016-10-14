@@ -34,7 +34,7 @@
 #endif
 
 
-#define BASE_WINDOW_W  800
+#define BASE_WINDOW_W  816
 #define BASE_WINDOW_H  532
 
 
@@ -70,7 +70,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	color(WINDOW_BG, WINDOW_BG);
 
-	int LEFT_W = W * 3 / 10;
+	int LEFT_W = 232;
 	int MOD_W   = (W - LEFT_W) / 2 - 4;
 
 	int TOP_H   = H * 50 / 100;
@@ -133,6 +133,7 @@ void UI_MainWin::Locked(bool value)
 	play_box ->Locked(value);
 	build_box->Locked(value);
 	mod_box  ->Locked(value);
+	sod_box  ->Locked(value);
 }
 
 
