@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2011 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -49,8 +49,8 @@ public:
 
 	UI_Build  *build_box;
 
-	UI_CustomMods *mod_box;
-	UI_CustomMods *sod_box;
+	UI_CustomMods * left_mods;
+	UI_CustomMods *right_mods;
 
 public:
 	UI_MainWin(int W, int H, const char *title);

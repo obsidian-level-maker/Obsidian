@@ -384,10 +384,10 @@ int gui_add_button(lua_State *L)
 		main_win->game_box->theme->AddPair(id, label);
 
 	else if (StringCaseCmp(what, "module") == 0)
-		main_win->mod_box->AddModule(id, label, tip);
+		main_win->right_mods->AddModule(id, label, tip);
 
 	else if (StringCaseCmp(what, "leftie") == 0)
-		main_win->sod_box->AddModule(id, label, tip);
+		main_win->left_mods->AddModule(id, label, tip);
 
 	else
 		Main_FatalError("add_button: unknown what value '%s'\n", what);
@@ -423,13 +423,13 @@ int gui_add_mod_option(lua_State *L)
 
 	if (! id)
 	{
-		main_win->mod_box->AddOption(module, option, label, tip, gap);
-		main_win->sod_box->AddOption(module, option, label, tip, gap);
+		main_win-> left_mods->AddOption(module, option, label, tip, gap);
+		main_win->right_mods->AddOption(module, option, label, tip, gap);
 	}
 	else
 	{
-		main_win->mod_box->OptionPair(module, option, id, label);
-		main_win->sod_box->OptionPair(module, option, id, label);
+		main_win-> left_mods->OptionPair(module, option, id, label);
+		main_win->right_mods->OptionPair(module, option, id, label);
 	}
 
 	return 0;
@@ -463,8 +463,8 @@ int gui_show_button(lua_State *L)
 
 	else if (StringCaseCmp(what, "module") == 0)
 	{
-		main_win->mod_box->ShowOrHide(id, shown);
-		main_win->sod_box->ShowOrHide(id, shown);
+		main_win-> left_mods->ShowOrHide(id, shown);
+		main_win->right_mods->ShowOrHide(id, shown);
 	}
 	else
 		Main_FatalError("show_button: unknown what value '%s'\n", what);
@@ -500,8 +500,8 @@ int gui_change_button(lua_State *L)
 
 	else if (StringCaseCmp(what, "module") == 0)
 	{
-		main_win->mod_box->ChangeValue(id, opt_val);
-		main_win->sod_box->ChangeValue(id, opt_val);
+		main_win-> left_mods->ChangeValue(id, opt_val);
+		main_win->right_mods->ChangeValue(id, opt_val);
 	}
 	else
 		Main_FatalError("change_button: unknown what value '%s'\n", what);
@@ -526,8 +526,8 @@ int gui_change_mod_option(lua_State *L)
 
 	if (main_win)
 	{
-		main_win->mod_box->ParseOptValue(module, option, value);
-		main_win->sod_box->ParseOptValue(module, option, value);
+		main_win-> left_mods->ParseOptValue(module, option, value);
+		main_win->right_mods->ParseOptValue(module, option, value);
 	}
 
 	return 0;

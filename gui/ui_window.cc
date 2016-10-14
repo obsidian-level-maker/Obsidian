@@ -91,9 +91,9 @@ play_box->hide();
 	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
 
 
-	mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, MODULE_RED);
+	right_mods = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, MODULE_RED);
 
-	sod_box = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H, MODULE_GREEN);
+	left_mods = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H, MODULE_GREEN);
 
 
 	end();
@@ -128,12 +128,12 @@ void UI_MainWin::CalcWindowSize(int *W, int *H)
 
 void UI_MainWin::Locked(bool value)
 {
-	game_box ->Locked(value);
-	level_box->Locked(value);
-	play_box ->Locked(value);
-	build_box->Locked(value);
-	mod_box  ->Locked(value);
-	sod_box  ->Locked(value);
+	game_box  ->Locked(value);
+	level_box ->Locked(value);
+	play_box  ->Locked(value);
+	build_box ->Locked(value);
+	left_mods ->Locked(value);
+	right_mods->Locked(value);
 }
 
 

@@ -73,8 +73,8 @@ static void Cookie_SetValue(const char *name, const char *value)
 
 		if (main_win)
 		{
-			main_win->mod_box->ParseOptValue(module, name, value);
-			main_win->sod_box->ParseOptValue(module, name, value);
+			main_win-> left_mods->ParseOptValue(module, name, value);
+			main_win->right_mods->ParseOptValue(module, name, value);
 		}
 
 		return;
