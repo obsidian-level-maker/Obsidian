@@ -28,13 +28,10 @@
 #include "main.h"
 
 
-#define MY_PURPLE  fl_rgb_color(208,0,208)
-
-
-UI_Module::UI_Module(int x, int y, int w, int h,
+UI_Module::UI_Module(int X, int Y, int W, int H,
 					 const char *id, const char *label,
 					 const char *tip) :
-	Fl_Group(x, y, w, h),
+	Fl_Group(X, Y, W, H),
 	id_name(id),
 	choice_map()
 {
@@ -43,11 +40,22 @@ UI_Module::UI_Module(int x, int y, int w, int h,
 	if (! alternate_look)
 		color(BUILD_BG, BUILD_BG);
 
-	mod_button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), label);
-	mod_button->labelfont(FL_HELVETICA_BOLD);
+	mod_button = new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
 
 	if (tip)
 		mod_button->tooltip(tip);
+
+	if (Is_UI())
+	{
+		mod_button->value(1);
+		mod_button->hide();
+	}
+
+	int tx = Is_UI() ? 8 : 32;
+
+	Fl_Box *title_box = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx+8), kf_h(24), label);
+	title_box->labelfont(FL_HELVETICA_BOLD);
+	title_box->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
 	end();
 
@@ -80,11 +88,13 @@ opt_change_callback_data_t;
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 						  Fl_Color select_col)
 {
+	int exist_num = (int) choice_map.size();
+
 	int nw = kf_w(112);
 	int nh = kf_h(30);
 
 	int nx = x() + w() - nw - kf_w(10);
-	int ny = y() + children() * nh;
+	int ny = y() + nh + exist_num * nh;
 
 	// make label with ': ' suffixed
 	int len = strlen(label);
@@ -105,7 +115,9 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	cb_data->opt_name = StringDup(opt);
 
 	rch->callback(callback_OptChange, cb_data);
-	rch->hide();
+
+	if (! mod_button->value())
+		rch->hide();
 
 	add(rch);
 
@@ -118,23 +130,33 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 int UI_Module::CalcHeight() const
 {
-	int h = kf_h(34);  // check button
+	int h = kf_h(34);  // the title line
 
-	if (mod_button->value() && children() > 1)
-		h += (children() - 1) * kf_h(30) + kf_h(4);
+	if (mod_button->value())
+	{
+		std::map<std::string, UI_RChoice *>::const_iterator IT;
+
+		for (IT = choice_map.begin() ; IT != choice_map.end() ; IT++)
+		{
+			UI_RChoice *M = IT->second;
+
+			h += kf_h(30);
+		}
+
+		h += kf_h(4);
+	}
 
 	return h;
 }
 
+
 void UI_Module::update_Enable()
 {
-	for (int j = 0 ; j < children() ; j++)
-	{
-		if (child(j) == mod_button)
-			continue;
+	std::map<std::string, UI_RChoice *>::const_iterator IT;
 
-		// this is awful
-		UI_RChoice *M = (UI_RChoice *)child(j);
+	for (IT = choice_map.begin() ; IT != choice_map.end() ; IT++)
+	{
+		UI_RChoice *M = IT->second;
 
 		if (mod_button->value())
 			M->show();
@@ -202,22 +224,22 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data)
 //----------------------------------------------------------------
 
 
-UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, Fl_Color _button_col) :
-	Fl_Group(x, y, w, h),
+UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
+	Fl_Group(X, Y, W, H),
 	button_col(_button_col)
 {
 	box(FL_FLAT_BOX);
 	color(WINDOW_BG, WINDOW_BG);
 
 
-	int cy = y;
+	int cy = Y;
 
 
 	// area for module list
-	mx = x;
+	mx = X;
 	my = cy;
-	mw = w - Fl::scrollbar_size();
-	mh = y + h - cy;
+	mw = W - Fl::scrollbar_size();
+	mh = Y + H - cy;
 
 	offset_y = 0;
 	total_h  = 0;
@@ -270,7 +292,8 @@ void UI_CustomMods::AddModule(const char *id, const char *label, const char *tip
 	cb_data->mod = M;
 	cb_data->parent = this;
 
-	M->mod_button->callback(callback_ModEnable, cb_data);
+	if (! M->Is_UI())
+		M->mod_button->callback(callback_ModEnable, cb_data);
 
 	mod_pack->add(M);
 
@@ -528,8 +551,7 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data)
 
 UI_Module * UI_CustomMods::FindID(const char *id) const
 {
-	// this is awful
-	for (int j = 0; j < mod_pack->children(); j++)
+	for (int j = 0 ; j < mod_pack->children() ; j++)
 	{
 		UI_Module *M = (UI_Module *) mod_pack->child(j);
 		SYS_ASSERT(M);

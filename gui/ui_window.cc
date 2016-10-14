@@ -47,6 +47,8 @@ int header_font_size;
 
 #define MODULE_GREEN	fl_rgb_color(0,160,0)
 #define MODULE_RED		fl_rgb_color(224,0,0)
+#define XXX_PURPLE		fl_rgb_color(208,0,208)
+
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)

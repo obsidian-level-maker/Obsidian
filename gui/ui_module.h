@@ -34,7 +34,7 @@ private:
 	std::map<std::string, UI_RChoice *> choice_map;
 
 public:
-	UI_Module(int x, int y, int w, int h, const char *id, const char *label, const char *tip);
+	UI_Module(int X, int Y, int W, int H, const char *id, const char *label, const char *tip);
 	virtual ~UI_Module();
 
 	void AddOption(const char *option, const char *label, const char *tip,
@@ -79,7 +79,7 @@ private:
 	Fl_Color button_col;
 
 public:
-	UI_CustomMods(int x, int y, int w, int h, Fl_Color _button_col);
+	UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col);
 	virtual ~UI_CustomMods();
 
 public:
