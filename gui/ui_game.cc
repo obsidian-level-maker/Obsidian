@@ -41,21 +41,22 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = kf_h(6) + KF;
+	int y_step  = kf_h(30);
+	int y_step2 = kf_h(44);
 
 	int cx = X + W * 0.36;
-	int cy = Y + y_step;
+	int cy = Y + kf_h(4);
 
 
 	const char *heading_text = _("Game Settings");
 
-	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text);
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
 	heading->labelsize(header_font_size);
 
-	cy += heading->h() + y_step;
+	cy += y_step;
 
 
 	int cw = W * 0.61;
@@ -66,7 +67,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	game->selection_color(FL_BLUE);
 	game->callback(callback_Game, this);
 
-	cy += game->h() + y_step;
+	cy += y_step;
 
 
 	engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
@@ -74,7 +75,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	engine->selection_color(FL_BLUE);
 	engine->callback(callback_Engine, this);
 
-	cy += engine->h() + y_step * 2;
+	cy += y_step2;
 
 
 	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
@@ -84,7 +85,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	setup_Length();
 
-	cy += length->h() + y_step;
+	cy += y_step;
 
 
 	mode = new UI_RChoice(cx, cy, cw, ch, _("Mode: "));
@@ -94,7 +95,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	setup_Mode();
 
-	cy += mode->h() + y_step*2;
+	cy += y_step2;
 
 
 	theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
@@ -102,7 +103,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	theme->selection_color(FL_BLUE);
 	theme->callback(callback_Theme, this);
 
-	cy += theme->h() + y_step;
+	cy += y_step;
 
 
 	end();

@@ -53,9 +53,12 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 
 	int tx = Is_UI() ? 8 : 32;
 
-	Fl_Box *title_box = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx+8), kf_h(24), label);
-	title_box->labelfont(FL_HELVETICA_BOLD);
-	title_box->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx+8), kf_h(24), label);
+	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	heading->labelfont(FL_HELVETICA_BOLD);
+
+	if (Is_UI())
+		heading->labelsize(header_font_size);
 
 	end();
 

@@ -73,7 +73,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	int LEFT_W = W * 3 / 10;
 	int MOD_W   = (W - LEFT_W) / 2 - 4;
 
-	int TOP_H   = H * 48 / 100;
+	int TOP_H   = H * 50 / 100;
 	int BOT_H   = H - TOP_H - 4;
 
 

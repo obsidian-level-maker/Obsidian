@@ -54,15 +54,14 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	int button_w = W * 0.35;
 	int button_h = kf_h(30);
-	int button_x = X + kf_w(12);
+	int button_x = X + kf_w(16);
 
 
-	int mini_w = W * 0.45;
+	int mini_w = W * 0.42;
 	int mini_h = mini_w;
-	int mini_x = button_x + button_w + kf_w(12);
+	int mini_x = button_x + button_w + kf_w(24);
 
-	mini_map = new UI_MiniMap(mini_x, cy + kf_h(14), mini_w, mini_h);
-
+	mini_map = new UI_MiniMap(mini_x, cy + kf_h(10), mini_w, mini_h);
 
 
 	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
@@ -77,7 +76,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	misc_menu->add(_("Manage Config"), FL_F+9, menu_do_manage_config);
 
 
-	cy += misc_menu->h() + kf_h(12);
+	cy += mini_h / 2;
 
 
 	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
@@ -86,7 +85,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	build->callback(build_callback, this);
 	build->shortcut(FL_F+2);
 
-	cy += build->h() + kf_h(12);
+	cy += mini_h / 2;
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, _("Quit"));
@@ -119,7 +118,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 
 	end();
-
 }
 
 
