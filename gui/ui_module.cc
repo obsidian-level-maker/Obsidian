@@ -302,7 +302,7 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
 
 	if (! M)
 	{
-		LogPrintf("Warning: no such module '%s' (add option '%s')\n",
+//!!!		LogPrintf("Warning: no such module '%s' (add option '%s')\n",
 				module, option);
 		return;
 	}
@@ -361,7 +361,7 @@ bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
 
 	if (! M)
 	{
-		LogPrintf("Warning: no such module '%s' (config parse)\n", module);
+//!!!		LogPrintf("Warning: no such module '%s' (config parse)\n", module);
 		return false;
 	}
 
