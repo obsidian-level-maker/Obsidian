@@ -345,16 +345,17 @@ int gui_scan_directory(lua_State *L)
 }
 
 
-// LUA: add_button (what, id, label, tooltip)
+// LUA: add_button (what, id, label)
 //
 int gui_add_button(lua_State *L)
 {
 	const char *what  = luaL_checkstring(L,1);
 	const char *id    = luaL_checkstring(L,2);
 	const char *label = luaL_checkstring(L,3);
-	const char *tip   = luaL_optstring  (L,4, NULL);
 
 	SYS_ASSERT(what && id && label);
+
+//	DebugPrintf("  add_button: %s id:%s\n", what, id);
 
 	if (! main_win)
 		return 0;
@@ -362,8 +363,6 @@ int gui_add_button(lua_State *L)
 	// only allowed during startup
 	if (has_added_buttons)
 		Main_FatalError("Script problem: gui.add_button called late.\n");
-
-	// DebugPrintf("  add_button: %s id:%s\n", what, id);
 
 	if (StringCaseCmp(what, "game") == 0)
 		main_win->game_box->game->AddPair(id, label);
@@ -374,17 +373,45 @@ int gui_add_button(lua_State *L)
 	else if (StringCaseCmp(what, "theme") == 0)
 		main_win->game_box->theme->AddPair(id, label);
 
-	else if (StringCaseCmp(what, "module_left") == 0)
-		main_win->left_mods->AddModule(id, label, tip);
-
-	else if (StringCaseCmp(what, "module_right") == 0)
-		main_win->right_mods->AddModule(id, label, tip);
-
 	else
 		Main_FatalError("add_button: unknown what value '%s'\n", what);
 
 	return 0;
 }
+
+
+// LUA: create_module (where, id, label, tooltip)
+//
+int gui_create_module(lua_State *L)
+{
+	const char *where = luaL_checkstring(L,1);
+	const char *id    = luaL_checkstring(L,2);
+	const char *label = luaL_checkstring(L,3);
+	const char *tip   = luaL_optstring  (L,4, NULL);
+
+	SYS_ASSERT(where && id && label);
+
+//	DebugPrintf("  create_module: %s id:%s\n", where, id);
+
+	if (! main_win)
+		return 0;
+
+	// only allowed during startup
+	if (has_added_buttons)
+		Main_FatalError("Script problem: gui.add_button called late.\n");
+
+	if (StringCaseCmp(where, "left") == 0)
+		main_win->left_mods->AddModule(id, label, tip);
+
+	else if (StringCaseCmp(where, "right") == 0)
+		main_win->right_mods->AddModule(id, label, tip);
+
+	else
+		Main_FatalError("create_module: unknown where value '%s'\n", where);
+
+	return 0;
+}
+
 
 // LUA: add_mod_option (module, option, id, label, tooltip)
 //
@@ -404,6 +431,8 @@ int gui_add_mod_option(lua_State *L)
 	int gap = luaL_optint(L,6, 0);
 
 	SYS_ASSERT(module && option);
+
+//	DebugPrintf("  add_mod_option: %s.%s\n", module, option);
 
 	if (! main_win)
 		return 0;
@@ -438,10 +467,10 @@ int gui_show_button(lua_State *L)
 
 	SYS_ASSERT(what && id);
 
+//	DebugPrintf("  show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+
 	if (! main_win)
 		return 0;
-
-	// DebugPrintf("  show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
 
 	if (StringCaseCmp(what, "game") == 0)
 		main_win->game_box->game->ShowOrHide(id, shown);
@@ -475,10 +504,10 @@ int gui_change_button(lua_State *L)
 
 	SYS_ASSERT(what && id);
 
+//	DebugPrintf("  change_button: %s --> %s\n", what, id);
+
 	if (! main_win)
 		return 0;
-
-	// DebugPrintf("  change_button: %s --> %s\n", what, id);
 
 	if (StringCaseCmp(what, "game") == 0)
 		main_win->game_box->game->ChangeTo(id);
@@ -511,7 +540,7 @@ int gui_change_mod_option(lua_State *L)
 
 	SYS_ASSERT(module && option && value);
 
-	// DebugPrintf("  change_mod_option: %s.%s --> %s\n", module, option, value);
+//	DebugPrintf("  change_mod_option: %s.%s --> %s\n", module, option, value);
 
 	ob_set_mod_option(module, option, value);
 
@@ -822,6 +851,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "set_colormap",   gui_set_colormap },
 
 	{ "add_button",     gui_add_button },
+	{ "create_module",  gui_create_module },
 	{ "add_mod_option", gui_add_mod_option },
 	{ "show_button",    gui_show_button },
 	{ "change_button",  gui_change_button },

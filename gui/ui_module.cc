@@ -1,6 +1,6 @@
-//----------------------------------------------------------------
-//  Custom Mod list
-//----------------------------------------------------------------
+//------------------------------------------------------------------------
+//  Custom Module list
+//------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
@@ -16,7 +16,7 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //
-//----------------------------------------------------------------
+//------------------------------------------------------------------------
 
 #include "headers.h"
 #include "hdr_fltk.h"
@@ -362,7 +362,7 @@ bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
 	if (! M)
 	{
 //!!!		LogPrintf("Warning: no such module '%s' (config parse)\n", module);
-//!!!		return false;
+		return false;
 	}
 
 	return M->ParseValue(option, value);
