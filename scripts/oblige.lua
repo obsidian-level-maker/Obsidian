@@ -725,11 +725,17 @@ function ob_init()
     table.sort(list, button_sorter)
 
     each def in list do
-      if def.side == "left" then
-        gui.add_button("leftie", def.name, def.label, def.tooltip)
-      else
-        gui.add_button(what, def.name, def.label, def.tooltip)
+      local what2 = what
+
+      if what == "module" then
+        if def.side == "left" then
+          what2 = "mod_left"
+        else
+          what2 = "mod_right"
+        end
       end
+
+      gui.add_button(what2, def.name, def.label, def.tooltip)
 
       if what == "game" then
         gui.show_button(what, def.name, true)
