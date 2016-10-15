@@ -20,7 +20,6 @@ UI_ENVIRON = { }
 
 UI_ENVIRON.CHOICES =
 {
-  "mixed",  _("Mix It Up"),
   "none",   _("NONE"),
   "rare",   _("Rare"),
   "few",    _("Few"),
@@ -28,6 +27,15 @@ UI_ENVIRON.CHOICES =
   "some",   _("Some"),
   "more",   _("More"),
   "heaps",  _("Heaps"),
+  "mixed",  _("Mix It Up"),
+}
+
+UI_ENVIRON.LIGHTINGS =
+{
+  "flat",    _("FLAT"),
+  "lower",   _("Lower"),
+  "normal",  _("Normal"),
+  "higher",  _("Higher"),
 }
 
 
@@ -40,15 +48,13 @@ OB_MODULES["ui_env"] =
 
   options =
   {
-    -- FIXME : choices
-
-    { name="outdoors",      label=_("Outdoors"),    choices=UI_ENVIRON.CHOICES }
-    { name="caves",         label=_("Caves"),       choices=UI_ENVIRON.CHOICES }
-    { name="liquids",       label=_("Liquids"),     choices=UI_ENVIRON.CHOICES,  gap=1 }
+    { name="outdoors",    label=_("Outdoors"),   choices=UI_ENVIRON.CHOICES }
+    { name="caves",       label=_("Caves"),      choices=UI_ENVIRON.CHOICES }
+    { name="liquids",     label=_("Liquids"),    choices=UI_ENVIRON.CHOICES,  gap=1 }
      
-    { name="steepness",     label=_("Steepness"),  choices=UI_ENVIRON.CHOICES }
-    { name="lighting",      label=_("Lighting"),   choices=UI_ENVIRON.CHOICES }
-    { name="detail",        label=_("Detail"),     choices=UI_ENVIRON.CHOICES }
+    { name="steepness",   label=_("Steepness"),  choices=UI_ENVIRON.CHOICES }
+    { name="lighting",    label=_("Lighting"),   choices=UI_ENVIRON.LIGHTINGS }
+    { name="detail",      label=_("Detail"),     choices=UI_ENVIRON.LIGHTINGS }
   }
 }
 

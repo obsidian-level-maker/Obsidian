@@ -20,14 +20,25 @@ UI_PICKUPS = { }
 
 UI_PICKUPS.CHOICES =
 {
-  "mixed",  _("Mix It Up"),
   "none",   _("NONE"),
-  "rare",   _("Rare"),
-  "few",    _("Few"),
+  "scarce", _("Scarce"),
   "less",   _("Less"),
-  "some",   _("Some"),
+  "normal", _("Normal"),
   "more",   _("More"),
   "heaps",  _("Heaps"),
+
+-- TODO:
+-- "bit_less", _("Bit Less"),
+-- "bit_more", _("Bit More"),
+}
+
+UI_PICKUPS.CHOICES2 =
+{
+	"none",   _("NONE"),
+	"less",   _("Less"),
+	"normal", _("Normal"),
+	"more",   _("More"),
+	"mixed",  _("Mix It Up"),
 }
 
 
@@ -40,13 +51,11 @@ OB_MODULES["ui_pickups"] =
 
   options =
   {
-    -- FIXME : choices
-
     { name="health",     label=_("Health"),    choices=UI_PICKUPS.CHOICES }
     { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.CHOICES,  gap=1 }
 
-    { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.CHOICES }
-    { name="items",      label=_("Items"),     choices=UI_PICKUPS.CHOICES }
+    { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.CHOICES2 }
+    { name="items",      label=_("Items"),     choices=UI_PICKUPS.CHOICES2 }
     { name="secrets",    label=_("Secrets"),   choices=UI_PICKUPS.CHOICES }
   }
 }

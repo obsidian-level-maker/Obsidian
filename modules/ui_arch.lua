@@ -20,17 +20,17 @@ UI_ARCH = { }
 
 UI_ARCH.CHOICES =
 {
-  "none",   _("NONE"),
-  "rare",   _("Rare"),
-  "few",    _("Few"),
-  "less",   _("Less"),
-  "some",   _("Some"),
-  "more",   _("More"),
-  "heaps",  _("Heaps"),
-  "mixed",  _("Mix It Up"),
+   "none",   _("NONE"),
+   "rare",   _("Rare"),
+   "few",    _("Few"),
+   "less",   _("Less"),
+   "some",   _("Some"),
+   "more",   _("More"),
+   "heaps",  _("Heaps"),
+   "mixed",  _("Mix It Up"),
 }
 
-UI_ARCH.SIZE_CHOICES =
+UI_ARCH.SIZES =
 {
   "epi",     _("Episodic"),
   "prog",    _("Progressive"),
@@ -55,7 +55,7 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-    { name="size",          label=_("Size"),       choices=UI_ARCH.SIZE_CHOICES,  gap=1 }
+    { name="size",          label=_("Size"),       choices=UI_ARCH.SIZES,  gap=1 }
      
     { name="hallways",      label=_("Hallways"),   choices=UI_ARCH.CHOICES }
     { name="big_rooms",     label=_("Big Rooms"),  choices=UI_ARCH.CHOICES }
