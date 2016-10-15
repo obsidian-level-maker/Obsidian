@@ -493,14 +493,12 @@ int gui_show_button(lua_State *L)
 }
 
 
-// LUA: change_button(what, id [, bool])
+// LUA: change_button (what, id)
 //
 int gui_change_button(lua_State *L)
 {
 	const char *what = luaL_checkstring(L,1);
 	const char *id   = luaL_checkstring(L,2);
-
-	int opt_val = lua_toboolean(L,3) ? 1 : 0;
 
 	SYS_ASSERT(what && id);
 
@@ -518,13 +516,31 @@ int gui_change_button(lua_State *L)
 	else if (StringCaseCmp(what, "theme") == 0)
 		main_win->game_box->theme->ChangeTo(id);
 
-	else if (StringCaseCmp(what, "module") == 0)
-	{
-		main_win-> left_mods->ChangeValue(id, opt_val);
-		main_win->right_mods->ChangeValue(id, opt_val);
-	}
 	else
 		Main_FatalError("change_button: unknown what value '%s'\n", what);
+
+	return 0;
+}
+
+
+// LUA: enable_module (id, bool)
+//
+int gui_enable_module(lua_State *L)
+{
+	const char *id = luaL_checkstring(L,1);
+
+	int opt_val = lua_toboolean(L,2) ? 1 : 0;
+
+	SYS_ASSERT(id);
+
+//	DebugPrintf("  enable_module: %s --> %s\n", id, opt_val);
+
+	if (! main_win)
+		return 0;
+
+	// try both columns
+	main_win-> left_mods->ChangeValue(id, opt_val);
+	main_win->right_mods->ChangeValue(id, opt_val);
 
 	return 0;
 }
@@ -852,6 +868,7 @@ static const luaL_Reg gui_script_funcs[] =
 
 	{ "add_button",     gui_add_button },
 	{ "create_module",  gui_create_module },
+	{ "enable_module",  gui_enable_module },
 	{ "add_mod_option", gui_add_mod_option },
 	{ "show_button",    gui_show_button },
 	{ "change_button",  gui_change_button },
