@@ -20,7 +20,6 @@ UI_ARCH = { }
 
 UI_ARCH.CHOICES =
 {
-  "mixed",  _("Mix It Up"),
   "none",   _("NONE"),
   "rare",   _("Rare"),
   "few",    _("Few"),
@@ -28,6 +27,22 @@ UI_ARCH.CHOICES =
   "some",   _("Some"),
   "more",   _("More"),
   "heaps",  _("Heaps"),
+  "mixed",  _("Mix It Up"),
+}
+
+UI_ARCH.SIZE_CHOICES =
+{
+  "epi",     _("Episodic"),
+  "prog",    _("Progressive"),
+  "mixed",   _("Mix It Up"),
+
+  -- this is a separator (not a usable choice)
+  "_",       "_",
+
+  "small",   _("Small"),
+  "regular", _("Regular"),
+  "large",   _("Large"),
+  "extreme", _("Extreme"),
 }
 
 
@@ -40,9 +55,7 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-    -- FIXME : size choices
-
-    { name="size",          label=_("Size"),       choices=UI_ARCH.CHOICES,  gap=1 }
+    { name="size",          label=_("Size"),       choices=UI_ARCH.SIZE_CHOICES,  gap=1 }
      
     { name="hallways",      label=_("Hallways"),   choices=UI_ARCH.CHOICES }
     { name="big_rooms",     label=_("Big Rooms"),  choices=UI_ARCH.CHOICES }
