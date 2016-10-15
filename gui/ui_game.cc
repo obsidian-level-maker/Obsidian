@@ -56,7 +56,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	heading->labelfont(FL_HELVETICA_BOLD);
 	heading->labelsize(header_font_size);
 
-	cy += y_step;
+	cy = kf_h(32);
 
 
 	int cw = W * 0.61;

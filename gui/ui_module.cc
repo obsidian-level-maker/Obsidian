@@ -61,7 +61,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 	if (Is_UI())
 		heading->labelsize(header_font_size);
 
-	cur_opt_y += kf_h(30);
+	cur_opt_y += kf_h(32);
 
 	end();
 
