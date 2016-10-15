@@ -98,15 +98,6 @@ int gui_raw_debug_print(lua_State *L)
 	return 0;
 }
 
-// LUA: raw_console_print(str)
-//
-int gui_raw_console_print(lua_State *L)
-{
-	// REMOVED
-
-	return 0;
-}
-
 
 // LUA: gettext(str)
 //
@@ -825,7 +816,6 @@ static const luaL_Reg gui_script_funcs[] =
 {
 	{ "raw_log_print",     gui_raw_log_print },
 	{ "raw_debug_print",   gui_raw_debug_print },
-	{ "raw_console_print", gui_raw_console_print },
 
 	{ "gettext",        gui_gettext },
 	{ "config_line",    gui_config_line },

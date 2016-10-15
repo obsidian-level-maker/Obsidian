@@ -147,110 +147,6 @@ function ob_ref_table(op, t)
 end
 
 
-
-function ob_console_dump(info, ...)
-
-  local function dump_tab(t, indent)
-    assert(t)
-
-    indent = indent or 0
-
-    local keys = {}
-    local longest_k = 1
-
-    each k,v in t do
-      table.insert(keys, k)
-      longest_k = math.max(longest_k, string.len(tostring(k)))
-    end
-
-    gui.conprintf("@2%s{\n", string.rep("   ", indent))
-
-    table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
-
-    local space = string.rep("   ", indent+1)
-
-    each k in keys do
-      local v = t[k]
-
-      local k_type = type(k)
-      local v_type = type(v)
-
-      if not (k_type == "string" or k_type == "number") or k == "___REFS" then
-        gui.conprintf("%s@1%s@7 = %s\n", space, tostring(k), tostring(v))
-
-      elseif v_type == "table" then
-        if table.empty(v) then
-          gui.conprintf("%s%s = @2{ }\n", space, k)
-        else
-          local label = "table"
-          if #v > 0 then label = string.format("list %d", #v) end
-
-          local ref_id = ob_ref_table("store", v)
-
-          gui.printf("%s%s = @b2%s:e:%d:%d@\n", space, k, label, indent+1, ref_id);
-        end
-
-      elseif type(v) == "string" then
-        gui.conprintf("%s%s = @5\"%s\"\n", space, k, tostring(v))
-
-      elseif type(v) == "function" then
-        gui.conprintf("%s@3%s()\n", space, k)
-
-      else
-        gui.conprintf("%s%s = @3%s\n", space, k, tostring(v))
-      end
-    end
-
-    gui.conprintf("@2%s}\n", string.rep("   ",indent))
-  end
-
-
-  local function dump_value(val)
-    local t = type(val)
-
-    if val == nil then
-      gui.conprintf("@1nil\n")
-    elseif t == "table" then
-      if table.empty(val) then
-        gui.conprintf("@2{ }\n")
-      else
-        dump_tab(val)
-      end
-    elseif t == "string" then
-      gui.conprintf("@5\"%s\"\n", tostring(val))
-    else
-      gui.conprintf("@3%s\n", tostring(val))
-    end
-  end
-
-  
-  --| ob_console_dump |--
-
-  if info and info.tab_ref then
-    local t = ob_ref_table("lookup", info.tab_ref)
-    if t then
-      dump_tab(t, info.indent)
-    else
-      gui.conprintf("@1BAD TABLE REF: %s\n", tostring(info.tab_ref))
-    end
-
-    return
-  end
-
-  -- grab results and show them
-  local args = { ... }
-  local count = select("#", ...)
-
-  if count == 0 then
-    gui.conprintf("no results\n")
-  else
-    for index = 1,count do
-      dump_value(args[index])
-    end
-  end
-end
-
-
 ------------------------------------------------------------------------
 
 
@@ -749,10 +645,6 @@ function ob_init()
 
   gui.debugf = function (fmt, ...)
     if fmt then gui.raw_debug_print(string.format(fmt, ...)) end
-  end
-
-  gui.conprintf = function (fmt, ...)
-    if fmt then gui.raw_console_print(string.format(fmt, ...)) end
   end
 
 
