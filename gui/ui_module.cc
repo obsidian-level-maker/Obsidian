@@ -186,7 +186,7 @@ bool UI_Module::ParseValue(const char *option, const char *value)
 		return false;
 	}
 
-	return rch->SetID(value);
+	return rch->ChangeTo(value);
 }
 
 
@@ -303,7 +303,7 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
 	if (! M)
 	{
 //!!!		LogPrintf("Warning: no such module '%s' (add option '%s')\n",
-				module, option);
+//!!!				module, option);
 		return;
 	}
 
@@ -362,7 +362,7 @@ bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
 	if (! M)
 	{
 //!!!		LogPrintf("Warning: no such module '%s' (config parse)\n", module);
-		return false;
+//!!!		return false;
 	}
 
 	return M->ParseValue(option, value);

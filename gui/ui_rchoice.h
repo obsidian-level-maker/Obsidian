@@ -62,23 +62,23 @@ public:
 	int handle(int event);
 
 public:
-	void AddPair(const char *id, const char *label);
 	// add a new option to the list.  If an option with the same 'id'
 	// already exists, that option is replaced instead.
 	// The option will begin with shown == false.
+	void AddPair(const char *id, const char *label);
 
-	bool ShowOrHide(const char *id, bool new_shown);
 	// finds the option with the given ID, and update the shown
 	// value.  Returns true if successful, or false if no such
 	// option exists.  Any change will call Recreate().
+	bool ShowOrHide(const char *id, bool new_shown);
 
-	const char *GetID() const;
 	// get the id string for the currently shown value.
 	// Returns the string "none" if there are no choices.
+	const char *GetID() const;
 
-	bool SetID(const char *id);
-	// set the currently shown value via the new 'id'.  If no
-	// such exists, returns false and nothing was changed.
+	// change the currently shown value via the new 'id'.
+	// If does not exist, returns false and nothing was changed.
+	bool ChangeTo(const char *id);
 
 private:
 	choice_data_c * FindID(const char *id) const;

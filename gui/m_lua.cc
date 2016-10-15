@@ -481,13 +481,13 @@ int gui_change_button(lua_State *L)
 	// DebugPrintf("  change_button: %s --> %s\n", what, id);
 
 	if (StringCaseCmp(what, "game") == 0)
-		main_win->game_box->game->SetID(id);
+		main_win->game_box->game->ChangeTo(id);
 
 	else if (StringCaseCmp(what, "engine") == 0)
-		main_win->game_box->engine->SetID(id);
+		main_win->game_box->engine->ChangeTo(id);
 
 	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->game_box->theme->SetID(id);
+		main_win->game_box->theme->ChangeTo(id);
 
 	else if (StringCaseCmp(what, "module") == 0)
 	{

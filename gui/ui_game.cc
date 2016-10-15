@@ -109,9 +109,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	end();
 
 	resizable(NULL);  // don't resize our children
-
-
-///---	length->SetID("episode");
 }
 
 
@@ -201,14 +198,14 @@ bool UI_Game::ParseValue(const char *key, const char *value)
 	//
 	if (StringCaseCmp(key, "mode") == 0)
 	{
-		mode->SetID(value);
+		mode->ChangeTo(value);
 		callback_Mode(NULL, this);
 		return true;
 	}
 
 	if (StringCaseCmp(key, "length") == 0)
 	{
-		length->SetID(value);
+		length->ChangeTo(value);
 		callback_Length(NULL, this);
 	}
 

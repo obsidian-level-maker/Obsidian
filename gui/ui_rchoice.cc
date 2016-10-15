@@ -123,7 +123,7 @@ const char *UI_RChoice::GetLabel() const
 }
 
 
-bool UI_RChoice::SetID(const char *id)
+bool UI_RChoice::ChangeTo(const char *id)
 {
 	SYS_ASSERT(id);
 
