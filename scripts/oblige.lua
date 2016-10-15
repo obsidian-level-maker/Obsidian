@@ -368,14 +368,14 @@ function ob_set_mod_option(name, option, value)
       each other,odef in OB_MODULES do
         if odef != mod and ob_defs_conflict(mod, odef) then
           odef.enabled = false
-          gui.change_button("module", other, odef.enabled)
+          gui.enable_module(other, odef.enabled)
         end
       end
     end
 
     -- this is required for parsing the CONFIG.TXT file
     -- [but redundant when the user merely changed the widget]
-    gui.change_button("module", name, mod.enabled)
+    gui.enable_module(name, mod.enabled)
 
     ob_update_all()
     return
@@ -730,7 +730,7 @@ function ob_init()
 
         gui.create_module(where, def.name, def.label, def.tooltip)
       else
-        gui.add_button(what, def.name, def.label)
+        gui.add_choice(what, def.name, def.label)
       end
 
       if what == "game" then
@@ -767,7 +767,7 @@ function ob_init()
           assert(opt.label)
           assert(opt.choices)
 
-          gui.add_mod_option(mod.name, opt.name, nil, opt.label, opt.tooltip, opt.gap)
+          gui.add_module_option(mod.name, opt.name, nil, opt.label, opt.tooltip, opt.gap)
 
           opt.value = opt.default or opt.choices[1]
 
@@ -777,7 +777,7 @@ function ob_init()
             local id    = opt.choices[i]
             local label = opt.choices[i+1]
 
-            gui.add_mod_option(mod.name, opt.name, id, label)
+            gui.add_module_option(mod.name, opt.name, id, label)
             opt.avail_choices[id] = 1
           end
 

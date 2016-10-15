@@ -345,9 +345,9 @@ int gui_scan_directory(lua_State *L)
 }
 
 
-// LUA: add_button (what, id, label)
+// LUA: add_choice (what, id, label)
 //
-int gui_add_button(lua_State *L)
+int gui_add_choice(lua_State *L)
 {
 	const char *what  = luaL_checkstring(L,1);
 	const char *id    = luaL_checkstring(L,2);
@@ -355,14 +355,14 @@ int gui_add_button(lua_State *L)
 
 	SYS_ASSERT(what && id && label);
 
-//	DebugPrintf("  add_button: %s id:%s\n", what, id);
+//	DebugPrintf("  add_choice: %s id:%s\n", what, id);
 
 	if (! main_win)
 		return 0;
 
 	// only allowed during startup
 	if (has_added_buttons)
-		Main_FatalError("Script problem: gui.add_button called late.\n");
+		Main_FatalError("Script problem: gui.add_choice called late.\n");
 
 	if (StringCaseCmp(what, "game") == 0)
 		main_win->game_box->game->AddPair(id, label);
@@ -374,7 +374,7 @@ int gui_add_button(lua_State *L)
 		main_win->game_box->theme->AddPair(id, label);
 
 	else
-		Main_FatalError("add_button: unknown what value '%s'\n", what);
+		Main_FatalError("add_choice: unknown what value '%s'\n", what);
 
 	return 0;
 }
@@ -398,7 +398,7 @@ int gui_create_module(lua_State *L)
 
 	// only allowed during startup
 	if (has_added_buttons)
-		Main_FatalError("Script problem: gui.add_button called late.\n");
+		Main_FatalError("Script problem: gui.create_module called late.\n");
 
 	if (StringCaseCmp(where, "left") == 0)
 		main_win->left_mods->AddModule(id, label, tip);
@@ -413,13 +413,13 @@ int gui_create_module(lua_State *L)
 }
 
 
-// LUA: add_mod_option (module, option, id, label, tooltip)
+// LUA: add_module_option (module, option, id, label, tooltip)
 //
 // When the 'id' string is NIL, it indicates mere creation of
 // a new button widget for the module.  OTHERWISE we are adding a
 // choice to the existing button (a la add_button).
 //
-int gui_add_mod_option(lua_State *L)
+int gui_add_module_option(lua_State *L)
 {
 	const char *module = luaL_checkstring(L,1);
 	const char *option = luaL_checkstring(L,2);
@@ -432,14 +432,14 @@ int gui_add_mod_option(lua_State *L)
 
 	SYS_ASSERT(module && option);
 
-//	DebugPrintf("  add_mod_option: %s.%s\n", module, option);
+//	DebugPrintf("  add_module_option: %s.%s\n", module, option);
 
 	if (! main_win)
 		return 0;
 
 	// only allowed during startup
 	if (has_added_buttons)
-		Main_FatalError("Script problem: gui.add_mod_option called late.\n");
+		Main_FatalError("Script problem: gui.add_module_option called late.\n");
 
 	if (! id)
 	{
@@ -866,10 +866,10 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "config_line",    gui_config_line },
 	{ "set_colormap",   gui_set_colormap },
 
-	{ "add_button",     gui_add_button },
+	{ "add_choice",     gui_add_choice },
 	{ "create_module",  gui_create_module },
 	{ "enable_module",  gui_enable_module },
-	{ "add_mod_option", gui_add_mod_option },
+	{ "add_module_option", gui_add_module_option },
 	{ "show_button",    gui_show_button },
 	{ "change_button",  gui_change_button },
 	{ "change_mod_option", gui_change_mod_option },
