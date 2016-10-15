@@ -90,7 +90,7 @@ public:
 
 	bool ShowOrHide(const char *id, bool new_shown);
 
-	void ChangeValue(const char *id, bool enable);
+	void EnableMod(const char *id, bool enable);
 
 	void AddOption (const char *module, const char *option, const char *label,
 	                const char *tip, int gap);

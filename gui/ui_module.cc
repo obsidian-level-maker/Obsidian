@@ -369,7 +369,7 @@ bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
 }
 
 
-void UI_CustomMods::ChangeValue(const char *id, bool enable)
+void UI_CustomMods::EnableMod(const char *id, bool enable)
 {
 	SYS_ASSERT(id);
 

@@ -539,8 +539,8 @@ int gui_enable_module(lua_State *L)
 		return 0;
 
 	// try both columns
-	main_win-> left_mods->ChangeValue(id, opt_val);
-	main_win->right_mods->ChangeValue(id, opt_val);
+	main_win-> left_mods->EnableMod(id, opt_val);
+	main_win->right_mods->EnableMod(id, opt_val);
 
 	return 0;
 }
