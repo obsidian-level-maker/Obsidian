@@ -71,7 +71,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	color(WINDOW_BG, WINDOW_BG);
 
 
-	int LEFT_W = 232;
+	int LEFT_W = kf_w(232);
 	int MOD_W   = (W - LEFT_W) / 2 - 4;
 
 	int TOP_H   = H * 50 / 100;
