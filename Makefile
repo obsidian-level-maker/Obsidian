@@ -94,11 +94,9 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/ui_build.o  \
 	$(OBJ_DIR)/ui_game.o   \
 	$(OBJ_DIR)/ui_hyper.o  \
-	$(OBJ_DIR)/ui_level.o  \
 	$(OBJ_DIR)/ui_map.o    \
 	$(OBJ_DIR)/ui_module.o \
 	$(OBJ_DIR)/ui_rchoice.o \
-	$(OBJ_DIR)/ui_play.o   \
 	$(OBJ_DIR)/ui_window.o \
 	\
 	$(OBJ_DIR)/zf_menu.o

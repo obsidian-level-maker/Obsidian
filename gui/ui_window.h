@@ -44,9 +44,6 @@ public:
 
 	UI_Game   *game_box;
 
-	UI_Level  *level_box;
-	UI_Play   *play_box;
-
 	UI_Build  *build_box;
 
 	UI_CustomMods * left_mods;
@@ -59,6 +56,11 @@ public:
 	static void CalcWindowSize(int *W, int *H);
 
 	void Locked(bool value);
+
+	void SetDefaults()
+	{
+		game_box->Defaults();
+	}
 };
 
 extern UI_MainWin * main_win;

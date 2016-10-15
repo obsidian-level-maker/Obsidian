@@ -101,14 +101,6 @@ static void Cookie_SetValue(const char *name, const char *value)
 		// -- Game Settings --
 		if (main_win->game_box->ParseValue(name, value))
 			return;
-
-		// -- Level Architecture --
-		if (main_win->level_box->ParseValue(name, value))
-			return;
-
-		// -- Playing Style --
-		if (main_win->play_box->ParseValue(name, value))
-			return;
 	}
 
 

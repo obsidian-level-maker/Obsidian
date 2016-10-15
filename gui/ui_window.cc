@@ -70,26 +70,16 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	color(WINDOW_BG, WINDOW_BG);
 
+
 	int LEFT_W = 232;
 	int MOD_W   = (W - LEFT_W) / 2 - 4;
 
 	int TOP_H   = H * 50 / 100;
 	int BOT_H   = H - TOP_H - 4;
 
-
 	game_box = new UI_Game(0, 0, LEFT_W, TOP_H);
 
-
-level_box = new UI_Level(LEFT_W+4, 0, LEFT_W, H);
-level_box->hide();
-
-play_box = new UI_Play(LEFT_W*2+8, 0, W - MOD_W-4 - LEFT_W*2 - 8, H);
-play_box->hide();
-
-
-
 	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
-
 
 	right_mods = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, MODULE_RED);
 
@@ -129,8 +119,6 @@ void UI_MainWin::CalcWindowSize(int *W, int *H)
 void UI_MainWin::Locked(bool value)
 {
 	game_box  ->Locked(value);
-	level_box ->Locked(value);
-	play_box  ->Locked(value);
 	build_box ->Locked(value);
 	left_mods ->Locked(value);
 	right_mods->Locked(value);

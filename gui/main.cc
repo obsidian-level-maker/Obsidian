@@ -839,10 +839,7 @@ int main(int argc, char **argv)
 
 	Script_Open();
 
-	// FIXME: main_win->Defaults();
-	main_win->game_box ->Defaults();
-	main_win->level_box->Defaults();
-	main_win->play_box ->Defaults();
+	main_win->SetDefaults();
 
 	// enable certain modules by default
 	Module_Defaults();
