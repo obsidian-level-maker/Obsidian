@@ -387,7 +387,7 @@ void UI_CustomMods::ChangeValue(const char *id, bool enable)
 	// no options => no height change => no need to reposition
 	if (M->choice_map.size() > 0)
 	{
-		PositionAll(M);
+		PositionAll();
 	}
 }
 
