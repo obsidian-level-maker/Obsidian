@@ -374,10 +374,10 @@ int gui_add_button(lua_State *L)
 	else if (StringCaseCmp(what, "theme") == 0)
 		main_win->game_box->theme->AddPair(id, label);
 
-	else if (StringCaseCmp(what, "mod_left") == 0)
+	else if (StringCaseCmp(what, "module_left") == 0)
 		main_win->left_mods->AddModule(id, label, tip);
 
-	else if (StringCaseCmp(what, "mod_right") == 0)
+	else if (StringCaseCmp(what, "module_right") == 0)
 		main_win->right_mods->AddModule(id, label, tip);
 
 	else

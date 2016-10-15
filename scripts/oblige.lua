@@ -729,9 +729,9 @@ function ob_init()
 
       if what == "module" then
         if def.side == "left" then
-          what2 = "mod_left"
+          what2 = "module_left"
         else
-          what2 = "mod_right"
+          what2 = "module_right"
         end
       end
 
