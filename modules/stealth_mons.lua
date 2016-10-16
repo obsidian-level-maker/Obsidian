@@ -334,7 +334,7 @@ OB_MODULES["stealth_mon_control"] =
 {
   label = _("Stealth Monsters : Control")
 
-  mod = "stealth_mons"
+  module = "stealth_mons"
 
   hooks =
   {

@@ -209,10 +209,10 @@ function ob_match_conf(T)
     return false
   end
 
-  if T.mod then
-    local mod = T.mod
-    if type(T.mod) != "table" then
-      mod = { [T.mod] = 1 }
+  if T.module then
+    local mod = T.module
+    if type(mod) != "table" then
+      mod = { [T.module]=1 }
     end
 
     each name,_ in mod do

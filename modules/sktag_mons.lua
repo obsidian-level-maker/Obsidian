@@ -2,7 +2,7 @@
 --  MODULE: Skulltag Monsters and Items
 ----------------------------------------------------------------
 --
---  Copyright (C)      2009 Andrew Apted
+--  Copyright (C) 2009-2016 Andrew Apted
 --  Copyright (C) 2009-2010 Chris Pisarczyk
 --  Copyright (C) 2009-2010 Enhas
 --
@@ -259,7 +259,7 @@ end
 
 OB_MODULES["sktag_mons"] =
 {
-  label = _("Skulltag : Monsters and Items")
+  label = _("Skulltag : Mons and Items")
 
   game = "doomish"
 
@@ -338,9 +338,9 @@ end
 
 OB_MODULES["sktag_mon_control"] =
 {
-  label = _("Skulltag Monsters : Fine Control")
+  label = _("Skulltag Monsters : Control")
 
-  mod = "sktag_mons"
+  module = "sktag_mons"
 
   hooks =
   {
@@ -387,9 +387,9 @@ end
 
 OB_MODULES["sktag_weap_control"] =
 {
-  label = _("Skulltag Weapons : Fine Control")
+  label = _("Skulltag Weapons : Control")
 
-  mod = "sktag_mons"
+  module = "sktag_mons"
 
   hooks =
   {
