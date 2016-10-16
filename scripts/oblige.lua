@@ -792,6 +792,7 @@ function ob_init()
 
           opt.value = opt.default
 
+---???        ob_set_mod_option(mod.name, opt.name, opt.value)
           gui.set_module_option(mod.name, opt.name, opt.value)
         end -- for opt
       end

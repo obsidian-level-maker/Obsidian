@@ -580,8 +580,6 @@ int gui_set_module_option(lua_State *L)
 
 //	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option, value);
 
-	ob_set_mod_option(module, option, value);
-
 	if (! main_win)
 		return 0;
 
