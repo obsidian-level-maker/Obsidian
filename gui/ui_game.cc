@@ -120,7 +120,6 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data)
 	UI_Game *that = (UI_Game *)data;
 
 	ob_set_config("game", that->game->GetID());
-	Signal_Raise("game");
 }
 
 
@@ -129,7 +128,6 @@ void UI_Game::callback_Engine(Fl_Widget *w, void *data)
 	UI_Game *that = (UI_Game *)data;
 
 	ob_set_config("engine", that->engine->GetID());
-	Signal_Raise("engine");
 }
 
 
@@ -146,7 +144,6 @@ void UI_Game::callback_Mode(Fl_Widget *w, void *data)
 	UI_Game *that = (UI_Game *)data;
 
 	ob_set_config("playmode", that->playmode->GetID());
-	Signal_Raise("mode");
 }
 
 
