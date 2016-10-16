@@ -168,8 +168,8 @@ end
 
 function ob_match_conf(T)
   assert(OB_CONFIG.game)
-  assert(OB_CONFIG.mode)
   assert(OB_CONFIG.engine)
+  assert(OB_CONFIG.playmode)
 
   -- special check: if required game is "doomish" then allow any
   -- of the DOOM games to match.
@@ -205,7 +205,7 @@ function ob_match_conf(T)
     end
   end
 
-  if T.playmode and not ob_match_word_or_table(T.playmode, OB_CONFIG.mode) then
+  if T.playmode and not ob_match_word_or_table(T.playmode, OB_CONFIG.playmode) then
     return false
   end
 
@@ -461,14 +461,14 @@ function ob_set_config(name, value)
 
   OB_CONFIG[name] = value
 
-  if name == "game" or name == "mode" or name == "engine" then
+  if name == "game" or name == "playmode" or name == "engine" then
     ob_update_all()
   end
 
   -- this is required for parsing the CONFIG.TXT file
   -- [ but redundant when the user merely changed the widget ]
   if name == "game" or name == "engine" or
-     name == "mode" or name == "length" or
+     name == "playmode" or name == "length" or
      name == "theme"
   then
     gui.set_button(name, OB_CONFIG[name])
@@ -501,11 +501,11 @@ function ob_read_all_config(print_to_log)
   do_line("---- Game Settings ----")
   do_line("")
 
-  do_value("game",   OB_CONFIG.game)
-  do_value("mode",   OB_CONFIG.mode)
-  do_value("engine", OB_CONFIG.engine)
-  do_value("length", OB_CONFIG.length)
-  do_value("theme",  OB_CONFIG.theme)
+  do_value("game",     OB_CONFIG.game)
+  do_value("engine",   OB_CONFIG.engine)
+  do_value("length",   OB_CONFIG.length)
+  do_value("playmode", OB_CONFIG.playmode)
+  do_value("theme",    OB_CONFIG.theme)
 
   do_line("")
 
@@ -828,19 +828,19 @@ function ob_init()
   create_buttons("engine", OB_ENGINES)
   create_buttons("theme",  OB_THEMES)
 
-  simple_buttons("mode",   MODE_CHOICES,   "sp")
-  simple_buttons("length", LENGTH_CHOICES, "game")
+  simple_buttons("length",   LENGTH_CHOICES,   "game")
+  simple_buttons("playmode", PLAYMODE_CHOICES, "sp")
 
   create_buttons("module", OB_MODULES)
   create_mod_options()
 
   ob_update_all()
 
-  gui.set_button("game",   OB_CONFIG.game)
-  gui.set_button("engine", OB_CONFIG.engine)
-  gui.set_button("mode",   OB_CONFIG.mode)
-  gui.set_button("length", OB_CONFIG.length)
-  gui.set_button("theme",  OB_CONFIG.theme)
+  gui.set_button("game",     OB_CONFIG.game)
+  gui.set_button("engine",   OB_CONFIG.engine)
+  gui.set_button("playmode", OB_CONFIG.playmode)
+  gui.set_button("length",   OB_CONFIG.length)
+  gui.set_button("theme",    OB_CONFIG.theme)
 
   gui.printf("\n~~ Completed Lua initialization ~~\n\n")
 end

@@ -149,7 +149,7 @@ function Level_determine_map_size(LEV)
   if ob_size == "mixed" then
     local SIZES = { 24,26,29, 32,34,36, 40,44,48 }
 
-    if OB_CONFIG.mode == "dm" then
+    if OB_CONFIG.playmode == "dm" then
       SIZES = { 22,24,26, 30,34,38 }
     end
 
@@ -180,7 +180,7 @@ function Level_determine_map_size(LEV)
     local H = W - 4
 
     -- not so big in Deathmatch mode
-    if OB_CONFIG.mode == "dm" then return H, H - 2 end
+    if OB_CONFIG.playmode == "dm" then return H, H - 2 end
 
     return W, H
   end
@@ -188,7 +188,7 @@ function Level_determine_map_size(LEV)
   -- Named sizes --
 
   -- smaller maps for Deathmatch mode
-  if OB_CONFIG.mode == "dm" then
+  if OB_CONFIG.playmode == "dm" then
     local SIZES = { small=22, regular=30, large=38, extreme=48 }
 
     local W = SIZES[ob_size]
@@ -1828,7 +1828,7 @@ function Level_do_styles()
   local style_tab = table.copy(GLOBAL_STYLE_LIST)
 
   -- adjust styles for Co-operative multiplayer
-  if OB_CONFIG.mode == "coop" then
+  if OB_CONFIG.playmode == "coop" then
     style_tab.cycles = { some=30, heaps=50 }
   end
 
@@ -1858,7 +1858,7 @@ function Level_do_styles()
   end
 
   -- no traps/cages in DM or CTF maps
-  if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
+  if OB_CONFIG.playmode == "dm" or OB_CONFIG.playmode == "ctf" then
     STYLE.traps = "none"
     STYLE.cages = "none"
   end

@@ -2072,7 +2072,7 @@ function Fab_match_user_stuff(def)
   if def.theme then match(def.theme, LEVEL.theme_name) end
 
   if def.engine   then match(def.engine,   OB_CONFIG.engine) end
-  if def.playmode then match(def.playmode, OB_CONFIG.mode) end
+  if def.playmode then match(def.playmode, OB_CONFIG.playmode) end
 
   if factor <= 0 then return 0 end
 

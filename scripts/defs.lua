@@ -78,14 +78,14 @@ OB_THEMES["jumble"] =
 
 
 -- choices for the Mode and Length buttons
-MODE_CHOICES =
+PLAYMODE_CHOICES =
 {
   "sp",   _("Single Player"),
   "coop", _("Co-op"),
 
 -- TODO:
---  "dm",   N_("Deathmatch"),
---  "ctf",  N_("Capture Flag"),
+--  "dm",   _("Deathmatch"),
+--  "ctf",  _("Capture Flag"),
 }
 
 LENGTH_CHOICES =

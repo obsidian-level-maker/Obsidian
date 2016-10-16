@@ -880,7 +880,7 @@ do return false end
 
     local prob = 25
 
-    if OB_CONFIG.mode == "coop" then
+    if OB_CONFIG.playmode == "coop" then
       prob = 50
     end
 
@@ -906,7 +906,7 @@ do return false end
 
     local prob = 25
 
-    if OB_CONFIG.mode == "coop" then
+    if OB_CONFIG.playmode == "coop" then
       prob = 75
     end
 
@@ -1462,7 +1462,7 @@ function Quest_start_room()
 
   local function find_alternate_start()
     -- only for Co-operative games
-    if OB_CONFIG.mode != "coop" then return end
+    if OB_CONFIG.playmode != "coop" then return end
 
     -- disabled by gameplay_tweaks module?
     if PARAM.start_together then return end
@@ -2778,8 +2778,8 @@ function Quest_make_quests()
 
   -- special handlign for Deathmatch and Capture-The-Flag
 
-  if OB_CONFIG.mode == "dm" or
-     OB_CONFIG.mode == "ctf"
+  if OB_CONFIG.playmode == "dm" or
+     OB_CONFIG.playmode == "ctf"
   then
     Multiplayer_setup_level()
     return

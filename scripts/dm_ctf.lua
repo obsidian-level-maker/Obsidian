@@ -126,7 +126,7 @@ function Multiplayer_setup_level()
   Quest_choose_themes()
   Quest_select_textures()
 
-  if OB_CONFIG.mode == "ctf" then
+  if OB_CONFIG.playmode == "ctf" then
     Multiplayer_flag_rooms()
   end
 

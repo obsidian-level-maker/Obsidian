@@ -1332,7 +1332,7 @@ function Area_analyse_areas()
 
   Area_find_neighbors()
 
-  if OB_CONFIG.mode == "ctf" then
+  if OB_CONFIG.playmode == "ctf" then
     error("CTF mode is broken!")
 
     find_CTF_peers()

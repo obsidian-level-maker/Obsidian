@@ -59,7 +59,7 @@ function Monster_prepare()
  
   ---| Monster_prepare |---
 
-  if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
+  if OB_CONFIG.playmode == "dm" or OB_CONFIG.playmode == "ctf" then
     return
   end
 
@@ -2119,8 +2119,8 @@ function Monster_make_battles()
 
   gui.prog_step("Mons")
 
-  if OB_CONFIG.mode == "dm" or
-     OB_CONFIG.mode == "ctf"
+  if OB_CONFIG.playmode == "dm" or
+     OB_CONFIG.playmode == "ctf"
   then
     Multiplayer_add_items()
     return

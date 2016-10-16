@@ -460,7 +460,7 @@ function Item_simulate_battle(R)
       ammo_mul = ammo_mul * factor
     end
 
-    if OB_CONFIG.mode == "coop" then
+    if OB_CONFIG.playmode == "coop" then
       heal_mul = heal_mul * COOP_HEALTH_FACTOR
       ammo_mul = ammo_mul * COOP_AMMO_FACTOR
     end

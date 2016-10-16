@@ -86,10 +86,10 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy += y_step;
 
 
-	mode = new UI_RChoice(cx, cy, cw, ch, _("Mode: "));
-	mode->align(FL_ALIGN_LEFT);
-	mode->selection_color(FL_BLUE);
-	mode->callback(callback_Mode, this);
+	playmode = new UI_RChoice(cx, cy, cw, ch, _("Mode: "));
+	playmode->align(FL_ALIGN_LEFT);
+	playmode->selection_color(FL_BLUE);
+	playmode->callback(callback_Mode, this);
 
 	cy += y_step2;
 
@@ -145,7 +145,7 @@ void UI_Game::callback_Mode(Fl_Widget *w, void *data)
 {
 	UI_Game *that = (UI_Game *)data;
 
-	ob_set_config("mode", that->mode->GetID());
+	ob_set_config("playmode", that->playmode->GetID());
 	Signal_Raise("mode");
 }
 
@@ -165,7 +165,7 @@ void UI_Game::Locked(bool value)
 		game  ->deactivate();
 		engine->deactivate();
 		length->deactivate();
-		mode  ->deactivate();
+		playmode->deactivate();
 		theme ->deactivate();
 	}
 	else
@@ -173,7 +173,7 @@ void UI_Game::Locked(bool value)
 		game  ->activate();
 		engine->activate();
 		length->activate();
-		mode  ->activate();
+		playmode->activate();
 		theme ->activate();
 	}
 }
@@ -191,9 +191,9 @@ bool UI_Game::AddChoice(const char *button, const char *id, const char *label)
 		engine->AddChoice(id, label);
 		return true;
 	}
-	if (StringCaseCmp(button, "mode") == 0)
+	if (StringCaseCmp(button, "playmode") == 0)
 	{
-		mode->AddChoice(id, label);
+		playmode->AddChoice(id, label);
 		return true;
 	}
 	if (StringCaseCmp(button, "length") == 0)
@@ -223,9 +223,9 @@ bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it)
 		engine->EnableChoice(id, enable_it);
 		return true;
 	}
-	if (StringCaseCmp(button, "mode") == 0)
+	if (StringCaseCmp(button, "playmode") == 0)
 	{
-		mode->EnableChoice(id, enable_it);
+		playmode->EnableChoice(id, enable_it);
 		return true;
 	}
 	if (StringCaseCmp(button, "length") == 0)
@@ -255,9 +255,9 @@ bool UI_Game::SetButton(const char *button, const char *id)
 		engine->ChangeTo(id);
 		return true;
 	}
-	if (StringCaseCmp(button, "mode") == 0)
+	if (StringCaseCmp(button, "playmode") == 0)
 	{
-		mode->ChangeTo(id);
+		playmode->ChangeTo(id);
 		return true;
 	}
 	if (StringCaseCmp(button, "length") == 0)

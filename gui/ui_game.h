@@ -28,7 +28,7 @@ public:
 	UI_RChoice *engine;
 
 	UI_RChoice *length;
-	UI_RChoice *mode;
+	UI_RChoice *playmode;
 
 	UI_RChoice *theme;
 
