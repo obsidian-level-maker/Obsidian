@@ -815,6 +815,8 @@ Name generator:
 
 -  TGA writing code, use it for ZDoom title screens
 
+-  fix "no such module" warnings (gui.add_module_option etc...)
+
 IDEA: a better Set Seed dialog, show a few previously used seeds
       and allow choosing them again
 

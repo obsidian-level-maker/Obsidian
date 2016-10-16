@@ -3,9 +3,6 @@ WORK IN PROGRESS
 ================
 
 
--  test if Spiderdemons get added with "A Few Maps" length wads
-
-
 Revamped UI:
 
 !!  some of the stuff belongs in STYLES table
@@ -13,16 +10,12 @@ Revamped UI:
     A/ yes, detect name 'xxx' in STYLES is used in OB_CONFIG
 
 -  program option for twiddling choices via MouseWheel
-   [ default to OFF ]
+   [ default to OFF? ]
 
--  warnings about "no such module" (for AddOption, etc)
+-  combine Extra Settings + Level Control, and add new
+   settings for Lighting and Detail.
 
-??  merge Extra Settings + Level Control ??
-
--  check Config_Flow.txt is still valid
-
-+  control MODE and LENGTH buttons from Lua
-
+-  ui_deathmatch?
 
 
 Modding wiki:
@@ -34,6 +27,8 @@ Modding wiki:
 
 
 Make it easier to share a particular config+seed combo
+
+FAQ : sharing wads
 
 
 
