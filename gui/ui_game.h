@@ -41,6 +41,10 @@ public:
 
 	void Defaults();
 
+	// these return false if 'button' is not valid
+	bool AddChoice(const char *button, const char *id, const char *label);
+	bool EnableChoice(const char *button, const char *id, bool enable_it);
+
 	// this is only for reading the CONFIG file.
 	// parse the name and store the value in the appropriate
 	// widget, also sending it to the Lua code.

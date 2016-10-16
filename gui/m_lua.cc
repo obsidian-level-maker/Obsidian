@@ -345,17 +345,17 @@ int gui_scan_directory(lua_State *L)
 }
 
 
-// LUA: add_choice(what, id, label)
+// LUA: add_choice(button, id, label)
 //
 int gui_add_choice(lua_State *L)
 {
-	const char *what  = luaL_checkstring(L,1);
-	const char *id    = luaL_checkstring(L,2);
-	const char *label = luaL_checkstring(L,3);
+	const char *button = luaL_checkstring(L,1);
+	const char *id     = luaL_checkstring(L,2);
+	const char *label  = luaL_checkstring(L,3);
 
-	SYS_ASSERT(what && id && label);
+	SYS_ASSERT(button && id && label);
 
-//	DebugPrintf("  add_choice: %s id:%s\n", what, id);
+//	DebugPrintf("  add_choice: %s id:%s\n", button, id);
 
 	if (! main_win)
 		return 0;
@@ -364,17 +364,8 @@ int gui_add_choice(lua_State *L)
 	if (has_added_buttons)
 		Main_FatalError("Script problem: gui.add_choice called late.\n");
 
-	if (StringCaseCmp(what, "game") == 0)
-		main_win->game_box->game->AddChoice(id, label);
-
-	else if (StringCaseCmp(what, "engine") == 0)
-		main_win->game_box->engine->AddChoice(id, label);
-
-	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->game_box->theme->AddChoice(id, label);
-
-	else
-		Main_FatalError("add_choice: unknown what value '%s'\n", what);
+	if (! main_win->game_box->AddChoice(button, id, label))
+		Main_FatalError("add_choice: unknown button '%s'\n", button);
 
 	return 0;
 }
@@ -475,29 +466,20 @@ int gui_add_option_choice(lua_State *L)
 //
 int gui_enable_choice(lua_State *L)
 {
-	const char *what = luaL_checkstring(L,1);
-	const char *id   = luaL_checkstring(L,2);
+	const char *button = luaL_checkstring(L,1);
+	const char *id     = luaL_checkstring(L,2);
 
-	int shown = lua_toboolean(L,3) ? 1 : 0;
+	int enable = lua_toboolean(L,3) ? 1 : 0;
 
-	SYS_ASSERT(what && id);
+	SYS_ASSERT(button && id);
 
-//	DebugPrintf("  enable_choice: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+//	DebugPrintf("  enable_choice: %s id:%s %s\n", button, id, enable ? "enable" : "DISABLE");
 
 	if (! main_win)
 		return 0;
 
-	if (StringCaseCmp(what, "game") == 0)
-		main_win->game_box->game->EnableChoice(id, shown);
-
-	else if (StringCaseCmp(what, "engine") == 0)
-		main_win->game_box->engine->EnableChoice(id, shown);
-
-	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->game_box->theme->EnableChoice(id, shown);
-
-	else
-		Main_FatalError("enable_choice: unknown button '%s'\n", what);
+	if (! main_win->game_box->EnableChoice(button, id, enable))
+		Main_FatalError("enable_choice: unknown button '%s'\n", button);
 
 	return 0;
 }

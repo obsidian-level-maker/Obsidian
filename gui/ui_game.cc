@@ -192,6 +192,49 @@ void UI_Game::Defaults()
 }
 
 
+bool UI_Game::AddChoice(const char *button, const char *id, const char *label)
+{
+	if (StringCaseCmp(button, "game") == 0)
+	{
+		game->AddChoice(id, label);
+		return true;
+	}
+	if (StringCaseCmp(button, "engine") == 0)
+	{
+		engine->AddChoice(id, label);
+		return true;
+	}
+	if (StringCaseCmp(button, "theme") == 0)
+	{
+		theme->AddChoice(id, label);
+	}
+
+	return false;  // unknown button
+}
+
+
+bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it)
+{
+	if (StringCaseCmp(button, "game") == 0)
+	{
+		game->EnableChoice(id, enable_it);
+		return true;
+	}
+	if (StringCaseCmp(button, "engine") == 0)
+	{
+		engine->EnableChoice(id, enable_it);
+		return true;
+	}
+	if (StringCaseCmp(button, "theme") == 0)
+	{
+		theme->EnableChoice(id, enable_it);
+		return true;
+	}
+
+	return false;  // unknown button
+}
+
+
 bool UI_Game::ParseValue(const char *key, const char *value)
 {
 	// Note: game, engine, theme are handled by LUA code
