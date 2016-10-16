@@ -34,14 +34,6 @@ h6 { font-size:1.0em; }
 /* The #wikilogo element is the logo from $PageLogoFmt */
 #wikilogo { margin-top:4px; padding:6px; border-bottom:1px #cccccc solid; }
 
-/* This controls the rest of the heading (primarily the search box) */
-#wikihead {
-  position:absolute; right:10px; top:10px;
-  font-family:Verdana,sans-serif;
-  font-size:85%;
-}
-#wikihead input { font-size:85%; }
-
 /* These are for the left-sidebar. */
 #wikileft {
   width: 12em;
@@ -74,7 +66,8 @@ h6 { font-size:1.0em; }
 
 /* These affect the main content area. */
 #wikibody {
-  padding: 10px 10px 10px 10px;
+  padding: 1em;
+  padding-top: 2em;
   margin-left: 10px;
   background-color: white;
   color: black;
@@ -91,24 +84,36 @@ h6 { font-size:1.0em; }
 #wikicmds li a.createlink { display:none; }
 #wikicmds li a:hover { text-decoration:underline; color:blue; }
 
-.pagegroup { margin-top:8px; margin-bottom:2px; }
-.pagetitle { line-height:1em; margin:0px; font-size:1.6em; font-weight:normal; }
+.pagegroup {
+    margin-top: 8px;
+    margin-bottom: 2px;
+    margin-left: 0.5em;
+}
+
+.pagetitle {
+    line-height: 1em;
+    margin: 0px;
+    margin-top: 0.1em;
+    margin-bottom: 1.0em;
+    font-size: 1.6em;
+    font-weight: normal;
+}
 
 .wikiaction { margin-top:4px; margin-bottom:4px; }
+
 .wikimessage { margin-top:4px; margin-bottom:4px; font-style:italic; }
 
-#wikitext { margin-top:12px; line-height:1.33em; }
+#wikitext {
+    margin-left: 0px;
+    margin-top: 12px;
+    line-height: 1.33em;
+}
+
 #wikitext table { font-size:100%; line-height:1.33em; } /* For MSIE 5.5 */
 
 /* These are for the edit form. */
 #wikiedit form { margin:0px; width:100%; }
 #wikiedit textarea { width:100%; }
-
-/* These affect the lines at the very bottom. */
-#wikifoot {
-  padding-left:178px; padding-bottom:4px; border-top:1px #cccccc solid;
-  font-family:Verdana,sans-serif; font-size:80%;
-}
 
 /* These affect the printed appearance of the web view of pages
  * (not the separate print view).  The sidebar and action links
@@ -116,8 +121,8 @@ h6 { font-size:1.0em; }
  */
 @media print {
   body { width:auto; margin:0px; padding:0.5em; }
-  #wikihead, #wikileft, #wikicmds, .footnav { display:none; }
-  #wikifoot { padding:2px; }
+
+  #wikileft, #wikicmds, .footnav { display:none; }
 }
 
 /* ---- stuff from Oblige website CSS ---- */
@@ -152,7 +157,7 @@ h6 { font-size:1.0em; }
     background-color: #ccbbaa;
     color: #000;
     text-align: right;
-    padding-right: 10px;
+    padding-right: 1.5em;
     line-height: 2.0em;
     font-size: 85%;
     font-weight: bold;
