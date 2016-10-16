@@ -365,13 +365,13 @@ int gui_add_choice(lua_State *L)
 		Main_FatalError("Script problem: gui.add_choice called late.\n");
 
 	if (StringCaseCmp(what, "game") == 0)
-		main_win->game_box->game->AddPair(id, label);
+		main_win->game_box->game->AddChoice(id, label);
 
 	else if (StringCaseCmp(what, "engine") == 0)
-		main_win->game_box->engine->AddPair(id, label);
+		main_win->game_box->engine->AddChoice(id, label);
 
 	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->game_box->theme->AddPair(id, label);
+		main_win->game_box->theme->AddChoice(id, label);
 
 	else
 		Main_FatalError("add_choice: unknown what value '%s'\n", what);

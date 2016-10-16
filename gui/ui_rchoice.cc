@@ -26,7 +26,7 @@
 
 
 choice_data_c::choice_data_c(const char *_id, const char *_label) :
-	id(NULL), label(NULL), shown(false),
+	id(NULL), label(NULL), enabled(false),
 	mapped(-1), widget(NULL)
 {
 	if (_id)    id    = StringDup(_id);
@@ -39,9 +39,9 @@ choice_data_c::~choice_data_c()
 	if (id)    StringFree(id);
 	if (label) StringFree(label);
 
-	// ignore 'widget' field when shown, we assume it exists in
+	// ignore 'widget' field when enabled, we assume it exists in
 	// an Fl_Group and hence FLTK will take care to delete it.
-	if (! shown)
+	if (! enabled)
 		delete widget;
 }
 
@@ -64,7 +64,7 @@ UI_RChoice::~UI_RChoice()
 }
 
 
-void UI_RChoice::AddPair(const char *id, const char *label)
+void UI_RChoice::AddChoice(const char *id, const char *label)
 {
 	choice_data_c *opt = FindID(id);
 
@@ -73,7 +73,7 @@ void UI_RChoice::AddPair(const char *id, const char *label)
 		StringFree(opt->label);
 		opt->label = StringDup(label);
 
-		if (opt->shown)
+		if (opt->enabled)
 			Recreate();
 	}
 	else
@@ -83,12 +83,12 @@ void UI_RChoice::AddPair(const char *id, const char *label)
 		opt_list.push_back(opt);
 
 		// no need to call Recreate() here since new pairs are always
-		// hidden (shown == false).
+		// hidden (enabled == false).
 	}
 }
 
 
-bool UI_RChoice::ShowOrHide(const char *id, bool new_shown)
+bool UI_RChoice::ShowOrHide(const char *id, bool enable_it)
 {
 	SYS_ASSERT(id);
 
@@ -97,9 +97,9 @@ bool UI_RChoice::ShowOrHide(const char *id, bool new_shown)
 	if (! P)
 		return false;
 
-	if (P->shown != new_shown)
+	if (P->enabled != enable_it)
 	{
-		P->shown = new_shown;
+		P->enabled = enable_it;
 		Recreate();
 	}
 
@@ -161,7 +161,7 @@ void UI_RChoice::Recreate()
 			continue;
 		}
 
-		if (! P->shown)
+		if (! P->enabled)
 		{
 			P->mapped = -1;
 			continue;

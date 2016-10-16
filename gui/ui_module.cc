@@ -170,7 +170,7 @@ void UI_Module::OptionPair(const char *option, const char *id, const char *label
 		return;
 	}
 
-	rch->AddPair(id, label);
+	rch->AddChoice(id, label);
 	rch->ShowOrHide(id, 1);
 }
 
