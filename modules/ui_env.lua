@@ -39,7 +39,9 @@ UI_ENVIRON.LIGHTINGS =
 }
 
 
-OB_MODULES["ui_env"] =
+
+-- TODO : move the options below into a normal module
+UNFINISHED["ui_env"] =
 {
   label = _("Environment")
 
@@ -48,13 +50,8 @@ OB_MODULES["ui_env"] =
 
   options =
   {
-    { name="outdoors",    label=_("Outdoors"),   choices=UI_ENVIRON.CHOICES }
-    { name="caves",       label=_("Caves"),      choices=UI_ENVIRON.CHOICES }
-    { name="liquids",     label=_("Liquids"),    choices=UI_ENVIRON.CHOICES,  gap=1 }
-     
-    { name="steepness",   label=_("Steepness"),  choices=UI_ENVIRON.CHOICES }
-    { name="lighting",    label=_("Lighting"),   choices=UI_ENVIRON.LIGHTINGS }
-    { name="detail",      label=_("Detail"),     choices=UI_ENVIRON.LIGHTINGS }
+    { name="lighting",    label=_("Lighting"),   choices=UI_ARCH.LIGHTINGS }
+    { name="detail",      label=_("Detail"),     choices=UI_ARCH.LIGHTINGS }
   }
 }
 
