@@ -60,7 +60,7 @@ OB_ENGINES["nolimit"] =
 -- special theme types, usable by all games
 OB_THEMES["original"] =
 {
-  label = _("Original")
+  label = _("As Original")
   priority = 90
 }
 

@@ -54,7 +54,7 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-    { name="size",         label=_("Size"),       choices=UI_ARCH.SIZES,  gap=1 }
+    { name="size",         label=_("Size"),       choices=UI_ARCH.SIZES,  default="epi",  gap=1 }
      
     { name="outdoors",     label=_("Outdoors"),   choices=UI_ARCH.CHOICES }
     { name="caves",        label=_("Caves"),      choices=UI_ARCH.CHOICES }

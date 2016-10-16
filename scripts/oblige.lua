@@ -770,8 +770,6 @@ function ob_init()
 
           gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
 
-          opt.value = opt.default or opt.choices[1]
-
           opt.avail_choices = {}
 
           for i = 1,#opt.choices,2 do
@@ -781,6 +779,18 @@ function ob_init()
             gui.add_option_choice(mod.name, opt.name, id, label)
             opt.avail_choices[id] = 1
           end
+
+          -- select a default value
+          if not opt.default then
+                if opt.avail_choices["default"] then opt.default = "default"
+            elseif opt.avail_choices["normal"]  then opt.default = "normal"
+            elseif opt.avail_choices["medium"]  then opt.default = "medium"
+            elseif opt.avail_choices["mixed"]   then opt.default = "mixed"
+            else   opt.default = list[1].name
+            end
+          end
+
+          opt.value = opt.default
 
           gui.set_module_option(mod.name, opt.name, opt.value)
         end -- for opt
