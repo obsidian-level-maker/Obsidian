@@ -768,7 +768,7 @@ function ob_init()
           assert(opt.label)
           assert(opt.choices)
 
-          gui.add_module_option(mod.name, opt.name, nil, opt.label, opt.tooltip, opt.gap)
+          gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
 
           opt.value = opt.default or opt.choices[1]
 
@@ -778,7 +778,7 @@ function ob_init()
             local id    = opt.choices[i]
             local label = opt.choices[i+1]
 
-            gui.add_module_option(mod.name, opt.name, id, label)
+            gui.add_option_choice(mod.name, opt.name, id, label)
             opt.avail_choices[id] = 1
           end
 

@@ -413,22 +413,17 @@ int gui_add_module(lua_State *L)
 }
 
 
-// LUA: add_module_option(module, option, id, label, tooltip)
-//
-// When the 'id' string is NIL, it indicates mere creation of
-// a new button widget for the module.  OTHERWISE we are adding a
-// choice to the existing button (a la add_button).
+// LUA: add_module_option(module, option, label, tooltip, gap)
 //
 int gui_add_module_option(lua_State *L)
 {
 	const char *module = luaL_checkstring(L,1);
 	const char *option = luaL_checkstring(L,2);
 
-	const char *id     = luaL_optstring  (L,3, NULL);
-	const char *label  = luaL_checkstring(L,4);
-	const char *tip    = luaL_optstring  (L,5, NULL);
+	const char *label  = luaL_checkstring(L,3);
+	const char *tip    = luaL_optstring  (L,4, NULL);
 
-	int gap = luaL_optint(L,6, 0);
+	int gap = luaL_optint(L,5, 0);
 
 	SYS_ASSERT(module && option);
 
@@ -441,16 +436,36 @@ int gui_add_module_option(lua_State *L)
 	if (has_added_buttons)
 		Main_FatalError("Script problem: gui.add_module_option called late.\n");
 
-	if (! id)
-	{
-		main_win-> left_mods->AddOption(module, option, label, tip, gap);
-		main_win->right_mods->AddOption(module, option, label, tip, gap);
-	}
-	else
-	{
-		main_win-> left_mods->OptionPair(module, option, id, label);
-		main_win->right_mods->OptionPair(module, option, id, label);
-	}
+	main_win-> left_mods->AddOption(module, option, label, tip, gap);
+	main_win->right_mods->AddOption(module, option, label, tip, gap);
+
+	return 0;
+}
+
+
+// LUA: add_option_choice(module, option, id, label)
+//
+int gui_add_option_choice(lua_State *L)
+{
+	const char *module = luaL_checkstring(L,1);
+	const char *option = luaL_checkstring(L,2);
+
+	const char *id     = luaL_checkstring(L,3);
+	const char *label  = luaL_checkstring(L,4);
+
+	SYS_ASSERT(module && option);
+
+//	DebugPrintf("  add_option_choice: %s.%s\n", module, option);
+
+	if (! main_win)
+		return 0;
+
+	// only allowed during startup
+	if (has_added_buttons)
+		Main_FatalError("Script problem: gui.add_option_choice called late.\n");
+
+	main_win-> left_mods->OptionPair(module, option, id, label);
+	main_win->right_mods->OptionPair(module, option, id, label);
 
 	return 0;
 }
@@ -891,6 +906,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "show_module",  gui_show_module },
 	{ "set_module",   gui_set_module },
 	{ "add_module_option", gui_add_module_option },
+	{ "add_option_choice", gui_add_option_choice },
 	{ "set_module_option", gui_set_module_option },
 
 	{ "at_level",    gui_at_level },
