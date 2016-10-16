@@ -43,9 +43,6 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 
 	mod_button = new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
 
-	if (tip)
-		mod_button->tooltip(tip);
-
 	if (Is_UI())
 	{
 		mod_button->value(1);
@@ -54,12 +51,18 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 
 	int tx = Is_UI() ? 8 : 28;
 
-	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx+8), kf_h(24), label);
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx+4), kf_h(24), label);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labelfont(FL_HELVETICA_BOLD);
 
 	if (Is_UI())
 		heading->labelsize(header_font_size);
+
+	if (tip)
+	{
+		mod_button->tooltip(tip);
+		heading->tooltip(tip);
+	}
 
 	cur_opt_y += kf_h(32);
 
