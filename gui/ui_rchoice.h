@@ -70,7 +70,7 @@ public:
 	// finds the option with the given ID, and update its 'enabled'
 	// value.  Returns true if successful, or false if no such
 	// option exists.  Any change will call Recreate().
-	bool ShowOrHide(const char *id, bool enable_it);
+	bool EnableChoice(const char *id, bool enable_it);
 
 	// get the id string for the currently shown value.
 	// Returns the string "none" if there are no choices.

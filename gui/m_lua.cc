@@ -464,8 +464,8 @@ int gui_add_option_choice(lua_State *L)
 	if (has_added_buttons)
 		Main_FatalError("Script problem: gui.add_option_choice called late.\n");
 
-	main_win-> left_mods->OptionPair(module, option, id, label);
-	main_win->right_mods->OptionPair(module, option, id, label);
+	main_win-> left_mods->AddOptionChoice(module, option, id, label);
+	main_win->right_mods->AddOptionChoice(module, option, id, label);
 
 	return 0;
 }
@@ -488,13 +488,13 @@ int gui_enable_choice(lua_State *L)
 		return 0;
 
 	if (StringCaseCmp(what, "game") == 0)
-		main_win->game_box->game->ShowOrHide(id, shown);
+		main_win->game_box->game->EnableChoice(id, shown);
 
 	else if (StringCaseCmp(what, "engine") == 0)
-		main_win->game_box->engine->ShowOrHide(id, shown);
+		main_win->game_box->engine->EnableChoice(id, shown);
 
 	else if (StringCaseCmp(what, "theme") == 0)
-		main_win->game_box->theme->ShowOrHide(id, shown);
+		main_win->game_box->theme->EnableChoice(id, shown);
 
 	else
 		Main_FatalError("enable_choice: unknown button '%s'\n", what);
@@ -548,8 +548,8 @@ int gui_show_module(lua_State *L)
 	if (! main_win)
 		return 0;
 
-	main_win-> left_mods->ShowOrHide(id, shown);
-	main_win->right_mods->ShowOrHide(id, shown);
+	main_win-> left_mods->ShowModule(id, shown);
+	main_win->right_mods->ShowModule(id, shown);
 
 	return 0;
 }

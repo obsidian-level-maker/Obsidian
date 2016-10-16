@@ -26,6 +26,10 @@ class UI_Module : public Fl_Group
 {
 friend class UI_CustomMods;
 
+	// NOTES:
+	// -  module is "enabled" when mod_button->value() == 1
+	// -  module is "shown" when visible() == true
+
 private:
 	std::string id_name;
 
@@ -43,7 +47,7 @@ public:
 	void AddOption(const char *option, const char *label, const char *tip,
 	               int gap, Fl_Color select_col);
 
-	void OptionPair(const char *option, const char *id, const char *label);
+	void AddOptionChoice(const char *option, const char *id, const char *label);
 
 	bool ParseValue(const char *option, const char *value);
 
@@ -88,15 +92,15 @@ public:
 public:
 	void AddModule(const char *id, const char *label, const char *tip);
 
-	bool ShowOrHide(const char *id, bool new_shown);
+	bool ShowModule(const char *id, bool new_shown);
 
 	void EnableMod(const char *id, bool enable);
 
 	void AddOption (const char *module, const char *option, const char *label,
 	                const char *tip, int gap);
 
-	void OptionPair(const char *module, const char *option,
-			const char *id, const char *label);
+	void AddOptionChoice(const char *module, const char *option,
+						 const char *id, const char *label);
 
 	bool ParseOptValue(const char *module, const char *option,
 			const char *value);

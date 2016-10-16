@@ -241,7 +241,7 @@ void UI_Game::setup_Mode()
 	for (int i = 0; mode_syms[i]; i += 2)
 	{
 		mode->AddChoice(mode_syms[i], _(mode_syms[i+1]));
-		mode->ShowOrHide(mode_syms[i], 1);
+		mode->EnableChoice(mode_syms[i], 1);
 	}
 }
 
@@ -251,7 +251,7 @@ void UI_Game::setup_Length()
 	for (int i = 0; length_syms[i]; i += 2)
 	{
 		length->AddChoice(length_syms[i], _(length_syms[i+1]));
-		length->ShowOrHide(length_syms[i], 1);
+		length->EnableChoice(length_syms[i], 1);
 	}
 }
 

@@ -88,7 +88,7 @@ void UI_RChoice::AddChoice(const char *id, const char *label)
 }
 
 
-bool UI_RChoice::ShowOrHide(const char *id, bool enable_it)
+bool UI_RChoice::EnableChoice(const char *id, bool enable_it)
 {
 	SYS_ASSERT(id);
 

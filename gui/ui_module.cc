@@ -159,7 +159,7 @@ void UI_Module::update_Enable()
 }
 
 
-void UI_Module::OptionPair(const char *option, const char *id, const char *label)
+void UI_Module::AddOptionChoice(const char *option, const char *id, const char *label)
 {
 	UI_RChoice *rch = FindOpt(option);
 
@@ -171,7 +171,7 @@ void UI_Module::OptionPair(const char *option, const char *id, const char *label
 	}
 
 	rch->AddChoice(id, label);
-	rch->ShowOrHide(id, 1);
+	rch->EnableChoice(id, 1);
 }
 
 
@@ -313,19 +313,19 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
 }
 
 
-void UI_CustomMods::OptionPair(const char *module, const char *option,
-                               const char *id, const char *label)
+void UI_CustomMods::AddOptionChoice(const char *module, const char *option,
+                                    const char *id, const char *label)
 {
 	UI_Module *M = FindID(module);
 
 	if (! M)
 		return;
 
-	M->OptionPair(option, id, label);
+	M->AddOptionChoice(option, id, label);
 }
 
 
-bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
+bool UI_CustomMods::ShowModule(const char *id, bool new_shown)
 {
 	SYS_ASSERT(id);
 
