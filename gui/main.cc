@@ -569,16 +569,6 @@ static void Module_Defaults()
 }
 
 
-static void Batch_Defaults()
-{
-	// inform Lua code about batch mode (the value doesn't matter)
-	ob_set_config("batch", "yes");
-
-	ob_set_config("mode",   "sp");
-	ob_set_config("length", "game");
-}
-
-
 //------------------------------------------------------------------------
 
 
@@ -781,7 +771,9 @@ int main(int argc, char **argv)
 
 		Script_Open();
 
-		Batch_Defaults();
+		// inform Lua code about batch mode (the value doesn't matter)
+		ob_set_config("batch", "yes");
+
 		Module_Defaults();
 
 		// batch mode never reads/writes the normal config file.
@@ -824,8 +816,6 @@ int main(int argc, char **argv)
 //???	Default_Location();
 
 	Script_Open();
-
-	main_win->SetDefaults();
 
 	// enable certain modules by default
 	Module_Defaults();

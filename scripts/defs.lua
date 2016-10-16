@@ -77,6 +77,26 @@ OB_THEMES["jumble"] =
 }
 
 
+-- choices for the Mode and Length buttons
+MODE_CHOICES =
+{
+  "sp",   _("Single Player"),
+  "coop", _("Co-op"),
+
+-- TODO:
+--  "dm",   N_("Deathmatch"),
+--  "ctf",  N_("Capture Flag"),
+}
+
+LENGTH_CHOICES =
+{
+  "single",  _("Single Level"),
+  "few",     _("A Few Maps"),
+  "episode", _("One Episode"),
+  "game",    _("Full Game"),
+}
+
+
 -- important constants
 
 SEED_SIZE = 128

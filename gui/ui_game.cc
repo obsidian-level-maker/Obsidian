@@ -1,5 +1,5 @@
 //----------------------------------------------------------------
-//  Setup screen
+//  Game Panel
 //----------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -83,8 +83,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	length->selection_color(FL_BLUE);
 	length->callback(callback_Length, this);
 
-	setup_Length();
-
 	cy += y_step;
 
 
@@ -92,8 +90,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	mode->align(FL_ALIGN_LEFT);
 	mode->selection_color(FL_BLUE);
 	mode->callback(callback_Mode, this);
-
-	setup_Mode();
 
 	cy += y_step2;
 
@@ -183,15 +179,6 @@ void UI_Game::Locked(bool value)
 }
 
 
-void UI_Game::Defaults()
-{
-	// Note: game, engine, theme are handled by LUA code (ob_init)
-
-	ParseValue("mode", "sp");
-	ParseValue("length", "game");
-}
-
-
 bool UI_Game::AddChoice(const char *button, const char *id, const char *label)
 {
 	if (StringCaseCmp(button, "game") == 0)
@@ -204,9 +191,20 @@ bool UI_Game::AddChoice(const char *button, const char *id, const char *label)
 		engine->AddChoice(id, label);
 		return true;
 	}
+	if (StringCaseCmp(button, "mode") == 0)
+	{
+		mode->AddChoice(id, label);
+		return true;
+	}
+	if (StringCaseCmp(button, "length") == 0)
+	{
+		length->AddChoice(id, label);
+		return true;
+	}
 	if (StringCaseCmp(button, "theme") == 0)
 	{
 		theme->AddChoice(id, label);
+		return true;
 	}
 
 	return false;  // unknown button
@@ -225,9 +223,51 @@ bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it)
 		engine->EnableChoice(id, enable_it);
 		return true;
 	}
+	if (StringCaseCmp(button, "mode") == 0)
+	{
+		mode->EnableChoice(id, enable_it);
+		return true;
+	}
+	if (StringCaseCmp(button, "length") == 0)
+	{
+		length->EnableChoice(id, enable_it);
+		return true;
+	}
 	if (StringCaseCmp(button, "theme") == 0)
 	{
 		theme->EnableChoice(id, enable_it);
+		return true;
+	}
+
+	return false;  // unknown button
+}
+
+
+bool UI_Game::SetButton(const char *button, const char *id)
+{
+	if (StringCaseCmp(button, "game") == 0)
+	{
+		game->ChangeTo(id);
+		return true;
+	}
+	if (StringCaseCmp(button, "engine") == 0)
+	{
+		engine->ChangeTo(id);
+		return true;
+	}
+	if (StringCaseCmp(button, "mode") == 0)
+	{
+		mode->ChangeTo(id);
+		return true;
+	}
+	if (StringCaseCmp(button, "length") == 0)
+	{
+		length->ChangeTo(id);
+		return true;
+	}
+	if (StringCaseCmp(button, "theme") == 0)
+	{
+		theme->ChangeTo(id);
 		return true;
 	}
 
@@ -253,49 +293,6 @@ bool UI_Game::ParseValue(const char *key, const char *value)
 	}
 
 	return false;
-}
-
-
-//----------------------------------------------------------------
-
-const char * UI_Game::mode_syms[] =
-{
-	"sp",   N_("Single Player"),
-	"coop", N_("Co-op"),
-///	"dm",   N_("Deathmatch"),
-///	"ctf",  N_("Capture Flag"),
-
-	NULL, NULL
-};
-
-const char * UI_Game::length_syms[] =
-{
-	"single",  N_("Single Level"),
-	"few",     N_("A Few Maps"),
-	"episode", N_("One Episode"),
-	"game",    N_("Full Game"),
-
-	NULL, NULL
-};
-
-
-void UI_Game::setup_Mode()
-{
-	for (int i = 0; mode_syms[i]; i += 2)
-	{
-		mode->AddChoice(mode_syms[i], _(mode_syms[i+1]));
-		mode->EnableChoice(mode_syms[i], 1);
-	}
-}
-
-
-void UI_Game::setup_Length()
-{
-	for (int i = 0; length_syms[i]; i += 2)
-	{
-		length->AddChoice(length_syms[i], _(length_syms[i+1]));
-		length->EnableChoice(length_syms[i], 1);
-	}
 }
 
 

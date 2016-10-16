@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  Setup screen
+//  Game Panel
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -39,11 +39,10 @@ public:
 public:
 	void Locked(bool value);
 
-	void Defaults();
-
 	// these return false if 'button' is not valid
 	bool AddChoice(const char *button, const char *id, const char *label);
 	bool EnableChoice(const char *button, const char *id, bool enable_it);
+	bool SetButton(const char *button, const char *id);
 
 	// this is only for reading the CONFIG file.
 	// parse the name and store the value in the appropriate
@@ -52,17 +51,11 @@ public:
 	bool ParseValue(const char *key, const char *value);
 
 private:
-	void setup_Mode();
-	void setup_Length();
-
 	static void callback_Game  (Fl_Widget *, void*);
 	static void callback_Engine(Fl_Widget *, void*);
 	static void callback_Length(Fl_Widget *, void*);
 	static void callback_Mode  (Fl_Widget *, void*);
 	static void callback_Theme (Fl_Widget *, void*);
-
-	static const char *mode_syms[];
-	static const char *length_syms[];
 
 };
 

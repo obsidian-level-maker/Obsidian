@@ -408,16 +408,7 @@ int gui_set_button(lua_State *L)
 	if (! main_win)
 		return 0;
 
-	if (StringCaseCmp(button, "game") == 0)
-		main_win->game_box->game->ChangeTo(id);
-
-	else if (StringCaseCmp(button, "engine") == 0)
-		main_win->game_box->engine->ChangeTo(id);
-
-	else if (StringCaseCmp(button, "theme") == 0)
-		main_win->game_box->theme->ChangeTo(id);
-
-	else
+	if (! main_win->game_box->SetButton(button, id))
 		return luaL_error(L, "set_button: unknown button '%s'\n", button);
 
 	return 0;

@@ -56,11 +56,6 @@ public:
 	static void CalcWindowSize(int *W, int *H);
 
 	void Locked(bool value);
-
-	void SetDefaults()
-	{
-		game_box->Defaults();
-	}
 };
 
 extern UI_MainWin * main_win;

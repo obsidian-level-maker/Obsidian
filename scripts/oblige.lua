@@ -743,6 +743,19 @@ function ob_init()
   end
 
 
+  local function simple_buttons(what, choices, default)
+    for i = 1,#choices,2 do
+      local id    = choices[i]
+      local label = choices[i+1]
+
+      gui.   add_choice(what, id, label)
+      gui.enable_choice(what, id, true)
+    end
+
+    OB_CONFIG[what] = default
+  end
+
+
   local function create_mod_options()
     gui.debugf("creating module options\n", what)
 
@@ -801,11 +814,14 @@ function ob_init()
 
 
   OB_CONFIG.seed = 0
-  OB_CONFIG.mode = "sp" -- GUI code sets the real default
 
+  -- FIXME : move setting into create_buttons()
   OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
   OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
   OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
+
+  simple_buttons("mode",   MODE_CHOICES,   "sp")
+  simple_buttons("length", LENGTH_CHOICES, "game")
 
   create_buttons("module", OB_MODULES)
   create_mod_options()
@@ -814,6 +830,8 @@ function ob_init()
 
   gui.set_button("game",   OB_CONFIG.game)
   gui.set_button("engine", OB_CONFIG.engine)
+  gui.set_button("mode",   OB_CONFIG.mode)
+  gui.set_button("length", OB_CONFIG.length)
   gui.set_button("theme",  OB_CONFIG.theme)
 
   gui.printf("\n~~ Completed Lua initialization ~~\n\n")
