@@ -365,7 +365,7 @@ int gui_add_choice(lua_State *L)
 		Main_FatalError("Script problem: gui.add_choice called late.\n");
 
 	if (! main_win->game_box->AddChoice(button, id, label))
-		Main_FatalError("add_choice: unknown button '%s'\n", button);
+		return luaL_error(L, "add_choice: unknown button '%s'\n", button);
 
 	return 0;
 }
@@ -398,7 +398,7 @@ int gui_add_module(lua_State *L)
 		main_win->right_mods->AddModule(id, label, tip);
 
 	else
-		Main_FatalError("add_module: unknown where value '%s'\n", where);
+		return luaL_error(L, "add_module: unknown where value '%s'\n", where);
 
 	return 0;
 }
@@ -426,6 +426,8 @@ int gui_add_module_option(lua_State *L)
 	// only allowed during startup
 	if (has_added_buttons)
 		Main_FatalError("Script problem: gui.add_module_option called late.\n");
+
+	// FIXME : error if module is unknown
 
 	main_win-> left_mods->AddOption(module, option, label, tip, gap);
 	main_win->right_mods->AddOption(module, option, label, tip, gap);
@@ -455,6 +457,8 @@ int gui_add_option_choice(lua_State *L)
 	if (has_added_buttons)
 		Main_FatalError("Script problem: gui.add_option_choice called late.\n");
 
+	// FIXME : error if module or option is unknown
+
 	main_win-> left_mods->AddOptionChoice(module, option, id, label);
 	main_win->right_mods->AddOptionChoice(module, option, id, label);
 
@@ -479,59 +483,61 @@ int gui_enable_choice(lua_State *L)
 		return 0;
 
 	if (! main_win->game_box->EnableChoice(button, id, enable))
-		Main_FatalError("enable_choice: unknown button '%s'\n", button);
+		return luaL_error(L, "enable_choice: unknown button '%s'\n", button);
 
 	return 0;
 }
 
 
-// LUA: set_button(what, id)
+// LUA: set_button(button, id)
 //
 int gui_set_button(lua_State *L)
 {
-	const char *what = luaL_checkstring(L,1);
-	const char *id   = luaL_checkstring(L,2);
+	const char *button = luaL_checkstring(L,1);
+	const char *id     = luaL_checkstring(L,2);
 
-	SYS_ASSERT(what && id);
+	SYS_ASSERT(button && id);
 
-//	DebugPrintf("  change_button: %s --> %s\n", what, id);
+//	DebugPrintf("  change_button: %s --> %s\n", button, id);
 
 	if (! main_win)
 		return 0;
 
-	if (StringCaseCmp(what, "game") == 0)
+	if (StringCaseCmp(button, "game") == 0)
 		main_win->game_box->game->ChangeTo(id);
 
-	else if (StringCaseCmp(what, "engine") == 0)
+	else if (StringCaseCmp(button, "engine") == 0)
 		main_win->game_box->engine->ChangeTo(id);
 
-	else if (StringCaseCmp(what, "theme") == 0)
+	else if (StringCaseCmp(button, "theme") == 0)
 		main_win->game_box->theme->ChangeTo(id);
 
 	else
-		Main_FatalError("set_button: unknown button '%s'\n", what);
+		return luaL_error(L, "set_button: unknown button '%s'\n", button);
 
 	return 0;
 }
 
 
-// LUA: show_module(id, shown)
+// LUA: show_module(module, shown)
 //
 int gui_show_module(lua_State *L)
 {
-	const char *id = luaL_checkstring(L,1);
+	const char *module = luaL_checkstring(L,1);
 
 	int shown = lua_toboolean(L,2) ? 1 : 0;
 
-	SYS_ASSERT(id);
+	SYS_ASSERT(module);
 
-//	DebugPrintf("  show_module: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+//	DebugPrintf("  show_module: %s --> %s\n", what, module, shown ? "show" : "HIDE");
 
 	if (! main_win)
 		return 0;
 
-	main_win-> left_mods->ShowModule(id, shown);
-	main_win->right_mods->ShowModule(id, shown);
+	// FIXME : error if module is unknown
+
+	main_win-> left_mods->ShowModule(module, shown);
+	main_win->right_mods->ShowModule(module, shown);
 
 	return 0;
 }
@@ -541,20 +547,22 @@ int gui_show_module(lua_State *L)
 //
 int gui_set_module(lua_State *L)
 {
-	const char *id = luaL_checkstring(L,1);
+	const char *module = luaL_checkstring(L,1);
 
 	int opt_val = lua_toboolean(L,2) ? 1 : 0;
 
-	SYS_ASSERT(id);
+	SYS_ASSERT(module);
 
-//	DebugPrintf("  set_module: %s --> %s\n", id, opt_val);
+//	DebugPrintf("  set_module: %s --> %s\n", module, opt_val);
 
 	if (! main_win)
 		return 0;
 
+	// FIXME : error if module is unknown
+
 	// try both columns
-	main_win-> left_mods->EnableMod(id, opt_val);
-	main_win->right_mods->EnableMod(id, opt_val);
+	main_win-> left_mods->EnableMod(module, opt_val);
+	main_win->right_mods->EnableMod(module, opt_val);
 
 	return 0;
 }
@@ -574,11 +582,13 @@ int gui_set_module_option(lua_State *L)
 
 	ob_set_mod_option(module, option, value);
 
-	if (main_win)
-	{
-		main_win-> left_mods->ParseOptValue(module, option, value);
-		main_win->right_mods->ParseOptValue(module, option, value);
-	}
+	if (! main_win)
+		return 0;
+
+	// FIXME : error if module or option is unknown
+
+	main_win-> left_mods->ParseOptValue(module, option, value);
+	main_win->right_mods->ParseOptValue(module, option, value);
 
 	return 0;
 }
