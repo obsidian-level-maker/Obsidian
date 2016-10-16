@@ -574,22 +574,8 @@ static void Batch_Defaults()
 	// inform Lua code about batch mode (the value doesn't matter)
 	ob_set_config("batch", "yes");
 
-	// Game Settings
 	ob_set_config("mode",   "sp");
 	ob_set_config("length", "game");
-
-	// Level Architecture
-	ob_set_config("size",     "epi");
-	ob_set_config("outdoors", "mixed");
-	ob_set_config("caves",    "mixed");
-
-	// Playing Style
-	ob_set_config("mons",    "normal");
-	ob_set_config("strength","medium");
-	ob_set_config("weapons", "normal");
-	ob_set_config("items",   "normal");
-	ob_set_config("health",  "normal");
-	ob_set_config("ammo",    "normal");
 }
 
 
