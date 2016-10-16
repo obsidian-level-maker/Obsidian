@@ -739,7 +739,12 @@ function ob_init()
       end
     end
 
-    return list[1] and list[1].name
+    -- set the current value
+    if what != "module" then
+      local default = list[1] and list[1].name
+
+      OB_CONFIG[what] = default
+    end
   end
 
 
@@ -815,10 +820,9 @@ function ob_init()
 
   OB_CONFIG.seed = 0
 
-  -- FIXME : move setting into create_buttons()
-  OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
-  OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
-  OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
+  create_buttons("game",   OB_GAMES)
+  create_buttons("engine", OB_ENGINES)
+  create_buttons("theme",  OB_THEMES)
 
   simple_buttons("mode",   MODE_CHOICES,   "sp")
   simple_buttons("length", LENGTH_CHOICES, "game")
