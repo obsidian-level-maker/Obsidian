@@ -238,12 +238,12 @@ function ob_update_engines()
       need_new = true
     end
 
-    gui.show_button("engine", name, shown)
+    gui.enable_choice("engine", name, shown)
   end
 
   if need_new then
     OB_CONFIG.engine = "nolimit"
-    gui.change_button("engine", OB_CONFIG.engine)
+    gui.set_button("engine", OB_CONFIG.engine)
   end
 end
 
@@ -260,7 +260,7 @@ function ob_update_themes()
     end
 
     def.shown = shown
-    gui.show_button("theme", name, def.shown)
+    gui.enable_choice("theme", name, def.shown)
   end
 
   -- try to keep the same GUI label
@@ -270,14 +270,14 @@ function ob_update_themes()
 
       if shown and def.label == new_label then
         OB_CONFIG.theme = name
-        gui.change_button("theme", OB_CONFIG.theme)
+        gui.set_button("theme", OB_CONFIG.theme)
         return
       end
     end
 
     -- otherwise revert to As Original
     OB_CONFIG.theme = "original"
-    gui.change_button("theme", OB_CONFIG.theme)
+    gui.set_button("theme", OB_CONFIG.theme)
   end
 end
 
@@ -299,7 +299,7 @@ function ob_update_modules()
       end
 
       def.shown = shown
-      gui.show_button("module", name, def.shown)
+      gui.show_module(name, def.shown)
     end
 
     if not changed then break; end
@@ -328,7 +328,7 @@ function ob_find_mod_option(mod, opt_name)
     end
   end
 
-  return mod.options[name]
+  return mod.options[opt_name]
 end
 
 
@@ -368,14 +368,14 @@ function ob_set_mod_option(name, option, value)
       each other,odef in OB_MODULES do
         if odef != mod and ob_defs_conflict(mod, odef) then
           odef.enabled = false
-          gui.enable_module(other, odef.enabled)
+          gui.set_module(other, odef.enabled)
         end
       end
     end
 
     -- this is required for parsing the CONFIG.TXT file
     -- [but redundant when the user merely changed the widget]
-    gui.enable_module(name, mod.enabled)
+    gui.set_module(name, mod.enabled)
 
     ob_update_all()
     return
@@ -423,7 +423,7 @@ function ob_set_config(name, value)
       each opt in mod.options do
         if opt.name == name then
               ob_set_mod_option(mod.name, name, value)
-          gui.change_mod_option(mod.name, name, value)
+          gui.set_module_option(mod.name, name, value)
           return
         end
       end
@@ -466,7 +466,7 @@ function ob_set_config(name, value)
   -- this is required for parsing the CONFIG.TXT file
   -- [ but redundant when the user merely changed the widget ]
   if (name == "game") or (name == "engine") or (name == "theme") then
-    gui.change_button(name, OB_CONFIG[name])
+    gui.set_button(name, OB_CONFIG[name])
   end
 end
 
@@ -728,13 +728,14 @@ function ob_init()
       if what == "module" then
         local where = def.side or "right"
 
-        gui.create_module(where, def.name, def.label, def.tooltip)
+        gui.add_module(where, def.name, def.label, def.tooltip)
       else
         gui.add_choice(what, def.name, def.label)
       end
 
+      -- TODO : review this, does it belong HERE ?
       if what == "game" then
-        gui.show_button(what, def.name, true)
+        gui.enable_choice("game", def.name, true)
       end
     end
 
@@ -781,7 +782,7 @@ function ob_init()
             opt.avail_choices[id] = 1
           end
 
-          gui.change_mod_option(mod.name, opt.name, opt.value)
+          gui.set_module_option(mod.name, opt.name, opt.value)
         end -- for opt
       end
     end -- for mod
@@ -800,9 +801,9 @@ function ob_init()
 
   ob_update_all()
 
-  gui.change_button("game",   OB_CONFIG.game)
-  gui.change_button("engine", OB_CONFIG.engine)
-  gui.change_button("theme",  OB_CONFIG.theme)
+  gui.set_button("game",   OB_CONFIG.game)
+  gui.set_button("engine", OB_CONFIG.engine)
+  gui.set_button("theme",  OB_CONFIG.theme)
 
   gui.printf("\n~~ Completed Lua initialization ~~\n\n")
 end

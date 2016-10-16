@@ -345,7 +345,7 @@ int gui_scan_directory(lua_State *L)
 }
 
 
-// LUA: add_choice (what, id, label)
+// LUA: add_choice(what, id, label)
 //
 int gui_add_choice(lua_State *L)
 {
@@ -380,9 +380,9 @@ int gui_add_choice(lua_State *L)
 }
 
 
-// LUA: create_module (where, id, label, tooltip)
+// LUA: add_module(where, id, label, tooltip)
 //
-int gui_create_module(lua_State *L)
+int gui_add_module(lua_State *L)
 {
 	const char *where = luaL_checkstring(L,1);
 	const char *id    = luaL_checkstring(L,2);
@@ -391,14 +391,14 @@ int gui_create_module(lua_State *L)
 
 	SYS_ASSERT(where && id && label);
 
-//	DebugPrintf("  create_module: %s id:%s\n", where, id);
+//	DebugPrintf("  add_module: %s id:%s\n", where, id);
 
 	if (! main_win)
 		return 0;
 
 	// only allowed during startup
 	if (has_added_buttons)
-		Main_FatalError("Script problem: gui.create_module called late.\n");
+		Main_FatalError("Script problem: gui.add_module called late.\n");
 
 	if (StringCaseCmp(where, "left") == 0)
 		main_win->left_mods->AddModule(id, label, tip);
@@ -407,13 +407,13 @@ int gui_create_module(lua_State *L)
 		main_win->right_mods->AddModule(id, label, tip);
 
 	else
-		Main_FatalError("create_module: unknown where value '%s'\n", where);
+		Main_FatalError("add_module: unknown where value '%s'\n", where);
 
 	return 0;
 }
 
 
-// LUA: add_module_option (module, option, id, label, tooltip)
+// LUA: add_module_option(module, option, id, label, tooltip)
 //
 // When the 'id' string is NIL, it indicates mere creation of
 // a new button widget for the module.  OTHERWISE we are adding a
@@ -456,9 +456,9 @@ int gui_add_module_option(lua_State *L)
 }
 
 
-// LUA: show_button(what, id, shown)
+// LUA: enable_choice(what, id, shown)
 //
-int gui_show_button(lua_State *L)
+int gui_enable_choice(lua_State *L)
 {
 	const char *what = luaL_checkstring(L,1);
 	const char *id   = luaL_checkstring(L,2);
@@ -467,7 +467,7 @@ int gui_show_button(lua_State *L)
 
 	SYS_ASSERT(what && id);
 
-//	DebugPrintf("  show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+//	DebugPrintf("  enable_choice: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
 
 	if (! main_win)
 		return 0;
@@ -481,21 +481,16 @@ int gui_show_button(lua_State *L)
 	else if (StringCaseCmp(what, "theme") == 0)
 		main_win->game_box->theme->ShowOrHide(id, shown);
 
-	else if (StringCaseCmp(what, "module") == 0)
-	{
-		main_win-> left_mods->ShowOrHide(id, shown);
-		main_win->right_mods->ShowOrHide(id, shown);
-	}
 	else
-		Main_FatalError("show_button: unknown what value '%s'\n", what);
+		Main_FatalError("enable_choice: unknown button '%s'\n", what);
 
 	return 0;
 }
 
 
-// LUA: change_button (what, id)
+// LUA: set_button(what, id)
 //
-int gui_change_button(lua_State *L)
+int gui_set_button(lua_State *L)
 {
 	const char *what = luaL_checkstring(L,1);
 	const char *id   = luaL_checkstring(L,2);
@@ -517,15 +512,37 @@ int gui_change_button(lua_State *L)
 		main_win->game_box->theme->ChangeTo(id);
 
 	else
-		Main_FatalError("change_button: unknown what value '%s'\n", what);
+		Main_FatalError("set_button: unknown button '%s'\n", what);
 
 	return 0;
 }
 
 
-// LUA: enable_module (id, bool)
+// LUA: show_module(id, shown)
 //
-int gui_enable_module(lua_State *L)
+int gui_show_module(lua_State *L)
+{
+	const char *id = luaL_checkstring(L,1);
+
+	int shown = lua_toboolean(L,2) ? 1 : 0;
+
+	SYS_ASSERT(id);
+
+//	DebugPrintf("  show_module: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+
+	if (! main_win)
+		return 0;
+
+	main_win-> left_mods->ShowOrHide(id, shown);
+	main_win->right_mods->ShowOrHide(id, shown);
+
+	return 0;
+}
+
+
+// LUA: set_module(id, bool)
+//
+int gui_set_module(lua_State *L)
 {
 	const char *id = luaL_checkstring(L,1);
 
@@ -533,7 +550,7 @@ int gui_enable_module(lua_State *L)
 
 	SYS_ASSERT(id);
 
-//	DebugPrintf("  enable_module: %s --> %s\n", id, opt_val);
+//	DebugPrintf("  set_module: %s --> %s\n", id, opt_val);
 
 	if (! main_win)
 		return 0;
@@ -546,9 +563,9 @@ int gui_enable_module(lua_State *L)
 }
 
 
-// LUA: change_mod_option(module, option, value)
+// LUA: set_module_option(module, option, value)
 //
-int gui_change_mod_option(lua_State *L)
+int gui_set_module_option(lua_State *L)
 {
 	const char *module = luaL_checkstring(L,1);
 	const char *option = luaL_checkstring(L,2);
@@ -556,7 +573,7 @@ int gui_change_mod_option(lua_State *L)
 
 	SYS_ASSERT(module && option && value);
 
-//	DebugPrintf("  change_mod_option: %s.%s --> %s\n", module, option, value);
+//	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option, value);
 
 	ob_set_mod_option(module, option, value);
 
@@ -867,12 +884,14 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "set_colormap",   gui_set_colormap },
 
 	{ "add_choice",     gui_add_choice },
-	{ "create_module",  gui_create_module },
-	{ "enable_module",  gui_enable_module },
+	{ "enable_choice",  gui_enable_choice },
+	{ "set_button",     gui_set_button },
+
+	{ "add_module",   gui_add_module },
+	{ "show_module",  gui_show_module },
+	{ "set_module",   gui_set_module },
 	{ "add_module_option", gui_add_module_option },
-	{ "show_button",    gui_show_button },
-	{ "change_button",  gui_change_button },
-	{ "change_mod_option", gui_change_mod_option },
+	{ "set_module_option", gui_set_module_option },
 
 	{ "at_level",    gui_at_level },
 	{ "prog_step",   gui_prog_step },
