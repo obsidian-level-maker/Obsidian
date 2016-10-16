@@ -3,17 +3,25 @@ WORK IN PROGRESS
 ================
 
 
+-  test if Spiderdemons get added with "A Few Maps" length wads
+
+
 Revamped UI:
 
--  support gaps between options
--  different kind of checkbox for UI modules? like "v" and "^"
--  rename sod_box
+!!  some of the stuff belongs in STYLES table
+    Q/ can we improve how that happens?
+    A/ yes, detect name 'xxx' in STYLES is used in OB_CONFIG
 
-+  FIX ALL THE CHOICES
+-  program option for twiddling choices via MouseWheel
+   [ default to OFF ]
 
--  remove the old code: ui_level.* ui_play.*
+-  warnings about "no such module" (for AddOption, etc)
 
--  split gui.add_mod_option ---> gui.add_option_choice
+??  merge Extra Settings + Level Control ??
+
+-  check Config_Flow.txt is still valid
+
++  control MODE and LENGTH buttons from Lua
 
 
 
@@ -22,6 +30,10 @@ Modding wiki:
 +  get template/CSS to match website style
 +  transfer "New Monster" docs to Wiki
 +  enable wiki on main page
+
+
+
+Make it easier to share a particular config+seed combo
 
 
 
