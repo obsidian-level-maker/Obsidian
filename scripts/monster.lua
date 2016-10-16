@@ -1947,14 +1947,14 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
         end
 
         if mon then
-          gui.printf("Using replacement boss: %s --> %s\n", bf.mon, mon)
+          warning("Using replacement boss: %s --> %s\n", bf.mon, mon)
 
           spot = grab_monster_spot(mon, R.guard_chunk, reqs)
         end
       end
 
       if not spot then
-        gui.printf("Cannot place boss monster: %s\n", bf.mon)
+        warning("Cannot place boss monster: %s\n", bf.mon)
         break;
       end
 
