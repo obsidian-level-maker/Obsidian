@@ -44,7 +44,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	int y_step  = kf_h(30);
 	int y_step2 = kf_h(44);
 
-	int cx = X + W * 0.36;
+	int cx = X + W * 0.39;
 	int cy = Y + kf_h(4);
 
 
@@ -59,7 +59,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy = kf_h(32);
 
 
-	int cw = W * 0.61;
+	int cw = W * 0.58;
 	int ch = kf_h(24);
 
 	game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
