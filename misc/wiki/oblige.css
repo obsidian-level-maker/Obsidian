@@ -2,10 +2,13 @@
 
 /* This sets the overall frame for the site */
 body {
-  margin: 0px;
-  background-color: black;
-  color: white;
-  font-family: sans-serif;  /* ???  Arial,Helvetica,sans-serif; */
+    background-color: black;
+    color: white;
+    padding: 6px;
+    padding-left: 50px;
+    padding-right: 50px;
+/*  font-size: larger;  */
+    font-family: sans-serif;
 }
 
 /* These control the fixed-width text elements of the page */
@@ -41,13 +44,13 @@ h6 { font-size:1.0em; }
 
 /* These are for the left-sidebar. */
 #wikileft {
-  width:155px;
-  padding:6px;
-  border-right:1px #cccccc solid;
-  line-height:1.33em;
-  font-size:9.4pt;
-  font-family:Verdana,sans-serif;
-  background-color: white;
+  width: 12em;
+  padding: 6px;
+  border-right: 3px #ccbbaa solid;
+  line-height: 1.33em;
+  font-size: 85%;
+  font-family: Verdana,sans-serif;
+  background-color:  white;
   color: black;
 }
 #wikileft .vspace { margin-top:1.125em; }
@@ -71,31 +74,35 @@ h6 { font-size:1.0em; }
 
 /* These affect the main content area. */
 #wikibody {
-  padding: 0px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  margin-left: 10px;
   background-color: white;
   color: black;
 }
 #wikicmds {
-  float:right;
-  white-space:nowrap;
-  font-family:Verdana,sans-serif;
-  font-size:80%;
+  float: right;
+  white-space: nowrap;
+  font-family: Verdana,sans-serif;
+  font-size: 80%;
 }
 #wikicmds ul { list-style:none; margin:0px; padding:0px; }
 #wikicmds li { display:inline; margin:0px 5px; }
 #wikicmds li a { text-decoration:none; color:black; border:none; }
 #wikicmds li a.createlink { display:none; }
 #wikicmds li a:hover { text-decoration:underline; color:blue; }
+
 .pagegroup { margin-top:8px; margin-bottom:2px; }
 .pagetitle { line-height:1em; margin:0px; font-size:1.6em; font-weight:normal; }
+
 .wikiaction { margin-top:4px; margin-bottom:4px; }
+.wikimessage { margin-top:4px; margin-bottom:4px; font-style:italic; }
+
 #wikitext { margin-top:12px; line-height:1.33em; }
 #wikitext table { font-size:100%; line-height:1.33em; } /* For MSIE 5.5 */
 
 /* These are for the edit form. */
 #wikiedit form { margin:0px; width:100%; }
 #wikiedit textarea { width:100%; }
-.wikimessage { margin-top:4px; margin-bottom:4px; font-style:italic; }
 
 /* These affect the lines at the very bottom. */
 #wikifoot {
@@ -103,8 +110,9 @@ h6 { font-size:1.0em; }
   font-family:Verdana,sans-serif; font-size:80%;
 }
 
-/* These affect the printed appearance of the web view (not the separate
- * print view) of pages.  The sidebar and action links aren't printed.
+/* These affect the printed appearance of the web view of pages
+ * (not the separate print view).  The sidebar and action links
+ * are omitted here.
  */
 @media print {
   body { width:auto; margin:0px; padding:0.5em; }
@@ -122,7 +130,7 @@ h6 { font-size:1.0em; }
     font-size: xx-large;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 0.8em;
+    margin-bottom: 1.2em;
 }
 
 .menu {
@@ -142,8 +150,27 @@ h6 { font-size:1.0em; }
 
 .submenu {
     background-color: #ccbbaa;
-    color: #006;
-    /* height: 32px; */
+    color: #000;
+    text-align: right;
+    padding-right: 10px;
     line-height: 2.0em;
+    font-size: 85%;
+    font-weight: bold;
+}
+
+.submenu a {
+    color: #420;
+    text-decoration: none;
+}
+
+.pagemod {
+    margin-top: 2.5em;
+    font-size: 65%;
+}
+
+.bottomcurve {
+    background-color: white;
+    height: 24px;
     font-size: small;
 }
+
