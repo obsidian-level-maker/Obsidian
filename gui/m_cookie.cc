@@ -70,13 +70,6 @@ static void Cookie_SetValue(const char *name, const char *value)
 		const char *module = active_module.c_str();
 
 		ob_set_mod_option(module, name, value);
-
-		if (main_win)
-		{
-			main_win-> left_mods->ParseOptValue(module, name, value);
-			main_win->right_mods->ParseOptValue(module, name, value);
-		}
-
 		return;
 	}
 
@@ -96,15 +89,6 @@ static void Cookie_SetValue(const char *name, const char *value)
 	}
 
 
-	if (main_win)
-	{
-		// -- Game Settings --
-		if (main_win->game_box->ParseValue(name, value))
-			return;
-	}
-
-
-	// everything else goes to the script
 	ob_set_config(name, value);
 }
 

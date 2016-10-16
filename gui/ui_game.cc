@@ -275,26 +275,5 @@ bool UI_Game::SetButton(const char *button, const char *id)
 }
 
 
-bool UI_Game::ParseValue(const char *key, const char *value)
-{
-	// Note: game, engine, theme are handled by LUA code
-	//
-	if (StringCaseCmp(key, "mode") == 0)
-	{
-		mode->ChangeTo(value);
-		callback_Mode(NULL, this);
-		return true;
-	}
-
-	if (StringCaseCmp(key, "length") == 0)
-	{
-		length->ChangeTo(value);
-		callback_Length(NULL, this);
-	}
-
-	return false;
-}
-
-
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

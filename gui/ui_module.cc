@@ -175,16 +175,12 @@ void UI_Module::AddOptionChoice(const char *option, const char *id, const char *
 }
 
 
-bool UI_Module::ParseValue(const char *option, const char *value)
+bool UI_Module::SetOption(const char *option, const char *value)
 {
 	UI_RChoice *rch = FindOpt(option);
 
 	if (! rch)
-	{
-		LogPrintf("Warning: module '%s' lacks option '%s' (config parse)\n",
-				id_name.c_str(), option);
 		return false;
-	}
 
 	return rch->ChangeTo(value);
 }
@@ -294,22 +290,20 @@ void UI_CustomMods::AddModule(const char *id, const char *label, const char *tip
 }
 
 
-void UI_CustomMods::AddOption(const char *module, const char *option,
+bool UI_CustomMods::AddOption(const char *module, const char *option,
 							  const char *label, const char *tip,
 							  int gap)
 {
 	UI_Module *M = FindID(module);
 
 	if (! M)
-	{
-//!!!		LogPrintf("Warning: no such module '%s' (add option '%s')\n",
-//!!!				module, option);
-		return;
-	}
+		return false;
 
 	M->AddOption(option, label, tip, gap, button_col);
 
 	PositionAll();
+
+	return true;
 }
 
 
@@ -350,36 +344,29 @@ bool UI_CustomMods::ShowModule(const char *id, bool new_shown)
 }
 
 
-bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
-                                  const char *value)
+bool UI_CustomMods::SetOption(const char *module, const char *option,
+							  const char *value)
 {
-	// the script takes care of the module itself
-	if (StringCaseCmp(option, "self") == 0)
-		return true;
-
 	UI_Module *M = FindID(module);
 
 	if (! M)
-	{
-//!!!		LogPrintf("Warning: no such module '%s' (config parse)\n", module);
 		return false;
-	}
 
-	return M->ParseValue(option, value);
+	return M->SetOption(option, value);
 }
 
 
-void UI_CustomMods::EnableMod(const char *id, bool enable)
+bool UI_CustomMods::EnableMod(const char *id, bool enable)
 {
 	SYS_ASSERT(id);
 
 	UI_Module *M = FindID(id);
 
 	if (! M)
-		return;
+		return false;
 
 	if ((M->mod_button->value() ? 1:0) == (enable ? 1:0))
-		return; // no change
+		return true; // no change
 
 	M->mod_button->value(enable ? 1 : 0);
 	M->update_Enable();
@@ -389,6 +376,8 @@ void UI_CustomMods::EnableMod(const char *id, bool enable)
 	{
 		PositionAll();
 	}
+
+	return true;
 }
 
 

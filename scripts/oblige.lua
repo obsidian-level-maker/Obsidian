@@ -397,6 +397,8 @@ function ob_set_mod_option(name, option, value)
 
   opt.value = value
 
+  gui.set_module_option(name, option, value)
+
   -- no need to call ob_update_all
   -- (nothing ever depends on custom options)
 end
@@ -459,13 +461,16 @@ function ob_set_config(name, value)
 
   OB_CONFIG[name] = value
 
-  if (name == "game") or (name == "mode") or (name == "engine") then
+  if name == "game" or name == "mode" or name == "engine" then
     ob_update_all()
   end
 
   -- this is required for parsing the CONFIG.TXT file
   -- [ but redundant when the user merely changed the widget ]
-  if (name == "game") or (name == "engine") or (name == "theme") then
+  if name == "game" or name == "engine" or
+     name == "mode" or name == "length" or
+     name == "theme"
+  then
     gui.set_button(name, OB_CONFIG[name])
   end
 end
@@ -804,13 +809,12 @@ function ob_init()
             elseif opt.avail_choices["normal"]  then opt.default = "normal"
             elseif opt.avail_choices["medium"]  then opt.default = "medium"
             elseif opt.avail_choices["mixed"]   then opt.default = "mixed"
-            else   opt.default = list[1].name
+            else   opt.default = opt.choices[1]
             end
           end
 
           opt.value = opt.default
 
----???        ob_set_mod_option(mod.name, opt.name, opt.value)
           gui.set_module_option(mod.name, opt.name, opt.value)
         end -- for opt
       end

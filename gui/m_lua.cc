@@ -574,10 +574,14 @@ int gui_set_module_option(lua_State *L)
 	if (! main_win)
 		return 0;
 
-	// FIXME : error if module or option is unknown
+	if (StringCaseCmp(option, "self") == 0)
+		return luaL_error(L, "set_module_option: cannot use 'self' here\n", option);
 
-	main_win-> left_mods->ParseOptValue(module, option, value);
-	main_win->right_mods->ParseOptValue(module, option, value);
+	if (! (main_win-> left_mods->SetOption(module, option, value) ||
+		   main_win->right_mods->SetOption(module, option, value)))
+	{
+		return luaL_error(L, "set_module_option: unknown option '%s.%s'\n", module, option);
+	}
 
 	return 0;
 }

@@ -49,7 +49,7 @@ public:
 
 	void AddOptionChoice(const char *option, const char *id, const char *label);
 
-	bool ParseValue(const char *option, const char *value);
+	bool SetOption(const char *option, const char *value);
 
 	bool Is_UI() const;
 
@@ -92,18 +92,17 @@ public:
 public:
 	void AddModule(const char *id, const char *label, const char *tip);
 
+	// these return false if module is unknown
 	bool ShowModule(const char *id, bool new_shown);
+	bool EnableMod(const char *id, bool enable);
 
-	void EnableMod(const char *id, bool enable);
-
-	void AddOption (const char *module, const char *option, const char *label,
+	bool AddOption (const char *module, const char *option, const char *label,
 	                const char *tip, int gap);
 
 	void AddOptionChoice(const char *module, const char *option,
 						 const char *id, const char *label);
 
-	bool ParseOptValue(const char *module, const char *option,
-			const char *value);
+	bool SetOption(const char *module, const char *option, const char *value);
 
 	void Locked(bool value);
 

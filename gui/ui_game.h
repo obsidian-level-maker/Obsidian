@@ -44,19 +44,12 @@ public:
 	bool EnableChoice(const char *button, const char *id, bool enable_it);
 	bool SetButton(const char *button, const char *id);
 
-	// this is only for reading the CONFIG file.
-	// parse the name and store the value in the appropriate
-	// widget, also sending it to the Lua code.
-	// Returns false if the key was unknown.
-	bool ParseValue(const char *key, const char *value);
-
 private:
 	static void callback_Game  (Fl_Widget *, void*);
 	static void callback_Engine(Fl_Widget *, void*);
 	static void callback_Length(Fl_Widget *, void*);
 	static void callback_Mode  (Fl_Widget *, void*);
 	static void callback_Theme (Fl_Widget *, void*);
-
 };
 
 #endif /* __UI_GAME_H__ */
