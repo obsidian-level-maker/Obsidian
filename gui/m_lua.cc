@@ -371,6 +371,59 @@ int gui_add_choice(lua_State *L)
 }
 
 
+// LUA: enable_choice(what, id, shown)
+//
+int gui_enable_choice(lua_State *L)
+{
+	const char *button = luaL_checkstring(L,1);
+	const char *id     = luaL_checkstring(L,2);
+
+	int enable = lua_toboolean(L,3) ? 1 : 0;
+
+	SYS_ASSERT(button && id);
+
+//	DebugPrintf("  enable_choice: %s id:%s %s\n", button, id, enable ? "enable" : "DISABLE");
+
+	if (! main_win)
+		return 0;
+
+	if (! main_win->game_box->EnableChoice(button, id, enable))
+		return luaL_error(L, "enable_choice: unknown button '%s'\n", button);
+
+	return 0;
+}
+
+
+// LUA: set_button(button, id)
+//
+int gui_set_button(lua_State *L)
+{
+	const char *button = luaL_checkstring(L,1);
+	const char *id     = luaL_checkstring(L,2);
+
+	SYS_ASSERT(button && id);
+
+//	DebugPrintf("  change_button: %s --> %s\n", button, id);
+
+	if (! main_win)
+		return 0;
+
+	if (StringCaseCmp(button, "game") == 0)
+		main_win->game_box->game->ChangeTo(id);
+
+	else if (StringCaseCmp(button, "engine") == 0)
+		main_win->game_box->engine->ChangeTo(id);
+
+	else if (StringCaseCmp(button, "theme") == 0)
+		main_win->game_box->theme->ChangeTo(id);
+
+	else
+		return luaL_error(L, "set_button: unknown button '%s'\n", button);
+
+	return 0;
+}
+
+
 // LUA: add_module(where, id, label, tooltip)
 //
 int gui_add_module(lua_State *L)
@@ -399,6 +452,55 @@ int gui_add_module(lua_State *L)
 
 	else
 		return luaL_error(L, "add_module: unknown where value '%s'\n", where);
+
+	return 0;
+}
+
+
+// LUA: set_module(id, bool)
+//
+int gui_set_module(lua_State *L)
+{
+	const char *module = luaL_checkstring(L,1);
+
+	int opt_val = lua_toboolean(L,2) ? 1 : 0;
+
+	SYS_ASSERT(module);
+
+//	DebugPrintf("  set_module: %s --> %s\n", module, opt_val);
+
+	if (! main_win)
+		return 0;
+
+	// FIXME : error if module is unknown
+
+	// try both columns
+	main_win-> left_mods->EnableMod(module, opt_val);
+	main_win->right_mods->EnableMod(module, opt_val);
+
+	return 0;
+}
+
+
+// LUA: show_module(module, shown)
+//
+int gui_show_module(lua_State *L)
+{
+	const char *module = luaL_checkstring(L,1);
+
+	int shown = lua_toboolean(L,2) ? 1 : 0;
+
+	SYS_ASSERT(module);
+
+//	DebugPrintf("  show_module: %s --> %s\n", what, module, shown ? "show" : "HIDE");
+
+	if (! main_win)
+		return 0;
+
+	// FIXME : error if module is unknown
+
+	main_win-> left_mods->ShowModule(module, shown);
+	main_win->right_mods->ShowModule(module, shown);
 
 	return 0;
 }
@@ -461,108 +563,6 @@ int gui_add_option_choice(lua_State *L)
 
 	main_win-> left_mods->AddOptionChoice(module, option, id, label);
 	main_win->right_mods->AddOptionChoice(module, option, id, label);
-
-	return 0;
-}
-
-
-// LUA: enable_choice(what, id, shown)
-//
-int gui_enable_choice(lua_State *L)
-{
-	const char *button = luaL_checkstring(L,1);
-	const char *id     = luaL_checkstring(L,2);
-
-	int enable = lua_toboolean(L,3) ? 1 : 0;
-
-	SYS_ASSERT(button && id);
-
-//	DebugPrintf("  enable_choice: %s id:%s %s\n", button, id, enable ? "enable" : "DISABLE");
-
-	if (! main_win)
-		return 0;
-
-	if (! main_win->game_box->EnableChoice(button, id, enable))
-		return luaL_error(L, "enable_choice: unknown button '%s'\n", button);
-
-	return 0;
-}
-
-
-// LUA: set_button(button, id)
-//
-int gui_set_button(lua_State *L)
-{
-	const char *button = luaL_checkstring(L,1);
-	const char *id     = luaL_checkstring(L,2);
-
-	SYS_ASSERT(button && id);
-
-//	DebugPrintf("  change_button: %s --> %s\n", button, id);
-
-	if (! main_win)
-		return 0;
-
-	if (StringCaseCmp(button, "game") == 0)
-		main_win->game_box->game->ChangeTo(id);
-
-	else if (StringCaseCmp(button, "engine") == 0)
-		main_win->game_box->engine->ChangeTo(id);
-
-	else if (StringCaseCmp(button, "theme") == 0)
-		main_win->game_box->theme->ChangeTo(id);
-
-	else
-		return luaL_error(L, "set_button: unknown button '%s'\n", button);
-
-	return 0;
-}
-
-
-// LUA: show_module(module, shown)
-//
-int gui_show_module(lua_State *L)
-{
-	const char *module = luaL_checkstring(L,1);
-
-	int shown = lua_toboolean(L,2) ? 1 : 0;
-
-	SYS_ASSERT(module);
-
-//	DebugPrintf("  show_module: %s --> %s\n", what, module, shown ? "show" : "HIDE");
-
-	if (! main_win)
-		return 0;
-
-	// FIXME : error if module is unknown
-
-	main_win-> left_mods->ShowModule(module, shown);
-	main_win->right_mods->ShowModule(module, shown);
-
-	return 0;
-}
-
-
-// LUA: set_module(id, bool)
-//
-int gui_set_module(lua_State *L)
-{
-	const char *module = luaL_checkstring(L,1);
-
-	int opt_val = lua_toboolean(L,2) ? 1 : 0;
-
-	SYS_ASSERT(module);
-
-//	DebugPrintf("  set_module: %s --> %s\n", module, opt_val);
-
-	if (! main_win)
-		return 0;
-
-	// FIXME : error if module is unknown
-
-	// try both columns
-	main_win-> left_mods->EnableMod(module, opt_val);
-	main_win->right_mods->EnableMod(module, opt_val);
 
 	return 0;
 }
@@ -895,6 +895,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "add_module",   gui_add_module },
 	{ "show_module",  gui_show_module },
 	{ "set_module",   gui_set_module },
+
 	{ "add_module_option", gui_add_module_option },
 	{ "add_option_choice", gui_add_option_choice },
 	{ "set_module_option", gui_set_module_option },
