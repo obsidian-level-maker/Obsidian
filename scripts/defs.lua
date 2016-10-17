@@ -194,6 +194,19 @@ GLOBAL_STYLE_LIST =
 }
 
 
+STYLE_CHOICES =
+{
+  "none",   _("NONE"),
+  "rare",   _("Rare"),
+  "few",    _("Few"),
+  "less",   _("Less"),
+  "some",   _("Some"),
+  "more",   _("More"),
+  "heaps",  _("Heaps"),
+  "mixed",  _("Mix It Up"),
+}
+
+
 --
 -- default parameters (each game can override these settings)
 --

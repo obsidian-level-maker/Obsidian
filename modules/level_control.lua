@@ -19,19 +19,6 @@
 
 LEVEL_CONTROL = { }
 
-LEVEL_CONTROL.CHOICES =
-{
-  "mixed",  _("DEFAULT"),
-  "none",   _("None at all"),
-  "rare",   _("Rare"),
-  "few",    _("Few"),
-  "less",   _("Less"),
-  "some",   _("Some"),
-  "more",   _("More"),
-  "heaps",  _("Heaps"),
-}
-
-
 function LEVEL_CONTROL.begin_level(self)
   for name,opt in pairs(self.options) do
     local factor = self.options[name].value
@@ -57,36 +44,36 @@ OB_MODULES["level_control"] =
 
   options =
   {
---  big_rooms   = { label=_("Big Rooms"),      choices=LEVEL_CONTROL.CHOICES }
---  cages       = { label=_("Cages"),          choices=LEVEL_CONTROL.CHOICES }
-    darkness    = { label=_("Dark Outdoors"),  choices=LEVEL_CONTROL.CHOICES }
-    doors       = { label=_("Doors"),          choices=LEVEL_CONTROL.CHOICES }
+--  big_rooms   = { label=_("Big Rooms"),      choices=STYLE_CHOICES }
+--  cages       = { label=_("Cages"),          choices=STYLE_CHOICES }
+    darkness    = { label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
+    doors       = { label=_("Doors"),          choices=STYLE_CHOICES }
 
-    keys        = { label=_("Keyed Doors"),    choices=LEVEL_CONTROL.CHOICES }
---  liquids     = { label=_("Liquids"),        choices=LEVEL_CONTROL.CHOICES }
---  mon_variety = { label=_("Monster Variety"),choices=LEVEL_CONTROL.CHOICES, tooltip="Setting this to NONE will make each level use a single monster type" }
+    keys        = { label=_("Keyed Doors"),    choices=STYLE_CHOICES }
+--  liquids     = { label=_("Liquids"),        choices=STYLE_CHOICES }
+--  mon_variety = { label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip="Setting this to NONE will make each level use a single monster type" }
 
---  secrets     = { label=_("Secrets"),        choices=LEVEL_CONTROL.CHOICES }
---  steepness   = { label=_("Steepness"),      choices=LEVEL_CONTROL.CHOICES }
-    switches    = { label=_("Switched Doors"), choices=LEVEL_CONTROL.CHOICES }
+--  secrets     = { label=_("Secrets"),        choices=STYLE_CHOICES }
+--  steepness   = { label=_("Steepness"),      choices=STYLE_CHOICES }
+    switches    = { label=_("Switched Doors"), choices=STYLE_CHOICES }
 
---  teleporters = { label=_("Teleporters"),    choices=LEVEL_CONTROL.CHOICES }
---  traps       = { label=_("Traps"),          choices=LEVEL_CONTROL.CHOICES }
-    windows     = { label=_("Windows"),        choices=LEVEL_CONTROL.CHOICES }
+--  teleporters = { label=_("Teleporters"),    choices=STYLE_CHOICES }
+--  traps       = { label=_("Traps"),          choices=STYLE_CHOICES }
+    windows     = { label=_("Windows"),        choices=STYLE_CHOICES }
 
 ---- PLANNED (UNFINISHED) STUFF ----
 
---  hallways    = { label=_("Hallways"),       choices=LEVEL_CONTROL.CHOICES }
---  symmetry    = { label=_("Symmetry"),       choices=LEVEL_CONTROL.CHOICES }
---  pictures    = { label=_("Pictures"),       choices=LEVEL_CONTROL.CHOICES }
---  cycles      = { label=_("Multiple Paths"), choices=LEVEL_CONTROL.CHOICES }
---  ex_floors   = { label=_("3D Floors"),      choices=LEVEL_CONTROL.CHOICES }
+--  hallways    = { label=_("Hallways"),       choices=STYLE_CHOICES }
+--  symmetry    = { label=_("Symmetry"),       choices=STYLE_CHOICES }
+--  pictures    = { label=_("Pictures"),       choices=STYLE_CHOICES }
+--  cycles      = { label=_("Multiple Paths"), choices=STYLE_CHOICES }
+--  ex_floors   = { label=_("3D Floors"),      choices=STYLE_CHOICES }
 
---  barrels     = { label=_("Barrels"),        choices=LEVEL_CONTROL.CHOICES }
---  porches     = { label=_("Porches"),        choices=LEVEL_CONTROL.CHOICES }
---  lakes       = { label=_("Lakes"),          choices=LEVEL_CONTROL.CHOICES }
---  bridges     = { label=_("3D Bridges"),     choices=LEVEL_CONTROL.CHOICES }
---  crossovers  = { label=_("Cross-Overs"),    choices=LEVEL_CONTROL.CHOICES }
+--  barrels     = { label=_("Barrels"),        choices=STYLE_CHOICES }
+--  porches     = { label=_("Porches"),        choices=STYLE_CHOICES }
+--  lakes       = { label=_("Lakes"),          choices=STYLE_CHOICES }
+--  bridges     = { label=_("3D Bridges"),     choices=STYLE_CHOICES }
+--  crossovers  = { label=_("Cross-Overs"),    choices=STYLE_CHOICES }
   }
 }
 

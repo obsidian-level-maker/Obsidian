@@ -18,18 +18,6 @@
 
 UI_ARCH = { }
 
-UI_ARCH.CHOICES =
-{
-   "none",   _("NONE"),
-   "rare",   _("Rare"),
-   "few",    _("Few"),
-   "less",   _("Less"),
-   "some",   _("Some"),
-   "more",   _("More"),
-   "heaps",  _("Heaps"),
-   "mixed",  _("Mix It Up"),
-}
-
 UI_ARCH.SIZES =
 {
   "epi",     _("Episodic"),
@@ -56,14 +44,14 @@ OB_MODULES["ui_arch"] =
   {
     { name="size",         label=_("Size"),       choices=UI_ARCH.SIZES,  default="epi",  gap=1 }
      
-    { name="outdoors",     label=_("Outdoors"),   choices=UI_ARCH.CHOICES }
-    { name="caves",        label=_("Caves"),      choices=UI_ARCH.CHOICES }
-    { name="liquids",      label=_("Liquids"),    choices=UI_ARCH.CHOICES,  gap=1 }
+    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES }
+    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES }
+    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES,  gap=1 }
 
-    { name="hallways",     label=_("Hallways"),   choices=UI_ARCH.CHOICES }
-    { name="big_rooms",    label=_("Big Rooms"),  choices=UI_ARCH.CHOICES }
-    { name="teleporters",  label=_("Teleports"),  choices=UI_ARCH.CHOICES }
-    { name="steepness",    label=_("Steepness"),  choices=UI_ARCH.CHOICES }
+    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES }
+    { name="big_rooms",    label=_("Big Rooms"),  choices=STYLE_CHOICES }
+    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES }
+    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES }
   }
 }
 
