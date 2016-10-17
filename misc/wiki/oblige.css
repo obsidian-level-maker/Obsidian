@@ -37,7 +37,7 @@ h6 { font-size:1.0em; }
 /* These are for the left-sidebar. */
 #wikileft {
   width: 12em;
-  padding: 6px;
+  padding: 0.8em;
   border-right: 3px #ccbbaa solid;
   line-height: 1.33em;
   font-size: 85%;
@@ -46,10 +46,17 @@ h6 { font-size:1.0em; }
   color: black;
 }
 #wikileft .vspace { margin-top:1.125em; }
+#wikileft strong { color: #c44; }
+#wikileft ul { list-style:none; padding:0px; margin:0px; }
+#wikileft li { margin:0px; padding-left: 0px; }
+
 #wikileft a { text-decoration:none; color:black; }
 #wikileft a:hover { text-decoration:underline; color:blue; }
-#wikileft ul { list-style:none; padding:0px; margin:0px; }
-#wikileft li { margin:0px; padding-left: 6px; }
+
+#wikileft a.createlinktext, #wikileft a.createlink {
+  border-bottom: 0px;
+  color: #ccc;
+}
 
 .sidehead {
   margin: 0px;
