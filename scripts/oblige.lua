@@ -424,8 +424,7 @@ function ob_set_config(name, value)
     if ob_check_ui_module(mod) then
       each opt in mod.options do
         if opt.name == name then
-              ob_set_mod_option(mod.name, name, value)
-          gui.set_module_option(mod.name, name, value)
+          ob_set_mod_option(mod.name, name, value)
           return
         end
       end

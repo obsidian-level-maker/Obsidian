@@ -185,7 +185,9 @@ bool UI_Module::SetOption(const char *option, const char *value)
 	if (! rch)
 		return false;
 
-	return rch->ChangeTo(value);
+	rch->ChangeTo(value);
+
+	return true;
 }
 
 
