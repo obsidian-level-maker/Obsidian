@@ -1827,12 +1827,7 @@ end
 function Level_do_styles()
   local style_tab = table.copy(GLOBAL_STYLE_LIST)
 
-  -- adjust styles for Co-operative multiplayer
-  if OB_CONFIG.playmode == "coop" then
-    style_tab.cycles = { some=30, heaps=50 }
-  end
-
-  -- per game, per level and per theme style_lists
+  -- game, level and theme specific style_lists
   if GAME.STYLE_LIST then
     table.merge(style_tab, GAME.STYLE_LIST)
   end
@@ -1843,6 +1838,11 @@ function Level_do_styles()
     table.merge(style_tab, THEME.style_list)
   end
 
+  -- adjustments for multiplayer modes
+  if OB_CONFIG.playmode != "sp" then
+    style_tab.cycles = { some=30, heaps=60 }
+  end
+
   -- decide the values
   STYLE = {}
 
@@ -1850,14 +1850,14 @@ function Level_do_styles()
     STYLE[name] = rand.key_by_probs(prob_tab)
   end
 
-  -- GUI overrides...
-  each name in { "outdoors", "caves", "traps" } do
+  -- apply user settings
+  each name,_ in GLOBAL_STYLE_LIST do
     if OB_CONFIG[name] and OB_CONFIG[name] != "mixed" then
       STYLE[name] = OB_CONFIG[name]
     end
   end
 
-  -- no traps/cages in DM or CTF maps
+  -- never any traps/cages in DM or CTF maps
   if OB_CONFIG.playmode == "dm" or OB_CONFIG.playmode == "ctf" then
     STYLE.traps = "none"
     STYLE.cages = "none"

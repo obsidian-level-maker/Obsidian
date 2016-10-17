@@ -152,35 +152,27 @@ COOP_AMMO_FACTOR   = 1.25
 --
 GLOBAL_STYLE_LIST =
 {
-  -- these two correspond to buttons in the GUI
   outdoors    = { none=0,  few=60, some=40, heaps=20 }
   caves       = { none=60, few=20, some=20, heaps=5 }
+  liquids     = { none=0,  few=20, some=20, heaps=80 }
+
+  hallways    = { none=0,  few=60, some=30, heaps=10 }
+  big_rooms   = { none=10, few=20, some=40, heaps=20 }
+  teleporters = { none=20, few=40, some=40, heaps=20 }
+  steepness   = { none=0,  few=20, some=60, heaps=10 }
 
   traps       = { none=0,  few=20, some=65, heaps=15 }
-  secrets     = { none=0,  few=20, some=50, heaps=10 }
   cages       = { none=10, few=20, some=40, heaps=10 }
+  secrets     = { none=0,  few=20, some=50, heaps=10 }
+  ambushes    = { none=10, few=0,  some=50, heaps=10 }
 
-  big_rooms   = { none=10, few=20, some=40, heaps=20 }
-  symmetry    = { none=10, few=40, some=60, heaps=10 }
-  steepness   = { none=0,  few=20, some=60, heaps=10 }
-  hallways    = { none=0,  few=60, some=30, heaps=10 }
-
-  -- room connections --
-
-  teleporters = { none=20, few=40, some=40, heaps=20 }
   doors       = { none=5,  few=30, some=60, heaps=5 }
   windows     = { none=0,  few=20, some=70, heaps=35 }
   switches    = { none=20, few=20, some=40, heaps=10 }
   keys        = { none=0,  few=10, some=20, heaps=60 }
 
-  -- decoration stuff --
-
-  liquids     = { none=0,  few=20, some=20, heaps=80 }
+  symmetry    = { none=10, few=40, some=60, heaps=10 }
   pictures    = { none=0,  few=10, some=50, heaps=10 }
-
-  -- monster stuff --
-
-  ambushes    = { none=10, few=0,  some=50, heaps=10 }
 
   -- PLANNED or UNFINISHED stuff --
 
