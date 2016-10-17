@@ -79,17 +79,6 @@ h6 { font-size:1.0em; }
   background-color: white;
   color: black;
 }
-#wikicmds {
-  float: right;
-  white-space: nowrap;
-  font-family: Verdana,sans-serif;
-  font-size: 80%;
-}
-#wikicmds ul { list-style:none; margin:0px; padding:0px; }
-#wikicmds li { display:inline; margin:0px 5px; }
-#wikicmds li a { text-decoration:none; color:black; border:none; }
-#wikicmds li a.createlink { display:none; }
-#wikicmds li a:hover { text-decoration:underline; color:blue; }
 
 .pagegroup {
     margin-top: 8px;
@@ -129,7 +118,9 @@ h6 { font-size:1.0em; }
 @media print {
   body { width:auto; margin:0px; padding:0.5em; }
 
-  #wikileft, #wikicmds, .footnav { display:none; }
+  #wikileft { display:none; }
+  .oblige_title { display:none; }
+  .menu, .submenu { display:none; }
 }
 
 /* ---- stuff from Oblige website CSS ---- */
@@ -162,7 +153,7 @@ h6 { font-size:1.0em; }
 
 .submenu {
     background-color: #ccbbaa;
-    color: #000;
+    color: #420;
     text-align: right;
     padding-right: 1.5em;
     line-height: 2.0em;
@@ -170,10 +161,9 @@ h6 { font-size:1.0em; }
     font-weight: bold;
 }
 
-.submenu a {
-    color: #420;
-    text-decoration: none;
-}
+.submenu a { text-decoration:none; color:#420; border:none; }
+.submenu a:hover { text-decoration:underline; color:#a60; }
+.submenu a.createlink { display:none; }
 
 .pagemod {
     margin-top: 2.5em;
