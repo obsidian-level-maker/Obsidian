@@ -23,22 +23,21 @@ UI_PICKUPS.HEALTH_CHOICES =
   "none",   _("NONE"),
   "scarce", _("Scarce"),
   "less",   _("Less"),
+--TODO  "bit_less", _("Bit Less"),
   "normal", _("Normal"),
+--TODO  "bit_more", _("Bit More"),
   "more",   _("More"),
   "heaps",  _("Heaps"),
-
--- TODO:
--- "bit_less", _("Bit Less"),
--- "bit_more", _("Bit More"),
 }
 
 UI_PICKUPS.ITEM_CHOICES =
 {
 	"none",   _("NONE"),
+--TODO	"rare",   _("Rare"),
 	"less",   _("Less"),
 	"normal", _("Normal"),
 	"more",   _("More"),
-	"mixed",  _("Mix It Up"),
+--TODO	"heaps",  _("Heaps"),
 }
 
 
