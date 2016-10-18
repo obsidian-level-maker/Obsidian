@@ -32,7 +32,8 @@
 static Fl_Menu_Across	*pressed_across_menu_ = 0;
 
 
-void Fl_Menu_Across::draw() {
+void Fl_Menu_Across::draw()
+{
   int H = (labelsize()-3)&-2;
   int X = x()+w()-H-Fl::box_dx(box())-Fl::box_dw(box())-1;
 //int Y = y()+(h()-H)/2;
@@ -49,7 +50,8 @@ void Fl_Menu_Across::draw() {
   sets changed() as described above.  The menu item is returned
   or NULL if the user dismisses the menu.
 */
-const Fl_Menu_Item* Fl_Menu_Across::popup() {
+const Fl_Menu_Item* Fl_Menu_Across::popup()
+{
   const Fl_Menu_Item* m;
   pressed_across_menu_ = this;
   redraw();
@@ -95,8 +97,9 @@ int Fl_Menu_Across::handle(int e) {
 /**
   Creates a new Fl_Menu_Across widget using the given position,
   size, and label string. The default boxtype is FL_UP_BOX.
-  <P>The constructor sets menu() to NULL.  See 
-  Fl_Menu_ for the methods to set or change the menu.
+  <P>
+  The constructor sets menu() to NULL.
+  See Fl_Menu_ for the methods to set or change the menu.
 */
 Fl_Menu_Across::Fl_Menu_Across(int X,int Y,int W,int H,const char *l)
 : Fl_Menu_(X,Y,W,H,l) {
@@ -113,6 +116,8 @@ int Fl_Menu_Across::add(const char *mytext,
 	int sc, Fl_Callback *cb, void *data, int myflags)
 {
 	char buf[1024 + 8];
+
+	SYS_ASSERT(strlen(mytext) < 1024);
 
 	strncpy(buf, mytext, 1024);
 	buf[1024] = 0;
