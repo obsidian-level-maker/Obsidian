@@ -23,6 +23,7 @@
 #include "hdr_ui.h"
 
 #include "lib_util.h"
+#include "main.h"
 
 
 choice_data_c::choice_data_c(const char *_id, const char *_label) :
@@ -251,7 +252,9 @@ void UI_RChoice::GotoNext()
 
 int UI_RChoice::handle(int event)
 {
-	if (event == FL_MOUSEWHEEL && Fl::belowmouse() == this)
+	if (wheel_can_bump &&
+	    event == FL_MOUSEWHEEL &&
+		Fl::belowmouse() == this)
 	{
 		if (Fl::event_dy() < 0)
 			GotoPrevious();

@@ -61,8 +61,10 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
-int  window_size = 0;  // AUTO
+int  window_size = 0;  /* AUTO */
 bool alternate_look = false;
+bool wheel_can_bump = true;
+
 bool create_backups = true;
 bool debug_messages = false;
 bool fast_lighting = false;

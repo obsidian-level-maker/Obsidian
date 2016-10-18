@@ -59,8 +59,10 @@ extern int main_action;
 
 
 // Misc Options
-extern bool alternate_look;
 extern  int window_size;    // 0 = Auto, 1 = Tiny ... 5 = Huge
+extern bool alternate_look;
+extern bool wheel_can_bump;
+
 extern bool create_backups;
 extern bool debug_messages;
 extern bool fast_lighting;
