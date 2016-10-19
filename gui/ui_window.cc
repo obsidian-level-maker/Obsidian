@@ -35,7 +35,7 @@
 
 
 #define BASE_WINDOW_W  816
-#define BASE_WINDOW_H  532
+#define BASE_WINDOW_H  512
 
 
 UI_MainWin *main_win;
