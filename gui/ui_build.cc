@@ -49,9 +49,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	status_label[0] = 0;
 
 
-	int cy = Y + kf_h(18);
-
-
 	int button_w = W * 0.35;
 	int button_h = kf_h(30);
 	int button_x = X + kf_w(16);
@@ -60,9 +57,12 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	int mini_w = W * 0.42;
 	int mini_h = mini_w;
 	int mini_x = button_x + button_w + kf_w(24);
+	int mini_y = Y + kf_h(28);
 
-	mini_map = new UI_MiniMap(mini_x, cy + kf_h(10), mini_w, mini_h);
+	mini_map = new UI_MiniMap(mini_x, mini_y, mini_w, mini_h);
 
+
+	int cy = mini_y - button_h/2;
 
 	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
 		StringPrintf("     %s @-3>", _("Menu")));
@@ -76,7 +76,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	misc_menu->add(_("Config Manager"),FL_F+9, menu_do_manage_config);
 
 
-	cy += mini_h / 2;
+	cy = mini_y + mini_h / 2 - (button_h+4) / 2;
 
 
 	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
@@ -85,8 +85,8 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	build->callback(build_callback, this);
 	build->shortcut(FL_F+2);
 
-	cy += mini_h / 2;
 
+	cy = mini_y + mini_h - button_h/2;
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, _("Quit"));
 	quit->callback(quit_callback, this);
