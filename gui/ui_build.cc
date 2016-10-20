@@ -95,7 +95,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	/* --- Status Area --- */
 
-	cy = Y + H - kf_h(82);
+	cy = Y + H - kf_h(112);
 
 
 	int pad = kf_w(14);
@@ -115,6 +115,17 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
 	progress->value(0.0);
 	progress->labelsize(FL_NORMAL_SIZE + 2);
+
+
+	int cw = kf_w(10);
+	int ch = kf_h(26);
+	cy = Y + H - ch * 3/2;
+
+
+	seed_display = new Fl_Box(FL_NO_BOX, X + cw, cy, W - cw*2, ch, "---- ---- ---- ----");
+	seed_display->labelfont(FL_COURIER);
+	seed_display->labelsize(FL_NORMAL_SIZE + 2);
+	seed_display->labelcolor(34);
 
 
 	end();

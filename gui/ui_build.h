@@ -23,9 +23,19 @@
 
 class UI_Build : public Fl_Group
 {
+public:
+	UI_MiniMap *mini_map;
+
 private:
+	Fl_Menu_Across *misc_menu;
+
+	Fl_Button *build;
+	Fl_Button *quit;
+
 	Fl_Box *status;
 	Fl_Progress *progress;
+
+	Fl_Box *seed_display;
 
 	char  status_label[200];
 	char  prog_label[100];
@@ -39,14 +49,6 @@ private:
 
 	std::vector<std::string> step_names;
 
-	Fl_Menu_Across *misc_menu;
-
-	Fl_Button *build;
-	Fl_Button *quit;
-
-public:
-	UI_MiniMap *mini_map;
-
 public:
 	UI_Build(int x, int y, int w, int h, const char *label = NULL);
 	virtual ~UI_Build();
@@ -59,6 +61,8 @@ public:
 	void Prog_Finish();
 
 	void SetStatus(const char *msg);
+	void DisplaySeed(double value);
+
 	void SetAbortButton(bool abort);
 	void Locked(bool value);
 
