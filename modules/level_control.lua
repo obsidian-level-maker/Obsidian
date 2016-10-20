@@ -44,7 +44,7 @@ OB_MODULES["level_control"] =
 
   options =
   {
---  big_rooms   = { label=_("Big Rooms"),      choices=STYLE_CHOICES }
+    big_rooms   = { label=_("Big Rooms"),      choices=STYLE_CHOICES }
 --  cages       = { label=_("Cages"),          choices=STYLE_CHOICES }
     darkness    = { label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
     doors       = { label=_("Doors"),          choices=STYLE_CHOICES }
