@@ -25,6 +25,14 @@ MISC_STUFF.YES_NO =
   "yes", _("Yes"),
 }
 
+MISC_STUFF.LIGHTINGS =
+{
+  "flat",    _("FLAT"),
+  "lower",   _("Lower"),
+  "normal",  _("Normal"),
+  "higher",  _("Higher"),
+}
+
 
 MISC_STUFF.variety_tip = _(
     "Affects how many different monster types can "..
@@ -80,6 +88,9 @@ OB_MODULES["miscellaneous"] =
       tooltip=_("For Co-operative games, ensure all players start in the same room (disable the separated start rooms)")
       gap=1
     }
+
+    { name="light_level",  label=_("Lighting"),   choices=MISC_STUFF.LIGHTINGS }
+    { name="detail_level", label=_("Detail"),     choices=MISC_STUFF.LIGHTINGS, gap=1 }
 
     { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
