@@ -5,24 +5,32 @@ WORK IN PROGRESS
 
 Revamped UI:
 
-!!  some of the stuff belongs in STYLES table
-    Q/ can we improve how that happens?
-    A/ yes, detect name 'xxx' in STYLES is used in OB_CONFIG
+!!  ensure all non-new settings actually work
 
--  program option for twiddling choices via MouseWheel
-   [ default to OFF? ]
++  implement the new settings
+   -  "ramp_up"
+   -  "bosses"
 
--  combine Extra Settings + Level Control, and add new
-   settings for Lighting and Detail.
+   -  "bit_less" for health/ammo
+   -  "rare" and "heaps" for items
 
--  ui_deathmatch?
+   -  change weapon logic to "spreading out-ness" (tm)
+
+   -  "lighting"
+   -  "detail"
+
 
 
 Modding wiki:
 
 +  get template/CSS to match website style
-+  transfer "New Monster" docs to Wiki
+   -  check if anything else is needed
+
+>>  transfer "New Monster" docs to Wiki
+
 +  enable wiki on main page
+
+-  improve the editing help text
 
 
 

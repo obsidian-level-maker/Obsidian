@@ -388,6 +388,8 @@ CTF and DM
 
 -  Cycles !
 
+-  ui_deathmatch panel
+
 -  Weapons / Big items
    -  decide mix of weapons and big items
    -  place big stuff as far apart as possible
@@ -800,6 +802,8 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
++  make the main window vertically resizable
+
 +  info files for addons: addons/<name>.txt
    [ tricky since need to find it inside disabled PK3 files ]
 
@@ -837,8 +841,6 @@ Cancellation:
   DOCUMENTATION / WEB SITE
 ----------------------------------------------
 
-+  need new screenshots for website
-
 +  modding Monsters guide: mention boss stuff
 
 +  tutorial for new prefabs
@@ -846,8 +848,6 @@ Cancellation:
 +  tutorial for new themes
 
 -  tutorial for room shapes (grammar rules)
-
--  modding guide: page about creating prefabs
 
 -  modding guide : code stuff:
    - Lua
@@ -882,8 +882,6 @@ Cancellation:
 -  certain cases in DM_AlignTextures don't work well, especially
    an upper where a crate straddles the periph (but does not directly
    overlap any linedefs).
-
--  MAP32: find and kill all the Keens to open the door to the exit.
 
 -  support BOOM's 242 linetype for liquids and fake 3D floors
 
@@ -938,6 +936,8 @@ LEGACY: gui.property("solid_exfloor", 281)
 ----------------------------------------------
   HERETIC
 ----------------------------------------------
+
+!!  get it working again
 
 +  determine new 'damage' values for monsters
    [ ideally via analysis of some UVmax demos ]
