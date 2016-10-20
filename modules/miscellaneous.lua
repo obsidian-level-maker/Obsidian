@@ -32,7 +32,7 @@ end
 
 OB_MODULES["level_control"] =
 {
-  label = _("Level Control")
+  label = _("Miscellaneous")
 
   side = "left"
   priority = 70
