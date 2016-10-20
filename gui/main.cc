@@ -613,6 +613,7 @@ bool Build_Cool_Shit()
 		main_win->Locked(true);
 		main_win->build_box->SetAbortButton(true);
 		main_win->build_box->SetStatus(_("Preparing..."));
+		main_win->build_box->DisplaySeed(next_rand_seed);
 	}
 
 	u32_t start_time = TimeGetMillies();
@@ -639,6 +640,11 @@ bool Build_Cool_Shit()
 		u32_t total_time = end_time - start_time;
 
 		LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
+	}
+	else
+	{
+		if (main_win)
+			main_win->build_box->DisplaySeed(-1);
 	}
 
 	if (main_win)
@@ -804,11 +810,13 @@ int main(int argc, char **argv)
 
 	/* ---- normal GUI mode ---- */
 
+
 	// this not only finds PK3 files, but also activates the ones specified in OPTIONS.txt
 	VFS_ScanForAddons();
 
 	VFS_ParseCommandLine();
 
+	// create the main window
 	int main_w, main_h;
 	UI_MainWin::CalcWindowSize(&main_w, &main_h);
 

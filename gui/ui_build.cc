@@ -342,6 +342,39 @@ void UI_Build::AddStatusStep(const char *name)
 }
 
 
+void UI_Build::DisplaySeed(double value)
+{
+	if (value < 0)
+	{
+		seed_display->label("---- ---- ---- ----");
+		return;
+	}
+
+	// format the number to be 4 groups of 4 digits.
+	// if the seed is longer than 16 digits, then we truncate it.
+
+	char buffer[256];
+
+	sprintf(buffer, "%016.0f", value);
+
+	char newbuf[64];
+	memset(newbuf, 0, sizeof(newbuf));
+
+	int i, k;
+
+	for (i = 0 ; i < 4 ; i++)
+	{
+		for (k = 0 ; k < 4 ; k++)
+			newbuf[i*5 + k] = buffer[i*4 + k];
+
+		if (i < 3)
+			newbuf[(i+1) * 5 - 1] = ' ';
+	}
+
+	seed_display->copy_label(newbuf);
+}
+
+
 //----------------------------------------------------------------
 
 void UI_Build::build_callback(Fl_Widget *w, void *data)
