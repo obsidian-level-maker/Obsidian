@@ -78,18 +78,18 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy += y_step2;
 
 
-	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
-	length->align(FL_ALIGN_LEFT);
-	length->selection_color(FL_BLUE);
-	length->callback(callback_Length, this);
-
-	cy += y_step;
-
-
 	playmode = new UI_RChoice(cx, cy, cw, ch, _("Mode: "));
 	playmode->align(FL_ALIGN_LEFT);
 	playmode->selection_color(FL_BLUE);
 	playmode->callback(callback_Mode, this);
+
+	cy += y_step;
+
+
+	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
+	length->align(FL_ALIGN_LEFT);
+	length->selection_color(FL_BLUE);
+	length->callback(callback_Length, this);
 
 	cy += y_step2;
 
