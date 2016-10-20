@@ -16,27 +16,27 @@
 --
 ------------------------------------------------------------------------
 
-MINI_MASTERMIND = {}
+SMALL_SPIDERDEMON = {}
 
 
-function MINI_MASTERMIND.setup(self)
+function SMALL_SPIDERDEMON.setup(self)
   -- this will be checked in engines/boom.lua
-  PARAM.mini_mastermind = true
+  PARAM.small_spiderdemon = true
 end
 
 
-OB_MODULES["mini_mastermind"] =
+OB_MODULES["small_spiderdemon"] =
 {
   label = _("Smaller Spiderdemon")
 
   side = "left"
-  priority = 88
+  priority = 92
 
   engine = "boom"
 
   hooks =
   {
-    setup = MINI_MASTERMIND.setup
+    setup = SMALL_SPIDERDEMON.setup
   }
 
   tooltip=_(

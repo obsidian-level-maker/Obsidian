@@ -565,9 +565,8 @@ void Main_SetSeed()
 
 static void Module_Defaults()
 {
-	ob_set_mod_option("extra_settings",  "self", "1");
-	ob_set_mod_option("mini_mastermind", "self", "1");
-	ob_set_mod_option("sky_generator",   "self", "1");
+	ob_set_mod_option("small_spiderdemon", "self", "1");
+	ob_set_mod_option("sky_generator",     "self", "1");
 }
 
 
