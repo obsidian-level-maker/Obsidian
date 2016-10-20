@@ -66,30 +66,30 @@ OB_MODULES["miscellaneous"] =
 
   options =
   {
-    pistol_starts =
     {
+      name="pistol_starts"
       label=_("Pistol Starts")
-      choices=EXTRA_SETTINGS.YES_NO
+      choices=MISC_STUFF.YES_NO
       tooltip=_("Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)")
     }
 
-    start_together =
     {
+      name="start_together"
       label=_("Start Together")
-      choices=EXTRA_SETTINGS.YES_NO
+      choices=MISC_STUFF.YES_NO
       tooltip=_("For Co-operative games, ensure all players start in the same room (disable the separated start rooms)")
+      gap=1
     }
 
-    big_rooms   = { label=_("Big Rooms"),      choices=STYLE_CHOICES }
-    darkness    = { label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
-    doors       = { label=_("Doors"),          choices=STYLE_CHOICES }
+    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
+    { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
 
-    keys        = { label=_("Keyed Doors"),    choices=STYLE_CHOICES }
-    mon_variety = { label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
+    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES }
+    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES, gap=1 }
 
-    switches    = { label=_("Switched Doors"), choices=STYLE_CHOICES }
-
-    windows     = { label=_("Windows"),        choices=STYLE_CHOICES }
+    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES }
+    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES }
+    { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES }
 
 ---- PLANNED (UNFINISHED) STUFF ----
 
