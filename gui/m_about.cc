@@ -110,9 +110,6 @@ UI_About::UI_About(int W, int H, const char *label) :
 	Fl_Window(W, H, label),
 	want_quit(false)
 {
-	// cancel Fl_Group's automatic add crap
-	end();
-
 	// non-resizable
 	size_range(W, H, W, H);
 
@@ -131,7 +128,6 @@ UI_About::UI_About(int W, int H, const char *label) :
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	box->labelcolor(TITLE_COLOR);
 	box->labelsize(FL_NORMAL_SIZE * 5 / 3);
-	add(box);
 
 	cy += box->h() + kf_h(6);
 
@@ -145,7 +141,6 @@ UI_About::UI_About(int W, int H, const char *label) :
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	box->box(FL_UP_BOX);
 	box->color(alternate_look ? INFO_COLOR2 : INFO_COLOR);
-	add(box);
 
 	cy += box->h() + kf_h(10);
 
@@ -159,8 +154,6 @@ UI_About::UI_About(int W, int H, const char *label) :
 	if (alternate_look)
 		link->color(FL_LIGHT3, FL_LIGHT3);
 
-	add(link);
-
 	cy += link->h() + kf_h(16);
 
 	SYS_ASSERT(cy < H);
@@ -168,20 +161,19 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 	// finally add an "OK" button
 	Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
-	darkish->end();
 	darkish->box(FL_FLAT_BOX);
 	darkish->color(BUILD_BG, BUILD_BG);
+	{
+		int bw = kf_w(60);
+		int bh = kf_h(30);
+		int by = H - (H - cy + bh)/2;
 
-	add(darkish);
+		Fl_Button *button = new Fl_Button(W - bw*2, by, bw, bh, fl_ok);
+		button->callback(callback_Quit, this);
+	}
+	darkish->end();
 
-
-	int bw = kf_w(60);
-	int bh = kf_h(30);
-	int by = H - (H - cy + bh)/2;
-
-	Fl_Button *button = new Fl_Button(W - bw*2, by, bw, bh, fl_ok);
-	button->callback(callback_Quit, this);
-	darkish->add(button);
+	end();
 }
 
 
