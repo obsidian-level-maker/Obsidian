@@ -20,16 +20,34 @@ pre code, code code, pre pre { font-size:100%; }
 /* These primarily adjust the size and spacing of heading elements,
  * most browsers have atrocious defaults for these.
  */
-h1, h2, h3, h4, h5, h6 { margin-top:1.0em; margin-bottom:0.6em; }
-h1, h2, h3, h6 { font-weight:normal; }
-h4, h5 { font-weight:bold; }
-h1 code, h2 code, h3 code, h4 code { font-size:1em; }
-h1 { font-size:1.8em; }
-h2 { font-size:1.44em; }
-h3 { font-size:1.22em; }
-h4 { font-size:1.07em; }
-h5 { font-size:1.0em; }
-h6 { font-size:1.0em; }
+h1 {
+    color: #f33;
+    font-size: 1.60em;
+    font-weight: bolder;
+    margin-top: 0.5em;
+    margin-bottom: 0.6em;
+}
+h2 {
+    color: #c44;
+    font-size: 1.30em;
+    font-weight: bold;
+    margin-top: 1.0em;
+    margin-bottom: 0.6em;
+}
+h3 {
+    color: #c44;
+    font-size: 1.20em;
+    font-weight: bold;
+    margin-top: 1.0em;
+    margin-bottom: 0.6em;
+}
+h4 {
+    color: #c44;
+    font-size: 1.10em;
+    font-weight: bold;
+    margin-top: 1.0em;
+    margin-bottom: 0.6em;
+}
 
 /* The #wikilogo element is the logo from $PageLogoFmt */
 #wikilogo { margin-top:4px; padding:6px; border-bottom:1px #cccccc solid; }
@@ -86,7 +104,7 @@ h6 { font-size:1.0em; }
     margin-left: 0.5em;
 }
 
-.pagetitle {
+.xxx_pagetitle {
     line-height: 1em;
     margin: 0px;
     margin-top: 0.1em;
