@@ -272,7 +272,7 @@ end
 function Episode_plan_monsters()
   --
   -- Decides various monster stuff :
-  --   
+  --
   -- (1) monster palette for each level
   -- (2) the end-of-level boss of each level
   -- (3) guarding monsters (aka "mini bosses")
@@ -1031,7 +1031,7 @@ function Episode_plan_weapons()
 
         gui.debugf("swapped weapon '%s' in %s <--> '%s' in %s\n", name1, L1.name, name2, L2.name)
       end
-    end      
+    end
     end
   end
 
@@ -1150,7 +1150,7 @@ function Episode_plan_weapons()
       local NL = next_level_in_episode(_index)
       local PL = next_next_level(_index)
 
-      -- build up a probability table 
+      -- build up a probability table
       local tab = {}
 
       if NL then each name in NL.new_weapons do tab[name] = 200 end end
@@ -1208,7 +1208,7 @@ function Episode_plan_weapons()
 
 
   local function decide_weapon(LEV, is_start, last_ones)
-    -- determine probabilities 
+    -- determine probabilities
     local tab = {}
 
     each name,info in GAME.WEAPONS do
@@ -1302,7 +1302,7 @@ function Episode_plan_weapons()
   end
 
   pick_new_weapons()
-  
+
   determine_seen_weapons()
 
   pick_secret_weapons()
@@ -1627,17 +1627,44 @@ function Level_choose_themes()
   end
 
 
+  local function decide_mixins(EPI, main_theme, mixins)
+    if not theme_tab[main_theme] then
+      error("Broken code handling mostly_xxx themes")
+    end
+
+    local new_tab = table.copy(theme_tab)
+
+    new_tab[main_theme] = nil
+
+    if table.empty(new_tab) then return end
+
+    local pos = rand.pick({ 3,4,4,5 })
+
+    while pos <= #EPI.levels do
+      local LEV = EPI.levels[pos]
+
+      mixins[LEV.name] = rand.key_by_probs(new_tab)
+
+      pos = pos + rand.pick({ 3,4 })
+    end
+  end
+
+
   local function set_an_episode(EPI, name)
-    -- FIXME: do mostly logic
+    local mixins = {}
+
+    if do_mostly then
+      decide_mixins(EPI, name, mixins)
+    end
 
     each LEV in EPI.levels do
-      set_a_theme(LEV, name)
+      set_a_theme(LEV, mixins[LEV.name] or name)
     end
   end
 
 
   local function set_single_theme(name)
-    each EPI in GAME.levels do
+    each EPI in GAME.episodes do
       set_an_episode(EPI, name)
     end
   end
@@ -1802,7 +1829,7 @@ function Level_choose_themes()
   local theme = OB_CONFIG.theme
 
   -- extract the part after the "mostly_" prefix
-  local mostly_theme = string.match(OB_CONFIG.theme, "mostly_(%w+)")
+  local mostly_theme = string.match(theme, "mostly_(%w+)")
 
   if mostly_theme then
     do_mostly = true
@@ -1832,7 +1859,7 @@ function Level_choose_themes()
 
 
   -- the user has specified the main theme
-  set_single_theme(OB_CONFIG.theme)
+  set_single_theme(theme)
 end
 
 
