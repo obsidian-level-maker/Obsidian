@@ -3689,7 +3689,7 @@ span.hidelink
 	text-transform: capitalize;
 }
 #navtop li a.active {
-	color: #eb7;
+	color: #ddb;
 	text-decoration: none;
 	background: url(../images/theme/navbg.gif) repeat-x;
 	font-weight: bold;
