@@ -1790,7 +1790,6 @@ namelib.NAMES =
         Dreams = 20
         Souls = 10
         Hate = 10
-        Desire = 10
         Magic = 15
         Rage = 10
 
