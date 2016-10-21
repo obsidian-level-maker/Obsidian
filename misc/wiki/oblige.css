@@ -21,11 +21,11 @@ pre code, code code, pre pre { font-size:100%; }
  * most browsers have atrocious defaults for these.
  */
 h1 {
-    color: #f33;
+    color: red; /* #e44; */
     font-size: 1.60em;
     font-weight: bolder;
-    margin-top: 0.5em;
-    margin-bottom: 0.6em;
+    margin-top: 1.0em;
+    margin-bottom: 0.7em;
 }
 h2 {
     color: #c44;
@@ -92,7 +92,7 @@ h4 {
 /* These affect the main content area. */
 #wikibody {
   padding: 1em;
-  padding-top: 2em;
+  padding-top: 1em;
   margin-left: 10px;
   background-color: white;
   color: black;
@@ -107,8 +107,8 @@ h4 {
 .xxx_pagetitle {
     line-height: 1em;
     margin: 0px;
-    margin-top: 0.1em;
-    margin-bottom: 1.0em;
+    margin-top: 0.3em;
+    margin-bottom: 0.8em;
     font-size: 1.6em;
     font-weight: normal;
 }
@@ -117,13 +117,25 @@ h4 {
 
 .wikimessage { margin-top:4px; margin-bottom:4px; font-style:italic; }
 
+.wikisearch { }
+
 #wikitext {
     margin-left: 0px;
     margin-top: 12px;
     line-height: 1.33em;
 }
 
-#wikitext table { font-size:100%; line-height:1.33em; } /* For MSIE 5.5 */
+#xxx_wikitext table { font-size:100%; line-height:1.33em; } /* For MSIE 5.5 */
+
+#cheatsheet {
+    font-size: 85%;
+    background-color: #fcfcec;
+    border: 1px #7e7e6e solid;
+    padding: 0.3em;
+    line-height: 1.33em;
+}
+
+.cheatsheet ul { list-style:none; }
 
 /* These are for the edit form. */
 #wikiedit form { margin:0px; width:100%; }
