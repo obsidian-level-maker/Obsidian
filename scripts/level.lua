@@ -1584,6 +1584,8 @@ end
 function Level_choose_themes()
   local theme_tab = {}
 
+  local do_mostly = false
+
 
   local function collect_mixed_themes()
     each name,info in OB_THEMES do
@@ -1598,7 +1600,7 @@ function Level_choose_themes()
   end
 
 
-  local function set_level_theme(LEV, name)
+  local function set_a_theme(LEV, name)
     -- don't overwrite theme of special levels
     if LEV.theme_name then
       name = LEV.theme_name
@@ -1625,16 +1627,36 @@ function Level_choose_themes()
   end
 
 
+  local function set_an_episode(EPI, name)
+    -- FIXME: do mostly logic
+
+    each LEV in EPI.levels do
+      set_a_theme(LEV, name)
+    end
+  end
+
+
   local function set_single_theme(name)
-    each LEV in GAME.levels do
-      set_level_theme(LEV, name)
+    each EPI in GAME.levels do
+      set_an_episode(EPI, name)
     end
   end
 
 
   local function set_jumbled_themes()
     each LEV in GAME.levels do
-      set_level_theme(LEV, rand.key_by_probs(theme_tab))
+      set_a_theme(LEV, rand.key_by_probs(theme_tab))
+    end
+  end
+
+
+  local function set_original_themes()
+    each EPI in GAME.episodes do
+      if not EPI.theme then
+        error("Broken episode def : missing 'theme' field")
+      end
+
+      set_an_episode(EPI, EPI.theme)
     end
   end
 
@@ -1668,7 +1690,7 @@ function Level_choose_themes()
         what = rand.key_by_probs(theme_tab)
       end
 
-      set_level_theme(LEV, what)
+      set_a_theme(LEV, what)
 
       if what == theme then
         last_same = last_same + 1
@@ -1691,7 +1713,7 @@ function Level_choose_themes()
         count = 0
       end
 
-      set_level_theme(LEV, episode_list[pos])
+      set_a_theme(LEV, episode_list[pos])
       count = count + 1
     end
   end
@@ -1699,7 +1721,7 @@ function Level_choose_themes()
 
   local function set_themes_by_episode(episode_list)
     each LEV in GAME.levels do
-      set_level_theme(LEV, episode_list[LEV.episode.id])
+      set_a_theme(LEV, episode_list[LEV.episode.id])
     end
   end
 
@@ -1716,15 +1738,6 @@ function Level_choose_themes()
       local info = OB_THEMES[name]
       local pos = rand.irange(1, total)
 
-      if OB_CONFIG.theme == "original" then
-        each epi in GAME.episodes do
-          if name == epi.theme and not episode_list[_index] then
-            -- this can leave gaps, but they are filled later
-            pos = _index ; break
-          end
-        end
-      end
-
       if episode_list[pos] then
         pos = table.find_unused(episode_list)
       end
@@ -1733,17 +1746,6 @@ function Level_choose_themes()
     end
 
     gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
-
-    -- fill any gaps when in "As Original" mode
-    if OB_CONFIG.theme == "original" then
-      each epi in GAME.episodes do
-        if not episode_list[_index] then
-          episode_list[_index] = epi.theme
-        end
-      end
-
-      assert(# episode_list == total)
-    end
 
     return episode_list
   end
@@ -1762,47 +1764,12 @@ function Level_choose_themes()
   end
 
 
-  ---| Level_choose_themes |---
+  local function set_episodic_themes()
+    -- FIXME
 
-  gui.printf("\n")
-
-  -- need to do this first
-  collect_mixed_themes()
-
-
-  -- backwards compat
-  if OB_CONFIG.theme == "mixed" then
-     OB_CONFIG.theme = "epi"
-  end
-
-
-  local mostly_theme = string.match(OB_CONFIG.theme, "mostly_(%w+)")
-
-  -- the user can specify the main theme
-  if OB_CONFIG.theme != "original" and
-     OB_CONFIG.theme != "jumble" and
-     OB_CONFIG.theme != "epi" and not mostly_theme
-  then
-    set_single_theme(OB_CONFIG.theme)
-    return
-  end
-
-
-  -- Jumbled Up : every level is purely random
-  if OB_CONFIG.theme == "jumble" then
-    set_jumbled_themes()
-    return
-  end
-
-  if mostly_theme then
-    set_mostly_a_theme(mostly_theme)
-    return
-  end
-
-
+--[[
   local total = table.size(theme_tab)
 
-  if OB_CONFIG.theme == "original" then
     total = math.max(total, #GAME.episodes)
   end
 
@@ -1820,6 +1787,52 @@ function Level_choose_themes()
   end
 
   set_themes_by_episode(episode_list)
+--]]
+  end
+
+
+  ---| Level_choose_themes |---
+
+  gui.printf("\n")
+
+  -- need to do this first
+  collect_mixed_themes()
+
+
+  local theme = OB_CONFIG.theme
+
+  -- extract the part after the "mostly_" prefix
+  local mostly_theme = string.match(OB_CONFIG.theme, "mostly_(%w+)")
+
+  if mostly_theme then
+    do_mostly = true
+    theme = mostly_theme
+  end
+
+
+  -- As Original : follow the original game
+  if theme == "original" then
+    set_original_themes()
+    return
+  end
+
+  -- Episodic : each episode is a single (random) theme
+  if theme == "epi" then
+    set_episodic_themes()
+    return
+  end
+
+  -- TODO : A Bit Mixed : theme changes every 3-4 maps
+
+  -- Jumbled Up : every level is purely random
+  if theme == "jumble" then
+    set_jumbled_themes()
+    return
+  end
+
+
+  -- the user has specified the main theme
+  set_single_theme(OB_CONFIG.theme)
 end
 
 

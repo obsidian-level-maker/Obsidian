@@ -1909,49 +1909,49 @@ OB_THEMES["tech"] =
 }
 
 
-OB_THEMES["hell"] =
-{
-  label = _("Hell")
-  game = "doomish"
-  priority = 14
-  name_class = "GOTHIC"
-  mixed_prob = 40
-}
-
-
 OB_THEMES["urban"] =
 {
   label = _("Urban")
   game = "doom2"
-  priority = 16
+  priority = 15
   name_class = "URBAN"
   mixed_prob = 50
 }
 
 
+OB_THEMES["hell"] =
+{
+  label = _("Hell")
+  game = "doomish"
+  priority = 12
+  name_class = "GOTHIC"
+  mixed_prob = 40
+}
+
+
 OB_THEMES["mostly_tech"] =
 {
-  label = _("Mostly Tech")
+  label = _("Tech-ish")
   game = "doomish"
-  priority = 8
+  priority = 17
   name_class = "TECH"
 }
 
 
 OB_THEMES["mostly_urban"] =
 {
-  label = _("Mostly Urban")
+  label = _("Urban-ish")
   game = "doom2"
-  priority = 4
+  priority = 14
   name_class = "URBAN"
 }
 
 
 OB_THEMES["mostly_hell"] =
 {
-  label = _("Mostly Hell")
+  label = _("Hell-ish")
   game = "doomish"
-  priority = 6
+  priority = 11
   name_class = "HELL"
 }
 

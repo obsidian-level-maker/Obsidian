@@ -60,9 +60,16 @@ OB_ENGINES["nolimit"] =
 -- special theme types, usable by all games
 OB_THEMES["original"] =
 {
-  label = _("As Original")
+  label = _("Original")
+  priority = 91
+}
+
+OB_THEMES["mostly_original"] =
+{
+  label = _("Original-ish")
   priority = 90
 }
+
 
 OB_THEMES["epi"] =
 {
@@ -70,9 +77,22 @@ OB_THEMES["epi"] =
   priority = 85,
 }
 
+OB_THEMES["mostly_epi"] =
+{
+  label = _("Episode-ish")
+  priority = 84,
+}
+
+
 OB_THEMES["jumble"] =
 {
   label = _("Jumbled Up")
+  priority = 81
+}
+
+OB_THEMES["bit_mixed"] =
+{
+  label = _("A Bit Mixed")
   priority = 80
 }
 

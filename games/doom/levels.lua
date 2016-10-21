@@ -151,8 +151,8 @@ function DOOM.get_levels()
       LEV.is_secret = true
 
       -- TODO : a more generic mechanism
-      if (OB_CONFIG.theme == "original") and
-         OB_CONFIG.game == "tnt"
+      if OB_CONFIG.game == "tnt" and
+        (OB_CONFIG.theme == "original" or OB_CONFIG.theme == "mostly_original")
       then
         LEV.theme_name = "egypt"
       end
