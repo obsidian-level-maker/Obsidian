@@ -657,7 +657,7 @@ private:
 
 		const char *str = that->text_buf->text();
 
-		Cookie_LoadString(str);
+		Cookie_LoadString(str, true /* keep_seed */);
 
 		free((void*)str);
 	}

@@ -193,10 +193,10 @@ bool Cookie_Load(const char *filename)
 }
 
 
-bool Cookie_LoadString(const char *str)
+bool Cookie_LoadString(const char *str, bool _keep_seed)
 {
 	context = CCTX_Load;
-	keep_seed = false;
+	keep_seed = _keep_seed;
 
 	active_module.clear();
 

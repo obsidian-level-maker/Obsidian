@@ -3,5 +3,9 @@ CHANGES IN x.xx
 ===============
 
 
+-  UI revamp, two scrolling columns of modules
+
 -  UI: can use mousewheel to change settings
+
+-  config manager "Use" button now sets the seed too
 
