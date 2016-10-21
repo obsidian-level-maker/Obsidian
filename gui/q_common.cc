@@ -804,7 +804,7 @@ qLump_c * BSP_CreateInfoLump()
 
 	std::vector<std::string> lines;
 
-	ob_read_all_config(&lines);
+	ob_read_all_config(&lines, false /* need_full */);
 
 	for (unsigned int i = 0; i < lines.size(); i++)
 		L->Printf("%s\n", lines[i].c_str());

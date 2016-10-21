@@ -1041,7 +1041,7 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0, const char *
 	int nargs = 0;
 	if (params)
 	{
-		for (; *params; params++, nargs++)
+		for ( ; *params ; params++, nargs++)
 			lua_pushstring(LUA_ST, *params);
 	}
 
@@ -1318,7 +1318,7 @@ bool ob_set_mod_option(const char *module, const char *option,
 {
 	if (! has_loaded)
 	{
-		DebugPrintf("Script_SetModOption called before loaded!\n");
+		DebugPrintf("ob_set_mod_option() called before loaded!\n");
 		return false;
 	}
 
@@ -1333,17 +1333,22 @@ bool ob_set_mod_option(const char *module, const char *option,
 }
 
 
-bool ob_read_all_config(std::vector<std::string> * lines)
+bool ob_read_all_config(std::vector<std::string> * lines, bool need_full)
 {
 	if (! has_loaded)
 	{
-		DebugPrintf("Script_GetAllConfig called before loaded!\n");
+		DebugPrintf("ob_read_all_config() called before loaded!\n");
 		return false;
 	}
 
 	conf_line_buffer = lines;
 
-	bool result = Script_CallFunc("ob_read_all_config", 0);
+	const char *params[2];
+
+	params[0] = need_full ? "need_full" : "";
+	params[1] = NULL; // end of list
+
+	bool result = Script_CallFunc("ob_read_all_config", 0, params);
 
 	conf_line_buffer = NULL;
 

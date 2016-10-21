@@ -476,10 +476,10 @@ end
 
 
 
-function ob_read_all_config(print_to_log)
+function ob_read_all_config(need_full, log_only)
 
   local function do_line(fmt, ...)
-    if print_to_log then
+    if log_only then
       gui.printf(fmt .. "\n", ...)
     else
       gui.config_line(string.format(fmt, ...))
@@ -490,9 +490,18 @@ function ob_read_all_config(print_to_log)
     do_line("%s = %s", name, value or "XXX")
   end
 
+  local function do_mod_value(name, value)
+    do_line("  %s = %s", name, value or "XXX")
+  end
+
   ---| ob_read_all_config |---
 
-  if OB_CONFIG.seed then
+  -- workaround for a limitation in C++ code
+  if need_full == "" then
+     need_full = false
+  end
+
+  if OB_CONFIG.seed and OB_CONFIG.seed != 0 then
     do_line("seed = %d",   OB_CONFIG.seed)
     do_line("")
   end
@@ -532,23 +541,26 @@ function ob_read_all_config(print_to_log)
 
     if ob_check_ui_module(def) then continue end
 
+    if not need_full and not def.shown then continue end
+
     do_line("@%s = %s", name, sel(def.enabled, "1", "0"))
-    do_line("")
 
     -- module options
-    if def.options and not table.empty(def.options) then
-      if def.options[1] then
-        each opt in def.options do
-          do_value(opt.name, opt.value)
-        end
-      else
-        each o_name,opt in def.options do
-          do_value(o_name, opt.value)
+    if need_full or def.enabled then
+      if def.options and not table.empty(def.options) then
+        if def.options[1] then
+          each opt in def.options do
+            do_mod_value(opt.name, opt.value)
+          end
+        else
+          each o_name,opt in def.options do
+            do_mod_value(o_name, opt.value)
+          end
         end
       end
-
-      do_line("")
     end
+
+    do_line("")
   end
 
   do_line("-- END --")
@@ -1028,6 +1040,10 @@ function ob_transfer_ui_options()
      OB_CONFIG.length = "game"
   end
 
+  if OB_CONFIG.theme == "mixed" then
+     OB_CONFIG.theme = "epi"
+  end
+
   if OB_CONFIG.size == "tiny" then
      OB_CONFIG.size = "small"
   end
@@ -1112,7 +1128,7 @@ function ob_build_cool_shit()
   gui.printf("\n\n")
   gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
 
-  ob_read_all_config(true)
+  ob_read_all_config(false, "log_only")
 
   gui.ticker()
 
