@@ -18,9 +18,6 @@ all:
 	htp -quiet doc_glossary.htp  out/doc_glossary.html
 	htp -quiet doc_faq.htp       out/doc_faq.html
 	htp -quiet doc_history.htp   out/doc_history.html
-	htp -quiet blog_mar2008.htp  out/blog_mar2008.html
-	htp -quiet blog_nov2008.htp  out/blog_nov2008.html
-	htp -quiet mod_monsters.htp  out/mod_monsters.html
 
 clean:
 	rm -f out/*.*

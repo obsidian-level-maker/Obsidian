@@ -18,7 +18,7 @@
 </block>
 
 <block MenuModding>
-  <a href="mod_monsters.html">Modding</a>
+  <a href="http://oblige.sourceforge.net/wiki">Modding</a>
 </block>
 
 
