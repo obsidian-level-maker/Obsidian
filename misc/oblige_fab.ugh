@@ -16,6 +16,7 @@ texture o _OUTER
 texture o _FLOOR
 texture o _FLOOR2
 texture o _CEIL
+texture o _CEIL2
 texture o _LIQUID
 texture o _SKY
 
@@ -25,6 +26,7 @@ flat o _OUTER
 flat o _FLOOR
 flat o _FLOOR2
 flat o _CEIL
+flat o _CEIL2
 flat o _LIQUID
 flat o _SKY
 
