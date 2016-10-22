@@ -1760,8 +1760,8 @@ function Level_choose_themes()
 
     local episode_list = create_episode_list(num_eps)
 
-    each LEV in GAME.levels do
-      set_a_theme(LEV, episode_list[LEV.episode.id])
+    each EPI in GAME.episodes do
+      set_an_episode(EPI, episode_list[EPI.id])
     end
   end
 
