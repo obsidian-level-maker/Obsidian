@@ -1601,6 +1601,8 @@ function Level_choose_themes()
 
 
   local function set_a_theme(LEV, name)
+    assert(name)
+
     -- don't overwrite theme of special levels
     if LEV.theme_name then
       name = LEV.theme_name
@@ -1666,43 +1668,53 @@ function Level_choose_themes()
   end
 
 
-  local function create_episode_list(total)
-    local episode_list = {}
+  local function grow_episode_list(list)
+    if #list == 1 then
+      table.insert(list, list[1])
+      table.insert(list, list[1])
+    end
 
-    local tab = table.copy(theme_tab)
+    if #list == 2 then
+      local dist = rand.sel(70, 0, 1)
+      table.insert(list, list[1 + dist])
+      table.insert(list, list[2 - dist])
+    end
+
+    assert(#list >= 3)
+
+    -- concatenate a shuffled copy of the list, doubling its size
+    local shuffled = table.copy(list)
+
+    rand.shuffle(shuffled)
+
+    table.append(list, shuffled)
+  end
+
+
+  local function create_episode_list(want_num)
+    local list = {}
+
+    local tab   = table.copy(theme_tab)
+    local total = table.size(theme_tab)
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
       tab[name] = nil
 
-      local info = OB_THEMES[name]
-      local pos = rand.irange(1, total)
-
-      if episode_list[pos] then
-        pos = table.find_unused(episode_list)
-      end
-
-      episode_list[pos] = name 
+      table.insert(list, name)
     end
 
-    gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
+    gui.debugf("Initial episode list = \n%s\n", table.tostr(list))
 
-    return episode_list
+    -- grow list until it is large enough
+    while #list < want_num do
+      grow_episode_list(list)
+    end
+
+    gui.debugf("Grown episode list = \n%s\n", table.tostr(list))
+
+    return list
   end
-
-
-  local function flesh_out_episodes(episode_list, total)
-    if total == 2 then
-      local dist = rand.sel(70, 0, 1)
-      table.insert(episode_list, episode_list[1 + dist])
-      table.insert(episode_list, episode_list[2 - dist])
-    end
-
-    while #episode_list < 90 do
-      table.insert(episode_list, episode_list[rand.irange(1, total)])
-    end
-  end
-
 
 
   local function set_an_episode(EPI, name)
@@ -1743,37 +1755,14 @@ function Level_choose_themes()
   end
 
 
-  local function set_themes_by_episode(episode_list)
+  local function set_episodic_themes()
+    local num_eps = #GAME.episodes
+
+    local episode_list = create_episode_list(num_eps)
+
     each LEV in GAME.levels do
       set_a_theme(LEV, episode_list[LEV.episode.id])
     end
-  end
-
-
-  local function set_episodic_themes()
-    -- FIXME
-
---[[
-  local total = table.size(theme_tab)
-
-    total = math.max(total, #GAME.episodes)
-  end
-
-  local episode_list = create_episode_list(total)
-
-  gui.printf("Theme for episodes =\n%s\n", table.tostr(episode_list))
-
-
-  flesh_out_episodes(episode_list, total)
-
-  -- single episode is different : have a few small batches
-  if OB_CONFIG.length == "episode" then
-    batched_episodic_themes(episode_list)
-    return
-  end
-
-  set_themes_by_episode(episode_list)
---]]
   end
 
 
