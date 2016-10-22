@@ -1934,7 +1934,6 @@ OB_THEMES["mostly_tech"] =
   label = _("Tech-ish")
   game = "doomish"
   priority = 17
-  name_class = "TECH"
 }
 
 
@@ -1943,7 +1942,6 @@ OB_THEMES["mostly_urban"] =
   label = _("Urban-ish")
   game = "doom2"
   priority = 14
-  name_class = "URBAN"
 }
 
 
@@ -1952,6 +1950,5 @@ OB_THEMES["mostly_hell"] =
   label = _("Hell-ish")
   game = "doomish"
   priority = 11
-  name_class = "HELL"
 }
 
