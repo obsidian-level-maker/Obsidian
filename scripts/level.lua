@@ -1650,86 +1650,6 @@ function Level_choose_themes()
   end
 
 
-  local function set_an_episode(EPI, name)
-    local mixins = {}
-
-    if do_mostly then
-      decide_mixins(EPI, name, mixins)
-    end
-
-    each LEV in EPI.levels do
-      set_a_theme(LEV, mixins[LEV.name] or name)
-    end
-  end
-
-
-  local function set_single_theme(name)
-    each EPI in GAME.episodes do
-      set_an_episode(EPI, name)
-    end
-  end
-
-
-  local function set_jumbled_themes()
-    each LEV in GAME.levels do
-      set_a_theme(LEV, rand.key_by_probs(theme_tab))
-    end
-  end
-
-
-  local function set_original_themes()
-    each EPI in GAME.episodes do
-      if not EPI.theme then
-        error("Broken episode def : missing 'theme' field")
-      end
-
-      set_an_episode(EPI, EPI.theme)
-    end
-  end
-
-
-  local function set_mostly_a_theme(theme)
-    if not theme_tab[theme] then
-      error("Broken mostly_" .. theme .." theme")
-    end
-
-    theme_tab[theme] = nil
-
-    local last_same = 0
-    local last_diff = 99  -- force first map to be desired theme
-
-    local max_same = 3
-    local max_diff = 1
-
-    if OB_CONFIG.length == "game" then
-      max_same = 5
-      max_diff = 2
-    end
-
-    each LEV in GAME.levels do
-      local what
-
-      if last_diff >= max_diff then
-        what = theme
-      elseif (last_same < max_same) and rand.odds(65) then
-        what = theme
-      else
-        what = rand.key_by_probs(theme_tab)
-      end
-
-      set_a_theme(LEV, what)
-
-      if what == theme then
-        last_same = last_same + 1
-        last_diff = 0
-      else
-        last_diff = last_diff + 1
-        last_same = 0
-      end
-    end
-  end
-
-
   local function batched_episodic_themes(episode_list)
     local pos = 1
     local count = 0
@@ -1742,13 +1662,6 @@ function Level_choose_themes()
 
       set_a_theme(LEV, episode_list[pos])
       count = count + 1
-    end
-  end
-
-
-  local function set_themes_by_episode(episode_list)
-    each LEV in GAME.levels do
-      set_a_theme(LEV, episode_list[LEV.episode.id])
     end
   end
 
@@ -1787,6 +1700,52 @@ function Level_choose_themes()
 
     while #episode_list < 90 do
       table.insert(episode_list, episode_list[rand.irange(1, total)])
+    end
+  end
+
+
+
+  local function set_an_episode(EPI, name)
+    local mixins = {}
+
+    if do_mostly then
+      decide_mixins(EPI, name, mixins)
+    end
+
+    each LEV in EPI.levels do
+      set_a_theme(LEV, mixins[LEV.name] or name)
+    end
+  end
+
+
+  local function set_single_theme(name)
+    each EPI in GAME.episodes do
+      set_an_episode(EPI, name)
+    end
+  end
+
+
+  local function set_jumbled_themes()
+    each LEV in GAME.levels do
+      set_a_theme(LEV, rand.key_by_probs(theme_tab))
+    end
+  end
+
+
+  local function set_original_themes()
+    each EPI in GAME.episodes do
+      if not EPI.theme then
+        error("Broken episode def : missing 'theme' field")
+      end
+
+      set_an_episode(EPI, EPI.theme)
+    end
+  end
+
+
+  local function set_themes_by_episode(episode_list)
+    each LEV in GAME.levels do
+      set_a_theme(LEV, episode_list[LEV.episode.id])
     end
   end
 
