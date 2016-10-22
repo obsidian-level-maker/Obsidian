@@ -447,5 +447,6 @@ OB_THEMES["egypt"] =
   priority = 3
   name_class = "GOTHIC"
   mixed_prob = 5
+  bit_limited = true
 }
 

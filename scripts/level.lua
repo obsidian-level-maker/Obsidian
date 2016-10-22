@@ -1764,7 +1764,13 @@ function Level_choose_themes()
       local name = table.remove(episode_list, 1)
       assert(name)
 
+      local info = OB_THEMES[name]
+
       local length = rand.index_by_probs(BIT_MIXED_PROBS)
+
+      if info.bit_limited then
+        length = 1
+      end
 
       for i = 1, length do
         local LEV = GAME.levels[pos]
