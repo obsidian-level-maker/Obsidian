@@ -254,6 +254,9 @@ GLOBAL_PREFAB_FIELDS =
    tex__FLOOR2 = "?floor2"
   flat__FLOOR2 = "?floor2"
 
+   tex__CEIL2  = "?ceil2"
+  flat__CEIL2  = "?ceil2"
+
   thing_8166   = "?object"
 
   line_888     = "?action"
@@ -264,11 +267,13 @@ GLOBAL_SKIN_DEFAULTS =
 {
   wall   = "_ERROR"
 
-  outer  = "?wall"
   fence  = "?wall"
   floor  = "?wall"
   ceil   = "?wall"
+
+  outer  = "?wall"
   floor2 = "?outer"
+  ceil2  = "?outer"
 
   -- Doom engine stuff
   tag = ""
