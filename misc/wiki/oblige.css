@@ -137,6 +137,11 @@ h4 {
 
 .cheatsheet ul { list-style:none; }
 
+.cheatbold { color: #742; font-weight: bold; }
+
+/* definition lists */
+#wikitext dt { color: #742; font-weight: bold; }
+
 /* These are for the edit form. */
 #wikiedit form { margin:0px; width:100%; }
 #wikiedit textarea { width:100%; }
