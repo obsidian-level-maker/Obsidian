@@ -5,8 +5,6 @@ WORK IN PROGRESS
 
 Revamped UI:
 
-!!  ensure all non-new settings actually work
-
 +  implement the new settings
    -  "ramp_up"
    -  "bosses"
@@ -23,24 +21,20 @@ Revamped UI:
 
 Modding wiki:
 
-+  get template/CSS to match website style
-   -  check if anything else is needed
+>>  tidy up the "New Monster" tutorial
+    -  fix the <b> usage
 
->>  transfer "New Monster" docs to Wiki
++  check Wiki in different browsers & OSes
+   -  FireFox ESR
+   -  dillo
+   -  Vista (esp. IE)
+   -  Tablet
+
++  backup the wiki
 
 +  enable wiki on main page
 
--  improve the editing help text
-
-
-
-Make it easier to share a particular config+seed combo
-
-FAQ : sharing wads
-
-
-
-Fix the stupid "As Original" logic
+-  remove mod_monsters.htp
 
 
 

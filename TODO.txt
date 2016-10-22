@@ -804,6 +804,8 @@ Name generator:
 
 +  make the main window vertically resizable
 
+-  option to disable the overwrite warning
+
 +  info files for addons: addons/<name>.txt
    [ tricky since need to find it inside disabled PK3 files ]
 
@@ -840,6 +842,9 @@ Cancellation:
 ----------------------------------------------
   DOCUMENTATION / WEB SITE
 ----------------------------------------------
+
++  FAQ : sharing wads
+   https://en.wikipedia.org/wiki/Comparison_of_file_hosting_services
 
 +  modding Monsters guide: mention boss stuff
 
