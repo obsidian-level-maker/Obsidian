@@ -1652,22 +1652,6 @@ function Level_choose_themes()
   end
 
 
-  local function batched_episodic_themes(episode_list)
-    local pos = 1
-    local count = 0
-
-    each LEV in GAME.levels do
-      if count >= 4 or (count >= 2 and rand.odds(50)) then
-        pos = pos + 1
-        count = 0
-      end
-
-      set_a_theme(LEV, episode_list[pos])
-      count = count + 1
-    end
-  end
-
-
   local function grow_episode_list(list)
     if #list == 1 then
       table.insert(list, list[1])
@@ -1766,6 +1750,35 @@ function Level_choose_themes()
   end
 
 
+  local function set_bit_mixed_themes()
+    -----------------------   1   2   3   4
+    local BIT_MIXED_PROBS = { 0, 30, 60, 40 }
+
+    local num_levels = #GAME.levels
+
+    local episode_list = create_episode_list(num_levels)
+
+    local pos = 1
+
+    while pos <= num_levels do
+      local name = table.remove(episode_list, 1)
+      assert(name)
+
+      local length = rand.index_by_probs(BIT_MIXED_PROBS)
+
+      for i = 1, length do
+        local LEV = GAME.levels[pos]
+        set_a_theme(LEV, name)
+
+        pos = pos + 1
+
+        if pos > num_levels then break; end
+      end
+    end
+  end
+
+
+
   ---| Level_choose_themes |---
 
   gui.printf("\n")
@@ -1797,7 +1810,11 @@ function Level_choose_themes()
     return
   end
 
-  -- TODO : A Bit Mixed : theme changes every 3-4 maps
+  -- Bit Mixed : theme changes every 3-4 maps or so
+  if theme == "bit_mixed" then
+    set_bit_mixed_themes()
+    return
+  end
 
   -- Jumbled Up : every level is purely random
   if theme == "jumble" then

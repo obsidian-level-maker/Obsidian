@@ -87,13 +87,13 @@ OB_THEMES["mostly_epi"] =
 OB_THEMES["jumble"] =
 {
   label = _("Jumbled Up")
-  priority = 81
+  priority = 80
 }
 
 OB_THEMES["bit_mixed"] =
 {
-  label = _("A Bit Mixed")
-  priority = 80
+  label = _("Bit Mixed")
+  priority = 81
 }
 
 
