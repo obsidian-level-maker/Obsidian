@@ -302,21 +302,40 @@ void DLG_EditSeed(void)
 
 	sprintf(num_buf, "%1.0f", next_rand_seed);
 
-	const char * buf = fl_input(_("Enter New Seed Number:"), num_buf);
+	const char * user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
 
 	// cancelled?
-	if (! buf)
+	if (! user_buf)
 		return;
+
+	// transfer to our own buffer
+	strncpy(num_buf, user_buf, sizeof(num_buf));
+	num_buf[sizeof(num_buf) - 1] = 0;
+
+	// remove spaces
+	int s, d;
+
+	for (s = d = 0 ; num_buf[s] ; s++)
+		if (! isspace(num_buf[s]))
+			num_buf[d++] = num_buf[s];
+
+	num_buf[d] = 0;
 
 	// nothing entered?
-	if (buf[0] == 0)
+	if (num_buf[0] == 0)
 		return;
 
-	next_rand_seed = atof(buf);
+	// skip leading zeros
+	for (s = 0 ; num_buf[s] == '0' && num_buf[s+1] ; s++)
+	{ }
 
+	next_rand_seed = atof(&num_buf[s]);
+
+	// negative values are not valid
 	if (next_rand_seed < 0)
 		next_rand_seed = -next_rand_seed;
 
+	// fractional part is not used
 	next_rand_seed = floor(next_rand_seed);
 }
 
