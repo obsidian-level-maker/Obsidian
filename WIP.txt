@@ -21,20 +21,7 @@ Revamped UI:
 
 Modding wiki:
 
->>  tidy up the "New Monster" tutorial
-    -  fix the <b> usage
-
 +  check Wiki in different browsers & OSes
-   -  FireFox ESR
-   -  dillo
-   -  Vista (esp. IE)
-   -  Tablet
-
-+  backup the wiki
-
-+  enable wiki on main page
-
--  remove mod_monsters.htp
 
 
 

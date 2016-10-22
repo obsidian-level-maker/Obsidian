@@ -3,9 +3,18 @@ CHANGES IN x.xx
 ===============
 
 
--  UI revamp, two scrolling columns of modules
++  UI revamp, two scrolling columns of modules
+   [ most panels defined in Lua ]
 
 -  UI: can use mousewheel to change settings
 
+-  new "Bit Mixed" theme
+
+-  new theme settings "Original-ish" and "Episode-ish"
+
 -  config manager "Use" button now sets the seed too
+
+-  abbreviated config in OBLIGDAT or config manager
+
+-  bug fix: swapped normal-exit and secret-exit switches
 
