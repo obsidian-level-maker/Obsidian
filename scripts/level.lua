@@ -975,7 +975,7 @@ function Episode_plan_weapons()
   end
 
 
-  local function spread_new_weapons(L1, L2)
+  local function spread_new_weapons__OLD(L1, L2)
     local num1 = #L1.new_weapons
     local num2 = #L2.new_weapons
 
@@ -1003,7 +1003,7 @@ function Episode_plan_weapons()
     gui.debugf("spread new weapon '%s' : %s --> %s\n", name, L1.name, L2.name)
 
     -- try again
-    spread_new_weapons(L1, L2)
+    spread_new_weapons__OLD(L1, L2)
   end
 
 
@@ -1107,6 +1107,85 @@ function Episode_plan_weapons()
   end
 
 
+  local function eval_push_away_offset(level_list, idx, ofs)
+    local LEV = level_list[idx]
+
+    idx = idx + ofs
+
+    -- no such map?
+    if idx < 1 or idx > #level_list then
+      return -1
+    end
+
+    local NEXT = level_list[idx]
+    assert(NEXT)
+
+    -- no point moving when destination is just as full as source
+    local  src_count = table.size( LEV.new_weapons)
+    local dest_count = table.size(NEXT.new_weapons)
+
+    if dest_count >= src_count - 1 then
+      return -2
+    end
+
+    -- best places have no weapons at all
+    local score = 90 - math.min(dest_count, 5) * 10
+
+    -- TODO : check for -2/+2 maps which are empty on both sides
+
+    if math.abs(ofs) >= 2 then score = score - 1 end
+
+    -- tie breaker
+    return score + gui.random()
+  end
+
+
+  local function push_away_a_weapon(level_list, idx)
+    local LEV = level_list[idx]
+
+    assert(not table.empty(LEV.new_weapons))
+
+    local best_ofs
+    local best_score = 0
+
+    for ofs = -2, 2 do
+      if ofs != 0 then
+        local score = eval_push_away_offset(level_list, idx, ofs)
+
+        if score > best_score then
+          best_ofs   = ofs
+          best_score = score
+        end
+      end
+    end
+
+    if best_ofs == nil then return end
+
+    -- ok --
+
+    local NEXT = level_list[idx + best_ofs]
+    assert(NEXT)
+
+    local weap = table.remove(LEV.new_weapons, 1)
+
+    table.insert(NEXT.new_weapons, weap)
+    rand.shuffle(NEXT.new_weapons)
+  end
+
+
+  local function spread_new_weapons(level_list)
+    -- prefer not to introduce multiple new weapons per map
+
+    for idx = 1, #level_list do
+      for loop = 1,5 do
+        if table.size(level_list[idx].new_weapons) >= 2 then
+          push_away_a_weapon(level_list, idx)
+        end
+      end
+    end
+  end
+
+
   local function pick_new_weapons()
     local level_list = {}
 
@@ -1132,9 +1211,14 @@ function Episode_plan_weapons()
       rand.shuffle(LEV.new_weapons)
     end
 
+    stderrf("%s\n", summarize_new_weapon_placement())
+
+    spread_new_weapons(level_list)
+
     check_new_weapon_at_start()
 
     stderrf("%s\n", summarize_new_weapon_placement())
+    stderrf("\n")
   end
 
 
@@ -1173,7 +1257,7 @@ function Episode_plan_weapons()
       local NL = next_level_in_episode(_index)
 
       if NL and _index >= 2 then
-        spread_new_weapons(LEV, NL)
+        spread_new_weapons__OLD(LEV, NL)
       end
     end
 
