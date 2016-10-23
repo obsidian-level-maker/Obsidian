@@ -1089,6 +1089,24 @@ function Episode_plan_weapons()
   end
 
 
+  local function check_new_weapon_at_start()
+    -- ensure the very first level has a new weapon
+    local LEV = GAME.levels[1]
+
+    if not table.empty(LEV.new_weapons) then return end
+
+    for i = 2, #GAME.levels do
+      local NEXT = GAME.levels[i]
+
+      if not table.empty(NEXT.new_weapons) then
+        local weap = table.remove(NEXT.new_weapons, 1)
+        table.insert(LEV.new_weapons, weap)
+        return
+      end
+    end
+  end
+
+
   local function pick_new_weapons()
     local level_list = {}
 
@@ -1111,7 +1129,10 @@ function Episode_plan_weapons()
       assert(LEV)
 
       table.insert(LEV.new_weapons, name)
+      rand.shuffle(LEV.new_weapons)
     end
+
+    check_new_weapon_at_start()
 
     stderrf("%s\n", summarize_new_weapon_placement())
   end
