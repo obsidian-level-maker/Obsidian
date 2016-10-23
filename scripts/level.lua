@@ -1036,7 +1036,88 @@ function Episode_plan_weapons()
   end
 
 
+  local function summarize_weapons_on_map(LEV)
+    if LEV.prebuilt  then return "#" end
+    if LEV.is_secret then return "#" end
+
+    if table.empty(LEV.new_weapons) then return "-" end
+
+    local str = ""
+
+    each name in LEV.new_weapons do
+      local letter = string.sub(name, 1, 1)
+      if name == "super" then letter = 'D' end
+      if name == "bfg"   then letter = 'B' end
+      str = str .. letter
+    end
+
+    return str
+  end
+
+
+  local function summarize_new_weapon_placement()
+    local line = ""
+
+    each LEV in GAME.levels do
+      if LEV.id > 1 then line = line .. "/" end
+      line = line .. summarize_weapons_on_map(LEV)
+    end
+
+    return line
+  end
+
+
+  local function calc_new_weapon_place(info, level_list)
+    -- transform 'level' value into an index into level_list[]
+
+    -- FIXME : handle shorter level_list
+
+    -- TODO : apply OB_CONFIG.weapons
+
+    local lev_idx = info.level
+    assert(lev_idx)
+
+    if lev_idx > 1 then
+      if rand.odds(30) then lev_idx = lev_idx + 1 end
+
+      lev_idx = int(lev_idx * rand.pick({ 1.0, 1.3, 1.6 }))
+    end
+
+    assert(lev_idx <= #level_list)
+
+    return level_list[lev_idx]
+  end
+
+
   local function pick_new_weapons()
+    local level_list = {}
+
+    each LEV in GAME.levels do
+      LEV.new_weapons = {}
+
+      if LEV.prebuilt  then continue end
+      if LEV.is_secret then continue end
+
+      table.insert(level_list, LEV)
+    end
+
+    assert(#level_list >= 1)
+
+    each name,info in GAME.WEAPONS do
+      -- skip non-item and disabled weapons
+      if (info.add_prob or 0) == 0 then continue end
+
+      local LEV = calc_new_weapon_place(info, level_list)
+      assert(LEV)
+
+      table.insert(LEV.new_weapons, name)
+    end
+
+    stderrf("%s\n", summarize_new_weapon_placement())
+  end
+
+
+  local function pick_new_weapons__OLD()
     local seen_weapons = {}
 
     each LEV in GAME.levels do
@@ -1301,7 +1382,9 @@ function Episode_plan_weapons()
     calc_weapon_quota(LEV)
   end
 
-  pick_new_weapons()
+  for i = 1,60 do
+    pick_new_weapons()
+  end
 
   determine_seen_weapons()
 
