@@ -1194,6 +1194,57 @@ function Episode_plan_weapons()
   end
 
 
+  local function detect_a_weapon_gap(level_list, start)
+    -- returns size of gap, possibly 0, or -1 if there is no gap
+    -- (e.g. if the given map is the last non-empty one).
+
+    if table.empty(level_list[start].new_weapons) then return -1 end
+
+    local finish = start + 1
+
+    while true do
+      if finish > #level_list then return -1 end
+
+      if not table.empty(level_list[finish].new_weapons) then break; end
+
+      finish = finish + 1
+    end
+
+    return finish - start - 1
+  end
+
+
+  local function shift_new_weapons_down(level_list, start)
+    while start < #level_list do
+      local LEV  = level_list[start]
+      assert(LEV)
+
+      local NEXT = level_list[start + 1]
+      assert(NEXT)
+
+      table.append(LEV.new_weapons, NEXT.new_weapons)
+      NEXT.new_weapons = {}
+
+      start = start + 1
+    end
+  end
+
+
+  local function reduce_weapon_gaps(level_list)
+    -- FIXME : make this depend on # of levels and OB_CONFIG.weapons
+    local max_gap = 2
+
+    for start = 1, #level_list do
+      local gap = detect_a_weapon_gap(level_list, start)
+
+      while gap > max_gap do
+        shift_new_weapons_down(level_list, start + 1)
+        gap = gap - 1
+      end
+    end
+  end
+
+
   local function pick_new_weapons()
     local level_list = {}
 
@@ -1224,6 +1275,8 @@ function Episode_plan_weapons()
     spread_new_weapons(level_list)
 
     check_new_weapon_at_start()
+
+    reduce_weapon_gaps(level_list)
 
     stderrf("%s\n", summarize_new_weapon_placement())
     stderrf("\n")
