@@ -1039,7 +1039,11 @@ function Episode_plan_weapons()
   local function calc_new_weapon_place(info, level_list)
     -- transform 'level' value into an index into level_list[]
 
-    -- FIXME : handle shorter level_list
+    -- handle short list of maps
+    -- [ OB_CONFIG.length == "single" or "few" ]
+    if #level_list <= 5 then
+      return rand.pick(level_list)
+    end
 
     -- TODO : apply OB_CONFIG.weapons
 
@@ -1047,12 +1051,17 @@ function Episode_plan_weapons()
     assert(lev_idx)
 
     if lev_idx > 1 then
+      if OB_CONFIG.length == "episode" then
+        lev_idx = 1 + (lev_idx-1) * 0.75
+      end
+
       if rand.odds(30) then lev_idx = lev_idx + 1 end
 
       lev_idx = int(lev_idx * rand.pick({ 1.0, 1.3, 1.6 }))
     end
 
-    assert(lev_idx <= #level_list)
+    -- ensure it is valid
+    lev_idx = math.clamp(1, lev_idx, #level_list)
 
     return level_list[lev_idx]
   end
@@ -1200,15 +1209,19 @@ function Episode_plan_weapons()
 
 
   local function reduce_weapon_gaps(level_list)
-    -- FIXME : make this depend on # of levels and OB_CONFIG.weapons
-    -- IDEA : gap depends on how far along
-    local max_gap = 3
+    local max_gap = 2
+
+    max_gap = max_gap + int(#level_list / 20)
+
+    if OB_CONFIG.weapons == "heaps" then max_gap = 1 end
+    if OB_CONFIG.weapons == "more"  then max_gap = 1 end
 
     for start = 1, #level_list do
       local gap = detect_a_weapon_gap(level_list, start)
 
+      -- lesser gaps near start
       local max_gap2 = max_gap
-      if max_gap2 >= 2 and start < #level_list / 5 then
+      if max_gap2 >= 2 and start <= 4 then
          max_gap2 = max_gap2 - 1
       end
 
@@ -1235,7 +1248,7 @@ function Episode_plan_weapons()
   end
 
 
-  local function pick_new_weapons()
+  local function place_new_weapons()
     local level_list = {}
 
     each LEV in GAME.levels do
@@ -1485,7 +1498,7 @@ function Episode_plan_weapons()
   end
 
   for i = 1,60 do
-    pick_new_weapons()
+    place_new_weapons()
   end
 
   determine_seen_weapons()
