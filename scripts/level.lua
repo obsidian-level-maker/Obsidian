@@ -1131,9 +1131,17 @@ function Episode_plan_weapons()
     -- best places have no weapons at all
     local score = 90 - math.min(dest_count, 5) * 10
 
-    -- TODO : check for -2/+2 maps which are empty on both sides
+    -- check if destination is in middle of a run of empty maps
+    if idx-1 >= 1 and idx+1 <= #level_list and
+       dest_count == 0 and
+       table.empty(level_list[idx-1].new_weapons) and
+       table.empty(level_list[idx+1].new_weapons)
+    then
+      score = score + 2
 
-    if math.abs(ofs) >= 2 then score = score - 1 end
+    elseif math.abs(ofs) < 2 then
+      score = score + 1
+    end
 
     -- tie breaker
     return score + gui.random()
