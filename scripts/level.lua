@@ -1007,7 +1007,10 @@ function Episode_plan_weapons()
   end
 
 
-  local function should_swap(info1, info2)
+  local function should_swap(name1, name2)
+    local info1 = GAME.WEAPONS[name1]
+    local info2 = GAME.WEAPONS[name2]
+
     if info1.upgrades and info1.upgrades == info2.name then
       return true
     end
@@ -1022,10 +1025,7 @@ function Episode_plan_weapons()
       local name1 = L1.new_weapons[idx1]
       local name2 = L2.new_weapons[idx2]
 
-      local info1 = GAME.WEAPONS[name1]
-      local info2 = GAME.WEAPONS[name2]
-
-      if should_swap(info1, info2) then
+      if should_swap(name1, name2) then
         L1.new_weapons[idx1] = name2
         L2.new_weapons[idx2] = name1
 
@@ -1232,15 +1232,36 @@ function Episode_plan_weapons()
 
   local function reduce_weapon_gaps(level_list)
     -- FIXME : make this depend on # of levels and OB_CONFIG.weapons
-    local max_gap = 2
+    -- IDEA : gap depends on how far along
+    local max_gap = 3
 
     for start = 1, #level_list do
       local gap = detect_a_weapon_gap(level_list, start)
 
-      while gap > max_gap do
+      local max_gap2 = max_gap
+      if max_gap2 >= 2 and start < #level_list / 5 then
+         max_gap2 = max_gap2 - 1
+      end
+
+      while gap > max_gap2 do
         shift_new_weapons_down(level_list, start + 1)
         gap = gap - 1
       end
+    end
+  end
+
+
+  local function check_upgraded_weapons()
+    -- ensure certain weapon pairs occur in the expected order
+    -- [ e.g. regular shotgun comes before the super-shotgun ]
+
+    for idx1 = 1, #GAME.levels do
+    for idx2 = idx1 + 1, #GAME.levels do
+      local L1 = GAME.levels[idx1]
+      local L2 = GAME.levels[idx2]
+
+      swap_upgraded_weapons(L1, L2)
+    end
     end
   end
 
@@ -1270,16 +1291,15 @@ function Episode_plan_weapons()
       rand.shuffle(LEV.new_weapons)
     end
 
-    stderrf("%s\n", summarize_new_weapon_placement())
-
     spread_new_weapons(level_list)
 
     check_new_weapon_at_start()
 
+    check_upgraded_weapons()
+
     reduce_weapon_gaps(level_list)
 
     stderrf("%s\n", summarize_new_weapon_placement())
-    stderrf("\n")
   end
 
 
@@ -1320,18 +1340,6 @@ function Episode_plan_weapons()
       if NL and _index >= 2 then
         spread_new_weapons__OLD(LEV, NL)
       end
-    end
-
-    -- ensure certain weapon pairs occur in the expected order
-    -- [ e.g. regular shotgun comes before the super-shotgun ]
-
-    for idx1 = 1, #GAME.levels do
-    for idx2 = idx1 + 1, #GAME.levels do
-      local L1 = GAME.levels[idx1]
-      local L2 = GAME.levels[idx2]
-
-      swap_upgraded_weapons(L1, L2)
-    end
     end
   end
 
