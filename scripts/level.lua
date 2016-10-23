@@ -853,11 +853,12 @@ end
 
 function Episode_plan_weapons()
   --
-  -- Decides weapon stuff for each level:
+  -- Decides weapon stuff :
   --
-  -- (1) the starting weapon(s) of a level
-  -- (2) other must-give weapons of a level
-  -- (3) a weapon for secrets [ provided earlier than normal ]
+  -- (1) which levels the weapons are first used on
+  -- (2) the starting weapon(s) of a level
+  -- (3) other must-give weapons of a level
+  -- (4) a earlier-than-normal weapon for secrets
   --
 
   local function calc_weapon_level(LEV)
@@ -972,38 +973,6 @@ function Episode_plan_weapons()
       gui.debugf("  other = %s\n", table.list_str(LEV.other_weapons))
       gui.debugf("  secret = %s\n", LEV.secret_weapon or "NONE")
     end
-  end
-
-
-  local function spread_new_weapons__OLD(L1, L2)
-    local num1 = #L1.new_weapons
-    local num2 = #L2.new_weapons
-
-    if num2 >= L2.weapon_quota then return end
-
-    local diff = num1 - num2
-
-    if num1 < 2 or diff < 0 then return end
-
-    -- chance of moving a single weapon
-    local move_prob = 100
-
-    if diff == 0 then move_prob = 10 end
-    if diff == 1 then move_prob = 33 end
-    if diff == 2 then move_prob = 80 end
-
-    if not rand.odds(move_prob) then return end
-
-    -- Ok, move a weapon
-    -- [ we remove one from beginning of L1, append to the end of L2,
-    --   as this prevents weapons moving too far ahead ]
-    local name = table.remove(L1.new_weapons, 1)
-    table.insert(L2.new_weapons, name)
-
-    gui.debugf("spread new weapon '%s' : %s --> %s\n", name, L1.name, L2.name)
-
-    -- try again
-    spread_new_weapons__OLD(L1, L2)
   end
 
 
@@ -1300,47 +1269,6 @@ function Episode_plan_weapons()
     reduce_weapon_gaps(level_list)
 
     stderrf("%s\n", summarize_new_weapon_placement())
-  end
-
-
-  local function pick_new_weapons__OLD()
-    local seen_weapons = {}
-
-    each LEV in GAME.levels do
-      LEV.new_weapons = {}
-
-      if LEV.prebuilt  then continue end
-      if LEV.is_secret then continue end
-
-      local w_names = table.keys(GAME.WEAPONS)
-      rand.shuffle(w_names)
-
-      each name in w_names do
-        local info = GAME.WEAPONS[name]
-        if (info.add_prob or 0) == 0 then continue end
-        if (info.level or 1) <= LEV.weapon_level and not seen_weapons[name] then
-          table.insert(LEV.new_weapons, name)
-          seen_weapons[name] = true
-        end
-
-        -- prevent having too many new weapons in this map
-        -- [ they get added to a later map, or simply dropped if no later maps ]
-        if table.size(LEV.new_weapons) >= LEV.weapon_quota then
-          break;
-        end
-      end
-    end
-
-    -- spread them out, esp. when next level has none and previous has >= 2,
-    -- but also sometimes just to randomize things a bit.
-
-    each LEV in GAME.levels do
-      local NL = next_level_in_episode(_index)
-
-      if NL and _index >= 2 then
-        spread_new_weapons__OLD(LEV, NL)
-      end
-    end
   end
 
 
