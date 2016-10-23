@@ -2167,8 +2167,11 @@ function Quest_nice_items()
     -- apply Items setting
     local quota = 1
 
-    if OB_CONFIG.items == "less" and rand.odds(50) then return end
-    if OB_CONFIG.items == "more" and rand.odds(50) then quota = 2 end
+    if OB_CONFIG.items == "rare"  and rand.odds(80) then return end
+    if OB_CONFIG.items == "less"  and rand.odds(50) then return end
+
+    if OB_CONFIG.items == "more"  and rand.odds(50) then quota = 2 end
+    if OB_CONFIG.items == "heaps" and rand.odds(80) then quota = 2 end
 
     for loop = 1, quota do
       -- add the same item into each start room
@@ -2240,8 +2243,11 @@ function Quest_nice_items()
   local function visit_other_rooms()
     local quota = (SEED_W + SEED_H + 40) / rand.pick({ 30, 55, 90 })
 
+    if OB_CONFIG.items == "rare"  then quota = quota / 4.0 end
     if OB_CONFIG.items == "less"  then quota = quota / 2.0 end
     if OB_CONFIG.items == "more"  then quota = quota * 2.0 end
+    if OB_CONFIG.items == "heaps" then quota = quota * 4.0 end
+
     if OB_CONFIG.items == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
 
     quota = rand.int(quota)
