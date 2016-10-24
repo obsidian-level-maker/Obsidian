@@ -1213,8 +1213,11 @@ function Episode_plan_weapons()
 
     max_gap = max_gap + int(#level_list / 20)
 
-    if OB_CONFIG.weapons == "heaps" then max_gap = 1 end
+    if OB_CONFIG.weapons == "rare"  then return end
+    if OB_CONFIG.weapons == "less"  then max_gap = max_gap + 1 end
+
     if OB_CONFIG.weapons == "more"  then max_gap = 1 end
+    if OB_CONFIG.weapons == "heaps" then max_gap = 1 end
 
     for start = 1, #level_list do
       local gap = detect_a_weapon_gap(level_list, start)
