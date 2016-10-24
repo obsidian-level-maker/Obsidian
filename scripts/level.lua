@@ -1415,15 +1415,24 @@ function Episode_plan_weapons()
 
       local want_num = rand.sel(extra_prob, 2, 1)
 
-      -- in very first few maps, only give a single weapon
+      -- in very first few maps, only give a single start weapon
       if (LEV.id <= 2 or LEV.game_along < 0.2) and LEV.new_weapons[1] then
         want_num = 1
       end
 
-      -- @@
-
       if want_num > LEV.weapon_quota then
          want_num = LEV.weapon_quota
+      end
+
+      -- skip one sometimes (esp. for "Rare" setting)
+      local skip_prob = 1
+
+      if OB_CONFIG.weapons == "rare"   then skip_prob = 50 end
+      if OB_CONFIG.weapons == "less"   then skip_prob = 25 end
+      if OB_CONFIG.weapons == "normal" then skip_prob = 10 end
+
+      if LEV.ep_along >= 0.2 and rand.odds(skip_prob) then
+        want_num = want_num - 1
       end
 
       for i = 1, want_num do
