@@ -77,7 +77,6 @@
 
     === Weapon planning ===
 
-    weapon_level    -- the maximum level of a weapon we can use [ except secret_weapon ]
     weapon_quota    -- number of weapons to add in this level [ except secrets ]
 
       new_weapons   -- weapons which player does not have yet [ may overlap with start_weapons ]
@@ -861,35 +860,6 @@ function Episode_plan_weapons()
   -- (4) a earlier-than-normal weapon for secrets
   --
 
-  local function calc_weapon_level(LEV)
-    local weap_along = LEV.game_along
-
-    -- allow everything in a single level, or the "Mixed" choice
-    if OB_CONFIG.length == "single" or OB_CONFIG.weapons == "mixed" then
-      weap_along = 1.0
-
-    elseif OB_CONFIG.length == "episode" then
-      weap_along = weap_along * 1.2
-
-    elseif OB_CONFIG.length == "game" then
-      -- reach peak sooner in a full game (after about an episode)
-      weap_along = weap_along * 3.0
-    end
-
-    -- small adjustment for the 'Weapons' setting
-    if OB_CONFIG.weapons == "more" then
-      weap_along = weap_along ^ 0.8 + 0.2
-    end
-
-    weap_along = 1 + 9 * weap_along
-
-    -- add some randomness
-    weap_along = weap_along + 1.6 * (gui.random() ^ 2)
-
-    LEV.weapon_level = weap_along
-  end
-
-
   local function calc_weapon_quota(LEV)
     -- decide how many weapons to give
 
@@ -905,15 +875,17 @@ function Episode_plan_weapons()
 
     local quota = (lev_size - 20) / 25 + gui.random()
 
-    -- more as game progresses
-    quota = quota + LEV.game_along * 2.0
-
-    if OB_CONFIG.weapons == "less" then quota = quota / 1.7 end
-    if OB_CONFIG.weapons == "more" then quota = quota * 1.7 end
+    if OB_CONFIG.weapons == "rare"  then quota = quota / 1.8 end
+    if OB_CONFIG.weapons == "less"  then quota = quota / 1.4 end
+    if OB_CONFIG.weapons == "more"  then quota = quota * 1.5 end
+    if OB_CONFIG.weapons == "heaps" then quota = quota * 2.0 end
 
     if OB_CONFIG.weapons == "mixed" then
-      quota = quota * rand.pick({ 0.6, 1.0, 1.7 })
+      quota = quota * rand.pick({ 0.6, 1.0, 1.6 })
     end
+
+    -- more as game progresses
+    quota = quota + LEV.game_along * 2.0
 
     quota = quota * (PARAM.weapon_factor or 1)
     quota = int(quota)
@@ -921,7 +893,9 @@ function Episode_plan_weapons()
     if quota < 1 then quota = 1 end
 
     -- be more generous in the very first level
-    if LEV.id == 1 and quota == 1 and OB_CONFIG.weapons != "less" then
+    if LEV.id == 1 and quota == 1 and
+       not (OB_CONFIG.weapons == "less" or OB_CONFIG.weapons == "rare")
+    then
       quota = 2
     end
 
@@ -965,13 +939,13 @@ function Episode_plan_weapons()
 
     each LEV in GAME.levels do
       gui.debugf("%s\n", LEV.name)
-      gui.debugf("  level = %1.2f\n", LEV.weapon_level)
-      gui.debugf("  quota = %d\n",    LEV.weapon_quota)
 
-      gui.debugf("  new = %s\n",   table.list_str(LEV.new_weapons))
-      gui.debugf("  start = %s\n", table.list_str(LEV.start_weapons))
-      gui.debugf("  other = %s\n", table.list_str(LEV.other_weapons))
+      gui.debugf("  new    = %s\n", table.list_str(LEV.new_weapons))
+      gui.debugf("  start  = %s\n", table.list_str(LEV.start_weapons))
+      gui.debugf("  other  = %s\n", table.list_str(LEV.other_weapons))
+
       gui.debugf("  secret = %s\n", LEV.secret_weapon or "NONE")
+      gui.debugf("  quota  = %d\n", LEV.weapon_quota)
     end
   end
 
@@ -1446,6 +1420,8 @@ function Episode_plan_weapons()
         want_num = 1
       end
 
+      -- @@
+
       if want_num > LEV.weapon_quota then
          want_num = LEV.weapon_quota
       end
@@ -1496,10 +1472,10 @@ function Episode_plan_weapons()
   ---| Episode_plan_weapons |---
 
   each LEV in GAME.levels do
-    calc_weapon_level(LEV)
     calc_weapon_quota(LEV)
   end
 
+  --FIXME : remove debugging loop
   for i = 1,60 do
     place_new_weapons()
   end
