@@ -861,7 +861,7 @@ function Episode_plan_weapons()
   --
 
   local QUOTA_ADJUSTS = { rare=0.55, less=0.70, more=1.50, heaps=2.00 }
-  local PLACE_ADJUSTS = { rare=1.80, less=1.30, more=0.66, heaps=0.40 }
+  local PLACE_ADJUSTS = { rare=1.70, less=1.30, more=0.50, heaps=0.20 }
 
   local function calc_weapon_quota(LEV)
     -- decide how many weapons to give
@@ -1073,6 +1073,13 @@ function Episode_plan_weapons()
       return -1
     end
 
+    -- prevent moving too far when user wants lots of weapons
+    if math.abs(ofs) >= 2 and
+       (OB_CONFIG.weapons == "more" or OB_CONFIG.weapons == "heaps")
+    then
+      return -1
+    end
+
     local NEXT = level_list[idx]
     assert(NEXT)
 
@@ -1139,6 +1146,8 @@ function Episode_plan_weapons()
 
   local function spread_new_weapons(level_list)
     -- prefer not to introduce multiple new weapons per map
+
+    if OB_CONFIG.weapons == "heaps" then return end
 
     for idx = 1, #level_list do
       for loop = 1,5 do
