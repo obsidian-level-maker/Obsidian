@@ -860,6 +860,9 @@ function Episode_plan_weapons()
   -- (4) a earlier-than-normal weapon for secrets
   --
 
+  local QUOTA_ADJUSTS = { rare=0.55, less=0.70, more=1.50, heaps=2.00 }
+  local PLACE_ADJUSTS = { rare=1.80, less=1.30, more=0.66, heaps=0.40 }
+
   local function calc_weapon_quota(LEV)
     -- decide how many weapons to give
 
@@ -875,10 +878,7 @@ function Episode_plan_weapons()
 
     local quota = (lev_size - 20) / 25 + gui.random()
 
-    if OB_CONFIG.weapons == "rare"  then quota = quota / 1.8 end
-    if OB_CONFIG.weapons == "less"  then quota = quota / 1.4 end
-    if OB_CONFIG.weapons == "more"  then quota = quota * 1.5 end
-    if OB_CONFIG.weapons == "heaps" then quota = quota * 2.0 end
+    quota = quota * (QUOTA_ADJUSTS[OB_CONFIG.weapons] or 1.0)
 
     if OB_CONFIG.weapons == "mixed" then
       quota = quota * rand.pick({ 0.6, 1.0, 1.6 })
@@ -1019,15 +1019,19 @@ function Episode_plan_weapons()
       return rand.pick(level_list)
     end
 
-    -- TODO : apply OB_CONFIG.weapons
-
     local lev_idx = info.level
     assert(lev_idx)
 
     if lev_idx > 1 then
+      -- apply the user Weapons setting
+      local factor = (PLACE_ADJUSTS[OB_CONFIG.weapons] or 1.0)
+
+      -- less spread out when building a single episode
       if OB_CONFIG.length == "episode" then
-        lev_idx = 1 + (lev_idx-1) * 0.75
+        factor = factor * 0.75
       end
+
+      lev_idx = 1 + (lev_idx - 1) * factor
 
       if rand.odds(30) then lev_idx = lev_idx + 1 end
 
@@ -1187,7 +1191,7 @@ function Episode_plan_weapons()
 
     max_gap = max_gap + int(#level_list / 20)
 
-    if OB_CONFIG.weapons == "rare"  then return end
+    if OB_CONFIG.weapons == "rare"  then max_gap = max_gap + 2 end
     if OB_CONFIG.weapons == "less"  then max_gap = max_gap + 1 end
 
     if OB_CONFIG.weapons == "more"  then max_gap = 1 end
