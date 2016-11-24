@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008 Andrew Apted
+--  Copyright (C) 2008-2016  Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,30 +18,24 @@
 --
 ----------------------------------------------------------------
 
-ZDOOM = { }
+ZDOOM = {}
+
 
 ZDOOM.ENTITIES =
 {
-  -- players --
-
-  player5 = { id=4001, kind="other", r=16,h=56 }
-  player6 = { id=4002, kind="other", r=16,h=56 }
-  player7 = { id=4003, kind="other", r=16,h=56 }
-  player8 = { id=4004, kind="other", r=16,h=56 }
-
   -- monsters --
 
-  mbf_dog = { id=888, kind="monster", r=12,h=28 }
+  mbf_dog = { id=888, r=12,h=28 }
 
   -- scenery --
 
-  fountain_red    = { id=9027, kind="scenery", r=16,h=16, pass=true }
-  fountain_green  = { id=9028, kind="scenery", r=16,h=16, pass=true }
-  fountain_blue   = { id=9029, kind="scenery", r=16,h=16, pass=true }
-  fountain_yellow = { id=9030, kind="scenery", r=16,h=16, pass=true }
-  fountain_purple = { id=9031, kind="scenery", r=16,h=16, pass=true }
-  fountain_black  = { id=9032, kind="scenery", r=16,h=16, pass=true }
-  fountain_white  = { id=9033, kind="scenery", r=16,h=16, pass=true }
+  fountain_red    = { id=9027, r=16,h=16, pass=true }
+  fountain_green  = { id=9028, r=16,h=16, pass=true }
+  fountain_blue   = { id=9029, r=16,h=16, pass=true }
+  fountain_yellow = { id=9030, r=16,h=16, pass=true }
+  fountain_purple = { id=9031, r=16,h=16, pass=true }
+  fountain_black  = { id=9032, r=16,h=16, pass=true }
+  fountain_white  = { id=9033, r=16,h=16, pass=true }
 }
 
 

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008,2016 Andrew Apted
+--  Copyright (C) 2008-2016  Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,13 +18,20 @@
 --
 ----------------------------------------------------------------
 
-BOOM = { }
+BOOM = {}
+
 
 BOOM.ENTITIES =
 {
-  point_push = { id=5001, kind="scenery", r=16,h=16, pass=true }
-  point_pull = { id=5002, kind="scenery", r=16,h=16, pass=true }
+  boom_player5 = { id=4001, r=16, h=56 }
+  boom_player6 = { id=4002, r=16, h=56 }
+  boom_player7 = { id=4003, r=16, h=56 }
+  boom_player8 = { id=4004, r=16, h=56 }
+
+  point_push = { id=5001, r=16,h=16, pass=true }
+  point_pull = { id=5002, r=16,h=16, pass=true }
 }
+
 
 BOOM.PARAMETERS =
 {

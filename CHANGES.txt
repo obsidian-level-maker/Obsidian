@@ -18,3 +18,5 @@ CHANGES IN x.xx
 
 -  bug fix: swapped normal-exit and secret-exit switches
 
+-  removed the non-standard player things (4001..4004)
+

@@ -22,7 +22,7 @@
 -- crazy_prob : probability for "Crazy" setting (default is 50)
 --
 -- health : hit points of monster
--- damage : total damage inflicted on player (average * accuracy)
+-- damage : total damage inflicted on player (on average)
 -- attack : kind of attack (hitscan | missile | melee)
 -- density : how many too use (e.g. 0.5 = half the normal amount)
 --
