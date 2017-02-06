@@ -5,6 +5,9 @@
 # turn off generalized sectors (they prevent large sector types)
 feature gen_types 0
 
+# disable the check for players in the map
+feature no_need_players 1
+
 
 #--- TEXTURES and FLATS ---
 
