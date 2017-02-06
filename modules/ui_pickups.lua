@@ -33,11 +33,11 @@ UI_PICKUPS.HEALTH_CHOICES =
 UI_PICKUPS.ITEM_CHOICES =
 {
   "none",   _("NONE"),
-  "rare",   _("Rare"),
-  "less",   _("Less"),
+  "heaps",  _("Very Soon"),
+  "more",   _("Sooner"),
   "normal", _("Normal"),
-  "more",   _("More"),
-  "heaps",  _("Heaps"),
+  "less",   _("Later"),
+  "rare",   _("Very Late"),
 }
 
 
