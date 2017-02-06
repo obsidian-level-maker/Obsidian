@@ -572,6 +572,8 @@ Mazes:
   MONSTERS / ITEMS
 ----------------------------------------------
 
+-  usage of Arch-Viles as boss/guard monsters should have a limit
+
 -  for "big" boss monster rooms, add a big health item / invuln
    [ insert into R.items ]
 
@@ -583,6 +585,9 @@ Mazes:
    single monster or 2-3 of a certain class), and place
    all the monsters close to each other, perhaps even
    have swarm patterns.
+
+IDEA : a setting for "difficulty spikes"
+       (an idea by flyingdeath, more info in topic 496)
 
 -  Fight simulator: adjust monster 'damage' value based on Ambush
    usage, Cage usage, dark rooms, hitscanners/Archies in low cover

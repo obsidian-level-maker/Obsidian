@@ -3,6 +3,19 @@ WORK IN PROGRESS
 ================
 
 
+>>>  use "gtk+" scheme, remove the alternate look
+
+
+Glossary : describe a "Sink"
+
+
+Weapon planning:
+
++  make distribution depend in Weapons setting
+   -  probably make "mixed" be like "heaps" (in this regard)
+
+
+
 Revamped UI:
 
 +  implement the new settings
@@ -10,18 +23,9 @@ Revamped UI:
    -  "bosses"
 
    -  "bit_less" for health/ammo
-   -  "rare" and "heaps" for items
-
-   -  change weapon logic to "spreading out-ness" (tm)
 
    -  "lighting"
    -  "detail"
-
-
-
-Modding wiki:
-
-+  check Wiki in different browsers & OSes
 
 
 
