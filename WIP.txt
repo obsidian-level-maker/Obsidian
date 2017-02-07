@@ -3,12 +3,6 @@ WORK IN PROGRESS
 ================
 
 
->>>  use "gtk+" scheme, remove the alternate look
-
-
-Glossary : describe a "Sink"
-
-
 Weapon planning:
 
 +  make distribution depend in Weapons setting
