@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2009      Enhas
---  Copyright (C) 2009-2016 Andrew Apted
+--  Copyright (C) 2009-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -41,8 +41,9 @@ MISC_STUFF.variety_tip = _(
 
 
 function MISC_STUFF.begin_level(self)
-  for name,opt in pairs(self.options) do
-    local value = self.options[name].value
+  each opt in self.options do
+    local name  = assert(opt.name)
+    local value = opt.value
 
     if opt.choices == STYLE_CHOICES then
       if value != "mixed" then
