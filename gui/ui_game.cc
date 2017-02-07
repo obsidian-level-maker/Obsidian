@@ -35,10 +35,7 @@
 UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	Fl_Group(X, Y, W, H, label)
 {
-	box(FL_THIN_UP_BOX);
-
-	if (! alternate_look)
-		color(BUILD_BG, BUILD_BG);
+	box(FL_FLAT_BOX);
 
 
 	int y_step  = kf_h(30);

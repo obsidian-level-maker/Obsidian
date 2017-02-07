@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -376,11 +376,11 @@ void Main_SetupFLTK()
 
 	if (! alternate_look)
 	{
-		Fl::background(236, 232, 228);
+		Fl::background(236, 228, 224);
 		Fl::background2(255, 255, 255);
 		Fl::foreground(0, 0, 0);
 
-		Fl::scheme("plastic");
+		Fl::scheme("gtk+");
 	}
 
 	screen_w = Fl::w();

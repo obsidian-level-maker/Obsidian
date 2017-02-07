@@ -118,7 +118,7 @@ void UI_MiniMap::MapCorner(int x, int y, int dx, int dy)
 	// we want to match the nearby background, but the "plastic" scheme
 	// changes the color in a way we cannot easily duplicate.  This is an
 	// approximation and may not work on different OSes.
-	Fl_Color nearby_bg = fl_color_average(BUILD_BG, FL_WHITE, 0.5);
+	Fl_Color nearby_bg = FL_LIGHT1; //fl_color_average(BUILD_BG, FL_WHITE, 0.5);
 
 	u8_t r, g, b;
 

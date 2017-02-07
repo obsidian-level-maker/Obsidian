@@ -24,8 +24,6 @@
 
 #define WINDOW_BG  fl_gray_ramp(3)
 
-#define BUILD_BG   fl_gray_ramp(2)
-
 
 // support for scaling up the GUI
 extern int KF;  // Kromulent Factor : -1 .. 3

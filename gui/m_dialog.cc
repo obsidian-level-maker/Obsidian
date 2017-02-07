@@ -414,7 +414,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) :
 		Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
 		o->box(FL_FLAT_BOX);
 
-		o->color(WINDOW_BG);
+		o->color(FL_DARK3);
 
 		int bx  = w() - button_w - kf_w(25);
 		int bx2 = bx;

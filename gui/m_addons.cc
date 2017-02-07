@@ -328,10 +328,10 @@ public:
 	{
 		box(FL_THIN_UP_BOX);
 
-		if (! alternate_look)
-			color(BUILD_BG, BUILD_BG);
+		// prefix the name with a space
+		const char *name2 = StringPrintf(" %s", info->name);
 
-		button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), info->name);
+		button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), name2);
 		// if (tip)
 		//	button->tooltip(tip);
 
@@ -425,7 +425,9 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 
 	box(FL_FLAT_BOX);
 
-	color(BUILD_BG, BUILD_BG);
+	Fl_Color bg_col = alternate_look ? FL_DARK2 : FL_DARK3;
+
+	color(bg_col, bg_col);
 
 
 //	int pad = kf_w(6);
@@ -446,8 +448,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
 	sbar->callback(callback_Scroll, this);
 
-	if (! alternate_look)
-		sbar->color(FL_DARK3+1, FL_DARK3+1);
+	sbar->color(FL_DARK3+1, FL_DARK1);
 
 
 	const char *pack_title = StringPrintf("\n\n\n\n%s", _("List of Addons"));
@@ -461,32 +462,32 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
 	pack->box(FL_FLAT_BOX);
-	pack->color(WINDOW_BG);
+	pack->color(bg_col);
 	pack->resizable(NULL);
 
 
 	//----------------
 
-	Fl_Box *sep = new Fl_Box(FL_FLAT_BOX, 0, H-dh, W, 3, "");
-	sep->color(FL_BACKGROUND_COLOR);
+	Fl_Group *darkish = new Fl_Group(0, H-dh, W, dh);
+	darkish->box(FL_FLAT_BOX);
+	darkish->color(WINDOW_BG, WINDOW_BG);
+	{
+		// finally add the close button
+		int bw = kf_w(60);
+		int bh = kf_h(30);
+		int bx = bw;
+		int by = H - dh/2 - bh/2 + 2;
 
+		Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, fl_close);
+		apply_but->callback(callback_Quit, this);
 
-	// finally add the close button
-	int bw = kf_w(60);
-	int bh = kf_h(30);
-	int bx = bw;
-	int by = H - dh/2 - bh/2 + 2;
-
-	Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, fl_close);
-	apply_but->callback(callback_Quit, this);
-
-
-	// show warning about needing a restart
-	sep = new Fl_Box(FL_NO_BOX, x(), by, W*3/5, bh, _("Changes require a restart"));
-	sep->align(FL_ALIGN_INSIDE);
-	sep->labelcolor(FL_DARK1);
-	sep->labelsize(small_font_size);
-
+		// show warning about needing a restart
+		Fl_Box * sep = new Fl_Box(FL_NO_BOX, x(), by, W*3/5, bh, _("Changes require a restart"));
+		sep->align(FL_ALIGN_INSIDE);
+		sep->labelcolor(FL_DARK1);
+		sep->labelsize(small_font_size);
+	}
+	darkish->end();
 
 	end();
 

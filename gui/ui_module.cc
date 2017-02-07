@@ -38,9 +38,6 @@ UI_Module::UI_Module(int X, int Y, int W, int H,
 {
 	box(FL_THIN_UP_BOX);
 
-	if (! alternate_look)
-		color(BUILD_BG, BUILD_BG);
-
 	mod_button = new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
 
 	if (Is_UI())
@@ -223,6 +220,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 	button_col(_button_col)
 {
 	box(FL_FLAT_BOX);
+
 	color(WINDOW_BG, WINDOW_BG);
 
 
@@ -242,8 +240,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 	sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
 	sbar->callback(callback_Scroll, this);
 
-	if (! alternate_look)
-		sbar->color(FL_DARK3+1, FL_DARK3+1);
+	sbar->color(FL_DARK3+1, FL_DARK1);
 
 
 	mod_pack = new Fl_Group(mx, my, mw, mh);
@@ -254,8 +251,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 	mod_pack->labeltype(FL_NORMAL_LABEL);
 	mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
-	if (alternate_look)
-		mod_pack->labelcolor(FL_DARK1);
+	mod_pack->labelcolor(FL_DARK1);
 
 	mod_pack->box(FL_FLAT_BOX);
 	mod_pack->color(WINDOW_BG);  

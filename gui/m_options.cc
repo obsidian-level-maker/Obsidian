@@ -363,9 +363,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	box(FL_THIN_UP_BOX);
 
-	if (! alternate_look)
-		color(BUILD_BG, BUILD_BG);
-
 
 	int y_step = kf_h(9);
 	int pad    = kf_w(6);
@@ -455,7 +452,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
 	darkish->box(FL_FLAT_BOX);
-	darkish->color(BUILD_BG, BUILD_BG);
+	darkish->color(FL_DARK3, FL_DARK3);
 	{
 		// finally add an "Close" button
 

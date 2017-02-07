@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -26,12 +26,10 @@
 #include "main.h"
 
 
-#define INACTIVE_BG  fl_gray_ramp(5)
-#define INACTIVE_BG2  fl_gray_ramp(14)
-
 #define ABORT_COLOR  fl_color_cube(3,1,1)
 
 #define PROGRESS_FG  fl_color_cube(3,3,0)
+#define PROGRESS_BG  fl_gray_ramp(10)
 
 #define NODE_PROGRESS_FG  fl_color_cube(1,4,2)
 
@@ -40,9 +38,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	Fl_Group(X, Y, W, H, label)
 {
 	box(FL_THIN_UP_BOX);
-
-	if (! alternate_look)
-		color(BUILD_BG, BUILD_BG);
 
 	resizable(NULL);
 
@@ -103,16 +98,13 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad*2, kf_h(26), _("Ready to go!"));
 	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
 
-	if (! alternate_look)
-		status->color(FL_DARK2 - 2, FL_DARK2 - 2);
-
 	cy += status->h() + kf_h(14);
 
 
 	progress = new Fl_Progress(X + pad, cy, W - pad*2, kf_h(26));
 	progress->align(FL_ALIGN_INSIDE);
 	progress->box(FL_FLAT_BOX);
-	progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
+	progress->color(PROGRESS_BG, PROGRESS_BG);
 	progress->value(0.0);
 	progress->labelsize(FL_NORMAL_SIZE + 2);
 
@@ -168,16 +160,14 @@ void UI_Build::Prog_Init(int node_perc, const char *extra_steps)
 	progress->maximum(1.0);
 
 	progress->value(0.0);
-	progress->color(alternate_look ? FL_BLACK : FL_BACKGROUND_COLOR, PROGRESS_FG);
-
-	if (alternate_look)
-		progress->labelcolor(FL_WHITE);
+	progress->color(FL_DARK3, PROGRESS_FG);
+	progress->labelcolor(FL_WHITE);
 }
 
 
 void UI_Build::Prog_Finish()
 {
-	progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
+	progress->color(PROGRESS_BG, PROGRESS_BG);
 	progress->value(0.0);
 	progress->label("");
 }
