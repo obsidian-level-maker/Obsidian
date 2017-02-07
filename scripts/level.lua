@@ -1271,7 +1271,7 @@ function Episode_plan_weapons()
 
     reduce_weapon_gaps(level_list)
 
-    stderrf("%s\n", summarize_new_weapon_placement())
+--  stderrf("%s\n", summarize_new_weapon_placement())
   end
 
 

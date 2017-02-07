@@ -121,7 +121,8 @@ function Story_generate()
 
     num_lines = num_lines + 1
 
-stderrf("num_lines = %d\n", num_lines)
+--stderrf("num_lines = %d\n", num_lines)
+
     if num_lines > PARAM.max_screen_lines then
       return false
     end
@@ -184,7 +185,7 @@ stderrf("num_lines = %d\n", num_lines)
       if EPI.bex_end_name then num_parts = num_parts + 1 end
     end
 
-  stderrf("num_parts = %d\n", num_parts)
+--stderrf("num_parts = %d\n", num_parts)
 
     if num_parts == 0 then return end
 
