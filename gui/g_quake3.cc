@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@
 #include "q_common.h"
 #include "q_light.h"
 #include "q_vis.h"
-#include "q3_structs.h"
+#include "q2_structs.h"  //!!! FIXME
 
 #include "csg_main.h"
 #include "csg_quake.h"
