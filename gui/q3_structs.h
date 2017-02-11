@@ -103,103 +103,140 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 /* AJA: dheader_t moved to q_common.h (as dheader3_t) */
 
 
-typedef struct {
+typedef struct
+{
 	float		mins[3], maxs[3];
-	int			firstSurface, numSurfaces;
-	int			firstBrush, numBrushes;
-} dmodel_t;
 
-typedef struct {
-	char		shader[MAX_QPATH];
-	int			surfaceFlags;
-	int			contentFlags;
-} dshader_t;
+	s32_t		firstSurface, numSurfaces;
+	s32_t		firstBrush, numBrushes;
+
+} PACKEDATTR dmodel3_t;
+
+
+typedef struct
+{
+	char		shader[64];
+
+	u32_t		surfaceFlags;
+	u32_t		contentFlags;
+
+} PACKEDATTR dshader3_t;
+
 
 // planes x^1 is allways the opposite of plane x
 
-typedef struct {
+typedef struct
+{
 	float		normal[3];
 	float		dist;
-} dplane_t;
 
-typedef struct {
-	int			planeNum;
-	int			children[2];	// negative numbers are -(leafs+1), not nodes
-	int			mins[3];		// for frustom culling
-	int			maxs[3];
-} dnode_t;
+} PACKEDATTR dplane3_t;
 
-typedef struct {
-	int			cluster;			// -1 = opaque cluster (do I still store these?)
-	int			area;
 
-	int			mins[3];			// for frustum culling
-	int			maxs[3];
+typedef struct
+{
+	s32_t		planeNum;
+	s32_t		children[2];	// negative numbers are -(leafs+1), not nodes
 
-	int			firstLeafSurface;
-	int			numLeafSurfaces;
+	s32_t		mins[3];		// for frustom culling
+	s32_t		maxs[3];
 
-	int			firstLeafBrush;
-	int			numLeafBrushes;
-} dleaf_t;
+} PACKEDATTR dnode3_t;
 
-typedef struct {
-	int			planeNum;			// positive plane side faces out of the leaf
-	int			shaderNum;
-} dbrushside_t;
 
-typedef struct {
-	int			firstSide;
-	int			numSides;
-	int			shaderNum;		// the shader that determines the contents flags
-} dbrush_t;
+typedef struct
+{
+	s32_t		cluster;			// -1 = opaque cluster (do I still store these?)
+	s32_t		area;
 
-typedef struct {
-	char		shader[MAX_QPATH];
-	int			brushNum;
-	int			visibleSide;	// the brush side that ray tests need to clip against (-1 == none)
-} dfog_t;
+	s32_t		mins[3];			// for frustum culling
+	s32_t		maxs[3];
 
-typedef struct {
-	vec3_t		xyz;
+	s32_t		firstLeafSurface;
+	s32_t		numLeafSurfaces;
+
+	s32_t		firstLeafBrush;
+	s32_t		numLeafBrushes;
+
+} PACKEDATTR dleaf3_t;
+
+
+typedef struct
+{
+	s32_t		planeNum;			// positive plane side faces out of the leaf
+	s32_t		shaderNum;
+
+} PACKEDATTR dbrushside3_t;
+
+
+typedef struct
+{
+	s32_t		firstSide;
+	s32_t		numSides;
+
+	s32_t		shaderNum;		// the shader that determines the contents flags
+
+} PACKEDATTR dbrush3_t;
+
+
+typedef struct
+{
+	char		shader[64];
+
+	s32_t		brushNum;
+	s32_t		visibleSide;	// the brush side that ray tests need to clip against (-1 == none)
+
+} PACKEDATTR dfog3_t;
+
+
+typedef struct
+{
+	float		xyz[3];
 	float		st[2];
 	float		lightmap[2];
-	vec3_t		normal;
+	float		normal[3];
 	byte		color[4];
-} drawVert_t;
 
-#define drawVert_t_cleared(x) drawVert_t (x) = {{0, 0, 0}, {0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 0, 0}}
+} PACKEDATTR drawvert3_t;
 
-typedef enum {
+
+typedef enum
+{
 	MST_BAD,
 	MST_PLANAR,
 	MST_PATCH,
 	MST_TRIANGLE_SOUP,
 	MST_FLARE
-} mapSurfaceType_t;
 
-typedef struct {
-	int			shaderNum;
-	int			fogNum;
-	int			surfaceType;
+} q3_mapsurfacetype_e;
 
-	int			firstVert;
-	int			numVerts;
 
-	int			firstIndex;
-	int			numIndexes;
+typedef struct
+{
+	s32_t		shaderNum;
+	s32_t		fogNum;
+	s32_t		surfaceType;
 
-	int			lightmapNum;
-	int			lightmapX, lightmapY;
-	int			lightmapWidth, lightmapHeight;
+	s32_t		firstVert;
+	s32_t		numVerts;
 
-	vec3_t		lightmapOrigin;
-	vec3_t		lightmapVecs[3];	// for patches, [0] and [1] are lodbounds
+	s32_t		firstIndex;
+	s32_t		numIndexes;
 
-	int			patchWidth;
-	int			patchHeight;
-} dsurface_t;
+	s32_t		lightmapNum;
+	s32_t		lightmapX, lightmapY;
+	s32_t		lightmapWidth, lightmapHeight;
 
+	float		lightmapOrigin[3];
+	float		lightmapVecs[3][3];	// for patches, [0] and [1] are lodbounds
+
+	s32_t		patchWidth;
+	s32_t		patchHeight;
+
+} PACKEDATTR dsurface3_t;
+
+
+//=============================================================================
 
 // contents flags are seperate bits
 // a given brush can contribute multiple content bits
