@@ -1523,7 +1523,7 @@ static quake_node_c * CreateLeaf(region_c * R, unsigned int g /* gap */,
 		// the liquid covers the whole gap : don't need an extra leaf/node
 		leaf->medium = ParseLiquidMedium(&liquid->props);
 
-		if (qk_game == 2)
+		if (qk_game >= 2)
 			leaf->AddSolid(liquid);
 
 		cluster->MarkAmbient(AMBIENT_WATER);
@@ -1540,7 +1540,7 @@ static quake_node_c * CreateLeaf(region_c * R, unsigned int g /* gap */,
 
 		W_leaf->bbox = leaf->bbox;
 
-		if (qk_game == 2)
+		if (qk_game >= 2)
 			W_leaf->AddSolid(liquid);
 
 		cluster->AddLeaf(W_leaf);
@@ -1886,7 +1886,7 @@ void CSG_QUAKE_Build()
 
 	CreateSides(GROUP);
 
-	if (qk_game == 2)
+	if (qk_game >= 2)
 		CreateBrushes(GROUP);
 
 	CreateClusters(GROUP);

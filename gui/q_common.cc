@@ -338,7 +338,7 @@ u16_t BSP_AddPlane(float x, float y, float z,
 
 	// Quake2/3 have pairs of planes (opposite directions)
 
-	if (was_new && (qk_game == 2 || qk_sub_format == SUBFMT_HalfLife))
+	if (was_new && (qk_game >= 2 || qk_sub_format == SUBFMT_HalfLife))
 	{
 		raw_plane.normal[0] = -nx;
 		raw_plane.normal[1] = -ny;
@@ -367,13 +367,30 @@ u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var)
 
 void BSP_WritePlanes(int lump_num, int max_planes)
 {
-	if ((int)bsp_planes.size() >= max_planes)
-		Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
-				max_planes);
-
 	qLump_c *lump = BSP_NewLump(lump_num);
 
-	lump->Append(&bsp_planes[0], bsp_planes.size() * sizeof(dplane_t));
+	if (qk_game != 3)
+	{
+		lump->Append(&bsp_planes[0], bsp_planes.size() * sizeof(dplane_t));
+	}
+	else  // Quake 3 has simpler structure
+	{
+		for (unsigned int i = 0 ; i < bsp_planes.size() ; i++)
+		{
+			dplane3_t pl;
+
+			pl.normal[0] = bsp_planes[i].normal[0];
+			pl.normal[1] = bsp_planes[i].normal[1];
+			pl.normal[2] = bsp_planes[i].normal[2];
+			pl.dist      = bsp_planes[i].dist;
+
+			lump->Append(&pl, sizeof(pl));
+		}
+	}
+
+	if (lump->GetSize() >= max_planes)
+		Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
+				max_planes);
 
 	BSP_ClearPlanes();
 }
@@ -624,6 +641,11 @@ bool BSP_OpenLevel(const char *entry_in_pak)
 			bsp_numlumps = Q2_HEADER_LUMPS;
 			break;
 
+		case 3:
+			bsp_version  = Q3_BSP_VERSION;
+			bsp_numlumps = Q3_HEADER_LUMPS;
+			break;
+
 		default:
 			Main_FatalError("INTERNAL ERROR: invalid qk_game %d\n", qk_game);
 			return false; // NOT REACHED
@@ -648,6 +670,11 @@ static void BSP_WriteHeader()
 	if (qk_game == 2)
 	{
 		PAK_AppendData(Q2_IDENT_MAGIC, 4);
+		offset += 4;
+	}
+	else if (qk_game == 3)
+	{
+		PAK_AppendData(Q3_IDENT_MAGIC, 4);
 		offset += 4;
 	}
 

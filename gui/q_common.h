@@ -186,6 +186,16 @@ typedef struct
 
 } PACKEDATTR dplane_t;
 
+// Quake 3 format
+typedef struct
+{
+	float	normal[3];
+	float	dist;
+
+} PACKEDATTR dplane3_t;
+
+
+
 // 0-2 are axial planes
 #define PLANE_X      0
 #define PLANE_Y      1

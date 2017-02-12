@@ -123,16 +123,6 @@ typedef struct
 } PACKEDATTR dshader3_t;
 
 
-// planes x^1 is allways the opposite of plane x
-
-typedef struct
-{
-	float		normal[3];
-	float		dist;
-
-} PACKEDATTR dplane3_t;
-
-
 typedef struct
 {
 	s32_t		planeNum;
