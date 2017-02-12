@@ -109,19 +109,18 @@ static u16_t Q3_AddBrush(const csg_brush_c *A)
 
 
 	int plane;
-	int texinfo = 1; // FIXME !!!!!
 
 
 	// top
 	plane = BSP_AddPlane(0, 0, A->t.z,  0, 0, +1);
 
-	DoWriteBrushSide(plane, texinfo);
+	DoWriteBrushSide(plane, raw_brush.shaderNum);
 
 
 	// bottom
 	plane = BSP_AddPlane(0, 0, A->b.z,  0, 0, -1);
 
-	DoWriteBrushSide(plane ^ 1, texinfo);
+	DoWriteBrushSide(plane ^ 1, raw_brush.shaderNum);
 
 
 	for (unsigned int k = 0 ; k < A->verts.size() ; k++)
@@ -138,7 +137,7 @@ static u16_t Q3_AddBrush(const csg_brush_c *A)
 		if (flipped)
 			plane ^= 1;
 
-		DoWriteBrushSide(plane, texinfo);
+		DoWriteBrushSide(plane, raw_brush.shaderNum);
 
 		raw_brush.numSides++;
 	}
@@ -414,11 +413,14 @@ static void Q3_WriteSurface(quake_face_c *face)
 
 	memset(&raw_surf, 0, sizeof(raw_surf));
 
+	raw_surf.fogNum = -1;
 
-	bool flipped;
+
+//??	bool flipped;
 
 //??	raw_surf.planeNum = BSP_AddPlane(&face->node->plane, &flipped);
 
+#if 0
 	raw_surf.side = face->node_side ^ (flipped ? 1 : 0);
 
 
@@ -428,15 +430,23 @@ static void Q3_WriteSurface(quake_face_c *face)
 	{
 		Q3_WriteEdge(face->verts[i], face->verts[(i+1) % total_v]);
 	}
+#endif
 
 
 	// lighting and texture...
 
-	raw_surf.lightofs = -1;
-
 	if (face->lmap)
 	{
-		raw_surf.lightofs = face->lmap->CalcOffset();
+		// FIXME : lightmap on surface
+
+		///--- raw_surf.lightofs = face->lmap->CalcOffset();
+
+		raw_surf.lightmapNum = -1;  /* NONE! */
+
+		raw_surf.lightmapX = 0;
+		raw_surf.lightmapY = 0;
+		raw_surf.lightmapWidth  = 2;
+		raw_surf.lightmapHeight = 2;
 	}
 
 
@@ -453,7 +463,7 @@ static void Q3_WriteSurface(quake_face_c *face)
 
 	int contents = 0;  // FIXME !!
 
-	raw_surf.texinfo = Q3_AddShader(texture, flags, contents);
+	raw_surf.shaderNum = Q3_AddShader(texture, flags, contents);
 
 	DoWriteSurface(raw_surf);
 }
@@ -781,9 +791,9 @@ static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 #endif
 	int contents = 0;  // FIXME
 
-	raw_surf.texinfo = Q3_AddShader(texture, flags, contents);
+	raw_surf.shaderNum = Q3_AddShader(texture, flags, contents);
 
-	raw_surf.lightofs = QCOM_FlatLightOffset(MODEL_LIGHT);
+///!!!	raw_surf.lightofs = QCOM_FlatLightOffset(MODEL_LIGHT);
 
 
 	DoWriteBrushSide(raw_surf.planenum ^ raw_surf.side, raw_surf.texinfo);
@@ -1046,8 +1056,7 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_WriteBSP();
 	Q3_WriteModels();
 
-	BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
-	BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
+	BSP_WritePlanes(LUMP_PLANES,   MAX_MAP_PLANES);
 
 	Q3_WriteBrushes();
 	Q3_WriteShaders();
