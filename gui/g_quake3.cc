@@ -33,7 +33,7 @@
 #include "q_common.h"
 #include "q_light.h"
 #include "q_vis.h"
-#include "q2_structs.h"  //!!! FIXME
+#include "q3_structs.h"
 
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -179,77 +179,68 @@ static void Q3_WriteBrushes()
 
 //------------------------------------------------------------------------
 
-static std::vector<texinfo2_t> q3_texinfos;
+static std::vector<dshader3_t> q3_shaders;
 
-#define NUM_TEXINFO_HASH  128
-static std::vector<int> * texinfo_hashtab[NUM_TEXINFO_HASH];
+#define NUM_SHADER_HASH  128
+static std::vector<int> * shader_hashtab[NUM_SHADER_HASH];
 
 
-static void Q3_ClearTexInfo(void)
+static void Q3_ClearShaders(void)
 {
-	q3_texinfos.clear();
+	q3_shaders.clear();
 
-	for (int h = 0 ; h < NUM_TEXINFO_HASH ; h++)
+	for (int h = 0 ; h < NUM_SHADER_HASH ; h++)
 	{
-		delete texinfo_hashtab[h];
-		texinfo_hashtab[h] = NULL;
+		delete shader_hashtab[h];
+		shader_hashtab[h] = NULL;
 	}
 }
 
 
-u16_t Q3_AddTexInfo(const char *texture, int flags, int value,
-                    float *s4, float *t4)
+u16_t Q3_AddShader(const char *texture, int flags, int contents)
 {
 	if (! texture[0])
 		texture = "error";
 
-	// create texinfo structure, fix endianness
-	texinfo2_t raw_tex;
+	// create shader structure, fix endianness
+	dshader3_t raw_tex;
 
 	memset(&raw_tex, 0, sizeof(raw_tex));
 
-	if (strlen(texture)+1 >= sizeof(raw_tex.texture))
+	if (strlen(texture)+1 >= sizeof(raw_tex.shader))
 		Main_FatalError("Quake3 texture name too long: '%s'\n", texture);
 
-	strcpy(raw_tex.texture, texture);
+	strcpy(raw_tex.shader, texture);
 
-	for (int k = 0 ; k < 4 ; k++)
-	{
-		raw_tex.s[k] = LE_Float32(s4[k]);
-		raw_tex.t[k] = LE_Float32(t4[k]);
-	}
-
-	raw_tex.flags = LE_S32(flags);
-	raw_tex.value = LE_S32(value);
-
-	raw_tex.anim_next = LE_S32(0);  // TODO
+	raw_tex.surfaceFlags = LE_S32(flags);
+	raw_tex.contentFlags = LE_S32(contents);
 
 
-	// find an existing texinfo in the hash table
-	int hash = (int)StringHash(texture) & (NUM_TEXINFO_HASH-1);
+	// find an existing shader in the hash table
+	int hash = (int)StringHash(texture) & (NUM_SHADER_HASH-1);
 
 	SYS_ASSERT(hash >= 0);
 
-	if (! texinfo_hashtab[hash])
-		texinfo_hashtab[hash] = new std::vector<int>;
+	if (! shader_hashtab[hash])
+		shader_hashtab[hash] = new std::vector<int>;
 
-	std::vector<int> * hashtab = texinfo_hashtab[hash];
+	std::vector<int> * hashtab = shader_hashtab[hash];
 
 	for (unsigned int i = 0 ; i < hashtab->size() ; i++)
 	{
 		int index = (*hashtab)[i];
 
-		SYS_ASSERT(index < (int)q3_texinfos.size());
+		SYS_ASSERT(index < (int)q3_shaders.size());
 
-		if (memcmp(&raw_tex, &q3_texinfos[index], sizeof(raw_tex)) == 0)
+		if (memcmp(&raw_tex, &q3_shaders[index], sizeof(raw_tex)) == 0)
 			return index;  // found it
 	}
 
 
 	// not found, so add new one
-	u16_t new_index = q3_texinfos.size();
+	u16_t new_index = q3_shaders.size();
 
-	q3_texinfos.push_back(raw_tex);
+	q3_shaders.push_back(raw_tex);
 
 	hashtab->push_back(new_index);
 
@@ -257,15 +248,15 @@ u16_t Q3_AddTexInfo(const char *texture, int flags, int value,
 }
 
 
-static void Q3_WriteTexInfo()
+static void Q3_WriteShaders()
 {
-	if (q3_texinfos.size() >= MAX_MAP_TEXINFO)
-		Main_FatalError("Quake3 build failure: exceeded limit of %d TEXINFOS\n",
-				MAX_MAP_TEXINFO);
+	if (q3_shaders.size() >= MAX_MAP_SHADERS)
+		Main_FatalError("Quake3 build failure: exceeded limit of %d SHADERS\n",
+				MAX_MAP_SHADERS);
 
-	qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
+	qLump_c *lump = BSP_NewLump(LUMP_SHADERS);
 
-	lump->Append(&q3_texinfos[0], q3_texinfos.size() * sizeof(texinfo2_t));
+	lump->Append(&q3_shaders[0], q3_shaders.size() * sizeof(dshader3_t));
 }
 
 
@@ -373,7 +364,7 @@ static int q3_total_nodes;
 static void Q3_FreeStuff()
 {
 	Q3_ClearBrushes();
-	Q3_ClearTexInfo();
+	Q3_ClearShaders();
 
 	delete qk_world_model;
 	qk_world_model = NULL;
@@ -495,7 +486,7 @@ static void Q3_WriteFace(quake_face_c *face)
 	if (face->flags & FACE_F_Liquid)
 		flags |= SURF_WARP | SURF_TRANS66;
 
-	raw_face.texinfo = Q3_AddTexInfo(texture, flags, 0, face->s, face->t);
+	raw_face.texinfo = Q3_AddShader(texture, flags, 0, face->s, face->t);
 
 
 	DoWriteFace(raw_face);
@@ -821,7 +812,7 @@ static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 	if (strstr(texture, "trigger") != NULL)
 		flags |= SURF_NODRAW | SURF_WARP;
 
-	raw_face.texinfo = Q3_AddTexInfo(texture, flags, 0, s, t);
+	raw_face.texinfo = Q3_AddShader(texture, flags, 0, s, t);
 
 	raw_face.styles[0] = 0;
 	raw_face.styles[1] = 0xFF;
@@ -1075,7 +1066,7 @@ static void Q3_CreateBSPFile(const char *name)
 	BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
 
 	Q3_WriteBrushes();
-	Q3_WriteTexInfo();
+	Q3_WriteShaders();
 
 	BSP_WriteEntities(LUMP_ENTITIES, description);
 

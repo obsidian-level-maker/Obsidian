@@ -100,7 +100,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define LUMP_VISIBILITY		16
 
 
-/* AJA: dheader_t moved to q_common.h (as dheader3_t) */
+/* AJA: dheader3_t moved to q_common.h */
 
 
 typedef struct
@@ -121,6 +121,9 @@ typedef struct
 	u32_t		contentFlags;
 
 } PACKEDATTR dshader3_t;
+
+
+/* AJA: dplane3_t moved to q_common.h */
 
 
 typedef struct
