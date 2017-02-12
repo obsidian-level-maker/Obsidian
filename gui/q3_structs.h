@@ -184,6 +184,14 @@ typedef struct
 
 typedef struct
 {
+	byte		ambientLight[3];
+	byte		directedLight[3];
+	byte		lat, lng;	// direction to light (angles)
+
+} PACKEDATTR dlightgrid3_t;
+
+typedef struct
+{
 	float		xyz[3];
 	float		st[2];
 	float		lightmap[2];
