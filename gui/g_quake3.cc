@@ -140,7 +140,7 @@ static u16_t Q3_AddBrush(const csg_brush_c *A)
 
 		DoWriteBrushSide(plane, texinfo);
 
-		raw_brush.numsides++;
+		raw_brush.numSides++;
 	}
 
 
@@ -259,22 +259,6 @@ static void Q3_WriteFogs()
 
 //------------------------------------------------------------------------
 
-static void Q3_DummyArea()
-{
-	/* TEMP DUMMY STUFF */
-
-	qLump_c *lump = BSP_NewLump(LUMP_AREAS);
-
-	darea_t area;
-
-	area.num_portals  = LE_U32(0);
-	area.first_portal = LE_U32(0);
-
-	lump->Append(&area, sizeof(area));
-	lump->Append(&area, sizeof(area));
-}
-
-
 #if 0
 static void Q3_DummyVis()
 {
@@ -306,8 +290,8 @@ static void Q3_DummyLeafBrush()
 
 	dbrush_t brush;
 
-	brush.firstside = 0;
-	brush.numsides  = 0;
+	brush.firstSide = 0;
+	brush.numSides  = 0;
 
 	brush.contents  = 0;
 
@@ -393,10 +377,24 @@ static void Q3_WriteLeafBrush(csg_brush_c *B)
 static inline void DoWriteSurface(dsurface3_t & raw_surf)
 {
 	// fix endianness
-	raw_surf.planenum  = LE_S16(raw_surf.planenum);
-	raw_surf.side      = LE_S16(raw_surf.side);
-	raw_surf.texinfo   = LE_S16(raw_surf.texinfo);
-	raw_surf.lightofs  = LE_S32(raw_surf.lightofs);
+	raw_surf.shaderNum   = LE_S32(raw_surf.shaderNum);
+	raw_surf.fogNum      = LE_S32(raw_surf.fogNum);
+	raw_surf.surfaceType = LE_S32(raw_surf.surfaceType);
+
+	raw_surf.firstVert   = LE_S32(raw_surf.firstVert);
+	raw_surf.numVerts    = LE_S32(raw_surf.numVerts);
+
+	raw_surf.firstIndex  = LE_S32(raw_surf.firstIndex);
+	raw_surf.numIndexes  = LE_S32(raw_surf.numIndexes);
+
+	raw_surf.lightmapNum    = LE_S32(raw_surf.lightmapNum);
+	raw_surf.lightmapX      = LE_S32(raw_surf.lightmapX);
+	raw_surf.lightmapY      = LE_S32(raw_surf.lightmapY);
+	raw_surf.lightmapWidth  = LE_S32(raw_surf.lightmapWidth);
+	raw_surf.lightmapHeight = LE_S32(raw_surf.lightmapHeight);
+
+	raw_surf.patchWidth  = LE_S32(raw_surf.patchWidth);
+	raw_surf.patchHeight = LE_S32(raw_surf.patchHeight);
 
 	q3_surfaces->Append(&raw_surf, sizeof(raw_surf));
 
@@ -419,7 +417,7 @@ static void Q3_WriteSurface(quake_face_c *face)
 
 	bool flipped;
 
-	raw_surf.planenum = BSP_AddPlane(&face->node->plane, &flipped);
+//??	raw_surf.planeNum = BSP_AddPlane(&face->node->plane, &flipped);
 
 	raw_surf.side = face->node_side ^ (flipped ? 1 : 0);
 
@@ -436,14 +434,9 @@ static void Q3_WriteSurface(quake_face_c *face)
 
 	raw_surf.lightofs = -1;
 
-	memset(raw_surf.styles, 255, 4);
-
 	if (face->lmap)
 	{
 		raw_surf.lightofs = face->lmap->CalcOffset();
-
-		for (int n = 0 ; n < 4 ; n++)
-			raw_surf.styles[n] = face->lmap->styles[n];
 	}
 
 
@@ -516,15 +509,15 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 
 	memset(&raw_leaf, 0, sizeof(raw_leaf));
 
+	raw_leaf.area = 0;
+
 	if (leaf->medium == MEDIUM_SOLID)
 	{
 		raw_leaf.cluster = -1;
-		raw_leaf.area    =  0;
 	}
 	else
 	{
 		raw_leaf.cluster = leaf->cluster ? leaf->cluster->CalcID() : 0;
-		raw_leaf.area    = 1;
 	}
 
 	// create the 'mark surfs'
@@ -707,7 +700,8 @@ static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 {
 	dsurface3_t raw_surf;
 
-	raw_surf.planenum = plane;
+//??	raw_surf.planeNum = plane;
+
 	raw_surf.side = flipped ? 1 : 0;
 
 
@@ -789,11 +783,6 @@ static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
 	raw_surf.texinfo = Q3_AddShader(texture, flags, contents);
 
-	raw_surf.styles[0] = 0;
-	raw_surf.styles[1] = 0xFF;
-	raw_surf.styles[2] = 0xFF;
-	raw_surf.styles[3] = 0xFF;
-
 	raw_surf.lightofs = QCOM_FlatLightOffset(MODEL_LIGHT);
 
 
@@ -828,19 +817,19 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 		{
 			v = (face==0) ? model->x1 : model->x2;
 			dir = (face==0) ? -1 : 1;
-			raw_node.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+			raw_node.planeNum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
 		}
 		else if (face < 4)  // PLANE_Y
 		{
 			v = (face==2) ? model->y1 : model->y2;
 			dir = (face==2) ? -1 : 1;
-			raw_node.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+			raw_node.planeNum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
 		}
 		else  // PLANE_Z
 		{
 			v = (face==5) ? model->z1 : model->z2;
 			dir = (face==5) ? -1 : 1;
-			raw_node.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+			raw_node.planeNum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
 		}
 
 		raw_node.children[0] = -(leaf_base + face + 2);
@@ -1041,8 +1030,6 @@ static void Q3_CreateBSPFile(const char *name)
 	qk_color_lighting = true;
 
 	BSP_OpenLevel(name);
-
-	Q3_DummyArea();
 
 	CSG_QUAKE_Build();
 
