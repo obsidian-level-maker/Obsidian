@@ -26,6 +26,7 @@
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_pak.h"
+#include "lib_zip.h"
 
 #include "main.h"
 #include "m_cookie.h"
@@ -247,6 +248,12 @@ static void Q3_WriteShaders()
 	qLump_c *lump = BSP_NewLump(LUMP_SHADERS);
 
 	lump->Append(&q3_shaders[0], q3_shaders.size() * sizeof(dshader3_t));
+}
+
+
+static void Q3_WriteFogs()
+{
+	BSP_NewLump(LUMP_FOGS);
 }
 
 
@@ -1038,6 +1045,7 @@ static void Q3_CreateBSPFile(const char *name)
 
 	Q3_WriteBrushes();
 	Q3_WriteShaders();
+	Q3_WriteFogs();
 
 	BSP_WriteEntities(LUMP_ENTITIES, description);
 
