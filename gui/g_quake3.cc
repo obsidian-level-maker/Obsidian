@@ -995,6 +995,22 @@ static void Q3_WriteModels()
 
 //------------------------------------------------------------------------
 
+static void Q3_PackLighting()
+{
+	// FIXME !!!
+
+	// leaving LUMP_LIGHTING empty for now -- engine can cope
+}
+
+
+static void Q3_SetGridLights()
+{
+	// FIXME !!!
+
+	// leaving LUMP_LIGHTGRID empty for now -- engine can cope
+}
+
+
 static void Q3_LightWorld()
 {
 	if (main_win)
@@ -1002,7 +1018,9 @@ static void Q3_LightWorld()
 
 	QCOM_LightAllFaces();
 
-	QCOM_BuildLightingLump(LUMP_LIGHTING, MAX_MAP_LIGHTING);
+	Q3_PackLighting();
+
+	Q3_SetGridLights();
 }
 
 
