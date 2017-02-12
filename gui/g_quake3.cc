@@ -585,19 +585,17 @@ static void Q3_WriteSolidLeaf(void)
 }
 
 
-static void DoWriteNode(dnode2_t & raw_node)
+static void DoWriteNode(dnode3_t & raw_node)
 {
 	// fix endianness
-	raw_node.planenum    = LE_S32(raw_node.planenum);
+	raw_node.planeNum    = LE_S32(raw_node.planeNum);
 	raw_node.children[0] = LE_S32(raw_node.children[0]);
 	raw_node.children[1] = LE_S32(raw_node.children[1]);
-	raw_node.firstface   = LE_U16(raw_node.firstface);
-	raw_node.numfaces    = LE_U16(raw_node.numfaces);
 
 	for (int b = 0 ; b < 3 ; b++)
 	{
-		raw_node.mins[b] = LE_S16(raw_node.mins[b] - NODE_PADDING);
-		raw_node.maxs[b] = LE_S16(raw_node.maxs[b] + NODE_PADDING);
+		raw_node.mins[b] = LE_S32(raw_node.mins[b]);
+		raw_node.maxs[b] = LE_S32(raw_node.maxs[b]);
 	}
 
 	q3_nodes->Append(&raw_node, sizeof(raw_node));
@@ -608,11 +606,11 @@ static void DoWriteNode(dnode2_t & raw_node)
 
 static void Q3_WriteNode(quake_node_c *node)
 {
-	dnode2_t raw_node;
+	dnode3_t raw_node;
 
 	bool flipped;
 
-	raw_node.planenum = BSP_AddPlane(&node->plane, &flipped);
+	raw_node.planeNum = BSP_AddPlane(&node->plane, &flipped);
 
 
 	if (node->front_N)
@@ -631,6 +629,8 @@ static void Q3_WriteNode(quake_node_c *node)
 	}
 
 
+	// FIXME : this is quite different in Q3
+#if 0
 	raw_node.firstface = q3_total_faces;
 	raw_node.numfaces  = node->faces.size();
 
@@ -641,12 +641,13 @@ static void Q3_WriteNode(quake_node_c *node)
 			Q3_WriteFace(node->faces[k]);
 		}
 	}
+#endif
 
 
 	for (int b = 0 ; b < 3 ; b++)
 	{
-		raw_node.mins[b] = I_ROUND(node->bbox.mins[b]);
-		raw_node.maxs[b] = I_ROUND(node->bbox.maxs[b]);
+		raw_node.mins[b] = (int)floor(node->bbox.mins[b] - NODE_PADDING);
+		raw_node.maxs[b] = (int) ceil(node->bbox.maxs[b] + NODE_PADDING);
 	}
 
 
@@ -706,6 +707,8 @@ static void Q3_WriteBSP()
 //------------------------------------------------------------------------
 //   MAP MODEL STUFF
 //------------------------------------------------------------------------
+
+#if 0  // FIXME !!
 
 static void Q3_Model_Edge(float x1, float y1, float z1,
                           float x2, float y2, float z2)
@@ -825,8 +828,8 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 	for (int face = 0 ; face < 6 ; face++)
 	{
-		dnode2_t raw_node;
-		dleaf2_t raw_leaf;
+		dnode3_t raw_node;
+		dleaf3_t raw_leaf;
 
 		memset(&raw_leaf, 0, sizeof(raw_leaf));
 
@@ -889,7 +892,7 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 
 	// create leaf for inner area of the cuboid (door etc)
-	dleaf2_t inner_leaf;
+	dleaf3_t inner_leaf;
 
 	memset(&inner_leaf, 0, sizeof(inner_leaf));
 
@@ -924,11 +927,12 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 	DoWriteBrush(inner_brush);
 }
+#endif
 
 
 static void Q3_WriteModel(quake_mapmodel_c *model)
 {
-	dmodel2_t raw_model;
+	dmodel3_t raw_model;
 
 	memset(&raw_model, 0, sizeof(raw_model));
 
@@ -942,10 +946,10 @@ static void Q3_WriteModel(quake_mapmodel_c *model)
 
 	// raw_model.origin stays zero
 
-	raw_model.headnode  = LE_S32(model->nodes[0]);
+	raw_model.firstSurface = LE_S32(model->firstface);
+	raw_model.numSurfaces  = LE_S32(model->numfaces);
 
-	raw_model.firstface = LE_S32(model->firstface);
-	raw_model.numfaces  = LE_S32(model->numfaces);
+	// FIXME : firstBrush / numBrushes
 
 	q3_models->Append(&raw_model, sizeof(raw_model));
 }
@@ -975,6 +979,8 @@ static void Q3_WriteModels()
 
 	// handle the sub-models (doors etc)
 
+#if 0  // FIXME
+
 	for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
 	{
 		quake_mapmodel_c *model = qk_all_mapmodels[i];
@@ -997,6 +1003,7 @@ static void Q3_WriteModels()
 
 		Q3_WriteModel(model);
 	}
+#endif
 }
 
 
