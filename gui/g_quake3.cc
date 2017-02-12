@@ -53,8 +53,8 @@ static char *description;
 
 //------------------------------------------------------------------------
 
-static std::vector<dbrush_t>     q3_brushes;
-static std::vector<dbrushside_t> q3_brush_sides;
+static std::vector<dbrush3_t>     q3_brushes;
+static std::vector<dbrushside3_t> q3_brush_sides;
 
 static std::map<const csg_brush_c *, u16_t> brush_map;
 
@@ -68,23 +68,23 @@ static void Q3_ClearBrushes()
 }
 
 
-static void DoWriteBrushSide(int plane, int texinfo)
+static void DoWriteBrushSide(int plane, int shader)
 {
-	dbrushside_t side;
+	dbrushside3_t side;
 
-	side.planenum = LE_U16(plane);
-	side.texinfo  = LE_U16(texinfo);
+	side.planeNum  = LE_S32(plane);
+	side.shaderNum = LE_S32(shader);
 
 	q3_brush_sides.push_back(side);
 }
 
 
-static void DoWriteBrush(dbrush_t & raw_brush)
+static void DoWriteBrush(dbrush3_t & raw_brush)
 {
-	raw_brush.firstside = LE_S32(raw_brush.firstside);
-	raw_brush.numsides  = LE_S32(raw_brush.numsides);
+	raw_brush.firstSide = LE_S32(raw_brush.firstSide);
+	raw_brush.numSides  = LE_S32(raw_brush.numSides);
 
-	raw_brush.contents  = LE_U32(raw_brush.contents);
+	raw_brush.shaderNum = LE_U32(raw_brush.shaderNum);
 
 	q3_brushes.push_back(raw_brush);
 }
@@ -99,11 +99,13 @@ static u16_t Q3_AddBrush(const csg_brush_c *A)
 	}
 
 
-	dbrush_t raw_brush;
+	dbrush3_t raw_brush;
 
-	raw_brush.firstside = (int)q3_brush_sides.size();
-	raw_brush.numsides  = 2;
-	raw_brush.contents  = CONTENTS_SOLID;
+	raw_brush.firstSide = (int)q3_brush_sides.size();
+	raw_brush.numSides  = 2;
+
+	raw_brush.shaderNum = 1;  // FIXME !!!!
+
 
 	int plane;
 	int texinfo = 1; // FIXME !!!!!
@@ -157,11 +159,11 @@ static void Q3_WriteBrushes()
 
 	// FIXME: write separately, fix endianness as we go
 
-	lump->Append(&q3_brushes[0], q3_brushes.size() * sizeof(dbrush_t));
+	lump->Append(&q3_brushes[0], q3_brushes.size() * sizeof(dbrush3_t));
 
 	qLump_c *sides = BSP_NewLump(LUMP_BRUSHSIDES);
 
-	sides->Append(&q3_brush_sides[0], q3_brush_sides.size() * sizeof(dbrushside_t));
+	sides->Append(&q3_brush_sides[0], q3_brush_sides.size() * sizeof(dbrushside3_t));
 }
 
 
@@ -330,21 +332,19 @@ const byte oblige_pop[256] =
 
 //------------------------------------------------------------------------
 
-static qLump_c *q3_surf_edges;
-static qLump_c *q3_mark_surfs;  // LUMP_LEAFFACES
+static qLump_c *q3_mark_surfs;  // LUMP_LEAFSURFACES
 static qLump_c *q3_leaf_brushes;
 
-static qLump_c *q3_faces;
+static qLump_c *q3_surfaces;
 static qLump_c *q3_leafs;
 static qLump_c *q3_nodes;
 
 static qLump_c *q3_models;
 
-static int q3_total_surf_edges;
 static int q3_total_mark_surfs;
 static int q3_total_leaf_brushes;
 
-static int q3_total_faces;
+static int q3_total_surfaces;
 static int q3_total_leafs;
 static int q3_total_nodes;
 
@@ -357,37 +357,17 @@ static void Q3_FreeStuff()
 	delete qk_world_model;
 	qk_world_model = NULL;
 
-	// lumps are handled (freed) in q_common code
-	q3_surf_edges = NULL;
+	// bsp lumps are freed in q_common code
+
 	q3_mark_surfs = NULL;
 	q3_leaf_brushes = NULL;
 
-	q3_faces = NULL;
+	q3_surfaces = NULL;
 	q3_leafs = NULL;
 	q3_nodes = NULL;
 	q3_models = NULL;
 }
 
-
-static void Q3_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
-{
-	u16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
-	u16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
-
-	if (v1 == v2)
-	{
-		Main_FatalError("INTERNAL ERROR: Q3 WriteEdge is zero length!\n");
-	}
-
-	s32_t index = BSP_AddEdge(v1, v2);
-
-	// fix endianness
-	index = LE_S32(index);
-
-	q3_surf_edges->Append(&index, sizeof(index));
-
-	q3_total_surf_edges += 1;
-}
 
 
 static void Q3_WriteLeafBrush(csg_brush_c *B)
@@ -403,46 +383,41 @@ static void Q3_WriteLeafBrush(csg_brush_c *B)
 }
 
 
-static inline void DoWriteFace(dface_t & raw_face)
+static inline void DoWriteSurface(dsurface3_t & raw_surf)
 {
 	// fix endianness
-	raw_face.planenum  = LE_S16(raw_face.planenum);
-	raw_face.side      = LE_S16(raw_face.side);
-	raw_face.firstedge = LE_S32(raw_face.firstedge);
-	raw_face.numedges  = LE_S16(raw_face.numedges);
-	raw_face.texinfo   = LE_S16(raw_face.texinfo);
-	raw_face.lightofs  = LE_S32(raw_face.lightofs);
+	raw_surf.planenum  = LE_S16(raw_surf.planenum);
+	raw_surf.side      = LE_S16(raw_surf.side);
+	raw_surf.texinfo   = LE_S16(raw_surf.texinfo);
+	raw_surf.lightofs  = LE_S32(raw_surf.lightofs);
 
-	q3_faces->Append(&raw_face, sizeof(raw_face));
+	q3_surfaces->Append(&raw_surf, sizeof(raw_surf));
 
-	q3_total_faces += 1;
+	q3_total_surfaces += 1;
 }
 
 
-static void Q3_WriteFace(quake_face_c *face)
+static void Q3_WriteSurface(quake_face_c *face)
 {
 	SYS_ASSERT(face->node);
 	SYS_ASSERT(face->node_side >= 0);
 
-	face->index = q3_total_faces;
+	face->index = q3_total_surfaces;
 
 
-	dface_t raw_face;
+	dsurface3_t raw_surf;
 
-	memset(&raw_face, 0, sizeof(raw_face));
+	memset(&raw_surf, 0, sizeof(raw_surf));
 
 
 	bool flipped;
 
-	raw_face.planenum = BSP_AddPlane(&face->node->plane, &flipped);
+	raw_surf.planenum = BSP_AddPlane(&face->node->plane, &flipped);
 
-	raw_face.side = face->node_side ^ (flipped ? 1 : 0);
+	raw_surf.side = face->node_side ^ (flipped ? 1 : 0);
 
 
 	unsigned int total_v = face->verts.size();
-
-	raw_face.firstedge = q3_total_surf_edges;
-	raw_face.numedges  = total_v;
 
 	for (unsigned int i = 0 ; i < total_v ; i++)
 	{
@@ -452,16 +427,16 @@ static void Q3_WriteFace(quake_face_c *face)
 
 	// lighting and texture...
 
-	raw_face.lightofs = -1;
+	raw_surf.lightofs = -1;
 
-	memset(raw_face.styles, 255, 4);
+	memset(raw_surf.styles, 255, 4);
 
 	if (face->lmap)
 	{
-		raw_face.lightofs = face->lmap->CalcOffset();
+		raw_surf.lightofs = face->lmap->CalcOffset();
 
 		for (int n = 0 ; n < 4 ; n++)
-			raw_face.styles[n] = face->lmap->styles[n];
+			raw_surf.styles[n] = face->lmap->styles[n];
 	}
 
 
@@ -469,15 +444,18 @@ static void Q3_WriteFace(quake_face_c *face)
 
 	int flags = 0;
 
+/* FIXME
 	if (face->flags & FACE_F_Sky)
 		flags |= SURF_SKY;
 	if (face->flags & FACE_F_Liquid)
 		flags |= SURF_WARP | SURF_TRANS66;
+*/
 
-	raw_face.texinfo = Q3_AddShader(texture, flags, 0, face->s, face->t);
+	int contents = 0;  // FIXME !!
 
+	raw_surf.texinfo = Q3_AddShader(texture, flags, contents);
 
-	DoWriteFace(raw_face);
+	DoWriteSurface(raw_surf);
 }
 
 
@@ -631,14 +609,14 @@ static void Q3_WriteNode(quake_node_c *node)
 
 	// FIXME : this is quite different in Q3
 #if 0
-	raw_node.firstface = q3_total_faces;
+	raw_node.firstface = q3_total_surfaces;
 	raw_node.numfaces  = node->faces.size();
 
 	if (raw_node.numfaces > 0)
 	{
 		for (unsigned int k = 0 ; k < node->faces.size() ; k++)
 		{
-			Q3_WriteFace(node->faces[k]);
+			Q3_WriteSurface(node->faces[k]);
 		}
 	}
 #endif
@@ -672,18 +650,16 @@ static void Q3_WriteBSP()
 {
 	q3_total_nodes = 0;
 	q3_total_leafs = 0;  // not including the solid leaf
-	q3_total_faces = 0;
+	q3_total_surfaces = 0;
 
-	q3_total_surf_edges = 0;
 	q3_total_mark_surfs = 0;
 	q3_total_leaf_brushes = 0;
 
 	q3_nodes = BSP_NewLump(LUMP_NODES);
 	q3_leafs = BSP_NewLump(LUMP_LEAFS);
-	q3_faces = BSP_NewLump(LUMP_FACES);
+	q3_surfaces = BSP_NewLump(LUMP_SURFACES);
 
-	q3_surf_edges   = BSP_NewLump(LUMP_SURFEDGES);
-	q3_mark_surfs   = BSP_NewLump(LUMP_LEAFFACES);
+	q3_mark_surfs   = BSP_NewLump(LUMP_LEAFSURFACES);
 	q3_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
 
 
@@ -693,8 +669,8 @@ static void Q3_WriteBSP()
 	Q3_WriteNode(qk_bsp_root);  
 
 
-	if (q3_total_faces >= MAX_MAP_FACES)
-		Main_FatalError("Quake3 build failure: exceeded limit of %d FACES\n", MAX_MAP_FACES);
+	if (q3_total_surfaces >= MAX_MAP_DRAW_SURFS)
+		Main_FatalError("Quake3 build failure: exceeded limit of %d DRAW_SURFS\n", MAX_MAP_DRAW_SURFS);
 
 	if (q3_total_leafs >= MAX_MAP_LEAFS)
 		Main_FatalError("Quake3 build failure: exceeded limit of %d LEAFS\n", MAX_MAP_LEAFS);
@@ -722,10 +698,10 @@ static void Q3_Model_Edge(float x1, float y1, float z1,
 
 static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool flipped)
 {
-	dface_t raw_face;
+	dsurface3_t raw_surf;
 
-	raw_face.planenum = plane;
-	raw_face.side = flipped ? 1 : 0;
+	raw_surf.planenum = plane;
+	raw_surf.side = flipped ? 1 : 0;
 
 
 	const char *texture = "error";
@@ -736,8 +712,8 @@ static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
 	// add the edges
 
-	raw_face.firstedge = q3_total_surf_edges;
-	raw_face.numedges  = 4;
+	raw_surf.firstedge = q3_total_surf_edges;
+	raw_surf.numedges  = 4;
 
 	if (face < 2)  // PLANE_X
 	{
@@ -795,31 +771,34 @@ static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
 	int flags = 0;
 
+#if 0
 	// using SURF_WARP to disable the check on extents
 	// (trigger models are never rendered anyway)
 
 	if (strstr(texture, "trigger") != NULL)
 		flags |= SURF_NODRAW | SURF_WARP;
+#endif
+	int contents = 0;  // FIXME
 
-	raw_face.texinfo = Q3_AddShader(texture, flags, 0, s, t);
+	raw_surf.texinfo = Q3_AddShader(texture, flags, contents);
 
-	raw_face.styles[0] = 0;
-	raw_face.styles[1] = 0xFF;
-	raw_face.styles[2] = 0xFF;
-	raw_face.styles[3] = 0xFF;
+	raw_surf.styles[0] = 0;
+	raw_surf.styles[1] = 0xFF;
+	raw_surf.styles[2] = 0xFF;
+	raw_surf.styles[3] = 0xFF;
 
-	raw_face.lightofs = QCOM_FlatLightOffset(MODEL_LIGHT);
+	raw_surf.lightofs = QCOM_FlatLightOffset(MODEL_LIGHT);
 
 
-	DoWriteBrushSide(raw_face.planenum ^ raw_face.side, raw_face.texinfo);
+	DoWriteBrushSide(raw_surf.planenum ^ raw_surf.side, raw_surf.texinfo);
 
-	DoWriteFace(raw_face);
+	DoWriteSurface(raw_surf);
 }
 
 
 static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 {
-	int face_base = q3_total_faces;
+	int face_base = q3_total_surfaces;
 	int leaf_base = q3_total_leafs;
 	int side_base = (int)q3_brush_sides.size();
 
@@ -882,7 +861,7 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 		raw_leaf.first_leafbrush = 0;
 		raw_leaf.num_leafbrushes = 0;
 
-		Q3_Model_Face(model, face, raw_node.planenum, flipped);
+		Q3_Model_Surface(model, face, raw_node.planenum, flipped);
 
 		Q3_WriteMarkSurf(q3_total_mark_surfs);
 
@@ -963,7 +942,7 @@ static void Q3_WriteModels()
 	qk_world_model = new quake_mapmodel_c();
 
 	qk_world_model->firstface = 0;
-	qk_world_model->numfaces  = q3_total_faces;
+	qk_world_model->numfaces  = q3_total_surfaces;
 	qk_world_model->numleafs  = q3_total_leafs;
 
 	// bounds of map
@@ -985,7 +964,7 @@ static void Q3_WriteModels()
 	{
 		quake_mapmodel_c *model = qk_all_mapmodels[i];
 
-		model->firstface = q3_total_faces;
+		model->firstface = q3_total_surfaces;
 		model->numfaces  = 6;
 		model->numleafs  = 6;
 
@@ -1056,7 +1035,6 @@ static void Q3_CreateBSPFile(const char *name)
 
 	BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
 	BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
-	BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
 
 	Q3_WriteBrushes();
 	Q3_WriteShaders();
