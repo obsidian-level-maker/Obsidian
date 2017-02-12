@@ -1082,7 +1082,7 @@ bool quake3_game_interface_c::Start()
 	if (batch_mode)
 		filename = StringDup(batch_output_file);
 	else
-		filename = DLG_OutputFilename("pak");
+		filename = DLG_OutputFilename("pk3");
 
 	if (! filename)
 	{
@@ -1093,7 +1093,7 @@ bool quake3_game_interface_c::Start()
 	if (create_backups)
 		Main_BackupFile(filename, "old");
 
-	if (! PAK_OpenWrite(filename))
+	if (! ZIPF_OpenWrite(filename))
 	{
 		Main_ProgStatus(_("Error (create file)"));
 		return false;
@@ -1110,7 +1110,7 @@ bool quake3_game_interface_c::Start()
 
 bool quake3_game_interface_c::Finish(bool build_ok)
 {
-	PAK_CloseWrite();
+	ZIPF_CloseWrite();
 
 	// remove the file if an error occurred
 	if (! build_ok)

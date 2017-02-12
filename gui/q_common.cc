@@ -27,6 +27,7 @@
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_pak.h"
+#include "lib_zip.h"
 
 #include "main.h"
 #include "m_lua.h"
@@ -603,6 +604,14 @@ static void BSP_WriteLump(qLump_c *lump)
 	if (len == 0)
 		return;
 
+	if (qk_game == 3)
+	{
+		ZIPF_AppendData(lump->GetBuffer(), len);
+
+		// no need for padding in PK3 files
+		return;
+	}
+
 	PAK_AppendData(lump->GetBuffer(), len);
 
 	// pad lumps to a multiple of four bytes
@@ -624,7 +633,10 @@ bool BSP_OpenLevel(const char *entry_in_pak)
 	// assumes that PAK_OpenWrite() has already been called.
 
 	// begin the .BSP file
-	PAK_NewLump(entry_in_pak);
+	if (qk_game == 3)
+		ZIPF_NewLump(entry_in_pak);
+	else
+		PAK_NewLump(entry_in_pak);
 
 	switch (qk_game)
 	{
@@ -674,12 +686,17 @@ static void BSP_WriteHeader()
 	}
 	else if (qk_game == 3)
 	{
-		PAK_AppendData(Q3_IDENT_MAGIC, 4);
+		ZIPF_AppendData(Q3_IDENT_MAGIC, 4);
 		offset += 4;
 	}
 
 	s32_t raw_version = LE_S32(bsp_version);
-	PAK_AppendData(&raw_version, 4);
+
+	if (qk_game == 3)
+		ZIPF_AppendData(&raw_version, 4);
+	else
+		PAK_AppendData(&raw_version, 4);
+
 	offset += 4;
 
 	offset += sizeof(lump_t) * bsp_numlumps;
@@ -697,7 +714,10 @@ static void BSP_WriteHeader()
 		raw_info.start  = LE_U32(offset);
 		raw_info.length = LE_U32(length);
 
-		PAK_AppendData(&raw_info, sizeof(raw_info));
+		if (qk_game == 3)
+			ZIPF_AppendData(&raw_info, sizeof(raw_info));
+		else
+			PAK_AppendData(&raw_info, sizeof(raw_info));
 
 		offset += (u32_t)ALIGN_LEN(length);
 	}
@@ -792,7 +812,10 @@ bool BSP_CloseLevel()
 	}
 
 	// finish the .BSP file
-	PAK_FinishLump();
+	if (qk_game == 3)
+		ZIPF_FinishLump();
+	else
+		PAK_FinishLump();
 
 	// free all the memory
 	BSP_ClearLumps();
@@ -851,9 +874,18 @@ void BSP_AddInfoFile()
 {
 	qLump_c *info = BSP_CreateInfoLump();
 
-	PAK_NewLump("oblige_dat.txt");
-	BSP_WriteLump(info);
-	PAK_FinishLump();
+	if (qk_game == 3)
+	{
+		ZIPF_NewLump("oblige_dat.txt");
+		BSP_WriteLump(info);
+		ZIPF_FinishLump();
+	}
+	else
+	{
+		PAK_NewLump("oblige_dat.txt");
+		BSP_WriteLump(info);
+		PAK_FinishLump();
+	}
 
 	delete info;
 }
