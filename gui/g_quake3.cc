@@ -50,18 +50,6 @@ static char *level_name;
 static char *description;
 
 
-// IMPORTANT!! Quake II assumes axis-aligned node planes are positive
-
-
-static int q3_medium_table[5] =
-{
-	0  /* EMPTY */,
-	CONTENTS_WATER,
-	CONTENTS_SLIME,
-	CONTENTS_LAVA,
-	CONTENTS_SOLID
-};
-
 
 //------------------------------------------------------------------------
 
@@ -506,22 +494,22 @@ static void Q3_WriteMarkSurf(int index)
 }
 
 
-static void DoWriteLeaf(dleaf2_t & raw_leaf)
+static void DoWriteLeaf(dleaf3_t & raw_leaf)
 {
 	// fix endianness
-	raw_leaf.contents = LE_S32(raw_leaf.contents);
-	raw_leaf.cluster  = LE_S16(raw_leaf.cluster);
-	raw_leaf.area     = LE_S16(raw_leaf.area);
+	raw_leaf.cluster  = LE_S32(raw_leaf.cluster);
+	raw_leaf.area     = LE_S32(raw_leaf.area);
 
-	raw_leaf.first_leafface  = LE_U16(raw_leaf.first_leafface);
-	raw_leaf.first_leafbrush = LE_U16(raw_leaf.first_leafbrush);
-	raw_leaf.num_leaffaces   = LE_U16(raw_leaf.num_leaffaces);
-	raw_leaf.num_leafbrushes = LE_U16(raw_leaf.num_leafbrushes);
+	raw_leaf.firstLeafSurface  = LE_S32(raw_leaf.firstLeafSurface);
+	raw_leaf.numLeafSurfaces   = LE_S32(raw_leaf.numLeafSurfaces);
+
+	raw_leaf.firstLeafBrush    = LE_S32(raw_leaf.firstLeafBrush);
+	raw_leaf.numLeafBrushes    = LE_S32(raw_leaf.numLeafBrushes);
 
 	for (int b = 0 ; b < 3 ; b++)
 	{
-		raw_leaf.mins[b] = LE_S16(raw_leaf.mins[b] - LEAF_PADDING);
-		raw_leaf.maxs[b] = LE_S16(raw_leaf.maxs[b] + LEAF_PADDING);
+		raw_leaf.mins[b] = LE_Float32(raw_leaf.mins[b]);
+		raw_leaf.maxs[b] = LE_Float32(raw_leaf.maxs[b]);
 	}
 
 	q3_leafs->Append(&raw_leaf, sizeof(raw_leaf));
@@ -539,11 +527,9 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 		return;
 
 
-	dleaf2_t raw_leaf;
+	dleaf3_t raw_leaf;
 
 	memset(&raw_leaf, 0, sizeof(raw_leaf));
-
-	raw_leaf.contents = q3_medium_table[leaf->medium];
 
 	if (leaf->medium == MEDIUM_SOLID)
 	{
@@ -557,30 +543,30 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 	}
 
 	// create the 'mark surfs'
-	raw_leaf.first_leafface = q3_total_mark_surfs;
-	raw_leaf.num_leaffaces  = 0;
+	raw_leaf.firstLeafSurface = q3_total_mark_surfs;
+	raw_leaf.numLeafSurfaces  = 0;
 
 	for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
 	{
 		Q3_WriteMarkSurf(leaf->faces[i]->index);
 
-		raw_leaf.num_leaffaces += 1;
+		raw_leaf.numLeafSurfaces += 1;
 	}
 
-	raw_leaf.first_leafbrush = q3_total_leaf_brushes;
-	raw_leaf.num_leafbrushes = 0;
+	raw_leaf.firstLeafBrush = q3_total_leaf_brushes;
+	raw_leaf.numLeafBrushes = 0;
 
 	for (unsigned int k = 0 ; k < leaf->solids.size() ; k++)
 	{
 		Q3_WriteLeafBrush(leaf->solids[k]);
 
-		raw_leaf.num_leafbrushes += 1;
+		raw_leaf.numLeafBrushes += 1;
 	}
 
 	for (int b = 0 ; b < 3 ; b++)
 	{
-		raw_leaf.mins[b] = I_ROUND(leaf->bbox.mins[b]);
-		raw_leaf.maxs[b] = I_ROUND(leaf->bbox.maxs[b]);
+		raw_leaf.mins[b] = leaf->bbox.mins[b] - LEAF_PADDING;
+		raw_leaf.maxs[b] = leaf->bbox.maxs[b] + LEAF_PADDING;
 	}
 
 	DoWriteLeaf(raw_leaf);
@@ -589,12 +575,11 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 
 static void Q3_WriteSolidLeaf(void)
 {
-	dleaf2_t raw_leaf;
+	dleaf3_t raw_leaf;
 
 	memset(&raw_leaf, 0, sizeof(raw_leaf));
 
-	raw_leaf.contents = LE_S32(CONTENTS_SOLID);
-	raw_leaf.cluster  = LE_S32(-1);
+	raw_leaf.cluster = LE_S32(-1);
 
 	q3_leafs->Append(&raw_leaf, sizeof(raw_leaf));
 }
@@ -701,6 +686,7 @@ static void Q3_WriteBSP()
 	q3_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
 
 
+	// FIXME : need this??
 	Q3_WriteSolidLeaf();
 
 	Q3_WriteNode(qk_bsp_root);  
