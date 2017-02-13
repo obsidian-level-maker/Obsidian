@@ -12,7 +12,7 @@
 #include "bspfile.h"
 
 
-static int verbose_mode = 0;  // 0, 1 or 2
+static int verbose_mode = 2;
 
 
 static const char *VectorStr(float *vec)
@@ -120,7 +120,7 @@ static void DumpPlanes(void)
 	for (i = 0 ; i < numplanes ; i++)
 	{
 		// skip all the opposites
-		if ((i % 2) == 1 && verbose_mode < 2)
+		if ((i % 2) == 1 && verbose_mode < 4)
 			continue;
 
 		dplane_t *P = &dplanes[i];
@@ -197,75 +197,6 @@ static void DumpDrawVerts(void)
 }
 
 
-#if 0
-static void DumpEdges(void)
-{
-	int i;
-
-	printf("EDGE COUNT: %d\n\n", numedges);
-
-	for (i = 0 ; i < numedges ; i++)
-	{
-		dedge_t *E = &dedges[i];
-
-		dvertex_t *v1 = (E->v[0] < numvertexes) ? &dvertexes[E->v[0]] : NULL;
-		dvertex_t *v2 = (E->v[1] < numvertexes) ? &dvertexes[E->v[1]] : NULL;
-
-		printf("Edge #%04d : %04d..%04d ", i, (int)E->v[0], (int)E->v[1]);
-		printf("(%s) ",  v1 ? VectorStr(v1->point) : "INVALID!");
-		printf("(%s)\n", v2 ? VectorStr(v2->point) : "INVALID!");
-	}
-
-	printf("\n------------------------------------------------------------\n\n");
-}
-
-
-static void DumpFaceEdges(dface_t *F)
-{
-	int k;
-
-	for (k = 0 ; k < F->numedges ; k++)
-	{
-		int k2 = F->firstedge + k;
-		int edge_idx;
-
-		printf("             edge[%d] : ", k);
-
-		if (k2 < 0 || k2 >= numsurfedges)
-		{
-			printf("BAD SURFEDGE REF! (%d >= %d)\n", k2, numsurfedges);
-			continue;
-		}
-
-		edge_idx = dsurfedges[k2];
-
-		if (edge_idx == 0 || abs(edge_idx) >= numedges)
-		{
-			printf("BAD EDGE REF! (%d >= %d)\n", edge_idx, numedges);
-			continue;
-		}
-		else
-		{
-			dedge_t *edge = &dedges[abs(edge_idx)];
-
-			int v_idx = (edge_idx < 0) ? edge->v[1] : edge->v[0];
-
-			printf("%04d>> %+05d ", k2, edge_idx);
-
-			if (v_idx >= numvertexes)
-			{
-				printf("BAD VERTEX REF! (%d)\n", v_idx);
-				continue;
-			}
-
-			printf("from (%s)\n", VectorStr(dvertexes[v_idx].point));
-		}
-	}
-}
-
-#endif
-
-
 static const char * GetSurfaceType(int val)
 {
 	switch (val)
@@ -285,6 +216,41 @@ static const char * GetSurfaceType(int val)
 		default:
 			return "???????";
 	}
+}
+
+
+static const char * GetTriangleList(dsurface_t *F)
+{
+	static char buffer[65536];
+
+	char triple[200];
+
+	int i;
+
+	buffer[0] = 0;
+
+	// iterate over the triangles in the surface
+
+	for (i = 0 ; i < F->numIndexes / 3 ; i++)
+	{
+		int k = F->firstIndex + i*3;
+
+		if (i > 0)
+			strcat(buffer, " ");
+
+		if (k < 0 || k+2 >= numDrawIndexes)
+		{
+			strcat(buffer, "[BAD INDEX]");
+			continue;
+		}
+
+		sprintf(triple, "(%d %d %d)",
+			drawIndexes[k+0], drawIndexes[k+1], drawIndexes[k+2]);
+
+		strcat(buffer, triple);
+	}
+
+	return buffer;
 }
 
 
@@ -335,6 +301,23 @@ static void DumpSurfaces(void)
 					else
 						printf("             vert[%04d] : (%s)\n", k2, VectorStr(drawVerts[k2].xyz));
 				}
+
+				if (F->numIndexes >= 3)
+				{
+					printf("             triangles: %s\n", GetTriangleList(F));
+				}
+
+#if 0
+				for (k = 0 ; k < F->numIndexes ; k++)
+				{
+					int k2 = F->firstIndex + k;
+
+					if (k2 < 0 || k2 >= numDrawIndexes)
+						printf("             index[%02d] : [BAD REF]\n", k2);
+					else
+						printf("             index[%02d] : %04d \n", k2, drawIndexes[k2]);
+				}
+#endif
 
 				printf("             patch size:%d x %d\n",
 						F->patchWidth, F->patchHeight);
