@@ -120,6 +120,28 @@ static const char *PaddedString(const char *name, int max_len)
 #endif
 
 
+static const char *ShaderInfo(int shader)
+{
+	static char buffer[100];
+
+	if (shader < 0 || shader >= numShaders)
+	{
+		sprintf(buffer, "%d [BAD SHADER NUM]", shader);
+	}
+	else if (verbose_mode)
+	{
+		snprintf(buffer, sizeof(buffer), "%d \"%s\"", shader, dshaders[shader].shader);
+	}
+	else
+	{
+		sprintf(buffer, "%d", shader);
+	}
+
+	return buffer;
+}
+
+
+
 static void DumpPlanes(void)
 {
 	int i;
@@ -324,23 +346,7 @@ static void DumpTexInfo(void)
 }
 
 
-static const char *ContentsName(signed short contents)
-{
-	static char buffer[64];
-
-	switch (contents)
-	{
-		case 0: return "EMPTY";
-		case CONTENTS_SOLID: return "SOLID";
-		case CONTENTS_WATER: return "WATER";
-		case CONTENTS_SLIME: return "SLIME";
-		case CONTENTS_LAVA:  return "LAVA ";
-
-		default:
-							 sprintf(buffer, "[%5d]", contents);
-							 return buffer;
-	}
-}
+#endif
 
 
 static void DumpBrushes(void)
@@ -353,18 +359,17 @@ static void DumpBrushes(void)
 	{
 		dbrush_t *B = &dbrushes[i];
 
-		printf("Brush #%04d : contents:%s\n",
-				i, ContentsName(B->contents));
+		printf("Brush #%04d : shader:%s\n", i, ShaderInfo(B->shaderNum));
 
-		if (B->numsides == 0)
+		if (B->numSides == 0)
 		{
 			printf("BAD BRUSH (no sides)\n\n");
 			continue;
 		}
 
-		for (k = 0 ; k < B->numsides ; k++)
+		for (k = 0 ; k < B->numSides ; k++)
 		{
-			int k2 = B->firstside + k;
+			int k2 = B->firstSide + k;
 			dbrushside_t *S;
 
 			if (k2 < 0 || k2 >= numbrushsides)
@@ -377,7 +382,7 @@ static void DumpBrushes(void)
 
 			printf("             side[%04d] : ", k2);
 
-			printf("plane:%04d tex:%d\n", S->planenum, S->texinfo);
+			printf("plane:%04d shader:%s\n", S->planeNum, ShaderInfo(S->shaderNum));
 		}
 
 		printf("\n");
@@ -385,8 +390,6 @@ static void DumpBrushes(void)
 
 	printf("\n------------------------------------------------------------\n\n");
 }
-
-#endif
 
 
 static void DumpLeafSurfaces(dleaf_t *L)
@@ -419,7 +422,7 @@ static void DumpLeafSurfaces(dleaf_t *L)
 
 			printf("[%04d] = surf:%04d ", k2, surf_idx);
 
-			printf("shader:%d\n", F->shaderNum);
+			printf("shader:%s\n", ShaderInfo(F->shaderNum));
 		}
 	}
 }
@@ -548,7 +551,7 @@ int main(int argc, char **argv)
 
 //	DumpDrawVerts();
 //	DumpSurfaces();
-//	DumpBrushes();
+	DumpBrushes();
 
 	DumpLeafs();
 	DumpNodes();
