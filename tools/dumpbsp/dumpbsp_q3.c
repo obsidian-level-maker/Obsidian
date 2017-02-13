@@ -201,24 +201,34 @@ static void DumpModels(void)
 }
 
 
-#if 0
 static void DumpDrawVerts(void)
 {
 	int i;
 
-	printf("VERTEX COUNT: %d\n\n", numvertexes);
+	printf("DRAWVERT COUNT: %d\n\n", numDrawVerts);
 
-	for (i = 0 ; i < numvertexes ; i++)
+	for (i = 0 ; i < numDrawVerts ; i++)
 	{
-		dvertex_t *V = &dvertexes[i];
+		drawVert_t *V = &drawVerts[i];
 
-		printf("Vertex #%04d : (%s)\n", i, VectorStr(V->point));
+		printf("DrawVert #%05d : xyz:(%s)\n", i, VectorStr(V->xyz));
+
+		if (verbose_mode)
+		{
+			printf("                  st:(%+9.6f %+9.6f)\n", V->st[0], V->st[1]);
+			printf("                  lm:(%+9.6f %+9.6f)\n", V->lightmap[0], V->lightmap[1]);
+			printf("                  normal:(%s)\n", NormalStr(V->normal));
+			printf("                  rgb:(%3d %3d %3d)\n", V->color[0], V->color[1], V->color[2]);
+
+			printf("\n");
+		}
 	}
 
 	printf("\n------------------------------------------------------------\n\n");
 }
 
 
+#if 0
 static void DumpEdges(void)
 {
 	int i;
@@ -534,7 +544,7 @@ int main(int argc, char **argv)
 
 	DumpPlanes();
 
-//	DumpDrawVerts();
+	DumpDrawVerts();
 //	DumpSurfaces();
 	DumpBrushes();
 
