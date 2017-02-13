@@ -311,9 +311,6 @@ static void DumpSurfaces(void)
 					F->numVerts, F->firstVert,
 					F->numIndexes, F->firstIndex);
 
-			printf("             patch size:%d x %d\n",
-					F->patchWidth, F->patchHeight);
-
 			printf("             lightmap:#%d (%d %d) %d x %d\n",
 					F->lightmapNum,
 					F->lightmapX, F->lightmapY,
@@ -323,9 +320,24 @@ static void DumpSurfaces(void)
 
 			if (verbose_mode >= 2)
 			{
+				int k;
+
 				printf("             lm S vec: (%s)\n", NormalStr(F->lightmapVecs[0]));
 				printf("             lm T vec: (%s)\n", NormalStr(F->lightmapVecs[1]));
 				printf("             lm N vec: (%s)\n", NormalStr(F->lightmapVecs[2]));
+
+				for (k = 0 ; k < F->numVerts ; k++)
+				{
+					int k2 = F->firstVert + k;
+
+					if (k2 < 0 || k2 >= numDrawVerts)
+						printf("             vert[%04d] : [BAD REF]\n", k2);
+					else
+						printf("             vert[%04d] : (%s)\n", k2, VectorStr(drawVerts[k2].xyz));
+				}
+
+				printf("             patch size:%d x %d\n",
+						F->patchWidth, F->patchHeight);
 			}
 
 			printf("\n");
@@ -561,16 +573,17 @@ int main(int argc, char **argv)
 	LoadBSPFile (source);   
 
 	DumpPlanes();
+	DumpShaders();
 
 	DumpDrawVerts();
 	DumpSurfaces();
-	DumpBrushes();
 
 	DumpLeafs();
 	DumpNodes();
+
+	DumpBrushes();
 	DumpModels();
 
-	DumpShaders();
 	DumpEntities();
 
 	return 0;
