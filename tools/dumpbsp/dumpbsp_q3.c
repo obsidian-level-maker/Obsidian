@@ -89,37 +89,6 @@ static const char *IntBBoxStr(int *vec)
 }
 
 
-#if 0
-static const char *PaddedString(const char *name, int max_len)
-{
-	static char buffer[1024];
-	char *pos;
-
-	if (max_len > 1000)
-		max_len = 1000;
-
-	pos = buffer;
-
-	*pos++ = '"';
-
-	for (; max_len > 0 && *name ; max_len--)
-	{
-		*pos++ = *name++;
-	}
-
-	*pos++ = '"';
-
-	for (; max_len > 0 ; max_len--)
-		*pos++ = ' ';
-
-
-	*pos = 0;
-
-	return buffer;
-}
-#endif
-
-
 static const char *ShaderInfo(int shader, int force_verbose)
 {
 	static char buffer[100];
@@ -151,7 +120,7 @@ static void DumpPlanes(void)
 	for (i = 0 ; i < numplanes ; i++)
 	{
 		// skip all the opposites
-		if ((i % 2) == 1 && ! verbose_mode)
+		if ((i % 2) == 1 && verbose_mode < 2)
 			continue;
 
 		dplane_t *P = &dplanes[i];
@@ -294,27 +263,70 @@ static void DumpFaceEdges(dface_t *F)
 	}
 }
 
+#endif
 
-static void DumpFaces(void)
+
+static const char * GetSurfaceType(int val)
+{
+	switch (val)
+	{
+		case MST_PLANAR:
+			return "POLYGON";
+
+		case MST_PATCH:
+			return "_PATCH_";
+
+		case MST_TRIANGLE_SOUP:
+			return "__SOUP_";
+
+		case MST_FLARE:
+			return "__FLARE";
+
+		default:
+			return "???????";
+	}
+}
+
+
+static void DumpSurfaces(void)
 {
 	int i;
 
-	printf("FACE COUNT: %d\n\n", numfaces);
+	printf("SURFACE COUNT: %d\n\n", numDrawSurfaces);
 
-	for (i = 0 ; i < numfaces ; i++)
+	for (i = 0 ; i < numDrawSurfaces ; i++)
 	{
-		dface_t *F = &dfaces[i];
+		dsurface_t *F = &drawSurfaces[i];
 
-		printf("Face #%04d : on %s %04d  edges:%2d  tex:%2d  lightofs:%d\n",
-				i, F->side ? "back " : "front", F->planenum,
-				F->numedges, F->texinfo, F->lightofs);
+		printf("Surf #%04d : type:%s shader:%s\n",
+				i, GetSurfaceType(F->surfaceType),
+				ShaderInfo(F->shaderNum, 1));
 
 		if (verbose_mode)
 		{
-			printf("             styles: %02x %02x %02x %02x\n",
-					F->styles[0], F->styles[1], F->styles[2], F->styles[3]);
+			if (F->fogNum >= 0)
+				printf("             fog: %d\n", F->fogNum);
 
-			DumpFaceEdges(F);
+			printf("             verts:%d(@%d) indexes:%d(@%d)\n",
+					F->numVerts, F->firstVert,
+					F->numIndexes, F->firstIndex);
+
+			printf("             patch size:%d x %d\n",
+					F->patchWidth, F->patchHeight);
+
+			printf("             lightmap:#%d (%d %d) %d x %d\n",
+					F->lightmapNum,
+					F->lightmapX, F->lightmapY,
+					F->lightmapWidth, F->lightmapHeight);
+
+			printf("             lm origin:(%s)\n", VectorStr(F->lightmapOrigin));
+
+			if (verbose_mode >= 2)
+			{
+				printf("             lm S vec: (%s)\n", NormalStr(F->lightmapVecs[0]));
+				printf("             lm T vec: (%s)\n", NormalStr(F->lightmapVecs[1]));
+				printf("             lm N vec: (%s)\n", NormalStr(F->lightmapVecs[2]));
+			}
 
 			printf("\n");
 		}
@@ -322,8 +334,6 @@ static void DumpFaces(void)
 
 	printf("\n------------------------------------------------------------\n\n");
 }
-
-#endif
 
 
 static void DumpShaders(void)
@@ -553,7 +563,7 @@ int main(int argc, char **argv)
 	DumpPlanes();
 
 	DumpDrawVerts();
-//	DumpSurfaces();
+	DumpSurfaces();
 	DumpBrushes();
 
 	DumpLeafs();
