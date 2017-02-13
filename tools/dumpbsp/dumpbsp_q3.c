@@ -12,7 +12,7 @@
 #include "bspfile.h"
 
 
-static int me_verbose = 1;
+static int verbose_mode = 0;
 
 
 static const char *VectorStr(float *vec)
@@ -87,22 +87,6 @@ static const char *ShortBBoxStr(signed short *vec)
 }
 
 
-static const char *PlaneTypeName(int type)
-{
-  switch (type)
-  {
-    case PLANE_X: return "PLANE_X";
-    case PLANE_Y: return "PLANE_Y";
-    case PLANE_Z: return "PLANE_Z";
-
-    case PLANE_ANYX: return "PLANE_ANYX";
-    case PLANE_ANYY: return "PLANE_ANYY";
-    case PLANE_ANYZ: return "PLANE_ANYZ";
-
-    default: return "????";
-  }
-}
-
 static const char *PaddedString(const char *name, int max_len)
 {
   static char buffer[1024];
@@ -140,10 +124,14 @@ static void DumpPlanes(void)
 
   for (i = 0; i < numplanes; i++)
   {
+    // skip all the opposites
+    if ((i % 2) == 1 && ! verbose_mode)
+      continue;
+
     dplane_t *P = &dplanes[i];
 
-    printf("Plane #%04d : (%s) dist:%+8.1f  %s\n",
-           i, NormalStr(P->normal), P->dist, PlaneTypeName(P->type));
+    printf("Plane #%04d : (%s) dist:%+8.1f\n",
+           i, NormalStr(P->normal), P->dist);
   }
 
   printf("\n------------------------------------------------------------\n\n");
@@ -162,6 +150,7 @@ static void DumpEntities(void)
 }
 
 
+#if 0
 static void DumpModels(void)
 {
   int i;
@@ -175,7 +164,7 @@ static void DumpModels(void)
     printf("Model #%04d : firstface:%5d  numfaces: %d\n",
            i, M->firstface, M->numfaces);
 
-    if (me_verbose)
+    if (verbose_mode)
     {
       printf("              mins (%s)\n", VectorStr(M->mins));
       printf("              maxs (%s)\n", VectorStr(M->maxs));
@@ -287,7 +276,7 @@ static void DumpFaces(void)
            i, F->side ? "back " : "front", F->planenum,
            F->numedges, F->texinfo, F->lightofs);
 
-    if (me_verbose)
+    if (verbose_mode)
     {
       printf("             styles: %02x %02x %02x %02x\n",
              F->styles[0], F->styles[1], F->styles[2], F->styles[3]);
@@ -315,7 +304,7 @@ static void DumpTexInfo(void)
     printf("Tex-Info #%04d : flags:0x%04x value:0x%04x %s\n",
            i, T->flags, T->value, T->texture);
 
-    if (me_verbose)
+    if (verbose_mode)
     {
       printf("                 s = (%s) offset:%+1.5f\n",
              NormalStr(T->vecs[0]), T->vecs[0][3]);
@@ -469,7 +458,7 @@ static void DumpLeafs(void)
            i, ContentsName(L->contents), L->numleaffaces,
            L->cluster, L->area);
 
-    if (me_verbose)
+    if (verbose_mode)
     {
       printf("             mins (%s)\n", ShortBBoxStr(L->mins));
       printf("             maxs (%s)\n", ShortBBoxStr(L->maxs));
@@ -515,7 +504,7 @@ static void DumpNodes(void)
     printf("front(%s)  ", ChildName(N->children[0]));
     printf("back(%s)\n",  ChildName(N->children[1]));
 
-    if (me_verbose)
+    if (verbose_mode)
     {
       printf("             mins (%s)\n", ShortBBoxStr(N->mins));
       printf("             maxs (%s)\n", ShortBBoxStr(N->maxs));
@@ -528,6 +517,7 @@ static void DumpNodes(void)
 
   printf("\n------------------------------------------------------------\n\n");
 }
+#endif
 
 
 int main(int argc, char **argv)
@@ -548,6 +538,7 @@ int main(int argc, char **argv)
   LoadBSPFile (source);   
     
   DumpPlanes();
+#if 0
   DumpVertices();
   DumpEdges();
   DumpFaces();
@@ -558,9 +549,9 @@ int main(int argc, char **argv)
   DumpModels();
 
   DumpTexInfo();
-  DumpEntities();
+#endif
 
-  // FIXME: areas, areaportals, visibility
+  DumpEntities();
 
   return 0;
 }
