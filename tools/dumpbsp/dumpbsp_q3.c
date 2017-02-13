@@ -12,7 +12,7 @@
 #include "bspfile.h"
 
 
-static int verbose_mode = 1;  // 0, 1 or 2
+static int verbose_mode = 0;  // 0, 1 or 2
 
 
 static const char *VectorStr(float *vec)
@@ -528,6 +528,14 @@ static void DumpNodes(void)
 int main(int argc, char **argv)
 {
 	char source[1024];
+
+	while (strcmp(argv[1], "-v") == 0)
+	{
+		verbose_mode++;
+
+		argv++;
+		argc--;
+	}
 
 	if (argc != 2)
 	{
