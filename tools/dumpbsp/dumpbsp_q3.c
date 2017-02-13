@@ -176,7 +176,6 @@ static void DumpEntities(void)
 }
 
 
-#if 0
 static void DumpModels(void)
 {
 	int i;
@@ -187,16 +186,13 @@ static void DumpModels(void)
 	{
 		dmodel_t *M = &dmodels[i];
 
-		printf("Model #%04d : firstface:%5d  numfaces: %d\n",
-				i, M->firstface, M->numfaces);
+		printf("Model #%04d : surfs:%d(@%d) brushes:%d(@%d)\n",
+				i, M->numSurfaces, M->firstSurface,
+				M->numBrushes, M->firstBrush);
 
-		if (verbose_mode)
 		{
 			printf("              mins (%s)\n", VectorStr(M->mins));
 			printf("              maxs (%s)\n", VectorStr(M->maxs));
-			printf("              orig (%s)\n", VectorStr(M->origin));
-
-			printf("              root node: %d\n", M->headnode);
 			printf("\n");
 		}
 	}
@@ -205,7 +201,8 @@ static void DumpModels(void)
 }
 
 
-static void DumpVertices(void)
+#if 0
+static void DumpDrawVerts(void)
 {
 	int i;
 
@@ -543,7 +540,7 @@ int main(int argc, char **argv)
 
 	DumpLeafs();
 	DumpNodes();
-//	DumpModels();
+	DumpModels();
 
 	DumpShaders();
 	DumpEntities();
