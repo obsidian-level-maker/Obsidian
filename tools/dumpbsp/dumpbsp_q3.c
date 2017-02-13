@@ -484,10 +484,7 @@ static void DumpLeafs(void)
 }
 
 
-#if 0
-
-
-static const char *ChildName(signed short child)
+static const char *ChildName(int child)
 {
 	static char buffer[64];
 
@@ -502,6 +499,7 @@ static const char *ChildName(signed short child)
 	return buffer;
 }
 
+
 static void DumpNodes(void)
 {
 	int i;
@@ -512,7 +510,7 @@ static void DumpNodes(void)
 	{
 		dnode_t *N = &dnodes[i];
 
-		printf("Node #%04d : splitter %04d  ", i, N->planenum);
+		printf("Node #%04d : splitter %04d  ", i, N->planeNum);
 		printf("front(%s)  ", ChildName(N->children[0]));
 		printf("back(%s)\n",  ChildName(N->children[1]));
 
@@ -521,15 +519,12 @@ static void DumpNodes(void)
 			printf("             mins (%s)\n", IntBBoxStr(N->mins));
 			printf("             maxs (%s)\n", IntBBoxStr(N->maxs));
 
-			printf("             firstface:%d numfaces:%d\n", N->firstface, N->numfaces);
-
 			printf("\n");
 		}
 	}
 
 	printf("\n------------------------------------------------------------\n\n");
 }
-#endif
 
 
 int main(int argc, char **argv)
@@ -556,7 +551,7 @@ int main(int argc, char **argv)
 //	DumpBrushes();
 
 	DumpLeafs();
-//	DumpNodes();
+	DumpNodes();
 //	DumpModels();
 
 //	DumpShaders();
