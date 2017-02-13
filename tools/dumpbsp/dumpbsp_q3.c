@@ -12,7 +12,7 @@
 #include "bspfile.h"
 
 
-static int verbose_mode = 0;
+static int verbose_mode = 1;
 
 
 static const char *VectorStr(float *vec)
@@ -24,7 +24,7 @@ static const char *VectorStr(float *vec)
   char *pos = buffer;
 
   int i;
-  for (i = 0; i < 3; i++)
+  for (i = 0 ; i < 3 ; i++)
   {
     if (i > 0)
       strcat(buffer, " ");
@@ -46,7 +46,7 @@ static const char *NormalStr(float *vec)
   char *pos = buffer;
 
   int i;
-  for (i = 0; i < 3; i++)
+  for (i = 0 ; i < 3 ; i++)
   {
     if (i > 0)
       strcat(buffer, " ");
@@ -64,7 +64,7 @@ static const char *NormalStr(float *vec)
   return buffer;
 }
 
-static const char *ShortBBoxStr(signed short *vec)
+static const char *IntBBoxStr(int *vec)
 {
   static char buffer[256];
 
@@ -73,14 +73,14 @@ static const char *ShortBBoxStr(signed short *vec)
   char *pos = buffer;
 
   int i;
-  for (i = 0; i < 3; i++)
+  for (i = 0 ; i < 3 ; i++)
   {
     if (i > 0)
       strcat(buffer, " ");
 
     pos = buffer + strlen(buffer);
 
-    sprintf(pos, "%+5d", (int)vec[i]);
+    sprintf(pos, "%+5d", vec[i]);
   }
 
   return buffer;
@@ -99,14 +99,14 @@ static const char *PaddedString(const char *name, int max_len)
 
   *pos++ = '"';
 
-  for (; max_len > 0 && *name; max_len--)
+  for (; max_len > 0 && *name ; max_len--)
   {
     *pos++ = *name++;
   }
 
   *pos++ = '"';
 
-  for (; max_len > 0; max_len--)
+  for (; max_len > 0 ; max_len--)
     *pos++ = ' ';
 
 
@@ -122,7 +122,7 @@ static void DumpPlanes(void)
 
   printf("PLANE COUNT: %d\n\n", numplanes);
 
-  for (i = 0; i < numplanes; i++)
+  for (i = 0 ; i < numplanes ; i++)
   {
     // skip all the opposites
     if ((i % 2) == 1 && ! verbose_mode)
@@ -157,7 +157,7 @@ static void DumpModels(void)
 
   printf("MODEL COUNT: %d\n\n", nummodels);
 
-  for (i = 0; i < nummodels; i++)
+  for (i = 0 ; i < nummodels ; i++)
   {
     dmodel_t *M = &dmodels[i];
 
@@ -185,7 +185,7 @@ static void DumpVertices(void)
 
   printf("VERTEX COUNT: %d\n\n", numvertexes);
 
-  for (i = 0; i < numvertexes; i++)
+  for (i = 0 ; i < numvertexes ; i++)
   {
     dvertex_t *V = &dvertexes[i];
 
@@ -202,7 +202,7 @@ static void DumpEdges(void)
 
   printf("EDGE COUNT: %d\n\n", numedges);
 
-  for (i = 0; i < numedges; i++)
+  for (i = 0 ; i < numedges ; i++)
   {
     dedge_t *E = &dedges[i];
 
@@ -222,7 +222,7 @@ static void DumpFaceEdges(dface_t *F)
 {
   int k;
 
-  for (k = 0; k < F->numedges; k++)
+  for (k = 0 ; k < F->numedges ; k++)
   {
     int k2 = F->firstedge + k;
     int edge_idx;
@@ -268,7 +268,7 @@ static void DumpFaces(void)
 
   printf("FACE COUNT: %d\n\n", numfaces);
 
-  for (i = 0; i < numfaces; i++)
+  for (i = 0 ; i < numfaces ; i++)
   {
     dface_t *F = &dfaces[i];
 
@@ -297,7 +297,7 @@ static void DumpTexInfo(void)
 
   printf("TEXINFO COUNT : %d\n\n", numtexinfo);
 
-  for (i = 0; i < numtexinfo; i++)
+  for (i = 0 ; i < numtexinfo ; i++)
   {
     texinfo_t *T = &texinfo[i];
 
@@ -344,7 +344,7 @@ static void DumpBrushes(void)
 
   printf("BRUSH COUNT : %d\n\n", numbrushes);
 
-  for (i = 0; i < numbrushes; i++)
+  for (i = 0 ; i < numbrushes ; i++)
   {
     dbrush_t *B = &dbrushes[i];
 
@@ -357,7 +357,7 @@ static void DumpBrushes(void)
       continue;
     }
 
-    for (k = 0; k < B->numsides; k++)
+    for (k = 0 ; k < B->numsides ; k++)
     {
       int k2 = B->firstside + k;
       dbrushside_t *S;
@@ -381,38 +381,40 @@ static void DumpBrushes(void)
   printf("\n------------------------------------------------------------\n\n");
 }
 
+#endif
 
-static void DumpLeafFaces(dleaf_t *L)
+
+static void DumpLeafSurfaces(dleaf_t *L)
 {
   int k;
 
-  for (k = 0; k < L->numleaffaces; k++)
+  for (k = 0 ; k < L->numLeafSurfaces ; k++)
   {
-    int k2 = L->firstleafface + k;
-    int face_idx;
+    int k2 = L->firstLeafSurface + k;
+    int surf_idx;
 
-    printf("             face[%d] : ", k);
+    printf("             surface[%d] : ", k);
 
-    if (k2 < 0 || k2 >= numleaffaces)
+    if (k2 < 0 || k2 >= numleafsurfaces)
     {
-      printf("BAD MARKSURF REF! (%d >= %d)\n", k2, numleaffaces);
+      printf("BAD MARKSURF REF! (%d >= %d)\n", k2, numleafsurfaces);
       continue;
     }
 
-    face_idx = (int)dleaffaces[k2];
+    surf_idx = dleafsurfaces[k2];
 
-    if (face_idx >= numfaces)
+    if (surf_idx >= numDrawSurfaces)
     {
-      printf("BAD FACE REF! (%d >= %d)\n", face_idx, numfaces);
+      printf("BAD SURFACE REF! (%d >= %d)\n", surf_idx, numDrawSurfaces);
       continue;
     }
     else
     {
-      dface_t *F = &dfaces[face_idx];
+      dsurface_t *F = &drawSurfaces[surf_idx];
 
-      printf("%04d>> %04d ", k2, face_idx);
+      printf("%04d>> %04d ", k2, surf_idx);
 
-      printf("plane:%04d side:%d\n", F->planenum, F->side);
+      printf("shader:%d\n", F->shaderNum);
     }
   }
 }
@@ -421,9 +423,9 @@ static void DumpLeafBrushes(dleaf_t *L)
 {
   int k;
 
-  for (k = 0; k < L->numleafbrushes; k++)
+  for (k = 0 ; k < L->numLeafBrushes ; k++)
   {
-    int k2 = L->firstleafbrush + k;
+    int k2 = L->firstLeafBrush + k;
     int brush_idx;
 
     if (k2 < 0 || k2 >= numleafbrushes)
@@ -432,7 +434,7 @@ static void DumpLeafBrushes(dleaf_t *L)
       continue;
     }
 
-    brush_idx = (int)dleafbrushes[k2];
+    brush_idx = dleafbrushes[k2];
 
     if (brush_idx < 0 || brush_idx >= numbrushes)
     {
@@ -450,21 +452,21 @@ static void DumpLeafs(void)
 
   printf("LEAF COUNT: %d\n\n", numleafs);
 
-  for (i = 0; i < numleafs; i++)
+  for (i = 0 ; i < numleafs ; i++)
   {
     dleaf_t *L = &dleafs[i];
 
-    printf("Leaf #%04d : contents:%s faces:%d cluster:%d area:%d\n",
-           i, ContentsName(L->contents), L->numleaffaces,
-           L->cluster, L->area);
+    printf("Leaf #%04d : cluster:%d area:%d surfs:%d @%d brushes:%d @%d\n",
+           i, L->cluster, L->area,
+           L->numLeafSurfaces, L->firstLeafSurface,
+           L->numLeafBrushes,  L->firstLeafBrush);
 
     if (verbose_mode)
     {
-      printf("             mins (%s)\n", ShortBBoxStr(L->mins));
-      printf("             maxs (%s)\n", ShortBBoxStr(L->maxs));
+      printf("             mins (%s)\n", IntBBoxStr(L->mins));
+      printf("             maxs (%s)\n", IntBBoxStr(L->maxs));
 
-      DumpLeafFaces(L);
-
+      DumpLeafSurfaces(L);
       DumpLeafBrushes(L);
 
       printf("\n");
@@ -473,6 +475,9 @@ static void DumpLeafs(void)
 
   printf("\n------------------------------------------------------------\n\n");
 }
+
+
+#if 0
 
 
 static const char *ChildName(signed short child)
@@ -496,7 +501,7 @@ static void DumpNodes(void)
 
   printf("NODE COUNT: %d\n\n", numnodes);
 
-  for (i = 0; i < numnodes; i++)
+  for (i = 0 ; i < numnodes ; i++)
   {
     dnode_t *N = &dnodes[i];
 
@@ -506,8 +511,8 @@ static void DumpNodes(void)
 
     if (verbose_mode)
     {
-      printf("             mins (%s)\n", ShortBBoxStr(N->mins));
-      printf("             maxs (%s)\n", ShortBBoxStr(N->maxs));
+      printf("             mins (%s)\n", IntBBoxStr(N->mins));
+      printf("             maxs (%s)\n", IntBBoxStr(N->maxs));
 
       printf("             firstface:%d numfaces:%d\n", N->firstface, N->numfaces);
 
@@ -538,20 +543,21 @@ int main(int argc, char **argv)
   LoadBSPFile (source);   
     
   DumpPlanes();
-#if 0
-  DumpVertices();
-  DumpEdges();
-  DumpFaces();
 
-  DumpBrushes();
+//DumpDrawVerts();
+//DumpSurfaces();
+//DumpBrushes();
+
   DumpLeafs();
-  DumpNodes();
-  DumpModels();
+//DumpNodes();
+//DumpModels();
 
-  DumpTexInfo();
-#endif
+//DumpShaders();
 
   DumpEntities();
 
   return 0;
 }
+
+//--- editor settings ---
+// vi:ts=4:sw=4:noexpandtab
