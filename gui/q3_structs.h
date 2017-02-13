@@ -298,6 +298,12 @@ typedef struct
 #define SURF_DUST				0x40000	// leave a dust trail when walking on this surface
 
 
+// special lightmap numbers
+#define LIGHTMAP_BY_VERTEX  -3
+#define LIGHTMAP_WHITEIMAGE -2
+#define LIGHTMAP_NONE       -1
+
+
 #endif /* __QUAKE3_FILES_H__ */
 
 //--- editor settings ---
