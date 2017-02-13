@@ -32,7 +32,6 @@ OBJS=dumpbsp_q3.o
 Q3_LIB_OBJS=\
 	obj_q3/aselib.o     \
 	obj_q3/cmdlib.o     \
-	obj_q3/l3dslib.o    \
 	obj_q3/md4.o        \
 	obj_q3/polylib.o    \
 	obj_q3/threads.o    \
