@@ -12,7 +12,7 @@
 #include "bspfile.h"
 
 
-static int verbose_mode = 1;
+static int verbose_mode = 1;  // 0, 1 or 2
 
 
 static const char *VectorStr(float *vec)
@@ -120,15 +120,15 @@ static const char *PaddedString(const char *name, int max_len)
 #endif
 
 
-static const char *ShaderInfo(int shader)
+static const char *ShaderInfo(int shader, int force_verbose)
 {
 	static char buffer[100];
 
 	if (shader < 0 || shader >= numShaders)
 	{
-		sprintf(buffer, "%d [BAD SHADER NUM]", shader);
+		sprintf(buffer, "%d [BAD SHADER]", shader);
 	}
-	else if (verbose_mode)
+	else if (force_verbose)
 	{
 		snprintf(buffer, sizeof(buffer), "%d \"%s\"", shader, dshaders[shader].shader);
 	}
@@ -359,7 +359,7 @@ static void DumpBrushes(void)
 	{
 		dbrush_t *B = &dbrushes[i];
 
-		printf("Brush #%04d : shader:%s\n", i, ShaderInfo(B->shaderNum));
+		printf("Brush #%04d : shader:%s\n", i, ShaderInfo(B->shaderNum, 1));
 
 		if (B->numSides == 0)
 		{
@@ -380,9 +380,9 @@ static void DumpBrushes(void)
 
 			S = &dbrushsides[k2];
 
-			printf("             side[%04d] : ", k2);
+			printf("              side[%04d] : ", k2);
 
-			printf("plane:%04d shader:%s\n", S->planeNum, ShaderInfo(S->shaderNum));
+			printf("plane:%04d shader:%s\n", S->planeNum, ShaderInfo(S->shaderNum, 0));
 		}
 
 		printf("\n");
@@ -422,7 +422,7 @@ static void DumpLeafSurfaces(dleaf_t *L)
 
 			printf("[%04d] = surf:%04d ", k2, surf_idx);
 
-			printf("shader:%s\n", ShaderInfo(F->shaderNum));
+			printf("shader:%s\n", ShaderInfo(F->shaderNum, verbose_mode >= 2));
 		}
 	}
 }
