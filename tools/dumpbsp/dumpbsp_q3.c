@@ -316,37 +316,25 @@ static void DumpFaces(void)
 	printf("\n------------------------------------------------------------\n\n");
 }
 
+#endif
 
-static void DumpTexInfo(void)
+
+static void DumpShaders(void)
 {
 	int i;
 
-	printf("TEXINFO COUNT : %d\n\n", numtexinfo);
+	printf("SHADER COUNT : %d\n\n", numShaders);
 
-	for (i = 0 ; i < numtexinfo ; i++)
+	for (i = 0 ; i < numShaders ; i++)
 	{
-		texinfo_t *T = &texinfo[i];
+		dshader_t *T = &dshaders[i];
 
-		printf("Tex-Info #%04d : flags:0x%04x value:0x%04x %s\n",
-				i, T->flags, T->value, T->texture);
-
-		if (verbose_mode)
-		{
-			printf("                 s = (%s) offset:%+1.5f\n",
-					NormalStr(T->vecs[0]), T->vecs[0][3]);
-
-			printf("                 t = (%s) offset:%+1.5f\n",
-					NormalStr(T->vecs[1]), T->vecs[1][3]);
-
-			printf("\n");
-		}
+		printf("Shader #%04d : flag:0x%06x cont:0x%08x %s\n",
+				i, T->surfaceFlags, T->contentFlags, T->shader);
 	}
 
 	printf("\n------------------------------------------------------------\n\n");
 }
-
-
-#endif
 
 
 static void DumpBrushes(void)
@@ -557,8 +545,7 @@ int main(int argc, char **argv)
 	DumpNodes();
 //	DumpModels();
 
-//	DumpShaders();
-
+	DumpShaders();
 	DumpEntities();
 
 	return 0;
