@@ -89,6 +89,7 @@ static const char *IntBBoxStr(int *vec)
 }
 
 
+#if 0
 static const char *PaddedString(const char *name, int max_len)
 {
 	static char buffer[1024];
@@ -116,6 +117,7 @@ static const char *PaddedString(const char *name, int max_len)
 
 	return buffer;
 }
+#endif
 
 
 static void DumpPlanes(void)
@@ -396,11 +398,11 @@ static void DumpLeafSurfaces(dleaf_t *L)
 		int k2 = L->firstLeafSurface + k;
 		int surf_idx;
 
-		printf("             surface[%d] : ", k);
+		printf("             leafsurf");
 
 		if (k2 < 0 || k2 >= numleafsurfaces)
 		{
-			printf("BAD MARKSURF REF! (%d >= %d)\n", k2, numleafsurfaces);
+			printf(": BAD LEAFSURF REF! (%d >= %d)\n", k2, numleafsurfaces);
 			continue;
 		}
 
@@ -408,14 +410,14 @@ static void DumpLeafSurfaces(dleaf_t *L)
 
 		if (surf_idx >= numDrawSurfaces)
 		{
-			printf("BAD SURFACE REF! (%d >= %d)\n", surf_idx, numDrawSurfaces);
+			printf(": BAD SURFACE REF! (%d >= %d)\n", surf_idx, numDrawSurfaces);
 			continue;
 		}
 		else
 		{
 			dsurface_t *F = &drawSurfaces[surf_idx];
 
-			printf("%04d>> %04d ", k2, surf_idx);
+			printf("[%04d] = surf:%04d ", k2, surf_idx);
 
 			printf("shader:%d\n", F->shaderNum);
 		}
@@ -461,7 +463,7 @@ static void DumpLeafs(void)
 	{
 		dleaf_t *L = &dleafs[i];
 
-		printf("Leaf #%04d : cluster:%d area:%d surfs:%d @%d brushes:%d @%d\n",
+		printf("Leaf #%04d : cluster:%d area:%d surfs:%d(@%d) brushes:%d(@%d)\n",
 				i, L->cluster, L->area,
 				L->numLeafSurfaces, L->firstLeafSurface,
 				L->numLeafBrushes,  L->firstLeafBrush);
