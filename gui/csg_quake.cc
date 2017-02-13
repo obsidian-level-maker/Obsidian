@@ -843,7 +843,7 @@ static void Split_XY(quake_group_c & group,
 		// the new segs are: S = a .. i  |  T = i .. b
 
 		front.AddSide((a_side > 0) ? S : T);
-		back.AddSide((a_side > 0) ? T : S);
+		 back.AddSide((a_side > 0) ? T : S);
 
 		AddIntersection(cut_list, part, S, 1, a_side, K1_NORMAL);
 		AddIntersection(cut_list, part, T, 0, a_side, K1_NORMAL);
