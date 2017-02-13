@@ -1,5 +1,5 @@
 /*
- * BSP DUMP by Andrew Apted
+ * Q1 DUMPBSP tool by Andrew Apted
  */
 
 #include <stdio.h>
