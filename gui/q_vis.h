@@ -62,7 +62,8 @@ public:
 
 /***** VARIABLES **********/
 
-#define CLUSTER_SIZE  192.0
+// CHUNK_SIZE in csg_main.h should be a nice multiple of this
+#define CLUSTER_SIZE  512.0  // FIXME : 128 !!!!!!
 
 extern int cluster_X, cluster_Y;
 extern int cluster_W, cluster_H;

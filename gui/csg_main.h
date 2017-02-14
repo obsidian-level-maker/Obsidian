@@ -31,6 +31,9 @@ class csg_brush_c;
 #define Z_EPSILON  0.01
 
 
+#define CHUNK_SIZE  512.0
+
+
 // unset values (handy sometimes)
 #define IVAL_NONE  -27777
 #define FVAL_NONE  -27777.75f
