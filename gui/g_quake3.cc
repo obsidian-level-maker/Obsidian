@@ -40,9 +40,9 @@
 #include "csg_quake.h"
 
 
-#define LEAF_PADDING   4
-#define NODE_PADDING   16
-#define MODEL_PADDING  1.0
+#define LEAF_PADDING   2
+#define NODE_PADDING   4
+#define MODEL_PADDING  4
 
 #define MODEL_LIGHT  64
 
@@ -561,13 +561,14 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 }
 
 
-static void Q3_WriteSolidLeaf(void)
+static void Q3_WriteDummyLeaf(void)
 {
 	dleaf3_t raw_leaf;
 
 	memset(&raw_leaf, 0, sizeof(raw_leaf));
 
 	raw_leaf.cluster = LE_S32(-1);
+	raw_leaf.area    = LE_S32(-1);
 
 	q3_leafs->Append(&raw_leaf, sizeof(raw_leaf));
 }
@@ -673,8 +674,8 @@ static void Q3_WriteBSP()
 	q3_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
 
 
-	// FIXME : need this??
-	Q3_WriteSolidLeaf();
+	// we create a unused leaf, like q3map2 does
+	Q3_WriteDummyLeaf();
 
 	Q3_WriteNode(qk_bsp_root);  
 
@@ -956,11 +957,11 @@ static void Q3_WriteModels()
 	// bounds of map
 	qk_world_model->x1 = qk_bsp_root->bbox.mins[0];
 	qk_world_model->y1 = qk_bsp_root->bbox.mins[1];
-	qk_world_model->y1 = qk_bsp_root->bbox.mins[2];
+	qk_world_model->z1 = qk_bsp_root->bbox.mins[2];
 
 	qk_world_model->x2 = qk_bsp_root->bbox.maxs[0];
 	qk_world_model->y2 = qk_bsp_root->bbox.maxs[1];
-	qk_world_model->y2 = qk_bsp_root->bbox.maxs[2];
+	qk_world_model->z2 = qk_bsp_root->bbox.maxs[2];
 
 	Q3_WriteModel(qk_world_model);
 
