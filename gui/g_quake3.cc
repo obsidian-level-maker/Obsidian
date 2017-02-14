@@ -57,7 +57,7 @@ static char *description;
 static std::vector<dbrush3_t>     q3_brushes;
 static std::vector<dbrushside3_t> q3_brush_sides;
 
-static std::map<const csg_brush_c *, u16_t> brush_map;
+static std::map<const csg_brush_c *, s32_t> brush_map;
 
 
 static void Q3_ClearBrushes()
@@ -91,7 +91,7 @@ static void DoWriteBrush(dbrush3_t & raw_brush)
 }
 
 
-static u16_t Q3_AddBrush(const csg_brush_c *A)
+static s32_t Q3_AddBrush(const csg_brush_c *A)
 {
 	// find existing brush
 	if (brush_map.find(A) != brush_map.end())
@@ -143,13 +143,13 @@ static u16_t Q3_AddBrush(const csg_brush_c *A)
 	}
 
 
-	u16_t index = q3_brushes.size();
+	s32_t index = q3_brushes.size();
 
 	brush_map[A] = index;
 
 	DoWriteBrush(raw_brush);
 
-	return (u16_t) index;
+	return index;
 }
 
 
@@ -187,7 +187,7 @@ static void Q3_ClearShaders(void)
 }
 
 
-u16_t Q3_AddShader(const char *texture, int flags, int contents)
+s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents)
 {
 	if (! texture[0])
 		texture = "error";
@@ -202,8 +202,8 @@ u16_t Q3_AddShader(const char *texture, int flags, int contents)
 
 	strcpy(raw_tex.shader, texture);
 
-	raw_tex.surfaceFlags = LE_S32(flags);
-	raw_tex.contentFlags = LE_S32(contents);
+	raw_tex.surfaceFlags = LE_U32(flags);
+	raw_tex.contentFlags = LE_U32(contents);
 
 
 	// find an existing shader in the hash table
@@ -228,7 +228,7 @@ u16_t Q3_AddShader(const char *texture, int flags, int contents)
 
 
 	// not found, so add new one
-	u16_t new_index = q3_shaders.size();
+	s32_t new_index = q3_shaders.size();
 
 	q3_shaders.push_back(raw_tex);
 
@@ -362,10 +362,10 @@ static void Q3_FreeStuff()
 
 static void Q3_WriteLeafBrush(csg_brush_c *B)
 {
-	u16_t index = Q3_AddBrush(B);
+	s32_t index = Q3_AddBrush(B);
 
 	// fix endianness
-	index = LE_U16(index);
+	index = LE_S32(index);
 
 	q3_leaf_brushes->Append(&index, sizeof(index));
 
@@ -474,7 +474,7 @@ static void Q3_WriteMarkSurf(int index)
 	SYS_ASSERT(index >= 0);
 
 	// fix endianness
-	u16_t raw_index = LE_U16(index);
+	s32_t raw_index = LE_S32(index);
 
 	q3_mark_surfs->Append(&raw_index, sizeof(raw_index));
 
@@ -706,7 +706,7 @@ static void Q3_Model_Edge(float x1, float y1, float z1,
 }
 
 
-static void Q3_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool flipped)
+static void Q3_Model_Face(quake_mapmodel_c *model, int face, s32_t plane, bool flipped)
 {
 	dsurface3_t raw_surf;
 
@@ -896,7 +896,7 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 
 	// leaf brush reference
-	u16_t index = LE_U16(q3_brushes.size());
+	s32_t index = LE_S32(q3_brushes.size());
 
 	q3_leaf_brushes->Append(&index, sizeof(index));
 
