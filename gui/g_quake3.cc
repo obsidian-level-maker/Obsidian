@@ -519,15 +519,15 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 
 	memset(&raw_leaf, 0, sizeof(raw_leaf));
 
-	raw_leaf.area = 0;
-
 	if (leaf->medium == MEDIUM_SOLID)
 	{
 		raw_leaf.cluster = -1;
+		raw_leaf.area = -1;
 	}
 	else
 	{
 		raw_leaf.cluster = leaf->cluster ? leaf->cluster->CalcID() : 0;
+		raw_leaf.area = 0;
 	}
 
 	// create the 'mark surfs'
