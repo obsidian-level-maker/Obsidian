@@ -105,7 +105,7 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	raw_brush.firstSide = (int)q3_brush_sides.size();
 	raw_brush.numSides  = 2;
 
-	raw_brush.shaderNum = 1;  // FIXME !!!!
+	raw_brush.shaderNum = 0;  // FIXME !!!!!
 
 
 	int plane;
@@ -461,7 +461,7 @@ static void Q3_WriteSurface(quake_face_c *face)
 		flags |= SURF_WARP | SURF_TRANS66;
 */
 
-	int contents = 0;  // FIXME !!
+	int contents = 1;  // FIXME !!
 
 	raw_surf.shaderNum = Q3_AddShader(texture, flags, contents);
 
@@ -546,7 +546,7 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 
 	for (unsigned int k = 0 ; k < leaf->solids.size() ; k++)
 	{
-//!!!		Q3_WriteLeafBrush(leaf->solids[k]);
+		Q3_WriteLeafBrush(leaf->solids[k]);
 
 		raw_leaf.numLeafBrushes += 1;
 	}
@@ -1055,6 +1055,9 @@ static void Q3_CreateBSPFile(const char *name)
 
 	Q3_VisWorld();
 	Q3_LightWorld();
+
+	// temporary for testing
+	Q3_AddShader("textures/gothic_block/blocks15", 0, 1);
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
