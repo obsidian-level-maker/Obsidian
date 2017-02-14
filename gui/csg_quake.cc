@@ -360,6 +360,7 @@ quake_mapmodel_c::quake_mapmodel_c() :
 	x2(0), y2(0), z2(0),
 	x_face(), y_face(), z_face(),
 	firstface(0), numfaces(0), numleafs(0),
+	firstBrush(0), numBrushes(0),
 	light(64)
 {
 	for (int i = 0 ; i < 6 ; i++)

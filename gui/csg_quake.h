@@ -228,6 +228,7 @@ public:
 class quake_mapmodel_c
 {
 public:
+	// bounding box
 	float x1, y1, z1;
 	float x2, y2, z2;
 
@@ -240,6 +241,10 @@ public:
 	int firstface;
 	int numfaces;
 	int numleafs;
+
+	// Quake3 support
+	int firstBrush;
+	int numBrushes;
 
 	// light level for whole model
 	int light;

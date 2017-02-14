@@ -929,12 +929,11 @@ static void Q3_WriteModel(quake_mapmodel_c *model)
 	raw_model.maxs[1] = LE_Float32(model->y2 + MODEL_PADDING);
 	raw_model.maxs[2] = LE_Float32(model->z2 + MODEL_PADDING);
 
-	// raw_model.origin stays zero
-
 	raw_model.firstSurface = LE_S32(model->firstface);
 	raw_model.numSurfaces  = LE_S32(model->numfaces);
 
-	// FIXME : firstBrush / numBrushes
+	raw_model.firstBrush = LE_S32(model->firstBrush);
+	raw_model.numBrushes = LE_S32(model->numBrushes);
 
 	q3_models->Append(&raw_model, sizeof(raw_model));
 }
@@ -950,6 +949,9 @@ static void Q3_WriteModels()
 	qk_world_model->firstface = 0;
 	qk_world_model->numfaces  = q3_total_surfaces;
 	qk_world_model->numleafs  = q3_total_leafs;
+
+	qk_world_model->firstBrush = 0;
+	qk_world_model->numBrushes = (int)q3_brushes.size();
 
 	// bounds of map
 	qk_world_model->x1 = qk_bsp_root->bbox.mins[0];
