@@ -39,7 +39,7 @@
 #include "csg_quake.h"
 
 
-#if 0  // fixme: quake defaults
+#if 1  // fixme: quake defaults
 
 #define DEFAULT_LIGHTLEVEL  150
 #define DEFAULT_SUNLEVEL    30

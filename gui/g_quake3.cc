@@ -536,7 +536,7 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 
 	for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
 	{
-		Q3_WriteMarkSurf(leaf->faces[i]->index);
+//!!!		Q3_WriteMarkSurf(leaf->faces[i]->index);
 
 		raw_leaf.numLeafSurfaces += 1;
 	}
@@ -546,7 +546,7 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 
 	for (unsigned int k = 0 ; k < leaf->solids.size() ; k++)
 	{
-		Q3_WriteLeafBrush(leaf->solids[k]);
+//!!!		Q3_WriteLeafBrush(leaf->solids[k]);
 
 		raw_leaf.numLeafBrushes += 1;
 	}

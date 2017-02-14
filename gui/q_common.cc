@@ -773,6 +773,10 @@ void BSP_WriteEntities(int lump_num, const char *description)
 		if (strncmp(name, "oblige_", 7) == 0)
 			continue;
 
+		// skip light entities for Quake3
+		if (qk_game == 3 && strcmp(name, "light") == 0)
+			continue;
+
 		lump->Printf("{\n");
 
 		// write entity properties
