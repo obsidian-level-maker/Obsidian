@@ -427,11 +427,11 @@ static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 static void Q3_TriangulateSurface(quake_face_c *face,
 	dsurface3_t *raw_surf)
 {
-	int first_v = q3_total_drawverts;
+	raw_surf->firstVert = q3_total_drawverts;
 
-	int total_v = (int)face->verts.size();
+	raw_surf->numVerts  = (int)face->verts.size();
 
-	for (int i = 0 ; i < total_v ; i++)
+	for (int i = 0 ; i < raw_surf->numVerts ; i++)
 	{
 		Q3_WriteDrawVert(face, &face->verts[i]);
 	}
