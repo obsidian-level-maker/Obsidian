@@ -379,6 +379,70 @@ static void Q3_WriteLeafBrush(csg_brush_c *B)
 }
 
 
+static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
+{
+	ddrawvert3_t raw_vert;
+
+	memset(&raw_vert, 0, sizeof(raw_vert));
+
+	raw_vert.xyz[0] = v->x;
+	raw_vert.xyz[1] = v->y;
+	raw_vert.xyz[2] = v->z;
+
+	SYS_ASSERT(face->node);
+
+	float mul = (face->node_side > 0) ? -1.0 : +1.0;
+
+	raw_vert.normal[0] = face->node->plane.nx * mul;
+	raw_vert.normal[1] = face->node->plane.ny * mul;
+	raw_vert.normal[2] = face->node->plane.nz * mul;
+
+	// FIXME : proper texture coords
+	raw_vert.st[0] = (v->x + v->z) / 128.0;
+	raw_vert.st[1] = (v->y + v->z) / 128.0;
+
+	// TODO : color 
+	raw_vert.color[0] = raw_vert.color[1] = raw_vert.color[2] = 100;
+
+
+	// fix endianness
+	raw_vert.xyz[0] = LE_Float32(raw_vert.xyz[0]);
+	raw_vert.xyz[1] = LE_Float32(raw_vert.xyz[1]);
+	raw_vert.xyz[2] = LE_Float32(raw_vert.xyz[2]);
+
+	raw_vert.st[0] = LE_Float32(raw_vert.st[0]);
+	raw_vert.st[1] = LE_Float32(raw_vert.st[1]);
+
+	raw_vert.lightmap[0] = LE_Float32(raw_vert.lightmap[0]);
+	raw_vert.lightmap[1] = LE_Float32(raw_vert.lightmap[1]);
+
+	raw_vert.normal[0] = LE_Float32(raw_vert.normal[0]);
+	raw_vert.normal[1] = LE_Float32(raw_vert.normal[1]);
+	raw_vert.normal[2] = LE_Float32(raw_vert.normal[2]);
+
+	q3_drawverts->Append(&raw_vert, sizeof(raw_vert));
+
+	q3_total_drawverts += 1;
+}
+
+
+static void Q3_TriangulateSurface(quake_face_c *face,
+	dsurface3_t *raw_surf)
+{
+	int first_v = q3_total_drawverts;
+
+	int total_v = (int)face->verts.size();
+
+	for (int i = 0 ; i < total_v ; i++)
+	{
+		Q3_WriteDrawVert(face, &face->verts[i]);
+	}
+
+	// FIXME !!!  triangulate the polygon, produce indexes
+
+}
+
+
 static inline void DoWriteSurface(dsurface3_t & raw_surf)
 {
 	// fix endianness
@@ -407,29 +471,6 @@ static inline void DoWriteSurface(dsurface3_t & raw_surf)
 }
 
 
-static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
-{
-	// FIXME
-
-	q3_total_drawverts += 1;
-}
-
-
-static void Q3_TriangulateSurface(quake_face_c *face)
-{
-	int first_v = q3_total_drawverts;
-
-	int total_v = face->verts.size();
-
-	for (int i = 0 ; i < total_v ; i++)
-	{
-		Q3_WriteDrawVert(face, &face->verts[i]);
-	}
-
-	// FIXME !!!  triangulate the polygon, produce indexes
-}
-
-
 static void Q3_WriteSurface(quake_face_c *face)
 {
 	SYS_ASSERT(face->node);
@@ -443,9 +484,10 @@ static void Q3_WriteSurface(quake_face_c *face)
 	memset(&raw_surf, 0, sizeof(raw_surf));
 
 	raw_surf.fogNum = -1;
+	raw_surf.surfaceType = MST_PLANAR;
 
 
-	Q3_TriangulateSurface(face);
+	Q3_TriangulateSurface(face, &raw_surf);
 
 
 	// lighting and texture...
@@ -476,7 +518,7 @@ static void Q3_WriteSurface(quake_face_c *face)
 }
 
 
-static void Q3_WriteMarkSurf(int index)
+static void Q3_WriteLeafSurf(int index)
 {
 	SYS_ASSERT(index >= 0);
 
@@ -538,14 +580,20 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 	}
 
 	// create the 'mark surfs'
+
+	// NOTE : currently surfaces are NEVER shared between leafs
+	//        [ but the Q3 format allows this ]
+
 	raw_leaf.firstLeafSurface = q3_total_leaf_surfs;
 	raw_leaf.numLeafSurfaces  = 0;
 
 	for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
 	{
-//!!!		Q3_WriteMarkSurf(leaf->faces[i]->index);
+		Q3_WriteLeafSurf(q3_total_surfaces);
 
 		raw_leaf.numLeafSurfaces += 1;
+
+		Q3_WriteSurface(leaf->faces[i]);
 	}
 
 	raw_leaf.firstLeafBrush = q3_total_leaf_brushes;
@@ -623,21 +671,6 @@ static void Q3_WriteNode(quake_node_c *node)
 	{
 		std::swap(raw_node.children[0], raw_node.children[1]);
 	}
-
-
-	// FIXME : this is quite different in Q3
-#if 0
-	raw_node.firstface = q3_total_surfaces;
-	raw_node.numfaces  = node->faces.size();
-
-	if (raw_node.numfaces > 0)
-	{
-		for (unsigned int k = 0 ; k < node->faces.size() ; k++)
-		{
-			Q3_WriteSurface(node->faces[k]);
-		}
-	}
-#endif
 
 
 	for (int b = 0 ; b < 3 ; b++)
@@ -883,7 +916,7 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 		Q3_Model_Surface(model, face, raw_node.planenum, flipped);
 
-		Q3_WriteMarkSurf(q3_total_leaf_surfs);
+		Q3_WriteLeafSurf(q3_total_leaf_surfs);
 
 		DoWriteNode(raw_node);
 		DoWriteLeaf(raw_leaf);
@@ -1070,7 +1103,7 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_LightWorld();
 
 	// temporary for testing
-	Q3_AddShader("textures/gothic_block/blocks15", 0, 1);
+	Q3_AddShader("common/solid", 0, 1);
 
 	Q3_WriteBSP();
 	Q3_WriteModels();

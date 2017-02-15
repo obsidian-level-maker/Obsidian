@@ -198,7 +198,7 @@ typedef struct
 	float		normal[3];
 	byte		color[4];
 
-} PACKEDATTR drawvert3_t;
+} PACKEDATTR ddrawvert3_t;
 
 
 typedef enum
