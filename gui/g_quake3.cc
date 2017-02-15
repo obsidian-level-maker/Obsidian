@@ -322,21 +322,27 @@ const byte oblige_pop[256] =
 
 //------------------------------------------------------------------------
 
-static qLump_c *q3_mark_surfs;  // LUMP_LEAFSURFACES
+static qLump_c *q3_leaf_surfs;  // LUMP_LEAFSURFACES
 static qLump_c *q3_leaf_brushes;
 
-static qLump_c *q3_surfaces;
 static qLump_c *q3_leafs;
 static qLump_c *q3_nodes;
 
+static qLump_c *q3_surfaces;
+static qLump_c *q3_drawverts;
+static qLump_c *q3_indexes;
+
 static qLump_c *q3_models;
 
-static int q3_total_mark_surfs;
+static int q3_total_leaf_surfs;
 static int q3_total_leaf_brushes;
 
-static int q3_total_surfaces;
 static int q3_total_leafs;
 static int q3_total_nodes;
+
+static int q3_total_surfaces;
+static int q3_total_drawverts;
+static int q3_total_indexes;
 
 
 static void Q3_FreeStuff()
@@ -349,7 +355,7 @@ static void Q3_FreeStuff()
 
 	// bsp lumps are freed in q_common code
 
-	q3_mark_surfs = NULL;
+	q3_leaf_surfs = NULL;
 	q3_leaf_brushes = NULL;
 
 	q3_surfaces = NULL;
@@ -401,6 +407,29 @@ static inline void DoWriteSurface(dsurface3_t & raw_surf)
 }
 
 
+static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
+{
+	// FIXME
+
+	q3_total_drawverts += 1;
+}
+
+
+static void Q3_TriangulateSurface(quake_face_c *face)
+{
+	int first_v = q3_total_drawverts;
+
+	int total_v = face->verts.size();
+
+	for (int i = 0 ; i < total_v ; i++)
+	{
+		Q3_WriteDrawVert(face, &face->verts[i]);
+	}
+
+	// FIXME !!!  triangulate the polygon, produce indexes
+}
+
+
 static void Q3_WriteSurface(quake_face_c *face)
 {
 	SYS_ASSERT(face->node);
@@ -416,21 +445,7 @@ static void Q3_WriteSurface(quake_face_c *face)
 	raw_surf.fogNum = -1;
 
 
-//??	bool flipped;
-
-//??	raw_surf.planeNum = BSP_AddPlane(&face->node->plane, &flipped);
-
-#if 0
-	raw_surf.side = face->node_side ^ (flipped ? 1 : 0);
-
-
-	unsigned int total_v = face->verts.size();
-
-	for (unsigned int i = 0 ; i < total_v ; i++)
-	{
-		Q3_WriteEdge(face->verts[i], face->verts[(i+1) % total_v]);
-	}
-#endif
+	Q3_TriangulateSurface(face);
 
 
 	// lighting and texture...
@@ -438,15 +453,7 @@ static void Q3_WriteSurface(quake_face_c *face)
 	if (face->lmap)
 	{
 		// FIXME : lightmap on surface
-
-		///--- raw_surf.lightofs = face->lmap->CalcOffset();
-
-		raw_surf.lightmapNum = -1;  /* NONE! */
-
-		raw_surf.lightmapX = 0;
-		raw_surf.lightmapY = 0;
-		raw_surf.lightmapWidth  = 2;
-		raw_surf.lightmapHeight = 2;
+		raw_surf.lightmapNum = LIGHTMAP_BY_VERTEX;
 	}
 
 
@@ -476,9 +483,9 @@ static void Q3_WriteMarkSurf(int index)
 	// fix endianness
 	s32_t raw_index = LE_S32(index);
 
-	q3_mark_surfs->Append(&raw_index, sizeof(raw_index));
+	q3_leaf_surfs->Append(&raw_index, sizeof(raw_index));
 
-	q3_total_mark_surfs += 1;
+	q3_total_leaf_surfs += 1;
 }
 
 
@@ -531,7 +538,7 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 	}
 
 	// create the 'mark surfs'
-	raw_leaf.firstLeafSurface = q3_total_mark_surfs;
+	raw_leaf.firstLeafSurface = q3_total_leaf_surfs;
 	raw_leaf.numLeafSurfaces  = 0;
 
 	for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
@@ -661,16 +668,22 @@ static void Q3_WriteBSP()
 {
 	q3_total_nodes = 0;
 	q3_total_leafs = 0;  // not including the solid leaf
-	q3_total_surfaces = 0;
 
-	q3_total_mark_surfs = 0;
+	q3_total_surfaces = 0;
+	q3_total_drawverts = 0;
+	q3_total_indexes = 0;
+
+	q3_total_leaf_surfs = 0;
 	q3_total_leaf_brushes = 0;
 
 	q3_nodes = BSP_NewLump(LUMP_NODES);
 	q3_leafs = BSP_NewLump(LUMP_LEAFS);
-	q3_surfaces = BSP_NewLump(LUMP_SURFACES);
 
-	q3_mark_surfs   = BSP_NewLump(LUMP_LEAFSURFACES);
+	q3_surfaces  = BSP_NewLump(LUMP_SURFACES);
+	q3_drawverts = BSP_NewLump(LUMP_DRAWVERTS);
+	q3_indexes   = BSP_NewLump(LUMP_DRAWINDEXES);
+
+	q3_leaf_surfs   = BSP_NewLump(LUMP_LEAFSURFACES);
 	q3_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
 
 
@@ -862,7 +875,7 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 		raw_leaf.contents = 0;  // EMPTY
 
-		raw_leaf.first_leafface = q3_total_mark_surfs;
+		raw_leaf.first_leafface = q3_total_leaf_surfs;
 		raw_leaf.num_leaffaces  = 1;
 
 		raw_leaf.first_leafbrush = 0;
@@ -870,7 +883,7 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 		Q3_Model_Surface(model, face, raw_node.planenum, flipped);
 
-		Q3_WriteMarkSurf(q3_total_mark_surfs);
+		Q3_WriteMarkSurf(q3_total_leaf_surfs);
 
 		DoWriteNode(raw_node);
 		DoWriteLeaf(raw_leaf);
