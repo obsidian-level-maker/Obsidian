@@ -1121,6 +1121,30 @@ void quake_face_c::ST_Bounds(double *min_s, double *min_t,
 }
 
 
+void quake_face_c::ComputeMidPoint(float *mx, float *my, float *mz)
+{
+	double sum_x = 0;
+	double sum_y = 0;
+	double sum_z = 0;
+
+	int num = (int)verts.size();
+
+	for (int i = 0 ; i < num ; i++)
+	{
+		sum_x += verts[i].x;
+		sum_y += verts[i].y;
+		sum_z += verts[i].z;
+	}
+
+	if (num == 0)
+		num = 1;
+
+	*mx = sum_x / (double)num;
+	*my = sum_y / (double)num;
+	*mz = sum_z / (double)num;
+}
+
+
 static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 {
 	// FIXME: support slopes !!

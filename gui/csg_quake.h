@@ -156,6 +156,8 @@ public:
 
 	void ST_Bounds(double *min_s, double *min_t,
 				   double *max_s, double *max_t) const;
+
+	void ComputeMidPoint(float *mx, float *my, float *mz);
 };
 
 
