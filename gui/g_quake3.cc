@@ -197,10 +197,8 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents)
 
 	memset(&raw_tex, 0, sizeof(raw_tex));
 
-	if (strlen(texture)+1 >= sizeof(raw_tex.shader))
-		Main_FatalError("Quake3 texture name too long: '%s'\n", texture);
-
-	strcpy(raw_tex.shader, texture);
+	// add texture/ prefix to every texture
+	snprintf(raw_tex.shader, sizeof(raw_tex.shader), "textures/%s", texture);
 
 	raw_tex.surfaceFlags = LE_U32(flags);
 	raw_tex.contentFlags = LE_U32(contents);
