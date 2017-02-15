@@ -377,6 +377,33 @@ static void Q3_WriteLeafBrush(csg_brush_c *B)
 }
 
 
+static inline bool IsTriangleDegenerate(quake_face_c *face, int a, int b, int c)
+{
+	// this logic is duplicated from q3map.c
+
+	float d[3];
+	float e[3];
+	float f[3];
+
+	d[0] = face->verts[b].x - face->verts[a].x;
+	d[1] = face->verts[b].y - face->verts[a].y;
+	d[2] = face->verts[b].z - face->verts[a].z;
+
+	e[0] = face->verts[c].x - face->verts[a].x;
+	e[1] = face->verts[c].y - face->verts[a].y;
+	e[2] = face->verts[c].z - face->verts[a].z;
+
+	// compute the cross-product
+	f[0] = d[1] * e[2] - d[2] * e[1];
+	f[1] = d[2] * e[0] - d[0] * e[2];
+	f[2] = d[0] * e[1] - d[1] * e[0];
+
+	float len_sqr = f[0]*f[0] + f[1]*f[1] + f[2]*f[2];
+
+	return fabs(len_sqr) < 3.0;
+}
+
+
 static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 {
 	ddrawvert3_t raw_vert;
