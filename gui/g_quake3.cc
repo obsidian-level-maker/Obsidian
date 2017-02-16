@@ -499,6 +499,9 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 
 	raw_surf->numVerts  = (int)face->verts.size();
 
+	if (has_degen)
+		raw_surf->numVerts += 1;
+
 	for (int i = 0 ; i < raw_surf->numVerts ; i++)
 	{
 		Q3_WriteDrawVert(face, &face->verts[i]);
@@ -507,7 +510,7 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 	// triangulate the polygon, produce indexes
 
 	// use the shared triangulation when possible
-	if (raw_surf->numVerts == 4 && ! has_degen)
+	if (face->verts.size() == 4 && ! has_degen)
 	{
 		raw_surf->firstIndex = 0;
 		raw_surf->numIndexes = 6;
