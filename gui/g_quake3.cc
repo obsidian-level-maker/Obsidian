@@ -404,6 +404,20 @@ static inline bool IsTriangleDegenerate(quake_face_c *face, int a, int b, int c)
 }
 
 
+static bool FaceHasDegenTriangle(quake_face_c *face)
+{
+	int total_v = (int)face->verts.size();
+
+	for (int i = 2 ; i < total_v ; i++)
+	{
+		if (IsTriangleDegenerate(face, 0, i-1, i))
+			return true;
+	}
+
+	return false;
+}
+
+
 static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 {
 	ddrawvert3_t raw_vert;
@@ -451,9 +465,42 @@ static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 }
 
 
+static void Q3_WriteDrawIndex(int index)
+{
+	SYS_ASSERT(index >= 0);
+
+	// fix endianness
+	s32_t raw_index = LE_S32(index);
+
+	q3_indexes->Append(&raw_index, sizeof(raw_index));
+
+	q3_total_indexes += 1;
+}
+
+
 static void Q3_TriangulateSurface(quake_face_c *face,
 	dsurface3_t *raw_surf)
 {
+	// check if any of the triangles would be degenerate.
+	// if so, we must create a triangle fan using a new
+	// vertex at the center of the surface.
+
+	// TODO: this logic can be improved, e.g. a single degenerate
+	//       triangle can be supported by using the middle vertex
+	//       as the common one.
+
+	bool has_degen = FaceHasDegenTriangle(face);
+
+	if (has_degen)
+	{
+		quake_vertex_c mid_vert;
+
+		face->ComputeMidPoint(&mid_vert.x, &mid_vert.y, &mid_vert.z);
+
+		Q3_WriteDrawVert(face, &mid_vert);
+	}
+
+
 	raw_surf->firstVert = q3_total_drawverts;
 
 	raw_surf->numVerts  = (int)face->verts.size();
@@ -463,8 +510,18 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 		Q3_WriteDrawVert(face, &face->verts[i]);
 	}
 
-	// FIXME !!!  triangulate the polygon, produce indexes
+	// triangulate the polygon, produce indexes
 
+	raw_surf->firstIndex = q3_total_indexes;
+
+	for (int i = 2 ; i < raw_surf->numVerts + (has_degen ? 1 : 0) ; i++)
+	{
+		Q3_WriteDrawIndex(0);
+		Q3_WriteDrawIndex(i - 1);
+		Q3_WriteDrawIndex(i);
+
+		raw_surf->numIndexes += 3;
+	}
 }
 
 
