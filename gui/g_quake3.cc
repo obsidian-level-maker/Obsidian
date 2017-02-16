@@ -430,9 +430,9 @@ static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 
 	face->GetNormal(raw_vert.normal);
 
-	// FIXME : proper texture coords
-	raw_vert.st[0] = (v->x + v->z) / 128.0;
-	raw_vert.st[1] = (v->y + v->z) / 128.0;
+	// TODO : remove the 2.0 here  [ into code which calcs ST matrix ]
+	raw_vert.st[0] = face->Calc_S(v) / 128.0;
+	raw_vert.st[1] = face->Calc_T(v) / 128.0;
 
 	// TODO : color 
 	raw_vert.color[0] = raw_vert.color[1] = raw_vert.color[2] = 100;
@@ -1181,7 +1181,7 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_LightWorld();
 
 	// temporary for testing
-	Q3_AddShader("common/solid", 0, 1);
+///!!!	Q3_AddShader("common/solid", 0, 1);
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
