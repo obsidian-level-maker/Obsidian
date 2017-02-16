@@ -3350,3 +3350,59 @@ function Room_build_all()
   Room_add_camera()
 end
 
+
+------------------------------------------------------------------------
+--  STUFF FOR TESTING THE CSG CODE
+------------------------------------------------------------------------
+
+function Quake3_test()
+
+  local F = brushlib.quad(0, 128, 256, 384,  -24, 0)
+  local C = brushlib.quad(0, 128, 256, 384,  192, 208)
+
+  local W = brushlib.quad(0,   128,  32, 384,  0, 192)
+  local E = brushlib.quad(224, 128, 256, 384,  0, 192)
+  local S = brushlib.quad(0,   128, 256, 144,  0, 192)
+  local N = brushlib.quad(0,   370, 256, 384,  0, 192)
+
+  local F_tex = "base_floor/clang_floor_s2"
+  local C_tex = "base_floor/tilefloor7_ow"
+  local W_tex = "gothic_block/blocks15"
+
+  brushlib.set_tex(F, F_tex, F_tex)
+  brushlib.set_tex(C, C_tex, C_tex)
+
+  brushlib.set_tex(N, W_tex, W_tex)
+  brushlib.set_tex(S, W_tex, W_tex)
+  brushlib.set_tex(E, W_tex, W_tex)
+  brushlib.set_tex(W, W_tex, W_tex)
+
+
+  Trans.brush(F) ; Trans.brush(C)
+  Trans.brush(S) ; Trans.brush(N)
+  Trans.brush(W) ; Trans.brush(E)
+
+
+  Trans.entity("player1", 80, 256, 44)
+  Trans.entity("light",   80, 256, 160, { light=200 })
+
+
+  -- 3D floor test  [TODO]
+  if false then
+    Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
+  end
+
+  -- liquid test  [TODO]
+  if false then
+    raw_add_brush(
+    {
+      { m="liquid", medium="water" },
+      { t=119, tex="e1u1/water4" },
+      { x=0,   y=0,   tex="e1u1/water4" },
+      { x=100, y=0,   tex="e1u1/water4" },
+      { x=100, y=600, tex="e1u1/water4" },
+      { x=0,   y=600, tex="e1u1/water4" },
+    })
+  end
+end
+
