@@ -428,13 +428,7 @@ static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 	raw_vert.xyz[1] = v->y;
 	raw_vert.xyz[2] = v->z;
 
-	SYS_ASSERT(face->node);
-
-	float mul = (face->node_side > 0) ? -1.0 : +1.0;
-
-	raw_vert.normal[0] = face->node->plane.nx * mul;
-	raw_vert.normal[1] = face->node->plane.ny * mul;
-	raw_vert.normal[2] = face->node->plane.nz * mul;
+	face->GetNormal(raw_vert.normal);
 
 	// FIXME : proper texture coords
 	raw_vert.st[0] = (v->x + v->z) / 128.0;
@@ -579,6 +573,8 @@ static void Q3_WriteSurface(quake_face_c *face)
 		// FIXME : lightmap on surface
 		raw_surf.lightmapNum = LIGHTMAP_BY_VERTEX;
 	}
+
+	face->GetNormal(raw_surf.lightmapVecs[2]);
 
 
 	const char *texture = face->texture.c_str();

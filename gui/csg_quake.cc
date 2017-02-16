@@ -1145,6 +1145,18 @@ void quake_face_c::ComputeMidPoint(float *mx, float *my, float *mz)
 }
 
 
+void quake_face_c::GetNormal(float *vec3)
+{
+	SYS_ASSERT(node);
+
+	float mul = (node_side > 0) ? -1.0 : +1.0;
+
+	vec3[0] = node->plane.nx * mul;
+	vec3[1] = node->plane.ny * mul;
+	vec3[2] = node->plane.nz * mul;
+}
+
+
 static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 {
 	// FIXME: support slopes !!

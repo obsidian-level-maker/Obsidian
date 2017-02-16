@@ -158,6 +158,8 @@ public:
 				   double *max_s, double *max_t) const;
 
 	void ComputeMidPoint(float *mx, float *my, float *mz);
+
+	void GetNormal(float *vec3);
 };
 
 
