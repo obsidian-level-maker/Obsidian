@@ -1099,6 +1099,28 @@ void quake_face_c::GetBounds(quake_bbox_c *bbox) const
 }
 
 
+float quake_face_c::Calc_S(float x, float y, float z) const
+{
+	return s[0] * x + s[1] * y + s[2] * z + s[3];
+}
+
+float quake_face_c::Calc_S(quake_vertex_c *V) const
+{
+	return s[0] * V->x + s[1] * V->y + s[2] * V->z + s[3];
+}
+
+
+float quake_face_c::Calc_T(float x, float y, float z) const
+{
+	return t[0] * x + t[1] * y + t[2] * z + t[3];
+}
+
+float quake_face_c::Calc_T(quake_vertex_c *V) const
+{
+	return t[0] * V->x + t[1] * V->y + t[2] * V->z + t[3];
+}
+
+
 void quake_face_c::ST_Bounds(double *min_s, double *min_t,
                              double *max_s, double *max_t) const
 {
@@ -1145,7 +1167,7 @@ void quake_face_c::ComputeMidPoint(float *mx, float *my, float *mz)
 }
 
 
-void quake_face_c::GetNormal(float *vec3)
+void quake_face_c::GetNormal(float *vec3) const
 {
 	SYS_ASSERT(node);
 

@@ -154,12 +154,18 @@ public:
 
 	void GetBounds(quake_bbox_c *bbox) const;
 
+	float Calc_S(float x, float y, float z) const;
+	float Calc_T(float x, float y, float z) const;
+
+	float Calc_S(quake_vertex_c *V) const;
+	float Calc_T(quake_vertex_c *V) const;
+
 	void ST_Bounds(double *min_s, double *min_t,
 				   double *max_s, double *max_t) const;
 
 	void ComputeMidPoint(float *mx, float *my, float *mz);
 
-	void GetNormal(float *vec3);
+	void GetNormal(float *vec3) const;
 };
 
 
