@@ -434,7 +434,7 @@ static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 	raw_vert.st[0] = face->Calc_S(v) / 128.0;
 	raw_vert.st[1] = face->Calc_T(v) / 128.0;
 
-	// TODO : color 
+	// TODO : color
 	raw_vert.color[0] = raw_vert.color[1] = raw_vert.color[2] = 100;
 
 
@@ -506,15 +506,24 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 
 	// triangulate the polygon, produce indexes
 
-	raw_surf->firstIndex = q3_total_indexes;
-
-	for (int i = 2 ; i < raw_surf->numVerts + (has_degen ? 1 : 0) ; i++)
+	// use the shared triangulation when possible
+	if (raw_surf->numVerts == 4 && ! has_degen)
 	{
-		Q3_WriteDrawIndex(0);
-		Q3_WriteDrawIndex(i - 1);
-		Q3_WriteDrawIndex(i);
+		raw_surf->firstIndex = 0;
+		raw_surf->numIndexes = 6;
+	}
+	else
+	{
+		raw_surf->firstIndex = q3_total_indexes;
 
-		raw_surf->numIndexes += 3;
+		for (int i = 2 ; i < raw_surf->numVerts + (has_degen ? 1 : 0) ; i++)
+		{
+			Q3_WriteDrawIndex(0);
+			Q3_WriteDrawIndex(i - 1);
+			Q3_WriteDrawIndex(i);
+
+			raw_surf->numIndexes += 3;
+		}
 	}
 }
 
@@ -798,10 +807,20 @@ static void Q3_WriteBSP()
 	q3_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
 
 
+	// create a triangulation for all non-degen quads
+	Q3_WriteDrawIndex(0);
+	Q3_WriteDrawIndex(1);
+	Q3_WriteDrawIndex(2);
+
+	Q3_WriteDrawIndex(0);
+	Q3_WriteDrawIndex(2);
+	Q3_WriteDrawIndex(3);
+
+
 	// we create a unused leaf, like q3map2 does
 	Q3_WriteDummyLeaf();
 
-	Q3_WriteNode(qk_bsp_root);  
+	Q3_WriteNode(qk_bsp_root);
 
 
 	if (q3_total_surfaces >= MAX_MAP_DRAW_SURFS)
