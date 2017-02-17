@@ -730,11 +730,17 @@ static void BSP_WriteHeader()
 		raw_info.length = LE_U32(length);
 
 		if (qk_game == 3)
+		{
 			ZIPF_AppendData(&raw_info, sizeof(raw_info));
+
+			offset += (u32_t)length;
+		}
 		else
+		{
 			PAK_AppendData(&raw_info, sizeof(raw_info));
 
-		offset += (u32_t)ALIGN_LEN(length);
+			offset += (u32_t)ALIGN_LEN(length);
+		}
 	}
 }
 
