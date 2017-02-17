@@ -224,19 +224,19 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	if (planes[0] < 0) DoAddBrushPlane(planes, A->min_x, 0, 0, -1,0,0);
 	SYS_ASSERT(planes[0] >= 0);
 
-	if (planes[1] > 0) DoAddBrushPlane(planes, A->max_x, 0, 0, +1,0,0);
+	if (planes[1] < 0) DoAddBrushPlane(planes, A->max_x, 0, 0, +1,0,0);
 	SYS_ASSERT(planes[1] >= 0);
 
 	if (planes[2] < 0) DoAddBrushPlane(planes, 0, A->min_y, 0, 0,-1,0);
 	SYS_ASSERT(planes[2] >= 0);
 
-	if (planes[3] > 0) DoAddBrushPlane(planes, 0, A->max_y, 0, 0,+1,0);
+	if (planes[3] < 0) DoAddBrushPlane(planes, 0, A->max_y, 0, 0,+1,0);
 	SYS_ASSERT(planes[3] >= 0);
 
 	if (planes[4] < 0) DoAddBrushPlane(planes, 0, 0, A->b.z,   0,0,-1);
 	SYS_ASSERT(planes[4] >= 0);
 
-	if (planes[5] > 0) DoAddBrushPlane(planes, 0, 0, A->t.z,   0,0,+1);
+	if (planes[5] < 0) DoAddBrushPlane(planes, 0, 0, A->t.z,   0,0,+1);
 	SYS_ASSERT(planes[5] >= 0);
 
 	// write the planes
