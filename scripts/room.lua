@@ -3357,6 +3357,8 @@ end
 
 function Quake3_test()
 
+--- Trans.set({ rotate=30 })
+
   local F = brushlib.quad(0, 128, 256, 384,  -24, 0)
   local C = brushlib.quad(0, 128, 256, 384,  192, 208)
 
@@ -3387,12 +3389,21 @@ function Quake3_test()
   Trans.entity("light",   80, 256, 160, { light=200 })
 
 
-  -- 3D floor test  [TODO]
-  if false then
-    Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
+  -- corner test --
+
+  if true then
+    local P_tex = "base_trim/pewter_shiney"
+
+    local P = brushlib.quad(160, 300, 224, 370, 0, 192)
+
+    brushlib.set_tex(P, P_tex, P_tex)
+
+    Trans.brush(P)
   end
 
+
   -- liquid test  [TODO]
+
   if false then
     raw_add_brush(
     {
