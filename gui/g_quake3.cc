@@ -49,6 +49,8 @@
 #define MAX_BRUSH_PLANES  100
 #define MAX_FACE_VERTS    100
 
+#define SHADER_COMMON_SOLID  0
+
 
 static char *level_name;
 static char *description;
@@ -193,7 +195,9 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	raw_brush.firstSide = (int)q3_brush_sides.size();
 	raw_brush.numSides  = 0;
 
-	raw_brush.shaderNum = 0;  // FIXME !!!!!
+	// use the "common/solid" shader
+	// FIXME : support water/slime/lava brushes, and clip brushes
+	raw_brush.shaderNum = SHADER_COMMON_SOLID;
 
 	// add all the brush planes
 
@@ -1384,7 +1388,7 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_LightWorld();
 
 	// temporary for testing
-///!!!	Q3_AddShader("common/solid", 0, 1);
+	Q3_AddShader("common/solid", 0, 1);
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
