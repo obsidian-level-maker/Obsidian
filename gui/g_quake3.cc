@@ -45,6 +45,7 @@
 #define MODEL_PADDING  4
 
 #define MODEL_LIGHT  64
+#define VERTEX_LIGHT  32
 
 #define MAX_BRUSH_PLANES  100
 #define MAX_FACE_VERTS    100
@@ -546,7 +547,7 @@ static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *v,
 	out->lightmap[1] = 0;
 
 	// we don't care about vertex lighting mode
-	out->color[0] = out->color[1] = out->color[2] = 16;
+	out->color[0] = out->color[1] = out->color[2] = VERTEX_LIGHT;
 }
 
 
@@ -594,7 +595,7 @@ static void Q3_AverageDrawVert(const ddrawvert3_t *in, int count,
 	out->normal[2] = in[0].normal[2];
 
 	// we don't care about vertex lighting mode
-	out->color[0] = out->color[1] = out->color[2] = 16;
+	out->color[0] = out->color[1] = out->color[2] = VERTEX_LIGHT;
 }
 
 
