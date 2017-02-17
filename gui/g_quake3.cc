@@ -46,6 +46,8 @@
 
 #define MODEL_LIGHT  64
 
+#define MAX_BRUSH_PLANES  100
+
 
 static char *level_name;
 static char *description;
@@ -66,6 +68,79 @@ static void Q3_ClearBrushes()
 	q3_brush_sides.clear();
 
 	brush_map.clear();
+}
+
+
+static int GetBrushSidePlane(float px, float py, float pz,
+							 float nx, float ny, float nz,
+							 int *axial)
+{
+	// returns planeNum, and sets 'axial' parameter to 0..5 or -1
+	// when the plane is NOT an axial plane.
+	//
+	// axial numbers:
+	//    0 = negative X   (the "left" side)
+	//    1 = positive X   (the "right" side)
+	//    2 = negative Y   (the "near" side)
+	//    3 = positive Y   (the "far" side)
+	//    4 = negative Z   (the "bottom" side)
+	//    5 = positive Z   (the "top" side)
+
+	int plane;
+	bool flipped;
+
+	double len = sqrt(nx*nx + ny*ny + nz*nz);
+	SYS_ASSERT(len > 0);
+
+	nx /= len;
+	ny /= len;
+	nz /= len;
+
+	plane = BSP_AddPlane(px, py, pz, nx, ny, nz, &flipped);
+
+	if (flipped)
+		plane ^= 1;
+
+	*axial = -1;
+
+	if (nx < -0.999) *axial = 0;
+	if (nx > +0.999) *axial = 1;
+	if (ny < -0.999) *axial = 2;
+	if (ny > +0.999) *axial = 3;
+	if (nz < -0.999) *axial = 4;
+	if (nz > +0.999) *axial = 5;
+
+	return plane;
+}
+
+
+static void DoAddBrushPlane(int *planes,
+							float px, float py, float pz,
+							float nx, float ny, float nz)
+{
+	int i;
+
+	int axial;
+	int plane = GetBrushSidePlane(px,py,pz, nx,ny,nz, &axial);
+
+	// store axial plane in the corresponding slot
+	if (axial >= 0)
+	{
+		planes[axial] = plane;
+		return;
+	}
+
+	// otherwise find a free slot (above the axial slots)
+	for (i = 6 ; i < MAX_BRUSH_PLANES ; i++)
+	{
+		if (planes[i] < 0)
+		{
+			planes[i] = plane;
+			return;
+		}
+	}
+
+	Main_FatalError("Quake3 build failure: brush with more than %d planes\n", MAX_BRUSH_PLANES);
 }
 
 
@@ -93,56 +168,86 @@ static void DoWriteBrush(dbrush3_t & raw_brush)
 
 static s32_t Q3_AddBrush(const csg_brush_c *A)
 {
+	// the logic here is a bit complicated, since the Quake3 engine
+	// requires axial planes (aka "brush bevels") as the first six
+	// planes of the brush, in a particular order too (X before Y
+	// before Z, negative normals before positive ones).
+
+	int planes[MAX_BRUSH_PLANES];
+	int i;
+
 	// find existing brush
 	if (brush_map.find(A) != brush_map.end())
 	{
 		return brush_map[A];
 	}
 
+	// clear the used planes
+	for (i = 0 ; i < MAX_BRUSH_PLANES ; i++)
+		planes[i] = -1;
 
+	// prepare the brush structure
 	dbrush3_t raw_brush;
 
 	raw_brush.firstSide = (int)q3_brush_sides.size();
-	raw_brush.numSides  = 2;
+	raw_brush.numSides  = 0;
 
 	raw_brush.shaderNum = 0;  // FIXME !!!!!
 
-
-	int plane;
-
+	// add all the brush planes
 
 	// top
-	plane = BSP_AddPlane(0, 0, A->t.z,  0, 0, +1);
-
-	DoWriteBrushSide(plane, raw_brush.shaderNum);
-
+	DoAddBrushPlane(planes, 0, 0, A->t.z,  0,0,+1);
 
 	// bottom
-	plane = BSP_AddPlane(0, 0, A->b.z,  0, 0, -1);
-
-	DoWriteBrushSide(plane ^ 1, raw_brush.shaderNum);
-
+	DoAddBrushPlane(planes, 0, 0, A->b.z,  0,0,-1);
 
 	for (unsigned int k = 0 ; k < A->verts.size() ; k++)
 	{
-		bool flipped;
-
 		brush_vert_c *v1 = A->verts[k];
 		brush_vert_c *v2 = A->verts[(k+1) % A->verts.size()];
 
-		plane = BSP_AddPlane(v1->x, v1->y, 0,
-				(v2->y - v1->y), (v1->x - v2->x), 0,
-				&flipped);
+		float nx = (v2->y - v1->y);
+		float ny = (v1->x - v2->x);
 
-		if (flipped)
-			plane ^= 1;
-
-		DoWriteBrushSide(plane, raw_brush.shaderNum);
-
-		raw_brush.numSides++;
+		DoAddBrushPlane(planes, v1->x, v1->y, 0, nx,ny,0);
 	}
 
+	// if some of our planes were not axial, we need to fill in
+	// the missing axial planes.
 
+	if (planes[0] < 0) DoAddBrushPlane(planes, A->min_x, 0, 0, -1,0,0);
+	SYS_ASSERT(planes[0] >= 0);
+
+	if (planes[1] > 0) DoAddBrushPlane(planes, A->max_x, 0, 0, +1,0,0);
+	SYS_ASSERT(planes[1] >= 0);
+
+	if (planes[2] < 0) DoAddBrushPlane(planes, 0, A->min_y, 0, 0,-1,0);
+	SYS_ASSERT(planes[2] >= 0);
+
+	if (planes[3] > 0) DoAddBrushPlane(planes, 0, A->max_y, 0, 0,+1,0);
+	SYS_ASSERT(planes[3] >= 0);
+
+	if (planes[4] < 0) DoAddBrushPlane(planes, 0, 0, A->b.z,   0,0,-1);
+	SYS_ASSERT(planes[4] >= 0);
+
+	if (planes[5] > 0) DoAddBrushPlane(planes, 0, 0, A->t.z,   0,0,+1);
+	SYS_ASSERT(planes[5] >= 0);
+
+	// write the planes
+	for (i = 0 ; i < MAX_BRUSH_PLANES ; i++)
+	{
+		if (planes[i] >= 0)
+		{
+			DoWriteBrushSide(planes[i], raw_brush.shaderNum);
+
+			raw_brush.numSides++;
+		}
+	}
+
+	SYS_ASSERT(raw_brush.numSides >= 6);
+
+	// add the brush
 	s32_t index = q3_brushes.size();
 
 	brush_map[A] = index;
