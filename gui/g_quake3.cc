@@ -47,6 +47,7 @@
 #define MODEL_LIGHT  64
 
 #define MAX_BRUSH_PLANES  100
+#define MAX_FACE_VERTS    100
 
 
 static char *level_name;
@@ -523,25 +524,83 @@ static bool FaceHasDegenTriangle(quake_face_c *face)
 }
 
 
+static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *v,
+							  ddrawvert3_t *out)
+{
+	memset(out, 0, sizeof(ddrawvert3_t));
+
+	out->xyz[0] = v->x;
+	out->xyz[1] = v->y;
+	out->xyz[2] = v->z;
+
+	face->GetNormal(out->normal);
+
+	// FIXME : compute the ST matrix properly (in csg_quake.cc code)
+	out->st[0] = face->Calc_S(v) / 128.0;
+	out->st[1] = face->Calc_T(v) / 128.0;
+
+	// FIXME : lightmap coords
+	out->lightmap[0] = 0;
+	out->lightmap[1] = 0;
+
+	// we don't care about vertex lighting mode
+	out->color[0] = out->color[1] = out->color[2] = 16;
+}
+
+
+static void Q3_AverageDrawVert(const ddrawvert3_t *in, int count,
+							   ddrawvert3_t *out)
+{
+	SYS_ASSERT(count >= 1);
+
+	double sum_x = 0;
+	double sum_y = 0;
+	double sum_z = 0;
+
+	double sum_s = 0;
+	double sum_t = 0;
+
+	double sum_lm0 = 0;
+	double sum_lm1 = 0;
+
+	for (int i = 0 ; i < count ; i++)
+	{
+		sum_x += in[i].xyz[0];
+		sum_y += in[i].xyz[1];
+		sum_z += in[i].xyz[2];
+
+		sum_s += in[i].st[0];
+		sum_t += in[i].st[1];
+
+		sum_lm0 += in[i].lightmap[0];
+		sum_lm1 += in[i].lightmap[1];
+	}
+
+	out->xyz[0] = sum_x / (double)count;
+	out->xyz[1] = sum_y / (double)count;
+	out->xyz[2] = sum_z / (double)count;
+
+	out->st[0] = sum_s / (double)count;
+	out->st[1] = sum_t / (double)count;
+
+	out->lightmap[0] = sum_lm0 / (double)count;
+	out->lightmap[1] = sum_lm1 / (double)count;
+
+	// assume normals are all the same
+	out->normal[0] = in[0].normal[0];
+	out->normal[1] = in[0].normal[1];
+	out->normal[2] = in[0].normal[2];
+
+	// we don't care about vertex lighting mode
+	out->color[0] = out->color[1] = out->color[2] = 16;
+}
+
+
 static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
 {
 	ddrawvert3_t raw_vert;
 
-	memset(&raw_vert, 0, sizeof(raw_vert));
-
-	raw_vert.xyz[0] = v->x;
-	raw_vert.xyz[1] = v->y;
-	raw_vert.xyz[2] = v->z;
-
-	face->GetNormal(raw_vert.normal);
-
-	// TODO : remove the 2.0 here  [ into code which calcs ST matrix ]
-	raw_vert.st[0] = face->Calc_S(v) / 128.0;
-	raw_vert.st[1] = face->Calc_T(v) / 128.0;
-
-	// TODO : color
-	raw_vert.color[0] = raw_vert.color[1] = raw_vert.color[2] = 100;
-
+	Q3_CreateDrawVert(face, v, &raw_vert);
 
 	// fix endianness
 	raw_vert.xyz[0] = LE_Float32(raw_vert.xyz[0]);
@@ -589,6 +648,9 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 	//       as the common one.
 
 	bool has_degen = FaceHasDegenTriangle(face);
+
+	ddrawvert3_t raw_verts[MAX_FACE_VERTS];
+
 
 	if (has_degen)
 	{
