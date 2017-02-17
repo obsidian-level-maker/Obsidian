@@ -596,28 +596,24 @@ static void Q3_AverageDrawVert(const ddrawvert3_t *in, int count,
 }
 
 
-static void Q3_WriteDrawVert(quake_face_c *face, quake_vertex_c *v)
+static void Q3_WriteDrawVert(ddrawvert3_t *vert)
 {
-	ddrawvert3_t raw_vert;
-
-	Q3_CreateDrawVert(face, v, &raw_vert);
-
 	// fix endianness
-	raw_vert.xyz[0] = LE_Float32(raw_vert.xyz[0]);
-	raw_vert.xyz[1] = LE_Float32(raw_vert.xyz[1]);
-	raw_vert.xyz[2] = LE_Float32(raw_vert.xyz[2]);
+	vert->xyz[0] = LE_Float32(vert->xyz[0]);
+	vert->xyz[1] = LE_Float32(vert->xyz[1]);
+	vert->xyz[2] = LE_Float32(vert->xyz[2]);
 
-	raw_vert.st[0] = LE_Float32(raw_vert.st[0]);
-	raw_vert.st[1] = LE_Float32(raw_vert.st[1]);
+	vert->st[0] = LE_Float32(vert->st[0]);
+	vert->st[1] = LE_Float32(vert->st[1]);
 
-	raw_vert.lightmap[0] = LE_Float32(raw_vert.lightmap[0]);
-	raw_vert.lightmap[1] = LE_Float32(raw_vert.lightmap[1]);
+	vert->lightmap[0] = LE_Float32(vert->lightmap[0]);
+	vert->lightmap[1] = LE_Float32(vert->lightmap[1]);
 
-	raw_vert.normal[0] = LE_Float32(raw_vert.normal[0]);
-	raw_vert.normal[1] = LE_Float32(raw_vert.normal[1]);
-	raw_vert.normal[2] = LE_Float32(raw_vert.normal[2]);
+	vert->normal[0] = LE_Float32(vert->normal[0]);
+	vert->normal[1] = LE_Float32(vert->normal[1]);
+	vert->normal[2] = LE_Float32(vert->normal[2]);
 
-	q3_drawverts->Append(&raw_vert, sizeof(raw_vert));
+	q3_drawverts->Append(vert, sizeof(ddrawvert3_t));
 
 	q3_total_drawverts += 1;
 }
@@ -651,49 +647,67 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 
 	ddrawvert3_t raw_verts[MAX_FACE_VERTS];
 
-
-	if (has_degen)
-	{
-		quake_vertex_c mid_vert;
-
-		face->ComputeMidPoint(&mid_vert.x, &mid_vert.y, &mid_vert.z);
-
-		Q3_WriteDrawVert(face, &mid_vert);
-	}
-
-
 	raw_surf->firstVert = q3_total_drawverts;
-
 	raw_surf->numVerts  = (int)face->verts.size();
 
-	if (has_degen)
-		raw_surf->numVerts += 1;
+	if (raw_surf->numVerts + 2 > MAX_FACE_VERTS)
+		Main_FatalError("Quake3 build failure: face with more than %d verts\n", MAX_FACE_VERTS);
+
+	// create the usual drawverts
 
 	for (int i = 0 ; i < raw_surf->numVerts ; i++)
 	{
-		Q3_WriteDrawVert(face, &face->verts[i]);
+		Q3_CreateDrawVert(face, &face->verts[i], &raw_verts[i]);
 	}
 
-	// triangulate the polygon, produce indexes
+	if (has_degen)
+	{
+		// create a middle point
+		Q3_AverageDrawVert(raw_verts, raw_surf->numVerts, &raw_verts[raw_surf->numVerts]);
 
-	// use the shared triangulation when possible
-	if (face->verts.size() == 4 && ! has_degen)
-	{
-		raw_surf->firstIndex = 0;
-		raw_surf->numIndexes = 6;
-	}
-	else
-	{
 		raw_surf->firstIndex = q3_total_indexes;
 
-		for (int i = 2 ; i < raw_surf->numVerts + (has_degen ? 1 : 0) ; i++)
+		for (int i = 1 ; i < raw_surf->numVerts ; i++)
 		{
-			Q3_WriteDrawIndex(0);
+			Q3_WriteDrawIndex(raw_surf->numVerts);
 			Q3_WriteDrawIndex(i - 1);
 			Q3_WriteDrawIndex(i);
 
 			raw_surf->numIndexes += 3;
 		}
+
+		raw_surf->numVerts++;
+	}
+	else
+	{
+		/* triangulate the polygon, produce indexes */
+
+		// use the shared triangulation when possible
+		if (face->verts.size() == 4)
+		{
+			raw_surf->firstIndex = 0;
+			raw_surf->numIndexes = 6;
+		}
+		else
+		{
+			raw_surf->firstIndex = q3_total_indexes;
+
+			for (int i = 2 ; i < raw_surf->numVerts ; i++)
+			{
+				Q3_WriteDrawIndex(0);
+				Q3_WriteDrawIndex(i - 1);
+				Q3_WriteDrawIndex(i);
+
+				raw_surf->numIndexes += 3;
+			}
+		}
+	}
+
+	// now write all the drawvert data
+
+	for (int i = 0 ; i < raw_surf->numVerts ; i++)
+	{
+		Q3_WriteDrawVert(&raw_verts[i]);
 	}
 }
 
