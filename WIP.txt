@@ -3,6 +3,32 @@ WORK IN PROGRESS
 ================
 
 
+
+Quake3 CSG Code
+---------------
+
++  verify handling of cluster node-splits
++  verify handling of more complex rooms
+
+-  clip brushes
+-  detail brushes
+
++  sloped floors and ceilings
+
+-  liquid areas and surfaces
+-  sky surfaces
+
+-  trigger brushes (as mapmodels I presume)
++  mapmodels
+
++  lighting
+-  grid lighting
+
+-  texture coords from brushes
+-  proper flags/contents for shaders
+
+
+
 Weapon planning:
 
 +  make distribution depend in Weapons setting
