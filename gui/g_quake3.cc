@@ -265,9 +265,7 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 
 static void Q3_WriteBrushes()
 {
-	qLump_c *lump  = BSP_NewLump(LUMP_BRUSHES);
-
-	// FIXME: write separately, fix endianness as we go
+	qLump_c *lump = BSP_NewLump(LUMP_BRUSHES);
 
 	lump->Append(&q3_brushes[0], q3_brushes.size() * sizeof(dbrush3_t));
 
