@@ -225,6 +225,8 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 	if (raw_plane.normal[1] == -0.0f) raw_plane.normal[1] = +0.0f;
 	if (raw_plane.normal[2] == -0.0f) raw_plane.normal[2] = +0.0f;
 
+	if (raw_plane.dist == -0.0f) raw_plane.dist = +0.0f;
+
 
 	int hash = I_ROUND(raw_plane.dist * 1.1);
 
