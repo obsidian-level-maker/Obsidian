@@ -667,10 +667,10 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 
 		raw_surf->firstIndex = q3_total_indexes;
 
-		for (int i = 1 ; i < raw_surf->numVerts ; i++)
+		for (int i = 0 ; i < raw_surf->numVerts ; i++)
 		{
 			Q3_WriteDrawIndex(raw_surf->numVerts);
-			Q3_WriteDrawIndex(i - 1);
+			Q3_WriteDrawIndex((i == 0) ? raw_surf->numVerts - 1 : (i - 1));
 			Q3_WriteDrawIndex(i);
 
 			raw_surf->numIndexes += 3;
