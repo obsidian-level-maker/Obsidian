@@ -219,6 +219,12 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
 	memcpy(&raw_plane, plane, sizeof(dplane_t));
 
+	// never use negative zero (minus zero) in normals
+	// [ this prevents duplicate planes ]
+	if (raw_plane.normal[0] == -0.0f) raw_plane.normal[0] = +0.0f;
+	if (raw_plane.normal[1] == -0.0f) raw_plane.normal[1] = +0.0f;
+	if (raw_plane.normal[2] == -0.0f) raw_plane.normal[2] = +0.0f;
+
 
 	int hash = I_ROUND(raw_plane.dist * 1.1);
 
@@ -263,8 +269,15 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
 	hashtab->push_back(new_index);
 
-//  fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
-//                   (int)plane_idx, (int)bsp_planes.size());
+#if 0  // DEBUG
+fprintf(stderr, "ADDED PLANE #%d : %08x %08x %08x d:%08x tp:%08x\n",
+(int)new_index,
+*(u32_t *) &raw_plane.normal[0],
+*(u32_t *) &raw_plane.normal[1],
+*(u32_t *) &raw_plane.normal[2],
+*(u32_t *) &raw_plane.dist,
+(u32_t)     raw_plane.type);
+#endif
 
 	*was_new = true;
 
