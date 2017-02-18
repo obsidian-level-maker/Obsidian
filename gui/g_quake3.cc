@@ -1361,10 +1361,9 @@ static void Q3_VisWorld()
 	if (main_win)
 		main_win->build_box->Prog_Step("Vis");
 
-	// no need for numleafs, as Quake 3 uses clusters directly
+	// Quake 3 uses clusters directly
 
-/// FIXME : disabled for now, though it probably will work as-is
-///	QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
+	QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
 }
 
 

@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C)      2010 Andrew Apted
+//  Copyright (C) 2010-2017 Andrew Apted
 //  Copyright (C) 2005-2006 Peter Brett
 //  Copyright (C) 1994-2001 iD Software
 //
@@ -95,8 +95,8 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
 
 	// ensure tnode planes are positive
 	if ( (-nx >= MAX(fy, fz)) ||
-			(-ny >= MAX(fx, fz)) ||
-			(-nz >= MAX(fx, fy)) )
+		 (-ny >= MAX(fx, fz)) ||
+		 (-nz >= MAX(fx, fy)) )
 	{
 		side = 1;
 
@@ -112,8 +112,8 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
 	bool is_sky = false;
 
 	if (fabs(node->plane.nz) > 0.5 &&
-			node->faces.size() == 1 &&
-			strstr(node->faces[0]->texture.c_str(), "sky") != NULL)
+		node->faces.size() == 1 &&
+		strstr(node->faces[0]->texture.c_str(), "sky") != NULL)
 	{
 		is_sky = true;
 	}
@@ -552,6 +552,14 @@ static int WriteCompressedRow(bool PHS)
 }
 
 
+static void WriteUncompressedRow()
+{
+	int length = v_bytes_per_row;
+
+	q_visibility->Append(v_row_buffer, length);
+}
+
+
 static void CollectRowData(int src_x, int src_y, bool PHS)
 {
 	// initial state : everything visible
@@ -567,7 +575,7 @@ static void CollectRowData(int src_x, int src_y, bool PHS)
 
 		qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
-		if (qk_game == 2)  // Quake II
+		if (qk_game >= 2)  // Quake II and III
 		{
 			int index = cy * cluster_W + cx;
 
@@ -636,14 +644,30 @@ static void Build_PVS()
 		qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
 		if (cluster->leafs.empty())
+		{
+			if (qk_game == 3)
+			{
+				memset(v_row_buffer, 0, v_bytes_per_row);
+				WriteUncompressedRow();
+			}
+
 			continue;
+		}
 
 		qk_visbuf->ClearVis();
 		qk_visbuf->ProcessVis(cx, cy);
 
 		CollectRowData(cx, cy, false);
 
-		cluster->visofs = WriteCompressedRow(false);
+		if (qk_game == 3)
+		{
+			WriteUncompressedRow();
+			cluster->visofs = 1;  // dummy value, unused
+		}
+		else
+		{
+			cluster->visofs = WriteCompressedRow(false);
+		}
 
 		if (qk_game == 2)
 		{
@@ -707,8 +731,11 @@ static void ShowVisStats()
 	pvs_stats.Finish();
 	phs_stats.Finish();
 
-	LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n",
-			pvs_stats.CalcRatio(), pvs_stats.uncompressed, pvs_stats.compressed);
+	if (qk_game < 3)
+	{
+		LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n",
+				pvs_stats.CalcRatio(), pvs_stats.uncompressed, pvs_stats.compressed);
+	}
 
 	if (qk_game == 2)
 	{
@@ -741,7 +768,7 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 	FloodAmbientSounds();
 
 
-	if (qk_game == 2)
+	if (qk_game >= 2)
 		v_row_bits = num_clusters;
 	else
 		v_row_bits = numleafs;
@@ -757,6 +784,18 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
 
 	q_visibility = BSP_NewLump(lump);
+
+	if (qk_game == 3)
+	{
+		s32_t raw_count;
+		s32_t raw_size;
+
+		raw_count = LE_S32(num_clusters);
+		raw_size  = LE_S32(v_bytes_per_row);
+
+		q_visibility->Append(&raw_count, sizeof(raw_count));
+		q_visibility->Append(&raw_size,  sizeof(raw_size));
+	}
 
 	Build_PVS();
 
