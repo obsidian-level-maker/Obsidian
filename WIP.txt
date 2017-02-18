@@ -7,9 +7,6 @@ WORK IN PROGRESS
 Quake3 CSG Code
 ---------------
 
-+  verify handling of cluster node-splits
-+  verify handling of more complex rooms
-
 -  clip brushes
 -  detail brushes
 
@@ -20,6 +17,8 @@ Quake3 CSG Code
 
 -  trigger brushes (as mapmodels I presume)
 +  mapmodels
+
++  visibility
 
 +  lighting
 -  grid lighting
