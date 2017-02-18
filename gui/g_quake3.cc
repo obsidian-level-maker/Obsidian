@@ -783,6 +783,9 @@ static void Q3_WriteSurface(quake_face_c *face)
 
 	int flags = 0;
 
+	if (strstr(texture, "skies/") != NULL)
+		flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP;
+
 /* FIXME
 	if (face->flags & FACE_F_Sky)
 		flags |= SURF_SKY;
