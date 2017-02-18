@@ -729,6 +729,8 @@ static inline void DoWriteSurface(dsurface3_t & raw_surf)
 	raw_surf.numIndexes  = LE_S32(raw_surf.numIndexes);
 
 	raw_surf.lightmapNum    = LE_S32(raw_surf.lightmapNum);
+
+	// note: these four seem to never be used by the engine
 	raw_surf.lightmapX      = LE_S32(raw_surf.lightmapX);
 	raw_surf.lightmapY      = LE_S32(raw_surf.lightmapY);
 	raw_surf.lightmapWidth  = LE_S32(raw_surf.lightmapWidth);
