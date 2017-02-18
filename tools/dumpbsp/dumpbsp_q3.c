@@ -119,10 +119,6 @@ static void DumpPlanes(void)
 
 	for (i = 0 ; i < numplanes ; i++)
 	{
-		// skip all the opposites
-		if ((i % 2) == 1 && verbose_mode < 4)
-			continue;
-
 		dplane_t *P = &dplanes[i];
 
 		printf("Plane #%04d : (%s) dist:%+8.1f\n",
