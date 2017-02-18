@@ -3391,12 +3391,26 @@ function Quake3_test()
 
   -- corner test --
 
-  if true then
+  if false then
     local P_tex = "base_trim/pewter_shiney"
 
     local P = brushlib.quad(160, 300, 224, 370, 0, 192)
 
     brushlib.set_tex(P, P_tex, P_tex)
+
+    Trans.brush(P)
+  end
+
+
+  -- clip test --
+
+  if true then
+    local P_tex = "common/clip"
+
+    local P = brushlib.quad(192, 140, 224, 370, 0, 31)
+
+    brushlib.set_tex(P, P_tex, P_tex)
+    brushlib.set_kind(P, "clip")
 
     Trans.brush(P)
   end
