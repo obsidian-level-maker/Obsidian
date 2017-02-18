@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  CSG : QUAKE I and II and III
+//  CSG : QUAKE I, II and III
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -83,6 +83,14 @@ public:
 
 	void Flip();
 	void Normalize();
+
+	// distance of point to the plane, positive is on the front
+	// (same side as normal faces), negative value is on the back.
+	float PointDist(float ax, float ay, float az) const;
+
+	// returns -1 if brush completely behind the plane, +1 if completely
+	// in front of the plane, or 0 if the brush straddles the plane.
+	int BrushSide(csg_brush_c *B, float epsilon = 0.1) const;
 };
 
 
@@ -186,8 +194,9 @@ public:
 	std::vector<csg_brush_c *> solids;
 
 public:
-	quake_leaf_c(int _m) : medium(_m), faces(),
-	cluster(NULL), index(-1), solids()
+	quake_leaf_c(int _m) :
+		medium(_m), faces(),
+		cluster(NULL), index(-1), solids()
 	{ }
 
 	~quake_leaf_c()
@@ -198,6 +207,8 @@ public:
 	void AddSolid(csg_brush_c *B);
 
 	void BBoxFromSolids();
+
+	void FilterClipBrush(csg_brush_c *B);
 };
 
 
@@ -232,6 +243,8 @@ public:
 	int CountNodes() const;
 
 	int CountLeafs() const;
+
+	void FilterClipBrush(csg_brush_c *B);
 };
 
 

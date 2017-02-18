@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  CSG : QUAKE I and II
+//  CSG : QUAKE I, II and III
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2011 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -275,6 +275,45 @@ void quake_plane_c::Normalize()
 		ny /= len;
 		nz /= len;
 	}
+}
+
+
+float quake_plane_c::PointDist(float ax, float ay, float az) const
+{
+	return (ax - x) * nx + (ay - y) * ny + (az - z) * nz;
+}
+
+
+int quake_plane_c::BrushSide(csg_brush_c *B, float epsilon) const
+{
+	float min_d = +9e9;
+	float max_d = -9e9;
+
+	for (unsigned int i = 0 ; i < B->verts.size() ; i++)
+	{
+		brush_vert_c *V = B->verts[i];
+
+		for (unsigned int k = 0 ; k < 2 ; k++)
+		{
+			// TODO : compute proper z coord
+			// [ though unlikely to make much difference, due to the
+			//   2D-ish nature of our BSP tree... ]
+
+			float x = V->x;
+			float y = V->y;
+			float z = k ? B->b.z : B->t.z;
+
+			float d = PointDist(x, y, z);
+
+			min_d = MIN(min_d, d);
+			max_d = MAX(max_d, d);
+		}
+	}
+
+	if (min_d > -epsilon) return +1;
+	if (max_d <  epsilon) return -1;
+
+	return 0;
 }
 
 
@@ -1435,6 +1474,15 @@ void quake_leaf_c::BBoxFromSolids()
 }
 
 
+void quake_leaf_c::FilterClipBrush(csg_brush_c *B)
+{
+	if (medium == MEDIUM_SOLID)
+		return;
+
+	AddSolid(B);
+}
+
+
 static int ParseLiquidMedium(csg_property_set_c *props)
 {
 	const char *str = props->getStr("medium");
@@ -1849,6 +1897,28 @@ void quake_node_c::ComputeBBox()
 }
 
 
+void quake_node_c::FilterClipBrush(csg_brush_c *B)
+{
+	int side = plane.BrushSide(B);
+
+	if (side >= 0)
+	{
+		if (front_N)
+			front_N->FilterClipBrush(B);
+		else if (front_L != qk_solid_leaf)
+			front_L->FilterClipBrush(B);
+	}
+
+	if (side <= 0)
+	{
+		if (back_N)
+			back_N->FilterClipBrush(B);
+		else if (back_L != qk_solid_leaf)
+			back_L->FilterClipBrush(B);
+	}
+}
+
+
 static void AssignLeafIndex(quake_leaf_c *leaf, int *cur_leaf)
 {
 	SYS_ASSERT(leaf);
@@ -1907,7 +1977,7 @@ static void RemoveSolidNodes(quake_node_c * node)
 		RemoveSolidNodes(node->front_N);
 
 		if (node->front_N->front_L == qk_solid_leaf &&
-				node->front_N->back_L  == qk_solid_leaf)
+			node->front_N->back_L  == qk_solid_leaf)
 		{
 			node->front_L = qk_solid_leaf;
 			node->front_N = NULL;
@@ -1919,11 +1989,27 @@ static void RemoveSolidNodes(quake_node_c * node)
 		RemoveSolidNodes(node->back_N);
 
 		if (node->back_N->front_L == qk_solid_leaf &&
-				node->back_N->back_L  == qk_solid_leaf)
+			node->back_N->back_L  == qk_solid_leaf)
 		{
 			node->back_L = qk_solid_leaf;
 			node->back_N = NULL;
 		}
+	}
+}
+
+
+static void FilterClipBrushes()
+{
+	// find all the BKIND_Clip brushes, which so far have been
+	// completely ignored, and insert them into the leafs of our
+	// quakey BSP tree.  [ Quake 3 only ]
+
+	for (unsigned int k = 0 ; k < all_brushes.size() ; k++)
+	{
+		csg_brush_c *B = all_brushes[k];
+
+		if (B->bkind == BKIND_Clip)
+			qk_bsp_root->FilterClipBrush(B);
 	}
 }
 
@@ -1967,6 +2053,9 @@ void CSG_QUAKE_Build()
 	RemoveSolidNodes(qk_bsp_root);
 
 	SYS_ASSERT(qk_bsp_root);
+
+	if (qk_game == 3)
+		FilterClipBrushes();
 }
 
 

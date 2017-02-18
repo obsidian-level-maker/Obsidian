@@ -226,12 +226,12 @@ brush_vert_c * snag_c::FindOneSidedVert(double z)
 		brush_vert_c *V = sides[i];
 
 		if (! (V->parent->bkind == BKIND_Solid  || 
-					V->parent->bkind == BKIND_Detail ||
-					V->parent->bkind == BKIND_Sky))
+			   V->parent->bkind == BKIND_Detail ||
+			   V->parent->bkind == BKIND_Sky))
 			continue;
 
 		if (z > V->parent->b.z - Z_EPSILON &&
-				z < V->parent->t.z + Z_EPSILON)
+			z < V->parent->t.z + Z_EPSILON)
 			return V;
 	}
 

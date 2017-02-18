@@ -144,7 +144,7 @@ public:
 typedef enum
 {
 	BKIND_Solid = 0,
-	BKIND_Detail,   // ignored for clipping (Quake 1/2/3 only)
+	BKIND_Detail,   // ignored for clipping (Quake 1/2 only, NOT Q3!)
 	BKIND_Clip,     // clipping only, no visible faces (Quake 1/2/3 only)
 
 	BKIND_Sky,
