@@ -52,6 +52,7 @@
 
 #define SHADER_COMMON_SOLID  0
 #define SHADER_COMMON_CLIP   1
+#define SHADER_COMMON_SKY    2
 
 
 static char *level_name;
@@ -199,10 +200,12 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 
 	// use the "common/solid" shader
 	// FIXME : support liquids
+	raw_brush.shaderNum = SHADER_COMMON_SOLID;
+
 	if (A->bkind == BKIND_Clip)
 		raw_brush.shaderNum = SHADER_COMMON_CLIP;
-	else
-		raw_brush.shaderNum = SHADER_COMMON_SOLID;
+	else if (strstr(A->t.face.getStr("tex"), "skies/") != NULL)
+		raw_brush.shaderNum = SHADER_COMMON_SKY;
 
 	// add all the brush planes
 
@@ -1394,9 +1397,10 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_VisWorld();
 	Q3_LightWorld();
 
-	// two standard shaders
+	// standard shaders (for collision brushes)
 	Q3_AddShader("common/solid", 0, CONTENTS_SOLID);
 	Q3_AddShader("common/clip",  SURF_NONSOLID | SURF_NODRAW | SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP, CONTENTS_PLAYERCLIP);
+	Q3_AddShader("common/sky",   SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP, CONTENTS_SOLID); 
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
