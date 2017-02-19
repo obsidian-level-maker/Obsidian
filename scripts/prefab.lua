@@ -429,9 +429,7 @@ function Fab_transform_XY(fab, T)
     each C in brush do
       if C.x then C.x, C.y = Trans.apply_xy(C.x, C.y) end
 
-      -- Note: this does Z too (fixme?)
-      if C.s then C.s = Trans.apply_slope(C.s) end
-
+      if C.slope then C.slope = Trans.apply_slope(C.slope) end
       if C.angle then C.angle = Trans.apply_angle(C.angle) end
     end
 
@@ -553,10 +551,6 @@ function Fab_transform_Z(fab, T)
       if C.b  then C.b  = Trans.apply_z(C.b)  ; b = C.b end
       if C.t  then C.t  = Trans.apply_z(C.t)  ; t = C.t end
       if C.za then C.za = Trans.apply_z(C.za) end
-
-      if Trans.mirror_z then
-        C.b, C.t = C.t, C.b
-      end
     end
 
     -- apply capping

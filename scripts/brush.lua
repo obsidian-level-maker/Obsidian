@@ -226,10 +226,12 @@ function Trans.apply_slope(slope)
 
   slope = table.copy(slope)
 
-  slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
-  slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
+  if T.mirror_x then slope.nx = - slope.nx end
+  if T.mirror_y then slope.ny = - slope.ny end
 
-  slope.dz = slope.dz * (T.scale_z or 1)
+  if T.rotate then
+    slope.nx, slope.ny = geom.rotate_vec(slope.nx, slope.ny, T.rotate)
+  end
 
   return slope
 end
