@@ -3367,8 +3367,30 @@ function Quake3_test()
   local S = brushlib.quad(0,   128, 256, 144,  0, 192)
   local N = brushlib.quad(0,   370, 256, 384,  0, 192)
 
+
+  -- slope test --
+
+  if true then
+    F = brushlib.quad(32, 144, 224, 370, -256,   0)
+    C = brushlib.quad(32, 144, 224, 370,  192, 512)
+
+    W = brushlib.quad(0,   128,  32, 384, -256, 512)
+    E = brushlib.quad(224, 128, 256, 384, -256, 512)
+    S = brushlib.quad(0,   128, 256, 144, -256, 512)
+    N = brushlib.quad(0,   370, 256, 384, -256, 512)
+
+    each coord in F do
+      if coord.t then coord.slope = { nx=0.3, ny=0, nz=1 } end
+    end
+
+    each coord in C do
+      if coord.b then coord.slope = { nx=0, ny=0.7, nz=-1 } end
+    end
+  end
+
+
   local F_tex = "base_floor/clang_floor_s2"
-  local C_tex = "base_floor/tilefloor7_ow"
+  local C_tex = "cosmo_floor/bfloor3"
   local W_tex = "gothic_block/blocks15"
 
   brushlib.set_tex(F, F_tex, F_tex)
@@ -3404,7 +3426,7 @@ function Quake3_test()
 
   -- clip test --
 
-  if true then
+  if false then
     local P_tex = "common/clip"
 
     local P = brushlib.quad(192, 140, 224, 370, 0, 31)
