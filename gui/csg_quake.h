@@ -27,6 +27,7 @@
 class quake_leaf_c;
 class quake_node_c;
 class qCluster_c;
+class qLightmap_c;
 
 
 typedef enum
@@ -73,15 +74,19 @@ public:
 	float nx, ny, nz;  // normal
 
 public:
-	quake_plane_c()
+	quake_plane_c() : x(0), y(0), z(0), nx(0), ny(0), nz(0)
 	{ }
 
 	~quake_plane_c()
 	{ }
 
+	void SetPos(double ax, double ay, double az);
+
 	double CalcDist() const;
 
 	void Flip();
+
+	// make the normal vector be a unit vector
 	void Normalize();
 
 	// distance of point to the plane, positive is on the front
@@ -91,6 +96,10 @@ public:
 	// returns -1 if brush completely behind the plane, +1 if completely
 	// in front of the plane, or 0 if the brush straddles the plane.
 	int BrushSide(csg_brush_c *B, float epsilon = 0.1) const;
+
+	// given an XY coordinate, compute the Z coordinate.
+	// result is undefined if the plane is vertical (nz == 0).
+	double CalcZ(double ax, double ay) const;
 };
 
 

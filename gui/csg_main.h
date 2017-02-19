@@ -22,6 +22,7 @@
 #define __OBLIGE_CSG_MAIN_H__
 
 class csg_brush_c;
+class quake_plane_c;
 
 
 // very high (low) value for uncapped brushes
@@ -40,33 +41,6 @@ class csg_brush_c;
 
 
 /******* CLASSES ***************/
-
-class slope_info_c
-{
-	// defines the planes used for sloped floors or ceiling.
-	// gives two points on the 2D map, and change in Z between them.
-	//
-	// the absolute Z coords are not here, this is implicitly relative
-	// to an external height (such as the top of the brush).
-
-public:
-	double sx, sy;
-	double ex, ey;
-
-	double dz;
-
-public:
-	slope_info_c();
-	slope_info_c(const slope_info_c *other);
-	~slope_info_c();
-
-	void Reverse();
-
-	double GetAngle() const;
-
-	double CalcZ(double base_z, double x, double y) const;
-};
-
 
 class csg_property_set_c
 {
@@ -127,7 +101,7 @@ public:
 	// height of the brush.
 	double z;
 
-	slope_info_c *slope;  // NULL if not sloped
+	quake_plane_c *slope;  // NULL if not sloped
 
 	csg_property_set_c face;
 
@@ -193,6 +167,7 @@ public:
 	csg_brush_c(const csg_brush_c *other);
 
 	void ComputeBBox();
+	void ComputePlanes();
 
 	// makes sure there are enough vertices and they are in
 	// anti-clockwise order.  Returns NULL if OK, otherwise an

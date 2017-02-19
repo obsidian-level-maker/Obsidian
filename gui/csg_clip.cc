@@ -641,6 +641,7 @@ static void AddFatBrush(csg_brush_c *P2)
 }
 
 
+#if 0  // TODO
 static void AdjustSlope(slope_info_c *slope, double pad_w, bool is_ceil)
 {
 	double dx = slope->ex - slope->sx;
@@ -662,6 +663,7 @@ static void AdjustSlope(slope_info_c *slope, double pad_w, bool is_ceil)
 
 	slope->dz *= len / (pad_w + len);
 }
+#endif
 
 
 static void FattenBrushes(double pad_w, double pad_t, double pad_b)
@@ -670,9 +672,9 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 	{
 		csg_brush_c *P = saved_all_brushes[i];
 
-		if (! (P->bkind == BKIND_Solid ||
-					P->bkind == BKIND_Clip  ||
-					P->bkind == BKIND_Sky))
+		if (! ( P->bkind == BKIND_Solid ||
+				P->bkind == BKIND_Clip  ||
+				P->bkind == BKIND_Sky))
 			continue;
 
 		// clone it, except vertices or slopes
@@ -690,6 +692,7 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
 		// !!!! FIXME: if floor is sloped, split this poly into two halves
 		//             at the point where the (slope + fh) exceeds (z2 + fh)
+#if 0
 		if (P->t.slope)
 		{
 			P2->t.slope = new slope_info_c(P->t.slope);
@@ -704,6 +707,7 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
 			AdjustSlope(P2->b.slope, pad_w, true);
 		}
+#endif
 
 		AddFatBrush(P2);
 	}

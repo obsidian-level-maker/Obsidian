@@ -30,6 +30,7 @@
 
 #include "csg_main.h"
 #include "csg_local.h"
+#include "csg_quake.h"	// for quake_plane_c
 
 
 #define EPSILON  0.001
@@ -53,48 +54,6 @@ int spot_high_h = 128;
 
 
 extern void SPOT_FillPolygon(byte content, const int *shape, int count);
-
-
-slope_info_c::slope_info_c() :
-	sx(0),sy(0), ex(1),ey(0),dz(0)
-{ }
-
-slope_info_c::slope_info_c(const slope_info_c *other) :
-	sx(other->sx), sy(other->sy),
-	ex(other->ex), ey(other->ey), dz(other->dz)
-{ }
-
-slope_info_c::~slope_info_c()
-{ }
-
-
-void slope_info_c::Reverse()
-{
-	std::swap(sx, ex);
-	std::swap(sy, ey);
-
-	dz = -dz;
-}
-
-
-double slope_info_c::GetAngle() const
-{
-	double xy_dist = ComputeDist(sx, sy, ex, ey);
-
-	return CalcAngle(0, 0, xy_dist, dz);
-}
-
-
-double slope_info_c::CalcZ(double base_z, double x, double y) const
-{
-	double dx = (ex - sx);
-	double dy = (ey - sy);
-
-	double along = (x - sx) * dx + (y - dy) * dy;
-
-	return base_z + dz * along / (dx*dx + dy*dy);
-}
-
 
 
 void csg_property_set_c::Add(const char *key, const char *value)
@@ -172,7 +131,7 @@ brush_plane_c::brush_plane_c(const brush_plane_c& other) :
 {
 	// NOTE: slope not cloned
 }
- 
+
 brush_plane_c::~brush_plane_c()
 {
 	// free slope ??   (or keep all slopes in big list)
@@ -211,9 +170,16 @@ const char * csg_brush_c::Validate()
 	if (verts.size() < 3)
 		return "Line loop contains less than 3 vertices!";
 
-	// FIXME: make sure brush is convex (co-linear lines is OK)
+	// check bbox
+	if ((max_x - min_x) < EPSILON)
+		return "Line loop has zero width!";
 
-	// make sure vertices are anti-clockwise
+	if ((max_y - min_y) < EPSILON)
+		return "Line loop has zero height!";
+
+	// make sure brush is convex (co-linear lines is OK), and
+	// that the vertices run anti-clockwise
+
 	double average_ang = 0;
 
 	bflags |= BRU_IF_Quad;
@@ -244,7 +210,7 @@ const char * csg_brush_c::Validate()
 				fabs(v1->y - v2->y) >= EPSILON)
 		{
 			bflags &= ~BRU_IF_Quad;  // not a quad
-		} 
+		}
 	}
 
 	average_ang /= (double)verts.size();
@@ -273,6 +239,63 @@ void csg_brush_c::ComputeBBox()
 
 		if (V->x > max_x) max_x = V->x;
 		if (V->y > max_y) max_y = V->y;
+	}
+}
+
+void csg_brush_c::ComputePlanes()
+{
+	// for sloped tops and bottom faces, compute the coordinate
+	// which defines each plane (i.e. a point ON the plane).
+
+	if (t.slope)
+	{
+		// find the vertex with the HIGHEST computed Z value.
+		// the plane position is still unset (at the origin) here.
+
+		unsigned int best_v = 0;
+		double		 best_z = -9e9;
+
+		for (unsigned int i = 0 ; i < verts.size() ; i++)
+		{
+			brush_vert_c *V = verts[i];
+
+			double z = t.slope->CalcZ(V->x, V->y);
+
+			if (z > best_z)
+			{
+				best_v = i;
+				best_z = z;
+			}
+		}
+
+		brush_vert_c *best_vert = verts[best_v];
+
+		t.slope->SetPos(best_vert->x, best_vert->y, t.z);
+	}
+
+	if (b.slope)
+	{
+		// for bottom plane we want the LOWEST computed Z.
+
+		unsigned int best_v = 0;
+		double		 best_z = +9e9;
+
+		for (unsigned int i = 0 ; i < verts.size() ; i++)
+		{
+			brush_vert_c *V = verts[i];
+
+			double z = b.slope->CalcZ(V->x, V->y);
+
+			if (z < best_z)
+			{
+				best_v = i;
+				best_z = z;
+			}
+		}
+
+		brush_vert_c *best_vert = verts[best_v];
+
+		b.slope->SetPos(best_vert->x, best_vert->y, b.z);
 	}
 }
 
@@ -346,7 +369,7 @@ bool csg_entity_c::Match(const char *want_name) const
 class brush_quad_node_c
 {
 public:
-	int lo_x, lo_y, size;  
+	int lo_x, lo_y, size;
 
 	brush_quad_node_c *children[2][2];   // [x][y]
 
@@ -638,7 +661,7 @@ int Grab_Properties(lua_State *L, int stack_pos,
 }
 
 
-static slope_info_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
+static quake_plane_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 {
 	if (stack_pos < 0)
 		stack_pos += lua_gettop(L) + 1;
@@ -648,35 +671,37 @@ static slope_info_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 
 	if (lua_type(L, stack_pos) != LUA_TTABLE)
 	{
-		luaL_argerror(L, stack_pos, "missing table: slope info");
+		luaL_argerror(L, stack_pos, "missing table: slope normal");
 		return NULL; /* NOT REACHED */
 	}
 
-	slope_info_c *P = new slope_info_c();
+	quake_plane_c *P = new quake_plane_c();
 
-	lua_getfield(L, stack_pos, "x1");
-	lua_getfield(L, stack_pos, "y1");
+	lua_getfield(L, stack_pos, "nx");
+	lua_getfield(L, stack_pos, "ny");
+	lua_getfield(L, stack_pos, "nz");
 
-	P->sx = luaL_checknumber(L, -2);
-	P->sy = luaL_checknumber(L, -1);
-
-	lua_pop(L, 2);
-
-	lua_getfield(L, stack_pos, "x2");
-	lua_getfield(L, stack_pos, "y2");
-	lua_getfield(L, stack_pos, "dz");
-
-	P->ex = luaL_checknumber(L, -3);
-	P->ey = luaL_checknumber(L, -2);
-	P->dz = luaL_checknumber(L, -1);
+	P->nx = luaL_checknumber(L, -3);
+	P->ny = luaL_checknumber(L, -2);
+	P->nz = luaL_checknumber(L, -1);
 
 	lua_pop(L, 3);
 
-	// floor slopes should have negative dz, and ceilings positive
-	if ((is_ceil ? 1 : -1) * P->dz < 0)
+	// NOTE: x/y/z are set later in ComputePlanes()
+
+	P->Normalize();
+
+	// too steep?
+	if (fabs(P->nz) < 0.1)
 	{
-		// P->Reverse();
-		luaL_error(L, "bad slope: dz should be <0 for floor, >0 for ceiling");
+		luaL_error(L, "bad slope: too steep!");
+		return NULL; /* NOT REACHED */
+	}
+
+	// floor slopes should have negative dz, and ceilings positive
+	if ((is_ceil ? 1 : -1) * P->nz > 0)
+	{
+		luaL_error(L, "bad slope: nz should be >0 for floor, <0 for ceiling");
 		return NULL; /* NOT REACHED */
 	}
 
@@ -805,18 +830,13 @@ static int Grab_CoordList(lua_State *L, int stack_pos, csg_brush_c *B)
 		index++;
 	}
 
+	B->ComputeBBox();
+	B->ComputePlanes();
+
 	const char *err_msg = B->Validate();
 
 	if (err_msg)
 		return luaL_error(L, "%s", err_msg);
-
-	B->ComputeBBox();
-
-	if ((B->max_x - B->min_x) < EPSILON)
-		return luaL_error(L, "Line loop has zero width!");
-
-	if ((B->max_y - B->min_y) < EPSILON)
-		return luaL_error(L, "Line loop has zero height!");
 
 	return 0;
 }
@@ -914,7 +934,7 @@ int CSG_property(lua_State *L)
 // the rest of the fields are for the FACE, and can be:
 //
 //    tex  :  texture name
-//    
+//
 //    x_offset  BLAH  FIXME
 //    y_offset
 //

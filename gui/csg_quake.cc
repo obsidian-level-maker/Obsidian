@@ -251,6 +251,14 @@ public:
 };
 
 
+void quake_plane_c::SetPos(double ax, double ay, double az)
+{
+	x = ax;
+	y = ay;
+	z = az;
+}
+
+
 double quake_plane_c::CalcDist() const
 {
 	return (x * (double)nx) + (y * (double)ny) + (z * (double)nz);
@@ -314,6 +322,26 @@ int quake_plane_c::BrushSide(csg_brush_c *B, float epsilon) const
 	if (max_d <  epsilon) return -1;
 
 	return 0;
+}
+
+
+double quake_plane_c::CalcZ(double ax, double ay) const
+{
+	if (fabs(nz) < 0.01)
+		return 0;
+
+	if (fabs(nz) > 0.999)
+		return z;
+
+	// solve the plane equation:
+	//    nx*(ax-x) + ny*(ay-y) + nz*(az-z) = 0
+
+	double tx = (double)nx * (ax - (double)x);
+	double ty = (double)ny * (ay - (double)y);
+
+	double dz = (tx + ty) / (double)nz;
+
+	return (double)z - dz;
 }
 
 
