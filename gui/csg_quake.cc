@@ -483,8 +483,7 @@ static void CreateBrushes(quake_group_c & group)
 			if (B->bflags & BRU_IF_Seen)
 				continue;
 
-			if (B->bkind == BKIND_Solid || B->bkind == BKIND_Clip ||
-					B->bkind == BKIND_Sky)
+			if (B->bkind == BKIND_Solid || B->bkind == BKIND_Sky)
 			{
 				group.AddBrush(R->brushes[k]);
 
@@ -530,7 +529,7 @@ typedef struct
 intersect_t;
 
 
-struct intersect_qdist_Compare
+struct intersect_qdist_Cmp
 {
 	inline bool operator() (const intersect_t& A, const intersect_t& B) const
 	{
@@ -718,7 +717,7 @@ static void CreateMiniSides(std::vector<intersect_t> & cuts,
                             const quake_side_c *part,
                             quake_group_c & front, quake_group_c & back)
 {
-	std::sort(cuts.begin(), cuts.end(), intersect_qdist_Compare());
+	std::sort(cuts.begin(), cuts.end(), intersect_qdist_Cmp());
 
 	///   DumpIntersections(cuts, "Intersection List");
 
@@ -1040,12 +1039,12 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
 }
 
 
-struct floor_angle_Compare
+struct floor_angle_Cmp
 {
 	double *angles;
 
-	floor_angle_Compare(double *p) : angles(p) { }
-	~floor_angle_Compare() { }
+	 floor_angle_Cmp(double *p) : angles(p) { }
+	~floor_angle_Cmp() { }
 
 	inline bool operator() (int A, int B) const
 	{
@@ -1058,7 +1057,12 @@ static void CollectWinding(quake_group_c & group,
                            std::vector<quake_vertex_c> & winding,
                            quake_bbox_c & bbox)
 {
-	// result is CLOCKWISE when looking DOWN at the winding
+	// create a winding for the current leaf, which serves as a
+	// template for the floor and ceiling faces in the leaf.
+	// only XY coordinates are handled here.
+	//
+	// result is CLOCKWISE when looking DOWN at the winding.
+	//
 
 	int v_num = (int)group.sides.size();
 
@@ -1081,8 +1085,7 @@ static void CollectWinding(quake_group_c & group,
 		mapping[a] = a;
 	}
 
-	std::sort(mapping.begin(), mapping.end(),
-			floor_angle_Compare(&angles[0]));
+	std::sort(mapping.begin(), mapping.end(), floor_angle_Cmp(&angles[0]));
 
 	// grab sorted vertices
 
@@ -1111,9 +1114,9 @@ void quake_face_c::AddVert(float x, float y, float z)
 }
 
 
-void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
-                               const quake_plane_c *plane,
-                               bool reverse)
+void quake_face_c::StoreWinding(const std::vector<quake_vertex_c>& winding,
+                                const quake_plane_c *plane,
+                                bool reverse)
 {
 	for (unsigned int i = 0 ; i < winding.size() ; i++)
 	{
@@ -1121,7 +1124,7 @@ void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
 
 		const quake_vertex_c& V = winding[k];
 
-		double z = plane->z;  // TODO: support slopes
+		double z = plane->CalcZ(V.x, V.y);
 
 		AddVert(V.x, V.y, z);
 	}
@@ -1171,7 +1174,7 @@ float quake_face_c::Calc_S(float x, float y, float z) const
 	return s[0] * x + s[1] * y + s[2] * z + s[3];
 }
 
-float quake_face_c::Calc_S(quake_vertex_c *V) const
+float quake_face_c::Calc_S(const quake_vertex_c *V) const
 {
 	return s[0] * V->x + s[1] * V->y + s[2] * V->z + s[3];
 }
@@ -1182,7 +1185,7 @@ float quake_face_c::Calc_T(float x, float y, float z) const
 	return t[0] * x + t[1] * y + t[2] * z + t[3];
 }
 
-float quake_face_c::Calc_T(quake_vertex_c *V) const
+float quake_face_c::Calc_T(const quake_vertex_c *V) const
 {
 	return t[0] * V->x + t[1] * V->y + t[2] * V->z + t[3];
 }
@@ -1196,10 +1199,8 @@ void quake_face_c::ST_Bounds(double *min_s, double *min_t,
 
 	for (unsigned int i = 0 ; i < verts.size() ; i++)
 	{
-		const quake_vertex_c& V = verts[i];
-
-		double ss = s[0] * V.x + s[1] * V.y + s[2] * V.z + s[3];
-		double tt = t[0] * V.x + t[1] * V.y + t[2] * V.z + t[3];
+		double ss = Calc_S(&verts[i]);
+		double tt = Calc_T(&verts[i]);
 
 		*min_s = MIN(*min_s, ss);  *max_s = MAX(*max_s, ss);
 		*min_t = MIN(*min_t, tt);  *max_t = MAX(*max_t, tt);
@@ -1246,37 +1247,41 @@ void quake_face_c::GetNormal(float *vec3) const
 }
 
 
-static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
-{
-	// FIXME: support slopes !!
-
-	plane->x  = plane->y  = 0;
-	plane->nx = plane->ny = 0;
-
-	plane->z  = is_ceil ? G->top->b.z : G->bottom->t.z;
-	plane->nz = +1;
-
-	plane->Normalize();
-}
-
-
-static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
+static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
                             const gap_c *G, bool is_ceil,
                             std::vector<quake_vertex_c> & winding)
 {
-	FlatToPlane(&node->plane, G, is_ceil);
+	// get node splitting plane
+
+	csg_brush_c *B = is_ceil ? G->top : G->bottom;
+
+	brush_plane_c& BP = is_ceil ? B->b : B->t;
+
+	if (BP.slope)
+	{
+		node->plane = *BP.slope;
+
+		if (node->plane.nz < 0)
+			node->plane.Flip();
+	}
+	else
+	{
+		node->plane.x  = node->plane.y  = 0;
+		node->plane.nx = node->plane.ny = 0;
+
+		node->plane.z  = BP.z;
+		node->plane.nz = +1;
+	}
 
 	quake_face_c *F = new quake_face_c;
 
 	F->node_side = is_ceil ? 1 : 0;
 
-	F->CopyWinding(winding, &node->plane, is_ceil);
+	F->StoreWinding(winding, &node->plane, is_ceil);
 
-	csg_property_set_c *face_props = is_ceil ? &G->top->b.face : &G->bottom->t.face;
+	F->texture = BP.face.getStr("tex", "missing");
 
-	F->texture = face_props->getStr("tex", "missing");
-
-	if ((is_ceil ? G->top : G->bottom) ->bkind == BKIND_Sky)
+	if (B->bkind == BKIND_Sky)
 		F->flags |= FACE_F_Sky;
 
 	F->SetupMatrix(&node->plane);
@@ -1288,6 +1293,7 @@ static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
 }
 
 
+// FIXME : just re-use the above function!!
 static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
                              csg_brush_c *B, bool is_ceil,
                              std::vector<quake_vertex_c> & winding)
@@ -1302,7 +1308,7 @@ static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
 	F->node_side = is_ceil ? 1 : 0;
 	F->flags |= FACE_F_Liquid;
 
-	F->CopyWinding(winding, &node->plane, is_ceil);
+	F->StoreWinding(winding, &node->plane, is_ceil);
 
 	csg_property_set_c *face_props = &B->t.face;
 
@@ -1614,12 +1620,42 @@ static quake_node_c * Solid_Node(quake_group_c & group)
 }
 
 
-static quake_node_c * CreateLeaf(region_c * R, unsigned int g /* gap */,
+static int GapForLiquid(region_c * R)
+{
+	// returns gap number * 2, plus 1 if the gap is completely
+	// filled by the liquid (i.e. the surface is eaten by the
+	// solid area above the gap).
+	//
+	// returns -1 if no liquid, or surface is below lowest floor.
+	//
+	if (R->liquid)
+	{
+		for (int g = (int)R->gaps.size()-1 ; g >= 0 ; g--)
+		{
+			gap_c *gap = R->gaps[g];
+
+			// FIXME : for sloped solids and sloped liquids
+
+			if (R->liquid->t.z > gap->top->b.z - 1)
+				return g*2 + 1;
+
+			if (R->liquid->t.z > gap->bottom->t.z + 1)
+				return g*2;
+		}
+	}
+
+	return -1;
+}
+
+
+static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
                                  quake_group_c & group,
                                  std::vector<quake_vertex_c> & winding,
-                                 quake_bbox_c & bbox, qCluster_c *cluster,
-                                 csg_brush_c *liquid,
-                                 quake_node_c * prev_N, quake_leaf_c * prev_L)
+                                 quake_bbox_c & bbox,
+								 qCluster_c *cluster,
+                                 quake_node_c * prev_N,
+								 quake_leaf_c * prev_L,
+								 int liq_gap)
 {
 	gap_c *gap = R->gaps[g];
 
@@ -1635,70 +1671,77 @@ static quake_node_c * CreateLeaf(region_c * R, unsigned int g /* gap */,
 	quake_node_c *F_node = new quake_node_c;
 	quake_node_c *C_node = new quake_node_c;
 
-	CreateFloorFace(F_node, leaf, gap, false, winding);
-	CreateFloorFace(C_node, leaf, gap, true,  winding);
-
-	// copy bbox and update Z (with a hack for slopes)
-
+	// copy XY bbox and determine Z coord
 	leaf->bbox = bbox;
 
 	leaf->bbox.mins[2] = gap->bottom->t.z;
 	leaf->bbox.maxs[2] = gap->top->b.z;
 
+	// TODO : this is hacky, determine proper Z value
 	if (gap->bottom->t.slope) leaf->bbox.mins[2] = gap->bottom->b.z;
 	if (gap->top   ->b.slope) leaf->bbox.maxs[2] = gap->top->t.z;
 
 	// --- handle liquids ---
 
-	quake_node_c *W_node = NULL;
-	quake_leaf_c *W_leaf = NULL;
+	quake_node_c *L_node = NULL;
+	quake_leaf_c *L_leaf = NULL;
 
-	if (liquid && leaf->bbox.maxs[2] < liquid->t.z + 0.1)
+	if (liq_gap >= 0)
 	{
-		// the liquid covers the whole gap : don't need an extra leaf/node
-		leaf->medium = ParseLiquidMedium(&liquid->props);
+		int medium = ParseLiquidMedium(&R->liquid->props);
 
-		if (qk_game >= 2)
-			leaf->AddSolid(liquid);
+		if (g*2 < liq_gap || g*2+1 == liq_gap)
+		{
+			// the liquid covers the whole gap : don't need an extra leaf/node
+			leaf->medium = medium;
 
-		cluster->MarkAmbient(AMBIENT_WATER);
+			if (qk_game >= 2)
+				leaf->AddSolid(R->liquid);
+
+			cluster->MarkAmbient(AMBIENT_WATER);
+		}
+		else if (g*2 == liq_gap)
+		{
+			// this liquid surface lies within this gap
+			// (above the floor and below the ceiling)
+
+			// FIXME: share faces between the AIR leaf and LIQUID leaf
+
+			L_node = new quake_node_c;
+			L_leaf = new quake_leaf_c(medium);
+
+			L_leaf->bbox = leaf->bbox;
+
+			if (qk_game >= 2)
+				L_leaf->AddSolid(R->liquid);
+
+			cluster->AddLeaf(L_leaf);
+			cluster->MarkAmbient(AMBIENT_WATER);
+
+			CreateLiquidFace(L_node,   leaf, R->liquid, false, winding);
+			CreateLiquidFace(L_node, L_leaf, R->liquid, true,  winding);
+		}
 	}
-	else if (liquid && liquid->t.z > leaf->bbox.mins[2] + 0.1)
-	{
-		// TODO: 1. should call CreateWallFaces() for each leaf
-		//       2. should move solid floor face into W_leaf
 
-		int medium = ParseLiquidMedium(&liquid->props);
+	FloorOrCeilFace(C_node, leaf, gap, true,  winding);
+	FloorOrCeilFace(F_node, L_leaf ? L_leaf : leaf, gap, false, winding);
 
-		W_node = new quake_node_c;
-		W_leaf = new quake_leaf_c(medium);
+	// link nodes together
 
-		W_leaf->bbox = leaf->bbox;
-
-		if (qk_game >= 2)
-			W_leaf->AddSolid(liquid);
-
-		cluster->AddLeaf(W_leaf);
-		cluster->MarkAmbient(AMBIENT_WATER);
-
-		CreateLiquidFace(W_node,   leaf, liquid, false, winding);
-		CreateLiquidFace(W_node, W_leaf, liquid, true,  winding);
-	}
-
-	// floor and ceiling node planes both face upwards
+	// Note that floor and ceiling node planes always face upwards (nz > 0)
 
 	C_node->front_N = prev_N;
 	C_node->front_L = prev_L;
 
-	F_node->front_N = W_node ? W_node : C_node;
+	F_node->front_N = L_node ? L_node : C_node;
 
 	C_node->back_L = leaf;
 	F_node->back_L = Solid_Leaf(R, g, 0, group);
 
-	if (W_node)
+	if (L_node)
 	{
-		W_node->front_N = C_node;
-		W_node->back_L  = W_leaf;
+		L_node->front_N = C_node;
+		L_node->back_L  = L_leaf;
 	}
 
 	return F_node;
@@ -1712,17 +1755,19 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 	SYS_ASSERT(R);
 
 	// THIS SHOULD NOT HAPPEN -- but handle it just in case
-	if (R->gaps.size() == 0 or group.sides.size() < 3)
+	if (R->gaps.size() == 0 || group.sides.size() < 3)
 	{
-		DebugPrintf("WARNING: bad group at Partition_Z\n");
-
+		LogPrintf("WARNING: bad group at Partition_Z\n");
 		return Solid_Node(group);
 	}
 
 	SYS_ASSERT(R->gaps.size() > 0);
 
-	quake_bbox_c bbox;
+	// if region has a liquid, find the gap containing it
+	int liq_gap = GapForLiquid(R);
 
+	// create the bbox and vertex winding, 2D only
+	quake_bbox_c bbox;
 	std::vector<quake_vertex_c> winding;
 
 	CollectWinding(group, winding, bbox);
@@ -1732,8 +1777,7 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 
 	for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
 	{
-		cur_node = CreateLeaf(R, i, group, winding, bbox,
-				cluster, R->liquid, cur_node, cur_leaf);
+		cur_node = CreateLeaf(R, i, group, winding, bbox, cluster, cur_node, cur_leaf, liq_gap);
 		cur_leaf = NULL;
 	}
 

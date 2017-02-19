@@ -164,8 +164,8 @@ public:
 
 	void AddVert(float x, float y, float z);
 
-	void CopyWinding(const std::vector<quake_vertex_c> winding,
-					 const quake_plane_c *plane, bool reverse);
+	void StoreWinding(const std::vector<quake_vertex_c>& winding,
+					  const quake_plane_c *plane, bool reverse);
 
 	void SetupMatrix(const quake_plane_c *plane);
 
@@ -174,8 +174,8 @@ public:
 	float Calc_S(float x, float y, float z) const;
 	float Calc_T(float x, float y, float z) const;
 
-	float Calc_S(quake_vertex_c *V) const;
-	float Calc_T(quake_vertex_c *V) const;
+	float Calc_S(const quake_vertex_c *V) const;
+	float Calc_T(const quake_vertex_c *V) const;
 
 	void ST_Bounds(double *min_s, double *min_t,
 				   double *max_s, double *max_t) const;

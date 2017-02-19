@@ -150,6 +150,21 @@ static void DoAddBrushPlane(int *planes,
 }
 
 
+static void DoAddBrushPlane(int *planes, const brush_plane_c& BP, float nz)
+{
+	if (BP.slope)
+	{
+		DoAddBrushPlane(planes,
+			BP.slope->x,  BP.slope->y,  BP.slope->z,
+			BP.slope->nx, BP.slope->ny, BP.slope->nz);
+	}
+	else
+	{
+		DoAddBrushPlane(planes,  0, 0, BP.z,  0, 0, nz);
+	}
+}
+
+
 static void DoWriteBrushSide(int plane, int shader)
 {
 	dbrushside3_t side;
@@ -210,11 +225,12 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	// add all the brush planes
 
 	// top
-	DoAddBrushPlane(planes, 0, 0, A->t.z,  0,0,+1);
+	DoAddBrushPlane(planes, A->t, +1);
 
 	// bottom
-	DoAddBrushPlane(planes, 0, 0, A->b.z,  0,0,-1);
+	DoAddBrushPlane(planes, A->b, -1);
 
+	// sides
 	for (unsigned int k = 0 ; k < A->verts.size() ; k++)
 	{
 		brush_vert_c *v1 = A->verts[k];
@@ -787,16 +803,13 @@ static void Q3_WriteSurface(quake_face_c *face)
 	int flags = 0;
 
 	if (strstr(texture, "skies/") != NULL)
-		flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP;
+		flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
 
-/* FIXME
-	if (face->flags & FACE_F_Sky)
-		flags |= SURF_SKY;
-	if (face->flags & FACE_F_Liquid)
-		flags |= SURF_WARP | SURF_TRANS66;
-*/
+	else if (strstr(texture, "liquids/") != NULL)
+		flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
 
-	int contents = 1;  // FIXME !!
+	// FIXME
+	int contents = CONTENTS_SOLID;
 
 	raw_surf.shaderNum = Q3_AddShader(texture, flags, contents);
 
@@ -1399,8 +1412,8 @@ static void Q3_CreateBSPFile(const char *name)
 
 	// standard shaders (for collision brushes)
 	Q3_AddShader("common/solid", 0, CONTENTS_SOLID);
-	Q3_AddShader("common/clip",  SURF_NONSOLID | SURF_NODRAW | SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP, CONTENTS_PLAYERCLIP);
-	Q3_AddShader("common/sky",   SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP, CONTENTS_SOLID); 
+	Q3_AddShader("common/clip",  SURF_NONSOLID | SURF_NODRAW | SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_PLAYERCLIP);
+	Q3_AddShader("common/sky",   SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_SOLID);
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
