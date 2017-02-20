@@ -1293,7 +1293,7 @@ static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
 }
 
 
-// FIXME : just re-use the above function!!
+// FIXME : can we re-use the above function??
 static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
                              csg_brush_c *B, bool is_ceil,
                              std::vector<quake_vertex_c> & winding)
@@ -1370,7 +1370,7 @@ static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
 }
 
 
-static void CreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
+static void DivideWallFace(quake_node_c *node, quake_leaf_c *leaf,
                            quake_side_c *S, brush_vert_c *bvert,
                            float z1, float z2)
 {
@@ -1399,87 +1399,88 @@ static void CreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
 
 static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
-                            gap_c *G)
+                            quake_side_c *S, gap_c *G)
 {
 	float f1 = G->bottom->t.z;
 	float c1 = G->top   ->b.z;
 
-	for (unsigned int i = 0 ; i < group.sides.size() ; i++)
+
+	SYS_ASSERT(S->on_node);
+
+	if (! S->snag)  // "mini sides" never have faces
+		return;
+
+	SYS_ASSERT(S->node_side >= 0);
+
+
+	// one-sided walls are the easiest to handle
+
+	if (! S->TwoSided())
 	{
-		quake_side_c *S = group.sides[i];
+		brush_vert_c *bvert = NULL;
 
-		SYS_ASSERT(S->on_node);
+		// Note: the brush sides we are interested in are on the OPPOSITE
+		//       side of the snag, since regions are created from *inward*
+		//       facing snags, but brush sides face outward.
+		if (S->snag->partner)
+			bvert = S->snag->partner->FindOneSidedVert((f1 + c1) / 2.0);
 
-		if (! S->snag)  // "mini sides" never have faces
-			continue;
+		// fallback to something safe
+		if (! bvert)
+			bvert = G->bottom->verts[0];
 
-		SYS_ASSERT(S->node_side >= 0);
+		DivideWallFace(S->on_node, leaf, S, bvert, f1, c1);
+		return;
+	}
 
-		if (S->TwoSided())
+
+	// two sided : check for which solid areas touch this gap
+
+	region_c *back = S->snag->partner->region;
+
+	unsigned int numgaps = back->gaps.size();
+
+	// k is not really a gap number here, but the solids in-between
+	for (unsigned int k = 0 ; k <= numgaps ; k++)
+	{
+		csg_brush_c *B;
+		float bz, tz;
+
+		if (k < numgaps)
 		{
-			region_c *back = S->snag->partner->region;
+			B = back->gaps[k]->bottom;
 
-			unsigned int numgaps = back->gaps.size();
-
-			// k is not really a gap number here, but the solids in-between
-			for (unsigned int k = 0 ; k <= numgaps ; k++)
-			{
-				csg_brush_c *B;
-				float bz, tz;
-
-				if (k < numgaps)
-				{
-					B = back->gaps[k]->bottom;
-
-					tz = B->t.z;
-					bz = (k == 0) ? -EXTREME_H : back->gaps[k-1]->top->b.z;
-				}
-				else
-				{
-					B = back->gaps[k-1]->top;
-
-					bz = B->b.z;
-					tz = EXTREME_H;
-				}
-
-				if (tz < f1 + Z_EPSILON) continue;
-				if (bz > c1 - Z_EPSILON) break;
-
-				bz = MAX(bz, f1);
-				tz = MIN(tz, c1);
-
-				brush_vert_c *bvert = NULL;
-
-				if (S->snag->partner)
-#if 0
-					bvert = S->snag->partner->FindBrushVert(B);
-#else
-				bvert = S->snag->partner->FindOneSidedVert((bz + tz) / 2.0);
-#endif
-
-				// fallback to something safe
-				if (! bvert)
-					bvert = B->verts[0];
-
-				CreateWallFace(S->on_node, leaf, S, bvert, bz, tz);
-			}
+			tz = B->t.z;
+			bz = (k == 0) ? -EXTREME_H : back->gaps[k-1]->top->b.z;
 		}
 		else
 		{
-			brush_vert_c *bvert = NULL;
+			B = back->gaps[k-1]->top;
 
-			// Note: the brush sides we are interested in are on the OPPOSITE
-			//       side of the snag, since regions are created from _inward_
-			//       facing snags (but brush sides face _outward_).
-			if (S->snag->partner)
-				bvert = S->snag->partner->FindOneSidedVert((f1 + c1) / 2.0);
-
-			// fallback to something safe
-			if (! bvert)
-				bvert = G->bottom->verts[0];
-
-			CreateWallFace(S->on_node, leaf, S, bvert, f1, c1);
+			bz = B->b.z;
+			tz = EXTREME_H;
 		}
+
+		if (tz < f1 + Z_EPSILON) continue;
+		if (bz > c1 - Z_EPSILON) break;
+
+		bz = MAX(bz, f1);
+		tz = MIN(tz, c1);
+
+		brush_vert_c *bvert = NULL;
+
+		if (S->snag->partner)
+#if 0
+			bvert = S->snag->partner->FindBrushVert(B);
+#else
+			bvert = S->snag->partner->FindOneSidedVert((bz + tz) / 2.0);
+#endif
+
+		// fallback to something safe
+		if (! bvert)
+			bvert = B->verts[0];
+
+		DivideWallFace(S->on_node, leaf, S, bvert, bz, tz);
 	}
 }
 
@@ -1663,10 +1664,11 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 
 	cluster->AddLeaf(leaf);
 
-	if (gap->top->bkind == BKIND_Sky)
-		cluster->MarkAmbient(AMBIENT_SKY);
-
-	CreateWallFaces(group, leaf, gap);
+	// create faces for the walls in this leaf
+	for (unsigned int s = 0 ; s < group.sides.size() ; s++)
+	{
+		CreateWallFaces(group, leaf, group.sides[s], gap);
+	}
 
 	quake_node_c *F_node = new quake_node_c;
 	quake_node_c *C_node = new quake_node_c;
@@ -1705,7 +1707,8 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 			// this liquid surface lies within this gap
 			// (above the floor and below the ceiling)
 
-			// FIXME: share faces between the AIR leaf and LIQUID leaf
+			// TODO: share faces between the AIR leaf and LIQUID leaf
+			// [ but engine will always draw both leafs, so not essential ]
 
 			L_node = new quake_node_c;
 			L_leaf = new quake_leaf_c(medium);
