@@ -784,7 +784,7 @@ static void CheckClusterEdges(quake_group_c & group, int cx, int cy)
 }
 
 
-static int Brush_TestSide(const csg_brush_c *B, const quake_side_c *part) 
+static int Brush_TestSide(const csg_brush_c *B, const quake_side_c *part)
 {
 	bool on_front = false;
 	bool on_back  = false;
@@ -1445,6 +1445,48 @@ static void DivideWallFace(quake_node_c *node, quake_leaf_c *leaf,
 }
 
 
+static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
+						 quake_side_c *S, brush_vert_c *bvert,
+						 double g_Lz1, double g_Lz2, /* gap */
+						 double g_Rz1, double g_Rz2,
+						 double f_Lz1, double f_Lz2, /* face */
+						 double f_Rz1, double f_Rz2)
+{
+	// ensure the face is sane  [ triangles are Ok ]
+	if ((f_Lz1 > f_Lz2 - Z_EPSILON) && (f_Rz1 > f_Rz2 - Z_EPSILON))
+		return;
+
+	if (f_Lz1 > f_Lz2) f_Lz1 = f_Lz2 = (f_Lz1 + f_Lz2) * 0.5;
+	if (f_Rz1 > f_Rz2) f_Rz1 = f_Rz2 = (f_Rz1 + f_Rz2) * 0.5;
+
+	// trivial reject
+	if ((f_Lz1 > g_Lz2 - Z_EPSILON) && (f_Rz1 > g_Rz2 - Z_EPSILON)) return;
+	if ((f_Lz2 < g_Lz1 + Z_EPSILON) && (f_Rz2 < g_Rz1 + Z_EPSILON)) return;
+
+	// subdivide faces which are too tall  [ recursively... ]
+	float len1 = MIN(f_Lz2, g_Lz2) - MAX(f_Lz1, g_Lz1);
+	float len2 = MIN(f_Rz2, g_Rz2) - MAX(f_Rz1, g_Rz1);
+
+	if (MAX(len1, len2) > FACE_MAX_SIZE)
+	{
+		double f_Lmz = (f_Lz1 + f_Lz2) * 0.5;
+		double f_Rmz = (f_Rz1 + f_Rz2) * 0.5;
+
+		ClipWallFace(node, leaf, S, bvert,
+					 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
+					 f_Lz1, f_Lmz, f_Rz1, f_Rmz);
+
+		ClipWallFace(node, leaf, S, bvert,
+					 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
+					 f_Lmz, f_Lz2, f_Rmz, f_Rz2);
+		return;
+	}
+
+
+	// FIXME !!!!
+}
+
+
 static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
                             quake_side_c *S, gap_c *G)
 {
@@ -1456,17 +1498,21 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 	SYS_ASSERT(S->node_side >= 0);
 
 
-	double L_bz = G->bottom->t.CalcZ(S->x1, S->y1);
-	double L_tz = G->   top->b.CalcZ(S->x1, S->y1);
+	double g_Lz1 = G->bottom->t.CalcZ(S->x1, S->y1);
+	double g_Lz2 = G->   top->b.CalcZ(S->x1, S->y1);
 
-	double R_bz = G->bottom->t.CalcZ(S->x2, S->y2);
-	double R_tz = G->   top->b.CalcZ(S->x2, S->y2);
+	double g_Rz1 = G->bottom->t.CalcZ(S->x2, S->y2);
+	double g_Rz2 = G->   top->b.CalcZ(S->x2, S->y2);
 
-	double mid_z = (L_bz + L_tz + R_bz + R_tz) * 0.25;
+	// ensure the gap is sane
+	if ((g_Lz1 > g_Lz2 - Z_EPSILON) && (g_Rz1 > g_Rz2 - Z_EPSILON))
+		return;
 
-// REMOVE THESE
-float f1 = G->bottom->t.z;
-float c1 = G->top   ->b.z;
+	if (g_Lz1 > g_Lz2) g_Lz1 = g_Lz2 = (g_Lz1 + g_Lz2) * 0.5;
+	if (g_Rz1 > g_Rz2) g_Rz1 = g_Rz2 = (g_Rz1 + g_Rz2) * 0.5;
+
+
+	double mid_z = (g_Lz1 + g_Lz2 + g_Rz1 + g_Rz2) * 0.25;
 
 
 	// one-sided walls are the easiest to handle
@@ -1482,10 +1528,13 @@ float c1 = G->top   ->b.z;
 			bvert = S->snag->partner->FindOneSidedVert(mid_z);
 
 		// fallback to something safe
+		// TODO : pick brushvert with closest normal to snag
 		if (! bvert)
 			bvert = G->bottom->verts[0];
 
-		DivideWallFace(S->on_node, leaf, S, bvert, L_bz, L_tz, R_bz, R_tz);
+		ClipWallFace(S->on_node, leaf, S, bvert,
+					 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
+					 g_Lz1, g_Lz2, g_Rz1, g_Rz2);
 		return;
 	}
 
@@ -1501,30 +1550,16 @@ float c1 = G->top   ->b.z;
 	// k is not really a gap number here, but the solids in-between
 	for (unsigned int k = 0 ; k <= numgaps ; k++)
 	{
+		// the side of this brush will supply the face
+		// [ we do not support a group of stacked brushes ]
 		csg_brush_c *B;
-		float bz, tz;
 
 		if (k < numgaps)
-		{
 			B = back->gaps[k]->bottom;
-
-			tz = B->t.z;
-			bz = (k == 0) ? -EXTREME_H : back->gaps[k-1]->top->b.z;
-		}
 		else
-		{
 			B = back->gaps[k-1]->top;
 
-			bz = B->b.z;
-			tz = EXTREME_H;
-		}
-
-		if (tz < L_bz + Z_EPSILON) continue;
-		if (bz > L_tz - Z_EPSILON) break;
-
-		bz = MAX(bz, f1);
-		tz = MIN(tz, c1);
-
+		// get the brush's side
 		brush_vert_c *bvert = S->snag->partner->FindBrushVert(B);
 
 		// fallback to something safe
@@ -1532,7 +1567,16 @@ float c1 = G->top   ->b.z;
 		if (! bvert)
 			bvert = B->verts[0];
 
-//FIXME !!!!		DivideWallFace(S->on_node, leaf, S, bvert, L_bz, L_tz, R_bz, R_tz);
+		// get the quad
+		double f_Lz1 = B->b.CalcZ(S->x1, S->y1);
+		double f_Lz2 = B->t.CalcZ(S->x1, S->y1);
+
+		double f_Rz1 = B->b.CalcZ(S->x2, S->y2);
+		double f_Rz2 = B->t.CalcZ(S->x2, S->y2);
+
+		ClipWallFace(S->on_node, leaf, S, bvert,
+					 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
+					 f_Lz1, f_Lz2, f_Rz1, f_Rz2);
 	}
 }
 
@@ -1904,7 +1948,7 @@ static quake_node_c * Partition_Group(quake_group_c & group,
 				leaf_to_string(new_node-> back_L, new_node-> back_N));
 #endif
 
-		// input group has been consumed now 
+		// input group has been consumed now
 
 		return new_node;
 	}
