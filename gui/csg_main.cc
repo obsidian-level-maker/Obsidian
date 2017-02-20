@@ -140,6 +140,15 @@ brush_plane_c::~brush_plane_c()
 }
 
 
+double brush_plane_c::CalcZ(double ax, double ay) const
+{
+	if (slope)
+		return slope->CalcZ(ax, ay);
+
+	return z;
+}
+
+
 csg_brush_c::csg_brush_c() :
 	bkind(BKIND_Solid), bflags(0),
 	props(), verts(),

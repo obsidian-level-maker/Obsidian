@@ -112,6 +112,8 @@ public:
 	brush_plane_c(const brush_plane_c& other);
 
 	~brush_plane_c();
+
+	double CalcZ(double ax, double ay) const;
 };
 
 
@@ -159,7 +161,7 @@ public:
 	double max_x, max_y;
 
 public:
-	csg_brush_c();
+	 csg_brush_c();
 	~csg_brush_c();
 
 	// copy constructor

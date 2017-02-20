@@ -1247,6 +1247,20 @@ void quake_face_c::GetNormal(float *vec3) const
 }
 
 
+static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
+					  quake_node_c *node, quake_leaf_c *leaf)
+{
+	F->texture = props->getStr("tex", "missing");
+
+	F->SetupMatrix(&node->plane);
+
+	node->AddFace(F);
+	leaf->AddFace(F);
+
+	qk_all_faces.push_back(F);
+}
+
+
 static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
                             const gap_c *G, bool is_ceil,
                             std::vector<quake_vertex_c> & winding)
@@ -1279,21 +1293,14 @@ static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
 
 	F->StoreWinding(winding, &node->plane, is_ceil);
 
-	F->texture = BP.face.getStr("tex", "missing");
-
 	if (B->bkind == BKIND_Sky)
 		F->flags |= FACE_F_Sky;
 
-	F->SetupMatrix(&node->plane);
-
-	node->AddFace(F);
-	leaf->AddFace(F);
-
-	qk_all_faces.push_back(F);
+	DoAddFace(F, &BP.face, node, leaf);
 }
 
 
-// FIXME : can we re-use the above function??
+// FIXME : re-use the above function
 static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
                              csg_brush_c *B, bool is_ceil,
                              std::vector<quake_vertex_c> & winding)
@@ -1306,94 +1313,134 @@ static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
 	quake_face_c *F = new quake_face_c;
 
 	F->node_side = is_ceil ? 1 : 0;
+
 	F->flags |= FACE_F_Liquid;
 
 	F->StoreWinding(winding, &node->plane, is_ceil);
 
-	csg_property_set_c *face_props = &B->t.face;
-
-	F->texture = face_props->getStr("tex", "missing");
-
-	F->SetupMatrix(&node->plane);
-
-	node->AddFace(F);
-	leaf->AddFace(F);
-
-	qk_all_faces.push_back(F);
+	DoAddFace(F, &B->t.face, node, leaf);
 }
 
 
-static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
-                             quake_side_c *S, brush_vert_c *bvert,
-                             float z1, float z2)
+static void WallFace_Quad(quake_node_c *node, quake_leaf_c *leaf,
+						  quake_side_c *S, brush_vert_c *bvert,
+						  double L_bz, double L_tz,
+						  double R_bz, double R_tz, int tri_side)
 {
 	quake_face_c *F = new quake_face_c();
 
 	F->node_side = S->node_side;
 
-	F->AddVert(S->x1, S->y1, z1);
-	F->AddVert(S->x1, S->y1, z2);
-	F->AddVert(S->x2, S->y2, z2);
-	F->AddVert(S->x2, S->y2, z1);
+	F->AddVert(S->x1, S->y1, L_bz);
 
-	csg_property_set_c *face_props = &bvert->face;
+	if (tri_side >= 0)
+		F->AddVert(S->x1, S->y1, L_tz);
 
-	F->texture = face_props->getStr("tex", "");
+	F->AddVert(S->x2, S->y2, R_tz);
 
-	if (F->texture.empty())
-		F->texture = bvert->parent->t.face.getStr("tex", "missing");
+	if (tri_side <= 0)
+		F->AddVert(S->x2, S->y2, R_bz);
+
+	SYS_ASSERT(F->verts.size() >= 3);
 
 	if (bvert->parent->bkind == BKIND_Sky)
 		F->flags |= FACE_F_Sky;
 
-	F->SetupMatrix(&node->plane);
+	DoAddFace(F, &bvert->face, node, leaf);
+}
 
-	// FIXME: temporary hack for aligned pictures
-	if (face_props->getInt("hack_align"))
-	{
-		if (fabs(node->plane.nx) > 0.5)
-		{
-			F->s[3] = - bvert->y;
-		}
-		else
-		{
-			F->s[3] = - bvert->x;
-		}
 
-		F->t[3] = bvert->parent->t.z;
-	}
+static void WallFace_Triangle(quake_node_c *node, quake_leaf_c *leaf,
+							  quake_side_c *S, brush_vert_c *bvert,
+							  double x1, double y1, double z1,
+							  double x2, double y2, double z2,
+							  double x3, double y3, double z3)
+{
+	quake_face_c *F = new quake_face_c();
 
-	node->AddFace(F);
-	leaf->AddFace(F);
+	F->node_side = S->node_side;
 
-	qk_all_faces.push_back(F);
+	F->AddVert(x1, y1, z1);
+	F->AddVert(x2, y2, z2);
+	F->AddVert(x3, y3, z3);
+
+	if (bvert->parent->bkind == BKIND_Sky)
+		F->flags |= FACE_F_Sky;
+
+	DoAddFace(F, &bvert->face, node, leaf);
 }
 
 
 static void DivideWallFace(quake_node_c *node, quake_leaf_c *leaf,
                            quake_side_c *S, brush_vert_c *bvert,
-                           float z1, float z2)
+                           double L_bz, double L_tz,
+						   double R_bz, double R_tz)
 {
-	SYS_ASSERT(z2 > z1 + Z_EPSILON);
+	int L_state = fabs(L_bz - L_tz) < Z_EPSILON ? 0 : (L_tz < L_bz) ? -1 : +1;
+	int R_state = fabs(R_bz - R_tz) < Z_EPSILON ? 0 : (R_tz < R_bz) ? -1 : +1;
+
+	// face has no volume?
+	if (L_state <= 0 && R_state <= 0)
+		return;
+
+	int tri_side = (L_state == 0) ? -1 : (R_state == 0) ? +1 : 0;
+
+
+	// face is horizontally clipped? (e.g. two opposite slopes back-to-back)
+	// [ we assume that the resulting face is never too tall ]
+
+	if (L_state < 0 || R_state < 0)
+	{
+		// find the cross point along the face
+		double den = (L_tz - L_bz) - (R_tz - R_bz);
+
+		double along = (R_bz - L_bz) / den;
+
+		double cx = S->x1 + (S->x2 - S->x1) * along;
+		double cy = S->y1 + (S->y2 - S->y1) * along;
+		double cz = L_bz  + (L_tz  - L_bz)  * along;
+
+		if (L_state < 0)
+		{
+			WallFace_Triangle(node, leaf, S, bvert,
+							  cx, cy, cz,
+							  S->x2, S->y2, R_tz,
+							  S->x2, S->y2, R_bz);
+		}
+		else
+		{
+			WallFace_Triangle(node, leaf, S, bvert,
+							  cx, cy, cz,
+							  S->x1, S->y1, L_bz,
+							  S->x1, S->y1, L_tz);
+		}
+
+		return;
+	}
 
 	// split faces if too tall
+
 	int pieces = 1;
 
-	while ((z2 - z1) / pieces > FACE_MAX_SIZE)
+	float tallest_edge = MAX(L_tz - L_bz, R_tz - R_bz);
+
+	while (tallest_edge / pieces > FACE_MAX_SIZE)
 		pieces++;
 
 	if (pieces > 1)
 	{
-		for (int i = 0 ; i < pieces ; i++)
-		{
-			DoCreateWallFace(node, leaf, S, bvert,
-					z1 + (z2 - z1) * (i  ) / pieces,
-					z1 + (z2 - z1) * (i+1) / pieces);
-		}
+		WallFace_Quad(node, leaf, S, bvert, L_bz, L_tz, R_bz, R_tz, tri_side);
+		return;
 	}
-	else
+
+	for (int i = 0 ; i < pieces ; i++)
 	{
-		DoCreateWallFace(node, leaf, S, bvert, z1, z2);
+		WallFace_Quad(node, leaf, S, bvert,
+				L_bz + (L_tz - L_bz) * (i  ) / (double)pieces,
+				L_bz + (L_tz - L_bz) * (i+1) / (double)pieces,
+				R_bz + (R_tz - R_bz) * (i  ) / (double)pieces,
+				R_bz + (R_tz - R_bz) * (i+1) / (double)pieces,
+				tri_side);
 	}
 }
 
@@ -1401,16 +1448,25 @@ static void DivideWallFace(quake_node_c *node, quake_leaf_c *leaf,
 static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
                             quake_side_c *S, gap_c *G)
 {
-	float f1 = G->bottom->t.z;
-	float c1 = G->top   ->b.z;
-
-
 	SYS_ASSERT(S->on_node);
 
 	if (! S->snag)  // "mini sides" never have faces
 		return;
 
 	SYS_ASSERT(S->node_side >= 0);
+
+
+	double L_bz = G->bottom->t.CalcZ(S->x1, S->y1);
+	double L_tz = G->   top->b.CalcZ(S->x1, S->y1);
+
+	double R_bz = G->bottom->t.CalcZ(S->x2, S->y2);
+	double R_tz = G->   top->b.CalcZ(S->x2, S->y2);
+
+	double mid_z = (L_bz + L_tz + R_bz + R_tz) * 0.25;
+
+// REMOVE THESE
+float f1 = G->bottom->t.z;
+float c1 = G->top   ->b.z;
 
 
 	// one-sided walls are the easiest to handle
@@ -1423,18 +1479,20 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 		//       side of the snag, since regions are created from *inward*
 		//       facing snags, but brush sides face outward.
 		if (S->snag->partner)
-			bvert = S->snag->partner->FindOneSidedVert((f1 + c1) / 2.0);
+			bvert = S->snag->partner->FindOneSidedVert(mid_z);
 
 		// fallback to something safe
 		if (! bvert)
 			bvert = G->bottom->verts[0];
 
-		DivideWallFace(S->on_node, leaf, S, bvert, f1, c1);
+		DivideWallFace(S->on_node, leaf, S, bvert, L_bz, L_tz, R_bz, R_tz);
 		return;
 	}
 
 
 	// two sided : check for which solid areas touch this gap
+
+	SYS_ASSERT(S->snag->partner);
 
 	region_c *back = S->snag->partner->region;
 
@@ -1461,26 +1519,20 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 			tz = EXTREME_H;
 		}
 
-		if (tz < f1 + Z_EPSILON) continue;
-		if (bz > c1 - Z_EPSILON) break;
+		if (tz < L_bz + Z_EPSILON) continue;
+		if (bz > L_tz - Z_EPSILON) break;
 
 		bz = MAX(bz, f1);
 		tz = MIN(tz, c1);
 
-		brush_vert_c *bvert = NULL;
-
-		if (S->snag->partner)
-#if 0
-			bvert = S->snag->partner->FindBrushVert(B);
-#else
-			bvert = S->snag->partner->FindOneSidedVert((bz + tz) / 2.0);
-#endif
+		brush_vert_c *bvert = S->snag->partner->FindBrushVert(B);
 
 		// fallback to something safe
+		// TODO : pick brushvert with closest normal to snag
 		if (! bvert)
 			bvert = B->verts[0];
 
-		DivideWallFace(S->on_node, leaf, S, bvert, bz, tz);
+//FIXME !!!!		DivideWallFace(S->on_node, leaf, S, bvert, L_bz, L_tz, R_bz, R_tz);
 	}
 }
 
