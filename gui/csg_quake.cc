@@ -1350,98 +1350,40 @@ static void WallFace_Quad(quake_node_c *node, quake_leaf_c *leaf,
 }
 
 
-static void WallFace_Triangle(quake_node_c *node, quake_leaf_c *leaf,
-							  quake_side_c *S, brush_vert_c *bvert,
-							  double x1, double y1, double z1,
-							  double x2, double y2, double z2,
-							  double x3, double y3, double z3)
+static int CheckEdgeIntersect(double g_z1, double g_z2,
+							  double f_z1, double f_z2,
+							  double *along = NULL)
 {
-	quake_face_c *F = new quake_face_c();
+	// returns:  0 if intersects
+	//          +1 if face edge completely above gap edge
+	//          -1 if face edge completely below gap edge
 
-	F->node_side = S->node_side;
+	if ((f_z1 > g_z1 - Z_EPSILON) && (f_z2 > g_z2 - Z_EPSILON))
+		return +1;
 
-	F->AddVert(x1, y1, z1);
-	F->AddVert(x2, y2, z2);
-	F->AddVert(x3, y3, z3);
+	if ((f_z1 < g_z1 + Z_EPSILON) && (f_z2 < g_z2 + Z_EPSILON))
+		return -1;
 
-	if (bvert->parent->bkind == BKIND_Sky)
-		F->flags |= FACE_F_Sky;
+	// find the intersection point
+	if (along)
+	{
+		double den = (g_z2 - g_z1) - (f_z2 - f_z1);
 
-	DoAddFace(F, &bvert->face, node, leaf);
+		*along = (f_z1 - g_z1) / den;
+	}
+
+	return 0;
 }
 
 
-static void DivideWallFace(quake_node_c *node, quake_leaf_c *leaf,
-                           quake_side_c *S, brush_vert_c *bvert,
-                           double L_bz, double L_tz,
-						   double R_bz, double R_tz)
+static void DoAddVertex(quake_face_c *F, quake_side_c *S,
+						double along, double Lz, double Rz)
 {
-	int L_state = fabs(L_bz - L_tz) < Z_EPSILON ? 0 : (L_tz < L_bz) ? -1 : +1;
-	int R_state = fabs(R_bz - R_tz) < Z_EPSILON ? 0 : (R_tz < R_bz) ? -1 : +1;
+	double x = S->x1 + (S->x2 - S->x1) * along;
+	double y = S->y1 + (S->y2 - S->y1) * along;
+	double z =    Lz + (   Rz -    Lz) * along;
 
-	// face has no volume?
-	if (L_state <= 0 && R_state <= 0)
-		return;
-
-	int tri_side = (L_state == 0) ? -1 : (R_state == 0) ? +1 : 0;
-
-
-	// face is horizontally clipped? (e.g. two opposite slopes back-to-back)
-	// [ we assume that the resulting face is never too tall ]
-
-	if (L_state < 0 || R_state < 0)
-	{
-		// find the cross point along the face
-		double den = (L_tz - L_bz) - (R_tz - R_bz);
-
-		double along = (R_bz - L_bz) / den;
-
-		double cx = S->x1 + (S->x2 - S->x1) * along;
-		double cy = S->y1 + (S->y2 - S->y1) * along;
-		double cz = L_bz  + (L_tz  - L_bz)  * along;
-
-		if (L_state < 0)
-		{
-			WallFace_Triangle(node, leaf, S, bvert,
-							  cx, cy, cz,
-							  S->x2, S->y2, R_tz,
-							  S->x2, S->y2, R_bz);
-		}
-		else
-		{
-			WallFace_Triangle(node, leaf, S, bvert,
-							  cx, cy, cz,
-							  S->x1, S->y1, L_bz,
-							  S->x1, S->y1, L_tz);
-		}
-
-		return;
-	}
-
-	// split faces if too tall
-
-	int pieces = 1;
-
-	float tallest_edge = MAX(L_tz - L_bz, R_tz - R_bz);
-
-	while (tallest_edge / pieces > FACE_MAX_SIZE)
-		pieces++;
-
-	if (pieces > 1)
-	{
-		WallFace_Quad(node, leaf, S, bvert, L_bz, L_tz, R_bz, R_tz, tri_side);
-		return;
-	}
-
-	for (int i = 0 ; i < pieces ; i++)
-	{
-		WallFace_Quad(node, leaf, S, bvert,
-				L_bz + (L_tz - L_bz) * (i  ) / (double)pieces,
-				L_bz + (L_tz - L_bz) * (i+1) / (double)pieces,
-				R_bz + (R_tz - R_bz) * (i  ) / (double)pieces,
-				R_bz + (R_tz - R_bz) * (i+1) / (double)pieces,
-				tri_side);
-	}
+	F->AddVert(x, y, z);
 }
 
 
@@ -1458,6 +1400,7 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
 	if (f_Lz1 > f_Lz2) f_Lz1 = f_Lz2 = (f_Lz1 + f_Lz2) * 0.5;
 	if (f_Rz1 > f_Rz2) f_Rz1 = f_Rz2 = (f_Rz1 + f_Rz2) * 0.5;
+
 
 	// trivial reject
 	if ((f_Lz1 > g_Lz2 - Z_EPSILON) && (f_Rz1 > g_Rz2 - Z_EPSILON)) return;
@@ -1483,7 +1426,124 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 	}
 
 
-	// FIXME !!!!
+	// determine relationship of edges
+
+	double a_bb, a_bt, a_tb, a_tt;
+
+	int bb = CheckEdgeIntersect(g_Lz1, g_Rz1, f_Lz1, f_Rz1, &a_bb);
+	int bt = CheckEdgeIntersect(g_Lz1, g_Rz1, f_Lz2, f_Rz2, &a_bt);
+	int tb = CheckEdgeIntersect(g_Lz2, g_Rz2, f_Lz1, f_Rz1, &a_tb);
+	int tt = CheckEdgeIntersect(g_Lz2, g_Rz2, f_Lz2, f_Rz2, &a_tt);
+
+	// full-reject cases  [ checked earlier, but handle it again ]
+	if (bt < 0 || tb > 0)
+		return;
+
+	if (! (bb == 0 || bt == 0 || tb == 0 || tt == 0))
+	{
+		// handle the simple cases (no intersections)
+
+		if (bb < 0)
+		{
+			f_Lz1 = g_Lz1;
+			f_Rz1 = g_Rz1;
+		}
+
+		if (tt > 0)
+		{
+			f_Lz2 = g_Lz2;
+			f_Rz2 = g_Rz2;
+		}
+
+		int tri_side = 0;
+
+		if (fabs(f_Lz1 - f_Lz2) < Z_EPSILON) tri_side = -1;
+		if (fabs(f_Rz1 - f_Rz2) < Z_EPSILON) tri_side = +1;
+
+		WallFace_Quad(node, leaf, S, bvert, f_Lz1, f_Lz2, f_Rz1, f_Rz2, tri_side);
+		return;
+	}
+
+
+	/* full clip! */
+
+	// basic idea is two produce a winding using all the intercept
+	// points (including at corners of the gap), but omit all the
+	// vertices which lie completely outside of the gap.
+
+	quake_face_c *F = new quake_face_c();
+
+	// left edge
+
+	if ((f_Lz2 < g_Lz1 - Z_EPSILON) || (f_Lz1 > g_Lz2 + Z_EPSILON))
+	{
+		// none
+	}
+	else
+	{
+		double z1 = MAX(f_Lz1, g_Lz1);
+		double z2 = MIN(f_Lz2, g_Lz2);
+
+		F->AddVert(S->x1, S->y1, z1);
+
+		if (z2 > z1 + Z_EPSILON)
+			F->AddVert(S->x1, S->y1, z2);
+	}
+
+	// top edge
+
+	if (bt == 0 && tt == 0)
+	{
+		// two intersects, ensure order is correct
+		if (a_bt > a_tt)
+			std::swap(a_bt, a_tt);
+	}
+
+	if (bt == 0) DoAddVertex(F, S, a_bt, g_Lz2, g_Rz2);
+	if (tt == 0) DoAddVertex(F, S, a_tt, g_Lz2, g_Rz2);
+
+	// right edge
+
+	if ((f_Rz2 < g_Rz1 - Z_EPSILON) || (f_Rz1 > g_Rz2 + Z_EPSILON))
+	{
+		// none
+	}
+	else
+	{
+		double z1 = MAX(f_Rz1, g_Rz1);
+		double z2 = MIN(f_Rz2, g_Rz2);
+
+		F->AddVert(S->x2, S->y2, z2);
+
+		if (z1 < z2 - Z_EPSILON)
+			F->AddVert(S->x2, S->y2, z1);
+	}
+
+	// bottom edge
+
+	if (bb == 0 && tb == 0)
+	{
+		// two intersects, ensure order is correct
+		if (a_bb < a_tb)
+			std::swap(a_bb, a_tb);
+	}
+
+	if (bb == 0) DoAddVertex(F, S, a_bb, g_Lz1, g_Rz1);
+	if (tb == 0) DoAddVertex(F, S, a_tb, g_Lz1, g_Rz1);
+
+
+	// check face is OK
+	// [ this should not happen, but just in case... ]
+
+	if (F->verts.size() < 3)
+	{
+		delete F;
+		return;
+	}
+
+	F->node_side = S->node_side;
+
+	DoAddFace(F, &bvert->face, node, leaf);
 }
 
 
