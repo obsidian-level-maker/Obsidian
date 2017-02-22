@@ -1325,8 +1325,13 @@ static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
 static void WallFace_Quad(quake_node_c *node, quake_leaf_c *leaf,
 						  quake_side_c *S, brush_vert_c *bvert,
 						  double L_bz, double L_tz,
-						  double R_bz, double R_tz, int tri_side)
+						  double R_bz, double R_tz)
 {
+	int tri_side = 0;
+
+	if (fabs(L_tz - L_bz) < Z_EPSILON) tri_side = -1;
+	if (fabs(R_tz - R_bz) < Z_EPSILON) tri_side = +1;
+
 	quake_face_c *F = new quake_face_c();
 
 	F->node_side = S->node_side;
@@ -1455,12 +1460,7 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 			f_Rz2 = g_Rz2;
 		}
 
-		int tri_side = 0;
-
-		if (fabs(f_Lz1 - f_Lz2) < Z_EPSILON) tri_side = -1;
-		if (fabs(f_Rz1 - f_Rz2) < Z_EPSILON) tri_side = +1;
-
-		WallFace_Quad(node, leaf, S, bvert, f_Lz1, f_Lz2, f_Rz1, f_Rz2, tri_side);
+		WallFace_Quad(node, leaf, S, bvert, f_Lz1, f_Lz2, f_Rz1, f_Rz2);
 		return;
 	}
 
@@ -1468,8 +1468,8 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 	/* full clip! */
 
 	// basic idea is two produce a winding using all the intercept
-	// points (including at corners of the gap), but omit all the
-	// vertices which lie completely outside of the gap.
+	// points (including at corners of the gap), plus original verts,
+	// but omit all vertices which lie completely outside of the gap.
 
 	quake_face_c *F = new quake_face_c();
 
@@ -1496,10 +1496,15 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 	{
 		// two intersects, ensure order is correct
 		if (a_bt > a_tt)
-			std::swap(a_bt, a_tt);
+		{
+			DoAddVertex(F, S, a_tt, g_Lz2, g_Rz2);
+			DoAddVertex(F, S, a_bt, g_Lz1, g_Rz1);
+
+			bt = tt = 777;
+		}
 	}
 
-	if (bt == 0) DoAddVertex(F, S, a_bt, g_Lz2, g_Rz2);
+	if (bt == 0) DoAddVertex(F, S, a_bt, g_Lz1, g_Rz1);
 	if (tt == 0) DoAddVertex(F, S, a_tt, g_Lz2, g_Rz2);
 
 	// right edge
@@ -1525,11 +1530,16 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 	{
 		// two intersects, ensure order is correct
 		if (a_bb < a_tb)
-			std::swap(a_bb, a_tb);
+		{
+			DoAddVertex(F, S, a_tb, g_Lz2, g_Rz2);
+			DoAddVertex(F, S, a_bb, g_Lz1, g_Rz1);
+
+			bb = tb = 888;
+		}
 	}
 
 	if (bb == 0) DoAddVertex(F, S, a_bb, g_Lz1, g_Rz1);
-	if (tb == 0) DoAddVertex(F, S, a_tb, g_Lz1, g_Rz1);
+	if (tb == 0) DoAddVertex(F, S, a_tb, g_Lz2, g_Rz2);
 
 
 	// check face is OK
@@ -1592,6 +1602,7 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 		if (! bvert)
 			bvert = G->bottom->verts[0];
 
+		// using this to handle overly tall faces
 		ClipWallFace(S->on_node, leaf, S, bvert,
 					 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
 					 g_Lz1, g_Lz2, g_Rz1, g_Rz2);
