@@ -167,7 +167,7 @@ public:
 	void StoreWinding(const std::vector<quake_vertex_c>& winding,
 					  const quake_plane_c *plane, bool reverse);
 
-	void SetupMatrix(const quake_plane_c *plane);
+	void SetupMatrix(const quake_plane_c *plane, int pl_side);
 
 	void GetBounds(quake_bbox_c *bbox) const;
 
