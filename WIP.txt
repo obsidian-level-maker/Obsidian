@@ -7,24 +7,23 @@ WORK IN PROGRESS
 Quake3 CSG Code
 ---------------
 
--  clip brushes
--  detail brushes
-
-+  sloped floors and ceilings
-
 -  liquid areas and surfaces
--  sky surfaces
 
 -  trigger brushes (as mapmodels I presume)
 +  mapmodels
 
-+  visibility
-
 +  lighting
 -  grid lighting
 
--  texture coords from brushes
+-  texture coords from brushes, fix SetupMatrix to not mirror
 -  proper flags/contents for shaders
+-  fallback brushvert in CreateWallFaces()
+-  ensure all triangle faces share an indexes triangle
+
+DONE:  visibility
+DONE:  clip brushes
+DONE:  sky surfaces
+DONE:  sloped floors and ceilings
 
 
 
