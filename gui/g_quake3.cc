@@ -243,7 +243,7 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	{
 		raw_brush.shaderNum = SHADER_COMMON_TRIGGER;
 	}
-	else if (strstr(A->t.face.getStr("tex"), "skies/") != NULL)
+	else if (strstr(A->t.face.getStr("tex", ""), "skies/") != NULL)
 	{
 		raw_brush.shaderNum = SHADER_COMMON_SKY;
 	}
