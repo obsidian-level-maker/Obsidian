@@ -50,13 +50,14 @@
 #define MAX_BRUSH_PLANES  100
 #define MAX_FACE_VERTS    100
 
-#define SHADER_COMMON_SOLID  0
-#define SHADER_COMMON_CLIP   1
-#define SHADER_COMMON_SKY    2
+#define SHADER_COMMON_SOLID    0
+#define SHADER_COMMON_CLIP     1
+#define SHADER_COMMON_SKY      2
+#define SHADER_COMMON_TRIGGER  3
 
-#define SHADER_COMMON_WATER  3
-#define SHADER_COMMON_SLIME  4
-#define SHADER_COMMON_LAVA   5
+#define SHADER_COMMON_WATER    4
+#define SHADER_COMMON_SLIME    5
+#define SHADER_COMMON_LAVA     6
 
 
 static char *level_name;
@@ -234,6 +235,10 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	else if (A->bkind == BKIND_Clip)
 	{
 		raw_brush.shaderNum = SHADER_COMMON_CLIP;
+	}
+	else if (A->bkind == BKIND_Trigger)
+	{
+		raw_brush.shaderNum = SHADER_COMMON_TRIGGER;
 	}
 	else if (strstr(A->t.face.getStr("tex"), "skies/") != NULL)
 	{
@@ -1432,6 +1437,7 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_AddShader("common/solid", 0, CONTENTS_SOLID);
 	Q3_AddShader("common/clip",  SURF_NONSOLID | SURF_NODRAW | SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_PLAYERCLIP);
 	Q3_AddShader("common/sky",   SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_SOLID);
+	Q3_AddShader("common/trigger", SURF_NODRAW | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_TRIGGER);
 
 	int liquid_flags = SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
 
