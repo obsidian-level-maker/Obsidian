@@ -3370,7 +3370,7 @@ function Quake3_test()
 
   -- slope test --
 
-  if true then
+  if false then
     F = brushlib.quad(32, 144, 224, 370, -256,   0)
     C = brushlib.quad(32, 144, 224, 370,  192, 512)
 
@@ -3403,7 +3403,7 @@ function Quake3_test()
   Trans.brush(W) ; Trans.brush(E)
 
 
-  Trans.entity("player1", 80, 256, 44)
+  Trans.entity("player1", 80, 256, 130)
   Trans.entity("light",   80, 256, 160, { light=200 })
 
 
@@ -3434,18 +3434,17 @@ function Quake3_test()
   end
 
 
-  -- liquid test  [TODO]
+  -- liquid test
 
-  if false then
-    raw_add_brush(
-    {
-      { m="liquid", medium="water" },
-      { t=119, tex="e1u1/water4" },
-      { x=0,   y=0,   tex="e1u1/water4" },
-      { x=100, y=0,   tex="e1u1/water4" },
-      { x=100, y=600, tex="e1u1/water4" },
-      { x=0,   y=600, tex="e1u1/water4" },
-    })
+  if true then
+    local L_tex = "liquids/softwater"
+
+    local L = brushlib.quad(0, 128, 256, 384, -1024, 64)
+
+    brushlib.set_tex(L, L_tex, L_tex)
+    brushlib.set_kind(L, "liquid", { medium="water" })
+
+    Trans.brush(L)
   end
 end
 

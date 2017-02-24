@@ -1888,8 +1888,12 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 			cluster->AddLeaf(L_leaf);
 			cluster->MarkAmbient(AMBIENT_WATER);
 
-			CreateLiquidFace(L_node,   leaf, R->liquid, false, winding);
-			CreateLiquidFace(L_node, L_leaf, R->liquid, true,  winding);
+			CreateLiquidFace(L_node, leaf, R->liquid, false, winding);
+
+			// for Quake3, we assume the liquid face is two-sided
+			// (having "cull none" or "cull disable" in the shader)
+			if (qk_game < 3)
+				CreateLiquidFace(L_node, L_leaf, R->liquid, true,  winding);
 		}
 	}
 

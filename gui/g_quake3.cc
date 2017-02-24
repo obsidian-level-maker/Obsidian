@@ -54,6 +54,10 @@
 #define SHADER_COMMON_CLIP   1
 #define SHADER_COMMON_SKY    2
 
+#define SHADER_COMMON_WATER  3
+#define SHADER_COMMON_SLIME  4
+#define SHADER_COMMON_LAVA   5
+
 
 static char *level_name;
 static char *description;
@@ -217,10 +221,25 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	// FIXME : support liquids
 	raw_brush.shaderNum = SHADER_COMMON_SOLID;
 
-	if (A->bkind == BKIND_Clip)
+	if (A->bkind == BKIND_Liquid)
+	{
+		const char *medium = A->props.getStr("medium", "");
+
+		if (StringCaseCmp(medium, "slime") == 0)
+			raw_brush.shaderNum = SHADER_COMMON_SLIME;
+		else if (StringCaseCmp(medium, "lava") == 0)
+			raw_brush.shaderNum = SHADER_COMMON_LAVA;
+		else
+			raw_brush.shaderNum = SHADER_COMMON_WATER;
+	}
+	else if (A->bkind == BKIND_Clip)
+	{
 		raw_brush.shaderNum = SHADER_COMMON_CLIP;
+	}
 	else if (strstr(A->t.face.getStr("tex"), "skies/") != NULL)
+	{
 		raw_brush.shaderNum = SHADER_COMMON_SKY;
+	}
 
 	// add all the brush planes
 
@@ -1414,6 +1433,12 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_AddShader("common/solid", 0, CONTENTS_SOLID);
 	Q3_AddShader("common/clip",  SURF_NONSOLID | SURF_NODRAW | SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_PLAYERCLIP);
 	Q3_AddShader("common/sky",   SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_SOLID);
+
+	int liquid_flags = SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
+
+	Q3_AddShader("liquids/softwater", liquid_flags, CONTENTS_WATER);
+	Q3_AddShader("liquids/slime2",    liquid_flags, CONTENTS_SLIME);
+	Q3_AddShader("liquids/lavahell",  liquid_flags, CONTENTS_LAVA);
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
