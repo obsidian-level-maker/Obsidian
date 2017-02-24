@@ -3379,13 +3379,9 @@ function Quake3_test()
     S = brushlib.quad(0,   128, 256, 144, -256, 512)
     N = brushlib.quad(0,   370, 256, 384, -256, 512)
 
-    each coord in F do
-      if coord.t then coord.slope = { nx=0.3, ny=0, nz=1 } end
-    end
+    brushlib.slope_top(F, 0.3, 0.0, 1.0)
 
-    each coord in C do
-      if coord.b then coord.slope = { nx=0, ny=0.7, nz=-1 } end
-    end
+    brushlib.slope_bottom(C, 0.0, 0.7, -1.0)
   end
 
 

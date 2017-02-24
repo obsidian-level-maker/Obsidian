@@ -719,6 +719,34 @@ function brushlib.get_top_h(brush)
 end
 
 
+function brushlib.slope_top(brush, nx, ny, nz)
+  assert(nz > 0)
+
+  each C in brush do
+    if C.t then
+      C.slope = { nx=nx, ny=ny, nz=nz }
+      return
+    end
+  end
+
+  error("add_top_slope: brush has no top!")
+end
+
+
+function brushlib.slope_bottom(brush, nx, ny, nz)
+  assert(nz < 0)
+
+  each C in brush do
+    if C.b then
+      C.slope = { nx=nx, ny=ny, nz=nz }
+      return
+    end
+  end
+
+  error("add_bottom_slope: brush has no bottom!")
+end
+
+
 function brushlib.set_tex(brush, wall, flat)
   each C in brush do
     if wall and C.x and not C.tex then
