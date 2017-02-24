@@ -771,6 +771,14 @@ static void CreateRegion(group_c & root, csg_brush_c *P)
 {
 	SYS_ASSERT(P);
 
+	// handle map-models
+	const char *link_key = P->props.getStr("link_entity");
+	if (link_key)
+	{
+		CSG_LinkBrushToEntity(P, link_key);
+		return;
+	}
+
 	if (P->bkind == BKIND_Clip)
 		return;
 

@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -153,13 +153,15 @@ csg_brush_c::csg_brush_c() :
 	bkind(BKIND_Solid), bflags(0),
 	props(), verts(),
 	b(-EXTREME_H),
-	t( EXTREME_H)
+	t( EXTREME_H),
+	link_ent(NULL)
 { }
 
 csg_brush_c::csg_brush_c(const csg_brush_c *other) :
 	bkind(other->bkind), bflags(other->bflags),
 	props(other->props), verts(),
-	b(other->b), t(other->t)
+	b(other->b), t(other->t),
+	link_ent(other->link_ent)
 {
 	// NOTE: verts and slopes not cloned
 
@@ -1060,6 +1062,32 @@ void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h)
 
 
 //------------------------------------------------------------------------
+
+void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key)
+{
+	for (unsigned int k = 0 ; k < all_entities.size() ; k++)
+	{
+		csg_entity_c *E = all_entities[k];
+
+		const char *E_key = E->props.getStr("link_id");
+
+		if (! E_key)
+			continue;
+
+		if (StringCaseCmp(E_key, link_key) == 0)
+		{
+			B->link_ent = E;
+			return;
+		}
+	}
+
+	// not found
+	LogPrintf("WARNING: brush has unknown link entity '%s'\n", link_key);
+
+	// ensure we ignore this brush
+	B->bkind = BKIND_Light;
+}
+
 
 void CSG_Main_Free()
 {

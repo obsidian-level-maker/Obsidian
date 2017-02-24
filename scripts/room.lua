@@ -3434,9 +3434,9 @@ function Quake3_test()
   end
 
 
-  -- liquid test
+  -- liquid test --
 
-  if true then
+  if false then
     local L_tex = "liquids/hydrowater"
 
     gui.property("water_shader", L_tex)
@@ -3447,6 +3447,37 @@ function Quake3_test()
     brushlib.set_kind(L, "liquid", { medium="water" })
 
     Trans.brush(L)
+  end
+
+
+  -- model test --
+
+  if true then
+    -- create an entity table.
+    -- the 'link_id' field must be unique, and links brushes to the entity.
+    -- the coordinates will be unused.
+    local ent =
+    {
+      id = "func_static"
+
+      link_id = "m1"
+
+      x = 0
+      y = 0
+      z = 0
+    }
+
+    raw_add_entity(ent)
+
+    local M_tex = "base_trim/pewter_shiney"
+    local M = brushlib.quad(170, 260, 210, 310, 30, 100)
+
+    brushlib.slope_top(M, -0.5, -0.5, 1.0)
+
+    brushlib.set_tex (M, M_tex, M_tex)
+    brushlib.set_kind(M, "solid", { link_entity=ent.link_id })
+
+    Trans.brush(M)
   end
 end
 

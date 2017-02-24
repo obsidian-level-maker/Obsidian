@@ -2261,7 +2261,7 @@ static void FilterClipBrushes()
 	{
 		csg_brush_c *B = all_brushes[k];
 
-		if (B->bkind == BKIND_Clip)
+		if (B->bkind == BKIND_Clip && !B->link_ent)
 			qk_bsp_root->FilterClipBrush(B);
 	}
 }

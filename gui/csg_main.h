@@ -22,6 +22,7 @@
 #define __OBLIGE_CSG_MAIN_H__
 
 class csg_brush_c;
+class csg_entity_c;
 class quake_plane_c;
 
 
@@ -160,6 +161,9 @@ public:
 	double min_x, min_y;
 	double max_x, max_y;
 
+	// only set when brush is part of a map-model (bmodel)
+	csg_entity_c * link_ent;
+
 public:
 	 csg_brush_c();
 	~csg_brush_c();
@@ -219,7 +223,7 @@ void CSG_Main_Free();
 bool CSG_TraceRay(double x1, double y1, double z1,
 				  double x2, double y2, double z2, const char *mode);
 
-void CSG_MakeMiniMap();
+void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key);
 
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */
