@@ -218,7 +218,6 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	raw_brush.numSides  = 0;
 
 	// use the "common/solid" shader
-	// FIXME : support liquids
 	raw_brush.shaderNum = SHADER_COMMON_SOLID;
 
 	if (A->bkind == BKIND_Liquid)

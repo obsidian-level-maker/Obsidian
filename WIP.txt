@@ -7,8 +7,6 @@ WORK IN PROGRESS
 Quake3 CSG Code
 ---------------
 
--  liquid areas and surfaces
-
 -  trigger brushes (as mapmodels I presume)
 +  mapmodels
 
@@ -24,6 +22,7 @@ DONE:  visibility
 DONE:  clip brushes
 DONE:  sky surfaces
 DONE:  sloped floors and ceilings
+DONE:  liquid areas and surfaces
 
 
 

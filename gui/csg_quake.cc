@@ -1262,12 +1262,11 @@ static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
 
 
 static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
-                            const gap_c *G, bool is_ceil,
-                            std::vector<quake_vertex_c> & winding)
+                            csg_brush_c *B, bool is_ceil,
+                            std::vector<quake_vertex_c> & winding,
+							bool is_liquid = false)
 {
 	// get node splitting plane
-
-	csg_brush_c *B = is_ceil ? G->top : G->bottom;
 
 	brush_plane_c& BP = is_ceil ? B->b : B->t;
 
@@ -1293,32 +1292,22 @@ static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
 
 	F->StoreWinding(winding, &node->plane, is_ceil);
 
-	if (B->bkind == BKIND_Sky)
+	if (is_liquid)
+		F->flags |= FACE_F_Liquid;
+	else if (B->bkind == BKIND_Sky)
 		F->flags |= FACE_F_Sky;
 
 	DoAddFace(F, &BP.face, node, leaf);
 }
 
 
-// FIXME : re-use the above function
-static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
-                             csg_brush_c *B, bool is_ceil,
-                             std::vector<quake_vertex_c> & winding)
+static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
+                            const gap_c *G, bool is_ceil,
+                            std::vector<quake_vertex_c> & winding)
 {
-	node->plane.x  = node->plane.y  = 0;
-	node->plane.nx = node->plane.ny = 0;
-	node->plane.z  = B->t.z;
-	node->plane.nz = +1;
+	csg_brush_c *B = is_ceil ? G->top : G->bottom;
 
-	quake_face_c *F = new quake_face_c;
-
-	F->node_side = is_ceil ? 1 : 0;
-
-	F->flags |= FACE_F_Liquid;
-
-	F->StoreWinding(winding, &node->plane, is_ceil);
-
-	DoAddFace(F, &B->t.face, node, leaf);
+	FloorOrCeilFace(node, leaf, B, is_ceil, winding);
 }
 
 
@@ -1888,12 +1877,12 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 			cluster->AddLeaf(L_leaf);
 			cluster->MarkAmbient(AMBIENT_WATER);
 
-			CreateLiquidFace(L_node, leaf, R->liquid, false, winding);
-
 			// for Quake3, we assume the liquid face is two-sided
 			// (having "cull none" or "cull disable" in the shader)
 			if (qk_game < 3)
-				CreateLiquidFace(L_node, L_leaf, R->liquid, true,  winding);
+				FloorOrCeilFace(L_node, L_leaf, R->liquid, true,  winding, true /* is_liquid */);
+
+			FloorOrCeilFace(L_node, leaf, R->liquid, false, winding, true /* is_liquid */);
 		}
 	}
 
