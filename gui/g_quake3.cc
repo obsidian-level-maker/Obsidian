@@ -63,6 +63,9 @@
 static char *level_name;
 static char *description;
 
+static char *water_shader;
+static char *slime_shader;
+static char * lava_shader;
 
 
 //------------------------------------------------------------------------
@@ -823,16 +826,15 @@ static void Q3_WriteSurface(quake_face_c *face)
 
 	const char *texture = face->texture.c_str();
 
-	int flags = 0;
+	// TODO : ability to specify flags and contents
+	int flags    = 0;
+	int contents = CONTENTS_SOLID;
 
 	if (strstr(texture, "skies/") != NULL)
 		flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
 
 	else if (strstr(texture, "liquids/") != NULL)
 		flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
-
-	// FIXME
-	int contents = CONTENTS_SOLID;
 
 	raw_surf.shaderNum = Q3_AddShader(texture, flags, contents);
 
@@ -1441,9 +1443,9 @@ static void Q3_CreateBSPFile(const char *name)
 
 	int liquid_flags = SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
 
-	Q3_AddShader("liquids/softwater", liquid_flags, CONTENTS_WATER);
-	Q3_AddShader("liquids/slime2",    liquid_flags, CONTENTS_SLIME);
-	Q3_AddShader("liquids/lavahell",  liquid_flags, CONTENTS_LAVA);
+	Q3_AddShader(water_shader, liquid_flags, CONTENTS_WATER);
+	Q3_AddShader(slime_shader, liquid_flags, CONTENTS_SLIME);
+	Q3_AddShader( lava_shader, liquid_flags, CONTENTS_LAVA);
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
@@ -1493,6 +1495,10 @@ bool quake3_game_interface_c::Start()
 	qk_game = 3;
 	qk_sub_format = 0;
 	qk_lighting_quality = fast_lighting ? -1 : +1;
+
+	if (! water_shader) water_shader = StringDup("liquids/water");
+	if (! slime_shader) slime_shader = StringDup("liquids/slime");
+	if (!  lava_shader)  lava_shader = StringDup("liquids/lava");
 
 	if (batch_mode)
 		filename = StringDup(batch_output_file);
@@ -1567,9 +1573,21 @@ void quake3_game_interface_c::Property(const char *key, const char *value)
 		else
 			qk_lighting_quality = 0;
 	}
+	else if (StringCaseCmp(key, "water_shader") == 0)
+	{
+		water_shader = StringDup(value);
+	}
+	else if (StringCaseCmp(key, "slime_shader") == 0)
+	{
+		slime_shader = StringDup(value);
+	}
+	else if (StringCaseCmp(key, "lava_shader") == 0)
+	{
+		lava_shader = StringDup(value);
+	}
 	else
 	{
-		LogPrintf("WARNING: unknown QUAKE2 property: %s=%s\n", key, value);
+		LogPrintf("WARNING: unknown QUAKE3 property: %s=%s\n", key, value);
 	}
 }
 

@@ -3437,7 +3437,9 @@ function Quake3_test()
   -- liquid test
 
   if true then
-    local L_tex = "liquids/softwater"
+    local L_tex = "liquids/hydrowater"
+
+    gui.property("water_shader", L_tex)
 
     local L = brushlib.quad(0, 128, 256, 384, -1024, 64)
 
