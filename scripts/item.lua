@@ -898,7 +898,7 @@ function Item_pickups_for_class(CL)
     -- more stuff in start room
     if R.is_start then
       if stat == "health" then
-        bonus = 20
+        bonus = 20 * HEALTH_FACTORS[OB_CONFIG.health]
       end
     end
 
@@ -908,7 +908,7 @@ function Item_pickups_for_class(CL)
         local info = GAME.WEAPONS[name]
 
         if info.ammo and info.ammo == stat and info.bonus_ammo then
-          bonus = bonus + info.bonus_ammo
+          bonus = bonus + info.bonus_ammo * AMMO_FACTORS[OB_CONFIG.ammo]
         end
       end
     end
@@ -919,7 +919,7 @@ function Item_pickups_for_class(CL)
 
     -- compensation for environmental hazards
     if stat == "health" and R.hazard_health then
-      bonus = bonus + R.hazard_health
+      bonus = bonus + R.hazard_health * HEALTH_FACTORS[OB_CONFIG.health]
     end
 
     return bonus
