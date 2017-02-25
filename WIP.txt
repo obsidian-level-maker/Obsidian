@@ -7,22 +7,20 @@ WORK IN PROGRESS
 Quake3 CSG Code
 ---------------
 
--  trigger brushes (as mapmodels I presume)
-+  mapmodels
-
 +  lighting
 -  grid lighting
 
--  texture coords from brushes, fix SetupMatrix to not mirror
--  proper flags/contents for shaders
++  texture coords from brushes
+
+-  ability to set flags/contents for shaders
 -  fallback brushvert in CreateWallFaces()
--  ensure all triangle faces share an indexes triangle
 
 DONE:  visibility
 DONE:  clip brushes
 DONE:  sky surfaces
 DONE:  sloped floors and ceilings
 DONE:  liquid areas and surfaces
+DONE:  mapmodels
 
 
 
