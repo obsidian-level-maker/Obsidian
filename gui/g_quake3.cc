@@ -495,6 +495,7 @@ static int q3_total_leaf_brushes;
 
 static int q3_total_leafs;
 static int q3_total_nodes;
+static int q3_total_models;
 
 static int q3_total_surfaces;
 static int q3_total_drawverts;
@@ -1020,8 +1021,9 @@ static void Q3_WriteNode(quake_node_c *node)
 
 static void Q3_WriteBSP()
 {
-	q3_total_nodes = 0;
-	q3_total_leafs = 0;  // not including the solid leaf
+	q3_total_nodes  = 0;
+	q3_total_leafs  = 0;  // not including the solid leaf
+	q3_total_models = 0;
 
 	q3_total_surfaces = 0;
 	q3_total_drawverts = 0;
@@ -1312,6 +1314,51 @@ static void Q3_WriteModel(dmodel3_t *model)
 	model->numBrushes = LE_S32(model->numBrushes);
 
 	q3_models->Append(model, sizeof(dmodel3_t));
+
+	q3_total_models += 1;
+}
+
+
+static void Q3_CreateSubModel(csg_entity_c *E)
+{
+	const char *link_id = E->props.getStr("link_id");
+	SYS_ASSERT(link_id);
+
+	E->props.Remove("link_id");
+
+	dmodel3_t raw_model;
+
+	memset(&raw_model, 0, sizeof(raw_model));
+
+	raw_model.firstSurface = q3_total_surfaces;
+	raw_model.firstBrush   = (int)q3_brushes.size();
+
+	// FIXME !!!!  surfaces
+
+	// FIXME !!!!  brushes
+
+	// FIXME !!!!  mins and maxs
+
+	raw_model.numSurfaces = q3_total_surfaces      - raw_model.firstSurface;
+	raw_model.numBrushes  = (int)q3_brushes.size() - raw_model.firstBrush;
+
+	if (raw_model.numSurfaces == 0 && raw_model.numBrushes == 0)
+	{
+		LogPrintf("WARNING: mapmodel for '%s' was empty.\n", E->id.c_str());
+
+		// ensure entity is not added to final BSP file
+		E->id = std::string("nothing");
+		return;
+	}
+
+	// create the important "model" keyword
+	char model_name[64];
+
+	snprintf(model_name, sizeof(model_name), "*%d", q3_total_models);
+
+	E->props.Add("model", model_name);
+
+	Q3_WriteModel(&raw_model);
 }
 
 
@@ -1339,33 +1386,15 @@ static void Q3_WriteModels()
 
 	Q3_WriteModel(&raw_model);
 
-	// handle the sub-models (doors etc)
+	// handle all the sub-models (doors etc)
 
-#if 0  // FIXME
-
-	for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
+	for (unsigned int k = 0 ; k < all_entities.size() ; k++)
 	{
-		quake_mapmodel_c *model = qk_all_mapmodels[i];
+		csg_entity_c *E = all_entities[k];
 
-		model->firstface = q3_total_surfaces;
-		model->numfaces  = 6;
-		model->numleafs  = 6;
-
-		float mins[3], maxs[3];
-
-		mins[0] = model->x1;
-		mins[1] = model->y1;
-		mins[2] = model->z1;
-
-		maxs[0] = model->x2;
-		maxs[1] = model->y2;
-		maxs[2] = model->z2;
-
-		Q3_Model_Nodes(model, mins, maxs);
-
-		Q3_WriteModel(model);
+		if (E->props.getStr("link_id"))
+			Q3_CreateSubModel(E);
 	}
-#endif
 }
 
 
@@ -1444,7 +1473,7 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_WriteBSP();
 	Q3_WriteModels();
 
-	BSP_WritePlanes(LUMP_PLANES,   MAX_MAP_PLANES);
+	BSP_WritePlanes(LUMP_PLANES, MAX_MAP_PLANES);
 
 	Q3_WriteBrushes();
 	Q3_WriteShaders();
