@@ -1327,6 +1327,33 @@ static void Q3_VisWorld()
 }
 
 
+static void AddCommonShaders()
+{
+	// SHADER_COMMON_SOLID
+	Q3_AddShader("common/solid", 0, CONTENTS_SOLID);
+
+	// SHADER_COMMON_CLIP
+	Q3_AddShader("common/clip",  SURF_NONSOLID | SURF_NODRAW | SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_PLAYERCLIP);
+
+	// SHADER_COMMON_SKY
+	Q3_AddShader("common/sky",   SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_SOLID);
+
+	// SHADER_COMMON_TRIGGER
+	Q3_AddShader("common/trigger", SURF_NODRAW | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_TRIGGER);
+
+	int liquid_flags = SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
+
+	// SHADER_COMMON_WATER
+	Q3_AddShader(water_shader, liquid_flags, CONTENTS_WATER);
+
+	// SHADER_COMMON_SLIME
+	Q3_AddShader(slime_shader, liquid_flags, CONTENTS_SLIME);
+
+	// SHADER_COMMON_LAVA
+	Q3_AddShader( lava_shader, liquid_flags, CONTENTS_LAVA);
+}
+
+
 static void Q3_CreateBSPFile(const char *name)
 {
 	qk_color_lighting = true;
@@ -1346,16 +1373,7 @@ static void Q3_CreateBSPFile(const char *name)
 	Q3_LightWorld();
 
 	// standard shaders (for collision brushes)
-	Q3_AddShader("common/solid", 0, CONTENTS_SOLID);
-	Q3_AddShader("common/clip",  SURF_NONSOLID | SURF_NODRAW | SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_PLAYERCLIP);
-	Q3_AddShader("common/sky",   SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_SOLID);
-	Q3_AddShader("common/trigger", SURF_NODRAW | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT, CONTENTS_TRIGGER);
-
-	int liquid_flags = SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP | SURF_NODLIGHT | SURF_NOSTEPS;
-
-	Q3_AddShader(water_shader, liquid_flags, CONTENTS_WATER);
-	Q3_AddShader(slime_shader, liquid_flags, CONTENTS_SLIME);
-	Q3_AddShader( lava_shader, liquid_flags, CONTENTS_LAVA);
+	AddCommonShaders();
 
 	Q3_WriteBSP();
 	Q3_WriteModels();
