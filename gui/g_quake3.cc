@@ -1010,7 +1010,6 @@ static void Q3_WriteBSP()
 //   MAP MODEL STUFF
 //------------------------------------------------------------------------
 
-
 static void Model_FloorOrCeilFace(csg_brush_c *B, bool is_ceil)
 {
 	// needed for quake_face_c, but only the 'plane' field is used
@@ -1045,7 +1044,7 @@ static void Model_FloorOrCeilFace(csg_brush_c *B, bool is_ceil)
 	// add vertices
 	for (unsigned int i = 0 ; i < B->verts.size() ; i++)
 	{
-		unsigned int k = is_ceil ? (B->verts.size() - 1 - i) : i;
+		unsigned int k = is_ceil ? i : (B->verts.size() - 1 - i);
 
 		brush_vert_c *V = B->verts[k];
 
@@ -1066,7 +1065,71 @@ static void Model_FloorOrCeilFace(csg_brush_c *B, bool is_ceil)
 
 static void Model_CreateSideFace(csg_brush_c *B, unsigned int k)
 {
-	// FIXME !!!!
+	// needed for quake_face_c, but only the 'plane' field is used
+	quake_node_c fake_node;
+
+	brush_vert_c *V1 = B->verts[k];
+	brush_vert_c *V2;
+
+	if (k+1 < B->verts.size())
+		V2 = B->verts[k+1];
+	else
+		V2 = B->verts[0];
+
+	// create the plane
+	fake_node.plane.x = V1->x;
+	fake_node.plane.y = V1->y;
+	fake_node.plane.z = 0;
+
+	fake_node.plane.nx = (V2->y - V1->y);
+	fake_node.plane.ny = (V1->x - V2->x);
+	fake_node.plane.nz = 0;
+
+	fake_node.plane.Normalize();
+
+	// create the face
+
+	quake_face_c face;
+
+	face.node = &fake_node;
+	face.node_side = 0;  // always on the front
+
+	// add vertices
+
+	double f_Lz1 = B->b.CalcZ(V1->x, V1->y);
+	double f_Lz2 = B->t.CalcZ(V1->x, V1->y);
+
+	double f_Rz1 = B->b.CalcZ(V2->x, V2->y);
+	double f_Rz2 = B->t.CalcZ(V2->x, V2->y);
+
+	// ensure the face is sane  [ triangles are Ok ]
+	if ((f_Lz1 > f_Lz2 - Z_EPSILON) && (f_Rz1 > f_Rz2 - Z_EPSILON))
+		return;
+
+	int tri_side = 0;
+
+	if (f_Lz1 > f_Lz2 - Z_EPSILON) tri_side = -1;
+	if (f_Rz1 > f_Rz2 - Z_EPSILON) tri_side = +1;
+
+	face.AddVert(V1->x, V1->y, f_Lz1);
+
+	if (tri_side >= 0)
+		face.AddVert(V1->x, V1->y, f_Lz2);
+
+	face.AddVert(V2->x, V2->y, f_Rz2);
+
+	if (tri_side <= 0)
+		face.AddVert(V2->x, V2->y, f_Rz1);
+
+	SYS_ASSERT(face.verts.size() >= 3);
+
+	// setup texturing
+	face.texture = V1->face.getStr("tex", "missing");
+
+	face.SetupMatrix(&fake_node.plane, face.node_side);
+
+	// add it!
+	Q3_AddSurface(&face);
 }
 
 
