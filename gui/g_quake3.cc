@@ -733,6 +733,13 @@ static void Q3_AddSurface(quake_face_c *face)
 	SYS_ASSERT(face->node);
 	SYS_ASSERT(face->node_side >= 0);
 
+	const char *texture = face->texture.c_str();
+
+	// inhibit surfaces with the "nothing" texture
+	if (strcmp(texture, "nothing") == 0)
+		return;
+
+
 	face->index = q3_total_surfaces;
 
 
@@ -757,8 +764,6 @@ static void Q3_AddSurface(quake_face_c *face)
 
 	face->GetNormal(raw_surf.lightmapVecs[2]);
 
-
-	const char *texture = face->texture.c_str();
 
 	// TODO : ability to specify flags and contents
 	int flags    = 0;
