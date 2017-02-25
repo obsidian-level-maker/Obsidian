@@ -292,6 +292,7 @@ public:
 extern quake_node_c * qk_bsp_root;
 extern quake_leaf_c * qk_solid_leaf;
 
+// this not used for Quake3 handling
 extern quake_mapmodel_c * qk_world_model;
 
 extern std::vector<quake_face_c *>     qk_all_faces;

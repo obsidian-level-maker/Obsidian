@@ -506,9 +506,6 @@ static void Q3_FreeStuff()
 	Q3_ClearBrushes();
 	Q3_ClearShaders();
 
-	delete qk_world_model;
-	qk_world_model = NULL;
-
 	// bsp lumps are freed in q_common code
 
 	q3_leaf_surfs = NULL;
@@ -1296,27 +1293,25 @@ static void Q3_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 #endif
 
 
-static void Q3_WriteModel(quake_mapmodel_c *model)
+static void Q3_WriteModel(dmodel3_t *model)
 {
-	dmodel3_t raw_model;
+	// fix endianness
+	for (int b = 0 ; b < 3 ; b++)
+	{
+		model->mins[b] -= MODEL_PADDING;
+		model->maxs[b] += MODEL_PADDING;
 
-	memset(&raw_model, 0, sizeof(raw_model));
+		model->mins[b] = LE_Float32(model->mins[b]);
+		model->maxs[b] = LE_Float32(model->maxs[b]);
+	}
 
-	raw_model.mins[0] = LE_Float32(model->x1 - MODEL_PADDING);
-	raw_model.mins[1] = LE_Float32(model->y1 - MODEL_PADDING);
-	raw_model.mins[2] = LE_Float32(model->z1 - MODEL_PADDING);
+	model->firstSurface = LE_S32(model->firstSurface);
+	model->numSurfaces  = LE_S32(model->numSurfaces);
 
-	raw_model.maxs[0] = LE_Float32(model->x2 + MODEL_PADDING);
-	raw_model.maxs[1] = LE_Float32(model->y2 + MODEL_PADDING);
-	raw_model.maxs[2] = LE_Float32(model->z2 + MODEL_PADDING);
+	model->firstBrush = LE_S32(model->firstBrush);
+	model->numBrushes = LE_S32(model->numBrushes);
 
-	raw_model.firstSurface = LE_S32(model->firstface);
-	raw_model.numSurfaces  = LE_S32(model->numfaces);
-
-	raw_model.firstBrush = LE_S32(model->firstBrush);
-	raw_model.numBrushes = LE_S32(model->numBrushes);
-
-	q3_models->Append(&raw_model, sizeof(raw_model));
+	q3_models->Append(model, sizeof(dmodel3_t));
 }
 
 
@@ -1325,25 +1320,24 @@ static void Q3_WriteModels()
 	q3_models = BSP_NewLump(LUMP_MODELS);
 
 	// create the world model
-	qk_world_model = new quake_mapmodel_c();
+	dmodel3_t raw_model;
 
-	qk_world_model->firstface = 0;
-	qk_world_model->numfaces  = q3_total_surfaces;
-	qk_world_model->numleafs  = q3_total_leafs;
+	memset(&raw_model, 0, sizeof(raw_model));
 
-	qk_world_model->firstBrush = 0;
-	qk_world_model->numBrushes = (int)q3_brushes.size();
+	raw_model.firstSurface = 0;
+	raw_model.numSurfaces  = q3_total_surfaces;
+
+	raw_model.firstBrush = 0;
+	raw_model.numBrushes = (int)q3_brushes.size();
 
 	// bounds of map
-	qk_world_model->x1 = qk_bsp_root->bbox.mins[0];
-	qk_world_model->y1 = qk_bsp_root->bbox.mins[1];
-	qk_world_model->z1 = qk_bsp_root->bbox.mins[2];
+	for (int b = 0 ; b < 3 ; b++)
+	{
+		raw_model.mins[b] = qk_bsp_root->bbox.mins[b];
+		raw_model.maxs[b] = qk_bsp_root->bbox.maxs[b];
+	}
 
-	qk_world_model->x2 = qk_bsp_root->bbox.maxs[0];
-	qk_world_model->y2 = qk_bsp_root->bbox.maxs[1];
-	qk_world_model->z2 = qk_bsp_root->bbox.maxs[2];
-
-	Q3_WriteModel(qk_world_model);
+	Q3_WriteModel(&raw_model);
 
 	// handle the sub-models (doors etc)
 
@@ -1495,6 +1489,9 @@ bool quake3_game_interface_c::Start()
 	qk_game = 3;
 	qk_sub_format = 0;
 	qk_lighting_quality = fast_lighting ? -1 : +1;
+
+	// this is not used here
+	qk_world_model = NULL;
 
 	if (! water_shader) water_shader = StringDup("liquids/water");
 	if (! slime_shader) slime_shader = StringDup("liquids/slime");
