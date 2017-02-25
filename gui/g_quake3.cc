@@ -626,8 +626,8 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 	// vertex at the center of the surface.
 
 	// TODO: this logic can be improved, e.g. a single degenerate
-	//       triangle can be supported by using the middle vertex
-	//       as the common one.
+	//       triangle can be handled by using its middle vertex
+	//       as the starting one.
 
 	bool has_degen = FaceHasDegenTriangle(face);
 
@@ -669,7 +669,12 @@ static void Q3_TriangulateSurface(quake_face_c *face,
 		/* triangulate the polygon, produce indexes */
 
 		// use the shared triangulation when possible
-		if (face->verts.size() == 4)
+		if (face->verts.size() == 3)
+		{
+			raw_surf->firstIndex = 0;
+			raw_surf->numIndexes = 3;
+		}
+		else if (face->verts.size() == 4)
 		{
 			raw_surf->firstIndex = 0;
 			raw_surf->numIndexes = 6;
