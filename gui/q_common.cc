@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  BSP files - Quake I and II
+//  BSP files - Quake I, II and III
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -745,6 +745,20 @@ static void BSP_WriteHeader()
 }
 
 
+static csg_entity_c *FindObligeWorldspawn()
+{
+	for (unsigned int k = 0 ; k < all_entities.size() ; k++)
+	{
+		csg_entity_c *E = all_entities[k];
+
+		if (strcmp(E->id.c_str(), "oblige_worldspawn") == 0)
+			return E;
+	}
+
+	return NULL;
+}
+
+
 void BSP_WriteEntities(int lump_num, const char *description)
 {
 	qLump_c *lump = BSP_NewLump(lump_num);
@@ -753,19 +767,13 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
 	lump->Printf("{\n");
 
-	// !!!! FIXME : let Lua code supply all these values
+	if (qk_game >= 3)
+		lump->KeyPair("_generated_by", "OBLIGE " OBLIGE_VERSION);
+	else if (description)
+		lump->KeyPair("message", description);
 
-	if (qk_sub_format == SUBFMT_HalfLife)
-	{
-		lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
-		lump->KeyPair("mapversion", "220");
-		lump->KeyPair("MaxRange", "4096");
-		lump->KeyPair("sounds", "1");
-	}
-
-//  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
-//  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
-
+	// TODO : do this via oblige_worldspawn entity
+	if (qk_game == 1)
 	{
 		char buffer[80];
 		sprintf(buffer, "%d", qk_worldtype);
@@ -773,10 +781,27 @@ void BSP_WriteEntities(int lump_num, const char *description)
 		lump->KeyPair("worldtype", buffer);
 	}
 
-	if (description)
-		lump->KeyPair("message", description);
-	else
-		lump->KeyPair("message", "Oblige Level");
+#if 0  // REMOVE THIS, let Lua code supply these values
+	if (qk_sub_format == SUBFMT_HalfLife)
+	{
+		lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
+		lump->KeyPair("mapversion", "220");
+		lump->KeyPair("MaxRange", "4096");
+		lump->KeyPair("sounds", "1");
+	}
+#endif
+
+	csg_entity_c *ob_world = FindObligeWorldspawn();
+
+	csg_property_set_c::iterator PI;
+
+	if (ob_world)
+	{
+		for (PI = ob_world->props.begin() ; PI != ob_world->props.end() ; PI++)
+		{
+			lump->KeyPair(PI->first.c_str(), "%s", PI->second.c_str());
+		}
+	}
 
 	lump->KeyPair("classname", "worldspawn");
 
@@ -790,6 +815,10 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
 		const char *name = E->id.c_str();
 
+		// this is mainly to skip broken map-models
+		if (strcmp(name, "nothing") == 0)
+			continue;
+
 		// skip special (Oblige only) entities
 		if (strncmp(name, "oblige_", 7) == 0)
 			continue;
@@ -801,9 +830,7 @@ void BSP_WriteEntities(int lump_num, const char *description)
 		lump->Printf("{\n");
 
 		// write entity properties
-		csg_property_set_c::iterator PI;
-
-		for (PI = E->props.begin(); PI != E->props.end(); PI++)
+		for (PI = E->props.begin() ; PI != E->props.end() ; PI++)
 		{
 			lump->KeyPair(PI->first.c_str(), "%s", PI->second.c_str());
 		}
@@ -881,7 +908,7 @@ qLump_c * BSP_CreateInfoLump()
 
 	ob_read_all_config(&lines, false /* need_full */);
 
-	for (unsigned int i = 0; i < lines.size(); i++)
+	for (unsigned int i = 0 ; i < lines.size() ; i++)
 		L->Printf("%s\n", lines[i].c_str());
 
 	L->Printf("\n\n\n");
