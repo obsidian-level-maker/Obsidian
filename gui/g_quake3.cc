@@ -728,7 +728,7 @@ static inline void DoWriteSurface(dsurface3_t & raw_surf)
 }
 
 
-static void Q3_WriteSurface(quake_face_c *face)
+static void Q3_AddSurface(quake_face_c *face)
 {
 	SYS_ASSERT(face->node);
 	SYS_ASSERT(face->node_side >= 0);
@@ -849,9 +849,9 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 	{
 		Q3_WriteLeafSurf(q3_total_surfaces);
 
-		raw_leaf.numLeafSurfaces += 1;
+		Q3_AddSurface(leaf->faces[i]);
 
-		Q3_WriteSurface(leaf->faces[i]);
+		raw_leaf.numLeafSurfaces += 1;
 	}
 
 	raw_leaf.firstLeafBrush = q3_total_leaf_brushes;
@@ -1011,6 +1011,99 @@ static void Q3_WriteBSP()
 //------------------------------------------------------------------------
 
 
+static void Model_FloorOrCeilFace(csg_brush_c *B, bool is_ceil)
+{
+	// needed for quake_face_c, but only the 'plane' field is used
+	quake_node_c fake_node;
+
+	// node splitting plane...
+	brush_plane_c& BP = is_ceil ? B->b : B->t;
+
+	if (BP.slope)
+	{
+		fake_node.plane = *BP.slope;
+
+		if (fake_node.plane.nz < 0)
+			fake_node.plane.Flip();
+	}
+	else
+	{
+		fake_node.plane.x  = fake_node.plane.y  = 0;
+		fake_node.plane.nx = fake_node.plane.ny = 0;
+
+		fake_node.plane.z  = BP.z;
+		fake_node.plane.nz = +1;
+	}
+
+	// create the face
+
+	quake_face_c face;
+
+	face.node = &fake_node;
+	face.node_side = is_ceil ? 1 : 0;
+
+	// add vertices
+	for (unsigned int i = 0 ; i < B->verts.size() ; i++)
+	{
+		unsigned int k = is_ceil ? (B->verts.size() - 1 - i) : i;
+
+		brush_vert_c *V = B->verts[k];
+
+		double z = fake_node.plane.CalcZ(V->x, V->y);
+
+		face.AddVert(V->x, V->y, z);
+	}
+
+	// setup texturing
+	face.texture = BP.face.getStr("tex", "missing");
+
+	face.SetupMatrix(&fake_node.plane, face.node_side);
+
+	// add it!
+	Q3_AddSurface(&face);
+}
+
+
+static void Model_CreateSideFace(csg_brush_c *B, unsigned int k)
+{
+	// FIXME !!!!
+}
+
+
+static void ProcessModelBrush(csg_brush_c *B, dmodel3_t *raw_model, csg_entity_c *E)
+{
+	// create surfaces
+	if (B->bkind != BKIND_Clip &&
+		B->bkind != BKIND_Trigger &&
+		B->bkind != BKIND_Light)
+	{
+		Model_FloorOrCeilFace(B, true /* is_ceil */);
+		Model_FloorOrCeilFace(B, false);
+
+		for (unsigned int k = 0 ; k < B->verts.size() ; k++)
+		{
+			Model_CreateSideFace(B, k);
+		}
+	}
+
+	// collision brush
+	if (B->bkind != BKIND_Detail &&
+		B->bkind != BKIND_Light)
+	{
+		Q3_AddBrush(B);
+	}
+
+	// update mins and maxs
+	raw_model->mins[0] = MIN(raw_model->mins[0], B->min_x);
+	raw_model->mins[1] = MIN(raw_model->mins[1], B->min_y);
+	raw_model->mins[2] = MIN(raw_model->mins[2], B->b.z);
+
+	raw_model->maxs[0] = MAX(raw_model->maxs[0], B->max_x);
+	raw_model->maxs[1] = MAX(raw_model->maxs[1], B->max_y);
+	raw_model->maxs[2] = MAX(raw_model->maxs[2], B->t.z);
+}
+
+
 static void Q3_WriteModel(dmodel3_t *model)
 {
 	// fix endianness
@@ -1049,11 +1142,21 @@ static void Q3_CreateSubModel(csg_entity_c *E)
 	raw_model.firstSurface = q3_total_surfaces;
 	raw_model.firstBrush   = (int)q3_brushes.size();
 
-	// FIXME !!!!  surfaces
+	// init bbox
+	for (int b = 0 ; b < 3 ; b++)
+	{
+		raw_model.mins[b] = +9e9;
+		raw_model.maxs[b] = -9e9;
+	}
 
-	// FIXME !!!!  brushes
+	// process all brushes associated with this entity
+	for (unsigned int i = 0 ; i < all_brushes.size() ; i++)
+	{
+		csg_brush_c *B = all_brushes[i];
 
-	// FIXME !!!!  mins and maxs
+		if (B->link_ent == E)
+			ProcessModelBrush(B, &raw_model, E);
+	}
 
 	raw_model.numSurfaces = q3_total_surfaces      - raw_model.firstSurface;
 	raw_model.numBrushes  = (int)q3_brushes.size() - raw_model.firstBrush;
