@@ -1575,10 +1575,19 @@ typedef struct
 } potential_face_t;
 
 
+struct potface_Z_Cmp
+{
+	inline bool operator() (const potential_face_t& A, const potential_face_t& B) const
+	{
+		return A.Lz1 < B.Lz1;
+	}
+};
+
+
 static void AddPotentialFace(quake_side_c *S, csg_brush_c *B, brush_vert_c *V,
-								  double g_Lz1, double g_Lz2,
-								  double g_Rz1, double g_Rz2,
-								  std::vector<potential_face_t>& pots)
+							 double g_Lz1, double g_Lz2,
+							 double g_Rz1, double g_Rz2,
+							 std::vector<potential_face_t>& pots)
 {
 	potential_face_t pface;
 
@@ -1593,10 +1602,10 @@ static void AddPotentialFace(quake_side_c *S, csg_brush_c *B, brush_vert_c *V,
 		return;
 
 	// check intersection with the gap
-	if (pface.Lz1 > g_Lz2 - Z_EPSILON && pface.Rz1 > g_Rz2 - Z_EPSILON)
+	if ((pface.Lz1 > g_Lz2 - Z_EPSILON) && (pface.Rz1 > g_Rz2 - Z_EPSILON))
 		return;
 
-	if (pface.Lz2 < g_Lz1 + Z_EPSILON && pface.Rz2 < g_Rz1 + Z_EPSILON)
+	if ((pface.Lz2 < g_Lz1 + Z_EPSILON) && (pface.Rz2 < g_Rz1 + Z_EPSILON))
 		return;
 
 	pface.bvert = V;
@@ -1623,18 +1632,57 @@ static void CollectPotentialFaces(quake_side_c *S, gap_c *G,
 			AddPotentialFace(S, V->parent, V, g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
 		}
 	}
-	else
+	else if (! S->TwoSided())
 	{
-		// emergency fallback  [ should be RARE! ]
+		// emergency fallback for one-sided walls
+		// [ should be RARE! ]
 
-		csg_brush_c *B = G->bottom;
-		csg_brush_c *T = G->top;
+/// fprintf(stderr, "**** EMERGENCY FALLBACK ****\n");
 
-		// TODO : pick bvert which aligns with side S
+		potential_face_t pface;
 
-		AddPotentialFace(S, B, B->verts[0], g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
-		AddPotentialFace(S, T, T->verts[0], g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
+		pface.Lz1 = g_Lz1;
+		pface.Lz2 = g_Lz2;
+
+		pface.Rz1 = g_Rz1;
+		pface.Rz2 = g_Rz2;
+
+		pface.bvert = G->bottom->verts[0];
+
+		pots.push_back(pface);
 	}
+}
+
+
+static void Potface_TryMerge(potential_face_t *A, potential_face_t *B)
+{
+	if (A->bvert == NULL || B->bvert == NULL)
+		return;
+
+	// A is above B?
+	if ((A->Lz1 > B->Lz2 - Z_EPSILON) && (A->Rz1 > B->Rz2 - Z_EPSILON))
+		return;
+
+	// A is below B?
+	if ((A->Lz2 < B->Lz1 + Z_EPSILON) && (A->Rz2 < B->Rz1 + Z_EPSILON))
+		return;
+
+	// they overlap, merge B into A
+
+	// use the brushvert from the largest face
+	double A_size = (A->Lz2 - A->Lz1) + (A->Rz2 + A->Rz1);
+	double B_size = (B->Lz2 - B->Lz1) + (B->Rz2 + B->Rz1);
+
+	if (B_size > A_size)
+		A->bvert = B->bvert;
+
+	B->bvert = NULL;
+
+	A->Lz1 = MIN(A->Lz1, B->Lz1);
+	A->Lz2 = MAX(A->Lz2, B->Lz2);
+
+	A->Rz1 = MIN(A->Rz1, B->Rz1);
+	A->Rz2 = MAX(A->Rz2, B->Rz2);
 }
 
 
@@ -1668,9 +1716,21 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 
 	CollectPotentialFaces(S, G, g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
 
-	// FIXME: sort in Z order
 
-	// FIXME: if two faces overlap, merge them
+	// sort in Z order
+	std::sort(pots.begin(), pots.end(), potface_Z_Cmp());
+
+
+	// when two faces overlap, merge them
+	// [ can "kill" a potential face by setting bvert to NULL ]
+	for (int pass = 0 ; pass < 6 ; pass++)
+	{
+		for (unsigned int i = 1 ; i < pots.size() ; i++)
+		for (unsigned int k = 0 ; k < i ; k++)
+		{
+			Potface_TryMerge(&pots[k], &pots[i]);
+		}
+	}
 
 
 	// clip them to the gap
@@ -1683,71 +1743,6 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 						 pots[k].Lz1, pots[k].Lz2,
 						 pots[k].Rz1, pots[k].Rz2);
 		}
-	}
-
-
-	// @@@@@@@@@ OLD CRUD @@@@@@@@@@@@@@@
-
-
-	// one-sided walls are the easiest to handle
-
-	if (! S->TwoSided())
-	{
-		brush_vert_c *bvert = NULL;
-
-		// Note: the brush sides we are interested in are on the OPPOSITE
-		//       side of the snag, since regions are created from *inward*
-		//       facing snags, but brush sides face outward.
-		if (S->snag->partner)
-			bvert = S->snag->partner->FindOneSidedVert(0);
-
-		// fallback to something safe
-		// TODO : pick brushvert with closest normal to snag
-		if (! bvert)
-			bvert = G->bottom->verts[0];
-
-		// using this to handle overly tall faces
-		return;
-	}
-
-
-	// two sided : check for which solid areas touch this gap
-
-	SYS_ASSERT(S->snag->partner);
-
-	region_c *back = S->snag->partner->region;
-
-	unsigned int numgaps = back->gaps.size();
-
-	// k is not really a gap number here, but the solids in-between
-	for (unsigned int k = 0 ; k <= numgaps ; k++)
-	{
-		// the side of this brush will supply the face
-		csg_brush_c *B;
-
-		if (k < numgaps)
-			B = back->gaps[k]->bottom;
-		else
-			B = back->gaps[k-1]->top;
-
-		// get the brush's side
-		brush_vert_c *bvert = S->snag->partner->FindBrushVert(B);
-
-		// fallback to something safe
-		// TODO : pick brushvert with closest normal to snag
-		if (! bvert)
-			bvert = B->verts[0];
-
-		// get the quad
-		double f_Lz1 = B->b.CalcZ(S->x1, S->y1);
-		double f_Lz2 = B->t.CalcZ(S->x1, S->y1);
-
-		double f_Rz1 = B->b.CalcZ(S->x2, S->y2);
-		double f_Rz2 = B->t.CalcZ(S->x2, S->y2);
-
-		ClipWallFace(S->on_node, leaf, S, bvert,
-					 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
-					 f_Lz1, f_Lz2, f_Rz1, f_Rz2);
 	}
 }
 
