@@ -3481,3 +3481,18 @@ function Quake3_test()
   end
 end
 
+
+function Quake3_conversion()
+  each B in all_brushes do
+    if B[1].m != "xxxliquid" then
+      Trans.brush(B)
+    end
+  end
+
+  each E in all_entities do
+    if E.id != "nothing" then
+      raw_add_entity(E)
+    end
+  end
+end
+
