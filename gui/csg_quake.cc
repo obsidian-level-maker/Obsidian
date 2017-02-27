@@ -327,6 +327,7 @@ int quake_plane_c::BrushSide(csg_brush_c *B, float epsilon) const
 
 double quake_plane_c::CalcZ(double ax, double ay) const
 {
+	// for vertical planes, result is meaningless
 	if (fabs(nz) < 0.01)
 		return 0;
 
@@ -1564,6 +1565,79 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 }
 
 
+typedef struct
+{
+	brush_vert_c * bvert;
+
+	double Lz1, Lz2;
+	double Rz1, Rz2;
+
+} potential_face_t;
+
+
+static void AddPotentialFace(quake_side_c *S, csg_brush_c *B, brush_vert_c *V,
+								  double g_Lz1, double g_Lz2,
+								  double g_Rz1, double g_Rz2,
+								  std::vector<potential_face_t>& pots)
+{
+	potential_face_t pface;
+
+	pface.Lz1 = B->b.CalcZ(S->x1, S->y1);
+	pface.Lz2 = B->t.CalcZ(S->x1, S->y1);
+
+	pface.Rz1 = B->b.CalcZ(S->x2, S->y2);
+	pface.Rz2 = B->t.CalcZ(S->x2, S->y2);
+
+	// check coords are sane
+	if ((pface.Lz1 > pface.Lz2 - Z_EPSILON) && (pface.Rz1 > pface.Rz2 - Z_EPSILON))
+		return;
+
+	// check intersection with the gap
+	if (pface.Lz1 > g_Lz2 - Z_EPSILON && pface.Rz1 > g_Rz2 - Z_EPSILON)
+		return;
+
+	if (pface.Lz2 < g_Lz1 + Z_EPSILON && pface.Rz2 < g_Rz1 + Z_EPSILON)
+		return;
+
+	pface.bvert = V;
+
+	pots.push_back(pface);
+}
+
+
+static void CollectPotentialFaces(quake_side_c *S, gap_c *G,
+								  double g_Lz1, double g_Lz2,
+								  double g_Rz1, double g_Rz2,
+								  std::vector<potential_face_t>& pots)
+{
+	// Note: the brush sides we are interested in are on the OPPOSITE
+	//       side of the snag, since regions are created from *inward*
+	//       facing snags, but brush sides face outward.
+
+	if (S->snag->partner)
+	{
+		for (unsigned int n = 0 ; n < S->snag->partner->sides.size() ; n++)
+		{
+			brush_vert_c *V = S->snag->partner->sides[n];
+
+			AddPotentialFace(S, V->parent, V, g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
+		}
+	}
+	else
+	{
+		// emergency fallback  [ should be RARE! ]
+
+		csg_brush_c *B = G->bottom;
+		csg_brush_c *T = G->top;
+
+		// TODO : pick bvert which aligns with side S
+
+		AddPotentialFace(S, B, B->verts[0], g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
+		AddPotentialFace(S, T, T->verts[0], g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
+	}
+}
+
+
 static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
                             quake_side_c *S, gap_c *G)
 {
@@ -1589,7 +1663,30 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 	if (g_Rz1 > g_Rz2) g_Rz1 = g_Rz2 = (g_Rz1 + g_Rz2) * 0.5;
 
 
-	double mid_z = (g_Lz1 + g_Lz2 + g_Rz1 + g_Rz2) * 0.25;
+	// collect all faces which overlap the gap
+	std::vector<potential_face_t> pots;
+
+	CollectPotentialFaces(S, G, g_Lz1, g_Lz2, g_Rz1, g_Rz2, pots);
+
+	// FIXME: sort in Z order
+
+	// FIXME: if two faces overlap, merge them
+
+
+	// clip them to the gap
+	for (unsigned int k = 0 ; k < pots.size() ; k++)
+	{
+		if (pots[k].bvert)
+		{
+			ClipWallFace(S->on_node, leaf, S, pots[k].bvert,
+						 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
+						 pots[k].Lz1, pots[k].Lz2,
+						 pots[k].Rz1, pots[k].Rz2);
+		}
+	}
+
+
+	// @@@@@@@@@ OLD CRUD @@@@@@@@@@@@@@@
 
 
 	// one-sided walls are the easiest to handle
@@ -1602,7 +1699,7 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 		//       side of the snag, since regions are created from *inward*
 		//       facing snags, but brush sides face outward.
 		if (S->snag->partner)
-			bvert = S->snag->partner->FindOneSidedVert(mid_z);
+			bvert = S->snag->partner->FindOneSidedVert(0);
 
 		// fallback to something safe
 		// TODO : pick brushvert with closest normal to snag
@@ -1610,9 +1707,6 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 			bvert = G->bottom->verts[0];
 
 		// using this to handle overly tall faces
-		ClipWallFace(S->on_node, leaf, S, bvert,
-					 g_Lz1, g_Lz2, g_Rz1, g_Rz2,
-					 g_Lz1, g_Lz2, g_Rz1, g_Rz2);
 		return;
 	}
 
@@ -1629,7 +1723,6 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 	for (unsigned int k = 0 ; k <= numgaps ; k++)
 	{
 		// the side of this brush will supply the face
-		// [ we do not support a group of stacked brushes ]
 		csg_brush_c *B;
 
 		if (k < numgaps)
