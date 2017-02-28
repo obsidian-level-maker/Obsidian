@@ -1134,41 +1134,36 @@ void quake_face_c::StoreWinding(const std::vector<quake_vertex_c>& winding,
 
 void quake_face_c::SetupMatrix(const quake_plane_c *plane, int pl_side)
 {
+	float nx = plane->nx * (pl_side ? -1 : +1);
+	float ny = plane->ny * (pl_side ? -1 : +1);
+	float nz = plane->nz * (pl_side ? -1 : +1);
+
 	s[0] = s[1] = s[2] = s[3] = 0;
 	t[0] = t[1] = t[2] = t[3] = 0;
 
-	if (plane->nx > 0.5)  // PLANE_X
+	if (nx > 0.5)  // PLANE_X
 	{
 		s[1] = 1; t[2] = -1;
 	}
-	else if (plane->nx < -0.5)
+	else if (nx < -0.5)
 	{
 		s[1] = -1; t[2] = -1;
 	}
-	else if (plane->ny < -0.5)  // PLANE_Y
+	else if (ny < -0.5)  // PLANE_Y
 	{
 		s[0] = 1; t[2] = -1;
 	}
-	else if (plane->ny > 0.5)
+	else if (ny > 0.5)
 	{
 		s[0] = -1; t[2] = -1;
 	}
-	else if (plane->nz >= 0)  // PLANE_Z
+	else if (nz >= 0)  // PLANE_Z
 	{
 		s[0] = 1; t[1] = -1;
 	}
 	else
 	{
 		s[0] = 1; t[1] = 1;
-	}
-
-	if (pl_side == 1)
-	{
-		for (int i = 0 ; i < 4 ; i++)
-		{
-			s[i] = -s[i];
-			t[i] = -t[i];
-		}
 	}
 }
 
