@@ -7,13 +7,26 @@ WORK IN PROGRESS
 Quake3 CSG Code
 ---------------
 
++  texture coords for brushes:
+   - can set a default "u_scale" and "v_scale" for textures
+     [ new gui.texture_prop() function ]
+
+   - specify uv coords in brushes:
+     -  tu, tv in each side (for top face
+     -  bu, bv in each side (for bottom face)
+     -  u1,u2, v1,v2 in side faces
+
++  proper "detail" brushes
+   - find touching leaf(s), share surfaces and brushes in them
+   - for visible but no-collision, use m=liquid + medium="air"
+   - check lighting logic
+   - issue : cannot have BKIND_Detail + BKIND_Liquid  [ etc ]
+
 +  lighting
 -  grid lighting
+-  ensure sun lighting works
 
-+  texture coords from brushes
-
--  ability to set flags/contents for shaders
--  fallback brushvert in CreateWallFaces()
+-  gui.property("cluster_size", NNN)
 
 DONE:  visibility
 DONE:  clip brushes
