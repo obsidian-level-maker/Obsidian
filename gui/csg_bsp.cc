@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1955,31 +1955,28 @@ static void DiscoverThemGaps()
 	{
 		region_c *R = all_regions[i];
 
-		if (R->brushes.size() <= 1)
+		// collect all the solid brushes
+		// [ detail brushes are skipped, and clip brushes ]
+		std::vector<csg_brush_c *> solids;
+
+		for (unsigned int n = 0 ; n < R->brushes.size() ; n++)
+		{
+			csg_brush_c *B = R->brushes[n];
+
+			if (B->bkind == BKIND_Solid || B->bkind == BKIND_Sky)
+				solids.push_back(B);
+		}
+
+		if (solids.size() <= 1)
 			continue;
 
-		std::sort(R->brushes.begin(), R->brushes.end(), csg_brush_bz_Compare());
+		std::sort(solids.begin(), solids.end(), csg_brush_bz_Compare());
 
-		csg_brush_c *high = R->brushes[0];
+		csg_brush_c *high = solids[0];
 
-		for (unsigned int k = 1 ; k < R->brushes.size() ; k++)
+		for (unsigned int k = 1 ; k < solids.size() ; k++)
 		{
-			csg_brush_c *A = R->brushes[k];
-
-			// skip the "ephemeral" brushes
-			if (high->bkind == BKIND_Liquid  ||
-			    high->bkind == BKIND_Trigger ||
-				high->bkind == BKIND_Light)
-			{
-				high = A;
-				continue;
-			}
-			else if (A->bkind == BKIND_Liquid  ||
-					 A->bkind == BKIND_Trigger ||
-					 A->bkind == BKIND_Light)
-			{
-				continue;
-			}
+			csg_brush_c *A = solids[k];
 
 			if (A->b.z > high->t.z + Z_EPSILON)
 			{
