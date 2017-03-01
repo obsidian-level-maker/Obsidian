@@ -618,9 +618,9 @@ static void AddIntersection(std::vector<intersect_t> & cut_list,
 
 
 static bool TestIntersectionOpen(std::vector<intersect_t> & cuts,
-                                 unsigned int first, unsigned int last, int dir)
+                                 int first, int last, int dir)
 {
-	unsigned int i;
+	int i;
 
 	const double ANG_EPSILON = 1e-5;
 
@@ -630,7 +630,7 @@ static bool TestIntersectionOpen(std::vector<intersect_t> & cuts,
 			return false;
 
 	// find intersection with closest angle along dir
-	unsigned int closest = -1;
+	int closest = -1;
 	double cl_angle = 999.0;
 
 	for (i = first ; i <= last ; i++)
@@ -690,8 +690,8 @@ static void MergeIntersections(std::vector<intersect_t> & cuts,
 
 		/// LogPrintf("DIST %1.0f [%d..%d]\n", cuts[first].along, first, last);
 
-		bool backward = TestIntersectionOpen(cuts, first, last, -1);
-		bool forward  = TestIntersectionOpen(cuts, first, last, +1);
+		bool backward = TestIntersectionOpen(cuts, (int)first, (int)last, -1);
+		bool forward  = TestIntersectionOpen(cuts, (int)first, (int)last, +1);
 
 		/// LogPrintf("--> backward:%s forward:%s\n",
 		///          backward ? "OPEN" : "closed",
