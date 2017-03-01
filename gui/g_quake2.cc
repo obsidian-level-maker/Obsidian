@@ -544,8 +544,7 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
 	SYS_ASSERT(leaf->medium >= 0);
 	SYS_ASSERT(leaf->medium <= MEDIUM_SOLID);
 
-	if (leaf == qk_solid_leaf)
-		return;
+	SYS_ASSERT(leaf != qk_solid_leaf);
 
 
 	dleaf2_t raw_leaf;

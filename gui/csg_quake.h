@@ -290,6 +290,8 @@ public:
 /***** VARIABLES ****************/
 
 extern quake_node_c * qk_bsp_root;
+
+// this only used for Quake1 and closely related games
 extern quake_leaf_c * qk_solid_leaf;
 
 // this not used for Quake3 handling

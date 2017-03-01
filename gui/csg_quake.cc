@@ -1803,9 +1803,8 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 	if (qk_game == 1)
 		return qk_solid_leaf;
 
-	// optimisation -- VALID ???
-	if (group.brushes.empty())
-		return qk_solid_leaf;
+///---	if (group.brushes.empty())
+///---		return qk_solid_leaf;
 
 	quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
@@ -1830,7 +1829,7 @@ static quake_leaf_c * Solid_Leaf(region_c *R, unsigned int g, int is_ceil,
 
 	quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
-	// add _all_ solid brushes for the floor/ceiling (Quake II)
+	// add _all_ solid brushes for the floor/ceiling
 	double brush_z1 = -9e9;
 	double brush_z2 = +9e9;
 
@@ -1964,8 +1963,9 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 			// this liquid surface lies within this gap
 			// (above the floor and below the ceiling)
 
-			// TODO: share faces between the AIR leaf and LIQUID leaf
-			// [ but engine will always draw both leafs, so not essential ]
+			// Note: the faces only exist in one leaf (the AIR or the LIQUID leaf).
+			// That is not quite right, but OK since the engine will always
+			// draw both leafs [ due to OBLIGE's visibility system ]
 
 			L_node = new quake_node_c;
 			L_leaf = new quake_leaf_c(medium);
@@ -2373,6 +2373,7 @@ void CSG_QUAKE_Build()
 	CreateClusters(GROUP);
 
 
+	// this not used for Quake3
 	qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
 	qk_solid_leaf->index = 0;
 
@@ -2386,7 +2387,8 @@ void CSG_QUAKE_Build()
 	LogPrintf("root = %p\n", qk_bsp_root);
 #endif
 
-	RemoveSolidNodes(qk_bsp_root);
+	if (qk_game == 1)
+		RemoveSolidNodes(qk_bsp_root);
 
 	SYS_ASSERT(qk_bsp_root);
 
