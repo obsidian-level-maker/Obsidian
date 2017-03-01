@@ -529,6 +529,18 @@ bool region_c::HasSameBrushes(const region_c *other) const
 }
 
 
+double region_c::TopZ(csg_brush_c *B) const
+{
+	return B->t.CalcZ(mid_x, mid_y);
+}
+
+
+double region_c::BottomZ(csg_brush_c *B) const
+{
+	return B->b.CalcZ(mid_x, mid_y);
+}
+
+
 void region_c::ClockwiseSnags()
 {
 	if (snags.size() < 2)
@@ -1778,11 +1790,11 @@ static void CompareRegionGaps(region_c *R1, region_c *R2)
 		gap_c *B = R1->gaps[b_idx];
 		gap_c *F = R2->gaps[f_idx];
 
-		double B_z1 = B->bottom->t.z;
-		double B_z2 = B->   top->b.z;
+		double B_z1 = R1->TopZ   (B->bottom);
+		double B_z2 = R1->BottomZ(B->top);
 
-		double F_z1 = F->bottom->t.z;
-		double F_z2 = F->   top->b.z;
+		double F_z1 = R2->TopZ   (F->bottom);
+		double F_z2 = R2->BottomZ(F->top);
 
 		if (B_z2 < F_z1 + Z_EPSILON)
 		{
@@ -1978,7 +1990,7 @@ static void DiscoverThemGaps()
 		{
 			csg_brush_c *A = solids[k];
 
-			if (A->b.z > high->t.z + Z_EPSILON)
+			if (R->BottomZ(A) > R->TopZ(high) + Z_EPSILON)
 			{
 				// found a gap
 				gap_c *gap = new gap_c(high, A);
@@ -1992,7 +2004,7 @@ static void DiscoverThemGaps()
 			// no gap implies that these two brushes touch/overlap,
 			// hence update the highest one.
 
-			if (A->t.z > high->t.z)
+			if (R->TopZ(A) > R->TopZ(high))
 				high = A;
 		}
 	}

@@ -138,6 +138,10 @@ public:
 
 	bool isClosed() const;
 
+	// these use mid-point of region to compute Z for a brush top/bottom
+	double TopZ   (csg_brush_c *B) const;
+	double BottomZ(csg_brush_c *B) const;
+
 	void GetBounds(double *x1, double *y1, double *x2, double *y2) const;
 
 	bool ContainsPoint(double x, double y) const;
