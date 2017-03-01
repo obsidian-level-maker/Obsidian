@@ -4,8 +4,41 @@ WORK IN PROGRESS
 
 
 
+>>>  liquid handling
+     Q/ more than just a detail brush with all
+        non-top face having "nothing" texture   ?
+
+
+Brush Kinds
+-----------
+
+Q/ liquid brushes are always detail?
+A/ for Q3, yes, but not for Q1 or Q2 (due to dleaf.contents)
+
+-  probably remove "BKIND_Detail", make it a flag instead, Lua: detail=1
+
+-  clip brushes are always detail brushes [ just inhibit the surfaces ]
+
+-  support "medium=air" for liquids, just inhibits the collision brushes
+   [ only useful for detail or map-models, so force to be detail ]
+
+-  sky brushes are a minor variation of BKIND_Solid
+   hence remove BKIND_Sky, have a flag instead, Lua: sky=1
+
+-  not sure about BKIND_Trigger -- review purpose and usage!
+
+
+
 Quake3 CSG Code
 ---------------
+
+!! issue : cannot have BKIND_Detail + BKIND_Liquid  [ etc ]
+
++  proper "detail" brushes
+   - find touching leaf(s), as per BKIND_Clip
+   - share surfaces with all leafs that contain theme
+   - check lighting logic
+   - review Q1 and Q2 code
 
 +  texture coords for brushes:
    - can set a default "u_scale" and "v_scale" for textures
@@ -15,12 +48,6 @@ Quake3 CSG Code
      -  tu, tv in each side (for top face
      -  bu, bv in each side (for bottom face)
      -  u1,u2, v1,v2 in side faces
-
-+  proper "detail" brushes
-   - find touching leaf(s), share surfaces and brushes in them
-   - for visible but no-collision, use m=liquid + medium="air"
-   - check lighting logic
-   - issue : cannot have BKIND_Detail + BKIND_Liquid  [ etc ]
 
 +  lighting
 -  grid lighting
