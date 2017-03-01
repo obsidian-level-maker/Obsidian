@@ -702,6 +702,13 @@ static quake_plane_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 
 	P->Normalize();
 
+	// completely flat?  then don't need it
+	if (fabs(P->nz) > 0.999)
+	{
+		delete P;
+		return NULL;
+	}
+
 	// too steep?
 	if (fabs(P->nz) < 0.1)
 	{
