@@ -676,6 +676,9 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 				P->bkind == BKIND_Clip))
 			continue;
 
+		if (P->bflags & BFLAG_NoClip)
+			continue;
+
 		// clone it, except vertices or slopes
 		csg_brush_c *P2 = new csg_brush_c(P);
 

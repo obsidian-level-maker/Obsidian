@@ -1145,9 +1145,7 @@ static void Model_CreateSideFace(csg_brush_c *B, unsigned int k)
 static void ProcessModelBrush(csg_brush_c *B, dmodel3_t *raw_model, csg_entity_c *E)
 {
 	// create surfaces
-	if (B->bkind != BKIND_Clip &&
-		B->bkind != BKIND_Trigger &&
-		B->bkind != BKIND_Light)
+	if (B->bkind == BKIND_Solid || B->bkind == BKIND_Detail)
 	{
 		Model_FloorOrCeilFace(B, true /* is_ceil */);
 		Model_FloorOrCeilFace(B, false);
@@ -1159,8 +1157,8 @@ static void ProcessModelBrush(csg_brush_c *B, dmodel3_t *raw_model, csg_entity_c
 	}
 
 	// collision brush
-	if (B->bkind != BKIND_Detail &&
-		B->bkind != BKIND_Light)
+	if ((B->bkind == BKIND_Solid || B->bkind == BKIND_Clip) &&
+		! (B->bflags & BFLAG_NoClip))
 	{
 		Q3_AddBrush(B);
 	}

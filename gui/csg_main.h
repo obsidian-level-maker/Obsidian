@@ -133,6 +133,7 @@ brush_kind_e;
 typedef enum
 {
 	BFLAG_Sky	   = (1 << 4),   // special handling for lighting
+	BFLAG_NoClip   = (1 << 5),   // inhibit clipping for this brush
 
 	// internal flags
 	BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box

@@ -734,6 +734,9 @@ static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 	if (B->props.getStr("sky"))
 		B->bflags |= BFLAG_Sky;
 
+	if (B->props.getStr("noclip"))
+		B->bflags |= BFLAG_NoClip;
+
 	// parse brush kind from 'm' field of the props table
 
 	SYS_ASSERT(kind);

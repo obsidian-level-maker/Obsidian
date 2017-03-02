@@ -484,7 +484,7 @@ static void CreateBrushes(quake_group_c & group)
 			if (B->bflags & BRU_IF_Seen)
 				continue;
 
-			if (B->bkind == BKIND_Solid)
+			if (B->bkind == BKIND_Solid && ! (B->bflags & BFLAG_NoClip))
 			{
 				group.AddBrush(R->brushes[k]);
 
