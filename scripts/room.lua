@@ -3412,9 +3412,11 @@ function Quake3_test()
   if false then
     local P_tex = "base_trim/pewter_shiney"
 
-    local P = brushlib.quad(160, 300, 224, 370, 0, 192)
+    local P = brushlib.quad(130, 256, 224, 370, 0, 170)
 
     brushlib.set_tex(P, P_tex, P_tex)
+
+--  brushlib.slope_top(P, -1, -1, 1.4)
 
     Trans.brush(P)
   end
@@ -3452,7 +3454,7 @@ function Quake3_test()
 
   -- model test --
 
-  if true then
+  if false then
     -- create an entity table.
     -- the 'link_id' field must be unique, and links brushes to the entity.
     -- the coordinates will be unused.
