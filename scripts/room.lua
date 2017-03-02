@@ -3412,7 +3412,7 @@ function Quake3_test()
   if false then
     local P_tex = "base_trim/pewter_shiney"
 
-    local P = brushlib.quad(130, 256, 224, 370, 0, 170)
+    local P = brushlib.quad(128, 256, 224, 370, 0, 170)
 
     brushlib.set_tex(P, P_tex, P_tex)
 
