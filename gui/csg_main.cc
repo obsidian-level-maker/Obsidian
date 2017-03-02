@@ -745,10 +745,10 @@ static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 		B->bflags |= BFLAG_Sky;
 
 	if (B->props.getInt("noclip") > 0)
-		B->bflags |= BFLAG_NoClip;
+		B->bflags |= BFLAG_NoClip | BFLAG_Detail;
 
 	if (B->props.getInt("nodraw") > 0)
-		B->bflags |= BFLAG_NoDraw;
+		B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
 
 	// parse brush kind from 'm' field of the props table
 
@@ -765,10 +765,14 @@ static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 		B->bflags |= BFLAG_Sky;
 		return BKIND_Solid;
 	}
-
-	if (StringCaseCmp(kind, "clip") == 0)
+	else if (StringCaseCmp(kind, "clip") == 0)
 	{
-		B->bflags |= BFLAG_NoDraw;
+		B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
+		return BKIND_Solid;
+	}
+	else if (StringCaseCmp(kind, "detail") == 0)
+	{
+		B->bflags |= BFLAG_Detail;
 		return BKIND_Solid;
 	}
 

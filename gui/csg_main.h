@@ -132,6 +132,7 @@ typedef enum
 {
 	BFLAG_Detail   = (1 << 0),   // not structural (ignored for node/leaf creation)
 	BFLAG_Sky      = (1 << 1),   // special handling for lighting
+
 	BFLAG_NoClip   = (1 << 2),   // inhibit clipping for this brush
 	BFLAG_NoDraw   = (1 << 3),   // inhibit faces for this brush
 
