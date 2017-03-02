@@ -484,7 +484,7 @@ static void CreateBrushes(quake_group_c & group)
 			if (B->bflags & BRU_IF_Seen)
 				continue;
 
-			if (B->bkind == BKIND_Solid || B->bkind == BKIND_Sky)
+			if (B->bkind == BKIND_Solid)
 			{
 				group.AddBrush(R->brushes[k]);
 
@@ -1308,7 +1308,7 @@ static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
 
 	if (is_liquid)
 		F->flags |= FACE_F_Liquid;
-	else if (B->bkind == BKIND_Sky)
+	else if (B->bflags & BFLAG_Sky)
 		F->flags |= FACE_F_Sky;
 
 	DoAddFace(F, &BP.face, node, leaf);
@@ -1351,7 +1351,7 @@ static void WallFace_Quad(quake_node_c *node, quake_leaf_c *leaf,
 
 	SYS_ASSERT(F->verts.size() >= 3);
 
-	if (bvert->parent->bkind == BKIND_Sky)
+	if (bvert->parent->bflags & BFLAG_Sky)
 		F->flags |= FACE_F_Sky;
 
 	DoAddFace(F, &bvert->face, node, leaf);

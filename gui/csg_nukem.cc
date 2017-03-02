@@ -354,7 +354,7 @@ static void NK_MakeSector(region_c *R)
 
 
 
-	if (T->bkind == BKIND_Sky)
+	if (T->bflags & BFLAG_Sky)
 	{
 		S->ceil.flags |= SECTOR_F_PARALLAX;
 	}

@@ -727,24 +727,29 @@ static quake_plane_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 }
 
 
-int Grab_BrushMode(lua_State *L, const char *kind)
+static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 {
-	// parse the 'm' field of the props table
+	// parse flags from the props table
 
-	if (! kind)
-	{
-		// not present, return the default
-		return BKIND_Solid;
-	}
+	if (B->props.getStr("sky"))
+		B->bflags |= BFLAG_Sky;
 
-	if (StringCaseCmp(kind, "solid")  == 0) return BKIND_Solid;
-	if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
-	if (StringCaseCmp(kind, "clip")   == 0) return BKIND_Clip;
+	// parse brush kind from 'm' field of the props table
 
-	if (StringCaseCmp(kind, "sky")     == 0) return BKIND_Sky;
+	SYS_ASSERT(kind);
+
+	if (StringCaseCmp(kind, "solid")   == 0) return BKIND_Solid;
+	if (StringCaseCmp(kind, "clip")    == 0) return BKIND_Clip;
 	if (StringCaseCmp(kind, "liquid")  == 0) return BKIND_Liquid;
 	if (StringCaseCmp(kind, "trigger") == 0) return BKIND_Trigger;
 	if (StringCaseCmp(kind, "light")   == 0) return BKIND_Light;
+
+	// this just for compatibilty
+	if (StringCaseCmp(kind, "sky") == 0)
+	{
+		B->bflags |= BFLAG_Sky;
+		return BKIND_Solid;
+	}
 
 	return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
 }
@@ -766,9 +771,9 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 	{
 		const char *kind_str = luaL_checkstring(L, -1);
 
-		B->bkind = Grab_BrushMode(L, kind_str);
-
 		Grab_Properties(L, stack_pos, &B->props, true);
+
+		Grab_BrushMode(B, L, kind_str);
 
 		lua_pop(L, 1);
 
@@ -1000,7 +1005,7 @@ int CSG_add_entity(lua_State *L)
 	E->y = E->props.getDouble("y");
 	E->z = E->props.getDouble("z");
 
-	// save a bit of space
+	// save a bit of space (and don't write into Q1/2/3 entities lump)
 	E->props.Remove("id"); E->props.Remove("x");
 	E->props.Remove("y");  E->props.Remove("z");
 

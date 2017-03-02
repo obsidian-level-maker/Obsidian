@@ -673,8 +673,7 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 		csg_brush_c *P = saved_all_brushes[i];
 
 		if (! ( P->bkind == BKIND_Solid ||
-				P->bkind == BKIND_Clip  ||
-				P->bkind == BKIND_Sky))
+				P->bkind == BKIND_Clip))
 			continue;
 
 		// clone it, except vertices or slopes

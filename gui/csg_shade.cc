@@ -151,7 +151,7 @@ static int SHADE_CalcRegionGroup(region_c *R)
 
 	int xor_val = 0;
 
-	if (T->bkind == BKIND_Sky)  // separate sky sectors  [ why?? ]
+	if (T->bflags & BFLAG_Sky)  // separate sky sectors  [ why?? ]
 		xor_val = 0x77777777;
 
 	int result = current_region_group;
@@ -306,7 +306,7 @@ static void SHADE_VisitRegion(region_c *R)
 
 		int sky_shadow = LB->props.getInt("sky_shadow", -1);
 
-		if (sky_shadow > 0 && T->bkind == BKIND_Sky)
+		if (sky_shadow > 0 && (T->bflags & BFLAG_Sky))
 			shadow = MAX(shadow, sky_shadow);
 	}
 

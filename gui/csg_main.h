@@ -124,7 +124,6 @@ typedef enum
 	BKIND_Detail,   // ignored for clipping (Quake 1/2 only, NOT Q3!)
 	BKIND_Clip,     // clipping only, no visible faces (Quake 1/2/3 only)
 
-	BKIND_Sky,
 	BKIND_Liquid,
 	BKIND_Trigger,  // supply a trigger special (DOOM/Nukem only)
 	BKIND_Light,    // supply extra lighting or shadow
@@ -133,6 +132,8 @@ brush_kind_e;
 
 typedef enum
 {
+	BFLAG_Sky	   = (1 << 4),   // special handling for lighting
+
 	// internal flags
 	BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
 	BRU_IF_Seen    = (1 << 17),  // already seen (Quake II)

@@ -226,8 +226,7 @@ brush_vert_c * snag_c::FindOneSidedVert(double z)
 		brush_vert_c *V = sides[i];
 
 		if (! (V->parent->bkind == BKIND_Solid  || 
-			   V->parent->bkind == BKIND_Detail ||
-			   V->parent->bkind == BKIND_Sky))
+			   V->parent->bkind == BKIND_Detail))
 			continue;
 
 		if (z > V->parent->b.z - Z_EPSILON &&
@@ -1675,11 +1674,10 @@ static bool CanSwallowBrush(region_c *R, int i, int k)
 	csg_brush_c *A = R->brushes[i];
 	csg_brush_c *B = R->brushes[k];
 
-	if (! (A->bkind == BKIND_Solid  ||
-		   A->bkind == BKIND_Sky))
+	if (A->bkind != BKIND_Solid)
 		return false;
 
-	// liquids are handled elsewhere
+	// liquids are swallowed elsewhere
 	if (B->bkind == BKIND_Liquid)
 		return false;
 
@@ -1979,7 +1977,7 @@ static void DiscoverThemGaps()
 		{
 			csg_brush_c *B = R->brushes[n];
 
-			if (B->bkind == BKIND_Solid || B->bkind == BKIND_Sky)
+			if (B->bkind == BKIND_Solid)
 				solids.push_back(B);
 		}
 
