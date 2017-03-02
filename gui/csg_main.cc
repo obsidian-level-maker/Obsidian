@@ -734,8 +734,48 @@ static quake_plane_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 }
 
 
-static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
+static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 {
+	// parse brush kind from 'm' field of the props table
+
+	SYS_ASSERT(kind);
+
+	if (StringCaseCmp(kind, "solid")   == 0)
+	{
+		B->bkind = BKIND_Solid;
+	}
+	else if (StringCaseCmp(kind, "liquid")  == 0)
+	{
+		B->bkind = BKIND_Liquid;
+	}
+	else if (StringCaseCmp(kind, "trigger") == 0)
+	{
+		B->bkind = BKIND_Trigger;
+	}
+	else if (StringCaseCmp(kind, "light")   == 0)
+	{
+		B->bkind = BKIND_Light;
+	}
+	else if (StringCaseCmp(kind, "sky") == 0)   // back compat
+	{
+		B->bkind = BKIND_Solid;
+		B->bflags |= BFLAG_Sky;
+	}
+	else if (StringCaseCmp(kind, "clip") == 0)   // back compat
+	{
+		B->bkind = BKIND_Solid;
+		B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
+	}
+	else if (StringCaseCmp(kind, "detail") == 0)   // back compat
+	{
+		B->bkind = BKIND_Solid;
+		B->bflags |= BFLAG_Detail;
+	}
+	else
+	{
+		luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
+	}
+
 	// parse flags from the props table
 
 	if (B->props.getInt("detail") > 0)
@@ -749,34 +789,6 @@ static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 
 	if (B->props.getInt("nodraw") > 0)
 		B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
-
-	// parse brush kind from 'm' field of the props table
-
-	SYS_ASSERT(kind);
-
-	if (StringCaseCmp(kind, "solid")   == 0) return BKIND_Solid;
-	if (StringCaseCmp(kind, "liquid")  == 0) return BKIND_Liquid;
-	if (StringCaseCmp(kind, "trigger") == 0) return BKIND_Trigger;
-	if (StringCaseCmp(kind, "light")   == 0) return BKIND_Light;
-
-	// backwards compatibilty
-	if (StringCaseCmp(kind, "sky") == 0)
-	{
-		B->bflags |= BFLAG_Sky;
-		return BKIND_Solid;
-	}
-	else if (StringCaseCmp(kind, "clip") == 0)
-	{
-		B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
-		return BKIND_Solid;
-	}
-	else if (StringCaseCmp(kind, "detail") == 0)
-	{
-		B->bflags |= BFLAG_Detail;
-		return BKIND_Solid;
-	}
-
-	return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
 }
 
 
