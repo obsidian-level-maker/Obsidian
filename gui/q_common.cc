@@ -310,8 +310,8 @@ u16_t BSP_AddPlane(float x, float y, float z,
 
 	// flip plane to make major axis positive
 	if ( (-nx >= MAX(ay, az)) ||
-			(-ny >= MAX(ax, az)) ||
-			(-nz >= MAX(ax, ay)) )
+		 (-ny >= MAX(ax, az)) ||
+		 (-nz >= MAX(ax, ay)) )
 	{
 		did_flip = true;
 

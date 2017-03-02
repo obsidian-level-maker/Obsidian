@@ -41,6 +41,9 @@
 #include "csg_quake.h"
 
 
+double CLUSTER_SIZE = 128.0;
+
+
 #define FACE_MAX_SIZE  (qk_game < 3 ? 240 : 768)
 
 #define NODE_DEBUG  0
