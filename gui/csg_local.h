@@ -100,8 +100,6 @@ public:
 
 	std::vector<gap_c *> gaps;
 
-	csg_brush_c *liquid;
-
 	double mid_x, mid_y;
 
 	// this forms a bounding box (dist from the mid point)
@@ -174,6 +172,9 @@ public:
 	bool reachable;
 
 	std::vector<gap_c *> neighbors;
+
+	// liquid brush whose surface is in this gap (or clipped above it)
+	csg_brush_c *liquid;
 
 public:
 	gap_c(csg_brush_c *B, csg_brush_c *T);

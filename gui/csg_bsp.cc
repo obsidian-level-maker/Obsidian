@@ -263,14 +263,14 @@ bool snag_c::IsTwoSided() const
 
 region_c::region_c() :
 	snags(), brushes(), entities(), gaps(),
-	liquid(NULL), degenerate(false),
+	degenerate(false),
 	index(-1), shade(0)
 { }
 
 
 region_c::region_c(const region_c& other) :
 	snags(), brushes(), entities(), gaps(),
-	liquid(NULL), degenerate(false),
+	degenerate(false),
 	index(-1), shade(0)
 {
 	for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
@@ -621,7 +621,8 @@ void region_c::RemoveSidesForBrush(const csg_brush_c *B)
 //------------------------------------------------------------------------
 
 gap_c::gap_c(csg_brush_c *B, csg_brush_c *T) :
-	bottom(B), top(T), reachable(false)
+	bottom(B), top(T), reachable(false),
+	liquid(NULL)
 { }
 
 gap_c::~gap_c()
@@ -826,7 +827,7 @@ static void CreateRegion(group_c & root, csg_brush_c *P)
 		snag_c *S = new snag_c(v2, v1->x, qx1 * QUANTIZE_GRID, qy1 * QUANTIZE_GRID,
 				qx2 * QUANTIZE_GRID, qy2 * QUANTIZE_GRID); */
 #else
-			snag_c *S = new snag_c(v2, v1->x, v1->y, v2->x, v2->y);
+		snag_c *S = new snag_c(v2, v1->x, v1->y, v2->x, v2->y);
 #endif
 
 		R->AddSnag(S);
@@ -839,7 +840,7 @@ static void CreateRegion(group_c & root, csg_brush_c *P)
 	}
 
 	if (R->snags.size() < 3 || max_qx <= min_qx || max_qy <= min_qy ||
-			R->HasFlattened())
+		R->HasFlattened())
 	{
 		// degenerate region : skip it
 		delete R;
@@ -1676,7 +1677,7 @@ static bool CanSwallowBrush(region_c *R, int i, int k)
 	if (A->bkind != BKIND_Solid)
 		return false;
 
-	// liquids are swallowed elsewhere
+	// liquids are handled elsewhere
 	if (B->bkind == BKIND_Liquid)
 		return false;
 
@@ -2021,7 +2022,6 @@ void DetermineLiquids()
 		if (R->gaps.empty())
 			continue;
 
-		//TODO: R->LowestTopZ(R->gaps.front()->bottom)
 		double low_z  = R->gaps.front()->bottom->b.z;
 		double high_z = R->gaps. back()->   top->t.z;
 
@@ -2032,17 +2032,23 @@ void DetermineLiquids()
 			if (B->bkind != BKIND_Liquid)
 				continue;
 
-			R->RemoveBrush(k);
-
-			// liquid is completely in the void)
+			// liquid is completely in the void?
 			if (B->t.z < low_z + Z_EPSILON || B->b.z > high_z - Z_EPSILON)
 				continue;
 
-			// more than one liquid : choose highest
-			if (R->liquid && B->t.z < R->liquid->t.z)
-				continue;
+			// find gap for this liquid
+			// FIXME: improve how slopes are handled
+			for (int g = (int)R->gaps.size()-1 ; g >= 0 ; g--)
+			{
+				gap_c *gap = R->gaps[g];
+				double mid_z = (gap->bottom->b.z + gap->bottom->t.z) * 0.5;
 
-			R->liquid = B;
+				if (R->TopZ(B) > mid_z)
+				{
+					gap->liquid = B;
+					break;
+				}
+			}
 		}
 	}
 }

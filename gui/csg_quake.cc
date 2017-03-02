@@ -1803,9 +1803,6 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 	if (qk_game == 1)
 		return qk_solid_leaf;
 
-///---	if (group.brushes.empty())
-///---		return qk_solid_leaf;
-
 	quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
 	for (unsigned int i = 0 ; i < group.brushes.size() ; i++)
@@ -1877,40 +1874,13 @@ static quake_node_c * Solid_Node(quake_group_c & group)
 }
 
 
-static int GapForLiquid(region_c * R)
-{
-	// returns gap number * 2, plus 1 if the gap is completely
-	// filled by the liquid (i.e. the surface is eaten by the
-	// solid area above the gap).
-	//
-	// returns -1 if no liquid, or surface is below lowest floor.
-	//
-	if (R->liquid)
-	{
-		for (int g = (int)R->gaps.size()-1 ; g >= 0 ; g--)
-		{
-			gap_c *gap = R->gaps[g];
-
-			if (R->TopZ(R->liquid) > R->BottomZ(gap->top) - 1)
-				return g*2 + 1;
-
-			if (R->TopZ(R->liquid) > (gap->bottom->b.z + gap->bottom->b.z) * 0.5)
-				return g*2;
-		}
-	}
-
-	return -1;
-}
-
-
 static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
                                  quake_group_c & group,
                                  std::vector<quake_vertex_c> & winding,
                                  quake_bbox_c & bbox,
 								 qCluster_c *cluster,
                                  quake_node_c * prev_N,
-								 quake_leaf_c * prev_L,
-								 int liq_gap)
+								 quake_leaf_c * prev_L)
 {
 	gap_c *gap = R->gaps[g];
 
@@ -1942,21 +1912,27 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 	quake_node_c *L_node = NULL;
 	quake_leaf_c *L_leaf = NULL;
 
-	if (liq_gap >= 0)
-	{
-		int medium = ParseLiquidMedium(&R->liquid->props);
+	// Quake3 does things differently (liquids must be detail)
 
-		if (g*2 < liq_gap || g*2+1 == liq_gap)
+	if (qk_game < 3 && gap->liquid)
+	{
+		bool is_above = (R->TopZ(gap->liquid) > R->BottomZ(gap->top) - 1);
+
+		// FIXME: in Q1/Q2, all lower leafs should get this medium
+
+		int medium = ParseLiquidMedium(&gap->liquid->props);
+
+		if (is_above)
 		{
 			// the liquid covers the whole gap : don't need an extra leaf/node
 			leaf->medium = medium;
 
 			if (qk_game >= 2)
-				leaf->AddSolid(R->liquid);
+				leaf->AddSolid(gap->liquid);
 
 			cluster->MarkAmbient(AMBIENT_WATER);
 		}
-		else if (g*2 == liq_gap)
+		else
 		{
 			// this liquid surface lies within this gap
 			// (above the floor and below the ceiling)
@@ -1971,17 +1947,13 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 			L_leaf->bbox = leaf->bbox;
 
 			if (qk_game >= 2)
-				L_leaf->AddSolid(R->liquid);
+				L_leaf->AddSolid(gap->liquid);
 
 			cluster->AddLeaf(L_leaf);
 			cluster->MarkAmbient(AMBIENT_WATER);
 
-			// for Quake3, we assume the liquid face is two-sided
-			// (having "cull none" or "cull disable" in the shader)
-			if (qk_game < 3)
-				FloorOrCeilFace(L_node, L_leaf, R->liquid, true,  winding, true /* is_liquid */);
-
-			FloorOrCeilFace(L_node, leaf, R->liquid, false, winding, true /* is_liquid */);
+			FloorOrCeilFace(L_node, L_leaf, gap->liquid, true,  winding, true /* is_liquid */);
+			FloorOrCeilFace(L_node,   leaf, gap->liquid, false, winding, true /* is_liquid */);
 		}
 	}
 
@@ -2025,12 +1997,6 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 
 	SYS_ASSERT(R->gaps.size() > 0);
 
-	// if region has a liquid, find the gap containing it
-	int liq_gap = GapForLiquid(R);
-
-///DEBUG
-///  fprintf(stderr, "GapForLiquid at (%1.0f %1.0f) liq:%p --> %d\n", R->mid_x, R->mid_y, R->liquid, liq_gap);
-
 	// create the bbox and vertex winding, 2D only
 	quake_bbox_c bbox;
 	std::vector<quake_vertex_c> winding;
@@ -2042,7 +2008,7 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 
 	for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
 	{
-		cur_node = CreateLeaf(R, i, group, winding, bbox, cluster, cur_node, cur_leaf, liq_gap);
+		cur_node = CreateLeaf(R, i, group, winding, bbox, cluster, cur_node, cur_leaf);
 		cur_leaf = NULL;
 	}
 

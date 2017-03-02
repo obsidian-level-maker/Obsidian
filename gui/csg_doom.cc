@@ -2550,9 +2550,16 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
 
 static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
 {
-	if (ef_liquid_type && R->liquid)
+	if (ef_liquid_type)
 	{
-		DM_LiquidExtraFloor(S, R->liquid);
+		for (unsigned int g = R->gaps.size() - 1 ; g > 0 ; g--)
+		{
+			if (R->gaps[g]->liquid)
+			{
+				DM_LiquidExtraFloor(S, R->gaps[g]->liquid);
+				break;
+			}
+		}
 	}
 
 	if (ef_solid_type)

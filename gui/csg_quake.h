@@ -199,7 +199,7 @@ public:
 
 	int index;
 
-	// for Quake II solid leafs
+	// for Quake2/3 collision handling
 	std::vector<csg_brush_c *> solids;
 
 public:
