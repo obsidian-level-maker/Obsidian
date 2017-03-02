@@ -121,10 +121,10 @@ public:
 typedef enum
 {
 	BKIND_Solid = 0,
-	BKIND_Detail,   // ignored for clipping (Quake 1/2 only, NOT Q3!)
 	BKIND_Clip,     // clipping only, no visible faces (Quake 1/2/3 only)
 
 	BKIND_Liquid,
+
 	BKIND_Trigger,  // supply a trigger special (DOOM/Nukem only)
 	BKIND_Light,    // supply extra lighting or shadow
 }
@@ -132,8 +132,9 @@ brush_kind_e;
 
 typedef enum
 {
-	BFLAG_Sky	   = (1 << 4),   // special handling for lighting
-	BFLAG_NoClip   = (1 << 5),   // inhibit clipping for this brush
+	BFLAG_Detail   = (1 << 0),   // not structural (ignored for node/leaf creation)
+	BFLAG_Sky      = (1 << 1),   // special handling for lighting
+	BFLAG_NoClip   = (1 << 2),   // inhibit clipping for this brush
 
 	// internal flags
 	BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box

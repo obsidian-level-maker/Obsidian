@@ -1145,7 +1145,8 @@ static void Model_CreateSideFace(csg_brush_c *B, unsigned int k)
 static void ProcessModelBrush(csg_brush_c *B, dmodel3_t *raw_model, csg_entity_c *E)
 {
 	// create surfaces
-	if (B->bkind == BKIND_Solid || B->bkind == BKIND_Detail)
+	if (B->bkind == BKIND_Solid || B->bkind == BKIND_Liquid)
+	   /* && ! (B->bflags & BKIND_NoDraw))  */
 	{
 		Model_FloorOrCeilFace(B, true /* is_ceil */);
 		Model_FloorOrCeilFace(B, false);

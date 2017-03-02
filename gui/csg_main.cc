@@ -476,12 +476,17 @@ private:
 	{
 		if (mode[0] == 'v')
 		{
-			if (B->bkind == BKIND_Clip || B->bkind >= BKIND_Trigger)
+			if (B->bkind == BKIND_Clip ||
+				B->bkind == BKIND_Light ||
+				B->bkind == BKIND_Trigger)
 				return false;
 		}
 		else if (mode[0] == 'p')
 		{
-			if (B->bkind == BKIND_Detail || B->bkind >= BKIND_Liquid)
+			if ((B->bflags & BFLAG_NoClip) ||
+				B->bkind == BKIND_Liquid   ||
+				B->bkind == BKIND_Light    ||
+				B->bkind == BKIND_Trigger)
 				return false;
 		}
 
@@ -534,7 +539,9 @@ private:
 					   int x1, int y1, int x2, int y2, int floor_h)
 	{
 		// ignore non-solid brushes
-		if (B->bkind == BKIND_Detail || B->bkind >= BKIND_Liquid)
+		if ((B->bflags & BFLAG_NoClip) ||
+			B->bkind == BKIND_Liquid   ||
+			B->bkind == BKIND_Trigger)
 			return;
 
 		// bbox check (skip if merely touching the bbox)
@@ -731,10 +738,13 @@ static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 {
 	// parse flags from the props table
 
-	if (B->props.getStr("sky"))
+	if (B->props.getInt("detail") > 0)
+		B->bflags |= BFLAG_Detail;
+
+	if (B->props.getInt("sky") > 0)
 		B->bflags |= BFLAG_Sky;
 
-	if (B->props.getStr("noclip"))
+	if (B->props.getInt("noclip") > 0)
 		B->bflags |= BFLAG_NoClip;
 
 	// parse brush kind from 'm' field of the props table

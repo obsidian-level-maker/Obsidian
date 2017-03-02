@@ -225,8 +225,7 @@ brush_vert_c * snag_c::FindOneSidedVert(double z)
 	{
 		brush_vert_c *V = sides[i];
 
-		if (! (V->parent->bkind == BKIND_Solid  || 
-			   V->parent->bkind == BKIND_Detail))
+		if (! (V->parent->bkind == BKIND_Solid))
 			continue;
 
 		if (z > V->parent->b.z - Z_EPSILON &&
@@ -790,7 +789,10 @@ static void CreateRegion(group_c & root, csg_brush_c *P)
 		return;
 	}
 
-	if (P->bkind == BKIND_Clip)  // TODO: if (P->bflags & BFLAG_Detail)
+	if (P->bflags & (BFLAG_Detail | BFLAG_NoClip))
+		return;
+
+	if (P->bkind == BKIND_Clip)
 		return;
 
 	region_c *R = new region_c;
