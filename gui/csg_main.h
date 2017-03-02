@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -121,8 +121,6 @@ public:
 typedef enum
 {
 	BKIND_Solid = 0,
-	BKIND_Clip,     // clipping only, no visible faces (Quake 1/2/3 only)
-
 	BKIND_Liquid,
 
 	BKIND_Trigger,  // supply a trigger special (DOOM/Nukem only)
@@ -135,6 +133,7 @@ typedef enum
 	BFLAG_Detail   = (1 << 0),   // not structural (ignored for node/leaf creation)
 	BFLAG_Sky      = (1 << 1),   // special handling for lighting
 	BFLAG_NoClip   = (1 << 2),   // inhibit clipping for this brush
+	BFLAG_NoDraw   = (1 << 3),   // inhibit faces for this brush
 
 	// internal flags
 	BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box

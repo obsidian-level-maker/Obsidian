@@ -476,7 +476,7 @@ private:
 	{
 		if (mode[0] == 'v')
 		{
-			if (B->bkind == BKIND_Clip ||
+			if ((B->bflags & BFLAG_NoDraw) ||
 				B->bkind == BKIND_Light ||
 				B->bkind == BKIND_Trigger)
 				return false;
@@ -747,20 +747,28 @@ static int Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 	if (B->props.getInt("noclip") > 0)
 		B->bflags |= BFLAG_NoClip;
 
+	if (B->props.getInt("nodraw") > 0)
+		B->bflags |= BFLAG_NoDraw;
+
 	// parse brush kind from 'm' field of the props table
 
 	SYS_ASSERT(kind);
 
 	if (StringCaseCmp(kind, "solid")   == 0) return BKIND_Solid;
-	if (StringCaseCmp(kind, "clip")    == 0) return BKIND_Clip;
 	if (StringCaseCmp(kind, "liquid")  == 0) return BKIND_Liquid;
 	if (StringCaseCmp(kind, "trigger") == 0) return BKIND_Trigger;
 	if (StringCaseCmp(kind, "light")   == 0) return BKIND_Light;
 
-	// this just for compatibilty
+	// backwards compatibilty
 	if (StringCaseCmp(kind, "sky") == 0)
 	{
 		B->bflags |= BFLAG_Sky;
+		return BKIND_Solid;
+	}
+
+	if (StringCaseCmp(kind, "clip") == 0)
+	{
+		B->bflags |= BFLAG_NoDraw;
 		return BKIND_Solid;
 	}
 

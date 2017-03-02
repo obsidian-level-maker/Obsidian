@@ -217,7 +217,7 @@ public:
 
 	void BBoxFromSolids();
 
-	void FilterClipBrush(csg_brush_c *B);
+	void FilterBrush(csg_brush_c *B);
 };
 
 
@@ -253,7 +253,7 @@ public:
 
 	int CountLeafs() const;
 
-	void FilterClipBrush(csg_brush_c *B);
+	void FilterBrush(csg_brush_c *B);
 };
 
 

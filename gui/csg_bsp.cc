@@ -789,10 +789,7 @@ static void CreateRegion(group_c & root, csg_brush_c *P)
 		return;
 	}
 
-	if (P->bflags & (BFLAG_Detail | BFLAG_NoClip))
-		return;
-
-	if (P->bkind == BKIND_Clip)
+	if (P->bflags & (BFLAG_Detail | BFLAG_NoClip | BFLAG_NoDraw))
 		return;
 
 	region_c *R = new region_c;

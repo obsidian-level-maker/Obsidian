@@ -1766,7 +1766,7 @@ void quake_leaf_c::BBoxFromSolids()
 }
 
 
-void quake_leaf_c::FilterClipBrush(csg_brush_c *B)
+void quake_leaf_c::FilterBrush(csg_brush_c *B)
 {
 	if (medium == MEDIUM_SOLID)
 		return;
@@ -2234,24 +2234,24 @@ void quake_node_c::ComputeBBox()
 }
 
 
-void quake_node_c::FilterClipBrush(csg_brush_c *B)
+void quake_node_c::FilterBrush(csg_brush_c *B)
 {
 	int side = plane.BrushSide(B);
 
 	if (side >= 0)
 	{
 		if (front_N)
-			front_N->FilterClipBrush(B);
+			front_N->FilterBrush(B);
 		else if (front_L != qk_solid_leaf)
-			front_L->FilterClipBrush(B);
+			front_L->FilterBrush(B);
 	}
 
 	if (side <= 0)
 	{
 		if (back_N)
-			back_N->FilterClipBrush(B);
+			back_N->FilterBrush(B);
 		else if (back_L != qk_solid_leaf)
-			back_L->FilterClipBrush(B);
+			back_L->FilterBrush(B);
 	}
 }
 
@@ -2335,9 +2335,9 @@ static void RemoveSolidNodes(quake_node_c * node)
 }
 
 
-static void FilterClipBrushes()
+static void FilterDetailBrushes()
 {
-	// find all the BKIND_Clip brushes, which so far have been
+	// find all the detail brushes, which so far have been
 	// completely ignored, and insert them into the leafs of our
 	// quakey BSP tree.  [ Quake 3 only ]
 
@@ -2345,8 +2345,8 @@ static void FilterClipBrushes()
 	{
 		csg_brush_c *B = all_brushes[k];
 
-		if (B->bkind == BKIND_Clip && !B->link_ent)
-			qk_bsp_root->FilterClipBrush(B);
+		if ((B->bflags & BFLAG_Detail) && !B->link_ent)
+			qk_bsp_root->FilterBrush(B);
 	}
 }
 
@@ -2394,7 +2394,7 @@ void CSG_QUAKE_Build()
 	SYS_ASSERT(qk_bsp_root);
 
 	if (qk_game == 3)
-		FilterClipBrushes();
+		FilterDetailBrushes();
 }
 
 

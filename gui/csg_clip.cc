@@ -672,8 +672,7 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 	{
 		csg_brush_c *P = saved_all_brushes[i];
 
-		if (! ( P->bkind == BKIND_Solid ||
-				P->bkind == BKIND_Clip))
+		if (P->bkind != BKIND_Solid)
 			continue;
 
 		if (P->bflags & BFLAG_NoClip)
