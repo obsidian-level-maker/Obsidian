@@ -224,20 +224,18 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 	// use the "common/solid" shader
 	raw_brush.shaderNum = SHADER_COMMON_SOLID;
 
-	if (A->bkind == BKIND_Liquid)
-	{
-		const char *medium = A->props.getStr("medium", "");
+	const char *medium = A->props.getStr("medium", NULL);
 
+	if (medium)
+	{
 		if (StringCaseCmp(medium, "slime") == 0)
 			raw_brush.shaderNum = SHADER_COMMON_SLIME;
 		else if (StringCaseCmp(medium, "lava") == 0)
 			raw_brush.shaderNum = SHADER_COMMON_LAVA;
+		else if (StringCaseCmp(medium, "trigger") == 0)
+			raw_brush.shaderNum = SHADER_COMMON_TRIGGER;
 		else
 			raw_brush.shaderNum = SHADER_COMMON_WATER;
-	}
-	else if (A->bkind == BKIND_Trigger)   // Hmmmm
-	{
-		raw_brush.shaderNum = SHADER_COMMON_TRIGGER;
 	}
 	else if (A->bflags & BFLAG_NoDraw)
 	{
