@@ -791,7 +791,7 @@ static void CreateRegion(group_c & root, csg_brush_c *P)
 		return;
 	}
 
-	if (P->bkind == BKIND_Clip)
+	if (P->bkind == BKIND_Clip)  // TODO: if (P->bflags & BFLAG_Detail)
 		return;
 
 	region_c *R = new region_c;
@@ -1676,8 +1676,11 @@ static bool CanSwallowBrush(region_c *R, int i, int k)
 	csg_brush_c *B = R->brushes[k];
 
 	if (! (A->bkind == BKIND_Solid  ||
-		   A->bkind == BKIND_Detail ||
 		   A->bkind == BKIND_Sky))
+		return false;
+
+	// liquids are handled elsewhere
+	if (B->bkind == BKIND_Liquid)
 		return false;
 
 	return	(B->b.z > A->b.z - Z_EPSILON) &&
@@ -1790,6 +1793,7 @@ static void CompareRegionGaps(region_c *R1, region_c *R2)
 		gap_c *B = R1->gaps[b_idx];
 		gap_c *F = R2->gaps[f_idx];
 
+		// FIXME : compute these at middle of the snag
 		double B_z1 = R1->TopZ   (B->bottom);
 		double B_z2 = R1->BottomZ(B->top);
 
@@ -2020,8 +2024,9 @@ void DetermineLiquids()
 		if (R->gaps.empty())
 			continue;
 
-		double low_z  = R->gaps.front()->bottom->t.z;
-		double high_z = R->gaps. back()->   top->b.z;
+		//TODO: R->LowestTopZ(R->gaps.front()->bottom)
+		double low_z  = R->gaps.front()->bottom->b.z;
+		double high_z = R->gaps. back()->   top->t.z;
 
 		for (int k = (int)R->brushes.size()-1 ; k >= 0 ; k--)
 		{
@@ -2032,7 +2037,7 @@ void DetermineLiquids()
 
 			R->RemoveBrush(k);
 
-			// liquid is completely in a solid
+			// liquid is completely in the void)
 			if (B->t.z < low_z + Z_EPSILON || B->b.z > high_z - Z_EPSILON)
 				continue;
 

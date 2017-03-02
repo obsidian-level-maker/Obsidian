@@ -1891,12 +1891,10 @@ static int GapForLiquid(region_c * R)
 		{
 			gap_c *gap = R->gaps[g];
 
-			// FIXME : for sloped solids and sloped liquids
-
-			if (R->liquid->t.z > gap->top->b.z - 1)
+			if (R->TopZ(R->liquid) > R->BottomZ(gap->top) - 1)
 				return g*2 + 1;
 
-			if (R->liquid->t.z > gap->bottom->t.z + 1)
+			if (R->TopZ(R->liquid) > (gap->bottom->b.z + gap->bottom->b.z) * 0.5)
 				return g*2;
 		}
 	}
@@ -2029,6 +2027,9 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 
 	// if region has a liquid, find the gap containing it
 	int liq_gap = GapForLiquid(R);
+
+///DEBUG
+///  fprintf(stderr, "GapForLiquid at (%1.0f %1.0f) liq:%p --> %d\n", R->mid_x, R->mid_y, R->liquid, liq_gap);
 
 	// create the bbox and vertex winding, 2D only
 	quake_bbox_c bbox;
