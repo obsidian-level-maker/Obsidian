@@ -336,21 +336,13 @@ static int lt_current_style;
 
 static void CalcFaceVectors(quake_face_c *F)
 {
-	const quake_plane_c * plane = &F->node->plane;
+	const quake_plane_c * plane = &F->plane;
 
 	lt_plane_normal[0] = plane->nx;
 	lt_plane_normal[1] = plane->ny;
 	lt_plane_normal[2] = plane->nz;
 
 	lt_plane_dist = plane->CalcDist();
-
-	if (F->node_side == 1)
-	{
-		lt_plane_dist = -lt_plane_dist;
-
-		for (int k = 0 ; k < 3 ; k++)
-			lt_plane_normal[k] = -lt_plane_normal[k];
-	}
 
 
 	lt_worldtotex[0][0] = F->s[0];

@@ -578,9 +578,9 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
 	raw_leaf.first_leafbrush = q2_total_leaf_brushes;
 	raw_leaf.num_leafbrushes = 0;
 
-	for (unsigned int k = 0 ; k < leaf->solids.size() ; k++)
+	for (unsigned int k = 0 ; k < leaf->brushes.size() ; k++)
 	{
-		Q2_WriteLeafBrush(leaf->solids[k]);
+		Q2_WriteLeafBrush(leaf->brushes[k]);
 
 		raw_leaf.num_leafbrushes += 1;
 	}

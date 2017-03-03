@@ -864,9 +864,9 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 	raw_leaf.firstLeafBrush = q3_total_leaf_brushes;
 	raw_leaf.numLeafBrushes = 0;
 
-	for (unsigned int k = 0 ; k < leaf->solids.size() ; k++)
+	for (unsigned int k = 0 ; k < leaf->brushes.size() ; k++)
 	{
-		Q3_WriteLeafBrush(leaf->solids[k]);
+		Q3_WriteLeafBrush(leaf->brushes[k]);
 
 		raw_leaf.numLeafBrushes += 1;
 	}

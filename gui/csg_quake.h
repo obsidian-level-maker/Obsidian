@@ -133,8 +133,13 @@ public:
 class quake_face_c
 {
 public:
+	// plane the face sits on (can be opposite of node plane)
+	quake_plane_c plane;
+
 	// the node this face sits on
+	// [ can be NULL for faces of detail brushes ]
 	quake_node_c *node;
+
 	quake_leaf_c *leaf;
 
 	int node_side;  // 0 = front, 1 = back
@@ -154,9 +159,11 @@ public:
 	int index;
 
 public:
-	quake_face_c() : node(NULL), leaf(NULL), node_side(-1),
-	verts(), texture(), flags(0),
-	lmap(NULL), index(-1)
+	quake_face_c() :
+		plane(),
+		node(NULL), leaf(NULL), node_side(-1),
+		verts(), texture(),
+		flags(0), lmap(NULL), index(-1)
 	{ }
 
 	~quake_face_c()
@@ -200,12 +207,13 @@ public:
 	int index;
 
 	// for Quake2/3 collision handling
-	std::vector<csg_brush_c *> solids;
+	std::vector<csg_brush_c *> brushes;
 
 public:
 	quake_leaf_c(int _m) :
 		medium(_m), faces(),
-		cluster(NULL), index(-1), solids()
+		cluster(NULL), index(-1),
+		brushes()
 	{ }
 
 	~quake_leaf_c()
@@ -213,7 +221,7 @@ public:
 
 	void AddFace(quake_face_c *F);
 
-	void AddSolid(csg_brush_c *B);
+	void AddBrush(csg_brush_c *B);
 
 	void BBoxFromSolids();
 

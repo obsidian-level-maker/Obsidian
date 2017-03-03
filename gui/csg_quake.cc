@@ -357,9 +357,9 @@ void quake_leaf_c::AddFace(quake_face_c *F)
 }
 
 
-void quake_leaf_c::AddSolid(csg_brush_c *B)
+void quake_leaf_c::AddBrush(csg_brush_c *B)
 {
-	solids.push_back(B);
+	brushes.push_back(B);
 }
 
 
@@ -1254,19 +1254,19 @@ void quake_face_c::ComputeMidPoint(float *mx, float *my, float *mz)
 
 void quake_face_c::GetNormal(float *vec3) const
 {
-	SYS_ASSERT(node);
-
-	float mul = (node_side > 0) ? -1.0 : +1.0;
-
-	vec3[0] = node->plane.nx * mul;
-	vec3[1] = node->plane.ny * mul;
-	vec3[2] = node->plane.nz * mul;
+	vec3[0] = plane.nx;
+	vec3[1] = plane.ny;
+	vec3[2] = plane.nz;
 }
 
 
 static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
 					  quake_node_c *node, quake_leaf_c *leaf)
 {
+	F->plane = node->plane;
+	if (F->node_side == 1)
+		F->plane.Flip();
+
 	F->texture = props->getStr("tex", "missing");
 
 	F->SetupMatrix(&node->plane, F->node_side);
@@ -1749,9 +1749,9 @@ void quake_leaf_c::BBoxFromSolids()
 {
 	bbox.Begin();
 
-	for (unsigned int i = 0 ; i < solids.size() ; i++)
+	for (unsigned int i = 0 ; i < brushes.size() ; i++)
 	{
-		csg_brush_c *B = solids[i];
+		csg_brush_c *B = brushes[i];
 
 		bbox.Add_Z(B->t.z);
 		bbox.Add_Z(B->b.z);
@@ -1774,7 +1774,7 @@ void quake_leaf_c::FilterBrush(csg_brush_c *B)
 	if (medium == MEDIUM_SOLID)
 		return;
 
-	AddSolid(B);
+	AddBrush(B);
 }
 
 
@@ -1812,7 +1812,7 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 	{
 		csg_brush_c *B = group.brushes[i];
 
-		leaf->AddSolid(B);
+		leaf->AddBrush(B);
 	}
 
 	leaf->BBoxFromSolids();
@@ -1844,15 +1844,15 @@ static quake_leaf_c * Solid_Leaf(region_c *R, unsigned int g, int is_ceil,
 		csg_brush_c *B = group.brushes[i];
 
 		if (brush_z1 < B->b.z && B->t.z < brush_z2)
-			leaf->AddSolid(B);
+			leaf->AddBrush(B);
 	}
 
 	// this should not happen..... but handle it anyway
-	if (leaf->solids.empty())
+	if (leaf->brushes.empty())
 	{
 		LogPrintf("WARNING: solid brush for floor/ceiling is AWOL!\n");
 
-		leaf->AddSolid(is_ceil ? R->gaps[g]->top : R->gaps[g]->bottom);
+		leaf->AddBrush(is_ceil ? R->gaps[g]->top : R->gaps[g]->bottom);
 	}
 
 	leaf->BBoxFromSolids();
@@ -1931,7 +1931,7 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 			leaf->medium = medium;
 
 			if (qk_game >= 2)
-				leaf->AddSolid(gap->liquid);
+				leaf->AddBrush(gap->liquid);
 
 			cluster->MarkAmbient(AMBIENT_WATER);
 		}
@@ -1950,7 +1950,7 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 			L_leaf->bbox = leaf->bbox;
 
 			if (qk_game >= 2)
-				L_leaf->AddSolid(gap->liquid);
+				L_leaf->AddBrush(gap->liquid);
 
 			cluster->AddLeaf(L_leaf);
 			cluster->MarkAmbient(AMBIENT_WATER);
