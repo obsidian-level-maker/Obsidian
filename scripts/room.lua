@@ -3445,8 +3445,15 @@ function Quake3_test()
 
     local L = brushlib.quad(0, 128, 256, 384, -1024, 64)
 
-    brushlib.set_tex(L, L_tex, L_tex)
-    brushlib.set_kind(L, "liquid", { medium="water" })
+    brushlib.set_tex(L, "nothing", "nothing")
+    brushlib.set_kind(L, "liquid", { detail=1, medium="water" })
+
+    -- only top face should have a real texture
+    each coord in L do
+      if coord.t then
+         coord.tex = L_tex
+      end
+    end
 
     Trans.brush(L)
   end
