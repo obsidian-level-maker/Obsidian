@@ -376,8 +376,11 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents)
 
 		SYS_ASSERT(index < (int)q3_shaders.size());
 
-		if (memcmp(&raw_tex, &q3_shaders[index], sizeof(raw_tex)) == 0)
+		// only check the shader name, ignore differences in flags
+		if (memcmp(&raw_tex.shader, &q3_shaders[index].shader, sizeof(raw_tex.shader)) == 0)
+		{
 			return index;  // found it
+		}
 	}
 
 
