@@ -1016,162 +1016,6 @@ static void Q3_WriteBSP()
 //   MAP MODEL STUFF
 //------------------------------------------------------------------------
 
-#if 0
-static void Model_FloorOrCeilFace(csg_brush_c *B, bool is_ceil)
-{
-	// needed for quake_face_c, but only the 'plane' field is used
-	quake_node_c fake_node;
-
-	// node splitting plane...
-	brush_plane_c& BP = is_ceil ? B->b : B->t;
-
-	if (BP.slope)
-	{
-		fake_node.plane = *BP.slope;
-
-		if (fake_node.plane.nz < 0)
-			fake_node.plane.Flip();
-	}
-	else
-	{
-		fake_node.plane.x  = fake_node.plane.y  = 0;
-		fake_node.plane.nx = fake_node.plane.ny = 0;
-
-		fake_node.plane.z  = BP.z;
-		fake_node.plane.nz = +1;
-	}
-
-	// create the face
-
-	quake_face_c face;
-
-	face.node = &fake_node;
-	face.node_side = is_ceil ? 1 : 0;
-
-	// add vertices
-	for (unsigned int i = 0 ; i < B->verts.size() ; i++)
-	{
-		unsigned int k = is_ceil ? i : (B->verts.size() - 1 - i);
-
-		brush_vert_c *V = B->verts[k];
-
-		double z = fake_node.plane.CalcZ(V->x, V->y);
-
-		face.AddVert(V->x, V->y, z);
-	}
-
-	// setup texturing
-	face.texture = BP.face.getStr("tex", "missing");
-
-	face.SetupMatrix(&fake_node.plane, face.node_side);
-
-	// add it!
-	Q3_AddSurface(&face);
-}
-
-
-static void Model_CreateSideFace(csg_brush_c *B, unsigned int k)
-{
-	// needed for quake_face_c, but only the 'plane' field is used
-	quake_node_c fake_node;
-
-	brush_vert_c *V1 = B->verts[k];
-	brush_vert_c *V2;
-
-	if (k+1 < B->verts.size())
-		V2 = B->verts[k+1];
-	else
-		V2 = B->verts[0];
-
-	// create the plane
-	fake_node.plane.x = V1->x;
-	fake_node.plane.y = V1->y;
-	fake_node.plane.z = 0;
-
-	fake_node.plane.nx = (V2->y - V1->y);
-	fake_node.plane.ny = (V1->x - V2->x);
-	fake_node.plane.nz = 0;
-
-	fake_node.plane.Normalize();
-
-	// create the face
-
-	quake_face_c face;
-
-	face.node = &fake_node;
-	face.node_side = 0;  // always on the front
-
-	// add vertices
-
-	double f_Lz1 = B->b.CalcZ(V1->x, V1->y);
-	double f_Lz2 = B->t.CalcZ(V1->x, V1->y);
-
-	double f_Rz1 = B->b.CalcZ(V2->x, V2->y);
-	double f_Rz2 = B->t.CalcZ(V2->x, V2->y);
-
-	// ensure the face is sane  [ triangles are Ok ]
-	if ((f_Lz1 > f_Lz2 - Z_EPSILON) && (f_Rz1 > f_Rz2 - Z_EPSILON))
-		return;
-
-	int tri_side = 0;
-
-	if (f_Lz1 > f_Lz2 - Z_EPSILON) tri_side = -1;
-	if (f_Rz1 > f_Rz2 - Z_EPSILON) tri_side = +1;
-
-	face.AddVert(V1->x, V1->y, f_Lz1);
-
-	if (tri_side >= 0)
-		face.AddVert(V1->x, V1->y, f_Lz2);
-
-	face.AddVert(V2->x, V2->y, f_Rz2);
-
-	if (tri_side <= 0)
-		face.AddVert(V2->x, V2->y, f_Rz1);
-
-	SYS_ASSERT(face.verts.size() >= 3);
-
-	// setup texturing
-	face.texture = V1->face.getStr("tex", "missing");
-
-	face.SetupMatrix(&fake_node.plane, face.node_side);
-
-	// add it!
-	Q3_AddSurface(&face);
-}
-
-
-static void ProcessModelBrush(csg_brush_c *B, dmodel3_t *raw_model, csg_entity_c *E)
-{
-	// create surfaces
-	if ((B->bkind == BKIND_Solid || B->bkind == BKIND_Liquid) &&
-	    ! (B->bflags & BFLAG_NoDraw))
-	{
-		Model_FloorOrCeilFace(B, true /* is_ceil */);
-		Model_FloorOrCeilFace(B, false);
-
-		for (unsigned int k = 0 ; k < B->verts.size() ; k++)
-		{
-			Model_CreateSideFace(B, k);
-		}
-	}
-
-	// collision brush
-	if ((B->bkind == BKIND_Solid) && ! (B->bflags & BFLAG_NoClip))
-	{
-		Q3_AddBrush(B);
-	}
-
-	// update mins and maxs
-	raw_model->mins[0] = MIN(raw_model->mins[0], B->min_x);
-	raw_model->mins[1] = MIN(raw_model->mins[1], B->min_y);
-	raw_model->mins[2] = MIN(raw_model->mins[2], B->b.z);
-
-	raw_model->maxs[0] = MAX(raw_model->maxs[0], B->max_x);
-	raw_model->maxs[1] = MAX(raw_model->maxs[1], B->max_y);
-	raw_model->maxs[2] = MAX(raw_model->maxs[2], B->t.z);
-}
-#endif
-
 
 static void Q3_WriteModel(dmodel3_t *model)
 {
@@ -1199,15 +1043,6 @@ static void Q3_WriteModel(dmodel3_t *model)
 
 static void Q3_CreateSubModel(quake_leaf_c *L)
 {
-#if 0  // FIXME
-
-	csg_entity_c *E = ....
-
-	const char *link_id = E->props.getStr("link_id");
-	SYS_ASSERT(link_id);
-
-	E->props.Remove("link_id");
-
 	dmodel3_t raw_model;
 
 	memset(&raw_model, 0, sizeof(raw_model));
@@ -1215,33 +1050,31 @@ static void Q3_CreateSubModel(quake_leaf_c *L)
 	raw_model.firstSurface = q3_total_surfaces;
 	raw_model.firstBrush   = (int)q3_brushes.size();
 
-	// init bbox
+	for (unsigned int i = 0 ; i < L->faces.size() ; i++)
+	{
+		Q3_AddSurface(L->faces[i]);
+
+		raw_model.numSurfaces += 1;
+	}
+
+	for (unsigned int k = 0 ; k < L->brushes.size() ; k++)
+	{
+		Q3_AddBrush(L->brushes[k]);
+
+		raw_model.numBrushes += 1;
+	}
+
+	// bounding box...
 	for (int b = 0 ; b < 3 ; b++)
 	{
-		raw_model.mins[b] = +9e9;
-		raw_model.maxs[b] = -9e9;
+		raw_model.mins[b] = L->bbox.mins[b];
+		raw_model.maxs[b] = L->bbox.maxs[b];
 	}
 
-	// process all brushes associated with this entity
-	for (unsigned int i = 0 ; i < all_brushes.size() ; i++)
-	{
-		csg_brush_c *B = all_brushes[i];
+	// update the entity
 
-		if (B->link_ent == E)
-			ProcessModelBrush(B, &raw_model, E);
-	}
-
-	raw_model.numSurfaces = q3_total_surfaces      - raw_model.firstSurface;
-	raw_model.numBrushes  = (int)q3_brushes.size() - raw_model.firstBrush;
-
-	if (raw_model.numSurfaces == 0 && raw_model.numBrushes == 0)
-	{
-		LogPrintf("WARNING: mapmodel for '%s' was empty.\n", E->id.c_str());
-
-		// ensure entity is not added to final BSP file
-		E->id = std::string("nothing");
-		return;
-	}
+	csg_entity_c *E = L->link_ent;
+	SYS_ASSERT(E);
 
 	// create the important "model" keyword
 	char model_name[64];
@@ -1250,8 +1083,8 @@ static void Q3_CreateSubModel(quake_leaf_c *L)
 
 	E->props.Add("model", model_name);
 
+
 	Q3_WriteModel(&raw_model);
-#endif
 }
 
 

@@ -2473,6 +2473,91 @@ static void FilterDetailBrushes()
 }
 
 
+static void Model_ProcessBrush(quake_leaf_c *mod, csg_brush_c *B)
+{
+	// create surfaces
+	if (! (B->bflags & BFLAG_NoDraw))
+	{
+		leaf_map_t touched;
+
+		touched[mod] = 1;
+
+		Detail_FloorOrCeilFace(B, true /* is_ceil */, &touched);
+		Detail_FloorOrCeilFace(B, false, &touched);
+
+		for (unsigned int k = 0 ; k < B->verts.size() ; k++)
+		{
+			Detail_SideFace(B, k, &touched);
+		}
+	}
+
+	// collision brush
+	if (! (B->bflags & BFLAG_NoClip))
+	{
+		mod->AddBrush(B);
+	}
+
+	// update mins and maxs
+	mod->bbox.AddPoint(B->min_x, B->min_y, B->b.z);
+	mod->bbox.AddPoint(B->max_x, B->max_y, B->t.z);
+}
+
+
+static void Model_ProcessEntity(csg_entity_c *E)
+{
+	const char *link_id = E->props.getStr("link_id");
+
+	if (! link_id)
+		return;  // not a model
+
+	E->props.Remove("link_id");
+
+	// create a container for the faces and brushes
+	// [ the Quake3 engine does a similar thing, using a leaf object ]
+	quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
+
+	leaf->link_ent = E;
+
+	leaf->bbox.Begin();
+
+	// process all brushes associated with this entity
+	for (unsigned int i = 0 ; i < all_brushes.size() ; i++)
+	{
+		csg_brush_c *B = all_brushes[i];
+
+		if (B->link_ent == E)
+			Model_ProcessBrush(leaf, B);
+	}
+
+	leaf->bbox.End();
+
+	// sanity check
+	if (leaf->faces.empty() && leaf->brushes.empty())
+	{
+		LogPrintf("WARNING: mapmodel for '%s' was empty.\n", E->id.c_str());
+
+		delete leaf;
+
+		// ensure entity is not added to final BSP file
+		E->id = std::string("nothing");
+		return;
+	}
+
+	qk_all_detail_models.push_back(leaf);
+}
+
+
+static void ProcessDetailModels()
+{
+	// create all the map-models  [ Quake 3 only ]
+
+	for (unsigned i = 0 ; i < all_entities.size() ; i++)
+	{
+		Model_ProcessEntity(all_entities[i]);
+	}
+}
+
+
 void CSG_QUAKE_Build()
 {
 	LogPrintf("QUAKE CSG...\n");
@@ -2516,7 +2601,11 @@ void CSG_QUAKE_Build()
 	SYS_ASSERT(qk_bsp_root);
 
 	if (qk_game == 3)
+	{
 		FilterDetailBrushes();
+
+		ProcessDetailModels();
+	}
 }
 
 
