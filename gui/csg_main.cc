@@ -43,6 +43,8 @@ std::vector<csg_entity_c *> all_entities;
 std::string dummy_wall_tex;
 std::string dummy_plane_tex;
 
+double CHUNK_SIZE = 512.0;
+
 
 // csg_spots.cc
 #define SPOT_LOW_CEIL  1
@@ -963,6 +965,11 @@ int CSG_property(lua_State *L)
 		spot_high_h = atoi(value);
 		return 0;
 	}
+	else if (StringCaseCmp(key, "chunk_size") == 0)
+	{
+		CHUNK_SIZE = atof(value);
+		return 0;
+	}
 	else if (StringCaseCmp(key, "cluster_size") == 0)
 	{
 		CLUSTER_SIZE = atof(value);
@@ -1163,6 +1170,8 @@ void CSG_Main_Free()
 
 	spot_low_h  = 72;
 	spot_high_h = 128;
+
+	CHUNK_SIZE  = 512.0;
 }
 
 

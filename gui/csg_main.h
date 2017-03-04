@@ -33,8 +33,8 @@ class quake_plane_c;
 #define Z_EPSILON  0.01
 
 
-// this is used for all games
-#define CHUNK_SIZE  512.0
+// this is used for all games.  defaults to 512.0
+extern double CHUNK_SIZE;
 
 // this is used for Quake1/2/3, and should be nicely divisible
 // into CHUNK_SIZE above.  the current default is 128.0
