@@ -2370,8 +2370,8 @@ static void Detail_FloorOrCeilFace(csg_brush_c *B, bool is_ceil,
 }
 
 
-static void Detail_CreateSideFace(csg_brush_c *B, unsigned int k,
-								  leaf_map_t *touched_leafs)
+static void Detail_SideFace(csg_brush_c *B, unsigned int k,
+							leaf_map_t *touched_leafs)
 {
 	quake_face_c *F = new quake_face_c;
 
@@ -2444,7 +2444,7 @@ static void Detail_CreateFaces(csg_brush_c *B, leaf_map_t *touched_leafs)
 
 	for (unsigned int k = 0 ; k < B->verts.size() ; k++)
 	{
-		Detail_CreateSideFace(B, k, touched_leafs);
+		Detail_SideFace(B, k, touched_leafs);
 	}
 }
 
@@ -2464,6 +2464,8 @@ static void FilterDetailBrushes()
 		if ((B->bflags & BFLAG_Detail) && !B->link_ent)
 		{
 			qk_bsp_root->FilterBrush(B, &touched_leafs);
+
+///  fprintf(stderr, "detail brush #%d touches %d leafs\n", (int)k, (int)touched_leafs.size());
 
 			Detail_CreateFaces(B, &touched_leafs);
 		}
