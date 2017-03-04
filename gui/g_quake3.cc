@@ -733,17 +733,13 @@ static inline void DoWriteSurface(dsurface3_t & raw_surf)
 
 static void Q3_AddSurface(quake_face_c *face)
 {
-	SYS_ASSERT(face->node);
-	SYS_ASSERT(face->node_side >= 0);
-
-	const char *texture = face->texture.c_str();
-
-	// inhibit surfaces with the "nothing" texture
-	if (strcmp(texture, "nothing") == 0)
+	// already added?
+	if (face->index >= 0)
 		return;
 
-
 	face->index = q3_total_surfaces;
+
+	const char *texture = face->texture.c_str();
 
 
 	dsurface3_t raw_surf;
@@ -854,9 +850,9 @@ static void Q3_WriteLeaf(quake_leaf_c *leaf)
 
 	for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
 	{
-		Q3_WriteLeafSurf(q3_total_surfaces);
-
 		Q3_AddSurface(leaf->faces[i]);
+
+		Q3_WriteLeafSurf(leaf->faces[i]->index);
 
 		raw_leaf.numLeafSurfaces += 1;
 	}
@@ -1017,6 +1013,7 @@ static void Q3_WriteBSP()
 //   MAP MODEL STUFF
 //------------------------------------------------------------------------
 
+#if 0
 static void Model_FloorOrCeilFace(csg_brush_c *B, bool is_ceil)
 {
 	// needed for quake_face_c, but only the 'plane' field is used
@@ -1170,6 +1167,7 @@ static void ProcessModelBrush(csg_brush_c *B, dmodel3_t *raw_model, csg_entity_c
 	raw_model->maxs[1] = MAX(raw_model->maxs[1], B->max_y);
 	raw_model->maxs[2] = MAX(raw_model->maxs[2], B->t.z);
 }
+#endif
 
 
 static void Q3_WriteModel(dmodel3_t *model)
@@ -1196,8 +1194,12 @@ static void Q3_WriteModel(dmodel3_t *model)
 }
 
 
-static void Q3_CreateSubModel(csg_entity_c *E)
+static void Q3_CreateSubModel(quake_leaf_c *L)
 {
+#if 0  // FIXME
+
+	csg_entity_c *E = ....
+
 	const char *link_id = E->props.getStr("link_id");
 	SYS_ASSERT(link_id);
 
@@ -1246,6 +1248,7 @@ static void Q3_CreateSubModel(csg_entity_c *E)
 	E->props.Add("model", model_name);
 
 	Q3_WriteModel(&raw_model);
+#endif
 }
 
 
@@ -1275,12 +1278,9 @@ static void Q3_WriteModels()
 
 	// handle all the sub-models (doors etc)
 
-	for (unsigned int k = 0 ; k < all_entities.size() ; k++)
+	for (unsigned int k = 0 ; k < qk_all_detail_models.size() ; k++)
 	{
-		csg_entity_c *E = all_entities[k];
-
-		if (E->props.getStr("link_id"))
-			Q3_CreateSubModel(E);
+		Q3_CreateSubModel(qk_all_detail_models[k]);
 	}
 }
 

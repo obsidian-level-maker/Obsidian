@@ -43,7 +43,6 @@
 
 double CLUSTER_SIZE = 128.0;
 
-
 #define FACE_MAX_SIZE  (qk_game < 3 ? 240 : 768)
 
 #define NODE_DEBUG  0
@@ -58,6 +57,7 @@ quake_leaf_c * qk_solid_leaf;
 
 std::vector<quake_face_c *>     qk_all_faces;
 std::vector<quake_mapmodel_c *> qk_all_mapmodels;
+std::vector<quake_leaf_c *>     qk_all_detail_models;  // Q3 only
 
 
 class quake_side_c
@@ -1135,11 +1135,11 @@ void quake_face_c::StoreWinding(const std::vector<quake_vertex_c>& winding,
 }
 
 
-void quake_face_c::SetupMatrix(const quake_plane_c *plane, int pl_side)
+void quake_face_c::SetupMatrix()
 {
-	float nx = plane->nx * (pl_side ? -1 : +1);
-	float ny = plane->ny * (pl_side ? -1 : +1);
-	float nz = plane->nz * (pl_side ? -1 : +1);
+	float nx = plane.nx;
+	float ny = plane.ny;
+	float nz = plane.nz;
 
 	s[0] = s[1] = s[2] = s[3] = 0;
 	t[0] = t[1] = t[2] = t[3] = 0;
@@ -1269,7 +1269,7 @@ static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
 
 	F->texture = props->getStr("tex", "missing");
 
-	F->SetupMatrix(&node->plane, F->node_side);
+	F->SetupMatrix();
 
 	node->AddFace(F);
 	leaf->AddFace(F);
@@ -1769,12 +1769,15 @@ void quake_leaf_c::BBoxFromSolids()
 }
 
 
-void quake_leaf_c::FilterBrush(csg_brush_c *B)
+void quake_leaf_c::FilterBrush(csg_brush_c *B, leaf_map_t *touched)
 {
 	if (medium == MEDIUM_SOLID)
 		return;
 
 	AddBrush(B);
+
+	// insert into leaf list
+	(* touched)[this] = 1;
 }
 
 
@@ -2203,24 +2206,24 @@ void quake_node_c::ComputeBBox()
 }
 
 
-void quake_node_c::FilterBrush(csg_brush_c *B)
+void quake_node_c::FilterBrush(csg_brush_c *B, leaf_map_t *touched)
 {
 	int side = plane.BrushSide(B);
 
 	if (side >= 0)
 	{
 		if (front_N)
-			front_N->FilterBrush(B);
+			front_N->FilterBrush(B, touched);
 		else if (front_L != qk_solid_leaf)
-			front_L->FilterBrush(B);
+			front_L->FilterBrush(B, touched);
 	}
 
 	if (side <= 0)
 	{
 		if (back_N)
-			back_N->FilterBrush(B);
+			back_N->FilterBrush(B, touched);
 		else if (back_L != qk_solid_leaf)
-			back_L->FilterBrush(B);
+			back_L->FilterBrush(B, touched);
 	}
 }
 
@@ -2304,6 +2307,148 @@ static void RemoveSolidNodes(quake_node_c * node)
 }
 
 
+static void Detail_StoreFace(quake_face_c *F, csg_property_set_c *props,
+							 leaf_map_t *touched_leafs)
+{
+	// setup texturing
+	F->texture = props->getStr("tex", "missing");
+
+	// inhibit surfaces with the "nothing" texture
+	// [ we don't free it, since it exists in the qk_all_faces list ]
+	if (strcmp(F->texture.c_str(), "nothing") == 0)
+		return;
+
+	F->SetupMatrix();
+
+	leaf_map_t::iterator LMI;
+
+	for (LMI = touched_leafs->begin() ; LMI != touched_leafs->end() ; LMI++)
+	{
+		quake_leaf_c *L = LMI->first;
+
+		L->AddFace(F);
+	}
+}
+
+
+static void Detail_FloorOrCeilFace(csg_brush_c *B, bool is_ceil,
+								   leaf_map_t *touched_leafs)
+{
+	quake_face_c *F = new quake_face_c;
+
+	qk_all_faces.push_back(F);
+
+	// determine plane...
+	brush_plane_c& BP = is_ceil ? B->b : B->t;
+
+	if (BP.slope)
+	{
+		F->plane = *BP.slope;
+	}
+	else
+	{
+		F->plane.x  = F->plane.y  = 0;
+		F->plane.nx = F->plane.ny = 0;
+
+		F->plane.z  = BP.z;
+		F->plane.nz = is_ceil ? -1 : +1;
+	}
+
+	// add vertices
+	for (unsigned int i = 0 ; i < B->verts.size() ; i++)
+	{
+		unsigned int k = is_ceil ? i : (B->verts.size() - 1 - i);
+
+		brush_vert_c *V = B->verts[k];
+
+		double z = F->plane.CalcZ(V->x, V->y);
+
+		F->AddVert(V->x, V->y, z);
+	}
+
+	Detail_StoreFace(F, &BP.face, touched_leafs);
+}
+
+
+static void Detail_CreateSideFace(csg_brush_c *B, unsigned int k,
+								  leaf_map_t *touched_leafs)
+{
+	quake_face_c *F = new quake_face_c;
+
+	qk_all_faces.push_back(F);
+
+	// determine the plane...
+	brush_vert_c *V1 = B->verts[k];
+	brush_vert_c *V2;
+
+	if (k+1 < B->verts.size())
+		V2 = B->verts[k+1];
+	else
+		V2 = B->verts[0];
+
+	F->plane.x = V1->x;
+	F->plane.y = V1->y;
+	F->plane.z = 0;
+
+	F->plane.nx = (V2->y - V1->y);
+	F->plane.ny = (V1->x - V2->x);
+	F->plane.nz = 0;
+
+	F->plane.Normalize();
+
+
+	// add vertices
+
+	double f_Lz1 = B->b.CalcZ(V1->x, V1->y);
+	double f_Lz2 = B->t.CalcZ(V1->x, V1->y);
+
+	double f_Rz1 = B->b.CalcZ(V2->x, V2->y);
+	double f_Rz2 = B->t.CalcZ(V2->x, V2->y);
+
+	// ensure the face is sane  [ triangles are Ok ]
+	if ((f_Lz1 > f_Lz2 - Z_EPSILON) && (f_Rz1 > f_Rz2 - Z_EPSILON))
+		return;
+
+	int tri_side = 0;
+
+	if (f_Lz1 > f_Lz2 - Z_EPSILON) tri_side = -1;
+	if (f_Rz1 > f_Rz2 - Z_EPSILON) tri_side = +1;
+
+	F->AddVert(V1->x, V1->y, f_Lz1);
+
+	if (tri_side >= 0)
+		F->AddVert(V1->x, V1->y, f_Lz2);
+
+	F->AddVert(V2->x, V2->y, f_Rz2);
+
+	if (tri_side <= 0)
+		F->AddVert(V2->x, V2->y, f_Rz1);
+
+	SYS_ASSERT(F->verts.size() >= 3);
+
+
+	Detail_StoreFace(F, &V1->face, touched_leafs);
+}
+
+
+static void Detail_CreateFaces(csg_brush_c *B, leaf_map_t *touched_leafs)
+{
+	if (B->bflags & BFLAG_NoDraw)
+		return;
+
+	if (touched_leafs->empty())
+		return;
+
+	Detail_FloorOrCeilFace(B, true /* is_ceil */, touched_leafs);
+	Detail_FloorOrCeilFace(B, false, touched_leafs);
+
+	for (unsigned int k = 0 ; k < B->verts.size() ; k++)
+	{
+		Detail_CreateSideFace(B, k, touched_leafs);
+	}
+}
+
+
 static void FilterDetailBrushes()
 {
 	// find all the detail brushes, which so far have been
@@ -2312,10 +2457,16 @@ static void FilterDetailBrushes()
 
 	for (unsigned int k = 0 ; k < all_brushes.size() ; k++)
 	{
+		leaf_map_t touched_leafs;
+
 		csg_brush_c *B = all_brushes[k];
 
 		if ((B->bflags & BFLAG_Detail) && !B->link_ent)
-			qk_bsp_root->FilterBrush(B);
+		{
+			qk_bsp_root->FilterBrush(B, &touched_leafs);
+
+			Detail_CreateFaces(B, &touched_leafs);
+		}
 	}
 }
 
@@ -2382,8 +2533,12 @@ void CSG_QUAKE_Free()
 	for (i = 0 ; i < qk_all_mapmodels.size() ; i++)
 		delete qk_all_mapmodels[i];
 
-	qk_all_faces.    clear();
+	for (i = 0 ; i < qk_all_detail_models.size() ; i++)
+		delete qk_all_detail_models[i];
+
+	qk_all_faces.clear();
 	qk_all_mapmodels.clear();
+	qk_all_detail_models.clear();
 }
 
 

@@ -21,6 +21,8 @@
 #ifndef __OBLIGE_CSG_QUAKE_H__
 #define __OBLIGE_CSG_QUAKE_H__
 
+#include <map>
+
 
 /***** CLASSES ****************/
 
@@ -28,6 +30,9 @@ class quake_leaf_c;
 class quake_node_c;
 class qCluster_c;
 class qLightmap_c;
+
+
+typedef std::map< quake_leaf_c *, int > leaf_map_t;
 
 
 typedef enum
@@ -174,7 +179,7 @@ public:
 	void StoreWinding(const std::vector<quake_vertex_c>& winding,
 					  const quake_plane_c *plane, bool reverse);
 
-	void SetupMatrix(const quake_plane_c *plane, int pl_side);
+	void SetupMatrix();
 
 	void GetBounds(quake_bbox_c *bbox) const;
 
@@ -204,16 +209,20 @@ public:
 
 	qCluster_c *cluster;
 
+	// the final leaf number in output lump.
 	int index;
 
 	// for Quake2/3 collision handling
 	std::vector<csg_brush_c *> brushes;
 
+	// used for Q3 detail models, NULL otherwise
+	csg_entity_c *link_ent;
+
 public:
 	quake_leaf_c(int _m) :
 		medium(_m), faces(),
 		cluster(NULL), index(-1),
-		brushes()
+		brushes(), link_ent(NULL)
 	{ }
 
 	~quake_leaf_c()
@@ -225,7 +234,7 @@ public:
 
 	void BBoxFromSolids();
 
-	void FilterBrush(csg_brush_c *B);
+	void FilterBrush(csg_brush_c *B, leaf_map_t *touched);
 };
 
 
@@ -261,7 +270,7 @@ public:
 
 	int CountLeafs() const;
 
-	void FilterBrush(csg_brush_c *B);
+	void FilterBrush(csg_brush_c *B, leaf_map_t *touched);
 };
 
 
@@ -290,7 +299,7 @@ public:
 	int light;
 
 public:
-	quake_mapmodel_c();
+	 quake_mapmodel_c();
 	~quake_mapmodel_c();
 };
 
@@ -307,6 +316,7 @@ extern quake_mapmodel_c * qk_world_model;
 
 extern std::vector<quake_face_c *>     qk_all_faces;
 extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
+extern std::vector<quake_leaf_c *>     qk_all_detail_models;  // Q3 only
 
 
 /***** FUNCTIONS ****************/
