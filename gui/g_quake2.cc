@@ -1191,10 +1191,6 @@ void quake2_game_interface_c::Property(const char *key, const char *value)
 		else
 			qk_lighting_quality = 0;
 	}
-	else if (StringCaseCmp(key, "cluster_size") == 0)
-	{
-		CLUSTER_SIZE = atof(value);
-	}
 	else
 	{
 		LogPrintf("WARNING: unknown QUAKE2 property: %s=%s\n", key, value);

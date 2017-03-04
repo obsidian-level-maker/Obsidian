@@ -963,6 +963,11 @@ int CSG_property(lua_State *L)
 		spot_high_h = atoi(value);
 		return 0;
 	}
+	else if (StringCaseCmp(key, "cluster_size") == 0)
+	{
+		CLUSTER_SIZE = atof(value);
+		return 0;
+	}
 
 	SYS_ASSERT(game_object);
 

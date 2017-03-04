@@ -1509,10 +1509,6 @@ void quake3_game_interface_c::Property(const char *key, const char *value)
 		else
 			qk_lighting_quality = 0;
 	}
-	else if (StringCaseCmp(key, "cluster_size") == 0)
-	{
-		CLUSTER_SIZE = atof(value);
-	}
 	else if (StringCaseCmp(key, "water_shader") == 0)
 	{
 		water_shader = StringDup(value);

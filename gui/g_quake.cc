@@ -1530,10 +1530,6 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
 		else
 			qk_lighting_quality = 0;
 	}
-	else if (StringCaseCmp(key, "cluster_size") == 0)
-	{
-		CLUSTER_SIZE = atof(value);
-	}
 	else if (StringCaseCmp(key, "worldtype") == 0)
 	{
 		qk_worldtype = atoi(value);
