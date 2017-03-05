@@ -1206,17 +1206,6 @@ void quake_face_c::GetBounds(quake_bbox_c *bbox) const
 }
 
 
-float quake_face_c::Calc_S(const quake_vertex_c *V) const
-{
-	return Calc_S(V->x, V->y, V->z);
-}
-
-float quake_face_c::Calc_T(const quake_vertex_c *V) const
-{
-	return Calc_T(V->x, V->y, V->z);
-}
-
-
 void quake_face_c::ST_Bounds(double *min_s, double *min_t,
                              double *max_s, double *max_t) const
 {

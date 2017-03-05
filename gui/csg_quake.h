@@ -192,8 +192,15 @@ public:
 		return uv_mat.Calc_T(x, y, z);
 	}
 
-	float Calc_S(const quake_vertex_c *V) const;
-	float Calc_T(const quake_vertex_c *V) const;
+	inline float Calc_S(const quake_vertex_c *V) const
+	{
+		return uv_mat.Calc_S(V->x, V->y, V->z);
+	}
+
+	inline float Calc_T(const quake_vertex_c *V) const
+	{
+		return uv_mat.Calc_T(V->x, V->y, V->z);
+	}
 
 	void ST_Bounds(double *min_s, double *min_t,
 				   double *max_s, double *max_t) const;
