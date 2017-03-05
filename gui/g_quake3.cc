@@ -68,6 +68,9 @@ static char *slime_shader;
 static char * lava_shader;
 
 
+extern double q3_default_tex_scale;
+
+
 //------------------------------------------------------------------------
 
 static std::vector<dbrush3_t>     q3_brushes;
@@ -1259,6 +1262,8 @@ bool quake3_game_interface_c::Start()
 	qk_sub_format = 0;
 	qk_lighting_quality = fast_lighting ? -1 : +1;
 
+	q3_default_tex_scale = 1.0 / 128.0;
+
 	CLUSTER_SIZE = 128.0;
 
 	// this is not used here
@@ -1340,6 +1345,10 @@ void quake3_game_interface_c::Property(const char *key, const char *value)
 			qk_lighting_quality = +1;
 		else
 			qk_lighting_quality = 0;
+	}
+	else if (StringCaseCmp(key, "default_tex_scale") == 0)
+	{
+		q3_default_tex_scale = atof(value);
 	}
 	else if (StringCaseCmp(key, "water_shader") == 0)
 	{

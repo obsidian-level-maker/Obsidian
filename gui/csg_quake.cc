@@ -43,6 +43,8 @@
 
 double CLUSTER_SIZE = 128.0;
 
+double q3_default_tex_scale = 1.0 / 128.0;
+
 #define FACE_MAX_SIZE  (qk_game < 3 ? 240 : 768)
 
 #define NODE_DEBUG  0
@@ -1143,7 +1145,7 @@ void quake_face_c::SetupMatrix()
 
 	if (qk_game >= 3)
 	{
-		 u = v = 1.0 / 128.0;
+		 u = v = q3_default_tex_scale;
 	}
 
 	// texture property can override
