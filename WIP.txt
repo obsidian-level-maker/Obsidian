@@ -6,15 +6,6 @@ WORK IN PROGRESS
 Quake3 CSG Code
 ---------------
 
-+  texture coords for brushes:
-   - can set a default "u_scale" and "v_scale" for textures
-     [ new gui.texture_prop() function ]
-
-   - specify uv coords in brushes:
-     - tu, tv in each side (for top face
-     - bu, bv in each side (for bottom face)
-     - u1,u2, v1,v2 in side faces
-
 +  better triangulation  [ review q3map2 code ]
 
 +  lighting
@@ -23,7 +14,13 @@ Quake3 CSG Code
    - ensure sun lighting works
    - grid lighting
 
-LATER:  reject detail surfaces lying completely inside a solid brush
+TODO : reject detail surfaces lying completely inside a solid brush
+
+TODO : brushlib function to visit side faces, and if they
+       contain u1/u2/v1/v2 then compute the uv_mat
+
+TODO : brushlib function to visit top/bottom faces, and
+       generate a uv_mat if the sides contain tu/tv/bu/bv values
 
 DONE:  visibility
 DONE:  clip brushes
