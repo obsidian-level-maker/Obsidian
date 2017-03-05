@@ -2447,6 +2447,9 @@ static void Detail_CreateFaces(csg_brush_c *B, leaf_map_t *touched_leafs)
 	if (touched_leafs->empty())
 		return;
 
+	// TODO : discard faces which lie inside a nearby solid brush
+	//        [ quite difficult, perhaps use the quad tree... ]
+
 	Detail_FloorOrCeilFace(B, true /* is_ceil */, touched_leafs);
 	Detail_FloorOrCeilFace(B, false, touched_leafs);
 
