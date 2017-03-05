@@ -153,9 +153,8 @@ public:
 
 	std::string texture;
 
-	// texturing matrix (fourth value is offset)
-	float s[4];
-	float t[4];
+	// texturing matrix
+	uv_matrix_c uv_mat;
 
 	int flags;
 
@@ -183,8 +182,15 @@ public:
 
 	void GetBounds(quake_bbox_c *bbox) const;
 
-	float Calc_S(float x, float y, float z) const;
-	float Calc_T(float x, float y, float z) const;
+	inline float Calc_S(float x, float y, float z) const
+	{
+		return uv_mat.Calc_S(x, y, z);
+	}
+
+	inline float Calc_T(float x, float y, float z) const
+	{
+		return uv_mat.Calc_T(x, y, z);
+	}
 
 	float Calc_S(const quake_vertex_c *V) const;
 	float Calc_T(const quake_vertex_c *V) const;

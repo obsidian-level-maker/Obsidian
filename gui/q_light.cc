@@ -345,22 +345,25 @@ static void CalcFaceVectors(quake_face_c *F)
 	lt_plane_dist = plane->CalcDist();
 
 
-	lt_worldtotex[0][0] = F->s[0];
-	lt_worldtotex[0][1] = F->s[1];
-	lt_worldtotex[0][2] = F->s[2];
+	const uv_matrix_c *UV = &F->uv_mat;
 
-	lt_worldtotex[1][0] = F->t[0];
-	lt_worldtotex[1][1] = F->t[1];
-	lt_worldtotex[1][2] = F->t[2];
+
+	lt_worldtotex[0][0] = UV->s[0];
+	lt_worldtotex[0][1] = UV->s[1];
+	lt_worldtotex[0][2] = UV->s[2];
+
+	lt_worldtotex[1][0] = UV->t[0];
+	lt_worldtotex[1][1] = UV->t[1];
+	lt_worldtotex[1][2] = UV->t[2];
 
 
 	// calculate a normal to the texture axis.  points can be moved
 	// along this without changing their S/T
 	static quake_plane_c texnormal;
 
-	texnormal.nx = F->s[2] * F->t[1] - F->s[1] * F->t[2];
-	texnormal.ny = F->s[0] * F->t[2] - F->s[2] * F->t[0];
-	texnormal.nz = F->s[1] * F->t[0] - F->s[0] * F->t[1];
+	texnormal.nx = UV->s[2] * UV->t[1] - UV->s[1] * UV->t[2];
+	texnormal.ny = UV->s[0] * UV->t[2] - UV->s[2] * UV->t[0];
+	texnormal.nz = UV->s[1] * UV->t[0] - UV->s[0] * UV->t[1];
 
 	texnormal.Normalize();
 
@@ -398,9 +401,9 @@ static void CalcFaceVectors(quake_face_c *F)
 
 
 	// calculate texorg on the texture plane
-	lt_texorg[0] = - F->s[3] * lt_textoworld[0][0] - F->t[3] * lt_textoworld[1][0];
-	lt_texorg[1] = - F->s[3] * lt_textoworld[0][1] - F->t[3] * lt_textoworld[1][1];
-	lt_texorg[2] = - F->s[3] * lt_textoworld[0][2] - F->t[3] * lt_textoworld[1][2];
+	lt_texorg[0] = - UV->s[3] * lt_textoworld[0][0] - UV->t[3] * lt_textoworld[1][0];
+	lt_texorg[1] = - UV->s[3] * lt_textoworld[0][1] - UV->t[3] * lt_textoworld[1][1];
+	lt_texorg[2] = - UV->s[3] * lt_textoworld[0][2] - UV->t[3] * lt_textoworld[1][2];
 
 	// project back to the face plane
 

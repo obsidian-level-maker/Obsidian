@@ -716,7 +716,7 @@ static void Q1_WriteFace(quake_face_c *face)
 		flags |= TEX_SPECIAL;
 	}
 
-	raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->s, face->t);
+	raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->uv_mat.s, face->uv_mat.t);
 
 
 	DoWriteFace(raw_face);

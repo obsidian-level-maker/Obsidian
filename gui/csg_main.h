@@ -84,6 +84,24 @@ public:
 };
 
 
+class uv_matrix_c
+{
+public:
+	// fourth value is the offset
+	float s[4];
+	float t[4];
+
+public:
+	 uv_matrix_c() { Clear(); }
+	~uv_matrix_c() { }
+
+	void Clear();
+
+	float Calc_S(float x, float y, float z) const;
+	float Calc_T(float x, float y, float z) const;
+};
+
+
 class brush_vert_c
 {
 public:
@@ -93,8 +111,10 @@ public:
 
 	csg_property_set_c face;
 
+	uv_matrix_c *uv_mat;	// can be NULL
+
 public:
-	brush_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
+	 brush_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
 	~brush_vert_c();
 };
 
@@ -111,11 +131,13 @@ public:
 
 	csg_property_set_c face;
 
+	uv_matrix_c *uv_mat;	// can be NULL
+
 public:
-	brush_plane_c(double _z = 0) : z(_z), slope(NULL), face()
+	brush_plane_c(double _z = 0) : z(_z), slope(NULL), face(), uv_mat(NULL)
 	{ }
 
-	brush_plane_c(const brush_plane_c& other);
+///	brush_plane_c(const brush_plane_c& other);
 
 	~brush_plane_c();
 

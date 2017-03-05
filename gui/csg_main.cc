@@ -121,26 +121,52 @@ void csg_property_set_c::getHexenArgs(u8_t *arg5) const
 }
 
 
+void uv_matrix_c::Clear()
+{
+	s[0] = s[1] = s[2] = s[3] = 0;
+	t[0] = t[1] = t[2] = t[3] = 0;
+}
+
+float uv_matrix_c::Calc_S(float x, float y, float z) const
+{
+	return s[0] * x + s[1] * y + s[2] * z + s[3];
+}
+
+float uv_matrix_c::Calc_T(float x, float y, float z) const
+{
+	return t[0] * x + t[1] * y + t[2] * z + t[3];
+}
+
+
 brush_vert_c::brush_vert_c(csg_brush_c *_parent, double _x, double _y) :
 	parent(_parent), x(_x), y(_y),
-	face()
+	face(), uv_mat(NULL)
 { }
 
 brush_vert_c::~brush_vert_c()
-{ }
+{
+	if (uv_mat)
+		delete uv_mat;
+}
 
 
+#if 0  // needed?
 brush_plane_c::brush_plane_c(const brush_plane_c& other) :
-	z(other.z), slope(NULL), face(other.face)
+	z(other.z), slope(NULL), face(other.face), uv_mat(NULL)
 {
 	// NOTE: slope not cloned
 }
+#endif
+
 
 brush_plane_c::~brush_plane_c()
 {
 	// free slope ??   (or keep all slopes in big list)
 
 	// free face ??  (or keep all faces in big list)
+
+	if (uv_mat)
+		delete uv_mat;
 }
 
 

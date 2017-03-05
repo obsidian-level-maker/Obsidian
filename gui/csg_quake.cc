@@ -1137,11 +1137,7 @@ void quake_face_c::StoreWinding(const std::vector<quake_vertex_c>& winding,
 
 void quake_face_c::SetupMatrix()
 {
-	float nx = plane.nx;
-	float ny = plane.ny;
-	float nz = plane.nz;
-
-	// default UV scaling
+	// the default UV scaling
 	float u = 1.0;
 	float v = 1.0;
 
@@ -1160,32 +1156,37 @@ void quake_face_c::SetupMatrix()
 	}
 
 
-	s[0] = s[1] = s[2] = s[3] = 0;
-	t[0] = t[1] = t[2] = t[3] = 0;
+	uv_mat.Clear();
 
-	if (nx > 0.5)  // PLANE_X
+	if (plane.nx > 0.5)  // PLANE_X
 	{
-		s[1] = u; t[2] = -v;
+		uv_mat.s[1] = u;
+		uv_mat.t[2] = -v;
 	}
-	else if (nx < -0.5)
+	else if (plane.nx < -0.5)
 	{
-		s[1] = -u; t[2] = -v;
+		uv_mat.s[1] = -u;
+		uv_mat.t[2] = -v;
 	}
-	else if (ny < -0.5)  // PLANE_Y
+	else if (plane.ny < -0.5)  // PLANE_Y
 	{
-		s[0] = u; t[2] = -v;
+		uv_mat.s[0] = u;
+		uv_mat.t[2] = -v;
 	}
-	else if (ny > 0.5)
+	else if (plane.ny > 0.5)
 	{
-		s[0] = -u; t[2] = -v;
+		uv_mat.s[0] = -u;
+		uv_mat.t[2] = -v;
 	}
-	else if (nz >= 0)  // PLANE_Z
+	else if (plane.nz >= 0)  // PLANE_Z
 	{
-		s[0] = u; t[1] = -v;
+		uv_mat.s[0] = u;
+		uv_mat.t[1] = -v;
 	}
 	else
 	{
-		s[0] = u; t[1] = v;
+		uv_mat.s[0] = u;
+		uv_mat.t[1] = v;
 	}
 }
 
@@ -1205,25 +1206,14 @@ void quake_face_c::GetBounds(quake_bbox_c *bbox) const
 }
 
 
-float quake_face_c::Calc_S(float x, float y, float z) const
-{
-	return s[0] * x + s[1] * y + s[2] * z + s[3];
-}
-
 float quake_face_c::Calc_S(const quake_vertex_c *V) const
 {
-	return s[0] * V->x + s[1] * V->y + s[2] * V->z + s[3];
-}
-
-
-float quake_face_c::Calc_T(float x, float y, float z) const
-{
-	return t[0] * x + t[1] * y + t[2] * z + t[3];
+	return Calc_S(V->x, V->y, V->z);
 }
 
 float quake_face_c::Calc_T(const quake_vertex_c *V) const
 {
-	return t[0] * V->x + t[1] * V->y + t[2] * V->z + t[3];
+	return Calc_T(V->x, V->y, V->z);
 }
 
 
