@@ -827,6 +827,7 @@ extern int SPOT_end(lua_State *L);
 extern int CSG_begin_level(lua_State *L);
 extern int CSG_end_level(lua_State *L);
 extern int CSG_property(lua_State *L);
+extern int CSG_tex_property(lua_State *L);
 extern int CSG_add_brush(lua_State *L);
 extern int CSG_add_entity(lua_State *L);
 extern int CSG_trace_ray(lua_State *L);
@@ -913,6 +914,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "begin_level", CSG_begin_level },
 	{ "end_level",   CSG_end_level },
 	{ "property",    CSG_property },
+	{ "tex_property",CSG_tex_property },
 	{ "add_brush",   CSG_add_brush  },
 	{ "add_entity",  CSG_add_entity },
 	{ "trace_ray",   CSG_trace_ray },

@@ -36,9 +36,11 @@
 #define EPSILON  0.001
 
 
-std::vector<csg_brush_c *> all_brushes;
+std::vector< csg_brush_c *> all_brushes;
 
-std::vector<csg_entity_c *> all_entities;
+std::vector< csg_entity_c *> all_entities;
+
+std::map< std::string, csg_property_set_c *> all_tex_props;
 
 std::string dummy_wall_tex;
 std::string dummy_plane_tex;
@@ -984,6 +986,37 @@ int CSG_property(lua_State *L)
 }
 
 
+// LUA: tex_property(texture, key, value)
+//
+int CSG_tex_property(lua_State *L)
+{
+	const char *texture = luaL_checkstring(L,1);
+	const char *key     = luaL_checkstring(L,2);
+	const char *value   = luaL_checkstring(L,3);
+
+	csg_property_set_c *props = NULL;
+
+	std::map< std::string, csg_property_set_c *>::iterator TPI;
+
+	TPI = all_tex_props.find(std::string(texture));
+
+	if (TPI == all_tex_props.end())
+	{
+		props = new csg_property_set_c;
+
+		all_tex_props[std::string(texture)] = props;
+	}
+	else
+	{
+		props = TPI->second;
+	}
+
+	props->Add(key, value);
+
+	return 0;
+}
+
+
 // LUA: add_brush(coords)
 //
 // coords is a list of coordinates of the form:
@@ -1124,6 +1157,34 @@ void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h)
 
 //------------------------------------------------------------------------
 
+csg_property_set_c * CSG_LookupTexProps(const char *name)
+{
+	std::map< std::string, csg_property_set_c *>::iterator TPI;
+
+	TPI = all_tex_props.find(std::string(name));
+
+	if (TPI == all_tex_props.end())
+		return NULL;
+
+	SYS_ASSERT(TPI->second);
+
+	return TPI->second;
+}
+
+
+static void CSG_FreeTexProps()
+{
+	std::map< std::string, csg_property_set_c *>::iterator TPI;
+
+	for (TPI = all_tex_props.begin() ; TPI != all_tex_props.end() ; TPI++)
+	{
+		delete TPI->second;
+	}
+
+	all_tex_props.clear();
+}
+
+
 void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key)
 {
 	for (unsigned int k = 0 ; k < all_entities.size() ; k++)
@@ -1162,6 +1223,8 @@ void CSG_Main_Free()
 
 	all_brushes .clear();
 	all_entities.clear();
+
+	CSG_FreeTexProps();
 
 	CSG_DeleteQuadTree();
 

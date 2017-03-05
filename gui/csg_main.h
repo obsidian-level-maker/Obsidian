@@ -231,6 +231,8 @@ void CSG_Main_Free();
 bool CSG_TraceRay(double x1, double y1, double z1,
 				  double x2, double y2, double z2, const char *mode);
 
+csg_property_set_c * CSG_LookupTexProps(const char *name);
+
 void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key);
 
 
