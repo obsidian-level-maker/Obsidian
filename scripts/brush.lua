@@ -789,6 +789,20 @@ function brushlib.set_mat(brush, wall, flat)
 end
 
 
+function brushlib.q3_liquid(brush, medium, top_tex)
+  brushlib.set_kind(brush, "liquid", { detail=1, medium=medium })
+
+  -- only top face has a real texture
+  brushlib.set_tex(brush, "nothing")
+
+  each C in brush do
+    if C.t then
+       C.tex = top_tex
+    end
+  end
+end
+
+
 function brushlib.set_line_flag(brush, key, value)
   each C in brush do
     if C.x then
