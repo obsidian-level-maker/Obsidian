@@ -522,9 +522,8 @@ static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *v,
 
 	face->GetNormal(out->normal);
 
-	// FIXME : compute the ST matrix properly (in csg_quake.cc code)
-	out->st[0] = face->Calc_S(v) / 128.0;
-	out->st[1] = face->Calc_T(v) / 128.0;
+	out->st[0] = face->Calc_S(v);
+	out->st[1] = face->Calc_T(v);
 
 	// FIXME : lightmap coords
 	out->lightmap[0] = 0;

@@ -1141,32 +1141,51 @@ void quake_face_c::SetupMatrix()
 	float ny = plane.ny;
 	float nz = plane.nz;
 
+	// default UV scaling
+	float u = 1.0;
+	float v = 1.0;
+
+	if (qk_game >= 3)
+	{
+		 u = v = 1.0 / 128.0;
+	}
+
+	// texture property can override
+	csg_property_set_c *props = CSG_LookupTexProps(texture.c_str());
+
+	if (props)
+	{
+		u = props->getDouble("u_scale", u);
+		v = props->getDouble("v_scale", v);
+	}
+
+
 	s[0] = s[1] = s[2] = s[3] = 0;
 	t[0] = t[1] = t[2] = t[3] = 0;
 
 	if (nx > 0.5)  // PLANE_X
 	{
-		s[1] = 1; t[2] = -1;
+		s[1] = u; t[2] = -v;
 	}
 	else if (nx < -0.5)
 	{
-		s[1] = -1; t[2] = -1;
+		s[1] = -u; t[2] = -v;
 	}
 	else if (ny < -0.5)  // PLANE_Y
 	{
-		s[0] = 1; t[2] = -1;
+		s[0] = u; t[2] = -v;
 	}
 	else if (ny > 0.5)
 	{
-		s[0] = -1; t[2] = -1;
+		s[0] = -u; t[2] = -v;
 	}
 	else if (nz >= 0)  // PLANE_Z
 	{
-		s[0] = 1; t[1] = -1;
+		s[0] = u; t[1] = -v;
 	}
 	else
 	{
-		s[0] = 1; t[1] = 1;
+		s[0] = u; t[1] = v;
 	}
 }
 
