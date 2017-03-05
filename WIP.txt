@@ -3,21 +3,8 @@ WORK IN PROGRESS
 ================
 
 
-
 Quake3 CSG Code
 ---------------
-
--  odd node splitters
-
--  better triangulation  [ review q3map2 code ]
-
--  gui.property("cluster_size", NNN)
-
-+  proper "detail" brushes
-   - find touching leaf(s), as per BKIND_Clip
-   - share surfaces with all leafs that contain them
-   - detect surfaces which lie completely inside a solid visible brush
-   - review Q1 and Q2 code
 
 +  texture coords for brushes:
    - can set a default "u_scale" and "v_scale" for textures
@@ -28,11 +15,15 @@ Quake3 CSG Code
      - bu, bv in each side (for bottom face)
      - u1,u2, v1,v2 in side faces
 
++  better triangulation  [ review q3map2 code ]
+
 +  lighting
    - ensure detail brushes are handled  [ being lit AND blocking light ]
    - make vertex lighting be average of a face
    - ensure sun lighting works
    - grid lighting
+
+LATER:  reject detail surfaces lying completely inside a solid brush
 
 DONE:  visibility
 DONE:  clip brushes
