@@ -97,6 +97,8 @@ public:
 
 	void Clear();
 
+	void Set(const uv_matrix_c *other);
+
 	float Calc_S(float x, float y, float z) const;
 	float Calc_T(float x, float y, float z) const;
 };

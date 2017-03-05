@@ -127,6 +127,15 @@ void uv_matrix_c::Clear()
 	t[0] = t[1] = t[2] = t[3] = 0;
 }
 
+void uv_matrix_c::Set(const uv_matrix_c *other)
+{
+	for (int i = 0 ; i < 4 ; i++)
+	{
+		s[i] = other->s[i];
+		t[i] = other->t[i];
+	}
+}
+
 float uv_matrix_c::Calc_S(float x, float y, float z) const
 {
 	return s[0] * x + s[1] * y + s[2] * z + s[3];
@@ -764,6 +773,46 @@ static quake_plane_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 }
 
 
+static uv_matrix_c * Grab_UVMatrix(lua_State *L, int stack_pos)
+{
+	if (stack_pos < 0)
+		stack_pos += lua_gettop(L) + 1;
+
+	if (lua_isnil(L, stack_pos))
+		return NULL;
+
+	if (lua_type(L, stack_pos) != LUA_TTABLE)
+	{
+		luaL_argerror(L, stack_pos, "missing table: uv_matrix");
+		return NULL; /* NOT REACHED */
+	}
+
+	uv_matrix_c *uv_mat = new uv_matrix_c;
+
+	for (int n = 0 ; n < 8 ; n++)
+	{
+		lua_rawgeti(L, stack_pos, 1+n);
+
+		if (lua_type(L, -1) != LUA_TNUMBER)
+		{
+			luaL_error(L, "bad uv_matrix: too short");
+			return NULL; /* NOT REACHED */
+		}
+
+		float val = lua_tonumber(L, -1);
+
+		if (n < 4)
+			uv_mat->s[n] = val;
+		else
+			uv_mat->t[n-4] = val;
+
+		lua_pop(L, 1);
+	}
+
+	return uv_mat;
+}
+
+
 static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 {
 	// parse brush kind from 'm' field of the props table
@@ -849,6 +898,7 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 
 	lua_pop(L, 1);
 
+	lua_getfield(L, stack_pos, "uv_mat");
 	lua_getfield(L, stack_pos, "slope");
 	lua_getfield(L, stack_pos, "b");
 	lua_getfield(L, stack_pos, "t");
@@ -859,6 +909,7 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 		{
 			B->t.z = luaL_checknumber(L, -1);
 			B->t.slope = Grab_Slope(L, -3, false);
+			B->t.uv_mat = Grab_UVMatrix(L, -4);
 
 			Grab_Properties(L, stack_pos, &B->t.face, true);
 		}
@@ -866,6 +917,7 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 		{
 			B->b.z = luaL_checknumber(L, -2);
 			B->b.slope = Grab_Slope(L, -3, true);
+			B->b.uv_mat = Grab_UVMatrix(L, -4);
 
 			Grab_Properties(L, stack_pos, &B->b.face, true);
 		}
@@ -873,6 +925,8 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 	else  // side info
 	{
 		brush_vert_c *V = new brush_vert_c(B);
+
+		V->uv_mat = Grab_UVMatrix(L, -4);
 
 		lua_getfield(L, stack_pos, "x");
 		lua_getfield(L, stack_pos, "y");
@@ -887,7 +941,7 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 		B->verts.push_back(V);
 	}
 
-	lua_pop(L, 3);  // slope, b, t
+	lua_pop(L, 4);  // uv_mat, slope, b, t
 
 	return 0;
 }

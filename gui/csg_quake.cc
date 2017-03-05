@@ -1259,6 +1259,7 @@ void quake_face_c::GetNormal(float *vec3) const
 
 
 static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
+					  uv_matrix_c *uv_mat,
 					  quake_node_c *node, quake_leaf_c *leaf)
 {
 	F->plane = node->plane;
@@ -1267,7 +1268,10 @@ static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
 
 	F->texture = props->getStr("tex", "missing");
 
-	F->SetupMatrix();
+	if (uv_mat)
+		F->uv_mat.Set(uv_mat);
+	else
+		F->SetupMatrix();
 
 	node->AddFace(F);
 	leaf->AddFace(F);
@@ -1312,7 +1316,7 @@ static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
 	else if (B->bflags & BFLAG_Sky)
 		F->flags |= FACE_F_Sky;
 
-	DoAddFace(F, &BP.face, node, leaf);
+	DoAddFace(F, &BP.face, BP.uv_mat, node, leaf);
 }
 
 
@@ -1355,7 +1359,7 @@ static void WallFace_Quad(quake_node_c *node, quake_leaf_c *leaf,
 	if (bvert->parent->bflags & BFLAG_Sky)
 		F->flags |= FACE_F_Sky;
 
-	DoAddFace(F, &bvert->face, node, leaf);
+	DoAddFace(F, &bvert->face, bvert->uv_mat, node, leaf);
 }
 
 
@@ -1557,7 +1561,7 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
 	F->node_side = S->node_side;
 
-	DoAddFace(F, &bvert->face, node, leaf);
+	DoAddFace(F, &bvert->face, bvert->uv_mat, node, leaf);
 }
 
 
@@ -2306,6 +2310,7 @@ static void RemoveSolidNodes(quake_node_c * node)
 
 
 static void Detail_StoreFace(quake_face_c *F, csg_property_set_c *props,
+							 uv_matrix_c *uv_mat,
 							 leaf_map_t *touched_leafs)
 {
 	// setup texturing
@@ -2316,7 +2321,10 @@ static void Detail_StoreFace(quake_face_c *F, csg_property_set_c *props,
 	if (strcmp(F->texture.c_str(), "nothing") == 0)
 		return;
 
-	F->SetupMatrix();
+	if (uv_mat)
+		F->uv_mat.Set(uv_mat);
+	else
+		F->SetupMatrix();
 
 	leaf_map_t::iterator LMI;
 
@@ -2364,7 +2372,7 @@ static void Detail_FloorOrCeilFace(csg_brush_c *B, bool is_ceil,
 		F->AddVert(V->x, V->y, z);
 	}
 
-	Detail_StoreFace(F, &BP.face, touched_leafs);
+	Detail_StoreFace(F, &BP.face, BP.uv_mat, touched_leafs);
 }
 
 
@@ -2425,7 +2433,7 @@ static void Detail_SideFace(csg_brush_c *B, unsigned int k,
 	SYS_ASSERT(F->verts.size() >= 3);
 
 
-	Detail_StoreFace(F, &V1->face, touched_leafs);
+	Detail_StoreFace(F, &V1->face, V1->uv_mat, touched_leafs);
 }
 
 
