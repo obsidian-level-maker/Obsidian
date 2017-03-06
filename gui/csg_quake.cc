@@ -1806,7 +1806,7 @@ static int ParseLiquidMedium(csg_property_set_c *props)
 }
 
 
-static quake_leaf_c * Solid_Leaf(quake_group_c & group)
+static quake_leaf_c * Solid_Wall_Leaf(quake_group_c & group)
 {
 	// Quake 1 and related games have a shared solid leaf
 	if (qk_game == 1)
@@ -1827,30 +1827,43 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 }
 
 
-static quake_leaf_c * Solid_Leaf(region_c *R, unsigned int g, int is_ceil,
-                                 quake_group_c& group)
+static quake_leaf_c * Solid_FloorOrCeil(region_c *R, unsigned int g, int is_ceil,
+									    quake_group_c& group)
 {
 	if (qk_game == 1)
 		return qk_solid_leaf;
 
 	quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
-	// add _all_ solid brushes for the floor/ceiling
-	double brush_z1 = -9e9;
-	double brush_z2 = +9e9;
+	double range_z1 = -9e9;
+	double range_z2 = +9e9;
 
-	if (g > 0)
-		brush_z1 = R->gaps[g-1]->top->b.z - 2;
+	if (is_ceil)
+	{
+		range_z1 = R->gaps[g]->top->b.z - 1;
 
-	if (g+1 < R->gaps.size())
-		brush_z2 = R->gaps[g+1]->bottom->t.z + 2;
+		if (g+1 < R->gaps.size())
+			range_z2 = R->gaps[g+1]->bottom->t.z + 1;
+	}
+	else
+	{
+		range_z2 = R->gaps[g]->bottom->t.z + 1;
+
+		if (g > 0)
+			range_z1 = R->gaps[g-1]->top->b.z - 1;
+	}
 
 	for (unsigned int i = 0 ; i < group.brushes.size() ; i++)
 	{
 		csg_brush_c *B = group.brushes[i];
 
-		if (brush_z1 < B->b.z && B->t.z < brush_z2)
+		if (range_z1 < B->b.z && B->t.z < range_z2)
+		{
 			leaf->AddBrush(B);
+
+///			if (B->bflags & BFLAG_Sky)
+///				sky_num++;
+		}
 	}
 
 	// this should not happen..... but handle it anyway
@@ -1876,8 +1889,8 @@ static quake_node_c * Solid_Node(quake_group_c & group)
 	node->plane.z  = 0;
 	node->plane.nz = +1;
 
-	node->front_L = Solid_Leaf(group);
-	node-> back_L = Solid_Leaf(group);
+	node->front_L = Solid_Wall_Leaf(group);
+	node-> back_L = Solid_Wall_Leaf(group);
 
 	return node;
 }
@@ -1979,7 +1992,7 @@ static quake_node_c * CreateLeaf(region_c * R, int g /* gap */,
 	F_node->front_N = L_node ? L_node : C_node;
 
 	C_node->back_L = leaf;
-	F_node->back_L = Solid_Leaf(R, g, 0, group);
+	F_node->back_L = Solid_FloorOrCeil(R, g, 0, group);
 
 	if (L_node)
 	{
@@ -2013,7 +2026,7 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 	CollectWinding(group, winding, bbox);
 
 	quake_node_c *cur_node = NULL;
-	quake_leaf_c *cur_leaf = Solid_Leaf(R, R->gaps.size()-1, 1, group);
+	quake_leaf_c *cur_leaf = Solid_FloorOrCeil(R, R->gaps.size()-1, 1, group);
 
 	for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
 	{
@@ -2079,7 +2092,7 @@ static quake_node_c * Partition_Group(quake_group_c & group,
 		new_node->front_N = Partition_Group(front, reached_cluster, new_node, 0);
 
 		if (back.sides.empty())
-			new_node->back_L = Solid_Leaf(back);
+			new_node->back_L = Solid_Wall_Leaf(back);
 		else
 			new_node->back_N = Partition_Group(back, reached_cluster, new_node, 1);
 
