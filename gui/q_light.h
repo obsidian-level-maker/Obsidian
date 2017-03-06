@@ -45,6 +45,7 @@ public:
 	byte styles[4];
 
 	// final offset in lightmap lump (if not flat)
+	// for Q3, this is (Y << 8) + X
 	int offset;
 
 	// these not valid until CalcScore()
@@ -128,9 +129,6 @@ extern std::vector<quake_light_t> qk_all_lights;
 
 
 /***** FUNCTIONS **********/
-
-void QCOM_FindLights();
-void QCOM_FreeLights();
 
 void QCOM_FreeLightmaps();
 

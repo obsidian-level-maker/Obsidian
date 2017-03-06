@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012  Andrew Apted
+//  Copyright (C) 2006-2017  Andrew Apted
 //  Copyright (C) 1996-1997  Id Software, Inc.
 //
 //  This program is free software; you can redistribute it and/or
@@ -214,6 +214,162 @@ int qLightmap_c::CalcOffset() const
 	else
 	{
 		return offset;
+	}
+}
+
+
+//------------------------------------------------------------------------
+
+#define LIGHTMAP_WIDTH    128
+#define LIGHTMAP_HEIGHT   128
+
+class q3_lightmap_block_c
+{
+public:
+	byte samples[LIGHTMAP_WIDTH][LIGHTMAP_HEIGHT][3];
+
+	// index of first free luxel in each column of this block.
+	// hence 0 is completely empty, LIGHTMAP_HEIGHT is completely full.
+	int free_y[LIGHTMAP_WIDTH];
+
+	int fail_count;
+
+public:
+	q3_lightmap_block_c() : fail_count(0)
+	{
+		memset(samples, 0, sizeof(samples));
+
+		for (int i = 0 ; i < LIGHTMAP_WIDTH ; i++)
+			free_y[i] = 0;
+	}
+
+	~q3_lightmap_block_c()
+	{ }
+
+	int Low_Y(int x, int w)
+	{
+		int y = 0;
+
+		for ( ; w > 0 ; x++, w--)
+			y = MAX(y, free_y[x]);
+
+		return y;
+	}
+
+	int WastedArea(int x, int y, int w)
+	{
+		int area = 0;
+
+		for ( ; w > 0 ; x++, w--)
+			area += (y - free_y[x]);
+
+		return area;
+	}
+
+	// attempt to allocate a block
+	bool Alloc(int bw, int bh, int *bx, int *by)
+	{
+#if 0
+		// skip when failure count reaches a certain limit
+		if (fail_count & 64)
+			return false;
+#endif
+
+		*bx = -1;
+		*by = -1;
+
+		int best_area = (1 << 30);
+
+		// find column that will waste the least amount of space
+
+		for (int x = 0 ; x < LIGHTMAP_WIDTH - bw + 1 ; x++)
+		{
+			int y = Low_Y(x, bw);
+
+			if (y + bh > LIGHTMAP_HEIGHT)
+				continue;
+
+			int area = WastedArea(x, y, bw);
+
+			if (area < best_area)
+			{
+				*bx = x;
+				*by = y;
+
+				best_area = area;
+			}
+		}
+
+		if (*bx < 0)
+		{
+			fail_count++;
+			return false;
+		}
+
+		// mark area as used
+
+		for (int i = 0 ; i < bw ; i++)
+		{
+			free_y[*bx + i] = *by + bh;
+		}
+
+		return true;  // Ok
+	}
+
+	void Write() const
+	{
+		// FIXME
+	}
+};
+
+
+static std::vector< q3_lightmap_block_c * > all_q3_light_blocks;
+
+
+static void Q3_FreeLightBlocks()
+{
+	for (unsigned int k = 0 ; k < all_q3_light_blocks.size() ; k++)
+		delete all_q3_light_blocks[k];
+
+	all_q3_light_blocks.clear();
+}
+
+
+static int Q3_AllocLightBlock(int bw, int bh, int *bx, int *by)
+{
+	// returns the block index numebr
+
+	SYS_ASSERT(bw <= LIGHTMAP_WIDTH);
+	SYS_ASSERT(bh <= LIGHTMAP_HEIGHT);
+
+	for (unsigned int k = 0 ; k < all_q3_light_blocks.size() ; k++)
+	{
+		q3_lightmap_block_c *BL = all_q3_light_blocks[k];
+
+		if (BL->Alloc(bw, bh, bx, by))
+			return (int)k;
+	}
+
+	// it did not fit in any existing block, create a new block
+
+	int bnum = (int)all_q3_light_blocks.size();
+
+	q3_lightmap_block_c *BL = new q3_lightmap_block_c;
+
+	all_q3_light_blocks.push_back(BL);
+
+	if (! BL->Alloc(bw, bh, bx, by))
+		Main_FatalError("INTERNAL ERROR: failed to alloc LM in fresh block\n");
+
+	return bnum;
+}
+
+
+static void Q3_WriteLightBlocks()
+{
+	for (unsigned int k = 0 ; k < all_q3_light_blocks.size() ; k++)
+	{
+		all_q3_light_blocks[k]->Write();
 	}
 }
 
@@ -592,13 +748,13 @@ void qLightmap_c::Store()
 std::vector<quake_light_t> qk_all_lights;
 
 
-void QCOM_FreeLights()
+static void QCOM_FreeLights()
 {
 	qk_all_lights.clear();
 }
 
 
-void QCOM_FindLights()
+static void QCOM_FindLights()
 {
 	QCOM_FreeLights();
 
@@ -828,9 +984,11 @@ void QCOM_LightAllFaces()
 	int lit_faces  = 0;
 	int lit_luxels = 0;
 
+	// visit all faces, including Q3 detail and map-model faces
+
 	for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
 	{
-		quake_face_c *F = qk_all_faces[i];    
+		quake_face_c *F = qk_all_faces[i];
 
 		if (F->flags & (FACE_F_Sky | FACE_F_Liquid))
 			continue;
@@ -852,9 +1010,9 @@ void QCOM_LightAllFaces()
 	}
 
 	LogPrintf("lit %d faces (of %u) using %d luxels\n",
-			lit_faces, qk_all_faces.size(), lit_luxels);
+			  lit_faces, qk_all_faces.size(), lit_luxels);
 
-// TODO: map models
+// Todo: Q1/Q2 map models
 #if 0
 	for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
 	{
