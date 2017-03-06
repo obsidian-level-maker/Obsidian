@@ -790,26 +790,25 @@ static void CheckClusterEdges(quake_group_c & group, int cx, int cy)
 }
 
 
-static int Brush_TestSide(const csg_brush_c *B, const quake_side_c *part)
+static int XY_BrushSide(const csg_brush_c *B, const quake_side_c *part)
 {
-	bool on_front = false;
-	bool on_back  = false;
+	float min_d = +9e9;
+	float max_d = -9e9;
 
 	for (unsigned int i = 0 ; i < B->verts.size() ; i++)
 	{
 		brush_vert_c * V = B->verts[i];
 
-		double d = PerpDist(V->x,V->y, part->x1,part->y1, part->x2,part->y2);
+		float d = PerpDist(V->x,V->y, part->x1,part->y1, part->x2,part->y2);
 
-		if (d >  Q_EPSILON) on_front = true;
-		if (d < -Q_EPSILON) on_back  = true;
-
-		// early out
-		if (on_front && on_back)
-			return 0;
+		min_d = MIN(min_d, d);
+		max_d = MAX(max_d, d);
 	}
 
-	return on_back ? -1 : +1;
+	if (min_d > -Q_EPSILON) return +1;
+	if (max_d <  Q_EPSILON) return -1;
+
+	return 0;  // straddles
 }
 
 
@@ -926,7 +925,7 @@ static void Split_XY(quake_group_c & group,
 	{
 		csg_brush_c *B = local_brushes[n];
 
-		int side = Brush_TestSide(B, part);
+		int side = XY_BrushSide(B, part);
 
 		if (side <= 0)  back.AddBrush(B);
 		if (side >= 0) front.AddBrush(B);
