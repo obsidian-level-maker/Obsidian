@@ -66,6 +66,31 @@ tnode_t;
 static tnode_t *trace_nodes;
 
 
+static int ConvertTraceLeaf(quake_leaf_c *leaf)
+{
+	// liquids do not transmit light [ TODO: make optional ]
+	if (true &&
+		leaf->medium > MEDIUM_AIR &&
+		leaf->medium < MEDIUM_SOLID)
+		return TRACE_SOLID;
+
+	if (leaf->medium != MEDIUM_SOLID)
+		return TRACE_EMPTY;
+
+	// look for sky ceiling, require all brushes to be "sky"
+	if (leaf->brushes.size() > 0)
+	{
+		for (unsigned int k = 0 ; k < leaf->brushes.size() ; k++)
+			if (! (leaf->brushes[k]->bflags & BFLAG_Sky))
+				return TRACE_SOLID;
+
+		return TRACE_SKY;
+	}
+
+	return TRACE_SOLID;
+}
+
+
 static int ConvertTraceNode(quake_node_c *node, int & index_var)
 {
 	int this_idx = index_var;
@@ -108,17 +133,6 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
 	}
 
 
-	// FIXME: face should store flags (like FACE_F_SKY)
-	bool is_sky = false;
-
-	if (fabs(node->plane.nz) > 0.5 &&
-		node->faces.size() == 1 &&
-		strstr(node->faces[0]->texture.c_str(), "sky") != NULL)
-	{
-		is_sky = true;
-	}
-
-
 	if (fx > 0.9999)
 		TN->type = PLANE_X;
 	else if (fy > 0.9999)
@@ -132,16 +146,14 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
 	if (node->front_N)
 		TN->children[side] = ConvertTraceNode(node->front_N, index_var);
 	else
-		TN->children[side] = (node->front_L->medium == MEDIUM_SOLID) ?
-			(is_sky ? TRACE_SKY : TRACE_SOLID) : TRACE_EMPTY;
+		TN->children[side] = ConvertTraceLeaf(node->front_L);
 
 	side ^= 1;
 
 	if (node->back_N)
 		TN->children[side] = ConvertTraceNode(node->back_N, index_var);
 	else
-		TN->children[side] = (node->back_L->medium == MEDIUM_SOLID) ?
-			(is_sky ? TRACE_SKY : TRACE_SOLID) : TRACE_EMPTY;
+		TN->children[side] = ConvertTraceLeaf(node->back_L);
 
 
 	return this_idx;
