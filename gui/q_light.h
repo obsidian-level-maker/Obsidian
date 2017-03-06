@@ -45,8 +45,11 @@ public:
 	byte styles[4];
 
 	// final offset in lightmap lump (if not flat)
-	// for Q3, this is (Y << 8) + X
+	// for Q3 this is the block number
 	int offset;
+
+	// for Q3, position in light block
+	int lx, ly;
 
 	// these not valid until CalcScore()
 	int score;
@@ -135,6 +138,7 @@ void QCOM_FreeLightmaps();
 int QCOM_FlatLightOffset(int value);
 
 void QCOM_BuildLightingLump(int lump, int max_size);
+void QCOM_BuildQ3Lighting  (int lump, int max_size);
 
 void QCOM_LightAllFaces();
 

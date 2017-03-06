@@ -316,23 +316,32 @@ public:
 		return true;  // Ok
 	}
 
-	void Write() const
+	void Copy(qLightmap_c *lmap)
 	{
-		// FIXME
+		for (int y = 0 ; y < lmap->height ; y++)
+		for (int x = 0 ; x < lmap->width  ; x++)
+		{
+			const byte *col = &lmap->samples[(y * lmap->width + x) * 3];
+
+			samples[lmap->lx + x][lmap->ly + y][0] = col[0];
+			samples[lmap->lx + x][lmap->ly + y][1] = col[1];
+			samples[lmap->lx + x][lmap->ly + y][2] = col[2];
+		}
+	}
+
+	void Write(qLump_c *lump) const
+	{
+		for (int y = 0 ; y < LIGHTMAP_HEIGHT ; y++)
+		for (int x = 0 ; x < LIGHTMAP_WIDTH  ; x++)
+		for (int c = 0 ; c < 3 ; c++)
+		{
+			lump->Append(&samples[x][y][c], 1);
+		}
 	}
 };
 
 
 static std::vector< q3_lightmap_block_c * > all_q3_light_blocks;
-
-
-static void Q3_FreeLightBlocks()
-{
-	for (unsigned int k = 0 ; k < all_q3_light_blocks.size() ; k++)
-		delete all_q3_light_blocks[k];
-
-	all_q3_light_blocks.clear();
-}
 
 
 static int Q3_AllocLightBlock(int bw, int bh, int *bx, int *by)
@@ -365,15 +374,6 @@ static int Q3_AllocLightBlock(int bw, int bh, int *bx, int *by)
 }
 
 
-static void Q3_WriteLightBlocks()
-{
-	for (unsigned int k = 0 ; k < all_q3_light_blocks.size() ; k++)
-	{
-		all_q3_light_blocks[k]->Write();
-	}
-}
-
-
 //------------------------------------------------------------------------
 
 static std::vector<qLightmap_c *> qk_all_lightmaps;
@@ -387,6 +387,14 @@ void QCOM_FreeLightmaps()
 		delete qk_all_lightmaps[i];
 
 	qk_all_lightmaps.clear();
+
+	if (qk_game >= 3)
+	{
+		for (unsigned int k = 0 ; k < all_q3_light_blocks.size() ; k++)
+			delete all_q3_light_blocks[k];
+
+		all_q3_light_blocks.clear();
+	}
 }
 
 
@@ -461,6 +469,34 @@ void QCOM_BuildLightingLump(int lump, int max_size)
 		qLightmap_c *L = qk_all_lightmaps[k];
 
 		L->Write(lightmap_lump);
+	}
+}
+
+
+void QCOM_BuildQ3Lighting(int lump, int max_size)
+{
+	// pack individual lightmaps into the 128x128 blocks
+	// [ this is lousy for memory usage.... ]
+
+	for (unsigned int k = 0 ; k < qk_all_lightmaps.size() ; k++)
+	{
+		qLightmap_c *L = qk_all_lightmaps[k];
+
+		L->offset = Q3_AllocLightBlock(L->width, L->height, &L->lx, &L->ly);
+
+		q3_lightmap_block_c *BL = all_q3_light_blocks[L->offset];
+		SYS_ASSERT(BL);
+
+		BL->Copy(L);
+	}
+
+	lightmap_lump = BSP_NewLump(lump);
+
+	for (unsigned int b = 0 ; b < all_q3_light_blocks.size() ; b++)
+	{
+		q3_lightmap_block_c *BL = all_q3_light_blocks[b];
+
+		BL->Write(lightmap_lump);
 	}
 }
 
