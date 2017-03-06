@@ -760,10 +760,11 @@ static void Q3_AddSurface(quake_face_c *face)
 
 	// lighting and texture...
 
-	if (face->lmap)
+	raw_surf.lightmapNum = LIGHTMAP_BY_VERTEX;
+
+	if (face->lmap && face->lmap->offset >= 0)
 	{
-		// FIXME : lightmap on surface
-		raw_surf.lightmapNum = LIGHTMAP_BY_VERTEX;
+		raw_surf.lightmapNum = face->lmap->offset;
 	}
 
 	face->GetNormal(raw_surf.lightmapVecs[2]);
