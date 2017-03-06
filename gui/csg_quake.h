@@ -50,6 +50,8 @@ typedef enum
 {
 	FACE_F_Sky     = (1 << 0),
 	FACE_F_Liquid  = (1 << 1),
+	FACE_F_Detail  = (1 << 2),
+	FACE_F_Model   = (1 << 3),
 }
 quake_face_flags_e;
 

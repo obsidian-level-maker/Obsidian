@@ -2325,15 +2325,22 @@ static void RemoveSolidNodes(quake_node_c * node)
 
 static void Detail_StoreFace(quake_face_c *F, csg_property_set_c *props,
 							 uv_matrix_c *uv_mat,
-							 leaf_map_t *touched_leafs)
+							 leaf_map_t *touched_leafs, bool is_model)
 {
 	// setup texturing
 	F->texture = props->getStr("tex", "missing");
 
 	// inhibit surfaces with the "nothing" texture
-	// [ we don't free it, since it exists in the qk_all_faces list ]
 	if (strcmp(F->texture.c_str(), "nothing") == 0)
+	{
+		delete F;
 		return;
+	}
+
+	if (is_model)
+		F->flags |= FACE_F_Model;
+	else
+		F->flags |= FACE_F_Detail;
 
 	if (uv_mat)
 		F->uv_mat.Set(uv_mat);
@@ -2348,15 +2355,15 @@ static void Detail_StoreFace(quake_face_c *F, csg_property_set_c *props,
 
 		L->AddFace(F);
 	}
+
+	qk_all_faces.push_back(F);
 }
 
 
 static void Detail_FloorOrCeilFace(csg_brush_c *B, bool is_ceil,
-								   leaf_map_t *touched_leafs)
+								   leaf_map_t *touched_leafs, bool is_model)
 {
 	quake_face_c *F = new quake_face_c;
-
-	qk_all_faces.push_back(F);
 
 	// determine plane...
 	brush_plane_c& BP = is_ceil ? B->b : B->t;
@@ -2386,16 +2393,14 @@ static void Detail_FloorOrCeilFace(csg_brush_c *B, bool is_ceil,
 		F->AddVert(V->x, V->y, z);
 	}
 
-	Detail_StoreFace(F, &BP.face, BP.uv_mat, touched_leafs);
+	Detail_StoreFace(F, &BP.face, BP.uv_mat, touched_leafs, is_model);
 }
 
 
 static void Detail_SideFace(csg_brush_c *B, unsigned int k,
-							leaf_map_t *touched_leafs)
+							leaf_map_t *touched_leafs, bool is_model)
 {
 	quake_face_c *F = new quake_face_c;
-
-	qk_all_faces.push_back(F);
 
 	// determine the plane...
 	brush_vert_c *V1 = B->verts[k];
@@ -2427,7 +2432,10 @@ static void Detail_SideFace(csg_brush_c *B, unsigned int k,
 
 	// ensure the face is sane  [ triangles are Ok ]
 	if ((f_Lz1 > f_Lz2 - Z_EPSILON) && (f_Rz1 > f_Rz2 - Z_EPSILON))
+	{
+		delete F;
 		return;
+	}
 
 	int tri_side = 0;
 
@@ -2447,7 +2455,7 @@ static void Detail_SideFace(csg_brush_c *B, unsigned int k,
 	SYS_ASSERT(F->verts.size() >= 3);
 
 
-	Detail_StoreFace(F, &V1->face, V1->uv_mat, touched_leafs);
+	Detail_StoreFace(F, &V1->face, V1->uv_mat, touched_leafs, is_model);
 }
 
 
@@ -2462,12 +2470,12 @@ static void Detail_CreateFaces(csg_brush_c *B, leaf_map_t *touched_leafs)
 	// TODO : discard faces which lie inside a nearby solid brush
 	//        [ quite difficult, perhaps use the quad tree... ]
 
-	Detail_FloorOrCeilFace(B, true /* is_ceil */, touched_leafs);
-	Detail_FloorOrCeilFace(B, false, touched_leafs);
+	Detail_FloorOrCeilFace(B, true  /* is_ceil */, touched_leafs, false /* is_model */);
+	Detail_FloorOrCeilFace(B, false /* is_ceil */, touched_leafs, false /* is_model */);
 
 	for (unsigned int k = 0 ; k < B->verts.size() ; k++)
 	{
-		Detail_SideFace(B, k, touched_leafs);
+		Detail_SideFace(B, k, touched_leafs, false /* is_model */);
 	}
 }
 
@@ -2505,12 +2513,12 @@ static void Model_ProcessBrush(quake_leaf_c *mod, csg_brush_c *B)
 
 		touched[mod] = 1;
 
-		Detail_FloorOrCeilFace(B, true /* is_ceil */, &touched);
-		Detail_FloorOrCeilFace(B, false, &touched);
+		Detail_FloorOrCeilFace(B, true  /* is_ceil */, &touched, true /* is_model */);
+		Detail_FloorOrCeilFace(B, false /* is_ceil */, &touched, true);
 
 		for (unsigned int k = 0 ; k < B->verts.size() ; k++)
 		{
-			Detail_SideFace(B, k, &touched);
+			Detail_SideFace(B, k, &touched, true /* is_model */);
 		}
 	}
 
