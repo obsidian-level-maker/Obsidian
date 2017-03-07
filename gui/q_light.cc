@@ -70,7 +70,7 @@ qLightmap_c::qLightmap_c(int w, int h, int value) :
 {
 	lm_mat = new uv_matrix_c;
 
-	samples = new byte[width * height];
+	samples = new rgb_color_t[width * height];
 
 	current_pos = samples;
 
@@ -89,7 +89,7 @@ qLightmap_c::~qLightmap_c()
 }
 
 
-void qLightmap_c::Fill(int value)
+void qLightmap_c::Fill(rgb_color_t value)
 {
 	for (int i = 0 ; i < width*height ; i++)
 		samples[i] = value;
@@ -114,9 +114,9 @@ bool qLightmap_c::AddStyle(byte style)
 
 	styles[num_styles] = style;
 
-	byte *new_samples = new byte[width * height * (num_styles+1)];
+	rgb_color_t *new_samples = new rgb_color_t[width * height * (num_styles+1)];
 
-	memcpy(new_samples, samples, width * height * num_styles);
+	memcpy(new_samples, samples, width * height * num_styles * sizeof(rgb_color_t));
 
 	num_styles++;
 
@@ -132,37 +132,51 @@ bool qLightmap_c::AddStyle(byte style)
 
 void qLightmap_c::CalcAverage()
 {
-	float avg = 0;
+	float avg_r = 0;
+	float avg_g = 0;
+	float avg_b = 0;
 
 	for (int i = 0 ; i < width*height ; i++)
 	{
-		avg  += samples[i];
+		const rgb_color_t col = samples[i];
+
+		avg_r += RGB_RED(col);
+		avg_g += RGB_GREEN(col);
+		avg_b += RGB_BLUE(col);
 	}
 
-	avg /= (float)(width * height);
+	avg_r /= (float)(width * height);
+	avg_g /= (float)(width * height);
+	avg_b /= (float)(width * height);
 
-	average = CLAMP(0, I_ROUND(avg), 255);
+	byte new_r = CLAMP(0, I_ROUND(avg_r), 255);
+	byte new_g = CLAMP(0, I_ROUND(avg_g), 255);
+	byte new_b = CLAMP(0, I_ROUND(avg_b), 255);
+
+	average = MAKE_RGBA(new_r, new_g, new_b, 0);
 }
 
 
 void qLightmap_c::Write(qLump_c *lump)
 {
+	// (this only used for Q1 and Q2, not Q3)
+
+	// grab the offset now...
 	offset = lump->GetSize();
 
 	int total = width * height * num_styles;
 
-	if (! qk_color_lighting)
-	{
-		lump->Append(samples, total);
-		return;
-	}
-
-	// convert to R/G/B triplets
 	for (int i = 0 ; i < total ; i++)
 	{
-		lump->Append(&samples[i], 1);
-		lump->Append(&samples[i], 1);
-		lump->Append(&samples[i], 1);
+		byte val = 0; // FIXME !!!!  compute greyscale
+
+		lump->Append(&val, 1);
+
+		if (qk_color_lighting)  // Q2
+		{
+			lump->Append(&val, 1);
+			lump->Append(&val, 1);
+		}
 	}
 }
 
@@ -270,11 +284,11 @@ public:
 		for (int y = 0 ; y < lmap->height ; y++)
 		for (int x = 0 ; x < lmap->width  ; x++)
 		{
-			const byte *col = &lmap->samples[(y * lmap->width + x) * 3];
+			const rgb_color_t col = lmap->At(x, y);
 
-			samples[lmap->lx + x][lmap->ly + y][0] = col[0];
-			samples[lmap->lx + x][lmap->ly + y][1] = col[1];
-			samples[lmap->lx + x][lmap->ly + y][2] = col[2];
+			samples[lmap->lx + x][lmap->ly + y][0] = RGB_RED(col);
+			samples[lmap->lx + x][lmap->ly + y][1] = RGB_GREEN(col);
+			samples[lmap->lx + x][lmap->ly + y][2] = RGB_BLUE(col);
 		}
 	}
 
@@ -650,16 +664,16 @@ void qLightmap_c::Store_Normal()
 	const int *src   = &blocklights[0];
 	const int *s_end = src + (width * height);
 
-	byte *dest = current_pos;
+	rgb_color_t *dest = current_pos;
 
 	while (src < s_end)
 	{
 		int raw = *src++ >> 8;
 
 		if (raw < 0)   raw = 0;
-		if (raw > 255) raw = 255;
+		if (raw > 254) raw = 254;
 
-		*dest++ = raw;
+		*dest++ = MAKE_RGBA(raw, raw, raw, 0);
 	}
 }
 
@@ -686,7 +700,7 @@ void qLightmap_c::Store_Fast()
 					+ (1-xc) *    yc  * blocklights[bt * lt_W + lt_W + bs]
 					+    xc  *    yc  * blocklights[bt * lt_W + lt_W + bs + 1];
 
-		Set(s, t, (int)value);
+//FIXME !!!		Set(s, t, (int)value);
 	}
 }
 
@@ -707,7 +721,7 @@ void qLightmap_c::Store_Best()
 					blocklights[(t*2 + 1) * lt_W + (s*2 + 0)] +
 					blocklights[(t*2 + 1) * lt_W + (s*2 + 1)];
 
-		Set(s, t, value >> 2);
+//!!!!		Set(s, t, value >> 2);
 	}
 }
 

@@ -21,6 +21,8 @@
 #ifndef __QUAKE_LIGHTING_H__
 #define __QUAKE_LIGHTING_H__
 
+#include "lib_tga.h"  // for rgb_color_t
+
 class quake_face_c;
 class uv_matrix_c;
 
@@ -35,9 +37,10 @@ public:
 	int width, height;
 	int num_styles;
 
-	byte * samples;
-	byte * current_pos;
+	rgb_color_t * samples;
+	rgb_color_t * current_pos;
 
+	// Q1 and Q2 only
 	byte styles[4];
 
 	// final offset in lightmap lump (if not flat)
@@ -51,23 +54,18 @@ public:
 	uv_matrix_c *lm_mat;
 
 	// this not valid until CalcAverage()
-	int average;
+	rgb_color_t average;
 
 public:
 	qLightmap_c(int w, int h, int value = -1);
 
 	~qLightmap_c();
 
-	void Fill(int value);
+	void Fill(rgb_color_t value);
 
-	inline void Set(int s, int t, int raw)
+	inline rgb_color_t& At(int s, int t)
 	{
-		raw >>= 8;
-
-		if (raw < 0)   raw = 0;
-		if (raw > 255) raw = 255;
-
-		current_pos[t * width + s] = raw;
+		return current_pos[t * width + s];
 	}
 
 	bool hasStyle(byte style) const;
@@ -91,8 +89,8 @@ private:
 
 typedef enum
 {
-  LTK_Normal = 0,
-  LTK_Sun,
+	LTK_Normal = 0,
+	LTK_Sun,
 }
 quake_light_kind_e;
 
