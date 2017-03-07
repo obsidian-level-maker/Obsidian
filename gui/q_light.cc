@@ -56,6 +56,8 @@
 
 #define LOW_LIGHT  20
 
+#define WHITE	MAKE_RGBA(255, 255, 255, 255)
+
 
 // 0 = normal, -1 = fast, +1 = best
 int qk_lighting_quality;
@@ -455,11 +457,12 @@ static quake_bbox_c lt_face_bbox;
 static int lt_W, lt_H;
 static int lt_tex_mins[2];
 
-// FIXME increase size limit (say: 64x64)
-static quake_vertex_c lt_points[18*18*4];
+#define MAX_LM_SIZE  64
+#define MAX_EXTRAS   4	// oversampling
 
-// FIXME !!!!   need R/G/B
-static int blocklights[18*18*4];  // * 4 for oversampling
+static quake_vertex_c lt_points[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS];
+
+static int blocklights[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS][3];
 
 static int lt_current_style;
 
@@ -629,32 +632,40 @@ static void ClearLightBuffer(int level)
 {
 	int total = lt_W * lt_H;
 
+	level <<= 8;
+
 	for (int k = 0 ; k < total ; k++)
-		blocklights[k] = level << 8;
+	{
+		blocklights[k][0] = level;
+		blocklights[k][1] = level;
+		blocklights[k][2] = level;
+	}
 }
 
 
 void qLightmap_c::Store_Normal()
 {
-	const int *src   = &blocklights[0];
-	const int *s_end = src + (width * height);
-
 	rgb_color_t *dest = current_pos;
 
-	while (src < s_end)
+	for (int k = 0 ; k < width * height ; k++)
 	{
-		int raw = *src++ >> 8;
+		int r = blocklights[k][0] >> 8;
+		int g = blocklights[k][1] >> 8;
+		int b = blocklights[k][2] >> 8;
 
-		if (raw < 0)   raw = 0;
-		if (raw > 254) raw = 254;
+		r = CLAMP(0, r, 254);
+		g = CLAMP(0, g, 254);
+		b = CLAMP(0, b, 254);
 
-		*dest++ = MAKE_RGBA(raw, raw, raw, 0);
+		*dest++ = MAKE_RGBA(r, g, b, 0);
 	}
 }
 
 
 void qLightmap_c::Store_Fast()
 {
+// FIXME
+#if 0
 	int W = width;
 	int H = height;
 
@@ -675,13 +686,16 @@ void qLightmap_c::Store_Fast()
 					+ (1-xc) *    yc  * blocklights[bt * lt_W + lt_W + bs]
 					+    xc  *    yc  * blocklights[bt * lt_W + lt_W + bs + 1];
 
-//FIXME !!!		Set(s, t, (int)value);
+		Set(s, t, (int)value);
 	}
+#endif
 }
 
 
 void qLightmap_c::Store_Best()
 {
+// FIXME
+#if 0
 	// the "best" mode visits 4 times as many points as normal,
 	// then computes the average of each 2x2 block.
 
@@ -696,8 +710,9 @@ void qLightmap_c::Store_Best()
 					blocklights[(t*2 + 1) * lt_W + (s*2 + 0)] +
 					blocklights[(t*2 + 1) * lt_W + (s*2 + 1)];
 
-//!!!!		Set(s, t, value >> 2);
+		Set(s, t, value >> 2);
 	}
+#endif
 }
 
 
@@ -710,8 +725,8 @@ void qLightmap_c::Store()
 		case +1: Store_Best();    break;
 
 		default:
-				 Main_FatalError("INTERNAL ERROR: qk_lighting_quality = %d\n", qk_lighting_quality);
-				 break;  /* NOT REACHED */
+			 Main_FatalError("INTERNAL ERROR: qk_lighting_quality = %d\n", qk_lighting_quality);
+			 break;  /* NOT REACHED */
 	}
 }
 
@@ -759,7 +774,9 @@ static void QCOM_FindLights()
 		if (level < 1 || light.radius < 1)
 			continue;
 
-		light.level = (int) (level * (1 << 8));
+		// FIXME: color
+
+		light.level = (int) level;
 		light.style = E->props.getInt("style", 0);
 
 		qk_all_lights.push_back(light);
@@ -767,9 +784,13 @@ static void QCOM_FindLights()
 }
 
 
-static inline void Bump(int s, int t, int W, int value)
+static inline void Bump(int s, int t, int W, int value, rgb_color_t color)
 {
-	blocklights[t * W + s] += value;
+	const int offset = t * W + s;
+
+	blocklights[offset][0] += value * RGB_RED(color);
+	blocklights[offset][1] += value * RGB_GREEN(color);
+	blocklights[offset][2] += value * RGB_BLUE(color);
 }
 
 
@@ -822,6 +843,8 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
 	}
 
 
+	rgb_color_t color = WHITE;  // FIXME !!!
+
 	bool hit_it = false;
 
 	for (int t = 0 ; t < lt_H ; t++)
@@ -836,7 +859,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
 
 		if (light.kind == LTK_Sun)
 		{
-			Bump(s, t, lt_W, light.level);
+			Bump(s, t, lt_W, light.level, color);
 		}
 		else
 		{
@@ -846,7 +869,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
 			{
 				int value = light.level * (1.0 - dist / light.radius);
 
-				Bump(s, t, lt_W, value);
+				Bump(s, t, lt_W, value, color);
 			}
 		}
 	}
