@@ -66,7 +66,7 @@ bool qk_color_lighting;
 qLightmap_c::qLightmap_c(int w, int h, int value) :
 	width(w), height(h), num_styles(1), samples(),
 	offset(-1), lx(-1), ly(-1),
-	score(-1), average(-1)
+	average(-1)
 {
 	lm_mat = new uv_matrix_c;
 
@@ -109,8 +109,6 @@ bool qLightmap_c::hasStyle(byte style) const
 
 bool qLightmap_c::AddStyle(byte style)
 {
-	SYS_ASSERT(! isFlat());
-
 	if (num_styles > 4)
 		return false;
 
@@ -132,52 +130,23 @@ bool qLightmap_c::AddStyle(byte style)
 }
 
 
-void qLightmap_c::CalcScore()
+void qLightmap_c::CalcAverage()
 {
-	// determine range and average
-	int low  = samples[0];
-	int high = samples[0];
-
 	float avg = 0;
 
 	for (int i = 0 ; i < width*height ; i++)
 	{
-		low  = MIN(low,  samples[i]);
-		high = MAX(high, samples[i]);
-
 		avg  += samples[i];
 	}
 
 	avg /= (float)(width * height);
 
 	average = CLAMP(0, I_ROUND(avg), 255);
-
-	// now calculate score
-	score = (width * height) * 2 + (high - low);
-}
-
-
-void qLightmap_c::Flatten()
-{
-	if (isFlat())
-		return;
-
-	if (score < 0)
-		CalcScore();
-
-	width = height = 1;
-
-	samples[0] = average;
-
-	current_pos = NULL;
 }
 
 
 void qLightmap_c::Write(qLump_c *lump)
 {
-	if (isFlat())
-		return;
-
 	offset = lump->GetSize();
 
 	int total = width * height * num_styles;
@@ -194,21 +163,6 @@ void qLightmap_c::Write(qLump_c *lump)
 		lump->Append(&samples[i], 1);
 		lump->Append(&samples[i], 1);
 		lump->Append(&samples[i], 1);
-	}
-}
-
-
-int qLightmap_c::CalcOffset() const
-{
-	if (isFlat())
-	{
-		int value = (int)samples[0];
-
-		return QCOM_FlatLightOffset(CLAMP(0, value, 255));
-	}
-	else
-	{
-		return offset;
 	}
 }
 

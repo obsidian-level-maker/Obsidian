@@ -479,7 +479,7 @@ static void Q2_WriteFace(quake_face_c *face)
 
 	if (face->lmap)
 	{
-		raw_face.lightofs = face->lmap->CalcOffset();
+		raw_face.lightofs = face->lmap->offset;
 
 		for (int n = 0 ; n < 4 ; n++)
 			raw_face.styles[n] = face->lmap->styles[n];

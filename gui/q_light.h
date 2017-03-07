@@ -50,19 +50,13 @@ public:
 	// for Q3, the matrix for computing coords
 	uv_matrix_c *lm_mat;
 
-	// these not valid until CalcScore()
-	int score;
+	// this not valid until CalcAverage()
 	int average;
 
 public:
 	qLightmap_c(int w, int h, int value = -1);
 
 	~qLightmap_c();
-
-	inline bool isFlat() const
-	{
-		return (width == 1 && height == 1 && num_styles == 1);
-	}
 
 	void Fill(int value);
 
@@ -81,16 +75,12 @@ public:
 	// returns false if too many styles
 	bool AddStyle(byte style);
 
+	void CalcAverage();
+
 	// transfer from blocklights[] array
 	void Store();
 
-	void CalcScore();
-
-	void Flatten();
-
 	void Write(qLump_c *lump);
-
-	int CalcOffset() const;
 
 private:
 	void Store_Fast();
