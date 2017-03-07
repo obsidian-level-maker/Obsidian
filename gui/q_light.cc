@@ -628,9 +628,13 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
 static void Q3_CalcFaceStuff(quake_face_c *F)
 {
-	lt_plane_normal[0] = F->plane.nx;
-	lt_plane_normal[1] = F->plane.ny;
-	lt_plane_normal[2] = F->plane.nz;
+	float nx = F->plane.nx;
+	float ny = F->plane.ny;
+	float nz = F->plane.nz;
+
+	lt_plane_normal[0] = nx;
+	lt_plane_normal[1] = ny;
+	lt_plane_normal[2] = nz;
 
 	lt_plane_dist = F->plane.CalcDist();
 
@@ -641,7 +645,7 @@ static void Q3_CalcFaceStuff(quake_face_c *F)
 
 	double tx, ty, tz;
 
-	double xy_len = hypot(F->plane.nx, F->plane.ny);
+	double xy_len = hypot(nx, ny);
 
 	if (xy_len < 0.001)
 	{
@@ -651,8 +655,8 @@ static void Q3_CalcFaceStuff(quake_face_c *F)
 	}
 	else
 	{
-		tx = (- F->plane.nx) * F->plane.nz;
-		ty = (- F->plane.ny) * F->plane.nz;
+		tx = (- nx) * nz;
+		ty = (- ny) * nz;
 		tz = xy_len;
 
 		// normalize  [ len cannot be zero here ]
@@ -666,12 +670,12 @@ static void Q3_CalcFaceStuff(quake_face_c *F)
 	// computing S is easy now, it is simply the cross-product
 	// of T and the plane normal.
 
-	double sx = ty * F->plane.nz - tz * F->plane.ny;
-	double sy = tz * F->plane.nx - tx * F->plane.nz;
-	double sz = tx * F->plane.ny - ty * F->plane.nx;
+	double sx = ty * nz - tz * ny;
+	double sy = tz * nx - tx * nz;
+	double sz = tx * ny - ty * nx;
 
 fprintf(stderr, "Face %p\n", F);
-fprintf(stderr, "  n = (%+5.4f %+5.4f %+5.4f)\n", F->plane.nx, F->plane.ny, F->plane.nz);
+fprintf(stderr, "  n = (%+5.4f %+5.4f %+5.4f)\n", nx, ny, nz);
 fprintf(stderr, "  t = (%+5.4f %+5.4f %+5.4f)\n", tx, ty, tz);
 fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 
@@ -739,15 +743,16 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 	lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
 
 	// create the points
+	const float away = 0.5;
 
 	for (int px = 0 ; px < lt_W ; px++)
 	for (int py = 0 ; py < lt_H ; py++)
 	{
 		quake_vertex_c & V = lt_points[py * lt_W + px];
 
-		V.x = F->plane.x + sx * (px + 0.5) + tx * (py + 0.5);
-		V.y = F->plane.y + sy * (px + 0.5) + ty * (py + 0.5);
-		V.z = F->plane.z + sz * (px + 0.5) + tz * (py + 0.5);
+		V.x = F->plane.x + sx * (px + 0.5) + tx * (py + 0.5) + nx * away;
+		V.y = F->plane.y + sy * (px + 0.5) + ty * (py + 0.5) + ny * away;
+		V.z = F->plane.z + sz * (px + 0.5) + tz * (py + 0.5) + nz * away;
 	}
 
 	// FIXME !!!!  : uv_matrix for qLightmap_c
