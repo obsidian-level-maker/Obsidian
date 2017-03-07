@@ -889,6 +889,27 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
 }
 
 
+void QLIT_TestingStuff(qLightmap_c *lmap)
+{
+	int W = lmap->width;
+	int H = lmap->height;
+
+	for (int t = 0 ; t < H ; t++)
+	for (int s = 0 ; s < W ; s++)
+	{
+		const quake_vertex_c & V = lt_points[t*W + s];
+
+		int r = 40 + 10 * sin(V.x / 40.0);
+		int g = 80 + 40 * sin(V.y / 40.0);
+		int b = 40 + 10 * sin(V.z / 40.0);
+
+		lmap->samples[t*W + s] = MAKE_RGBA(r, g, b, 0);
+
+	//  lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
+	}
+}
+
+
 void QCOM_LightFace(quake_face_c *F)
 {
 	lt_face = F;
@@ -899,6 +920,9 @@ void QCOM_LightFace(quake_face_c *F)
 	F->lmap = QCOM_NewLightmap(lt_W, lt_H);
 
 	CalcPoints();
+
+QLIT_TestingStuff(F->lmap);
+return;
 
 	for (int pass = 0 ; pass < 4 ; pass++)
 	{
@@ -917,23 +941,7 @@ void QCOM_LightFace(quake_face_c *F)
 }
 
 
-void QLIT_TestingStuff(qLightmap_c *lmap)
-{
-	int W = lmap->width;
-	int H = lmap->height;
-
-	for (int t = 0 ; t < H ; t++)
-	for (int s = 0 ; s < W ; s++)
-	{
-		const quake_vertex_c & V = lt_points[t*W + s];
-
-		lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
-
-	//  lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
-	}
-}
-
-
+#if 0  // this needed for Q1 and Q2
 void QCOM_LightMapModel(quake_mapmodel_c *model)
 {
 	float value = LOW_LIGHT;
@@ -966,6 +974,7 @@ void QCOM_LightMapModel(quake_mapmodel_c *model)
 
 	model->light = CLAMP(0, I_ROUND(value), 255);
 }
+#endif
 
 
 void QCOM_LightAllFaces()
