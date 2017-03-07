@@ -448,14 +448,11 @@ static quake_face_c *lt_face;
 static double lt_plane_normal[3];
 static double lt_plane_dist;
 
-static double lt_texorg[3];
-static double lt_worldtotex[2][3];
-static double lt_textoworld[2][3];
-
 static quake_bbox_c lt_face_bbox;
 
 static int lt_W, lt_H;
-static int lt_tex_mins[2];
+
+static int lt_current_style;
 
 #define MAX_LM_SIZE  64
 #define MAX_EXTRAS   4	// oversampling
@@ -464,11 +461,11 @@ static quake_vertex_c lt_points[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS];
 
 static int blocklights[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS][3];
 
-static int lt_current_style;
 
-
-static void CalcFaceVectors(quake_face_c *F)
+static void Q1_CalcFaceStuff(quake_face_c *F)
 {
+	/* Calc Vectors... */
+
 	const quake_plane_c * plane = &F->plane;
 
 	lt_plane_normal[0] = plane->nx;
@@ -477,6 +474,10 @@ static void CalcFaceVectors(quake_face_c *F)
 
 	lt_plane_dist = plane->CalcDist();
 
+
+	double lt_texorg[3];
+	double lt_worldtotex[2][3];
+	double lt_textoworld[2][3];
 
 	const uv_matrix_c *UV = &F->uv_mat;
 
@@ -552,11 +553,12 @@ static void CalcFaceVectors(quake_face_c *F)
 	lt_texorg[0] -= texnormal.nx * o_dist;
 	lt_texorg[1] -= texnormal.ny * o_dist;
 	lt_texorg[2] -= texnormal.nz * o_dist;
-}
 
 
-static void CalcFaceExtents(quake_face_c *F)
-{
+	/* Calc Extents... */
+
+	int lt_tex_mins[2];
+
 	double min_s, min_t;
 	double max_s, max_t;
 
@@ -582,11 +584,10 @@ static void CalcFaceExtents(quake_face_c *F)
 	lt_H = MAX(2, bmax_t - bmin_t + 1);
 
 /// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, lt_W, lt_H);
-}
 
 
-static void CalcPoints()
-{
+	/* Calc Points... */
+
 	float s_start = lt_tex_mins[0] * 16.0;
 	float t_start = lt_tex_mins[1] * 16.0;
 
@@ -610,7 +611,6 @@ static void CalcPoints()
 		if (lt_H < 5) lt_H = 2; else { lt_H = 3;  t_step /= 2.0; }
 	}
 
-
 	for (int t = 0 ; t < lt_H ; t++)
 	for (int s = 0 ; s < lt_W ; s++)
 	{
@@ -625,6 +625,12 @@ static void CalcPoints()
 
 		// TODO: adjust points which are inside walls
 	}
+}
+
+
+static void Q3_CalcFaceStuff(quake_face_c *F)
+{
+	// FIXME
 }
 
 
@@ -818,8 +824,8 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
 
 	// skip lights which are behind the face
 	float perp = lt_plane_normal[0] * light.x +
-		lt_plane_normal[1] * light.y +
-		lt_plane_normal[2] * light.z - lt_plane_dist;
+				 lt_plane_normal[1] * light.y +
+				 lt_plane_normal[2] * light.z - lt_plane_dist;
 
 	if (perp <= 0)
 		return;
@@ -914,12 +920,16 @@ void QCOM_LightFace(quake_face_c *F)
 {
 	lt_face = F;
 
-	CalcFaceVectors(F);
-	CalcFaceExtents(F);
+	if (qk_game < 3)
+	{
+		Q1_CalcFaceStuff(F);
+	}
+	else
+	{
+		Q3_CalcFaceStuff(F);
+	}
 
 	F->lmap = QCOM_NewLightmap(lt_W, lt_H);
-
-	CalcPoints();
 
 QLIT_TestingStuff(F->lmap);
 return;
