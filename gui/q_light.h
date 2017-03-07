@@ -29,8 +29,6 @@ class uv_matrix_c;
 #define FLAT_LIGHTMAP_SIZE  (17*17)
 
 
-#define SMALL_LIGHTMAP  20
-
 class qLightmap_c
 {
 public:
@@ -39,9 +37,6 @@ public:
 
 	byte * samples;
 	byte * current_pos;
-
-	// for small maps, store data directly here
-	byte data[SMALL_LIGHTMAP];
 
 	byte styles[4];
 

@@ -64,14 +64,13 @@ bool qk_color_lighting;
 
 
 qLightmap_c::qLightmap_c(int w, int h, int value) :
-	width(w), height(h), num_styles(1), samples(data),
+	width(w), height(h), num_styles(1), samples(),
 	offset(-1), lx(-1), ly(-1),
 	score(-1), average(-1)
 {
 	lm_mat = new uv_matrix_c;
 
-	if (width * height > SMALL_LIGHTMAP)
-		samples = new byte[width * height];
+	samples = new byte[width * height];
 
 	current_pos = samples;
 
@@ -86,8 +85,7 @@ qLightmap_c::~qLightmap_c()
 {
 	delete lm_mat;
 
-	if (samples != data)
-		delete[] samples;
+	delete[] samples;
 }
 
 
@@ -124,8 +122,7 @@ bool qLightmap_c::AddStyle(byte style)
 
 	num_styles++;
 
-	if (samples != data)
-		delete[] samples;
+	delete[] samples;
 
 	samples = new_samples;
 
@@ -138,8 +135,8 @@ bool qLightmap_c::AddStyle(byte style)
 void qLightmap_c::CalcScore()
 {
 	// determine range and average
-	int low  = data[0];
-	int high = data[0];
+	int low  = samples[0];
+	int high = samples[0];
 
 	float avg = 0;
 
@@ -170,14 +167,7 @@ void qLightmap_c::Flatten()
 
 	width = height = 1;
 
-	data[0] = average;
-
-	if (samples != data)
-	{
-		delete[] samples;
-
-		samples = data;
-	}
+	samples[0] = average;
 
 	current_pos = NULL;
 }
