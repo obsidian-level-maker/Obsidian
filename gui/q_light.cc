@@ -361,22 +361,6 @@ void QCOM_FreeLightmaps()
 }
 
 
-int QCOM_FlatLightOffset(int value)
-{
-	SYS_ASSERT(0 <= value && value <= 255);
-
-	if (value > 128)
-	{
-		value = 64 + value / 2;
-	}
-
-	if (qk_color_lighting)
-		value *= 3;
-
-	return value * FLAT_LIGHTMAP_SIZE;
-}
-
-
 static qLightmap_c * QCOM_NewLightmap(int w, int h)
 {
 	qLightmap_c *lmap = new qLightmap_c(w, h);
@@ -398,34 +382,23 @@ static void WriteFlatBlock(int level, int count)
 
 void QCOM_BuildLightingLump(int lump, int max_size)
 {
+	// (this is for Q1 and Q2 only)
+
 	lightmap_lump = BSP_NewLump(lump);
 
-	// at the start are a bunch of completely flat lightmaps.
-	// for the overbright range (129-255) there are half as many.
+	// at the start a single completely flat lightmap for map-models
 
-	int i;
 	int flat_size = FLAT_LIGHTMAP_SIZE * (qk_color_lighting ? 3 : 1);
 
-	for (i = 0 ; i < 128 ; i++)
-	{
-		WriteFlatBlock(i, flat_size);
-		max_size -= flat_size;
-	}
+	WriteFlatBlock(64, flat_size);
 
-	for (i = 128 ; i < 256 ; i += 2)
-	{
-		WriteFlatBlock(i, flat_size);
-		max_size -= flat_size;
-	}
-
+	max_size -= flat_size;
 
 	// from here on 'max_size' is in PIXELS (not bytes)
 	if (qk_color_lighting)
 		max_size /= 3;
 
-
 	// FIXME !!!! : check if lump would overflow, if yes then flatten some maps
-
 
 	for (unsigned int k = 0 ; k < qk_all_lightmaps.size() ; k++)
 	{
@@ -482,8 +455,10 @@ static quake_bbox_c lt_face_bbox;
 static int lt_W, lt_H;
 static int lt_tex_mins[2];
 
+// FIXME increase size limit (say: 64x64)
 static quake_vertex_c lt_points[18*18*4];
 
+// FIXME !!!!   need R/G/B
 static int blocklights[18*18*4];  // * 4 for oversampling
 
 static int lt_current_style;

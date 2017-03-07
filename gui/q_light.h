@@ -122,8 +122,6 @@ extern std::vector<quake_light_t> qk_all_lights;
 
 void QCOM_FreeLightmaps();
 
-int QCOM_FlatLightOffset(int value);
-
 void QCOM_BuildLightingLump(int lump, int max_size);
 void QCOM_BuildQ3Lighting  (int lump, int max_size);
 
