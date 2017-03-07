@@ -630,7 +630,42 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
 static void Q3_CalcFaceStuff(quake_face_c *F)
 {
-	// FIXME
+	// compute T vector that basically goes "up" the slope of the
+	// face's plane.  If the plane is purely vertical, direction of
+	// T is simply straight up.  If plane is purely horizontal,
+	// then T is arbitrary, so we choose NORTH.
+
+	double tx, ty, tz;
+
+	double xy_len = hypot(F->plane.nx, F->plane.ny);
+
+	if (xy_len < 0.001)
+	{
+		tx =  0.0;
+		ty = +1.0;
+		tz =  0.0;
+	}
+	else
+	{
+		tx = (- F->plane.nx) * F->plane.nz;
+		ty = (- F->plane.ny) * F->plane.nz;
+		tz = xy_len;
+
+		// normalize  [ len cannot be zero here ]
+		double len = sqrt(tx*tx + ty*ty + tz*tz);
+
+		tx /= len;
+		ty /= len;
+		tz /= len;
+	}
+
+	// computing S is easy now, it is simply the cross-product
+	// of T and the plane normal.
+
+	double sx = ty * F->plane.nz - tz * F->plane.ny;
+	double sy = tz * F->plane.nx - tx * F->plane.nz;
+	double sz = tx * F->plane.ny - ty * F->plane.nx;
+
 }
 
 
