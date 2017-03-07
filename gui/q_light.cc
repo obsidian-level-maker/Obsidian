@@ -58,6 +58,8 @@
 
 #define WHITE	MAKE_RGBA(255, 255, 255, 255)
 
+#define LUXEL_SIZE  16.0
+
 
 // 0 = normal, -1 = fast, +1 = best
 int qk_lighting_quality;
@@ -464,16 +466,14 @@ static int blocklights[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS][3];
 
 static void Q1_CalcFaceStuff(quake_face_c *F)
 {
+	lt_plane_normal[0] = F->plane.nx;
+	lt_plane_normal[1] = F->plane.ny;
+	lt_plane_normal[2] = F->plane.nz;
+
+	lt_plane_dist = F->plane.CalcDist();
+
+
 	/* Calc Vectors... */
-
-	const quake_plane_c * plane = &F->plane;
-
-	lt_plane_normal[0] = plane->nx;
-	lt_plane_normal[1] = plane->ny;
-	lt_plane_normal[2] = plane->nz;
-
-	lt_plane_dist = plane->CalcDist();
-
 
 	double lt_texorg[3];
 	double lt_worldtotex[2][3];
@@ -562,8 +562,6 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 	double min_s, min_t;
 	double max_s, max_t;
 
-	F->GetBounds(&lt_face_bbox);
-
 	F->ST_Bounds(&min_s, &min_t, &max_s, &max_t);
 
 ///  lt_face_mid_s = (min_s + max_s) / 2.0;
@@ -630,6 +628,12 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
 static void Q3_CalcFaceStuff(quake_face_c *F)
 {
+	lt_plane_normal[0] = F->plane.nx;
+	lt_plane_normal[1] = F->plane.ny;
+	lt_plane_normal[2] = F->plane.nz;
+
+	lt_plane_dist = F->plane.CalcDist();
+
 	// compute T vector that basically goes "up" the slope of the
 	// face's plane.  If the plane is purely vertical, direction of
 	// T is simply straight up.  If plane is purely horizontal,
@@ -666,6 +670,69 @@ static void Q3_CalcFaceStuff(quake_face_c *F)
 	double sy = tz * F->plane.nx - tx * F->plane.nz;
 	double sz = tx * F->plane.ny - ty * F->plane.nx;
 
+fprintf(stderr, "Face %p\n", F);
+fprintf(stderr, "  n = (%+5.4f %+5.4f %+5.4f)\n", F->plane.nx, F->plane.ny, F->plane.nz);
+fprintf(stderr, "  t = (%+5.4f %+5.4f %+5.4f)\n", tx, ty, tz);
+fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
+
+	// store it into a matrix so we can compute the ST bounds
+	// of the face.  keep offsets as zero for time being.
+
+	uv_matrix_c mat;
+
+	mat.s[0] = sx / LUXEL_SIZE;
+	mat.s[1] = sy / LUXEL_SIZE;
+	mat.s[2] = sz / LUXEL_SIZE;
+
+	mat.t[0] = tx / LUXEL_SIZE;
+	mat.t[1] = ty / LUXEL_SIZE;
+	mat.t[2] = tz / LUXEL_SIZE;
+
+	double min_s = +9e9;
+	double max_s = -9e9;
+
+	double min_t = +9e9;
+	double max_t = -9e9;
+
+	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
+	{
+		const quake_vertex_c *V = &F->verts[k];
+
+		double s = mat.Calc_S(V->x, V->y, V->z);
+
+		min_s = MIN(min_s, s);
+		max_s = MAX(max_s, s);
+
+		double t = mat.Calc_T(V->x, V->y, V->z);
+
+		min_t = MIN(min_t, t);
+		max_t = MAX(max_t, t);
+	}
+
+fprintf(stderr, "  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
+fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
+
+	mat.s[3] = -min_s;
+	mat.t[3] = -min_t;
+
+#if 1  // DEBUG
+	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
+	{
+		const quake_vertex_c *V = &F->verts[k];
+
+		double s = mat.Calc_S(V->x, V->y, V->z);
+		double t = mat.Calc_T(V->x, V->y, V->z);
+
+		fprintf(stderr, "  st coord (%+5.3f %+5.3f)\n", s, t);
+	}
+#endif
+
+	float lux_W = max_s - min_s;
+	float lux_H = max_t - min_t;
+
+	// FIXME : TEMP CRUD
+	lt_W = 8;
+	lt_H = 8;
 }
 
 
@@ -954,6 +1021,8 @@ void QLIT_TestingStuff(qLightmap_c *lmap)
 void QCOM_LightFace(quake_face_c *F)
 {
 	lt_face = F;
+
+	F->GetBounds(&lt_face_bbox);
 
 	if (qk_game < 3)
 	{
