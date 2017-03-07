@@ -678,15 +678,19 @@ fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 	// store it into a matrix so we can compute the ST bounds
 	// of the face.  keep offsets as zero for time being.
 
+	sx /= LUXEL_SIZE;
+	sy /= LUXEL_SIZE;
+	sz /= LUXEL_SIZE;
+
+	tx /= LUXEL_SIZE;
+	ty /= LUXEL_SIZE;
+	tz /= LUXEL_SIZE;
+
 	uv_matrix_c mat;
 
-	mat.s[0] = sx / LUXEL_SIZE;
-	mat.s[1] = sy / LUXEL_SIZE;
-	mat.s[2] = sz / LUXEL_SIZE;
-
-	mat.t[0] = tx / LUXEL_SIZE;
-	mat.t[1] = ty / LUXEL_SIZE;
-	mat.t[2] = tz / LUXEL_SIZE;
+	mat.s[0] = sx;  mat.t[0] = tx;
+	mat.s[1] = sy;  mat.t[1] = ty;
+	mat.s[2] = sz;  mat.t[2] = tz;
 
 	double min_s = +9e9;
 	double max_s = -9e9;
@@ -727,12 +731,26 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 	}
 #endif
 
-	float lux_W = max_s - min_s;
-	float lux_H = max_t - min_t;
+	// compute size of lightmap
+	lt_W = (int)ceil(max_s - min_s + 0.1);
+	lt_H = (int)ceil(max_t - min_t + 0.1);
 
-	// FIXME : TEMP CRUD
-	lt_W = 8;
-	lt_H = 8;
+	lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
+	lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
+
+	// create the points
+
+	for (int px = 0 ; px < lt_W ; px++)
+	for (int py = 0 ; py < lt_H ; py++)
+	{
+		quake_vertex_c & V = lt_points[py * lt_W + px];
+
+		V.x = F->plane.x + sx * (px + 0.5) + tx * (py + 0.5);
+		V.y = F->plane.y + sy * (px + 0.5) + ty * (py + 0.5);
+		V.z = F->plane.z + sz * (px + 0.5) + tz * (py + 0.5);
+	}
+
+	// FIXME !!!!  : uv_matrix for qLightmap_c
 }
 
 
