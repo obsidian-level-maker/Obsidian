@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -22,13 +22,14 @@
 #define __QUAKE_LIGHTING_H__
 
 class quake_face_c;
+class uv_matrix_c;
 
 
 // the maximum size of a face's lightmap in Quake I/II
 #define FLAT_LIGHTMAP_SIZE  (17*17)
 
 
-#define SMALL_LIGHTMAP  16
+#define SMALL_LIGHTMAP  20
 
 class qLightmap_c
 {
@@ -50,6 +51,9 @@ public:
 
 	// for Q3, position in light block
 	int lx, ly;
+
+	// for Q3, the matrix for computing coords
+	uv_matrix_c *lm_mat;
 
 	// these not valid until CalcScore()
 	int score;

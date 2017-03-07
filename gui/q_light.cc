@@ -64,9 +64,12 @@ bool qk_color_lighting;
 
 
 qLightmap_c::qLightmap_c(int w, int h, int value) :
-    width(w), height(h), num_styles(1), samples(data),
-    offset(-1), score(-1), average(-1)
+	width(w), height(h), num_styles(1), samples(data),
+	offset(-1), lx(-1), ly(-1),
+	score(-1), average(-1)
 {
+	lm_mat = new uv_matrix_c;
+
 	if (width * height > SMALL_LIGHTMAP)
 		samples = new byte[width * height];
 
@@ -81,6 +84,8 @@ qLightmap_c::qLightmap_c(int w, int h, int value) :
 
 qLightmap_c::~qLightmap_c()
 {
+	delete lm_mat;
+
 	if (samples != data)
 		delete[] samples;
 }
@@ -414,7 +419,7 @@ int QCOM_FlatLightOffset(int value)
 }
 
 
-qLightmap_c * QCOM_NewLightmap(int w, int h)
+static qLightmap_c * QCOM_NewLightmap(int w, int h)
 {
 	qLightmap_c *lmap = new qLightmap_c(w, h);
 
