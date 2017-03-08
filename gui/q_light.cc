@@ -642,9 +642,17 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
 static void Q3_CalcFaceStuff(quake_face_c *F)
 {
+	float px = F->plane.x;
+	float py = F->plane.y;
+	float pz = F->plane.z;
+
 	float nx = F->plane.nx;
 	float ny = F->plane.ny;
 	float nz = F->plane.nz;
+
+	// this is constant for every vertex on the face
+	// [ i.e. vert[i] * N == n_dist, where '*' is dot product ]
+	double n_dist = px * nx + py * ny + pz * nz;
 
 	lt_plane_normal[0] = nx;
 	lt_plane_normal[1] = ny;
@@ -672,7 +680,6 @@ static void Q3_CalcFaceStuff(quake_face_c *F)
 		tx = -nz * (nx / xy_len);
 		ty = -nz * (ny / xy_len);
 		tz = xy_len;
-
 	}
 
 	// computing S is easy now, it is simply the cross-product
@@ -682,27 +689,15 @@ static void Q3_CalcFaceStuff(quake_face_c *F)
 	double sy = tz * nx - tx * nz;
 	double sz = tx * ny - ty * nx;
 
+	// once here: N, T and S are three unit vectors which are
+	// orthogonal to each other.
+
 fprintf(stderr, "Face %p\n", F);
 fprintf(stderr, "  n = (%+5.4f %+5.4f %+5.4f)\n", nx, ny, nz);
 fprintf(stderr, "  t = (%+5.4f %+5.4f %+5.4f)\n", tx, ty, tz);
 fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 
-	// store it into a matrix so we can compute the ST bounds
-	// of the face.  keep offsets as zero for time being.
-
-	sx /= LUXEL_SIZE;
-	sy /= LUXEL_SIZE;
-	sz /= LUXEL_SIZE;
-
-	tx /= LUXEL_SIZE;
-	ty /= LUXEL_SIZE;
-	tz /= LUXEL_SIZE;
-
-	uv_matrix_c mat;
-
-	mat.s[0] = sx;  mat.t[0] = tx;
-	mat.s[1] = sy;  mat.t[1] = ty;
-	mat.s[2] = sz;  mat.t[2] = tz;
+	// compute extents in the ST space
 
 	double min_s = +9e9;
 	double max_s = -9e9;
@@ -714,12 +709,12 @@ fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 	{
 		const quake_vertex_c *V = &F->verts[k];
 
-		double s = mat.Calc_S(V->x, V->y, V->z);
+		double s = V->x * sx + V->y * sy + V->z * sz;
 
 		min_s = MIN(min_s, s);
 		max_s = MAX(max_s, s);
 
-		double t = mat.Calc_T(V->x, V->y, V->z);
+		double t = V->x * tx + V->y * ty + V->z * tz;
 
 		min_t = MIN(min_t, t);
 		max_t = MAX(max_t, t);
@@ -728,39 +723,59 @@ fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 fprintf(stderr, "  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
 fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 
-	mat.s[3] = -min_s;
-	mat.t[3] = -min_t;
-
 #if 1  // DEBUG
 	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
 	{
 		const quake_vertex_c *V = &F->verts[k];
 
-		double s = mat.Calc_S(V->x, V->y, V->z);
-		double t = mat.Calc_T(V->x, V->y, V->z);
+		double s = V->x * sx + V->y * sy + V->z * sz;
+		double t = V->x * tx + V->y * ty + V->z * tz;
+
+		// reverse mapping, ST --> vertex
+		double xx = s * sx + t * tx + n_dist * nx;
+		double yy = s * sy + t * ty + n_dist * ny;
+		double zz = s * sz + t * tz + n_dist * nz;
+
+		s = (s - min_s) / LUXEL_SIZE;
+		t = (s - min_t) / LUXEL_SIZE;
 
 		fprintf(stderr, "  st coord (%+5.3f %+5.3f)\n", s, t);
+		fprintf(stderr, "   from: (%+7.2f %+7.2f %+7.2f)\n", V->x, V->y, V->z);
+//		fprintf(stderr, "     to: (%+7.2f %+7.2f %+7.2f)\n", xx, yy, zz);
+//		fprintf(stderr, "  Error: %7.3f\n", fabs(V->x - xx) + fabs(V->y - yy) + fabs(V->z - zz));
 	}
 #endif
 
 	// compute size of lightmap
-	lt_W = (int)ceil(max_s - min_s + 0.1);
-	lt_H = (int)ceil(max_t - min_t + 0.1);
+	lt_W = (int)ceil((max_s - min_s) / LUXEL_SIZE - 0.1);
+	lt_H = (int)ceil((max_t - min_t) / LUXEL_SIZE - 0.1);
+
+fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 
 	lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
 	lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
 
-	// create the points
+	// create the points...
+
 	const float away = 0.5;
 
-	for (int px = 0 ; px < lt_W ; px++)
 	for (int py = 0 ; py < lt_H ; py++)
+	for (int px = 0 ; px < lt_W ; px++)
 	{
+		float ax = (px * 2 + 1) / (float)(lt_W * 2 + 1);
+		float ay = (py * 2 + 1) / (float)(lt_H * 2 + 1);
+
+		double s = min_s + (max_s - min_s) * ax;
+		double t = min_t + (max_t - min_t) * ay;
+
 		quake_vertex_c & V = lt_points[py * lt_W + px];
 
-		V.x = F->plane.x + sx * (px + 0.5) + tx * (py + 0.5) + nx * away;
-		V.y = F->plane.y + sy * (px + 0.5) + ty * (py + 0.5) + ny * away;
-		V.z = F->plane.z + sz * (px + 0.5) + tz * (py + 0.5) + nz * away;
+		V.x = s * sx + t * tx + (n_dist + away) * nx;
+		V.y = s * sy + t * ty + (n_dist + away) * ny;
+		V.z = s * sz + t * tz + (n_dist + away) * nz;
+
+fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f)\n",
+		px, py, V.x, V.y, V.z);
 	}
 
 	// FIXME !!!!  : uv_matrix for qLightmap_c
