@@ -514,23 +514,25 @@ static bool FaceHasDegenTriangle(quake_face_c *face)
 }
 
 
-static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *v,
+static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *V,
 							  ddrawvert3_t *out)
 {
 	memset(out, 0, sizeof(ddrawvert3_t));
 
-	out->xyz[0] = v->x;
-	out->xyz[1] = v->y;
-	out->xyz[2] = v->z;
+	out->xyz[0] = V->x;
+	out->xyz[1] = V->y;
+	out->xyz[2] = V->z;
 
 	face->GetNormal(out->normal);
 
-	out->st[0] = face->Calc_S(v);
-	out->st[1] = face->Calc_T(v);
+	out->st[0] = face->Calc_S(V);
+	out->st[1] = face->Calc_T(V);
 
-	// FIXME : lightmap coords
-	out->lightmap[0] = 0;
-	out->lightmap[1] = 0;
+	if (face->lmap)
+	{
+		out->lightmap[0] = face->lmap->lm_mat->Calc_S(V->x, V->y, V->z);
+		out->lightmap[1] = face->lmap->lm_mat->Calc_T(V->x, V->y, V->z);
+	}
 
 	// we don't care about vertex lighting mode
 	out->color[0] = out->color[1] = out->color[2] = VERTEX_LIGHT;

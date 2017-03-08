@@ -436,7 +436,7 @@ void QCOM_BuildQ3Lighting(int lump, int max_size)
 	{
 		qLightmap_c *L = qk_all_lightmaps[k];
 
-		L->offset = Q3_AllocLightBlock(L->width, L->height, &L->lx, &L->ly);
+		SYS_ASSERT(L->offset >= 0);
 
 		q3_lightmap_block_c *BL = all_q3_light_blocks[L->offset];
 		SYS_ASSERT(BL);
@@ -597,6 +597,8 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
 /// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, lt_W, lt_H);
 
+	F->lmap = QCOM_NewLightmap(lt_W, lt_H);
+
 
 	/* Calc Points... */
 
@@ -697,7 +699,7 @@ fprintf(stderr, "  n = (%+5.4f %+5.4f %+5.4f)\n", nx, ny, nz);
 fprintf(stderr, "  t = (%+5.4f %+5.4f %+5.4f)\n", tx, ty, tz);
 fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 
-	// compute extents in the ST space
+	// compute extents in the ST space...
 
 	double min_s = +9e9;
 	double max_s = -9e9;
@@ -755,6 +757,13 @@ fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 	lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
 	lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
 
+	F->lmap = QCOM_NewLightmap(lt_W, lt_H);
+
+	F->lmap->offset = Q3_AllocLightBlock(lt_W, lt_H, &F->lmap->lx, &F->lmap->ly);
+
+fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
+
+
 	// create the points...
 
 	const float away = 0.5;
@@ -774,11 +783,49 @@ fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 		V.y = s * sy + t * ty + (n_dist + away) * ny;
 		V.z = s * sz + t * tz + (n_dist + away) * nz;
 
-fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f)\n",
-		px, py, V.x, V.y, V.z);
+///	fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f)\n",
+///			px, py, V.x, V.y, V.z);
 	}
 
-	// FIXME !!!!  : uv_matrix for qLightmap_c
+
+	// compute the UV matrix...
+
+	uv_matrix_c *mat = F->lmap->lm_mat;
+
+	double s1 = (F->lmap->lx + 0.1) / (double)LIGHTMAP_WIDTH;
+	double t1 = (F->lmap->ly + 0.1) / (double)LIGHTMAP_HEIGHT;
+
+	double s2 = (F->lmap->lx + lt_W - 0.2) / (double)LIGHTMAP_WIDTH;
+	double t2 = (F->lmap->ly + lt_H - 0.2) / (double)LIGHTMAP_HEIGHT;
+
+	fprintf(stderr, "want S range: %+1.7f .. %+1.7f\n", s1, s2);
+	fprintf(stderr, "want T range: %+1.7f .. %+1.7f\n", t1, t2);
+
+	double s_mul = (s2 - s1) / (max_s - min_s);
+	double t_mul = (t2 - t1) / (max_t - min_t);
+
+	mat->s[0] = s_mul * sx;
+	mat->s[1] = s_mul * sy;
+	mat->s[2] = s_mul * sz;
+	mat->s[3] = s_mul * -min_s + s1;
+
+	mat->t[0] = t_mul * tx;
+	mat->t[1] = t_mul * ty;
+	mat->t[2] = t_mul * tz;
+	mat->t[3] = t_mul * -min_t + t1;
+
+
+#if 1  // DEBUG
+	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
+	{
+		const quake_vertex_c *V = &F->verts[k];
+
+		double s = mat->Calc_S(V->x, V->y, V->z);
+		double t = mat->Calc_T(V->x, V->y, V->z);
+
+		fprintf(stderr, "  LM coord (%+7.6f %+7.6f)\n", s, t);
+	}
+#endif
 }
 
 
@@ -1057,6 +1104,12 @@ void QLIT_TestingStuff(qLightmap_c *lmap)
 		int g = 80 + 40 * sin(V.y / 40.0);
 		int b = 40 + 10 * sin(V.z / 40.0);
 
+		g = (int)(V.x * 2.0) & 255;
+		r = (int)(V.y * 2.0) & 255;
+		b = (int)(V.z * 2.0) & 255;
+
+		r=b=0;
+
 		lmap->samples[t*W + s] = MAKE_RGBA(r, g, b, 0);
 
 	//  lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
@@ -1071,15 +1124,9 @@ void QCOM_LightFace(quake_face_c *F)
 	F->GetBounds(&lt_face_bbox);
 
 	if (qk_game < 3)
-	{
 		Q1_CalcFaceStuff(F);
-	}
 	else
-	{
 		Q3_CalcFaceStuff(F);
-	}
-
-	F->lmap = QCOM_NewLightmap(lt_W, lt_H);
 
 QLIT_TestingStuff(F->lmap);
 return;
