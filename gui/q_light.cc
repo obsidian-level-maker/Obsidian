@@ -669,16 +669,10 @@ static void Q3_CalcFaceStuff(quake_face_c *F)
 	}
 	else
 	{
-		tx = (- nx) * nz;
-		ty = (- ny) * nz;
+		tx = -nz * (nx / xy_len);
+		ty = -nz * (ny / xy_len);
 		tz = xy_len;
 
-		// normalize  [ len cannot be zero here ]
-		double len = sqrt(tx*tx + ty*ty + tz*tz);
-
-		tx /= len;
-		ty /= len;
-		tz /= len;
 	}
 
 	// computing S is easy now, it is simply the cross-product
