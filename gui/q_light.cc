@@ -850,9 +850,9 @@ void qLightmap_c::Store_Normal()
 
 	for (int k = 0 ; k < width * height ; k++)
 	{
-		int r = blocklights[k][0] >> 8;
-		int g = blocklights[k][1] >> 8;
-		int b = blocklights[k][2] >> 8;
+		int r = blocklights[k][0] >> 11;
+		int g = blocklights[k][1] >> 11;
+		int b = blocklights[k][2] >> 11;
 
 		r = CLAMP(0, r, 254);
 		g = CLAMP(0, g, 254);
@@ -1126,8 +1126,10 @@ void QCOM_LightFace(quake_face_c *F)
 	else
 		Q3_CalcFaceStuff(F);
 
-QLIT_TestingStuff(F->lmap);
-return;
+#if 0  // DEBUG
+	QLIT_TestingStuff(F->lmap);
+	return;
+#endif
 
 	for (int pass = 0 ; pass < 4 ; pass++)
 	{
