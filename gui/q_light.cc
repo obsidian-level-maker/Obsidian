@@ -305,6 +305,20 @@ public:
 			lump->Append(&samples[x][y][c], 1);
 		}
 	}
+
+	void SavePPM(FILE *fp)
+	{
+		fprintf(fp, "P6\n");
+		fprintf(fp, "128 128\n");
+		fprintf(fp, "255\n");
+
+		for (int y = 0 ; y < LIGHTMAP_HEIGHT ; y++)
+		for (int x = 0 ; x < LIGHTMAP_WIDTH  ; x++)
+		for (int c = 0 ; c < 3 ; c++)
+		{
+			fputc(samples[x][y][c], fp);
+		}
+	}
 };
 
 
