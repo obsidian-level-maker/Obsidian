@@ -792,11 +792,11 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 
 	uv_matrix_c *mat = F->lmap->lm_mat;
 
-	double s1 = (F->lmap->lx + 0.1) / (double)LIGHTMAP_WIDTH;
-	double t1 = (F->lmap->ly + 0.1) / (double)LIGHTMAP_HEIGHT;
+	double s1 = (F->lmap->lx + 0.5) / (double)LIGHTMAP_WIDTH;
+	double t1 = (F->lmap->ly + 0.5) / (double)LIGHTMAP_HEIGHT;
 
-	double s2 = (F->lmap->lx + lt_W - 0.2) / (double)LIGHTMAP_WIDTH;
-	double t2 = (F->lmap->ly + lt_H - 0.2) / (double)LIGHTMAP_HEIGHT;
+	double s2 = (F->lmap->lx + lt_W - 0.5) / (double)LIGHTMAP_WIDTH;
+	double t2 = (F->lmap->ly + lt_H - 0.5) / (double)LIGHTMAP_HEIGHT;
 
 	fprintf(stderr, "want S range: %+1.7f .. %+1.7f\n", s1, s2);
 	fprintf(stderr, "want T range: %+1.7f .. %+1.7f\n", t1, t2);
@@ -1104,11 +1104,9 @@ void QLIT_TestingStuff(qLightmap_c *lmap)
 		int g = 80 + 40 * sin(V.y / 40.0);
 		int b = 40 + 10 * sin(V.z / 40.0);
 
-		g = (int)(V.x * 2.0) & 255;
-		r = (int)(V.y * 2.0) & 255;
-		b = (int)(V.z * 2.0) & 255;
-
-		r=b=0;
+		g = (int)(V.x / 4.0) & 63;
+		r = (int)(V.y / 4.0) & 63;
+		b = (int)(V.z / 2.0) & 63;
 
 		lmap->samples[t*W + s] = MAKE_RGBA(r, g, b, 0);
 
