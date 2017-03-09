@@ -266,6 +266,74 @@ bool QCOM_TraceRay(float x1, float y1, float z1,
 }
 
 
+static int RecursiveTestPoint(int nodenum, float x, float y, float z)
+{
+	for (;;)
+	{
+		if (nodenum < 0)
+			return nodenum;
+
+		tnode_t *TN = &trace_nodes[nodenum];
+
+		float dist;
+
+		switch (TN->type)
+		{
+			case PLANE_X:
+				dist = x;
+				break;
+
+			case PLANE_Y:
+				dist = y;
+				break;
+
+			case PLANE_Z:
+				dist = z;
+				break;
+
+			default:
+				dist = x * TN->normal[0] + y * TN->normal[1] + z * TN->normal[2];
+				break;
+		}
+
+		dist -= TN->dist;
+
+		if (dist > 0.0001)
+		{
+			nodenum = TN->children[0];
+			continue;
+		}
+
+		if (dist < -0.0001)
+		{
+			nodenum = TN->children[1];
+			continue;
+		}
+
+		// point is sitting ON the node, we must test both sides
+		// [ in order to produce a consistent result ]
+
+		int A = RecursiveTestPoint(TN->children[0], x,y,z);
+		int B = RecursiveTestPoint(TN->children[1], x,y,z);
+
+		// we don't care about sky brushes here
+
+		if (A == TRACE_EMPTY && B == TRACE_EMPTY)
+			return TRACE_EMPTY;
+
+		return TRACE_SOLID;
+	}
+}
+
+
+bool QCOM_TracePoint(float x, float y, float z)
+{
+	int r = RecursiveTestPoint(0, x,y,z);
+
+	return (r == TRACE_EMPTY);
+}
+
+
 //------------------------------------------------------------------------
 //  CLUSTER MANAGEMENT
 //------------------------------------------------------------------------

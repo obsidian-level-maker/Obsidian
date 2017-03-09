@@ -77,6 +77,9 @@ void QCOM_FreeTraceNodes();
 bool QCOM_TraceRay(float x1, float y1, float z1,
                    float x2, float y2, float z2);
 
+// returns true if point is in air, false for solid or sky
+bool QCOM_TracePoint(float x, float y, float z);
+
 void QCOM_CreateClusters(double min_x, double min_y,
                          double max_x, double max_y);
 void QCOM_FreeClusters();
