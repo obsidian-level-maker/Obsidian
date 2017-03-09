@@ -1183,6 +1183,17 @@ void QCOM_LightMapModel(quake_mapmodel_c *model)
 }
 #endif
 
+
+static void Q3_VisitGridPoint(int gx, int gy, int gz, dlightgrid3_t *out)
+{
+	memset(out, (byte)(gx * 4), sizeof(dlightgrid3_t));
+
+	// FIXME
+}
+
+
+#define LUMP_Q3_LIGHTGRID	15
+
 static void Q3_GridLighting()
 {
 	// world mins / maxs
@@ -1206,9 +1217,20 @@ static void Q3_GridLighting()
 		g_size[b] = (g_maxs[b] - g_mins[b]) / block_size + 1;
 	}
 
-	LogPrintf("q3 grid size: %d x %d x %d\n", g_size[0], g_size[1], g_size[2]);
+	LogPrintf("grid size: %d x %d x %d\n", g_size[0], g_size[1], g_size[2]);
 
-	// FIXME
+	qLump_c * lump = BSP_NewLump(LUMP_Q3_LIGHTGRID);
+
+	dlightgrid3_t raw_point;
+
+	for (int gz = 0 ; gz < g_size[2] ; gz++)
+	for (int gy = 0 ; gy < g_size[1] ; gy++)
+	for (int gx = 0 ; gx < g_size[0] ; gx++)
+	{
+		Q3_VisitGridPoint(gx, gy, gz, &raw_point);
+
+		lump->Append(&raw_point, sizeof(raw_point));
+	}
 }
 
 

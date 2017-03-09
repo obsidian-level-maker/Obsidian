@@ -109,6 +109,16 @@ typedef struct
 quake_light_t;
 
 
+// on-disk structure for Q3 light grid
+typedef struct
+{
+	byte		ambientLight[3];
+	byte		directedLight[3];
+	byte		lat, lng;	// direction to light (angles)
+
+} PACKEDATTR dlightgrid3_t;
+
+
 /***** VARIABLES **********/
 
 extern bool qk_color_lighting;

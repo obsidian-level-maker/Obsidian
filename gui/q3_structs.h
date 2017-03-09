@@ -182,13 +182,8 @@ typedef struct
 } PACKEDATTR dfog3_t;
 
 
-typedef struct
-{
-	byte		ambientLight[3];
-	byte		directedLight[3];
-	byte		lat, lng;	// direction to light (angles)
+/* AJA : moved dlightgrid3_t to q_light.h */
 
-} PACKEDATTR dlightgrid3_t;
 
 typedef struct
 {
