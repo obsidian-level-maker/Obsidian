@@ -1027,9 +1027,6 @@ static void Q3_WriteModel(dmodel3_t *model)
 	// fix endianness
 	for (int b = 0 ; b < 3 ; b++)
 	{
-		model->mins[b] -= MODEL_PADDING;
-		model->maxs[b] += MODEL_PADDING;
-
 		model->mins[b] = LE_Float32(model->mins[b]);
 		model->maxs[b] = LE_Float32(model->maxs[b]);
 	}

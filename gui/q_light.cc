@@ -1183,6 +1183,34 @@ void QCOM_LightMapModel(quake_mapmodel_c *model)
 }
 #endif
 
+static void Q3_GridLighting()
+{
+	// world mins / maxs
+	float w_mins[3];
+	float w_maxs[3];
+
+	float g_mins[3];
+	float g_maxs[3];
+	int   g_size[3];
+
+	for (int b = 0 ; b < 3 ; b++)
+	{
+		float block_size = (b < 2) ? 64.0 : 128.0;
+
+		w_mins[b] = qk_bsp_root->bbox.mins[b];
+		w_maxs[b] = qk_bsp_root->bbox.maxs[b];
+
+		g_mins[b] = block_size * ceil (w_mins[b] / block_size);
+		g_maxs[b] = block_size * floor(w_maxs[b] / block_size);
+
+		g_size[b] = (g_maxs[b] - g_mins[b]) / block_size + 1;
+	}
+
+	LogPrintf("q3 grid size: %d x %d x %d\n", g_size[0], g_size[1], g_size[2]);
+
+	// FIXME
+}
+
 
 void QCOM_LightAllFaces()
 {
@@ -1224,6 +1252,10 @@ void QCOM_LightAllFaces()
 
 	LogPrintf("lit %d faces (of %u) using %d luxels\n",
 			  lit_faces, qk_all_faces.size(), lit_luxels);
+
+	// for Q3, determine grid lighting
+	if (qk_game >= 3)
+		Q3_GridLighting();
 
 // Todo: Q1/Q2 map models
 #if 0
