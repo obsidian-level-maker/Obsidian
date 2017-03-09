@@ -68,12 +68,6 @@ static tnode_t *trace_nodes;
 
 static int ConvertTraceLeaf(quake_leaf_c *leaf)
 {
-	// liquids do not transmit light [ TODO: make optional ]
-	if (true &&
-		leaf->medium > MEDIUM_AIR &&
-		leaf->medium < MEDIUM_SOLID)
-		return TRACE_SOLID;
-
 	if (leaf->medium != MEDIUM_SOLID)
 		return TRACE_EMPTY;
 
