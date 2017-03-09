@@ -995,7 +995,7 @@ static inline void Bump(int s, int t, int W, int value, rgb_color_t color)
 }
 
 
-static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass)
+static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 {
 	// first pass is normal lights, other passes are for styled lights
 	if (pass == 0)
@@ -1028,11 +1028,14 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
 	// skip lights which are too far away
 	if (light.kind == LTK_Sun)
 	{
-		SYS_ASSERT(lt_face->leaf);
+		if (qk_game < 3)
+		{
+			SYS_ASSERT(lt_face->leaf);
 
-		if (lt_face->leaf->cluster &&
+			if (lt_face->leaf->cluster &&
 				lt_face->leaf->cluster->ambient_dists[AMBIENT_SKY] > 4)
-			return;
+				return;
+		}
 	}
 	else
 	{
@@ -1184,6 +1187,11 @@ void QCOM_LightMapModel(quake_mapmodel_c *model)
 #endif
 
 
+#define MAX_GRID_CONTRIBUTIONS	100
+
+static int grid_contributions[MAX_GRID_CONTRIBUTIONS][3];
+
+
 static const int grid_z_deltas[6] =
 {
 	0, +12, +24, -12, -24, +36
@@ -1201,6 +1209,34 @@ static const int grid_xy_deltas[9 * 2] =
 	-18,	+18,
 	-18,	-18
 };
+
+
+static void Q3_ProcessLightForGrid(quake_light_t& light,
+								   float gx, float gy, float gz,
+								   int *r, int *g, int *b)
+{
+	float dist = ComputeDist(gx, gy, gz, light.x, light.y, light.z);
+
+	// fast check on distance
+	if (light.kind != LTK_Sun && dist >= light.radius)
+		return;
+
+	// slow ray-trace check
+	if (! QCOM_TraceRay(gx, gy, gz, light.x, light.y, light.z))
+		return;
+
+
+	rgb_color_t color = WHITE;  // FIXME !!!
+
+	int value = light.level;
+
+	if (light.kind != LTK_Sun)
+		value = value * (1.0 - dist / light.radius);
+
+	(*r) = value * RGB_RED(color);
+	(*g) = value * RGB_GREEN(color);
+	(*b) = value * RGB_BLUE(color);
+}
 
 
 static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
@@ -1224,11 +1260,43 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 			continue;
 
 		// Ok!
-		gx = gx + dx;
-		gy = gy + dy;
-		gz = gz + dz;
+		gx += dx;
+		gy += dy;
+		gz += dz;
+
 		break;
 	}
+
+	// process each light, storing each contribution and
+	// remembering the greatest contribution to use for the
+	// directional component.
+
+	int num_grid_contribs = 0;
+
+	int best_dir_contrib  = -1;
+
+	for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
+	{
+		int r, g, b, ity;
+
+		Q3_ProcessLightForGrid(qk_all_lights[i], gx, gy, gz, &r, &g, &b);
+
+		ity = MAX(r, MAX(g, b));
+
+		// if (ity > best_ity)
+		// {
+		// }
+
+		if (num_grid_contribs >= MAX_GRID_CONTRIBUTIONS)
+			break;
+
+		grid_contributions[num_grid_contribs][0] = r;
+		grid_contributions[num_grid_contribs][1] = g;
+		grid_contributions[num_grid_contribs][2] = b;
+
+		num_grid_contribs++;
+	}
+
 
 	// FIXME
 }
@@ -1244,7 +1312,7 @@ static void Q3_GridLighting()
 
 	float g_mins[3];
 	float g_maxs[3];
-	int   g_size[3];
+	int   g_count[3];
 
 	for (int b = 0 ; b < 3 ; b++)
 	{
@@ -1256,22 +1324,22 @@ static void Q3_GridLighting()
 		g_mins[b] = block_size * ceil (w_mins[b] / block_size);
 		g_maxs[b] = block_size * floor(w_maxs[b] / block_size);
 
-		g_size[b] = (g_maxs[b] - g_mins[b]) / block_size + 1;
+		g_count[b] = (g_maxs[b] - g_mins[b]) / block_size + 1;
 	}
 
-	LogPrintf("grid size: %d x %d x %d\n", g_size[0], g_size[1], g_size[2]);
+	LogPrintf("grid counts: %d x %d x %d\n", g_count[0], g_count[1], g_count[2]);
 
 	qLump_c * lump = BSP_NewLump(LUMP_Q3_LIGHTGRID);
 
 	dlightgrid3_t raw_point;
 
-	for (int znum = 0 ; znum < g_size[2] ; znum++)
-	for (int ynum = 0 ; ynum < g_size[1] ; ynum++)
-	for (int xnum = 0 ; xnum < g_size[0] ; xnum++)
+	for (int znum = 0 ; znum < g_count[2] ; znum++)
+	for (int ynum = 0 ; ynum < g_count[1] ; ynum++)
+	for (int xnum = 0 ; xnum < g_count[0] ; xnum++)
 	{
-		float gx = g_mins[0] + xnum * g_size[0];
-		float gy = g_mins[1] + ynum * g_size[1];
-		float gz = g_mins[2] + znum * g_size[2];
+		float gx = g_mins[0] + xnum *  64.0;
+		float gy = g_mins[1] + ynum *  64.0;
+		float gz = g_mins[2] + znum * 128.0;
 
 		Q3_VisitGridPoint(gx, gy, gz, &raw_point);
 
