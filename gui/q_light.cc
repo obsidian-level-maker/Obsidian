@@ -1184,9 +1184,51 @@ void QCOM_LightMapModel(quake_mapmodel_c *model)
 #endif
 
 
-static void Q3_VisitGridPoint(int gx, int gy, int gz, dlightgrid3_t *out)
+static const int grid_z_deltas[6] =
 {
-	memset(out, (byte)(gx * 4), sizeof(dlightgrid3_t));
+	0, +12, +24, -12, -24, +36
+};
+
+static const int grid_xy_deltas[9 * 2] =
+{
+	 0,		 0,
+	+9,		+9,
+	+9,		-9,
+	-9,		+9,
+	-9,		-9,
+	+18, 	+18,
+	+18,	-18,
+	-18,	+18,
+	-18,	-18
+};
+
+
+static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
+{
+	memset(out, 0, sizeof(dlightgrid3_t));
+
+	// the point may lie inside a solid area, so look for a nearby
+	// spot that is open...
+
+	for (int i = 0 ; i <= 6*9 ; i++)
+	{
+		// everything failed?
+		if (i == 6*9)
+			return;
+
+		float dx = grid_xy_deltas[(i / 6) * 2 + 0];
+		float dy = grid_xy_deltas[(i / 6) * 2 + 1];
+		float dz = grid_z_deltas[i % 6];
+
+		if (! QCOM_TracePoint(gx + dx, gy + dy, gz + dz))
+			continue;
+
+		// Ok!
+		gx = gx + dx;
+		gy = gy + dy;
+		gz = gz + dz;
+		break;
+	}
 
 	// FIXME
 }
@@ -1223,10 +1265,14 @@ static void Q3_GridLighting()
 
 	dlightgrid3_t raw_point;
 
-	for (int gz = 0 ; gz < g_size[2] ; gz++)
-	for (int gy = 0 ; gy < g_size[1] ; gy++)
-	for (int gx = 0 ; gx < g_size[0] ; gx++)
+	for (int znum = 0 ; znum < g_size[2] ; znum++)
+	for (int ynum = 0 ; ynum < g_size[1] ; ynum++)
+	for (int xnum = 0 ; xnum < g_size[0] ; xnum++)
 	{
+		float gx = g_mins[0] + xnum * g_size[0];
+		float gy = g_mins[1] + ynum * g_size[1];
+		float gz = g_mins[2] + znum * g_size[2];
+
 		Q3_VisitGridPoint(gx, gy, gz, &raw_point);
 
 		lump->Append(&raw_point, sizeof(raw_point));
