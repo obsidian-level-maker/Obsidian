@@ -56,7 +56,7 @@
 
 #define LOW_LIGHT  20
 
-#define WHITE	MAKE_RGBA(255, 255, 255, 255)
+#define WHITE	MAKE_RGBA(255, 255, 255, 0)
 
 #define LUXEL_SIZE  16.0
 
@@ -853,15 +853,26 @@ void qLightmap_c::Store_Normal()
 
 	for (int k = 0 ; k < width * height ; k++)
 	{
-		int r = blocklights[k][0] >> 11;
-		int g = blocklights[k][1] >> 11;
-		int b = blocklights[k][2] >> 11;
+		float r = blocklights[k][0] / 2000.0;
+		float g = blocklights[k][1] / 2000.0;
+		float b = blocklights[k][2] / 2000.0;
 
-		r = CLAMP(0, r, 254);
-		g = CLAMP(0, g, 254);
-		b = CLAMP(0, b, 254);
+		float ity = MAX(r, MAX(g, b));
 
-		*dest++ = MAKE_RGBA(r, g, b, 0);
+		if (ity > 127)
+		{
+			ity = 127.0 / ity;
+
+			r *= ity;
+			g *= ity;
+			b *= ity;
+		}
+
+		byte r2 = r;
+		byte g2 = g;
+		byte b2 = b;
+
+		*dest++ = MAKE_RGBA(r2, g2, b2, 0);
 	}
 }
 
@@ -973,7 +984,7 @@ static rgb_color_t ParseColorString(const char *name)
 		return WHITE;
 	}
 
-	return MAKE_RGBA(r, g, b, 255);
+	return MAKE_RGBA(r, g, b, 0);
 }
 
 
