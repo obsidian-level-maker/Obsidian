@@ -172,7 +172,9 @@ void qLightmap_c::Write(qLump_c *lump)
 
 	for (int i = 0 ; i < total ; i++)
 	{
-		byte val = 0; // FIXME !!!!  compute greyscale
+		const rgb_color_t col = samples[i];
+
+		byte val = RGB_GREEN(col);  // FIXME
 
 		lump->Append(&val, 1);
 
@@ -405,6 +407,7 @@ void QCOM_BuildLightingLump(int lump, int max_size)
 	lightmap_lump = BSP_NewLump(lump);
 
 	// at the start a single completely flat lightmap for map-models
+	// [ this is horrible, should have proper lightmap ]
 
 	int flat_size = FLAT_LIGHTMAP_SIZE * (qk_color_lighting ? 3 : 1);
 
@@ -938,6 +941,42 @@ void qLightmap_c::Store()
 std::vector<quake_light_t> qk_all_lights;
 
 
+static rgb_color_t ParseColorString(const char *name)
+{
+	if (! name || name[0] == 0)
+		return WHITE;
+
+	if (name[0] != '#')
+	{
+		LogPrintf("WARNING: bad color string for light: '%s'\n", name);
+		return WHITE;
+	}
+
+	int raw_hex = strtol(name + 1, NULL, 16);
+	int r=0, g=0, b=0;
+
+	if (strlen(name) == 4)
+	{
+			r = ((raw_hex >> 8) & 0x0f) * 17;
+			g = ((raw_hex >> 4) & 0x0f) * 17;
+			b = ((raw_hex     ) & 0x0f) * 17;
+	}
+	else if (strlen(name) == 7)
+	{
+			r = (raw_hex >> 16) & 0xff;
+			g = (raw_hex >>  8) & 0xff;
+			b = (raw_hex      ) & 0xff;
+	}
+	else
+	{
+		LogPrintf("WARNING: bad color string for light: '%s'\n", name);
+		return WHITE;
+	}
+
+	return MAKE_RGBA(r, g, b, 255);
+}
+
+
 static void QCOM_FreeLights()
 {
 	qk_all_lights.clear();
@@ -975,7 +1014,7 @@ static void QCOM_FindLights()
 		if (level < 1 || light.radius < 1)
 			continue;
 
-		// FIXME: color
+		light.color = ParseColorString(E->props.getStr("color"));
 
 		light.level = (int) level;
 		light.style = E->props.getInt("style", 0);
@@ -1047,8 +1086,6 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 	}
 
 
-	rgb_color_t color = WHITE;  // FIXME !!!
-
 	bool hit_it = false;
 
 	for (int t = 0 ; t < lt_H ; t++)
@@ -1063,7 +1100,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 
 		if (light.kind == LTK_Sun)
 		{
-			Bump(s, t, lt_W, light.level, color);
+			Bump(s, t, lt_W, light.level, light.color);
 		}
 		else
 		{
@@ -1073,7 +1110,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 			{
 				int value = light.level * (1.0 - dist / light.radius);
 
-				Bump(s, t, lt_W, value, color);
+				Bump(s, t, lt_W, value, light.color);
 			}
 		}
 	}
@@ -1284,16 +1321,14 @@ static void Q3_ProcessLightForGrid(quake_light_t& light,
 		return;
 
 
-	rgb_color_t color = WHITE;  // FIXME !!!
-
 	int value = light.level;
 
 	if (light.kind != LTK_Sun)
 		value = value * (1.0 - dist / light.radius);
 
-	*r = value * RGB_RED(color);
-	*g = value * RGB_GREEN(color);
-	*b = value * RGB_BLUE(color);
+	*r = value * RGB_RED(light.color);
+	*g = value * RGB_GREEN(light.color);
+	*b = value * RGB_BLUE(light.color);
 }
 
 

@@ -105,6 +105,8 @@ typedef struct
 
 	int level;  // 16.8 fixed point
 	int style;
+
+	rgb_color_t color;
 }
 quake_light_t;
 
