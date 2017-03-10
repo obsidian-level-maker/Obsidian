@@ -1248,6 +1248,8 @@ static void Q3_ColorToBytes(int r, int g, int b, float div, byte *out)
 	float g2 = g / div;
 	float b2 = b / div;
 
+/// fprintf(stderr, "Q3_ColorToBytes : (%5.3f %5.3f %5.3f)\n", r2, g2, b2);
+
 	float ity = MAX(r2, MAX(g2, b2));
 
 	if (ity > 127)
@@ -1347,17 +1349,13 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 		if (ity <= 0)
 			continue;
 
+		sum_r += r;
+		sum_g += g;
+		sum_b += b;
+		sum_total += 1;
+
 		if (ity > best_dir_ity)
 		{
-			// add the previous one to the ambient sum
-			if (best_dir_ity > 0)
-			{
-				sum_r += best_dir_color[0];
-				sum_g += best_dir_color[1];
-				sum_b += best_dir_color[2];
-				sum_total += 1;
-			}
-
 			best_dir_ity = ity;
 
 			best_dir_color[0] = r;
@@ -1367,25 +1365,18 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 			best_direction[0] = qk_all_lights[k].x - gx;
 			best_direction[1] = qk_all_lights[k].y - gy;
 			best_direction[2] = qk_all_lights[k].z - gz;
-
-			continue;
 		}
-
-		sum_r += r;
-		sum_g += g;
-		sum_b += b;
-		sum_total += 1;
 	}
 
 	if (best_dir_ity > 0)
 	{
 		Q3_CalcAngularDirection(best_direction, out);
-		Q3_ColorToBytes(best_dir_color[0], best_dir_color[1], best_dir_color[2], 10.0, out->directedLight);
+		Q3_ColorToBytes(best_dir_color[0], best_dir_color[1], best_dir_color[2], 3000.0, out->directedLight);
 	}
 
 	if (sum_total > 0)
 	{
-		Q3_ColorToBytes(sum_r, sum_g, sum_b, sum_total * 30.0, out->ambientLight);
+		Q3_ColorToBytes(sum_r, sum_g, sum_b, sum_total * 500.0, out->ambientLight);
 	}
 }
 
