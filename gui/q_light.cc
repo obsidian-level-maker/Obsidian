@@ -725,7 +725,7 @@ fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 fprintf(stderr, "  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
 fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 
-#if 1  // DEBUG
+#if 0  // DEBUG
 	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
 	{
 		const quake_vertex_c *V = &F->verts[k];
@@ -815,7 +815,7 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 	mat->t[3] = t_mul * -min_t + t1;
 
 
-#if 1  // DEBUG
+#if 0  // DEBUG
 	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
 	{
 		const quake_vertex_c *V = &F->verts[k];
@@ -1211,10 +1211,66 @@ static const int grid_xy_deltas[9 * 2] =
 };
 
 
+static void Q3_CalcAngularDirection(const float *vec3, dlightgrid3_t *out)
+{
+	float x = vec3[0];
+	float y = vec3[1];
+	float z = vec3[2];
+
+	float len = sqrt(x*x + y*y + z*z);
+
+	if (len > 0)
+	{
+		x /= len;
+		y /= len;
+		z /= len;
+	}
+
+	if (x == 0 && y == 0)
+	{
+		out->lat = (z < 0) ? 128 : 0;
+		out->lng = 0;
+	}
+	else
+	{
+		float lat = atan2(y, x) * (180.0 / M_PI) * (255.0 / 360.0);
+		float lng = acos(z)     * (180.0 / M_PI) * (255.0 / 360.0);
+
+		out->lat = (int)lat & 0xff;
+		out->lng = (int)lng & 0xff;
+	}
+}
+
+
+static void Q3_ColorToBytes(int r, int g, int b, float div, byte *out)
+{
+	float r2 = r / div;
+	float g2 = g / div;
+	float b2 = b / div;
+
+	float ity = MAX(r2, MAX(g2, b2));
+
+	if (ity > 127)
+	{
+		ity = 127.0 / ity;
+
+		r2 *= ity;
+		g2 *= ity;
+		b2 *= ity;
+	}
+
+	out[0] = (byte)r2;
+	out[1] = (byte)g2;
+	out[2] = (byte)b2;
+}
+
+
 static void Q3_ProcessLightForGrid(quake_light_t& light,
 								   float gx, float gy, float gz,
 								   int *r, int *g, int *b)
 {
+	*r = *g = *b = 0;
+
 	float dist = ComputeDist(gx, gy, gz, light.x, light.y, light.z);
 
 	// fast check on distance
@@ -1233,9 +1289,9 @@ static void Q3_ProcessLightForGrid(quake_light_t& light,
 	if (light.kind != LTK_Sun)
 		value = value * (1.0 - dist / light.radius);
 
-	(*r) = value * RGB_RED(color);
-	(*g) = value * RGB_GREEN(color);
-	(*b) = value * RGB_BLUE(color);
+	*r = value * RGB_RED(color);
+	*g = value * RGB_GREEN(color);
+	*b = value * RGB_BLUE(color);
 }
 
 
@@ -1271,34 +1327,66 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 	// remembering the greatest contribution to use for the
 	// directional component.
 
-	int num_grid_contribs = 0;
+	int sum_r = 0;
+	int sum_g = 0;
+	int sum_b = 0;
+	int sum_total = 0;
 
-	int best_dir_contrib  = -1;
+	int   best_dir_ity = -999;
+	int   best_dir_color[3];
+	float best_direction[3];
 
-	for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
+	for (unsigned int k = 0 ; k < qk_all_lights.size() ; k++)
 	{
 		int r, g, b, ity;
 
-		Q3_ProcessLightForGrid(qk_all_lights[i], gx, gy, gz, &r, &g, &b);
+		Q3_ProcessLightForGrid(qk_all_lights[k], gx, gy, gz, &r, &g, &b);
 
 		ity = MAX(r, MAX(g, b));
 
-		// if (ity > best_ity)
-		// {
-		// }
+		if (ity <= 0)
+			continue;
 
-		if (num_grid_contribs >= MAX_GRID_CONTRIBUTIONS)
-			break;
+		if (ity > best_dir_ity)
+		{
+			// add the previous one to the ambient sum
+			if (best_dir_ity > 0)
+			{
+				sum_r += best_dir_color[0];
+				sum_g += best_dir_color[1];
+				sum_b += best_dir_color[2];
+				sum_total += 1;
+			}
 
-		grid_contributions[num_grid_contribs][0] = r;
-		grid_contributions[num_grid_contribs][1] = g;
-		grid_contributions[num_grid_contribs][2] = b;
+			best_dir_ity = ity;
 
-		num_grid_contribs++;
+			best_dir_color[0] = r;
+			best_dir_color[1] = g;
+			best_dir_color[2] = b;
+
+			best_direction[0] = qk_all_lights[k].x - gx;
+			best_direction[1] = qk_all_lights[k].y - gy;
+			best_direction[2] = qk_all_lights[k].z - gz;
+
+			continue;
+		}
+
+		sum_r += r;
+		sum_g += g;
+		sum_b += b;
+		sum_total += 1;
 	}
 
+	if (best_dir_ity > 0)
+	{
+		Q3_CalcAngularDirection(best_direction, out);
+		Q3_ColorToBytes(best_dir_color[0], best_dir_color[1], best_dir_color[2], 10.0, out->directedLight);
+	}
 
-	// FIXME
+	if (sum_total > 0)
+	{
+		Q3_ColorToBytes(sum_r, sum_g, sum_b, sum_total * 30.0, out->ambientLight);
+	}
 }
 
 
