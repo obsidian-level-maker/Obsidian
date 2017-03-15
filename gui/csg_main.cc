@@ -657,11 +657,10 @@ brush_quad_node_c * brush_quad_tree;
 
 static void CSG_CreateQuadTree()
 {
-	// TODO: these coords assume DOOM maps
-	// (for Quake it should be centred on the origin)
-	// perhaps make this controllable from the Lua scripts?
+	// TODO : can change this size via gui.property()
+	int size = 65536;
 
-	brush_quad_tree = new brush_quad_node_c(0, 0, 16384);
+	brush_quad_tree = new brush_quad_node_c(-(size/2), -(size/2), size);
 }
 
 static void CSG_DeleteQuadTree()
