@@ -394,8 +394,11 @@ bool csg_brush_c::IntersectRay(float x1, float y1, float z1,
 
 	// at here, the clipped ray lies inside the brush
 
-	if (MAX(z1, z2) < b.z - 0.1) return false;
-	if (MIN(z1, z2) > t.z + 0.1) return false;
+	double bz = b.CalcZ(x1, y1);
+	double tz = t.CalcZ(x1, y1);
+
+	if (MAX(z1, z2) < bz - 0.1) return false;
+	if (MIN(z1, z2) > tz + 0.1) return false;
 
 	return true;
 }
