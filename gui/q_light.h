@@ -127,6 +127,8 @@ extern bool qk_color_lighting;
 
 extern int qk_lighting_quality;
 
+extern float q3_LUXEL_SIZE;
+
 extern std::vector<quake_light_t> qk_all_lights;
 
 

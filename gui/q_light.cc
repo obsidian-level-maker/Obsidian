@@ -54,11 +54,11 @@
 #endif
 
 
-#define LOW_LIGHT  20
-
 #define WHITE	MAKE_RGBA(255, 255, 255, 0)
 
-#define LUXEL_SIZE  16.0
+#define LOW_LIGHT  8
+
+float q3_LUXEL_SIZE = 12.0;
 
 
 // 0 = normal, -1 = fast, +1 = best
@@ -741,8 +741,8 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 		double yy = s * sy + t * ty + n_dist * ny;
 		double zz = s * sz + t * tz + n_dist * nz;
 
-		s = (s - min_s) / LUXEL_SIZE;
-		t = (s - min_t) / LUXEL_SIZE;
+		s = (s - min_s) / q3_LUXEL_SIZE;
+		t = (s - min_t) / q3_LUXEL_SIZE;
 
 		fprintf(stderr, "  st coord (%+5.3f %+5.3f)\n", s, t);
 		fprintf(stderr, "   from: (%+7.2f %+7.2f %+7.2f)\n", V->x, V->y, V->z);
@@ -752,8 +752,8 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 #endif
 
 	// compute size of lightmap
-	lt_W = (int)ceil((max_s - min_s) / LUXEL_SIZE - 0.1);
-	lt_H = (int)ceil((max_t - min_t) / LUXEL_SIZE - 0.1);
+	lt_W = (int)ceil((max_s - min_s) / q3_LUXEL_SIZE - 0.1);
+	lt_H = (int)ceil((max_t - min_t) / q3_LUXEL_SIZE - 0.1);
 
 fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 

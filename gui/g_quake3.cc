@@ -1255,6 +1255,7 @@ bool quake3_game_interface_c::Start()
 	qk_lighting_quality = 0;  // TODO
 
 	q3_default_tex_scale = 1.0 / 128.0;
+	q3_LUXEL_SIZE = 12.0;
 
 	CLUSTER_SIZE = 128.0;
 
@@ -1341,6 +1342,10 @@ void quake3_game_interface_c::Property(const char *key, const char *value)
 	else if (StringCaseCmp(key, "default_tex_scale") == 0)
 	{
 		q3_default_tex_scale = atof(value);
+	}
+	else if (StringCaseCmp(key, "luxel_size") == 0)
+	{
+		q3_LUXEL_SIZE = atof(value);
 	}
 	else if (StringCaseCmp(key, "water_shader") == 0)
 	{
