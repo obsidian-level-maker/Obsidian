@@ -212,6 +212,11 @@ public:
 	// error message string.
 	const char * Validate();
 
+	// compute a MEDIUM_XXX value for this brush.
+	// some brushes return -1, including triggers, light brushes,
+	// no-clip and no-draw brushes.  sky brushes return as SOLID.
+	int CalcMedium() const;
+
 	bool ContainsPoint(float x, float y, float z) const;
 
 	bool IntersectRay(float x1, float y1, float z1,
@@ -256,6 +261,8 @@ void CSG_Main_Free();
 
 bool CSG_TraceRay(double x1, double y1, double z1,
 				  double x2, double y2, double z2, const char *mode);
+
+int CSG_BrushContents(double x, double y, double z);
 
 csg_property_set_c * CSG_LookupTexProps(const char *name);
 

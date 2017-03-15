@@ -353,6 +353,37 @@ void csg_brush_c::ComputePlanes()
 }
 
 
+int csg_brush_c::CalcMedium() const
+{
+	if (bflags & BFLAG_NoDraw) return -1;
+	if (bflags & BFLAG_NoClip) return -1;
+
+	switch (bkind)
+	{
+		case BKIND_Solid:
+			return MEDIUM_SOLID;
+
+		case BKIND_Liquid:
+		{
+			const char *str = props.getStr("medium", "");
+
+			if (StringCaseCmp(str, "slime") == 0)
+				return MEDIUM_SLIME;
+
+			if (StringCaseCmp(str, "lava") == 0)
+				return MEDIUM_LAVA;
+
+			return MEDIUM_WATER;
+		}
+
+		case BKIND_Trigger:
+		case BKIND_Light:
+		default:
+			return -1;
+	}
+}
+
+
 bool csg_brush_c::ContainsPoint(float x, float y, float z) const
 {
 	// the test uses a slightly expanded brush
@@ -677,6 +708,43 @@ public:
 			}
 		}
 	}
+
+	bool BrushContents(double x, double y, double z, int *result)
+	{
+		// check all brushes in this section of the quad-tree,
+		// and update 'result' to be the hardest MEDIUM_XXX value
+		// (e.g. MEDIUM_SOLID > MEDIUM_WATER > MEDIUM_AIR).
+		//
+		// returns true if hit solid (and hence no need to check
+		// further nodes or brushes).
+
+		for (unsigned int k = 0 ; k < brushes.size() ; k++)
+		{
+			csg_brush_c *B = brushes[k];
+
+			if (! B->ContainsPoint(x, y, z))
+				continue;
+
+			int med = B->CalcMedium();
+
+			*result = MAX(*result, med);
+
+			return (*result == MEDIUM_SOLID);
+		}
+
+		if (children[0][0])
+		{
+			for (int cx = 0 ; cx < 2 ; cx++)
+			for (int cy = 0 ; cy < 2 ; cy++)
+			{
+				if (children[cx][cy]->RayTouchesBox(x,y, x,y))
+					if (children[cx][cy]->BrushContents(x,y,z, result))
+						return true;
+			}
+		}
+
+		return false;
+	}
 };
 
 
@@ -685,7 +753,7 @@ brush_quad_node_c * brush_quad_tree;
 
 static void CSG_CreateQuadTree()
 {
-	// TODO : can change this size via gui.property()
+	// TODO : ability to set this via gui.property()
 	int size = 65536;
 
 	brush_quad_tree = new brush_quad_node_c(-(size/2), -(size/2), size);
@@ -1266,6 +1334,26 @@ bool CSG_TraceRay(double x1, double y1, double z1,
 	SYS_ASSERT(brush_quad_tree);
 
 	return brush_quad_tree->TraceRay(x1, y1, z1, x2, y2, z2, mode);
+}
+
+
+int CSG_BrushContents(double x, double y, double z)
+{
+	// find the brush(es) which contain the given point, and
+	// return a MEDIUM_XXX value for it.  harder values trump
+	// softer ones (e.g. MEDIUM_SOLID > MEDIUM_WATER).
+	//
+	// returns -1 when no brushes contain the brush, which
+	// indicates either the point is in the AIR, or the point
+	// is completely outside of the map.
+
+	SYS_ASSERT(brush_quad_tree);
+
+	int result = -1;
+
+	brush_quad_tree->BrushContents(x, y, z, &result);
+
+	return result;
 }
 
 
