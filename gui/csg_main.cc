@@ -397,7 +397,7 @@ bool csg_brush_c::ContainsPoint(float x, float y, float z) const
 
 		double d = PerpDist(x,y, v1->x,v1->y, v2->x,v2->y);
 
-		if (d < -epsilon)
+		if (d > epsilon)
 			return false;
 	}
 
@@ -727,7 +727,8 @@ public:
 
 			int med = B->CalcMedium();
 
-			*result = MAX(*result, med);
+			if (med > *result)
+				*result = med;
 
 			return (*result == MEDIUM_SOLID);
 		}
