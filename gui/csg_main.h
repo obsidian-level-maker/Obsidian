@@ -212,6 +212,8 @@ public:
 	// error message string.
 	const char * Validate();
 
+	bool ContainsPoint(float x, float y, float z) const;
+
 	bool IntersectRay(float x1, float y1, float z1,
 			float x2, float y2, float z2) const;
 };

@@ -353,6 +353,31 @@ void csg_brush_c::ComputePlanes()
 }
 
 
+bool csg_brush_c::ContainsPoint(float x, float y, float z) const
+{
+	// the test uses a slightly expanded brush
+	const double epsilon = 0.01;
+
+	// see if point lies inside the 2D sides
+	for (unsigned int k = 0 ; k < verts.size() ; k++)
+	{
+		brush_vert_c *v1 = verts[k];
+		brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
+
+		double d = PerpDist(x,y, v1->x,v1->y, v2->x,v2->y);
+
+		if (d < -epsilon)
+			return false;
+	}
+
+	// check the 3rd dimension...
+	if (z < b.CalcZ(x, y) - epsilon) return false;
+	if (z > t.CalcZ(x, y) + epsilon) return false;
+
+	return true;
+}
+
+
 bool csg_brush_c::IntersectRay(float x1, float y1, float z1,
                                float x2, float y2, float z2) const
 {
