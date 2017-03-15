@@ -123,13 +123,19 @@ typedef struct
 
 /***** VARIABLES **********/
 
+extern std::vector<quake_light_t> qk_all_lights;
+
 extern bool qk_color_lighting;
 
 extern int qk_lighting_quality;
 
+extern float q_light_scale;
+extern int   q_low_light;
+
 extern float q3_LUXEL_SIZE;
 
-extern std::vector<quake_light_t> qk_all_lights;
+extern float grid_ambient_scale;
+extern float grid_directed_scale;
 
 
 /***** FUNCTIONS **********/

@@ -56,6 +56,9 @@ double CHUNK_SIZE = 512.0;
 int spot_low_h  = 72;
 int spot_high_h = 128;
 
+extern float q_light_scale;
+extern int   q_low_light;
+
 
 extern void SPOT_FillPolygon(byte content, const int *shape, int count);
 
@@ -1055,6 +1058,16 @@ int CSG_property(lua_State *L)
 	else if (StringCaseCmp(key, "cluster_size") == 0)
 	{
 		CLUSTER_SIZE = atof(value);
+		return 0;
+	}
+	else if (StringCaseCmp(key, "q_light_scale") == 0)
+	{
+		q_light_scale = atof(value);
+		return 0;
+	}
+	else if (StringCaseCmp(key, "q_low_light") == 0)
+	{
+		q_low_light = atoi(value);
 		return 0;
 	}
 

@@ -1441,6 +1441,9 @@ bool quake1_game_interface_c::Start()
 
 	CLUSTER_SIZE = 128.0;
 
+	q_light_scale = 1.0;
+	q_low_light = 20;
+
 	if (batch_mode)
 		filename = StringDup(batch_output_file);
 	else

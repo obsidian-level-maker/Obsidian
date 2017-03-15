@@ -1254,10 +1254,16 @@ bool quake3_game_interface_c::Start()
 	qk_sub_format = 0;
 	qk_lighting_quality = 0;  // TODO
 
+	CLUSTER_SIZE = 128.0;
+
 	q3_default_tex_scale = 1.0 / 128.0;
 	q3_LUXEL_SIZE = 12.0;
 
-	CLUSTER_SIZE = 128.0;
+	q_light_scale = 1.0;
+	q_low_light = 8;
+
+	grid_ambient_scale  = 4.0;
+	grid_directed_scale = 0.7;
 
 	// this is not used here
 	qk_world_model = NULL;
@@ -1346,6 +1352,14 @@ void quake3_game_interface_c::Property(const char *key, const char *value)
 	else if (StringCaseCmp(key, "luxel_size") == 0)
 	{
 		q3_LUXEL_SIZE = atof(value);
+	}
+	else if (StringCaseCmp(key, "grid_ambient_scale") == 0)
+	{
+		grid_ambient_scale = atof(value);
+	}
+	else if (StringCaseCmp(key, "grid_directed_scale") == 0)
+	{
+		grid_directed_scale = atof(value);
 	}
 	else if (StringCaseCmp(key, "water_shader") == 0)
 	{
