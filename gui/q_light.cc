@@ -465,6 +465,15 @@ void QCOM_BuildQ3Lighting(int lump, int max_size)
 
 //------------------------------------------------------------------------
 
+typedef struct
+{
+	float x, y, z;
+
+	short medium;
+
+} light_point_t;
+
+
 // Lighting variables
 
 static quake_face_c *lt_face;
@@ -481,7 +490,7 @@ static int lt_current_style;
 #define MAX_LM_SIZE  64
 #define MAX_EXTRAS   4	// oversampling
 
-static quake_vertex_c lt_points[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS];
+static light_point_t lt_points[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS];
 
 static int blocklights[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS][3];
 
@@ -639,11 +648,13 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 		float us = s_start + s * s_step;
 		float ut = t_start + t * t_step;
 
-		quake_vertex_c & V = lt_points[t * lt_W + s];
+		light_point_t & P = lt_points[t * lt_W + s];
 
-		V.x = lt_texorg[0] + lt_textoworld[0][0]*us + lt_textoworld[1][0]*ut;
-		V.y = lt_texorg[1] + lt_textoworld[0][1]*us + lt_textoworld[1][1]*ut;
-		V.z = lt_texorg[2] + lt_textoworld[0][2]*us + lt_textoworld[1][2]*ut;
+		P.x = lt_texorg[0] + lt_textoworld[0][0]*us + lt_textoworld[1][0]*ut;
+		P.y = lt_texorg[1] + lt_textoworld[0][1]*us + lt_textoworld[1][1]*ut;
+		P.z = lt_texorg[2] + lt_textoworld[0][2]*us + lt_textoworld[1][2]*ut;
+
+		P.medium = CSG_BrushContents(P.x, P.y, P.z);
 
 		// TODO: adjust points which are inside walls
 	}
@@ -785,14 +796,16 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 		double s = min_s + (max_s - min_s) * ax;
 		double t = min_t + (max_t - min_t) * ay;
 
-		quake_vertex_c & V = lt_points[py * lt_W + px];
+		light_point_t & P = lt_points[py * lt_W + px];
 
-		V.x = s * sx + t * tx + (n_dist + away) * nx;
-		V.y = s * sy + t * ty + (n_dist + away) * ny;
-		V.z = s * sz + t * tz + (n_dist + away) * nz;
+		P.x = s * sx + t * tx + (n_dist + away) * nx;
+		P.y = s * sy + t * ty + (n_dist + away) * ny;
+		P.z = s * sz + t * tz + (n_dist + away) * nz;
+
+		P.medium = CSG_BrushContents(P.x, P.y, P.z);
 
 ///	fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f)\n",
-///			px, py, V.x, V.y, V.z);
+///			px, py, P.x, P.y, P.z);
 	}
 
 
@@ -1109,9 +1122,15 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 	for (int t = 0 ; t < lt_H ; t++)
 	for (int s = 0 ; s < lt_W ; s++)
 	{
-		const quake_vertex_c & V = lt_points[t * lt_W + s];
+		const light_point_t & P = lt_points[t * lt_W + s];
 
-		if (! QCOM_TraceRay(V.x, V.y, V.z, light.x, light.y, light.z))
+		if (P.medium > MEDIUM_AIR)
+		{
+///---		Bump(s, t, lt_W, light.level, MAKE_RGBA(85, 0, 0, 0));
+			continue;
+		}
+
+		if (! QCOM_TraceRay(P.x, P.y, P.z, light.x, light.y, light.z))
 			continue;
 
 		hit_it = true;
@@ -1122,7 +1141,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 		}
 		else
 		{
-			float dist = ComputeDist(V.x, V.y, V.z, light.x, light.y, light.z);
+			float dist = ComputeDist(P.x, P.y, P.z, light.x, light.y, light.z);
 
 			if (dist < light.radius)
 			{
@@ -1156,19 +1175,19 @@ void QLIT_TestingStuff(qLightmap_c *lmap)
 	for (int t = 0 ; t < H ; t++)
 	for (int s = 0 ; s < W ; s++)
 	{
-		const quake_vertex_c & V = lt_points[t*W + s];
+		const light_point_t & P = lt_points[t*W + s];
 
-		int r = 40 + 10 * sin(V.x / 40.0);
-		int g = 80 + 40 * sin(V.y / 40.0);
-		int b = 40 + 10 * sin(V.z / 40.0);
+		int r = 40 + 10 * sin(P.x / 40.0);
+		int g = 80 + 40 * sin(P.y / 40.0);
+		int b = 40 + 10 * sin(P.z / 40.0);
 
-		g = (int)(V.x / 4.0) & 63;
-		r = (int)(V.y / 4.0) & 63;
-		b = (int)(V.z / 2.0) & 63;
+		g = (int)(P.x / 4.0) & 63;
+		r = (int)(P.y / 4.0) & 63;
+		b = (int)(P.z / 2.0) & 63;
 
 		lmap->samples[t*W + s] = MAKE_RGBA(r, g, b, 0);
 
-	//  lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
+	//  lmap->samples[t*W + s] = QCOM_TraceRay(P.x,P.y,P.z, 2e5,4e5,3e5) ? 80 : 40;
 	}
 }
 

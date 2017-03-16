@@ -316,7 +316,7 @@ static int RecursiveTestPoint(int nodenum, float x, float y, float z)
 		int A = RecursiveTestPoint(TN->children[0], x,y,z);
 		int B = RecursiveTestPoint(TN->children[1], x,y,z);
 
-		// we don't care about sky brushes here
+		// we treat sky brushes as solid here
 
 		if (A == TRACE_EMPTY && B == TRACE_EMPTY)
 			return TRACE_EMPTY;
