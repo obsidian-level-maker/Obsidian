@@ -144,7 +144,7 @@ public:
 	quake_plane_c plane;
 
 	// the node this face sits on
-	// [ can be NULL for faces of detail brushes ]
+	// [ can be NULL for detail brushes ]
 	quake_node_c *node;
 
 	quake_leaf_c *leaf;

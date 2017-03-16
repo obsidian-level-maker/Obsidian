@@ -465,6 +465,8 @@ void QCOM_BuildQ3Lighting(int lump, int max_size)
 
 //------------------------------------------------------------------------
 
+#define MEDIUM_OFF_FACE	 (MEDIUM_SOLID + 1)
+
 typedef struct
 {
 	float x, y, z;
@@ -661,6 +663,38 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 }
 
 
+static bool LightPointOffFace(quake_face_c *F, double s, double t,
+							  double sx, double sy, double sz,
+							  double tx, double ty, double tz)
+{
+	const double epislon = 0.001;
+
+	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
+	{
+		unsigned int k2 = k + 1;
+		if (k2 >= F->verts.size())
+			k2 = 0;
+
+		const quake_vertex_c *V1 = &F->verts[k];
+
+		double s1 = V1->x * sx + V1->y * sy + V1->z * sz;
+		double t1 = V1->x * tx + V1->y * ty + V1->z * tz;
+
+		const quake_vertex_c *V2 = &F->verts[k2];
+
+		double s2 = V2->x * sx + V2->y * sy + V2->z * sz;
+		double t2 = V2->x * tx + V2->y * ty + V2->z * tz;
+
+		double d = PerpDist(s,t, s1,t1, s2,t2);
+
+		if (d < epislon)
+			return true;
+	}
+
+	return false;
+}
+
+
 static void Q3_CalcFaceStuff(quake_face_c *F)
 {
 	float px = F->plane.x;
@@ -802,10 +836,13 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 		P.y = s * sy + t * ty + (n_dist + away) * ny;
 		P.z = s * sz + t * tz + (n_dist + away) * nz;
 
-		P.medium = CSG_BrushContents(P.x, P.y, P.z);
+		if (LightPointOffFace(F, s, t, sx,sy,sz, tx,ty,tz))
+			P.medium = MEDIUM_OFF_FACE;
+		else
+			P.medium = CSG_BrushContents(P.x, P.y, P.z);
 
-///	fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f)\n",
-///			px, py, P.x, P.y, P.z);
+///		fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f) medium:%d\n",
+///				px, py, P.x, P.y, P.z, P.medium);
 	}
 
 
@@ -1124,9 +1161,9 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 	{
 		const light_point_t & P = lt_points[t * lt_W + s];
 
-		if (P.medium > MEDIUM_AIR)
+		if (P.medium == MEDIUM_OFF_FACE)
 		{
-///---		Bump(s, t, lt_W, light.level, MAKE_RGBA(85, 0, 0, 0));
+      		Bump(s, t, lt_W, light.level, MAKE_RGBA(205, 0, 0, 0));
 			continue;
 		}
 
