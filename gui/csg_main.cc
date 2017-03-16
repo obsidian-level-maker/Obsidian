@@ -722,6 +722,10 @@ public:
 		{
 			csg_brush_c *B = brushes[k];
 
+			// ignore map-models
+			if (B->link_ent)
+				continue;
+
 			if (! B->ContainsPoint(x, y, z))
 				continue;
 
