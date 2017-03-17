@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  QUAKE 1/2 LIGHTING
+//  QUAKE 1/2/3 LIGHTING
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -471,9 +471,9 @@ typedef struct
 {
 	float x, y, z;
 
-	short medium;
+	int medium;
 
-	short liquid_depth;
+	float liquid_depth;
 
 } light_point_t;
 
@@ -851,7 +851,7 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 
 			liq_depth = CLAMP(-7, liq_depth, 8190.0);
 
-			P.liquid_depth = I_ROUND(liq_depth * 4.0);
+			P.liquid_depth = liq_depth;
 		}
 
 ///		fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f) medium:%d\n",
@@ -1215,6 +1215,23 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 }
 
 
+static rgb_color_t ColorForLiquid(int medium)
+{
+	// TODO : colors settable via gui.property()
+
+	if (medium == MEDIUM_WATER)
+		return MAKE_RGBA(33, 33, 255, 0);
+
+	if (medium == MEDIUM_SLIME)
+		return MAKE_RGBA(77, 255, 99, 0);
+
+	if (medium == MEDIUM_LAVA)
+		return MAKE_RGBA(255, 77, 33, 0);
+
+	return 0;
+}
+
+
 static void QCOM_LiquidLighting(qLightmap_c *lmap)
 {
 	for (int t = 0 ; t < lt_H ; t++)
@@ -1222,24 +1239,18 @@ static void QCOM_LiquidLighting(qLightmap_c *lmap)
 	{
 		const light_point_t & P = lt_points[t * lt_W + s];
 
-		rgb_color_t liquid_col;
+		if (P.medium >= MEDIUM_WATER && P.medium <= MEDIUM_LAVA)
+		{
+			rgb_color_t liquid_col = ColorForLiquid(P.medium);
 
-		if (P.medium == MEDIUM_WATER)
-			liquid_col = MAKE_RGBA(33, 33, 255, 0);
-		else if (P.medium == MEDIUM_SLIME)
-			liquid_col = MAKE_RGBA(77, 255, 99, 0);
-		else if (P.medium == MEDIUM_LAVA)
-			liquid_col = MAKE_RGBA(255, 77, 33, 0);
-		else
-			continue;
+			float fx = 3 + sin(P.x / 16.0);
+			float fy = 3 + sin(P.y / 16.0);
 
-		float fx = 3 + sin(P.x / 16.0);
-		float fy = 3 + sin(P.y / 16.0);
+			int level = (fx + fy) * (180 - P.liquid_depth * 1.2);
 
-		int level = (fx + fy) * (180 - P.liquid_depth / 2);
-
-		if (level > 0)
-			Bump(s, t, lt_W, level, liquid_col);
+			if (level > 0)
+				Bump(s, t, lt_W, level, liquid_col);
+		}
 	}
 }
 
@@ -1478,6 +1489,30 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 		break;
 	}
 
+	// handle liquids
+
+	double liq_depth;
+	int    medium = CSG_BrushContents(gx, gy, gz, &liq_depth);
+
+	if (medium >= MEDIUM_WATER && medium <= MEDIUM_LAVA)
+	{
+		rgb_color_t liquid_col = ColorForLiquid(medium);
+
+		float dir[3] = { 0, 0, 1 };
+
+		Q3_CalcAngularDirection(dir, out);
+
+		out->directedLight[0] = RGB_RED(liquid_col)   / 1;
+		out->directedLight[1] = RGB_GREEN(liquid_col) / 1;
+		out->directedLight[2] = RGB_BLUE(liquid_col)  / 1;
+
+		out->ambientLight[0] = RGB_RED(liquid_col)   / 8;
+		out->ambientLight[1] = RGB_GREEN(liquid_col) / 8;
+		out->ambientLight[2] = RGB_BLUE(liquid_col)  / 8;
+
+		return;
+	}
+
 	// process each light, storing each contribution and
 	// remembering the greatest contribution to use for the
 	// directional component.
@@ -1530,7 +1565,8 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 
 	if (sum_total > 0)
 	{
-		Q3_ColorToBytes(sum_r, sum_g, sum_b, sum_total * grid_ambient_scale / 2048.0, out->ambientLight);
+		Q3_ColorToBytes(sum_r, sum_g, sum_b, sum_total * grid_ambient_scale / 2048.0,
+						out->ambientLight);
 	}
 }
 
