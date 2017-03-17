@@ -473,6 +473,8 @@ typedef struct
 
 	short medium;
 
+	short liquid_depth;
+
 } light_point_t;
 
 
@@ -837,9 +839,20 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 		P.z = s * sz + t * tz + (n_dist + away) * nz;
 
 		if (LightPointOffFace(F, s, t, sx,sy,sz, tx,ty,tz))
+		{
 			P.medium = MEDIUM_OFF_FACE;
+			P.liquid_depth = -1;
+		}
 		else
-			P.medium = CSG_BrushContents(P.x, P.y, P.z);
+		{
+			double liq_depth = -1;
+
+			P.medium = CSG_BrushContents(P.x, P.y, P.z, &liq_depth);
+
+			liq_depth = CLAMP(-7, liq_depth, 8190.0);
+
+			P.liquid_depth = I_ROUND(liq_depth * 4.0);
+		}
 
 ///		fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f) medium:%d\n",
 ///				px, py, P.x, P.y, P.z, P.medium);
@@ -1161,11 +1174,9 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 	{
 		const light_point_t & P = lt_points[t * lt_W + s];
 
-		if (P.medium == MEDIUM_OFF_FACE)
-		{
-      		Bump(s, t, lt_W, light.level, MAKE_RGBA(205, 0, 0, 0));
+		// ignore liquids, off-face points and points blocked by solids
+		if (P.medium > MEDIUM_AIR)
 			continue;
-		}
 
 		if (! QCOM_TraceRay(P.x, P.y, P.z, light.x, light.y, light.z))
 			continue;
@@ -1200,6 +1211,35 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 		lt_current_style = light.style;
 
 		lmap->AddStyle(light.style);
+	}
+}
+
+
+static void QCOM_LiquidLighting(qLightmap_c *lmap)
+{
+	for (int t = 0 ; t < lt_H ; t++)
+	for (int s = 0 ; s < lt_W ; s++)
+	{
+		const light_point_t & P = lt_points[t * lt_W + s];
+
+		rgb_color_t liquid_col;
+
+		if (P.medium == MEDIUM_WATER)
+			liquid_col = MAKE_RGBA(33, 33, 255, 0);
+		else if (P.medium == MEDIUM_SLIME)
+			liquid_col = MAKE_RGBA(77, 255, 99, 0);
+		else if (P.medium == MEDIUM_LAVA)
+			liquid_col = MAKE_RGBA(255, 77, 33, 0);
+		else
+			continue;
+
+		float fx = 3 + sin(P.x / 16.0);
+		float fy = 3 + sin(P.y / 16.0);
+
+		int level = (fx + fy) * (180 - P.liquid_depth / 2);
+
+		if (level > 0)
+			Bump(s, t, lt_W, level, liquid_col);
 	}
 }
 
@@ -1257,7 +1297,11 @@ void QCOM_LightFace(quake_face_c *F)
 		}
 
 		if (lt_current_style >= 0)
+		{
+			QCOM_LiquidLighting(F->lmap);
+
 			F->lmap->Store();
+		}
 	}
 }
 
@@ -1315,7 +1359,7 @@ static const int grid_xy_deltas[9 * 2] =
 	+9,		-9,
 	-9,		+9,
 	-9,		-9,
-	+18, 	+18,
+	+18,	+18,
 	+18,	-18,
 	-18,	+18,
 	-18,	-18

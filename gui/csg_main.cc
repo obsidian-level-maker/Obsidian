@@ -709,7 +709,8 @@ public:
 		}
 	}
 
-	bool BrushContents(double x, double y, double z, int *result)
+	bool BrushContents(double x, double y, double z, int *result,
+					   double *liquid_depth = NULL)
 	{
 		// check all brushes in this section of the quad-tree,
 		// and update 'result' to be the hardest MEDIUM_XXX value
@@ -732,7 +733,14 @@ public:
 			int med = B->CalcMedium();
 
 			if (med > *result)
+			{
 				*result = med;
+
+				if (liquid_depth && med >= MEDIUM_WATER && med <= MEDIUM_LAVA)
+				{
+					*liquid_depth = B->t.CalcZ(x, y) - z;
+				}
+			}
 
 			return (*result == MEDIUM_SOLID);
 		}
@@ -743,7 +751,7 @@ public:
 			for (int cy = 0 ; cy < 2 ; cy++)
 			{
 				if (children[cx][cy]->RayTouchesBox(x,y, x,y))
-					if (children[cx][cy]->BrushContents(x,y,z, result))
+					if (children[cx][cy]->BrushContents(x,y,z, result, liquid_depth))
 						return true;
 			}
 		}
@@ -1342,7 +1350,7 @@ bool CSG_TraceRay(double x1, double y1, double z1,
 }
 
 
-int CSG_BrushContents(double x, double y, double z)
+int CSG_BrushContents(double x, double y, double z, double *liquid_depth)
 {
 	// find the brush(es) which contain the given point, and
 	// return a MEDIUM_XXX value for it.  harder values trump
@@ -1356,7 +1364,7 @@ int CSG_BrushContents(double x, double y, double z)
 
 	int result = -1;
 
-	brush_quad_tree->BrushContents(x, y, z, &result);
+	brush_quad_tree->BrushContents(x, y, z, &result, liquid_depth);
 
 	return result;
 }
