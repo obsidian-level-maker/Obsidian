@@ -9,32 +9,31 @@ Quake3 CSG Code
 +  better triangulation  [ review q3map2 code ]
 
 +  lighting
-   -  property for how much to scale normal lighing
-   -  properties for scaling of grid lighting
+   - use QLIT_ prefix for all functions
+
+   - have a QLIT_InitProperties()
+
+   >> implement water/slime/lava lighting
+      - settable properties (colors, depth factor, etc)
+
+   + mark samples which are "off the face", and later set them
+     to average of nearby samples
+
+   - re-implement super-sampling
 
    + ensure detail brushes can block light
-     --> for tracing, get bounding sphere of each brush
-         to quickly test if brush is near trace line
-
-   + ensure sun lighting works
-
-   + implement water/slime/lava lighting
+     --> use the rendering BSP we have (qk_bsp_root)
 
    + implement ambient system -- every face belongs to a "room" and
-     ambient value for the room is either computed or specified by Lua
+     ambient value for the room is specified by Lua
      [ for grid lighting, find face directly underneath point ]
 
    + support realtime lights
      - store in ".rtlights" file
-     - determine contribution on a face BUT do not store in the
-       lightmap, instead use to compute ambient value of the room
 
-   - mark samples which are "off the face", and later set them
-     to average of nearby samples
+   + ensure sun lighting works
 
    - make vertex colors be average of a face : value in qLightmap_c
-
-   - IDEA: implement "lighting_quality" as different LUXEL_SIZEs
 
 -  brushlib function to visit side faces, and if they
    contain u1/u2/v1/v2 then compute the uv_mat
