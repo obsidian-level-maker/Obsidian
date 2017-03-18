@@ -74,8 +74,7 @@ bool qk_color_lighting;
 
 qLightmap_c::qLightmap_c(int w, int h, int value) :
 	width(w), height(h), num_styles(1), samples(),
-	offset(-1), lx(-1), ly(-1),
-	average(-1)
+	offset(-1), lx(-1), ly(-1)
 {
 	lm_mat = new uv_matrix_c;
 
@@ -139,7 +138,7 @@ bool qLightmap_c::AddStyle(byte style)
 }
 
 
-void qLightmap_c::CalcAverage()
+rgb_color_t qLightmap_c::CalcAverage() const
 {
 	float avg_r = 0;
 	float avg_g = 0;
@@ -162,7 +161,7 @@ void qLightmap_c::CalcAverage()
 	byte new_g = CLAMP(0, I_ROUND(avg_g), 255);
 	byte new_b = CLAMP(0, I_ROUND(avg_b), 255);
 
-	average = MAKE_RGBA(new_r, new_g, new_b, 0);
+	return MAKE_RGBA(new_r, new_g, new_b, 255);
 }
 
 
@@ -1355,7 +1354,7 @@ void QCOM_LightMapModel(quake_mapmodel_c *model)
 
 #define MAX_GRID_CONTRIBUTIONS	100
 
-static int grid_contributions[MAX_GRID_CONTRIBUTIONS][3];
+///??  static int grid_contributions[MAX_GRID_CONTRIBUTIONS][3];
 
 
 static const int grid_z_deltas[6] =

@@ -53,9 +53,6 @@ public:
 	// for Q3, the matrix for computing coords
 	uv_matrix_c *lm_mat;
 
-	// this not valid until CalcAverage()
-	rgb_color_t average;
-
 public:
 	qLightmap_c(int w, int h, int value = -1);
 
@@ -73,7 +70,7 @@ public:
 	// returns false if too many styles
 	bool AddStyle(byte style);
 
-	void CalcAverage();
+	rgb_color_t CalcAverage() const;
 
 	// transfer from blocklights[] array
 	void Store();

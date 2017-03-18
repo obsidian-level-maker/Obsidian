@@ -45,7 +45,6 @@
 #define MODEL_PADDING  4
 
 #define MODEL_LIGHT  64
-#define VERTEX_LIGHT  32
 
 #define MAX_BRUSH_PLANES  100
 #define MAX_FACE_VERTS    100
@@ -532,10 +531,13 @@ static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *V,
 	{
 		out->lightmap[0] = face->lmap->lm_mat->Calc_S(V->x, V->y, V->z);
 		out->lightmap[1] = face->lmap->lm_mat->Calc_T(V->x, V->y, V->z);
-	}
 
-	// we don't care about vertex lighting mode
-	out->color[0] = out->color[1] = out->color[2] = VERTEX_LIGHT;
+		rgb_color_t avg_col = face->lmap->CalcAverage();
+
+		out->color[0] = RGB_RED(avg_col);
+		out->color[1] = RGB_GREEN(avg_col);
+		out->color[2] = RGB_BLUE(avg_col);
+	}
 }
 
 
@@ -554,6 +556,10 @@ static void Q3_AverageDrawVert(const ddrawvert3_t *in, int count,
 	double sum_lm0 = 0;
 	double sum_lm1 = 0;
 
+	int sum_r = 0;
+	int sum_g = 0;
+	int sum_b = 0;
+
 	for (int i = 0 ; i < count ; i++)
 	{
 		sum_x += in[i].xyz[0];
@@ -565,6 +571,10 @@ static void Q3_AverageDrawVert(const ddrawvert3_t *in, int count,
 
 		sum_lm0 += in[i].lightmap[0];
 		sum_lm1 += in[i].lightmap[1];
+
+		sum_r += in[i].color[0];
+		sum_g += in[i].color[1];
+		sum_b += in[i].color[2];
 	}
 
 	out->xyz[0] = sum_x / (double)count;
@@ -577,13 +587,15 @@ static void Q3_AverageDrawVert(const ddrawvert3_t *in, int count,
 	out->lightmap[0] = sum_lm0 / (double)count;
 	out->lightmap[1] = sum_lm1 / (double)count;
 
+	out->color[0] = sum_r / count;
+	out->color[1] = sum_g / count;
+	out->color[2] = sum_b / count;
+
 	// assume normals are all the same
 	out->normal[0] = in[0].normal[0];
 	out->normal[1] = in[0].normal[1];
 	out->normal[2] = in[0].normal[2];
 
-	// we don't care about vertex lighting mode
-	out->color[0] = out->color[1] = out->color[2] = VERTEX_LIGHT;
 }
 
 
