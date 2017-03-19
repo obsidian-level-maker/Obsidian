@@ -76,11 +76,6 @@ public:
 	void Store();
 
 	void Write(qLump_c *lump);
-
-private:
-	void Store_Fast();
-	void Store_Normal();
-	void Store_Best();
 };
 
 

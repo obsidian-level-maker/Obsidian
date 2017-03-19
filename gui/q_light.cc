@@ -649,11 +649,10 @@ static int lt_W, lt_H;
 static int lt_current_style;
 
 #define MAX_LM_SIZE  64
-#define MAX_EXTRAS   4	// oversampling
 
-static light_point_t lt_points[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS];
+static light_point_t lt_points[MAX_LM_SIZE * 2][MAX_LM_SIZE * 2];
 
-static int blocklights[MAX_LM_SIZE * MAX_LM_SIZE * MAX_EXTRAS][3];
+static int blocklights[MAX_LM_SIZE * 2][MAX_LM_SIZE * 2][3];
 
 
 static void Q1_CalcFaceStuff(quake_face_c *F)
@@ -794,14 +793,6 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 		lt_W *= 2;
 		lt_H *= 2;
 	}
-	else if (q_lighting_quality < 0)  // "fast" mode, 2x2 or 3x3 grid
-	{
-		s_step = 16 * (lt_W - 1);
-		t_step = 16 * (lt_H - 1);
-
-		if (lt_W < 5) lt_W = 2; else { lt_W = 3;  s_step /= 2.0; }
-		if (lt_H < 5) lt_H = 2; else { lt_H = 3;  t_step /= 2.0; }
-	}
 
 	for (int t = 0 ; t < lt_H ; t++)
 	for (int s = 0 ; s < lt_W ; s++)
@@ -809,7 +800,7 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 		float us = s_start + s * s_step;
 		float ut = t_start + t * t_step;
 
-		light_point_t & P = lt_points[t * lt_W + s];
+		light_point_t & P = lt_points[s][t];
 
 		P.x = lt_texorg[0] + lt_textoworld[0][0]*us + lt_textoworld[1][0]*ut;
 		P.y = lt_texorg[1] + lt_textoworld[0][1]*us + lt_textoworld[1][1]*ut;
@@ -989,7 +980,7 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 		double s = min_s + (max_s - min_s) * ax;
 		double t = min_t + (max_t - min_t) * ay;
 
-		light_point_t & P = lt_points[py * lt_W + px];
+		light_point_t & P = lt_points[px][py];
 
 		P.x = s * sx + t * tx + (n_dist + away) * nx;
 		P.y = s * sy + t * ty + (n_dist + away) * ny;
@@ -1059,20 +1050,18 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 
 static void ClearLightBuffer(int level)
 {
-	int total = lt_W * lt_H;
-
 	level <<= 8;
 
-	for (int k = 0 ; k < total ; k++)
+	for (int s = 0 ; s < lt_W ; s++)
+	for (int t = 0 ; t < lt_H ; t++)
+	for (int c = 0 ; c < 3    ; c++)
 	{
-		blocklights[k][0] = level;
-		blocklights[k][1] = level;
-		blocklights[k][2] = level;
+		blocklights[s][t][c] = level;
 	}
 }
 
 
-void qLightmap_c::Store_Normal()
+void qLightmap_c::Store()
 {
 	rgb_color_t *dest = current_pos;
 
@@ -1083,11 +1072,12 @@ void qLightmap_c::Store_Normal()
 
 	int limit = q3_overbrighting ? 127 : 254;
 
-	for (int k = 0 ; k < width * height ; k++)
+	for (int t = 0 ; t < height ; t++)
+	for (int s = 0 ; s < width  ; s++)
 	{
-		float r = blocklights[k][0] * scale;
-		float g = blocklights[k][1] * scale;
-		float b = blocklights[k][2] * scale;
+		float r = blocklights[s][t][0] * scale;
+		float g = blocklights[s][t][1] * scale;
+		float b = blocklights[s][t][2] * scale;
 
 		float ity = MAX(r, MAX(g, b));
 
@@ -1109,71 +1099,24 @@ void qLightmap_c::Store_Normal()
 }
 
 
-void qLightmap_c::Store_Fast()
+void FilterSuperSamples()
 {
-// FIXME
-#if 0
-	int W = width;
-	int H = height;
-
-	// the "super fast" mode uses a 2x2 or 3x3 grid.
-	// result is just a bilinearly scaled version of that.
-
-	for (int t = 0 ; t < H ; t++)
-	for (int s = 0 ; s < W ; s++)
-	{
-		int bs = s * (lt_W-1) / W;
-		int bt = t * (lt_H-1) / H;
-
-		float xc = s * (lt_W-1) / (float)W - bs;
-		float yc = t * (lt_H-1) / (float)H - bt;
-
-		float value = (1-xc) * (1-yc) * blocklights[bt * lt_W + bs]
-					+    xc  * (1-yc) * blocklights[bt * lt_W + bs + 1]
-					+ (1-xc) *    yc  * blocklights[bt * lt_W + lt_W + bs]
-					+    xc  *    yc  * blocklights[bt * lt_W + lt_W + bs + 1];
-
-		Set(s, t, (int)value);
-	}
-#endif
-}
-
-
-void qLightmap_c::Store_Best()
-{
-// FIXME
-#if 0
 	// the "best" mode visits 4 times as many points as normal,
 	// then computes the average of each 2x2 block.
 
-	int W = width;
-	int H = height;
+	int W = lt_W / 2;
+	int H = lt_H / 2;
 
 	for (int t = 0 ; t < H ; t++)
 	for (int s = 0 ; s < W ; s++)
+	for (int c = 0 ; c < 3 ; c++)
 	{
-		int value = blocklights[(t*2 + 0) * lt_W + (s*2 + 0)] +
-					blocklights[(t*2 + 0) * lt_W + (s*2 + 1)] +
-					blocklights[(t*2 + 1) * lt_W + (s*2 + 0)] +
-					blocklights[(t*2 + 1) * lt_W + (s*2 + 1)];
+		int v = blocklights[s*2 + 0][t*2 + 0][c] +
+				blocklights[s*2 + 0][t*2 + 1][c] +
+				blocklights[s*2 + 1][t*2 + 0][c] +
+				blocklights[s*2 + 1][t*2 + 1][c];
 
-		Set(s, t, value >> 2);
-	}
-#endif
-}
-
-
-void qLightmap_c::Store()
-{
-	switch (q_lighting_quality)
-	{
-		case -1: Store_Fast();    break;
-		case  0: Store_Normal();  break;
-		case +1: Store_Best();    break;
-
-		default:
-			 Main_FatalError("INTERNAL ERROR: q_lighting_quality = %d\n", q_lighting_quality);
-			 break;  /* NOT REACHED */
+		blocklights[s][t][c] = v >> 2;
 	}
 }
 
@@ -1231,13 +1174,11 @@ static void QLIT_FindLights()
 }
 
 
-static inline void Bump(int s, int t, int W, int value, rgb_color_t color)
+static inline void Bump(int s, int t, int value, rgb_color_t color)
 {
-	const int offset = t * W + s;
-
-	blocklights[offset][0] += value * RGB_RED(color);
-	blocklights[offset][1] += value * RGB_GREEN(color);
-	blocklights[offset][2] += value * RGB_BLUE(color);
+	blocklights[s][t][0] += value * RGB_RED(color);
+	blocklights[s][t][1] += value * RGB_GREEN(color);
+	blocklights[s][t][2] += value * RGB_BLUE(color);
 }
 
 
@@ -1298,7 +1239,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 	for (int t = 0 ; t < lt_H ; t++)
 	for (int s = 0 ; s < lt_W ; s++)
 	{
-		const light_point_t & P = lt_points[t * lt_W + s];
+		const light_point_t & P = lt_points[s][t];
 
 		// ignore liquids, off-face points and points blocked by solids
 		if (P.medium > MEDIUM_AIR)
@@ -1311,7 +1252,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 
 		if (light.kind == LTK_Sun)
 		{
-			Bump(s, t, lt_W, light.level, light.color);
+			Bump(s, t, light.level, light.color);
 		}
 		else
 		{
@@ -1321,7 +1262,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 			{
 				int value = light.level * (1.0 - dist / light.radius);
 
-				Bump(s, t, lt_W, value, light.color);
+				Bump(s, t, value, light.color);
 			}
 		}
 	}
@@ -1346,7 +1287,7 @@ static void QLIT_LiquidLighting(qLightmap_c *lmap)
 	for (int t = 0 ; t < lt_H ; t++)
 	for (int s = 0 ; s < lt_W ; s++)
 	{
-		const light_point_t & P = lt_points[t * lt_W + s];
+		const light_point_t & P = lt_points[s][t];
 
 		if (P.medium >= MEDIUM_WATER && P.medium <= MEDIUM_LAVA)
 		{
@@ -1359,7 +1300,7 @@ static void QLIT_LiquidLighting(qLightmap_c *lmap)
 			int level = (fx + fy) * (180 - P.liquid_depth * 1.2);
 
 			if (level > 0)
-				Bump(s, t, lt_W, level, LC.color);
+				Bump(s, t, level, LC.color);
 		}
 	}
 }
@@ -1373,7 +1314,7 @@ void QLIT_TestingStuff(qLightmap_c *lmap)
 	for (int t = 0 ; t < H ; t++)
 	for (int s = 0 ; s < W ; s++)
 	{
-		const light_point_t & P = lt_points[t*W + s];
+		const light_point_t & P = lt_points[s][t];
 
 		int r = 40 + 10 * sin(P.x / 40.0);
 		int g = 80 + 40 * sin(P.y / 40.0);
@@ -1420,6 +1361,8 @@ void QLIT_LightFace(quake_face_c *F)
 		if (lt_current_style >= 0)
 		{
 			QLIT_LiquidLighting(F->lmap);
+
+			// if (lighting_quality > 0) FilterSuperSamples()
 
 			F->lmap->Store();
 		}
