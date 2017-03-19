@@ -74,6 +74,36 @@ static float grid_ambient_scale  = 4.0;
 static float grid_directed_scale = 0.7;
 
 
+typedef struct
+{
+	rgb_color_t color;
+
+public:
+	void Init(int r, int g, int b)
+	{
+		color = MAKE_RGBA(r, g, b, 255);
+	}
+
+	bool ParseProp(const char *key, const char *value)
+	{
+		if (StringCaseCmp(key, "color") == 0)
+		{
+			color = QLIT_ParseColorString(value);
+			return true;
+		}
+
+		// unknown property
+		return false;
+	}
+
+} liquid_coloring_t;
+
+static liquid_coloring_t q_water;
+static liquid_coloring_t q_slime;
+static liquid_coloring_t q_lava;
+
+
+
 void QLIT_InitProperties()
 {
 	q_lighting_quality = 0; // TODO: fast_lighting ? -1 : +1;
@@ -88,6 +118,45 @@ void QLIT_InitProperties()
 	grid_ambient_scale  = 4.0;
 	grid_directed_scale = 0.7;
 
+	q_water.Init(33, 33, 255);
+	q_slime.Init(77, 255, 99);
+	q_lava .Init(255, 77, 33);
+}
+
+
+rgb_color_t QLIT_ParseColorString(const char *name)
+{
+	if (! name || name[0] == 0)
+		return WHITE;
+
+	if (name[0] != '#')
+	{
+		LogPrintf("WARNING: bad color string for light: '%s'\n", name);
+		return WHITE;
+	}
+
+	int raw_hex = strtol(name + 1, NULL, 16);
+	int r=0, g=0, b=0;
+
+	if (strlen(name) == 4)
+	{
+			r = ((raw_hex >> 8) & 0x0f) * 17;
+			g = ((raw_hex >> 4) & 0x0f) * 17;
+			b = ((raw_hex     ) & 0x0f) * 17;
+	}
+	else if (strlen(name) == 7)
+	{
+			r = (raw_hex >> 16) & 0xff;
+			g = (raw_hex >>  8) & 0xff;
+			b = (raw_hex      ) & 0xff;
+	}
+	else
+	{
+		LogPrintf("WARNING: bad color string for light: '%s'\n", name);
+		return WHITE;
+	}
+
+	return MAKE_RGBA(r, g, b, 0);
 }
 
 
@@ -117,18 +186,34 @@ bool QLIT_ParseProperty(const char *key, const char *value)
 	else if (StringCaseCmp(key, "luxel_size") == 0)  // Q3 only
 	{
 		q3_luxel_size = atof(value);
+		return true;
 	}
 	else if (StringCaseCmp(key, "overbrighting") == 0)  // Q3 only
 	{
 		q3_overbrighting = (atoi(value) > 0);
+		return true;
 	}
 	else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
 	{
 		grid_ambient_scale = atof(value);
+		return true;
 	}
 	else if (StringCaseCmp(key, "grid_directed_scale") == 0) // Q3 only
 	{
 		grid_directed_scale = atof(value);
+		return true;
+	}
+	else if (strncmp(key, "water_", 6) == 0)
+	{
+		return q_water.ParseProp(key+6, value);
+	}
+	else if (strncmp(key, "slime_", 6) == 0)
+	{
+		return q_slime.ParseProp(key+6, value);
+	}
+	else if (strncmp(key, "lava_", 5) == 0)
+	{
+		return q_lava.ParseProp(key+5, value);
 	}
 
 	// not known
@@ -1099,42 +1184,6 @@ void qLightmap_c::Store()
 std::vector<quake_light_t> qk_all_lights;
 
 
-rgb_color_t QLIT_ParseColorString(const char *name)
-{
-	if (! name || name[0] == 0)
-		return WHITE;
-
-	if (name[0] != '#')
-	{
-		LogPrintf("WARNING: bad color string for light: '%s'\n", name);
-		return WHITE;
-	}
-
-	int raw_hex = strtol(name + 1, NULL, 16);
-	int r=0, g=0, b=0;
-
-	if (strlen(name) == 4)
-	{
-			r = ((raw_hex >> 8) & 0x0f) * 17;
-			g = ((raw_hex >> 4) & 0x0f) * 17;
-			b = ((raw_hex     ) & 0x0f) * 17;
-	}
-	else if (strlen(name) == 7)
-	{
-			r = (raw_hex >> 16) & 0xff;
-			g = (raw_hex >>  8) & 0xff;
-			b = (raw_hex      ) & 0xff;
-	}
-	else
-	{
-		LogPrintf("WARNING: bad color string for light: '%s'\n", name);
-		return WHITE;
-	}
-
-	return MAKE_RGBA(r, g, b, 0);
-}
-
-
 static void QLIT_FreeLights()
 {
 	qk_all_lights.clear();
@@ -1292,23 +1341,6 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 }
 
 
-static rgb_color_t ColorForLiquid(int medium)
-{
-	// TODO : colors settable via gui.property()
-
-	if (medium == MEDIUM_WATER)
-		return MAKE_RGBA(33, 33, 255, 0);
-
-	if (medium == MEDIUM_SLIME)
-		return MAKE_RGBA(77, 255, 99, 0);
-
-	if (medium == MEDIUM_LAVA)
-		return MAKE_RGBA(255, 77, 33, 0);
-
-	return 0;
-}
-
-
 static void QLIT_LiquidLighting(qLightmap_c *lmap)
 {
 	for (int t = 0 ; t < lt_H ; t++)
@@ -1318,7 +1350,8 @@ static void QLIT_LiquidLighting(qLightmap_c *lmap)
 
 		if (P.medium >= MEDIUM_WATER && P.medium <= MEDIUM_LAVA)
 		{
-			rgb_color_t liquid_col = ColorForLiquid(P.medium);
+			liquid_coloring_t& LC = (P.medium == MEDIUM_SLIME) ? q_slime :
+			                        (P.medium == MEDIUM_LAVA)  ? q_lava  : q_water;
 
 			float fx = 3 + sin(P.x / 16.0);
 			float fy = 3 + sin(P.y / 16.0);
@@ -1326,7 +1359,7 @@ static void QLIT_LiquidLighting(qLightmap_c *lmap)
 			int level = (fx + fy) * (180 - P.liquid_depth * 1.2);
 
 			if (level > 0)
-				Bump(s, t, lt_W, level, liquid_col);
+				Bump(s, t, lt_W, level, LC.color);
 		}
 	}
 }
@@ -1575,19 +1608,20 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 
 	if (medium >= MEDIUM_WATER && medium <= MEDIUM_LAVA)
 	{
-		rgb_color_t liquid_col = ColorForLiquid(medium);
+		liquid_coloring_t& LC = (medium == MEDIUM_SLIME) ? q_slime :
+								(medium == MEDIUM_LAVA)  ? q_lava  : q_water;
 
 		float dir[3] = { 0, 0, 1 };
 
 		Q3_CalcAngularDirection(dir, out);
 
-		out->directedLight[0] = RGB_RED(liquid_col)   / 1;
-		out->directedLight[1] = RGB_GREEN(liquid_col) / 1;
-		out->directedLight[2] = RGB_BLUE(liquid_col)  / 1;
+		out->directedLight[0] = RGB_RED(LC.color)   / 1;
+		out->directedLight[1] = RGB_GREEN(LC.color) / 1;
+		out->directedLight[2] = RGB_BLUE(LC.color)  / 1;
 
-		out->ambientLight[0] = RGB_RED(liquid_col)   / 8;
-		out->ambientLight[1] = RGB_GREEN(liquid_col) / 8;
-		out->ambientLight[2] = RGB_BLUE(liquid_col)  / 8;
+		out->ambientLight[0] = RGB_RED(LC.color)   / 8;
+		out->ambientLight[1] = RGB_GREEN(LC.color) / 8;
+		out->ambientLight[2] = RGB_BLUE(LC.color)  / 8;
 
 		return;
 	}
