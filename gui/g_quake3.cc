@@ -534,6 +534,8 @@ static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *V,
 		out->lightmap[0] = face->lmap->lm_mat->Calc_S(V->x, V->y, V->z);
 		out->lightmap[1] = face->lmap->lm_mat->Calc_T(V->x, V->y, V->z);
 
+		// this is cruddy, but better than nothing
+		// [ I don't plan to properly support vertex lighting mode ]
 		rgb_color_t avg_col = face->lmap->CalcAverage();
 
 		out->color[0] = RGB_RED(avg_col);
@@ -1310,18 +1312,12 @@ bool quake3_game_interface_c::Start()
 {
 	qk_game = 3;
 	qk_sub_format = 0;
-	qk_lighting_quality = 0;  // TODO
 
 	CLUSTER_SIZE = 128.0;
 
+	QLIT_InitProperties();
+
 	q3_default_tex_scale = 1.0 / 128.0;
-	q3_LUXEL_SIZE = 12.0;
-
-	q_light_scale = 1.0;
-	q_low_light = 8;
-
-	grid_ambient_scale  = 4.0;
-	grid_directed_scale = 0.7;
 
 	// this is not used here
 	qk_world_model = NULL;
@@ -1394,30 +1390,9 @@ void quake3_game_interface_c::Property(const char *key, const char *value)
 	{
 		description = StringDup(value);
 	}
-	else if (StringCaseCmp(key, "lighting_quality") == 0)
-	{
-		if (StringCaseCmp(value, "low") == 0)
-			qk_lighting_quality = -1;
-		else if (StringCaseCmp(value, "high") == 0)
-			qk_lighting_quality = +1;
-		else
-			qk_lighting_quality = 0;
-	}
 	else if (StringCaseCmp(key, "default_tex_scale") == 0)
 	{
 		q3_default_tex_scale = atof(value);
-	}
-	else if (StringCaseCmp(key, "luxel_size") == 0)
-	{
-		q3_LUXEL_SIZE = atof(value);
-	}
-	else if (StringCaseCmp(key, "grid_ambient_scale") == 0)
-	{
-		grid_ambient_scale = atof(value);
-	}
-	else if (StringCaseCmp(key, "grid_directed_scale") == 0)
-	{
-		grid_directed_scale = atof(value);
 	}
 	else if (StringCaseCmp(key, "water_shader") == 0)
 	{

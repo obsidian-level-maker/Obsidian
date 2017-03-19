@@ -62,6 +62,8 @@ extern int   q_low_light;
 
 extern void SPOT_FillPolygon(byte content, const int *shape, int count);
 
+extern bool QLIT_ParseProperty(const char *key, const char *value);
+
 
 void csg_property_set_c::Add(const char *key, const char *value)
 {
@@ -1168,16 +1170,9 @@ int CSG_property(lua_State *L)
 		CLUSTER_SIZE = atof(value);
 		return 0;
 	}
-	else if (StringCaseCmp(key, "q_light_scale") == 0)
-	{
-		q_light_scale = atof(value);
+
+	if (QLIT_ParseProperty(key, value))
 		return 0;
-	}
-	else if (StringCaseCmp(key, "q_low_light") == 0)
-	{
-		q_low_light = atoi(value);
-		return 0;
-	}
 
 	SYS_ASSERT(game_object);
 

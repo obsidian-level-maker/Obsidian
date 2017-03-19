@@ -57,20 +57,78 @@
 #define WHITE	MAKE_RGBA(255, 255, 255, 0)
 
 
-int   q_low_light   = 8;
-float q_light_scale = 1.0;
-
-float q3_LUXEL_SIZE = 12.0;
-
-float grid_ambient_scale  = 4.0;
-float grid_directed_scale = 0.7;
-
-
 // 0 = normal, -1 = fast, +1 = best
-int qk_lighting_quality;
+static int qk_lighting_quality;
 
 bool qk_color_lighting;
 
+
+static int   q_low_light   = 8;
+static float q_light_scale = 1.0;
+
+static float q3_LUXEL_SIZE = 12.0;
+
+static float grid_ambient_scale  = 4.0;
+static float grid_directed_scale = 0.7;
+
+
+void QLIT_InitProperties()
+{
+	qk_lighting_quality = fast_lighting ? -1 : +1;
+
+	q3_LUXEL_SIZE = 12.0;
+
+	q_light_scale = 1.0;
+	q_low_light = 8;
+
+	grid_ambient_scale  = 4.0;
+	grid_directed_scale = 0.7;
+
+}
+
+
+bool QLIT_ParseProperty(const char *key, const char *value)
+{
+	if (StringCaseCmp(key, "lighting_quality") == 0)
+	{
+		if (StringCaseCmp(value, "low") == 0)
+			qk_lighting_quality = -1;
+		else if (StringCaseCmp(value, "high") == 0)
+			qk_lighting_quality = +1;
+		else
+			qk_lighting_quality = 0;
+
+		return true;
+	}
+	else if (StringCaseCmp(key, "q_light_scale") == 0)
+	{
+		q_light_scale = atof(value);
+		return true;
+	}
+	else if (StringCaseCmp(key, "q_low_light") == 0)
+	{
+		q_low_light = atoi(value);
+		return true;
+	}
+	else if (StringCaseCmp(key, "luxel_size") == 0)  // Q3 only
+	{
+		q3_LUXEL_SIZE = atof(value);
+	}
+	else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
+	{
+		grid_ambient_scale = atof(value);
+	}
+	else if (StringCaseCmp(key, "grid_directed_scale") == 0) // Q3 only
+	{
+		grid_directed_scale = atof(value);
+	}
+
+	// not known
+	return false;
+}
+
+
+//------------------------------------------------------------------------
 
 qLightmap_c::qLightmap_c(int w, int h, int value) :
 	width(w), height(h), num_styles(1), samples(),
