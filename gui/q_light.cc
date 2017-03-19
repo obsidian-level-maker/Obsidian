@@ -58,15 +58,17 @@
 
 
 // 0 = normal, -1 = fast, +1 = best
-static int q_lighting_quality;
+static int q_lighting_quality = 0;
 
-bool q_mono_lighting;
+bool q_mono_lighting = false;
 
 
 static int   q_low_light   = 8;
 static float q_light_scale = 1.0;
 
 static float q3_luxel_size = 12.0;
+
+static bool  q3_overbrighting = false;
 
 static float grid_ambient_scale  = 4.0;
 static float grid_directed_scale = 0.7;
@@ -78,6 +80,7 @@ void QLIT_InitProperties()
 	q_mono_lighting    = false;
 
 	q3_luxel_size = 12.0;
+	q3_overbrighting = false;
 
 	q_light_scale = 1.0;
 	q_low_light = 8;
@@ -114,6 +117,10 @@ bool QLIT_ParseProperty(const char *key, const char *value)
 	else if (StringCaseCmp(key, "luxel_size") == 0)  // Q3 only
 	{
 		q3_luxel_size = atof(value);
+	}
+	else if (StringCaseCmp(key, "overbrighting") == 0)  // Q3 only
+	{
+		q3_overbrighting = (atoi(value) > 0);
 	}
 	else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
 	{
@@ -984,7 +991,12 @@ void qLightmap_c::Store_Normal()
 {
 	rgb_color_t *dest = current_pos;
 
-	float scale = q_light_scale / 2048.0;
+	float scale = q_light_scale / 1024.0;
+
+	if (q3_overbrighting)
+		scale *= 0.5;
+
+	int limit = q3_overbrighting ? 127 : 254;
 
 	for (int k = 0 ; k < width * height ; k++)
 	{
@@ -994,9 +1006,9 @@ void qLightmap_c::Store_Normal()
 
 		float ity = MAX(r, MAX(g, b));
 
-		if (ity > 127)
+		if (ity > limit)
 		{
-			ity = 127.0 / ity;
+			ity = (float)limit / ity;
 
 			r *= ity;
 			g *= ity;
@@ -1483,9 +1495,11 @@ static void Q3_ColorToBytes(int r, int g, int b, float mul, byte *out)
 
 	float ity = MAX(r2, MAX(g2, b2));
 
-	if (ity > 127)
+	int limit = q3_overbrighting ? 127 : 254;
+
+	if (ity > limit)
 	{
-		ity = 127.0 / ity;
+		ity = (float)limit / ity;
 
 		r2 *= ity;
 		g2 *= ity;
@@ -1621,16 +1635,18 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 		}
 	}
 
+	float div = q3_overbrighting ? 2048.0 : 1024.0;
+
 	if (best_dir_ity > 0)
 	{
 		Q3_CalcAngularDirection(best_direction, out);
 		Q3_ColorToBytes(best_dir_color[0], best_dir_color[1], best_dir_color[2],
-						grid_directed_scale / 2048.0, out->directedLight);
+						grid_directed_scale / div, out->directedLight);
 	}
 
 	if (sum_total > 0)
 	{
-		Q3_ColorToBytes(sum_r, sum_g, sum_b, sum_total * grid_ambient_scale / 2048.0,
+		Q3_ColorToBytes(sum_r, sum_g, sum_b, sum_total * grid_ambient_scale / div,
 						out->ambientLight);
 	}
 }
