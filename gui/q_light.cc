@@ -623,6 +623,7 @@ void QLIT_BuildQ3Lighting(int lump, int max_size)
 //------------------------------------------------------------------------
 
 #define MEDIUM_OFF_FACE	 (MEDIUM_SOLID + 1)
+#define MEDIUM_AVERAGED  -3
 
 typedef struct
 {
@@ -1099,7 +1100,107 @@ void qLightmap_c::Store()
 }
 
 
-void FilterSuperSamples()
+static bool Luxel_HasSetNeighbor(int s, int t)
+{
+	for (int side = 0 ; side < 4 ; side++)
+	{
+		int ds = (side == 0) ? -1 : (side == 1) ? +1 : 0;
+		int dt = (side == 2) ? -1 : (side == 3) ? +1 : 0;
+
+		if (s + ds < 0 || s + ds >= lt_W) continue;
+		if (t + dt < 0 || t + dt >= lt_H) continue;
+
+		if (lt_points[s + ds][t + dt].medium < MEDIUM_SOLID)
+			return true;
+	}
+
+	return false;
+}
+
+
+static void Luxel_ComputeAverage(int s, int t, bool do_avg)
+{
+	int total = 0;
+
+	int sum_r = 0;
+	int sum_g = 0;
+	int sum_b = 0;
+
+	for (int side = 0 ; side < 4 ; side++)
+	{
+		int ds = (side == 0) ? -1 : (side == 1) ? +1 : 0;
+		int dt = (side == 2) ? -1 : (side == 3) ? +1 : 0;
+
+		if (s + ds < 0 || s + ds >= lt_W) continue;
+		if (t + dt < 0 || t + dt >= lt_H) continue;
+
+		if (lt_points[s + ds][t + dt].medium >= MEDIUM_SOLID)
+			continue;
+
+		if (!do_avg && lt_points[s + ds][t + dt].medium == MEDIUM_AVERAGED)
+			continue;
+
+		sum_r += blocklights[s + ds][t + dt][0];
+		sum_g += blocklights[s + ds][t + dt][1];
+		sum_b += blocklights[s + ds][t + dt][2];
+
+		total += 1;
+	}
+
+	if (total > 0)
+	{
+		blocklights[s][t][0] = sum_r / total;
+		blocklights[s][t][1] = sum_g / total;
+		blocklights[s][t][2] = sum_b / total;
+	}
+}
+
+
+static void HandleOffFaceLuxels()
+{
+	// set luxels in blocklights[] which are off the face or
+	// underneath a solid brush to the average of nearby luxels.
+	//
+	// NOTE: WE DESTROY THE 'medium' VALUE HERE.
+
+	std::vector<int> where;
+
+	for (;;)
+	{
+		where.clear();
+
+		// find all unset points with at least one set neighbor
+		for (int s = 0 ; s < lt_W ; s++)
+		for (int t = 0 ; t < lt_H ; t++)
+		{
+			if (lt_points[s][t].medium >= MEDIUM_SOLID &&
+				Luxel_HasSetNeighbor(s, t))
+			{
+				where.push_back((t << 10) + s);
+
+				// this logic means that we ignore AVERAGED neighbors
+				// unless none of them has come from a real light.
+				Luxel_ComputeAverage(s, t, true /* do_avg */);
+				Luxel_ComputeAverage(s, t, false);
+			}
+		}
+
+		if (where.empty())
+			return;
+
+		// mark the luxels we visited LAST, to prevent run-on effects
+		for (unsigned int k = 0 ; k < where.size() ; k++)
+		{
+			int s = where[k] & 1023;
+			int t = where[k] >> 10;
+
+			lt_points[s][t].medium = MEDIUM_AVERAGED;
+		}
+	}
+}
+
+
+static void FilterSuperSamples()
 {
 	// the "best" mode visits 4 times as many points as normal,
 	// then computes the average of each 2x2 block.
@@ -1361,6 +1462,8 @@ void QLIT_LightFace(quake_face_c *F)
 		if (lt_current_style >= 0)
 		{
 			QLIT_LiquidLighting(F->lmap);
+
+			HandleOffFaceLuxels();
 
 			// if (lighting_quality > 0) FilterSuperSamples()
 
