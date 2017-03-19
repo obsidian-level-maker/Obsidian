@@ -1202,8 +1202,6 @@ static void AddCommonShaders()
 
 static void Q3_CreateBSPFile(const char *name)
 {
-	qk_color_lighting = true;
-
 	BSP_OpenLevel(name);
 
 	CSG_QUAKE_Build();

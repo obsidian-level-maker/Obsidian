@@ -58,15 +58,15 @@
 
 
 // 0 = normal, -1 = fast, +1 = best
-static int qk_lighting_quality;
+static int q_lighting_quality;
 
-bool qk_color_lighting;
+bool q_mono_lighting;
 
 
 static int   q_low_light   = 8;
 static float q_light_scale = 1.0;
 
-static float q3_LUXEL_SIZE = 12.0;
+static float q3_luxel_size = 12.0;
 
 static float grid_ambient_scale  = 4.0;
 static float grid_directed_scale = 0.7;
@@ -74,9 +74,10 @@ static float grid_directed_scale = 0.7;
 
 void QLIT_InitProperties()
 {
-	qk_lighting_quality = fast_lighting ? -1 : +1;
+	q_lighting_quality = 0; // TODO: fast_lighting ? -1 : +1;
+	q_mono_lighting    = false;
 
-	q3_LUXEL_SIZE = 12.0;
+	q3_luxel_size = 12.0;
 
 	q_light_scale = 1.0;
 	q_low_light = 8;
@@ -92,11 +93,11 @@ bool QLIT_ParseProperty(const char *key, const char *value)
 	if (StringCaseCmp(key, "lighting_quality") == 0)
 	{
 		if (StringCaseCmp(value, "low") == 0)
-			qk_lighting_quality = -1;
+			q_lighting_quality = -1;
 		else if (StringCaseCmp(value, "high") == 0)
-			qk_lighting_quality = +1;
+			q_lighting_quality = +1;
 		else
-			qk_lighting_quality = 0;
+			q_lighting_quality = 0;
 
 		return true;
 	}
@@ -112,7 +113,7 @@ bool QLIT_ParseProperty(const char *key, const char *value)
 	}
 	else if (StringCaseCmp(key, "luxel_size") == 0)  // Q3 only
 	{
-		q3_LUXEL_SIZE = atof(value);
+		q3_luxel_size = atof(value);
 	}
 	else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
 	{
@@ -236,14 +237,21 @@ void qLightmap_c::Write(qLump_c *lump)
 	{
 		const rgb_color_t col = samples[i];
 
-		byte val = RGB_GREEN(col);  // FIXME
+		byte r = RGB_RED(col);
+		byte g = RGB_GREEN(col);
+		byte b = RGB_BLUE(col);
 
-		lump->Append(&val, 1);
-
-		if (qk_color_lighting)  // Q2
+		if (q_mono_lighting)
 		{
+			byte val = (r * 3 + g * 5 + b * 2) / 10;
+
 			lump->Append(&val, 1);
-			lump->Append(&val, 1);
+		}
+		else
+		{
+			lump->Append(&r, 1);
+			lump->Append(&g, 1);
+			lump->Append(&b, 1);
 		}
 	}
 }
@@ -471,14 +479,14 @@ void QLIT_BuildLightingLump(int lump, int max_size)
 	// at the start a single completely flat lightmap for map-models
 	// [ this is horrible, should have proper lightmap ]
 
-	int flat_size = FLAT_LIGHTMAP_SIZE * (qk_color_lighting ? 3 : 1);
+	int flat_size = FLAT_LIGHTMAP_SIZE * (q_mono_lighting ? 1 : 3);
 
 	WriteFlatBlock(64, flat_size);
 
 	max_size -= flat_size;
 
 	// from here on 'max_size' is in PIXELS (not bytes)
-	if (qk_color_lighting)
+	if (! q_mono_lighting)
 		max_size /= 3;
 
 	// FIXME !!!! : check if lump would overflow, if yes then flatten some maps
@@ -686,7 +694,7 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 	float s_step = 16.0;
 	float t_step = 16.0;
 
-	if (qk_lighting_quality > 0)  // "best" mode
+	if (q_lighting_quality > 0)  // "best" mode
 	{
 		s_step = 16 * (lt_W - 1) / (float)(lt_W*2 - 1);
 		t_step = 16 * (lt_H - 1) / (float)(lt_H*2 - 1);
@@ -694,7 +702,7 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 		lt_W *= 2;
 		lt_H *= 2;
 	}
-	else if (qk_lighting_quality < 0)  // "fast" mode, 2x2 or 3x3 grid
+	else if (q_lighting_quality < 0)  // "fast" mode, 2x2 or 3x3 grid
 	{
 		s_step = 16 * (lt_W - 1);
 		t_step = 16 * (lt_H - 1);
@@ -850,8 +858,8 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 		double yy = s * sy + t * ty + n_dist * ny;
 		double zz = s * sz + t * tz + n_dist * nz;
 
-		s = (s - min_s) / q3_LUXEL_SIZE;
-		t = (s - min_t) / q3_LUXEL_SIZE;
+		s = (s - min_s) / q3_luxel_size;
+		t = (s - min_t) / q3_luxel_size;
 
 		fprintf(stderr, "  st coord (%+5.3f %+5.3f)\n", s, t);
 		fprintf(stderr, "   from: (%+7.2f %+7.2f %+7.2f)\n", V->x, V->y, V->z);
@@ -861,8 +869,8 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 #endif
 
 	// compute size of lightmap
-	lt_W = (int)ceil((max_s - min_s) / q3_LUXEL_SIZE - 0.1);
-	lt_H = (int)ceil((max_t - min_t) / q3_LUXEL_SIZE - 0.1);
+	lt_W = (int)ceil((max_s - min_s) / q3_luxel_size - 0.1);
+	lt_H = (int)ceil((max_t - min_t) / q3_luxel_size - 0.1);
 
 fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 
@@ -1060,14 +1068,14 @@ void qLightmap_c::Store_Best()
 
 void qLightmap_c::Store()
 {
-	switch (qk_lighting_quality)
+	switch (q_lighting_quality)
 	{
 		case -1: Store_Fast();    break;
 		case  0: Store_Normal();  break;
 		case +1: Store_Best();    break;
 
 		default:
-			 Main_FatalError("INTERNAL ERROR: qk_lighting_quality = %d\n", qk_lighting_quality);
+			 Main_FatalError("INTERNAL ERROR: q_lighting_quality = %d\n", q_lighting_quality);
 			 break;  /* NOT REACHED */
 	}
 }

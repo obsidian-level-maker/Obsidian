@@ -122,7 +122,7 @@ typedef struct
 
 extern std::vector<quake_light_t> qk_all_lights;
 
-extern bool qk_color_lighting;
+extern bool q_mono_lighting;
 
 
 /***** FUNCTIONS **********/

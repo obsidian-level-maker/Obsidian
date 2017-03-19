@@ -1048,8 +1048,6 @@ static void Q2_VisWorld()
 
 static void Q2_CreateBSPFile(const char *name)
 {
-	qk_color_lighting = true;
-
 	BSP_OpenLevel(name);
 
 	Q2_DummyArea();

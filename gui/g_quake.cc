@@ -1323,10 +1323,10 @@ static void Q1_VisWorld(int base_leafs)
 
 static void Q1_CreateBSPFile(const char *name)
 {
-	qk_color_lighting = false;
+	q_mono_lighting = true;
 
 	if (qk_sub_format == SUBFMT_HalfLife)
-		qk_color_lighting = true;
+		q_mono_lighting = false;
 
 	BSP_OpenLevel(name);
 
