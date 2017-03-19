@@ -2582,7 +2582,7 @@ static void ProcessDetailModels()
 {
 	// create all the map-models  [ Quake 3 only ]
 
-	for (unsigned i = 0 ; i < all_entities.size() ; i++)
+	for (unsigned int i = 0 ; i < all_entities.size() ; i++)
 	{
 		Model_ProcessEntity(all_entities[i]);
 	}

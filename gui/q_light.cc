@@ -1021,7 +1021,7 @@ void qLightmap_c::Store()
 std::vector<quake_light_t> qk_all_lights;
 
 
-static rgb_color_t ParseColorString(const char *name)
+rgb_color_t QLIT_ParseColorString(const char *name)
 {
 	if (! name || name[0] == 0)
 		return WHITE;
@@ -1094,7 +1094,7 @@ static void QCOM_FindLights()
 		if (level < 1 || light.radius < 1)
 			continue;
 
-		light.color = ParseColorString(E->props.getStr("color"));
+		light.color = QLIT_ParseColorString(E->props.getStr("color"));
 
 		light.level = (int) level;
 		light.style = E->props.getInt("style", 0);

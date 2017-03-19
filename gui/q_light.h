@@ -137,6 +137,8 @@ extern float grid_directed_scale;
 
 /***** FUNCTIONS **********/
 
+rgb_color_t QLIT_ParseColorString(const char *name);
+
 void QCOM_FreeLightmaps();
 
 void QCOM_BuildLightingLump(int lump, int max_size);

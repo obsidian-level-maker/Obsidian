@@ -46,6 +46,8 @@
 
 #define MODEL_LIGHT  64
 
+#define RT_DEFAULT_RADIUS  200
+
 #define MAX_BRUSH_PLANES  100
 #define MAX_FACE_VERTS    100
 
@@ -1237,6 +1239,50 @@ static void Q3_CreateBSPFile(const char *name)
 }
 
 
+static void DP_CreateRTLights(const char *entry_in_pak)
+{
+	// we don't create the file when there are no RT lights
+	bool has_file = false;
+
+	static char buffer[1024];
+
+	for (unsigned int i = 0 ; i < all_entities.size() ; i++)
+	{
+		csg_entity_c *E = all_entities[i];
+
+		if (strcmp(E->id.c_str(), "oblige_rtlight") != 0)
+			continue;
+
+		if (! has_file)
+		{
+			ZIPF_NewLump(entry_in_pak);
+			has_file = true;
+		}
+
+		if (E->props.getInt("noshadow") > 0)
+		{
+			ZIPF_AppendData("!", 1);
+		}
+
+		rgb_color_t color = QLIT_ParseColorString(E->props.getStr("color"));
+
+		double r = E->props.getDouble("r",   RGB_RED(color) / 255.0);
+		double g = E->props.getDouble("g", RGB_GREEN(color) / 255.0);
+		double b = E->props.getDouble("b",  RGB_BLUE(color) / 255.0);
+
+		snprintf(buffer, sizeof(buffer), "%1.3f %1.3f %1.3f %1.3f %1.5f %1.5f %1.5f %d\n",
+				 E->x, E->y, E->z,
+				 E->props.getDouble("radius", RT_DEFAULT_RADIUS),
+				 r, g, b, E->props.getInt("style", 0));
+
+		ZIPF_AppendData(buffer, (int)strlen(buffer));
+	}
+
+	if (has_file)
+		ZIPF_FinishLump();
+}
+
+
 //------------------------------------------------------------------------
 
 class quake3_game_interface_c : public game_interface_c
@@ -1404,6 +1450,10 @@ void quake3_game_interface_c::EndLevel()
 	sprintf(entry_in_pak, "maps/%s.bsp", level_name);
 
 	Q3_CreateBSPFile(entry_in_pak);
+
+	sprintf(entry_in_pak, "maps/%s.rtlights", level_name);
+
+	DP_CreateRTLights(entry_in_pak);
 
 	StringFree(level_name);
 

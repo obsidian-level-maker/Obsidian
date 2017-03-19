@@ -1449,14 +1449,14 @@ struct snag_on_node_Compare
 
 static void CollectAllSnags(std::vector<snag_c *> & list)
 {
-	for (unsigned i = 0 ; i < all_regions.size() ; i++)
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
 		region_c *R = all_regions[i];
 
 		if (R->degenerate)
 			continue;
 
-		for (unsigned k = 0 ; k < R->snags.size() ; k++)
+		for (unsigned int k = 0 ; k < R->snags.size() ; k++)
 		{
 			snag_c *S = R->snags[k];
 
@@ -1754,6 +1754,7 @@ static void MarkGapsWithEntities()
 			// ignore lights and boxes
 			if (E->Match("light") ||
 			    E->Match("oblige_sun") ||
+			    E->Match("oblige_rtlight") ||
 				E->Match("oblige_box"))
 				continue;
 
