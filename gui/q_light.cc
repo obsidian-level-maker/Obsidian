@@ -999,8 +999,8 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 #endif
 
 	// compute size of lightmap
-	lt_W = (int)ceil((max_s - min_s) / q3_luxel_size - 0.1);
-	lt_H = (int)ceil((max_t - min_t) / q3_luxel_size - 0.1);
+	lt_W = (int)ceil((max_s - min_s + q3_luxel_size * 0.7) / q3_luxel_size);
+	lt_H = (int)ceil((max_t - min_t + q3_luxel_size * 0.7) / q3_luxel_size);
 
 fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 
@@ -1015,8 +1015,8 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 
 
 	// nudge amounts
-	double s_nudge = 0.4 / (lt_W + 1);
-	double t_nudge = 0.4 / (lt_H + 1);
+	double s_nudge = 0.6 / (lt_W + 1);
+	double t_nudge = 0.6 / (lt_H + 1);
 
 
 	// create the points...
@@ -1026,15 +1026,17 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 	for (int py = 0 ; py < lt_H ; py++)
 	for (int px = 0 ; px < lt_W ; px++)
 	{
-		float ax = (px * 2 + 1) / (float)(lt_W * 2 + 1);
-		float ay = (py * 2 + 1) / (float)(lt_H * 2 + 1);
+		float ax = (lt_W == 1) ? 0.5 : px / (float)(lt_W - 1);
+		float ay = (lt_H == 1) ? 0.5 : py / (float)(lt_H - 1);
 
 		light_point_t & P = lt_points[px][py];
 
+		// if the point is off the face or inside a solid brush,
+		// try some locations closer to the middle of the face.
 		for (int nudge = 0 ; nudge < 4 ; nudge++)
 		{
-			double s = min_s + (max_s - min_s) * ax;
-			double t = min_t + (max_t - min_t) * ay;
+			double s = (lt_W == 1) ? avg_s : (min_s + (max_s - min_s) * ax);
+			double t = (lt_H == 1) ? avg_t : (min_t + (max_t - min_t) * ay);
 
 			if (nudge > 0)
 			{
@@ -1063,11 +1065,17 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 
 	uv_matrix_c *mat = F->lmap->lm_mat;
 
-	double s1 = (F->lmap->lx + 0.5) / (double)LIGHTMAP_WIDTH;
-	double t1 = (F->lmap->ly + 0.5) / (double)LIGHTMAP_HEIGHT;
+	double s1 = (F->lmap->lx + 0.5);
+	double s2 = (F->lmap->lx + lt_W - 0.5);
 
-	double s2 = (F->lmap->lx + lt_W - 0.5) / (double)LIGHTMAP_WIDTH;
-	double t2 = (F->lmap->ly + lt_H - 0.5) / (double)LIGHTMAP_HEIGHT;
+	s1 /= (double)LIGHTMAP_WIDTH;
+	s2 /= (double)LIGHTMAP_WIDTH;
+
+	double t1 = (F->lmap->ly + 0.5);
+	double t2 = (F->lmap->ly + lt_H - 0.5);
+
+	t1 /= (double)LIGHTMAP_HEIGHT;
+	t2 /= (double)LIGHTMAP_HEIGHT;
 
 	fprintf(stderr, "want S range: %+1.7f .. %+1.7f\n", s1, s2);
 	fprintf(stderr, "want T range: %+1.7f .. %+1.7f\n", t1, t2);
