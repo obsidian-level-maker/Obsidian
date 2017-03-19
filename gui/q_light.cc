@@ -638,7 +638,7 @@ void QLIT_BuildQ3Lighting(int lump, int max_size)
 //------------------------------------------------------------------------
 
 #define MEDIUM_OFF_FACE	 (MEDIUM_SOLID + 1)
-#define MEDIUM_AVERAGED  -3
+#define MEDIUM_AVERAGED  (MEDIUM_AIR   - 3)
 
 typedef struct
 {
@@ -861,6 +861,29 @@ static bool LightPointOffFace(quake_face_c *F, double s, double t,
 }
 
 
+// returns false if OFF FACE or in a SOLID
+static bool CheckLightPoint(light_point_t& P, quake_face_c *F,
+							double s, double t,
+							double sx, double sy, double sz,
+							double tx, double ty, double tz)
+{
+	if (LightPointOffFace(F, s, t, sx,sy,sz, tx,ty,tz))
+	{
+		P.medium = MEDIUM_OFF_FACE;
+		P.liquid_depth = -1;
+	}
+	else
+	{
+		double liq_depth = -1;
+
+		P.medium = CSG_BrushContents(P.x, P.y, P.z, &liq_depth);
+		P.liquid_depth = CLAMP(-7, liq_depth, 8190.0);
+	}
+
+	return ! (P.medium == MEDIUM_OFF_FACE || P.medium == MEDIUM_SOLID);
+}
+
+
 static void Q3_CalcFaceStuff(quake_face_c *F)
 {
 	float px = F->plane.x;
@@ -926,6 +949,9 @@ fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 	double min_t = +9e9;
 	double max_t = -9e9;
 
+	double avg_s = 0;
+	double avg_t = 0;
+
 	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
 	{
 		const quake_vertex_c *V = &F->verts[k];
@@ -934,12 +960,17 @@ fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 
 		min_s = MIN(min_s, s);
 		max_s = MAX(max_s, s);
+		avg_s += s;
 
 		double t = V->x * tx + V->y * ty + V->z * tz;
 
 		min_t = MIN(min_t, t);
 		max_t = MAX(max_t, t);
+		avg_t += t;
 	}
+
+	avg_s /= (double)(F->verts.size());
+	avg_t /= (double)(F->verts.size());
 
 fprintf(stderr, "  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
 fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
@@ -983,6 +1014,11 @@ fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 
 
+	// nudge amounts
+	double s_nudge = 0.4 / (lt_W + 1);
+	double t_nudge = 0.4 / (lt_H + 1);
+
+
 	// create the points...
 
 	const float away = 0.5;
@@ -993,29 +1029,29 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 		float ax = (px * 2 + 1) / (float)(lt_W * 2 + 1);
 		float ay = (py * 2 + 1) / (float)(lt_H * 2 + 1);
 
-		double s = min_s + (max_s - min_s) * ax;
-		double t = min_t + (max_t - min_t) * ay;
-
 		light_point_t & P = lt_points[px][py];
 
-		P.x = s * sx + t * tx + (n_dist + away) * nx;
-		P.y = s * sy + t * ty + (n_dist + away) * ny;
-		P.z = s * sz + t * tz + (n_dist + away) * nz;
-
-		if (LightPointOffFace(F, s, t, sx,sy,sz, tx,ty,tz))
+		for (int nudge = 0 ; nudge < 4 ; nudge++)
 		{
-			P.medium = MEDIUM_OFF_FACE;
-			P.liquid_depth = -1;
-		}
-		else
-		{
-			double liq_depth = -1;
+			double s = min_s + (max_s - min_s) * ax;
+			double t = min_t + (max_t - min_t) * ay;
 
-			P.medium = CSG_BrushContents(P.x, P.y, P.z, &liq_depth);
+			if (nudge > 0)
+			{
+				// nudge coordinate towards center of face
+				double ss = (nudge == 3 ? 4 : nudge) * s_nudge;
+				double ts = (nudge == 3 ? 4 : nudge) * t_nudge;
 
-			liq_depth = CLAMP(-7, liq_depth, 8190.0);
+				s = s * (1.0 - ss) + avg_s * ss;
+				t = t * (1.0 - ts) + avg_t * ts;
+			}
 
-			P.liquid_depth = liq_depth;
+			P.x = s * sx + t * tx + (n_dist + away) * nx;
+			P.y = s * sy + t * ty + (n_dist + away) * ny;
+			P.z = s * sz + t * tz + (n_dist + away) * nz;
+
+			if (CheckLightPoint(P, F, s,t, sx,sy,sz, tx,ty,tz))
+				break;  // ok
 		}
 
 ///		fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f) medium:%d\n",
