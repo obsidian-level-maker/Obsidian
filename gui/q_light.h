@@ -139,12 +139,12 @@ extern float grid_directed_scale;
 
 rgb_color_t QLIT_ParseColorString(const char *name);
 
-void QCOM_FreeLightmaps();
+void QLIT_FreeLightmaps();
 
-void QCOM_BuildLightingLump(int lump, int max_size);
-void QCOM_BuildQ3Lighting  (int lump, int max_size);
+void QLIT_BuildLightingLump(int lump, int max_size);
+void QLIT_BuildQ3Lighting  (int lump, int max_size);
 
-void QCOM_LightAllFaces();
+void QLIT_LightAllFaces();
 
 
 #endif /* __QUAKE_LIGHTING_H__ */

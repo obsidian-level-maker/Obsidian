@@ -1152,9 +1152,9 @@ static void Q3_LightWorld()
 	if (main_win)
 		main_win->build_box->Prog_Step("Light");
 
-	QCOM_LightAllFaces();
+	QLIT_LightAllFaces();
 
-	QCOM_BuildQ3Lighting(LUMP_LIGHTMAPS, MAX_MAP_LIGHTING);
+	QLIT_BuildQ3Lighting(LUMP_LIGHTMAPS, MAX_MAP_LIGHTING);
 
 	Q3_SetGridLights();
 }
@@ -1167,7 +1167,7 @@ static void Q3_VisWorld()
 
 	// Quake 3 uses clusters directly
 
-	QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
+	QVIS_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
 }
 
 

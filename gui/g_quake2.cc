@@ -1029,9 +1029,9 @@ static void Q2_LightWorld()
 	if (main_win)
 		main_win->build_box->Prog_Step("Light");
 
-	QCOM_LightAllFaces();
+	QLIT_LightAllFaces();
 
-	QCOM_BuildLightingLump(LUMP_LIGHTING, MAX_MAP_LIGHTING);
+	QLIT_BuildLightingLump(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 }
 
 
@@ -1042,7 +1042,7 @@ static void Q2_VisWorld()
 
 	// no need for numleafs, as Quake II uses clusters directly
 
-	QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
+	QVIS_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
 }
 
 

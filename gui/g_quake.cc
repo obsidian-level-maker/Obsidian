@@ -1292,14 +1292,14 @@ static void Q1_LightWorld()
 	if (main_win)
 		main_win->build_box->Prog_Step("Light");
 
-	QCOM_LightAllFaces();
+	QLIT_LightAllFaces();
 
 	int max_size = MAX_MAP_LIGHTING;
 
 	if (qk_sub_format == SUBFMT_HalfLife)
 		max_size = HL_MAX_MAP_LIGHTING;
 
-	QCOM_BuildLightingLump(LUMP_LIGHTING, max_size);
+	QLIT_BuildLightingLump(LUMP_LIGHTING, max_size);
 }
 
 
@@ -1317,7 +1317,7 @@ static void Q1_VisWorld(int base_leafs)
 		numleafs += 6; ///TODO  qk_all_mapmodels->PredictLeafs();
 	}
 
-	QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, numleafs);
+	QVIS_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, numleafs);
 }
 
 

@@ -684,7 +684,7 @@ bool BSP_OpenLevel(const char *entry_in_pak)
 	BSP_PrepareVertices();
 	BSP_PrepareEdges();
 
-	QCOM_FreeLightmaps();
+	QLIT_FreeLightmaps();
 
 	return true;
 }
@@ -872,8 +872,8 @@ bool BSP_CloseLevel()
 	// free all the memory
 	BSP_ClearLumps();
 
-	QCOM_FreeLightmaps();
-	QCOM_FreeClusters();
+	QLIT_FreeLightmaps();
+	QVIS_FreeClusters();
 
 	return true;
 }

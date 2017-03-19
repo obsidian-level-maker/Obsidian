@@ -154,7 +154,7 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
 }
 
 
-void QCOM_MakeTraceNodes()
+void QVIS_MakeTraceNodes()
 {
 	int total = qk_bsp_root->CountNodes();
 
@@ -166,7 +166,7 @@ void QCOM_MakeTraceNodes()
 }
 
 
-void QCOM_FreeTraceNodes()
+void QVIS_FreeTraceNodes()
 {
 	if (trace_nodes)
 	{
@@ -257,7 +257,7 @@ static int RecursiveTestRay(int nodenum,
 }
 
 
-bool QCOM_TraceRay(float x1, float y1, float z1,
+bool QVIS_TraceRay(float x1, float y1, float z1,
                    float x2, float y2, float z2)
 {
 	int r = RecursiveTestRay(0, x1,y1,z1, x2,y2,z2);
@@ -326,7 +326,7 @@ static int RecursiveTestPoint(int nodenum, float x, float y, float z)
 }
 
 
-bool QCOM_TracePoint(float x, float y, float z)
+bool QVIS_TracePoint(float x, float y, float z)
 {
 	int r = RecursiveTestPoint(0, x,y,z);
 
@@ -387,7 +387,7 @@ void qCluster_c::MarkAmbient(int kind)
 }
 
 
-void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
+void QVIS_CreateClusters(double min_x, double min_y, double max_x, double max_y)
 {
 	SYS_ASSERT(min_x < max_x);
 	SYS_ASSERT(min_y < max_y);
@@ -422,7 +422,7 @@ void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
 }
 
 
-void QCOM_FreeClusters()
+void QVIS_FreeClusters()
 {
 	if (qk_clusters)
 	{
@@ -438,7 +438,7 @@ void QCOM_FreeClusters()
 }
 
 
-void QCOM_VisMarkWall(int cx, int cy, int side)
+void QVIS_MarkWall(int cx, int cy, int side)
 {
 	SYS_ASSERT(qk_visbuf);
 
@@ -466,7 +466,7 @@ static void MarkSolidClusters()
 		if (cluster->leafs.empty())
 		{
 			for (int side = 2 ; side <= 8 ; side += 2)
-				QCOM_VisMarkWall(cx, cy, side);
+				QVIS_MarkWall(cx, cy, side);
 		}
 	}
 }
@@ -825,7 +825,7 @@ static void ShowVisStats()
 }
 
 
-void QCOM_Visibility(int lump, int max_size, int numleafs)
+void QVIS_Visibility(int lump, int max_size, int numleafs)
 {
 	LogPrintf("\nVisibility...\n");
 

@@ -368,7 +368,7 @@ static std::vector<qLightmap_c *> qk_all_lightmaps;
 static qLump_c *lightmap_lump;
 
 
-void QCOM_FreeLightmaps()
+void QLIT_FreeLightmaps()
 {
 	for (unsigned int i = 0 ; i < qk_all_lightmaps.size() ; i++)
 		delete qk_all_lightmaps[i];
@@ -385,7 +385,7 @@ void QCOM_FreeLightmaps()
 }
 
 
-static qLightmap_c * QCOM_NewLightmap(int w, int h)
+static qLightmap_c * QLIT_NewLightmap(int w, int h)
 {
 	qLightmap_c *lmap = new qLightmap_c(w, h);
 
@@ -404,7 +404,7 @@ static void WriteFlatBlock(int level, int count)
 }
 
 
-void QCOM_BuildLightingLump(int lump, int max_size)
+void QLIT_BuildLightingLump(int lump, int max_size)
 {
 	// (this is for Q1 and Q2 only)
 
@@ -434,7 +434,7 @@ void QCOM_BuildLightingLump(int lump, int max_size)
 }
 
 
-void QCOM_BuildQ3Lighting(int lump, int max_size)
+void QLIT_BuildQ3Lighting(int lump, int max_size)
 {
 	// pack individual lightmaps into the 128x128 blocks
 	// [ this is lousy for memory usage.... ]
@@ -617,7 +617,7 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
 /// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, lt_W, lt_H);
 
-	F->lmap = QCOM_NewLightmap(lt_W, lt_H);
+	F->lmap = QLIT_NewLightmap(lt_W, lt_H);
 
 
 	/* Calc Points... */
@@ -811,7 +811,7 @@ fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 	lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
 	lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
 
-	F->lmap = QCOM_NewLightmap(lt_W, lt_H);
+	F->lmap = QLIT_NewLightmap(lt_W, lt_H);
 
 	F->lmap->offset = Q3_AllocLightBlock(lt_W, lt_H, &F->lmap->lx, &F->lmap->ly);
 
@@ -1057,15 +1057,15 @@ rgb_color_t QLIT_ParseColorString(const char *name)
 }
 
 
-static void QCOM_FreeLights()
+static void QLIT_FreeLights()
 {
 	qk_all_lights.clear();
 }
 
 
-static void QCOM_FindLights()
+static void QLIT_FindLights()
 {
-	QCOM_FreeLights();
+	QLIT_FreeLights();
 
 	for (unsigned int i = 0 ; i < all_entities.size() ; i++)
 	{
@@ -1114,7 +1114,7 @@ static inline void Bump(int s, int t, int W, int value, rgb_color_t color)
 }
 
 
-static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
+static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 {
 	// first pass is normal lights, other passes are for styled lights
 	if (pass == 0)
@@ -1177,7 +1177,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 		if (P.medium > MEDIUM_AIR)
 			continue;
 
-		if (! QCOM_TraceRay(P.x, P.y, P.z, light.x, light.y, light.z))
+		if (! QVIS_TraceRay(P.x, P.y, P.z, light.x, light.y, light.z))
 			continue;
 
 		hit_it = true;
@@ -1231,7 +1231,7 @@ static rgb_color_t ColorForLiquid(int medium)
 }
 
 
-static void QCOM_LiquidLighting(qLightmap_c *lmap)
+static void QLIT_LiquidLighting(qLightmap_c *lmap)
 {
 	for (int t = 0 ; t < lt_H ; t++)
 	for (int s = 0 ; s < lt_W ; s++)
@@ -1274,12 +1274,12 @@ void QLIT_TestingStuff(qLightmap_c *lmap)
 
 		lmap->samples[t*W + s] = MAKE_RGBA(r, g, b, 0);
 
-	//  lmap->samples[t*W + s] = QCOM_TraceRay(P.x,P.y,P.z, 2e5,4e5,3e5) ? 80 : 40;
+	//  lmap->samples[t*W + s] = QVIS_TraceRay(P.x,P.y,P.z, 2e5,4e5,3e5) ? 80 : 40;
 	}
 }
 
 
-void QCOM_LightFace(quake_face_c *F)
+void QLIT_LightFace(quake_face_c *F)
 {
 	lt_face = F;
 
@@ -1303,12 +1303,12 @@ void QCOM_LightFace(quake_face_c *F)
 
 		for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
 		{
-			QCOM_ProcessLight(F->lmap, qk_all_lights[i], pass);
+			QLIT_ProcessLight(F->lmap, qk_all_lights[i], pass);
 		}
 
 		if (lt_current_style >= 0)
 		{
-			QCOM_LiquidLighting(F->lmap);
+			QLIT_LiquidLighting(F->lmap);
 
 			F->lmap->Store();
 		}
@@ -1317,7 +1317,7 @@ void QCOM_LightFace(quake_face_c *F)
 
 
 #if 0  // this needed for Q1 and Q2
-void QCOM_LightMapModel(quake_mapmodel_c *model)
+void QLIT_LightMapModel(quake_mapmodel_c *model)
 {
 	float value = q_low_light;
 
@@ -1329,7 +1329,7 @@ void QCOM_LightMapModel(quake_mapmodel_c *model)
 	{
 		quake_light_t & light = qk_all_lights[i];
 
-		if (! QCOM_TraceRay(mx, my, mz, light.x, light.y, light.z))
+		if (! QVIS_TraceRay(mx, my, mz, light.x, light.y, light.z))
 			continue;
 
 		if (light.kind == LTK_Sun)
@@ -1445,7 +1445,7 @@ static void Q3_ProcessLightForGrid(quake_light_t& light,
 		return;
 
 	// slow ray-trace check
-	if (! QCOM_TraceRay(gx, gy, gz, light.x, light.y, light.z))
+	if (! QVIS_TraceRay(gx, gy, gz, light.x, light.y, light.z))
 		return;
 
 
@@ -1477,7 +1477,7 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz, dlightgrid3_t *out)
 		float dy = grid_xy_deltas[(i / 6) * 2 + 1];
 		float dz = grid_z_deltas[i % 6];
 
-		if (! QCOM_TracePoint(gx + dx, gy + dy, gz + dz))
+		if (! QVIS_TracePoint(gx + dx, gy + dy, gz + dz))
 			continue;
 
 		// Ok!
@@ -1616,15 +1616,15 @@ static void Q3_GridLighting()
 }
 
 
-void QCOM_LightAllFaces()
+void QLIT_LightAllFaces()
 {
 	LogPrintf("\nLighting World...\n");
 
-	QCOM_FindLights();
+	QLIT_FindLights();
 
 	LogPrintf("found %u lights\n", qk_all_lights.size());
 
-	QCOM_MakeTraceNodes();
+	QVIS_MakeTraceNodes();
 
 	int lit_faces  = 0;
 	int lit_luxels = 0;
@@ -1638,7 +1638,7 @@ void QCOM_LightAllFaces()
 		if (F->flags & (FACE_F_Sky | FACE_F_Liquid))
 			continue;
 
-		QCOM_LightFace(F);
+		QLIT_LightFace(F);
 
 		lit_faces++;
 		lit_luxels += F->lmap->width * F->lmap->height;
@@ -1665,12 +1665,12 @@ void QCOM_LightAllFaces()
 #if 0
 	for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
 	{
-		QCOM_LightMapModel(qk_all_mapmodels[i]);
+		QLIT_LightMapModel(qk_all_mapmodels[i]);
 	}
 #endif
 
-	QCOM_FreeLights();
-	QCOM_FreeTraceNodes();
+	QLIT_FreeLights();
+	QVIS_FreeTraceNodes();
 }
 
 

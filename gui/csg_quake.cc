@@ -783,10 +783,10 @@ static void CheckClusterEdges(quake_group_c & group, int cx, int cy)
 	}
 
 	// send data to vis code
-	if (closed_N) QCOM_VisMarkWall(cx, cy, 8);
-	if (closed_S) QCOM_VisMarkWall(cx, cy, 2);
-	if (closed_E) QCOM_VisMarkWall(cx, cy, 6);
-	if (closed_W) QCOM_VisMarkWall(cx, cy, 4);
+	if (closed_N) QVIS_MarkWall(cx, cy, 8);
+	if (closed_S) QVIS_MarkWall(cx, cy, 2);
+	if (closed_E) QVIS_MarkWall(cx, cy, 6);
+	if (closed_W) QVIS_MarkWall(cx, cy, 4);
 }
 
 
@@ -2281,14 +2281,14 @@ void CSG_AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf)
 
 static void CreateClusters(quake_group_c & group)
 {
-	QCOM_FreeClusters();
+	QVIS_FreeClusters();
 
 	double min_x, min_y;
 	double max_x, max_y;
 
 	group.GetGroupBounds(&min_x, &min_y, &max_x, &max_y);
 
-	QCOM_CreateClusters(min_x, min_y, max_x, max_y);
+	QVIS_CreateClusters(min_x, min_y, max_x, max_y);
 }
 
 
