@@ -1272,7 +1272,7 @@ static void DP_CreateRTLights(const char *entry_in_pak)
 
 		snprintf(buffer, sizeof(buffer), "%1.3f %1.3f %1.3f %1.3f %1.5f %1.5f %1.5f %d\n",
 				 E->x, E->y, E->z,
-				 E->props.getDouble("radius", RT_DEFAULT_RADIUS),
+				 E->props.getDouble("light", RT_DEFAULT_RADIUS),
 				 r, g, b, E->props.getInt("style", 0));
 
 		ZIPF_AppendData(buffer, (int)strlen(buffer));
