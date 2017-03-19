@@ -78,10 +78,15 @@ typedef struct
 {
 	rgb_color_t color;
 
+	float intensity;
+	float dropoff;
+
 public:
 	void Init(int r, int g, int b)
 	{
 		color = MAKE_RGBA(r, g, b, 255);
+		intensity = 160.0;
+		dropoff = 4.0;
 	}
 
 	bool ParseProp(const char *key, const char *value)
@@ -89,6 +94,16 @@ public:
 		if (StringCaseCmp(key, "color") == 0)
 		{
 			color = QLIT_ParseColorString(value);
+			return true;
+		}
+		else if (StringCaseCmp(key, "intensity") == 0)
+		{
+			intensity = atof(value);
+			return true;
+		}
+		else if (StringCaseCmp(key, "dropoff") == 0)
+		{
+			dropoff = atof(value);
 			return true;
 		}
 
@@ -1395,10 +1410,10 @@ static void QLIT_LiquidLighting(qLightmap_c *lmap)
 			liquid_coloring_t& LC = (P.medium == MEDIUM_SLIME) ? q_slime :
 			                        (P.medium == MEDIUM_LAVA)  ? q_lava  : q_water;
 
-			float fx = 3 + sin(P.x / 16.0);
-			float fy = 3 + sin(P.y / 16.0);
+			float fx = 2 + sin(P.x / 16.0);
+			float fy = 2 + sin(P.y / 16.0);
 
-			int level = (fx + fy) * (180 - P.liquid_depth * 1.2);
+			int level = (fx + fy) * LC.intensity - P.liquid_depth * LC.dropoff;
 
 			if (level > 0)
 				Bump(s, t, level, LC.color);
