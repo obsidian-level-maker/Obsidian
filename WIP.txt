@@ -9,8 +9,6 @@ Quake3 CSG Code
 +  better triangulation  [ review q3map2 code ]
 
 +  lighting
-   + re-implement super-sampling
-
    + ensure detail brushes can block light
      --> use the rendering BSP we have (qk_bsp_root)
 
@@ -18,13 +16,13 @@ Quake3 CSG Code
      ambient value for the room is specified by Lua
      [ for grid lighting, find face directly underneath point ]
 
-   + ensure sun lighting works
-
 -  brushlib function to visit side faces, and if they
    contain u1/u2/v1/v2 then compute the uv_mat
 
 -  brushlib function to visit top/bottom faces, and generate
    a uv_mat if the sides contain tu/tv/bu/bv values
+
+LATER : re-implement super-sampling for lighting
 
 LATER : reject detail surfaces lying completely inside a solid brush
 
