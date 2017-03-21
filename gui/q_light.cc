@@ -999,8 +999,8 @@ fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 #endif
 
 	// compute size of lightmap
-	lt_W = (int)ceil((max_s - min_s + q3_luxel_size * 0.7) / q3_luxel_size);
-	lt_H = (int)ceil((max_t - min_t + q3_luxel_size * 0.7) / q3_luxel_size);
+	lt_W = (int)ceil((max_s - min_s + q3_luxel_size * 0.6) / q3_luxel_size);
+	lt_H = (int)ceil((max_t - min_t + q3_luxel_size * 0.6) / q3_luxel_size);
 
 fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 
@@ -1028,6 +1028,9 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 	{
 		float ax = (lt_W == 1) ? 0.5 : px / (float)(lt_W - 1);
 		float ay = (lt_H == 1) ? 0.5 : py / (float)(lt_H - 1);
+
+		ax = 0.5 + (ax - 0.5) * 0.98;
+		ay = 0.5 + (ay - 0.5) * 0.98;
 
 		light_point_t & P = lt_points[px][py];
 
