@@ -631,7 +631,16 @@ void QLIT_BuildQ3Lighting(int lump, int max_size)
 		q3_lightmap_block_c *BL = all_q3_light_blocks[b];
 
 		BL->Write(lightmap_lump);
+
+#if 0  // DEBUG
+		static char test_file[500];
+		snprintf(test_file, sizeof(test_file), "lm_block_%03d.ppm", (int)b);
+		FILE *fp = fopen(test_file, "wb");
+		if (fp) { BL->SavePPM(fp); fclose(fp); }
+#endif
 	}
+
+	LogPrintf("created %d LM blocks\n", (int)all_q3_light_blocks.size());
 }
 
 

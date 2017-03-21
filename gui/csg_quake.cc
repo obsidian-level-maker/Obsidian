@@ -1293,13 +1293,11 @@ static void GenerateBoundaryPlane(const quake_face_c *F,
 bool quake_face_c::IntersectRay(float x1, float y1, float z1, float x2, float y2, float z2)
 {
 	// does the ray intersect the plane?
-	// [ prevent touching the plane too, in case this face is the one
-	//   we are currently lightmapping... ]
 	float dist1 = plane.PointDist(x1, y1, z1);
 	float dist2 = plane.PointDist(x2, y2, z2);
 
-	if (dist1 < +0.01 && dist2 < +0.01) return false;
-	if (dist1 > -0.01 && dist2 > -0.01) return false;
+	if (dist1 < -0.01 && dist2 < -0.01) return false;
+	if (dist1 > +0.01 && dist2 > +0.01) return false;
 
 	// compute intersection of ray and plane
 	double frac = dist1 / (double)(dist1 - dist2);
@@ -1321,7 +1319,7 @@ bool quake_face_c::IntersectRay(float x1, float y1, float z1, float x2, float y2
 
 		GenerateBoundaryPlane(this, V1, V2, &test);
 
-		if (test.PointDist(mx, my, mz) > 0)
+		if (test.PointDist(mx, my, mz) > 0.1)
 			return false;
 	}
 
