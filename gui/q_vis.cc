@@ -257,12 +257,96 @@ static int RecursiveTestRay(int nodenum,
 }
 
 
+static int RecursiveTestDetail(quake_node_c *N,
+							   quake_leaf_c *L,
+							   float x1, float y1, float z1,
+							   float x2, float y2, float z2)
+{
+	for (;;)
+	{
+		// hit a leaf?
+		if (L)
+		{
+			for (unsigned int k = 0 ; k < L->faces.size() ; k++)
+			{
+				quake_face_c *F = L->faces[k];
+
+				if (! (F->flags & FACE_F_Detail))
+					continue;
+
+				if (F->flags & FACE_F_Model)
+					continue;
+
+				if (F->IntersectRay(x1,y1,z1, x2,y2,z1))
+					return TRACE_SOLID;
+			}
+
+			return TRACE_EMPTY;
+		}
+
+		float dist1 = N->plane.PointDist(x1, y1, z1);
+		float dist2 = N->plane.PointDist(x2, y2, z2);
+
+		if (dist1 >= -T_EPSILON && dist2 >= -T_EPSILON)
+		{
+			L = N->front_L;
+			N = N->front_N;
+			continue;
+		}
+
+		if (dist1 < T_EPSILON && dist2 < T_EPSILON)
+		{
+			L = N->back_L;
+			N = N->back_N;
+			continue;
+		}
+
+		// the ray crosses the node plane.
+
+		int side = (dist1 < 0) ? 1 : 0;
+
+		double frac = dist1 / (double)(dist1 - dist2);
+
+		float mx = x1 + (x2 - x1) * frac;
+		float my = y1 + (y2 - y1) * frac;
+		float mz = z1 + (z2 - z1) * frac;
+
+		// check if front half of the ray is OK
+
+		quake_leaf_c *L0 = side ? N->back_L : N->front_L;
+		quake_node_c *N0 = side ? N->back_N : N->front_N;
+
+		int r = RecursiveTestDetail(N0, L0, x1,y1,z1, mx,my,mz);
+
+		if (r != TRACE_EMPTY)
+			return r;
+
+		// yes it was, so continue with the back half
+
+		L = side ? N->front_L : N->back_L;
+		N = side ? N->front_N : N->back_N;
+
+		x1 = mx;  y1 = my;  z1 = mz;
+	}
+}
+
+
 bool QVIS_TraceRay(float x1, float y1, float z1,
                    float x2, float y2, float z2)
 {
 	int r = RecursiveTestRay(0, x1,y1,z1, x2,y2,z2);
 
-	return (r != TRACE_SOLID);
+	if (r == TRACE_SOLID)
+		return false;
+
+	// check for detail faces *after* the main trace
+
+	r = RecursiveTestDetail(qk_bsp_root, NULL, x1,y1,z1, x2,y2,z2);
+
+	if (r == TRACE_SOLID)
+		return false;
+
+	return true;
 }
 
 

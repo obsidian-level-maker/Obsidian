@@ -210,6 +210,8 @@ public:
 	void ComputeMidPoint(float *mx, float *my, float *mz);
 
 	void GetNormal(float *vec3) const;
+
+	bool IntersectRay(float x1, float y1, float z1, float x2, float y2, float z2);
 };
 
 

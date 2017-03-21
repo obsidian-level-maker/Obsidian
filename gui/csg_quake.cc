@@ -1259,6 +1259,76 @@ void quake_face_c::GetNormal(float *vec3) const
 }
 
 
+static void GenerateBoundaryPlane(const quake_face_c *F,
+								  quake_vertex_c *V1,
+								  quake_vertex_c *V2,
+								  quake_plane_c *out)
+{
+	// this logic is duplicated from q3map.c
+
+	float d[3];
+	float e[3];
+
+	d[0] = V2->x - V1->x;
+	d[1] = V2->y - V1->y;
+	d[2] = V2->z - V1->z;
+
+	e[0] = F->plane.nx;
+	e[1] = F->plane.ny;
+	e[2] = F->plane.nz;
+
+	// compute the cross-product
+	out->nx = d[2] * e[1] - d[1] * e[2];
+	out->ny = d[0] * e[2] - d[2] * e[0];
+	out->nz = d[1] * e[0] - d[0] * e[1];
+
+	out->x = V1->x;
+	out->y = V1->y;
+	out->z = V1->z;
+
+	out->Normalize();
+}
+
+
+bool quake_face_c::IntersectRay(float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	// does the ray intersect the plane?
+	// [ prevent touching the plane too, in case this face is the one
+	//   we are currently lightmapping... ]
+	float dist1 = plane.PointDist(x1, y1, z1);
+	float dist2 = plane.PointDist(x2, y2, z2);
+
+	if (dist1 < +0.01 && dist2 < +0.01) return false;
+	if (dist1 > -0.01 && dist2 > -0.01) return false;
+
+	// compute intersection of ray and plane
+	double frac = dist1 / (double)(dist1 - dist2);
+
+	// TODO : if (frac >= already_hit_frac) return false;
+
+	float mx = x1 + (x2 - x1) * frac;
+	float my = y1 + (y2 - y1) * frac;
+	float mz = z1 + (z2 - z1) * frac;
+
+	// TODO : precompute the boundary planes
+
+	for (unsigned int k = 0 ; k < verts.size() ; k++)
+	{
+		quake_vertex_c *V1 = &verts[k];
+		quake_vertex_c *V2 = &verts[(k+1) % verts.size()];
+
+		quake_plane_c test;
+
+		GenerateBoundaryPlane(this, V1, V2, &test);
+
+		if (test.PointDist(mx, my, mz) > 0)
+			return false;
+	}
+
+	return true;
+}
+
+
 static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
 					  uv_matrix_c *uv_mat,
 					  quake_node_c *node, quake_leaf_c *leaf)
