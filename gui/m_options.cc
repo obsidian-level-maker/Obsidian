@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -192,7 +192,7 @@ bool Options_Save(const char *filename)
 	LogPrintf("Saving options file...\n");
 
 	fprintf(option_fp, "-- OPTIONS FILE : OBLIGE %s\n", OBLIGE_VERSION); 
-	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2016 Andrew Apted\n");
+	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2017 Andrew Apted\n");
 	fprintf(option_fp, "-- http://oblige.sourceforge.net/\n\n");
 
 	fprintf(option_fp, "language = %s\n", t_language);

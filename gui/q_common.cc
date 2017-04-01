@@ -900,7 +900,7 @@ qLump_c * BSP_CreateInfoLump()
 
 	L->Printf("\n");
 	L->Printf("-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
-	L->Printf("-- " OBLIGE_TITLE " (C) 2006-2016 Andrew Apted\n");
+	L->Printf("-- " OBLIGE_TITLE " (C) 2006-2017 Andrew Apted\n");
 	L->Printf("-- http://oblige.sourceforge.net/\n");
 	L->Printf("\n");
 

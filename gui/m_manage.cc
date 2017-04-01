@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2014-2016 Andrew Apted
+//  Copyright (C) 2014-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -329,7 +329,7 @@ public:
 		Clear();
 
 		text_buf->append("-- CONFIG FILE : OBLIGE " OBLIGE_VERSION "\n"); 
-		text_buf->append("-- " OBLIGE_TITLE " (C) 2006-2016 Andrew Apted\n");
+		text_buf->append("-- " OBLIGE_TITLE " (C) 2006-2017 Andrew Apted\n");
 		text_buf->append("-- http://oblige.sourceforge.net/\n\n");
 
 		std::vector<std::string> lines;

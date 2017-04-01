@@ -1,8 +1,8 @@
 
-OBLIGE 7.50
+OBLIGE 7.52
 ===========
 
-by Andrew Apted.  September 2016
+by Andrew Apted.
 
 
 INTRODUCTION
@@ -52,7 +52,7 @@ COPYRIGHT and LICENSE
 
   OBLIGE Level Maker
 
-  Copyright (C) 2006-2016 Andrew Apted, et al
+  Copyright (C) 2006-2017 Andrew Apted, et al
 
   OBLIGE is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published
