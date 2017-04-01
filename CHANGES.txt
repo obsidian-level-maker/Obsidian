@@ -1,5 +1,5 @@
 
-CHANGES IN x.xx
+CHANGES IN 7.5x
 ===============
 
 
@@ -12,6 +12,8 @@ CHANGES IN x.xx
    was new weapons are introduced
 
 -  new "Bit Mixed" theme
+
+-  new health/ammo settings "Bit Less" and "Bit More"
 
 -  new theme settings "Original-ish" and "Episode-ish"
 

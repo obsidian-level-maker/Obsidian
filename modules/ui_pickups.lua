@@ -20,14 +20,14 @@ UI_PICKUPS = { }
 
 UI_PICKUPS.HEALTH_CHOICES =
 {
-  "none",   _("NONE"),
-  "scarce", _("Scarce"),
-  "less",   _("Less"),
-  "normal", _("Normal"),
---TODO  "bit_less", _("Bit Less"),
---TODO  "bit_more", _("Bit More"),
-  "more",   _("More"),
-  "heaps",  _("Heaps"),
+  "none",     _("NONE"),
+  "scarce",   _("Scarce"),
+  "less",     _("Less"),
+  "bit_less", _("Bit Less"),
+  "normal",   _("Normal"),
+  "bit_more", _("Bit More"),
+  "more",     _("More"),
+  "heaps",    _("Heaps"),
 }
 
 UI_PICKUPS.WEAPON_CHOICES =

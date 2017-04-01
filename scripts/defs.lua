@@ -138,27 +138,55 @@ SPOT_LEDGE    = 3
 -- monster and item stuff
 MONSTER_QUANTITIES =
 {
-  scarce=0.35, less=0.7, normal=1.0, more=1.5, heaps=2.5, nuts=7.7
+  scarce = 0.35
+  less   = 0.7
+  normal = 1.0
+  more   = 1.5
+  heaps  = 2.5
+  nuts   = 7.7
 }
 
 MONSTER_KIND_TAB =
 {
-  scarce=0.5, less=0.75, normal=1.0, more=1.33, heaps=1.6, nuts=2.0
+  scarce = 0.5
+  less   = 0.75
+  normal = 1.0
+  more   = 1.33
+  heaps  = 1.6
+  nuts   = 2.0
 }
 
 STRENGTH_FACTORS =
 {
-  weak=0.7, easier=0.85, medium=1.0, harder=1.2, tough=1.5
+  weak   = 0.7
+  easier = 0.85
+  medium = 1.0
+  harder = 1.2
+  tough  = 1.5
 }
 
 HEALTH_FACTORS =
 {
-  none=0, scarce=0.40, less=0.64, normal=1.00, more=1.60, heaps=2.50
+  none     = 0
+  scarce   = 0.4
+  less     = 0.64
+  bit_less = 0.8
+  normal   = 1.0
+  bit_more = 1.3
+  more     = 1.6
+  heaps    = 2.5
 }
 
 AMMO_FACTORS =
 {
-  none=0, scarce=0.65, less=0.85, normal=1.00, more=1.20, heaps=1.50
+  none     = 0
+  scarce   = 0.64
+  less     = 0.8
+  bit_less = 0.9
+  normal   = 1.0
+  bit_more = 1.1
+  more     = 1.25
+  heaps    = 1.6
 }
 
 
