@@ -860,8 +860,8 @@ function Episode_plan_weapons()
   -- (4) a earlier-than-normal weapon for secrets
   --
 
-  local QUOTA_ADJUSTS = { rare=0.55, less=0.70, more=1.50, heaps=2.00 }
-  local PLACE_ADJUSTS = { rare=1.70, less=1.30, more=0.50, heaps=0.20 }
+  local QUOTA_ADJUSTS = { very_late=0.55, later=0.70, sooner=1.50, very_soon=2.00 }
+  local PLACE_ADJUSTS = { very_late=1.70, later=1.30, sooner=0.50, very_soon=0.20 }
 
   local function calc_weapon_quota(LEV)
     -- decide how many weapons to give
@@ -894,7 +894,7 @@ function Episode_plan_weapons()
 
     -- be more generous in the very first level
     if LEV.id == 1 and quota == 1 and
-       not (OB_CONFIG.weapons == "less" or OB_CONFIG.weapons == "rare")
+       not (OB_CONFIG.weapons == "later" or OB_CONFIG.weapons == "very_late")
     then
       quota = 2
     end
@@ -1075,7 +1075,7 @@ function Episode_plan_weapons()
 
     -- prevent moving too far when user wants lots of weapons
     if math.abs(ofs) >= 2 and
-       (OB_CONFIG.weapons == "more" or OB_CONFIG.weapons == "heaps")
+       (OB_CONFIG.weapons == "sooner" or OB_CONFIG.weapons == "very_soon")
     then
       return -1
     end
@@ -1147,7 +1147,7 @@ function Episode_plan_weapons()
   local function spread_new_weapons(level_list)
     -- prefer not to introduce multiple new weapons per map
 
-    if OB_CONFIG.weapons == "heaps" then return end
+    if OB_CONFIG.weapons == "very_soon" then return end
 
     for idx = 1, #level_list do
       for loop = 1,5 do
@@ -1200,11 +1200,11 @@ function Episode_plan_weapons()
 
     max_gap = max_gap + int(#level_list / 20)
 
-    if OB_CONFIG.weapons == "rare"  then max_gap = max_gap + 2 end
-    if OB_CONFIG.weapons == "less"  then max_gap = max_gap + 1 end
+    if OB_CONFIG.weapons == "very_late" then max_gap = max_gap + 2 end
+    if OB_CONFIG.weapons == "later"     then max_gap = max_gap + 1 end
 
-    if OB_CONFIG.weapons == "more"  then max_gap = 1 end
-    if OB_CONFIG.weapons == "heaps" then max_gap = 1 end
+    if OB_CONFIG.weapons == "sooner"    then max_gap = 1 end
+    if OB_CONFIG.weapons == "very_soon" then max_gap = 1 end
 
     for start = 1, #level_list do
       local gap = detect_a_weapon_gap(level_list, start)
@@ -1437,13 +1437,13 @@ function Episode_plan_weapons()
          want_num = LEV.weapon_quota
       end
 
-      -- skip one sometimes (esp. for "Rare" setting)
+      -- skip one sometimes
       -- [ but never in the first few maps ]
       local skip_prob = 1
 
-      if OB_CONFIG.weapons == "rare"   then skip_prob = 50 end
-      if OB_CONFIG.weapons == "less"   then skip_prob = 25 end
-      if OB_CONFIG.weapons == "normal" then skip_prob = 10 end
+      if OB_CONFIG.weapons == "very_late" then skip_prob = 40 end
+      if OB_CONFIG.weapons == "later"     then skip_prob = 20 end
+      if OB_CONFIG.weapons == "normal"    then skip_prob = 10 end
 
       if LEV.ep_along >= 0.2 and rand.odds(skip_prob) then
         want_num = want_num - 1

@@ -8,13 +8,16 @@ CHANGES IN x.xx
 
 -  UI: can use mousewheel to change settings
 
++  the Weapons setting now controls how early or late in the
+   was new weapons are introduced
+
 -  new "Bit Mixed" theme
 
 -  new theme settings "Original-ish" and "Episode-ish"
 
 -  config manager "Use" button now sets the seed too
 
--  abbreviated config in OBLIGDAT or config manager
+-  abbreviated config in OBLIGDAT lump and config manager
 
 -  bug fix: swapped normal-exit and secret-exit switches
 
