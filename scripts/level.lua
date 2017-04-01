@@ -1438,6 +1438,7 @@ function Episode_plan_weapons()
       end
 
       -- skip one sometimes (esp. for "Rare" setting)
+      -- [ but never in the first few maps ]
       local skip_prob = 1
 
       if OB_CONFIG.weapons == "rare"   then skip_prob = 50 end
@@ -1497,10 +1498,7 @@ function Episode_plan_weapons()
     calc_weapon_quota(LEV)
   end
 
-  --FIXME : remove debugging loop
-  for i = 1,60 do
-    place_new_weapons()
-  end
+  place_new_weapons()
 
   determine_seen_weapons()
 
