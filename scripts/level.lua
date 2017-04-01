@@ -2349,7 +2349,6 @@ function Level_make_all()
 
   Episode_plan_game()
 
-  Story_generate()
   Title_generate()
 
 

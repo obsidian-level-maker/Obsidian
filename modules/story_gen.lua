@@ -16,8 +16,10 @@
 --
 ------------------------------------------------------------------------
 
+STORY_GEN = {}
 
-function Story_generate()
+
+function STORY_GEN.generate_story()
 
   local info = {}
 
