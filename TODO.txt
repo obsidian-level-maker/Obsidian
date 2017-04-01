@@ -77,6 +77,8 @@ OBLIGE TO-DO
    should use "shadow" light value as ambient
 
 
+IDEA : "Lighting" and "Detail" settings (in miscellaneous module)
+
 IDEA : a sharp corner removal pass [ before border stuff ]
        [ preserve symmetry, e.g. by preferring horizontal direction to merge ]
 

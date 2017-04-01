@@ -90,9 +90,6 @@ OB_MODULES["miscellaneous"] =
       gap=1
     }
 
-    { name="light_level",  label=_("Lighting"),   choices=MISC_STUFF.LIGHTINGS }
-    { name="detail_level", label=_("Detail"),     choices=MISC_STUFF.LIGHTINGS, gap=1 }
-
     { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
 
@@ -104,6 +101,9 @@ OB_MODULES["miscellaneous"] =
     { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES }
 
 ---- PLANNED (UNFINISHED) STUFF ----
+
+--  { name="light_level",  label=_("Lighting"),   choices=MISC_STUFF.LIGHTINGS }
+--  { name="detail_level", label=_("Detail"),     choices=MISC_STUFF.LIGHTINGS, gap=1 }
 
 --  symmetry    = { label=_("Symmetry"),       choices=STYLE_CHOICES }
 --  pictures    = { label=_("Pictures"),       choices=STYLE_CHOICES }

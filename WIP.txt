@@ -44,9 +44,6 @@ Revamped UI:
    -  "ramp_up"
    -  "bosses"
 
-   -  "lighting"
-   -  "detail"
-
 
 
 Review "weak" strength, esp. guard monsters
