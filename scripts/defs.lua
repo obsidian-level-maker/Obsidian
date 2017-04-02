@@ -163,6 +163,13 @@ RAMP_UP_FACTORS =
   fast   = 1.70
 }
 
+BOSS_FACTORS =
+{
+  easier = 0.30
+  medium = 0.60
+  harder = 1.00
+}
+
 HEALTH_FACTORS =
 {
   none     = 0

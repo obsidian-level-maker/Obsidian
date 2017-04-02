@@ -40,6 +40,14 @@ UI_MONS.STRENGTHS =
   "crazy",  _("CRAZY"),
 }
 
+UI_MONS.BOSSES =
+{
+  "none",   _("NONE"),
+  "easier", _("Easier"),
+  "medium", _("Normal"),
+  "harder", _("Harder"),
+}
+
 UI_MONS.RAMPS =
 {
   "slow",    _("Slow"),
@@ -62,7 +70,7 @@ OB_MODULES["ui_mons"] =
     { name="strength",  label=_("Strength"),  choices=UI_MONS.STRENGTHS }
     { name="ramp_up",   label=_("Ramp Up"),   choices=UI_MONS.RAMPS,  gap=1 }
 
-    { name="bosses",    label=_("Bosses"),    choices=UI_MONS.STRENGTHS }
+    { name="bosses",    label=_("Bosses"),    choices=UI_MONS.BOSSES }
     { name="traps",     label=_("Traps"),     choices=STYLE_CHOICES }
     { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES }
   }

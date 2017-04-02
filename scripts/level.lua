@@ -278,9 +278,11 @@ function Episode_plan_monsters()
   -- (4) one day: boss fights for special levels
   --
 
-  local seen_bosses = {}
+  local used_types  = {}
+  local used_bosses = {}
+  local used_guards = {}
 
-  local BOSS_AHEAD = 2.1  -- TODO : review this number
+  local BOSS_AHEAD = 2.2
 
 
   local function default_level(info)
@@ -354,7 +356,7 @@ function Episode_plan_monsters()
     mon_along = 1 + 8.4 * mon_along
 
     -- add some randomness
-    mon_along = mon_along + 1.7 * (gui.random() ^ 2)
+    mon_along = mon_along + 1.4 * (gui.random() ^ 2)
 
     LEV.monster_level = mon_along
   end
@@ -525,13 +527,13 @@ function Episode_plan_monsters()
     local prob = (info.damage or 2)
     prob = prob ^ 0.6
 
-    local is_seen  = seen_bosses[info.name]
-    local is_avail = LEV.seen_monsters[info.name]
+    if OB_CONFIG.bosses == "easier" then prob = prob / info.level end
+    if OB_CONFIG.bosses == "harder" then prob = prob * info.level end
 
-    if is_seen then
-      -- no change
-    else
-      prob = prob * sel(is_avail, 100, 1000)
+    if LEV.seen_monsters[info.name] then
+      prob = prob / 10
+    elseif not used_guards[info.name] then
+      prob = prob * 5
     end
 
     return prob
@@ -566,7 +568,8 @@ function Episode_plan_monsters()
     local c_nasty = count_boss_type(LEV, "nasty")
     local c_tough = count_boss_type(LEV, "tough")
 
-    LEV.boss_quotas = { minor=0, nasty=0, tough=0 }
+    local user_factor = BOSS_FACTORS[OB_CONFIG.bosses]
+    assert(user_factor)
 
     -- Tough quota
 
@@ -575,35 +578,46 @@ function Episode_plan_monsters()
     if LEV.dist_to_end then
       local factor = sel(c_tough < 2, 40, 20)
       prob1 = 100 - (LEV.dist_to_end - 1) * factor
+      prob1 = prob1 * user_factor
     end
 
     if c_tough > 0 and rand.odds(prob1) then
       LEV.boss_quotas.tough = 1
 
-      prob1 = prob1 * LEV.game_along * 0.6
+      prob1 = prob1 * LEV.game_along * user_factor
 
-      if rand.odds(prob1) then
+      if rand.odds(prob1) and used_types["tough"] then
         LEV.boss_quotas.tough = 2
       end
+    end
+
+    if LEV.boss_quotas.tough > 0 then
+      used_types["tough"] = true
     end
 
 
     -- Nasty quota
 
-    local prob2 = sel(c_nasty < 2, 40, 70)
+    local prob2 = sel(c_nasty < 2, 25, 40)
 
     if LEV.dist_to_end == 2 then
-      prob2 = 99
+      prob2 = 90
     end
+
+    prob2 = prob2 * user_factor
 
     if c_nasty > 0 and rand.odds(prob2) then
       LEV.boss_quotas.nasty = 1
 
-      prob2 = prob2 * LEV.game_along * 0.6
+      prob2 = prob2 * LEV.game_along * user_factor
 
-      if rand.odds(prob2) and not LEV.is_secret then
+      if rand.odds(prob2) and used_types["nasty"] then
         LEV.boss_quotas.nasty = 2
       end
+    end
+
+    if LEV.boss_quotas.nasty > 0 then
+      used_types["nasty"] = true
     end
 
 
@@ -615,14 +629,20 @@ function Episode_plan_monsters()
       prob3 = 99
     end
 
+    prob3 = prob3 * user_factor
+
     if c_minor > 0 and rand.odds(prob3) then
       LEV.boss_quotas.minor = 1
 
-      prob3 = prob3 * LEV.game_along * 0.6
+      prob3 = prob3 * LEV.game_along * user_factor
 
-      if rand.odds(prob3) and not LEV.is_secret then
+      if rand.odds(prob3) and used_types["minor"] then
         LEV.boss_quotas.minor = 2
       end
+    end
+
+    if LEV.boss_quotas.minor > 0 then
+      used_types["minor"] = true
     end
 
 
@@ -656,18 +676,17 @@ function Episode_plan_monsters()
 
     count = count * factor
 
-    if OB_CONFIG.strength == "weak" or
-       OB_CONFIG.strength == "easier"
-    then count = count / 2 end
+    if OB_CONFIG.bosses == "easier" then count = count / 1.6 end
+    if OB_CONFIG.bosses == "harder" then count = count * 1.6 end
 
     count = rand.int(count)
 
-    if boss_type == "minor" then
-      count = math.clamp(1, count, 6)
+    if boss_type == "tough" then
+      count = math.clamp(1, count, 2)
     elseif boss_type == "nasty" then
       count = math.clamp(1, count, 4)
     else
-      count = math.clamp(1, count, 2)
+      count = math.clamp(1, count, 6)
     end
 
     -- secondary boss fights should be weaker than primary one
@@ -687,7 +706,7 @@ function Episode_plan_monsters()
     end
 
     -- ensure first encounter with a boss only uses a single one
-    count = math.min(count, 1 + (seen_bosses[mon] or 0))
+    count = math.min(count, 1 + (used_bosses[mon] or 0))
 
 --  stderrf("  count %1.2f for '%s'\n", count, mon)
 
@@ -700,7 +719,9 @@ function Episode_plan_monsters()
 
     table.insert(LEV.boss_fights, FIGHT)
 
-    seen_bosses[mon] = math.max(seen_bosses[mon] or 0, count)
+    used_bosses[mon] = math.max(used_bosses[mon] or 0, count)
+
+    return true  -- ok
   end
 
 
@@ -724,6 +745,9 @@ function Episode_plan_monsters()
 
     count = count * factor
 
+    if OB_CONFIG.bosses == "easier" then count = count / 1.6 end
+    if OB_CONFIG.bosses == "harder" then count = count * 1.6 end
+
     -- secondary boss fights should be weaker than primary one
     count = count / (1.8 ^ (along - 1))
 
@@ -735,8 +759,8 @@ function Episode_plan_monsters()
     count = rand.int(count)
     count = math.clamp(1, count, 8)
 
-    -- ensure first encounter with a boss only uses a single one
-    count = math.min(count, 2 + (seen_bosses[mon] or 0))
+    -- ensure first encounter with a guard only uses a single one
+    count = math.min(count, 1 + (used_guards[mon] or 0))
 
     local FIGHT =
     {
@@ -747,12 +771,9 @@ function Episode_plan_monsters()
 
     table.insert(LEV.boss_fights, FIGHT)
 
-    LEV.seen_guards[mon] = 1
+    LEV.seen_guards[mon] = true
 
-    -- ONLY BLAH BLAH
-    if along == 1 then
-      seen_bosses[mon] = math.max(seen_bosses[mon] or 0, count)
-    end
+    used_guards[mon] = math.max(used_guards[mon] or 0, count)
   end
 
 
@@ -761,13 +782,15 @@ function Episode_plan_monsters()
       LEV.boss_fights = {}
       LEV.seen_guards = {}
 
-      pick_boss_quotas(LEV)
+      LEV.boss_quotas = { minor=0, nasty=0, tough=0 }
+
+      if LEV.prebuilt  then continue end
+      if LEV.is_secret then continue end
 
       if OB_CONFIG.strength == "crazy" then continue end
+      if OB_CONFIG.bosses   == "none"  then continue end
 
-      if LEV.prebuilt then continue end
-
--- stderrf("%s:\n", LEV.name)
+      pick_boss_quotas(LEV)
 
       for i = 1, LEV.boss_quotas.tough do create_fight(LEV, "tough", i) end
       for i = 1, LEV.boss_quotas.nasty do create_fight(LEV, "nasty", i) end
@@ -832,6 +855,9 @@ function Episode_plan_monsters()
   ---| Episode_plan_monsters |---
 
   init_monsters()
+
+  if OB_CONFIG.bosses == "easier" then BOSS_AHEAD = 1.9 end
+  if OB_CONFIG.bosses == "harder" then BOSS_AHEAD = 2.7 end
 
   each LEV in GAME.levels do
     calc_monster_level(LEV)
