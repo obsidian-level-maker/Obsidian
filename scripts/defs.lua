@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -156,13 +156,11 @@ MONSTER_KIND_TAB =
   nuts   = 2.0
 }
 
-STRENGTH_FACTORS =
+RAMP_UP_FACTORS =
 {
-  weak   = 0.7
-  easier = 0.85
-  medium = 1.0
-  harder = 1.2
-  tough  = 1.5
+  slow   = 0.60
+  medium = 1.00
+  fast   = 1.70
 }
 
 HEALTH_FACTORS =

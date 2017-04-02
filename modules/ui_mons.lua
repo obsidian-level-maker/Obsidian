@@ -2,7 +2,7 @@
 --  PANEL: Monsters
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2016 Andrew Apted
+--  Copyright (C) 2016-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -38,13 +38,10 @@ UI_MONS.STRENGTHS =
   "harder", _("Harder"),
   "tough",  _("Tough"),
   "crazy",  _("CRAZY"),
-
---TODO  "mixed",  N_("Mix It Up"),
 }
 
 UI_MONS.RAMPS =
 {
-  "none",    _("NONE"),
   "slow",    _("Slow"),
   "medium",  _("Medium"),
   "fast",    _("Fast"),

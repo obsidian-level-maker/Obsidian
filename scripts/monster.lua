@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2016 Andrew Apted
+--  Copyright (C) 2008-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -43,7 +43,6 @@ function Monster_init()
         LEVEL.mon_replacement[orig][name] = info.replace_prob
       end
     end
-
   end
 
   -- remove a replacement monster if the monster it replaces
@@ -1089,9 +1088,9 @@ function Monster_fill_room(R)
     assert(low > 0)
 
     if OB_CONFIG.strength == "weak"   then return low  ^ 1.5 end
-    if OB_CONFIG.strength == "tough"  then return high ^ 1.5 end
-
     if OB_CONFIG.strength == "easier" then return low  ^ 0.5 end
+
+    if OB_CONFIG.strength == "tough"  then return high ^ 1.5 end
     if OB_CONFIG.strength == "harder" then return high ^ 0.5 end
 
     return 1.0

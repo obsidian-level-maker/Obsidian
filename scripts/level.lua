@@ -322,7 +322,7 @@ function Episode_plan_monsters()
     local mon_along = LEV.game_along
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
-    if PARAM.episodic_monsters then
+    if PARAM.episodic_monsters or OB_CONFIG.ramp_up == "epi" then
       mon_along = (LEV.ep_along + LEV.game_along) / 2
     end
 
@@ -335,16 +335,16 @@ function Episode_plan_monsters()
       mon_along = rand.skew(0.6, 0.3)
 
     elseif OB_CONFIG.length == "game" then
-      -- reach peak strength about halfway along
-      mon_along = mon_along * 2.1
+      -- reach peak strength about 2/3rds along
+      mon_along = mon_along * 1.7
     end
 
     assert(mon_along >= 0)
 
-    -- apply the user Strength setting
+    -- apply the user Ramp-up setting
+    -- [ and some tweaks for the Strength setting ]
 
-    local factor = STRENGTH_FACTORS[OB_CONFIG.strength]
-    assert(factor)
+    local factor = RAMP_UP_FACTORS[OB_CONFIG.ramp_up] or 1.0
 
     mon_along = mon_along * factor
 

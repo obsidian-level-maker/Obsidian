@@ -41,7 +41,6 @@ DONE:  mapmodels
 Revamped UI:
 
 +  implement the new settings
-   -  "ramp_up"
    -  "bosses"
 
 
