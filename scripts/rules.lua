@@ -255,6 +255,20 @@ GROW_2 =
 }
 
 
+GROW_2_EMERGENCY =
+{
+  emergency = true
+
+  prob = 200
+
+  structure =
+  {
+    "..", "11"
+    "11", "11"
+  }
+}
+
+
 GROW_3 =
 {
   prob = 20
@@ -346,6 +360,35 @@ GROW_CURVE_2 =
     "1.", "1A"
           "A."
   }
+}
+
+
+GROW_CURVE_TUNNEL =
+{
+  prob = 1
+
+  structure =
+  {
+    "%...", "%#/1"
+    "1...", "1111"
+    "/...", "/#%1"
+  }
+
+  diagonals =
+  {
+    "1.", "1#", "#1"
+    "1.", "1#", "#1"
+  }
+}
+
+
+GROW_CURVE_TUNNEL_EMERGENCY =
+{
+  template = "GROW_CURVE_TUNNEL"
+
+  emergency = true
+
+  prob = 100
 }
 
 
@@ -748,6 +791,29 @@ SPROUT_DIRECT_2 =
     conn = { x=2, y=2, w=2, dir=8 }
 
     symmetry = { x=2, y=3, w=2, dir=8 }
+  }
+}
+
+
+SPROUT_DIRECT_2_EMERGENCY =
+{
+  emergency = true
+
+  -- high prob to force this rule to be tried fairly early
+  prob = 1000
+
+  structure =
+  {
+    "..", "RR"
+    "..", "RR"
+    "11", "11"
+  }
+
+  new_room =
+  {
+    conn = { x=1, y=1, w=2, dir=8 }
+
+    symmetry = { x=1, y=2, w=2, dir=8 }
   }
 }
 

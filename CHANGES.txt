@@ -10,6 +10,8 @@ CHANGES IN 7.5x
 +  the "Weapons" button now controls how early or late new
    weapons are introduced into the wad
 
++  support for the Quake3 map format in the CSG code
+
 -  new "Ramp Up" and "Bosses" buttons for monster panel
 
 -  new "Bit Mixed" theme
@@ -22,7 +24,8 @@ CHANGES IN 7.5x
 
 -  abbreviated config in OBLIGDAT lump and config manager
 
--  support for the Quake3 map format in the CSG code
+-  less chance of producing maps that are much smaller than
+   they are supposed to be
 
 -  bug fix: swapped normal-exit and secret-exit switches
 

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2015-2016 Andrew Apted
+--  Copyright (C) 2015-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1220,6 +1220,15 @@ function Grower_grammatical_room(R, pass, is_emergency)
       end
     end
 
+    if rule.emergency then
+      if not is_emergency then return 0 end
+    end
+
+    -- for emergency, limit what growth rules to try
+    if is_emergency and pass == "grow" and not rule.emergency then
+      return 0
+    end
+
     if rule.new_room and rule.new_room.env == "cave" then
       if R.is_cave then
         prob = prob * LEVEL.cave_extend_factor
@@ -1612,7 +1621,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if area_map[E1.area] == nil then
       -- check if the area would grow too big
       local growth = cur_rule.area_growths[E1.area] or 0
-      if growth > 0 and #A.seeds + growth > A.max_size then
+      if growth > 0 and #A.seeds + growth > A.max_size and not is_emergency then
         return false
       end
 
@@ -2711,7 +2720,13 @@ function Grower_grow_rooms()
     rand.shuffle(room_list)
 
     each R in room_list do
+      local old_num = #LEVEL.rooms
       Grower_grammatical_room(R, "sprout", "is_emergency")
+
+      -- only try a growth pass if no new rooms were sprouted
+      if old_num == #LEVEL.rooms then
+        Grower_grammatical_room(R, "grow", "is_emergency")
+      end
     end
   end
 
@@ -2720,7 +2735,7 @@ function Grower_grow_rooms()
 
   grow_until_done()
 
-  for loop = 1, 3 do
+  for loop = 1, 4 do
     local coverage = Grower_determine_coverage()
 
     if coverage >= MIN_COVERAGE then break; end
