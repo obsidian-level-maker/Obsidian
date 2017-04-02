@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -674,28 +674,6 @@ function Junction_make_fence(junc)
   }
 
   junc.E2 = { kind="nothing" }
-
-  junc.E1.peer = junc.E2
-  junc.E2.peer = junc.E1
-end
-
-
-function Junction_make_window(junc)
-  junc.E1 =
-  {
-    kind = "window"
-    area = junc.A1
-    window_z = math.max(junc.A1.floor_h, junc.A2.floor_h)
-  }
-
-  junc.E2 =
-  {
-    kind = "nothing"
-    area = junc.A2
-  }
-
-  junc.E1.wall_mat = Junction_calc_wall_tex(junc.A1, junc.A2)
-  junc.E2.wall_mat = Junction_calc_wall_tex(junc.A2, junc.A1)
 
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1

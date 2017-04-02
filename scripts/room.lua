@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1118,18 +1118,18 @@ end
 
 
 
-function Room_border_up()
-  --
-  -- Decide the default bordering between any two adjacent areas.
-  -- [ This default can be overridden by EDGE objects, e.g. for doors ]
-  --
+function Room_make_windows(A1, A2)
 
-  local omit_fence_prob = rand.pick({ 10,50,90 })
+  local edge_list = {}
+  local total_len = 0
 
 
   local function area_can_window(A)
     if not A.room then return false end
     if not A.floor_h then return false end
+
+    -- disable windows into caves [ for now... ]
+    if A.room and A.room.is_cave then return false end
 
     if A.mode == "void" then return false end
     if A.chunk and A.chunk.kind != "area" then return false end
@@ -1140,50 +1140,159 @@ function Room_border_up()
   end
 
 
-  local function check_window_heights(A1, A2)
-    local c1 = A1.ceil_h
-    local c2 = A2.ceil_h
-
-    if not c1 or not c2 then return false end
-
-    local max_f = math.max(A1.floor_h, A2.floor_h)
-    local min_c = math.min(c1, c2)
-
-    return (min_c - max_f) >= 128
-  end
-
-
-  local function can_make_window(A1, A2)
-    -- disable windows into caves [ for now... ]
-    if A1.room and A1.room.is_cave then return false end
-    if A2.room and A2.room.is_cave then return false end
-
+  local function calc_vertical_space(A1, A2)
     if A1.is_outdoor and not A2.is_outdoor then
        A1, A2 = A2, A1
     end
 
-    if area_can_window(A1) and
-       area_can_window(A2) and
-       check_window_heights(A1, A2)
-    then
-      return true
+    local c1 = A1.ceil_h
+    local c2 = A2.ceil_h
+
+    if not c1 or not c2 then return -99 end
+
+    local max_f = math.max(A1.floor_h, A2.floor_h)
+    local min_c = math.min(c1, c2)
+
+    return (min_c - max_f)
+  end
+
+
+  local function is_possible_at_seed(S, dir)
+    if not S then return false end
+
+    if S.area != A1 then return false end
+
+    local N = S:neighbor(dir)
+
+    if not N then return false end
+
+    if N.area != A2 then return false end
+
+    -- already have edges here?
+    if S.edge[dir]    then return false end
+    if N.edge[10-dir] then return false end
+
+    return true
+  end
+
+
+  local function kill_seed(S, seed_list)
+    for k = 1, #seed_list do
+      if seed_list[k] == S then
+         seed_list[k] = nil
+      end
     end
   end
 
 
-  local function should_make_window(A1, A2)
-    local prob = style_sel("windows", 0, 20, 50, 80)
+  local function check_for_edge(S, dir, seed_list)
+    if not is_possible_at_seed(S, dir) then return end
 
-    if not A1.is_outdoor and not A2.is_outdoor then prob = prob / 3 end
+    -- determine maximum length of window, and update 'S' to be
+    -- the left-most seed of that run.
 
-    if A1.zone != A2.zone then prob = prob / 5 end
+    local L_dir = geom.LEFT [dir]
+    local R_dir = geom.RIGHT[dir]
 
-    if not rand.odds(prob) then return false end
+    local LS = S
+    local RS = S
 
-    if not can_make_window(A1, A2) then return false end
+    local long = 1
 
-    return true
+    for pass = 1, 9 do
+      RS = RS:neighbor(R_dir)
+
+      if not is_possible_at_seed(RS, dir) then
+        break;
+      end
+
+      long = long + 1
+
+      kill_seed(RS, seed_list)
+    end
+
+    for pass = 1, 9 do
+      LS = LS:neighbor(L_dir)
+
+      if not is_possible_at_seed(LS, dir) then
+        break;
+      end
+
+      S = LS
+      long = long + 1
+
+      kill_seed(LS, seed_list)
+    end
+
+    -- create edge info
+
+    local E = { S=S, dir=dir, long=long }
+
+stderrf("  %s dir:%d long:%d\n", E.S.name, dir, long)
+
+    E.wall_mat  = Junction_calc_wall_tex(A1, A2)
+    E.other_mat = Junction_calc_wall_tex(A2, A1)
+
+    table.insert(edge_list, E)
+
+    total_len = total_len + long
   end
+
+
+  local function find_window_edges()
+stderrf("Window edges %s --> %s\n", A1.name, A2.name)
+
+    for dir = 2,8,2 do
+      local seed_list = table.copy(A1.seeds)
+
+      for i = 1, #seed_list do
+        local S = seed_list[i]
+
+        if S then
+          check_for_edge(S, dir, seed_list)
+        end
+      end
+    end
+
+    return edge_list, total_len
+  end
+
+
+  ---| Room_make_windows |---
+
+  if not area_can_window(A1) then return end
+  if not area_can_window(A2) then return end
+
+  if calc_vertical_space(A1, A2) < 128 then return end
+
+  local window_z = math.max(A1.floor_h, A2.floor_h)
+
+
+--[[  !!!!! FIXME
+  -- less chance between indoor rooms
+  if (not A1.is_outdoor and not A2.is_outdoor) and rand.odds(60) then return end
+
+  -- much less chance between zones
+  if (A1.zone != A2.zone) and rand.odds(80) then return end
+
+  -- check style
+  local prob = style_sel("windows", 0, 20, 50, 80)
+  if not rand.odds(prob) then return end
+--]]
+
+
+  find_window_edges()
+end
+
+
+
+function Room_border_up()
+  --
+  -- Decide the default bordering between any two adjacent areas.
+  -- [ This default can be overridden by EDGE objects, e.g. for doors ]
+  --
+
+  local omit_fence_prob = rand.pick({ 10,50,90 })
 
 
   local function can_omit_fence(A1, A2)
@@ -1226,11 +1335,7 @@ function Room_border_up()
     -- zones : gotta keep 'em separated
 
     if A1.zone != A2.zone then
-      if should_make_window(A1, A2) then
-        Junction_make_window(junc)
-        return
-      end
-
+      Room_make_windows(A1, A2)
       Junction_make_wall(junc)
       return
     end
@@ -1272,7 +1377,7 @@ function Room_border_up()
     -- room to scenic --
 
     if not A2.room then
-      -- TODO Sometimes make windows?  [ probably do elsewhere... ]
+      -- FIXME support windows  [ maybe do elsewhere... ]
 
       Junction_make_wall(junc)
       return
@@ -1307,10 +1412,7 @@ function Room_border_up()
 
     -- windows --
 
-    if should_make_window(A1, A2) then
-      Junction_make_window(junc)
-      return
-    end
+    Room_make_windows(A1, A2)
 
 
     -- when in doubt, block it out!
