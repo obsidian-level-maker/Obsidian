@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2015-2016 Andrew Apted
+--  Copyright (C) 2015-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -476,6 +476,64 @@ GROW_STAIRPAIR_3 =
     ".....", "A^#^A"
     "x111x", "x111x"
   }
+}
+
+
+GROW_STAIRPAIR_4 =
+{
+  prob = 800
+
+  structure =
+  {
+    ".......", "AAAAAAA"
+    ".......", "^^111^^"
+    ".......", "^^111^^"
+    "..111..", "1111111"
+  }
+}
+
+GROW_STAIRPAIR_4B =
+{
+  prob = 800
+
+  structure =
+  {
+    ".......", "AAAAAAA"
+    ".......", "^^111^^"
+    ".......", "^^111^^"
+    ".11111.", "1111111"
+  }
+}
+
+
+GROW_STAIRPAIR_4C =
+{
+  prob = 100
+
+  structure =
+  {
+    ".......", "AAAAAAA"
+    ".......", "^^~~~^^"
+    ".......", "^^~~~^^"
+    ".11111.", "1111111"
+  }
+}
+
+
+GROW_STAIRPAIR_5 =
+{
+  prob = 2000
+
+  structure =
+  {
+    ".....", "AAAAA"
+    ".....", "^11%A"
+    ".....", "^111A"
+    "11...", "1111A"
+    "11...", "11>>A"
+  }
+
+  diagonals = { "1A" }
 }
 
 
