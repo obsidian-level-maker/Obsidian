@@ -37,22 +37,3 @@ DONE:  liquid areas and surfaces
 DONE:  mapmodels
 
 
-
-Revamped UI:
-
-+  implement the new settings
-   -  "bosses"
-
-
-
-Review "weak" strength, esp. guard monsters
-
-  I agree that TWO of the hell knights and revenants is too much for the
-  first level of "weak" strength, and maybe revenant is too strong a monster
-  to appear that early.
-
-  Adjust the calculations based on level size, e.g. when first
-  level or two are small, then spread the guards/bosses out more
-
-  "It's sort of weird to be fighting arachnotrons on map 02"
-

@@ -2,24 +2,27 @@
 CHANGES IN 7.5x
 ===============
 
++  UI revamped, two scrolling columns of modules, and most
+   panels are defined in Lua code
 
-+  UI revamp, two scrolling columns of modules
-   [ most panels defined in Lua ]
+-  UI: option to use mousewheel to change settings
 
--  UI: can use mousewheel to change settings
++  the "Weapons" button now controls how early or late new
+   weapons are introduced into the wad
 
-+  the Weapons setting now controls how early or late in the
-   was new weapons are introduced
+-  new "Ramp Up" and "Bosses" buttons for monster panel
 
 -  new "Bit Mixed" theme
 
--  new health/ammo settings "Bit Less" and "Bit More"
+-  new health/ammo settings: "Bit Less" and "Bit More"
 
--  new theme settings "Original-ish" and "Episode-ish"
+-  new theme settings: "Original-ish" and "Episode-ish"
 
--  config manager "Use" button now sets the seed too
+-  config manager: the "Use" button now sets the seed too
 
 -  abbreviated config in OBLIGDAT lump and config manager
+
+-  support for the Quake3 map format in the CSG code
 
 -  bug fix: swapped normal-exit and secret-exit switches
 
