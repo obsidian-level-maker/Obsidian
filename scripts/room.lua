@@ -1188,7 +1188,7 @@ function Room_make_windows(A1, A2)
   local function kill_seed(S, seed_list)
     for k = 1, #seed_list do
       if seed_list[k] == S then
-         seed_list[k] = nil
+         seed_list[k] = "DEAD"
       end
     end
   end
@@ -1288,7 +1288,7 @@ function Room_make_windows(A1, A2)
       for i = 1, #seed_list do
         local S = seed_list[i]
 
-        if S then
+        if S != "DEAD" then
           check_for_edge(S, dir, seed_list)
         end
       end
@@ -1334,7 +1334,9 @@ function Room_make_windows(A1, A2)
 
   -- wide windows are currently quite rare, so bump up chance when
   -- they occur
-  prob = prob * total_len
+  if total_len >= 2 then
+    prob = prob * 3.0
+  end
 
 --prob = 100  -- FIXME !!!!!!
 
