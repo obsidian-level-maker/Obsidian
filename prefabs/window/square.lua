@@ -1,83 +1,42 @@
 --
--- Window, narrow and short
+-- a simple square shaped window
 --
 
-PREFABS.Window_narrow =
+PREFABS.Window_square1 =
 {
-  file   = "window/narrow.wad"
+  file   = "window/square.wad"
   map    = "MAP01"
 
   prob   = 50
 
   where  = "edge"
+  seed_w = 1
+
   deep   = 16
   over   = 16
   height = 128
 
-  x_fit  = "frame"
---z_fit  = "top"
-
   bound_z1 = 0
   bound_z2 = 112
 }
 
 
-PREFABS.Window_narrow_diag =
+PREFABS.Window_square2 =
 {
-  file   = "window/narrow.wad"
-  map    = "MAP02"
+  template = "Window_square1"
 
-  prob   = 50
+  map      = "MAP02"
 
-  where  = "diagonal"
-  height = 128
-
---z_fit  = "top"
-
-  bound_z1 = 0
-  bound_z2 = 112
-
+  seed_w   = 2
 }
 
 
---------------------------------------------------------
-
---
--- Tall version (expands vertically)
---
-
-UNFINISHED.Window_narrow_tall =
+PREFABS.Window_square3 =
 {
-  file   = "window/narrow.wad"
-  map    = "MAP01"
+  template = "Window_square1"
 
-  prob   = 90
-  group  = "win_tall"
+  map      = "MAP03"
 
-  where  = "edge"
-  deep   = 16
-  over   = 16
-
-  bound_z1 = 0
-  bound_z2 = 112
-
-  z_fit = { 72, 96 }
-}
-
-
-UNFINISHED.Window_narrow_tall_diag =
-{
-  file   = "window/narrow.wad"
-  map    = "MAP02"
-
-  prob   = 50
-  group  = "win_tall"
-
-  where  = "diagonal"
-
-  bound_z1 = 0
-  bound_z2 = 112
-
-  z_fit = { 72, 96 }
+  seed_w   = 3
 }
 
