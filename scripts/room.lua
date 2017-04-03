@@ -1123,6 +1123,15 @@ function Room_make_windows(A1, A2)
   local edge_list = {}
   local total_len = 0
 
+  local WINDOW_PATTERNS =
+  {
+    "1", "2", "3", "22", "2-2", "33", "3-3"
+  }
+
+  if rand.odds(50) then
+    WINDOW_PATTERNS[6] = "222"
+  end
+
 
   local function area_can_window(A)
     if not A.room then return false end
@@ -1185,6 +1194,20 @@ function Room_make_windows(A1, A2)
   end
 
 
+  local function add_piece(S, dir, long)
+    local E = { S=S, dir=dir, long=long }
+
+stderrf("  %s dir:%d long:%d\n", E.S.name, dir, long)
+
+    E.wall_mat  = Junction_calc_wall_tex(A1, A2)
+    E.other_mat = Junction_calc_wall_tex(A2, A1)
+
+    table.insert(edge_list, E)
+
+    total_len = total_len + long
+  end
+
+
   local function check_for_edge(S, dir, seed_list)
     if not is_possible_at_seed(S, dir) then return end
 
@@ -1224,18 +1247,38 @@ function Room_make_windows(A1, A2)
       kill_seed(LS, seed_list)
     end
 
-    -- create edge info
+    -- limit width of window
+    -- [ currently windows this wide *never* occur ]
+    while long >= 9 do
+      S = S:neighbor(R_dir)
+      long = long - 2
+    end
 
-    local E = { S=S, dir=dir, long=long }
+    if long >= 8 then
+      long = 7
+    end
 
-stderrf("  %s dir:%d long:%d\n", E.S.name, dir, long)
+    -- divide really wide windows into smaller ones
 
-    E.wall_mat  = Junction_calc_wall_tex(A1, A2)
-    E.other_mat = Junction_calc_wall_tex(A2, A1)
+    local pattern = assert(WINDOW_PATTERNS[long])
 
-    table.insert(edge_list, E)
+    for i = 1, #pattern do
+      local ch = string.sub(pattern, i, i)
 
-    total_len = total_len + long
+      if ch == '-' then
+        S = S:neighbor(R_dir)
+        continue
+      end
+
+      local want_len = 0 + ch
+      assert(want_len > 0)
+
+      add_piece(S, dir, want_len)
+
+      for i = 1, want_len do
+        S = S:neighbor(R_dir)
+      end
+    end
   end
 
 
@@ -1270,10 +1313,10 @@ stderrf("Window edges %s --> %s\n", A1.name, A2.name)
 
 --[[  !!!!! FIXME
   -- less chance between indoor rooms
-  if (not A1.is_outdoor and not A2.is_outdoor) and rand.odds(60) then return end
+  if (not A1.is_outdoor and not A2.is_outdoor) and rand.odds(50) then return end
 
   -- much less chance between zones
-  if (A1.zone != A2.zone) and rand.odds(80) then return end
+  if (A1.zone != A2.zone) and rand.odds(75) then return end
 
   -- check style
   local prob = style_sel("windows", 0, 20, 50, 80)
