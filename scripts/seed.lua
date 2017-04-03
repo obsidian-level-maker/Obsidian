@@ -675,13 +675,15 @@ function Seed_create_edge(S, dir, long, kind)
 
   -- add it into each seed
   for i = 1, long do
+    assert(S)
+
     if S.edge[dir] then
       error("Seed already has an EDGE")
     end
 
     S.edge[dir] = EDGE
 
-    S = S:raw_neighbor(geom.RIGHT[dir])
+    S = S:neighbor(geom.RIGHT[dir])
   end
 
   -- add it to area list
@@ -703,8 +705,8 @@ function Seed_create_edge_pair(S, dir, long, kind1, kind2)
   local N = S:neighbor(dir)
   assert(N)
 
-  if long > 1 then
-    N = N:raw_neighbor(geom.RIGHT[dir], long - 1)
+  for k = 1, long-1 do
+    N = N:neighbor(geom.RIGHT[dir])
     assert(N)
   end
 
