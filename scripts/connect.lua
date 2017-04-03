@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -169,9 +169,7 @@ P.R2.name, C.A2.name, dir1, dir2)
 
   else  -- edge connection
 
-    local E1, E2 = Seed_create_edge_pair(P.S, P.dir, long, "nothing")
-
-    E1.kind = "arch"
+    local E1, E2 = Seed_create_edge_pair(P.S, P.dir, long, "arch", "nothing")
 
 --[[
 gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)

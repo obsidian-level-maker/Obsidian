@@ -1197,10 +1197,7 @@ function Room_make_windows(A1, A2)
   local function add_piece(S, dir, long)
     local E = { S=S, dir=dir, long=long }
 
-stderrf("  %s dir:%d long:%d\n", E.S.name, dir, long)
-
-    E.wall_mat  = Junction_calc_wall_tex(A1, A2)
-    E.other_mat = Junction_calc_wall_tex(A2, A1)
+--stderrf("  %s dir:%d long:%d\n", E.S.name, dir, long)
 
     table.insert(edge_list, E)
 
@@ -1283,7 +1280,7 @@ stderrf("  %s dir:%d long:%d\n", E.S.name, dir, long)
 
 
   local function find_window_edges()
-stderrf("Window edges %s --> %s\n", A1.name, A2.name)
+-- stderrf("Window edges %s --> %s\n", A1.name, A2.name)
 
     for dir = 2,8,2 do
       local seed_list = table.copy(A1.seeds)
@@ -1301,6 +1298,18 @@ stderrf("Window edges %s --> %s\n", A1.name, A2.name)
   end
 
 
+  local function install_windows()
+    each E in edge_list do
+      local E1, E2 = Seed_create_edge_pair(E.S, E.dir, E.long, "window", "nothing")
+
+      E1.window_z = math.max(A1.floor_h, A2.floor_h)
+
+      E1.wall_mat = Junction_calc_wall_tex(A1, A2)
+      E2.wall_mat = Junction_calc_wall_tex(A2, A1)
+    end
+  end
+
+
   ---| Room_make_windows |---
 
   if not area_can_window(A1) then return end
@@ -1308,23 +1317,30 @@ stderrf("Window edges %s --> %s\n", A1.name, A2.name)
 
   if calc_vertical_space(A1, A2) < 128 then return end
 
-  local window_z = math.max(A1.floor_h, A2.floor_h)
-
-
---[[  !!!!! FIXME
-  -- less chance between indoor rooms
-  if (not A1.is_outdoor and not A2.is_outdoor) and rand.odds(50) then return end
-
-  -- much less chance between zones
-  if (A1.zone != A2.zone) and rand.odds(75) then return end
+  find_window_edges()
 
   -- check style
   local prob = style_sel("windows", 0, 20, 50, 80)
-  if not rand.odds(prob) then return end
---]]
 
+  -- less chance between indoor rooms
+  if (not A1.is_outdoor and not A2.is_outdoor) then
+    prob = prob * 0.5
+  end
 
-  find_window_edges()
+  -- much less chance between zones
+  if (A1.zone != A2.zone) and rand.odds(75) then
+    prob = prob * 0.25
+  end
+
+  -- wide windows are currently quite rare, so bump up chance when
+  -- they occur
+  prob = prob * total_len
+
+--prob = 100  -- FIXME !!!!!!
+
+  if rand.odds(prob) then
+    install_windows()
+  end
 end
 
 

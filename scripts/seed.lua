@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2016 Andrew Apted
+--  Copyright (C) 2008-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -697,8 +697,8 @@ function Seed_create_edge(S, dir, long, kind)
 end
 
 
-function Seed_create_edge_pair(S, dir, long, kind)
-  local E1 = Seed_create_edge(S, dir, long, kind)
+function Seed_create_edge_pair(S, dir, long, kind1, kind2)
+  local E1 = Seed_create_edge(S, dir, long, kind1)
 
   local N = S:neighbor(dir)
   assert(N)
@@ -708,7 +708,7 @@ function Seed_create_edge_pair(S, dir, long, kind)
     assert(N)
   end
 
-  local E2 = Seed_create_edge(N, 10-dir, long, kind)
+  local E2 = Seed_create_edge(N, 10-dir, long, kind2)
 
   E1.peer = E2
   E2.peer = E1
