@@ -262,6 +262,11 @@ DOOM.THEMES =
       PLAIN = 100
     }
 
+    window_groups =
+    {
+      square = 100
+    }
+
     -- FIXME: temp crud
     has_triple_key_door = true
     has_double_switch_door = true

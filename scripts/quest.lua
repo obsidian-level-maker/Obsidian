@@ -70,6 +70,8 @@
 
     sky_h : number   -- height of sky for this zone
 
+    along : number   -- lower values are entered earlier
+
 
     === Theme stuff ===
 
@@ -1151,15 +1153,15 @@ function Quest_create_zones()
 
   local function sort_zones()
     each Z in LEVEL.zones do
-      Z.min_along = 99
+      Z.along = 99
 
       each R in Z.rooms do
-        Z.min_along = math.min(Z.min_along, R.lev_along)
+        Z.along = math.min(Z.along, R.lev_along)
       end
     end
 
     table.sort(LEVEL.zones, function(A, B)
-        return A.min_along < B.min_along end)
+        return A.along < B.along end)
   end
 
 

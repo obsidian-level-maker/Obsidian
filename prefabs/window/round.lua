@@ -7,6 +7,8 @@ PREFABS.Window_round1 =
   file   = "window/round.wad"
   map    = "MAP01"
 
+  group  = "round"
+
   prob   = 50
 
   where  = "edge"

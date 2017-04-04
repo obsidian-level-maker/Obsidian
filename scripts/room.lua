@@ -1149,6 +1149,37 @@ function Room_make_windows(A1, A2)
   end
 
 
+  local function decide_window_group()
+    local R1 = A1.room
+    local R2 = A2.room
+
+    local group1 = A1.zone.window_group
+    local group2 = A2.zone.window_group
+
+    if group1 == nil then return group2 end
+    if group2 == nil then return group1 end
+
+    if R1.zone.along <= R2.zone.along then
+      return group1
+    else
+      return group2
+    end
+
+--[[ OLD CRUD
+    if sel(R1.is_outdoor, 1, 0) != sel(R2.is_outdoor, 1, 0) then
+      if R1.is_outdoor then return group2 end
+      if R2.is_outdoor then return group1 end
+    end
+
+    if R1.svolume >= R2.svolume then
+      return group1
+    else
+      return group2
+    end
+--]]
+  end
+
+
   local function calc_vertical_space(A1, A2)
     if A1.is_outdoor and not A2.is_outdoor then
        A1, A2 = A2, A1
@@ -1298,11 +1329,12 @@ function Room_make_windows(A1, A2)
   end
 
 
-  local function install_windows()
+  local function install_windows(group)
     each E in edge_list do
       local E1, E2 = Seed_create_edge_pair(E.S, E.dir, E.long, "window", "nothing")
 
       E1.window_z = math.max(A1.floor_h, A2.floor_h)
+      E1.window_group = group
 
       E1.wall_mat = Junction_calc_wall_tex(A1, A2)
       E2.wall_mat = Junction_calc_wall_tex(A2, A1)
@@ -1316,6 +1348,10 @@ function Room_make_windows(A1, A2)
   if not area_can_window(A2) then return end
 
   if calc_vertical_space(A1, A2) < 128 then return end
+
+  -- if theme has no window groups, we cannot make any windows
+  local group = decide_window_group()
+  if not group then return end
 
   find_window_edges()
 
@@ -1341,7 +1377,7 @@ function Room_make_windows(A1, A2)
 --prob = 100  -- FIXME !!!!!!
 
   if rand.odds(prob) then
-    install_windows()
+    install_windows(group)
   end
 end
 
@@ -1482,7 +1518,22 @@ function Room_border_up()
   end
 
 
+  local function assign_window_groups()
+    if not THEME.window_groups then return end
+
+    local tab = table.copy(THEME.window_groups)
+
+    each Z in LEVEL.zones do
+      Z.window_group = rand.key_by_probs(tab)
+
+      tab[Z.window_group] = tab[Z.window_group] / 2
+    end
+  end
+
+
   ---| Room_border_up |---
+
+  assign_window_groups()
 
   each _,junc in LEVEL.area_junctions do
     if junc.E1 == nil then
