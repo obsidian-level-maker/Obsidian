@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1943,7 +1943,9 @@ function Layout_finish_scenic_borders()
     local N = S2.area
     if not N then return end
 
-    if not N.room then return end
+    -- check face_room to handle liquid pools
+    if not (N.room or N.face_room) then return end
+
     if not N.is_outdoor then return end
     if not N.floor_h then return end
 
