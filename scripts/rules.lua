@@ -542,6 +542,7 @@ GROW_STAIRPAIR_3 =
 GROW_STAIRPAIR_4 =
 {
   prob = 300
+  skip_prob = 50
 
   structure =
   {
@@ -555,6 +556,7 @@ GROW_STAIRPAIR_4 =
 GROW_STAIRPAIR_4B =
 {
   prob = 300
+  skip_prob = 50
 
   structure =
   {
@@ -569,6 +571,7 @@ GROW_STAIRPAIR_4B =
 GROW_STAIRPAIR_4C =
 {
   prob = 50
+  skip_prob = 75
 
   structure =
   {
@@ -582,9 +585,9 @@ GROW_STAIRPAIR_4C =
 
 GROW_STAIRPAIR_5 =
 {
-  prob = 300
+  prob = 400
   prob_skew = 2
-  skip_prob = 25
+  skip_prob = 33
 
   structure =
   {
@@ -601,7 +604,8 @@ GROW_STAIRPAIR_5 =
 
 GROW_STAIR_CURVE =
 {
-  prob = 200
+  prob = 250
+  skip_prob = 50
 
   structure =
   {
@@ -652,7 +656,7 @@ GROW_DBLSTAIR_CURVE =
 GROW_STAIR_POOL1 =
 {
   prob = 25
-  skip_prob = 75
+  skip_prob = 66
 
   structure =
   {
@@ -679,7 +683,7 @@ GROW_STAIR_POOL2 =
   -- this one is higher than STAIR_POOL1
 
   prob = 30
-  skip_prob = 33
+  skip_prob = 66
 
   structure =
   {
@@ -705,7 +709,7 @@ GROW_STAIR_SIDE2 =
 {
   prob = 70
   prob_skew = 3
-  skip_prob = 33
+  skip_prob = 40
 
   structure =
   {
@@ -723,7 +727,7 @@ GROW_STAIR_SIDE3 =
 {
   prob = 70
   prob_skew = 3
-  skip_prob = 35
+  skip_prob = 40
 
   structure =
   {
