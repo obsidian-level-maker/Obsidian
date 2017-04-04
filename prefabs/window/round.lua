@@ -1,39 +1,42 @@
 --
--- Window with two narrow holes
+-- Round-ish windows
 --
 
-UNFINISHED.Window_double =
+PREFABS.Window_round1 =
 {
-  file   = "window/double.wad"
+  file   = "window/round.wad"
+  map    = "MAP01"
 
-  prob   = 90
+  prob   = 50
 
   where  = "edge"
+  seed_w = 1
+
   deep   = 16
   over   = 16
+  height = 128
 
   bound_z1 = 0
   bound_z2 = 112
 }
 
 
---
--- Tall version (expands vertically)
---
-
-UNFINISHED.Window_double_tall =
+PREFABS.Window_round2 =
 {
-  file   = "window/double.wad"
+  template = "Window_round1"
 
-  prob   = 90
+  map      = "MAP02"
 
-  where  = "edge"
-  deep   = 16
-  over   = 16
+  seed_w   = 2
+}
 
-  bound_z1 = 0
-  bound_z2 = 112
 
-  z_fit = { 64, 88 }
+PREFABS.Window_round3 =
+{
+  template = "Window_round1"
+
+  map      = "MAP03"
+
+  seed_w   = 3
 }
 
