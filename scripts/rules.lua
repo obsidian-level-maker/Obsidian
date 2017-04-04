@@ -282,6 +282,20 @@ GROW_3 =
 }
 
 
+GROW_4 =
+{
+  prob = 30
+  prob_skew = 2
+  skip_prob = 50
+
+  structure =
+  {
+    "....", "1111"
+    ".11.", "1111"
+  }
+}
+
+
 GROW_BLOB_1 =
 {
   prob = 15
@@ -328,6 +342,7 @@ GROW_FUNNEL_2 =
 GROW_CURVE_1 =
 {
   prob = 80
+  skip_prob = 25
 
   structure =
   {
@@ -342,7 +357,8 @@ GROW_CURVE_1 =
 
 GROW_CURVE_2 =
 {
-  prob = 30
+  prob = 45
+  skip_prob = 50
 
   structure =
   {
@@ -422,7 +438,7 @@ GROW_DIAG_BLOB2 =
     "...", "AA%"
     "%..", "%AA"
     "x%.", "x%A"
-    "x1.", "x1."
+    "x1.", "x1#"
     "x/.", "x/A"
     "/..", "/AA"
     "...", "AA/"
@@ -454,7 +470,8 @@ GROW_AREA_1 =
 
 GROW_AREA_2 =
 {
-  prob = 3
+  prob = 6
+  skip_prob = 50
 
   structure =
   {
@@ -524,7 +541,7 @@ GROW_STAIRPAIR_3 =
 
 GROW_STAIRPAIR_4 =
 {
-  prob = 800
+  prob = 300
 
   structure =
   {
@@ -537,7 +554,7 @@ GROW_STAIRPAIR_4 =
 
 GROW_STAIRPAIR_4B =
 {
-  prob = 800
+  prob = 300
 
   structure =
   {
@@ -551,7 +568,7 @@ GROW_STAIRPAIR_4B =
 
 GROW_STAIRPAIR_4C =
 {
-  prob = 100
+  prob = 50
 
   structure =
   {
@@ -565,7 +582,9 @@ GROW_STAIRPAIR_4C =
 
 GROW_STAIRPAIR_5 =
 {
-  prob = 2000
+  prob = 300
+  prob_skew = 2
+  skip_prob = 25
 
   structure =
   {
@@ -606,6 +625,7 @@ GROW_STAIR_CURVE =
 GROW_DBLSTAIR_CURVE =
 {
   prob = 200
+  skip_prob = 50
 
   structure =
   {
@@ -631,7 +651,8 @@ GROW_DBLSTAIR_CURVE =
 
 GROW_STAIR_POOL1 =
 {
-  prob = 7
+  prob = 25
+  skip_prob = 75
 
   structure =
   {
@@ -657,7 +678,8 @@ GROW_STAIR_POOL2 =
 {
   -- this one is higher than STAIR_POOL1
 
-  prob = 25
+  prob = 30
+  skip_prob = 33
 
   structure =
   {
@@ -681,8 +703,9 @@ GROW_STAIR_POOL2 =
 
 GROW_STAIR_SIDE2 =
 {
-  prob = 60
+  prob = 70
   prob_skew = 3
+  skip_prob = 33
 
   structure =
   {
@@ -698,13 +721,14 @@ GROW_STAIR_SIDE2 =
 
 GROW_STAIR_SIDE3 =
 {
-  prob = 60
+  prob = 70
   prob_skew = 3
+  skip_prob = 35
 
   structure =
   {
-    "...", "#AA"
-    "...", "#AA"
+    "...", ".AA"
+    "...", ".AA"
     "..1", "#^/"
     "..1", "#^1"
     "..1", "#^1"
@@ -717,7 +741,8 @@ GROW_STAIR_SIDE3 =
 
 GROW_STAIR_HUGE =
 {
-  prob = 20
+  prob = 30
+  skip_prob = 50
 
   structure =
   {
