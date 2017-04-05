@@ -563,11 +563,27 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local inner_mat = assert(E.wall_mat)
     local outer_mat = assert(E.peer.wall_mat)
 
+    local floor1_mat = E.area.floor_mat
+    local floor2_mat = E.peer.area.floor_mat
+
+    local ceil1_mat = E.area.ceil_mat
+    local ceil2_mat = E.peer.area.ceil_mat
+
     if flip_it then
-      inner_mat, outer_mat = outer_mat, inner_mat
+      inner_mat,  outer_mat  = outer_mat,  inner_mat
+      floor1_mat, floor2_mat = floor2_mat, floor1_mat
+      ceil1_mat,  ceil2_mat  = ceil2_mat,  ceil1_mat
     end
 
-    local skin1 = { wall=inner_mat, outer=outer_mat }
+    local skin1 =
+    {
+      wall   = inner_mat
+      outer  = outer_mat
+      floor  = floor1_mat
+      floor2 = floor2_mat
+      ceil   = ceil1_mat
+      ceil2  = ceil2_mat
+    }
 
     skin1.lock_tag = E.lock_tag
 
