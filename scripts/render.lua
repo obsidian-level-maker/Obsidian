@@ -164,10 +164,9 @@ function Render_edge(E)
     {
       kind = "window"
 
-      height = 192  -- FIXME
-
       seed_w = assert(E.long)
       group  = assert(E.window_group)
+      height = assert(E.window_height)
     }
 
     if geom.is_corner(E.dir) then

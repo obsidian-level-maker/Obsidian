@@ -1329,12 +1329,13 @@ function Room_make_windows(A1, A2)
   end
 
 
-  local function install_windows(group)
+  local function install_windows(group, height)
     each E in edge_list do
       local E1, E2 = Seed_create_edge_pair(E.S, E.dir, E.long, "window", "nothing")
 
       E1.window_z = math.max(A1.floor_h, A2.floor_h)
-      E1.window_group = group
+      E1.window_group  = group
+      E1.window_height = height
 
       E1.wall_mat = Junction_calc_wall_tex(A1, A2)
       E2.wall_mat = Junction_calc_wall_tex(A2, A1)
@@ -1347,7 +1348,8 @@ function Room_make_windows(A1, A2)
   if not area_can_window(A1) then return end
   if not area_can_window(A2) then return end
 
-  if calc_vertical_space(A1, A2) < 128 then return end
+  local height = calc_vertical_space(A1, A2)
+  if height < 128 then return end
 
   -- if theme has no window groups, we cannot make any windows
   local group = decide_window_group()
@@ -1377,7 +1379,7 @@ function Room_make_windows(A1, A2)
 --prob = 100  -- FIXME !!!!!!
 
   if rand.odds(prob) then
-    install_windows(group)
+    install_windows(group, height)
   end
 end
 

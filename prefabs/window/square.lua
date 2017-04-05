@@ -16,7 +16,7 @@ PREFABS.Window_square1 =
 
   deep   = 16
   over   = 16
-  height = 128
+  height = 112
 
   bound_z1 = 0
   bound_z2 = 112

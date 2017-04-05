@@ -19,7 +19,7 @@ PREFABS.Window_round1 =
   height = 128
 
   bound_z1 = 0
-  bound_z2 = 112
+  bound_z2 = 128
 }
 
 
