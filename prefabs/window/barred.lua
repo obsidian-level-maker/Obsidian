@@ -1,73 +1,41 @@
 --
--- Window, wide but vertically short
+-- a window with thick bars
 --
 
-UNFINISHED.Window_wide =
+PREFABS.Window_barred1 =
 {
-  file   = "window/wide.wad"
+  file   = "window/barred.wad"
   map    = "MAP01"
 
-  prob = 90
-
-  where  = "edge"
-  deep   = 16
-  over   = 16
-
-  bound_z1 = 0
-  bound_z2 = 112
-}
-
-
-UNFINISHED.Window_wide_diag =
-{
-  file   = "window/wide.wad"
-  map    = "MAP02"
-
+  group  = "barred"
   prob   = 50
 
-  where  = "diagonal"
-
-  bound_z1 = 0
-  bound_z2 = 112
-}
-
-
-----------------------------------------------------
-
---
--- Tall version (expands vertically)
---
-
-UNFINISHED.Window_wide_tall =
-{
-  file   = "window/wide.wad"
-  map    = "MAP01"
-
-  prob = 90
-
   where  = "edge"
+  seed_w = 1
+
   deep   = 16
   over   = 16
-
-  z_fit = { 64, 88 }
+  height = 128
 
   bound_z1 = 0
-  bound_z2 = 112
+  bound_z2 = 128
 }
 
 
-UNFINISHED.Window_wide_tall_diag =
+PREFABS.Window_barred2 =
 {
-  file   = "window/wide.wad"
-  map    = "MAP02"
+  template = "Window_barred1"
 
-  prob   = 50
+  map      = "MAP02"
+  seed_w   = 2
+}
 
-  where  = "diagonal"
 
-  z_fit = { 64, 88 }
+PREFABS.Window_barred3 =
+{
+  template = "Window_barred1"
 
-  bound_z1 = 0
-  bound_z2 = 112
+  map      = "MAP03"
+  seed_w   = 3
 }
 
