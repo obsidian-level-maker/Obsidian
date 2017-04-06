@@ -1,73 +1,41 @@
 --
--- Window, wide but vertically short
+-- this window is just grate!
 --
 
-UNFINISHED.Window_wide =
+PREFABS.Window_grate_1 =
 {
-  file   = "window/wide.wad"
+  file   = "window/grate.wad"
   map    = "MAP01"
 
-  prob = 90
+  group  = "grate"
+  prob   = 50
 
   where  = "edge"
+  seed_w = 1
+
+  height = 128
   deep   = 16
   over   = 16
 
   bound_z1 = 0
-  bound_z2 = 112
+  bound_z2 = 128
 }
 
 
-UNFINISHED.Window_wide_diag =
+PREFABS.Window_grate_2 =
 {
-  file   = "window/wide.wad"
-  map    = "MAP02"
+  template = "Window_grate_1"
 
-  prob   = 50
-
-  where  = "diagonal"
-
-  bound_z1 = 0
-  bound_z2 = 112
+  map      = "MAP02"
+  seed_w   = 2
 }
 
 
-----------------------------------------------------
-
---
--- Tall version (expands vertically)
---
-
-UNFINISHED.Window_wide_tall =
+PREFABS.Window_grate_3 =
 {
-  file   = "window/wide.wad"
-  map    = "MAP01"
+  template = "Window_grate_1"
 
-  prob = 90
-
-  where  = "edge"
-  deep   = 16
-  over   = 16
-
-  z_fit = { 64, 88 }
-
-  bound_z1 = 0
-  bound_z2 = 112
-}
-
-
-UNFINISHED.Window_wide_tall_diag =
-{
-  file   = "window/wide.wad"
-  map    = "MAP02"
-
-  prob   = 50
-
-  where  = "diagonal"
-
-  z_fit = { 64, 88 }
-
-  bound_z1 = 0
-  bound_z2 = 112
+  map      = "MAP03"
+  seed_w   = 3
 }
 
