@@ -1039,7 +1039,7 @@ SPROUT_DIAG_2 =
 
 SPROUT_JOINER_2x1 =
 {
-  prob = 500
+  prob = 360
 
   structure =
   {
@@ -1111,7 +1111,7 @@ SPROUT_JOINER_4x1 =
 
 SPROUT_JOINER_2x2 =
 {
-  prob = 120
+  prob = 100
 
   structure =
   {
