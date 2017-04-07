@@ -372,9 +372,9 @@ DOOM.THEMES =
 
     window_groups =
     {
-      square = 90
-      tall   = 30
-      grate  = 30
+      square = 70
+      tall   = 40
+      grate  = 40
       barred = 5
     }
 
@@ -478,9 +478,9 @@ DOOM.THEMES =
     window_groups =
     {
       barred = 80
-      round  = 40
-      tall   = 40
-      square =  5
+      tall   = 60
+      round  = 30
+      square = 10
     }
 
     cave_torches =
@@ -613,8 +613,8 @@ DOOM.THEMES =
     window_groups =
     {
       round  = 80
-      barred = 40
-      tall   = 20
+      tall   = 40
+      barred = 20
       grate  = 10
     }
 
