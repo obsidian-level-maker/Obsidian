@@ -53,3 +53,14 @@ PREFABS.Door_plain_diag =
   bound_z2 = 128
 }
 
+
+PREFABS.Door_plain2_hell =
+{
+  template = "Door_plain2"
+
+  theme  = "hell"
+  rank   = 2
+
+  flat_TLITE6_6 = "FLAT1"
+}
+
