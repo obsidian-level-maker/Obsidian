@@ -12,6 +12,8 @@ CHANGES IN 7.5x
 
 +  support for the Quake3 map format in the CSG code
 
++  more variety of windows
+
 -  new "Ramp Up" and "Bosses" buttons for monster panel
 
 -  new "Bit Mixed" theme
