@@ -135,11 +135,6 @@ SKY_GEN.colormaps =
     115, 119, 123, 127
   }
 
-  BLACK_N_WHITE =
-  {
-    0, 4, 0, 4, 0, 4, 0, 4
-  }
-
   -- hill colors --
 
   BLACK_HILLS =
@@ -239,7 +234,7 @@ SKY_GEN.themes =
       HELL_HILLS = 50
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
-      BLACK_HILLS = 50
+      BLACK_HILLS = 25
     }
 
     dark_hills =
@@ -299,6 +294,8 @@ function SKY_GEN.generate_skies()
 
     local is_starry = (_index == starry_ep)
 
+    local is_hilly  = rand.odds(80)
+
 
     local theme_name = theme_list[_index]
 
@@ -337,7 +334,7 @@ function SKY_GEN.generate_skies()
       gui.set_colormap(1, colormap)
       gui.fsky_add_stars({ seed=seed, colmap=1 })
 
-      if theme.dark_hills then
+      if theme.dark_hills and rand.odds(90) then
         hill_tab = theme.dark_hills
       end
 
@@ -364,7 +361,7 @@ function SKY_GEN.generate_skies()
     end
 
 
-    if rand.odds(80) then
+    if is_hilly then
 
       --- Hills ---
 
@@ -379,8 +376,10 @@ function SKY_GEN.generate_skies()
 
       gui.printf("    + %s\n", name)
 
+      local max_h = rand.pick({0.6, 0.65, 0.7, 0.8 })
+
       gui.set_colormap(2, colormap)
-      gui.fsky_add_hills({ seed=seed+1, colmap=2, max_h=0.6 })
+      gui.fsky_add_hills({ seed=seed+1, colmap=2, max_h=max_h })
     end
 
     gui.fsky_write(EPI.sky_patch)
