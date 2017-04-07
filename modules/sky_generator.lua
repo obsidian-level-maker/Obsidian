@@ -2,7 +2,7 @@
 --  MODULE: sky generator
 ----------------------------------------------------------------
 --
---  Copyright (C) 2008-2016 Andrew Apted
+--  Copyright (C) 2008-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -302,7 +302,7 @@ function SKY_GEN.generate_skies()
 
     local is_starry = (_index == starry_ep)
 
-    local is_hilly  = rand.odds(80)
+    local is_hilly  = rand.odds(85)
 
 
     local theme_name = theme_list[_index]
@@ -384,10 +384,26 @@ function SKY_GEN.generate_skies()
 
       gui.printf("    + %s\n", name)
 
-      local max_h = rand.pick({0.6, 0.65, 0.7, 0.8 })
+      local info =
+      {
+        seed = seed + 1
+        colmap = 2
+      }
+
+      info.max_h = rand.pick({0.6, 0.65, 0.7, 0.8 })
+      info.min_h = rand.pick({ -0.2, -0.1 })
+
+      info.frac_dim = rand.pick({1.4, 1.65, 1.8, 1.9 })
+
+      -- sometimes make more pointy mountains
+      if rand.odds(50) then
+        info.power = 3.3
+        info.max_h = info.max_h + 0.1
+        info.min_h = info.min_h + 0.3
+      end
 
       gui.set_colormap(2, colormap)
-      gui.fsky_add_hills({ seed=seed+1, colmap=2, max_h=max_h })
+      gui.fsky_add_hills(info)
     end
 
     gui.fsky_write(EPI.sky_patch)
