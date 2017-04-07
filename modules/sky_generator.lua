@@ -179,6 +179,12 @@ SKY_GEN.colormaps =
     0, 7, 12, 11, 10, 9, 15, 14, 13,
     159, 158, 157, 156, 155, 154
   }
+
+  ICE_HILLS =
+  {
+    0, 244,
+    207, 205, 203, 201, 199, 197, 195, 193, 192
+  }
 }
 
 
@@ -207,6 +213,7 @@ SKY_GEN.themes =
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
       GREENISH_HILLS = 30
+      ICE_HILLS = 10
       BLACK_HILLS = 5
     }
 
@@ -214,6 +221,7 @@ SKY_GEN.themes =
     {
       DARKGREEN_HILLS = 50
       DARKBROWN_HILLS = 50
+      ICE_HILLS = 25
     }
   }
 
