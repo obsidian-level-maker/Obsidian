@@ -10,8 +10,8 @@ PREFABS.Arch_pic1 =
   prob   = 400
   theme  = "tech"
 
-  env      = "!cave"
-  neighbor = "!cave"
+  env      = "building"
+  neighbor = "building"
 
   kind   = "arch"
   where  = "edge"
