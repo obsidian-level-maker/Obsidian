@@ -242,7 +242,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 			float ity = 0.75 - (max_h - f);
 
 			if (use_slope_z)
-				ity += fabs(slope_z) * 30;
+				ity += fabs(slope_z) * 60 - 0.25;
 			else
 				ity += slope_x * 50;
 
