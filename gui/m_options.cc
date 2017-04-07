@@ -47,7 +47,8 @@ static void Parse_Option(const char *name, const char *value)
 	{
 		t_language = StringDup(value);
 	}
-	else if (StringCaseCmp(name, "window_size") == 0)
+	else if (StringCaseCmp(name, "font_size") == 0 ||
+	         StringCaseCmp(name, "window_size") == 0 /* backwards compat */)
 	{
 		window_size = atoi(value);
 		window_size = CLAMP(0, window_size, 5);
@@ -198,7 +199,7 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "language = %s\n", t_language);
 	fprintf(option_fp, "\n");
 
-	fprintf(option_fp, "window_size    = %d\n", window_size);
+	fprintf(option_fp, "font_size      = %d\n", window_size);
 	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
 	fprintf(option_fp, "wheel_can_bump = %d\n", wheel_can_bump ? 1 : 0);
 	fprintf(option_fp, "\n");
@@ -232,7 +233,7 @@ public:
 
 private:
 	Fl_Choice       *opt_language;
-	Fl_Choice       *opt_win_size;
+	Fl_Choice       *opt_font_size;
 
 	Fl_Check_Button *opt_alt_look;
 	Fl_Check_Button *opt_wheel_bump;
@@ -309,11 +310,11 @@ private:
 		}
 	}
 
-	static void callback_WinSize(Fl_Widget *w, void *data)
+	static void callback_FontSize(Fl_Widget *w, void *data)
 	{
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-		window_size = that->opt_win_size->value();
+		window_size = that->opt_font_size->value();
 	}
 
 	static void callback_AltLook(Fl_Widget *w, void *data)
@@ -391,13 +392,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_language->h() + y_step;
 
 
-	opt_win_size = new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Window Size: "));
-	opt_win_size->align(FL_ALIGN_LEFT);
-	opt_win_size->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
-	opt_win_size->callback(callback_WinSize, this);
-	opt_win_size->value(window_size);
+	opt_font_size = new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font Size: "));
+	opt_font_size->align(FL_ALIGN_LEFT);
+	opt_font_size->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
+	opt_font_size->callback(callback_FontSize, this);
+	opt_font_size->value(window_size);
 
-	cy += opt_win_size->h() + y_step;
+	cy += opt_font_size->h() + y_step;
 
 
 	opt_alt_look = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Alternate Look"));
@@ -407,7 +408,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_alt_look->h() + y_step*2/3;
 
 
-	opt_wheel_bump = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Mouse Wheel Changes Settings"));
+	opt_wheel_bump = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Change Settings via Mouse Wheel"));
 	opt_wheel_bump->value(alternate_look ? 1 : 0);
 	opt_wheel_bump->callback(callback_AltLook, this);
 
@@ -434,7 +435,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_backups->h() + y_step*2/3;
 
 
-	opt_debug = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Debugging Messages (in LOGS.txt)"));
+	opt_debug = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Debugging Messages"));
 	opt_debug->value(debug_messages ? 1 : 0);
 	opt_debug->callback(callback_Debug, this);
 
@@ -509,7 +510,7 @@ void DLG_OptionsEditor(void)
 		int opt_w = kf_w(350);
 		int opt_h = kf_h(380);
 
-		option_window = new UI_OptionsWin(opt_w, opt_h, _("OBLIGE Options"));
+		option_window = new UI_OptionsWin(opt_w, opt_h, _("OBLIGE Misc Options"));
 	}
 
 	option_window->want_quit = false;
