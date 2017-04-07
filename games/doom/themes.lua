@@ -2,7 +2,7 @@
 --  DOOM THEMES
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -370,6 +370,14 @@ DOOM.THEMES =
       torches1 = 15
     }
 
+    window_groups =
+    {
+      square = 90
+      tall   = 30
+      grate  = 30
+      barred = 5
+    }
+
     cave_torches =
     {
       blue_torch  = 60
@@ -465,6 +473,14 @@ DOOM.THEMES =
       light_urban1 = 15
       light_diamond = 5
       ceil_redash = 5
+    }
+
+    window_groups =
+    {
+      barred = 80
+      round  = 40
+      tall   = 40
+      square =  5
     }
 
     cave_torches =
@@ -592,6 +608,14 @@ DOOM.THEMES =
       runes3 = 7
       cross1 = 7
       cross2 = 15
+    }
+
+    window_groups =
+    {
+      round  = 80
+      barred = 40
+      tall   = 20
+      grate  = 10
     }
 
     cave_torches =

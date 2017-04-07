@@ -2,7 +2,7 @@
 --  DOOM 1 / ULTIMATE DOOM
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -435,6 +435,13 @@ ULTDOOM.THEMES =
 
     switches = { sw_blue=50 }
 
+    window_groups =
+    {
+      square = 90
+      tall   = 30
+      grate  = 10
+    }
+
     cave_torches =
     {
       red_torch   = 60
@@ -711,6 +718,14 @@ ULTDOOM.THEMES =
       runes3 = 7
       cross1 = 7
       cross2 = 15
+    }
+
+    window_groups =
+    {
+      round  = 80
+      barred = 40
+      tall   = 20
+      grate  = 10
     }
 
     monster_prefs =

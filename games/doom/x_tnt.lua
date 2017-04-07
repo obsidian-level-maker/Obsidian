@@ -219,6 +219,13 @@ TNT.THEMES =
       SW1COMP  = "SW1CMT"
     }
 
+    window_groups =
+    {
+      round  = 90
+      barred = 60
+      grate  = 30
+    }
+
     outdoor_torches =
     {
       blue_torch = 50
