@@ -1347,6 +1347,12 @@ function Fab_load_wad(def)
     local x_offset = side.x_offset
     local y_offset = side.y_offset
 
+    if x_offset == 0 then x_offset = nil end
+    if y_offset == 0 then y_offset = nil end
+
+    if x_offset == 1 then x_offset = 0   end
+    if y_offset == 1 then y_offset = 0   end
+
     C[prefix .. "u1"] = x_offset
     C[prefix .. "v1"] = y_offset
   end
