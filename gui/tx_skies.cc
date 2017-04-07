@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2008-2009 Andrew Apted
+//  Copyright (C) 2008-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -161,26 +161,70 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 	TX_SpectralSynth(seed, height_map, W, fracdim, powscale);
 
 
-	max_h = max_h - min_h;
-
 	aj_Random_c twist;
 
 	twist.Seed(seed ^ 0x1234567);
 
+	bool use_slope_z = (twist.Int() & 255) < 64;
 
-	// draw a column of pixels for every point on the height map.
-	// optimised to only draw the visible parts.
 
-	for (int x = 0; x < W; x++)
+	// convert range from 0.0 .. 1.0 to min_h . max_h
+	int x, y, z;
+
+	for (z = 0 ; z < W ; z++)
+	for (x = 0 ; x < W ; x++)
+	{
+		float& f = height_map[z*W + x];
+
+		f = min_h + f * (max_h - min_h);
+	}
+
+
+	// modify heightmap so that all values at Z=0 are negative
+	float z0_max_h = -99;
+
+	for (x = 0 ; x < W ; x++)
+	{
+		z0_max_h = MAX(z0_max_h, height_map[x]);
+	}
+
+	if (z0_max_h > -0.05)
+	{
+		z0_max_h = (z0_max_h + 0.10) * 1.1;
+
+		for (z = 0 ; z < W ; z++)
+		{
+			float factor = (W - z) / (float)W;
+
+			float sub_h = factor * factor * z0_max_h;
+
+			for (x = 0 ; x < W ; x++)
+			{
+				float& f = height_map[z*W + x];
+
+				f = f - sub_h;
+			}
+		}
+	}
+
+
+	// -- render each column --
+
+	// since every column begins with a negative value (below the
+	// camera) we can merely process the height array from front to
+	// back, and incrementally add pixels to the top of each column.
+
+	for (x = 0 ; x < W ; x++)
 	{
 		// remember the highest span for this column
 		int high_span = 0;
 
-		for (int z = 0; z < W; z++)
+		int x2 = x + 1;
+		if (x2 >= W) x2 = 0;
+
+		for (int z = 0 ; z < W-1 ; z++)
 		{
 			float f = height_map[z*W + x];
-
-			f = min_h + f * max_h;
 
 			int span = int(f*H);
 
@@ -191,19 +235,25 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 			if (span >= H)
 				span = H-1;
 
-			float ity = abs(z - W/2) / float(W/2);
+			// determine slopes at current point
+			float slope_x = height_map[z*W + x2]    - f;
+			float slope_z = height_map[(z+1)*W + x] - f;
 
-			ity = 1.0 - ity * 0.7;
+			float ity = 0.75 - (max_h - f);
 
-			for (int y = high_span; y < span; y++)
+			if (use_slope_z)
+				ity += fabs(slope_z) * 30;
+			else
+				ity += slope_x * 50;
+
+			int col_idx = (int)(ity * map->size);
+			col_idx = CLAMP(0, col_idx, map->size-1);
+
+			byte col = map->colors[col_idx];
+
+			for (int y = high_span ; y < span ; y++)
 			{
-				float i2 = ity - 0.3 * twist.Double();
-
-				int idx = (int)(i2 * map->size);
-
-				idx = CLAMP(0, idx, map->size-1);
-
-				pixels[(H-1-y)*W + x] = map->colors[idx];
+				pixels[(H-1-y)*W + x] = col;
 			}
 
 			high_span = span;
