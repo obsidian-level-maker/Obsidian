@@ -1337,7 +1337,10 @@ function Room_make_windows(A1, A2)
         prob = math.min((prob + 100) / 2, prob * 2.5)
       end
 
-      if rand.odds(prob) then
+      if (A1.room and A1.room.force_windows) or
+         (A2.room and A2.room.force_windows) or
+         rand.odds(prob)
+      then
         local E1, E2 = Seed_create_edge_pair(E.S, E.dir, E.long, "window", "nothing")
 
         E1.window_z = math.max(A1.floor_h, A2.floor_h)
@@ -1366,7 +1369,7 @@ function Room_make_windows(A1, A2)
   find_window_edges()
 
   -- check style
-  local prob = style_sel("windows", 0, 30, 75, 125)
+  local prob = style_sel("windows", 0, 30, 70, 130)
 
   -- less chance between indoor rooms
   if (not A1.is_outdoor and not A2.is_outdoor) then
@@ -1531,9 +1534,26 @@ function Room_border_up()
   end
 
 
+  local function decide_window_boosts()
+    each R in LEVEL.rooms do
+      if R.is_outdoor then continue end
+      if R.is_cave    then continue end
+
+      local prob = style_sel("windows", 0, 2, 5, 8)
+      if R.is_secret then prob = prob * 2 end
+      if R.symmetry  then prob = prob * 2 end
+
+      if rand.odds(prob) then
+        R.force_windows = true
+      end
+    end
+  end
+
+
   ---| Room_border_up |---
 
   assign_window_groups()
+  decide_window_boosts()
 
   each _,junc in LEVEL.area_junctions do
     if junc.E1 == nil then
