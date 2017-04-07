@@ -1329,16 +1329,24 @@ function Room_make_windows(A1, A2)
   end
 
 
-  local function install_windows(group, height)
+  local function install_windows(group, height, base_prob)
     each E in edge_list do
-      local E1, E2 = Seed_create_edge_pair(E.S, E.dir, E.long, "window", "nothing")
+      -- wide windows occur quite rarely, so bump up their chance
+      local prob = base_prob
+      if E.long >= 2 then
+        prob = math.min((prob + 100) / 2, prob * 2.5)
+      end
 
-      E1.window_z = math.max(A1.floor_h, A2.floor_h)
-      E1.window_group  = group
-      E1.window_height = height
+      if rand.odds(prob) then
+        local E1, E2 = Seed_create_edge_pair(E.S, E.dir, E.long, "window", "nothing")
 
-      E1.wall_mat = Junction_calc_wall_tex(A1, A2)
-      E2.wall_mat = Junction_calc_wall_tex(A2, A1)
+        E1.window_z = math.max(A1.floor_h, A2.floor_h)
+        E1.window_group  = group
+        E1.window_height = height
+
+        E1.wall_mat = Junction_calc_wall_tex(A1, A2)
+        E2.wall_mat = Junction_calc_wall_tex(A2, A1)
+      end
     end
   end
 
@@ -1358,29 +1366,19 @@ function Room_make_windows(A1, A2)
   find_window_edges()
 
   -- check style
-  local prob = style_sel("windows", 0, 20, 50, 80)
+  local prob = style_sel("windows", 0, 30, 75, 125)
 
   -- less chance between indoor rooms
   if (not A1.is_outdoor and not A2.is_outdoor) then
-    prob = prob * 0.5
+    prob = prob * 0.7
   end
 
   -- much less chance between zones
-  if (A1.zone != A2.zone) and rand.odds(75) then
-    prob = prob * 0.25
+  if A1.zone != A2.zone then
+    prob = prob * 0.3
   end
 
-  -- wide windows are currently quite rare, so bump up chance when
-  -- they occur
-  if total_len >= 2 then
-    prob = prob * 3.0
-  end
-
---prob = 100  -- FIXME !!!!!!
-
-  if rand.odds(prob) then
-    install_windows(group, height)
-  end
+  install_windows(group, height, prob)
 end
 
 
