@@ -169,7 +169,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
 
 	// convert range from 0.0 .. 1.0 to min_h . max_h
-	int x, y, z;
+	int x, z;
 
 	for (z = 0 ; z < W ; z++)
 	for (x = 0 ; x < W ; x++)
