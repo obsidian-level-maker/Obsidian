@@ -233,18 +233,7 @@ DOOM.THEMES =
 
     fences =
     {
-      BROWN144 = 60
-      WOOD5    = 60
-      STONE    = 40
-      BSTONE2  = 40
-      CEMENT9  = 30
-      BRICK12  = 20
-
-      GSTVINE2 = 15
-      BRICK10  = 10
-      BRICK11  = 10
-      SLADWALL = 20
-      STUCCO3  = 10
+      STONE = 50
     }
 
     floor_sinks =
@@ -315,6 +304,20 @@ DOOM.THEMES =
       SLADWALL = 20
       METAL2   = 10
       METAL1   = 5
+    }
+
+    fences =
+    {
+      BROWN144 = 60
+      STONE    = 40
+      STONE2   = 40
+      METAL2   = 30
+      BRONZE1  = 30
+      SLADWALL = 30
+
+      CEMENT9  = 10
+      BRICK10  = 10
+      METAL1   = 10
     }
 
     cliff_mats =
@@ -437,6 +440,23 @@ DOOM.THEMES =
       METAL2  = 10
     }
 
+    fences =
+    {
+      WOOD5    = 60
+      BSTONE2  = 60
+      BSTONE1  = 40
+      STONE4   = 30
+      STONE6   = 30
+      CEMENT9  = 30
+      MODWALL1 = 30
+      STUCCO3  = 30
+
+      BRICK12  = 10
+      BRICK10  = 10
+      BRICK11  = 10
+      METAL2   = 10
+    }
+
     cliff_mats =
     {
       ROCK2    = 60
@@ -546,6 +566,23 @@ DOOM.THEMES =
       GSTVINE2 = 20
       STONE    = 10
       MARBLE2  = 10
+    }
+
+    fences =
+    {
+      MARBLE3  = 60
+      MARBGRAY = 30
+      WOOD5    = 60
+      WOOD3    = 40
+      STONE4   = 40
+      BSTONE2  = 40
+      ICKWALL3 = 20
+
+      GSTVINE1 = 15
+      GSTVINE2 = 15
+      SP_HOT1  = 10
+      BRICK10  = 10
+      SKIN2    = 20
     }
 
     cliff_mats =
