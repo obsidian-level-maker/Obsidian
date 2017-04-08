@@ -2815,7 +2815,20 @@ function Grower_flatten_outdoor_fences()
     end
 
 
+    -- mark the seed just over the border
+    x2, y2 = geom.nudge(x, y, dir)
+
+    if Seed_valid(x2, y2) then
+      local S = SEEDS[x2][y2]
+      assert(not S.area)
+
+      S.park_border = true
+    end
+
+
     dir = 10 - dir
+
+    local change_list = {}
 
     while x >= sx1 and x <= sx2 and y >= sy1 and y <= sy2 do
       local S1 = SEEDS[x][y]
@@ -2838,11 +2851,23 @@ function Grower_flatten_outdoor_fences()
         if not S then continue end
 
         if not S.area then
-          set_liquid(R, S)
-        elseif S.area.mode != "liquid" then
-          -- stop if we hit a non-liquid area
-          return
+          table.insert(change_list, S)
+          continue
         end
+
+        if S.area.mode == "liquid" then
+          continue
+        end
+
+        -- once we hit a non-liquid area, stop
+
+        if S.area.room == R then
+          each N in change_list do
+            set_liquid(R, N)
+          end
+        end
+
+        return
       end
 
       x, y = geom.nudge(x, y, dir)
@@ -3171,14 +3196,18 @@ function Grower_fill_gaps()
       seeds = { S }
     }
 
+    if S.park_border or (S.top and S.top.park_border) or (S.bottom and S.bottom.park_border) then
+      TEMP.park_border = true
+    end
+
     if S.diagonal then
       TEMP.svolume = 0.5
     else
       TEMP.svolume = 1.0
     end
 
-    -- check if touches very edge of map
-    -- [ it might only touch at a corner, that is OK ]
+    -- check if an edge sits along edge of map
+    -- [ does not matter if only a corner touches edge of map ]
     if S.sx <= 1 or S.sx >= SEED_W or
        S.sy <= 1 or S.sy >= SEED_H
     then
@@ -3246,6 +3275,11 @@ function Grower_fill_gaps()
   local function eval_merge(A1, A2, dir)
     local score = 1
 
+    -- never merge park borders with non-park-borders
+    if (not A1.park_border) != (not A2.park_border) then
+      return -1
+    end
+
     if A2.svolume < MIN_SIZE then
       score = 3
     elseif A1.svolume + A2.svolume <= MAX_SIZE then
@@ -3277,6 +3311,8 @@ function Grower_fill_gaps()
       assert(not A2.is_dead)
 
       local score = eval_merge(A1, A2, dir)
+
+      if score < 0 then continue end
 
       if score > best_score then
         best_A2 = A2
@@ -3499,6 +3535,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 
       A.seeds = temp.seeds
       A.touches_edge = temp.touches_edge
+      A.park_border  = temp.park_border
 
       -- install into seeds
       each S in A.seeds do
@@ -3517,7 +3554,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
     merge_temp_areas()
   end
 
-  smoothen_out_pokers()
+--!!!!  smoothen_out_pokers()
 
   make_real_areas()
 end

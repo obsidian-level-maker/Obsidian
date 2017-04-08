@@ -1886,6 +1886,11 @@ function Layout_create_scenic_borders()
 
         if A.zone != N.zone then continue end
 
+        -- NOTE: park_border fences must be created later
+        if A.park_border then
+          junc.defer_park_border = true
+        end
+
         Junction_make_empty(junc)
       end
     end
@@ -2019,6 +2024,18 @@ function Layout_finish_scenic_borders()
   end
 
 
+  local function do_park_borders(A)
+    each N in A.neighbors do
+      local junc = Junction_lookup(A, N)
+      assert(junc)
+
+      if junc.defer_park_border then
+        Junction_make_fence(junc)
+      end
+    end
+  end
+
+
   ---| Layout_finish_scenic_borders |---
 
   each Z in LEVEL.zones do
@@ -2030,6 +2047,12 @@ function Layout_finish_scenic_borders()
     if A.is_boundary then
       temp_properties(A)
       do_outer_skies(A)
+    end
+  end
+
+  each A in LEVEL.areas do
+    if A.is_boundary and A.park_border then
+      do_park_borders(A)
     end
   end
 end
@@ -2174,6 +2197,8 @@ function Layout_liquid_stuff()
 
 
   ---| Layout_liquid_stuff |---
+
+do return end --!!!!!! FIXME
 
   if LEVEL.liquid_usage == 0 then return end
 
