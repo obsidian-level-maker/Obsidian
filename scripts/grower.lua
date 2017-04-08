@@ -1202,7 +1202,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
     -- environment check
     if rule.env != nil and rule.env != "any" then
       -- FIXME: support "!xxx" properly [ see prefab code ]
-      if rule.env == "!cave" then 
+      if rule.env == "!cave" then
         if R:get_env() == "cave" then return 0 end
       else
         if rule.env != R:get_env() then return 0 end
@@ -2767,6 +2767,115 @@ end
 
 
 
+function Grower_foo_outdoor_fences()
+
+  local sx1, sy1
+  local sx2, sy2
+
+  local function get_bounds(R)
+    sx1, sy1 =  9e9,  9e9
+    sx2, sy2 = -9e9, -9e9
+
+    each A in R.areas do
+      each S in A.seeds do
+        sx1 = math.min(sx1, S.sx)
+        sy1 = math.min(sy1, S.sy)
+        sx2 = math.max(sx2, S.sx)
+        sy2 = math.max(sy2, S.sy)
+      end
+    end
+  end
+
+
+  local function set_liquid(R, S)
+    if not R.dummy_liquid then
+       R.dummy_liquid = AREA_CLASS.new("liquid")
+       R:add_area(R.dummy_liquid)
+    end
+
+    S.area = R.dummy_liquid
+
+    table.insert(S.area.seeds, S)
+  end
+
+
+  local function scan_direction(R, x, y, dir)
+    -- check we can see the edge of the map
+    local x2, y2 = x, y
+
+    while true do
+      x2, y2 = geom.nudge(x2, y2, dir)
+
+      if not Seed_valid(x2, y2) then break; end
+
+      local S = SEEDS[x2][y2]
+
+      if S.area then return end
+      if S.top and S.top.area then return end
+    end
+
+
+    dir = 10 - dir
+
+    while x >= sx1 and x <= sx2 and y >= sy1 and y <= sy2 do
+      local S1 = SEEDS[x][y]
+      local S2 = S1.top
+
+      if S2 then
+        -- swap S1 and S2 so that S1 is "earlier" (closer to edge of room)
+        assert(S1.diagonal <= 3)
+
+        if (dir == 2) or
+           (dir == 4 and S1.diagonal == 1) or
+           (dir == 6 and S1.diagonal == 3)
+        then
+          S1, S2 = S2, S1
+        end
+      end
+
+      for pass = 1, 2 do
+        local S = sel(pass == 1, S1, S2)
+        if not S then continue end
+
+        -- stop if we hit a non-liquid area
+        if not S.area then
+          set_liquid(R, S)
+        elseif S.area.mode != "liquid" then
+          return
+        end
+      end
+
+      x, y = geom.nudge(x, y, dir)
+    end
+  end
+
+
+  local function visit_park(R)
+    get_bounds(R)
+
+    for x = sx1, sx2 do
+      scan_direction(R, x, sy1, 2)
+      scan_direction(R, x, sy2, 8)
+    end
+
+    for y = sy1, sy2 do
+      scan_direction(R, sx1, y, 4)
+      scan_direction(R, sx2, y, 6)
+    end
+  end
+
+
+  ---| Grower_foo_outdoor_fences |---
+
+  each R in LEVEL.rooms do
+    if R.is_outdoor and not R.is_cave then
+      visit_park(R)
+    end
+  end
+end
+
+
+
 function Grower_prune_small_rooms()
 
   local function is_leaf(R)
@@ -3435,6 +3544,7 @@ function Grower_create_rooms()
   Grower_prune_small_rooms()
 
   Grower_decorate_rooms()
+  Grower_foo_outdoor_fences()
   Grower_split_liquids()
 
   Grower_fill_gaps()
