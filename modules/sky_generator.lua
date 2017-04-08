@@ -1,6 +1,6 @@
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --  MODULE: sky generator
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Copyright (C) 2008-2017 Andrew Apted
 --
@@ -14,7 +14,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 SKY_GEN = { }
 
@@ -28,6 +28,25 @@ SKY_GEN.colormaps =
     8, 7, 6, 5,
     111, 109, 107, 104, 101,
     98, 95, 91, 87, 83, 4
+  }
+
+  RED_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    191,190,189,188,186,184,182,180
+  }
+
+  BLUE_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    247,246,245,244,243,242,241,240,
+    207,206,205,204,203,202,201,200
+  }
+
+  BROWN_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    2,2,1,1, 79,79,78,77,76,75,74,73,71,69
   }
 
   -- cloud colors --
@@ -231,8 +250,8 @@ SKY_GEN.themes =
     clouds =
     {
       HELL_CLOUDS = 70
-      HELLISH_CLOUDS = 70
       DARKRED_CLOUDS = 50
+      HELLISH_CLOUDS = 30
       YELLOW_CLOUDS = 30
       ORANGE_CLOUDS = 30
     }
@@ -266,7 +285,7 @@ function SKY_GEN.generate_skies()
   end
 
   -- often have no starry sky at all
-  if rand.odds(40) then
+  if rand.odds(30) then
     starry_ep = -7
   end
 
@@ -298,11 +317,11 @@ function SKY_GEN.generate_skies()
 
     local seed = int(gui.random() * 1000000)
 
-    local squish = 2.0
+    local is_starry = (_index == starry_ep) or rand.odds(2)
+    local is_nebula = is_starry and rand.odds(60)
 
-    local is_starry = (_index == starry_ep)
-
-    local is_hilly  = rand.odds(85)
+    -- only rarely combine stars + nebula + hills
+    local is_hilly  = rand.odds(sel(is_nebula, 25, 90))
 
 
     local theme_name = theme_list[_index]
@@ -316,19 +335,56 @@ function SKY_GEN.generate_skies()
     end
 
     local theme = all_themes[theme_name]
-
     assert(theme)
-    assert(theme.clouds)
-    assert(theme.hills)
 
-    local hill_tab = theme.hills
+    local cloud_tab = assert(theme.clouds)
+    local  hill_tab = assert(theme.hills)
+
+    local nebula_tab =
+    {
+      BLUE_NEBULA  = 90
+       RED_NEBULA  = 60
+      BROWN_NEBULA = 30
+    }
 
 
     gui.fsky_create(256, 128, 0)
 
-    if is_starry then
 
-      --- Stars ---
+    --- Clouds ---
+
+    if not is_starry or is_nebula then
+
+      local name
+
+      if is_nebula then
+        name = rand.key_by_probs(nebula_tab)
+        -- don't use same one again
+        nebula_tab[name] = nebula_tab[name] / 1000
+
+      else
+        name = rand.key_by_probs(cloud_tab)
+        -- don't use same one again
+        cloud_tab[name] = cloud_tab[name] / 1000
+      end
+
+      local colormap = SKY_GEN.colormaps[name]
+      if not colormap then
+        error("SKY_GEN: unknown colormap: " .. tostring(name))
+      end
+
+      gui.printf("  %d = %s\n", _index, name)
+
+      gui.set_colormap(1, colormap)
+      gui.fsky_add_clouds({ seed=seed, colmap=1, squish=2.0 })
+
+      EPI.dark_prob = 10
+    end
+
+
+    --- Stars ---
+
+    if is_starry then
 
       local name = "STARS"
 
@@ -347,31 +403,12 @@ function SKY_GEN.generate_skies()
       end
 
       EPI.dark_prob = 100  -- always, for flyingdeath
-
-    else
-      --- Clouds ---
-
-      local name = rand.key_by_probs(theme.clouds)
-      -- don't use same one again
-      theme.clouds[name] = nil
-
-      local colormap = SKY_GEN.colormaps[name]
-      if not colormap then
-        error("SKY_GEN: unknown colormap: " .. tostring(name))
-      end
-
-      gui.printf("  %d = %s\n", _index, name)
-
-      gui.set_colormap(1, colormap)
-      gui.fsky_add_clouds({ seed=seed, colmap=1, squish=squish })
-
-      EPI.dark_prob = 10
     end
 
 
-    if is_hilly then
+    --- Hills ---
 
-      --- Hills ---
+    if is_hilly then
 
       local name = rand.key_by_probs(hill_tab)
       -- don't use same one again
