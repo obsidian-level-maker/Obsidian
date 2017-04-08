@@ -7,6 +7,8 @@ CHANGES IN 7.5x
 
 -  UI: option to use mousewheel to change settings
 
+-  UI: main window can be vertically resized
+
 +  the "Weapons" button now controls how early or late new
    weapons are introduced into the wad
 

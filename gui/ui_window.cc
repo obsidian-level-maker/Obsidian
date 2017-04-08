@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -63,8 +63,8 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
 UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	Fl_Double_Window(W, H, title)
 {
-	// not resizable!
-	size_range(W, H, W, H);
+	// only vertically resizable
+	size_range(W, H, W, 2000);
 
 	callback((Fl_Callback *) main_win_close_CB);
 
@@ -74,7 +74,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	int LEFT_W = kf_w(232);
 	int MOD_W   = (W - LEFT_W) / 2 - 4;
 
-	int TOP_H   = H * 45 / 100;
+	int TOP_H   = kf_h(228);
 	int BOT_H   = H - TOP_H - 4;
 
 	game_box = new UI_Game(0, 0, LEFT_W, TOP_H);
@@ -88,7 +88,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	end();
 
-	resizable(NULL);
+	resizable(right_mods);
 }
 
 

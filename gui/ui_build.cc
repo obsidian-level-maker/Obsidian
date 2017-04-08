@@ -90,7 +90,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	/* --- Status Area --- */
 
-	cy = Y + H - kf_h(112);
+	cy = cy + button_h + kf_h(16);
 
 
 	int pad = kf_w(14);
@@ -98,7 +98,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad*2, kf_h(26), _("Ready to go!"));
 	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
 
-	cy += status->h() + kf_h(14);
+	cy += status->h() + kf_h(12);
 
 
 	progress = new Fl_Progress(X + pad, cy, W - pad*2, kf_h(26));
@@ -108,11 +108,11 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	progress->value(0.0);
 	progress->labelsize(FL_NORMAL_SIZE + 2);
 
+	cy = cy + progress->h() + kf_h(8);
+
 
 	int cw = kf_w(10);
 	int ch = kf_h(26);
-	cy = Y + H - ch * 3/2;
-
 
 	seed_display = new Fl_Box(FL_NO_BOX, X + cw, cy, W - cw*2, ch, "---- ---- ---- ----");
 	seed_display->labelfont(FL_COURIER);
