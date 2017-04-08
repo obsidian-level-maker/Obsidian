@@ -542,7 +542,7 @@ GROW_STAIRPAIR_3 =
 GROW_STAIRPAIR_4 =
 {
   prob = 300
-  skip_prob = 50
+  skip_prob = 60
 
   structure =
   {
@@ -555,8 +555,8 @@ GROW_STAIRPAIR_4 =
 
 GROW_STAIRPAIR_4B =
 {
-  prob = 300
-  skip_prob = 50
+  prob = 200
+  skip_prob = 60
 
   structure =
   {
@@ -571,7 +571,7 @@ GROW_STAIRPAIR_4B =
 GROW_STAIRPAIR_4C =
 {
   prob = 50
-  skip_prob = 75
+  skip_prob = 60
 
   structure =
   {
@@ -585,9 +585,9 @@ GROW_STAIRPAIR_4C =
 
 GROW_STAIRPAIR_5 =
 {
-  prob = 400
+  prob = 200
   prob_skew = 2
-  skip_prob = 33
+  skip_prob = 50
 
   structure =
   {
@@ -656,14 +656,14 @@ GROW_DBLSTAIR_CURVE =
 GROW_STAIR_POOL1 =
 {
   prob = 25
-  skip_prob = 66
+  skip_prob = 80
 
   structure =
   {
     "x.....", "xAAA%."
     "1.....", "1/~%A."
     "1.....", "1~~~A."
-    "1.....", "1%~/A#"
+    "1.....", "1~~/A#"
     "1.....", "1>AA/."
     "x....x", "x##..x"
   }
@@ -672,7 +672,7 @@ GROW_STAIR_POOL1 =
   {
     "A."
     "1~", "~A"
-    "1~", "~A"
+    "~A"
     "A."
   }
 }
@@ -683,14 +683,14 @@ GROW_STAIR_POOL2 =
   -- this one is higher than STAIR_POOL1
 
   prob = 30
-  skip_prob = 66
+  skip_prob = 80
 
   structure =
   {
     "x.....", "xAAA%."
     "1.....", "1/~%A."
     "1.....", "1~~~A."
-    "1.....", "1%~/A#"
+    "1.....", "1~~/A#"
     "1.....", "1>>A/."
     "x....x", "x##..x"
   }
@@ -699,7 +699,7 @@ GROW_STAIR_POOL2 =
   {
     "A."
     "1~", "~A"
-    "1~", "~A"
+    "~A"
     "A."
   }
 }
@@ -714,12 +714,10 @@ GROW_STAIR_SIDE2 =
   structure =
   {
     "....", "#AAA"
-    "..1x", "#^/x"
+    "..1x", "#^1x"
     "..1x", "#^1x"
     "..1x", "#11x"
   }
-
-  diagonals = { "A1" }
 }
 
 
@@ -733,20 +731,18 @@ GROW_STAIR_SIDE3 =
   {
     "...", ".AA"
     "...", ".AA"
-    "..1", "#^/"
+    "..1", "#^1"
     "..1", "#^1"
     "..1", "#^1"
     "..1", "#11"
   }
-
-  diagonals = { "A1" }
 }
 
 
 GROW_STAIR_HUGE =
 {
   prob = 30
-  skip_prob = 50
+  skip_prob = 60
 
   structure =
   {
