@@ -1063,7 +1063,7 @@ SPROUT_JOINER_2x1 =
 
 SPROUT_JOINER_3x1 =
 {
-  prob = 2000
+  prob = 1500
 
   structure =
   {
@@ -1087,7 +1087,7 @@ SPROUT_JOINER_3x1 =
 
 SPROUT_JOINER_4x1 =
 {
-  prob = 4000
+  prob = 3000
 
   structure =
   {
@@ -1136,7 +1136,7 @@ SPROUT_JOINER_2x2 =
 
 SPROUT_JOINER_3x2 =
 {
-  prob = 4000
+  prob = 3000
 
   structure =
   {
@@ -1161,7 +1161,7 @@ SPROUT_JOINER_3x2 =
 
 SPROUT_JOINER_L =
 {
-  prob = 200
+  prob = 100
 
   structure =
   {
