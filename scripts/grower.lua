@@ -2767,7 +2767,7 @@ end
 
 
 
-function Grower_foo_outdoor_fences()
+function Grower_flatten_outdoor_fences()
 
   local sx1, sy1
   local sx2, sy2
@@ -2837,15 +2837,44 @@ function Grower_foo_outdoor_fences()
         local S = sel(pass == 1, S1, S2)
         if not S then continue end
 
-        -- stop if we hit a non-liquid area
         if not S.area then
           set_liquid(R, S)
         elseif S.area.mode != "liquid" then
+          -- stop if we hit a non-liquid area
           return
         end
       end
 
       x, y = geom.nudge(x, y, dir)
+    end
+  end
+
+
+  local function fixup_diagonal(R, S)
+    if not S then return end
+    if not S.diagonal then return end
+
+    if S.area then return end
+
+    -- require at least two liquid neighbors in same room
+    local nb_count = 0
+    local nb_area
+
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+
+      if N and N.area and
+         N.area.room == R and
+         N.area.mode == "liquid"
+      then
+        nb_count = nb_count + 1
+
+        if not nb_area then nb_area = N.area end
+      end
+    end
+
+    if nb_count >= 2 then
+      set_liquid(R, S)
     end
   end
 
@@ -2862,10 +2891,22 @@ function Grower_foo_outdoor_fences()
       scan_direction(R, sx1, y, 4)
       scan_direction(R, sx2, y, 6)
     end
+
+    -- handle awkward diagonals
+    for pass = 1, 2 do
+      for x = sx1, sx2 do
+      for y = sy1, sy2 do
+        local S = SEEDS[x][y]
+
+        fixup_diagonal(R, S)
+        fixup_diagonal(R, S.top)
+      end
+      end
+    end
   end
 
 
-  ---| Grower_foo_outdoor_fences |---
+  ---| Grower_flatten_outdoor_fences |---
 
   each R in LEVEL.rooms do
     if R.is_outdoor and not R.is_cave then
@@ -3544,7 +3585,7 @@ function Grower_create_rooms()
   Grower_prune_small_rooms()
 
   Grower_decorate_rooms()
-  Grower_foo_outdoor_fences()
+  Grower_flatten_outdoor_fences()
   Grower_split_liquids()
 
   Grower_fill_gaps()
