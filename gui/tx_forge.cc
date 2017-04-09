@@ -315,6 +315,13 @@ void TX_SpectralSynth(int seed, float *buf, int width,
 	SYS_ASSERT(0 < fracdim && fracdim < 4.0);
 	SYS_ASSERT(powscale > 0);
 
+	// NOTE : width *must* be a power of two
+	for (int test = width ; test > 1 ; test >>= 1)
+	{
+		if (test & 1)
+			Main_FatalError("TX_SpectralSynth: width '%d' is not a power of two\n", width);
+	}
+
 	ss_twist.Seed(seed);
 
 	init_gauss();

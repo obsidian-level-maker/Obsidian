@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -860,6 +860,7 @@ extern int DM_title_set_palette(lua_State *L);
 extern int DM_title_property(lua_State *L);
 extern int DM_title_draw_rect(lua_State *L);
 extern int DM_title_draw_line(lua_State *L);
+extern int DM_title_draw_clouds(lua_State *L);
 extern int DM_title_load_image(lua_State *L);
 
 extern int wadfab_load(lua_State *L);
@@ -955,6 +956,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "title_prop",        DM_title_property },
 	{ "title_draw_rect",   DM_title_draw_rect },
 	{ "title_draw_line",   DM_title_draw_line },
+	{ "title_draw_clouds", DM_title_draw_clouds },
 	{ "title_load_image",  DM_title_load_image },
 
 	{ "wadfab_load",         wadfab_load },

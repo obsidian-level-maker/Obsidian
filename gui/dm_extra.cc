@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2008-2016 Andrew Apted
+//  Copyright (C) 2008-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -398,7 +398,7 @@ int DM_fsky_add_stars(lua_State *L)
 
 	lua_pop(L, 4);
 
-	// validation... 
+	// validation...
 	SYS_ASSERT(sky_pixels);
 
 	if (map_id < 1 || map_id > MAX_COLOR_MAPS)
@@ -453,7 +453,7 @@ int DM_fsky_add_clouds(lua_State *L)
 
 	lua_pop(L, 4);
 
-	// validation... 
+	// validation...
 	SYS_ASSERT(sky_pixels);
 
 	if (map_id < 1 || map_id > MAX_COLOR_MAPS)
@@ -516,7 +516,7 @@ int DM_fsky_add_hills(lua_State *L)
 
 	lua_pop(L, 4);
 
-	// validation... 
+	// validation...
 	SYS_ASSERT(sky_pixels);
 
 	if (map_id < 1 || map_id > MAX_COLOR_MAPS)
@@ -2056,6 +2056,89 @@ int DM_title_load_image(lua_State *L)
 		luaL_error(L, "title_load_image: no such file: %s", filename);
 
 	TDraw_Image(x, y, title_last_tga);
+
+	return 0;
+}
+
+
+int DM_title_draw_clouds(lua_State *L)
+{
+	// LUA: title_draw_clouds(seed, hue1, hue2, thresh, power, fracdim)
+
+	int seed = luaL_checkint(L, 1);
+
+	rgb_color_t hue1 = Grab_Color(L, 2);
+	rgb_color_t hue2 = Grab_Color(L, 3);
+	rgb_color_t hue3 = Grab_Color(L, 4);
+
+	double thresh   = luaL_optnumber(L, 5, 0.0);
+	double powscale = luaL_optnumber(L, 6, 1.0);
+	double fracdim  = luaL_optnumber(L, 7, 2.4);
+
+	if (thresh > 0.98)
+		return luaL_error(L, "title_draw_clouds: bad thresh value");
+
+	if (powscale < 0.01)
+		return luaL_error(L, "title_draw_clouds: bad power value");
+
+	if (fracdim > 2.99 || fracdim < 0.2)
+		return luaL_error(L, "title_draw_clouds: bad fracdim value");
+
+	SYS_ASSERT(title_pix);
+	SYS_ASSERT(title_W > 0);
+
+	// create height field
+	// [ it is a square, and size must be a power of two ]
+
+	int W = MAX(title_W, title_H) - 1;
+	for (int k = 0 ; k < 30 ; k++) W |= (W >> 1);
+	W += 1;
+
+	float * synth = new float[W * W];
+
+	TX_SpectralSynth(seed, synth, W, fracdim, powscale);
+
+	for (int y = 0 ; y < title_H ; y++)
+	for (int x = 0 ; x < title_W ; x++)
+	{
+		float src = synth[y * W + x];
+
+		if (src < thresh)
+			continue;
+
+		src = (src - thresh) * 2 / (1.0 - thresh);
+
+		float r, g, b;
+
+		if (src < 1.0)
+		{
+			r =   RGB_RED(hue2) * src +   RGB_RED(hue1) * (1.0 - src);
+			g = RGB_GREEN(hue2) * src + RGB_GREEN(hue1) * (1.0 - src);
+			b =  RGB_BLUE(hue2) * src +  RGB_BLUE(hue1) * (1.0 - src);
+		}
+		else
+		{
+			src = src - 1.0;
+
+			r =   RGB_RED(hue3) * src +   RGB_RED(hue2) * (1.0 - src);
+			g = RGB_GREEN(hue3) * src + RGB_GREEN(hue2) * (1.0 - src);
+			b =  RGB_BLUE(hue3) * src +  RGB_BLUE(hue2) * (1.0 - src);
+		}
+
+		int r2 = CLAMP(0, r, 255);
+		int g2 = CLAMP(0, g, 255);
+		int b2 = CLAMP(0, b, 255);
+
+		rgb_color_t col = MAKE_RGBA(r2, g2, b2, 255);
+
+		for (int dy = 0 ; dy < 3 ; dy++)
+		for (int dx = 0 ; dx < 3 ; dx++)
+		{
+			title_pix[(y*3+dy) * title_W3 + (x*3+dx)] = col;
+		}
+	}
+
+	delete[] synth;
 
 	return 0;
 }
