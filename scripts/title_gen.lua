@@ -1376,6 +1376,34 @@ TITLE_SUB_STYLES =
 }
 
 
+TITLE_BACKGROUND_STYLES =
+{
+  red_nebula =
+  {
+    hue1   = "#300"
+    hue2   = "#f00"
+    hue3   = "#fff"
+    thresh = 0.5
+  }
+
+  blue_nebula =
+  {
+    hue1   = "#000"
+    hue2   = "#00f"
+    hue3   = "#99f"
+    thresh = 0.5
+  }
+
+  green_nebula =
+  {
+    hue1   = "#000"
+    hue2   = "#060"
+    hue3   = "#0f0"
+    thresh = 0.5
+  }
+}
+
+
 ------------------------------------------------------------------------
 
 
@@ -1383,6 +1411,8 @@ function Title_add_background()
   --
   -- generate a night sky scene
   --
+
+  local style = Title_pick_style(TITLE_BACKGROUND_STYLES, {})
 
   local seed = int(gui.random() * 1000000)
 
@@ -1392,7 +1422,9 @@ function Title_add_background()
 
   -- WISH : render planets / moons
 
-  gui.title_draw_clouds(seed, "#300", "#f00", "#fff", 0.6)
+  gui.title_draw_clouds(seed, style.hue1, style.hue2, style.hue3,
+                        style.thresh or 0, style.power or 1,
+                        style.fracdim or 2.4)
 end
 
 
