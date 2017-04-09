@@ -61,7 +61,7 @@ function MISC_STUFF.begin_level(self)
 end
 
 
-OB_MODULES["miscellaneous"] =
+OB_MODULES["misc"] =
 {
   label = _("Miscellaneous")
 
