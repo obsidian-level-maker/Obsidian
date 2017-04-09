@@ -1119,28 +1119,60 @@ DOOM.ROOM_THEMES =
 ----- HELL / GOTHIC -----------------------------
 
 
-  hell_Marble =
+  hell_GreenMarble =
   {
     env  = "building"
-    prob = 100
+    prob = 40
 
     walls =
     {
       MARBLE1 = 20
       MARBLE2 = 50
       MARBLE3 = 50
-
-      MARBGRAY = 80
     }
 
     floors =
     {
-      DEM1_5   = 50
-      DEM1_6   = 30
-      FLAT10   = 25
-      FLAT5_4  = 15
+      GRNROCK  = 30
+      FLAT5_4  = 30
+      FLAT5_1  = 30
       FLOOR7_1 = 30
-      FLOOR7_2 = 30
+
+      FLAT10   = 10
+      FLOOR6_2 = 10
+      RROCK14  = 10
+      MFLR8_2  = 10
+    }
+
+    ceilings =
+    {
+      FLOOR7_2 = 50
+      DEM1_5   = 20
+      FLOOR6_1 = 20
+      FLOOR6_2 = 20
+      MFLR8_4  = 15
+    }
+  }
+
+
+  hell_GrayMarble =
+  {
+    env  = "building"
+    prob = 60
+
+    walls =
+    {
+      MARBGRAY = 50
+    }
+
+    floors =
+    {
+      FLOOR7_1 = 40
+      DEM1_5   = 40
+      DEM1_6   = 20
+      FLAT10   = 20
+      FLAT5_4  = 20
+      FLAT5_8  = 20
     }
 
     ceilings =
