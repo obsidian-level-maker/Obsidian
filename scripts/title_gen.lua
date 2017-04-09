@@ -1401,6 +1401,26 @@ TITLE_BACKGROUND_STYLES =
     hue3   = "#0f0"
     thresh = 0.5
   }
+
+  brown_nebula =
+  {
+    hue1   = "#000000"
+    hue2   = "#ab6f43"
+    hue3   = "#ffebdf"
+    thresh = 0.25
+    power  = 3.0
+  }
+
+  firey_nebula =
+  {
+    prob = 100
+
+    hue1   = "#300"
+    hue2   = "#732"
+    hue3   = "#ff8"
+    thresh = 0.2
+    power  = 1.5
+  }
 }
 
 
