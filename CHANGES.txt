@@ -2,11 +2,8 @@
 CHANGES IN 7.5x
 ===============
 
-+  UI revamped, two scrolling columns of modules, and most
-   panels are defined in Lua code
-
++  UI: big revamp, two scrolling columns of modules
 -  UI: option to use mousewheel to change settings
-
 -  UI: main window can be vertically resized
 
 +  the "Weapons" button now controls how early or late new
@@ -16,24 +13,19 @@ CHANGES IN 7.5x
 
 +  support for the Quake3 map format in the CSG code
 
-+  more variety of windows
++  more variety of window prefabs
 
 -  new "Ramp Up" and "Bosses" buttons for monster panel
-
 -  new "Bit Mixed" theme
-
 -  new health/ammo settings: "Bit Less" and "Bit More"
-
 -  new theme settings: "Original-ish" and "Episode-ish"
 
+-  removed all title pictures, generate a nebula instead
+-  various polishing of the shape rules
+-  abbreviated config in OBLIGDAT lump and config manager
 -  config manager: the "Use" button now sets the seed too
 
--  abbreviated config in OBLIGDAT lump and config manager
-
--  less chance of producing maps that are much smaller than
-   they are supposed to be
-
--  bug fix: swapped normal-exit and secret-exit switches
-
+-  less chance of producing very undersized maps
+-  fixed bug swapping normal-exit and secret-exit switches
 -  removed the non-standard player things (4001..4004)
 
