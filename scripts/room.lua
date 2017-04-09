@@ -2221,7 +2221,7 @@ function Room_floor_ceil_heights()
     end
 --]]
 
-    for loop = 1, 20 do
+    for loop = 1, 1 do
       group_ceiling_pass(R)
     end
 
