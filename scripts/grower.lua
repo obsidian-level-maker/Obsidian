@@ -2206,12 +2206,12 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 ---##   table.insert(new_stairs, chunk)
 
+        local from_area = assert(chunk.from_area)
+        chunk.area.prelim_h = assert(from_area.prelim_h)
+
         -- choose the stair prefab now
         if not stair_prefab then
           stair_prefab = pick_stair_prefab(chunk)
-
-          local from_area = assert(chunk.from_area)
-          assert(from_area.prelim_h)
 
 ---???          local h = R:pick_stair_delta_h(from_area.prelim_h, C.stair_chunk)
           local h = assert(stair_prefab.delta_h)

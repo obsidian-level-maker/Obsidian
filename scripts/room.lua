@@ -2947,8 +2947,9 @@ function Room_floor_ceil_heights()
     each chunk in R.stairs do
       local A = chunk.area
 
+      -- outdoor heights are done later, get a dummy now
       if A.is_outdoor then
-        A.ceil_h = A.floor_h + 256
+        A.ceil_h = A.floor_h + R.zone.sky_add_h - 8
         continue
       end
 
