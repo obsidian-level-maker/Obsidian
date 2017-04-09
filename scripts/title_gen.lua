@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2015-2016 Andrew Apted
+--  Copyright (C) 2015-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1380,19 +1380,19 @@ TITLE_SUB_STYLES =
 
 
 function Title_add_background()
-  local DIR = "games/" .. assert(GAME.game_dir) .. "/titles"
+  --
+  -- generate a night sky scene
+  --
 
-  local backgrounds = gui.scan_directory(DIR, "*.tga")
+  local seed = int(gui.random() * 1000000)
 
-  if not backgrounds or table.empty(backgrounds) then
-    error("Failed to scan 'data/titles' directory")
-  end
+  -- TODO : a variety of colors
 
-  local filename = rand.pick(backgrounds)
+  -- TODO : add stars
 
-  gui.printf("Using title background: %s\n", filename)
+  -- WISH : render planets / moons
 
-  gui.title_load_image(0, 0, DIR .. "/" .. filename)
+  gui.title_draw_clouds(seed, "#300", "#f00", "#fff", 0.6)
 end
 
 
