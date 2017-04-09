@@ -883,54 +883,26 @@ SPROUT_DIRECT_4 =
 }
 
 
-SPROUT_CASTLE_1 =
-{
-  env = "outdoor"
-  prob = 1000
-
-  structure =
-  {
-    "!!xxxx!!", "11xxxx11"
-    "!!!!!!!!", "11RRRR11"
-    "!!!!!!!!", "11RRRR11"
-    "!!!!!!!!", "11111111"
-    "xxx11xxx", "xxx11xxx"
-  }
-
-  new_room =
-  {
-    env = "building"
-
-    conn = { x=4, y=2, w=2, dir=8 }
-
---  symmetry = { x=4, y=3, w=2, dir=8 }
-  }
-}
-
-
 SPROUT_CASTLE_2 =
 {
   env = "outdoor"
-  prob = 8000
+  prob = 200
 
   structure =
   {
-    "!!!!!!!!", "11RRRR11"
     "!!!!!!!!", "11RRRR11"
     "!!!!!!!!", "11%RR/11"
     "!!!!!!!!", "11111111"
     "xxx11xxx", "xxx11xxx"
   }
 
-  diagonals = { ".R", "R." }
+  diagonals = { "1R", "R1" }
 
   new_room =
   {
     env = "building"
 
     conn = { x=4, y=2, w=2, dir=8 }
-
-    symmetry = { x=4, y=3, w=2, dir=8 }
   }
 }
 
