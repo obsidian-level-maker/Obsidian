@@ -642,6 +642,45 @@ function ROOM_CLASS.exclude_monsters(R)
 end
 
 
+function ROOM_CLASS.usable_delta_h(R, from_h, h)
+  if not rand.odds(R.delta_up_chance) then
+    h = - h
+  end
+
+  if R.delta_limit_mode == "positive" then
+    if from_h + h <= 0 then h = - h end
+  else
+    if from_h + h >= 0 then h = - h end
+  end
+
+  return from_h + h
+end
+
+
+function ROOM_CLASS.pick_direct_delta_h(R, from_h, A1, A2)
+  if STYLE.steepness == "none" then
+    return from_h
+  end
+
+  -- only change height if floor_groups are different
+  if A1.floor_group and A1.floor_group == A2.floor_group then
+    return from_h
+  end
+
+  local h = 8
+
+  return R:usable_delta_h(from_h, h)
+end
+
+
+function ROOM_CLASS.pick_stair_delta_h(R, from_h, chunk)
+  local h = chunk.prefab_def.delta_h
+  assert(h)
+
+  return R:usable_delta_h(from_h, h)
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -1458,6 +1497,7 @@ function Room_border_up()
       return
     end
 
+
     -- scenic to scenic --
 
     if A2.room and not A1.room then
@@ -2212,166 +2252,6 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function usable_delta_h(R, from_h, h)
-    if not rand.odds(R.delta_up_chance) then
-      h = - h
-    end
-
-    if R.delta_limit_mode == "positive" then
-      if from_h + h <= 0 then h = - h end
-    else
-      if from_h + h >= 0 then h = - h end
-    end
-
-    return from_h + h
-  end
-
-
-  local function pick_direct_delta_h(R, from_h, A1, A2)
-    if STYLE.steepness == "none" then
-      return from_h
-    end
-
-    -- only change height if floor_groups are different
-    if A1.floor_group and A1.floor_group == A2.floor_group then
-      return from_h
-    end
-
-    local h = 8
-
-    return usable_delta_h(R, from_h, h)
-  end
-
-
-  local function pick_stair_delta_h(R, from_h, chunk)
-    local h = chunk.prefab_def.delta_h
-    assert(h)
-
-    return usable_delta_h(R, from_h, h)
-  end
-
-
-  local function pick_stair_prefab(chunk)
-    local A = chunk.area
-    local R = A.room
-
-    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
-
-    reqs.kind  = "stairs"
-    reqs.shape = assert(chunk.shape)
-
-    if A.room then
-      reqs.env = A.room:get_env()
-    end
-
-    -- prevent small areas connected with a lift
-    -- [ FIXME : this is broken due to deep staircases ]
-    if false then
-      local vol_1 = chunk.from_area.svolume / sel(R.symmetry, 2, 1)
-      local vol_2 = chunk.dest_area.svolume / sel(R.symmetry, 2, 1)
-
-      if vol_1 < 7 or vol_2 < 7 then
-        reqs.max_delta_h = 32
-      end
-    end
-
-    local def = Fab_pick(reqs)
-
-    -- handle symmetrical rooms AND stair groups
-
-    for pass = 1, 2 do
-      local K2 = sel(pass == 1, chunk, chunk.peer)
-      if not K2 then continue end
-
-      if K2.stair_group then
-        each K3 in K2.stair_group.chunks do
-          K3.prefab_def = def
-        end
-      else
-        K2.prefab_def = def
-      end
-    end
-
-    assert(chunk.prefab_def)
-  end
-
-
-  local function flow_through_room(A, cur_delta_h)
-    gui.debugf("flow_through_room: delta %d --> %s\n", cur_delta_h, A.name)
-
-    A.delta_h = cur_delta_h
-
-    if A.floor_group then
-      -- sanity check
-      if A.floor_group.delta_h and A.floor_group.delta_h != cur_delta_h then
-        error("floor group got different heights")
-      end
-
-      A.floor_group.delta_h = cur_delta_h
-    end
-
-    local R = A.room
-
-    each C in R.internal_conns do
-      local A2 = areaconn_other(C, A)
-
-      -- not connected to this area?
-      if not A2 then continue end
-
-      assert(A2.room == A.room)
-
-      if A2.delta_h then
-        continue
-      end
-
--- stderrf("Passing through intl conn '%s' %s<-->%s\n", C.kind, A.name, A2.name)
-
-      if C.kind == "direct" then
-        flow_through_room(A2, pick_direct_delta_h(R, cur_delta_h, A, A2))
-        continue
-      end
-
---stderrf("Visiting stair in %s\n", C.stair_chunk.area.name)
-
-      assert(C.kind == "stair")
-      assert(C.stair_chunk)
-
-      assert(not C.stair_chunk.prefab_def)
-
-      pick_stair_prefab(C.stair_chunk)
-
-      local new_delta = pick_stair_delta_h(R, cur_delta_h, C.stair_chunk)
-
-      flow_through_room(A2, new_delta)
-    end
-  end
-
-
-  local function fix_stair_dirs(R)
-    each chunk in R.stairs do
-      local A = assert(chunk.area)
-
-      local A1 = assert(chunk.from_area)
-      local A2 = assert(chunk.dest_area)
-
--- stderrf("STAIR in %s : off %s --> face %s\n", A.name, A1.name, A2.name)
-
-      assert(A1.floor_h)
-      assert(A2.floor_h)
-
-      set_floor(A, math.min(A1.floor_h, A2.floor_h))
-
-      A.stair_top_h = math.max(A1.floor_h, A2.floor_h)
-
--- stderrf("STAIR %s : off %d --> %d  (us: %d)\n", A.name, A1.floor_h, A2.floor_h, A.floor_h)
-
-      if A1.floor_h > A2.floor_h then
-        Chunk_flip(chunk)
-      end
-    end
-  end
-
-
   local function room_add_steps(R)
     -- NOT USED ATM [ should be done while flowing through room ]
 
@@ -2412,37 +2292,22 @@ function Room_floor_ceil_heights()
   local function process_room(R, entry_area)
     local start_area = pick_start_area(R)
 
-    R.delta_limit_mode = rand.sel(50, "positive", "negative")
-    R.delta_up_chance  = 50
-
-    if rand.odds(70) then
-      if R.delta_limit_mode == "positive" then
-        R.delta_up_chance = 90
-      else
-        R.delta_up_chance = 10
-      end
-    end
-
     -- recursively flow delta heights from a random starting area
 
-    gui.debugf("ASSIGN DELTAS IN %s\n", R.name)
-
-    flow_through_room(start_area, 0)
+    gui.debugf("ASSIGN FLOORS IN %s\n", R.name)
 
     local adjust_h = 0
 
-    if entry_area then adjust_h = assert(entry_area.delta_h) end
+    if entry_area then adjust_h = assert(entry_area.prelim_h) end
 
-    -- compute the actual floor heights, ensuring entry_area stays the same
+    -- compute the actual floor heights, ensuring entry_area becomes 'entry_h'
     each A in R.areas do
-      if A.delta_h then
-        set_floor(A, R.entry_h + A.delta_h - adjust_h)
+      if A.prelim_h then
+        set_floor(A, R.entry_h + A.prelim_h - adjust_h)
       end
 
 --    stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
     end
-
-    fix_stair_dirs(R)
   end
 
 
@@ -2928,7 +2793,11 @@ function Room_floor_ceil_heights()
         local N = A:lowest_neighbor()
 
         if not N then
-          error("failed to find liquid neighbor")
+--!!!! FIXME : temp stuff for park-border experiment....
+--!!!!    error("failed to find liquid neighbor")
+          A.floor_h = -77
+          A.ceil_h  = 999
+          continue
         end
 
         A.floor_h  = N.floor_h - 16

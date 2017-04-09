@@ -1054,11 +1054,25 @@ gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), 
     local A = AREA_CLASS.new("floor")
     ROOM:add_area(A)
 
+    A.prelim_h = 0
+
     -- max size of new area  [ for caves it is whole room ]
     if ROOM.is_cave then
       A.max_size = ROOM.size_limit
     else
       A.max_size = rand.pick({ 16, 24, 32 })
+    end
+  end
+
+  local R = ROOM
+  R.delta_limit_mode = rand.sel(50, "positive", "negative")
+  R.delta_up_chance  = 50
+
+  if rand.odds(70) then
+    if R.delta_limit_mode == "positive" then
+      R.delta_up_chance = 90
+    else
+      R.delta_up_chance = 10
     end
   end
 
@@ -2088,10 +2102,41 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
   end
 
 
+  local function pick_stair_prefab(chunk)
+    local A = chunk.area
+    local R = A.room
+
+    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+
+    reqs.kind  = "stairs"
+    reqs.shape = assert(chunk.shape)
+
+    if A.room then
+      reqs.env = A.room:get_env()
+    end
+
+    -- prevent small areas connected with a lift
+    -- [ FIXME : this is broken due to deep staircases ]
+    if false then
+      local vol_1 = chunk.from_area.svolume / sel(R.symmetry, 2, 1)
+      local vol_2 = chunk.dest_area.svolume / sel(R.symmetry, 2, 1)
+
+      if vol_1 < 7 or vol_2 < 7 then
+        reqs.max_delta_h = 32
+      end
+    end
+
+    local def = Fab_pick(reqs)
+
+    return def
+  end
+
+
+
   local function install_create_chunks(T)
     new_chunks = {}
 
-    local new_stairs = {}
+    local stair_prefab
 
     each r in cur_rule.rects do
       local x1,y1, x2,y2 = transform_rect(T, r)
@@ -2159,7 +2204,22 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         assert(new_intconn)
         new_intconn.stair_chunk = chunk
 
-        table.insert(new_stairs, chunk)
+---##   table.insert(new_stairs, chunk)
+
+        -- choose the stair prefab now
+        if not stair_prefab then
+          stair_prefab = pick_stair_prefab(chunk)
+
+          local from_area = assert(chunk.from_area)
+          assert(from_area.prelim_h)
+
+---???          local h = R:pick_stair_delta_h(from_area.prelim_h, C.stair_chunk)
+          local h = assert(stair_prefab.delta_h)
+
+          new_area.prelim_h = from_area.prelim_h + h
+        end
+
+        chunk.prefab_def = stair_prefab
 
       elseif r.dest_area then
         chunk.dest_area = assert(area_map[r.dest_area])
@@ -2188,16 +2248,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       if r.kind == "joiner" then table.insert(R.joiners, chunk) end
 
       if r.kind == "hallway" then table.insert(R2.pieces, chunk) end
-    end
-
-    -- if a rule adds multiple stairs, link them so we can use
-    -- the same prefab for them all.
-
-    if #new_stairs >= 2 then
-      local stair_group = { chunks=new_stairs }
-      each chunk in new_stairs do
-        chunk.stair_group = stair_group
-      end
     end
   end
 
@@ -2237,6 +2287,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
       local from_area_idx = cur_rule.new_area.from_area or 1
       local from_area = assert(area_map[from_area_idx])
+
+      new_area.prelim_h = assert(from_area.prelim_h)
 
       new_intconn = add_internal_conn(from_area, new_area)
     end
@@ -3622,7 +3674,7 @@ function Grower_create_rooms()
   Grower_prune_small_rooms()
 
   Grower_decorate_rooms()
-  Grower_flatten_outdoor_fences()
+--TODO  Grower_flatten_outdoor_fences()
   Grower_split_liquids()
 
   Grower_fill_gaps()
