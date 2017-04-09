@@ -1421,6 +1421,25 @@ TITLE_BACKGROUND_STYLES =
     thresh = 0.2
     power  = 1.5
   }
+
+  white_nebula =
+  {
+    hue1   = "#000"
+    hue2   = "#fff"
+    hue3   = "#000"
+    power  = 4
+  }
+
+  purple_nebula =
+  {
+    prob = 5
+
+    hue1   = "#707"
+    hue2   = "#f0f"
+    hue3   = "#fff"
+    thresh = 0.3
+    power  = 2
+  }
 }
 
 
