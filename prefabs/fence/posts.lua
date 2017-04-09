@@ -3,7 +3,7 @@
 --
 
 
-PREFABS.Post_tech_1 =
+PREFABS.Post_metal =
 {
   file   = "fence/posts.wad"
   map    = "MAP01"
@@ -18,12 +18,29 @@ PREFABS.Post_tech_1 =
 }
 
 
+PREFABS.Post_tech_1 =
+{
+  file   = "fence/posts.wad"
+  map    = "MAP03"
+  kind   = "post"
+
+  group  = "foo"
+  prob   = 50
+
+  where  = "point"
+  size   = 48
+
+  bound_z1 = 0
+}
+
+
 PREFABS.Post_tech_2 =
 {
   file   = "fence/posts.wad"
-  map    = "MAP02"
+  map    = "MAP04"
   kind   = "post"
 
+  group  = "bar"
   prob   = 50
 
   where  = "point"
