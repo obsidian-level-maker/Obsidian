@@ -977,7 +977,6 @@ function Title_centered_string(T, mx, my, text, style)
   local thick
 
 
- 
   -- TODO : support "thin_horiz" and "thin_vert" pens
   -- [ not real pens, just use different box_w than box_h ]
 
@@ -1443,7 +1442,25 @@ TITLE_BACKGROUND_STYLES =
 }
 
 
+TITLE_INTERMISSION_STYLES =
+{
+  brown =
+  {
+    prob = 100
+
+    hue1 = "#321"
+    hue2 = "#743"
+    hue3 = "#c85"
+
+    fracdim = 2.8
+  }
+}
+
+
 ------------------------------------------------------------------------
+
+
+TITLE_SEED = 0
 
 
 function Title_add_background()
@@ -1453,15 +1470,13 @@ function Title_add_background()
 
   local style = Title_pick_style(TITLE_BACKGROUND_STYLES, {})
 
-  local seed = int(gui.random() * 1000000)
-
   -- TODO : a variety of colors
 
   -- TODO : add stars
 
   -- WISH : render planets / moons
 
-  gui.title_draw_clouds(seed, style.hue1, style.hue2, style.hue3,
+  gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
                         style.thresh or 0, style.power or 1,
                         style.fracdim or 2.4)
 end
@@ -1846,6 +1861,36 @@ end
 
 
 
+function Title_make_interpic()
+  gui.title_create(320, 200, "#000")
+  gui.title_set_palette(GAME.PALETTES.normal)
+
+  local style = Title_pick_style(TITLE_INTERMISSION_STYLES, {})
+
+  gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
+                        style.thresh or 0, style.power or 1,
+                        style.fracdim or 2.4)
+
+  gui.title_write("INTERPIC")
+  gui.title_free()
+end
+
+
+
+function Title_make_titlepic()
+  gui.title_create(320, 200, "#000")
+  gui.title_set_palette(GAME.PALETTES.normal)
+
+  Title_add_background()
+  Title_add_credit()
+  Title_add_title()
+
+  gui.title_write("TITLEPIC")
+  gui.title_free()
+end
+
+
+
 function Title_generate()
   assert(GAME.title)
   assert(GAME.PALETTES)
@@ -1853,20 +1898,9 @@ function Title_generate()
 
   process_raw_fonts()
 
+  TITLE_SEED = int(gui.random() * 1000000)
 
-  gui.title_create(320, 200, "#000")
-
-  gui.title_set_palette(GAME.PALETTES.normal)
-
-  Title_add_background()
-
-  gui.title_write("INTERPIC")
-
-  Title_add_credit()
-  Title_add_title()
-
-  gui.title_write("TITLEPIC")
-
-  gui.title_free()
+  Title_make_interpic()
+  Title_make_titlepic()
 end
 
