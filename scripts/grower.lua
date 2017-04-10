@@ -796,29 +796,48 @@ end
 
 function Grower_decide_extents()
   --
-  -- decide rectangle where new rooms are allowed
+  -- decides how much of the map we can use for growing rooms.
   --
 
   assert(LEVEL.map_W < SEED_MAX)
   assert(LEVEL.map_H < SEED_MAX)
 
-  LEVEL.map_x1 = 1 + int((SEED_MAX - LEVEL.map_W) / 2)
-  LEVEL.map_y1 = 1 + int((SEED_MAX - LEVEL.map_H) / 2)
+  local map_x1 = 1 + int((SEED_MAX - LEVEL.map_W) / 2)
+  local map_y1 = 1 + int((SEED_MAX - LEVEL.map_H) / 2)
 
-  LEVEL.map_x2 = LEVEL.map_x1 + LEVEL.map_W - 1
-  LEVEL.map_y2 = LEVEL.map_y1 + LEVEL.map_H - 1
+  local map_x2 = map_x1 + LEVEL.map_W - 1
+  local map_y2 = map_y1 + LEVEL.map_H - 1
 
 
-  local min_dist = 3
+  -- we prevent creation of new rooms unless the initial part
+  -- lies inside the sprout bbox
+  local dist = 3
 
-  LEVEL.sprout_x1 = LEVEL.map_x1 + min_dist
-  LEVEL.sprout_y1 = LEVEL.map_y1 + min_dist
-  LEVEL.sprout_x2 = LEVEL.map_x2 - min_dist
-  LEVEL.sprout_y2 = LEVEL.map_y2 - min_dist
+  LEVEL.sprout_x1 = map_x1 + dist
+  LEVEL.sprout_y1 = map_y1 + dist
+  LEVEL.sprout_x2 = map_x2 - dist
+  LEVEL.sprout_y2 = map_y2 - dist
 
 stderrf("SPROUT bbox : (%d %d) .. (%d %d)\n",
         LEVEL.sprout_x1, LEVEL.sprout_y1,
         LEVEL.sprout_x2, LEVEL.sprout_y2)
+
+
+  -- this boundary is the absolute limit where parts of a room
+  -- may be placed
+  dist = 11
+
+  local EDGE = 4
+
+  LEVEL.boundary_x1 = math.max(EDGE, map_x1 - dist)
+  LEVEL.boundary_y1 = math.max(EDGE, map_y1 - dist)
+
+  LEVEL.boundary_x2 = math.min(SEED_MAX - EDGE + 1, map_x2 + dist)
+  LEVEL.boundary_y2 = math.min(SEED_MAX - EDGE + 1, map_y2 + dist)
+
+stderrf("BOUNDARY bbox : (%d %d) .. (%d %d)\n",
+        LEVEL.boundary_x1, LEVEL.boundary_y1,
+        LEVEL.boundary_x2, LEVEL.boundary_y2)
 end
 
 
@@ -1256,7 +1275,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
     if R.is_cave then return 0 end
 
     if R.is_outdoor then
-      return style_sel("symmetry", 0,  5, 20, 50)
+      return style_sel("symmetry", 0,  5, 15, 50)
     else
       return style_sel("symmetry", 0, 20, 50, 90)
     end
@@ -1760,9 +1779,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       local doing_cave = (E2.kind == "area" and R.is_cave) or
                          (E2.kind == "room" and cur_rule.new_room and cur_rule.new_room.env == "cave")
 
-      if math.min(S.sx, S.sy) <= 3 or
-         math.max(S.sx, S.sy) >= (SEED_MAX - 2)
-      then
+      if Seed_over_boundary(S) then
         return false
       end
 
