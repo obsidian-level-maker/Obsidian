@@ -121,6 +121,8 @@ LENGTH_CHOICES =
 
 SEED_SIZE = 128
 
+SEED_MAX  = 64  -- map size, in seeds
+
 EXTREME_H = 32000
 
 

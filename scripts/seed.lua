@@ -299,7 +299,7 @@ function SEED_CLASS.neighbor(S, dir, nodir)
   if (S.diagonal == 7 or S.diagonal == 9) and dir == 8 then
     return S:raw_neighbor(dir)
   end
-  
+
   if (S.diagonal == 1 or S.diagonal == 3) and dir == 2 then
     N = S:raw_neighbor(dir)
     if N and N.diagonal then return N.top end
@@ -311,13 +311,13 @@ function SEED_CLASS.neighbor(S, dir, nodir)
     if N and N.diagonal == 1 then return N.top end
     return N
   end
-  
+
   if (S.diagonal == 3 or S.diagonal == 9) and dir == 6 then
     N = S:raw_neighbor(dir)
     if N and N.diagonal == 3 then return N.top end
     return N
   end
-  
+
   -- diagonal directions in directions seeds
 
   if S.diagonal == 1 and dir == 9 then return S.top end
@@ -357,7 +357,7 @@ function SEED_CLASS.calc_mid_point(S)
   elseif S.diagonal == 9 then
     mx = (S.x2 + mx) / 2
     my = (S.y2 + my) / 2
-  end 
+  end
 
   S.mid_x = int(mx)
   S.mid_y = int(my)
@@ -537,13 +537,10 @@ function Seed_create(sx, sy, x1, y1)
 end
 
 
-function Seed_init(map_W, map_H)
-  -- setup globals 
-  SEED_W = map_W
-  SEED_H = map_H
-
-  gui.printf("Map size: %dx%d seeds\n", map_W, map_H)
-
+function Seed_init()
+  -- FIXME : remove these globals
+  SEED_W = SEED_MAX
+  SEED_H = SEED_MAX
 
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
@@ -850,6 +847,15 @@ function Seed_over_boundary(S)
 
   return false
 end
+
+
+function Seed_outside_sprout_box(S)
+  if S.sx <= LEVEL.sprout_x1 or S.sx >= LEVEL.sprout_x2 then return true end
+  if S.sy <= LEVEL.sprout_y1 or S.sy >= LEVEL.sprout_y2 then return true end
+
+  return false
+end
+
 
 
 function Seed_alloc_depot(room)

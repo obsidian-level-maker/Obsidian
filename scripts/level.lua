@@ -188,14 +188,14 @@ function Level_determine_map_size(LEV)
 
   -- smaller maps for Deathmatch mode
   if OB_CONFIG.playmode == "dm" then
-    local SIZES = { small=22, regular=30, large=38, extreme=48 }
+    local SIZES = { small=20, regular=26, large=32, extreme=40 }
 
     local W = SIZES[ob_size]
 
     return W, W
   end
 
-  local SIZES = { small=24, regular=34, large=44, extreme=60 }
+  local SIZES = { small=24, regular=32, large=40, extreme=54 }
 
   local W = SIZES[ob_size]
 
@@ -2193,7 +2193,7 @@ end
 function Level_build_it()
   Level_init()
 
-  Seed_init(LEVEL.map_W, LEVEL.map_H)
+  Seed_init()
 
   Area_create_rooms()
     if gui.abort() then return "abort" end

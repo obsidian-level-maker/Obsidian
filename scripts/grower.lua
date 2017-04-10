@@ -794,36 +794,31 @@ end
 
 
 
-function Grower_decide_boundary()
+function Grower_decide_extents()
   --
-  -- decide boundary rectangle
+  -- decide rectangle where new rooms are allowed
   --
 
-  local map_size = (SEED_W + SEED_H) / 2
+  assert(LEVEL.map_W < SEED_MAX)
+  assert(LEVEL.map_H < SEED_MAX)
 
-  if map_size < 20 then
-    LEVEL.boundary_margin = 4
-  elseif map_size < 30 then
-    LEVEL.boundary_margin = 5
-  else
-    LEVEL.boundary_margin = 6
-  end
+  LEVEL.map_x1 = 1 + int((SEED_MAX - LEVEL.map_W) / 2)
+  LEVEL.map_y1 = 1 + int((SEED_MAX - LEVEL.map_H) / 2)
 
-  LEVEL.boundary_sx1 = LEVEL.boundary_margin
-  LEVEL.boundary_sy1 = LEVEL.boundary_margin
+  LEVEL.map_x2 = LEVEL.map_x1 + LEVEL.map_W - 1
+  LEVEL.map_y2 = LEVEL.map_y1 + LEVEL.map_H - 1
 
-  LEVEL.boundary_sx2 = SEED_W + 1 - LEVEL.boundary_margin
-  LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
 
-  -- map edge calculation
+  local min_dist = 3
 
-  LEVEL.edge_margin = sel(map_size < 35, 2, 3)
+  LEVEL.sprout_x1 = LEVEL.map_x1 + min_dist
+  LEVEL.sprout_y1 = LEVEL.map_y1 + min_dist
+  LEVEL.sprout_x2 = LEVEL.map_x2 - min_dist
+  LEVEL.sprout_y2 = LEVEL.map_y2 - min_dist
 
-  LEVEL.edge_sx1 = LEVEL.edge_margin
-  LEVEL.edge_sy1 = LEVEL.edge_margin
-
-  LEVEL.edge_sx2 = SEED_W + 1 - LEVEL.edge_margin
-  LEVEL.edge_sy2 = SEED_H + 1 - LEVEL.edge_margin
+stderrf("SPROUT bbox : (%d %d) .. (%d %d)\n",
+        LEVEL.sprout_x1, LEVEL.sprout_y1,
+        LEVEL.sprout_x2, LEVEL.sprout_y2)
 end
 
 
@@ -832,8 +827,8 @@ function Grower_determine_coverage()
   local count = 0
   local total = 0
 
-  for sx = LEVEL.boundary_sx1 + 1, LEVEL.boundary_sx2 - 1 do
-  for sy = LEVEL.boundary_sy1 + 1, LEVEL.boundary_sy2 - 1 do
+  for sx = 1, SEED_MAX do
+  for sy = 1, SEED_MAX do
     local S = SEEDS[sx][sy]
 
     if S.area or (S.top and S.top.area) then
@@ -1724,7 +1719,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
     -- new rooms must not be placed in boundary spaces
     -- [ this is relaxed when we really need to grow the map ]
-    if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_over_boundary(S) then
+    if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_outside_sprout_box(S) then
       if not is_emergency then
         return false
       end
@@ -1763,7 +1758,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       local doing_cave = (E2.kind == "area" and R.is_cave) or
                          (E2.kind == "room" and cur_rule.new_room and cur_rule.new_room.env == "cave")
 
-      if not doing_cave and Seed_over_map_edge(S) then
+      if math.min(S.sx, S.sy) <= 3 or
+         math.max(S.sx, S.sy) >= (SEED_MAX - 2)
+      then
         return false
       end
 
@@ -2787,10 +2784,14 @@ function Grower_grow_rooms()
 
   grow_until_done()
 
+do return end --!!!!!! FIXME
+
   for loop = 1, 4 do
     local coverage = Grower_determine_coverage()
 
     if coverage >= MIN_COVERAGE then break; end
+
+--TODO increase sprout_box
 
     -- map is too small, try to sprout some more rooms
     emergency_sprouts()
@@ -3665,7 +3666,7 @@ function Grower_create_rooms()
   Grower_setup_caves()
   Grower_calc_rule_probs()
 
-  Grower_decide_boundary()
+  Grower_decide_extents()
 
   Grower_create_trunks()
   Grower_grow_rooms()

@@ -1426,6 +1426,12 @@ function Area_assign_boundary()
 
   ---| Area_assign_boundary |---
 
+  -- FIXME : compute properly, based on extent of used seeds
+  LEVEL.boundary_sx1 = 3
+  LEVEL.boundary_sy1 = 3
+  LEVEL.boundary_sx2 = SEED_MAX - 2
+  LEVEL.boundary_sy2 = SEED_MAX - 2
+
   mark_room_inners()
   mark_other_inners()
 
@@ -1975,6 +1981,8 @@ end
 function Area_create_rooms()
 
   gui.printf("\n--==| Creating Rooms |==--\n\n")
+
+  gui.printf("Map size target: %dx%d seeds\n", LEVEL.map_W, LEVEL.map_H)
 
   Grower_create_rooms()
 
