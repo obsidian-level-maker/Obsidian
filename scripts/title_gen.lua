@@ -1415,8 +1415,8 @@ TITLE_BACKGROUND_STYLES =
   green_nebula =
   {
     hue1   = "#000"
-    hue2   = "#060"
-    hue3   = "#0f0"
+    hue2   = "#363"
+    hue3   = "#6f6"
     thresh = 0.5
   }
 
@@ -1470,6 +1470,33 @@ TITLE_INTERMISSION_STYLES =
     hue1 = "#332b13"
     hue2 = "#774f2b"
     hue3 = "#ab6f43"
+
+    fracdim = 2.8
+  }
+
+  blue_box =
+  {
+    hue1 = "#005"
+    hue2 = "#00c"
+    hue3 = "#33f"
+
+    fracdim = 2.8
+  }
+
+  pink_box =
+  {
+    hue1 = "#600"
+    hue2 = "#933"
+    hue3 = "#b55"
+
+    fracdim = 2.8
+  }
+
+  green_box =
+  {
+    hue1 = "#13230b"
+    hue2 = "#27551b"
+    hue3 = "#448822"
 
     fracdim = 2.8
   }
