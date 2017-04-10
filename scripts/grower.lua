@@ -818,10 +818,11 @@ function Grower_decide_extents()
   LEVEL.sprout_x2 = map_x2 - dist
   LEVEL.sprout_y2 = map_y2 - dist
 
+--[[
 stderrf("SPROUT bbox : (%d %d) .. (%d %d)\n",
         LEVEL.sprout_x1, LEVEL.sprout_y1,
         LEVEL.sprout_x2, LEVEL.sprout_y2)
-
+--]]
 
   -- this boundary is the absolute limit where parts of a room
   -- may be placed
@@ -835,9 +836,11 @@ stderrf("SPROUT bbox : (%d %d) .. (%d %d)\n",
   LEVEL.boundary_x2 = math.min(SEED_MAX - EDGE + 1, map_x2 + dist)
   LEVEL.boundary_y2 = math.min(SEED_MAX - EDGE + 1, map_y2 + dist)
 
+--[[
 stderrf("BOUNDARY bbox : (%d %d) .. (%d %d)\n",
         LEVEL.boundary_x1, LEVEL.boundary_y1,
         LEVEL.boundary_x2, LEVEL.boundary_y2)
+--]]
 end
 
 
@@ -3259,6 +3262,11 @@ function Grower_fill_gaps()
   local MIN_SIZE = 4
   local MAX_SIZE = MIN_SIZE * 4
 
+  local SX1 = LEVEL.boundary_x1 - 3
+  local SY1 = LEVEL.boundary_y1 - 3
+  local SX2 = LEVEL.boundary_x2 + 3
+  local SY2 = LEVEL.boundary_y2 + 3
+
 
   local function new_temp_area(S)
     local TEMP =
@@ -3280,8 +3288,8 @@ function Grower_fill_gaps()
 
     -- check if an edge sits along edge of map
     -- [ does not matter if only a corner touches edge of map ]
-    if S.sx <= 1 or S.sx >= SEED_W or
-       S.sy <= 1 or S.sy >= SEED_H
+    if S.sx <= SX1 or S.sx >= SX2 or
+       S.sy <= SY1 or S.sy >= SY2
     then
       TEMP.touches_edge = true
     end
@@ -3293,8 +3301,8 @@ function Grower_fill_gaps()
 
 
   local function create_temp_areas()
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
+    for sx = SX1, SX2 do
+    for sy = SY1, SY2 do
       local S = SEEDS[sx][sy]
 
       if not S.diagonal and not S.area and not S.temp_area then
@@ -3327,8 +3335,8 @@ function Grower_fill_gaps()
     table.append(A1.seeds, A2.seeds)
 
     -- fix all seeds
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
+    for sx = SX1, SX2 do
+    for sy = SY1, SY2 do
       local S = SEEDS[sx][sy]
       local S2 = S.top
 

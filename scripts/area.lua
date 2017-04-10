@@ -1315,6 +1315,16 @@ function Area_analyse_areas()
 
     find_CTF_peers()
   end
+
+
+  local total_seeds = 0
+
+  each R in LEVEL.rooms do
+    total_seeds = total_seeds + R.svolume
+  end
+
+  stderrf("TOTAL ROOMS: %d  [ average %1.1f seeds ]\n", #LEVEL.rooms, total_seeds / #LEVEL.rooms)
+  stderrf("TOTAL SEEDS: %d  [ target %d ]\n", total_seeds, LEVEL.map_W * LEVEL.map_H)
 end
 
 
@@ -1341,7 +1351,7 @@ function Area_assign_boundary()
   end
 
 
-  local function area_nearto_edge(A)
+  local function OLD__area_nearto_edge(A)
     -- this also prevents a single seed gap between area and edge of map
 
     each S in A.seeds do
@@ -1407,7 +1417,7 @@ function Area_assign_boundary()
 
   local function floodfill_outers()
     each A in LEVEL.areas do
-      if not (A.is_inner or A.is_boundary) and area_nearto_edge(A) then
+      if not (A.is_inner or A.is_boundary) then ---- and area_nearto_edge(A) then
         mark_outer_recursive(A)
       end
     end
