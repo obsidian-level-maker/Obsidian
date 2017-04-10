@@ -94,7 +94,8 @@ OB_MODULES["misc"] =
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
 
     { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES }
-    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES, gap=1 }
+    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES }
+    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, gap=1 }
 
     { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES }
     { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES }
@@ -105,7 +106,6 @@ OB_MODULES["misc"] =
 --  { name="light_level",  label=_("Lighting"),   choices=MISC_STUFF.LIGHTINGS }
 --  { name="detail_level", label=_("Detail"),     choices=MISC_STUFF.LIGHTINGS, gap=1 }
 
---  symmetry    = { label=_("Symmetry"),       choices=STYLE_CHOICES }
 --  pictures    = { label=_("Pictures"),       choices=STYLE_CHOICES }
 --  cycles      = { label=_("Multiple Paths"), choices=STYLE_CHOICES }
 --  ex_floors   = { label=_("3D Floors"),      choices=STYLE_CHOICES }

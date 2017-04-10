@@ -1255,9 +1255,11 @@ function Grower_grammatical_room(R, pass, is_emergency)
 
     if R.is_cave then return 0 end
 
-    if R.is_outdoor then return 10 end
-
-    return 40
+    if R.is_outdoor then
+      return style_sel("symmetry", 0,  5, 20, 50)
+    else
+      return style_sel("symmetry", 0, 20, 50, 90)
+    end
   end
 
 

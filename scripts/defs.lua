@@ -226,7 +226,7 @@ GLOBAL_STYLE_LIST =
   switches    = { none=20, few=20, some=40, heaps=10 }
   keys        = { none=0,  few=10, some=20, heaps=60 }
 
-  symmetry    = { none=10, few=40, some=60, heaps=10 }
+  symmetry    = { none=20, few=40, some=60, heaps=10 }
   pictures    = { none=0,  few=10, some=50, heaps=10 }
 
   -- PLANNED or UNFINISHED stuff --
