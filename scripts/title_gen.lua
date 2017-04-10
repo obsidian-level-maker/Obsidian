@@ -1069,6 +1069,25 @@ function Title_widest_size_to_fit(text, box_w, max_w, spacing)
 end
 
 
+
+function Title_draw_lit_box(x, y, w, h, hue1, hue2, hue3)
+  if hue2 then
+    gui.title_prop("color", hue2)
+    gui.title_draw_rect(x, y, w, h)
+  end
+
+  gui.title_prop("color", hue3)
+
+  gui.title_draw_rect(x, y, w, 1)
+  gui.title_draw_rect(x, y, 1, h)
+
+  gui.title_prop("color", hue1)
+
+  gui.title_draw_rect(x, y + h - 1, w, 1)
+  gui.title_draw_rect(x + w - 1, y, 1, h)
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -1444,13 +1463,13 @@ TITLE_BACKGROUND_STYLES =
 
 TITLE_INTERMISSION_STYLES =
 {
-  brown =
+  brown_box =
   {
     prob = 100
 
-    hue1 = "#321"
-    hue2 = "#743"
-    hue3 = "#c85"
+    hue1 = "#332b13"
+    hue2 = "#774f2b"
+    hue3 = "#ab6f43"
 
     fracdim = 2.8
   }
@@ -1870,6 +1889,16 @@ function Title_make_interpic()
   gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
                         style.thresh or 0, style.power or 1,
                         style.fracdim or 2.4)
+
+  local BW = 32
+  local BH = 25
+
+  for bx = 0, 9 do
+  for by = 0, 8 do
+    Title_draw_lit_box(bx*BW, by*BH, BW, BH,
+                       style.hue1, style.hue2 and nil, style.hue3)
+  end
+  end
 
   gui.title_write("INTERPIC")
   gui.title_free()
