@@ -1316,7 +1316,7 @@ function Area_analyse_areas()
     find_CTF_peers()
   end
 
-
+--[[
   local total_seeds = 0
 
   each R in LEVEL.rooms do
@@ -1325,6 +1325,7 @@ function Area_analyse_areas()
 
   stderrf("TOTAL ROOMS: %d  [ average %1.1f seeds ]\n", #LEVEL.rooms, total_seeds / #LEVEL.rooms)
   stderrf("TOTAL SEEDS: %d  [ target %d ]\n", total_seeds, LEVEL.map_W * LEVEL.map_H)
+--]]
 end
 
 

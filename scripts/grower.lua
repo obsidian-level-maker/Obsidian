@@ -2635,8 +2635,6 @@ end
 
   local apply_num = rand.pick({ 10,20,30 })
 
-  -- TODO: often no sprouts when room is near edge of map
-
   if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,2,2,3 }) end
   if pass == "terminate" then apply_num = 10 end --- TODO : number of active links
@@ -2649,7 +2647,7 @@ end
 
   for loop = 1, apply_num do
     -- hit the room limit?
-    if #LEVEL.rooms >= LEVEL.max_rooms then
+    if pass == "sprout" and #LEVEL.rooms >= LEVEL.max_rooms then
       return
     end
 
@@ -2748,7 +2746,7 @@ function Grower_prune_small_rooms()
 
   local function is_too_small(R)
     -- always prune dead-end hallways
-    if R.kind == "hallway" then return true end
+    --???   if R.kind == "hallway" then return true end
 
     return R:calc_walk_vol() < 8
   end
@@ -2756,8 +2754,6 @@ function Grower_prune_small_rooms()
 
   local function kill_joiner(N, chunk)
     gui.debugf("  killing joiner in %s\n", N.name)
-
-    -- TODO : make the chunk becomes a USABLE closet
 
     chunk.kind = "closet"
 
@@ -2784,14 +2780,13 @@ function Grower_prune_small_rooms()
     PC.R1    = nil
     PC.R2    = nil
     PC.chunk = nil
+    PC.is_dead = true
 
     table.kill_elem(LEVEL.prelim_conns, PC)
   end
 
 
   local function prune_room(R)
-    -- TODO : possibly give areas to a connected neighbor room
-
     gui.debugf("Prune small room %s\n", R.name)
 
     -- remove any prelim conns
@@ -2820,6 +2815,7 @@ function Grower_prune_small_rooms()
 
   local function kill_trunk(TR)
     TR.name = "DEAD_" .. TR.name
+    TR.is_dead = true
 
     table.kill_elem(LEVEL.trunks, TR)
 
@@ -2900,32 +2896,30 @@ function Grower_grow_rooms()
 
 
   local function grow_some()
-    local room_list = table.copy(LEVEL.rooms)
+    -- collect all the fresh sprouts from previous pass
+    local room_list = {}
+
+    each R in LEVEL.rooms do
+      if not R.is_grown then
+        table.insert(room_list, R)
+      end
+    end
 
     rand.shuffle(room_list)
 
     each R in room_list do
-      if not R.is_grown then
-        R.is_grown = true
+      Grower_grammatical_room(R, "grow")
 
-        Grower_grammatical_room(R, "grow")
-
-        if R.kind == "hallway" then
-          Grower_grammatical_room(R, "terminate")
-          -- TODO : prune parts of hallway not reaching a room
-          --        [ when WHOLE thing, often try "grow" again ]
-          clean_up_links(R)
-        else
-          Grower_grammatical_room(R, "sprout")
-        end
+      if R.kind == "hallway" then
+        Grower_grammatical_room(R, "terminate")
+        -- TODO : prune parts of hallway not reaching a room
+        --        [ when WHOLE thing, often try "grow" again ]
+        clean_up_links(R)
+      else
+        Grower_grammatical_room(R, "sprout")
       end
-    end
-  end
 
-
-  local function grow_until_done()
-    while not check_all_grown() do
-      grow_some()
+      R.is_grown = true
     end
   end
 
@@ -2963,7 +2957,12 @@ function Grower_grow_rooms()
 
   for loop = 1, MAX_LOOP do
 
-    grow_until_done()
+    -- grow all the fresh rooms
+    while not check_all_grown() do
+      grow_some()
+    end
+
+    Grower_prune_small_rooms()
 
     local num_rooms = #LEVEL.rooms
     local coverage  = Grower_determine_coverage()
