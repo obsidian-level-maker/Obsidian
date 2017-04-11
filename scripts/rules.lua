@@ -338,7 +338,7 @@ GROW_BLOB_1 =
 
 GROW_FUNNEL_1 =
 {
-  prob = 25
+  prob = 25*0
 
   structure =
   {
@@ -353,7 +353,7 @@ GROW_FUNNEL_1 =
 
 GROW_FUNNEL_2 =
 {
-  prob = 25
+  prob = 25*0
 
   structure =
   {
@@ -368,7 +368,7 @@ GROW_FUNNEL_2 =
 
 GROW_CURVE_1 =
 {
-  prob = 80
+  prob = 80*0
   skip_prob = 25
 
   structure =
@@ -384,7 +384,7 @@ GROW_CURVE_1 =
 
 GROW_CURVE_2 =
 {
-  prob = 45
+  prob = 45*0
   skip_prob = 50
 
   structure =
@@ -408,7 +408,7 @@ GROW_CURVE_2 =
 
 GROW_CURVE_TUNNEL =
 {
-  prob = 1
+  prob = 1*0
 
   structure =
   {
@@ -437,7 +437,7 @@ GROW_CURVE_TUNNEL_EMERGENCY =
 
 GROW_DIAG_BLOB1 =
 {
-  prob = 10
+  prob = 10*0
 
   structure =
   {
@@ -458,7 +458,7 @@ GROW_DIAG_BLOB1 =
 
 GROW_DIAG_BLOB2 =
 {
-  prob = 20
+  prob = 20*0
 
   structure =
   {
@@ -606,19 +606,19 @@ GROW_STAIRPAIR_5 =
   structure =
   {
     ".....", "AAAAA"
-    ".....", "^11%A"
+    ".....", "^111A"
     ".....", "^111A"
     "11...", "1111A"
     "11...", "11>>A"
   }
 
-  diagonals = { "1A" }
+---!!!  diagonals = { "1A" }
 }
 
 
 GROW_STAIR_CURVE =
 {
-  prob = 250
+  prob = 250*0
   skip_prob = 50
 
   structure =
@@ -642,7 +642,7 @@ GROW_STAIR_CURVE =
 
 GROW_DBLSTAIR_CURVE =
 {
-  prob = 200
+  prob = 200*0
   skip_prob = 50
 
   structure =
@@ -669,7 +669,7 @@ GROW_DBLSTAIR_CURVE =
 
 GROW_STAIR_POOL1 =
 {
-  prob = 25
+  prob = 25*0
   skip_prob = 80
 
   structure =
@@ -696,7 +696,7 @@ GROW_STAIR_POOL2 =
 {
   -- this one is higher than STAIR_POOL1
 
-  prob = 30
+  prob = 30*0
   skip_prob = 80
 
   structure =
@@ -755,7 +755,7 @@ GROW_STAIR_SIDE3 =
 
 GROW_STAIR_HUGE =
 {
-  prob = 30
+  prob = 30*0
   skip_prob = 60
 
   structure =
