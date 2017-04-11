@@ -2731,6 +2731,145 @@ end
 
 
 
+function Grower_prune_small_rooms()
+
+  local function is_leaf(R)
+    local conns = 0
+
+    each PC in LEVEL.prelim_conns do
+      if PC.R1 == R or PC.R2 == R then
+        conns = conns + 1
+      end
+    end
+
+    return conns < 2
+  end
+
+
+  local function is_too_small(R)
+    -- always prune dead-end hallways
+    if R.kind == "hallway" then return true end
+
+    return R:calc_walk_vol() < 8
+  end
+
+
+  local function kill_joiner(N, chunk)
+    gui.debugf("  killing joiner in %s\n", N.name)
+
+    -- TODO : make the chunk becomes a USABLE closet
+
+    chunk.kind = "closet"
+
+    chunk.area.mode = "void"
+    chunk.content_kind = "void"
+
+    chunk.dest_dir  = nil
+    chunk.dest_area = nil
+    chunk.shape = "U"
+
+    table.kill_elem(N.joiners, chunk)
+    table.insert(N.closets, chunk)
+
+    -- remove peering too
+    if chunk.peer then
+      chunk.peer.peer = nil
+      chunk.peer = nil
+    end
+  end
+
+
+  local function kill_prelim_conn(PC)
+    PC.kind  = "DEAD"
+    PC.R1    = nil
+    PC.R2    = nil
+    PC.chunk = nil
+
+    table.kill_elem(LEVEL.prelim_conns, PC)
+  end
+
+
+  local function prune_room(R)
+    -- TODO : possibly give areas to a connected neighbor room
+
+    gui.debugf("Prune small room %s\n", R.name)
+
+    -- remove any prelim conns
+    for idx = #LEVEL.prelim_conns, 1, -1 do
+      local PC = LEVEL.prelim_conns[idx]
+
+      -- get neighbor room
+      local N
+      if PC.R1 == R then N = PC.R2 end
+      if PC.R2 == R then N = PC.R1 end
+
+      if not N then continue end
+
+      gui.debugf("  killing prelim conn to %s\n", N.name)
+
+      if PC.kind == "joiner" and PC.chunk.area.room == N then
+        kill_joiner(N, PC.chunk)
+      end
+
+      kill_prelim_conn(PC)
+    end
+
+    R:kill_it()
+  end
+
+
+  local function kill_trunk(TR)
+    TR.name = "DEAD_" .. TR.name
+
+    table.kill_elem(LEVEL.trunks, TR)
+
+    -- sanity check
+    each R in LEVEL.rooms do
+      assert(R.trunk != TR)
+    end
+  end
+
+
+  local function prune_trunks()
+    for idx = #LEVEL.trunks, 1, -1 do
+      local trunk = LEVEL.trunks[idx]
+
+      if table.empty(trunk.rooms) then
+        kill_trunk(trunk)
+      end
+    end
+  end
+
+
+  ---| Grower_prune_small_rooms |---
+
+  -- killing a room may cause another room to become a leaf, hence
+  -- we need multiple passes.
+
+  repeat
+    local changes = false
+
+    for idx = #LEVEL.rooms, 1, -1 do
+      local R = LEVEL.rooms[idx]
+
+      if is_leaf(R) and is_too_small(R) then
+        prune_room(R)
+        changes = true
+      end
+    end
+  until not changes
+
+  -- a trunk may have become empty, prune these too
+  prune_trunks()
+
+  -- sanity check
+  if table.empty(LEVEL.rooms) then
+    error("All rooms were pruned")
+  end
+end
+
+
+
 function Grower_grow_rooms()
 
   local function clean_up_links(R)
@@ -3043,145 +3182,6 @@ function Grower_flatten_outdoor_fences()
     if R.is_outdoor and not R.is_cave then
       visit_park(R)
     end
-  end
-end
-
-
-
-function Grower_prune_small_rooms()
-
-  local function is_leaf(R)
-    local conns = 0
-
-    each PC in LEVEL.prelim_conns do
-      if PC.R1 == R or PC.R2 == R then
-        conns = conns + 1
-      end
-    end
-
-    return conns < 2
-  end
-
-
-  local function is_too_small(R)
-    -- always prune dead-end hallways
-    if R.kind == "hallway" then return true end
-
-    return R:calc_walk_vol() < 8
-  end
-
-
-  local function kill_joiner(N, chunk)
-    gui.debugf("  killing joiner in %s\n", N.name)
-
-    -- TODO : make the chunk becomes a USABLE closet
-
-    chunk.kind = "closet"
-
-    chunk.area.mode = "void"
-    chunk.content_kind = "void"
-
-    chunk.dest_dir  = nil
-    chunk.dest_area = nil
-    chunk.shape = "U"
-
-    table.kill_elem(N.joiners, chunk)
-    table.insert(N.closets, chunk)
-
-    -- remove peering too
-    if chunk.peer then
-      chunk.peer.peer = nil
-      chunk.peer = nil
-    end
-  end
-
-
-  local function kill_prelim_conn(PC)
-    PC.kind  = "DEAD"
-    PC.R1    = nil
-    PC.R2    = nil
-    PC.chunk = nil
-
-    table.kill_elem(LEVEL.prelim_conns, PC)
-  end
-
-
-  local function prune_room(R)
-    -- TODO : possibly give areas to a connected neighbor room
-
-    gui.debugf("Prune small room %s\n", R.name)
-
-    -- remove any prelim conns
-    for idx = #LEVEL.prelim_conns, 1, -1 do
-      local PC = LEVEL.prelim_conns[idx]
-
-      -- get neighbor room
-      local N
-      if PC.R1 == R then N = PC.R2 end
-      if PC.R2 == R then N = PC.R1 end
-
-      if not N then continue end
-
-      gui.debugf("  killing prelim conn to %s\n", N.name)
-
-      if PC.kind == "joiner" and PC.chunk.area.room == N then
-        kill_joiner(N, PC.chunk)
-      end
-
-      kill_prelim_conn(PC)
-    end
-
-    R:kill_it()
-  end
-
-
-  local function kill_trunk(TR)
-    TR.name = "DEAD_" .. TR.name
-
-    table.kill_elem(LEVEL.trunks, TR)
-
-    -- sanity check
-    each R in LEVEL.rooms do
-      assert(R.trunk != TR)
-    end
-  end
-
-
-  local function prune_trunks()
-    for idx = #LEVEL.trunks, 1, -1 do
-      local trunk = LEVEL.trunks[idx]
-
-      if table.empty(trunk.rooms) then
-        kill_trunk(trunk)
-      end
-    end
-  end
-
-
-  ---| Grower_prune_small_rooms |---
-
-  -- killing a room may cause another room to become a leaf, hence
-  -- we need multiple passes.
-
-  repeat
-    local changes = false
-
-    for idx = #LEVEL.rooms, 1, -1 do
-      local R = LEVEL.rooms[idx]
-
-      if is_leaf(R) and is_too_small(R) then
-        prune_room(R)
-        changes = true
-      end
-    end
-  until not changes
-
-  -- a trunk may have become empty, prune these too
-  prune_trunks()
-
-  -- sanity check
-  if table.empty(LEVEL.rooms) then
-    error("All rooms were pruned")
   end
 end
 
@@ -3711,8 +3711,6 @@ function Grower_create_rooms()
   Grower_create_trunks()
   Grower_grow_rooms()
   Grower_cave_stats()
-
-  Grower_prune_small_rooms()
 
   Grower_decorate_rooms()
 --TODO  Grower_flatten_outdoor_fences()
