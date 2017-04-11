@@ -841,13 +841,26 @@ stderrf("BOUNDARY bbox : (%d %d) .. (%d %d)\n",
         LEVEL.boundary_x1, LEVEL.boundary_y1,
         LEVEL.boundary_x2, LEVEL.boundary_y2)
 --]]
+
+
+  -- calculate a minimum and maximum # of rooms
+
+  local base = (LEVEL.map_W + LEVEL.map_H - 18) / 3.5
+
+  LEVEL.min_rooms = math.max(3, int(base / 3))
+  LEVEL.max_rooms = math.max(6, int(base) + 1)
+
+--stderrf("NUMBER OF ROOMS : %d .. %d\n", LEVEL.min_rooms, LEVEL.max_rooms)
+
+  -- calculate coverage target
+
+  LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.66)
 end
 
 
 
 function Grower_determine_coverage()
   local count = 0
-  local total = 0
 
   for sx = 1, SEED_MAX do
   for sy = 1, SEED_MAX do
@@ -856,18 +869,12 @@ function Grower_determine_coverage()
     if S.area or (S.top and S.top.area) then
       count = count + 1
     end
-
-    total = total + 1
   end
   end
 
-  if total < 1 then total = 1 end
+  local total = SEED_MAX * SEED_MAX
 
-  local coverage = count * 100 / total
-
-  gui.printf("=== Coverage: %d%% (%d seeds / %d)\n", coverage, count, total)
-
-  return coverage
+  return count
 end
 
 
@@ -1742,11 +1749,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     -- new rooms must not be placed in boundary spaces
-    -- [ this is relaxed when we really need to grow the map ]
     if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_outside_sprout_box(S) then
-      if not is_emergency then
-        return false
-      end
+      return false
     end
 
 
@@ -2644,6 +2648,11 @@ end
   if pass == "decorate" then rule_tab["STOP"] = 10 end
 
   for loop = 1, apply_num do
+    -- hit the room limit?
+    if #LEVEL.rooms >= LEVEL.max_rooms then
+      return
+    end
+
     -- stderrf("LOOP %d\n", loop)
     apply_a_rule(rule_tab)
 
@@ -2724,9 +2733,6 @@ end
 
 function Grower_grow_rooms()
 
-  local MIN_COVERAGE = 66
-
-
   local function clean_up_links(R)
     -- remove hallway links that were never used
     -- (so they don't block stuff in future rooms)
@@ -2792,33 +2798,58 @@ function Grower_grow_rooms()
 
     each R in room_list do
       local old_num = #LEVEL.rooms
+
       Grower_grammatical_room(R, "sprout", "is_emergency")
 
-      -- only try a growth pass if no new rooms were sprouted
-      if old_num == #LEVEL.rooms then
-        Grower_grammatical_room(R, "grow", "is_emergency")
-      end
+---???  -- only try a growth pass if no new rooms were sprouted
+---???  if old_num == #LEVEL.rooms then
+---???    Grower_grammatical_room(R, "grow", "is_emergency")
+---???  end
     end
+  end
+
+
+  local function expand_sprout_bbox()
+    LEVEL.sprout_x1 = math.max(LEVEL.boundary_x1, LEVEL.sprout_x1 - 2)
+    LEVEL.sprout_y1 = math.max(LEVEL.boundary_y1, LEVEL.sprout_y1 - 2)
+    LEVEL.sprout_x2 = math.min(LEVEL.boundary_x2, LEVEL.sprout_x2 + 2)
+    LEVEL.sprout_y2 = math.min(LEVEL.boundary_y2, LEVEL.sprout_y2 + 2)
   end
 
 
   ---| Grower_grow_rooms |---
 
-  grow_until_done()
+  -- if map is too small, try to sprout some more rooms
+  local MAX_LOOP = 4
 
-do return end --!!!!!! FIXME
-
-  for loop = 1, 4 do
-    local coverage = Grower_determine_coverage()
-
-    if coverage >= MIN_COVERAGE then break; end
-
---TODO increase sprout_box
-
-    -- map is too small, try to sprout some more rooms
-    emergency_sprouts()
+  for loop = 1, MAX_LOOP do
 
     grow_until_done()
+
+    local num_rooms = #LEVEL.rooms
+    local coverage  = Grower_determine_coverage()
+
+stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
+        coverage,  LEVEL.min_coverage,
+        num_rooms, LEVEL.min_rooms)
+
+    if num_rooms >= LEVEL.min_rooms and
+       coverage  >= LEVEL.min_coverage
+    then
+      break;
+    end
+
+    if loop == MAX_LOOP then
+      break;
+    end
+
+    if num_rooms >= LEVEL.max_rooms then
+      LEVEL.max_rooms = num_rooms + 2
+    end
+
+    expand_sprout_bbox()
+
+    emergency_sprouts()
   end
 end
 
@@ -3104,12 +3135,6 @@ function Grower_prune_small_rooms()
   end
 
 
-  local function OLD__become_hallway(R)
-    gui.debugf("Hallwaying small room %s\n", R.name)
-    R.kind = "hallway"
-  end
-
-
   local function kill_trunk(TR)
     TR.name = "DEAD_" .. TR.name
 
@@ -3150,18 +3175,6 @@ function Grower_prune_small_rooms()
       end
     end
   until not changes
-
---[[  TODO : REVIEW this idea
-
-  -- turn any other small rooms into hallways
-  -- [ cannot remove them since they are not leafs ]
-
-  each R in LEVEL.rooms do
-    if is_too_small(R) then
-      become_hallway(R)
-    end
-  end
---]]
 
   -- a trunk may have become empty, prune these too
   prune_trunks()

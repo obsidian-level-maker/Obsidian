@@ -1924,13 +1924,15 @@ end
 
 
 
-function Room_choose_size(R)
+function Room_choose_size(R, not_big)
   -- decides whether room will be "big" or not.
   -- room kind (building, cave, etc) should have been set already.
 
   local prob
 
-  if R.is_cave then
+  if not_big then
+    prob = 0
+  elseif R.is_cave then
     prob = 100
   elseif R.is_outdoor then
     prob = style_sel("big_rooms", 0, 10, 20, 50)
@@ -1942,16 +1944,18 @@ function Room_choose_size(R)
     R.is_big = true
   end
 
+  local sum = LEVEL.map_W + LEVEL.map_H
+
   if R.is_cave then
-    R.size_limit  = SEED_W * rand.pick({ 3.0, 4.0, 5.0 })
-    R.floor_limit = 2
+    R.size_limit  = sum * rand.pick({ 1.7, 2.2, 2.7 })
+    R.floor_limit = nil
 
   elseif R.is_big then
-    R. size_limit = SEED_W * 4.4
+    R. size_limit = sum * 2.3
     R.floor_limit = rand.pick({ 9,10,11,12 })
 
   else
-    R. size_limit = SEED_W * 2.7
+    R. size_limit = sum * 1.4
     R.floor_limit = rand.pick({ 4,5,5,6,6,7 })
   end
 end
