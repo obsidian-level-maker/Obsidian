@@ -39,7 +39,7 @@ ROOT_1 =
 
 ROOT_2 =
 {
-  prob = 60
+  prob = 60*0
 
   structure =
   {
@@ -81,12 +81,26 @@ ROOT_L1 =
 
   structure =
   {
-    "!!!!!!", "......"
-    "!!!!!!", ".RR##."
-    "!!!!!!", ".RR%#."
-    "!!!!!!", "#RRRR."
-    "!!!!!!", ".%RRR."
-    "!!!!!!", "..#..."
+    "!!!!!", ".RR##"
+    "!!!!!", ".RR##"
+    "!!!!!", "#RRRR"
+    "!!!!!", "#RRRR"
+    "!!!!!", "###.."
+  }
+}
+
+
+ROOT_L2 =
+{
+  prob = 40*0
+
+  structure =
+  {
+    "!!!!!", ".RR##"
+    "!!!!!", ".RR%#"
+    "!!!!!", "#RRRR"
+    "!!!!!", ".%RRR"
+    "!!!!!", "..#.."
   }
 
   diagonals = { "R.", ".R" }
@@ -102,9 +116,23 @@ ROOT_T1 =
     "!!!!!!", "..##.."
     "!!!!!!", "RRRRRR"
     "!!!!!!", "RRRRRR"
+    "!!!!!!", "##RR##"
+    "!!!!!!", "##RR##"
+  }
+}
+
+
+ROOT_T2 =
+{
+  prob = 40*0
+
+  structure =
+  {
+    "!!!!!!", "..##.."
+    "!!!!!!", "RRRRRR"
+    "!!!!!!", "RRRRRR"
     "!!!!!!", "#%RR/#"
     "!!!!!!", "##RR##"
-    "!!!!!!", "......"
   }
 
   diagonals = { ".R", "R." }
@@ -136,7 +164,7 @@ ROOT_CAGES4 =
 
 ROOT_LIQUID_1A =
 {
-  prob = 25
+  prob = 25*0
 
   structure =
   {
@@ -166,7 +194,7 @@ ROOT_LIQUID_1B =
 {
   template = "ROOT_LIQUID_1A"
 
-  prob = 30
+  prob = 30*0
 
   structure =
   {
@@ -183,7 +211,7 @@ ROOT_LIQUID_1B =
 
 ROOT_LIQUID_CAGE2 =
 {
-  prob = 20
+  prob = 20*0
 
   structure =
   {
@@ -224,7 +252,7 @@ ROOT_LIQUID_CAGE3 =
     "!!!!!", "#C/~R"
     "!!!!!", "#~~/R"
     "!!!!!", "!RRRR"
-    "!!!!!", "!RRR/"
+    "!!!!!", "!RRRR"
   }
 
   diagonals =
@@ -232,7 +260,6 @@ ROOT_LIQUID_CAGE3 =
     "#C"
     "C~"
     "~R"
-    "R!"
   }
 
   cage_mode = "fancy"
