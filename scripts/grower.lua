@@ -180,8 +180,10 @@ function Grower_preprocess_grammar()
       return
     end
 
-    if E2.kind == "disable" and E1.kind != "free" then
-      error("bad element in " .. def.name .. ": disable cannot remove stuff")
+    if E2.kind == "disable" then
+      if E1.kind != "free" then
+        error("bad element in " .. def.name .. ": '#' element cannot remove stuff")
+      end
     end
 
     -- from here on, output element is an ASSIGNMENT
@@ -205,7 +207,7 @@ function Grower_preprocess_grammar()
     end
 
     -- we cannot assign into a '.' (which means "not part of current room")
-    if E1.kind == "free" then
+    if E1.kind == "free" and E2.kind != "disable" then
       E1.utterly = 1
     end
   end
@@ -1793,13 +1795,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       return true
     end
 
+
     if E1.kind == "disable" then
       return (S.disabled_R == R)
-    end
-
-    -- prevent assigning an '#' onto one from a different room
-    if E2.kind == "disable" then
-      return not (S.disabled_R and S.disabled_R != R)
     end
 
     -- seed is locked out of further changes?
@@ -1825,8 +1823,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       return not A
     end
 
-    -- otherwise we require an area of this room
-    if not (A and A.room == R) then return false end
+    -- everything else requires an area of the current room
+    if not A then return false end
 
     if E1.kind == "area" then
       return match_floor(E1, A)
@@ -1854,24 +1852,21 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
   local function install_an_element(S, E1, E2, T)
-    if not E2.assignment then return end
+    assert(E2.assignment)
+
+    if E2.kind == "disable" then
+      -- prevent the seed being used by THIS room ever again
+      -- [ however, OTHER rooms are allowed to use it, and actually
+      --   may already be using it! ]
+      S.disabled_R = R
+      return
+    end
 
     if E2.kind == "free" then
       if S.area then
         unset_seed(S)
       end
 
-      return
-    end
-
-    if E2.kind == "disable" then
-      if S.area then
-        unset_seed(S)
-      end
-
-      -- prevent the seed being used by THIS room ever again
-      -- [ however, OTHER rooms are allowed to use it ]
-      S.disabled_R = R
       return
     end
 
@@ -2020,7 +2015,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       if E2B.assignment or E2T.assignment then
 
         -- split the seed
-        -- FIXME: this area shuffling logic is unnecessarily complex...
         local A = S.area
         if A then unset_seed(S) end
 
