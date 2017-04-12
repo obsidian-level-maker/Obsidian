@@ -2026,8 +2026,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
           set_seed(S2, A)
         end
 
-        install_an_element(S,  E1B, E2B, T)
-        install_an_element(S2, E1T, E2T, T)
+        if E2B.assignment then install_an_element(S,  E1B, E2B, T) end
+        if E2T.assignment then install_an_element(S2, E1T, E2T, T) end
       end
 
       return true
