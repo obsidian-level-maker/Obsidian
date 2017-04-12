@@ -2063,7 +2063,7 @@ int DM_title_load_image(lua_State *L)
 
 int DM_title_draw_clouds(lua_State *L)
 {
-	// LUA: title_draw_clouds(seed, hue1, hue2, thresh, power, fracdim)
+	// LUA: title_draw_clouds(seed, hue1,hue2,hue3, thresh, power, fracdim)
 
 	int seed = luaL_checkint(L, 1);
 
@@ -2142,6 +2142,73 @@ int DM_title_draw_clouds(lua_State *L)
 
 	return 0;
 }
+
+
+int DM_title_draw_planet(lua_State *L)
+{
+	// LUA: title_draw_planet(x,y,r, seed, flags, hue1,hue2,hue3)
+
+	int px = luaL_checkint(L, 1);
+	int py = luaL_checkint(L, 2);
+
+	int ph = luaL_checkint(L, 3);
+	int pw = ph * 5 / 4;
+
+	int seed = luaL_checkint(L, 4);
+
+	const char *flag_str = luaL_checkstring(L, 5);
+
+	rgb_color_t hue1 = Grab_Color(L, 6);
+	rgb_color_t hue2 = Grab_Color(L, 7);
+	rgb_color_t hue3 = Grab_Color(L, 8);
+
+
+	SYS_ASSERT(title_pix);
+
+	px *= 3;  py *= 3;
+	pw *= 3;  ph *= 3;
+
+	// FIXME : clip !!!!
+
+
+	int W = 512;
+
+	float * synth = new float[W * W];
+
+	TX_SpectralSynth(seed, synth, W, 2.7, 1.0);
+
+
+	for (int y = py - ph ; y < py + ph ; y++)
+	for (int x = px - pw ; x < px + pw ; x++)
+	{
+		int dx = (x - px) * 4 / 5;
+		int dy = (y - py);
+
+		if (dx * dx + dy * dy > ph * ph)
+			continue;
+
+
+		// compute normal at point
+		float nx = dx / (float)ph;
+		float ny = dy / (float)ph;
+		float nz = 1.0 - hypot(nx, ny);
+
+
+		// FIXME : compute normal adjusted by the noise
+
+		int ity = 96 + (nx - ny + nz) * 48;
+		ity = CLAMP(0, ity, 255);
+
+		rgb_color_t col = MAKE_RGBA(ity, ity, ity, 255);
+
+		title_pix[y * title_W3 + x] = col;
+	}
+
+	delete[] synth;
+
+	return 0;
+}
+
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
