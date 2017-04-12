@@ -1500,6 +1500,15 @@ TITLE_INTERMISSION_STYLES =
 
     fracdim = 2.8
   }
+
+  dark_box =
+  {
+    hue1 = "#111"
+    hue2 = "#222"
+    hue3 = "#333"
+
+    fracdim = 2.9
+  }
 }
 
 
