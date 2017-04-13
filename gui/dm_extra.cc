@@ -2180,6 +2180,7 @@ int DM_title_draw_planet(lua_State *L)
 	// add craters
 	srand(seed);
 
+	if (false)
 	for (int ci = 0 ; ci < 250 ; ci++)
 	{
 		int cr = 8 + (rand() & 63);
@@ -2235,23 +2236,24 @@ for (int kx = 0   ; kx < W ; kx++)
 
 
 		// compute normal at point
-		float nx = dx / (float)ph + T1 * 30.0;
-		float ny = dy / (float)ph + T2 * 30.0;
+		float nx = dx / (float)ph + T1 * 10;
+		float ny = dy / (float)ph + T2 * 10;
 		float nz = 1.0 - hypot(nx, ny);
 
 
 		rgb_color_t col;
 
 		// TEMP CRUD
-#if 0
-		int ity = 64 + (nx - ny + nz) * 64;
-		ity = CLAMP(0, ity*2, 255);
+#if 1
+		int ity = 128 + (nx - ny + nz) * 128;
+		ity = CLAMP(0, ity, 255);
 
-		if (K < 0.55)
+		if ((int)(K * 32) & 3)
 			col = MAKE_RGBA(0  , 0  , ity, 255);
 		else
 			col = MAKE_RGBA(0  ,ity ,   0, 255);
 #else
+		// moon colors
 		int ity = 80 + (nx + nx + nx) * 60;
 		ity = CLAMP(0, ity, 255);
 
