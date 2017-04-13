@@ -1525,11 +1525,9 @@ function Title_add_background()
 
   local style = Title_pick_style(TITLE_BACKGROUND_STYLES, {})
 
-  -- TODO : a variety of colors
-
   -- TODO : add stars
 
-  -- WISH : render planets / moons
+  -- WISH : render a large star and/or a moon
 
   gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
                         style.thresh or 0, style.power or 1,
