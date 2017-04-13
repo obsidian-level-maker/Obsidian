@@ -889,7 +889,7 @@ static qLump_c * DoLoadLump(int src_entry)
 
 static const char *level_lumps[NUM_LEVEL_LUMPS]=
 {
-	"THINGS", "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS", 
+	"THINGS", "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS",
 	"SSECTORS", "NODES", "SECTORS", "REJECT", "BLOCKMAP",
 	"BEHAVIOR",  // <-- hexen support
 	"SCRIPTS"  // -JL- Lump with script sources
@@ -2175,7 +2175,39 @@ int DM_title_draw_planet(lua_State *L)
 
 	float * synth = new float[W * W];
 
-	TX_SpectralSynth(seed, synth, W, 2.7, 1.0);
+	TX_SpectralSynth(seed, synth, W, 1.8, 1.0);
+
+	// add craters
+	srand(seed);
+
+	for (int ci = 0 ; ci < 250 ; ci++)
+	{
+		int cr = 8 + (rand() & 63);
+
+		int mx = rand() & 511;
+		int my = rand() & 511;
+
+		for (int dx = -cr ; dx < cr ; dx++)
+		for (int dy = -cr ; dy < cr ; dy++)
+		{
+			if (dx*dx + dy*dy > cr*cr)
+				continue;
+
+			float d = hypot(dx, dy) / (float)cr;
+
+			int sx = (mx + dx) & 511;
+			int sy = (my + dy) & 511;
+
+			synth[sy*W + sx] += 0.3 * (1 - d*d);
+		}
+	}
+
+/*
+for (int ky = 40 ; ky < 110 ; ky++)
+for (int kx = 0   ; kx < W ; kx++)
+{
+	synth[ky*W + kx] -= 0.1;
+}*/
 
 
 	for (int y = py - ph ; y < py + ph ; y++)
@@ -2188,18 +2220,43 @@ int DM_title_draw_planet(lua_State *L)
 			continue;
 
 
+		// coordinate in synthesized noise
+		int tx1 = dx & 511;
+		int tx2 = (dx+1) & 511;
+
+		int ty1 = dy & 511;
+		int ty2 = (dy+1) & 511;
+
+
+		float K  = synth[tx1*W + ty1];
+
+		float T1 = synth[ty1*W + tx2] - synth[ty1*W + tx1];
+		float T2 = synth[ty2*W + tx1] - synth[ty1*W + tx1];
+
+
 		// compute normal at point
-		float nx = dx / (float)ph;
-		float ny = dy / (float)ph;
+		float nx = dx / (float)ph + T1 * 30.0;
+		float ny = dy / (float)ph + T2 * 30.0;
 		float nz = 1.0 - hypot(nx, ny);
 
 
-		// FIXME : compute normal adjusted by the noise
+		rgb_color_t col;
 
-		int ity = 96 + (nx - ny + nz) * 48;
+		// TEMP CRUD
+#if 0
+		int ity = 64 + (nx - ny + nz) * 64;
+		ity = CLAMP(0, ity*2, 255);
+
+		if (K < 0.55)
+			col = MAKE_RGBA(0  , 0  , ity, 255);
+		else
+			col = MAKE_RGBA(0  ,ity ,   0, 255);
+#else
+		int ity = 80 + (nx + nx + nx) * 60;
 		ity = CLAMP(0, ity, 255);
 
-		rgb_color_t col = MAKE_RGBA(ity, ity, ity, 255);
+		col = MAKE_RGBA(ity, ity, ity, 255);
+#endif
 
 		title_pix[y * title_W3 + x] = col;
 	}
