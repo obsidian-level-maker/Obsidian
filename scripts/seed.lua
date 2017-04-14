@@ -1009,6 +1009,9 @@ function Seed_save_svg_image(filename)
   local max_x = SEED_W * SIZE
   local max_y = SEED_H * SIZE
 
+  fp:write(string.format("<rect width=\"%d\" height=\"%d\" fill=\"#fff\"/>",
+           max_x + SIZE, max_y + SIZE))
+
   for x = 0, SEED_W do
     wr_line(fp, x * SIZE, min_y, x * SIZE, max_y, "#bbb")
   end
