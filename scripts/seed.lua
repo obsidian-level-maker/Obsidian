@@ -927,6 +927,20 @@ function Seed_save_svg_image(filename)
   end
 
 
+  local function wr_seed_box(fp, x1, y1, x2, y2, color, width)
+    x1 = x1 * SIZE
+    y1 = y1 * SIZE
+
+    x2 = (x2 + 1) * SIZE
+    y2 = (y2 + 1) * SIZE
+
+    wr_line(fp, x1,y1, x1,y2, color, width)
+    wr_line(fp, x1,y1, x2,y1, color, width)
+    wr_line(fp, x2,y1, x2,y2, color, width)
+    wr_line(fp, x1,y2, x2,y2, color, width)
+  end
+
+
   local function visit_seed(S1, dir)
     local S2 = S1:neighbor(dir, "NODIR")
 
@@ -1018,6 +1032,12 @@ function Seed_save_svg_image(filename)
 
   for y = 0, SEED_H do
     wr_line(fp, min_x, y * SIZE, max_x, y * SIZE, "#bbb")
+  end
+
+  -- special bboxes
+  if false then
+    wr_seed_box(fp, LEVEL.sprout_x1, LEVEL.sprout_y1, LEVEL.sprout_x2, LEVEL.sprout_y2, "#cc0", 3)
+    wr_seed_box(fp, LEVEL.boundary_x1, LEVEL.boundary_y1, LEVEL.boundary_x2, LEVEL.boundary_y2, "#f00", 3)
   end
 
   -- edges
