@@ -1037,7 +1037,7 @@ function Grower_add_room(parent_R, force_env, trunk)
 
   local ROOM = ROOM_CLASS.new()
 
-gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), tostring(parent_R and parent_R.name))
+gui.debugf("new room %s : env = %s : parent = %s\n", ROOM.name, tostring(force_env), tostring(parent_R and parent_R.name))
 
   if trunk == nil then
     assert(parent_R)
@@ -1769,12 +1769,12 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
          is_element_a_chunk(E2) or
          not R.symmetry:on_axis(S.sx, S.sy)
       then
-        S.sym_token = sym_token
+        S.sym_token = assert(sym_token)
       end
     end
 
     if T.is_second and E2.assignment then
-      if S.sym_token == sym_token then
+      if S.sym_token == assert(sym_token) then
         return false
       end
     end
@@ -2200,7 +2200,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
       -- symmetry handling : peer up mirrored chunks and their areas
-      if T.is_second then
+      if T.is_second and old_chunks then
         assert(old_chunks)
 
         local old_chunk = old_chunks[#new_chunks]
@@ -2394,7 +2394,7 @@ end
     -- exactly at the right spot to be usable ONCE in a symmetrical room
     -- (i.e. perfectly straddling the axis of symmetry).
 
-    if pass == "root" then return false end
+    if is_create then return false end
 
     if R.symmetry.kind != "mirror" then return false end
 
@@ -2478,9 +2478,15 @@ end
 --stderrf("T = \n%s\n", table.tostr(T))
 --stderrf("T2 = \n%s\n", table.tostr(T2))
 
-      sym_token = alloc_id("sym_token")
+      if what == "TEST" then
+        sym_token = alloc_id("sym_token")
+      end
 
-      if not match_or_install_pat_raw(what, T2) then
+      -- an exit room should only have a single connection, so
+      -- inhibit a mirrored sprout.
+      if what == "INSTALL" and pass == "sprout" and R.is_exit then
+        -- la la la
+      elseif not match_or_install_pat_raw(what, T2) then
         return false
       end
     end
@@ -2622,9 +2628,11 @@ end
 
   ---| Grower_grammatical_pass |---
 
+  gui.debugf("Growing %s with a [%s x %d] pass.....\n", R.name, pass, apply_num)
+
   -- we should have a known bbox (unless creating a room)
-  if pass != "root" then
---  assert(R.gx1)
+  if not is_create then
+    assert(R.gx1)
   end
 
   local rule_tab = collect_matching_rules(pass)
@@ -2659,7 +2667,6 @@ end
 
 function Grower_grammatical_room(R, pass, is_emergency)
   gui.ticker()
-  gui.debugf("\nGrow room %s : %s pass\n", R.name, pass)
 
   local apply_num = rand.pick({ 10,20,30 })
 
@@ -2682,9 +2689,10 @@ function Grower_do_room(R, create_it)
 
   if create_it then
     if create_it == "exit_root" then
-      Grower_grammatical_pass(R, "exit_root", 1, 0, nil, "is_create", nil)
       R.is_exit = true
       LEVEL.exit_room = R
+
+      Grower_grammatical_pass(R, "exit_root", 1, 0, nil, "is_create", nil)
     else
       Grower_grammatical_room(R, "root")
     end
@@ -2755,6 +2763,9 @@ function Grower_create_trunks()
     trunk.name = string.format("TRUNK_%d", trunk.id)
 
     table.insert(LEVEL.trunks, trunk)
+
+    gui.debugf("Created %s\n", trunk.name)
+
 
     local create_mode = "normal"
     if i == 1 then
@@ -2966,6 +2977,8 @@ function Grower_grow_rooms()
 
     each R in room_list do
       local old_num = #LEVEL.rooms
+
+      if R.is_exit then continue end
 
       Grower_grammatical_room(R, "sprout", "is_emergency")
 

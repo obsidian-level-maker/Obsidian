@@ -269,8 +269,7 @@ ROOT_LIQUID_CAGE3 =
 EXIT_1 =
 {
   pass = "exit_root"
-
-  prob = 20
+  prob = 50
 
   structure =
   {
@@ -281,8 +280,10 @@ EXIT_1 =
     "!!!!!", "....."
   }
 
-  no_sprout = true
-  no_grow   = true
+  new_room =
+  {
+    symmetry = { x=3, y=2, dir=8 }
+  }
 
   auxiliary =
   {
