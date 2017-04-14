@@ -1661,6 +1661,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if area_map[3] == A then return (E1.area == 3) end
 
     if area_map[E1.area] == nil then
+      if pass == "grow"   and A.no_grow    then return false end
+      if pass == "sprout" and A.no_sprout  then return false end
+
       -- check if the area would grow too big
       local growth = cur_rule.area_growths[E1.area] or 0
       if growth > 0 and #A.seeds + growth > A.max_size and not is_emergency then
@@ -1943,11 +1946,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
   local function match_or_install_element(what, E1, E2, T, px, py)
-
     local sx, sy = transform_coord(T, px, py)
 
     -- never allow patterns to touch edge of map
-    -- [ TODO : relax this a bit? ]
     if sx <= 1 or sx >= SEED_W or
        sy <= 1 or sy >= SEED_H
     then
@@ -2291,6 +2292,11 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         -- the seed and direction are determined later.
         new_conn = Grower_new_prelim_conn(R, new_room)
 --stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
+
+        local A = new_room.areas[1]
+
+        A.no_grow   = cur_rule.no_grow
+        A.no_sprout = cur_rule.no_sprout
       end
     end
 
@@ -2299,6 +2305,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
       -- max size of new area
       new_area.max_size = rand.pick({ 16, 24, 32 })
+
+      new_area.no_grow   = cur_rule.no_grow
+      new_area.no_sprout = cur_rule.no_sprout
 
       R:add_area(new_area)
 
