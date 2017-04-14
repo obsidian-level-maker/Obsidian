@@ -244,6 +244,11 @@ function Layout_spot_for_wotsit(R, kind, required)
 
     local score = (chunk.sig_dist or 0) * 10
 
+    -- the exit room generally has a closet pre-booked
+    if kind == "EXIT" and chunk.prefer_usage == "goal" then
+      score = score + 200
+    end
+
     if kind == "TELEPORTER" then
       if chunk.kind == "closet" then
         score = score + 27

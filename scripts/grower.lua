@@ -606,25 +606,25 @@ function Grower_preprocess_grammar()
     -- this also verifies the rectangle is all the same
     mark_part_as_seen(kind, x, y, w, h, seen)
 
-    local rect = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
+    local r = { kind=kind, x1=x, y1=y, x2=x+w-1, y2=y+h-1 }
 
     if kind == "hall2" or kind == "hall3" then
-      rect.kind = "hallway"
+      r.kind = "hallway"
     end
 
     local E = def.output[x][y]
 
     -- grab "dir" from corresponding table, if present
-    local info = find_info_for_part(rect.kind, x, y)
+    local info = find_info_for_part(r.kind, x, y)
     if info then
-      table.merge_missing(rect, info)
+      table.merge_missing(r, info)
     end
 
     if E.dir then
       -- directional stair
-      rect.from_dir = 10 - E.dir
+      r.from_dir = 10 - E.dir
 
-    elseif rect.kind == "hallway" or kind == "link" then
+    elseif r.kind == "hallway" or kind == "link" then
       -- TODO
 
     else
@@ -632,33 +632,33 @@ function Grower_preprocess_grammar()
         error("Missing " .. kind .. " info in grammar rule: " .. tostring(def.name))
       end
 
-      assert(rect.from_dir)
+      assert(r.from_dir)
     end
 
-    if rect.kind == "hallway" or kind == "link" then
+    if r.kind == "hallway" or kind == "link" then
       -- TODO
 
     else
-      rect.from_area = determine_from_area(kind, x, y, rect.from_dir)
+      r.from_area = determine_from_area(kind, x, y, r.from_dir)
 
-      if not rect.shape then
+      if not r.shape then
         if kind == "closet" then
-          rect.shape = "U"
+          r.shape = "U"
         else
-          rect.shape = "I"
+          r.shape = "I"
         end
       end
     end
 
     if kind == "joiner" then
-      if not rect.dest_dir then
-        rect.dest_dir = 10 - rect.from_dir
+      if not r.dest_dir then
+        r.dest_dir = 10 - r.from_dir
       end
     end
 
     if not def.rects then def.rects = {} end
 
-    table.insert(def.rects, rect)
+    table.insert(def.rects, r)
   end
 
 
@@ -2172,6 +2172,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       end
 
       chunk.shape = r.shape
+      chunk.prefer_usage = r.usage
 
       if r.from_area then
         chunk.from_area = assert(area_map[r.from_area])

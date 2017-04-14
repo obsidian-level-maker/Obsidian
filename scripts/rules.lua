@@ -283,6 +283,8 @@ EXIT_1 =
   new_room =
   {
     symmetry = { x=3, y=2, dir=8 }
+
+    usage = "boss"
   }
 
   auxiliary =
@@ -311,7 +313,7 @@ AUX_EXITCLOSET_A =
     "111", "111"
   }
 
-  closet = { from_dir=2 }
+  closet = { from_dir=2, usage="goal" }
 }
 
 
