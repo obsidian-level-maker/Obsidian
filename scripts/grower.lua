@@ -1493,7 +1493,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
   local function get_iteration_range(T)
-    if pass == "root" then
+    if R.gx1 == nil then
       local dx = math.min(10, int(SEED_W / 4))
       local dy = math.min(10, int(SEED_H / 4))
 
@@ -1898,7 +1898,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     if E2.kind == "new_area" then
-      assert(pass != "root")
       assert(new_area)
 
       set_seed(S, new_area)
@@ -2672,6 +2671,34 @@ end
 
 
 
+function Grower_do_room(R, create_it)
+
+  if create_it then
+    Grower_grammatical_room(R, "root")
+
+    -- if a root failed to establish itself, kill the room
+    if not R.gx1 then
+      gui.debugf("%s could not establish a root, killing it\n", R.name)
+      R:kill_it()
+    end
+  end
+
+  Grower_grammatical_room(R, "grow")
+
+  if R.kind == "hallway" then
+    Grower_grammatical_room(R, "terminate")
+    -- TODO : prune parts of hallway not reaching a room
+    --        [ when WHOLE thing, often try "grow" again ]
+    clean_up_links(R)
+  else
+    Grower_grammatical_room(R, "sprout")
+  end
+
+  R.is_grown = true
+end
+
+
+
 function Grower_create_trunks()
   --
   -- Multiple trunks require teleporters to connect them
@@ -2720,13 +2747,7 @@ function Grower_create_trunks()
 
     local R = Grower_add_room(nil, env, trunk)  -- no parent
 
-    Grower_grammatical_room(R, "root")
-
-    -- if a root failed to establish itself, kill the room
-    if not R.gx1 then
-      gui.debugf("%s could not establish a root, killing it\n", R.name)
-      R:kill_it()
-    end
+    Grower_do_room(R, "create_it")
   end
 end
 
@@ -2911,18 +2932,7 @@ function Grower_grow_rooms()
     rand.shuffle(room_list)
 
     each R in room_list do
-      Grower_grammatical_room(R, "grow")
-
-      if R.kind == "hallway" then
-        Grower_grammatical_room(R, "terminate")
-        -- TODO : prune parts of hallway not reaching a room
-        --        [ when WHOLE thing, often try "grow" again ]
-        clean_up_links(R)
-      else
-        Grower_grammatical_room(R, "sprout")
-      end
-
-      R.is_grown = true
+      Grower_do_room(R)
     end
   end
 
