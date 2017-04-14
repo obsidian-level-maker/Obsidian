@@ -775,7 +775,7 @@ GROW_STAIR_HUGE =
 }
 
 
-GROW_LIQUID_BRIDGE1 =
+GROW_XXX_BRIDGE1 =
 {
   prob = 0
 
@@ -788,6 +788,88 @@ GROW_LIQUID_BRIDGE1 =
     "x..x", "x~~x"
   }
 }
+
+
+--[[
+GROW_LIQUID_1 =
+{
+  prob = 200
+
+  structure =
+  {
+    "....", ".11."
+    "....", ".~~."
+    "x11x", "x11x"
+    "x11x", "x11x"
+  }
+
+  auxiliary =
+  {
+    pass = "liquid_grow"
+
+    count = { 4,8 }
+  }
+
+  xx_auxiliary2 =
+  {
+    pass = "liquid_newarea"
+
+    count = { 1,3 }
+  }
+}
+
+
+AUX_LIQUID_1 =
+{
+  pass = "liquid_grow"
+  prob = 50
+
+  structure =
+  {
+    "1.", "11"
+    "~.", "~~"
+    "1.", "11"
+  }
+}
+
+
+AUX_LIQUID_2 =
+{
+  pass = "liquid_grow"
+  prob = 50
+
+  structure =
+  {
+    "...", ".11"
+    "1..", "1/~"
+    "~..", "~/1"
+    "1..", "11."
+  }
+
+  diagonals =
+  {
+    "1~", "~1"
+  }
+}
+
+
+AUX_LIQUID_3 =
+{
+  pass = "liquid_grow"
+  prob = 0
+
+  structure =
+  {
+    "...", "..."
+    "~.~", "~~~"
+  }
+
+  diagonals =
+  {
+    ".~", "~."
+  }
+}
+--]]
 
 
 ------------------------------------------
