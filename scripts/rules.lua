@@ -266,6 +266,70 @@ ROOT_LIQUID_CAGE3 =
 }
 
 
+EXIT_1 =
+{
+  pass = "exit_root"
+
+  prob = 20
+
+  structure =
+  {
+    "!!!!!", "....."
+    "!!!!!", "#RRR#"
+    "!!!!!", "#RRR#"
+    "!!!!!", "#RRR#"
+    "!!!!!", "....."
+  }
+
+  no_sprout = true
+  no_grow   = true
+
+  auxiliary =
+  {
+    pass = "exit_closet"
+    count = 1
+  }
+
+  auxiliary2 =
+  {
+    pass = "exit_grow"
+    count = 1
+  }
+}
+
+
+AUX_EXITCLOSET_A =
+{
+  pass = "exit_closet"
+  prob = 50
+
+  structure =
+  {
+    "...", "TTT"
+    "...", "TTT"
+    "111", "111"
+  }
+
+  closet = { from_dir=2 }
+}
+
+
+AUX_EXITGROW_A =
+{
+  pass = "exit_grow"
+  prob = 50
+
+  structure =
+  {
+    "...", "AAA"
+    "...", "AAA"
+    "...", "AAA"
+    "...", "^^^"
+    "111", "111"
+  }
+}
+
+
 ------------------------------------------
 
 
@@ -790,7 +854,8 @@ GROW_XXX_BRIDGE1 =
 }
 
 
---[[
+--[[ test crud......
+
 GROW_LIQUID_1 =
 {
   prob = 200

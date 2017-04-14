@@ -1047,6 +1047,8 @@ gui.debugf("new room %s : env = %s : off %s\n", ROOM.name, tostring(force_env), 
   ROOM.trunk = trunk
   table.insert(trunk.rooms, ROOM)
 
+  ROOM.grow_parent = parent_R
+
   local kind = "normal"
 
   if force_env == "hallway" then
@@ -1108,7 +1110,7 @@ end
 
 
 function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
-                                 parent_rule, is_emergency)
+                                 parent_rule, is_create, is_emergency)
   --
   -- Creates rooms using Shape Grammars.
   --
@@ -1127,8 +1129,6 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   local link_matches
 
   local new_room
-  local old_room
-
   local new_conn
   local new_area
   local new_intconn
@@ -2271,7 +2271,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
   local function pre_install(T)
-    old_room = new_room
     new_room = nil
 
     new_conn = nil
@@ -2279,9 +2278,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     old_chunks = new_chunks
     new_chunks = nil
 
-    -- for initial shapes, 'R' is the current room
-    if pass == "root" then
+    if is_create then
       new_room = R
+
     else
       if cur_rule.new_room then
         local env = cur_rule.new_room.env  -- often NIL
@@ -2579,7 +2578,7 @@ end
         num = rand.irange(num[1], num[2])
       end
 
-      Grower_grammatical_pass(R, aux.pass, num, aux.stop_prob or 0, cur_rule, is_emergency)
+      Grower_grammatical_pass(R, aux.pass, num, aux.stop_prob or 0, cur_rule, false, is_emergency)
     end
   end
 
@@ -2625,7 +2624,7 @@ end
 
   -- we should have a known bbox (unless creating a room)
   if pass != "root" then
-    assert(R.gx1)
+--  assert(R.gx1)
   end
 
   local rule_tab = collect_matching_rules(pass)
@@ -2674,7 +2673,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
   if pass == "grow"     then stop_prob =  5 end
   if pass == "decorate" then stop_prob = 10 end
 
-  Grower_grammatical_pass(R, pass, apply_num, stop_prob, nil, is_emergency)
+  Grower_grammatical_pass(R, pass, apply_num, stop_prob, nil, pass == "root", is_emergency)
 end
 
 
@@ -2682,7 +2681,13 @@ end
 function Grower_do_room(R, create_it)
 
   if create_it then
-    Grower_grammatical_room(R, "root")
+    if create_it == "exit_root" then
+      Grower_grammatical_pass(R, "exit_root", 1, 0, nil, "is_create", nil)
+      R.is_exit = true
+      LEVEL.exit_room = R
+    else
+      Grower_grammatical_room(R, "root")
+    end
 
     -- if a root failed to establish itself, kill the room
     if not R.gx1 then
@@ -2699,7 +2704,11 @@ function Grower_do_room(R, create_it)
     --        [ when WHOLE thing, often try "grow" again ]
     clean_up_links(R)
   else
-    Grower_grammatical_room(R, "sprout")
+    if create_it == "exit_root" then
+      Grower_grammatical_pass(R, "sprout", 1, 0)
+    else
+      Grower_grammatical_room(R, "sprout")
+    end
   end
 
   R.is_grown = true
@@ -2747,15 +2756,20 @@ function Grower_create_trunks()
 
     table.insert(LEVEL.trunks, trunk)
 
+    local create_mode = "normal"
+    if i == 1 then
+      create_mode = "exit_root"
+    end
+
     local env
 
-    if rand.odds(LEVEL.cave_trunk_prob) then
+    if rand.odds(LEVEL.cave_trunk_prob) and create_mode != "exit_root" then
       env = "cave"
     end
 
     local R = Grower_add_room(nil, env, trunk)  -- no parent
 
-    Grower_do_room(R, "create_it")
+    Grower_do_room(R, create_mode)
   end
 end
 

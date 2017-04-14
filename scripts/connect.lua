@@ -218,6 +218,9 @@ end
 function Connect_teleporters()
 
   local function eval_room(R)
+    -- exit room already has a connection [ another one would be bad ]
+    if R == LEVEL.exit_room then return -1 end
+
     -- never in hallways
     if R.kind == "hallway" then return -1 end
 

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -262,10 +262,14 @@ function Quest_create_initial_quest()
 
 
   local function add_normal_exit(quest)
-    local R = pick_exit_room()
+    local R = assert(LEVEL.exit_room)  --!!!!  pick_exit_room()
 
     if not R then
       error("Unable to pick exit room!")
+    end
+
+    if R:total_conns() > 1 then
+      error("Exit room has multiple conns")
     end
 
     gui.printf("Exit room: %s\n", R.name)
