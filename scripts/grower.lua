@@ -1265,10 +1265,10 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       if not is_emergency then return 0 end
     end
 
-    -- for emergency, limit what growth rules to try
-    if is_emergency and pass == "grow" and not rule.emergency then
-      return 0
-    end
+---!!!    -- for emergency, limit what growth rules to try
+---!!!    if is_emergency and pass == "grow" and not rule.emergency then
+---!!!      return 0
+---!!!    end
 
     if rule.new_room and rule.new_room.env == "cave" then
       if R.is_cave then
@@ -2629,7 +2629,7 @@ end
 
   ---| Grower_grammatical_pass |---
 
-  gui.debugf("Growing %s with a [%s x %d] pass.....\n", R.name, pass, apply_num)
+  gui.debugf("Growing %s with [%s x %d].....\n", R.name, pass, apply_num)
 
   -- we should have a known bbox (unless creating a room)
   if not is_create then
@@ -2650,6 +2650,11 @@ end
 
     -- hit the room limit?
     if pass == "sprout" and #LEVEL.rooms >= LEVEL.max_rooms then
+      break;
+    end
+
+    -- exit rooms must have only a single entrance
+    if pass == "sprout" and R.is_exit and R.prelim_conn_num >= 1 then
       break;
     end
 
@@ -2979,8 +2984,6 @@ function Grower_grow_rooms()
     each R in room_list do
       local old_num = #LEVEL.rooms
 
-      if R.is_exit then continue end
-
       Grower_grammatical_room(R, "sprout", "is_emergency")
 
 ---???  -- only try a growth pass if no new rooms were sprouted
@@ -2992,10 +2995,10 @@ function Grower_grow_rooms()
 
 
   local function expand_sprout_bbox()
-    LEVEL.sprout_x1 = math.max(LEVEL.boundary_x1, LEVEL.sprout_x1 - 2)
-    LEVEL.sprout_y1 = math.max(LEVEL.boundary_y1, LEVEL.sprout_y1 - 2)
-    LEVEL.sprout_x2 = math.min(LEVEL.boundary_x2, LEVEL.sprout_x2 + 2)
-    LEVEL.sprout_y2 = math.min(LEVEL.boundary_y2, LEVEL.sprout_y2 + 2)
+    LEVEL.sprout_x1 = math.max(LEVEL.sprout_x1 - 2, LEVEL.boundary_x1)
+    LEVEL.sprout_y1 = math.max(LEVEL.sprout_y1 - 2, LEVEL.boundary_y1)
+    LEVEL.sprout_x2 = math.min(LEVEL.sprout_x2 + 2, LEVEL.boundary_x2)
+    LEVEL.sprout_y2 = math.min(LEVEL.sprout_y2 + 2, LEVEL.boundary_y2)
   end
 
 
