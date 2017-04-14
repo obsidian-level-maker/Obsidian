@@ -1009,6 +1009,8 @@ do return false end
   end
 
 
+  -- use remotely switched doors only within a zone
+
   goal_list = {}
 
   collect_switch_goals(goal_list)

@@ -225,7 +225,7 @@ function Grower_preprocess_grammar()
       def.new_room = {}
     end
 
-    if E.kind == "new_area" and not def.new_area then
+    if (E.kind == "new_area" or E.kind == "XXX_room") and not def.new_area then
       def.new_area = {}
     end
 
@@ -1107,7 +1107,8 @@ end
 
 
 
-function Grower_grammatical_room(R, pass, is_emergency)
+function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
+                                 parent_rule, is_emergency)
   --
   -- Creates rooms using Shape Grammars.
   --
@@ -2562,7 +2563,28 @@ end
   end
 
 
-  local function apply_a_rule(rule_tab, doing_aux)
+  local function apply_auxiliary_rules()
+    for idx = 1,9 do
+      local aux_name = auxiliary_name(idx)
+
+      local aux = cur_rule[aux_name]
+      if aux == nil then continue end
+
+      assert(aux.pass)
+
+      -- 'count' can be a number or a range of values: { low,high }
+      local num = aux.count
+
+      if type(num) == "table" then
+        num = rand.irange(num[1], num[2])
+      end
+
+      Grower_grammatical_pass(R, aux.pass, num, aux.stop_prob or 0, cur_rule, is_emergency)
+    end
+  end
+
+
+  local function apply_a_rule(rule_tab)
     local rules = table.copy(rule_tab)
 
     local loop = 0
@@ -2593,47 +2615,52 @@ end
     gui.debugf("Applied grammar rule %s\n", cur_rule.name)
 
     -- apply any auxiliary rules
-    -- TODO : support multiple sets
-
-    -- for performance reasons, only support one layer of recursion
-    if doing_aux then return end
-
-    if not cur_rule.auxiliary then return end
-
-    -- we modify 'cur_rule', so need to remember it here
-    local parent_rule = cur_rule
-
-    for aux = 1,9 do
-      local aux_name = auxiliary_name(aux)
-
-      local aux = parent_rule[aux_name]
-      if aux == nil then continue end
-
-      assert(aux.pass)
-      local aux_rules = collect_matching_rules(aux.pass)
-
-      -- 'count' can be a number or a range of values: { low,high }
-      local num = aux.count
-
-      if type(num) == "table" then
-        num = rand.irange(num[1], num[2])
-      end
-
-      for i = 1, num do
-        apply_a_rule(aux_rules, "doing_aux")
-      end
+    if cur_rule.auxiliary then
+      apply_auxiliary_rules()
     end
   end
 
 
-  ---| Grower_grammatical_room |---
+  ---| Grower_grammatical_pass |---
 
-  gui.debugf("\nGrow room %s : %s pass\n", R.name, pass)
-  gui.ticker()
-
+  -- we should have a known bbox (unless creating a room)
   if pass != "root" then
-    assert(R.gx1) ; assert(R.gy2)
+    assert(R.gx1)
   end
+
+  local rule_tab = collect_matching_rules(pass)
+
+  if stop_prob > 0 then
+    rule_tab["STOP"] = stop_prob
+  end
+
+  for loop = 1, apply_num do
+    -- hit the size limit?
+    if pass == "grow" and R:rough_size() >= R.size_limit then
+      break;
+    end
+
+    -- hit the room limit?
+    if pass == "sprout" and #LEVEL.rooms >= LEVEL.max_rooms then
+      break;
+    end
+
+    -- stderrf("LOOP %d\n", loop)
+    apply_a_rule(rule_tab)
+
+    -- if we surpass the floor limit, remove rules which add new areas
+    if pass == "grow" and not hit_floor_limit and R:num_floors() >= R.floor_limit then
+      hit_floor_limit = true
+      rule_tab = collect_matching_rules(pass, "no_new_areas")
+    end
+  end
+end
+
+
+
+function Grower_grammatical_room(R, pass, is_emergency)
+  gui.ticker()
+  gui.debugf("\nGrow room %s : %s pass\n", R.name, pass)
 
   local apply_num = rand.pick({ 10,20,30 })
 
@@ -2642,31 +2669,12 @@ end
   if pass == "terminate" then apply_num = 10 end --- TODO : number of active links
   if pass == "decorate" then apply_num = 7 end --- TODO
 
-  local rule_tab = collect_matching_rules(pass)
+  local stop_prob = 0
 
-  if pass == "grow"     then rule_tab["STOP"] =  5 end
-  if pass == "decorate" then rule_tab["STOP"] = 10 end
+  if pass == "grow"     then stop_prob =  5 end
+  if pass == "decorate" then stop_prob = 10 end
 
-  for loop = 1, apply_num do
-    -- hit the room limit?
-    if pass == "sprout" and #LEVEL.rooms >= LEVEL.max_rooms then
-      return
-    end
-
-    -- stderrf("LOOP %d\n", loop)
-    apply_a_rule(rule_tab)
-
-    -- stop if we surpass the size limit
-    if pass == "grow" and R:rough_size() >= R.size_limit then
-      break
-    end
-
-    -- if we surpass the floor limit, remove rules which add new areas
-    if pass == "grow" and not hit_floor_limit and R:num_floors() >= R.floor_limit then
-      hit_floor_limit = true
-      rule_tab = collect_matching_rules(pass, "no_new_areas")
-    end
-  end
+  Grower_grammatical_pass(R, pass, apply_num, stop_prob, nil, is_emergency)
 end
 
 
