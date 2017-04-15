@@ -2523,7 +2523,7 @@ end
     local flip_y_max = sel(cur_rule.y_symmetry, 0, 1)
 
     -- exit rooms (and auxiliary pieces) do not rotate or mirror
-    if cur_rule.absolute_pos then
+    if cur_rule.no_rotate then
       transp_max = 0
       flip_x_max = 0
       flip_y_max = 0

@@ -284,6 +284,7 @@ EXIT_1 =
   }
 
   absolute_pos = "top"
+  no_rotate = true
 
   new_room =
   {
@@ -317,7 +318,7 @@ EXIT1_CLOSET =
     "111", "111"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 
   closet = { from_dir=2, usage="goal" }
 }
@@ -339,7 +340,7 @@ EXIT1_AREA_A =
     "x...x", "xAAAx"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 }
 
 
@@ -357,7 +358,7 @@ EXIT1_AREA_B =
     ".....", "AAAAA"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 }
 
 
@@ -374,7 +375,7 @@ EXIT1_AREA_C =
     "xxx...xxx", "xxx###xxx"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 }
 
 
@@ -393,6 +394,7 @@ EXIT_2 =
   }
 
   absolute_pos = "corner"
+  no_rotate = true
 
   new_room =
   {
@@ -419,7 +421,7 @@ EXIT2_CLOSET =
     "1..", "1TT"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 
   closet = { from_dir=4, usage="goal" }
 }
@@ -444,6 +446,7 @@ EXIT_3 =
   }
 
   absolute_pos = "top"
+  no_rotate = true
 
   new_room =
   {
@@ -471,7 +474,7 @@ EXIT3_AREA_A =
     "..111..", "#A111A#"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 
   auxiliary =
   {
@@ -499,7 +502,7 @@ EXIT3_AREA_B =
     "..111..", "#A111A#"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 
   diagonals =
   {
@@ -526,7 +529,7 @@ EXIT3_CLOSET =
     "1...1", "1TTT1"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 
   closet = { from_dir=8, usage="goal" }
 }
@@ -543,7 +546,7 @@ EXIT1_DECOR =
     "11111", "11111"
   }
 
-  absolute_pos = "top"
+  no_rotate = true
 
   closet = { from_dir=2 }
 }
