@@ -1499,9 +1499,14 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       local my = int(SEED_H / 2)
 
       -- the exit room is alway placed near top of map
-      if cur_rule.absolute_dir then
+      if cur_rule.absolute_pos == "top" or cur_rule.absolute_pos == "corner" then
         my = LEVEL.sprout_y2 + 2
         dy = 8
+      end
+
+      if cur_rule.absolute_pos == "right" or cur_rule.absolute_pos == "corner" then
+        mx = LEVEL.sprout_x2 + 2
+        dx = 8
       end
 
       return mx-dx, my-dy, mx+dx, my+dy
@@ -2517,8 +2522,8 @@ end
     local flip_x_max = sel(cur_rule.x_symmetry, 0, 1)
     local flip_y_max = sel(cur_rule.y_symmetry, 0, 1)
 
-    -- exit rooms always begin near bottom of map
-    if cur_rule.absolute_dir then
+    -- exit rooms (and auxiliary pieces) do not rotate or mirror
+    if cur_rule.absolute_pos then
       transp_max = 0
       flip_x_max = 0
       flip_y_max = 0

@@ -283,7 +283,7 @@ EXIT_1 =
     "!!!!!", "....."
   }
 
-  absolute_dir = true
+  absolute_pos = "top"
 
   new_room =
   {
@@ -318,7 +318,7 @@ EXIT1_CLOSET =
     "111", "111"
   }
 
-  absolute_dir = true
+  absolute_pos = "top"
 
   closet = { from_dir=2, usage="goal" }
 }
@@ -340,7 +340,7 @@ EXIT1_AREA_A =
     "x...x", "xAAAx"
   }
 
-  absolute_dir = true
+  absolute_pos = "top"
 }
 
 
@@ -358,7 +358,7 @@ EXIT1_AREA_B =
     ".....", "AAAAA"
   }
 
-  absolute_dir = true
+  absolute_pos = "top"
 }
 
 
@@ -375,7 +375,7 @@ EXIT1_AREA_C =
     "xxx...xxx", "xxx###xxx"
   }
 
-  absolute_dir = true
+  absolute_pos = "top"
 }
 
 
@@ -393,7 +393,7 @@ EXIT_2 =
     "!!!!!", "...#."
   }
 
-  absolute_dir = true
+  absolute_pos = "top"
 
   new_room =
   {
@@ -420,7 +420,7 @@ EXIT2_CLOSET =
     "1..", "1TT"
   }
 
-  absolute_dir = true
+  absolute_pos = "top"
 
   closet = { from_dir=4, usage="goal" }
 }
