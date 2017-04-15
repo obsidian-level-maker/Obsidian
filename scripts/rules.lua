@@ -386,8 +386,8 @@ EXIT_2 =
 
   structure =
   {
-    "!!!!!", "####."
-    "!!!!!", "#RRR."
+    "!!!!!", ".###."
+    "!!!!!", ".RRR."
     "!!!!!", ".RRR."
     "!!!!!", ".RRR."
     "!!!!!", "....."
@@ -404,6 +404,12 @@ EXIT_2 =
   auxiliary =
   {
     pass = "exit2_closet"
+    count = 1
+  }
+
+  auxiliary2 =
+  {
+    pass = "exit2_decor"
     count = 1
   }
 }
@@ -424,6 +430,24 @@ EXIT2_CLOSET =
   no_rotate = true
 
   closet = { from_dir=4, usage="goal" }
+}
+
+
+EXIT2_DECOR =
+{
+  pass = "exit2_decor"
+  prob = 50
+
+  structure =
+  {
+    "..1", "TT1"
+    "..1", "TT1"
+    "..1", "TT1"
+  }
+
+  no_rotate = true
+
+  closet = { from_dir=6 }
 }
 
 
