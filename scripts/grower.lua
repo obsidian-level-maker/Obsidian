@@ -1023,9 +1023,6 @@ function Grower_new_prelim_conn(R1, R2, kind)
     PC.kind = kind
   end
 
-  PC.R1.prelim_conn_num = PC.R1.prelim_conn_num + 1
-  PC.R2.prelim_conn_num = PC.R2.prelim_conn_num + 1
-
   table.insert(LEVEL.prelim_conns, PC)
 
   return PC
@@ -2511,7 +2508,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
---  gui.debugf("Trying rule '%s'...\n", cur_rule.name)
+--- gui.debugf("  Trying rule '%s'...\n", cur_rule.name)
 
     local best = { score=-1 }
 
@@ -2669,7 +2666,7 @@ end
     end
 
     -- exit rooms must have only a single entrance
-    if pass == "sprout" and R.is_exit and R.prelim_conn_num >= 1 then
+    if pass == "sprout" and R.is_exit and R:prelim_conn_num() >= 1 then
       break;
     end
 

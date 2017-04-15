@@ -133,7 +133,6 @@ function ROOM_CLASS.new()
 
     svolume = 0
     total_inner_points = 0
-    prelim_conn_num = 0
     num_windows = 0
 
     areas = {}
@@ -370,6 +369,19 @@ function ROOM_CLASS.has_teleporter(R)
   end
 
   return false
+end
+
+
+function ROOM_CLASS.prelim_conn_num(R)
+  local count = 0
+
+  each PC in LEVEL.prelim_conns do
+    if PC.R1 == R or PC.R2 == R then
+      count = count + 1
+    end
+  end
+
+  return count
 end
 
 
