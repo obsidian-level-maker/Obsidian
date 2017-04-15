@@ -909,8 +909,7 @@ GROW_STAIRPAIR_4C =
 
 GROW_STAIRPAIR_5 =
 {
-  prob = 200
-  prob_skew = 2
+  prob = 120
   skip_prob = 50
 
   structure =
