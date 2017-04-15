@@ -272,7 +272,7 @@ ROOT_LIQUID_CAGE3 =
 EXIT_1 =
 {
   pass = "exit_root"
-  prob = 50
+  prob = 60
 
   structure =
   {
@@ -376,6 +376,53 @@ EXIT1_AREA_C =
   }
 
   absolute_dir = true
+}
+
+
+EXIT_2 =
+{
+  pass = "exit_root"
+  prob = 30
+
+  structure =
+  {
+    "!!!!!", ".###."
+    "!!!!!", "#RRR."
+    "!!!!!", ".RRR."
+    "!!!!!", ".RRR."
+    "!!!!!", "...#."
+  }
+
+  absolute_dir = true
+
+  new_room =
+  {
+    usage = "boss"
+  }
+
+  auxiliary =
+  {
+    pass = "exit2_closet"
+    count = 1
+  }
+}
+
+
+EXIT2_CLOSET =
+{
+  pass = "exit2_closet"
+  prob = 50
+
+  structure =
+  {
+    "1..", "1TT"
+    "1..", "1TT"
+    "1..", "1TT"
+  }
+
+  absolute_dir = true
+
+  closet = { from_dir=4, usage="goal" }
 }
 
 
