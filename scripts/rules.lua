@@ -266,6 +266,9 @@ ROOT_LIQUID_CAGE3 =
 }
 
 
+------------------------------------------
+
+
 EXIT_1 =
 {
   pass = "exit_root"
@@ -291,21 +294,21 @@ EXIT_1 =
 
   auxiliary =
   {
-    pass = "exit_closet"
+    pass = "exit1_closet"
     count = 1
   }
 
   auxiliary2 =
   {
-    pass = "exit_grow"
+    pass = "exit1_area"
     count = 1
   }
 }
 
 
-AUX_EXITCLOSET_A =
+EXIT1_CLOSET =
 {
-  pass = "exit_closet"
+  pass = "exit1_closet"
   prob = 50
 
   structure =
@@ -321,9 +324,9 @@ AUX_EXITCLOSET_A =
 }
 
 
-AUX_EXITGROW_A =
+EXIT1_AREA =
 {
-  pass = "exit_grow"
+  pass = "exit1_area"
   prob = 50
 
   structure =
@@ -333,6 +336,77 @@ AUX_EXITGROW_A =
     "...", "AAA"
     "...", "AAA"
     "...", "AAA"
+  }
+
+  absolute_dir = true
+}
+
+
+EXIT_2 =
+{
+  pass = "exit_root"
+  prob = 50
+
+  structure =
+  {
+    "!!!!!", "....."
+    "!!!!!", ".RRR."
+    "!!!!!", ".RRR."
+    "!!!!!", ".RRR."
+    "!!!!!", ".###."
+  }
+
+  absolute_dir = true
+
+  new_room =
+  {
+    symmetry = { x=3, y=2, dir=8 }
+
+    usage = "boss"
+  }
+
+  auxiliary =
+  {
+    pass = "exit1_closet"
+    count = 1
+  }
+
+  auxiliary2 =
+  {
+    pass = "exit2_area"
+    count = 1
+  }
+}
+
+
+EXIT2_AREA1 =
+{
+  pass = "exit2_area"
+  prob = 50
+
+  structure =
+  {
+    ".111.", "A111A"
+    ".111.", "A111A"
+    ".111.", "A111A"
+    ".....", "AvvvA"
+    ".....", "AAAAA"
+  }
+
+  absolute_dir = true
+}
+
+
+EXIT2_AREA2 =
+{
+  pass = "exit2_area"
+  prob = 50
+
+  structure =
+  {
+    "...111...", "AA<111>AA"
+    "...111...", "AA<111>AA"
+    "...111...", "AA<111>AA"
   }
 
   absolute_dir = true
