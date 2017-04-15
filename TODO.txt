@@ -31,19 +31,11 @@ OBLIGE TO-DO
    shadow (or split by it), and wrong texture in liquidy caves
 
 
-+  health and ammo : "A Bit Less", "A Bit More".
-
 +  monster spots from a prefab : can cause stuck monsters
    [ ideally shrink them if nearby wall(etc) overlaps ]
 
-+  grower: compute a score early, do a check on first whole-seed
-   "area" element and do the "max_size" check here too
-
 +  level_usage for: rules, prefabs, rooms themes.
    (maybe have "room_usage" and "zone_usage" for prefabs too)
-
-+  if room has a boss/guard needing a large chunk, allocate those
-   chunks early [ but allow importants to override in emergencies ]
 
 -  traps : distinguish "short-range" (same room) and "long-range"
            (another room) when deciding monsters to use
@@ -52,8 +44,6 @@ OBLIGE TO-DO
 
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars
-
--  a "slow pace weapons" extra setting (idea by flyingdeath)
 
 -  intra-room locks : support free-standing switches
 
@@ -154,8 +144,6 @@ Hallways
 
 SHAPE GRAMMARS
 --------------
-
--  flags to make a new area as "no grow" and/or "no sprout"
 
 +  '9', '8', '7' matches anything but "1", "2", "3"
 
@@ -809,8 +797,6 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
-+  make the main window vertically resizable
-
 -  option to disable the overwrite warning
 
 +  info files for addons: addons/<name>.txt
@@ -834,9 +820,6 @@ IDEA: a better Set Seed dialog, show a few previously used seeds
       and allow choosing them again
 
 IDEA: Menu / Rebuild Last : used seed and filename of previous build
-
-Console:
-  -  display lists better
 
 Cancellation:
   -  can abort monster code (Fight sim) midstream 

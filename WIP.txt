@@ -3,6 +3,51 @@ WORK IN PROGRESS
 ================
 
 
+Minor Goals
+-----------
+
+-  grower : when pruning rooms, totally remove dead joiners too
+
+-  grower: compute a score early, do a check on first whole-seed
+   "area" element and do the "max_size" check here too
+
+-  if room has a boss/guard needing a large chunk, allocate those
+   chunks early [ but allow importants to override in emergencies ]
+
+
+stairs : prevent two stairs from touching
+
+
+steepness : IF exist on a rule AND room is outdoor THEN prob *= 0.5
+
+
+EXIT room in the first trunk:
+-  error if exit room failed to take root
+-  ensure room (and trunk) is never killed
+-  ensure a sprout is made, and grow that room ASAP
+   [ if sprout room is killed or impossible, force a teleporter to exit ]
+-  force first area to be boss-monster spot (at least one), be tall enough
+-  prevent first area from getting a decoration or floor sink
+
+
+
+Major Goals
+-----------
+
++  better room/map borders
+   -  the fenced off pools from V7-WEIRD
+   -  use cave code to make mountainy areas
+   -  use cave code to make cavey/liquidy areas
+   -  get the "park fence" logic working
+
++  hallway system
+   -  made up of pieces (each one is a prefab)
+   -  a "vent" style
+   -  a "curvey" style like in V5
+   -  a wide-ish one with stairs, like in V4
+
+
+
 Quake3 CSG Code
 ---------------
 
