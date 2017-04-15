@@ -272,6 +272,10 @@ function Layout_spot_for_wotsit(R, kind, required)
       end
     end
 
+    if chunk.prefer_usage != kind then
+      score = score / 3
+    end
+
     -- in caves, prefer spots which do not touch the room edge,
     -- and prefer not to use closets (which don't look good).
     if R.is_cave then

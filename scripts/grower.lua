@@ -2708,7 +2708,7 @@ end
 
 
 
-function Grower_do_room(R, create_it)
+function Grower_grow_room(R, create_it)
 
   if create_it then
     if create_it == "exit_root" then
@@ -2722,8 +2722,14 @@ function Grower_do_room(R, create_it)
 
     -- if a root failed to establish itself, kill the room
     if not R.gx1 then
+      if create_it == "exit_room" then
+        error("Exit room could not be placed!")
+      end
+
       gui.debugf("%s could not establish a root, killing it\n", R.name)
+
       R:kill_it()
+      return
     end
   end
 
@@ -2734,12 +2740,12 @@ function Grower_do_room(R, create_it)
     -- TODO : prune parts of hallway not reaching a room
     --        [ when WHOLE thing, often try "grow" again ]
     clean_up_links(R)
+
+  elseif create_it == "exit_root" then
+    Grower_grammatical_pass(R, "sprout", 1, 0)
+
   else
-    if create_it == "exit_root" then
-      Grower_grammatical_pass(R, "sprout", 1, 0)
-    else
-      Grower_grammatical_room(R, "sprout")
-    end
+    Grower_grammatical_room(R, "sprout")
   end
 
   R.is_grown = true
@@ -2789,22 +2795,22 @@ function Grower_create_trunks()
 
     gui.debugf("Created %s\n", trunk.name)
 
+    local env
+    if rand.odds(LEVEL.cave_trunk_prob) then
+      env = "cave"
+    end
 
+    -- first trunk is always the exit room
     local create_mode = "normal"
     if i == 1 then
       create_mode = "exit_root"
-    end
-
-    local env
-
-    if rand.odds(LEVEL.cave_trunk_prob) and create_mode != "exit_root" then
-      env = "cave"
+      env = nil
     end
 
     local R = Grower_add_room(nil, env, trunk)  -- no parent
 
-    Grower_do_room(R, create_mode)
-  end
+    Grower_grow_room(R, create_mode)
+  end -- i
 end
 
 
@@ -2825,8 +2831,8 @@ function Grower_prune_small_rooms()
 
 
   local function is_too_small(R)
-    -- always prune dead-end hallways
-    --???   if R.kind == "hallway" then return true end
+    -- never prune the initial exit room
+    if R.is_exit then return false end
 
     return R:calc_walk_vol() < 8
   end
@@ -2946,7 +2952,7 @@ end
 
 
 
-function Grower_grow_rooms()
+function Grower_grow_all_rooms()
 
   local function clean_up_links(R)
     -- remove hallway links that were never used
@@ -2988,7 +2994,7 @@ function Grower_grow_rooms()
     rand.shuffle(room_list)
 
     each R in room_list do
-      Grower_do_room(R)
+      Grower_grow_room(R)
     end
   end
 
@@ -3019,7 +3025,7 @@ function Grower_grow_rooms()
   end
 
 
-  ---| Grower_grow_rooms |---
+  ---| Grower_grow_all_rooms |---
 
   -- if map is too small, try to sprout some more rooms
   local MAX_LOOP = 4
@@ -3777,7 +3783,7 @@ function Grower_create_rooms()
   Grower_decide_extents()
 
   Grower_create_trunks()
-  Grower_grow_rooms()
+  Grower_grow_all_rooms()
   Grower_cave_stats()
 
   Grower_decorate_rooms()
