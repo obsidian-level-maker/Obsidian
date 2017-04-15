@@ -287,9 +287,8 @@ EXIT_1 =
 
   new_room =
   {
-    symmetry = { x=3, y=2, dir=8 }
-
     usage = "boss"
+    symmetry = { x=3, y=2, dir=8 }
   }
 
   auxiliary =
@@ -386,14 +385,14 @@ EXIT_2 =
 
   structure =
   {
-    "!!!!!", ".###."
+    "!!!!!", "####."
     "!!!!!", "#RRR."
     "!!!!!", ".RRR."
     "!!!!!", ".RRR."
-    "!!!!!", "...#."
+    "!!!!!", "....."
   }
 
-  absolute_pos = "top"
+  absolute_pos = "corner"
 
   new_room =
   {
@@ -423,6 +422,130 @@ EXIT2_CLOSET =
   absolute_pos = "top"
 
   closet = { from_dir=4, usage="goal" }
+}
+
+
+EXIT_3 =
+{
+  pass = "exit_root"
+  prob = 30
+
+  structure =
+  {
+    "!!!!!", "....."
+    "!!!!!", "....."
+    "!!!!!", "....."
+    "!!!!!", "....."
+    "!!!!!", "....."
+    "!!!!!", ".RRR."
+    "!!!!!", "#RRR#"
+    "!!!!!", ".RRR."
+    "!!!!!", "....."
+  }
+
+  absolute_pos = "top"
+
+  new_room =
+  {
+    usage = "boss"
+    symmetry = { x=3, y=2, dir=8 }
+  }
+
+  auxiliary =
+  {
+    pass = "exit3_area"
+    count = 1
+  }
+}
+
+
+EXIT3_AREA_A =
+{
+  pass = "exit3_area"
+  prob = 50
+
+  structure =
+  {
+    ".......", "#AAAAA#"
+    ".......", "#A...A#"
+    "..111..", "#A111A#"
+  }
+
+  absolute_pos = "top"
+
+  auxiliary =
+  {
+    pass = "exit3_closet"
+    count = 1
+  }
+
+  auxiliary2 =
+  {
+    pass = "exit3_decor"
+    count = 1
+  }
+}
+
+
+EXIT3_AREA_B =
+{
+  pass = "exit3_area"
+  prob = 50
+
+  structure =
+  {
+    ".......", "#/AAA%#"
+    ".......", "#A/#%A#"
+    "..111..", "#A111A#"
+  }
+
+  absolute_pos = "top"
+
+  diagonals =
+  {
+    "#A", "A#"
+    "A#", "#A"
+  }
+
+  auxiliary =
+  {
+    pass = "exit1_closet"
+    count = 1
+  }
+}
+
+
+EXIT3_CLOSET =
+{
+  pass = "exit3_closet"
+  prob = 50
+
+  structure =
+  {
+    "11111", "11111"
+    "1...1", "1TTT1"
+  }
+
+  absolute_pos = "top"
+
+  closet = { from_dir=8, usage="goal" }
+}
+
+
+EXIT1_DECOR =
+{
+  pass = "exit3_decor"
+  prob = 50
+
+  structure =
+  {
+    ".....", "#TTT#"
+    "11111", "11111"
+  }
+
+  absolute_pos = "top"
+
+  closet = { from_dir=2 }
 }
 
 
