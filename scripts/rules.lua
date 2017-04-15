@@ -277,9 +277,9 @@ EXIT_1 =
   structure =
   {
     "!!!!!", "....."
-    "!!!!!", "#RRR#"
-    "!!!!!", "#RRR#"
-    "!!!!!", "#RRR#"
+    "!!!!!", ".RRR."
+    "!!!!!", ".RRR."
+    "!!!!!", ".RRR."
     "!!!!!", "....."
   }
 
@@ -324,64 +324,29 @@ EXIT1_CLOSET =
 }
 
 
-EXIT1_AREA =
+EXIT1_AREA_A =
 {
   pass = "exit1_area"
   prob = 50
 
   structure =
   {
-    "111", "111"
-    "...", "vvv"
-    "...", "AAA"
-    "...", "AAA"
-    "...", "AAA"
+    ".111.", "#111#"
+    ".111.", "#111#"
+    ".111.", "#111#"
+    "x...x", "xvvvx"
+    "x...x", "xAAAx"
+    "x...x", "xAAAx"
+    "x...x", "xAAAx"
   }
 
   absolute_dir = true
 }
 
 
-EXIT_2 =
+EXIT1_AREA_B =
 {
-  pass = "exit_root"
-  prob = 50
-
-  structure =
-  {
-    "!!!!!", "....."
-    "!!!!!", ".RRR."
-    "!!!!!", ".RRR."
-    "!!!!!", ".RRR."
-    "!!!!!", ".###."
-  }
-
-  absolute_dir = true
-
-  new_room =
-  {
-    symmetry = { x=3, y=2, dir=8 }
-
-    usage = "boss"
-  }
-
-  auxiliary =
-  {
-    pass = "exit1_closet"
-    count = 1
-  }
-
-  auxiliary2 =
-  {
-    pass = "exit2_area"
-    count = 1
-  }
-}
-
-
-EXIT2_AREA1 =
-{
-  pass = "exit2_area"
+  pass = "exit1_area"
   prob = 50
 
   structure =
@@ -397,9 +362,9 @@ EXIT2_AREA1 =
 }
 
 
-EXIT2_AREA2 =
+EXIT1_AREA_C =
 {
-  pass = "exit2_area"
+  pass = "exit1_area"
   prob = 50
 
   structure =
@@ -407,6 +372,7 @@ EXIT2_AREA2 =
     "...111...", "AA<111>AA"
     "...111...", "AA<111>AA"
     "...111...", "AA<111>AA"
+    "xxx...xxx", "xxx###xxx"
   }
 
   absolute_dir = true
