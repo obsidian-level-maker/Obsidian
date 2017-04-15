@@ -1494,12 +1494,18 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
   local function get_iteration_range(T)
-    if R.gx1 == nil then
+    if is_create then
       local dx = math.min(10, int(SEED_W / 4))
       local dy = math.min(10, int(SEED_H / 4))
 
       local mx = int(SEED_W / 2)
       local my = int(SEED_H / 2)
+
+      -- the exit room is alway placed near top of map
+      if cur_rule.absolute_dir then
+        my = LEVEL.sprout_y2 + 2
+        dy = 8
+      end
 
       return mx-dx, my-dy, mx+dx, my+dy
     end
@@ -2511,6 +2517,13 @@ end
     local transp_max = sel(cur_rule.t_symmetry, 0, 1)
     local flip_x_max = sel(cur_rule.x_symmetry, 0, 1)
     local flip_y_max = sel(cur_rule.y_symmetry, 0, 1)
+
+    -- exit rooms always begin near bottom of map
+    if cur_rule.absolute_dir then
+      transp_max = 0
+      flip_x_max = 0
+      flip_y_max = 0
+    end
 
     for transpose = 0, transp_max do
     for flip_x = 0, flip_x_max do

@@ -280,6 +280,8 @@ EXIT_1 =
     "!!!!!", "....."
   }
 
+  absolute_dir = true
+
   new_room =
   {
     symmetry = { x=3, y=2, dir=8 }
@@ -313,6 +315,8 @@ AUX_EXITCLOSET_A =
     "111", "111"
   }
 
+  absolute_dir = true
+
   closet = { from_dir=2, usage="goal" }
 }
 
@@ -324,12 +328,14 @@ AUX_EXITGROW_A =
 
   structure =
   {
-    "...", "AAA"
-    "...", "AAA"
-    "...", "AAA"
-    "...", "^^^"
     "111", "111"
+    "...", "vvv"
+    "...", "AAA"
+    "...", "AAA"
+    "...", "AAA"
   }
+
+  absolute_dir = true
 }
 
 
