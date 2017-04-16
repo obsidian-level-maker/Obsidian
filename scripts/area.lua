@@ -1611,10 +1611,10 @@ function Area_zone_up_borders()
   local seed_list = {}
 
 
-  local function new_border(zone)
+  local function new_border(R)
     local BORDER =
     {
-      zone  = zone
+      id    = R.id
       seeds = {}
     }
 
@@ -1622,17 +1622,17 @@ function Area_zone_up_borders()
   end
 
 
-  local function get_zone(S)
-    if S.bzone then return S.bzone end
-    if S.area and S.area.room then return S.area.zone end
+  local function get_zborder(S)
+    if S.zborder then return S.zborder end
+    if S.room    then return S.room.border end
     return nil
   end
 
 
-  local function set_seed(S, zone)
-    S.bzone = zone
+  local function set_seed(S, zborder)
+    S.zborder = zborder
 
-    table.insert(zone.border.seeds, S)
+    table.insert(zborder.seeds, S)
   end
 
 
@@ -1650,21 +1650,21 @@ function Area_zone_up_borders()
       local changes = {}
 
       each S in seed_list do
-        assert(S.bzone == nil)
+        assert(S.zborder == nil)
 
         if no_diags and S.diagonal then continue end
 
-        local zone = func(S)
+        local zborder = func(S)
 
-        if zone then
-          table.insert(changes, { S=S, zone=zone })
+        if zborder then
+          table.insert(changes, { S=S, zborder=zborder })
         end
       end
 
       -- apply the changes
       each tab in changes do
-        if tab.zone != "FAIL" then
-          set_seed(tab.S, tab.zone)
+        if tab.zborder != "FAIL" then
+          set_seed(tab.S, tab.zborder)
         end
 
         table.kill_elem(seed_list, tab.S)
@@ -1675,22 +1675,22 @@ function Area_zone_up_borders()
 
 
   local function mark_func(S)
-    local zone
+    local zb
 
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
       if not N then continue end
 
-      local z2 = get_zone(N)
-      if not z2 then continue end
+      local nz = get_zborder(N)
+      if not nz then continue end
 
       -- fail if we have two neighbors with differing zones
-      if zone and zone != z2 then return nil end
+      if zb and zb != nz then return nil end
 
-      zone = z2
+      zb = nz
     end
 
-    return zone
+    return zb
   end
 
 
@@ -1702,10 +1702,10 @@ function Area_zone_up_borders()
 
     if not (T and B and L and R) then return nil end
 
-    T = get_zone(T)
-    B = get_zone(B)
-    L = get_zone(L)
-    R = get_zone(R)
+    T = get_zborder(T)
+    B = get_zborder(B)
+    L = get_zborder(L)
+    R = get_zborder(R)
 
     if T == nil and B == nil and L and R then return L end
 
@@ -1721,10 +1721,10 @@ function Area_zone_up_borders()
 
     if not (T and B and L and R) then return nil end
 
-    T = get_zone(T)
-    B = get_zone(B)
-    L = get_zone(L)
-    R = get_zone(R)
+    T = get_zborder(T)
+    B = get_zborder(B)
+    L = get_zborder(L)
+    R = get_zborder(R)
 
     if L == nil and R == nil and B and T then return B end
 
@@ -1740,10 +1740,10 @@ function Area_zone_up_borders()
 
     if not (T and B and L and R) then return nil end
 
-    T = get_zone(T)
-    B = get_zone(B)
-    L = get_zone(L)
-    R = get_zone(R)
+    T = get_zborder(T)
+    B = get_zborder(B)
+    L = get_zborder(L)
+    R = get_zborder(R)
 
     if not (T and B and L and R) then return nil end
 
@@ -1772,7 +1772,7 @@ function Area_zone_up_borders()
       local N = S:neighbor(dir)
       if not N then continue end
 
-      local z = get_zone(N)
+      local z = get_zborder(N)
       if not z then continue end
 
       counts[z] = (counts[z] or 0) + 1
@@ -1802,7 +1802,7 @@ function Area_zone_up_borders()
       local N = S:neighbor(dir)
       if not N then continue end
 
-      local z = get_zone(N)
+      local z = get_zborder(N)
 
       if z then return z end
     end
@@ -1815,8 +1815,8 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
   ---| Area_zone_up_borders |---
 
-  each Z in LEVEL.zones do
-    Z.border = new_border(Z)
+  each R in LEVEL.rooms do
+    R.border = new_border(R)
   end
 
   collect_seeds()
