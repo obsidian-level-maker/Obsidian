@@ -1592,10 +1592,11 @@ function Area_zone_up_borders()
 
   --
   -- ALGORITHM:
-  --   (a) mark boundary seeds which touch a single zone
-  --   (b) grow all such seeds, ensuring only touch a single zone
-  --   (c) there will be gaps now, fill them by:
+  --   (a) mark boundary seeds which touch a single room.
   --
+  --   (b) grow all seeds only touching a single zone.
+  --
+  --   (c) there will be gaps now, fill them by:
   --       (1) empty on sides 4/6, filled on sides 2/8 : pick side 2
   --       (2) empty on sides 2/8, filled on sides 4/6 : pick side 4
   --       (3) if filled on all sides, with two different zones and
@@ -1603,8 +1604,22 @@ function Area_zone_up_borders()
   --       (4) if have a majority in the neighbors : pick that one
   --       (5) lastly, pick any neighbor (preference for side 2, then 4)
   --
+  --   (d) find small isolated parts and merge with a larger neighbor
+  --       border, otherwise kill it.
+  --
 
   local seed_list = {}
+
+
+  local function new_border(zone)
+    local BORDER =
+    {
+      zone  = zone
+      seeds = {}
+    }
+
+    return BORDER
+  end
 
 
   local function get_zone(S)
@@ -1616,6 +1631,8 @@ function Area_zone_up_borders()
 
   local function set_seed(S, zone)
     S.bzone = zone
+
+    table.insert(zone.border.seeds, S)
   end
 
 
@@ -1646,7 +1663,10 @@ function Area_zone_up_borders()
 
       -- apply the changes
       each tab in changes do
-        set_seed(tab.S, tab.zone)
+        if tab.zone != "FAIL" then
+          set_seed(tab.S, tab.zone)
+        end
+
         table.kill_elem(seed_list, tab.S)
       end
 
@@ -1737,9 +1757,9 @@ function Area_zone_up_borders()
 
     -- common stuff for splitting the seed
     S.top.area  = S.area
-    S.top.bzone = T
-
     table.insert(S.area.seeds, S.top)
+
+    set_seed(S.top, T)
 
     return B
   end
@@ -1788,11 +1808,16 @@ function Area_zone_up_borders()
     end
 
 stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
-    return LEVEL.zones[1]
+
+    return "FAIL"
   end
 
 
   ---| Area_zone_up_borders |---
+
+  each Z in LEVEL.zones do
+    Z.border = new_border(Z)
+  end
 
   collect_seeds()
 
