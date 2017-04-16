@@ -1331,49 +1331,8 @@ end
 
 
 function Area_assign_boundary()
-  --
-  -- ALGORITHM:
-  --   1. all the existing room areas are marked as "inner"
-  --
-  --   2. mark some non-room areas which touch a room as "inner"
-  --
-  --   3. visit each non-inner area:
-  --      (a) flood-fill to find all joined non-inner areas
-  --      (b) if this group touches edge of map, mark as boundary,
-  --          otherwise mark as "inner"
-  --
 
-  local function area_touches_a_room(A)
-    each N in A.neighbors do
-      if N.room then return true end
-    end
-
-    return false
-  end
-
-
-  local function OLD__area_nearto_edge(A)
-    -- this also prevents a single seed gap between area and edge of map
-
-    each S in A.seeds do
-      if S.sx <= 2 or S.sx >= SEED_W-1 then return true end
-      if S.sy <= 2 or S.sy >= SEED_H-1 then return true end
-    end
-
-    return false
-  end
-
-
-  local function area_is_inside_box(A)
-    each S in A.seeds do
-      if not Seed_over_boundary(S) then
-        return true
-      end
-    end
-
-    return false
-  end
-
+  -- TEMPORARY CRUD !!
 
   local function mark_room_inners()
     each A in LEVEL.areas do
@@ -1384,24 +1343,10 @@ function Area_assign_boundary()
   end
 
 
-  local function mark_outer_recursive(A)
-    assert(not A.room)
-
-    A.is_boundary = true
-
-    -- recursively handle neighbors
-    each N in A.neighbors do
-      if not (N.is_inner or N.is_boundary) then
-        mark_outer_recursive(N)
-      end
-    end
-  end
-
-
   local function floodfill_outers()
     each A in LEVEL.areas do
-      if not (A.is_inner or A.is_boundary) then ---- and area_nearto_edge(A) then
-        mark_outer_recursive(A)
+      if A.touches_edge then
+        A.is_boundary = true
       end
     end
   end
@@ -1420,9 +1365,7 @@ function Area_assign_boundary()
   ---| Area_assign_boundary |---
 
   mark_room_inners()
-
   floodfill_outers()
-
   void_the_rest()
 end
 
