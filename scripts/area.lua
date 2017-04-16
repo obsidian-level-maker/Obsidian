@@ -1598,9 +1598,9 @@ function Area_zone_up_borders()
   --
   --       (1) empty on sides 4/6, filled on sides 2/8 : pick side 2
   --       (2) empty on sides 2/8, filled on sides 4/6 : pick side 4
-  --       (3) if have a majority in the neighbors : pick that one
-  --       (4) if filled on all sides, with two different zones and
+  --       (3) if filled on all sides, with two different zones and
   --           forming a diagonal : make a diagonal seed
+  --       (4) if have a majority in the neighbors : pick that one
   --       (5) lastly, pick any neighbor (preference for side 2, then 4)
   --
 
@@ -1712,6 +1712,39 @@ function Area_zone_up_borders()
   end
 
 
+  local function diagonal_func(S)
+    local T = S:neighbor(8)
+    local B = S:neighbor(2)
+    local L = S:neighbor(4)
+    local R = S:neighbor(6)
+
+    if not (T and B and L and R) then return nil end
+
+    T = get_zone(T)
+    B = get_zone(B)
+    L = get_zone(L)
+    R = get_zone(R)
+
+    if not (T and B and L and R) then return nil end
+
+    if (T == L) and (B == R) then
+      S:split(3)
+    elseif (T == R) and (B == L) then
+      S:split(1)
+    else
+      return nil
+    end
+
+    -- common stuff for splitting the seed
+    S.top.area  = S.area
+    S.top.bzone = T
+
+    table.insert(S.area.seeds, S.top)
+
+    return B
+  end
+
+
   local function majority_func(S)
     local counts = {}
 
@@ -1742,6 +1775,23 @@ function Area_zone_up_borders()
   end
 
 
+  local function emergency_func(S)
+    local counts = {}
+
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+      if not N then continue end
+
+      local z = get_zone(N)
+
+      if z then return z end
+    end
+
+stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
+    return LEVEL.zones[1]
+  end
+
+
   ---| Area_zone_up_borders |---
 
   collect_seeds()
@@ -1750,8 +1800,10 @@ function Area_zone_up_borders()
 
   process(horizontal_func, "no_diags")
   process(vertical_func,   "no_diags")
+  process(diagonal_func,   "no_diags")
 
   process(majority_func)
+  process(emergency_func)
 end
 
 
