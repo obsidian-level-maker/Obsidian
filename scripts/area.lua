@@ -1583,6 +1583,104 @@ end
 
 
 
+function Area_zone_up_borders()
+  --
+  -- Subdivides the boundary area(s) of the map into pieces
+  -- belonging to each zone, so that zone walls can be placed
+  -- and to allow each zone to do different bordery stuff.
+  --
+
+  --
+  -- ALGORITHM:
+  --   (a) mark boundary seeds which touch a single zone
+  --   (b) grow all such seeds, ensuring only touch a single zone
+  --   (c) there will be gaps now, fill them by:
+  --
+  --       (1) empty on sides 4/6, filled on sides 2/8 : pick side 2
+  --       (2) empty on sides 2/8, filled on sides 4/6 : pick side 4
+  --       (3) if have a majority in the neighbors : pick that one
+  --       (4) if filled on all sides, with two different zones and
+  --           forming a diagonal : make a diagonal seed
+  --       (5) lastly, pick any neighbor (preference for side 2, then 4)
+  --
+
+  local seed_list = {}
+
+
+  local function get_zone(S)
+    if S.bzone then return S.bzone end
+    if S.area and S.area.room then return S.area.zone end
+    return nil
+  end
+
+
+  local function set_seed(S, zone)
+    S.bzone = zone
+  end
+
+
+  local function collect_seeds()
+    each A in LEVEL.areas do
+      if A.is_boundary then
+        table.append(seed_list, A.seeds)
+      end
+    end
+  end
+
+
+  local function process(func)
+    repeat
+      local changes = {}
+
+      each S in seed_list do
+        assert(S.bzone == nil)
+
+        local zone = func(S)
+
+        if zone then
+          table.insert(changes, { S=S, zone=zone })
+        end
+      end
+
+      -- apply the changes
+      each tab in changes do
+        set_seed(tab.S, tab.zone)
+        table.kill_elem(seed_list, tab.S)
+      end
+
+    until table.empty(changes)
+  end
+
+
+  local function mark_func(S)
+    local zone
+
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+      if not N then continue end
+
+      local z2 = get_zone(N)
+      if not z2 then continue end
+
+      -- fail if we have two neighbors with differing zones
+      if zone and zone != z2 then return nil end
+
+      zone = z2
+    end
+
+    return zone
+  end
+
+
+  ---| Area_zone_up_borders |---
+
+  collect_seeds()
+
+  process(mark_func)
+end
+
+
+
 function Area_building_facades()
 
   local all_groups = {}
