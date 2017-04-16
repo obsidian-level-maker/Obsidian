@@ -3423,7 +3423,7 @@ function Room_build_all()
 
   gui.printf("\n--==|  Build Rooms |==--\n\n")
 
-  Area_zone_up_borders()
+  Area_divvy_up_borders()
   Area_building_facades()
 
   -- place importants early as traps need to know where they are.

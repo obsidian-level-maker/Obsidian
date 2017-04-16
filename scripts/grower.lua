@@ -883,8 +883,8 @@ end
 
 function Grower_split_liquids()
   --
-  -- Ensures the liquid areas in a room are contiguous, splitting them
-  -- if they are consist of separate pieces.
+  -- Checks the liquid areas in a room are contiguous.
+  -- When the area has separate pieces, make new areas for them.
   --
   -- Handles large cages too.
   --
@@ -917,7 +917,7 @@ function Grower_split_liquids()
 
     A2.seeds = seed_list
 
-    each S in A2.seeds do
+    each S in seed_list do
       S.area = A2
 
       table.kill_elem(A.seeds, S)
@@ -3334,194 +3334,6 @@ end
 
 
 
-function Grower_fill_gaps()
-  --
-  -- Creates areas from all currently unused seeds (ones which have not
-  -- received a shape yet).
-  --
-
-  local temp_areas = {}
-
-  local SX1 = math.max(LEVEL.boundary_x1 - 3, 1)
-  local SY1 = math.max(LEVEL.boundary_y1 - 3, 1)
-  local SX2 = math.min(LEVEL.boundary_x2 + 3, SEED_W)
-  local SY2 = math.min(LEVEL.boundary_y2 + 3, SEED_H)
-
-
-  local function add_seed(temp, S)
-    S.temp_area = temp
-
-    table.insert(temp.seeds, S)
-
-    -- check if sits along edge of map
-    -- [ does not matter if only a corner touches edge of map ]
-    if S.sx <= SX1 or S.sx >= SX2 or
-       S.sy <= SY1 or S.sy >= SY2
-    then
-      temp.touches_edge = true
-    end
-
---[[
-    if S.diagonal then
-      TEMP.svolume = 0.5
-    else
-      TEMP.svolume = 1.0
-    end
---]]
-  end
-
-
-  local function new_temp_area(S)
-    local TEMP =
-    {
-      name  = "TEMP_" .. alloc_id("temp_area")
-      seeds = {}
-    }
-
----??    if S.park_border or (S.top and S.top.park_border) or (S.bottom and S.bottom.park_border) then
----??      TEMP.park_border = true
----??    end
-
-    table.insert(temp_areas, TEMP)
-
-    add_seed(TEMP, S)
-  end
-
-
-  local function visit_seed(S)
-    if S.area then return end
-
-    local X = S:neighbor(4)
-    local Y = S:neighbor(2)
-
-    if X and X.temp_area then add_seed(X.temp_area, S) ; return end
-    if Y and Y.temp_area then add_seed(Y.temp_area, S) ; return end
-
-    new_temp_area(S)
-  end
-
-
-  local function create_temp_areas()
-    for sy = SY1, SY2 do
-    for sx = SX1, SX2 do
-      local S = SEEDS[sx][sy]
-
-      visit_seed(S)
-
-      if S.top then visit_seed(S.top) end
-    end
-    end
-  end
-
-
-  local function perform_merge(A1, A2)
-    -- merges A2 into A1 (killing A2)
-
-    if #A2.seeds > #A1.seeds then
-      A1, A2 = A2, A1
-    end
-
-    if A2.touches_edge then
-       A1.touches_edge = true
-    end
-
-    -- fix all seeds
-    each S in A2.seeds do
-      S.temp_area = A1
-    end
-
-    table.append(A1.seeds, A2.seeds)
-
-    -- mark A2 as dead
-    A2.is_dead = true
-    A2.svolume = nil
-    A2.seeds = nil
-  end
-
-
-  local function try_merge_an_area(A1)
-    each S in A1.seeds do
-    each dir in geom.ALL_DIRS do
-      local N = S:neighbor(dir)
-
-      if not (N and N.temp_area) then continue end
-
-      local A2 = N.temp_area
-
-      if A2 == A1 then continue end
-
-      assert(not A2.is_dead)
-
----??    -- never merge park borders with non-park-borders
----??    if (not A1.park_border) != (not A2.park_border) then
----??      return -1
----??    end
-
-      perform_merge(A1, A2)
-      return true
-    end
-    end
-
-    return false
-  end
-
-
-  local function prune_dead_areas()
-    for i = #temp_areas, 1, -1 do
-      if temp_areas[i].is_dead then
-        table.remove(temp_areas, i)
-      end
-    end
-  end
-
-
-  local function merge_temp_areas()
-    local changed = false
-
-    each A1 in temp_areas do
-      if A1.is_dead then continue end
-
-      if try_merge_an_area(A1) then
-        changed = true
-      end
-    end
-
-    prune_dead_areas()
-
-    return changed
-  end
-
-
-  local function make_real_areas()
-    each temp in temp_areas do
-      local A = AREA_CLASS.new("scenic")
-
-      A.seeds = temp.seeds
-      A.touches_edge = temp.touches_edge
----??   A.park_border  = temp.park_border
-
-      -- install into seeds
-      each S in A.seeds do
-        S.area = A
-        S.temp_area = nil
-      end
-    end
-  end
-
-
-  ---| Grower_fill_gaps |---
-
-  create_temp_areas()
-
-  while merge_temp_areas() do
-    -- keep going until done
-  end
-
-  make_real_areas()
-end
-
-
-
 function Grower_setup_caves()
   -- the chance that any ROOT pattern will be a cave
   LEVEL.cave_trunk_prob = style_sel("caves", 0, 10, 35, 90)
@@ -3583,8 +3395,6 @@ function Grower_create_rooms()
   Grower_decorate_rooms()
 --TODO  Grower_flatten_outdoor_fences()
   Grower_split_liquids()
-
-  Grower_fill_gaps()
 
   Seed_squarify()
 

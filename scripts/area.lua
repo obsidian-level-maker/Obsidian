@@ -1330,47 +1330,6 @@ end
 
 
 
-function Area_assign_boundary()
-
-  -- TEMPORARY CRUD !!
-
-  local function mark_room_inners()
-    each A in LEVEL.areas do
-      if A.room then
-        A.is_inner = true
-      end
-    end
-  end
-
-
-  local function floodfill_outers()
-    each A in LEVEL.areas do
-      if A.touches_edge then
-        A.is_boundary = true
-      end
-    end
-  end
-
-
-  local function void_the_rest()
-    each A in LEVEL.areas do
-      if A.mode == "scenic" and not A.is_boundary then
-        A.mode = "void"
-        A.is_outdoor = nil
-      end
-    end
-  end
-
-
-  ---| Area_assign_boundary |---
-
-  mark_room_inners()
-  floodfill_outers()
-  void_the_rest()
-end
-
-
-
 function Area_find_inner_points()
 
   local function collect_inner_points(A)
@@ -1583,10 +1542,10 @@ end
 
 
 
-function Area_zone_up_borders()
+function Area_divvy_up_borders()
   --
   -- Subdivides the boundary area(s) of the map into pieces
-  -- belonging to each zone, so that zone walls can be placed
+  -- belonging to each room, so that zone walls can be placed
   -- and to allow each zone to do different bordery stuff.
   --
 
@@ -1594,54 +1553,58 @@ function Area_zone_up_borders()
   -- ALGORITHM:
   --   (a) mark boundary seeds which touch a single room.
   --
-  --   (b) grow all seeds only touching a single zone.
+  --   (b) repeat (a) continuously, filling most of the map.
   --
-  --   (c) there will be gaps now, fill them by:
-  --       (1) empty on sides 4/6, filled on sides 2/8 : pick side 2
-  --       (2) empty on sides 2/8, filled on sides 4/6 : pick side 4
+  --   (c) there will be gaps now, choose what to fill each seed:
+  --       (1) empty on sides 4/6, filled on sides 2/8 -> pick side 2
+  --       (2) empty on sides 2/8, filled on sides 4/6 -> pick side 4
   --       (3) if filled on all sides, with two different zones and
-  --           forming a diagonal : make a diagonal seed
-  --       (4) if have a majority in the neighbors : pick that one
+  --           forming a diagonal -> make a diagonal seed
+  --       (4) if have a majority in the neighbors -> pick that one
   --       (5) lastly, pick any neighbor (preference for side 2, then 4)
   --
-  --   (d) find small isolated parts and merge with a larger neighbor
-  --       border, otherwise kill it.
+  --   (d) create areas by flood-filling contiguous border areas.
   --
 
-  local seed_list = {}
+  local seed_list
 
+  local SX1 = math.max(LEVEL.boundary_x1 - 1, 1)
+  local SY1 = math.max(LEVEL.boundary_y1 - 1, 1)
+  local SX2 = math.min(LEVEL.boundary_x2 + 1, SEED_W)
+  local SY2 = math.min(LEVEL.boundary_y2 + 1, SEED_H)
 
-  local function new_border(R)
-    local BORDER =
-    {
-      id    = R.id
-      seeds = {}
-    }
-
-    return BORDER
-  end
+  local temp_areas
 
 
   local function get_zborder(S)
     if S.zborder then return S.zborder end
-    if S.room    then return S.room.border end
-    return nil
+    return S.area and S.area.room
   end
 
 
   local function set_seed(S, zborder)
     S.zborder = zborder
-
-    table.insert(zborder.seeds, S)
   end
 
 
   local function collect_seeds()
-    each A in LEVEL.areas do
-      if A.is_boundary then
-        table.append(seed_list, A.seeds)
+    local list = {}
+
+    for sy = SY1, SY2 do
+    for sx = SX1, SX2 do
+      local S = SEEDS[sx][sy]
+
+      if not S.area then
+        table.insert(list, S)
       end
+
+      if S.top and not S.top.area then
+        table.insert(list, S.top)
+      end
+    end  -- sx, sy
     end
+
+    return list
   end
 
 
@@ -1663,10 +1626,7 @@ function Area_zone_up_borders()
 
       -- apply the changes
       each tab in changes do
-        if tab.zborder != "FAIL" then
-          set_seed(tab.S, tab.zborder)
-        end
-
+        set_seed(tab.S, tab.zborder)
         table.kill_elem(seed_list, tab.S)
       end
 
@@ -1674,7 +1634,7 @@ function Area_zone_up_borders()
   end
 
 
-  local function mark_func(S)
+  local function marking_func(S)
     local zb
 
     each dir in geom.ALL_DIRS do
@@ -1684,7 +1644,7 @@ function Area_zone_up_borders()
       local nz = get_zborder(N)
       if not nz then continue end
 
-      -- fail if we have two neighbors with differing zones
+      -- fail if we have two neighbors with differing rooms
       if zb and zb != nz then return nil end
 
       zb = nz
@@ -1756,8 +1716,9 @@ function Area_zone_up_borders()
     end
 
     -- common stuff for splitting the seed
-    S.top.area  = S.area
-    table.insert(S.area.seeds, S.top)
+
+---###  S.top.area  = S.area
+---###  table.insert(S.area.seeds, S.top)
 
     set_seed(S.top, T)
 
@@ -1804,24 +1765,198 @@ function Area_zone_up_borders()
 
       local z = get_zborder(N)
 
-      if z then return z end
+      if z and z != "VOID" then return z end
     end
 
 stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
-    return "FAIL"
+    return "VOID"
   end
 
 
-  ---| Area_zone_up_borders |---
+  --------------------------------------------
 
-  each R in LEVEL.rooms do
-    R.border = new_border(R)
+
+  local function add_seed(temp, S)
+    S.temp_area = temp
+
+    table.insert(temp.seeds, S)
+
+    -- check if sits along edge of map
+    -- [ does not matter if only a corner touches edge of map ]
+    if S.sx <= SX1 or S.sx >= SX2 or
+       S.sy <= SY1 or S.sy >= SY2
+    then
+      temp.touches_edge = true
+    end
   end
 
-  collect_seeds()
 
-  process(mark_func)
+  local function new_temp_area(S)
+    local TEMP =
+    {
+      name = "TEMP_" .. alloc_id("temp_area")
+      zborder = S.zborder
+      seeds = {}
+    }
+
+---??    if S.park_border or (S.top and S.top.park_border) or (S.bottom and S.bottom.park_border) then
+---??      TEMP.park_border = true
+---??    end
+
+    table.insert(temp_areas, TEMP)
+
+    add_seed(TEMP, S)
+  end
+
+
+  local function fill_at_seed(S)
+    assert(S.zborder)
+
+    -- optimise by checking earlier neighbors
+    -- [ this optimisation assumes a certain ordering of the seed list ]
+    for dir = 1,4 do
+      local N = S:neighbor(dir)
+
+      if N and N.temp_area and N.zborder == S.zborder then
+        add_seed(N.temp_area, S)
+        return
+      end
+    end
+
+    new_temp_area(S)
+  end
+
+
+  local function create_temp_areas()
+    temp_areas = {}
+
+    each S in collect_seeds() do
+      fill_at_seed(S)
+    end
+  end
+
+
+  local function perform_merge(T1, T2)
+    -- merges T2 into T1 (killing T2)
+
+    if #T2.seeds > #T1.seeds then
+      T1, T2 = T2, T1
+    end
+
+    if T2.touches_edge then
+       T1.touches_edge = true
+    end
+
+    -- update seed references (replace T2 with T1)
+    each S in T2.seeds do
+      S.temp_area = T1
+    end
+
+    table.append(T1.seeds, T2.seeds)
+
+    -- mark T2 as dead
+    T2.name = "DEAD_TEMP_AREA"
+    T2.is_dead = true
+    T2.zborder = nil
+    T2.seeds = nil
+  end
+
+
+  local function try_merge_an_area(T1)
+    each S in T1.seeds do
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+
+      local T2 = (N and N.temp_area)
+
+      if not T2 then continue end
+      if T2 == T1 then continue end
+
+      assert(not T2.is_dead)
+
+      if T1.zborder != T2.zborder then continue end
+
+---??    -- never merge park borders with non-park-borders
+---??    if (not T1.park_border) != (not T2.park_border) then
+---??      return -1
+---??    end
+
+      perform_merge(T1, T2)
+      return true
+
+    end  -- S, dir
+    end
+
+    return false
+  end
+
+
+  local function prune_dead_areas()
+    for i = #temp_areas, 1, -1 do
+      if temp_areas[i].is_dead then
+        table.remove(temp_areas, i)
+      end
+    end
+  end
+
+
+  local function merge_temp_areas()
+    repeat
+      local changed = false
+
+      each A1 in temp_areas do
+        if A1.is_dead then continue end
+
+        if try_merge_an_area(A1) then
+          changed = true
+        end
+      end
+
+      prune_dead_areas()
+
+    until not changed
+  end
+
+
+  local function make_real_areas()
+    each T in temp_areas do
+      local A = AREA_CLASS.new("scenic")
+
+      A.seeds        = T.seeds
+      A.touches_edge = T.touches_edge
+
+---??   A.park_border  = temp.park_border
+
+      if T.zborder == "VOID" then
+        A.mode = "void"
+        A.is_outdoor = nil
+      else
+        A.is_boundary = true
+        A.zborder = T.zborder
+      end
+
+      -- install into seeds
+      each S in A.seeds do
+        S.area = A
+        S.temp_area = nil
+      end
+    end
+  end
+
+
+  local function flood_fill_areas()
+    create_temp_areas()
+    merge_temp_areas()
+    make_real_areas()
+  end
+
+
+  ---| Area_divvy_up_borders |---
+
+  seed_list = collect_seeds()
+
+  process(marking_func)
 
   process(horizontal_func, "no_diags")
   process(vertical_func,   "no_diags")
@@ -1829,6 +1964,8 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
   process(majority_func)
   process(emergency_func)
+
+  flood_fill_areas()
 end
 
 
@@ -2165,8 +2302,9 @@ function Area_create_rooms()
 
   Grower_create_rooms()
 
+  Area_divvy_up_borders()
+
   Area_analyse_areas()
-  Area_assign_boundary()
 
   Junction_init()
     Corner_init()
