@@ -1628,12 +1628,14 @@ function Area_zone_up_borders()
   end
 
 
-  local function process(func)
+  local function process(func, no_diags)
     repeat
       local changes = {}
 
       each S in seed_list do
         assert(S.bzone == nil)
+
+        if no_diags and S.diagonal then continue end
 
         local zone = func(S)
 
@@ -1672,11 +1674,84 @@ function Area_zone_up_borders()
   end
 
 
+  local function horizontal_func(S)
+    local T = S:neighbor(8)
+    local B = S:neighbor(2)
+    local L = S:neighbor(4)
+    local R = S:neighbor(6)
+
+    if not (T and B and L and R) then return nil end
+
+    T = get_zone(T)
+    B = get_zone(B)
+    L = get_zone(L)
+    R = get_zone(R)
+
+    if T == nil and B == nil and L and R then return L end
+
+    return nil
+  end
+
+
+  local function vertical_func(S)
+    local T = S:neighbor(8)
+    local B = S:neighbor(2)
+    local L = S:neighbor(4)
+    local R = S:neighbor(6)
+
+    if not (T and B and L and R) then return nil end
+
+    T = get_zone(T)
+    B = get_zone(B)
+    L = get_zone(L)
+    R = get_zone(R)
+
+    if L == nil and R == nil and B and T then return B end
+
+    return nil
+  end
+
+
+  local function majority_func(S)
+    local counts = {}
+
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+      if not N then continue end
+
+      local z = get_zone(N)
+      if not z then continue end
+
+      counts[z] = (counts[z] or 0) + 1
+    end
+
+    each z, num in counts do
+      if num >= 3 then return z end
+    end
+
+    local double_z
+
+    each z, num in counts do
+      if num == 2 then
+        if double_z then return nil end
+        double_z = z
+      end
+    end
+
+    return double_z
+  end
+
+
   ---| Area_zone_up_borders |---
 
   collect_seeds()
 
   process(mark_func)
+
+  process(horizontal_func, "no_diags")
+  process(vertical_func,   "no_diags")
+
+  process(majority_func)
 end
 
 
