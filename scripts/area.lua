@@ -1384,24 +1384,6 @@ function Area_assign_boundary()
   end
 
 
-  local function mark_other_inners()
-    -- NOT USED ATM
-
-    do return end
-
-    each A in LEVEL.areas do
-      if not A.room and
-         rand.odds(20) and
-         area_touches_a_room(A) and
-         area_is_inside_box(A) and
-         not area_nearto_edge(A)
-      then
-        A.is_inner = true
-      end
-    end
-  end
-
-
   local function mark_outer_recursive(A)
     assert(not A.room)
 
@@ -1438,7 +1420,6 @@ function Area_assign_boundary()
   ---| Area_assign_boundary |---
 
   mark_room_inners()
-  mark_other_inners()
 
   floodfill_outers()
 

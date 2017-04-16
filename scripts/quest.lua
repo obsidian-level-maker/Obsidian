@@ -2817,8 +2817,6 @@ function Quest_make_quests()
 
   Quest_room_themes()
 
-  Area_building_facades()
-
   -- special weapon handling for HEXEN and HEXEN II
   if PARAM.hexen_weapons then
     Quest_do_hexen_weapons()

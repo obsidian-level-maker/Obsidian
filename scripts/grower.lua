@@ -3339,68 +3339,76 @@ function Grower_fill_gaps()
   -- Creates areas from all currently unused seeds (ones which have not
   -- received a shape yet).
   --
-  -- Algorithm is very simple : assign a new "temp_area" to each half-seed
-  -- and randomly merge them until size of all temp_areas has reached a
-  -- certain threshhold.
-  --
 
   local temp_areas = {}
 
-  local MIN_SIZE = 4
-  local MAX_SIZE = MIN_SIZE * 4
-
-  local SX1 = LEVEL.boundary_x1 - 3
-  local SY1 = LEVEL.boundary_y1 - 3
-  local SX2 = LEVEL.boundary_x2 + 3
-  local SY2 = LEVEL.boundary_y2 + 3
+  local SX1 = math.max(LEVEL.boundary_x1 - 3, 1)
+  local SY1 = math.max(LEVEL.boundary_y1 - 3, 1)
+  local SX2 = math.min(LEVEL.boundary_x2 + 3, SEED_W)
+  local SY2 = math.min(LEVEL.boundary_y2 + 3, SEED_H)
 
 
-  local function new_temp_area(S)
-    local TEMP =
-    {
-      id = alloc_id("temp_area")
-      svolume = 0
-      seeds = { S }
-    }
+  local function add_seed(temp, S)
+    S.temp_area = temp
 
-    if S.park_border or (S.top and S.top.park_border) or (S.bottom and S.bottom.park_border) then
-      TEMP.park_border = true
+    table.insert(temp.seeds, S)
+
+    -- check if sits along edge of map
+    -- [ does not matter if only a corner touches edge of map ]
+    if S.sx <= SX1 or S.sx >= SX2 or
+       S.sy <= SY1 or S.sy >= SY2
+    then
+      temp.touches_edge = true
     end
 
+--[[
     if S.diagonal then
       TEMP.svolume = 0.5
     else
       TEMP.svolume = 1.0
     end
+--]]
+  end
 
-    -- check if an edge sits along edge of map
-    -- [ does not matter if only a corner touches edge of map ]
-    if S.sx <= SX1 or S.sx >= SX2 or
-       S.sy <= SY1 or S.sy >= SY2
-    then
-      TEMP.touches_edge = true
-    end
+
+  local function new_temp_area(S)
+    local TEMP =
+    {
+      name  = "TEMP_" .. alloc_id("temp_area")
+      seeds = {}
+    }
+
+---??    if S.park_border or (S.top and S.top.park_border) or (S.bottom and S.bottom.park_border) then
+---??      TEMP.park_border = true
+---??    end
 
     table.insert(temp_areas, TEMP)
 
-    return TEMP
+    add_seed(TEMP, S)
+  end
+
+
+  local function visit_seed(S)
+    if S.area then return end
+
+    local X = S:neighbor(4)
+    local Y = S:neighbor(2)
+
+    if X and X.temp_area then add_seed(X.temp_area, S) ; return end
+    if Y and Y.temp_area then add_seed(Y.temp_area, S) ; return end
+
+    new_temp_area(S)
   end
 
 
   local function create_temp_areas()
-    for sx = SX1, SX2 do
     for sy = SY1, SY2 do
+    for sx = SX1, SX2 do
       local S = SEEDS[sx][sy]
 
-      if not S.diagonal and not S.area and not S.temp_area then
-        -- a whole unused seed : split into two
-        S:split(rand.sel(50, 1, 3))
-      end
+      visit_seed(S)
 
-      S2 = S.top
-
-      if S  and not S .area and not S .temp_area then S .temp_area = new_temp_area(S)  end
-      if S2 and not S2.area and not S2.temp_area then S2.temp_area = new_temp_area(S2) end
+      if S.top then visit_seed(S.top) end
     end
     end
   end
@@ -3409,7 +3417,7 @@ function Grower_fill_gaps()
   local function perform_merge(A1, A2)
     -- merges A2 into A1 (killing A2)
 
-    if A2.svolume > A1.svolume then
+    if #A2.seeds > #A1.seeds then
       A1, A2 = A2, A1
     end
 
@@ -3417,20 +3425,12 @@ function Grower_fill_gaps()
        A1.touches_edge = true
     end
 
-    A1.svolume = A1.svolume + A2.svolume
+    -- fix all seeds
+    each S in A2.seeds do
+      S.temp_area = A1
+    end
 
     table.append(A1.seeds, A2.seeds)
-
-    -- fix all seeds
-    for sx = SX1, SX2 do
-    for sy = SY1, SY2 do
-      local S = SEEDS[sx][sy]
-      local S2 = S.top
-
-      if S  and S .temp_area == A2 then S .temp_area = A1 end
-      if S2 and S2.temp_area == A2 then S2.temp_area = A1 end
-    end
-    end
 
     -- mark A2 as dead
     A2.is_dead = true
@@ -3439,30 +3439,7 @@ function Grower_fill_gaps()
   end
 
 
-  local function eval_merge(A1, A2, dir)
-    local score = 1
-
-    -- never merge park borders with non-park-borders
-    if (not A1.park_border) != (not A2.park_border) then
-      return -1
-    end
-
-    if A2.svolume < MIN_SIZE then
-      score = 3
-    elseif A1.svolume + A2.svolume <= MAX_SIZE then
-      score = 2
-    end
-
-    return score + gui.random()
-  end
-
-
   local function try_merge_an_area(A1)
-    assert(A1.room == nil)
-
-    local best_A2
-    local best_score = 0
-
     each S in A1.seeds do
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
@@ -3473,24 +3450,19 @@ function Grower_fill_gaps()
 
       if A2 == A1 then continue end
 
-      if A2.room then continue end
-
       assert(not A2.is_dead)
 
-      local score = eval_merge(A1, A2, dir)
+---??    -- never merge park borders with non-park-borders
+---??    if (not A1.park_border) != (not A2.park_border) then
+---??      return -1
+---??    end
 
-      if score < 0 then continue end
-
-      if score > best_score then
-        best_A2 = A2
-        best_score = score
-      end
+      perform_merge(A1, A2)
+      return true
     end
     end
 
-    if best_A2 then
-      perform_merge(A1, best_A2)
-    end
+    return false
   end
 
 
@@ -3504,195 +3476,19 @@ function Grower_fill_gaps()
 
 
   local function merge_temp_areas()
-    rand.shuffle(temp_areas)
+    local changed = false
 
     each A1 in temp_areas do
       if A1.is_dead then continue end
 
-      if A1.svolume < MIN_SIZE then
-        try_merge_an_area(A1)
+      if try_merge_an_area(A1) then
+        changed = true
       end
     end
 
     prune_dead_areas()
-  end
 
-
-  local function detect_sharp_poker(S, dir)
-    -- returns true or false.
-    -- when true, also returns 'a', 'b', 'c', 'd' areas
-
-    if not S.diagonal then return false end
-
-    local S2 = assert(S.top)
-
-    local T1 = S .temp_area
-    local T2 = S2.temp_area
-
-    local a, b, c, d, e, a2
-    local Na, Nc, Nd, Ne
-
-    if not (T1 and T2) then return false end
-    if T1 == T2 then return false end
-    if T1.room or T2.room then return false end
-
-
-    if dir == 2 then
-      a = T2
-      b = T1
-
-      Na = S :neighbor(2)
-      Nc = S2:neighbor(8)
-      Nd = S :neighbor(sel(S.diagonal == 1, 4, 6))
-      Ne = S2:neighbor(sel(S.diagonal == 1, 6, 4))
-
-    elseif dir == 8 then
-
-      a = T1
-      b = T2
-
-      Na = S2:neighbor(8)
-      Nc = S :neighbor(2)
-      Nd = S2:neighbor(sel(S.diagonal == 1, 6, 4))
-      Ne = S :neighbor(sel(S.diagonal == 1, 4, 6))
-
-    elseif dir == 4 then
-
-      a = sel(S.diagonal == 1, T2, T1)
-      b = sel(S.diagonal == 1, T1, T2)
-
-      Na = sel(S.diagonal == 1, S:neighbor(4), S2:neighbor(4))
-      Nc = sel(S.diagonal == 1, S2:neighbor(6), S:neighbor(6))
-      Nd = sel(S.diagonal == 1, S:neighbor(2), S2:neighbor(6))
-      Ne = sel(S.diagonal == 1, S2:neighbor(8), S:neighbor(2))
-
-    elseif dir == 6 then
-
-      a = sel(S.diagonal == 1, T1, T2)
-      b = sel(S.diagonal == 1, T2, T1)
-
-      Na = sel(S.diagonal == 1, S2:neighbor(6), S:neighbor(6))
-      Nc = sel(S.diagonal == 1, S:neighbor(4), S2:neighbor(4))
-      Nd = sel(S.diagonal == 1, S2:neighbor(8), S:neighbor(2))
-      Ne = sel(S.diagonal == 1, S:neighbor(2), S2:neighbor(6))
-
-    else
-
-      error("Unknown dir in detect_sharp_poker")
-    end
-
-
-    a2 = Na and Na.temp_area
-    c  = Nc and Nc.temp_area
-    d  = Nd and Nd.temp_area
-    e  = Ne and Ne.temp_area
-
---[[ DEBUG
-stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
-(a and a.id) or -1, (b and b.id) or -1,
-(c and c.id) or -1, (d and d.id) or -1, (e and e.id) or -1)
---]]
-
-    if a2 != a then return false end
-
-    return true, a, b, c, d, e
-  end
-
-
-  local function flip_at_seed(S1, dir)
-    local S2 = S1.top
-
-    S1.diagonal = geom.MIRROR_X[S1.diagonal]
-    S2.diagonal = geom.MIRROR_X[S2.diagonal]
-
-    if geom.is_vert(dir) then
-      local T1 = S1.temp_area
-      local T2 = S2.temp_area
-
-      S1.temp_area = T2
-      S2.temp_area = T1
-
-      table.kill_elem(T1.seeds, S1)
-      table.kill_elem(T2.seeds, S2)
-
-      table.insert(T1.seeds, S2)
-      table.insert(T2.seeds, S1)
-    end
-  end
-
-
-  local function try_flip_at_seed(S)
-    for dir = 2,8,2 do
-      local res, a, b, c, d, e = detect_sharp_poker(S, dir)
-
-      if res and b == d and a == e and c != a then
-        flip_at_seed(S, dir)
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  local function smooth_at_seed(S1, a, b)
-    -- need to merge areas if close to minimum size
-    if math.min(a.svolume, b.svolume) < MIN_SIZE + 2 then
-      perform_merge(a, b)
-      return
-    end
-
-    local S2 = S1.top
-
-    if S1.temp_area != b then
-      S1, S2 = S2, S1
-    end
-
-    assert(S1.temp_area == b)
-    assert(S2.temp_area == a)
-
-    -- we remove 'b' from the seed (give ownership to 'a')
-    S1.temp_area = a
-
-    table.kill_elem(b.seeds, S1)
-    table.insert(a.seeds, S1)
-  end
-
-
-  local function try_smooth_at_seed(S)
-    for dir = 2,8,2 do
-      local res, a, b, c, d, e = detect_sharp_poker(S, dir)
-
-      if res then
-        smooth_at_seed(S, a, b)
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  local function smoothen_out_pokers()
-    -- first pass : detect diagonals we can flip --
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      try_flip_at_seed(SEEDS[sx][sy])
-    end
-    end
-
-    -- second pass : handle the rest --
-
-    for pass = 1, 3 do
-      for sx = 1, SEED_W do
-      for sy = 1, SEED_H do
-        try_smooth_at_seed(SEEDS[sx][sy])
-      end
-      end
-    end
-
-    prune_dead_areas()
+    return changed
   end
 
 
@@ -3702,7 +3498,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 
       A.seeds = temp.seeds
       A.touches_edge = temp.touches_edge
-      A.park_border  = temp.park_border
+---??   A.park_border  = temp.park_border
 
       -- install into seeds
       each S in A.seeds do
@@ -3717,11 +3513,9 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 
   create_temp_areas()
 
-  for loop = 1,20 do
-    merge_temp_areas()
+  while merge_temp_areas() do
+    -- keep going until done
   end
-
---!!!!  smoothen_out_pokers()
 
   make_real_areas()
 end

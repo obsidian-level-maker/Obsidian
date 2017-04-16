@@ -3423,6 +3423,8 @@ function Room_build_all()
 
   gui.printf("\n--==|  Build Rooms |==--\n\n")
 
+  Area_building_facades()
+
   -- place importants early as traps need to know where they are.
   Layout_place_all_importants()
 
