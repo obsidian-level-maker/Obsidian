@@ -1919,6 +1919,56 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
+  local function test_neighbor_at_seed(T1, S, dir)
+    local N = S:neighbor(dir)
+    if not N then return end
+
+    local T2 = N.temp_area
+    if not T2 then return end
+
+    if T2 == T1 then return end
+
+    table.add_unique(T1.neighbors, T2)
+    table.add_unique(T2.neighbors, T1)
+  end
+
+
+  local function determine_neighbors()
+    each T in temp_areas do
+      T.neighbors = {}
+    end
+
+    each T in temp_areas do
+      each S in T.seeds do
+        each dir in geom.ALL_DIRS do
+          test_neighbor_at_seed(T, S, dir)
+        end
+      end
+    end
+  end
+
+
+  local function assign_outers()
+    -- mark all temp areas which can trace a path to the edge
+    -- of the map.
+
+    determine_neighbors()
+
+    each T in temp_areas do
+      T.is_outer = T.touches_edge
+    end
+
+    for loop = 1,9 do
+      each T in temp_areas do
+      each N in T.neighbors do
+        T.is_outer = T.is_outer or N.is_outer
+      end
+      end
+    end
+  end
+
+
+
   local function make_real_areas()
     each T in temp_areas do
       local A = AREA_CLASS.new("scenic")
@@ -1934,6 +1984,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
       else
         A.is_boundary = true
         A.zborder = T.zborder
+A.is_outer = T.is_outer  -- TEMP CRUD
       end
 
       -- install into seeds
@@ -1948,6 +1999,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   local function flood_fill_areas()
     create_temp_areas()
     merge_temp_areas()
+    assign_outers()
     make_real_areas()
   end
 
