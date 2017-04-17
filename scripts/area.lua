@@ -1905,10 +1905,10 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     repeat
       local changed = false
 
-      each A1 in temp_areas do
-        if A1.is_dead then continue end
+      each T1 in temp_areas do
+        if T1.is_dead then continue end
 
-        if try_merge_an_area(A1) then
+        if try_merge_an_area(T1) then
           changed = true
         end
       end
@@ -1968,6 +1968,30 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
+  local function handle_inners()
+
+    -- merge contiguous inner areas
+    each T in temp_areas do
+      each N in T.neighbors do
+        if T.is_dead or N.is_dead then continue end
+
+        if not T.is_outer and not N.is_outer then
+          perform_merge(T, N)
+        end
+      end
+    end
+
+    prune_dead_areas()
+
+    -- TODO : maybe keep if large enough
+
+    each T in temp_areas do
+      if not T.is_outer then
+        T.zborder = "VOID"
+      end
+    end
+  end
+
 
   local function make_real_areas()
     each T in temp_areas do
@@ -2000,6 +2024,7 @@ A.is_outer = T.is_outer  -- TEMP CRUD
     create_temp_areas()
     merge_temp_areas()
     assign_outers()
+    handle_inners()
     make_real_areas()
   end
 
