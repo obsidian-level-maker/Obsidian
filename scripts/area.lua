@@ -1575,6 +1575,8 @@ function Area_divvy_up_borders()
 
   local temp_areas
 
+  local VOID = { name="<VOID>", id=9999 }
+
 
   local function get_zborder(S)
     if S.zborder then return S.zborder end
@@ -1765,12 +1767,12 @@ function Area_divvy_up_borders()
 
       local z = get_zborder(N)
 
-      if z and z != "VOID" then return z end
+      if z and z != VOID then return z end
     end
 
 stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
-    return "VOID"
+    return VOID
   end
 
 
@@ -1987,7 +1989,29 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
     each T in temp_areas do
       if not T.is_outer then
-        T.zborder = "VOID"
+        T.zborder = VOID
+      end
+    end
+  end
+
+
+  local function find_isolated_areas()
+    -- find small pockets which are separated from the large one
+
+    table.sort(temp_areas,
+        function(A, B)
+          if A.zborder != B.zborder then
+            return A.zborder.id < B.zborder.id
+          end
+          return #A.seeds > #B.seeds
+        end)
+
+    for i = 2, #temp_areas do
+      local T1 = temp_areas[i-1]
+      local T2 = temp_areas[i  ]
+
+      if T2.zborder == T1.zborder then
+        T2.is_isolated = true
       end
     end
   end
@@ -2002,7 +2026,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
 ---??   A.park_border  = temp.park_border
 
-      if T.zborder == "VOID" then
+      if T.zborder == VOID then
         A.mode = "void"
         A.is_outdoor = nil
       else
@@ -2025,6 +2049,7 @@ A.is_outer = T.is_outer  -- TEMP CRUD
     merge_temp_areas()
     assign_outers()
     handle_inners()
+    find_isolated_areas()
     make_real_areas()
   end
 
