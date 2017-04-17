@@ -1577,6 +1577,8 @@ function Area_divvy_up_borders()
 
   local VOID = { name="<VOID>", id=9999 }
 
+  local MIN_SIZE = 60
+
 
   local function get_zborder(S)
     if S.zborder then return S.zborder end
@@ -1970,7 +1972,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
-  local function handle_inners()
+  local function find_inners()
 
     -- merge contiguous inner areas
     each T in temp_areas do
@@ -1984,19 +1986,58 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     end
 
     prune_dead_areas()
+    determine_neighbors()
+  end
 
-    -- TODO : maybe keep if large enough
 
+  local function area_is_small(T)
+    return #T.seeds < MIN_SIZE
+  end
+
+
+  local function find_small_areas()
     each T in temp_areas do
-      if not T.is_outer then
-        T.zborder = VOID
-      end
+      T.is_small = area_is_small(T)
     end
+
+    -- try to merge small areas with other small areas
+    -- [ since several areas is better than one humungous one ]
+
+    rand.shuffle(temp_areas)
+
+    for pass = 1, 4 do
+    each T in temp_areas do
+      if T.is_dead then continue end
+      if T.zborder == VOID then continue end
+
+      if not T.is_small then continue end
+
+      rand.shuffle(T.neighbors)
+
+      each N in T.neighbors do
+        if N.is_dead then continue end
+        if N.zborder == VOID then continue end
+
+        if (pass < 4) and not N.is_small then continue end
+
+        perform_merge(T, N)
+
+        if not T.is_dead then T.is_small = area_is_small(T) end
+        if not N.is_dead then N.is_small = area_is_small(N) end
+
+        break;
+      end
+    end  -- pass, T
+    end
+
+    prune_dead_areas()
+    determine_neighbors()
   end
 
 
   local function find_isolated_areas()
-    -- find small pockets which are separated from the large one
+    -- find small pockets which are separated from their
+    -- corresponding large area.
 
     table.sort(temp_areas,
         function(A, B)
@@ -2017,8 +2058,21 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
+  local function handle_dud_areas()
+    -- TODO : maybe keep an inner area when its size is large
+    --        and touches some outdoor rooms
+
+    each T in temp_areas do
+      if T.is_isolated or T.is_small or not T.is_outer then
+        T.zborder = VOID
+      end
+    end
+  end
+
+
   local function make_real_areas()
     each T in temp_areas do
+
       local A = AREA_CLASS.new("scenic")
 
       A.seeds        = T.seeds
@@ -2032,7 +2086,6 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
       else
         A.is_boundary = true
         A.zborder = T.zborder
-A.is_outer = T.is_outer  -- TEMP CRUD
       end
 
       -- install into seeds
@@ -2048,8 +2101,12 @@ A.is_outer = T.is_outer  -- TEMP CRUD
     create_temp_areas()
     merge_temp_areas()
     assign_outers()
-    handle_inners()
+
+    find_inners()
+    find_small_areas()
     find_isolated_areas()
+    handle_dud_areas()
+
     make_real_areas()
   end
 
