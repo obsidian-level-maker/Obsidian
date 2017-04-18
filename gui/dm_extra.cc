@@ -1298,6 +1298,7 @@ static rgb_color_t title_palette[256];
 typedef enum
 {
 	REND_Solid = 0,
+	REND_Additive,
 	REND_Textured,
 	REND_Gradient,
 	REND_Gradient3,
@@ -1609,6 +1610,8 @@ static void TitleParseRenderMode(const char *what)
 
 	if (strcmp(what, "solid") == 0)
 		title_drawctx.render_mode = REND_Solid;
+	else if (strcmp(what, "additive") == 0)
+		title_drawctx.render_mode = REND_Additive;
 	else if (strcmp(what, "gradient") == 0)
 		title_drawctx.render_mode = REND_Gradient;
 	else if (strcmp(what, "gradient3") == 0)
@@ -1718,6 +1721,20 @@ static inline rgb_color_t CalcGradient(float along)
 }
 
 
+static inline rgb_color_t CalcAdditive(rgb_color_t C1, rgb_color_t C2)
+{
+	int r =   RGB_RED(C1) +   RGB_RED(C2);
+	int g = RGB_GREEN(C1) + RGB_GREEN(C2);
+	int b =  RGB_BLUE(C1) +  RGB_BLUE(C2);
+
+	r = MIN(r, 255);
+	g = MIN(g, 255);
+	b = MIN(b, 255);
+
+	return MAKE_RGBA(r, g, b, 255);
+}
+
+
 static inline rgb_color_t CalcPixel(int x, int y)
 {
 	float along = 0;
@@ -1729,6 +1746,9 @@ static inline rgb_color_t CalcPixel(int x, int y)
 	{
 		case REND_Solid:
 			break;
+
+		case REND_Additive:
+			return CalcAdditive(title_drawctx.color[0], title_pix[y*title_W3 + x]);
 
 		case REND_Textured:
 			if (! title_last_tga)
