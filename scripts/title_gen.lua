@@ -1934,7 +1934,10 @@ function Title_make_interpic()
   end
   end
 
-  gui.title_write("INTERPIC")
+  local format = "patch"
+  if PARAM.tga_images then format = "tga" end
+
+  gui.title_write("INTERPIC", format)
   gui.title_free()
 end
 
@@ -1948,7 +1951,10 @@ function Title_make_titlepic()
   Title_add_credit()
   Title_add_title()
 
-  gui.title_write("TITLEPIC")
+  local format = "patch"
+  if PARAM.tga_images then format = "tga" end
+
+  gui.title_write("TITLEPIC", format)
   gui.title_free()
 end
 
