@@ -858,8 +858,9 @@ extern int DM_title_free(lua_State *L);
 extern int DM_title_write(lua_State *L);
 extern int DM_title_set_palette(lua_State *L);
 extern int DM_title_property(lua_State *L);
-extern int DM_title_draw_rect(lua_State *L);
 extern int DM_title_draw_line(lua_State *L);
+extern int DM_title_draw_rect(lua_State *L);
+extern int DM_title_draw_disc(lua_State *L);
 extern int DM_title_draw_clouds(lua_State *L);
 extern int DM_title_draw_planet(lua_State *L);
 extern int DM_title_load_image(lua_State *L);
@@ -955,8 +956,9 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "title_write",       DM_title_write },
 	{ "title_set_palette", DM_title_set_palette },
 	{ "title_prop",        DM_title_property },
-	{ "title_draw_rect",   DM_title_draw_rect },
 	{ "title_draw_line",   DM_title_draw_line },
+	{ "title_draw_rect",   DM_title_draw_rect },
+	{ "title_draw_disc",   DM_title_draw_disc },
 	{ "title_draw_clouds", DM_title_draw_clouds },
 	{ "title_draw_planet", DM_title_draw_planet },
 	{ "title_load_image",  DM_title_load_image },

@@ -1799,17 +1799,16 @@ static void TDraw_Slash(int x, int y, int w, int dir)
 }
 
 
-static void TDraw_Circle(int x, int y, int w)
+static void TDraw_Circle(int x, int y, int w, int h)
 {
 	int bmx = x + w / 2;
-	int bmy = y + w / 2;
-	int r2  = w * w / 4;
+	int bmy = y + h / 2;
 
 	// clip the box
 	int x1 = x;
 	int y1 = y;
 	int x2 = x + w;
-	int y2 = y + w;
+	int y2 = y + h;
 
 	x1 = MAX(x1, 0);
 	y1 = MAX(y1, 0);
@@ -1823,10 +1822,10 @@ static void TDraw_Circle(int x, int y, int w)
 	for (int y = y1 ; y < y2 ; y++)
 	for (int x = x1 ; x < x2 ; x++)
 	{
-		int dx = x - bmx;
-		int dy = y - bmy;
+		float dx = (x - bmx) / (float)w;
+		float dy = (y - bmy) / (float)h;
 
-		if (dx*dx + dy*dy > r2)
+		if (dx * dx + dy * dy > 0.25)
 			continue;
 
 		title_pix[y * title_W3 + x] = CalcPixel(x, y);
@@ -1839,7 +1838,7 @@ static void TDraw_LinePart(int x, int y)
 	switch (title_drawctx.pen_type)
 	{
 		case PEN_Circle:
-			TDraw_Circle(x, y, title_drawctx.box_w * 3);
+			TDraw_Circle(x, y, title_drawctx.box_w * 3, title_drawctx.box_w * 3);
 			break;
 
 		case PEN_Box:
@@ -2087,6 +2086,22 @@ int DM_title_draw_rect(lua_State *L)
 	SYS_ASSERT(title_pix);
 
 	TDraw_Box(x*3, y*3, w*3, h*3);
+	return 0;
+}
+
+
+int DM_title_draw_disc(lua_State *L)
+{
+	// LUA: title_draw_disc(x, y, w, h)
+
+	int x = luaL_checkint(L, 1);
+	int y = luaL_checkint(L, 2);
+	int w = luaL_checkint(L, 3);
+	int h = luaL_checkint(L, 4);
+
+	SYS_ASSERT(title_pix);
+
+	TDraw_Circle(x*3, y*3, w*3, h*3);
 	return 0;
 }
 
