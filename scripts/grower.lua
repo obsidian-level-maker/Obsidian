@@ -2711,7 +2711,7 @@ end
 function Grower_grow_room(R, create_it)
 
   if create_it then
-    if create_it == "exit_root" then
+    if create_it == "force_exit" then
       R.is_exit = true
       LEVEL.exit_room = R
 
@@ -2722,7 +2722,7 @@ function Grower_grow_room(R, create_it)
 
     -- if a root failed to establish itself, kill the room
     if not R.gx1 then
-      if create_it == "exit_room" then
+      if create_it == "force_exit" then
         error("Exit room could not be placed!")
       end
 
@@ -2741,7 +2741,7 @@ function Grower_grow_room(R, create_it)
     --        [ when WHOLE thing, often try "grow" again ]
     clean_up_links(R)
 
-  elseif create_it == "exit_root" then
+  elseif create_it == "force_exit" then
     Grower_grammatical_pass(R, "sprout", 1, 0)
 
   else
@@ -2755,13 +2755,15 @@ end
 
 function Grower_create_trunks()
   --
-  -- Multiple trunks require teleporters to connect them
-  -- (at the moment, anyway).
+  -- Trunks are parts of the map grown separately, and will be
+  -- connected via teleporters.
   --
-  -- There are three basic configurations:
-  --    1. a single trunk, can spawn anywhere
-  --    2. two trunks, at two opposite corners of the map
-  --    3. three or four trunks, at each corner of the map
+  -- Here we decide how many to make, create each one and its
+  -- first room [ which is grown later ].
+  --
+  -- The very first room of the first trunk will be the EXIT room
+  -- for the map, and it is grown immediately (ensuring the next
+  -- room to grow is the one sprouted off it).
   --
 
   local trunk_num = 1
@@ -2796,21 +2798,22 @@ function Grower_create_trunks()
     gui.debugf("Created %s\n", trunk.name)
 
     local env
-    if rand.odds(LEVEL.cave_trunk_prob) then
+
+    if rand.odds(LEVEL.cave_trunk_prob) and i >= 2 then
       env = "cave"
     end
 
-    -- first trunk is always the exit room
-    local create_mode = "normal"
     if i == 1 then
-      create_mode = "exit_root"
       env = nil
     end
 
     local R = Grower_add_room(nil, env, trunk)  -- no parent
 
-    Grower_grow_room(R, create_mode)
-  end -- i
+    -- first trunk is always the exit room
+    if i == 1 then
+      Grower_grow_room(R, "force_exit")
+    end
+  end
 end
 
 
