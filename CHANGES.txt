@@ -16,16 +16,17 @@ CHANGES IN 7.5x
 +  more variety of window prefabs
 
 -  new "Ramp Up" and "Bosses" buttons for monster panel
--  new "Bit Mixed" theme
+-  new themes: "Bit Mixed", "Original-ish", "Episode-ish"
 -  new health/ammo settings: "Bit Less" and "Bit More"
--  new theme settings: "Original-ish" and "Episode-ish"
 
--  removed all title pictures, generate a nebula instead
+-  removed all title pictures, generate something instead
+-  support TGA format title pics when engine is GZDOOM
+
 -  various polishing of the shape rules
 -  abbreviated config in OBLIGDAT lump and config manager
 -  config manager: the "Use" button now sets the seed too
 
--  less chance of producing very undersized maps
+-  introduced variation in how much symmetry to use
 -  fixed bug swapping normal-exit and secret-exit switches
 -  removed the non-standard player things (4001..4004)
 
