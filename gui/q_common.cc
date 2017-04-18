@@ -107,6 +107,12 @@ void qLump_c::Prepend(const void *data, u32_t len)
 }
 
 
+void qLump_c::AddByte(byte value)
+{
+	Append(&value, 1);
+}
+
+
 void qLump_c::RawPrintf(const char *str)
 {
 	if (! crlf)

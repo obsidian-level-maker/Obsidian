@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  BSP files - Quake I and II
+//  BSP files - Quake I, II and III
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -57,6 +57,8 @@ public:
 	void Append(qLump_c *other);
 
 	void Prepend(const void *data, u32_t len);
+
+	void AddByte(byte value);
 
 	void Printf (const char *str, ...);
 	void KeyPair(const char *key, const char *val, ...);

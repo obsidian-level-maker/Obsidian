@@ -1434,7 +1434,7 @@ static bool TitleCacheImage(const char *filename)
 }
 
 
-static int TitleLookupPixel(int x, int y)
+static int TitleAveragePixel(int x, int y)
 {
 	x *= 3;
 	y *= 3;
@@ -1458,18 +1458,54 @@ static int TitleLookupPixel(int x, int y)
 	g = g / 9;
 	b = b / 9;
 
-	return PaletteLookup(MAKE_RGBA(r, g, b, 255), title_palette);
+	return MAKE_RGBA(r, g, b, 255);
 }
 
 
-int DM_title_write(lua_State *L)
+static qLump_c * TitleCreateTGA()
 {
-	// LUA: title_write(lumpname)
+	qLump_c *lump = new qLump_c();
 
-	const char *lumpname = luaL_checkstring(L, 1);
+	lump->AddByte(0);  // id_length
+	lump->AddByte(0);  // colormap_type
+	lump->AddByte(2);  // TGA_RGB
 
-	SYS_ASSERT(title_pix);
+	lump->AddByte(0);  // colormap_xxx
+	lump->AddByte(0);
+	lump->AddByte(0);
+	lump->AddByte(0);
+	lump->AddByte(0);
 
+	lump->AddByte(0);  // x_offset
+	lump->AddByte(0);
+	lump->AddByte(0);  // y_offset
+	lump->AddByte(0);
+
+	lump->AddByte(title_W & 255);  // width
+	lump->AddByte(title_W >> 8);
+
+	lump->AddByte(title_H & 255);  // height
+	lump->AddByte(title_H >> 8);
+
+	lump->AddByte(24); // pixel_bits
+	lump->AddByte(0);  // attributes
+
+	for (int y = title_H-1 ; y >= 0 ; y--)
+	for (int x = 0 ; x < title_W ; x++)
+	{
+		rgb_color_t col = TitleAveragePixel(x, y);
+
+		lump->AddByte( RGB_BLUE(col));
+		lump->AddByte(RGB_GREEN(col));
+		lump->AddByte(  RGB_RED(col));
+	}
+
+	return lump;
+}
+
+
+static qLump_c * TitleCreatePatch()
+{
 	// convert image to the palette  [ this is very slow! ]
 
 	byte *conv_pixels = new byte[title_W * title_H];
@@ -1477,15 +1513,38 @@ int DM_title_write(lua_State *L)
 	for (int y = 0 ; y < title_H ; y++)
 	for (int x = 0 ; x < title_W ; x++)
 	{
-		conv_pixels[y * title_W + x] = TitleLookupPixel(x, y);
+		rgb_color_t col = TitleAveragePixel(x, y);
+
+		conv_pixels[y * title_W + x] = PaletteLookup(col, title_palette);
 	}
 
 	qLump_c *lump = DM_CreatePatch(title_W, title_H, 0, 0, conv_pixels, title_W, title_H);
 
+	delete[] conv_pixels;
+
+	return lump;
+}
+
+
+int DM_title_write(lua_State *L)
+{
+	// LUA: title_write(lumpname [, format])
+
+	const char *lumpname = luaL_checkstring(L, 1);
+	const char *format   = luaL_optstring(L, 2, "");
+
+	SYS_ASSERT(title_pix);
+
+	qLump_c *lump;
+
+	if (StringCaseCmp(format, "tga") == 0)
+		lump = TitleCreateTGA();
+	else
+		lump = TitleCreatePatch();
+
 	DM_WriteLump(lumpname, lump);
 
 	delete lump;
-	delete conv_pixels;
 
 	return 0;
 }
@@ -2148,6 +2207,7 @@ int DM_title_draw_planet(lua_State *L)
 {
 	// LUA: title_draw_planet(x,y,r, seed, flags, hue1,hue2,hue3)
 
+#if 0
 	int px = luaL_checkint(L, 1);
 	int py = luaL_checkint(L, 2);
 
@@ -2264,6 +2324,7 @@ for (int kx = 0   ; kx < W ; kx++)
 	}
 
 	delete[] synth;
+#endif
 
 	return 0;
 }
