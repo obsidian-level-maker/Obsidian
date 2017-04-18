@@ -1633,7 +1633,10 @@ int DM_title_property(lua_State *L)
 
 	const char *propname = luaL_checkstring(L, 1);
 
-	if (strcmp(propname, "color") == 0 || strcmp(propname, "color1") == 0)
+	if (strcmp(propname, "reset") == 0)
+		title_drawctx.Reset();
+
+	else if (strcmp(propname, "color") == 0 || strcmp(propname, "color1") == 0)
 		title_drawctx.color[0] = Grab_Color(L, 2);
 	else if (strcmp(propname, "color2") == 0)
 		title_drawctx.color[1] = Grab_Color(L, 2);
