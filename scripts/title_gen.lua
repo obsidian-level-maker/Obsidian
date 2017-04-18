@@ -1518,7 +1518,7 @@ TITLE_INTERMISSION_STYLES =
 TITLE_SEED = 0
 
 
-function Title_add_background()
+function Title_gen_space_scene()
   --
   -- generate a night sky scene
   --
@@ -1532,6 +1532,41 @@ function Title_add_background()
   gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
                         style.thresh or 0, style.power or 1,
                         style.fracdim or 2.4)
+end
+
+
+
+function Title_gen_ray_stuff()
+  local mx = 160
+  local my =  85
+
+  local function coord(angle, dist)
+    local x = mx + math.sin(angle * math.pi / 180) * dist * 1.2
+    local y = my + math.cos(angle * math.pi / 180) * dist
+
+    return x, y
+  end
+
+  local function draw_ray(angle, thick, col)
+    gui.title_prop("color", col)
+
+    for m = -thick, thick, 0.1 do
+      local x1, y1 = coord(angle + m, 280)
+      local x2, y2 = coord(angle, 180)
+
+      gui.title_draw_line(mx, my, x1, y1, col)
+--    gui.title_draw_line(x1, y1, x2, y2, col)
+    end
+  end
+
+
+  for th = 28, 2, -1 do
+    for angle = 12, 355, 30 do
+      local ity = 255 - (th ^ 0.4) * (254 / 28 ^ 0.4)
+      local col = { 0, 0, ity }
+      draw_ray(angle, th, col)
+    end
+  end
 end
 
 
@@ -1626,6 +1661,7 @@ end
 
 
 function Title_add_title()
+  gui.title_prop("reset", "all")
 
   -- determine if we have one or two main lines
   local line1, line2, mid_line, top_line = Title_split_into_lines()
@@ -1856,6 +1892,7 @@ end
 
 
 function Title_add_credit()
+  gui.title_prop("reset", "all")
   gui.title_prop("color", "#000")
 
   gui.title_draw_rect(310, 190, 10, 10)
@@ -1947,7 +1984,12 @@ function Title_make_titlepic()
   gui.title_create(320, 200, "#000")
   gui.title_set_palette(GAME.PALETTES.normal)
 
-  Title_add_background()
+  if rand.odds(100) then
+    Title_gen_ray_stuff()
+  else
+    Title_gen_space_scene()
+  end
+
   Title_add_credit()
   Title_add_title()
 
