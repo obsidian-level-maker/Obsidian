@@ -1604,6 +1604,51 @@ function Title_gen_ray_stuff()
 end
 
 
+function Title_gen_brick_stuff()
+  local tex = "cement"
+  gui.title_prop("texture", "data/bg/" .. tex .. ".tga")
+
+  gui.title_draw_rect(0, 0, 320, 200)
+
+  local lights = {}
+
+  for i = 1, 2 do
+    local x = 150 + (i - 1.5) * 230
+    local y = 130
+
+    table.insert(lights, { x=x, y=y })
+  end
+
+  gui.title_prop("render_mode", "multiply")
+
+  local col = { 0,0,0 }
+
+  for x = 0, 319 do
+  for y = 0, 199  do
+    local d = 9e9
+    each L in lights do
+      d = math.min(d, geom.dist(L.x, L.y, x, y))
+    end
+
+    local ity = math.exp(-d / 50) * 255  --- 255 - (d ^ 1.5) / 2.0
+    ity = math.clamp(0, ity, 255)
+
+    col[1] = ity
+    col[2] = ity
+    col[3] = ity
+
+    gui.title_prop("color", col)
+
+    gui.title_draw_rect(x, y, 1, 1)
+  end
+  end
+
+  each L in lights do
+    gui.title_load_image(L.x - 10, L.y - 16, "data/bg/lamp1.tga")
+  end
+end
+
+
 
 function Title_split_into_lines()
   --
@@ -2018,14 +2063,14 @@ function Title_make_titlepic()
   gui.title_create(320, 200, "#000")
   gui.title_set_palette(GAME.PALETTES.normal)
 
-  if rand.odds(0) then
-    Title_gen_ray_stuff()
+  if rand.odds(100) then
+    Title_gen_brick_stuff()
   else
     Title_gen_space_scene()
   end
 
   Title_add_credit()
---!!!!  Title_add_title()
+        Title_add_title()
 
   local format = "patch"
   if PARAM.tga_images then format = "tga" end
