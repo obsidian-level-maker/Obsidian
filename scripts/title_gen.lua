@@ -1604,6 +1604,7 @@ function Title_gen_ray_stuff()
 end
 
 
+
 function Title_gen_brick_stuff()
   local tex = "cement"
   gui.title_prop("texture", "data/bg/" .. tex .. ".tga")
@@ -1645,6 +1646,74 @@ function Title_gen_brick_stuff()
 
   each L in lights do
     gui.title_load_image(L.x - 10, L.y - 16, "data/bg/lamp1.tga")
+  end
+end
+
+
+
+function Title_gen_cone_stuff()
+
+  local sun_x = 2 / (6 ^ 0.5)
+  local sun_y = 1 / (6 ^ 0.5)
+  local sun_z = 1 / (6 ^ 0.5)
+
+  if rand.odds(0) then sun_x = - sun_x end
+
+
+  local function intensity(mx, r, sx, sy)
+    -- compute a normal vector
+    local z = (sy - 99.5) / 99.5
+
+    local x = (sx - mx) / r
+    x = x * x * sel(x < 0, -1, 1)
+
+    local y = math.sqrt(1 - x*x)
+
+    local len = math.sqrt(x*x + y*y + z*z)
+
+    x = x / len
+    y = y / len
+    z = z / len
+
+    return x * sun_x + y * sun_y + z * sun_z;
+  end
+
+
+  local function draw_cone(mx, dist)
+    local col = { 255,0,0 }
+
+    for y = 0, 199 do
+      -- calc radius at this point
+      local r = math.abs(y - 99.5)
+      r = 3 + r ^ 1.6 / 24
+
+      for x = mx - r, mx + r do
+        local ity = intensity(mx, r, x, y)
+
+        ity = math.clamp(0, ity, 1) * 225
+        ity = ity / (dist ^ 0.5) + 30 / dist
+
+        if ity < 128 then
+          col[1] = 0
+          col[2] = 0
+          col[3] = ity * 2
+        else
+          col[1] = (ity - 128) * 2
+          col[2] = col[1]
+          col[3] = 255
+        end
+
+        gui.title_prop("color", col)
+        gui.title_draw_rect(x, y, 1, 1)
+      end
+    end
+  end
+
+
+  for dist = 50, 1, -1 do
+    local mx = rand.irange(5, 315)
+
+    draw_cone(mx, dist)
   end
 end
 
@@ -2064,7 +2133,7 @@ function Title_make_titlepic()
   gui.title_set_palette(GAME.PALETTES.normal)
 
   if rand.odds(100) then
-    Title_gen_brick_stuff()
+    Title_gen_cone_stuff()
   else
     Title_gen_space_scene()
   end
