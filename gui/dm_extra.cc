@@ -1299,6 +1299,9 @@ typedef enum
 {
 	REND_Solid = 0,
 	REND_Additive,
+	REND_Subtract,
+	REND_Multiply,
+
 	REND_Textured,
 	REND_Gradient,
 	REND_Gradient3,
@@ -1612,6 +1615,10 @@ static void TitleParseRenderMode(const char *what)
 		title_drawctx.render_mode = REND_Solid;
 	else if (strcmp(what, "additive") == 0)
 		title_drawctx.render_mode = REND_Additive;
+	else if (strcmp(what, "subtract") == 0)
+		title_drawctx.render_mode = REND_Subtract;
+	else if (strcmp(what, "multiply") == 0)
+		title_drawctx.render_mode = REND_Multiply;
 	else if (strcmp(what, "gradient") == 0)
 		title_drawctx.render_mode = REND_Gradient;
 	else if (strcmp(what, "gradient3") == 0)
@@ -1735,6 +1742,35 @@ static inline rgb_color_t CalcAdditive(rgb_color_t C1, rgb_color_t C2)
 }
 
 
+static inline rgb_color_t CalcSubtract(rgb_color_t C1, rgb_color_t C2)
+{
+	int r =   RGB_RED(C1) -   RGB_RED(C2);
+	int g = RGB_GREEN(C1) - RGB_GREEN(C2);
+	int b =  RGB_BLUE(C1) -  RGB_BLUE(C2);
+
+	r = MAX(r, 0);
+	g = MAX(g, 0);
+	b = MAX(b, 0);
+
+	return MAKE_RGBA(r, g, b, 255);
+}
+
+
+static inline rgb_color_t CalcMultiply(rgb_color_t C1, rgb_color_t C2)
+{
+	int r =   RGB_RED(C1) * (  RGB_RED(C2) + 1);
+	int g = RGB_GREEN(C1) * (RGB_GREEN(C2) + 1);
+	int b =  RGB_BLUE(C1) * ( RGB_BLUE(C2) + 1);
+
+	r = r >> 8;
+	g = g >> 8;
+	b = b >> 8;
+
+	return MAKE_RGBA(r, g, b, 255);
+}
+
+
+
 static inline rgb_color_t CalcPixel(int x, int y)
 {
 	float along = 0;
@@ -1748,7 +1784,13 @@ static inline rgb_color_t CalcPixel(int x, int y)
 			break;
 
 		case REND_Additive:
-			return CalcAdditive(title_drawctx.color[0], title_pix[y*title_W3 + x]);
+			return CalcAdditive(title_pix[y*title_W3 + x], title_drawctx.color[0]);
+
+		case REND_Subtract:
+			return CalcSubtract(title_pix[y*title_W3 + x], title_drawctx.color[0]);
+
+		case REND_Multiply:
+			return CalcMultiply(title_pix[y*title_W3 + x], title_drawctx.color[0]);
 
 		case REND_Textured:
 			if (! title_last_tga)
