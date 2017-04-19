@@ -1527,7 +1527,7 @@ function Title_gen_space_scene()
   local function big_star(mx, my, r)
     local r2 = int(r * 1.2)
 
-    local DD = 0.05
+    local DD = 0.09
 
     for y = my - r,  my + r  do
     for x = mx - r2, mx + r2 do
@@ -1537,11 +1537,11 @@ function Title_gen_space_scene()
       local ity = 1.0 / (math.abs(dx) + DD) + 1.0 / (math.abs(dy) + DD)
 
       ity = ity / (1.0 / DD)
-      ity = ity ^ 2.2
+      ity = ity ^ 3.2
       ity = ity * (1.0 - geom.dist(0, 0, dx, dy))
-      ity = 255 * math.clamp(0, ity, 1)
+      ity = 240 * math.clamp(0, ity, 1)
 
-      if ity < 10 then continue end
+      if ity < 50 then continue end
 
       gui.title_prop("color", { ity, ity, ity })
       gui.title_draw_rect(x, y, 1, 1)
@@ -1560,6 +1560,8 @@ function Title_gen_space_scene()
   gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
                         style.thresh or 0, style.power or 1,
                         style.fracdim or 2.4)
+
+  gui.title_prop("render_mode", "additive")
 
   big_star(80, 50, 30)
 
@@ -2023,7 +2025,7 @@ function Title_make_titlepic()
   end
 
   Title_add_credit()
-  Title_add_title()
+--!!!!  Title_add_title()
 
   local format = "patch"
   if PARAM.tga_images then format = "tga" end
