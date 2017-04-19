@@ -56,6 +56,7 @@ cp -av addons   $dest/addons
 cp -av language $dest/language
 
 rm -f $dest/data/*.wad
+rm -f $dest/data/*.wd2
 rm -f $dest/data/*.pak
 
 #
