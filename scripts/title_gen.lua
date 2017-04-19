@@ -1088,6 +1088,31 @@ function Title_draw_lit_box(x, y, w, h, hue1, hue2, hue3)
 end
 
 
+
+function Title_interp_color(list, ity, out)
+  ity = math.clamp(0, ity, 1)
+  ity = ity * (#list - 1)
+
+  for pos = 1, #list - 1 do
+    if ity <= 1 then
+      local A = list[pos]
+      local B = list[pos+1]
+
+      out[1] = A[1] * (1 - ity) + B[1] * ity
+      out[2] = A[2] * (1 - ity) + B[2] * ity
+      out[3] = A[3] * (1 - ity) + B[3] * ity
+      return
+    end
+
+    ity = ity - 1
+  end
+
+  out[1] = list[#list][1]
+  out[2] = list[#list][2]
+  out[3] = list[#list][3]
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -1657,14 +1682,24 @@ function Title_gen_cone_stuff()
   local sun_y = 1 / (6 ^ 0.5)
   local sun_z = 1 / (6 ^ 0.5)
 
-  if rand.odds(0) then sun_x = - sun_x end
+  local colors =
+  {
+    {60,0,0}
+    {143,43,43},
+    {175,67,0},
+    {243,115,23},
+    {255,235,219},
+  }
+
+  if rand.odds(100) then sun_x = - sun_x end
+  if rand.odds(  0) then sun_z = - sun_z end
 
 
   local function intensity(mx, r, sx, sy)
     -- compute a normal vector
     local z = (sy - 99.5) / 99.5
 
-    local x = (sx - mx) / r
+    local x = (sx - mx) / (r + 1)
     x = x * x * sel(x < 0, -1, 1)
 
     local y = math.sqrt(1 - x*x)
@@ -1693,15 +1728,7 @@ function Title_gen_cone_stuff()
         ity = math.clamp(0, ity, 1) * 225
         ity = ity / (dist ^ 0.5) + 30 / dist
 
-        if ity < 128 then
-          col[1] = 0
-          col[2] = 0
-          col[3] = ity * 2
-        else
-          col[1] = (ity - 128) * 2
-          col[2] = col[1]
-          col[3] = 255
-        end
+        Title_interp_color(colors, ity/255, col)
 
         gui.title_prop("color", col)
         gui.title_draw_rect(x, y, 1, 1)
