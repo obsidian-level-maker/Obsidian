@@ -1530,6 +1530,30 @@ static qLump_c * TitleCreatePatch()
 }
 
 
+static qLump_c * TitleCreateRaw()
+{
+	// convert image to the palette  [ this is very slow! ]
+
+	byte *conv_pixels = new byte[title_W * title_H];
+
+	for (int y = 0 ; y < title_H ; y++)
+	for (int x = 0 ; x < title_W ; x++)
+	{
+		rgb_color_t col = TitleAveragePixel(x, y);
+
+		conv_pixels[y * title_W + x] = PaletteLookup(col, title_palette);
+	}
+
+	qLump_c *lump = new qLump_c;
+
+	lump->Append(conv_pixels, title_W * title_H);
+
+	delete[] conv_pixels;
+
+	return lump;
+}
+
+
 int DM_title_write(lua_State *L)
 {
 	// LUA: title_write(lumpname [, format])
@@ -1543,6 +1567,8 @@ int DM_title_write(lua_State *L)
 
 	if (StringCaseCmp(format, "tga") == 0)
 		lump = TitleCreateTGA();
+	else if (StringCaseCmp(format, "raw") == 0)
+		lump = TitleCreateRaw();
 	else
 		lump = TitleCreatePatch();
 
