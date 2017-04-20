@@ -1686,9 +1686,34 @@ end
 
 
 
-function Title_gen_ray_stuff()
-  local mx = 160
-  local my =  85
+function Title_gen_ray_burst()
+  local mx, my
+
+  mx = rand.pick({30,280, 160,160})
+  my = rand.pick({-10,180, 80,90,100,100,110,120})
+
+  local step = rand.pick({20,24,30,36})
+
+  local ray_colors =
+  {
+    blue_white = 60
+    blue = 30
+
+    red_white = 30
+    orange_white = 30
+    brown_yellow = 30
+    dark_grey = 30
+
+    red = 10
+    pink = 10
+    light_brown = 10
+  }
+
+  local ray_color = rand.key_by_probs(ray_colors)
+
+  local color_list = TITLE_COLOR_RAMPS[ray_color]
+  assert(color_list)
+
 
   local function coord(angle, dist)
     local x = mx + math.sin(angle * math.pi / 180) * dist * 1.2
@@ -1698,30 +1723,38 @@ function Title_gen_ray_stuff()
   end
 
   local function draw_ray(angle, thick, col)
-    gui.title_prop("color", col)
+    local col = { 0,0,0 }
 
-    for m = -thick, thick, 0.1 do
-      local x1, y1 = coord(angle + m, 280)
+    for side = 0,1 do
+    for m = thick, 0, -0.1 do
+      local da = sel(side > 0, -1, 1) * m
+
+      local x1, y1 = coord(angle + da, 280)
       local x2, y2 = coord(angle, 180)
 
+      local ity = 1.0 - m / thick
+
+      ity = (ity ^ 1.4) * 0.8
+
+      Title_interp_color(color_list, ity, col)
+
+      gui.title_prop("color", col)
       gui.title_draw_line(mx, my, x1, y1, col)
---    gui.title_draw_line(x1, y1, x2, y2, col)
+    end
     end
   end
 
 
-  for th = 28, 2, -1 do
-    for angle = 12, 355, 30 do
-      local ity = 255 - (th ^ 0.4) * (254 / 28 ^ 0.4)
-      local col = { 0, 0, ity }
-      draw_ray(angle, th, col)
-    end
+  -- draw each ray
+
+  for angle = step/2, 361-step/2, step do
+    draw_ray(angle, step * 0.4, col)
   end
 end
 
 
 
-function Title_gen_brick_stuff()
+function Title_gen_wall_scene()
   local tex = "cement"
   gui.title_prop("texture", "data/bg/" .. tex .. ".tga")
 
@@ -1767,7 +1800,7 @@ end
 
 
 
-function Title_gen_cone_stuff()
+function Title_gen_cave_scene()
 
   local sun_x = 2 / (6 ^ 0.5)
   local sun_y = 1 / (6 ^ 0.5)
@@ -2244,7 +2277,7 @@ function Title_make_titlepic()
   gui.title_set_palette(GAME.PALETTES.normal)
 
   if rand.odds(100) then
-    Title_gen_cone_stuff()
+    Title_gen_ray_burst()
   else
     Title_gen_space_scene()
   end
