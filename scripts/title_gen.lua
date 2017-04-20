@@ -1537,6 +1537,52 @@ TITLE_INTERMISSION_STYLES =
 }
 
 
+TITLE_COLOR_RAMPS =
+{
+  blue =
+  {
+    { 0,0,0 }
+    { 0,0,255 }
+  }
+
+  blue_white =
+  {
+    { 0,0,0 }
+    { 0,0,255 }
+    { 231,231,255 }
+  }
+
+  red =
+  {
+    { 60,0,0 }
+    { 255,0,0 }
+  }
+
+  red_white =
+  {
+    { 60,0,0 }
+    { 255,0,0 }
+    { 255,224,224 }
+  }
+
+  green =
+  {
+    { 8,23,8 }
+    { 62,147,62 }
+    { 115,255,115 }
+  }
+
+  orange_white =
+  {
+    {60,0,0}
+    {143,43,43}
+    {175,67,0}
+    {243,115,23}
+    {255,235,219}
+  }
+}
+
+
 ------------------------------------------------------------------------
 
 
@@ -1682,14 +1728,7 @@ function Title_gen_cone_stuff()
   local sun_y = 1 / (6 ^ 0.5)
   local sun_z = 1 / (6 ^ 0.5)
 
-  local colors =
-  {
-    {60,0,0}
-    {143,43,43},
-    {175,67,0},
-    {243,115,23},
-    {255,235,219},
-  }
+  local colors = TITLE_COLOR_RAMPS["orange_white"]
 
   if rand.odds(100) then sun_x = - sun_x end
   if rand.odds(  0) then sun_z = - sun_z end
