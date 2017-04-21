@@ -19,7 +19,7 @@ CHANGES IN 7.5x
 -  new themes: "Bit Mixed", "Original-ish", "Episode-ish"
 -  new health/ammo settings: "Bit Less" and "Bit More"
 
--  removed all title pictures, generate something instead
+-  improved title generator, removed pre-made backgrounds
 -  support TGA format title pics when engine is GZDOOM
 
 -  various polishing of the shape rules
