@@ -1465,10 +1465,12 @@ TITLE_SPACE_STYLES =
     power  = 1.5
   }
 
-  white_nebula =
+  grey_nebula =
   {
+    prob   = 5
+
     hue1   = "#000"
-    hue2   = "#fff"
+    hue2   = "#aaa"
     hue3   = "#000"
     power  = 4
   }
@@ -1638,10 +1640,50 @@ function Title_gen_space_scene()
   -- generate a night sky scene
   --
 
+  local style = Title_pick_style(TITLE_SPACE_STYLES, {})
 
-  local function big_star(mx, my, r)
-    gui.title_prop("render_mode", "additive")
+  local density = rand.pick({40,70,100})
 
+  local big_stars = {}
+
+
+  local function distance_to_big_star(mx, my, r, x, y)
+    -- account for the curvey-cross shape of big stars
+    local dx = math.abs(x - mx)
+    local dy = math.abs(y - my)
+
+    if dy >= dx then dx, dy = dy, dx end
+
+    local best_d = 9e9
+
+    for i = 0, 1, 0.05 do
+      local px = i * r
+      local py = (1 - i) * 0.4
+
+      local d = geom.dist(px, py, dx, dy)
+
+      best_d = math.min(best_d, d)
+    end
+
+    return best_d
+  end
+
+
+  local function nearest_big_star(x, y)
+    -- avoid the logo too
+    local near_d = geom.dist(315, 195, x, y)
+
+    each B in big_stars do
+      local d = distance_to_big_star(B.mx, B.my, B.r, x, y)
+
+      near_d = math.min(near_d, d)
+    end
+
+    return near_d
+  end
+
+
+  local function draw_big_star(mx, my, r)
     local r2 = int(r * 1.2)
 
     local DD = 0.09
@@ -1664,6 +1706,43 @@ function Title_gen_space_scene()
       gui.title_draw_rect(x, y, 1, 1)
 
     end -- x, y
+    end
+  end
+
+
+  local function location_for_big_star(r)
+    local mx, my
+    local best_d = -1
+
+    for loop = 1, 9 do
+      local tx = rand.irange(r+2, 320 - (r+2))
+      local ty = rand.irange(r+2, 200 - (r+2))
+
+      local d = nearest_big_star(tx, ty)
+
+      if d > best_d then
+        best_d = d
+        mx, my = tx, ty
+      end
+    end
+
+    assert(mx and my)
+
+    return mx, my
+  end
+
+
+  local function add_big_stars()
+    gui.title_prop("render_mode", "additive")
+
+    local BIG_SIZES = { 56, 36, 16 }
+
+    each r in BIG_SIZES do
+      if rand.odds(50) then
+        local mx, my = location_for_big_star(r)
+        table.insert(big_stars, { mx=mx, my=my, r=r })
+        draw_big_star(mx, my, r)
+      end
     end
   end
 
@@ -1701,38 +1780,39 @@ function Title_gen_space_scene()
   end
 
 
-  local function little_stars()
+  local function add_little_stars()
     gui.title_prop("render_mode", "additive")
 
     local col = { 0,0,0 }
 
     for x = 0, 319 do
-      local y = rand.irange(-100, -200)
+      -- begin somewhere off-screen
+      local y = rand.irange(-300, -500)
 
       while y < 200 do
         if y >= 0 then
           local size = 1
-          if rand.odds(10) then size = 3 end
-          if rand.odds(5)  then size = 2 end
+          if rand.odds(15) then size = 3 end
+          if rand.odds(3)  then size = 2 end
 
-          draw_small_star(x, y, size, col)
+          if nearest_big_star(x, y) >= 7 then
+            draw_small_star(x, y, size, col)
+          end
         end
 
-        y = y + rand.irange(16, 72)
+        y = y + rand.irange(density / 2, density * 2)
       end
     end
   end
 
 
-  local style = Title_pick_style(TITLE_SPACE_STYLES, {})
-
   gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
                         style.thresh or 0, style.power or 1,
                         style.fracdim or 2.4)
 
-  little_stars()
+  add_big_stars()
 
---  big_star(200, 150, 50)
+  add_little_stars()
 end
 
 
