@@ -114,12 +114,6 @@ DOOM.ENTITIES =
   -- replacement sprite (normally this is a gore sprite)
   hang_lamp  = { id=60, r=20, h=68, ceil=true, pass=true }
 
-  -- CTF things (NOTE: these don't exist in vanilla DOOM)
-  ctf_blue_flag  = { id=5130, r=16, h=56, pass=true }
-  ctf_blue_start = { id=5080, r=16, h=56, pass=true }
-  ctf_red_flag   = { id=5131, r=16, h=56, pass=true }
-  ctf_red_start  = { id=5081, r=16, h=56, pass=true }
-
   -- special stuff --
   keen  = { id=72, r=16, h=72, ceil=true }
 

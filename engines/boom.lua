@@ -28,6 +28,12 @@ BOOM.ENTITIES =
   boom_player7 = { id=4003, r=16, h=56 }
   boom_player8 = { id=4004, r=16, h=56 }
 
+  -- CTF things
+  ctf_blue_flag  = { id=5130, r=16, h=56, pass=true }
+  ctf_blue_start = { id=5080, r=16, h=56, pass=true }
+  ctf_red_flag   = { id=5131, r=16, h=56, pass=true }
+  ctf_red_start  = { id=5081, r=16, h=56, pass=true }
+
   point_push = { id=5001, r=16,h=16, pass=true }
   point_pull = { id=5002, r=16,h=16, pass=true }
 }
