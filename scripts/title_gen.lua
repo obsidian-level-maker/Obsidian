@@ -1547,7 +1547,7 @@ TITLE_COLOR_RAMPS =
     { 255,255,255 }
   }
 
-  light_gray =
+  light_grey =
   {
     { 0,0,0 }
     { 160,160,160 }
@@ -1977,7 +1977,7 @@ function Title_gen_cave_scene()
 
   if rand.odds(50) then sun_x = - sun_x end
 
-  local tall_mode = rand.odds(75)
+  local tall_mode = rand.odds(66)
 
 
   local cave_colors =
@@ -2488,18 +2488,20 @@ function Title_make_titlepic()
   gui.title_create(320, 200, "#000")
   gui.title_set_palette(GAME.PALETTES.normal)
 
-  if rand.odds(10*0) then
+  if rand.odds(2) then
+    -- empty background
+  elseif rand.odds(10) then
     Title_gen_ray_burst()
-  elseif rand.odds(20*0) then
+  elseif rand.odds(10) then
     Title_gen_cave_scene()
-  elseif rand.odds(35*0) then
+  elseif rand.odds(30) then
     Title_gen_wall_scene()
   else
     Title_gen_space_scene()
   end
 
   Title_add_credit()
---!!!!  Title_add_title()
+  Title_add_title()
 
   local format = "patch"
   if PARAM.tga_images then format = "tga" end

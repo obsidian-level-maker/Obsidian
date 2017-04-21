@@ -1888,6 +1888,9 @@ namelib.NAMES =
         ["Where Devils Spawn"] = 20
 
         -- miscellaneous
+        ["A Dreaded Obligation"] = 30
+        ["Your Dire Obligation"] = 30
+
         ["The Final Hour"] = 20
         ["Out Of Time"] = 20
         ["Days Of Rage"] = 20
