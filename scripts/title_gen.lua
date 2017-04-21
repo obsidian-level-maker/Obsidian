@@ -1754,29 +1754,68 @@ end
 
 
 function Title_gen_wall_scene()
-  local tex = "cement"
+  local tex_list
+
+  local lamp_y
+  local lamp_sprite
+
+  if rand.odds(37) then
+    -- tech lamp
+    lamp_y = 154
+    lamp_sprite = "lamp2"
+    
+    tex_list = { "airduct", "cement" }
+
+  else
+    if rand.odds(50) then
+      -- standing lamp
+      lamp_y = 130
+      lamp_sprite = "lamp1"
+    else
+      -- wall-mounted torch
+      lamp_y = 80
+      lamp_sprite = "lamp3"
+    end
+
+    tex_list = { "block1", "block2" }
+  end
+
+  -- draw the texture over the whole screen
+  local tex = rand.pick(tex_list)
   gui.title_prop("texture", "data/bg/" .. tex .. ".tga")
 
   gui.title_draw_rect(0, 0, 320, 200)
 
+  -- decide # of lamps
+  local lamp_num = 2
+  if rand.odds(25) then lamp_num = 1 end
+  if rand.odds(25) then lamp_num = 3 end
+
   local lights = {}
 
-  for i = 1, 2 do
-    local x = 150 + (i - 1.5) * 230
-    local y = 130
+  for i = 1, lamp_num do
+    local x = 150
+    
+    if lamp_num >= 2 and i == 1 then x = 35 end
+    if lamp_num >= 2 and i == lamp_num then x = 265 end
 
-    table.insert(lights, { x=x, y=y })
+    table.insert(lights, { x=x, y=lamp_y })
   end
 
+  -- apply lighting effect
   gui.title_prop("render_mode", "multiply")
 
   local col = { 0,0,0 }
+
+  local xf = 1.0
+  if lamp_num == 1 then xf = 0.7 end
+  if lamp_num == 3 then xf = 1.6 end
 
   for x = 0, 319 do
   for y = 0, 199  do
     local d = 9e9
     each L in lights do
-      d = math.min(d, geom.dist(L.x, L.y, x, y))
+      d = math.min(d, geom.dist(L.x * xf, L.y, x * xf, y))
     end
 
     local ity = math.exp(-d / 50) * 255  --- 255 - (d ^ 1.5) / 2.0
@@ -1792,8 +1831,9 @@ function Title_gen_wall_scene()
   end
   end
 
+  -- draw each lamp
   each L in lights do
-    gui.title_load_image(L.x - 10, L.y - 16, "data/bg/lamp1.tga")
+    gui.title_load_image(L.x - 10, L.y - 16, "data/bg/" .. lamp_sprite .. ".tga")
   end
 end
 
@@ -2318,7 +2358,7 @@ function Title_make_titlepic()
   gui.title_set_palette(GAME.PALETTES.normal)
 
   if rand.odds(100) then
-    Title_gen_cave_scene()
+    Title_gen_wall_scene()
   else
     Title_gen_space_scene()
   end
