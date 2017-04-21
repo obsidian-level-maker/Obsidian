@@ -531,8 +531,19 @@ static void Q3_CreateDrawVert(quake_face_c *face, quake_vertex_c *V,
 
 	if (face->lmap)
 	{
-		out->lightmap[0] = face->lmap->lm_mat->Calc_S(V->x, V->y, V->z);
-		out->lightmap[1] = face->lmap->lm_mat->Calc_T(V->x, V->y, V->z);
+		bool is_dark = face->lmap->isDark();
+
+		if (is_dark)
+		{
+			// middle of the top-left 2x2 block
+			out->lightmap[0] = 1.0 / 128.0;
+			out->lightmap[1] = 1.0 / 128.0;
+		}
+		else
+		{
+			out->lightmap[0] = face->lmap->lm_mat->Calc_S(V->x, V->y, V->z);
+			out->lightmap[1] = face->lmap->lm_mat->Calc_T(V->x, V->y, V->z);
+		}
 
 		// this is cruddy, but better than nothing
 		// [ I don't plan to properly support vertex lighting mode ]

@@ -72,6 +72,9 @@ public:
 
 	rgb_color_t CalcAverage() const;
 
+	// true if all samples are zero
+	bool isDark() const;
+
 	// transfer from blocklights[] array
 	void Store();
 

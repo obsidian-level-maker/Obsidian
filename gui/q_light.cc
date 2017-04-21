@@ -63,7 +63,7 @@ static int q_lighting_quality = 0;
 bool q_mono_lighting = false;
 
 
-static int   q_low_light   = 8;
+static int   q_low_light   = 0;
 static float q_light_scale = 1.0;
 
 static float q3_luxel_size = 12.0;
@@ -128,7 +128,7 @@ void QLIT_InitProperties()
 	q3_overbrighting = false;
 
 	q_light_scale = 1.0;
-	q_low_light = 8;
+	q_low_light = 0;
 
 	grid_ambient_scale  = 4.0;
 	grid_directed_scale = 0.7;
@@ -331,6 +331,23 @@ rgb_color_t qLightmap_c::CalcAverage() const
 }
 
 
+bool qLightmap_c::isDark() const
+{
+	int total = width * height * num_styles;
+
+	for (int i = 0 ; i < total ; i++)
+	{
+		const rgb_color_t col = samples[i];
+
+		if ((int)RGB_RED(col)   > 0) return false;
+		if ((int)RGB_GREEN(col) > 0) return false;
+		if ((int)RGB_BLUE(col)  > 0) return false;
+	}
+
+	return true;
+}
+
+
 void qLightmap_c::Write(qLump_c *lump)
 {
 	// (this only used for Q1 and Q2, not Q3)
@@ -460,19 +477,6 @@ public:
 		}
 
 		return true;  // Ok
-	}
-
-	void Copy(qLightmap_c *lmap)
-	{
-		for (int y = 0 ; y < lmap->height ; y++)
-		for (int x = 0 ; x < lmap->width  ; x++)
-		{
-			const rgb_color_t col = lmap->At(x, y);
-
-			samples[lmap->lx + x][lmap->ly + y][0] = RGB_RED(col);
-			samples[lmap->lx + x][lmap->ly + y][1] = RGB_GREEN(col);
-			samples[lmap->lx + x][lmap->ly + y][2] = RGB_BLUE(col);
-		}
 	}
 
 	void Write(qLump_c *lump) const
@@ -611,18 +615,6 @@ void QLIT_BuildQ3Lighting(int lump, int max_size)
 {
 	// pack individual lightmaps into the 128x128 blocks
 	// [ this is lousy for memory usage.... ]
-
-	for (unsigned int k = 0 ; k < qk_all_lightmaps.size() ; k++)
-	{
-		qLightmap_c *L = qk_all_lightmaps[k];
-
-		SYS_ASSERT(L->offset >= 0);
-
-		q3_lightmap_block_c *BL = all_q3_light_blocks[L->offset];
-		SYS_ASSERT(BL);
-
-		BL->Copy(L);
-	}
 
 	lightmap_lump = BSP_NewLump(lump);
 
@@ -1018,10 +1010,6 @@ fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 
 	F->lmap = QLIT_NewLightmap(lt_W, lt_H);
 
-	F->lmap->offset = Q3_AllocLightBlock(lt_W, lt_H, &F->lmap->lx, &F->lmap->ly);
-
-fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
-
 
 	// nudge amounts
 	double s_nudge = 0.6 / (lt_W + 1);
@@ -1074,36 +1062,25 @@ fprintf(stderr, "LM POSITION: (%3d %3d)\n", F->lmap->lx, F->lmap->ly);
 
 
 	// compute the UV matrix...
+	// [ the offsets in s[3] and t[3] are updated later, when block is allocated ]
 
 	uv_matrix_c *mat = F->lmap->lm_mat;
 
-	double s1 = (F->lmap->lx + 0.5);
-	double s2 = (F->lmap->lx + lt_W - 0.5);
+	double s3 = (lt_W - 1) / (double)LIGHTMAP_WIDTH;
+	double t3 = (lt_H - 1) / (double)LIGHTMAP_HEIGHT;
 
-	s1 /= (double)LIGHTMAP_WIDTH;
-	s2 /= (double)LIGHTMAP_WIDTH;
-
-	double t1 = (F->lmap->ly + 0.5);
-	double t2 = (F->lmap->ly + lt_H - 0.5);
-
-	t1 /= (double)LIGHTMAP_HEIGHT;
-	t2 /= (double)LIGHTMAP_HEIGHT;
-
-	fprintf(stderr, "want S range: %+1.7f .. %+1.7f\n", s1, s2);
-	fprintf(stderr, "want T range: %+1.7f .. %+1.7f\n", t1, t2);
-
-	double s_mul = (s2 - s1) / (max_s - min_s);
-	double t_mul = (t2 - t1) / (max_t - min_t);
+	double s_mul = s3 / (max_s - min_s);
+	double t_mul = t3 / (max_t - min_t);
 
 	mat->s[0] = s_mul * sx;
 	mat->s[1] = s_mul * sy;
 	mat->s[2] = s_mul * sz;
-	mat->s[3] = s_mul * -min_s + s1;
+	mat->s[3] = s_mul * -min_s;
 
 	mat->t[0] = t_mul * tx;
 	mat->t[1] = t_mul * ty;
 	mat->t[2] = t_mul * tz;
-	mat->t[3] = t_mul * -min_t + t1;
+	mat->t[3] = t_mul * -min_t;
 
 
 #if 0  // DEBUG
@@ -1167,6 +1144,44 @@ void qLightmap_c::Store()
 		byte b2 = b;
 
 		*dest++ = MAKE_RGBA(r2, g2, b2, 0);
+	}
+
+	if (qk_game >= 3 && isDark())
+	{
+fprintf(stderr, "DARK LIGHTMAP !\n");
+		offset = 0;
+	}
+	else if (qk_game >= 3)
+	{
+		// this is lousy for memory usage...
+		// [ but some stuff is using samples[], like CalcAverage() ]
+
+		offset = Q3_AllocLightBlock(width, height, &lx, &ly);
+		SYS_ASSERT(offset >= 0);
+
+fprintf(stderr, "LM POSITION: block #%d (%3d %3d)\n", offset, lx, ly);
+
+		double s1 = (lx + 0.5) / (double)LIGHTMAP_WIDTH;
+		double t1 = (ly + 0.5) / (double)LIGHTMAP_HEIGHT;
+
+		lm_mat->s[3] += s1;
+		lm_mat->t[3] += t1;
+
+		q3_lightmap_block_c *BL = all_q3_light_blocks[offset];
+		SYS_ASSERT(BL);
+
+		for (int y = 0 ; y < height ; y++)
+		for (int x = 0 ; x < width  ; x++)
+		{
+			const rgb_color_t col = At(x, y);
+
+			const int bx = lx + x;
+			const int by = ly + y;
+
+			BL->samples[bx][by][0] = RGB_RED(col);
+			BL->samples[bx][by][1] = RGB_GREEN(col);
+			BL->samples[bx][by][2] = RGB_BLUE(col);
+		}
 	}
 }
 
@@ -1530,7 +1545,7 @@ void QLIT_LightFace(quake_face_c *F)
 			QLIT_ProcessLight(F->lmap, qk_all_lights[i], pass);
 		}
 
-		if (lt_current_style >= 0)
+		if (pass == 0)
 		{
 			QLIT_LiquidLighting(F->lmap);
 
@@ -1849,11 +1864,22 @@ static void Q3_GridLighting()
 }
 
 
+void Q3_InitSharedBlock()
+{
+	int bx, by;
+
+	Q3_AllocLightBlock(2, 2, &bx, &by);
+}
+
+
 void QLIT_LightAllFaces()
 {
 	LogPrintf("\nLighting World...\n");
 
 	QLIT_FindLights();
+
+	if (qk_game >= 3)
+		Q3_InitSharedBlock();
 
 	LogPrintf("found %u lights\n", qk_all_lights.size());
 
