@@ -1592,9 +1592,8 @@ TITLE_COLOR_RAMPS =
 
   orange_white =
   {
-    {60,0,0}
-    {95,11,11}
-    {135,35,35}
+    {43,35,15}
+    {135,40,5}
     {215,95,11}
     {243,115,23}
     {255,235,219}
@@ -1689,8 +1688,8 @@ end
 function Title_gen_ray_burst()
   local mx, my
 
-  mx = rand.pick({30,280, 160,160})
-  my = rand.pick({-10,180, 80,90,100,100,110,120})
+  mx = rand.pick({30,270, 160,160})
+  my = rand.pick({-10,160, 80,90,100,100,110,120})
 
   local step = rand.pick({20,24,30,36})
 
@@ -1709,9 +1708,9 @@ function Title_gen_ray_burst()
     light_brown = 10
   }
 
-  local ray_color = rand.key_by_probs(ray_colors)
+  local color_name = rand.key_by_probs(ray_colors)
 
-  local color_list = TITLE_COLOR_RAMPS[ray_color]
+  local color_list = TITLE_COLOR_RAMPS[color_name]
   assert(color_list)
 
 
@@ -1801,26 +1800,47 @@ end
 
 
 function Title_gen_cave_scene()
-
   local sun_x = 2 / (6 ^ 0.5)
   local sun_y = 1 / (6 ^ 0.5)
   local sun_z = 1 / (6 ^ 0.5)
 
-  local colors = TITLE_COLOR_RAMPS["orange_white"]
+  if rand.odds(50) then sun_x = - sun_x end
 
-  if rand.odds(100) then sun_x = - sun_x end
-  if rand.odds(  0) then sun_z = - sun_z end
+  local tall_mode = rand.odds(75)
+
+
+  local cave_colors =
+  {
+    light_brown  = 60
+    brown_yellow = 60
+
+    red_white = 30
+    orange_white = 30
+    light_grey = 30
+
+    blue_white = 10
+    pink = 10
+    green = 10
+  }
+
+  local color_name = rand.key_by_probs(cave_colors)
+
+  local color_list = TITLE_COLOR_RAMPS[color_name]
+  assert(color_list)
 
 
   local function intensity(mx, r, sx, sy)
-    -- compute a normal vector
+    -- compute the normal vector
     local z = (sy - 99.5) / 99.5
+
+    if tall_mode then z = (sy / 190) ^ 1.4 end
 
     local x = (sx - mx) / (r + 1)
     x = x * x * sel(x < 0, -1, 1)
 
     local y = math.sqrt(1 - x*x)
 
+    -- normalize
     local len = math.sqrt(x*x + y*y + z*z)
 
     x = x / len
@@ -1832,20 +1852,33 @@ function Title_gen_cave_scene()
 
 
   local function draw_cone(mx, dist)
-    local col = { 255,0,0 }
+    local col = { 0,0,0 }
+
+    local dist_factor = 1.4 / (1 + math.log(dist + 0.5))
 
     for y = 0, 199 do
       -- calc radius at this point
       local r = math.abs(y - 99.5)
       r = 3 + r ^ 1.6 / 24
 
+      if (dist < 5) then
+        r = r + (5 - dist)
+      end
+
+      if tall_mode then
+        r = (y - (dist-1)*3) * 0.5
+        if r < 0 then continue end
+
+        r = 1.2 + r ^ 2.2 / 240
+      end
+
       for x = mx - r, mx + r do
         local ity = intensity(mx, r, x, y)
 
-        ity = math.clamp(0, ity, 1) * 225
-        ity = ity / (dist ^ 0.5) + 30 / dist
+        ity = math.clamp(0, ity, 1) ^ 0.7
+        ity = ity * dist_factor
 
-        Title_interp_color(colors, ity/255, col)
+        Title_interp_color(color_list, ity, col)
 
         gui.title_prop("color", col)
         gui.title_draw_rect(x, y, 1, 1)
@@ -1854,7 +1887,15 @@ function Title_gen_cave_scene()
   end
 
 
-  for dist = 50, 1, -1 do
+  -- cave scene --
+
+  if rand.odds(50) and not tall_mode then
+    gui.title_prop("color", "#ffa")
+    gui.title_draw_rect(0,0, 320,200)
+  end
+
+
+  for dist = 30, 1, -1 do
     local mx = rand.irange(5, 315)
 
     draw_cone(mx, dist)
@@ -2277,7 +2318,7 @@ function Title_make_titlepic()
   gui.title_set_palette(GAME.PALETTES.normal)
 
   if rand.odds(100) then
-    Title_gen_ray_burst()
+    Title_gen_cave_scene()
   else
     Title_gen_space_scene()
   end
