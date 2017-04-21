@@ -3,10 +3,24 @@ WORK IN PROGRESS
 ================
 
 
+EXIT_GENERIC
+
+
+!!!  handling of 2nd (etc) trunk rooms is now fucked
+
+     [ IDEA: make teleporter trunks part of the sprout process.
+             a room could create a closet for the teleporter,
+             and that causes a new trunk to be created... ]
+
+
+>>>  grower : when pruning rooms, totally remove dead joiners too
+
+
+??? on LAST max_loop attempt, set sprout_bbox to boundary_bbox
+
+
 Minor Goals
 -----------
-
--  grower : when pruning rooms, totally remove dead joiners too
 
 -  grower: compute a score early, do a check on first whole-seed
    "area" element and do the "max_size" check here too
@@ -21,12 +35,20 @@ stairs : prevent two stairs from touching
 steepness : IF exist on a rule AND room is outdoor THEN prob *= 0.5
 
 
-EXIT room in the first trunk:
--  error if exit room failed to take root
+
+Exit Rooms
+----------
+
++  force first area to be boss-monster spot (at least one), be tall enough
+
+??  if exit room failed to sprout (or that room was killed) then
+    force usage of a teleporter
+
 -  ensure room (and trunk) is never killed
+
 -  ensure a sprout is made, and grow that room ASAP
    [ if sprout room is killed or impossible, force a teleporter to exit ]
--  force first area to be boss-monster spot (at least one), be tall enough
+
 -  prevent first area from getting a decoration or floor sink
 
 
@@ -53,16 +75,8 @@ Quake3 CSG Code
 
 +  better triangulation  [ review q3map2 code ]
 
-+  lighting
-   >>  optimise detail face intersection
-
-   - "noshadow" for brushes / faces
-
-   + a shared lightmap for 100% low-light
-
-   + implement ambient system -- every face belongs to a "room" and
-     ambient value for the room is specified by Lua
-     [ for grid lighting, find face directly underneath point ]
++  implement ambient lighting -- every face belongs to a "room"
+   and ambient light(s) for the room is specified by Lua
 
 -  brushlib function to visit side faces, and if they
    contain u1/u2/v1/v2 then compute the uv_mat
@@ -72,13 +86,7 @@ Quake3 CSG Code
 
 LATER : re-implement super-sampling for lighting
 
-LATER : reject detail surfaces lying completely inside a solid brush
-
-DONE:  visibility
-DONE:  clip brushes
-DONE:  sky surfaces
-DONE:  sloped floors and ceilings
-DONE:  liquid areas and surfaces
-DONE:  mapmodels
-
+LATER : optimise detail face intersection
+        1. rebuild BSP tree ]
+        2. reject faces lying completely inside a solid brush
 
