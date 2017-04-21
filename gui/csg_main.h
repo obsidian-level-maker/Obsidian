@@ -164,6 +164,7 @@ typedef enum
 
 	BFLAG_NoClip   = (1 << 2),   // inhibit clipping for this brush
 	BFLAG_NoDraw   = (1 << 3),   // inhibit faces for this brush
+	BFLAG_NoShadow = (1 << 4),   // inhibit blocking of light (detail only)
 
 	// internal flags
 	BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box

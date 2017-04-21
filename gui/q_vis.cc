@@ -274,7 +274,7 @@ static int RecursiveTestDetail(quake_node_c *N,
 				if (! (F->flags & FACE_F_Detail))
 					continue;
 
-				if (F->flags & FACE_F_Model)
+				if (F->flags & FACE_F_NoShadow)
 					continue;
 
 				if (F->IntersectRay(x1,y1,z1, x2,y2,z2))

@@ -981,6 +981,9 @@ static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 
 	if (B->props.getInt("nodraw") > 0)
 		B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
+
+	if (B->props.getInt("noshadow") > 0)
+		B->bflags |= BFLAG_NoShadow | BFLAG_Detail;
 }
 
 

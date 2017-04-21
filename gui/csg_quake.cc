@@ -2410,6 +2410,9 @@ static void Detail_StoreFace(quake_face_c *F, csg_property_set_c *props,
 	else
 		F->flags |= FACE_F_Detail;
 
+	if (props->getInt("noshadow") > 0)
+		F->flags |= FACE_F_NoShadow;
+
 	if (uv_mat)
 		F->uv_mat.Set(uv_mat);
 	else
@@ -2460,6 +2463,9 @@ static void Detail_FloorOrCeilFace(csg_brush_c *B, bool is_ceil,
 
 		F->AddVert(V->x, V->y, z);
 	}
+
+	if (B->bflags & BFLAG_NoShadow)
+		F->flags |= FACE_F_NoShadow;
 
 	Detail_StoreFace(F, &BP.face, BP.uv_mat, touched_leafs, is_model);
 }
@@ -2522,6 +2528,9 @@ static void Detail_SideFace(csg_brush_c *B, unsigned int k,
 
 	SYS_ASSERT(F->verts.size() >= 3);
 
+
+	if (B->bflags & BFLAG_NoShadow)
+		F->flags |= FACE_F_NoShadow;
 
 	Detail_StoreFace(F, &V1->face, V1->uv_mat, touched_leafs, is_model);
 }
