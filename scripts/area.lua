@@ -243,19 +243,6 @@ function area_get_seed_bbox(A)
 end
 
 
-function AREA_CLASS.get_ctf_peer(A)
-  local S = A.seeds[1]
-  local N = S.ctf_peer
-
-  if not N then return nil end
-  assert(N.area)
-
-  if N.area == A then return nil end
-
-  return N.area
-end
-
-
 function area_get_bbox(A)
   local BB_X1, BB_Y1, BB_X2, BB_Y2 = area_get_seed_bbox(A)
 
@@ -600,6 +587,7 @@ end
 
 
 function Junction_calc_wall_tex(A1, A2)
+
   if A1.zone != A2.zone then
     if A1.room and not A1.is_outdoor then
       return assert(A1.room.main_tex)
@@ -1284,22 +1272,6 @@ end
 
 function Area_analyse_areas()
 
-  local function find_CTF_peers()
-    --
-    -- FIXME : REWRITE to be SEED based !
-    --         [ because areas are shared on each side of map ]
-    --
-    -- i.e. give each non-neutral seed a 'team' value
-    --
-
-    -- Do a flood fill through the level.
-    -- This spreading logic tries to keep teamed areas contiguous
-    -- (i.e. PREVENT pockets of one color surrounded by the other color).
-
-    -- TODO : add/grow the central neutral area [ upto a quota ]
-  end
-
-
   ---| Area_analyse_areas |---
 
   Area_calc_volumes()
@@ -1309,12 +1281,6 @@ function Area_analyse_areas()
   end
 
   Area_find_neighbors()
-
-  if OB_CONFIG.playmode == "ctf" then
-    error("CTF mode is broken!")
-
-    find_CTF_peers()
-  end
 
 --[[
   local total_seeds = 0

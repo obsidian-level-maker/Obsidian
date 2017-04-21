@@ -148,10 +148,6 @@ function Level_determine_map_size(LEV)
   if ob_size == "mixed" then
     local SIZES = { 24,26,29, 32,34,36, 40,44,48 }
 
-    if OB_CONFIG.playmode == "dm" then
-      SIZES = { 22,24,26, 30,34,38 }
-    end
-
     local W = rand.pick(SIZES)
     local H = rand.pick(SIZES)
 
@@ -178,22 +174,10 @@ function Level_determine_map_size(LEV)
     local W = SIZES[n]
     local H = W - 4
 
-    -- not so big in Deathmatch mode
-    if OB_CONFIG.playmode == "dm" then return H, H - 2 end
-
     return W, H
   end
 
   -- Named sizes --
-
-  -- smaller maps for Deathmatch mode
-  if OB_CONFIG.playmode == "dm" then
-    local SIZES = { small=20, regular=26, large=32, extreme=40 }
-
-    local W = SIZES[ob_size]
-
-    return W, W
-  end
 
   local SIZES = { small=24, regular=32, large=40, extreme=54 }
 
@@ -2089,12 +2073,6 @@ function Level_do_styles()
     if OB_CONFIG[name] and OB_CONFIG[name] != "mixed" then
       STYLE[name] = OB_CONFIG[name]
     end
-  end
-
-  -- never any traps/cages in DM or CTF maps
-  if OB_CONFIG.playmode == "dm" or OB_CONFIG.playmode == "ctf" then
-    STYLE.traps = "none"
-    STYLE.cages = "none"
   end
 
   -- if level needs a secret exit, make lots of secrets

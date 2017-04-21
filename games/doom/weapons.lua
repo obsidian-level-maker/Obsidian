@@ -20,7 +20,6 @@
 --
 -- level      : how far along (over episode) it should appear (1..9)
 -- add_prob   : probabiliiy of adding into level [absent = never]
--- dm_prob    : chance of being used in a Death-Match map
 --
 -- pref       : usage preference [absent = never]
 -- upgrades   : when present, always prefer this weapon over named one
@@ -156,7 +155,6 @@ DOOM.WEAPONS =
     pref = 20
     upgrades = "plasma"
     add_prob = 20
-    dm_prob = 6
     hide_prob = 35
     attack = "missile"
     rate = 0.8

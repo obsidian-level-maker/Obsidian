@@ -102,10 +102,6 @@ PLAYMODE_CHOICES =
 {
   "sp",   _("Single Player"),
   "coop", _("Co-op"),
-
--- TODO:
---  "dm",   _("Deathmatch"),
---  "ctf",  _("Capture Flag"),
 }
 
 LENGTH_CHOICES =
