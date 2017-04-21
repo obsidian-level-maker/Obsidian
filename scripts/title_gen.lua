@@ -1419,7 +1419,7 @@ TITLE_SUB_STYLES =
 }
 
 
-TITLE_BACKGROUND_STYLES =
+TITLE_SPACE_STYLES =
 {
   red_nebula =
   {
@@ -1640,6 +1640,8 @@ function Title_gen_space_scene()
 
 
   local function big_star(mx, my, r)
+    gui.title_prop("render_mode", "additive")
+
     local r2 = int(r * 1.2)
 
     local DD = 0.09
@@ -1666,21 +1668,71 @@ function Title_gen_space_scene()
   end
 
 
-  local style = Title_pick_style(TITLE_BACKGROUND_STYLES, {})
+  local function draw_small_star(mx, my, size, col)
+    -- determine brightness
+    local ity = rand.pick({64,96,120,144,160,224})
 
-  -- TODO : add stars
+    col[1] = ity
+    col[2] = ity
+    col[3] = ity
 
-  -- WISH : render a large star and/or a moon
+    gui.title_prop("color", col)
+
+    if size == 1 then
+      gui.title_draw_rect(mx, my, 1, 1)
+
+    elseif size == 2 then
+      gui.title_draw_rect(mx, my, 2, 2)
+
+    else
+      gui.title_draw_rect(mx, my, 1, 1)
+
+      col[1] = col[1] * 0.6
+      col[2] = col[2] * 0.6
+      col[3] = col[3] * 0.6
+
+      gui.title_prop("color", col)
+
+      gui.title_draw_rect(mx-1, my, 1, 1)
+      gui.title_draw_rect(mx+1, my, 1, 1)
+      gui.title_draw_rect(mx, my-1, 1, 1)
+      gui.title_draw_rect(mx, my+1, 1, 1)
+    end
+  end
+
+
+  local function little_stars()
+    gui.title_prop("render_mode", "additive")
+
+    local col = { 0,0,0 }
+
+    for x = 0, 319 do
+      local y = rand.irange(-100, -200)
+
+      while y < 200 do
+        if y >= 0 then
+          local size = 1
+          if rand.odds(10) then size = 3 end
+          if rand.odds(5)  then size = 2 end
+
+          draw_small_star(x, y, size, col)
+        end
+
+        y = y + rand.irange(16, 72)
+      end
+    end
+  end
+
+
+  local style = Title_pick_style(TITLE_SPACE_STYLES, {})
 
   gui.title_draw_clouds(TITLE_SEED, style.hue1, style.hue2, style.hue3,
                         style.thresh or 0, style.power or 1,
                         style.fracdim or 2.4)
 
-  gui.title_prop("render_mode", "additive")
+  little_stars()
 
-  big_star(80, 50, 30)
-
-  big_star(200, 150, 50)
+--  big_star(200, 150, 50)
 end
 
 
@@ -1826,7 +1878,6 @@ function Title_gen_wall_scene()
     col[3] = ity
 
     gui.title_prop("color", col)
-
     gui.title_draw_rect(x, y, 1, 1)
   end
   end
@@ -2357,14 +2408,18 @@ function Title_make_titlepic()
   gui.title_create(320, 200, "#000")
   gui.title_set_palette(GAME.PALETTES.normal)
 
-  if rand.odds(100) then
+  if rand.odds(10*0) then
+    Title_gen_ray_burst()
+  elseif rand.odds(20*0) then
+    Title_gen_cave_scene()
+  elseif rand.odds(35*0) then
     Title_gen_wall_scene()
   else
     Title_gen_space_scene()
   end
 
   Title_add_credit()
-        Title_add_title()
+--!!!!  Title_add_title()
 
   local format = "patch"
   if PARAM.tga_images then format = "tga" end
