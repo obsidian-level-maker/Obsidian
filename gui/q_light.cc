@@ -121,7 +121,7 @@ static liquid_coloring_t q_lava;
 
 void QLIT_InitProperties()
 {
-	q_lighting_quality = 0; // TODO: fast_lighting ? -1 : +1;
+	q_lighting_quality = 0;
 	q_mono_lighting    = false;
 
 	q3_luxel_size = 12.0;
@@ -177,7 +177,7 @@ rgb_color_t QLIT_ParseColorString(const char *name)
 
 bool QLIT_ParseProperty(const char *key, const char *value)
 {
-	if (StringCaseCmp(key, "lighting_quality") == 0)
+	if (StringCaseCmp(key, "q_lighting_quality") == 0)
 	{
 		if (StringCaseCmp(value, "low") == 0)
 			q_lighting_quality = -1;
@@ -198,12 +198,12 @@ bool QLIT_ParseProperty(const char *key, const char *value)
 		q_low_light = atoi(value);
 		return true;
 	}
-	else if (StringCaseCmp(key, "luxel_size") == 0)  // Q3 only
+	else if (StringCaseCmp(key, "q3_luxel_size") == 0)  // Q3 only
 	{
 		q3_luxel_size = atof(value);
 		return true;
 	}
-	else if (StringCaseCmp(key, "overbrighting") == 0)  // Q3 only
+	else if (StringCaseCmp(key, "q3_overbrighting") == 0)  // Q3 only
 	{
 		q3_overbrighting = (atoi(value) > 0);
 		return true;

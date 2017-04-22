@@ -67,7 +67,6 @@ bool wheel_can_bump = true;
 
 bool create_backups = true;
 bool debug_messages = false;
-bool fast_lighting = false;
 
 
 game_interface_c * game_object = NULL;

@@ -69,10 +69,6 @@ static void Parse_Option(const char *name, const char *value)
 	{
 		debug_messages = atoi(value) ? true : false;
 	}
-	else if (StringCaseCmp(name, "fast_lighting") == 0)
-	{
-		fast_lighting = atoi(value) ? true : false;
-	}
 	else if (StringCaseCmp(name, "last_file") == 0)
 	{
 //???		UI_SetLastFile(value);
@@ -206,7 +202,6 @@ bool Options_Save(const char *filename)
 
 	fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
 	fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
-	fprintf(option_fp, "fast_lighting  = %d\n",  fast_lighting ? 1 : 0);
 
 //???	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
 	fprintf(option_fp, "\n");
@@ -240,8 +235,6 @@ private:
 
 	Fl_Check_Button *opt_backups;
 	Fl_Check_Button *opt_debug;
-
-	Fl_Check_Button *opt_lighting;
 
 public:
 	UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -339,14 +332,6 @@ private:
 		debug_messages = that->opt_debug->value() ? true : false;
 		LogEnableDebug(debug_messages);
 	}
-
-	static void callback_Lighting(Fl_Widget *w, void *data)
-	{
-		UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-		fast_lighting = that->opt_lighting->value() ? true : false;
-	}
-
 };
 
 

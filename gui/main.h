@@ -65,7 +65,6 @@ extern bool wheel_can_bump;
 
 extern bool create_backups;
 extern bool debug_messages;
-extern bool fast_lighting;
 
 
 #ifdef __GNUC__
