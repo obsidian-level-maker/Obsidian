@@ -803,6 +803,65 @@ function brushlib.q3_liquid(brush, medium, top_tex)
 end
 
 
+function brushlib.solve_equation(X1,Y1,R1, X2,Y2,R2, X3,Y3,R3)
+  --
+  -- given the three simultaneous equations:
+  --    X1*a + Y1*b + c = R1
+  --    X2*a + Y2*b + c = R2
+  --    X3*a + Y3*b + c = R3
+  --
+  -- computes and returns: a, b, c
+  --
+
+  local a_num = (Y2 - Y1) * (R3 - R1) - (Y3 - Y1) * (R2 - R1)
+  local a_den = (Y2 - Y1) * (X3 - X1) - (Y3 - Y1) * (X2 - X1)
+
+  local b_num = (X2 - X1) * (R3 - R1) - (X3 - X1) * (R2 - R1)
+  local b_den = (X2 - X1) * (Y3 - Y1) - (X3 - X1) * (Y2 - Y1)
+
+  -- zero denominators should not occur, as that indicates a
+  -- degenerate triangle (e.g. two points at same location).
+  -- but we handle it anyway.
+
+  local a, b, c
+
+  if math.abs(a_den) < 0.0001 then
+    a = 0
+  else
+    a = a_num / a_den
+  end
+
+  if math.abs(b_den) < 0.0001 then
+    b = 0
+  else
+    b = b_num / b_den
+  end
+
+  c = R1 - (X1 * a) - (Y1 * b)
+
+--[[
+  -- DEBUGGING : check that alternate ways of computing 'c' gives
+  --             the same result.
+
+  local c2 = R2 - (X2 * a) - (Y2 * b)
+  local c3 = R3 - (X3 * a) - (Y3 * b)
+
+  -- TODO
+--]]
+
+  return a, b, c
+end
+
+
+function brushlib.combine_uv_matrix(u_mat, v_mat)
+  return
+  {
+    u_mat[1], u_mat[2], u_mat[3], u_mat[4],
+    v_mat[1], v_mat[2], v_mat[3], v_mat[4]
+  }
+end
+
+
 function brushlib.set_line_flag(brush, key, value)
   each C in brush do
     if C.x then
