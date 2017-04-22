@@ -2450,9 +2450,6 @@ function Area_create_rooms()
     Connect_directly(P)
   end
 
-  Connect_teleporters()
-
   Area_locate_chunks()
-
 end
 

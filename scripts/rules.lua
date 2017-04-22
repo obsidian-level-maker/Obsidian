@@ -1558,6 +1558,27 @@ SPROUT_JOINER_L =
 }
 
 
+SPROUT_TELEPORTER_2x2 =
+{
+  prob = 700
+
+  structure =
+  {
+    "..", "TT"
+    "..", "TT"
+    "11", "11"
+    "11", "11"
+  }
+
+  teleporter = true
+
+  closet =
+  {
+    from_dir = 2
+  }
+}
+
+
 ------------------------------------------
 
 

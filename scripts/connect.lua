@@ -215,7 +215,28 @@ end
 
 
 
-function Connect_teleporters()
+function Connect_teleporter_rooms(R1, R2)
+  gui.debugf("Teleporter connection: %s --> %s\n", R1.name, R2.name)
+
+  local C = CONN_CLASS.new("teleporter", R1, R2)
+
+  table.insert(C.R1.conns, C)
+  table.insert(C.R2.conns, C)
+
+  table.insert(C.R1.teleporters, C)
+  table.insert(C.R2.teleporters, C)
+
+  -- setup tag information
+  C.tele_tag1 = alloc_id("tag")
+  C.tele_tag2 = alloc_id("tag")
+
+  R1.used_chunks = R1.used_chunks + 1
+  R2.used_chunks = R2.used_chunks + 1
+end
+
+
+
+function Connect_teleporters__OLD()
 
   local function eval_room(R)
     -- exit room already has a connection
@@ -235,22 +256,6 @@ function Connect_teleporters()
 
 
   local function add_teleporter(R1, R2)
-    gui.debugf("Teleporter connection: %s --> %s\n", R1.name, R2.name)
-
-    local C = CONN_CLASS.new("teleporter", R1, R2)
-
-    table.insert(C.R1.conns, C)
-    table.insert(C.R2.conns, C)
-
-    table.insert(C.R1.teleporters, C)
-    table.insert(C.R2.teleporters, C)
-
-    -- setup tag information
-    C.tele_tag1 = alloc_id("tag")
-    C.tele_tag2 = alloc_id("tag")
-
-    R1.used_chunks = R1.used_chunks + 1
-    R2.used_chunks = R2.used_chunks + 1
   end
 
 

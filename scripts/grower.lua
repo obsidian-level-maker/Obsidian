@@ -1237,6 +1237,11 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
     if prob <= 0 then return 0 end
 
+    -- don't exceed trunk quota
+    if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
+      return 0
+    end
+
     -- environment check
     if rule.env != nil and rule.env != "any" then
       -- FIXME: support "!xxx" properly [ see prefab code ]
@@ -2292,22 +2297,20 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if is_create then
       new_room = R
 
-    else
-      if cur_rule.new_room then
-        local env = cur_rule.new_room.env  -- often NIL
+    elseif cur_rule.new_room then
+      local env = cur_rule.new_room.env  -- usually NIL
 
-        new_room = Grower_add_room(R, env)
+      new_room = Grower_add_room(R, env)
 
-        -- create a preliminary connection (last room to this one).
-        -- the seed and direction are determined later.
-        new_conn = Grower_new_prelim_conn(R, new_room)
+      -- create a preliminary connection (last room to this one).
+      -- the seed and direction are determined later.
+      new_conn = Grower_new_prelim_conn(R, new_room)
 --stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
 
-        local A = new_room.areas[1]
+      local A = new_room.areas[1]
 
-        A.no_grow   = cur_rule.no_grow
-        A.no_sprout = cur_rule.no_sprout
-      end
+      A.no_grow   = cur_rule.no_grow
+      A.no_sprout = cur_rule.no_sprout
     end
 
     if cur_rule.new_area and not new_area then
@@ -2337,6 +2340,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
   local function post_install(T)
     Seed_squarify()
+
+    if cur_rule.teleporter then
+      R.need_teleports = R.need_teleports + 1
+    end
 
     if new_room then
       local sym_prob = prob_for_symmetry(new_room)
@@ -2721,7 +2728,7 @@ function Grower_grow_room(R, create_it)
     end
 
     -- if a root failed to establish itself, kill the room
-    if not R.gx1 then
+    if R.kind == "DEAD" then
       if create_it == "force_exit" then
         error("Exit room could not be placed!")
       end
@@ -2732,6 +2739,7 @@ function Grower_grow_room(R, create_it)
       return
     end
   end
+
 
   Grower_grammatical_room(R, "grow")
 
@@ -2753,7 +2761,25 @@ end
 
 
 
-function Grower_create_trunks()
+function Grower_add_a_trunk()
+  local trunk =
+  {
+    id = alloc_id("trunk")
+    rooms = {}
+  }
+
+  trunk.name = string.format("TRUNK_%d", trunk.id)
+
+  table.insert(LEVEL.trunks, trunk)
+
+  gui.debugf("Added trunk: %s\n", trunk.name)
+
+  return trunk
+end
+
+
+
+function Grower_begin_trunks()
   --
   -- Trunks are parts of the map grown separately, and will be
   -- connected via teleporters.
@@ -2766,54 +2792,58 @@ function Grower_create_trunks()
   -- room to grow is the one sprouted off it).
   --
 
-  local trunk_num = 1
-
-  LEVEL.trunks = {}
-
+  local max_trunks = 1
 
   if PARAM.teleporters then
-    local prob1 = style_sel("teleporters", 0, 33, 66, 99)
+    local prob1 = style_sel("teleporters", 0, 20, 50, 99)
     local prob2 = style_sel("teleporters", 0, 10, 30, 60)
 
     if rand.odds(prob1) then
-      trunk_num = trunk_num + 1
+      max_trunks = max_trunks + 1
 
-      if rand.odds(prob2) then trunk_num = trunk_num + 1 end
-      if rand.odds(prob2) then trunk_num = trunk_num + 1 end
+      if rand.odds(prob2) then max_trunks = max_trunks + 1 end
+      if rand.odds(prob2) then max_trunks = max_trunks + 1 end
     end
   end
 
+  LEVEL.trunks = {}
 
-  for i = 1, trunk_num do
-    local trunk =
-    {
-      id = alloc_id("trunk")
-      rooms = {}
-    }
+  LEVEL.max_trunks = 9  -- FIXME !!!!  max_trunks
 
-    trunk.name = string.format("TRUNK_%d", trunk.id)
 
-    table.insert(LEVEL.trunks, trunk)
+  -- create first trunk and the exit room
 
-    gui.debugf("Created %s\n", trunk.name)
+  local trunk = Grower_add_a_trunk()
 
-    local env
+  local R = Grower_add_room(nil, nil, trunk)  -- no parent
 
-    if rand.odds(LEVEL.cave_trunk_prob) and i >= 2 then
-      env = "cave"
-    end
+  Grower_grow_room(R, "force_exit")
+end
 
-    if i == 1 then
-      env = nil
-    end
 
-    local R = Grower_add_room(nil, env, trunk)  -- no parent
 
-    -- first trunk is always the exit room
-    if i == 1 then
-      Grower_grow_room(R, "force_exit")
-    end
+function Grower_add_teleporter_trunk(parent_R)
+
+  local trunk = Grower_add_a_trunk()
+
+--[[ FIXME
+  local env
+
+  if rand.odds(LEVEL.cave_trunk_prob) then
+    env = "cave"
   end
+--]]
+
+  local R = Grower_add_room(nil, env, trunk)  -- no parent
+
+  Grower_grow_room(R, "create_it")
+
+  if R.kind == "DEAD" then
+    -- trunk should be dead too
+    return
+  end
+
+  Connect_teleporter_rooms(parent_R, R)
 end
 
 
@@ -2978,6 +3008,7 @@ function Grower_grow_all_rooms()
   local function check_all_grown()
     each R in LEVEL.rooms do
       if not R.is_grown then return false end
+      if R.need_teleports > 0 then return false end
     end
 
     return true
@@ -2991,6 +3022,11 @@ function Grower_grow_all_rooms()
     each R in LEVEL.rooms do
       if not R.is_grown then
         table.insert(room_list, R)
+      end
+
+      if R.need_teleports > 0 then
+        R.need_teleports = R.need_teleports - 1
+        Grower_add_teleporter_trunk(R)
       end
     end
 
@@ -3391,7 +3427,7 @@ function Grower_create_rooms()
 
   Grower_decide_extents()
 
-  Grower_create_trunks()
+  Grower_begin_trunks()
   Grower_grow_all_rooms()
   Grower_cave_stats()
 

@@ -134,6 +134,7 @@ function ROOM_CLASS.new()
     svolume = 0
     total_inner_points = 0
     num_windows = 0
+    need_teleports = 0
 
     areas = {}
     seeds = {}
@@ -246,9 +247,7 @@ function ROOM_CLASS.kill_it(R)
 
   -- sanity check
   each C in LEVEL.conns do
-    if (C.A1.room == R and C.A2.room != R) or
-       (C.A2.room == R and C.A1.room != R)
-    then
+    if (C.R1 == R) or (C.R2 == R) then
       error("Killed a connected room!")
     end
   end
@@ -263,10 +262,11 @@ function ROOM_CLASS.kill_it(R)
     A:kill_it()
   end
 
-  R.areas = nil
-
   R.name = "DEAD_" .. R.name
   R.kind = "DEAD"
+  R.is_dead = true
+
+  R.areas = nil
   R.hallway = nil
   R.trunk = nil
 
