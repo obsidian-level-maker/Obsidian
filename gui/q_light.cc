@@ -39,20 +39,7 @@
 #include "csg_quake.h"
 
 
-#if 1  // fixme: quake defaults
-
-#define DEFAULT_LIGHTLEVEL  150
-#define DEFAULT_SUNLEVEL    30
-#define DEFAULT_FACTOR      2.0  // radius multiplier
-
-#else
-
-#define DEFAULT_LIGHTLEVEL  192
-#define DEFAULT_SUNLEVEL    208
-#define DEFAULT_FACTOR      1.0
-
-#endif
-
+#define DEFAULT_LIGHT_RADIUS	300
 
 #define WHITE	MAKE_RGBA(255, 255, 255, 0)
 
@@ -1341,19 +1328,15 @@ static void QLIT_FindLights()
 		light.y = E->y;
 		light.z = E->z;
 
-		float default_level = (light.kind == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
+		light.radius = E->props.getDouble("radius", DEFAULT_LIGHT_RADIUS);
 
-		float level  = E->props.getDouble("light", default_level);
+		light.level  = E->props.getDouble("level",  light.radius * 0.5);
+		light.level  = light.level * 256.0;
 
-		light.factor = E->props.getDouble("factor", DEFAULT_FACTOR);
-		light.radius = level * light.factor;
-
-		if (level < 1 || light.radius < 1)
+		if (light.level < 1 || light.radius < 1)
 			continue;
 
 		light.color = QLIT_ParseColorString(E->props.getStr("color"));
-
-		light.level = (int) level;
 		light.style = E->props.getInt("style", 0);
 
 		qk_all_lights.push_back(light);
@@ -1439,7 +1422,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 
 		if (light.kind == LTK_Sun)
 		{
-			Bump(s, t, light.level, light.color);
+			Bump(s, t, (int)light.level, light.color);
 		}
 		else
 		{
@@ -1693,8 +1676,7 @@ static void Q3_ProcessLightForGrid(quake_light_t& light,
 	if (! QVIS_TraceRay(gx, gy, gz, light.x, light.y, light.z))
 		return;
 
-
-	int value = light.level;
+	int value = (int)light.level;
 
 	if (light.kind != LTK_Sun)
 		value = value * (1.0 - dist / light.radius);
