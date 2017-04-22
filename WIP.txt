@@ -64,6 +64,8 @@ Major Goals
 
 +  hallway system
    -  made up of pieces (each one is a prefab)
+   -  "terminator" pieces between hall and room
+      [ need plain, key locked, switch locked versions... ]
    -  a "vent" style
    -  a "curvey" style like in V5
    -  a wide-ish one with stairs, like in V4
@@ -83,8 +85,6 @@ Quake3 CSG Code
 
 -  brushlib function to visit top/bottom faces, and generate
    a uv_mat if the sides contain tu/tv/bu/bv values
-
-LATER : re-implement super-sampling for lighting
 
 LATER : optimise detail face intersection
         1. rebuild BSP tree ]
