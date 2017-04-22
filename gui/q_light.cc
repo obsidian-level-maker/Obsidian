@@ -45,7 +45,7 @@
 
 
 // 0 = normal, -1 = fast, +1 = best
-static int q_lighting_quality = 0;
+static int q_light_quality = 0;
 
 bool q_mono_lighting = false;
 
@@ -108,8 +108,8 @@ static liquid_coloring_t q_lava;
 
 void QLIT_InitProperties()
 {
-	q_lighting_quality = 0;
-	q_mono_lighting    = false;
+	q_light_quality = 0;
+	q_mono_lighting = false;
 
 	q3_luxel_size = 12.0;
 	q3_overbrighting = false;
@@ -164,14 +164,14 @@ rgb_color_t QLIT_ParseColorString(const char *name)
 
 bool QLIT_ParseProperty(const char *key, const char *value)
 {
-	if (StringCaseCmp(key, "q_lighting_quality") == 0)
+	if (StringCaseCmp(key, "q_light_quality") == 0)
 	{
 		if (StringCaseCmp(value, "low") == 0)
-			q_lighting_quality = -1;
+			q_light_quality = -1;
 		else if (StringCaseCmp(value, "high") == 0)
-			q_lighting_quality = +1;
+			q_light_quality = +1;
 		else
-			q_lighting_quality = 0;
+			q_light_quality = 0;
 
 		return true;
 	}
@@ -789,7 +789,7 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 	float s_step = 16.0;
 	float t_step = 16.0;
 
-	if (q_lighting_quality > 0)  // "best" mode
+	if (q_light_quality > 0)  // "best" mode
 	{
 		s_step = 16 * (lt_W - 1) / (float)(lt_W*2 - 1);
 		t_step = 16 * (lt_H - 1) / (float)(lt_H*2 - 1);
@@ -998,14 +998,54 @@ fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 	F->lmap = QLIT_NewLightmap(lt_W, lt_H);
 
 
-	// nudge amounts
-	double s_nudge = 0.6 / (lt_W + 1);
-	double t_nudge = 0.6 / (lt_H + 1);
+	// compute the UV matrix...
+	// [ the offsets in s[3] and t[3] are updated later, when block is allocated ]
+
+	uv_matrix_c *mat = F->lmap->lm_mat;
+
+	double s3 = (lt_W - 1) / (double)LIGHTMAP_WIDTH;
+	double t3 = (lt_H - 1) / (double)LIGHTMAP_HEIGHT;
+
+	double s_mul = s3 / (max_s - min_s);
+	double t_mul = t3 / (max_t - min_t);
+
+	mat->s[0] = s_mul * sx;
+	mat->s[1] = s_mul * sy;
+	mat->s[2] = s_mul * sz;
+	mat->s[3] = s_mul * -min_s;
+
+	mat->t[0] = t_mul * tx;
+	mat->t[1] = t_mul * ty;
+	mat->t[2] = t_mul * tz;
+	mat->t[3] = t_mul * -min_t;
+
+
+#if 0  // DEBUG
+	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
+	{
+		const quake_vertex_c *V = &F->verts[k];
+
+		double s = mat->Calc_S(V->x, V->y, V->z);
+		double t = mat->Calc_T(V->x, V->y, V->z);
+
+		fprintf(stderr, "  LM coord (%+7.6f %+7.6f)\n", s, t);
+	}
+#endif
 
 
 	// create the points...
 
+	// nudge amounts
+	double s_nudge = 0.6 / (lt_W + 1);
+	double t_nudge = 0.6 / (lt_H + 1);
+
 	const float away = 0.5;
+
+	if (q_light_quality > 0)
+	{
+		lt_W *= 2;
+		lt_H *= 2;
+	}
 
 	for (int py = 0 ; py < lt_H ; py++)
 	for (int px = 0 ; px < lt_W ; px++)
@@ -1046,41 +1086,6 @@ fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 ///		fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f %+7.2f) medium:%d\n",
 ///				px, py, P.x, P.y, P.z, P.medium);
 	}
-
-
-	// compute the UV matrix...
-	// [ the offsets in s[3] and t[3] are updated later, when block is allocated ]
-
-	uv_matrix_c *mat = F->lmap->lm_mat;
-
-	double s3 = (lt_W - 1) / (double)LIGHTMAP_WIDTH;
-	double t3 = (lt_H - 1) / (double)LIGHTMAP_HEIGHT;
-
-	double s_mul = s3 / (max_s - min_s);
-	double t_mul = t3 / (max_t - min_t);
-
-	mat->s[0] = s_mul * sx;
-	mat->s[1] = s_mul * sy;
-	mat->s[2] = s_mul * sz;
-	mat->s[3] = s_mul * -min_s;
-
-	mat->t[0] = t_mul * tx;
-	mat->t[1] = t_mul * ty;
-	mat->t[2] = t_mul * tz;
-	mat->t[3] = t_mul * -min_t;
-
-
-#if 0  // DEBUG
-	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
-	{
-		const quake_vertex_c *V = &F->verts[k];
-
-		double s = mat->Calc_S(V->x, V->y, V->z);
-		double t = mat->Calc_T(V->x, V->y, V->z);
-
-		fprintf(stderr, "  LM coord (%+7.6f %+7.6f)\n", s, t);
-	}
-#endif
 }
 
 
@@ -1532,7 +1537,8 @@ void QLIT_LightFace(quake_face_c *F)
 
 			HandleOffFaceLuxels();
 
-			// if (lighting_quality > 0) FilterSuperSamples()
+			if (q_light_quality > 0)
+				FilterSuperSamples();
 
 			F->lmap->Store();
 		}
