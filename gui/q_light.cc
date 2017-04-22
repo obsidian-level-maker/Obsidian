@@ -1329,9 +1329,7 @@ static void QLIT_FindLights()
 		light.z = E->z;
 
 		light.radius = E->props.getDouble("radius", DEFAULT_LIGHT_RADIUS);
-
 		light.level  = E->props.getDouble("level",  light.radius * 0.5);
-		light.level  = light.level * 256.0;
 
 		if (light.level < 1 || light.radius < 1)
 			continue;

@@ -96,9 +96,7 @@ typedef struct
 
 	float x, y, z;
 	float radius;
-
 	float level;   // brightest level (at dist = 0)
-	               // pre-multiplied by 256
 
 	rgb_color_t color;
 	int style;

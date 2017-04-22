@@ -1080,7 +1080,7 @@ function Quake3_test()
 
 
   Trans.entity("player1", 80, 256, 130)
-  Trans.entity("light",   80, 256, 160, { light=200 })
+  Trans.entity("light",   80, 256, 160, { radius=200 })
 
 
   -- corner test --
@@ -1167,6 +1167,11 @@ function Quake3_conversion()
   end
 
   each E in all_entities do
+    if E.light then
+      E.radius = E.light * 1.5
+      E.light  = nil
+    end
+
     if E.id != "nothing" then
       raw_add_entity(E)
     end
