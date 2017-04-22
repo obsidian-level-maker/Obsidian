@@ -2346,6 +2346,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     if new_room then
+      assert(new_room.gx1)
+
       local sym_prob = prob_for_symmetry(new_room)
 
       if rand.odds(sym_prob) then
@@ -2696,50 +2698,27 @@ end
 
 
 function Grower_grammatical_room(R, pass, is_emergency)
-  gui.ticker()
-
+  -- this is for "grow" pass
   local apply_num = rand.pick({ 10,20,30 })
 
-  if pass == "root" then apply_num = 1 end
   if pass == "sprout" then apply_num = rand.pick({ 1,2,2,3 }) end
   if pass == "terminate" then apply_num = 10 end --- TODO : number of active links
   if pass == "decorate" then apply_num = 7 end --- TODO
+
+  if pass == "sprout" and R.is_exit then apply_num = 1 end
 
   local stop_prob = 0
 
   if pass == "grow"     then stop_prob =  5 end
   if pass == "decorate" then stop_prob = 10 end
 
-  Grower_grammatical_pass(R, pass, apply_num, stop_prob, nil, pass == "root", is_emergency)
+  Grower_grammatical_pass(R, pass, apply_num, stop_prob, nil, nil, is_emergency)
 end
 
 
 
-function Grower_grow_room(R, create_it)
-
-  if create_it then
-    if create_it == "force_exit" then
-      R.is_exit = true
-      LEVEL.exit_room = R
-
-      Grower_grammatical_pass(R, "exit_root", 1, 0, nil, "is_create", nil)
-    else
-      Grower_grammatical_room(R, "root")
-    end
-
-    -- if a root failed to establish itself, kill the room
-    if R.kind == "DEAD" then
-      if create_it == "force_exit" then
-        error("Exit room could not be placed!")
-      end
-
-      gui.debugf("%s could not establish a root, killing it\n", R.name)
-
-      R:kill_it()
-      return
-    end
-  end
-
+function Grower_grow_room(R)
+  gui.ticker()
 
   Grower_grammatical_room(R, "grow")
 
@@ -2749,14 +2728,51 @@ function Grower_grow_room(R, create_it)
     --        [ when WHOLE thing, often try "grow" again ]
     clean_up_links(R)
 
-  elseif create_it == "force_exit" then
-    Grower_grammatical_pass(R, "sprout", 1, 0)
-
   else
     Grower_grammatical_room(R, "sprout")
   end
 
   R.is_grown = true
+end
+
+
+
+function Grower_create_and_grow_room(create_it, env, trunk)
+  -- create the ROOM object
+  local R = Grower_add_room(nil, env, trunk)
+  assert(R)
+
+
+  -- apply a root rule for it
+  local pass = "root"
+
+  if create_it == "force_exit" then
+    pass = "exit_root"
+
+    R.is_exit = true
+    LEVEL.exit_room = R
+  end
+
+  Grower_grammatical_pass(R, pass, 1, 0, nil, "is_create", nil)
+
+
+  -- if a root failed to establish itself, kill the room
+  if R.gx1 == nil then
+    if create_it == "force_exit" then
+      error("Exit room could not be placed!")
+    end
+
+    gui.debugf("%s could not establish a root, killing it\n", R.name)
+
+    R:kill_it()
+    return R
+  end
+
+
+  -- grow it now
+  Grower_grow_room(R)
+
+  return R
 end
 
 
@@ -2815,9 +2831,9 @@ function Grower_begin_trunks()
 
   local trunk = Grower_add_a_trunk()
 
-  local R = Grower_add_room(nil, nil, trunk)  -- no parent
+  local R = Grower_create_and_grow_room("force_exit", nil, trunk)
 
-  Grower_grow_room(R, "force_exit")
+  assert(not R.is_dead)
 end
 
 
@@ -2834,11 +2850,9 @@ function Grower_add_teleporter_trunk(parent_R)
   end
 --]]
 
-  local R = Grower_add_room(nil, env, trunk)  -- no parent
+  local R = Grower_create_and_grow_room("create_it", env, trunk)
 
-  Grower_grow_room(R, "create_it")
-
-  if R.kind == "DEAD" then
+  if R.is_dead then
     -- trunk should be dead too
     return
   end
