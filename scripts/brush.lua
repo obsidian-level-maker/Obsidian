@@ -492,7 +492,7 @@ function Mat_lookup_flat(name)
 
   if not mat then
     gui.printf("\nLACKING MATERIAL : %s\n\n", name)
-    
+
     -- prevent further messages (create a new material)
     local src_mat = assert(GAME.MATERIALS["_DEFAULT"])
 
@@ -580,7 +580,7 @@ function brushlib.dump(brush, title)
       end
 
       if pos then
-        table.insert(field_list, pos, name) 
+        table.insert(field_list, pos, name)
       else
         table.insert(field_list, name)
       end
@@ -590,7 +590,7 @@ function brushlib.dump(brush, title)
 
     each name in field_list do
       local val = C[name]
-      
+
       if _index > 1 then line = line .. ", " end
 
       line = line .. string.format("%s=%s", name, tostring(val))
@@ -850,6 +850,43 @@ function brushlib.solve_equation(X1,Y1,R1, X2,Y2,R2, X3,Y3,R3)
 --]]
 
   return a, b, c
+end
+
+
+function brushlib.calc_uv_vector(mode, x1,y1,z1,r1, x2,y2,z2,r2,
+                                 x3,y3,z3,r3, out_mat)
+
+  -- mode can be "xy", "xz" or "yz"
+  -- [ the other coordinate is linearly dependent on those two
+  --   since a triangle always lies on a plane ]
+
+  if mode == "xz" then
+    y1, y2, y3 = z1, z2, z3
+
+  elseif mode == "yz" then
+    x1, x2, x3 = y1, y2, y3
+    y1, y2, y3 = z1, z2, z3
+  end
+
+  local a,b,c = brushlib.solve_equation(x1,y1,r1, x2,y2,r2, x3,y3,r3)
+
+  out_mat[4] = c
+
+  if mode == "xy" then
+    out_mat[1] = a
+    out_mat[2] = b
+    out_mat[3] = 0
+
+  elseif mode == "xz" then
+    out_mat[1] = a
+    out_mat[2] = 0
+    out_mat[3] = b
+
+  else
+    out_mat[1] = 0
+    out_mat[2] = a
+    out_mat[3] = b
+  end
 end
 
 
