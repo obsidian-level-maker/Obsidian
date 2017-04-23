@@ -874,7 +874,7 @@ function Cave_create_areas(R)
     local cx2, cy2
 
     local touched_groups
-    
+
 
     -- mark free areas with zero instead of negative
     for fx = 1, cw do
@@ -1143,8 +1143,8 @@ function Cave_bunch_areas(R, mode)
   --|
   --| this picks a bunch of step areas which will become either liquid
   --| or sky (depending on 'mode' parameter).
-  --| 
-  
+  --|
+
   local info = R.cave_info
 
 
@@ -1475,7 +1475,7 @@ function Cave_floor_heights(R, entry_h)
           C.conn_h  = imp.area.floor_h
         end
       end
-    end 
+    end
   end
 
 
@@ -1511,12 +1511,12 @@ function Cave_floor_heights(R, entry_h)
       info. wall.floor_h = info.fence.floor_h
 
       R.cave_fence_z = info.fence.floor_h
-    
+
     elseif info.sky_mode == "low_wall" then
       info.wall.floor_h = R.floor_max_h + 80
 
       R.cave_fence_z = info.wall.floor_h
-    
+
     else
       -- do not need a cave_fence_z
     end
@@ -1527,7 +1527,7 @@ function Cave_floor_heights(R, entry_h)
     for pass = 1,4 do
       each A in info.lakes do
         if not A.floor_h then
-        
+
           local f_h = Cave_heights_near_area(R, A)
 
           if f_h then
@@ -1773,7 +1773,7 @@ function Render_cells(base_area)
   local function cell_middle(x, y)
     local mx = info.x1 + (x - 1) * 64 + 32
     local my = info.y1 + (y - 1) * 64 + 32
-  
+
     return mx, my
   end
 
@@ -1934,7 +1934,7 @@ function Render_cells(base_area)
   local function heights_near_island(island)
     local min_floor =  9e9
     local max_ceil  = -9e9
-  
+
     for x = 1, info.W do
     for y = 1, info.H do
       if ((island:get(x, y) or 0) > 0) then
@@ -2075,7 +2075,7 @@ function Render_cells(base_area)
 
 
   ---| Render_cells |---
-  
+
   Trans.clear()
 
   Ambient_push(base_area.base_light)
@@ -2296,7 +2296,7 @@ function Cave_lake_fences(R)
     return
   end
 
-  local FENCE =  
+  local FENCE =
   {
     is_fence = true
 
@@ -2383,7 +2383,7 @@ function Cave_make_waterfalls(R)
       if not cave:valid_cell(ox, oy) then return false end
 
       local B2 = info.blocks[ox][oy]
-      
+
       if not B2 or B2 == lake then return false end
 
       -- found another lake?
@@ -2404,7 +2404,7 @@ function Cave_make_waterfalls(R)
     for dist = 1, length do
       local ox, oy = geom.nudge(x, y, dir, dist)
 
-      if can_still_traverse(ox, oy, dir) then 
+      if can_still_traverse(ox, oy, dir) then
         trav_count = trav_count + 1
       end
     end
@@ -2516,13 +2516,13 @@ function Cave_make_waterfalls(R)
     for i = 0, 7 do
       local nx, ny = geom.nudge(cx, cy, dir, i)
       if not cave:valid_cell(nx, ny) then return false end
-      
+
       local BL = info.blocks[nx][ny]
       if not BL or BL.is_wall or BL.goal_type then return false end
 
       -- do not join onto a previously built waterfall
       if BL.is_waterfall then return false end
-      
+
       if BL.is_fence then
         str = str .. "F"
       elseif BL.is_liquid then
@@ -2748,7 +2748,7 @@ function Cave_decorations(R)
     for x = 2, info.W - 1 do
     for y = 2, info.H - 1 do
       if usable_corner(x, y) then
-        table.insert(locs, { cx=x, cy=y })    
+        table.insert(locs, { cx=x, cy=y })
       end
     end
     end
@@ -3125,7 +3125,7 @@ function Cave_determine_spots(R)
       end
     end end -- dir
 
-    if touches then 
+    if touches then
       local poly = Cave_brush(info, x, y)
 
       if not A2 or A2.is_wall then
@@ -3169,7 +3169,7 @@ function Cave_determine_spots(R)
 
     -- determine bbox (with a bit extra)
     local x1 = info.x1 + (A.cx1 - 2) * 64
-    local y1 = info.y1 + (A.cy1 - 2) * 64 
+    local y1 = info.y1 + (A.cy1 - 2) * 64
 
     local x2 = info.x1 + (A.cx2 + 1) * 64
     local y2 = info.y1 + (A.cy2 + 1) * 64
@@ -3309,7 +3309,7 @@ function Cave_outdoor_borders()
     local ent =
     {
       id = "oblige_box"
-      
+
       box_type = "outdoor"
 
       x1 = S1.x1
@@ -3350,7 +3350,7 @@ function Cave_outdoor_borders()
     if S.sun_done then return end
 
     if not is_seed_outdoor(S) then return end
-    
+
     if test_range_for_outdoor(sx, sy, 3, 3) or
        test_range_for_outdoor(sx, sy, 2, 2) or
        test_range_for_outdoor(sx, sy, 1, 1)
