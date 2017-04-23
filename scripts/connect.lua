@@ -121,7 +121,7 @@ end
 
 
 function Connect_directly(P)
-  local kind = P.kind or "edge"
+  local kind = P.kind
 
   gui.debugf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
 
@@ -215,7 +215,10 @@ end
 
 
 
-function Connect_teleporter_rooms(R1, R2)
+function Connect_teleporter_rooms(P)
+  local R1 = P.R1
+  local R2 = P.R2
+
   gui.debugf("Teleporter connection: %s --> %s\n", R1.name, R2.name)
 
   local C = CONN_CLASS.new("teleporter", R1, R2)
@@ -232,5 +235,19 @@ function Connect_teleporter_rooms(R1, R2)
 
   R1.used_chunks = R1.used_chunks + 1
   R2.used_chunks = R2.used_chunks + 1
+end
+
+
+
+function Connect_finalize()
+  each P in LEVEL.prelim_conns do
+    assert(P.kind)
+
+    if P.kind == "teleporter" then
+      Connect_teleporter_rooms(P)
+    else
+      Connect_directly(P)
+    end
+  end
 end
 

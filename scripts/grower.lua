@@ -1017,15 +1017,24 @@ function Grower_new_prelim_conn(R1, R2, kind)
   {
     R1 = R1
     R2 = R2
+    kind = kind
   }
-
-  if kind then
-    PC.kind = kind
-  end
 
   table.insert(LEVEL.prelim_conns, PC)
 
   return PC
+end
+
+
+function Grower_kill_prelim_conn(PC)
+  PC.kind  = "DEAD"
+  PC.is_dead = true
+
+  PC.R1    = nil
+  PC.R2    = nil
+  PC.chunk = nil
+
+  table.kill_elem(LEVEL.prelim_conns, PC)
 end
 
 
@@ -2304,7 +2313,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
       -- create a preliminary connection (last room to this one).
       -- the seed and direction are determined later.
-      new_conn = Grower_new_prelim_conn(R, new_room)
+      new_conn = Grower_new_prelim_conn(R, new_room, "edge")
 --stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
 
       local A = new_room.areas[1]
@@ -2857,7 +2866,7 @@ function Grower_add_teleporter_trunk(parent_R)
     return
   end
 
-  Connect_teleporter_rooms(parent_R, R)
+  Grower_new_prelim_conn(parent_R, R, "teleporter")
 end
 
 
@@ -2908,17 +2917,6 @@ function Grower_prune_small_rooms()
   end
 
 
-  local function kill_prelim_conn(PC)
-    PC.kind  = "DEAD"
-    PC.R1    = nil
-    PC.R2    = nil
-    PC.chunk = nil
-    PC.is_dead = true
-
-    table.kill_elem(LEVEL.prelim_conns, PC)
-  end
-
-
   local function prune_room(R)
     gui.debugf("Prune small room %s\n", R.name)
 
@@ -2939,7 +2937,7 @@ function Grower_prune_small_rooms()
         kill_joiner(N, PC.chunk)
       end
 
-      kill_prelim_conn(PC)
+      Grower_kill_prelim_conn(PC)
     end
 
     R:kill_it()

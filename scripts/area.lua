@@ -2446,9 +2446,7 @@ function Area_create_rooms()
   end
 
 
-  each P in LEVEL.prelim_conns do
-    Connect_directly(P)
-  end
+  Connect_finalize()
 
   Area_locate_chunks()
 end
