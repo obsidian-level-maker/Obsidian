@@ -2700,11 +2700,29 @@ function Grower_grammatical_room(R, pass, is_emergency)
   -- this is for "grow" pass
   local apply_num = rand.pick({ 10,20,30 })
 
-  if pass == "sprout" then apply_num = rand.pick({ 1,2,2,3 }) end
-  if pass == "terminate" then apply_num = 10 end --- TODO : number of active links
-  if pass == "decorate" then apply_num = 7 end --- TODO
+  if pass == "grow" then
+    apply_num = rand.pick({ 10,20,30 })
 
-  if pass == "sprout" and R.is_exit then apply_num = 1 end
+  elseif pass == "sprout" then
+    if R.is_exit then
+      apply_num = 1
+    else
+      apply_num = rand.pick({ 1,2,2,3 })
+    end
+
+  elseif pass == "terminate" then
+    apply_num = 10  -- TODO : number of active links
+
+  elseif pass == "decorate" then
+    apply_num = 7   -- TODO
+
+  elseif pass == "park_fill" then
+    apply_num = 15
+
+  else
+    error("unknown grammar pass: " .. tostring(pass))
+  end
+
 
   local stop_prob = 0
 
@@ -3127,6 +3145,20 @@ end
 
 
 
+function Grower_expand_parks()
+  local room_list = table.copy(LEVEL.rooms)
+
+  rand.shuffle(room_list)
+
+  each R in room_list do
+    if R.is_park then
+      Grower_grammatical_room(R, "park_fill")
+    end
+  end
+end
+
+
+
 function Grower_flatten_outdoor_fences()
 
   local sx1, sy1
@@ -3434,6 +3466,7 @@ function Grower_create_rooms()
   Grower_cave_stats()
 
   Grower_decorate_rooms()
+  Grower_expand_parks()
 --TODO  Grower_flatten_outdoor_fences()
   Grower_split_liquids()
 
