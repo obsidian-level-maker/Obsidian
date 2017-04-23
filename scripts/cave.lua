@@ -1624,9 +1624,6 @@ function Render_cells(base_area)
   local delta_x_map
   local delta_y_map
 
-  local dw = info.W + 1
-  local dh = info.H + 1
-
 
   local function grab_cell(x, y)
     -- Produce a string representing the cell, or NIL for invalid cells.
@@ -1635,7 +1632,7 @@ function Render_cells(base_area)
     --    F is floor height (adjusted to prevent negative values)
     --    C is ceiling height (negated, since lower ceils can block the player)
 
-    if not cave:valid_cell(x, y) then
+    if x < 1 or x > info.W or y < 1 or y > info.H then
       return nil
     end
 
@@ -1756,6 +1753,9 @@ function Render_cells(base_area)
 
 
   local function create_delta_map()
+    local dw = info.W + 1
+    local dh = info.H + 1
+
     delta_x_map = table.array_2D(dw, dh)
     delta_y_map = table.array_2D(dw, dh)
 
@@ -2928,7 +2928,6 @@ end
 
 
 function Cave_build_room(R, entry_h)
-
   Cave_setup_info(R)
 
   Cave_collect_walk_chunks(R, R.cave_info)
@@ -2956,10 +2955,76 @@ end
 
 function Cave_build_a_park(R, entry_h)
 
+  local info
+
+  local base_area = R.areas[1]
+
+
+  local function temp_install_floor(A)
+    for sx = info.sx1, info.sx2 do
+    for sy = info.sy1, info.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.diagonal then continue end
+
+      -- this ignores different rooms, AND closets and joiners too
+      if S.area != base_area then continue end
+
+      local cx1 = (S.sx - info.sx1) * 2 + 1
+      local cy1 = (S.sy - info.sy1) * 2 + 1
+
+      for cx = cx1, cx1+1 do
+      for cy = cy1, cy1+1 do
+        info.blocks[cx][cy] = A
+      end -- cx, cy
+      end
+
+      A.cx1 = math.min(A.cx1 or  9999, cx1)
+      A.cy1 = math.min(A.cy1 or  9999, cy1)
+
+      A.cx2 = math.max(A.cx2 or -9999, cx1+1)
+      A.cy2 = math.max(A.cy2 or -9999, cy1+1)
+
+    end -- sx, sy
+    end
+  end
+
+
+  local function do_parky_stuff()
+    local FLOOR =
+    {
+      neighbors = {}
+      children  = {}
+
+      floor_mat = R.floor_mat
+       ceil_mat = "_SKY"
+
+      -- TEMP RUBBISH
+      floor_h   = entry_h
+      ceil_h    = entry_h + 256
+    }
+
+    info.FLOOR = FLOOR
+
+    table.insert(info.floors, FLOOR)
+  end
+
+
+  ---| Cave_build_a_park |---
+
   Cave_setup_info(R)
+
+  info = R.cave_info
 
   Cave_collect_walk_chunks(R, R.cave_info)
 
+  -- TEMP RUBBISH
+  base_area.floor_h = entry_h
+  base_area.ceil_h  = entry_h + 256
+
+  do_parky_stuff()
+
+  temp_install_floor(info.FLOOR)
 end
 
 

@@ -2616,10 +2616,15 @@ function Room_floor_ceil_heights()
 
 
   local function process_cave(R)
-    R.walkway_height = 192  --!!!! FIXME TEMP
+    Cave_build_room(R, R.entry_h)
+  end
+
+
+  local function process_park(R)
+    R.walkway_height = 256
     R.areas[1].base_light = 144
 
-    Cave_build_room(R, R.entry_h)
+    Cave_build_a_park(R, R.entry_h)
   end
 
 
@@ -2762,8 +2767,11 @@ function Room_floor_ceil_heights()
     if R.kind == "hallway" then
       process_hallway(R, via_conn)
 
-    elseif R.is_cave or R.is_park then
+    elseif R.is_cave then
       process_cave(R)
+
+    elseif R.is_park then
+      process_park(R)
 
     else
       process_room(R, entry_area)
