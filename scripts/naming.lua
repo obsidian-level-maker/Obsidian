@@ -1761,6 +1761,7 @@ namelib.NAMES =
         Cult = 10
         Ruins = 10
         Caverns = 15
+        Garden = 10
 
         Night = 30
         Knowledge = 10
