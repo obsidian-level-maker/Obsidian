@@ -2754,18 +2754,19 @@ end
 
 
 
-function Grower_create_and_grow_room(create_it, env, trunk)
+function Grower_create_and_grow_room(trunk, mode, env)
   -- create the ROOM object
   local R = Grower_add_room(nil, env, trunk)
   assert(R)
+
+  R.is_root = true
 
 
   -- apply a root rule for it
   local pass = "root"
 
-  if create_it == "force_exit" then
+  if mode == "exit" then
     pass = "exit_root"
-
     R.is_exit = true
     LEVEL.exit_room = R
   end
@@ -2775,7 +2776,7 @@ function Grower_create_and_grow_room(create_it, env, trunk)
 
   -- if a root failed to establish itself, kill the room
   if R.gx1 == nil then
-    if create_it == "force_exit" then
+    if mode == "exit" then
       error("Exit room could not be placed!")
     end
 
@@ -2848,7 +2849,7 @@ function Grower_begin_trunks()
 
   local trunk = Grower_add_a_trunk()
 
-  local R = Grower_create_and_grow_room("force_exit", nil, trunk)
+  local R = Grower_create_and_grow_room(trunk, "exit")
 
   assert(not R.is_dead)
 end
@@ -2867,7 +2868,7 @@ function Grower_add_teleporter_trunk(parent_R)
   end
 --]]
 
-  local R = Grower_create_and_grow_room("create_it", env, trunk)
+  local R = Grower_create_and_grow_room(trunk, "normal", env)
 
   if R.is_dead then
     -- trunk should be dead too
@@ -2895,8 +2896,8 @@ function Grower_prune_small_rooms()
 
 
   local function is_too_small(R)
-    -- never prune the initial exit room
-    if R.is_exit then return false end
+    -- never prune a root room (including the exit)
+    if R.is_root then return false end
 
     return R:calc_walk_vol() < 8
   end
