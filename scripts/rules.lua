@@ -1719,6 +1719,19 @@ DECORATE_CLOSET_3x2 =
 ------------------------------------------
 
 
+PARK_ROOT_3x3 =
+{
+  prob = 50
+
+  structure =
+  {
+    "!!!", "RRR"
+    "!!!", "RRR"
+    "!!!", "RRR"
+  }
+}
+
+
 PARK_GROW_1 =
 {
   prob = 100
