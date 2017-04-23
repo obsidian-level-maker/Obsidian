@@ -1251,6 +1251,10 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       return 0
     end
 
+    if rule.teleporter and R.is_exit then
+      prob = prob / 4
+    end
+
     -- environment checks...
     if (rule.env or "any") != "any" then
       -- FIXME: support "!xxx" properly [ see prefab code ]
