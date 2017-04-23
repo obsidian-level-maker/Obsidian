@@ -25,6 +25,8 @@
 
     x1, y1, x2, y2  -- bounding coords
 
+    sx1, sy1, sx2, sy2  -- seed range
+
     step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
     liquid_mode : keyword  -- "none", "some", "lake"
@@ -140,15 +142,40 @@ end
 
 
 
-function Cave_generate_cave(R)
-  local info = R.cave_info
-  local base_area = R.areas[1]
+function Cave_setup_map(R, info)
+  info.sx1 = R.sx1
+  info.sy1 = R.sy1
+  info.sx2 = R.sx2
+  info.sy2 = R.sy2
 
-  local map
-  local cave
+  info.W = 2 * (info.sx2 - info.sx1 + 1)
+  info.H = 2 * (info.sy2 - info.sy1 + 1)
 
-  local is_lake = (info.liquid_mode == "lake")
+  info.x1 = SEEDS[info.sx1][info.sy1].x1
+  info.y1 = SEEDS[info.sx1][info.sy1].y1
 
+  info.x2 = SEEDS[info.sx2][info.sy2].x2
+  info.y2 = SEEDS[info.sx2][info.sy2].y2
+
+--stderrf("setup_map %d x %d : %s\n", info.W, info.H, R.name)
+
+  info.blocks = table.array_2D(info.W, info.H)
+
+  info.floors = {}
+
+  local WALL_AREA =
+  {
+    is_wall = true
+  }
+
+  info.wall = WALL_AREA
+
+  return AUTOMATA_CLASS.new(info.W, info.H)
+end
+
+
+
+function Cave_collect_walk_chunks(R, info)
 
   local function cave_box_for_seed(sx, sy)
     local box =
@@ -165,8 +192,8 @@ function Cave_generate_cave(R)
 
 
   local function cave_box_for_chunk(chunk)
-    chunk.cx1 = (chunk.sx1 - R.sx1) * 2 + 1
-    chunk.cy1 = (chunk.sy1 - R.sy1) * 2 + 1
+    chunk.cx1 = (chunk.sx1 - info.sx1) * 2 + 1
+    chunk.cy1 = (chunk.sy1 - info.sy1) * 2 + 1
 
     chunk.cx2 = chunk.cx1 + chunk.sw * 2 - 1
     chunk.cy2 = chunk.cy1 + chunk.sh * 2 - 1
@@ -198,7 +225,7 @@ E.S.name, E.dir, along_dir, sx1,sy1, sx2,sy2)
 
 --[[
 if E.long > 1 then
-stderrf("ROOM @ (%d %d)\n", R.sx1, R.sy1)
+stderrf("ROOM @ (%d %d)\n", info.sx1, info.sy1)
 stderrf("-----> cells (%d %d) .. (%d %d)\n", WC.cx1, WC.cy1, WC.cx2, WC.cy2)
 end
 assert(map:valid_cell(WC.cx1, WC.cy1))
@@ -264,23 +291,6 @@ end
   end
 
 
-  local function collect_walk_chunks()
-    info.walk_chunks = {}
-
-    each C in R.conns do
-      walk_for_connection(C)
-    end
-
-    each chunk in R.floor_chunks do
-      walk_for_floor_chunk(chunk)
-    end
-
-    each chunk in R.closets do
-      walk_for_closet(chunk)
-    end
-  end
-
-
   local function walk_chunks_to_points()
     info.point_list = {}
 
@@ -300,17 +310,47 @@ end
   end
 
 
+  ---| Cave_collect_walk_chunks |---
+
+  info.walk_chunks = {}
+
+  each C in R.conns do
+    walk_for_connection(C)
+  end
+
+  each chunk in R.floor_chunks do
+    walk_for_floor_chunk(chunk)
+  end
+
+  each chunk in R.closets do
+    walk_for_closet(chunk)
+  end
+
+  walk_chunks_to_points()
+end
+
+
+
+function Cave_generate_cave(R, info, map)
+
+  local base_area = R.areas[1]
+
+  local cave
+
+  local is_lake = (info.liquid_mode == "lake")
+
+
   local function set_whole(S, value)
-    local cx = (S.sx - R.sx1) * 2 + 1
-    local cy = (S.sy - R.sy1) * 2 + 1
+    local cx = (S.sx - info.sx1) * 2 + 1
+    local cy = (S.sy - info.sy1) * 2 + 1
 
     map:fill(cx, cy, cx+1, cy+1, value)
   end
 
 
   local function set_side(S, side, value)
-    local cx = (S.sx - R.sx1) * 2 + 1
-    local cy = (S.sy - R.sy1) * 2 + 1
+    local cx = (S.sx - info.sx1) * 2 + 1
+    local cy = (S.sy - info.sy1) * 2 + 1
 
     local x1,y1, x2,y2 = geom.side_coords(side, cx,cy, cx+1,cy+1)
 
@@ -319,8 +359,8 @@ end
 
 
   local function set_corner(S, side, value)
-    local cx = (S.sx - R.sx1) * 2 + 1
-    local cy = (S.sy - R.sy1) * 2 + 1
+    local cx = (S.sx - info.sx1) * 2 + 1
+    local cy = (S.sy - info.sy1) * 2 + 1
 
     local nx, ny = geom.pick_corner(side, cx, cy, cx+1, cy+1)
 
@@ -328,39 +368,12 @@ end
   end
 
 
-  local function create_map()
-    info.W = R.sw * 2
-    info.H = R.sh * 2
-
---stderrf("create_map %d x %d : %s\n", info.W, info.H, R.name)
-
-    info.blocks = table.array_2D(info.W, info.H)
-
-    info.x1 = SEEDS[R.sx1][R.sy1].x1
-    info.y1 = SEEDS[R.sx1][R.sy1].y1
-
-    info.x2 = SEEDS[R.sx2][R.sy2].x2
-    info.y2 = SEEDS[R.sx2][R.sy2].y2
-
-    info.floors = {}
-
-    local WALL_AREA =
-    {
-      is_wall = true
-    }
-
-    info.wall = WALL_AREA
-
-    map = AUTOMATA_CLASS.new(info.W, info.H)
-  end
-
-
   local function mark_boundaries()
     -- this also sets most parts of the cave to zero
     -- [ zero means "can make cave here" ]
 
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
+    for sx = info.sx1, info.sx2 do
+    for sy = info.sy1, info.sy2 do
       local S = SEEDS[sx][sy]
 
       -- this ignores different rooms, AND closets and joiners too
@@ -442,8 +455,8 @@ end
 
 
   local function clear_some_seeds()
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
+    for sx = info.sx1, info.sx2 do
+    for sy = info.sy1, info.sy2 do
       local S = SEEDS[sx][sy]
 
       if S.area != base_area then continue end
@@ -539,12 +552,8 @@ end
 
   ---| Cave_generate_cave |---
 
-  create_map()
-
-  collect_walk_chunks()
-  walk_chunks_to_points()
-
   mark_boundaries()
+
   clear_walk_chunks()
 
   generate_cave()
@@ -2916,7 +2925,11 @@ function Cave_build_room(R, entry_h)
 
   Cave_decide_properties(R)
 
-  Cave_generate_cave(R)
+  local map = Cave_setup_map(R, R.cave_info)
+
+  Cave_collect_walk_chunks(R, R.cave_info)
+
+  Cave_generate_cave(R, R.cave_info, map)
 
 ---  Cave_lake_fences(R)
 ---  Cave_fill_lakes(R)
