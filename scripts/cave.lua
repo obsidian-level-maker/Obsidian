@@ -1584,11 +1584,10 @@ end
 
 
 
-function Render_cave(R)
+function Render_cells(base_area)
 
-  local info = R.cave_info
-
-  local base_area = R.areas[1]
+  local info = base_area.cell_info
+  assert(info)
 
 
   local cave = info.cave
@@ -1808,6 +1807,9 @@ function Render_cave(R)
   local function render_floor(x, y, A)
     local f_h = A.floor_h
 
+    -- TODO : remove this
+    local R = assert(base_area.room)
+
     local f_mat = A.floor_mat or R.floor_mat or R.main_tex
 
     if A.is_wall or A.is_fence then
@@ -1839,6 +1841,9 @@ function Render_cave(R)
 
   local function render_ceiling(x, y, A)
     if not A.ceil_h then return end
+
+    -- TODO : remove this
+    local R = assert(base_area.room)
 
     local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex
 
@@ -2021,20 +2026,14 @@ function Render_cave(R)
 
 
   local function add_sky_rects()
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
+    each S in base_area.seeds do
+      local rect =
+      {
+        x1 = S.x1, y1 = S.y1
+        x2 = S.x2, y2 = S.y2
+      }
 
-      if S.room == R then
-        local rect =
-        {
-          x1 = S.x1, y1 = S.y1
-          x2 = S.x2, y2 = S.y2
-        }
-
-        table.insert(R.sky_rects, rect)
-      end
-    end -- sx, sy
+      table.insert(R.sky_rects, rect)
     end
   end
 
@@ -2050,7 +2049,7 @@ function Render_cave(R)
   end
 
 
-  ---| Render_cave |---
+  ---| Render_cells |---
   
   Trans.clear()
 
@@ -2073,7 +2072,7 @@ function Render_cave(R)
 
   Ambient_pop()
 
-  if R.is_outdoor and false then --!!!!
+  if base_area.is_outdoor and false then --!!!!
     add_sky_rects()
   end
 end
@@ -2847,6 +2846,9 @@ function Cave_decide_properties(R)
 
   R.cave_info = info
 
+  R.areas[1].cell_info = info
+
+
   -- step mode --
 
   info.step_mode = "walkway"
@@ -2929,6 +2931,12 @@ function Cave_build_room(R, entry_h)
 ---  Cave_make_waterfalls(R)
 
   Cave_decorations(R)
+end
+
+
+
+function Cave_build_a_park(R, entry_h)
+  -- TODO
 end
 
 

@@ -1373,9 +1373,8 @@ function Render_seed(A, S)
     end
   end
 
-  -- caves are done elsewhere
-  -- FIXME : make this a property of the area
-  if A.room and (A.room.is_cave or A.room.is_park) then
+  -- caves, parks and landscapes are done elsewhere
+  if A.cell_info then
     return
   end
 
@@ -1676,6 +1675,11 @@ function Render_area(A)
     Render_edge(E)
   end
 
+  -- handle caves, parks and landscapes
+  if A.cell_info then
+    Render_cells(A)
+  end
+
   each S in A.seeds do
     Render_seed(A, S)
 
@@ -1777,12 +1781,6 @@ function Render_all_areas()
 
   each A in LEVEL.areas do
     Render_area(A)
-  end
-
-  each R in LEVEL.rooms do
-    if R.is_cave or R.is_park then
-      Render_cave(R)
-    end
   end
 
   for cx = 1, SEED_W + 1 do

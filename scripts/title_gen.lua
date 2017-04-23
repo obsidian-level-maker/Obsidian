@@ -1492,8 +1492,6 @@ TITLE_INTERMISSION_STYLES =
 {
   brown_box =
   {
-    prob = 100
-
     hue1 = "#332b13"
     hue2 = "#774f2b"
     hue3 = "#ab6f43"
