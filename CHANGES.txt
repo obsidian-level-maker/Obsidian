@@ -3,8 +3,9 @@ CHANGES IN 7.5x
 ===============
 
 +  UI: big revamp, two scrolling columns of modules
--  UI: option to use mousewheel to change settings
 -  UI: main window can be vertically resized
+-  UI: option to use mousewheel to change settings
+-  UI: option to disable the overwrite-file warning
 
 +  the "Weapons" button now controls how early or late new
    weapons are introduced into the wad

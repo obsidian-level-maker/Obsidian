@@ -231,8 +231,12 @@ const char * DLG_OutputFilename(const char *ext)
 
 	chooser.title(_("Select output file"));
 	chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
-	chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
+
+	if (overwrite_warning)
+		chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
+
 	chooser.filter(kind_buf);
+
 
 	// TODO: chooser.directory(LAST_USED_DIRECTORY)
 

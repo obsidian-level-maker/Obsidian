@@ -66,6 +66,7 @@ bool alternate_look = false;
 bool wheel_can_bump = true;
 
 bool create_backups = true;
+bool overwrite_warning = true;
 bool debug_messages = false;
 
 

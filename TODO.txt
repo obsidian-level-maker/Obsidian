@@ -708,8 +708,6 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
--  option to disable the overwrite warning
-
 +  info files for addons: addons/<name>.txt
    [ tricky since need to find it inside disabled PK3 files ]
 
@@ -723,14 +721,10 @@ Name generator:
 
 +  CSG issue: support beam intersects with 3D floor => wrong side texture
 
--  TGA writing code, use it for ZDoom title screens
-
 -  fix "no such module" warnings (gui.add_module_option etc...)
 
 IDEA: a better Set Seed dialog, show a few previously used seeds
       and allow choosing them again
-
-IDEA: Menu / Rebuild Last : used seed and filename of previous build
 
 Cancellation:
   -  can abort monster code (Fight sim) midstream 

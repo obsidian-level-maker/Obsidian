@@ -65,6 +65,10 @@ static void Parse_Option(const char *name, const char *value)
 	{
 		create_backups = atoi(value) ? true : false;
 	}
+	else if (StringCaseCmp(name, "overwrite_warning") == 0)
+	{
+		overwrite_warning = atoi(value) ? true : false;
+	}
 	else if (StringCaseCmp(name, "debug_messages") == 0)
 	{
 		debug_messages = atoi(value) ? true : false;
@@ -201,6 +205,7 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "\n");
 
 	fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
+	fprintf(option_fp, "overwrite_warning = %d\n", overwrite_warning ? 1 : 0);
 	fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
 
 //???	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
@@ -234,6 +239,7 @@ private:
 	Fl_Check_Button *opt_wheel_bump;
 
 	Fl_Check_Button *opt_backups;
+	Fl_Check_Button *opt_overwrite;
 	Fl_Check_Button *opt_debug;
 
 public:
@@ -323,6 +329,13 @@ private:
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
 		create_backups = that->opt_backups->value() ? true : false;
+	}
+
+	static void callback_Overwrite(Fl_Widget *w, void *data)
+	{
+		UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+		overwrite_warning = that->opt_overwrite->value() ? true : false;
 	}
 
 	static void callback_Debug(Fl_Widget *w, void *data)
@@ -420,6 +433,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_backups->h() + y_step*2/3;
 
 
+	opt_overwrite = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Overwrite File Warning"));
+	opt_overwrite->value(overwrite_warning ? 1 : 0);
+	opt_overwrite->callback(callback_Overwrite, this);
+
+	cy += opt_overwrite->h() + y_step*2/3;
+
+
 	opt_debug = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Debugging Messages"));
 	opt_debug->value(debug_messages ? 1 : 0);
 	opt_debug->callback(callback_Debug, this);
@@ -493,7 +513,7 @@ void DLG_OptionsEditor(void)
 	if (! option_window)
 	{
 		int opt_w = kf_w(350);
-		int opt_h = kf_h(380);
+		int opt_h = kf_h(410);
 
 		option_window = new UI_OptionsWin(opt_w, opt_h, _("OBLIGE Misc Options"));
 	}

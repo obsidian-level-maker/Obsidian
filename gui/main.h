@@ -64,6 +64,7 @@ extern bool alternate_look;
 extern bool wheel_can_bump;
 
 extern bool create_backups;
+extern bool overwrite_warning;
 extern bool debug_messages;
 
 
