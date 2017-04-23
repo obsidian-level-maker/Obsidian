@@ -3,20 +3,37 @@ WORK IN PROGRESS
 ================
 
 
-EXIT_GENERIC
+
+PARKS
+-----
+
+-  add a style for it
+
++  proper sky handling
+
++  height variation  [ different areas ]
+
+-  texturing
+   [ in constructed outdoors, don't use natural tex like GRASS
+     except in the lowest area ]
 
 
-!!!  handling of 2nd (etc) trunk rooms is now fucked
 
-     [ IDEA: make teleporter trunks part of the sprout process.
-             a room could create a closet for the teleporter,
-             and that causes a new trunk to be created... ]
+Miscellaneous
+-------------
 
+???  should "celly" areas have MODE = "cells" ?
+
+
+>>>  prune small rooms AFTER "grow" pass  [ i.e. as we go ]
 
 >>>  grower : when pruning rooms, totally remove dead joiners too
 
 
 ??? on LAST max_loop attempt, set sprout_bbox to boundary_bbox
+
+idea: on LAST max_loop attempt, allow extra teleporters
+
 
 
 Minor Goals
@@ -39,17 +56,12 @@ steepness : IF exist on a rule AND room is outdoor THEN prob *= 0.5
 Exit Rooms
 ----------
 
-+  force first area to be boss-monster spot (at least one), be tall enough
++  force first area to be boss-monster spot (at least one),
+   be tall enough (at least 128), and never has a decoration
+   or floor sink
 
 ??  if exit room failed to sprout (or that room was killed) then
     force usage of a teleporter
-
--  ensure room (and trunk) is never killed
-
--  ensure a sprout is made, and grow that room ASAP
-   [ if sprout room is killed or impossible, force a teleporter to exit ]
-
--  prevent first area from getting a decoration or floor sink
 
 
 
@@ -87,6 +99,6 @@ Quake3 CSG Code
    a uv_mat if the sides contain tu/tv/bu/bv values
 
 LATER : optimise detail face intersection
-        1. rebuild BSP tree ]
+        1. rebuild BSP tree
         2. reject faces lying completely inside a solid brush
 
