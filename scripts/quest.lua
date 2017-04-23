@@ -750,12 +750,22 @@ function Quest_scan_all_conns(new_goals, do_quest)
     score = 0
   }
 
+  local need_joiner = (#new_goals >= 2)
+
 
   each C in LEVEL.conns do
     local quest = C.R1.quest
     assert(quest)
 
     if do_quest and quest != do_quest then continue end
+
+    if need_joiner and
+       not (C.kind == "joiner" and
+            ---###  C.joiner_chunk.sw >= 2 and C.joiner_chunk.sh >= 2 and
+            C.joiner_chunk.shape == "I")
+    then
+      continue
+    end
 
     -- must be same quest on each side
     if C.R2.quest != quest then continue end
@@ -876,21 +886,18 @@ do return false end
 
 
   local function add_triple_key_door(key_list)
---FIXME
-do return false end
-
     if #key_list < 3 then return false end
 
-    -- FIXME: check "game" field in prefab def
+    -- FIXME: check that a usable prefab exists
     if not THEME.has_triple_key_door then return false end
 
-    local prob = 25
+    local prob = 20
 
     if OB_CONFIG.playmode == "coop" then
-      prob = 50
+      prob = 40
     end
 
-    if not rand.odds(prob) then return false end
+--!!!!  if not rand.odds(prob) then return false end
 
     rand.shuffle(key_list)
 
@@ -999,11 +1006,10 @@ do return false end
 
   -- triple key door?
 
-  if rand.odds(60) then
-    if add_triple_key_door(goal_list) then
-      LEVEL.has_triple_key = true
-      goal_list = { }
-    end
+  if add_triple_key_door(goal_list) then
+stderrf("***** triple key door !!\n")
+    LEVEL.has_triple_key = true
+    goal_list = { }
   end
 
   -- normal keyed doors...

@@ -967,7 +967,7 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
       elseif #LOCK.goals == 2 then
         error("Locked double")
       elseif #LOCK.goals == 3 then
-        error("Locked triple")
+        reqs.key = "k_ALL"
       elseif LOCK.goals[1].kind == "SWITCH" then
         reqs.switch = LOCK.goals[1].item
       else

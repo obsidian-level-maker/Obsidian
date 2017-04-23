@@ -46,6 +46,8 @@
 
     F1, F2 : EDGE  -- for "split" connections, the other side
 
+    joiner_chunk : CHUNK
+
     door_h : floor height for doors straddling the connection
 
     backwards : true if travel from R2 --> R1

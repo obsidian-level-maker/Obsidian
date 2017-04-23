@@ -31,3 +31,5 @@ CHANGES IN 7.5x
 -  fixed bug swapping normal-exit and secret-exit switches
 -  removed the non-standard player things (4001..4004)
 
+-  got triple-key doors working again
+
