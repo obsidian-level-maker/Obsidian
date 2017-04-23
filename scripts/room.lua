@@ -25,9 +25,10 @@
                     -- "hallway"
                     -- "scenic" (unvisitable room)
 
-    is_outdoor : bool  -- true for outdoor rooms / caves
+    is_outdoor : bool  -- true for outdoor rooms
 
-    is_cave    : bool  -- true for caves (indoor or outdoor)
+    is_cave    : bool  -- true for caves (indoors)
+    is_park    : bool  -- true for parks (outdoors)
 
 
     areas = list(AREA)
@@ -1712,7 +1713,7 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
 
 
   local function spots_in_room(R)
-    if R.is_cave then
+    if R.is_cave or R.is_park then
       Cave_determine_spots(R)
       return
     end
@@ -2615,6 +2616,9 @@ function Room_floor_ceil_heights()
 
 
   local function process_cave(R)
+    R.walkway_height = 192  --!!!! FIXME TEMP
+    R.areas[1].base_light = 144
+
     Cave_build_room(R, R.entry_h)
   end
 
@@ -2758,7 +2762,7 @@ function Room_floor_ceil_heights()
     if R.kind == "hallway" then
       process_hallway(R, via_conn)
 
-    elseif R.is_cave then
+    elseif R.is_cave or R.is_park then
       process_cave(R)
 
     else
@@ -3221,7 +3225,7 @@ end
   each R in LEVEL.rooms do
     calc_max_floor(R)
 
-    if not R.is_cave then
+    if not (R.is_cave or R.is_park) then
       regroup_floors(R)
 
       do_ceilings(R)

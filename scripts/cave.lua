@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2009-2016 Andrew Apted
+--  Copyright (C) 2009-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -235,7 +235,7 @@ end
 
 
   local function walk_for_floor_chunk(chunk)
-    -- ignored unused floor chunks
+    -- ignore unused floor chunks
     if not chunk.content_kind then return end
 
     cave_box_for_chunk(chunk)
@@ -251,7 +251,7 @@ end
 
 
   local function walk_for_closet(chunk)
-    -- ignored unused closets
+    -- ignore unused closets
     if not chunk.content_kind then return end
     if chunk.content_kind == "void" then return end
 
@@ -1391,7 +1391,7 @@ function Cave_floor_heights(R, entry_h)
 
     -- ceiling --
 
-    if R.is_outdoor then
+    if R.is_outdoor and false then  --!!!!!!
       -- no ceil_h (done later using sky_rects)
     elseif A.goal_type then
       A.ceil_h = h + 192
@@ -2073,7 +2073,7 @@ function Render_cave(R)
 
   Ambient_pop()
 
-  if R.is_outdoor then
+  if R.is_outdoor and false then --!!!!
     add_sky_rects()
   end
 end
@@ -2913,6 +2913,7 @@ end
 function Cave_build_room(R, entry_h)
 
   Cave_decide_properties(R)
+
   Cave_generate_cave(R)
 
 ---  Cave_lake_fences(R)

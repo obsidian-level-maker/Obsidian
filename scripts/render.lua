@@ -1374,7 +1374,8 @@ function Render_seed(A, S)
   end
 
   -- caves are done elsewhere
-  if A.room and A.room.is_cave then
+  -- FIXME : make this a property of the area
+  if A.room and (A.room.is_cave or A.room.is_park) then
     return
   end
 
@@ -1779,7 +1780,7 @@ function Render_all_areas()
   end
 
   each R in LEVEL.rooms do
-    if R.is_cave then
+    if R.is_cave or R.is_park then
       Render_cave(R)
     end
   end

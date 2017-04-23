@@ -1463,6 +1463,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     if R.is_start  then return end
     if R.is_secret then return end
 
+    -- FIXME
+    if R.is_park then return end
+
     -- collect usable chunks
     local locs = {}
 
@@ -1812,7 +1815,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     switch_up_room(R)
 
     -- closets must be decided early for caves
-    if R.is_cave then
+    if R.is_cave or R.is_park then
       pick_cavey_bling(R)
 
       tizzy_all_closets(R)
@@ -1821,7 +1824,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function decor_later_pass(R)
-    if not R.is_cave then
+    if not (R.is_cave or R.is_park) then
       tizzy_up_normal_room(R)
       tizzy_all_closets(R)
     end
