@@ -2717,7 +2717,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
     apply_num = 7   -- TODO
 
   elseif pass == "park_fill" then
-    apply_num = 15
+    apply_num = 30
 
   else
     error("unknown grammar pass: " .. tostring(pass))
@@ -3152,6 +3152,13 @@ function Grower_expand_parks()
 
   each R in room_list do
     if R.is_park then
+      -- up the seed limit
+      each A in R.areas do
+        if A.max_size then
+          A.max_size = math.ceil(A.max_size * 1.2)
+        end
+      end
+
       Grower_grammatical_room(R, "park_fill")
     end
   end

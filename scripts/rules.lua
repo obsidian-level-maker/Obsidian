@@ -1761,7 +1761,6 @@ PARK_GROW_3 =
 PARK_FILL_1 =
 {
   pass = "park_fill"
-
   prob = 50
 
   structure =
@@ -1776,13 +1775,25 @@ PARK_FILL_1 =
 PARK_FILL_2 =
 {
   pass = "park_fill"
-
   prob = 50
 
   structure =
   {
     "1.1", "111"
     "111", "111"
+  }
+}
+
+
+PARK_FILL_3 =
+{
+  pass = "park_fill"
+  prob = 50
+
+  structure =
+  {
+    "1..1", "1111"
+    "1111", "1111"
   }
 }
 
