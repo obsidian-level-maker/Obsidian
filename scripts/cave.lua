@@ -142,7 +142,18 @@ end
 
 
 
-function Cave_setup_map(R, info)
+function Cave_setup_info(R)
+  local info =
+  {
+    lakes  = {}
+    lights = {}
+  }
+
+  R.cave_info = info
+
+  R.areas[1].cell_info = info
+
+  -- determine extent of cells
   info.sx1 = R.sx1
   info.sy1 = R.sy1
   info.sx2 = R.sx2
@@ -157,7 +168,7 @@ function Cave_setup_map(R, info)
   info.x2 = SEEDS[info.sx2][info.sy2].x2
   info.y2 = SEEDS[info.sx2][info.sy2].y2
 
---stderrf("setup_map %d x %d : %s\n", info.W, info.H, R.name)
+--stderrf("setup_info %d x %d : %s\n", info.W, info.H, R.name)
 
   info.blocks = table.array_2D(info.W, info.H)
 
@@ -169,8 +180,6 @@ function Cave_setup_map(R, info)
   }
 
   info.wall = WALL_AREA
-
-  return AUTOMATA_CLASS.new(info.W, info.H)
 end
 
 
@@ -335,9 +344,14 @@ function Cave_generate_cave(R, info, map)
 
   local base_area = R.areas[1]
 
-  local cave
-
   local is_lake = (info.liquid_mode == "lake")
+
+
+  -- this contains where walls and must-be-clear spots are
+  local map
+
+  -- this is the generated 2d cave
+  local cave
 
 
   local function set_whole(S, value)
@@ -551,6 +565,8 @@ function Cave_generate_cave(R, info, map)
 
 
   ---| Cave_generate_cave |---
+
+  map = AUTOMATA_CLASS.new(info.W, info.H)
 
   mark_boundaries()
 
@@ -2822,7 +2838,7 @@ end
 
 
 
-function Cave_decide_properties(R)
+function Cave_decide_properties(R, info)
   --
   --  V7 NOTES
   -- ==========
@@ -2846,16 +2862,6 @@ function Cave_decide_properties(R)
   --     border each other (and connect via cavey stairs or a lift
   --     prefab) is going to better results.
   --
-
-  local info =
-  {
-    lakes  = {}
-    lights = {}
-  }
-
-  R.cave_info = info
-
-  R.areas[1].cell_info = info
 
 
   -- step mode --
@@ -2923,13 +2929,13 @@ end
 
 function Cave_build_room(R, entry_h)
 
-  Cave_decide_properties(R)
-
-  local map = Cave_setup_map(R, R.cave_info)
+  Cave_setup_info(R)
 
   Cave_collect_walk_chunks(R, R.cave_info)
 
-  Cave_generate_cave(R, R.cave_info, map)
+  Cave_decide_properties(R, R.cave_info)
+
+  Cave_generate_cave(R, R.cave_info)
 
 ---  Cave_lake_fences(R)
 ---  Cave_fill_lakes(R)
@@ -2949,7 +2955,11 @@ end
 
 
 function Cave_build_a_park(R, entry_h)
-  -- TODO
+
+  Cave_setup_info(R)
+
+  Cave_collect_walk_chunks(R, R.cave_info)
+
 end
 
 
