@@ -4,7 +4,7 @@ OBLIGE TO-DO
 
 
 ----------------------------------------------
-  V7 STUFF
+  RECENT STUFF
 ----------------------------------------------
 
 *  ensure player cannot climb over fences or windows due to a
@@ -331,31 +331,6 @@ IDEA:  looks like a normal item closet, but opens up
 IDEA:  a monster closet with a secret behind it
 
 
-Fake fence IDEA
----------------
-
--  a wall built out of floor brush and sky brush (delta_z for no gap)
-
--  perhaps best place is on a zone boundary
-
--  placement: between 1 and 3 seeds (no angle > 180 between them)
-   and solid walls on each side and angle on each side < 180
-   (limit to one area, use edge loops to detect)
-
-   do it after (or part of) Room_border_up
-
--  pick a single height for each zone
-   (e.g. half way between average floor_h and sky_h)
-   don't make in an area if height of fence would be < 64
-   don't make too tall either
-
--  pick a single texture for each zone
-
--  stretch goal : if void behind seed(s), have a transition prefab
-   (i.e. showing solid wall above the fence)
-   if sky much higher, occasionally stick a cage monster there
-
-
 Weapon choice :
 +  when game_along >= 0.3, then ALWAYS have at least one "big" weapon
    and have before the last zone (or if one zone, before last quest)
@@ -366,16 +341,9 @@ Weapon choice :
    ALWAYS have at least one "small" weapon
 
 
-----------------------------------------------
-  V6 STUFF
-----------------------------------------------
-
 +  fix lighting with 3D floors
 
 ???  apply nice items gotten in normal rooms to the HMODEL
-
--  outdoor fences should straddle both rooms
-   (but need to handle corners and T junctions)
 
 -  wad-fab: "outside bbox" pieces via sector type #977
 
@@ -412,32 +380,6 @@ Prefab system:
        else              priority = 3
 
    ALWAYS prefer a higher priority over a lower one.
-
-
-Starting Ideas:
-
--  three main kinds:
-
-   CLOSET : you begin in a very small room, which is connected to a
-            larger room, often by a door.  The closet would only
-            contain one or two pickups, e.g. a nice health item and
-            (if you're lucky) a weapon.
-
-   SIDE :   you begin in the side or corner of a large-ish room,
-            with nothing particularly special about the start position
-            (except say a pedestal).
-            
-            There are no monsters which can see you (and usually none you
-            can see either).  Again, only a couple of items nearby.
-            The starting weapon and ammo will be further away.
-
-   MIDDLE : you begin in the middle of a large room, and often have
-            to get moving to fight or avoid the monsters scattered
-            around.  There is usually some useful pickups nearby,
-            especially a starting weapon. 
-
-
-V5 STUFF:
 
 
 
@@ -711,12 +653,11 @@ Name generator:
    -  support bmodels with two brushes meeting at a plane
 
 ?  Hexen
-?  Harmony
 ?  HacX
 ?  Chex Quest 3
+?  Strife
 
 ?  Duke Nukem 3D
-?  Strife
 
 
 ----------------------------------------------
