@@ -19,23 +19,6 @@
 ------------------------------------------------------------------------
 
 
---class TEMP_AREA
---[[
-    id, name  :  use for debugging
-
-    mode : keyword   -- the eventual mode of the AREA (q.v.)
-
-    room : ROOM
-
-    seeds : list(SEED)
-
-    FIXME : other fields??
---]]
-
-
-------------------------------------------------------------------------
-
-
 function Grower_preprocess_grammar()
 
   local def
@@ -711,8 +694,11 @@ function Grower_preprocess_grammar()
        cur_def.pass = name_to_pass(name)
     end
 
+    if cur_def.teleporter then add_style("teleporters") end
+
     if string.match(name, "^HALL_") then cur_def.env = "hallway" end
     if string.match(name, "^CAVE_") then cur_def.env = "cave" end
+    if string.match(name, "^PARK_") then cur_def.env = "park" end
   end
 end
 
@@ -1041,19 +1027,19 @@ end
 
 function Grower_add_room(parent_R, force_env, trunk)
 
-  local ROOM = ROOM_CLASS.new()
+  local R = ROOM_CLASS.new()
 
-gui.debugf("new room %s : env = %s : parent = %s\n", ROOM.name, tostring(force_env), tostring(parent_R and parent_R.name))
+gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(force_env), tostring(parent_R and parent_R.name))
 
   if trunk == nil then
     assert(parent_R)
     trunk = assert(parent_R.trunk)
   end
 
-  ROOM.trunk = trunk
-  table.insert(trunk.rooms, ROOM)
+  R.trunk = trunk
+  table.insert(trunk.rooms, R)
 
-  ROOM.grow_parent = parent_R
+  R.grow_parent = parent_R
 
   local kind = "normal"
 
@@ -1072,33 +1058,38 @@ gui.debugf("new room %s : env = %s : parent = %s\n", ROOM.name, tostring(force_e
   elseif force_env == "cave" then
     is_cave = true
   else
-    is_outdoor, is_cave = Room_choose_kind(ROOM, parent_R)
+    is_outdoor, is_cave = Room_choose_kind(R, parent_R)
   end
 
-  Room_set_kind(ROOM, kind, is_outdoor, is_cave)
+  Room_set_kind(R, kind, is_outdoor, is_cave)
 
-  Room_choose_size(ROOM)
+--FIXME : TEMP SHITE
+  if R.id != 1 and is_outdoor and not is_cave and rand.odds(100) then
+    R.is_park = true
+  end
+
+  Room_choose_size(R)
 
   -- always need at least one floor area
   -- [ except for hallways, every piece is an area ]
 
   if kind == "hallway" then
-    ROOM.max_hall_size = 20
+    R.max_hall_size = 20
+
   else
     local A = AREA_CLASS.new("floor")
-    ROOM:add_area(A)
+    R:add_area(A)
 
     A.prelim_h = 0
 
     -- max size of new area  [ for caves it is whole room ]
-    if ROOM.is_cave then
-      A.max_size = ROOM.size_limit
+    if R.is_cave or R.is_park then
+      A.max_size = R.size_limit
     else
       A.max_size = rand.pick({ 16, 24, 32 })
     end
   end
 
-  local R = ROOM
   R.delta_limit_mode = rand.sel(50, "positive", "negative")
   R.delta_up_chance  = 50
 
@@ -1110,7 +1101,7 @@ gui.debugf("new room %s : env = %s : parent = %s\n", ROOM.name, tostring(force_e
     end
   end
 
-  return ROOM
+  return R
 end
 
 
@@ -1246,13 +1237,22 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
     if prob <= 0 then return 0 end
 
+    if rule.emergency then
+      if not is_emergency then return 0 end
+    end
+
+---###  -- for emergency, limit what growth rules to try
+---###  if is_emergency and pass == "grow" and not rule.emergency then
+---###    return 0
+---###  end
+
     -- don't exceed trunk quota
     if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
       return 0
     end
 
-    -- environment check
-    if rule.env != nil and rule.env != "any" then
+    -- environment checks...
+    if (rule.env or "any") != "any" then
       -- FIXME: support "!xxx" properly [ see prefab code ]
       if rule.env == "!cave" then
         if R:get_env() == "cave" then return 0 end
@@ -1267,19 +1267,9 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     end
 
     if pass == "root" or pass == "grow" then
-      if R.is_cave and rule.env != "cave" then
-        return 0
-      end
+      if R.is_cave and rule.env != "cave" then return 0 end
+      if R.is_park and rule.env != "park" then return 0 end
     end
-
-    if rule.emergency then
-      if not is_emergency then return 0 end
-    end
-
----!!!    -- for emergency, limit what growth rules to try
----!!!    if is_emergency and pass == "grow" and not rule.emergency then
----!!!      return 0
----!!!    end
 
     if rule.new_room and rule.new_room.env == "cave" then
       if R.is_cave then
