@@ -1106,6 +1106,73 @@ end
 
 
 
+function Grower_prune_room(R)
+
+  local function kill_joiner(chunk)
+    local R2 = chunk.area.room
+    assert(R2)
+
+    gui.debugf("  killing joiner in %s\n", R2.name)
+
+    chunk.kind = "closet"
+
+    chunk.area.mode = "void"
+    chunk.content_kind = "void"
+
+    chunk.dest_dir  = nil
+    chunk.dest_area = nil
+    chunk.shape = "U"
+
+    table.kill_elem(R2.joiners, chunk)
+    table.insert(R2.closets, chunk)
+
+    -- remove peering too
+    if chunk.peer then
+      chunk.peer.peer = nil
+      chunk.peer = nil
+    end
+  end
+
+
+  local function handle_conn()
+    -- there should be a single prelim-conn : find and kill it
+
+    each PC in LEVEL.prelim_conns do
+      if PC.R1 == R or PC.R2 == R then
+        gui.debugf("  killing prelim conn %s -> %s\n", PC.R1.name, PC.R2.name)
+
+        if PC.kind == "joiner" and PC.chunk.area.room != R then
+          kill_joiner(PC.chunk)
+        end
+
+        Grower_kill_prelim_conn(PC)
+        break;
+      end
+    end
+
+    -- sanity check
+    each PC in LEVEL.prelim_conns do
+      assert(not (PC.R1 == R or PC.R2 == R))
+    end
+  end
+
+
+  ---| Grower_prune_room |---
+
+  gui.debugf("Prune small room %s\n", R.name)
+
+  handle_conn()
+
+  R:kill_it()
+
+  -- sanity check
+  if table.empty(LEVEL.rooms) then
+    error("All rooms were pruned!")
+  end
+end
+
+
+
 function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
                                  parent_rule, is_create, is_emergency)
   --
@@ -2743,7 +2810,28 @@ end
 function Grower_grow_room(R)
   gui.ticker()
 
+  local function is_too_small(R)
+    -- never prune a root room (including the exit)
+    if R.is_root then return false end
+
+    return R:calc_walk_vol() < 8
+  end
+
+
+  ---| Grower_grow_room |---
+
   Grower_grammatical_room(R, "grow")
+
+  -- if room too small, try another grow pass, then kill it
+
+  if is_too_small(R) then
+    Grower_grammatical_room(R, "grow")
+
+    if is_too_small(R) then
+      Grower_prune_room(R)
+      return
+    end
+  end
 
   if R.kind == "hallway" then
     Grower_grammatical_room(R, "terminate")
@@ -2789,6 +2877,9 @@ function Grower_create_and_grow_room(trunk, mode, env)
     gui.debugf("%s could not establish a root, killing it\n", R.name)
 
     R:kill_it()
+
+    Grower_kill_a_trunk(trunk)
+
     return R
   end
 
@@ -2815,6 +2906,19 @@ function Grower_add_a_trunk()
   gui.debugf("Added trunk: %s\n", trunk.name)
 
   return trunk
+end
+
+
+function Grower_kill_a_trunk(TR)
+  TR.name = "DEAD_" .. TR.name
+  TR.is_dead = true
+
+  table.kill_elem(LEVEL.trunks, TR)
+
+  -- sanity check
+  each R in LEVEL.rooms do
+    assert(R.trunk != TR)
+  end
 end
 
 
@@ -2886,132 +2990,6 @@ end
 
 
 
-function Grower_prune_small_rooms()
-
-  local function is_leaf(R)
-    local conns = 0
-
-    each PC in LEVEL.prelim_conns do
-      if PC.R1 == R or PC.R2 == R then
-        conns = conns + 1
-      end
-    end
-
-    return conns < 2
-  end
-
-
-  local function is_too_small(R)
-    -- never prune a root room (including the exit)
-    if R.is_root then return false end
-
-    return R:calc_walk_vol() < 8
-  end
-
-
-  local function kill_joiner(N, chunk)
-    gui.debugf("  killing joiner in %s\n", N.name)
-
-    chunk.kind = "closet"
-
-    chunk.area.mode = "void"
-    chunk.content_kind = "void"
-
-    chunk.dest_dir  = nil
-    chunk.dest_area = nil
-    chunk.shape = "U"
-
-    table.kill_elem(N.joiners, chunk)
-    table.insert(N.closets, chunk)
-
-    -- remove peering too
-    if chunk.peer then
-      chunk.peer.peer = nil
-      chunk.peer = nil
-    end
-  end
-
-
-  local function prune_room(R)
-    gui.debugf("Prune small room %s\n", R.name)
-
-    -- remove any prelim conns
-    for idx = #LEVEL.prelim_conns, 1, -1 do
-      local PC = LEVEL.prelim_conns[idx]
-
-      -- get neighbor room
-      local N
-      if PC.R1 == R then N = PC.R2 end
-      if PC.R2 == R then N = PC.R1 end
-
-      if not N then continue end
-
-      gui.debugf("  killing prelim conn to %s\n", N.name)
-
-      if PC.kind == "joiner" and PC.chunk.area.room == N then
-        kill_joiner(N, PC.chunk)
-      end
-
-      Grower_kill_prelim_conn(PC)
-    end
-
-    R:kill_it()
-  end
-
-
-  local function kill_trunk(TR)
-    TR.name = "DEAD_" .. TR.name
-    TR.is_dead = true
-
-    table.kill_elem(LEVEL.trunks, TR)
-
-    -- sanity check
-    each R in LEVEL.rooms do
-      assert(R.trunk != TR)
-    end
-  end
-
-
-  local function prune_trunks()
-    for idx = #LEVEL.trunks, 1, -1 do
-      local trunk = LEVEL.trunks[idx]
-
-      if table.empty(trunk.rooms) then
-        kill_trunk(trunk)
-      end
-    end
-  end
-
-
-  ---| Grower_prune_small_rooms |---
-
-  -- killing a room may cause another room to become a leaf, hence
-  -- we need multiple passes.
-
-  repeat
-    local changes = false
-
-    for idx = #LEVEL.rooms, 1, -1 do
-      local R = LEVEL.rooms[idx]
-
-      if is_leaf(R) and is_too_small(R) then
-        prune_room(R)
-        changes = true
-      end
-    end
-  until not changes
-
-  -- a trunk may have become empty, prune these too
-  prune_trunks()
-
-  -- sanity check
-  if table.empty(LEVEL.rooms) then
-    error("All rooms were pruned")
-  end
-end
-
-
-
 function Grower_grow_all_rooms()
 
   local function clean_up_links(R)
@@ -3042,25 +3020,23 @@ function Grower_grow_all_rooms()
   end
 
 
-  local function grow_some()
-    -- collect all the fresh sprouts from previous pass
-    local room_list = {}
-
+  local function grow_fresh_rooms()
     each R in LEVEL.rooms do
       if not R.is_grown then
-        table.insert(room_list, R)
+        Grower_grow_room(R)
+        return
       end
+    end
+  end
 
+
+  local function grow_teleport_trunks()
+    each R in LEVEL.rooms do
       if R.need_teleports > 0 then
         R.need_teleports = R.need_teleports - 1
         Grower_add_teleporter_trunk(R)
+        return
       end
-    end
-
-    rand.shuffle(room_list)
-
-    each R in room_list do
-      Grower_grow_room(R)
     end
   end
 
@@ -3100,10 +3076,9 @@ function Grower_grow_all_rooms()
 
     -- grow all the fresh rooms
     while not check_all_grown() do
-      grow_some()
+      grow_teleport_trunks()
+      grow_fresh_rooms()
     end
-
-    Grower_prune_small_rooms()
 
     local num_rooms = #LEVEL.rooms
     local coverage  = Grower_determine_coverage()
