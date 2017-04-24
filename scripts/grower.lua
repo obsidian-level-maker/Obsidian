@@ -2718,7 +2718,9 @@ function Grower_grammatical_room(R, pass, is_emergency)
     apply_num = 10  -- TODO : number of active links
 
   elseif pass == "decorate" then
-    apply_num = 7   -- TODO
+    -- TODO: review this (and stop_prob), see what works best
+    apply_num = sel(R.is_big, 10, 6)
+    if R.is_outdoor or R.is_cave then apply_num = apply_num / 2 end
 
   elseif pass == "park_fill" then
     apply_num = 30
