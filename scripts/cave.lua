@@ -19,13 +19,23 @@
 ------------------------------------------------------------------------
 
 
---class CAVE_INFO
+--class CELL_INFO
 --[[
-    W, H  -- size of cave (# of cells)
+    W, H  -- size (# of cells)
 
     x1, y1, x2, y2  -- bounding coords
 
     sx1, sy1, sx2, sy2  -- seed range
+
+    blocks : array(CAVE_AREA)  -- info for each 64x64 block
+
+    walk_chunks : list(CHUNK)  -- all places the player MUST be able
+                               -- walk to (conns, goals, etc...)
+
+
+    --- Cave specific fields ---
+
+    cave : CAVE   -- the raw generated cave
 
     step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
@@ -38,51 +48,43 @@
     torch_mode  : keyword  -- "none", "few", "some"
 
 
-    cave : CAVE  -- raw generated cave
+    floors : list(CAVE_AREA)
+    lakes  : list(CAVE_AREA)
 
-    walk_chunks : list(CHUNK)  -- all places the player MUST be able
-                               -- walk to (conns, goals, etc...)
-
-    blocks : array(AREA)  -- info for each 64x64 block
-
-    floors : list(AREA)
-    lakes  : list(AREA)
-
-    wall   : AREA
-    fence  : AREA
+    wall   : CAVE_AREA
+    fence  : CAVE_AREA
 --]]
 
 
 --class CAVE_AREA
 --[[
     --
-    -- This info describes a group of cave cells.
+    -- This info describes a group of cells.
     --
+
+    cx1, cy1, cx2, cy2   -- cell bounding box
+
+    floor_h    -- floor height
+    floor_mat  -- floor material
+
+    ceil_h     -- ceiling height
+    ceil_mat   -- ceiling material
 
     is_wall   : boolean  -- true for solid walls
     is_fence  : boolean  -- true for a lake fence
-
     is_liquid : boolean  -- true for a liquid floor
     is_sky    : boolean  -- true for a sky ceiling
 
     is_waterfall : boolean
 
-    cx1, cy1, cx2, cy2   -- cell bounding box
-
-    floor_h  -- floor height
-     ceil_h  -- ceiling height
-
-    floor_mat  -- floor material
-     ceil_mat  -- ceiling material
-
     goal_type : keyword      -- set if area contains a goal
 
-    neighbors : list(AREA)   -- only used for visitable floors
+    neighbors : list(CAVE_AREA)  -- only used for visitable floors
 
     host_spots : list(BBOX)  -- spots which can host a torch/prefab
 
     -- stuff for walkways only
-    children : list[AREA]
+    children : list[CAVE_AREA]
 --]]
 
 
@@ -151,7 +153,7 @@ function Cave_setup_info(R)
 
   R.cave_info = info
 
-  R.areas[1].cell_info = info
+  R.areas[1].cells = info
 
   -- determine extent of cells
   info.sx1 = R.sx1
@@ -1611,7 +1613,7 @@ end
 
 function Render_cells(base_area)
 
-  local info = base_area.cell_info
+  local info = base_area.cells
   assert(info)
 
 

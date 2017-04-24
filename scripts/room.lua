@@ -391,9 +391,9 @@ function ROOM_CLASS.calc_walk_vol(R)
   local vol = 0
 
   each A in R.areas do
-    if A.mode == "floor" or
-      (A.chunk and A.chunk.kind == "area") or
-      (A.chunk and A.chunk.kind == "stair")
+    if (A.mode == "floor" or A.mode == "nature") or
+       (A.chunk and A.chunk.kind == "area") or
+       (A.chunk and A.chunk.kind == "stair")
     then
       A:calc_volume()
       vol = vol + A.svolume
@@ -1449,6 +1449,7 @@ function Room_border_up()
 
 
   local function can_omit_fence(A1, A2)
+    -- TODO : review for mode == "nature"
     if not (A1.mode == "floor" and A1.room) then return false end
     if not (A2.mode == "floor" and A2.room) then return false end
 
@@ -1962,7 +1963,7 @@ function Room_choose_size(R, not_big)
 
   if R.is_cave then
     R.size_limit  = sum * rand.pick({ 1.7, 2.2, 2.7 })
-    R.floor_limit = nil
+    R.floor_limit = 8
 
   elseif R.is_big then
     R. size_limit = sum * 2.3
@@ -2043,6 +2044,8 @@ function Room_floor_ceil_heights()
 
 
   local function group_floors(R)
+    if R.is_park then return end
+    if R.is_cave then return end
     if R.kind == "hallway" then return end
 
     local start_area
@@ -2844,6 +2847,10 @@ function Room_floor_ceil_heights()
 
     each N2 in A.neighbors do
       if N2.mode == "liquid" then return N2 end
+    end
+
+    each N3 in A.neighbors do
+      if N3.mode == "nature" then return N3 end
     end
 
     error("failed to find cage neighbor")

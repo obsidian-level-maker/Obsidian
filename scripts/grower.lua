@@ -3167,6 +3167,17 @@ function Grower_expand_parks()
       Grower_grammatical_room(R, "park_fill")
     end
   end
+
+  -- fix the area modes
+  each R in room_list do
+    if R.is_park or R.is_cave then
+      each A in R.areas do
+        if A.mode == "floor" then
+          A.mode = "nature"
+        end
+      end -- A
+    end
+  end -- R
 end
 
 

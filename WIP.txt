@@ -7,8 +7,6 @@ WORK IN PROGRESS
 PARKS
 -----
 
--  add a style for it
-
 +  proper sky handling
 
 +  height variation  [ different areas ]
@@ -17,13 +15,12 @@ PARKS
    [ in constructed outdoors, don't use natural tex like GRASS
      except in the lowest area ]
 
+-  add a style for it, decide room properly
+
 
 
 Miscellaneous
 -------------
-
-???  should "celly" areas have MODE = "cells" ?
-
 
 >>>  prune small rooms AFTER "grow" pass  [ i.e. as we go ]
 
@@ -62,6 +59,7 @@ Exit Rooms
 
 ??  if exit room failed to sprout (or that room was killed) then
     force usage of a teleporter
+    [ ideally: start again...... ]
 
 
 

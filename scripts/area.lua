@@ -25,7 +25,8 @@
 
     id, name  -- debugging info
 
-    mode : keyword  -- "floor"  (traversible part of a normal room)
+    mode : keyword  -- "floor"  (a flat traversible part of a normal room)
+                    -- "nature" (a non-flat traversible part of a cave or park)
                     -- "liquid"
                     -- "cage"
                     -- "hallway"
@@ -46,6 +47,8 @@
     zone : ZONE
 
     chunk : CHUNK   -- only set when mode == "chunk"
+
+    cells : CELL_INFO  -- when mode == "nature" or "scenic"
 
 
     --- geometry of area ---
@@ -314,6 +317,8 @@ end
 function AREA_CLASS.highest_neighbor(A)
   local best
 
+  -- FIXME : for "nature" areas (like parks)
+
   each N in A.neighbors do
     if N.room == A.room and N.mode == "floor" and N.floor_h then
       if not best or N.floor_h > best.floor_h or
@@ -331,6 +336,8 @@ end
 
 function AREA_CLASS.lowest_neighbor(A)
   local best
+
+  -- FIXME : for "nature" areas (like parks)
 
   each N in A.neighbors do
     if N.room == A.room and N.mode == "floor" and N.floor_h then
@@ -1237,7 +1244,7 @@ function Area_locate_chunks()
 
   local function visit_room(R)
     each A in R.areas do
-      if A.mode == "floor" or A.mode == "liquid" then
+      if A.mode == "floor" or A.mode == "nature" or A.mode == "liquid" then
         find_chunks_in_area(A)
       end
     end

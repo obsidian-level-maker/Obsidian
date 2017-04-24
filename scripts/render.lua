@@ -1374,7 +1374,7 @@ function Render_seed(A, S)
   end
 
   -- caves, parks and landscapes are done elsewhere
-  if A.cell_info then
+  if A.mode == "nature" then
     return
   end
 
@@ -1676,7 +1676,7 @@ function Render_area(A)
   end
 
   -- handle caves, parks and landscapes
-  if A.cell_info then
+  if A.mode == "nature" then
     Render_cells(A)
   end
 
