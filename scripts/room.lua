@@ -2858,10 +2858,15 @@ function Room_floor_ceil_heights()
 
 
   local function kill_start_cages(R)
-    -- turn closets in start rooms into a plain floor
+    -- turn cages in start rooms into a plain floor
 
     each A in R.areas do
       if A.mode != "cage" then continue end
+
+      if R.is_park or R.is_cave then
+        A.mode = "void"
+        continue
+      end
 
       local N
 
