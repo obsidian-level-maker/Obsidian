@@ -1108,29 +1108,41 @@ end
 
 function Grower_prune_room(R)
 
-  local function kill_joiner(chunk)
-    local R2 = chunk.area.room
-    assert(R2)
-
-    gui.debugf("  killing joiner in %s\n", R2.name)
-
+  local function turn_joiner_into_closet(R2, chunk)
     chunk.kind = "closet"
 
-    chunk.area.mode = "void"
+    chunk.area.mode = "void"    -- ugh, what?
     chunk.content_kind = "void"
 
     chunk.dest_dir  = nil
     chunk.dest_area = nil
     chunk.shape = "U"
 
-    table.kill_elem(R2.joiners, chunk)
     table.insert(R2.closets, chunk)
+  end
 
-    -- remove peering too
+
+  local function kill_joiner(chunk)
+    local R2 = chunk.area.room
+    assert(R2)
+
+    gui.debugf("  killing joiner in %s\n", R2.name)
+
+    table.kill_elem(R2.joiners, chunk)
+
     if chunk.peer then
       chunk.peer.peer = nil
       chunk.peer = nil
     end
+
+    if false then
+      turn_joiner_into_closet(R2, chunk)
+      return
+    end
+
+    chunk.area:kill_it()
+
+    Chunk_kill(chunk)
   end
 
 

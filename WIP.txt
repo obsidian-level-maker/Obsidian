@@ -22,11 +22,6 @@ PARKS
 Miscellaneous
 -------------
 
->>>  prune small rooms AFTER "grow" pass  [ i.e. as we go ]
-
->>>  grower : when pruning rooms, totally remove dead joiners too
-
-
 ??? on LAST max_loop attempt, set sprout_bbox to boundary_bbox
 
 idea: on LAST max_loop attempt, allow extra teleporters

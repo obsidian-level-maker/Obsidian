@@ -209,17 +209,19 @@ function AREA_CLASS.kill_it(A)
 
   A.id   = -1
   A.name = "DEAD_" .. A.name
+  A.is_dead = true
 
   A.mode = "DEAD"
   A.kind = "DEAD"
-  A.room = nil
+
+  A.room  = nil
+  A.zone  = nil
+  A.conns = nil
 
   each S in A.seeds do
-    S.room = nil
     S.area = nil
+    S.room = nil
   end
-
-  A.conns = nil
 end
 
 

@@ -1188,6 +1188,34 @@ function Chunk_new(kind, sx1,sy1, sx2,sy2)
 end
 
 
+function Chunk_kill(chunk)
+  for sx = chunk.sx1, chunk.sx2 do
+  for sy = chunk.sy1, chunk.sy2 do
+    local S = SEEDS[sx][sy]
+    assert(S.chunk == chunk)
+    S.chunk = nil
+  end
+  end
+
+  -- TODO : handle area here?
+
+  chunk.kind = "DEAD_" .. chunk.kind
+  chunk.is_dead = true
+
+  chunk.area  = nil
+  chunk.place = nil
+  chunk.shape = nil
+
+  chunk.sx1  = nil ; chunk.sx2  = nil
+  chunk.sy1  = nil ; chunk.sy2  = nil
+
+  if chunk.peer then
+    chunk.peer.peer = nil
+    chunk.peer = nil
+  end
+end
+
+
 function Chunk_base_reqs(chunk, dir)
   local reqs =
   {
