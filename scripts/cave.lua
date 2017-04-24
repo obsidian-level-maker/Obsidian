@@ -27,6 +27,8 @@
 
     sx1, sy1, sx2, sy2  -- seed range
 
+    area : AREA   -- link back to normal area
+
     blocks : array(CAVE_AREA)  -- info for each 64x64 block
 
     walk_chunks : list(CHUNK)  -- all places the player MUST be able
@@ -153,7 +155,15 @@ function Cave_setup_info(R)
 
   R.cave_info = info
 
-  R.areas[1].cells = info
+  -- find the area to use
+  each A in R.areas do
+    if A.mode == "nature" then
+      assert(info.area == nil)
+      info.area = A
+    end
+  end
+
+  info.area.cells = info
 
   -- determine extent of cells
   info.sx1 = R.sx1
@@ -344,8 +354,6 @@ end
 
 function Cave_generate_cave(R, info, map)
 
-  local base_area = R.areas[1]
-
   local is_lake = (info.liquid_mode == "lake")
 
 
@@ -393,7 +401,7 @@ function Cave_generate_cave(R, info, map)
       local S = SEEDS[sx][sy]
 
       -- this ignores different rooms, AND closets and joiners too
-      if S.area != base_area then continue end
+      if S.area != info.area then continue end
 
       set_whole(S, 0)
 
@@ -475,7 +483,7 @@ function Cave_generate_cave(R, info, map)
     for sy = info.sy1, info.sy2 do
       local S = SEEDS[sx][sy]
 
-      if S.area != base_area then continue end
+      if S.area != info.area then continue end
 
       if rand.odds(10) and is_fully_interior(S) then
         set_whole(S, -1)
@@ -603,8 +611,6 @@ function Cave_create_areas(R)
 
   local info = R.cave_info
   local cave = info.cave
-
-  local base_area = R.areas[1]
 
   local is_lake = (info.liquid_mode == "lake")
 
@@ -782,8 +788,8 @@ function Cave_create_areas(R)
     install_area(AREA, cave, -1)
 
     -- this fixes MON_TELEPORT spots [ so they blend in ]
-    base_area.floor_mat = AREA.floor_mat
-    base_area.ceil_mat  = AREA.ceil_mat
+    info.area.floor_mat = AREA.floor_mat
+    info.area.ceil_mat  = AREA.ceil_mat
 
 
     -- compute properties of each sink
@@ -1331,7 +1337,6 @@ function Cave_floor_heights(R, entry_h)
   assert(entry_h)
 
   local info = R.cave_info
-  local base_area = R.areas[1]
 
 
   local z_change_prob = rand.sel(15, 40, 10)
@@ -1591,8 +1596,8 @@ function Cave_floor_heights(R, entry_h)
   end
 
   -- TEMP RUBBISH
-  base_area.floor_h = entry_h
-  base_area.ceil_h  = entry_h + R.walkway_height
+  info.area.floor_h = entry_h
+  info.area.ceil_h  = entry_h + R.walkway_height
 
   local entry_area = find_entry_area()
 
@@ -1614,10 +1619,12 @@ end
 function Render_cells(base_area)
 
   local info = base_area.cells
+
+  if not info then --!!!
+  stderrf("Render_cells on\n%s\n", table.tostr(base_area))
+  end
   assert(info)
 
-
-  local cave = info.cave
 
   local is_lake = (info.liquid_mode == "lake")
 
@@ -1835,7 +1842,7 @@ function Render_cells(base_area)
     local f_h = A.floor_h
 
     -- TODO : remove this
-    local R = assert(base_area.room)
+    local R = assert(info.area.room)
 
     local f_mat = A.floor_mat or R.floor_mat or R.main_tex
 
@@ -1870,7 +1877,7 @@ function Render_cells(base_area)
     if not A.ceil_h then return end
 
     -- TODO : remove this
-    local R = assert(base_area.room)
+    local R = assert(info.area.room)
 
     local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex
 
@@ -1902,7 +1909,7 @@ function Render_cells(base_area)
     end
 
     if light then
-      Ambient_push(base_area.base_light + light)
+      Ambient_push(info.area.base_light + light)
     end
 
     render_floor  (x, y, A)
@@ -2053,7 +2060,7 @@ function Render_cells(base_area)
 
 
   local function add_sky_rects()
-    each S in base_area.seeds do
+    each S in info.area.seeds do
       local rect =
       {
         x1 = S.x1, y1 = S.y1
@@ -2080,7 +2087,7 @@ function Render_cells(base_area)
 
   Trans.clear()
 
-  Ambient_push(base_area.base_light)
+  Ambient_push(info.area.base_light)
 
   create_delta_map()
 
@@ -2099,7 +2106,7 @@ function Render_cells(base_area)
 
   Ambient_pop()
 
-  if base_area.is_outdoor and false then --!!!!
+  if info.area.is_outdoor and false then --!!!!
     add_sky_rects()
   end
 end
@@ -2959,8 +2966,6 @@ function Cave_build_a_park(R, entry_h)
 
   local info
 
-  local base_area = R.areas[1]
-
 
   local function temp_install_floor(A)
     for sx = info.sx1, info.sx2 do
@@ -2970,7 +2975,7 @@ function Cave_build_a_park(R, entry_h)
       if S.diagonal then continue end
 
       -- this ignores different rooms, AND closets and joiners too
-      if S.area != base_area then continue end
+      if S.area != info.area then continue end
 
       local cx1 = (S.sx - info.sx1) * 2 + 1
       local cy1 = (S.sy - info.sy1) * 2 + 1
@@ -3021,8 +3026,8 @@ function Cave_build_a_park(R, entry_h)
   Cave_collect_walk_chunks(R, R.cave_info)
 
   -- TEMP RUBBISH
-  base_area.floor_h = entry_h
-  base_area.ceil_h  = entry_h + 256
+  info.area.floor_h = entry_h
+  info.area.ceil_h  = entry_h + 256
 
   do_parky_stuff()
 
@@ -3034,8 +3039,6 @@ end
 function Cave_determine_spots(R)
   local info = R.cave_info
   local cave = info.cave
-
-  local base_area = R.areas[1]
 
 
   local function do_floor_cell(x, y)
@@ -3187,7 +3190,7 @@ function Cave_determine_spots(R)
     end
 
     -- set the edges of the room
-    each E in base_area.side_edges do
+    each E in info.area.side_edges do
       gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
     end
 
