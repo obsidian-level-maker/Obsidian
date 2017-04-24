@@ -1123,7 +1123,8 @@ function Grower_prune_room(R)
 
 
   local function kill_joiner(chunk)
-    local R2 = chunk.area.room
+    local A2 = chunk.area
+    local R2 = A2.room
     assert(R2)
 
     gui.debugf("  killing joiner in %s\n", R2.name)
@@ -1140,7 +1141,9 @@ function Grower_prune_room(R)
       return
     end
 
-    chunk.area:kill_it()
+    A2:kill_it()
+
+    table.kill_elem(R2.areas, A2)
 
     Chunk_kill(chunk)
   end
