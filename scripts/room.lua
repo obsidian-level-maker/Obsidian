@@ -1523,6 +1523,9 @@ function Room_border_up()
       -- nothing needed if both building or both outdoor
       if (not A1.is_outdoor) != (not A2.is_outdoor) then
         Junction_make_wall(junc)
+
+      elseif A1.zborder and A2.zborder then
+        Junction_make_wall(junc)
       end
 
       return

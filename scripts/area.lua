@@ -2055,7 +2055,8 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
 ---??   A.park_border  = temp.park_border
 
-      if T.zborder == VOID then
+      -->                -- FIXME !!!! review this
+      if T.zborder == VOID or not T.zborder.is_outdoor then
         A.mode = "void"
         A.is_outdoor = nil
       else
