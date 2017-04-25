@@ -109,7 +109,12 @@ function Cave_brush(info, x, y)
 
   local coords = {}
 
+  local diag_map = info.diagonals
+
   each side in CELL_CORNERS do
+    -- create a triangle when cell straddles a diagonal seed
+    if diag_map[x][y] == 10 - side then continue end
+
     local dx, dy = geom.delta(side)
 
     local fx = bx + sel(dx < 0, 0, 64)
@@ -376,13 +381,24 @@ function Cave_map_usable_area(info)
   local bbox = {}
 
 
-  local function check_diagonal(diag_mode, cx, cy)
-    if diag_mode == 1 then return not (cx == 2 and cy == 2) end
-    if diag_mode == 3 then return not (cx == 1 and cy == 2) end
-    if diag_mode == 7 then return not (cx == 2 and cy == 1) end
-    if diag_mode == 9 then return not (cx == 1 and cy == 1) end
+  local function cell_within_triangle(diag_mode, dx, dy)
+    if diag_mode == 1 then return not (dx == 1 and dy == 1) end
+    if diag_mode == 3 then return not (dx == 0 and dy == 1) end
+    if diag_mode == 7 then return not (dx == 1 and dy == 0) end
+    if diag_mode == 9 then return not (dx == 0 and dy == 0) end
 
     error("bad diag_mode")
+  end
+
+
+  local function cell_touches_diagonal(diag_mode, dx, dy)
+    local val = dx * 10 + dy
+
+    if diag_mode == 1 or diag_mode == 9 then
+      return (val == 1) or (val == 10)
+    else
+      return (val == 0) or (val == 11)
+    end
   end
 
 
@@ -408,14 +424,17 @@ function Cave_map_usable_area(info)
       end
     end
 
-    for cx = cx1, cx2 do
-    for cy = cy1, cy2 do
-      if (diag_mode == nil) or check_diagonal(diag_mode, cx, cy) then
-        cells[cx][cy] = 0
+    for dx = 0, 1 do
+    for dy = 0, 1 do
+      local cx = cx1 + dx
+      local cy = cy1 + dy
 
-        if diag_mode then
-          info.diagonals[cx][cy] = diag_mode
-        end
+      if (diag_mode == nil) or cell_within_triangle(diag_mode, dx, dy) then
+        cells[cx][cy] = 0
+      end
+
+      if diag_mode and cell_touches_diagonal(diag_mode, dx, dy) then
+        info.diagonals[cx][cy] = diag_mode
       end
     end -- cx, cy
     end
