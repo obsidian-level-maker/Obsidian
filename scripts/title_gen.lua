@@ -1975,7 +1975,7 @@ function Title_gen_cave_scene()
 
   if rand.odds(50) then sun_x = - sun_x end
 
-  local tall_mode = rand.odds(66)
+  local tall_mode = rand.odds(35)
 
 
   local cave_colors =
