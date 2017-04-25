@@ -3122,7 +3122,7 @@ end
 
 
 
-function Cave_determine_spots(R)
+function Cave_determine_spots(R, area)
   local info = R.cave_info
   local cave = info.cave
 
@@ -3255,22 +3255,22 @@ function Cave_determine_spots(R)
 --]]
 
 
-  local function spots_for_cave_area(A)
-    assert(A.cx1 and A.cy2)
+  local function spots_for_cave_floor(FL)
+    assert(FL.cx1 and FL.cy2)
 
     -- determine bbox (with a bit extra)
-    local x1 = info.x1 + (A.cx1 - 2) * 64
-    local y1 = info.y1 + (A.cy1 - 2) * 64
+    local x1 = info.x1 + (FL.cx1 - 2) * 64
+    local y1 = info.y1 + (FL.cy1 - 2) * 64
 
-    local x2 = info.x1 + (A.cx2 + 1) * 64
-    local y2 = info.y1 + (A.cy2 + 1) * 64
+    local x2 = info.x1 + (FL.cx2 + 1) * 64
+    local y2 = info.y1 + (FL.cy2 + 1) * 64
 
     -- initialize grid to "ledge"
-    gui.spots_begin(x1, y1, x2, y2, A.floor_h, SPOT_LEDGE)
+    gui.spots_begin(x1, y1, x2, y2, FL.floor_h, SPOT_LEDGE)
 
     -- clear the floors
-    for cx = A.cx1, A.cx2 do
-    for cy = A.cy1, A.cy2 do
+    for cx = FL.cx1, FL.cx2 do
+    for cy = FL.cy1, FL.cy2 do
       do_floor_cell(cx, cy)
     end
     end
@@ -3281,7 +3281,7 @@ function Cave_determine_spots(R)
     end
 
     -- remove decoration entities
-    R:spots_do_decor(A.floor_h)
+    R:spots_do_decor(FL.floor_h)
 
     -- remove walls and blockers (using nearby brushes)
     gui.spots_apply_brushes()
@@ -3307,8 +3307,8 @@ gui.spots_dump("Cave spot dump")
 
   ---| Cave_determine_spots |---
 
-  each A in info.floors do
-    spots_for_cave_area(A)
+  each FL in info.floors do
+    spots_for_cave_floor(FL)
   end
 end
 

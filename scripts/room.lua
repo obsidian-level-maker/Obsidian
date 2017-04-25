@@ -1717,13 +1717,12 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
 
 
   local function spots_in_room(R)
-    if R.is_cave or R.is_park then
-      Cave_determine_spots(R)
-      return
-    end
-
     each A in R.areas do
-      spots_for_area(R, A)
+      if A.mode == "nature" then
+        Cave_determine_spots(R, A)
+      else
+        spots_for_area(R, A)
+      end
     end
   end
 
