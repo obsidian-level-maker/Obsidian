@@ -27,12 +27,23 @@
 
     sx1, sy1, sx2, sy2  -- seed range
 
-    area : AREA   -- link back to normal area
 
-    blocks : array(CAVE_AREA)  -- info for each 64x64 block
+    area : AREA   -- link back to normal area
 
     walk_chunks : list(CHUNK)  -- all places the player MUST be able
                                -- walk to (conns, goals, etc...)
+
+    map : CAVE    -- marks which parts are usable:
+                  --    nil : never touched (e.g. other rooms)
+                  --    -1  : forced off [ empty ]
+                  --    +1  : forced on  [ wall ]
+                  --     0  : normal processing
+
+    diagonals : array   -- marks which cells are on a diagonal seed
+                        -- (using the numbers 1/3/7/9)
+
+    blocks : array(CAVE_AREA)  -- info for each 64x64 block
+                               -- [ used for the final rendering of cells ]
 
 
     --- Cave specific fields ---
@@ -48,7 +59,6 @@
                            -- "low_wall", "high_wall"  (outdoor rooms)
 
     torch_mode  : keyword  -- "none", "few", "some"
-
 
     floors : list(CAVE_AREA)
     lakes  : list(CAVE_AREA)
@@ -146,24 +156,27 @@ end
 
 
 
-function Cave_setup_info(R)
+function Cave_setup_info(R, area)
   local info =
   {
     lakes  = {}
     lights = {}
   }
 
-  R.cave_info = info
-
   -- find the area to use
-  each A in R.areas do
-    if A.mode == "nature" then
-      assert(info.area == nil)
-      info.area = A
+  if not area then
+    each A in R.areas do
+      if A.mode == "nature" then
+        assert(info.area == nil)
+        area = A
+      end
     end
+
+    assert(area)
   end
 
-  info.area.cells = info
+  info.area  = area
+  area.cells = info
 
   -- determine extent of cells
   info.sx1 = R.sx1
@@ -182,7 +195,10 @@ function Cave_setup_info(R)
 
 --stderrf("setup_info %d x %d : %s\n", info.W, info.H, R.name)
 
-  info.blocks = table.array_2D(info.W, info.H)
+  info.map = AUTOMATA_CLASS.new(info.W, info.H)
+
+  info.diagonals = table.array_2D(info.W, info.H)
+  info.blocks    = table.array_2D(info.W, info.H)
 
   info.floors = {}
 
@@ -192,6 +208,8 @@ function Cave_setup_info(R)
   }
 
   info.wall = WALL_AREA
+
+  return info
 end
 
 
@@ -352,13 +370,12 @@ end
 
 
 
-function Cave_generate_cave(R, info, map)
+function Cave_generate_cave(R, info)
 
   local is_lake = (info.liquid_mode == "lake")
 
-
   -- this contains where walls and must-be-clear spots are
-  local map
+  local map = info.map
 
   -- this is the generated 2d cave
   local cave
@@ -576,8 +593,6 @@ function Cave_generate_cave(R, info, map)
 
   ---| Cave_generate_cave |---
 
-  map = AUTOMATA_CLASS.new(info.W, info.H)
-
   mark_boundaries()
 
   clear_walk_chunks()
@@ -604,12 +619,11 @@ end
 
 
 
-function Cave_create_areas(R)
+function Cave_create_areas(R, info)
   --|
   --| sub-divide the floor of the cave into areas of differing heights.
   --|
 
-  local info = R.cave_info
   local cave = info.cave
 
   local is_lake = (info.liquid_mode == "lake")
@@ -2937,18 +2951,21 @@ end
 
 
 function Cave_build_room(R, entry_h)
-  Cave_setup_info(R)
+ 
+  local info = Cave_setup_info(R)
 
-  Cave_collect_walk_chunks(R, R.cave_info)
+  R.cave_info = info
 
-  Cave_decide_properties(R, R.cave_info)
+  Cave_collect_walk_chunks(R, info)
 
-  Cave_generate_cave(R, R.cave_info)
+  Cave_decide_properties(R, info)
+
+  Cave_generate_cave(R, info)
 
 ---  Cave_lake_fences(R)
 ---  Cave_fill_lakes(R)
 
-  Cave_create_areas(R)
+  Cave_create_areas(R, info)
 
 ---  Cave_bunch_areas(R, "liquid")
 ---  Cave_bunch_areas(R, "sky")
@@ -3019,11 +3036,11 @@ function Cave_build_a_park(R, entry_h)
 
   ---| Cave_build_a_park |---
 
-  Cave_setup_info(R)
+  info = Cave_setup_info(R)
 
-  info = R.cave_info
+  R.cave_info = info
 
-  Cave_collect_walk_chunks(R, R.cave_info)
+  Cave_collect_walk_chunks(R, info)
 
   -- TEMP RUBBISH
   info.area.floor_h = entry_h
