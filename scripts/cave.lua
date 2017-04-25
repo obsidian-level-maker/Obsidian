@@ -157,6 +157,8 @@ end
 
 
 function Cave_setup_info(R, area)
+  -- R can be NIL (for scenic areas outside of map)
+
   local info =
   {
     lakes  = {}
@@ -179,10 +181,7 @@ function Cave_setup_info(R, area)
   area.cells = info
 
   -- determine extent of cells
-  info.sx1 = R.sx1
-  info.sy1 = R.sy1
-  info.sx2 = R.sx2
-  info.sy2 = R.sy2
+  info.sx1, info.sy1, info.sx2, info.sy2 = area:calc_seed_bbox()
 
   info.W = 2 * (info.sx2 - info.sx1 + 1)
   info.H = 2 * (info.sy2 - info.sy1 + 1)
@@ -193,7 +192,7 @@ function Cave_setup_info(R, area)
   info.x2 = SEEDS[info.sx2][info.sy2].x2
   info.y2 = SEEDS[info.sx2][info.sy2].y2
 
---stderrf("setup_info %d x %d : %s\n", info.W, info.H, R.name)
+--stderrf("setup_info %d x %d : %s\n", info.W, info.H, area.name)
 
   info.map = AUTOMATA_CLASS.new(info.W, info.H)
 
@@ -1925,10 +1924,10 @@ function Render_cells(base_area)
   local function render_floor(x, y, A)
     local f_h = A.floor_h
 
-    -- TODO : remove this
-    local R = assert(info.area.room)
+    -- TODO : review this
+    local R = info.area.room or {}
 
-    local f_mat = A.floor_mat or R.floor_mat or R.main_tex
+    local f_mat = A.floor_mat or R.floor_mat or R.main_tex or "_ERROR"
 
     if A.is_wall or A.is_fence then
       f_mat = A.wall_mat or R.main_tex or R.main_tex
@@ -1960,10 +1959,10 @@ function Render_cells(base_area)
   local function render_ceiling(x, y, A)
     if not A.ceil_h then return end
 
-    -- TODO : remove this
-    local R = assert(info.area.room)
+    -- TODO : review this
+    local R = info.area.room or {}
 
-    local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex
+    local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex or "_ERROR"
 
     local c_brush = Cave_brush(info, x, y)
 
@@ -2171,8 +2170,6 @@ function Render_cells(base_area)
 
   Trans.clear()
 
-  Ambient_push(info.area.base_light)
-
   create_delta_map()
 
 ---???  add_liquid_pools()
@@ -2187,8 +2184,6 @@ function Render_cells(base_area)
   end
 
   render_all_cells(2)
-
-  Ambient_pop()
 
   if info.area.is_outdoor and false then --!!!!
     add_sky_rects()
@@ -3117,7 +3112,64 @@ end
 
 
 function Cave_build_a_scenic_vista(area)
-  -- TODO
+
+  local info
+
+
+  local function temp_install_floor(FL)
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      local val = info.map.cells[cx][cy]
+
+      if val == nil then continue end
+
+      info.blocks[cx][cy] = FL
+
+      FL.cx1 = math.min(FL.cx1 or  9999, cx)
+      FL.cy1 = math.min(FL.cy1 or  9999, cy)
+      FL.cx2 = math.max(FL.cx2 or -9999, cx)
+      FL.cy2 = math.max(FL.cy2 or -9999, cy)
+    end -- sx, sy
+    end
+  end
+
+
+  local function do_scenic_stuff()
+    local FLOOR =
+    {
+      neighbors = {}
+      children  = {}
+
+      floor_mat = "REDWALL"
+       ceil_mat = "COMPBLUE"
+
+      -- TEMP RUBBISH
+      floor_h   = -73
+      ceil_h    = 255
+    }
+
+    info.FLOOR = FLOOR
+
+    table.insert(info.floors, FLOOR)
+
+    -- TEMP RUBBISH
+    info.area.floor_h = FLOOR.floor_h
+    info.area.ceil_h  = FLOOR.ceil_h
+  end
+
+
+  ---| Cave_build_a_scenic_vista |---
+
+  -- FIXME: eventually ALL "scenic" areas call into here
+  area.mode = "nature"
+
+  info = Cave_setup_info(R, area)
+
+  Cave_map_usable_area(info)
+
+  do_scenic_stuff()
+
+  temp_install_floor(info.FLOOR)
 end
 
 

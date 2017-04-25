@@ -1670,14 +1670,14 @@ end
 function Render_area(A)
   Ambient_push(A.lighting)
 
-  each E in A.edges do
-    assert(E.area == A)
-    Render_edge(E)
-  end
-
   -- handle caves, parks and landscapes
   if A.mode == "nature" then
     Render_cells(A)
+  end
+
+  each E in A.edges do
+    assert(E.area == A)
+    Render_edge(E)
   end
 
   each S in A.seeds do
@@ -1802,8 +1802,11 @@ function Render_properties_for_area(A)
 
   local R = A.room
 
-  -- scenic parts done elsewhere...
-  if A.mode == "scenic" then
+  -- natural parts done elsewhere...
+  if A.mode == "scenic" or A.mode == "nature" then
+    if not A.lighting then
+      A.lighting = LEVEL.sky_light
+    end
     return
   end
 

@@ -1646,7 +1646,7 @@ function Room_determine_spots()
     if not mode then mode = A.mode end
 
     -- get bbox of room
-    local rx1, ry1, rx2, ry2 = area_get_bbox(A)
+    local rx1, ry1, rx2, ry2 = A:calc_real_bbox()
 
     -- initialize grid to "ledge"
     gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, A.floor_h, SPOT_LEDGE)
@@ -3467,6 +3467,13 @@ function Room_build_all()
   Room_reckon_doors()
   Room_prepare_skies()
 
+each A in LEVEL.areas do
+  if A.id == 87 then
+    assert(A.mode == "scenic")
+    A.scenic_vista = true
+  end
+end
+
   Room_floor_ceil_heights()
   Room_set_sky_heights()
 
@@ -3477,6 +3484,12 @@ function Room_build_all()
   Layout_create_scenic_borders()
 
   Room_border_up()
+
+each A in LEVEL.areas do
+  if A.scenic_vista then
+    Cave_build_a_scenic_vista(A)
+  end
+end
 
   Layout_finish_scenic_borders()
   Room_add_cage_rails()

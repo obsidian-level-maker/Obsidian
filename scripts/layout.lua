@@ -1859,7 +1859,7 @@ function Layout_create_scenic_borders()
     Z.border_areas = {}
 
     each A in LEVEL.areas do
-      if A.is_boundary and A.zone == Z then
+      if A.is_boundary and A.zone == Z and not A.scenic_vista then
         table.insert(Z.border_areas, A)
       end
     end
@@ -1888,7 +1888,7 @@ function Layout_create_scenic_borders()
   end
 
 
-  local function set_junctions(A)
+  local function clear_junctions(A)
     each N in A.neighbors do
       if N.room and N.is_outdoor then
         local junc = Junction_lookup(A, N)
@@ -1935,7 +1935,7 @@ function Layout_create_scenic_borders()
     end
 
     each A in Z.border_areas do
-      set_junctions(A)
+      clear_junctions(A)
     end
   end
 
@@ -1944,6 +1944,12 @@ function Layout_create_scenic_borders()
 
   each Z in LEVEL.zones do
     setup_zone(Z)
+  end
+
+  each A in LEVEL.areas do
+    if A.scenic_vista then
+      clear_junctions(A)
+    end
   end
 end
 
@@ -2056,14 +2062,14 @@ function Layout_finish_scenic_borders()
   end
 
   each A in LEVEL.areas do
-    if A.is_boundary then
+    if A.is_boundary and not A.scenic_vista then
       temp_properties(A)
       do_outer_skies(A)
     end
   end
 
   each A in LEVEL.areas do
-    if A.is_boundary and A.park_border then
+    if A.is_boundary and A.park_border and not A.scenic_vista then
       do_park_borders(A)
     end
   end

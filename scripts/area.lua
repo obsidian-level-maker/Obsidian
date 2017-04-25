@@ -230,28 +230,31 @@ function AREA_CLASS.tostr(A)
 end
 
 
-function area_get_seed_bbox(A)
+function AREA_CLASS.calc_seed_bbox(A)
   local first_S = A.seeds[1]
 
-  local BB_X1, BB_Y1 = first_S, first_S
-  local BB_X2, BB_Y2 = first_S, first_S
+  local sx1, sy1 = first_S.sx, first_S.sy
+  local sx2, sy2 = first_S.sx, first_S.sy
 
   each S in A.seeds do
-    if S.sx < BB_X1.sx then BB_X1 = S end
-    if S.sy < BB_Y1.sy then BB_Y1 = S end
+    sx1 = math.min(sx1, S.sx)
+    sy1 = math.min(sy1, S.sy)
 
-    if S.sx > BB_X2.sx then BB_X2 = S end
-    if S.sy > BB_Y2.sy then BB_Y2 = S end
+    sx2 = math.max(sx2, S.sx)
+    sy2 = math.max(sy2, S.sy)
   end
 
-  return BB_X1, BB_Y1, BB_X2, BB_Y2
+  return sx1, sy1, sx2, sy2
 end
 
 
-function area_get_bbox(A)
-  local BB_X1, BB_Y1, BB_X2, BB_Y2 = area_get_seed_bbox(A)
+function AREA_CLASS.calc_real_bbox(A)
+  local sx1, sy1, sx2, sy2 = A:calc_seed_bbox()
 
-  return BB_X1.x1, BB_Y1.y1, BB_X2.x2, BB_Y2.y2
+  local S1 = SEEDS[sx1][sy1]
+  local S2 = SEEDS[sx2][sy2]
+
+  return S1.x1, S1.y1, S2.x2, S2.y2
 end
 
 
