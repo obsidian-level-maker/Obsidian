@@ -642,9 +642,7 @@ private:
 					   int x1, int y1, int x2, int y2, int floor_h)
 	{
 		// ignore non-solid brushes
-		if ((B->bflags & BFLAG_NoClip) ||
-			B->bkind == BKIND_Liquid   ||
-			B->bkind == BKIND_Trigger)
+		if (B->bkind != BKIND_Solid || (B->bflags & BFLAG_NoClip))
 			return;
 
 		// bbox check (skip if merely touching the bbox)

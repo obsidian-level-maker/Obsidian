@@ -1623,8 +1623,8 @@ end
 
 
 function Room_determine_spots()
-
-  -- Algorithm:
+  --
+  -- ALGORITHM:
   --
   -- For each area of each room:
   --
@@ -1676,7 +1676,7 @@ function Room_determine_spots()
     gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
 
---  stderrf("mon_spots @ %s floor:%d : %d\n", R.name, f_h, #mon_spots)
+--- gui.debugf("mon_spots @ %s floor:%d : %d\n", R.name, A.floor_h, #mon_spots)
 
     -- this is mainly for traps
     if A.mon_focus then
