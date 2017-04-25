@@ -33,11 +33,11 @@
     walk_chunks : list(CHUNK)  -- all places the player MUST be able
                                -- walk to (conns, goals, etc...)
 
-    map : CAVE    -- marks which parts are usable:
-                  --    nil : never touched (e.g. other rooms)
-                  --    -1  : forced off [ empty ]
-                  --    +1  : forced on  [ wall ]
-                  --     0  : normal processing
+    map : AUTOMATA  -- marks which parts are usable:
+                    --    nil : never touched (e.g. other rooms)
+                    --    -1  : forced off [ empty ]
+                    --    +1  : forced on  [ wall ]
+                    --     0  : normal processing
 
     diagonals : array   -- marks which cells are on a diagonal seed
                         -- (using the numbers 1/3/7/9)
@@ -48,7 +48,7 @@
 
     --- Cave specific fields ---
 
-    cave : CAVE   -- the raw generated cave
+    cave : AUTOMATA   -- the raw generated cave
 
     step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
@@ -370,6 +370,87 @@ end
 
 
 
+function Cave_map_usable_area(info)
+
+  local cells = info.map.cells
+
+  local bbox = {}
+
+
+  local function check_diagonal(diag_mode, cx, cy)
+    if diag_mode == 1 then return not (cx == 2 and cy == 2) end
+    if diag_mode == 3 then return not (cx == 1 and cy == 2) end
+    if diag_mode == 7 then return not (cx == 2 and cy == 1) end
+    if diag_mode == 9 then return not (cx == 1 and cy == 1) end
+
+    error("bad diag_mode")
+  end
+
+
+  local function visit_seed(S, sx, sy)
+    local cx1 = (S.sx - info.sx1) * 2 + 1
+    local cy1 = (S.sy - info.sy1) * 2 + 1
+    local cx2 = cx1 + 1
+    local cy2 = cy1 + 1
+
+    bbox.cx1 = math.min(bbox.cx1 or  9999, cx1)
+    bbox.cy1 = math.min(bbox.cy1 or  9999, cy1)
+    bbox.cx2 = math.max(bbox.cx2 or -9999, cx2)
+    bbox.cy2 = math.max(bbox.cy2 or -9999, cy2)
+
+    -- update diagonal grid for cave
+    local diag_mode
+
+    if S.diagonal then
+      diag_mode = S.diagonal
+
+      if S.area != info.area then
+        diag_mode = 10 - diag_mode
+      end
+    end
+
+    for cx = cx1, cx2 do
+    for cy = cy1, cy2 do
+      if (diag_mode == nil) or check_diagonal(diag_mode, cx, cy) then
+        cells[cx][cy] = 0
+
+        if diag_mode then
+          info.diagonals[cx][cy] = diag_mode
+        end
+      end
+    end -- cx, cy
+    end
+  end
+
+
+  ---| Cave_map_usable_area |---
+
+  for sx = info.sx1, info.sx2 do
+  for sy = info.sy1, info.sy2 do
+    local S = SEEDS[sx][sy]
+
+    -- this ignores different rooms, AND closets and joiners too
+    if S.area == info.area or
+       (S.top and S.top.area == info.area)
+    then
+      visit_seed(S, sx, sy)
+    end
+  end -- sx, sy
+  end
+end
+
+
+
+function Cave_clear_walk_chunks(info)
+  each chunk in info.walk_chunks do
+    assert(chunk.cx1)
+
+    info.map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, -1)
+  end
+end
+
+
+
 function Cave_generate_cave(R, info)
 
   local is_lake = (info.liquid_mode == "lake")
@@ -420,8 +501,6 @@ function Cave_generate_cave(R, info)
       -- this ignores different rooms, AND closets and joiners too
       if S.area != info.area then continue end
 
-      set_whole(S, 0)
-
       for dir = 2,8,2 do
         if Cave_is_edge(S, dir) then
           set_side(S, dir, sel(is_lake, -1, 1))
@@ -446,15 +525,6 @@ function Cave_generate_cave(R, info)
       end
 
     end -- sx, sy
-    end
-  end
-
-
-  local function clear_walk_chunks()
-    each chunk in info.walk_chunks do
-      assert(chunk.cx1)
-
-      map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, -1)
     end
   end
 
@@ -595,7 +665,7 @@ function Cave_generate_cave(R, info)
 
   mark_boundaries()
 
-  clear_walk_chunks()
+  Cave_clear_walk_chunks(info)
 
   generate_cave()
 end
@@ -2951,7 +3021,7 @@ end
 
 
 function Cave_build_room(R, entry_h)
- 
+
   local info = Cave_setup_info(R)
 
   R.cave_info = info
@@ -2959,6 +3029,8 @@ function Cave_build_room(R, entry_h)
   Cave_collect_walk_chunks(R, info)
 
   Cave_decide_properties(R, info)
+
+  Cave_map_usable_area(info)
 
   Cave_generate_cave(R, info)
 
@@ -2984,31 +3056,19 @@ function Cave_build_a_park(R, entry_h)
   local info
 
 
-  local function temp_install_floor(A)
-    for sx = info.sx1, info.sx2 do
-    for sy = info.sy1, info.sy2 do
-      local S = SEEDS[sx][sy]
+  local function temp_install_floor(FL)
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      local val = info.map.cells[cx][cy]
 
-      if S.diagonal then continue end
+      if val == nil then continue end
 
-      -- this ignores different rooms, AND closets and joiners too
-      if S.area != info.area then continue end
+      info.blocks[cx][cy] = FL
 
-      local cx1 = (S.sx - info.sx1) * 2 + 1
-      local cy1 = (S.sy - info.sy1) * 2 + 1
-
-      for cx = cx1, cx1+1 do
-      for cy = cy1, cy1+1 do
-        info.blocks[cx][cy] = A
-      end -- cx, cy
-      end
-
-      A.cx1 = math.min(A.cx1 or  9999, cx1)
-      A.cy1 = math.min(A.cy1 or  9999, cy1)
-
-      A.cx2 = math.max(A.cx2 or -9999, cx1+1)
-      A.cy2 = math.max(A.cy2 or -9999, cy1+1)
-
+      FL.cx1 = math.min(FL.cx1 or  9999, cx)
+      FL.cy1 = math.min(FL.cy1 or  9999, cy)
+      FL.cx2 = math.max(FL.cx2 or -9999, cx)
+      FL.cy2 = math.max(FL.cy2 or -9999, cy)
     end -- sx, sy
     end
   end
@@ -3042,6 +3102,9 @@ function Cave_build_a_park(R, entry_h)
 
   Cave_collect_walk_chunks(R, info)
 
+  Cave_map_usable_area(info)
+  Cave_clear_walk_chunks(info)
+
   -- TEMP RUBBISH
   info.area.floor_h = entry_h
   info.area.ceil_h  = entry_h + 256
@@ -3049,6 +3112,12 @@ function Cave_build_a_park(R, entry_h)
   do_parky_stuff()
 
   temp_install_floor(info.FLOOR)
+end
+
+
+
+function Cave_build_a_scenic_vista(area)
+  -- TODO
 end
 
 
