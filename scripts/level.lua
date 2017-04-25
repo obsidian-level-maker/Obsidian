@@ -1455,7 +1455,7 @@ function Episode_plan_weapons()
       if OB_CONFIG.weapons == "later"     then skip_prob = 20 end
       if OB_CONFIG.weapons == "normal"    then skip_prob = 10 end
 
-      if LEV.ep_along >= 0.2 and rand.odds(skip_prob) then
+      if LEV.id >= 3 and LEV.ep_along >= 0.2 and rand.odds(skip_prob) then
         want_num = want_num - 1
       end
 
