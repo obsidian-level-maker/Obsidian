@@ -1374,7 +1374,7 @@ function Render_seed(A, S)
   end
 
   -- caves, parks and landscapes are done elsewhere
-  if A.mode == "nature" then
+  if A.mode == "nature" or A.mode == "scenic" then
     return
   end
 
@@ -1671,7 +1671,7 @@ function Render_area(A)
   Ambient_push(A.lighting)
 
   -- handle caves, parks and landscapes
-  if A.mode == "nature" then
+  if A.mode == "nature" or A.mode == "scenic" then
     Render_cells(A)
   end
 
@@ -1803,7 +1803,7 @@ function Render_properties_for_area(A)
   local R = A.room
 
   -- natural parts done elsewhere...
-  if A.mode == "scenic" or A.mode == "nature" then
+  if A.mode == "nature" or A.mode == "scenic" then
     if not A.lighting then
       A.lighting = LEVEL.sky_light
     end

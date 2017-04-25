@@ -1942,12 +1942,12 @@ function Layout_create_scenic_borders()
 
   ---| Layout_create_scenic_borders |---
 
-  each Z in LEVEL.zones do
-    setup_zone(Z)
-  end
+---##  each Z in LEVEL.zones do
+---##    setup_zone(Z)
+---##  end
 
   each A in LEVEL.areas do
-    if A.scenic_vista then
+    if A.mode == "scenic" then
       clear_junctions(A)
     end
   end
@@ -2061,6 +2061,7 @@ function Layout_finish_scenic_borders()
     Z.scenic_sky_h = Z.sky_h ---??? + add_h
   end
 
+--[[  OLD
   each A in LEVEL.areas do
     if A.is_boundary and not A.scenic_vista then
       temp_properties(A)
@@ -2073,6 +2074,7 @@ function Layout_finish_scenic_borders()
       do_park_borders(A)
     end
   end
+--]]
 end
 
 

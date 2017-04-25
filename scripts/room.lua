@@ -3467,31 +3467,25 @@ function Room_build_all()
   Room_reckon_doors()
   Room_prepare_skies()
 
-each A in LEVEL.areas do
-  if A.id == 87 then
-    assert(A.mode == "scenic")
-    A.scenic_vista = true
-  end
-end
-
   Room_floor_ceil_heights()
   Room_set_sky_heights()
 
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
 
-  Layout_liquid_stuff()
-  Layout_create_scenic_borders()
+Layout_liquid_stuff()
+Layout_create_scenic_borders()
 
   Room_border_up()
 
 each A in LEVEL.areas do
-  if A.scenic_vista then
+  if A.mode == "scenic" then
     Cave_build_a_scenic_vista(A)
   end
 end
 
-  Layout_finish_scenic_borders()
+Layout_finish_scenic_borders()
+
   Room_add_cage_rails()
 
   Layout_handle_corners()

@@ -3159,8 +3159,8 @@ function Cave_build_a_scenic_vista(area)
       neighbors = {}
       children  = {}
 
-      floor_mat = "REDWALL"
-       ceil_mat = "COMPBLUE"
+      floor_mat = "FWATER1"
+       ceil_mat = "_SKY"
 
       -- TEMP RUBBISH
       floor_h   = -73
@@ -3179,8 +3179,7 @@ function Cave_build_a_scenic_vista(area)
 
   ---| Cave_build_a_scenic_vista |---
 
-  -- FIXME: eventually ALL "scenic" areas call into here
-  area.mode = "nature"
+  assert(area.mode == "scenic")
 
   info = Cave_setup_info(R, area)
 
