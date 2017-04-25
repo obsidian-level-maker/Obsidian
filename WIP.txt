@@ -4,6 +4,19 @@ WORK IN PROGRESS
 
 
 
+Scenic Borders
+--------------
+
++  proper sky handling
+
++  different styles:
+   - mountainy areas  (w/ trees or torches)
+   - cavey/liquidy areas
+   - fenced off pools from V7-WEIRD
+   - fancy fences
+
+
+
 PARKS
 -----
 
@@ -26,20 +39,13 @@ Miscellaneous
 
 idea: on LAST max_loop attempt, allow extra teleporters
 
-
-
-Minor Goals
------------
-
 -  grower: compute a score early, do a check on first whole-seed
    "area" element and do the "max_size" check here too
 
 -  if room has a boss/guard needing a large chunk, allocate those
    chunks early [ but allow importants to override in emergencies ]
 
-
 stairs : prevent two stairs from touching
-
 
 steepness : IF exist on a rule AND room is outdoor THEN prob *= 0.5
 
@@ -58,22 +64,19 @@ Exit Rooms
 
 
 
-Major Goals
------------
+Hallway System
+--------------
 
-+  better room/map borders
-   -  the fenced off pools from V7-WEIRD
-   -  use cave code to make mountainy areas
-   -  use cave code to make cavey/liquidy areas
-   -  get the "park fence" logic working
++  construct them from pieces (each one is a prefab)
 
-+  hallway system
-   -  made up of pieces (each one is a prefab)
-   -  "terminator" pieces between hall and room
-      [ need plain, key locked, switch locked versions... ]
-   -  a "vent" style
-   -  a "curvey" style like in V5
-   -  a wide-ish one with stairs, like in V4
+-  "terminator" pieces between hall and room
+   [ need plain, key locked, switch locked versions... ]
+
+-  different styles:
+   - a "vent" style
+   - a "curvey" style like in V5
+   - a wide-ish one with stairs, like in V4
+   - a techy one like in V5/V6
 
 
 
@@ -82,16 +85,9 @@ Quake3 CSG Code
 
 +  better triangulation  [ review q3map2 code ]
 
-+  implement ambient lighting -- every face belongs to a "room"
-   and ambient light(s) for the room is specified by Lua
-
 -  brushlib function to visit side faces, and if they
    contain u1/u2/v1/v2 then compute the uv_mat
 
 -  brushlib function to visit top/bottom faces, and generate
    a uv_mat if the sides contain tu/tv/bu/bv values
-
-LATER : optimise detail face intersection
-        1. rebuild BSP tree
-        2. reject faces lying completely inside a solid brush
 

@@ -85,6 +85,17 @@ IDEA : a sharp corner removal pass [ before border stuff ]
        ..aaa..
 
 
+Quake3 CSG
+----------
+
++  implement ambient lighting -- every face belongs to a "room"
+   and ambient light(s) for the room is specified by Lua
+
++  optimise detail face intersection
+   1. rebuild BSP tree
+   2. reject faces lying completely inside a solid brush
+
+
 Caves
 -----
 
