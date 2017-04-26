@@ -437,17 +437,16 @@ function ROOM_CLASS.is_unused_leaf(R)
 end
 
 
-function secret_entry_conn(R, skip_room)
-  -- find entry connection for a potential secret room
-  -- skip_room is usually NIL
+function ROOM_CLASS.secret_entry_conn(R, skip_room)
+  -- find entry connection for a potential secret room.
+  -- when skip_room is non-nil, ignore it.
 
   each C in R.conns do
-    if C.A1.room != C.A2.room and
-       C.A1.room != skip_room and
-       C.A2.room != skip_room
-    then
-      return C
-    end
+    local R2 = C:other_room(R)
+
+    if R2 == skip_room then continue end
+
+    return C
   end
 
   error("Cannot find entry conn for secret room")
