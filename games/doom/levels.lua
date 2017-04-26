@@ -117,8 +117,8 @@ function DOOM.get_levels()
     end
 
     if OB_CONFIG.length == "single" then
-      game_along = rand.pick({ 0.2, 0.3, 0.4, 0.7 })
-      ep_along = game_along
+      game_along = 0.57
+      ep_along   = 0.75
 
     elseif OB_CONFIG.length == "few" then
       ep_along = game_along
