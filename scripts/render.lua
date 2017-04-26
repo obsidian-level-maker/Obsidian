@@ -2523,8 +2523,10 @@ function Render_determine_spots()
   --   4. use the CSG code to kill any blocking brushes.
   --      This step creates the WALL cells.
   --
+  local info
 
-  local function spots_for_area(R, A, mode)
+
+  local function spots_in_flat_floor(R, A, mode)
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
     if not mode then mode = A.mode end
 
@@ -2576,7 +2578,6 @@ function Render_determine_spots()
     end
 
     if mode == "cage" then
-gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
       table.insert(R.cages, { mon_spots=mon_spots })
 
     elseif mode == "trap" then
@@ -2599,12 +2600,86 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
   end
 
 
+  local function do_floor_cell(x, y)
+    if x < 1 or x > info.W then return end
+    if y < 1 or y > info.H then return end
+
+    local A = info.blocks[x][y]
+
+    if not A then return end
+    if not A.floor_h then return end
+
+    local poly = Cave_brush(info, x, y)
+
+    gui.spots_fill_poly(poly, SPOT_CLEAR)
+  end
+
+
+  local function spots_in_cave_floor(R, FL)
+    assert(FL.cx1 and FL.cy2)
+
+    -- determine bbox (with a bit extra)
+    local x1 = info.x1 + (FL.cx1 - 2) * 64
+    local y1 = info.y1 + (FL.cy1 - 2) * 64
+
+    local x2 = info.x1 + (FL.cx2 + 1) * 64
+    local y2 = info.y1 + (FL.cy2 + 1) * 64
+
+    -- initialize grid to "ledge"
+    gui.spots_begin(x1, y1, x2, y2, FL.floor_h, SPOT_LEDGE)
+
+    -- clear the floors
+    for cx = FL.cx1, FL.cx2 do
+    for cy = FL.cy1, FL.cy2 do
+      do_floor_cell(cx, cy)
+    end
+    end
+
+    -- set the edges of the room
+    each E in info.area.side_edges do
+      gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
+    end
+
+    -- remove decoration entities
+    R:spots_do_decor(FL.floor_h)
+
+    -- remove walls and blockers (using nearby brushes)
+    gui.spots_apply_brushes()
+
+gui.spots_dump("Cave spot dump")
+
+
+    -- now grab all the spots...
+
+    local item_spots = {}
+    local  mon_spots = {}
+
+    gui.spots_get_items(item_spots)
+    gui.spots_get_mons(mon_spots)
+
+    table.append(R.item_spots, item_spots)
+    table.append(R.mon_spots,  mon_spots)
+
+    gui.spots_end()
+  end
+
+
+  local function spots_in_natural_area(R, area)
+    info = assert(area.cells)
+
+    each FL in info.floors do
+      spots_in_cave_floor(R, FL)
+    end
+  end
+
+
   local function spots_in_room(R)
     each A in R.areas do
-      if A.mode == "nature" then
-        Cave_determine_spots(R, A)
-      elseif A.mode == "floor" or A.mode == "cage" then
-        spots_for_area(R, A)
+      if A.mode == "floor" or A.mode == "cage" then
+        spots_in_flat_floor(R, A)
+
+      elseif A.mode == "nature" then
+        spots_in_natural_area(R, A)
       end
     end
   end
