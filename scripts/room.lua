@@ -1720,7 +1720,7 @@ gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
     each A in R.areas do
       if A.mode == "nature" then
         Cave_determine_spots(R, A)
-      else
+      elseif A.mode == "floor" or A.mode == "cage" then
         spots_for_area(R, A)
       end
     end
