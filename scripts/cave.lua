@@ -1962,6 +1962,8 @@ function Render_cells(base_area)
         top.is_cave = 1
       end
 
+top.reachable = 1  --!!!!!! FIXME: remove
+
       table.insert(f_brush, top)
     end
 
