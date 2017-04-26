@@ -1238,13 +1238,20 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   local cur_rule
   local cur_symmetry
 
-  -- this maps area numbers (1/2/3) in the current rule to temp-areas of
+  -- this maps area numbers (1/2/3) in the current rule to areas of
   -- the current room
   local area_map = {}
 
   -- if rule matches a link ('@'), this is the link chunk (in seeds)
   local link_chunk
   local link_matches
+
+  -- this table contains the current best match.
+  -- fields include:
+  --     score   : number (higher is better), < 0 if no match yet
+  --     T       : the transform of the best match
+  --     areas[] : copy of the area_map[] table
+  local best = {}
 
   local new_room
   local new_conn
@@ -1771,47 +1778,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
   local function match_floor(E1, A)
-    -- hallways are a bit different (and simpler)
-    if cur_rule.env == "hallway" then
-      if A.mode != "chunk" then return false end
-
-      assert(E1.area == 1)
-
-      if area_map[1] == nil then
-        area_map[1] = A
-      end
-
-      return (area_map[1] == A)
-    end
-
     if A.mode != "floor" then return false end
 
-    if area_map[1] == A then return (E1.area == 1) end
-    if area_map[2] == A then return (E1.area == 2) end
-    if area_map[3] == A then return (E1.area == 3) end
-
-    if area_map[E1.area] == nil then
-      if pass == "grow"   and A.no_grow    then return false end
-      if pass == "sprout" and A.no_sprout  then return false end
-
-      -- check if the area would grow too big
-      local growth = cur_rule.area_growths[E1.area] or 0
-      if growth > 0 and #A.seeds + growth > A.max_size and not is_emergency then
-        return false
-      end
-
-      -- don't create a brand new area when existing area is tiny
-      if cur_rule.new_area then
-        A:calc_volume()
-        local area_min_size = sel(R.symmetry, 8, 4)
-        if A.svolume < area_min_size then return false end
-      end
-
-      area_map[E1.area] = A
-      return true
-    end
-
-    return false
+    return area_map[E1.area] == A
   end
 
 
@@ -1982,6 +1951,72 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     error("Element kind not testable: " .. tostring(E1.kind))
+  end
+
+
+  --[[
+    -- hallways are a bit different (and simpler)
+    if cur_rule.env == "hallway" then
+      if A.mode != "chunk" then return false end
+
+      assert(E1.area == 1)
+
+      if area_map[1] == nil then
+        area_map[1] = A
+      end
+
+      return (area_map[1] == A)
+    end
+  --]]
+
+  local function match_a_focal_point(area_num, T, px, py)
+    local sx, sy = transform_coord(T, px, py)
+
+    if sx <= 1 or sx >= SEED_W or
+       sy <= 1 or sy >= SEED_H
+    then
+      return false
+    end
+
+    local S = SEEDS[sx][sy]
+
+    local A = S.area
+    if not A then return false end
+
+    if S.diagonal and S.top.area != A then return false end
+
+    if A.mode != "floor" then return false end
+
+    -- FIXME : hallways may need special treatment (see code above)
+
+    -- check the area is NOT assigned to a different area_num
+    if area_map[1] == A then return (area_num == 1) end
+    if area_map[2] == A then return (area_num == 2) end
+    if area_map[3] == A then return (area_num == 3) end
+
+    if area_map[area_num] != nil then return false end
+
+    -- check if area is inhibiting further growth or sprouts
+    if pass == "grow"   and A.no_grow    then return false end
+    if pass == "sprout" and A.no_sprout  then return false end
+
+    -- check if the area would grow too big
+    local growth = cur_rule.area_growths[area_num] or 0
+    if growth > 0 and #A.seeds + growth > A.max_size and not is_emergency then
+      return false
+    end
+
+    -- don't create a brand new area when existing area is tiny
+    if cur_rule.new_area and pass != "sprout" then
+      A:calc_volume()
+      local area_min_size = sel(R.symmetry, 8, 4)
+      if A.svolume < area_min_size then return false end
+    end
+
+    -- OK --
+    area_map[area_num] = A
+
+    return true
   end
 
 
@@ -2579,10 +2614,6 @@ end
     T.y = y
 
     if what == "TEST" then
-      area_map[1] = nil
-      area_map[2] = nil
-      area_map[3] = nil
-
       link_chunk = nil
       link_matches = nil
     else
@@ -2632,6 +2663,24 @@ end
   end
 
 
+  local function match_all_focal_points(T, x, y)
+    T.x = x
+    T.y = y
+
+    area_map[1] = nil
+    area_map[2] = nil
+    area_map[3] = nil
+
+    each area_num, loc in cur_rule.focal_points do
+      if not match_a_focal_point(area_num, T, loc.gx, loc.gy) then
+        return false
+      end
+    end
+
+    return true
+  end
+
+
   local function try_apply_a_rule()
     --
     -- Test all eight possible transforms (four rotations + mirroring)
@@ -2641,7 +2690,7 @@ end
 
 --- gui.debugf("  Trying rule '%s'...\n", cur_rule.name)
 
-    local best = { score=-1 }
+    best = { score=-1, areas={} }
 
     -- no need to mirror a symmetrical pattern
     local transp_max = sel(cur_rule.t_symmetry, 0, 1)
@@ -2668,6 +2717,8 @@ end
 
         if score < best.score then continue end
 
+        if not match_all_focal_points(T, x, y) then continue end
+
         if match_or_install_pattern("TEST", T, x, y) then
           best.T = T
           best.x = x
@@ -2675,9 +2726,9 @@ end
           best.score = score
 
           -- this is less memory hungry than copying the whole table
-          best.area_1 = area_map[1]
-          best.area_2 = area_map[2]
-          best.area_3 = area_map[3]
+          best.areas[1] = area_map[1]
+          best.areas[2] = area_map[2]
+          best.areas[3] = area_map[3]
         end
       end -- x, y
       end
@@ -2691,9 +2742,9 @@ end
 
     -- ok --
 
-    area_map[1] = best.area_1
-    area_map[2] = best.area_2
-    area_map[3] = best.area_3
+    area_map[1] = best.areas[1]
+    area_map[2] = best.areas[2]
+    area_map[3] = best.areas[3]
 
     match_or_install_pattern("INSTALL", best.T, best.x, best.y)
 
