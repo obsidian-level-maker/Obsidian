@@ -91,6 +91,8 @@ Quake3 CSG
 +  implement ambient lighting -- every face belongs to a "room"
    and ambient light(s) for the room is specified by Lua
 
++  better triangulation  [ review q3map2 code ]
+
 +  optimise detail face intersection
    1. rebuild BSP tree
    2. reject faces lying completely inside a solid brush

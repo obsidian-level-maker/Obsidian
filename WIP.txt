@@ -83,8 +83,6 @@ Hallway System
 Quake3 CSG Code
 ---------------
 
-+  better triangulation  [ review q3map2 code ]
-
 -  brushlib function to visit side faces, and if they
    contain u1/u2/v1/v2 then compute the uv_mat
 
