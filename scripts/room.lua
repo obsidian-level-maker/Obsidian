@@ -3473,16 +3473,15 @@ function Room_build_all()
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
 
-Layout_liquid_stuff()
 Layout_create_scenic_borders()
-
-  Room_border_up()
 
 each A in LEVEL.areas do
   if A.mode == "scenic" then
     Cave_build_a_scenic_vista(A)
   end
 end
+
+  Room_border_up()
 
 Layout_finish_scenic_borders()
 
