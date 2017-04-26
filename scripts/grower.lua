@@ -2503,7 +2503,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       local sym_prob = prob_for_symmetry(new_room)
 
       if rand.odds(sym_prob) then
-        -- assumes best.T has set X/Y to best.x and best.y
         new_room.symmetry = transform_symmetry(T)
 
 ----    stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
@@ -2609,10 +2608,7 @@ end
   end
 
 
-  local function match_or_install_pattern(what, T, x, y)
-    T.x = x
-    T.y = y
-
+  local function match_or_install_pattern(what, T)
     if what == "TEST" then
       link_chunk = nil
       link_matches = nil
@@ -2621,7 +2617,7 @@ end
       new_intconn = nil
     end
 
---stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, x, y)
+--stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
     T.is_first  = nil
     T.is_second = nil
 
@@ -2663,10 +2659,7 @@ end
   end
 
 
-  local function match_all_focal_points(T, x, y)
-    T.x = x
-    T.y = y
-
+  local function match_all_focal_points(T)
     area_map[1] = nil
     area_map[2] = nil
     area_map[3] = nil
@@ -2717,12 +2710,13 @@ end
 
         if score < best.score then continue end
 
-        if not match_all_focal_points(T, x, y) then continue end
+        T.x = x
+        T.y = y
 
-        if match_or_install_pattern("TEST", T, x, y) then
-          best.T = T
-          best.x = x
-          best.y = y
+        if not match_all_focal_points(T) then continue end
+
+        if match_or_install_pattern("TEST", T) then
+          best.T = table.copy(T)
           best.score = score
 
           -- this is less memory hungry than copying the whole table
@@ -2746,7 +2740,7 @@ end
     area_map[2] = best.areas[2]
     area_map[3] = best.areas[3]
 
-    match_or_install_pattern("INSTALL", best.T, best.x, best.y)
+    match_or_install_pattern("INSTALL", best.T)
 
     return true
   end
