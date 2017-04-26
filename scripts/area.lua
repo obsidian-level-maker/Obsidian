@@ -2085,6 +2085,8 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     handle_dud_areas()
 
     make_real_areas()
+
+    Seed_squarify()
   end
 
 
