@@ -1223,6 +1223,9 @@ function Grower_prune_room(R)
   if table.empty(LEVEL.rooms) then
     error("All rooms were pruned!")
   end
+
+  -- make any split diagonals seeds whole again
+  Seed_squarify()
 end
 
 
