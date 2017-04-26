@@ -2055,15 +2055,13 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
       A.seeds        = T.seeds
       A.touches_edge = T.touches_edge
-
----??   A.park_border  = temp.park_border
+      A.is_boundary  = true
 
       -->                -- FIXME !!!! review this
       if T.zborder == VOID or not T.zborder.is_outdoor then
         A.mode = "void"
-        A.is_outdoor = nil
       else
-        A.is_boundary = true
+        A.is_outdoor = true
         A.zborder = T.zborder
       end
 
