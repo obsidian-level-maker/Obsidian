@@ -2502,3 +2502,138 @@ function Render_triggers()
   end
 end
 
+
+------------------------------------------------------------------------
+
+
+function Render_determine_spots()
+  --
+  -- ALGORITHM:
+  --
+  -- For each area of each room:
+  --
+  --   1. initialize grid to be LEDGE.
+  --
+  --   2. CLEAR the polygons for area's floor.  This will produce areas
+  --      which are somewhat too large.
+  --
+  --   3. use draw_line to set edges of area to LEDGE again, fixing the
+  --      "too large" problem of the above step.
+  --
+  --   4. use the CSG code to kill any blocking brushes.
+  --      This step creates the WALL cells.
+  --
+
+  local function spots_for_area(R, A, mode)
+    -- the 'mode' is normally NIL, can also be "cage" or "trap"
+    if not mode then mode = A.mode end
+
+    -- get bbox of room
+    local rx1, ry1, rx2, ry2 = A:calc_real_bbox()
+
+    -- initialize grid to "ledge"
+    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, A.floor_h, SPOT_LEDGE)
+
+    -- clear polygons making up the floor
+    each brush in A.floor_brushes do
+      gui.spots_fill_poly(brush, SPOT_CLEAR)
+    end
+
+    -- set the edges of the area
+    each E in A.side_edges do
+      gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
+    end
+
+    -- remove decoration entities
+    R:spots_do_decor(A.floor_h)
+
+    -- remove walls and blockers (using nearby brushes)
+    gui.spots_apply_brushes()
+
+--- gui.spots_dump("Spot dump in " .. R.name .. "/" .. A.mode)
+
+    -- add the spots to the room
+    local item_spots = {}
+    local  mon_spots = {}
+
+    gui.spots_get_items(item_spots)
+    gui.spots_get_mons(mon_spots)
+
+--- gui.debugf("mon_spots @ %s floor:%d : %d\n", R.name, A.floor_h, #mon_spots)
+
+    -- this is mainly for traps
+    if A.mon_focus then
+      each spot in mon_spots do
+        spot.face = A.mon_focus
+      end
+    end
+
+    -- for large cages/traps, adjust quantities
+    if mode == "cage" or mode == "trap" then
+      each spot in mon_spots do
+        spot.use_factor = 1.0 / (A.svolume ^ 0.64)
+      end
+    end
+
+    if mode == "cage" then
+gui.debugf("ADDING CAGE IN %s : %d spots\n", R.name, #mon_spots)
+      table.insert(R.cages, { mon_spots=mon_spots })
+
+    elseif mode == "trap" then
+      table.insert(R.traps, { mon_spots=mon_spots })
+      table.append(R.item_spots, item_spots)
+
+    else
+      -- do not place items in damaging liquids
+      -- [ we skip monsters too because we can place big items in a mon spot ]
+      if A.mode != "liquid" then
+        table.append(R.item_spots, item_spots)
+        table.append(R.mon_spots,  mon_spots)
+      end
+    end
+
+    gui.spots_end()
+
+--- DEBUG:
+--- stderrf("AREA_%d has %d mon spots, %d item spots\n", A.id, #mon_spots, #item_spots)
+  end
+
+
+  local function spots_in_room(R)
+    each A in R.areas do
+      if A.mode == "nature" then
+        Cave_determine_spots(R, A)
+      elseif A.mode == "floor" or A.mode == "cage" then
+        spots_for_area(R, A)
+      end
+    end
+  end
+
+
+  local function entry_spot_for_conn(R, C)
+    -- FIXME : entry_spot_for_conn
+  end
+
+
+  local function find_entry_spots(R)
+    if R.entry_conn then
+      entry_spot_for_conn(R, C)
+    end
+
+    -- TODO : start pad, teleporter pad
+
+    -- TODO : closets
+  end
+
+
+  ---| Render_determine_spots |---
+
+  each R in LEVEL.rooms do
+    spots_in_room(R)
+
+    R:exclude_monsters()
+
+    find_entry_spots(R)
+  end
+end
+
