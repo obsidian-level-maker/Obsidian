@@ -1386,31 +1386,6 @@ SPROUT_DIAG_1 =
 }
 
 
-SPROUT_DIAG_2 =
-{
-  prob = 0
-
-  structure =
-  {
-    "...", "..."
-    "...", "RR."
-    "%..", "%R."
-  }
-
-  diagonals =
-  {
-    "1.", "1R"
-  }
-
-  new_room =
-  {
-    conn = { x=1, y=1, dir=9 }
-
-    symmetry = { x=1, y=1, dir=1 }
-  }
-}
-
-
 SPROUT_JOINER_2x1 =
 {
   prob = 360

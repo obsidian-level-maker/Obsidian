@@ -475,6 +475,44 @@ function Grower_preprocess_grammar()
   end
 
 
+  local function find_focal_points()
+    def.focal_points = {}
+
+    if def.pass == "root" or def.pass == "exit_root" then
+      return
+    end
+
+    for x = 1, def.input.w do
+    for y = 1, def.input.h do
+      local E1 = def.input[x][y]
+
+      local f_name
+
+      if E1.kind == "area" then
+        f_name = E1.area
+      end
+
+      if not f_name then continue end
+
+      -- already have one?
+      if def.focal_points[f_name] then continue end
+
+      -- add it
+      def.focal_points[f_name] =
+      {
+        gx = x
+        gy = y
+      }
+
+    end -- x, y
+    end
+
+    if table.empty(def.focal_points) then
+      error("No focal points in rule: " .. def.name)
+    end
+  end
+
+
   local function find_connections()
     -- TODO
   end
@@ -676,10 +714,15 @@ function Grower_preprocess_grammar()
 
     def = cur_def
 
+    if cur_def.pass == nil then
+       cur_def.pass = name_to_pass(name)
+    end
+
     convert_structure()
     finalize_structure()
     check_symmetries()
 
+    find_focal_points()
     find_connections()
 
     locate_all_contiguous_parts("stair")
@@ -689,10 +732,6 @@ function Grower_preprocess_grammar()
     locate_all_contiguous_parts("link")
     locate_all_contiguous_parts("hallway")
     locate_all_contiguous_parts("hall2")
-
-    if cur_def.pass == nil then
-       cur_def.pass = name_to_pass(name)
-    end
 
     if cur_def.teleporter then add_style("teleporters") end
 
@@ -1303,14 +1342,6 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   end
 
 
-  local function raw_blocked(S)
-    if S.area then return true end
-    if S.disabled_R == R then return true end
-
-    return false
-  end
-
-
   local function prob_for_rule(rule)
     -- the 'use_prob' field is computed earler, and already takes styles
     -- into account.
@@ -1884,7 +1915,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
     -- for "!", require nothing there at all
     if E1.kind == "free" and E1.utterly then
-      if raw_blocked(S) then return false end
+      if S.area then return false end
+      if S.disabled_R == R then return false end
 
       -- never use a seed near edge of map  [ except for caves! ]
       local doing_cave = (E2.kind == "area" and R.is_cave) or
