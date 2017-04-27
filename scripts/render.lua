@@ -1672,7 +1672,7 @@ function Render_area(A)
 
   -- handle caves, parks and landscapes
   if A.mode == "nature" or A.mode == "scenic" then
-    Render_cells(A)
+    Render_cells(A.cells)
   end
 
   each E in A.edges do
@@ -2711,4 +2711,497 @@ gui.spots_dump("Cave spot dump")
     find_entry_spots(R)
   end
 end
+
+
+------------------------------------------------------------------------
+
+
+function Render_cells(info)
+  assert(info)
+
+
+  local is_lake = (info.liquid_mode == "lake")
+
+  -- the delta map specifies how to move each corner of the 64x64 cells
+  -- (where the cells form a continuous mesh).
+  local delta_x_map
+  local delta_y_map
+
+
+  local function grab_cell(x, y)
+    -- Produce a string representing the cell, or NIL for invalid cells.
+    -- The string is of the form "S-FFFFF-CCCCC-LLL", where:
+    --    S is solidity (2 for solid, 1 is normal)
+    --    F is floor height (adjusted to prevent negative values)
+    --    C is ceiling height (negated, since lower ceils can block the player)
+
+    if x < 1 or x > info.W or y < 1 or y > info.H then
+      return nil
+    end
+
+    local A = info.blocks[x][y]
+
+    -- in some places we build nothing (e.g. other rooms)
+    if A == nil then return nil end
+
+    -- check for a solid cell
+    if A.is_wall then return "2-99999-99999" end
+
+    -- otherwise there should be a floor area here
+
+    assert(A)
+    assert(A.floor_h)
+    assert(A.ceil_h)
+
+    return string.format("1-%5d-%5d", A.floor_h + 50000, 50000 - A.ceil_h)
+  end
+
+
+  local function analyse_corner(x, y)
+    --  A | B
+    --  --+--
+    --  C | D
+
+    local A = grab_cell(x-1, y)
+    local B = grab_cell(x,   y)
+    local C = grab_cell(x-1, y-1)
+    local D = grab_cell(x,   y-1)
+
+    -- never move a corner at edge of room
+    if not A or not B or not C or not D then
+      return
+    end
+
+    -- pick highest floor (since that can block a lower floor).
+    -- solid cells will always override floor cells.
+
+    local max_h = A
+    if B > A then max_h = B end
+    if C > A then max_h = C end
+    if D > A then max_h = D end
+
+    -- convert A/B/C/D to boolean values
+    A = (A == max_h)
+    B = (B == max_h)
+    C = (C == max_h)
+    D = (D == max_h)
+
+    -- no need to move when all cells are the same
+    if A == B and A == C and A == D then
+      return
+    end
+
+    local x_mul =  1
+    local y_mul = -1
+
+    -- flip horizontally and/or vertically to ease analysis
+    if not A and B then
+      A, B = B, A
+      C, D = D, C
+      x_mul = -1
+
+    elseif not A and C then
+      A, C = C, A
+      B, D = D, B
+      y_mul = 1
+
+    elseif not A and D then
+      A, D = D, A
+      B, C = C, B
+      x_mul = -1
+      y_mul =  1
+    end
+
+    assert(A)
+
+    -- get nearby values
+    local prev_x, prev_y
+
+    if y >= 2 then prev_x = delta_x_map[x][y-1] end
+    if x >= 2 then prev_y = delta_y_map[x-1][y] end
+
+    prev_x = (prev_x or 0) * x_mul
+    prev_y = (prev_y or 0) * y_mul
+
+    --- ANALYSE! ---
+
+    if not B and not C and not D then
+      -- sticking out corner
+      if prev_x == 0 or (prev_x > 0 and rand.odds(75)) then delta_x_map[x][y] = -16 * x_mul end
+      if prev_y == 0 or (prev_y > 0 and rand.odds(75)) then delta_y_map[x][y] = -16 * y_mul end
+
+    elseif B and not C and not D then
+      -- horizontal wall
+      if prev_y == 0 or (prev_y > 0 and rand.odds(25)) then delta_y_map[x][y] = -24 * y_mul end
+
+    elseif C and not B and not D then
+      -- vertical wall
+      if prev_x == 0 or (prev_x > 0 and rand.odds(25)) then delta_x_map[x][y] = -24 * x_mul end
+
+    elseif D and not B and not C then
+      -- checkerboard
+      -- (not moving it : this situation should not occur)
+
+    else
+      -- an empty corner
+      -- expand a bit, but not enough to block player movement
+          if not B then y_mul = -y_mul
+      elseif not C then x_mul = -x_mul
+      end
+
+      if prev_x == 0 or (prev_x < 0 and rand.odds(90)) then delta_x_map[x][y] = 12 * x_mul end
+      if prev_y == 0 or (prev_y < 0 and rand.odds(90)) then delta_y_map[x][y] = 12 * y_mul end
+    end
+  end
+
+
+  local function create_delta_map()
+    local dw = info.W + 1
+    local dh = info.H + 1
+
+    delta_x_map = table.array_2D(dw, dh)
+    delta_y_map = table.array_2D(dw, dh)
+
+    info.delta_x_map = delta_x_map
+    info.delta_y_map = delta_y_map
+
+    for x = 1, dw do
+    for y = 1, dh do
+      analyse_corner(x, y)
+    end
+    end
+  end
+
+
+  local function cell_middle(x, y)
+    local mx = info.x1 + (x - 1) * 64 + 32
+    local my = info.y1 + (y - 1) * 64 + 32
+
+    return mx, my
+  end
+
+
+  local function dist_to_light_level(d)
+    if d >= 312 then return 0  end
+    if d >= 208 then return 16 end
+    if d >= 104 then return 32 end
+    return 48
+  end
+
+--[[
+  local function OLD__dist_to_light_level(d)
+    if d >  276 then return 0  end
+    if d >  104 then return 16 end
+    if d >   40 then return 32 end
+    if R.light_level != "verydark" then return 32 end
+    return 48
+  end
+--]]
+
+
+  local function calc_lighting_for_cell(x, y, A)
+    if not A then return 0 end
+    if not A.floor_h then return 0 end
+
+    local cell_x, cell_y = cell_middle(x, y)
+    local cell_z = A.floor_h + 80
+
+    local result = 0
+
+    each L in info.lights do
+      -- compute distance
+      local dx = L.x - cell_x
+      local dy = L.y - cell_y
+
+      local dist = math.sqrt(dx * dx + dy * dy)
+
+      local val = dist_to_light_level(dist)
+
+      -- check if result would be updated.
+      -- this does a distance check too (val is zero for far away lights)
+      if val <= result then continue end
+
+      -- check if line of sight is blocked
+      -- [ this is expensive, so call it AFTER distance test ]
+      if not gui.trace_ray(L.x, L.y, L.z, cell_x, cell_y, cell_z, "v") then
+        result = val
+      end
+    end
+
+    return result
+  end
+
+
+  local function render_floor(x, y, A)
+    local f_h = A.floor_h
+
+    -- TODO : review this
+    local R = info.area.room or {}
+
+    local f_mat = A.floor_mat or R.floor_mat or R.main_tex or "_ERROR"
+
+    if A.is_wall or A.is_fence then
+      f_mat = A.wall_mat or R.main_tex or R.main_tex
+    end
+
+
+    local f_brush = Cave_brush(info, x, y)
+
+    if f_h then
+      local top = { t=f_h }
+
+      if info.torch_mode != "none" then
+        top.is_cave = 1
+      end
+
+top.reachable = 1  --!!!!!! FIXME: remove
+
+      table.insert(f_brush, top)
+    end
+
+    if A.is_liquid then
+      f_mat = "_LIQUID"
+    end
+
+    brushlib.set_mat(f_brush, f_mat, f_mat)
+
+    Trans.brush(f_brush)
+  end
+
+
+  local function render_ceiling(x, y, A)
+    if not A.ceil_h then return end
+
+    -- TODO : review this
+    local R = info.area.room or {}
+
+    local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex or "_ERROR"
+
+    local c_brush = Cave_brush(info, x, y)
+
+    local bottom = { b=A.ceil_h }
+    table.insert(c_brush, bottom)
+
+    if A.is_sky then
+      c_mat = "_SKY"
+
+      if not LEVEL.is_dark then
+        bottom.light_add = 32
+      end
+    end
+
+    brushlib.set_mat(c_brush, c_mat, c_mat)
+
+    Trans.brush(c_brush)
+  end
+
+
+  local function render_lit_cell(x, y, A)
+    local light
+
+    if info.torch_mode != "none" then
+      light = calc_lighting_for_cell(x, y, A)
+      if light <= 0 then light = nil end
+    end
+
+    if light then
+      Ambient_push(info.area.base_light + light)
+    end
+
+    render_floor  (x, y, A)
+    render_ceiling(x, y, A)
+
+    if light then
+      Ambient_pop()
+    end
+  end
+
+
+  local function render_cell(x, y, pass)
+    local A = info.blocks[x][y]
+
+    if not A then return end
+
+    local is_solid = (A.floor_h == nil)
+
+    if is_solid and pass == 1 then
+      render_floor(x, y, A)
+    end
+
+    if not is_solid and pass == 2 then
+      render_lit_cell(x, y, A)
+    end
+  end
+
+
+--[[ OLD STUFF.... TODO: REVIEW IF USEFUL
+
+  local function heights_near_island(island)
+    local min_floor =  9e9
+    local max_ceil  = -9e9
+
+    for x = 1, info.W do
+    for y = 1, info.H do
+      if ((island:get(x, y) or 0) > 0) then
+        for dir = 2,8,2 do
+          local nx, ny = geom.nudge(x, y, dir)
+
+          if not island:valid_cell(nx, ny) then continue end
+
+          local A = R.area_map:get(nx, ny)
+          if not A then continue end
+
+          min_floor = math.min(min_floor, A.floor_h)
+          max_ceil  = math.max(max_ceil , A.ceil_h)
+        end
+      end
+    end  -- x, y
+    end
+
+--FIXME  assert(min_floor < max_ceil)
+
+    return min_floor, max_ceil
+  end
+
+
+  local function render_liquid_area(island)
+    -- create a lava/nukage pit
+
+    local f_mat = R.floor_mat or cave_tex
+    local c_mat = R.ceil_mat  or cave_tex
+    local l_mat = LEVEL.liquid.mat
+
+    local f_h, c_h = heights_near_island(island)
+
+    -- FIXME! should not happen
+    if f_h >= c_h then return end
+
+    f_h = f_h - 24
+    c_h = c_h + 64
+
+    -- TODO: fireballs for Quake
+
+    for x = 1, cave.w do
+    for y = 1, cave.h do
+
+      if ((island:get(x, y) or 0) > 0) then
+
+        -- do not render a wall here
+        cave:set(x, y, 0)
+
+        local f_brush = Cave_brush(info, x, y)
+        local c_brush = Cave_brush(info, x, y)
+
+        if PARAM.deep_liquids then
+          brushlib.add_top(f_brush, f_h-128)
+          brushlib.set_mat(f_brush, f_mat, f_mat)
+
+          Trans.brush(f_brush)
+
+          local l_brush = Cave_brush(info, x, y)
+
+          table.insert(l_brush, 1, { m="liquid", medium=LEVEL.liquid.medium })
+
+          brushlib.add_top(l_brush, f_h)
+          brushlib.set_mat(l_brush, "_LIQUID", "_LIQUID")
+
+          Trans.brush(l_brush)
+
+          -- TODO: lighting
+
+        else
+          brushlib.add_top(f_brush, f_h)
+
+          -- damaging
+          f_brush[#f_brush].special = LEVEL.liquid.special
+
+          -- lighting
+          if LEVEL.liquid.light then
+            f_brush[#f_brush].light = LEVEL.liquid.light
+          end
+
+          brushlib.set_mat(f_brush, l_mat, l_mat)
+
+          Trans.brush(f_brush)
+        end
+
+        -- common ceiling code
+
+        brushlib.add_bottom(c_brush, c_h)
+        brushlib.set_mat(c_brush, c_mat, c_mat)
+
+        if c_mat == "_SKY" then
+          table.insert(c_brush, 1, { m="sky" })
+        end
+
+        Trans.brush(c_brush)
+      end
+
+    end end -- x, y
+  end
+--]]
+
+
+  local function add_liquid_pools()
+    if not LEVEL.liquid then return end
+
+    local prob = 70  -- FIXME
+
+    each island in cave.islands do
+      if rand.odds(prob) then
+        render_liquid_area(island)
+      end
+    end
+  end
+
+
+  local function add_sky_rects()
+    each S in info.area.seeds do
+      local rect =
+      {
+        x1 = S.x1, y1 = S.y1
+        x2 = S.x2, y2 = S.y2
+      }
+
+      table.insert(R.sky_rects, rect)
+    end
+  end
+
+
+  local function render_all_cells(pass)
+    -- pass is 1 for solid cells, 2 for normal (open) cells
+
+    for x = 1, info.W do
+    for y = 1, info.H do
+      render_cell(x, y, pass)
+    end
+    end
+  end
+
+
+  ---| Render_cells |---
+
+  Trans.clear()
+
+  create_delta_map()
+
+---???  add_liquid_pools()
+
+  -- send all solid cells to the CSG system
+  -- [ to allow gui.trace_ray() to hit them ]
+
+  render_all_cells(1)
+
+  if info.torch_mode != "none" then
+---    do_torch_lighting()
+  end
+
+  render_all_cells(2)
+
+  if info.area.is_outdoor and false then --!!!!
+    add_sky_rects()
+  end
+end
+
+
 
