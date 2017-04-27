@@ -186,7 +186,7 @@ end
 
 
 
-function size_of_room_set(rooms)
+function Quest_size_of_room_set(rooms)
   local total = 0
 
   each id, R in rooms do
@@ -445,8 +445,8 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
 
   local function eval_split_possibility(C, before, after, before_R, after_R)
-    local before_size = size_of_room_set(before)
-    local  after_size = size_of_room_set(after)
+    local before_size = Quest_size_of_room_set(before)
+    local  after_size = Quest_size_of_room_set(after)
 
     local score = 300
 
@@ -713,8 +713,8 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
   Q1.rooms = info.before
   Q2.rooms = info.after
 
-  Q1.svolume = size_of_room_set(Q1.rooms)
-  Q2.svolume = size_of_room_set(Q2.rooms)
+  Q1.svolume = Quest_size_of_room_set(Q1.rooms)
+  Q2.svolume = Quest_size_of_room_set(Q2.rooms)
 
   assign_quest(Q1)
   assign_quest(Q2)
@@ -1041,10 +1041,10 @@ stderrf("***** triple key door !!\n")
   end
 
 
-each Q in LEVEL.quests do
-Q.svolume = size_of_room_set(Q.rooms)
-end
-
+  -- fixup quest sizes
+  each Q in LEVEL.quests do
+    Q.svolume = Quest_size_of_room_set(Q.rooms)
+  end
 end
 
 
