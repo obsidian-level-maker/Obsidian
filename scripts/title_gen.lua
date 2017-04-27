@@ -2404,7 +2404,7 @@ end
 
 
 
-function process_raw_fonts()
+function Title_process_raw_fonts()
   local function dump_line(...)
     -- gui.debugf(...)
   end
@@ -2515,7 +2515,7 @@ function Title_generate()
   assert(GAME.PALETTES)
   assert(GAME.PALETTES.normal)
 
-  process_raw_fonts()
+  Title_process_raw_fonts()
 
   TITLE_SEED = int(gui.random() * 1000000)
 
