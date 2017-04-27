@@ -2138,13 +2138,116 @@ HALL_1_TERMINATE_3x2 =
   {
     "...", "RRR"
     "...", "RRR"
-    "x.x", "xHx"
+    "x@x", "xHx"
     "x1x", "x1x"
   }
 
   new_room =
   {
     conn = { x=2, y=2, dir=8 }
+  }
+}
+
+
+SPROUT_hallway2 =
+{
+  prob = 0
+
+  structure =
+  {
+    "..", "@@"
+    "..", "@@"
+    "..", "HH"
+    "..", "HH"
+    "11", "11"
+  }
+
+  new_room =
+  {
+    env = "hallway"
+
+    conn = { x=1, y=1, w=2, dir=8 }
+  }
+}
+
+
+HALL_2_GROW_I1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "..", "@@"
+    "..", "@@"
+    "@@", "HH"
+    "@@", "HH"
+    "11", "11"
+    "11", "11"
+  }
+}
+
+
+HALL_2_GROW_L1 =
+{
+  prob = 50
+
+  structure =
+  {
+    "..@@", "@@HH"
+    "..@@", "@@HH"
+    "xx11", "xx11"
+    "xx11", "xx11"
+  }
+}
+
+
+HALL_2_GROW_T1 =
+{
+  prob = 25
+
+  structure =
+  {
+    "..@@..", "@@HH@@"
+    "..@@..", "@@HH@@"
+    "xx11xx", "xx11xx"
+    "xx11xx", "xx11xx"
+  }
+}
+
+
+HALL_2_GROW_P1 =
+{
+  prob = 5
+
+  structure =
+  {
+    "xx..xx", "xx@@xx"
+    "xx..xx", "xx@@xx"
+    "..@@..", "@@HH@@"
+    "..@@..", "@@HH@@"
+    "xx11xx", "xx11xx"
+    "xx11xx", "xx11xx"
+  }
+}
+
+
+HALL_2_TERMINATE_4x2 =
+{
+  prob = 100
+
+  structure =
+  {
+    "....", "RRRR"
+    "....", "RRRR"
+    "x@@x", "xHHx"
+    "x@@x", "xHHx"
+    "x11x", "x11x"
+    "x11x", "x11x"
+  }
+
+  new_room =
+  {
+    conn = { x=2, y=4, w=2,dir=8 }
   }
 }
 
