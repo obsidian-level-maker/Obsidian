@@ -648,6 +648,15 @@ end
 function Render_junction(A, S, dir)
   -- this actually only does ONE side of the junction
 
+  local N = S:neighbor(dir, "NODIR")
+
+  if N == "NODIR" then return end
+
+  -- create edge-lines for spot finding code
+  if N and N.area != A then
+    table.insert(A.side_edges, S:get_line(dir))
+  end
+
   if S.done_all then return end
 
   -- whole chunks never build walls inside them
@@ -656,10 +665,6 @@ function Render_junction(A, S, dir)
   -- proper EDGE objects are handled elsewhere
   if S.edge[dir] and S.edge[dir].kind != "ignore" then return end
 
-
-  local N = S:neighbor(dir, "NODIR")
-
-  if N == "NODIR" then return end
 
   -- same area?  absolutely nothing needed
   if N and N.area == A then return end
@@ -1365,19 +1370,6 @@ function Render_seed(A, S)
     return
   end
 
-  -- create edge-lines for spot finding code
-  each dir in geom.ALL_DIRS do
-    local N = S:neighbor(dir)
-    if N and N.area != A then
-      table.insert(A.side_edges, S:get_line(dir))
-    end
-  end
-
-  -- caves, parks and landscapes are done elsewhere
-  if A.mode == "nature" or A.mode == "scenic" then
-    return
-  end
-
   Render_floor  (A, S)
   Render_ceiling(A, S)
 end
@@ -1673,6 +1665,10 @@ function Render_area(A)
   -- handle caves, parks and landscapes
   if A.mode == "nature" or A.mode == "scenic" then
     Render_cells(A.cells)
+  else
+    each S in A.seeds do
+      Render_seed(A, S)
+    end
   end
 
   each E in A.edges do
@@ -1681,8 +1677,6 @@ function Render_area(A)
   end
 
   each S in A.seeds do
-    Render_seed(A, S)
-
     each dir in geom.ALL_DIRS do
       Render_junction(A, S, dir)
     end
@@ -3202,6 +3196,4 @@ top.reachable = 1  --!!!!!! FIXME: remove
     add_sky_rects()
   end
 end
-
-
 
