@@ -2056,17 +2056,15 @@ CAVE_GROW_FILL_B =
 --   Hallway stuff
 ------------------------------------------
 
-
-SPROUT_1_hallway =
+SPROUT_hallway1 =
 {
   prob = 0
 
   structure =
   {
-    "...", "..."
     "...", ".@."
     "...", ".H."
-    "x1x", "x1x"
+    "111", "111"
   }
 
   new_room =
@@ -2078,9 +2076,9 @@ SPROUT_1_hallway =
 }
 
 
-HALL_GROW_I1 =
+HALL_1_GROW_I1 =
 {
-  prob = 100/10
+  prob = 50
 
   structure =
   {
@@ -2091,22 +2089,22 @@ HALL_GROW_I1 =
 }
 
 
-HALL_GROW_L1 =
+HALL_1_GROW_L1 =
 {
-  prob = 50/10
+  prob = 50
 
   structure =
   {
-    "...", "..."
-    "..@", ".@H"
-    "..1", "..1"
+    "....", "...."
+    "..@.", ".@H."
+    "..1.", "..1."
   }
 }
 
 
-HALL_GROW_T1 =
+HALL_1_GROW_T1 =
 {
-  prob = 50/10
+  prob = 50
 
   structure =
   {
@@ -2117,20 +2115,36 @@ HALL_GROW_T1 =
 }
 
 
-HALL_TERMINATE_1 =
+HALL_1_GROW_P1 =
+{
+  prob = 5
+
+  structure =
+  {
+    ".....", "....."
+    ".....", "....."
+    ".....", "..@.."
+    "..@..", ".@H@."
+    "..1..", "..1.."
+  }
+}
+
+
+HALL_1_TERMINATE_3x2 =
 {
   prob = 100
 
   structure =
   {
     "...", "RRR"
-    ".@.", "RRR"
+    "...", "RRR"
+    "x.x", "xHx"
     "x1x", "x1x"
   }
 
   new_room =
   {
-    conn = { x=2, y=1, dir=8 }
+    conn = { x=2, y=2, dir=8 }
   }
 }
 
