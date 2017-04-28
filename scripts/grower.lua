@@ -30,7 +30,6 @@ function Grower_preprocess_grammar()
     if string.match(name, "GROW_")      then return "grow" end
     if string.match(name, "SPROUT_")    then return "sprout" end
     if string.match(name, "DECORATE_")  then return "decorate" end
-    if string.match(name, "TERMINATE_") then return "terminate" end
 
     error("Unknown pass for grammar " .. tostring(name))
   end
@@ -70,7 +69,7 @@ function Grower_preprocess_grammar()
     if ch == 'R' then return { kind="new_room" } end
 
     if ch == 'H' then return { kind="hallway" } end
-    if ch == 'P' then return { kind="hall2"   } end
+    if ch == 'X' then return { kind="hall2"   } end
 
     if ch == 'C' then return { kind="cage"   } end
     if ch == 'J' then return { kind="joiner" } end
@@ -2466,6 +2465,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
       A.no_grow   = cur_rule.no_grow
       A.no_sprout = cur_rule.no_sprout
+
+      -- this only for hallways (ATM)
+      new_room.grow_pass = cur_rule.new_room.grow_pass
     end
 
     if cur_rule.new_area and not new_area then
@@ -2511,7 +2513,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 ----    stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
       end
 
-      if pass == "sprout" or pass == "terminate" then
+      -- FIXME: review this usage of "pass"
+      if pass == "sprout" then
         -- joiners connections are handled later
         if cur_rule.new_room.conn then
           transform_connection(T, cur_rule.new_room.conn, new_conn)
@@ -2869,6 +2872,11 @@ function Grower_grammatical_room(R, pass, is_emergency)
   if pass == "grow" then
     apply_num = rand.pick({ 10,20,30 })
 
+    if R.kind == "hallway" then
+      pass = assert(R.grow_pass)
+      apply_num = rand.irange(3, 12)
+    end
+
   elseif pass == "sprout" then
     if R.is_exit then
       apply_num = 1
@@ -2876,8 +2884,9 @@ function Grower_grammatical_room(R, pass, is_emergency)
       apply_num = rand.pick({ 1,2,2,3 })
     end
 
-  elseif pass == "terminate" then
-    apply_num = 10  -- TODO : number of active links
+    if R.kind == "hallway" then
+      pass = R.grow_pass .. "_" .. pass
+    end
 
   elseif pass == "decorate" then
     -- TODO: review this (and stop_prob), see what works best
@@ -2902,10 +2911,24 @@ end
 
 
 
+function Grower_finish_hallway(R)
+  clean_up_links(R)
+
+  -- FIXME: if did not sprout, prune room
+
+  -- FIXME : prune parts of hallway not reaching a room
+end
+
+
+
 function Grower_grow_room(R)
   gui.ticker()
 
   local function is_too_small(R)
+    if R.kind == "hallway" then
+      return R:prelim_conn_num() < 2
+    end
+
     -- never prune a root room (including the exit)
     if R.is_root then return false end
 
@@ -2928,14 +2951,10 @@ function Grower_grow_room(R)
     end
   end
 
-  if R.kind == "hallway" then
-    Grower_grammatical_room(R, "terminate")
-    -- TODO : prune parts of hallway not reaching a room
-    --        [ when WHOLE thing, often try "grow" again ]
-    clean_up_links(R)
+  Grower_grammatical_room(R, "sprout")
 
-  else
-    Grower_grammatical_room(R, "sprout")
+  if R.kind == "hallway" then
+    Grower_finish_hallway(R)
   end
 
   R.is_grown = true

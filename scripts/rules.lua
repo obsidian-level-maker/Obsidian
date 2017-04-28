@@ -2136,9 +2136,9 @@ HALL_1_GROW_P1 =
 }
 
 
-HALL_1_TERMINATE_3x2 =
+HALL_1_SPROUT_3x2 =
 {
-  pass = "hall_1"
+  pass = "hall_1_sprout"
   prob = 100
 
   structure =
@@ -2244,9 +2244,9 @@ HALL_2_GROW_P1 =
 }
 
 
-HALL_2_TERMINATE_4x2 =
+HALL_2_SPROUT_4x2 =
 {
-  pass = "hall_2"
+  pass = "hall_2_sprout"
   prob = 100
 
   structure =
