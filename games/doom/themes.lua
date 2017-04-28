@@ -1042,12 +1042,11 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      BROWN1 = 50
+      BROWN1 = 40
       BRICK12 = 20
       SLIME14 = 20
       SLIME16 = 20
 
-      GRASS1 = 40
       STONE3 = 40
       FLOOR4_8 = 10
       FLOOR5_4 = 20
@@ -1056,16 +1055,14 @@ DOOM.ROOM_THEMES =
 
     naturals =
     {
-      ASHWALL2 = 50
-      ASHWALL4 = 50
-      SP_ROCK1 = 50
+      GRASS1 = 40
+      FLAT10 = 20
 
-      ASHWALL6 = 20
-      TANROCK4 = 15
-      ZIMMER2  = 15
-      ZIMMER4  = 15
-      ZIMMER8  = 5
-      ROCK5    = 20
+      RROCK16 = 20
+      RROCK17 = 20
+      RROCK18 = 10
+      RROCK19 = 20
+      RROCK20 = 20
     }
   }
 
@@ -1456,22 +1453,15 @@ DOOM.ROOM_THEMES =
       FLAT5_7 = 20
       FLAT5_8 = 10
       RROCK03 = 30
-      RROCK04 = 30
-      RROCK09 = 15
     }
 
     naturals =
     {
-      ROCKRED1 = 50
-      SP_ROCK1 = 30
-      ASHWALL2 = 30
-      ASHWALL3  = 25
-      ASHWALL6  = 20
-      ASHWALL7  = 15
-      ASHWALL4 = 30
-      SKIN2 = 10
-      SKSNAKE1 = 30
-      SKSNAKE2 = 30
+      MFLR8_4 = 60
+      MFLR8_3 = 10
+      RROCK04 = 30
+      RROCK09 = 20
+      SFLR6_1 = 10
     }
   }
 
@@ -1863,19 +1853,23 @@ DOOM.ROOM_THEMES =
       STONE    = 50
       FLAT5_2  = 50
       RROCK19  = 25
+      ROCK3    = 25
       MFLR8_3  = 10
     }
 
     naturals =
     {
-      ASHWALL2 = 50
-      ASHWALL4 = 50
-      BSTONE1  = 15
-      ZIMMER5  = 15
-      ROCK3    = 70
+      FLAT10 = 40
+      GRASS2 = 20
+
+      RROCK09 = 20
+      RROCK16 = 40
+      RROCK17 = 40
+      RROCK18 = 10
+      RROCK19 = 20
+      RROCK20 = 20
     }
   }
-
 }
 
 
