@@ -1443,7 +1443,8 @@ end
 function Room_border_up()
   --
   -- Decide the default bordering between any two adjacent areas.
-  -- [ This default can be overridden by EDGE objects, e.g. for doors ]
+  -- This default can be overridden by EDGE objects, e.g. for doors.
+  -- Also some code has already set up the junctions [ TODO : list them ].
   --
 
   local omit_fence_prob = rand.pick({ 10,50,90 })
@@ -1533,9 +1534,12 @@ function Room_border_up()
     -- room to scenic --
 
     if not A2.room then
-      -- FIXME support windows  [ maybe do elsewhere... ]
+      if A1.room.border == A2 then
+        Junction_make_empty(junc)
+      else
+        Junction_make_wall(junc)
+      end
 
-      Junction_make_wall(junc)
       return
     end
 
@@ -3205,8 +3209,6 @@ function Room_build_all()
 
   -- this does other stuff (crates, free-standing cages, etc..)
   Layout_decorate_rooms(2)
-
-Layout_create_scenic_borders()
 
 each A in LEVEL.areas do
   if A.mode == "scenic" then

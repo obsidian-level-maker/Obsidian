@@ -1946,11 +1946,11 @@ function Layout_create_scenic_borders()
 ---##    setup_zone(Z)
 ---##  end
 
-  each A in LEVEL.areas do
-    if A.mode == "scenic" then
-      clear_junctions(A)
-    end
-  end
+---##  each A in LEVEL.areas do
+---##    if A.mode == "scenic" then
+---##      clear_junctions(A)
+---##    end
+---##  end
 end
 
 

@@ -2170,6 +2170,10 @@ stderrf("secondary flob %s with %s\n", R.name, T.name)
 
       R.kkk2_temp = T
       T.kkk2_room = R
+
+      if T.zone == nil then
+        T.zone = R.zone
+      end
     end
   end
 
