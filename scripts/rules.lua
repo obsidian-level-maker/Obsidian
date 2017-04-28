@@ -2136,7 +2136,7 @@ HALL_1_GROW_P1 =
 }
 
 
-HALL_1_SPROUT_3x2 =
+HALL_1_SPROUT_A =
 {
   pass = "hall_1_sprout"
   prob = 100
@@ -2244,7 +2244,7 @@ HALL_2_GROW_P1 =
 }
 
 
-HALL_2_SPROUT_4x2 =
+HALL_2_SPROUT_A =
 {
   pass = "hall_2_sprout"
   prob = 100
@@ -2257,6 +2257,28 @@ HALL_2_SPROUT_4x2 =
     "x@@x", "xHHx"
     "x11x", "x11x"
     "x11x", "x11x"
+  }
+
+  new_room =
+  {
+    conn = { x=2, y=4, w=2,dir=8 }
+  }
+}
+
+
+HALL_2_SPROUT_B =
+{
+  pass = "hall_2_sprout"
+  prob = 10
+
+  structure =
+  {
+    "....", "RRRR"
+    "....", "RRRR"
+    "@@xx", "HHxx"
+    "@@xx", "HHxx"
+    "11xx", "11xx"
+    "11xx", "11xx"
   }
 
   new_room =
