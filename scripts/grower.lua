@@ -3040,7 +3040,7 @@ end
 function Grower_begin_trunks()
   --
   -- Trunks are parts of the map grown separately, and will be
-  -- connected via teleporters.
+  -- connected via teleporters (only).
   --
   -- Here we decide how many to make, create each one and its
   -- first room [ which is grown later ].
@@ -3052,21 +3052,25 @@ function Grower_begin_trunks()
 
   local max_trunks = 1
 
-  if PARAM.teleporters then
-    local prob1 = style_sel("teleporters", 0, 20, 50, 99)
-    local prob2 = style_sel("teleporters", 0, 10, 30, 60)
+  local  some_prob = style_sel("teleporters", 0, 20, 50, 100)
+  local extra_prob = style_sel("teleporters", 0, 10, 35, 70)
+  local  many_prob = style_sel("teleporters", 0,  0,  5, 50)
 
-    if rand.odds(prob1) then
-      max_trunks = max_trunks + 1
+  if PARAM.teleporters and rand.odds(some_prob) then
+    max_trunks = 2
 
-      if rand.odds(prob2) then max_trunks = max_trunks + 1 end
-      if rand.odds(prob2) then max_trunks = max_trunks + 1 end
+    if rand.odds(extra_prob) then max_trunks = max_trunks + 1 end
+    if rand.odds(extra_prob) then max_trunks = max_trunks + 1 end
+
+    if rand.odds(many_prob) then
+      max_trunks = 9
     end
   end
 
+
   LEVEL.trunks = {}
 
-  LEVEL.max_trunks = 9  -- FIXME !!!!  max_trunks
+  LEVEL.max_trunks = max_trunks
 
 
   -- create first trunk and the exit room
