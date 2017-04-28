@@ -888,16 +888,16 @@ do return false end
   local function add_triple_key_door(key_list)
     if #key_list < 3 then return false end
 
-    -- FIXME: check that a usable prefab exists
+    -- TODO: check that a usable prefab exists
     if not THEME.has_triple_key_door then return false end
 
-    local prob = 20
+    local prob = 30
 
     if OB_CONFIG.playmode == "coop" then
-      prob = 40
+      prob = 60
     end
 
---!!!!  if not rand.odds(prob) then return false end
+    if not rand.odds(prob) then return false end
 
     rand.shuffle(key_list)
 
@@ -929,7 +929,7 @@ do return false end
     local fab_def = PREFABS["Locked_double"]
     assert(fab_def)
 
-    -- FIXME: check "game" in prefab
+    -- TODO: check that a usable prefab exists
     if not THEME.has_double_switch_door then return false end
 
     local GOAL1 = Goal_new("SWITCH")
