@@ -1851,6 +1851,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
   local function match_an_element(S, E1, E2, T)
 
     if E1.kind == "magic" then
+      assert(not E2.assignment)
       return match_a_magic_element(S, E1)
     end
 
@@ -1882,6 +1883,11 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     -- new hallways links cannot overwrite old ones
     if E2.kind == "link" and S.h_link then
       return false
+    end
+
+    -- don't allow staircase to touch
+    if E2.kind == "stair" and E2.assignment then
+      if S.no_stair_R == R then return false end
     end
 
     -- for "!", require nothing there at all
@@ -2317,6 +2323,21 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
   end
 
 
+  local function mark_stair_seeds(chunk)
+    -- used to prevent staircases in a room touching
+
+    local sx1 = math.clamp(1, chunk.sx1 - 2, SEED_W)
+    local sy1 = math.clamp(1, chunk.sy1 - 2, SEED_W)
+    local sx2 = math.clamp(1, chunk.sx2 + 2, SEED_W)
+    local sy2 = math.clamp(1, chunk.sy2 + 2, SEED_W)
+    
+    for sx = sx1, sx2 do
+    for sy = sy1, sy2 do
+      SEEDS[sx][sy].no_stair_R = R
+    end
+    end
+  end
+
 
   local function install_create_chunks(T)
     new_chunks = {}
@@ -2408,6 +2429,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         end
 
         chunk.prefab_def = stair_prefab
+
+        mark_stair_seeds(chunk)
 
       elseif r.dest_area then
         chunk.dest_area = assert(area_map[r.dest_area])
