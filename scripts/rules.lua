@@ -2072,12 +2072,15 @@ SPROUT_hallway1 =
     env = "hallway"
 
     conn = { x=2, y=1, dir=8 }
+
+    grow_pass = "hall_1"
   }
 }
 
 
 HALL_1_GROW_I1 =
 {
+  pass = "hall_1"
   prob = 50
 
   structure =
@@ -2091,6 +2094,7 @@ HALL_1_GROW_I1 =
 
 HALL_1_GROW_L1 =
 {
+  pass = "hall_1"
   prob = 50
 
   structure =
@@ -2104,6 +2108,7 @@ HALL_1_GROW_L1 =
 
 HALL_1_GROW_T1 =
 {
+  pass = "hall_1"
   prob = 50
 
   structure =
@@ -2117,6 +2122,7 @@ HALL_1_GROW_T1 =
 
 HALL_1_GROW_P1 =
 {
+  pass = "hall_1"
   prob = 5
 
   structure =
@@ -2132,6 +2138,7 @@ HALL_1_GROW_P1 =
 
 HALL_1_TERMINATE_3x2 =
 {
+  pass = "hall_1"
   prob = 100
 
   structure =
@@ -2167,12 +2174,15 @@ SPROUT_hallway2 =
     env = "hallway"
 
     conn = { x=1, y=1, w=2, dir=8 }
+
+    grow_pass = "hall_2"
   }
 }
 
 
 HALL_2_GROW_I1 =
 {
+  pass = "hall_2"
   prob = 50
 
   structure =
@@ -2189,6 +2199,7 @@ HALL_2_GROW_I1 =
 
 HALL_2_GROW_L1 =
 {
+  pass = "hall_2"
   prob = 50
 
   structure =
@@ -2203,6 +2214,7 @@ HALL_2_GROW_L1 =
 
 HALL_2_GROW_T1 =
 {
+  pass = "hall_2"
   prob = 25
 
   structure =
@@ -2217,6 +2229,7 @@ HALL_2_GROW_T1 =
 
 HALL_2_GROW_P1 =
 {
+  pass = "hall_2"
   prob = 5
 
   structure =
@@ -2233,6 +2246,7 @@ HALL_2_GROW_P1 =
 
 HALL_2_TERMINATE_4x2 =
 {
+  pass = "hall_2"
   prob = 100
 
   structure =
