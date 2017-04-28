@@ -74,6 +74,8 @@
 
     symmetry : SYMMETRY_INFO
 
+    border : AREA
+
     gx1, gy1, gx2, gy2   -- seed range while growing
 
     floor_mats[z] : name
@@ -1519,11 +1521,8 @@ function Room_border_up()
     end
 
     if not A1.room then
-      -- nothing needed if both building or both outdoor
-      if (not A1.is_outdoor) != (not A2.is_outdoor) then
-        Junction_make_wall(junc)
-
-      elseif A1.zborder and A2.zborder then
+      -- nothing needed when both are building/cave
+      if A1.is_outdoor or A2.is_outdoor then
         Junction_make_wall(junc)
       end
 

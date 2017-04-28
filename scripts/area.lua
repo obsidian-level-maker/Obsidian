@@ -1529,19 +1529,20 @@ function Area_divvy_up_borders()
 
   --
   -- ALGORITHM:
-  --   (a) mark boundary seeds which touch a single room.
+  --   (a) mark boundary seeds which only touch a single room.
   --
-  --   (b) repeat (a) continuously, filling most of the map.
+  --   (b) spread these continuously, filling most of the map.
   --
-  --   (c) there will be gaps now, choose what to fill each seed:
+  --   (c) there will be gaps now, choose how to fill each seed:
   --       (1) empty on sides 4/6, filled on sides 2/8 -> pick side 2
   --       (2) empty on sides 2/8, filled on sides 4/6 -> pick side 4
-  --       (3) if filled on all sides, with two different zones and
+  --       (3) if filled on all sides, with only two choices and
   --           forming a diagonal -> make a diagonal seed
   --       (4) if have a majority in the neighbors -> pick that one
   --       (5) lastly, pick any neighbor (preference for side 2, then 4)
   --
-  --   (d) create areas by flood-filling contiguous border areas.
+  --   (d) create temp areas by flood-filling contiguous groups
+  --       of these marked seeds.
   --
 
   local seed_list
@@ -1778,17 +1779,24 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     local TEMP =
     {
       name = "TEMP_" .. alloc_id("temp_area")
-      zborder = S.zborder
       seeds = {}
     }
 
----??    if S.park_border or (S.top and S.top.park_border) or (S.bottom and S.bottom.park_border) then
----??      TEMP.park_border = true
----??    end
+    if S.zborder == VOID then
+      TEMP.is_void = true
+    else
+      TEMP.zroom = S.zborder
+    end
 
     table.insert(temp_areas, TEMP)
 
     add_seed(TEMP, S)
+  end
+
+
+  local function void_up_temp(T)
+    T.is_void = true
+    T.zroom   = nil
   end
 
 
@@ -1819,10 +1827,10 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
-  local function perform_merge(T1, T2)
+  local function perform_merge(T1, T2, no_swap)
     -- merges T2 into T1 (killing T2)
 
-    if #T2.seeds > #T1.seeds then
+    if not no_swap and #T2.seeds > #T1.seeds then
       T1, T2 = T2, T1
     end
 
@@ -1840,7 +1848,6 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     -- mark T2 as dead
     T2.name = "DEAD_TEMP_AREA"
     T2.is_dead = true
-    T2.zborder = nil
     T2.seeds = nil
   end
 
@@ -1857,12 +1864,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
       assert(not T2.is_dead)
 
-      if T1.zborder != T2.zborder then continue end
-
----??    -- never merge park borders with non-park-borders
----??    if (not T1.park_border) != (not T2.park_border) then
----??      return -1
----??    end
+      if S.zborder != N.zborder then continue end
 
       perform_merge(T1, T2)
       return true
@@ -1930,40 +1932,45 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
-  local function assign_outers()
+  local function assign_inners()
     -- mark all temp areas which can trace a path to the edge
     -- of the map.
 
     determine_neighbors()
 
     each T in temp_areas do
-      T.is_outer = T.touches_edge
+      if not T.touches_edge then
+        T.is_inner = true
+      end
     end
 
     for loop = 1,9 do
       each T in temp_areas do
-      each N in T.neighbors do
-        T.is_outer = T.is_outer or N.is_outer
-      end
-      end
-    end
+        each N in T.neighbors do
+          if T.is_inner and not N.is_inner then
+            T.is_inner = nil
+            break;
+          end
+        end -- N
+      end -- T
+    end -- loop
   end
 
 
-  local function find_inners()
-
+  local function handle_inners()
     -- merge contiguous inner areas
     each T in temp_areas do
       each N in T.neighbors do
-        if T.is_dead or N.is_dead then continue end
-
-        if not T.is_outer and not N.is_outer then
+        if T.is_inner and not T.is_dead and
+           N.is_inner and not N.is_dead
+        then
           perform_merge(T, N)
         end
       end
     end
 
     prune_dead_areas()
+
     determine_neighbors()
   end
 
@@ -1973,7 +1980,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
-  local function find_small_areas()
+  local function handle_small_areas()
     each T in temp_areas do
       T.is_small = area_is_small(T)
     end
@@ -1986,7 +1993,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     for pass = 1, 4 do
     each T in temp_areas do
       if T.is_dead then continue end
-      if T.zborder == VOID then continue end
+      if T.is_void then continue end
 
       if not T.is_small then continue end
 
@@ -1994,7 +2001,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
       each N in T.neighbors do
         if N.is_dead then continue end
-        if N.zborder == VOID then continue end
+        if N.is_void then continue end
 
         if (pass < 4) and not N.is_small then continue end
 
@@ -2009,18 +2016,19 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     end
 
     prune_dead_areas()
+
     determine_neighbors()
   end
 
 
   local function find_isolated_areas()
     -- find small pockets which are separated from their
-    -- corresponding large area.
+    -- corresponding large area.  NOTE: ignores void areas.
 
     table.sort(temp_areas,
         function(A, B)
-          if A.zborder != B.zborder then
-            return A.zborder.id < B.zborder.id
+          if A.zroom and B.zroom and A.zroom != B.zroom then
+            return A.zroom.id < B.zroom.id
           end
           return #A.seeds > #B.seeds
         end)
@@ -2029,7 +2037,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
       local T1 = temp_areas[i-1]
       local T2 = temp_areas[i  ]
 
-      if T2.zborder == T1.zborder then
+      if not T2.zroom and T2.zroom == T1.zroom then
         T2.is_isolated = true
       end
     end
@@ -2041,8 +2049,8 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     --        and touches some outdoor rooms
 
     each T in temp_areas do
-      if T.is_isolated or T.is_small or not T.is_outer then
-        T.zborder = VOID
+      if T.is_isolated or T.is_small or T.is_inner then
+        void_up_temp(T)
       end
     end
   end
@@ -2050,19 +2058,16 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
   local function make_real_areas()
     each T in temp_areas do
-
       local A = AREA_CLASS.new("scenic")
 
       A.seeds        = T.seeds
       A.touches_edge = T.touches_edge
       A.is_boundary  = true
 
-      -->                -- FIXME !!!! review this
-      if T.zborder == VOID then ---  or not T.zborder.is_outdoor then
+      if T.is_void then
         A.mode = "void"
       else
         A.is_outdoor = true
-        A.zborder = T.zborder
       end
 
       -- install into seeds
@@ -2077,10 +2082,12 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   local function flood_fill_areas()
     create_temp_areas()
     merge_temp_areas()
-    assign_outers()
 
-    find_inners()
-    find_small_areas()
+    assign_inners()
+    handle_inners()
+
+    handle_small_areas()
+
     find_isolated_areas()
     handle_dud_areas()
 
