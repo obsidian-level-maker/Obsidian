@@ -1460,7 +1460,8 @@ end
 
 function Area_spread_zones()
   --
-  -- Associates every area with a zone (including scenic and VOID areas)
+  -- Associates every area with a zone, including VOID areas,
+  -- but not including SCENIC areas (which are done already).
   --
 
   local function are_we_done()
@@ -1553,6 +1554,8 @@ function Area_divvy_up_borders()
   local SY2 = math.min(LEVEL.boundary_y2 + 1, SEED_H)
 
   local temp_areas
+
+  local facings = {}   -- map ROOM + TEMP --> count
 
   local VOID = { name="<VOID>", id=9999 }
 
@@ -1795,8 +1798,9 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
 
   local function void_up_temp(T)
-    T.is_void = true
-    T.zroom   = nil
+    T.is_void  = true
+    T.is_inner = nil
+    T.zroom    = nil
   end
 
 
@@ -1845,6 +1849,10 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
     table.append(T1.seeds, T2.seeds)
 
+    if T1.viewables and T2.viewables then
+      T1.viewables = T1.viewables + T2.viewables
+    end
+
     -- mark T2 as dead
     T2.name = "DEAD_TEMP_AREA"
     T2.is_dead = true
@@ -1886,6 +1894,8 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
 
   local function merge_temp_areas()
+    -- find temp_areas with same zroom and merge them
+
     repeat
       local changed = false
 
@@ -1959,68 +1969,96 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
   local function handle_inners()
     -- merge contiguous inner areas
+    -- NOTE: we do NOT care about zones here
+
     each T in temp_areas do
-      each N in T.neighbors do
-        if T.is_inner and not T.is_dead and
-           N.is_inner and not N.is_dead
-        then
-          perform_merge(T, N)
-        end
+    each N in T.neighbors do
+      if T.is_inner and not T.is_dead and
+         N.is_inner and not N.is_dead
+      then
+        perform_merge(T, N)
       end
+    end
     end
 
     prune_dead_areas()
+    determine_neighbors()
 
+    -- decide whether to void them up
+    -- TODO: keep an inner area when its size and views are large enough
+    each T in temp_areas do
+      if T.is_void then continue end
+
+      if T.is_inner then
+        void_up_temp(T)
+      end
+    end
+  end
+
+
+  local function handle_voids()
+    each T in temp_areas do
+    each N in T.neighbors do
+      if T.is_void and not T.is_dead and
+         N.is_void and not N.is_dead
+      then
+        perform_merge(T, N)
+      end
+    end
+    end
+
+    prune_dead_areas()
     determine_neighbors()
   end
 
 
-  local function area_is_small(T)
+  local function area_too_small(T)
     return #T.seeds < MIN_SIZE
   end
 
 
-  local function handle_small_areas()
-    each T in temp_areas do
-      T.is_small = area_is_small(T)
-    end
-
-    -- try to merge small areas with other small areas
-    -- [ since several areas is better than one humungous one ]
-
+  local function handle_runts()
     rand.shuffle(temp_areas)
 
-    for pass = 1, 4 do
+    for pass = 1, 6 do
     each T in temp_areas do
-      if T.is_dead then continue end
-      if T.is_void then continue end
+      if T.is_dead or T.is_inner or T.is_void then continue end
 
-      if not T.is_small then continue end
+      if not area_too_small(T) then continue end
 
       rand.shuffle(T.neighbors)
 
       each N in T.neighbors do
-        if N.is_dead then continue end
-        if N.is_void then continue end
+        if N.is_dead or N.is_inner or N.is_void then continue end
 
-        if (pass < 4) and not N.is_small then continue end
+        -- only merge small areas with other small areas in the
+        -- in first few passes (hoping they become large enough)
+        if area_too_small(N) or
+           (pass >= 3 and N.zroom.zone == T.zroom.zone) or
+           (pass >= 5)
+        then
+          perform_merge(T, N)
 
-        perform_merge(T, N)
-
-        if not T.is_dead then T.is_small = area_is_small(T) end
-        if not N.is_dead then N.is_small = area_is_small(N) end
-
-        break;
+          if T.is_dead then break; end
+        end
       end
     end  -- pass, T
     end
 
-    prune_dead_areas()
+    each T in temp_areas do
+      if T.is_dead or T.is_inner or T.is_void then continue end
 
+      if area_too_small(T) then
+        void_up_temp(T)
+      end
+    end
+
+    prune_dead_areas()
     determine_neighbors()
   end
 
 
+--[[  OLD, REMOVE THIS
   local function find_isolated_areas()
     -- find small pockets which are separated from their
     -- corresponding large area.  NOTE: ignores void areas.
@@ -2037,21 +2075,101 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
       local T1 = temp_areas[i-1]
       local T2 = temp_areas[i  ]
 
-      if not T2.zroom and T2.zroom == T1.zroom then
+      if T2.zroom and T2.zroom == T1.zroom then
         T2.is_isolated = true
       end
     end
   end
+--]]
 
 
-  local function handle_dud_areas()
-    -- TODO : maybe keep an inner area when its size is large
-    --        and touches some outdoor rooms
+  local function face_id(R, T)
+    return R.name .. "/" .. T.name
+  end
 
-    each T in temp_areas do
-      if T.is_isolated or T.is_small or T.is_inner then
-        void_up_temp(T)
+
+  local function build_facing_database()
+    each A in LEVEL.areas do
+      if A.room and A.is_outdoor and (A.mode == "floor" or A.mode == "nature") then
+        each S in A.seeds do
+        each dir in geom.ALL_DIRS do
+          local N = S:neighbor(dir)
+          local T = N and N.temp_area
+
+          if T and not T.is_void then
+            local id = face_id(A.room, T)
+
+            facings[id] = (facings[id] or gui.random() / 10) + 1
+          end
+        end -- S, dir
+        end
       end
+    end -- A
+
+stderrf("facing DB:\n%s\n", table.tostr(facings))
+  end
+
+
+  local function best_facing_pair(share_temp)
+    local best_R
+    local best_T
+    local best_num = -1
+
+    each R in LEVEL.rooms do
+      if not R.is_outdoor then continue end
+      if R.kkk_temp or R.kkk2_temp then continue end
+
+      each T in temp_areas do
+        if T.is_void  then continue end
+        if T.is_inner then continue end
+
+        if T.kkk_room then
+          if not share_temp then continue end
+          -- can only share a temp when rooms have same zone
+          if T.kkk_room.zone != R.zone then continue end
+        end
+
+        local num = facings[face_id(R, T)]
+
+        if num != nil and num > best_num then
+          best_R = R
+          best_T = T
+          best_num = num
+        end
+      end -- T
+    end -- R
+
+    return best_R, best_T
+  end
+
+
+  local function flob_the_jubbles()
+    build_facing_database()
+
+    while true do
+      local R, T = best_facing_pair(nil)
+
+      -- nothing else possible?
+      if R == nil then break; end
+
+stderrf("flobbing %s with %s\n", R.name, T.name)
+
+      R.kkk_temp = T
+      T.kkk_room = R
+
+      T.zone = R.zone
+    end
+
+    while true do
+      local R, T = best_facing_pair("share_temp")
+
+      -- nothing else possible?
+      if R == nil then break; end
+
+stderrf("secondary flob %s with %s\n", R.name, T.name)
+
+      R.kkk2_temp = T
+      T.kkk2_room = R
     end
   end
 
@@ -2060,14 +2178,22 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     each T in temp_areas do
       local A = AREA_CLASS.new("scenic")
 
+      A.is_boundary  = true
+
       A.seeds        = T.seeds
       A.touches_edge = T.touches_edge
-      A.is_boundary  = true
+      A.zone         = T.zone  -- can be NIL
 
       if T.is_void then
         A.mode = "void"
       else
         A.is_outdoor = true
+      end
+
+      each R in LEVEL.rooms do
+        if R.kkk_temp == T or R.kkk2_temp == T then
+          R.border = A
+        end
       end
 
       -- install into seeds
@@ -2086,10 +2212,15 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     assign_inners()
     handle_inners()
 
-    handle_small_areas()
+    handle_runts()
+    handle_voids()
 
-    find_isolated_areas()
-    handle_dud_areas()
+    -- we don't need "zroom" after here....
+    each T in temp_areas do
+      T.zroom = nil
+    end
+
+    flob_the_jubbles()
 
     make_real_areas()
 
