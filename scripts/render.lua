@@ -330,9 +330,6 @@ function Render_edge(E)
 
   local function seed_touches_junc(S, junc)
     -- FIXME
-    each dir in geom.ALL_DIRS do
---    if S.border[dir].junction == junc then return true end
-    end
 
     return false
   end
@@ -342,7 +339,7 @@ function Render_edge(E)
 --FIXME
 do return "narrow" end
 
-    local junc = S.border[dir].junction
+    local junc = S.foo  -- FIXME
     if not junc or junc.kind != "steps" then return "narrow" end
 
     local N, bord
@@ -354,7 +351,7 @@ do return "narrow" end
       N = N:neighbor(dir)
       if not (N and N.area == S.area) then return "" end
 
-      bord = N.border[geom.RIGHT[dir]]
+      bord = N.foo  -- FIXME
       if bord.junction == junc then return "wide" end
 
       return "xx"
@@ -386,7 +383,7 @@ do return "narrow" end
 --FIXME
 do return "narrow" end
 
-    local junc = S.border[dir].junction
+    local junc = S.foo -- FIXME
     if not junc or junc.kind != "steps" then return "narrow" end
 
     local N, bord
@@ -398,7 +395,7 @@ do return "narrow" end
       N = N:neighbor(dir)
       if not (N and N.area == S.area) then return "" end
 
-      bord = N.border[geom.LEFT[dir]]
+      bord = N.foo -- FIXME
       if bord.junction == junc then return "wide" end
 
       return "xx"

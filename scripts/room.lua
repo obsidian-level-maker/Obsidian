@@ -2145,11 +2145,6 @@ function Room_floor_ceil_heights()
       if N.area.room != R then
         if N.area.room == R.hallway.R1 then R.hallway.touch_R1 = R.hallway.touch_R1 + 1 end
         if N.area.room == R.hallway.R2 then R.hallway.touch_R2 = R.hallway.touch_R2 + 1 end
-
--- FIXME
---???        if S.border[dir].conn and not N.area.room.entry_h then
---???          table.insert(exit_dirs, dir)
---???        end
         continue
       end
 

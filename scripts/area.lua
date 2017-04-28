@@ -2058,7 +2058,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
       A.is_boundary  = true
 
       -->                -- FIXME !!!! review this
-      if T.zborder == VOID or not T.zborder.is_outdoor then
+      if T.zborder == VOID then ---  or not T.zborder.is_outdoor then
         A.mode = "void"
       else
         A.is_outdoor = true

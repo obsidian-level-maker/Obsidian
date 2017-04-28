@@ -197,7 +197,7 @@ end
 -- convert a square seed to a pair of diagonal seeds.
 -- the 'S' parameter becomes the bottom half.
 --
--- NOTE: must be done fairly early, e.g. assumes nothing in border[] yet
+-- NOTE: should only be done on unused seeds.
 --
 function SEED_CLASS.split(S, diagonal)
   assert(diagonal == 1 or diagonal == 3)
@@ -522,7 +522,6 @@ function Seed_create(sx, sy, x1, y1)
     name = string.format("SEED [%d,%d]", sx, sy)
 
     edge   = {}
-    border = {}
     m_cell = {}
   }
 

@@ -549,7 +549,6 @@ function Cave_generate_cave(R, info)
 
   local function check_need_wall(S, dir)
     -- don't clobber connections
---FIXME    if S.border[dir].kind then return false end
 
     local N = S:neighbor(dir)
 
