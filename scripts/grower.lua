@@ -2452,7 +2452,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       new_room = R
 
     elseif cur_rule.new_room then
-      local env = cur_rule.new_room.env  -- usually NIL
+      local info = cur_rule.new_room
+
+      local env = info.env  -- usually NIL
 
       new_room = Grower_add_room(R, env)
 
@@ -2463,25 +2465,27 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
       local A = new_room.areas[1]
 
-      A.no_grow   = cur_rule.no_grow
-      A.no_sprout = cur_rule.no_sprout
+      A.no_grow   = info.no_grow
+      A.no_sprout = info.no_sprout
 
       -- this only for hallways (ATM)
-      new_room.grow_pass = cur_rule.new_room.grow_pass
+      new_room.grow_pass = info.grow_pass
     end
 
     if cur_rule.new_area and not new_area then
+      local info = cur_rule.new_area
+
       new_area = AREA_CLASS.new("floor")
 
       -- max size of new area
       new_area.max_size = rand.pick({ 16, 24, 32 })
 
-      new_area.no_grow   = cur_rule.no_grow
-      new_area.no_sprout = cur_rule.no_sprout
+      new_area.no_grow   = info.no_grow
+      new_area.no_sprout = info.no_sprout
 
       R:add_area(new_area)
 
-      local from_area_idx = cur_rule.new_area.from_area or 1
+      local from_area_idx = info.from_area or 1
       local from_area = assert(area_map[from_area_idx])
 
       new_area.prelim_h = assert(from_area.prelim_h)
