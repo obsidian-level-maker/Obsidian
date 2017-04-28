@@ -209,8 +209,8 @@ GLOBAL_STYLE_LIST =
 
   hallways    = { none=0,  few=60, some=30, heaps=10 }
   big_rooms   = { none=10, few=20, some=40, heaps=20 }
-  teleporters = { none=20, few=40, some=40, heaps=20 }
-  steepness   = { none=0,  few=20, some=60, heaps=10 }
+  teleporters = { none=20, few=40, some=60, heaps=10 }
+  steepness   = { none=0,  few=10, some=70, heaps=10 }
 
   traps       = { none=0,  few=20, some=65, heaps=15 }
   cages       = { none=10, few=20, some=40, heaps=10 }
