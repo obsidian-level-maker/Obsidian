@@ -1386,7 +1386,7 @@ function Monster_fill_room(R)
     -- monsters in traps are never deaf (esp. monster depots)
     if mode then
       deaf = false
-    elseif spot.ambush then
+    elseif spot.ambush or info.boss_type then
       deaf  = rand.odds(95)
       focus = spot.ambush
     elseif R.kind == "cave" or R.kind == "hallway" or info.float then
