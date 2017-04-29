@@ -136,25 +136,22 @@ function Level_determine_map_size(LEV)
   local ob_size = OB_CONFIG.size
 
   -- there is no real "progression" when making a single level.
-  -- hence use mixed mode instead.
+  -- hence use the regular size instead.
   if OB_CONFIG.length == "single" then
     if ob_size == "prog" or ob_size == "epi" then
-      ob_size = "mixed"
+      ob_size = "regular"
     end
   end
 
   -- Mix It Up --
 
   if ob_size == "mixed" then
-    local SIZES = { 24,26,29, 32,34,36, 40,44,48 }
+    local MIXED_SIZES =
+    {
+      small=30, regular=50, large=30, extreme=5
+    }
 
-    local W = rand.pick(SIZES)
-    local H = rand.pick(SIZES)
-
-    -- prefer the map to be wider than it is tall
-    if W < H then W, H = H, W end
-
-    return W, H
+    ob_size = rand.key_by_probs(MIXED_SIZES)
   end
 
   -- Progressive --
