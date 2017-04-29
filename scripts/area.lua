@@ -1124,6 +1124,12 @@ function Area_locate_chunks()
     end
     end
 
+    -- this marks the exit room boss area
+    if A.is_bossy and sx2 > sx1 and sy2 > sy1 then
+      CHUNK.is_bossy = A.is_bossy
+      A.is_bossy = nil
+    end
+
     return CHUNK
   end
 
@@ -1184,6 +1190,10 @@ function Area_locate_chunks()
 
     CHUNK1.peer = CHUNK2
     CHUNK2.peer = CHUNK1
+
+    if CHUNK1.is_bossy then
+      CHUNK2.is_bossy = true
+    end
 
     -- peer up ceiling chunks too
     local CEIL1 = CHUNK1.ceil_above

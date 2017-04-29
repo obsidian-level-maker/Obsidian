@@ -160,6 +160,7 @@
                             -- "CAGE", "TRAP", "DECORATION"
 
     is_secret      -- boolean
+    is_bossy       -- boolean  (keep it clear for a boss monster)
 
     peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk
 

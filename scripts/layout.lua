@@ -242,6 +242,11 @@ function Layout_spot_for_wotsit(R, kind, required)
       return 700 + gui.random()
     end
 
+    -- avoid using chunks set aside for boss monsters
+    if chunk.is_bossy then
+      return 1.0 + gui.random()
+    end
+
     local score = (chunk.sig_dist or 0) * 10
 
     -- the exit room generally has a closet pre-booked
@@ -1687,7 +1692,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     local decor_prob = rand.pick({ 15, 35, 70 })
 
     each chunk in R.floor_chunks do
-      if chunk.content_kind == nil and rand.odds(decor_prob) then
+      if chunk.content_kind == nil and not chunk.is_bossy and rand.odds(decor_prob) then
         try_decoration_in_chunk(chunk)
       end
     end
@@ -1698,7 +1703,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     local decor_prob = rand.pick({ 2, 6, 12, 24 })
 
     each chunk in R.floor_chunks do
-      if chunk.content_kind == nil and rand.odds(decor_prob) then
+      if chunk.content_kind == nil and not chunk.is_bossy and rand.odds(decor_prob) then
         try_decoration_in_chunk(chunk, "is_cave")
       end
     end
@@ -1760,7 +1765,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     -- TODO : review this, e.g. key pedestal can be OK (but need right floor_z)
 
     each chunk in R.floor_chunks do
-      if chunk.content_kind and chunk.content_kind != "NOTHING" then
+      if (chunk.content_kind and chunk.content_kind != "NOTHING") or chunk.is_bossy then
         unsink_chunk(chunk, "floor")
       end
     end

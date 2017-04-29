@@ -3107,6 +3107,14 @@ function Grower_begin_trunks()
   local R = Grower_create_and_grow_room(trunk, "exit")
 
   assert(not R.is_dead)
+
+  -- ensure the first floor area is kept usable for bosses
+  each A in R.areas do
+    if A.mode == "floor" then
+      A.is_bossy = true
+      break;
+    end
+  end
 end
 
 
