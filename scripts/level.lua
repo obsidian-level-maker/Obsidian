@@ -72,7 +72,7 @@
 
     global_pal      -- global palette, can ONLY use these monsters [ except for bosses ]
 
-    boss_fights : list(BOSS_FIGHT)   -- boss fighrs, from biggest to smallest
+    boss_fights : list(BOSS_FIGHT)   -- boss fights, from biggest to smallest
 
 
     === Weapon planning ===

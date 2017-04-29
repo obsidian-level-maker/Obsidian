@@ -2119,7 +2119,6 @@ function Monster_make_battles()
   Player_give_map_stuff()
   Player_weapon_palettes()
 
-  Monster_assign_bosses()
   Monster_zone_palettes()
 
   -- Rooms have been sorted into a visitation order, so we just

@@ -2824,5 +2824,6 @@ function Quest_make_quests()
   Quest_nice_items()
 
   Monster_pacing()
+  Monster_assign_bosses()
 end
 
