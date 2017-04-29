@@ -1477,7 +1477,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     each chunk in R.floor_chunks do
       local A = chunk.area
 
-      if not chunk.content_kind and not Chunk_is_slave(chunk) and
+      if not chunk.content_kind and not chunk.is_bossy and
+         not Chunk_is_slave(chunk) and
          chunk.sw >= 2 and chunk.sh >= 2 and
          not chunk.content_kind and
          not (A.floor_group and A.floor_group.sink) and
