@@ -2920,8 +2920,11 @@ function Grower_grammatical_room(R, pass, is_emergency)
     apply_num = sel(R.is_big, 10, 6)
     if R.is_outdoor or R.is_cave then apply_num = apply_num / 2 end
 
-  elseif pass == "park_fill" then
+  elseif pass == "filler" then
     apply_num = 30
+
+  elseif pass == "smoother" then
+    apply_num = 15
 
   else
     error("unknown grammar pass: " .. tostring(pass))
@@ -3286,19 +3289,23 @@ function Grower_expand_parks()
   rand.shuffle(room_list)
 
   each R in room_list do
-    if R.is_park then
-      -- up the seed limit
+    if R.is_outdoor then
+      -- disable the seed limit
       each A in R.areas do
-        if A.max_size then
-          A.max_size = math.ceil(A.max_size * 1.2)
-        end
+        if A.max_size then A.max_size = 999 end
       end
 
-      Grower_grammatical_room(R, "park_fill")
+      Grower_grammatical_room(R, "filler")
     end
   end
 
-  -- fix the area modes
+  each R in room_list do
+    if R.is_outdoor then
+      Grower_grammatical_room(R, "smoother")
+    end
+  end
+
+  -- fix area modes
   each R in room_list do
     if R.is_park or R.is_cave then
       each A in R.areas do

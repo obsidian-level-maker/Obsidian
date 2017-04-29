@@ -1746,10 +1746,10 @@ PARK_GROW_3 =
 }
 
 
-PARK_FILL_1 =
+FILLER_1 =
 {
-  pass = "park_fill"
-  prob = 50
+  pass = "filler"
+  prob = 30
 
   structure =
   {
@@ -1760,29 +1760,45 @@ PARK_FILL_1 =
 }
 
 
-PARK_FILL_2 =
+FILLER_2 =
 {
-  pass = "park_fill"
-  prob = 50
+  pass = "filler"
+  prob = 60
 
   structure =
   {
     "1.1", "111"
-    "111", "111"
+    "x1x", "x1x"
   }
 }
 
 
-PARK_FILL_3 =
+FILLER_3 =
 {
-  pass = "park_fill"
-  prob = 50
+  pass = "filler"
+  prob = 30
 
   structure =
   {
     "1..1", "1111"
     "1111", "1111"
   }
+}
+
+
+SMOOTHER_1 =
+{
+  pass = "smoother"
+  prob = 50
+
+  structure =
+  {
+    "x.", "x."
+    "1.", "1%"
+    "11", "11"
+  }
+
+  diagonals = { "1." }
 }
 
 
