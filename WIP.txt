@@ -3,9 +3,10 @@ WORK IN PROGRESS
 ================
 
 
-
 Scenic Borders
 --------------
+
+-  assign unused border areas to a room (esp. its zroom)
 
 +  proper sky handling
 
@@ -14,7 +15,6 @@ Scenic Borders
    - cavey/liquidy areas
    - fenced off pools from V7-WEIRD
    - fancy fences
-
 
 
 PARKS
@@ -34,33 +34,6 @@ PARKS
 
 Miscellaneous
 -------------
-
-??? on LAST max_loop attempt, set sprout_bbox to boundary_bbox
-
-idea: on LAST max_loop attempt, allow extra teleporters
-
--  grower: compute a score early, do a check on first whole-seed
-   "area" element and do the "max_size" check here too
-
--  if room has a boss/guard needing a large chunk, allocate those
-   chunks early [ but allow importants to override in emergencies ]
-
-stairs : prevent two stairs from touching
-
-steepness : IF exist on a rule AND room is outdoor THEN prob *= 0.5
-
-
-
-Exit Rooms
-----------
-
-+  force first area to be boss-monster spot (at least one),
-   be tall enough (at least 128), and never has a decoration
-   or floor sink
-
-??  if exit room failed to sprout (or that room was killed) then
-    force usage of a teleporter
-    [ ideally: start again...... ]
 
 
 
