@@ -185,7 +185,7 @@ DOOM.SINKS =
 
   floor_red =
   {
-    mat = "FLOOR1_6"
+    mat = "FLOOR6_1"
     dz  = -8
   }
 
@@ -347,7 +347,7 @@ DOOM.THEMES =
       liquid_shiny = 5
       liquid_metal = 5
       floor_green = 10
-      floor_blue2 = 5
+      floor_blue2 = 10
     }
 
     ceiling_sinks =

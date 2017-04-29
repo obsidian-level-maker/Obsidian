@@ -1610,25 +1610,56 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function pick_floor_sinks(R)
-    if R.is_cave or R.is_outdoor then return end
+  local function grab_usable_sinks(R, group, where)
+    -- skip sinks whose texture(s) clash with the room or area
 
-    local tab = R.theme.floor_sinks or THEME.floor_sinks
-    if not tab then return end
+    local tab
+
+    if where == "floor" then
+      tab = R.theme.floor_sinks or THEME.floor_sinks
+    else
+      tab = R.theme.ceiling_sinks or THEME.ceiling_sinks
+    end
 
     assert(tab["PLAIN"])
+
+    tab = table.copy(tab)
+
+    each name in table.keys(tab) do
+      if name == "PLAIN" then continue end
+
+      local sink = GAME.SINKS[name]
+
+      if not sink then
+        error("Unknown sink: " .. name)
+      end
+
+      -- TODO : check floor/ceiling material
+
+      if (sink.trim_mat and sink.trim_mat == R.main_tex)
+      then
+        tab[name] = nil
+      end
+    end
+
+    return tab
+  end
+
+
+  local function pick_floor_sinks(R)
+    if R.is_cave or R.is_outdoor then return end
 
     each fg in R.floor_groups do
       if fg.openness < 0.4 then continue end
 
-      local what = rand.key_by_probs(tab)
+      local tab = grab_usable_sinks(R, fg, "floor")
+      if tab == nil then return end
 
-      if what != "PLAIN" then
-        fg.sink = GAME.SINKS[what]
+      local name = rand.key_by_probs(tab)
 
-        if not fg.sink then
-          error("Unknown floor sink: " .. what)
-        end
+      if name != "PLAIN" then
+        fg.sink = GAME.SINKS[name]
+        assert(fg.sink)
 
         -- TODO : prune liquid sinks first
         if fg.sink.mat == "_LIQUID" and not LEVEL.liquid then
@@ -1642,25 +1673,20 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   local function pick_ceiling_sinks(R)
     if R.is_cave or R.is_outdoor then return end
 
-    local tab = R.theme.ceiling_sinks or THEME.ceiling_sinks
-    if not tab then return end
-
-    assert(tab["PLAIN"])
-
     each cg in R.ceil_groups do
       if cg.openness < 0.4 then continue end
 
       local height = cg.h - cg.max_floor_h
       if height < 128 then continue end
 
-      local what = rand.key_by_probs(tab)
+      local tab = grab_usable_sinks(R, cg, "ceiling")
+      if tab == nil then return end
 
-      if what != "PLAIN" then
-        cg.sink = GAME.SINKS[what]
+      local name = rand.key_by_probs(tab)
 
-        if not cg.sink then
-          error("Unknown ceiling sink: " .. what)
-        end
+      if name != "PLAIN" then
+        cg.sink = GAME.SINKS[name]
+        assert(cg.sink)
 
         -- inhibit ceiling lights and pillars
         each chunk in R.ceil_chunks do
