@@ -205,6 +205,10 @@ function AREA_CLASS.kill_it(A)
   --        neighbor lists and junctions are created.
   --
 
+  if A.mode == "chunk" then
+    Chunk_kill(A.chunk)
+  end
+
   table.kill_elem(LEVEL.areas, A)
 
   A.id   = -1
@@ -217,6 +221,7 @@ function AREA_CLASS.kill_it(A)
   A.room  = nil
   A.zone  = nil
   A.conns = nil
+  A.chunk = nil
 
   each S in A.seeds do
     S.area = nil

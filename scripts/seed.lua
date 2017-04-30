@@ -161,6 +161,9 @@
 
     is_secret      -- boolean
     is_bossy       -- boolean  (keep it clear for a boss monster)
+    is_terminator  -- boolean  (for hallway pieces)
+
+    joins[DIR] : CHUNK   -- for hallway pieces: nearby chunks
 
     peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk
 

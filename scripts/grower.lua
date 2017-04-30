@@ -490,6 +490,8 @@ function Grower_preprocess_grammar()
 
       if E1.kind == "area" then
         f_name = E1.area
+      elseif E1.kind == "link" then
+        f_name = "link"
       end
 
       if not f_name then continue end
@@ -729,9 +731,9 @@ function Grower_preprocess_grammar()
     locate_all_contiguous_parts("joiner")
     locate_all_contiguous_parts("closet")
 
-    locate_all_contiguous_parts("link")
     locate_all_contiguous_parts("hallway")
     locate_all_contiguous_parts("hall2")
+    locate_all_contiguous_parts("link")
 
     if cur_def.teleporter then add_style("teleporters") end
 
@@ -1181,8 +1183,6 @@ function Grower_prune_room(R)
     A2:kill_it()
 
     table.kill_elem(R2.areas, A2)
-
-    Chunk_kill(chunk)
   end
 
 
@@ -1243,7 +1243,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   -- the current room
   local area_map = {}
 
-  -- if rule matches a link ('@'), this is the link chunk (in seeds)
+  -- if rule matches a link ('@'), this is the link chunk
   local link_chunk
   local link_matches
 
@@ -1284,7 +1284,6 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     assert(A.room)
 
     S.area   = nil
-    S.h_link = nil
 
     table.kill_elem(A.seeds, S)
   end
@@ -1301,7 +1300,6 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     end
 
     S.area = A
-    S.h_link = nil
 
     table.insert(A.seeds, S)
 
@@ -1785,22 +1783,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
   end
 
 
-  local function match_link(E1, S)
-    local HL = S.h_link
+  local function match_link(E1, A)
+    if A.mode != "chunk" then return false end
 
-    if not HL then return false end
-    if HL.kind != "link" then return false end
-
-    -- link must be in same hallway
-    if HL.room != R then return false end
-
-    if not link_chunk then
-      link_chunk = HL
-      link_matches = 1
-      return true
-    end
-
-    return (HL == link_chunk)
+    return link_chunk == A
   end
 
 
@@ -1879,11 +1865,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       end
     end
 
-    -- new hallways links cannot overwrite old ones
-    if E2.kind == "link" and S.h_link then
-      return false
-    end
-
     -- don't allow staircase to touch
     if E2.kind == "stair" and E2.assignment then
       if S.no_stair_R == R then return false end
@@ -1916,15 +1897,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
 
-    if E1.kind == "link" then
-      return match_link(E1, S)
-    end
-
-    if S.h_link then
-      return false
-    end
-
-
     -- do we have an area in current room?
     local A = S.area
     if A and A.room != R then A = nil end
@@ -1938,10 +1910,12 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
     if E1.kind == "area" then
       return match_floor(E1, A)
-    end
 
-    if E1.kind == "liquid" or
-       E1.kind == "cage"
+    elseif E1.kind == "link" then
+      return match_link(E1, A)
+
+    elseif E1.kind == "liquid" or
+           E1.kind == "cage"
     then
       return (A.mode == E1.kind)
     end
@@ -1961,21 +1935,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
   end
 
 
-  --[[
-    -- hallways are a bit different (and simpler)
-    if cur_rule.env == "hallway" then
-      if A.mode != "chunk" then return false end
-
-      assert(E1.area == 1)
-
-      if area_map[1] == nil then
-        area_map[1] = A
-      end
-
-      return (area_map[1] == A)
-    end
-  --]]
-
   local function match_a_focal_point(area_num, T, px, py)
     local sx, sy = transform_coord(T, px, py)
 
@@ -1986,13 +1945,33 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     local S = SEEDS[sx][sy]
-
     local A = S.area
-    if not A then return false end
 
+    if not A then return false end
     if S.diagonal and S.top.area != A then return false end
 
-    if A.mode != "floor" then return false end
+    if A.room != R then return false end
+
+    -- logic for hallway links --
+
+    if area_num == "link" then
+      if A.mode != "chunk" then return false end
+      if A.chunk.kind != "link" then return false end
+
+      if link_chunk and link_chunk != A.chunk then return false end
+
+      link_chunk = A.chunk
+      return true
+    end
+
+    -- normal logic --
+
+    if R.is_hallway then
+      if A.mode != "chunk" then return false end
+      if A.chunk.kind != "hallway" then return false end
+    else
+      if A.mode != "floor" then return false end
+    end
 
     -- FIXME : hallways may need special treatment (see code above)
 
@@ -2014,7 +1993,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     -- don't create a brand new area when existing area is tiny
-    if cur_rule.new_area and pass != "sprout" then
+    if not R.is_hallway and cur_rule.new_area and pass != "sprout" then
       A:calc_volume()
       local area_min_size = sel(R.symmetry, 8, 4)
       if A.svolume < area_min_size then return false end
@@ -2050,15 +2029,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     local chunk = find_chunk(S.sx, S.sy)
 
     if chunk then
-      if chunk.kind == "link" then
-        assert(not S.h_link)
-        S.h_link = chunk
-      else
-        assert(chunk.area)
-        set_seed(S, chunk.area)
-        S.chunk = chunk
-      end
-
+      assert(chunk.area)
+      set_seed(S, chunk.area)
+      S.chunk = chunk
       return
     end
 
@@ -2697,6 +2670,7 @@ end
     area_map[1] = nil
     area_map[2] = nil
     area_map[3] = nil
+    link_chunk  = nil
 
     each area_num, loc in cur_rule.focal_points do
       if not match_a_focal_point(area_num, T, loc.gx, loc.gy) then
@@ -2943,7 +2917,16 @@ end
 
 
 function Grower_finish_hallway(R)
-  clean_up_links(R)
+
+
+  local function clean_up_links(R)
+    -- remove hallway links that were never used
+    -- (so they don't block stuff in future rooms)
+
+    -- FIXME : find area with chunk.kind == "link"
+
+  end
+
 
   -- FIXME: if did not sprout, prune room
 
@@ -3148,24 +3131,6 @@ end
 
 
 function Grower_grow_all_rooms()
-
-  local function clean_up_links(R)
-    -- remove hallway links that were never used
-    -- (so they don't block stuff in future rooms)
-
-    -- FIXME : manage links more explicitly
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S = SEEDS[sx][sy]
-
-      if S.h_link and S.h_link.room == R then
-        S.h_link = nil
-      end
-    end
-    end
-  end
-
 
   local function check_all_grown()
     each R in LEVEL.rooms do
