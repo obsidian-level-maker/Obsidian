@@ -1147,7 +1147,7 @@ end
 
 
 
-function Grower_prune_room(R)
+function Grower_kill_room(R)
 
   local function turn_joiner_into_closet(R2, chunk)
     chunk.kind = "closet"
@@ -1182,9 +1182,7 @@ function Grower_prune_room(R)
       return
     end
 
-    A2:kill_it()
-
-    table.kill_elem(R2.areas, A2)
+    A2:kill_it("remove_from_room")
   end
 
 
@@ -1211,9 +1209,9 @@ function Grower_prune_room(R)
   end
 
 
-  ---| Grower_prune_room |---
+  ---| Grower_kill_room |---
 
-  gui.debugf("Prune small room %s\n", R.name)
+  gui.debugf("Killing small room %s\n", R.name)
 
   handle_conn()
 
@@ -2324,8 +2322,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         h_join = link_chunk.h_join
       }
 
+      table.kill_elem(R.all_links, link_chunk)
+
       -- this kills the chunk too
-      link_chunk.area:kill_it()
+      link_chunk.area:kill_it("remove_from_room")
       link_chunk = nil
     end
 
@@ -2939,20 +2939,50 @@ end
 
 
 
-function Grower_finish_hallway(R)
+function Grower_clean_up_links(R, do_all)
+  if not do_all then
+    rand.shuffle(R.all_links)
+  end
 
-  local function clean_up_links()
-    each chunk in R.all_links do
-      if not chunk.is_dead then
-        chunk.area:kill_it()
-      end
+  for i = #R.all_links, 1, sel(do_all, -1, -2) do
+    local chunk = table.remove(R.all_links, i)
+
+    if not chunk.is_dead then
+      chunk.area:kill_it("remove_from_room")
     end
   end
 
-  clean_up_links()
+--[[ VALIDATION CRUD
+  if do_all then
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local K = SEEDS[sx][sy].chunk
+      if K and K.area.room == R then
+        assert(K.kind != "link")
+      end
+    end
+    end
+  end
+--]]
+
+end
 
 
-  -- FIXME: if did not sprout, prune room
+function Grower_prune_hallway(R)
+  --
+  -- Prune the dead ends of the grown hallway.
+  -- The whole room is killed when there is nowhere left to go.
+  --
+
+
+  ---| Grower_prune_hallway |---
+
+  Grower_clean_up_links(R, "do_all")
+
+  if R:prelim_conn_num() < 2 then
+    Grower_kill_room(R)
+    return
+  end
 
   -- FIXME : prune parts of hallway not reaching a room
 end
@@ -2963,11 +2993,6 @@ function Grower_grow_room(R)
   gui.ticker()
 
   local function is_too_small(R)
-    if R.is_hallway then
-do return false end  --FIXME
-      return R:prelim_conn_num() < 2
-    end
-
     -- never prune a root room (including the exit)
     if R.is_root then return false end
 
@@ -2981,22 +3006,28 @@ do return false end  --FIXME
 
   -- if room too small, try another grow pass, then kill it
 
-  if is_too_small(R) then
+  if not R.is_hallway and is_too_small(R) then
     Grower_grammatical_room(R, "grow")
 
     if is_too_small(R) then
-      Grower_prune_room(R)
+      Grower_kill_room(R)
       return
     end
   end
 
   Grower_grammatical_room(R, "sprout")
 
-  if R.is_hallway then
-    Grower_finish_hallway(R)
+  -- if hallway did not sprout, try again
+  if R.is_hallway and R:prelim_conn_num() < 2 then
+    Grower_clean_up_links(R)
+    Grower_grammatical_room(R, "sprout")
   end
 
   R.is_grown = true
+
+  if R.is_hallway then
+    Grower_prune_hallway(R)
+  end
 end
 
 
@@ -3168,7 +3199,9 @@ function Grower_grow_all_rooms()
 
 
   local function grow_fresh_rooms()
-    each R in LEVEL.rooms do
+    local list = table.copy(LEVEL.rooms)
+
+    each R in list do
       if not R.is_grown then
         Grower_grow_room(R)
         return
@@ -3220,7 +3253,7 @@ function Grower_grow_all_rooms()
   ---| Grower_grow_all_rooms |---
 
   -- if map is too small, try to sprout some more rooms
-  local MAX_LOOP = 4
+  local MAX_LOOP = 8
 
   for loop = 1, MAX_LOOP do
 
@@ -3632,5 +3665,13 @@ function Grower_create_rooms()
   end
 
   Seed_draw_minimap()
+
+-- FIXME : VALIDATION CRUD
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local K = SEEDS[sx][sy].chunk
+      if K then assert(K.kind != "link") end
+    end
+    end
 end
 

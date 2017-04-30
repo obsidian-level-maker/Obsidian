@@ -199,7 +199,7 @@ function AREA_CLASS.new(mode)
 end
 
 
-function AREA_CLASS.kill_it(A)
+function AREA_CLASS.kill_it(A, remove_from_room)
   --
   -- NOTE : this can only be called fairly early, e.g. before all the
   --        neighbor lists and junctions are created.
@@ -212,6 +212,10 @@ function AREA_CLASS.kill_it(A)
   end
 
   table.kill_elem(LEVEL.areas, A)
+
+  if A.room and remove_from_room then
+    table.kill_elem(A.room.areas, A)
+  end
 
   A.id   = -1
   A.name = "DEAD_" .. A.name
