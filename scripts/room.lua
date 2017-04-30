@@ -235,6 +235,7 @@ end
 
 function ROOM_CLASS.kill_it(R)
   gui.debugf("Killing %s\n", R.name)
+  assert(not R.is_dead)
 
   -- sanity check
   each C in LEVEL.conns do
@@ -2192,12 +2193,46 @@ function Room_floor_ceil_heights()
   end
 
 
+  local function pick_hallway_fab(R, chunk)
+    local from_dir = 2  -- FIXME
+
+    local reqs = Chunk_base_reqs(chunk, from_dir)
+
+    reqs.kind  = "hall"
+    reqs.shape = "P"  -- FIXME
+
+    local def = Fab_pick(reqs)
+
+    chunk.prefab_def = def
+  end
+
+
+  local function hallway_flow(R, piece, h)
+    local A = piece.area
+    assert(A and A.room == R)
+
+    table.insert(R.pieces, piece)
+
+    set_floor(A, h)
+
+    pick_hallway_fab(R, piece)
+
+    -- recurse to other pieces
+    each P in piece.h_join do
+      if not table.has_elem(R.pieces, P) then
+        local new_h = h
+
+        hallway_flow(R, P, new_h)
+      end
+    end
+  end
+
+
   local function process_hallway(R, conn)
     -- Note: this would be a problem if player starts could exist in a hallway
     assert(conn)
 
-    R.hallway.max_h = R.entry_h
-    R.hallway.min_h = R.entry_h
+    hallway_flow(R, assert(R.first_piece), R.entry_h)
 
 --[[
     local S, S_dir
@@ -2291,19 +2326,6 @@ function Room_floor_ceil_heights()
       end
     end
 --]]
-
-    -- use highest floor for "the" floor_h (so that fences are high enough)
-    set_floor(R.areas[1], R.hallway.max_h)
-
-    each P in R.pieces do
-      set_floor(P.area, R.hallway.max_h)
-
-      -- FIXME TEMP RUBBISH
-      P.prefab_def = assert(PREFABS.Vent_p1)
-    end
-
-    -- set ceiling heights
-    do_hallway_ceiling(R)
   end
 
 

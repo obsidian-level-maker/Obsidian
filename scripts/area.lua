@@ -205,6 +205,8 @@ function AREA_CLASS.kill_it(A)
   --        neighbor lists and junctions are created.
   --
 
+  assert(not A.is_dead)
+
   if A.mode == "chunk" then
     Chunk_kill(A.chunk)
   end

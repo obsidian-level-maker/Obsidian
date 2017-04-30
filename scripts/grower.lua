@@ -1115,6 +1115,8 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(force_env)
   if is_hallway then
     R.max_hall_size = 20
 
+    R.all_links = {}
+
   else
     local A = AREA_CLASS.new("floor")
     R:add_area(A)
@@ -2299,7 +2301,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     local sy1 = math.clamp(1, chunk.sy1 - 2, SEED_W)
     local sx2 = math.clamp(1, chunk.sx2 + 2, SEED_W)
     local sy2 = math.clamp(1, chunk.sy2 + 2, SEED_W)
-    
+
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
       SEEDS[sx][sy].no_stair_R = R
@@ -2314,7 +2316,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     local stair_prefab
 
     local link_info
-    
+
     -- need to remove the existing link chunk
     if link_chunk then
       link_info =
@@ -2454,6 +2456,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         end
       end
 
+      if r.kind == "link" then
+        table.insert(R2.all_links, chunk)
+      end
+
       if r.kind == "closet" then table.insert(R.closets, chunk) end
       if r.kind == "stair"  then table.insert(R.stairs,  chunk) end
       if r.kind == "joiner" then table.insert(R.joiners, chunk) end
@@ -2539,8 +2545,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 ----    stderrf("new_room.symmetry :\n%s\n", table.tostr(new_room.symmetry))
       end
 
-      -- FIXME: review this usage of "pass"
-      if pass == "sprout" then
+      if not is_create then
         -- joiners connections are handled later
         if cur_rule.new_room.conn then
           transform_connection(T, cur_rule.new_room.conn, new_conn)
@@ -2936,14 +2941,15 @@ end
 
 function Grower_finish_hallway(R)
 
-
-  local function clean_up_links(R)
-    -- remove hallway links that were never used
-    -- (so they don't block stuff in future rooms)
-
-    -- FIXME : find area with chunk.kind == "link"
-
+  local function clean_up_links()
+    each chunk in R.all_links do
+      if not chunk.is_dead then
+        chunk.area:kill_it()
+      end
+    end
   end
+
+  clean_up_links()
 
 
   -- FIXME: if did not sprout, prune room

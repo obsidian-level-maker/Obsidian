@@ -1507,8 +1507,6 @@ function Render_chunk(chunk)
     -- move closets and joiners to align with nearby walls
     local dir = chunk.from_dir
 
-    if not dir then return end
-
     if def.deep then
       if dir == 2 then y1 = y1 - def.deep end
       if dir == 8 then y2 = y2 + def.deep end

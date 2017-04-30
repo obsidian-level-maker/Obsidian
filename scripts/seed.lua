@@ -1189,6 +1189,8 @@ end
 
 
 function Chunk_kill(chunk)
+  assert(not chunk.is_dead)
+
   for sx = chunk.sx1, chunk.sx2 do
   for sy = chunk.sy1, chunk.sy2 do
     local S = SEEDS[sx][sy]
