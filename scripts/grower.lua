@@ -2296,9 +2296,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     -- used to prevent staircases in a room touching
 
     local sx1 = math.clamp(1, chunk.sx1 - 2, SEED_W)
-    local sy1 = math.clamp(1, chunk.sy1 - 2, SEED_W)
+    local sy1 = math.clamp(1, chunk.sy1 - 2, SEED_H)
     local sx2 = math.clamp(1, chunk.sx2 + 2, SEED_W)
-    local sy2 = math.clamp(1, chunk.sy2 + 2, SEED_W)
+    local sy2 = math.clamp(1, chunk.sy2 + 2, SEED_H)
 
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
@@ -3281,7 +3281,7 @@ stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     end
 
     if num_rooms >= LEVEL.max_rooms then
-      LEVEL.max_rooms = num_rooms + 2
+      LEVEL.max_rooms = num_rooms + 1
     end
 
     expand_sprout_bbox()
