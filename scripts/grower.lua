@@ -1245,7 +1245,6 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
   -- if rule matches a link ('@'), this is the link chunk
   local link_chunk
-  local link_matches
 
   -- this table contains the current best match.
   -- fields include:
@@ -1777,8 +1776,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
 
   local function match_floor(E1, A)
-    if A.mode != "floor" then return false end
-
     return area_map[E1.area] == A
   end
 
@@ -1786,7 +1783,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
   local function match_link(E1, A)
     if A.mode != "chunk" then return false end
 
-    return link_chunk == A
+    return link_chunk == A.chunk
   end
 
 
@@ -1841,7 +1838,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     -- new rooms must not be placed in boundary spaces
-    if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_outside_sprout_box(S) then
+    if (E2.kind == "new_room") and Seed_outside_sprout_box(S) then
       return false
     end
 
@@ -2316,6 +2313,20 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
     local stair_prefab
 
+    local link_info
+    
+    -- need to remove the existing link chunk
+    if link_chunk then
+      link_info =
+      {
+        h_join = link_chunk.h_join
+      }
+
+      -- this kills the chunk too
+      link_chunk.area:kill_it()
+      link_chunk = nil
+    end
+
     each r in cur_rule.rects do
       local x1,y1, x2,y2 = transform_rect(T, r)
 
@@ -2348,10 +2359,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         R2 = new_room
       end
 
-      -- link chunks have no area
-      if r.kind == "link" then
-        chunk.room = R2
-      else
+      do
         A = AREA_CLASS.new("chunk")
         R2:add_area(A)
 
@@ -2426,18 +2434,35 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 --???        chunk.dir = transform_dir(T, chunk.dir)
       end
 
+      if r.kind == "hallway" then
+        chunk.h_join = {}
+
+        if new_room then
+          chunk.is_terminator = true
+
+          if new_room.is_hallway then
+            new_room.first_piece = chunk
+          end
+        end
+
+        local prev_chunk = area_map[1].chunk
+
+        if prev_chunk then
+          -- FIXME : proper directions !!
+          table.insert(prev_chunk.h_join, chunk)
+          table.insert(     chunk.h_join, prev_chunk)
+        end
+      end
+
       if r.kind == "closet" then table.insert(R.closets, chunk) end
       if r.kind == "stair"  then table.insert(R.stairs,  chunk) end
       if r.kind == "joiner" then table.insert(R.joiners, chunk) end
-
-      if r.kind == "hallway" then table.insert(R2.pieces, chunk) end
     end
   end
 
 
   local function pre_install(T)
     new_room = nil
-
     new_conn = nil
 
     old_chunks = new_chunks
@@ -2549,11 +2574,6 @@ end
     end -- px, py
     end
 
-    -- hallway links need to match exactly
-    if link_chunk and link_matches != (link_chunk.sw * link_chunk.sh) then
-      return false
-    end
-
 --[[ DEBUG
 if what == "INSTALL" then
 stderrf("=== install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
@@ -2617,8 +2637,6 @@ end
 
   local function match_or_install_pattern(what, T)
     if what == "TEST" then
-      link_chunk = nil
-      link_matches = nil
     else
       new_area = nil
       new_intconn = nil
@@ -2876,7 +2894,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
 
     if R.is_hallway then
       pass = assert(R.grow_pass)
-      apply_num = rand.irange(3, 12)
+      apply_num = rand.irange(5, 12)
     end
 
   elseif pass == "sprout" then
@@ -2940,6 +2958,7 @@ function Grower_grow_room(R)
 
   local function is_too_small(R)
     if R.is_hallway then
+do return false end  --FIXME
       return R:prelim_conn_num() < 2
     end
 
@@ -3170,6 +3189,9 @@ function Grower_grow_all_rooms()
 
     each R in room_list do
       local old_num = #LEVEL.rooms
+
+      -- hallways cannot be regrown or resprouted
+      if R.is_hallway then continue end
 
       Grower_grammatical_room(R, "sprout", "is_emergency")
 
