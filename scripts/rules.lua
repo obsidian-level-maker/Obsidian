@@ -2272,7 +2272,7 @@ HALL_2_SPROUT_A =
 
   new_room =
   {
-    conn = { x=2, y=4, w=2,dir=8 }
+    conn = { x=2, y=3, w=2, dir=8 }
   }
 }
 
@@ -2293,7 +2293,7 @@ HALL_2_SPROUT_B =
 
   new_room =
   {
-    conn = { x=2, y=4, w=2,dir=8 }
+    conn = { x=1, y=3, w=2, dir=8 }
   }
 }
 
