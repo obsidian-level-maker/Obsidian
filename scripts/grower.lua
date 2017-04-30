@@ -1282,7 +1282,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     local A = assert(S.area)
     assert(A.room)
 
-    S.area   = nil
+    S.area = nil
 
     table.kill_elem(A.seeds, S)
   end

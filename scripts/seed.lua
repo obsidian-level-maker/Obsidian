@@ -1194,12 +1194,11 @@ function Chunk_kill(chunk)
   for sx = chunk.sx1, chunk.sx2 do
   for sy = chunk.sy1, chunk.sy2 do
     local S = SEEDS[sx][sy]
-    assert(S.chunk == chunk)
-    S.chunk = nil
-  end
-  end
 
-  -- TODO : handle area here?
+    -- FIXME : this is WRONG WRONG WRONG
+    if S.chunk == chunk then S.chunk = nil end
+  end
+  end
 
   chunk.kind = "DEAD_" .. chunk.kind
   chunk.is_dead = true
