@@ -2576,7 +2576,7 @@ function Area_prune_hallways__OLD()
 do return end
 
   each R in LEVEL.rooms do
-    if R.kind == "hallway" then
+    if R.is_hallway then
       prune_hallway(R)
     end
   end

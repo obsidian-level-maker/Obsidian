@@ -1080,27 +1080,25 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(force_env)
 
   R.grow_parent = parent_R
 
-  local kind = "normal"
-
-  if force_env == "hallway" then
-    kind = "hallway"
-  end
 
   -- pick room environment (outdoor / cave)
+  local is_hallway = false
   local is_outdoor = false
   local is_cave = false
 
-  if force_env == "outdoor" then
+  if force_env == "hallway" then
+    is_hallway = true
+  elseif force_env == "outdoor" then
     is_outdoor = true
   elseif force_env == "building" then
     is_outdoor = false
   elseif force_env == "cave" then
     is_cave = true
   else
-    is_outdoor, is_cave = Room_choose_kind(R, parent_R)
+    is_outdoor = Room_choose_kind(R, parent_R)
   end
 
-  Room_set_kind(R, kind, is_outdoor, is_cave)
+  Room_set_kind(R, is_hallway, is_outdoor, is_cave)
 
 --FIXME : TEMP SHITE
   if R.id != 1 and is_outdoor and not is_cave and rand.odds(100) then
@@ -1112,7 +1110,7 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(force_env)
   -- always need at least one floor area
   -- [ except for hallways, every piece is an area ]
 
-  if kind == "hallway" then
+  if is_hallway then
     R.max_hall_size = 20
 
   else
@@ -1389,7 +1387,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     end
 
     -- hallways and caves are more restrictive than normal
-    if R.kind == "hallway" and rule.env != "hallway" then
+    if R.is_hallway and rule.env != "hallway" then
       return 0
     end
 
@@ -1411,7 +1409,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
 
   local function prob_for_symmetry(R)
-    if R.kind == "hallway" then return 0 end
+    if R.is_hallway then return 0 end
 
     if R.is_cave then return 0 end
 
@@ -2373,7 +2371,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       local A
       local R2 = R
 
-      if new_room and new_room.kind == "hallway" then
+      if new_room and new_room.is_hallway then
         R2 = new_room
       end
 
@@ -2487,10 +2485,12 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       new_conn = Grower_new_prelim_conn(R, new_room, "edge")
 --stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
 
-      local A = new_room.areas[1]
+      if not new_room.is_hallway then
+        local A = new_room.areas[1]
 
-      A.no_grow   = info.no_grow
-      A.no_sprout = info.no_sprout
+        A.no_grow   = info.no_grow
+        A.no_sprout = info.no_sprout
+      end
 
       -- this only for hallways (ATM)
       new_room.grow_pass = info.grow_pass
@@ -2900,7 +2900,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
   if pass == "grow" then
     apply_num = rand.pick({ 10,20,30 })
 
-    if R.kind == "hallway" then
+    if R.is_hallway then
       pass = assert(R.grow_pass)
       apply_num = rand.irange(3, 12)
     end
@@ -2912,7 +2912,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
       apply_num = rand.pick({ 1,2,2,3 })
     end
 
-    if R.kind == "hallway" then
+    if R.is_hallway then
       pass = R.grow_pass .. "_" .. pass
     end
 
@@ -2956,7 +2956,7 @@ function Grower_grow_room(R)
   gui.ticker()
 
   local function is_too_small(R)
-    if R.kind == "hallway" then
+    if R.is_hallway then
       return R:prelim_conn_num() < 2
     end
 
@@ -2984,7 +2984,7 @@ function Grower_grow_room(R)
 
   Grower_grammatical_room(R, "sprout")
 
-  if R.kind == "hallway" then
+  if R.is_hallway then
     Grower_finish_hallway(R)
   end
 
@@ -3276,7 +3276,7 @@ function Grower_decorate_rooms()
   rand.shuffle(room_list)
 
   each R in room_list do
-    if R.kind != "hallway" then
+    if not R.is_hallway then
       Grower_grammatical_room(R, "decorate")
     end
   end
@@ -3550,7 +3550,7 @@ function Grower_hallway_kinds()
 
 -- stderrf("Hallway kind @ %s --> %s %s\n", H.name, sel(is_outdoor, "OUT", "-"), sel(is_cave, "CAVE", "-"))
 
-    Room_set_kind(H, "hallway", is_outdoor, is_cave)
+    Room_set_kind(H, true, is_outdoor, is_cave)
   end
 
 
@@ -3560,7 +3560,7 @@ function Grower_hallway_kinds()
 do return end
 
   each H in LEVEL.rooms do
-    if H.kind == "hallway" then
+    if H.is_hallway then
       visit_hall(H)
     end
   end

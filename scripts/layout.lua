@@ -614,7 +614,7 @@ function Layout_choose_face_area(A)
 
     if N.zone != A.zone then continue end
 
-    if N.room.kind == "hallway" then continue end
+    if N.room.is_hallway then continue end
 
     -- ok --
 

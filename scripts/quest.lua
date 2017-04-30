@@ -207,7 +207,7 @@ function Quest_create_initial_quest()
   --
 
   local function eval_exit_room(R, secret_mode)
-    if R.kind == "hallway" then return -1 end
+    if R.is_hallway then return -1 end
 
     if R.is_exit then return -1 end
 
@@ -416,7 +416,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
     each id, R in rooms do
       if R.is_secret then continue end
 
-      if R.kind == "hallway" then continue end
+      if R.is_hallway then continue end
 
       -- some goals already?
       if #R.goals > 0 then continue end
@@ -450,8 +450,8 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
     local score = 300
 
-    -- strongly prefer not to enter a hallway from a locked door
-    if after_R.kind == "hallway" then
+    -- prefer not to enter a hallway from a locked door
+    if after_R.is_hallway then
       score = score - 100
     end
 
@@ -525,7 +525,7 @@ each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
   end
 
   -- no locking end of hallways
-  if before_R.kind == "hallway" then
+  if before_R.is_hallway then
     return
   end
 
@@ -1303,7 +1303,7 @@ function Quest_calc_exit_dists()
 
     local step = 1.0
 
-    if R1.kind == "hallway" or R2.kind == "hallway" then
+    if R1.is_hallway or R2.is_hallway then
       step = 0.3
     end
 
@@ -1370,7 +1370,7 @@ function Quest_start_room()
     -- never in a hallway
     -- TODO : occasionally allow it -- but require a closety void area nearby
     --        which we can use for a start closet
-    if R.kind == "hallway" then
+    if R.is_hallway then
       return -1
     end
 
@@ -1820,7 +1820,7 @@ function Quest_add_weapons()
 
   local function eval_weapon_room(R)
     -- never in hallways!
-    if R.kind == "hallway" then return -200 end
+    if R.is_hallway then return -200 end
 
     -- never in secrets!
     if R.is_secret then return -150 end
@@ -2105,7 +2105,7 @@ function Quest_nice_items()
     local rooms = {}
 
     each R in LEVEL.rooms do
-      if R.is_secret and not R.is_exit and R.kind != "hallway" then
+      if R.is_secret and not R.is_exit and not R.is_hallway then
         table.insert(rooms, R)
       end
     end
@@ -2206,8 +2206,7 @@ function Quest_nice_items()
     if R.is_secret  then return -1 end
     if R.is_start   then return -1 end
     if R.is_exit    then return -1 end
-
-    if R.kind == "hallway" then return -1 end
+    if R.is_hallway then return -1 end
 
     if R:usable_chunks() < 2 then return -1 end
 
@@ -2287,7 +2286,7 @@ function Quest_nice_items()
 
   local function find_storage_rooms()
     each R in LEVEL.rooms do
-      if R.kind == "hallway" then continue end
+      if R.is_hallway then continue end
 
       if R:is_unused_leaf() and #R.items == 0 then
         R.is_storage = true
@@ -2346,7 +2345,7 @@ function Quest_make_room_secret(R)
 
   local H = sel(C.R1 == R, C.R2, C.R1)
 
-  if H.kind == "hallway" and H:total_conns() <= 2 then
+  if H.is_hallway and H:total_conns() <= 2 then
     H.is_secret = true
 
     C = R:secret_entry_conn(H)
@@ -2370,10 +2369,9 @@ function Quest_big_secrets()
 
 
   local function eval_secret_room(R)
-    if R.kind == "hallway" then return -1 end
-
     if R.is_start   then return -1 end
     if R.is_exit    then return -1 end
+    if R.is_hallway then return -1 end
 
     if #R.goals > 0 then return -1 end
 
@@ -2493,6 +2491,8 @@ function Quest_room_themes()
 
 
   local function total_volume_of_room_kind(kind)
+    -- FIXME : BORKEN !!  (R.kind is not used anymore)
+
     local vol = 0
 
     each R in LEVEL.rooms do
@@ -2618,7 +2618,7 @@ function Quest_room_themes()
 
       -- apply it to all rooms in this zone
       each R in Z.rooms do
-        if R.kind == "hallway" then
+        if R.is_hallway then
           R.theme = Z.hallway_theme
         elseif R.is_cave then
           R.theme = Z.cave_theme

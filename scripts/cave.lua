@@ -2724,6 +2724,7 @@ function Cave_outdoor_borders()
 
     if not R then return false end
 
+    -- FIXME
     if R.kind == "outdoor" then return true end
     if R.kind == "scenic" and R.is_outdoor then return true end
 

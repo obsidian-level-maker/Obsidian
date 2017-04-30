@@ -623,7 +623,7 @@ function Item_distribute_stats()
       -- do not cross zones
       if N.zone != R.zone then break; end
 
-      if N.kind == "hallway" then continue end
+      if N.is_hallway then continue end
 
       table.insert(list, { room=N, ratio=ratio })
 

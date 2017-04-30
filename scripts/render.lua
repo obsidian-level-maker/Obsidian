@@ -1318,8 +1318,6 @@ function Render_hallway__OLD(A, S)
 
   local skin = {}
 
---- if A.room.hallway.parent then skin.floor = "FLAT14" end
-
 
   if S.hall_piece then
     local fab_name = "Hall_f_" .. fab_common
@@ -2111,7 +2109,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function content_weapon(spot)
     local weapon = assert(spot.content_item)
 
-    if R.is_start or R.kind == "hallway" then
+    if R.is_start or R.is_hallway then
       -- bare item
       Trans.entity(weapon, spot.mx, spot.my, spot.z1)
     else
@@ -2125,7 +2123,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function content_item(spot)
     local item = assert(spot.content_item)
 
-    if R.is_start or R.kind == "hallway" then
+    if R.is_start or R.is_hallway then
       -- bare item
       Trans.entity(item, spot.mx, spot.my, spot.z1)
     else

@@ -93,7 +93,7 @@ function Monster_pacing()
     room_list = {}
 
     each R in LEVEL.rooms do
-      if R.kind == "hallway" or R.is_secret then
+      if R.is_hallway or R.is_secret then
         R.pressure = "low"
         continue
       end
@@ -803,7 +803,7 @@ function Monster_fill_room(R)
 
 
   local function number_of_kinds()
-    if R.kind == "hallway" then
+    if R.is_hallway then
       return rand.sel(66, 1, 2)
     end
 
@@ -896,7 +896,7 @@ function Monster_fill_room(R)
 
   local function categorize_room_size()
     -- hallways are always small : allow any monsters
-    if R.kind == "hallway" then return end
+    if R.is_hallway then return end
 
     -- anything goes for the final battle
     if R.is_exit then return end
@@ -905,7 +905,7 @@ function Monster_fill_room(R)
     if rand.odds(6) then return end
 
     -- often allow any monsters in caves
-    if R.kind == "cave" and rand.odds(27) then return end
+    if R.is_cave and rand.odds(27) then return end
 
     -- value depends on total area of monster spots
     local area = 0
@@ -924,7 +924,7 @@ function Monster_fill_room(R)
     area = area * rand.range(0.80, 1.25)
 
     -- caves are often large -- adjust for that
-    if R.kind == "cave" then area = area / 2 - 8 end
+    if R.is_cave then area = area * 0.7 - 8 end
 
     if area < 4 then
       R.room_size = "small"
@@ -1027,8 +1027,8 @@ function Monster_fill_room(R)
 
 
   local function mark_ambush_spots()
-    if R.kind == "hallway" then return end
-    if R.kind == "cave" then return end
+    if R.is_hallway then return end
+    if R.is_cave or R.is_park then return end
 
     -- this also determines the 'central_dist' field of spots
 
@@ -1194,7 +1194,7 @@ function Monster_fill_room(R)
   local function crazy_palette()
     local num_kinds
 
-    if R.kind == "hallway" then
+    if R.is_hallway then
       num_kinds = rand.index_by_probs({ 20, 40, 60 })
     else
       local size = math.sqrt(R.svolume)
@@ -1389,7 +1389,7 @@ function Monster_fill_room(R)
     elseif spot.ambush or info.boss_type then
       deaf  = rand.odds(95)
       focus = spot.ambush
-    elseif R.kind == "cave" or R.kind == "hallway" or info.float then
+    elseif R.is_cave or R.is_hallway or info.float then
       deaf = rand.odds(65)
     else
       deaf = rand.odds(35)
@@ -1401,7 +1401,7 @@ function Monster_fill_room(R)
 
     local angle
 
-    if (mode or R.kind == "hallway") and spot.angle then
+    if (mode or R.is_hallway) and spot.angle then
       angle = spot.angle
     else
       angle = monster_angle(spot, x, y, z, focus)
@@ -1681,7 +1681,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- do not produce groups of nasties
     if info.nasty then return 1 end
 
-    if R.kind == "hallway" then
+    if R.is_hallway then
       return rand.sel(50, 1, 2)
     end
 
@@ -2013,8 +2013,8 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
     if STYLE.barrels == "none" then return end
 
     local barrel_chance = sel(R.is_outdoor, 2, 15)
---??    if R.natural then barrel_chance = 3 end
---??    if R.hallway then barrel_chance = 5 end
+--??    if R.is_park then barrel_chance = 3 end
+--??    if R.is_hallway then barrel_chance = 5 end
 
     if STYLE.barrels == "heaps" or rand.odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
     if STYLE.barrels == "few"   or rand.odds(25) then barrel_chance = barrel_chance / 4 end
@@ -2043,7 +2043,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
     R.sneakiness = rand.sel(30, 95, 25)
 
-    if R.kind != "hallway" and R.entry_coord then
+    if not R.is_hallway and R.entry_coord then
       R.furthest_dist = R:furthest_dist_from_entry()
     end
 

@@ -21,10 +21,7 @@
 
 --class ROOM
 --[[
-    kind : keyword  -- "normal" (layoutable room, can place items)
-                    -- "hallway"
-                    -- "scenic" (unvisitable room)
-
+    is_hallway : bool  -- true for hallways
     is_outdoor : bool  -- true for outdoor rooms
 
     is_cave    : bool  -- true for caves (indoors)
@@ -70,8 +67,6 @@
 
     light_level : keyword    -- "bright", "normal", "dark" or "verydark"
 
-    hallway : HALLWAY_INFO   -- for hallways only
-
     symmetry : SYMMETRY_INFO
 
     border : AREA
@@ -82,13 +77,6 @@
      ceil_mats[z] : name
 
     guard_chunk : CHUNK   -- what a bossy monster is guarding
---]]
-
-
---class HALLWAY_INFO
---[[
-    height : number   -- space between floor and ceiling
-
 --]]
 
 
@@ -131,7 +119,6 @@ function ROOM_CLASS.new()
   local R =
   {
     id = id
-    kind = "UNSET"
     name = string.format("ROOM_%d", id)
 
     svolume = 0
@@ -198,7 +185,7 @@ end
 
 
 function ROOM_CLASS.add_area(R, A)
-  assert(R.kind != "DEAD")
+  assert(not R.is_dead)
 
   A.room = R
   A.is_outdoor = R.is_outdoor
@@ -211,7 +198,7 @@ end
 
 
 function ROOM_CLASS.get_env(R)
-  if R.kind == "hallway" then return "hallway" end
+  if R.is_hallway then return "hallway" end
 
   if R.is_cave then return "cave" end
   if R.is_park then return "park" end
@@ -267,11 +254,9 @@ function ROOM_CLASS.kill_it(R)
   end
 
   R.name = "DEAD_" .. R.name
-  R.kind = "DEAD"
   R.is_dead = true
 
   R.areas = nil
-  R.hallway = nil
   R.trunk = nil
 
   R.sx1   = nil
@@ -425,8 +410,7 @@ end
 
 
 function ROOM_CLASS.is_unused_leaf(R)
-  if R.kind == "hallway" then return false end
-
+  if R.is_hallway then return false end
   if R.is_secret  then return false end
   if R.is_start   then return false end
 
@@ -1159,7 +1143,7 @@ do return end
     return
   end
 
----??  if R.kind == "hallway" then
+---??  if R.is_hallway then
 ---??    detect_hallway_porch()
 
   if R.is_outdoor then
@@ -1197,7 +1181,7 @@ function Room_make_windows(A1, A2)
     if A.mode == "void" then return false end
     if A.chunk and A.chunk.kind != "area" then return false end
 
-    if A.room.kind == "hallway" then return false end
+    if A.room.is_hallway then return false end
 
     return true
   end
@@ -1626,16 +1610,14 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_set_kind(R, kind, is_outdoor, is_cave)
-  R.kind = kind
-
-  if kind == "hallway" then
-    R.name = string.format("HALLWAY_%d", R.id)
-    R.hallway = R.hallway or {}
-  end
-
+function Room_set_kind(R, is_hallway, is_outdoor, is_cave)
+  R.is_hallway = is_hallway
   R.is_outdoor = is_outdoor
   R.is_cave    = is_cave
+
+  if is_hallway then
+    R.name = string.format("HALLWAY_%d", R.id)
+  end
 
   each A in R.areas do
     A.is_outdoor = R.is_outdoor
@@ -1660,23 +1642,6 @@ function Room_choose_kind(R, last_R)
   end
 
   local is_outdoor = rand.odds(out_prob)
-
-  -- compute a bbox from the sprout (roughly where next room will be)
-  -- and check it against cave grid
---[[ FIXME : use current room bbox
-  local S = P.S
-
-  local fx, fy = geom.nudge(S.sx, S.sy, P.dir, 4)
-  local rx, ry = geom.nudge(S.sx, S.sy, geom.RIGHT[P.dir], P.long + 2)
-  local lx, ly = geom.nudge(S.sx, S.sy, geom. LEFT[P.dir], 2)
-
-  local sx1 = math.min(fx, lx, rx)
-  local sy1 = math.min(fy, ly, ry)
-  local sx2 = math.max(fx, lx, rx)
-  local sy2 = math.max(fy, ly, ry)
-
-  local is_cave = touches_cave_section(sx1, sy1, sx2, sy2)
---]]
 
   return is_outdoor, false  -- is_cave
 end
@@ -1790,7 +1755,7 @@ function Room_floor_ceil_heights()
   local function group_floors(R)
     if R.is_park then return end
     if R.is_cave then return end
-    if R.kind == "hallway" then return end
+    if R.is_hallway then return end
 
     local start_area
 
@@ -2374,7 +2339,7 @@ function Room_floor_ceil_heights()
     if C.kind != "edge" then return false end
 
     if C.R1.is_cave or C.R2.is_cave then return false end
-    if C.R1.kind == "hallway" or C.R2.kind == "hallway" then return false end
+    if C.R1.is_hallway or C.R2.is_hallway then return false end
 
     if C.A1.floor_h    != C.A2.floor_h then return false end
     if C.R1.is_outdoor != C.R2.is_outdoor then return false end
@@ -2500,13 +2465,7 @@ function Room_floor_ceil_heights()
       via_conn.door_h = entry_h
     end
 
---[[  do this elsewhere?
-    if R.kind != "hallway" then
-      Room_detect_porches(R)
-    end
---]]
-
-    if R.kind == "hallway" then
+    if R.is_hallway then
       process_hallway(R, via_conn)
 
     elseif R.is_cave then
@@ -2516,6 +2475,8 @@ function Room_floor_ceil_heights()
       process_park(R)
 
     else
+---???  Room_detect_porches(R)
+
       process_room(R, entry_area)
       select_floor_mats(R, via_conn)
     end

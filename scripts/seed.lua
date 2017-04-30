@@ -887,9 +887,6 @@ function Seed_dump_rooms()
     if S.diagonal == 1 then return "\\" end
     if S.diagonal == 3 then return "/" end
 
-    if R.kind == "scenic"   then return "=" end
-    if R.kind == "reserved" then return "*" end
-
     if R.is_outdoor then
       local n = 1 + ((R.id - 1) % 26)
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
@@ -977,7 +974,7 @@ function Seed_save_svg_image(filename)
       color = "#f0f"
     elseif A1.room and (A1.room == A2.room) then
       color = "#0f0"
-    elseif (A1.room and A1.room.hallway) or (A2.room and A2.room.hallway) then
+    elseif (A1.room and A1.room.is_hallway) or (A2.room and A2.room.is_hallway) then
       color = "#fb0"
     else
       color = "#00f"
