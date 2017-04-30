@@ -2006,29 +2006,14 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function pick_start_area(R)
-    local list = {}
-
-    each A in R.areas do
-      if A.mode == "floor" then
-        table.insert(list, A)
-      end
-    end
-
-    return rand.pick(list)
-  end
-
-
   local function process_room(R, entry_area)
-    local start_area = pick_start_area(R)
-
-    -- recursively flow delta heights from a random starting area
-
     gui.debugf("ASSIGN FLOORS IN %s\n", R.name)
 
     local adjust_h = 0
 
-    if entry_area then adjust_h = assert(entry_area.prelim_h) end
+    if entry_area then
+      adjust_h = assert(entry_area.prelim_h)
+    end
 
     -- compute the actual floor heights, ensuring entry_area becomes 'entry_h'
     each A in R.areas do
