@@ -3253,7 +3253,7 @@ function Grower_grow_all_rooms()
   ---| Grower_grow_all_rooms |---
 
   -- if map is too small, try to sprout some more rooms
-  local MAX_LOOP = 8
+  local MAX_LOOP = 10
 
   for loop = 1, MAX_LOOP do
 
