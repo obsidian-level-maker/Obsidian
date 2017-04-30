@@ -57,6 +57,36 @@ DOOM.SINKS =
     trim_light = 16
   }
 
+  sky_hell_1 =
+  {
+    mat   = "_SKY"
+    dz    = 128
+    light = 16
+
+    trim_mat = "WOODMET2"
+    trim_dz  = 0
+  }
+
+  sky_hell_2 =
+  {
+    mat   = "_SKY"
+    dz    = 128
+    light = 16
+
+    trim_mat = "SKINSYMB"
+    trim_dz  = 0
+  }
+
+  sky_hell_3 =
+  {
+    mat   = "_SKY"
+    dz    = 64
+    light = 16
+
+    trim_mat = "BIGBRIK2"
+    trim_dz  = 0
+  }
+
 
   -- liquid floor --
 
@@ -208,6 +238,15 @@ DOOM.SINKS =
   {
     mat = "FLOOR6_1"
     dz  = 8
+  }
+
+  ceil_vdark =
+  {
+    mat   = "CEIL4_1"
+    dz    = 64
+
+    trim_mat = "BLAKWAL2"
+    trim_dz  = 0
   }
 }
 
@@ -625,13 +664,19 @@ DOOM.THEMES =
 
     ceiling_sinks =
     {
-      PLAIN = 50
+      PLAIN = 80
+
       sky_metal = 20
       sky_plain = 20
+      sky_hell_1 = 10
+      sky_hell_2 = 10
+      sky_hell_3 = 20
+
       light_diamond = 10
       light_hell_red = 20
       light_hell_lava = 5
       ceil_redash = 5
+      ceil_vdark = 10
     }
 
     wall_groups =
