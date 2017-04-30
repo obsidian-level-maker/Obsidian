@@ -57,6 +57,38 @@ DOOM.SINKS =
     trim_light = 16
   }
 
+
+  sky_urban_1 =
+  {
+    mat   = "_SKY"
+    dz    = 64
+    light = 16
+
+    trim_mat = "WOOD4"
+    trim_dz  = 0
+  }
+
+  sky_urban_2 =
+  {
+    mat   = "_SKY"
+    dz    = 72
+    light = 16
+
+    trim_mat = "BRONZE1"
+    trim_dz  = 0
+  }
+
+  sky_urban_3 =
+  {
+    mat   = "_SKY"
+    dz    = 96
+    light = 16
+
+    trim_mat = "SLADSKUL"
+    trim_dz  = 0
+  }
+
+
   sky_hell_1 =
   {
     mat   = "_SKY"
@@ -247,6 +279,15 @@ DOOM.SINKS =
 
     trim_mat = "BLAKWAL2"
     trim_dz  = 0
+  }
+
+  ceil_icky =
+  {
+    mat   = "FLOOR7_2"
+    dz    = 64
+
+    trim_mat = "ICKWALL1"
+    trim_dz  = 64
   }
 }
 
@@ -526,12 +567,17 @@ DOOM.THEMES =
 
     ceiling_sinks =
     {
-      PLAIN = 60
+      PLAIN = 80
       sky_metal = 30
       sky_plain = 10
+      sky_urban_1 = 10
+      sky_urban_2 = 5
+      sky_urban_3 = 10
+
       light_urban1 = 15
       light_diamond = 5
       ceil_redash = 5
+      ceil_icky   = 20
     }
 
     window_groups =
