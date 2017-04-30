@@ -944,6 +944,11 @@ function Render_sink_part(A, S, where, sink)
 
       brushlib.set_mat(brush, sink.trim_mat, sink.trim_mat)
 
+      -- ensure trim is unpeg (especially for trims like COMPTALL)
+      if where == "ceil" then
+        brushlib.set_kind(brush, "solid", { mover=1 })
+      end
+
     else
       if sink.dz then
         T.delta_z = sink.dz - base_dz
