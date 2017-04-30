@@ -1569,10 +1569,10 @@ function Area_divvy_up_borders()
 
   local seed_list
 
-  local SX1 = math.max(LEVEL.boundary_x1 - 1, 1)
-  local SY1 = math.max(LEVEL.boundary_y1 - 1, 1)
-  local SX2 = math.min(LEVEL.boundary_x2 + 1, SEED_W)
-  local SY2 = math.min(LEVEL.boundary_y2 + 1, SEED_H)
+  local SX1 = math.max(LEVEL.boundary_x1 - 2, 1)
+  local SY1 = math.max(LEVEL.boundary_y1 - 2, 1)
+  local SX2 = math.min(LEVEL.boundary_x2 + 2, SEED_W)
+  local SY2 = math.min(LEVEL.boundary_y2 + 2, SEED_H)
 
   local temp_areas
 
