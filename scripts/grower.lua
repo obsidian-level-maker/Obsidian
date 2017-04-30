@@ -69,7 +69,8 @@ function Grower_preprocess_grammar()
     if ch == 'R' then return { kind="new_room" } end
 
     if ch == 'H' then return { kind="hallway" } end
-    if ch == 'X' then return { kind="hall2"   } end
+    if ch == 'I' then return { kind="hall2"   } end
+    if ch == 'K' then return { kind="hall3"   } end
 
     if ch == 'C' then return { kind="cage"   } end
     if ch == 'J' then return { kind="joiner" } end
