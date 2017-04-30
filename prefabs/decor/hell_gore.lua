@@ -73,7 +73,7 @@ PREFABS.Decor_hellgore4 =
   env    = "outdoor"
 
   where  = "point"
-  size   = 100
+  size   = 200
   height = { 152, 256 }
 
   bound_z1 = 0
@@ -95,12 +95,12 @@ PREFABS.Decor_hellgore5 =
   file   = "decor/hell_gore.wad"
   map    = "MAP05"
 
-  prob   = 60
+  prob   = 30
   theme  = "hell"
   env    = "outdoor"
 
   where  = "point"
-  size   = 100
+  size   = 200
   height = { 128, 256 }
 
   bound_z1 = 0
