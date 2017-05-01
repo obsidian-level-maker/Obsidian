@@ -2964,8 +2964,8 @@ function Grower_clean_up_links(R, do_all)
     end
   end
 --]]
-
 end
+
 
 
 function Grower_prune_hallway(R)
@@ -2973,6 +2973,50 @@ function Grower_prune_hallway(R)
   -- Prune the dead ends of the grown hallway.
   -- The whole room is killed when there is nowhere left to go.
   --
+
+  local function kill_a_piece(piece)
+    assert(not piece.is_dead)
+
+    each P2 in piece.h_join do
+      if not P2.is_dead then
+        table.kill_elem(P2.h_join, piece)
+      end
+    end
+
+    piece.area:kill_it("remove_from_room")
+  end
+
+
+  local function dead_end_flow(piece, seen)
+    seen[piece.id] = 1
+
+    -- recurse to neighbors FIRST, which means we can prune this
+    -- piece if ones further along were pruned
+
+    local neighbors = table.copy(piece.h_join)
+
+    each P in neighbors do
+      if not seen[P.id] then
+        dead_end_flow(P, seen)
+      end
+    end
+
+    -- terminating pieces are always OK
+    if piece.is_terminator then
+      return
+    end
+
+    -- count number of destinations
+    local count = 0
+
+    each P2 in piece.h_join do
+      count = count + 1
+    end
+
+    if count < 2 then
+      kill_a_piece(piece)
+    end
+  end
 
 
   ---| Grower_prune_hallway |---
@@ -2984,7 +3028,7 @@ function Grower_prune_hallway(R)
     return
   end
 
-  -- FIXME : prune parts of hallway not reaching a room
+  dead_end_flow(R.first_piece, {})
 end
 
 
