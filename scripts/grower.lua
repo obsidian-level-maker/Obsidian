@@ -1217,6 +1217,9 @@ function Grower_kill_room(R)
 
   R:kill_it()
 
+  -- NOTE: if this room was connected to a hallway, we should prune it too
+  -- [ but the current hallway rules never sprout small rooms ]
+
   -- sanity check
   if table.empty(LEVEL.rooms) then
     error("All rooms were pruned!")
