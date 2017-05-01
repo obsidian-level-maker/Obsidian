@@ -2343,12 +2343,12 @@ function Quest_make_room_secret(R)
   -- when connected to a hallway, make the hallway secret too
   -- (unless hallway connects three or more rooms...)
 
-  local H = sel(C.R1 == R, C.R2, C.R1)
+  local H = C:other_room(R)
 
-  if H.is_hallway and H:total_conns() <= 2 then
+  if H.is_hallway and H:total_conns() == 2 then
     H.is_secret = true
 
-    C = R:secret_entry_conn(H)
+    C = H:secret_entry_conn(R)
     assert(C)
   end
 
