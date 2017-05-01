@@ -1944,6 +1944,28 @@ function Quest_add_weapons()
   end
 
 
+  local function do_the_secret_weapon()
+    local best_R
+    local best_score = -1
+
+    each R in LEVEL.rooms do
+      if R.is_secret and not R.is_exit and not R.is_hallway then
+        local score = R:usable_chunks() * 10
+        score = score + gui.random()
+
+        if score > best_score then
+          best_R = R
+          best_score = score
+        end
+      end
+    end
+
+    if best_R then
+      table.insert(best_R.weapons, LEVEL.secret_weapon)
+    end
+  end
+
+
   local function dump_weapons()
     gui.debugf("Weapon assignment:\n")
 
@@ -1965,6 +1987,10 @@ function Quest_add_weapons()
   do_start_weapons(LEVEL.alt_start)
 
   do_other_weapons()
+
+  if LEVEL.secret_weapon then
+    do_the_secret_weapon()
+  end
 
   dump_weapons()
 end
@@ -2105,7 +2131,9 @@ function Quest_nice_items()
     local rooms = {}
 
     each R in LEVEL.rooms do
-      if R.is_secret and not R.is_exit and not R.is_hallway then
+      if R.is_secret and not R.is_exit and not R.is_hallway and
+        table.empty(R.weapons)
+      then
         table.insert(rooms, R)
       end
     end
@@ -2361,8 +2389,8 @@ end
 function Quest_big_secrets()
   --
   -- Finds unused leaf rooms and turns some of them into secrets.
-  -- These are "big" secrets, but we also create small ("closet") secrets
-  -- elsewhere (ONLY PLANNED ATM).
+  -- These are "big" secrets, but we also create small ("closet")
+  -- secrets elsewhere.
   --
 
   local max_size = 199
@@ -2446,7 +2474,7 @@ function Quest_big_secrets()
   local poss_list  = collect_possible_secrets()
   local poss_count = table.size(poss_list)
 
-  -- quantities : use first possible secret + using the rest
+  -- quantities : use first possible secret / using the rest
   local first = style_sel("secrets", 0, 0.40, 0.70, 0.90)
   local  rest = style_sel("secrets", 0, 0.25, 0.50, 0.75)
 
