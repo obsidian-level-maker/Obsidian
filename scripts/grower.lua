@@ -1844,7 +1844,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     -- new rooms must not be placed in boundary spaces
-    if (E2.kind == "new_room") and Seed_outside_sprout_box(S) then
+    if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_outside_sprout_box(S) then
       return false
     end
 
@@ -1855,6 +1855,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     -- [[[ except for new rooms and chunks, as they must remain distinct ]]]
     if T.is_first and E2.assignment then
       if E2.kind == "new_room" or
+         E2.kind == "hallway" or
          is_element_a_chunk(E2) or
          not R.symmetry:on_axis(S.sx, S.sy)
       then
@@ -1877,10 +1878,6 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if E1.kind == "free" and E1.utterly then
       if S.area then return false end
       if S.disabled_R == R then return false end
-
-      -- never use a seed near edge of map  [ except for caves! ]
-      local doing_cave = (E2.kind == "area" and R.is_cave) or
-                         (E2.kind == "room" and cur_rule.new_room and cur_rule.new_room.env == "cave")
 
       if Seed_over_boundary(S) then
         return false
@@ -2460,11 +2457,11 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         if prev_chunk then
           local dir1 = link_info.dest_dir
           local dir2 = 10 - dir1
-
+--[[
 stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
          prev_chunk.area.name, dir1,
               chunk.area.name, dir2)
-
+--]]
           assert(prev_chunk.h_join[dir1] == nil)
           assert(     chunk.h_join[dir2] == nil)
 
