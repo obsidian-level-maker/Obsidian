@@ -60,6 +60,7 @@ PREFABS.Hallway_vent_barred =
 
   prob   = 50
 
-  deep   = 16
+  deep     = 16
+  delta_h  = 64
 }
 

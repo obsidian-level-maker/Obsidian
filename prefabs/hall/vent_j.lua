@@ -14,6 +14,8 @@ PREFABS.Hallway_vent_plain =
   prob   = 50
 
   deep   = 16
+
+  delta_h = 64
 }
 
 
