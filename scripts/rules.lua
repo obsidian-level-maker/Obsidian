@@ -2159,10 +2159,10 @@ HALL_1_SPROUT_A =
 
   structure =
   {
-    "...", "RRR"
-    "...", "RRR"
-    "x@x", "xHx"
-    "x1x", "x1x"
+    "....", "RRRR"
+    "....", "RRRR"
+    "x@xx", "xHxx"
+    "x1xx", "x1xx"
   }
 
   new_room =
@@ -2199,7 +2199,7 @@ SPROUT_hallway2 =
 HALL_2_GROW_I1 =
 {
   pass = "hall_2"
-  prob = 50
+  prob = 25
 
   structure =
   {

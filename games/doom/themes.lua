@@ -210,7 +210,7 @@ DOOM.SINKS =
   light_brightred_metal =
   {
     mat = "FLOOR1_7"
-    dz  = 4
+    dz  = 8
     light = 32
 
     trim_mat = "METAL"
