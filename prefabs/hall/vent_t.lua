@@ -4,7 +4,7 @@
 
 PREFABS.Hallway_vent_t1 =
 {
-  file   = "hall/vent_t1.wad"
+  file   = "hall/vent_t.wad"
   map    = "MAP01"
 
   where  = "seeds"
