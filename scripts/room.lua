@@ -2218,7 +2218,7 @@ function Room_floor_ceil_heights()
     pick_hallway_fab(R, piece)
 
     -- recurse to other pieces
-    each P in piece.h_join do
+    each dir, P in piece.h_join do
       if not table.has_elem(R.pieces, P) then
         local new_h = h
 

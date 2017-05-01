@@ -647,8 +647,11 @@ function Grower_preprocess_grammar()
       -- directional stair
       r.from_dir = 10 - E.dir
 
-    elseif r.kind == "hallway" or kind == "link" then
-      -- TODO
+    elseif kind == "link" then
+      r.dest_dir = r.dest_dir or 8
+
+    elseif r.kind == "hallway" then
+      r.from_dir = r.from_dir or 2
 
     else
       if not info then
@@ -659,7 +662,7 @@ function Grower_preprocess_grammar()
     end
 
     if r.kind == "hallway" or kind == "link" then
-      -- TODO
+      -- nothing needed ??
 
     else
       r.from_area = determine_from_area(kind, x, y, r.from_dir)
@@ -2322,7 +2325,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if link_chunk then
       link_info =
       {
-        h_join = link_chunk.h_join
+        dest_dir = assert(link_chunk.dest_dir)
       }
 
       table.kill_elem(R.all_links, link_chunk)
@@ -2443,19 +2446,30 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         chunk.h_join = {}
 
         if new_room then
-          chunk.is_terminator = true
+          chunk.is_terminator = "entry"
 
           if new_room.is_hallway then
             new_room.first_piece = chunk
+          else
+            chunk.is_terminator = "exit"
           end
         end
 
         local prev_chunk = area_map[1].chunk
 
         if prev_chunk then
-          -- FIXME : proper directions !!
-          table.insert(prev_chunk.h_join, chunk)
-          table.insert(     chunk.h_join, prev_chunk)
+          local dir1 = link_info.dest_dir
+          local dir2 = 10 - dir1
+
+stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
+         prev_chunk.area.name, dir1,
+              chunk.area.name, dir2)
+
+          assert(prev_chunk.h_join[dir1] == nil)
+          assert(     chunk.h_join[dir2] == nil)
+
+          prev_chunk.h_join[dir1] = chunk
+               chunk.h_join[dir2] = prev_chunk
         end
       end
 
@@ -2757,6 +2771,8 @@ end
           best.areas[1] = area_map[1]
           best.areas[2] = area_map[2]
           best.areas[3] = area_map[3]
+
+          best.link_chunk = link_chunk
         end
       end -- x, y
       end
@@ -2773,6 +2789,8 @@ end
     area_map[1] = best.areas[1]
     area_map[2] = best.areas[2]
     area_map[3] = best.areas[3]
+
+    link_chunk = best.link_chunk
 
     match_or_install_pattern("INSTALL", best.T)
 
@@ -2980,9 +2998,10 @@ function Grower_prune_hallway(R)
   local function kill_a_piece(piece)
     assert(not piece.is_dead)
 
-    each P2 in piece.h_join do
+    each dir, P2 in piece.h_join do
       if not P2.is_dead then
-        table.kill_elem(P2.h_join, piece)
+        assert(P2.h_join[10 - dir] == piece)
+               P2.h_join[10 - dir] = nil
       end
     end
 
@@ -2998,7 +3017,7 @@ function Grower_prune_hallway(R)
 
     local neighbors = table.copy(piece.h_join)
 
-    each P in neighbors do
+    each dir,P in neighbors do
       if not seen[P.id] then
         dead_end_flow(P, seen)
       end
@@ -3012,7 +3031,7 @@ function Grower_prune_hallway(R)
     -- count number of destinations
     local count = 0
 
-    each P2 in piece.h_join do
+    each dir, P2 in piece.h_join do
       count = count + 1
     end
 
