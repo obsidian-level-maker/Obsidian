@@ -169,10 +169,10 @@ DOOM.SINKS =
   liquid_shiny =
   {
     mat = "_LIQUID"
-    dz  = -10
+    dz  = -8
 
     trim_mat = "FLAT23"
-    trim_dz  = 3
+    trim_dz  = 0
   }
 
   liquid_metal =
@@ -181,7 +181,7 @@ DOOM.SINKS =
     dz  = -8
 
     trim_mat = "METAL"
-    trim_dz  = 3
+    trim_dz  = 0
   }
 
 
@@ -496,7 +496,7 @@ DOOM.THEMES =
       PLAIN = 130
       sky_shiny = 20
       sky_metal = 20
-      sky_tech1 = 20
+      sky_tech1 = 7
       sky_tech2 = 7
       sky_tech3 = 20
 
