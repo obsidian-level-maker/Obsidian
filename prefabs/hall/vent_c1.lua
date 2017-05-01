@@ -1,12 +1,15 @@
 --
--- vent corner piece
+-- vent piece : corner (L shape)
 --
 
-UNFINISHED.Vent_c1 =
+PREFABS.Hallway_vent_c1 =
 {
   file   = "hall/vent_c1.wad"
+  map    = "MAP01"
+
   where  = "seeds"
   shape  = "L"
 
+  prob   = 50
 }
 

@@ -1,5 +1,5 @@
 --
--- narrow vent : four-way "+" junction
+-- vent piece : four-way "+" junction
 --
 
 PREFABS.Hallway_vent_p1 =

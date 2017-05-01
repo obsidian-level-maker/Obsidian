@@ -1,12 +1,15 @@
 --
--- vent piece, straight
+-- vent piece : straight
 --
 
-UNFINISHED.Vent_i1 =
+PREFABS.Hallway_vent_i1 =
 {
   file   = "hall/vent_i1.wad"
+  map    = "MAP01"
+
   where  = "seeds"
   shape  = "I"
 
+  prob   = 50
 }
 
