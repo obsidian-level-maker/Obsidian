@@ -2194,12 +2194,23 @@ function Room_floor_ceil_heights()
 
 
   local function pick_hallway_fab(R, chunk)
-    local from_dir = 2  -- FIXME
+    assert(chunk.from_dir)
+    assert(chunk.shape)
 
-    local reqs = Chunk_base_reqs(chunk, from_dir)
+    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
-    reqs.kind  = "hall"
-    reqs.shape = "P"  -- FIXME
+    -- shape handling is a bit hacky....
+
+    if chunk.XXX_is_terminator then
+      reqs.kind  = "terminator"
+      reqs.shape = "I"
+    else
+      reqs.kind  = "hall"
+      reqs.shape = chunk.shape
+
+-- TEMP CRUD
+if reqs.shape == "U" then reqs.shape = "I" end
+    end
 
     local def = Fab_pick(reqs)
 
@@ -2214,6 +2225,10 @@ function Room_floor_ceil_heights()
     table.insert(R.pieces, piece)
 
     set_floor(A, h)
+
+    -- determine shape and orientation
+    piece.shape = geom.categorize_shape(
+        piece.h_join[2], piece.h_join[4], piece.h_join[6], piece.h_join[8])
 
     pick_hallway_fab(R, piece)
 
