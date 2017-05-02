@@ -2230,6 +2230,15 @@ if reqs.shape == "U" then reqs.shape = "I" end
     piece.shape = geom.categorize_shape(
         piece.h_join[2], piece.h_join[4], piece.h_join[6], piece.h_join[8])
 
+    -- an L shape needs a dest_dir, so piece can be mirrored when needed
+    if piece.shape == "L" then
+      for dir = 2,8,2 do
+        if piece.h_join[dir] and piece.from_dir != dir then
+          piece.dest_dir = dir
+        end
+      end
+    end
+
     pick_hallway_fab(R, piece)
 
     -- recurse to other pieces
