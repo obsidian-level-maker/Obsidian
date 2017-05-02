@@ -2442,6 +2442,11 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       if r.kind == "hallway" then
         chunk.h_join = {}
 
+        if new_conn then
+          new_conn.kind  = "terminator"
+          new_conn.chunk = chunk
+        end
+
         if new_room then
           chunk.is_terminator = "entry"
 

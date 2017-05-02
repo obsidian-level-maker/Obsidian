@@ -1157,7 +1157,7 @@ function Layout_decorate_rooms(pass)
     each C in R.conns do
       local N = C:other_room(R)
 
-      if (C.kind == "joiner" or C.kind == "edge") and
+      if (C.kind == "edge" or C.kind == "joiner" or C.kind == "terminator") and
          not C.lock and
          not (N.is_secret or R.is_secret) and
          not N.is_start and

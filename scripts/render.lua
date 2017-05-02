@@ -1477,6 +1477,10 @@ function Render_chunk(chunk)
 
   local function do_hallway()
     assert(chunk.prefab_def)
+
+    if chunk.is_terminator then
+      do_joiner()
+    end
   end
 
   local function do_switch()

@@ -21,7 +21,7 @@
 
 --class CONN
 --[[
-    kind : keyword  -- "edge", "joiner", "teleporter"
+    kind : keyword  -- "edge", "joiner", "terminator", "teleporter"
 
     lock : LOCK
 
@@ -33,7 +33,7 @@
     -- especially for the quest system.
     --
     -- For teleporters the edge and area info will be absent.
-    -- For joiners, the edges are NOT peered.
+    -- For joiners and hall terminators, the edges are NOT peered.
 
     R1 : source ROOM
     R2 : destination ROOM
@@ -43,8 +43,6 @@
 
     A1 : source AREA
     A2 : destination AREA
-
-    F1, F2 : EDGE  -- for "split" connections, the other side
 
     joiner_chunk : CHUNK
 
@@ -132,24 +130,27 @@ function Connect_directly(P)
   table.insert(C.R1.conns, C)
   table.insert(C.R2.conns, C)
 
-
   local S1   = P.S
   local long = P.long
 
-  if P.split then long = P.split end
+  local E1, E2
 
 
   assert(kind != "teleporter")
 
-  if kind == "joiner" then
-    C.A1 = assert(P.A1)
-    C.A2 = assert(P.A2)
+  if kind == "joiner" or kind == "terminator" then
 
     C.joiner_chunk = assert(P.chunk)
     C.joiner_chunk.conn = C
 
     local dir1 = assert(P.chunk.from_dir)
-    local dir2 = assert(P.chunk.dest_dir)
+    local dir2
+    
+    if kind == "terminator" then
+      dir2 = 10 - dir1
+    else
+      dir2 = assert(P.chunk.dest_dir)
+    end
 
 --[[
 stderrf("Connect %s/%s --> %s/%s : from_dir:%d  dest_dir:%d\n",
@@ -157,8 +158,8 @@ P.R1.name, C.A1.name,
 P.R2.name, C.A2.name, dir1, dir2)
 --]]
 
-    local E1 = Seed_create_chunk_edge(P.chunk, dir1, "nothing")
-    local E2 = Seed_create_chunk_edge(P.chunk, dir2, "nothing")
+    E1 = Seed_create_chunk_edge(P.chunk, dir1, "nothing")
+    E2 = Seed_create_chunk_edge(P.chunk, dir2, "nothing")
 
     -- TODO : this shape check is hacky
     if P.chunk.shape == "I" then
@@ -166,24 +167,24 @@ P.R2.name, C.A2.name, dir1, dir2)
       E2.is_wallish = true
     end
 
-    C.E1 = E1 ; E1.conn = C
-    C.E2 = E2 ; E2.conn = C
-
   else  -- edge connection
 
-    local E1, E2 = Seed_create_edge_pair(P.S, P.dir, long, "arch", "nothing")
+    E1, E2 = Seed_create_edge_pair(P.S, P.dir, long, "arch", "nothing")
 
 --[[
 gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)
 gui.debugf("E2.S = %s  dir = %d  area = %s\n", E2.S.name, E2.dir, E2.S.area.name)
 --]]
-
-    C.E1 = E1 ; E1.conn = C
-    C.E2 = E2 ; E2.conn = C
-
-    C.A1 = assert(E1.S.area)
-    C.A2 = assert(E2.S.area)
   end
+
+  C.E1 = E1 ; E1.conn = C
+  C.E2 = E2 ; E2.conn = C
+
+  C.A1 = assert(E1.S.area)
+  C.A2 = assert(E2.S.area)
+
+  assert(C.A1.room == C.R1)
+  assert(C.A2.room == C.R2)
 
 --[[
 gui.debugf("Creating conn %s from %s --> %s\n", C.name, C.R1.name, C.R2.name)
@@ -191,27 +192,6 @@ gui.debugf("  seed %s  dir:%d  long:%d\n", P.S.name, P.dir, P.long)
 gui.debugf("  area %s(%s) of %s --> %s(%s) of %s\n",
 C.A1.name, C.A1.mode, C.A1.room.name,
 C.A2.name, C.A2.mode, C.A2.room.name)
---]]
-
-  assert(C.A1.room == C.R1)
-  assert(C.A2.room == C.R2)
-
-
-  -- handle split connections
-  -- [ FIXME : broken, must be done a different way ]
---[[
-  if P.split then
-    assert(not S1.diagonal)
-    local S2 = S1:raw_neighbor(geom.RIGHT[P.dir], P.long - P.split)
-    assert(not S2.diagonal)
-
-    local F1, F2 = Seed_create_edge_pair(S2, P.dir, long, "nothing")
-
-    F1.kind = "arch"
-
-    C.F1 = F1 ; F1.conn = C
-    C.F2 = F2 ; F2.conn = C
-  end
 --]]
 end
 

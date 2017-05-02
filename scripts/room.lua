@@ -735,6 +735,7 @@ function Room_reckon_door_tex()
       visit_conn(C, C.E1, C.E2)
       visit_conn(C, C.F1, C.F2)
 
+    -- FIXME !!!!!  terminator
     elseif C.kind == "joiner" then
       visit_joiner(C)
     end
@@ -997,6 +998,7 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
   local function visit_conn(C)
     if C.kind == "edge" then
       pick_edge_prefab(C)
+    -- FIXME !!!!!  terminator
     elseif C.kind == "joiner" then
       pick_joiner_prefab(C)
     end
@@ -2541,6 +2543,7 @@ if reqs.shape == "U" then reqs.shape = "I" end
 
       local next_h = A1.floor_h
 
+      -- FIXME !!!!!  terminator
       if C.kind == "joiner" then
         next_h = do_joiner(R, C, next_h)
       end
@@ -2763,7 +2766,9 @@ if reqs.shape == "U" then reqs.shape = "I" end
 
   local function check_joiner_nearby_h(A)
     each C in LEVEL.conns do
-      if C.kind == "joiner" and (C.A1 == A or C.A2 == A) then
+      if (C.kind == "joiner" or C.kind == "terminator") and
+         (C.A1 == A or C.A2 == A)
+      then
         return C.joiner_chunk.prefab_def.nearby_h
       end
     end

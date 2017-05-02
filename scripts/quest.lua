@@ -761,8 +761,8 @@ function Quest_scan_all_conns(new_goals, do_quest)
 
     if need_joiner and
        not (C.kind == "joiner" and
-            ---###  C.joiner_chunk.sw >= 2 and C.joiner_chunk.sh >= 2 and
-            C.joiner_chunk.shape == "I")
+            C.joiner_chunk.shape == "I" and
+            (C.joiner_chunk.sw >= 2 or C.joiner_chunk.sh >= 2))
     then
       continue
     end
