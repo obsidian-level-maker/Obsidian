@@ -730,14 +730,21 @@ function Room_reckon_door_tex()
   end
 
 
+  local function visit_terminator(C)
+    -- nothing needed ??
+  end
+
+
   each C in LEVEL.conns do
     if C.kind == "edge" then
       visit_conn(C, C.E1, C.E2)
       visit_conn(C, C.F1, C.F2)
 
-    -- FIXME !!!!!  terminator
     elseif C.kind == "joiner" then
       visit_joiner(C)
+
+    elseif C.kind == "terminator" then
+      visit_terminator(C)
     end
   end
 end
@@ -934,17 +941,18 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
   local function pick_joiner_prefab(C)
     local chunk = assert(C.joiner_chunk)
 
---stderrf("Joiner chunk:\n%s\n", table.tostr(chunk))
-    local A1 = chunk.from_area
-    local A2 = chunk.dest_area
-
     local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
-    reqs.kind  = "joiner"
+    reqs.kind  = C.kind
     reqs.shape = assert(chunk.shape)
 
-    reqs.env      = A1.room:get_env()
-    reqs.neighbor = A2.room:get_env()
+    if C.kind == "joiner" then
+      local A1 = chunk.from_area
+      local A2 = chunk.dest_area
+
+      reqs.env      = A1.room:get_env()
+      reqs.neighbor = A2.room:get_env()
+    end
 
     local LOCK = C.lock
 
@@ -969,7 +977,7 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
     chunk.prefab_def = Fab_pick(reqs)
 
     -- should we flip the joiner?
-    if A1.room.lev_along > A2.room.lev_along then
+    if C.R1.lev_along > C.R2.lev_along then
       if chunk.shape == "I" then
         chunk.flipped = true
       else
@@ -998,8 +1006,8 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
   local function visit_conn(C)
     if C.kind == "edge" then
       pick_edge_prefab(C)
-    -- FIXME !!!!!  terminator
-    elseif C.kind == "joiner" then
+
+    elseif C.kind == "joiner" or C.kind == "terminator" then
       pick_joiner_prefab(C)
     end
   end
@@ -1534,11 +1542,6 @@ function Room_border_up()
     -- the same room --
 
     if A1.room == A2.room then
----???      -- this needed for closets and joiners  FIXME WRONG [ REALLY ?? ]
----???      if (not A1.is_outdoor) != (not A2.is_outdoor) then
----???        Junction_make_wall(junc)
----???      end
-
       return
     end
 
@@ -1689,6 +1692,97 @@ end
 
 
 ------------------------------------------------------------------------
+
+
+function Room_prepare_hallways(PASS)
+  --
+  -- Collects all the pieces of each hallway, and determines the
+  -- shape and orientation of each piece.
+  --
+
+
+  local function pick_hallway_fab(R, chunk)
+    assert(chunk.from_dir)
+    assert(chunk.shape)
+
+    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+
+    -- shape handling is a bit hacky....
+
+    if chunk.XXX_is_terminator then
+      reqs.kind  = "terminator"
+      reqs.shape = "I"
+    else
+      reqs.kind  = "hall"
+      reqs.shape = chunk.shape
+    end
+
+    local def = Fab_pick(reqs)
+
+    chunk.prefab_def = def
+  end
+
+
+  local function hallway_flow(R, piece, h, seen)
+    seen[piece.id] = 1
+
+    local A = piece.area
+    assert(A and A.room == R)
+
+    if PASS == 1 then
+      table.insert(R.pieces, piece)
+
+      -- determine shape and orientation
+      piece.shape = geom.categorize_shape(
+          piece.h_join[2], piece.h_join[4], piece.h_join[6], piece.h_join[8])
+
+-- FIXME: this is for terminators, but very hacky
+if piece.shape == "U" then piece.shape = "I" end
+
+      -- an L shape needs a dest_dir, so piece can be mirrored when needed
+      if piece.shape == "L" then
+        for dir = 2,8,2 do
+          if piece.h_join[dir] and piece.from_dir != dir then
+            piece.dest_dir = dir
+          end
+        end
+      end
+
+    else  -- PASS == 2
+
+      piece.area.prelim_h = h
+stderrf("  piece in %s : %d\n", piece.area.name, h)
+
+      if not piece.is_terminator then
+        pick_hallway_fab(R, piece)
+      end
+
+      assert(piece.prefab_def)
+    end
+
+    -- recurse to other pieces
+
+    each dir, P in piece.h_join do
+      if not seen[P.id] then
+        -- TODO : delta_h from prefab
+        local new_h = h
+
+        hallway_flow(R, P, new_h, seen)
+      end
+    end
+  end
+
+
+  ---| Room_prepare_hallways |---
+
+  each R in LEVEL.rooms do
+    if R.is_hallway then
+stderrf("hallway prep phase %s in %s\n", PASS, R.name)
+      hallway_flow(R, R.first_piece, 0, {})
+    end
+  end
+end
+
 
 
 function Room_floor_ceil_heights()
@@ -2159,106 +2253,14 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function OLD__hallway_other_end(R, entry_R)
-    -- if the hallway has multiple exits, then one is picked arbitrarily
 
-    each C in R.conns do
-      local R2 = sel(C.A1.room == R, C.A2.room, C.A1.room)
-
-      if R2 != entry_R then return R2 end
-    end
-
-    error("hallway error : cannot find other end")
-  end
-
-
-  local function do_hallway_ceiling(R)
---[[
-    if R.is_outdoor then
-      -- will be zone.sky_h
-
-      -- FIXME: workaround for odd bug [ outdoors non-sync? ]
-      R.areas[1].is_outdoor = true
-      return
-    end
-
-    R.areas[1].ceil_h = R.areas[1].floor_h + R.hallway.height
-
-    each S in R.hallway.path do
-      if R.hallway.parent then
-        S.ceil_h = R.areas[1].ceil_h
-      else
-        S.ceil_h = S.floor_h + R.hallway.height
-      end
-    end
---]]
-  end
-
-
-  local function pick_hallway_fab(R, chunk)
-    assert(chunk.from_dir)
-    assert(chunk.shape)
-
-    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
-
-    -- shape handling is a bit hacky....
-
-    if chunk.XXX_is_terminator then
-      reqs.kind  = "terminator"
-      reqs.shape = "I"
-    else
-      reqs.kind  = "hall"
-      reqs.shape = chunk.shape
-
--- TEMP CRUD
-if reqs.shape == "U" then reqs.shape = "I" end
-    end
-
-    local def = Fab_pick(reqs)
-
-    chunk.prefab_def = def
-  end
-
-
-  local function hallway_flow(R, piece, h)
-    local A = piece.area
-    assert(A and A.room == R)
-
-    table.insert(R.pieces, piece)
-
-    set_floor(A, h)
-
-    -- determine shape and orientation
-    piece.shape = geom.categorize_shape(
-        piece.h_join[2], piece.h_join[4], piece.h_join[6], piece.h_join[8])
-
-    -- an L shape needs a dest_dir, so piece can be mirrored when needed
-    if piece.shape == "L" then
-      for dir = 2,8,2 do
-        if piece.h_join[dir] and piece.from_dir != dir then
-          piece.dest_dir = dir
-        end
-      end
-    end
-
-    pick_hallway_fab(R, piece)
-
-    -- recurse to other pieces
-    each dir, P in piece.h_join do
-      if not table.has_elem(R.pieces, P) then
-        local new_h = h
-
-        hallway_flow(R, P, new_h)
-      end
-    end
-  end
-
-
-  local function process_hallway(R, conn)
+  local function OLD__process_hallway(R, entry_area)
     -- Note: this would be a problem if player starts could exist in a hallway
-    assert(conn)
+    assert(entry_area)
+    assert(entry_area.chunk)
+    assert(entry_area.chunk.kind == "hallway")
 
-    hallway_flow(R, assert(R.first_piece), R.entry_h)
+    hallway_flow(R, entry_area.chunk, R.entry_h)
 
 --[[
     local S, S_dir
@@ -2464,7 +2466,9 @@ if reqs.shape == "U" then reqs.shape = "I" end
     local delta_h = chunk.prefab_def.delta_h or 0
 
     local flipped = chunk.flipped
-    if chunk.area.room != R then flipped = not flipped end
+
+    -- FIXME: wtf?
+    if chunk.area.room != R and C.kind == "joiner" then flipped = not flipped end
 
     if flipped then delta_h = - delta_h end
 
@@ -2499,7 +2503,7 @@ if reqs.shape == "U" then reqs.shape = "I" end
     end
 
     if R.is_hallway then
-      process_hallway(R, via_conn)
+      process_room(R, entry_area)
 
     elseif R.is_cave then
       process_cave(R)
@@ -2518,10 +2522,11 @@ if reqs.shape == "U" then reqs.shape = "I" end
     each C in R.conns do
       if C.is_cycle then continue end
 
-      local R2, A2, A1
-      if C.R1 == R then R2 = C.R2 else R2 = C.R1 end
-      if C.R1 == R then A2 = C.A2 else A2 = C.A1 end
+      local R2 = C:other_room(R)
+
+      local A1, A2
       if C.R1 == R then A1 = C.A1 else A1 = C.A2 end
+      if C.R1 == R then A2 = C.A2 else A2 = C.A1 end
 
       -- already visited it?
       if R2.entry_h then continue end
@@ -2543,8 +2548,7 @@ if reqs.shape == "U" then reqs.shape = "I" end
 
       local next_h = A1.floor_h
 
-      -- FIXME !!!!!  terminator
-      if C.kind == "joiner" then
+      if C.kind == "joiner" then  --FIXME???  or C.kind == "terminator" then
         next_h = do_joiner(R, C, next_h)
       end
 
@@ -3197,8 +3201,11 @@ function Room_build_all()
 
   -- do doors before floor heights, they may have a delta_h (esp. joiners)
   Room_reckon_door_tex()
-  Room_reckon_doors()
   Room_prepare_skies()
+
+  Room_prepare_hallways(1)
+  Room_reckon_doors()
+  Room_prepare_hallways(2)
 
   Room_floor_ceil_heights()
   Room_set_sky_heights()
