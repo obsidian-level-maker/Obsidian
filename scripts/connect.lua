@@ -52,6 +52,15 @@
 --]]
 
 
+--class LOCK
+--[[
+    goals : list(GOAL)  -- the goal(s) which solve the lock
+
+    conn : CONN         -- connection which is locked
+
+    -- FIXME : "intraroom" and "itemlock" stuff
+--]]
+
 
 CONN_CLASS = {}
 
@@ -114,6 +123,33 @@ function CONN_CLASS.edge_for_room(C, R)
   if R == C.R2 then return C.E2, C.F2 end
 
   error("wrong room for CONN_CLASS.edge_for_room")
+end
+
+
+function CONN_CLASS.get_lock_reqs(C, reqs)
+  if C.is_secret then
+    reqs.key = "secret"
+    return
+  end
+
+  if not C.lock then return end
+
+  if C.lock.kind == "intraroom" then
+    reqs.key = "barred"
+
+  elseif #C.lock.goals == 2 then
+    error("Locked double")
+
+  elseif #C.lock.goals == 3 then
+    reqs.key = "k_ALL"
+
+  -- TODO : just use "key" for this  [ LIKE EVERYTHING ELSE ]
+  elseif C.lock.goals[1].kind == "SWITCH" then
+    reqs.switch = C.lock.goals[1].item
+
+  else
+    reqs.key = C.lock.goals[1].item
+  end
 end
 
 

@@ -775,23 +775,21 @@ function Room_reckon_doors()
 
 
     -- locked door?
+    C:get_lock_reqs(reqs)
+
     local LOCK = C.lock
 
     if LOCK then
       E.kind = "lock_door"
 
       if LOCK.kind == "intraroom" then
-        reqs.key = "barred"
         E.lock_tag = assert(LOCK.tag)
       elseif #LOCK.goals == 2 then
         error("Locked double")
       elseif #LOCK.goals == 3 then
         error("Locked triple")
       elseif LOCK.goals[1].kind == "SWITCH" then
-        reqs.switch = LOCK.goals[1].item
         E.lock_tag  = assert(LOCK.goals[1].tag)
-      else
-        reqs.key = LOCK.goals[1].item
       end
 
       C.is_door = true
@@ -806,8 +804,6 @@ function Room_reckon_doors()
       E.kind = "secret_door"
 
       C.is_door = true
-
-      reqs.key = "secret"
 
       return reqs
     end
@@ -891,16 +887,12 @@ function Room_reckon_doors()
 
 
     local E = C.E1
-    local F = C.F1  -- used for split conns, usually NIL
 
     if E.kind != "arch" then
       E = C.E2
-      F = C.F2
     end
 
     assert(E.kind == "arch")
-
-    if F then assert(F.kind == "arch") end
 
 
     -- get orientation right, "front" of prefab faces earlier room
@@ -913,8 +905,6 @@ function Room_reckon_doors()
 
     if R1.lev_along > R2.lev_along then
       E.flip_it = true
-
-      if F then F.flip_it = true end
     end
 
 
@@ -927,13 +917,6 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
       reqs.neighbor = R2:get_env()
 
       E.prefab_def = Fab_pick(reqs)
-    end
-
-    -- use exact same thing on split conn
-    if F then
-      F.kind       = E.kind
-      F.prefab_def = E.prefab_def
-      F.lock_tag   = E.lock_tag
     end
   end
 
@@ -954,34 +937,14 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
       reqs.neighbor = A2.room:get_env()
     end
 
-    local LOCK = C.lock
-
-    if LOCK then
-      if LOCK.kind == "intraroom" then
-        reqs.key = "barred"
-      elseif #LOCK.goals == 2 then
-        error("Locked double")
-      elseif #LOCK.goals == 3 then
-        reqs.key = "k_ALL"
-      elseif LOCK.goals[1].kind == "SWITCH" then
-        reqs.switch = LOCK.goals[1].item
-      else
-        reqs.key = LOCK.goals[1].item
-      end
-    end
-
-    if C.is_secret then
-      reqs.key = "secret"
-    end
+    C:get_lock_reqs(reqs)
 
     chunk.prefab_def = Fab_pick(reqs)
 
-    -- should we flip the joiner?
+    -- should we flip the joiner?   [ only straight pieces can be flipped ]
     if C.R1.lev_along > C.R2.lev_along then
       if chunk.shape == "I" then
         chunk.flipped = true
-      else
-        -- FIXME L SHAPES, do what??
       end
     end
 
