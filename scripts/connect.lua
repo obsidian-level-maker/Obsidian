@@ -156,6 +156,27 @@ end
 ------------------------------------------------------------------------
 
 
+function Lock_new(kind, conn)
+  local LOCK =
+  {
+    id   = alloc_id("lock")
+    kind = kind
+    conn = conn
+  }
+
+  LOCK.name = "LOCK_" .. kind .. "_" .. LOCK.id
+
+  if conn then
+    conn.lock = LOCK
+  end
+
+  return LOCK
+end
+
+
+------------------------------------------------------------------------
+
+
 function Connect_directly(P)
   local kind = P.kind
 

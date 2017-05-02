@@ -1178,16 +1178,12 @@ function Layout_decorate_rooms(pass)
 
     local C = rand.pick(conn_list)
 
-    local LOCK =
-    {
-      kind = "intraroom"
-      conn = C
-      spot = spot
-      tag  = alloc_id("tag")
-    }
+    local lock = Lock_new("intraroom", C)
 
-    C.lock    = LOCK
-    spot.lock = LOCK
+    lock.spot = spot
+    lock.tag  = alloc_id("tag")
+
+    spot.lock = lock
   end
 
 
@@ -1215,16 +1211,14 @@ function Layout_decorate_rooms(pass)
 
 -- stderrf("**** DOING LOWERING PED\n") 
 
-    local LOCK =
-    {
-      kind = "itemlock"
-      item = item
-      spot = spot
-      tag  = alloc_id("tag")
-    }
+    local lock = Lock_new("itemlock")
 
-    item.lock = LOCK
-    spot.lock = LOCK
+    lock.item = item
+    lock.spot = spot
+    lock.tag  = alloc_id("tag")
+
+    item.lock = lock
+    spot.lock = lock
   end
 
 

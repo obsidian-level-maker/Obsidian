@@ -549,17 +549,6 @@ function Quest_perform_division(info)
   -- binary tree.  Also locks the connection.
   --
 
-  local function create_lock()
-    local LOCK =
-    {
-      goals = info.new_goals
-      conn  = info.conn
-    }
-
-    return LOCK
-  end
-
-
   local function replace_with_node(Q, new_node)
     if not Q.parent_node then
       assert(LEVEL.quest_root == Q)
@@ -714,9 +703,9 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
 
 
   -- lock the connection
-  local LOCK = create_lock()
+  local lock = Lock_new("quest", info.conn)
 
-  info.conn.lock = LOCK
+  lock.goals = info.new_goals
 
 
   -- finally, add the new goals to the first quest
