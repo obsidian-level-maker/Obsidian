@@ -433,7 +433,10 @@ ULTDOOM.THEMES =
       k_yellow = 50
     }
 
-    switches = { sw_blue=50 }
+    switches =
+    {
+      sw_metal = 50
+    }
 
     window_groups =
     {

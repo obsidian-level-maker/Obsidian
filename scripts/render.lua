@@ -2097,8 +2097,6 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
       size   = assert(spot.space)
       height = spot.area.ceil_h - spot.area.floor_h
-
-      --??  switch = spot.goal.item
     }
 
     local def = Fab_pick(reqs)

@@ -365,7 +365,10 @@ DOOM.THEMES =
       k_yellow = 50
     }
 
-    switches = { sw_blue=50, sw_red=50 }
+    switches =
+    {
+      sw_metal = 50
+    }
 
     cave_torches =
     {

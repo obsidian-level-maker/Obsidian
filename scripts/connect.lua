@@ -143,10 +143,6 @@ function CONN_CLASS.get_lock_reqs(C, reqs)
   elseif #C.lock.goals == 3 then
     reqs.key = "k_ALL"
 
-  -- TODO : just use "key" for this  [ LIKE EVERYTHING ELSE ]
-  elseif C.lock.goals[1].kind == "SWITCH" then
-    reqs.switch = C.lock.goals[1].item
-
   else
     reqs.key = C.lock.goals[1].item
   end

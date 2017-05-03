@@ -7,7 +7,7 @@ PREFABS.Switch_niche_bars =
   file   = "switch/niche_bars.wad"
 
   prob   = 50
-  switch = "sw_blue"
+  key    = "barred"
 
   where  = "seeds"
 

@@ -7,7 +7,6 @@ UNFINISHED.Switch_niche2 =
   file   = "switch/niche2.wad"
 
   prob   = 50
-  switch = "any"
 
   where  = "seeds"
 
