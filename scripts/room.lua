@@ -753,27 +753,14 @@ function Room_reckon_doors()
     -- locked door?
     C:get_lock_reqs(reqs)
 
-    local LOCK = C.lock
-
-    if LOCK then
+    if C.lock then
       E.kind = "lock_door"
-
-      if LOCK.kind == "intraroom" then
-        E.lock_tag = assert(LOCK.tag)
-      elseif #LOCK.goals == 2 then
-        error("Locked double")
-      elseif #LOCK.goals == 3 then
-        error("Locked triple")
-      elseif LOCK.goals[1].kind == "SWITCH" then
-        E.lock_tag  = assert(LOCK.goals[1].tag)
-      end
 
       C.is_door = true
       C.fresh_floor = true
 
       return reqs
     end
-
 
     -- secret door ?
     if C.is_secret then

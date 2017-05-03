@@ -541,12 +541,12 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_door()
     assert(E.peer)
 
-    local z
+    local C, z
 
     if E.kind == "window" then
       z = E.window_z
     else
-      assert(E.conn)
+      C = assert(E.conn)
       z = E.conn.door_h or A.floor_h
     end
 
@@ -572,7 +572,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       ceil1_mat,  ceil2_mat  = ceil2_mat,  ceil1_mat
     end
 
-    local skin1 =
+    local skin =
     {
       wall   = inner_mat
       outer  = outer_mat
@@ -582,7 +582,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       ceil2  = ceil2_mat
     }
 
-    skin1.lock_tag = E.lock_tag
+    if C and C.lock and C.lock.kind == "intraroom" then
+      skin.lock_tag = assert(C.lock.tag)
+    end
 
     local def
 
@@ -608,7 +610,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, flip_it)
     end
 
-    Fabricate(A.room, def, T, { skin1 })
+    Fabricate(A.room, def, T, { skin })
   end
 
 

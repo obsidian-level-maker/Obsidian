@@ -634,6 +634,7 @@ gui.debugf("   %s\n", targ.name)
     -- for switched doors we need a tag value
     if goal.same_tag then
       goal.tag = assert(info.new_goals[1].tag)
+
     elseif goal.kind == "SWITCH" then
       goal.tag = alloc_id("tag")
     end
@@ -702,17 +703,21 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
   transfer_existing_goals(Q1, Q2)
 
 
+  -- add the new goals to the first quest
+  place_new_goals(Q1)
+
+  assert(not table.empty(Q1.goals))
+  assert(not table.empty(Q2.goals))
+
+
   -- lock the connection
   local lock = Lock_new("quest", info.conn)
 
   lock.goals = info.new_goals
 
-
-  -- finally, add the new goals to the first quest
-  place_new_goals(Q1)
-
-  assert(not table.empty(Q1.goals))
-  assert(not table.empty(Q2.goals))
+  if lock.goals[1].kind == "SWITCH" then
+    lock.tag = assert(lock.goals[1].tag)
+  end
 end
 
 
