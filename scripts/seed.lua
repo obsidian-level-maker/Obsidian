@@ -661,140 +661,6 @@ function Seed_squarify()
 end
 
 
-function Seed_create_edge(S, dir, long, kind)
-  -- Note: 'S' must be the left-most seed of a long edge
-
-  local EDGE =
-  {
-    S = S
-    dir = dir
-    long = long
-    kind = kind
-    area = S.area
-  }
-
-  -- add it into each seed
-  for i = 1, long do
-    assert(S)
-
-    if S.edge[dir] then
-      error("Seed already has an EDGE")
-    end
-
-    S.edge[dir] = EDGE
-
-    S = S:neighbor(geom.RIGHT[dir])
-  end
-
-  -- add it to area list
-  if true then
-    local A = assert(EDGE.area)
-    table.insert(A.edges, EDGE)
-  end
-
-  -- add it to corners
-  Corner_add_edge(EDGE)
-
-  return EDGE
-end
-
-
-function Seed_create_edge_pair(S, dir, long, kind1, kind2)
-  local E1 = Seed_create_edge(S, dir, long, kind1)
-
-  local N = S:neighbor(dir)
-  assert(N)
-
-  for k = 1, long-1 do
-    N = N:neighbor(geom.RIGHT[dir])
-    assert(N)
-  end
-
-  local E2 = Seed_create_edge(N, 10-dir, long, kind2)
-
-  E1.peer = E2
-  E2.peer = E1
-
-  return E1, E2
-end
-
-
-function Seed_create_chunk_edge(chunk, side, kind)
-  -- the edge faces *into* the chunk (on the given side)
-
-  local sx, sy
-
-  if side == 2 then sx = chunk.sx1 ; sy = chunk.sy1 - 1 end
-  if side == 8 then sx = chunk.sx2 ; sy = chunk.sy2 + 1 end
-
-  if side == 4 then sx = chunk.sx1 - 1 ; sy = chunk.sy2 end
-  if side == 6 then sx = chunk.sx2 + 1 ; sy = chunk.sy1 end
-
-  assert(Seed_valid(sx, sy))
-
-  local long = geom.vert_sel(side, chunk.sw, chunk.sh)
-
-  local S = SEEDS[sx][sy]
-
-  local E = Seed_create_edge(S, 10-side, long, kind)
-
-  E.other_area = chunk.area
-
-  return E
-end
-
-
-function Edge_mid_point(E)
-  -- FIXME: this does not handle long edges
-
-  local S = E.S
-
-  return S:edge_coord(E.dir)
-end
-
-
-function Edge_is_wallish(E)
-  if E.is_wallish then return true end
-
-  if E.kind == "wall" or E.kind == "window" or
-     E.kind == "arch" or E.kind == "locked_door" or
-     E.kind == "door" or E.kind == "secret_door"
-  then
-    return true
-  end
-
-  -- handle straddling stuff
-  if E.peer and E.kind == "nothing" then
-    local kind2 = E.peer.kind
-
-    if kind2 == "window" or
-       kind2 == "arch" or kind2 == "locked_door" or
-       kind2 == "door" or kind2 == "secret_door"
-    then
-      return true
-    end
-  end
-
-  return false
-end
-
-
-function Edge_wallish_tex(E)
-  -- this handles most cases
-  if E.wall_mat then
-    return E.wall_mat
-  end
-
-  -- closets and joiners
-  if E.other_area then
-    return Junction_calc_wall_tex(E.area, E.other_area)
-  end
-
-  -- fallback
-  return "_ERROR"
-end
-
-
 function Seed_coord_range(sx1, sy1, sx2, sy2)
   assert(Seed_valid(sx1, sy1))
   assert(Seed_valid(sx2, sy2))
@@ -1157,6 +1023,122 @@ end
 ------------------------------------------------------------------------
 
 
+function Edge_new(kind, S, dir, long)
+  -- Note: 'S' must be the left-most seed of a long edge
+
+  local EDGE =
+  {
+    S = S
+    dir = dir
+    long = long
+    kind = kind
+    area = S.area
+  }
+
+  -- add it into each seed
+  for i = 1, long do
+    assert(S)
+
+    if S.edge[dir] then
+      error("Seed already has an EDGE")
+    end
+
+    S.edge[dir] = EDGE
+
+    S = S:neighbor(geom.RIGHT[dir])
+  end
+
+  -- add it to area list
+  if true then
+    local A = assert(EDGE.area)
+    table.insert(A.edges, EDGE)
+  end
+
+  -- add it to corners
+  Corner_add_edge(EDGE)
+
+  return EDGE
+end
+
+
+function Edge_new_opposite(kind, S, dir, long)
+  local N = S:neighbor(dir)
+  assert(N)
+
+  for k = 1, long-1 do
+    N = N:neighbor(geom.RIGHT[dir])
+    assert(N)
+  end
+
+  return Edge_new(kind, N, 10-dir, long)
+end
+
+
+function Edge_new_pair(kind1, kind2, S, dir, long)
+  local E1 = Edge_new         (kind1, S, dir, long)
+  local E2 = Edge_new_opposite(kind2, S, dir, long)
+
+  E1.peer = E2
+  E2.peer = E1
+
+  return E1, E2
+end
+
+
+function Edge_mid_point(E)
+  -- FIXME: this does not handle long edges
+
+  local S = E.S
+
+  return S:edge_coord(E.dir)
+end
+
+
+function Edge_is_wallish(E)
+  if E.is_wallish then return true end
+
+  if E.kind == "wall" or E.kind == "window" or
+     E.kind == "arch" or E.kind == "locked_door" or
+     E.kind == "door" or E.kind == "secret_door"
+  then
+    return true
+  end
+
+  -- handle straddling stuff
+  if E.peer and E.kind == "nothing" then
+    local kind2 = E.peer.kind
+
+    if kind2 == "window" or
+       kind2 == "arch" or kind2 == "locked_door" or
+       kind2 == "door" or kind2 == "secret_door"
+    then
+      return true
+    end
+  end
+
+  return false
+end
+
+
+function Edge_wallish_tex(E)
+  -- this handles most cases
+  if E.wall_mat then
+    return E.wall_mat
+  end
+
+  -- closets and joiners
+  if E.other_area then
+    return Junction_calc_wall_tex(E.area, E.other_area)
+  end
+
+  -- fallback
+  return "_ERROR"
+end
+
+
+------------------------------------------------------------------------
+
+
 function Chunk_new(kind, sx1,sy1, sx2,sy2)
   local CHUNK =
   {
@@ -1252,6 +1234,31 @@ function Chunk_is_slave(chunk)
   if not chunk.peer then return false end
 
   return chunk.id > chunk.peer.id
+end
+
+
+function Chunk_create_edge(chunk, kind, side)
+  -- the edge faces *into* the chunk (on the given side)
+
+  local sx, sy
+
+  if side == 2 then sx = chunk.sx1 ; sy = chunk.sy1 - 1 end
+  if side == 8 then sx = chunk.sx2 ; sy = chunk.sy2 + 1 end
+
+  if side == 4 then sx = chunk.sx1 - 1 ; sy = chunk.sy2 end
+  if side == 6 then sx = chunk.sx2 + 1 ; sy = chunk.sy1 end
+
+  assert(Seed_valid(sx, sy))
+
+  local long = geom.vert_sel(side, chunk.sw, chunk.sh)
+
+  local S = SEEDS[sx][sy]
+
+  local E = Edge_new(kind, S, 10-side, long)
+
+  E.other_area = chunk.area
+
+  return E
 end
 
 

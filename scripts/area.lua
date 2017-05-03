@@ -1456,7 +1456,7 @@ function Area_closet_edges()
   local function visit_closet(chunk, R)
     -- TODO : different shapes (L/T/P) need more edges
 
-    local E = Seed_create_chunk_edge(chunk, chunk.from_dir, "nothing")
+    local E = Chunk_create_edge(chunk, "nothing", chunk.from_dir)
 
     E.is_wallish = true
 

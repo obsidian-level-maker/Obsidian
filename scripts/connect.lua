@@ -215,8 +215,8 @@ P.R1.name, C.A1.name,
 P.R2.name, C.A2.name, dir1, dir2)
 --]]
 
-    E1 = Seed_create_chunk_edge(P.chunk, dir1, "nothing")
-    E2 = Seed_create_chunk_edge(P.chunk, dir2, "nothing")
+    E1 = Chunk_create_edge(P.chunk, "nothing", dir1)
+    E2 = Chunk_create_edge(P.chunk, "nothing", dir2)
 
     -- TODO : this shape check is hacky
     if P.chunk.shape == "I" then
@@ -226,7 +226,7 @@ P.R2.name, C.A2.name, dir1, dir2)
 
   else  -- edge connection
 
-    E1, E2 = Seed_create_edge_pair(P.S, P.dir, long, "arch", "nothing")
+    E1, E2 = Edge_new_pair("arch", "nothing",  P.S, P.dir, long)
 
 --[[
 gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)

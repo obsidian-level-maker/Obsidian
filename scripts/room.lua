@@ -1317,7 +1317,7 @@ function Room_make_windows(A1, A2)
          (A2.room and A2.room.force_windows) or
          rand.odds(prob)
       then
-        local E1, E2 = Seed_create_edge_pair(E.S, E.dir, E.long, "window", "nothing")
+        local E1, E2 = Edge_new_pair("window", "nothing", E.S, E.dir, E.long)
 
         E1.window_z = math.max(A1.floor_h, A2.floor_h)
         E1.window_group  = group
