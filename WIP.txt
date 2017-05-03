@@ -3,8 +3,56 @@ WORK IN PROGRESS
 ================
 
 
+???  EDGE.other_area (esp. to closets and joiners), WTF   ???
+     [ only used for Edge_wallish_tex, hence do a special
+       pass which assigns a tex where needed ]
+
+>>>  lighting in caves mucked up?  [ check Ambient_push/pop ]
+
+-    sprouts from symmetrical rooms : often skip a side
+
+-    have a CHUNK_CLASS
+
+
+
+Hallway System
+--------------
+
++  support "terminator" pieces between hall and room
+   [ STOP making edge prefabs there ]
+
+   Needed:
+   - plain (open)    j : MAP01
+   - normal door     j : MAP02
+   - secret          j : MAP05
+   - key locked      k : MAP01
+   - switch locked   k : MAP03
+
+-  different styles:
+   - a "vent" style
+   - a wide-ish one with stairs, like in V4
+
+-  support stair pieces  [ delta_h, like in joiners ]
+
+-  have dead-end pieces ("U" shape)
+
+-  support wide pieces (e.g. 3x1 and 3x3 for vent)
+   [ will need all I/L/T/P shapes ]
+   [[ can be good for traps! ]]
+
+-  be real nice to have pieces which are wall on one
+   side and open on the other (with sky ceiling)
+   [ BUT: will need to expand vertically ]
+
+   also: open on ALL sides  (mainly I and L pieces)
+
+
+
 Scenic Borders
 --------------
+
++  proper ZONE handling
+   [ note : zones do NOT exist during divvy_up_borders! ]
 
 -  assign unused border areas to a room (esp. its zroom)
 
@@ -15,6 +63,7 @@ Scenic Borders
    - cavey/liquidy areas
    - fenced off pools from V7-WEIRD
    - fancy fences
+
 
 
 PARKS
@@ -35,21 +84,7 @@ PARKS
 Miscellaneous
 -------------
 
-
-
-Hallway System
---------------
-
-+  construct them from pieces (each one is a prefab)
-
--  "terminator" pieces between hall and room
-   [ need plain, key locked, switch locked versions... ]
-
--  different styles:
-   - a "vent" style
-   - a "curvey" style like in V5
-   - a wide-ish one with stairs, like in V4
-   - a techy one like in V5/V6
+-  if not pistol starts, use more seen_weapons
 
 
 
