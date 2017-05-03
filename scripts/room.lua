@@ -318,30 +318,6 @@ function ROOM_CLASS.get_bbox(R)
 end
 
 
----## function ROOM_CLASS.has_lock(R, lock)
----##   each C in R.conns do
----##     if C.lock == lock then return true end
----##   end
----##   return false
----## end
-
-
-function ROOM_CLASS.has_any_lock(R)
-  each C in R.conns do
-    if C.lock then return true end
-  end
-  return false
-end
-
-
----## function ROOM_CLASS.has_lock_kind(R, kind)
----##   each C in R.conns do
----##     if C.lock and C.lock.kind == kind then return true end
----##   end
----##   return false
----## end
-
-
 function ROOM_CLASS.has_sky_neighbor(R)
   each C in R.conns do
     if C.A1.room == C.A2.room then continue end
