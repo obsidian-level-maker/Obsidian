@@ -727,6 +727,52 @@ end
 
 
 
+  function pick_joiner_prefab(C)
+    local chunk = assert(C.joiner_chunk)
+
+    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+
+    reqs.kind  = C.kind
+    reqs.shape = assert(chunk.shape)
+
+    if C.kind == "joiner" then
+      local A1 = chunk.from_area
+      local A2 = chunk.dest_area
+
+      reqs.env      = A1.room:get_env()
+      reqs.neighbor = A2.room:get_env()
+    end
+
+    C:get_lock_reqs(reqs)
+
+    chunk.prefab_def = Fab_pick(reqs)
+
+    -- should we flip the joiner?   [ only straight pieces can be flipped ]
+    if C.R1.lev_along > C.R2.lev_along then
+      if chunk.shape == "I" then
+        chunk.flipped = true
+      end
+    end
+
+    if (chunk.prefab_def.can_flip and rand.odds(35))
+    then
+      chunk.flipped = not chunk.flipped
+    end
+
+    -- this is needed when the environment on each side is important,
+    -- such as the joiner connecting a normal room to a cave.
+    if chunk.prefab_def.force_flip != nil then
+      chunk.flipped = chunk.prefab_def.force_flip
+    end
+
+    if chunk.flipped then
+      -- reverse from_dir, swap from_area and dest_area
+      Chunk_flip(chunk)
+    end
+  end
+
+
+
 function Room_reckon_doors()
 
   local  indoor_prob = style_sel("doors", 0, 15, 35,  65)
@@ -884,56 +930,11 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
   end
 
 
-  local function pick_joiner_prefab(C)
-    local chunk = assert(C.joiner_chunk)
-
-    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
-
-    reqs.kind  = C.kind
-    reqs.shape = assert(chunk.shape)
-
-    if C.kind == "joiner" then
-      local A1 = chunk.from_area
-      local A2 = chunk.dest_area
-
-      reqs.env      = A1.room:get_env()
-      reqs.neighbor = A2.room:get_env()
-    end
-
-    C:get_lock_reqs(reqs)
-
-    chunk.prefab_def = Fab_pick(reqs)
-
-    -- should we flip the joiner?   [ only straight pieces can be flipped ]
-    if C.R1.lev_along > C.R2.lev_along then
-      if chunk.shape == "I" then
-        chunk.flipped = true
-      end
-    end
-
-    if (chunk.prefab_def.can_flip and rand.odds(35))
-    then
-      chunk.flipped = not chunk.flipped
-    end
-
-    -- this is needed when the environment on each side is important,
-    -- such as the joiner connecting a normal room to a cave.
-    if chunk.prefab_def.force_flip != nil then
-      chunk.flipped = chunk.prefab_def.force_flip
-    end
-
-    if chunk.flipped then
-      -- reverse from_dir, swap from_area and dest_area
-      Chunk_flip(chunk)
-    end
-  end
-
-
   local function visit_conn(C)
     if C.kind == "edge" then
       pick_edge_prefab(C)
 
-    elseif C.kind == "joiner" or C.kind == "terminator" then
+    elseif C.kind == "joiner" then
       pick_joiner_prefab(C)
     end
   end
@@ -1626,22 +1627,31 @@ function Room_prepare_hallways(PASS)
   -- shape and orientation of each piece.
   --
 
+  local function pick_terminator_fab(R, chunk)
+    -- FIXME: review this hacky shite....
+stderrf("pick_terminator_fab @ %s for chunk in %s\n", R.name, chunk.area.name)
+    each C in R.conns do
+stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
+      if C.A1 == chunk.area or C.A2 == chunk.area then
+        pick_joiner_prefab(C)
+        return
+      end
+    end
+
+    error("WTF, no conn??")
+  end
+
 
   local function pick_hallway_fab(R, chunk)
+    -- Note: does not handle terminator pieces (they are done like joiners)
+
     assert(chunk.from_dir)
     assert(chunk.shape)
 
     local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
-    -- shape handling is a bit hacky....
-
-    if chunk.XXX_is_terminator then
-      reqs.kind  = "terminator"
-      reqs.shape = "I"
-    else
-      reqs.kind  = "hall"
-      reqs.shape = chunk.shape
-    end
+    reqs.kind  = "hall"
+    reqs.shape = chunk.shape
 
     local def = Fab_pick(reqs)
 
@@ -1649,14 +1659,15 @@ function Room_prepare_hallways(PASS)
   end
 
 
-  local function hallway_flow(R, piece, h, seen)
+  local function flow(R, piece, h, seen)
     seen[piece.id] = 1
+
+    table.insert(R.pieces, piece)
 
     local A = piece.area
     assert(A and A.room == R)
 
-    if PASS == 1 then
-      table.insert(R.pieces, piece)
+    A.prelim_h = h
 
       -- determine shape and orientation
       piece.shape = geom.categorize_shape(
@@ -1674,16 +1685,10 @@ if piece.shape == "U" then piece.shape = "I" end
         end
       end
 
-    else  -- PASS == 2
-
-      piece.area.prelim_h = h
-stderrf("  piece in %s : %d\n", piece.area.name, h)
-
-      if not piece.is_terminator then
-        pick_hallway_fab(R, piece)
-      end
-
-      assert(piece.prefab_def)
+    if piece.is_terminator then
+      pick_terminator_fab(R, piece)
+    else
+      pick_hallway_fab(R, piece)
     end
 
     -- recurse to other pieces
@@ -1693,9 +1698,14 @@ stderrf("  piece in %s : %d\n", piece.area.name, h)
         -- TODO : delta_h from prefab
         local new_h = h
 
-        hallway_flow(R, P, new_h, seen)
+        flow(R, P, new_h, seen)
       end
     end
+  end
+
+
+  local function visit_hallway(R)
+    flow(R, R.first_piece, 0, {})
   end
 
 
@@ -1703,8 +1713,7 @@ stderrf("  piece in %s : %d\n", piece.area.name, h)
 
   each R in LEVEL.rooms do
     if R.is_hallway then
-stderrf("hallway prep phase %s in %s\n", PASS, R.name)
-      hallway_flow(R, R.first_piece, 0, {})
+      visit_hallway(R)
     end
   end
 end
@@ -3129,9 +3138,8 @@ function Room_build_all()
   Room_reckon_door_tex()
   Room_prepare_skies()
 
-  Room_prepare_hallways(1)
   Room_reckon_doors()
-  Room_prepare_hallways(2)
+  Room_prepare_hallways()
 
   Room_floor_ceil_heights()
   Room_set_sky_heights()

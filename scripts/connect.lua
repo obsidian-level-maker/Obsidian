@@ -240,6 +240,11 @@ gui.debugf("E2.S = %s  dir = %d  area = %s\n", E2.S.name, E2.dir, E2.S.area.name
   C.A1 = assert(E1.S.area)
   C.A2 = assert(E2.S.area)
 
+  if kind == "terminator" then
+    if C.R1.is_hallway then C.A1 = assert(C.E1.other_area) end
+    if C.R2.is_hallway then C.A2 = assert(C.E2.other_area) end
+  end
+
   assert(C.A1.room == C.R1)
   assert(C.A2.room == C.R2)
 
