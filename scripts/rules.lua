@@ -2190,7 +2190,6 @@ SPROUT_hallway2 =
     "..", ".."
     "..", "@@"
     "..", "HH"
-    "..", "HH"
     "11", "11"
   }
 
@@ -2283,14 +2282,13 @@ HALL_2_SPROUT_A =
   {
     "....", "RRRR"
     "....", "RRRR"
-    "x..x", "xHHx"
     "x@@x", "xHHx"
     "x11x", "x11x"
   }
 
   new_room =
   {
-    conn = { x=2, y=3, w=2, dir=8 }
+    conn = { x=2, y=2, w=2, dir=8 }
   }
 }
 
@@ -2304,14 +2302,13 @@ HALL_2_SPROUT_B =
   {
     "....", "RRRR"
     "....", "RRRR"
-    "..xx", "HHxx"
     "@@xx", "HHxx"
     "11xx", "11xx"
   }
 
   new_room =
   {
-    conn = { x=1, y=3, w=2, dir=8 }
+    conn = { x=1, y=2, w=2, dir=8 }
   }
 }
 
