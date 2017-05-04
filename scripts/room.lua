@@ -1671,21 +1671,30 @@ stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
 
     A.prelim_h = h
 
-      -- determine shape and orientation
-      piece.shape = geom.categorize_shape(
-          piece.h_join[2], piece.h_join[4], piece.h_join[6], piece.h_join[8])
+    -- determine shape and orientation
+    local cat_dir
 
--- FIXME: this is for terminators, but very hacky
-if piece.shape == "U" then piece.shape = "I" end
+    piece.shape, cat_dir = geom.categorize_shape(
+        piece.h_join[2], piece.h_join[4], piece.h_join[6], piece.h_join[8])
 
-      -- an L shape needs a dest_dir, so piece can be mirrored when needed
-      if piece.shape == "L" then
-        for dir = 2,8,2 do
-          if piece.h_join[dir] and piece.from_dir != dir then
-            piece.dest_dir = dir
-          end
+    -- terminators get mis-categorized as dead-ends...
+    if piece.is_terminator and piece.shape == "U" then
+      piece.shape = "I"
+    end
+
+    -- an L shape needs a dest_dir, so piece can be mirrored when needed
+    if piece.shape == "L" then
+      for dir = 2,8,2 do
+        if piece.h_join[dir] and piece.from_dir != dir then
+          piece.dest_dir = dir
         end
       end
+    end
+
+    -- a T shape needs a specific from_dir
+    if piece.shape == "T" then
+      piece.from_dir = cat_dir
+    end
 
     if piece.is_terminator then
       pick_terminator_fab(R, piece)
