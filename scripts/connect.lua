@@ -21,6 +21,17 @@
 
 --class CONN
 --[[
+    --
+    -- A connection between two rooms.
+    --
+    -- The two rooms are the vital (compulsory) information,
+    -- especially for the quest system.
+    --
+    -- For teleporters the edge and area info will be absent.
+    -- For joiners, neither A1 and A2 are the actual joiner and
+    -- the edges are NOT peered.
+    --
+
     kind : keyword  -- "edge", "joiner", "terminator", "teleporter"
 
     lock : LOCK
@@ -28,12 +39,6 @@
     is_secret : boolean
 
     id : number  -- debugging aid
-
-    -- The two rooms are the vital (compulsory) information,
-    -- especially for the quest system.
-    --
-    -- For teleporters the edge and area info will be absent.
-    -- For joiners and hall terminators, the edges are NOT peered.
 
     R1 : source ROOM
     R2 : destination ROOM
@@ -99,6 +104,29 @@ end
 
 function CONN_CLASS.tostr(C)
   return assert(C.name)
+end
+
+
+function CONN_CLASS.dump(C)
+  gui.debugf("Connect object %s:  kind:%s\n", C.name, C.kind)
+  gui.debugf("  Rooms: %s --> %s\n", C.R1.name, C.R2.name)
+
+  if C.lock then
+    gui.debugf("  Locked: kind=%s tag=%s goalnum=%s\n",
+      C.lock.kind or "<nil>",
+      tostring(C.lock.tag or "-"),
+      tostring((C.lock.goals and #C.lock.goals) or "-"))
+  end
+
+  if C.A1 then
+    gui.debugf("  Areas: %s in %s --> %s in %s\n",
+        C.A1.name, C.A1.room.name, C.A2.name, C.A2.room.name)
+  end
+
+  if C.E1 then
+    gui.debugf("  Edge 1 @ %s dir:%d long:%d\n", C.E1.S.name, C.E1.dir, C.E1.long)
+    gui.debugf("  Edge 2 @ %s dir:%d long:%d\n", C.E2.S.name, C.E2.dir, C.E2.long)
+  end
 end
 
 
@@ -189,45 +217,50 @@ function Connect_directly(P)
   local E1, E2
 
 
-  assert(kind != "teleporter")
+  if kind == "edge" then
 
-  if kind == "joiner" or kind == "terminator" then
+    -- this "arch" kind can become "door" or "locked_door" later...
+
+    E1, E2 = Edge_new_pair("arch", "nothing",  P.S, P.dir, long)
+
+  elseif kind == "joiner" then
 
     C.joiner_chunk = assert(P.chunk)
     C.joiner_chunk.conn = C
 
     local dir1 = assert(P.chunk.from_dir)
-    local dir2
-    
-    if kind == "terminator" then
-      dir2 = 10 - dir1
-    else
-      dir2 = assert(P.chunk.dest_dir)
-    end
-
---[[
-stderrf("Connect %s/%s --> %s/%s : from_dir:%d  dest_dir:%d\n",
-P.R1.name, C.A1.name,
-P.R2.name, C.A2.name, dir1, dir2)
---]]
+    local dir2 = assert(P.chunk.dest_dir)
 
     E1 = Chunk_create_edge(P.chunk, "nothing", dir1)
     E2 = Chunk_create_edge(P.chunk, "nothing", dir2)
 
-    -- TODO : this shape check is hacky
+    -- TODO : this shape check is hacky, REVIEW THIS
     if P.chunk.shape == "I" then
       E1.is_wallish = true
       E2.is_wallish = true
     end
 
-  else  -- edge connection
+  elseif kind == "terminator" then
 
-    E1, E2 = Edge_new_pair("arch", "nothing",  P.S, P.dir, long)
+    C.terminator_chunk = P.chunk
+    C.terminator_chunk.conn = C
 
---[[
-gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)
-gui.debugf("E2.S = %s  dir = %d  area = %s\n", E2.S.name, E2.dir, E2.S.area.name)
---]]
+    if C.R1.is_hallway then
+      Chunk_flip(P.chunk)
+    end
+
+    local dir1 = assert(P.chunk.from_dir)
+    local dir2 = 10 - dir1  -- terminators are always "I" shape
+
+    E1 = Chunk_create_edge(P.chunk, "nothing", dir1)
+    E2 = Edge_new_opposite("nothing", E1.S, E1.dir, E1.long)
+
+    if C.R1.is_hallway then
+      E1, E2 = E2, E1
+    end
+
+  else
+    error("Connect_directly: unknown kind: " .. tostring(P.kind))
   end
 
   C.E1 = E1 ; E1.conn = C
@@ -236,13 +269,13 @@ gui.debugf("E2.S = %s  dir = %d  area = %s\n", E2.S.name, E2.dir, E2.S.area.name
   C.A1 = assert(E1.S.area)
   C.A2 = assert(E2.S.area)
 
-  if kind == "terminator" then
-    if C.R1.is_hallway then C.A1 = assert(C.E1.other_area) end
-    if C.R2.is_hallway then C.A2 = assert(C.E2.other_area) end
-  end
-
   assert(C.A1.room == C.R1)
   assert(C.A2.room == C.R2)
+
+--[[
+gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)
+gui.debugf("E2.S = %s  dir = %d  area = %s\n", E2.S.name, E2.dir, E2.S.area.name)
+--]]
 
 --[[
 gui.debugf("Creating conn %s from %s --> %s\n", C.name, C.R1.name, C.R2.name)

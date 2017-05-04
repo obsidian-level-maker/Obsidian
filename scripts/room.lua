@@ -727,8 +727,8 @@ end
 
 
 
-  function pick_joiner_prefab(C)
-    local chunk = assert(C.joiner_chunk)
+  function pick_joiner_prefab(C, chunk)
+    assert(chunk)
 
     local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
@@ -935,7 +935,7 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
       pick_edge_prefab(C)
 
     elseif C.kind == "joiner" then
-      pick_joiner_prefab(C)
+      pick_joiner_prefab(C, C.joiner_chunk)
     end
   end
 
@@ -1633,7 +1633,7 @@ stderrf("pick_terminator_fab @ %s for chunk in %s\n", R.name, chunk.area.name)
     each C in R.conns do
 stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
       if C.A1 == chunk.area or C.A2 == chunk.area then
-        pick_joiner_prefab(C)
+        pick_joiner_prefab(C, chunk)
         return
       end
     end
@@ -2704,8 +2704,9 @@ function Room_floor_ceil_heights()
 
 
   local function check_joiner_nearby_h(A)
+    -- FIXME for terminators
     each C in LEVEL.conns do
-      if (C.kind == "joiner" or C.kind == "terminator") and
+      if (C.kind == "joiner" or C.kind == "XXX_terminator") and
          (C.A1 == A or C.A2 == A)
       then
         return C.joiner_chunk.prefab_def.nearby_h
