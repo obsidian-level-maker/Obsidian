@@ -748,26 +748,28 @@ end
     chunk.prefab_def = Fab_pick(reqs)
 
     -- should we flip the joiner?   [ only straight pieces can be flipped ]
-    if C.R1.lev_along > C.R2.lev_along then
-      if chunk.shape == "I" then
-        chunk.flipped = true
+    -- [ hallway terminators are already correct ]
+    if C.kind == "joiner" then
+      if C.R1.lev_along > C.R2.lev_along then
+        if chunk.shape == "I" then
+          chunk.flipped = true
+        end
       end
-    end
 
-    if (chunk.prefab_def.can_flip and rand.odds(35))
-    then
-      chunk.flipped = not chunk.flipped
-    end
+      if chunk.prefab_def.can_flip and rand.odds(35) then
+        chunk.flipped = not chunk.flipped
+      end
 
-    -- this is needed when the environment on each side is important,
-    -- such as the joiner connecting a normal room to a cave.
-    if chunk.prefab_def.force_flip != nil then
-      chunk.flipped = chunk.prefab_def.force_flip
-    end
+      -- this is needed when the environment on each side is important,
+      -- such as the joiner connecting a normal room to a cave.
+      if chunk.prefab_def.force_flip != nil then
+        chunk.flipped = chunk.prefab_def.force_flip
+      end
 
-    if chunk.flipped then
-      -- reverse from_dir, swap from_area and dest_area
-      Chunk_flip(chunk)
+      if chunk.flipped then
+        -- reverse from_dir, swap from_area and dest_area
+        Chunk_flip(chunk)
+      end
     end
   end
 
