@@ -1858,8 +1858,7 @@ function Title_gen_ray_burst()
     for m = thick, 0, -0.1 do
       local da = sel(side > 0, -1, 1) * m
 
-      local x1, y1 = coord(angle + da, 280)
-      local x2, y2 = coord(angle, 180)
+      local x1, y1 = coord(angle + da, 380)
 
       local ity = 1.0 - m / thick
 
@@ -2068,6 +2067,36 @@ function Title_gen_cave_scene()
     local mx = rand.irange(5, 315)
 
     draw_cone(mx, dist)
+  end
+end
+
+
+
+function Title_gen_tunnel_scene()
+  local mx = 60
+  local my = 60
+
+  local col = { 0,0,0 }
+
+  local color_name = "blue_white"
+  local color_list = TITLE_COLOR_RAMPS[color_name]
+
+  local f = rand.odds(50)
+  f = rand.odds(50)
+  f = rand.odds(50)
+
+  for r = 1202, 2, -2 do
+    -- local bump = (gui.random() ^ 10) * 0.7
+    -- local ity = math.clamp(0.0, r / 1200, 0.9) + bump
+
+    local ity = math.abs(math.sin(r * 0.05)) ^ 4
+
+    ity = ity * (1.0 - r / 900)
+
+    Title_interp_color(color_list, ity, col)
+
+    gui.title_prop("color", col)
+    gui.title_draw_disc(mx - r*0.75, my - r*0.25, r*1.2, r)
   end
 end
 
@@ -2488,10 +2517,12 @@ function Title_make_titlepic()
 
   if rand.odds(2) then
     -- empty background
-  elseif rand.odds(12) then
+  elseif rand.odds(10) then
     Title_gen_ray_burst()
   elseif rand.odds(5) then
     Title_gen_cave_scene()
+  elseif rand.odds(5) then
+    Title_gen_tunnel_scene()
   elseif rand.odds(33) then
     Title_gen_wall_scene()
   else
