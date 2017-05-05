@@ -51,9 +51,6 @@ static int map_bound_x1;
 static int map_bound_y1;
 
 
-#define SIMPLE_Y_OFFSETS  1
-
-
 #define SEC_FLOOR_SPECIAL  (1 << 1)
 #define SEC_CEIL_SPECIAL   (1 << 2)
 
@@ -1227,82 +1224,6 @@ static int NormalizeYOffset(int oy)
 }
 
 
-#ifndef SIMPLE_Y_OFFSETS
-static int Default_ZA(csg_brush_c *B)
-{
-	// default anchor point for a brush
-
-	int z1 = I_ROUND(B->b.z);
-	int z2 = I_ROUND(B->t.z);
-
-	if (z2 < EXTREME_H - 100)
-		return z2;
-	
-	if (z1 > 100 - EXTREME_H)
-		return z1;
-	
-	return 0;
-}
-#endif
-
-
-static int CalcYOffset_1S(brush_vert_c *V, int oy, int ceil_h,
-						  int za, bool unpeg_L)
-{
-#ifdef SIMPLE_Y_OFFSETS
-	return oy;
-#else
-	if (unpeg_L)
-		return oy;
-
-	csg_brush_c *B = V->parent;
-
-	if (za == IVAL_NONE)
-		za = Default_ZA(B);
-
-	return za - ceil_h + oy;
-#endif
-}
-
-
-static int CalcYOffset_Lower(brush_vert_c *V, int oy, int ceil_h,
-							 int za, bool unpeg_L)
-{
-#ifdef SIMPLE_Y_OFFSETS
-	return oy;
-#else
-	if (! unpeg_L)  // pegged, i.e. rendered top-down
-		return oy;
-
-	csg_brush_c *B = V->parent;
-
-	if (za == IVAL_NONE)
-		za = Default_ZA(B);
-
-	return za - ceil_h + oy;
-#endif
-}
-
-
-static int CalcYOffset_Upper(brush_vert_c *V, int oy, int ceil_h,
-							 int za, bool unpeg_U)
-{
-#ifdef SIMPLE_Y_OFFSETS
-	return oy;
-#else
-	if (! unpeg_U)	// pegged, i.e. rendered bottom-up (doors)
-		return oy;
-
-	csg_brush_c *B = V->parent;
-
-	if (za == IVAL_NONE)
-		za = Default_ZA(B);
-
-	return za - ceil_h + oy;
-#endif
-}
-
-
 static doom_sidedef_c * DM_MakeSidedef(
 	doom_linedef_c *L,
 	doom_sector_c *sec, doom_sector_c *back,
@@ -1354,13 +1275,11 @@ static doom_sidedef_c * DM_MakeSidedef(
 			int ox = lower->face.getInt("u1", IVAL_NONE);
 			int oy = lower->face.getInt("v1", IVAL_NONE);
 
-			int za = lower->face.getInt("za", IVAL_NONE);
-
 			if (ox != IVAL_NONE)
 				SD->x_offset = CalcXOffset(snag, lower, ox);
 
 			if (oy != IVAL_NONE)
-				SD->y_offset = CalcYOffset_1S(lower, oy, sec->c_h, za, unpeg_L);
+				SD->y_offset = oy;
 		}
 	}
 	else
@@ -1379,11 +1298,9 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		int l_ox = IVAL_NONE;
 		int l_oy = IVAL_NONE;
-		int l_za = IVAL_NONE;
 
 		int u_ox = IVAL_NONE;
 		int u_oy = IVAL_NONE;
-		int u_za = IVAL_NONE;
 
 		if (rail)
 		{
@@ -1403,14 +1320,12 @@ static doom_sidedef_c * DM_MakeSidedef(
 			l_ox = lower->face.getInt("u1", IVAL_NONE);
 			// on a moving brush, default Y offset is zero
 			l_oy = lower->face.getInt("v1", l_brush->props.getInt("mover") ? 0 : IVAL_NONE);
-			l_za = lower->face.getInt("za", IVAL_NONE);
 		}
 
 		if (upper)
 		{
 			u_ox = upper->face.getInt("u1", IVAL_NONE);
 			u_oy = upper->face.getInt("v1", u_brush->props.getInt("mover") ? 0 : IVAL_NONE);
-			u_za = upper->face.getInt("za", IVAL_NONE);
 		}
 
 		if (back && back->f_h > sec->f_h && !rail && l_oy != IVAL_NONE)
@@ -1429,9 +1344,9 @@ static doom_sidedef_c * DM_MakeSidedef(
 		if (r_oy != IVAL_NONE)
 			SD->y_offset = r_oy;
 		else if (l_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset_Lower(lower, l_oy, sec->c_h, l_za, unpeg_L);
+			SD->y_offset = l_oy;
 		else if (u_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset_Upper(upper, u_oy, sec->c_h, u_za, unpeg_U);
+			SD->y_offset = u_oy;
 
 		// get textures, but fallback to something safe
 		if (! lower) lower = l_brush->verts[0];
@@ -1547,6 +1462,9 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 
 static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const region_c *N)
 {
+	if (! S)
+		return NULL;
+
 	// railings require a two-sided line
 	if (! R || ! N || ! S->partner)
 		return NULL;
@@ -1554,15 +1472,14 @@ static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const regi
 	if (R->gaps.size() == 0 || N->gaps.size() == 0)
 		return NULL;
 
-	// we only find railings from a floor brush
-	const csg_brush_c *B1 = R->gaps.front()->bottom;
-	const csg_brush_c *B2 = N->gaps.front()->bottom;
+	// we only find railings from a floor brush (behind this snag)
+	const csg_brush_c *B = N->gaps.front()->bottom;
 
 	for (unsigned int k = 0 ; k < S->sides.size() ; k++)
 	{
 		brush_vert_c *V = S->sides[k];
 
-		if (! (V->parent == B1 || V->parent == B1))
+		if (V->parent != B)
 			continue;
 
 		if (V->face.getStr("rail", NULL))
@@ -1664,7 +1581,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 		back = dm_sectors[N->index];
 
 
-	brush_vert_c *f_rail = DM_FindRail(S, R, N);
+	brush_vert_c *f_rail = DM_FindRail(S->partner, R, N);
 	brush_vert_c *b_rail = DM_FindRail(S, N, R);
 
 	csg_property_set_c *trig = DM_FindTrigger(S, front, back);
