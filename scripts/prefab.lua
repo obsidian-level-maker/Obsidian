@@ -1004,6 +1004,18 @@ function Fab_load_wad(def)
   end
 
 
+  local function convert_offset(raw_val)
+    if raw_val == nil then return nil end
+
+    assert(type(raw_val) == "number")
+
+    if raw_val == 0 then return nil end
+    if raw_val == 1 then return 0 end
+
+    return raw_val
+  end
+
+
   local function heights_are_same(sec, other_sec, pass)
     if not sec then return false end
     if not other_sec then return false end
@@ -1083,15 +1095,8 @@ function Fab_load_wad(def)
       -- do not copy the offsets to the brush
 
     elseif side and line then
-      if side.x_offset and side.x_offset != 0 then
-        C2.u1 = side.x_offset
-        if C2.u1 == 1 then C2.u1 = 0 end
-      end
-
-      if side.y_offset and side.y_offset != 0 then
-        C2.v1 = side.y_offset
-        if C2.v1 == 1 then C2.v1 = 0 end
-      end
+      C2.u1 = convert_offset(side.x_offset)
+      C2.v1 = convert_offset(side.y_offset)
     end
 
     -- texture anchoring --
@@ -1344,17 +1349,8 @@ function Fab_load_wad(def)
 
     -- handle offsets --
 
-    local x_offset = side.x_offset
-    local y_offset = side.y_offset
-
-    if x_offset == 0 then x_offset = nil end
-    if y_offset == 0 then y_offset = nil end
-
-    if x_offset == 1 then x_offset = 0   end
-    if y_offset == 1 then y_offset = 0   end
-
-    C[prefix .. "u1"] = x_offset
-    C[prefix .. "v1"] = y_offset
+    C[prefix .. "u1"] = convert_offset(side.x_offset)
+    C[prefix .. "v1"] = convert_offset(side.y_offset)
   end
 
 
@@ -1370,8 +1366,10 @@ function Fab_load_wad(def)
       else
         where = "right"
       end
+
     elseif info.floors["left"] then
       where = "left"
+
     else
       assert(info.floors["right"])
       where = "right"
