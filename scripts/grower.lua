@@ -41,7 +41,6 @@ function Grower_preprocess_grammar()
 
     if ch == '~' then return { kind="liquid" } end
     if ch == '#' then return { kind="disable" } end
-    if ch == '@' then return { kind="link" } end
     if ch == '=' then return { kind="bridge", dir=6 } end
 
     if ch == '1' then return { kind="area", area=1 } end
@@ -68,13 +67,16 @@ function Grower_preprocess_grammar()
     if ch == 'A' then return { kind="new_area" } end
     if ch == 'R' then return { kind="new_room" } end
 
-    if ch == 'H' then return { kind="hallway" } end
-    if ch == 'I' then return { kind="hall2"   } end
-    if ch == 'K' then return { kind="hall3"   } end
-
     if ch == 'C' then return { kind="cage"   } end
     if ch == 'J' then return { kind="joiner" } end
     if ch == 'T' then return { kind="closet" } end
+
+    -- hallway stuff
+    if ch == '@' then return { kind="link"  } end
+    if ch == 'a' then return { kind="link2" } end
+    if ch == 'H' then return { kind="hallway" } end
+    if ch == 'I' then return { kind="hall2"   } end
+    if ch == 'K' then return { kind="hall3"   } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -219,7 +221,6 @@ function Grower_preprocess_grammar()
     if E.kind == "cage"    then add_style("cages")    end
     if E.kind == "liquid"  then add_style("liquids")  end
     if E.kind == "hallway" then add_style("hallways") end
-    if E.kind == "hall2"   then add_style("hallways") end
     if E.kind == "stair"   then add_style("steepness") end
   end
 
@@ -633,6 +634,8 @@ function Grower_preprocess_grammar()
 
     if kind == "hall2" or kind == "hall3" then
       r.kind = "hallway"
+    elseif kind == "link2" then
+      r.kind = "link"
     end
 
     local E = def.output[x][y]
@@ -736,7 +739,10 @@ function Grower_preprocess_grammar()
 
     locate_all_contiguous_parts("hallway")
     locate_all_contiguous_parts("hall2")
+    locate_all_contiguous_parts("hall3")
+
     locate_all_contiguous_parts("link")
+    locate_all_contiguous_parts("link2")
 
     if cur_def.teleporter then add_style("teleporters") end
 
