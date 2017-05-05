@@ -883,7 +883,7 @@ function Episode_plan_weapons()
 
     local lev_size = math.clamp(30, LEV.map_W + LEV.map_H, 100)
 
-    local quota = (lev_size - 20) / 25 + gui.random()
+    local quota = (lev_size - 12) / 25 + gui.random()
 
     quota = quota * (QUOTA_ADJUSTS[OB_CONFIG.weapons] or 1.0)
 
@@ -892,7 +892,11 @@ function Episode_plan_weapons()
     end
 
     -- more as game progresses
-    quota = quota + LEV.game_along * 2.0
+    if PARAM.pistol_starts then
+      quota = quota + math.clamp(0, LEV.game_along, 0.5) * 3.1
+    else
+      quota = quota + math.clamp(0, LEV.game_along, 0.5) * 6.1
+    end
 
     quota = quota * (PARAM.weapon_factor or 1)
     quota = int(quota)
@@ -900,7 +904,7 @@ function Episode_plan_weapons()
     if quota < 1 then quota = 1 end
 
     -- be more generous in the very first level
-    if LEV.id == 1 and quota == 1 and
+    if LEV.id <= 2 and quota == 1 and
        not (OB_CONFIG.weapons == "later" or OB_CONFIG.weapons == "very_late")
     then
       quota = 2
@@ -1423,7 +1427,7 @@ function Episode_plan_weapons()
 
 
   local function pick_start_weapons()
-    -- decide how many we want, either 1 or 2.
+    -- decide how many we want, either 1, 2 or 3.
     -- should be more in later levels.
 
     local prev_ones
@@ -1431,9 +1435,13 @@ function Episode_plan_weapons()
     each LEV in GAME.levels do
       LEV.start_weapons = {}
 
-      local extra_prob = 10 + math.min(1, LEV.game_along) * 80
+      local want_num = 1
 
-      local want_num = rand.sel(extra_prob, 2, 1)
+      local extra_prob1 = 15 + 85 * math.clamp(0, LEV.game_along, 1)
+      local extra_prob2 =  5 + 45 * math.clamp(0, LEV.game_along, 1)
+
+      if rand.odds(extra_prob1) then want_num = want_num + 1 end
+      if rand.odds(extra_prob2) then want_num = want_num + 1 end
 
       -- in very first few maps, only give a single start weapon
       if (LEV.id <= 2 or LEV.game_along < 0.2) and LEV.new_weapons[1] then
@@ -1444,6 +1452,7 @@ function Episode_plan_weapons()
          want_num = LEV.weapon_quota
       end
 
+--[[
       -- skip one sometimes
       -- [ but never in the first few maps ]
       local skip_prob = 1
@@ -1455,6 +1464,7 @@ function Episode_plan_weapons()
       if LEV.id >= 3 and LEV.ep_along >= 0.2 and rand.odds(skip_prob) then
         want_num = want_num - 1
       end
+--]]
 
       for i = 1, want_num do
         local name = decide_weapon(LEV, "is_start", prev_ones)
