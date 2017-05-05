@@ -1,23 +1,6 @@
 --
--- Door #1, quite plain
+-- A rather plain door
 --
-
-PREFABS.Door_plain1 =
-{
-  file   = "door/door1.wad"
-  map    = "MAP01"
-
-  prob   = 100
-
-  where  = "edge"
-
-  deep   = 32
-  over   = 32
-
-  bound_z1 = 0
-  bound_z2 = 128
-}
-
 
 PREFABS.Door_plain2 =
 {
