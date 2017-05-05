@@ -19,19 +19,6 @@
 ------------------------------------------------------------------------
 
 
-CSG_BRUSHES =
-{
-  solid  = 1
-  detail = 1
-  clip   = 1
-
-  sky     = 1
-  liquid  = 1
-  trigger = 1
-  light   = 1
-}
-
-
 WADFAB_ENTITIES =
 {
   -- monster spots
@@ -654,13 +641,11 @@ function Fab_bound_brushes_Z(fab, z1, z2)
   if not (z1 or z2) then return end
 
   each B in fab.brushes do
-    if CSG_BRUSHES[B[1].m] then
-      local b = Brush_get_b(B)
-      local t = Brush_get_t(B)
+    local b = Brush_get_b(B)
+    local t = Brush_get_t(B)
 
-      if z1 and not b then table.insert(B, { b = z1 }) end
-      if z2 and not t then table.insert(B, { t = z2 }) end
-    end
+    if z1 and not b then table.insert(B, { b = z1 }) end
+    if z2 and not t then table.insert(B, { t = z2 }) end
   end
 end
 
@@ -673,11 +658,7 @@ function Fab_render(fab)
   fab.state = "rendered"
 
   each B in fab.brushes do
-    if CSG_BRUSHES[B[1].m] then
-      --- DEBUG AID:
-      --- stderrf("brush %d/%d\n", _index, #fab.brushes)
-      -- Brush_dump(B)
-
+    if B[1].m != "spot" then
       raw_add_brush(B)
     end
   end
