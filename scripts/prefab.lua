@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2013-2016 Andrew Apted
+--  Copyright (C) 2013-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -972,37 +972,6 @@ DOOM_TWO_SIDED_FLAG = 0x04
 function Fab_load_wad(def)
   local fab
 
-  local rail_lines = {}
-
-
-  local function add_railing(line_idx, line, side_idx, C, floor_h)
-    if not rail_lines[line_idx] then
-      rail_lines[line_idx] =
-      {
-        poly_parts = {}
-        floors = {}
-      }
-    end
-
-    local info = rail_lines[line_idx]
-
-    -- check if we are on the right (front) or left (back) of linedef
-    local where
-
-    if side_idx == line.right then
-      where = "right"
-    elseif side_idx == line.left then
-      where = "left"
-    else
-      -- TODO : relax this
-      error("weird polygonation result (sidedef not found)")
-    end
-
-    info.floors[where] = floor_h
-
-    table.insert(info.poly_parts, { where=where, coord=C })
-  end
-
 
   local function convert_offset(raw_val)
     if raw_val == nil then return nil end
@@ -1089,25 +1058,6 @@ function Fab_load_wad(def)
     end
 
 
-    -- offsets --
-
-    if heights_are_same(sec, other_sec, pass) then
-      -- do not copy the offsets to the brush
-
-    elseif side and line then
-      C2.u1 = convert_offset(side.x_offset)
-      C2.v1 = convert_offset(side.y_offset)
-    end
-
-    -- texture anchoring --
-
-    if not sec and other_sec and C2.v1 then
-      if other_sec then
-        C2.za = other_sec.ceil_h
-      end
-    end
-
-
     -- line type --
 
     if line and line.special and line.special > 0 then
@@ -1123,6 +1073,9 @@ function Fab_load_wad(def)
     local MLF_UpperUnpegged = 0x0008
     local MLF_LowerUnpegged = 0x0010
 
+    local upper_unpeg
+    local lower_unpeg
+
     if not line then
       -- nothing
 
@@ -1137,14 +1090,25 @@ function Fab_load_wad(def)
         -- this makes sure the flags get applied
         if not C2.special then C2.special = 0 end
       end
+
+      upper_unpeg = (bit.band(flags, MLF_UpperUnpegged) != 0)
+      lower_unpeg = (bit.band(flags, MLF_LowerUnpegged) != 0)
     end
 
     -- railings --
 
-    if pass == 1 and C.line and two_sided and mid_tex then
-      -- we only remember the railing here (for later processing)
-      assert(sec)
-      add_railing(C.line, line, C.side, C2, sec.floor_h)
+    if line and side and two_sided and mid_tex then
+      C2.rail = mid_tex
+    end
+
+    -- offsets --
+
+    if heights_are_same(sec, other_sec, pass) and not C2.rail then
+      -- do not copy the offsets to the brush
+
+    elseif side and line then
+      C2.u1 = convert_offset(side.x_offset)
+      C2.v1 = convert_offset(side.y_offset)
     end
 
     return C2
@@ -1332,60 +1296,6 @@ function Fab_load_wad(def)
   end
 
 
-  local function grab_rail_info(C, line, where, prefix)
-    local side_idx = sel(where == "left", line.left, line.right)
-    -- railings can only occur on two-sided lines
-    assert(side_idx)
-
-    local side = gui.wadfab_get_side(side_idx)
-    assert(side)
-
-    if side.mid_tex == "-" then
-      -- the railing might only occur on a single side
-      return
-    end
-
-    C[prefix .. "rail"] = side.mid_tex
-
-    -- handle offsets --
-
-    C[prefix .. "u1"] = convert_offset(side.x_offset)
-    C[prefix .. "v1"] = convert_offset(side.y_offset)
-  end
-
-
-  local function create_railing(line_idx, info)
-    local line = gui.wadfab_get_line(line_idx)
-
-    -- decide which side of line will get the 'rail' information
-    local where
-
-    if info.floors["left"] and info.floors["right"] then
-      if info.floors["left"] > info.floors["right"] then
-        where = "left"
-      else
-        where = "right"
-      end
-
-    elseif info.floors["left"] then
-      where = "left"
-
-    else
-      assert(info.floors["right"])
-      where = "right"
-    end
-
-    local other = sel(where == "left", "right", "left")
-
-    each part in info.poly_parts do
-      if part.where == where then
-        grab_rail_info(part.coord, line, where, "")
-        grab_rail_info(part.coord, line, other, "back_")
-      end
-    end
-  end
-
-
   local function skill_to_rank(flags)
     if not flags then return 2 end
 
@@ -1521,10 +1431,6 @@ function Fab_load_wad(def)
 
         create_3d_floor(exfl, coords)
       end
-    end
-
-    each line_idx,info in rail_lines do
-      create_railing(line_idx, info)
     end
 
     gui.wadfab_free()
@@ -1909,6 +1815,7 @@ function Fab_replacements(fab)
 
     if C.u1 and C.u1_along then
       C.u1 = C.u1 + C.u1_along
+      C.u1_along = nil
     end
   end
 
@@ -1942,17 +1849,14 @@ function Fab_replacements(fab)
 
       if C.tag then C.tag = check_tag(C.tag) end
 
-      if C.u1      then C.u1      = check("offset", C.u1) end
-      if C.v1      then C.v1      = check("offset", C.v1) end
-      if C.back_u1 then C.back_u1 = check("offset", C.back_u1) end
-      if C.back_v1 then C.back_v1 = check("offset", C.back_v1) end
+      if C.u1  then C.u1  = check("offset", C.u1) end
+      if C.v1  then C.v1  = check("offset", C.v1) end
 
       -- do textures last (may add e.g. special for liquids)
-      if C.tex and C.x     then C.tex = check_tex (sanitize(C.tex)) end
-      if C.tex and not C.x then C.tex = check_flat(sanitize(C.tex), C) end
+      if C.tex and C.x     then C.tex  = check_tex (sanitize(C.tex)) end
+      if C.tex and not C.x then C.tex  = check_flat(sanitize(C.tex), C) end
 
-      if C.x and C.rail      then C.rail      = check_tex(sanitize(C.rail)) end
-      if C.x and C.back_rail then C.back_rail = check_tex(sanitize(C.back_rail)) end
+      if C.rail and C.x    then C.rail = check_tex(sanitize(C.rail)) end
 
       fixup_x_offsets(C)
     end

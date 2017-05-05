@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1307,7 +1307,7 @@ static doom_sidedef_c * DM_MakeSidedef(
 	doom_linedef_c *L,
 	doom_sector_c *sec, doom_sector_c *back,
 	snag_c *snag, snag_c *other,
-	brush_vert_c *rail, int rail_side,
+	brush_vert_c *rail,
 	bool unpeg_L, bool unpeg_U)
 {
 	if (! sec)
@@ -1387,14 +1387,14 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		if (rail)
 		{
-			const char *rail_tex = rail->face.getStr(rail_side ? "back_rail" : "rail", NULL);
+			const char *rail_tex = rail->face.getStr("rail", NULL);
 
 			if (rail_tex)
 			{
 				SD->mid = rail_tex;
 
-				r_ox = rail->face.getInt(rail_side ? "back_u1" : "u1", IVAL_NONE);
-				r_oy = rail->face.getInt(rail_side ? "back_v1" : "v1", IVAL_NONE);
+				r_ox = rail->face.getInt("u1", IVAL_NONE);
+				r_oy = rail->face.getInt("v1", IVAL_NONE);
 			}
 		}
 
@@ -1545,8 +1545,7 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 }
 
 
-static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const region_c *N,
-                                  int *rail_side)
+static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const region_c *N)
 {
 	// railings require a two-sided line
 	if (! R || ! N || ! S->partner)
@@ -1555,29 +1554,19 @@ static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const regi
 	if (R->gaps.size() == 0 || N->gaps.size() == 0)
 		return NULL;
 
-	/* we only find railings from a floor brush */
-
+	// we only find railings from a floor brush
 	const csg_brush_c *B1 = R->gaps.front()->bottom;
 	const csg_brush_c *B2 = N->gaps.front()->bottom;
 
-	for (int side = 0 ; side < 2 ; side++)
+	for (unsigned int k = 0 ; k < S->sides.size() ; k++)
 	{
-		const snag_c *test_S = (side == 0) ? S->partner : S;
+		brush_vert_c *V = S->sides[k];
 
-		for (unsigned int k = 0 ; k < test_S->sides.size() ; k++)
-		{
-			brush_vert_c *V = test_S->sides[k];
+		if (! (V->parent == B1 || V->parent == B1))
+			continue;
 
-			if (! (V->parent == B1 || V->parent == B2))
-				continue;
-
-			if (V->face.getStr("rail", NULL) ||
-			    V->face.getStr("back_rail", NULL))
-			{
-				*rail_side = side;
-				return V;  // found it
-			}
-		}
+		if (V->face.getStr("rail", NULL))
+			return V;  // found it!
 	}
 
 	return NULL;
@@ -1675,8 +1664,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 		back = dm_sectors[N->index];
 
 
-	int rail_side = 0;
-	brush_vert_c *rail = DM_FindRail(S, R, N, &rail_side);
+	brush_vert_c *f_rail = DM_FindRail(S, R, N);
+	brush_vert_c *b_rail = DM_FindRail(S, N, R);
 
 	csg_property_set_c *trig = DM_FindTrigger(S, front, back);
 	csg_property_set_c *spec = DM_FindSpecial(S, R, N);
@@ -1704,7 +1693,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 
 	// skip the line if same on both sides, except when it has a rail or special
-	if (front == back && !rail && !L_special)
+	if (front == back && !f_rail && !b_rail && !L_special)
 		return;
 
 
@@ -1736,14 +1725,14 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 	// set pegging _before_ making sidedefs
 
-	DM_DeterminePegging(L, front, back, rail ? true : false);
+	DM_DeterminePegging(L, front, back, (f_rail || b_rail) ? true : false);
 
 	bool unpeg_L = (L->flags & MLF_LowerUnpeg) != 0;
 	bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;
 
 
-	L->front = DM_MakeSidedef(L, front, back, S->partner, S, rail,   rail_side, unpeg_L, unpeg_U);
-	L->back  = DM_MakeSidedef(L, back, front, S, S->partner, rail, 1-rail_side, unpeg_L, unpeg_U);
+	L->front = DM_MakeSidedef(L, front, back, S->partner, S, f_rail, unpeg_L, unpeg_U);
+	L->back  = DM_MakeSidedef(L, back, front, S, S->partner, b_rail, unpeg_L, unpeg_U);
 
 	SYS_ASSERT(L->front || L->back);
 
@@ -1775,8 +1764,9 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 		L->flags |= MLF_TwoSided;
 	}
 
-	if (rail) L->flags |= rail->face.getInt("flags");
-	if (spec) L->flags |= spec->getInt("flags");
+	if (f_rail) L->flags |= f_rail->face.getInt("flags");
+	if (b_rail) L->flags |= b_rail->face.getInt("flags");
+	if (spec)   L->flags |= spec->getInt("flags");
 
 	if (L->special == LIN_FAKE_UNPEGGED)
 	{
