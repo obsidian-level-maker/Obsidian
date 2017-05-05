@@ -3,45 +3,41 @@ WORK IN PROGRESS
 ================
 
 
-???  EDGE.other_area (esp. to closets and joiners), WTF   ???
-     [ only used for Edge_wallish_tex, hence do a special
-       pass which assigns a tex where needed ]
+Miscellaneous
+-------------
 
->>>  lighting in caves mucked up?  [ check Ambient_push/pop ]
++  lighting in caves mucked up?  [ check Ambient_push/pop ]
 
--    sprouts from symmetrical rooms : often skip a side
+-  sprouts from symmetrical rooms : often skip a side
 
--    have a CHUNK_CLASS
+-  have a CHUNK_CLASS
+
++  proper system for actions of remote switches
+
+-  if not pistol starts, use more seen_weapons
 
 
 
 Hallway System
 --------------
 
-+  support "terminator" pieces between hall and room
-   [ STOP making edge prefabs there ]
+-  wrong texture on terminators
+   [ _OUTER (etc) is always the non-hallway room ]
 
-   Needed:
-   - plain (open)    j : MAP01
-   - normal door     j : MAP02
-   - secret          j : MAP05
-   - key locked      k : MAP01
-   - switch locked   k : MAP03
+!!!  for 2x2 hallway, have 2x1 terminator pieces
 
--  different styles:
-   - a "vent" style
-   - a wide-ish one with stairs, like in V4
++  finish the "deuce" hallway pieces
 
--  support stair pieces  [ delta_h, like in joiners ]
++  support stair pieces  [ delta_h, like in joiners ]
 
--  have dead-end pieces ("U" shape)
-
--  support wide pieces (e.g. 3x1 and 3x3 for vent)
+-  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]
-   [[ can be good for traps! ]]
+   [[ good for traps! ]]
+
+-  support pieces with windows
 
 -  be real nice to have pieces which are wall on one
-   side and open on the other (with sky ceiling)
+   side and open on the other (with sky ceiling OR like nearby ceiling)
    [ BUT: will need to expand vertically ]
 
    also: open on ALL sides  (mainly I and L pieces)
@@ -78,13 +74,6 @@ PARKS
      except in the lowest area ]
 
 -  add a style for it, decide room properly
-
-
-
-Miscellaneous
--------------
-
--  if not pistol starts, use more seen_weapons
 
 
 
