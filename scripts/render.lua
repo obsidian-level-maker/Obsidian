@@ -1603,22 +1603,34 @@ function Render_chunk(chunk)
   local def = chunk.prefab_def or Fab_pick(reqs)
 
 
-  -- build the prefab --
+  -- texturing --
 
-  if chunk.from_area then
+  if chunk.kind == "hallway" then
+    -- FIXME: proper textures for hallway pieces
+    skin.wall = "REDWALL"
+
+  elseif chunk.from_area then
     skin.wall  = Junction_calc_wall_tex(chunk.from_area, A)
-
     skin.floor = chunk.from_area.floor_mat
     skin.ceil  = chunk.from_area.ceil_mat
   end
 
-  if chunk.dest_area then
-    skin.outer  = Junction_calc_wall_tex(chunk.dest_area, A)
+  if chunk.is_terminator then
+    local C = assert(chunk.conn)
+    local A2 = sel(C.R1 == A.room, C.A2, C.A1)
 
+    skin.outer  = Junction_calc_wall_tex(A2, A)
+    skin.floor2 = A2.floor_mat
+    skin.ceil2  = A2.ceil_mat
+
+  elseif chunk.dest_area then
+    skin.outer  = Junction_calc_wall_tex(chunk.dest_area, A)
     skin.floor2 = chunk.dest_area.floor_mat
     skin.ceil2  = chunk.dest_area.ceil_mat
   end
 
+
+  -- build the prefab --
 
   local x1, y1, x2, y2 = chunk_coords(def)
 
