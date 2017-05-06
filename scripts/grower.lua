@@ -892,7 +892,7 @@ stderrf("BOUNDARY bbox : (%d %d) .. (%d %d)\n",
 
   -- calculate coverage target
 
-  LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.66)
+  LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.55)
 end
 
 
