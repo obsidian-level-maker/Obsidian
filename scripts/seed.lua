@@ -1262,6 +1262,15 @@ function Chunk_create_edge(chunk, kind, side)
 end
 
 
+function Chunk_create_edge_pair(chunk, kind1, side)
+  local E1 = Chunk_create_edge(chunk, kind1, side)
+
+  local E2 = Edge_new_opposite("nothing", E1.S, E1.dir, E1.long)
+
+  return E1, E2
+end
+
+
 function Chunk_flip(chunk)
   local A1 = chunk.from_area
   local A2 = chunk.dest_area

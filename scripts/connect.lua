@@ -252,8 +252,7 @@ function Connect_directly(P)
     local dir1 = assert(P.chunk.from_dir)
     local dir2 = 10 - dir1  -- terminators are always "I" shape
 
-    E1 = Chunk_create_edge(P.chunk, "nothing", dir1)
-    E2 = Edge_new_opposite("nothing", E1.S, E1.dir, E1.long)
+    E1, E2 = Chunk_create_edge_pair(P.chunk, "nothing", dir1)
 
     if C.R1.is_hallway then
       E1, E2 = E2, E1
