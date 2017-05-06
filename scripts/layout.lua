@@ -1180,7 +1180,6 @@ function Layout_decorate_rooms(pass)
 
     local lock = Lock_new("intraroom", C)
 
-    lock.spot = spot
     lock.tag  = alloc_id("tag")
 
     spot.lock = lock
@@ -1214,7 +1213,6 @@ function Layout_decorate_rooms(pass)
     local lock = Lock_new("itemlock")
 
     lock.item = item
-    lock.spot = spot
     lock.tag  = alloc_id("tag")
 
     item.lock = lock
