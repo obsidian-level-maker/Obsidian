@@ -29,6 +29,8 @@
 
     sx, sy  -- location in seed map
 
+    x1, y1, x2, y2  -- 2D map coordinates
+
     diagonal : DIR  -- if non-nil, then seed is split into two halves.
                     -- DIR is the corner associated with the triangle
                     -- (and the direction *away* from the diagonal line)
@@ -52,21 +54,10 @@
 
     room : ROOM
 
-    edge[DIR] : EDGE   -- set when an EDGE object exists at this seed
-                       -- Note: it may be several seeds wide
+    edge[DIR] : EDGE  -- set when an EDGE object exists at this seed
+                      -- Note: it may be several seeds wide
 
     chunk : CHUNK   -- only set when seed is part of a chunk
-
-
-    kind : keyword  -- main usage of seed:
-                    --   "walk", "void", "diagonal",
-                    --   "stair", "curve_stair", "tall_stair",
-                    --   "liquid"
-
-    content : keyword  -- normally nil, but can be:
-                       --   "wotsit", "pillar"
-
-    x1, y1, x2, y2  -- 2D map coordinates
 
     mid_x, mid_y  -- mid point coordinate
 
@@ -128,7 +119,7 @@
     -- a rectangle of seeds within an area of a room
 
     kind : keyword  -- "floor" (part of a walkable area)
-                    -- "ceil"  (above a "floor" chunk)
+                    -- "ceil"  (part of a ceiling area)
                     -- "liquid"
                     -- "stair"
                     -- "closet" ('T' elements in rules)
@@ -254,7 +245,7 @@ function SEED_CLASS.join_halves(S)
   -- kill the other half
 
   S2.name = "DEAD_SEED"
-  S2.kind = "dead"
+  S2.is_dead = true
   S2.diagonal = "dead"
 
   S2.area = nil

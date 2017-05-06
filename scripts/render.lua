@@ -1312,7 +1312,7 @@ function Render_seed(A, S)
     return
   end
 
-  if S.kind == "void" or A.mode == "void" then
+  if A.mode == "void" then
     Render_void(A, S)
     return
   end
