@@ -1432,8 +1432,8 @@ function Room_border_up()
 
     -- closets --
 
-    if (A1.mode == "chunk" and A1.chunk.place == "whole") or
-       (A2.mode == "chunk" and A2.chunk.place == "whole")
+    if (A1.mode == "chunk" and A1.chunk.occupy == "whole") or
+       (A2.mode == "chunk" and A2.chunk.occupy == "whole")
     then
       Junction_make_wall(junc)
       return
@@ -2406,7 +2406,8 @@ function Room_floor_ceil_heights()
     local chunk = assert(C.joiner_chunk)
     assert(chunk.prefab_def)
 
-    if chunk.place == "whole" then
+    -- FIXME: this smells like a hack
+    if chunk.occupy == "whole" then
       chunk.area.is_outdoor = nil
     end
 
@@ -2695,7 +2696,8 @@ function Room_floor_ceil_heights()
       assert(chunk.from_area)
       A.floor_h = assert(chunk.from_area.floor_h)
 
-      if chunk.place == "whole" then
+      -- FIXME: this smells like a hack
+      if chunk.occupy == "whole" then
         A.is_outdoor = nil
       end
     end

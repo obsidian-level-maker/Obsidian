@@ -657,7 +657,7 @@ function Render_junction(A, S, dir)
   if S.done_all then return end
 
   -- whole chunks never build walls inside them
-  if A.chunk and A.chunk.place == "whole" then return end
+  if A.chunk and A.chunk.occupy == "whole" then return end
 
   -- proper EDGE objects are handled elsewhere
   if S.edge[dir] and S.edge[dir].kind != "ignore" then return end

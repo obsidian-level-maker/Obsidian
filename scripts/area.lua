@@ -1049,11 +1049,10 @@ function Area_locate_chunks()
   end
 
 
-  local function make_chunk(kind, place, A, sx1,sy1, sx2,sy2)
+  local function make_chunk(kind, A, sx1,sy1, sx2,sy2)
     local CHUNK = Chunk_new(kind, sx1,sy1, sx2,sy2)
 
-    CHUNK.area  = A
-    CHUNK.place = place
+    CHUNK.area = A
 
     if CHUNK.sw < 2 or CHUNK.sh < 2 then
       CHUNK.is_small = true
@@ -1073,7 +1072,7 @@ function Area_locate_chunks()
     local kind = "floor"
     if A.mode == "liquid" then kind = "liquid" end
 
-    local CHUNK = make_chunk(kind, "floor", A, sx1,sy1, sx2,sy2)
+    local CHUNK = make_chunk(kind, A, sx1,sy1, sx2,sy2)
 
     -- TODO : improve this [ take nearby walls, conns, closets into account ]
     CHUNK.space = 24
@@ -1083,18 +1082,20 @@ function Area_locate_chunks()
 
     if kind == "liquid" then
       table.insert(R.liquid_chunks, CHUNK)
+
     else
 -- stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
       table.insert(R.floor_chunks, CHUNK)
+    end
 
-      if not A.is_outdoor then
-        local CEIL = make_chunk("ceil", "ceil", A, sx1,sy1, sx2,sy2)
-        table.insert(R.ceil_chunks, CEIL)
+    -- TODO : review the liquid check here
+    if not A.is_outdoor and A.mode != "liquid" then
+      local CEIL = make_chunk("ceil", A, sx1,sy1, sx2,sy2)
+      table.insert(R.ceil_chunks, CEIL)
 
-        -- link the floor and ceiling chunks
-         CEIL.floor_below = CHUNK
-        CHUNK. ceil_above = CEIL
-      end
+      -- link the floor and ceiling chunks
+       CEIL.floor_below = CHUNK
+      CHUNK. ceil_above = CEIL
     end
 
     return CHUNK

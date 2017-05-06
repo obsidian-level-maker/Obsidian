@@ -685,6 +685,12 @@ function Grower_preprocess_grammar()
       end
     end
 
+    if r.kind == "stair" then
+      r.occupy = "floor"
+    else
+      r.occupy = "whole"
+    end
+
     if not def.rects then def.rects = {} end
 
     table.insert(def.rects, r)
@@ -2347,13 +2353,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       if r.from_dir then chunk.from_dir = transform_dir(T, r.from_dir) end
       if r.dest_dir then chunk.dest_dir = transform_dir(T, r.dest_dir) end
 
-      if r.kind == "stair" then
-        chunk.place = "floor"
-      else
-        chunk.place = "whole"
-      end
-
-      chunk.shape = r.shape
+      chunk.shape  = r.shape
+      chunk.occupy = r.occupy
       chunk.prefer_usage = r.usage
 
       if r.from_area then

@@ -119,7 +119,7 @@
     -- a rectangle of seeds within an area of a room
 
     kind : keyword  -- "floor" (part of a walkable area)
-                    -- "ceil"  (part of a ceiling area)
+                    -- "ceil"  (part of a ceiling)
                     -- "liquid"
                     -- "stair"
                     -- "closet" ('T' elements in rules)
@@ -138,12 +138,13 @@
 
     mx, my           -- coordinate of middle point
 
-    place : keyword  -- "floor" (needs a ceiling + walls)
-                     -- "ceil"  (needs a floor + walls)
-                     -- "whole" (provides both floor, ceiling, walls)
+    occupy : keyword  -- "floor" (needs a ceiling + walls)
+                      -- "ceil"  (needs a floor + walls)
+                      -- "whole" (completely self-contained)
+                      -- is NIL for content-only stuff (e.g. pillars)
 
     shape : keyword  -- "U" or "I" or "L" or "T" or "P"
-                     -- only used for stairs, closets, joiners
+                     -- used for stairs, closets, joiners, hallway pieces
 
     content_kind : keyword  -- is NIL when unused / free
                             -- "START", "EXIT", "SECRET_EXIT"
@@ -1184,9 +1185,9 @@ function Chunk_kill(chunk)
   chunk.kind = "DEAD_" .. chunk.kind
   chunk.is_dead = true
 
-  chunk.area  = nil
-  chunk.place = nil
-  chunk.shape = nil
+  chunk.area   = nil
+  chunk.occupy = nil
+  chunk.shape  = nil
 
   chunk.sx1  = nil ; chunk.sx2  = nil
   chunk.sy1  = nil ; chunk.sy2  = nil
