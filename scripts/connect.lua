@@ -32,13 +32,13 @@
     -- the edges are NOT peered.
     --
 
+    id, name   -- debugging aids
+
     kind : keyword  -- "edge", "joiner", "terminator", "teleporter"
 
     lock : LOCK
 
     is_secret : boolean
-
-    id : number  -- debugging aid
 
     R1 : source ROOM
     R2 : destination ROOM
@@ -59,11 +59,24 @@
 
 --class LOCK
 --[[
+    --
+    -- A lock marks when something (mainly connections) is locked
+    -- and requires some goal (like a key) to open it.
+    --
+
+    id, name   -- debugging aids
+
+    kind : keyword  -- "quest" (significant goal)
+                    -- "intraroom" (an barred exit)
+                    -- "itemlock" (e.g. lowering pedestal)
+
+    conn : CONN     -- connection which is locked
+
     goals : list(GOAL)  -- the goal(s) which solve the lock
+                        -- [ only used with "quest" kind ]
 
-    conn : CONN         -- connection which is locked
-
-    -- FIXME : "intraroom" and "itemlock" stuff
+    action : number   -- the action used for remote doors
+    tag    : number   -- the tag used for remote doors
 --]]
 
 

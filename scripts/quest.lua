@@ -97,19 +97,28 @@
 
 --class GOAL
 --[[
-    kind : keyword  --  "KEY" or "SWITCH" or "EXIT" or "SECRET_EXIT"
+    --
+    -- A goal is something which the player is required to find.
+    -- For example, a key that is needed to open a door, or the
+    -- exit from the level.  Also used for level starting spots.
+    --
+
+    id, name  -- debugging aids
+
+    kind : keyword  --  "KEY", "SWITCH"
+                    --  "START", "EXIT" or "SECRET_EXIT"
 
     item : keyword  -- name of key or switch
 
-    special : number  -- linedef special for switches
-
-    room : ROOM   -- where the goal is
+    room : ROOM     -- where the goal is
 
     backtrack : list(ROOMS)  -- rooms player MUST back-track through
                              -- (includes room with the locked conn,
                              --  but excludes room with the goal).
 
-    tag : number  -- tag number to use for a switched door
+    action : number  -- linedef special for switches
+    tag    : number  -- tag number to use for a switched door
+
 --]]
 
 
@@ -859,8 +868,8 @@ do return false end
 
     local prob_tab = {}
 
-    each G in list do
-      prob_tab[_index] = assert(G.prob)
+    each goal in list do
+      prob_tab[_index] = assert(goal.prob)
     end
 
     local idx = rand.index_by_probs(prob_tab)
@@ -900,6 +909,8 @@ do return false end
 --FIXME
 do return false end
 
+    -- TODO: check that a usable prefab exists
+    if not THEME.has_double_switch_door then return false end
 
     local prob = 25
 
@@ -912,9 +923,6 @@ do return false end
     -- this is VERY dependent on the sw_pair.wad prefab
     local fab_def = PREFABS["Locked_double"]
     assert(fab_def)
-
-    -- TODO: check that a usable prefab exists
-    if not THEME.has_double_switch_door then return false end
 
     local GOAL1 = Goal_new("SWITCH")
     local GOAL2 = Goal_new("SWITCH")
