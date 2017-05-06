@@ -69,6 +69,9 @@ OBLIGE TO-DO
 
 IDEA : "Lighting" and "Detail" settings (in miscellaneous module)
 
+IDEA : for music swapper, give each song a theme and try to match
+       the song themes with the level it will be played on.
+
 IDEA : a sharp corner removal pass [ before border stuff ]
        [ preserve symmetry, e.g. by preferring horizontal direction to merge ]
 

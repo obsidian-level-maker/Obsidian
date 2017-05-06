@@ -14,23 +14,24 @@ Miscellaneous
 
 +  proper system for actions of remote switches
 
--  if not pistol starts, use more seen_weapons
+-  internal fences (esp. for outdoor rooms)
 
 
 
 Hallway System
 --------------
 
--  wrong texture on terminators
-   [ _OUTER (etc) is always the non-hallway room ]
+-  not considered "wallish" (no triangular filler) ?
 
 !!!  for 2x2 hallway, have 2x1 terminator pieces
 
 +  finish the "deuce" hallway pieces
 
+-  texturing for non-terminator pieces  [ hallway room themes ]
+
 +  support stair pieces  [ delta_h, like in joiners ]
 
--  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
++  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]
    [[ good for traps! ]]
 
