@@ -176,22 +176,6 @@ end
 
 
 
-function Fab_lookup(name)
-  error("Fab_lookup is deprecated, fix the code to use Fab_pick()")
-
---[[
-  local def = PREFABS[name]
-
-  if not def then
-    error("Unknown prefab: " .. tostring(name))
-  end
-
-  return def
---]]
-end
-
-
-
 function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
   local extra = fit_size - pf_size
 

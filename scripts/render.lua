@@ -1304,59 +1304,6 @@ end
 
 
 
-function Render_hallway__OLD(A, S)
-  local R = A.room
-
-  -- determine common part of prefab name
-  local fab_common
-
-  if S.hall_piece then
-    if S.hall_piece.shape == "I" then
-      fab_common = "stair_"
-    else
-      fab_common = "curve_"
-    end
-
-    -- append "big" or "small"
-    fab_common = fab_common .. S.hall_piece.z_size
-  end
-
-  local skin = {}
-
-
-  if S.hall_piece then
-    local fab_name = "Hall_f_" .. fab_common
-    local def = Fab_lookup(fab_name)
-
-    local z = S.floor_h + S.hall_piece.z_offset
-    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
-
-    if S.hall_piece.mirror then T.mirror_x = SEED_SIZE / 2 end
-
-    Fabricate(A.room, def, T, { skin })
-
-  else
-    Render_floor(A, S)
-  end
-
-
-  if S.hall_piece and not A.is_outdoor and not R.hallway.parent then
-    local fab_name = "Hall_c_" .. fab_common
-    local def = Fab_lookup(fab_name)
-
-    local z = S.ceil_h + S.hall_piece.z_offset
-    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
-
-    if S.hall_piece.mirror then T.mirror_x = 96 end
-
-    Fabricate(A.room, def, T, { skin })
-  else
-    Render_ceiling(A, S)
-  end
-end
-
-
-
 function Render_seed(A, S)
   assert(S.area == A)
 
