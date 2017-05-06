@@ -290,7 +290,7 @@ GLOBAL_PREFAB_FIELDS =
 
   thing_8166   = "?object"
 
-  line_888     = "?action"
+  line_888     = "?switch_action"
 }
 
 

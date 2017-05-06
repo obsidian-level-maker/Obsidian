@@ -12,7 +12,7 @@ PREFABS.Switch_small_sw_blue =
   where  = "point"
   size   = 64
 
-  tag_1  = "?lock_tag"
+  tag_1  = "?switch_tag"
 
   -- prefab has COMPBLUE / FLAT14 textures
 }

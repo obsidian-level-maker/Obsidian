@@ -16,6 +16,6 @@ UNFINISHED.Switch_niche2 =
   x_fit = "frame"
   y_fit = "top"
 
-  tag_1 = "?lock_tag"
+  tag_1 = "?switch_tag"
 }
 

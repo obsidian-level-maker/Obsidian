@@ -1490,12 +1490,12 @@ function Render_chunk(chunk)
 
     assert(chunk.lock)
 
-    skin.lock_tag = assert(chunk.lock.tag)
-    skin.action   = 103  -- open door
+    skin.switch_tag = assert(chunk.lock.tag)
+    skin.switch_action = 103  -- open door
 
     -- FIXME BIG HACK for LOWERING PEDESTALS
     if chunk.lock.item then
-      skin.action = 23
+      skin.switch_action = 23
     end
   end
 
@@ -2115,9 +2115,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local skin1 = { }
 
-    skin1.lock_tag = assert(spot.goal.tag)
-
-    skin1.action = spot.goal.action  -- can be NIL
+    skin1.switch_tag = assert(spot.goal.tag)
+    skin1.switch_action = assert(spot.goal.action)
 
     local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
 
