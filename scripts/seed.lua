@@ -163,6 +163,12 @@
     is_bossy       -- boolean  (keep it clear for a boss monster)
     is_terminator  -- boolean  (for hallway pieces)
 
+    lock : LOCK    -- present when "ITEM" (etc) needs a switch
+                   -- (such as a lowering pedestal)
+
+    goal : GOAL    -- for "SWITCH" contents, this is the goal which the
+                   -- switch is for.  [ used to get the action and tag ]
+
     h_join[DIR] : CHUNK   -- for hallway pieces: nearby chunks
 
     peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk

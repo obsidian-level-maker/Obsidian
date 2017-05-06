@@ -1848,17 +1848,17 @@ function Render_importants()
   local R  -- the current room
 
 
-  local function calc_player_see_dist(spot, dir)
+  local function calc_player_see_dist(chunk, dir)
     local dx, dy = geom.delta(dir)
-    local z = spot.z1 + 48
+    local z = chunk.z1 + 48
 
     local n = 1
 
     while n < 18 do
-      local x2 = spot.mx + n * dx * 64
-      local y2 = spot.my + n * dy * 64
+      local x2 = chunk.mx + n * dx * 64
+      local y2 = chunk.my + n * dy * 64
 
-      if gui.trace_ray(spot.mx, spot.my, z, x2, y2, z, "v") then
+      if gui.trace_ray(chunk.mx, chunk.my, z, x2, y2, z, "v") then
         break;
       end
 
@@ -1902,11 +1902,11 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function player_face_dir(spot)
-    local D2 = calc_player_see_dist(spot, 2)
-    local D4 = calc_player_see_dist(spot, 4)
-    local D6 = calc_player_see_dist(spot, 6)
-    local D8 = calc_player_see_dist(spot, 8)
+  local function player_face_dir(chunk)
+    local D2 = calc_player_see_dist(chunk, 2)
+    local D4 = calc_player_see_dist(chunk, 4)
+    local D6 = calc_player_see_dist(chunk, 6)
+    local D8 = calc_player_see_dist(chunk, 8)
 
 --- stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
 
@@ -1935,8 +1935,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function content_big_item(spot, item)
-    local dir = player_face_dir(spot)
+  local function content_big_item(chunk, item)
+    local dir = player_face_dir(chunk)
 
     --TODO : area_base_reqs()
 
@@ -1945,53 +1945,53 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       kind  = "item"
       where = "point"
 
-      size   = assert(spot.space)
-      height = spot.area.ceil_h - spot.area.floor_h
+      size   = assert(chunk.space)
+      height = chunk.area.ceil_h - chunk.area.floor_h
     }
 
     local skin = { object=item }
 
-    if spot.goal and spot.goal.kind == "KEY" then
+    if chunk.goal and chunk.goal.kind == "KEY" then
       reqs.item_kind = "key"
     end
 
-    if spot.lock then
+    if chunk.lock then
       reqs.key = "lowering"  -- hmmm, review that
-      skin.door_tag = assert(spot.lock.goals[1].tag)
+      skin.door_tag = assert(chunk.lock.goals[1].tag)
     end
 
     local def = Fab_pick(reqs)
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
     Fabricate(R, def, T, { skin })
   end
 
 
-  local function content_start_pad(spot, dir)
+  local function content_start_pad(chunk, dir)
     local reqs =
     {
       kind  = "start"
       where = "point"
 
-      size  = assert(spot.space)
-      height = spot.area.ceil_h - spot.area.floor_h
+      size  = assert(chunk.space)
+      height = chunk.area.ceil_h - chunk.area.floor_h
     }
 
     local def = Fab_pick(reqs)
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
     Fabricate(R, def, T, { })
   end
 
 
-  local function content_coop_pair(spot, dir)
+  local function content_coop_pair(chunk, dir)
     -- no prefab for this : add player entities directly
 
-    local mx = spot.mx
-    local my = spot.my
-    local  z = spot.z1
+    local mx = chunk.mx
+    local my = chunk.my
+    local  z = chunk.z1
 
     local angle = geom.ANGLES[dir]
 
@@ -2004,27 +2004,27 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function content_start(spot)
-    local dir = player_face_dir(spot)
+  local function content_start(chunk)
+    local dir = player_face_dir(chunk)
 
     if R.player_set then
-      content_coop_pair(spot, dir)
+      content_coop_pair(chunk, dir)
     else
-      content_start_pad(spot, dir)
+      content_start_pad(chunk, dir)
     end
   end
 
 
-  local function content_exit(spot, secret_exit)
-    local dir = player_face_dir(spot)
+  local function content_exit(chunk, secret_exit)
+    local dir = player_face_dir(chunk)
 
     local reqs =
     {
       kind  = "exit"
       where = "point"
 
-      size  = assert(spot.space)
-      height = spot.area.ceil_h - spot.area.floor_h
+      size  = assert(chunk.space)
+      height = chunk.area.ceil_h - chunk.area.floor_h
     }
 
     if secret_exit then
@@ -2035,59 +2035,59 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local skin1 = { }
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
 
 
-  local function content_switch(spot)
-    local dir = player_face_dir(spot)
+  local function content_switch(chunk)
+    local dir = player_face_dir(chunk)
 
     local reqs =
     {
       kind  = "switch"
       where = "point"
 
-      size   = assert(spot.space)
-      height = spot.area.ceil_h - spot.area.floor_h
+      size   = assert(chunk.space)
+      height = chunk.area.ceil_h - chunk.area.floor_h
     }
 
     local def = Fab_pick(reqs)
 
     local skin1 = { }
 
-    skin1.switch_tag    = assert(spot.goal.tag)
-    skin1.switch_action = assert(spot.goal.action)
+    skin1.switch_tag    = assert(chunk.goal.tag)
+    skin1.switch_action = assert(chunk.goal.action)
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
 
 
-  local function content_weapon(spot)
-    local weapon = assert(spot.content_item)
+  local function content_weapon(chunk)
+    local weapon = assert(chunk.content_item)
 
     if R.is_start or R.is_hallway then
       -- bare item
-      Trans.entity(weapon, spot.mx, spot.my, spot.z1)
+      Trans.entity(weapon, chunk.mx, chunk.my, chunk.z1)
     else
-      content_big_item(spot, weapon)
+      content_big_item(chunk, weapon)
     end
 
-    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, spot.mx, spot.my, spot.z1)
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, chunk.mx, chunk.my, chunk.z1)
   end
 
 
-  local function content_item(spot)
-    local item = assert(spot.content_item)
+  local function content_item(chunk)
+    local item = assert(chunk.content_item)
 
     if R.is_start or R.is_hallway then
       -- bare item
-      Trans.entity(item, spot.mx, spot.my, spot.z1)
+      Trans.entity(item, chunk.mx, chunk.my, chunk.z1)
     else
-      content_big_item(spot, item)
+      content_big_item(chunk, item)
     end
   end
 
@@ -2095,20 +2095,20 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function content_flag(spot)
     -- TODO : prefab for flag base
 
-    content_big_item(spot, assert(spot.content_item))
+    content_big_item(chunk, assert(chunk.content_item))
   end
 
 
-  local function content_teleporter(spot)
-    local C = assert(spot.conn)
+  local function content_teleporter(chunk)
+    local C = assert(chunk.conn)
 
     local reqs =
     {
       kind  = "teleporter"
       where = "point"
 
-      size   = assert(spot.space)
-      height = spot.area.ceil_h - spot.area.floor_h
+      size   = assert(chunk.space)
+      height = chunk.area.ceil_h - chunk.area.floor_h
     }
 
     local def = Fab_pick(reqs)
@@ -2126,9 +2126,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     skin1. in_target = string.format("tele%d", skin1. in_tag)
     skin1.out_target = string.format("tele%d", skin1.out_tag)
 
-    local dir = player_face_dir(spot)
+    local dir = player_face_dir(chunk)
 
-    local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end

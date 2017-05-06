@@ -110,7 +110,8 @@
 
     item : keyword  -- name of key or switch
 
-    room : ROOM     -- where the goal is
+    room  : ROOM    -- where the goal is
+    chunk : CHUNK   -- place in room where the goal is
 
     backtrack : list(ROOMS)  -- rooms player MUST back-track through
                              -- (includes room with the locked conn,

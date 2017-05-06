@@ -71,8 +71,8 @@ function Layout_compute_dists(R)
 
     -- finally handle goal spots
     each goal in R.goals do
-      if goal.kk_spot then
-        mark_chunk(goal.kk_spot)
+      if goal.chunk then
+        mark_chunk(goal.chunk)
       end
     end
   end
@@ -218,6 +218,15 @@ end
 
 
 function Layout_spot_for_wotsit(R, kind, required)
+  --
+  -- Find a free chunk in the room for a certain thing
+  -- (like a key, switch, weapon, starting spot, etc....).
+  --
+  -- If 'required' is true, produces an error when nothing
+  -- can be found, otherwise NIL is returned when none left.
+  --
+  -- The returned chunk is either a floor chunk or a closet.
+  --
 
   local function eval_spot(chunk)
     -- already used?
@@ -325,12 +334,12 @@ function Layout_spot_for_wotsit(R, kind, required)
 
 
   if best then
-    local spot = assert(best)
+    assert(best)
 
     -- never use it again
-    spot.content_kind = kind
+    best.content_kind = kind
 
-    return spot
+    return best
   end
 
 
@@ -361,34 +370,34 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_goal(goal)
-    local spot = Layout_spot_for_wotsit(R, goal.kind, "required")
+    local chunk = Layout_spot_for_wotsit(R, goal.kind, "required")
 
-    if not spot then
+    if not chunk then
       error("No spot in room for " .. goal.kind)
     end
 
 -- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R.name)
 
-    spot.content_item = goal.item
-    spot.goal = goal
+    chunk.content_item = goal.item
+    chunk.goal = goal
 
-    goal.kk_spot = spot
+    goal.chunk = chunk
 
     if goal.kind != "START" then
-      R.guard_chunk = spot
+      R.guard_chunk = chunk
     end
 
     if goal.kind == "START" then
-      if not spot.closet then
--- FIXME broken since our "spot" does not have x1/y1/x2/y2 
+      if not chunk.closet then
+-- FIXME broken since our "spot" does not have x1/y1/x2/y2
 --        R:add_entry_spot(spot)
       end
 
       -- exclude monsters
-      local mx, my = spot.mx, spot.my
+      local mx, my = chunk.mx, chunk.my
 
-      if spot.kind == "closet" then
-        mx, my = point_in_front_of_closet(spot, 96)
+      if chunk.kind == "closet" then
+        mx, my = point_in_front_of_closet(chunk, 96)
       end
 
       R:add_exclusion("keep_empty", mx, my,  640)
@@ -398,20 +407,20 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_teleporter(conn)
-    local spot = Layout_spot_for_wotsit(R, "TELEPORTER", "required")
+    local chunk = Layout_spot_for_wotsit(R, "TELEPORTER", "required")
 
-    if not spot then
+    if not chunk then
       error("No spot in room for teleporter!")
     end
 
-    spot.conn = conn
+    chunk.conn = conn
 
     -- exclude monsters from being nearby
 
-    local mx, my = spot.mx, spot.my
+    local mx, my = chunk.mx, chunk.my
 
-    if spot.kind == "closet" then
-      mx, my = point_in_front_of_closet(spot, 96)
+    if chunk.kind == "closet" then
+      mx, my = point_in_front_of_closet(chunk, 96)
     end
 
     R:add_exclusion("keep_empty", mx, my, 192)
@@ -420,15 +429,15 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_weapon(weapon)
-    local spot = Layout_spot_for_wotsit(R, "WEAPON")
+    local chunk = Layout_spot_for_wotsit(R, "WEAPON")
 
-    if not spot then
+    if not chunk then
       -- try to place it in a future room
       table.insert(LEVEL.unplaced_weapons, weapon)
       return
     end
 
-    spot.content_item = weapon
+    chunk.content_item = weapon
 
     if not R.guard_chunk then
       R.guard_chunk = spot
@@ -437,14 +446,14 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_item(item)
-    local spot = Layout_spot_for_wotsit(R, "ITEM")
+    local chunk = Layout_spot_for_wotsit(R, "ITEM")
 
-    if not spot then
+    if not chunk then
       warning("unable to place nice item: %s\n", item)
       return
     end
 
-    spot.content_item = item
+    chunk.content_item = item
 
     if not R.guard_chunk then
       R.guard_chunk = spot
@@ -887,7 +896,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
 
   local function trigger_for_entry(R)
     local C = R.entry_conn
-    
+
     if not C then return nil end
 
     if C.kind == "teleporter" then
@@ -960,7 +969,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     local places = places_for_backtracking(R, goal.backtrack, "goal")
     if table.empty(places) then return end
 
-    local trig = trigger_for_chunk(R, assert(goal.kk_spot))
+    local trig = trigger_for_chunk(R, assert(goal.chunk))
     if not trig then return end
 
     install_a_trap(places, trig)
@@ -988,7 +997,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
       prob = 1
     else
       prob = 60
-    end 
+    end
 
     if not rand.odds(prob) then return -2 end
 
@@ -1170,9 +1179,9 @@ function Layout_decorate_rooms(pass)
 
     if table.empty(conn_list) then return end
 
-    local spot = Layout_spot_for_wotsit(R, "SWITCH")
+    local chunk = Layout_spot_for_wotsit(R, "SWITCH")
 
-    if spot == nil then return end
+    if not chunk then return end
 
     -- Ok, can make it
 
@@ -1184,7 +1193,7 @@ function Layout_decorate_rooms(pass)
     goal.room = R
     goal.tag  = alloc_id("tag")
 
-    spot.goal = goal
+    chunk.goal = goal
 
     local lock = Lock_new("intraroom", C)
 
@@ -1209,9 +1218,9 @@ function Layout_decorate_rooms(pass)
     if not item then return end
 
     -- see if we can place a switch
-    local spot = Layout_spot_for_wotsit(R, "SWITCH")
+    local chunk = Layout_spot_for_wotsit(R, "SWITCH")
 
-    if spot == nil then return end
+    if not chunk then return end
 
     -- OK !!
 
@@ -1225,7 +1234,7 @@ function Layout_decorate_rooms(pass)
 --  goal.action = "S1_LowerFloor"
     goal.tag = alloc_id("tag")
 
-    spot.goal = goal
+    chunk.goal = goal
 
     local lock = Lock_new("itemlock")
 
