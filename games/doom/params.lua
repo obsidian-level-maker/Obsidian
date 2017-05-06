@@ -56,6 +56,8 @@ DOOM.ACTIONS =
   W1_OpenDoor = 2      --
   GR_OpenDoor = 46
 
+  W1_OpenDoorFast = 109
+
   S1_RaiseStair = 127  -- 16 units
   W1_RaiseStair = 100  --
 
