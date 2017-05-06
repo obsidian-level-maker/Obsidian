@@ -104,7 +104,7 @@ end
 function CONN_CLASS.kill_it(C)
   table.remove(LEVEL.conns, C)
 
-  C.name = "DEAD_CONN"
+  C.name = "DEAD_" .. C.name
   C.kind = "DEAD"
   C.id   = -1
 

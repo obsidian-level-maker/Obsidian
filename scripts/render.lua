@@ -1305,6 +1305,7 @@ end
 
 
 function Render_seed(A, S)
+  assert(not S.is_dead)
   assert(S.area == A)
 
   if S.done_all then

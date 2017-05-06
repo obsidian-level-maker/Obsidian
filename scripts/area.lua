@@ -271,7 +271,7 @@ end
 
 function AREA_CLASS.remove_dead_seeds(A)
   for i = #A.seeds, 1, -1 do
-    if A.seeds[i].kind == "dead" then
+    if A.seeds[i].is_dead then
       table.remove(A.seeds, i)
     end
   end

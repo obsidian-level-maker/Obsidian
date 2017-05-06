@@ -245,7 +245,7 @@ function SEED_CLASS.join_halves(S)
 
   -- kill the other half
 
-  S2.name = "DEAD_SEED"
+  S2.name = "DEAD_" .. S2.name
   S2.is_dead = true
   S2.diagonal = "dead"
 
