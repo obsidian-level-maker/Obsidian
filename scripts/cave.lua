@@ -306,7 +306,7 @@ end
 
   local function walk_for_floor_chunk(chunk)
     -- ignore unused floor chunks
-    if not chunk.content_kind then return end
+    if not chunk.content then return end
 
     cave_box_for_chunk(chunk)
 
@@ -322,8 +322,8 @@ end
 
   local function walk_for_closet(chunk)
     -- ignore unused closets
-    if not chunk.content_kind then return end
-    if chunk.content_kind == "void" then return end
+    if not chunk.content then return end
+    if chunk.content == "void" then return end
 
     local E = assert(chunk.edges[1])
 

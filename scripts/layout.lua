@@ -58,13 +58,13 @@ function Layout_compute_dists(R)
 
     -- now check teleporters
     each chunk in R.floor_chunks do
-      if chunk.content_kind == "TELEPORTER" then
+      if chunk.content == "TELEPORTER" then
         mark_chunk(chunk)
       end
     end
 
     each chunk in R.closets do
-      if chunk.content_kind == "TELEPORTER" then
+      if chunk.content == "TELEPORTER" then
         mark_chunk(chunk)
       end
     end
@@ -230,7 +230,7 @@ function Layout_spot_for_wotsit(R, kind, required)
 
   local function eval_spot(chunk)
     -- already used?
-    if chunk.content_kind then return -1 end
+    if chunk.content then return -1 end
 
     -- TODO: review this
     if kind == "SWITCH" then
@@ -247,7 +247,7 @@ function Layout_spot_for_wotsit(R, kind, required)
     end
 
     -- handle symmetrical room
-    if chunk.peer and chunk.peer.content_kind == kind then
+    if chunk.peer and chunk.peer.content == kind then
       return 700 + gui.random()
     end
 
@@ -337,7 +337,7 @@ function Layout_spot_for_wotsit(R, kind, required)
     assert(best)
 
     -- never use it again
-    best.content_kind = kind
+    best.content = kind
 
     return best
   end
@@ -503,7 +503,7 @@ function Layout_place_hub_gates()
     local count = 0
 
     each chunk in R.closets do
-      if chunk.content_kind == nil then
+      if chunk.content == nil then
         count = count + 1
       end
     end
@@ -550,7 +550,7 @@ function Layout_place_hub_gates()
     -- should not fail, as our eval function detects free closets
     assert(chunk)
 
-    chunk.content_kind = "SECRET_EXIT"
+    chunk.content = "SECRET_EXIT"
 
     -- mark the closet as hidden in the room
     chunk.is_secret = true
@@ -658,14 +658,14 @@ function Layout_add_traps()
 
     if kind == "closet" then
       each chunk in R.closets do
-        if not chunk.content_kind and not Chunk_is_slave(chunk) then
+        if not chunk.content and not Chunk_is_slave(chunk) then
           table.insert(locs, chunk)
         end
       end
 
     elseif kind == "teleport" then
       each chunk in R.floor_chunks do
-        if not chunk.content_kind and (chunk.sw < 2 or chunk.sh < 2 or rand.odds(20)) then
+        if not chunk.content and (chunk.sw < 2 or chunk.sh < 2 or rand.odds(20)) then
           table.insert(locs, chunk)
         end
       end
@@ -808,20 +808,20 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
 
 
   local function make_closet_trap(closet, trig)
-    closet.content_kind = "TRAP"
+    closet.content = "TRAP"
     closet.trigger = trig
 
-    if closet.peer and not closet.peer.content_kind then
+    if closet.peer and not closet.peer.content then
       closet = closet.peer
 
-      closet.content_kind = "TRAP"
+      closet.content = "TRAP"
       closet.trigger = trig
     end
   end
 
 
   local function make_teleport_trap(chunk, trig)
-    chunk.content_kind = "MON_TELEPORT"
+    chunk.content = "MON_TELEPORT"
     chunk.trigger = trig
     chunk.out_tag = alloc_id("tag")
   end
@@ -979,8 +979,8 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
   local function eval_item_for_trap(chunk)
     -- returns a probability
 
-    if chunk.content_kind == "WEAPON" or
-       chunk.content_kind == "ITEM"
+    if chunk.content == "WEAPON" or
+       chunk.content == "ITEM"
     then
       -- ok
     else
@@ -993,7 +993,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     if table.has_elem(LEVEL.new_weapons, item) then
       prob = 99
     -- very rarely trap weapons you already have
-    elseif chunk.content_kind == "WEAPON" then
+    elseif chunk.content == "WEAPON" then
       prob = 1
     else
       prob = 60
@@ -1031,7 +1031,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     -- determine places and trigger, and install trap
     local p_kind = "item"
 
-    if best.content_kind == "WEAPON" then
+    if best.content == "WEAPON" then
       p_kind = "weapon"
     end
 
@@ -1071,7 +1071,7 @@ function Layout_decorate_rooms(pass)
   --
 
   local function make_cage(chunk)
-    chunk.content_kind = "CAGE"
+    chunk.content = "CAGE"
 
     -- select cage prefab
     local A = chunk.area
@@ -1109,10 +1109,10 @@ function Layout_decorate_rooms(pass)
     chunk.prefab_def = Fab_pick(reqs)
 
     -- in symmetrical rooms, handle the peer too
-    if chunk.peer and not chunk.peer.content_kind then
+    if chunk.peer and not chunk.peer.content then
       local peer = chunk.peer
 
-      peer.content_kind = chunk.content_kind
+      peer.content = chunk.content
       peer.prefab_def   = chunk.prefab_def
 
       if chunk.kind != "closet" and chunk.prefab_dir then
@@ -1125,7 +1125,7 @@ function Layout_decorate_rooms(pass)
 
 
   local function make_secret_closet(chunk, item)
-    chunk.content_kind = "ITEM"
+    chunk.content = "ITEM"
     chunk.content_item = item
 
     chunk.is_secret = true
@@ -1136,7 +1136,7 @@ function Layout_decorate_rooms(pass)
 
   local function kill_closet(chunk)
     chunk.area.mode = "void"
-    chunk.content_kind = "void"
+    chunk.content = "void"
 
     -- TODO : sometimes make a picture
 
@@ -1209,7 +1209,7 @@ function Layout_decorate_rooms(pass)
     local item
 
     each chunk in R.floor_chunks do
-      if chunk.kind == "floor" and chunk.content_kind == "KEY" and not chunk.lock then
+      if chunk.kind == "floor" and chunk.content == "KEY" and not chunk.lock then
         item = chunk
         break;
       end
@@ -1361,7 +1361,7 @@ function Layout_decorate_rooms(pass)
     -- don't create pillars under ceiling sinks
     -- TODO : allow it in certain circumstances
     -- FIXME: use 'reqs' to prevent picking them at all
-    if def.z_fit and chunk.ceil_above and chunk.ceil_above.content_kind then
+    if def.z_fit and chunk.ceil_above and chunk.ceil_above.content then
       return
     end
 
@@ -1370,25 +1370,25 @@ function Layout_decorate_rooms(pass)
       chunk.floor_dz = chunk.area.floor_group.sink.dz
     end
 
-    chunk.content_kind = "DECORATION"
+    chunk.content = "DECORATION"
     chunk.prefab_def = def
     chunk.prefab_dir = rand.dir()
 
     -- prevent pillars clobbering ceiling lights
     if def.z_fit and chunk.ceil_above then
-      chunk.ceil_above.content_kind = "NOTHING"
+      chunk.ceil_above.content = "NOTHING"
     end
 
-    if chunk.peer and not chunk.peer.content_kind then
+    if chunk.peer and not chunk.peer.content then
       assert(A.room.symmetry)
       local peer = chunk.peer
 
-      peer.content_kind = chunk.content_kind
+      peer.content = chunk.content
       peer.prefab_def   = chunk.prefab_def
       peer.prefab_dir   = A.room.symmetry:conv_dir(chunk.prefab_dir)
 
       if def.z_fit and peer.ceil_above then
-        peer.ceil_above.content_kind = "NOTHING"
+        peer.ceil_above.content = "NOTHING"
       end
     end
   end
@@ -1494,10 +1494,10 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     each chunk in R.floor_chunks do
       local A = chunk.area
 
-      if not chunk.content_kind and not chunk.is_bossy and
+      if not chunk.content and not chunk.is_bossy and
          not Chunk_is_slave(chunk) and
          chunk.sw >= 2 and chunk.sh >= 2 and
-         not chunk.content_kind and
+         not chunk.content and
          not (A.floor_group and A.floor_group.sink) and
          rand.odds(35)
       then
@@ -1506,7 +1506,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     each chunk in R.closets do
-      if not chunk.content_kind and not Chunk_is_slave(chunk) then
+      if not chunk.content and not Chunk_is_slave(chunk) then
         table.insert(locs, chunk)
       end
     end
@@ -1530,7 +1530,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     local locs = {}
 
     each chunk in R.closets do
-      if not chunk.content_kind then
+      if not chunk.content then
         table.insert(locs, chunk)
       end
     end
@@ -1572,15 +1572,15 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 --stderrf("decor closet : %s\n", chunk.prefab_def.name)
 
-    chunk.content_kind = "DECORATION"
+    chunk.content = "DECORATION"
 
 --????  chunk.prefab_dir = chunk.from_dir
 
     -- in symmetrical rooms, handle the peer too
-    if chunk.peer and not chunk.peer.content_kind then
+    if chunk.peer and not chunk.peer.content then
       local peer = chunk.peer
 
-      peer.content_kind = chunk.content_kind
+      peer.content = chunk.content
       peer.prefab_def   = chunk.prefab_def
     end
   end
@@ -1590,7 +1590,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     local locs = {}
 
     each chunk in R.closets do
-      if not chunk.content_kind then
+      if not chunk.content then
         table.insert(locs, chunk)
       end
     end
@@ -1707,8 +1707,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
         -- inhibit ceiling lights and pillars
         each chunk in R.ceil_chunks do
-          if chunk.area.ceil_group == cg and not chunk.content_kind then
-            chunk.content_kind = "NOTHING"
+          if chunk.area.ceil_group == cg and not chunk.content then
+            chunk.content = "NOTHING"
           end
         end
       end
@@ -1736,7 +1736,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     local decor_prob = rand.pick({ 15, 35, 70 })
 
     each chunk in R.floor_chunks do
-      if chunk.content_kind == nil and not chunk.is_bossy and rand.odds(decor_prob) then
+      if chunk.content == nil and not chunk.is_bossy and rand.odds(decor_prob) then
         try_decoration_in_chunk(chunk)
       end
     end
@@ -1747,7 +1747,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     local decor_prob = rand.pick({ 2, 6, 12, 24 })
 
     each chunk in R.floor_chunks do
-      if chunk.content_kind == nil and not chunk.is_bossy and rand.odds(decor_prob) then
+      if chunk.content == nil and not chunk.is_bossy and rand.odds(decor_prob) then
         try_decoration_in_chunk(chunk, "is_cave")
       end
     end
@@ -1769,11 +1769,11 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       each chunk in R.ceil_chunks do
         if chunk.area.ceil_group != cg then continue end
-        if chunk.content_kind then continue end
-        if chunk.floor_below and chunk.floor_below.content_kind then continue end
+        if chunk.content then continue end
+        if chunk.floor_below and chunk.floor_below.content then continue end
 
         if true then
-          chunk.content_kind = "DECORATION"
+          chunk.content = "DECORATION"
           chunk.prefab_def = def
           chunk.prefab_dir = 2
 
@@ -1809,7 +1809,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     -- TODO : review this, e.g. key pedestal can be OK (but need right floor_z)
 
     each chunk in R.floor_chunks do
-      if (chunk.content_kind and chunk.content_kind != "NOTHING") or chunk.is_bossy then
+      if (chunk.content and chunk.content != "NOTHING") or chunk.is_bossy then
         unsink_chunk(chunk, "floor")
       end
     end
@@ -1853,7 +1853,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     -- kill any unused closets
     each CL in R.closets do
-      if not CL.content_kind then
+      if not CL.content then
         kill_closet(CL)
       end
     end

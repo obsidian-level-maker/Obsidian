@@ -1349,12 +1349,12 @@ function Render_chunk(chunk)
   --
 
   -- unused closets will be rendered as void (elsewhere)
-  if chunk.kind == "closet" and chunk.content_kind == "void" then
+  if chunk.kind == "closet" and chunk.content == "void" then
     return
   end
 
   if chunk.kind == "floor" or chunk.kind == "ceil" then
-    if chunk.content_kind == nil or chunk.content_kind == "NOTHING" then
+    if chunk.content == nil or chunk.content == "NOTHING" then
       return
     end
   end
@@ -1362,7 +1362,7 @@ function Render_chunk(chunk)
   local A = chunk.area
   local R = A.room
 
-  gui.debugf("\n\n Render_chunk %d in %s (%s / %s)\n", chunk.id, A.room.name, chunk.kind, chunk.content_kind or "-")
+  gui.debugf("\n\n Render_chunk %d in %s (%s / %s)\n", chunk.id, A.room.name, chunk.kind, chunk.content or "-")
 
   local dir
   local reqs
@@ -1714,38 +1714,38 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     Ambient_push(chunk.area.lighting)
 
-    if chunk.content_kind == "START" then
+    if chunk.content == "START" then
       content_start(chunk)
 
-    elseif chunk.content_kind == "EXIT" then
+    elseif chunk.content == "EXIT" then
       content_exit(chunk)
 
-    elseif chunk.content_kind == "SECRET_EXIT" then
+    elseif chunk.content == "SECRET_EXIT" then
       content_exit(chunk, "secret_exit")
 
-    elseif chunk.content_kind == "KEY" then
+    elseif chunk.content == "KEY" then
       content_big_item(chunk, assert(chunk.content_item))
 
-    elseif chunk.content_kind == "SWITCH" then
+    elseif chunk.content == "SWITCH" then
       content_switch(chunk)
 
-    elseif chunk.content_kind == "WEAPON" then
+    elseif chunk.content == "WEAPON" then
       content_weapon(chunk)
 
-    elseif chunk.content_kind == "ITEM" then
+    elseif chunk.content == "ITEM" then
       content_item(chunk)
 
-    elseif chunk.content_kind == "TELEPORTER" then
+    elseif chunk.content == "TELEPORTER" then
       content_teleporter(chunk)
 
-    elseif chunk.content_kind == "MON_TELEPORT" then
+    elseif chunk.content == "MON_TELEPORT" then
       content_mon_teleport(chunk)
 
-    elseif chunk.content_kind == "DECORATION" or chunk.content_kind == "CAGE" then
+    elseif chunk.content == "DECORATION" or chunk.content == "CAGE" then
       content_decoration(chunk)
 
     else
-      error("unknown important: " .. tostring(chunk.content_kind))
+      error("unknown important: " .. tostring(chunk.content))
     end
 
     Ambient_pop()
@@ -1753,8 +1753,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
 
   local function build_ceiling_thang()
-    if chunk.content_kind != "DECORATION" then
-      error("Unknown ceiling thang: " .. tostring(chunk.content_kind))
+    if chunk.content != "DECORATION" then
+      error("Unknown ceiling thang: " .. tostring(chunk.content))
     end
 
     Ambient_push(chunk.area.lighting)
@@ -1858,7 +1858,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   local function do_item()
     reqs.kind = "item"
 
-    if chunk.content_kind == "KEY" then
+    if chunk.content == "KEY" then
       reqs.item_kind = "key"
     end
 
@@ -1927,7 +1927,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     reqs.key = "secret"
   end
 
-  local what = chunk.content_kind
+  local what = chunk.content
 
   if chunk.kind == "stair" then
     do_stairs()

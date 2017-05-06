@@ -1168,7 +1168,7 @@ function Grower_kill_room(R)
     chunk.kind = "closet"
 
     chunk.area.mode = "void"    -- ugh, what?
-    chunk.content_kind = "void"
+    chunk.content = "void"
 
     chunk.dest_dir  = nil
     chunk.dest_area = nil

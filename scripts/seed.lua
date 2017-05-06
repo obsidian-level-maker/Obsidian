@@ -146,11 +146,11 @@
     shape : keyword  -- "U" or "I" or "L" or "T" or "P"
                      -- used for stairs, closets, joiners, hallway pieces
 
-    content_kind : keyword  -- is NIL when unused / free
-                            -- "START", "EXIT", "SECRET_EXIT"
-                            -- "TELEPORTER", "SWITCH"
-                            -- "KEY", "WEAPON", "ITEM"
-                            -- "CAGE", "TRAP", "DECORATION"
+    content : keyword  -- is NIL when unused / free
+                       -- "START", "EXIT", "SECRET_EXIT"
+                       -- "TELEPORTER", "SWITCH"
+                       -- "KEY", "WEAPON", "ITEM"
+                       -- "CAGE", "TRAP", "DECORATION"
 
     is_secret      -- boolean
     is_bossy       -- boolean  (keep it clear for a boss monster)
