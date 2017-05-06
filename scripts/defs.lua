@@ -309,8 +309,8 @@ GLOBAL_SKIN_DEFAULTS =
   -- Doom engine stuff
   tag = ""
   light = ""
-  action = ""
   object = ""
+  switch_action = ""
 
   -- Quake engine stuff
   style = ""
