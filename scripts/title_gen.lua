@@ -2517,12 +2517,12 @@ function Title_make_titlepic()
 
   if rand.odds(2) then
     -- empty background
+  elseif rand.odds(2) then
+    Title_gen_tunnel_scene()
   elseif rand.odds(10) then
     Title_gen_ray_burst()
   elseif rand.odds(5) then
     Title_gen_cave_scene()
-  elseif rand.odds(5) then
-    Title_gen_tunnel_scene()
   elseif rand.odds(33) then
     Title_gen_wall_scene()
   else
