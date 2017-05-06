@@ -2079,6 +2079,9 @@ end
 
 function Render_all_chunks()
 
+  local SWITCHES_ONLY
+
+
   local function build_a_pool(chunk)
 
     -- TEMPORARY TESTING STUFF, NOT USED ATM
@@ -2113,16 +2116,33 @@ function Render_all_chunks()
   end
 
 
+  local function visit_chunk(chunk)
+    local is_switch = (chunk.content == "SWITCH")
+
+    if sel(is_switch, 1, 0) != sel(SWITCHES_ONLY, 1, 0) then
+      return
+    end
+
+    Render_chunk(chunk)
+  end
+
+
   ---| Render_all_chunks |---
 
-  each R in LEVEL.rooms do
-    each chunk in R.floor_chunks do Render_chunk(chunk) end
-    each chunk in R.ceil_chunks  do Render_chunk(chunk) end
+  for pass = 1, 2 do
+    -- we must do switches after everything else
+    -- [ to get correct action of the remote door, etc ]
+    SWITCHES_ONLY = (pass == 2)
 
-    each chunk in R.closets do Render_chunk(chunk) end
-    each chunk in R.stairs  do Render_chunk(chunk) end
-    each chunk in R.joiners do Render_chunk(chunk) end
-    each chunk in R.pieces  do Render_chunk(chunk) end
+    each R in LEVEL.rooms do
+      each chunk in R.floor_chunks do visit_chunk(chunk) end
+      each chunk in R.ceil_chunks  do visit_chunk(chunk) end
+
+      each chunk in R.closets do visit_chunk(chunk) end
+      each chunk in R.stairs  do visit_chunk(chunk) end
+      each chunk in R.joiners do visit_chunk(chunk) end
+      each chunk in R.pieces  do visit_chunk(chunk) end
+    end
   end
 end
 
