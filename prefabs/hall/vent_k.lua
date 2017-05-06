@@ -63,7 +63,7 @@ PREFABS.Hallway_vent_barred =
   deep     = 16
   delta_h  = 64
 
-  tag_1  = "?lock_tag"
-  action = "S1_OpenDoor"
+  tag_1  = "?door_tag"
+  door_action = "S1_LowerFloor"
 }
 

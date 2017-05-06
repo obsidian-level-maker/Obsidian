@@ -583,7 +583,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     }
 
     if C and C.lock and C.lock.kind == "intraroom" then
-      skin.lock_tag = assert(C.lock.tag)
+      skin.door_tag = assert(C.lock.tag)
     end
 
     local def
@@ -1473,7 +1473,7 @@ function Render_chunk(chunk)
     local C = assert(chunk.conn)
 
     if C.lock and C.lock.kind == "intraroom" then
-      skin.lock_tag = assert(C.lock.tag)
+      skin.door_tag = assert(C.lock.tag)
     end
   end
 
@@ -2014,8 +2014,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     end
 
     if spot.lock then
-      reqs.key = "lowering"  -- UGH
-      skin.lock_tag = assert(spot.lock.tag)
+      reqs.key = "lowering"  -- hmmm, review that
+      skin.door_tag = assert(spot.lock.tag)
     end
 
     local def = Fab_pick(reqs)

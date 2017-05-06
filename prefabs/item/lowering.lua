@@ -13,8 +13,8 @@ PREFABS.Item_lowering_remote1 =
 
   where  = "point"
 
-  tag_1  = "?lock_tag"
-  action = "S1_LowerFloor"
+  tag_1  = "?door_tag"
+  door_action = "S1_LowerFloor"
 }
 
 
