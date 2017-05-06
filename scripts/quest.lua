@@ -723,10 +723,6 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
   local lock = Lock_new("quest", info.conn)
 
   lock.goals = info.new_goals
-
-  if lock.goals[1].kind == "SWITCH" then
-    lock.tag = assert(lock.goals[1].tag)
-  end
 end
 
 

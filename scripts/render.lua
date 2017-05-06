@@ -582,9 +582,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       ceil2  = ceil2_mat
     }
 
-    if C and C.lock and C.lock.kind == "intraroom" then
-      skin.door_tag = assert(C.lock.tag)
-    end
+    skin.door_tag = E.door_tag
 
     local def
 
@@ -1473,7 +1471,7 @@ function Render_chunk(chunk)
     local C = assert(chunk.conn)
 
     if C.lock and C.lock.kind == "intraroom" then
-      skin.door_tag = assert(C.lock.tag)
+      skin.door_tag = assert(C.lock.goals[1].tag)
     end
   end
 
@@ -1488,15 +1486,12 @@ function Render_chunk(chunk)
   local function do_switch()
     reqs.kind = "switch"
 
-    assert(chunk.lock)
+    local goal = assert(chunk.goal)
 
-    skin.switch_tag = assert(chunk.lock.tag)
-    skin.switch_action = 103  -- open door
+    skin.switch_tag = assert(goal.tag)
+    skin.switch_action = 103  -- open door  [ FIXME ]
 
-    -- FIXME BIG HACK for LOWERING PEDESTALS
-    if chunk.lock.item then
-      skin.switch_action = 23
-    end
+    -- FIXME for LOWERING PEDESTALS !!!!
   end
 
   local function do_item()
@@ -2015,7 +2010,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     if spot.lock then
       reqs.key = "lowering"  -- hmmm, review that
-      skin.door_tag = assert(spot.lock.tag)
+      skin.door_tag = assert(spot.lock.goals[1].tag)
     end
 
     local def = Fab_pick(reqs)
@@ -2115,7 +2110,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
 
     local skin1 = { }
 
-    skin1.switch_tag = assert(spot.goal.tag)
+    skin1.switch_tag    = assert(spot.goal.tag)
     skin1.switch_action = assert(spot.goal.action)
 
     local T = Trans.spot_transform(spot.mx, spot.my, spot.z1, dir)

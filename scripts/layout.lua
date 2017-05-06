@@ -1178,11 +1178,18 @@ function Layout_decorate_rooms(pass)
 
     local C = rand.pick(conn_list)
 
+    local goal = Goal_new("SWITCH")
+
+    goal.item = "sw_metal"
+    goal.room = R
+    goal.tag  = alloc_id("tag")
+
+    spot.goal = goal
+
     local lock = Lock_new("intraroom", C)
 
-    lock.tag  = alloc_id("tag")
-
-    spot.lock = lock
+    lock.conn  = C
+    lock.goals = { goal }
   end
 
 
@@ -1210,13 +1217,22 @@ function Layout_decorate_rooms(pass)
 
 -- stderrf("**** DOING LOWERING PED\n") 
 
+    local goal = Goal_new("SWITCH")
+
+    goal.item = "sw_metal"
+    goal.room = R
+
+--  goal.action = "S1_LowerFloor"
+    goal.tag = alloc_id("tag")
+
+    spot.goal = goal
+
     local lock = Lock_new("itemlock")
 
-    lock.item = item
-    lock.tag  = alloc_id("tag")
+    lock.goals = { goal }
+    lock.item  = item
 
     item.lock = lock
-    spot.lock = lock
   end
 
 

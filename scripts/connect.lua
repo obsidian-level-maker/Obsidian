@@ -62,21 +62,20 @@
     --
     -- A lock marks when something (mainly connections) is locked
     -- and requires some goal (like a key) to open it.
+    -- In other words, an "obstacle" with an external solution.
     --
 
     id, name   -- debugging aids
 
     kind : keyword  -- "quest" (significant goal)
-                    -- "intraroom" (an barred exit)
+                    -- "intraroom" (a barred exit)
                     -- "itemlock" (e.g. lowering pedestal)
 
     conn : CONN     -- connection which is locked
+    item : CHUNK    -- item chunk which is locked
 
     goals : list(GOAL)  -- the goal(s) which solve the lock
                         -- [ only used with "quest" kind ]
-
-    action : number   -- the action used for remote doors
-    tag    : number   -- the tag used for remote doors
 --]]
 
 
@@ -125,9 +124,8 @@ function CONN_CLASS.dump(C)
   gui.debugf("  Rooms: %s --> %s\n", C.R1.name, C.R2.name)
 
   if C.lock then
-    gui.debugf("  Locked: kind=%s tag=%s goalnum=%s\n",
+    gui.debugf("  Locked: kind=%s goalnum=%s\n",
       C.lock.kind or "<nil>",
-      tostring(C.lock.tag or "-"),
       tostring((C.lock.goals and #C.lock.goals) or "-"))
   end
 

@@ -804,6 +804,8 @@ function Room_reckon_doors()
     if C.lock then
       E.kind = "lock_door"
 
+      E.door_tag = C.lock.goals[1].tag
+
       C.is_door = true
       C.fresh_floor = true
 
