@@ -1344,508 +1344,28 @@ function Render_chunk(chunk)
   -- this handles prefabs which occupy a seed rectangle (chunk) and
   -- are responsible for making the whole floor and/or ceiling.
   --
+  -- >>>>  handling "content" stuff too now  <<<<
+  --
 
-  -- unused closets will be rendered as void
+  -- unused closets will be rendered as void (elsewhere)
   if chunk.kind == "closet" and chunk.content_kind == "void" then
     return
   end
 
+  if chunk.kind == "floor" or chunk.kind == "ceil" then
+    if chunk.content_kind == nil or chunk.content_kind == "NOTHING" then
+      return
+    end
+  end
+
   local A = chunk.area
+  local R = A.room
 
   gui.debugf("\n\n Render_chunk %d in %s (%s / %s)\n", chunk.id, A.room.name, chunk.kind, chunk.content_kind or "-")
 
-  local dir = chunk.from_dir or chunk.dir or 2
-
-  local skin = {}
-
-  local reqs = Chunk_base_reqs(chunk, dir)
-
-
-  local function do_start()
-    reqs.kind = "start"
-  end
-
-  local function do_exit()
-    reqs.kind = "exit"
-  end
-
-  local function do_secret_exit()
-    reqs.kind = "secret_exit"
-  end
-
-  local function do_cage()
-    reqs.kind = "cage"
-  end
-
-  local function do_trap()
-    reqs.kind  = "trap"
-    reqs.shape = "U"
-
-    assert(chunk.trigger)
-
-    skin.trap_tag = assert(chunk.trigger.tag)
-  end
-
-  local function do_decoration()
-    -- prefab already chosen
-    assert(chunk.prefab_def)
-  end
-
-  local function do_teleporter()
-    reqs.kind = "teleporter"
-
-    local C = assert(chunk.conn)
-
-    if C.R1 == A.room then
-      skin. in_tag = C.tele_tag2
-      skin.out_tag = C.tele_tag1
-    else
-      skin. in_tag = C.tele_tag1
-      skin.out_tag = C.tele_tag2
-    end
-
-    skin. in_target = string.format("tele%d", skin. in_tag)
-    skin.out_target = string.format("tele%d", skin.out_tag)
-  end
-
-  local function do_stairs()
-    assert(chunk.prefab_def)
-  end
-
-  local function do_joiner()
-    assert(chunk.prefab_def)
-
-    local C = assert(chunk.conn)
-
-    if C.lock and C.lock.kind == "intraroom" then
-      skin.door_tag = assert(C.lock.goals[1].tag)
-    end
-  end
-
-  local function do_hallway()
-    assert(chunk.prefab_def)
-
-    if chunk.is_terminator then
-      do_joiner()
-    end
-  end
-
-  local function do_switch()
-    reqs.kind = "switch"
-
-    local goal = assert(chunk.goal)
-
-    skin.switch_tag = assert(goal.tag)
-    skin.switch_action = 103  -- open door  [ FIXME ]
-
-    -- FIXME for LOWERING PEDESTALS !!!!
-  end
-
-  local function do_item()
-    reqs.kind = "item"
-
-    if chunk.content_kind == "KEY" then
-      reqs.item_kind = "key"
-    end
-
-    -- for entity remapping (e.g. skull keys), rely on prefab system
-    skin.object = assert(chunk.content_item)
-  end
-
-
-  local function chunk_coords(def)
-    local x1, y1 = chunk.x1, chunk.y1
-    local x2, y2 = chunk.x2, chunk.y2
-
-    -- move closets and joiners to align with nearby walls
-    local dir = chunk.from_dir
-
-    if def.deep then
-      if dir == 2 then y1 = y1 - def.deep end
-      if dir == 8 then y2 = y2 + def.deep end
-      if dir == 4 then x1 = x1 - def.deep end
-      if dir == 6 then x2 = x2 + def.deep end
-    end
-
-    if def.over then
-      if dir == 2 then y2 = y2 + def.over end
-      if dir == 8 then y1 = y1 - def.over end
-      if dir == 4 then x2 = x2 + def.over end
-      if dir == 6 then x1 = x1 - def.over end
-    end
-
-    return x1,y1, x2,y2
-  end
-
-
-  ---| Render_chunk |---
-
-  -- handle a ceiling paired with a floor
-  if chunk.next_highest then
-    Render_chunk(chunk.next_highest)
-  end
-
-  -- FIXME : reqs.shape
-
-  -- room kind and (for joiners) neighbor room kind
-  if A.room then
-    reqs.env = A.room:get_env()
-  end
-
-  -- handle secret closets and joiners to a secret room
-  if chunk.is_secret then
-    reqs.key = "secret"
-  end
-
-  local what = chunk.content_kind
-
-  if chunk.kind == "stair" then
-    do_stairs()
-
-  elseif chunk.kind == "joiner" then
-    do_joiner()
-
-  elseif chunk.kind == "hallway" then
-    do_hallway()
-
-  elseif what == "START" then
-    do_start()
-
-  elseif what == "EXIT" then
-    do_exit()
-
-  elseif what == "SECRET_EXIT" then
-    do_secret_exit()
-
-  elseif what == "TELEPORTER" then
-    do_teleporter()
-
-  elseif what == "SWITCH" then
-    do_switch()
-
-  elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
-    do_item()
-
-  elseif what == "CAGE" then
-    do_cage()
-
-  elseif what == "TRAP" then
-    do_trap()
-
-  elseif what == "DECORATION" then
-    do_decoration()
-
-  else
-    error("Unsupported chunk kind: " .. tostring(chunk.kind) .. " / " .. tostring(what))
-  end
-
-
-  --- pick the prefab ---
-
-  local def = chunk.prefab_def or Fab_pick(reqs)
-
-
-  -- texturing --
-
-  if chunk.kind == "hallway" then
-    -- FIXME: proper textures for hallway pieces
-    skin.wall = "REDWALL"
-
-  elseif chunk.from_area then
-    skin.wall  = Junction_calc_wall_tex(chunk.from_area, A)
-    skin.floor = chunk.from_area.floor_mat
-    skin.ceil  = chunk.from_area.ceil_mat
-  end
-
-  if chunk.is_terminator then
-    local C = assert(chunk.conn)
-    local A2 = sel(C.R1 == A.room, C.A2, C.A1)
-
-    skin.outer  = Junction_calc_wall_tex(A2, A)
-    skin.floor2 = A2.floor_mat
-    skin.ceil2  = A2.ceil_mat
-
-  elseif chunk.dest_area then
-    skin.outer  = Junction_calc_wall_tex(chunk.dest_area, A)
-    skin.floor2 = chunk.dest_area.floor_mat
-    skin.ceil2  = chunk.dest_area.ceil_mat
-  end
-
-
-  -- build the prefab --
-
-  local x1, y1, x2, y2 = chunk_coords(def)
-
-  local floor_h = assert(A.floor_h) + (def.raise_z or 0)
-
-  local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
-
-  if (chunk.kind == "stair" or chunk.kind == "joiner" or chunk.kind == "hallway") and
-     chunk.shape == "L" and
-     chunk.dest_dir == geom.LEFT[chunk.from_dir]
-  then
-    T.mirror_x = chunk.sw * SEED_SIZE / 2
-  end
-
-
-  Ambient_push(A.lighting)
-
-  Fabricate(A.room, def, T, { skin })
-
-  Ambient_pop()
-
-
-  -- mark seeds as done --
-
-  local done_mode
-
-  if def.done_mode then
-    done_mode = def.done_mode
-
-  elseif def.kind == "floor" or def.kind == "stairs" then
-    done_mode = "floor"
-
-  elseif def.kind == "ceil" then
-    done_mode = "ceil"
-
-  else
-    done_mode = "all"
-  end
-
-  Render_mark_done(chunk, done_mode)
-end
-
-
-
-function Render_area(A)
-  Ambient_push(A.lighting)
-
-  -- handle caves, parks and landscapes
-  if A.mode == "nature" or A.mode == "scenic" then
-    Render_cells(A.cells)
-  else
-    each S in A.seeds do
-      Render_seed(A, S)
-    end
-  end
-
-  each E in A.edges do
-    assert(E.area == A)
-    Render_edge(E)
-  end
-
-  each S in A.seeds do
-    each dir in geom.ALL_DIRS do
-      Render_junction(A, S, dir)
-    end
-  end
-
-  Ambient_pop()
-end
-
-
-
-function Render_full_chunks()
-
-  local function build_a_pool(chunk)
-
-    -- TEMPORARY TESTING STUFF, NOT USED ATM
-
-    if chunk.sw < 2 then return end
-    if chunk.sh < 2 then return end
-
-    local floor_mat = chunk.area.floor_mat
-    if not floor_mat then return end
-
-    local reqs =
-    {
-      kind  = "floor"
-      where = "seeds"
-
-      seed_w = chunk.sw
-      seed_h = chunk.sh
-    }
-
-    local def = Fab_pick(reqs)
-    local skin1 = { floor=floor_mat }
-
-    local S1 = SEEDS[chunk.sx1][chunk.sy1]
-    local S2 = SEEDS[chunk.sx2][chunk.sy2]
-
-    local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, chunk.area.floor_h, 2)
-
-    Fabricate(chunk.area.room, def, T, { skin1 })
-
-    -- only for pit test
-    Render_mark_done(chunk, "floor")
-  end
-
-
-  ---| Render_full_chunks |---
-
-  each R in LEVEL.rooms do
-    each chunk in R.floor_chunks do
-      if chunk.content_kind == "floor_fab" then
-        Render_chunk(chunk)
-      end
-    end
-
-    each chunk in R.closets do Render_chunk(chunk) end
-    each chunk in R.stairs  do Render_chunk(chunk) end
-    each chunk in R.joiners do Render_chunk(chunk) end
-    each chunk in R.pieces  do Render_chunk(chunk) end
-  end
-end
-
-
-
-function Render_depot(depot)
-  -- dest_R is the room which gets the trap spots
-  local dest_R = assert(depot.room)
-
-  gui.debugf("Render_depot for %s\n", dest_R.name)
-
-  local x1 = depot.x1
-  local y1 = depot.y1
-
-  local z1 = 0
-
-  -- TODO : use Fab_pick() system
-  local def = PREFABS["Depot_raise"]
-  assert(def)
-
-  local x2 = x1 + def.seed_w * SEED_SIZE
-  local y2 = y1 + def.seed_h * SEED_SIZE
-
-  local T = Trans.box_transform(x1, y1, x2, y2, z1, 2)
-
-  Ambient_push(96)
-
-  Fabricate(dest_R, def, T, { depot.skin })
-
-  Ambient_pop()
-end
-
-
-
-function Render_all_areas()
-  Render_full_chunks()
-
-  each A in LEVEL.areas do
-    Render_area(A)
-  end
-
-  for cx = 1, SEED_W + 1 do
-  for cy = 1, SEED_H + 1 do
-    Render_corner(cx, cy)
-  end
-  end
-
-  each depot in LEVEL.depots do
-    Render_depot(depot)
-  end
-end
-
-
-------------------------------------------------------------------------
-
-
-function Render_properties_for_area(A)
-
-  local R = A.room
-
-  -- natural parts done elsewhere...
-  if A.mode == "nature" or A.mode == "scenic" then
-    if not A.lighting then
-      A.lighting = LEVEL.sky_light
-    end
-    return
-  end
-
-  -- nothing needed for void areas
-  if A.mode == "void" then
-    A.lighting = 144
-    return
-  end
-
-
-  if not A.lighting then
-    if A.is_outdoor then
-      A.lighting = LEVEL.sky_light
-
-    elseif A.room and A.room.is_outdoor then
-      -- this for outdoor closets
-      A.lighting = LEVEL.sky_light - LEVEL.sky_shadow
-
-    else
-      A.lighting = A.base_light or 144
-      A.lighting = A.lighting + (A.bump_light or 0)
-    end
-  end
-
-
-  if not A.floor_h then
-    A.floor_h = -7
-  end
-
-
-  if R then
----##  A.wall_mat = assert(R.main_tex)
-
-  else
-    A.floor_mat = "_ERROR"
-  end
-
-  if A.mode == "liquid" then
-    A.floor_mat = "_LIQUID"
-  end
-
-  if A.is_outdoor and not A.is_porch then
-    A.ceil_mat = "_SKY"
-  end
-
-
-  A.floor_mat = A.floor_mat or R.main_tex
-  A.ceil_mat  = A.ceil_mat  or R.main_tex
-
-
-  --DEBUG FOR SECRETS
-  if A.room and A.room.is_secret then
----  A.floor_mat = "REDWALL"
-  end
-
---[[ PRESSURE TESTING
-if A.room and A.room.pressure == "low"    then A.floor_mat = "FWATER1" end
-if A.room and A.room.pressure == "medium" then A.floor_mat = "NUKAGE1" end
-if A.room and A.room.pressure == "high"   then A.floor_mat = "LAVA1" end
---]]
-
---[[ ZONE TESTING
-if A.mode != "hallway" then
-if A.zone.id == 1 then A.floor_mat = "FWATER1" end
-if A.zone.id == 2 then A.floor_mat = "NUKAGE1" end
-if A.zone.id == 3 then A.floor_mat = "LAVA1" end
-if A.zone.id == 4 then A.floor_mat = "CEIL5_2" end
-end
---]]
-end
-
-
-
-function Render_set_all_properties()
-  each A in LEVEL.areas do
-    Render_properties_for_area(A)
-  end
-end
-
-
-
-------------------------------------------------------------------------
-
-
-function Render_importants()
-
-  local R  -- the current room
+  local dir
+  local reqs
+  local skin
 
 
   local function calc_player_see_dist(chunk, dir)
@@ -2092,13 +1612,6 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function content_flag(spot)
-    -- TODO : prefab for flag base
-
-    content_big_item(chunk, assert(chunk.content_item))
-  end
-
-
   local function content_teleporter(chunk)
     local C = assert(chunk.conn)
 
@@ -2195,7 +1708,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function build_important(chunk)
+  local function build_important()
     chunk.z1 = assert(chunk.area.floor_h)
 
     Ambient_push(chunk.area.lighting)
@@ -2221,9 +1734,6 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     elseif chunk.content_kind == "ITEM" then
       content_item(chunk)
 
-    elseif chunk.content_kind == "FLAG" then
-      content_flag(chunk)
-
     elseif chunk.content_kind == "TELEPORTER" then
       content_teleporter(chunk)
 
@@ -2241,10 +1751,12 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function build_ceiling_thang(chunk)
+  local function build_ceiling_thang()
     if chunk.content_kind != "DECORATION" then
       error("Unknown ceiling thang: " .. tostring(chunk.content_kind))
     end
+
+    Ambient_push(chunk.area.lighting)
 
     local def = assert(chunk.prefab_def)
     local A   = chunk.area
@@ -2257,28 +1769,504 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     assert(def.z_fit == nil)
 
     Fabricate(A.room, def, T, { skin })
+
+    Ambient_pop()
   end
 
 
-  ---| Render_importants |---
+  local function do_start()
+    reqs.kind = "start"
+  end
 
-  each room in LEVEL.rooms do
-    R = room
+  local function do_exit()
+    reqs.kind = "exit"
+  end
 
-    each chunk in R.floor_chunks do
-      if chunk.content_kind and chunk.content_kind != "NOTHING" then
-        build_important(chunk)
-      end
+  local function do_secret_exit()
+    reqs.kind = "secret_exit"
+  end
+
+  local function do_cage()
+    reqs.kind = "cage"
+  end
+
+  local function do_trap()
+    reqs.kind  = "trap"
+    reqs.shape = "U"
+
+    assert(chunk.trigger)
+
+    skin.trap_tag = assert(chunk.trigger.tag)
+  end
+
+  local function do_decoration()
+    -- prefab already chosen
+    assert(chunk.prefab_def)
+  end
+
+  local function do_teleporter()
+    reqs.kind = "teleporter"
+
+    local C = assert(chunk.conn)
+
+    if C.R1 == A.room then
+      skin. in_tag = C.tele_tag2
+      skin.out_tag = C.tele_tag1
+    else
+      skin. in_tag = C.tele_tag1
+      skin.out_tag = C.tele_tag2
     end
 
-    each chunk in R.ceil_chunks do
-      if chunk.content_kind and chunk.content_kind != "NOTHING" then
-        build_ceiling_thang(chunk)
-      end
+    skin. in_target = string.format("tele%d", skin. in_tag)
+    skin.out_target = string.format("tele%d", skin.out_tag)
+  end
+
+  local function do_stairs()
+    assert(chunk.prefab_def)
+  end
+
+  local function do_joiner()
+    assert(chunk.prefab_def)
+
+    local C = assert(chunk.conn)
+
+    if C.lock and C.lock.kind == "intraroom" then
+      skin.door_tag = assert(C.lock.goals[1].tag)
     end
+  end
+
+  local function do_hallway()
+    assert(chunk.prefab_def)
+
+    if chunk.is_terminator then
+      do_joiner()
+    end
+  end
+
+  local function do_switch()
+    reqs.kind = "switch"
+
+    local goal = assert(chunk.goal)
+
+    skin.switch_tag = assert(goal.tag)
+    skin.switch_action = 103  -- open door  [ FIXME ]
+
+    -- FIXME for LOWERING PEDESTALS !!!!
+  end
+
+  local function do_item()
+    reqs.kind = "item"
+
+    if chunk.content_kind == "KEY" then
+      reqs.item_kind = "key"
+    end
+
+    -- for entity remapping (e.g. skull keys), rely on prefab system
+    skin.object = assert(chunk.content_item)
+  end
+
+
+  local function chunk_coords(def)
+    local x1, y1 = chunk.x1, chunk.y1
+    local x2, y2 = chunk.x2, chunk.y2
+
+    -- move closets and joiners to align with nearby walls
+    local dir = chunk.from_dir
+
+    if def.deep then
+      if dir == 2 then y1 = y1 - def.deep end
+      if dir == 8 then y2 = y2 + def.deep end
+      if dir == 4 then x1 = x1 - def.deep end
+      if dir == 6 then x2 = x2 + def.deep end
+    end
+
+    if def.over then
+      if dir == 2 then y2 = y2 + def.over end
+      if dir == 8 then y1 = y1 - def.over end
+      if dir == 4 then x2 = x2 + def.over end
+      if dir == 6 then x1 = x1 - def.over end
+    end
+
+    return x1,y1, x2,y2
+  end
+
+
+  ---| Render_chunk |---
+
+  dir  = chunk.from_dir or chunk.dir or 2
+  reqs = Chunk_base_reqs(chunk, dir)
+  skin = {}
+
+
+  -- handle a ceiling paired with a floor  [ NOT USED ATM ]
+  if chunk.next_highest then
+    Render_chunk(chunk.next_highest)
+  end
+
+
+  if chunk.kind == "floor" then
+    build_important()
+    return
+
+  elseif chunk.kind == "ceil" then
+    build_ceiling_thang()
+    return
+  end
+
+
+  -- FIXME : reqs.shape
+
+  -- room kind and (for joiners) neighbor room kind
+  if A.room then
+    reqs.env = A.room:get_env()
+  end
+
+  -- handle secret closets and joiners to a secret room
+  if chunk.is_secret then
+    reqs.key = "secret"
+  end
+
+  local what = chunk.content_kind
+
+  if chunk.kind == "stair" then
+    do_stairs()
+
+  elseif chunk.kind == "joiner" then
+    do_joiner()
+
+  elseif chunk.kind == "hallway" then
+    do_hallway()
+
+  elseif what == "START" then
+    do_start()
+
+  elseif what == "EXIT" then
+    do_exit()
+
+  elseif what == "SECRET_EXIT" then
+    do_secret_exit()
+
+  elseif what == "TELEPORTER" then
+    do_teleporter()
+
+  elseif what == "SWITCH" then
+    do_switch()
+
+  elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
+    do_item()
+
+  elseif what == "CAGE" then
+    do_cage()
+
+  elseif what == "TRAP" then
+    do_trap()
+
+  elseif what == "DECORATION" then
+    do_decoration()
+
+  else
+    error("Unsupported chunk kind: " .. tostring(chunk.kind) .. " / " .. tostring(what))
+  end
+
+
+  --- pick the prefab ---
+
+  local def = chunk.prefab_def or Fab_pick(reqs)
+
+
+  -- texturing --
+
+  if chunk.kind == "hallway" then
+    -- FIXME: proper textures for hallway pieces
+    skin.wall = "REDWALL"
+
+  elseif chunk.from_area then
+    skin.wall  = Junction_calc_wall_tex(chunk.from_area, A)
+    skin.floor = chunk.from_area.floor_mat
+    skin.ceil  = chunk.from_area.ceil_mat
+  end
+
+  if chunk.is_terminator then
+    local C = assert(chunk.conn)
+    local A2 = sel(C.R1 == A.room, C.A2, C.A1)
+
+    skin.outer  = Junction_calc_wall_tex(A2, A)
+    skin.floor2 = A2.floor_mat
+    skin.ceil2  = A2.ceil_mat
+
+  elseif chunk.dest_area then
+    skin.outer  = Junction_calc_wall_tex(chunk.dest_area, A)
+    skin.floor2 = chunk.dest_area.floor_mat
+    skin.ceil2  = chunk.dest_area.ceil_mat
+  end
+
+
+  -- build the prefab --
+
+  local x1, y1, x2, y2 = chunk_coords(def)
+
+  local floor_h = assert(A.floor_h) + (def.raise_z or 0)
+
+  local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+
+  if (chunk.kind == "stair" or chunk.kind == "joiner" or chunk.kind == "hallway") and
+     chunk.shape == "L" and
+     chunk.dest_dir == geom.LEFT[chunk.from_dir]
+  then
+    T.mirror_x = chunk.sw * SEED_SIZE / 2
+  end
+
+
+  Ambient_push(A.lighting)
+
+  Fabricate(A.room, def, T, { skin })
+
+  Ambient_pop()
+
+
+  -- mark seeds as done --
+
+  local done_mode
+
+  if def.done_mode then
+    done_mode = def.done_mode
+
+  elseif def.kind == "floor" or def.kind == "stairs" then
+    done_mode = "floor"
+
+  elseif def.kind == "ceil" then
+    done_mode = "ceil"
+
+  else
+    done_mode = "all"
+  end
+
+  Render_mark_done(chunk, done_mode)
+end
+
+
+
+function Render_area(A)
+--FIXME  if A.mode == "chunk" then return end
+
+  Ambient_push(A.lighting)
+
+  -- handle caves, parks and landscapes
+  if A.mode == "nature" or A.mode == "scenic" then
+    Render_cells(A.cells)
+  else
+    each S in A.seeds do
+      Render_seed(A, S)
+    end
+  end
+
+  each E in A.edges do
+    assert(E.area == A)
+    Render_edge(E)
+  end
+
+  each S in A.seeds do
+    each dir in geom.ALL_DIRS do
+      Render_junction(A, S, dir)
+    end
+  end
+
+  Ambient_pop()
+end
+
+
+
+function Render_all_chunks()
+
+  local function build_a_pool(chunk)
+
+    -- TEMPORARY TESTING STUFF, NOT USED ATM
+
+    if chunk.sw < 2 then return end
+    if chunk.sh < 2 then return end
+
+    local floor_mat = chunk.area.floor_mat
+    if not floor_mat then return end
+
+    local reqs =
+    {
+      kind  = "floor"
+      where = "seeds"
+
+      seed_w = chunk.sw
+      seed_h = chunk.sh
+    }
+
+    local def = Fab_pick(reqs)
+    local skin1 = { floor=floor_mat }
+
+    local S1 = SEEDS[chunk.sx1][chunk.sy1]
+    local S2 = SEEDS[chunk.sx2][chunk.sy2]
+
+    local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, chunk.area.floor_h, 2)
+
+    Fabricate(chunk.area.room, def, T, { skin1 })
+
+    -- only for pit test
+    Render_mark_done(chunk, "floor")
+  end
+
+
+  ---| Render_all_chunks |---
+
+  each R in LEVEL.rooms do
+    each chunk in R.floor_chunks do Render_chunk(chunk) end
+    each chunk in R.ceil_chunks  do Render_chunk(chunk) end
+
+    each chunk in R.closets do Render_chunk(chunk) end
+    each chunk in R.stairs  do Render_chunk(chunk) end
+    each chunk in R.joiners do Render_chunk(chunk) end
+    each chunk in R.pieces  do Render_chunk(chunk) end
   end
 end
 
+
+
+function Render_depot(depot)
+  -- dest_R is the room which gets the trap spots
+  local dest_R = assert(depot.room)
+
+  gui.debugf("Render_depot for %s\n", dest_R.name)
+
+  local x1 = depot.x1
+  local y1 = depot.y1
+
+  local z1 = 0
+
+  -- TODO : use Fab_pick() system
+  local def = PREFABS["Depot_raise"]
+  assert(def)
+
+  local x2 = x1 + def.seed_w * SEED_SIZE
+  local y2 = y1 + def.seed_h * SEED_SIZE
+
+  local T = Trans.box_transform(x1, y1, x2, y2, z1, 2)
+
+  Ambient_push(96)
+
+  Fabricate(dest_R, def, T, { depot.skin })
+
+  Ambient_pop()
+end
+
+
+
+function Render_all_areas()
+  each A in LEVEL.areas do
+    Render_area(A)
+  end
+
+  for cx = 1, SEED_W + 1 do
+  for cy = 1, SEED_H + 1 do
+    Render_corner(cx, cy)
+  end
+  end
+
+  each depot in LEVEL.depots do
+    Render_depot(depot)
+  end
+end
+
+
+------------------------------------------------------------------------
+
+
+function Render_properties_for_area(A)
+
+  local R = A.room
+
+  -- natural parts done elsewhere...
+  if A.mode == "nature" or A.mode == "scenic" then
+    if not A.lighting then
+      A.lighting = LEVEL.sky_light
+    end
+    return
+  end
+
+  -- nothing needed for void areas
+  if A.mode == "void" then
+    A.lighting = 144
+    return
+  end
+
+
+  if not A.lighting then
+    if A.is_outdoor then
+      A.lighting = LEVEL.sky_light
+
+    elseif A.room and A.room.is_outdoor then
+      -- this for outdoor closets
+      A.lighting = LEVEL.sky_light - LEVEL.sky_shadow
+
+    else
+      A.lighting = A.base_light or 144
+      A.lighting = A.lighting + (A.bump_light or 0)
+    end
+  end
+
+
+  if not A.floor_h then
+    A.floor_h = -7
+  end
+
+
+  if R then
+---##  A.wall_mat = assert(R.main_tex)
+
+  else
+    A.floor_mat = "_ERROR"
+  end
+
+  if A.mode == "liquid" then
+    A.floor_mat = "_LIQUID"
+  end
+
+  if A.is_outdoor and not A.is_porch then
+    A.ceil_mat = "_SKY"
+  end
+
+
+  A.floor_mat = A.floor_mat or R.main_tex
+  A.ceil_mat  = A.ceil_mat  or R.main_tex
+
+
+  --DEBUG FOR SECRETS
+  if A.room and A.room.is_secret then
+---  A.floor_mat = "REDWALL"
+  end
+
+--[[ PRESSURE TESTING
+if A.room and A.room.pressure == "low"    then A.floor_mat = "FWATER1" end
+if A.room and A.room.pressure == "medium" then A.floor_mat = "NUKAGE1" end
+if A.room and A.room.pressure == "high"   then A.floor_mat = "LAVA1" end
+--]]
+
+--[[ ZONE TESTING
+if A.mode != "hallway" then
+if A.zone.id == 1 then A.floor_mat = "FWATER1" end
+if A.zone.id == 2 then A.floor_mat = "NUKAGE1" end
+if A.zone.id == 3 then A.floor_mat = "LAVA1" end
+if A.zone.id == 4 then A.floor_mat = "CEIL5_2" end
+end
+--]]
+end
+
+
+
+function Render_set_all_properties()
+  each A in LEVEL.areas do
+    Render_properties_for_area(A)
+  end
+end
+
+
+
+------------------------------------------------------------------------
 
 
 function Render_triggers()

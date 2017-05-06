@@ -3177,14 +3177,13 @@ Layout_finish_scenic_borders()
 
   Render_set_all_properties()
 
-  -- we must build importants after "normal" area geometry, since we
+  -- FIXME:we must build importants after "normal" area geometry, since we
   -- rely on world traces to determine player facing directions.
+
+  Render_all_chunks()
   Render_all_areas()
 
-  -- this does other decorative prefabs too
-  Render_importants()
   Render_triggers()
-
   Render_determine_spots()
 
   Room_add_sun()
