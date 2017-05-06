@@ -127,7 +127,8 @@
 --[[
     -- a rectangle of seeds within an area of a room
 
-    kind : keyword  -- "area" (part of a walkable area)
+    kind : keyword  -- "floor" (part of a walkable area)
+                    -- "ceil"  (above a "floor" chunk)
                     -- "liquid"
                     -- "stair"
                     -- "closet" ('T' elements in rules)
@@ -179,7 +180,8 @@
     dest_dir  : DIR
     dest_area : AREA
 
-    flipped          -- when TRUE, joiner should be rotated 180 deg
+     ceil_above : CHUNK  -- for "floor" kind, this is ceiling (NIL in outdoor rooms)
+    floor_below : CHUNK  -- for "ceil" kind, this is floor chunk
 
     encroach[SIDE]   -- how much distance is used on each side, often zero
                      -- [ used by walls, archways, etc... ]

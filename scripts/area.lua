@@ -1070,7 +1070,7 @@ function Area_locate_chunks()
   local function create_chunk(A, sx1,sy1, sx2,sy2)
     local R = assert(A.room)
 
-    local kind = "area"
+    local kind = "floor"
     if A.mode == "liquid" then kind = "liquid" end
 
     local CHUNK = make_chunk(kind, "floor", A, sx1,sy1, sx2,sy2)

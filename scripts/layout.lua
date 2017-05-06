@@ -1209,7 +1209,7 @@ function Layout_decorate_rooms(pass)
     local item
 
     each chunk in R.floor_chunks do
-      if chunk.kind == "area" and chunk.content_kind == "KEY" and not chunk.lock then
+      if chunk.kind == "floor" and chunk.content_kind == "KEY" and not chunk.lock then
         item = chunk
         break;
       end

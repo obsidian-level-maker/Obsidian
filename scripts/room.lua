@@ -356,7 +356,6 @@ function ROOM_CLASS.calc_walk_vol(R)
 
   each A in R.areas do
     if (A.mode == "floor" or A.mode == "nature") or
-       (A.chunk and A.chunk.kind == "area") or
        (A.chunk and A.chunk.kind == "stair")
     then
       A:calc_volume()
@@ -1121,7 +1120,7 @@ function Room_make_windows(A1, A2)
     if A.room and A.room.is_cave then return false end
 
     if A.mode == "void" then return false end
-    if A.chunk and A.chunk.kind != "area" then return false end
+    if A.chunk and A.chunk.kind != "floor" then return false end
 
     if A.room.is_hallway then return false end
 
