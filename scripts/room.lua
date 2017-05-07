@@ -778,87 +778,86 @@ end
 
 
 
-function Room_reckon_doors()
+function Room_pick_edge_prefab(C)
+  -- hack for unfinished games
+  if THEME.no_doors then return end
+
 
   local  indoor_prob = style_sel("doors", 0, 15, 35,  65)
   local outdoor_prob = style_sel("doors", 0, 70, 90, 100)
 
+  local E = C.E1
 
-  local function reqs_for_edge(C, E)
-    -- requirements for the prefab
-    local reqs =
-    {
-      kind = "door"
+  if E.kind != "arch" then
+    E = C.E2
+  end
 
-      seed_w = assert(E.long)
-    }
-
-    if geom.is_corner(E.dir) then
-      reqs.where = "diagonal"
-      reqs.seed_h = reqs.seed_w
-    else
-      reqs.where = "edge"
-    end
+  assert(E.kind == "arch")
 
 
-    -- locked door?
-    C:get_lock_reqs(reqs)
+  -- get orientation right, "front" of prefab faces earlier room
 
-    if C.lock then
-      E.kind = "lock_door"
+  local R1 = C.R1
+  local R2 = C.R2
 
-      local goal = C.lock.goals[1]
+  if R1 != E.area.room then
+    R1, R2 = R2, R1
+  end
 
-      E.door_tag = goal.tag
-
-      C.is_door = true
-      C.fresh_floor = true
-
-      return reqs
-    end
-
-    -- secret door ?
-    if C.is_secret then
-      E.kind = "secret_door"
-
-      C.is_door = true
-
-      return reqs
-    end
+  if R1.lev_along > R2.lev_along then
+    E.flip_it = true
+  end
 
 
-    -- special archways for caves FIXME
---[[
-    local R1 = S.room
-    local R2 = N.room
+  -- requirements for the prefab
 
-    if R2.is_cave and not R2.is_outdoor then
-      R1, R2 = R2, R1
-    end
+  local reqs =
+  {
+    kind = "arch"
 
-    if R1.is_cave and not R1.is_outdoor then
-      if R2.kind != "building" then
-        B.fab_name = sel(woody, "Arch_woody", "Arch_viney")
-        return reqs
-      end
-    end
---]]
+    seed_w = assert(E.long)
+  }
 
+  local goal
 
-    -- don't need anything between two outdoor rooms
-    -- TODO : allow the arch if have "walls" touching both corners
---[[
-    if C.R1.is_outdoor and C.R2.is_outdoor then
-      E.kind = "nothing"
-      return reqs
-    end
---]]
+  if geom.is_corner(E.dir) then
+    reqs.where = "diagonal"
+    reqs.seed_h = reqs.seed_w
+  else
+    reqs.where = "edge"
+  end
+
+  reqs.env      = R1:get_env()
+  reqs.neighbor = R2:get_env()
 
 
-    -- apply the random check
+  -- locked door?
+  C:get_lock_reqs(reqs)
+
+  if C.lock then
+    reqs.kind = "door"
+
+    goal = C.lock.goals[1]
+
+    E.kind = "lock_door"
+    E.door_tag = goal.tag
+
+    C.is_door = true
+    C.fresh_floor = true
+
+  -- secret door ?
+  elseif C.is_secret then
+    reqs.kind = "door"
+
+    E.kind = "secret_door"
+
+    C.is_door = true
+
+  else
+    -- apply the random check (whether to use a door or not)
     local prob = indoor_prob
-    if (C.R1.is_outdoor and not C.R2.is_cave) or
-       (C.R2.is_outdoor and not C.R1.is_cave)
+    if (R1.is_outdoor and not R2.is_cave) or
+       (R2.is_outdoor and not R1.is_cave)
     then
       prob = outdoor_prob
     end
@@ -868,91 +867,29 @@ function Room_reckon_doors()
 
       C.is_door = true
       C.fresh_floor = rand.odds(30)
-
-      return reqs
-    end
-
-
---[[  FIXME  (PROBABLY check prefab_def.delta_h after Fab_pick, NOT the following crud)
-
-    -- support arches which have a step in them
-    if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
-      if THEME.archy_arches then return end
-      if STYLE.steepness == "none" then return end
-
-      if not (S.room.hallway or N.room.hallway) then
-        if S == C.S1 then
-          C.diff_h = 16
-        else
-          C.diff_h = -16
-        end
-        C.fresh_floor = true
-      end
-    end
---]]
-
-
-    -- keep the current ARCH
-    reqs.kind = "arch"
-
-    return reqs
-  end
-
-
-  local function Room_pick_edge_prefab(C)
-    -- hack for unfinished games
-    if THEME.no_doors then return end
-
-
-    local E = C.E1
-
-    if E.kind != "arch" then
-      E = C.E2
-    end
-
-    assert(E.kind == "arch")
-
-
-    -- get orientation right, "front" of prefab faces earlier room
-    local R1 = C.R1
-    local R2 = C.R2
-
-    if R1 != E.area.room then
-      R1, R2 = R2, R1
-    end
-
-    if R1.lev_along > R2.lev_along then
-      E.flip_it = true
-    end
-
-
-    local reqs = reqs_for_edge(C, E)
-
-    if reqs then
-gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tostr(reqs))
-
-      reqs.env      = R1:get_env()
-      reqs.neighbor = R2:get_env()
-
-      E.prefab_def = Fab_pick(reqs)
     end
   end
 
 
-  local function visit_conn(C)
+  -- Ok, select it --
+
+  E.prefab_def = Fab_pick(reqs)
+
+  if goal then
+    goal.action = E.prefab_def.door_action
+  end
+end
+
+
+
+function Room_reckon_doors()
+  each C in LEVEL.conns do
     if C.kind == "edge" then
       Room_pick_edge_prefab(C)
 
     elseif C.kind == "joiner" then
       Room_pick_joiner_prefab(C, C.joiner_chunk)
     end
-  end
-
-
-  ---| Room_reckon_doors |---
-
-  each C in LEVEL.conns do
-    visit_conn(C)
   end
 end
 
@@ -1630,7 +1567,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_prepare_hallways(PASS)
+function Room_prepare_hallways()
   --
   -- Collects all the pieces of each hallway, and determines the
   -- shape and orientation of each piece.
