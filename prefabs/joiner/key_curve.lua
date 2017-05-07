@@ -5,17 +5,18 @@
 PREFABS.Locked_curve_red =
 {
   file   = "joiner/key_curve.wad"
-  where  = "seeds"
-  shape  = "L"
+  map    = "MAP01"
 
   key    = "k_red"
+  prob   = 100
+
+  where  = "seeds"
+  shape  = "L"
 
   seed_w = 2
   seed_h = 2
 
   nearby_h = 160
-
-  prob   = 100
 
   flat_FLAT23 = "BIGDOOR2"
 
