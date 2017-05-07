@@ -88,15 +88,14 @@ PREFABS.Joiner_viney1_B =
 }
 
 
--- TODO : cave-to-cave version
-UNFINISHED.Joiner_viney1_CC =
+PREFABS.Joiner_viney1_CC =
 {
   template = "Joiner_viney1"
-  map      = "MAP04"
+  map      = "MAP06"
 
   env      = "cave"
   neighbor = "cave"
 
-  force_flip = true
+  rank   = 4
 }
 
