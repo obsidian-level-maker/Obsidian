@@ -176,7 +176,7 @@ function Level_determine_map_size(LEV)
 
   -- Named sizes --
 
-  local SIZES = { small=24, regular=32, large=40, extreme=54 }
+  local SIZES = { small=24, regular=32, large=42, extreme=54 }
 
   local W = SIZES[ob_size]
 
