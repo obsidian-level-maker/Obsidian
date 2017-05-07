@@ -1371,19 +1371,6 @@ function Render_chunk(chunk)
   local goal
 
 
-  local function lookup_action(action)
-    assert(action)
-
-    local info = GAME.ACTIONS[action]
-
-    if not info then
-      error("Unknown switch action: " .. tostring(action))
-    end
-
-    return info.id
-  end
-
-
   local function calc_player_see_dist(chunk, dir)
     local dx, dy = geom.delta(dir)
     local z = chunk.z1 + 48
@@ -1599,7 +1586,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local skin1 = { }
 
     skin1.switch_tag    = assert(chunk.goal.tag)
-    skin1.switch_action = lookup_action(chunk.goal.action)
+    skin1.switch_action = Action_lookup(chunk.goal.action)
 
     local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
@@ -1859,7 +1846,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local goal = assert(chunk.goal)
 
     skin.switch_tag = assert(goal.tag)
-    skin.switch_action = lookup_action(goal.action)
+    skin.switch_action = Action_lookup(goal.action)
   end
 
   local function do_item()

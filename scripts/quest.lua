@@ -117,7 +117,7 @@
                              -- (includes room with the locked conn,
                              --  but excludes room with the goal).
 
-    action : number  -- linedef special for switches
+    action : name    -- name of action special for switches
     tag    : number  -- tag number to use for a switched door
 
 --]]

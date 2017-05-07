@@ -83,6 +83,19 @@ function raw_add_model(model)
 end
 
 
+function Action_lookup(action)
+  assert(action)
+
+  local info = GAME.ACTIONS[action]
+
+  if not info then
+    error("Unknown action: " .. tostring(action))
+  end
+
+  return info.id
+end
+
+
 ------------------------------------------------------------------------
 --  Ambient Lighting
 ------------------------------------------------------------------------
