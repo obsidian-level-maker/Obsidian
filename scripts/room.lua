@@ -726,51 +726,55 @@ end
 
 
 
-  function pick_joiner_prefab(C, chunk)
-    assert(chunk)
+function Room_pick_joiner_prefab(C, chunk)
+  -- Note: this also used for hallway terminators
 
-    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+  assert(chunk)
 
-    reqs.kind  = C.kind
-    reqs.shape = assert(chunk.shape)
+  local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
 
-    if C.kind == "joiner" then
-      local A1 = chunk.from_area
-      local A2 = chunk.dest_area
+  reqs.kind  = C.kind
+  reqs.shape = assert(chunk.shape)
 
-      reqs.env      = A1.room:get_env()
-      reqs.neighbor = A2.room:get_env()
+  if C.kind == "joiner" then
+    local A1 = chunk.from_area
+    local A2 = chunk.dest_area
+
+    reqs.env      = A1.room:get_env()
+    reqs.neighbor = A2.room:get_env()
+  end
+
+  C:get_lock_reqs(reqs)
+
+  chunk.prefab_def = Fab_pick(reqs)
+
+  -- should we flip the joiner?
+  -- [ hallway terminators are already correct ]
+  -- [[ only straight pieces can be flipped ]]
+
+  if C.kind == "joiner" and chunk.shape == "I" then
+    local flipped
+
+    if C.R1.lev_along > C.R2.lev_along then
+      flipped = true
     end
 
-    C:get_lock_reqs(reqs)
+    if chunk.prefab_def.can_flip and rand.odds(35) then
+      flipped = not flipped
+    end
 
-    chunk.prefab_def = Fab_pick(reqs)
+    -- this is needed when the environment on each side is important,
+    -- such as the joiner connecting a normal room to a cave.
+    if chunk.prefab_def.force_flip != nil then
+      flipped = chunk.prefab_def.force_flip
+    end
 
-    -- should we flip the joiner?   [ only straight pieces can be flipped ]
-    -- [ hallway terminators are already correct ]
-    if C.kind == "joiner" then
-      if C.R1.lev_along > C.R2.lev_along then
-        if chunk.shape == "I" then
-          chunk.flipped = true
-        end
-      end
-
-      if chunk.prefab_def.can_flip and rand.odds(35) then
-        chunk.flipped = not chunk.flipped
-      end
-
-      -- this is needed when the environment on each side is important,
-      -- such as the joiner connecting a normal room to a cave.
-      if chunk.prefab_def.force_flip != nil then
-        chunk.flipped = chunk.prefab_def.force_flip
-      end
-
-      if chunk.flipped then
-        -- reverse from_dir, swap from_area and dest_area
-        Chunk_flip(chunk)
-      end
+    if flipped then
+      -- reverse from_dir, swap from_area and dest_area
+      Chunk_flip(chunk)
     end
   end
+end
 
 
 
@@ -803,7 +807,9 @@ function Room_reckon_doors()
     if C.lock then
       E.kind = "lock_door"
 
-      E.door_tag = C.lock.goals[1].tag
+      local goal = C.lock.goals[1]
+
+      E.door_tag = goal.tag
 
       C.is_door = true
       C.fresh_floor = true
@@ -893,7 +899,7 @@ function Room_reckon_doors()
   end
 
 
-  local function pick_edge_prefab(C)
+  local function Room_pick_edge_prefab(C)
     -- hack for unfinished games
     if THEME.no_doors then return end
 
@@ -935,10 +941,10 @@ gui.debugf("Reqs for arch from %s --> %s\n%s\n", C.R1.name, C.R2.name, table.tos
 
   local function visit_conn(C)
     if C.kind == "edge" then
-      pick_edge_prefab(C)
+      Room_pick_edge_prefab(C)
 
     elseif C.kind == "joiner" then
-      pick_joiner_prefab(C, C.joiner_chunk)
+      Room_pick_joiner_prefab(C, C.joiner_chunk)
     end
   end
 
@@ -1636,7 +1642,7 @@ stderrf("pick_terminator_fab @ %s for chunk in %s\n", R.name, chunk.area.name)
     each C in R.conns do
 stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
       if C.A1 == chunk.area or C.A2 == chunk.area then
-        pick_joiner_prefab(C, chunk)
+        Room_pick_joiner_prefab(C, chunk)
         return
       end
     end
