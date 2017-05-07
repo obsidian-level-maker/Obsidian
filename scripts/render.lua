@@ -582,6 +582,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       ceil2  = ceil2_mat
     }
 
+    -- this is set in Room_pick_edge_prefab()
     skin.door_tag = E.door_tag
 
     local def
@@ -1367,6 +1368,20 @@ function Render_chunk(chunk)
   local dir
   local reqs
   local skin
+  local goal
+
+
+  local function lookup_action(action)
+    assert(action)
+
+    local info = GAME.ACTIONS[action]
+
+    if not info then
+      error("Unknown switch action: " .. tostring(action))
+    end
+
+    return info.id
+  end
 
 
   local function calc_player_see_dist(chunk, dir)
@@ -1477,8 +1492,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     end
 
     if chunk.lock then
-      reqs.key = "lowering"  -- hmmm, review that
-      skin.door_tag = assert(chunk.lock.goals[1].tag)
+      reqs.key = "barred"
+      goal = chunk.lock.goals[1]
+      skin.door_tag = assert(goal.tag)
     end
 
     local def = Fab_pick(reqs)
@@ -1486,6 +1502,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
     Fabricate(R, def, T, { skin })
+
+    if goal and goal.kind == "SWITCH" then
+      goal.action = assert(def.door_action)
+    end
   end
 
 
@@ -1579,7 +1599,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local skin1 = { }
 
     skin1.switch_tag    = assert(chunk.goal.tag)
-    skin1.switch_action = assert(chunk.goal.action)
+    skin1.switch_action = lookup_action(chunk.goal.action)
 
     local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
 
@@ -1587,24 +1607,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   end
 
 
-  local function content_weapon(chunk)
-    local weapon = assert(chunk.content_item)
-
-    if R.is_start or R.is_hallway then
-      -- bare item
-      Trans.entity(weapon, chunk.mx, chunk.my, chunk.z1)
-    else
-      content_big_item(chunk, weapon)
-    end
-
-    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, chunk.mx, chunk.my, chunk.z1)
-  end
-
-
   local function content_item(chunk)
     local item = assert(chunk.content_item)
 
-    if R.is_start or R.is_hallway then
+    if (R.is_start or R.is_hallway) and not chunk.lock then
       -- bare item
       Trans.entity(item, chunk.mx, chunk.my, chunk.z1)
     else
@@ -1730,7 +1736,8 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
       content_switch(chunk)
 
     elseif chunk.content == "WEAPON" then
-      content_weapon(chunk)
+      content_item(chunk)
+      gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", chunk.content_item, chunk.mx, chunk.my, chunk.z1)
 
     elseif chunk.content == "ITEM" then
       content_item(chunk)
@@ -1832,7 +1839,9 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local C = assert(chunk.conn)
 
     if C.lock and C.lock.kind == "intraroom" then
-      skin.door_tag = assert(C.lock.goals[1].tag)
+      goal = C.lock.goals[1]
+
+      skin.door_tag = assert(goal.tag)
     end
   end
 
@@ -1850,9 +1859,7 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local goal = assert(chunk.goal)
 
     skin.switch_tag = assert(goal.tag)
-    skin.switch_action = 103  -- open door  [ FIXME ]
-
-    -- FIXME for LOWERING PEDESTALS !!!!
+    skin.switch_action = lookup_action(goal.action)
   end
 
   local function do_item()
@@ -2023,6 +2030,10 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
   Fabricate(A.room, def, T, { skin })
 
   Ambient_pop()
+
+  if goal and goal.kind == "SWITCH" then
+    goal.action = assert(def.door_action)
+  end
 
 
   -- mark seeds as done --

@@ -8,7 +8,7 @@ PREFABS.Item_lowering_remote1 =
   map    = "MAP01"
 
   prob   = 1
-  key    = "lowering"
+  key    = "barred"
   item_kind = "key"
 
   where  = "point"

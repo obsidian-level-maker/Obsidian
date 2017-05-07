@@ -849,7 +849,6 @@ do return false end
         local GOAL = Goal_new("SWITCH")
 
         GOAL.item = name
-        GOAL.action = 103  -- open door
         GOAL.prob = 25
 
         table.insert(list, GOAL)
@@ -925,11 +924,11 @@ do return false end
     local GOAL2 = Goal_new("SWITCH")
 
     GOAL1.item = "sw_metal"
-    GOAL1.action = fab_def.action1
-
     GOAL2.item = "sw_metal"
-    GOAL2.action = fab_def.action2
     GOAL2.same_tag = true
+
+--FIXME    GOAL1.action = fab_def.action1
+--FIXME    GOAL2.action = fab_def.action2
 
     return Quest_scan_all_conns({ GOAL1, GOAL2 }, quest)
   end
