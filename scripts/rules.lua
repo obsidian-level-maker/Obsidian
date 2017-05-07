@@ -2136,6 +2136,8 @@ HALL_1_GROW_T1 =
     "..1..", "..1.."
   }
 
+  hallway = { keep_shape_prob=90 }
+
   link2_2 = { dest_dir=4 }
   link4_2 = { dest_dir=6 }
 }
@@ -2154,6 +2156,8 @@ HALL_1_GROW_P1 =
     "..@..", ".@H@."
     "..1..", "..1.."
   }
+
+  hallway = { keep_shape_prob=50 }
 
   link2_2 = { dest_dir=4 }
   link4_2 = { dest_dir=6 }
@@ -2247,6 +2251,8 @@ HALL_2_GROW_T1 =
     "..@@..", ".@HH@."
     "xx11xx", "xx11xx"
   }
+
+  hallway = { keep_shape_prob=50 }
 
   link2_2 = { dest_dir=4 }
   link5_2 = { dest_dir=6 }

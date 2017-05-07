@@ -2357,6 +2357,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       chunk.occupy = r.occupy
       chunk.prefer_usage = r.usage
 
+      if rand.odds(r.keep_shape_prob or 0) then
+        chunk.keep_shape = true
+      end
+
       if r.from_area then
         chunk.from_area = assert(area_map[r.from_area])
       end
@@ -3018,7 +3022,7 @@ function Grower_prune_hallway(R)
   end
 
 
-  local function dead_end_flow(piece, seen)
+  local function dead_end_flow(piece, seen, last_piece)
     seen[piece.id] = 1
 
     -- recurse to neighbors FIRST, which means we can prune this
@@ -3028,7 +3032,7 @@ function Grower_prune_hallway(R)
 
     each dir,P in neighbors do
       if not seen[P.id] then
-        dead_end_flow(P, seen)
+        dead_end_flow(P, seen, piece)
       end
     end
 
@@ -3037,16 +3041,37 @@ function Grower_prune_hallway(R)
       return
     end
 
-    -- count number of destinations
+    -- count number of REAL destinations
     local count = 0
 
     each dir, P2 in piece.h_join do
-      count = count + 1
+      if not P2.delay_pruned then
+        count = count + 1
+      end
     end
 
-    if count < 2 then
-      kill_a_piece(piece)
+    if count >= 2 then
+      return -- OK
     end
+
+    -- kill any neighbors that delayed being pruned
+    -- (since the current piece will be removed or become a dead-end)
+    neighbors = table.copy(piece.h_join)
+
+    each dir, P2 in neighbors do
+      if P2.delay_pruned then
+        kill_a_piece(P2)
+      end
+    end
+
+    -- does last piece wants to keep its original shape?
+    if last_piece and last_piece.keep_shape then
+      piece.delay_pruned = true
+      return
+    end
+
+    -- kill the piece
+    kill_a_piece(piece)
   end
 
 
@@ -3059,7 +3084,7 @@ function Grower_prune_hallway(R)
     return
   end
 
-  dead_end_flow(R.first_piece, {})
+  dead_end_flow(R.first_piece, {}, nil)
 end
 
 
