@@ -36,3 +36,5 @@ CHANGES IN 7.5x
 
 -  argument parsing: use "@@" to forget current module
 
+-  proper action system for remotely activated doors (etc)
+

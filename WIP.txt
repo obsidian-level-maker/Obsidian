@@ -16,6 +16,10 @@ Miscellaneous
 
 -  internal fences (esp. for outdoor rooms)
 
+-  review the "done_xxx" stuff in render.lua
+
+-  rewrite player_face_dir() ?
+
 
 
 Hallway System
@@ -42,6 +46,35 @@ Hallway System
    [ BUT: will need to expand vertically ]
 
    also: open on ALL sides  (mainly I and L pieces)
+
+-  IDEA: shape = { "mid", "none", "mid", "none" }
+
+   -- keywords can be: "none"  (no connections)
+                       "mid"   (middle of side)
+                       "left"
+                       "right"
+                       "split" (one on left, one on right)
+
+       function REMAP(pos)
+          if pos == "left"  then return "right" end
+          if pos == "right" then return "left" end
+          return pos
+       end
+
+       function mirror_X_complex_shape(SH)
+          SH[4], SH[6] = REMAP(SH[6]), REMAP(SH[4])
+          SH[2], SH[8] = REMAP(SH[2]), REMAP(SH[8])
+       end
+
+       function mirror_Y_complex_shape(SH)
+          SH[2], SH[8] = REMAP(SH[8]), REMAP(SH[2])
+          SH[4], SH[6] = REMAP(SH[4]), REMAP(SH[6])
+       end
+
+       function transpose_complex_shape(SH)
+          SH[2], SH[4] = REMAP(SH[4]), REMAP(SH[2])
+          SH[8], SH[6] = REMAP(SH[6]), REMAP(SH[8])
+       end
 
 
 
