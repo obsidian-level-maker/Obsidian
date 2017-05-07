@@ -32,4 +32,7 @@ CHANGES IN 7.5x
 -  removed the non-standard player things (4001..4004)
 
 -  got triple-key doors working again
+-  support secret weapons (available earlier than usual)
+
+-  argument parsing: use "@@" to forget current module
 

@@ -268,6 +268,12 @@ void Cookie_ParseArguments(void)
 		if (arg[0] == '{' || arg[0] == '}')
 			continue;
 
+		if (strcmp(arg, "@@") == 0)
+		{
+			active_module.clear();
+			continue;
+		}
+
 		// support an isolated "=", like in: FOO = 3
 		if (i+2 < arg_count &&
 			strcmp(arg_list[i+1], "=") == 0 &&
