@@ -52,19 +52,19 @@ DOOM.ACTIONS =
   -- These keywords are used by prefabs with an "action" value.
   --
 
-  S1_OpenDoor = 103    -- opens and stays open
-  W1_OpenDoor = 2      --
-  GR_OpenDoor = 46
+  S1_OpenDoor = { id=103 }    -- opens and stays open
+  W1_OpenDoor = { id=2   }    --
+  GR_OpenDoor = { id=46  }
 
-  W1_OpenDoorFast = 109
+  W1_OpenDoorFast = { id=109 }
 
-  S1_RaiseStair = 127  -- 16 units
-  W1_RaiseStair = 100  --
+  S1_RaiseStair = { id=127 }  -- 16 units
+  W1_RaiseStair = { id=100 }  --
 
-  S1_FloorUp  = 18     -- up to next highest floor
-  W1_FloorUp  = 119    --
+  S1_FloorUp  = { id=18  }    -- up to next highest floor
+  W1_FloorUp  = { id=119 }    --
 
-  S1_LowerFloor = 23  -- down to lowest nb floor
-  W1_LowerFloor = 38  --
+  S1_LowerFloor = { id=23 }  -- down to lowest nb floor
+  W1_LowerFloor = { id=38 }  --
 }
 
