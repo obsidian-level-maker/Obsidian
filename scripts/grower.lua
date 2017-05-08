@@ -904,21 +904,27 @@ end
 
 
 function Grower_determine_coverage()
-  local count = 0
+  local seed_count = 0
+  local room_count = 0
 
   for sx = 1, SEED_MAX do
   for sy = 1, SEED_MAX do
     local S = SEEDS[sx][sy]
 
     if S.area or (S.top and S.top.area) then
-      count = count + 1
+      seed_count = seed_count + 1
     end
   end
   end
 
-  local total = SEED_MAX * SEED_MAX
+  -- ignore hallways when counting rooms
+  each R in LEVEL.rooms do
+    if not R.is_hallway then
+      room_count = room_count + 1
+    end
+  end
 
-  return count
+  return seed_count, room_count
 end
 
 
@@ -3362,8 +3368,7 @@ function Grower_grow_all_rooms()
       grow_fresh_rooms()
     end
 
-    local num_rooms = #LEVEL.rooms
-    local coverage  = Grower_determine_coverage()
+    local coverage, num_rooms = Grower_determine_coverage()
 
 stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         coverage,  LEVEL.min_coverage,
