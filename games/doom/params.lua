@@ -59,6 +59,10 @@ DOOM.ACTIONS =
 
   W1_OpenDoorFast = { id=109, kind="open" }
 
+  S1_UnlockBlue   = { id=133, kind="unlock" }
+  S1_UnlockRed    = { id=135, kind="unlock" }
+  S1_UnlockYellow = { id=137, kind="unlock" }
+
   S1_RaiseStair = { id=127,  kind="stair" }  -- 16 units
   W1_RaiseStair = { id=100,  kind="stair" }  --
 
