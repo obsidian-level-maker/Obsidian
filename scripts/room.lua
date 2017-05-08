@@ -967,8 +967,6 @@ function Room_detect_porches(R)
 
     if A.mode != "floor" then return -1 end
 
-    if A.pool_hack then return -1 end
-
     -- size check : never too much of room
     if A.svolume > R.svolume / 2 then return -1 end
 
@@ -1985,9 +1983,6 @@ function Room_floor_ceil_heights()
 
       if C.kind == "stair" then continue end
 
-      -- ignore pools
-      if A1.pool_hack or A2.pool_hack then continue end
-
       local diff = math.abs(A1.floor_h - A2.floor_h)
       if diff <= PARAM.jump_height then continue end
 
@@ -2132,8 +2127,6 @@ function Room_floor_ceil_heights()
 
     each A in R.areas do
       if A.mode != "floor" then continue end
-
-      if A.pool_hack then continue end
 
       assert(A.floor_h)
 
@@ -2846,64 +2839,6 @@ function Room_add_camera()
   if not GAME.ENTITIES["camera"] then return end
 
   -- TODO
-end
-
-
-
-function Room_pool_hacks__OLD()
-
-  local function similar_room(A1, A2)
-    local R1 = A1.room
-    local R2 = A2.room
-
-    if R1 == R2 then return true end
-
-    return false
-  end
-
-
-  local function can_become_pool(A)
-    if not A.room then return false end
-    if A.is_porch then return false end
-
-    -- room is too simple?
-    if #A.room.areas < 2 then return false end
-
-    -- too small?
-    if A.svolume < 2 then return false end
-
-    -- external connection?
-    each C in A.room.conns do
-      if C.A1 == A or C.A2 == A then return false end
-    end
-
-    -- check number of "roomy" neighbors
-    local count = 0
-
-    each N in A.neighbors do
-      if N.room and similar_room(A, N) then
-        count = count + 1
-      end
-    end
-
-    return (count < 2)
-  end
-
-  ---| Room_pool_hacks |---
-
-  if not LEVEL.liquid then return end
-
-  local prob = style_sel("liquids", 0, 20, 40, 80);
-
-  if prob == 0 then return end
-
-  each A in LEVEL.areas do
-    if not A.room then continue end
-
-    if can_become_pool(A) and rand.odds(prob) then
-      A.pool_hack = true
-    end
-  end
 end
 
 
