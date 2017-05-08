@@ -62,8 +62,7 @@ PREFABS.Hallway_vent_barred =
   where  = "seeds"
   shape  = "I"
 
-  deep     = 16
-  delta_h  = 64
+  deep   = 16
 
   tag_1  = "?door_tag"
   door_action = "S1_LowerFloor"

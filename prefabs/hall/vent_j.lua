@@ -16,8 +16,6 @@ PREFABS.Hallway_vent_plain =
   shape  = "I"
 
   deep   = 16
-
-  delta_h = 64
 }
 
 
