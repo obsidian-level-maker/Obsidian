@@ -49,22 +49,23 @@ DOOM.PARAMETERS =
 DOOM.ACTIONS =
 {
   --
-  -- These keywords are used by prefabs with an "action" value.
+  -- These keywords are used by prefabs that are remotely
+  -- triggered (by a switch or walk-over line).
   --
 
-  S1_OpenDoor = { id=103 }    -- opens and stays open
-  W1_OpenDoor = { id=2   }    --
-  GR_OpenDoor = { id=46  }
+  S1_OpenDoor = { id=103,  kind="open" }    -- opens and stays open
+  W1_OpenDoor = { id=2,    kind="open" }    --
+  GR_OpenDoor = { id=46,   kind="open" }    --
 
-  W1_OpenDoorFast = { id=109 }
+  W1_OpenDoorFast = { id=109, kind="open" }
 
-  S1_RaiseStair = { id=127 }  -- 16 units
-  W1_RaiseStair = { id=100 }  --
+  S1_RaiseStair = { id=127,  kind="stair" }  -- 16 units
+  W1_RaiseStair = { id=100,  kind="stair" }  --
 
-  S1_FloorUp  = { id=18  }    -- up to next highest floor
-  W1_FloorUp  = { id=119 }    --
+  S1_FloorUp  = { id=18,   kind="floor_up" } -- up to next highest floor
+  W1_FloorUp  = { id=119,  kind="floor_up" } --
 
-  S1_LowerFloor = { id=23 }  -- down to lowest nb floor
-  W1_LowerFloor = { id=38 }  --
+  S1_LowerFloor = { id=23, kind="lower" }  -- down to lowest nb floor
+  W1_LowerFloor = { id=38, kind="lower" }  --
 }
 
