@@ -6,13 +6,22 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
++  fence/bars : needs to vertically expand like a normal fence
+                so that player cannot jump through the gap
+
+-  Traps prefabs have an "action_kind", use matching action
+   for the trigger lines.   [ "open" vs "lower" ]
+   Q/ how to pick the matching action
+   A/ decide it for the trapped thing early, require trap prefabs tp
+      have a matching value
+
 +  lighting in caves mucked up?  [ check Ambient_push/pop ]
 
 -  sprouts from symmetrical rooms : often skip a side
 
 -  have a CHUNK_CLASS
 
-+  proper system for actions of remote switches
+DONE:  proper system for actions of remote switches
 
 -  internal fences (esp. for outdoor rooms)
 
@@ -20,10 +29,20 @@ Miscellaneous
 
 -  rewrite player_face_dir() ?
 
+-  have a ob_match_game(), use by prefab system AND grower rules TOO
+-  have a ob_match_theme(), ditto
+-  have a ob_match_engine()
+-  have a ob_match_playmode()
+
+-  have a ob_check_features()  : the name (or names) must exist
+                                 in the PARAM table (and not be "false")
+
 
 
 Hallway System
 --------------
+
+-  use a "group" to match prefabs
 
 -  not considered "wallish" (no triangular filler) ?
 
@@ -31,7 +50,7 @@ Hallway System
 
 +  finish the "deuce" hallway pieces
 
--  texturing for non-terminator pieces  [ hallway room themes ]
+-  texturing for pieces  [ hallway room themes ]
 
 +  support stair pieces  [ delta_h, like in joiners ]
 
@@ -47,13 +66,13 @@ Hallway System
 
    also: open on ALL sides  (mainly I and L pieces)
 
--  IDEA: shape = { "mid", "none", "mid", "none" }
+-  IDEA: shape = { "mid", "-", "mid", "-" }
 
-   -- keywords can be: "none"  (no connections)
-                       "mid"   (middle of side)
-                       "left"
-                       "right"
-                       "split" (one on left, one on right)
+   keywords can be: "-"     (no connections)
+                    "mid"   (middle of side)
+                    "left"
+                    "right"
+                    "split" (one on left, one on right)
 
        function REMAP(pos)
           if pos == "left"  then return "right" end
