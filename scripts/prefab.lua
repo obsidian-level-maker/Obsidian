@@ -2045,9 +2045,16 @@ function Fab_find_matches(reqs, match_state)
 
     if req_k == nil then return false end
 
+    if def_k == "outdoor" then
+      if match_environment(req_k, "park")      then return true end
+      if match_environment(req_k, "courtyard") then return true end
+    end
+
     -- negated check?
     if string.sub(def_k, 1, 1) == '!' then
-      return string.sub(def_k, 2) != req_k
+      def_k = string.sub(def_k, 2)
+
+      return not match_environment(def_k, req_k)
     end
 
     return def_k == req_k
