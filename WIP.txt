@@ -42,8 +42,6 @@ DONE:  proper system for actions of remote switches
 Hallway System
 --------------
 
--  use a "group" to match prefabs
-
 -  not considered "wallish" (no triangular filler) ?
 
 !!!  for 2x2 hallway, have 2x1 terminator pieces
@@ -51,8 +49,6 @@ Hallway System
 +  finish the "deuce" hallway pieces
 
 -  texturing for pieces  [ hallway room themes ]
-
-+  support stair pieces  [ delta_h, like in joiners ]
 
 +  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]

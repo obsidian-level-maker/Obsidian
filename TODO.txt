@@ -134,27 +134,14 @@ Caves
 Hallways
 --------
 
-+  use a wad-fab for each part of a hallway
+-  support delta_h in terminator prefabs
 
-+  determine shape of each piece/chunk in the rule
-   -  simple shapes like I/L/T/P/U
-   -  complex shapes like "11./.../1./.." (s/n/w/e)
-
-+  use shape to pick prefabs properly (see joiner logic)
++  support complex shapes
 
 -  allow a hallway rule to sprout TWO new rooms
 
--  hallway "groups", as per V5
-
--  support for stairs in hallways
-
 -  double halls : detect a 6x4 or larger room with one or two exits
    and place the hallway around it
-
--  flat mismatch where hallways meet rooms
-   (a) have a step (ideally not flush with wall)
-   (b) put a door there
-   (c) use floor texture in hallway (only works at one end)
 
 
 
