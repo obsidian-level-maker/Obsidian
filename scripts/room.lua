@@ -700,26 +700,12 @@ function Room_reckon_door_tex()
   end
 
 
-  local function visit_joiner(C)
-    -- nothing needed
-  end
-
-
-  local function visit_terminator(C)
-    -- nothing needed ??
-  end
-
+  ---| Room_reckon_door_tex |---
 
   each C in LEVEL.conns do
     if C.kind == "edge" then
       visit_conn(C, C.E1, C.E2)
       visit_conn(C, C.F1, C.F2)
-
-    elseif C.kind == "joiner" then
-      visit_joiner(C)
-
-    elseif C.kind == "terminator" then
-      visit_terminator(C)
     end
   end
 end
@@ -753,25 +739,28 @@ function Room_pick_joiner_prefab(C, chunk)
   -- [[ only straight pieces can be flipped ]]
 
   if C.kind == "joiner" and chunk.shape == "I" then
-    local flipped
+    local flip_it
 
-    -- we generally want the joiner to face the later room
+    -- we generally want the joiner to face the earlier room
+    -- (i.e. travel direction is toward the later room).
+    -- this is critical for some locked types of joiners.
     if C.R1.lev_along > C.R2.lev_along then
-      flipped = true
+      flip_it = true
     end
 
     if chunk.prefab_def.can_flip and rand.odds(35) then
-      flipped = not flipped
+      flip_it = not flip_it
     end
 
     -- this is needed when the environment on each side is important,
     -- such as the joiner connecting a normal room to a cave.
     if chunk.prefab_def.force_flip != nil then
-      flipped = chunk.prefab_def.force_flip
+      flip_it = chunk.prefab_def.force_flip
     end
 
-    if flipped then
-      -- reverse from_dir, swap from_area and dest_area
+    if flip_it then
+      -- this reverses from_dir and dest_dir, and adjusts the
+      -- from_area and dest_area fields accordingly.
       Chunk_flip(chunk)
     end
   end
@@ -2014,146 +2003,8 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function OLD__categorize_hall_shape(S, enter_dir, leave_dir, z_dir, z_size)
-    local info =
-    {
-      dir = enter_dir
-      delta_h = sel(z_size == "big", 48, 24)
+--[[  OLD CRUD, REVIEW IF USEFUL....
 
-      z_dir = z_dir
-      z_size = z_size
-      z_offset = 0
-    }
-
-    if leave_dir == enter_dir then
-      info.shape = "I"
-
-    elseif leave_dir == geom.LEFT[enter_dir] then
-      info.shape = "C"
-      info.mirror = false
-
-    elseif leave_dir == geom.RIGHT[enter_dir] then
-      info.shape = "C"
-      info.mirror = true
-
-    else
-      error("weird hallway dirs")
-    end
-
-    if z_dir < 0 then
-      if info.shape == "I" then
-        info.dir = 10 - info.dir
-      else
-        if info.mirror then
-          info.dir = geom.LEFT[info.dir]
-        else
-          info.dir = geom.RIGHT[info.dir]
-        end
-
-        info.mirror = not info.mirror
-      end
-
-      info.z_offset = - info.delta_h
-    end
-
-    return info
-  end
-
-
-  local function OLD__flow_through_hallway(R, S, enter_dir, floor_h)
-
--- stderrf("flow_through_hallway @ %s : %s\n", S.name, R.name)
-
-    table.insert(R.hallway.path, S)
-
-    S.floor_h = floor_h
-    S.hall_visited = true
-
-    R.hallway.max_h = math.max(R.hallway.max_h, floor_h)
-    R.hallway.min_h = math.min(R.hallway.min_h, floor_h)
-
-    -- collect where we can go next + where can exit
-    local next_dirs = {}
-    local exit_dirs = {}
-
-    local saw_fixed = false
-
-    each dir in geom.ALL_DIRS do
-      local N = S:neighbor(dir)
-
-      if not (N and N.area) then continue end
-
-      if N.area.room != R then
-        if N.area.room == R.hallway.R1 then R.hallway.touch_R1 = R.hallway.touch_R1 + 1 end
-        if N.area.room == R.hallway.R2 then R.hallway.touch_R2 = R.hallway.touch_R2 + 1 end
-        continue
-      end
-
-      if N.not_path then continue end
-      if N.hall_visited then continue end
-
-      -- Note: this assume fixed diagonals never branch elsewhere
-      if N.fixed_diagonal then
-        if not N.floor_h then
-          table.insert(R.hallway.path, N)  -- needed for ceilings
-          N.floor_h = floor_h
-          N.hall_visited = true
-        end
-
-        saw_fixed = true
-        continue
-      end
-
-      table.insert(next_dirs, dir)
-    end
-
-    -- all done?
-    local total = #next_dirs + #exit_dirs
-
-    if total == 0 then
-      return
-    end
-
-    -- branching?
-    if total > 1 then
-      R.hallway.branched = true
-
-      each dir in next_dirs do
-        flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
-      end
-
-      return
-    end
-
-    -- a single direction --
-
-    local dir = next_dirs[1] or exit_dirs[1]
-
-    if not S.diagonal and not saw_fixed and not S:has_door_edge() then
-      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, R.hallway.z_dir, R.hallway.z_size)
-
-      floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
-
-      R.hallway.max_h = math.max(R.hallway.max_h, floor_h)
-      R.hallway.min_h = math.min(R.hallway.min_h, floor_h)
-    end
-
-    if #next_dirs > 0 then
-      return flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
-    end
-  end
-
-
-
-  local function OLD__process_hallway(R, entry_area)
-    -- Note: this would be a problem if player starts could exist in a hallway
-    assert(entry_area)
-    assert(entry_area.chunk)
-    assert(entry_area.chunk.kind == "hallway")
-
-    hallway_flow(R, entry_area.chunk, R.entry_h)
-
---[[
     local S, S_dir
     local from_A
 
@@ -2211,41 +2062,7 @@ function Room_floor_ceil_heights()
       -- steep stairs need a bit more headroom
       R.hallway.height = R.hallway.height + 24
     end
-
-
-    flow_through_hallway(R, S, S_dir, R.entry_h)
-
-    -- check all parts got a height
-    each S in R.areas[1].seeds do
-      if S.not_path then continue end
-      assert(S.floor_h)
-    end
-
-    -- transfer heights to neighbors
-    each C in R.conns do
-      local N
-
-      if C.A1.room == C.A2.room then continue end
-
-      error("this is broken...")
-
-      if C.A1.room == R then
-        S = C.S1
-        N = C.S2
-      else
-        assert(C.A2.room == R)
-        S = C.S2
-        N = C.S1
-      end
-
-      if not N.area.room.entry_h then
-        local next_f = assert(S.floor_h)
-        if S.hall_piece then next_f = next_f + S.hall_piece.delta_h * S.hall_piece.z_dir end
-        N.area.room.next_f = next_f
-      end
-    end
 --]]
-  end
 
 
   local function process_cave(R)
@@ -2346,8 +2163,8 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function do_joiner(R, C, next_h)
-    local chunk = assert(C.joiner_chunk)
+  local function visit_joiner(entry_h, prev_room, conn)
+    local chunk = assert(conn.joiner_chunk)
     assert(chunk.prefab_def)
 
     -- FIXME: this smells like a hack
@@ -2357,21 +2174,19 @@ function Room_floor_ceil_heights()
 
     local delta_h = chunk.prefab_def.delta_h or 0
 
-    local flipped = chunk.flipped
+    -- are we entering the joiner from the opposite side?
+    if chunk.from_area.room != prev_room then
+      delta_h = 0 - delta_h
+    end
 
-    -- FIXME: wtf?
-    if chunk.area.room != R and C.kind == "joiner" then flipped = not flipped end
+    local joiner_h = math.min(entry_h, entry_h + delta_h)
 
-    if flipped then delta_h = - delta_h end
-
-    local joiner_h = math.min(next_h, next_h + delta_h)
-
-    set_floor(C.joiner_chunk.area, joiner_h)
+    set_floor(chunk.area, joiner_h)
 
 -- stderrf("  setting joiner in %s to %d\n", C.joiner_chunk.area.name, C.joiner_chunk.area.floor_h)
 -- stderrf("  loc: (%d %d)\n", C.joiner_chunk.sx1, C.joiner_chunk.sy1)
 
-    return next_h + delta_h
+    return entry_h + delta_h
   end
 
 
@@ -2441,7 +2256,7 @@ function Room_floor_ceil_heights()
       local next_h = A1.floor_h
 
       if C.kind == "joiner" then  --FIXME???  or C.kind == "terminator" then
-        next_h = do_joiner(R, C, next_h)
+        next_h = visit_joiner(next_h, R, C)
       end
 
       visit_room(R2, next_h, A2, R, C)

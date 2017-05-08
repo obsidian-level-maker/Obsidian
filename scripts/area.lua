@@ -29,10 +29,10 @@
                     -- "nature" (a non-flat traversible part of a cave or park)
                     -- "liquid"
                     -- "cage"
-                    -- "hallway"
+
+                    -- "chunk" (whole area is a single chunk)
                     -- "scenic"
                     -- "void"
-                    -- "chunk" (whole area is a single chunk)
 
     scenic_kind : keyword  -- "water", "mountain"
 

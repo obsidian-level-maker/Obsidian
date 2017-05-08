@@ -1283,10 +1283,11 @@ function Chunk_flip(chunk)
   else
     chunk.from_dir = 10 - chunk.from_dir
 
-    -- TODO : review this  [ main point of dest_dir is for "L" shapes ]
     if chunk.dest_dir then
       chunk.dest_dir = 10 - chunk.dest_dir
     end
   end
+
+  chunk.is_flipped = not chunk.is_flipped
 end
 
