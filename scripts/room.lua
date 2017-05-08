@@ -1630,6 +1630,8 @@ stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
     end
 
     -- a T shape needs a specific from_dir
+    local old_dir = piece.from_dir
+
     if piece.shape == "T" then
       piece.from_dir = cat_dir
     end
@@ -1640,12 +1642,23 @@ stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
       pick_hallway_fab(R, piece)
     end
 
+    local delta_h = piece.prefab_def.delta_h or 0
+
     -- recurse to other pieces
 
     each dir, P in piece.h_join do
       if not seen[P.id] then
-        -- TODO : delta_h from prefab
         local new_h = h
+
+        -- most prefabs are orientated along the flow, so only need to
+        -- adjust  delta_h for certain "T" pieces (and maybe terminators...)
+        if piece.shape == "T" and piece.from_dir != old_dir then
+          if dir == piece.from_dir then
+            new_h = new_h - delta_h
+          end
+        else
+          new_h = new_h + delta_h
+        end
 
         flow(R, P, new_h, seen)
       end
