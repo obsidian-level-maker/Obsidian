@@ -256,6 +256,7 @@ function Connect_directly(P)
     C.terminator_chunk = P.chunk
     C.terminator_chunk.conn = C
 
+    -- terminator pieces always point INTO the hallway (from_dir goes OUT)
     if C.R1.is_hallway then
       Chunk_flip(P.chunk)
     end

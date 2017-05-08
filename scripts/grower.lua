@@ -2421,6 +2421,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
           stair_prefab = pick_stair_prefab(chunk)
 
           local h = assert(stair_prefab.delta_h)
+          --TODO : if stair goes down (is flipped) then subtract h from both new_area AND chunk.area
           new_area.prelim_h = from_area.prelim_h + h
         end
 
@@ -2459,12 +2460,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         end
 
         if new_room then
-          chunk.is_terminator = "entry"
+          chunk.is_terminator = true
 
           if new_room.is_hallway then
             new_room.first_piece = chunk
-          else
-            chunk.is_terminator = "exit"
           end
         end
 

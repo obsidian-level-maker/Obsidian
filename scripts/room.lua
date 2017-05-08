@@ -749,12 +749,13 @@ function Room_pick_joiner_prefab(C, chunk)
   chunk.prefab_def = Fab_pick(reqs)
 
   -- should we flip the joiner?
-  -- [ hallway terminators are already correct ]
+  -- [ hallway terminators are already ok, done in Connect_directly ]
   -- [[ only straight pieces can be flipped ]]
 
   if C.kind == "joiner" and chunk.shape == "I" then
     local flipped
 
+    -- we generally want the joiner to face the later room
     if C.R1.lev_along > C.R2.lev_along then
       flipped = true
     end
