@@ -8,12 +8,13 @@ PREFABS.Hallway_vent_locked_red =
   map    = "MAP01"
 
   kind   = "terminator"
+  group  = "vent"
   key    = "k_red"
+
+  prob   = 50
 
   where  = "seeds"
   shape  = "I"
-
-  prob   = 50
 
   deep   = 16
 }
@@ -53,12 +54,13 @@ PREFABS.Hallway_vent_barred =
   map    = "MAP03"
 
   kind   = "terminator"
+  group  = "vent"
   key    = "barred"
+
+  prob   = 50
 
   where  = "seeds"
   shape  = "I"
-
-  prob   = 50
 
   deep     = 16
   delta_h  = 64

@@ -2089,6 +2089,8 @@ SPROUT_hallway1 =
 
     conn = { x=2, y=1, dir=8 }
 
+    hall_type = "narrow"
+
     grow_pass = "hall_1"
   }
 }
@@ -2202,6 +2204,8 @@ SPROUT_hallway2 =
     env = "hallway"
 
     conn = { x=1, y=1, w=2, dir=8 }
+
+    hall_type = "wide"
 
     grow_pass = "hall_2"
   }

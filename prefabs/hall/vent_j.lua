@@ -8,10 +8,12 @@ PREFABS.Hallway_vent_plain =
   map    = "MAP01"
 
   kind   = "terminator"
-  where  = "seeds"
-  shape  = "I"
+  group  = "vent"
 
   prob   = 50
+
+  where  = "seeds"
+  shape  = "I"
 
   deep   = 16
 

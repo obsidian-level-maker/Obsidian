@@ -1087,11 +1087,11 @@ end
 
 
 
-function Grower_add_room(parent_R, force_env, trunk)
+function Grower_add_room(parent_R, info, trunk)
 
   local R = ROOM_CLASS.new()
 
-gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(force_env), tostring(parent_R and parent_R.name))
+gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
 
   if trunk == nil then
     assert(parent_R)
@@ -1109,13 +1109,13 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(force_env)
   local is_outdoor = false
   local is_cave = false
 
-  if force_env == "hallway" then
+  if info.env == "hallway" then
     is_hallway = true
-  elseif force_env == "outdoor" then
+  elseif info.env == "outdoor" then
     is_outdoor = true
-  elseif force_env == "building" then
+  elseif info.env == "building" then
     is_outdoor = false
-  elseif force_env == "cave" then
+  elseif info.env == "cave" then
     is_cave = true
   else
     is_outdoor = Room_choose_kind(R, parent_R)
@@ -1137,6 +1137,16 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(force_env)
     R.max_hall_size = 20
 
     R.all_links = {}
+
+    -- choose what kind of hallway to make
+    local kind_tab
+    if info.hall_type == "narrow" then kind_tab = THEME.narrow_halls end
+    if info.hall_type == "wide"   then kind_tab = THEME.  wide_halls end
+
+    -- unusable hallway types are inhibited in prob_for_rule()
+    assert(kind_tab and not table.empty(kind_tab))
+
+    R.hall_group = rand.key_by_probs(kind_tab)
 
   else
     local A = AREA_CLASS.new("floor")
@@ -1424,6 +1434,15 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
         prob = prob * LEVEL.cave_new_factor
       end
     end
+
+    -- check available hallway types
+    if rule.new_room and rule.new_room.hall_type == "narrow" and
+       table.empty(THEME.narrow_halls or {})
+    then return 0 end
+
+    if rule.new_room and rule.new_room.hall_type == "wide" and
+       table.empty(THEME.wide_halls or {})
+    then return 0 end
 
     return prob
   end
@@ -2515,9 +2534,7 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
     elseif cur_rule.new_room then
       local info = cur_rule.new_room
 
-      local env = info.env  -- usually NIL
-
-      new_room = Grower_add_room(R, env)
+      new_room = Grower_add_room(R, info)
 
       -- create a preliminary connection (last room to this one).
       -- the seed and direction are determined later.
@@ -3137,9 +3154,9 @@ end
 
 
 
-function Grower_create_and_grow_room(trunk, mode, env)
+function Grower_create_and_grow_room(trunk, mode, info)
   -- create the ROOM object
-  local R = Grower_add_room(nil, env, trunk)
+  local R = Grower_add_room(nil, info, trunk)
   assert(R)
 
   R.is_root = true
@@ -3251,8 +3268,9 @@ function Grower_begin_trunks()
   -- create first trunk and the exit room
 
   local trunk = Grower_add_a_trunk()
+  local info  = {}
 
-  local R = Grower_create_and_grow_room(trunk, "exit")
+  local R = Grower_create_and_grow_room(trunk, "exit", info)
 
   assert(not R.is_dead)
 
@@ -3270,16 +3288,15 @@ end
 function Grower_add_teleporter_trunk(parent_R)
 
   local trunk = Grower_add_a_trunk()
+  local info  = {}
 
 --[[ FIXME
-  local env
-
   if rand.odds(LEVEL.cave_trunk_prob) then
-    env = "cave"
+    info.env = "cave"
   end
 --]]
 
-  local R = Grower_create_and_grow_room(trunk, "normal", env)
+  local R = Grower_create_and_grow_room(trunk, "normal", info)
 
   if R.is_dead then
     -- trunk should be dead too

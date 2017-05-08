@@ -380,6 +380,16 @@ DOOM.THEMES =
       STONE = 50
     }
 
+    narrow_halls =
+    {
+      vent = 50
+    }
+
+    wide_halls =
+    {
+      deuce = 50
+    }
+
     floor_sinks =
     {
       PLAIN = 100

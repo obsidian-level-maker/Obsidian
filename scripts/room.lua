@@ -728,6 +728,9 @@ function Room_pick_joiner_prefab(C, chunk)
 
     reqs.env      = A1.room:get_env()
     reqs.neighbor = A2.room:get_env()
+
+  elseif C.kind == "terminator" then
+    reqs.group = assert(chunk.area.room.hall_group)
   end
 
   C:get_lock_reqs(reqs)
@@ -1588,6 +1591,7 @@ stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
 
     reqs.kind  = "hall"
     reqs.shape = chunk.shape
+    reqs.group = assert(chunk.area.room.hall_group)
 
     local def = Fab_pick(reqs)
 
