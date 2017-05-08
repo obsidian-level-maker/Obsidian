@@ -7,16 +7,20 @@ PREFABS.Bars_shiny =
   file   = "fence/bars.wad"
   map    = "MAP01"
 
-  prob   = 50
+  prob   = 500
 
+  kind   = "door"
   where  = "edge"
   key    = "barred"
 
-  long   = 192
+  env      = "outdoor"
+  neighbor = "outdoor"
+
+  seed_w = 2
   deep   = 16
   over   = 16
 
-  z_fit  = "bottom"
+  x_fit  = "frame"
 
   bound_z1 = 0
   bound_z2 = 128
@@ -31,12 +35,10 @@ PREFABS.Bars_shiny_diag =
   file   = "fence/bars.wad"
   map    = "MAP02"
 
-  prob   = 50
+  prob   = 500
 
   where  = "diagonal"
   key    = "barred"
-
-  z_fit  = "bottom"
 
   bound_z1 = 0
   bound_z2 = 128
