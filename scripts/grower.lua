@@ -804,7 +804,6 @@ function Grower_calc_rule_probs()
     if not ob_match_game(rule)     then return 0 end
     if not ob_match_engine(rule)   then return 0 end
     if not ob_match_playmode(rule) then return 0 end
-    if not ob_match_feature(rule)  then return 0 end
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
@@ -1403,6 +1402,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 ---###  end
 
     if not ob_match_level_theme(rule) then return 0 end
+    if not ob_match_feature(rule)     then return 0 end
 
     -- don't exceed trunk quota
     if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then

@@ -152,30 +152,6 @@ function Fab_load_all_definitions()
   end
 
 
-  local function style_factor(def)
-    if not def.style then return 1 end
-
-    local style_tab = def.style
-
-    if type(style_tab) != "table" then
-      style_tab = { def.style }
-      def.style = style_tab
-    end
-
-    local factor = 1.0
-
-    each name in style_tab do
-      if STYLE[name] == nil then
-        error("Unknown style name in prefab def: " .. tostring(name))
-      end
-
-      factor = factor * style_sel(name, 0, 0.28, 1.0, 3.5)
-    end
-
-    return factor
-  end
-
-
   local function random_factor(def)
     if not def.prob_skew then return 1 end
 
@@ -195,14 +171,12 @@ function Fab_load_all_definitions()
     if not ob_match_game(def)     then return 0 end
     if not ob_match_engine(def)   then return 0 end
     if not ob_match_playmode(def) then return 0 end
-    if not ob_match_feature(def)  then return 0 end
 
     -- normal logic --
 
     local prob = def.prob or 0
 
---!!!    prob = prob *  style_factor(def)
---!!!    prob = prob * random_factor(def)
+    prob = prob * random_factor(def)
 
     return prob
   end
@@ -2127,6 +2101,47 @@ function Fab_find_matches(reqs, match_state)
   end
 
 
+  local function style_factor(def)
+    if not def.style then return 1 end
+
+    local style_tab = def.style
+
+    if type(style_tab) != "table" then
+      style_tab = { def.style }
+      def.style = style_tab
+    end
+
+    local factor = 1.0
+
+    each name in style_tab do
+      if STYLE[name] == nil then
+        error("Unknown style name in prefab def: " .. tostring(name))
+      end
+
+      factor = factor * style_sel(name, 0, 0.28, 1.0, 3.5)
+    end
+
+    return factor
+  end
+
+  
+  local function prob_for_match(def, match_state)
+    local prob = assert(def.use_prob)
+
+    if prob <= 0 then return 0 end
+
+    if not ob_match_level_theme(def) then return 0 end
+    if not ob_match_feature(def)     then return 0 end
+
+    if (def.rank or 0) < match_state.rank then return 0 end
+
+    prob = prob * match_requirements(def)
+    prob = prob * style_factor(def)
+
+    return prob
+  end
+
+
   ---| Fab_find_matches |---
 
   assert(reqs.kind)
@@ -2134,25 +2149,19 @@ function Fab_find_matches(reqs, match_state)
   local tab = {}
 
   each name,def in PREFABS do
-    local prob = assert(def.use_prob)
+    local prob = prob_for_match(def, match_state)
 
-    if prob <= 0 then continue end
+    if prob > 0 then
+      -- Ok, add it
+      -- a higher rank overrides anything lower
+      
+      if (def.rank or 0) > match_state.rank then
+        match_state.rank = def.rank
+        tab = {}
+      end
 
-    if not ob_match_level_theme(def) then continue end
-
-    if (def.rank or 0) < match_state.rank then continue end
-
-    if match_requirements(def) <= 0 then continue end
-
-    -- Ok, add it
-    -- a higher rank overrides anything lower
-    
-    if (def.rank or 0) > match_state.rank then
-      match_state.rank = def.rank
-      tab = {}
+      tab[name] = prob
     end
-
-    tab[name] = prob
   end
 
   return tab
