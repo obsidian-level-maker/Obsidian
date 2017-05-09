@@ -264,6 +264,27 @@ function ob_match_playmode(T)
 end
 
 
+function ob_match_level_theme(T)
+  if not T.theme then return true end
+
+  local theme  = T.theme
+  local result = true
+
+  -- negated check?
+  if type(theme) == "string" and string.sub(theme, 1, 1) == '!' then
+    theme  = string.sub(theme, 2)
+    result = not result
+  end
+
+  -- normal check
+  if ob_match_word_or_table(theme, LEVEL.theme_name) then
+    return result
+  end
+
+  return not result
+end
+
+
 function ob_match_module(T)
   if not T.module then return true end
 
