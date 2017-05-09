@@ -152,6 +152,62 @@ function Fab_load_all_definitions()
   end
 
 
+  local function style_factor(def)
+    if not def.style then return 1 end
+
+    local style_tab = def.style
+
+    if type(style_tab) != "table" then
+      style_tab = { def.style }
+      def.style = style_tab
+    end
+
+    local factor = 1.0
+
+    each name in style_tab do
+      if STYLE[name] == nil then
+        error("Unknown style name in prefab def: " .. tostring(name))
+      end
+
+      factor = factor * style_sel(name, 0, 0.28, 1.0, 3.5)
+    end
+
+    return factor
+  end
+
+
+  local function random_factor(def)
+    if not def.prob_skew then return 1 end
+
+    local prob_skew = def.prob_skew
+    local half_skew = (1.0 + prob_skew) / 2.0
+
+    return rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
+  end
+
+
+  local function calc_prob(def)
+    if def.skip_prob then
+      if rand.odds(def.skip_prob) then return 0 end
+    end
+
+    -- check against current game, engine, theme (etc...)
+    if not ob_match_game(def)     then return 0 end
+    if not ob_match_engine(def)   then return 0 end
+    if not ob_match_playmode(def) then return 0 end
+    if not ob_match_feature(def)  then return 0 end
+
+    -- normal logic --
+
+    local prob = def.prob or 0
+
+--!!!    prob = prob *  style_factor(def)
+--!!!    prob = prob * random_factor(def)
+
+    return prob
+  end
+
+
   local function preprocess_all()
     table.name_up(PREFABS)
     table.expand_templates(PREFABS)
@@ -160,6 +216,8 @@ function Fab_load_all_definitions()
       if not def.kind then
         def.kind = kind_from_filename(def.file)
       end
+
+      def.use_prob = calc_prob(def)
     end
   end
 
@@ -168,8 +226,8 @@ function Fab_load_all_definitions()
 
   PREFABS = {}
 
+--TODO: visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
   visit_dir("prefabs")
--- visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
 
   preprocess_all()
 end
@@ -1892,73 +1950,6 @@ end
 
 ------------------------------------------------------------------------
 
-
-function Fab_match_user_stuff(def)
-  -- returns a probability multiplier >= 0
-
-  local factor = 1
-
-  local function match(def_k, user)
-    if type(def_k) == "table" then
-      local v = def_k[user]
-      if not v then v = def_k["other"] or 0 end
-      factor = factor * v
-      return
-    end
-
-    -- negated check?
-    if string.sub(def_k, 1, 1) == '!' then
-      if string.sub(def_k, 2) == user then factor = 0 end
-      return
-    end
-
-    if def_k != user then factor = 0 end
-  end
-
-  local function match_style(name)
-    if not STYLE[name] then
-      error("Unknown style name in prefab def: " .. tostring(name))
-    end
-
-    factor = factor * style_sel(name, 0, 0.25, 1.0, 4.0)
-  end
-
-
-  ---| Fab_match_user_stuff |---
-
-  -- special check: if required game is "doomish" then allow any
-  -- of the DOOM games to match.
-  if def.game == "doomish" then
-     def.game = { doom1=1, doom2=1 }
-  end
-
-  -- !!! FIXME: handle "extends" for games (like in oblige.lua)
-
-  if def.game  then match(def.game,  OB_CONFIG.game) end
-  if def.theme then match(def.theme, LEVEL.theme_name) end
-
-  if def.engine   then match(def.engine,   OB_CONFIG.engine) end
-  if def.playmode then match(def.playmode, OB_CONFIG.playmode) end
-
-  if factor <= 0 then return 0 end
-
-  -- style checks...
-
-  if def.style then
-    if type(def.style) == "table" then
-      each s in def.style do
-        match_style(s)
-      end
-    else
-      match_style(def.style)
-    end
-  end
-
-  return factor
-end
-
-
-
 --[[
 
 PREFAB SIZE MATCHING
@@ -2140,26 +2131,25 @@ function Fab_find_matches(reqs, match_state)
 
   assert(reqs.kind)
 
-  local tab = { }
+  local tab = {}
 
   each name,def in PREFABS do
+    local prob = assert(def.use_prob)
+
+    if prob <= 0 then continue end
+
+    if not ob_match_level_theme(def) then continue end
+
     if (def.rank or 0) < match_state.rank then continue end
 
     if match_requirements(def) <= 0 then continue end
-
-    -- game, theme (etc) check
-    local prob = Fab_match_user_stuff(def)
-
-    prob = prob * (def.prob or 0) * (reqs.prob_mul or 1)
-
-    if prob <= 0 then continue end
 
     -- Ok, add it
     -- a higher rank overrides anything lower
     
     if (def.rank or 0) > match_state.rank then
       match_state.rank = def.rank
-      tab = { }
+      tab = {}
     end
 
     tab[name] = prob

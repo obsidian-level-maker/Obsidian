@@ -777,7 +777,7 @@ function Grower_calc_rule_probs()
         error("Unknown style in grammar rule: " .. tostring(name))
       end
 
-      factor = factor * style_sel(name, 0, 0.30, 1.0, 3.5)
+      factor = factor * style_sel(name, 0, 0.28, 1.0, 3.5)
     end
 
     return factor
@@ -790,9 +790,7 @@ function Grower_calc_rule_probs()
     local prob_skew = rule.prob_skew
     local half_skew = (1.0 + prob_skew) / 2.0
 
-    local factor = rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
-
-    return factor
+    return rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
   end
 
 
@@ -806,9 +804,7 @@ function Grower_calc_rule_probs()
     if not ob_match_game(rule)     then return 0 end
     if not ob_match_engine(rule)   then return 0 end
     if not ob_match_playmode(rule) then return 0 end
-
-    if not ob_match_level_theme(rule) then return 0 end
-    if not ob_match_feature(rule)     then return 0 end
+    if not ob_match_feature(rule)  then return 0 end
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
@@ -1405,6 +1401,8 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 ---###  if is_emergency and pass == "grow" and not rule.emergency then
 ---###    return 0
 ---###  end
+
+    if not ob_match_level_theme(rule) then return 0 end
 
     -- don't exceed trunk quota
     if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
