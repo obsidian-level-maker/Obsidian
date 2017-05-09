@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -164,10 +164,8 @@ end
 
 
 
-function ob_match_conf(T)
-  assert(OB_CONFIG.game)
-  assert(OB_CONFIG.engine)
-  assert(OB_CONFIG.playmode)
+function ob_match_game(T)
+  if not T.game then return true end
 
   -- special check: if required game is "doomish" then allow any
   -- of the DOOM games to match.
@@ -175,51 +173,99 @@ function ob_match_conf(T)
      T.game = { doom1=1, doom2=1 }
   end
 
-  if T.game and not ob_match_word_or_table(T.game, OB_CONFIG.game) then
-    local game_def = OB_GAMES[OB_CONFIG.game]
+  if ob_match_word_or_table(T.game, OB_CONFIG.game) then
+    return true
+  end
 
-    while game_def do
-      if not game_def.extends then return false end
+  -- FIXME: negated check
 
-      if ob_match_word_or_table(T.game, game_def.extends) then
-        break; -- OK --
-      end
+  -- handle extended games
+  local game_def = OB_GAMES[OB_CONFIG.game]
 
-      game_def = OB_GAMES[game_def.extends]
+  while game_def do
+    if not game_def.extends then return false end
+
+    if ob_match_word_or_table(T.game, game_def.extends) then
+      return true -- OK --
+    end
+
+    game_def = OB_GAMES[game_def.extends]
+  end
+
+  return false
+end
+
+
+function ob_match_engine(T)
+  if not T.engine then return true end
+
+  if ob_match_word_or_table(T.engine, OB_CONFIG.engine) then
+    return true
+  end
+
+  -- FIXME: negated check
+
+  -- handle extended engines
+
+  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
+  while engine_def do
+    if not engine_def.extends then return false end
+
+    if ob_match_word_or_table(T.engine, engine_def.extends) then
+      return true -- OK --
+    end
+
+    engine_def = OB_ENGINES[engine_def.extends]
+  end
+
+  return false
+end
+
+
+function ob_match_playmode(T)
+  if not T.playmode then return true end
+
+  -- FIXME: negated check
+
+  -- normal check
+  return ob_match_word_or_table(T.playmode, OB_CONFIG.playmode)
+end
+
+
+function ob_match_module(T)
+  if not T.module then return true end
+
+  local mod_tab = T.module
+
+  if type(mod_tab) != "table" then
+    mod_tab = { [T.module]=1 }
+  end
+
+  -- require ALL specified modules to be present and enabled
+
+  each name,_ in mod_tab do
+    local def = OB_MODULES[name]
+
+    if not (def and def.shown and def.enabled) then
+      return false
     end
   end
 
-  if T.engine and not ob_match_word_or_table(T.engine, OB_CONFIG.engine) then
-    local engine_def = OB_ENGINES[OB_CONFIG.engine]
+  return true
+end
 
-    while engine_def do
-      if not engine_def.extends then return false end
 
-      if ob_match_word_or_table(T.engine, engine_def.extends) then
-        break; -- OK --
-      end
 
-      engine_def = OB_ENGINES[engine_def.extends]
-    end
-  end
+function ob_match_conf(T)
+  assert(OB_CONFIG.game)
+  assert(OB_CONFIG.engine)
+  assert(OB_CONFIG.playmode)
 
-  if T.playmode and not ob_match_word_or_table(T.playmode, OB_CONFIG.playmode) then
-    return false
-  end
-
-  if T.module then
-    local mod = T.module
-    if type(mod) != "table" then
-      mod = { [T.module]=1 }
-    end
-
-    each name,_ in mod do
-      local def = OB_MODULES[name]
-      if not (def and def.shown and def.enabled) then
-        return false
-      end
-    end
-  end
+  if not ob_match_game(T)     then return false end
+  if not ob_match_engine(T)   then return false end
+  if not ob_match_playmode(T) then return false end
+  if not ob_match_module(T)   then return false end
 
   return true --OK--
 end
