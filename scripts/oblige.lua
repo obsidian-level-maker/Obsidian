@@ -64,7 +64,7 @@ function ob_traceback(msg)
     end
 
     local base_fn = string.match(info.short_src, "[^/]*$")
- 
+
     return string.format("@ %s:%d", base_fn, info.currentline)
   end
 
@@ -173,63 +173,94 @@ function ob_match_game(T)
      T.game = { doom1=1, doom2=1 }
   end
 
-  if ob_match_word_or_table(T.game, OB_CONFIG.game) then
-    return true
+  local game   = T.game
+  local result = true
+
+  -- negated check?
+  if type(game) == "string" and string.sub(game, 1, 1) == '!' then
+    game   = string.sub(game, 2)
+    result = not result
   end
 
-  -- FIXME: negated check
+  -- normal check
+  if ob_match_word_or_table(game, OB_CONFIG.game) then
+    return result
+  end
 
   -- handle extended games
   local game_def = OB_GAMES[OB_CONFIG.game]
 
   while game_def do
-    if not game_def.extends then return false end
+    if not game_def.extends then
+      break;
+    end
 
-    if ob_match_word_or_table(T.game, game_def.extends) then
-      return true -- OK --
+    if ob_match_word_or_table(game, game_def.extends) then
+      return result
     end
 
     game_def = OB_GAMES[game_def.extends]
   end
 
-  return false
+  return not result
 end
 
 
 function ob_match_engine(T)
   if not T.engine then return true end
 
-  if ob_match_word_or_table(T.engine, OB_CONFIG.engine) then
-    return true
+  local engine = T.engine
+  local result = true
+
+  -- negated check?
+  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
+    engine = string.sub(engine, 2)
+    result = not result
   end
 
-  -- FIXME: negated check
+  -- normal check
+  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+    return result
+  end
 
   -- handle extended engines
 
   local engine_def = OB_ENGINES[OB_CONFIG.engine]
 
   while engine_def do
-    if not engine_def.extends then return false end
+    if not engine_def.extends then
+      break;
+    end
 
-    if ob_match_word_or_table(T.engine, engine_def.extends) then
-      return true -- OK --
+    if ob_match_word_or_table(engine, engine_def.extends) then
+      return result
     end
 
     engine_def = OB_ENGINES[engine_def.extends]
   end
 
-  return false
+  return not result
 end
 
 
 function ob_match_playmode(T)
   if not T.playmode then return true end
 
-  -- FIXME: negated check
+  local playmode = T.playmode
+  local result   = true
+
+  -- negated check?
+  if type(playmode) == "string" and string.sub(playmode, 1, 1) == '!' then
+    playmode = string.sub(playmode, 2)
+    result   = not result
+  end
 
   -- normal check
-  return ob_match_word_or_table(T.playmode, OB_CONFIG.playmode)
+  if ob_match_word_or_table(playmode, OB_CONFIG.playmode) then
+    return result
+  end
+
+  return not result
 end
 
 
@@ -331,7 +362,7 @@ function ob_update_modules()
   -- modules may depend on other modules, hence we may need
   -- to repeat this multiple times until all the dependencies
   -- have flowed through.
-  
+
   for loop = 1,100 do
     local changed = false
 
@@ -396,7 +427,7 @@ function ob_set_mod_option(name, option, value)
     gui.printf("Ignoring unknown module: %s\n", name)
     return
   end
-    
+
   if option == "self" then
     -- convert 'value' from string to a boolean
     value = not (value == "false" or value == "0")
@@ -614,7 +645,7 @@ end
 
 function ob_load_game(game)
   -- 'game' parameter must be a sub-directory of the games/ folder
-  
+
   -- ignore the template game -- it is only instructional
   if game == "template" then return end
 
@@ -758,7 +789,7 @@ function ob_init()
   local function create_buttons(what, DEFS)
     assert(DEFS)
     gui.debugf("creating buttons for %s\n", what)
-  
+
     local list = {}
 
     local min_priority = 999
