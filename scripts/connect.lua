@@ -230,9 +230,7 @@ function Connect_directly(P)
 
   if kind == "edge" then
 
-    -- this "arch" kind can become "door" or "locked_door" later...
-
-    E1, E2 = Edge_new_pair("arch", "nothing",  P.S, P.dir, long)
+    E1, E2 = Edge_new_pair("doorway", "nothing",  P.S, P.dir, long)
 
   elseif kind == "joiner" then
 

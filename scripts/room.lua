@@ -781,11 +781,11 @@ function Room_pick_edge_prefab(C)
 
   local E = C.E1
 
-  if E.kind != "arch" then
+  if E.kind != "doorway" then
     E = C.E2
   end
 
-  assert(E.kind == "arch")
+  assert(E.kind == "doorway")
 
 
   -- get orientation right, "front" of prefab faces earlier room
@@ -832,7 +832,6 @@ function Room_pick_edge_prefab(C)
 
     goal = C.lock.goals[1]
 
-    E.kind = "lock_door"
     E.door_tag = goal.tag
 
     C.is_door = true
@@ -841,8 +840,6 @@ function Room_pick_edge_prefab(C)
   -- secret door ?
   elseif C.is_secret then
     reqs.kind = "door"
-
-    E.kind = "secret_door"
 
     C.is_door = true
 
@@ -856,7 +853,7 @@ function Room_pick_edge_prefab(C)
     end
 
     if rand.odds(prob) then
-      E.kind = "door"
+      -- TODO : reqs.kind = "door"
 
       C.is_door = true
       C.fresh_floor = rand.odds(30)
@@ -2099,8 +2096,8 @@ function Room_floor_ceil_heights()
     if C.A1.floor_h    != C.A2.floor_h then return false end
     if C.R1.is_outdoor != C.R2.is_outdoor then return false end
 
-    if not (C.E1.kind == "nothing" or C.E1.kind == "arch") then return false end
-    if not (C.E2.kind == "nothing" or C.E2.kind == "arch") then return false end
+    if not (C.E1.kind == "nothing" or C.E1.kind == "doorway") then return false end
+    if not (C.E2.kind == "nothing" or C.E2.kind == "doorway") then return false end
 
     return true
   end

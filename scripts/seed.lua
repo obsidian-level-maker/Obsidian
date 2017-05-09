@@ -88,9 +88,9 @@
 
     kind : keyword  -- "nothing" (keep it empty)
                     -- "ignore" (use the junction instead)
-                    -- "arch", "door", "lock_door"
-                    -- "wall", "fence", "window"
-                    -- "steps", "trap_wall", "sky_edge"
+                    -- "wall", "doorway",
+                    -- "window", "fence"
+                    -- [ "steps", "trap_wall", "sky_edge" ]
 
     S : SEED        -- first seed (the "left-most" one when facing the edge)
 
@@ -109,8 +109,6 @@
 
 
     floor_h  -- floor height (set during room layouting)
-
-    door_kind : keyword   -- can be NIL, or "door" or "arch"
 --]]
 
 
@@ -1097,9 +1095,9 @@ end
 function Edge_is_wallish(E)
   if E.is_wallish then return true end
 
-  if E.kind == "wall" or E.kind == "window" or
-     E.kind == "arch" or E.kind == "locked_door" or
-     E.kind == "door" or E.kind == "secret_door"
+  if E.kind == "wall" or
+     E.kind == "window" or
+     E.kind == "doorway"
   then
     return true
   end
@@ -1109,8 +1107,7 @@ function Edge_is_wallish(E)
     local kind2 = E.peer.kind
 
     if kind2 == "window" or
-       kind2 == "arch" or kind2 == "locked_door" or
-       kind2 == "door" or kind2 == "secret_door"
+       kind2 == "doorway"
     then
       return true
     end
