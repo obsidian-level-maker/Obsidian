@@ -29,14 +29,6 @@ DONE:  proper system for actions of remote switches
 
 -  rewrite player_face_dir() ?
 
--  have a ob_match_game(), use by prefab system AND grower rules TOO
--  have a ob_match_theme(), ditto
--  have a ob_match_engine()
--  have a ob_match_playmode()
-
--  have a ob_check_features()  : the name (or names) must exist
-                                 in the PARAM table (and not be "false")
-
 
 
 Hallway System
