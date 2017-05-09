@@ -291,7 +291,8 @@ function ob_match_module(T)
   local mod_tab = T.module
 
   if type(mod_tab) != "table" then
-    mod_tab = { [T.module]=1 }
+    mod_tab  = { [T.module]=1 }
+    T.module = mod_tab
   end
 
   -- require ALL specified modules to be present and enabled
@@ -300,6 +301,30 @@ function ob_match_module(T)
     local def = OB_MODULES[name]
 
     if not (def and def.shown and def.enabled) then
+      return false
+    end
+  end
+
+  return true
+end
+
+
+function ob_match_feature(T)
+  if not T.feature then return true end
+
+  local feat_tab = T.feature
+
+  if type(feat_tab) != "table" then
+    feat_tab  = { [T.feature]=1 }
+    T.feature = feat_tab
+  end
+
+  -- require ALL specified features to be available
+
+  each name,_ in feat_tab do
+    local param = PARAM[name]
+
+    if param == nil or param == false then
       return false
     end
   end
