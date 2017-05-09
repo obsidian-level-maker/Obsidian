@@ -1371,57 +1371,73 @@ function Render_chunk(chunk)
   local goal
 
 
-  local function calc_player_see_dist(chunk, dir)
-    local dx, dy = geom.delta(dir)
-    local z = chunk.z1 + 48
-
-    local n = 1
-
-    while n < 18 do
-      local x2 = chunk.mx + n * dx * 64
-      local y2 = chunk.my + n * dy * 64
-
-      if gui.trace_ray(chunk.mx, chunk.my, z, x2, y2, z, "v") then
-        break;
-      end
-
-      n = n + 1
-    end
-
-    local dist = (n - 1) / 3
-
---- stderrf("***** can_see_dist [%d] --> %1.2f\n", dir, dist)
-
-    return dist
-
---[[ OLD SEED-BASED LOGIC
-    -- returns # of whole seeds, zero if a wall directly nearby
-
-    local R = S.area and S.area.room
-
-    if not R then return 0 end
+  local function see_dist_from_seed(R, sx, sy, dir)
+    -- look at seeds in a line, until we find where the room ends.
+    -- returns number of seeds, where 0 means right against a wall.
 
     local dist = 0
+    local dx, dy = geom.delta(dir)
 
     while dist < 20 do
-      local N = S:neighbor(dir, "NODIR")
-      if not N then break; end
+      sx = sx + dx
+      sy = sy + dy
 
-      -- step across a diagonal boundary
-      if N == "NODIR" then
-        N = S.top or S.bottom
-        if N then N = S:neighbor(dir) end
-        if not N then break; end
+      if not Seed_valid(sx, sy) then break; end
+
+      local N  = SEEDS[sx][sy]
+      local NR = N and N.area and N.area.room
+
+      if NR != R then break; end
+
+      -- stop at closets and joiners too
+      if N.area.mode == "void" then break; end
+
+      local chunk = (N.area.mode == "chunk" and N.chunk)
+
+      if chunk and chunk.kind == "closet" then break; end
+      if chunk and chunk.kind == "joiner" then break; end
+
+      -- for diagonals, stop when either half is not the same room
+      if N.top then
+        N  = N.top
+        NR = N and N.area and N.area.room
+
+        if NR != R then break; end
+        if N.area.mode == "void" then break; end
       end
 
-      if (N.area and N.area.room) != R then break; end
-
-      S = N ; dist = dist + 1.0
+      dist = dist + 1
     end
 
-stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     return dist
---]]
+  end
+
+
+  local function calc_player_see_dist(chunk, dir)
+    local R = assert(chunk.area.room)
+
+    local avg = 0
+
+    -- for wide chunks, check each seed along the chunk edge
+    -- and average the result
+
+    if geom.is_vert(dir) then
+      local sy = sel(dir == 2, chunk.sy1, chunk.sy2)
+
+      for sx = chunk.sx1, chunk.sx2 do
+        avg = avg + see_dist_from_seed(R, sx, sy, dir) / chunk.sw
+      end
+
+    else -- is_horiz(dir)
+      local sx = sel(dir == 4, chunk.sx1, chunk.sx2)
+
+      for sy = chunk.sy1, chunk.sy2 do
+        avg = avg + see_dist_from_seed(R, sx, sy, dir) / chunk.sh
+      end
+    end
+
+    -- tie breaker
+    return avg + gui.random() * 0.1
   end
 
 
@@ -1431,29 +1447,20 @@ stderrf("***** can_see_dist [%d] --> %d\n", dir, dist)
     local D6 = calc_player_see_dist(chunk, 6)
     local D8 = calc_player_see_dist(chunk, 8)
 
---- stderrf("player_face_dir :  %1.1f  %1.1f  %1.1f  %1.1f\n", D2,D4,D6,D8)
+--  stderrf("player_face_dir: %1.3f  %1.3f  %1.3f  %1.3f\n", D2,D4,D6,D8)
 
-    -- up against a wall?
+    -- up against a wall?  if so, favor the other direction
     if D2 <= 1 and D8 > 1 then D8 = D8 * 1.8 end
     if D8 <= 1 and D2 > 1 then D2 = D2 * 1.8 end
     if D4 <= 1 and D6 > 1 then D6 = D6 * 1.8 end
     if D6 <= 1 and D4 > 1 then D4 = D4 * 1.8 end
 
-    local D_max = math.max(D2, D4, D6, D8)
+    if D2 > D4 and D2 > D6 and D2 > D8 then return 2 end
+    if D4 > D2 and D4 > D6 and D4 > D8 then return 4 end
+    if D6 > D2 and D6 > D4 and D6 > D8 then return 6 end
+    if D8 > D2 and D8 > D4 and D8 > D6 then return 8 end
 
-    if D2 < D_max and D4 < D_max and D6 < D_max then return 8 end
-    if D2 < D_max and D4 < D_max and D8 < D_max then return 6 end
-    if D2 < D_max and D6 < D_max and D8 < D_max then return 4 end
-    if D4 < D_max and D6 < D_max and D8 < D_max then return 2 end
-
-    -- more than one direction is maximal, break the tie
-    for loop = 1,50 do
-      if D2 == D_max and rand.odds(20) then return 2 end
-      if D4 == D_max and rand.odds(20) then return 4 end
-      if D6 == D_max and rand.odds(20) then return 6 end
-      if D8 == D_max and rand.odds(20) then return 8 end
-    end
-
+    -- extremely rare to get here
     return rand.dir()
   end
 
