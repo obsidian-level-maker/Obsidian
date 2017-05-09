@@ -767,37 +767,8 @@ function Grower_calc_rule_probs()
   -- This gives each level a distinctive feel.
   --
 
-  local function game_factor(rule)
-    -- TODO : game_factor
-    return 1
-  end
-
-
-  local function theme_factor(rule)
-    -- TODO : theme_factor
-    return 1
-  end
-
-
-  local function random_factor(rule)
-    local default_skew = 2.0
-    if string.match(rule.name, "AUX_") then default_skew = 1.2 end
-
-    local prob_skew = rule.prob_skew or default_skew
-    local half_skew = (1.0 + prob_skew) / 2.0
-
-    local factor = rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
-
-    return factor
-  end
-
-
   local function style_factor(rule)
     if not rule.styles then return 1 end
-
-    if table.has_elem(rule.styles, "liquids") and not LEVEL.liquid then
-      return 0
-    end
 
     local factor = 1.0
 
@@ -806,8 +777,20 @@ function Grower_calc_rule_probs()
         error("Unknown style in grammar rule: " .. tostring(name))
       end
 
-      factor = factor * style_sel(name, 0, 0.3, 1.0, 4.0)
+      factor = factor * style_sel(name, 0, 0.30, 1.0, 3.5)
     end
+
+    return factor
+  end
+
+
+  local function random_factor(rule)
+    if not rule.prob_skew then return 1 end
+
+    local prob_skew = rule.prob_skew
+    local half_skew = (1.0 + prob_skew) / 2.0
+
+    local factor = rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
 
     return factor
   end
@@ -818,10 +801,35 @@ function Grower_calc_rule_probs()
       if rand.odds(rule.skip_prob) then return 0 end
     end
 
+    -- check against current game, engine, theme (etc).
+    -- [ I doubt these are useful, but do it for completeness ]
+    if not ob_match_game(rule)     then return 0 end
+    if not ob_match_engine(rule)   then return 0 end
+    if not ob_match_playmode(rule) then return 0 end
+
+    if not ob_match_level_theme(rule) then return 0 end
+    if not ob_match_feature(rule)     then return 0 end
+
+    -- liquid check
+    if not LEVEL.liquid and rule.styles and
+       table.has_elem(rule.styles, "liquids")
+    then
+      return 0
+    end
+
+    -- check hallway types
+    if rule.new_room and rule.new_room.hall_type == "narrow" and
+       table.empty(THEME.narrow_halls or {})
+    then return 0 end
+
+    if rule.new_room and rule.new_room.hall_type == "wide" and
+       table.empty(THEME.wide_halls or {})
+    then return 0 end
+
+    -- normal logic --
+
     local prob = rule.prob or 0
 
-    prob = prob *   game_factor(rule)
-    prob = prob *  theme_factor(rule)
     prob = prob *  style_factor(rule)
     prob = prob * random_factor(rule)
 
@@ -1434,15 +1442,6 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
         prob = prob * LEVEL.cave_new_factor
       end
     end
-
-    -- check available hallway types
-    if rule.new_room and rule.new_room.hall_type == "narrow" and
-       table.empty(THEME.narrow_halls or {})
-    then return 0 end
-
-    if rule.new_room and rule.new_room.hall_type == "wide" and
-       table.empty(THEME.wide_halls or {})
-    then return 0 end
 
     return prob
   end
