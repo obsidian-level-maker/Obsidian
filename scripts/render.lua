@@ -1202,16 +1202,14 @@ end
 
 
 
-function Render_void(A, S)
-  -- used for VOID areas
+function Render_void_area(A, S)
+  each S in A.seeds do
+    local w_brush = S:make_brush()
 
-  local w_brush = S:make_brush()
+    brushlib.set_mat(w_brush, "_DEFAULT")
 
-  local mat = "_DEFAULT" -- A.zone.facade_mat
-
-  brushlib.set_mat(w_brush, mat)
-
-  Trans.brush(w_brush)
+    Trans.brush(w_brush)
+  end
 end
 
 
@@ -1306,11 +1304,6 @@ function Render_seed(A, S, occupy)
 
   if S.done_all then
     -- done elsewhere
-    return
-  end
-
-  if A.mode == "void" then
-    Render_void(A, S)
     return
   end
 
@@ -2053,6 +2046,11 @@ end
 
 
 function Render_area(A)
+  if A.mode == "void" then
+    Render_void_area(A)
+    return
+  end
+
 --FIXME  if A.mode == "chunk" then return end
 
   Ambient_push(A.lighting)
