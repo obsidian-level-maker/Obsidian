@@ -14,8 +14,7 @@ PREFABS.Fence_plain =
   deep   = 16
   over   = 16
 
-  fence_h = 32
-
+  fence_h  = 32
   bound_z1 = 0
 }
 
@@ -32,21 +31,5 @@ PREFABS.Fence_plain_diag =
   fence_h = 32
 
   bound_z1 = 0
-}
-
-
---
--- Secret fence
---
-
-PREFABS.Fence_plain_secret =
-{
-  template = "Fence_plain"
-
-  map    = "MAP05"
-  key    = "secret"
-
-  seed_w = 2
-  x_fit  = "frame"
 }
 
