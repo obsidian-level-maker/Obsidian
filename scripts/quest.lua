@@ -228,9 +228,6 @@ function Quest_create_initial_quest()
       -- don't waste big rooms on a secret exit
       local score = 200 - math.min(R.svolume, 190)
 
-      --TODO: prefer room near the exit room
-      --      [ but we do not have "lev_along" values yet ]
-
       return score + gui.random()
     end
 
@@ -1515,6 +1512,8 @@ function Quest_order_by_visit()
   local room_along  = 1
   local quest_along = 1
 
+  local next_locs = {}
+
 
   local function visit_quest_node(Q)
     if Q.node_id then
@@ -1529,25 +1528,44 @@ function Quest_order_by_visit()
   end
 
 
-  local function visit_room(R, quest, via_conn_name)
---stderrf("visit_room %s (via %s) for %s\n", R.name, via_conn_name or "???", quest.name or "???")
+  local function visit_next_room()
+    table.sort(next_locs, function(A, B)
+        return A.cost < B.cost end)
+
+    local loc = assert(table.remove(next_locs, 1))
+
+    local R = loc.R
+
+--- stderrf("visit_next_room %s (quest %s along:%1.3f)\n", R.name, R.quest.name, R.quest.lev_along)
+
     R.lev_along = room_along / #LEVEL.rooms
 
     room_along = room_along + 1
 
-    assert(R.quest == quest)
-
+    -- collect which rooms to visit next
     each C in R.conns do
---stderrf("  conn '%s'  %s <--> %s\n", C.name, C.R1.name, C.R2.name)
-      assert(C.R1)
-
       local R2 = C:other_room(R)
 
-      if R2.quest != quest then continue end
+      -- done the other room?
+      if R2.lev_along then continue end
 
-      if not R2.lev_along then
-        visit_room(R2, quest, C.name)
+      local loc = { R=R2 }
+
+      -- we MUST honor the quest ordering
+      if R2.quest != R.quest then
+        loc.cost = 100 + 100 * math.max(R2.quest.lev_along, R.quest.lev_along)
+
+      elseif R2.rough_exit_dist then
+        loc.cost = 80 - R2.rough_exit_dist
+
+      else
+        loc.cost = 0
       end
+
+      -- tie breaker
+      loc.cost = loc.cost + gui.random() * 0.1
+
+      table.insert(next_locs, loc)
     end
   end
 
@@ -1586,16 +1604,32 @@ function Quest_order_by_visit()
   end
 
 
-  local function check_conn_movement()
-    each C in LEVEL.conns do
-      if C.R1.lev_along > C.R2.lev_along then
-        C.backwards = true
+  local function mark_rough_path_to_exit()
+    local R = LEVEL.exit_room
+    local dist = 0
+
+    while true do
+      R.rough_exit_dist = dist
+
+      if not R.entry_conn then
+        break;
       end
+
+      R = R.entry_conn:other_room(R)
+
+      dist = dist + 1
     end
   end
 
 
   ---| Quest_order_by_visit |---
+
+  do_entry_conns(LEVEL.start_room, nil, {})
+
+  mark_rough_path_to_exit()
+
+
+  -- sort the quests into a visit order --
 
   visit_quest_node(LEVEL.quest_root)
 
@@ -1604,40 +1638,31 @@ function Quest_order_by_visit()
     assert(Q.lev_along)
   end
 
-  -- sort the quests
   table.sort(LEVEL.quests, function(A, B)
       return A.lev_along < B.lev_along end)
 
   dump_quests()
 
 
-  -- visit each quest, and recurse through it only
-  each Q in LEVEL.quests do
-    assert(Q.entry)
-    visit_room(Q.entry, Q)
+  -- sort the rooms into a visit order --
+
+  table.insert(next_locs, { R=LEVEL.start_room, cost=0 })
+
+  while next_locs[1] do
+    visit_next_room()
   end
 
   -- sanity check
   each R in LEVEL.rooms do
-
---[[ "fubar" debug stuff
-if not R.lev_along then R.lev_along = 0.5 end
---]]
-
     if not R.lev_along then
       error("Room not visited: " .. R.name)
     end
   end
 
-  -- sort the rooms
   table.sort(LEVEL.rooms, function(A,B)
       return A.lev_along < B.lev_along end)
 
   dump_room_order()
-
-  do_entry_conns(LEVEL.start_room, nil, {})
-
-  check_conn_movement()
 end
 
 
@@ -2263,7 +2288,8 @@ function Quest_nice_items()
     end
 
     -- sort them (best first)
-    table.sort(list, function(A, B) return A.nice_item_score > B.nice_item_score end)
+    table.sort(list, function(A, B)
+        return A.nice_item_score > B.nice_item_score end)
 
     return list
   end

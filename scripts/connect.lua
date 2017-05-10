@@ -52,8 +52,6 @@
     joiner_chunk : CHUNK
 
     door_h : floor height for doors straddling the connection
-
-    backwards : true if travel from R2 --> R1
 --]]
 
 
