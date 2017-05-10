@@ -1300,7 +1300,7 @@ end
 
 
 
-function Render_seed(A, S)
+function Render_seed(A, S, occupy)
   assert(not S.is_dead)
   assert(S.area == A)
 
@@ -1314,8 +1314,13 @@ function Render_seed(A, S)
     return
   end
 
-  Render_floor  (A, S)
-  Render_ceiling(A, S)
+  if occupy != "ceil" then
+    Render_floor  (A, S)
+  end
+
+  if occupy != "floor" then
+    Render_ceiling(A, S)
+  end
 end
 
 
@@ -2055,6 +2060,13 @@ function Render_area(A)
   -- handle caves, parks and landscapes
   if A.mode == "nature" or A.mode == "scenic" then
     Render_cells(A.cells)
+
+    if A.cells.external_sky then
+      each S in A.seeds do
+        Render_seed(A, S, "ceil")
+      end
+    end
+
   else
     each S in A.seeds do
       Render_seed(A, S)
@@ -2709,9 +2721,8 @@ function Render_cells(info)
 
     assert(A)
     assert(A.floor_h)
-    assert(A.ceil_h)
 
-    return string.format("1-%5d-%5d", A.floor_h + 50000, 50000 - A.ceil_h)
+    return string.format("1-%5d-%5d", A.floor_h + 50000, 50000 - (A.ceil_h or 0))
   end
 
 
@@ -2891,9 +2902,10 @@ function Render_cells(info)
 
 
   local function render_floor(x, y, A)
+    -- this is NIL for completely solid areas
     local f_h = A.floor_h
 
-    -- TODO : review this
+    -- TODO : review this usage of ROOM object
     local R = info.area.room or {}
 
     local f_mat = A.floor_mat or R.floor_mat or R.main_tex or "_ERROR"
@@ -2930,7 +2942,7 @@ top.reachable = 1  --!!!!!! FIXME: remove
   local function render_ceiling(x, y, A)
     if not A.ceil_h then return end
 
-    -- TODO : review this
+    -- TODO : review this usage of ROOM object
     local R = info.area.room or {}
 
     local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex or "_ERROR"
@@ -3113,19 +3125,6 @@ top.reachable = 1  --!!!!!! FIXME: remove
   end
 
 
-  local function add_sky_rects()
-    each S in info.area.seeds do
-      local rect =
-      {
-        x1 = S.x1, y1 = S.y1
-        x2 = S.x2, y2 = S.y2
-      }
-
-      table.insert(R.sky_rects, rect)
-    end
-  end
-
-
   local function render_all_cells(pass)
     -- pass is 1 for solid cells, 2 for normal (open) cells
 
@@ -3155,9 +3154,5 @@ top.reachable = 1  --!!!!!! FIXME: remove
   end
 
   render_all_cells(2)
-
-  if info.area.is_outdoor and false then --!!!!
-    add_sky_rects()
-  end
 end
 

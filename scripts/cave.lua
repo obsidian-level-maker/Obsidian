@@ -30,6 +30,8 @@
 
     area : AREA   -- link back to normal area
 
+    external_sky  -- true when sky is built by area (NOT the cells)
+
     walk_chunks : list(CHUNK)  -- all places the player MUST be able
                                -- walk to (conns, goals, etc...)
 
@@ -79,7 +81,7 @@
     floor_h    -- floor height
     floor_mat  -- floor material
 
-    ceil_h     -- ceiling height
+    ceil_h     -- ceiling height    [ NIL for none, i.e. external_sky area ]
     ceil_mat   -- ceiling material
 
     is_wall   : boolean  -- true for solid walls
@@ -1525,7 +1527,7 @@ function Cave_floor_heights(R, entry_h)
     -- ceiling --
 
     if R.is_outdoor and false then  --!!!!!!
-      -- no ceil_h (done later using sky_rects)
+      -- no ceil_h (done later as the base area ceiling)
     elseif A.goal_type then
       A.ceil_h = h + 192
     else
@@ -2601,16 +2603,16 @@ function Cave_build_a_park(R, entry_h)
       children  = {}
 
       floor_mat = R.floor_mat
-       ceil_mat = "_SKY"
 
       -- TEMP RUBBISH
       floor_h   = entry_h
-      ceil_h    = entry_h + 256
     }
 
     info.FLOOR = FLOOR
 
     table.insert(info.floors, FLOOR)
+
+    info.external_sky = true
   end
 
 
@@ -2666,20 +2668,20 @@ function Cave_build_a_scenic_vista(area)
       children  = {}
 
       floor_mat = "FWATER1"
-       ceil_mat = "_SKY"
 
       -- TEMP RUBBISH
       floor_h   = -73
-      ceil_h    = 255
     }
 
     info.FLOOR = FLOOR
 
     table.insert(info.floors, FLOOR)
 
+    info.external_sky = true
+
     -- TEMP RUBBISH
     info.area.floor_h = FLOOR.floor_h
-    info.area.ceil_h  = FLOOR.ceil_h
+    info.area.ceil_h  = FLOOR.floor_h + 512
   end
 
 

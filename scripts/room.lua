@@ -166,7 +166,6 @@ function ROOM_CLASS.new()
      ceil_groups = {}
 
     solid_ents = {}
-    sky_rects  = {}
     exclusions = {}
     avoid_mons = {}
 
