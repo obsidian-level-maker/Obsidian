@@ -34,3 +34,19 @@ PREFABS.Fence_plain_diag =
   bound_z1 = 0
 }
 
+
+--
+-- Secret fence
+--
+
+PREFABS.Fence_plain_secret =
+{
+  template = "Fence_plain"
+
+  map    = "MAP05"
+  key    = "secret"
+
+  seed_w = 2
+  x_fit  = "frame"
+}
+

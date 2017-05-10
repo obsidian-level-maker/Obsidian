@@ -863,6 +863,12 @@ function Room_pick_edge_prefab(C)
 
     C.is_door = true
 
+    if R1.is_outdoor and R2.is_outdoor then
+      reqs.kind = "fence"
+
+      make_fence(E)
+    end
+
   else
     -- make a normal door?
     local prob = indoor_prob
