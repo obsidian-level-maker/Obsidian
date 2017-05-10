@@ -1895,14 +1895,17 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout_create_scenic_borders()
-  --
-  -- Handles the "scenic" stuff outside of the normal map.
-  -- For example: a watery "sea" around at one corner of the map.
-  --
-  -- This mainly sets up area information (and creates "scenic rooms").
-  -- The actual brushwork is done by normal area-building code.
-  --
+function Layout_scenic_vistas()
+  each A in LEVEL.areas do
+    if A.mode == "scenic" then
+      Cave_build_a_scenic_vista(A)
+    end
+  end
+end
+
+
+
+function Layout_create_scenic_borders__OLD()
 
   local function collect_border_areas(Z)
     Z.border_areas = {}
@@ -2004,7 +2007,7 @@ end
 
 
 
-function Layout_finish_scenic_borders()
+function Layout_finish_scenic_borders__OLD()
 
   local cur_max_f
 
@@ -2105,12 +2108,12 @@ function Layout_finish_scenic_borders()
 
   ---| Layout_finish_scenic_borders |---
 
+--[[  OLD
   each Z in LEVEL.zones do
     local add_h = rand.pick({ 128,256,384 })
     Z.scenic_sky_h = Z.sky_h ---??? + add_h
   end
 
---[[  OLD
   each A in LEVEL.areas do
     if A.is_boundary and not A.scenic_vista then
       temp_properties(A)
