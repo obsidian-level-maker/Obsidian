@@ -179,11 +179,6 @@ function ROOM_CLASS.new()
 end
 
 
-function ROOM_CLASS.tostr(R)
-  return assert(R.name)
-end
-
-
 function ROOM_CLASS.add_area(R, A)
   assert(not R.is_dead)
 

@@ -236,11 +236,6 @@ function AREA_CLASS.kill_it(A, remove_from_room)
 end
 
 
-function AREA_CLASS.tostr(A)
-  return assert(A.name)
-end
-
-
 function AREA_CLASS.calc_seed_bbox(A)
   local first_S = A.seeds[1]
 

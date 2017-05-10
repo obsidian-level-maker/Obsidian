@@ -190,11 +190,6 @@ BASE_Y = 0
 
 SEED_CLASS = {}
 
-function SEED_CLASS.tostr(S)
-return assert(S.name)
-end
-
-
 --
 -- convert a square seed to a pair of diagonal seeds.
 -- the 'S' parameter becomes the bottom half.

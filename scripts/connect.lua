@@ -112,11 +112,6 @@ function CONN_CLASS.kill_it(C)
 end
 
 
-function CONN_CLASS.tostr(C)
-  return assert(C.name)
-end
-
-
 function CONN_CLASS.dump(C)
   gui.debugf("Connect object %s:  kind:%s\n", C.name, C.kind)
   gui.debugf("  Rooms: %s --> %s\n", C.R1.name, C.R2.name)
