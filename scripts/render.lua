@@ -650,11 +650,6 @@ function Render_junction(A, S, dir)
     table.insert(A.side_edges, S:get_line(dir))
   end
 
-  if S.done_all then return end
-
-  -- whole chunks never build walls inside them
-  if A.chunk and A.chunk.occupy == "whole" then return end
-
   -- proper EDGE objects are handled elsewhere
   if S.edge[dir] and S.edge[dir].kind != "ignore" then return end
 
@@ -1216,12 +1211,20 @@ end
 
 function Render_floor(A)
 
-  local function render_seed(S)
+  local function should_do_seed(S)
     assert(not S.is_dead)
     assert(S.area == A)
 
-    if S.done_floor or S.done_all then return end
+    if S.chunk then
+      if S.chunk.occupy == "floor" then return false end
+      if S.chunk.occupy == "whole" then return false end
+    end
 
+    return true
+  end
+
+
+  local function render_seed(S)
     local f_brush = S:make_brush()
 
     local f_h = S.floor_h or A.floor_h
@@ -1273,10 +1276,12 @@ function Render_floor(A)
   ---| Render_floor |---
 
   each S in A.seeds do
-    render_seed(S)
+    if should_do_seed(S) then
+      render_seed(S)
 
-    if A.floor_group and A.floor_group.sink then
-      Render_sink_part(A, S, "floor",   A.floor_group.sink)
+      if A.floor_group and A.floor_group.sink then
+        Render_sink_part(A, S, "floor",   A.floor_group.sink)
+      end
     end
   end
 end
@@ -1285,12 +1290,20 @@ end
 
 function Render_ceiling(A)
 
-  local function render_seed(S)
+  local function should_do_seed(S)
     assert(not S.is_dead)
     assert(S.area == A)
 
-    if S.done_ceil or S.done_all then return end
+    if S.chunk then
+      if S.chunk.occupy == "ceil"  then return false end
+      if S.chunk.occupy == "whole" then return false end
+    end
 
+    return true
+  end
+
+
+  local function render_seed(S)
     local c_h = S.ceil_h or A.ceil_h
 if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.tostr(A)) end
     assert(c_h)
@@ -1311,27 +1324,13 @@ if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.to
   ---| Render_ceiling |---
 
   each S in A.seeds do
-    render_seed(S)
+    if should_do_seed(S) then
+      render_seed(S)
 
-    if A.ceil_group and A.ceil_group.sink then
-      Render_sink_part(A, S, "ceil", A.ceil_group.sink)
+      if A.ceil_group and A.ceil_group.sink then
+        Render_sink_part(A, S, "ceil", A.ceil_group.sink)
+      end
     end
-  end
-end
-
-
-
-function Render_mark_done(chunk, mode)
-  -- mode can be "all", "floor" or "ceil"
-
-  mode = "done_" .. mode
-
-  for sx = chunk.sx1, chunk.sx2 do
-  for sy = chunk.sy1, chunk.sy2 do
-    local S = SEEDS[sx][sy]
-
-    S[mode] = true
-  end
   end
 end
 
@@ -1771,6 +1770,7 @@ function Render_chunk(chunk)
     Ambient_pop()
   end
 
+  ----------------------------------------------------------------
 
   local function do_start()
     reqs.kind = "start"
@@ -2024,37 +2024,19 @@ function Render_chunk(chunk)
   if goal and goal.kind == "SWITCH" then
     goal.action = assert(def.door_action)
   end
-
-
-  -- mark seeds as done --
-
-  local done_mode
-
-  if def.done_mode then
-    done_mode = def.done_mode
-
-  elseif def.kind == "floor" or def.kind == "stairs" then
-    done_mode = "floor"
-
-  elseif def.kind == "ceil" then
-    done_mode = "ceil"
-
-  else
-    done_mode = "all"
-  end
-
-  Render_mark_done(chunk, done_mode)
 end
 
 
 
 function Render_area(A)
-  Ambient_push(A.lighting)
-
   if A.mode == "void" then
     Render_void_area(A)
+    return
+  end
 
-  else
+  Ambient_push(A.lighting)
+
+  do
     -- handle caves, parks and landscapes
     if A.cells then
       Render_cells(A.cells)
@@ -2067,14 +2049,20 @@ function Render_area(A)
     end
   end
 
-  each E in A.edges do
-    assert(E.area == A)
-    Render_edge(E)
-  end
+  -- render edges and junctions which face OUT from this area
 
-  each S in A.seeds do
-    each dir in geom.ALL_DIRS do
-      Render_junction(A, S, dir)
+  if A.chunk and A.chunk.occupy == "whole" then
+    -- whole chunks never build walls inside them
+  else
+    each E in A.edges do
+      assert(E.area == A)
+      Render_edge(E)
+    end
+
+    each S in A.seeds do
+      each dir in geom.ALL_DIRS do
+        Render_junction(A, S, dir)
+      end
     end
   end
 
@@ -2117,8 +2105,7 @@ function Render_all_chunks()
 
     Fabricate(chunk.area.room, def, T, { skin1 })
 
-    -- only for pit test
-    Render_mark_done(chunk, "floor")
+    chunk.occupy = "floor"
   end
 
 

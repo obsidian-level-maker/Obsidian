@@ -2883,9 +2883,6 @@ function Room_build_all()
 
   Render_set_all_properties()
 
-  -- FIXME:we must build importants after "normal" area geometry, since we
-  -- rely on world traces to determine player facing directions.
-
   Render_all_chunks()
   Render_all_areas()
 
