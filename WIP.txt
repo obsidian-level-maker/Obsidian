@@ -6,6 +6,14 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
+!!  RAILS:
+    - re-instate rail brushes
+    - only uses the OUTSIDE of the brush (need TWO for a double sided railing)
+    - prefabs set an absolute X and Y offset
+    - default X offset is NONE (auto align)
+    - default Y offset is zero
+    - brushlib.rail_brush() and rail_brush_pair()
+
 +  fence/bars : needs to vertically expand like a normal fence
                 so that player cannot jump through the gap
 
@@ -25,10 +33,6 @@ DONE:  proper system for actions of remote switches
 
 -  internal fences (esp. for outdoor rooms)
 
--  review the "done_xxx" stuff in render.lua
-
--  rewrite player_face_dir() ?
-
 
 
 Hallway System
@@ -36,9 +40,9 @@ Hallway System
 
 -  not considered "wallish" (no triangular filler) ?
 
-!!!  for 2x2 hallway, have 2x1 terminator pieces
-
 +  finish the "deuce" hallway pieces
+
++  for 2x2 hallway, have 2x1 terminator pieces
 
 -  texturing for pieces  [ hallway room themes ]
 
@@ -61,6 +65,8 @@ Hallway System
                     "left"
                     "right"
                     "split" (one on left, one on right)
+                    "window"
+                    "open"
 
        function REMAP(pos)
           if pos == "left"  then return "right" end
@@ -91,9 +97,8 @@ Scenic Borders
 +  proper ZONE handling
    [ note : zones do NOT exist during divvy_up_borders! ]
 
--  assign unused border areas to a room (esp. its zroom)
-
-+  proper sky handling
+-  assign unused border areas to a room
+   [ do it later than divvy_up ?? ]
 
 +  different styles:
    - mountainy areas  (w/ trees or torches)
@@ -106,7 +111,8 @@ Scenic Borders
 PARKS
 -----
 
-+  proper sky handling
++  sky handling:
+   -  ensure the heighest FLOOR contributes to zone.sky_h
 
 +  height variation  [ different areas ]
 
