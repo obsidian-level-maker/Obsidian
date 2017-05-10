@@ -2794,6 +2794,10 @@ function Room_set_sky_heights()
     if A.floor_h and A.is_outdoor and not A.is_porch then
       A.ceil_h = A.zone.sky_h
     end
+
+    if A.mode == "scenic" and A.is_outdoor then
+      A.ceil_h = A.zone.sky_h
+    end
   end
 end
 

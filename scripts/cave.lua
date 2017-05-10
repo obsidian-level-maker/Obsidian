@@ -2630,6 +2630,7 @@ function Cave_build_a_park(R, entry_h)
   -- TEMP RUBBISH
   info.area.floor_h = entry_h
   info.area.ceil_h  = entry_h + 256
+  info.area.ceil_mat = "_SKY"
 
   do_parky_stuff()
 
@@ -2681,7 +2682,9 @@ function Cave_build_a_scenic_vista(area)
 
     -- TEMP RUBBISH
     info.area.floor_h = FLOOR.floor_h
-    info.area.ceil_h  = FLOOR.floor_h + 512
+---##  info.area.ceil_h  = FLOOR.floor_h + 512
+    assert(info.area.ceil_h)
+    info.area.ceil_mat = "_SKY"
   end
 
 
