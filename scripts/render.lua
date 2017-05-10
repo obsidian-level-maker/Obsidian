@@ -1214,105 +1214,108 @@ end
 
 
 
-function Render_floor(A, S)
-  if S.done_floor then return end
+function Render_floor(A)
 
-  local f_brush = S:make_brush()
+  local function render_seed(S)
+    assert(not S.is_dead)
+    assert(S.area == A)
 
-  local f_h = S.floor_h or A.floor_h
-  assert(f_h)
+    if S.done_floor or S.done_all then return end
 
-  local f_mat = S.floor_mat or A.floor_mat
-  local f_side = S.floor_side or S.floor_mat or A.floor_side or f_mat
+    local f_brush = S:make_brush()
 
-  local tag = S.tag
--- tag = A.id
--- if A.room then tag = A.room.id end
--- if A.pool_id then tag = 1000 + A.pool_id end
--- if A.ceil_group then tag = A.ceil_group.id end
+    local f_h = S.floor_h or A.floor_h
+    assert(f_h)
 
-  -- handle railings [ must be done here ]
-  each C in f_brush do
-    local info = edge_get_rail(S, C.__dir)
-    if info then
-      local mat = Mat_lookup_tex(assert(info.rail_mat))
-      assert(mat.t)
+    local f_mat = S.floor_mat or A.floor_mat
+    local f_side = S.floor_side or S.floor_mat or A.floor_side or f_mat
 
-      C.rail = mat.t
-      C.v1 = 0
-      C.back_rail = mat.t
-      C.back_v1 = 0
-      C.blocked = info.rail_block
+    local tag = S.tag
+  -- tag = A.id
+  -- if A.room then tag = A.room.id end
+  -- if A.pool_id then tag = 1000 + A.pool_id end
+  -- if A.ceil_group then tag = A.ceil_group.id end
+
+    -- handle railings [ must be done here ]
+    each C in f_brush do
+      local info = edge_get_rail(S, C.__dir)
+      if info then
+        local mat = Mat_lookup_tex(assert(info.rail_mat))
+        assert(mat.t)
+
+        C.rail = mat.t
+        C.v1 = 0
+        C.back_rail = mat.t
+        C.back_v1 = 0
+        C.blocked = info.rail_block
+      end
+    end
+
+    table.insert(f_brush, { t=f_h, tag=tag })
+
+    if A.sector_fx then f_brush[#f_brush].special = A.sector_fx end
+
+    brushlib.set_mat(f_brush, f_side, f_mat)
+
+    -- sound blocking for border areas
+    if A.is_boundary and A.mode != "liquid" then
+      local top_C = f_brush[#f_brush]
+      top_C.sound_area = 70000 + A.id
+    end
+
+    -- remember floor brush for the spot logic
+    table.insert(A.floor_brushes, f_brush)
+
+    Trans.brush(f_brush)
+  end
+
+
+  ---| Render_floor |---
+
+  each S in A.seeds do
+    render_seed(S)
+
+    if A.floor_group and A.floor_group.sink then
+      Render_sink_part(A, S, "floor",   A.floor_group.sink)
     end
   end
-
-
-  table.insert(f_brush, { t=f_h, tag=tag })
-
-  if A.sector_fx then f_brush[#f_brush].special = A.sector_fx end
-
-  brushlib.set_mat(f_brush, f_side, f_mat)
-
-
-  -- sound blocking for border areas
-  if A.is_boundary and A.mode != "liquid" then
-    local top_C = f_brush[#f_brush]
-    top_C.sound_area = 70000 + A.id
-  end
-
-
-  Trans.brush(f_brush)
-
-  -- remember floor brush for the spot logic
-  table.insert(A.floor_brushes, f_brush)
-
-  if A.floor_group and A.floor_group.sink then
-    Render_sink_part(A, S, "floor",   A.floor_group.sink)
-  end
 end
 
 
 
-function Render_ceiling(A, S)
-  if S.done_ceil then return end
+function Render_ceiling(A)
 
-  local c_h = S.ceil_h or A.ceil_h
+  local function render_seed(S)
+    assert(not S.is_dead)
+    assert(S.area == A)
+
+    if S.done_ceil or S.done_all then return end
+
+    local c_h = S.ceil_h or A.ceil_h
 if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.tostr(A)) end
-  assert(c_h)
+    assert(c_h)
 
-  local c_mat  = S.ceil_mat  or A.ceil_mat
-  local c_side = S.ceil_side or S.ceil_mat or A.ceil_side or c_mat
+    local c_mat  = S.ceil_mat  or A.ceil_mat
+    local c_side = S.ceil_side or S.ceil_mat or A.ceil_side or c_mat
 
-  local c_brush = S:make_brush()
+    local c_brush = S:make_brush()
 
-  table.insert(c_brush, { b=c_h })
+    table.insert(c_brush, { b=c_h })
 
-  brushlib.set_mat(c_brush, c_side, c_mat)
+    brushlib.set_mat(c_brush, c_side, c_mat)
 
-  Trans.brush(c_brush)
-
-  if A.ceil_group and A.ceil_group.sink then
-    Render_sink_part(A, S, "ceil", A.ceil_group.sink)
-  end
-end
-
-
-
-function Render_seed(A, S, occupy)
-  assert(not S.is_dead)
-  assert(S.area == A)
-
-  if S.done_all then
-    -- done elsewhere
-    return
+    Trans.brush(c_brush)
   end
 
-  if occupy != "ceil" then
-    Render_floor  (A, S)
-  end
 
-  if occupy != "floor" then
-    Render_ceiling(A, S)
+  ---| Render_ceiling |---
+
+  each S in A.seeds do
+    render_seed(S)
+
+    if A.ceil_group and A.ceil_group.sink then
+      Render_sink_part(A, S, "ceil", A.ceil_group.sink)
+    end
   end
 end
 
@@ -2046,28 +2049,21 @@ end
 
 
 function Render_area(A)
-  if A.mode == "void" then
-    Render_void_area(A)
-    return
-  end
-
---FIXME  if A.mode == "chunk" then return end
-
   Ambient_push(A.lighting)
 
-  -- handle caves, parks and landscapes
-  if A.mode == "nature" or A.mode == "scenic" then
-    Render_cells(A.cells)
-
-    if A.cells.external_sky then
-      each S in A.seeds do
-        Render_seed(A, S, "ceil")
-      end
-    end
+  if A.mode == "void" then
+    Render_void_area(A)
 
   else
-    each S in A.seeds do
-      Render_seed(A, S)
+    -- handle caves, parks and landscapes
+    if A.cells then
+      Render_cells(A.cells)
+    else
+      Render_floor(A)
+    end
+
+    if not A.cells or A.cells.external_sky then
+      Render_ceiling(A)
     end
   end
 
