@@ -2671,7 +2671,7 @@ function Cave_build_a_scenic_vista(area)
       floor_mat = "FWATER1"
 
       -- TEMP RUBBISH
-      floor_h   = -73
+      floor_h   = -731
     }
 
     info.FLOOR = FLOOR

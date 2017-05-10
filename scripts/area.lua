@@ -662,19 +662,24 @@ function Junction_make_wall(junc)
 end
 
 
-function Junction_make_fence(junc)
-  local z1 = junc.A1.floor_h
-  local z2 = junc.A2.floor_h
+function Junction_calc_fence_z(A1, A2)
+  local z1 = A1.floor_h
+  local z2 = A2.floor_h
 
-  if junc.A1.pool_id then z1 = junc.A1.face_room.max_floor_h end
-  if junc.A2.pool_id then z2 = junc.A2.face_room.max_floor_h end
+  if A1.pool_id then z1 = A1.face_room.max_floor_h end
+  if A2.pool_id then z2 = A2.face_room.max_floor_h end
 
-  if junc.A1.room then z1 = math.max(z1, junc.A1.room.max_floor_h) end
-  if junc.A2.room then z2 = math.max(z2, junc.A2.room.max_floor_h) end
+  if A1.room then z1 = math.max(z1, A1.room.max_floor_h) end
+  if A2.room then z2 = math.max(z2, A2.room.max_floor_h) end
 
   local top_z = math.max(z1, z2)
 
-  top_z = top_z + PARAM.jump_height + 8
+  return top_z + PARAM.jump_height + 8
+end
+
+
+function Junction_make_fence(junc)
+  local top_z = Junction_calc_fence_z(junc.A1, junc.A2)
 
   junc.E1 =
   {

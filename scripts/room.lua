@@ -168,6 +168,7 @@ function ROOM_CLASS.new()
     solid_ents = {}
     exclusions = {}
     avoid_mons = {}
+    locked_fences = {}
 
     hazard_health = 0
   }
@@ -771,6 +772,16 @@ end
 
 
 function Room_pick_edge_prefab(C)
+
+  local function make_fence(E)
+    E.kind = "fence"
+    E.fence_mat = assert(E.area.zone.fence_mat)
+
+    -- fence_top_z computed later...
+    table.insert(E.area.room.locked_fences, E)
+  end
+
+
   -- hack for unfinished games
   if THEME.no_doors then return end
 
@@ -836,6 +847,16 @@ function Room_pick_edge_prefab(C)
     C.is_door = true
     C.fresh_floor = true
 
+    -- use lowering bars between outdoor rooms (usually)
+    if R1.is_outdoor and R2.is_outdoor and
+       goal.kind == "SWITCH" and
+       rand.odds(80+20)
+    then
+      reqs.kind = "fence"
+
+      make_fence(E)
+    end
+
   -- secret door ?
   elseif C.is_secret then
     reqs.kind = "door"
@@ -843,11 +864,10 @@ function Room_pick_edge_prefab(C)
     C.is_door = true
 
   else
-    -- apply the random check (whether to use a door or not)
+    -- make a normal door?
     local prob = indoor_prob
-    if (R1.is_outdoor and not R2.is_cave) or
-       (R2.is_outdoor and not R1.is_cave)
-    then
+
+    if R1.is_outdoor or R2.is_outdoor then
       prob = outdoor_prob
     end
 
@@ -2763,6 +2783,16 @@ function Room_set_sky_heights()
   end
 
 
+  local function do_fence(E)
+    assert(E.peer)
+
+    local A1 = E.area
+    local A2 = E.peer.area
+
+    E.fence_top_z = Junction_calc_fence_z(A1, A2)
+  end
+
+
   ---| Room_set_sky_heights |---
 
   each A in LEVEL.areas do
@@ -2797,6 +2827,13 @@ function Room_set_sky_heights()
 
     if A.mode == "scenic" and A.is_outdoor then
       A.ceil_h = A.zone.sky_h
+    end
+  end
+
+  -- handle locked and secret fences
+  each R in LEVEL.rooms do
+    each E in R.locked_fences do
+      do_fence(E)
     end
   end
 end

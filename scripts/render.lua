@@ -235,8 +235,6 @@ function Render_edge(E)
       reqs.where = "edge"
     end
 
-    -- TODO : secret fences, barred fences
-
     local def = Fab_pick(reqs)
 
     return def
@@ -307,7 +305,15 @@ function Render_edge(E)
     local skin = { wall=E.fence_mat }
 
 
-    local def = pick_fence_prefab()
+    local def = E.prefab_def
+
+    if not def then
+      def = pick_fence_prefab()
+    end
+
+    -- this is set in Room_pick_edge_prefab()
+    skin.door_tag = E.door_tag
+
 
     local z = assert(E.fence_top_z) - def.fence_h
 
