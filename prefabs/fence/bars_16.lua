@@ -4,7 +4,7 @@
 
 PREFABS.Bars_shiny =
 {
-  file   = "fence/bars.wad"
+  file   = "fence/bars_16.wad"
   map    = "MAP01"
 
   prob   = 100
