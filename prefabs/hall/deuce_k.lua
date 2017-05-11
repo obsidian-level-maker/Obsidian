@@ -1,14 +1,14 @@
 --
--- vent piece : locked terminators
+-- 2-seed-wide hallway : locked terminators
 --
 
-PREFABS.Hallway_vent_locked_red =
+PREFABS.Hallway_deuce_locked_red =
 {
-  file   = "hall/vent_k.wad"
+  file   = "hall/deuce_k.wad"
   map    = "MAP01"
 
   kind   = "terminator"
-  group  = "vent"
+  group  = "deuce"
   key    = "k_red"
 
   prob   = 50
@@ -16,26 +16,29 @@ PREFABS.Hallway_vent_locked_red =
   where  = "seeds"
   shape  = "I"
 
+  seed_w = 2
+  seed_h = 1
+
   deep   = 16
 }
 
 
-PREFABS.Hallway_vent_locked_blue =
+PREFABS.Hallway_deuce_locked_blue =
 {
-  template = "Hallway_vent_locked_red"
+  template = "Hallway_deuce_locked_red"
 
-  key    = "k_blue"
+  key  = "k_blue"
 
   tex_DOORRED = "DOORBLU"
   line_33     = 32
 }
 
 
-PREFABS.Hallway_vent_locked_yellow =
+PREFABS.Hallway_deuce_locked_yellow =
 {
-  template = "Hallway_vent_locked_red"
+  template = "Hallway_deuce_locked_red"
 
-  key    = "k_yellow"
+  key  = "k_yellow"
 
   tex_DOORRED = "DOORYEL"
   line_33     = 34
@@ -44,14 +47,13 @@ PREFABS.Hallway_vent_locked_yellow =
 
 ----------------------------------------------------------------
 
-
-PREFABS.Hallway_vent_barred =
+PREFABS.Hallway_deuce_barred =
 {
-  file   = "hall/vent_k.wad"
+  file   = "hall/deuce_k.wad"
   map    = "MAP03"
 
   kind   = "terminator"
-  group  = "vent"
+  group  = "deuce"
   key    = "barred"
 
   prob   = 50

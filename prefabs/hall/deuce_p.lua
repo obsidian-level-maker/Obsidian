@@ -4,15 +4,16 @@
 
 PREFABS.Hallway_deuce_p1 =
 {
-  file   = "hall/deuce_p1.wad"
+  file   = "hall/deuce_p.wad"
   map    = "MAP01"
+
+  deuce  = "deuce"
+  prob   = 50
 
   where  = "seeds"
   shape  = "P"
 
   seed_w = 2
   seed_h = 2
-
-  prob   = 50
 }
 
