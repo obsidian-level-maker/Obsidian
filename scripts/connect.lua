@@ -233,8 +233,8 @@ function Connect_directly(P)
     local dir1 = assert(P.chunk.from_dir)
     local dir2 = assert(P.chunk.dest_dir)
 
-    E1 = Chunk_create_edge(P.chunk, "nothing", dir1)
-    E2 = Chunk_create_edge(P.chunk, "nothing", dir2)
+    E1 = P.chunk:create_edge("nothing", dir1)
+    E2 = P.chunk:create_edge("nothing", dir2)
 
     -- TODO : this shape check is hacky, REVIEW THIS
     if P.chunk.shape == "I" then
@@ -249,13 +249,13 @@ function Connect_directly(P)
 
     -- terminator pieces always point INTO the hallway (from_dir goes OUT)
     if C.R1.is_hallway then
-      Chunk_flip(P.chunk)
+      P.chunk:flip()
     end
 
     local dir1 = assert(P.chunk.from_dir)
     local dir2 = 10 - dir1  -- terminators are always "I" shape
 
-    E1, E2 = Chunk_create_edge_pair(P.chunk, "nothing", dir1)
+    E1, E2 = P.chunk:create_edge_pair("nothing", dir1)
 
     if C.R1.is_hallway then
       E1, E2 = E2, E1

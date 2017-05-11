@@ -1196,7 +1196,7 @@ function CHUNK_CLASS.kill_it(CK)
 end
 
 
-function Chunk_base_reqs(chunk, dir)
+function CHUNK_CLASS.base_reqs(chunk, dir)
   local reqs =
   {
     where  = "seeds"
@@ -1225,7 +1225,7 @@ function Chunk_base_reqs(chunk, dir)
 end
 
 
-function Chunk_is_slave(chunk)
+function CHUNK_CLASS.is_slave(chunk)
   -- the "slave" chunk is a peered chunk with a higher ID number
 
   if not chunk.peer then return false end
@@ -1234,7 +1234,7 @@ function Chunk_is_slave(chunk)
 end
 
 
-function Chunk_create_edge(chunk, kind, side)
+function CHUNK_CLASS.create_edge(chunk, kind, side)
   -- the edge faces *into* the chunk (on the given side)
 
   local sx, sy
@@ -1259,8 +1259,8 @@ function Chunk_create_edge(chunk, kind, side)
 end
 
 
-function Chunk_create_edge_pair(chunk, kind1, side)
-  local E1 = Chunk_create_edge(chunk, kind1, side)
+function CHUNK_CLASS.create_edge_pair(chunk, kind1, side)
+  local E1 = chunk:create_edge(kind1, side)
 
   local E2 = Edge_new_opposite("nothing", E1.S, E1.dir, E1.long)
 
@@ -1268,7 +1268,7 @@ function Chunk_create_edge_pair(chunk, kind1, side)
 end
 
 
-function Chunk_flip(chunk)
+function CHUNK_CLASS.flip(chunk)
   local A1 = chunk.from_area
   local A2 = chunk.dest_area
 

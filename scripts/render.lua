@@ -1898,7 +1898,7 @@ function Render_chunk(chunk)
   ---| Render_chunk |---
 
   dir  = chunk.from_dir or chunk.dir or 2
-  reqs = Chunk_base_reqs(chunk, dir)
+  reqs = chunk:base_reqs(dir)
   skin = {}
 
 

@@ -658,7 +658,7 @@ function Layout_add_traps()
 
     if kind == "closet" then
       each chunk in R.closets do
-        if not chunk.content and not Chunk_is_slave(chunk) then
+        if not chunk.content and not chunk:is_slave() then
           table.insert(locs, chunk)
         end
       end
@@ -1078,7 +1078,7 @@ function Layout_decorate_rooms(pass)
     local reqs
 
     if chunk.kind == "closet" then
-      reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+      reqs = chunk:base_reqs(chunk.from_dir)
 
       reqs.kind  = "cage"
       reqs.shape = "U"   -- TODO: chunk.shape
@@ -1316,7 +1316,7 @@ function Layout_decorate_rooms(pass)
     if chunk.sh < 2 then return end
 
     -- only try mirrored chunks *once*
-    if Chunk_is_slave(chunk) then return end
+    if chunk:is_slave() then return end
 
     local A = chunk.area
 
@@ -1495,7 +1495,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       local A = chunk.area
 
       if not chunk.content and not chunk.is_bossy and
-         not Chunk_is_slave(chunk) and
+         not chunk:is_slave() and
          chunk.sw >= 2 and chunk.sh >= 2 and
          not chunk.content and
          not (A.floor_group and A.floor_group.sink) and
@@ -1506,7 +1506,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     each chunk in R.closets do
-      if not chunk.content and not Chunk_is_slave(chunk) then
+      if not chunk.content and not chunk:is_slave() then
         table.insert(locs, chunk)
       end
     end
@@ -1550,7 +1550,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function try_make_decor_closet(R, chunk)
-    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+    local reqs = chunk:base_reqs(chunk.from_dir)
 
     -- TODO : REVIEW THIS
     --        [ probably should be "decor" once have a proper picture system ]

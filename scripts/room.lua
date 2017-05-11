@@ -712,7 +712,7 @@ function Room_pick_joiner_prefab(C, chunk)
 
   assert(chunk)
 
-  local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+  local reqs = chunk:base_reqs(chunk.from_dir)
 
   reqs.kind  = C.kind
   reqs.shape = assert(chunk.shape)
@@ -759,7 +759,7 @@ function Room_pick_joiner_prefab(C, chunk)
     if flip_it then
       -- this reverses from_dir and dest_dir, and adjusts the
       -- from_area and dest_area fields accordingly.
-      Chunk_flip(chunk)
+      chunk:flip()
     end
   end
 end
@@ -1602,7 +1602,7 @@ stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
     assert(chunk.from_dir)
     assert(chunk.shape)
 
-    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+    local reqs = chunk:base_reqs(chunk.from_dir)
 
     reqs.kind  = "hall"
     reqs.shape = chunk.shape

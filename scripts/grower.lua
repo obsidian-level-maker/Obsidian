@@ -2303,7 +2303,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     local A = chunk.area
     local R = A.room
 
-    local reqs = Chunk_base_reqs(chunk, chunk.from_dir)
+    local reqs = chunk:base_reqs(chunk.from_dir)
 
     reqs.kind  = "stairs"
     reqs.shape = assert(chunk.shape)
