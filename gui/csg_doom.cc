@@ -1813,7 +1813,7 @@ static void DM_AlignTextures()
 	// the first pass checks every 256 lines for IVAL_NONE (which will then
 	// propagate to similar neighbors), the next pass checks 128, 64, etc..
 
-	for (int pass = 8 ; pass >= 0 ; pass--)
+	for (int pass = 12 ; pass >= 0 ; pass--)
 	{
 		int naturals = 0;
 		int prev_count = 0;
@@ -1822,11 +1822,15 @@ static void DM_AlignTextures()
 		for (i = 0 ; i < (int)dm_linedefs.size() ; i++)
 		{
 			doom_linedef_c *L = dm_linedefs[i];
+
 			if (! L->isValid())
 				continue;
 
 			if (L->front->x_offset == IVAL_NONE)
 			{
+				if (pass >= 12)
+					continue;
+
 				int mask = (1 << pass) - 1;
 
 				if ((i & mask) == 0)
@@ -1834,7 +1838,6 @@ static void DM_AlignTextures()
 					L->front->x_offset = NaturalXOffset(L, 0);
 					naturals++;
 				}
-				continue;
 			}
 
 			doom_linedef_c *P = L;
