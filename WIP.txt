@@ -14,9 +14,6 @@ Miscellaneous
     - default Y offset is zero
     - brushlib.rail_brush() and rail_brush_pair()
 
-+  fence/bars : needs to vertically expand like a normal fence
-                so that player cannot jump through the gap
-
 -  Traps prefabs have an "action_kind", use matching action
    for the trigger lines.   [ "open" vs "lower" ]
    Q/ how to pick the matching action
@@ -27,10 +24,6 @@ Miscellaneous
 
 -  sprouts from symmetrical rooms : often skip a side
 
--  have a CHUNK_CLASS
-
-DONE:  proper system for actions of remote switches
-
 -  internal fences (esp. for outdoor rooms)
 
 
@@ -39,6 +32,8 @@ Hallway System
 --------------
 
 -  not considered "wallish" (no triangular filler) ?
+
+-  monster and item spots
 
 +  finish the "deuce" hallway pieces
 
@@ -50,6 +45,7 @@ Hallway System
    [ will need all I/L/T/P shapes ]
    [[ good for traps! ]]
 
+
 -  support pieces with windows
 
 -  be real nice to have pieces which are wall on one
@@ -58,7 +54,7 @@ Hallway System
 
    also: open on ALL sides  (mainly I and L pieces)
 
--  IDEA: shape = { "mid", "-", "mid", "-" }
++  complex shapes: shape = { "mid", "-", "mid", "-" }
 
    keywords can be: "-"     (no connections)
                     "mid"   (middle of side)
