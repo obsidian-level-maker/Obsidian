@@ -264,7 +264,7 @@ E.S.name, E.dir, along_dir, sx1,sy1, sx2,sy2)
     if sx2 < sx1 then sx1, sx2 = sx2, sx1 end
     if sy2 < sy1 then sy1, sy2 = sy2, sy1 end
 
-    local WC = Chunk_new("cave_walk", sx1, sy1, sx2, sy2)
+    local WC = CHUNK_CLASS.new("cave_walk", sx1, sy1, sx2, sy2)
 
     cave_box_for_chunk(WC)
 

@@ -2370,7 +2370,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       local x1,y1, x2,y2 = transform_rect(T, r)
 
       assert(r.kind)
-      local chunk = Chunk_new(r.kind, x1,y1, x2,y2)
+      local chunk = CHUNK_CLASS.new(r.kind, x1,y1, x2,y2)
 
       if r.from_dir then chunk.from_dir = transform_dir(T, r.from_dir) end
       if r.dest_dir then chunk.dest_dir = transform_dir(T, r.dest_dir) end

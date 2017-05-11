@@ -208,7 +208,7 @@ function AREA_CLASS.kill_it(A, remove_from_room)
   assert(not A.is_dead)
 
   if A.mode == "chunk" then
-    Chunk_kill(A.chunk)
+    A.chunk:kill_it()
   end
 
   table.kill_elem(LEVEL.areas, A)
@@ -1050,19 +1050,19 @@ function Area_locate_chunks()
 
 
   local function make_chunk(kind, A, sx1,sy1, sx2,sy2)
-    local CHUNK = Chunk_new(kind, sx1,sy1, sx2,sy2)
+    local CK = CHUNK_CLASS.new(kind, sx1,sy1, sx2,sy2)
 
-    CHUNK.area = A
+    CK.area = A
 
-    if CHUNK.sw < 2 or CHUNK.sh < 2 then
-      CHUNK.is_small = true
-    elseif CHUNK.sw > 2 and CHUNK.sh > 2 then
-      CHUNK.is_large = true
+    if CK.sw < 2 or CK.sh < 2 then
+      CK.is_small = true
+    elseif CK.sw > 2 and CK.sh > 2 then
+      CK.is_large = true
     end
 
-    CHUNK.touches_wall = check_touches_wall(sx1,sy1, sx2,sy2)
+    CK.touches_wall = check_touches_wall(sx1,sy1, sx2,sy2)
 
-    return CHUNK
+    return CK
   end
 
 
@@ -1072,20 +1072,20 @@ function Area_locate_chunks()
     local kind = "floor"
     if A.mode == "liquid" then kind = "liquid" end
 
-    local CHUNK = make_chunk(kind, A, sx1,sy1, sx2,sy2)
+    local CK = make_chunk(kind, A, sx1,sy1, sx2,sy2)
 
     -- TODO : improve this [ take nearby walls, conns, closets into account ]
-    CHUNK.space = 24
-    if math.min(CHUNK.sw, CHUNK.sh) >= 2 then CHUNK.space = 104 end
-    if math.min(CHUNK.sw, CHUNK.sh) >= 3 then CHUNK.space = 224 end
-    if math.min(CHUNK.sw, CHUNK.sh) >= 4 then CHUNK.space = 344 end
+    CK.space = 24
+    if math.min(CK.sw, CK.sh) >= 2 then CK.space = 104 end
+    if math.min(CK.sw, CK.sh) >= 3 then CK.space = 224 end
+    if math.min(CK.sw, CK.sh) >= 4 then CK.space = 344 end
 
     if kind == "liquid" then
-      table.insert(R.liquid_chunks, CHUNK)
+      table.insert(R.liquid_chunks, CK)
 
     else
--- stderrf("adding CHUNK %dx%d in %s of %s\n", CHUNK.sw, CHUNK.sh, A.name, R.name)
-      table.insert(R.floor_chunks, CHUNK)
+-- stderrf("adding CHUNK %dx%d in %s of %s\n", CK.sw, CK.sh, A.name, R.name)
+      table.insert(R.floor_chunks, CK)
     end
 
     -- TODO : review the liquid check here
@@ -1094,11 +1094,11 @@ function Area_locate_chunks()
       table.insert(R.ceil_chunks, CEIL)
 
       -- link the floor and ceiling chunks
-       CEIL.floor_below = CHUNK
-      CHUNK. ceil_above = CEIL
+       CEIL.floor_below = CK
+         CK. ceil_above = CEIL
     end
 
-    return CHUNK
+    return CK
   end
 
 
@@ -1128,21 +1128,21 @@ function Area_locate_chunks()
 
 
   local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-    local CHUNK = create_chunk(A, sx1,sy1, sx2,sy2)
+    local CK = create_chunk(A, sx1,sy1, sx2,sy2)
 
     for x = sx1, sx2 do
     for y = sy1, sy2 do
-      SEEDS[x][y].chunk = CHUNK
+      SEEDS[x][y].chunk = CK
     end
     end
 
     -- this marks the exit room boss area
     if A.is_bossy and sx2 > sx1 and sy2 > sy1 then
-      CHUNK.is_bossy = A.is_bossy
-      A.is_bossy = nil
+      CK.is_bossy = A.is_bossy
+       A.is_bossy = nil
     end
 
-    return CHUNK
+    return CK
   end
 
 

@@ -1131,8 +1131,11 @@ end
 ------------------------------------------------------------------------
 
 
-function Chunk_new(kind, sx1,sy1, sx2,sy2)
-  local CHUNK =
+CHUNK_CLASS = {}
+
+
+function CHUNK_CLASS.new(kind, sx1,sy1, sx2,sy2)
+  local CK =
   {
     id = alloc_id("chunk")
 
@@ -1147,46 +1150,48 @@ function Chunk_new(kind, sx1,sy1, sx2,sy2)
     encroach = {}
   }
 
-  CHUNK.name = string.format("CHUNK_%d", CHUNK.id)
+  CK.name = string.format("CHUNK_%d", CK.id)
+
+  table.set_class(CK, CHUNK_CLASS)
 
   local S1 = SEEDS[sx1][sy1]
   local S2 = SEEDS[sx2][sy2]
 
-  CHUNK.x1, CHUNK.y1 = S1.x1, S1.y1
-  CHUNK.x2, CHUNK.y2 = S2.x2, S2.y2
+  CK.x1, CK.y1 = S1.x1, S1.y1
+  CK.x2, CK.y2 = S2.x2, S2.y2
 
-  CHUNK.mx = math.mid(S1.x1, S2.x2)
-  CHUNK.my = math.mid(S1.y1, S2.y2)
+  CK.mx = math.mid(S1.x1, S2.x2)
+  CK.my = math.mid(S1.y1, S2.y2)
 
-  return CHUNK
+  return CK
 end
 
 
-function Chunk_kill(chunk)
-  assert(not chunk.is_dead)
+function CHUNK_CLASS.kill_it(CK)
+  assert(not CK.is_dead)
 
-  for sx = chunk.sx1, chunk.sx2 do
-  for sy = chunk.sy1, chunk.sy2 do
+  for sx = CK.sx1, CK.sx2 do
+  for sy = CK.sy1, CK.sy2 do
     local S = SEEDS[sx][sy]
 
     -- FIXME : this is WRONG WRONG WRONG
-    if S.chunk == chunk then S.chunk = nil end
+    if S.chunk == CK then S.chunk = nil end
   end
   end
 
-  chunk.kind = "DEAD_" .. chunk.kind
-  chunk.is_dead = true
+  CK.kind = "DEAD_" .. CK.kind
+  CK.is_dead = true
 
-  chunk.area   = nil
-  chunk.occupy = nil
-  chunk.shape  = nil
+  CK.area   = nil
+  CK.occupy = nil
+  CK.shape  = nil
 
-  chunk.sx1  = nil ; chunk.sx2  = nil
-  chunk.sy1  = nil ; chunk.sy2  = nil
+  CK.sx1  = nil ; CK.sx2  = nil
+  CK.sy1  = nil ; CK.sy2  = nil
 
-  if chunk.peer then
-    chunk.peer.peer = nil
-    chunk.peer = nil
+  if CK.peer then
+     CK.peer.peer = nil
+     CK.peer = nil
   end
 end
 
