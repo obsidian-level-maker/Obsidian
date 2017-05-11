@@ -2315,6 +2315,10 @@ function Layout_indoor_lighting()
       -- cannot use set_room() here
       R.light_level = sky_light_to_keyword()
     end
+
+    if R.is_hallway then
+      R.light_level = 144
+    end
   end
 
   visit_room(LEVEL.start_room)
