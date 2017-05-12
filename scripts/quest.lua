@@ -91,6 +91,8 @@
 
     weap_palette    -- weapon usage palette
 
+    storage_rooms   -- unused leaf rooms where we can store some
+                    -- of the health and ammo the player needs
 --]]
 
 
@@ -2327,10 +2329,11 @@ function Quest_nice_items()
 
   local function find_storage_rooms()
     each R in LEVEL.rooms do
-      if R.is_hallway then continue end
-
-      if R:is_unused_leaf() and #R.items == 0 then
-        R.is_storage = true
+      -- this test automatically excludes hallways and secrets
+      if R:is_unused_leaf() and
+         #R.items == 0 and not R.rough_exit_dist
+      then
+        table.insert(R.zone.storage_rooms, R)
       end
     end
   end
