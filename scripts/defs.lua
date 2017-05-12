@@ -294,6 +294,16 @@ GLOBAL_PREFAB_FIELDS =
   thing_8166   = "?object"
 
   line_888     = "?switch_action"
+
+  offset_301   = "?x_offset1"
+  offset_302   = "?x_offset2"
+  offset_303   = "?x_offset3"
+  offset_304   = "?x_offset4"
+
+  offset_401   = "?y_offset1"
+  offset_402   = "?y_offset2"
+  offset_403   = "?y_offset3"
+  offset_404   = "?y_offset4"
 }
 
 
@@ -309,8 +319,15 @@ GLOBAL_SKIN_DEFAULTS =
   floor2 = "?outer"
   ceil2  = "?outer"
 
-  x_offset = ""
-  y_offset = ""
+  x_offset1 = ""
+  x_offset2 = ""
+  x_offset3 = ""
+  x_offset4 = ""
+
+  y_offset1 = ""
+  y_offset2 = ""
+  y_offset3 = ""
+  y_offset4 = ""
 
   -- Doom engine stuff
   tag = ""
