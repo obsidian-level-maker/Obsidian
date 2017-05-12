@@ -1981,8 +1981,9 @@ function Render_chunk(chunk)
   -- texturing --
 
   if chunk.kind == "hallway" then
-    -- FIXME: proper textures for hallway pieces
-    skin.wall = "REDWALL"
+    table.merge(skin, A.room.skin)
+
+    -- FIXME : y_offset1
 
   elseif chunk.from_area then
     skin.wall  = Junction_calc_wall_tex(chunk.from_area, A)
