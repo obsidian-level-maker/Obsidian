@@ -1149,6 +1149,7 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     -- unusable hallway types are inhibited in prob_for_rule()
     assert(kind_tab and not table.empty(kind_tab))
 
+    R.hall_type  = info.hall_type
     R.hall_group = rand.key_by_probs(kind_tab)
 
   else

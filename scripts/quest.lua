@@ -76,7 +76,6 @@
     === Theme stuff ===
 
     cave_theme     : ROOM_THEME
-    hallway_theme  : ROOM_THEME
     outdoor_theme  : ROOM_THEME
 
     facade_mat      -- material for outer walls of buildings
@@ -2547,7 +2546,7 @@ function Quest_room_themes()
   end
 
 
-  local function collect_usable_themes(env)
+  local function collect_usable_themes(env, group)
     local tab = {}
 
     each name,info in GAME.ROOM_THEMES do
@@ -2557,6 +2556,7 @@ function Quest_room_themes()
 
       if info.prob and
          info.env == env and
+         info.group == group and
          match_level_theme(name)
       then
         tab[name] = info.prob
@@ -2648,21 +2648,31 @@ function Quest_room_themes()
   end
 
 
+  local function choose_hallway_themes()
+    each R in LEVEL.rooms do
+      if R.is_hallway then
+        local tab = collect_usable_themes("hallway", R.hall_group)
+
+        local name = rand.key_by_probs(tab, {})
+
+        R.theme = GAME.ROOM_THEMES[name]
+        assert(R.theme)
+      end
+    end
+  end
+
+
   local function choose_other_themes()
     local outdoor_tab = collect_usable_themes("outdoor")
-    local hallway_tab = collect_usable_themes("hallway")
     local    cave_tab = collect_usable_themes("cave")
 
     each Z in LEVEL.zones do
       Z.outdoor_theme = pick_zone_theme(outdoor_tab)
-      Z.hallway_theme = pick_zone_theme(hallway_tab)
       Z.   cave_theme = pick_zone_theme(cave_tab)
 
       -- apply it to all rooms in this zone
       each R in Z.rooms do
-        if R.is_hallway then
-          R.theme = Z.hallway_theme
-        elseif R.is_cave then
+        if R.is_cave then
           R.theme = Z.cave_theme
         elseif R.is_outdoor then
           R.theme = Z.outdoor_theme
@@ -2683,14 +2693,6 @@ function Quest_room_themes()
     LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
 
     each Z in LEVEL.zones do
-      if Z.hallway_theme then
-        local theme = Z.hallway_theme
-
-        Z.hall_tex   = rand.key_by_probs(theme.walls)
-        Z.hall_floor = rand.key_by_probs(theme.floors)
-        Z.hall_ceil  = rand.key_by_probs(theme.ceilings or theme.floors)
-      end
-
       assert(THEME.fences)
 
       Z.fence_mat = rand.key_by_probs(THEME.fences)
@@ -2818,6 +2820,7 @@ function Quest_room_themes()
   ---| Quest_room_themes |---
 
   choose_building_themes()
+  choose_hallway_themes()
   choose_other_themes()
 
     misc_textures()

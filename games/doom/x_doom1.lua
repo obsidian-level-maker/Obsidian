@@ -851,8 +851,56 @@ ULTDOOM.THEMES =
 
 ULTDOOM.ROOM_THEMES =
 {
-  -- this field ensures these theme entries REPLACE those of Doom 2.
+  -- this ensures the following room themes REPLACE those of Doom 2.
   replace_all = true
+
+
+-----  GENERIC STUFF  ------------------------------
+
+  any_vent_Hallway =
+  {
+    env   = "hallway"
+    group = "vent"
+    prob  = 50
+
+    walls =
+    {
+      GRAY1 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 30
+    }
+
+    ceilings =
+    {
+      CEIL3_5 = 30
+    }
+  }
+
+
+  any_deuce_Hallway =
+  {
+    env   = "hallway"
+    group = "deuce"
+    prob  = 1
+
+    walls =
+    {
+      GRAY1 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 30
+    }
+
+    ceilings =
+    {
+      CEIL3_5 = 30
+    }
+  }
 
 
 ------ EPISODE 1 : Tech Bases ----------------------

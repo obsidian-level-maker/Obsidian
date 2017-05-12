@@ -857,29 +857,48 @@ DOOM.ROOM_THEMES =
 
 -----  GENERIC STUFF  ------------------------------
 
-  any_Hallway =
+  any_vent_Hallway =
   {
-    env = "hallway"
-    prob = 1
+    env   = "hallway"
+    group = "vent"
+    prob  = 50
 
     walls =
     {
-      BROWN1  = 50
-      GRAY1   = 50
-      STARGR1 = 50
-      METAL1  = 20
+      GRAY1 = 50
     }
 
     floors =
     {
       FLAT1 = 30
-      FLOOR7_1 = 50
     }
 
     ceilings =
     {
+      CEIL3_5 = 30
+    }
+  }
+
+
+  any_deuce_Hallway =
+  {
+    env   = "hallway"
+    group = "deuce"
+    prob  = 1
+
+    walls =
+    {
+      GRAY1 = 50
+    }
+
+    floors =
+    {
       FLAT1 = 30
-      FLOOR7_1 = 50
+    }
+
+    ceilings =
+    {
+      CEIL3_5 = 30
     }
   }
 
