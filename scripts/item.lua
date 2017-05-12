@@ -583,37 +583,35 @@ function Item_simulate_battle(R)
 
   ---| Item_simulate_battle |---
 
-    assert(R.monster_list)
+  assert(R.monster_list)
 
-    R.item_stats = make_empty_stats()
+  R.item_stats = make_empty_stats()
 
-    if #R.monster_list >= 1 then
-      each CL,hmodel in LEVEL.hmodels do
-        battle_for_class(CL, hmodel)
-      end
+  if #R.monster_list >= 1 then
+    each CL,hmodel in LEVEL.hmodels do
+      battle_for_class(CL, hmodel)
     end
+  end
 end
 
 
 
 function Item_distribute_stats()
-  --|
-  --| This distributes the item statistics (how much health and ammo to
-  --| give the player needs) into earlier rooms and also storage rooms
-  --| in the same zone.
-  --|
+  --
+  -- This distributes the item statistics (how much health and ammo to
+  -- give to the player) into earlier rooms.
+  --
+
 
   -- health mainly stays in same room (a reward for killing the monsters).
   -- ammo mainly goes back, to prepare player for the fight.
-  local HEALTH_DISTRIB  = 0.35
-  local AMMO_DISTRIB    = 0.90
-  local STORAGE_DISTRIB = 0.30
+  local HEALTH_RATIO  = 0.35
+  local AMMO_RATIO    = 0.90
 
 
-  local function get_other_locs(R)
+  local function get_earlier_rooms(R)
     local list = {}
 
-    -- visit previous rooms
     local N = R
     local ratio = 1.0
 
@@ -623,28 +621,25 @@ function Item_distribute_stats()
       -- do not cross zones
       if N.zone != R.zone then break; end
 
+      -- never move stuff into hallways
       if N.is_hallway then continue end
 
-      table.insert(list, { room=N, ratio=ratio })
+      -- give more in larger rooms
+      local factor = (N.svolume ^ 0.7)
+
+      table.insert(list, { room=N, ratio=ratio * factor })
 
       ratio = ratio * 0.7
     end
-
-    -- add storage rooms
---[[ FIXME
-    if R.zone.storage_rooms then
-      each N in R.zone.storage_rooms do
-        ratio = rand.pick({ 0.25, 0.5, 0.75 })
-        table.insert(list, { room=R, ratio=ratio, is_storage=true })
-      end
-    end
---]]
 
     return list
   end
 
 
-  local function distribute(R, N, ratio)
+  local function distribute_to_room(R, N, ratio)
+    -- ratio is a value between 0.0 and 1.0, based on the number
+    -- and size of the earlier rooms (in the loc list).
+
     each CL,R_stats in R.item_stats do
       local N_stats = N.item_stats[CL]
 
@@ -653,42 +648,41 @@ function Item_distribute_stats()
 
         local value = qty * ratio
 
-        if N.is_storage then
-          value = value * STORAGE_DISTRIB
+        -- apply a ratio based on type of item (on top of the room ratio)
+        -- [ for hallways, we need EVERYTHING to go elsewhere ]
+        if R.is_hallway then
+          -- no change
         elseif stat == "health" then
-          value = value * HEALTH_DISTRIB
+          value = value * HEALTH_RATIO
         else 
-          value = value * AMMO_DISTRIB
+          value = value * AMMO_RATIO
         end
 
         N_stats[stat] = (N_stats[stat] or 0) + value
         R_stats[stat] =  R_stats[stat]       - value
 
-        gui.debugf("  distributing %s:%1.1f [%s]  %s --> %s\n",
-                   stat, value,  CL, R.name, N.name)
+--      gui.debugf("  distributing %s:%1.1f [%s]  %s --> %s\n",
+--                 stat, value,  CL, R.name, N.name)
       end
     end
   end
 
 
-  local function distribute_from_room(R)
-    -- skip storage rooms
-    if R.is_storage then return end
-
+  local function visit_room(R)
     -- no stats?
     if not R.item_stats then return end
 
-    local list  = get_other_locs(R)  -- may be empty
+    local list  = get_earlier_rooms(R)
     local total = 0
 
-    gui.debugf("distribute_from_room %s : locs:%d\n", R.name, #list)
+--  gui.debugf("distribute_from_room %s : locs:%d\n", R.name, #list)
 
     each loc in list do
       total = total + loc.ratio
     end
 
     each loc in list do
-      distribute(R, loc.room, loc.ratio / total)
+      distribute_to_room(R, loc.room, loc.ratio / total)
     end
   end
 
@@ -705,13 +699,12 @@ function Item_distribute_stats()
 
   ---| Item_distribute_stats |---
 
-  -- Note: we don't distribute to hallways
-
   each R in LEVEL.rooms do
-    distribute_from_room(R)
+    visit_room(R)
   end
 
----  dump_results
+--DEBUG:
+--  dump_results()
 end
 
 
@@ -723,9 +716,10 @@ function Item_pickups_for_class(CL)
   -- (the easy part) and *where* to place them (the hard part).
   --
 
+
   -- this accumulates excess stats
   -- e.g. if wanted health == 20 and we give a medikit, add 5 to excess["health"]
-  local excess
+  local excess = {}
 
 
   local function grab_a_big_spot(R)
@@ -1016,8 +1010,6 @@ function Item_pickups_for_class(CL)
 
 
   ---| Item_pickups_for_class |---
-
-  excess = {}
 
   each R in LEVEL.rooms do
     pickups_in_room(R)

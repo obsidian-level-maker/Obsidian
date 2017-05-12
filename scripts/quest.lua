@@ -90,9 +90,6 @@
                     -- [ a table of mon=prob pairs ]
 
     weap_palette    -- weapon usage palette
-
-    storage_rooms   -- unused leaf rooms where we can store some
-                    -- of the health and ammo the player needs
 --]]
 
 
@@ -2020,7 +2017,7 @@ end
 function Quest_nice_items()
   --
   -- Decides which nice items, including powerups, to use on this level,
-  -- especially for secrets but also for storage rooms, the start room,
+  -- especially for secrets but also the start room, unused leaf rooms,
   -- and (rarely) in normal rooms.
   --
 
@@ -2297,7 +2294,7 @@ function Quest_nice_items()
 
 
   local function visit_other_rooms()
-    local quota = (SEED_W + SEED_H + 40) / rand.pick({ 30, 55, 90 })
+    local quota = (LEVEL.map_W + LEVEL.map_H + 30) / rand.pick({ 50, 75, 100 })
 
     if OB_CONFIG.items == "rare"  then quota = quota / 4.0 end
     if OB_CONFIG.items == "less"  then quota = quota / 2.0 end
@@ -2333,7 +2330,9 @@ function Quest_nice_items()
       if R:is_unused_leaf() and
          #R.items == 0 and not R.rough_exit_dist
       then
-        table.insert(R.zone.storage_rooms, R)
+stderrf("!!!!  STORAGE ROOM @ %s  !!!!\n", R.name)
+        -- TODO : store a "minor" item here,
+        --        e.g. 50 units of health or two boxes of rocket ammo
       end
     end
   end
