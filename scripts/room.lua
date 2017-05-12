@@ -1581,21 +1581,6 @@ function Room_prepare_hallways()
   -- shape and orientation of each piece.
   --
 
-  local function pick_terminator_fab(R, chunk)
-    -- FIXME: review this hacky shite....
-stderrf("pick_terminator_fab @ %s for chunk in %s\n", R.name, chunk.area.name)
-    each C in R.conns do
-stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
-      if C.A1 == chunk.area or C.A2 == chunk.area then
-        Room_pick_joiner_prefab(C, chunk)
-        return
-      end
-    end
-
-    error("WTF, no conn??")
-  end
-
-
   local function pick_hallway_fab(R, chunk)
     -- Note: does not handle terminator pieces (they are done like joiners)
 
@@ -1652,7 +1637,7 @@ stderrf("  conn %s --> %s\n", C.A1.name, C.A2.name)
     end
 
     if piece.is_terminator then
-      pick_terminator_fab(R, piece)
+      Room_pick_joiner_prefab(assert(piece.conn), piece)
     else
       pick_hallway_fab(R, piece)
     end
