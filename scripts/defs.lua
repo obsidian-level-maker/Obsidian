@@ -270,6 +270,9 @@ GLOBAL_PARAMETERS =
 -- 
 GLOBAL_PREFAB_FIELDS =
 {
+  -- Note the double underscore, since these materials actually
+  -- begin with an underscore (like "_WALL" and "_FLOOR").
+
    tex__WALL   = "?wall"
   flat__WALL   = "?wall"
 
@@ -306,11 +309,15 @@ GLOBAL_SKIN_DEFAULTS =
   floor2 = "?outer"
   ceil2  = "?outer"
 
+  x_offset = ""
+  y_offset = ""
+
   -- Doom engine stuff
   tag = ""
   light = ""
   object = ""
   switch_action = ""
+  scroller = ""
 
   -- Quake engine stuff
   style = ""
