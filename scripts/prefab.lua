@@ -1809,7 +1809,7 @@ function Fab_replacements(fab)
   local function fixup_x_offsets(C)
     -- adjust X offset for split edges
 
-    if C.u1 and C.u1_along then
+    if C.u1 and C.u1 != "" and C.u1_along then
       C.u1 = C.u1 + C.u1_along
       C.u1_along = nil
     end
