@@ -632,6 +632,14 @@ function Item_distribute_stats()
       ratio = ratio * 0.7
     end
 
+    -- handle hallways that are entered from a different zone
+    -- (i.e. via a keyed door).
+    if R.is_hallway and table.empty(list) then
+      N = R.entry_conn:other_room(N)
+
+      table.insert(list, { room=N, ratio=1.0 })
+    end
+
     return list
   end
 

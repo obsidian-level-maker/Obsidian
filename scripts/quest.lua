@@ -2294,7 +2294,7 @@ function Quest_nice_items()
 
 
   local function visit_other_rooms()
-    local quota = (LEVEL.map_W + LEVEL.map_H + 30) / rand.pick({ 50, 75, 100 })
+    local quota = (LEVEL.map_W + LEVEL.map_H + 45) / rand.pick({ 50, 70, 90 })
 
     if OB_CONFIG.items == "rare"  then quota = quota / 4.0 end
     if OB_CONFIG.items == "less"  then quota = quota / 2.0 end
