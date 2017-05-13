@@ -1797,7 +1797,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
   local function is_element_a_chunk(E)
     return E.kind == "closet" or E.kind == "joiner" or
-           E.kind == "stair"  or E.kind == "hallway"
+           E.kind == "stair"  or E.kind == "hallway" or
+           E.kind == "link"
   end
 
 
