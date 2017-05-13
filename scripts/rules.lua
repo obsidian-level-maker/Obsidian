@@ -2072,9 +2072,10 @@ CAVE_GROW_FILL_B =
 --   Hallway stuff
 ------------------------------------------
 
-SPROUT_hallway1 =
+SPROUT_narrow_hallway =
 {
-  prob = 9999  --!!!!
+  prob = 350
+  skip_prob = 25
 
   structure =
   {
@@ -2187,9 +2188,10 @@ HALL_1_SPROUT_A =
 }
 
 
-SPROUT_hallway2 =
+SPROUT_wide_hallway =
 {
-  prob = 0
+  prob = 700
+  skip_prob = 25
 
   structure =
   {
