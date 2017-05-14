@@ -2616,6 +2616,124 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function check_river_point(cx, cy)
+    -- returns -1 if hit/touching a walk chunk
+    -- returns  0 if hit another room
+    -- returns +1 if spot is fine
+
+    if cx < 1 or cx > info.W then return 0 end
+    if cy < 1 or cy > info.H then return 0 end
+
+    for nx = cx-1, cx+1 do
+    for ny = cy-1, cy+1 do
+      if nx < 1 or nx > info.W then continue end
+      if ny < 1 or ny > info.H then continue end
+
+      local v2 = info.map.cells[nx][ny]
+
+      -- touches a walk chunk?
+      if v2 and v2 < 0 then return -1 end
+    end
+    end
+
+    local v = info.map.cells[cx][cy]
+
+    if v == nil then return 0 end
+
+    return 1
+  end
+
+
+  local function meander(points, x, y, dx)
+      x = x + dx
+
+      local v = info.map.cells[x][y]
+
+      if v == nil then return true end
+      if v != 0   then return false end
+
+    while 1 do
+      table.insert(points, { x=x, y=y })
+
+      -- see where we can go to from here
+      local dy = 0
+
+      local v1 = check_river_point(x + dx, y)
+      local v2 = check_river_point(x, y - 1)
+      local v3 = check_river_point(x, y + 1)
+
+      if v1 < 0 then return false end
+      if v1 < 1 then return true  end
+
+      -- TODO : verticality
+
+      x = x + dx
+      y = y + dy
+    end
+  end
+
+
+  local function try_a_river(RIVER)
+    local points = {}
+
+    -- pick starting point
+    local x, y
+
+    for loop = 1,50 do
+      x = rand.irange(1, info.W)
+      y = rand.irange(1, info.H)
+
+      if check_river_point(x, y) > 0 then break; end
+
+      x = nil
+      y = nil
+    end
+
+    if not x then return false end
+
+    table.insert(points, { x=x, y=y })
+
+    -- meander eastward
+
+    if not meander(points, x, y, 1) then return false end
+
+    -- meander westward
+
+    if not meander(points, x, y, -1) then return false end
+
+    -- OK --
+
+    each P in points do
+      info.blocks[P.x][P.y] = RIVER
+    end
+
+stderrf("MADE A RIVER !!!!!!\n")
+
+    -- FIXME : add a bridge
+
+    return true
+  end
+
+
+  local function make_a_river()
+    local RIVER =
+    {
+      neighbors = {}
+      children  = {}
+
+      floor_mat = "_LIQUID"
+
+      floor_h   = entry_h - 24  ---  rand.pick({64, 96, 128})
+    }
+
+    for loop = 1,50 do
+      if try_a_river(RIVER) then
+        break;
+      end
+    end
+  end
+
+
   ---| Cave_build_a_park |---
 
   info = Cave_setup_info(R)
@@ -2635,6 +2753,10 @@ function Cave_build_a_park(R, entry_h)
   do_parky_stuff()
 
   temp_install_floor(info.FLOOR)
+
+  if LEVEL.liquid then
+    make_a_river()
+  end
 end
 
 
