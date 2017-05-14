@@ -2128,7 +2128,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
       end
     end -- A
 
-stderrf("facing DB:\n%s\n", table.tostr(facings))
+--stderrf("facing DB:\n%s\n", table.tostr(facings))
   end
 
 
@@ -2174,7 +2174,7 @@ stderrf("facing DB:\n%s\n", table.tostr(facings))
       -- nothing else possible?
       if R == nil then break; end
 
-stderrf("flobbing %s with %s\n", R.name, T.name)
+--stderrf("flobbing %s with %s\n", R.name, T.name)
 
       R.kkk_temp = T
       T.kkk_room = R
@@ -2188,7 +2188,7 @@ stderrf("flobbing %s with %s\n", R.name, T.name)
       -- nothing else possible?
       if R == nil then break; end
 
-stderrf("secondary flob %s with %s\n", R.name, T.name)
+--stderrf("secondary flob %s with %s\n", R.name, T.name)
 
       R.kkk2_temp = T
       T.kkk2_room = R

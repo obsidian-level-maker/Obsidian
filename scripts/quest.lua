@@ -2781,8 +2781,13 @@ function Quest_room_themes()
 
     if R.is_cave then
       setup_cave_theme(R)
+
+    elseif R.is_park then
+      R.main_tex = rand.key_by_probs(assert(R.theme.naturals))
+
     elseif R.is_outdoor then
-      R.main_tex = R.zone.fence_mat  --- rand.key_by_probs(R.theme.floors)
+      R.main_tex = R.zone.fence_mat
+
     else
       R.main_tex = rand.key_by_probs(R.theme.walls)
     end
