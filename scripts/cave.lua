@@ -2645,12 +2645,13 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function meander(points, x, y, dx)
-      x = x + dx
+    x = x + dx
 
-      local v = info.map.cells[x][y]
+    local v0 = check_river_point(x, y)
 
-      if v == nil then return true end
-      if v != 0   then return false end
+    if v0 < 1 then return false end
+
+    local decide_prob = rand.sel(50, 25, 75)
 
     while 1 do
       table.insert(points, { x=x, y=y })
@@ -2662,10 +2663,28 @@ function Cave_build_a_park(R, entry_h)
       local v2 = check_river_point(x, y - 1)
       local v3 = check_river_point(x, y + 1)
 
-      if v1 < 0 then return false end
-      if v1 < 1 then return true  end
+      -- finish successfully when hit edge of room
+      if v1 == 0 then return true end
 
-      -- TODO : verticality
+      -- fail if we have nowhere else to go
+      v1 = (v1 > 0)
+      v2 = (v2 > 0)
+      v3 = (v3 > 0)
+
+      if not (v1 or v2 or v3) then return false end
+
+      if v2 then v2 = check_river_point(x + dx, y - 1) > 0 end
+      if v3 then v3 = check_river_point(x + dx, y + 1) > 0 end
+
+      if (v2 or v3) and (not v1 or rand.odds(75)) then
+        if v2 and v3 then
+          if rand.odds(decide_prob) then v2 = false else v3 = false end
+        end
+
+        if v2 then dy = -1 else dy = 1 end
+
+        table.insert(points, { x=x, y=y + dy })
+      end
 
       x = x + dx
       y = y + dy
