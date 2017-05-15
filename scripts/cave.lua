@@ -2648,10 +2648,12 @@ function Cave_build_a_park(R, entry_h)
     -- the start point is also where the bridge will go,
     -- so make sure there is enough room for a bridge.
 
+    for dx =  0, 1 do
     for dy = -3, 3 do
-      if check_river_point(cx, cy+dy) < 1 then
+      if check_river_point(cx+dx, cy+dy) < 1 then
         return false
       end
+    end
     end
 
     for dx = -4, 4 do
@@ -2821,11 +2823,12 @@ function Cave_build_a_park(R, entry_h)
 
     if not x then return nil end
 
-    table.insert(points, { x=x, y=y })
+    table.insert(points, { x=x,   y=y })
+    table.insert(points, { x=x+1, y=y })
 
     -- meander eastward
 
-    if not meander(points, x, y, 1) then return nil end
+    if not meander(points, x+1, y, 1) then return nil end
 
     -- meander westward
 
@@ -2888,13 +2891,13 @@ gui.debugf("MADE A RIVER !!!!!!\n")
     BRIDGE.is_river  = nil
     BRIDGE.is_bridge = true
 
-    for dx =  0, 0 do
+    for dx =  0, 1 do
     for dy = -1, 1 do
       info.blocks[bx+dx][by+dy] = BRIDGE
     end
     end
 
-    local mx = info.x1 + (bx - 1) * 64 + 32
+    local mx = info.x1 + (bx - 1) * 64 + 64
     local my = info.y1 + (by - 1) * 64 + 32
 
     local def = PREFABS["Bridge_narrow1"]
