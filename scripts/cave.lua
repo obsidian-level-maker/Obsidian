@@ -2707,7 +2707,7 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function try_a_river(RIVER)
+  local function try_a_river()
     local points = {}
 
     -- pick starting point
@@ -2723,20 +2723,27 @@ function Cave_build_a_park(R, entry_h)
       y = nil
     end
 
-    if not x then return false end
+    if not x then return nil end
 
     table.insert(points, { x=x, y=y })
 
     -- meander eastward
 
-    if not meander(points, x, y, 1) then return false end
+    if not meander(points, x, y, 1) then return nil end
 
     -- meander westward
 
-    if not meander(points, x, y, -1) then return false end
+    if not meander(points, x, y, -1) then return nil end
 
     -- OK --
 
+    local score = #points + gui.random() * 0.1
+
+    return points, score
+  end
+
+
+  local function install_river(points, RIVER)
     each P in points do
       info.blocks[P.x][P.y] = RIVER
 
@@ -2763,10 +2770,20 @@ stderrf("MADE A RIVER !!!!!!\n")
       floor_h   = entry_h - 24  ---  rand.pick({64, 96, 128})
     }
 
-    for loop = 1,50 do
-      if try_a_river(RIVER) then
-        break;
+    local best
+    local best_score = 7  -- not too short
+
+    for loop = 1,30 do
+      local points, score = try_a_river()
+
+      if points and score > best_score then
+        best = points
+        best_score = score
       end
+    end
+
+    if best then
+      install_river(best, RIVER)
     end
   end
 
