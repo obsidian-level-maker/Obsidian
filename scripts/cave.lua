@@ -2644,6 +2644,23 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function check_river_start_point(cx, cy)
+    for dy = -3, 3 do
+      if check_river_point(cx, cy+dy) < 1 then
+        return false
+      end
+    end
+
+    for dx = -4, 4 do
+      if check_river_point(cx+dx, cy) < 1 then
+        return false
+      end
+    end
+
+    return true
+  end
+
+
   local function meander(points, x, y, dx)
     x = x + dx
 
@@ -2653,13 +2670,15 @@ function Cave_build_a_park(R, entry_h)
 
     local decide_prob = rand.sel(50, 25, 75)
 
+    local max_loop = 1
+
     while 1 do
       table.insert(points, { x=x, y=y })
 
       -- see where we can go to from here
       local dy = 0
 
-      for loop = 1, rand.irange(1,4) do
+      for loop = 1, rand.irange(1,max_loop) do
 
         local v1 = check_river_point(x + dx, y)
         local v2 = check_river_point(x, y - 1)
@@ -2703,6 +2722,10 @@ function Cave_build_a_park(R, entry_h)
       end -- loop
 
       x = x + dx
+
+      if max_loop < 4 then
+        max_loop = max_loop + 1
+      end
     end
   end
 
@@ -2785,7 +2808,9 @@ function Cave_build_a_park(R, entry_h)
       x = rand.irange(1, info.W)
       y = rand.irange(1, info.H)
 
-      if check_river_point(x, y) > 0 then break; end
+      if check_river_start_point(x, y) then
+        break;
+      end
 
       x = nil
       y = nil
@@ -2822,10 +2847,10 @@ gui.debugf("MADE A RIVER !!!!!!\n")
     each P in points do
       info.blocks[P.x][P.y] = RIVER
 
-      if math.abs(P.x - points[1].x) <= 1 then continue end
-
       if check_river_point(P.x, P.y-1) > 0 then info.blocks[P.x][P.y-1] = RIVER end
       if check_river_point(P.x, P.y+1) > 0 then info.blocks[P.x][P.y+1] = RIVER end
+
+      if math.abs(P.x - points[1].x) < 2 then continue end
 
       if check_river_point(P.x, P.y-2) > 0 then info.blocks[P.x][P.y-2] = RIVER end
       if check_river_point(P.x, P.y+2) > 0 then info.blocks[P.x][P.y+2] = RIVER end
@@ -2876,6 +2901,8 @@ gui.debugf("MADE A RIVER !!!!!!\n")
       floor_mat = "_LIQUID"
 
       floor_h   = entry_h - 64  ---  rand.pick({64, 96, 128})
+
+      is_river  = true
     }
 
     local best
