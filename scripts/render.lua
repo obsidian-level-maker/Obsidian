@@ -2562,18 +2562,30 @@ function Render_determine_spots()
   end
 
 
-  local function do_floor_cell(x, y)
-    if x < 1 or x > info.W then return end
-    if y < 1 or y > info.H then return end
+  local function do_floor_cell(x, y, FL)
+    assert(not (x < 1 or x > info.W))
+    assert(not (y < 1 or y > info.H))
 
     local A = info.blocks[x][y]
-
     if not A then return end
-    if not A.floor_h then return end
 
-    local poly = Cave_brush(info, x, y)
+    if A == FL or A.parent == FL then
+      local poly = Cave_brush(info, x, y)
 
-    gui.spots_fill_poly(poly, SPOT_CLEAR)
+      gui.spots_fill_poly(poly, SPOT_CLEAR)
+    end
+  end
+
+
+  local function do_lower_cell(x, y, FL)
+    local A = info.blocks[x][y]
+    if not A then return end
+
+    if A.floor_h and A.floor_h < FL.floor_h - 16 then
+      local poly = Cave_brush(info, x, y)
+
+      gui.spots_fill_poly(poly, SPOT_LEDGE)
+    end
   end
 
 
@@ -2593,7 +2605,14 @@ function Render_determine_spots()
     -- clear the floors
     for cx = FL.cx1, FL.cx2 do
     for cy = FL.cy1, FL.cy2 do
-      do_floor_cell(cx, cy)
+      do_floor_cell(cx, cy, FL)
+    end
+    end
+
+    -- handle nearby lower floors or liquid pools
+    for cx = FL.cx1, FL.cx2 do
+    for cy = FL.cy1, FL.cy2 do
+      do_lower_cell(cx, cy, FL)
     end
     end
 

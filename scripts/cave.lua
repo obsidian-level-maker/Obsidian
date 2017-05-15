@@ -896,8 +896,8 @@ function Cave_create_areas(R, info)
 
 
     -- compute properties of each sink
-    local SINK1 = {}
-    local SINK2 = {}
+    local SINK1 = { parent=AREA }
+    local SINK2 = { parent=AREA }
 
     compute_floor_sinks  (SINK1, SINK2, R, AREA)
     compute_ceiling_sinks(SINK1, SINK2, R, AREA)
@@ -2813,7 +2813,7 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function install_river(points, RIVER)
-    -- bridge cell
+    -- bridge cell coords
     local bx = points[1].x
     local by = points[1].y
 
@@ -2833,8 +2833,8 @@ stderrf("MADE A RIVER !!!!!!\n")
 
     -- add a bridge
 
-    local mx = info.x1 + (bx - 1) * 64 + 32 - 44
-    local my = info.y1 + (by - 1) * 64 + 32 - 96
+    local mx = info.x1 + (bx - 1) * 64 + 32
+    local my = info.y1 + (by - 1) * 64 + 32
 
     local def = PREFABS["Bridge_narrow1"]
 
