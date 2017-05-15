@@ -2659,35 +2659,50 @@ function Cave_build_a_park(R, entry_h)
       -- see where we can go to from here
       local dy = 0
 
-      local v1 = check_river_point(x + dx, y)
-      local v2 = check_river_point(x, y - 1)
-      local v3 = check_river_point(x, y + 1)
+      for loop = 1, rand.irange(1,4) do
 
-      -- finish successfully when hit edge of room
-      if v1 == 0 then return true end
+        local v1 = check_river_point(x + dx, y)
+        local v2 = check_river_point(x, y - 1)
+        local v3 = check_river_point(x, y + 1)
 
-      -- fail if we have nowhere else to go
-      v1 = (v1 > 0)
-      v2 = (v2 > 0)
-      v3 = (v3 > 0)
+        -- finish successfully when hit edge of room
+        if v1 == 0 then return true end
 
-      if not (v1 or v2 or v3) then return false end
+        -- fail if we have nowhere else to go
+        v1 = (v1 > 0)
+        v2 = (v2 > 0)
+        v3 = (v3 > 0)
 
-      if v2 then v2 = check_river_point(x + dx, y - 1) > 0 end
-      if v3 then v3 = check_river_point(x + dx, y + 1) > 0 end
-
-      if (v2 or v3) and (not v1 or rand.odds(75)) then
-        if v2 and v3 then
-          if rand.odds(decide_prob) then v2 = false else v3 = false end
+        if dy != 0 then
+          if dy < 0 then v3 = false else v2 = false end
         end
 
-        if v2 then dy = -1 else dy = 1 end
+        if not (v1 or v2 or v3) then return false end
 
-        table.insert(points, { x=x, y=y + dy })
-      end
+        if v2 then v2 = check_river_point(x + dx, y - 1) > 0 end
+        if v3 then v3 = check_river_point(x + dx, y + 1) > 0 end
+
+        if (v2 or v3) and (not v1 or rand.odds(70)) then
+          if dy != 0 then
+            -- ok
+          else
+            if v2 and v3 then
+              if rand.odds(decide_prob) then v2 = false else v3 = false end
+            end
+
+            if v2 then dy = -1 else dy = 1 end
+          end
+
+          y = y + dy
+
+          table.insert(points, { x=x, y=y })
+        else
+          break;
+        end
+
+      end -- loop
 
       x = x + dx
-      y = y + dy
     end
   end
 
@@ -2724,6 +2739,9 @@ function Cave_build_a_park(R, entry_h)
 
     each P in points do
       info.blocks[P.x][P.y] = RIVER
+
+      if check_river_point(P.x, P.y-1) > 0 then info.blocks[P.x][P.y-1] = RIVER end
+      if check_river_point(P.x, P.y+1) > 0 then info.blocks[P.x][P.y+1] = RIVER end
     end
 
 stderrf("MADE A RIVER !!!!!!\n")
