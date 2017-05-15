@@ -2922,10 +2922,16 @@ function Cave_build_a_park(R, entry_h)
     end
     end
 
+    local reqs =
+    {
+      kind  = "bridge"
+      where = "point"
+    }
+
+    local def = Fab_pick(reqs)
+
     local mx = info.x1 + (bx - 1) * 64 + 64
     local my = info.y1 + (by - 1) * 64 + 32
-
-    local def = PREFABS["Bridge_narrow1"]
 
     local T = Trans.spot_transform(mx, my, entry_h, 2)
 
