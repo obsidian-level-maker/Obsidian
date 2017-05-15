@@ -337,7 +337,7 @@ end
 
 
   local function walk_chunks_to_points()
-    info.point_list = {}
+    info.walk_points = {}
 
     each chunk in info.walk_chunks do
       assert(chunk.cx1)
@@ -348,10 +348,10 @@ end
         y = math.i_mid(chunk.cy1, chunk.cy2)
       }
 
-      table.insert(info.point_list, POINT)
+      table.insert(info.walk_points, POINT)
     end
 
-    assert(#info.point_list > 0)
+    assert(#info.walk_points > 0)
   end
 
 
@@ -602,12 +602,12 @@ function Cave_generate_cave(R, info)
   local function is_cave_good(cave)
     -- check that all important parts are connected
 
-    if not cave:validate_conns(info.point_list) then
+    if not cave:validate_conns(info.walk_points) then
       gui.debugf("cave failed connection check\n")
       return false
     end
 
-    local p1 = info.point_list[1]
+    local p1 = info.walk_points[1]
 
     cave.empty_id = cave.flood[p1.x][p1.y]
 
@@ -965,8 +965,8 @@ function Cave_create_areas(R, info)
 
     pos_list[1] =
     {
-      x = info.point_list[1].x
-      y = info.point_list[1].y
+      x = info.walk_points[1].x
+      y = info.walk_points[1].y
     }
 
 
@@ -1765,7 +1765,7 @@ function Cave_fill_lakes(R)
   if info.liquid_mode != "lake" then return end
 
   -- determine region id for the main walkway
-  local p1 = info.point_list[1]
+  local p1 = info.walk_points[1]
 
   local path_id = cave.flood[p1.x][p1.y]
 
@@ -2843,26 +2843,8 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function install_river(points, RIVER)
-gui.debugf("MADE A RIVER !!!!!!\n")
-
-    -- bridge cell coords
-    local bx = points[1].x
-    local by = points[1].y
-
-    each P in points do
-      info.blocks[P.x][P.y] = RIVER
-
-      if check_river_point(P.x, P.y-1) > 0 then info.blocks[P.x][P.y-1] = RIVER end
-      if check_river_point(P.x, P.y+1) > 0 then info.blocks[P.x][P.y+1] = RIVER end
-
-      if math.abs(P.x - points[1].x) < 2 then continue end
-
-      if check_river_point(P.x, P.y-2) > 0 then info.blocks[P.x][P.y-2] = RIVER end
-      if check_river_point(P.x, P.y+2) > 0 then info.blocks[P.x][P.y+2] = RIVER end
-    end
-
-    -- find contiguous regions
+  local function find_river_banks(RIVER)
+    -- finds all contiguous regions
 
     local map2 = info.map:copy()
 
@@ -2880,11 +2862,30 @@ gui.debugf("MADE A RIVER !!!!!!\n")
 
     map2:flood_fill()
 
-    map2:dump_regions()
+    return map2
+  end
 
 
-    -- add a bridge --
+  local function check_walkables(RIVER, bx, by)
+    local map2 = find_river_banks(RIVER)
 
+    local B1 = map2.flood[bx][by - 2]
+    local B2 = map2.flood[bx][by + 2]
+
+    assert(B1 and B1 < 0)
+    assert(B2 and B2 < 0)
+
+    each P in info.walk_points do
+      local B = map2.flood[P.x][P.y]
+
+      if not (B == B1 or B == B2) then return false end
+    end
+
+    return true  -- Ok
+  end
+
+
+  local function add_the_bridge(RIVER, bx, by)
     -- this tells the Render_cell() code to not move cell corners,
     -- so the floor adjoining the bridge will be aligned properly.
     local BRIDGE = table.copy(RIVER)
@@ -2905,8 +2906,37 @@ gui.debugf("MADE A RIVER !!!!!!\n")
     local T = Trans.spot_transform(mx, my, entry_h, 2)
 
     Fabricate(R, def, T, {})
+  end
 
-    return true
+
+  local function install_river(points, RIVER)
+gui.debugf("MADE A RIVER !!!!!!\n")
+
+    -- bridge cell coords
+    local bx = points[1].x
+    local by = points[1].y
+
+    each P in points do
+      info.blocks[P.x][P.y] = RIVER
+
+      if check_river_point(P.x, P.y-1) > 0 then info.blocks[P.x][P.y-1] = RIVER end
+      if check_river_point(P.x, P.y+1) > 0 then info.blocks[P.x][P.y+1] = RIVER end
+
+      if math.abs(P.x - points[1].x) < 2 then continue end
+
+      if check_river_point(P.x, P.y-2) > 0 then info.blocks[P.x][P.y-2] = RIVER end
+      if check_river_point(P.x, P.y+2) > 0 then info.blocks[P.x][P.y+2] = RIVER end
+    end
+
+
+    -- check if all walk-points can be reached
+
+    if not check_walkables(RIVER, bx, by) then
+      -- make it very shallow, disable the bridge
+      RIVER.floor_h = entry_h - 24
+    else
+      add_the_bridge(RIVER, bx, by)
+    end
   end
 
 
@@ -2918,7 +2948,7 @@ gui.debugf("MADE A RIVER !!!!!!\n")
 
       floor_mat = "_LIQUID"
 
-      floor_h   = entry_h - 64  ---  rand.pick({64, 96, 128})
+      floor_h   = entry_h - rand.pick({48, 64, 80, 96, 128})
 
       is_river  = true
     }
