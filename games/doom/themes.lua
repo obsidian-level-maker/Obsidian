@@ -875,7 +875,7 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      CEIL3_5 = 30
+      FLAT1 = 30
     }
   }
 
@@ -893,12 +893,12 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLAT1 = 30
+      FLAT3 = 30
     }
 
     ceilings =
     {
-      CEIL3_5 = 30
+      FLAT3 = 30
     }
   }
 
