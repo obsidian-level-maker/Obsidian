@@ -2866,6 +2866,17 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function merge_a_runt(map2, reg, RIVER)
+    for rx = reg.x1, reg.x2 do
+    for ry = reg.y1, reg.y2 do
+      if map2.flood[rx][ry] == reg.id then
+        info.blocks[rx][ry] = RIVER
+      end
+    end
+    end
+  end
+
+
   local function check_walkables(RIVER, bx, by)
     local map2 = find_river_banks(RIVER)
 
@@ -2875,13 +2886,26 @@ function Cave_build_a_park(R, entry_h)
     assert(B1 and B1 < 0)
     assert(B2 and B2 < 0)
 
+    local result = true
+
     each P in info.walk_points do
       local B = map2.flood[P.x][P.y]
 
-      if not (B == B1 or B == B2) then return false end
+      if not (B == B1 or B == B2) then
+        result = false
+        break;
+      end
     end
 
-    return true  -- Ok
+    -- handle little cut-off pieces
+
+    each _,reg in map2.regions do
+      if reg.size < 6 and reg.id != B1 and reg.id != B2 then
+        merge_a_runt(map2, reg, RIVER)
+      end
+    end
+
+    return result
   end
 
 
@@ -2910,8 +2934,6 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function install_river(points, RIVER)
-gui.debugf("MADE A RIVER !!!!!!\n")
-
     -- bridge cell coords
     local bx = points[1].x
     local by = points[1].y
