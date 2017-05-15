@@ -2707,6 +2707,67 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function score_river(points)
+    -- computes a measure of how well the river divides the
+    -- floor space into two halves.
+
+    -- first, determine Y range for each x coordinate
+    local y_ranges = {}
+
+    each P in points do
+      local r = y_ranges[P.x]
+
+      if not y_ranges[P.x] then
+        r = { y1=P.y, y2=P.y }
+        y_ranges[P.x] = r
+      else
+        r.y1 = math.min(r.y1, P.y)
+        r.y2 = math.max(r.y2, P.y)
+      end
+    end
+
+    -- second, see how much space is above and below each column
+    local sum   = 0
+    local count = 0
+
+    each x,r in y_ranges do
+      local top = 0
+      local bottom = 0
+
+      for y = r.y2 + 1, info.H do
+        if info.map.cells[x][y] != nil then
+          top = top + 1
+        end
+      end
+
+      for y = 1, r.y1 - 1 do
+        if info.map.cells[x][y] != nil then
+          bottom = bottom + 1
+        end
+      end
+
+      -- this will range from 0.0 (good) to 1.0 (bad)
+      local val = math.abs(top - bottom) / info.H
+
+      sum   = sum + val
+      count = count + 1
+    end
+
+    -- not wide enough?
+    if count < 15 then return -1 end
+
+    sum = sum / count
+
+    -- not enough space on each side?
+    if sum > 0.31 then return -1 end
+
+    local score = (1.0 - sum) * 30 + count
+
+    -- tie breaker
+    return score + gui.random() * 0.1
+  end
+
+
   local function try_a_river()
     local points = {}
 
@@ -2735,11 +2796,12 @@ function Cave_build_a_park(R, entry_h)
 
     if not meander(points, x, y, -1) then return nil end
 
+    -- too short?
+    if #points < 10 then return nil end
+
     -- OK --
 
-    local score = #points + gui.random() * 0.1
-
-    return points, score
+    return points, score_river(points)
   end
 
 
@@ -2771,7 +2833,7 @@ stderrf("MADE A RIVER !!!!!!\n")
     }
 
     local best
-    local best_score = 7  -- not too short
+    local best_score = 0
 
     for loop = 1,30 do
       local points, score = try_a_river()
