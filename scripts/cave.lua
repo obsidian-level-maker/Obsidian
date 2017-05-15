@@ -2813,6 +2813,8 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function install_river(points, RIVER)
+gui.debugf("MADE A RIVER !!!!!!\n")
+
     -- bridge cell coords
     local bx = points[1].x
     local by = points[1].y
@@ -2829,7 +2831,26 @@ function Cave_build_a_park(R, entry_h)
       if check_river_point(P.x, P.y+2) > 0 then info.blocks[P.x][P.y+2] = RIVER end
     end
 
-stderrf("MADE A RIVER !!!!!!\n")
+    -- find contiguous regions
+
+    local map2 = info.map:copy()
+
+    for x = 1, info.W do
+    for y = 1, info.H do
+      if map2:get(x, y) == 0 then
+        map2:set(x, y, -1)
+      end
+
+      if info.blocks[x][y] == RIVER then
+        map2:set(x, y, nil)
+      end
+    end
+    end
+
+    map2:flood_fill()
+
+    map2:dump_regions()
+
 
     -- add a bridge
 
@@ -2876,6 +2897,8 @@ stderrf("MADE A RIVER !!!!!!\n")
 
 
   ---| Cave_build_a_park |---
+
+gui.debugf("BUILD PARK IN %s\n", R.name)
 
   info = Cave_setup_info(R)
 
