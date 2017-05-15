@@ -6,6 +6,10 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
++  make stairs in exit rooms (etc) often build DOWNWARD
+
+-  improve the "tunnel" titlepic scheme
+
 !!  RAILS:
     - re-instate rail brushes
     - only uses the OUTSIDE of the brush (need TWO for a double sided railing)
@@ -14,39 +18,37 @@ Miscellaneous
     - default Y offset is zero
     - brushlib.rail_brush() and rail_brush_pair()
 
--  Traps prefabs have an "action_kind", use matching action
-   for the trigger lines.   [ "open" vs "lower" ]
-   Q/ how to pick the matching action
-   A/ decide it for the trapped thing early, require trap prefabs tp
-      have a matching value
-
 +  lighting in caves mucked up?  [ check Ambient_push/pop ]
 
 -  sprouts from symmetrical rooms : often skip a side
 
 -  internal fences (esp. for outdoor rooms)
 
+-  Traps prefabs have an "action_kind", use matching action
+   for the trigger lines.   [ "open" vs "lower" ]
+   Q/ how to pick the matching action
+   A/ decide it for the trapped thing early, require trap prefabs tp
+      have a matching value
+
 
 
 Hallway System
 --------------
 
--  not considered "wallish" (no triangular filler) ?
++  monster spots
 
--  monster and item spots
-
-+  finish the "deuce" hallway pieces
-
-+  for 2x2 hallway, have 2x1 terminator pieces
-
--  texturing for pieces  [ hallway room themes ]
++  make hallway themes for deuce (tech/urban/hell), and
+   review the existing xxx_Hallway themes.
 
 +  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]
    [[ good for traps! ]]
 
 
+-  not considered "wallish" (no triangular filler) ?
+
 -  support pieces with windows
+   [ the window side needs _OUTER tex and ability to make it flush ]
 
 -  be real nice to have pieces which are wall on one
    side and open on the other (with sky ceiling OR like nearby ceiling)
@@ -106,6 +108,14 @@ Scenic Borders
 
 PARKS
 -----
+
++  rivers:
+   -  split the main floor into new contiguous pieces
+
+   -  if some walk pieces are still unconnected
+      then make river be low enough to walk (12/16/24 units)
+
+   -  small pieces without a WC/point can become part of river
 
 +  sky handling:
    -  ensure the heighest FLOOR contributes to zone.sky_h
