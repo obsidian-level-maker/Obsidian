@@ -1548,13 +1548,19 @@ TITLE_COLOR_RAMPS =
   light_grey =
   {
     { 0,0,0 }
-    { 160,160,160 }
+    { 168,168,168 }
+  }
+
+  mid_grey =
+  {
+    { 0,0,0 }
+    { 128,128,128 }
   }
 
   dark_grey =
   {
     { 0,0,0 }
-    { 99,99,99 }
+    { 96,96,96 }
   }
 
   blue =
@@ -1588,6 +1594,12 @@ TITLE_COLOR_RAMPS =
     { 8,23,8 }
     { 62,147,62 }
     { 115,255,115 }
+  }
+
+  mid_green =
+  {
+    { 8,23,8 }
+    { 62,147,62 }
   }
 
   orange_white =
@@ -2076,27 +2088,41 @@ function Title_gen_tunnel_scene()
   local mx = 60
   local my = 60
 
+  local x_mul = 0.75
+  local y_mul = 0.25
+
+  if rand.odds(50) then
+    mx = 320 - mx
+    x_mul = 1.0 - x_mul
+  end
+
+
+  local tunnel_colors =
+  {
+    blue_white   = 30
+    red_white    = 20
+    brown_yellow = 10
+    mid_green    = 10
+    mid_grey     = 10
+  }
+
+  local color_name = rand.key_by_probs(tunnel_colors)
+
+  local color_list = TITLE_COLOR_RAMPS[color_name]
+  assert(color_list)
+
   local col = { 0,0,0 }
 
-  local color_name = "blue_white"
-  local color_list = TITLE_COLOR_RAMPS[color_name]
-
-  local f = rand.odds(50)
-  f = rand.odds(50)
-  f = rand.odds(50)
-
   for r = 1202, 2, -2 do
-    -- local bump = (gui.random() ^ 10) * 0.7
-    -- local ity = math.clamp(0.0, r / 1200, 0.9) + bump
-
-    local ity = math.abs(math.sin(r * 0.05)) ^ 4
+    local bump = (gui.random() ^ 10) * 0.7
+    local ity = math.clamp(0.0, r / 1200, 0.9) + bump
 
     ity = ity * (1.0 - r / 900)
 
     Title_interp_color(color_list, ity, col)
 
     gui.title_prop("color", col)
-    gui.title_draw_disc(mx - r*0.75, my - r*0.25, r*1.2, r)
+    gui.title_draw_disc(mx - r*x_mul, my - r*y_mul, r*1.2, r)
   end
 end
 
@@ -2517,24 +2543,27 @@ end
 
 
 
-function Title_make_titlepic()
-  gui.title_create(320, 200, "#000")
-  gui.title_set_palette(GAME.PALETTES.normal)
-
-  if rand.odds(2) then
-    -- empty background
-  elseif rand.odds(2) then
-    Title_gen_tunnel_scene()
-  elseif rand.odds(10) then
+function Title_add_background()
+  if rand.odds(12) then
     Title_gen_ray_burst()
-  elseif rand.odds(5) then
+  elseif rand.odds(12) then
+    Title_gen_tunnel_scene()
+  elseif rand.odds(6) then
     Title_gen_cave_scene()
-  elseif rand.odds(33) then
+  elseif rand.odds(35) then
     Title_gen_wall_scene()
   else
     Title_gen_space_scene()
   end
+end
 
+
+
+function Title_make_titlepic()
+  gui.title_create(320, 200, "#000")
+  gui.title_set_palette(GAME.PALETTES.normal)
+
+  Title_add_background()
   Title_add_credit()
   Title_add_title()
 
