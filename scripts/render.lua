@@ -2728,6 +2728,9 @@ function Render_cells(info)
     -- in some places we build nothing (e.g. other rooms)
     if A == nil then return nil end
 
+    -- bridges need aligned corners
+    if A.is_bridge then return nil end
+
     -- check for a solid cell
     if A.is_wall then return "2-99999-99999" end
 
@@ -2939,6 +2942,8 @@ function Render_cells(info)
       end
 
 top.reachable = 1  --!!!!!! FIXME: remove
+
+-- if R and R.id then top.tag = 1000 + R.id end
 
       table.insert(f_brush, top)
     end

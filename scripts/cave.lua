@@ -2645,6 +2645,9 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function check_river_start_point(cx, cy)
+    -- the start point is also where the bridge will go,
+    -- so make sure there is enough room for a bridge.
+
     for dy = -3, 3 do
       if check_river_point(cx, cy+dy) < 1 then
         return false
@@ -2877,7 +2880,19 @@ gui.debugf("MADE A RIVER !!!!!!\n")
     map2:dump_regions()
 
 
-    -- add a bridge
+    -- add a bridge --
+
+    -- this tells the Render_cell() code to not move cell corners,
+    -- so the floor adjoining the bridge will be aligned properly.
+    local BRIDGE = table.copy(RIVER)
+    BRIDGE.is_river  = nil
+    BRIDGE.is_bridge = true
+
+    for dx =  0, 0 do
+    for dy = -1, 1 do
+      info.blocks[bx+dx][by+dy] = BRIDGE
+    end
+    end
 
     local mx = info.x1 + (bx - 1) * 64 + 32
     local my = info.y1 + (by - 1) * 64 + 32
