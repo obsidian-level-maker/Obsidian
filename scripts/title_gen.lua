@@ -1892,7 +1892,7 @@ function Title_gen_wall_scene()
     -- tech lamp
     lamp_y = 154
     lamp_sprite = "lamp2"
-    
+
     tex_list = { "airduct", "cement" }
 
   else
@@ -1924,7 +1924,7 @@ function Title_gen_wall_scene()
 
   for i = 1, lamp_num do
     local x = 150
-    
+
     if lamp_num >= 2 and i == 1 then x = 35 end
     if lamp_num >= 2 and i == lamp_num then x = 265 end
 
@@ -2495,10 +2495,16 @@ function Title_make_interpic()
   local BW = 32
   local BH = 25
 
-  for bx = 0, 9 do
+  local bricky = rand.odds(30)
+
+  for bx = 0, 10 do
   for by = 0, 8 do
-    Title_draw_lit_box(bx*BW, by*BH, BW, BH,
-                       style.hue1, style.hue2 and nil, style.hue3)
+    local ofs = 0
+
+    if bricky then ofs = (by % 2) * (BW / 2) end
+
+    Title_draw_lit_box(bx*BW - ofs, by*BH, BW, BH,
+                       style.hue1, nil, style.hue3)
   end
   end
 
