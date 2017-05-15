@@ -2707,11 +2707,7 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function score_river(points)
-    -- computes a measure of how well the river divides the
-    -- floor space into two halves.
-
-    -- first, determine Y range for each x coordinate
+  local function get_river_ranges(points)
     local y_ranges = {}
 
     each P in points do
@@ -2725,6 +2721,17 @@ function Cave_build_a_park(R, entry_h)
         r.y2 = math.max(r.y2, P.y)
       end
     end
+
+    return y_ranges
+  end
+
+
+  local function score_river(points)
+    -- computes a measure of how well the river divides the
+    -- floor space into two halves.
+
+    -- first, determine Y range for each x coordinate
+    local y_ranges = get_river_ranges(points)
 
     -- second, see how much space is above and below each column
     local sum   = 0
