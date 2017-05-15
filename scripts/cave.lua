@@ -2813,16 +2813,34 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function install_river(points, RIVER)
+    -- bridge cell
+    local bx = points[1].x
+    local by = points[1].y
+
     each P in points do
       info.blocks[P.x][P.y] = RIVER
 
+      if math.abs(P.x - points[1].x) <= 1 then continue end
+
       if check_river_point(P.x, P.y-1) > 0 then info.blocks[P.x][P.y-1] = RIVER end
       if check_river_point(P.x, P.y+1) > 0 then info.blocks[P.x][P.y+1] = RIVER end
+
+      if check_river_point(P.x, P.y-2) > 0 then info.blocks[P.x][P.y-2] = RIVER end
+      if check_river_point(P.x, P.y+2) > 0 then info.blocks[P.x][P.y+2] = RIVER end
     end
 
 stderrf("MADE A RIVER !!!!!!\n")
 
-    -- FIXME : add a bridge
+    -- add a bridge
+
+    local mx = info.x1 + (bx - 1) * 64 + 32 - 44
+    local my = info.y1 + (by - 1) * 64 + 32 - 96
+
+    local def = PREFABS["Bridge_narrow1"]
+
+    local T = Trans.spot_transform(mx, my, entry_h, 2)
+
+    Fabricate(R, def, T, {})
 
     return true
   end
@@ -2836,7 +2854,7 @@ stderrf("MADE A RIVER !!!!!!\n")
 
       floor_mat = "_LIQUID"
 
-      floor_h   = entry_h - 24  ---  rand.pick({64, 96, 128})
+      floor_h   = entry_h - 64  ---  rand.pick({64, 96, 128})
     }
 
     local best
