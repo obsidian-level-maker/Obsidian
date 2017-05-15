@@ -2578,6 +2578,9 @@ function Render_determine_spots()
 
 
   local function do_lower_cell(x, y, FL)
+    if (x < 1 or x > info.W) then return end
+    if (y < 1 or y > info.H) then return end
+
     local A = info.blocks[x][y]
     if not A then return end
 
@@ -2610,8 +2613,8 @@ function Render_determine_spots()
     end
 
     -- handle nearby lower floors or liquid pools
-    for cx = FL.cx1, FL.cx2 do
-    for cy = FL.cy1, FL.cy2 do
+    for cx = FL.cx1 - 1, FL.cx2 + 1 do
+    for cy = FL.cy1 - 1, FL.cy2 + 1 do
       do_lower_cell(cx, cy, FL)
     end
     end
