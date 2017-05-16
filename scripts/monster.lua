@@ -864,6 +864,11 @@ function Monster_fill_room(R)
       assert(qty)
     end
 
+    -- hallways have limited spots
+    if R.is_hallway then
+      return qty * rand.pick({10,20,30})
+    end
+
     -- less in secrets (usually much less)
     if R.is_secret then
       qty = qty * 2
@@ -1386,10 +1391,10 @@ function Monster_fill_room(R)
     -- monsters in traps are never deaf (esp. monster depots)
     if mode then
       deaf = false
-    elseif spot.ambush or info.boss_type then
+    elseif spot.ambush or info.boss_type or R.is_hallway then
       deaf  = rand.odds(95)
       focus = spot.ambush
-    elseif R.is_cave or R.is_hallway or info.float then
+    elseif R.is_cave or info.float then
       deaf = rand.odds(65)
     else
       deaf = rand.odds(35)
@@ -2043,7 +2048,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
     R.sneakiness = rand.sel(30, 95, 25)
 
-    if not R.is_hallway and R.entry_coord then
+    if R.entry_coord then
       R.furthest_dist = R:furthest_dist_from_entry()
     end
 
