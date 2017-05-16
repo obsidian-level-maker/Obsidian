@@ -816,6 +816,57 @@ function brushlib.q3_liquid(brush, medium, top_tex)
 end
 
 
+function brushlib.rail_brush(x1,y1, x2,y2, side_props)
+  -- compute coords for other side of brush
+  local x3, y3 = x2, y2
+  local x4, y4 = x1, y1
+
+  if math.abs(x2 - x1) >= math.abs(y2 - y1) then
+    -- move vertically away
+
+    if x2 > x1 then
+      y3 = math.max(y1, y2) + 8
+      y3 = math.ceil(y3 / 128) * 128
+      y4 = y3
+    else
+      y3 = math.min(y1, y2) - 8
+      y3 = math.floor(y3 / 128) * 128
+      y4 = y3
+    end
+
+  else
+    -- move horizontally away
+
+    if y2 > y1 then
+      x3 = math.min(x1, x2) - 8
+      x3 = math.floor(x3 / 128) * 128
+      x4 = x3
+    else
+      x3 = math.max(x1, x2) + 8
+      x3 = math.ceil(x3 / 128) * 128
+      x4 = x3
+    end
+  end
+
+  -- create the brush
+  local brush =
+  {
+    { x=x1, y=y1 }
+    { x=x2, y=y2 }
+    { x=x3, y=y3 }
+    { x=x4, y=y4 }
+  }
+
+  if side_props then
+    table.merge(brush[1], side_props)
+  end
+
+  brushlib.set_kind(brush, "rail")
+
+  return brush
+end
+
+
 function brushlib.solve_equation(X1,Y1,R1, X2,Y2,R2, X3,Y3,R3)
   --
   -- given the three simultaneous equations:
