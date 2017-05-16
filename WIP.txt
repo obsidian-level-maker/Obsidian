@@ -8,15 +8,10 @@ Miscellaneous
 
 +  make stairs in exit rooms (etc) often build DOWNWARD
 
--  improve the "tunnel" titlepic scheme
-
-!!  RAILS:
-    - re-instate rail brushes
-    - only uses the OUTSIDE of the brush (need TWO for a double sided railing)
-    - prefabs set an absolute X and Y offset
+>>  RAILS:
     - default X offset is NONE (auto align)
     - default Y offset is zero
-    - brushlib.rail_brush() and rail_brush_pair()
+    - Junction_make_rail()
 
 +  lighting in caves mucked up?  [ check Ambient_push/pop ]
 
@@ -35,17 +30,15 @@ Miscellaneous
 Hallway System
 --------------
 
-+  monster spots
-
 +  make hallway themes for deuce (tech/urban/hell), and
    review the existing xxx_Hallway themes.
 
-+  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
+-  not considered "wallish" (no triangular filler) ?
+
+
+-  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]
    [[ good for traps! ]]
-
-
--  not considered "wallish" (no triangular filler) ?
 
 -  support pieces with windows
    [ the window side needs _OUTER tex and ability to make it flush ]
@@ -108,14 +101,6 @@ Scenic Borders
 
 PARKS
 -----
-
-+  rivers:
-   -  split the main floor into new contiguous pieces
-
-   -  if some walk pieces are still unconnected
-      then make river be low enough to walk (12/16/24 units)
-
-   -  small pieces without a WC/point can become part of river
 
 +  sky handling:
    -  ensure the heighest FLOOR contributes to zone.sky_h
