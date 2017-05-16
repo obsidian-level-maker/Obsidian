@@ -2445,8 +2445,17 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
           stair_prefab = pick_stair_prefab(chunk)
 
           local h = assert(stair_prefab.delta_h)
-          --TODO : if stair goes down (is flipped) then subtract h from both new_area AND chunk.area
-          new_area.prelim_h = from_area.prelim_h + h
+
+          if R.trunk.stair_z_dir > 0 then
+            new_area.prelim_h = from_area.prelim_h + h
+          else
+            new_area.prelim_h = from_area.prelim_h - h
+          end
+        end
+
+        if R.trunk.stair_z_dir < 0 then
+          chunk.area.prelim_h = chunk.area.prelim_h - stair_prefab.delta_h
+          chunk:flip()
         end
 
         chunk.prefab_def = stair_prefab
@@ -3208,6 +3217,8 @@ function Grower_add_a_trunk()
   }
 
   trunk.name = string.format("TRUNK_%d", trunk.id)
+
+  trunk.stair_z_dir = rand.sel(50, 1, -1)
 
   table.insert(LEVEL.trunks, trunk)
 
