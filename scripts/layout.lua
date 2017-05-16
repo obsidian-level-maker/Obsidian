@@ -881,7 +881,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
 
 
   local function install_a_trap(places, trig)
-    trig.action = 109  -- W1 : open and stay /fast
+    trig.action = "W1_OpenDoorFast"
     trig.tag = alloc_id("tag")
 
     each info in places do
@@ -1222,16 +1222,13 @@ function Layout_decorate_rooms(pass)
 
     if not chunk then return end
 
-    -- OK !!
-
--- stderrf("**** DOING LOWERING PED\n") 
+    -- OK --
 
     local goal = Goal_new("SWITCH")
 
     goal.item = "sw_metal"
     goal.room = R
 
---  goal.action = "S1_LowerFloor"
     goal.tag = alloc_id("tag")
 
     chunk.goal = goal

@@ -2297,7 +2297,7 @@ end
 function Render_triggers()
 
   local function setup_coord(C, trig)
-    C.special = assert(trig.action)
+    C.special = Action_lookup(trig.action)
     C.tag     = assert(trig.tag)
   end
 
@@ -2446,7 +2446,7 @@ function Render_triggers()
         {
           kind = "edge"
           edge = E
-          action = 1
+          action = "W1_OpenDoorFast"
           tag = C.R1.id
         }
         build_trigger(R, TRIG)
