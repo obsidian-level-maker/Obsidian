@@ -42,7 +42,8 @@
 //       }
 // 
 //  wadfab_get_line(index)
-//  -->  { special=#, tag=#, flags=#, right=#, left=# }
+//  -->  { x1=#,y1=#, x2=#,y2=#,
+//         special=#, tag=#, flags=#, right=#, left=# }
 //  
 //  wadfab_get_3d_floor(poly_idx, floor_idx)
 //  -->  { bottom_h=#, bottom_tex="...",
@@ -285,14 +286,17 @@ int wadfab_get_line(lua_State *L)
 
 	lua_newtable(L);
 
-	lua_pushinteger(L, LD->special);
-	lua_setfield(L, -2, "special");
+	lua_pushinteger(L, LD->start->x);
+	lua_setfield(L, -2, "x1");
 
-	lua_pushinteger(L, LD->flags);
-	lua_setfield(L, -2, "flags");
+	lua_pushinteger(L, LD->start->y);
+	lua_setfield(L, -2, "y1");
 
-	lua_pushinteger(L, LD->tag);
-	lua_setfield(L, -2, "tag");
+	lua_pushinteger(L, LD->end->x);
+	lua_setfield(L, -2, "x2");
+
+	lua_pushinteger(L, LD->end->y);
+	lua_setfield(L, -2, "y2");
 
 	if (LD->right)
 	{
@@ -305,6 +309,15 @@ int wadfab_get_line(lua_State *L)
 		lua_pushinteger(L, LD->left->index);
 		lua_setfield(L, -2, "left");
 	}
+
+	lua_pushinteger(L, LD->special);
+	lua_setfield(L, -2, "special");
+
+	lua_pushinteger(L, LD->flags);
+	lua_setfield(L, -2, "flags");
+
+	lua_pushinteger(L, LD->tag);
+	lua_setfield(L, -2, "tag");
 
 	return 1;
 }
