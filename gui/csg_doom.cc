@@ -1304,7 +1304,7 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		if (rail)
 		{
-			const char *rail_tex = rail->face.getStr("rail", NULL);
+			const char *rail_tex = rail->face.getStr("tex", NULL);
 
 			if (rail_tex)
 			{
