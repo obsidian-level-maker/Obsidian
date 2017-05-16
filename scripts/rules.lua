@@ -454,6 +454,7 @@ EXIT2_DECOR =
 EXIT_3 =
 {
   pass = "exit_root"
+  env  = "building"
   prob = 30
 
   structure =
