@@ -719,7 +719,7 @@ function Layout_add_traps()
     local prob
 
     if is_same and not R.is_cave then
-      prob = style_sel("traps", 0,  2,  5, 12)
+      prob = style_sel("traps", 0,  2, 10, 20)
     else
       prob = style_sel("traps", 0,  8, 25, 50)
     end
