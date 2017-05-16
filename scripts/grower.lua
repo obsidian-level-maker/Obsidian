@@ -2946,15 +2946,18 @@ end
 
 
 function Grower_grammatical_room(R, pass, is_emergency)
-  -- this is for "grow" pass
-  local apply_num = rand.pick({ 10,20,30 })
+  local apply_num
 
   if pass == "grow" then
     apply_num = rand.pick({ 10,20,30 })
 
     if R.is_hallway then
       pass = assert(R.grow_pass)
-      apply_num = rand.irange(5, 12)
+      if R.hall_type == "narrow" then
+        apply_num = rand.irange(5, 15)
+      else
+        apply_num = rand.irange(3, 8)
+      end
     end
 
   elseif pass == "sprout" then
@@ -2965,7 +2968,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
     end
 
     if R.is_hallway then
-      pass = R.grow_pass .. "_" .. pass
+      pass = R.grow_pass .. "_sprout"
     end
 
   elseif pass == "decorate" then

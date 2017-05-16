@@ -559,7 +559,7 @@ EXIT3_CLOSET =
 }
 
 
-EXIT1_DECOR =
+EXIT3_DECOR =
 {
   pass = "exit3_decor"
   prob = 50
@@ -2074,7 +2074,7 @@ CAVE_GROW_FILL_B =
 
 SPROUT_narrow_hallway =
 {
-  prob = 350
+  prob = 400
   skip_prob = 25
 
   structure =
@@ -2190,7 +2190,7 @@ HALL_1_SPROUT_A =
 
 SPROUT_wide_hallway =
 {
-  prob = 700
+  prob = 800
   skip_prob = 25
 
   structure =
