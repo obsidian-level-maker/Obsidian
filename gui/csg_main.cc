@@ -378,8 +378,6 @@ int csg_brush_c::CalcMedium() const
 			return MEDIUM_WATER;
 		}
 
-		case BKIND_Trigger:
-		case BKIND_Light:
 		default:
 			return -1;
 	}
@@ -581,6 +579,7 @@ private:
 		{
 			if ((B->bflags & BFLAG_NoDraw) ||
 				B->bkind == BKIND_Light ||
+				B->bkind == BKIND_Rail ||
 				B->bkind == BKIND_Trigger)
 				return false;
 		}
@@ -589,6 +588,7 @@ private:
 			if ((B->bflags & BFLAG_NoClip) ||
 				B->bkind == BKIND_Liquid   ||
 				B->bkind == BKIND_Light    ||
+				B->bkind == BKIND_Rail     ||
 				B->bkind == BKIND_Trigger)
 				return false;
 		}
@@ -930,11 +930,11 @@ static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 
 	SYS_ASSERT(kind);
 
-	if (StringCaseCmp(kind, "solid")   == 0)
+	if (StringCaseCmp(kind, "solid") == 0)
 	{
 		B->bkind = BKIND_Solid;
 	}
-	else if (StringCaseCmp(kind, "liquid")  == 0)
+	else if (StringCaseCmp(kind, "liquid") == 0)
 	{
 		B->bkind = BKIND_Liquid;
 	}
@@ -942,9 +942,13 @@ static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 	{
 		B->bkind = BKIND_Trigger;
 	}
-	else if (StringCaseCmp(kind, "light")   == 0)
+	else if (StringCaseCmp(kind, "light") == 0)
 	{
 		B->bkind = BKIND_Light;
+	}
+	else if (StringCaseCmp(kind, "rail") == 0)
+	{
+		B->bkind = BKIND_Rail;
 	}
 	else if (StringCaseCmp(kind, "sky") == 0)   // back compat
 	{

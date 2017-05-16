@@ -153,6 +153,7 @@ typedef enum
 	BKIND_Liquid,
 
 	BKIND_Trigger,  // supply a trigger special (DOOM/Nukem only)
+	BKIND_Rail,     // supply a railing texture (DOOM only)
 	BKIND_Light,    // supply extra lighting or shadow
 }
 brush_kind_e;

@@ -1472,17 +1472,14 @@ static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const regi
 	if (R->gaps.size() == 0 || N->gaps.size() == 0)
 		return NULL;
 
-	// we only find railings from a floor brush (behind this snag)
-	const csg_brush_c *B = N->gaps.front()->bottom;
-
 	for (unsigned int k = 0 ; k < S->sides.size() ; k++)
 	{
 		brush_vert_c *V = S->sides[k];
 
-		if (V->parent != B)
+		if (V->parent->bkind != BKIND_Rail)
 			continue;
 
-		if (V->face.getStr("rail", NULL))
+		if (V->face.getStr("tex", NULL))
 			return V;  // found it!
 	}
 
