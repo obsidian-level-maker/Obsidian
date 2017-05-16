@@ -378,6 +378,7 @@ function Fab_determine_bbox(fab)
   each B in fab.brushes do
     if B[1].outlier then continue end
     if B[1].m == "light" then continue end
+    if B[1].m == "rail"  then continue end
     if B[1].m == "spot"  then continue end
 
     each C in B do
@@ -1091,15 +1092,9 @@ function Fab_load_wad(def)
       lower_unpeg = (bit.band(flags, MLF_LowerUnpegged) != 0)
     end
 
-    -- railings --
-
-    if line and side and two_sided and mid_tex then
-      C2.rail = mid_tex
-    end
-
     -- offsets --
 
-    if heights_are_same(sec, other_sec, pass) and not C2.rail then
+    if heights_are_same(sec, other_sec, pass) then
       -- do not copy the offsets to the brush
 
     elseif side and line then
@@ -1371,6 +1366,46 @@ function Fab_load_wad(def)
   end
 
 
+  local function handle_railing(fab, L)
+    -- must be two sided
+    if not (L.left and L.right) then return end
+
+    for pass = 1, 2 do
+      local side = gui.wadfab_get_side(sel(pass == 1, L.right, L.left))
+      assert(side)
+
+      -- check for a railing texture on this side
+      local tex = side.mid_tex
+      if tex == nil or tex == "" or tex == "-" then continue end
+
+      local S = gui.wadfab_get_sector(side.sector)
+      assert(S)
+
+      local x1, y1 = L.x1, L.y1
+      local x2, y2 = L.x2, L.y2
+      assert(x1 and y2)
+
+      -- swap coords for back side
+      if pass == 2 then
+        x1, x2 = x2, x1
+        y1, y2 = y2, y1
+      end
+
+      -- create the brush
+      local props =
+      {
+        tex = tex
+        u1  = convert_offset(side.x_offset)
+        v1  = convert_offset(side.y_offset)
+      }
+
+      local B = brushlib.rail_brush(x1,y1, x2,y2, props)
+
+      table.insert(fab.brushes, B)
+    end
+  end
+
+
   local function create_it()
     fab = table.copy(def)
 
@@ -1393,7 +1428,7 @@ function Fab_load_wad(def)
     -- [ if map is not specified, use "*" to load the first one ]
     gui.wadfab_load(filename, def.map or "*")
 
-    for thing_idx = 0,999 do
+    for thing_idx = 0,9999 do
       local E = gui.wadfab_get_thing(thing_idx)
 
       -- nil result marks the end
@@ -1402,7 +1437,7 @@ function Fab_load_wad(def)
       handle_entity(fab, E)
     end
 
-    for poly_idx = 0,999 do
+    for poly_idx = 0,9999 do
       local sec_idx, coords = gui.wadfab_get_polygon(poly_idx)
 
       -- nil result marks the end
@@ -1427,6 +1462,15 @@ function Fab_load_wad(def)
 
         create_3d_floor(exfl, coords)
       end
+    end
+
+    for line_idx = 0,9999 do
+      local L = gui.wadfab_get_line(line_idx)
+
+      -- nil result marks the end
+      if not L then break; end
+
+      handle_railing(fab, L)
     end
 
     gui.wadfab_free()
@@ -1851,8 +1895,6 @@ function Fab_replacements(fab)
       -- do textures last (may add e.g. special for liquids)
       if C.tex and C.x     then C.tex  = check_tex (sanitize(C.tex)) end
       if C.tex and not C.x then C.tex  = check_flat(sanitize(C.tex), C) end
-
-      if C.rail and C.x    then C.rail = check_tex(sanitize(C.rail)) end
 
       fixup_x_offsets(C)
     end
