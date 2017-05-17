@@ -567,6 +567,7 @@ static void Module_Defaults()
 {
 	ob_set_mod_option("small_spiderdemon", "self", "1");
 	ob_set_mod_option("sky_generator",     "self", "1");
+	ob_set_mod_option("music_swapper",     "self", "1");
 }
 
 
