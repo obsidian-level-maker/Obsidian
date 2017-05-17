@@ -3069,6 +3069,8 @@ function Cave_build_a_scenic_vista(area)
   local function make_simple_fence()
     -- this is very basic, like in E1M1 or MAP01 of standard DOOM
 
+    area.border_type = "simple_fence"
+
     local FL = new_floor()
 
     FL.floor_mat = area.zone.fence_mat
