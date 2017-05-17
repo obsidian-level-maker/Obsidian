@@ -1573,6 +1573,8 @@ function Area_divvy_up_borders()
   -- absolute boundary rectangle of the map gets an "area" value.
   -- Such areas which lie inside the map become the VOID type.
   --
+  -- NOTE: in here, quests and zones do not exist yet.
+  --
 
   --
   -- ALGORITHM:
@@ -1591,6 +1593,10 @@ function Area_divvy_up_borders()
   --   (d) create temp areas by flood-filling contiguous groups
   --       of these marked seeds.
   --
+  --   (e) process the temp areas, such as merging small ones
+  --       and making "inner" ones be VOID.  Then convert the
+  --       remaining ones to *real* areas.
+  --
 
   local seed_list
 
@@ -1601,7 +1607,7 @@ function Area_divvy_up_borders()
 
   local temp_areas
 
-  local facings = {}   -- map ROOM + TEMP --> count
+  local facings = {}  --  maps ROOM + TEMP --> count
 
   local VOID = { name="<VOID>", id=9999 }
 
@@ -1614,7 +1620,7 @@ function Area_divvy_up_borders()
   end
 
 
-  local function set_seed(S, zborder)
+  local function set_zborder(S, zborder)
     S.zborder = zborder
   end
 
@@ -1658,7 +1664,7 @@ function Area_divvy_up_borders()
 
       -- apply the changes
       each tab in changes do
-        set_seed(tab.S, tab.zborder)
+        set_zborder(tab.S, tab.zborder)
         table.kill_elem(seed_list, tab.S)
       end
 
@@ -1749,10 +1755,7 @@ function Area_divvy_up_borders()
 
     -- common stuff for splitting the seed
 
----###  S.top.area  = S.area
----###  table.insert(S.area.seeds, S.top)
-
-    set_seed(S.top, T)
+    set_zborder(S.top, T)
 
     return B
   end
@@ -1800,13 +1803,25 @@ function Area_divvy_up_borders()
       if z and z != VOID then return z end
     end
 
-stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
-
     return VOID
   end
 
 
-  --------------------------------------------
+  local function mark_all_seeds()
+    process(marking_func)
+
+    process(horizontal_func, "no_diags")
+    process(vertical_func,   "no_diags")
+    process(diagonal_func,   "no_diags")
+
+    process(majority_func)
+
+    -- this handles all remaining unmarked seeds
+    process(emergency_func)
+  end
+
+
+  ------------------------------------------------
 
 
   local function add_seed(temp, S)
@@ -2015,7 +2030,6 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
   local function handle_inners()
     -- merge contiguous inner areas
-    -- NOTE: we do NOT care about zones here
 
     each T in temp_areas do
     each N in T.neighbors do
@@ -2079,10 +2093,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
         -- only merge small areas with other small areas in the
         -- in first few passes (hoping they become large enough)
-        if area_too_small(N) or
-           (pass >= 3 and N.zroom.zone == T.zroom.zone) or
-           (pass >= 5)
-        then
+        if area_too_small(N) or pass >= 5 then
           perform_merge(T, N)
 
           if T.is_dead then break; end
@@ -2102,31 +2113,6 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     prune_dead_areas()
     determine_neighbors()
   end
-
-
---[[  OLD, REMOVE THIS
-  local function find_isolated_areas()
-    -- find small pockets which are separated from their
-    -- corresponding large area.  NOTE: ignores void areas.
-
-    table.sort(temp_areas,
-        function(A, B)
-          if A.zroom and B.zroom and A.zroom != B.zroom then
-            return A.zroom.id < B.zroom.id
-          end
-          return #A.seeds > #B.seeds
-        end)
-
-    for i = 2, #temp_areas do
-      local T1 = temp_areas[i-1]
-      local T2 = temp_areas[i  ]
-
-      if T2.zroom and T2.zroom == T1.zroom then
-        T2.is_isolated = true
-      end
-    end
-  end
---]]
 
 
   local function face_id(R, T)
@@ -2156,7 +2142,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
-  local function best_facing_pair(share_temp)
+  local function best_facing_pair()
     local best_R
     local best_T
     local best_num = -1
@@ -2169,11 +2155,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
         if T.is_void  then continue end
         if T.is_inner then continue end
 
-        if T.kkk_room then
-          if not share_temp then continue end
-          -- can only share a temp when rooms have same zone
-          if T.kkk_room.zone != R.zone then continue end
-        end
+        if T.kkk_room then continue end
 
         local num = facings[face_id(R, T)]
 
@@ -2189,7 +2171,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
-  local function flob_the_jubbles()
+  local function pick_facing_rooms()
     build_facing_database()
 
     while true do
@@ -2202,24 +2184,6 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
       R.kkk_temp = T
       T.kkk_room = R
-
-      T.zone = R.zone
-    end
-
-    while true do
-      local R, T = best_facing_pair("share_temp")
-
-      -- nothing else possible?
-      if R == nil then break; end
-
---stderrf("secondary flob %s with %s\n", R.name, T.name)
-
-      R.kkk2_temp = T
-      T.kkk2_room = R
-
-      if T.zone == nil then
-        T.zone = R.zone
-      end
     end
   end
 
@@ -2232,7 +2196,6 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
       A.seeds        = T.seeds
       A.touches_edge = T.touches_edge
-      A.zone         = T.zone  -- can be NIL
 
       if T.is_void then
         A.mode = "void"
@@ -2255,7 +2218,7 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
   end
 
 
-  local function flood_fill_areas()
+  local function flood_fill_temp_areas()
     create_temp_areas()
     merge_temp_areas()
 
@@ -2269,12 +2232,6 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
     each T in temp_areas do
       T.zroom = nil
     end
-
-    flob_the_jubbles()
-
-    make_real_areas()
-
-    Seed_squarify()
   end
 
 
@@ -2282,16 +2239,15 @@ stderrf("BORDER ZONE FAILURE @ %s\n", S.name)
 
   seed_list = collect_seeds()
 
-  process(marking_func)
+  mark_all_seeds()
 
-  process(horizontal_func, "no_diags")
-  process(vertical_func,   "no_diags")
-  process(diagonal_func,   "no_diags")
+  flood_fill_temp_areas()
 
-  process(majority_func)
-  process(emergency_func)
+  pick_facing_rooms()
 
-  flood_fill_areas()
+  make_real_areas()
+
+  Seed_squarify()
 end
 
 
