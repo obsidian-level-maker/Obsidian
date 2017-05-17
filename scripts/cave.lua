@@ -3075,7 +3075,7 @@ function Cave_build_a_scenic_vista(area)
 
     FL.floor_mat = area.zone.fence_mat
 
-    FL.floor_h = (area.face_room.max_floor_h or area.face_room.entry_h) + 64
+    FL.floor_h = (area.face_room.max_floor_h or area.face_room.entry_h) + 72
 
     temp_install_floor(FL)
 
