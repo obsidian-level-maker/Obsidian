@@ -2738,8 +2738,7 @@ function Room_add_cage_rails()
       if true then
         local junc = Junction_lookup(A, N)
 
-        junc.rail_mat   = "MIDBARS3"
-        junc.rail_block = true
+        Junction_make_railing(junc, "MIDBARS3", "block")
       end
     end
   end

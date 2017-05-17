@@ -19,27 +19,6 @@
 ------------------------------------------------------------------------
 
 
-function edge_get_rail(S, dir)
-  assert(S.area)
-
-  local N = S:neighbor(dir, "NODIR")
-
-  assert(N != "NODIR")
-
-  if not (N and N.area) then return nil end
-  if N.area == S.area then return nil end
-
-  local E = S.edge[dir]
-  if E and E.rail_mat then return E end
-
-  local junc = Junction_lookup(S.area, N.area)
-  if junc.rail_mat then return junc end
-
-  return nil
-end
-
-
-
 function Render_outer_sky(S, dir, floor_h)
   assert(not geom.is_corner(dir))
 
@@ -297,6 +276,31 @@ function Render_edge(E)
     Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
 
     Fabricate(A.room, def, T, { skin })
+  end
+
+
+  local function straddle_railing()
+    local mat = Mat_lookup_tex(assert(E.rail_mat))
+    assert(mat.t)
+
+    local side_props =
+    {
+      tex = mat.t
+      v1  = 0
+
+      blocked = E.rail_block
+    }
+
+    local x1,y1, x2,y2 = Edge_line_coords(E)
+
+    for pass = 1, 2 do
+      local B = brushlib.rail_brush(x1,y1, x2,y2, side_props)
+
+      Trans.brush(B)
+
+      x1, x2 = x2, x1
+      y1, y2 = y2, y1
+    end
   end
 
 
@@ -630,6 +634,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif E.kind == "steps" then
     edge_steps()
 
+  elseif E.kind == "railing" then
+    straddle_railing()
+
   elseif E.kind == "fence" then
     straddle_fence()
 
@@ -653,11 +660,15 @@ function Render_junction(A, S, dir)
 
   -- create edge-lines for spot finding code
   if N and N.area != A then
-    table.insert(A.side_edges, S:get_line(dir))
+    local x1,y1, x2,y2 = S:line_coords(dir)
+
+    table.insert(A.side_edges, { x1=x1, y1=y1, x2=x2, y2=y2 })
   end
 
-  -- proper EDGE objects are handled elsewhere
-  if S.edge[dir] and S.edge[dir].kind != "ignore" then return end
+  -- proper EDGE objects are handled elsewhere (so don't clobber them here)
+  if S.edge[dir] and S.edge[dir].kind != "ignore" then
+    return
+  end
 
 
   -- same area?  absolutely nothing needed
@@ -1244,21 +1255,6 @@ function Render_floor(A)
   -- if A.room then tag = A.room.id end
   -- if A.pool_id then tag = 1000 + A.pool_id end
   -- if A.ceil_group then tag = A.ceil_group.id end
-
-    -- handle railings [ must be done here ]
-    each C in f_brush do
-      local info = edge_get_rail(S, C.__dir)
-      if info then
-        local mat = Mat_lookup_tex(assert(info.rail_mat))
-        assert(mat.t)
-
-        C.rail = mat.t
-        C.v1 = 0
-        C.back_rail = mat.t
-        C.back_v1 = 0
-        C.blocked = info.rail_block
-      end
-    end
 
     table.insert(f_brush, { t=f_h, tag=tag })
 

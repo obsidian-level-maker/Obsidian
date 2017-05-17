@@ -116,9 +116,11 @@
 --[[
     --
     -- A "junction" is information about how two touching areas interact.
-    -- For example: could be solid wall, fence, or even nothing at all.
+    -- It could be a solid wall, fence, or even nothing at all.
     --
     -- The junction kind can be overridden by a specific EDGE object.
+    -- For example, solid walls are inhibited where two rooms connect
+    -- to each other.
     --
 
     A1 : AREA
@@ -127,6 +129,7 @@
     --
     -- These are "pseudo edges" which will be used to render the
     -- junction.  They do not contain position info (S and dir).
+    --
     -- By default these are absent, which means "do nothing".
     -- For straddlers (like fences) one side should be "nothing".
     -- For map edges, E2 is not used.
@@ -681,6 +684,22 @@ function Junction_make_fence(junc)
     kind = "fence"
     fence_mat = assert(junc.A1.zone.fence_mat)
     fence_top_z = top_z
+    area = junc.A1
+  }
+
+  junc.E2 = { kind="nothing" }
+
+  junc.E1.peer = junc.E2
+  junc.E2.peer = junc.E1
+end
+
+
+function Junction_make_railing(junc, rail_mat, block)
+  junc.E1 =
+  {
+    kind = "railing"
+    rail_mat = assert(rail_mat)
+    rail_block = block and 1
     area = junc.A1
   }
 

@@ -77,6 +77,8 @@
     --
     -- Edges are one-sided.  For connections there will be two edges
     -- back-to-back which refer to each other via the 'peer' field.
+    -- For windows and fences, one edge straddles the border and
+    -- the other one is set to "nothing".
     --
     -- Closets and joiners are considered self-contained and hence
     -- do not use/require edges in their inside region.
@@ -89,7 +91,7 @@
     kind : keyword  -- "nothing" (keep it empty)
                     -- "ignore" (use the junction instead)
                     -- "wall", "doorway",
-                    -- "window", "fence"
+                    -- "window", "fence", "railing"
                     -- [ "steps", "trap_wall", "sky_edge" ]
 
     S : SEED        -- first seed (the "left-most" one when facing the edge)
@@ -373,23 +375,42 @@ function SEED_CLASS.midstr(S)
 end
 
 
-function SEED_CLASS.raw_edge_coord(S, dir)
-  -- ignores diagonals
-  local mx = S.x1 + SEED_SIZE / 2
-  local my = S.y1 + SEED_SIZE / 2
+function SEED_CLASS.left_corner_coord(S, dir)
+  -- assumes 'dir' is a valid direction for this seed (or half-seed)
 
-  if dir == 2 then return mx, S.y1 end
-  if dir == 8 then return mx, S.y2 end
+  if geom.is_corner(dir) then
+    dir = geom.LEFT_45[dir]
+  end
 
-  if dir == 4 then return S.x1, my end
-  if dir == 6 then return S.x2, my end
+  if dir == 8 then return S.x1, S.y2 end
+  if dir == 2 then return S.x2, S.y1 end
 
-  error("bad dir to SEED:raw_edge_coord")
+  if dir == 4 then return S.x1, S.y1 end
+  if dir == 6 then return S.x2, S.y2 end
+
+  error("bad dir to SEED:left_corner_coord")
 end
 
 
-function SEED_CLASS.edge_coord(S, dir)
-  -- assumes 'dir' is a valid direction
+function SEED_CLASS.right_corner_coord(S, dir)
+  -- assumes 'dir' is a valid direction for this seed (or half-seed)
+
+  if geom.is_corner(dir) then
+    dir = geom.RIGHT_45[dir]
+  end
+
+  if dir == 8 then return S.x2, S.y2 end
+  if dir == 2 then return S.x1, S.y1 end
+
+  if dir == 4 then return S.x1, S.y2 end
+  if dir == 6 then return S.x2, S.y1 end
+
+  error("bad dir to SEED:left_corner_coord")
+end
+
+
+function SEED_CLASS.edge_mid_coord(S, dir)
+  -- assumes 'dir' is a valid direction for this seed (or half-seed)
 
   local mx, my = S:mid_point()
 
@@ -427,7 +448,7 @@ function SEED_CLASS.get_corner(S, dir)
 end
 
 
-function SEED_CLASS.get_raw_line(S, dir)
+function SEED_CLASS.line_coords(S, dir)
   local x1, y1 = S.x1, S.y1
   local x2, y2 = S.x2, S.y2
 
@@ -445,13 +466,6 @@ function SEED_CLASS.get_raw_line(S, dir)
   end
 
   return x1,y1, x2,y2
-end
-
-
-function SEED_CLASS.get_line(S, dir)
-  local x1,y1, x2,y2 = S:get_raw_line(dir)
-
-  return { x1=x1, y1=y1, x2=x2, y2=y2 }
 end
 
 
@@ -473,29 +487,30 @@ end
 
 
 function SEED_CLASS.make_brush(S)
-  -- get parent seed
-  local PS = S.bottom or S
-
   local brush =
   {
-    { x=PS.x1, y=PS.y1, __dir=2 }
-    { x=PS.x2, y=PS.y1, __dir=6 }
-    { x=PS.x2, y=PS.y2, __dir=8 }
-    { x=PS.x1, y=PS.y2, __dir=4 }
+    { x=S.x1, y=S.y1, __dir=2 }
+    { x=S.x2, y=S.y1, __dir=6 }
+    { x=S.x2, y=S.y2, __dir=8 }
+    { x=S.x1, y=S.y2, __dir=4 }
   }
 
   if S.diagonal == 3 then
     brush[3].__dir = 7
     table.remove(brush, 4)
+
   elseif S.diagonal == 7 then
     brush[1].__dir = 3
     table.remove(brush, 2)
+
   elseif S.diagonal == 1 then
     brush[2].__dir = 9
     table.remove(brush, 3)
+
   elseif S.diagonal == 9 then
     brush[4].__dir = 1
     table.remove(brush, 1)
+
   elseif S.diagonal then
     error("Invalid diagonal seed!")
   end
@@ -737,6 +752,7 @@ function Seed_alloc_depot(room)
 end
 
 
+
 function Seed_dump_rooms()
   local function seed_to_char(S)
     if not S then return "!" end
@@ -768,6 +784,7 @@ function Seed_dump_rooms()
 
   gui.printf("\n")
 end
+
 
 
 function Seed_save_svg_image(filename)
@@ -918,6 +935,7 @@ function Seed_save_svg_image(filename)
 end
 
 
+
 function Seed_draw_minimap()
   local map_W  -- size in the GUI
   local map_H  --
@@ -938,7 +956,7 @@ function Seed_draw_minimap()
 
 
   local function draw_edge(S, dir, color)
-    local x1,y1, x2,y2 = S:get_raw_line(dir)
+    local x1,y1, x2,y2 = S:line_coords(dir)
 
     x1 = (x1 - min_x + ofs_x) * map_W / size
     x2 = (x2 - min_x + ofs_x) * map_W / size
@@ -1078,12 +1096,31 @@ function Edge_new_pair(kind1, kind2, S, dir, long)
 end
 
 
+function Edge_line_coords(E)
+  local x1, y1 = E.S:left_corner_coord(E.dir)
+
+  -- determine seed at other end of edge
+  local N = E.S
+
+  if E.long >= 2 then
+    if N.bottom then N = N.bottom end
+    N = N:raw_neighbor(geom.RIGHT[E.dir], E.long - 1)
+    assert(N)
+  end
+
+  local x2, y2 = N:right_corner_coord(E.dir)
+
+  return x1,y1, x2,y2
+end
+
+
 function Edge_mid_point(E)
-  -- FIXME: this does not handle long edges
+  local x1,y1, x2,y2 = Edge_line_coords(E)
 
-  local S = E.S
+  x1 = (x1 + x2) / 2
+  y1 = (y1 + y2) / 2
 
-  return S:edge_coord(E.dir)
+  return x1, y1
 end
 
 
