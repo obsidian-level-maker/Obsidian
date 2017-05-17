@@ -1563,6 +1563,90 @@ end
 
 
 
+function Area_pick_facing_rooms()
+
+  local scenics = {}
+
+  local facings = {}  --  [ROOM + SCENIC] --> count
+
+
+  local function face_id(R, T)
+    return R.name .. "/" .. T.name
+  end
+
+
+  local function build_facing_database()
+    each A in LEVEL.areas do
+      if A.room and A.is_outdoor and (A.mode == "floor" or A.mode == "nature") then
+        each S in A.seeds do
+        each dir in geom.ALL_DIRS do
+          local N = S:neighbor(dir)
+          local T = N and N.area
+
+          if T and T.mode == "scenic" then
+            local id = face_id(A.room, T)
+
+            facings[id] = (facings[id] or gui.random() / 10) + 1
+          end
+        end -- S, dir
+        end
+      end
+    end -- A
+
+--stderrf("facing DB:\n%s\n", table.tostr(facings))
+  end
+
+
+  local function best_facing_pair()
+    local best_R
+    local best_T
+    local best_score = -1
+
+    each R in LEVEL.rooms do
+      if not R.is_outdoor then continue end
+
+      each T in scenics do
+        if T.is_flobbed then continue end
+
+        local score = facings[face_id(R, T)]
+
+        if score != nil and score > best_score then
+          best_R = R
+          best_T = T
+          best_score = score
+        end
+      end -- T
+    end -- R
+
+    return best_R, best_T
+  end
+
+
+  ---| Area_pick_facing_rooms |---
+
+  each A in LEVEL.areas do
+    if A.mode == "scenic" then
+      table.insert(scenics, A)
+    end
+  end
+
+  build_facing_database()
+
+  while true do
+    local R, T = best_facing_pair()
+
+    -- nothing else possible?
+    if R == nil then break; end
+
+stderrf("flobbing %s with %s\n", R.name, T.name)
+
+    R.border = T
+    T.is_flobbed = true
+  end
+end
+
+
+
 function Area_divvy_up_borders()
   --
   -- Subdivides the boundary area(s) of the map into pieces
@@ -1606,8 +1690,6 @@ function Area_divvy_up_borders()
   local SY2 = math.min(LEVEL.boundary_y2 + 2, SEED_H)
 
   local temp_areas
-
-  local facings = {}  --  maps ROOM + TEMP --> count
 
   local VOID = { name="<VOID>", id=9999 }
 
@@ -2115,79 +2197,6 @@ function Area_divvy_up_borders()
   end
 
 
-  local function face_id(R, T)
-    return R.name .. "/" .. T.name
-  end
-
-
-  local function build_facing_database()
-    each A in LEVEL.areas do
-      if A.room and A.is_outdoor and (A.mode == "floor" or A.mode == "nature") then
-        each S in A.seeds do
-        each dir in geom.ALL_DIRS do
-          local N = S:neighbor(dir)
-          local T = N and N.temp_area
-
-          if T and not T.is_void then
-            local id = face_id(A.room, T)
-
-            facings[id] = (facings[id] or gui.random() / 10) + 1
-          end
-        end -- S, dir
-        end
-      end
-    end -- A
-
---stderrf("facing DB:\n%s\n", table.tostr(facings))
-  end
-
-
-  local function best_facing_pair()
-    local best_R
-    local best_T
-    local best_num = -1
-
-    each R in LEVEL.rooms do
-      if not R.is_outdoor then continue end
-      if R.kkk_temp or R.kkk2_temp then continue end
-
-      each T in temp_areas do
-        if T.is_void  then continue end
-        if T.is_inner then continue end
-
-        if T.kkk_room then continue end
-
-        local num = facings[face_id(R, T)]
-
-        if num != nil and num > best_num then
-          best_R = R
-          best_T = T
-          best_num = num
-        end
-      end -- T
-    end -- R
-
-    return best_R, best_T
-  end
-
-
-  local function pick_facing_rooms()
-    build_facing_database()
-
-    while true do
-      local R, T = best_facing_pair(nil)
-
-      -- nothing else possible?
-      if R == nil then break; end
-
---stderrf("flobbing %s with %s\n", R.name, T.name)
-
-      R.kkk_temp = T
-      T.kkk_room = R
-    end
-  end
-
-
   local function make_real_areas()
     each T in temp_areas do
       local A = AREA_CLASS.new("scenic")
@@ -2201,12 +2210,6 @@ function Area_divvy_up_borders()
         A.mode = "void"
       else
         A.is_outdoor = true
-      end
-
-      each R in LEVEL.rooms do
-        if R.kkk_temp == T or R.kkk2_temp == T then
-          R.border = A
-        end
       end
 
       -- install into seeds
@@ -2242,8 +2245,6 @@ function Area_divvy_up_borders()
   mark_all_seeds()
 
   flood_fill_temp_areas()
-
-  pick_facing_rooms()
 
   make_real_areas()
 
@@ -2379,6 +2380,7 @@ function Area_create_rooms()
   Grower_create_rooms()
 
   Area_divvy_up_borders()
+  Area_pick_facing_rooms()
 
   Area_analyse_areas()
 
