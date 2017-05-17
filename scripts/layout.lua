@@ -1893,6 +1893,8 @@ end
 
 
 function Layout_scenic_vistas()
+  Area_pick_facing_rooms()
+
   each A in LEVEL.areas do
     if A.mode == "scenic" then
       Cave_build_a_scenic_vista(A)

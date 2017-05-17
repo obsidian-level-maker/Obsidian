@@ -2380,7 +2380,6 @@ function Area_create_rooms()
   Grower_create_rooms()
 
   Area_divvy_up_borders()
-  Area_pick_facing_rooms()
 
   Area_analyse_areas()
 
