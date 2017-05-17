@@ -1654,6 +1654,8 @@ function Area_pick_facing_rooms()
 --  stderrf("flobbing %s with %s\n", R.name, T.name)
 
       R.border = T
+
+      T.face_room = R
       T.zone = R.zone
     end
   end
@@ -1695,6 +1697,7 @@ function Area_pick_facing_rooms()
   each A in scenics do
     if A.zone then
       A.ceil_h = A.zone.sky_h
+      A.ceil_mat = "_SKY"
     end
 
     -- void up unset areas

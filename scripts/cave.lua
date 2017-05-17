@@ -2940,6 +2940,8 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function install_river(points, RIVER)
+    R.has_river = true
+
     -- bridge cell coords
     local bx = points[1].x
     local by = points[1].y
@@ -3033,6 +3035,19 @@ function Cave_build_a_scenic_vista(area)
   local info
 
 
+  local function new_floor()
+    local FL =
+    {
+      neighbors = {}
+      children  = {}
+    }
+
+    table.insert(info.floors, FL)
+
+    return FL
+  end
+
+
   local function temp_install_floor(FL)
     for cx = 1, info.W do
     for cy = 1, info.H do
@@ -3051,29 +3066,34 @@ function Cave_build_a_scenic_vista(area)
   end
 
 
-  local function do_scenic_stuff()
-    local FLOOR =
-    {
-      neighbors = {}
-      children  = {}
+  local function make_simple_fence()
+    -- this is very basic, like in E1M1 or MAP01 of standard DOOM
 
-      floor_mat = "FWATER1"
+    local FL = new_floor()
 
-      -- TEMP RUBBISH
-      floor_h   = -731
-    }
+    FL.floor_mat = area.zone.fence_mat
 
-    info.FLOOR = FLOOR
+    FL.floor_h = (area.face_room.max_floor_h or area.face_room.entry_h) + 64
 
-    table.insert(info.floors, FLOOR)
-
-    info.external_sky = true
+    temp_install_floor(FL)
 
     -- TEMP RUBBISH
-    info.area.floor_h = FLOOR.floor_h
----##  info.area.ceil_h  = FLOOR.floor_h + 512
-    assert(info.area.ceil_h)
-    info.area.ceil_mat = "_SKY"
+    info.area.floor_h = FL.floor_h
+  end
+
+
+  local function do_scenic_stuff()
+    local FL = new_floor()
+
+    FL.floor_mat = "FWATER1"
+
+    -- TEMP RUBBISH
+    FL.floor_h   = -731
+
+    temp_install_floor(FL)
+
+    -- TEMP RUBBISH
+    info.area.floor_h = FL.floor_h
   end
 
 
@@ -3083,10 +3103,10 @@ function Cave_build_a_scenic_vista(area)
 
   info = Cave_setup_info(R, area)
 
+  info.external_sky = true
+
   Cave_map_usable_area(info)
 
-  do_scenic_stuff()
-
-  temp_install_floor(info.FLOOR)
+  make_simple_fence()
 end
 
