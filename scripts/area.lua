@@ -1502,20 +1502,11 @@ end
 
 function Area_spread_zones()
   --
-  -- Associates every area with a zone, including VOID areas,
-  -- but not including SCENIC areas (which are done already).
+  -- Associates every area with a zone, including VOID areas
+  -- but not SCENIC areas (which are done later).
   --
 
-  local function are_we_done()
-    each A in LEVEL.areas do
-      if not A.zone then return false end
-    end
-
-    return true
-  end
-
-
-  local function prepare_pass()
+  local function setup_room_areas()
     each A in LEVEL.areas do
       if A.room then
         A.zone = assert(A.room.zone)
@@ -1524,36 +1515,53 @@ function Area_spread_zones()
   end
 
 
-  local function grow_pass(loop)
-    local list = table.copy(LEVEL.areas)
+  local function try_set_area(A)
+    rand.shuffle(A.neighbors)
 
-    rand.shuffle(list)
+    for pass = 1, 2 do
+      each N in A.neighbors do
+        if not N.zone then continue end
 
-    each A in list do
-      if not A.zone then
-        for loop = 1, 10 do
-          local N = rand.pick(A.neighbors)
-          assert(N)
+        -- on first pass, require neighbor to be a real room
+        -- [ to prevent run-ons ]
+        if pass == 1 and not N.room then continue end
 
-          -- on first loop, require neighbor to be a real room
-          -- [ to prevent run-ons ]
-          if loop == 1 and not N.room then continue end
-
-          if N.zone then A.zone = N.zone ; break; end
-        end
+        -- OK --
+        A.zone = N.zone
+        return
       end
     end
   end
 
 
+  local function grow_pass()
+    -- returns true when all areas are done
+    local all_done = true
+
+    local list = table.copy(LEVEL.areas)
+
+    rand.shuffle(list)
+
+    each A in list do
+      if A.zone then continue end
+      if A.mode == "scenic" then continue end
+
+      all_done = false
+
+      try_set_area(A)
+
+    end -- A
+
+    return all_done
+  end
+
+
   ---| Area_spread_zones |---
 
-  prepare_pass()
+  setup_room_areas()
 
   for loop = 1, 99 do
-    grow_pass()
-
-    if are_we_done(loop) then
+    if grow_pass() then
       return
     end
   end
@@ -1564,10 +1572,11 @@ end
 
 
 function Area_pick_facing_rooms()
+  -- also assigns a zone to scenic areas, plus ceil_h
 
   local scenics = {}
 
-  local facings = {}  --  [ROOM + SCENIC] --> count
+  local facings  --  [ROOM + SCENIC] --> count
 
 
   local function face_id(R, T)
@@ -1575,38 +1584,46 @@ function Area_pick_facing_rooms()
   end
 
 
-  local function build_facing_database()
+  local function build_facing_database(want_outdoor)
+    facings = {}
+
     each A in LEVEL.areas do
-      if A.room and A.is_outdoor and (A.mode == "floor" or A.mode == "nature") then
-        each S in A.seeds do
-        each dir in geom.ALL_DIRS do
-          local N = S:neighbor(dir)
-          local T = N and N.area
+      if not A.room then continue end
 
-          if T and T.mode == "scenic" then
-            local id = face_id(A.room, T)
+      if not (A.mode == "floor" or A.mode == "nature") then continue end
 
-            facings[id] = (facings[id] or gui.random() / 10) + 1
-          end
-        end -- S, dir
+      if sel(A.is_outdoor, 1, 0) != sel(want_outdoor, 1, 0) then continue end
+
+      each S in A.seeds do
+      each dir in geom.ALL_DIRS do
+        local N = S:neighbor(dir)
+        local T = N and N.area
+
+        if T and T.mode == "scenic" then
+          local id = face_id(A.room, T)
+
+          facings[id] = (facings[id] or gui.random() / 10) + 1
         end
+      end -- S, dir
       end
     end -- A
 
---stderrf("facing DB:\n%s\n", table.tostr(facings))
+--  stderrf("facing DB:\n%s\n", table.tostr(facings))
   end
 
 
-  local function best_facing_pair()
+  local function best_facing_pair(want_outdoor)
     local best_R
     local best_T
     local best_score = -1
 
     each R in LEVEL.rooms do
-      if not R.is_outdoor then continue end
+      if R.border then continue end
+
+      if sel(R.is_outdoor, 1, 0) != sel(want_outdoor, 1, 0) then continue end
 
       each T in scenics do
-        if T.is_flobbed then continue end
+        if T.zone then continue end
 
         local score = facings[face_id(R, T)]
 
@@ -1622,6 +1639,46 @@ function Area_pick_facing_rooms()
   end
 
 
+  local function assign_borders(mode)
+    -- mode can be "outdoor", "cave" or "building"
+    local want_outdoor = (mode == "outdoor")
+
+    build_facing_database(want_outdoor)
+
+    while true do
+      local R, T = best_facing_pair(want_outdoor)
+
+      -- nothing else is possible?
+      if R == nil then break; end
+
+--  stderrf("flobbing %s with %s\n", R.name, T.name)
+
+      R.border = T
+      T.zone = R.zone
+    end
+  end
+
+
+  local function emergency_zone(A)
+    rand.shuffle(A.neighbors)
+
+    each N in A.neighbors do
+      if N.room then
+        return N.room.zone
+      end
+    end
+
+    each N in A.neighbors do
+      if N.zone then
+        return N.zone
+      end
+    end
+
+    -- the ultimate fallback
+    return LEVEL.zones[1]
+  end
+
+
   ---| Area_pick_facing_rooms |---
 
   each A in LEVEL.areas do
@@ -1630,18 +1687,26 @@ function Area_pick_facing_rooms()
     end
   end
 
-  build_facing_database()
+  assign_borders("outdoor")
 
-  while true do
-    local R, T = best_facing_pair()
+--TODO : support making windows from building --> scenic
+--  assign_borders("building")
 
-    -- nothing else possible?
-    if R == nil then break; end
+  each A in scenics do
+    if A.zone then
+      A.ceil_h = A.zone.sky_h
+    end
 
-stderrf("flobbing %s with %s\n", R.name, T.name)
+    -- void up unset areas
+    if not A.zone then
+      A.mode = "void"
+      A.zone = emergency_zone(A)
+    end
+  end
 
-    R.border = T
-    T.is_flobbed = true
+  -- sanity check
+  each A in LEVEL.areas do
+    assert(A.zone)
   end
 end
 

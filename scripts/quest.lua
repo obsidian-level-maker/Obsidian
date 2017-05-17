@@ -1036,6 +1036,10 @@ function Quest_create_zones()
   --
   -- Divides the map into a few distinct sections.
   --
+  -- Generally the start room and exit room are in distinct zones.
+  -- Rooms in a quest usually belong to the same room, but this is
+  -- not absolutely required (especially for teleporters).
+  --
 
   local function calc_quota()
     --
@@ -1177,10 +1181,12 @@ function Quest_create_zones()
      quota = #LEVEL.quests
   end
 
+
   -- handle exit room first
   local exit_zone = Zone_new()
 
   assign_room(LEVEL.exit_room, exit_zone)
+
 
   -- start room(s) are usually the 2nd zone
   local start_zone = exit_zone
@@ -1194,6 +1200,7 @@ function Quest_create_zones()
       assign_room(R, start_zone)
     end
   end
+
 
   -- handle quest entry rooms
   local quest_list = table.copy(LEVEL.quests)
@@ -1215,6 +1222,7 @@ function Quest_create_zones()
     assign_room(R, Zone_new())
   end
 
+
   -- flow zones between room connections
   while not check_if_finished() do
     for loop = 1, 50 do
@@ -1226,6 +1234,7 @@ function Quest_create_zones()
   each R in LEVEL.rooms do
     assert(R.zone)
   end
+
 
   sort_zones()
 

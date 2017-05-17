@@ -2784,7 +2784,7 @@ function Room_set_sky_heights()
 
   each A in LEVEL.areas do
     -- visit all normal, outdoor areas
-    if A.floor_h and A.is_outdoor and not A.is_boundary then
+    if A.floor_h and A.is_outdoor and not A.mode != "scenic" then
       do_area(A)
 
       -- include nearby buildings in same zone
@@ -2806,13 +2806,10 @@ function Room_set_sky_heights()
   end
 
   -- transfer final results into areas
+  -- [ SCENIC areas are done later.... ]
 
   each A in LEVEL.areas do
-    if A.floor_h and A.is_outdoor and not A.is_porch then
-      A.ceil_h = A.zone.sky_h
-    end
-
-    if A.mode == "scenic" and A.is_outdoor then
+    if A.floor_h and A.zone and A.is_outdoor and not A.is_porch then
       A.ceil_h = A.zone.sky_h
     end
   end
