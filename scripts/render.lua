@@ -19,42 +19,6 @@
 ------------------------------------------------------------------------
 
 
-function Render_outer_sky(S, dir, floor_h)
-  assert(not geom.is_corner(dir))
-
-  local x1, y1 = S.x1, S.y1
-  local x2, y2 = S.x2, S.y2
-
-  if dir == 2 then y2 = y1 ; y1 = y1 - 8 end
-  if dir == 8 then y1 = y2 ; y2 = y2 + 8 end
-
-  if dir == 4 then x2 = x1 ; x1 = x1 - 8 end
-  if dir == 6 then x1 = x2 ; x2 = x2 + 8 end
-
-  local f_brush = brushlib.quad(x1, y1, x2, y2)
-
-  each C in f_brush do
-    C.flags = DOOM_LINE_FLAGS.draw_never
-  end
-
-  Ambient_push(LEVEL.sky_light)
-
-  local c_brush = brushlib.copy(f_brush)
-
-  table.insert(f_brush, { t=floor_h, reachable=true })
-  table.insert(c_brush, { b=floor_h + 16, delta_z = -16 })
-
-  brushlib.set_mat(f_brush, "_SKY", "_SKY")
-  brushlib.set_mat(c_brush, "_SKY", "_SKY")
-
-  Trans.brush(f_brush)
-  Trans.brush(c_brush)
-
-  Ambient_pop()
-end
-
-
-
 function Render_edge(E)
   assert(E)
   assert(E.kind)
@@ -220,31 +184,40 @@ function Render_edge(E)
   end
 
 
-  local function edge_inner_sky()
-    local floor_h = assert(A.floor_h)
+  local function edge_outer_sky()
+    assert(E.long == 1)
 
-    assert(not geom.is_corner(dir))
+    local S = E.S
 
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
 
-    if dir == 2 then y2 = y1 + 8 end
-    if dir == 8 then y1 = y2 - 8 end
+    if dir == 2 then y2 = y1 ; y1 = y1 - 8 end
+    if dir == 8 then y1 = y2 ; y2 = y2 + 8 end
 
-    if dir == 4 then x2 = x1 + 8 end
-    if dir == 6 then x1 = x2 - 8 end
+    if dir == 4 then x2 = x1 ; x1 = x1 - 8 end
+    if dir == 6 then x1 = x2 ; x2 = x2 + 8 end
 
-    local brush = brushlib.quad(x1, y1, x2, y2)
+    local f_brush = brushlib.quad(x1, y1, x2, y2)
 
-    each C in brush do
+    each C in f_brush do
       C.flags = DOOM_LINE_FLAGS.draw_never
     end
 
-    table.insert(brush, { b=floor_h + 16, delta_z = -16 })
+    Ambient_push(LEVEL.sky_light)
 
-    brushlib.set_mat(brush, "_SKY", "_SKY")
+    local c_brush = brushlib.copy(f_brush)
 
-    Trans.brush(brush)
+    table.insert(f_brush, { t=A.floor_h, reachable=true })
+    table.insert(c_brush, { b=A.floor_h + 16, delta_z = -16 })
+
+    brushlib.set_mat(f_brush, "_SKY", "_SKY")
+    brushlib.set_mat(c_brush, "_SKY", "_SKY")
+
+    Trans.brush(f_brush)
+    Trans.brush(c_brush)
+
+    Ambient_pop()
   end
 
 
@@ -629,7 +602,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     edge_wall()
 
   elseif E.kind == "sky_edge" and A.floor_h then
-    edge_inner_sky()
+    edge_outer_sky()
 
   elseif E.kind == "steps" then
     edge_steps()

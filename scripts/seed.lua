@@ -92,7 +92,8 @@
                     -- "ignore" (use the junction instead)
                     -- "wall", "doorway",
                     -- "window", "fence", "railing"
-                    -- [ "steps", "trap_wall", "sky_edge" ]
+                    -- "sky_edge"
+                    -- [ "steps" ]
 
     S : SEED        -- first seed (the "left-most" one when facing the edge)
 

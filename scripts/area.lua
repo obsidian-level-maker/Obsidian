@@ -589,21 +589,22 @@ function Junction_make_map_edge(junc)
   local A = junc.A1
   local mat
 
-  if not A.room then
-    Junction_make_empty(junc)
-    return
-  end
-
   if A.room and not A.is_outdoor then
     mat = A.room.main_tex
-  else
+  elseif A.zone then
     mat = A.zone.facade_mat
+  else
+    mat = "_DEFAULT"
   end
 
   assert(mat)
 
   junc.E1 = { kind="wall", area=A, wall_mat=mat }
   junc.E2 = { kind="nothing" }
+
+  if A.is_outdoor and A.floor_h then
+    junc.E1.kind = "sky_edge"
+  end
 end
 
 
@@ -1567,6 +1568,10 @@ function Area_divvy_up_borders()
   -- Subdivides the boundary area(s) of the map into pieces
   -- belonging to each room, so that zone walls can be placed
   -- and to allow each zone to do different bordery stuff.
+  --
+  -- As a by-product, this also ensures every seed inside the
+  -- absolute boundary rectangle of the map gets an "area" value.
+  -- Such areas which lie inside the map become the VOID type.
   --
 
   --
