@@ -711,17 +711,17 @@ function Seed_from_loc(loc)
 end
 
 
-function Seed_over_boundary(S)
-  if S.sx <= LEVEL.boundary_x1 or S.sx >= LEVEL.boundary_x2 then return true end
-  if S.sy <= LEVEL.boundary_y1 or S.sy >= LEVEL.boundary_y2 then return true end
+function Seed_over_boundary(sx, sy)
+  if sx <= LEVEL.boundary_x1 or sx >= LEVEL.boundary_x2 then return true end
+  if sy <= LEVEL.boundary_y1 or sy >= LEVEL.boundary_y2 then return true end
 
   return false
 end
 
 
-function Seed_outside_sprout_box(S)
-  if S.sx <= LEVEL.sprout_x1 or S.sx >= LEVEL.sprout_x2 then return true end
-  if S.sy <= LEVEL.sprout_y1 or S.sy >= LEVEL.sprout_y2 then return true end
+function Seed_outside_sprout_box(sx, sy)
+  if sx <= LEVEL.sprout_x1 or sx >= LEVEL.sprout_x2 then return true end
+  if sy <= LEVEL.sprout_y1 or sy >= LEVEL.sprout_y2 then return true end
 
   return false
 end

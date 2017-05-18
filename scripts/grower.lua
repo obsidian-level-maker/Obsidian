@@ -1880,7 +1880,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     -- new rooms must not be placed in boundary spaces
-    if (E2.kind == "new_room" or E2.kind == "hallway") and Seed_outside_sprout_box(S) then
+    if (E2.kind == "new_room" or E2.kind == "hallway") and
+       Seed_outside_sprout_box(S.sx, S.sy)
+    then
       return false
     end
 
@@ -1915,7 +1917,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       if S.area then return false end
       if S.disabled_R == R then return false end
 
-      if Seed_over_boundary(S) then
+      if Seed_over_boundary(S.sx, S.sy) then
         return false
       end
 

@@ -1414,10 +1414,14 @@ function Room_border_up()
     -- room to scenic --
 
     if not A2.room then
-      if A1.room.border == A2 then
-        Junction_make_empty(junc)
-      else
+      if A1.room.border != A2 then
         Junction_make_wall(junc)
+
+      elseif A2.border_type == "watery_drop" then
+        Junction_make_railing(junc, "MIDBARS3", "block")
+
+      else
+        Junction_make_empty(junc)
       end
 
       return

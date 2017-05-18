@@ -471,6 +471,33 @@ end
 
 
 
+function Cave_cell_touches_map_edge(info, cx, cy)
+  local sx = info.sx1 + int((cx - 1) / 2)
+  local sy = info.sy1 + int((cy - 1) / 2)
+
+  if (cx % 2) == 0 then
+    if Seed_over_boundary(sx + 1, sy) then return true end
+  else
+    if Seed_over_boundary(sx - 1, sy) then return true end
+  end
+
+  if (cy % 2) == 0 then
+    if Seed_over_boundary(sx, sy + 1) then return true end
+  else
+    if Seed_over_boundary(sx, sy - 1) then return true end
+  end
+
+  return false
+end
+
+
+
+function Cave_cell_touches_room(info, R)
+  -- FIXME
+end
+
+
+
 function Cave_generate_cave(R, info)
 
   local is_lake = (info.liquid_mode == "lake")
@@ -3023,7 +3050,7 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   temp_install_floor(info.FLOOR)
 
-  if LEVEL.liquid then
+  if LEVEL.liquid and rand.odds(25) then
     make_a_river()
   end
 end
@@ -3033,6 +3060,8 @@ end
 function Cave_build_a_scenic_vista(area)
 
   local info
+
+  local room = assert(area.face_room)
 
 
   local function new_floor()
@@ -3066,16 +3095,15 @@ function Cave_build_a_scenic_vista(area)
   end
 
 
+  -- a basic fence, like in E1M1 or MAP01 of standard DOOM
   local function make_simple_fence()
-    -- this is very basic, like in E1M1 or MAP01 of standard DOOM
-
     area.border_type = "simple_fence"
 
     local FL = new_floor()
 
     FL.floor_mat = area.zone.fence_mat
 
-    FL.floor_h = (area.face_room.max_floor_h or area.face_room.entry_h) + 72
+    FL.floor_h = (room.max_floor_h or room.entry_h) + 72
 
     temp_install_floor(FL)
 
@@ -3084,18 +3112,46 @@ function Cave_build_a_scenic_vista(area)
   end
 
 
-  local function do_scenic_stuff()
+  -- large body of liquid with an impassible railing
+  local function make_watery_drop()
+    area.border_type = "watery_drop"
+
+    -- create the liquid area --
+
+    local drop_h = rand.pick({ 128,192,256,320 })
+
     local FL = new_floor()
 
-    FL.floor_mat = "FWATER1"
-
-    -- TEMP RUBBISH
-    FL.floor_h   = -731
+    FL.floor_h   = (room.max_floor_h or room.entry_h) - drop_h
+    FL.floor_mat = "_LIQUID"
 
     temp_install_floor(FL)
 
+
+    -- create cliffs in the distance --
+
+    local CLIFF = new_floor()
+
+    CLIFF.floor_h   = (room.max_floor_h or room.entry_h) + 96
+    CLIFF.floor_mat = LEVEL.cliff_mat
+
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      local val = info.map.cells[cx][cy]
+
+      if val == nil then continue end
+
+      if Cave_cell_touches_map_edge(info, cx, cy) then
+        info.blocks[cx][cy] = CLIFF
+      end
+    end
+    end
+
+
     -- TEMP RUBBISH
-    info.area.floor_h = FL.floor_h
+    info.area.floor_h = CLIFF.floor_h
+
+    -- NOTE: the railing is setup in Room_border_up()
   end
 
 
@@ -3103,12 +3159,16 @@ function Cave_build_a_scenic_vista(area)
 
   assert(area.mode == "scenic")
 
-  info = Cave_setup_info(R, area)
+  info = Cave_setup_info(nil, area)
 
   info.external_sky = true
 
   Cave_map_usable_area(info)
 
-  make_simple_fence()
+  if room.has_river or not LEVEL.liquid then
+    make_simple_fence()
+  else
+    make_watery_drop()
+  end
 end
 
