@@ -12,5 +12,7 @@ PREFABS.Hallway_vent_t1 =
 
   where  = "seeds"
   shape  = "T"
+
+  mon_height = 64
 }
 
