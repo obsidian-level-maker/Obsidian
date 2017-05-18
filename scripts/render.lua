@@ -1235,12 +1235,6 @@ function Render_floor(A)
 
     brushlib.set_mat(f_brush, f_side, f_mat)
 
-    -- sound blocking for border areas
-    if A.is_boundary and A.mode != "liquid" then
-      local top_C = f_brush[#f_brush]
-      top_C.sound_area = 70000 + A.id
-    end
-
     -- remember floor brush for the spot logic
     table.insert(A.floor_brushes, f_brush)
 
@@ -2914,13 +2908,12 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
 -- if R and R.id then top.tag = 1000 + R.id end
 
-      table.insert(f_brush, top)
-
+      -- scenic areas need to block sound
       if info.area.mode == "scenic" then
-        each C in f_brush do
-          if C.x then C.sound_block = true end
-        end
+        top.sound_area = 70000 + info.area.id
       end
+
+      table.insert(f_brush, top)
     end
 
     if A.is_liquid then
