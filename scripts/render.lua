@@ -2915,6 +2915,12 @@ top.reachable = 1  --!!!!!! FIXME: remove
 -- if R and R.id then top.tag = 1000 + R.id end
 
       table.insert(f_brush, top)
+
+      if info.area.mode == "scenic" then
+        each C in f_brush do
+          if C.x then C.sound_block = true end
+        end
+      end
     end
 
     if A.is_liquid then
