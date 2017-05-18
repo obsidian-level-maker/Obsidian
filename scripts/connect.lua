@@ -261,6 +261,9 @@ function Connect_directly(P)
       E1, E2 = E2, E1
     end
 
+    E1.is_wallish = true
+    E2.is_wallish = true
+
   else
     error("Connect_directly: unknown kind: " .. tostring(P.kind))
   end
