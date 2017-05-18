@@ -1354,13 +1354,15 @@ function Fab_load_wad(def)
 
     local r = spot_info.r
 
+    local mon_height = def.mon_height or 128
+
     table.insert(B, { x = E.x - r, y = E.y - r })
     table.insert(B, { x = E.x + r, y = E.y - r })
     table.insert(B, { x = E.x + r, y = E.y + r })
     table.insert(B, { x = E.x - r, y = E.y + r })
 
     table.insert(B, { b = E.z })
-    table.insert(B, { t = E.z + 128 })
+    table.insert(B, { t = E.z + mon_height })
 
     table.insert(fab.brushes, B)
   end
