@@ -6,14 +6,10 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
-+  make stairs in exit rooms (etc) often build DOWNWARD
-
->>  RAILS:
-    - default X offset is NONE (auto align)
-    - default Y offset is zero
-    - Junction_make_rail()
++  ability to limit rules to a particular stair_z_dir
 
 +  lighting in caves mucked up?  [ check Ambient_push/pop ]
+
 
 -  sprouts from symmetrical rooms : often skip a side
 
@@ -32,6 +28,9 @@ Hallway System
 
 +  make hallway themes for deuce (tech/urban/hell), and
    review the existing xxx_Hallway themes.
+
+   e.g. BLOOD1 for ceiling/floor in hell
+   e.g. SKSPINE2 for wall in hell
 
 -  not considered "wallish" (no triangular filler) ?
 
@@ -85,31 +84,31 @@ Hallway System
 Scenic Borders
 --------------
 
-+  proper ZONE handling
-   [ note : zones do NOT exist during divvy_up_borders! ]
-
--  assign unused border areas to a room
-   [ do it later than divvy_up ?? ]
-
 +  different styles:
    - mountainy areas  (w/ trees or torches)
    - cavey/liquidy areas
    - fenced off pools from V7-WEIRD
    - fancy fences
 
+-  block sound between two "simple_fence" areas
+
+-  block travel 2/3 seeds into simple fence (archvile jumps etc)
 
 
 PARKS
 -----
+
+!!  inhibit items in bits of floor cut-off by river
 
 +  sky handling:
    -  ensure the heighest FLOOR contributes to zone.sky_h
 
 +  height variation  [ different areas ]
 
--  texturing
-   [ in constructed outdoors, don't use natural tex like GRASS
-     except in the lowest area ]
+-  consider texturing
+
+-  review outdoor ROOM_THEMEs, remove/replace any "floors" which
+   are actually natural-ish
 
 -  add a style for it, decide room properly
 
