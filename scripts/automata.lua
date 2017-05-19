@@ -1002,12 +1002,273 @@ end
 
 
 ----------------------------------------------------------------
+--  BLOB STUFF
+----------------------------------------------------------------
+
+
+function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
+  --
+  -- Divide the given array into "blobs", which are small groups
+  -- of contiguous cells.
+  --
+  -- Returns a new array, where each valid cell will contain a blob
+  -- identity number.
+  --
+
+  -- NOTE : the input region MUST be contiguous
+  --        [ if not, expect unfilled places ]
+
+  local W = grid.w
+  local H = grid.h
+
+  local blob_map = table.array_2D(W, H)
+
+  local total_blobs = 0
+
+  local sizes = {}
+
+  local grow_dirs = {}
+
+
+  local function is_valid(cx, cy)
+    if cx < 1 or cx > W then return false end
+    if cy < 1 or cy > H then return false end
+
+    if grid.cells[cx][cy] == nil then return false end
+
+    return true
+  end
+
+
+  local function is_free(cx, cy)
+    if not is_valid(cx, cy) then return false end
+
+    if blob_map[cx][cy] then return false end
+
+    return true
+  end
+
+
+  local function neighbor_blob(cx, cy, dir)
+    cx, cy = geom.nudge(cx, cy, dir)
+
+    if not is_valid(cx, cy) then return nil end
+
+    return blob_map[cx][cy]
+  end
+
+
+  local function set_cell(cx, cy, id)
+    assert(is_free(cx, cy))
+
+    blob_map[cx][cy] = id
+
+    sizes[id] = (sizes[id] or 0) + 1
+  end
+
+
+  local function try_set_cell(cx, cy, id)
+    if is_free(cx, cy) then
+      set_cell(cx, cy, id)
+    end
+  end
+
+
+  local function spawn_blobs()
+    for cx = 1, W, 3 do
+    for cy = 1, H, 2 do
+      if rand.odds(5) then continue end
+
+      local dx = rand.irange(0, 2)
+      local dy = rand.irange(0, 1)
+
+      if not is_free(cx+dx, cy+dy) then
+        continue
+      end
+
+      total_blobs = total_blobs + 1
+
+      set_cell(cx+dx, cy+dy, total_blobs)
+    end
+    end
+
+    assert(total_blobs > 1)
+  end
+
+
+  local function growth_spurt_one()
+    for cx = 1, W do
+    for cy = 1, H do
+      local id = blob_map[cx][cy]
+      if not id then continue end
+      if sizes[id] >= 2 then continue end
+
+      if rand.odds(15) then
+        local dx = rand.sel(50, -1, 1)
+        local dy = rand.sel(50, -1, 1)
+
+        try_set_cell(cx+dx, cy   , id)
+        try_set_cell(cx   , cy+dy, id)
+        try_set_cell(cx+dx, cy+dy, id)
+        continue
+      end
+
+      local x_dir = rand.irange(-2, 2)
+      local y_dir = rand.irange(-2, 2)
+
+      if x_dir <=  1 then try_set_cell(cx-1, cy, id) end
+      if x_dir >= -1 then try_set_cell(cx+1, cy, id) end
+
+      if y_dir <=  1 then try_set_cell(cx, cy-1, id) end
+      if y_dir >= -1 then try_set_cell(cx, cy+1, id) end
+    end
+    end
+  end
+
+
+  local function try_grow_at_cell(cx, cy, dir)
+    if not is_free(cx, cy) then return end
+
+    local id = neighbor_blob(cx, cy, dir)
+    if not id then return end
+
+    if grow_dirs[id] != dir then return end
+
+    if rand.odds(15) then return end
+
+    set_cell(cx, cy, id)
+  end
+
+
+  local function directional_pass(dir)
+    -- prevent run-on effects by iterating in the correct order
+    if dir == 2 or dir == 4 then
+
+      for cx = W, 1, -1 do
+      for cy = H, 1, -1 do
+        try_grow_at_cell(cx, cy, dir)
+      end
+      end
+
+    else -- dir == 6 or dir == 8
+
+      for cx = 1, W do
+      for cy = 1, H do
+        try_grow_at_cell(cx, cy, dir)
+      end
+      end
+    end
+  end
+
+
+  local function check_all_done()
+    for cx = 1, W do
+    for cy = 1, H do
+      if is_valid(cx, cy) and is_free(cx, cy) then
+        return false
+      end
+    end
+    end
+
+    return true
+  end
+
+
+  local function normal_grow_pass()
+    for i = 1, total_blobs do
+      grow_dirs[i] = rand.dir()
+    end
+
+    for dir = 2,8,2 do
+      directional_pass(dir)
+    end
+  end
+
+
+  local function char_for_cell(cx, cy)
+    if grid.cells[cx][cy] == nil then return " " end
+
+    local id = blob_map[cx][cy]
+
+    if not id then return "." end
+
+    id = 1 + (id - 1) % 36
+
+    return string.sub("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", id, id)
+  end
+
+
+  local function dump_blob_map()
+    gui.debugf("Blob map:\n")
+
+    for cy = H, 1, -1 do
+      local line = ""
+
+      for cx = 1, W do
+        line = line .. char_for_cell(cx, cy)
+      end
+
+      gui.debugf("| %s\n", line)
+    end
+
+    gui.debugf("\n")
+  end
+
+
+  local function dump_blob_info()
+    gui.debugf("Blob sizes:\n")
+
+    for id = 1, total_blobs, 9 do
+      local line = ""
+
+      for di = 0, 8 do
+        if id + di <= total_blobs then
+          line = line .. "  " .. string.format("%2d", sizes[id + di])
+        end
+      end
+
+      gui.debugf("%s\n", line)
+    end
+
+    gui.debugf("\n")
+  end
+
+
+  ---| Cave_create_blobs |---
+
+  spawn_blobs()
+
+  growth_spurt_one()
+
+  for loop = 1, 200 do
+    normal_grow_pass()
+    normal_grow_pass()
+    normal_grow_pass()
+
+    if check_all_done() then
+      break;
+    end
+
+    if loop >= 200 then
+      error("blob creation failed!")
+    end
+  end
+
+  dump_blob_map()
+  dump_blob_info()
+
+  return blob_map
+end
+
+
+
+----------------------------------------------------------------
 --  MAZE STUFF
 ----------------------------------------------------------------
 
 
 function AUTOMATA_CLASS.maze_generate(maze)
-
+  --
   -- Generates a maze in the current object.
   --
   -- The initial contents should form a map where the maze will be
