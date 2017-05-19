@@ -3109,6 +3109,9 @@ function Cave_build_a_scenic_vista(area)
 
     temp_install_floor(FL)
 
+    area.fence_FLOOR = FL
+
+
 local blob_map = info.map:create_blobs(3, 2, 3)
 
     -- TEMP RUBBISH
@@ -3131,6 +3134,8 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
     temp_install_floor(FL)
 
+    area.liquid_FLOOR = FL
+
 
     -- create cliffs in the distance --
 
@@ -3151,6 +3156,8 @@ local blob_map = info.map:create_blobs(3, 2, 3)
     end
     end
 
+    area.cliff_FLOOR = CLIFF
+
 
     -- TEMP RUBBISH
     info.area.floor_h = CLIFF.floor_h
@@ -3169,10 +3176,44 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
   Cave_map_usable_area(info)
 
-  if true then ---  room.has_river or not LEVEL.liquid then
+  if room.has_river or not LEVEL.liquid then
     make_simple_fence()
   else
     make_watery_drop()
   end
+end
+
+
+
+function Cave_join_scenic_borders(junc)
+  --
+  -- See if we can join two scenic borders.
+  --
+  -- Note: the zones will always be the same here.
+  --
+
+  local A = junc.A1
+  local B = junc.A2
+
+  if A.border_type == "simple_fence" and B.border_type == "simple_fence" then
+    -- nothing needed
+
+    -- TODO : if heights are close, increase to maximum
+    return
+  end
+
+  if A.border_type == "watery_drop" and B.border_type == "watery_drop" then
+    A.liquid_FLOOR.floor_h = math.min(A.liquid_FLOOR.floor_h, B.liquid_FLOOR.floor_h)
+    B.liquid_FLOOR.floor_h = A.liquid_FLOOR.floor_h
+
+    A.cliff_FLOOR.floor_h = math.max(A.cliff_FLOOR.floor_h, B.cliff_FLOOR.floor_h)
+    B.cliff_FLOOR.floor_h = A.cliff_FLOOR.floor_h
+    return
+  end
+
+  -- TODO : simple <---> watery
+
+  -- in all other cases, make a wall
+  Junction_make_wall(junc)
 end
 

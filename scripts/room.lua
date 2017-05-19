@@ -1400,11 +1400,7 @@ function Room_border_up()
     if not A1.room then
       -- nothing needed when both are building/cave
       if A1.is_outdoor or A2.is_outdoor then
-        if A1.border_type == "simple_fence" and A2.border_type == "simple_fence" then
-          -- nothing needed
-        else
-          Junction_make_wall(junc)
-        end
+        Cave_join_scenic_borders(junc)
       end
 
       return
