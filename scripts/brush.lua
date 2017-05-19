@@ -802,6 +802,15 @@ function brushlib.set_mat(brush, wall, flat)
 end
 
 
+function brushlib.set_y_offset(brush, y_offset)
+  each C in brush do
+    if C.x then
+      C.v1 = y_offset
+    end
+  end
+end
+
+
 function brushlib.q3_liquid(brush, medium, top_tex)
   brushlib.set_kind(brush, "liquid", { detail=1, medium=medium })
 

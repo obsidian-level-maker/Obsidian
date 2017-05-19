@@ -2921,6 +2921,10 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
     brushlib.set_mat(f_brush, f_mat, f_mat)
 
+    if A.floor_y_offset then
+      brushlib.set_y_offset(f_brush, A.floor_y_offset)
+    end
+
     Trans.brush(f_brush)
   end
 
@@ -2947,6 +2951,10 @@ top.reachable = 1  --!!!!!! FIXME: remove
     end
 
     brushlib.set_mat(c_brush, c_mat, c_mat)
+
+    if A.ceil_y_offset then
+      brushlib.set_y_offset(c_brush, A.ceil_y_offset)
+    end
 
     Trans.brush(c_brush)
   end

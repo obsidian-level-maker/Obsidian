@@ -3105,6 +3105,8 @@ function Cave_build_a_scenic_vista(area)
 
     FL.floor_h = (room.max_floor_h or room.entry_h) + 72
 
+    FL.floor_y_offset = 0
+
     temp_install_floor(FL)
 
 local blob_map = info.map:create_blobs(3, 2, 3)
