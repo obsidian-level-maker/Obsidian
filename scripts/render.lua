@@ -1226,7 +1226,6 @@ function Render_floor(A)
     local tag = S.tag
   -- tag = A.id
   -- if A.room then tag = A.room.id end
-  -- if A.pool_id then tag = 1000 + A.pool_id end
   -- if A.ceil_group then tag = A.ceil_group.id end
 
     table.insert(f_brush, { t=f_h, tag=tag })

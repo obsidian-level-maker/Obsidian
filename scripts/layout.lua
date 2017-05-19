@@ -212,11 +212,6 @@ end
 
 
 
-function Layout_reclaim_floor_chunk(R)
-end
-
-
-
 function Layout_spot_for_wotsit(R, kind, required)
   --
   -- Find a free chunk in the room for a certain thing
@@ -338,6 +333,11 @@ function Layout_spot_for_wotsit(R, kind, required)
 
     -- never use it again
     best.content = kind
+
+    -- ensure we cannot climb over a nearby fence
+    if best.kind == "floor" then
+      best.area.podium_h = 24
+    end
 
     return best
   end

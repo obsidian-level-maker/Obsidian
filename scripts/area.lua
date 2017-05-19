@@ -665,8 +665,8 @@ function Junction_calc_fence_z(A1, A2)
   local z1 = A1.floor_h
   local z2 = A2.floor_h
 
-  if A1.pool_id then z1 = A1.face_room.max_floor_h end
-  if A2.pool_id then z2 = A2.face_room.max_floor_h end
+  if A1.podium_h then z1 = z1 + A1.podium_h end
+  if A2.podium_h then z2 = z2 + A2.podium_h end
 
   if A1.room then z1 = math.max(z1, A1.room.max_floor_h) end
   if A2.room then z2 = math.max(z2, A2.room.max_floor_h) end
@@ -678,13 +678,11 @@ end
 
 
 function Junction_make_fence(junc)
-  local top_z = Junction_calc_fence_z(junc.A1, junc.A2)
-
   junc.E1 =
   {
     kind = "fence"
     fence_mat = assert(junc.A1.zone.fence_mat)
-    fence_top_z = top_z
+    fence_top_z = Junction_calc_fence_z(junc.A1, junc.A2)
     area = junc.A1
   }
 
