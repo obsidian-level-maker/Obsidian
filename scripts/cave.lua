@@ -500,9 +500,12 @@ end
 
 function Cave_create_blobs(info, FL)
 
+  -- NOTE : the region MUST be contiguous
+  --        [ if not, expect unfilled places ]
+
   local blob_map = table.array_2D(info.W, info.H)
 
-  local cur_blob_id  = 1
+  local total_blobs = 0
 
   local sizes = {}
 
@@ -565,13 +568,13 @@ function Cave_create_blobs(info, FL)
         continue
       end
 
-      set_cell(cx+dx, cy+dy, cur_blob_id)
+      total_blobs = total_blobs + 1
 
-      cur_blob_id = cur_blob_id + 1
+      set_cell(cx+dx, cy+dy, total_blobs)
     end
     end
 
-    assert(cur_blob_id > 1)
+    assert(total_blobs > 1)
   end
 
 
@@ -582,7 +585,7 @@ function Cave_create_blobs(info, FL)
       if not id then continue end
       if sizes[id] >= 2 then continue end
 
-      if rand.odds(20) then
+      if rand.odds(15) then
         local dx = rand.sel(50, -1, 1)
         local dy = rand.sel(50, -1, 1)
 
@@ -605,50 +608,62 @@ function Cave_create_blobs(info, FL)
   end
 
 
-  local function try_grow_at_cell(cx, cy, emergency)
-    local best
-    local best_cost = 9e9
+  local function try_grow_at_cell(cx, cy, dir)
+    if not is_free(cx, cy) then return end
 
-    for dir = 2,8,2 do
-      local id = neighbor_blob(cx, cy, dir)
-      if not id then continue end
+    local id = neighbor_blob(cx, cy, dir)
+    if not id then return end
 
-      if dir != grow_dirs[dir] then continue end
+    if grow_dirs[id] != dir then return end
 
-      local cost = sizes[id] + gui.random() * 0.1
+    if rand.odds(15) then return end
 
-      if cost < best_cost then
-        best = id
-        best_cost = cost
+    set_cell(cx, cy, id)
+  end
+
+
+  local function directional_pass(dir)
+    -- prevent run-on effects by iterating in the correct order
+    if dir == 2 or dir == 4 then
+
+      for cx = info.W, 1, -1 do
+      for cy = info.H, 1, -1 do
+        try_grow_at_cell(cx, cy, dir)
       end
-    end
+      end
 
-    if best then
-      set_cell(cx, cy, best)
+    else -- dir == 6 or dir == 8
+
+      for cx = 1, info.W do
+      for cy = 1, info.H do
+        try_grow_at_cell(cx, cy, dir)
+      end
+      end
     end
   end
 
 
-  local function normal_grow_pass(emergency)
-    -- this pass fills in the gaps
-
-    for i = 1, cur_blob_id do
-      grow_dirs[i] = rand.dir()
-    end
-
-    local all_done = true
-
+  local function check_all_done()
     for cx = 1, info.W do
     for cy = 1, info.H do
-      if is_free(cx, cy) then
-        all_done = false
-
-        try_grow_at_cell(cx, cy, emergency)
+      if is_valid(cx, cy) and is_free(cx, cy) then
+        return false
       end
     end
     end
 
-    return all_done
+    return true
+  end
+
+
+  local function normal_grow_pass()
+    for i = 1, total_blobs do
+      grow_dirs[i] = rand.dir()
+    end
+
+    for dir = 2,8,2 do
+      directional_pass(dir)
+    end
   end
 
 
@@ -688,15 +703,17 @@ function Cave_create_blobs(info, FL)
 
   growth_spurt_one()
 
-  for loop = 1, 10 do
-    if normal_grow_pass() then
+  for loop = 1, 200 do
+    normal_grow_pass()
+    normal_grow_pass()
+    normal_grow_pass()
+
+    if check_all_done() then
       break;
     end
-  end
 
-  for loop = 1, -900 do
-    if normal_grow_pass("emergency") then
-      break;
+    if loop >= 200 then
+      error("blob creation failed!")
     end
   end
 
