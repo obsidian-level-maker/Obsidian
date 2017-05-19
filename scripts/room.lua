@@ -2736,18 +2736,19 @@ function Room_add_cage_rails()
   -- this must be called AFTER scenic borders are finished, since
   -- otherwise we won't know the floor_h of border areas.
 
-  local function rails_in_cage(A)
+  local function rails_in_cage(A, R)
     each N in A.neighbors do
       if N.zone != A.zone then continue end
+
+      local junc = Junction_lookup(A, N)
+
+      if junc.E1 and junc.E1.kind != "nothing" then continue end
+      if junc.E2 and junc.E2.kind != "nothing" then continue end
 
       -- don't place railings on higher floors (it looks silly)
       if N.floor_h and N.floor_h > A.floor_h then continue end
 
-      if true then
-        local junc = Junction_lookup(A, N)
-
-        Junction_make_railing(junc, "MIDBARS3", "block")
-      end
+      Junction_make_railing(junc, "MIDBARS3", "block")
     end
   end
 
@@ -2757,7 +2758,7 @@ function Room_add_cage_rails()
   each R in LEVEL.rooms do
     if R.cage_rail_areas then
       each A in R.cage_rail_areas do
-        rails_in_cage(A)
+        rails_in_cage(A, R)
       end
     end
   end
