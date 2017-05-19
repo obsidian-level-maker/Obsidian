@@ -589,12 +589,14 @@ end
 
 
 function Layout_place_all_importants()
+  -- do hub gates and secret exit closets
+  -- [ do this first, since these require closets, whereas normal
+  --   starts and exits and goals can be placed without closets ]
+  Layout_place_hub_gates()
+
   each R in LEVEL.rooms do
     Layout_place_importants(R, 1)
   end
-
-  -- this also does secret exit closets
-  Layout_place_hub_gates()
 
   each R in LEVEL.rooms do
     Layout_place_importants(R, 2)
