@@ -498,6 +498,213 @@ end
 
 
 
+function Cave_create_blobs(info, FL)
+
+  local blob_map = table.array_2D(info.W, info.H)
+
+  local cur_blob_id  = 1
+
+  local sizes = {}
+
+  local grow_dirs = {}
+
+
+  local function is_valid(cx, cy)
+    if cx < 1 or cx > info.W then return false end
+    if cy < 1 or cy > info.H then return false end
+
+    if info.blocks[cx][cy] != FL then return false end
+
+    return true
+  end
+
+
+  local function is_free(cx, cy)
+    if not is_valid(cx, cy) then return false end
+
+    if blob_map[cx][cy] then return false end
+
+    return true
+  end
+
+
+  local function neighbor_blob(cx, cy, dir)
+    cx, cy = geom.nudge(cx, cy, dir)
+
+    if not is_valid(cx, cy) then return nil end
+
+    return blob_map[cx][cy]
+  end
+
+
+  local function set_cell(cx, cy, id)
+    assert(is_free(cx, cy))
+
+    blob_map[cx][cy] = id
+
+    sizes[id] = (sizes[id] or 0) + 1
+  end
+
+
+  local function try_set_cell(cx, cy, id)
+    if is_free(cx, cy) then
+      set_cell(cx, cy, id)
+    end
+  end
+
+
+  local function spawn_blobs()
+    for cx = 1, info.W, 3 do
+    for cy = 1, info.H, 2 do
+      if rand.odds(5) then continue end
+
+      local dx = rand.irange(0, 2)
+      local dy = rand.irange(0, 1)
+
+      if not is_free(cx+dx, cy+dy) then
+        continue
+      end
+
+      set_cell(cx+dx, cy+dy, cur_blob_id)
+
+      cur_blob_id = cur_blob_id + 1
+    end
+    end
+
+    assert(cur_blob_id > 1)
+  end
+
+
+  local function growth_spurt_one()
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      local id = blob_map[cx][cy]
+      if not id then continue end
+      if sizes[id] >= 2 then continue end
+
+      if rand.odds(20) then
+        local dx = rand.sel(50, -1, 1)
+        local dy = rand.sel(50, -1, 1)
+
+        try_set_cell(cx+dx, cy   , id)
+        try_set_cell(cx   , cy+dy, id)
+        try_set_cell(cx+dx, cy+dy, id)
+        continue
+      end
+
+      local x_dir = rand.irange(-2, 2)
+      local y_dir = rand.irange(-2, 2)
+
+      if x_dir <=  1 then try_set_cell(cx-1, cy, id) end
+      if x_dir >= -1 then try_set_cell(cx+1, cy, id) end
+
+      if y_dir <=  1 then try_set_cell(cx, cy-1, id) end
+      if y_dir >= -1 then try_set_cell(cx, cy+1, id) end
+    end
+    end
+  end
+
+
+  local function try_grow_at_cell(cx, cy, emergency)
+    local best
+    local best_cost = 9e9
+
+    for dir = 2,8,2 do
+      local id = neighbor_blob(cx, cy, dir)
+      if not id then continue end
+
+      if dir != grow_dirs[dir] then continue end
+
+      local cost = sizes[id] + gui.random() * 0.1
+
+      if cost < best_cost then
+        best = id
+        best_cost = cost
+      end
+    end
+
+    if best then
+      set_cell(cx, cy, best)
+    end
+  end
+
+
+  local function normal_grow_pass(emergency)
+    -- this pass fills in the gaps
+
+    for i = 1, cur_blob_id do
+      grow_dirs[i] = rand.dir()
+    end
+
+    local all_done = true
+
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      if is_free(cx, cy) then
+        all_done = false
+
+        try_grow_at_cell(cx, cy, emergency)
+      end
+    end
+    end
+
+    return all_done
+  end
+
+
+  local function char_for_cell(cx, cy)
+    if info.blocks[cx][cy] != FL then return " " end
+
+    local id = blob_map[cx][cy]
+
+    if not id then return "." end
+
+    id = 1 + (id - 1) % 36
+
+    return string.sub("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", id, id)
+  end
+
+
+  local function dump_blobs()
+    gui.debugf("Blob map:\n")
+
+    for cy = info.H, 1, -1 do
+      local line = ""
+
+      for cx = 1, info.W do
+        line = line .. char_for_cell(cx, cy)
+      end
+
+      gui.debugf("| %s\n", line)
+    end
+
+    gui.debugf("\n")
+  end
+
+
+  ---| Cave_create_blobs |---
+
+  spawn_blobs()
+
+  growth_spurt_one()
+
+  for loop = 1, 10 do
+    if normal_grow_pass() then
+      break;
+    end
+  end
+
+  for loop = 1, -900 do
+    if normal_grow_pass("emergency") then
+      break;
+    end
+  end
+
+  dump_blobs()
+end
+
+
+
 function Cave_generate_cave(R, info)
 
   local is_lake = (info.liquid_mode == "lake")
@@ -3107,6 +3314,8 @@ function Cave_build_a_scenic_vista(area)
 
     temp_install_floor(FL)
 
+Cave_create_blobs(info, FL)
+
     -- TEMP RUBBISH
     info.area.floor_h = FL.floor_h
   end
@@ -3165,7 +3374,7 @@ function Cave_build_a_scenic_vista(area)
 
   Cave_map_usable_area(info)
 
-  if room.has_river or not LEVEL.liquid then
+  if true then ---  room.has_river or not LEVEL.liquid then
     make_simple_fence()
   else
     make_watery_drop()
