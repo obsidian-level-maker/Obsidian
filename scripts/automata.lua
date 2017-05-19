@@ -1092,7 +1092,22 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
     end
     end
 
-    assert(total_blobs > 1)
+    if total_blobs > 0 then return end
+
+    -- in the unlikely event that no blobs were created, force
+    -- the creation of one now
+
+    for cx = 1, W, step_x do
+    for cy = 1, H, step_y do
+      if is_free(cx, cy) then
+        total_blobs = total_blobs + 1
+        set_cell(cx, cy, total_blobs)
+        return
+      end
+    end
+    end
+
+    error("create_blobs: no usable cells")
   end
 
 
@@ -1234,7 +1249,7 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
   end
 
 
-  ---| Cave_create_blobs |---
+  ---| create_blobs |---
 
   spawn_blobs()
 
