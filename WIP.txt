@@ -32,8 +32,6 @@ Hallway System
    e.g. BLOOD1 for ceiling/floor in hell
    e.g. SKSPINE2 for wall in hell
 
--  not considered "wallish" (no triangular filler) ?
-
 
 -  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]
@@ -90,15 +88,14 @@ Scenic Borders
    - fenced off pools from V7-WEIRD
    - fancy fences
 
--  block sound between two "simple_fence" areas
-
 -  block travel 2/3 seeds into simple fence (archvile jumps etc)
+
 
 
 PARKS
 -----
 
-!!  inhibit items in bits of floor cut-off by river
++  inhibit items in bits of floor cut-off by river
 
 +  sky handling:
    -  ensure the heighest FLOOR contributes to zone.sky_h
