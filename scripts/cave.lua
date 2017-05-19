@@ -3176,7 +3176,7 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
   Cave_map_usable_area(info)
 
-  if room.has_river or not LEVEL.liquid then
+  if room.has_river or not LEVEL.liquid or rand.odds(25) then
     make_simple_fence()
   else
     make_watery_drop()
@@ -3192,26 +3192,53 @@ function Cave_join_scenic_borders(junc)
   -- Note: the zones will always be the same here.
   --
 
+  local function lower_floors(A, B)
+    A.floor_h = math.min(A.floor_h, B.floor_h)
+    B.floor_h = A.floor_h
+  end
+
+
+  local function raise_floors(A, B)
+    A.floor_h = math.max(A.floor_h, B.floor_h)
+    B.floor_h = A.floor_h
+  end
+
+
+  ---| Cave_join_scenic_borders |---
+
   local A = junc.A1
   local B = junc.A2
 
   if A.border_type == "simple_fence" and B.border_type == "simple_fence" then
-    -- nothing needed
+    local diff_h = B.fence_FLOOR.floor_h - A.fence_FLOOR.floor_h
 
-    -- TODO : if heights are close, increase to maximum
+    -- if heights are close, increase lower one to match the other
+    if math.abs(diff_h) <= 32 and rand.odds(66) then
+      raise_floors(A.fence_FLOOR, B.fence_FLOOR)
+    end
+
     return
   end
 
   if A.border_type == "watery_drop" and B.border_type == "watery_drop" then
-    A.liquid_FLOOR.floor_h = math.min(A.liquid_FLOOR.floor_h, B.liquid_FLOOR.floor_h)
-    B.liquid_FLOOR.floor_h = A.liquid_FLOOR.floor_h
-
-    A.cliff_FLOOR.floor_h = math.max(A.cliff_FLOOR.floor_h, B.cliff_FLOOR.floor_h)
-    B.cliff_FLOOR.floor_h = A.cliff_FLOOR.floor_h
+    lower_floors(A.liquid_FLOOR, B.liquid_FLOOR)
+    raise_floors(A. cliff_FLOOR, B. cliff_FLOOR)
     return
   end
 
-  -- TODO : simple <---> watery
+  if (A.border_type == "watery_drop" and B.border_type == "simple_fence") or
+     (B.border_type == "watery_drop" and A.border_type == "simple_fence")
+  then
+    if A.border_type == "watery_drop" then A, B = B, A end
+
+    -- tend to make nothing, but check that fence is not below the liquid
+    if rand.odds(75) and
+       A.fence_FLOOR.floor_h > B.liquid_FLOOR.floor_h + 32
+    then
+       A.fence_FLOOR.floor_mat = B.cliff_FLOOR.floor_mat
+       return
+    end
+  end
 
   -- in all other cases, make a wall
   Junction_make_wall(junc)
