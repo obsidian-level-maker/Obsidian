@@ -680,7 +680,7 @@ function Cave_create_blobs(info, FL)
   end
 
 
-  local function dump_blobs()
+  local function dump_blob_map()
     gui.debugf("Blob map:\n")
 
     for cy = info.H, 1, -1 do
@@ -691,6 +691,25 @@ function Cave_create_blobs(info, FL)
       end
 
       gui.debugf("| %s\n", line)
+    end
+
+    gui.debugf("\n")
+  end
+
+
+  local function dump_blob_info()
+    gui.debugf("Blob sizes:\n")
+
+    for id = 1, total_blobs, 9 do
+      local line = ""
+
+      for di = 0, 8 do
+        if id + di <= total_blobs then
+          line = line .. "  " .. string.format("%2d", sizes[id + di])
+        end
+      end
+
+      gui.debugf("%s\n", line)
     end
 
     gui.debugf("\n")
@@ -717,7 +736,8 @@ function Cave_create_blobs(info, FL)
     end
   end
 
-  dump_blobs()
+  dump_blob_map()
+  dump_blob_info()
 end
 
 
