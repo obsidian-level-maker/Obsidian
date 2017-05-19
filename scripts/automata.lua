@@ -1075,12 +1075,12 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
 
 
   local function spawn_blobs()
-    for cx = 1, W, 3 do
-    for cy = 1, H, 2 do
+    for cx = 1, W, step_x do
+    for cy = 1, H, step_y do
       if rand.odds(5) then continue end
 
-      local dx = rand.irange(0, 2)
-      local dy = rand.irange(0, 1)
+      local dx = rand.irange(0, step_x - 1)
+      local dy = rand.irange(0, step_y - 1)
 
       if not is_free(cx+dx, cy+dy) then
         continue
@@ -1240,7 +1240,9 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
 
   growth_spurt_one()
 
-  for loop = 1, 200 do
+  local MAX_LOOP = 200
+
+  for loop = 1, MAX_LOOP do
     normal_grow_pass()
     normal_grow_pass()
     normal_grow_pass()
@@ -1249,9 +1251,13 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
       break;
     end
 
-    if loop >= 200 then
+    if loop >= MAX_LOOP then
       error("blob creation failed!")
     end
+  end
+
+  if min_size then
+    -- TODO : handle small blobs
   end
 
   dump_blob_map()
