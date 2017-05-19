@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2009-2014 Andrew Apted
+--  Copyright (C) 2009-2017 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1200,6 +1200,67 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
   end
 
 
+  local function merge_blobs(id1, id2)
+    -- merges second one into first one
+
+    for cx = 1, W do
+    for cy = 1, H do
+      if blob_map[cx][cy] == id2 then
+         blob_map[cx][cy] = id1
+      end
+    end
+    end
+
+    sizes[id1] = sizes[id1] + sizes[id2]
+    sizes[id2] = -1
+  end
+
+
+  local function candidate_to_merge(id)
+    local best
+    local best_cost = 9e9
+
+    local seen = {}
+
+    for cx = 1, W do
+    for cy = 1, H do
+      if blob_map[cx][cy] != id then continue end
+
+      for dir = 2,8,2 do
+        local nb = neighbor_blob(cx, cy, dir)
+
+        if nb and nb != id and sizes[nb] > 0 and not seen[nb] then
+          seen[nb] = true
+
+          local cost = sizes[nb] + gui.random() * 0.1
+
+          if cost < best_cost then
+            best = nb
+            best_cost = cost
+          end
+        end
+      end -- dir
+
+    end -- cx, cy
+    end
+
+    return best
+  end
+
+
+  local function merge_small_pass()
+    for id = 1, total_blobs do
+      if sizes[id] < min_size then
+        local nb = candidate_to_merge(id)
+
+        if nb then
+          merge_blobs(nb, id)
+        end
+      end
+    end
+  end
+
+
   local function char_for_cell(cx, cy)
     if grid.cells[cx][cy] == nil then return " " end
 
@@ -1272,7 +1333,9 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
   end
 
   if min_size then
-    -- TODO : handle small blobs
+    for loop = 1, 4 do
+      merge_small_pass()
+    end
   end
 
   dump_blob_map()
