@@ -7,14 +7,6 @@ OBLIGE TO-DO
   RECENT STUFF
 ----------------------------------------------
 
-*  ensure player cannot climb over fences or windows due to a
-   nearby start pad, teleport pad (etc), and get stuck in a
-   future area of the map
-
-*  when a secret exit cannot be placed in a concealed spot,
-   add a switch in a normal spot somewhere
-
-
 +  ability to truly add new textures
    -  use TX_START/TX_END in ZDoom ports
    -  use TEXTURES2 + PNAMES in other ports

@@ -7,9 +7,9 @@ PREFABS.Exit_plutonia =
   file   = "exit/plut_pad.wad"
   map    = "MAP01"
 
+  game   = "plutonia"
   rank   = 2
   prob   = 50
-  game   = "plutonia"
 
   where  = "point"
 }

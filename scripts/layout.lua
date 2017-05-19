@@ -232,10 +232,6 @@ function Layout_spot_for_wotsit(R, kind, required)
       if chunk.kind != "closet" then return -1 end
     end
 
-    if kind == "SECRET_EXIT_CLOSET" then
-      if chunk.kind != "closet" then return -1 end
-    end
-
     -- when we have alternate start rooms, cannot use closets
     if kind == "START" and R.player_set then
       if chunk.kind == "closet" then return -1 end
@@ -256,6 +252,11 @@ function Layout_spot_for_wotsit(R, kind, required)
     -- the exit room generally has a closet pre-booked
     if kind == "EXIT" and chunk.prefer_usage == "goal" then
       score = score + 200
+    end
+
+    -- really really want a secret exit in a closet
+    if kind == "SECRET_EXIT" and chunk.kind == "closet" then
+      score = score + 500
     end
 
     if kind == "TELEPORTER" then
@@ -497,12 +498,10 @@ end
 function Layout_place_hub_gates()
   -- this also does secret exit closets
 
-  -- TODO : place secret exit closets
-
-  local function num_free_closets(R)
+  local function num_free_chunks(list)
     local count = 0
 
-    each chunk in R.closets do
+    each chunk in list do
       if chunk.content == nil then
         count = count + 1
       end
@@ -512,17 +511,17 @@ function Layout_place_hub_gates()
   end
 
 
-  local function eval_exit_room(R)
-    local spots = num_free_closets(R)
+  local function eval_closet_room(R)
+    local free_spots = num_free_chunks(R.closets)
 
-    if spots == 0 then return -1 end
+    if free_spots == 0 then return -1 end
 
-    local score = 1
+    local score = 0
 
     if R.is_secret then
-      score = score + 200
+      score = 300
     elseif not (R.is_start or R.is_exit) then
-      score = score + 100
+      score = 200
     end
 
     -- prefer it near the end of the map
@@ -532,23 +531,59 @@ function Layout_place_hub_gates()
       score = score + 20
     end
 
-    -- try to leave some closets for weapons and items
-    if spots > (#R.weapons + #R.items) then
+    -- prefer leaving some closets for other things
+    score = score + math.clamp(1, free_spots, 7)
+
+    -- tie breaker
+    return score + gui.random() * 0.5
+  end
+
+
+  local function eval_free_standing_room(R)
+    local free_spots = num_free_chunks(R.floor_chunks)
+
+    if free_spots == 0 then return -1 end
+
+    local score = 0
+
+    if R.is_secret then
+      score = 300
+    elseif not (R.is_start or R.is_exit) then
+      score = 200
+    elseif #R.goals == 0 then
+      score = 100
+    end
+
+    -- check number of spots against what will be needed
+    -- [ we reach this function due to a dearth of closets.... ]
+    local need_spots = #R.goals + #R.teleporters
+
+    if R.is_start then need_spots = need_spots + 1 end
+
+    if free_spots > need_spots then
+      score = score + 50
+    end
+
+    -- prefer it near the end of the map
+    if R.lev_along > 0.7 then
+      score = score + 20
+    elseif R.lev_along > 0.4 then
       score = score + 10
     end
 
+    -- prefer leaving some closets for other things
+    score = score + math.clamp(1, free_spots, 7)
+
     -- tie breaker
-    return score + gui.random()
+    return score + gui.random() * 0.5
   end
 
 
   local function make_secret_exit(R)
     gui.printf("Secret Exit: %s (in a closet)\n", R.name)
 
-    local chunk = Layout_spot_for_wotsit(R, "SECRET_EXIT_CLOSET")
-
-    -- should not fail, as our eval function detects free closets
-    assert(chunk)
+    -- should not fail, as our eval function detects free spots
+    local chunk = Layout_spot_for_wotsit(R, "SECRET_EXIT", "required")
 
     chunk.content = "SECRET_EXIT"
 
@@ -557,12 +592,34 @@ function Layout_place_hub_gates()
   end
 
 
-  local function add_secret_exit()
+  local function add_secret_closet()
     local best_R
     local best_score = 0
 
     each R in LEVEL.rooms do
-      local score = eval_exit_room(R)
+      local score = eval_closet_room(R)
+
+      if score > best_score then
+        best_R = R
+        best_score = score
+      end
+    end
+
+    if not best_R then
+      return false
+    end
+
+    make_secret_exit(best_R)
+    return true
+  end
+
+
+  local function add_secret_switch()
+    local best_R
+    local best_score = 0
+
+    each R in LEVEL.rooms do
+      local score = eval_free_standing_room(R)
 
       if score > best_score then
         best_R = R
@@ -582,7 +639,10 @@ function Layout_place_hub_gates()
   ---| Layout_place_hub_gates |---
 
   if LEVEL.need_secret_exit then
-    add_secret_exit()
+    if not add_secret_closet() then
+      -- invoke plan C : make a secret switch somewhere
+      add_secret_switch()
+    end
   end
 end
 
