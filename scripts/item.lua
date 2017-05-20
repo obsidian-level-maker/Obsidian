@@ -131,15 +131,18 @@ end
 
 
 function Player_give_room_stuff(R)
+  -- give weapons, plus any ammo they come with
   if not PARAM.hexen_weapons then
     each name in R.weapons do
       Player_give_weapon(name)
+
       local weap = GAME.WEAPONS[name]
       if weap and weap.give then
         each CL,hmodel in LEVEL.hmodels do
           Player_give_stuff(hmodel, weap.give)
         end
       end
+
       EPISODE.seen_weapons[name] = 1
     end
   end
@@ -149,6 +152,18 @@ function Player_give_room_stuff(R)
     each name in R.items do
       local info = GAME.NICE_ITEMS[name] or GAME.PICKUPS[name]
       if info and info.give then
+        each CL,hmodel in LEVEL.hmodels do
+          Player_give_stuff(hmodel, info.give)
+        end
+      end
+    end
+  end
+
+  -- handle storage rooms too
+  if R.storage_items then
+    each pair in R.storage_items do
+      local info = assert(pair.item)
+      if info.give then
         each CL,hmodel in LEVEL.hmodels do
           Player_give_stuff(hmodel, info.give)
         end
