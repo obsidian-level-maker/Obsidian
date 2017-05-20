@@ -18,12 +18,13 @@
 --
 -- id          : editor number used to place item on the map
 --
--- add_prob    : probabiliiy of adding as a general pickup [absent = never]
+-- add_prob    : chance of adding as a general pickup [absent = never]
 -- start_prob  : if present, use instead of add_prob in start rooms
 -- crazy_prob  : if present, use instead of add_prob in "crazy" mode
 --
--- closet_prob : chance of using in a small secret closet
--- secret_prob : chance of using in a large secret room
+-- closet_prob  : chance of using in a small secret closet
+-- secret_prob  : chance of using in a large secret room
+-- storage_prob : chance of using in a storage room
 --
 -- level       : how far along (over episode) it should appear (1..9)
 --
@@ -66,6 +67,7 @@ DOOM.PICKUPS =
     add_prob = 120
     closet_prob = 20
     secret_prob = 5
+    storage_prob = 80
     give = { {health=25} }
   }
 
@@ -135,6 +137,8 @@ DOOM.PICKUPS =
     add_prob = 40
     closet_prob = 20
     secret_prob = 5
+    storage_prob = 20
+    storage_qty  = 2
     give = { {ammo="rocket",count=5} }
   }
 
@@ -143,6 +147,7 @@ DOOM.PICKUPS =
     id = 2047
     kind = "ammo"
     add_prob = 20
+    closet_prob = 20
     cluster = { 2,5 }
     give = { {ammo="cell",count=20} }
   }
@@ -153,18 +158,19 @@ DOOM.PICKUPS =
     kind = "ammo"
     rank = 2
     add_prob = 40
-    closet_prob = 20
     secret_prob = 5
+    storage_prob = 40
     give = { {ammo="cell",count=100} }
   }
 
-
+  --
   -- NOTES:
   --
   -- Armor (all types) is modelled as health, because it merely
   -- saves the player's health when you are hit with damage.
-  -- The BLUE jacket saves 50% of damage, hence it is roughly
-  -- equivalent to 100 units of health.
+  -- For example, the BLUE jacket saves 50% of damage, hence
+  -- it is roughly equivalent to 100 units of health.
+  --
 }
 
 
@@ -200,9 +206,9 @@ DOOM.NICE_ITEMS =
   {
     id = 2013
     kind = "health"
-    add_prob = 10
-    start_prob = 5
-    closet_prob = 5
+    add_prob = 5
+    start_prob = 2
+    closet_prob = 2
     secret_prob = 40
     give = { {health=150} }
   }
@@ -290,7 +296,7 @@ DOOM.NICE_ITEMS =
     id = 83
     kind = "health"
     level = 3
-    add_prob = 2
+    add_prob = 1
     secret_prob = 20
     give = { {health=200} }
   }
