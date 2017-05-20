@@ -3213,7 +3213,7 @@ function Cave_join_scenic_borders(junc)
     local diff_h = B.fence_FLOOR.floor_h - A.fence_FLOOR.floor_h
 
     -- if heights are close, increase lower one to match the other
-    if math.abs(diff_h) <= 32 and rand.odds(66) then
+    if math.abs(diff_h) <= 32 and rand.odds(65) then
       raise_floors(A.fence_FLOOR, B.fence_FLOOR)
     end
 
@@ -3231,10 +3231,8 @@ function Cave_join_scenic_borders(junc)
   then
     if A.border_type == "watery_drop" then A, B = B, A end
 
-    -- tend to make nothing, but check that fence is not below the liquid
-    if rand.odds(75) and
-       A.fence_FLOOR.floor_h > B.liquid_FLOOR.floor_h + 32
-    then
+    -- tend to make nothing, but ensure the fence is not below the liquid
+    if A.fence_FLOOR.floor_h >= B.liquid_FLOOR.floor_h + 32 then
        A.fence_FLOOR.floor_mat = B.cliff_FLOOR.floor_mat
        return
     end
