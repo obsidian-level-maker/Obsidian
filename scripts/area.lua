@@ -163,11 +163,10 @@
 
     edges : list(EDGE)
 
-    walls[DIR]  -- used for filling corner gaps
+     walls[DIR]  -- used for filling corner gaps
+    fences[DIR]  --
 
     inner_point : AREA  -- usually NIL
-
-    delta_x, delta_y    -- usually NIL, used for mountains
 --]]
 
 
@@ -761,6 +760,7 @@ function Corner_init()
       junctions = {}
       edges = {}
       walls = {}
+      fences = {}
     }
 
     LEVEL.area_corners[cx][cy] = CORNER
@@ -903,16 +903,62 @@ function Corner_mark_walls(E)
 
 --  stderrf("Corner_mark_walls @ (%d %d)  E=%s dir:%d\n", cx, cy, E.kind, E.dir)
 
-    local wall_dir = sel(pass == 1, along_dir, 10 - along_dir)
+    local dir = sel(pass == 1, along_dir, 10 - along_dir)
 
-    if not corner.walls[wall_dir] then
-      corner.walls[wall_dir] = {}
+    if not corner.walls[dir] then
+      corner.walls[dir] = {}
     end
 
     if pass == 1 then
-      corner.walls[wall_dir].R = wall_mat
+      corner.walls[dir].R = wall_mat
     else
-      corner.walls[wall_dir].L = wall_mat
+      corner.walls[dir].L = wall_mat
+    end
+
+    cx = cx + dx * E.long
+    cy = cy + dy * E.long
+  end
+end
+
+
+
+function Corner_mark_fences(E)
+  -- compute the "left most" corner coord
+  local cx = E.S.sx
+  local cy = E.S.sy
+
+  local E2 = E
+  if E2.kind == "nothing" then E2 = assert(E2.peer) end
+  assert(E2.kind == "fence")
+
+  local fence_mat = assert(E2.fence_mat)
+  local fence_z   = assert(E2.fence_top_z)
+
+  if E.dir == 2 or E.dir == 6 or E.dir == 1 or E.dir == 3 then cx = cx + 1 end
+  if E.dir == 8 or E.dir == 6 or E.dir == 9 or E.dir == 3 then cy = cy + 1 end
+
+  -- compute delta and # of corners to visit
+  local along_dir = geom.RIGHT[E.dir]
+  local dx, dy = geom.delta(along_dir)
+
+  -- iterate over both corners of edge (left side then right side)
+  for pass = 1, 2 do
+    local corner = Corner_lookup(cx, cy)
+
+--  stderrf("Corner_mark_fences @ (%d %d)  E=%s dir:%d\n", cx, cy, E.kind, E.dir)
+
+    local dir = sel(pass == 1, along_dir, 10 - along_dir)
+
+    if not corner.fences[dir] then
+      corner.fences[dir] = {}
+    end
+
+    if pass == 1 then
+      corner.fences[dir].R   = fence_mat
+      corner.fences[dir].R_z = fence_z
+    else
+      corner.fences[dir].L   = fence_mat
+      corner.fences[dir].L_z = fence_z
     end
 
     cx = cx + dx * E.long

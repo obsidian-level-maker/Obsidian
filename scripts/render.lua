@@ -25,6 +25,8 @@ function Render_edge(E)
 
   if Edge_is_wallish(E) then
     Corner_mark_walls(E)
+  elseif Edge_is_fencish(E) then
+    Corner_mark_fences(E)
   end
 
   if E.kind == "nothing" or E.kind == "ignore" then
@@ -701,7 +703,7 @@ function Render_corner(cx, cy)
   end
 
 
-  local function init_analysis()
+  local function init_wall_analysis()
     analysis = {}
 
     each dir in geom.ALL_DIRS do
@@ -714,7 +716,20 @@ function Render_corner(cx, cy)
   end
 
 
-  local function build_filler_normal(dir, L_tex, R_tex)
+  local function init_fence_analysis()
+    analysis = {}
+
+    each dir in geom.ALL_DIRS do
+      if corner.fences[dir] then
+        analysis[dir] = corner.fences[dir]
+      else
+        analysis[dir] = {}
+      end
+    end
+  end
+
+
+  local function build_filler_normal(dir, L_tex, top_z)
     -- builds a triangle at the given corner.
 
     local x = corner.x
@@ -726,15 +741,20 @@ function Render_corner(cx, cy)
     ax = ax * 16 ; ay = ay * 16
     bx = bx * 16 ; by = by * 16
 
-    local w_brush = brushlib.triangle(x, y, x+ax, y+ay, x+bx, y+by)
+    local brush = brushlib.triangle(x, y, x+ax, y+ay, x+bx, y+by)
 
-    brushlib.set_mat(w_brush, L_tex)
+    if top_z then
+      brushlib.add_top(brush, top_z)
+      brushlib.set_y_offset(brush, 0)
+    end
 
-    Trans.brush(w_brush)
+    brushlib.set_mat(brush, L_tex, L_tex)
+
+    Trans.brush(brush)
   end
 
 
-  local function build_filler_sharp(dir, L_tex, R_tex)
+  local function build_filler_sharp(dir, L_tex, top_z)
     -- builds a wedge shape suitable for a sharp-ish corner.
     -- 'dir' parameter is a side (2, 4, 6 or 8).
 
@@ -744,7 +764,7 @@ function Render_corner(cx, cy)
     local nx, ny = geom.delta(dir)
     local ax, ay = geom.delta(geom.LEFT[dir])
 
-    local w_brush =
+    local brush =
     {
       { x = x + ax*16, y = y + ay*16 }
       { x = x - ax*16, y = y - ay*16 }
@@ -753,9 +773,14 @@ function Render_corner(cx, cy)
       { x = x + ax*8 + nx*8, y = y + ay*8 + ny*8 }
     }
 
-    brushlib.set_mat(w_brush, L_tex)
+    if top_z then
+      brushlib.add_top(brush, top_z)
+      brushlib.set_y_offset(brush, 0)
+    end
 
-    Trans.brush(w_brush)
+    brushlib.set_mat(brush, L_tex, L_tex)
+
+    Trans.brush(brush)
   end
 
 
@@ -798,17 +823,26 @@ function Render_corner(cx, cy)
       L_tex = "METAL"
     end
 
+    -- handle fence heights
+    local L_fence_z = analysis[L_dir].R_z
+    local R_fence_z = analysis[R_dir].L_z
+
+    if L_fence_z or R_fence_z then
+      assert(L_fence_z and R_fence_z)
+      L_fence_z = math.min(L_fence_z, R_fence_z)
+    end
+
     if is_sharp then
-      build_filler_sharp(dir, L_tex)
+      build_filler_sharp(dir, L_tex, L_fence_z)
     else
-      build_filler_normal(dir, L_tex)
+      build_filler_normal(dir, L_tex, L_fence_z)
     end
 
     return true
   end
 
 
-  local function polish_walls()
+  local function polish_walls(do_fence)
     --
     -- Find gaps where two walls meet at a corner, and fill that gap
     -- (producing a nice polished finish).
@@ -824,9 +858,19 @@ function Render_corner(cx, cy)
     --      gap needs to be filled at the corner.
     --
 
-    if table.empty(corner.walls) then return end
+    if do_fence then
+      if table.empty(corner.fences) then return end
 
-    init_analysis()
+      -- don't fill fence gaps if there is a wall here
+      if not table.empty(corner.walls) then return end
+
+      init_fence_analysis()
+
+    else
+      if table.empty(corner.walls) then return end
+
+      init_wall_analysis()
+    end
 
     each dir in geom.CORNERS do
       if detect_gap(dir, 1, 1) or
@@ -858,6 +902,7 @@ function Render_corner(cx, cy)
 
   if corner.kind == nil or corner.kind == "nothing" then
     polish_walls()
+    polish_walls("do_fence")
 
   elseif corner.kind == "post" then
     make_post()

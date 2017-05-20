@@ -1166,6 +1166,17 @@ function Edge_wallish_tex(E)
 end
 
 
+function Edge_is_fencish(E)
+  if E.kind == "fence" then return true end
+
+  if E.peer and E.kind == "nothing" then
+    if E.peer.kind == "fence" then return true end
+  end
+
+  return false
+end
+
+
 ------------------------------------------------------------------------
 
 
