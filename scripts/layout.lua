@@ -249,6 +249,9 @@ function Layout_spot_for_wotsit(R, kind, required)
 
     local score = (chunk.sig_dist or 0) * 10
 
+    -- tie breaker
+    score = score + gui.random() ^ 2
+
     -- the exit room generally has a closet pre-booked
     if kind == "EXIT" and chunk.prefer_usage == "goal" then
       score = score + 200
@@ -259,33 +262,6 @@ function Layout_spot_for_wotsit(R, kind, required)
       score = score + 500
     end
 
-    if kind == "TELEPORTER" then
-      if chunk.kind == "closet" then
-        score = score + 27
-      end
-
-      if chunk.sw >= 2 or chunk.sh >= 2 then
-        score = score + 7
-      end
-
-    else
-      if chunk.sw >= 2 and chunk.sh >= 2 then
-        score = score + 17
-
-        if chunk.is_straddler then
-          if kind == "EXIT"  then score = score + 25 end
-          if kind == "START" then score = score + 25 end
-          if kind == "KEY"   then score = score +  5 end
-        end
-      elseif chunk.sw >= 2 or chunk.sh >= 2 then
-        score = score + 5
-      end
-    end
-
-    if chunk.prefer_usage != kind then
-      score = score / 3
-    end
-
     -- in caves, prefer spots which do not touch the room edge,
     -- and prefer not to use closets (which don't look good).
     if R.is_cave then
@@ -294,10 +270,30 @@ function Layout_spot_for_wotsit(R, kind, required)
       elseif not chunk.touches_wall then
         score = score * 3
       end
+
+      return score
     end
 
-    -- tie breaker
-    return score + gui.random() ^ 2
+    -- in general, prefer closets of free-standing spots
+    if chunk.kind == "closet" then
+      score = score + 27
+    end
+
+    if chunk.sw >= 2 or chunk.sh >= 2 then
+      score = score + 7
+    end
+
+    if chunk.is_straddler then
+      if kind == "EXIT"  then score = score + 25 end
+      if kind == "START" then score = score + 25 end
+      if kind == "KEY"   then score = score +  5 end
+    end
+
+    if chunk.prefer_usage and chunk.prefer_usage != kind then
+      score = score / 3
+    end
+
+    return score
   end
 
 
