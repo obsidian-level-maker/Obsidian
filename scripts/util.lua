@@ -358,6 +358,8 @@ function table.tostr(t, depth, prefix)
     result = result .. prefix .. "  " .. tostring(k) .. " = "
     if type(v) == "table" and depth > 1 then
       result = result .. table.tostr(v, depth-1, prefix .. "  ")
+    elseif type(v) == "table" and v.name then
+      result = result .. v.name
     else
       result = result .. tostring(v)
     end
