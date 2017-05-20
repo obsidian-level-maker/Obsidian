@@ -1414,6 +1414,10 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       prob = prob / 4
     end
 
+    -- stair direction check
+    if rule.z_dir == "up"   and R.trunk.stair_z_dir < 0 then return 0 end
+    if rule.z_dir == "down" and R.trunk.stair_z_dir > 0 then return 0 end
+
     -- environment checks...
     if (rule.env or "any") != "any" then
       -- FIXME: support "!xxx" properly [ see prefab code ]
