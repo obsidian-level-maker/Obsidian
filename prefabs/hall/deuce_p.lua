@@ -7,7 +7,7 @@ PREFABS.Hallway_deuce_p1 =
   file   = "hall/deuce_p.wad"
   map    = "MAP01"
 
-  deuce  = "deuce"
+  group  = "deuce"
   prob   = 50
 
   where  = "seeds"
