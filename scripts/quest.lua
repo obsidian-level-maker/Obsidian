@@ -2100,7 +2100,9 @@ function Quest_nice_items()
         continue
       end
 
-      if info.add_prob then
+      local prob = info.add_prob
+
+      if prob and prob > 0 then
         pal[name] = info.add_prob
       end
     end
@@ -2124,7 +2126,8 @@ function Quest_nice_items()
       end
 
       local prob = info.start_prob or info.add_prob
-      if prob then
+
+      if prob and prob > 0 then
         pal[name] = prob
       end
     end
@@ -2182,7 +2185,9 @@ function Quest_nice_items()
         continue
       end
 
-      pal[name] = info.storage_prob
+      if info.storage_prob > 0 then
+        pal[name] = info.storage_prob
+      end
     end
 
     return pal

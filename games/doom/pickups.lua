@@ -208,7 +208,7 @@ DOOM.NICE_ITEMS =
     id = 2013
     kind = "health"
     add_prob = 5
-    start_prob = 2
+    start_prob = 0
     closet_prob = 2
     secret_prob = 40
     give = { {health=150} }
@@ -252,6 +252,7 @@ DOOM.NICE_ITEMS =
     id = 2024
     kind = "powerup"
     add_prob = 7
+    start_prob = 0
     closet_prob = 15
     time_limit = 100
   }
@@ -262,6 +263,7 @@ DOOM.NICE_ITEMS =
     kind = "powerup"
     level = 4
     add_prob = 2
+    start_prob = 0
     closet_prob = 7
     secret_prob = 7
     time_limit = 30
@@ -298,6 +300,7 @@ DOOM.NICE_ITEMS =
     kind = "health"
     level = 3
     add_prob = 1
+    start_prob = 0
     secret_prob = 20
     give = { {health=200} }
   }
