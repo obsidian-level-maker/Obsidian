@@ -913,6 +913,8 @@ GROW_STAIRPAIR_5 =
   prob = 120
   skip_prob = 50
 
+  z_dir = "up"
+
   structure =
   {
     ".....", "AAAAA"
@@ -921,8 +923,24 @@ GROW_STAIRPAIR_5 =
     "11...", "1111A"
     "11...", "11>>A"
   }
+}
 
----!!!  diagonals = { "1A" }
+
+GROW_STAIRPAIR_5D =
+{
+  prob = 90
+  skip_prob = 35
+
+  z_dir = "down"
+
+  structure =
+  {
+    ".....", "AAA##"
+    ".....", "^AA##"
+    ".....", "^AAAA"
+    "11...", "11AAA"
+    "11...", "11>>A"
+  }
 }
 
 
