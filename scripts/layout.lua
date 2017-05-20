@@ -289,8 +289,8 @@ function Layout_spot_for_wotsit(R, kind, required)
       if kind == "KEY"   then score = score +  5 end
     end
 
-    if chunk.prefer_usage and chunk.prefer_usage != kind then
-      score = score / 3
+    if chunk.prefer_usage and chunk.prefer_usage == kind then
+      score = score * 2
     end
 
     return score
