@@ -612,8 +612,10 @@ function Item_distribute_stats()
   local function get_earlier_rooms(R)
     local list = {}
 
-    local N = R
     local ratio = 1.0
+    local total = 0.0
+
+    local N = R
 
     while N.entry_conn do
       N = N.entry_conn:other_room(N)
@@ -625,9 +627,10 @@ function Item_distribute_stats()
       if N.is_hallway then continue end
 
       -- give more in larger rooms
-      local factor = (N.svolume ^ 0.7)
+      local val = ratio * (N.svolume ^ 0.7)
 
-      table.insert(list, { room=N, ratio=ratio * factor })
+      table.insert(list, { room=N, ratio=val })
+      total = total + val
 
       ratio = ratio * 0.7
     end
@@ -638,6 +641,14 @@ function Item_distribute_stats()
       N = R.entry_conn:other_room(N)
 
       table.insert(list, { room=N, ratio=1.0 })
+      total = 1.0
+    end
+
+    -- adjust ratio values to be in range 0.0 - 1.0
+    if total > 0 then
+      each loc in list do
+        loc.ratio = loc.ratio / total
+      end
     end
 
     return list
@@ -680,17 +691,8 @@ function Item_distribute_stats()
     -- no stats?
     if not R.item_stats then return end
 
-    local list  = get_earlier_rooms(R)
-    local total = 0
-
---  gui.debugf("distribute_from_room %s : locs:%d\n", R.name, #list)
-
-    each loc in list do
-      total = total + loc.ratio
-    end
-
-    each loc in list do
-      distribute_to_room(R, loc.room, loc.ratio / total)
+    each loc in get_earlier_rooms(R) do
+      distribute_to_room(R, loc.room, loc.ratio)
     end
   end
 
