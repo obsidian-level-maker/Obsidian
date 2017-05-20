@@ -462,6 +462,24 @@ function Layout_place_importants(R, imp_pass)
   end
 
 
+  local function rank_for_weapon(name)
+    local info = GAME.WEAPONS[name]
+    assert(info)
+
+    return info.level * 1000 + info.damage * info.rate + info.pref / 100
+  end
+
+
+  local function sort_weapons()
+    -- point of this is to assign the best spots to the biggest weaps
+
+    table.sort(R.weapons,
+        function(A, B)
+          return rank_for_weapon(A) > rank_for_weapon(B)
+        end)
+  end
+
+
   ---| Layout_place_importants |---
 
   if imp_pass == 1 then
@@ -479,6 +497,8 @@ function Layout_place_importants(R, imp_pass)
       table.append(R.weapons, LEVEL.unplaced_weapons)
       LEVEL.unplaced_weapons = {}
     end
+
+    sort_weapons()
 
     each name in R.weapons do
       add_weapon(name)
