@@ -685,7 +685,7 @@ function Junction_make_fence(junc)
     area = junc.A1
   }
 
-  junc.E2 = { kind="nothing" }
+  junc.E2 = { kind="nothing", area=junc.A2 }
 
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1
@@ -701,7 +701,7 @@ function Junction_make_railing(junc, rail_mat, block)
     area = junc.A1
   }
 
-  junc.E2 = { kind="nothing" }
+  junc.E2 = { kind="nothing", area=junc.A2 }
 
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1

@@ -309,7 +309,13 @@ function Render_edge(E)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
     end
 
+    -- choose lighting to be the minimum of each side
+    local min_light = math.min(E.area.lighting, E.peer.area.lighting)
+    Ambient_push(min_light)
+
     Fabricate(A.room, def, T, { skin })
+
+    Ambient_pop()
   end
 
 
@@ -594,7 +600,13 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, flip_it)
     end
 
+    -- choose lighting to be the minimum of each side
+    local min_light = math.min(E.area.lighting, E.peer.area.lighting)
+    Ambient_push(min_light)
+
     Fabricate(A.room, def, T, { skin })
+
+    Ambient_pop()
   end
 
 
