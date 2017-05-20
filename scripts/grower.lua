@@ -1126,19 +1126,12 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
 
   Room_set_kind(R, is_hallway, is_outdoor, is_cave)
 
---FIXME : TEMP SHITE
-  if R.id != 1 and is_outdoor and not is_cave and rand.odds(100) then
-    R.is_park = true
-  end
-
   Room_choose_size(R)
 
   -- always need at least one floor area
   -- [ except for hallways, every piece is an area ]
 
   if is_hallway then
-    R.max_hall_size = 20
-
     R.all_links = {}
 
     -- choose what kind of hallway to make
@@ -3661,7 +3654,7 @@ end
 
 
 
-function Grower_hallway_kinds()
+function Grower_hallway_kinds__UNUSED()
   --
   -- Determines kind (building, outdoor, etc) of hallways.
   -- Actually called by quest code after room visit order has been

@@ -1510,6 +1510,18 @@ function Room_set_kind(R, is_hallway, is_outdoor, is_cave)
     R.name = string.format("HALLWAY_%d", R.id)
   end
 
+  -- determine if outdoor room should be a park
+  -- TODO : exit room cannot be a park, remove that restriction
+  if is_outdoor and not (is_hallway or is_cave) and
+     R.id != 1
+  then
+    local park_prob = THEME.park_prob or 35
+
+    if rand.odds(park_prob) then
+      R.is_park = true
+    end
+  end
+
   each A in R.areas do
     A.is_outdoor = R.is_outdoor
   end

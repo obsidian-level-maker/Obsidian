@@ -2875,9 +2875,6 @@ function Quest_make_quests()
 
   Quest_big_secrets()
 
-  -- TODO : move this function here (or room.lua)
-  Grower_hallway_kinds()
-
   Quest_room_themes()
 
   -- special weapon handling for HEXEN and HEXEN II
