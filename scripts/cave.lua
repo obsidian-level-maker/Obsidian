@@ -3125,11 +3125,11 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
     -- create the liquid area --
 
-    local drop_h = rand.pick({ 128,192,256,320 })
+    local drop_h = rand.pick({ 64,128,192,256 })
 
     local FL = new_floor()
 
-    FL.floor_h   = (room.max_floor_h or room.entry_h) - drop_h
+    FL.floor_h   = (room.min_floor_h or room.entry_h) - drop_h
     FL.floor_mat = "_LIQUID"
 
     temp_install_floor(FL)
