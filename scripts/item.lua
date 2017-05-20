@@ -821,7 +821,9 @@ function Item_pickups_for_class(CL)
       local count = pair.count
 
       -- big item?
-      if (item.rank or 0) >= 2 and count == 1 and not table.empty(R.big_spots) then
+      if ((item.rank or 0) >= 2 or pair.is_storage) and count == 1 and
+         not table.empty(R.big_spots)
+      then
         local spot = grab_a_big_spot(R)
         place_item_in_spot(item.name, spot)
         continue
@@ -1010,6 +1012,11 @@ function Item_pickups_for_class(CL)
     end
 
     rand.shuffle(R.item_spots)
+
+    -- handle storage rooms
+    if R.storage_items then
+      place_item_list(R, R.storage_items)
+    end
 
     -- sort items by rank
     -- also: place large clusters before small ones

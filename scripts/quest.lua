@@ -2032,10 +2032,11 @@ function Quest_nice_items()
 
   local max_level
 
-  local  start_items
-  local normal_items
-  local closet_items
-  local secret_items
+  local   start_items
+  local  normal_items
+  local  closet_items
+  local  secret_items
+  local storage_items
 
   local ALL_ITEMS = table.merge(table.copy(GAME.NICE_ITEMS), GAME.PICKUPS)
 
@@ -2140,6 +2141,48 @@ function Quest_nice_items()
       if not info.add_prob then continue end
 
       pal[name] = info.crazy_prob or 50
+    end
+
+    return pal
+  end
+
+
+  local function have_weapon_for_ammo(ammo)
+    each name,info in GAME.WEAPONS do
+      if info.ammo != ammo then continue end
+
+      -- the player always has this weapon?
+      local classname, hmodel = next(GAME.PLAYER_MODEL)
+      assert(hmodel)
+
+      if hmodel.weapons[name] then return true end
+
+      -- the weapon will be placed on this map?
+      if table.has_elem(LEVEL.new_weapons, name) then return true end
+
+      -- the weapon is given in a secret on this map?
+      if LEVEL.secret_weapon == name then return true end
+
+      -- the weapon was given in an earlier map?
+      if not PARAM.pistol_starts and EPISODE.seen_weapons[name] then return true end
+    end
+
+    return false
+  end
+
+
+  local function storage_palette()
+    local pal = {}
+
+    each name,info in ALL_ITEMS do
+      if not info.storage_prob then continue end
+
+      -- check if we have a weapon which uses this ammo
+      if info.kind == "ammo" and not have_weapon_for_ammo(info.give[1].ammo) then
+        continue
+      end
+
+      pal[name] = info.storage_prob
     end
 
     return pal
@@ -2333,15 +2376,41 @@ function Quest_nice_items()
   end
 
 
+  local function pick_storage_item(R)
+    if table.empty(storage_items) then return end
+
+    local name = rand.key_by_probs(storage_items)
+    local info = assert(ALL_ITEMS[name])
+
+    R.storage_items = {}
+
+    for i = 1, info.storage_qty or 1 do
+      local pair =
+      {
+        item  = info
+        count = 1
+        is_storage = true
+        random = gui.random()
+      }
+
+      table.insert(R.storage_items, pair)
+    end
+
+    gui.debugf("Storage Item '%s' --> %s\n", name, R.name)
+  end
+
+
   local function find_storage_rooms()
     each R in LEVEL.rooms do
       -- this test automatically excludes hallways and secrets
       if R:is_unused_leaf() and
-         #R.items == 0 and not R.rough_exit_dist
+         #R.items == 0 and
+         not R.rough_exit_dist
       then
 stderrf("!!!!  STORAGE ROOM @ %s  !!!!\n", R.name)
-        -- TODO : store a "minor" item here,
-        --        e.g. 50 units of health or two boxes of rocket ammo
+
+        -- store a "minor" item here, e.g. 50 units of health
+        pick_storage_item(R)
       end
     end
   end
@@ -2362,6 +2431,8 @@ stderrf("!!!!  STORAGE ROOM @ %s  !!!!\n", R.name)
 
   closet_items = secret_palette("do_closet")
   secret_items = secret_palette()
+
+  storage_items = storage_palette()
 
   -- handle the secret sauces first
   visit_secret_rooms()
