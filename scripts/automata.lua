@@ -1006,6 +1006,20 @@ end
 ----------------------------------------------------------------
 
 
+function AUTOMATA_CLASS.merge_blobs(blob_map, id1, id2)
+  -- merges the second blob into the first one
+
+  for cx = 1, blob_map.w do
+  for cy = 1, blob_map.h do
+    if blob_map[cx][cy] == id2 then
+       blob_map[cx][cy] = id1
+    end
+  end
+  end
+end
+
+
+
 function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
   --
   -- Divide the given array into "blobs", which are small groups
@@ -1014,7 +1028,6 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
   -- Returns a new array, where each valid cell will contain a blob
   -- identity number.
   --
-
   -- NOTE : the input region MUST be contiguous
   --        [ if not, expect unfilled places ]
 
@@ -1201,15 +1214,7 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
 
 
   local function merge_blobs(id1, id2)
-    -- merges second one into first one
-
-    for cx = 1, W do
-    for cy = 1, H do
-      if blob_map[cx][cy] == id2 then
-         blob_map[cx][cy] = id1
-      end
-    end
-    end
+    AUTOMATA_CLASS.merge_blobs(blob_map, id1, id2)
 
     sizes[id1] = sizes[id1] + sizes[id2]
     sizes[id2] = -1
@@ -1342,6 +1347,43 @@ function AUTOMATA_CLASS.create_blobs(grid, step_x, step_y, min_size)
   dump_blob_info()
 
   return blob_map
+end
+
+
+
+function AUTOMATA_CLASS.walkify_blobs(blob_map, walk_chunks)
+  --
+  -- For each cell rectangle in the walk_chunks list,
+  -- merge any group of blobs that span that rectangle
+  -- (so that afterwards, only a single blob spans it).
+  --
+
+  local function handle_chunk(WC)
+    local cur_blob
+
+    for cx = WC.cx1, WC.cx2 do
+    for cy = WC.cy1, WC.cy2 do
+      local id = blob_map[cx][cy]
+      assert(id)
+
+      if cur_blob == nil then
+         cur_blob = id
+         continue
+      end
+
+      if cur_blob != id then
+        AUTOMATA_CLASS.merge_blobs(blob_map, cur_blob, id)
+      end
+    end
+    end
+  end
+
+
+  ---| walkify_blobs |---
+
+  each WC in walk_chunks do
+    handle_chunk(WC)
+  end
 end
 
 
