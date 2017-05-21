@@ -309,10 +309,6 @@ Various:
 Secrets
 -------
 
-+  secret fences
-
-+  support 'LEVEL.secret_weapon'
-
 -  support big (room) secret coming off a closet secret
 
 -  a secret that provides little more than another way for the
@@ -351,6 +347,9 @@ Weapon choice :
 ----------------------------------------------
   LEVEL STUFF
 ----------------------------------------------
+
++  a setting/module to create a super-megawad
+   [ will require MAPINFO to define the extra levels ]
 
 -  review Dante's ideas : doc/DANTE.txt
 
