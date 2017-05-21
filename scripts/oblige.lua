@@ -166,6 +166,7 @@ end
 
 function ob_match_game(T)
   if not T.game then return true end
+  if T.game == "any" then return true end
 
   -- special check: if required game is "doomish" then allow any
   -- of the DOOM games to match.
@@ -208,6 +209,7 @@ end
 
 function ob_match_engine(T)
   if not T.engine then return true end
+  if T.engine == "any" then return true end
 
   local engine = T.engine
   local result = true
@@ -245,6 +247,7 @@ end
 
 function ob_match_playmode(T)
   if not T.playmode then return true end
+  if T.playmode == "any" then return true end
 
   local playmode = T.playmode
   local result   = true
@@ -266,6 +269,7 @@ end
 
 function ob_match_level_theme(T)
   if not T.theme then return true end
+  if T.theme == "any" then return true end
 
   local theme  = T.theme
   local result = true
