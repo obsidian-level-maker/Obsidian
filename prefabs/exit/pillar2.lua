@@ -13,20 +13,6 @@ PREFABS.Exit_pillar2 =
 }
 
 
-PREFABS.Exit_pillar2_secret =
-{
-  template = "Exit_pillar2"
-
-  -- this kind means "an exit to a secret level"
-  kind = "secret_exit"
-
-  -- replace normal exit special with "exit to secret" special
-  line_11 = 51
-
-  tex_SW1STRTN = "SW1HOT"
-}
-
-
 PREFABS.Exit_pillar2_hell =
 {
   template = "Exit_pillar2"
@@ -47,5 +33,21 @@ PREFABS.Exit_pillar2_urban =
 
   tex_SW1STRTN = "SW1CMT"
   flat_CEIL5_2 = "FLAT8"
+}
+
+
+PREFABS.Exit_pillar2_secret =
+{
+  template = "Exit_pillar2"
+
+  -- this kind means "an exit to a secret level"
+  kind = "secret_exit"
+
+  theme = "any"
+
+  -- replace normal exit special with "exit to secret" special
+  line_11 = 51
+
+  tex_SW1STRTN = "SW1HOT"
 }
 
