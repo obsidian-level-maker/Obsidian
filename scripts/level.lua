@@ -106,6 +106,10 @@
     start_room : ROOM  -- the starting room
      exit_room : ROOM  -- the exit room
 
+    junctions[id1 + id2] : JUNCTION
+
+    corners : array_2D(CORNER)
+
     -- TODO: lots of other fields : document important ones
 --]]
 

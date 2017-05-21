@@ -1490,7 +1490,7 @@ function Room_border_up()
   assign_window_groups()
   decide_window_boosts()
 
-  each _,junc in LEVEL.area_junctions do
+  each _,junc in LEVEL.junctions do
     if junc.E1 == nil then
       visit_junction(junc)
     end

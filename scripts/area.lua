@@ -519,12 +519,12 @@ function Junction_lookup(A1, A2, create_it)
   end
 
   if create_it then
-    if not LEVEL.area_junctions[index] then
-      LEVEL.area_junctions[index] = { A1=A1, A2=A2, perimeter=0 }
+    if not LEVEL.junctions[index] then
+      LEVEL.junctions[index] = { A1=A1, A2=A2, perimeter=0 }
     end
   end
 
-  return LEVEL.area_junctions[index]
+  return LEVEL.junctions[index]
 end
 
 
@@ -532,7 +532,7 @@ end
 function Junction_init()
   -- this is a dictionary, looked up via a string formed from the IDs of
   -- the two areas.
-  LEVEL.area_junctions = {}
+  LEVEL.junctions = {}
 
   each A in LEVEL.areas do
   each N in A.neighbors do
@@ -571,7 +571,7 @@ function Junction_init()
   end
 
 --[[ DEBUG
-  each name,J in LEVEL.area_junctions do
+  each name,J in LEVEL.junctions do
     gui.printf("Junc %s : perimeter %d\n", name, J.perimeter)
   end
 --]]
@@ -736,9 +736,9 @@ end
 
 
 function Corner_lookup(cx, cy)
-  assert(table.valid_pos(LEVEL.area_corners, cx, cy))
+  assert(table.valid_pos(LEVEL.corners, cx, cy))
 
-  local corner = LEVEL.area_corners[cx][cy]
+  local corner = LEVEL.corners[cx][cy]
 
   return assert(corner)
 end
@@ -746,10 +746,10 @@ end
 
 
 function Corner_init()
-  LEVEL.area_corners = table.array_2D(SEED_W + 1, SEED_H + 1)
+  LEVEL.corners = table.array_2D(SEED_W + 1, SEED_H + 1)
 
-  for cx = 1, LEVEL.area_corners.w do
-  for cy = 1, LEVEL.area_corners.h do
+  for cx = 1, LEVEL.corners.w do
+  for cy = 1, LEVEL.corners.h do
     local CORNER =
     {
       cx = cx
@@ -763,7 +763,7 @@ function Corner_init()
       fences = {}
     }
 
-    LEVEL.area_corners[cx][cy] = CORNER
+    LEVEL.corners[cx][cy] = CORNER
   end
   end
 
@@ -785,9 +785,9 @@ function Corner_init()
 
   -- collect the junctions
 
-  for cx = 1, LEVEL.area_corners.w do
-  for cy = 1, LEVEL.area_corners.h do
-    local corner = LEVEL.area_corners[cx][cy]
+  for cx = 1, LEVEL.corners.w do
+  for cy = 1, LEVEL.corners.h do
+    local corner = LEVEL.corners[cx][cy]
 
     for i = 1, #corner.areas do
     for k = i + 1, #corner.areas do
@@ -846,9 +846,9 @@ function Corner_detect_zone_diffs()
 
   ---| Corner_detect_zone_diffs |---
 
-  for cx = 1, LEVEL.area_corners.w do
-  for cy = 1, LEVEL.area_corners.h do
-    local corner = LEVEL.area_corners[cx][cy]
+  for cx = 1, LEVEL.corners.w do
+  for cy = 1, LEVEL.corners.h do
+    local corner = LEVEL.corners[cx][cy]
 
     if has_zone_diff(corner) then
        update_groups(corner)
