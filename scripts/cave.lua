@@ -35,7 +35,7 @@
     walk_chunks : list(CHUNK)  -- all places the player MUST be able
                                -- walk to (conns, goals, etc...)
 
-    map : AUTOMATA  -- marks which parts are usable:
+    map : MATRIX  -- marks which parts are usable:
                     --    nil : never touched (e.g. other rooms)
                     --    -1  : forced off [ empty ]
                     --    +1  : forced on  [ wall ]
@@ -50,7 +50,7 @@
 
     --- Cave specific fields ---
 
-    cave : AUTOMATA   -- the raw generated cave
+    cave : MATRIX   -- the raw generated cave
 
     step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
@@ -201,7 +201,7 @@ function Cave_setup_info(R, area)
 
 --stderrf("setup_info %d x %d : %s\n", info.W, info.H, area.name)
 
-  info.map = AUTOMATA_CLASS.new(info.W, info.H)
+  info.map = MATRIX_CLASS.new(info.W, info.H)
 
   info.diagonals = table.array_2D(info.W, info.H)
   info.blocks    = table.array_2D(info.W, info.H)
@@ -978,7 +978,7 @@ function Cave_create_areas(R, info)
   local function create_group_map()
     group_list = {}
 
-    group_map = AUTOMATA_CLASS.blank_copy(info.cave)
+    group_map = MATRIX_CLASS.blank_copy(info.cave)
 
 ---##  each G in R.cave_imps do
 ---##    add_group_to_map(G)
@@ -1112,7 +1112,7 @@ function Cave_create_areas(R, info)
 
 -- free:dump("Free:")
 
-      step  = AUTOMATA_CLASS.blank_copy(free)
+      step  = MATRIX_CLASS.blank_copy(free)
       s_cel = step.cells
 
       step:set_all(0)
