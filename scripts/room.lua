@@ -2493,16 +2493,20 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function calc_max_floor(R)
-    R.max_floor_h = -7777
+  local function calc_min_max_floor(R)
+    R.max_floor_h = -EXTREME_H
+    R.min_floor_h =  EXTREME_H
 
     each A in R.areas do
       if A.floor_h then
-        R.max_floor_h = math.max(R.max_floor_h, A.floor_h)
+        R.max_floor_h = math.max(R.max_floor_h, A.max_floor_h or A.floor_h)
+        R.min_floor_h = math.min(R.min_floor_h, A.min_floor_h or A.floor_h)
 
         if A.floor_group then A.floor_group.h = A.floor_h end
       end
     end
+
+    assert(R.max_floor_h >= R.min_floor_h)
   end
 
 
@@ -2722,7 +2726,7 @@ end
   sanity_check()
 
   each R in LEVEL.rooms do
-    calc_max_floor(R)
+    calc_min_max_floor(R)
 
     if not (R.is_cave or R.is_park) then
       regroup_floors(R)
