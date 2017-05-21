@@ -846,11 +846,11 @@ function Grower_decide_extents()
   -- decides how much of the map we can use for growing rooms.
   --
 
-  assert(LEVEL.map_W < SEED_MAX)
-  assert(LEVEL.map_H < SEED_MAX)
+  assert(LEVEL.map_W < SEED_W)
+  assert(LEVEL.map_H < SEED_H)
 
-  local map_x1 = 1 + int((SEED_MAX - LEVEL.map_W) / 2)
-  local map_y1 = 1 + int((SEED_MAX - LEVEL.map_H) / 2)
+  local map_x1 = 1 + int((SEED_W - LEVEL.map_W) / 2)
+  local map_y1 = 1 + int((SEED_H - LEVEL.map_H) / 2)
 
   local map_x2 = map_x1 + LEVEL.map_W - 1
   local map_y2 = map_y1 + LEVEL.map_H - 1
@@ -865,11 +865,9 @@ function Grower_decide_extents()
   LEVEL.sprout_x2 = map_x2 - dist
   LEVEL.sprout_y2 = map_y2 - dist
 
---[[
-stderrf("SPROUT bbox : (%d %d) .. (%d %d)\n",
+  gui.debugf("Sprout bbox : (%d %d) .. (%d %d)\n",
         LEVEL.sprout_x1, LEVEL.sprout_y1,
         LEVEL.sprout_x2, LEVEL.sprout_y2)
---]]
 
   -- this boundary is the absolute limit where parts of a room
   -- may be placed
@@ -877,17 +875,15 @@ stderrf("SPROUT bbox : (%d %d) .. (%d %d)\n",
 
   local EDGE = 4
 
-  LEVEL.boundary_x1 = math.max(EDGE, map_x1 - dist)
-  LEVEL.boundary_y1 = math.max(EDGE, map_y1 - dist)
+  LEVEL.boundary_x1 = math.max(map_x1 - dist, EDGE)
+  LEVEL.boundary_y1 = math.max(map_y1 - dist, EDGE)
 
-  LEVEL.boundary_x2 = math.min(SEED_MAX - EDGE + 1, map_x2 + dist)
-  LEVEL.boundary_y2 = math.min(SEED_MAX - EDGE + 1, map_y2 + dist)
+  LEVEL.boundary_x2 = math.min(map_x2 + dist, SEED_W - EDGE + 1)
+  LEVEL.boundary_y2 = math.min(map_y2 + dist, SEED_H - EDGE + 1)
 
---[[
-stderrf("BOUNDARY bbox : (%d %d) .. (%d %d)\n",
+  gui.debugf("Boundary bbox : (%d %d) .. (%d %d)\n",
         LEVEL.boundary_x1, LEVEL.boundary_y1,
         LEVEL.boundary_x2, LEVEL.boundary_y2)
---]]
 
 
   -- calculate a minimum and maximum # of rooms
@@ -897,9 +893,10 @@ stderrf("BOUNDARY bbox : (%d %d) .. (%d %d)\n",
   LEVEL.min_rooms = math.max(3, int(base / 3))
   LEVEL.max_rooms = math.max(6, int(base) + 1)
 
---stderrf("NUMBER OF ROOMS : %d .. %d\n", LEVEL.min_rooms, LEVEL.max_rooms)
+  gui.debugf("Target # of rooms : %d .. %d\n", LEVEL.min_rooms, LEVEL.max_rooms)
 
-  -- calculate coverage target
+
+  -- calculate the coverage target
 
   LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.55)
 end
@@ -910,8 +907,8 @@ function Grower_determine_coverage()
   local seed_count = 0
   local room_count = 0
 
-  for sx = 1, SEED_MAX do
-  for sy = 1, SEED_MAX do
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
     local S = SEEDS[sx][sy]
 
     if S.area or (S.top and S.top.area) then

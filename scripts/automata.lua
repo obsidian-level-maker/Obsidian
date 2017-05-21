@@ -41,8 +41,6 @@
     islands : list(GRID)
 
     regions : table[id] -> REGION
-
-    square  -- if set, render() method won't smooth out the 64x64 blocks
 --]]
 
 

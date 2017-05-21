@@ -197,6 +197,10 @@ function Episode_determine_map_sizes()
   each LEV in GAME.levels do
     local W, H = Level_determine_map_size(LEV)
 
+    -- sanity check
+    assert(W + 4 <= SEED_W)
+    assert(H + 4 <= SEED_H)
+
     LEV.map_W = W - 1
     LEV.map_H = H - 1
   end

@@ -113,12 +113,16 @@ LENGTH_CHOICES =
 }
 
 
--- important constants
+-- important constants --
 
+-- size of each seed square
 SEED_SIZE = 128
 
-SEED_MAX  = 64  -- map size, in seeds
+-- largest map size
+SEED_W    = 64
+SEED_H    = 64
 
+-- highest possible Z coord (and lowest, when negative)
 EXTREME_H = 32000
 
 

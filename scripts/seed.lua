@@ -184,9 +184,6 @@
 --------------------------------------------------------------]]
 
 
-SEED_W = 0
-SEED_H = 0
-
 BASE_X = 0
 BASE_Y = 0
 
@@ -550,10 +547,6 @@ end
 
 
 function Seed_init()
-  -- FIXME : remove these globals
-  SEED_W = SEED_MAX
-  SEED_H = SEED_MAX
-
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
   -- offset the map in DOOM for flat alignment
@@ -592,14 +585,6 @@ function Seed_init()
     table.insert(LEVEL.depot_locs, { x=x, y=y })
   end
   end
-end
-
-
-function Seed_close()
-  SEEDS = nil
-
-  SEED_W = 0
-  SEED_H = 0
 end
 
 
