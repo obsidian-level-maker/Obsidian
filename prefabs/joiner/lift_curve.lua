@@ -35,16 +35,6 @@ PREFABS.Joiner_lift_curve_urban =
 }
 
 
-PREFABS.Joiner_lift_curve_hell =
-{
-  template = "Joiner_lift_curve"
-
-  map    = "MAP03"
-
-  theme  = "hell"
-}
-
-
 PREFABS.Joiner_lift_curve_deimos =
 {
   template = "Joiner_lift_curve"
@@ -52,6 +42,16 @@ PREFABS.Joiner_lift_curve_deimos =
   map    = "MAP01"
 
   theme  = "deimos"
+}
+
+
+PREFABS.Joiner_lift_curve_hell =
+{
+  template = "Joiner_lift_curve"
+
+  map    = "MAP04"
+
+  theme  = "hell"
 }
 
 
