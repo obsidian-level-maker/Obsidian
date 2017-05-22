@@ -72,9 +72,14 @@
 
     --- nature stuff ---
 
+    cw, ch   -- total size of the cell grid
+
     cell_info : CELL_INFO  -- when mode == "nature" or "scenic"
 
-    external_sky  -- true when sky is built by area (NOT the cells)
+    base_sx, base_sy  -- the bottom-left seed coordinate
+    base_x,  base_y   -- real coordinate for bottom-left cell
+
+    external_sky    -- true when sky is built by area (NOT the cells)
 
     walk_map : GRID  -- marks which parts are usable:
                      --    nil : never touched (e.g. other rooms)

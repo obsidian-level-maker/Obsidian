@@ -2580,8 +2580,8 @@ function Render_determine_spots()
 
 
   local function do_floor_cell(x, y, area, FL)
-    assert(not (x < 1 or x > area.walk_map.w))
-    assert(not (y < 1 or y > area.walk_map.h))
+    assert(not (x < 1 or x > area.cw))
+    assert(not (y < 1 or y > area.ch))
 
     local B = area.blobs[x][y]
     if not B then return end
@@ -2595,8 +2595,8 @@ function Render_determine_spots()
 
 
   local function do_lower_cell(x, y, area, FL)
-    if (x < 1 or x > area.walk_map.w) then return end
-    if (y < 1 or y > area.walk_map.h) then return end
+    if (x < 1 or x > area.cw) then return end
+    if (y < 1 or y > area.ch) then return end
 
     local B = area.blobs[x][y]
     if not B then return end
@@ -2613,11 +2613,11 @@ function Render_determine_spots()
     assert(FL.cx1 and FL.cy2)
 
     -- determine bbox (with a bit extra)
-    local x1 = info.x1 + (FL.cx1 - 2) * 64
-    local y1 = info.y1 + (FL.cy1 - 2) * 64
+    local x1 = area.base_x + (FL.cx1 - 2) * 64
+    local y1 = area.base_y + (FL.cy1 - 2) * 64
 
-    local x2 = info.x1 + (FL.cx2 + 1) * 64
-    local y2 = info.y1 + (FL.cy2 + 1) * 64
+    local x2 = area.base_x + (FL.cx2 + 1) * 64
+    local y2 = area.base_y + (FL.cy2 + 1) * 64
 
     -- initialize grid to "ledge"
     gui.spots_begin(x1, y1, x2, y2, FL.floor_h, SPOT_LEDGE)
@@ -2737,7 +2737,7 @@ function Render_cells(area)
     --    F is floor height (adjusted to prevent negative values)
     --    C is ceiling height (negated, since lower ceils can block the player)
 
-    if x < 1 or x > area.walk_map.w or y < 1 or y > area.walk_map.h then
+    if x < 1 or x > area.cw or y < 1 or y > area.ch then
       return nil
     end
 
@@ -2860,8 +2860,8 @@ function Render_cells(area)
 
 
   local function create_delta_map()
-    local dw = area.walk_map.w + 1
-    local dh = area.walk_map.h + 1
+    local dw = area.cw + 1
+    local dh = area.ch + 1
 
     delta_x_map = table.array_2D(dw, dh)
     delta_y_map = table.array_2D(dw, dh)
@@ -2878,8 +2878,8 @@ function Render_cells(area)
 
 
   local function cell_middle(x, y)
-    local mx = info.x1 + (x - 1) * 64 + 32
-    local my = info.y1 + (y - 1) * 64 + 32
+    local mx = area.base_x + (x - 1) * 64 + 32
+    local my = area.base_y + (y - 1) * 64 + 32
 
     return mx, my
   end
@@ -3060,8 +3060,8 @@ top.reachable = 1  --!!!!!! FIXME: remove
     local min_floor =  9e9
     local max_ceil  = -9e9
 
-    for x = 1, info.W do
-    for y = 1, info.H do
+    for x = 1, area.cw do
+    for y = 1, area.ch do
       if ((island:get(x, y) or 0) > 0) then
         for dir = 2,8,2 do
           local nx, ny = geom.nudge(x, y, dir)
@@ -3178,8 +3178,8 @@ top.reachable = 1  --!!!!!! FIXME: remove
   local function render_all_cells(pass)
     -- pass is 1 for solid cells, 2 for normal (open) cells
 
-    for cx = 1, area.walk_map.w do
-    for cy = 1, area.walk_map.h do
+    for cx = 1, area.cw do
+    for cy = 1, area.ch do
       render_cell(cx, cy, pass)
     end
     end
