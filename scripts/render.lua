@@ -3059,7 +3059,7 @@ top.reachable = 1  --!!!!!! FIXME: remove
         for dir = 2,8,2 do
           local nx, ny = geom.nudge(x, y, dir)
 
-          if not island:valid_cell(nx, ny) then continue end
+          if not island:valid(nx, ny) then continue end
 
           local B = R.area_map:get(nx, ny)
           if not B then continue end

@@ -486,22 +486,66 @@ function Cave_generate_cave(R, area)
   end
 
 
+  local function check_walks_reachable()
+    --
+    -- checks that all walking points can reach each other.
+    --
+
+    assert(cave.flood)
+
+    local walk_reg = nil
+
+    each P in area.walk_rects do
+      if (cave.flood[P.cx1][P.cy1] or 0) >= 0 then
+        -- not valid : the cell is solid or absent
+        return false
+      end
+
+      local reg = cave.flood[P.cx1][P.cy1]
+
+      if not walk_reg then
+        walk_reg = reg
+        continue
+      end
+
+      if walk_reg != reg then
+        -- not valid : the empty areas are disjoint
+        return false
+      end
+    end
+
+    cave.empty_id = walk_reg
+
+    return true
+  end
+
+
   local function is_cave_good(cave)
     -- check that all important parts are connected
 
-    if not cave:validate_conns(area.walk_rects) then
+    if not check_walks_reachable(area.walk_rects) then
       gui.debugf("cave failed connection check\n")
       return false
     end
 
-    local p1 = area.walk_rects[1]
-
-    cave.empty_id = cave.flood[p1.cx1][p1.cy1]
-
     assert(cave.empty_id)
     assert(cave.empty_id < 0)
 
-    if not cave:validate_size(cave.empty_id) then
+    -- now check that the size is adequate
+
+    local empty_reg = cave.regions[cave.empty_id]
+    assert(empty_reg)
+
+    local W = cave.w
+    local H = cave.h
+
+    local cw = empty_reg.x2 - empty_reg.x1 + 1
+    local ch = empty_reg.y2 - empty_reg.y1 + 1
+
+    if (cw < W / 2) or
+       (ch < H / 2) or
+       (cw * ch < W * H / 2.5)
+    then
       gui.debugf("cave failed size check\n")
       return false
     end

@@ -357,11 +357,13 @@ end
 
 
 function GRID_CLASS.flood_fill(grid)
-  -- generate the 'flood' member, an array where each contiguous region
+  --
+  -- Generate the 'flood' member, an array where each contiguous region
   -- has a unique id.  Empty areas are negative, solid areas are positive,
   -- and everything else is NIL.
   --
   -- This also creates the 'regions' table.
+  --
 
   local W = grid.w
   local H = grid.h
@@ -489,38 +491,6 @@ function GRID_CLASS.flood_fill(grid)
 end
 
 
-function GRID_CLASS.validate_conns(grid, rect_list)
-
-  -- checks that all connections can reach each other.
-
-  local empty_id = nil
-
-  if not grid.flood then
-    grid:flood_fill()
-  end
-
-  each P in rect_list do
-    if (grid.flood[P.cx1][P.cy1] or 0) >= 0 then
-      -- not valid : the cell is solid or absent
-      return false
-    end
-
-    local reg = grid.flood[P.cx1][P.cy1]
-
-    if not empty_id then
-      empty_id = reg
-    elseif empty_id != reg then
-      -- not valid : the empty areas are disjoint
-      return false
-    end
-  end
-
-  grid.empty_id = empty_id
-
-  return true
-end
-
-
 function GRID_CLASS.solidify_pockets(grid)
   -- this removes the empty areas which are surrounded by solid
   -- (i.e. not part of the main walk area).
@@ -642,28 +612,6 @@ function GRID_CLASS.find_islands(grid)
   end
 
   grid.islands = islands
-end
-
-
-function GRID_CLASS.validate_size(grid)
-  assert(grid.empty_id)
-
-  local empty_reg = grid.regions[grid.empty_id]
-  assert(empty_reg)
-
-  local W = grid.w
-  local H = grid.h
-
-  local cw = empty_reg.x2 - empty_reg.x1 + 1
-  local ch = empty_reg.y2 - empty_reg.y1 + 1
-
-  if cw < W / 2 then return false end
-  if ch < H / 2 then return false end
-
-  -- volume check
-  if cw * ch < W * H / 2.5 then return false end
-
-  return true  -- OK --
 end
 
 
