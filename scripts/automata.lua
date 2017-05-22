@@ -37,10 +37,7 @@
 
     regions : table[id] -> REGION
 
-    empty_id  -- the main empty area in the flood_fill
-              -- this is set by the validate_conns() method
-
-    islands : list(GRID)
+FIXME:  empty_id  -- the main empty area in the flood_fill
 
 --]]
 
@@ -559,17 +556,22 @@ end
 
 
 function GRID_CLASS.find_islands(grid)
+  --
+  -- Detects islands, which are a contiguous *solid* area of a
+  -- cave which is completely surrounded by an empty area.
+  --
+  -- The result is a list of island grids.
+  --
+  -- The input grid must have been flood-filled already.
+  -- Nothing is modified in the input grid.
+  --
 
-  -- an "island" is contiguous solid area which never touches NIL
+  assert(grid.flood)
 
   local islands = {}
 
   local W = grid.w
   local H = grid.h
-
-  if not grid.flood then
-    grid:flood_fill()
-  end
 
   local flood = grid.flood
 
@@ -610,11 +612,11 @@ function GRID_CLASS.find_islands(grid)
 
   for reg,pot in pairs(potentials) do
     if pot == "maybe" then
-      table.insert(islands, grid:copy_island(reg))
+      table.insert(list, grid:copy_island(reg))
     end
   end
 
-  grid.islands = islands
+  return list
 end
 
 
