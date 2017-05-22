@@ -19,7 +19,7 @@
 ------------------------------------------------------------------------
 
 
---class CELL_INFO
+--class NATURAL_AREA
 --[[
     W, H  -- size (# of cells)
 
@@ -27,10 +27,6 @@
 
     sx1, sy1, sx2, sy2  -- seed range
 
-
-    area : AREA   -- link back to normal area
-
-    external_sky  -- true when sky is built by area (NOT the cells)
 
     walk_chunks : list(CHUNK)  -- all places the player MUST be able
                                -- walk to (conns, goals, etc...)
@@ -62,19 +58,20 @@
 
     torch_mode  : keyword  -- "none", "few", "some"
 
-    floors : list(CAVE_AREA)
-    lakes  : list(CAVE_AREA)
+    floors : list(BLOB)
 
-    wall   : CAVE_AREA
-    fence  : CAVE_AREA
+    wall   : BLOB
+    fence  : BLOB
 --]]
 
 
---class CAVE_AREA
+--class BLOB
 --[[
     --
-    -- This info describes a group of cells.
+    -- This info describes a cell or a group of cells.
     --
+
+    area : AREA   -- parent area
 
     cx1, cy1, cx2, cy2   -- cell bounding box
 
@@ -93,12 +90,10 @@
 
     goal_type : keyword      -- set if area contains a goal
 
-    neighbors : list(CAVE_AREA)  -- only used for visitable floors
+    neighbors : list(BLOB)  -- only used for visitable floors
 
-    host_spots : list(BBOX)  -- spots which can host a torch/prefab
-
-    -- stuff for walkways only
-    children : list[CAVE_AREA]
+    -- stuff for walkways only  [ FIXME ]
+    children : list(BLOB)
 --]]
 
 
@@ -185,7 +180,7 @@ function Cave_setup_info(R, area)
   end
 
   info.area  = area
-  area.cells = info
+  area.cell_info = info
 
   -- determine extent of cells
   info.sx1, info.sy1, info.sx2, info.sy2 = area:calc_seed_bbox()
@@ -714,23 +709,6 @@ function Cave_generate_cave(R, info)
   Cave_clear_walk_chunks(info)
 
   generate_cave()
-end
-
-
-
-function Cave_area_host_parts(R, A)
-  --|
-  --| figure out if this area can host something inside it
-  --| (e.g. a torch or a cage prefab).
-  --|
-  --| stores a list of cell ranges in 'host_spots' field.
-  --|
-
-  local info = R.cave_info
-
-  A.host_spots = {}
-
-  -- TODO
 end
 
 
@@ -2639,7 +2617,7 @@ function Cave_build_a_park(R, entry_h)
 
     table.insert(info.floors, FLOOR)
 
-    info.external_sky = true
+    info.area.external_sky = true
   end
 
 
@@ -3172,7 +3150,7 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
   info = Cave_setup_info(nil, area)
 
-  info.external_sky = true
+  info.area.external_sky = true
 
   Cave_map_usable_area(info)
 

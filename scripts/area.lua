@@ -48,8 +48,6 @@
 
     chunk : CHUNK   -- only set when mode == "chunk"
 
-    cells : CELL_INFO  -- when mode == "nature" or "scenic"
-
 
     --- geometry of area ---
 
@@ -70,6 +68,13 @@
 
     floor_side  -- floor side material (optional)
     ceil_side   -- ceiling side material (optional)
+
+
+    --- nature stuff ---
+
+    cell_info : CELL_INFO  -- when mode == "nature" or "scenic"
+
+    external_sky  -- true when sky is built by area (NOT the cells)
 
 
     --- other stuff ---

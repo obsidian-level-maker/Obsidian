@@ -2068,13 +2068,13 @@ function Render_area(A)
 
   do
     -- handle caves, parks and landscapes
-    if A.cells then
-      Render_cells(A.cells)
+    if A.mode == "nature" then
+      Render_cells(A)
     else
       Render_floor(A)
     end
 
-    if not A.cells or A.cells.external_sky then
+    if A.mode != "nature" or A.external_sky then
       Render_ceiling(A)
     end
   end
@@ -2668,7 +2668,7 @@ gui.spots_dump("Cave spot dump")
 
 
   local function spots_in_natural_area(R, area)
-    info = assert(area.cells)
+    info = assert(area.cell_info)
 
     each FL in info.floors do
       spots_in_cave_floor(R, FL)
@@ -2719,7 +2719,8 @@ end
 ------------------------------------------------------------------------
 
 
-function Render_cells(info)
+function Render_cells(area)
+  local info = area.cell_info
   assert(info)
 
 

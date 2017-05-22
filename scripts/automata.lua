@@ -25,12 +25,10 @@
 ------------------------------------------------------------------------
 
 
---class MATRIX
+--class MATRIX : extends ARRAY_2D
 --[[
-    w, h   -- width and height (in cells)
-
-    cells : array_2D(number)  -- > 0 means solid
-                              -- < 0 means empty
+    -- for caves, each cell is either NIL (unused) or a number,
+    -- when > 0 means solid (wall) and < 0 means empty (floor).
 
     flood : array_2D(number)  -- contiguous areas have the same value
                               -- (positive for solid, negative for empty)
