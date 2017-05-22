@@ -622,6 +622,131 @@ end
 
 
 
+function Cave_liquid_pools__OLD()
+
+--[[ OLD STUFF.... TODO: REVIEW IF USEFUL
+
+  local function heights_near_island(island)
+    local min_floor =  9e9
+    local max_ceil  = -9e9
+
+    for x = 1, area.cw do
+    for y = 1, area.ch do
+      if ((island:get(x, y) or 0) > 0) then
+        for dir = 2,8,2 do
+          local nx, ny = geom.nudge(x, y, dir)
+
+          if not island:valid(nx, ny) then continue end
+
+          local B = R.area_map:get(nx, ny)
+          if not B then continue end
+
+          min_floor = math.min(min_floor, B.floor_h)
+          max_ceil  = math.max(max_ceil , B.ceil_h)
+        end
+      end
+    end  -- x, y
+    end
+
+--FIXME  assert(min_floor < max_ceil)
+
+    return min_floor, max_ceil
+  end
+
+
+  local function turn_area_into_liquid(island)
+    -- create a lava/nukage pit
+
+    local f_mat = R.floor_mat or cave_tex
+    local c_mat = R.ceil_mat  or cave_tex
+    local l_mat = LEVEL.liquid.mat
+
+    local f_h, c_h = heights_near_island(island)
+
+    -- FIXME! should not happen
+    if f_h >= c_h then return end
+
+    f_h = f_h - 24
+    c_h = c_h + 64
+
+    -- TODO: fireballs for Quake
+
+    for x = 1, cave.w do
+    for y = 1, cave.h do
+
+      if ((island:get(x, y) or 0) > 0) then
+
+        -- do not render a wall here
+        cave:set(x, y, 0)
+
+        local f_brush = Cave_brush(area, x, y)
+        local c_brush = Cave_brush(area, x, y)
+
+        if PARAM.deep_liquids then
+          brushlib.add_top(f_brush, f_h-128)
+          brushlib.set_mat(f_brush, f_mat, f_mat)
+
+          Trans.brush(f_brush)
+
+          local l_brush = Cave_brush(area, x, y)
+
+          table.insert(l_brush, 1, { m="liquid", medium=LEVEL.liquid.medium })
+
+          brushlib.add_top(l_brush, f_h)
+          brushlib.set_mat(l_brush, "_LIQUID", "_LIQUID")
+
+          Trans.brush(l_brush)
+
+          -- TODO: lighting
+
+        else
+          brushlib.add_top(f_brush, f_h)
+
+          -- damaging
+          f_brush[#f_brush].special = LEVEL.liquid.special
+
+          -- lighting
+          if LEVEL.liquid.light then
+            f_brush[#f_brush].light = LEVEL.liquid.light
+          end
+
+          brushlib.set_mat(f_brush, l_mat, l_mat)
+
+          Trans.brush(f_brush)
+        end
+
+        -- common ceiling code
+
+        brushlib.add_bottom(c_brush, c_h)
+        brushlib.set_mat(c_brush, c_mat, c_mat)
+
+        if c_mat == "_SKY" then
+          table.insert(c_brush, 1, { m="sky" })
+        end
+
+        Trans.brush(c_brush)
+      end
+
+    end end -- x, y
+  end
+--]]
+
+
+  ---| Cave_liquid_pools |---
+
+  if not LEVEL.liquid then return end
+
+  local prob = 70  -- FIXME
+
+  each island in cave.islands do
+    if rand.odds(prob) then
+      turn_area_into_liquid(island)
+    end
+  end
+end
+
+
+
 function Cave_create_areas(R, area)
   --
   -- Sub-divide the floor of the cave into areas of differing heights.
