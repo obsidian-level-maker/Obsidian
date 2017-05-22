@@ -539,8 +539,8 @@ function Cave_generate_cave(R, area)
     local W = cave.w
     local H = cave.h
 
-    local cw = empty_reg.x2 - empty_reg.x1 + 1
-    local ch = empty_reg.y2 - empty_reg.y1 + 1
+    local cw = empty_reg.cx2 - empty_reg.cx1 + 1
+    local ch = empty_reg.cy2 - empty_reg.cy1 + 1
 
     if (cw < W / 2) or
        (ch < H / 2) or
@@ -605,7 +605,7 @@ function Cave_generate_cave(R, area)
 
     cave:dump("Filled Cave:")
 
-    cave:find_islands()
+---??  local islands = cave:find_islands()
 
     return cave
   end
@@ -1652,10 +1652,10 @@ function Cave_fill_lakes(R)
 
       region = reg
 
-      cx1 = reg.x1
-      cy1 = reg.y1
-      cx2 = reg.x2
-      cy2 = reg.y2
+      cx1 = reg.cx1
+      cy1 = reg.cy1
+      cx2 = reg.cx2
+      cy2 = reg.cy2
     }
 
     table.insert(area.lakes, LAKE)
@@ -2789,8 +2789,8 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function merge_a_runt(map2, reg, RIVER)
-    for rx = reg.x1, reg.x2 do
-    for ry = reg.y1, reg.y2 do
+    for rx = reg.cx1, reg.cx2 do
+    for ry = reg.cy1, reg.cy2 do
       if map2.flood[rx][ry] == reg.id then
         area.blobs[rx][ry] = RIVER
       end

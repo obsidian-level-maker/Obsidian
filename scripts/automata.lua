@@ -27,18 +27,21 @@
 
 --class GRID : extends ARRAY_2D
 --[[
-    -- for caves, each cell is either NIL (unused) or a number,
-    -- when > 0 means solid (wall) and < 0 means empty (floor).
+    -- when used for caves, each cell can be:
+    --    NIL        : unused (e.g. another room)
+    --    number > 0 : solid (i.e. wall)
+    --    number < 0 : empty (i.e. a floor)
 
     flood : array_2D(number)  -- contiguous areas have the same value
                               -- (positive for solid, negative for empty)
+
+    regions : table[id] -> REGION
 
     empty_id  -- the main empty area in the flood_fill
               -- this is set by the validate_conns() method
 
     islands : list(GRID)
 
-    regions : table[id] -> REGION
 --]]
 
 
@@ -46,9 +49,9 @@
 --[[
     id : number
 
-    x1, y1, x2, y2  -- bounding box (in cell coordinates)
+    cx1, cy1, cx2, cy2  -- bounding box
 
-    size : number of cells
+    size  -- number of cells
 --]]
 
 
@@ -83,9 +86,9 @@ function GRID_CLASS.set(grid, x, y, val)
 end
 
 
-function GRID_CLASS.fill(grid, x1,y1, x2,y2, val)
-  for x = x1, x2 do
-  for y = y1, y2 do
+function GRID_CLASS.fill(grid, cx1,cy1, cx2,cy2, val)
+  for x = cx1, cx2 do
+  for y = cy1, cy2 do
     grid.cells[x][y] = val
   end
   end
@@ -97,14 +100,14 @@ function GRID_CLASS.set_all(grid, val)
 end
 
 
-function GRID_CLASS.negate(grid, x1,y1, x2,y2)
-  if not x1 then
-    x1, x2 = 1, grid.w
-    y1, y2 = 1, grid.h
+function GRID_CLASS.negate(grid, cx1,cy1, cx2,cy2)
+  if not cx1 then
+    cx1, cx2 = 1, grid.w
+    cy1, cy2 = 1, grid.h
   end
 
-  for x = x1, x2 do
-  for y = y1, y2 do
+  for x = cx1, cx2 do
+  for y = cy1, cy2 do
     if grid.cells[x][y] then
       grid.cells[x][y] = - grid.cells[x][y]
     end
@@ -348,7 +351,7 @@ function GRID_CLASS.dump_regions(grid)
 
   each id,REG in grid.regions do
     gui.debugf("  %+4d : (%d %d) .. (%d %d) size:%d\n",
-               REG.id, REG.x1, REG.y1, REG.x2, REG.y2, REG.size)
+               REG.id, REG.cx1, REG.cy1, REG.cx2, REG.cy2, REG.size)
   end
 
   gui.debugf("Empty regions: %d (with %d cells)\n", grid.empty_regions, grid.empty_cells)
@@ -415,8 +418,8 @@ function GRID_CLASS.flood_fill(grid)
       REG =
       {
         id = id
-        x1 = x, y1 = y
-        x2 = x, y2 = y
+        cx1 = x, cy1 = y
+        cx2 = x, cy2 = y
         size = 0
       }
 
@@ -429,10 +432,10 @@ function GRID_CLASS.flood_fill(grid)
       end
     end
 
-    if x < REG.x1 then REG.x1 = x end
-    if y < REG.y1 then REG.y1 = y end
-    if x > REG.x2 then REG.x2 = x end
-    if y > REG.y2 then REG.y2 = y end
+    if x < REG.cx1 then REG.cx1 = x end
+    if y < REG.cy1 then REG.cy1 = y end
+    if x > REG.cx2 then REG.cx2 = x end
+    if y > REG.cy2 then REG.cy2 = y end
 
     REG.size = REG.size + 1
   end
@@ -515,8 +518,8 @@ function GRID_CLASS.solidify_pockets(grid)
     assert(REG)
 
     -- solidify the cells
-    for x = REG.x1, REG.x2 do
-    for y = REG.y1, REG.y2 do
+    for x = REG.cx1, REG.cx2 do
+    for y = REG.cy1, REG.cy2 do
       if grid.flood[x][y] == pocket_id then
         grid.cells[x][y] = 1
         grid.flood[x][y] = nil
@@ -941,7 +944,6 @@ function GRID_CLASS.furthest_point(grid, ref_points)
 
   return best_x, best_y  -- could be nil !
 end
-
 
 
 
