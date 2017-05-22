@@ -37,8 +37,6 @@
 
     regions : table[id] -> REGION
 
-FIXME:  empty_id  -- the main empty area in the flood_fill
-
 --]]
 
 
@@ -160,6 +158,9 @@ end
 
 
 function GRID_CLASS.union(grid, other)
+  -- make empty cells in 'grid' solid if they are solid in 'other'.
+  -- when either cell is NIL, nothing happens.
+
   local W = math.min(grid.w, other.w)
   local H = math.min(grid.h, other.h)
 
@@ -176,6 +177,9 @@ end
 
 
 function GRID_CLASS.intersection(grid, other)
+  -- make solid cells in 'grid' empty if they are empty in 'other'.
+  -- when either cell is NIL, nothing happens.
+
   local W = math.min(grid.w, other.w)
   local H = math.min(grid.h, other.h)
 
@@ -191,18 +195,23 @@ function GRID_CLASS.intersection(grid, other)
 end
 
 
-function GRID_CLASS.subtract(grid, other)
+function GRID_CLASS.subtract(grid, other, new_id)
+  -- set cells in 'grid' to new_id, defaulting to -1, when both cells
+  -- in 'grid' and 'other' are solid.
+  --
+  -- when either cell is NIL, nothing happens.
+
+  new_id = new_id or -1
+
   local W = math.min(grid.w, other.w)
   local H = math.min(grid.h, other.h)
-
-  local empty_id = grid.empty_id or -1
 
   for x = 1, W do
   for y = 1, H do
     if ( grid.cells[x][y] or 0) > 0 and
        (other.cells[x][y] or 0) > 0
     then
-      grid.cells[x][y] = empty_id
+      grid.cells[x][y] = new_id
     end
   end
   end
@@ -210,7 +219,7 @@ end
 
 
 function GRID_CLASS.generate(grid, solid_prob)
-
+  --
   -- The initial contents of the grid form a map where a cave
   -- will be generated.  The following values can be used:
   --
@@ -221,8 +230,6 @@ function GRID_CLASS.generate(grid, solid_prob)
   --
   -- Result elements can be: nil, -1 or +1.
   --
-
--- FIXME: support -2, +2 as 'forced' on, -1,+1 as initial values
 
   solid_prob = solid_prob or 40
 
@@ -371,10 +378,11 @@ function GRID_CLASS.flood_fill(grid)
   local cells = grid.cells
   local flood = table.array_2D(W, H)
 
-  local solid_id =  1
-  local empty_id = -1
+  local cur_solid =  1
+  local cur_empty = -1
 
   local next_points = {}
+
 
   local function flood_point(x, y)
     -- spread value from this cell to neighbors
@@ -445,9 +453,9 @@ function GRID_CLASS.flood_fill(grid)
     if not cells[x][y] then
       -- ignore it
     elseif cells[x][y] < 0 then
-      flood[x][y] = empty_id ; empty_id = empty_id - 1
+      flood[x][y] = cur_empty ; cur_empty = cur_empty - 1
     else
-      flood[x][y] = solid_id ; solid_id = solid_id + 1
+      flood[x][y] = cur_solid ; cur_solid = cur_solid + 1
     end
   end
   end
@@ -491,14 +499,23 @@ function GRID_CLASS.flood_fill(grid)
 end
 
 
-function GRID_CLASS.solidify_pockets(grid)
+function GRID_CLASS.solidify_pockets(grid, walk_reg, solid_reg)
   -- this removes the empty areas which are surrounded by solid
   -- (i.e. not part of the main walk area).
+  --
+  -- the 'walk_reg' parameter is the main walkable region.
+  -- the 'solid_reg' parameter is what to set the pockets to,
+  -- defaulting to 1.
 
-  local function find_one()
-    each id,REG in grid.regions do
-      if id < 0 and id != grid.empty_id then
-        return id
+  assert(walk_reg)
+
+  solid_reg = solid_reg or 1
+
+
+  local function find_next()
+    each id, REG in grid.regions do
+      if id < 0 and id != walk_reg then
+        return id, REG
       end
     end
 
@@ -506,19 +523,18 @@ function GRID_CLASS.solidify_pockets(grid)
     return nil
   end
 
+
   while true do
-    local pocket_id = find_one()
+    local pocket_id, REG = find_next()
 
-    if not pocket_id then break end
-
-    local REG = grid.regions[pocket_id]
-    assert(REG)
+    -- nil means nothing else exists
+    if not pocket_id then break; end
 
     -- solidify the cells
     for x = REG.cx1, REG.cx2 do
     for y = REG.cy1, REG.cy2 do
       if grid.flood[x][y] == pocket_id then
-        grid.cells[x][y] = 1
+        grid.cells[x][y] = solid_reg
         grid.flood[x][y] = nil
       end
     end

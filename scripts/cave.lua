@@ -600,7 +600,7 @@ function Cave_generate_cave(R, area)
     end
 
     if not is_lake then
-      cave:solidify_pockets()
+      cave:solidify_pockets(cave.empty_id)
     end
 
     cave:dump("Filled Cave:")
