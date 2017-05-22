@@ -48,11 +48,11 @@ DOOM.MATERIALS =
 
   -- walls --
 
-  BIGDOOR1 = { t="BIGDOOR1", f="FLAT23" }
-  BIGDOOR2 = { t="BIGDOOR2", f="FLAT1" }
-  BIGDOOR3 = { t="BIGDOOR3", f="FLOOR7_2" }
-  BIGDOOR4 = { t="BIGDOOR4", f="FLOOR3_3" }
-  BIGDOOR5 = { t="BIGDOOR5", f="FLAT5_2" }
+  BIGDOOR1 = { t="BIGDOOR1", f="FLAT19" }
+  BIGDOOR2 = { t="BIGDOOR2", f="CEIL5_1" }
+  BIGDOOR3 = { t="BIGDOOR3", f="CEIL5_1" }
+  BIGDOOR4 = { t="BIGDOOR4", f="CEIL5_1" }
+  BIGDOOR5 = { t="BIGDOOR5", f="CEIL5_2" }
   BIGDOOR6 = { t="BIGDOOR6", f="CEIL5_2" }
   BIGDOOR7 = { t="BIGDOOR7", f="CEIL5_2" }
 
@@ -182,9 +182,9 @@ DOOM.MATERIALS =
   SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" }
 
   STARBR2  = { t="STARBR2",  f="FLOOR0_2" }
-  STARG1   = { t="STARG1",   f="FLAT23" }
-  STARG2   = { t="STARG2",   f="FLAT23" }
-  STARG3   = { t="STARG3",   f="FLAT23" }
+  STARG1   = { t="STARG1",   f="FLOOR7_2" }
+  STARG2   = { t="STARG2",   f="FLOOR7_2" }
+  STARG3   = { t="STARG3",   f="FLOOR7_2" }
   STARGR1  = { t="STARGR1",  f="FLAT3" }
   STARGR2  = { t="STARGR2",  f="FLAT3" }
   STARTAN2 = { t="STARTAN2", f="FLOOR4_1" }
