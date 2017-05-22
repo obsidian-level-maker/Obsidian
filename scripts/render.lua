@@ -2666,9 +2666,7 @@ gui.spots_dump("Cave spot dump")
 
 
   local function spots_in_natural_area(R, area)
-    info = assert(area.cell_info)
-
-    each FL in info.floors do
+    each FL in area.walk_floors do
       spots_in_cave_floor(R, area, FL)
     end
   end
@@ -2718,9 +2716,6 @@ end
 
 
 function Render_cells(area)
-  local info = area.cell_info
-  assert(info)
-
 
   -- the delta map specifies how to move each corner of the 64x64 cells
   -- (where the cells form a continuous mesh).
@@ -2901,16 +2896,16 @@ function Render_cells(area)
 --]]
 
 
-  local function calc_lighting_for_cell(x, y, A)
-    if not A then return 0 end
-    if not A.floor_h then return 0 end
+  local function calc_lighting_for_cell(x, y, B)
+    if not B then return 0 end
+    if not B.floor_h then return 0 end
 
     local cell_x, cell_y = cell_middle(x, y)
-    local cell_z = A.floor_h + 80
+    local cell_z = B.floor_h + 80
 
     local result = 0
 
-    each L in info.lights do
+    each L in area.cave_lights do
       -- compute distance
       local dx = L.x - cell_x
       local dy = L.y - cell_y
@@ -3066,11 +3061,11 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
           if not island:valid_cell(nx, ny) then continue end
 
-          local A = R.area_map:get(nx, ny)
-          if not A then continue end
+          local B = R.area_map:get(nx, ny)
+          if not B then continue end
 
-          min_floor = math.min(min_floor, A.floor_h)
-          max_ceil  = math.max(max_ceil , A.ceil_h)
+          min_floor = math.min(min_floor, B.floor_h)
+          max_ceil  = math.max(max_ceil , B.ceil_h)
         end
       end
     end  -- x, y
@@ -3107,8 +3102,8 @@ top.reachable = 1  --!!!!!! FIXME: remove
         -- do not render a wall here
         cave:set(x, y, 0)
 
-        local f_brush = Cave_brush(info, x, y)
-        local c_brush = Cave_brush(info, x, y)
+        local f_brush = Cave_brush(area, x, y)
+        local c_brush = Cave_brush(area, x, y)
 
         if PARAM.deep_liquids then
           brushlib.add_top(f_brush, f_h-128)
@@ -3116,7 +3111,7 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
           Trans.brush(f_brush)
 
-          local l_brush = Cave_brush(info, x, y)
+          local l_brush = Cave_brush(area, x, y)
 
           table.insert(l_brush, 1, { m="liquid", medium=LEVEL.liquid.medium })
 

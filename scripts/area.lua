@@ -81,8 +81,6 @@
 
     cw, ch   -- total size of the cell grid
 
-    cell_info : CELL_INFO  -- when mode == "nature" or "scenic"
-
     base_sx, base_sy  -- the bottom-left seed coordinate
     base_x,  base_y   -- real coordinate for bottom-left cell
 
@@ -106,6 +104,9 @@
     delta_x_map : array
     delta_y_map : array
 
+    walk_floors : list(BLOB)  -- floors where player can travel and
+                              -- monsters/items can be placed
+
 
     --- Cave specific fields ---
 
@@ -120,6 +121,8 @@
                            -- "low_wall", "high_wall"  (outdoor rooms)
 
     torch_mode  : keyword  -- "none", "few", "some"
+
+    cave_lights : list     -- position of lamps and other point-lights
 --]]
 
 

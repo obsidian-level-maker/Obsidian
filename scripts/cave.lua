@@ -19,20 +19,10 @@
 ------------------------------------------------------------------------
 
 
---class NATURAL_AREA
---[[
-
-    floors : list(BLOB)
-
-    wall   : BLOB
-    fence  : BLOB
---]]
-
-
 --class BLOB
 --[[
     --
-    -- This info describes a cell or a group of cells.
+    -- This describes a group of contiguous cells.
     --
 
     area : AREA   -- parent area
@@ -52,7 +42,7 @@
 
     is_waterfall : boolean
 
-    goal_type : keyword      -- set if area contains a goal
+    goal_type : keyword     -- set if blob contains a goal
 
     neighbors : list(BLOB)  -- only used for visitable floors
 
@@ -122,29 +112,20 @@ end
 
 
 
-function Cave_setup_info(R, area)
-  -- R can be NIL (for scenic areas outside of map)
-
-  local info =
-  {
-    lakes  = {}
-    lights = {}
-  }
-
-  -- find the area to use
-  if not area then
-    each A in R.areas do
-      if A.mode == "nature" then
-        assert(info.area == nil)
-        area = A
-      end
+function Cave_find_area_for_room(R)
+  each A in R.areas do
+    if A.mode == "nature" then
+      return A
     end
-
-    assert(area)
   end
 
-  info.area  = area
-  area.cell_info = info
+  error("Cave/park room has no nature area")
+end
+
+
+
+function Cave_setup_stuff(area)
+  assert(area)
 
   -- determine extent of cells
   local sx1,sy1, sx2,sy2 = area:calc_seed_bbox()
@@ -158,23 +139,24 @@ function Cave_setup_info(R, area)
   area.base_x = SEEDS[sx1][sy1].x1
   area.base_y = SEEDS[sx1][sy1].y1
 
---stderrf("setup_info %d x %d : %s\n", area.cw, area.ch, area.name)
+--stderrf("setup_stuff %d x %d : %s\n", area.cw, area.ch, area.name)
 
   area.walk_map = GRID_CLASS.new(area.cw, area.ch)
 
   area.diagonals = table.array_2D(area.cw, area.ch)
   area.blobs     = table.array_2D(area.cw, area.ch)
 
-  info.floors = {}
+  area.walk_floors = {}
 
+  area.cave_lights = {}
+
+  -- hmmm, move this outta here??
   local WALL_AREA =
   {
     is_wall = true
   }
 
-  info.wall = WALL_AREA
-
-  return info
+  area.wall_blob = WALL_AREA
 end
 
 
@@ -279,9 +261,8 @@ end
 
 
 
-function Cave_map_usable_area(info)
+function Cave_map_usable_area(area)
 
-  local area  = info.area
   local cells = area.walk_map.cells
 
   local bbox = {}
@@ -325,7 +306,7 @@ function Cave_map_usable_area(info)
     if S.diagonal then
       diag_mode = S.diagonal
 
-      if S.area != info.area then
+      if S.area != area then
         diag_mode = 10 - diag_mode
       end
     end
@@ -364,9 +345,7 @@ end
 
 
 
-function Cave_cell_touches_map_edge(info, cx, cy)
-  local area = info.area
-
+function Cave_cell_touches_map_edge(area, cx, cy)
   local sx = area.base_sx + int((cx - 1) / 2)
   local sy = area.base_sy + int((cy - 1) / 2)
 
@@ -387,15 +366,13 @@ end
 
 
 
-function Cave_cell_touches_room(info, R)
+function Cave_cell_touches_room(area, R)
   -- FIXME
 end
 
 
 
-function Cave_generate_cave(R, info)
-
-  local area = info.area
+function Cave_generate_cave(R, area)
 
   local is_lake = (area.liquid_mode == "lake")
 
@@ -594,19 +571,18 @@ function Cave_generate_cave(R, info)
 
   mark_boundaries()
 
-  Cave_clear_walk_rects(info.area)
+  Cave_clear_walk_rects(area)
 
   area.cave_map = generate_cave()
 end
 
 
 
-function Cave_create_areas(R, info)
-  --|
-  --| sub-divide the floor of the cave into areas of differing heights.
-  --|
+function Cave_create_areas(R, area)
+  --
+  -- Sub-divide the floor of the cave into areas of differing heights.
+  --
 
-  local area = info.area
   local cave = area.cave_map
 
   local is_lake = (area.liquid_mode == "lake")
@@ -641,7 +617,7 @@ function Cave_create_areas(R, info)
   local function copy_cave_without_fences()
     local new_cave = area.cave_map:copy()
 
-    if info.fence then
+    if area.fence_blob then
       for cx = 1, area.cw do
       for cy = 1, area.ch do
         local B = area.blobs[cx][cy]
@@ -776,17 +752,17 @@ function Cave_create_areas(R, info)
        ceil_mat = R.ceil_mat
     }
 
-    table.insert(info.floors, AREA)
+    table.insert(area.walk_floors, AREA)
 
----??  each WC in info.area.walk_rects do
+---??  each WC in area.walk_rects do
 ---??    WC.cave_area = AREA
 ---??  end
 
     install_blob(AREA, cave, -1)
 
     -- this fixes MON_TELEPORT spots [ so they blend in ]
-    info.area.floor_mat = AREA.floor_mat
-    info.area.ceil_mat  = AREA.ceil_mat
+    area.floor_mat = AREA.floor_mat
+    area.ceil_mat  = AREA.ceil_mat
 
 
     -- compute properties of each sink
@@ -845,7 +821,7 @@ function Cave_create_areas(R, info)
   local function create_group_map()
     group_list = {}
 
-    group_map = GRID_CLASS.blank_copy(info.cave_map)
+    group_map = GRID_CLASS.blank_copy(area.cave_map)
 
 ---##  each G in R.cave_imps do
 ---##    add_group_to_map(G)
@@ -975,7 +951,7 @@ function Cave_create_areas(R, info)
     end
 
 
-    local function grow_an_area(cx, cy, prev_A)
+    local function grow_an_area(cx, cy, prev_B)
 
 -- free:dump("Free:")
 
@@ -1010,9 +986,9 @@ function Cave_create_areas(R, info)
 step:dump("Step:")
 
       -- when the step is too small, merge it into previous area
-      if size < 4 and prev_A then
+      if size < 4 and prev_B then
 
-        install_blob(prev_A, step, 1)
+        install_blob(prev_B, step, 1)
 
       else
         local AREA =
@@ -1020,22 +996,22 @@ step:dump("Step:")
           neighbors = {}
         }
 
-        table.insert(info.floors, AREA)
+        table.insert(area.walk_floors, AREA)
 
         install_blob(AREA, step, 1)
 
-        prev_A = AREA
+        prev_B = AREA
       end
 
 
       -- remember area of covered groups (e.g. for outgoing heights)
       each G in touched_groups do
-        G.area = prev_A
+        G.area = prev_B
 
         if G.portal then
-          prev_A.goal_type = "portal"
+          prev_B.goal_type = "portal"
         else
-          prev_A.goal_type = "important"
+          prev_B.goal_type = "important"
         end
       end
 
@@ -1049,7 +1025,7 @@ step:dump("Step:")
         for dir = 2,8,2 do
           local nx, ny = geom.nudge(x, y, dir)
           if free:valid_cell(nx, ny) and f_cel[nx][ny] == 0 then
-            table.insert(pos_list, { x=nx, y=ny, prev=prev_A })
+            table.insert(pos_list, { x=nx, y=ny, prev=prev_B })
           end
         end
       end -- x, y
@@ -1098,8 +1074,8 @@ step:dump("Step:")
     end
 
     -- verify all areas touch at least one other
-    if #info.floors > 1 then
-      each B in info.floors do
+    if #area.walk_floors > 1 then
+      each B in area.walk_floors do
         assert(not table.empty(B.neighbors))
       end
     end
@@ -1107,14 +1083,14 @@ step:dump("Step:")
 
 
   local function set_walls()
-    assert(info.wall)
+    assert(area.wall_blob)
 
     for x = 1, area.cw do
     for y = 1, area.ch do
       local val = cave:get(x, y)
 
       if (val or 0) > 0 then
-        area.blobs[x][y] = info.wall
+        area.blobs[x][y] = area.wall_blob
       end
     end
     end
@@ -1145,17 +1121,17 @@ end
 
 
 function Cave_bunch_areas(R, mode)
-  --|
-  --| this picks a bunch of step areas which will become either liquid
-  --| or sky (depending on 'mode' parameter).
-  --|
+  --
+  -- This picks a bunch of step areas which will become either liquid
+  -- or sky (depending on 'mode' parameter).
+  --
 
-  local info = R.cave_info
+  local area = R.cave_area
 
 
   local function setup()
-    each A in info.floors do
-      if A.goal_type then A.near_bunch = 0 end
+    each B in area.walk_floors do
+      if B.goal_type then B.near_bunch = 0 end
     end
   end
 
@@ -1163,9 +1139,9 @@ function Cave_bunch_areas(R, mode)
   local function pick_start_area()
     local poss = {}
 
-    each A in info.floors do
-      if not A.near_bunch then
-        table.insert(poss, A)
+    each B in area.walk_floors do
+      if not B.near_bunch then
+        table.insert(poss, B)
       end
     end
 
@@ -1189,12 +1165,12 @@ function Cave_bunch_areas(R, mode)
   local function grow_bunch(list)
     local poss = {}
 
-    each A,_ in list do
-      each N in A.neighbors do
+    each B,_ in list do
+      each N in B.neighbors do
         if list[N] then continue end
         if N.near_bunch then continue end
 
-        if touches_the_list(N, list, A) then continue end
+        if touches_the_list(N, list, B) then continue end
 
         table.insert(poss, N)
       end
@@ -1202,26 +1178,26 @@ function Cave_bunch_areas(R, mode)
 
     if table.empty(poss) then return false end
 
-    local A2 = rand.pick(poss)
+    local B2 = rand.pick(poss)
 
-    list[A2] = 1
+    list[B2] = 1
 
     return true
   end
 
 
   local function install_bunch(list)
-    local head_A
+    local head_B
 
-    each A,_ in list do
-      if not head_A then head_A = A end
+    each B,_ in list do
+      if not head_B then head_B = B end
 
-      if mode == "sky"    then A.sky_bunch    = head_A ; A.is_sky    = true end
-      if mode == "liquid" then A.liquid_bunch = head_A ; A.is_liquid = true end
+      if mode == "sky"    then B.sky_bunch    = head_B ; B.is_sky    = true end
+      if mode == "liquid" then B.liquid_bunch = head_B ; B.is_liquid = true end
 
-      A.near_bunch = 0
+      B.near_bunch = 0
 
-      each N in A.neighbors do
+      each N in B.neighbors do
         if not N.near_bunch or N.near_bunch > 1 then
           N.near_bunch = 1
         end
@@ -1236,8 +1212,8 @@ function Cave_bunch_areas(R, mode)
 
 
   local function clear()
-    each A in info.floors do
-      A.near_bunch = nil
+    each B in area.walk_floors do
+      B.near_bunch = nil
     end
   end
 
@@ -1252,14 +1228,14 @@ function Cave_bunch_areas(R, mode)
 
   setup()
 
-  local try_count = int(#info.floors / rand.sel(50, 8, 14))
+  local try_count = int(#area.walk_floors / rand.sel(50, 8, 14))
 
   for i = 1, try_count do
-    local A1 = pick_start_area()
+    local B1 = pick_start_area()
 
-    if not A1 then break; end  -- nothing is possible
+    if not B1 then break; end  -- nothing is possible
 
-    local list = { [A1] = 1 }
+    local list = { [B1] = 1 }
 
     while grow_bunch(list) and rand.odds(64) do
       -- keep growing...
@@ -1276,8 +1252,8 @@ end
 
 
 function Cave_heights_near_area(R, B)
-  local info = R.cave_info
-  local area = info.area
+  local area = R.cave_area
+
   local cave = area.cave_map
 
   local min_floor_h =  9e9
@@ -1334,8 +1310,7 @@ end
 function Cave_floor_heights(R, entry_h)
   assert(entry_h)
 
-  local info = R.cave_info
-  local area = info.area
+  local area = R.cave_area
 
 
   local z_change_prob = rand.sel(15, 40, 10)
@@ -1345,16 +1320,16 @@ function Cave_floor_heights(R, entry_h)
   end
 
 
-  local function floor_for_river(bunch_A, h)
-    assert(not bunch_A.floor_h)
+  local function floor_for_river(bunch_B, h)
+    assert(not bunch_B.floor_h)
 
     local diff_h = 16
 
     -- determine minimum of all areas touching the river
-    each A in info.floors do
-      if A.liquid_bunch != bunch_A then continue end
+    each B in area.walk_floors do
+      if B.liquid_bunch != bunch_B then continue end
 
-      each N in A.neighbors do
+      each N in B.neighbors do
         if N.liquid_bunch then continue end
 
         if N.floor_h then
@@ -1363,9 +1338,9 @@ function Cave_floor_heights(R, entry_h)
       end
     end
 
-    each A in info.floors do
-      if A.liquid_bunch == bunch_A then
-        A.floor_h = h
+    each B in area.walk_floors do
+      if B.liquid_bunch == bunch_B then
+        B.floor_h = h
       end
     end
 
@@ -1373,14 +1348,14 @@ function Cave_floor_heights(R, entry_h)
   end
 
 
-  local function spread_river_banks(bunch_A, h)
+  local function spread_river_banks(bunch_B, h)
     --| ensure all areas touching the river get a floor height now
     --| (to prevent those areas becoming lower than the river).
 
-    each A in info.floors do
-      if A.liquid_bunch != bunch_A then continue end
+    each B in area.walk_floors do
+      if B.liquid_bunch != bunch_B then continue end
 
-      each N in A.neighbors do
+      each N in B.neighbors do
         if N.liquid_bunch then continue end
 
         if not N.floor_h then
@@ -1391,13 +1366,13 @@ function Cave_floor_heights(R, entry_h)
   end
 
 
-  local function visit_area(A, z_dir, h)
+  local function visit_area(B, z_dir, h)
     --|
     --| recursively spread floors heights into each area
     --|
 
-    assert(not A.visited)
-    A.visited = true
+    assert(not B.visited)
+    B.visited = true
 
     if rand.odds(z_change_prob) then
       z_dir = - z_dir
@@ -1406,17 +1381,17 @@ function Cave_floor_heights(R, entry_h)
 
     -- floor --
 
-    if A.floor_h then
-      h = A.floor_h
-    elseif A.liquid_bunch then
-      h = floor_for_river(A.liquid_bunch, h)
+    if B.floor_h then
+      h = B.floor_h
+    elseif B.liquid_bunch then
+      h = floor_for_river(B.liquid_bunch, h)
     else
-      A.floor_h = h
+      B.floor_h = h
     end
 
 
-    if A.liquid_bunch then
-      spread_river_banks(A.liquid_bunch, h)
+    if B.liquid_bunch then
+      spread_river_banks(B.liquid_bunch, h)
     end
 
 
@@ -1424,16 +1399,16 @@ function Cave_floor_heights(R, entry_h)
 
     if R.is_outdoor and false then  --!!!!!!
       -- no ceil_h (done later as the base area ceiling)
-    elseif A.goal_type then
-      A.ceil_h = h + 192
+    elseif B.goal_type then
+      B.ceil_h = h + 192
     else
-      A.ceil_h = h + R.walkway_height
+      B.ceil_h = h + R.walkway_height
     end
 
 
-    rand.shuffle(A.neighbors)
+    rand.shuffle(B.neighbors)
 
-    each N in A.neighbors do
+    each N in B.neighbors do
       if not N.visited then
         local new_h = h + z_dir * rand.sel(35, 8, 16)
         visit_area(N, z_dir, new_h)
@@ -1452,7 +1427,7 @@ function Cave_floor_heights(R, entry_h)
     end
 --]]
 
-    return rand.pick(info.floors)
+    return rand.pick(area.walk_floors)
   end
 
 
@@ -1489,22 +1464,22 @@ function Cave_floor_heights(R, entry_h)
     R.floor_min_h = entry_h
     R.floor_max_h = entry_h
 
-    each A in info.floors do
-      R.floor_min_h = math.min(R.floor_min_h, A.floor_h)
-      R.floor_max_h = math.max(R.floor_max_h, A.floor_h)
+    each B in area.walk_floors do
+      R.floor_min_h = math.min(R.floor_min_h, B.floor_h)
+      R.floor_max_h = math.max(R.floor_max_h, B.floor_h)
     end
   end
 
 
   local function update_walk_ways()
-    each A in info.floors do
-      if not A.children then continue end
+    each B in area.walk_floors do
+      if not B.children then continue end
 
-      each SINK in A.children do
-        SINK.floor_h = A.floor_h + SINK.floor_dz
+      each SINK in B.children do
+        SINK.floor_h = B.floor_h + SINK.floor_dz
 
-        if A.ceil_h then
-          SINK.ceil_h = A.ceil_h + SINK.ceil_dz
+        if B.ceil_h then
+          SINK.ceil_h = B.ceil_h + SINK.ceil_dz
         end
       end
     end
@@ -1513,15 +1488,15 @@ function Cave_floor_heights(R, entry_h)
 
   local function update_fences()
     if area.liquid_mode == "lake" then
-      info.fence.floor_h = R.floor_max_h + 96
-      info. wall.floor_h = info.fence.floor_h
+      area.fence_blob.floor_h = R.floor_max_h + 96
+      area. wall_blob.floor_h = area.fence_blob.floor_h
 
-      R.cave_fence_z = info.fence.floor_h
+      R.cave_fence_z = area.fence_blob.floor_h
 
     elseif area.sky_mode == "low_wall" then
-      info.wall.floor_h = R.floor_max_h + 80
+      area.wall_blob.floor_h = R.floor_max_h + 80
 
-      R.cave_fence_z = info.wall.floor_h
+      R.cave_fence_z = area.wall_blob.floor_h
 
     else
       -- do not need a cave_fence_z
@@ -1530,14 +1505,16 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function update_lakes()
+    if not area.lakes then return end
+
     for pass = 1,4 do
-      each A in info.lakes do
-        if not A.floor_h then
+      each B in area.lakes do
+        if not B.floor_h then
 
           local f_h = Cave_heights_near_area(R, A)
 
           if f_h then
-            A.floor_h = f_h - rand.pick({ 8, 16, 24 })
+            B.floor_h = f_h - rand.pick({ 8, 16, 24 })
           elseif pass == 4 then
             error("Lake failed to get a height")
           end
@@ -1548,13 +1525,13 @@ function Cave_floor_heights(R, entry_h)
   end
 
 
-  local function ceiling_for_sky_bunch(bunch_A)
-    local h = bunch_A.ceil_h or 0
+  local function ceiling_for_sky_bunch(bunch_B)
+    local h = bunch_B.ceil_h or 0
 
-    each A in info.floors do
-      if A.sky_bunch != bunch_A then continue end
+    each B in area.walk_floors do
+      if B.sky_bunch != bunch_B then continue end
 
-      each N in A.neighbors do
+      each N in B.neighbors do
         if N.sky_bunch then continue end
 
         if N.ceil_h then
@@ -1565,18 +1542,18 @@ function Cave_floor_heights(R, entry_h)
 
     h = h + rand.pick({ 32,48,64,96 })
 
-    each A in info.floors do
-      if A.sky_bunch == bunch_A then
-        A.ceil_h = h
+    each B in area.walk_floors do
+      if B.sky_bunch == bunch_B then
+        B.ceil_h = h
       end
     end
   end
 
 
   local function update_sky_bunches()
-    each A in info.floors do
-      if A.sky_bunch == A then
-        ceiling_for_sky_bunch(A)
+    each B in area.walk_floors do
+      if B.sky_bunch == B then
+        ceiling_for_sky_bunch(B)
       end
     end
   end
@@ -1595,8 +1572,8 @@ function Cave_floor_heights(R, entry_h)
   end
 
   -- TEMP RUBBISH
-  info.area.floor_h = entry_h
-  info.area.ceil_h  = entry_h + R.walkway_height
+  area.floor_h = entry_h
+  area.ceil_h  = entry_h + R.walkway_height
 
   local entry_area = find_entry_area()
 
@@ -1616,8 +1593,8 @@ end
 
 
 function Cave_fill_lakes(R)
-  local info = R.cave_info
-  local area = info.area
+  local area = R.cave_area
+
   local cave = area.cave_map
 
 
@@ -1637,7 +1614,7 @@ function Cave_fill_lakes(R)
       cy2 = reg.y2
     }
 
-    table.insert(info.lakes, LAKE)
+    table.insert(area.lakes, LAKE)
 
     for x = LAKE.cx1, LAKE.cx2 do
     for y = LAKE.cy1, LAKE.cy2 do
@@ -1680,7 +1657,7 @@ end
 
 
 function Cave_lake_fences(R)
-  local info = R.cave_info
+  local area = R.cave_area
 
   local function install_fence_post(cx1, cy1, cx2, cy2, dir, along_dir, i, deep)
     if along_dir == 6 then
@@ -1699,7 +1676,7 @@ function Cave_lake_fences(R)
 
     for x = cx1, cx2 do
     for y = cy1, cy2 do
-      area.blobs[x][y] = info.fence
+      area.blobs[x][y] = area.fence_blob
     end
     end
   end
@@ -1792,7 +1769,7 @@ function Cave_lake_fences(R)
            B:need_lake_fence(A_dir)
         then
           local cx, cy = geom.pick_corner(dir, cx1, cy1, cx1+1, cy1+1)
-          area.blobs[cx][cy] = info.fence
+          area.blobs[cx][cy] = area.fence_blob
         end
 
       end
@@ -1815,7 +1792,7 @@ function Cave_lake_fences(R)
     -- floor_h
   }
 
-  info.fence = FENCE
+  area.fence_blob = FENCE
 
   for x = R.sx1, R.sx2 do
   for y = R.sy1, R.sy2 do
@@ -1838,11 +1815,11 @@ end
 
 
 function Cave_make_waterfalls(R)
-  --| this checks if two lakes can be connected by a short run of
-  --| intermediate cells.
+  -- this checks if two lakes can be connected by a short run of
+  -- intermediate cells.
 
-  local info = R.cave_info
-  local area = info.area
+  local area = R.cave_area
+
   local cave = area.cave_map
 
 
@@ -1958,7 +1935,7 @@ function Cave_make_waterfalls(R)
 
 
   local function connect_pools()
-    each lake in info.lakes do
+    each lake in area.lakes do
       local w, h = geom.group_size(lake.cx1, lake.cy1, lake.cx2, lake.cy2)
 
       -- too large?
@@ -1990,7 +1967,7 @@ function Cave_make_waterfalls(R)
   end
 
 
-  local function check_side_floors(cx, cy, dir, walk_A)
+  local function check_side_floors(cx, cy, dir, walk_B)
     dir = geom.RIGHT[dir]
 
     for pass = 1, 2 do
@@ -2010,7 +1987,7 @@ function Cave_make_waterfalls(R)
 
       if N.is_wall or not N.floor_h then return false end
 
-      if N != walk_A then return false end
+      if N != walk_B then return false end
 
       dir = 10 - dir
     end
@@ -2205,16 +2182,16 @@ end
 
 
 function Cave_decorations(R)
-  --|
-  --| add torches (etc)
-  --|
+  --
+  -- add torches (etc)
+  --
 
-  local info = R.cave_info
-  local area = info.area
+  local area = R.cave_area
+
   local cave = area.cave_map
 
 
-  local function block_is_bounded(x, y, A, dir)
+  local function block_is_bounded(x, y, B, dir)
     local nx, ny = geom.nudge(x, y, dir)
 
     if not cave:valid_cell(nx, ny) then return true end
@@ -2224,22 +2201,22 @@ function Cave_decorations(R)
     if not (N and N.floor_h) then return true end
     if N.is_wall or N.is_fence or N.is_liquid then return true end
 
-    if math.abs(N.floor_h - A.floor_h) > 16 then return true end
+    if math.abs(N.floor_h - B.floor_h) > 16 then return true end
 
     return false
   end
 
 
   local function usable_corner(x, y)
-    local A = area.blobs[x][y]
+    local B = area.blobs[x][y]
 
-    if not (A and A.floor_h) then return false end
+    if not (B and B.floor_h) then return false end
 
     -- analyse neighborhood of cell
     local nb_str = ""
 
     for dir = 1,9 do
-      if block_is_bounded(x, y, A, dir) then
+      if block_is_bounded(x, y, B, dir) then
         nb_str = nb_str .. "1"
       else
         nb_str = nb_str .. "0"
@@ -2302,7 +2279,7 @@ function Cave_decorations(R)
 
     R:add_solid_ent(torch_ent, mx, my, B.floor_h)
 
-    table.insert(info.lights, { x=mx, y=my, z=B.floor_h + 64 })
+    table.insert(area.cave_lights, { x=mx, y=my, z=B.floor_h + 64 })
   end
 
 
@@ -2443,22 +2420,24 @@ end
 
 function Cave_build_room(R, entry_h)
 
-  local info = Cave_setup_info(R)
+  local area = Cave_find_area_for_room(R)
 
-  R.cave_info = info
+  R.cave_area = area
 
-  Cave_collect_walk_rects(R, info.area)
+  Cave_setup_stuff(area)
 
-  Cave_decide_properties(R, info.area)
+  Cave_collect_walk_rects(R, area)
 
-  Cave_map_usable_area(info)
+  Cave_decide_properties(R, area)
 
-  Cave_generate_cave(R, info)
+  Cave_map_usable_area(area)
+
+  Cave_generate_cave(R, area)
 
 ---  Cave_lake_fences(R)
 ---  Cave_fill_lakes(R)
 
-  Cave_create_areas(R, info)
+  Cave_create_areas(R, area)
 
 ---  Cave_bunch_areas(R, "liquid")
 ---  Cave_bunch_areas(R, "sky")
@@ -2474,8 +2453,7 @@ end
 
 function Cave_build_a_park(R, entry_h)
 
-  local info
-  local area
+  local area = Cave_find_area_for_room(R)
 
 
   local function temp_install_floor(FL)
@@ -2508,9 +2486,9 @@ function Cave_build_a_park(R, entry_h)
       floor_h   = entry_h
     }
 
-    info.FLOOR = FLOOR
+    area.floor_blob = FLOOR
 
-    table.insert(info.floors, FLOOR)
+    table.insert(area.walk_floors, FLOOR)
 
     area.external_sky = true
   end
@@ -2905,25 +2883,24 @@ function Cave_build_a_park(R, entry_h)
 
 gui.debugf("BUILD PARK IN %s\n", R.name)
 
-  info = Cave_setup_info(R)
-  area = info.area
+  R.cave_area = area
 
-  R.cave_info = info
+  Cave_setup_stuff(area)
 
-  Cave_collect_walk_rects(R, info.area)
+  Cave_collect_walk_rects(R, area)
 
-  Cave_map_usable_area(info)
+  Cave_map_usable_area(area)
 
-  Cave_clear_walk_rects(info.area)
+  Cave_clear_walk_rects(area)
 
   -- TEMP RUBBISH
-  info.area.floor_h = entry_h
-  info.area.ceil_h  = entry_h + 256
-  info.area.ceil_mat = "_SKY"
+  area.floor_h = entry_h
+  area.ceil_h  = entry_h + 256
+  area.ceil_mat = "_SKY"
 
   do_parky_stuff()
 
-  temp_install_floor(info.FLOOR)
+  temp_install_floor(area.floor_blob)
 
   if LEVEL.liquid and rand.odds(25) then
     make_a_river()
@@ -2933,8 +2910,6 @@ end
 
 
 function Cave_build_a_scenic_vista(area)
-
-  local info
 
   local room = assert(area.face_room)
 
@@ -2946,7 +2921,7 @@ function Cave_build_a_scenic_vista(area)
       children  = {}
     }
 
-    table.insert(info.floors, FL)
+    table.insert(area.walk_floors, FL)
 
     return FL
   end
@@ -3025,7 +3000,7 @@ function Cave_build_a_scenic_vista(area)
 
       if val == nil then continue end
 
-      if Cave_cell_touches_map_edge(info, cx, cy) then
+      if Cave_cell_touches_map_edge(area, cx, cy) then
         area.blobs[cx][cy] = CLIFF
       end
     end
@@ -3045,11 +3020,11 @@ function Cave_build_a_scenic_vista(area)
 
   assert(area.mode == "scenic")
 
-  info = Cave_setup_info(nil, area)
+  Cave_setup_stuff(area)
 
   area.external_sky = true
 
-  Cave_map_usable_area(info)
+  Cave_map_usable_area(area)
 
   if room.has_river or not LEVEL.liquid or rand.odds(25) then
     make_simple_fence()
