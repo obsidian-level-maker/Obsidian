@@ -76,6 +76,21 @@
 
     external_sky  -- true when sky is built by area (NOT the cells)
 
+    walk_map : GRID  -- marks which parts are usable:
+                     --    nil : never touched (e.g. other rooms)
+                     --    -1  : forced off [ floor ]
+                     --    +1  : forced on  [ wall ]
+                     --     0  : normal processing
+
+    diagonals : array   -- marks which cells are on a diagonal seed
+                        -- (using the numbers 1/3/7/9)
+
+    blobs : array(BLOB)  -- info for each 64x64 block
+                         -- [ used for the final rendering of cells ]
+
+    delta_x_map : array
+    delta_y_map : array
+
 
     --- other stuff ---
 

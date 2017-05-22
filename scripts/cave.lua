@@ -31,18 +31,6 @@
     walk_chunks : list(CHUNK)  -- all places the player MUST be able
                                -- walk to (conns, goals, etc...)
 
-    map : GRID  -- marks which parts are usable:
-                    --    nil : never touched (e.g. other rooms)
-                    --    -1  : forced off [ empty ]
-                    --    +1  : forced on  [ wall ]
-                    --     0  : normal processing
-
-    diagonals : array   -- marks which cells are on a diagonal seed
-                        -- (using the numbers 1/3/7/9)
-
-    blocks : array(CAVE_AREA)  -- info for each 64x64 block
-                               -- [ used for the final rendering of cells ]
-
 
     --- Cave specific fields ---
 
@@ -100,13 +88,13 @@
 CELL_CORNERS = { 1,3,9,7 }
 
 
-function Cave_brush(info, x, y)
-  local bx = info.x1 + (x - 1) * 64
-  local by = info.y1 + (y - 1) * 64
+function Cave_brush(area, x, y)
+  local bx = area.cell_info.x1 + (x - 1) * 64
+  local by = area.cell_info.y1 + (y - 1) * 64
 
   local coords = {}
 
-  local diag_map = info.diagonals
+  local diag_map = area.diagonals
 
   each side in CELL_CORNERS do
     -- create a triangle when cell straddles a diagonal seed
@@ -120,8 +108,8 @@ function Cave_brush(info, x, y)
     local cx =  x + sel(dx < 0, 0, 1)
     local cy =  y + sel(dy < 0, 0, 1)
 
-    fx = fx + (info.delta_x_map[cx][cy] or 0)
-    fy = fy + (info.delta_y_map[cx][cy] or 0)
+    fx = fx + (area.delta_x_map[cx][cy] or 0)
+    fy = fy + (area.delta_y_map[cx][cy] or 0)
 
     table.insert(coords, { x=fx, y=fy })
   end
@@ -196,10 +184,10 @@ function Cave_setup_info(R, area)
 
 --stderrf("setup_info %d x %d : %s\n", info.W, info.H, area.name)
 
-  info.map = GRID_CLASS.new(info.W, info.H)
+  area.walk_map = GRID_CLASS.new(info.W, info.H)
 
-  info.diagonals = table.array_2D(info.W, info.H)
-  info.blocks    = table.array_2D(info.W, info.H)
+  area.diagonals = table.array_2D(info.W, info.H)
+  area.blobs     = table.array_2D(info.W, info.H)
 
   info.floors = {}
 
@@ -373,7 +361,8 @@ end
 
 function Cave_map_usable_area(info)
 
-  local cells = info.map.cells
+  local area  = info.area
+  local cells = area.walk_map.cells
 
   local bbox = {}
 
@@ -431,7 +420,7 @@ function Cave_map_usable_area(info)
       end
 
       if diag_mode and cell_touches_diagonal(diag_mode, dx, dy) then
-        info.diagonals[cx][cy] = diag_mode
+        area.diagonals[cx][cy] = diag_mode
       end
     end -- cx, cy
     end
@@ -460,7 +449,7 @@ function Cave_clear_walk_chunks(info)
   each chunk in info.walk_chunks do
     assert(chunk.cx1)
 
-    info.map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, -1)
+    info.area.walk_map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, -1)
   end
 end
 
@@ -498,7 +487,7 @@ function Cave_generate_cave(R, info)
   local is_lake = (info.liquid_mode == "lake")
 
   -- this contains where walls and must-be-clear spots are
-  local map = info.map
+  local map = info.area.walk_map
 
   -- this is the generated 2d cave
   local cave
@@ -727,24 +716,26 @@ function Cave_create_areas(R, info)
   local group_list
   local group_map
 
+  local area = info.area
 
-  local function install_area(A, template, mul, empty_ok)
-    for cx = 1, info.W do
-    for cy = 1, info.H do
+
+  local function install_blob(B, template, mul, empty_ok)
+    for cx = 1, area.walk_map.w do
+    for cy = 1, area.walk_map.h do
       if ((template:get(cx, cy) or 0) * mul) > 0 then
-        info.blocks[cx][cy] = A
+        area.blobs[cx][cy] = B
 
-        A.cx1 = math.min(A.cx1 or  9999, cx)
-        A.cy1 = math.min(A.cy1 or  9999, cy)
+        B.cx1 = math.min(B.cx1 or  9999, cx)
+        B.cy1 = math.min(B.cy1 or  9999, cy)
 
-        A.cx2 = math.max(A.cx2 or -9999, cx)
-        A.cy2 = math.max(A.cy2 or -9999, cy)
+        B.cx2 = math.max(B.cx2 or -9999, cx)
+        B.cy2 = math.max(B.cy2 or -9999, cy)
       end
     end
     end
 
-    if not A.cx1 and not empty_ok then
-      error("Cave install_area: no cells!")
+    if not B.cx1 and not empty_ok then
+      error("Cave install_blob: no cells!")
     end
   end
 
@@ -755,9 +746,9 @@ function Cave_create_areas(R, info)
     if info.fence then
       for cx = 1, info.W do
       for cy = 1, info.H do
-        local A = info.blocks[cx][cy]
+        local B = area.blobs[cx][cy]
 
-        if A and A.is_fence then
+        if B and B.is_fence then
           new_cave:set(cx, cy, nil)
         end
       end
@@ -893,7 +884,7 @@ function Cave_create_areas(R, info)
       WC.cave_area = AREA
     end
 
-    install_area(AREA, cave, -1)
+    install_blob(AREA, cave, -1)
 
     -- this fixes MON_TELEPORT spots [ so they blend in ]
     info.area.floor_mat = AREA.floor_mat
@@ -917,7 +908,7 @@ function Cave_create_areas(R, info)
     walk_way:shrink8(true)
     walk_way:remove_dots()
 
-    install_area(SINK1, walk_way, 1, "empty_ok")
+    install_blob(SINK1, walk_way, 1, "empty_ok")
 
     table.insert(AREA.children, SINK1)
 
@@ -925,7 +916,7 @@ function Cave_create_areas(R, info)
     walk_way:shrink8(true)
     walk_way:remove_dots()
 
-    install_area(SINK2, walk_way, 1, "empty_ok")
+    install_blob(SINK2, walk_way, 1, "empty_ok")
 
     table.insert(AREA.children, SINK2)
   end
@@ -1123,7 +1114,7 @@ step:dump("Step:")
       -- when the step is too small, merge it into previous area
       if size < 4 and prev_A then
 
-        install_area(prev_A, step, 1)
+        install_blob(prev_A, step, 1)
 
       else
         local AREA =
@@ -1133,7 +1124,7 @@ step:dump("Step:")
 
         table.insert(info.floors, AREA)
 
-        install_area(AREA, step, 1)
+        install_blob(AREA, step, 1)
 
         prev_A = AREA
       end
@@ -1187,22 +1178,22 @@ step:dump("Step:")
 
     for x = 1, W do
     for y = 1, H do
-      local A1 = info.blocks[x][y]
+      local B1 = area.blobs[x][y]
 
-      if not (A1 and A1.neighbors) then continue end
+      if not (B1 and B1.neighbors) then continue end
 
       for dir = 2,4,2 do
         local nx, ny = geom.nudge(x, y, dir)
 
         if not cave:valid_cell(nx, ny) then continue end
 
-        local A2 = info.blocks[nx][ny]
+        local B2 = area.blobs[nx][ny]
 
-        if not (A2 and A2.neighbors) then continue end
+        if not (B2 and B2.neighbors) then continue end
 
-        if A2 != A1 then
-          table.add_unique(A1.neighbors, A2)
-          table.add_unique(A2.neighbors, A1)
+        if B2 != B1 then
+          table.add_unique(B1.neighbors, B2)
+          table.add_unique(B2.neighbors, B1)
         end
       end
     end  -- x, y
@@ -1210,8 +1201,8 @@ step:dump("Step:")
 
     -- verify all areas touch at least one other
     if #info.floors > 1 then
-      each A in info.floors do
-        assert(not table.empty(A.neighbors))
+      each B in info.floors do
+        assert(not table.empty(B.neighbors))
       end
     end
   end
@@ -1225,7 +1216,7 @@ step:dump("Step:")
       local val = cave:get(x, y)
 
       if (val or 0) > 0 then
-        info.blocks[x][y] = info.wall
+        area.blobs[x][y] = info.wall
       end
     end
     end
@@ -1386,8 +1377,9 @@ end
 
 
 
-function Cave_heights_near_area(R, A)
+function Cave_heights_near_area(R, B)
   local info = R.cave_info
+  local area = info.area
   local cave = info.cave
 
   local min_floor_h =  9e9
@@ -1403,23 +1395,23 @@ function Cave_heights_near_area(R, A)
 
       if not cave:valid_cell(nx, ny) then continue end
 
-      local A1 = info.blocks[x][y]
-      local A2 = info.blocks[nx][ny]
+      local B1 = area.blobs[x][y]
+      local B2 = area.blobs[nx][ny]
 
-      if (A2 == A) then
-        A1, A2 = A2, A1
+      if (B2 == B) then
+        B1, B2 = B2, B1
       end
 
-      if not A2 or (A1 != A) or (A2 == A) then continue end
+      if not B2 or (B1 != B) or (B2 == B) then continue end
 
-      if A2.floor_h then
-        min_floor_h = math.min(min_floor_h, A2.floor_h)
-        max_floor_h = math.max(max_floor_h, A2.floor_h)
+      if B2.floor_h then
+        min_floor_h = math.min(min_floor_h, B2.floor_h)
+        max_floor_h = math.max(max_floor_h, B2.floor_h)
       end
 
-      if A2.ceil_h then
-        min_ceil_h = math.min(min_ceil_h, A2.ceil_h)
-        max_ceil_h = math.max(max_ceil_h, A2.ceil_h)
+      if B2.ceil_h then
+        min_ceil_h = math.min(min_ceil_h, B2.ceil_h)
+        max_ceil_h = math.max(max_ceil_h, B2.ceil_h)
       end
     end
   end -- x, y
@@ -1750,7 +1742,7 @@ function Cave_fill_lakes(R)
     for x = LAKE.cx1, LAKE.cx2 do
     for y = LAKE.cy1, LAKE.cy2 do
       if cave.flood[x][y] == id then
-        info.blocks[x][y] = LAKE
+        area.blobs[x][y] = LAKE
       end
     end
     end
@@ -1807,7 +1799,7 @@ function Cave_lake_fences(R)
 
     for x = cx1, cx2 do
     for y = cy1, cy2 do
-      info.blocks[x][y] = info.fence
+      area.blobs[x][y] = info.fence
     end
     end
   end
@@ -1900,7 +1892,7 @@ function Cave_lake_fences(R)
            B:need_lake_fence(A_dir)
         then
           local cx, cy = geom.pick_corner(dir, cx1, cy1, cx1+1, cy1+1)
-          info.blocks[cx][cy] = info.fence
+          area.blobs[cx][cy] = info.fence
         end
 
       end
@@ -1965,8 +1957,8 @@ function Cave_make_waterfalls(R)
     if not cave:valid_cell(ax, ay) then return false end
     if not cave:valid_cell(bx, by) then return false end
 
-    local A = info.blocks[ax][ay]
-    local B = info.blocks[bx][by]
+    local A = area.blobs[ax][ay]
+    local B = area.blobs[bx][by]
 
     if not A or not B then return false end
 
@@ -1978,7 +1970,7 @@ function Cave_make_waterfalls(R)
 
 
   local function try_from_loc(lake, x, y, dir)
-    if info.blocks[x][y] != lake then
+    if area.blobs[x][y] != lake then
       return false
     end
 
@@ -1986,7 +1978,7 @@ function Cave_make_waterfalls(R)
 
     if not cave:valid_cell(nx, ny) then return false end
 
-    local B = info.blocks[nx][ny]
+    local B = area.blobs[nx][ny]
 
     if not B or B == lake then return false end
 
@@ -2002,7 +1994,7 @@ function Cave_make_waterfalls(R)
 
       if not cave:valid_cell(ox, oy) then return false end
 
-      local B2 = info.blocks[ox][oy]
+      local B2 = area.blobs[ox][oy]
 
       if not B2 or B2 == lake then return false end
 
@@ -2036,7 +2028,7 @@ function Cave_make_waterfalls(R)
     for dist = 1, length do
       local ox, oy = geom.nudge(x, y, dir, dist)
 
-      info.blocks[ox][oy] = lake
+      area.blobs[ox][oy] = lake
     end
 
     return true
@@ -2088,7 +2080,7 @@ function Cave_make_waterfalls(R)
     for x = cx1, cx2 do
     for y = cy1, cy2 do
       assert(cave:valid_cell(x, y))
-      local B = info.blocks[x][y]
+      local B = area.blobs[x][y]
       if not (B and B.is_fence) then return false end
     end
     end
@@ -2105,7 +2097,7 @@ function Cave_make_waterfalls(R)
 
       if not cave:valid_cell(nx, ny) then return false end
 
-      local N = info.blocks[nx][ny]
+      local N = area.blobs[nx][ny]
       if not N then return false end
 
       -- allow fences
@@ -2137,7 +2129,7 @@ function Cave_make_waterfalls(R)
       local nx, ny = geom.nudge(cx, cy, dir, i)
       if not cave:valid_cell(nx, ny) then return false end
 
-      local BL = info.blocks[nx][ny]
+      local BL = area.blobs[nx][ny]
       if not BL or BL.is_wall or BL.goal_type then return false end
 
       -- do not join onto a previously built waterfall
@@ -2187,7 +2179,7 @@ function Cave_make_waterfalls(R)
 
     -- OK, do it --
 
-    local F1 = info.blocks[cx][cy]
+    local F1 = area.blobs[cx][cy]
     assert(F1.floor_h)
 
     local HIGH_POOL =
@@ -2204,7 +2196,7 @@ function Cave_make_waterfalls(R)
       floor_h = low_floor.floor_h - 12
     }
 
-    info.blocks[cx][cy] = HIGH_POOL
+    area.blobs[cx][cy] = HIGH_POOL
 
     for i = 1, 7 do
       local ch = string.sub(str, i+1, i+1)
@@ -2213,11 +2205,11 @@ function Cave_make_waterfalls(R)
       if ch == 'L' then break; end
 
       if ch == 'F' and i == 1 and string.sub(str, 3, 3) == 'F' then
-        info.blocks[nx][ny] = HIGH_POOL
+        area.blobs[nx][ny] = HIGH_POOL
         continue
       end
 
-      info.blocks[nx][ny] = LOW_POOL
+      area.blobs[nx][ny] = LOW_POOL
     end
 
     return true
@@ -2318,6 +2310,7 @@ function Cave_decorations(R)
 
   local info = R.cave_info
   local cave = info.cave
+  local area = info.area
 
 
   local function block_is_bounded(x, y, A, dir)
@@ -2325,7 +2318,7 @@ function Cave_decorations(R)
 
     if not cave:valid_cell(nx, ny) then return true end
 
-    local N = info.blocks[nx][ny]
+    local N = area.blobs[nx][ny]
 
     if not (N and N.floor_h) then return true end
     if N.is_wall or N.is_fence or N.is_liquid then return true end
@@ -2337,7 +2330,7 @@ function Cave_decorations(R)
 
 
   local function usable_corner(x, y)
-    local A = info.blocks[x][y]
+    local A = area.blobs[x][y]
 
     if not (A and A.floor_h) then return false end
 
@@ -2398,17 +2391,17 @@ function Cave_decorations(R)
 
 
   local function add_torch(x, y, torch_ent)
-    local A = info.blocks[x][y]
-    assert(A and A.floor_h)
+    local B = area.blobs[x][y]
+    assert(B and B.floor_h)
 
     local mx = info.x1 + (x-1) * 64 + 32
     local my = info.y1 + (y-1) * 64 + 32
 
-    Trans.entity(torch_ent, mx, my, A.floor_h) ---??  { cave_light=48 })
+    Trans.entity(torch_ent, mx, my, B.floor_h) ---??  { cave_light=48 })
 
-    R:add_solid_ent(torch_ent, mx, my, A.floor_h)
+    R:add_solid_ent(torch_ent, mx, my, B.floor_h)
 
-    table.insert(info.lights, { x=mx, y=my, z=A.floor_h + 64 })
+    table.insert(info.lights, { x=mx, y=my, z=B.floor_h + 64 })
   end
 
 
@@ -2581,16 +2574,17 @@ end
 function Cave_build_a_park(R, entry_h)
 
   local info
+  local area
 
 
   local function temp_install_floor(FL)
     for cx = 1, info.W do
     for cy = 1, info.H do
-      local val = info.map.cells[cx][cy]
+      local val = area.walk_map.cells[cx][cy]
 
       if val == nil then continue end
 
-      info.blocks[cx][cy] = FL
+      area.blobs[cx][cy] = FL
 
       FL.cx1 = math.min(FL.cx1 or  9999, cx)
       FL.cy1 = math.min(FL.cy1 or  9999, cy)
@@ -2617,7 +2611,7 @@ function Cave_build_a_park(R, entry_h)
 
     table.insert(info.floors, FLOOR)
 
-    info.area.external_sky = true
+    area.external_sky = true
   end
 
 
@@ -2634,14 +2628,14 @@ function Cave_build_a_park(R, entry_h)
       if nx < 1 or nx > info.W then continue end
       if ny < 1 or ny > info.H then continue end
 
-      local v2 = info.map.cells[nx][ny]
+      local v2 = area.walk_map.cells[nx][ny]
 
       -- touches a walk chunk?
       if v2 and v2 < 0 then return -1 end
     end
     end
 
-    local v = info.map.cells[cx][cy]
+    local v = area.walk_map.cells[cx][cy]
 
     if v == nil then return 0 end
 
@@ -2775,13 +2769,13 @@ function Cave_build_a_park(R, entry_h)
       local bottom = 0
 
       for y = r.y2 + 1, info.H do
-        if info.map.cells[x][y] != nil then
+        if area.walk_map.cells[x][y] != nil then
           top = top + 1
         end
       end
 
       for y = 1, r.y1 - 1 do
-        if info.map.cells[x][y] != nil then
+        if area.walk_map.cells[x][y] != nil then
           bottom = bottom + 1
         end
       end
@@ -2851,7 +2845,7 @@ function Cave_build_a_park(R, entry_h)
   local function find_river_banks(RIVER)
     -- finds all contiguous regions
 
-    local map2 = info.map:copy()
+    local map2 = area.walk_map:copy()
 
     for x = 1, info.W do
     for y = 1, info.H do
@@ -2859,7 +2853,7 @@ function Cave_build_a_park(R, entry_h)
         map2:set(x, y, -1)
       end
 
-      if info.blocks[x][y] == RIVER then
+      if area.blobs[x][y] == RIVER then
         map2:set(x, y, nil)
       end
     end
@@ -2875,7 +2869,7 @@ function Cave_build_a_park(R, entry_h)
     for rx = reg.x1, reg.x2 do
     for ry = reg.y1, reg.y2 do
       if map2.flood[rx][ry] == reg.id then
-        info.blocks[rx][ry] = RIVER
+        area.blobs[rx][ry] = RIVER
       end
     end
     end
@@ -2923,7 +2917,7 @@ function Cave_build_a_park(R, entry_h)
 
     for dx =  0, 1 do
     for dy = -1, 1 do
-      info.blocks[bx+dx][by+dy] = BRIDGE
+      area.blobs[bx+dx][by+dy] = BRIDGE
     end
     end
 
@@ -2952,15 +2946,15 @@ function Cave_build_a_park(R, entry_h)
     local by = points[1].y
 
     each P in points do
-      info.blocks[P.x][P.y] = RIVER
+      area.blobs[P.x][P.y] = RIVER
 
-      if check_river_point(P.x, P.y-1) > 0 then info.blocks[P.x][P.y-1] = RIVER end
-      if check_river_point(P.x, P.y+1) > 0 then info.blocks[P.x][P.y+1] = RIVER end
+      if check_river_point(P.x, P.y-1) > 0 then area.blobs[P.x][P.y-1] = RIVER end
+      if check_river_point(P.x, P.y+1) > 0 then area.blobs[P.x][P.y+1] = RIVER end
 
       if math.abs(P.x - points[1].x) < 2 then continue end
 
-      if check_river_point(P.x, P.y-2) > 0 then info.blocks[P.x][P.y-2] = RIVER end
-      if check_river_point(P.x, P.y+2) > 0 then info.blocks[P.x][P.y+2] = RIVER end
+      if check_river_point(P.x, P.y-2) > 0 then area.blobs[P.x][P.y-2] = RIVER end
+      if check_river_point(P.x, P.y+2) > 0 then area.blobs[P.x][P.y+2] = RIVER end
     end
 
 
@@ -3011,6 +3005,7 @@ function Cave_build_a_park(R, entry_h)
 gui.debugf("BUILD PARK IN %s\n", R.name)
 
   info = Cave_setup_info(R)
+  area = info.area
 
   R.cave_info = info
 
@@ -3058,11 +3053,11 @@ function Cave_build_a_scenic_vista(area)
   local function temp_install_floor(FL)
     for cx = 1, info.W do
     for cy = 1, info.H do
-      local val = info.map.cells[cx][cy]
+      local val = area.walk_map.cells[cx][cy]
 
       if val == nil then continue end
 
-      info.blocks[cx][cy] = FL
+      area.blobs[cx][cy] = FL
 
       FL.cx1 = math.min(FL.cx1 or  9999, cx)
       FL.cy1 = math.min(FL.cy1 or  9999, cy)
@@ -3090,10 +3085,10 @@ function Cave_build_a_scenic_vista(area)
     area.fence_FLOOR = FL
 
 
-local blob_map = info.map:create_blobs(3, 2, 3)
+---##  local blob_map = area.walk_map:create_blobs(3, 2, 3)
 
     -- TEMP RUBBISH
-    info.area.floor_h = FL.floor_h
+    area.floor_h = FL.floor_h
   end
 
 
@@ -3124,12 +3119,12 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
     for cx = 1, info.W do
     for cy = 1, info.H do
-      local val = info.map.cells[cx][cy]
+      local val = area.walk_map.cells[cx][cy]
 
       if val == nil then continue end
 
       if Cave_cell_touches_map_edge(info, cx, cy) then
-        info.blocks[cx][cy] = CLIFF
+        area.blobs[cx][cy] = CLIFF
       end
     end
     end
@@ -3138,7 +3133,7 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
 
     -- TEMP RUBBISH
-    info.area.floor_h = CLIFF.floor_h
+    area.floor_h = CLIFF.floor_h
 
     -- NOTE: the railing is setup in Room_border_up()
   end
@@ -3150,7 +3145,7 @@ local blob_map = info.map:create_blobs(3, 2, 3)
 
   info = Cave_setup_info(nil, area)
 
-  info.area.external_sky = true
+  area.external_sky = true
 
   Cave_map_usable_area(info)
 

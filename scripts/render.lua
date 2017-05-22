@@ -2504,8 +2504,6 @@ function Render_determine_spots()
   --   4. use the CSG code to kill any blocking brushes.
   --      This step creates the WALL cells.
   --
-  local info
-
 
   local function spots_in_flat_floor(R, A, mode)
     -- the 'mode' is normally NIL, can also be "cage" or "trap"
@@ -2581,37 +2579,37 @@ function Render_determine_spots()
   end
 
 
-  local function do_floor_cell(x, y, FL)
-    assert(not (x < 1 or x > info.W))
-    assert(not (y < 1 or y > info.H))
+  local function do_floor_cell(x, y, area, FL)
+    assert(not (x < 1 or x > area.walk_map.w))
+    assert(not (y < 1 or y > area.walk_map.h))
 
-    local A = info.blocks[x][y]
-    if not A then return end
+    local B = area.blobs[x][y]
+    if not B then return end
 
-    if A == FL or A.parent == FL then
-      local poly = Cave_brush(info, x, y)
+    if B == FL or B.parent == FL then
+      local poly = Cave_brush(area, x, y)
 
       gui.spots_fill_poly(poly, SPOT_CLEAR)
     end
   end
 
 
-  local function do_lower_cell(x, y, FL)
-    if (x < 1 or x > info.W) then return end
-    if (y < 1 or y > info.H) then return end
+  local function do_lower_cell(x, y, area, FL)
+    if (x < 1 or x > area.walk_map.w) then return end
+    if (y < 1 or y > area.walk_map.h) then return end
 
-    local A = info.blocks[x][y]
-    if not A then return end
+    local B = area.blobs[x][y]
+    if not B then return end
 
-    if A.floor_h and A.floor_h < FL.floor_h - 16 then
-      local poly = Cave_brush(info, x, y)
+    if B.floor_h and B.floor_h < FL.floor_h - 16 then
+      local poly = Cave_brush(area, x, y)
 
       gui.spots_fill_poly(poly, SPOT_LEDGE)
     end
   end
 
 
-  local function spots_in_cave_floor(R, FL)
+  local function spots_in_cave_floor(R, area, FL)
     assert(FL.cx1 and FL.cy2)
 
     -- determine bbox (with a bit extra)
@@ -2627,19 +2625,19 @@ function Render_determine_spots()
     -- clear the floors
     for cx = FL.cx1, FL.cx2 do
     for cy = FL.cy1, FL.cy2 do
-      do_floor_cell(cx, cy, FL)
+      do_floor_cell(cx, cy, area, FL)
     end
     end
 
     -- handle nearby lower floors or liquid pools
     for cx = FL.cx1 - 1, FL.cx2 + 1 do
     for cy = FL.cy1 - 1, FL.cy2 + 1 do
-      do_lower_cell(cx, cy, FL)
+      do_lower_cell(cx, cy, area, FL)
     end
     end
 
     -- set the edges of the room
-    each E in info.area.side_edges do
+    each E in area.side_edges do
       gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
     end
 
@@ -2671,7 +2669,7 @@ gui.spots_dump("Cave spot dump")
     info = assert(area.cell_info)
 
     each FL in info.floors do
-      spots_in_cave_floor(R, FL)
+      spots_in_cave_floor(R, area, FL)
     end
   end
 
@@ -2739,27 +2737,27 @@ function Render_cells(area)
     --    F is floor height (adjusted to prevent negative values)
     --    C is ceiling height (negated, since lower ceils can block the player)
 
-    if x < 1 or x > info.W or y < 1 or y > info.H then
+    if x < 1 or x > area.walk_map.w or y < 1 or y > area.walk_map.h then
       return nil
     end
 
-    local A = info.blocks[x][y]
+    local B = area.blobs[x][y]
 
     -- in some places we build nothing (e.g. other rooms)
-    if A == nil then return nil end
+    if B == nil then return nil end
 
     -- bridges need aligned corners
-    if A.is_bridge then return nil end
+    if B.is_bridge then return nil end
 
     -- check for a solid cell
-    if A.is_wall then return "2-99999-99999" end
+    if B.is_wall then return "2-99999-99999" end
 
     -- otherwise there should be a floor area here
 
-    assert(A)
-    assert(A.floor_h)
+    assert(B)
+    assert(B.floor_h)
 
-    return string.format("1-%5d-%5d", A.floor_h + 50000, 50000 - (A.ceil_h or 0))
+    return string.format("1-%5d-%5d", B.floor_h + 50000, 50000 - (B.ceil_h or 0))
   end
 
 
@@ -2862,14 +2860,14 @@ function Render_cells(area)
 
 
   local function create_delta_map()
-    local dw = info.W + 1
-    local dh = info.H + 1
+    local dw = area.walk_map.w + 1
+    local dh = area.walk_map.h + 1
 
     delta_x_map = table.array_2D(dw, dh)
     delta_y_map = table.array_2D(dw, dh)
 
-    info.delta_x_map = delta_x_map
-    info.delta_y_map = delta_y_map
+    area.delta_x_map = delta_x_map
+    area.delta_y_map = delta_y_map
 
     for x = 1, dw do
     for y = 1, dh do
@@ -2938,21 +2936,21 @@ function Render_cells(area)
   end
 
 
-  local function render_floor(x, y, A)
+  local function render_floor(x, y, B)
     -- this is NIL for completely solid areas
-    local f_h = A.floor_h
+    local f_h = B.floor_h
 
     -- TODO : review this usage of ROOM object
-    local R = info.area.room or {}
+    local R = area.room or {}
 
-    local f_mat = A.floor_mat or R.floor_mat or R.main_tex or "_ERROR"
+    local f_mat = B.floor_mat or R.floor_mat or R.main_tex or "_ERROR"
 
-    if A.is_wall or A.is_fence then
-      f_mat = A.wall_mat or R.main_tex or R.main_tex
+    if B.is_wall or B.is_fence then
+      f_mat = B.wall_mat or R.main_tex or R.main_tex
     end
 
 
-    local f_brush = Cave_brush(info, x, y)
+    local f_brush = Cave_brush(area, x, y)
 
     if f_h then
       local top = { t=f_h }
@@ -2966,41 +2964,41 @@ top.reachable = 1  --!!!!!! FIXME: remove
 -- if R and R.id then top.tag = 1000 + R.id end
 
       -- scenic areas need to block sound
-      if info.area.mode == "scenic" then
-        top.sound_area = 70000 + info.area.id
+      if area.mode == "scenic" then
+        top.sound_area = 70000 + area.id
       end
 
       table.insert(f_brush, top)
     end
 
-    if A.is_liquid then
+    if B.is_liquid then
       f_mat = "_LIQUID"
     end
 
     brushlib.set_mat(f_brush, f_mat, f_mat)
 
-    if A.floor_y_offset then
-      brushlib.set_y_offset(f_brush, A.floor_y_offset)
+    if B.floor_y_offset then
+      brushlib.set_y_offset(f_brush, B.floor_y_offset)
     end
 
     Trans.brush(f_brush)
   end
 
 
-  local function render_ceiling(x, y, A)
-    if not A.ceil_h then return end
+  local function render_ceiling(x, y, B)
+    if not B.ceil_h then return end
 
     -- TODO : review this usage of ROOM object
-    local R = info.area.room or {}
+    local R = area.room or {}
 
-    local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex or "_ERROR"
+    local c_mat = B.ceil_mat or R.ceil_mat or R.main_tex or "_ERROR"
 
-    local c_brush = Cave_brush(info, x, y)
+    local c_brush = Cave_brush(area, x, y)
 
-    local bottom = { b=A.ceil_h }
+    local bottom = { b=B.ceil_h }
     table.insert(c_brush, bottom)
 
-    if A.is_sky then
+    if B.is_sky then
       c_mat = "_SKY"
 
       if not LEVEL.is_dark then
@@ -3010,28 +3008,28 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
     brushlib.set_mat(c_brush, c_mat, c_mat)
 
-    if A.ceil_y_offset then
-      brushlib.set_y_offset(c_brush, A.ceil_y_offset)
+    if B.ceil_y_offset then
+      brushlib.set_y_offset(c_brush, B.ceil_y_offset)
     end
 
     Trans.brush(c_brush)
   end
 
 
-  local function render_lit_cell(x, y, A)
+  local function render_lit_cell(x, y, B)
     local light
 
     if info.torch_mode != "none" then
-      light = calc_lighting_for_cell(x, y, A)
+      light = calc_lighting_for_cell(x, y, B)
       if light <= 0 then light = nil end
     end
 
     if light then
-      Ambient_push(info.area.base_light + light)
+      Ambient_push(area.base_light + light)
     end
 
-    render_floor  (x, y, A)
-    render_ceiling(x, y, A)
+    render_floor  (x, y, B)
+    render_ceiling(x, y, B)
 
     if light then
       Ambient_pop()
@@ -3040,18 +3038,18 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
 
   local function render_cell(x, y, pass)
-    local A = info.blocks[x][y]
+    local B = area.blobs[x][y]
 
-    if not A then return end
+    if not B then return end
 
-    local is_solid = (A.floor_h == nil)
+    local is_solid = (B.floor_h == nil)
 
     if is_solid and pass == 1 then
-      render_floor(x, y, A)
+      render_floor(x, y, B)
     end
 
     if not is_solid and pass == 2 then
-      render_lit_cell(x, y, A)
+      render_lit_cell(x, y, B)
     end
   end
 
@@ -3180,9 +3178,9 @@ top.reachable = 1  --!!!!!! FIXME: remove
   local function render_all_cells(pass)
     -- pass is 1 for solid cells, 2 for normal (open) cells
 
-    for x = 1, info.W do
-    for y = 1, info.H do
-      render_cell(x, y, pass)
+    for cx = 1, area.walk_map.w do
+    for cy = 1, area.walk_map.h do
+      render_cell(cx, cy, pass)
     end
     end
   end
