@@ -530,28 +530,30 @@ function GRID_CLASS.solidify_pockets(grid)
 end
 
 
-function GRID_CLASS.copy_island(grid, reg_id)
-  local W = grid.w
-  local H = grid.h
+function GRID_CLASS.copy_region(grid, reg_id)
+  -- creates a new grid where the cells are 1 when the given
+  -- region is, -1 where other regions are (empty or solid),
+  -- and NIL where nothing is.
 
   local flood = assert(grid.flood)
 
-  local island = grid:blank_copy()
+  local result = grid:blank_copy()
 
-  for x = 1, W do
-  for y = 1, H do
+  for x = 1, grid.w do
+  for y = 1, grid.h do
     local val = flood[x][y]
+
     if val == nil then
       -- nothing to copy
+    elseif val == reg_id then
+      result.cells[x][y] = 1
     else
-      island.cells[x][y] = sel(val == reg_id, 1, -1)
+      result.cells[x][y] = -1
     end
   end
   end
 
-  island:dump("Island for " .. tostring(reg_id))
-
-  return island
+  return result
 end
 
 
@@ -575,7 +577,7 @@ function GRID_CLASS.find_islands(grid)
 
   local flood = grid.flood
 
-  -- scan the cave, determine which regions are islands
+  -- scan the cave, determine which regions are islands --
 
   -- a table mapping region ids to a string value: "maybe" if could be
   -- an island, and "no" when definitely not an island. 
@@ -595,8 +597,9 @@ function GRID_CLASS.find_islands(grid)
       end
 
       if potentials[reg] != "no" then
-        for side = 2,8,2 do
-          local nx, ny = geom.nudge(x, y, side)
+        for dir = 2,8,2 do
+          local nx, ny = geom.nudge(x, y, dir)
+
           if grid:valid(nx, ny) and flood[nx][ny] == nil then
             potentials[reg] = "no"
             break;
@@ -608,11 +611,15 @@ function GRID_CLASS.find_islands(grid)
   end -- x, y
   end
 
-  -- create the islands
+  -- create the grids --
 
-  for reg,pot in pairs(potentials) do
+  each reg, pot in potentials do
     if pot == "maybe" then
-      table.insert(list, grid:copy_island(reg))
+      local island = grid:copy_region(reg)
+
+      table.insert(list, island)
+
+      -- island:dump("Island for " .. tostring(reg))
     end
   end
 
