@@ -21,23 +21,6 @@
 
 --class NATURAL_AREA
 --[[
-    walk_chunks : list(CHUNK)  -- all places the player MUST be able
-                               -- walk to (conns, goals, etc...)
-
-
-    --- Cave specific fields ---
-
-    cave : GRID   -- the raw generated cave
-
-    step_mode   : keyword  -- "walkway", "up", "down", "mixed"
-
-    liquid_mode : keyword  -- "none", "some", "lake"
-
-    sky_mode    : keyword  -- "none"
-                           -- "some" (indoor rooms only)
-                           -- "low_wall", "high_wall"  (outdoor rooms)
-
-    torch_mode  : keyword  -- "none", "few", "some"
 
     floors : list(BLOB)
 
@@ -196,33 +179,27 @@ end
 
 
 
-function Cave_collect_walk_chunks(R, info)
-  local area = info.area
+function Cave_collect_walk_rects(R, area)
 
-  local function cave_box_for_seed(sx, sy)
-    local box =
+  local function rect_for_seeds(kind, sx1,sy1, sx2,sy2)
+    local rect =
     {
-      cx1 = (sx - area.base_sx) * 2 + 1
-      cy1 = (sy - area.base_sy) * 2 + 1
+      kind = kind
+
+      cx1 = (sx1 - area.base_sx) * 2 + 1
+      cy1 = (sy1 - area.base_sy) * 2 + 1
     }
 
-    box.cx2 = box.cx1 + 1
-    box.cy2 = box.cy1 + 1
+    rect.cx2 = rect.cx1 + (sx2 - sx1 + 1) * 2 - 1
+    rect.cy2 = rect.cy1 + (sy2 - sy1 + 1) * 2 - 1
 
-    return box
+    table.insert(area.walk_rects, rect)
+
+    return rect
   end
 
 
-  local function cave_box_for_chunk(chunk)
-    chunk.cx1 = (chunk.sx1 - area.base_sx) * 2 + 1
-    chunk.cy1 = (chunk.sy1 - area.base_sy) * 2 + 1
-
-    chunk.cx2 = chunk.cx1 + chunk.sw * 2 - 1
-    chunk.cy2 = chunk.cy1 + chunk.sh * 2 - 1
-  end
-
-
-  local function walk_for_edge(E)
+  local function rect_for_edge(E, kind)
     local sx1 = E.S.sx
     local sy1 = E.S.sy
 
@@ -232,123 +209,72 @@ function Cave_collect_walk_chunks(R, info)
     if E.long > 1 then
       local along_dir = geom.RIGHT[E.dir]
       sx2, sy2 = geom.nudge(sx1, sy1, along_dir, E.long - 1)
---[[
-stderrf("EDGE : %s dir=%d ---> along:%d (%d %d) .. (%d %d)\n",
-E.S.name, E.dir, along_dir, sx1,sy1, sx2,sy2)
---]]
     end
 
     if sx2 < sx1 then sx1, sx2 = sx2, sx1 end
     if sy2 < sy1 then sy1, sy2 = sy2, sy1 end
 
-    local WC = CHUNK_CLASS.new("cave_walk", sx1, sy1, sx2, sy2)
-
-    cave_box_for_chunk(WC)
-
---[[
-if E.long > 1 then
-stderrf("ROOM @ (%d %d)\n", area.base_sx, area.base_sy)
-stderrf("-----> cells (%d %d) .. (%d %d)\n", WC.cx1, WC.cy1, WC.cx2, WC.cy2)
-end
-assert(map:valid_cell(WC.cx1, WC.cy1))
-assert(map:valid_cell(WC.cx2, WC.cy2))
---]]
-
-    table.insert(info.walk_chunks, WC)
+    local WC = rect_for_seeds(kind, sx1,sy1, sx2,sy2)
 
     return WC
   end
 
 
-  local function walk_for_connection(C)
+  local function rect_for_connection(C)
     -- teleporters will be handled elsewhere (e.g. as a floor_chunk)
     if C.kind == "teleporter" then return end
 
     local E = C:edge_for_room(R)
     assert(E)
 
---[[
-if C.kind == "joiner" then
-stderrf("Joiner walk in %s.....\n", R.name)
-stderrf("   conn  : %s --> %s\n", C.R1.name, C.R2.name)
-stderrf("   edge1 : %s dir:%d\n", C.E1.S.name, C.E1.dir)
-stderrf("   edge2 : %s dir:%d\n", C.E2.S.name, C.E2.dir)
-end
---]]
+    local WC = rect_for_edge(E, "conn")
 
-    WC = walk_for_edge(E)
-
-    WC.walk_kind = "conn"
-    WC.walk_conn = C
+    WC.conn = C
   end
 
 
-  local function walk_for_floor_chunk(chunk)
+  local function rect_for_floor_chunk(chunk)
     -- ignore unused floor chunks
     if not chunk.content then return end
 
-    cave_box_for_chunk(chunk)
-
-    chunk.walk_kind = "floor"
+    local WC = rect_for_seeds("floor", chunk.sx1, chunk.sy1, chunk.sx2, chunk.sy2)
 
     if chunk.sw >= 2 and chunk.sh >= 2 then
-      chunk.walk_shrinkage = 2
+      WC.walk_shrinkage = 2
     end
 
-    table.insert(info.walk_chunks, chunk)
+    WC.chunk = chunk
   end
 
 
-  local function walk_for_closet(chunk)
+  local function rect_for_closet(chunk)
     -- ignore unused closets
     if not chunk.content then return end
     if chunk.content == "void" then return end
 
     local E = assert(chunk.edges[1])
 
-    local WC = walk_for_edge(E)
+    local WC = rect_for_edge(E, "closet")
 
-    WC.walk_kind   = "closet"
-    WC.walk_closet = chunk
+    WC.chunk = chunk
   end
 
 
-  local function walk_chunks_to_points()
-    info.walk_points = {}
+  ---| Cave_collect_walk_rects |---
 
-    each chunk in info.walk_chunks do
-      assert(chunk.cx1)
-
-      local POINT =
-      {
-        x = math.i_mid(chunk.cx1, chunk.cx2)
-        y = math.i_mid(chunk.cy1, chunk.cy2)
-      }
-
-      table.insert(info.walk_points, POINT)
-    end
-
-    assert(#info.walk_points > 0)
-  end
-
-
-  ---| Cave_collect_walk_chunks |---
-
-  info.walk_chunks = {}
+  area.walk_rects = {}
 
   each C in R.conns do
-    walk_for_connection(C)
+    rect_for_connection(C)
   end
 
   each chunk in R.floor_chunks do
-    walk_for_floor_chunk(chunk)
+    rect_for_floor_chunk(chunk)
   end
 
   each chunk in R.closets do
-    walk_for_closet(chunk)
+    rect_for_closet(chunk)
   end
-
-  walk_chunks_to_points()
 end
 
 
@@ -430,11 +356,9 @@ end
 
 
 
-function Cave_clear_walk_chunks(info)
-  each chunk in info.walk_chunks do
-    assert(chunk.cx1)
-
-    info.area.walk_map:fill(chunk.cx1, chunk.cy1, chunk.cx2, chunk.cy2, -1)
+function Cave_clear_walk_rects(area)
+  each rect in area.walk_rects do
+    area.walk_map:fill(rect.cx1, rect.cy1, rect.cx2, rect.cy2, -1)
   end
 end
 
@@ -473,7 +397,7 @@ function Cave_generate_cave(R, info)
 
   local area = info.area
 
-  local is_lake = (info.liquid_mode == "lake")
+  local is_lake = (area.liquid_mode == "lake")
 
   -- this contains where walls and must-be-clear spots are
   local map = area.walk_map
@@ -588,14 +512,14 @@ function Cave_generate_cave(R, info)
   local function is_cave_good(cave)
     -- check that all important parts are connected
 
-    if not cave:validate_conns(info.walk_points) then
+    if not cave:validate_conns(area.walk_rects) then
       gui.debugf("cave failed connection check\n")
       return false
     end
 
-    local p1 = info.walk_points[1]
+    local p1 = area.walk_rects[1]
 
-    cave.empty_id = cave.flood[p1.x][p1.y]
+    cave.empty_id = cave.flood[p1.cx1][p1.cy1]
 
     assert(cave.empty_id)
     assert(cave.empty_id < 0)
@@ -654,8 +578,6 @@ function Cave_generate_cave(R, info)
       clear_some_seeds()
     end
 
-    info.cave = cave
-
     if not is_lake then
       cave:solidify_pockets()
     end
@@ -663,6 +585,8 @@ function Cave_generate_cave(R, info)
     cave:dump("Filled Cave:")
 
     cave:find_islands()
+
+    return cave
   end
 
 
@@ -670,9 +594,9 @@ function Cave_generate_cave(R, info)
 
   mark_boundaries()
 
-  Cave_clear_walk_chunks(info)
+  Cave_clear_walk_rects(info.area)
 
-  generate_cave()
+  area.cave_map = generate_cave()
 end
 
 
@@ -682,16 +606,15 @@ function Cave_create_areas(R, info)
   --| sub-divide the floor of the cave into areas of differing heights.
   --|
 
-  local cave = info.cave
+  local area = info.area
+  local cave = area.cave_map
 
-  local is_lake = (info.liquid_mode == "lake")
+  local is_lake = (area.liquid_mode == "lake")
 
   -- groups are areas (rectangles) belonging to portals or importants
   -- and must be kept distinct (at the same height).
   local group_list
   local group_map
-
-  local area = info.area
 
 
   local function install_blob(B, template, mul, empty_ok)
@@ -716,7 +639,7 @@ function Cave_create_areas(R, info)
 
 
   local function copy_cave_without_fences()
-    local new_cave = info.cave:copy()
+    local new_cave = area.cave_map:copy()
 
     if info.fence then
       for cx = 1, area.cw do
@@ -735,11 +658,11 @@ function Cave_create_areas(R, info)
 
 
   local function apply_walk_chunks(map)
-    each chunk in info.walk_chunks do
-      local cx1, cy1 = chunk.cx1, chunk.cy1
-      local cx2, cy2 = chunk.cx2, chunk.cy2
+    each rect in area.walk_rects do
+      local cx1, cy1 = rect.cx1, rect.cy1
+      local cx2, cy2 = rect.cx2, rect.cy2
 
-      if chunk.walk_shrinkage == 2 then
+      if rect.walk_shrinkage == 2 then
         map:fill(cx1 + 1, cy1 + 1, cx2 - 1, cy2 - 1, 1)
       else
         map:fill(cx1, cy1, cx2, cy2, 1)
@@ -750,7 +673,7 @@ function Cave_create_areas(R, info)
 
   local function compute_floor_sinks(SINK1, SINK2, R, AREA)
     -- sometimes make sink1 be liquid but sink2 be solid
-    if info.liquid_mode == "some" and rand.odds(25) then
+    if area.liquid_mode == "some" and rand.odds(25) then
       SINK1.floor_dz  = -12
       SINK1.is_liquid = true
 
@@ -760,7 +683,7 @@ function Cave_create_areas(R, info)
     end
 
     -- sometimes make a completely liquid floor [ if non-damaging ]
-    if info.liquid_mode == "heaps" and not LEVEL.liquid.damage and rand.odds(25) then
+    if area.liquid_mode == "heaps" and not LEVEL.liquid.damage and rand.odds(25) then
        AREA.is_liquid = true
       SINK1.is_liquid = true
       SINK2.is_liquid = true
@@ -782,12 +705,12 @@ function Cave_create_areas(R, info)
     SINK1.floor_dz  = -8
     SINK1.floor_mat = R.alt_floor_mat
 
-    if info.liquid_mode == "heaps" then
+    if area.liquid_mode == "heaps" then
       SINK1.is_liquid = true
     end
 
     -- when no liquid, often make a larger area of the alternate floor
-    if info.liquid_mode == "none" and rand.odds(50) then
+    if area.liquid_mode == "none" and rand.odds(50) then
       SINK2.floor_dz  = SINK1.floor_dz
       SINK2.floor_mat = SINK1.floor_mat
       return
@@ -797,7 +720,7 @@ function Cave_create_areas(R, info)
     SINK2.floor_dz  = -16
     SINK2.floor_mat = AREA.floor_mat
 
-    if info.liquid_mode != "none" then
+    if area.liquid_mode != "none" then
       SINK2.is_liquid = true
     end
 
@@ -823,11 +746,11 @@ function Cave_create_areas(R, info)
       SINK1.ceil_mat, SINK2.ceil_mat = SINK2.ceil_mat, SINK1.ceil_mat
     end
 
-    if info.sky_mode == "heaps" then
+    if area.sky_mode == "heaps" then
       SINK1.is_sky = true
     end
 
-    if info.sky_mode != "none" then
+    if area.sky_mode != "none" then
       SINK2.is_sky = true
 
       -- no big need to synchronise skies (as per liquids)
@@ -842,7 +765,7 @@ function Cave_create_areas(R, info)
     -- modifications of the main area.
     --
 
-    assert(info.liquid_mode != "lake")
+    assert(area.liquid_mode != "lake")
 
     local AREA =
     {
@@ -855,9 +778,9 @@ function Cave_create_areas(R, info)
 
     table.insert(info.floors, AREA)
 
-    each WC in info.walk_chunks do
-      WC.cave_area = AREA
-    end
+---??  each WC in info.area.walk_rects do
+---??    WC.cave_area = AREA
+---??  end
 
     install_blob(AREA, cave, -1)
 
@@ -922,7 +845,7 @@ function Cave_create_areas(R, info)
   local function create_group_map()
     group_list = {}
 
-    group_map = GRID_CLASS.blank_copy(info.cave)
+    group_map = GRID_CLASS.blank_copy(info.cave_map)
 
 ---##  each G in R.cave_imps do
 ---##    add_group_to_map(G)
@@ -936,8 +859,8 @@ function Cave_create_areas(R, info)
 
     pos_list[1] =
     {
-      x = info.walk_points[1].x
-      y = info.walk_points[1].y
+      x = area.walk_rects[1].cx1
+      y = area.walk_rects[1].cy1
     }
 
 
@@ -1200,7 +1123,7 @@ step:dump("Step:")
 
   ---| Cave_create_areas |---
 
-  if info.step_mode == "walkway" then
+  if area.step_mode == "walkway" then
     make_walkway()
   else
     create_group_map()
@@ -1321,11 +1244,11 @@ function Cave_bunch_areas(R, mode)
 
   ---| Cave_bunch_areas |---
 
-  if info.step_mode == "walkway" then return end
-  if info.liquid_mode == "lake"  then return end
+  if area.step_mode == "walkway" then return end
+  if area.liquid_mode == "lake"  then return end
 
-  if mode == "sky"    and info.sky_mode    != "some" then return end
-  if mode == "liquid" and info.liquid_mode != "some" then return end
+  if mode == "sky"    and area.sky_mode    != "some" then return end
+  if mode == "liquid" and area.liquid_mode != "some" then return end
 
   setup()
 
@@ -1355,7 +1278,7 @@ end
 function Cave_heights_near_area(R, B)
   local info = R.cave_info
   local area = info.area
-  local cave = info.cave
+  local cave = area.cave_map
 
   local min_floor_h =  9e9
   local max_floor_h = -9e9
@@ -1412,11 +1335,12 @@ function Cave_floor_heights(R, entry_h)
   assert(entry_h)
 
   local info = R.cave_info
+  local area = info.area
 
 
   local z_change_prob = rand.sel(15, 40, 10)
 
-  if info.step_mode == "up" or info.step_mode == "down" then
+  if area.step_mode == "up" or area.step_mode == "down" then
     z_change_prob = 0
   end
 
@@ -1588,13 +1512,13 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function update_fences()
-    if info.liquid_mode == "lake" then
+    if area.liquid_mode == "lake" then
       info.fence.floor_h = R.floor_max_h + 96
       info. wall.floor_h = info.fence.floor_h
 
       R.cave_fence_z = info.fence.floor_h
 
-    elseif info.sky_mode == "low_wall" then
+    elseif area.sky_mode == "low_wall" then
       info.wall.floor_h = R.floor_max_h + 80
 
       R.cave_fence_z = info.wall.floor_h
@@ -1662,9 +1586,9 @@ function Cave_floor_heights(R, entry_h)
 
   local z_dir
 
-  if info.step_mode == "up" then
+  if area.step_mode == "up" then
     z_dir = 1
-  elseif info.step_mode == "down" then
+  elseif area.step_mode == "down" then
     z_dir = -1
   else
     z_dir = rand.sel(37, 1, -1)
@@ -1693,7 +1617,8 @@ end
 
 function Cave_fill_lakes(R)
   local info = R.cave_info
-  local cave = info.cave
+  local area = info.area
+  local cave = area.cave_map
 
 
   local function add_lake(id, reg)
@@ -1734,12 +1659,12 @@ function Cave_fill_lakes(R)
 
   ---| Cave_fill_lakes |---
 
-  if info.liquid_mode != "lake" then return end
+  if area.liquid_mode != "lake" then return end
 
   -- determine region id for the main walkway
-  local p1 = info.walk_points[1]
+  local p1 = area.walk_rects[1]
 
-  local path_id = cave.flood[p1.x][p1.y]
+  local path_id = cave.flood[p1.cx1][p1.cy1]
 
   each id,reg in cave.regions do
     if (id > 0) then
@@ -1879,7 +1804,7 @@ function Cave_lake_fences(R)
 
   --| Cave_lake_fences |--
 
-  if info.liquid_mode != "lake" then
+  if area.liquid_mode != "lake" then
     return
   end
 
@@ -1917,7 +1842,8 @@ function Cave_make_waterfalls(R)
   --| intermediate cells.
 
   local info = R.cave_info
-  local cave = info.cave
+  local area = info.area
+  local cave = area.cave_map
 
 
   local function can_still_traverse(cx, cy, dir)
@@ -2269,7 +2195,7 @@ function Cave_make_waterfalls(R)
 
   ---| Cave_make_waterfalls |---
 
-  if info.liquid_mode != "lake" then return end
+  if area.liquid_mode != "lake" then return end
 
   connect_pools()
 
@@ -2284,8 +2210,8 @@ function Cave_decorations(R)
   --|
 
   local info = R.cave_info
-  local cave = info.cave
   local area = info.area
+  local cave = area.cave_map
 
 
   local function block_is_bounded(x, y, A, dir)
@@ -2389,14 +2315,14 @@ function Cave_decorations(R)
 
     rand.shuffle(locs)
 
-    local perc  = sel(info.torch_mode == "few", 5, 12)
+    local perc  = sel(area.torch_mode == "few", 5, 12)
     local quota = #locs * perc / 100
 
     quota = quota * rand.range(0.8, 1.2)
     quota = int(quota + gui.random())
 
     -- very rarely add lots of torches
-    if info.torch_mode != "few" and rand.odds(1) then
+    if area.torch_mode != "few" and rand.odds(1) then
       quota = #locs / 2
     end
 
@@ -2419,14 +2345,14 @@ function Cave_decorations(R)
 
   ---| Cave_decorations |---
 
-  if info.torch_mode != "none" then
+  if area.torch_mode != "none" then
     place_torches_in_corners()
   end
 end
 
 
 
-function Cave_decide_properties(R, info)
+function Cave_decide_properties(R, area)
   --
   --  V7 NOTES
   -- ==========
@@ -2454,20 +2380,20 @@ function Cave_decide_properties(R, info)
 
   -- step mode --
 
-  info.step_mode = "walkway"
+  area.step_mode = "walkway"
 
   -- liquid mode --
 
   local LIQUID_MODES = { none=60, some=30, heaps=10 }
 
   if not LEVEL.liquid then
-    info.liquid_mode = "none"
+    area.liquid_mode = "none"
   else
     local factor = style_sel("liquids", 33, 3, 1, 0.3)
 
     LIQUID_MODES.none = LIQUID_MODES.none * factor
 
-    info.liquid_mode = rand.key_by_probs(LIQUID_MODES)
+    area.liquid_mode = rand.key_by_probs(LIQUID_MODES)
   end
 
   -- sky mode --
@@ -2477,40 +2403,40 @@ function Cave_decide_properties(R, info)
   if R.light_level == "verydark" then SKY_MODES.none = 300 end
   if R.light_level == "bright"   then SKY_MODES.none = 10 end
 
-  info.sky_mode = rand.key_by_probs(SKY_MODES)
+  area.sky_mode = rand.key_by_probs(SKY_MODES)
 
   -- torch mode --
 
   local TORCH_MODES = { none=60, few=40, some=20 }
 
   if R.light_level == "bright" or
-     (info.sky_mode != "none" and not LEVEL.is_dark) or
-     info.liquid_mode != "none"
+     (area.sky_mode != "none" and not LEVEL.is_dark) or
+     area.liquid_mode != "none"
   then
     -- we have another source of light (sky or liquid)
-    info.torch_mode = "none"
+    area.torch_mode = "none"
 
   else
     if R.light_level == "verydark" then TORCH_MODES.none = 10 end
     if R.light_level == "dark"     then TORCH_MODES.none = 20 end
 
-    info.torch_mode = rand.key_by_probs(TORCH_MODES)
+    area.torch_mode = rand.key_by_probs(TORCH_MODES)
   end
 
-  if info.torch_mode != "none" then
-    info.cave_lighting = 1
+  if area.torch_mode != "none" then
+    area.cave_lighting = 1
   end
 
   -- extra health for damaging liquid
-  if info.liquid_mode != "none" and LEVEL.liquid.damage then
+  if area.liquid_mode != "none" and LEVEL.liquid.damage then
     R.hazard_health = R.hazard_health + R.svolume * 0.7
   end
 
   gui.debugf("Cave properties in %s\n", R.name)
-  gui.debugf("    step_mode : %s\n", info.step_mode)
-  gui.debugf("  liquid_mode : %s\n", info.liquid_mode)
-  gui.debugf("     sky_mode : %s\n", info.sky_mode)
-  gui.debugf("   torch_mode : %s\n", info.torch_mode)
+  gui.debugf("    step_mode : %s\n", area.step_mode)
+  gui.debugf("  liquid_mode : %s\n", area.liquid_mode)
+  gui.debugf("     sky_mode : %s\n", area.sky_mode)
+  gui.debugf("   torch_mode : %s\n", area.torch_mode)
 end
 
 
@@ -2521,9 +2447,9 @@ function Cave_build_room(R, entry_h)
 
   R.cave_info = info
 
-  Cave_collect_walk_chunks(R, info)
+  Cave_collect_walk_rects(R, info.area)
 
-  Cave_decide_properties(R, info)
+  Cave_decide_properties(R, info.area)
 
   Cave_map_usable_area(info)
 
@@ -2862,8 +2788,8 @@ function Cave_build_a_park(R, entry_h)
 
     local result = true
 
-    each P in info.walk_points do
-      local B = map2.flood[P.x][P.y]
+    each P in area.walk_rects do
+      local B = map2.flood[P.cx1][P.cy1]
 
       if not (B == B1 or B == B2) then
         result = false
@@ -2984,10 +2910,11 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   R.cave_info = info
 
-  Cave_collect_walk_chunks(R, info)
+  Cave_collect_walk_rects(R, info.area)
 
   Cave_map_usable_area(info)
-  Cave_clear_walk_chunks(info)
+
+  Cave_clear_walk_rects(info.area)
 
   -- TEMP RUBBISH
   info.area.floor_h = entry_h

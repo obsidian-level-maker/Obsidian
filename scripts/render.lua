@@ -2722,8 +2722,6 @@ function Render_cells(area)
   assert(info)
 
 
-  local is_lake = (info.liquid_mode == "lake")
-
   -- the delta map specifies how to move each corner of the 64x64 cells
   -- (where the cells form a continuous mesh).
   local delta_x_map
@@ -2955,7 +2953,7 @@ function Render_cells(area)
     if f_h then
       local top = { t=f_h }
 
-      if info.torch_mode != "none" then
+      if area.torch_mode != "none" then
         top.is_cave = 1
       end
 
@@ -3019,7 +3017,7 @@ top.reachable = 1  --!!!!!! FIXME: remove
   local function render_lit_cell(x, y, B)
     local light
 
-    if info.torch_mode != "none" then
+    if area.torch_mode != "none" then
       light = calc_lighting_for_cell(x, y, B)
       if light <= 0 then light = nil end
     end
@@ -3199,7 +3197,7 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
   render_all_cells(1)
 
-  if info.torch_mode != "none" then
+  if area.torch_mode != "none" then
 ---    do_torch_lighting()
   end
 

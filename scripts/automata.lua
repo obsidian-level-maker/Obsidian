@@ -489,7 +489,7 @@ function GRID_CLASS.flood_fill(grid)
 end
 
 
-function GRID_CLASS.validate_conns(grid, point_list)
+function GRID_CLASS.validate_conns(grid, rect_list)
 
   -- checks that all connections can reach each other.
 
@@ -499,13 +499,13 @@ function GRID_CLASS.validate_conns(grid, point_list)
     grid:flood_fill()
   end
 
-  each P in point_list do
-    if (grid.flood[P.x][P.y] or 0) >= 0 then
+  each P in rect_list do
+    if (grid.flood[P.cx1][P.cy1] or 0) >= 0 then
       -- not valid : the cell is solid or absent
       return false
     end
 
-    local reg = grid.flood[P.x][P.y]
+    local reg = grid.flood[P.cx1][P.cy1]
 
     if not empty_id then
       empty_id = reg
@@ -513,7 +513,7 @@ function GRID_CLASS.validate_conns(grid, point_list)
       -- not valid : the empty areas are disjoint
       return false
     end
-  end -- P
+  end
 
   grid.empty_id = empty_id
 
@@ -1347,9 +1347,9 @@ end
 
 
 
-function GRID_CLASS.walkify_blobs(blob_map, walk_chunks)
+function GRID_CLASS.walkify_blobs(blob_map, walk_rects)
   --
-  -- For each cell rectangle in the walk_chunks list,
+  -- For each cell rectangle in the walk_rects list,
   -- merge any group of blobs that span that rectangle
   -- (so that afterwards, only a single blob spans it).
   --
@@ -1377,7 +1377,7 @@ function GRID_CLASS.walkify_blobs(blob_map, walk_chunks)
 
   ---| walkify_blobs |---
 
-  each WC in walk_chunks do
+  each WC in walk_rects do
     handle_chunk(WC)
   end
 end

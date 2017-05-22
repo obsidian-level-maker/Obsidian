@@ -70,6 +70,13 @@
     ceil_side   -- ceiling side material (optional)
 
 
+    --- miscellaneous stuff ---
+
+    inner_points : list(CORNER)
+
+    facade_group : FACADE_GROUP   -- used by facade logic (temporarily)
+
+
     --- nature stuff ---
 
     cw, ch   -- total size of the cell grid
@@ -87,6 +94,9 @@
                      --    +1  : forced on  [ wall ]
                      --     0  : normal processing
 
+    walk_rects : list(RECT)  -- all places the player MUST be able
+                             -- walk to (conns, goals, etc...)
+
     diagonals : array   -- marks which cells are on a diagonal seed
                         -- (using the numbers 1/3/7/9)
 
@@ -97,12 +107,19 @@
     delta_y_map : array
 
 
-    --- other stuff ---
+    --- Cave specific fields ---
 
-    inner_points : list(CORNER)
+    cave_map : GRID   -- the raw generated cave
 
-    facade_group : FACADE_GROUP   -- used by facade logic (temporarily)
+    step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
+    liquid_mode : keyword  -- "none", "some", "lake"
+
+    sky_mode    : keyword  -- "none"
+                           -- "some" (indoor rooms only)
+                           -- "low_wall", "high_wall"  (outdoor rooms)
+
+    torch_mode  : keyword  -- "none", "few", "some"
 --]]
 
 
