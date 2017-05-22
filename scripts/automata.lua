@@ -353,13 +353,27 @@ function GRID_CLASS.dump_regions(grid)
 
   gui.debugf("Regions:\n")
 
-  each id,REG in grid.regions do
+  local empty_regs  = 0
+  local empty_cells = 0
+
+  local solid_regs  = 0
+  local solid_cells = 0
+
+  each id, REG in grid.regions do
     gui.debugf("  %+4d : (%d %d) .. (%d %d) size:%d\n",
                REG.id, REG.cx1, REG.cy1, REG.cx2, REG.cy2, REG.size)
+
+    if id < 0 then
+      empty_regs  = empty_regs  + 1
+      empty_cells = empty_cells + REG.size
+    elseif id > 0 then
+      solid_regs  = solid_regs  + 1
+      solid_cells = solid_cells + REG.size
+    end
   end
 
-  gui.debugf("Empty regions: %d (with %d cells)\n", grid.empty_regions, grid.empty_cells)
-  gui.debugf("Solid regions: %d (with %d cells)\n", grid.solid_regions, grid.solid_cells)
+  gui.debugf("  total empty: %d (with %d cells)\n", empty_regions, empty_cells)
+  gui.debugf("  total solid: %d (with %d cells)\n", solid_regions, solid_cells)
 end
 
 
@@ -411,12 +425,6 @@ function GRID_CLASS.flood_fill(grid)
 
     assert(id != 0)
 
-    if id < 0 then
-      grid.empty_cells = grid.empty_cells + 1
-    else
-      grid.solid_cells = grid.solid_cells + 1
-    end
-
     local REG = grid.regions[id]
 
     if not REG then
@@ -429,12 +437,6 @@ function GRID_CLASS.flood_fill(grid)
       }
 
       grid.regions[id] = REG
-
-      if id < 0 then
-        grid.empty_regions = grid.empty_regions + 1
-      else
-        grid.solid_regions = grid.solid_regions + 1
-      end
     end
 
     if x < REG.cx1 then REG.cx1 = x end
@@ -481,11 +483,6 @@ function GRID_CLASS.flood_fill(grid)
   -- create information for each region
 
   grid.regions = {}
-
-  grid.empty_cells = 0
-  grid.solid_cells = 0
-  grid.empty_regions = 0
-  grid.solid_regions = 0
 
   for x = 1, W do
   for y = 1, H do
@@ -596,7 +593,7 @@ function GRID_CLASS.find_islands(grid)
   -- scan the cave, determine which regions are islands --
 
   -- a table mapping region ids to a string value: "maybe" if could be
-  -- an island, and "no" when definitely not an island. 
+  -- an island, and "no" when definitely not an island.
   local potentials = {}
 
   for x = 1, W do
@@ -745,7 +742,7 @@ function GRID_CLASS.shrink(grid, keep_edges)
 
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
-    
+
       if not grid:valid(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] < 0 then
@@ -787,7 +784,7 @@ function GRID_CLASS.shrink8(grid, keep_edges)
 
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
-    
+
       if not grid:valid(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] < 0 then
@@ -1409,7 +1406,7 @@ function GRID_CLASS.maze_generate(maze)
       x, y = geom.nudge(x, y, dir)
 
       if not valid_and_free(x, y) then break; end
-      
+
       local ax, ay = geom.nudge(x, y, geom.RIGHT[dir])
       local bx, by = geom.nudge(x, y, geom.LEFT [dir])
 
@@ -1451,7 +1448,7 @@ function GRID_CLASS.maze_generate(maze)
 
     for x = 1, W do
     for y = 1, H do
-      if (cells[x][y] or 0) > 0 or 
+      if (cells[x][y] or 0) > 0 or
          (cells[x][y] == 0 and (table.empty(middles) or rand.odds(2)))
       then
         for dir = 2,8,2 do
@@ -1501,7 +1498,7 @@ function GRID_CLASS.maze_generate(maze)
         local len = how_far_can_move(p.x, p.y, dir)
 
         if len > 0 then
-          lens[dir] = len 
+          lens[dir] = len
         end
       end
     end
