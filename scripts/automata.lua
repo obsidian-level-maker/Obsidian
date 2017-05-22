@@ -25,7 +25,7 @@
 ------------------------------------------------------------------------
 
 
---class MATRIX : extends ARRAY_2D
+--class GRID : extends ARRAY_2D
 --[[
     -- for caves, each cell is either NIL (unused) or a number,
     -- when > 0 means solid (wall) and < 0 means empty (floor).
@@ -52,38 +52,38 @@
 --]]
 
 
-MATRIX_CLASS = {}
+GRID_CLASS = {}
 
 
-function MATRIX_CLASS.new(w, h)
+function GRID_CLASS.new(w, h)
   local grid = { w=w, h=h }
-  table.set_class(grid, MATRIX_CLASS)
+  table.set_class(grid, GRID_CLASS)
   grid.cells = table.array_2D(w, h)
   return grid
 end
 
 
-function MATRIX_CLASS.blank_copy(grid)
-  return MATRIX_CLASS.new(grid.w, grid.h)
+function GRID_CLASS.blank_copy(grid)
+  return GRID_CLASS.new(grid.w, grid.h)
 end
 
 
-function MATRIX_CLASS.valid_cell(grid, x, y)
+function GRID_CLASS.valid_cell(grid, x, y)
   return (1 <= x and x <= grid.w) and (1 <= y and y <= grid.h)
 end
 
 
-function MATRIX_CLASS.get(grid, x, y)
+function GRID_CLASS.get(grid, x, y)
   return grid.cells[x][y]
 end
 
 
-function MATRIX_CLASS.set(grid, x, y, val)
+function GRID_CLASS.set(grid, x, y, val)
   grid.cells[x][y] = val
 end
 
 
-function MATRIX_CLASS.fill(grid, x1,y1, x2,y2, val)
+function GRID_CLASS.fill(grid, x1,y1, x2,y2, val)
   for x = x1, x2 do
   for y = y1, y2 do
     grid.cells[x][y] = val
@@ -92,12 +92,12 @@ function MATRIX_CLASS.fill(grid, x1,y1, x2,y2, val)
 end
 
 
-function MATRIX_CLASS.set_all(grid, val)
+function GRID_CLASS.set_all(grid, val)
   grid:fill(1, 1, grid.w, grid.h, val)
 end
 
 
-function MATRIX_CLASS.negate(grid, x1,y1, x2,y2)
+function GRID_CLASS.negate(grid, x1,y1, x2,y2)
   if not x1 then
     x1, x2 = 1, grid.w
     y1, y2 = 1, grid.h
@@ -115,7 +115,7 @@ function MATRIX_CLASS.negate(grid, x1,y1, x2,y2)
 end
 
 
-function MATRIX_CLASS.copy(grid)
+function GRID_CLASS.copy(grid)
   -- only copies 'w', 'h' and 'cells' members.
   -- the cells themselves are NOT copied.
 
@@ -131,7 +131,7 @@ function MATRIX_CLASS.copy(grid)
 end
 
 
-function MATRIX_CLASS.dump(grid, title)
+function GRID_CLASS.dump(grid, title)
   if title then
     gui.debugf("%s\n", title)
   end
@@ -159,7 +159,7 @@ function MATRIX_CLASS.dump(grid, title)
 end
 
 
-function MATRIX_CLASS.union(grid, other)
+function GRID_CLASS.union(grid, other)
   local W = math.min(grid.w, other.w)
   local H = math.min(grid.h, other.h)
 
@@ -175,7 +175,7 @@ function MATRIX_CLASS.union(grid, other)
 end
 
 
-function MATRIX_CLASS.intersection(grid, other)
+function GRID_CLASS.intersection(grid, other)
   local W = math.min(grid.w, other.w)
   local H = math.min(grid.h, other.h)
 
@@ -191,7 +191,7 @@ function MATRIX_CLASS.intersection(grid, other)
 end
 
 
-function MATRIX_CLASS.subtract(grid, other)
+function GRID_CLASS.subtract(grid, other)
   local W = math.min(grid.w, other.w)
   local H = math.min(grid.h, other.h)
 
@@ -209,7 +209,7 @@ function MATRIX_CLASS.subtract(grid, other)
 end
 
 
-function MATRIX_CLASS.generate(grid, solid_prob)
+function GRID_CLASS.generate(grid, solid_prob)
 
   -- The initial contents of the grid form a map where a cave
   -- will be generated.  The following values can be used:
@@ -313,7 +313,7 @@ function MATRIX_CLASS.generate(grid, solid_prob)
 end
 
 
-function MATRIX_CLASS.gen_empty(grid)
+function GRID_CLASS.gen_empty(grid)
 
   -- this is akin to generate(), but making all target cells empty
 
@@ -338,7 +338,7 @@ function MATRIX_CLASS.gen_empty(grid)
 end
 
 
-function MATRIX_CLASS.dump_regions(grid)
+function GRID_CLASS.dump_regions(grid)
   if not grid.regions then
     gui.debugf("No region info (flood_fill not called yet)\n")
     return
@@ -356,7 +356,7 @@ function MATRIX_CLASS.dump_regions(grid)
 end
 
 
-function MATRIX_CLASS.flood_fill(grid)
+function GRID_CLASS.flood_fill(grid)
   -- generate the 'flood' member, an array where each contiguous region
   -- has a unique id.  Empty areas are negative, solid areas are positive,
   -- and everything else is NIL.
@@ -489,7 +489,7 @@ function MATRIX_CLASS.flood_fill(grid)
 end
 
 
-function MATRIX_CLASS.validate_conns(grid, point_list)
+function GRID_CLASS.validate_conns(grid, point_list)
 
   -- checks that all connections can reach each other.
 
@@ -521,7 +521,7 @@ function MATRIX_CLASS.validate_conns(grid, point_list)
 end
 
 
-function MATRIX_CLASS.solidify_pockets(grid)
+function GRID_CLASS.solidify_pockets(grid)
   -- this removes the empty areas which are surrounded by solid
   -- (i.e. not part of the main walk area).
 
@@ -560,7 +560,7 @@ function MATRIX_CLASS.solidify_pockets(grid)
 end
 
 
-function MATRIX_CLASS.copy_island(grid, reg_id)
+function GRID_CLASS.copy_island(grid, reg_id)
   local W = grid.w
   local H = grid.h
 
@@ -585,7 +585,7 @@ function MATRIX_CLASS.copy_island(grid, reg_id)
 end
 
 
-function MATRIX_CLASS.find_islands(grid)
+function GRID_CLASS.find_islands(grid)
 
   -- an "island" is contiguous solid area which never touches NIL
 
@@ -645,7 +645,7 @@ function MATRIX_CLASS.find_islands(grid)
 end
 
 
-function MATRIX_CLASS.validate_size(grid)
+function GRID_CLASS.validate_size(grid)
   assert(grid.empty_id)
 
   local empty_reg = grid.regions[grid.empty_id]
@@ -667,7 +667,7 @@ function MATRIX_CLASS.validate_size(grid)
 end
 
 
-function MATRIX_CLASS.grow(grid, keep_edges)
+function GRID_CLASS.grow(grid, keep_edges)
   -- grow the cave : it will have more solids, less empties.
   -- nil cells are not affected.
 
@@ -710,7 +710,7 @@ function MATRIX_CLASS.grow(grid, keep_edges)
 end
 
 
-function MATRIX_CLASS.grow8(grid, keep_edges)
+function GRID_CLASS.grow8(grid, keep_edges)
   -- like grow() method but expands in all 8 directions
 
   local W = grid.w
@@ -752,7 +752,7 @@ function MATRIX_CLASS.grow8(grid, keep_edges)
 end
 
 
-function MATRIX_CLASS.shrink(grid, keep_edges)
+function GRID_CLASS.shrink(grid, keep_edges)
   -- shrink the cave : it will have more empties, less solids.
   -- when 'keep_edges' is true, cells at edges are not touched.
   -- nil cells are not affected.
@@ -796,7 +796,7 @@ function MATRIX_CLASS.shrink(grid, keep_edges)
 end
 
 
-function MATRIX_CLASS.shrink8(grid, keep_edges)
+function GRID_CLASS.shrink8(grid, keep_edges)
   -- like shrink() method but checks all 8 directions
 
   local W = grid.w
@@ -838,7 +838,7 @@ function MATRIX_CLASS.shrink8(grid, keep_edges)
 end
 
 
-function MATRIX_CLASS.remove_dots(grid)
+function GRID_CLASS.remove_dots(grid)
   -- removes isolated cells (solid or empty) from the cave.
   -- diagonal cells are NOT checked.
 
@@ -874,7 +874,7 @@ function MATRIX_CLASS.remove_dots(grid)
 end
 
 
-function MATRIX_CLASS.is_land_locked(grid, x, y)
+function GRID_CLASS.is_land_locked(grid, x, y)
   if x <= 1 or x >= grid.w or y <= 1 or y >= grid.h then
     return false
   end
@@ -893,7 +893,7 @@ function MATRIX_CLASS.is_land_locked(grid, x, y)
 end
 
 
-function MATRIX_CLASS.is_empty_locked(grid, x, y)
+function GRID_CLASS.is_empty_locked(grid, x, y)
   if x <= 1 or x >= grid.w or y <= 1 or y >= grid.h then
     return false
   end
@@ -912,7 +912,7 @@ function MATRIX_CLASS.is_empty_locked(grid, x, y)
 end
 
 
-function MATRIX_CLASS.distance_map(grid, ref_points)
+function GRID_CLASS.distance_map(grid, ref_points)
   assert(grid.flood)
   assert(grid.empty_id)
 
@@ -962,7 +962,7 @@ function MATRIX_CLASS.distance_map(grid, ref_points)
 end
 
 
-function MATRIX_CLASS.furthest_point(grid, ref_points)
+function GRID_CLASS.furthest_point(grid, ref_points)
   local dist_map = grid:distance_map(ref_points)
 
   local best_x, best_y
@@ -1002,7 +1002,7 @@ end
 ----------------------------------------------------------------
 
 
-function MATRIX_CLASS.merge_blobs(blob_map, id1, id2)
+function GRID_CLASS.merge_blobs(blob_map, id1, id2)
   -- merges the second blob into the first one
 
   for cx = 1, blob_map.w do
@@ -1016,7 +1016,7 @@ end
 
 
 
-function MATRIX_CLASS.create_blobs(grid, step_x, step_y, min_size)
+function GRID_CLASS.create_blobs(grid, step_x, step_y, min_size)
   --
   -- Divide the given array into "blobs", which are small groups
   -- of contiguous cells.
@@ -1210,7 +1210,7 @@ function MATRIX_CLASS.create_blobs(grid, step_x, step_y, min_size)
 
 
   local function merge_blobs(id1, id2)
-    MATRIX_CLASS.merge_blobs(blob_map, id1, id2)
+    GRID_CLASS.merge_blobs(blob_map, id1, id2)
 
     sizes[id1] = sizes[id1] + sizes[id2]
     sizes[id2] = -1
@@ -1347,7 +1347,7 @@ end
 
 
 
-function MATRIX_CLASS.walkify_blobs(blob_map, walk_chunks)
+function GRID_CLASS.walkify_blobs(blob_map, walk_chunks)
   --
   -- For each cell rectangle in the walk_chunks list,
   -- merge any group of blobs that span that rectangle
@@ -1368,7 +1368,7 @@ function MATRIX_CLASS.walkify_blobs(blob_map, walk_chunks)
       end
 
       if cur_blob != id then
-        MATRIX_CLASS.merge_blobs(blob_map, cur_blob, id)
+        GRID_CLASS.merge_blobs(blob_map, cur_blob, id)
       end
     end
     end
@@ -1389,7 +1389,7 @@ end
 ----------------------------------------------------------------
 
 
-function MATRIX_CLASS.maze_generate(maze)
+function GRID_CLASS.maze_generate(maze)
   --
   -- Generates a maze in the current object.
   --
@@ -1585,7 +1585,7 @@ end
 
 
 
-function MATRIX_CLASS.maze_render(maze, brush_func, data)
+function GRID_CLASS.maze_render(maze, brush_func, data)
   local W = maze.w
   local H = maze.h
 
@@ -1630,7 +1630,7 @@ function Maze_test()
   local SIZE = 15
 
   for loop = 1,20 do
-    local maze = MATRIX_CLASS.new(SIZE, SIZE)
+    local maze = GRID_CLASS.new(SIZE, SIZE)
 
     -- solid on outside, empty in middle
     maze:fill(1,1, SIZE,SIZE,     1)
