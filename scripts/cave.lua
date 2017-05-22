@@ -1024,7 +1024,7 @@ step:dump("Step:")
 
         for dir = 2,8,2 do
           local nx, ny = geom.nudge(x, y, dir)
-          if free:valid_cell(nx, ny) and f_cel[nx][ny] == 0 then
+          if free:valid(nx, ny) and f_cel[nx][ny] == 0 then
             table.insert(pos_list, { x=nx, y=ny, prev=prev_B })
           end
         end
@@ -1059,7 +1059,7 @@ step:dump("Step:")
       for dir = 2,4,2 do
         local nx, ny = geom.nudge(x, y, dir)
 
-        if not cave:valid_cell(nx, ny) then continue end
+        if not cave:valid(nx, ny) then continue end
 
         local B2 = area.blobs[nx][ny]
 
@@ -1267,7 +1267,7 @@ function Cave_heights_near_area(R, B)
     for dir = 2,4 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not cave:valid_cell(nx, ny) then continue end
+      if not cave:valid(nx, ny) then continue end
 
       local B1 = area.blobs[x][y]
       local B2 = area.blobs[nx][ny]
@@ -1832,8 +1832,8 @@ function Cave_make_waterfalls(R)
     local ax, ay = geom.nudge(cx, cy, A_dir)
     local bx, by = geom.nudge(cx, cy, B_dir)
 
-    if not cave:valid_cell(ax, ay) then return false end
-    if not cave:valid_cell(bx, by) then return false end
+    if not cave:valid(ax, ay) then return false end
+    if not cave:valid(bx, by) then return false end
 
     local A = area.blobs[ax][ay]
     local B = area.blobs[bx][by]
@@ -1854,7 +1854,7 @@ function Cave_make_waterfalls(R)
 
     local nx, ny = geom.nudge(x, y, dir)
 
-    if not cave:valid_cell(nx, ny) then return false end
+    if not cave:valid(nx, ny) then return false end
 
     local B = area.blobs[nx][ny]
 
@@ -1870,7 +1870,7 @@ function Cave_make_waterfalls(R)
 
       local ox, oy = geom.nudge(x, y, dir, dist)
 
-      if not cave:valid_cell(ox, oy) then return false end
+      if not cave:valid(ox, oy) then return false end
 
       local B2 = area.blobs[ox][oy]
 
@@ -1957,7 +1957,7 @@ function Cave_make_waterfalls(R)
   local function cells_are_fences(cx1, cy1, cx2, cy2)
     for x = cx1, cx2 do
     for y = cy1, cy2 do
-      assert(cave:valid_cell(x, y))
+      assert(cave:valid(x, y))
       local B = area.blobs[x][y]
       if not (B and B.is_fence) then return false end
     end
@@ -1973,7 +1973,7 @@ function Cave_make_waterfalls(R)
     for pass = 1, 2 do
       local nx, ny = geom.nudge(cx, cy, dir)
 
-      if not cave:valid_cell(nx, ny) then return false end
+      if not cave:valid(nx, ny) then return false end
 
       local N = area.blobs[nx][ny]
       if not N then return false end
@@ -2005,7 +2005,7 @@ function Cave_make_waterfalls(R)
 
     for i = 0, 7 do
       local nx, ny = geom.nudge(cx, cy, dir, i)
-      if not cave:valid_cell(nx, ny) then return false end
+      if not cave:valid(nx, ny) then return false end
 
       local BL = area.blobs[nx][ny]
       if not BL or BL.is_wall or BL.goal_type then return false end
@@ -2194,7 +2194,7 @@ function Cave_decorations(R)
   local function block_is_bounded(x, y, B, dir)
     local nx, ny = geom.nudge(x, y, dir)
 
-    if not cave:valid_cell(nx, ny) then return true end
+    if not cave:valid(nx, ny) then return true end
 
     local N = area.blobs[nx][ny]
 

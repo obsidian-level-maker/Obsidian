@@ -68,7 +68,7 @@ function GRID_CLASS.blank_copy(grid)
 end
 
 
-function GRID_CLASS.valid_cell(grid, x, y)
+function GRID_CLASS.valid(grid, x, y)
   return (1 <= x and x <= grid.w) and (1 <= y and y <= grid.h)
 end
 
@@ -622,7 +622,7 @@ function GRID_CLASS.find_islands(grid)
       if potentials[reg] != "no" then
         for side = 2,8,2 do
           local nx, ny = geom.nudge(x, y, side)
-          if grid:valid_cell(nx, ny) and flood[nx][ny] == nil then
+          if grid:valid(nx, ny) and flood[nx][ny] == nil then
             potentials[reg] = "no"
             break;
           end
@@ -684,7 +684,7 @@ function GRID_CLASS.grow(grid, keep_edges)
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] > 0 then
         val = cells[nx][ny]
@@ -726,7 +726,7 @@ function GRID_CLASS.grow8(grid, keep_edges)
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] > 0 then
         val = cells[nx][ny]
@@ -770,7 +770,7 @@ function GRID_CLASS.shrink(grid, keep_edges)
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
     
-      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] < 0 then
         val = cells[nx][ny]
@@ -812,7 +812,7 @@ function GRID_CLASS.shrink8(grid, keep_edges)
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
     
-      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] < 0 then
         val = cells[nx][ny]
@@ -851,7 +851,7 @@ function GRID_CLASS.remove_dots(grid)
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not cells[nx][ny] then
         -- ignore it
       elseif cells[nx][ny] == val then
         return false
@@ -1414,7 +1414,7 @@ function GRID_CLASS.maze_generate(maze)
 
 
   local function valid_and_free(x, y)
-    return maze:valid_cell(x, y) and cells[x][y] == 0
+    return maze:valid(x, y) and cells[x][y] == 0
   end
 
 
@@ -1460,7 +1460,7 @@ function GRID_CLASS.maze_generate(maze)
   local function is_edge(x, y, dir)
     x, y = geom.nudge(x, y, 10-dir)
 
-    if not maze:valid_cell(x, y) then return true end
+    if not maze:valid(x, y) then return true end
 
     if not cells[x][y] then return true end
 
