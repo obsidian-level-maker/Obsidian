@@ -37,6 +37,8 @@
 
     regions : table[id] -> REGION
 
+    blobs   : table[id] -> REGION
+
 --]]
 
 
@@ -974,35 +976,79 @@ end
 ----------------------------------------------------------------
 
 
-function GRID_CLASS.merge_blobs(blob_map, id1, id2)
-  -- merges the second blob into the first one
+function GRID_CLASS.dump_blobs(grid)
 
-  for cx = 1, blob_map.w do
-  for cy = 1, blob_map.h do
-    if blob_map[cx][cy] == id2 then
-       blob_map[cx][cy] = id1
+  local function char_for_cell(cx, cy)
+    local id = grid.cells[cx][cy]
+
+    if id == nil then return " " end
+
+    if id < 0 then return "." end
+
+    id = 1 + (id - 1) % 36
+
+    return string.sub("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", id, id)
+  end
+
+
+  local function dump_map()
+    gui.debugf("Blob map:\n")
+
+    for cy = grid.h, 1, -1 do
+      local line = ""
+
+      for cx = 1, grid.w do
+        line = line .. char_for_cell(cx, cy)
+      end
+
+      gui.debugf("| %s\n", line)
     end
   end
+
+
+  local function dump_sizes()
+    gui.debugf("Blob sizes:\n")
+
+    local line = ""
+
+    each id, reg in grid.blobs do
+      line = line .. "  " .. string.format("%2d", reg.size)
+
+      if #line > 40 then
+        gui.debugf("%s\n", line)
+      end
+    end
+
+    if #line > 0 then
+      gui.debugf("%s\n", line)
+    end
   end
+
+
+  ---| dump_blobs |---
+
+  dump_map()
+  dump_sizes()
+
+  gui.debugf("\n")
 end
 
 
-
-function GRID_CLASS.create_blobs(grid, step_x, step_y, min_size)
+function GRID_CLASS.create_blobs(grid, step_x, step_y)
   --
-  -- Divide the given array into "blobs", which are small groups
+  -- Divide the given grid into "blobs", which are small groups
   -- of contiguous cells.
   --
-  -- Returns a new array, where each valid cell will contain a blob
+  -- Returns a new grid, where each valid cell will contain a blob
   -- identity number.
   --
-  -- NOTE : the input region MUST be contiguous
-  --        [ if not, expect unfilled places ]
+  -- NOTE: the input region MUST be contiguous
+  --       [ if not, expect unfilled places ]
 
   local W = grid.w
   local H = grid.h
 
-  local blob_map = table.array_2D(W, H)
+  local result = grid:new(W, H)
 
   local total_blobs = 0
 
@@ -1181,108 +1227,6 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y, min_size)
   end
 
 
-  local function merge_blobs(id1, id2)
-    GRID_CLASS.merge_blobs(blob_map, id1, id2)
-
-    sizes[id1] = sizes[id1] + sizes[id2]
-    sizes[id2] = -1
-  end
-
-
-  local function candidate_to_merge(id)
-    local best
-    local best_cost = 9e9
-
-    local seen = {}
-
-    for cx = 1, W do
-    for cy = 1, H do
-      if blob_map[cx][cy] != id then continue end
-
-      for dir = 2,8,2 do
-        local nb = neighbor_blob(cx, cy, dir)
-
-        if nb and nb != id and sizes[nb] > 0 and not seen[nb] then
-          seen[nb] = true
-
-          local cost = sizes[nb] + gui.random() * 0.1
-
-          if cost < best_cost then
-            best = nb
-            best_cost = cost
-          end
-        end
-      end -- dir
-
-    end -- cx, cy
-    end
-
-    return best
-  end
-
-
-  local function merge_small_pass()
-    for id = 1, total_blobs do
-      if sizes[id] < min_size then
-        local nb = candidate_to_merge(id)
-
-        if nb then
-          merge_blobs(nb, id)
-        end
-      end
-    end
-  end
-
-
-  local function char_for_cell(cx, cy)
-    if grid.cells[cx][cy] == nil then return " " end
-
-    local id = blob_map[cx][cy]
-
-    if not id then return "." end
-
-    id = 1 + (id - 1) % 36
-
-    return string.sub("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", id, id)
-  end
-
-
-  local function dump_blob_map()
-    gui.debugf("Blob map:\n")
-
-    for cy = H, 1, -1 do
-      local line = ""
-
-      for cx = 1, W do
-        line = line .. char_for_cell(cx, cy)
-      end
-
-      gui.debugf("| %s\n", line)
-    end
-
-    gui.debugf("\n")
-  end
-
-
-  local function dump_blob_info()
-    gui.debugf("Blob sizes:\n")
-
-    for id = 1, total_blobs, 9 do
-      local line = ""
-
-      for di = 0, 8 do
-        if id + di <= total_blobs then
-          line = line .. "  " .. string.format("%2d", sizes[id + di])
-        end
-      end
-
-      gui.debugf("%s\n", line)
-    end
-
-    gui.debugf("\n")
-  end
-
-
   ---| create_blobs |---
 
   spawn_blobs()
@@ -1305,33 +1249,113 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y, min_size)
     end
   end
 
-  if min_size then
-    for loop = 1, 4 do
-      merge_small_pass()
-    end
-  end
-
-  dump_blob_map()
-  dump_blob_info()
+  -- dump_blob_sizes()
 
   return blob_map
 end
 
 
+function GRID_CLASS.merge_two_blobs(grid, id1, id2)
+  -- merges the second blob into the first one
 
-function GRID_CLASS.walkify_blobs(blob_map, walk_rects)
+  for cx = 1, grid.w do
+  for cy = 1, grid.h do
+    if grid.cells[cx][cy] == id2 then
+       grid.cells[cx][cy] = id1
+    end
+  end
+  end
+
+  local reg1 = grid.blobs[id1]
+  local reg2 = grid.blobs[id2]
+
+  reg1.size = reg1.size + reg2.size
+  reg2.size = -1
+
+  grid.blobs[id2] = nil
+end
+
+
+function GRID_CLASS.merge_small_blobs(grid, min_size)
+
+  local allow_large
+
+
+  local function candidate_to_merge(id)
+    local best
+    local best_cost = 9e9
+
+    local seen = {}
+
+    for cx = 1, grid.w do
+    for cy = 1, grid.h do
+      if grid.cells[cx][cy] != id then continue end
+
+      for dir = 2,8,2 do
+        local nb = neighbor_blob(cx, cy, dir)
+
+        if nb and nb != id and not seen[nb] and
+           (allow_large or grid.blobs[nb].size < min_size)
+        then
+          seen[nb] = true
+
+          local cost = sizes[nb] + gui.random() * 0.1
+
+          if cost < best_cost then
+            best = nb
+            best_cost = cost
+          end
+        end
+      end -- dir
+
+    end -- cx, cy
+    end
+
+    return best
+  end
+
+
+  local function merge_pass()
+    -- need to copy the keys, since we modify the table as we go
+    local id_list = table.keys(grid.blobs)
+
+    each id in id_list do
+      if grid.blobs[id].size < min_size then
+        local nb = candidate_to_merge(id)
+
+        if nb then
+          grid:merge_two_blobs(id, nb)
+        end
+      end
+    end
+  end
+
+
+  ---| merge_small_blobs |---
+
+  for loop = 1, 8 do
+    allow_large = (loop > 4)
+
+    merge_small_pass()
+  end
+end
+
+
+function GRID_CLASS.walkify_blobs(grid, walk_rects)
   --
   -- For each cell rectangle in the walk_rects list,
   -- merge any group of blobs that span that rectangle
   -- (so that afterwards, only a single blob spans it).
   --
 
-  local function handle_chunk(WC)
+  local function handle_rect(rect)
     local cur_blob
 
-    for cx = WC.cx1, WC.cx2 do
-    for cy = WC.cy1, WC.cy2 do
-      local id = blob_map[cx][cy]
+    for cx = rect.cx1, rect.cx2 do
+    for cy = rect.cy1, rect.cy2 do
+      local id = grid.cells[cx][cy]
+
+      -- walk rectangles should be covered by a floor
       assert(id)
 
       if cur_blob == nil then
@@ -1340,7 +1364,7 @@ function GRID_CLASS.walkify_blobs(blob_map, walk_rects)
       end
 
       if cur_blob != id then
-        GRID_CLASS.merge_blobs(blob_map, cur_blob, id)
+        GRID_CLASS.merge_blobs(grid, cur_blob, id)
       end
     end
     end
@@ -1349,8 +1373,8 @@ function GRID_CLASS.walkify_blobs(blob_map, walk_rects)
 
   ---| walkify_blobs |---
 
-  each WC in walk_rects do
-    handle_chunk(WC)
+  each rect in walk_rects do
+    handle_rect(rect)
   end
 end
 
