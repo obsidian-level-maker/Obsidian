@@ -149,14 +149,6 @@ function Cave_setup_stuff(area)
   area.walk_floors = {}
 
   area.cave_lights = {}
-
-  -- hmmm, move this outta here??
-  local WALL_AREA =
-  {
-    is_wall = true
-  }
-
-  area.wall_blob = WALL_AREA
 end
 
 
@@ -835,7 +827,7 @@ function Cave_create_areas(R, area)
       -- occasionally some islands
       if rand.odds(30) then
         SINK2.is_liquid = nil
-        SINK2.floor_mat = R.floor_mat
+        SINK2.floor_mat = assert(R.floor_mat)
         SINK2.floor_dz  = 8
       end
 
@@ -844,7 +836,7 @@ function Cave_create_areas(R, area)
 
 
     SINK1.floor_dz  = -8
-    SINK1.floor_mat = R.alt_floor_mat
+    SINK1.floor_mat = assert(R.alt_floor_mat)
 
     if area.liquid_mode == "heaps" then
       SINK1.is_liquid = true
@@ -880,8 +872,8 @@ function Cave_create_areas(R, area)
     SINK1.ceil_dz  = bump1
     SINK2.ceil_dz  = bump1 + bump2
 
-    SINK1.ceil_mat = R.alt_ceil_mat
-    SINK2.ceil_mat = R.ceil_mat
+    SINK1.ceil_mat = assert(R.alt_ceil_mat)
+    SINK2.ceil_mat = assert(R.ceil_mat)
 
     if rand.odds(10) then
       SINK1.ceil_mat, SINK2.ceil_mat = SINK2.ceil_mat, SINK1.ceil_mat
@@ -916,6 +908,9 @@ function Cave_create_areas(R, area)
       floor_mat = R.floor_mat
        ceil_mat = R.ceil_mat
     }
+
+    assert(AREA.floor_mat)
+    assert(AREA.ceil_mat)
 
     table.insert(area.walk_floors, AREA)
 
@@ -1245,7 +1240,11 @@ step:dump("Step:")
 
 
   local function set_walls()
-    assert(area.wall_blob)
+    area.wall_blob =
+    {
+      is_wall = true
+      wall_mat = assert(area.room.main_tex)
+    }
 
     for x = 1, area.cw do
     for y = 1, area.ch do
@@ -2642,7 +2641,7 @@ function Cave_build_a_park(R, entry_h)
       neighbors = {}
       children  = {}
 
-      floor_mat = R.floor_mat
+      floor_mat = assert(R.main_tex)
 
       -- TEMP RUBBISH
       floor_h   = entry_h
@@ -3016,11 +3015,10 @@ function Cave_build_a_park(R, entry_h)
       neighbors = {}
       children  = {}
 
-      floor_mat = "_LIQUID"
+      is_liquid = true
+      is_river  = true
 
       floor_h   = entry_h - rand.pick({48, 64, 80, 96, 128})
-
-      is_river  = true
     }
 
     local best
@@ -3091,14 +3089,12 @@ function Cave_build_a_scenic_vista(area)
   local room = assert(area.face_room)
 
 
-  local function new_floor()
+  local function new_blob()
     local FL =
     {
       neighbors = {}
       children  = {}
     }
-
-    table.insert(area.walk_floors, FL)
 
     return FL
   end
@@ -3122,13 +3118,15 @@ function Cave_build_a_scenic_vista(area)
   end
 
 
-  -- a basic fence, like in E1M1 or MAP01 of standard DOOM
   local function make_simple_fence()
-    local FL = new_floor()
+    --
+    -- WHAT: a basic fence, like in E1M1 or MAP01 of standard DOOM
+    --
 
-    FL.floor_mat = area.zone.fence_mat
+    local FL = new_blob()
 
     FL.floor_h = (room.max_floor_h or room.entry_h) + 72
+    FL.floor_mat = assert(area.zone.fence_mat)
 
     FL.floor_y_offset = 0
 
@@ -3144,16 +3142,19 @@ function Cave_build_a_scenic_vista(area)
   end
 
 
-  -- large body of liquid with an impassible railing
   local function make_watery_drop()
+    --
+    -- WHAT: large body of liquid with an impassible railing
+    --
+
     -- create the liquid area --
 
     local drop_h = rand.pick({ 64,128,192,256 })
 
-    local FL = new_floor()
+    local FL = new_blob()
 
     FL.floor_h   = (room.min_floor_h or room.entry_h) - drop_h
-    FL.floor_mat = "_LIQUID"
+    FL.is_liquid = true
 
     temp_install_floor(FL)
 
@@ -3162,10 +3163,10 @@ function Cave_build_a_scenic_vista(area)
 
     -- create cliffs in the distance --
 
-    local CLIFF = new_floor()
+    local CLIFF = new_blob()
 
     CLIFF.floor_h   = (room.max_floor_h or room.entry_h) + 96
-    CLIFF.floor_mat = LEVEL.cliff_mat
+    CLIFF.floor_mat = assert(LEVEL.cliff_mat)
 
     for cx = 1, area.cw do
     for cy = 1, area.ch do

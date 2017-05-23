@@ -2068,13 +2068,13 @@ function Render_area(A)
 
   do
     -- handle caves, parks and landscapes
-    if A.mode == "nature" then
+    if A.mode == "nature" or A.mode == "scenic" then
       Render_cells(A)
     else
       Render_floor(A)
     end
 
-    if A.mode != "nature" or A.external_sky then
+    if not (A.mode == "nature" or A.mode == "scenic") or A.external_sky then
       Render_ceiling(A)
     end
   end
@@ -2930,20 +2930,10 @@ function Render_cells(area)
 
 
   local function render_floor(x, y, B)
+    local f_brush = Cave_brush(area, x, y)
+
     -- this is NIL for completely solid areas
     local f_h = B.floor_h
-
-    -- TODO : review this usage of ROOM object
-    local R = area.room or {}
-
-    local f_mat = B.floor_mat or R.floor_mat or R.main_tex or "_ERROR"
-
-    if B.is_wall or B.is_fence then
-      f_mat = B.wall_mat or R.main_tex or R.main_tex
-    end
-
-
-    local f_brush = Cave_brush(area, x, y)
 
     if f_h then
       local top = { t=f_h }
@@ -2954,7 +2944,7 @@ function Render_cells(area)
 
 top.reachable = 1  --!!!!!! FIXME: remove
 
--- if R and R.id then top.tag = 1000 + R.id end
+-- if area.room and area.room.id then top.tag = 1000 + area.room.id end
 
       -- scenic areas need to block sound
       if area.mode == "scenic" then
@@ -2964,8 +2954,14 @@ top.reachable = 1  --!!!!!! FIXME: remove
       table.insert(f_brush, top)
     end
 
+    local f_mat
+
     if B.is_liquid then
       f_mat = "_LIQUID"
+    elseif f_h then
+      f_mat = assert(B.floor_mat)
+    else
+      f_mat = assert(B.wall_mat)
     end
 
     brushlib.set_mat(f_brush, f_mat, f_mat)
@@ -2981,15 +2977,12 @@ top.reachable = 1  --!!!!!! FIXME: remove
   local function render_ceiling(x, y, B)
     if not B.ceil_h then return end
 
-    -- TODO : review this usage of ROOM object
-    local R = area.room or {}
-
-    local c_mat = B.ceil_mat or R.ceil_mat or R.main_tex or "_ERROR"
-
     local c_brush = Cave_brush(area, x, y)
 
     local bottom = { b=B.ceil_h }
     table.insert(c_brush, bottom)
+
+    local c_mat
 
     if B.is_sky then
       c_mat = "_SKY"
@@ -2997,6 +2990,8 @@ top.reachable = 1  --!!!!!! FIXME: remove
       if not LEVEL.is_dark then
         bottom.light_add = 32
       end
+    else
+      c_mat = assert(B.ceil_mat)
     end
 
     brushlib.set_mat(c_brush, c_mat, c_mat)
