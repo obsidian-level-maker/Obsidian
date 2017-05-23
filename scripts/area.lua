@@ -34,19 +34,20 @@
                     -- "scenic"
                     -- "void"
 
-    scenic_kind : keyword  -- "water", "mountain"
-
     is_outdoor    -- true if outdoors (sky ceiling)
     is_boundary   -- true for areas outside the boundary line
-
-    lighting      -- ambient lighting for the area
 
 
     room : ROOM
 
     zone : ZONE
 
-    chunk : CHUNK   -- only set when mode == "chunk"
+    chunk : CHUNK   -- only used when mode == "chunk"
+
+    border_type : keyword  -- "simple_fence"
+                           -- "watery_drop"
+
+    facade_group : FACADE_GROUP   -- used by facade logic (temporarily)
 
 
     --- geometry of area ---
@@ -60,6 +61,8 @@
 
     edges : list(EDGE)
 
+    inner_points : list(CORNER)
+
     floor_h     -- floor height
     ceil_h      -- ceiling height
 
@@ -69,12 +72,7 @@
     floor_side  -- floor side material (optional)
     ceil_side   -- ceiling side material (optional)
 
-
-    --- miscellaneous stuff ---
-
-    inner_points : list(CORNER)
-
-    facade_group : FACADE_GROUP   -- used by facade logic (temporarily)
+    lighting    -- ambient lighting for the area
 
 
     --- nature stuff ---

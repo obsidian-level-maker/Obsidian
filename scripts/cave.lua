@@ -3071,6 +3071,21 @@ end
 
 
 
+function Cave_prepare_scenic_vista(area)
+
+  local room = assert(area.face_room)
+
+  -- decide what kind of vista to make
+
+  if room.has_river or not LEVEL.liquid or rand.odds(25) then
+    area.border_type = "simple_fence"
+  else
+    area.border_type = "watery_drop"
+  end
+end
+
+
+
 function Cave_build_a_scenic_vista(area)
 
   local room = assert(area.face_room)
@@ -3109,8 +3124,6 @@ function Cave_build_a_scenic_vista(area)
 
   -- a basic fence, like in E1M1 or MAP01 of standard DOOM
   local function make_simple_fence()
-    area.border_type = "simple_fence"
-
     local FL = new_floor()
 
     FL.floor_mat = area.zone.fence_mat
@@ -3133,8 +3146,6 @@ function Cave_build_a_scenic_vista(area)
 
   -- large body of liquid with an impassible railing
   local function make_watery_drop()
-    area.border_type = "watery_drop"
-
     -- create the liquid area --
 
     local drop_h = rand.pick({ 64,128,192,256 })
@@ -3188,10 +3199,14 @@ function Cave_build_a_scenic_vista(area)
 
   Cave_map_usable_area(area)
 
-  if room.has_river or not LEVEL.liquid or rand.odds(25) then
+  if area.border_type == "simple_fence" then
     make_simple_fence()
-  else
+
+  elseif area.border_type == "watery_drop" then
     make_watery_drop()
+
+  else
+    error("Unknown border_type: " .. tostring(area.border_type))
   end
 end
 

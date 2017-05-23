@@ -1975,6 +1975,12 @@ function Layout_scenic_vistas()
 
   each A in LEVEL.areas do
     if A.mode == "scenic" then
+      Cave_prepare_scenic_vista(A)
+    end
+  end
+
+  each A in LEVEL.areas do
+    if A.mode == "scenic" then
       Cave_build_a_scenic_vista(A)
     end
   end
