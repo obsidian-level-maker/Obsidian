@@ -38,7 +38,6 @@
     regions : table[id] -> REGION
 
     blobs   : table[id] -> REGION
-
 --]]
 
 
@@ -56,9 +55,10 @@ GRID_CLASS = {}
 
 
 function GRID_CLASS.new(w, h)
-  local grid = { w=w, h=h }
+  local grid = table.array_2D(w, h)
+
   table.set_class(grid, GRID_CLASS)
-  grid.cells = table.array_2D(w, h)
+
   return grid
 end
 
@@ -74,19 +74,19 @@ end
 
 
 function GRID_CLASS.get(grid, x, y)
-  return grid.cells[x][y]
+  return grid[x][y]
 end
 
 
 function GRID_CLASS.set(grid, x, y, val)
-  grid.cells[x][y] = val
+  grid[x][y] = val
 end
 
 
 function GRID_CLASS.fill(grid, cx1,cy1, cx2,cy2, val)
   for x = cx1, cx2 do
   for y = cy1, cy2 do
-    grid.cells[x][y] = val
+    grid[x][y] = val
   end
   end
 end
@@ -105,8 +105,8 @@ function GRID_CLASS.negate(grid, cx1,cy1, cx2,cy2)
 
   for x = cx1, cx2 do
   for y = cy1, cy2 do
-    if grid.cells[x][y] then
-      grid.cells[x][y] = - grid.cells[x][y]
+    if grid[x][y] then
+      grid[x][y] = 0 - grid[x][y]
     end
   end
   end
@@ -116,18 +116,33 @@ end
 
 
 function GRID_CLASS.copy(grid)
-  -- only copies 'w', 'h' and 'cells' members.
-  -- the cells themselves are NOT copied.
+  -- a fairly shallow copy, only "w" and "h" members are copied
+  -- (NOT additional stuff like "flood" or "regions"), and each
+  -- cell is copied by value.
 
   local newbie = grid:blank_copy()
 
   for x = 1, grid.w do
   for y = 1, grid.h do
-    newbie.cells[x][y] = grid.cells[x][y]
+    newbie[x][y] = grid[x][y]
   end
   end
 
   return newbie
+end
+
+
+function GRID_CLASS.swap_data(grid, other)
+  assert(grid.w == other.w)
+  assert(grid.h == other.h)
+
+  for y = 1, grid.h do
+    local row1 =  grid[y]
+    local row2 = other[y]
+
+     grid[y] = row2
+    other[y] = row1
+  end
 end
 
 
@@ -141,7 +156,7 @@ function GRID_CLASS.dump(grid, title)
 
     for x = 1,grid.w do
       local ch = " "
-      local cell = grid.cells[x][y]
+      local cell = grid[x][y]
 
       if  cell == 0      then ch = "/" end
       if (cell or 0) > 0 then ch = "#" end
@@ -168,10 +183,10 @@ function GRID_CLASS.union(grid, other)
 
   for x = 1, W do
   for y = 1, H do
-    if ( grid.cells[x][y] or 0) < 0 and
-       (other.cells[x][y] or 0) > 0
+    if ( grid[x][y] or 0) < 0 and
+       (other[x][y] or 0) > 0
     then
-      grid.cells[x][y] = other.cells[x][y]
+      grid[x][y] = other[x][y]
     end
   end
   end
@@ -187,10 +202,10 @@ function GRID_CLASS.intersection(grid, other)
 
   for x = 1, W do
   for y = 1, H do
-    if ( grid.cells[x][y] or 0) > 0 and
-       (other.cells[x][y] or 0) < 0
+    if ( grid[x][y] or 0) > 0 and
+       (other[x][y] or 0) < 0
     then
-      grid.cells[x][y] = other.cells[x][y]
+      grid[x][y] = other[x][y]
     end
   end
   end
@@ -210,19 +225,19 @@ function GRID_CLASS.subtract(grid, other, new_id)
 
   for x = 1, W do
   for y = 1, H do
-    if ( grid.cells[x][y] or 0) > 0 and
-       (other.cells[x][y] or 0) > 0
+    if ( grid[x][y] or 0) > 0 and
+       (other[x][y] or 0) > 0
     then
-      grid.cells[x][y] = new_id
+      grid[x][y] = new_id
     end
   end
   end
 end
 
 
-function GRID_CLASS.generate(grid, solid_prob)
+function GRID_CLASS.generate_cave(grid, solid_prob)
   --
-  -- The initial contents of the grid form a map where a cave
+  -- The contents of the input grid form a map where a cave
   -- will be generated.  The following values can be used:
   --
   --    nil : never touched
@@ -230,7 +245,7 @@ function GRID_CLASS.generate(grid, solid_prob)
   --      0 : computed normally
   --     +1 : forced on
   --
-  -- Result elements can be: nil, -1 or +1.
+  -- A new grid is returned, the elements can be: nil, -1 or +1.
   --
 
   solid_prob = solid_prob or 40
@@ -238,18 +253,16 @@ function GRID_CLASS.generate(grid, solid_prob)
   local W = grid.w
   local H = grid.h
 
-  local map  = grid.cells
-
   -- these arrays only use 0 and 1 as values
-  local work = table.array_2D(W, H)
-  local temp = table.array_2D(W, H)
+  local work = grid:blank_copy()
+  local temp = grid:blank_copy()
 
   -- populate initial map
   for x = 1, W do
   for y = 1, H do
-    if not map[x][y] or map[x][y] < 0 then
+    if not grid[x][y] or grid[x][y] < 0 then
       work[x][y] = 0
-    elseif map[x][y] > 0 then
+    elseif grid[x][y] > 0 then
       work[x][y] = 1
     else
       work[x][y] = rand.sel(solid_prob, 1, 0)
@@ -257,10 +270,12 @@ function GRID_CLASS.generate(grid, solid_prob)
   end
   end
 
+
   local function calc_new(x, y, loop)
-    if not map[x][y] then return 0 end
-    if map[x][y] > 0 then return 1 end
-    if map[x][y] < 0 then return 0 end
+    if not grid[x][y] then return 0 end
+
+    if grid[x][y] > 0 then return 1 end
+    if grid[x][y] < 0 then return 0 end
 
     if x == 1 or x == W or y == 1 or y == H then
       return work[x][y]
@@ -296,6 +311,7 @@ function GRID_CLASS.generate(grid, solid_prob)
     return 0
   end
 
+
   -- perform the cellular automation steps
   for loop = 1,7 do
     for x = 1, W do
@@ -310,40 +326,42 @@ function GRID_CLASS.generate(grid, solid_prob)
   -- convert values for the result
   for x = 1, W do
   for y = 1, H do
-    if map[x][y] == 0 then
+    if grid[x][y] == 0 then
       work[x][y] = sel(work[x][y] > 0, 1, -1)
     else
-      work[x][y] = map[x][y]
+      work[x][y] = grid[x][y]
     end
   end
   end
 
-  grid.cells = work
+  return work
 end
 
 
-function GRID_CLASS.gen_empty(grid)
-
-  -- this is akin to generate(), but making all target cells empty
+function GRID_CLASS.gen_empty_cave(grid)
+  --
+  -- This is like generate_cave(), but making the largest possible
+  -- area of empty cells.
+  --
 
   local W = grid.w
   local H = grid.h
 
-  local cells = grid.cells
+  local result = grid:blank_copy()
 
   for x = 1, W do
   for y = 1, H do
-    if not cells[x][y] then
+    if not grid[x][y] then
       -- skip it
-    elseif cells[x][y] > 0 then
-      cells[x][y] = 1
+    elseif grid[x][y] > 0 then
+      result[x][y] = 1
     else
-      cells[x][y] = -1
+      result[x][y] = -1
     end
   end
   end
 
-  return grid
+  return result
 end
 
 
@@ -391,7 +409,6 @@ function GRID_CLASS.flood_fill(grid)
   local W = grid.w
   local H = grid.h
 
-  local cells = grid.cells
   local flood = table.array_2D(W, H)
 
   local cur_solid =  1
@@ -454,9 +471,9 @@ function GRID_CLASS.flood_fill(grid)
 
   for x = 1, W do
   for y = 1, H do
-    if not cells[x][y] then
+    if not grid[x][y] then
       -- ignore it
-    elseif cells[x][y] < 0 then
+    elseif grid[x][y] < 0 then
       flood[x][y] = cur_empty ; cur_empty = cur_empty - 1
     else
       flood[x][y] = cur_solid ; cur_solid = cur_solid + 1
@@ -493,8 +510,6 @@ function GRID_CLASS.flood_fill(grid)
   end
 
   grid.flood = flood
-
-  --  grid:dump_regions()
 end
 
 
@@ -533,8 +548,8 @@ function GRID_CLASS.solidify_pockets(grid, walk_id, solid_id)
     for x = REG.cx1, REG.cx2 do
     for y = REG.cy1, REG.cy2 do
       if grid.flood[x][y] == pocket_id then
-        grid.cells[x][y] = solid_id
         grid.flood[x][y] = nil
+        grid[x][y] = solid_id
       end
     end
     end
@@ -561,9 +576,9 @@ function GRID_CLASS.copy_region(grid, reg_id)
     if val == nil then
       -- nothing to copy
     elseif val == reg_id then
-      result.cells[x][y] = 1
+      result[x][y] = 1
     else
-      result.cells[x][y] = -1
+      result[x][y] = -1
     end
   end
   end
@@ -650,38 +665,40 @@ function GRID_CLASS.grow(grid, keep_edges)
   local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = grid.cells
+
 
   local function value_for_spot(x, y)
-    local val = cells[x][y]
+    local val = grid[x][y]
     local hit_edge
 
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not grid[nx][ny] then
         hit_edge = true
-      elseif cells[nx][ny] > 0 then
-        val = cells[nx][ny]
+      elseif grid[nx][ny] > 0 then
+        val = grid[nx][ny]
       end
     end
 
     if keep_edges and hit_edge then
-      return cells[x][y]
+      return grid[x][y]
     end
 
     return val
   end
 
+  -- compute the new cells
   for x = 1, W do
   for y = 1, H do
-    if cells[x][y] then
+    if grid[x][y] then
       work[x][y] = value_for_spot(x, y)
     end
   end
   end
 
-  grid.cells = work
+  -- transfer result into input grid
+  grid:swap_data(work)
 end
 
 
@@ -692,38 +709,40 @@ function GRID_CLASS.grow8(grid, keep_edges)
   local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = grid.cells
+
 
   local function value_for_spot(x, y)
-    local val = cells[x][y]
+    local val = grid[x][y]
     local hit_edge
 
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not grid[nx][ny] then
         hit_edge = true
-      elseif cells[nx][ny] > 0 then
-        val = cells[nx][ny]
+      elseif grid[nx][ny] > 0 then
+        val = grid[nx][ny]
       end
     end end -- dir
 
     if keep_edges and hit_edge then
-      return cells[x][y]
+      return grid[x][y]
     end
 
     return val
   end
 
+  -- compute the new cells
   for x = 1, W do
   for y = 1, H do
-    if cells[x][y] then
+    if grid[x][y] then
       work[x][y] = value_for_spot(x, y)
     end
   end
   end
 
-  grid.cells = work
+  -- transfer result into input grid
+  grid:swap_data(work)
 end
 
 
@@ -736,38 +755,39 @@ function GRID_CLASS.shrink(grid, keep_edges)
   local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = grid.cells
 
   local function value_for_spot(x, y)
-    local val = cells[x][y]
+    local val = grid[x][y]
     local hit_edge
 
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not grid[nx][ny] then
         hit_edge = true
-      elseif cells[nx][ny] < 0 then
-        val = cells[nx][ny]
+      elseif grid[nx][ny] < 0 then
+        val = grid[nx][ny]
       end
     end
 
     if keep_edges and hit_edge then
-      return cells[x][y]
+      return grid[x][y]
     end
 
     return val
   end
 
+  -- compute the new cells
   for x = 1, W do
   for y = 1, H do
-    if cells[x][y] then
+    if grid[x][y] then
       work[x][y] = value_for_spot(x, y)
     end
   end
   end
 
-  grid.cells = work
+  -- transfer result into input grid
+  grid:swap_data(work)
 end
 
 
@@ -778,38 +798,39 @@ function GRID_CLASS.shrink8(grid, keep_edges)
   local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = grid.cells
 
   local function value_for_spot(x, y)
-    local val = cells[x][y]
+    local val = grid[x][y]
     local hit_edge
 
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not grid[nx][ny] then
         hit_edge = true
-      elseif cells[nx][ny] < 0 then
-        val = cells[nx][ny]
+      elseif grid[nx][ny] < 0 then
+        val = grid[nx][ny]
       end
     end end -- dir
 
     if keep_edges and hit_edge then
-      return cells[x][y]
+      return grid[x][y]
     end
 
     return val
   end
 
+  -- compute the new cells
   for x = 1, W do
   for y = 1, H do
-    if cells[x][y] then
+    if grid[x][y] then
       work[x][y] = value_for_spot(x, y)
     end
   end
   end
 
-  grid.cells = work
+  -- transfer result into input grid
+  grid:swap_data(work)
 end
 
 
@@ -820,15 +841,14 @@ function GRID_CLASS.remove_dots(grid)
   local W = grid.w
   local H = grid.h
 
-  local cells = grid.cells
 
   local function is_isolated(x, y, val)
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not grid:valid(nx, ny) or not cells[nx][ny] then
+      if not grid:valid(nx, ny) or not grid[nx][ny] then
         -- ignore it
-      elseif cells[nx][ny] == val then
+      elseif grid[nx][ny] == val then
         return false
       end
     end
@@ -836,13 +856,15 @@ function GRID_CLASS.remove_dots(grid)
     return true
   end
 
+
   for x = 1, W do
   for y = 1, H do
-    local val = cells[x][y]
+    local val = grid[x][y]
 
     if val and val != 0 and is_isolated(x, y, val) then
       local dx = sel(x > W/2, -1, 1)
-      cells[x][y] = cells[x+dx][y]
+
+      grid[x][y] = grid[x+dx][y]
     end
   end
   end
@@ -854,11 +876,9 @@ function GRID_CLASS.is_land_locked(grid, x, y)
     return false
   end
 
-  local cells = grid.cells
-
   for dx = -1, 1 do
   for dy = -1, 1 do
-    if (cells[x+dx][y+dy] or 0) < 0 then
+    if (grid[x+dx][y+dy] or 0) < 0 then
       return false
     end
   end
@@ -873,11 +893,9 @@ function GRID_CLASS.is_empty_locked(grid, x, y)
     return false
   end
 
-  local cells = grid.cells
-
-  for dx = -1,1 do
-  for dy = -1,1 do
-    if (cells[x+dx][y+dy] or 0) >= 0 then
+  for dx = -1, 1 do
+  for dy = -1, 1 do
+    if (grid[x+dx][y+dy] or 0) >= 0 then
       return false
     end
   end
@@ -979,7 +997,7 @@ end
 function GRID_CLASS.dump_blobs(grid)
 
   local function char_for_cell(cx, cy)
-    local id = grid.cells[cx][cy]
+    local id = grid[cx][cy]
 
     if id == nil then return " " end
 
@@ -1048,7 +1066,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   local W = grid.w
   local H = grid.h
 
-  local result = grid:new(W, H)
+  local result = grid:blank_copy()
 
   local total_blobs = 0
 
@@ -1061,7 +1079,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
     if cx < 1 or cx > W then return false end
     if cy < 1 or cy > H then return false end
 
-    if grid.cells[cx][cy] == nil then return false end
+    if grid[cx][cy] == nil then return false end
 
     return true
   end
@@ -1260,8 +1278,8 @@ function GRID_CLASS.merge_two_blobs(grid, id1, id2)
 
   for cx = 1, grid.w do
   for cy = 1, grid.h do
-    if grid.cells[cx][cy] == id2 then
-       grid.cells[cx][cy] = id1
+    if grid[cx][cy] == id2 then
+       grid[cx][cy] = id1
     end
   end
   end
@@ -1289,7 +1307,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
 
     for cx = 1, grid.w do
     for cy = 1, grid.h do
-      if grid.cells[cx][cy] != id then continue end
+      if grid[cx][cy] != id then continue end
 
       for dir = 2,8,2 do
         local nb = neighbor_blob(cx, cy, dir)
@@ -1353,7 +1371,7 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
 
     for cx = rect.cx1, rect.cx2 do
     for cy = rect.cy1, rect.cy2 do
-      local id = grid.cells[cx][cy]
+      local id = grid[cx][cy]
 
       -- walk rectangles should be covered by a floor
       assert(id)
@@ -1406,17 +1424,15 @@ function GRID_CLASS.maze_generate(maze)
   local W = maze.w
   local H = maze.h
 
-  local cells = maze.cells
-
 
   local function valid_and_free(x, y)
-    return maze:valid(x, y) and cells[x][y] == 0
+    return maze:valid(x, y) and maze[x][y] == 0
   end
 
 
   local function how_far_can_move(x, y, dir)
     -- when start is in open space, require all neighbors to be open too
-    if cells[x][y] == 0 then
+    if maze[x][y] == 0 then
       for side = 1,9 do
         local nx, ny = geom.nudge(x, y, side)
         if not valid_and_free(nx, ny) then return 0 end
@@ -1458,22 +1474,20 @@ function GRID_CLASS.maze_generate(maze)
 
     if not maze:valid(x, y) then return true end
 
-    if not cells[x][y] then return true end
+    if not maze[x][y] then return true end
 
     return false
   end
 
 
   local function pick_start()
-    -- TODO: optimise this (how ?)
-
     local middles = {}
     local edges   = {}
 
     for x = 1, W do
     for y = 1, H do
-      if (cells[x][y] or 0) > 0 or
-         (cells[x][y] == 0 and (table.empty(middles) or rand.odds(2)))
+      if (maze[x][y] or 0) > 0 or
+         (maze[x][y] == 0 and (table.empty(middles) or rand.odds(2)))
       then
         for dir = 2,8,2 do
           local len = how_far_can_move(x, y, dir)
@@ -1506,12 +1520,12 @@ function GRID_CLASS.maze_generate(maze)
 
 
   local function trace_next(p)
-    cells[p.x][p.y] = 1
+    maze[p.x][p.y] = 1
 
     for i = 1,p.len do
       p.x, p.y = geom.nudge(p.x, p.y, p.dir)
 
-      cells[p.x][p.y] = 1
+      maze[p.x][p.y] = 1
     end
 
     -- set how far we can move in each direction
@@ -1551,8 +1565,8 @@ function GRID_CLASS.maze_generate(maze)
   local function tidy_up()
     for x = 1, W do
     for y = 1, H do
-      if cells[x][y] == 0 then
-         cells[x][y] = -1
+      if maze[x][y] == 0 then
+         maze[x][y] = -1
       end
     end
     end
@@ -1585,11 +1599,9 @@ function GRID_CLASS.maze_render(maze, brush_func, data)
   local W = maze.w
   local H = maze.h
 
-  local cells = maze.cells
-
 
   local function visit_cell(x, y)
-    if (cells[x][y] or 0) <= 0 then return; end
+    if (maze[x][y] or 0) <= 0 then return; end
 
     local bx = maze.base_x + (x - 1) * 64
     local by = maze.base_y + (y - 1) * 64

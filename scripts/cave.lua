@@ -143,8 +143,8 @@ function Cave_setup_stuff(area)
 
   area.walk_map = GRID_CLASS.new(area.cw, area.ch)
 
-  area.diagonals = table.array_2D(area.cw, area.ch)
-  area.blobs     = table.array_2D(area.cw, area.ch)
+  area.diagonals = area.walk_map:blank_copy()
+  area.blobs     = area.walk_map:blank_copy()
 
   area.walk_floors = {}
 
@@ -263,8 +263,6 @@ end
 
 function Cave_map_usable_area(area)
 
-  local cells = area.walk_map.cells
-
   local bbox = {}
 
 
@@ -317,7 +315,7 @@ function Cave_map_usable_area(area)
       local cy = cy1 + dy
 
       if (diag_mode == nil) or cell_within_triangle(diag_mode, dx, dy) then
-        cells[cx][cy] = 0
+        area.walk_map[cx][cy] = 0
       end
 
       if diag_mode and cell_touches_diagonal(diag_mode, dx, dy) then
@@ -568,13 +566,11 @@ function Cave_generate_cave(R, area)
     for loop = 1,MAX_LOOP do
       gui.debugf("Trying to make a cave: loop %d\n", loop)
 
-      cave = map:copy()
-
       if loop >= MAX_LOOP then
         gui.printf("Failed to generate a usable cave! (%s)\n", R.name)
 
         -- emergency fallback
-        cave:gen_empty()
+        cave = map:gen_empty_cave()
 
         cave:flood_fill()
 
@@ -582,7 +578,7 @@ function Cave_generate_cave(R, area)
         break
       end
 
-      cave:generate(solid_prob)
+      cave = map:generate_cave(solid_prob)
 
       cave:dump("Generated Cave:")
 
@@ -970,7 +966,7 @@ function Cave_create_areas(R, area)
 
     for x = G.cx1, G.cx2 do
     for y = G.cy1, G.cy2 do
-      group_map.cells[x][y] = G
+      group_map[x][y] = G
     end
     end
   end
@@ -981,7 +977,7 @@ function Cave_create_areas(R, area)
 
     for x = G.cx1, G.cx2 do
     for y = G.cy1, G.cy2 do
-      group_map.cells[x][y] = nil
+      group_map[x][y] = nil
     end
     end
   end
@@ -1010,10 +1006,8 @@ function Cave_create_areas(R, area)
 
 
     local free  = copy_cave_without_fences()
-    local f_cel = free.cells
 
     local step
-    local s_cel
     local size
 
     local cw = free.w
@@ -1029,8 +1023,8 @@ function Cave_create_areas(R, area)
     -- mark free areas with zero instead of negative
     for fx = 1, cw do
     for fy = 1, ch do
-      if (f_cel[fx][fy] or 0) < 0 then
-        f_cel[fx][fy] = 0
+      if (free[fx][fy] or 0) < 0 then
+        free[fx][fy] = 0
       end
     end
     end
@@ -1044,8 +1038,8 @@ function Cave_create_areas(R, area)
       -- add the whole group to the current step
       for x = G.cx1, G.cx2 do
       for y = G.cy1, G.cy2 do
-        s_cel[x][y] = 1
-        f_cel[x][y] = 1
+        step[x][y] = 1
+        free[x][y] = 1
 
         size = size + 1
       end
@@ -1061,8 +1055,8 @@ function Cave_create_areas(R, area)
 
 
     local function grow_add(x, y)
-      s_cel[x][y] = 1
-      f_cel[x][y] = 1
+      step[x][y] = 1
+      free[x][y] = 1
 
       size = size + 1
 
@@ -1073,21 +1067,21 @@ function Cave_create_areas(R, area)
       if y < cy1 then cy1 = y end
       if y > cy2 then cy2 = y end
 
-      if group_map.cells[x][y] then
-        touch_a_group(group_map.cells[x][y])
+      if group_map[x][y] then
+        touch_a_group(group_map[x][y])
       end
     end
 
 
     local function grow_horiz(y, prob)
       for x = cx1, cx2 do
-        if x > 1 and s_cel[x][y] == 1 and s_cel[x-1][y] == 0 and f_cel[x-1][y] == 0 and rand.odds(prob) then
+        if x > 1 and step[x][y] == 1 and step[x-1][y] == 0 and free[x-1][y] == 0 and rand.odds(prob) then
           grow_add(x-1, y)
         end
       end
 
       for x = cx2, cx1, -1 do
-        if x < cw and s_cel[x][y] == 1 and s_cel[x+1][y] == 0 and f_cel[x+1][y] == 0 and rand.odds(prob) then
+        if x < cw and step[x][y] == 1 and step[x+1][y] == 0 and free[x+1][y] == 0 and rand.odds(prob) then
           grow_add(x+1, y)
         end
       end
@@ -1096,13 +1090,13 @@ function Cave_create_areas(R, area)
 
     local function grow_vert(x, prob)
       for y = cy1, cy2 do
-        if y > 1 and s_cel[x][y] == 1 and s_cel[x][y-1] == 0 and f_cel[x][y-1] == 0 and rand.odds(prob) then
+        if y > 1 and step[x][y] == 1 and step[x][y-1] == 0 and free[x][y-1] == 0 and rand.odds(prob) then
           grow_add(x, y-1)
         end
       end
 
       for y = cy2, cy1, -1 do
-        if y < ch and s_cel[x][y] == 1 and s_cel[x][y+1] == 0 and f_cel[x][y+1] == 0 and rand.odds(prob) then
+        if y < ch and step[x][y] == 1 and step[x][y+1] == 0 and free[x][y+1] == 0 and rand.odds(prob) then
           grow_add(x, y+1)
         end
       end
@@ -1125,7 +1119,6 @@ function Cave_create_areas(R, area)
 -- free:dump("Free:")
 
       step  = GRID_CLASS.blank_copy(free)
-      s_cel = step.cells
 
       step:set_all(0)
 
@@ -1189,11 +1182,11 @@ step:dump("Step:")
 
       for x = cx1, cx2 do
       for y = cy1, cy2 do
-        if s_cel[x][y] != 1 then continue end
+        if step[x][y] != 1 then continue end
 
         for dir = 2,8,2 do
           local nx, ny = geom.nudge(x, y, dir)
-          if free:valid(nx, ny) and f_cel[nx][ny] == 0 then
+          if free:valid(nx, ny) and free[nx][ny] == 0 then
             table.insert(pos_list, { x=nx, y=ny, prev=prev_B })
           end
         end
@@ -1208,7 +1201,7 @@ step:dump("Step:")
       local pos = table.remove(pos_list, rand.irange(1, #pos_list))
 
       -- ignore out-of-date positions
-      if f_cel[pos.x][pos.y] != 0 then continue end
+      if free[pos.x][pos.y] != 0 then continue end
 
       grow_an_area(pos.x, pos.y, pos.prev)
     end
@@ -2628,7 +2621,7 @@ function Cave_build_a_park(R, entry_h)
   local function temp_install_floor(FL)
     for cx = 1, area.cw do
     for cy = 1, area.ch do
-      local val = area.walk_map.cells[cx][cy]
+      local val = area.walk_map[cx][cy]
 
       if val == nil then continue end
 
@@ -2676,14 +2669,14 @@ function Cave_build_a_park(R, entry_h)
       if nx < 1 or nx > area.cw then continue end
       if ny < 1 or ny > area.ch then continue end
 
-      local v2 = area.walk_map.cells[nx][ny]
+      local v2 = area.walk_map[nx][ny]
 
       -- touches a walk chunk?
       if v2 and v2 < 0 then return -1 end
     end
     end
 
-    local v = area.walk_map.cells[cx][cy]
+    local v = area.walk_map[cx][cy]
 
     if v == nil then return 0 end
 
@@ -2817,13 +2810,13 @@ function Cave_build_a_park(R, entry_h)
       local bottom = 0
 
       for y = r.y2 + 1, area.ch do
-        if area.walk_map.cells[x][y] != nil then
+        if area.walk_map[x][y] != nil then
           top = top + 1
         end
       end
 
       for y = 1, r.y1 - 1 do
-        if area.walk_map.cells[x][y] != nil then
+        if area.walk_map[x][y] != nil then
           bottom = bottom + 1
         end
       end
@@ -3099,7 +3092,7 @@ function Cave_build_a_scenic_vista(area)
   local function temp_install_floor(FL)
     for cx = 1, area.cw do
     for cy = 1, area.ch do
-      local val = area.walk_map.cells[cx][cy]
+      local val = area.walk_map[cx][cy]
 
       if val == nil then continue end
 
@@ -3165,7 +3158,7 @@ function Cave_build_a_scenic_vista(area)
 
     for cx = 1, area.cw do
     for cy = 1, area.ch do
-      local val = area.walk_map.cells[cx][cy]
+      local val = area.walk_map[cx][cy]
 
       if val == nil then continue end
 
