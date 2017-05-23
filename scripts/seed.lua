@@ -696,21 +696,28 @@ function Seed_from_loc(loc)
 end
 
 
-function Seed_over_boundary(sx, sy)
-  if sx <= LEVEL.boundary_x1 or sx >= LEVEL.boundary_x2 then return true end
-  if sy <= LEVEL.boundary_y1 or sy >= LEVEL.boundary_y2 then return true end
+function Seed_inside_sprout_box(sx, sy)
+  if sx < LEVEL.sprout_x1 or sx > LEVEL.sprout_x2 then return false end
+  if sy < LEVEL.sprout_y1 or sy > LEVEL.sprout_y2 then return false end
 
-  return false
+  return true
 end
 
 
-function Seed_outside_sprout_box(sx, sy)
-  if sx <= LEVEL.sprout_x1 or sx >= LEVEL.sprout_x2 then return true end
-  if sy <= LEVEL.sprout_y1 or sy >= LEVEL.sprout_y2 then return true end
+function Seed_inside_boundary(sx, sy)
+  if sx < LEVEL.walkable_x1 or sx > LEVEL.walkable_x2 then return false end
+  if sy < LEVEL.walkable_y1 or sy > LEVEL.walkable_y2 then return false end
 
-  return false
+  return true
 end
 
+
+function Seed_inside_abs_limit(sx, sy)
+  if sx < LEVEL.absolute_x1 or sx > LEVEL.absolute_x2 then return false end
+  if sy < LEVEL.absolute_y1 or sy > LEVEL.absolute_y2 then return false end
+
+  return true
+end
 
 
 function Seed_alloc_depot(room)
@@ -899,7 +906,7 @@ function Seed_save_svg_image(filename)
   -- special bboxes
   if false then
     wr_seed_box(fp, LEVEL.sprout_x1, LEVEL.sprout_y1, LEVEL.sprout_x2, LEVEL.sprout_y2, "#cc0", 3)
-    wr_seed_box(fp, LEVEL.boundary_x1, LEVEL.boundary_y1, LEVEL.boundary_x2, LEVEL.boundary_y2, "#f00", 3)
+    wr_seed_box(fp, LEVEL.walkable_x1, LEVEL.walkable_y1, LEVEL.walkable_x2, LEVEL.walkable_y2, "#f00", 3)
   end
 
   -- edges

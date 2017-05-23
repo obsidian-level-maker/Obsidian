@@ -1839,11 +1839,6 @@ function Area_divvy_up_borders()
 
   local seed_list
 
-  local SX1 = math.max(LEVEL.boundary_x1 - 2, 1)
-  local SY1 = math.max(LEVEL.boundary_y1 - 2, 1)
-  local SX2 = math.min(LEVEL.boundary_x2 + 2, SEED_W)
-  local SY2 = math.min(LEVEL.boundary_y2 + 2, SEED_H)
-
   local temp_areas
 
   local VOID = { name="<VOID>", id=9999 }
@@ -1865,8 +1860,8 @@ function Area_divvy_up_borders()
   local function collect_seeds()
     local list = {}
 
-    for sy = SY1, SY2 do
-    for sx = SX1, SX2 do
+    for sy = LEVEL.absolute_y1, LEVEL.absolute_y2 do
+    for sx = LEVEL.absolute_x1, LEVEL.absolute_x2 do
       local S = SEEDS[sx][sy]
 
       if not S.area then
@@ -2068,8 +2063,10 @@ function Area_divvy_up_borders()
 
     -- check if sits along edge of map
     -- [ does not matter if only a corner touches edge of map ]
-    if S.sx <= SX1 or S.sx >= SX2 or
-       S.sy <= SY1 or S.sy >= SY2
+    if S.sx <= LEVEL.absolute_x1 or
+       S.sy <= LEVEL.absolute_y1 or
+       S.sx >= LEVEL.absolute_x2 or
+       S.sy >= LEVEL.absolute_y2
     then
       temp.touches_edge = true
     end

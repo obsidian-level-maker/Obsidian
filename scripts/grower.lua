@@ -857,8 +857,9 @@ function Grower_decide_extents()
 
 
   -- we prevent creation of new rooms unless the initial part
-  -- lies inside the sprout bbox
-  local dist = 3
+  -- lies inside this sprout bbox...
+  -- [ however we grow this when trying to fulfil the coverage ]
+  local dist = 2
 
   LEVEL.sprout_x1 = map_x1 + dist
   LEVEL.sprout_y1 = map_y1 + dist
@@ -869,21 +870,35 @@ function Grower_decide_extents()
         LEVEL.sprout_x1, LEVEL.sprout_y1,
         LEVEL.sprout_x2, LEVEL.sprout_y2)
 
-  -- this boundary is the absolute limit where parts of a room
-  -- may be placed
-  dist = 11
+
+  -- this bbox is the limit where any walkable/visitable parts
+  -- of a room may be placed...
+  dist = 8
 
   local EDGE = 4
 
-  LEVEL.boundary_x1 = math.max(map_x1 - dist, EDGE)
-  LEVEL.boundary_y1 = math.max(map_y1 - dist, EDGE)
+  LEVEL.walkable_x1 = math.max(map_x1 - dist, 1 + EDGE)
+  LEVEL.walkable_y1 = math.max(map_y1 - dist, 1 + EDGE)
 
-  LEVEL.boundary_x2 = math.min(map_x2 + dist, SEED_W - EDGE + 1)
-  LEVEL.boundary_y2 = math.min(map_y2 + dist, SEED_H - EDGE + 1)
+  LEVEL.walkable_x2 = math.min(map_x2 + dist, SEED_W - EDGE)
+  LEVEL.walkable_y2 = math.min(map_y2 + dist, SEED_H - EDGE)
 
-  gui.debugf("Boundary bbox : (%d %d) .. (%d %d)\n",
-        LEVEL.boundary_x1, LEVEL.boundary_y1,
-        LEVEL.boundary_x2, LEVEL.boundary_y2)
+  gui.debugf("Walkable bbox : (%d %d) .. (%d %d)\n",
+        LEVEL.walkable_x1, LEVEL.walkable_y1,
+        LEVEL.walkable_x2, LEVEL.walkable_y2)
+
+
+  -- this bbox is the absolute limit where anything can be placed
+  -- (especially scenic areas which border the normal rooms).
+  -- in other words, seeds outside this range will never be used.
+  LEVEL.absolute_x1 = math.max(LEVEL.walkable_x1 - EDGE, 1)
+  LEVEL.absolute_y1 = math.max(LEVEL.walkable_y1 - EDGE, 1)
+  LEVEL.absolute_x2 = math.min(LEVEL.walkable_x2 + EDGE, SEED_W)
+  LEVEL.absolute_y2 = math.min(LEVEL.walkable_y2 + EDGE, SEED_H)
+
+  gui.debugf("Absolute bbox : (%d %d) .. (%d %d)\n",
+        LEVEL.absolute_x1, LEVEL.absolute_y1,
+        LEVEL.absolute_x2, LEVEL.absolute_y2)
 
 
   -- calculate a minimum and maximum # of rooms
@@ -1875,7 +1890,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
     -- new rooms must not be placed in boundary spaces
     if (E2.kind == "new_room" or E2.kind == "hallway") and
-       Seed_outside_sprout_box(S.sx, S.sy)
+       not Seed_inside_sprout_box(S.sx, S.sy)
     then
       return false
     end
@@ -1911,7 +1926,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       if S.area then return false end
       if S.disabled_R == R then return false end
 
-      if Seed_over_boundary(S.sx, S.sy) then
+      if not Seed_inside_boundary(S.sx, S.sy) then
         return false
       end
 
@@ -3374,10 +3389,10 @@ function Grower_grow_all_rooms()
 
 
   local function expand_sprout_bbox()
-    LEVEL.sprout_x1 = math.max(LEVEL.sprout_x1 - 2, LEVEL.boundary_x1)
-    LEVEL.sprout_y1 = math.max(LEVEL.sprout_y1 - 2, LEVEL.boundary_y1)
-    LEVEL.sprout_x2 = math.min(LEVEL.sprout_x2 + 2, LEVEL.boundary_x2)
-    LEVEL.sprout_y2 = math.min(LEVEL.sprout_y2 + 2, LEVEL.boundary_y2)
+    LEVEL.sprout_x1 = math.max(LEVEL.sprout_x1 - 2, LEVEL.walkable_x1)
+    LEVEL.sprout_y1 = math.max(LEVEL.sprout_y1 - 2, LEVEL.walkable_y1)
+    LEVEL.sprout_x2 = math.min(LEVEL.sprout_x2 + 2, LEVEL.walkable_x2)
+    LEVEL.sprout_y2 = math.min(LEVEL.sprout_y2 + 2, LEVEL.walkable_y2)
   end
 
 

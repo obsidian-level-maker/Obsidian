@@ -340,15 +340,15 @@ function Cave_cell_touches_map_edge(area, cx, cy)
   local sy = area.base_sy + int((cy - 1) / 2)
 
   if (cx % 2) == 0 then
-    if Seed_over_boundary(sx + 1, sy) then return true end
+    if sx >= LEVEL.absolute_x2 then return true end
   else
-    if Seed_over_boundary(sx - 1, sy) then return true end
+    if sx <= LEVEL.absolute_x1 then return true end
   end
 
   if (cy % 2) == 0 then
-    if Seed_over_boundary(sx, sy + 1) then return true end
+    if sy >= LEVEL.absolute_y2 then return true end
   else
-    if Seed_over_boundary(sx, sy - 1) then return true end
+    if sy <= LEVEL.absolute_y1 then return true end
   end
 
   return false
