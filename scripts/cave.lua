@@ -493,7 +493,7 @@ function Cave_generate_cave(R, area)
 
     assert(cave.flood)
 
-    local walk_reg = nil
+    local walk_id = nil
 
     each P in area.walk_rects do
       if (cave.flood[P.cx1][P.cy1] or 0) >= 0 then
@@ -503,18 +503,18 @@ function Cave_generate_cave(R, area)
 
       local reg = cave.flood[P.cx1][P.cy1]
 
-      if not walk_reg then
-        walk_reg = reg
+      if not walk_id then
+        walk_id = reg
         continue
       end
 
-      if walk_reg != reg then
+      if walk_id != reg then
         -- not valid : the empty areas are disjoint
         return false
       end
     end
 
-    cave.empty_id = walk_reg
+    cave.walk_id = walk_id
 
     return true
   end
@@ -528,12 +528,12 @@ function Cave_generate_cave(R, area)
       return false
     end
 
-    assert(cave.empty_id)
-    assert(cave.empty_id < 0)
+    assert(cave.walk_id)
+    assert(cave.walk_id < 0)
 
     -- now check that the size is adequate
 
-    local empty_reg = cave.regions[cave.empty_id]
+    local empty_reg = cave.regions[cave.walk_id]
     assert(empty_reg)
 
     local W = cave.w
@@ -578,7 +578,7 @@ function Cave_generate_cave(R, area)
 
         cave:flood_fill()
 
-        is_cave_good(cave)  -- set empty_id
+        is_cave_good(cave)
         break
       end
 
@@ -600,7 +600,7 @@ function Cave_generate_cave(R, area)
     end
 
     if not is_lake then
-      cave:solidify_pockets(cave.empty_id)
+      cave:solidify_pockets(cave.walk_id)
     end
 
     cave:dump("Filled Cave:")

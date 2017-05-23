@@ -498,22 +498,22 @@ function GRID_CLASS.flood_fill(grid)
 end
 
 
-function GRID_CLASS.solidify_pockets(grid, walk_reg, solid_reg)
+function GRID_CLASS.solidify_pockets(grid, walk_id, solid_id)
   -- this removes the empty areas which are surrounded by solid
   -- (i.e. not part of the main walk area).
   --
-  -- the 'walk_reg' parameter is the main walkable region.
-  -- the 'solid_reg' parameter is what to set the pockets to,
+  -- the 'walk_id' parameter is the main walkable region.
+  -- the 'solid_id' parameter is what to set the pockets to,
   -- defaulting to 1.
 
-  assert(walk_reg)
+  assert(walk_id)
 
-  solid_reg = solid_reg or 1
+  solid_id = solid_id or 1
 
 
   local function find_next()
     each id, REG in grid.regions do
-      if id < 0 and id != walk_reg then
+      if id < 0 and id != walk_id then
         return id, REG
       end
     end
@@ -533,7 +533,7 @@ function GRID_CLASS.solidify_pockets(grid, walk_reg, solid_reg)
     for x = REG.cx1, REG.cx2 do
     for y = REG.cy1, REG.cy2 do
       if grid.flood[x][y] == pocket_id then
-        grid.cells[x][y] = solid_reg
+        grid.cells[x][y] = solid_id
         grid.flood[x][y] = nil
       end
     end
