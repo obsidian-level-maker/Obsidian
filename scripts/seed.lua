@@ -933,11 +933,14 @@ function Seed_draw_minimap()
   local map_W  -- size in the GUI
   local map_H  --
 
-  local min_x = SEEDS[1][1].x1 - 64
-  local min_y = SEEDS[1][1].y1 - 64
+  local S1 = SEEDS[LEVEL.walkable_x1][LEVEL.walkable_y1]
+  local S2 = SEEDS[LEVEL.walkable_x2][LEVEL.walkable_y2]
 
-  local max_x = SEEDS[SEED_W][SEED_H].x2 + 64
-  local max_y = SEEDS[SEED_W][SEED_H].y2 + 64
+  local min_x = S1.x1 - 64
+  local min_y = S1.y1 - 64
+
+  local max_x = S2.x2 + 64
+  local max_y = S2.y2 + 64
 
   local  width = max_x - min_x
   local height = max_y - min_y

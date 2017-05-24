@@ -133,11 +133,14 @@
 
 function Level_determine_map_size(LEV)
   --
-  -- Determines size of map (Width x Height) in grid points, based on the
-  -- user's settings and how far along in the episode or game we are.
+  -- Determines size of map (Width x Height) in grid squares,
+  -- based on the user's settings and how far along in the
+  -- episode or game we are.
   --
 
   local ob_size = OB_CONFIG.size
+
+  local W, H
 
   -- there is no real "progression" when making a single level.
   -- hence use the regular size instead.
@@ -155,12 +158,20 @@ function Level_determine_map_size(LEV)
       small=30, regular=50, large=30, extreme=5
     }
 
+    -- choose something different than previous level
+    if EPISODE.last_ob_size then
+      MIXED_PROBS[EPISODE.last_ob_size] = nil
+    end
+
     ob_size = rand.key_by_probs(MIXED_PROBS)
+
+    EPISODE.last_ob_size = ob_size
   end
 
-  -- Progressive --
-
   if ob_size == "prog" or ob_size == "epi" then
+
+    -- Progressive --
+
     local along = LEV.game_along ^ 0.66
 
     if ob_size == "epi" then along = LEV.ep_along end
@@ -170,25 +181,26 @@ function Level_determine_map_size(LEV)
     if n < 1 then n = 1 end
     if n > 9 then n = 9 end
 
-    local SIZES = { 26,28,30, 32,34,34, 36,38,38 }
+    -- this basically ramps from "small" --> "large"
+    local SIZES = { 26,28,30, 33,35,37, 40,44,48 }
 
-    local W = SIZES[n]
-    local H = W - 4
+    W = SIZES[n]
 
-    return W, H
+  else
+    -- Named sizes --
+
+    local SIZES = { small=24, regular=36, large=48, extreme=72 }
+
+    W = SIZES[ob_size]
   end
-
-  -- Named sizes --
-
-  local SIZES = { small=24, regular=32, large=44, extreme=64 }
-
-  local W = SIZES[ob_size]
 
   if not W then
     error("Unknown size keyword: " .. tostring(ob_size))
   end
 
-  return W, W - 4
+  local H = 1 + int(W * 0.8)
+
+  return W, H
 end
 
 
@@ -201,8 +213,8 @@ function Episode_determine_map_sizes()
     assert(W + 4 <= SEED_W)
     assert(H + 4 <= SEED_H)
 
-    LEV.map_W = W - 1
-    LEV.map_H = H - 1
+    LEV.map_W = W
+    LEV.map_H = H
   end
 end
 
