@@ -257,7 +257,7 @@ function Quest_create_initial_quest()
 
 
   local function add_normal_exit(quest)
-    local R = assert(LEVEL.exit_room)  --!!!!  pick_exit_room()
+    local R = assert(LEVEL.exit_room)
 
     if not R then
       error("Unable to pick exit room!")
@@ -2412,7 +2412,6 @@ function Quest_nice_items()
          #R.items == 0 and
          not R.rough_exit_dist
       then
-stderrf("!!!!  STORAGE ROOM @ %s  !!!!\n", R.name)
 
         -- store a "minor" item here, e.g. 50 units of health
         pick_storage_item(R)

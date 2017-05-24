@@ -903,10 +903,10 @@ function Grower_decide_extents()
 
   -- calculate a minimum and maximum # of rooms
 
-  local base = (LEVEL.map_W + LEVEL.map_H - 18) / 3.5
+  local base = (LEVEL.map_W - 12) * 0.72
 
   LEVEL.min_rooms = math.max(3, int(base / 3))
-  LEVEL.max_rooms = math.max(6, int(base) + 1)
+  LEVEL.max_rooms = math.max(6, int(base))
 
   gui.debugf("Target # of rooms : %d .. %d\n", LEVEL.min_rooms, LEVEL.max_rooms)
 

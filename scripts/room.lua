@@ -1573,7 +1573,7 @@ function Room_choose_size(R, not_big)
     R.is_big = true
   end
 
-  local sum = LEVEL.map_W + LEVEL.map_H
+  local sum = LEVEL.map_W + 32
 
   if R.is_cave then
     R.size_limit  = sum * rand.pick({ 1.7, 2.2, 2.7 })

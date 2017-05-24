@@ -150,12 +150,12 @@ function Level_determine_map_size(LEV)
   -- Mix It Up --
 
   if ob_size == "mixed" then
-    local MIXED_SIZES =
+    local MIXED_PROBS =
     {
       small=30, regular=50, large=30, extreme=5
     }
 
-    ob_size = rand.key_by_probs(MIXED_SIZES)
+    ob_size = rand.key_by_probs(MIXED_PROBS)
   end
 
   -- Progressive --
@@ -180,7 +180,7 @@ function Level_determine_map_size(LEV)
 
   -- Named sizes --
 
-  local SIZES = { small=24, regular=32, large=44, extreme=56 }
+  local SIZES = { small=24, regular=32, large=44, extreme=64 }
 
   local W = SIZES[ob_size]
 
