@@ -913,7 +913,7 @@ function Grower_decide_extents()
 
   -- calculate the coverage target
 
-  LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.55)
+  LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.85)
 end
 
 
@@ -3480,6 +3480,7 @@ stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   check_exit_room()
 
   for loop = 1, MAX_LOOP do
+stderrf("LOOP %d\n", loop)
 
     local kw
 

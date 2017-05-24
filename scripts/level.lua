@@ -176,20 +176,15 @@ function Level_determine_map_size(LEV)
 
     if ob_size == "epi" then along = LEV.ep_along end
 
-    local n = int(1 + along * 8.9)
-
-    if n < 1 then n = 1 end
-    if n > 9 then n = 9 end
+    along = math.clamp(0, along, 1)
 
     -- this basically ramps from "small" --> "large"
-    local SIZES = { 26,28,30, 33,35,37, 40,44,48 }
-
-    W = SIZES[n]
+    W = int(24 + along * 24)
 
   else
     -- Named sizes --
 
-    local SIZES = { small=24, regular=36, large=48, extreme=72 }
+    local SIZES = { small=22, regular=36, large=48, extreme=72 }
 
     W = SIZES[ob_size]
   end
