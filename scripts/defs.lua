@@ -119,7 +119,7 @@ LENGTH_CHOICES =
 SEED_SIZE = 128
 
 -- largest map size
-SEED_W    = 72
+SEED_W    = 80
 SEED_H    = 64
 
 -- highest possible Z coord (and lowest, when negative)
