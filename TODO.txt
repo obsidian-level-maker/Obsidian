@@ -151,9 +151,6 @@ SHAPE GRAMMARS
 -  in SPROUT pass of symmetrical room : ability to make non-mirrored
    [ especially when we are in dire need to grow the map ]
 
--  IDEA: aversion for rules, decreases prob of using rule again in a room
-   [ also: aversion for NICE_ITEMS ]
-
 IDEA:  CYCLE pass (after SPROUT) for multiple paths
        [ probably as 'H' hallways, allow these to grow, prune them
          when they fail to connect ]

@@ -6,12 +6,16 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
-+  ability to limit rules to a particular stair_z_dir
+-  "aversion" for rules, decreases prob of using rule again in a room
 
 +  lighting in caves mucked up?  [ check Ambient_push/pop ]
 
+-  texture on monster-in teleport spots
+
 
 -  sprouts from symmetrical rooms : often skip a side
+
++  need the switch-door quests [ for large/extreme levels ]
 
 -  internal fences (esp. for outdoor rooms)
 
@@ -32,21 +36,23 @@ Hallway System
    e.g. BLOOD1 for ceiling/floor in hell
    e.g. SKSPINE2 for wall in hell
 
++  make some deuce stairs
+
 
 -  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]
    [[ good for traps! ]]
 
--  support pieces with windows
+?  support pieces with windows
    [ the window side needs _OUTER tex and ability to make it flush ]
 
--  be real nice to have pieces which are wall on one
+?  be real nice to have pieces which are wall on one
    side and open on the other (with sky ceiling OR like nearby ceiling)
    [ BUT: will need to expand vertically ]
 
    also: open on ALL sides  (mainly I and L pieces)
 
-+  complex shapes: shape = { "mid", "-", "mid", "-" }
+?  complex shapes: shape = { "mid", "-", "mid", "-" }
 
    keywords can be: "-"     (no connections)
                     "mid"   (middle of side)
@@ -82,6 +88,11 @@ Hallway System
 Scenic Borders
 --------------
 
+-  need posts where two different floor heights meet (for railing)
+
+-  handle stairs adjacent to a border : need a brush for the
+   side and a post where that brush meets the low floor
+
 +  different styles:
    - mountainy areas  (w/ trees or torches)
    - cavey/liquidy areas
@@ -89,18 +100,20 @@ Scenic Borders
    - fancy fences
 
 -  block travel 2/3 seeds into simple fence (archvile jumps etc)
+   [ esp. where a simple fence is joined to a watery_drop ]
 
 
 
 PARKS
 -----
 
-+  inhibit items in bits of floor cut-off by river
++  height variation  [ different areas ]
+
+-  inhibit items in bits of floor cut-off by river
+   [ create another FLOOR for them BUT not stored in info.floors list ]
 
 +  sky handling:
    -  ensure the heighest FLOOR contributes to zone.sky_h
-
-+  height variation  [ different areas ]
 
 -  consider texturing
 
