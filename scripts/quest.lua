@@ -271,8 +271,6 @@ function Quest_create_initial_quest()
 
     R.is_exit = true
 
-    LEVEL.exit_room = R
-
     -- create the goal for the entire map
     local GOAL = Goal_new("EXIT")
 

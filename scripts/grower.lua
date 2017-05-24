@@ -934,7 +934,7 @@ function Grower_determine_coverage()
 
   -- ignore hallways when counting rooms
   each R in LEVEL.rooms do
-    if not R.is_hallway then
+    if R.is_grown and not R.is_hallway then
       room_count = room_count + 1
     end
   end
@@ -1189,6 +1189,9 @@ end
 
 function Grower_kill_room(R)
 
+  local hallway_neighbor
+
+
   local function turn_joiner_into_closet(R2, chunk)
     chunk.kind = "closet"
 
@@ -1226,12 +1229,19 @@ function Grower_kill_room(R)
   end
 
 
-  local function handle_conn()
+  local function handle_conns()
     -- there should be a single prelim-conn : find and kill it
 
     each PC in LEVEL.prelim_conns do
       if PC.R1 == R or PC.R2 == R then
         gui.debugf("  killing prelim conn %s -> %s\n", PC.R1.name, PC.R2.name)
+
+        local other = sel(PC.R1 == R, PC.R2, PC.R1)
+
+        if other.is_hallway then
+          hallway_neighbor = other
+          hallway_neighbor.first_piece.cut_off = true
+        end
 
         if PC.kind == "joiner" and PC.chunk.area.room != R then
           kill_joiner(PC.chunk)
@@ -1251,14 +1261,19 @@ function Grower_kill_room(R)
 
   ---| Grower_kill_room |---
 
-  gui.debugf("Killing small room %s\n", R.name)
+  gui.debugf("Killing small/ungrown room %s\n", R.name)
 
-  handle_conn()
+  assert(R != LEVEL.exit_room)
+
+  handle_conns()
 
   R:kill_it()
 
-  -- NOTE: if this room was connected to a hallway, we should prune it too
-  -- [ but the current hallway rules never sprout small rooms ]
+  -- if this room was connected to a hallway, we should prune it too
+  -- (which may end up recursing into this function)
+  if hallway_neighbor then
+    Grower_prune_hallway(hallway_neighbor)
+  end
 
   -- sanity check
   if table.empty(LEVEL.rooms) then
@@ -3080,9 +3095,9 @@ function Grower_prune_hallway(R)
       end
     end
 
-    -- terminating pieces are always OK
+    -- terminating pieces are OK, unless attached room was killed
     if piece.is_terminator then
-      return
+      if not piece.cut_off then return end
     end
 
     -- count number of REAL destinations
@@ -3159,6 +3174,14 @@ function Grower_grow_room(R)
     end
   end
 
+  R.is_grown = true
+end
+
+
+
+function Grower_sprout_room(R)
+  if R.is_dead then return end
+
   Grower_grammatical_room(R, "sprout")
 
   -- if hallway did not sprout, try again
@@ -3167,7 +3190,7 @@ function Grower_grow_room(R)
     Grower_grammatical_room(R, "sprout")
   end
 
-  R.is_grown = true
+  R.is_sprouted = true
 
   if R.is_hallway then
     Grower_prune_hallway(R)
@@ -3214,6 +3237,7 @@ function Grower_create_and_grow_room(trunk, mode, info)
 
   -- grow it now
   Grower_grow_room(R)
+  Grower_sprout_room(R)
 
   return R
 end
@@ -3334,36 +3358,30 @@ end
 
 function Grower_grow_all_rooms()
 
-  local function check_all_grown()
-    each R in LEVEL.rooms do
-      if not R.is_grown then return false end
-      if R.need_teleports > 0 then return false end
-    end
+  local coverage
+  local cov_rooms
 
-    return true
+
+  local function reached_coverage()
+stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
+        coverage,  LEVEL.min_coverage,
+        cov_rooms, LEVEL.min_rooms)
+
+    return (coverage  >= LEVEL.min_coverage) and
+           (cov_rooms >= LEVEL.min_rooms)
   end
 
 
-  local function grow_fresh_rooms()
-    local list = table.copy(LEVEL.rooms)
-
-    each R in list do
-      if not R.is_grown then
-        Grower_grow_room(R)
-        return
-      end
-    end
-  end
-
-
-  local function grow_teleport_trunks()
+  local function grow_teleport_trunk()
     each R in LEVEL.rooms do
       if R.need_teleports > 0 then
         R.need_teleports = R.need_teleports - 1
         Grower_add_teleporter_trunk(R)
-        return
+        return true
       end
     end
+
+    return false
   end
 
 
@@ -3379,20 +3397,74 @@ function Grower_grow_all_rooms()
       if R.is_hallway then continue end
 
       Grower_grammatical_room(R, "sprout", "is_emergency")
-
----???  -- only try a growth pass if no new rooms were sprouted
----???  if old_num == #LEVEL.rooms then
----???    Grower_grammatical_room(R, "grow", "is_emergency")
----???  end
     end
   end
 
 
-  local function expand_sprout_bbox()
+  local function check_exit_room()
+    if LEVEL.exit_room:prelim_conn_num() == 0 then
+      Grower_sprout_room(LEVEL.exit_room)
+
+      each PC in LEVEL.prelim_conns do
+        if PC.R1.is_exit or PC.R2.is_exit then
+          local other = sel(PC.R1.is_eit, PC.R2, PC.R1)
+
+          Grower_grow_room(other)
+          Grower_sprout_room(other)
+          break;
+        end
+      end
+
+      return false
+    end
+
+    return true
+  end
+
+
+  local function handle_next_room()
+    coverage, cov_rooms = Grower_determine_coverage()
+
+    if reached_coverage() then return "reached" end
+
+    if grow_teleport_trunk() then
+      return "ok"
+    end
+
+    each R in LEVEL.rooms do
+      if not R.is_grown then
+        Grower_grow_room(R)
+        Grower_sprout_room(R)
+        return "ok"
+      end
+    end
+
+    return "none"
+  end
+
+
+  local function kill_surplus_rooms()
+    -- remove any sprouted rooms which did not grow
+
+    local list = table.copy(LEVEL.rooms)
+
+    each R in list do
+      if not R.is_grown then
+        Grower_kill_room(R)
+      end
+    end
+  end
+
+
+  local function expand_limits()
     LEVEL.sprout_x1 = math.max(LEVEL.sprout_x1 - 2, LEVEL.walkable_x1)
     LEVEL.sprout_y1 = math.max(LEVEL.sprout_y1 - 2, LEVEL.walkable_y1)
     LEVEL.sprout_x2 = math.min(LEVEL.sprout_x2 + 2, LEVEL.walkable_x2)
     LEVEL.sprout_y2 = math.min(LEVEL.sprout_y2 + 2, LEVEL.walkable_y2)
+
+    if cov_rooms >= LEVEL.max_rooms then
+      LEVEL.max_rooms = cov_rooms + 1
+    end
   end
 
 
@@ -3401,35 +3473,30 @@ function Grower_grow_all_rooms()
   -- if map is too small, try to sprout some more rooms
   local MAX_LOOP = 10
 
+  check_exit_room()
+
   for loop = 1, MAX_LOOP do
 
-    -- grow all the fresh rooms
-    while not check_all_grown() do
-      grow_teleport_trunks()
-      grow_fresh_rooms()
-    end
+    local kw
 
-    local coverage, num_rooms = Grower_determine_coverage()
+    repeat
+      kw = handle_next_room()
+    until kw != "ok"
 
-stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
-        coverage,  LEVEL.min_coverage,
-        num_rooms, LEVEL.min_rooms)
+    if kw == "reached" then
+      kill_surplus_rooms()
 
-    if num_rooms >= LEVEL.min_rooms and
-       coverage  >= LEVEL.min_coverage
-    then
-      break;
+      -- go around again if the exit room resprouted
+      if check_exit_room() != "resprout" then
+        break;
+      end
     end
 
     if loop == MAX_LOOP then
       break;
     end
 
-    if num_rooms >= LEVEL.max_rooms then
-      LEVEL.max_rooms = num_rooms + 1
-    end
-
-    expand_sprout_bbox()
+    expand_limits()
 
     emergency_sprouts()
   end
