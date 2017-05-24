@@ -139,7 +139,7 @@ DOOM.PICKUPS =
     closet_prob = 20
     secret_prob = 5
     storage_prob = 20
-    storage_qty  = 2
+    storage_qty  = 3
     give = { {ammo="rocket",count=5} }
   }
 
@@ -161,6 +161,7 @@ DOOM.PICKUPS =
     add_prob = 40
     secret_prob = 5
     storage_prob = 40
+    storage_qty  = 2
     give = { {ammo="cell",count=100} }
   }
 
