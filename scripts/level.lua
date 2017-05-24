@@ -179,7 +179,7 @@ function Level_determine_map_size(LEV)
     along = math.clamp(0, along, 1)
 
     -- this basically ramps from "small" --> "large"
-    W = int(24 + along * 24)
+    W = int(22 + along * 24)
 
   else
     -- Named sizes --
