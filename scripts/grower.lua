@@ -1229,7 +1229,7 @@ function Grower_kill_room(R)
   end
 
 
-  local function handle_conns()
+  local function handle_conn()
     -- there should be a single prelim-conn : find and kill it
 
     each PC in LEVEL.prelim_conns do
@@ -1240,7 +1240,11 @@ function Grower_kill_room(R)
 
         if other.is_hallway then
           hallway_neighbor = other
-          hallway_neighbor.first_piece.cut_off = true
+
+          assert(PC.chunk)
+          assert(PC.chunk.is_terminator)
+
+          PC.chunk.cut_off = true
         end
 
         if PC.kind == "joiner" and PC.chunk.area.room != R then
@@ -1265,7 +1269,7 @@ function Grower_kill_room(R)
 
   assert(R != LEVEL.exit_room)
 
-  handle_conns()
+  handle_conn()
 
   R:kill_it()
 
