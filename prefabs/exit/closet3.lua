@@ -1,12 +1,12 @@
 --
--- Gun door closet (a little tribute...)
+-- Exit closet
 --
 
-PREFABS.Start_closet3 =
+PREFABS.Exit_closet3 =
 {
-  file  = "start/closet3.wad"
+  file  = "exit/closet3.wad"
 
-  prob  = 30
+  prob  = 20*99
   theme = "!tech"
 
   where  = "seeds"
