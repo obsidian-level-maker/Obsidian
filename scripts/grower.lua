@@ -3128,7 +3128,7 @@ function Grower_prune_hallway(R)
     end
 
     -- does last piece wants to keep its original shape?
-    if last_piece and last_piece.keep_shape then
+    if last_piece and last_piece.keep_shape and not piece.is_terminator then
       piece.delay_pruned = true
       return
     end
