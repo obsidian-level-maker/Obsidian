@@ -455,7 +455,7 @@ EXIT_3 =
 {
   pass = "exit_root"
   env  = "building"
-  prob = 30
+  prob = 20
 
   structure =
   {
@@ -850,8 +850,9 @@ GROW_STAIR_3 =
 
 GROW_STAIRPAIR_2 =
 {
-  prob = 10
-  prob_skew = 3
+  prob = 20
+  skip_prob = 30
+  aversion = 3
 
   structure =
   {
@@ -868,6 +869,7 @@ GROW_STAIRPAIR_4 =
 {
   prob = 300
   skip_prob = 60
+  aversion = 3
 
   structure =
   {
@@ -882,6 +884,7 @@ GROW_STAIRPAIR_4B =
 {
   prob = 200
   skip_prob = 60
+  aversion = 3
 
   structure =
   {
@@ -912,6 +915,7 @@ GROW_STAIRPAIR_5 =
 {
   prob = 120
   skip_prob = 50
+  aversion = 5
 
   z_dir = "up"
 
@@ -930,6 +934,7 @@ GROW_STAIRPAIR_5D =
 {
   prob = 90
   skip_prob = 35
+  aversion = 2
 
   z_dir = "down"
 
@@ -1051,7 +1056,7 @@ GROW_STAIR_SIDE2 =
 {
   prob = 70
   prob_skew = 3
-  skip_prob = 40
+  skip_prob = 30
 
   structure =
   {
@@ -1067,7 +1072,8 @@ GROW_STAIR_SIDE3 =
 {
   prob = 70
   prob_skew = 3
-  skip_prob = 40
+  skip_prob = 50
+  aversion  = 5
 
   structure =
   {
@@ -1083,8 +1089,9 @@ GROW_STAIR_SIDE3 =
 
 GROW_STAIR_HUGE =
 {
-  prob = 30*0
-  skip_prob = 60
+  prob = 10
+  skip_prob = 70
+  aversion  = 10
 
   structure =
   {
