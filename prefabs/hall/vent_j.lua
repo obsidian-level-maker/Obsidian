@@ -19,6 +19,16 @@ PREFABS.Hallway_vent_plain =
 }
 
 
+PREFABS.Hallway_vent_door =
+{
+  template = "Hallway_vent_plain"
+
+  map    = "MAP02"
+
+  prob   = 20
+}
+
+
 PREFABS.Hallway_vent_secret =
 {
   template = "Hallway_vent_plain"
