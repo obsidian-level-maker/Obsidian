@@ -77,6 +77,8 @@
      ceil_mats[z] : name
 
     guard_chunk : CHUNK   -- what a bossy monster is guarding
+
+    aversions : table[name] -> factor
 --]]
 
 
@@ -156,6 +158,7 @@ function ROOM_CLASS.new()
     cages = {}
     traps = {}
     triggers = {}
+    aversions = {}
 
     used_chunks = 0  -- includes closets
 

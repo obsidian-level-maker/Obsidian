@@ -1429,6 +1429,11 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     if not ob_match_level_theme(rule) then return 0 end
     if not ob_match_feature(rule)     then return 0 end
 
+    -- aversion check (less chance if used before)
+    if R.aversions[rule.name] then
+      prob = prob * R.aversions[rule.name]
+    end
+
     -- don't exceed trunk quota
     if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
       return 0
@@ -1487,7 +1492,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   end
 
 
-  local function collect_matching_rules(want_pass, no_new_areas)
+  local function collect_matching_rules(want_pass, stop_prob, no_new_areas)
     local tab = {}
 
     each name,rule in grammar do
@@ -1504,6 +1509,10 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
     if table.empty(tab) then
       error("No rules found for " .. tostring(want_pass) .. " pass")
+    end
+
+    if stop_prob > 0 then
+      tab["STOP"] = stop_prob
     end
 
     return tab
@@ -2871,6 +2880,28 @@ end
   end
 
 
+  local function update_aversions(rule)
+    if not rule.aversion then
+      return
+    end
+
+    if R.aversions[rule.name] == 0 then
+      return
+    end
+
+    if R.aversions[rule.name] == nil then
+       R.aversions[rule.name] = 1
+    end
+
+    if R.aversions[rule.name] < 0.002 then
+       R.aversions[rule.name] = 0
+      return
+    end
+
+    R.aversions[rule.name] = R.aversions[rule.name] / rule.aversion
+  end
+
+
   local function auxiliary_name(index)
     local name = "auxiliary"
 
@@ -2903,7 +2934,9 @@ end
   end
 
 
-  local function apply_a_rule(rule_tab)
+  local function apply_a_rule()
+    local rule_tab = collect_matching_rules(pass, stop_prob, hit_floor_limit)
+
     local rules = table.copy(rule_tab)
 
     local loop = 0
@@ -2933,6 +2966,8 @@ end
 
     gui.debugf("Applied grammar rule %s\n", cur_rule.name)
 
+    update_aversions(cur_rule)
+
     -- apply any auxiliary rules
     if cur_rule.auxiliary then
       apply_auxiliary_rules()
@@ -2947,12 +2982,6 @@ end
   -- we should have a known bbox (unless creating a room)
   if not is_create then
     assert(R.gx1)
-  end
-
-  local rule_tab = collect_matching_rules(pass)
-
-  if stop_prob > 0 then
-    rule_tab["STOP"] = stop_prob
   end
 
   for loop = 1, apply_num do
@@ -2977,7 +3006,6 @@ end
     -- if we surpass the floor limit, remove rules which add new areas
     if pass == "grow" and not hit_floor_limit and R:num_floors() >= R.floor_limit then
       hit_floor_limit = true
-      rule_tab = collect_matching_rules(pass, "no_new_areas")
     end
   end
 end

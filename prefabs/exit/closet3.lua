@@ -6,7 +6,7 @@ PREFABS.Exit_closet3 =
 {
   file  = "exit/closet3.wad"
 
-  prob  = 20*99
+  prob  = 20
   theme = "!tech"
 
   where  = "seeds"
