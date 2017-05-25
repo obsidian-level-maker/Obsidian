@@ -6,22 +6,33 @@ CHANGES IN 7.5x
 -  UI: main window can be vertically resized
 -  UI: option to use mousewheel to change settings
 -  UI: option to disable the overwrite-file warning
+-  UI: "@@" on the command line will forget current module
 
 +  the "Weapons" button now controls how early or late new
    weapons are introduced into the wad
+-  support secret weapons (available earlier than usual)
+
++  hallways (IN PROGRESS...)
+
++  better scenic areas outside the map (IN PROGRESS...)
 
 +  sky generator: much better looking mountains
-
-+  support for the Quake3 map format in the CSG code
 
 +  more variety of window prefabs
 
 +  ensure a secret exit can always be placed
 -  fixed bug swapping normal-exit and secret-exit switches
 
+-  support for the Quake3 map format in the CSG code
+
 -  new "Ramp Up" and "Bosses" buttons for monster panel
 -  new themes: "Bit Mixed", "Original-ish", "Episode-ish"
 -  new health/ammo settings: "Bit Less" and "Bit More"
+
+-  got triple-key doors working again
+-  got lowering-bar fences working again
+-  support for rooms with a liquid river and a bridge
+-  introduced variation in how much symmetry to use
 
 -  improved title generator, removed pre-made backgrounds
 -  support TGA format title pics when engine is GZDOOM
@@ -30,15 +41,15 @@ CHANGES IN 7.5x
 -  abbreviated config in OBLIGDAT lump and config manager
 -  config manager: the "Use" button now sets the seed too
 
--  introduced variation in how much symmetry to use
--  removed the non-standard player things (4001..4004)
+-  unused leaf rooms become "storage" for some minor items
+-  less chance of creating long/thin rooms
 
--  got triple-key doors working again
--  support secret weapons (available earlier than usual)
-
--  argument parsing: use "@@" to forget current module
+-  smooth corners where two fences meet
+-  raise outdoor fences when near a item pedestal (etc)
 
 -  proper action system for remotely activated doors (etc)
 
--  raise outdoor fences when near a item pedestal (etc)
+-  removed the non-standard player things (4001..4004)
+
+-  DOOM CSG: reworked how railing textures are handled
 
