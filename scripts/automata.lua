@@ -1063,32 +1063,33 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   -- NOTE: the input region MUST be contiguous
   --       [ if not, expect unfilled places ]
 
+  local result = grid:blank_copy()
+
+  result.blobs = {}
+
+
   local W = grid.w
   local H = grid.h
 
-  local result = grid:blank_copy()
-
   local total_blobs = 0
-
-  local sizes = {}
 
   local grow_dirs = {}
 
 
-  local function is_valid(cx, cy)
+  local function is_usable(cx, cy)
     if cx < 1 or cx > W then return false end
     if cy < 1 or cy > H then return false end
 
     if grid[cx][cy] == nil then return false end
 
-    return true
+    return grid[cx][cy] > 0
   end
 
 
   local function is_free(cx, cy)
-    if not is_valid(cx, cy) then return false end
+    if not is_usable(cx, cy) then return false end
 
-    if blob_map[cx][cy] then return false end
+    if result.blobs[cx][cy] then return false end
 
     return true
   end
@@ -1097,18 +1098,26 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   local function neighbor_blob(cx, cy, dir)
     cx, cy = geom.nudge(cx, cy, dir)
 
-    if not is_valid(cx, cy) then return nil end
+    if not is_usable(cx, cy) then return nil end
 
-    return blob_map[cx][cy]
+    return result.blobs[cx][cy]
   end
 
 
   local function set_cell(cx, cy, id)
     assert(is_free(cx, cy))
 
-    blob_map[cx][cy] = id
+    result.blobs[cx][cy] = id
 
-    sizes[id] = (sizes[id] or 0) + 1
+    local reg = result.blobs[id]
+
+    if not reg then
+      reg = { id=id, size=0 }
+
+      result.blobs[id] = reg
+    end
+
+    reg.size = reg.size + 1
   end
 
 
@@ -1157,11 +1166,16 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
 
   local function growth_spurt_one()
+    -- takes the single-cell blobs created by spawn_blobs() and
+    -- expands them in several (or all) of the N/S/E/W directions
+    -- to make L/T/+ shapes, or occasionally a 2x2 block of cells.
+
     for cx = 1, W do
     for cy = 1, H do
-      local id = blob_map[cx][cy]
+      local id = result.blobs[cx][cy]
       if not id then continue end
-      if sizes[id] >= 2 then continue end
+
+      if result.blobs[id].size >= 2 then continue end
 
       if rand.odds(15) then
         local dx = rand.sel(50, -1, 1)
@@ -1210,7 +1224,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
       end
       end
 
-    else -- dir == 6 or dir == 8
+    else  -- dir == 6 or dir == 8
 
       for cx = 1, W do
       for cy = 1, H do
@@ -1224,7 +1238,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   local function check_all_done()
     for cx = 1, W do
     for cy = 1, H do
-      if is_valid(cx, cy) and is_free(cx, cy) then
+      if is_usable(cx, cy) and is_free(cx, cy) then
         return false
       end
     end
@@ -1251,7 +1265,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
   growth_spurt_one()
 
-  local MAX_LOOP = 200
+  local MAX_LOOP = 500
 
   for loop = 1, MAX_LOOP do
     normal_grow_pass()
@@ -1267,9 +1281,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
     end
   end
 
-  -- dump_blob_sizes()
-
-  return blob_map
+  return result
 end
 
 
@@ -1317,7 +1329,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
         then
           seen[nb] = true
 
-          local cost = sizes[nb] + gui.random() * 0.1
+          local cost = grid.blobs[nb].size + gui.random() * 0.1
 
           if cost < best_cost then
             best = nb
