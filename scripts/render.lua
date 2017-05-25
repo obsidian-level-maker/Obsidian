@@ -2221,14 +2221,22 @@ end
 
 
 function Render_properties_for_area(A)
+  --
+  -- FIXME : decide all this elsewhere!
+  --
 
   local R = A.room
 
   -- natural parts done elsewhere...
   if A.mode == "nature" or A.mode == "scenic" then
     if not A.lighting then
-      A.lighting = LEVEL.sky_light
+      if R and R.is_cave then
+        A.lighting = A.base_light
+      else
+        A.lighting = LEVEL.sky_light
+      end
     end
+
     return
   end
 
@@ -2277,27 +2285,6 @@ function Render_properties_for_area(A)
 
   A.floor_mat = A.floor_mat or R.main_tex
   A.ceil_mat  = A.ceil_mat  or R.main_tex
-
-
-  --DEBUG FOR SECRETS
-  if A.room and A.room.is_secret then
----  A.floor_mat = "REDWALL"
-  end
-
---[[ PRESSURE TESTING
-if A.room and A.room.pressure == "low"    then A.floor_mat = "FWATER1" end
-if A.room and A.room.pressure == "medium" then A.floor_mat = "NUKAGE1" end
-if A.room and A.room.pressure == "high"   then A.floor_mat = "LAVA1" end
---]]
-
---[[ ZONE TESTING
-if A.mode != "hallway" then
-if A.zone.id == 1 then A.floor_mat = "FWATER1" end
-if A.zone.id == 2 then A.floor_mat = "NUKAGE1" end
-if A.zone.id == 3 then A.floor_mat = "LAVA1" end
-if A.zone.id == 4 then A.floor_mat = "CEIL5_2" end
-end
---]]
 end
 
 
@@ -3005,21 +2992,22 @@ top.reachable = 1  --!!!!!! FIXME: remove
 
 
   local function render_lit_cell(x, y, B)
-    local light
+    local bump_light
 
-    if area.torch_mode != "none" then
-      light = calc_lighting_for_cell(x, y, B)
-      if light <= 0 then light = nil end
+    if area.cave_lighting then
+      bump_light = calc_lighting_for_cell(x, y, B)
+
+      if bump_light <= 0 then bump_light = nil end
     end
 
-    if light then
-      Ambient_push(area.base_light + light)
+    if bump_light then
+      Ambient_push(area.lighting + bump_light)
     end
 
     render_floor  (x, y, B)
     render_ceiling(x, y, B)
 
-    if light then
+    if bump_light then
       Ambient_pop()
     end
   end

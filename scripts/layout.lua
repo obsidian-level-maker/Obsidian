@@ -2122,12 +2122,14 @@ function Layout_indoor_lighting()
       base_light = LIGHT_LEVELS[what]
     end
 
+    assert(base_light)
+
     if R.theme.light_adjusts then
       base_light = base_light + rand.pick(R.theme.light_adjusts)
     end
 
     each A in R.areas do
-      A.base_light = assert(base_light)
+      A.base_light = base_light
     end
   end
 
