@@ -2101,7 +2101,7 @@ function Room_floor_ceil_heights()
 
 
   local function process_cave(R)
-    Cave_build_room(R, R.entry_h)
+    Cave_build_a_cave(R, R.entry_h)
   end
 
 

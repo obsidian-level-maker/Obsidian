@@ -1674,7 +1674,7 @@ function Render_chunk(chunk)
     local mx = chunk.mx
     local my = chunk.my
 
-    local r = 16
+    local r = 8
 
     local brush = brushlib.quad(mx - r, my - r, mx + r, my + r)
 
@@ -1683,21 +1683,22 @@ function Render_chunk(chunk)
       C.draw_never = 1
     end
 
-    local A = assert(chunk.area)
+    local z   = assert(chunk.floor_h   or chunk.area.floor_h)
+    local mat = assert(chunk.floor_mat or chunk.area.floor_mat)
 
     -- make it higher to ensure it doesn't get eaten by the floor brush
     -- (use delta_z to lower to real height)
 
     local top =
     {
-      t = A.floor_h + 1
+      t = z + 1
       delta_z = -1
       tag = assert(chunk.out_tag)
     }
 
     table.insert(brush, top)
 
-    brushlib.set_mat(brush, A.floor_mat, A.floor_mat)
+    brushlib.set_mat(brush, mat, mat)
 
     Trans.brush(brush)
 

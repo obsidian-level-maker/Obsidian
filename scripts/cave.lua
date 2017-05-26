@@ -806,7 +806,7 @@ function Cave_create_areas(R, area)
 
   local function compute_floor_sinks(SINK1, SINK2, R, AREA)
     -- sometimes make sink1 be liquid but sink2 be solid
-    if area.liquid_mode == "some" and rand.odds(25) then
+    if area.liquid_mode == "some" and rand.odds(15) then
       SINK1.floor_dz  = -12
       SINK1.is_liquid = true
 
@@ -920,17 +920,19 @@ function Cave_create_areas(R, area)
 
     install_blob(AREA, cave, -1)
 
-    -- this fixes MON_TELEPORT spots [ so they blend in ]
-    area.floor_mat = AREA.floor_mat
-    area.ceil_mat  = AREA.ceil_mat
-
-
     -- compute properties of each sink
     local SINK1 = { parent=AREA }
     local SINK2 = { parent=AREA }
 
     compute_floor_sinks  (SINK1, SINK2, R, AREA)
     compute_ceiling_sinks(SINK1, SINK2, R, AREA)
+
+
+    -- this fixes MON_TELEPORT spots [ so they blend in ]
+    R.mon_tele_floor = AREA.floor_mat
+
+    area.floor_mat = AREA.floor_mat
+    area.ceil_mat  = AREA.ceil_mat
 
 
     -- actually install the sinks...
@@ -1720,6 +1722,16 @@ function Cave_floor_heights(R, entry_h)
   end
 
 
+  local function temp_chunk_crud()
+    each chunk in R.floor_chunks do
+      if chunk.content == "MON_TELEPORT" then
+        chunk.floor_h   = entry_h
+        chunk.floor_mat = R.mon_tele_floor
+      end
+    end
+  end
+
+
   ---| Cave_floor_heights |---
 
   local z_dir
@@ -1749,6 +1761,8 @@ function Cave_floor_heights(R, entry_h)
   update_fences()
   update_lakes()
   update_sky_bunches()
+
+  temp_chunk_crud()
 end
 
 
@@ -2579,7 +2593,7 @@ end
 
 
 
-function Cave_build_room(R, entry_h)
+function Cave_build_a_cave(R, entry_h)
 
   local area = Cave_find_area_for_room(R)
 
@@ -3039,6 +3053,16 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function temp_chunk_crud()
+    each chunk in R.floor_chunks do
+      if chunk.content == "MON_TELEPORT" then
+        chunk.floor_h   = entry_h
+        chunk.floor_mat = R.main_tex
+      end
+    end
+  end
+
+
   ---| Cave_build_a_park |---
 
 gui.debugf("BUILD PARK IN %s\n", R.name)
@@ -3065,6 +3089,8 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
   if LEVEL.liquid and rand.odds(35) then
     make_a_river()
   end
+
+  temp_chunk_crud()
 end
 
 
