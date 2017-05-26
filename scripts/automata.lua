@@ -1034,6 +1034,7 @@ function GRID_CLASS.dump_blobs(grid)
 
       if #line > 40 then
         gui.debugf("%s\n", line)
+        line = ""
       end
     end
 
@@ -1089,7 +1090,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   local function is_free(cx, cy)
     if not is_usable(cx, cy) then return false end
 
-    if result.blobs[cx][cy] then return false end
+    if result[cx][cy] then return false end
 
     return true
   end
@@ -1100,14 +1101,14 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
     if not is_usable(cx, cy) then return nil end
 
-    return result.blobs[cx][cy]
+    return result[cx][cy]
   end
 
 
   local function set_cell(cx, cy, id)
     assert(is_free(cx, cy))
 
-    result.blobs[cx][cy] = id
+    result[cx][cy] = id
 
     local reg = result.blobs[id]
 
@@ -1172,7 +1173,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
     for cx = 1, W do
     for cy = 1, H do
-      local id = result.blobs[cx][cy]
+      local id = result[cx][cy]
       if not id then continue end
 
       if result.blobs[id].size >= 2 then continue end
@@ -1322,7 +1323,10 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
       if grid[cx][cy] != id then continue end
 
       for dir = 2,8,2 do
-        local nb = neighbor_blob(cx, cy, dir)
+        local nx, ny = geom.nudge(cx, cy, dir)
+
+        local nb
+        if grid:valid(nx, ny) then nb = grid[nx][ny] end
 
         if nb and nb != id and not seen[nb] and
            (allow_large or grid.blobs[nb].size < min_size)
@@ -1350,7 +1354,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
     local id_list = table.keys(grid.blobs)
 
     each id in id_list do
-      if grid.blobs[id].size < min_size then
+      if grid.blobs[id] and grid.blobs[id].size < min_size then
         local nb = candidate_to_merge(id)
 
         if nb then
@@ -1366,7 +1370,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
   for loop = 1, 8 do
     allow_large = (loop > 4)
 
-    merge_small_pass()
+    merge_pass()
   end
 end
 

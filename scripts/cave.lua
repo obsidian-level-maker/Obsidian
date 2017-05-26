@@ -3101,7 +3101,7 @@ function Cave_prepare_scenic_vista(area)
 
   -- decide what kind of vista to make
 
-  if room.has_river or not LEVEL.liquid or rand.odds(25) then
+  if room.has_river or not LEVEL.liquid or rand.odds(25*0) then
     area.border_type = "simple_fence"
   else
     area.border_type = "watery_drop"
@@ -3114,6 +3114,8 @@ function Cave_build_a_scenic_vista(area)
 
   local room = assert(area.face_room)
 
+  local blob_map
+
 
   local function new_blob()
     local FL =
@@ -3123,6 +3125,25 @@ function Cave_build_a_scenic_vista(area)
     }
 
     return FL
+  end
+
+
+  local function blobify()
+    local src = area.walk_map:copy()
+
+    for x = 1, area.cw do
+    for y = 1, area.ch do
+      if src[x][y] then src[x][y] = 1 end
+    end
+    end
+
+    blob_map = src:create_blobs(3, 2)
+
+    -- no walk_rects to worry about
+
+    blob_map:merge_small_blobs(4)
+
+    blob_map:dump_blobs()
   end
 
 
@@ -3161,8 +3182,6 @@ function Cave_build_a_scenic_vista(area)
     area.fence_FLOOR = FL
 
 
----##  local blob_map = area.walk_map:create_blobs(3, 2, 3)
-
     -- TEMP RUBBISH
     area.floor_h = FL.floor_h
   end
@@ -3173,9 +3192,11 @@ function Cave_build_a_scenic_vista(area)
     -- WHAT: large body of liquid with an impassible railing
     --
 
+    blobify()
+
     -- create the liquid area --
 
-    local drop_h = rand.pick({ 64,128,192,256 })
+    local drop_h = rand.pick({ 64,96,128,192,256 })
 
     local FL = new_blob()
 
@@ -3274,6 +3295,8 @@ function Cave_join_scenic_borders(junc)
     return
   end
 
+--[[ DISABLED FOR NOW...
+
   if A.border_type == "watery_drop" and B.border_type == "watery_drop" then
     lower_floors(A.liquid_FLOOR, B.liquid_FLOOR)
     raise_floors(A. cliff_FLOOR, B. cliff_FLOOR)
@@ -3291,6 +3314,7 @@ function Cave_join_scenic_borders(junc)
        return
     end
   end
+--]]
 
   -- in all other cases, make a wall
   Junction_make_wall(junc)
