@@ -725,6 +725,22 @@ function Layout_add_traps()
   -- Add traps to rooms, especially monster closets.
   --
 
+  local function eval_closet(R, chunk)
+    -- compute a distance to the room's goal
+    local dist = 0
+
+    if R.guard_chunk then
+      local dx = math.abs(R.guard_chunk.mx - chunk.mx)
+      local dy = math.abs(R.guard_chunk.my - chunk.my)
+
+      dist = (dx + dy) / SEED_SIZE
+    end
+
+    -- tie breaker
+    chunk.trap_dist = dist + (gui.random() ^ 2) * 16
+  end
+
+
   local function locs_for_room(R, kind)
     -- kind is either "closet" or "teleport".
     -- returns a list of all possible monster closets / teleport spots.
@@ -737,16 +753,32 @@ function Layout_add_traps()
     if kind == "closet" then
       each chunk in R.closets do
         if not chunk.content and not chunk:is_slave() then
+          eval_closet(R, chunk)
           table.insert(locs, chunk)
         end
       end
 
+      table.sort(locs,
+          function(A, B) return A.trap_dist < B.trap_dist end)
+
     elseif kind == "teleport" then
+      -- large chunks are better, so place them first in the list
+      local locs2 = {}
+
       each chunk in R.floor_chunks do
-        if not chunk.content and (chunk.sw < 2 or chunk.sh < 2 or rand.odds(20)) then
-          table.insert(locs, chunk)
+        if not chunk.content then
+          if chunk.sw >= 2 and chunk.sh >= 2 then
+            table.insert(locs, chunk)
+          else
+            table.insert(locs2, chunk)
+          end
         end
       end
+
+      rand.shuffle(locs)
+      rand.shuffle(locs2)
+
+      table.append(locs, locs2)
 
     else
       error("locs_for_room: unknown kind")
@@ -849,15 +881,12 @@ function Layout_add_traps()
       end
 
       -- break ties
-      -- [ preference for closets since they are less common ]
-      -- [[ but in caves, prefer teleporting in ]]
+      -- [ but in caves, prefer teleporting in ]
       if closet_locs and telep_locs then
-        if info.room.is_cave then
+        if info.room.is_cave or rand.odds(40) then
           closet_locs = nil
-        elseif is_same or rand.odds(66) then
-          telep_locs = nil
         else
-          closet_locs = nil
+          telep_locs = nil
         end
       end
 
@@ -909,7 +938,6 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     local R    = info.room
     local locs = info.locs
 
-    -- TODO : often pick closets near the goal [ideally facing it]
     rand.shuffle(locs)
 
     local qty = rand.index_by_probs({ 40,40,20,5 })
@@ -939,10 +967,9 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
 
     DEPOT.skin.trap_tag = trig.tag
 
+    -- re-use some chunks if there are less than three
     if #locs < 2 then table.insert(locs, locs[1]) end
     if #locs < 3 then table.insert(locs, locs[2]) end
-
-    rand.shuffle(locs)
 
     local chunk1 = table.remove(locs, 1)
     local chunk2 = table.remove(locs, 1)
