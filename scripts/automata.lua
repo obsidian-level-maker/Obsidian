@@ -1413,6 +1413,31 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
 end
 
 
+function GRID_CLASS.extent_of_blobs(grid)
+  -- determines bounding box for each blob
+
+  for cx = 1, grid.w do
+  for cy = 1, grid.h do
+    local id  = grid[cx][cy]
+
+    if id == nil then continue end
+
+    local reg = grid.blobs[id]
+    assert(reg)
+
+    if not reg.cx1 then
+      reg.cx1, reg.cy1 = cx, cy
+      reg.cx2, reg.cy2 = cx, cy
+    else
+      reg.cx1 = math.min(reg.cx1, cx)
+      reg.cy1 = math.min(reg.cy1, cy)
+      reg.cx2 = math.max(reg.cx2, cx)
+      reg.cy2 = math.max(reg.cy2, cy)
+    end
+  end
+  end
+end
+
 
 ----------------------------------------------------------------
 --  MAZE STUFF

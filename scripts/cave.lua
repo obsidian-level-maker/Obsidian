@@ -3142,6 +3142,7 @@ function Cave_build_a_scenic_vista(area)
     -- no walk_rects to worry about
 
     blob_map:merge_small_blobs(4)
+    blob_map:extent_of_blobs()
 
     blob_map:dump_blobs()
   end
