@@ -3062,7 +3062,7 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   temp_install_floor(area.floor_blob)
 
-  if LEVEL.liquid and rand.odds(25) then
+  if LEVEL.liquid and rand.odds(35) then
     make_a_river()
   end
 end
