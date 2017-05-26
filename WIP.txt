@@ -6,16 +6,11 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
--  "aversion" for rules, decreases prob of using rule again in a room
-
-+  lighting in caves mucked up?  [ check Ambient_push/pop ]
-
--  texture on monster-in teleport spots
+!!  sprouts from symmetrical rooms : often skip a side
 
 
--  sprouts from symmetrical rooms : often skip a side
-
-+  need the switch-door quests [ for large/extreme levels ]
++  need some switch-door quests [ for large/extreme levels ]
+   [ use free-standing switches for these ]
 
 -  internal fences (esp. for outdoor rooms)
 
@@ -88,6 +83,8 @@ Hallway System
 Scenic Borders
 --------------
 
+!!  better cliff shapes for watery_drop, add trees
+
 -  need posts where two different floor heights meet (for railing)
 
 -  handle stairs adjacent to a border : need a brush for the
@@ -120,7 +117,7 @@ PARKS
 -  review outdoor ROOM_THEMEs, remove/replace any "floors" which
    are actually natural-ish
 
--  add a style for it, decide room properly
+-  consider a style and/or UI setting for parks
 
 
 
