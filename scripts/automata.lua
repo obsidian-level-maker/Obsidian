@@ -1472,6 +1472,41 @@ function GRID_CLASS.neighbors_of_blobs(grid)
 end
 
 
+function GRID_CLASS.spread_blob_dists(grid, field)
+  -- spreads a distance value of the given field (e.g. "room_dist").
+  -- these values are integers (representing # of blobs) and NOT
+  -- true distances of any kind.
+
+  local changes
+
+  repeat
+    changes = false
+
+    each _,B1 in grid.blobs do
+      -- compute minimum of neighbors
+      local min_val
+
+      each _,B2 in B1.neighbors do
+        if B2[field] and (not min_val or B2[field] < min_val) then
+          min_val = B2[field]
+        end
+      end
+
+      -- cannot do anything if all neighbors are unset
+      if not min_val then continue end
+
+      min_val = min_val + 1
+
+      if not B1[field] or min_val < B1[field] then
+        B1[field] = min_val
+        changes   = true
+      end
+    end
+
+  until not changes
+end
+
+
 ----------------------------------------------------------------
 --  MAZE STUFF
 ----------------------------------------------------------------
