@@ -971,6 +971,12 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     if #locs < 2 then table.insert(locs, locs[1]) end
     if #locs < 3 then table.insert(locs, locs[2]) end
 
+    for n = 1, 3 do
+      if locs[n].sw < 2 or locs[n].sh < 2 then
+        DEPOT.max_spot_size = 64
+      end
+    end
+
     local chunk1 = table.remove(locs, 1)
     local chunk2 = table.remove(locs, 1)
     local chunk3 = table.remove(locs, 1)

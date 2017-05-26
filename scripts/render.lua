@@ -2196,6 +2196,21 @@ function Render_depot(depot)
   Fabricate(dest_R, def, T, { depot.skin })
 
   Ambient_pop()
+
+  -- reduce sizes of monster spots based on the space at the
+  -- teleport destinations
+  local cur_trap = assert(dest_R.traps[#dest_R.traps])
+
+  if depot.max_spot_size then
+    each spot in cur_trap.mon_spots do
+      if spot.x2 > spot.x1 + depot.max_spot_size then
+         spot.x2 = spot.x1 + depot.max_spot_size
+      end
+      if spot.y2 > spot.y1 + depot.max_spot_size then
+         spot.y2 = spot.y1 + depot.max_spot_size
+      end
+    end
+  end
 end
 
 

@@ -44,6 +44,8 @@ CHANGES IN 7.5x
 -  unused leaf rooms become "storage" for some minor items
 -  less chance of creating long/thin rooms
 
+-  fixed large teleport-in monsters getting stuck
+
 -  smooth corners where two fences meet
 -  raise outdoor fences when near a item pedestal (etc)
 

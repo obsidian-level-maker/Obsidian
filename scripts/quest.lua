@@ -988,7 +988,6 @@ do return false end
   -- triple key door?
 
   if add_triple_key_door(goal_list) then
-stderrf("***** triple key door !!\n")
     LEVEL.has_triple_key = true
     goal_list = { }
   end
