@@ -1418,7 +1418,7 @@ function GRID_CLASS.extent_of_blobs(grid)
 
   for cx = 1, grid.w do
   for cy = 1, grid.h do
-    local id  = grid[cx][cy]
+    local id = grid[cx][cy]
 
     if id == nil then continue end
 
@@ -1433,6 +1433,39 @@ function GRID_CLASS.extent_of_blobs(grid)
       reg.cy1 = math.min(reg.cy1, cy)
       reg.cx2 = math.max(reg.cx2, cx)
       reg.cy2 = math.max(reg.cy2, cy)
+    end
+  end
+  end
+end
+
+
+function GRID_CLASS.neighbors_of_blobs(grid)
+  each id, reg in grid.blobs do
+    reg.neighbors = {}
+  end
+
+  for cx = 1, grid.w do
+  for cy = 1, grid.h do
+    local id = grid[cx][cy]
+
+    if id == nil then continue end
+
+    local reg1 = grid.blobs[id]
+    assert(reg1)
+
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(cx, cy, dir)
+
+      local nb
+      if grid:valid(nx, ny) then nb = grid[nx][ny] end
+
+      if not nb or nb == id then continue end
+
+      local reg2 = grid.blobs[nb]
+      assert(reg2)
+
+      table.add_unique(reg1.neighbors, reg2)
+      table.add_unique(reg2.neighbors, reg1)
     end
   end
   end
