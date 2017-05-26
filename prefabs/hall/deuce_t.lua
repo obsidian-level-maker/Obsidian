@@ -17,3 +17,16 @@ PREFABS.Hallway_deuce_t1 =
   seed_h = 2
 }
 
+
+PREFABS.Hallway_deuce_t_stair =
+{
+  template = "Hallway_deuce_t1"
+
+  map    = "MAP03"
+
+  style  = "steepness"
+  prob   = 50
+
+  delta_h = 32
+}
+
