@@ -356,8 +356,47 @@ end
 
 
 
-function Cave_cell_touches_room(area, R)
-  -- FIXME
+function Cave_cell_touches_room(area, cx, cy, R)
+  -- checks diagonal directions too (i.e. corner touches)
+
+  each dir in geom.ALL_DIRS do
+    local nx, ny = geom.nudge(cx, cy, dir)
+
+    -- get seed coordinate of neighbor cell
+    local sx = area.base_sx + int((nx - 1) / 2)
+    local sy = area.base_sy + int((ny - 1) / 2)
+
+    if not Seed_valid(sx, sy) then continue end
+
+    local S1 = SEEDS[sx][sy]
+    local S2 = S1.top
+
+    nx = 1 - (nx % 2)  -- 0 for left side,   1 for right side
+    ny = 1 - (ny % 2)  -- 0 for bottom side, 1 for top side
+
+    if S1.diagonal == 1 then
+
+      if (nx == 0 and ny == 0) or dir == 9 then
+        S2 = nil
+      elseif (nx == 1 and ny == 1) or dir == 1 then
+        S1 = nil
+      end
+
+    elseif S1.diagonal == 3 then
+
+      if (nx == 1 and ny == 0) or dir == 7 then
+        S2 = nil
+      elseif (nx == 0 and ny == 1) or dir == 3 then
+        S1 = nil
+      end
+
+    end
+
+    if S1 and S1.area and S1.area.room == R then return true end
+    if S2 and S2.area and S2.area.room == R then return true end
+  end
+
+  return false
 end
 
 
@@ -3151,6 +3190,21 @@ function Cave_build_a_scenic_vista(area)
 
 
   local function calc_room_dists()
+    for cx = 1, area.cw do
+    for cy = 1, area.ch do
+      local id = blob_map[cx][cy]
+      if not id then continue end
+
+      local reg = blob_map.blobs[id]
+      if reg.room_dist then continue end
+
+      if Cave_cell_touches_room(area, cx, cy, room) then
+        reg.room_dist = 0
+      end
+    end
+    end
+
+    blob_map:spread_blob_dists("room_dist")
   end
 
 
@@ -3220,6 +3274,7 @@ function Cave_build_a_scenic_vista(area)
 
     blobify()
 
+    calc_room_dists()
     calc_mapedge_dists()
 
     -- create the liquid area --
