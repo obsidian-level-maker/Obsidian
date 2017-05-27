@@ -6,11 +6,12 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
-!!  sprouts from symmetrical rooms : often skip a side
-
-
 +  need some switch-door quests [ for large/extreme levels ]
    [ use free-standing switches for these ]
+
++  railings : max_z (or so) value, support in CSG DOOM
+
+-  sprouts from symmetrical rooms : often skip a side
 
 -  internal fences (esp. for outdoor rooms)
 
@@ -83,21 +84,15 @@ Hallway System
 Scenic Borders
 --------------
 
-!!  better cliff shapes for watery_drop, add trees
-
 -  need posts where two different floor heights meet (for railing)
 
 -  handle stairs adjacent to a border : need a brush for the
    side and a post where that brush meets the low floor
 
-+  different styles:
-   - mountainy areas  (w/ trees or torches)
-   - cavey/liquidy areas
-   - fenced off pools from V7-WEIRD
-   - fancy fences
-
 -  block travel 2/3 seeds into simple fence (archvile jumps etc)
    [ esp. where a simple fence is joined to a watery_drop ]
+
+-  add some waterfalls to "watery_drop"
 
 
 
@@ -114,10 +109,10 @@ PARKS
 
 -  consider texturing
 
+-  consider a style and/or UI setting for parks
+
 -  review outdoor ROOM_THEMEs, remove/replace any "floors" which
    are actually natural-ish
-
--  consider a style and/or UI setting for parks
 
 
 
