@@ -57,8 +57,10 @@ function Layout_compute_dists(R)
     end
 
     -- now check teleporters
+    -- [ and exits, mainly to keep a teleporter entry far away ]
+
     each chunk in R.floor_chunks do
-      if chunk.content == "TELEPORTER" then
+      if chunk.content == "TELEPORTER" or chunk.is_bossy then
         mark_chunk(chunk)
       end
     end
@@ -274,19 +276,19 @@ function Layout_spot_for_wotsit(R, kind, required)
       return score
     end
 
-    -- in general, prefer closets of free-standing spots
+    -- in general, prefer closets over free-standing spots
     if chunk.kind == "closet" then
-      score = score + 27
+      score = score + 12
     end
 
     if chunk.sw >= 2 or chunk.sh >= 2 then
-      score = score + 7
+      score = score + 5
     end
 
     if chunk.is_straddler then
-      if kind == "EXIT"  then score = score + 25 end
-      if kind == "START" then score = score + 25 end
-      if kind == "KEY"   then score = score +  5 end
+      if kind == "EXIT"  then score = score + 20 end
+      if kind == "START" then score = score + 20 end
+      if kind == "KEY"   then score = score +  7 end
     end
 
     if chunk.prefer_usage and chunk.prefer_usage == kind then
