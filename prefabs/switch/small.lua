@@ -10,7 +10,7 @@ PREFABS.Switch_small_sw_blue =
   prob   = 50
 
   where  = "point"
-  size   = 64
+--???  size   = 64
 
   tag_1  = "?switch_tag"
 

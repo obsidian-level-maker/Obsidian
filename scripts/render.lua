@@ -1608,6 +1608,9 @@ function Render_chunk(chunk)
       height = chunk.area.ceil_h - chunk.area.floor_h
     }
 
+    reqs.key = "sw_metal"  -- FIXME GET IT PROPERLY
+chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS RENDERED
+
     local def = Fab_pick(reqs)
 
     local skin1 = { }
