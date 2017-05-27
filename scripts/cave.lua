@@ -3328,6 +3328,33 @@ function Cave_build_a_scenic_vista(area)
     area.cliff_FLOOR = CLIFF
 
 
+    -- add some scenery objects
+    if THEME.cliff_trees then
+      each id, reg in blob_map.blobs do
+        local cx, cy = blob_map:random_blob_cell(id)
+        if not cx then continue end
+
+        local B = area.blobs[cx][cy]
+        assert(B)
+
+        if not B.floor_h then continue end
+        if B.floor_h < CLIFF3.floor_h then continue end
+
+        -- less chance of using a tree on highest cliff
+        if rand.odds(30) then continue end
+        if B.floor_h > CLIFF2.floor_h and rand.odds(70) then continue end
+
+        -- OK --
+        local mx = area.base_x + (cx-1) * 64 + 32
+        local my = area.base_y + (cy-1) * 64 + 32
+
+        local tree = rand.key_by_probs(THEME.cliff_trees)
+
+        Trans.entity(tree, mx, my, B.floor_h)
+      end
+    end
+
+
     -- TEMP RUBBISH
     area.floor_h = CLIFF.floor_h
 

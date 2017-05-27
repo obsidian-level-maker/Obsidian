@@ -1439,6 +1439,26 @@ function GRID_CLASS.extent_of_blobs(grid)
 end
 
 
+function GRID_CLASS.random_blob_cell(grid, id)
+  -- NOTE: this can return nil
+
+  local reg = grid.blobs[id]
+  assert(reg and reg.cx1)
+
+  for loop = 1, 10 do
+    local cx = rand.irange(reg.cx1, reg.cx2)
+    local cy = rand.irange(reg.cy1, reg.cy2)
+
+    if grid[cx][cy] == id then
+      return cx, cy
+    end
+  end
+
+  -- nothing we tried was on the required blob
+  return nil, nil
+end
+
+
 function GRID_CLASS.neighbors_of_blobs(grid)
   each id, reg in grid.blobs do
     reg.neighbors = {}

@@ -375,6 +375,13 @@ DOOM.THEMES =
       red_torch = 50
     }
 
+    cliff_trees =
+    {
+      burnt_tree = 80
+      brown_stub = 40
+        big_tree = 20
+    }
+
     fences =
     {
       STONE = 50
