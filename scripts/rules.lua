@@ -1002,8 +1002,9 @@ GROW_DBLSTAIR_CURVE =
 
 GROW_STAIR_POOL1 =
 {
-  prob = 25*0
+  prob = 20
   skip_prob = 80
+  aversion = 10
 
   structure =
   {
