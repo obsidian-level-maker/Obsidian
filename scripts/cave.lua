@@ -3140,7 +3140,7 @@ function Cave_prepare_scenic_vista(area)
 
   -- decide what kind of vista to make
 
-  if room.has_river or not LEVEL.liquid or rand.odds(25*0) then
+  if room.has_river or not LEVEL.liquid or rand.odds(66) then
     area.border_type = "simple_fence"
   else
     area.border_type = "watery_drop"
