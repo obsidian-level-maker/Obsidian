@@ -1517,7 +1517,7 @@ function Render_chunk(chunk)
 
     Fabricate(R, def, T, { skin })
 
-    if goal and goal.kind == "SWITCH" then
+    if goal and (goal.kind == "SWITCH" or goal.kind == "LOCAL_SWITCH") then
       goal.action = assert(def.door_action)
     end
   end
@@ -1973,7 +1973,7 @@ function Render_chunk(chunk)
   elseif what == "TELEPORTER" then
     do_teleporter()
 
-  elseif what == "SWITCH" then
+  elseif what == "LOCAL_SWITCH" then
     do_switch()
 
   elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
@@ -2052,7 +2052,7 @@ function Render_chunk(chunk)
 
   Ambient_pop()
 
-  if goal and goal.kind == "SWITCH" then
+  if goal and goal.kind == "LOCAL_SWITCH" then
     goal.action = assert(def.door_action)
   end
 end
@@ -2141,7 +2141,7 @@ function Render_all_chunks()
 
 
   local function visit_chunk(chunk)
-    local is_switch = (chunk.content == "SWITCH")
+    local is_switch = (chunk.content == "SWITCH" or chunk.content == "LOCAL_SWITCH")
 
     if sel(is_switch, 1, 0) != sel(SWITCHES_ONLY, 1, 0) then
       return

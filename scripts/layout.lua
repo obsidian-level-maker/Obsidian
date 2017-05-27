@@ -229,8 +229,7 @@ function Layout_spot_for_wotsit(R, kind, required)
     -- already used?
     if chunk.content then return -1 end
 
-    -- TODO: review this
-    if kind == "SWITCH" then
+    if kind == "LOCAL_SWITCH" then
       if chunk.kind != "closet" then return -1 end
     end
 
@@ -1292,7 +1291,7 @@ function Layout_decorate_rooms(pass)
 
     if table.empty(conn_list) then return end
 
-    local chunk = Layout_spot_for_wotsit(R, "SWITCH")
+    local chunk = Layout_spot_for_wotsit(R, "LOCAL_SWITCH")
 
     if not chunk then return end
 
@@ -1300,7 +1299,7 @@ function Layout_decorate_rooms(pass)
 
     local C = rand.pick(conn_list)
 
-    local goal = Goal_new("SWITCH")
+    local goal = Goal_new("LOCAL_SWITCH")
 
     goal.item = "sw_metal"
     goal.room = R
@@ -1331,13 +1330,13 @@ function Layout_decorate_rooms(pass)
     if not item then return end
 
     -- see if we can place a switch
-    local chunk = Layout_spot_for_wotsit(R, "SWITCH")
+    local chunk = Layout_spot_for_wotsit(R, "LOCAL_SWITCH")
 
     if not chunk then return end
 
     -- OK --
 
-    local goal = Goal_new("SWITCH")
+    local goal = Goal_new("LOCAL_SWITCH")
 
     goal.item = "sw_metal"
     goal.room = R

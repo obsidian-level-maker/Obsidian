@@ -847,7 +847,7 @@ function Room_pick_edge_prefab(C)
 
     -- use lowering bars between outdoor rooms (usually)
     if R1.is_outdoor and R2.is_outdoor and
-       goal.kind == "SWITCH" and
+       goal.kind == "LOCAL_SWITCH" and
        rand.odds(80+20)
     then
       reqs.kind = "fence"
