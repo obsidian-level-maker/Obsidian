@@ -3150,6 +3150,29 @@ function Cave_build_a_scenic_vista(area)
   end
 
 
+  local function calc_room_dists()
+  end
+
+
+  local function calc_mapedge_dists()
+    for cx = 1, area.cw do
+    for cy = 1, area.ch do
+      local id = blob_map[cx][cy]
+      if not id then continue end
+
+      local reg = blob_map.blobs[id]
+      if reg.mapedge_dist then continue end
+
+      if Cave_cell_touches_map_edge(area, cx, cy) then
+        reg.mapedge_dist = 0
+      end
+    end
+    end
+
+    blob_map:spread_blob_dists("mapedge_dist")
+  end
+
+
   local function temp_install_floor(FL)
     for cx = 1, area.cw do
     for cy = 1, area.ch do
@@ -3196,6 +3219,8 @@ function Cave_build_a_scenic_vista(area)
     --
 
     blobify()
+
+    calc_mapedge_dists()
 
     -- create the liquid area --
 
