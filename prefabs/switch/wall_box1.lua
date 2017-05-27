@@ -7,7 +7,6 @@ PREFABS.Switch_wall_box1 =
   file   = "switch/wall_box1.wad"
 
   prob   = 50
-  switch = "any"
 
   where  = "seeds"
   seed_w = 1

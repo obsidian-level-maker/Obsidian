@@ -1854,10 +1854,12 @@ function Render_chunk(chunk)
 
     local C = assert(chunk.conn)
 
-    if C.lock and C.lock.kind == "intraroom" then
+    if C.lock and C.lock.goals then
       goal = C.lock.goals[1]
 
-      skin.door_tag = assert(goal.tag)
+      if goal.tag then
+        skin.door_tag = goal.tag
+      end
     end
   end
 
@@ -1869,13 +1871,20 @@ function Render_chunk(chunk)
     end
   end
 
-  local function do_switch()
+  local function do_local_switch()
     reqs.kind = "switch"
 
     local goal = assert(chunk.goal)
 
     skin.switch_tag = assert(goal.tag)
     skin.switch_action = Action_lookup(goal.action)
+  end
+
+  local function do_remote_switch()
+    reqs.key  = "sw_metal"  -- FIXME GET IT PROPERLY
+chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS RENDERED
+
+    do_local_switch()
   end
 
   local function do_item()
@@ -1974,7 +1983,10 @@ function Render_chunk(chunk)
     do_teleporter()
 
   elseif what == "LOCAL_SWITCH" then
-    do_switch()
+    do_local_switch()
+
+  elseif what == "SWITCH" then
+    do_remote_switch()
 
   elseif what == "KEY" or what == "WEAPON" or what == "ITEM" then
     do_item()

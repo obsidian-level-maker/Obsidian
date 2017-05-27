@@ -10,7 +10,7 @@ PREFABS.Joiner_remote_door =
 
   key    = "barred"
 
-  prob   = 200
+  prob   = 20
 
   seed_w = 2
   seed_h = 1
@@ -22,5 +22,19 @@ PREFABS.Joiner_remote_door =
   door_action = "S1_OpenDoor"
 
   flat_FLAT23 = "SILVER3"
+}
+
+
+PREFABS.Joiner_remote_sw_metal =
+{
+  template = "Joiner_remote_door"
+
+  key = "sw_metal"
+
+  x_fit = "frame"
+  y_fit = "stretch"
+
+  tex_SILVER3 = "METAL3"
+  flat_FLAT23 = "CEIL5_2"
 }
 

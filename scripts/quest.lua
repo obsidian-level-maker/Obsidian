@@ -198,8 +198,8 @@ end
 
 function Quest_create_initial_quest()
   --
-  -- Turns the whole map into a single Quest object, and pick an exit room
-  -- as the goal of the quest.
+  -- Turns the whole map into a single QUEST object, and the exit
+  -- room is the goal of the quest.
   --
   -- This quest can be divided later on into major and minor quests.
   --
@@ -549,7 +549,7 @@ end
 function Quest_perform_division(info)
   --
   -- Splits the current quest into two, adding the new quest into the
-  -- binary tree.  Also locks the connection.
+  -- binary tree.  Also marks the connection as locked.
   --
 
   local function replace_with_node(Q, new_node)
@@ -733,7 +733,7 @@ function Quest_scan_all_conns(new_goals, do_quest)
     score = 0
   }
 
-  local need_joiner = (#new_goals >= 2)
+  local need_joiner = (#new_goals >= 2 or new_goals[1].kind == "SWITCH")
 
 
   each C in LEVEL.conns do
@@ -817,9 +817,6 @@ function Quest_add_major_quests()
 
 
   local function collect_switch_goals(list)
---FIXME
-do return false end
-
     if not THEME.switches then return {} end
 
     local skip_prob = style_sel("switches", 100, 20, 0, 0)
@@ -901,10 +898,14 @@ do return false end
     -- TODO: check that a usable prefab exists
     if not THEME.has_double_switch_door then return false end
 
-    local prob = 25
+    local prob = 36
 
     if OB_CONFIG.playmode == "coop" then
-      prob = 75
+      prob = 70
+    end
+
+    if LEVEL.has_double_switch_door then
+      prob = prob / 2
     end
 
     if not rand.odds(prob) then return false end
@@ -928,12 +929,14 @@ do return false end
 
 
   local function lock_up_double_doors()
-    local list = table.copy(LEVEL.quests)
-
-    each Q in list do
-      if count_unused_leafs(Q) >= 3 then
-        add_double_switch_door(Q)
-      end
+    for loop = 1, 2 do
+      --TODO:
+      -- local Q = find_exit_quest()
+      -- if Q and count_unused_leafs(Q) >= 3 then
+      --   if add_double_switch_door(Q) then
+      --     LEVEL.has_double_switch_door = true
+      --   end
+      -- end
     end
   end
 

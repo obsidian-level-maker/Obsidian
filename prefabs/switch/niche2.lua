@@ -2,16 +2,17 @@
 --  Niche switch
 --
 
-UNFINISHED.Switch_niche2 =
+PREFABS.Switch_niche2 =
 {
   file   = "switch/niche2.wad"
+  map    = "MAP01"
 
+  key    = "sw_metal"
   prob   = 50
 
   where  = "seeds"
-
-  seed_w = 1
-  seed_h = 1
+  deep   =  16
+  over   = -16
 
   x_fit = "frame"
   y_fit = "top"
