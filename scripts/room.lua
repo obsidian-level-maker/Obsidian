@@ -1330,13 +1330,18 @@ function Room_border_up()
 
 
   local function can_omit_fence(A1, A2)
-    -- TODO : review for mode == "nature"
+    -- TODO : support mode == "nature"
     if not (A1.mode == "floor" and A1.room) then return false end
     if not (A2.mode == "floor" and A2.room) then return false end
 
     -- start rooms need protection from monsters in neighbor rooms
     if (A1.room and A1.room.is_start) or (A2.room and A2.room.is_start) then
       if rand.odds(80) then return false end
+    end
+
+    -- never fall down into a secret
+    if A1.room.is_secret or A2.room.is_secret then
+      return false
     end
 
     if A1.room.lev_along > A2.room.lev_along then
