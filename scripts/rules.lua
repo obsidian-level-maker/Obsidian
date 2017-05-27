@@ -1090,8 +1090,8 @@ GROW_STAIR_SIDE3 =
 GROW_STAIR_HUGE =
 {
   prob = 10
-  skip_prob = 70
-  aversion  = 10
+  skip_prob = 80
+  aversion  = 20
 
   structure =
   {
@@ -2100,8 +2100,8 @@ CAVE_GROW_FILL_B =
 
 SPROUT_narrow_hallway =
 {
-  prob = 400
-  skip_prob = 25
+  prob = 800
+  skip_prob = 20
 
   structure =
   {
@@ -2216,8 +2216,8 @@ HALL_1_SPROUT_A =
 
 SPROUT_wide_hallway =
 {
-  prob = 800
-  skip_prob = 25
+  prob = 1500
+  skip_prob = 20
 
   structure =
   {
