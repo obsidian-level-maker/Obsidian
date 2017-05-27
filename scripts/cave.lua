@@ -3279,7 +3279,7 @@ function Cave_build_a_scenic_vista(area)
 
     -- create the liquid area --
 
-    local drop_h = rand.pick({ 64,96,128,192,256 })
+    local drop_h = rand.pick({ 64,96,128,192 })
 
     local FL = new_blob()
 
@@ -3293,19 +3293,34 @@ function Cave_build_a_scenic_vista(area)
 
     -- create cliffs in the distance --
 
-    local CLIFF = new_blob()
+    local CLIFF  = new_blob()
+    local CLIFF2 = new_blob()
+    local CLIFF3 = new_blob()
 
     CLIFF.floor_h   = (room.max_floor_h or room.entry_h) + 96
     CLIFF.floor_mat = assert(LEVEL.cliff_mat)
 
+    CLIFF3.floor_h   = (room.max_floor_h or room.entry_h) - drop_h/2
+    CLIFF3.floor_mat = assert(LEVEL.cliff_mat)
+
+    CLIFF2.floor_h   = (CLIFF.floor_h + CLIFF3.floor_h) * 0.5
+    CLIFF2.floor_mat = assert(LEVEL.cliff_mat)
+
     for cx = 1, area.cw do
     for cy = 1, area.ch do
-      local val = area.walk_map[cx][cy]
+      local id = blob_map[cx][cy]
+      if not id then continue end
 
-      if val == nil then continue end
+      local reg = blob_map.blobs[id]
 
-      if Cave_cell_touches_map_edge(area, cx, cy) then
+      if not (reg.room_dist and reg.mapedge_dist) then continue end
+
+      if reg.mapedge_dist * 0.9 <= reg.room_dist  then
         area.blobs[cx][cy] = CLIFF
+      elseif reg.mapedge_dist * 0.6 <= reg.room_dist  then
+        area.blobs[cx][cy] = CLIFF2
+      elseif reg.mapedge_dist * 0.3 <= reg.room_dist  then
+        area.blobs[cx][cy] = CLIFF3
       end
     end
     end
