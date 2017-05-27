@@ -1445,17 +1445,33 @@ function GRID_CLASS.random_blob_cell(grid, id)
   local reg = grid.blobs[id]
   assert(reg and reg.cx1)
 
-  for loop = 1, 10 do
+  local best_cx
+  local best_cy
+  local best_score
+
+  for loop = 1, 20 do
     local cx = rand.irange(reg.cx1, reg.cx2)
     local cy = rand.irange(reg.cy1, reg.cy2)
 
-    if grid[cx][cy] == id then
-      return cx, cy
+    if grid[cx][cy] != id then continue end
+
+    local score = gui.random()
+
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(cx, cy, dir)
+      if grid:valid(nx, ny) and grid[nx][ny] == id then
+        score = score + 1
+      end
+    end
+
+    if not best_score or score > best_score then
+      best_cx = cx
+      best_cy = cy
+      best_score = score
     end
   end
 
-  -- nothing we tried was on the required blob
-  return nil, nil
+  return best_cx, best_cy
 end
 
 
