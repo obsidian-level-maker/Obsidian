@@ -2982,6 +2982,13 @@ function Render_cells(area)
       f_mat = assert(B.wall_mat)
     end
 
+    -- disable liquid lighting in outdoor rooms
+    if f_mat == "_LIQUID" and area.is_outdoor and not LEVEL.is_dark then
+      each C in f_brush do
+        if C.t then C.light_add = 0 end
+      end
+    end
+
     brushlib.set_mat(f_brush, f_mat, f_mat)
 
     if B.floor_y_offset then

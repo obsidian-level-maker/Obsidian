@@ -783,7 +783,7 @@ function brushlib.set_mat(brush, wall, flat)
 
     if flat == "_LIQUID" and LEVEL.liquid then
       each C in brush do
-        if C.b or C.t then
+        if C.t then
           C.special   = C.special   or LEVEL.liquid.special
           C.light_add = C.light_add or LEVEL.liquid.light_add
         end
