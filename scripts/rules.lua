@@ -1091,7 +1091,7 @@ GROW_STAIR_SIDE3 =
 
 GROW_STAIR_HUGE =
 {
-  prob = 10
+  prob = 8
   skip_prob = 80
   aversion  = 20
 
