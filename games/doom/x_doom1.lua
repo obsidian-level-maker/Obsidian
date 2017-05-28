@@ -452,6 +452,13 @@ ULTDOOM.THEMES =
       blue_torch  = 20
     }
 
+    cliff_trees =
+    {
+      burnt_tree = 80
+      brown_stub = 40
+        big_tree = 20
+    }
+
     fences =
     {
       BROWN144 = 60
