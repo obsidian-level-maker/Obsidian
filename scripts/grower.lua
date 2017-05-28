@@ -3395,7 +3395,7 @@ function Grower_grow_all_rooms()
 
 
   local function reached_coverage()
-stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
+gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         coverage,  LEVEL.min_coverage,
         cov_rooms, LEVEL.min_rooms)
 
@@ -3508,7 +3508,6 @@ stderrf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   check_exit_room()
 
   for loop = 1, MAX_LOOP do
-stderrf("LOOP %d\n", loop)
 
     local kw
 
