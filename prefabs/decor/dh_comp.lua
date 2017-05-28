@@ -7,7 +7,7 @@ PREFABS.Decor_dittohead_computer =
   file   = "decor/dh_comp.wad"
   map    = "MAP01"
 
-  prob   = 8000
+  prob   = 5000
   theme  = "tech"
   env    = "building"
 
