@@ -1058,6 +1058,8 @@ GROW_STAIR_SIDE2 =
   prob_skew = 3
   skip_prob = 30
 
+  z_dir = "up"
+
   structure =
   {
     "....", "#AAA"
