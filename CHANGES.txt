@@ -1,11 +1,12 @@
 
-CHANGES IN 7.5x
+CHANGES IN 7.55
 ===============
 
 +  UI: big revamp, two scrolling columns of modules
 -  UI: main window can be vertically resized
 -  UI: option to use mousewheel to change settings
 -  UI: option to disable the overwrite-file warning
+-  UI: the "Use" button in config manager now sets the seed too
 -  UI: "@@" on the command line will forget current module
 
 +  the "Weapons" button now controls how early or late new
@@ -22,6 +23,7 @@ CHANGES IN 7.5x
 
 +  ensure a secret exit can always be placed
 -  fixed bug swapping normal-exit and secret-exit switches
+-  fixed large teleport-in monsters getting stuck
 
 -  support for the Quake3 map format in the CSG code
 
@@ -30,28 +32,24 @@ CHANGES IN 7.5x
 -  new health/ammo settings: "Bit Less" and "Bit More"
 
 -  got triple-key doors working again
+-  got remote-activated doors working again
 -  got lowering-bar fences working again
--  support for rooms with a liquid river and a bridge
--  introduced variation in how much symmetry to use
 
 -  improved title generator, removed pre-made backgrounds
 -  support TGA format title pics when engine is GZDOOM
 
--  various polishing of the shape rules
--  abbreviated config in OBLIGDAT lump and config manager
--  config manager: the "Use" button now sets the seed too
+-  support for rooms with a liquid river and a bridge
+-  raise outdoor fences when near a item pedestal (etc)
+-  smooth corners where two fences meet
 
+-  proper action system for remotely activated doors (etc)
+-  removed the non-standard player things (4001..4004)
+
+-  introduced variation in how much symmetry to use
 -  unused leaf rooms become "storage" for some minor items
 -  less chance of creating long/thin rooms
 
--  fixed large teleport-in monsters getting stuck
-
--  smooth corners where two fences meet
--  raise outdoor fences when near a item pedestal (etc)
-
--  proper action system for remotely activated doors (etc)
-
--  removed the non-standard player things (4001..4004)
-
+-  various polishing of the shape rules
 -  DOOM CSG: reworked how railing textures are handled
+-  abbreviated config in OBLIGDAT lump and config manager
 
