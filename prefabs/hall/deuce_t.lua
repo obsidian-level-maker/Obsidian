@@ -18,7 +18,8 @@ PREFABS.Hallway_deuce_t1 =
 }
 
 
-PREFABS.Hallway_deuce_t_stair =
+-- disabled for now
+UNFINISHED.Hallway_deuce_t_stair =
 {
   template = "Hallway_deuce_t1"
 
