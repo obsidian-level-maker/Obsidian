@@ -13,21 +13,13 @@ OBLIGE TO-DO
 
 +  add in more scenery: trees, computers etc
 
-+  don't make "Empty Quests", especially 2 or more rooms
+-  support a "Mix It Up" Strength setting
 
-+  support a "Mix It Up" Strength setting
-
-+  proper "apply_num" calculation [ especially DECORATE ]
-
--  bug: mon-teleport dests can be wrong lighting in an outdoor
-   shadow (or split by it), and wrong texture in liquidy caves
-
-
-+  monster spots from a prefab : can cause stuck monsters
-   [ ideally shrink them if nearby wall(etc) overlaps ]
-
-+  level_usage for: rules, prefabs, rooms themes.
+-  level_usage for: rules, prefabs, rooms themes.
    (maybe have "room_usage" and "zone_usage" for prefabs too)
+
+-  monster spots from a prefab : can cause stuck monsters
+   [ ideally shrink them if nearby wall(etc) overlaps ]
 
 -  traps : distinguish "short-range" (same room) and "long-range"
            (another room) when deciding monsters to use
@@ -37,14 +29,10 @@ OBLIGE TO-DO
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars
 
--  intra-room locks : support free-standing switches
-
 -  support decorative closets, e.g. fancy light thingy
 
 -  one switch opens ALL the barred exits
 
-
-+  allow TWO conns into a new room (become F1/F2 in CONN object)
 
 -  sky generator : better checking of themes (esp. w/ control module)
 
@@ -59,6 +47,8 @@ OBLIGE TO-DO
    should use "shadow" light value as ambient
 
 
+IDEA : allow TWO conns into a new room (become F1/F2 in CONN object)
+
 IDEA : "Lighting" and "Detail" settings (in miscellaneous module)
 
 IDEA : for music swapper, give each song a theme and try to match
@@ -66,6 +56,9 @@ IDEA : for music swapper, give each song a theme and try to match
 
 IDEA : a sharp corner removal pass [ before border stuff ]
        [ preserve symmetry, e.g. by preferring horizontal direction to merge ]
+
+IDEA : separated in/out teleporters in very large rooms
+
 
 
 -  a "Z" shape for joiners and stairs, which connects two areas
@@ -140,7 +133,7 @@ Hallways
 SHAPE GRAMMARS
 --------------
 
-+  '9', '8', '7' matches anything but "1", "2", "3"
+IDEA: '9', '8', '7' matches anything but "1", "2", "3"
 
    Q/ does "anything" included empty space / other rooms?
    A/ yes it would
@@ -148,12 +141,9 @@ SHAPE GRAMMARS
    ISSUE: must be handled in second pass, once '1' etc have been
           determined
 
--  in SPROUT pass of symmetrical room : ability to make non-mirrored
-   [ especially when we are in dire need to grow the map ]
-
-IDEA:  CYCLE pass (after SPROUT) for multiple paths
-       [ probably as 'H' hallways, allow these to grow, prune them
-         when they fail to connect ]
+IDEA: CYCLE pass (after SPROUT) for multiple paths
+      [ probably as 'H' hallways, allow these to grow, prune them
+        when they fail to connect ]
 
 IDEA: rules can specify a "prefab_flavor" for any rects, and when
       finding a matching prefab require "flavor" field to match.
@@ -233,39 +223,12 @@ Doors and Joiners
 Scenic Borders
 --------------
 
-+  where an outdoor border area touches X, need a low-sky half-seed brush
-   AND LIMIT floor of whole area to be < zone.sky_h
-
-   (a) X can be:
-       - solid wall (either in normal map or bordery parts, e.g. zone wall)
-       - window
-       - a porch
-       - a roofed cage
-       - a "ceiling-y" prefab
-
-   [ we only know about the walls in FINISH_SCENIC_BORDERS ]
-
-   (b) half-seed brush logic similar to SINKs -- ideally use same code
-
-+  proper algorithm for heights
-   (avoid same height of two neighboring areas)
-
-   -  areas touching edge of map need floor_h >= zone's max floor
-
--  proper texturing (use cliff_mat at edge_of_map)
-
--  get WATER mode working again
+-  Water : waterfalls in the far away cliff
 
 -  Water : have some islands
 
--  Water : waterfalls in the far away cliff
+-  Low hills / Mountains
 
--  Low hills : make occasional big rock
-
--  Mountains : add some largish flat areas (away from map and away from edges)
-               with a lot more of the scenic object (or a different one)
-
--  mountains : larger groups at further distances (needs a good rethink)
 
 
 Sinks
@@ -279,28 +242,8 @@ Sinks
    and [for floors only] give the seed a new floor_h/floor_mat, and honor
    that floor_h when adding importants or decorative prefabs.
 
--  monsters: should not straddle the line between normal floor and sink
-   [ draw that line in spot code ] and ideally would have correct 'Z'
-
 -  probably should mark seeds (or whatever) so know where can place
    decorative prefabs.
-
-
-Various:
--  lowering bars between outdoor rooms
-
--  sometimes make a floor side use same material as top (not room wall)
-
--  area/room with key/exit/etc are good for windows
-
--  if area floor is >= all neighbors, sometimes mark as "want rail" (instead of fence)
-
--  Courtyard floor should be > Landscape floor.
-
-+  weapon palettes : not varied enough
-
--  use separated in/out teleporters in very large rooms
-   (especially in Quake maps)
 
 
 Secrets
@@ -319,21 +262,10 @@ IDEA:  looks like a normal item closet, but opens up
 IDEA:  a monster closet with a secret behind it
 
 
-Weapon choice :
-+  when game_along >= 0.3, then ALWAYS have at least one "big" weapon
-   and have before the last zone (or if one zone, before last quest)
-
-   and when game_along >= 0.5, GENERALLY have at least two big weapons,
-   and OFTEN have all three.
-
-   ALWAYS have at least one "small" weapon
-
 
 +  fix lighting with 3D floors
 
 ???  apply nice items gotten in normal rooms to the HMODEL
-
--  wad-fab: "outside bbox" pieces via sector type #977
 
 -  proper handling of windows with 3D floors
 
@@ -350,25 +282,14 @@ Weapon choice :
 
 -  review Dante's ideas : doc/DANTE.txt
 
-+  Dante's "Head Start" idea
-   -  give player stuff at start of each map
-      (often weapons that "keep weapons" would assume you have)
-
-   -  a button / module to control how much stuff
-      (perhaps replacing "Powerups" setting in GUI)
-
 
 Prefab system:
-+  handle extended games when checking "game" field
+-  "outside bbox" pieces via sector type #977
 
--  x_repeat, y_repeat
-
--  do mirroring in prefab space (only really need X)
-
-+  priority for spots  (skill flag)
-       if EASY set OR nothing set --> priority = 1
-       elseif MEDIUM --> priority = 2
-       else              priority = 3
+IDEA:  priority for spots  (skill flag)
+         if EASY set OR nothing set --> priority = 1
+         elseif MEDIUM --> priority = 2
+         else              priority = 3
 
    ALWAYS prefer a higher priority over a lower one.
 
@@ -401,14 +322,6 @@ Outdoor Idioms:
 
 
 Level Themes:
-+  fix "As Original" to not pick other themes for a whole episode
-
--  IDEA: "Mostly Original" theme
-
-+  fairly rare "mix in" themes, e.g. Egypt for TNT
-
-+  proper themes for QUAKE
-
 -  IDEA: a 'subs' table -- used to substitute a chosen texture with
    another (randomly picked) one.  Applies to PREFABS too.
 
@@ -478,9 +391,15 @@ Mazes:
 
 -  overlapping items in monster closets
 
-+  in later levels, low-level monsters should be used in bigger swarms
+-  Fight simulator: adjust monster 'damage' value based on Ambush
+   usage, Cage usage, dark rooms, hitscanners/Archies in low cover
+   rooms -- and lower values if killed by BFG or rocket launcher
 
--  support "Swarms" : a group of 3-N monsters (either a
+-  Mons: sometimes look toward important item (esp. keys)
+
+-  allow monsters in liquids [ but never place items there ]
+
+IDEA : "Swarms" : a group of 3-N monsters (either a
    single monster or 2-3 of a certain class), and place
    all the monsters close to each other, perhaps even
    have swarm patterns.
@@ -488,16 +407,8 @@ Mazes:
 IDEA : a setting for "difficulty spikes"
        (an idea by flyingdeath, more info in topic 496)
 
--  Fight simulator: adjust monster 'damage' value based on Ambush
-   usage, Cage usage, dark rooms, hitscanners/Archies in low cover
-   rooms -- and lower values if killed by BFG or rocket launcher
-
 IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
-
--  Mons: sometimes look toward important item (esp. keys)
-
--  allow monsters in liquids [ but never place items there ]
 
 
 Monster flag IDEAS:
@@ -542,13 +453,6 @@ Visibility:
 
 +  One-way Routes (see doc/Various_Notes.txt)
 
-IDEA: GAME.SCOPED_VARS table which is like styles but (a) fields can
-      be used in prefabs (b) a _scope field can be "zone", "level",
-      "room", "episode" -- value remains constant over that scope.
-
-IDEA: "weak texturing" (especially on floors) which will try to
-      use a texturing from adjoining floor (via a certain side).
-
 -  a mode to use dynamic lights instead of sector lighting
    (for ports like EDGE and GZDoom).  Basically just convert
    the candle thing in prefabs to light-emitting entities.
@@ -566,6 +470,14 @@ IDEA: "weak texturing" (especially on floors) which will try to
 -  3D stairs
 
 
+IDEA: GAME.SCOPED_VARS table which is like styles but (a) fields can
+      be used in prefabs (b) a _scope field can be "zone", "level",
+      "room", "episode" -- value remains constant over that scope.
+
+IDEA: "weak texturing" (especially on floors) which will try to
+      use a texturing from adjoining floor (via a certain side).
+
+
 -  double or triple switches: each one raises a 24 unit stair,
    but player can only traverse stairs when ALL are raised.
    Might work best if stairs are parallel to height diff.
@@ -578,11 +490,11 @@ IDEA: "weak texturing" (especially on floors) which will try to
 
 -  rarity for bfg10k and railgun for Skulltag
 
--  IDEA: STYLE to control # of lifts
-
 +  ability to replace music using MUS/OGG/MP3 from a bunch of files
    placed in a certain folder (e.g. "music/").  Needs a Lua API to
    read a directory.
+
+IDEA: STYLE to control # of lifts
 
 
 +  "parallel stairs"  (they run parallel to line between two floors)
@@ -632,9 +544,9 @@ Name generator:
   POSSIBLE GAMES
 ----------------------------------------------
 
-+  Heretic support
++  Heretic
 
-?  Quake support
+?  Quake
    -  load textures directly from the PAK files
    -  bring back lua-based prefabs
    -  support slopes
@@ -667,10 +579,6 @@ Name generator:
 +  generate random music (incorporate SoundHelix ?)
 
 -  make Oblige easier to mod
-
--  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
-
--  more Oblige logos, higher resolution ones too
 
 -  Rooms that lock you in and you have to find the switch on
    the other side of the room to get out.  All "normal" exits
