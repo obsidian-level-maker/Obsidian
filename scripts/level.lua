@@ -158,14 +158,7 @@ function Level_determine_map_size(LEV)
       small=30, regular=50, large=30, extreme=5
     }
 
-    -- choose something different than previous level
-    if EPISODE.last_ob_size then
-      MIXED_PROBS[EPISODE.last_ob_size] = nil
-    end
-
     ob_size = rand.key_by_probs(MIXED_PROBS)
-
-    EPISODE.last_ob_size = ob_size
   end
 
   if ob_size == "prog" or ob_size == "epi" then
