@@ -1506,7 +1506,7 @@ function Layout_decorate_rooms(pass)
   local function switch_up_room(R)
     -- locking exits and items
 
-    local switch_prob = style_sel("switches", 0, 35, 70, 90)
+    local switch_prob = style_sel("switches", 0, 20, 40, 80)
 
     for loop = 1, 2 do
       if rand.odds(switch_prob) then
