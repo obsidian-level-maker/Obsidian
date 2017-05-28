@@ -1599,7 +1599,7 @@ function Cave_floor_heights(R, entry_h)
 
     -- ceiling --
 
-    if R.is_outdoor and false then  --!!!!!!
+    if R.is_outdoor and false then  --!!!???
       -- no ceil_h (done later as the base area ceiling)
     elseif B.goal_type then
       B.ceil_h = h + 192
@@ -3140,7 +3140,7 @@ function Cave_prepare_scenic_vista(area)
 
   -- decide what kind of vista to make
 
-  if room.has_river or not LEVEL.liquid or rand.odds(66) then
+  if room.has_river or not LEVEL.liquid or rand.odds(50) then
     area.border_type = "simple_fence"
   else
     area.border_type = "watery_drop"

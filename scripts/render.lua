@@ -2960,7 +2960,7 @@ function Render_cells(area)
         top.is_cave = 1
       end
 
-top.reachable = 1  --!!!!!! FIXME: remove
+-- top.reachable = 1
 
 -- if area.room and area.room.id then top.tag = 1000 + area.room.id end
 

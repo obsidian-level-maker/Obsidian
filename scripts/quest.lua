@@ -264,7 +264,7 @@ function Quest_create_initial_quest()
     end
 
     if R:total_conns() > 1 then
---!!!!  error("Exit room has multiple conns")
+      warning("Exit room has multiple conns!")
     end
 
     gui.printf("Exit room: %s\n", R.name)
