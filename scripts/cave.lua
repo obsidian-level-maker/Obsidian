@@ -3315,11 +3315,11 @@ function Cave_build_a_scenic_vista(area)
 
       if not (reg.room_dist and reg.mapedge_dist) then continue end
 
-      if reg.mapedge_dist * 0.9 <= reg.room_dist  then
+      if reg.mapedge_dist * 1.8 <= reg.room_dist  then
         area.blobs[cx][cy] = CLIFF
-      elseif reg.mapedge_dist * 0.6 <= reg.room_dist  then
+      elseif reg.mapedge_dist * 1.0 <= reg.room_dist  then
         area.blobs[cx][cy] = CLIFF2
-      elseif reg.mapedge_dist * 0.3 <= reg.room_dist  then
+      elseif reg.mapedge_dist * 0.4 <= reg.room_dist  then
         area.blobs[cx][cy] = CLIFF3
       end
     end
