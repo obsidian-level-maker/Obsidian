@@ -1510,7 +1510,8 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
 	// determine relationship of edges
 
-	double a_bb, a_bt, a_tb, a_tt;
+	double a_bb = 0, a_bt = 0;
+	double a_tb = 0, a_tt = 0;
 
 	int bb = CheckEdgeIntersect(g_Lz1, g_Rz1, f_Lz1, f_Rz1, &a_bb);
 	int bt = CheckEdgeIntersect(g_Lz1, g_Rz1, f_Lz2, f_Rz2, &a_bt);
