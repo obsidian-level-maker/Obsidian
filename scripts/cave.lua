@@ -553,7 +553,7 @@ function Cave_generate_cave(R, area)
     -- check that all important parts are connected
 
     if not check_walks_reachable(area.walk_rects) then
-      gui.debugf("cave failed connection check\n")
+      -- gui.debugf("cave failed connection check\n")
       return false
     end
 
