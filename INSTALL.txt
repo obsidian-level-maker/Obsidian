@@ -33,7 +33,7 @@ Linux Compilation
 -----------------
 
 Assuming all those dependencies are met, then the following shell
-command will build the Eureka binary. (The '>' is just the prompt)
+command will build the Oblige binary. (The '>' is just the prompt)
 
    > make
 

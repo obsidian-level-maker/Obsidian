@@ -11,7 +11,6 @@ CHANGES IN 7.55
 
 +  the "Weapons" button now controls how early or late new
    weapons are introduced into the wad
--  support secret weapons (available earlier than usual)
 
 +  hallways (IN PROGRESS...)
 
@@ -23,6 +22,8 @@ CHANGES IN 7.55
 
 +  ensure a secret exit can always be placed
 -  fixed bug swapping normal-exit and secret-exit switches
+-  support secret weapons (available earlier than usual)
+
 -  fixed large teleport-in monsters getting stuck
 
 -  support for the Quake3 map format in the CSG code
@@ -39,7 +40,7 @@ CHANGES IN 7.55
 -  support TGA format title pics when engine is GZDOOM
 
 -  support for rooms with a liquid river and a bridge
--  raise outdoor fences when near a item pedestal (etc)
+-  raise outdoor fences when near an item pedestal (etc)
 -  smooth corners where two fences meet
 
 -  proper action system for remotely activated doors (etc)
@@ -47,7 +48,7 @@ CHANGES IN 7.55
 
 -  introduced variation in how much symmetry to use
 -  unused leaf rooms become "storage" for some minor items
--  less chance of creating long/thin rooms
+-  lower tendency of creating long/thin rooms
 
 -  various polishing of the shape rules
 -  DOOM CSG: reworked how railing textures are handled
