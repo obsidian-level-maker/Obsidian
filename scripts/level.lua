@@ -2151,7 +2151,7 @@ function Level_choose_darkness()
     prob = style_sel("darkness", 0, 10, 30, 90)
   end
 
-  LEVEL.sky_light  = rand.pick({ 160, 176,176, 192,192 })
+  LEVEL.sky_light  = rand.pick({ 176,192,192,208 })
   LEVEL.sky_shadow = 32
 
   if rand.odds(prob) then
