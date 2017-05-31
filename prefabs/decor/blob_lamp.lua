@@ -10,7 +10,7 @@ PREFABS.Decor_blob_lamp =
   prob   = 500
   skip_prob = 50
 
-  theme  = "tech"
+  theme  = "!hell"
   env    = "outdoor"
 
   where  = "point"
