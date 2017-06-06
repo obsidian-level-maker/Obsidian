@@ -36,8 +36,6 @@
                               -- (positive for solid, negative for empty)
 
     regions : table[id] -> REGION
-
-    blobs   : table[id] -> REGION
 --]]
 
 
@@ -48,6 +46,8 @@
     cx1, cy1, cx2, cy2  -- bounding box
 
     size  -- number of cells
+
+    neighbors : list(REGION)  -- only for blobs
 --]]
 
 
@@ -1029,7 +1029,7 @@ function GRID_CLASS.dump_blobs(grid)
 
     local line = ""
 
-    each id, reg in grid.blobs do
+    each id, reg in grid.regions do
       line = line .. "  " .. string.format("%2d", reg.size)
 
       if #line > 40 then
@@ -1066,7 +1066,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
   local result = grid:blank_copy()
 
-  result.blobs = {}
+  result.regions = {}
 
 
   local W = grid.w
@@ -1110,12 +1110,12 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
     result[cx][cy] = id
 
-    local reg = result.blobs[id]
+    local reg = result.regions[id]
 
     if not reg then
       reg = { id=id, size=0 }
 
-      result.blobs[id] = reg
+      result.regions[id] = reg
     end
 
     reg.size = reg.size + 1
@@ -1176,7 +1176,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
       local id = result[cx][cy]
       if not id then continue end
 
-      if result.blobs[id].size >= 2 then continue end
+      if result.regions[id].size >= 2 then continue end
 
       if rand.odds(15) then
         local dx = rand.sel(50, -1, 1)
@@ -1297,13 +1297,13 @@ function GRID_CLASS.merge_two_blobs(grid, id1, id2)
   end
   end
 
-  local reg1 = grid.blobs[id1]
-  local reg2 = grid.blobs[id2]
+  local reg1 = grid.regions[id1]
+  local reg2 = grid.regions[id2]
 
   reg1.size = reg1.size + reg2.size
   reg2.size = -1
 
-  grid.blobs[id2] = nil
+  grid.regions[id2] = nil
 end
 
 
@@ -1329,11 +1329,11 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
         if grid:valid(nx, ny) then nb = grid[nx][ny] end
 
         if nb and nb != id and not seen[nb] and
-           (allow_large or grid.blobs[nb].size < min_size)
+           (allow_large or grid.regions[nb].size < min_size)
         then
           seen[nb] = true
 
-          local cost = grid.blobs[nb].size + gui.random() * 0.1
+          local cost = grid.regions[nb].size + gui.random() * 0.1
 
           if cost < best_cost then
             best = nb
@@ -1351,10 +1351,10 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
 
   local function merge_pass()
     -- need to copy the keys, since we modify the table as we go
-    local id_list = table.keys(grid.blobs)
+    local id_list = table.keys(grid.regions)
 
     each id in id_list do
-      if grid.blobs[id] and grid.blobs[id].size < min_size then
+      if grid.regions[id] and grid.regions[id].size < min_size then
         local nb = candidate_to_merge(id)
 
         if nb then
@@ -1424,7 +1424,7 @@ function GRID_CLASS.extent_of_blobs(grid)
 
     if id == nil then continue end
 
-    local reg = grid.blobs[id]
+    local reg = grid.regions[id]
     assert(reg)
 
     if not reg.cx1 then
@@ -1444,7 +1444,7 @@ end
 function GRID_CLASS.random_blob_cell(grid, id)
   -- NOTE: this can return nil
 
-  local reg = grid.blobs[id]
+  local reg = grid.regions[id]
   assert(reg and reg.cx1)
 
   local best_cx
@@ -1478,7 +1478,7 @@ end
 
 
 function GRID_CLASS.neighbors_of_blobs(grid)
-  each id, reg in grid.blobs do
+  each id, reg in grid.regions do
     reg.neighbors = {}
   end
 
@@ -1488,7 +1488,7 @@ function GRID_CLASS.neighbors_of_blobs(grid)
 
     if id == nil then continue end
 
-    local reg1 = grid.blobs[id]
+    local reg1 = grid.regions[id]
     assert(reg1)
 
     for dir = 2,8,2 do
@@ -1499,7 +1499,7 @@ function GRID_CLASS.neighbors_of_blobs(grid)
 
       if not nb or nb == id then continue end
 
-      local reg2 = grid.blobs[nb]
+      local reg2 = grid.regions[nb]
       assert(reg2)
 
       table.add_unique(reg1.neighbors, reg2)
@@ -1520,7 +1520,7 @@ function GRID_CLASS.spread_blob_dists(grid, field)
   repeat
     changes = false
 
-    each _,B1 in grid.blobs do
+    each _,B1 in grid.regions do
       -- compute minimum of neighbors
       local min_val
 

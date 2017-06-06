@@ -3304,7 +3304,7 @@ function Cave_build_a_scenic_vista(area)
       local id = blob_map[cx][cy]
       if not id then continue end
 
-      local reg = blob_map.blobs[id]
+      local reg = blob_map.regions[id]
       if reg.room_dist then continue end
 
       if Cave_cell_touches_room(area, cx, cy, room) then
@@ -3323,7 +3323,7 @@ function Cave_build_a_scenic_vista(area)
       local id = blob_map[cx][cy]
       if not id then continue end
 
-      local reg = blob_map.blobs[id]
+      local reg = blob_map.regions[id]
       if reg.mapedge_dist then continue end
 
       if Cave_cell_touches_map_edge(area, cx, cy) then
@@ -3420,7 +3420,7 @@ function Cave_build_a_scenic_vista(area)
       local id = blob_map[cx][cy]
       if not id then continue end
 
-      local reg = blob_map.blobs[id]
+      local reg = blob_map.regions[id]
 
       if not (reg.room_dist and reg.mapedge_dist) then continue end
 
@@ -3439,7 +3439,7 @@ function Cave_build_a_scenic_vista(area)
 
     -- add some scenery objects
     if THEME.cliff_trees then
-      each id, reg in blob_map.blobs do
+      each id, reg in blob_map.regions do
         local cx, cy = blob_map:random_blob_cell(id)
         if not cx then continue end
 
