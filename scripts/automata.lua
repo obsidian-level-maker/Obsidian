@@ -1398,7 +1398,7 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
       end
 
       if cur_blob != id then
-        GRID_CLASS.merge_blobs(grid, cur_blob, id)
+        grid:merge_two_blobs(cur_blob, id)
       end
     end
     end

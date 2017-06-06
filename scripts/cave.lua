@@ -2669,6 +2669,30 @@ function Cave_build_a_park(R, entry_h)
 
   local area = Cave_find_area_for_room(R)
 
+  local blob_map
+
+
+  local function blobify()
+    local src = area.walk_map:copy()
+
+    for x = 1, area.cw do
+    for y = 1, area.ch do
+      if src[x][y] then src[x][y] = 1 end
+    end
+    end
+
+    blob_map = src:create_blobs(3, 2)
+
+    blob_map:walkify_blobs(area.walk_rects)
+
+    blob_map:merge_small_blobs(4)
+
+    blob_map:extent_of_blobs()
+    blob_map:neighbors_of_blobs()
+
+    blob_map:dump_blobs()
+  end
+
 
   local function temp_install_floor(FL)
     for cx = 1, area.cw do
@@ -2694,7 +2718,7 @@ function Cave_build_a_park(R, entry_h)
       neighbors = {}
       children  = {}
 
-      floor_mat = assert(R.main_tex)
+      floor_mat = assert(R.floor_mat)
 
       -- TEMP RUBBISH
       floor_h   = entry_h
@@ -2705,6 +2729,8 @@ function Cave_build_a_park(R, entry_h)
     table.insert(area.walk_floors, FLOOR)
 
     area.external_sky = true
+
+    temp_install_floor(area.floor_blob)
   end
 
 
@@ -3092,11 +3118,15 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function make_a_hillside()
+  end
+
+
   local function temp_chunk_crud()
     each chunk in R.floor_chunks do
       if chunk.content == "MON_TELEPORT" then
         chunk.floor_h   = entry_h
-        chunk.floor_mat = R.main_tex
+        chunk.floor_mat = R.floor_mat
       end
     end
   end
@@ -3121,11 +3151,13 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
   area.ceil_h  = entry_h + 256
   area.ceil_mat = "_SKY"
 
+  blobify()
+
   do_parky_stuff()
 
-  temp_install_floor(area.floor_blob)
-
-  if LEVEL.liquid and rand.odds(35) then
+  if rand.odds(100) then  -- FIXME !!!!
+    make_a_hillside()
+  elseif LEVEL.liquid and rand.odds(35) then
     make_a_river()
   end
 
@@ -3185,7 +3217,7 @@ function Cave_build_a_scenic_vista(area)
     blob_map:extent_of_blobs()
     blob_map:neighbors_of_blobs()
 
-    blob_map:dump_blobs()
+--  blob_map:dump_blobs()
   end
 
 
