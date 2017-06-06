@@ -204,6 +204,10 @@ function Cave_collect_walk_rects(R, area)
     local WC = rect_for_edge(E, "conn")
 
     WC.conn = C
+
+    if R.entry_conn and R.entry_conn == C then
+      area.entry_walk = WC
+    end
   end
 
 
@@ -218,6 +222,12 @@ function Cave_collect_walk_rects(R, area)
     end
 
     WC.chunk = chunk
+
+    if R.is_start and not R.entry_conn and chunk.content == "START" then
+      area.entry_walk = WC
+    end
+
+    -- TODO : teleporter entry  [ ensure other room has lower lev_along ]
   end
 
 
@@ -231,6 +241,12 @@ function Cave_collect_walk_rects(R, area)
     local WC = rect_for_edge(E, "closet")
 
     WC.chunk = chunk
+
+    if R.is_start and not R.entry_conn and chunk.content == "START" then
+      area.entry_walk = WC
+    end
+
+    -- TODO : teleporter entry  [ ensure other room has lower lev_along ]
   end
 
 
@@ -2707,7 +2723,21 @@ function Cave_build_a_park(R, entry_h)
       FL.cy1 = math.min(FL.cy1 or  9999, cy)
       FL.cx2 = math.max(FL.cx2 or -9999, cx)
       FL.cy2 = math.max(FL.cy2 or -9999, cy)
-    end -- sx, sy
+    end -- cx, cy
+    end
+  end
+
+
+  local function temp_install_blob(B, reg)
+    B.cx1, B.cy1 = reg.cx1, reg.cy1
+    B.cx2, B.cy2 = reg.cx2, reg.cy2
+
+    for cx = B.cx1, B.cx2 do
+    for cy = B.cy1, B.cy2 do
+      if blob_map[cx][cy] == reg.id then
+        area.blobs[cx][cy] = B
+      end
+    end -- cx, cy
     end
   end
 
@@ -2718,7 +2748,7 @@ function Cave_build_a_park(R, entry_h)
       neighbors = {}
       children  = {}
 
-      floor_mat = assert(R.floor_mat)
+      floor_mat = "REDWALL" --!!!! assert(R.floor_mat)
 
       -- TEMP RUBBISH
       floor_h   = entry_h
@@ -3118,7 +3148,54 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function grow_a_hill()
+    each _,reg in blob_map.regions do
+      if reg.floor_h then continue end
+
+      local min_z
+
+      each N in reg.neighbors do
+        if N.floor_h then
+          min_z = math.min(min_z or 9999, N.floor_h)
+        end
+      end
+
+      if min_z then
+        reg.floor_h = min_z - 4
+        return true
+      end
+    end
+
+    return false
+  end
+
+
   local function make_a_hillside()
+    -- we need to know where the entrance is
+    if not area.entry_walk then return end
+
+    local entry_id = blob_map[area.entry_walk.cx1][area.entry_walk.cy1]
+    assert(entry_id)
+
+    blob_map.regions[entry_id].floor_h = entry_h
+
+    for loop = 1,999 do
+      grow_a_hill()
+    end
+
+    each _,reg in blob_map.regions do
+      if reg.floor_h then
+        local BLOB =
+        {
+          floor_h = reg.floor_h
+          floor_mat = sel(rand.odds(66), R.floor_mat, R.alt_floor_mat)
+        }
+        assert(BLOB.floor_h)
+        assert(BLOB.floor_mat)
+
+        temp_install_blob(BLOB, reg)
+      end
+    end
   end
 
 
