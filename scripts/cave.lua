@@ -3183,6 +3183,7 @@ function Cave_build_a_park(R, entry_h)
       grow_a_hill()
     end
 
+    -- install all the blobs
     each _,reg in blob_map.regions do
       if reg.floor_h then
         local BLOB =
@@ -3194,6 +3195,26 @@ function Cave_build_a_park(R, entry_h)
         assert(BLOB.floor_mat)
 
         temp_install_blob(BLOB, reg)
+      end
+    end
+
+    -- ensure out-going connections get the correct floor_h,
+    -- closets too
+
+    each WC in area.walk_rects do
+      local id = blob_map[WC.cx1][WC.cy1]
+      assert(id)
+
+      local reg = blob_map.regions[id]
+      assert(reg)
+
+      if WC.kind == "conn" and WC.conn.kind != "teleporter" then
+        WC.conn.conn_h = assert(reg.floor_h)
+      end
+
+      if WC.kind == "floor" or WC.kind == "closet" then
+        WC.chunk.floor_h   = assert(reg.floor_h)
+        WC.chunk.floor_mat = reg.floor_mat
       end
     end
   end

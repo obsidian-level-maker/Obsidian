@@ -167,6 +167,9 @@
 
     peer : CHUNK   -- in symmetrical rooms, this is mirrored chunk
 
+    floor_h        -- if present, overrides the area info  [ for nature areas ]
+    floor_mat      -- if present, overrides the area info  [ for nature areas ]
+
     from_dir  : DIR
     from_area : AREA
 

@@ -2291,7 +2291,7 @@ function Room_floor_ceil_heights()
 
       assert(A1.floor_h)
 
-      local next_h = A1.floor_h
+      local next_h = C.conn_h or A1.floor_h
 
       if C.kind == "joiner" then  --FIXME???  or C.kind == "terminator" then
         next_h = visit_joiner(next_h, R, C)
