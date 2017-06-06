@@ -3,41 +3,18 @@ WORK IN PROGRESS
 ================
 
 
--  no UAC crates in Hell please
-
--  lack of barrels
-
--  make "Jumbled" theme try to avoid being same as last one
-
--  update usage doc on THEME setting, e.g.:
-
-   the "Jumbled" theme setting means each map's theme is chosen purely
-   randomly (like a dice throw), where "bit mixed" means groups of maps (2-4)
-   have the same theme before choosing a new (random) one.  The "xxx-ish"
-   settings means you get mostly "xxx" but with an occasionally different one
-   thrown in.
-
--  add "Symmetry" to glossary, e.g.:
-
-   Symmetry is where rooms are mirrored, e.g. has the same architecture on
-   the left side as the right side.
-
-
-
 Miscellaneous
 -------------
 
 +  railings : max_z (or so) value, support in CSG DOOM
 
--  sprouts from symmetrical rooms : often skip a side
-
 -  internal fences (esp. for outdoor rooms)
 
--  Traps prefabs have an "action_kind", use matching action
-   for the trigger lines.   [ "open" vs "lower" ]
-   Q/ how to pick the matching action
-   A/ decide it for the trapped thing early, require trap prefabs tp
-      have a matching value
+-  no UAC crates in Hell please
+
+-  lack of barrels
+
+-  make "Jumbled" theme try to avoid being same as last one
 
 
 
@@ -55,49 +32,15 @@ Hallway System
 -  fix issue with T-shape stairs
 
 
--  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
-   [ will need all I/L/T/P shapes ]
-   [[ good for traps! ]]
 
-?  support pieces with windows
-   [ the window side needs _OUTER tex and ability to make it flush ]
+Parks
+-----
 
-?  be real nice to have pieces which are wall on one
-   side and open on the other (with sky ceiling OR like nearby ceiling)
-   [ BUT: will need to expand vertically ]
++  height variation  [ different areas ]
 
-   also: open on ALL sides  (mainly I and L pieces)
+-  ensure the heighest FLOOR contributes to zone.sky_h
 
-?  complex shapes: shape = { "mid", "-", "mid", "-" }
-
-   keywords can be: "-"     (no connections)
-                    "mid"   (middle of side)
-                    "left"
-                    "right"
-                    "split" (one on left, one on right)
-                    "window"
-                    "open"
-
-       function REMAP(pos)
-          if pos == "left"  then return "right" end
-          if pos == "right" then return "left" end
-          return pos
-       end
-
-       function mirror_X_complex_shape(SH)
-          SH[4], SH[6] = REMAP(SH[6]), REMAP(SH[4])
-          SH[2], SH[8] = REMAP(SH[2]), REMAP(SH[8])
-       end
-
-       function mirror_Y_complex_shape(SH)
-          SH[2], SH[8] = REMAP(SH[8]), REMAP(SH[2])
-          SH[4], SH[6] = REMAP(SH[4]), REMAP(SH[6])
-       end
-
-       function transpose_complex_shape(SH)
-          SH[2], SH[4] = REMAP(SH[4]), REMAP(SH[2])
-          SH[8], SH[6] = REMAP(SH[6]), REMAP(SH[8])
-       end
+-  use TWO floor textures
 
 
 
@@ -109,29 +52,21 @@ Scenic Borders
 -  handle stairs adjacent to a border : need a brush for the
    side and a post where that brush meets the low floor
 
--  block travel 2/3 seeds into simple fence (archvile jumps etc)
-   [ esp. where a simple fence is joined to a watery_drop ]
-
--  add some waterfalls to "watery_drop"
 
 
+Web Site
+--------
 
-PARKS
------
+-  update usage doc on THEME setting, e.g.:
 
-+  height variation  [ different areas ]
+   the "Jumbled" theme setting means each map's theme is chosen purely
+   randomly (like a dice throw), where "bit mixed" means groups of maps (2-4)
+   have the same theme before choosing a new (random) one.  The "xxx-ish"
+   settings means you get mostly "xxx" but with an occasionally different one
+   thrown in.
 
--  inhibit items in bits of floor cut-off by river
-   [ create another FLOOR for them BUT not stored in info.floors list ]
+-  add "Symmetry" to glossary, e.g.:
 
-+  sky handling:
-   -  ensure the heighest FLOOR contributes to zone.sky_h
-
--  consider texturing
-
--  consider a style and/or UI setting for parks
-
--  review outdoor ROOM_THEMEs, remove/replace any "floors" which
-   are actually natural-ish
-
+   Symmetry is where rooms are mirrored, e.g. has the same architecture on
+   the left side as the right side.
 

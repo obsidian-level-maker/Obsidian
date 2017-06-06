@@ -13,6 +13,13 @@ OBLIGE TO-DO
 
 +  add in more scenery: trees, computers etc
 
+-  sprouts from symmetrical rooms : often skip a side
+
+-  Traps: decide an "action_kind" for the trapped object
+          [ mainly "open" vs "lower" ] and pick the matching
+          action in GAME.ACTIONS for the trigger lines
+          [ also require it on trap prefab, via "key" probably ]
+
 -  support a "Mix It Up" Strength setting
 
 -  level_usage for: rules, prefabs, rooms themes.
@@ -92,6 +99,18 @@ Quake3 CSG
    2. reject faces lying completely inside a solid brush
 
 
+Parks
+-----
+
+-  inhibit items in bits of floor cut-off by river
+   [ create another FLOOR for them BUT not stored in info.floors list ]
+
+-  consider a style and/or UI setting for parks
+
+-  review outdoor ROOM_THEMEs, remove/replace any "floors" which
+   are actually natural-ish
+
+
 Caves
 -----
 
@@ -125,14 +144,51 @@ Caves
 Hallways
 --------
 
+-  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
+   [ will need all I/L/T/P shapes ]
+   [[ good for traps! ]]
+
 -  support delta_h in terminator prefabs
 
-+  support complex shapes
+?  support pieces with windows
+   [ the window side needs _OUTER tex and ability to make it flush ]
 
--  allow a hallway rule to sprout TWO new rooms
+?  be real nice to have pieces which are wall on one
+   side and open on the other (with sky ceiling OR like nearby ceiling)
+   [ BUT: will need to expand vertically ]
 
--  double halls : detect a 6x4 or larger room with one or two exits
-   and place the hallway around it
+   also: open on ALL sides  (mainly I and L pieces)
+
+?  complex shapes: shape = { "mid", "-", "mid", "-" }
+
+   keywords can be: "-"     (no connections)
+                    "mid"   (middle of side)
+                    "left"
+                    "right"
+                    "split" (one on left, one on right)
+                    "window"
+                    "open"
+
+       function REMAP(pos)
+          if pos == "left"  then return "right" end
+          if pos == "right" then return "left" end
+          return pos
+       end
+
+       function mirror_X_complex_shape(SH)
+          SH[4], SH[6] = REMAP(SH[6]), REMAP(SH[4])
+          SH[2], SH[8] = REMAP(SH[2]), REMAP(SH[8])
+       end
+
+       function mirror_Y_complex_shape(SH)
+          SH[2], SH[8] = REMAP(SH[8]), REMAP(SH[2])
+          SH[4], SH[6] = REMAP(SH[4]), REMAP(SH[6])
+       end
+
+       function transpose_complex_shape(SH)
+          SH[2], SH[4] = REMAP(SH[4]), REMAP(SH[2])
+          SH[8], SH[6] = REMAP(SH[6]), REMAP(SH[8])
+       end
 
 
 
