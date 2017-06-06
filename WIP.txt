@@ -135,13 +135,3 @@ PARKS
    are actually natural-ish
 
 
-
-Quake3 CSG Code
----------------
-
--  brushlib function to visit side faces, and if they
-   contain u1/u2/v1/v2 then compute the uv_mat
-
--  brushlib function to visit top/bottom faces, and generate
-   a uv_mat if the sides contain tu/tv/bu/bv values
-
