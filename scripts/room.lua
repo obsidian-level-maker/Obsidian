@@ -2789,7 +2789,7 @@ end
 function Room_set_sky_heights()
 
   local function do_area(A)
-    local sky_h = A.floor_h + A.zone.sky_add_h
+    local sky_h = (A.max_floor_h or A.floor_h) + A.zone.sky_add_h
 
     A.zone.sky_h = math.N_max(A.zone.sky_h, sky_h)
 
