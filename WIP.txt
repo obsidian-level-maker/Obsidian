@@ -38,9 +38,20 @@ Parks
 
 +  height variation  [ different areas ]
 
--  ensure the heighest FLOOR contributes to zone.sky_h
+   -  fix window logic
 
--  use TWO floor textures
+   -  limit number of floors (dep. on room size)
+
+   -  somehow create "stairs" between two floors
+
+   >>  use prelim_h so that we can do heights from arbitrary start
+
+       [ pick a random blob to start ]
+
+   -  create paths between walk-chunks
+      [ everything else could become liquid or fencey ]
+
+   -  ability to make liquid pools
 
 
 
