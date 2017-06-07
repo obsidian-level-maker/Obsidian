@@ -3216,31 +3216,19 @@ function Cave_build_a_park(R, entry_h)
 
     -- ensure out-going connections get the correct floor_h,
     -- closets too
+    -- [ FIXME : use this logic for normal CAVES too ]
 
     each WC in area.walk_rects do
-      local id = blob_map[WC.cx1][WC.cy1]
-      assert(id)
-
-      local reg = blob_map.regions[id]
-      assert(reg)
+      local blob = area.blobs[WC.cx1][WC.cy1]
+      assert(blob)
 
       if WC.kind == "conn" and WC.conn.kind != "teleporter" then
-        WC.conn.conn_h = assert(reg.floor_h)
+        WC.conn.conn_h = assert(blob.floor_h)
       end
 
       if WC.kind == "floor" or WC.kind == "closet" then
-        WC.chunk.floor_h   = assert(reg.floor_h)
-        WC.chunk.floor_mat = reg.floor_mat
-      end
-    end
-  end
-
-
-  local function temp_chunk_crud()
-    each chunk in R.floor_chunks do
-      if chunk.content == "MON_TELEPORT" then
-        chunk.floor_h   = entry_h
-        chunk.floor_mat = R.floor_mat
+        WC.chunk.floor_h   = assert(blob.floor_h)
+        WC.chunk.floor_mat = assert(blob.floor_mat)
       end
     end
   end
@@ -3277,8 +3265,6 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
   elseif LEVEL.liquid and rand.odds(35) then
     make_a_river()
   end
-
-  temp_chunk_crud()
 end
 
 
