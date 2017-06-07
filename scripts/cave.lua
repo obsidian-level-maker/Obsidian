@@ -211,6 +211,21 @@ function Cave_collect_walk_rects(R, area)
   end
 
 
+  local function check_entry_chunk(WC, chunk)
+    if R.is_start and not R.entry_conn and chunk.content == "START" then
+      area.entry_walk = WC
+    end
+
+    if R.entry_conn and R.entry_conn.kind == "teleporter" then
+      local R2 = R.entry_conn:other_room(R)
+
+      if R2.lev_along < R.lev_along then
+        area.entry_walk = WC
+      end
+    end
+  end
+
+
   local function rect_for_floor_chunk(chunk)
     -- ignore unused floor chunks
     if not chunk.content then return end
@@ -223,11 +238,7 @@ function Cave_collect_walk_rects(R, area)
 
     WC.chunk = chunk
 
-    if R.is_start and not R.entry_conn and chunk.content == "START" then
-      area.entry_walk = WC
-    end
-
-    -- TODO : teleporter entry  [ ensure other room has lower lev_along ]
+    check_entry_chunk(WC, chunk)
   end
 
 
@@ -242,11 +253,7 @@ function Cave_collect_walk_rects(R, area)
 
     WC.chunk = chunk
 
-    if R.is_start and not R.entry_conn and chunk.content == "START" then
-      area.entry_walk = WC
-    end
-
-    -- TODO : teleporter entry  [ ensure other room has lower lev_along ]
+    check_entry_chunk(WC, chunk)
   end
 
 
