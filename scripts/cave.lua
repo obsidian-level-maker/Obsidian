@@ -3157,18 +3157,18 @@ function Cave_build_a_park(R, entry_h)
 
   local function grow_a_hill()
     each _,reg in blob_map.regions do
-      if reg.floor_h then continue end
+      if reg.prelim_h then continue end
 
       local min_z
 
       each N in reg.neighbors do
-        if N.floor_h then
-          min_z = math.min(min_z or 9999, N.floor_h)
+        if N.prelim_h then
+          min_z = math.max(min_z or -9999, N.prelim_h)
         end
       end
 
       if min_z then
-        reg.floor_h = min_z - 4
+        reg.prelim_h = min_z + 8
         return true
       end
     end
@@ -3181,25 +3181,35 @@ function Cave_build_a_park(R, entry_h)
     -- we need to know where the entrance is
     if not area.entry_walk then return end
 
+    local ecx = area.entry_walk.cx1
+    local ecy = area.entry_walk.cy1
+
     R.has_hills = true
 
-    local entry_id = blob_map[area.entry_walk.cx1][area.entry_walk.cy1]
+    local entry_id = blob_map[ecx][ecy]
     assert(entry_id)
 
-    blob_map.regions[entry_id].floor_h = entry_h
+    local entry_reg = blob_map.regions[entry_id]
+
+    local start_reg = entry_reg  -- TODO : pick another
+
+    start_reg.prelim_h = 0
 
     for loop = 1,999 do
       grow_a_hill()
     end
 
+    -- this ensure the entry floor (blob) becomes 'entry_h'
+    local base_h = entry_h - assert(entry_reg.prelim_h)
+
     -- install all the blobs
     area.walk_floors = {}
 
     each _,reg in blob_map.regions do
-      if reg.floor_h then
+      if reg.prelim_h then
         local BLOB =
         {
-          floor_h = reg.floor_h
+          floor_h   = base_h + reg.prelim_h
           floor_mat = sel(rand.odds(66), R.floor_mat, R.alt_floor_mat)
         }
         assert(BLOB.floor_h)

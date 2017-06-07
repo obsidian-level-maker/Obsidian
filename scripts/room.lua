@@ -2026,16 +2026,16 @@ function Room_floor_ceil_heights()
   local function process_room(R, entry_area)
     gui.debugf("ASSIGN FLOORS IN %s\n", R.name)
 
-    local adjust_h = 0
+    local base_h = 0
 
     if entry_area then
-      adjust_h = assert(entry_area.prelim_h)
+      base_h = R.entry_h - assert(entry_area.prelim_h)
     end
 
     -- compute the actual floor heights, ensuring entry_area becomes 'entry_h'
     each A in R.areas do
       if A.prelim_h then
-        set_floor(A, R.entry_h + A.prelim_h - adjust_h)
+        set_floor(A, base_h + A.prelim_h)
       end
 
 --    stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
