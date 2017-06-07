@@ -3191,6 +3191,8 @@ function Cave_build_a_park(R, entry_h)
     end
 
     -- install all the blobs
+    area.walk_floors = {}
+
     each _,reg in blob_map.regions do
       if reg.floor_h then
         local BLOB =
@@ -3202,6 +3204,8 @@ function Cave_build_a_park(R, entry_h)
         assert(BLOB.floor_mat)
 
         temp_install_blob(BLOB, reg)
+
+        table.insert(area.walk_floors, BLOB)
       end
     end
 
