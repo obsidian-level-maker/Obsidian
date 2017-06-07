@@ -3181,6 +3181,8 @@ function Cave_build_a_park(R, entry_h)
     -- we need to know where the entrance is
     if not area.entry_walk then return end
 
+    R.has_hills = true
+
     local entry_id = blob_map[area.entry_walk.cx1][area.entry_walk.cy1]
     assert(entry_id)
 
@@ -3206,6 +3208,9 @@ function Cave_build_a_park(R, entry_h)
         temp_install_blob(BLOB, reg)
 
         table.insert(area.walk_floors, BLOB)
+
+        area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
+        area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
       end
     end
 
@@ -3254,6 +3259,9 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
   Cave_map_usable_area(area)
 
   Cave_clear_walk_rects(area)
+
+  area.min_floor_h = entry_h
+  area.max_floor_h = entry_h
 
   -- TEMP RUBBISH
   area.floor_h = entry_h
@@ -3421,6 +3429,8 @@ function Cave_build_a_scenic_vista(area)
     -- create the liquid area --
 
     local drop_h = rand.pick({ 64,96,128,192 })
+
+    if room.has_hills then drop_h = drop_h / 2 end
 
     local FL = new_blob()
 
