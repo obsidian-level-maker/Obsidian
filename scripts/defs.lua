@@ -228,12 +228,12 @@ GLOBAL_STYLE_LIST =
 
   symmetry    = { none=20, few=40, some=60, heaps=10 }
   pictures    = { none=0,  few=10, some=50, heaps=10 }
+  barrels     = { none=10, few=50, some=50, heaps=10 }
 
   -- PLANNED or UNFINISHED stuff --
 
   cycles      = { none=50, few=0,  some=50, heaps=50 }
   ex_floors   = { none=0,  few=40, some=60, heaps=20 }
-  barrels     = { none=0,  few=50, some=50, heaps=10 }
   porches     = { none=0,  few=10, some=60, heaps=10 }
   fences      = { none=30, few=30, some=10, heaps=10 }
   lakes       = { none=0,  few=60, some=0,  heaps=10 }

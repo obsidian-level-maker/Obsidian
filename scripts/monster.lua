@@ -1415,7 +1415,7 @@ function Monster_fill_room(R)
     -- minimum skill needed for the monster to appear
     local skill = calc_min_skill(all_skills)
 
-    local props = { }
+    local props = {}
 
     props.angle = angle
 
@@ -1486,6 +1486,36 @@ function Monster_fill_room(R)
       Trans.entity("depot_ref", x, y, z + 1)
       LEVEL.has_depot_thing = true
     end
+  end
+
+
+  local function place_decor_in_spot(ent_name, spot)
+    local info = GAME.ENTITIES[ent_name]
+
+    if not info then
+      error("Unknown decoration: " .. tostring(ent_name))
+    end
+
+    local x, y = geom.box_mid (spot.x1, spot.y1, spot.x2, spot.y2)
+    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
+    local z = spot.z1
+
+    -- move decoration entity to random place within the box
+    local dx = w / 2 - info.r
+    local dy = h / 2 - info.r
+
+    if dx > 0 then
+      x = x + rand.range(-dx, dx)
+    end
+
+    if dy > 0 then
+      y = y + rand.range(-dy, dy)
+    end
+
+    local props = {}
+
+    Trans.entity(ent_name, x, y, z, props)
   end
 
 
@@ -1600,6 +1630,22 @@ function Monster_fill_room(R)
     end
 
     return actual
+  end
+
+
+  local function try_add_decor_group(ent_tab, count)
+    local reqs = {}
+    local last_spot
+
+    for i = 1, count do
+      local spot = grab_monster_spot(mon, last_spot, reqs)
+
+      if not spot then break; end
+
+      local ent_name = rand.key_by_probs(ent_tab)
+
+      last_spot = spot
+    end
   end
 
 
@@ -2011,9 +2057,9 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
   end
 
 
-  local function add_destructibles()
-    -- add barrels or other DESTRUCTIBLE decorations
-    -- [ these objects may block player paths, hence must be destroyable ]
+  local function add_passable_decor()
+    -- add barrels and other non-blocking decorations
+    -- [ barrels are destructible, hence do not block player paths ]
 
     if STYLE.barrels == "none" then return end
 
@@ -2081,7 +2127,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
     add_monsters()
   end
 
-  add_destructibles()
+  add_passable_decor()
 end
 
 

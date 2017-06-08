@@ -90,12 +90,13 @@ OB_MODULES["misc"] =
       gap=1
     }
 
-    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
-    { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
-
     { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES }
     { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES }
     { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, gap=1 }
+
+    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
+    { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
+    { name="barrels",     label=_("Barrels"),        choices=STYLE_CHOICES, gap=1 }
 
     { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES }
     { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES }
@@ -110,7 +111,6 @@ OB_MODULES["misc"] =
 --  cycles      = { label=_("Multiple Paths"), choices=STYLE_CHOICES }
 --  ex_floors   = { label=_("3D Floors"),      choices=STYLE_CHOICES }
 
---  barrels     = { label=_("Barrels"),        choices=STYLE_CHOICES }
 --  porches     = { label=_("Porches"),        choices=STYLE_CHOICES }
 --  lakes       = { label=_("Lakes"),          choices=STYLE_CHOICES }
   }
