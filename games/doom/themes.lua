@@ -370,6 +370,27 @@ DOOM.THEMES =
       sw_metal = 50
     }
 
+    barrels =
+    {
+      barrel = 50
+    }
+
+    passable_decor =
+    {
+      gibs = 20
+      pool_blood_1 = 20
+      pool_blood_2 = 20
+      pool_brains  = 10
+
+      gibbed_player = 10
+      dead_player = 10
+      dead_zombie = 3
+      dead_shooter = 3
+      dead_imp = 3
+      dead_demon = 1
+      dead_caco  = 1
+    }
+
     cave_torches =
     {
       red_torch = 50
