@@ -10,8 +10,6 @@ Miscellaneous
 
 -  internal fences (esp. for outdoor rooms)
 
--  no UAC crates in Hell please
-
 
 
 Hallway System
