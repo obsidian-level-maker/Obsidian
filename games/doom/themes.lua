@@ -787,8 +787,7 @@ DOOM.THEMES =
       ROCK3    = 40
       CRACKLE4 = 40
       SKSNAKE1 = 20
-      SKSNAKE2 = 20
-      SKIN2    = 20
+      SKIN2    = 10
     }
 
     prefab_remap =
