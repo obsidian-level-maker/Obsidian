@@ -7,6 +7,7 @@ PREFABS.Joiner_simple2 =
   file   = "joiner/simple2.wad"
   map    = "MAP01"
 
+  theme  = "!tech"
   prob   = 1400
 
   where  = "seeds"

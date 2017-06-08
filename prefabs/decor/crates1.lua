@@ -10,13 +10,11 @@ PREFABS.Crate_small_brown =
   file   = "decor/crates1.wad"
   map    = "MAP01"
 
-  prob   = 20
   theme  = "!hell"
+  prob   = 20
 
   where  = "point"
   size   = 64
-
-  bound_z1 = 0
 }
 
 
@@ -29,18 +27,25 @@ PREFABS.Crate_small_gray =
 }
 
 
--- a version for Hell theme
+-- ones for Urban and Hell themes
 
 PREFABS.Crate_small_woodmet =
 {
-  template = "Crate_small_brown"
+  file   = "decor/crates1.wad"
+  map    = "MAP11"
 
+  theme  = "!tech"
   prob   = 20
-  theme  = "hell"
-  env    = "building"
 
-   tex_CRATE1  = { WOODMET1=20, WOODMET3=40, WOODMET4=20 }
-  flat_CRATOP2 = "CEIL5_2"
+  where  = "point"
+  size   = 64
+}
+
+PREFABS.Crate_small_wood3 =
+{
+  template = "Crate_small_woodmet"
+
+  map    = "MAP10"
 }
 
 
@@ -57,8 +62,6 @@ PREFABS.Crate_tall_brown =
   where  = "point"
   size   = 64
   height = 160
-
-  bound_z1 = 0
 }
 
 
@@ -75,8 +78,6 @@ PREFABS.Crate_medium_gray =
 
   where  = "point"
   size   = 96
-
-  bound_z1 = 0
 }
 
 
@@ -87,13 +88,28 @@ PREFABS.Crate_group_medium =
   file   = "decor/crates1.wad"
   map    = "MAP04"
 
-  prob   = 300
+  theme  = "!hell"
   env    = "!cave"
+  prob   = 300
 
   where  = "point"
   size   = 128
   height = 160
+}
 
-  bound_z1 = 0
+
+-- a large, tall, wooden crate
+
+PREFABS.Crate_large_wooden =
+{
+  file   = "decor/crates1.wad"
+  map    = "MAP12"
+
+  theme  = "!tech"
+  prob   = 400
+
+  where  = "point"
+  size   = 128
+  height = 160
 }
 
