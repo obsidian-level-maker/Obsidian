@@ -2064,18 +2064,18 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
     if not THEME.barrels then return end
 
-    local room_prob = style_sel("barrels", 0, 20, 40, 70)
-    local  use_prob = style_sel("barrels", 0, 30, 60, 90)
+    local room_prob = style_sel("barrels", 0, 40, 60, 80)
+    local  use_prob = style_sel("barrels", 0, 20, 40, 80)
 
     if not rand.odds(room_prob) then
---!!!!      return
+      return
     end
 
     -- compute maximum # of barrel groups to add
-    local qty = 10
+    local qty = 15
 
---!!!!    if rand.odds(5) then qty = qty * 2 end
---!!!!    if rand.odds(5) then qty = qty / 3 end
+    if rand.odds(10) then qty = qty * 2 end
+    if rand.odds(10) then qty = qty / 2 end
 
     local tally = (1 + fodder_tally ^ 0.7) * qty / 100
 
@@ -2083,7 +2083,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
     for i = 1, want_num do
       if rand.odds(use_prob) then
-        local group_size = rand.index_by_probs({ 60,40,20,10,5 })
+        local group_size = rand.index_by_probs({ 20,40,20,7,2 })
 
         try_add_decor_group(THEME.barrels, group_size)
       end
@@ -2092,7 +2092,32 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
 
   local function add_passable_decor()
-    -- TODO
+    if not THEME.passable_decor then return end
+
+    local room_prob = 80
+    local  use_prob = 25
+
+    if not rand.odds(room_prob) then
+      return
+    end
+
+    -- compute maximum # of decor to use
+    local qty = 24
+
+    if rand.odds(10) then qty = qty * 2 end
+    if rand.odds(10) then qty = qty / 2 end
+
+    local tally = (1 + fodder_tally ^ 0.7) * qty / 100
+
+    local want_num = rand.int(tally)
+
+    for i = 1, want_num do
+      if rand.odds(use_prob) then
+        local group_size = rand.index_by_probs({ 64,8,1 })
+
+        try_add_decor_group(THEME.passable_decor, group_size)
+      end
+    end
   end
 
 
