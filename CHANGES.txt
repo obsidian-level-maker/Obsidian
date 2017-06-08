@@ -24,6 +24,8 @@ CHANGES IN 7.55
 -  fixed bug swapping normal-exit and secret-exit switches
 -  support secret weapons (available earlier than usual)
 
++  add barrels and blood / corpses to rooms
+
 -  fixed large teleport-in monsters getting stuck
 
 -  support for the Quake3 map format in the CSG code
