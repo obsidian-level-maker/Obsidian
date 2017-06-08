@@ -1445,7 +1445,8 @@ function Monster_fill_room(R)
 
 
   local function mon_fits(mon, spot)
-    local info  = GAME.MONSTERS[mon]
+    local info  = GAME.MONSTERS[mon] or
+                  GAME.ENTITIES[mon]
 
     if info.h >= (spot.z2 - spot.z1) then return 0 end
 
@@ -1529,6 +1530,8 @@ function Monster_fill_room(R)
 
 
   local function grab_monster_spot(mon, near_to, reqs)
+    -- this is used for decor items too
+
     local total = 0
 
     each spot in R.mon_spots do
@@ -1638,11 +1641,13 @@ function Monster_fill_room(R)
     local last_spot
 
     for i = 1, count do
-      local spot = grab_monster_spot(mon, last_spot, reqs)
+      local ent_name = rand.key_by_probs(ent_tab)
+
+      local spot = grab_monster_spot(ent_name, last_spot, reqs)
 
       if not spot then break; end
 
-      local ent_name = rand.key_by_probs(ent_tab)
+      place_decor_in_spot(ent_name, spot)
 
       last_spot = spot
     end
@@ -2018,9 +2023,6 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
 
   local function add_monsters()
 
-    fodder_tally = tally_spots(R.mon_spots)
-      cage_tally = tally_cage_spots()
-
     -- sometimes prevent monster replacements
     if rand.odds(40) or OB_CONFIG.strength == "crazy" then
       R.no_replacement = true
@@ -2057,20 +2059,40 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
   end
 
 
+  local function add_destructibles()
+    -- add destructible decorations, especially DOOM barrels
+
+    if not THEME.barrels then return end
+
+    local room_prob = style_sel("barrels", 0, 20, 40, 70)
+    local  use_prob = style_sel("barrels", 0, 30, 60, 90)
+
+    if not rand.odds(room_prob) then
+--!!!!      return
+    end
+
+    -- compute maximum # of barrel groups to add
+    local qty = 10
+
+--!!!!    if rand.odds(5) then qty = qty * 2 end
+--!!!!    if rand.odds(5) then qty = qty / 3 end
+
+    local tally = (1 + fodder_tally ^ 0.7) * qty / 100
+
+    local want_num = rand.int(tally)
+
+    for i = 1, want_num do
+      if rand.odds(use_prob) then
+        local group_size = rand.index_by_probs({ 60,40,20,10,5 })
+
+        try_add_decor_group(THEME.barrels, group_size)
+      end
+    end
+  end
+
+
   local function add_passable_decor()
-    -- add barrels and other non-blocking decorations
-    -- [ barrels are destructible, hence do not block player paths ]
-
-    if STYLE.barrels == "none" then return end
-
-    local barrel_chance = sel(R.is_outdoor, 2, 15)
---??    if R.is_park then barrel_chance = 3 end
---??    if R.is_hallway then barrel_chance = 5 end
-
-    if STYLE.barrels == "heaps" or rand.odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
-    if STYLE.barrels == "few"   or rand.odds(25) then barrel_chance = barrel_chance / 4 end
-
-    -- FIXME : get barrels working again
+    -- TODO
   end
 
 
@@ -2081,7 +2103,12 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
     if R.no_monsters then return false end
 
-    return true  -- OK --
+    return true  -- YES --
+  end
+
+
+  local function should_add_decor()
+    return true  -- YES --
   end
 
 
@@ -2122,12 +2149,18 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
   prepare_room()
 
+  fodder_tally = tally_spots(R.mon_spots)
+    cage_tally = tally_cage_spots()
+
   if should_add_monsters() then
     add_bosses()
     add_monsters()
   end
 
-  add_passable_decor()
+  if should_add_decor() then
+    add_destructibles()
+    add_passable_decor()
+  end
 end
 
 
