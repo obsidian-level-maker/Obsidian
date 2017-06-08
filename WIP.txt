@@ -12,8 +12,6 @@ Miscellaneous
 
 -  no UAC crates in Hell please
 
--  make "Jumbled" theme try to avoid being same as last one
-
 
 
 Hallway System

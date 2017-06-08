@@ -1944,8 +1944,19 @@ function Level_choose_themes()
 
 
   local function set_jumbled_themes()
+    local last_theme
+
     each LEV in GAME.levels do
-      set_a_theme(LEV, rand.key_by_probs(theme_tab))
+      local tab = table.copy(theme_tab)
+
+      -- prefer a different theme than the last one
+      if last_theme then
+        tab[last_theme] = tab[last_theme] / 10
+      end
+
+      last_theme = rand.key_by_probs(tab)
+
+      set_a_theme(LEV, last_theme)
     end
   end
 
