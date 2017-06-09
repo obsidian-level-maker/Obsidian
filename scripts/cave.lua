@@ -3155,6 +3155,161 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function hill_can_use_step(B, chain, is_last)
+    if B.prelim_h then return false end  -- in use already
+
+    if not is_last then
+      if B.is_walk then return false end  -- must not be a walk rect
+
+      if B.size >= 12 then return false end  -- too big
+    end
+
+    if table.has_elem(chain, B) then return false end  -- already a step
+
+    return true
+  end
+
+
+  local function hill_try_pick_chain(B, length)
+    local chain = {}
+
+    for i = 1, length do
+      local nb
+      local nb_score = -1
+
+      each N in B.neighbors do
+        if hill_can_use_step(N, chain, i == length) then
+          local score = gui.random()
+
+          if score > nb_score then
+            nb = N
+            nb_score = score
+          end
+        end
+      end
+
+      -- nothing possible?
+      if not nb then return nil end
+
+      table.insert(chain, nb)
+
+      B = nb
+    end
+
+    return chain
+  end
+
+
+  local function hill_pick_a_chain(B)
+    for loop = 1, 30 do
+      local chain = hill_try_pick_chain(B, 4)
+
+      if chain then return chain end
+    end
+
+    return nil
+  end
+
+
+  local function hill_set_neighbors(B, ref)
+    each N in B.neighbors do
+      if not N.floor_id then
+        N.floor_id = ref.floor_id
+        N.prelim_h = ref.prelim_h
+      end
+    end
+  end
+
+
+  local function hill_fill_gaps()
+    local changes = false
+
+    each _,B in blob_map.regions do
+      local nb
+
+      if not B.prelim_h then
+        each N in B.neighbors do
+          if N.prelim_h and N.floor_id != "step" then
+            if not nb or rand.odds(50) then nb = N end
+          end
+        end
+      end
+
+      if nb then
+        B.prelim_h = nb.prelim_h
+        B.floor_id = nb.floor_id
+
+        changes = true
+      end
+    end
+
+    return changes
+  end
+
+
+  local function hill_grow_with_steps(entry_reg)
+    --
+    -- 1. start with a blob 'B', make it FLOOR #0
+    --
+    -- 2. pick a chain of neighbors from B
+    --    (B -> X -> Y -> Z -> C)
+    --    where none of X/Y/Z are walk chunks
+    --    and none of X/Y/Z are HUGE chunks
+    --
+    -- 3. mark blob 'C' as FLOOR #1, X/Y/Z marked as "step"
+    --
+    -- 4. neighbors of X/Y/Z are marked as FLOOR #0  [ REVIEW THIS! ]
+    --
+    -- 5. continue this process (B := C ; goto 1.)
+    --
+    -- 6. fill unused blobs with a nearby FLOOR (#0 .. #N)
+    --
+
+    local B = entry_reg  -- TODO : pick blob at random
+
+    B.floor_id = 0
+    B.prelim_h = 0
+
+stderrf("hill_grow_with_steps...\n")
+    while 1 do
+      local chain = hill_pick_a_chain(B)
+
+      if not chain then
+        break;
+--[[
+        B = hill_pick_neighbor()
+
+        if not B then break; end
+
+        continue  ]]
+      end
+
+      local C = table.remove(chain, #chain)
+
+stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
+
+      C.floor_id = B.floor_id + 1
+      C.prelim_h = B.prelim_h + 8
+
+      each step in chain do
+        step.floor_id = "step"
+        step.prelim_h = C.prelim_h
+
+        C.prelim_h = C.prelim_h + 8
+      end
+
+      each step in chain do
+        hill_set_neighbors(step, C)
+      end
+
+      B = C
+    end
+
+    -- fill any gaps
+    while hill_fill_gaps() do end
+  end
+
+
   local function grow_a_hill()
     each _,reg in blob_map.regions do
       if reg.prelim_h then continue end
@@ -3193,11 +3348,12 @@ function Cave_build_a_park(R, entry_h)
 
     local start_reg = entry_reg  -- TODO : pick another
 
-    start_reg.prelim_h = 0
+    hill_grow_with_steps(start_reg)
 
-    for loop = 1,999 do
-      grow_a_hill()
-    end
+---##   start_reg.prelim_h = 0
+---##   for loop = 1,999 do
+---##     grow_a_hill()
+---##   end
 
     -- this ensure the entry floor (blob) becomes 'entry_h'
     local base_h = entry_h - assert(entry_reg.prelim_h)

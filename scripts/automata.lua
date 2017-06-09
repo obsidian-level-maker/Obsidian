@@ -1303,6 +1303,8 @@ function GRID_CLASS.merge_two_blobs(grid, id1, id2)
   reg1.size = reg1.size + reg2.size
   reg2.size = -1
 
+  reg1.is_walk = reg1.is_walk or reg2.is_walk
+
   grid.regions[id2] = nil
 end
 
