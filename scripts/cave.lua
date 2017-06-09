@@ -3236,19 +3236,132 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_grow_with_steps_NEW()
-    -- mark which blobs make good stairs
+  local function hill_create_a_division(stair_list, want_stairs, info)
+    --
+    -- Create a division of the room with the wanted number of stairs.
+    -- If successful and score is better, updates the 'info' table.
+    --
+    -- info.best =
+    -- {
+    --   floors[blob_id] --> integer
+    --   stairs[blob_id] --> STAIR_INFO
+    -- }
+    --
+
+    -- not possible unless we have enough stairs
+    if want_stairs > #stair_list then return end
+
+    -- pick a random set of stairs
+    local stairs = table.copy(stair_list)
+
+    rand.shuffle(stairs)
+
+    while #stairs > want_stairs do
+      table.remove(stairs, #stairs)
+    end
+
+    local num_floors = 0
+
+    local floors = {}
+    local sizes  = {}
+
+    -- initial setup : place all blobs on a single floor
+
+    local function new_floor()
+      num_floors = num_floors + 1
+
+      local F = num_floors
+
+      sizes[F] = 0
+
+      return F
+    end
 
     each _,B in blob_map.regions do
-      local res,src,dest = hill_blob_is_good_stair(B, true)
+      floors[B.id] = 1
+    end
+
+    -- then for each stair we divide its floor into two new floors.
+    -- if this fails, then we abort (return from the function).
+
+    local function divide_floor(st)
+      -- FIXME !!!!
+    end
+
+    each st in stairs do
+      if not divide_floor(st) then return end
+    end
+
+    -- evaluate the result
+
+    local total_size = 0
+    local min_size   = 9e9
+
+    each _,size in sizes do
+      total_size = total_size + size
+      min_size   = math.min(min_size, size)
+    end
+
+    assert(total_size > 0)
+
+    local score = min_size * 10 / total_size + gui.random()
+
+    if score > info.score then
+      info.score = score
+
+      info.best =
+      {
+        floors = floors
+        stairs = stairs
+      }
+    end
+  end
+
+
+  local function install_division(div)
+    -- FIXME !!!!
+  end
+
+
+  local function hill_grow_with_steps_NEW()
+    -- collect the blobs which make good stairs
+
+    local all_stairs = {}
+
+    each _,B in blob_map.regions do
+      local res,src,dest = hill_blob_is_good_stair(B, false)
 
       if res then
-gui.debugf("good stair in blob #%d  (from #%d --> #%d)\n", B.id, src, dest)
-        B.prelim_h = 8
-      else
-        B.prelim_h = 0
+        table.insert(all_stairs, { B=B, is_vert=false, src=src, dest=dest })
+      end
+
+      res,src,dest = hill_blob_is_good_stair(B, true)
+
+      if res then
+        table.insert(all_stairs, { B=B, is_vert=true, src=src, dest=dest })
       end
     end
+
+
+    -- FIXME : make this depend on size of room  [ and some randomness ]
+    local max_floors = 4
+
+    local info = { score = -1 }
+
+    for want_floors = max_floors, 2, -1 do
+      for loop = 1, 30 do
+        hill_create_a_division(all_stairs, want_floors - 1, info)
+      end
+
+      if info.best then break; end
+    end
+
+    -- nothing worked??
+    if not info.best then return false end
+
+    install_division(info.best)
+
+    return true
   end
 
 
@@ -3445,7 +3558,9 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
     local start_reg = entry_reg  -- TODO : pick another
 
-    hill_grow_with_steps_NEW()
+    if not hill_grow_with_steps_NEW() then
+      return
+    end
 
 ---##   start_reg.prelim_h = 0
 ---##   for loop = 1,999 do
@@ -3465,8 +3580,8 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
           floor_h   = base_h + reg.prelim_h
           floor_mat = R.floor_mat
         }
-        if reg.prelim_h != 0 then
-          BLOB.floor_mat = "REDWALL"  -- R.alt_floor_mat
+        if reg.is_step then
+          BLOB.floor_mat = "COMPBLUE"  -- R.alt_floor_mat
         end
         assert(BLOB.floor_h)
         assert(BLOB.floor_mat)
