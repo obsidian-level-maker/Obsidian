@@ -3,6 +3,30 @@ WORK IN PROGRESS
 ================
 
 
+Parks
+-----
+
++  height variation  [ different areas ]
+
+   -  windows and cages can be too low
+      [ logic for AREA:min_neighbor_h and max_... needs to look
+        into "nature" areas properly ]
+
+   -  limit number of floors (dep. on room size)
+
+   -  somehow create "stairs" between two floors
+
+   >>  use prelim_h so that we can do heights from arbitrary start
+
+       [ pick a random blob to start ]
+
+   -  create paths between walk-chunks
+      [ everything else could become liquid or fencey ]
+
+   -  ability to make liquid pools
+
+
+
 Miscellaneous
 -------------
 
@@ -30,28 +54,6 @@ Hallway System
 +  make some deuce stairs
 
 -  fix issue with T-shape stairs
-
-
-
-Parks
------
-
-+  height variation  [ different areas ]
-
-   -  fix window logic
-
-   -  limit number of floors (dep. on room size)
-
-   -  somehow create "stairs" between two floors
-
-   >>  use prelim_h so that we can do heights from arbitrary start
-
-       [ pick a random blob to start ]
-
-   -  create paths between walk-chunks
-      [ everything else could become liquid or fencey ]
-
-   -  ability to make liquid pools
 
 
 
