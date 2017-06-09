@@ -3155,6 +3155,103 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function hill_best_stair_neighbor(B, dir)
+    local cx1, cy1 = B.cx1, B.cy1
+    local cx2, cy2 = B.cx2, B.cy2
+
+    if dir == 2 then cy2 = cy1 end
+    if dir == 8 then cy1 = cy2 end
+    if dir == 4 then cx2 = cx1 end
+    if dir == 6 then cx1 = cx2 end
+
+    local counts = {}
+
+    for x = cx1, cx2 do
+    for y = cy1, cy2 do
+      if blob_map[x][y] != B.id then continue end
+
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if not blob_map:valid(nx, ny) then continue end
+
+      local id = blob_map[nx][ny]
+      if id == nil then continue end
+      if id == B.id then continue end
+
+      if not counts[id] then
+        counts[id] = 1 + gui.random() / 10  -- tie breaker
+      else
+        counts[id] = counts[id] + 1
+      end
+    end
+    end
+
+    -- pick the one with highest count
+    local best
+
+    each id,count in counts do
+      if not best or count > counts[best] then
+        best = id
+      end
+    end
+
+    -- require at least 2 cells
+    if best and counts[best] < 2 then
+      best = nil
+    end
+
+    return best
+  end
+
+
+  local function hill_blob_is_good_stair(B, is_vert)
+    if B.is_walk then return false end  -- must not be a walk rect
+
+    -- check large enough, or too large
+    local cw = B.cx2 - B.cx1 + 1
+    local ch = B.cy2 - B.cy1 + 1
+
+    if B.size <  6  then return end
+    if B.size >= 20 then return end
+
+    if is_vert then
+      if ch < 3 or ch > 6 then return false end
+      if cw < 2 or cw > 9 then return false end
+    else
+      if cw < 3 or cw > 6 then return false end
+      if ch < 2 or ch > 9 then return false end
+    end
+
+    -- find best connecting blobs
+    local src  = hill_best_stair_neighbor(B, sel(is_vert, 2, 4))
+    local dest = hill_best_stair_neighbor(B, sel(is_vert, 8, 6))
+
+    if not src  then return false end
+    if not dest then return false end
+
+    if src == dest then return false end
+
+    -- Ok!
+    return true, src, dest
+  end
+
+
+  local function hill_grow_with_steps_NEW()
+    -- mark which blobs make good stairs
+
+    each _,B in blob_map.regions do
+      local res,src,dest = hill_blob_is_good_stair(B, true)
+
+      if res then
+gui.debugf("good stair in blob #%d  (from #%d --> #%d)\n", B.id, src, dest)
+        B.prelim_h = 8
+      else
+        B.prelim_h = 0
+      end
+    end
+  end
+
+
   local function hill_can_use_step(B, chain, is_last)
     if B.prelim_h then return false end  -- in use already
 
@@ -3247,7 +3344,7 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_grow_with_steps(entry_reg)
+  local function hill_grow_with_steps_OLD(entry_reg)
     --
     -- 1. start with a blob 'B', make it FLOOR #0
     --
@@ -3348,7 +3445,7 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
     local start_reg = entry_reg  -- TODO : pick another
 
-    hill_grow_with_steps(start_reg)
+    hill_grow_with_steps_NEW()
 
 ---##   start_reg.prelim_h = 0
 ---##   for loop = 1,999 do
@@ -3366,8 +3463,11 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
         local BLOB =
         {
           floor_h   = base_h + reg.prelim_h
-          floor_mat = sel(rand.odds(66), R.floor_mat, R.alt_floor_mat)
+          floor_mat = R.floor_mat
         }
+        if reg.prelim_h != 0 then
+          BLOB.floor_mat = "REDWALL"  -- R.alt_floor_mat
+        end
         assert(BLOB.floor_h)
         assert(BLOB.floor_mat)
 
