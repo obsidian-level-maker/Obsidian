@@ -3236,6 +3236,39 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function hill_stair_touches_another(st, stair_list)
+    each st2 in stair_list do
+      if st2 == st then continue end
+
+      if table.has_elem(st.B.neighbors, st2.B) then return true end
+    end
+
+    return false
+  end
+
+
+  local function hill_select_group_stairs(stair_list, want_stairs)
+    local list = table.copy(stair_list)
+
+    local result = {}
+
+    rand.shuffle(list)
+
+    while #result < want_stairs do
+      -- not enough stairs?
+      if table.empty(list) then return nil end
+
+      local st = table.remove(list, 1)
+
+      if not hill_stair_touches_another(st, result) then
+        table.insert(result, st)
+      end
+    end
+
+    return result
+  end
+
+
   local function hill_create_a_division(stair_list, want_stairs, info)
     --
     -- Create a division of the room with the wanted number of stairs.
@@ -3251,21 +3284,18 @@ function Cave_build_a_park(R, entry_h)
     -- not possible unless we have enough stairs
     if want_stairs > #stair_list then return end
 
-    -- pick a random set of stairs
-    local stairs = table.copy(stair_list)
+    -- pick a random set of stairs (which do not touch)
+    local stairs = hill_select_group_stairs(stair_list, want_stairs)
 
-    rand.shuffle(stairs)
+    if not stairs then return end
 
-    while #stairs > want_stairs do
-      table.remove(stairs, #stairs)
-    end
+
+    -- initial setup : place all blobs on a single floor
 
     local num_floors = 0
 
     local floors = {}
     local sizes  = {}
-
-    -- initial setup : place all blobs on a single floor
 
     local function new_floor()
       num_floors = num_floors + 1
@@ -3281,18 +3311,22 @@ function Cave_build_a_park(R, entry_h)
       floors[B.id] = 1
     end
 
+
     -- then for each stair we divide its floor into two new floors.
-    -- if this fails, then we abort (return from the function).
+    -- if this fails, then we abort the attempt.
 
     local function divide_floor(st)
       -- FIXME !!!!
     end
 
     each st in stairs do
-      if not divide_floor(st) then return end
+      if not divide_floor(st) then
+        return
+      end
     end
 
-    -- evaluate the result
+
+    -- evaluate the result --
 
     local total_size = 0
     local min_size   = 9e9
@@ -3304,7 +3338,7 @@ function Cave_build_a_park(R, entry_h)
 
     assert(total_size > 0)
 
-    local score = min_size * 10 / total_size + gui.random()
+    local score = 20 * min_size / total_size + gui.random()
 
     if score > info.score then
       info.score = score
@@ -3363,6 +3397,9 @@ function Cave_build_a_park(R, entry_h)
 
     return true
   end
+
+
+  --___________>>>>>>>>>>>>>>>>>>
 
 
   local function hill_can_use_step(B, chain, is_last)
@@ -3556,13 +3593,11 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
     local entry_reg = blob_map.regions[entry_id]
 
-    local start_reg = entry_reg  -- TODO : pick another
-
     if not hill_grow_with_steps_NEW() then
       return
     end
 
----##   start_reg.prelim_h = 0
+---##   entry_reg.prelim_h = 0
 ---##   for loop = 1,999 do
 ---##     grow_a_hill()
 ---##   end
