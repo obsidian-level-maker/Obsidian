@@ -3269,6 +3269,63 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function hill_grow_new_floors(floors, sizes, old, new1, new2)
+    local unfilled = {}
+
+    each _,B in blob_map.regions do
+      if floors[B.id] == old then
+        table.insert(unfilled, B.id)
+      end
+    end
+
+    rand.shuffle(unfilled)
+
+    each _,B in blob_map.regions do
+      rand.shuffle(B.neighbors)
+    end
+
+    local function get_a_neighbor(id)
+      local B = blob_map.regions[id]
+
+      each N in B.neighbors do
+        if floors[N.id] == new1 then return new1 end
+        if floors[N.id] == new2 then return new2 end
+      end
+
+      return nil
+    end
+
+    local function unfill_pass()
+      local changes = false
+
+      for i = #unfilled, 1, -1 do
+        local id = unfilled[i]
+
+        local use_id = get_a_neighbor(id)
+
+        if use_id then
+          floors[id]  = use_id
+          sizes [id]  = sizes[id] + blob_map.regions[use_id].size
+
+          table.remove(unfilled, i)
+          changes = true
+
+          -- FIXME : if this is src/dest of a UNPROCESSED stair, then
+          --         set the OTHER side of it too
+          --         [ BUT if already set, abort ]
+        end
+      end
+
+      return changes
+    end
+
+    while unfill_pass() do
+    end
+
+    return table.empty(unfilled)
+  end
+
+
   local function hill_create_a_division(stair_list, want_stairs, info)
     --
     -- Create a division of the room with the wanted number of stairs.
@@ -3290,12 +3347,17 @@ function Cave_build_a_park(R, entry_h)
     if not stairs then return end
 
 
-    -- initial setup : place all blobs on a single floor
+    -- initial setup : place all blobs on a single floor, but
+    -- the stair blobs are marked as "stair"
 
     local num_floors = 0
 
     local floors = {}
     local sizes  = {}
+
+    each st in stairs do
+      floors[st.B.id] = "stair"
+    end
 
     local function new_floor()
       num_floors = num_floors + 1
@@ -3307,8 +3369,18 @@ function Cave_build_a_park(R, entry_h)
       return F
     end
 
+    local function set_floor(B, f_id)
+      floors[B.id] = f_id
+
+      sizes[f_id] = sizes[f_id] + B.size
+    end
+
+    new_floor()
+
     each _,B in blob_map.regions do
-      floors[B.id] = 1
+      if not floors[B.id] then
+        set_floor(B, 1)
+      end
     end
 
 
@@ -3316,7 +3388,35 @@ function Cave_build_a_park(R, entry_h)
     -- if this fails, then we abort the attempt.
 
     local function divide_floor(st)
-      -- FIXME !!!!
+      local old = floors[st.B.id]
+      assert(old)
+
+      local new1 = new_floor()
+      local new2 = new_floor()
+
+      assert(floors[st.src.id]  == old)
+      assert(floors[st.dest.id] == old)
+
+      set_floor(st.src,  new1)
+      set_floor(st.dest, new2)
+
+      floors[st.B.id] = "stair"
+
+      sizes [old] = nil
+
+      -- grow the new floors
+      if not hill_grow_new_floors(floors, sizes, old, new1, new2) then
+        return false
+      end
+
+      -- handle any blobs which could not be reached
+      each _,B in blob_map.regions do
+        if floors[B.id] == f_id then
+          return false  -- FAIL
+        end
+      end
+
+      return true  -- OK
     end
 
     each st in stairs do
