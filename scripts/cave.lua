@@ -3155,6 +3155,33 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  ----===========  HILLSIDE STUFF  ===========----
+
+
+  local function hill_clear()
+    each _,B in blob_map.regions do
+      B.floor_id = nil
+      B.stair    = nil
+    end
+  end
+
+
+  local function hill_save(HILL)
+    HILL.blob_floors = {}
+
+    each _,B in blob_map.regions do
+      HILL.blob_floors[B.id] = B.floor_id
+    end
+  end
+
+
+  local function hill_restore(HILL)
+    each _,B in blob_map.regions do
+      B.floor_id = HILL.blob_floors[B.id]
+    end
+  end
+
+
   local function hill_best_stair_neighbor(B, dir)
     local cx1, cy1 = B.cx1, B.cy1
     local cx2, cy2 = B.cx2, B.cy2
@@ -3211,8 +3238,8 @@ function Cave_build_a_park(R, entry_h)
     local cw = B.cx2 - B.cx1 + 1
     local ch = B.cy2 - B.cy1 + 1
 
-    if B.size <  6  then return end
-    if B.size >= 20 then return end
+    if B.size <  6  then return false end
+    if B.size >= 20 then return false end
 
     if is_vert then
       if ch < 3 or ch > 6 then return false end
@@ -3236,31 +3263,34 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_stair_touches_another(st, stair_list)
-    each st2 in stair_list do
-      if st2 == st then continue end
+  local function hill_can_use_stair(st, others)
+    each st2 in others do
+      -- blob is already in the list?
+      if st2.B == st.B then return false end
 
-      if table.has_elem(st.B.neighbors, st2.B) then return true end
+      -- blob has a neighbor already in the list?
+      -- [ main thing here is to avoid src/dest of another stair ]
+      if table.has_elem(st.B.neighbors, st2.B) then return false end
     end
 
-    return false
+    return true
   end
 
 
-  local function hill_select_group_stairs(stair_list, want_stairs)
-    local list = table.copy(stair_list)
-
-    local result = {}
+  local function hill_select_stairs(all_stairs, want_num)
+    local list = table.copy(all_stairs)
 
     rand.shuffle(list)
 
-    while #result < want_stairs do
+    local result = {}
+
+    while #result < want_num do
       -- not enough stairs?
       if table.empty(list) then return nil end
 
       local st = table.remove(list, 1)
 
-      if not hill_stair_touches_another(st, result) then
+      if hill_can_use_stair(st, result) then
         table.insert(result, st)
       end
     end
@@ -3326,23 +3356,26 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_create_a_division(stair_list, want_stairs, info)
+  local function hill_create_a_division(all_stairs, want_stairs, info)
     --
     -- Create a division of the room with the wanted number of stairs.
     -- If successful and score is better, updates the 'info' table.
     --
-    -- info.best =
+    -- HILL =
     -- {
-    --   floors[blob_id] --> integer
-    --   stairs[blob_id] --> STAIR_INFO
+    --   stairs : list(STAIR_INFO)
+    --
+    --   blob_floors[blob_id] --> integer
     -- }
     --
 
+    hill_clear()
+
     -- not possible unless we have enough stairs
-    if want_stairs > #stair_list then return end
+    if want_stairs > #all_stairs then return end
 
     -- pick a random set of stairs (which do not touch)
-    local stairs = hill_select_group_stairs(stair_list, want_stairs)
+    local stairs = hill_select_group_stairs(all_stairs, want_stairs)
 
     if not stairs then return end
 
@@ -3445,57 +3478,66 @@ function Cave_build_a_park(R, entry_h)
 
       info.best =
       {
-        floors = floors
         stairs = stairs
       }
+
+      hill_save(info.best)
     end
   end
 
 
-  local function install_division(div)
+  local function install_division(HILL)
+    hill_clear()
+    hill_restore(HILL)
+
     -- FIXME !!!!
+    --   1. merge all blobs with same floor_id
+    --   2. pick a start blob, give prelim_h = 0
+    --   3. flow throw stairs, adding 48 to prelim_h of last
   end
 
 
-  local function hill_grow_with_steps_NEW()
-    -- collect the blobs which make good stairs
+  local function hill_grow_with_stairs()
+    -- find the blobs which would make good stairs
 
     local all_stairs = {}
 
     each _,B in blob_map.regions do
-      local res,src,dest = hill_blob_is_good_stair(B, false)
+      for pass = 1, 2 do
+        local is_vert = (pass == 2)
+        local res,src,dest = hill_blob_is_good_stair(B, is_vert)
 
-      if res then
-        table.insert(all_stairs, { B=B, is_vert=false, src=src, dest=dest })
-      end
-
-      res,src,dest = hill_blob_is_good_stair(B, true)
-
-      if res then
-        table.insert(all_stairs, { B=B, is_vert=true, src=src, dest=dest })
-      end
+        if res then
+          table.insert(all_stairs, { B=B, is_vert=is_vert, src=src, dest=dest })
+        end
+      end 
     end
 
+    -- try many combinations of dividing up the room based
+    -- on using some of those stairs, and choose the highest
+    -- scoring one.
 
     -- FIXME : make this depend on size of room  [ and some randomness ]
-    local max_floors = 4
+    local max_stairs = 3
 
-    local info = { score = -1 }
+    local info = { score=-1 }
 
-    for want_floors = max_floors, 2, -1 do
-      for loop = 1, 30 do
-        hill_create_a_division(all_stairs, want_floors - 1, info)
+    for want_stairs = max_stairs, 1, -1 do
+      for loop = 1, 50 do
+        hill_create_a_division(all_stairs, want_stairs, info)
       end
 
-      if info.best then break; end
+      -- if we managed something, then install it
+      if info.best then
+        install_division(info.best)
+        return true
+      end
+
+      -- try again with fewer wanted stairs
     end
 
-    -- nothing worked??
-    if not info.best then return false end
-
-    install_division(info.best)
-
-    return true
+    -- nothing worked :(
+    return false
   end
 
 
@@ -3657,28 +3699,6 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
   end
 
 
-  local function grow_a_hill()
-    each _,reg in blob_map.regions do
-      if reg.prelim_h then continue end
-
-      local min_z
-
-      each N in reg.neighbors do
-        if N.prelim_h then
-          min_z = math.max(min_z or -9999, N.prelim_h)
-        end
-      end
-
-      if min_z then
-        reg.prelim_h = min_z + 8
-        return true
-      end
-    end
-
-    return false
-  end
-
-
   local function make_a_hillside()
     -- we need to know where the entrance is
     if not area.entry_walk then return end
@@ -3693,14 +3713,9 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
     local entry_reg = blob_map.regions[entry_id]
 
-    if not hill_grow_with_steps_NEW() then
+    if not hill_grow_with_stairs() then
       return
     end
-
----##   entry_reg.prelim_h = 0
----##   for loop = 1,999 do
----##     grow_a_hill()
----##   end
 
     -- this ensure the entry floor (blob) becomes 'entry_h'
     local base_h = entry_h - assert(entry_reg.prelim_h)
@@ -3723,10 +3738,12 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
         temp_install_blob(BLOB, reg)
 
-        table.insert(area.walk_floors, BLOB)
+        if reg.is_floor then
+          table.insert(area.walk_floors, BLOB)
 
-        area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
-        area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
+          area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
+          area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
+        end
       end
     end
 

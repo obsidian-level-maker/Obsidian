@@ -8,17 +8,14 @@ Parks
 
 +  height variation  [ different areas ]
 
+   >>  work on hill_create_a_division() + hill_grow_new_floors()
+       to use the new method: directly set/test blob.floor_id
+
+   >>  flesh out install_division()
+
    -  windows and cages can be too low
       [ logic for AREA:min_neighbor_h and max_... needs to look
         into "nature" areas properly ]
-
-   -  limit number of floors (dep. on room size)
-
-   -  somehow create "stairs" between two floors
-
-   >>  use prelim_h so that we can do heights from arbitrary start
-
-       [ pick a random blob to start ]
 
    -  create paths between walk-chunks
       [ everything else could become liquid or fencey ]
