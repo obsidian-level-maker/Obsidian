@@ -6,7 +6,11 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
-+  railings : max_z (or so) value, support in CSG DOOM
++  Y offsets on a ceiling sink mucked up by.... ?
+
+-  a version of "simple2" joiner for indoor/outdoor transitions
+
+-  railings : max_z (or so) value, support in CSG DOOM
 
 -  internal fences (esp. for outdoor rooms)
 
