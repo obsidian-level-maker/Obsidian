@@ -3314,7 +3314,7 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function hill_divide_floor(st, stairs)
-    local old = floors[st.src.floor_id]
+    local old = st.src.floor_id
     assert(old)
 
     assert(st.dest.floor_id == old)
@@ -3420,7 +3420,7 @@ function Cave_build_a_park(R, entry_h)
     if want_stairs > #all_stairs then return end
 
     -- pick a random set of stairs (which do not touch)
-    local stairs = hill_select_group_stairs(all_stairs, want_stairs)
+    local stairs = hill_select_stairs(all_stairs, want_stairs)
 
     if not stairs then return end
 
@@ -3428,24 +3428,19 @@ function Cave_build_a_park(R, entry_h)
     -- initial setup : place all blobs on a single floor, but
     -- the stair blobs are marked as "stair"
 
-    local num_floors = 0
-
-    each st in stairs do
-      hill_set_floor(B, "stair")
-    end
-
     local F1 = hill_new_floor()
 
     each _,B in blob_map.regions do
-      if B.floor_id != "stair" then
-        hill_set_floor(B, F1)
-      end
+      hill_set_floor(B, F1)
+    end
+
+    each st in stairs do
+      hill_set_floor(st.B, "stair")
     end
 
 
     -- then for each stair we divide its floor into two new floors.
     -- if this fails, then we abort the attempt.
-
 
     each st in stairs do
       if not hill_divide_floor(st, stairs) then
@@ -3458,7 +3453,7 @@ function Cave_build_a_park(R, entry_h)
 
     local floor_sizes = {}
 
-    each _,B in blob_map.regions() do
+    each _,B in blob_map.regions do
       local f_id = B.floor_id
 
       if f_id != "stair" then
@@ -3502,8 +3497,8 @@ function Cave_build_a_park(R, entry_h)
     local floor_stair_num = {}
 
     each st in HILL.stairs do
-      st.src  = assert(st.src .B.floor_id)
-      st.dest = assert(st.dest.B.floor_id)
+      st.src  = assert(st.src .floor_id)
+      st.dest = assert(st.dest.floor_id)
 
       floor_stair_num[st.src ] = (floor_stair_num[st.src ] or 0) + 1
       floor_stair_num[st.dest] = (floor_stair_num[st.dest] or 0) + 1
