@@ -3229,7 +3229,7 @@ function Cave_build_a_park(R, entry_h)
       best = nil
     end
 
-    return best
+    return blob_map.regions[best]
   end
 
 
@@ -3313,7 +3313,7 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_divide_floor(st)
+  local function hill_divide_floor(st, stairs)
     local old = floors[st.src.floor_id]
     assert(old)
 
@@ -3341,9 +3341,7 @@ function Cave_build_a_park(R, entry_h)
       rand.shuffle(B.neighbors)
     end
 
-    local function get_a_neighbor(id)
-      local B = blob_map.regions[id]
-
+    local function get_a_neighbor(B)
       each N in B.neighbors do
         if N.floor_id == new1 then return new1 end
         if N.floor_id == new2 then return new2 end
@@ -3358,27 +3356,43 @@ function Cave_build_a_park(R, entry_h)
       local changes = false
 
       for i = #unfilled, 1, -1 do
-        local id = unfilled[i]
+        local B = unfilled[i]
 
-        local use_id = get_a_neighbor(id)
-
-        if use_id then
-          floors[id]  = use_id
-          sizes [id]  = sizes[id] + blob_map.regions[use_id].size
-
+        if B.floor_id != old then
           table.remove(unfilled, i)
-          changes = true
-
-          -- FIXME : if this is src/dest of a UNPROCESSED stair, then
-          --         set the OTHER side of it too
-          --         [ BUT if already set, abort ]
+          continue
         end
+
+        local use_id = get_a_neighbor(B)
+
+        if not use_id then continue end
+
+        -- handle UNPROCESSED stairs, ensure src/dest blobs of the
+        -- stair gets the same new floor
+        each st2 in stairs do
+          if st2.src == B and st2.dest.floor_id == old then
+            hill_set_floor(st2.dest, use_id)
+            changes = true
+          end
+
+          if st2.dest == B and st2.src.floor_id == old then
+            hill_set_floor(st2.src, use_id)
+            changes = true
+          end
+        end
+
+        hill_set_floor(B, use_id)
+        changes = true
       end
 
     until not changes
 
-    if table.empty(unfilled) then
-      return false
+    -- check all blobs with old floor were replaced
+
+    each _,B in blob_map.regions do
+      if B.floor_id == old then
+        return false
+      end
     end
 
     return true  -- OK
@@ -3417,7 +3431,7 @@ function Cave_build_a_park(R, entry_h)
     local num_floors = 0
 
     each st in stairs do
-      st.B.floor_id = "stair"
+      hill_set_floor(B, "stair")
     end
 
     local F1 = hill_new_floor()
@@ -3434,7 +3448,7 @@ function Cave_build_a_park(R, entry_h)
 
 
     each st in stairs do
-      if not hill_divide_floor(st) then
+      if not hill_divide_floor(st, stairs) then
         return
       end
     end
