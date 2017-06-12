@@ -3529,6 +3529,9 @@ function Cave_build_a_park(R, entry_h)
       blob_map:merge_two_blobs(F.id, B.id)
     end
 
+    blob_map:extent_of_blobs()
+    blob_map:neighbors_of_blobs()
+
     -- pick starting floor, mark it as the lowest
 
     local start_f
@@ -3795,14 +3798,14 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
     R.has_hills = true
 
+    if not hill_grow_with_stairs() then
+      return
+    end
+
     local entry_id = blob_map[ecx][ecy]
     assert(entry_id)
 
     local entry_reg = blob_map.regions[entry_id]
-
-    if not hill_grow_with_stairs() then
-      return
-    end
 
     -- this ensure the entry floor (blob) becomes 'entry_h'
     local base_h = entry_h - assert(entry_reg.prelim_h)
