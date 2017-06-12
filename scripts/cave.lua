@@ -3486,28 +3486,101 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function install_division(HILL)
+  local function install_hillside(HILL)
     hill_clear()
     hill_restore(HILL)
 
-    -- FIXME !!!!
-    --   1. merge all blobs with same floor_id
-    --   2. pick a start blob, give prelim_h = 0
-    --   3. flow throw stairs, adding 48 to prelim_h of last
+    -- for each stair, convert 'src' and 'dest' to floor ids,
+    -- and count how many stairs connect to each floor.
+
+    local floor_stair_num = {}
+
+    each st in HILL.stairs do
+      st.src  = assert(st.src .B.floor_id)
+      st.dest = assert(st.dest.B.floor_id)
+
+      floor_stair_num[st.src ] = (floor_stair_num[st.src ] or 0) + 1
+      floor_stair_num[st.dest] = (floor_stair_num[st.dest] or 0) + 1
+    end
+
+    -- merge all blobs with same floor_id
+
+    local all_blobs = table.keys(blob_map.regions)
+
+    local floor_blobs = {}   --  [floor_id] --> blob
+
+    each blob_id, f_id in HILL.blob_floors do
+      local B = blob_map.regions[blob_id]
+
+      floor_blobs[f_id] = assert(B)
+    end
+
+    each id in all_blobs do
+      local B = blob_map.regions[id]
+
+      if B.floor_id == "stair" then continue end
+
+      local F = floor_blobs[B.floor_id]
+      assert(F)
+
+      if F == B then continue end
+
+      blob_map:merge_two_blobs(F.id, B.id)
+    end
+
+    -- pick starting floor, mark it as the lowest
+
+    local start_f
+
+    each id, stair_num in floor_stair_num do
+      assert(stair_num >= 1)
+
+      if stair_num == 1 and (not start_f or rand.odds(50)) then
+        start_f = id
+      end
+    end
+
+    floor_blobs[start_f].prelim_h = 0
+
+    -- flow through stairs to unvisited floors
+
+    repeat
+      local changes = false
+
+      rand.shuffle(HILL.stairs)
+
+      each st in HILL.stairs do
+        local B1 = floor_blobs[st.src]
+        local B2 = floor_blobs[st.dest]
+
+        assert(B1 and B2)
+
+        if not B1.prelim_h then
+          B1, B2 = B2, B1
+        end
+
+        if B1.prelim_h and not B2.prelim_h then
+          st.height = 48
+          B2.prelim_h = B1.prelim_h + st.height
+          changes = true
+        end
+      end
+
+    until not changes
   end
 
 
   local function hill_grow_with_stairs()
-    -- find the blobs which would make good stairs
+    -- collect the blobs which would make good stairs
 
     local all_stairs = {}
 
     each _,B in blob_map.regions do
       for pass = 1, 2 do
         local is_vert = (pass == 2)
-        local res,src,dest = hill_blob_is_good_stair(B, is_vert)
+        local ok,src,dest = hill_blob_is_good_stair(B, is_vert)
 
-        if res then
+        if ok then
           table.insert(all_stairs, { B=B, is_vert=is_vert, src=src, dest=dest })
         end
       end 
@@ -3529,7 +3602,7 @@ function Cave_build_a_park(R, entry_h)
 
       -- if we managed something, then install it
       if info.best then
-        install_division(info.best)
+        install_hillside(info.best)
         return true
       end
 
