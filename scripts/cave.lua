@@ -3313,17 +3313,61 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  -- this one handles stairs (recursively, as they may form chains)
+  local function hill_change_floor(B, f_id, old, stairs)
+    if B.floor_id == f_id then return true end
+
+    if B.floor_id != old  then return false end
+
+    B.floor_id = f_id
+
+    each st in stairs do
+      if not st.is_contained then continue end
+
+      if st.src == B then
+        if not hill_change_floor(st.dest, f_id,  old, stairs) then
+          return false
+        end
+      end
+
+      if st.dest == B then
+        if not hill_change_floor(st.src,  f_id,  old, stairs) then
+          return false
+        end
+      end
+    end
+
+    return true
+  end
+
+
   local function hill_divide_floor(st, stairs)
     local old = st.src.floor_id
     assert(old)
 
     assert(st.dest.floor_id == old)
 
+    -- mark stairs that are wholly contained in this floor
+    -- [ EXCEPT the stair we are dividing! ]
+    each st2 in stairs do
+      st2.is_contained = false
+
+      if st2 != st and st2.src.floor_id == old and st2.dest.floor_id == old then
+        st2.is_contained = true
+      end
+    end
+
+
     local new1 = hill_new_floor()
     local new2 = hill_new_floor()
 
-    hill_set_floor(st.src,  new1)
-    hill_set_floor(st.dest, new2)
+    if not hill_change_floor(st.src, new1,  old, stairs) then
+      return false
+    end
+
+    if not hill_change_floor(st.dest, new2,  old, stairs) then
+      return false
+    end
 
     -- grow the new floors
 
@@ -3364,30 +3408,18 @@ function Cave_build_a_park(R, entry_h)
         end
 
         local use_id = get_a_neighbor(B)
-
         if not use_id then continue end
 
-        -- handle UNPROCESSED stairs, ensure src/dest blobs of the
-        -- stair gets the same new floor
-        each st2 in stairs do
-          if st2.src == B and st2.dest.floor_id == old then
-            hill_set_floor(st2.dest, use_id)
-            changes = true
-          end
-
-          if st2.dest == B and st2.src.floor_id == old then
-            hill_set_floor(st2.src, use_id)
-            changes = true
-          end
+        if not hill_change_floor(B, use_id,  old, stairs) then
+          return false
         end
 
-        hill_set_floor(B, use_id)
         changes = true
       end
 
     until not changes
 
-    -- check all blobs with old floor were replaced
+    -- check whether all blobs with old floor were replaced
 
     each _,B in blob_map.regions do
       if B.floor_id == old then
@@ -3608,17 +3640,19 @@ function Cave_build_a_park(R, entry_h)
     -- scoring one.
 
     -- FIXME : make this depend on size of room  [ and some randomness ]
-    local max_stairs = 3
+    local max_stairs = 4
 
     local info = { score=-1 }
 
     for want_stairs = max_stairs, 1, -1 do
       for loop = 1, 50 do
         hill_create_a_division(all_stairs, want_stairs, info)
+--stderrf("loop:%d want:%d --> score:%1.3f\n", loop, want_stairs, info.score)
       end
 
       -- if we managed something, then install it
       if info.best then
+--stderrf("YES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         install_hillside(info.best)
         return true
       end
