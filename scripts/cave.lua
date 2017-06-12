@@ -2694,6 +2694,8 @@ function Cave_build_a_park(R, entry_h)
 
   local blob_map
 
+  local floor_num
+
 
   local function blobify()
     local src = area.walk_map:copy()
@@ -3299,12 +3301,37 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_grow_new_floors(floors, sizes, old, new1, new2)
+  local function hill_new_floor()
+    floor_num = floor_num + 1
+
+    return floor_num
+  end
+
+
+  local function hill_set_floor(B, f_id)
+    B.floor_id = f_id
+  end
+
+
+  local function hill_divide_floor(st)
+    local old = floors[st.src.floor_id]
+    assert(old)
+
+    assert(st.dest.floor_id == old)
+
+    local new1 = hill_new_floor()
+    local new2 = hill_new_floor()
+
+    hill_set_floor(st.src,  new1)
+    hill_set_floor(st.dest, new2)
+
+    -- grow the new floors
+
     local unfilled = {}
 
     each _,B in blob_map.regions do
-      if floors[B.id] == old then
-        table.insert(unfilled, B.id)
+      if B.floor_id == old then
+        table.insert(unfilled, B)
       end
     end
 
@@ -3318,14 +3345,16 @@ function Cave_build_a_park(R, entry_h)
       local B = blob_map.regions[id]
 
       each N in B.neighbors do
-        if floors[N.id] == new1 then return new1 end
-        if floors[N.id] == new2 then return new2 end
+        if N.floor_id == new1 then return new1 end
+        if N.floor_id == new2 then return new2 end
       end
 
       return nil
     end
 
-    local function unfill_pass()
+    -- spread new floors into blobs containing the old floor
+
+    repeat
       local changes = false
 
       for i = #unfilled, 1, -1 do
@@ -3346,13 +3375,13 @@ function Cave_build_a_park(R, entry_h)
         end
       end
 
-      return changes
+    until not changes
+
+    if table.empty(unfilled) then
+      return false
     end
 
-    while unfill_pass() do
-    end
-
-    return table.empty(unfilled)
+    return true  -- OK
   end
 
 
@@ -3365,11 +3394,13 @@ function Cave_build_a_park(R, entry_h)
     -- {
     --   stairs : list(STAIR_INFO)
     --
-    --   blob_floors[blob_id] --> integer
+    --   blob_floors[blob_id] -> integer
     -- }
     --
 
     hill_clear()
+
+    floor_num = 0
 
     -- not possible unless we have enough stairs
     if want_stairs > #all_stairs then return end
@@ -3385,34 +3416,15 @@ function Cave_build_a_park(R, entry_h)
 
     local num_floors = 0
 
-    local floors = {}
-    local sizes  = {}
-
     each st in stairs do
-      floors[st.B.id] = "stair"
+      st.B.floor_id = "stair"
     end
 
-    local function new_floor()
-      num_floors = num_floors + 1
-
-      local F = num_floors
-
-      sizes[F] = 0
-
-      return F
-    end
-
-    local function set_floor(B, f_id)
-      floors[B.id] = f_id
-
-      sizes[f_id] = sizes[f_id] + B.size
-    end
-
-    new_floor()
+    local F1 = hill_new_floor()
 
     each _,B in blob_map.regions do
-      if not floors[B.id] then
-        set_floor(B, 1)
+      if B.floor_id != "stair" then
+        hill_set_floor(B, F1)
       end
     end
 
@@ -3420,40 +3432,9 @@ function Cave_build_a_park(R, entry_h)
     -- then for each stair we divide its floor into two new floors.
     -- if this fails, then we abort the attempt.
 
-    local function divide_floor(st)
-      local old = floors[st.B.id]
-      assert(old)
-
-      local new1 = new_floor()
-      local new2 = new_floor()
-
-      assert(floors[st.src.id]  == old)
-      assert(floors[st.dest.id] == old)
-
-      set_floor(st.src,  new1)
-      set_floor(st.dest, new2)
-
-      floors[st.B.id] = "stair"
-
-      sizes [old] = nil
-
-      -- grow the new floors
-      if not hill_grow_new_floors(floors, sizes, old, new1, new2) then
-        return false
-      end
-
-      -- handle any blobs which could not be reached
-      each _,B in blob_map.regions do
-        if floors[B.id] == f_id then
-          return false  -- FAIL
-        end
-      end
-
-      return true  -- OK
-    end
 
     each st in stairs do
-      if not divide_floor(st) then
+      if not hill_divide_floor(st) then
         return
       end
     end
@@ -3461,10 +3442,20 @@ function Cave_build_a_park(R, entry_h)
 
     -- evaluate the result --
 
+    local floor_sizes = {}
+
+    each _,B in blob_map.regions() do
+      local f_id = B.floor_id
+
+      if f_id != "stair" then
+        floor_sizes[f_id] = (floor_sizes[f_id] or 0) + B.size
+      end
+    end
+
     local total_size = 0
     local min_size   = 9e9
 
-    each _,size in sizes do
+    each _,size in floor_sizes do
       total_size = total_size + size
       min_size   = math.min(min_size, size)
     end
@@ -3474,14 +3465,15 @@ function Cave_build_a_park(R, entry_h)
     local score = 20 * min_size / total_size + gui.random()
 
     if score > info.score then
-      info.score = score
-
-      info.best =
+      local HILL =
       {
         stairs = stairs
       }
 
-      hill_save(info.best)
+      hill_save(HILL)
+
+      info.best  = HILL
+      info.score = score
     end
   end
 
@@ -3507,7 +3499,7 @@ function Cave_build_a_park(R, entry_h)
 
     local all_blobs = table.keys(blob_map.regions)
 
-    local floor_blobs = {}   --  [floor_id] --> blob
+    local floor_blobs = {}   --  [floor_id] -> blob
 
     each blob_id, f_id in HILL.blob_floors do
       local B = blob_map.regions[blob_id]
@@ -3540,7 +3532,13 @@ function Cave_build_a_park(R, entry_h)
       end
     end
 
+    local mat1 = R.floor_mat
+    local mat2 = R.alt_floor_mat
+
+    if rand.odds(50) then mat1, mat2 = mat2, mat1 end
+
     floor_blobs[start_f].prelim_h = 0
+    floor_blobs[start_f].floor_mat = mat1
 
     -- flow through stairs to unvisited floors
 
@@ -3561,7 +3559,14 @@ function Cave_build_a_park(R, entry_h)
 
         if B1.prelim_h and not B2.prelim_h then
           st.height = 48
-          B2.prelim_h = B1.prelim_h + st.height
+
+          st.B.prelim_h  = B1.prelim_h + st.height / 2
+          st.B.floor_mat = "COMPBLUE"
+
+          B2.prelim_h  = B1.prelim_h + st.height
+          B2.floor_mat = mat2
+
+          mat1, mat2 = mat2, mat1
           changes = true
         end
       end
@@ -3583,7 +3588,7 @@ function Cave_build_a_park(R, entry_h)
         if ok then
           table.insert(all_stairs, { B=B, is_vert=is_vert, src=src, dest=dest })
         end
-      end 
+      end
     end
 
     -- try many combinations of dividing up the room based
@@ -3800,18 +3805,16 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
       if reg.prelim_h then
         local BLOB =
         {
-          floor_h   = base_h + reg.prelim_h
-          floor_mat = R.floor_mat
+          floor_h   = reg.prelim_h + base_h
+          floor_mat = reg.floor_mat
         }
-        if reg.is_step then
-          BLOB.floor_mat = "COMPBLUE"  -- R.alt_floor_mat
-        end
+
         assert(BLOB.floor_h)
         assert(BLOB.floor_mat)
 
         temp_install_blob(BLOB, reg)
 
-        if reg.is_floor then
+        if reg.floor_id != "stair" then
           table.insert(area.walk_floors, BLOB)
 
           area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
