@@ -845,10 +845,43 @@ GROW_STAIR_3 =
 }
 
 
-GROW_STAIRPAIR_2 =
+GROW_NARROWSTAIR_1 =
+{
+  prob = 10
+  prob_skew = 3
+  skip_prob = 70
+
+  structure =
+  {
+    "...", "AAA"
+    "...", "1^1"
+    "111", "111"
+  }
+}
+
+
+GROW_NARROWSTAIR_2 =
+{
+  prob = 10
+  prob_skew = 3
+  skip_prob = 70
+
+  z_dir = "up"
+
+  structure =
+  {
+    "...", "AAA"
+    "...", "1^1"
+    "...", "1^1"
+    "111", "111"
+  }
+}
+
+
+GROW_CAGESTAIR_1 =
 {
   prob = 20
-  skip_prob = 30
+  skip_prob = 50
   aversion = 3
 
   structure =
@@ -856,6 +889,41 @@ GROW_STAIRPAIR_2 =
     "...", "AAA"
     "...", "^C^"
     "111", "111"
+  }
+
+  cage_mode = "fancy"
+}
+
+
+GROW_CAGESTAIR_2 =
+{
+  prob = 10
+  skip_prob = 70
+  aversion = 3
+
+  structure =
+  {
+    "....", "AAAA"
+    "....", "^CC^"
+    "1111", "1111"
+  }
+
+  cage_mode = "fancy"
+}
+
+
+GROW_CAGESTAIR_3 =
+{
+  prob = 10
+  skip_prob = 70
+  aversion = 3
+
+  structure =
+  {
+    "....", "AAAA"
+    "....", "^CC^"
+    "....", "^CC^"
+    "1111", "1111"
   }
 
   cage_mode = "fancy"
