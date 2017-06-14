@@ -6,11 +6,18 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
-+  Y offsets on a ceiling sink mucked up by.... ?
+-  make start rooms NOT is_big
+
+-  start rooms NEVER symmetrical?  [ also hallway exits ]
+
+-  have a closet for start rooms, prefer it for "START" goal
+
+-  implement "P" shape closets  [ all four sides == area ]
+
 
 -  a version of "simple2" joiner for indoor/outdoor transitions
 
--  railings : max_z (or so) value, support in CSG DOOM
+-  railing brushes : require a bottom face
 
 -  internal fences (esp. for outdoor rooms)
 
