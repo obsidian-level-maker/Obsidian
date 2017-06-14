@@ -6,21 +6,19 @@ WORK IN PROGRESS
 Parks
 -----
 
-+  height variation  [ different areas ]
+-  don't merge blobs : just use same BLOBINFO for them
 
-   >>  work on hill_create_a_division() + hill_grow_new_floors()
-       to use the new method: directly set/test blob.floor_id
+-  once a hill division is decided, then iterate several
+   height variations and pick the "best".
+   [ e.g. prefer highest floor has GOAL or a connection ]
 
-   >>  flesh out install_division()
+-  ability to make a floor (or TWO) into a liquid
+   [ require no connections, except free-standing teleporters ]
+   [[ other floors MUST be higher ]]
 
-   -  windows and cages can be too low
-      [ logic for AREA:min_neighbor_h and max_... needs to look
-        into "nature" areas properly ]
-
-   -  create paths between walk-chunks
-      [ everything else could become liquid or fencey ]
-
-   -  ability to make liquid pools
+-  windows and cages can be too low
+   [ logic for AREA:min_neighbor_h and max_... needs to look
+     into "nature" areas properly ]
 
 
 
