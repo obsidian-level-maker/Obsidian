@@ -1488,14 +1488,18 @@ static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const regi
 
 
 static void DM_DeterminePegging(doom_linedef_c *L,
-								doom_sector_c *front, doom_sector_c *back,
+								region_c *front, region_c *back,
 								bool has_rail)
 {
+	// sanity check
+	if (front->gaps.empty())
+		return;
+
 	// one-sided?
 	// set LOWER-UNPEG only when ceiling is a door
-	if (! back)
+	if (! back || back->gaps.empty())
 	{
-		csg_brush_c *T = front->region->gaps.back() ->top;
+		csg_brush_c *T = front->gaps.back() ->top;
 
 		if (T->props.getInt("mover"))
 		{
@@ -1512,18 +1516,18 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 	// Note: later we will clear LOWER-UNPEG if lower is visible and it
 	//       has a y_offset.
 
-	csg_brush_c *B1 = front->region->gaps.front()->bottom;
-	csg_brush_c *T1 = front->region->gaps.back() ->top;
+	csg_brush_c *B1 = front->gaps.front()->bottom;
+	csg_brush_c *T1 = front->gaps.back() ->top;
 
-	csg_brush_c *B2 =  back->region->gaps.front()->bottom;
-	csg_brush_c *T2 =  back->region->gaps.back() ->top;
+	csg_brush_c *B2 =  back->gaps.front()->bottom;
+	csg_brush_c *T2 =  back->gaps.back() ->top;
 
 	if (has_rail)
 	{
 		L->flags |= MLF_LowerUnpeg;
 	}
-	else if ( (back->f_h > front->f_h && B2->props.getInt("mover")) ||
-			 (front->f_h >  back->f_h && B1->props.getInt("mover")))
+	else if ((/*  back->f_h > front->f_h && */ B2->props.getInt("mover")) ||
+			 (/* front->f_h >  back->f_h && */ B1->props.getInt("mover")))
 	{
 		// pegged lower
 	}
@@ -1532,8 +1536,8 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 		L->flags |= MLF_LowerUnpeg;
 	}
 
-	if ( (back->c_h < front->c_h && T2->props.getInt("mover")) ||
-		(front->c_h <  back->c_h && T1->props.getInt("mover")))
+	if ((/*  back->c_h < front->c_h && */ T2->props.getInt("mover")) ||
+		(/* front->c_h <  back->c_h && */ T1->props.getInt("mover")))
 	{
 		// pegged upper
 	}
@@ -1639,7 +1643,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 	// set pegging _before_ making sidedefs
 
-	DM_DeterminePegging(L, front, back, (f_rail || b_rail) ? true : false);
+	DM_DeterminePegging(L, R, N, (f_rail || b_rail) ? true : false);
 
 	bool unpeg_L = (L->flags & MLF_LowerUnpeg) != 0;
 	bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;

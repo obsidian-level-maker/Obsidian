@@ -974,9 +974,7 @@ function Render_sink_part(A, S, where, sink)
     if is_trim then
       if not sink.trim_mat then return end
 
-      if sink.trim_dz then
-        T.delta_z = sink.trim_dz - base_dz
-      end
+      T.delta_z = (sink.trim_dz or 0) - base_dz
 
       T.light_add = sink.trim_light
 
@@ -988,9 +986,7 @@ function Render_sink_part(A, S, where, sink)
       end
 
     else
-      if sink.dz then
-        T.delta_z = sink.dz - base_dz
-      end
+      T.delta_z = (sink.dz or 0) - base_dz
 
       -- these can be nil
       T.light_add = sink.light
