@@ -257,7 +257,11 @@ function Quest_create_initial_quest()
 
 
   local function add_normal_exit(quest)
-    local R = assert(LEVEL.exit_room)
+    local R = LEVEL.exit_room
+
+    if not R then
+      R = pick_exit_room()
+    end
 
     if not R then
       error("Unable to pick exit room!")
@@ -270,6 +274,10 @@ function Quest_create_initial_quest()
     gui.printf("Exit room: %s\n", R.name)
 
     R.is_exit = true
+
+    if not LEVEL.exit_room then
+      LEVEL.exit_room = R
+    end
 
     -- create the goal for the entire map
     local GOAL = Goal_new("EXIT")
