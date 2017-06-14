@@ -772,6 +772,7 @@ function Seed_dump_rooms()
     for x = 1,SEED_W do
       line = line .. seed_to_char(SEEDS[x][y])
     end
+    line = string.gsub(line, "  *$", "")
     gui.printf("%s\n", line)
   end
 
