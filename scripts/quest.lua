@@ -205,14 +205,15 @@ function Quest_create_initial_quest()
   --
 
   local function eval_exit_room(R, secret_mode)
+    if R.is_exit    then return -1 end
     if R.is_hallway then return -1 end
-
-    if R.is_exit then return -1 end
 
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
 
     if secret_mode then
+      if R.is_start then return -1 end
+
       local conn = R.conns[1]
 
       -- cannot teleport into a secret exit
@@ -229,7 +230,16 @@ function Quest_create_initial_quest()
       return score + gui.random()
     end
 
+    -- occasionally the grower will only produce a single room,
+    -- hence we cannot reject a starting room completely
+    if R.is_start then
+      return gui.random() / 100
+    end
+
     local score = R.svolume
+
+    -- caves are not ideal
+    if R.is_cave then score = score / 2 end
 
     return score + gui.random() * 10
   end
@@ -329,6 +339,9 @@ function Quest_create_initial_quest()
     Q.rooms[R.id] = R
     Q.svolume = Q.svolume + R.svolume
   end
+
+  -- the start room may not be chosen yet (so NIL is ok)
+  Q.entry = LEVEL.start_room
 
   add_normal_exit(Q)
 
@@ -1425,7 +1438,11 @@ function Quest_start_room()
 
 
   local function add_normal_start()
-    local R = pick_best_start()
+    local R = LEVEL.start_room
+
+    if not R then
+      R = pick_best_start()
+    end
 
     if not R then
       error("Could not find a usable start room")
@@ -1435,7 +1452,15 @@ function Quest_start_room()
 
     R.is_start = true
 
-    LEVEL.start_room  = R
+    if not LEVEL.start_room then
+      LEVEL.start_room  = R
+    end
+
+    if not start_quest then
+      start_quest = assert(R.quest)
+      assert(start_quest.entry == R)
+    end
+
     start_quest.entry = R
 
     local GOAL = Goal_new("START")
@@ -1478,7 +1503,7 @@ function Quest_start_room()
     -- only for Co-operative games
     if OB_CONFIG.playmode != "coop" then return end
 
-    -- disabled by gameplay_tweaks module?
+    -- disabled by a module?
     if PARAM.start_together then return end
 
     local R = pick_best_start("alt_mode")
@@ -1508,7 +1533,9 @@ function Quest_start_room()
 
   Quest_calc_exit_dists()
 
-  find_start_quest()
+  if not LEVEL.start_room then
+    find_start_quest()
+  end
 
   add_normal_start()
 
