@@ -25,3 +25,16 @@ PREFABS.Locked_joiner_triple =
   flat_FLOOR7_1 = "BIGDOOR4"
 }
 
+
+-- variation for BOOM compatible ports
+PREFABS.Locked_joiner_triple_boom =
+{
+  template = "Locked_joiner_triple"
+
+  map = "MAP02"
+
+  engine = "boom"
+
+  rank = 2
+}
+
