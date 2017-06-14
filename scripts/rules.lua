@@ -271,7 +271,6 @@ ROOT_LIQUID_CAGE3 =
 
 EXIT_1 =
 {
-  pass = "exit_root"
   prob = 60
 
   structure =
@@ -381,7 +380,6 @@ EXIT1_AREA_C =
 
 EXIT_2 =
 {
-  pass = "exit_root"
   prob = 30
 
   structure =
@@ -453,7 +451,6 @@ EXIT2_DECOR =
 
 EXIT_3 =
 {
-  pass = "exit_root"
   env  = "building"
   prob = 20
 

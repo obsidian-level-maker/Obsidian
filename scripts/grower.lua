@@ -27,6 +27,7 @@ function Grower_preprocess_grammar()
 
   local function name_to_pass(name)
     if string.match(name, "ROOT_")      then return "root" end
+    if string.match(name, "EXIT_")      then return "exit" end
     if string.match(name, "GROW_")      then return "grow" end
     if string.match(name, "SPROUT_")    then return "sprout" end
     if string.match(name, "DECORATE_")  then return "decorate" end
@@ -479,7 +480,7 @@ function Grower_preprocess_grammar()
   local function find_focal_points()
     def.focal_points = {}
 
-    if def.pass == "root" or def.pass == "exit_root" then
+    if def.pass == "root" or def.pass == "exit" then
       return
     end
 
@@ -3243,7 +3244,7 @@ function Grower_create_and_grow_room(trunk, mode, info)
   local pass = "root"
 
   if mode == "exit" then
-    pass = "exit_root"
+    pass = "exit"
     R.is_exit = true
     LEVEL.exit_room = R
   end
