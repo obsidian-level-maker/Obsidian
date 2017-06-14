@@ -1268,6 +1268,7 @@ function Grower_kill_room(R)
 
   gui.debugf("Killing small/ungrown room %s\n", R.name)
 
+  assert(R != LEVEL.start_room)
   assert(R != LEVEL.exit_room)
 
   handle_conn()
@@ -3351,15 +3352,25 @@ function Grower_begin_trunks()
   local trunk = Grower_add_a_trunk()
   local info  = {}
 
-  local R = Grower_create_and_grow_room(trunk, "exit", info)
+  -- TODO : if we have big boss (esp. Mastermind) then
+  --        grow the map backwards (do "exit" pass now)
+
+  local R = Grower_create_and_grow_room(trunk, nil, info)
 
   assert(not R.is_dead)
 
-  -- ensure the first floor area is kept usable for bosses
-  each A in R.areas do
-    if A.mode == "floor" then
-      A.is_bossy = true
-      break;
+  if not R.is_exit then
+    R.is_start = true
+    LEVEL.start_room = R
+  end
+
+  -- ensure the first floor of an exit room is kept usable for bosses
+  if R.is_exit then
+    each A in R.areas do
+      if A.mode == "floor" then
+        A.is_bossy = true
+        break;
+      end
     end
   end
 end
@@ -3434,13 +3445,17 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   end
 
 
-  local function check_exit_room()
-    if LEVEL.exit_room:prelim_conn_num() == 0 then
-      Grower_sprout_room(LEVEL.exit_room)
+  local function check_initial_room()
+    local R = LEVEL.start_room or LEVEL.exit_room
+
+    if not R then return true end
+
+    if R:prelim_conn_num() == 0 then
+      Grower_sprout_room(R)
 
       each PC in LEVEL.prelim_conns do
-        if PC.R1.is_exit or PC.R2.is_exit then
-          local other = sel(PC.R1.is_eit, PC.R2, PC.R1)
+        if PC.R1 == R or PC.R2 == R then
+          local other = sel(PC.R1 == R, PC.R2, PC.R1)
 
           Grower_grow_room(other)
           Grower_sprout_room(other)
@@ -3506,7 +3521,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   -- if map is too small, try to sprout some more rooms
   local MAX_LOOP = 10
 
-  check_exit_room()
+  check_initial_room()
 
   for loop = 1, MAX_LOOP do
 
@@ -3519,8 +3534,8 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     if kw == "reached" then
       kill_surplus_rooms()
 
-      -- go around again if the exit room resprouted
-      if check_exit_room() != "resprout" then
+      -- go around again if the initial room resprouted
+      if check_initial_room() != "resprout" then
         break;
       end
     end
