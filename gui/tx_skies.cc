@@ -165,7 +165,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
 	twist.Seed(seed ^ 0x1234567);
 
-	bool use_slope_z = (twist.Int() & 255) < 64;
+	bool use_slope_z = (twist.Int() & 255) < 20;
 
 
 	// convert range from 0.0 .. 1.0 to min_h . max_h
