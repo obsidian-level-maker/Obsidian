@@ -937,6 +937,18 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
   end
 
 
+  local function fix_mirrored_trap(chunk, trig)
+    if chunk.peer and not chunk.peer.content then
+      chunk = chunk.peer
+
+      -- using "NOTHING" is not enough (sinks would still be made)
+      chunk.content = "MON_TELEPORT"
+      chunk.trigger = trig
+      chunk.out_tag = 9999  -- a dummy tag (never referenced)
+    end
+  end
+
+
   local function install_a_closet_trap(info, trig)
     local R    = info.room
     local locs = info.locs
@@ -984,6 +996,15 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     local chunk2 = table.remove(locs, 1)
     local chunk3 = table.remove(locs, 1)
 
+    -- in a symmetrical room, try to use a peered chunk
+    if chunk1.peer and not chunk1.peer.content then
+      chunk3 = chunk1.peer
+    elseif chunk2.peer and not chunk2.peer.content then
+      chunk3 = chunk2.peer
+    elseif chunk3.peer and not chunk3.peer.content then
+      chunk2 = chunk3.peer
+    end
+
     make_teleport_trap(chunk1, trig)
     make_teleport_trap(chunk2, trig)
     make_teleport_trap(chunk3, trig)
@@ -991,6 +1012,11 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     DEPOT.skin.out_tag1 = chunk1.out_tag
     DEPOT.skin.out_tag2 = chunk2.out_tag
     DEPOT.skin.out_tag3 = chunk3.out_tag
+
+    -- this is to prevent non-symmetrical sinks or decor prefabs
+    fix_mirrored_trap(chunk1, trig)
+    fix_mirrored_trap(chunk2, trig)
+    fix_mirrored_trap(chunk3, trig)
   end
 
 
