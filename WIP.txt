@@ -6,10 +6,6 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
--  make start rooms NOT is_big
-
--  start rooms NEVER symmetrical?  [ also hallway exits ]
-
 -  have a closet for start rooms, prefer it for "START" goal
 
 -  implement "P" shape closets  [ all four sides == area ]
@@ -18,6 +14,8 @@ Miscellaneous
 -  a version of "simple2" joiner for indoor/outdoor transitions
 
 -  railing brushes : require a bottom face
+
+-  get posts working with rail junctions again
 
 -  internal fences (esp. for outdoor rooms)
 
