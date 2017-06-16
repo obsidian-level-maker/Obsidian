@@ -2438,6 +2438,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       chunk.occupy = r.occupy
       chunk.prefer_usage = r.usage
 
+      if T.is_straddling then
+        chunk.is_straddler = true
+      end
+
       if rand.odds(r.keep_shape_prob or 0) then
         chunk.keep_shape = true
       end
@@ -2767,8 +2771,12 @@ end
 --stderrf("=== match_or_install_pattern %s @ (%d %d) ===\n", cur_rule.name, T.x, T.y)
     T.is_first  = nil
     T.is_second = nil
+    T.is_straddling = nil
 
-    if R.symmetry and try_straddling_pattern(what, T) then
+    if R.symmetry then
+      T.is_straddling = true
+
+      if try_straddling_pattern(what, T) then
 
 --[[ DEBUG
 if what == "INSTALL" then
@@ -2776,7 +2784,10 @@ stderrf("[ straddler ]\n")
 stderrf("T =\n%s\n", table.tostr(T))
 end
 --]]
-      return true
+        return true
+      end
+
+      T.is_straddling = nil
     end
 
     if R.symmetry then

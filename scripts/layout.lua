@@ -277,17 +277,19 @@ function Layout_spot_for_wotsit(R, kind, required)
 
     -- in general, prefer closets over free-standing spots
     if chunk.kind == "closet" then
-      score = score + 12
+      score = score + 22
     end
 
     if chunk.sw >= 2 or chunk.sh >= 2 then
-      score = score + 5
+      score = score + 9
     end
 
     if chunk.is_straddler then
-      if kind == "EXIT"  then score = score + 20 end
-      if kind == "START" then score = score + 20 end
-      if kind == "KEY"   then score = score +  7 end
+      if kind == "EXIT"  or kind == "START" or
+         kind == "KEY" or kind == "SWITCH"
+      then
+        score = score + 41
+      end
     end
 
     if chunk.prefer_usage and chunk.prefer_usage == kind then
