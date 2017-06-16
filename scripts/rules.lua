@@ -24,7 +24,7 @@ SHAPE_GRAMMAR =
 
 ROOT_1 =
 {
-  prob = 100
+  prob = 50
 
   structure =
   {
@@ -34,27 +34,11 @@ ROOT_1 =
     "!!!!!", ".RRR."
     "!!!!!", "....."
   }
-}
 
-
-ROOT_2 =
-{
-  prob = 60*0
-
-  structure =
+  new_room =
   {
-    "!!!!!", "....."
-    "!!!!!", "./R%."
-    "!!!!!", ".RRR."
-    "!!!!!", ".RRR."
-    "!!!!!", ".%R/."
-    "!!!!!", "....."
-  }
-
-  diagonals =
-  {
-    ".R", "R."
-    ".R", "R."
+    symmetry  = { kind="mirror", x=3, y=2, dir=8 }
+    symmetry2 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
 }
 
@@ -72,16 +56,51 @@ ROOT_3 =
     "!!!!!!", ".RRRR."
     "!!!!!!", "......"
   }
+
+  new_room =
+  {
+    symmetry  = { kind="mirror", x=3, y=2, w=2, dir=8 }
+    symmetry2 = { kind="rotate", x=2, y=2, x2=5, y2=5 }
+  }
 }
+
+
+ROOT_4 =
+{
+  prob = 20
+
+  structure =
+  {
+    "!!!!!!", "......"
+    "!!!!!!", "./RR%."
+    "!!!!!!", ".RRRR."
+    "!!!!!!", ".RRRR."
+    "!!!!!!", ".%RR/."
+    "!!!!!!", "......"
+  }
+
+  diagonals =
+  {
+    ".R", "R."
+    ".R", "R."
+  }
+
+  new_room =
+  {
+    symmetry  = { kind="mirror", x=3, y=2, w=2, dir=8 }
+    symmetry2 = { kind="rotate", x=2, y=2, x2=5, y2=5 }
+  }
+}
+
 
 
 ROOT_L1 =
 {
-  prob = 40
+  prob = 2
 
   structure =
   {
-    "!!!!!", ".RR##"
+    "!!!!!", ".RR#."
     "!!!!!", ".RR##"
     "!!!!!", "#RRRR"
     "!!!!!", "#RRRR"
@@ -90,45 +109,13 @@ ROOT_L1 =
 }
 
 
-ROOT_L2 =
-{
-  prob = 40*0
-
-  structure =
-  {
-    "!!!!!", ".RR##"
-    "!!!!!", ".RR%#"
-    "!!!!!", "#RRRR"
-    "!!!!!", ".%RRR"
-    "!!!!!", "..#.."
-  }
-
-  diagonals = { "R.", ".R" }
-}
-
-
-ROOT_T1 =
-{
-  prob = 40
-
-  structure =
-  {
-    "!!!!!!", "..##.."
-    "!!!!!!", "RRRRRR"
-    "!!!!!!", "RRRRRR"
-    "!!!!!!", "##RR##"
-    "!!!!!!", "##RR##"
-  }
-}
-
-
 ROOT_T2 =
 {
-  prob = 40*0
+  prob = 5
 
   structure =
   {
-    "!!!!!!", "..##.."
+    "!!!!!!", "......"
     "!!!!!!", "RRRRRR"
     "!!!!!!", "RRRRRR"
     "!!!!!!", "#%RR/#"
@@ -136,12 +123,17 @@ ROOT_T2 =
   }
 
   diagonals = { ".R", "R." }
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=3, y=1, w=2, dir=8 }
+  }
 }
 
 
 ROOT_CAGES4 =
 {
-  prob = 35
+  prob = 2
 
   structure =
   {
@@ -164,7 +156,7 @@ ROOT_CAGES4 =
 
 ROOT_LIQUID_1A =
 {
-  prob = 25*0
+  prob = 5
 
   structure =
   {
@@ -185,7 +177,8 @@ ROOT_LIQUID_1A =
 
   new_room =
   {
-    symmetry = { kind="rotate", x=2, y=2, x2=4, y2=4 }
+    symmetry  = { kind="mirror", x=3, y=1, dir=8 }
+    symmetry2 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
 }
 
@@ -194,7 +187,7 @@ ROOT_LIQUID_1B =
 {
   template = "ROOT_LIQUID_1A"
 
-  prob = 30*0
+  prob = 1
 
   structure =
   {
@@ -206,44 +199,18 @@ ROOT_LIQUID_1B =
   }
 
   cage_mode = "fancy"
-}
-
-
-ROOT_LIQUID_CAGE2 =
-{
-  prob = 20*0
-
-  structure =
-  {
-    "!!!!!", "!RRR%"
-    "!!!!!", "#~~%R"
-    "!!!!!", "#C%~R"
-    "!!!!!", "#C/~R"
-    "!!!!!", "#~~/R"
-    "!!!!!", "!RRR/"
-  }
-
-  diagonals =
-  {
-    "R."
-    "~R"
-    "C~"
-    "C~"
-    "~R"
-    "R."
-  }
 
   new_room =
   {
+    symmetry  = { kind="mirror", x=3, y=1, dir=8 }
+    symmetry2 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
-
-  cage_mode = "fancy"
 }
 
 
 ROOT_LIQUID_CAGE3 =
 {
-  prob = 70
+  prob = 40
 
   structure =
   {
@@ -978,7 +945,7 @@ GROW_STAIRPAIR_4C =
 
 GROW_STAIRPAIR_5 =
 {
-  prob = 120
+  prob = 90
   skip_prob = 50
   aversion = 5
 
@@ -997,7 +964,7 @@ GROW_STAIRPAIR_5 =
 
 GROW_STAIRPAIR_5D =
 {
-  prob = 90
+  prob = 70
   skip_prob = 35
   aversion = 2
 
@@ -1603,7 +1570,7 @@ SPROUT_JOINER_3x2 =
 
 SPROUT_JOINER_L =
 {
-  prob = 100
+  prob = 30
 
   structure =
   {
@@ -2277,6 +2244,8 @@ HALL_1_SPROUT_A =
   new_room =
   {
     conn = { x=2, y=2, dir=8 }
+
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
   }
 }
 
@@ -2394,6 +2363,8 @@ HALL_2_SPROUT_A =
   new_room =
   {
     conn = { x=2, y=2, w=2, dir=8 }
+
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
   }
 }
 
@@ -2414,6 +2385,8 @@ HALL_2_SPROUT_B =
   new_room =
   {
     conn = { x=1, y=2, w=2, dir=8 }
+
+    -- deliberately no symmetry info
   }
 }
 
