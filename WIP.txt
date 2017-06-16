@@ -10,9 +10,6 @@ Miscellaneous
 
 -  implement "P" shape closets  [ all four sides == area ]
 
-
--  a version of "simple2" joiner for indoor/outdoor transitions
-
 -  railing brushes : require a bottom face
 
 -  get posts working with rail junctions again
