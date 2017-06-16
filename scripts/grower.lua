@@ -1109,6 +1109,16 @@ function Grower_add_room(parent_R, info, trunk)
 
 gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
 
+  if info.force_start then
+    R.is_start = true
+    LEVEL.start_room = R
+  end
+
+  if info.force_exit then
+    R.is_exit = true
+    LEVEL.exit_room = R
+  end
+
   if trunk == nil then
     assert(parent_R)
     trunk = assert(parent_R.trunk)
@@ -3246,8 +3256,6 @@ function Grower_create_and_grow_room(trunk, mode, info)
 
   if mode == "exit" then
     pass = "exit"
-    R.is_exit = true
-    LEVEL.exit_room = R
   end
 
   Grower_grammatical_pass(R, pass, 1, 0, nil, "is_create", nil)
@@ -3355,14 +3363,12 @@ function Grower_begin_trunks()
   -- TODO : if we have big boss (esp. Mastermind) then
   --        grow the map backwards (do "exit" pass now)
 
+  info.force_start = true
+  info.force_exit  = false
+
   local R = Grower_create_and_grow_room(trunk, nil, info)
 
   assert(not R.is_dead)
-
-  if not R.is_exit then
-    R.is_start = true
-    LEVEL.start_room = R
-  end
 
   -- ensure the first floor of an exit room is kept usable for bosses
   if R.is_exit then

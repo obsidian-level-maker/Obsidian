@@ -1569,8 +1569,8 @@ function Room_choose_size(R, not_big)
     prob = 0
   elseif R.is_cave then
     prob = 100
-  elseif R.is_exit then
-    prob = 10
+  elseif R.is_start or R.is_exit then
+    prob = 0
   elseif R.is_outdoor then
     prob = style_sel("big_rooms", 0, 10, 20, 50)
   else
