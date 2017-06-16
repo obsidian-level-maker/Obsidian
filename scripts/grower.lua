@@ -1614,15 +1614,21 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   local function transform_symmetry(T)
     if not cur_rule.new_room then return nil end
 
-    local info = cur_rule.new_room.symmetry
-    if not info then return nil end
+    local all_symmetries = {}
 
-    if info.list then
-      info = rand.pick(info.list)
+    for i = 1,9 do
+      local name = "symmetry"
+      if i > 1 then name = name .. i end
+
+      local info = cur_rule.new_room[name]
+      if info and (info.kind != "rotate" or rand.odds(20)) then
+        table.insert(all_symmetries, cur_rule.new_room[name])
+      end
     end
 
---FIXME
---if pass != "root" then return nil end
+    if table.empty(all_symmetries) then return end
+
+    local info = rand.pick(all_symmetries)
 
     local sym = Symmetry_new(info.kind or "mirror")
 
