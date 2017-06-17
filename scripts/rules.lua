@@ -995,6 +995,7 @@ GROW_STAIRPAIR_5 =
 }
 
 
+-- FIXME : rename, as these are really L-shape new-floor rules
 GROW_STAIRPAIR_5E =
 {
   prob = 80
@@ -1013,6 +1014,43 @@ GROW_STAIRPAIR_5E =
   }
 }
 
+
+GROW_STAIRPAIR_5F =
+{
+  prob = 30
+  skip_prob = 50
+  aversion = 4
+
+  z_dir = "up"
+
+  structure =
+  {
+    "....", "AAAA"
+    "....", "11^A"
+    "....", "11^A"
+    "11..", "111A"
+    "11..", "111A"
+  }
+}
+
+
+GROW_STAIRPAIR_5G =
+{
+  prob = 10
+  skip_prob = 50
+  aversion = 4
+
+  z_dir = "up"
+
+  structure =
+  {
+    "....", "AAAA"
+    "....", "11^A"
+    "....", "11^A"
+    "11..", "11^A"
+    "11..", "111A"
+  }
+}
 
 
 GROW_STAIRPAIR_5D =
