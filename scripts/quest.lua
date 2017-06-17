@@ -211,10 +211,10 @@ function Quest_create_initial_quest()
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
 
+    local conn = R.conns[1]
+
     if secret_mode then
       if R.is_start then return -1 end
-
-      local conn = R.conns[1]
 
       -- cannot teleport into a secret exit
       if conn.kind == "teleporter" then return -1 end
@@ -236,10 +236,17 @@ function Quest_create_initial_quest()
       return gui.random() / 100
     end
 
+    -- prefer a non-teleporter entrance (so we can lock it)
+    if conn.kind == "teleporter" then
+      local score = sel(R.is_cave, 1, 2)
+
+      return score + gui.random()
+    end
+
     local score = R.svolume
 
     -- caves are not ideal
-    if R.is_cave then score = score / 2 end
+    if R.is_cave then score = score / 4 end
 
     return score + gui.random() * 10
   end
