@@ -793,7 +793,7 @@ GROW_CAGEPAIR_2 =
 
 GROW_LIQUID_CAGE3 =
 {
-  prob = 20
+  prob = 15
   skip_prob = 25
 
   structure =
@@ -810,7 +810,7 @@ GROW_LIQUID_CAGE3 =
   {
     "#C"
     "C~"
-    "~R"
+    "~1"
   }
 
   cage_mode = "fancy"
