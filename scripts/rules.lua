@@ -131,29 +131,6 @@ ROOT_T2 =
 }
 
 
-ROOT_CAGES4 =
-{
-  prob = 2
-
-  structure =
-  {
-    "!!!!!", ".#.#."
-    "!!!!!", "RCRCR"
-    "!!!!!", "RRRRR"
-    "!!!!!", "RRRRR"
-    "!!!!!", "RCRCR"
-    "!!!!!", ".#.#."
-  }
-
-  new_room =
-  {
-    symmetry = { dir=4, x=2, y=3, w=2 }
-  }
-
-  cage_mode = "fancy"
-}
-
-
 ROOT_LIQUID_1A =
 {
   prob = 5
@@ -205,31 +182,6 @@ ROOT_LIQUID_1B =
     symmetry  = { kind="mirror", x=3, y=1, dir=8 }
     symmetry2 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
-}
-
-
-ROOT_LIQUID_CAGE3 =
-{
-  prob = 40
-
-  structure =
-  {
-    "!!!!!", "#####"
-    "!!!!!", "#/C~R"
-    "!!!!!", "#C/~R"
-    "!!!!!", "#~~/R"
-    "!!!!!", "!RRRR"
-    "!!!!!", "!RRRR"
-  }
-
-  diagonals =
-  {
-    "#C"
-    "C~"
-    "~R"
-  }
-
-  cage_mode = "fancy"
 }
 
 
@@ -784,6 +736,87 @@ GROW_AREA_2 =
 }
 
 
+GROW_BIG_CAGE =
+{
+  prob = 10
+  skip_prob = 50
+  aversion = 10
+
+  structure =
+  {
+    "....", "1111"
+    "....", "1CC1"
+    "....", "1CC1"
+    "1111", "1111"
+  }
+
+  cage_mode = "fancy"
+}
+
+
+GROW_CAGEPAIR_1 =
+{
+  prob = 1
+  skip_prob = 50
+
+  structure =
+  {
+    "......", "#AAAA#"
+    "......", "#CAAC#"
+    "......", "#AAAA#"
+    "xx11xx", "xx11xx"
+  }
+
+  cage_mode = "fancy"
+}
+
+
+GROW_CAGEPAIR_2 =
+{
+  prob = 5
+  skip_prob = 30
+  aversion = 5
+
+  structure =
+  {
+    "......", "#AAAA#"
+    "......", "#CAAC#"
+    "......", "#AAAA#"
+    "......", "#CAAC#"
+    "......", "#AAAA#"
+    ".1111.", ".1111."
+  }
+
+  cage_mode = "fancy"
+}
+
+
+GROW_LIQUID_CAGE3 =
+{
+  prob = 20
+  skip_prob = 25
+
+  structure =
+  {
+    ".....", "#####"
+    ".....", "#/C~1"
+    ".....", "#C/~1"
+    ".....", "#~~/1"
+    ".....", ".1111"
+    ".1111", ".1111"
+  }
+
+  diagonals =
+  {
+    "#C"
+    "C~"
+    "~R"
+  }
+
+  cage_mode = "fancy"
+}
+
+
 GROW_STAIR_2 =
 {
   prob = 12
@@ -847,9 +880,9 @@ GROW_NARROWSTAIR_2 =
 
 GROW_CAGESTAIR_1 =
 {
-  prob = 20
+  prob = 5
   skip_prob = 50
-  aversion = 3
+  aversion = 5
 
   structure =
   {
@@ -864,9 +897,9 @@ GROW_CAGESTAIR_1 =
 
 GROW_CAGESTAIR_2 =
 {
-  prob = 10
+  prob = 5
   skip_prob = 70
-  aversion = 3
+  aversion = 5
 
   structure =
   {
@@ -881,9 +914,9 @@ GROW_CAGESTAIR_2 =
 
 GROW_CAGESTAIR_3 =
 {
-  prob = 10
+  prob = 5
   skip_prob = 70
-  aversion = 3
+  aversion = 5
 
   structure =
   {
