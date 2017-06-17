@@ -200,8 +200,6 @@ function Grower_preprocess_grammar()
 
 
   local function add_style(name)
-    if not def.styles then def.styles = {} end
-
     table.add_unique(def.styles, name)
   end
 
@@ -732,6 +730,8 @@ function Grower_preprocess_grammar()
     if cur_def.pass == nil then
        cur_def.pass = name_to_pass(name)
     end
+
+    if not def.styles then def.styles = {} end
 
     convert_structure()
     finalize_structure()
@@ -1458,6 +1458,9 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     -- stair direction check
     if rule.z_dir == "up"   and R.trunk.stair_z_dir < 0 then return 0 end
     if rule.z_dir == "down" and R.trunk.stair_z_dir > 0 then return 0 end
+
+    -- no cages in start rooms
+    if R.is_start and table.has_elem(rule.styles, "cages") then return 0 end
 
     -- environment checks...
     if (rule.env or "any") != "any" then
