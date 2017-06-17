@@ -6,6 +6,8 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
++  crates/cages/pillars right in front of teleporter/start/exit closets
+
 -  have a closet for start rooms, prefer it for "START" goal
 
 -  implement "P" shape closets  [ all four sides == area ]
@@ -15,6 +17,10 @@ Miscellaneous
 -  get posts working with rail junctions again
 
 -  internal fences (esp. for outdoor rooms)
+
+-  strong tendency to lock the exit room
+
+-  a less ornate secret item closet, small items (e.g. 10 potions)
 
 
 
