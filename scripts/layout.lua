@@ -1211,8 +1211,6 @@ function Layout_decorate_rooms(pass)
   --
 
   local function make_cage(chunk)
-    chunk.content = "CAGE"
-
     -- select cage prefab
     local A = chunk.area
     local reqs
@@ -1246,14 +1244,20 @@ function Layout_decorate_rooms(pass)
       reqs.env = A.room:get_env()
     end
 
-    chunk.prefab_def = Fab_pick(reqs)
+    local prefab_def = Fab_pick(reqs, "allow_none")
+
+    -- nothing matched?
+    if not prefab_def then return end
+
+    chunk.content    = "CAGE"
+    chunk.prefab_def = prefab_def
 
     -- in symmetrical rooms, handle the peer too
     if chunk.peer and not chunk.peer.content then
       local peer = chunk.peer
 
-      peer.content = chunk.content
-      peer.prefab_def   = chunk.prefab_def
+      peer.content    = chunk.content
+      peer.prefab_def = chunk.prefab_def
 
       if chunk.kind != "closet" and chunk.prefab_dir then
         local A = chunk.area
