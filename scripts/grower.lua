@@ -2993,7 +2993,7 @@ end
 
     -- SUCCESS --
 
-    gui.debugf("Applied grammar rule %s\n", cur_rule.name)
+    gui.debugf("APPLIED rule: %s\n", cur_rule.name)
 
     update_aversions(cur_rule)
 
