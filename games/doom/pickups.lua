@@ -218,7 +218,7 @@ DOOM.NICE_ITEMS =
   backpack =
   {
     id = 8
-    kind = "other"
+    kind = "ammo"
     add_prob = 40
     start_prob = 80
     closet_prob = 10
