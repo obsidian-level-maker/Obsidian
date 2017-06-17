@@ -978,7 +978,7 @@ GROW_STAIRPAIR_4C =
 
 GROW_STAIRPAIR_5 =
 {
-  prob = 90
+  prob = 20
   skip_prob = 50
   aversion = 5
 
@@ -995,9 +995,29 @@ GROW_STAIRPAIR_5 =
 }
 
 
+GROW_STAIRPAIR_5E =
+{
+  prob = 80
+  skip_prob = 33
+  aversion = 4
+
+  z_dir = "up"
+
+  structure =
+  {
+    "....", "AAAA"
+    "....", "^11A"
+    "....", "^11A"
+    "11..", "111A"
+    "11..", "111A"
+  }
+}
+
+
+
 GROW_STAIRPAIR_5D =
 {
-  prob = 70
+  prob = 55
   skip_prob = 35
   aversion = 2
 
