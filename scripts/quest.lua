@@ -2102,6 +2102,31 @@ function Quest_nice_items()
   end
 
 
+  local function pick_different_item(pal, avoid_items)
+    -- prevent giving a similar item in a secret closet to an item
+    -- explicitly given to the player in a room.
+
+    pal = table.copy(pal)
+
+    each name1 in avoid_items do
+      local info1 = assert(ALL_ITEMS[name1])
+
+      each name2,val in pal do
+        local info2 = assert(ALL_ITEMS[name2])
+
+        if info1.kind == info2.kind then
+          pal[name2] = val / 100
+        end
+      end
+
+      -- remove the actual item completely
+      pal[name1] = nil
+    end
+
+    return pick_item(pal)
+  end
+
+
   local function secret_palette(do_closet)
     local pal = {}
 
@@ -2278,7 +2303,7 @@ function Quest_nice_items()
 
     -- pick the items
     for loop = 1, usable do
-      local item = pick_item(closet_items)
+      local item = pick_different_item(closet_items, R.items)
 
       if item == nil then break; end
 
@@ -2476,8 +2501,6 @@ function Quest_nice_items()
   -- handle the secret sauces first
   visit_secret_rooms()
 
-  handle_secret_closets()
-
   if OB_CONFIG.items == "none" then
     gui.printf("Nice Items : disabled (user setting).\n")
   else
@@ -2489,6 +2512,8 @@ function Quest_nice_items()
 
     visit_other_rooms()
   end
+
+  handle_secret_closets()
 
   -- mark all remaining unused leafs as STORAGE rooms
   find_storage_rooms()
