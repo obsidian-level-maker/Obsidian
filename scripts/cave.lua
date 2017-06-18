@@ -3537,15 +3537,6 @@ function Cave_build_a_park(R, entry_h)
       end
     end
 
-
---[[
-    local mat1 = R.floor_mat
-    local mat2 = R.alt_floor_mat
-
-    if rand.odds(50) then mat1, mat2 = mat2, mat1 end
-
-    floor_blobs[start_f].floor_mat = mat1
---]]
     profile[start_f].prelim_h = 0
 
 
@@ -3618,8 +3609,27 @@ function Cave_build_a_park(R, entry_h)
 
     create_a_height_profile(HILL)
 
+
     -- determine materials
-    -- FIXME
+    local h_list = {}
+    local h_mats = {}
+
+    each _,F in floors do
+      table.add_unique(h_list, F.prelim_h)
+    end
+
+    table.sort(h_list)
+
+    local mat1 = R.floor_mat
+    local mat2 = R.alt_floor_mat
+
+    if rand.odds(50) then mat1, mat2 = mat2, mat1 end
+
+    each h in h_list do
+      h_mats[h] = mat1
+      mat1, mat2 = mat2, mat1
+    end
+
 
     -- install the height profile
 
@@ -3639,7 +3649,7 @@ function Cave_build_a_park(R, entry_h)
         assert(F)
 
         B.prelim_h  = assert(F.prelim_h)
-        B.floor_mat = "FLAT10"
+        B.floor_mat = assert(h_mats[B.prelim_h])
       end
     end
   end
