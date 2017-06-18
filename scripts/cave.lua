@@ -3520,10 +3520,16 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function create_a_height_profile(HILL)
-    -- a height profile is a copy of HILL.floors with 'prelim_h' set.
-    -- this updates HILL.profile if the score is better.
+    -- a height profile is a blank copy of HILL.floors with 'prelim_h'
+    -- (and possibly liquid info) set.
+    --
+    -- this function updates HILL.profile if the score is better.
 
-    local profile = table.copy(HILL.floors)
+    local profile = {}
+
+    each id,_ in HILL.floors do
+      profile[id] = {}
+    end
 
     -- pick starting floor, mark it as the lowest
 
@@ -3548,17 +3554,17 @@ function Cave_build_a_park(R, entry_h)
       rand.shuffle(HILL.stairs)
 
       each st in HILL.stairs do
-        local F1 = profile[st.src .floor_id]
-        local F2 = profile[st.dest.floor_id]
+        local P1 = profile[st.src .floor_id]
+        local P2 = profile[st.dest.floor_id]
 
-        assert(F1 and F2)
+        assert(P1 and P2)
 
-        if not F1.prelim_h then
-          F1, F2 = F2, F1
+        if not P1.prelim_h then
+          P1, P2 = P2, P1
         end
 
-        if F1.prelim_h and not F2.prelim_h then
-          F2.prelim_h = F1.prelim_h + 32
+        if P1.prelim_h and not P2.prelim_h then
+          P2.prelim_h = P1.prelim_h + 32
           changes = true
         end
       end
@@ -3567,8 +3573,8 @@ function Cave_build_a_park(R, entry_h)
 
 
     -- sanity check
-    each id, F in profile do
-      assert(F.prelim_h)
+    each id, P in profile do
+      assert(P.prelim_h)
     end
 
 
@@ -3613,8 +3619,8 @@ function Cave_build_a_park(R, entry_h)
     local h_list = {}
     local h_mats = {}
 
-    each _,F in floors do
-      table.add_unique(h_list, F.prelim_h)
+    each _,P in HILL.profile do
+      table.add_unique(h_list, P.prelim_h)
     end
 
     table.sort(h_list)
@@ -3635,19 +3641,19 @@ function Cave_build_a_park(R, entry_h)
     each st in HILL.stairs do
       local B = st.B
 
-      local F1 = HILL.profile[st.src .floor_id]
-      local F2 = HILL.profile[st.dest.floor_id]
+      local P1 = HILL.profile[st.src .floor_id]
+      local P2 = HILL.profile[st.dest.floor_id]
 
-      B.prelim_h  = math.i_mid(F1.prelim_h, F2.prelim_h)
+      B.prelim_h  = math.i_mid(P1.prelim_h, P2.prelim_h)
       B.floor_mat = "FLAT1" or LEVEL.cliff_mat
     end
 
     each _,B in blob_map.regions do
       if B.floor_id != "stair" then
-        local F = HILL.profile[B.floor_id]
-        assert(F)
+        local P1 = HILL.profile[B.floor_id]
+        assert(P1)
 
-        B.prelim_h  = assert(F.prelim_h)
+        B.prelim_h  = assert(P1.prelim_h)
         B.floor_mat = assert(h_mats[B.prelim_h])
       end
     end
