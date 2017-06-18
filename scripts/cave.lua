@@ -3440,7 +3440,7 @@ function Cave_build_a_park(R, entry_h)
     -- {
     --   stairs : list(STAIR_INFO)
     --
-    --   blob_floors[blob_id] -> integer
+    --   blob_floors[blob_id] -> integer / "stair"
     -- }
     --
 
@@ -3519,70 +3519,35 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function install_hillside(HILL)
-    hill_clear()
-    hill_restore(HILL)
+  local function create_a_height_profile(HILL)
+    -- a height profile is a copy of HILL.floors with 'prelim_h' set.
+    -- this updates HILL.profile if the score is better.
 
-    -- for each stair, convert 'src' and 'dest' to floor ids,
-    -- and count how many stairs connect to each floor.
-
-    local floor_stair_num = {}
-
-    each st in HILL.stairs do
-      st.src  = assert(st.src .floor_id)
-      st.dest = assert(st.dest.floor_id)
-
-      floor_stair_num[st.src ] = (floor_stair_num[st.src ] or 0) + 1
-      floor_stair_num[st.dest] = (floor_stair_num[st.dest] or 0) + 1
-    end
-
-    -- merge all blobs with same floor_id
-
-    local all_blobs = table.keys(blob_map.regions)
-
-    local floor_blobs = {}   --  [floor_id] -> blob
-
-    each blob_id, f_id in HILL.blob_floors do
-      local B = blob_map.regions[blob_id]
-
-      floor_blobs[f_id] = assert(B)
-    end
-
-    each id in all_blobs do
-      local B = blob_map.regions[id]
-
-      if B.floor_id == "stair" then continue end
-
-      local F = floor_blobs[B.floor_id]
-      assert(F)
-
-      if F == B then continue end
-
-      blob_map:merge_two_blobs(F.id, B.id)
-    end
-
-    blob_map:extent_of_blobs()
-    blob_map:neighbors_of_blobs()
+    local profile = table.copy(HILL.floors)
 
     -- pick starting floor, mark it as the lowest
 
     local start_f
 
-    each id, stair_num in floor_stair_num do
-      assert(stair_num >= 1)
+    each id, F in HILL.floors do
+      assert(F.stair_num >= 1)
 
-      if stair_num == 1 and (not start_f or rand.odds(50)) then
+      if F.stair_num == 1 and (not start_f or rand.odds(50)) then
         start_f = id
       end
     end
 
+
+--[[
     local mat1 = R.floor_mat
     local mat2 = R.alt_floor_mat
 
     if rand.odds(50) then mat1, mat2 = mat2, mat1 end
 
-    floor_blobs[start_f].prelim_h = 0
     floor_blobs[start_f].floor_mat = mat1
+--]]
+    profile[start_f].prelim_h = 0
+
 
     -- flow through stairs to unvisited floors
 
@@ -3592,30 +3557,91 @@ function Cave_build_a_park(R, entry_h)
       rand.shuffle(HILL.stairs)
 
       each st in HILL.stairs do
-        local B1 = floor_blobs[st.src]
-        local B2 = floor_blobs[st.dest]
+        local F1 = profile[st.src]
+        local F2 = profile[st.dest]
 
-        assert(B1 and B2)
+        assert(F1 and F2)
 
-        if not B1.prelim_h then
-          B1, B2 = B2, B1
+        if not F1.prelim_h then
+          F1, F2 = F2, F1
         end
 
-        if B1.prelim_h and not B2.prelim_h then
-          st.height = 48
-
-          st.B.prelim_h  = B1.prelim_h + st.height / 2
-          st.B.floor_mat = "COMPBLUE"
-
-          B2.prelim_h  = B1.prelim_h + st.height
-          B2.floor_mat = mat2
-
-          mat1, mat2 = mat2, mat1
+        if F1.prelim_h and not F2.prelim_h then
+          F2.prelim_h = F1.prelim_h + 32
           changes = true
         end
       end
 
     until not changes
+
+
+    -- sanity check
+    each id, F in profile do
+      assert(F.prelim_h)
+    end
+
+
+    -- TODO : score it, update only if better
+    HILL.profile = profile
+  end
+
+
+  local function install_hillside(HILL)
+    hill_clear()
+    hill_restore(HILL)
+
+    -- create an info table for each floor
+
+    local floors = {}  --  [floor_id] -> { prelim_h=xxx }
+
+    each _,f_id in HILL.blob_floors do
+      if f_id != "stair" and not floors[f_id] then
+        floors[f_id] = { id=f_id, stair_num=0 }
+      end
+    end
+
+    -- for each stair, convert 'src' and 'dest' to floor ids,
+    -- and count how many stairs connect to each floor.
+
+    each st in HILL.stairs do
+      st.src  = assert(st.src .floor_id)
+      st.dest = assert(st.dest.floor_id)
+
+      floors[st.src ].stair_num = floors[st.src ].stair_num + 1
+      floors[st.dest].stair_num = floors[st.dest].stair_num + 1
+    end
+
+    -- create a height profile
+    -- [ TODO : create a dozen, pick "best" ]
+
+    HILL.floors = floors
+
+    create_a_height_profile(HILL)
+
+    -- determine materials
+    -- FIXME
+
+    -- install the height profile
+
+    each st in HILL.stairs do
+      local B = st.B
+
+      local F1 = HILL.profile[st.src]
+      local F2 = HILL.profile[st.dest]
+
+      B.prelim_h  = math.i_mid(F1.prelim_h, F2.prelim_h)
+      B.floor_mat = "FLAT1" or LEVEL.cliff_mat
+    end
+
+    each _,B in blob_map.regions do
+      if B.floor_id != "stair" then
+        local F = HILL.profile[B.floor_id]
+        assert(F)
+
+        B.prelim_h  = assert(F.prelim_h)
+        B.floor_mat = "FLAT10"
+      end
+    end
   end
 
 
@@ -3846,6 +3872,8 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
     -- install all the blobs
     area.walk_floors = {}
+
+    -- TODO : merge neighboring blobs with same h/mat
 
     each _,reg in blob_map.regions do
       if reg.prelim_h then
