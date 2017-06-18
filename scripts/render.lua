@@ -20,6 +20,9 @@
 
 
 function Render_add_exit_sign(E)
+  local def = PREFABS["Decor_exit_sign"]
+  if not def then return end
+
   local x1,y1, x2,y2 = Edge_line_coords(E)
 
   local z = assert(E.area.floor_h)
@@ -50,9 +53,6 @@ function Render_add_exit_sign(E)
 
   local T1 = Trans.spot_transform(ax, ay, z, dir)
   local T2 = Trans.spot_transform(bx, by, z, dir)
-
-  local def = PREFABS["Decor_exit_sign"]
-  assert(def)
 
   Fabricate(nil, def, T1, {})
   Fabricate(nil, def, T2, {})
