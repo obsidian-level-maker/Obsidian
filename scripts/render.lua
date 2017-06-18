@@ -50,7 +50,7 @@ function Render_add_exit_sign(E)
 
   local T1 = Trans.spot_transform(ax, ay, z, dir)
   local T2 = Trans.spot_transform(bx, by, z, dir)
-  
+
   local def = PREFABS["Decor_exit_sign"]
   assert(def)
 
@@ -1915,8 +1915,14 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     end
 
     -- maybe add exit signs
-    if C.leads_to_exit and geom.is_straight(dir) and not is_terminator then
-      local E = sel(C.R2.is_exit, C.E1, C.E2)
+    if C.leads_to_exit and geom.is_straight(dir) then
+      local E
+
+      if C.R2.lev_along > C.R1.lev_along then
+        E = C.E1
+      else
+        E = C.E2
+      end
 
       if E then
         Render_add_exit_sign(E)
