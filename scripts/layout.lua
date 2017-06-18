@@ -254,13 +254,18 @@ function Layout_spot_for_wotsit(R, kind, required)
     score = score + gui.random() ^ 2
 
     -- the exit room generally has a closet pre-booked
-    if kind == "EXIT" and chunk.prefer_usage == "goal" then
+    if kind == "EXIT" and chunk.prefer_usage == "exit" then
+      score = score + 200
+    end
+
+    -- start rooms and teleporter roots too
+    if (kind == "START" or kind == "TELEPORTER") and chunk.prefer_usage == "start" then
       score = score + 200
     end
 
     -- really really want a secret exit in a closet
     if kind == "SECRET_EXIT" and chunk.kind == "closet" then
-      score = score + 500
+      score = score + 600
     end
 
     -- in caves, prefer spots which do not touch the room edge,

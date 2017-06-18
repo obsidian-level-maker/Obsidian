@@ -40,6 +40,11 @@ ROOT_1 =
     symmetry  = { kind="mirror", x=3, y=2, dir=8 }
     symmetry2 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
+
+  auxiliary =
+  {
+    pass = "start_closet3"
+  }
 }
 
 
@@ -61,6 +66,11 @@ ROOT_3 =
   {
     symmetry  = { kind="mirror", x=3, y=2, w=2, dir=8 }
     symmetry2 = { kind="rotate", x=2, y=2, x2=5, y2=5 }
+  }
+
+  auxiliary =
+  {
+    pass = "start_closet4"
   }
 }
 
@@ -90,13 +100,17 @@ ROOT_4 =
     symmetry  = { kind="mirror", x=3, y=2, w=2, dir=8 }
     symmetry2 = { kind="rotate", x=2, y=2, x2=5, y2=5 }
   }
-}
 
+  auxiliary =
+  {
+    pass = "start_closet2"
+  }
+}
 
 
 ROOT_L1 =
 {
-  prob = 2
+  prob = 1
 
   structure =
   {
@@ -128,6 +142,11 @@ ROOT_T2 =
   {
     symmetry = { kind="mirror", x=3, y=1, w=2, dir=8 }
   }
+
+  auxiliary =
+  {
+    pass = "start_closet2"
+  }
 }
 
 
@@ -157,6 +176,11 @@ ROOT_LIQUID_1A =
     symmetry  = { kind="mirror", x=3, y=1, dir=8 }
     symmetry2 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
+
+  auxiliary =
+  {
+    pass = "start_closet3"
+  }
 }
 
 
@@ -176,12 +200,54 @@ ROOT_LIQUID_1B =
   }
 
   cage_mode = "fancy"
+}
 
-  new_room =
+
+START_CLOSET_2x2 =
+{
+  pass = "start_closet2"
+  prob = 50
+
+  structure =
   {
-    symmetry  = { kind="mirror", x=3, y=1, dir=8 }
-    symmetry2 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
+    "..", "TT"
+    "..", "TT"
+    "11", "11"
   }
+
+  closet = { from_dir=2, usage="start" }
+}
+
+
+START_CLOSET_3x2 =
+{
+  pass = "start_closet3"
+  prob = 50
+
+  structure =
+  {
+    "...", "TTT"
+    "...", "TTT"
+    "111", "111"
+  }
+
+  closet = { from_dir=2, usage="start" }
+}
+
+
+START_CLOSET_4x2 =
+{
+  pass = "start_closet4"
+  prob = 50
+
+  structure =
+  {
+    "....", "TTTT"
+    "....", "TTTT"
+    "1111", "1111"
+  }
+
+  closet = { from_dir=2, usage="start" }
 }
 
 
@@ -213,13 +279,11 @@ EXIT_1 =
   auxiliary =
   {
     pass = "exit1_closet"
-    count = 1
   }
 
   auxiliary2 =
   {
     pass = "exit1_area"
-    count = 1
   }
 }
 
@@ -238,7 +302,7 @@ EXIT1_CLOSET =
 
   no_rotate = true
 
-  closet = { from_dir=2, usage="goal" }
+  closet = { from_dir=2, usage="exit" }
 }
 
 
@@ -321,13 +385,11 @@ EXIT_2 =
   auxiliary =
   {
     pass = "exit2_closet"
-    count = 1
   }
 
   auxiliary2 =
   {
     pass = "exit2_decor"
-    count = 1
   }
 }
 
@@ -346,7 +408,7 @@ EXIT2_CLOSET =
 
   no_rotate = true
 
-  closet = { from_dir=4, usage="goal" }
+  closet = { from_dir=4, usage="exit" }
 }
 
 
@@ -398,7 +460,6 @@ EXIT_3 =
   auxiliary =
   {
     pass = "exit3_area"
-    count = 1
   }
 }
 
@@ -420,13 +481,11 @@ EXIT3_AREA_A =
   auxiliary =
   {
     pass = "exit3_closet"
-    count = 1
   }
 
   auxiliary2 =
   {
     pass = "exit3_decor"
-    count = 1
   }
 }
 
@@ -454,7 +513,6 @@ EXIT3_AREA_B =
   auxiliary =
   {
     pass = "exit1_closet"
-    count = 1
   }
 }
 
@@ -472,7 +530,7 @@ EXIT3_CLOSET =
 
   no_rotate = true
 
-  closet = { from_dir=8, usage="goal" }
+  closet = { from_dir=8, usage="exit" }
 }
 
 
