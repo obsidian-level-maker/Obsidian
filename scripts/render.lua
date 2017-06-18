@@ -26,7 +26,10 @@ function Render_add_exit_sign(E, flipped)
 
   local len = geom.dist(x1,y1, x2,y2)
 
-  local ofs = sel(len < 200, 20, 40)
+  local ofs = int(len / 6)
+  if len > 340 then
+    ofs = int(len / 4)
+  end
 
   local ax = x1 + ofs * (x2 - x1) / len
   local ay = y1 + ofs * (y2 - y1) / len
