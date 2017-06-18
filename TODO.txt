@@ -31,8 +31,6 @@ OBLIGE TO-DO
 -  traps : distinguish "short-range" (same room) and "long-range"
            (another room) when deciding monsters to use
 
--  move 'prefabs' folder to games/doom/
-
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars
 
@@ -79,6 +77,27 @@ IDEA : separated in/out teleporters in very large rooms
        ..aZZb.
        ..aaa..
 
+
+Reorganize Folders
+------------------
+
+TOP LEVEL:
+
+   Oblige.exe
+   (etc)
+
+   doom/
+        game.lua       [ was "base.lua", used to detect games ]
+        entities.lua
+        monsters.lua
+        (etc)
+
+        tech/
+             theme.lua    [ used to detect themes ]
+             cages/
+             joiners/
+             (etc)
+ 
 
 Quake3 CSG
 ----------
