@@ -1897,7 +1897,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function pick_decorative_bling(R)
-    local decor_prob = rand.pick({ 15, 35, 70 })
+    local decor_prob = rand.pick({ 20, 55, 90 })
 
     each chunk in R.floor_chunks do
       if chunk.content == nil and not chunk.is_bossy and rand.odds(decor_prob) then
