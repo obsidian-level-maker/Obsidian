@@ -19,7 +19,7 @@
 ------------------------------------------------------------------------
 
 
-function Render_add_exit_sign(E, flipped)
+function Render_add_exit_sign(E)
   local x1,y1, x2,y2 = Edge_line_coords(E)
 
   local z = assert(E.area.floor_h)
@@ -37,16 +37,10 @@ function Render_add_exit_sign(E, flipped)
   local bx = x2 + ofs * (x1 - x2) / len
   local by = y2 + ofs * (y1 - y2) / len
 
-  local dx = 32 * (y1 - y2) / len
-  local dy = 32 * (x2 - x1) / len
+  local dx = 32 * (y2 - y1) / len
+  local dy = 32 * (x1 - x2) / len
 
-  local dir = E.dir
-
-  if flipped then
-    dx = -dx
-    dy = -dy
-    dir = 10 - dir
-  end
+  local dir = 10 - E.dir
 
   ax = math.round(ax + dx)
   ay = math.round(ay + dy)
@@ -660,7 +654,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     -- maybe add exit signs
     if C and C.leads_to_exit and not geom.is_corner(dir) then
-      if E.peer.area.room.is_exit then
+      if E.area.room.is_exit then
          E = E.peer
       end
 
@@ -1925,8 +1919,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       local E = sel(C.R2.is_exit, C.E1, C.E2)
 
       if E then
-        -- must flip because joiner edges face the joiner (NOT the room)
-        Render_add_exit_sign(E, "flipped")
+        Render_add_exit_sign(E)
       end
     end
   end
