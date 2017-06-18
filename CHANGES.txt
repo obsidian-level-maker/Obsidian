@@ -37,6 +37,7 @@ CHANGES IN 7.55
 -  got triple-key doors working again
 -  got remote-activated doors working again
 -  got lowering-bar fences working again
+-  added exit signs to doors leading to exit room
 
 -  improved title generator, removed pre-made backgrounds
 -  support TGA format title pics when engine is GZDOOM

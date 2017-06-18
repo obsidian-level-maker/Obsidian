@@ -19,6 +19,50 @@
 ------------------------------------------------------------------------
 
 
+function Render_add_exit_sign(E, flipped)
+  local x1,y1, x2,y2 = Edge_line_coords(E)
+
+  local z = assert(E.area.floor_h)
+
+  local len = geom.dist(x1,y1, x2,y2)
+
+  local ofs = sel(len < 200, 20, 40)
+
+  local ax = x1 + ofs * (x2 - x1) / len
+  local ay = y1 + ofs * (y2 - y1) / len
+
+  local bx = x2 + ofs * (x1 - x2) / len
+  local by = y2 + ofs * (y1 - y2) / len
+
+  local dx = 32 * (y1 - y2) / len
+  local dy = 32 * (x2 - x1) / len
+
+  local dir = E.dir
+
+  if flipped then
+    dx = -dx
+    dy = -dy
+    dir = 10 - dir
+  end
+
+  ax = math.round(ax + dx)
+  ay = math.round(ay + dy)
+
+  bx = math.round(bx + dx)
+  by = math.round(by + dy)
+
+  local T1 = Trans.spot_transform(ax, ay, z, dir)
+  local T2 = Trans.spot_transform(bx, by, z, dir)
+  
+  local def = PREFABS["Decor_exit_sign"]
+  assert(def)
+
+  Fabricate(nil, def, T1, {})
+  Fabricate(nil, def, T2, {})
+end
+
+
+
 function Render_edge(E)
   assert(E)
   assert(E.kind)
@@ -531,41 +575,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
-  local function add_exit_sign(E)
-    local x1,y1, x2,y2 = Edge_line_coords(E)
-
-    local z = assert(A.floor_h)
-
-    local len = geom.dist(x1,y1, x2,y2)
-
-    local ofs = sel(len < 200, 20, 40)
-
-    local ax = x1 + ofs * (x2 - x1) / len
-    local ay = y1 + ofs * (y2 - y1) / len
-
-    local bx = x2 + ofs * (x1 - x2) / len
-    local by = y2 + ofs * (y1 - y2) / len
-
-    local dx = 32 * (y1 - y2) / len
-    local dy = 32 * (x2 - x1) / len
-
-    ax = math.round(ax + dx)
-    ay = math.round(ay + dy)
-
-    bx = math.round(bx + dx)
-    by = math.round(by + dy)
-
-    local T1 = Trans.spot_transform(ax, ay, z, dir)
-    local T2 = Trans.spot_transform(bx, by, z, dir)
-    
-    local def = PREFABS["Decor_exit_sign"]
-    assert(def)
-
-    Fabricate(A.room, def, T1, {})
-    Fabricate(A.room, def, T2, {})
-  end
-
-
   local function straddle_door()
     assert(E.peer)
 
@@ -652,7 +661,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      add_exit_sign(E)
+      Render_add_exit_sign(E)
     end
   end
 
@@ -1895,7 +1904,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     assert(chunk.prefab_def)
   end
 
-  local function do_joiner()
+  local function do_joiner(is_terminator)
     assert(chunk.prefab_def)
 
     local C = assert(chunk.conn)
@@ -1907,13 +1916,23 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
         skin.door_tag = goal.tag
       end
     end
+
+    -- maybe add exit signs
+    if C.leads_to_exit and geom.is_straight(dir) and not is_terminator then
+      local E = sel(C.R2.is_exit, C.E1, C.E2)
+
+      if E then
+        -- must flip because joiner edges face the joiner (NOT the room)
+        Render_add_exit_sign(E, "flipped")
+      end
+    end
   end
 
   local function do_hallway()
     assert(chunk.prefab_def)
 
     if chunk.is_terminator then
-      do_joiner()
+      do_joiner("is_terminator")
     end
   end
 
