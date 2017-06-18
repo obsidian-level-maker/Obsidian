@@ -1957,6 +1957,10 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     each chunk in R.floor_chunks do
       if (chunk.content and chunk.content != "NOTHING") or chunk.is_bossy then
         unsink_chunk(chunk, "floor")
+
+        if chunk.peer then
+          unsink_chunk(chunk.peer, "floor")
+        end
       end
     end
   end

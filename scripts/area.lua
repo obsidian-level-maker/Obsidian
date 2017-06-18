@@ -1233,9 +1233,8 @@ function Area_locate_chunks()
 
       if not N then return false end
       if N.area != A then return false end
+      if N.must_walk then return false end
       if N.diagonal or N.chunk then return false end
-
-      if N:has_connection() then return false end
     end -- x, y
     end
 
@@ -1405,8 +1404,7 @@ function Area_locate_chunks()
     -- smaller max_vol for caves
     -- [ to get more chunks which do not touch the room edge ]
     if R.is_cave then
-      -- TODO : REVIEW THIS
-      max_vol = 4  -- math.min(9, max_vol * 0.1)
+      max_vol = 4
     else
       max_vol = max_vol * 0.35
     end

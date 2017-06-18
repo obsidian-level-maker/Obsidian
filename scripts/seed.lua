@@ -1093,6 +1093,19 @@ function Edge_new_pair(kind1, kind2, S, dir, long)
 end
 
 
+function Edge_mark_walk(E)
+  local S = E.S
+
+  for i = 1, E.long do
+    assert(S)
+
+    S.must_walk = true
+
+    S = S:neighbor(geom.RIGHT[E.dir])
+  end
+end
+
+
 function Edge_line_coords(E)
   local x1, y1 = E.S:left_corner_coord(E.dir)
 

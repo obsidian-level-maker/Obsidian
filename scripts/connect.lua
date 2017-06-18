@@ -277,6 +277,9 @@ function Connect_directly(P)
   assert(C.A1.room == C.R1)
   assert(C.A2.room == C.R2)
 
+  Edge_mark_walk(E1)
+  Edge_mark_walk(E2)
+
 --[[
 gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)
 gui.debugf("E2.S = %s  dir = %d  area = %s\n", E2.S.name, E2.dir, E2.S.area.name)
