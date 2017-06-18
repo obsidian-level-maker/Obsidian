@@ -2955,7 +2955,7 @@ end
       assert(aux.pass)
 
       -- 'count' can be a number or a range of values: { low,high }
-      local num = aux.count
+      local num = aux.count or 1
 
       if type(num) == "table" then
         num = rand.irange(num[1], num[2])
