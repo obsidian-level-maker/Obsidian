@@ -1292,6 +1292,19 @@ function CHUNK_CLASS.is_slave(chunk)
 end
 
 
+function CHUNK_CLASS.is_must_walk(chunk)
+  for sx = chunk.sx1, chunk.sx2 do
+  for sy = chunk.sy1, chunk.sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.must_walk then return true end
+  end
+  end
+
+  return false
+end
+
+
 function CHUNK_CLASS.create_edge(chunk, kind, side)
   -- the edge faces *into* the chunk (on the given side)
 

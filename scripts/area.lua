@@ -1233,7 +1233,6 @@ function Area_locate_chunks()
 
       if not N then return false end
       if N.area != A then return false end
-      if N.must_walk then return false end
       if N.diagonal or N.chunk then return false end
     end -- x, y
     end

@@ -243,12 +243,17 @@ function Layout_spot_for_wotsit(R, kind, required)
       return 700 + gui.random()
     end
 
-    -- avoid using chunks set aside for boss monsters
-    if chunk.is_bossy then
+    -- avoid using chunks right next to a connection or closet entrance
+    if chunk.kind == "floor" and chunk:is_must_walk() then
       return 1.0 + gui.random()
     end
 
-    local score = (chunk.sig_dist or 0) * 10
+    -- avoid using chunks set aside for boss monsters
+    if chunk.is_bossy then
+      return 2.0 + gui.random()
+    end
+
+    local score = (chunk.sig_dist or 0) * 10 + 10
 
     -- tie breaker
     score = score + gui.random() ^ 2
@@ -342,6 +347,13 @@ function Layout_spot_for_wotsit(R, kind, required)
     -- ensure we cannot climb over a nearby fence
     if best.kind == "floor" then
       best.area.podium_h = 24
+    end
+
+    -- leave room for player to enter a closet
+    if best.kind == "closet" then
+      each E in best.edges do
+        Edge_mark_walk(E)
+      end
     end
 
     return best
@@ -1464,6 +1476,10 @@ function Layout_decorate_rooms(pass)
     -- only try mirrored chunks *once*
     if chunk:is_slave() then return end
 
+    -- don't put bloody shit in the player's way
+    if chunk:is_must_walk() then return end
+    if chunk.peer and chunk.peer:is_must_walk() then return end
+
     local A = chunk.area
 
     local reqs =
@@ -1642,6 +1658,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       if not chunk.content and not chunk.is_bossy and
          not chunk:is_slave() and
+         not chunk:is_must_walk() and
+         (not chunk.peer or not chunk.peer:is_must_walk()) and
          chunk.sw >= 2 and chunk.sh >= 2 and
          not chunk.content and
          not (A.floor_group and A.floor_group.sink) and
