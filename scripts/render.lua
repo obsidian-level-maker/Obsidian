@@ -531,6 +531,41 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
+  local function add_exit_sign(E)
+    local x1,y1, x2,y2 = Edge_line_coords(E)
+
+    local z = assert(A.floor_h)
+
+    local len = geom.dist(x1,y1, x2,y2)
+
+    local ofs = sel(len < 200, 20, 40)
+
+    local ax = x1 + ofs * (x2 - x1) / len
+    local ay = y1 + ofs * (y2 - y1) / len
+
+    local bx = x2 + ofs * (x1 - x2) / len
+    local by = y2 + ofs * (y1 - y2) / len
+
+    local dx = 32 * (y1 - y2) / len
+    local dy = 32 * (x2 - x1) / len
+
+    ax = math.round(ax + dx)
+    ay = math.round(ay + dy)
+
+    bx = math.round(bx + dx)
+    by = math.round(by + dy)
+
+    local T1 = Trans.spot_transform(ax, ay, z, dir)
+    local T2 = Trans.spot_transform(bx, by, z, dir)
+    
+    local def = PREFABS["Decor_exit_sign"]
+    assert(def)
+
+    Fabricate(A.room, def, T1, {})
+    Fabricate(A.room, def, T2, {})
+  end
+
+
   local function straddle_door()
     assert(E.peer)
 
@@ -609,6 +644,16 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     Fabricate(A.room, def, T, { skin })
 
     Ambient_pop()
+
+
+    -- maybe add exit signs
+    if C and C.leads_to_exit and not geom.is_corner(dir) then
+      if E.peer.area.room.is_exit then
+         E = E.peer
+      end
+
+      add_exit_sign(E)
+    end
   end
 
 

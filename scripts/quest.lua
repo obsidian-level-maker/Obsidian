@@ -305,6 +305,12 @@ function Quest_create_initial_quest()
     table.insert(quest.goals, GOAL)
 
     R.used_chunks = R.used_chunks + 1
+
+    local conn = R.conns[1]
+
+    if conn then
+      conn.leads_to_exit = true
+    end
   end
 
 
