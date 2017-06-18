@@ -1239,8 +1239,14 @@ function Fab_load_wad(def)
       end
 
       -- give ceiling brush the tag ONLY when floor brush is absent
-      if S.floor_tex == "_NOTHING" and S.tag and S.tag > 0 then
-        C.tag = S.tag
+      if S.floor_tex == "_NOTHING" then
+        if S.tag and S.tag > 0 then
+          C.tag = S.tag
+        end
+
+        if S.special > 0 and S.special < 800 then
+          C.special = S.special
+        end
       end
 
       -- automatically convert to a sky brush
