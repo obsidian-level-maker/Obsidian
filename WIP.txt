@@ -6,17 +6,11 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
-+  crates/cages/pillars right in front of teleporter/start/exit closets
-
-
 -  support "sky closets" (require outdoor area on all sides)
 
 -  get posts working with rail junctions again
 
 -  internal fences (esp. for outdoor rooms)
-
-
--  strong tendency to lock the exit room
 
 -  a less ornate secret item closet, small items (e.g. 10 potions)
 

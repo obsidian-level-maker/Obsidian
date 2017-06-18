@@ -273,6 +273,27 @@ function Quest_create_initial_quest()
   end
 
 
+  local function mark_exit_connection(R)
+    local C = R.conns[1]
+
+    if C then
+      local H = C:other_room(R)
+      if H.is_hallway and H:total_conns() == 2 then
+        C = H:hallway_other_conn(C)
+      end
+    end
+
+    if C then
+      C.leads_to_exit = true
+
+      -- generally try to lock the exit room
+      if rand.odds(90) then
+        C.prefer_locked = true
+      end
+    end
+  end
+
+
   local function add_normal_exit(quest)
     local R = LEVEL.exit_room
 
@@ -306,11 +327,7 @@ function Quest_create_initial_quest()
 
     R.used_chunks = R.used_chunks + 1
 
-    local conn = R.conns[1]
-
-    if conn then
-      conn.leads_to_exit = true
-    end
+    mark_exit_connection(R)
   end
 
 
@@ -475,7 +492,11 @@ function Quest_eval_divide_at_conn(C, goal, info)
     local before_size = Quest_size_of_room_set(before)
     local  after_size = Quest_size_of_room_set(after)
 
-    local score = 300
+    local score = 200
+
+    if C.prefer_locked then
+      score = 400
+    end
 
     -- prefer not to enter a hallway from a locked door
     if after_R.is_hallway then
@@ -552,8 +573,11 @@ each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
   end
 
   -- no locking end of hallways
+  -- [ except for branchy hallways where one room is the exit ]
   if before_R.is_hallway then
-    return
+    if #before_R.conns < 3 then return end
+    if not after_R.is_exit then return end
+    if after_R.is_secret   then return end
   end
 
   local leafs = unused_rooms_in_set(before)
@@ -2548,7 +2572,7 @@ function Quest_make_room_secret(R)
   if H.is_hallway and H:total_conns() == 2 then
     H.is_secret = true
 
-    C = H:secret_entry_conn(R)
+    C = H:hallway_other_conn(C)
     assert(C)
   end
 

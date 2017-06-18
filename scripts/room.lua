@@ -397,6 +397,19 @@ function ROOM_CLASS.is_unused_leaf(R)
 end
 
 
+function ROOM_CLASS.hallway_other_conn(H, C1)
+  -- if hallway only has one other connection, return it,
+  -- otherwise return NIL.
+
+  if #H.conns == 2 then
+    if H.conns[1] == C1 then return H.conns[2] end
+    if H.conns[2] == C1 then return H.conns[1] end
+  end
+
+  return nil
+end
+
+
 function ROOM_CLASS.secret_entry_conn(R, skip_room)
   -- find entry connection for a potential secret room.
   -- when skip_room is non-nil, ignore it.
