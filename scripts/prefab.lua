@@ -1378,6 +1378,27 @@ function Fab_load_wad(def)
     -- must be two sided
     if not (L.left and L.right) then return end
 
+    -- calculate base Z
+    local z
+
+    do
+      local side1 = gui.wadfab_get_side(L.left)
+      local side2 = gui.wadfab_get_side(L.right)
+      assert(side1 and side2)
+
+      local S1 = gui.wadfab_get_sector(side1.sector)
+      local S2 = gui.wadfab_get_sector(side2.sector)
+      assert(S1 and S2)
+
+      local z1 = S1.floor_h
+      local z2 = S2.floor_h
+
+      if S1.special == WADFAB_DELTA_12 then z1 = z1 - 12 end
+      if S2.special == WADFAB_DELTA_12 then z2 = z2 - 12 end
+
+      z = math.max(z1, z2)
+    end
+
     for pass = 1, 2 do
       local side = gui.wadfab_get_side(sel(pass == 1, L.right, L.left))
       assert(side)
@@ -1407,7 +1428,7 @@ function Fab_load_wad(def)
         v1  = convert_offset(side.y_offset)
       }
 
-      local B = brushlib.rail_brush(x1,y1, x2,y2, props)
+      local B = brushlib.rail_brush(x1,y1, x2,y2, z, props)
 
       table.insert(fab.brushes, B)
     end

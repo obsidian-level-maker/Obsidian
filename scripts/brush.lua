@@ -825,7 +825,7 @@ function brushlib.q3_liquid(brush, medium, top_tex)
 end
 
 
-function brushlib.rail_brush(x1,y1, x2,y2, side_props)
+function brushlib.rail_brush(x1,y1, x2,y2, z, side_props)
   -- compute coords for other side of brush
   local x3, y3 = x2, y2
   local x4, y4 = x1, y1
@@ -871,6 +871,8 @@ function brushlib.rail_brush(x1,y1, x2,y2, side_props)
   end
 
   brushlib.set_kind(brush, "rail")
+
+  table.insert(brush, { b=z })
 
   return brush
 end

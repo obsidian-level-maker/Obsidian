@@ -744,6 +744,15 @@ function Junction_make_railing(junc, rail_mat, block)
     area = junc.A1
   }
 
+  -- calculate base Z
+  local z1 = junc.A1.max_floor_h or junc.A1.floor_h
+  local z2 = junc.A2.max_floor_h or junc.A2.floor_h
+
+  if junc.A1.mode == "scenic" then z1 = z2 end
+  if junc.A2.mode == "scenic" then z2 = z1 end
+
+  junc.E1.rail_z = math.max(z1, z2)
+
   junc.E2 = { kind="nothing", area=junc.A2 }
 
   junc.E1.peer = junc.E2

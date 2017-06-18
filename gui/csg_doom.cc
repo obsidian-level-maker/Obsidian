@@ -1311,7 +1311,12 @@ static doom_sidedef_c * DM_MakeSidedef(
 				SD->mid = rail_tex;
 
 				r_ox = rail->face.getInt("u1", IVAL_NONE);
-				r_oy = rail->face.getInt("v1", IVAL_NONE);
+				r_oy = rail->face.getInt("v1", 0);
+
+				// adjust Y-offset for higher floor than expected
+				int sec_max_z = MAX(sec->f_h, back->f_h);
+
+				r_oy += I_ROUND(rail->parent->b.z) - sec_max_z;
 			}
 		}
 

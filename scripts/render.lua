@@ -268,8 +268,10 @@ function Render_edge(E)
 
     local x1,y1, x2,y2 = Edge_line_coords(E)
 
+    local z = assert(E.rail_z)
+
     for pass = 1, 2 do
-      local B = brushlib.rail_brush(x1,y1, x2,y2, side_props)
+      local B = brushlib.rail_brush(x1,y1, x2,y2, z, side_props)
 
       Trans.brush(B)
 
