@@ -1133,12 +1133,16 @@ end
 
 
 --
--- Find path from start (sx,sy) to end (ex,ey).
--- The returned path includes the start but not the end.
+-- Find path from start (sx,sy) to end (ex,ey), inside a
+-- rectangle of size WxH cells.
+--
+-- The returned path consists of (x,y,dir) triples, and
+-- includes the start but not the end.
+--
 -- Returns NIL if no path can be found.
 --
 -- Score function:
---   f(x, y, dir, data) --> distance, negative for impossible
+--   f(x, y, dir, data) --> distance, negative when blocked
 --
 function astar_find_path(sx, sy, ex, ey, W, H, score_func, data)
   local open   = table.array_2D(W, H)
