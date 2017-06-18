@@ -3548,8 +3548,8 @@ function Cave_build_a_park(R, entry_h)
       rand.shuffle(HILL.stairs)
 
       each st in HILL.stairs do
-        local F1 = profile[st.src]
-        local F2 = profile[st.dest]
+        local F1 = profile[st.src .floor_id]
+        local F2 = profile[st.dest.floor_id]
 
         assert(F1 and F2)
 
@@ -3591,15 +3591,14 @@ function Cave_build_a_park(R, entry_h)
       end
     end
 
-    -- for each stair, convert 'src' and 'dest' to floor ids,
-    -- and count how many stairs connect to each floor.
+    -- count how many stairs connect to each floor.
 
     each st in HILL.stairs do
-      st.src  = assert(st.src .floor_id)
-      st.dest = assert(st.dest.floor_id)
+      local src  = assert(st.src .floor_id)
+      local dest = assert(st.dest.floor_id)
 
-      floors[st.src ].stair_num = floors[st.src ].stair_num + 1
-      floors[st.dest].stair_num = floors[st.dest].stair_num + 1
+      floors[src ].stair_num = floors[src ].stair_num + 1
+      floors[dest].stair_num = floors[dest].stair_num + 1
     end
 
     -- create a height profile
@@ -3636,8 +3635,8 @@ function Cave_build_a_park(R, entry_h)
     each st in HILL.stairs do
       local B = st.B
 
-      local F1 = HILL.profile[st.src]
-      local F2 = HILL.profile[st.dest]
+      local F1 = HILL.profile[st.src .floor_id]
+      local F2 = HILL.profile[st.dest.floor_id]
 
       B.prelim_h  = math.i_mid(F1.prelim_h, F2.prelim_h)
       B.floor_mat = "FLAT1" or LEVEL.cliff_mat
