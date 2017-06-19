@@ -6,7 +6,7 @@ WORK IN PROGRESS
 Parks
 -----
 
--  don't merge blobs : just use same BLOBINFO for them
++  do A* pathing through room, mark blobs as "must_walk"
 
 -  once a hill division is decided, then iterate several
    height variations and pick the "best".
