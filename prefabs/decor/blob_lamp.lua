@@ -12,6 +12,7 @@ PREFABS.Decor_blob_lamp =
 
   theme  = "!hell"
   env    = "outdoor"
+  game   = "doom2"
 
   where  = "point"
   size   = 80
