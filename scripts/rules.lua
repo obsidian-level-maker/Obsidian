@@ -1768,7 +1768,7 @@ SPROUT_TELEPORTER_2x2 =
 
 DECORATE_CAGE_1 =
 {
-  prob = 10
+  prob = 4
   env  = "!cave"
 
   structure =
@@ -1776,6 +1776,27 @@ DECORATE_CAGE_1 =
     "...", "..."
     "...", ".C."
     "x1x", "x1x"
+  }
+
+  auxiliary =
+  {
+    pass = "cage_grow"
+
+    count = { 1,4 }
+  }
+}
+
+
+DECORATE_CAGE_2 =
+{
+  prob = 10
+  env  = "!cave"
+
+  structure =
+  {
+    "....", "...."
+    "....", ".CC."
+    "x11x", "x11x"
   }
 
   auxiliary =
