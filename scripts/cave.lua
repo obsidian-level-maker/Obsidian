@@ -230,7 +230,14 @@ function Cave_collect_walk_rects(R, area)
     -- ignore unused floor chunks
     if not chunk.content then return end
 
-    local WC = rect_for_seeds("floor", chunk.sx1, chunk.sy1, chunk.sx2, chunk.sy2)
+    local kind = "floor"
+    if chunk.content == "DECORATION" or
+       chunk.content == "CAGE"
+    then
+      kind = "decor"
+    end
+
+    local WC = rect_for_seeds(kind, chunk.sx1, chunk.sy1, chunk.sx2, chunk.sy2)
 
     if chunk.sw >= 2 and chunk.sh >= 2 then
       WC.walk_shrinkage = 2
@@ -3583,6 +3590,40 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function can_make_pool(B)
+    if not LEVEL.liquid then return false end
+
+    if B.floor_id == "stair" then return false end
+
+    each N in B.neighbors do
+      -- if N.is_pool then return false end
+      if N.floor_id == "stair" then return false end
+      if N.prelim_h < B.prelim_h then return false end
+    end
+
+    -- TODO : allow it unless walk_rect.kind == "conn"
+    if B.is_walk then return false end
+
+    return true
+  end
+
+
+  local function hill_add_decor(HILL)
+    each _,B in blob_map.regions do
+      if can_make_pool(B) then
+        B.is_pool = true
+      end
+    end
+
+    each _,B in blob_map.regions do
+      if B.is_pool then
+        B.prelim_h = B.prelim_h - 12
+        B.floor_mat = "_LIQUID"
+      end
+    end
+  end
+
+
   local function install_hillside(HILL)
     hill_clear()
     hill_restore(HILL)
@@ -3638,25 +3679,40 @@ function Cave_build_a_park(R, entry_h)
 
     -- install the height profile
 
+    each _,B in blob_map.regions do
+      if B.floor_id != "stair" then
+        local P1 = HILL.profile[B.floor_id]
+        assert(P1)
+
+        B.prelim_h = assert(P1.prelim_h)
+
+        if P1.is_liquid then
+          B.floor_mat = "_LIQUID"
+        else
+          B.floor_mat = assert(h_mats[B.prelim_h])
+        end
+      end
+    end
+
     each st in HILL.stairs do
       local B = st.B
 
       local P1 = HILL.profile[st.src .floor_id]
       local P2 = HILL.profile[st.dest.floor_id]
 
-      B.prelim_h  = math.i_mid(P1.prelim_h, P2.prelim_h)
-      B.floor_mat = "FLAT1" or LEVEL.cliff_mat
-    end
+      if math.abs(P1.prelim_h - P2.prelim_h) <= 16 then
+        local N = st.src
 
-    each _,B in blob_map.regions do
-      if B.floor_id != "stair" then
-        local P1 = HILL.profile[B.floor_id]
-        assert(P1)
-
-        B.prelim_h  = assert(P1.prelim_h)
-        B.floor_mat = assert(h_mats[B.prelim_h])
+        B.prelim_h  = N.prelim_h
+        B.floor_mat = n.floor_mat
+      else
+        B.prelim_h  = math.i_mid(P1.prelim_h, P2.prelim_h)
+        B.floor_mat = "FLAT1" or LEVEL.cliff_mat
       end
     end
+
+
+    hill_add_decor(HILL)
   end
 
 
@@ -3924,7 +3980,7 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
         WC.conn.conn_h = assert(blob.floor_h)
       end
 
-      if WC.kind == "floor" or WC.kind == "closet" then
+      if WC.kind == "floor" or WC.kind == "decor" or WC.kind == "closet" then
         WC.chunk.floor_h   = assert(blob.floor_h)
         WC.chunk.floor_mat = assert(blob.floor_mat)
       end
@@ -4019,6 +4075,15 @@ function Cave_build_a_scenic_vista(area)
     blob_map:neighbors_of_blobs()
 
 --  blob_map:dump_blobs()
+  end
+
+
+  local function mark_must_walk_blobs()
+    -- TODO : use A* pathing to mark all blobs on a PATH
+    --
+    -- [ blobs not on the path can potentially become blocking,
+    --   however we must ensure the player cannot become trapped
+    --   if they fall from a higher floor ]
   end
 
 

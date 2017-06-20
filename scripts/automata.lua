@@ -1443,7 +1443,10 @@ function GRID_CLASS.extent_of_blobs(grid)
 end
 
 
-function GRID_CLASS.random_blob_cell(grid, id)
+function GRID_CLASS.random_blob_cell(grid, id, req_3x3)
+  -- when 'req_3x3' is true, require that the cell is in the
+  -- middle of a 3x3 group of cells of the given blob.
+
   -- NOTE: this can return nil
 
   local reg = grid.regions[id]
@@ -1451,7 +1454,7 @@ function GRID_CLASS.random_blob_cell(grid, id)
 
   local best_cx
   local best_cy
-  local best_score
+  local best_score = 0
 
   for loop = 1, 20 do
     local cx = rand.irange(reg.cx1, reg.cx2)
@@ -1460,6 +1463,18 @@ function GRID_CLASS.random_blob_cell(grid, id)
     if grid[cx][cy] != id then continue end
 
     local score = gui.random()
+
+    if req_3x3 then
+      each dir in geom.ALL_DIRS do
+        local nx, ny = geom.nudge(cx, cy, dir)
+        if not (grid:valid(nx, ny) and grid[nx][ny] == id) then
+          score = -1
+          break;
+        end
+      end
+    end
+
+    if score < 0 then continue end
 
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(cx, cy, dir)
