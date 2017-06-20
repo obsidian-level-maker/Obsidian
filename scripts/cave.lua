@@ -3747,7 +3747,7 @@ function Cave_build_a_park(R, entry_h)
 
     B.decor =
     {
-      ent = "big_tree"
+      ent = rand.key_by_probs(THEME.park_decor)
       cx  = cx
       cy  = cy
     }
@@ -3759,9 +3759,11 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function hill_add_decor(HILL)
+    if not THEME.park_decor then return end
+
     tree_locs = {}
 
-    local prob = 100
+    local prob = rand.pick({ 10, 30, 90 })
 
     each _,B in blob_map.regions do
       if rand.odds(prob) then
