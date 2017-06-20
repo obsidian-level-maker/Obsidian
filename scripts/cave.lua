@@ -3528,6 +3528,24 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function mark_features_of_floors(HILL)
+    -- count how many stairs connect to each floor.
+
+    local floors = HILL.floors
+
+    each st in HILL.stairs do
+      local src  = assert(st.src .floor_id)
+      local dest = assert(st.dest.floor_id)
+
+      floors[src ].stair_num = floors[src ].stair_num + 1
+      floors[dest].stair_num = floors[dest].stair_num + 1
+    end
+
+    -- see what walk_rects are used on each floor
+    -- FIXME !!!
+  end
+
+
   local function create_a_height_profile(HILL)
     -- a height profile is a blank copy of HILL.floors with 'prelim_h'
     -- (and possibly liquid info) set.
@@ -3587,8 +3605,13 @@ function Cave_build_a_park(R, entry_h)
     end
 
 
-    -- TODO : score it, update only if better
-    HILL.profile = profile
+    -- TODO : score it properly!
+    local score = 1 + gui.random()
+
+    if score > (HILL.score or 0) then
+      HILL.score = score
+      HILL.profile = profile
+    end
   end
 
 
@@ -3709,7 +3732,7 @@ function Cave_build_a_park(R, entry_h)
       if N.floor_id != B.floor_id then return nil end
     end
 
-    -- ensure tree is not adjacent to any other one
+    -- ensure tree is not adjacent to another one
     each loc in tree_locs do
       if math.abs(cx - loc.cx) <= 1 and
          math.abs(cy - loc.cy) <= 1
@@ -3787,22 +3810,18 @@ function Cave_build_a_park(R, entry_h)
       end
     end
 
-    -- count how many stairs connect to each floor.
-
-    each st in HILL.stairs do
-      local src  = assert(st.src .floor_id)
-      local dest = assert(st.dest.floor_id)
-
-      floors[src ].stair_num = floors[src ].stair_num + 1
-      floors[dest].stair_num = floors[dest].stair_num + 1
-    end
-
-    -- create a height profile
-    -- [ TODO : create a dozen, pick "best" ]
-
     HILL.floors = floors
 
-    create_a_height_profile(HILL)
+    -- analyse floor usage
+    mark_features_of_floors(HILL)
+
+
+    -- create a height profile
+    -- [ we pick the "best" out of several profiles ]
+
+    for loop = 1, 6 do
+      create_a_height_profile(HILL)
+    end
 
 
     -- determine materials
