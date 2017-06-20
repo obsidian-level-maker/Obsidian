@@ -1443,9 +1443,9 @@ function GRID_CLASS.extent_of_blobs(grid)
 end
 
 
-function GRID_CLASS.random_blob_cell(grid, id, req_3x3)
-  -- when 'req_3x3' is true, require that the cell is in the
-  -- middle of a 3x3 group of cells of the given blob.
+function GRID_CLASS.random_blob_cell(grid, id, req_four)
+  -- when 'req_four' is true, require that all four sides of
+  -- the cell are the same blob.
 
   -- NOTE: this can return nil
 
@@ -1464,22 +1464,13 @@ function GRID_CLASS.random_blob_cell(grid, id, req_3x3)
 
     local score = gui.random()
 
-    if req_3x3 then
-      each dir in geom.ALL_DIRS do
-        local nx, ny = geom.nudge(cx, cy, dir)
-        if not (grid:valid(nx, ny) and grid[nx][ny] == id) then
-          score = -1
-          break;
-        end
-      end
-    end
-
-    if score < 0 then continue end
-
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(cx, cy, dir)
       if grid:valid(nx, ny) and grid[nx][ny] == id then
         score = score + 1
+      elseif req_four then
+        score = -1
+        break;
       end
     end
 

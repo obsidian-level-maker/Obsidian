@@ -3596,7 +3596,6 @@ function Cave_build_a_park(R, entry_h)
     if B.floor_id == "stair" then return false end
 
     each N in B.neighbors do
-      -- if N.is_pool then return false end
       if N.floor_id == "stair" then return false end
       if N.prelim_h < B.prelim_h then return false end
     end
@@ -3608,7 +3607,7 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_add_decor(HILL)
+  local function hill_add_pools(HILL)
     each _,B in blob_map.regions do
       if can_make_pool(B) then
         B.is_pool = true
@@ -3619,6 +3618,31 @@ function Cave_build_a_park(R, entry_h)
       if B.is_pool then
         B.prelim_h = B.prelim_h - 12
         B.floor_mat = "_LIQUID"
+      end
+    end
+  end
+
+
+  local function hill_add_decor(HILL)
+    each _,B in blob_map.regions do
+      if B.floor_id == "stair" then continue end
+      if B.is_walk then continue end
+
+      -- less chance in pools (never in damaging liquids)
+      if B.is_pool then
+        if LEVEL.liquid.damage then continue end
+        if rand.odds(50) then continue end
+      end
+
+      local cx, cy = blob_map:random_blob_cell(B.id, "req_four")
+
+      if cx then
+        B.decor =
+        {
+          ent = "big_tree"
+          cx  = cx
+          cy  = cy
+        }
       end
     end
   end
@@ -3712,6 +3736,7 @@ function Cave_build_a_park(R, entry_h)
     end
 
 
+    hill_add_pools(HILL)
     hill_add_decor(HILL)
   end
 
@@ -3964,6 +3989,13 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
           area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
           area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
+        end
+
+        if reg.decor then
+          local mx = area.base_x + (reg.decor.cx - 1) * 64 + 32
+          local my = area.base_y + (reg.decor.cy - 1) * 64 + 32
+
+          Trans.entity(reg.decor.ent, mx, my, BLOB.floor_h, reg.decor.props)
         end
       end
     end
