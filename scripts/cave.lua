@@ -3626,12 +3626,16 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function hill_add_towers(HILL)
-    local prob = 100
+    local prob = rand.pick({ 10, 30, 90 })
 
     each _,B in blob_map.regions do
       if rand.odds(prob) and can_make_tower(B) then
         B.is_tower = true
         B.prelim_h = B.prelim_h + 64
+
+        if B.floor_mat == "_LIQUID" then
+          B.floor_mat = R.alt_floor_mat
+        end
       end
     end
   end
