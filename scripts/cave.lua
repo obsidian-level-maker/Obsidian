@@ -2703,6 +2703,8 @@ function Cave_build_a_park(R, entry_h)
 
   local floor_num
 
+  local tree_locs
+
 
   local function blobify()
     local src = area.walk_map:copy()
@@ -3608,8 +3610,10 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function hill_add_pools(HILL)
+    local prob = 100
+
     each _,B in blob_map.regions do
-      if can_make_pool(B) then
+      if rand.odds(prob) and can_make_pool(B) then
         B.is_pool = true
       end
     end
@@ -3623,26 +3627,80 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_add_decor(HILL)
-    each _,B in blob_map.regions do
-      if B.floor_id == "stair" then continue end
-      if B.is_walk then continue end
+  local function pick_spot_for_tree(B)
+    local cx, cy = blob_map:random_blob_cell(B.id)
+    if not cx then return nil end
+
+    each dir in geom.ALL_DIRS do
+      local nx, ny = geom.nudge(cx, cy, dir)
+      if not blob_map:valid(nx, ny) then return nil end
+
+      local n_id = blob_map[nx][ny]
+      if not n_id then return nil end
+
+      local N = blob_map.regions[n_id]
+      assert(N)
+
+      if N.floor_id != B.floor_id then return nil end
+    end
+
+    -- ensure tree is not adjacent to any other one
+    each loc in tree_locs do
+      if math.abs(cx - loc.cx) <= 1 and
+         math.abs(cy - loc.cy) <= 1
+      then
+        return nil
+      end
+    end
+
+    return cx, cy  -- OK
+  end
+
+
+  local function try_add_decor_item(B)
+    if B.floor_id == "stair" then return false end
+
+    if B.is_walk then return false end
 
       -- less chance in pools (never in damaging liquids)
-      if B.is_pool then
-        if LEVEL.liquid.damage then continue end
-        if rand.odds(50) then continue end
-      end
+    if B.is_pool then
+      if LEVEL.liquid.damage then return false end
+      if rand.odds(50) then return false end
+    end
 
-      local cx, cy = blob_map:random_blob_cell(B.id, "req_four")
+    -- pick a spot, check if it is usable
+    local cx, cy
 
-      if cx then
-        B.decor =
-        {
-          ent = "big_tree"
-          cx  = cx
-          cy  = cy
-        }
+    for loop = 1, 5 do
+      cx, cy = pick_spot_for_tree(B)
+      if cx then break; end
+    end
+
+    if not cx then return false end
+
+    -- Ok --
+
+    B.decor =
+    {
+      ent = "big_tree"
+      cx  = cx
+      cy  = cy
+    }
+
+    table.insert(tree_locs, B.decor)
+
+    return true
+  end
+
+
+  local function hill_add_decor(HILL)
+    tree_locs = {}
+
+    local prob = 100
+
+    each _,B in blob_map.regions do
+      if rand.odds(prob) then
+        try_add_decor_item(B)
       end
     end
   end
@@ -3736,7 +3794,7 @@ function Cave_build_a_park(R, entry_h)
     end
 
 
-    hill_add_pools(HILL)
+--  hill_add_pools(HILL)
     hill_add_decor(HILL)
   end
 
@@ -3996,6 +4054,8 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
           local my = area.base_y + (reg.decor.cy - 1) * 64 + 32
 
           Trans.entity(reg.decor.ent, mx, my, BLOB.floor_h, reg.decor.props)
+
+          R:add_solid_ent(reg.decor.ent, mx, my, BLOB.floor_h)
         end
       end
     end
