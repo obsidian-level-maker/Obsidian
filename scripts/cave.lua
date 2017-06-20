@@ -3542,7 +3542,20 @@ function Cave_build_a_park(R, entry_h)
     end
 
     -- see what walk_rects are used on each floor
-    -- FIXME !!!
+    each WC in area.walk_rects do
+      local id = blob_map[WC.cx1][WC.cy1]
+      assert(id)
+
+      local B = blob_map.regions[id]
+      assert(B)
+
+      floors[B.floor_id].is_walk = true
+
+      if WC.kind == "conn" or WC.kind == "closet" then
+        B.has_conn = true
+        floors[B.floor_id].has_conn = true
+      end
+    end
   end
 
 
@@ -3673,8 +3686,12 @@ function Cave_build_a_park(R, entry_h)
       if N.prelim_h < B.prelim_h then return false end
     end
 
-    -- TODO : allow it unless walk_rect.kind == "conn"
-    if B.is_walk then return false end
+    if B.has_conn then return false end
+
+    -- rarely put goals in a damaging liquid
+    if B.is_walk and LEVEL.liquid.damage and rand.odds(85) then
+      return false
+    end
 
     return true
   end
@@ -3695,7 +3712,7 @@ function Cave_build_a_park(R, entry_h)
     if not LEVEL.liquid then return end
     if not rand.odds(room_prob) then return end
 
-    if rand.odds(all_prob) then prob = 90 end
+    if rand.odds(all_prob) then prob = 95 end
 
     -- visit each blob and see if we can make a pool
     -- [ update prelim_h in a second pass, to two or more neighboring
