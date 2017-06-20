@@ -3638,8 +3638,6 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function can_make_pool(B)
-    if not LEVEL.liquid then return false end
-
     if B.floor_id == "stair" then return false end
     if B.is_tower then return false end
 
@@ -3656,8 +3654,25 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function hill_add_pools(HILL)
-    local prob = 100
+    -- decide how many to use
+    local prob = rand.sel(30, 30, 10)
 
+    local room_prob = style_sel("liquids", 0, 30, 60, 90)
+    local  all_prob = style_sel("liquids", 0, 10, 35, 70)
+
+    if HILL.has_liquid then
+      room_prob = room_prob / 2
+       all_prob =  all_prob / 4
+    end
+
+    if not LEVEL.liquid then return end
+    if not rand.odds(room_prob) then return end
+
+    if rand.odds(all_prob) then prob = 90 end
+
+    -- visit each blob and see if we can make a pool
+    -- [ update prelim_h in a second pass, to two or more neighboring
+    --   blobs to become liquid ]
     each _,B in blob_map.regions do
       if rand.odds(prob) and can_make_pool(B) then
         B.is_pool = true
@@ -3816,6 +3831,7 @@ function Cave_build_a_park(R, entry_h)
 
         if P1.is_liquid then
           B.floor_mat = "_LIQUID"
+          HILL.has_liquid = true
         else
           B.floor_mat = assert(h_mats[B.prelim_h])
         end
