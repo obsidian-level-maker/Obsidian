@@ -3592,10 +3592,56 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function can_make_tower(B)
+    if B.floor_id == "stair" then return false end
+    if B.is_walk then return false end
+
+    -- check whether the blob is completely surrounded by
+    -- cells at the same height.
+
+    for cx = B.cx1, B.cx2 do
+    for cy = B.cy1, B.cy2 do
+      if blob_map[cx][cy] != B.id then continue end
+
+      each dir in geom.ALL_DIRS do
+        local nx, ny = geom.nudge(cx, cy, dir)
+        if not blob_map:valid(nx, ny) then return false end
+
+        local n_id = blob_map[nx][ny]
+        if not n_id then return false end
+        if n_id == B.id then continue end
+
+        local N = blob_map.regions[n_id]
+        assert(N)
+
+        if N.floor_id != B.floor_id then return false end
+
+        if N.is_tower then return false end
+      end
+    end
+    end
+
+    return true
+  end
+
+
+  local function hill_add_towers(HILL)
+    local prob = 100
+
+    each _,B in blob_map.regions do
+      if rand.odds(prob) and can_make_tower(B) then
+        B.is_tower = true
+        B.prelim_h = B.prelim_h + 64
+      end
+    end
+  end
+
+
   local function can_make_pool(B)
     if not LEVEL.liquid then return false end
 
     if B.floor_id == "stair" then return false end
+    if B.is_tower then return false end
 
     each N in B.neighbors do
       if N.floor_id == "stair" then return false end
@@ -3659,8 +3705,8 @@ function Cave_build_a_park(R, entry_h)
 
   local function try_add_decor_item(B)
     if B.floor_id == "stair" then return false end
-
-    if B.is_walk then return false end
+    if B.is_walk  then return false end
+    if B.is_tower then return false end
 
       -- less chance in pools (never in damaging liquids)
     if B.is_pool then
@@ -3794,7 +3840,10 @@ function Cave_build_a_park(R, entry_h)
     end
 
 
---  hill_add_pools(HILL)
+    -- decorate time!
+
+    hill_add_towers(HILL)
+    hill_add_pools(HILL)
     hill_add_decor(HILL)
   end
 
