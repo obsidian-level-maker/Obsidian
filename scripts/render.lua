@@ -2623,7 +2623,7 @@ function Render_determine_spots()
     local B = area.blobs[x][y]
     if not B then return end
 
-    if B.floor_h and B.floor_h < FL.floor_h - 16 then
+    if B != FL then
       local poly = Cave_brush(area, x, y)
 
       gui.spots_fill_poly(poly, SPOT_LEDGE)
