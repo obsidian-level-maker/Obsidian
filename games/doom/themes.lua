@@ -382,6 +382,13 @@ DOOM.THEMES =
         big_tree = 20
     }
 
+    park_decor =
+    {
+      burnt_tree = 80
+      brown_stub = 40
+        big_tree = 20
+    }
+
     fences =
     {
       STONE = 50
