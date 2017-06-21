@@ -10,9 +10,10 @@ Miscellaneous
 
 -  get posts working with rail junctions again
 
--  internal fences (esp. for outdoor rooms)
+-  don't add chaingunner until player has chaingun
+   [ new "require_weapon" monster field? ]
 
--  a less ornate secret item closet, small items (e.g. 10 potions)
+-  internal fences (esp. for outdoor rooms)
 
 
 

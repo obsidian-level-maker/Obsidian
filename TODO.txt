@@ -34,6 +34,8 @@ OBLIGE TO-DO
 -  fix cages next to low ceilings
    e.g. floor height of 32 + blocking bars
 
+-  a less ornate secret item closet, small items (e.g. 10 potions)
+
 -  support decorative closets, e.g. fancy light thingy
 
 -  one switch opens ALL the barred exits
