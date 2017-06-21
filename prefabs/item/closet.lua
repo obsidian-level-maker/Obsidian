@@ -6,7 +6,7 @@ PREFABS.Item_closet_w_door =
 {
   file   = "item/closet.wad"
 
-  prob   = 20
+  prob   = 15
   env    = "!cave"
 
   where  = "seeds"
