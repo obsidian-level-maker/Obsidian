@@ -2680,8 +2680,13 @@ gui.spots_dump("Cave spot dump")
     gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
 
-    table.append(R.item_spots, item_spots)
-    table.append(R.mon_spots,  mon_spots)
+    if not FL.no_items then
+      table.append(R.item_spots, item_spots)
+    end
+
+    if not FL.no_monsters then
+      table.append(R.mon_spots,  mon_spots)
+    end
 
     gui.spots_end()
   end

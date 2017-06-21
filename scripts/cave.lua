@@ -3810,7 +3810,7 @@ function Cave_build_a_park(R, entry_h)
 
     tree_locs = {}
 
-    local prob = rand.pick({ 10, 30, 90 })
+    local prob = rand.pick({ 10, 27, 65 })
 
     each _,B in blob_map.regions do
       if rand.odds(prob) then
@@ -3971,6 +3971,11 @@ function Cave_build_a_park(R, entry_h)
       Trans.entity(B.decor.ent, mx, my, BLOB.floor_h, B.decor.props)
 
       R:add_solid_ent(B.decor.ent, mx, my, BLOB.floor_h)
+    end
+
+    -- inhibit pickup items in damaging liquid
+    if BLOB.floor_mat == "_LIQUID" and LEVEL.liquid.damage then
+      BLOB.no_items = true
     end
   end
 

@@ -6,8 +6,6 @@ WORK IN PROGRESS
 Parks
 -----
 
--  "no_items" flag for nature areas
-
 +  merge blobs that sit on a diagonal with the one at the
    opposite corner -- to prevent the narrow gap which can
    sometimes be too narrow to fit through
