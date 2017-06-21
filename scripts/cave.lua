@@ -3765,9 +3765,8 @@ function Cave_build_a_park(R, entry_h)
   local function try_add_decor_item(B)
     if B.floor_id == "stair" then return false end
     if B.is_walk  then return false end
-    if B.is_tower then return false end
 
-      -- less chance in pools (never in damaging liquids)
+    -- less chance in pools (never in damaging liquids)
     if B.is_pool then
       if LEVEL.liquid.damage then return false end
       if rand.odds(50) then return false end
@@ -3810,6 +3809,10 @@ function Cave_build_a_park(R, entry_h)
         try_add_decor_item(B)
       end
     end
+  end
+
+
+  local function hill_build_stair(HILL, st)
   end
 
 
@@ -3863,6 +3866,7 @@ function Cave_build_a_park(R, entry_h)
 
 
     -- install the height profile
+    -- [ stairs are processed later.... ]
 
     each _,B in blob_map.regions do
       if B.floor_id != "stair" then
@@ -3881,20 +3885,7 @@ function Cave_build_a_park(R, entry_h)
     end
 
     each st in HILL.stairs do
-      local B = st.B
-
-      local P1 = HILL.profile[st.src .floor_id]
-      local P2 = HILL.profile[st.dest.floor_id]
-
-      if math.abs(P1.prelim_h - P2.prelim_h) <= 16 then
-        local N = st.src
-
-        B.prelim_h  = N.prelim_h
-        B.floor_mat = n.floor_mat
-      else
-        B.prelim_h  = math.i_mid(P1.prelim_h, P2.prelim_h)
-        B.floor_mat = "FLAT1" or LEVEL.cliff_mat
-      end
+      st.B.stair_info = st
     end
 
 
@@ -3949,6 +3940,64 @@ function Cave_build_a_park(R, entry_h)
 
     -- nothing worked :(
     return false
+  end
+
+
+  local function do_install_floor_blob(B, base_h)
+    local BLOB =
+    {
+      floor_h   = B.prelim_h + base_h
+      floor_mat = B.floor_mat
+    }
+
+    assert(BLOB.floor_h)
+    assert(BLOB.floor_mat)
+
+    temp_install_blob(BLOB, B)
+
+    table.insert(area.walk_floors, BLOB)
+
+    area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
+    area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
+
+    if B.decor then
+      local mx = area.base_x + (B.decor.cx - 1) * 64 + 32
+      local my = area.base_y + (B.decor.cy - 1) * 64 + 32
+
+      Trans.entity(B.decor.ent, mx, my, BLOB.floor_h, B.decor.props)
+
+      R:add_solid_ent(B.decor.ent, mx, my, BLOB.floor_h)
+    end
+  end
+
+
+  local function do_install_stair_blob(B, base_h)
+    local st = assert(B.stair_info)
+
+    local z1 = st.src .prelim_h + base_h
+    local z2 = st.dest.prelim_h + base_h
+
+    local z_diff = math.abs(z1 - z2)
+
+    -- nothing is needed for a small height difference
+    if z_diff <= 16 then
+      local N = rand.sel(50, st.src, st.dest)
+
+      B.prelim_h  = N.prelim_h
+      B.floor_mat = N.floor_mat
+
+      do_install_floor_blob(B, base_h)
+      return
+    end
+
+    -- use floor material of highest sfloor
+    local floor_mat = sel(z1 > z2, st.src.floor_mat, st.dest.floor_mat)
+    assert(floor_mat)
+
+    -- FIXME : TEMP SHITE
+    B.prelim_h  = math.i_mid(st.src.prelim_h, st.dest.prelim_h)
+    B.floor_mat = floor_mat
+    do_install_floor_blob(B, base_h)
   end
 
 
@@ -4134,38 +4183,17 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
     -- install all the blobs
     area.walk_floors = {}
 
-    -- TODO : merge neighboring blobs with same h/mat
+    -- TODO : merge neighboring blobs with same h/mat  [ must handle "decor" too!! ]
 
     each _,reg in blob_map.regions do
-      if reg.prelim_h then
-        local BLOB =
-        {
-          floor_h   = reg.prelim_h + base_h
-          floor_mat = reg.floor_mat
-        }
+      if reg.floor_id == "stair" then
+        do_install_stair_blob(reg, base_h)
 
-        assert(BLOB.floor_h)
-        assert(BLOB.floor_mat)
-
-        temp_install_blob(BLOB, reg)
-
-        if reg.floor_id != "stair" then
-          table.insert(area.walk_floors, BLOB)
-
-          area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
-          area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
-        end
-
-        if reg.decor then
-          local mx = area.base_x + (reg.decor.cx - 1) * 64 + 32
-          local my = area.base_y + (reg.decor.cy - 1) * 64 + 32
-
-          Trans.entity(reg.decor.ent, mx, my, BLOB.floor_h, reg.decor.props)
-
-          R:add_solid_ent(reg.decor.ent, mx, my, BLOB.floor_h)
-        end
+      elseif reg.prelim_h then
+        do_install_floor_blob(reg, base_h)
       end
     end
+
 
     -- ensure out-going connections get the correct floor_h,
     -- closets too

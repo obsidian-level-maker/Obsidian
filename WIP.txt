@@ -6,11 +6,24 @@ WORK IN PROGRESS
 Parks
 -----
 
-+  do A* pathing through room, mark blobs as "must_walk"
+>>>  make "stairs" properly : divide into three sections
+     also : pick a material (e.g. R.park_stair_mat)
+
++  decide height jumps (for profile)
+   - often 16
+   - often 32
+   - less often 48
+   - rare-ish 64
+
++  liquid pools
+   -  hazard_health
+   -  radiation suit (one per room, perhaps close to mid-point)
 
 -  once a hill division is decided, then iterate several
    height variations and pick the "best".
    [ e.g. prefer highest floor has GOAL or a connection ]
+   [ also want good "separation" of walk chunks between floors ]
+   [[ ALSO: prefer no "cliffs" near conns, esp. entry conn ]]
 
 -  ability to make a floor (or TWO) into a liquid
    [ require no connections, except free-standing teleporters ]
@@ -19,6 +32,8 @@ Parks
 -  windows and cages can be too low
    [ logic for AREA:min_neighbor_h and max_... needs to look
      into "nature" areas properly ]
+
+IDEA: do A* pathing through room, mark blobs as "must_walk"
 
 
 
