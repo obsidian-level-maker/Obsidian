@@ -6,9 +6,14 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
--  support "sky closets" (require outdoor area on all sides)
+-  assign a floor chunk for boss fights
+
+-  review the disabled diagonal rules
 
 -  get posts working with rail junctions again
+
+
+-  support "sky closets" (require outdoor area on all sides)
 
 -  don't add chaingunner until player has chaingun
    [ new "require_weapon" monster field? ]
