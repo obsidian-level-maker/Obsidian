@@ -3995,6 +3995,32 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function do_make_stair_step(B, st_dir, along, w, z, mat)
+    local STEP =
+    {
+      floor_h   = z
+      floor_mat = mat
+    }
+
+    local cx1, cy1 = B.cx1, B.cy1
+    local cx2, cy2 = B.cx2, B.cy2
+
+    if st_dir == 8 then cy1 = cy1 + along ; cy2 = cy1 + (w-1) end
+    if st_dir == 2 then cy2 = cy2 - along ; cy1 = cy2 - (w-1) end
+
+    if st_dir == 6 then cx1 = cx1 + along ; cx2 = cx1 + (w-1) end
+    if st_dir == 4 then cx2 = cx2 - along ; cx1 = cx2 - (w-1) end
+
+    for cx = cx1, cx2 do
+    for cy = cy1, cy2 do
+      if blob_map[cx][cy] == B.id then
+        area.blobs[cx][cy] = STEP
+      end
+    end
+    end
+  end
+
+
   local function do_install_stair_blob(B, base_h)
     local st = assert(B.stair_info)
 
@@ -4018,10 +4044,41 @@ function Cave_build_a_park(R, entry_h)
     local floor_mat = sel(z1 > z2, st.src.floor_mat, st.dest.floor_mat)
     assert(floor_mat)
 
-    -- FIXME : TEMP SHITE
-    B.prelim_h  = math.i_mid(st.src.prelim_h, st.dest.prelim_h)
-    B.floor_mat = floor_mat
-    do_install_floor_blob(B, base_h)
+    -- determine how many steps, and width of each step
+    local width
+    local num_div
+
+    if st.is_vert then
+      width = B.cy2 - B.cy1 + 1
+    else
+      width = B.cx2 - B.cx1 + 1
+    end
+
+    if z_diff >= 64 then
+      num_div = math.min(width, 6)
+    else
+      num_div = math.min(width, 3)
+    end
+
+    local div = division_for_stair(width, num_div)
+
+    -- get direction
+    local st_dir = sel(st.is_vert, 8, 6)
+
+    if z1 > z2 then
+      table.reverse(div)
+    end
+
+    -- build the steps
+    local along = 0
+
+    each w in div do
+      local z = z1 + (z2 - z1) * _index / (#div + 1)
+
+      do_make_stair_step(B, st_dir, along, w, z, floor_mat)
+
+      along = along + w
+    end
   end
 
 
