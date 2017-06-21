@@ -2,12 +2,12 @@
 -- Teleporter pad
 --
 
-PREFABS.Teleporter1 =
+PREFABS.Teleporter2 =
 {
-  file   = "teleporter/pad1.wad"
+  file   = "teleporter/pad2.wad"
   map    = "MAP01"
 
-  theme  = "!tech"
+  theme  = "tech"
   prob   = 50
 
   where  = "point"
