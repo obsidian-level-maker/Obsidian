@@ -2706,6 +2706,12 @@ function Cave_build_a_park(R, entry_h)
   local tree_locs
 
 
+  local RAISE_HEIGHTS =
+  {
+    [16] = 40, [32] = 60, [48] = 40, [64] = 20
+  }
+
+
   local function blobify()
     local src = area.walk_map:copy()
 
@@ -3603,8 +3609,10 @@ function Cave_build_a_park(R, entry_h)
           P1, P2 = P2, P1
         end
 
+        local raise_h = rand.key_by_probs(RAISE_HEIGHTS)
+
         if P1.prelim_h and not P2.prelim_h then
-          P2.prelim_h = P1.prelim_h + 32
+          P2.prelim_h = P1.prelim_h + raise_h
           changes = true
         end
       end
@@ -3835,7 +3843,7 @@ function Cave_build_a_park(R, entry_h)
     -- create a height profile
     -- [ we pick the "best" out of several profiles ]
 
-    for loop = 1, 6 do
+    for loop = 1, 5 do
       create_a_height_profile(HILL)
     end
 
