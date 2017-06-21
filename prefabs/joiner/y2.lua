@@ -2,7 +2,9 @@
 -- huge joiner with a round glowy thing
 --
 
-PREFABS.Joiner_y2 =
+-- disabled for now, since connected area is almost always too low
+
+UNFINISHED.Joiner_y2 =
 {
   file   = "joiner/y2.wad"
 
