@@ -3812,10 +3812,6 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function hill_build_stair(HILL, st)
-  end
-
-
   local function install_hillside(HILL)
     hill_clear()
     hill_restore(HILL)
@@ -3968,6 +3964,34 @@ function Cave_build_a_park(R, entry_h)
 
       R:add_solid_ent(B.decor.ent, mx, my, BLOB.floor_h)
     end
+  end
+
+
+  local function division_for_stair(width, num_div)
+    -- the stair blob is 'width' cells wide (in the travel direction).
+    --
+    -- returns a table of length 'num_div' with how many cells to use
+    -- for each step of the stair.
+
+    assert(num_div <= width)
+
+    if num_div == 1 then
+      return { width }
+    end
+
+    local total  = 0
+    local result = {}
+
+    for i = 1, num_div do
+      table.insert(result, 1)
+    end
+
+    for k = 1, width - num_div do
+      local m = table.remove(result, #result)
+      table.insert(result, 1, m + 1)
+    end
+
+    return result
   end
 
 
