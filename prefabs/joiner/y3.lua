@@ -5,9 +5,10 @@
 PREFABS.Joiner_y3 =
 {
   file   = "joiner/y3.wad"
+  map    = "MAP01"
 
-  prob   = 300
-  theme  = "!tech"
+  theme  = "hell"
+  prob   = 150
 
   where  = "seeds"
   shape  = "I"
