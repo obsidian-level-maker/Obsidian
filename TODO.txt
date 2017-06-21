@@ -165,7 +165,11 @@ Caves
 Hallways
 --------
 
--  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
++  make some deuce stairs
+
+-  fix issue with T-shape stairs
+
++  support over-sized pieces (e.g. 3x1 and 3x3 for vent)
    [ will need all I/L/T/P shapes ]
    [[ good for traps! ]]
 

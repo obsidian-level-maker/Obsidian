@@ -26,10 +26,6 @@ Hallway System
    e.g. BLOOD1 for ceiling/floor in hell
    e.g. SKSPINE2 for wall in hell
 
-+  make some deuce stairs
-
--  fix issue with T-shape stairs
-
 
 
 Parks
