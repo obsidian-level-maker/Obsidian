@@ -625,7 +625,8 @@ GROW_FUNNEL_2 =
 
 GROW_CURVE_1 =
 {
-  prob = 40
+  prob = 50
+  prob_skew = 3
   skip_prob = 25
 
   structure =
@@ -662,6 +663,28 @@ GROW_AREA_2 =
     "...", "AAA"
     "11.", "11A"
     "11.", "11A"
+  }
+}
+
+
+GROW_AREA_3 =
+{
+  prob = 40
+  prob_skew = 2
+  skip_prob = 35
+
+  structure =
+  {
+    "x...", "x#AA"
+    "x...", "x/AA"
+    "1%..", "1%/#"
+    "11xx", "11xx"
+  }
+
+  diagonals =
+  {
+    "#A"
+    "1.", "1A", "A#"
   }
 }
 
