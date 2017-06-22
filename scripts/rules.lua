@@ -567,20 +567,6 @@ GROW_2 =
 }
 
 
-GROW_2_EMERGENCY =
-{
-  emergency = true
-
-  prob = 200
-
-  structure =
-  {
-    "..", "11"
-    "11", "11"
-  }
-}
-
-
 GROW_3 =
 {
   prob = 20
@@ -621,24 +607,10 @@ GROW_BLOB_1 =
 }
 
 
-GROW_FUNNEL_1 =
-{
-  prob = 25*0
-
-  structure =
-  {
-    "....", "1111"
-    "....", "%11/"
-    ".11.", ".11."
-  }
-
-  diagonals = { ".1", "1." }
-}
-
-
 GROW_FUNNEL_2 =
 {
-  prob = 25*0
+  prob = 5
+  skip_prob = 50
 
   structure =
   {
@@ -653,118 +625,18 @@ GROW_FUNNEL_2 =
 
 GROW_CURVE_1 =
 {
-  prob = 80*0
+  prob = 40
   skip_prob = 25
 
   structure =
   {
     "1.", "1%"
     "1.", "11"
+    "1.", "11"
     "1.", "1/"
   }
 
   diagonals = { "1.", "1." }
-}
-
-
-GROW_CURVE_2 =
-{
-  prob = 45*0
-  skip_prob = 50
-
-  structure =
-  {
-    "..", "A%"
-    "%.", "%A"
-    "1.", "1A"
-    "/.", "/A"
-    "..", "A/"
-  }
-
-  diagonals =
-  {
-          "A."
-    "1.", "1A"
-    "1.", "1A"
-          "A."
-  }
-}
-
-
-GROW_CURVE_TUNNEL =
-{
-  prob = 1*0
-
-  structure =
-  {
-    "%...", "%#/1"
-    "1...", "1111"
-    "/...", "/#%1"
-  }
-
-  diagonals =
-  {
-    "1.", "1#", "#1"
-    "1.", "1#", "#1"
-  }
-}
-
-
-GROW_CURVE_TUNNEL_EMERGENCY =
-{
-  template = "GROW_CURVE_TUNNEL"
-
-  emergency = true
-
-  prob = 100
-}
-
-
-GROW_DIAG_BLOB1 =
-{
-  prob = 10*0
-
-  structure =
-  {
-    "...", "AA%"
-    "%..", "%AA"
-    "x%.", "x%A"
-    "x1.", "x1."
-  }
-
-  diagonals =
-  {
-          "A."
-    "1.", "1A"
-    "1.", "1A"
-  }
-}
-
-
-GROW_DIAG_BLOB2 =
-{
-  prob = 20*0
-
-  structure =
-  {
-    "...", "AA%"
-    "%..", "%AA"
-    "x%.", "x%A"
-    "x1.", "x1#"
-    "x/.", "x/A"
-    "/..", "/AA"
-    "...", "AA/"
-  }
-
-  diagonals =
-  {
-          "A."
-    "1.", "1A"
-    "1.", "1A"
-    "1.", "1A"
-    "1.", "1A"
-          "A."
-  }
 }
 
 
@@ -1113,9 +985,9 @@ GROW_STAIRPAIR_5G =
 
 GROW_STAIRPAIR_5D =
 {
-  prob = 55
-  skip_prob = 35
-  aversion = 2
+  prob = 25
+  skip_prob = 50
+  aversion = 4
 
   z_dir = "down"
 
@@ -1126,81 +998,6 @@ GROW_STAIRPAIR_5D =
     ".....", "^AAAA"
     "11...", "11AAA"
     "11...", "11>>A"
-  }
-}
-
-
-GROW_STAIR_CURVE =
-{
-  prob = 250*0
-  skip_prob = 50
-
-  structure =
-  {
-    "x..x", "xA%x"
-    "1%..", "1%A%"
-    "11..", "11>A"
-    "1/..", "1/A/"
-    "x..x", "xA/x"
-  }
-
-  diagonals =
-  {
-          "A."
-    "1.", "1A", "A."
-    "1.", "1A", "A."
-          "A."
-  }
-}
-
-
-GROW_DBLSTAIR_CURVE =
-{
-  prob = 200*0
-  skip_prob = 50
-
-  structure =
-  {
-    "...", "SA%"
-    "1%.", "1%A"
-    "11.", "11A"
-    "1/.", "1/A"
-    "...", "SA/"
-  }
-
-  diagonals =
-  {
-          "A."
-    "1.", "1A"
-    "1.", "1A"
-          "A."
-  }
-
-  stair1_5 = { shape="L", from_dir=2, dest_dir=6 }
-  stair1_1 = { shape="L", from_dir=8, dest_dir=6 }
-}
-
-
-GROW_STAIR_POOL1 =
-{
-  prob = 0
-
-  structure =
-  {
-    "x.....", "xAAA%."
-    "1.....", "1/~%A."
-    "1.....", "1~~~A."
-    "1.....", "1~~/A#"
-    "1.....", "1>AA/."
-    "x....x", "x##..x"
-  }
-
-  diagonals =
-  {
-    "A."
-    "1~", "~A"
-    "~A"
-    "A."
   }
 }
 
@@ -1440,7 +1237,7 @@ SPROUT_DIRECT_2_EMERGENCY =
   emergency = true
 
   -- high prob to force this rule to be tried fairly early
-  prob = 1000
+  prob = 500
 
   structure =
   {
@@ -1565,32 +1362,6 @@ SPROUT_SYMMETRY_3 =
     conn = { x=2, y=1, w=3, dir=8 }
 
     symmetry = { x=3, y=2, dir=8 }
-  }
-}
-
-
-SPROUT_DIAG_1 =
-{
-  prob = 0
-
-  structure =
-  {
-    "....", "...."
-    "....", ".RR."
-    "11..", "1%R."
-    "11..", "11.."
-  }
-
-  diagonals =
-  {
-    "1R"
-  }
-
-  new_room =
-  {
-    conn = { x=2, y=2, dir=9 }
-
-    symmetry = { x=2, y=2, dir=1 }
   }
 }
 
@@ -2269,31 +2040,6 @@ CAVE_GROW_5x2 =
     ".....", "11111"
     ".....", "11111"
     "11111", "11111"
-  }
-}
-
-
-CAVE_GROW_FILL_A =
-{
-  prob = 0
-
-  structure =
-  {
-    "1.", "11"
-    "11", "11"
-  }
-}
-
-
-CAVE_GROW_FILL_B =
-{
-  prob = 0
-
-  structure =
-  {
-    "1xx", "1xx"
-    "1.x", "11x"
-    "111", "111"
   }
 }
 

@@ -1433,11 +1433,6 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       if not is_emergency then return 0 end
     end
 
----###  -- for emergency, limit what growth rules to try
----###  if is_emergency and pass == "grow" and not rule.emergency then
----###    return 0
----###  end
-
     if not ob_match_level_theme(rule) then return 0 end
     if not ob_match_feature(rule)     then return 0 end
 
