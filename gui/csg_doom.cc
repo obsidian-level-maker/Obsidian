@@ -47,8 +47,11 @@ int ef_thing_mode;
 
 
 // valid after DM_CreateLinedefs()
-static int map_bound_x1;
-static int map_bound_y1;
+static int map_bound_x1, map_bound_x2;
+static int map_bound_y1, map_bound_y2;
+
+static int dummy_pos_x;
+static int dummy_pos_y;
 
 
 #define SEC_FLOOR_SPECIAL  (1 << 1)
@@ -1621,11 +1624,11 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 
 	// update map's bounding box
-	if (x1 < map_bound_x1) map_bound_x1 = x1;
-	if (x2 < map_bound_x1) map_bound_x1 = x2;
+	map_bound_x1 = MIN(map_bound_x1, MIN(x1, x2));
+	map_bound_y1 = MIN(map_bound_y1, MIN(y1, y2));
 
-	if (y1 < map_bound_y1) map_bound_y1 = y1;
-	if (y2 < map_bound_y1) map_bound_y1 = y2;
+	map_bound_x2 = MAX(map_bound_x2, MAX(x1, x2));
+	map_bound_y2 = MAX(map_bound_y2, MAX(y1, y2));
 
 
 	// create the line...
@@ -1706,8 +1709,10 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 static void DM_CreateLinedefs()
 {
-	map_bound_x1 = 9999;
-	map_bound_y1 = 9999;
+	map_bound_x1 = +99999;
+	map_bound_y1 = +99999;
+	map_bound_x2 = -99999;
+	map_bound_y2 = -99999;
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -1722,8 +1727,9 @@ static void DM_CreateLinedefs()
 		}
 	}
 
-	map_bound_x1 -= (map_bound_x1 & 31) + 32;
-	map_bound_y1 -= (map_bound_y1 & 31) + 128;
+	// coordinate for first dummy sector
+	dummy_pos_x = map_bound_x1 - (map_bound_x1 & 31);
+	dummy_pos_y = map_bound_y1 - (map_bound_y1 & 31) - 128;
 }
 
 
@@ -2320,8 +2326,16 @@ public:
 	void Construct(int index)
 	{
 		// determine coordinate of bottom/left corner
-		int x1 = map_bound_x1 + (index % 64) * 32;
-		int y1 = map_bound_y1 - (index / 64) * 32;
+		int x1 = dummy_pos_x;
+		int y1 = dummy_pos_y;
+
+		dummy_pos_x += 32;
+
+		if (dummy_pos_x + 32 >= map_bound_x2)
+		{
+			dummy_pos_x = map_bound_x1 - (map_bound_x1 & 31);
+			dummy_pos_y -= 32;
+		}
 
 		int x2 = x1 + 16;
 		int y2 = y1 + 16;
