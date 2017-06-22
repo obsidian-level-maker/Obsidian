@@ -15,10 +15,10 @@ PREFABS.Pillar_tech2_A =
   size   = 64
   height = 136
 
+  z_fit  = "top"
+
   bound_z1 = 0
   bound_z2 = 136
-
-  z_fit  = "top"
 
   sink_mode = "never"
 }
@@ -36,5 +36,23 @@ PREFABS.Pillar_tech2_B =
   height = { 128,128 }
 
   bound_z2 = 128
+}
+
+
+PREFABS.Pillar_tech2_elec =
+{
+  template = "Pillar_tech2_A"
+
+  map = "MAP03"
+
+  prob = 800
+  skip_prob = 50
+
+  height = { 160,192 }
+
+  z_fit  = "top"
+
+  bound_z1 = 0
+  bound_z2 = 160
 }
 

@@ -1008,7 +1008,7 @@ GROW_STAIRPAIR_5G =
 
 GROW_STAIRPAIR_5D =
 {
-  prob = 25
+  prob = 20
   skip_prob = 50
   aversion = 4
 
