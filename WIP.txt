@@ -8,8 +8,6 @@ Miscellaneous
 
 -  assign a floor chunk for boss fights
 
--  review the disabled diagonal rules
-
 -  get posts working with rail junctions again
 
 
