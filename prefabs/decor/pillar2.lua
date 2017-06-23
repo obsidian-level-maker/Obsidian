@@ -56,3 +56,24 @@ PREFABS.Pillar_tech2_elec =
   bound_z2 = 160
 }
 
+
+PREFABS.Pillar_tech2_TEKLITE =
+{
+  template = "Pillar_tech2_A"
+
+  map = "MAP04"
+
+  prob = 200
+  skip_prob = 50
+
+  height = { 160,192 }
+
+  z_fit  = "frame"
+
+  bound_z1 = 0
+  bound_z2 = 160
+
+  -- occasionally flicker the lighting
+  sector_1 = { [0]=90, [1]=10 }
+}
+
