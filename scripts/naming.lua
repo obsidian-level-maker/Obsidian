@@ -1690,39 +1690,56 @@ namelib.NAMES =
         Dark = 20
         Menacing = 20
         Cold = 10
+        Fiery = 10
+        Blazing = 15
         Savage = 30
         Deathly = 20
         Strange = 10
+        Burning = 10
+        Frozen  = 10
 
         Evil = 50
         Monstrous = 15
+        Sinful  = 15
         Demonic = 15
         Infested = 10
         Doomed = 10
+        Malicious = 10
         Forsaken = 10
+        Filthy   = 5
 
         Morbid = 20
         Lonely = 10
         Weird = 10
         Endless = 20
+        Infinite = 10
         Gory = 10
+        Visceral = 15
+        Corrupt = 15
+        Wicked  = 10
+        Vile    = 5
 
         Fatal = 10
         Lost  = 10
         Fetid = 5
+        Foul  = 5
         Cursed = 10
         Haunted = 10
         Cruel = 10
 
         Hallowed = 10
         Unholy = 10
+        Profane = 15
         Tortured = 10
         Forgotten = 10
+        Abandoned = 10
+        Ghoulish  = 10
 
         Hidden = 10
         Wretched = 15
         Nefarious = 15
         Extreme = 10
+        Wrecked = 10
       }
 
       p =
