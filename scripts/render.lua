@@ -2111,6 +2111,19 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     skin.ceil2  = chunk.dest_area.ceil_mat
   end
 
+  if def.open_to_sky then
+    -- ensure a sky ceiling is made for this
+    chunk.occupy = "floor"
+
+    A.ceil_h = assert(A.zone.sky_h)
+    A.ceil_mat = "_SKY"
+
+    -- disable walls around/inside this chunk
+    each N in A.neighbors do
+      Junction_make_empty(Junction_lookup(A, N))
+    end
+  end
+
 
   -- build the prefab --
 
