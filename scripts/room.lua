@@ -1506,10 +1506,30 @@ function Room_border_up()
   end
 
 
+  local function check_sky_closets()
+    each A in LEVEL.areas do
+      if A.mode != "chunk" then continue end
+
+      if not A.room then continue end
+      if not A.room.is_outdoor then continue end
+
+      local T = A.chunk
+      if T.kind != "closet" then continue end
+
+      if T:is_open_to_sky(A.room) then
+        T.open_to_sky = true
+stderrf("%s is open to sky in %s\n", T.name, A.room.name)
+      end
+    end
+  end
+
+
   ---| Room_border_up |---
 
   assign_window_groups()
   decide_window_boosts()
+
+  check_sky_closets()
 
   each _,junc in LEVEL.junctions do
     if junc.E1 == nil then

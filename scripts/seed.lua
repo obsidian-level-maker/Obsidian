@@ -178,6 +178,9 @@
 
     encroach[SIDE]   -- how much distance is used on each side, often zero
                      -- [ used by walls, archways, etc... ]
+
+    open_to_sky   -- true if all sides face an outdoor area
+    open_to_room  -- true if all sides face an open area of the room
 --]]
 
 
@@ -1302,6 +1305,89 @@ function CHUNK_CLASS.is_must_walk(chunk)
   end
 
   return false
+end
+
+
+function CHUNK_CLASS.is_open_to_sky(chunk, R)
+  -- are all neighbors of the chunk going to be a sky ceiling?
+
+  if not R.is_outdoor then return false end
+
+  local function area_open_to_sky(A)
+    if not A.is_outdoor then return false end
+    if A.mode == "void" then return false end
+    if A.room and A.room != R then return false end
+    if A.mode == "scenic" and A.face_room != R then return false end
+
+    return true
+  end
+
+  for sx = chunk.sx1-1, chunk.sx2+1 do
+  for sy = chunk.sy1-1, chunk.sy2+1 do
+    -- only check seeds around the chunk
+    if (sx >= chunk.sx1 and sx <= chunk.sx2) and
+       (sy >= chunk.sy1 and sy <= chunk.sy2)
+    then continue end
+
+    if not Seed_valid(sx, sy) then return false end
+
+    local S = SEEDS[sx][sy]
+
+    local A = S.area
+    if not (A and area_open_to_sky(A)) then return false end
+
+    if S.diagonal then
+      A = S.top.area
+      if not (A and area_open_to_sky(A)) then return false end
+    end
+  end
+  end
+
+  return true
+end
+
+
+function CHUNK_CLASS.is_open_to_room(chunk, R)
+  -- chunk faces a normal (open) area of the room on ALL sides?
+  -- TODO : determine max_floor and min_ceil of neighbors
+  --        [ fail when height < N, e.g. 128 ]
+
+  if R.is_outdoor then return false end
+
+  local function area_open_to_room(A)
+    if A.room != R then return false end
+
+    -- TODO : check for stairs
+
+    if not (A.mode == "floor" or A.mode == "nature" or
+            A.mode == "liquid")
+    then return false end
+
+    return true
+  end
+
+  for sx = chunk.sx1-1, chunk.sx2+1 do
+  for sy = chunk.sy1-1, chunk.sy2+1 do
+    -- only check seeds around the chunk
+    if (sx >= chunk.sx1 and sx <= chunk.sx2) and
+       (sy >= chunk.sy1 and sy <= chunk.sy2)
+    then continue end
+
+    if not Seed_valid(sx, sy) then return false end
+
+    local S = SEEDS[sx][sy]
+
+    local A = S.area
+    if not (A and area_open_to_room(A)) then return false end
+
+    if S.diagonal then
+      A = S.top.area
+      if not (A and area_open_to_room(A)) then return false end
+    end
+  end
+  end
+
+  return true
 end
 
 

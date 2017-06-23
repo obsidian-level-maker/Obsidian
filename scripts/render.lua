@@ -2019,6 +2019,9 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   -- room kind and (for joiners) neighbor room kind
   if A.room then
     reqs.env = A.room:get_env()
+
+    reqs.open_to_sky  = chunk.open_to_sky
+    reqs.open_to_room = chunk.open_to_room
   end
 
   -- handle secret closets and joiners to a secret room

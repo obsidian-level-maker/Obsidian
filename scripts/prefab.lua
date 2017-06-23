@@ -2148,6 +2148,8 @@ function Fab_find_matches(reqs, match_state)
     if not match_environment(reqs.env,      def.env)      then return 0 end
     if not match_environment(reqs.neighbor, def.neighbor) then return 0 end
 
+    if def.open_to_sky and not reqs.open_to_sky then return 0 end
+
     -- hallway stuff
     if reqs.door   != def.door   then return 0 end
     if reqs.secret != def.secret then return 0 end
