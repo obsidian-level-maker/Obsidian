@@ -29,6 +29,7 @@
 -- float  : true if monster floats (flies)
 -- invis  : true if invisible (or partially)
 --
+-- weap_needed : weapons player must have to fight this monster
 -- weap_min_damage : damage (per second) of player weapon required
 -- weap_prefs : weapon preferences table (usage by player)
 -- disloyal   : can hurt a member of same species
@@ -82,6 +83,7 @@ DOOM.MONSTERS =
     attack = "hitscan"
     density = 1.0
     give = { {weapon="shotty"}, {ammo="shell",count=4} }
+    weap_needed = { shotty=true }
     species = "zombie"
     room_size = "small"
     disloyal = true
@@ -260,6 +262,7 @@ DOOM.MONSTERS =
     damage = 5.5
     attack = "hitscan"
     give = { {weapon="chain"}, {ammo="bullet",count=10} }
+    weap_needed = { chain=true }
     weap_min_damage = 50
     density = 0.75
     species = "zombie"
