@@ -115,11 +115,13 @@ function Fight_Simulator(monsters, weapons, stats)
         prob = prob * (first_mon.weap_prefs[W.info.name] or 1)
       end
 
-      -- handle 'weap_needed' and 'min_weapon' fields of a monster
+      local W_damage = W.info.rate * W.info.damage
+
+      -- handle weapon requirements of a monster
       if first_mon.weap_needed and not first_mon.weap_needed[W.info.name] then
         prob = prob / 200
-      elseif first_mon.min_weapon and (W.info.level or 0) < first_mon.min_weapon then
-        prob = prob / 10
+      elseif first_mon.weap_min_damage and first_mon.weap_min_damage > W_damage then
+        prob = prob / 20
       end
 
       table.insert(prob_tab, prob)

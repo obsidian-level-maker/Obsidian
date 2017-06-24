@@ -1110,7 +1110,7 @@ function Monster_fill_room(R)
       return 0
     end
 
-    if info.min_weapon and not Player_has_min_weapon(info.min_weapon) then
+    if info.weap_min_damage and info.weap_min_damage > Player_max_damage() then
       return 0
     end
 

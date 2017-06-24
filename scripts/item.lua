@@ -285,18 +285,19 @@ function Player_has_weapon(weap_needed)
 end
 
 
-function Player_has_min_weapon(min_weapon)
+function Player_max_damage()
+  local result = 5
+
   each name,info in GAME.WEAPONS do
-    if (info.level or 0) >= min_weapon then
-      if Player_has_weapon({ [name]=1 }) then
-        return true
-      end
+    local W_damage = info.rate * info.damage
+
+    if W_damage > result and Player_has_weapon({ [name]=1 }) then
+      result = W_damage
     end
   end
 
-  return false
+  return result
 end
-
 
 
 function Player_find_initial_weapons()

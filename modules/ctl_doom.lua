@@ -70,7 +70,7 @@ function CTL_DOOM.monster_setup(self)
 
       if M.prob > 40 then
         M.level = 1
-        M.min_weapon = nil
+        M.weap_min_damage = nil
       end
 
       if M.prob > 200 then

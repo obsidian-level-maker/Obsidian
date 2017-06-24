@@ -367,7 +367,7 @@ function Episode_plan_monsters()
 
     if info.level > LEV.monster_level then return false end
 
-    if info.min_weapon and info.min_weapon > LEV.max_weapon then return false end
+    if info.weap_min_damage and info.weap_min_damage > LEV.weap_max_damage then return false end
 
     if not check_theme(LEV, info) then return false end
 
@@ -474,7 +474,7 @@ function Episode_plan_monsters()
 
     if info.level > LEV.monster_level + BOSS_AHEAD then return false end
 
-    if info.min_weapon and info.min_weapon > LEV.max_weapon then return false end
+    if info.weap_min_damage and info.weap_min_damage > LEV.weap_max_damage then return false end
 
     return true
   end
@@ -501,7 +501,7 @@ function Episode_plan_monsters()
     -- simply too weak
     if info.level < 3 then return 0 end
 
-    if info.min_weapon and info.min_weapon > LEV.max_weapon then return 0 end
+    if info.weap_min_damage and info.weap_min_damage > LEV.weap_max_damage then return 0 end
 
     if info.level > LEV.monster_level + BOSS_AHEAD then return 0 end
 
@@ -1294,17 +1294,18 @@ function Episode_plan_weapons()
   end
 
 
-  local function calc_max_level(LEV)
-    local max_level = 1
+  local function calc_max_damage(LEV)
+    local max_damage = 5
 
     each name,_ in LEV.seen_weapons do
       local info = GAME.WEAPONS[name]
-      local level = info.level or 1
 
-      max_level = math.max(max_level, level)
+      local W_damage = info.rate * info.damage
+
+      max_damage = math.max(max_damage, W_damage)
     end
 
-    LEV.max_weapon = max_level
+    LEV.weap_max_damage = max_damage
   end
 
 
@@ -1320,7 +1321,7 @@ function Episode_plan_weapons()
         seen_weapons[name] = true
       end
 
-      calc_max_level(LEV)
+      calc_max_damage(LEV)
     end
   end
 
@@ -1755,7 +1756,7 @@ function Hub_assign_pieces(epi, pieces)
     L.hub_piece = piece
 
     gui.debugf("Hub: assigning piece '%s' --> %s\n", piece, L.name)
-  end 
+  end
 end
 
 
