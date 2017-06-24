@@ -6,35 +6,22 @@ WORK IN PROGRESS
 Parks
 -----
 
-+  merge blobs that sit on a diagonal with the one at the
-   opposite corner -- to prevent the narrow gap which can
-   sometimes be too narrow to fit through
-
-+  prevent a tree ON or TOUCHING a diagonal
-
-+  decide height jumps (for profile)
-   - often 16
-   - often 32
-   - less often 48
-   - rare-ish 64
-
 +  liquid pools
    -  hazard_health
-   -  radiation suit (one per room, perhaps close to mid-point)
-
--  once a hill division is decided, then iterate several
-   height variations and pick the "best".
-   [ e.g. prefer highest floor has GOAL or a connection ]
-   [ also want good "separation" of walk chunks between floors ]
-   [[ ALSO: prefer no "cliffs" near conns, esp. entry conn ]]
-
--  ability to make a floor (or TWO) into a liquid
-   [ require no connections, except free-standing teleporters ]
-   [[ other floors MUST be higher ]]
 
 -  windows and cages can be too low
    [ logic for AREA:min_neighbor_h and max_... needs to look
      into "nature" areas properly ]
+
+-  evaluate a hill division:
+   - want a good "separation" of walk chunks between floors
+   - also prefer no "cliffs" near conns, esp. entry conn
+
+-  ability to make a floor (or TWO) into a liquid
+   [ require no connections, except free-standing teleporters ]
+   [[ ensure other floors are higher ]]
+
+-  radiation suits (max one per room)
 
 IDEA: do A* pathing through room, mark blobs as "must_walk"
 
