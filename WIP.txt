@@ -6,24 +6,9 @@ WORK IN PROGRESS
 Parks
 -----
 
-+  liquid pools
-   -  hazard_health
-
--  windows and cages can be too low
++  windows and cages can be too low
    [ logic for AREA:min_neighbor_h and max_... needs to look
      into "nature" areas properly ]
-
--  evaluate a hill division:
-   - want a good "separation" of walk chunks between floors
-   - also prefer no "cliffs" near conns, esp. entry conn
-
--  ability to make a floor (or TWO) into a liquid
-   [ require no connections, except free-standing teleporters ]
-   [[ ensure other floors are higher ]]
-
--  radiation suits (max one per room)
-
-IDEA: do A* pathing through room, mark blobs as "must_walk"
 
 
 

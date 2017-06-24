@@ -102,10 +102,18 @@ Quake3 CSG
 Parks
 -----
 
+-  evaluate a hill division:
+   - want a good "separation" of walk chunks between floors
+   - also prefer no "cliffs" near conns, esp. entry conn
+
+-  ability to make a floor (or TWO) into a liquid
+   [ require no connections, except free-standing teleporters ]
+   [[ ensure other floors are higher ]]
+
+-  radiation suits when room has much damaging liquid
+
 -  inhibit items in bits of floor cut-off by river
    [ create another FLOOR for them BUT not stored in info.floors list ]
-
--  consider a style and/or UI setting for parks
 
 -  review outdoor ROOM_THEMEs, remove/replace any "floors" which
    are actually natural-ish
