@@ -12,6 +12,8 @@ CHANGES IN 7.55
 +  the "Weapons" button now controls how early or late new
    weapons are introduced into the wad
 
++  new "Park" rooms, naturalistic outdoor areas
+
 +  hallways (IN PROGRESS...)
 
 +  better scenic areas outside the map (IN PROGRESS...)

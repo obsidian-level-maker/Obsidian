@@ -479,6 +479,9 @@ Mazes:
   MONSTERS / ITEMS
 ----------------------------------------------
 
+-  don't add chaingunner until player has chaingun
+   [ new "require_weapon" monster field? ]
+
 -  usage of Arch-Viles as boss/guard monsters should have a limit
 
 -  for "big" boss monster rooms, add a big health item / invuln

@@ -11,9 +11,15 @@ BUG: weapon control module interferes with boss selection
 Parks
 -----
 
++  fix the railings when next to "watery_drop" scenic
+   [ alternatively: disable watery_drop when next to a park ]
+   [[ another idea: provide a teleporter in liquid ]]
+
 +  windows and cages can be too low
    [ logic for AREA:min_neighbor_h and max_... needs to look
      into "nature" areas properly ]
+
+-  fix park_prob
 
 
 
@@ -29,9 +35,6 @@ Miscellaneous
 
 -  get posts working with rail junctions again
 
-
--  don't add chaingunner until player has chaingun
-   [ new "require_weapon" monster field? ]
 
 -  internal fences (esp. for outdoor rooms)
 
@@ -61,16 +64,11 @@ Scenic Borders
 Web Site
 --------
 
--  update usage doc on THEME setting, e.g.:
+-  update Usage page on THEME setting, e.g.:
 
    the "Jumbled" theme setting means each map's theme is chosen purely
-   randomly (like a dice throw), where "bit mixed" means groups of maps (2-4)
+   randomly (and usually different from the last), where "bit mixed" means groups of maps (2-4)
    have the same theme before choosing a new (random) one.  The "xxx-ish"
    settings means you get mostly "xxx" but with an occasionally different one
    thrown in.
-
--  add "Symmetry" to glossary, e.g.:
-
-   Symmetry is where rooms are mirrored, e.g. has the same architecture on
-   the left side as the right side.
 
