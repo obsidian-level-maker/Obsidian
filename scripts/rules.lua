@@ -667,11 +667,13 @@ GROW_AREA_2 =
 }
 
 
-GROW_AREA_3 =
+GROW_DIAG_WING =
 {
   prob = 40
   prob_skew = 2
   skip_prob = 35
+
+  env = "building"
 
   structure =
   {
