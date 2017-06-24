@@ -1556,9 +1556,9 @@ function Room_set_kind(R, is_hallway, is_outdoor, is_cave)
   if is_outdoor and not (is_hallway or is_cave) and
      R.id != 1
   then
-    local park_prob = THEME.park_prob or 25
+    local park_prob = style_sel("parks", 0, 20, 50, 90)
 
-    if rand.odds(park_prob) then
+    if rand.odds(park_prob) or true then --!!!!!
       R.is_park = true
     end
   end
@@ -2059,16 +2059,16 @@ function Room_floor_ceil_heights()
   local function process_room(R, entry_area)
     gui.debugf("ASSIGN FLOORS IN %s\n", R.name)
 
-    local adjust_h = 0
+    local base_h = 0
 
     if entry_area then
-      adjust_h = assert(entry_area.prelim_h)
+      base_h = R.entry_h - assert(entry_area.prelim_h)
     end
 
     -- compute the actual floor heights, ensuring entry_area becomes 'entry_h'
     each A in R.areas do
       if A.prelim_h then
-        set_floor(A, R.entry_h + A.prelim_h - adjust_h)
+        set_floor(A, base_h + A.prelim_h)
       end
 
 --    stderrf("%s %s = %s : floor_h = %s\n", R.name, A.name, tostring(A.mode), tostring(A.floor_h))
@@ -2324,7 +2324,7 @@ function Room_floor_ceil_heights()
 
       assert(A1.floor_h)
 
-      local next_h = A1.floor_h
+      local next_h = C.conn_h or A1.floor_h
 
       if C.kind == "joiner" then  --FIXME???  or C.kind == "terminator" then
         next_h = visit_joiner(next_h, R, C)
@@ -2822,7 +2822,7 @@ end
 function Room_set_sky_heights()
 
   local function do_area(A)
-    local sky_h = A.floor_h + A.zone.sky_add_h
+    local sky_h = (A.max_floor_h or A.floor_h) + A.zone.sky_add_h
 
     A.zone.sky_h = math.N_max(A.zone.sky_h, sky_h)
 

@@ -36,8 +36,6 @@
                               -- (positive for solid, negative for empty)
 
     regions : table[id] -> REGION
-
-    blobs   : table[id] -> REGION
 --]]
 
 
@@ -48,6 +46,8 @@
     cx1, cy1, cx2, cy2  -- bounding box
 
     size  -- number of cells
+
+    neighbors : list(REGION)  -- only for blobs
 --]]
 
 
@@ -1029,7 +1029,7 @@ function GRID_CLASS.dump_blobs(grid)
 
     local line = ""
 
-    each id, reg in grid.blobs do
+    each id, reg in grid.regions do
       line = line .. "  " .. string.format("%2d", reg.size)
 
       if #line > 40 then
@@ -1066,7 +1066,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
   local result = grid:blank_copy()
 
-  result.blobs = {}
+  result.regions = {}
 
 
   local W = grid.w
@@ -1110,12 +1110,12 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
     result[cx][cy] = id
 
-    local reg = result.blobs[id]
+    local reg = result.regions[id]
 
     if not reg then
       reg = { id=id, size=0 }
 
-      result.blobs[id] = reg
+      result.regions[id] = reg
     end
 
     reg.size = reg.size + 1
@@ -1176,7 +1176,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
       local id = result[cx][cy]
       if not id then continue end
 
-      if result.blobs[id].size >= 2 then continue end
+      if result.regions[id].size >= 2 then continue end
 
       if rand.odds(15) then
         local dx = rand.sel(50, -1, 1)
@@ -1297,13 +1297,15 @@ function GRID_CLASS.merge_two_blobs(grid, id1, id2)
   end
   end
 
-  local reg1 = grid.blobs[id1]
-  local reg2 = grid.blobs[id2]
+  local reg1 = grid.regions[id1]
+  local reg2 = grid.regions[id2]
 
   reg1.size = reg1.size + reg2.size
   reg2.size = -1
 
-  grid.blobs[id2] = nil
+  reg1.is_walk = reg1.is_walk or reg2.is_walk
+
+  grid.regions[id2] = nil
 end
 
 
@@ -1329,11 +1331,11 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
         if grid:valid(nx, ny) then nb = grid[nx][ny] end
 
         if nb and nb != id and not seen[nb] and
-           (allow_large or grid.blobs[nb].size < min_size)
+           (allow_large or grid.regions[nb].size < min_size)
         then
           seen[nb] = true
 
-          local cost = grid.blobs[nb].size + gui.random() * 0.1
+          local cost = grid.regions[nb].size + gui.random() * 0.1
 
           if cost < best_cost then
             best = nb
@@ -1351,10 +1353,10 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
 
   local function merge_pass()
     -- need to copy the keys, since we modify the table as we go
-    local id_list = table.keys(grid.blobs)
+    local id_list = table.keys(grid.regions)
 
     each id in id_list do
-      if grid.blobs[id] and grid.blobs[id].size < min_size then
+      if grid.regions[id] and grid.regions[id].size < min_size then
         local nb = candidate_to_merge(id)
 
         if nb then
@@ -1397,8 +1399,10 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
          continue
       end
 
+      grid.regions[cur_blob].is_walk = true
+
       if cur_blob != id then
-        GRID_CLASS.merge_blobs(grid, cur_blob, id)
+        grid:merge_two_blobs(cur_blob, id)
       end
     end
     end
@@ -1413,6 +1417,52 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
 end
 
 
+function GRID_CLASS.merge_diagonal_blobs(grid, diagonals)
+  -- ensure half-cells are merged with the blob touching the
+  -- corner away from the diagonal, otherwise the gap which
+  -- could exist there may be too narrow for players to pass.
+
+  for cx = 1, grid.w do
+  for cy = 1, grid.h do
+    local C = grid[cx][cy]
+    if not C then continue end
+
+    local dir = diagonals[cx][cy]
+    if not dir then continue end
+
+    local nx, ny = geom.nudge(cx, cy, dir)
+    local ax, ay = geom.nudge(cx, cy, geom. LEFT_45[dir])
+    local bx, by = geom.nudge(cx, cy, geom.RIGHT_45[dir])
+
+    local N = grid:valid(nx, ny) and grid[nx][ny]
+
+    -- check the cell directly opposite
+    if N and N != C then
+      grid:merge_two_blobs(C, N)
+    end
+
+    -- check the two neighbors (which touch both C and N)
+    -- [ must grab these values AFTER the merge above ]
+    local A = grid:valid(ax, ay) and grid[ax][ay]
+    local B = grid:valid(bx, by) and grid[bx][by]
+
+--  stderrf(": %s %s / %s %s\n", tostring(C), tostring(N), tostring(A), tostring(B))
+
+    if not (A or B) then continue end
+
+    if not A then A = B ; B = nil end
+
+    if A and A == C then continue end
+    if B and B == C then continue end
+
+    if A and B then A = math.min(A, B) end
+
+    grid:merge_two_blobs(C, A)
+  end
+  end
+end
+
+
 function GRID_CLASS.extent_of_blobs(grid)
   -- determines bounding box for each blob
 
@@ -1422,7 +1472,7 @@ function GRID_CLASS.extent_of_blobs(grid)
 
     if id == nil then continue end
 
-    local reg = grid.blobs[id]
+    local reg = grid.regions[id]
     assert(reg)
 
     if not reg.cx1 then
@@ -1439,15 +1489,18 @@ function GRID_CLASS.extent_of_blobs(grid)
 end
 
 
-function GRID_CLASS.random_blob_cell(grid, id)
+function GRID_CLASS.random_blob_cell(grid, id, req_four)
+  -- when 'req_four' is true, require that all four sides of
+  -- the cell are the same blob.
+
   -- NOTE: this can return nil
 
-  local reg = grid.blobs[id]
+  local reg = grid.regions[id]
   assert(reg and reg.cx1)
 
   local best_cx
   local best_cy
-  local best_score
+  local best_score = 0
 
   for loop = 1, 20 do
     local cx = rand.irange(reg.cx1, reg.cx2)
@@ -1461,6 +1514,9 @@ function GRID_CLASS.random_blob_cell(grid, id)
       local nx, ny = geom.nudge(cx, cy, dir)
       if grid:valid(nx, ny) and grid[nx][ny] == id then
         score = score + 1
+      elseif req_four then
+        score = -1
+        break;
       end
     end
 
@@ -1476,7 +1532,7 @@ end
 
 
 function GRID_CLASS.neighbors_of_blobs(grid)
-  each id, reg in grid.blobs do
+  each id, reg in grid.regions do
     reg.neighbors = {}
   end
 
@@ -1486,7 +1542,7 @@ function GRID_CLASS.neighbors_of_blobs(grid)
 
     if id == nil then continue end
 
-    local reg1 = grid.blobs[id]
+    local reg1 = grid.regions[id]
     assert(reg1)
 
     for dir = 2,8,2 do
@@ -1497,7 +1553,7 @@ function GRID_CLASS.neighbors_of_blobs(grid)
 
       if not nb or nb == id then continue end
 
-      local reg2 = grid.blobs[nb]
+      local reg2 = grid.regions[nb]
       assert(reg2)
 
       table.add_unique(reg1.neighbors, reg2)
@@ -1518,7 +1574,7 @@ function GRID_CLASS.spread_blob_dists(grid, field)
   repeat
     changes = false
 
-    each _,B1 in grid.blobs do
+    each _,B1 in grid.regions do
       -- compute minimum of neighbors
       local min_val
 

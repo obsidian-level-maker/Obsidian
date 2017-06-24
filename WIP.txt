@@ -7,6 +7,16 @@ BUG: weapon control module interferes with boss selection
      (the setting of "level" to 1...)
 
 
+
+Parks
+-----
+
++  windows and cages can be too low
+   [ logic for AREA:min_neighbor_h and max_... needs to look
+     into "nature" areas properly ]
+
+
+
 Miscellaneous
 -------------
 
@@ -35,17 +45,6 @@ Hallway System
 
    e.g. BLOOD1 for ceiling/floor in hell
    e.g. SKSPINE2 for wall in hell
-
-
-
-Parks
------
-
-+  height variation  [ different areas ]
-
--  ensure the heighest FLOOR contributes to zone.sky_h
-
--  use TWO floor textures
 
 
 

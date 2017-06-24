@@ -204,6 +204,25 @@ function Cave_collect_walk_rects(R, area)
     local WC = rect_for_edge(E, "conn")
 
     WC.conn = C
+
+    if R.entry_conn and R.entry_conn == C then
+      area.entry_walk = WC
+    end
+  end
+
+
+  local function check_entry_chunk(WC, chunk)
+    if R.is_start and not R.entry_conn and chunk.content == "START" then
+      area.entry_walk = WC
+    end
+
+    if R.entry_conn and R.entry_conn.kind == "teleporter" then
+      local R2 = R.entry_conn:other_room(R)
+
+      if R2.lev_along < R.lev_along then
+        area.entry_walk = WC
+      end
+    end
   end
 
 
@@ -211,13 +230,22 @@ function Cave_collect_walk_rects(R, area)
     -- ignore unused floor chunks
     if not chunk.content then return end
 
-    local WC = rect_for_seeds("floor", chunk.sx1, chunk.sy1, chunk.sx2, chunk.sy2)
+    local kind = "floor"
+    if chunk.content == "DECORATION" or
+       chunk.content == "CAGE"
+    then
+      kind = "decor"
+    end
+
+    local WC = rect_for_seeds(kind, chunk.sx1, chunk.sy1, chunk.sx2, chunk.sy2)
 
     if chunk.sw >= 2 and chunk.sh >= 2 then
       WC.walk_shrinkage = 2
     end
 
     WC.chunk = chunk
+
+    check_entry_chunk(WC, chunk)
   end
 
 
@@ -231,6 +259,8 @@ function Cave_collect_walk_rects(R, area)
     local WC = rect_for_edge(E, "closet")
 
     WC.chunk = chunk
+
+    check_entry_chunk(WC, chunk)
   end
 
 
@@ -2669,6 +2699,46 @@ function Cave_build_a_park(R, entry_h)
 
   local area = Cave_find_area_for_room(R)
 
+  local blob_map
+
+  local floor_num
+
+  local tree_locs
+
+
+  local RAISE_HEIGHTS =
+  {
+    [16] = 40, [32] = 60, [48] = 40, [64] = 20
+  }
+
+
+  local function blobify()
+    local src = area.walk_map:copy()
+
+    for x = 1, area.cw do
+    for y = 1, area.ch do
+      if src[x][y] then src[x][y] = 1 end
+    end
+    end
+
+    blob_map = src:create_blobs(3, 2)
+
+    -- ensure walk-rects are fully contained in a single blob
+    blob_map:walkify_blobs(area.walk_rects)
+
+    -- ensure half-cells are merged with the blob touching the
+    -- corner away from the diagonal, otherwise the gap which
+    -- could exist there may be too narrow for players to pass
+    blob_map:merge_diagonal_blobs(area.diagonals)
+
+    blob_map:merge_small_blobs(4)
+
+    blob_map:extent_of_blobs()
+    blob_map:neighbors_of_blobs()
+
+    blob_map:dump_blobs()
+  end
+
 
   local function temp_install_floor(FL)
     for cx = 1, area.cw do
@@ -2683,7 +2753,21 @@ function Cave_build_a_park(R, entry_h)
       FL.cy1 = math.min(FL.cy1 or  9999, cy)
       FL.cx2 = math.max(FL.cx2 or -9999, cx)
       FL.cy2 = math.max(FL.cy2 or -9999, cy)
-    end -- sx, sy
+    end -- cx, cy
+    end
+  end
+
+
+  local function temp_install_blob(B, reg)
+    B.cx1, B.cy1 = reg.cx1, reg.cy1
+    B.cx2, B.cy2 = reg.cx2, reg.cy2
+
+    for cx = B.cx1, B.cx2 do
+    for cy = B.cy1, B.cy2 do
+      if blob_map[cx][cy] == reg.id then
+        area.blobs[cx][cy] = B
+      end
+    end -- cx, cy
     end
   end
 
@@ -2694,7 +2778,7 @@ function Cave_build_a_park(R, entry_h)
       neighbors = {}
       children  = {}
 
-      floor_mat = assert(R.main_tex)
+      floor_mat = "REDWALL" --!!!! assert(R.floor_mat)
 
       -- TEMP RUBBISH
       floor_h   = entry_h
@@ -2705,6 +2789,8 @@ function Cave_build_a_park(R, entry_h)
     table.insert(area.walk_floors, FLOOR)
 
     area.external_sky = true
+
+    temp_install_floor(area.floor_blob)
   end
 
 
@@ -3092,11 +3178,1153 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function temp_chunk_crud()
-    each chunk in R.floor_chunks do
-      if chunk.content == "MON_TELEPORT" then
-        chunk.floor_h   = entry_h
-        chunk.floor_mat = R.main_tex
+  ----===========  HILLSIDE STUFF  ===========----
+
+
+  local function hill_clear()
+    each _,B in blob_map.regions do
+      B.floor_id = nil
+      B.stair    = nil
+    end
+  end
+
+
+  local function hill_save(HILL)
+    HILL.blob_floors = {}
+
+    each _,B in blob_map.regions do
+      HILL.blob_floors[B.id] = B.floor_id
+    end
+  end
+
+
+  local function hill_restore(HILL)
+    each _,B in blob_map.regions do
+      B.floor_id = HILL.blob_floors[B.id]
+    end
+  end
+
+
+  local function hill_best_stair_neighbor(B, dir)
+    local cx1, cy1 = B.cx1, B.cy1
+    local cx2, cy2 = B.cx2, B.cy2
+
+    if dir == 2 then cy2 = cy1 end
+    if dir == 8 then cy1 = cy2 end
+    if dir == 4 then cx2 = cx1 end
+    if dir == 6 then cx1 = cx2 end
+
+    local counts = {}
+
+    for x = cx1, cx2 do
+    for y = cy1, cy2 do
+      if blob_map[x][y] != B.id then continue end
+
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if not blob_map:valid(nx, ny) then continue end
+
+      local id = blob_map[nx][ny]
+      if id == nil then continue end
+      if id == B.id then continue end
+
+      if not counts[id] then
+        counts[id] = 1 + gui.random() / 10  -- tie breaker
+      else
+        counts[id] = counts[id] + 1
+      end
+    end
+    end
+
+    -- pick the one with highest count
+    local best
+
+    each id,count in counts do
+      if not best or count > counts[best] then
+        best = id
+      end
+    end
+
+    -- require at least 2 cells
+    if best and counts[best] < 2 then
+      best = nil
+    end
+
+    return blob_map.regions[best]
+  end
+
+
+  local function hill_blob_is_good_stair(B, is_vert)
+    if B.is_walk then return false end  -- must not be a walk rect
+
+    -- check large enough, or too large
+    local cw = B.cx2 - B.cx1 + 1
+    local ch = B.cy2 - B.cy1 + 1
+
+    if B.size <  6  then return false end
+    if B.size >= 20 then return false end
+
+    if is_vert then
+      if ch < 3 or ch > 6 then return false end
+      if cw < 2 or cw > 9 then return false end
+    else
+      if cw < 3 or cw > 6 then return false end
+      if ch < 2 or ch > 9 then return false end
+    end
+
+    -- find best connecting blobs
+    local src  = hill_best_stair_neighbor(B, sel(is_vert, 2, 4))
+    local dest = hill_best_stair_neighbor(B, sel(is_vert, 8, 6))
+
+    if not src  then return false end
+    if not dest then return false end
+
+    if src == dest then return false end
+
+    -- Ok!
+    return true, src, dest
+  end
+
+
+  local function hill_can_use_stair(st, others)
+    each st2 in others do
+      -- blob is already in the list?
+      if st2.B == st.B then return false end
+
+      -- blob has a neighbor already in the list?
+      -- [ main thing here is to avoid src/dest of another stair ]
+      if table.has_elem(st.B.neighbors, st2.B) then return false end
+    end
+
+    return true
+  end
+
+
+  local function hill_select_stairs(all_stairs, want_num)
+    local list = table.copy(all_stairs)
+
+    rand.shuffle(list)
+
+    local result = {}
+
+    while #result < want_num do
+      -- not enough stairs?
+      if table.empty(list) then return nil end
+
+      local st = table.remove(list, 1)
+
+      if hill_can_use_stair(st, result) then
+        table.insert(result, st)
+      end
+    end
+
+    return result
+  end
+
+
+  local function hill_new_floor()
+    floor_num = floor_num + 1
+
+    return floor_num
+  end
+
+
+  local function hill_set_floor(B, f_id)
+    B.floor_id = f_id
+  end
+
+
+  -- this one handles stairs (recursively, as they may form chains)
+  local function hill_change_floor(B, f_id, old, stairs)
+    if B.floor_id == f_id then return true end
+
+    if B.floor_id != old  then return false end
+
+    B.floor_id = f_id
+
+    each st in stairs do
+      if not st.is_contained then continue end
+
+      if st.src == B then
+        if not hill_change_floor(st.dest, f_id,  old, stairs) then
+          return false
+        end
+      end
+
+      if st.dest == B then
+        if not hill_change_floor(st.src,  f_id,  old, stairs) then
+          return false
+        end
+      end
+    end
+
+    return true
+  end
+
+
+  local function hill_divide_floor(st, stairs)
+    local old = st.src.floor_id
+    assert(old)
+
+    assert(st.dest.floor_id == old)
+
+    -- mark stairs that are wholly contained in this floor
+    -- [ EXCEPT the stair we are dividing! ]
+    each st2 in stairs do
+      st2.is_contained = false
+
+      if st2 != st and st2.src.floor_id == old and st2.dest.floor_id == old then
+        st2.is_contained = true
+      end
+    end
+
+
+    local new1 = hill_new_floor()
+    local new2 = hill_new_floor()
+
+    if not hill_change_floor(st.src, new1,  old, stairs) then
+      return false
+    end
+
+    if not hill_change_floor(st.dest, new2,  old, stairs) then
+      return false
+    end
+
+    -- grow the new floors
+
+    local unfilled = {}
+
+    each _,B in blob_map.regions do
+      if B.floor_id == old then
+        table.insert(unfilled, B)
+      end
+    end
+
+    rand.shuffle(unfilled)
+
+    each _,B in blob_map.regions do
+      rand.shuffle(B.neighbors)
+    end
+
+    local function get_a_neighbor(B)
+      each N in B.neighbors do
+        if N.floor_id == new1 then return new1 end
+        if N.floor_id == new2 then return new2 end
+      end
+
+      return nil
+    end
+
+    -- spread new floors into blobs containing the old floor
+
+    repeat
+      local changes = false
+
+      for i = #unfilled, 1, -1 do
+        local B = unfilled[i]
+
+        if B.floor_id != old then
+          table.remove(unfilled, i)
+          continue
+        end
+
+        local use_id = get_a_neighbor(B)
+        if not use_id then continue end
+
+        if not hill_change_floor(B, use_id,  old, stairs) then
+          return false
+        end
+
+        changes = true
+      end
+
+    until not changes
+
+    -- check whether all blobs with old floor were replaced
+
+    each _,B in blob_map.regions do
+      if B.floor_id == old then
+        return false
+      end
+    end
+
+    return true  -- OK
+  end
+
+
+  local function hill_create_a_division(all_stairs, want_stairs, info)
+    --
+    -- Create a division of the room with the wanted number of stairs.
+    -- If successful and score is better, updates the 'info' table.
+    --
+    -- HILL =
+    -- {
+    --   stairs : list(STAIR_INFO)
+    --
+    --   blob_floors[blob_id] -> integer / "stair"
+    -- }
+    --
+
+    hill_clear()
+
+    floor_num = 0
+
+    -- not possible unless we have enough stairs
+    if want_stairs > #all_stairs then return end
+
+    -- pick a random set of stairs (which do not touch)
+    local stairs = hill_select_stairs(all_stairs, want_stairs)
+
+    if not stairs then return end
+
+
+    -- initial setup : place all blobs on a single floor, but
+    -- the stair blobs are marked as "stair"
+
+    local F1 = hill_new_floor()
+
+    each _,B in blob_map.regions do
+      hill_set_floor(B, F1)
+    end
+
+    each st in stairs do
+      hill_set_floor(st.B, "stair")
+    end
+
+
+    -- then for each stair we divide its floor into two new floors.
+    -- if this fails, then we abort the attempt.
+
+    each st in stairs do
+      if not hill_divide_floor(st, stairs) then
+        return
+      end
+    end
+
+
+    -- evaluate the result --
+
+    local floor_sizes = {}
+
+    each _,B in blob_map.regions do
+      local f_id = B.floor_id
+
+      if f_id != "stair" then
+        floor_sizes[f_id] = (floor_sizes[f_id] or 0) + B.size
+      end
+    end
+
+    local total_size = 0
+    local min_size   = 9e9
+
+    each _,size in floor_sizes do
+      total_size = total_size + size
+      min_size   = math.min(min_size, size)
+    end
+
+    assert(total_size > 0)
+
+    local score = 20 * min_size / total_size + gui.random()
+
+    if score > info.score then
+      local HILL =
+      {
+        stairs = stairs
+      }
+
+      hill_save(HILL)
+
+      info.best  = HILL
+      info.score = score
+    end
+  end
+
+
+  local function mark_features_of_floors(HILL)
+    -- count how many stairs connect to each floor.
+
+    local floors = HILL.floors
+
+    each st in HILL.stairs do
+      local src  = assert(st.src .floor_id)
+      local dest = assert(st.dest.floor_id)
+
+      floors[src ].stair_num = floors[src ].stair_num + 1
+      floors[dest].stair_num = floors[dest].stair_num + 1
+    end
+
+    -- see what walk_rects are used on each floor
+    each WC in area.walk_rects do
+      local id = blob_map[WC.cx1][WC.cy1]
+      assert(id)
+
+      local B = blob_map.regions[id]
+      assert(B)
+
+      floors[B.floor_id].is_walk = true
+
+      if WC.kind == "conn" or WC.kind == "closet" then
+        B.has_conn = true
+        floors[B.floor_id].has_conn = true
+      end
+    end
+  end
+
+
+  local function create_a_height_profile(HILL)
+    -- a height profile is a blank copy of HILL.floors with 'prelim_h'
+    -- (and possibly liquid info) set.
+    --
+    -- this function updates HILL.profile if the score is better.
+
+    local profile = {}
+
+    each id,_ in HILL.floors do
+      profile[id] = {}
+    end
+
+    -- pick starting floor, mark it as the lowest
+
+    local start_f
+
+    each id, F in HILL.floors do
+      assert(F.stair_num >= 1)
+
+      if F.stair_num == 1 and (not start_f or rand.odds(50)) then
+        start_f = id
+      end
+    end
+
+    profile[start_f].prelim_h = 0
+
+
+    -- flow through stairs to unvisited floors
+
+    repeat
+      local changes = false
+
+      rand.shuffle(HILL.stairs)
+
+      each st in HILL.stairs do
+        local P1 = profile[st.src .floor_id]
+        local P2 = profile[st.dest.floor_id]
+
+        assert(P1 and P2)
+
+        if not P1.prelim_h then
+          P1, P2 = P2, P1
+        end
+
+        local raise_h = rand.key_by_probs(RAISE_HEIGHTS)
+
+        if P1.prelim_h and not P2.prelim_h then
+          P2.prelim_h = P1.prelim_h + raise_h
+          changes = true
+        end
+      end
+
+    until not changes
+
+
+    -- sanity check
+    each id, P in profile do
+      assert(P.prelim_h)
+    end
+
+
+    -- TODO : score it properly!
+    local score = 1 + gui.random()
+
+    if score > (HILL.score or 0) then
+      HILL.score = score
+      HILL.profile = profile
+    end
+  end
+
+
+  local function can_make_tower(B)
+    if B.floor_id == "stair" then return false end
+    if B.is_walk then return false end
+
+    -- check whether the blob is completely surrounded by
+    -- cells at the same height.
+
+    for cx = B.cx1, B.cx2 do
+    for cy = B.cy1, B.cy2 do
+      if blob_map[cx][cy] != B.id then continue end
+
+      each dir in geom.ALL_DIRS do
+        local nx, ny = geom.nudge(cx, cy, dir)
+        if not blob_map:valid(nx, ny) then return false end
+
+        local n_id = blob_map[nx][ny]
+        if not n_id then return false end
+        if n_id == B.id then continue end
+
+        local N = blob_map.regions[n_id]
+        assert(N)
+
+        if N.floor_id != B.floor_id then return false end
+
+        if N.is_tower then return false end
+      end
+    end
+    end
+
+    return true
+  end
+
+
+  local function hill_add_towers(HILL)
+    local prob = rand.pick({ 10, 30, 90 })
+
+    each _,B in blob_map.regions do
+      if rand.odds(prob) and can_make_tower(B) then
+        B.is_tower = true
+        B.prelim_h = B.prelim_h + 64
+
+        if B.floor_mat == "_LIQUID" then
+          B.floor_mat = R.alt_floor_mat
+        end
+      end
+    end
+  end
+
+
+  local function hill_make_a_pool(B)
+    B.prelim_h = B.prelim_h - 12
+    B.floor_mat = "_LIQUID"
+
+    -- extra health for damaging liquid
+    if LEVEL.liquid.damage then
+      R.hazard_health = R.hazard_health + int(B.size / 4)
+    end
+  end
+
+
+  local function can_make_pool(B)
+    if B.floor_id == "stair" then return false end
+    if B.is_tower then return false end
+
+    each N in B.neighbors do
+      if N.floor_id == "stair" then return false end
+      if N.prelim_h < B.prelim_h then return false end
+    end
+
+    if B.has_conn then return false end
+
+    -- rarely put goals in a damaging liquid
+    if B.is_walk and LEVEL.liquid.damage and rand.odds(85) then
+      return false
+    end
+
+    return true
+  end
+
+
+  local function hill_add_pools(HILL)
+    -- decide how many to use
+    local prob = rand.sel(30, 30, 10)
+
+    local room_prob = style_sel("liquids", 0, 30, 60, 90)
+    local  all_prob = style_sel("liquids", 0, 10, 35, 70)
+
+    if HILL.has_liquid then
+      room_prob = room_prob / 2
+       all_prob =  all_prob / 4
+    end
+
+    if not LEVEL.liquid then return end
+    if not rand.odds(room_prob) then return end
+
+    if rand.odds(all_prob) then prob = 95 end
+
+    -- visit each blob and see if we can make a pool
+    -- [ update prelim_h in a second pass, to two or more neighboring
+    --   blobs to become liquid ]
+    each _,B in blob_map.regions do
+      if rand.odds(prob) and can_make_pool(B) then
+        B.is_pool = true
+      end
+    end
+
+    each _,B in blob_map.regions do
+      if B.is_pool then
+        hill_make_a_pool(B)
+      end
+    end
+  end
+
+
+  local function pick_spot_for_tree(B)
+    local cx, cy = blob_map:random_blob_cell(B.id)
+    if not cx then return nil end
+
+    -- never on a diagonal cell
+    if area.diagonals[cx][cy] then return nil end
+
+    each dir in geom.ALL_DIRS do
+      local nx, ny = geom.nudge(cx, cy, dir)
+      if not blob_map:valid(nx, ny) then return nil end
+
+      if area.diagonals[nx][ny] then return nil end
+
+      local n_id = blob_map[nx][ny]
+      if not n_id then return nil end
+
+      local N = blob_map.regions[n_id]
+      assert(N)
+
+      if N.floor_id != B.floor_id then return nil end
+    end
+
+    -- ensure tree is not adjacent to another one
+    each loc in tree_locs do
+      if math.abs(cx - loc.cx) <= 1 and
+         math.abs(cy - loc.cy) <= 1
+      then
+        return nil
+      end
+    end
+
+    return cx, cy  -- OK
+  end
+
+
+  local function try_add_decor_item(B)
+    if B.floor_id == "stair" then return false end
+    if B.is_walk  then return false end
+
+    -- less chance in pools (never in damaging liquids)
+    if B.is_pool then
+      if LEVEL.liquid.damage then return false end
+      if rand.odds(50) then return false end
+    end
+
+    -- pick a spot, check if it is usable
+    local cx, cy
+
+    for loop = 1, 5 do
+      cx, cy = pick_spot_for_tree(B)
+      if cx then break; end
+    end
+
+    if not cx then return false end
+
+    -- Ok --
+
+    B.decor =
+    {
+      ent = rand.key_by_probs(THEME.park_decor)
+      cx  = cx
+      cy  = cy
+    }
+
+    table.insert(tree_locs, B.decor)
+
+    return true
+  end
+
+
+  local function hill_add_decor(HILL)
+    if not THEME.park_decor then return end
+
+    tree_locs = {}
+
+    local prob = rand.pick({ 10, 27, 65 })
+
+    each _,B in blob_map.regions do
+      if rand.odds(prob) then
+        try_add_decor_item(B)
+      end
+    end
+  end
+
+
+  local function install_hillside(HILL)
+    hill_clear()
+    hill_restore(HILL)
+
+    -- create an info table for each floor
+
+    local floors = {}  --  [floor_id] -> { prelim_h=xxx }
+
+    each _,f_id in HILL.blob_floors do
+      if f_id != "stair" and not floors[f_id] then
+        floors[f_id] = { id=f_id, stair_num=0 }
+      end
+    end
+
+    HILL.floors = floors
+
+    -- analyse floor usage
+    mark_features_of_floors(HILL)
+
+
+    -- create a height profile
+    -- [ we pick the "best" out of several profiles ]
+
+    for loop = 1, 5 do
+      create_a_height_profile(HILL)
+    end
+
+
+    -- determine materials
+    local h_list = {}
+    local h_mats = {}
+
+    each _,P in HILL.profile do
+      table.add_unique(h_list, P.prelim_h)
+    end
+
+    table.sort(h_list)
+
+    local mat1 = R.floor_mat
+    local mat2 = R.alt_floor_mat
+
+    if rand.odds(50) then mat1, mat2 = mat2, mat1 end
+
+    each h in h_list do
+      h_mats[h] = mat1
+      mat1, mat2 = mat2, mat1
+    end
+
+
+    -- install the height profile
+    -- [ stairs are processed later.... ]
+
+    each _,B in blob_map.regions do
+      if B.floor_id != "stair" then
+        local P1 = HILL.profile[B.floor_id]
+        assert(P1)
+
+        B.prelim_h = assert(P1.prelim_h)
+
+        if P1.is_liquid then
+          B.floor_mat = "_LIQUID"
+          HILL.has_liquid = true
+        else
+          B.floor_mat = assert(h_mats[B.prelim_h])
+        end
+      end
+    end
+
+    each st in HILL.stairs do
+      st.B.stair_info = st
+    end
+
+
+    -- decorate time!
+
+    hill_add_towers(HILL)
+    hill_add_pools(HILL)
+    hill_add_decor(HILL)
+  end
+
+
+  local function hill_grow_with_stairs()
+    -- collect the blobs which would make good stairs
+
+    local all_stairs = {}
+
+    each _,B in blob_map.regions do
+      for pass = 1, 2 do
+        local is_vert = (pass == 2)
+        local ok,src,dest = hill_blob_is_good_stair(B, is_vert)
+
+        if ok then
+          table.insert(all_stairs, { B=B, is_vert=is_vert, src=src, dest=dest })
+        end
+      end
+    end
+
+    -- try many combinations of dividing up the room based
+    -- on using some of those stairs, and choose the highest
+    -- scoring one.
+
+    -- FIXME : make this depend on size of room  [ and some randomness ]
+    local max_stairs = 4
+
+    local info = { score=-1 }
+
+    for want_stairs = max_stairs, 1, -1 do
+      for loop = 1, 50 do
+        hill_create_a_division(all_stairs, want_stairs, info)
+--stderrf("loop:%d want:%d --> score:%1.3f\n", loop, want_stairs, info.score)
+      end
+
+      -- if we managed something, then install it
+      if info.best then
+--stderrf("YES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+        install_hillside(info.best)
+        return true
+      end
+
+      -- try again with fewer wanted stairs
+    end
+
+    -- nothing worked :(
+    return false
+  end
+
+
+  local function do_install_floor_blob(B, base_h)
+    local BLOB =
+    {
+      floor_h   = B.prelim_h + base_h
+      floor_mat = B.floor_mat
+    }
+
+    assert(BLOB.floor_h)
+    assert(BLOB.floor_mat)
+
+    temp_install_blob(BLOB, B)
+
+    table.insert(area.walk_floors, BLOB)
+
+    area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
+    area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
+
+    if B.decor then
+      local mx = area.base_x + (B.decor.cx - 1) * 64 + 32
+      local my = area.base_y + (B.decor.cy - 1) * 64 + 32
+
+      Trans.entity(B.decor.ent, mx, my, BLOB.floor_h, B.decor.props)
+
+      R:add_solid_ent(B.decor.ent, mx, my, BLOB.floor_h)
+    end
+
+    -- inhibit pickup items in damaging liquid
+    if BLOB.floor_mat == "_LIQUID" and LEVEL.liquid.damage then
+      BLOB.no_items = true
+    end
+  end
+
+
+  local function division_for_stair(width, num_div)
+    -- the stair blob is 'width' cells wide (in the travel direction).
+    --
+    -- returns a table of length 'num_div' with how many cells to use
+    -- for each step of the stair.
+
+    assert(num_div <= width)
+
+    if num_div == 1 then
+      return { width }
+    end
+
+    local total  = 0
+    local result = {}
+
+    for i = 1, num_div do
+      table.insert(result, 1)
+    end
+
+    for k = 1, width - num_div do
+      local m = table.remove(result, #result)
+      table.insert(result, 1, m + 1)
+    end
+
+    return result
+  end
+
+
+  local function do_make_stair_step(B, st_dir, along, w, z, mat)
+    local STEP =
+    {
+      floor_h   = z
+      floor_mat = mat
+    }
+
+    local cx1, cy1 = B.cx1, B.cy1
+    local cx2, cy2 = B.cx2, B.cy2
+
+    if st_dir == 8 then cy1 = cy1 + along ; cy2 = cy1 + (w-1) end
+    if st_dir == 2 then cy2 = cy2 - along ; cy1 = cy2 - (w-1) end
+
+    if st_dir == 6 then cx1 = cx1 + along ; cx2 = cx1 + (w-1) end
+    if st_dir == 4 then cx2 = cx2 - along ; cx1 = cx2 - (w-1) end
+
+    for cx = cx1, cx2 do
+    for cy = cy1, cy2 do
+      if blob_map[cx][cy] == B.id then
+        area.blobs[cx][cy] = STEP
+      end
+    end
+    end
+  end
+
+
+  local function do_install_stair_blob(B, base_h)
+    local st = assert(B.stair_info)
+
+    local z1 = st.src .prelim_h + base_h
+    local z2 = st.dest.prelim_h + base_h
+
+    local z_diff = math.abs(z1 - z2)
+
+    -- nothing is needed for a small height difference
+    if z_diff <= 16 then
+      local N = rand.sel(50, st.src, st.dest)
+
+      B.prelim_h  = N.prelim_h
+      B.floor_mat = N.floor_mat
+
+      do_install_floor_blob(B, base_h)
+      return
+    end
+
+    -- use floor material of highest sfloor
+    local floor_mat = sel(z1 > z2, st.src.floor_mat, st.dest.floor_mat)
+    assert(floor_mat)
+
+    -- determine how many steps, and width of each step
+    local width
+    local num_div
+
+    if st.is_vert then
+      width = B.cy2 - B.cy1 + 1
+    else
+      width = B.cx2 - B.cx1 + 1
+    end
+
+    if z_diff >= 64 then
+      num_div = math.min(width, 6)
+    else
+      num_div = math.min(width, 3)
+    end
+
+    local div = division_for_stair(width, num_div)
+
+    -- get direction
+    local st_dir = sel(st.is_vert, 8, 6)
+
+    if z1 > z2 then
+      table.reverse(div)
+    end
+
+    -- build the steps
+    local along = 0
+
+    each w in div do
+      local z = z1 + (z2 - z1) * _index / (#div + 1)
+
+      do_make_stair_step(B, st_dir, along, w, z, floor_mat)
+
+      along = along + w
+    end
+  end
+
+
+  --___________>>>>>>>>>>>>>>>>>>
+
+
+  local function hill_can_use_step(B, chain, is_last)
+    if B.prelim_h then return false end  -- in use already
+
+    if not is_last then
+      if B.is_walk then return false end  -- must not be a walk rect
+
+      if B.size >= 12 then return false end  -- too big
+    end
+
+    if table.has_elem(chain, B) then return false end  -- already a step
+
+    return true
+  end
+
+
+  local function hill_try_pick_chain(B, length)
+    local chain = {}
+
+    for i = 1, length do
+      local nb
+      local nb_score = -1
+
+      each N in B.neighbors do
+        if hill_can_use_step(N, chain, i == length) then
+          local score = gui.random()
+
+          if score > nb_score then
+            nb = N
+            nb_score = score
+          end
+        end
+      end
+
+      -- nothing possible?
+      if not nb then return nil end
+
+      table.insert(chain, nb)
+
+      B = nb
+    end
+
+    return chain
+  end
+
+
+  local function hill_pick_a_chain(B)
+    for loop = 1, 30 do
+      local chain = hill_try_pick_chain(B, 4)
+
+      if chain then return chain end
+    end
+
+    return nil
+  end
+
+
+  local function hill_set_neighbors(B, ref)
+    each N in B.neighbors do
+      if not N.floor_id then
+        N.floor_id = ref.floor_id
+        N.prelim_h = ref.prelim_h
+      end
+    end
+  end
+
+
+  local function hill_fill_gaps()
+    local changes = false
+
+    each _,B in blob_map.regions do
+      local nb
+
+      if not B.prelim_h then
+        each N in B.neighbors do
+          if N.prelim_h and N.floor_id != "step" then
+            if not nb or rand.odds(50) then nb = N end
+          end
+        end
+      end
+
+      if nb then
+        B.prelim_h = nb.prelim_h
+        B.floor_id = nb.floor_id
+
+        changes = true
+      end
+    end
+
+    return changes
+  end
+
+
+  local function hill_grow_with_steps_OLD(entry_reg)
+    --
+    -- 1. start with a blob 'B', make it FLOOR #0
+    --
+    -- 2. pick a chain of neighbors from B
+    --    (B -> X -> Y -> Z -> C)
+    --    where none of X/Y/Z are walk chunks
+    --    and none of X/Y/Z are HUGE chunks
+    --
+    -- 3. mark blob 'C' as FLOOR #1, X/Y/Z marked as "step"
+    --
+    -- 4. neighbors of X/Y/Z are marked as FLOOR #0  [ REVIEW THIS! ]
+    --
+    -- 5. continue this process (B := C ; goto 1.)
+    --
+    -- 6. fill unused blobs with a nearby FLOOR (#0 .. #N)
+    --
+
+    local B = entry_reg  -- TODO : pick blob at random
+
+    B.floor_id = 0
+    B.prelim_h = 0
+
+stderrf("hill_grow_with_steps...\n")
+    while 1 do
+      local chain = hill_pick_a_chain(B)
+
+      if not chain then
+        break;
+--[[
+        B = hill_pick_neighbor()
+
+        if not B then break; end
+
+        continue  ]]
+      end
+
+      local C = table.remove(chain, #chain)
+
+stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
+
+      C.floor_id = B.floor_id + 1
+      C.prelim_h = B.prelim_h + 8
+
+      each step in chain do
+        step.floor_id = "step"
+        step.prelim_h = C.prelim_h
+
+        C.prelim_h = C.prelim_h + 8
+      end
+
+      each step in chain do
+        hill_set_neighbors(step, C)
+      end
+
+      B = C
+    end
+
+    -- fill any gaps
+    while hill_fill_gaps() do end
+  end
+
+
+  local function make_a_hillside()
+    -- we need to know where the entrance is
+    if not area.entry_walk then return end
+
+    local ecx = area.entry_walk.cx1
+    local ecy = area.entry_walk.cy1
+
+    R.has_hills = true
+
+    if not hill_grow_with_stairs() then
+      return
+    end
+
+    local entry_id = blob_map[ecx][ecy]
+    assert(entry_id)
+
+    local entry_reg = blob_map.regions[entry_id]
+
+    -- this ensure the entry floor (blob) becomes 'entry_h'
+    local base_h = entry_h - assert(entry_reg.prelim_h)
+
+    -- install all the blobs
+    area.walk_floors = {}
+
+    -- TODO : merge neighboring blobs with same h/mat  [ must handle "decor" too!! ]
+
+    each _,reg in blob_map.regions do
+      if reg.floor_id == "stair" then
+        do_install_stair_blob(reg, base_h)
+
+      elseif reg.prelim_h then
+        do_install_floor_blob(reg, base_h)
+      end
+    end
+
+
+    -- ensure out-going connections get the correct floor_h,
+    -- closets too
+    -- [ FIXME : use this logic for normal CAVES too ]
+
+    each WC in area.walk_rects do
+      local blob = area.blobs[WC.cx1][WC.cy1]
+      assert(blob)
+
+      if WC.kind == "conn" and WC.conn.kind != "teleporter" then
+        WC.conn.conn_h = assert(blob.floor_h)
+      end
+
+      if WC.kind == "floor" or WC.kind == "decor" or WC.kind == "closet" then
+        WC.chunk.floor_h   = assert(blob.floor_h)
+        WC.chunk.floor_mat = assert(blob.floor_mat)
       end
     end
   end
@@ -3116,20 +4344,23 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   Cave_clear_walk_rects(area)
 
+  area.min_floor_h = entry_h
+  area.max_floor_h = entry_h
+
   -- TEMP RUBBISH
   area.floor_h = entry_h
   area.ceil_h  = entry_h + 256
   area.ceil_mat = "_SKY"
 
+  blobify()
+
   do_parky_stuff()
 
-  temp_install_floor(area.floor_blob)
-
-  if LEVEL.liquid and rand.odds(35) then
+  if rand.odds(100) then  -- FIXME !!!!
+    make_a_hillside()
+  elseif LEVEL.liquid and rand.odds(35) then
     make_a_river()
   end
-
-  temp_chunk_crud()
 end
 
 
@@ -3185,7 +4416,16 @@ function Cave_build_a_scenic_vista(area)
     blob_map:extent_of_blobs()
     blob_map:neighbors_of_blobs()
 
-    blob_map:dump_blobs()
+--  blob_map:dump_blobs()
+  end
+
+
+  local function mark_must_walk_blobs()
+    -- TODO : use A* pathing to mark all blobs on a PATH
+    --
+    -- [ blobs not on the path can potentially become blocking,
+    --   however we must ensure the player cannot become trapped
+    --   if they fall from a higher floor ]
   end
 
 
@@ -3195,7 +4435,7 @@ function Cave_build_a_scenic_vista(area)
       local id = blob_map[cx][cy]
       if not id then continue end
 
-      local reg = blob_map.blobs[id]
+      local reg = blob_map.regions[id]
       if reg.room_dist then continue end
 
       if Cave_cell_touches_room(area, cx, cy, room) then
@@ -3214,7 +4454,7 @@ function Cave_build_a_scenic_vista(area)
       local id = blob_map[cx][cy]
       if not id then continue end
 
-      local reg = blob_map.blobs[id]
+      local reg = blob_map.regions[id]
       if reg.mapedge_dist then continue end
 
       if Cave_cell_touches_map_edge(area, cx, cy) then
@@ -3281,6 +4521,8 @@ function Cave_build_a_scenic_vista(area)
 
     local drop_h = rand.pick({ 64,96,128,192 })
 
+    if room.has_hills then drop_h = drop_h / 2 end
+
     local FL = new_blob()
 
     FL.floor_h   = (room.min_floor_h or room.entry_h) - drop_h
@@ -3311,7 +4553,7 @@ function Cave_build_a_scenic_vista(area)
       local id = blob_map[cx][cy]
       if not id then continue end
 
-      local reg = blob_map.blobs[id]
+      local reg = blob_map.regions[id]
 
       if not (reg.room_dist and reg.mapedge_dist) then continue end
 
@@ -3330,7 +4572,7 @@ function Cave_build_a_scenic_vista(area)
 
     -- add some scenery objects
     if THEME.cliff_trees then
-      each id, reg in blob_map.blobs do
+      each id, reg in blob_map.regions do
         local cx, cy = blob_map:random_blob_cell(id)
         if not cx then continue end
 

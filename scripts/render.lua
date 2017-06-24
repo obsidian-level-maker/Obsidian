@@ -1432,6 +1432,16 @@ function Render_chunk(chunk)
   local A = chunk.area
   local R = A.room
 
+  local z1 = chunk.floor_h   or A.floor_h
+  local z2 = chunk.ceil_h    or A.ceil_h
+
+  local floor_mat = chunk.floor_mat or A.floor_mat
+  local  ceil_mat = chunk.ceil_mat  or A.ceil_mat
+
+  assert(z1)
+--!!! assert(z2)
+
+
   gui.debugf("\n\n Render_chunk %d in %s (%s / %s)\n", chunk.id, A.room.name, chunk.kind, chunk.content or "-")
 
   local dir
@@ -1545,7 +1555,7 @@ function Render_chunk(chunk)
       where = "point"
 
       size   = assert(chunk.space)
-      height = chunk.area.ceil_h - chunk.area.floor_h
+      height = z2 - z1
     }
 
     local skin = { object=item }
@@ -1562,7 +1572,7 @@ function Render_chunk(chunk)
 
     local def = Fab_pick(reqs)
 
-    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
     Fabricate(R, def, T, { skin })
 
@@ -1579,12 +1589,12 @@ function Render_chunk(chunk)
       where = "point"
 
       size  = assert(chunk.space)
-      height = chunk.area.ceil_h - chunk.area.floor_h
+      height = z2 - z1
     }
 
     local def = Fab_pick(reqs)
 
-    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
     Fabricate(R, def, T, { })
   end
@@ -1595,7 +1605,6 @@ function Render_chunk(chunk)
 
     local mx = chunk.mx
     local my = chunk.my
-    local  z = chunk.z1
 
     local angle = geom.ANGLES[dir]
 
@@ -1603,8 +1612,8 @@ function Render_chunk(chunk)
 
     dx = dx * 24 ; dy = dy * 24
 
-    Trans.entity(R.player_set[1], mx - dy, my + dx, z, { angle=angle })
-    Trans.entity(R.player_set[2], mx + dy, my - dx, z, { angle=angle })
+    Trans.entity(R.player_set[1], mx - dy, my + dx, z1, { angle=angle })
+    Trans.entity(R.player_set[2], mx + dy, my - dx, z1, { angle=angle })
   end
 
 
@@ -1628,7 +1637,7 @@ function Render_chunk(chunk)
       where = "point"
 
       size  = assert(chunk.space)
-      height = chunk.area.ceil_h - chunk.area.floor_h
+      height = z2 - z1
     }
 
     if secret_exit then
@@ -1639,7 +1648,7 @@ function Render_chunk(chunk)
 
     local skin1 = { }
 
-    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
@@ -1654,7 +1663,7 @@ function Render_chunk(chunk)
       where = "point"
 
       size   = assert(chunk.space)
-      height = chunk.area.ceil_h - chunk.area.floor_h
+      height = z2 - z1
     }
 
     reqs.key = "sw_metal"  -- FIXME GET IT PROPERLY
@@ -1667,7 +1676,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     skin1.switch_tag    = assert(chunk.goal.tag)
     skin1.switch_action = Action_lookup(chunk.goal.action)
 
-    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
@@ -1678,7 +1687,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     if (R.is_start or R.is_hallway) and not chunk.lock then
       -- bare item
-      Trans.entity(item, chunk.mx, chunk.my, chunk.z1)
+      Trans.entity(item, chunk.mx, chunk.my, z1)
     else
       content_big_item(chunk, item)
     end
@@ -1694,7 +1703,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       where = "point"
 
       size   = assert(chunk.space)
-      height = chunk.area.ceil_h - chunk.area.floor_h
+      height = z2 - z1
     }
 
     local def = Fab_pick(reqs)
@@ -1714,7 +1723,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     local dir = player_face_dir(chunk)
 
-    local T = Trans.spot_transform(chunk.mx, chunk.my, chunk.z1, dir)
+    local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
     Fabricate(R, def, T, { skin1 })
   end
@@ -1735,22 +1744,19 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       C.draw_never = 1
     end
 
-    local z   = assert(chunk.floor_h   or chunk.area.floor_h)
-    local mat = assert(chunk.floor_mat or chunk.area.floor_mat)
-
     -- make it higher to ensure it doesn't get eaten by the floor brush
     -- (use delta_z to lower to real height)
 
     local top =
     {
-      t = z + 1
+      t = z1 + 1
       delta_z = -1
       tag = assert(chunk.out_tag)
     }
 
     table.insert(brush, top)
 
-    brushlib.set_mat(brush, mat, mat)
+    brushlib.set_mat(brush, floor_mat, floor_mat)
 
     Trans.brush(brush)
 
@@ -1763,10 +1769,10 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local def = assert(chunk.prefab_def)
     local A   = chunk.area
 
-    local floor_h = A.floor_h + (chunk.floor_dz or 0)
-    local ceil_h  = A.ceil_h  + (chunk.ceil_dz  or 0)
+    local floor_h = z1 + (chunk.floor_dz or 0)
+    local ceil_h  = z2 + (chunk.ceil_dz  or 0)
 
-    local skin = { floor=A.floor_mat, ceil=A.ceil_mat }
+    local skin = { floor=floor_mat, ceil=ceil_mat }
 
     if def.face_open then
       chunk.prefab_dir = player_face_dir(chunk)
@@ -1783,8 +1789,6 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
 
   local function build_important()
-    chunk.z1 = assert(chunk.area.floor_h)
-
     Ambient_push(chunk.area.lighting)
 
     if chunk.content == "START" then
@@ -1804,7 +1808,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     elseif chunk.content == "WEAPON" then
       content_item(chunk)
-      gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", chunk.content_item, chunk.mx, chunk.my, chunk.z1)
+      gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", chunk.content_item, chunk.mx, chunk.my, z1)
 
     elseif chunk.content == "ITEM" then
       content_item(chunk)
@@ -1838,7 +1842,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     local ceil_h = assert(A.ceil_h) + (chunk.ceil_dz or 0)
 
-    local skin = { ceil=A.ceil_mat }
+    local skin = { ceil=ceil_mat }
     local T = Trans.spot_transform(chunk.mx, chunk.my, ceil_h, chunk.prefab_dir or 2)
 
     assert(def.z_fit == nil)
@@ -2129,9 +2133,9 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   local x1, y1, x2, y2 = chunk_coords(def)
 
-  local floor_h = assert(A.floor_h) + (def.raise_z or 0)
+  z1 = z1 + (def.raise_z or 0)
 
-  local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+  local T = Trans.box_transform(x1, y1, x2, y2, z1, dir)
 
   if (chunk.kind == "stair" or chunk.kind == "joiner" or chunk.kind == "hallway") and
      chunk.shape == "L" and
@@ -2699,7 +2703,7 @@ function Render_determine_spots()
     local B = area.blobs[x][y]
     if not B then return end
 
-    if B.floor_h and B.floor_h < FL.floor_h - 16 then
+    if B != FL then
       local poly = Cave_brush(area, x, y)
 
       gui.spots_fill_poly(poly, SPOT_LEDGE)
@@ -2756,8 +2760,13 @@ gui.spots_dump("Cave spot dump")
     gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
 
-    table.append(R.item_spots, item_spots)
-    table.append(R.mon_spots,  mon_spots)
+    if not FL.no_items then
+      table.append(R.item_spots, item_spots)
+    end
+
+    if not FL.no_monsters then
+      table.append(R.mon_spots,  mon_spots)
+    end
 
     gui.spots_end()
   end

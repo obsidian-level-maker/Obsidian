@@ -91,6 +91,8 @@ OB_MODULES["misc"] =
     }
 
     { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES }
+    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES, gap=1 }
+
     { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES }
     { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, gap=1 }
 

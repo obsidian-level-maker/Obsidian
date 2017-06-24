@@ -221,6 +221,17 @@ feel.
 </div>
 
 
+<div id="park" class="gloss_term">
+Park
+</div><div class="gloss_define">
+Parks are outdoor rooms which are
+designed to look and feel more naturalistic.
+They use materials like grass and rocks, and can include
+liquid pools and decorations such as trees.
+
+</div>
+
+
 <div id="prefab" class="gloss_term">
 Prefab
 </div><div class="gloss_define">
@@ -357,6 +368,15 @@ A room which lies inside another room.  The sub-room is also
 called the child and the outer room is the parent.
 </div>
 --->
+
+
+<div id="symmetry" class="gloss_term">
+Symmetry
+</div><div class="gloss_define">
+Symmetry is when a room is mirrored, i.e. has the same
+architecture on the left side as the right side.
+
+</div>
 
 
 <div id="zone" class="gloss_term">

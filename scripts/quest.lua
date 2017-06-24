@@ -2909,6 +2909,19 @@ function Quest_room_themes()
   end
 
 
+  local function pick_alternate_tex(tab, prev, num_try)
+    for loop = 1, num_try do
+      local tex = rand.key_by_probs(tab)
+
+      if tex != prev then
+        return tex
+      end
+    end
+
+    return prev
+  end
+
+
   local function setup_cave_theme(R)
     R.main_tex = rand.key_by_probs(R.zone.cave_theme.walls)
 
@@ -2921,11 +2934,7 @@ function Quest_room_themes()
 
     if not ceil_tab then ceil_tab = floor_tab end
 
-    for loop = 1,2 do
-      R.floor_mat = rand.key_by_probs(floor_tab)
-
-      if R.floor_mat != R.main_tex then break; end
-    end
+    R.floor_mat = pick_alternate_tex(floor_tab, R.main_tex, 2)
 
     if rand.odds(20) then
       R.ceil_mat = R.floor_mat
@@ -2937,22 +2946,14 @@ function Quest_room_themes()
 
     -- alternate floor and ceiling materials --
 
-    for loop = 1,9 do
-      R.alt_floor_mat = rand.key_by_probs(floor_tab)
-
-      if R.alt_floor_mat != R.floor_mat then break; end
-    end
+    R.alt_floor_mat = pick_alternate_tex(floor_tab, R.floor_mat, 9)
 
     if R.floor_mat != R.ceil_mat and rand.odds(50) then
       R.alt_ceil_mat = R.floor_mat
     elseif R.alt_floor_mat != R.ceil_mat and rand.odds(50) then
       R.alt_ceil_mat = R.alt_floor_mat
     else
-      for loop = 1,9 do
-        R.alt_ceil_mat = rand.key_by_probs(ceil_tab)
-
-        if R.alt_ceil_mat != R.ceil_mat then break; end
-      end
+      R.alt_ceil_mat = pick_alternate_tex(ceil_tab, R.ceil_mat, 9)
     end
   end
 
@@ -2964,7 +2965,10 @@ function Quest_room_themes()
       setup_cave_theme(R)
 
     elseif R.is_park then
-      R.main_tex = rand.key_by_probs(assert(R.theme.naturals))
+      R.main_tex = R.zone.fence_mat
+
+      R.floor_mat     = rand.key_by_probs(assert(R.theme.naturals))
+      R.alt_floor_mat = pick_alternate_tex(R.theme.naturals, R.floor_mat, 3)
 
     elseif R.is_outdoor then
       R.main_tex = R.zone.fence_mat
