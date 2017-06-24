@@ -370,6 +370,15 @@ called the child and the outer room is the parent.
 --->
 
 
+<div id="symmetry" class="gloss_term">
+Symmetry
+</div><div class="gloss_define">
+Symmetry is when a room is mirrored, i.e. has the same
+architecture on the left side as the right side.
+
+</div>
+
+
 <div id="zone" class="gloss_term">
 Zone
 </div><div class="gloss_define">
