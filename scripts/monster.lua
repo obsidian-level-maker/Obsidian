@@ -2064,8 +2064,8 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
     if not THEME.barrels then return end
 
-    local room_prob = style_sel("barrels", 0, 40, 60, 80)
-    local  use_prob = style_sel("barrels", 0, 20, 40, 80)
+    local room_prob = style_sel("barrels", 0, 25, 50, 75)
+    local each_prob = style_sel("barrels", 0, 10, 30, 80)
 
     if not rand.odds(room_prob) then
       return
@@ -2082,8 +2082,8 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
     local want_num = rand.int(tally)
 
     for i = 1, want_num do
-      if rand.odds(use_prob) then
-        local group_size = rand.index_by_probs({ 20,40,20,7,2 })
+      if rand.odds(each_prob) then
+        local group_size = rand.index_by_probs({ 20,40,20,5,1 })
 
         try_add_decor_group(THEME.barrels, group_size)
       end
