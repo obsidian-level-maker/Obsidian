@@ -19,13 +19,13 @@
 ------------------------------------------------------------------------
 
 
-function Render_add_exit_sign(E)
+function Render_add_exit_sign(E, z)
   local def = PREFABS["Decor_exit_sign"]
   if not def then return end
 
-  local x1,y1, x2,y2 = Edge_line_coords(E)
+  assert(z)
 
-  local z = assert(E.area.floor_h)
+  local x1,y1, x2,y2 = Edge_line_coords(E)
 
   local len = geom.dist(x1,y1, x2,y2)
 
@@ -658,7 +658,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      Render_add_exit_sign(E)
+      Render_add_exit_sign(E, z)
     end
   end
 
@@ -1929,7 +1929,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       end
 
       if E then
-        Render_add_exit_sign(E)
+        Render_add_exit_sign(E, z1)
       end
     end
   end
@@ -2132,8 +2132,6 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   -- build the prefab --
 
   local x1, y1, x2, y2 = chunk_coords(def)
-
-  z1 = z1 + (def.raise_z or 0)
 
   local T = Trans.box_transform(x1, y1, x2, y2, z1, dir)
 
