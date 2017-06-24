@@ -1417,6 +1417,52 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
 end
 
 
+function GRID_CLASS.merge_diagonal_blobs(grid, diagonals)
+  -- ensure half-cells are merged with the blob touching the
+  -- corner away from the diagonal, otherwise the gap which
+  -- could exist there may be too narrow for players to pass.
+
+  for cx = 1, grid.w do
+  for cy = 1, grid.h do
+    local C = grid[cx][cy]
+    if not C then continue end
+
+    local dir = diagonals[cx][cy]
+    if not dir then continue end
+
+    local nx, ny = geom.nudge(cx, cy, dir)
+    local ax, ay = geom.nudge(cx, cy, geom. LEFT_45[dir])
+    local bx, by = geom.nudge(cx, cy, geom.RIGHT_45[dir])
+
+    local N = grid:valid(nx, ny) and grid[nx][ny]
+
+    -- check the cell directly opposite
+    if N and N != C then
+      grid:merge_two_blobs(C, N)
+    end
+
+    -- check the two neighbors (which touch both C and N)
+    -- [ must grab these values AFTER the merge above ]
+    local A = grid:valid(ax, ay) and grid[ax][ay]
+    local B = grid:valid(bx, by) and grid[bx][by]
+
+--  stderrf(": %s %s / %s %s\n", tostring(C), tostring(N), tostring(A), tostring(B))
+
+    if not (A or B) then continue end
+
+    if not A then A = B ; B = nil end
+
+    if A and A == C then continue end
+    if B and B == C then continue end
+
+    if A and B then A = math.min(A, B) end
+
+    grid:merge_two_blobs(C, A)
+  end
+  end
+end
+
+
 function GRID_CLASS.extent_of_blobs(grid)
   -- determines bounding box for each blob
 

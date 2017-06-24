@@ -2723,7 +2723,13 @@ function Cave_build_a_park(R, entry_h)
 
     blob_map = src:create_blobs(3, 2)
 
+    -- ensure walk-rects are fully contained in a single blob
     blob_map:walkify_blobs(area.walk_rects)
+
+    -- ensure half-cells are merged with the blob touching the
+    -- corner away from the diagonal, otherwise the gap which
+    -- could exist there may be too narrow for players to pass
+    blob_map:merge_diagonal_blobs(area.diagonals)
 
     blob_map:merge_small_blobs(4)
 
