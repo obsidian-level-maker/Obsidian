@@ -3691,6 +3691,17 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
+  local function hill_make_a_pool(B)
+    B.prelim_h = B.prelim_h - 12
+    B.floor_mat = "_LIQUID"
+
+    -- extra health for damaging liquid
+    if LEVEL.liquid.damage then
+      R.hazard_health = R.hazard_health + int(B.size / 4)
+    end
+  end
+
+
   local function can_make_pool(B)
     if B.floor_id == "stair" then return false end
     if B.is_tower then return false end
@@ -3739,8 +3750,7 @@ function Cave_build_a_park(R, entry_h)
 
     each _,B in blob_map.regions do
       if B.is_pool then
-        B.prelim_h = B.prelim_h - 12
-        B.floor_mat = "_LIQUID"
+        hill_make_a_pool(B)
       end
     end
   end
