@@ -3750,6 +3750,9 @@ function Cave_build_a_park(R, entry_h)
     local cx, cy = blob_map:random_blob_cell(B.id)
     if not cx then return nil end
 
+    -- never on a diagonal cell
+    if area.diagonals[cx][cy] then return nil end
+
     each dir in geom.ALL_DIRS do
       local nx, ny = geom.nudge(cx, cy, dir)
       if not blob_map:valid(nx, ny) then return nil end
