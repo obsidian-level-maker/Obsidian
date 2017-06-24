@@ -2778,7 +2778,7 @@ function Cave_build_a_park(R, entry_h)
       neighbors = {}
       children  = {}
 
-      floor_mat = "REDWALL" --!!!! assert(R.floor_mat)
+      floor_mat = assert(R.floor_mat)
 
       -- TEMP RUBBISH
       floor_h   = entry_h
