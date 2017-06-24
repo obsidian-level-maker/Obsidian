@@ -9,7 +9,7 @@ PREFABS.Pillar_tech3 =
 
   rank   = 2
   prob   = 100
-  theme  = "!hell"
+  theme  = "tech"
   env    = "building"
 
   where  = "point"
