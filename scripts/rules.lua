@@ -748,8 +748,8 @@ GROW_CAGEPAIR_2 =
 
 GROW_LIQUID_CAGE3 =
 {
-  prob = 15
-  skip_prob = 25
+  prob = 12
+  skip_prob = 33
 
   structure =
   {
