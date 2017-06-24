@@ -3,15 +3,22 @@ WORK IN PROGRESS
 ================
 
 
+BUG: weapon control module interferes with boss selection
+     (the setting of "level" to 1...)
+
+
 Miscellaneous
 -------------
+
+>>>  support "sky closets" (require outdoor area on all sides)
+
+     +  need a height check for start/exit gazebos
+
 
 -  assign a floor chunk for boss fights
 
 -  get posts working with rail junctions again
 
-
--  support "sky closets" (require outdoor area on all sides)
 
 -  don't add chaingunner until player has chaingun
    [ new "require_weapon" monster field? ]
