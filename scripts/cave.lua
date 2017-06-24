@@ -3757,6 +3757,8 @@ function Cave_build_a_park(R, entry_h)
       local nx, ny = geom.nudge(cx, cy, dir)
       if not blob_map:valid(nx, ny) then return nil end
 
+      if area.diagonals[nx][ny] then return nil end
+
       local n_id = blob_map[nx][ny]
       if not n_id then return nil end
 
