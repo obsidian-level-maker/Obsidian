@@ -2083,11 +2083,6 @@ function Level_do_styles()
     table.merge(style_tab, THEME.style_list)
   end
 
-  -- adjustments for multiplayer modes
-  if OB_CONFIG.playmode != "sp" then
-    style_tab.cycles = { some=30, heaps=60 }
-  end
-
   -- decide the values
   STYLE = {}
 

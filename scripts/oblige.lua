@@ -246,24 +246,9 @@ end
 
 
 function ob_match_playmode(T)
-  if not T.playmode then return true end
-  if T.playmode == "any" then return true end
+  -- TODO : remove this function
 
-  local playmode = T.playmode
-  local result   = true
-
-  -- negated check?
-  if type(playmode) == "string" and string.sub(playmode, 1, 1) == '!' then
-    playmode = string.sub(playmode, 2)
-    result   = not result
-  end
-
-  -- normal check
-  if ob_match_word_or_table(playmode, OB_CONFIG.playmode) then
-    return result
-  end
-
-  return not result
+  return true
 end
 
 
@@ -341,11 +326,9 @@ end
 function ob_match_conf(T)
   assert(OB_CONFIG.game)
   assert(OB_CONFIG.engine)
-  assert(OB_CONFIG.playmode)
 
   if not ob_match_game(T)     then return false end
   if not ob_match_engine(T)   then return false end
-  if not ob_match_playmode(T) then return false end
   if not ob_match_module(T)   then return false end
 
   return true --OK--
@@ -585,15 +568,14 @@ function ob_set_config(name, value)
 
   OB_CONFIG[name] = value
 
-  if name == "game" or name == "playmode" or name == "engine" then
+  if name == "game" or name == "engine" then
     ob_update_all()
   end
 
   -- this is required for parsing the CONFIG.TXT file
   -- [ but redundant when the user merely changed the widget ]
-  if name == "game" or name == "engine" or
-     name == "playmode" or name == "length" or
-     name == "theme"
+  if name == "game"  or name == "engine" or
+     name == "theme" or name == "length"
   then
     gui.set_button(name, OB_CONFIG[name])
   end
@@ -637,7 +619,6 @@ function ob_read_all_config(need_full, log_only)
   do_value("game",     OB_CONFIG.game)
   do_value("engine",   OB_CONFIG.engine)
   do_value("length",   OB_CONFIG.length)
-  do_value("playmode", OB_CONFIG.playmode)
   do_value("theme",    OB_CONFIG.theme)
 
   do_line("")
@@ -965,7 +946,6 @@ function ob_init()
   create_buttons("theme",  OB_THEMES)
 
   simple_buttons("length",   LENGTH_CHOICES,   "game")
-  simple_buttons("playmode", PLAYMODE_CHOICES, "sp")
 
   create_buttons("module", OB_MODULES)
   create_mod_options()
@@ -974,7 +954,6 @@ function ob_init()
 
   gui.set_button("game",     OB_CONFIG.game)
   gui.set_button("engine",   OB_CONFIG.engine)
-  gui.set_button("playmode", OB_CONFIG.playmode)
   gui.set_button("length",   OB_CONFIG.length)
   gui.set_button("theme",    OB_CONFIG.theme)
 

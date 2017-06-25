@@ -97,12 +97,7 @@ OB_THEMES["bit_mixed"] =
 }
 
 
--- choices for the Mode and Length buttons
-PLAYMODE_CHOICES =
-{
-  "sp",   _("Single Player"),
-}
-
+-- choices for Length button
 LENGTH_CHOICES =
 {
   "single",  _("Single Level"),

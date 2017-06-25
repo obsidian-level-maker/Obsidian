@@ -36,6 +36,11 @@ CHANGES IN 7.55
 -  new themes: "Bit Mixed", "Original-ish", "Episode-ish"
 -  new health/ammo settings: "Bit Less" and "Bit More"
 
+-  removed "Mode" button in UI, since it did very little
+-  removed most Engine choices, since they did nothing at all
+-  removed the non-standard player things (4001..4004)
+-  renamed "Start Together" setting to "Alt-start Rooms"
+
 -  got triple-key doors working again
 -  got remote-activated doors working again
 -  got lowering-bar fences working again
@@ -47,10 +52,6 @@ CHANGES IN 7.55
 -  support for rooms with a liquid river and a bridge
 -  raise outdoor fences when near an item pedestal (etc)
 -  smooth corners where two fences meet
-
--  removed most Engine choices, since they did nothing at all
--  removed the non-standard player things (4001..4004)
--  renamed "Start Together" setting to "Alt-start Rooms"
 
 -  proper action system for remotely activated doors (etc)
 -  introduced variation in how much symmetry to use

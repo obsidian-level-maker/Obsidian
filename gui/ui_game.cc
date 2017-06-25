@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -75,14 +75,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy += y_step2;
 
 
-	playmode = new UI_RChoice(cx, cy, cw, ch, _("Mode: "));
-	playmode->align(FL_ALIGN_LEFT);
-	playmode->selection_color(FL_BLUE);
-	playmode->callback(callback_Mode, this);
-
-	cy += y_step;
-
-
 	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
 	length->align(FL_ALIGN_LEFT);
 	length->selection_color(FL_BLUE);
@@ -136,14 +128,6 @@ void UI_Game::callback_Length(Fl_Widget *w, void *data)
 }
 
 
-void UI_Game::callback_Mode(Fl_Widget *w, void *data)
-{
-	UI_Game *that = (UI_Game *)data;
-
-	ob_set_config("playmode", that->playmode->GetID());
-}
-
-
 void UI_Game::callback_Theme(Fl_Widget *w, void *data)
 {
 	UI_Game *that = (UI_Game *) data;
@@ -159,7 +143,6 @@ void UI_Game::Locked(bool value)
 		game  ->deactivate();
 		engine->deactivate();
 		length->deactivate();
-		playmode->deactivate();
 		theme ->deactivate();
 	}
 	else
@@ -167,7 +150,6 @@ void UI_Game::Locked(bool value)
 		game  ->activate();
 		engine->activate();
 		length->activate();
-		playmode->activate();
 		theme ->activate();
 	}
 }
@@ -183,11 +165,6 @@ bool UI_Game::AddChoice(const char *button, const char *id, const char *label)
 	if (StringCaseCmp(button, "engine") == 0)
 	{
 		engine->AddChoice(id, label);
-		return true;
-	}
-	if (StringCaseCmp(button, "playmode") == 0)
-	{
-		playmode->AddChoice(id, label);
 		return true;
 	}
 	if (StringCaseCmp(button, "length") == 0)
@@ -217,11 +194,6 @@ bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it)
 		engine->EnableChoice(id, enable_it);
 		return true;
 	}
-	if (StringCaseCmp(button, "playmode") == 0)
-	{
-		playmode->EnableChoice(id, enable_it);
-		return true;
-	}
 	if (StringCaseCmp(button, "length") == 0)
 	{
 		length->EnableChoice(id, enable_it);
@@ -247,11 +219,6 @@ bool UI_Game::SetButton(const char *button, const char *id)
 	if (StringCaseCmp(button, "engine") == 0)
 	{
 		engine->ChangeTo(id);
-		return true;
-	}
-	if (StringCaseCmp(button, "playmode") == 0)
-	{
-		playmode->ChangeTo(id);
 		return true;
 	}
 	if (StringCaseCmp(button, "length") == 0)

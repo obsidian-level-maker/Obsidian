@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -26,11 +26,8 @@ class UI_Game : public Fl_Group
 public:
 	UI_RChoice *game;
 	UI_RChoice *engine;
-
-	UI_RChoice *length;
-	UI_RChoice *playmode;
-
 	UI_RChoice *theme;
+	UI_RChoice *length;
 
 public:
 	UI_Game(int x, int y, int w, int h, const char *label = NULL);
@@ -48,7 +45,6 @@ private:
 	static void callback_Game  (Fl_Widget *, void*);
 	static void callback_Engine(Fl_Widget *, void*);
 	static void callback_Length(Fl_Widget *, void*);
-	static void callback_Mode  (Fl_Widget *, void*);
 	static void callback_Theme (Fl_Widget *, void*);
 };
 
