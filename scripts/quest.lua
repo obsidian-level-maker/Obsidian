@@ -859,49 +859,46 @@ function Quest_add_major_quests()
   local function collect_key_goals(list)
     local key_tab = LEVEL.usable_keys or THEME.keys or {}
 
-    local use_prob = style_sel("keys", 0, 40, 80, 100)
+    local each_prob = style_sel("keys", 0, 40, 80, 100)
 
     each name,_ in key_tab do
-      if rand.odds(use_prob) then
+      if rand.odds(each_prob) then
         local GOAL = Goal_new("KEY")
 
         GOAL.item = name
-        GOAL.prob = 100
+        GOAL.prob = 50
 
         table.insert(list, GOAL)
       end
     end
+
+    gui.printf("Maximum of %d key goals.\n", #list)
   end
 
 
   local function collect_switch_goals(list)
-    if not THEME.switches then return {} end
+    if THEME.no_switches then return end
 
-    local skip_prob = style_sel("switches", 100, 20, 0, 0)
-    if rand.odds(skip_prob) then return {} end
+    local  any_prob = style_sel("switches", 0, 50, 75, 100)
+    local each_prob = style_sel("switches", 0, 35, 65, 95)
 
-    -- we want at least four kinds, so duplicate some if necessary
-    local switch_tab = THEME.switches
+    if not rand.odds(any_prob) then return {} end
 
-    local dup_num
-    if table.size(switch_tab) < 2 then
-      dup_num = 4
-    elseif table.size(switch_tab) < 4 then
-      dup_num = 2
-    else
-      dup_num = 1
-    end
+    -- decide maximum number
+    local max_num = 1 + int(#LEVEL.rooms / 5)
 
-    for loop = 1, dup_num do
-      each name,_ in switch_tab do
+    for i = 1, max_num do
+      if rand.odds(each_prob) then
         local GOAL = Goal_new("SWITCH")
 
-        GOAL.item = name
-        GOAL.prob = 25
+        GOAL.item = "sw_metal"
+        GOAL.prob = 50
 
         table.insert(list, GOAL)
       end
     end
+
+    gui.printf("Maximum of %d switch goals.\n", #list)
   end
 
 
@@ -949,6 +946,8 @@ function Quest_add_major_quests()
     table.remove(key_list, 2)
     table.remove(key_list, 3)
 
+    gui.printf("Added triple-key quest.\n")
+
     return true
   end
 
@@ -982,7 +981,13 @@ do return false end
 --FIXME    GOAL1.action = fab_def.action1
 --FIXME    GOAL2.action = fab_def.action2
 
-    return Quest_scan_all_conns({ GOAL1, GOAL2 }, quest)
+    if not Quest_scan_all_conns({ GOAL1, GOAL2 }, quest) then
+      return false
+    end
+
+    gui.printf("Added double-switch quest.\n")
+
+    return true
   end
 
 
@@ -1055,7 +1060,7 @@ do return false end
 
   -- normal keyed doors...
 
-  for pass = 1, 6 do
+  for pass = 1, 4 do
     lock_up_quests(goal_list)
   end
 
@@ -1067,11 +1072,11 @@ do return false end
   collect_switch_goals(goal_list)
 
 
-  -- double switched doors
+  -- double switched door?
   -- [ never make them if disabled by "switches" style ]
 
   if not table.empty(goal_list) then
-    lock_up_double_doors()
+    lock_up_double_doors(goal_list)
   end
 
 

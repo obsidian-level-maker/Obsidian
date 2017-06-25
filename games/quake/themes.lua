@@ -23,11 +23,6 @@ QUAKE.THEMES =
       k_gold   = 20
     }
 
-    switches =
-    {
-      sw_metal = 50
-    }
-
     fences =
     {
       ROCK5_2 = 50

@@ -365,11 +365,6 @@ DOOM.THEMES =
       k_yellow = 50
     }
 
-    switches =
-    {
-      sw_metal = 50
-    }
-
     barrels =
     {
       barrel = 50

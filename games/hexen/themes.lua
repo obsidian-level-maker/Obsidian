@@ -30,13 +30,6 @@ HEXEN.THEMES =
       k_swamp = 50
       k_steel = 50
     }
-
-    switches =
-    {
-      sw_demon = 50
-      sw_moon  = 40
-    }
-
   }
 
 

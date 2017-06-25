@@ -25,11 +25,6 @@ HERETIC.THEMES =
       k_blue   = 30
     }
 
-    ___switches =  -- FIXME
-    {
-      sw_metal = 50
-    }
-
     fences =
     {
       BRWNRCKS = 20
