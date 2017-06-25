@@ -440,6 +440,16 @@ ULTDOOM.THEMES =
       grate  = 10
     }
 
+    narrow_halls =
+    {
+      vent = 50
+    }
+
+    wide_halls =
+    {
+      deuce = 50
+    }
+
     barrels =
     {
       barrel = 50
@@ -1734,26 +1744,23 @@ ULTDOOM.ROOM_THEMES =
 
   hell_Hallway =
   {
-    env = "hallway"
-    prob = 50
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
 
     walls =
     {
-      BROWN1 = 33
-      BROWNGRN = 50
-      BROVINE = 20
-      BROVINE2 = 15
-      GRAY1 = 50
-      GRAY5 = 33
-      ICKWALL1 = 30
-      ICKWALL3 = 30
-      STONE2 = 40
-      STONE3 = 50
-      METAL1 = 30
+      FIREBLU2 = 50
+      FIREWALL = 50
+      SKSPINE2 = 50
+      SKIN2    = 50
+      SKINSYMB = 50
+      MARBGRAY = 50
     }
 
     floors =
     {
+      BLOOD1 = 50
       FLAT4 = 30
       CEIL4_1 = 15
       CEIL5_1 = 30
@@ -1769,6 +1776,8 @@ ULTDOOM.ROOM_THEMES =
 
     ceilings =
     {
+      BLOOD1 = 50
+      LAVA1 = 20
       FLAT4 = 20
       CEIL4_2 = 15
       CEIL5_1 = 30
@@ -1778,6 +1787,13 @@ ULTDOOM.ROOM_THEMES =
       FLOOR7_1 = 2
       FLAT5_1 = 2
       DEM1_6 = 2
+    }
+
+    y_offsets =
+    {
+      SKSPINE2 = 13
+      SKINSYMB = 30
+      MARBGRAY = 24
     }
   }
 
