@@ -1746,6 +1746,8 @@ function Room_floor_ceil_heights()
   -- Computes the floor and ceiling heights of all the areas of
   -- each room, including liquids and closets.
   --
+  -- Also constructs CAVES and PARK rooms.
+  --
 
   -- Note: the 'entry_h' field also serves as a "visited already" flag
 

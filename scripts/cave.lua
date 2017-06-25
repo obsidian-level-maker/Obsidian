@@ -3842,6 +3842,8 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function install_hillside(HILL)
+    R.has_hills = true
+
     hill_clear()
     hill_restore(HILL)
 
@@ -4280,8 +4282,6 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
     local ecx = area.entry_walk.cx1
     local ecy = area.entry_walk.cy1
 
-    R.has_hills = true
-
     if not hill_grow_with_stairs() then
       return
     end
@@ -4374,7 +4374,7 @@ function Cave_prepare_scenic_vista(area)
 
   -- decide what kind of vista to make
 
-  if room.has_river or not LEVEL.liquid or rand.odds(50) then
+  if room.has_hills or not LEVEL.liquid or rand.odds(50) then
     area.border_type = "simple_fence"
   else
     area.border_type = "watery_drop"
