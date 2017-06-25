@@ -2079,7 +2079,6 @@ DOOM.ROOM_THEMES =
     {
       STONE    = 50
       FLAT5_2  = 50
-      RROCK19  = 25
       ROCK3    = 25
       MFLR8_3  = 10
     }
