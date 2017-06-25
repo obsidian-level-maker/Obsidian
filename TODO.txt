@@ -20,6 +20,8 @@ OBLIGE TO-DO
           action in GAME.ACTIONS for the trigger lines
           [ also require it on trap prefab, via "key" probably ]
 
+-  internal fences (esp. for outdoor rooms)
+
 -  support a "Mix It Up" Strength setting
 
 -  level_usage for: rules, prefabs, rooms themes.

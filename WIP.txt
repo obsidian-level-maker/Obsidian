@@ -12,36 +12,11 @@ Miscellaneous
 
 -  improve the gazebos / sky_pads
 
-
 -  assign a floor chunk for boss fights
 
 -  get posts working with rail junctions again
 
-
--  internal fences (esp. for outdoor rooms)
-
--  review window qty
-
-
-
-Hallway System
---------------
-
-+  make hallway themes for deuce (tech/urban/hell), and
-   review the existing xxx_Hallway themes.
-
-   e.g. BLOOD1 for ceiling/floor in hell
-   e.g. SKSPINE2 for wall in hell
-
-
-
-Scenic Borders
---------------
-
--  need posts where two different floor heights meet (for railing)
-
--  handle stairs adjacent to a border : need a brush for the
-   side and a post where that brush meets the low floor
+-  scenic: need posts where two different floor heights meet
 
 
 
