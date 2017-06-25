@@ -1,14 +1,14 @@
 --
--- Start gazebo
+-- Outdoor start platform
 --
 
-PREFABS.Start_gazebo1 =
+PREFABS.Start_sky_pad =
 {
-  file   = "start/gazebo1.wad"
+  file   = "start/sky_pad.wad"
   map    = "MAP01"
 
   rank   = 2
-  prob   = 100
+  prob   = 50
 
   where  = "seeds"
   seed_w = 2
