@@ -4308,8 +4308,10 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
         do_install_floor_blob(reg, base_h)
       end
     end
+  end
 
 
+  local function update_chunk_textures()
     -- ensure out-going connections get the correct floor_h,
     -- closets too
     -- [ FIXME : use this logic for normal CAVES too ]
@@ -4358,9 +4360,11 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   if rand.odds(100) then  -- FIXME !!!!
     make_a_hillside()
-  elseif LEVEL.liquid and rand.odds(35) then
+  elseif LEVEL.liquid and rand.odds(50) then
     make_a_river()
   end
+
+  update_chunk_textures()
 end
 
 
