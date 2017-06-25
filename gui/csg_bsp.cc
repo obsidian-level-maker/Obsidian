@@ -1040,7 +1040,7 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 
 	// FIXME: SYS_ASSERT(along_max > along_min + SNAG_EPSILON);
 
-	if (along_max > along_min + SNAG_EPSILON);
+	if (along_max > along_min + SNAG_EPSILON)
 	{
 		double x1, y1;
 		double x2, y2;
