@@ -1560,9 +1560,9 @@ function Room_set_kind(R, is_hallway, is_outdoor, is_cave)
   if is_outdoor and not (is_hallway or is_cave) and
      R.id != 1
   then
-    local park_prob = style_sel("parks", 0, 20, 50, 90)
+    local park_prob = style_sel("parks", 0, 22, 45, 90)
 
-    if rand.odds(park_prob) or true then --!!!!!
+    if rand.odds(park_prob) then
       R.is_park = true
     end
   end

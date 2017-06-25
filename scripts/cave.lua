@@ -4357,7 +4357,7 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   do_parky_stuff()
 
-  if rand.odds(100) then  -- FIXME !!!!
+  if rand.odds(75) then
     make_a_hillside()
   elseif LEVEL.liquid and rand.odds(50) then
     make_a_river()

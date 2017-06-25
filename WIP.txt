@@ -3,30 +3,14 @@ WORK IN PROGRESS
 ================
 
 
-Parks
------
-
-+  fix the railings when next to "watery_drop" scenic
-   [ alternatively: disable watery_drop when next to a park ]
-   [[ another idea: provide a teleporter in liquid ]]
-
-+  windows and cages can be too low
-   [ logic for AREA:min_neighbor_h and max_... needs to look
-     into "nature" areas properly ]
-
--  fix park_prob, hillside prob
-
-
-
 Miscellaneous
 -------------
 
 >>>  support "sky closets" (require outdoor area on all sides)
 
-     +  need a height check for start/exit gazebos
++  need a height check for gazebos
 
-     -  make start gazebo --> item gazebo, and
-        copy teleport gazebo for start gazebo
+-  improve the gazebos / sky_pads
 
 
 -  assign a floor chunk for boss fights
@@ -35,6 +19,8 @@ Miscellaneous
 
 
 -  internal fences (esp. for outdoor rooms)
+
+-  review window qty
 
 
 
