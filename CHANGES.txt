@@ -50,6 +50,7 @@ CHANGES IN 7.55
 
 -  proper action system for remotely activated doors (etc)
 -  removed the non-standard player things (4001..4004)
+-  renamed "Start Together" setting to "Alt-start Rooms"
 
 -  introduced variation in how much symmetry to use
 -  unused leaf rooms become "storage" for some minor items

@@ -83,10 +83,10 @@ OB_MODULES["misc"] =
     }
 
     {
-      name="start_together"
-      label=_("Start Together")
+      name="alt_starts"
+      label=_("Alt-start Rooms")
       choices=MISC_STUFF.YES_NO
-      tooltip=_("For Co-operative games, ensure all players start in the same room (disable the separated start rooms)")
+      tooltip=_("For Co-operative games, sometimes have players start in different rooms")
       gap=1
     }
 

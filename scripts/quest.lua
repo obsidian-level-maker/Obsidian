@@ -960,11 +960,7 @@ do return false end
     -- TODO: check that a usable prefab exists
     if not THEME.has_double_switch_door then return false end
 
-    local prob = 36
-
-    if OB_CONFIG.playmode == "coop" then
-      prob = 70
-    end
+    local prob = 35
 
     if LEVEL.has_double_switch_door then
       prob = prob / 2
@@ -1541,12 +1537,6 @@ function Quest_start_room()
 
 
   local function find_alternate_start()
-    -- only for Co-operative games
-    if OB_CONFIG.playmode != "coop" then return end
-
-    -- disabled by a module?
-    if PARAM.start_together then return end
-
     local R = pick_best_start("alt_mode")
 
     if not R then return end
@@ -1580,7 +1570,9 @@ function Quest_start_room()
 
   add_normal_start()
 
-  find_alternate_start()
+  if PARAM.alt_starts then
+    find_alternate_start()
+  end
 end
 
 
