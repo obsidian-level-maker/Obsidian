@@ -1520,10 +1520,7 @@ function Quest_start_room()
 
     local set1, set2
 
-    if rand.odds(10) then
-      set1 = { "player1", "player2" }
-      set2 = { "player3", "player4" }
-    elseif rand.odds(50) then
+    if rand.odds(50) then
       set1 = { "player1", "player3" }
       set2 = { "player2", "player4" }
     else
