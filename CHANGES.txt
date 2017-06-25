@@ -48,7 +48,7 @@ CHANGES IN 7.55
 -  raise outdoor fences when near an item pedestal (etc)
 -  smooth corners where two fences meet
 
--  removed "Skulltag" engine and related modules
+-  removed most Engine choices, since they did nothing at all
 -  removed the non-standard player things (4001..4004)
 -  renamed "Start Together" setting to "Alt-start Rooms"
 
