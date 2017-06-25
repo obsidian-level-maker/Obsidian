@@ -372,16 +372,20 @@ end
 
 function AREA_CLASS.highest_neighbor(A)
   local best
+  local best_h
 
-  -- FIXME : for "nature" areas (like parks)
+  -- FIXME : handle "nature" areas better (checks cells along the junction)
 
   each N in A.neighbors do
     if N.room == A.room and N.mode == "floor" and N.floor_h then
-      if not best or N.floor_h > best.floor_h or
+      local f_h = N.max_floor_h or N.floor_h
+
+      if not best or f_h > best_h or
          -- use ceiling heights to break ties
-         (N.floor_h == best.floor_h and (N.ceil_h or 9999) < (best.ceil_h or 9999))
+         (f_h == best_h and (N.ceil_h or 9999) < (best.ceil_h or 9999))
       then
-        best = N
+        best   = N
+        best_h = f_h
       end
     end
   end
@@ -393,7 +397,7 @@ end
 function AREA_CLASS.lowest_neighbor(A)
   local best
 
-  -- FIXME : for "nature" areas (like parks)
+  -- FIXME : handle "nature" areas better (checks cells along the junction)
 
   each N in A.neighbors do
     if N.room == A.room and N.mode == "floor" and N.floor_h then
@@ -745,6 +749,7 @@ function Junction_make_railing(junc, rail_mat, block)
   }
 
   -- calculate base Z
+  -- TODO : handle "nature" areas better (checks cells along the junction)
   local z1 = junc.A1.max_floor_h or junc.A1.floor_h
   local z2 = junc.A2.max_floor_h or junc.A2.floor_h
 

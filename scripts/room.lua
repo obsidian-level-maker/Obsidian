@@ -1136,7 +1136,11 @@ function Room_make_windows(A1, A2)
 
     if not c1 or not c2 then return -99 end
 
-    local max_f = math.max(A1.floor_h, A2.floor_h)
+    -- TODO : handle "nature" areas better (checks cells along the junction)
+    local f1 = A1.max_floor_h or A1.floor_h
+    local f2 = A2.max_floor_h or A2.floor_h
+
+    local max_f = math.max(f1, f2)
     local min_c = math.min(c1, c2)
 
     return (min_c - max_f)
