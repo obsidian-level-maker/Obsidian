@@ -1134,7 +1134,7 @@ function Room_make_windows(A1, A2)
     local c1 = A1.ceil_h
     local c2 = A2.ceil_h
 
-    if not c1 or not c2 then return -99 end
+    if not c1 or not c2 then return -77,-99 end
 
     -- TODO : handle "nature" areas better (checks cells along the junction)
     local f1 = A1.max_floor_h or A1.floor_h
@@ -1143,7 +1143,7 @@ function Room_make_windows(A1, A2)
     local max_f = math.max(f1, f2)
     local min_c = math.min(c1, c2)
 
-    return (min_c - max_f)
+    return max_f, (min_c - max_f)
   end
 
 
@@ -1279,7 +1279,7 @@ function Room_make_windows(A1, A2)
   end
 
 
-  local function install_windows(group, height, base_prob)
+  local function install_windows(group, z, height, base_prob)
     each E in edge_list do
       -- wide windows occur quite rarely, so bump up their chance
       local prob = base_prob
@@ -1293,7 +1293,7 @@ function Room_make_windows(A1, A2)
       then
         local E1, E2 = Edge_new_pair("window", "nothing", E.S, E.dir, E.long)
 
-        E1.window_z = math.max(A1.floor_h, A2.floor_h)
+        E1.window_z = z
         E1.window_group  = group
         E1.window_height = height
 
@@ -1309,7 +1309,7 @@ function Room_make_windows(A1, A2)
   if not area_can_window(A1) then return end
   if not area_can_window(A2) then return end
 
-  local height = calc_vertical_space(A1, A2)
+  local z, height = calc_vertical_space(A1, A2)
   if height < 128 then return end
 
   -- if theme has no window groups, we cannot make any windows
@@ -1331,7 +1331,7 @@ function Room_make_windows(A1, A2)
     prob = prob * 0.3
   end
 
-  install_windows(group, height, prob)
+  install_windows(group, z, height, prob)
 end
 
 
