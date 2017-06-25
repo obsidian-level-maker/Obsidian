@@ -2878,9 +2878,9 @@ function Render_cells(area)
     -- solid cells will always override floor cells.
 
     local max_h = A
-    if B > A then max_h = B end
-    if C > A then max_h = C end
-    if D > A then max_h = D end
+    if B > max_h then max_h = B end
+    if C > max_h then max_h = C end
+    if D > max_h then max_h = D end
 
     -- convert A/B/C/D to boolean values
     A = (A == max_h)
