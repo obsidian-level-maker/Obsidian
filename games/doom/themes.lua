@@ -1281,13 +1281,15 @@ DOOM.ROOM_THEMES =
     naturals =
     {
       GRASS1 = 40
-      FLAT10 = 20
+      FLAT10 = 40
 
       RROCK16 = 20
       RROCK17 = 20
-      RROCK18 = 10
       RROCK19 = 20
-      RROCK20 = 20
+
+      RROCK03  = 8
+      FLOOR6_2 = 2
+      MFLR8_3  = 2
     }
   }
 
@@ -2089,8 +2091,7 @@ DOOM.ROOM_THEMES =
 
       RROCK09 = 20
       RROCK16 = 40
-      RROCK17 = 40
-      RROCK18 = 10
+      RROCK18 = 20
       RROCK19 = 20
       RROCK20 = 20
     }
