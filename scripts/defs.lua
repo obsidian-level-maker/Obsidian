@@ -101,7 +101,6 @@ OB_THEMES["bit_mixed"] =
 PLAYMODE_CHOICES =
 {
   "sp",   _("Single Player"),
-  "coop", _("Co-op"),
 }
 
 LENGTH_CHOICES =
@@ -195,11 +194,6 @@ AMMO_FACTORS =
   more     = 1.25
   heaps    = 1.6
 }
-
-
--- adjustments for Co-operative game mode
-COOP_HEALTH_FACTOR = 1.25
-COOP_AMMO_FACTOR   = 1.25
 
 
 --
