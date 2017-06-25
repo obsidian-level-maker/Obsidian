@@ -2343,7 +2343,7 @@ function Room_floor_ceil_heights()
         if not N then
 --!!!! FIXME : temp stuff for park-border experiment....
 --!!!!    error("failed to find liquid neighbor")
-          A.floor_h = -77
+          A.floor_h = 977
           A.ceil_h  = 999
           continue
         end

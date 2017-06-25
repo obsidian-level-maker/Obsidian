@@ -3955,7 +3955,6 @@ function Cave_build_a_park(R, entry_h)
 
       -- if we managed something, then install it
       if info.best then
---stderrf("YES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         install_hillside(info.best)
         return true
       end
