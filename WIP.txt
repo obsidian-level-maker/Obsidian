@@ -3,11 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-BUG: weapon control module interferes with boss selection
-     (the setting of "level" to 1...)
-
-
-
 Parks
 -----
 
@@ -19,7 +14,7 @@ Parks
    [ logic for AREA:min_neighbor_h and max_... needs to look
      into "nature" areas properly ]
 
--  fix park_prob
+-  fix park_prob, hillside prob
 
 
 
@@ -29,6 +24,9 @@ Miscellaneous
 >>>  support "sky closets" (require outdoor area on all sides)
 
      +  need a height check for start/exit gazebos
+
+     -  make start gazebo --> item gazebo, and
+        copy teleport gazebo for start gazebo
 
 
 -  assign a floor chunk for boss fights

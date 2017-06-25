@@ -479,8 +479,12 @@ Mazes:
   MONSTERS / ITEMS
 ----------------------------------------------
 
--  don't add chaingunner until player has chaingun
-   [ new "require_weapon" monster field? ]
++  make the "boss" monsters able to become fodder/cage/trap
+   monsters after a certain point
+
++  for "mini bosses", don't use them as fodder/cage/trap until
+   their usage as a mini boss
+   [ probably plan this better.... ]
 
 -  usage of Arch-Viles as boss/guard monsters should have a limit
 
@@ -608,11 +612,6 @@ IDEA: STYLE to control # of lifts
 
 -  a module to randomly change DOOM monster / weapon stats via
    DEHACKED / DDF / DECORATE.
-
-
-If one engine "extends" another, and both have an 'all_done' hook
-(for example), then only the extended engine's hook is called.
-Should it be like that, OR call both ???
 
 
 Warzone Mode:
