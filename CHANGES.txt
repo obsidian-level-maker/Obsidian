@@ -48,10 +48,11 @@ CHANGES IN 7.55
 -  raise outdoor fences when near an item pedestal (etc)
 -  smooth corners where two fences meet
 
--  proper action system for remotely activated doors (etc)
+-  removed "Skulltag" engine and related modules
 -  removed the non-standard player things (4001..4004)
 -  renamed "Start Together" setting to "Alt-start Rooms"
 
+-  proper action system for remotely activated doors (etc)
 -  introduced variation in how much symmetry to use
 -  unused leaf rooms become "storage" for some minor items
 -  lower tendency of creating long/thin rooms
