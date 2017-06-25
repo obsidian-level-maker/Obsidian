@@ -2453,7 +2453,7 @@ function Room_floor_ceil_heights()
     local N = get_cage_neighbor(A)
 
     if not N.cage_floor_h then
-      N.cage_floor_h = N.floor_h + rand.pick({48,64})
+      N.cage_floor_h = (N.max_floor_h or N.floor_h) + rand.pick({48,64})
     end
 
     A.floor_h  = N.cage_floor_h
