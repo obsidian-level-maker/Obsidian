@@ -1133,8 +1133,9 @@ ULTDOOM.ROOM_THEMES =
 
   tech_Hallway =
   {
-    env = "hallway"
-    prob = 50
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
 
     walls =
     {
@@ -1398,8 +1399,9 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Hallway =
   {
-    env = "hallway"
-    prob = 50
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
 
     walls =
     {
@@ -1462,8 +1464,9 @@ ULTDOOM.ROOM_THEMES =
 
   deimos_Hallway_hell =
   {
-    env = "hallway"
-    prob = 50
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
 
     walls =
     {
@@ -2004,8 +2007,9 @@ ULTDOOM.ROOM_THEMES =
 
   flesh_Hallway_hell =
   {
-    env = "hallway"
-    prob = 50
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
 
     walls =
     {

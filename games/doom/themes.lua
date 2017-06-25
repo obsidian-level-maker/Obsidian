@@ -1289,20 +1289,20 @@ DOOM.ROOM_THEMES =
   }
 
 
-  tech_Hallway =
+  tech_deuce_Hallway =
   {
-    env  = "hallway"
-    prob = 50
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
 
     walls =
     {
-      BROWNGRN = 90
-      BROWN1   = 90
-      GRAY1    = 70
+      BROWN1   = 50
+      GRAY7    = 20
 
       TEKWALL6 = 30
       TEKWALL4 = 10
-      TEKGREN1 = 40
+      TEKGREN1 = 30
       STARGR1 = 10
       STARBR2 = 10
 
@@ -1562,46 +1562,6 @@ DOOM.ROOM_THEMES =
   }
 
 
-  hell_Hallway =
-  {
-    env  = "hallway"
-    prob = 50
-
-    walls =
-    {
-      MARBGRAY = 80
-      REDWALL  = 60
-      SKIN2    = 60
-
-      GSTVINE1 = 40
-      GSTVINE2 = 40
-      GSTONE1  = 20
-      SKINMET1 = 10
-      SKINMET2 = 10
-    }
-
-    floors =
-    {
-      FLAT1 = 50
-      DEM1_6  = 30
-      FLOOR6_2 = 15
-      FLOOR7_1 = 20
-      FLOOR7_2 = 25
-      FLAT10  = 20
-    }
-
-    ceilings =
-    {
-      FLAT1 = 50
-      SFLR6_1 = 20
-      SFLR6_4 = 20
-      FLAT5_2 = 10
-      FLOOR7_2 = 20
-      CEIL1_1 = 15
-    }
-  }
-
-
   hell_Cave_generic =
   {
     env  = "cave"
@@ -1684,6 +1644,65 @@ DOOM.ROOM_THEMES =
       RROCK04 = 30
       RROCK09 = 20
       SFLR6_1 = 10
+    }
+  }
+
+
+  hell_deuce_Hallway =
+  {
+    env   = "hallway"
+    group = "deuce"
+    prob  = 100
+
+    walls =
+    {
+      SKSPINE2 = 30
+      FIREWALL = 30
+      SKINSYMB = 30
+
+      SKSNAKE1 = 20
+      SKINEDGE = 20
+      MARBGRAY = 20
+      SW1WOOD  = 20
+
+      WOODMET4 = 10
+      SW1LION  =  5
+      REDWALL  =  5
+      FIREBLU2 =  5
+    }
+
+    floors =
+    {
+      BLOOD1   = 45
+      FLAT5_3  = 30
+      FLAT5_8  = 30
+      FLAT5_1  = 20
+      FLOOR6_1 = 20
+      MFLR8_1  = 20
+      GRNROCK  = 20
+      RROCK05  = 20
+    }
+
+    ceilings =
+    {
+      BLOOD1   = 45
+      FLAT5_3  = 30
+      FLAT5_8  = 30
+      FLAT5_1  = 20
+      FLOOR6_1 = 20
+      GRNROCK  = 20
+      RROCK05  = 20
+      LAVA1    = 20
+    }
+
+    y_offsets =
+    {
+      MARBGRAY = 24
+      SKINSYMB = 30
+      SKSPINE2 = 13
+      SW1WOOD  = 47
+      SW1LION  = 47
+      WOODMET4 = 16
     }
   }
 
@@ -1983,10 +2002,11 @@ DOOM.ROOM_THEMES =
   }
 
 
-  urban_Hallway =
+  urban_deuce_Hallway =
   {
-    env  = "hallway"
-    prob = 50
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
 
     walls =
     {
