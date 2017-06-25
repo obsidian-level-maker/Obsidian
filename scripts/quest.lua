@@ -928,24 +928,28 @@ function Quest_add_major_quests()
     -- TODO: check that a usable prefab exists
     if not THEME.has_triple_key_door then return false end
 
-    local prob = 30
-
-    if OB_CONFIG.playmode == "coop" then
-      prob = 60
-    end
+    local prob = 35
 
     if not rand.odds(prob) then return false end
 
     rand.shuffle(key_list)
 
-    local K1 = table.remove(key_list, 1)
-    local K2 = table.remove(key_list, 1)
-    local K3 = table.remove(key_list, 1)
+    local K1 = key_list[1]
+    local K2 = key_list[2]
+    local K3 = key_list[3]
 
     assert(K1 and K2 and K3)
-    assert(K3.kind == "KEY")
+    assert(K1.kind == "KEY")
 
-    return Quest_scan_all_conns({ K1, K2, K3 })
+    if not Quest_scan_all_conns({ K1, K2, K3 }) then
+      return false
+    end
+
+    table.remove(key_list, 1)
+    table.remove(key_list, 2)
+    table.remove(key_list, 3)
+
+    return true
   end
 
 
