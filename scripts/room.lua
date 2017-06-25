@@ -1319,7 +1319,7 @@ function Room_make_windows(A1, A2)
   find_window_edges()
 
   -- check style
-  local prob = style_sel("windows", 0, 30, 70, 130)
+  local prob = style_sel("windows", 0, 35, 70, 140)
 
   -- less chance between indoor rooms
   if (not A1.is_outdoor and not A2.is_outdoor) then

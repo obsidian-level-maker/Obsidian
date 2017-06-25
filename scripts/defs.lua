@@ -212,8 +212,8 @@ GLOBAL_STYLE_LIST =
   ambushes    = { none=10, few=0,  some=50, heaps=10 }
 
   doors       = { none=5,  few=30, some=60, heaps=5 }
-  windows     = { none=0,  few=20, some=70, heaps=35 }
-  switches    = { none=10, few=20, some=40, heaps=10 }
+  windows     = { none=0,  few=20, some=80, heaps=20 }
+  switches    = { none=10, few=30, some=50, heaps=10 }
   keys        = { none=0,  few=10, some=20, heaps=60 }
 
   symmetry    = { none=20, few=40, some=60, heaps=10 }
