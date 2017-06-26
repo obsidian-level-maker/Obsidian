@@ -14,9 +14,7 @@ CHANGES IN 7.55
 
 +  new "Park" rooms, naturalistic outdoor areas
 
-+  hallways (IN PROGRESS...)
-
-+  better scenic areas outside the map (IN PROGRESS...)
++  hallways
 
 +  sky generator: much better looking mountains
 
@@ -26,7 +24,7 @@ CHANGES IN 7.55
 -  fixed bug swapping normal-exit and secret-exit switches
 -  support secret weapons (available earlier than usual)
 
-+  add barrels and blood / corpses to rooms
++  add barrels, blood and corpses to rooms
 
 -  fixed large teleport-in monsters getting stuck
 
@@ -36,20 +34,21 @@ CHANGES IN 7.55
 -  new themes: "Bit Mixed", "Original-ish", "Episode-ish"
 -  new health/ammo settings: "Bit Less" and "Bit More"
 
--  removed "Mode" button in UI, since it did very little
--  removed most Engine choices, since they did nothing at all
--  removed the non-standard player things (4001..4004)
--  renamed "Start Together" setting to "Alt-start Rooms"
+!  removed most Engine choices, since they did nothing at all
+!  removed "Mode" button in UI, since it did very little
+!  removed the non-standard player things (4001..4004)
 
 -  got triple-key doors working again
 -  got remote-activated doors working again
 -  got lowering-bar fences working again
+
 -  added exit signs to doors leading to exit room
+-  renamed "Start Together" setting to "Alt-start Rooms"
 
 -  improved title generator, removed pre-made backgrounds
 -  support TGA format title pics when engine is GZDOOM
 
--  support for rooms with a liquid river and a bridge
+-  better scenic areas outside the map
 -  raise outdoor fences when near an item pedestal (etc)
 -  smooth corners where two fences meet
 
