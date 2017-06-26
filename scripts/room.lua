@@ -1522,7 +1522,6 @@ function Room_border_up()
 
       if T:is_open_to_sky(A.room) then
         T.open_to_sky = true
-stderrf("%s is open to sky in %s\n", T.name, A.room.name)
       end
     end
   end

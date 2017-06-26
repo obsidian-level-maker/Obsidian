@@ -1094,16 +1094,11 @@ function Monster_fill_room(R)
 
     local factor = default_level(info)
 
-    local low  = (10 - factor) / 9
-    local high = factor / 9
+    if OB_CONFIG.strength == "weak"   then return 1 / (1.7 ^ factor) end
+    if OB_CONFIG.strength == "easier" then return 1 / (1.3 ^ factor) end
 
-    assert(low > 0)
-
-    if OB_CONFIG.strength == "weak"   then return low  ^ 1.5 end
-    if OB_CONFIG.strength == "easier" then return low  ^ 0.5 end
-
-    if OB_CONFIG.strength == "tough"  then return high ^ 1.5 end
-    if OB_CONFIG.strength == "harder" then return high ^ 0.5 end
+    if OB_CONFIG.strength == "harder" then return 1.3 ^ factor end
+    if OB_CONFIG.strength == "tough"  then return 1.7 ^ factor end
 
     return 1.0
   end
