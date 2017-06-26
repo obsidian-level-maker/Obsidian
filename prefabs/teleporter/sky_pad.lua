@@ -17,7 +17,7 @@ PREFABS.Teleporter_sky_pad =
   seed_w = 2
   seed_h = 2
 
-  x_fit  = "frame"
+  x_fit  = { 40,48, 208,216 }
 
   tag_1 = "?out_tag"
   tag_2 = "?in_tag"
