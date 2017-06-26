@@ -2026,7 +2026,17 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     reqs.open_to_sky  = chunk.open_to_sky
     reqs.open_to_room = chunk.open_to_room
+
+    if A.room.is_outdoor then
+      z2 = A.zone.sky_h
+    end
   end
+
+  if z2 then
+    reqs.height = z2 - z1
+    assert(reqs.height > 0)
+  end
+
 
   -- handle secret closets and joiners to a secret room
   if chunk.is_secret then
