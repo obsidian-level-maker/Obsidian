@@ -513,13 +513,15 @@ function Episode_plan_monsters()
 
     -- base probability : this value is designed to take into account
     -- the settings of the monster control module
-    local prob = (info.damage or 2)
-    prob = prob ^ 0.6
+    local prob = (info.damage or 1)
 
-    local sqrt_dmg = math.sqrt(info.damage)
-
-    if OB_CONFIG.bosses == "easier" then prob = prob / sqrt_dmg end
-    if OB_CONFIG.bosses == "harder" then prob = prob * sqrt_dmg end
+    if OB_CONFIG.bosses == "easier" then
+      prob = prob ^ 0.3
+    elseif OB_CONFIG.bosses == "harder" then
+      prob = prob ^ 1.2
+    else
+      prob = prob ^ 0.6
+    end
 
     if LEV.seen_monsters[info.name] then
       prob = prob / 10
