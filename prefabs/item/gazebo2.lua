@@ -11,6 +11,7 @@ PREFABS.Item_gazebo2 =
 
   env    = "outdoor"
   open_to_sky = 1
+  height = 176
 
   item_kind = "key"
 
