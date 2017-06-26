@@ -6,7 +6,7 @@ PREFABS.Stair_64_red =
 {
   file   = "stairs/stair_64.wad"
 
-  prob  = 20
+  prob  = 10
   theme = "urban"
 
   where  = "seeds"
