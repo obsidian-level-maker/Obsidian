@@ -499,7 +499,7 @@ function Episode_plan_monsters()
     if info.prob <= 0 then return 0 end
 
     -- simply too weak
-    if info.level < 3 then return 0 end
+    if info.health < 45 then return 0 end
 
     if info.weap_min_damage and info.weap_min_damage > LEV.weap_max_damage then return 0 end
 
@@ -516,8 +516,10 @@ function Episode_plan_monsters()
     local prob = (info.damage or 2)
     prob = prob ^ 0.6
 
-    if OB_CONFIG.bosses == "easier" then prob = prob / info.level end
-    if OB_CONFIG.bosses == "harder" then prob = prob * info.level end
+    local sqrt_dmg = math.sqrt(info.damage)
+
+    if OB_CONFIG.bosses == "easier" then prob = prob / sqrt_dmg end
+    if OB_CONFIG.bosses == "harder" then prob = prob * sqrt_dmg end
 
     if LEV.seen_monsters[info.name] then
       prob = prob / 10
@@ -655,7 +657,7 @@ function Episode_plan_monsters()
 
     -- select how many
 
-    local count = LEV.monster_level / info.level
+    local count = 1 + LEV.game_along
 
     if boss_type != "tough" then count = count ^ 1.5 end
 
@@ -726,7 +728,7 @@ function Episode_plan_monsters()
 
     -- select how many
 
-    local count = 3.5 * LEV.monster_level / info.level
+    local count = 2 * (1.5 + LEV.game_along)
 
     -- user quantity setting
     local factor = MONSTER_QUANTITIES[OB_CONFIG.mons] or 1

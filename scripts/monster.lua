@@ -1077,11 +1077,22 @@ function Monster_fill_room(R)
   end
 
 
-  local function calc_strength_factor(info)
-    local factor = (info.level or 1)
+  local function default_level(info)
+    local hp = info.health
 
+    if hp < 45  then return 1 end
+    if hp < 130 then return 3 end
+    if hp < 450 then return 5 end
+
+    return 7
+  end
+
+
+  local function calc_strength_factor(info)
     -- weaker monsters in secrets
-    if R.is_secret then return 1 / factor end
+    if R.is_secret then return 1 / info.damage end
+
+    local factor = default_level(info)
 
     local low  = (10 - factor) / 9
     local high = factor / 9
@@ -1218,9 +1229,7 @@ function Monster_fill_room(R)
       end
 
       -- weaker monsters in secrets
-      if R.is_secret then
-        prob = prob / (info.level or 1)
-      end
+      if R.is_secret then prob = prob / info.damage end
 
       if prob > 0 then
         list[mon] = prob
