@@ -34,7 +34,8 @@ CHANGES IN 7.55
 -  new themes: "Bit Mixed", "Original-ish", "Episode-ish"
 -  new health/ammo settings: "Bit Less" and "Bit More"
 
-!  removed most Engine choices, since they did nothing at all
+!  removed Skulltag engine and modules
+!  removed most other engines, since they did nothing at all
 !  removed "Mode" button in UI, since it did very little
 !  removed the non-standard player things (4001..4004)
 
