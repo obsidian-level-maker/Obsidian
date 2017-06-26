@@ -10,12 +10,13 @@ PREFABS.Start_sky_pad =
   rank   = 2
   prob   = 50
 
+  env    = "outdoor"
+  open_to_sky = 1
+
   where  = "seeds"
   seed_w = 2
   seed_h = 2
 
-  open_to_sky = 1
-
-  x_fit  = "frame"
+  x_fit  = { 72,80, 176,184 }
 }
 
