@@ -171,6 +171,33 @@ void StringRemoveCRLF(char *str)
 }
 
 
+void StringReplaceChar(char *str, char old_ch, char new_ch)
+{
+	// when 'new_ch' is zero, the character is simply removed
+
+	SYS_ASSERT(old_ch != 0);
+
+	char *dest = str;
+
+	while (*str)
+	{
+		if (*str == old_ch)
+		{
+			str++;
+
+			if (new_ch)
+				*dest++ = new_ch;
+		}
+		else
+		{
+			*dest++ = *str++;
+		}
+	}
+
+	*dest = 0;
+}
+
+
 char *mem_gets(char *buf, int size, const char ** str_ptr)
 {
 	// This is like fgets() but reads lines from a string.
@@ -186,7 +213,7 @@ char *mem_gets(char *buf, int size, const char ** str_ptr)
 
 	if (! *p)
 		return NULL;
-	
+
 	char *dest = buf;
 	char *dest_end = dest + (size - 2);
 
@@ -282,7 +309,7 @@ double CalcAngle(double sx, double sy, double ex, double ey)
 
 	double angle = atan2(ey, ex) * 180.0 / M_PI;
 
-	if (angle < 0) 
+	if (angle < 0)
 		angle += 360.0;
 
 	return angle;

@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -167,6 +167,9 @@ void LogReadLines(log_display_func_t display_func, void *priv_data)
 	{
 		// remove any newline at the end (LF or CR/LF)
 		StringRemoveCRLF(buffer);
+
+		// remove any DEL characters (mainly to workaround an FLTK bug)
+		StringReplaceChar(buffer, 0x7f, 0);
 
 		display_func(buffer, priv_data);
 	}

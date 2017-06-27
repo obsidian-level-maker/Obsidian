@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -404,7 +404,9 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) :
 	browser->callback(select_callback, this);
 
 	// disable the special '@' formatting
-	browser->format_char(0);
+	// [ should be zero here, but in FLTK 1.3.4 it causes garbage to be
+	//   displayed.  LogReadLines() ensures 0x7f chars are removed. ]
+	browser->format_char(0x7f);
 
 	resizable(browser);
 
