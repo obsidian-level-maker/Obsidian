@@ -3,14 +3,16 @@ WORK IN PROGRESS
 ================
 
 
+Monsters
+--------
+
++  more sophisticated handling of monster roles
+   [ e.g. eventually use Archviles in cages and traps ]
+
+
+
 Miscellaneous
 -------------
-
->>>  support "sky closets" (require outdoor area on all sides)
-
-+  need a height check for gazebos
-
--  improve the gazebos / sky_pads
 
 -  assign a floor chunk for boss fights
 

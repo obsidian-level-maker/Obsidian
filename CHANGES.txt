@@ -61,4 +61,5 @@ CHANGES IN 7.55
 -  various polishing of the shape rules
 -  DOOM CSG: reworked how railing textures are handled
 -  abbreviated config in OBLIGDAT lump and config manager
+-  fixed issue with garbage characters in the Log Viewer
 
