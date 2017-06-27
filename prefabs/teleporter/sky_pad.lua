@@ -9,6 +9,7 @@ PREFABS.Teleporter_sky_pad =
 
   rank   = 2
   prob   = 50
+  theme  = "!tech"
 
   env    = "outdoor"
   open_to_sky = 1
@@ -21,5 +22,16 @@ PREFABS.Teleporter_sky_pad =
 
   tag_1 = "?out_tag"
   tag_2 = "?in_tag"
+}
+
+
+PREFABS.Teleporter_sky_pad_tech =
+{
+  template = "Teleporter_sky_pad"
+
+  theme = "tech"
+
+  -- replace blue torches with bollard lamps
+  thing_55 = "lamp"
 }
 
