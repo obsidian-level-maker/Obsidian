@@ -99,7 +99,7 @@ HERETIC.ENTITIES =
 
 HERETIC.PLAYER_MODEL =
 {
-  cleric =
+  corvus =
   {
     stats = { health=0 }
     weapons = { staff=1, wand=1 }
