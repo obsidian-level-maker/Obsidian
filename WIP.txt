@@ -9,10 +9,14 @@ Monsters
 +  more sophisticated handling of monster roles
    [ e.g. eventually use Archviles in cages and traps ]
 
+-  a big boss fight every half-episode
+
 
 
 Miscellaneous
 -------------
+
+-  void up cages in secret rooms (most of the time)
 
 -  assign a floor chunk for boss fights
 

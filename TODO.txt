@@ -706,6 +706,8 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
+IDEA : sliders for various settings, tooltip shows exactly how much.
+
 +  info files for addons: addons/<name>.txt
    [ tricky since need to find it inside disabled PK3 files ]
 
