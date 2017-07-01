@@ -60,3 +60,10 @@ CHANGES
    since I find it more readable -- the exclamation mark just
    stands out more.
 
+
+5. Allow string.format '%s' to use __tostring metamethod on a
+   non-string argument, especially tables.  It will also convert
+   other values to strings, such as "nil" and the booleans.
+
+   This was a power-patch by Doug Currie.
+
