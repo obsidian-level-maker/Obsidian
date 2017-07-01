@@ -546,6 +546,10 @@ table.INHERIT_META =
 {
   __index = function(t, k)
     if t.__parent then return t.__parent[k] end
+  end,
+
+  __tostring = function(t)
+    return t.name or tostring(t)
   end
 }
 
