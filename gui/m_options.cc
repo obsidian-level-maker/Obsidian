@@ -73,9 +73,9 @@ static void Parse_Option(const char *name, const char *value)
 	{
 		debug_messages = atoi(value) ? true : false;
 	}
-	else if (StringCaseCmp(name, "last_file") == 0)
+	else if (StringCaseCmp(name, "last_directory") == 0)
 	{
-//???		UI_SetLastFile(value);
+		last_directory = StringDup(value);
 	}
 	else
 	{
@@ -208,7 +208,12 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "overwrite_warning = %d\n", overwrite_warning ? 1 : 0);
 	fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
 
-//???	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
+	if (last_directory)
+	{
+		fprintf(option_fp, "\n");
+		fprintf(option_fp, "last_directory = %s\n", last_directory);
+	}
+
 	fprintf(option_fp, "\n");
 
 	VFS_OptWrite(option_fp);

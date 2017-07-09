@@ -30,6 +30,9 @@
 #include <FL/fl_utf8.h>
 
 
+const char *last_directory = NULL;
+
+
 static int dialog_result;
 
 static void dialog_close_CB(Fl_Widget *w, void *data)
@@ -237,8 +240,8 @@ const char * DLG_OutputFilename(const char *ext, const char *preset)
 
 	chooser.filter(kind_buf);
 
-
-	// TODO: chooser.directory(LAST_USED_DIRECTORY)
+	if (last_directory)
+		chooser.directory(last_directory);
 
 	if (preset)
 		chooser.preset_file(preset);
@@ -267,16 +270,24 @@ const char * DLG_OutputFilename(const char *ext, const char *preset)
 
 	static char filename[FL_PATH_MAX + 16];
 
+	const char *src_name = chooser.filename();
+
 #ifdef WIN32
 	// workaround for accented characters in a username
 	// [ real solution is yet to be determined..... ]
 
-	const char *_srcname = chooser.filename();
-
-	fl_utf8toa(_srcname, strlen(_srcname), filename, sizeof(filename));
+	fl_utf8toa(src_name, strlen(src_name), filename, sizeof(filename));
 #else
-	strcpy(filename, chooser.filename());
+	snprintf(filename, sizeof(filename), "%s", src_name);
 #endif
+
+	// remember the directory for next time
+	static char dir_name[FL_PATH_MAX];
+
+	FilenameGetPath(dir_name, sizeof(dir_name), src_name);
+
+	if (strlen(dir_name) > 0)
+		last_directory = StringDup(dir_name);
 
 	// add extension if missing
 	char *pos = (char *)fl_filename_ext(filename);
@@ -599,6 +610,9 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data)
 	chooser.title(_("Pick file to save to"));
 	chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 	chooser.filter("Text files\t*.txt");
+
+	if (last_directory)
+		chooser.directory(last_directory);
 
 	switch (chooser.show())
 	{
