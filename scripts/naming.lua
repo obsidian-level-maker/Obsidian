@@ -2500,17 +2500,19 @@ function namelib.test()
 end
 
 
-function Naming_grab_one(theme)
-  if not GAME.name_cache then
-    GAME.name_cache = {}
-  end
+function Naming_init()
+  namelib.cache = {}
+end
 
-  local cache = GAME.name_cache
+
+function Naming_grab_one(theme)
+  local cache = namelib.cache
+  assert(cache)
 
   if not cache[theme] or table.empty(cache[theme]) then
-    cache[theme] = namelib.generate(theme, 30, PARAM.max_name_length)
+    cache[theme] = namelib.generate(theme, 30, PARAM.max_name_length or 28)
   end
 
-  return table.remove(GAME.name_cache[theme], 1)
+  return table.remove(namelib.cache[theme], 1)
 end
 

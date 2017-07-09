@@ -1158,6 +1158,12 @@ end
 function ob_build_setup()
   ob_clean_up()
 
+  Naming_init()
+
+  if OB_CONFIG.title then
+    GAME.title = OB_CONFIG.title
+  end
+
   ob_transfer_ui_options()
 
   ob_sort_modules()
