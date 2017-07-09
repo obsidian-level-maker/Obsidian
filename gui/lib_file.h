@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -34,6 +34,9 @@ bool HasExtension(const char *filename);
 bool MatchExtension(const char *filename, const char *ext);
 char *ReplaceExtension(const char *filename, const char *ext);
 const char *FindBaseName(const char *filename);
+
+bool FilenameIsBare(const char *filename);
+void FilenameGetPath(char *dest, size_t maxsize, const char *filename);
 
 // file utilities
 bool FileExists(const char *filename);

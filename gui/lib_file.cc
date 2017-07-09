@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -122,7 +122,9 @@ char *ReplaceExtension(const char *filename, const char *ext)
 {
 	SYS_ASSERT(filename[0] != 0);
 
-	char *buffer = StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
+	size_t total_len = strlen(filename) + (ext ? strlen(ext) : 0);
+
+	char *buffer = StringNew((int)total_len + 10);
 
 	strcpy(buffer, filename);
 
@@ -185,11 +187,22 @@ const char *FindBaseName(const char *filename)
 }
 
 
+bool FilenameIsBare(const char *filename)
+{
+	if (strchr(filename, '.')) return false;
+	if (strchr(filename, '/')) return false;
+	if (strchr(filename, '\\')) return false;
+	if (strchr(filename, ':')) return false;
+
+	return true;
+}
+
+
 void FilenameStripBase(char *buffer)
 {
 	char *pos = buffer + strlen(buffer) - 1;
 
-	for (; pos > buffer; pos--)
+	for (; pos > buffer ; pos--)
 	{
 		if (*pos == '/')
 			break;
@@ -213,6 +226,32 @@ void FilenameStripBase(char *buffer)
 }
 
 
+void FilenameGetPath(char *dest, size_t maxsize, const char *filename)
+{
+	size_t len = (size_t)(FindBaseName(filename) - filename);
+
+	// remove trailing slash (except when following "C:" or similar)
+	if (len >= 1 &&
+		(filename[len-1] == '/' || filename[len-1] == '\\') &&
+		! (len >= 2 && filename[len-2] == ':'))
+	{
+		len--;
+	}
+
+	if (len == 0)
+	{
+		strcpy(dest, ".");
+		return;
+	}
+
+	if (len >= maxsize)
+		len =  maxsize - 1;
+
+	strncpy(dest, filename, len);
+	dest[len] = 0;
+}
+
+
 bool FileCopy(const char *src_name, const char *dest_name)
 {
 	char buffer[1024];
@@ -230,11 +269,11 @@ bool FileCopy(const char *src_name, const char *dest_name)
 
 	while (true)
 	{
-		int rlen = fread(buffer, 1, sizeof(buffer), src);
-		if (rlen <= 0)
+		size_t rlen = fread(buffer, 1, sizeof(buffer), src);
+		if (rlen == 0)
 			break;
 
-		int wlen = fwrite(buffer, 1, rlen, dest);
+		size_t wlen = fwrite(buffer, 1, rlen, dest);
 		if (wlen != rlen)
 			break;
 	}
