@@ -16,8 +16,6 @@ Monsters
 Miscellaneous
 -------------
 
-+  use GAME.title for the default wad filename
-
 -  void up cages in secret rooms (most of the time)
 
 -  assign a floor chunk for boss fights
