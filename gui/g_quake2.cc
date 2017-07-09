@@ -1099,7 +1099,7 @@ public:
 	~quake2_game_interface_c()
 	{ }
 
-	bool Start();
+	bool Start(const char *preset);
 	bool Finish(bool build_ok);
 
 	void BeginLevel();
@@ -1108,7 +1108,7 @@ public:
 };
 
 
-bool quake2_game_interface_c::Start()
+bool quake2_game_interface_c::Start(const char *preset)
 {
 	qk_game = 2;
 	qk_sub_format = 0;

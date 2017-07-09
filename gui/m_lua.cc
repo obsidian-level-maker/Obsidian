@@ -1364,7 +1364,7 @@ bool ob_read_all_config(std::vector<std::string> * lines, bool need_full)
 }
 
 
-const char * ob_game_format(void)
+const char * ob_game_format()
 {
 	if (! Script_CallFunc("ob_game_format", 1))
 		return NULL;
@@ -1381,7 +1381,24 @@ const char * ob_game_format(void)
 }
 
 
-bool ob_build_cool_shit(void)
+const char * ob_get_title_name()
+{
+	if (! Script_CallFunc("ob_get_title_name", 1))
+		return NULL;
+
+	const char *res = lua_tolstring(LUA_ST, -1, NULL);
+
+	if (res)
+		res = StringDup(res);
+
+	// remove result from lua stack
+	lua_pop(LUA_ST, 1);
+
+	return res;
+}
+
+
+bool ob_build_cool_shit()
 {
 	if (! Script_CallFunc("ob_build_cool_shit", 1))
 	{

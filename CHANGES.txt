@@ -4,6 +4,7 @@ CHANGES IN 7.55
 
 +  UI: big revamp, two scrolling columns of modules
 -  UI: main window can be vertically resized
+-  UI: default save filename is the generated title name
 -  UI: option to use mousewheel to change settings
 -  UI: option to disable the overwrite-file warning
 -  UI: the "Use" button in config manager now sets the seed too

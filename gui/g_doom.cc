@@ -698,7 +698,7 @@ public:
 		StringFree(filename);
 	}
 
-	bool Start();
+	bool Start(const char *preset);
 	bool Finish(bool build_ok);
 
 	void BeginLevel();
@@ -710,7 +710,7 @@ private:
 };
 
 
-bool doom_game_interface_c::Start()
+bool doom_game_interface_c::Start(const char *preset)
 {
 	dm_sub_format = 0;
 
@@ -721,7 +721,7 @@ bool doom_game_interface_c::Start()
 	if (batch_mode)
 		filename = StringDup(batch_output_file);
 	else
-		filename = DLG_OutputFilename("wad");
+		filename = DLG_OutputFilename("wad", preset);
 
 	if (! filename)
 	{

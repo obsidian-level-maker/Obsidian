@@ -364,7 +364,7 @@ public:
   ~wolf_game_interface_c()
   { }
 
-  bool Start();
+  bool Start(const char *preset);
   bool Finish(bool build_ok);
 
   void BeginLevel();
@@ -377,7 +377,7 @@ private:
 };
 
 
-bool wolf_game_interface_c::Start()
+bool wolf_game_interface_c::Start(const char *preset)
 {
   WF_FreeStuff();
 

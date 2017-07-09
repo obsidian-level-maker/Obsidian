@@ -621,10 +621,13 @@ bool Build_Cool_Shit()
 
 	u32_t start_time = TimeGetMillies();
 
-	bool was_ok = game_object->Start();
+	const char *title = ob_get_title_name();
+
+	// this will ask for output filename (among other things)
+	bool was_ok = game_object->Start(title);
 
 	// coerce FLTK to redraw the main window
-	for (int r_loop = 0; r_loop < 6; r_loop++)
+	for (int r_loop = 0 ; r_loop < 6 ; r_loop++)
 		Fl::wait(0.06);
 
 	if (was_ok)

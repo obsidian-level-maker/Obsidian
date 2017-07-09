@@ -81,7 +81,7 @@ void Main_Ticker();
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
-const char * DLG_OutputFilename(const char *ext);
+const char * DLG_OutputFilename(const char *ext, const char *preset = NULL);
 
 void DLG_AboutText(void);
 void DLG_OptionsEditor(void);
@@ -108,7 +108,10 @@ public:
 	// this selects an output filename or directory and prepares
 	// for building a set of levels.  Returns false if an error
 	// occurs (or the user simply Cancel'd).
-	virtual bool Start() = 0;
+	//
+	// when 'preset' parameter is not NULL, it is a filename to
+	// use in the save dialog.
+	virtual bool Start(const char *preset) = 0;
 
 	// this is called after all levels are done.  The 'build_ok'
 	// value is the result from the LUA script, and is false if

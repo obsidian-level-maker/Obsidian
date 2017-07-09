@@ -475,7 +475,7 @@ public:
 		StringFree(filename);
 	}
 
-	bool Start();
+	bool Start(const char *preset);
 	bool Finish(bool build_ok);
 
 	void BeginLevel();
@@ -486,7 +486,7 @@ private:
 };
 
 
-bool nukem_game_interface_c::Start()
+bool nukem_game_interface_c::Start(const char *preset)
 {
 	if (batch_mode)
 		filename = StringDup(batch_output_file);

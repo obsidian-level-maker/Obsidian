@@ -210,7 +210,7 @@ void DLG_ShowError(const char *msg, ...)
 //----------------------------------------------------------------------
 
 
-const char * DLG_OutputFilename(const char *ext)
+const char * DLG_OutputFilename(const char *ext, const char *preset)
 {
 	char kind_buf[200];
 
@@ -239,6 +239,9 @@ const char * DLG_OutputFilename(const char *ext)
 
 
 	// TODO: chooser.directory(LAST_USED_DIRECTORY)
+
+	if (preset)
+		chooser.preset_file(preset);
 
 
 	int result = chooser.show();

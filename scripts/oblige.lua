@@ -978,6 +978,27 @@ function ob_game_format()
 end
 
 
+
+function ob_get_title_name()
+  assert(OB_CONFIG)
+  assert(OB_CONFIG.game)
+
+  gui.rand_seed(OB_CONFIG.seed + 0)
+
+  Naming_init()
+
+  OB_CONFIG.title = Naming_grab_one("TITLE")
+
+  -- massage into a usable filename
+  local str = string.lower(OB_CONFIG.title)
+
+  str = string.gsub(str, "%p", "")
+  str = string.gsub(str, " ", "_")
+
+  return str
+end
+
+
 ------------------------------------------------------------------------
 
 

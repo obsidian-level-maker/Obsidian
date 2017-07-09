@@ -210,8 +210,13 @@ end
 
 function Episode_pick_names()
   -- game name (for title screen)
-  GAME.title     = Naming_grab_one("TITLE")
-  GAME.sub_title = Naming_grab_one("SUB_TITLE")
+  if not GAME.title then
+    GAME.title = Naming_grab_one("TITLE")
+  end
+
+  if not GAME.sub_itle then
+    GAME.sub_title = Naming_grab_one("SUB_TITLE")
+  end
 
   gui.printf("Game title: %s\n\n", GAME.title)
   gui.printf("Game sub-title: %s\n\n", GAME.sub_title)
