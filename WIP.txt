@@ -3,6 +3,9 @@ WORK IN PROGRESS
 ================
 
 
+BUG : can use mousewheel to change settings WHEN OPTION IS DISABLED ?
+
+
 Monsters
 --------
 
