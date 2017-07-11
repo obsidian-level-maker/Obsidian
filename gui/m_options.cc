@@ -412,7 +412,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 
 	opt_wheel_bump = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), _(" Change Settings via Mouse Wheel"));
-	opt_wheel_bump->value(alternate_look ? 1 : 0);
+	opt_wheel_bump->value(wheel_can_bump ? 1 : 0);
 	opt_wheel_bump->callback(callback_AltLook, this);
 
 	cy += opt_wheel_bump->h() + y_step;
