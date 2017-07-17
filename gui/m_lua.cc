@@ -1381,9 +1381,9 @@ const char * ob_game_format()
 }
 
 
-const char * ob_get_title_name()
+const char * ob_default_filename()
 {
-	if (! Script_CallFunc("ob_get_title_name", 1))
+	if (! Script_CallFunc("ob_default_filename", 1))
 		return NULL;
 
 	const char *res = lua_tolstring(LUA_ST, -1, NULL);

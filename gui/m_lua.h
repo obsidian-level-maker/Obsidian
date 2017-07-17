@@ -48,7 +48,7 @@ bool ob_set_mod_option(const char *module, const char *option,
 bool ob_read_all_config(std::vector<std::string> * lines, bool need_full);
 
 const char * ob_game_format();
-const char * ob_get_title_name();
+const char * ob_default_filename();
 
 bool ob_build_cool_shit();
 

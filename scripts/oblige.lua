@@ -979,7 +979,9 @@ end
 
 
 
-function ob_get_title_name()
+function ob_default_filename()
+  -- create a default filename [ WITHOUT any extension ]
+
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
