@@ -19,7 +19,7 @@ CHANGES IN 7.55
 
 +  hallways
 
-+  sky generator: much better looking mountains
++  sky generator makes better looking mountains
 
 +  more variety of window prefabs
 
