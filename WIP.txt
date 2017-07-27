@@ -6,8 +6,6 @@ WORK IN PROGRESS
 Miscellaneous
 -------------
 
--  void up cages in secret rooms (most of the time)
-
 -  get posts working with rail junctions again
 
 -  scenic: need posts where two different floor heights meet

@@ -2378,13 +2378,13 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function kill_start_cages(R)
+  local function kill_cages(R, want_void)
     -- turn cages in start rooms into a plain floor
 
     each A in R.areas do
       if A.mode != "cage" then continue end
 
-      if R.is_park or R.is_cave then
+      if R.is_park or R.is_cave or want_void then
         A.mode = "void"
         continue
       end
@@ -2491,7 +2491,12 @@ function Room_floor_ceil_heights()
 
   local function do_cage_areas(R)
     if R.is_start then
-      kill_start_cages(R)
+      kill_cages(R)
+      return
+    end
+
+    if R.is_secret and rand.odds(90) then
+      kill_cages(R, "want_void")
       return
     end
 
