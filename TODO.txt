@@ -7,11 +7,11 @@ OBLIGE TO-DO
   RECENT STUFF
 ----------------------------------------------
 
-+  ability to truly add new textures
++  add in more scenery, computers etc
+
+-  ability to truly add new textures
    -  use TX_START/TX_END in ZDoom ports
    -  use TEXTURES2 + PNAMES in other ports
-
-+  add in more scenery: trees, computers etc
 
 -  sprouts from symmetrical rooms : often skip a side
 
