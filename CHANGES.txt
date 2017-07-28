@@ -19,8 +19,6 @@ CHANGES IN 7.666
 
 +  hallways
 
-+  sky generator makes better looking mountains
-
 +  more variety of window prefabs
 
 +  ensure a secret exit can always be placed
@@ -28,10 +26,9 @@ CHANGES IN 7.666
 -  support secret weapons (available earlier than usual)
 
 +  add barrels, blood and corpses to rooms
-
 -  fixed large teleport-in monsters getting stuck
-
 -  support for the Quake3 map format in the CSG code
+-  sky generator makes better looking mountains
 
 -  new "Ramp Up" and "Bosses" buttons for monster panel
 -  new themes: "Bit Mixed", "Original-ish", "Episode-ish"
