@@ -1750,7 +1750,7 @@ ULTDOOM.ROOM_THEMES =
 
     walls =
     {
-      FIREBLU2 = 50
+      FIREBLU1 = 50
       FIREWALL = 50
       SKSPINE2 = 50
       SKIN2    = 50

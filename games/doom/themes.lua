@@ -1668,7 +1668,7 @@ DOOM.ROOM_THEMES =
       WOODMET4 = 10
       SW1LION  =  5
       REDWALL  =  5
-      FIREBLU2 =  5
+      FIREBLU1 =  5
     }
 
     floors =
