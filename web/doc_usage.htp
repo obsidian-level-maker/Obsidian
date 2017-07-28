@@ -228,7 +228,7 @@ pre-existing config file.
 Here is a simple example:
 
 <div class="legal">
-Oblige --batch OUTPUT.wad game=doom2 length=episode theme=tech
+Oblige --batch OUTPUT.wad game=doom2 length=episode theme=hell
 </div>
 
 <p>
