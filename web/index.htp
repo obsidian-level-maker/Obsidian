@@ -29,7 +29,7 @@ The goal is to produce high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 7.50 is the current stable version.
+OBLIGE 7.666 is the current stable version.
 
 <p>
 <i>(Note: this version only supports the DOOM games.
@@ -39,8 +39,57 @@ For other games please try version 4.28)
 
 <h3>NEWS</h3>
 
+<div class="newsdate">29-Jul-2017:</div>
+<blockquote class="news">
+I am happy to announce that version 7.666 of OBLIGE
+has been released.
+
+<p>
+The user interface got a major revamp in this version.
+There are now two scrolling columns for modules, and
+some of the panels are now fully defined in the Lua code
+(previously they were hard-coded in the C++ code).
+Also the main window can be vertically resized now.
+The default save filename is based on the generated
+titlepic name.
+There is also an option to change settings using the
+mousewheel.
+
+<p>
+Another significant change is the new "Park" rooms, which are
+naturalistic outdoor areas with trees, liquid pools, etc....
+Hallways have made a come-back in this version,
+as well as a larger variety of window shapes,
+and rooms are decorated with barrels, blood and corpses
+sprinkled around.
+There is a new "Ramp Up" and "Bosses" buttons in the UI
+for extra control over monsters, some levels have triple-key
+doors and remote-switched doors, and the sky generator is
+making better looking mountains.
+
+<p>
+For the full list of changes, please see the
+<a href="doc_history.html#changes7666">Change Log</a>.
+
+<p>
+On a sadder note, I don't intend to continue developing
+OBLIGE any further.
+I have been working on this program for over 12 years now,
+and to be honest I have grown very tired of it.
+So I would like to thank everyone who contributed to
+OBLIGE, all the people who tested things and provided feedback,
+it has all been very helpful.  THANKS EVERYONE!
+
+</blockquote>
+
+
+<!--- ------------------------------------ --->
+
+<hr style="clear: right;">
+
 <div class="newsdate">27-Sep-2016:</div>
 <blockquote class="news">
+
 I am delighted to announce that version 7.50 of OBLIGE
 has been released!
 
