@@ -1,6 +1,6 @@
 
-CHANGES IN 7.55
-===============
+CHANGES IN 7.666
+================
 
 +  UI: big revamp, two scrolling columns of modules
 -  UI: main window can be vertically resized
