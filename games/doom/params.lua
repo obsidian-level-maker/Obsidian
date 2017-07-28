@@ -17,8 +17,6 @@ DOOM.PARAMETERS =
 
   jump_height = 24
 
-  map_limit = 12800
-
   -- this is roughly how many characters can fit on the
   -- intermission screens (the CWILVxx patches).  It does not
   -- reflect any buffer limits in the DOOM.EXE
