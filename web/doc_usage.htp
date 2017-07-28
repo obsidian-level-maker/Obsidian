@@ -57,11 +57,13 @@ running OBLIGE.  See below for more information)
 <h3 id="window">WINDOW LAYOUT</h3>
 
 The following diagram shows the GUI for OBLIGE.
-You can see that the window is divided into five distinct panels.
+You can see that the window is divided into three distinct columns,
+and each columns contains several panels.
+Two of the columns can be scrolled.
 The panels are discussed in separate sections below.
 
 <div class="guioverview">
-<img src="gui_overview.png" width="627" height="415" border="0" alt="SCREENSHOT">
+<img src="gui_overview.png" width="704" height="495" border="0" alt="SCREENSHOT">
 </div>
 
 
@@ -72,19 +74,31 @@ The panels are discussed in separate sections below.
 The top left panel contains the most important settings.
 
 <p>
-These settings include:
-<ul>
-  <li>the <span class="button">Game</span> type (DOOM, HERETIC, etc...)
-  <li>the <span class="button">Mode</span> of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
-  <li>the <span class="button">Length</span> of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
-</ul>
+These settings include
+the <span class="button">Game</span> to build for
+(currently limited to the DOOM family of games),
+and the <span class="button">Length</span> of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
+
+<p>
+The <span class="button">Theme</span> button has several
+normal themes and also some special settings.
+The "Jumbled" setting means each map's theme is chosen purely
+randomly (and usually different from the last), where
+"A Bit Mixed" means groups of 2-4 maps
+have the same theme before choosing a new one.
+
+The "Original" setting causes the themes in each episode
+to try and match the original game, where
+the "xxx-ish" settings mean you get mostly "xxx" but with
+a different theme thrown in occasionally.
 
 
-<h3 id="level">LEVEL ARCHITECTURE</h3>
+<h3 id="level">ARCHITECTURE PANEL</h3>
 
 The Level Architecture panel lets you control general features
-of the maps, like what size they should be, what theme to use,
-and how many outdoor areas and caves to make.
+of the maps, like what size they should be,
+how many outdoor areas and caves to make.
+Even more control is available in the Miscellaneous module.
 
 <p>
 Choosing "Mix It Up" as a setting means that each map
@@ -92,23 +106,10 @@ will get different values, chosen at random.
 For example, using it with the <span class="button">Size</span> button
 causes the maps to be a mixture of small, regular and large.
 
-<p>
-For the <span class="button">Theme</span> button
-the "A Bit Mixed" setting means each whole episode will stick to a
-single theme, but the episodes will have different themes.
-Constrast with the "Jumbled Up" setting which means every
-map can have a different theme.
 
-<p>
-The "As Original" setting causes the themes in each episode
-to try and match the original game.
-Note that this may not always be possible, especially when
-there are new or custom themes present.
+<h3 id="playing">MONSTERS and PICKUPS</h3>
 
-
-<h3 id="playing">PLAYING STYLE</h3>
-
-This panel is all about the gameplay.
+These two panels are all about the gameplay.
 Here you can control the quantity and strength of the
 monsters, how much health and ammunition should be added,
 etc....
@@ -124,6 +125,8 @@ monsters and the "Tough" setting gives tougher ones.
 Note that the toughness increases over the course of an episode
 or game, it starts off quite weak and ramps up to the
 chosen setting by the end.
+How fast this ramping up occurs can be controlled by the
+<span class="button">Ramp Up</span> button.
 
 <p>
 The "Crazy" strength setting works a bit differently.
@@ -133,7 +136,7 @@ Be warned though, playing maps on this setting can actually
 drive you insane.
 
 
-<h3 id="modules">MODULES PANEL</h3>
+<h3 id="modules">OTHER MODULES</h3>
 
 Modules allow for additional customisation of various
 aspects of the level generation process, or to support
@@ -160,16 +163,6 @@ button.
 Changing the current game or the current engine
 can cause some modules to appear and/or other modules
 to disappear.
-
-<p>
-The Level Control module is always available and provides
-numerous things you may want to control.
-Especially useful are the
-<span class="button">Secrets</span> and
-<span class="button">Traps</span> buttons.
-For most modules, the "DEFAULT" setting means that
-OBLIGE will simply do what it normally does.
-
 
 <h3 id="build">BUILD PANEL</h3>
 
@@ -217,8 +210,8 @@ created WAD files) and saving the settings to a new file.
 Note that settings in the Options and Addon windows typically
 require OBLIGE to be restarted before they take effect.
 Changes to add-ons mean that all the Lua scripts that OBLIGE
-has loaded are now invalidated, hence OBLIGE is forced to
-shut down.
+has loaded are now invalidated, hence OBLIGE must be shut down
+and restarted.
 
 
 

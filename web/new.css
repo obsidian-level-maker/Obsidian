@@ -87,6 +87,7 @@ B { color: #742; }
     color: #393;
     font-weight: bold;
     font-family: monospace;
+    font-size: larger;
 }
 
 .newsdate { font-weight: bold; color: #742; }
