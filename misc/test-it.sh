@@ -27,8 +27,8 @@ index=$(($RANDOM % 5))
 def_game=${GAMES[$index]}
 
 declare -a ENGINES
-ENGINES=("nolimit" "boom" "edge" "legacy" "zdoom" "gzdoom")
-index=$(($RANDOM % 6))
+ENGINES=("nolimit" "boom" "zdoom" "gzdoom")
+index=$(($RANDOM % 4))
 def_engine=${ENGINES[$index]}
 
 declare -a SIZES
@@ -37,8 +37,8 @@ index=$(($RANDOM % 6))
 def_size=${SIZES[$index]}
 
 declare -a THEMES
-THEMES=("mixed" "jumble" "original")
-index=$(($RANDOM % 3))
+THEMES=("bit_mixed" "jumble" "original" "epi" "mostly_tech", "mostly_hell", "mostly_original")
+index=$(($RANDOM % 7))
 def_theme=${THEMES[$index]}
 
 set -x
