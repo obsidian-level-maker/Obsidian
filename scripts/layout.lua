@@ -2083,7 +2083,7 @@ end
 
 function Layout_handle_corners()
 
-  local function need_fencepost(corner) --OLD
+  local function need_fencepost__OLD(corner)
     --
     -- need a fence post where :
     --   1. three or more areas meet (w/ different heights)
@@ -2139,16 +2139,50 @@ function Layout_handle_corners()
   end
 
 
+  local function check_need_fencepost(corner)
+    -- already used?
+    if corner.kind then return end
+
+    -- cannot place posts next to a wall
+    if Corner_touches_wall(corner) then return end
+
+    -- see if we have multiple railings at different heights, and
+    -- if so then determine highest one.
+    local rail_z
+    local need_post
+
+    each junc in corner.junctions do
+      if junc.A2 == "map_edge" then return end
+      if not junc.E1 then continue end
+
+      if junc.E1.kind != "railing" then continue end
+
+      local cur_z = assert(junc.E1.rail_z)
+      cur_z = int(cur_z)
+
+      if not rail_z then
+        rail_z = cur_z
+        continue
+      end
+
+      if cur_z ~= rail_z then
+        need_post = true
+      end
+
+      rail_z = math.max(rail_z, cur_z)
+    end
+
+    if need_post then
+      corner.kind = "post"
+      corner.post_top_h = rail_z + 76
+    end
+  end
+
+
   local function check_corner(cx, cy)
     local corner = Corner_lookup(cx, cy)
 
-    if not corner.kind and
-       #corner.areas > 1 and
-       near_porch(corner) and
-       not Corner_touches_wall(corner)
-    then
-      corner.kind = "post"
-    end
+    check_need_fencepost(corner)
   end
 
 

@@ -3,11 +3,3 @@ WORK IN PROGRESS
 ================
 
 
-Miscellaneous
--------------
-
--  get posts working with rail junctions again
-
--  scenic: need posts where two different floor heights meet
-
-

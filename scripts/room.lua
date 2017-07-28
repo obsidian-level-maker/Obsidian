@@ -2356,6 +2356,8 @@ function Room_floor_ceil_heights()
         A.floor_h  = N.floor_h - 16
         A.ceil_h   = N.ceil_h
         A.ceil_mat = N.ceil_mat
+
+        A.max_floor_h = N.floor_h
       end
     end
   end

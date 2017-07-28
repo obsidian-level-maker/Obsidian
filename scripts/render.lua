@@ -972,9 +972,6 @@ function Render_corner(cx, cy)
   elseif corner.kind == "post" then
     make_post()
 
-  elseif corner.kind == "pillar" then
-    make_pillar()
-
   else
     error("Unknown corner kind: " .. tostring(corner.kind))
   end
