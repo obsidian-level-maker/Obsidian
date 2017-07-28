@@ -11,15 +11,3 @@ Miscellaneous
 -  scenic: need posts where two different floor heights meet
 
 
-
-Web Site
---------
-
--  update Usage page on THEME setting, e.g.:
-
-   the "Jumbled" theme setting means each map's theme is chosen purely
-   randomly (and usually different from the last), where "bit mixed" means groups of maps (2-4)
-   have the same theme before choosing a new (random) one.  The "xxx-ish"
-   settings means you get mostly "xxx" but with an occasionally different one
-   thrown in.
-
