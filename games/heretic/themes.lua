@@ -40,6 +40,16 @@ HERETIC.THEMES =
       REDWALL  = 60
     }
 
+    floor_sinks =
+    {
+      PLAIN = 50
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 50
+    }
+
     -- FIXME: temporary crud
     steps_mat = "FLOOR10"
     no_doors = true
