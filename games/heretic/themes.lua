@@ -35,9 +35,16 @@ HERETIC.THEMES =
       ROOTWALL = 50
     }
 
+    cage_mats =
+    {
+      REDWALL  = 60
+    }
+
     -- FIXME: temporary crud
     steps_mat = "FLOOR10"
     no_doors = true
+
+
   }
 
 
