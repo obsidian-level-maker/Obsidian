@@ -50,10 +50,7 @@ HERETIC.THEMES =
       PLAIN = 50
     }
 
-    -- FIXME: temporary crud
     steps_mat = "FLOOR10"
-    no_doors = true
-
 
   }
 
