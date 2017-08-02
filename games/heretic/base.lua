@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ HERETIC.PARAMETERS =
 
 ------------------------------------------------------------
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = _("Heretic")
   priority = 38
