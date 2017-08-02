@@ -1,11 +1,10 @@
 ------------------------------------------------------------------------
---  BASE FILE for HERETIC
+--  HERETIC PARAMETERS and ACTIONS
 ------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -19,42 +18,21 @@
 --
 ------------------------------------------------------------------------
 
-HERETIC = { }
-
-
-gui.import("params")
-
-gui.import("entities")
-gui.import("monsters")
-gui.import("pickups")
-gui.import("weapons")
-
-gui.import("materials")
-gui.import("themes")
-gui.import("levels")
-gui.import("resources")
-
-
-------------------------------------------------------------
-
-OB_GAMES["heretic"] =
+HERETIC.PARAMETERS =
 {
-  label = _("Heretic")
-  priority = 38
+  teleporters = true
 
-  format = "doom"
-  game_dir = "heretic"
-  iwad_name = "heretic.wad"
+  jump_height = 24
 
-  tables =
-  {
-    HERETIC
-  }
+  max_name_length = 28
 
-  hooks =
-  {
-    get_levels = HERETIC.get_levels
-    all_done   = HERETIC.all_done
-  }
+  skip_monsters = { 20,30 }
+
+  episodic_monsters = true
+
+  monster_factor = 1.0
+  health_factor  = 1.0
+  ammo_factor    = 1.0
+  time_factor    = 1.0
 }
 
