@@ -202,9 +202,14 @@ HERETIC.ROOM_THEMES =
     env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
     {
-      LOOSERCK=20, LAVA1=20, BRWNRCKS=20
+      LOOSERCK=20, BRWNRCKS=20
+    }
+
+    floors =
+    {
+      LOOSERCK=20, BRWNRCKS=20
     }
   }
 
@@ -339,9 +344,14 @@ HERETIC.ROOM_THEMES =
     env  = "cave"
     prob = 50
 
-    naturals =
+    walls =
     {
-      LOOSERCK=20, LAVA1=20, BRWNRCKS=20
+      LOOSERCK=20, BRWNRCKS=20
+    }
+
+    floors =
+    {
+      LOOSERCK=20, BRWNRCKS=20
     }
   }
 
