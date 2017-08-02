@@ -19,7 +19,7 @@ HERETIC.PICKUPS =
   h_vial =
   {
     id = 81
-    prob = 70
+    add_prob = 70
     rank = 1
     cluster = { 1,4 }
     give = { {health=10} }
@@ -28,7 +28,7 @@ HERETIC.PICKUPS =
   h_flask =
   {
     id = 82
-    prob = 25
+    add_prob = 25
     rank = 2
     give = { {health=25} }
   }
@@ -36,7 +36,7 @@ HERETIC.PICKUPS =
   h_urn =
   {
     id = 32
-    prob = 5
+    add_prob = 5
     rank = 3
     give = { {health=100} }
   }
@@ -47,7 +47,7 @@ HERETIC.PICKUPS =
   shield1 =
   {
     id = 85
-    prob = 20
+    add_prob = 20
     rank = 2
     give = { {health=50} }
   }
@@ -55,7 +55,7 @@ HERETIC.PICKUPS =
   shield2 =
   {
     id = 31
-    prob = 5
+    add_prob = 5
     rank = 3
     give = { {health=100} }
   }
@@ -66,7 +66,7 @@ HERETIC.PICKUPS =
   crystal =
   {
     id = 10
-    prob = 20
+    add_prob = 20
     rank = 0
     cluster = { 1,4 }
     give = { {ammo="crystal",count=10} }
@@ -75,7 +75,7 @@ HERETIC.PICKUPS =
   geode =
   {
     id = 12
-    prob = 40
+    add_prob = 40
     rank = 1
     give = { {ammo="crystal",count=50} }
   }
@@ -83,7 +83,7 @@ HERETIC.PICKUPS =
   arrow =
   {
     id = 18
-    prob = 20
+    add_prob = 20
     rank = 0
     cluster = { 1,3 }
     give = { {ammo="arrow",count=5} }
@@ -92,7 +92,7 @@ HERETIC.PICKUPS =
   quiver =
   {
     id = 19
-    prob = 40
+    add_prob = 40
     rank = 1
     give = { {ammo="arrow",count=20} }
   }
@@ -100,7 +100,7 @@ HERETIC.PICKUPS =
   claw_orb1 =
   {
     id = 54
-    prob = 20
+    add_prob = 20
     rank = 0
     cluster = { 1,3 }
     give = { {ammo="claw_orb",count=10} }
@@ -109,7 +109,7 @@ HERETIC.PICKUPS =
   claw_orb2 =
   {
     id = 55
-    prob = 40
+    add_prob = 40
     rank = 1
     give = { {ammo="claw_orb",count=25} }
   }
@@ -117,7 +117,7 @@ HERETIC.PICKUPS =
   runes1 =
   {
     id = 20
-    prob = 20
+    add_prob = 20
     rank = 1
     cluster = { 1,4 }
     give = { {ammo="rune",count=20} }
@@ -126,7 +126,7 @@ HERETIC.PICKUPS =
   runes2 =
   {
     id = 21
-    prob = 40
+    add_prob = 40
     rank = 2
     give = { {ammo="rune",count=100} }
   }
@@ -134,7 +134,7 @@ HERETIC.PICKUPS =
   flame_orb1 =
   {
     id = 22
-    prob = 20
+    add_prob = 20
     rank = 0
     cluster = { 2,5 }
     give = { {ammo="flame_orb",count=1} }
@@ -143,7 +143,7 @@ HERETIC.PICKUPS =
   flame_orb2 =
   {
     id = 23
-    prob = 40
+    add_prob = 40
     rank = 1
     give = { {ammo="flame_orb",count=10} }
   }
@@ -151,7 +151,7 @@ HERETIC.PICKUPS =
   mace_orb1 =
   {
     id = 13
-    prob = 20
+    add_prob = 20
     rank = 1
     cluster = { 1,4 }
     give = { {ammo="mace_orb",count=20} }
@@ -160,7 +160,7 @@ HERETIC.PICKUPS =
   mace_orb2 =
   {
     id = 16
-    prob = 40
+    add_prob = 40
     rank = 2
     give = { {ammo="mace_orb",count=100} }
   }
