@@ -200,8 +200,9 @@ function Fab_load_all_definitions()
 
   PREFABS = {}
 
---TODO: visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
-  visit_dir("prefabs")
+  assert(GAME.game_dir)
+
+  visit_dir("games/" .. GAME.game_dir .. "/fabs")
 
   preprocess_all()
 end
