@@ -1415,54 +1415,6 @@ SPROUT_JOINER_2x1 =
 }
 
 
-SPROUT_JOINER_3x1 =
-{
-  prob = 1500
-
-  structure =
-  {
-    ".....", ".RRR."
-    ".....", ".RRR."
-    "x...x", "xJJJx"
-    "x111x", "x111x"
-  }
-
-  new_room =
-  {
-    symmetry = { x=3, y=3, dir=8 }
-  }
-
-  joiner =
-  {
-    from_dir = 2
-  }
-}
-
-
-SPROUT_JOINER_4x1 =
-{
-  prob = 3000
-
-  structure =
-  {
-    "....", "RRRR"
-    "....", "RRRR"
-    "....", "JJJJ"
-    "1111", "1111"
-  }
-
-  new_room =
-  {
-    symmetry = { x=2, y=3, w=2, dir=8 }
-  }
-
-  joiner =
-  {
-    from_dir = 2
-  }
-}
-
-
 SPROUT_JOINER_2x2 =
 {
   prob = 100
@@ -1486,59 +1438,6 @@ SPROUT_JOINER_2x2 =
     from_dir = 2
   }
 }
-
-
-SPROUT_JOINER_3x2 =
-{
-  prob = 3000
-
-  structure =
-  {
-    ".....", ".RRR."
-    ".....", ".RRR."
-    "x...x", "xJJJx"
-    "x...x", "xJJJx"
-    "x111x", "x111x"
-  }
-
-  new_room =
-  {
-    symmetry = { x=3, y=4, dir=8 }
-  }
-
-  joiner =
-  {
-    from_dir = 2
-  }
-}
-
-
---[[ disabled for Heretic
-
-SPROUT_JOINER_L =
-{
-  prob = 30
-
-  structure =
-  {
-    "....", "####"
-    "....", "RRJJ"
-    "....", "RRJJ"
-    "xx11", "xx11"
-  }
-
-  new_room =
-  {
-  }
-
-  joiner =
-  {
-    shape = "L"
-    from_dir = 2
-    dest_dir = 4
-  }
-}
---]]
 
 
 SPROUT_TELEPORTER_2x2 =
@@ -1937,64 +1836,6 @@ SPROUT_JOINER_2x1_cave =
     from_dir = 2
   }
 }
-
-
-SPROUT_JOINER_3x1_cave =
-{
-  prob = 2000
-
-  structure =
-  {
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    "x...x", "xJJJx"
-    "x111x", "x111x"
-  }
-
-  new_room =
-  {
-    env = "cave"
-  }
-
-  joiner =
-  {
-    from_dir = 2
-  }
-}
-
-
---[[ disabled for now....
-
-SPROUT_JOINER_3x2_cave =
-{
-  prob = 4000
-
-  structure =
-  {
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    ".....", "RRRRR"
-    "x...x", "xJJJx"
-    "x...x", "xJJJx"
-    "x111x", "x111x"
-  }
-
-  new_room =
-  {
-    env = "cave"
-  }
-
-  joiner =
-  {
-    from_dir = 2
-  }
-}
---]]
 
 
 CAVE_GROW_3x1 =
