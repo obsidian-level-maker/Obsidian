@@ -1513,6 +1513,8 @@ SPROUT_JOINER_3x2 =
 }
 
 
+--[[ disabled for Heretic
+
 SPROUT_JOINER_L =
 {
   prob = 30
@@ -1536,6 +1538,7 @@ SPROUT_JOINER_L =
     dest_dir = 4
   }
 }
+--]]
 
 
 SPROUT_TELEPORTER_2x2 =
