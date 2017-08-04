@@ -9,8 +9,5 @@ PREFABS.Start_basic =
   prob   = 50
 
   where  = "point"
-
-  flat_FLAT22 = "O_BOLT"
-  tex_SHAWN2  = "O_BOLT"
 }
 
