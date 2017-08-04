@@ -26,6 +26,9 @@ HERETIC.PARAMETERS =
 
   max_name_length = 28
 
+  titlepic_lump   = "TITLE"
+  titlepic_format = "raw"
+
   skip_monsters = { 20,30 }
 
   episodic_monsters = true

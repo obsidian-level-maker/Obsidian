@@ -2509,6 +2509,8 @@ end
 
 
 function Title_make_interpic()
+  if not PARAM.interpic_lump then return end
+
   gui.title_create(320, 200, "#000")
   gui.title_set_palette(GAME.PALETTES.normal)
 
@@ -2534,10 +2536,12 @@ function Title_make_interpic()
   end
   end
 
-  local format = "patch"
+  local lump   = PARAM.interpic_lump
+  local format = PARAM.interpic_format
+
   if PARAM.tga_images then format = "tga" end
 
-  gui.title_write("INTERPIC", format)
+  gui.title_write(lump, format)
   gui.title_free()
 end
 
@@ -2560,6 +2564,8 @@ end
 
 
 function Title_make_titlepic()
+  if not PARAM.titlepic_lump then return end
+
   gui.title_create(320, 200, "#000")
   gui.title_set_palette(GAME.PALETTES.normal)
 
@@ -2567,10 +2573,12 @@ function Title_make_titlepic()
   Title_add_credit()
   Title_add_title()
 
-  local format = "patch"
+  local lump   = PARAM.titlepic_lump
+  local format = PARAM.titlepic_format
+
   if PARAM.tga_images then format = "tga" end
 
-  gui.title_write("TITLEPIC", format)
+  gui.title_write(lump, format)
   gui.title_free()
 end
 
