@@ -37,7 +37,7 @@ HERETIC.THEMES =
 
     cage_mats =
     {
-      REDWALL  = 60
+      METL1 = 60
     }
 
     floor_sinks =
