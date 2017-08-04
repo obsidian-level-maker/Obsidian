@@ -240,7 +240,7 @@ LANG_FILES= \
 all: $(PROGRAM)
 
 $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
-	$(CXX) -Wl $^ -o $@ $(LDFLAGS) $(LIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o $(OBJ_DIR)/*.f ERRS
