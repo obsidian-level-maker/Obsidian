@@ -1,3 +1,4 @@
 Oblige
 *.o
 .f
+.DS_Store
