@@ -48,6 +48,7 @@ HERETIC.MATERIALS =
   BRWNRCKS = { t="BRWNRCKS", f="FLOOR17" }
 
   CELTIC   = { t="CELTIC",   f="FLOOR06" }
+  CHAINSD  = { t="CHAINSD",  f="FLOOR08" }
   CHAINMAN = { t="CHAINMAN", f="FLAT520" }
   CSTLMOSS = { t="CSTLMOSS", f="FLOOR03" }
   CSTLRCK  = { t="CSTLRCK",  f="FLOOR03" }
@@ -96,6 +97,7 @@ HERETIC.MATERIALS =
   SAINT1   = { t="SAINT1",   f="FLAT523" }
   SANDSQ2  = { t="SANDSQ2",  f="FLOOR06" }
   SKULLSB1 = { t="SKULLSB1", f="FLOOR30" }
+  SKULLSB2 = { t="SKULLSB2", f="FLOOR30" }
   SNDBLCKS = { t="SNDBLCKS", f="FLOOR06" }
   SNDCHNKS = { t="SNDCHNKS", f="FLAT522" }
   SNDPLAIN = { t="SNDPLAIN", f="FLOOR25" }
@@ -201,9 +203,7 @@ HERETIC.MATERIALS =
 
   -- other --
 
-  O_PILL   = { t="SKULLSB2", f="O_PILL",  sane=1 }
   O_BOLT   = { t="DOORWOOD", f="O_BOLT",  sane=1 }
-  O_CARVE  = { t="CHAINSD",  f="O_CARVE", sane=1 }
 }
 
 
