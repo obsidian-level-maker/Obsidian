@@ -40,6 +40,7 @@ LIBS=-lm -lz $(FLTK_LIBS)
 
 
 #----- OBLIGE Objects ----------------------------------------------
+.SECONDEXPANSION:
 
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_about.o  \
@@ -102,9 +103,14 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	\
 	$(OBJ_DIR)/zf_menu.o
 
-$(OBJ_DIR)/%.o: gui/%.cc
+$(OBJ_DIR)/%.o: gui/%.cc $$(@D)/.f
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
+%/.f:
+	mkdir -p $(dir $@)
+	touch $@
+
+.PRECIOUS: %/.f
 
 #----- LUA Objects --------------------------------------------------
 
@@ -142,9 +148,14 @@ LUA_OBJS=\
 
 LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI -DLUA_USE_MKSTEMP
 
-$(OBJ_DIR)/lua/%.o: lua_src/%.cc
+$(OBJ_DIR)/lua/%.o: lua_src/%.cc $$(@D)/.f
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
+%/.f:
+	mkdir -p $(dir $@)
+	touch $@
+
+.PRECIOUS: %/.f
 
 #----- glBSP Objects ------------------------------------------------
 
@@ -162,9 +173,14 @@ GLBSP_OBJS= \
 
 GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
-$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
+$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc $$(@D)/.f
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
 
+%/.f:
+	mkdir -p $(dir $@)
+	touch $@
+
+.PRECIOUS: %/.f
 
 #----- AJ-Polygonator Objects --------------------------------------
 
@@ -176,8 +192,14 @@ AJPOLY_OBJS= \
 
 AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
 
-$(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
-	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
+$(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc $$(@D)/.f
+	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $<
+
+%/.f:
+	mkdir -p $(dir $@)
+	touch $@
+
+.PRECIOUS: %/.f
 
 
 #----- PhysFS Objects ---------------------------------------------
@@ -193,9 +215,14 @@ PHYSFS_OBJS= \
 
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
-$(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
+$(OBJ_DIR)/physfs/%.o: physfs_src/%.cc $$(@D)/.f
 	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
 
+%/.f:
+	mkdir -p $(dir $@)
+	touch $@
+
+.PRECIOUS: %/.f
 
 #----- Language Analysis ------------------------------------------
 
@@ -216,11 +243,11 @@ $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 	$(CXX) -Wl $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
-	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
-	rm -f $(OBJ_DIR)/lua/*.o
-	rm -f $(OBJ_DIR)/glbsp/*.o
-	rm -f $(OBJ_DIR)/ajpoly/*.o
-	rm -f $(OBJ_DIR)/physfs/*.o
+	rm -f $(PROGRAM) $(OBJ_DIR)/*.o $(OBJ_DIR)/*.f ERRS
+	rm -f $(OBJ_DIR)/lua/*.o $(OBJ_DIR)/lua/*.f
+	rm -f $(OBJ_DIR)/glbsp/*.o $(OBJ_DIR)/glbsp/*.f
+	rm -f $(OBJ_DIR)/ajpoly/*.o $(OBJ_DIR)/ajpoly/*.f
+	rm -f $(OBJ_DIR)/physfs/*.o $(OBJ_DIR)/physfs/*.f
 	rm -f LANG_TEMPLATE.txt
 
 halfclean:
