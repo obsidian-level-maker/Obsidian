@@ -22,15 +22,5 @@ PREFABS.Exit_secret_box1 =
 
   x_fit = "frame"
   y_fit = "top"
-
-  thing_34 =
-  {
-    dead_player = 10
-    gibbed_player = 10
-    dead_shooter = 10
-    dead_imp = 10
-    dead_demon = 10
-    dead_caco = 10
-  }
 }
 
