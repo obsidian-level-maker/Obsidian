@@ -33,12 +33,12 @@
 #    define PHYSFS_PLATFORM_POSIX
 #    define PHYSFS_NO_CDROM_SUPPORT
 #  else
-#    define PHYSFS_PLATFORM_MACOSX
+#    define PHYSFS_PLATFORM_UNIX
 #    define PHYSFS_PLATFORM_POSIX
 #  endif
 #elif defined(macintosh)
 #  error Classic Mac OS support was dropped from PhysicsFS 2.0. Move to OS X.
-#elif defined(unix) || defined(__unix__)
+#elif defined(unix) || defined(__unix__) || defined (__unix)
 #  define PHYSFS_PLATFORM_UNIX
 #  define PHYSFS_PLATFORM_POSIX
 #else

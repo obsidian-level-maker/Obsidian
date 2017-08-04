@@ -213,7 +213,7 @@ LANG_FILES= \
 all: $(PROGRAM)
 
 $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
-	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
+	$(CXX) -Wl $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
