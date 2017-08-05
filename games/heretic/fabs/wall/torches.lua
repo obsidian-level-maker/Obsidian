@@ -19,17 +19,5 @@ PREFABS.Wall_torches1_diag =
   bound_z2 = 64
 
   z_fit  = "top"
-
-  solid_ents = true
-}
-
-
-PREFABS.Wall_torches2_diag =
-{
-  template = "Wall_torches1_diag"
-
-  group  = "torches2"
-
-  thing_45 = "red_torch"
 }
 

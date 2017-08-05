@@ -50,8 +50,13 @@ HERETIC.THEMES =
       PLAIN = 50
     }
 
-    steps_mat = "FLOOR10"
+    wall_groups =
+    {
+      PLAIN = 50
+      torches1 = 50
+    }
 
+    steps_mat = "FLOOR10"
   }
 
 
