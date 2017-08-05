@@ -4,11 +4,11 @@
 
 PREFABS.Bridge_narrow1 =
 {
-  file   = "bridge/narrow.wad"
+  file   = "misc/bridge.wad"
   map    = "MAP01"
 
   prob   = 90
-
+  kind   = "bridge"
   where  = "point"
 }
 
