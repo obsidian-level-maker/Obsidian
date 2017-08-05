@@ -1439,7 +1439,7 @@ function Room_border_up()
         Junction_make_wall(junc)
 
       elseif A2.border_type == "watery_drop" then
-        Junction_make_railing(junc, "MIDBARS3", "block")
+        Junction_make_railing(junc, "WDGAT64", "block")
 
       else
         Junction_make_empty(junc)
@@ -2813,7 +2813,7 @@ function Room_add_cage_rails()
       -- don't place railings on higher floors (it looks silly)
       if N.floor_h and N.floor_h > A.floor_h then continue end
 
-      Junction_make_railing(junc, "MIDBARS3", "block")
+      Junction_make_railing(junc, "GATMETL4", "block")
     end
   end
 

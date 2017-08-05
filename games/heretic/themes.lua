@@ -57,6 +57,8 @@ HERETIC.THEMES =
     }
 
     steps_mat = "FLOOR10"
+
+    post_mat  = "METL2"
   }
 
 
