@@ -3,3 +3,17 @@ WORK IN PROGRESS
 ================
 
 
+Heretic prefabs :
+
+DONE : exits
+DONE : misc
+DONE : starts
+DONE : teleporters
+DONE : walls
+
++  keyed doors
+
+-  doors
+
+-  everything else
+
