@@ -1130,89 +1130,6 @@ GROW_XXX_BRIDGE1 =
 }
 
 
---[[ test crud......
-
-GROW_LIQUID_1 =
-{
-  prob = 200
-
-  structure =
-  {
-    "....", ".11."
-    "....", ".~~."
-    "x11x", "x11x"
-    "x11x", "x11x"
-  }
-
-  auxiliary =
-  {
-    pass = "liquid_grow"
-
-    count = { 4,8 }
-  }
-
-  xx_auxiliary2 =
-  {
-    pass = "liquid_newarea"
-
-    count = { 1,3 }
-  }
-}
-
-
-AUX_LIQUID_1 =
-{
-  pass = "liquid_grow"
-  prob = 50
-
-  structure =
-  {
-    "1.", "11"
-    "~.", "~~"
-    "1.", "11"
-  }
-}
-
-
-AUX_LIQUID_2 =
-{
-  pass = "liquid_grow"
-  prob = 50
-
-  structure =
-  {
-    "...", ".11"
-    "1..", "1/~"
-    "~..", "~/1"
-    "1..", "11."
-  }
-
-  diagonals =
-  {
-    "1~", "~1"
-  }
-}
-
-
-AUX_LIQUID_3 =
-{
-  pass = "liquid_grow"
-  prob = 0
-
-  structure =
-  {
-    "...", "..."
-    "~.~", "~~~"
-  }
-
-  diagonals =
-  {
-    ".~", "~."
-  }
-}
---]]
-
-
 ------------------------------------------
 
 
@@ -1371,7 +1288,6 @@ SPROUT_DOUBLE_TEST =
 }
 
 
---[[ !!!!
 SPROUT_JOINER_2x1 =
 {
   prob = 360
@@ -1394,32 +1310,6 @@ SPROUT_JOINER_2x1 =
     from_dir = 2
   }
 }
-
-
-SPROUT_JOINER_2x2 =
-{
-  prob = 100
-
-  structure =
-  {
-    "....", ".RR."
-    "....", ".RR."
-    "x..x", "xJJx"
-    "x..x", "xJJx"
-    "x11x", "x11x"
-  }
-
-  new_room =
-  {
-    symmetry = { x=2, y=4, dir=8 }
-  }
-
-  joiner =
-  {
-    from_dir = 2
-  }
-}
---]]
 
 
 SPROUT_TELEPORTER_2x2 =
@@ -1793,7 +1683,6 @@ SPROUT_DIRECT_3_cave =
 }
 
 
---[[ !!!!
 SPROUT_JOINER_2x1_cave =
 {
   prob = 500
@@ -1819,7 +1708,6 @@ SPROUT_JOINER_2x1_cave =
     from_dir = 2
   }
 }
---]]
 
 
 CAVE_GROW_3x1 =
