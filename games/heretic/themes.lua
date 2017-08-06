@@ -37,7 +37,7 @@ HERETIC.THEMES =
 
     cage_mats =
     {
-      METL1 = 60
+      WOODWL = 60
     }
 
     floor_sinks =
@@ -60,6 +60,11 @@ HERETIC.THEMES =
     {
       square = 70
       tall   = 30
+    }
+
+    wide_halls =
+    {
+      deuce = 50
     }
 
     steps_mat = "FLOOR10"
@@ -249,6 +254,33 @@ HERETIC.ROOM_THEMES =
     {
       FLOOR17=50, FLAT509=20, FLAT510=20,
       FLAT513=20, FLAT516=35,
+    }
+  }
+
+
+  castle_deuce_Hallway =
+  {
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
+
+    walls =
+    {
+      SNDCHNKS = 10
+    }
+
+    floors =
+    {
+      FLOOR06 = 40
+      FLOOR07 = 10
+      FLOOR09 = 10
+      FLAT502 = 10
+    }
+
+    ceilings =
+    {
+      FLAT520 = 10
+      FLOOR00 = 10
     }
   }
 
