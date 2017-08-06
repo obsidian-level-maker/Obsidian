@@ -889,8 +889,8 @@ function Render_corner(cx, cy)
     -- OK --
 
     -- handle different textures, use a neutral value
-    if L_tex != R_tex then
-      L_tex = "METAL"
+    if L_tex != R_tex and THEME.corner_fill_tex then
+      L_tex = THEME.corner_fill_tex
     end
 
     -- handle fence heights

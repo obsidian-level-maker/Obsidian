@@ -446,6 +446,8 @@ DOOM.THEMES =
 
     steps_mat = "GRAY7"
 
+    corner_fill_tex = "METAL"
+
     cliff_mats =
     {
       GRAYVINE = 60
