@@ -10,10 +10,10 @@ DONE : misc
 DONE : starts
 DONE : teleporters
 DONE : walls
+DONE : keyed doors
+DONE : doors
 
-+  keyed doors
-
--  doors
+-  joiners/*
 
 -  everything else
 
