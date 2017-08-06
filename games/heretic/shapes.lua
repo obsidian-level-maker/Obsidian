@@ -1371,26 +1371,7 @@ SPROUT_DOUBLE_TEST =
 }
 
 
-SPROUT_SYMMETRY_3 =
-{
-  prob = 30
-
-  structure =
-  {
-    ".....", ".RRR."
-    ".....", ".RRR."
-    "x111x", "x111x"
-  }
-
-  new_room =
-  {
-    conn = { x=2, y=1, w=3, dir=8 }
-
-    symmetry = { x=3, y=2, dir=8 }
-  }
-}
-
-
+--[[ !!!!
 SPROUT_JOINER_2x1 =
 {
   prob = 360
@@ -1438,6 +1419,7 @@ SPROUT_JOINER_2x2 =
     from_dir = 2
   }
 }
+--]]
 
 
 SPROUT_TELEPORTER_2x2 =
@@ -1811,6 +1793,7 @@ SPROUT_DIRECT_3_cave =
 }
 
 
+--[[ !!!!
 SPROUT_JOINER_2x1_cave =
 {
   prob = 500
@@ -1836,6 +1819,7 @@ SPROUT_JOINER_2x1_cave =
     from_dir = 2
   }
 }
+--]]
 
 
 CAVE_GROW_3x1 =
