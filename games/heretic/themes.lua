@@ -56,6 +56,12 @@ HERETIC.THEMES =
       torches1 = 50
     }
 
+    window_groups =
+    {
+      square = 70
+      tall   = 30
+    }
+
     steps_mat = "FLOOR10"
 
     post_mat  = "METL2"

@@ -12,6 +12,7 @@ DONE : teleporters
 DONE : walls
 DONE : keyed doors
 DONE : doors
+DONE : windows
 
 -  joiners/*
 
