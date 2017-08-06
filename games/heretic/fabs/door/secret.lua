@@ -44,6 +44,8 @@ PREFABS.Door_secret3 =
   map      = "MAP03"
 
   prob   = 50
+
+  env    = "any"
 }
 
 
@@ -54,6 +56,8 @@ PREFABS.Door_secret4 =
   map      = "MAP04"
 
   prob   = 100
+
+  env    = "any"
 }
 
 
@@ -64,5 +68,7 @@ PREFABS.Door_secret5 =
   map      = "MAP05"
 
   prob   = 100
+
+  env    = "any"
 }
 
