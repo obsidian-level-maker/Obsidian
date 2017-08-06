@@ -12,21 +12,13 @@ PREFABS.Door_secret =
   where  = "edge"
   key    = "secret"
 
+  -- we use a hanging object to mark secret, so must not be outdoor
+  env    = "building"
+
   deep   = 16
   over   = 16
 
   x_fit  = "frame"
-
-  -- pick some different objects for the hint, often none
-  thing_34 =
-  {
-    nothing = 25
-    candle = 10
-    dead_player = 10
-    gibs = 10
-    gibbed_player = 5
-    pool_brains = 5
-  }
 }
 
 
@@ -39,6 +31,9 @@ PREFABS.Door_secret_diag =
 
   where  = "diagonal"
   key    = "secret"
+
+  -- we use a hanging object to mark secret, so must not be outdoor
+  env    = "building"
 }
 
 
@@ -68,6 +63,6 @@ PREFABS.Door_secret5 =
   template = "Door_secret"
   map      = "MAP05"
 
-  prob   = 150
+  prob   = 100
 }
 
