@@ -19,6 +19,8 @@ PREFABS.Locked_medium_green =
 
   x_fit  = "frame"
 
+  solid_ents = true
+
   -- thing is already #95 (green statue)
   -- line special is already #33
 }
@@ -36,6 +38,8 @@ PREFABS.Locked_medium_green_diag =
 
   seed_w = 2
   seed_h = 2
+
+  solid_ents = true
 
   -- thing is already #95 (green statue)
   -- line special is already #33
