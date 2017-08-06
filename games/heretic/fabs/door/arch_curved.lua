@@ -9,7 +9,6 @@ PREFABS.Arch_curved1 =
 
   prob   = 50
   rank   = 1
-  theme  = "!tech"
 
   kind   = "arch"
   where  = "edge"
