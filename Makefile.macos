@@ -174,7 +174,7 @@ GLBSP_OBJS= \
 GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc $$(@D)/.f
-	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
 
 %/.f:
 	mkdir -p $(dir $@)
@@ -216,7 +216,7 @@ PHYSFS_OBJS= \
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
 $(OBJ_DIR)/physfs/%.o: physfs_src/%.cc $$(@D)/.f
-	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $<
 
 %/.f:
 	mkdir -p $(dir $@)
@@ -291,7 +291,7 @@ install: stripped
 
 uninstall:
 	rm -v $(PREFIX)/bin/oblige
-	rm -Rv $(SCRIPT_DIR) 
+	rm -Rv $(SCRIPT_DIR)
 
 
 .PHONY: all clean halfclean stripped install uninstall

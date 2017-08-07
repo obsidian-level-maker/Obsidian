@@ -163,7 +163,7 @@ GLBSP_OBJS= \
 GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
-	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
 
 
 #----- AJ-Polygonator Objects --------------------------------------
@@ -177,7 +177,7 @@ AJPOLY_OBJS= \
 AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
 
 $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
-	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $<
 
 
 #----- PhysFS Objects ---------------------------------------------
@@ -194,7 +194,7 @@ PHYSFS_OBJS= \
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
 $(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
-	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $<
 
 
 #----- Language Analysis ------------------------------------------
@@ -267,7 +267,7 @@ install: stripped
 
 uninstall:
 	rm -v $(PREFIX)/bin/oblige
-	rm -Rv $(SCRIPT_DIR) 
+	rm -Rv $(SCRIPT_DIR)
 	#
 	xdg-desktop-menu  uninstall --novendor misc/oblige.desktop
 	xdg-icon-resource uninstall --novendor --size 32 oblige

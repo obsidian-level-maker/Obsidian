@@ -169,7 +169,7 @@ GLBSP_OBJS= \
 GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline $(ZLIB_FLAGS)
 
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
-	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
 
 
 #----- AJ-Polygonator Objects --------------------------------------
@@ -183,7 +183,7 @@ AJPOLY_OBJS= \
 AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
 
 $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
-	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $<
 
 
 #----- PhysFS Objects ---------------------------------------------
@@ -199,7 +199,7 @@ PHYSFS_OBJS= \
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall $(ZLIB_FLAGS)
 
 $(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
-	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
+	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $<
 
 
 #----- Targets ----------------------------------------------------
