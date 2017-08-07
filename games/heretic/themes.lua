@@ -268,21 +268,29 @@ HERETIC.ROOM_THEMES =
 
     walls =
     {
-      SNDCHNKS = 10
+      SNDCHNKS = 30
+      SQPEB1   = 30
+      SQPEB2   = 20
+      SKULLSB1 = 10
     }
 
     floors =
     {
-      FLOOR06 = 40
-      FLOOR07 = 10
-      FLOOR09 = 10
+      FLOOR00 = 20
+      FLOOR01 = 20
+      FLOOR06 = 20
+      FLOOR07 = 20
+      FLOOR09 = 20
       FLAT502 = 10
     }
 
     ceilings =
     {
-      FLAT520 = 10
+      FLOOR29 = 20
       FLOOR00 = 10
+      FLOOR09 = 10
+      FLAT510 = 10
+      FLAT520 = 10
     }
   }
 
