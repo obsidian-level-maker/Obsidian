@@ -707,7 +707,7 @@ const char *GetExecutablePath(const char *argv0)
 	   enough, -1 is returned and the expected buffer size is
 	   copied in *bufsize.
 	 */
-	int pathlen = PATH_MAX * 2;
+	uint32_t pathlen = PATH_MAX * 2;
 
 	path = StringNew(pathlen+2);
 

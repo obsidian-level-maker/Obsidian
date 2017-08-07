@@ -25,9 +25,15 @@
 #  define PHYSFS_PLATFORM_WINDOWS
 #elif (defined OS2)
 #  define PHYSFS_PLATFORM_OS2
+
+// andrewj: according to Doctor Nick, the "sys_macos.cc" code does not
+//          work on modern MacOS operating systems.  Hence I commented
+//          out the following tests and made default be UNIX + POSIX.
+
+/*
 #elif ((defined __MACH__) && (defined __APPLE__))
-/* To check if iphone or not, we need to include this file */
-# include <TargetConditionals.h> 
+// To check if iphone or not, we need to include this file
+# include <TargetConditionals.h>
 # if ((TARGET_IPHONE_SIMULATOR) || (TARGET_OS_IPHONE))
 #    define PHYSFS_PLATFORM_UNIX
 #    define PHYSFS_PLATFORM_POSIX
@@ -37,12 +43,12 @@
 #    define PHYSFS_PLATFORM_POSIX
 #  endif
 #elif defined(macintosh)
-#  error Classic Mac OS support was dropped from PhysicsFS 2.0. Move to OS X.
-#elif defined(unix) || defined(__unix__)
+#  error Classic Mac OS is not supported
+*/
+
+#else
 #  define PHYSFS_PLATFORM_UNIX
 #  define PHYSFS_PLATFORM_POSIX
-#else
-#  error Unknown platform.
 #endif
 
 #endif  /* include-once blocker. */
