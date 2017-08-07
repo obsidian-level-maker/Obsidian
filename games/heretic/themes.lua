@@ -77,9 +77,11 @@ HERETIC.THEMES =
   {
     liquids =
     {
+      water2 = 40
+      water  = 10
+
       lava   = 50
-      magma  = 20
-      sludge = 5
+      sludge = 20
     }
 
     facades =
