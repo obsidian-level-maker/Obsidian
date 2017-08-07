@@ -13,8 +13,7 @@ DONE : walls
 DONE : keyed doors
 DONE : doors
 DONE : windows
-
--  joiners/*
+DONE : items
 
 -  everything else
 
