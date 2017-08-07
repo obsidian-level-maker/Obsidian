@@ -2,7 +2,7 @@
 --  HERETIC PICKUPS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@ HERETIC.PICKUPS =
 {
   -- HEALTH --
 
-  h_vial =
+  vial =
   {
     id = 81
     add_prob = 70
@@ -25,39 +25,12 @@ HERETIC.PICKUPS =
     give = { {health=10} }
   }
 
-  h_flask =
+  flask =
   {
     id = 82
     add_prob = 25
     rank = 2
     give = { {health=25} }
-  }
-
-  h_urn =
-  {
-    id = 32
-    add_prob = 5
-    rank = 3
-    give = { {health=100} }
-  }
-
-
-  -- ARMOR --
-
-  shield1 =
-  {
-    id = 85
-    add_prob = 20
-    rank = 2
-    give = { {health=50} }
-  }
-
-  shield2 =
-  {
-    id = 31
-    add_prob = 5
-    rank = 3
-    give = { {health=100} }
   }
 
 
@@ -169,8 +142,86 @@ HERETIC.PICKUPS =
 
 --------------------------------------------------
 
+
 HERETIC.NICE_ITEMS =
 {
-  -- TODO : e.g. torch
+  -- ARMOR --
+
+  shield1 =
+  {
+    id = 85
+    add_prob = 20
+    rank = 2
+    give = { {health=50} }
+  }
+
+  shield2 =
+  {
+    id = 31
+    add_prob = 5
+    rank = 3
+    give = { {health=100} }
+  }
+
+
+  -- ARTIFACTS --
+
+  urn =
+  {
+    id = 32
+    add_prob = 5
+    rank = 3
+    give = { {health=100} }
+  }
+
+  bag =
+  {
+    id=8
+  }
+
+  wings =
+  {
+    id=83
+  }
+
+  ovum =
+  {
+    id=30
+  }
+
+  torch =
+  {
+    id=33
+  }
+
+  bomb =
+  {
+    id=34
+  }
+
+  map =
+  {
+    id=35
+  }
+
+  chaos =
+  {
+    id=36
+  }
+
+  shadow =
+  {
+    id=75
+  }
+
+  ring =
+  {
+    id=84
+  }
+
+  tome =
+  {
+    id=86
+  }
 }
 
