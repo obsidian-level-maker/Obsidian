@@ -802,7 +802,7 @@ GROW_STAIR_3 =
 
 GROW_NARROWSTAIR_1 =
 {
-  prob = 10
+  prob = 20
   prob_skew = 3
   skip_prob = 70
 
@@ -817,7 +817,7 @@ GROW_NARROWSTAIR_1 =
 
 GROW_NARROWSTAIR_2 =
 {
-  prob = 10
+  prob = 20
   prob_skew = 3
   skip_prob = 70
 
@@ -887,46 +887,47 @@ GROW_CAGESTAIR_3 =
 
 GROW_STAIRPAIR_4 =
 {
-  prob = 300
+  prob = 100
   skip_prob = 60
   aversion = 3
 
   structure =
   {
-    ".......", "AAAAAAA"
-    ".......", "^^111^^"
-    ".......", "^^111^^"
-    "..111..", "1111111"
+    "......", "AAAAAA"
+    "......", "^^11^^"
+    "......", "^^11^^"
+    ".1111.", "111111"
   }
 }
 
-GROW_STAIRPAIR_4B =
+
+GROW_STAIRPAIR_4D =
 {
-  prob = 200
+  prob = 100
   skip_prob = 60
   aversion = 3
 
   structure =
   {
-    ".......", "AAAAAAA"
-    ".......", "^^111^^"
-    ".......", "^^111^^"
-    ".11111.", "1111111"
+    "......", "AAAAAA"
+    "......", "A^11^A"
+    "......", "A^11^A"
+    ".1111.", "111111"
   }
 }
 
 
 GROW_STAIRPAIR_4C =
 {
-  prob = 50
+  prob = 40
   skip_prob = 60
 
   structure =
   {
-    ".......", "AAAAAAA"
-    ".......", "^^~~~^^"
-    ".......", "^^~~~^^"
-    ".11111.", "1111111"
+    "......", "AAAAAA"
+    "......", "^^~~^^"
+    "......", "^^~~^^"
+    ".1111.", "111111"
   }
 }
 
