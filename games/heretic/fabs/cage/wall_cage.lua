@@ -8,7 +8,6 @@ PREFABS.Cage_wall =
   map    = "MAP01"
 
   prob  = 100
-  theme = "!hell"
 
   where  = "seeds"
   shape  = "U"
@@ -21,19 +20,5 @@ PREFABS.Cage_wall =
 
   x_fit = "stretch"
   y_fit = "top"
-
-  -- disable the oscillation (pending a smarter system...)
-  sector_8 = 0
-}
-
-
-PREFABS.Cage_wall_hell =
-{
-  template = "Cage_wall"
-
-  theme = "hell"
-
-   tex_SHAWN2 = "REDWALL"
-  flat_FLAT23 = "RROCK03"
 }
 
