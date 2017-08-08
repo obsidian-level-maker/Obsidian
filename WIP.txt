@@ -14,6 +14,7 @@ DONE : keyed doors
 DONE : doors
 DONE : windows
 DONE : items
+DONE : switch
 
 -  everything else
 
