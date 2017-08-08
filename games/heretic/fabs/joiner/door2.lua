@@ -7,8 +7,7 @@ PREFABS.Joiner_door2 =
   file   = "joiner/door2.wad"
   map    = "MAP01"
 
-  prob   = 200
-  theme  = "!hell"
+  prob   = 100
   style  = "doors"
 
   where  = "seeds"
@@ -21,14 +20,5 @@ PREFABS.Joiner_door2 =
   over   = 16
 
   x_fit  = "frame"
-}
-
-
-PREFABS.Joiner_door2_hell =
-{
-  template = "Joiner_door2"
-  map      = "MAP02"
-
-  theme  = "hell"
 }
 
