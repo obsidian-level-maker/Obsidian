@@ -15,6 +15,20 @@ DONE : doors
 DONE : windows
 DONE : items
 DONE : switch
+DONE : joiner
+DONE : cages
+DONE : fence
 
--  everything else
+-  stairs
+-  picture
+-  decor
+
+
+TEST:  finish the NICE_ITEMS
+
+
++  check "level" value of monsters
+
+
++  boss monsters
 
