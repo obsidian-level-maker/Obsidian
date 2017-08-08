@@ -8,7 +8,6 @@ PREFABS.Joiner_archy1 =
   map    = "MAP01"
 
   prob  = 140
-  theme = "!tech"
 
   where  = "seeds"
   shape  = "I"
@@ -29,7 +28,6 @@ PREFABS.Joiner_archy1_wide =
   map    = "MAP02"
 
   prob  = 400
-  theme = "!tech"
 
   where  = "seeds"
   shape  = "I"
