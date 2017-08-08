@@ -167,6 +167,8 @@ HERETIC.NICE_ITEMS =
     id = 82
     kind = "health"
     add_prob = 25
+    closet_prob = 25
+    secret_prob = 5
     give = { {health=25} }
   }
 
@@ -175,6 +177,8 @@ HERETIC.NICE_ITEMS =
     id = 32
     kind = "health"
     add_prob = 5
+    closet_prob = 10
+    secret_prob = 30
     give = { {health=100} }
   }
 
@@ -182,7 +186,8 @@ HERETIC.NICE_ITEMS =
   {
     id = 31
     kind = "armor"
-    add_prob = 5
+    add_prob = 10
+    closet_prob = 20
     give = { {health=100} }
   }
 
@@ -194,7 +199,7 @@ HERETIC.NICE_ITEMS =
     id = 8
     kind = "ammo"
     add_prob = 20
-    start_prob = 10
+    start_prob = 20
     closet_prob = 10
 
     give = { {ammo="crystal",  count=10},
@@ -212,24 +217,32 @@ HERETIC.NICE_ITEMS =
   {
     id = 83
     kind = "powerup"
+    secret_prob = 20
+    closet_prob = 5
   }
 
   ovum =
   {
     id = 30
     kind = "powerup"
+    closet_prob = 10
+    secret_prob = 10
   }
 
   torch =
   {
     id = 33
     kind = "powerup"
+    add_prob = 10
+    closet_prob = 10
   }
 
   time_bomb =
   {
     id = 34
     kind = "powerup"
+    add_prob = 20
+    closet_prob = 20
   }
 
   map =
@@ -244,24 +257,34 @@ HERETIC.NICE_ITEMS =
   {
     id = 36
     kind = "powerup"
+    secret_prob = 20
+    closet_prob = 10
   }
 
   shadow =
   {
     id = 75
     kind = "powerup"
+    add_prob = 10
+    secret_prob = 20
+    closet_prob = 10
   }
 
   ring =
   {
     id = 84
     kind = "powerup"
+    secret_prob = 10
+    closet_prob = 2
   }
 
   tome =
   {
     id = 86
     kind = "powerup"
+    add_prob = 20
+    closet_prob = 20
+    secret_prob = 10
   }
 }
 
