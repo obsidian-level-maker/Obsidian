@@ -14,25 +14,23 @@
 
 HERETIC.PICKUPS =
 {
-  -- HEALTH --
+  -- HEALTH and ARMOR --
 
   vial =
   {
     id = 81
     kind = "health"
     add_prob = 70
-    rank = 1
     cluster = { 1,4 }
     give = { {health=10} }
   }
 
-  flask =
+  shield1 =
   {
-    id = 82
-    kind = "health"
-    add_prob = 25
-    rank = 2
-    give = { {health=25} }
+    id = 85
+    kind = "armor"
+    add_prob = 20
+    give = { {health=50} }
   }
 
 
@@ -42,8 +40,8 @@ HERETIC.PICKUPS =
   {
     id = 10
     kind = "ammo"
-    add_prob = 20
     rank = 1
+    add_prob = 20
     cluster = { 1,4 }
     give = { {ammo="crystal",count=10} }
   }
@@ -52,8 +50,8 @@ HERETIC.PICKUPS =
   {
     id = 12
     kind = "ammo"
-    add_prob = 40
     rank = 2
+    add_prob = 40
     give = { {ammo="crystal",count=50} }
   }
 
@@ -61,8 +59,8 @@ HERETIC.PICKUPS =
   {
     id = 18
     kind = "ammo"
-    add_prob = 20
     rank = 1
+    add_prob = 20
     cluster = { 1,3 }
     give = { {ammo="arrow",count=5} }
   }
@@ -71,8 +69,8 @@ HERETIC.PICKUPS =
   {
     id = 19
     kind = "ammo"
-    add_prob = 40
     rank = 2
+    add_prob = 40
     give = { {ammo="arrow",count=20} }
   }
 
@@ -80,8 +78,8 @@ HERETIC.PICKUPS =
   {
     id = 54
     kind = "ammo"
-    add_prob = 20
     rank = 1
+    add_prob = 20
     cluster = { 1,3 }
     give = { {ammo="claw_orb",count=10} }
   }
@@ -90,8 +88,8 @@ HERETIC.PICKUPS =
   {
     id = 55
     kind = "ammo"
-    add_prob = 40
     rank = 2
+    add_prob = 40
     give = { {ammo="claw_orb",count=25} }
   }
 
@@ -99,8 +97,8 @@ HERETIC.PICKUPS =
   {
     id = 20
     kind = "ammo"
-    add_prob = 20
     rank = 1
+    add_prob = 20
     cluster = { 1,4 }
     give = { {ammo="rune",count=20} }
   }
@@ -109,8 +107,9 @@ HERETIC.PICKUPS =
   {
     id = 21
     kind = "ammo"
-    add_prob = 40
     rank = 2
+    add_prob = 40
+    storage_prob = 50
     give = { {ammo="rune",count=100} }
   }
 
@@ -118,8 +117,8 @@ HERETIC.PICKUPS =
   {
     id = 22
     kind = "ammo"
-    add_prob = 20
     rank = 1
+    add_prob = 20
     cluster = { 2,5 }
     give = { {ammo="flame_orb",count=1} }
   }
@@ -128,8 +127,9 @@ HERETIC.PICKUPS =
   {
     id = 23
     kind = "ammo"
-    add_prob = 40
     rank = 2
+    add_prob = 40
+    storage_prob = 50
     give = { {ammo="flame_orb",count=10} }
   }
 
@@ -137,8 +137,8 @@ HERETIC.PICKUPS =
   {
     id = 13
     kind = "ammo"
-    add_prob = 20
     rank = 1
+    add_prob = 20
     cluster = { 1,4 }
     give = { {ammo="mace_orb",count=20} }
   }
@@ -147,8 +147,9 @@ HERETIC.PICKUPS =
   {
     id = 16
     kind = "ammo"
-    add_prob = 40
     rank = 2
+    add_prob = 40
+    storage_prob = 50
     give = { {ammo="mace_orb",count=100} }
   }
 }
@@ -159,14 +160,22 @@ HERETIC.PICKUPS =
 
 HERETIC.NICE_ITEMS =
 {
-  -- ARMOR --
+  -- HEALTH and AMMO --
 
-  shield1 =
+  flask =
   {
-    id = 85
-    kind = "armor"
-    add_prob = 20
-    give = { {health=50} }
+    id = 82
+    kind = "health"
+    add_prob = 25
+    give = { {health=25} }
+  }
+
+  urn =
+  {
+    id = 32
+    kind = "health"
+    add_prob = 5
+    give = { {health=100} }
   }
 
   shield2 =
@@ -178,15 +187,7 @@ HERETIC.NICE_ITEMS =
   }
 
 
-  -- HEALTH and AMMO --
-
-  urn =
-  {
-    id = 32
-    kind = "health"
-    add_prob = 5
-    give = { {health=100} }
-  }
+  -- ARMOR --
 
   bag =
   {
