@@ -71,6 +71,8 @@ PREFABS.Pic_box_wide =
   seed_w   = 3
   height   = 160
 
-  tex_CELTIC = { HORSES=50, CHAINMAN=25, CELTIC=5 }
+  rank     = 3
+
+  tex_CELTIC = { HORSES1=50, CHAINMAN=25, CELTIC=5 }
 }
 
