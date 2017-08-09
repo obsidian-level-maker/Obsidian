@@ -7,7 +7,7 @@ PREFABS.Stair_wide_3x1 =
   file   = "stairs/wide_3x1.wad"
   map    = "MAP01"
 
-  prob   = 900
+  prob   = 800
 
   where  = "seeds"
   shape  = "I"
@@ -26,9 +26,7 @@ PREFABS.Stair_wide_3x1_torch =
   file   = "stairs/wide_3x1.wad"
   map    = "MAP02"
 
-  prob  = 500
-  rank  = 2
-  theme = "!tech"
+  prob  = 400
 
   where  = "seeds"
   shape  = "I"
