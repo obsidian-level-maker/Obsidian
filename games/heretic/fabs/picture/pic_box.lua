@@ -8,7 +8,7 @@ TEMPLATES.Pic_box_template =
   map    = "MAP02"
 
   prob  = 100
---skip_prob = 40
+  skip_prob = 40
 
   env   = "building"
 
@@ -49,7 +49,7 @@ PREFABS.Pic_box_saint1 =
 }
 
 
-PREFABS.Pic_box_stainglass =
+PREFABS.Pic_box_glass =
 {
   template = "Pic_box_template"
   map      = "MAP05"
@@ -57,7 +57,21 @@ PREFABS.Pic_box_stainglass =
   seed_w   = 2
   height   = 160
 
+  prob     = 200
+
   tex_CELTIC = { STNGLS1=50, STNGLS2=50 }
+}
+
+
+PREFABS.Pic_box_demon =
+{
+  template = "Pic_box_template"
+  map      = "MAP05"
+
+  seed_w   = 2
+  height   = 160
+
+  tex_CELTIC = { GRSKULL3=50, DMNMSK=30, SKULLSB2=10 }
 }
 
 
@@ -71,7 +85,8 @@ PREFABS.Pic_box_wide =
   seed_w   = 3
   height   = 160
 
-  rank     = 3
+  rank      = 3
+  skip_prob = 10
 
   tex_CELTIC = { HORSES1=50, CHAINMAN=25, CELTIC=5 }
 }
