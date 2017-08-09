@@ -7,7 +7,7 @@ PREFABS.Pic_wall_torch1 =
   file   = "picture/wall_torch.wad"
   map    = "MAP01"
 
-  prob  = 200
+  prob  = 100
   skip_prob = 35
   env   = "building"
 
@@ -29,7 +29,7 @@ PREFABS.Pic_wall_torch2 =
   template = "Pic_wall_torch1"
   map      = "MAP02"
 
-  prob  = 150
+  prob  = 70
 }
 
 
@@ -38,6 +38,6 @@ PREFABS.Pic_wall_torch3 =
   template = "Pic_wall_torch1"
   map      = "MAP03"
 
-  prob  = 50
+  prob  = 40
 }
 
