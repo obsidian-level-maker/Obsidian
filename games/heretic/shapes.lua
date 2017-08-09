@@ -1058,8 +1058,8 @@ GROW_STAIR_POOL2 =
 
 GROW_STAIR_SIDE2 =
 {
-  prob = 70
-  prob_skew = 3
+  prob = 60
+  prob_skew = 2
   skip_prob = 30
 
   z_dir = "up"
@@ -1076,8 +1076,7 @@ GROW_STAIR_SIDE2 =
 
 GROW_STAIR_SIDE3 =
 {
-  prob = 70
-  prob_skew = 3
+  prob = 20
   skip_prob = 50
   aversion  = 5
 
