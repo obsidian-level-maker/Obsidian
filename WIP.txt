@@ -20,8 +20,7 @@ DONE : joiner
 DONE : cages
 DONE : fence
 DONE : picture
-
--  stairs
+DONE : stairs
 
 -  decor
    DONE:  square pillar with GRSTNPBW and SPINE1
