@@ -217,8 +217,9 @@ HERETIC.NICE_ITEMS =
   {
     id = 83
     kind = "powerup"
-    secret_prob = 20
-    closet_prob = 5
+
+    -- NOTE: never added, since it can allow the player to fly over
+    --       fences (and break the quest structure).
   }
 
   ovum =
