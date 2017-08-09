@@ -88,6 +88,6 @@ PREFABS.Pic_box_wide =
   rank      = 3
   skip_prob = 10
 
-  tex_CELTIC = { HORSES1=50, CHAINMAN=25, CELTIC=5 }
+  tex_CELTIC = { HORSES1=50, CHAINMAN=15, CELTIC=5 }
 }
 

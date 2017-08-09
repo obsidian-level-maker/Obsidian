@@ -8,7 +8,6 @@ PREFABS.Arch_curved1 =
   map    = "MAP01"
 
   prob   = 50
-  rank   = 1
 
   kind   = "arch"
   where  = "edge"
