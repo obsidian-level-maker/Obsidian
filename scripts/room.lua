@@ -2413,10 +2413,9 @@ function Room_floor_ceil_heights()
   local function add_cage_lighting(R, A)
     if not R.cage_light_fx then
       --  8 = oscillates
-      -- 17 = flickering
       -- 12 = flashes @ 1 hz
       -- 13 = flashes @ 2 hz
-      R.cage_light_fx = rand.pick({ 0,8,12,13,17 })
+      R.cage_light_fx = rand.pick({ 0,8,12,13 })
     end
 
     if R.cage_light_fx == 0 then
