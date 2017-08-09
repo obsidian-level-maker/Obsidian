@@ -104,7 +104,6 @@ HERETIC.WEAPONS =
     id = 2002
     level = 6
     pref = 35
-    add_prob = 20
     rate = 8.7
     damage = 8
     attack = "missile"
@@ -115,13 +114,16 @@ HERETIC.WEAPONS =
 
   -- NOTES:
   --
+  -- The Firemace has a 25% chance of NOT APPEARING in the level,
+  -- which makes it practically useless as a general weapon for
+  -- single player or co-op.  Hence it has no "add_prob".
+  -- [ It may be better to define it as a NICE_ITEM which can
+  --   appear in start rooms and secret closets... ]
+  --
   -- No information here about weapons when the Tome-Of-Power is
   -- being used (such as different firing rates and ammo usage).
   -- Since that artifact can be used at any time by the player,
   -- OBLIGE cannot properly model it.
   --
-  -- The Firemace can be placed in upto 8 different spots, but
-  -- only one is spawned (at a spot chosen randomly) when the
-  -- level is loaded.
 }
 
