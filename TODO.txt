@@ -837,18 +837,7 @@ LEGACY: gui.property("solid_exfloor", 281)
   HERETIC
 ----------------------------------------------
 
-!!  get it working again
-
-+  determine new 'damage' values for monsters
-   [ ideally via analysis of some UVmax demos ]
-
-+  support title pic generator
-
--  don't build Blaze doors into maps.
-
--  monsters: not mixed enough (too repetitive), no bosses.
-
--  weapons: firemace no good for SP/COOP ??
+>>  get it working again
 
 Sam's suggestions:
   for Heretic caves should be rare in E1, common in E2, and somewhat common

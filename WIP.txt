@@ -3,7 +3,8 @@ WORK IN PROGRESS
 ================
 
 
-Heretic prefabs :
+Heretic prefabs
+---------------
 
 DONE : exits
 DONE : misc
@@ -18,17 +19,32 @@ DONE : switch
 DONE : joiner
 DONE : cages
 DONE : fence
+DONE : picture
 
 -  stairs
--  picture
+
 -  decor
+   >>  square pillar with GRSTNPBW and SPINE1
+
+   >>  outdoor tombstones
+
+   >>  outdoor 64x64x64 box with SANDSQ2 or METL1
+
+   >>  a large coffin (stone AND wood)
 
 
-TEST:  finish the NICE_ITEMS
 
+Other Stuff
+-----------
+
+TEST: all the NICE_ITEMS
 
 +  check "level" value of monsters
 
-
 +  boss monsters
+
++  determine new 'damage' values for monsters
+   [ ideally via analysis of some UVmax demos ]
+
+-  monsters: not mixed enough (too repetitive), no bosses.
 
