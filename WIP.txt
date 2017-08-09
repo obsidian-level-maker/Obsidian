@@ -24,9 +24,9 @@ DONE : picture
 -  stairs
 
 -  decor
-   >>  square pillar with GRSTNPBW and SPINE1
+   DONE:  square pillar with GRSTNPBW and SPINE1
 
-   >>  outdoor tombstones
+   >>  outdoor tombstones (50% skip_prob)
 
    >>  outdoor 64x64x64 box with SANDSQ2 or METL1
 
