@@ -34,7 +34,7 @@ HERETIC.WEAPONS =
   gauntlets =
   {
     id = 2005
-    level = 1
+    level = 2
     pref = 1
     add_prob = 5
     rate = 5.2
@@ -60,7 +60,7 @@ HERETIC.WEAPONS =
   claw =  -- aka blaster
   {
     id = 53
-    level = 1
+    level = 1.5
     pref = 50
     add_prob = 20
     rate = 2.9
@@ -102,7 +102,7 @@ HERETIC.WEAPONS =
   firemace =
   {
     id = 2002
-    level = 6
+    level = 5
     pref = 5
     rate = 8.7
     damage = 8
