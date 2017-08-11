@@ -2,7 +2,7 @@
 --  HERETIC WEAPONS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@ HERETIC.WEAPONS =
   staff =
   {
     rate = 2.5
-    damage = 12
+    damage = 10
     attack = "melee"
   }
 
@@ -38,7 +38,7 @@ HERETIC.WEAPONS =
     pref = 1
     add_prob = 5
     rate = 5.2
-    damage = 8
+    damage = 18
     attack = "melee"
   }
 
@@ -49,7 +49,7 @@ HERETIC.WEAPONS =
     pref = 30
     add_prob = 10
     rate = 1.3
-    damage = 20
+    damage = 55
     attack = "missile"
     splash = {0,5}
     ammo = "arrow"
@@ -64,7 +64,7 @@ HERETIC.WEAPONS =
     pref = 50
     add_prob = 20
     rate = 2.9
-    damage = 16
+    damage = 20
     attack = "missile"
     ammo = "claw_orb"
     per = 1
@@ -78,7 +78,7 @@ HERETIC.WEAPONS =
     pref = 25
     add_prob = 20
     rate = 8.7
-    damage = 12
+    damage = 27
     attack = "missile"
     ammo = "rune"
     per = 1
@@ -92,7 +92,8 @@ HERETIC.WEAPONS =
     pref = 25
     add_prob = 20
     rate = 1.7
-    damage = 80
+    damage = 180
+    splash = { 65, 20, 5 }
     attack = "missile"
     ammo = "flame_orb"
     per = 1
@@ -105,7 +106,7 @@ HERETIC.WEAPONS =
     level = 5
     pref = 5
     rate = 8.7
-    damage = 8
+    damage = 10
     attack = "missile"
     ammo = "mace_orb"
     per = 1
