@@ -23,7 +23,7 @@ HERETIC.WEAPONS =
 
   wand =
   {
-    pref = 10
+    pref = 5
     rate = 3.1
     damage = 10
     attack = "hitscan"
@@ -35,7 +35,7 @@ HERETIC.WEAPONS =
   {
     id = 2005
     level = 1
-    pref = 10
+    pref = 1
     add_prob = 5
     rate = 5.2
     damage = 8
@@ -46,7 +46,7 @@ HERETIC.WEAPONS =
   {
     id = 2001
     level = 1
-    pref = 90
+    pref = 30
     add_prob = 10
     rate = 1.3
     damage = 20
@@ -61,7 +61,7 @@ HERETIC.WEAPONS =
   {
     id = 53
     level = 1
-    pref = 60
+    pref = 50
     add_prob = 20
     rate = 2.9
     damage = 16
@@ -75,7 +75,7 @@ HERETIC.WEAPONS =
   {
     id = 2004
     level = 3
-    pref = 50
+    pref = 25
     add_prob = 20
     rate = 8.7
     damage = 12
@@ -89,7 +89,7 @@ HERETIC.WEAPONS =
   {
     id = 2003
     level = 4
-    pref = 50
+    pref = 25
     add_prob = 20
     rate = 1.7
     damage = 80
@@ -103,7 +103,7 @@ HERETIC.WEAPONS =
   {
     id = 2002
     level = 6
-    pref = 35
+    pref = 5
     rate = 8.7
     damage = 8
     attack = "missile"
