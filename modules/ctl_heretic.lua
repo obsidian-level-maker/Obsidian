@@ -94,11 +94,14 @@ OB_MODULES["heretic_mon_control"] =
     gargoyle   = { label="Gargoyle",      choices=CTL_HERETIC.MON_CHOICES }
     fire_garg  = { label="Fire Gargoyle", choices=CTL_HERETIC.MON_CHOICES }
     warrior    = { label="Warrior",       choices=CTL_HERETIC.MON_CHOICES }
+    warrior_ghost = { label="Warrior Ghost", choices=CTL_HERETIC.MON_CHOICES }
 
-    golem      = { label="Golem",         choices=CTL_HERETIC.MON_CHOICES }
-    nitro      = { label="Nitro Golem",   choices=CTL_HERETIC.MON_CHOICES }
+    golem       = { label="Golem",         choices=CTL_HERETIC.MON_CHOICES }
+    golem_ghost = { label="Golem Ghost",   choices=CTL_HERETIC.MON_CHOICES }
+    nitro       = { label="Nitro",         choices=CTL_HERETIC.MON_CHOICES }
+    nitro_ghost = { label="Nitro Ghost",   choices=CTL_HERETIC.MON_CHOICES }
+
     disciple   = { label="Disciple",      choices=CTL_HERETIC.MON_CHOICES }
-
     sabreclaw  = { label="Sabreclaw",     choices=CTL_HERETIC.MON_CHOICES }
     weredragon = { label="Weredragon",    choices=CTL_HERETIC.MON_CHOICES }
     ophidian   = { label="Ophidian",      choices=CTL_HERETIC.MON_CHOICES }
