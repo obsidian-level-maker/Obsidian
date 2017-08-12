@@ -23,16 +23,9 @@ DONE : picture
 DONE : stairs
 
 -  decor
+   !!  a group of barrels
+
    >>  outdoor 64x64x64 box with SANDSQ2 or METL1
 
    >>  a large coffin (stone)
-
-
-
-Other Stuff
------------
-
-+  determine 'damage' values for monsters
-
--  ensure Weapon Control and Monster Control modules work
 
