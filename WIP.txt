@@ -23,27 +23,29 @@ DONE : picture
 DONE : stairs
 
 -  decor
-   DONE:  square pillar with GRSTNPBW and SPINE1
-
-   >>  outdoor tombstones (50% skip_prob)
-
    >>  outdoor 64x64x64 box with SANDSQ2 or METL1
 
-   >>  a large coffin (stone AND wood)
+   >>  a large coffin (stone)
 
 
 
 Other Stuff
 -----------
 
-TEST: all the NICE_ITEMS
+-  'add_prob' of all weapons based on demo analysis
+
+-  'prob' values of all monsters based on demo analysis.
+
+-  treat invisible monsters individually (BUT same "species")
+   [ i.e. remove "replaces" stuff ]
 
 +  check "level" value of monsters
 
 +  boss monsters
 
-+  determine new 'damage' values for monsters
-   [ ideally via analysis of some UVmax demos ]
++  determine better 'damage' values for monsters
 
--  monsters: not mixed enough (too repetitive), no bosses.
+-  monsters: not mixed enough (too repetitive)
+
+-  ensure Weapon Control and Monster Control modules work
 
