@@ -62,9 +62,17 @@ function CTL_HERETIC.monster_setup(self)
       M.density = CTL_HERETIC.DENSITIES[opt.value]
 
       -- loosen some of the normal restrictions
-      M.level = 1
       M.skip_prob = nil
       M.crazy_prob = nil
+
+      if M.prob > 40 then
+        M.level = 1
+        M.weap_min_damage = nil
+      end
+
+      if M.prob > 200 then
+        M.boss_type = nil
+      end
     end
   end -- for opt
 end
