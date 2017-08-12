@@ -32,13 +32,7 @@ DONE : stairs
 Other Stuff
 -----------
 
--  'prob' values of all monsters based on demo analysis.
-
-+  check "level" value of monsters
-
-+  determine better 'damage' values for monsters
-
--  monsters: not mixed enough (too repetitive)
++  determine 'damage' values for monsters
 
 -  ensure Weapon Control and Monster Control modules work
 
