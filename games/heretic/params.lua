@@ -29,7 +29,7 @@ HERETIC.PARAMETERS =
   titlepic_lump   = "TITLE"
   titlepic_format = "raw"
 
-  skip_monsters = { 20,30 }
+  skip_monsters = { 10,20 }
 
   episodic_monsters = true
 
