@@ -463,7 +463,7 @@ OB_THEMES["castle"] =
 {
   label = _("Castle")
   game = "heretic"
-  name_theme = "GOTHIC"
+  name_theme = "URBAN"
   mixed_prob = 50
 }
 
