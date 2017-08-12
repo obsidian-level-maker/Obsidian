@@ -23,7 +23,7 @@ HERETIC.MONSTERS =
     prob = 60
     density = 1.5
     health = 20
-    damage = 1
+    damage = 0.7
     attack = "melee"
     float = true
   }
@@ -37,7 +37,7 @@ HERETIC.MONSTERS =
     prob = 40
     density = 0.8
     health = 80
-    damage = 3
+    damage = 2.5
     attack = "missile"
     float = true
   }
@@ -51,7 +51,7 @@ HERETIC.MONSTERS =
     prob = 40
     density = 1.0
     health = 80
-    damage = 1
+    damage = 1.5
     attack = "melee"
     give = { {ammo="crystal",count=1} }
   }
@@ -65,7 +65,7 @@ HERETIC.MONSTERS =
     prob = 10
     density = 0.2
     health = 80
-    damage = 2
+    damage = 2.0
     attack = "melee"
     give = { {ammo="crystal",count=1} }
     weap_prefs = { staff=0.1, crossbow=0.1, hellstaff=0.1, firemace=0.1 }
@@ -81,7 +81,7 @@ HERETIC.MONSTERS =
     prob = 22
     density = 1.0
     health = 200
-    damage = 3
+    damage = 3.5
     attack = "missile"
     give = { {ammo="arrow",count=1.6} }
   }
@@ -95,7 +95,7 @@ HERETIC.MONSTERS =
     prob = 10
     density = 0.2
     health = 200
-    damage = 3
+    damage = 5.0
     attack = "missile"
     give = { {ammo="arrow",count=1.6} }
     weap_prefs = { staff=0.1, crossbow=0.1, hellstaff=0.1, firemace=0.1 }
@@ -111,7 +111,7 @@ HERETIC.MONSTERS =
     prob = 20
     density = 0.5
     health = 100
-    damage = 6
+    damage = 2.2
     attack = "missile"
     give = { {ammo="crystal",count=1} }
   }
@@ -125,7 +125,7 @@ HERETIC.MONSTERS =
     prob = 10
     density = 0.2
     health = 100
-    damage = 7
+    damage = 5.0
     attack = "missile"
     give = { {ammo="crystal",count=1} }
     weap_prefs = { staff=0.1, crossbow=0.1, hellstaff=0.1, firemace=0.1 }
@@ -141,7 +141,7 @@ HERETIC.MONSTERS =
     prob = 45
     density = 0.5
     health = 150
-    damage = 5
+    damage = 1.2
     attack = "melee"
     give = { {ammo="rune",count=6} }
   }
@@ -155,7 +155,7 @@ HERETIC.MONSTERS =
     prob = 30
     density = 0.3
     health = 180
-    damage = 14
+    damage = 10.0
     attack = "missile"
     give = { {ammo="claw_orb",count=3} }
     float = true
@@ -170,7 +170,7 @@ HERETIC.MONSTERS =
     prob = 30
     density = 0.5
     health = 220
-    damage = 25
+    damage = 4.0
     attack = "missile"
     give = { {ammo="arrow",count=3} }
   }
@@ -184,7 +184,7 @@ HERETIC.MONSTERS =
     prob = 22
     density = 0.3
     health = 280
-    damage = 25
+    damage = 12.5
     attack = "missile"
     give = { {ammo="flame_orb",count=1.6} }
   }
@@ -204,7 +204,7 @@ HERETIC.MONSTERS =
     density = 0.1
     health = 700
     attack = "missile"
-    damage = 75
+    damage = 30.0
     give = { {ammo="claw_orb",count=3} }
     float = true
   }
@@ -221,7 +221,7 @@ HERETIC.MONSTERS =
     density = 0.1
     health = 3000
     attack = "missile"
-    damage = 100
+    damage = 200
     give  = 
     {
       {ammo="flame_orb",count=3}
@@ -241,7 +241,7 @@ HERETIC.MONSTERS =
     density = 0.1
     health = 5000
     attack = "missile"
-    damage = 200
+    damage = 250
   }
 
   --
