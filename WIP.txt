@@ -32,16 +32,9 @@ DONE : stairs
 Other Stuff
 -----------
 
--  'add_prob' of all weapons based on demo analysis
-
 -  'prob' values of all monsters based on demo analysis.
 
--  treat invisible monsters individually (BUT same "species")
-   [ i.e. remove "replaces" stuff ]
-
 +  check "level" value of monsters
-
-+  boss monsters
 
 +  determine better 'damage' values for monsters
 
