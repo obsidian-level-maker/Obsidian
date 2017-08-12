@@ -55,17 +55,17 @@ HERETIC.MONSTERS =
     give = { {ammo="crystal",count=1} }
   }
 
-  golem_inv =
+  golem_ghost =
   {
     id = 69
     r = 22
     h = 64
-    replaces = "golem"
-    replace_prob = 25
+    prob = 5
     health = 80
     damage = 2
     attack = "melee"
     give = { {ammo="crystal",count=1} }
+    weap_prefs = { staff=0.1, crossbow=0.1, hellstaff=0.1, firemace=0.1 }
     invis = true
   }
 
@@ -82,17 +82,17 @@ HERETIC.MONSTERS =
     give = { {ammo="arrow",count=1.6} }
   }
 
-  warrior_inv =
+  warrior_ghost =
   {
     id = 65
     r = 24
     h = 80
-    replaces = "warrior"
-    replace_prob = 20
+    prob = 5
     health = 200
     damage = 3
     attack = "missile"
     give = { {ammo="arrow",count=1.6} }
+    weap_prefs = { staff=0.1, crossbow=0.1, hellstaff=0.1, firemace=0.1 }
     invis = true
   }
 
@@ -110,18 +110,18 @@ HERETIC.MONSTERS =
     give = { {ammo="crystal",count=1} }
   }
 
-  nitro_inv =
+  nitro_ghost =
   {
     id = 46
     r = 22
     h = 64
-    replaces = "nitro"
-    replace_prob = 25
+    prob = 5
     density = 0.6
     health = 100
     damage = 7
     attack = "missile"
     give = { {ammo="crystal",count=1} }
+    weap_prefs = { staff=0.1, crossbow=0.1, hellstaff=0.1, firemace=0.1 }
     invis = true
   }
 
@@ -241,6 +241,10 @@ HERETIC.MONSTERS =
   -- of the time (randomly).  The give amounts are therefore
   -- just an average.  Some of them also (but rarely) drop
   -- artifacts (egg/tome) -- this is not modelled.
+  --
+  -- Some weapons are ineffective against the "Ghost" versions
+  -- of monsters (the projectiles pass through them).  This is
+  -- handled using "weap_prefs" (though it is not ideal).
   --
 }
 
