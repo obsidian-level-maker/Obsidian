@@ -8,6 +8,7 @@ PREFABS.Decor_water_fountain =
   map    = "MAP01"
 
   prob   = 200
+  skip_prob = 50
   env    = "outdoor"
 
   where  = "point"
