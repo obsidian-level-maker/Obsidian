@@ -44,7 +44,7 @@ PREFABS.Crate_demonface =
   file   = "decor/crates1.wad"
   map    = "MAP12"
 
-  prob   = 400
+  prob   = 200
 
   where  = "point"
   size   = 128
