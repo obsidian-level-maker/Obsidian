@@ -31,8 +31,6 @@ HERETIC.PARAMETERS =
 
   skip_monsters = { 10,20 }
 
-  episodic_monsters = true
-
   monster_factor = 1.0
   health_factor  = 1.0
   ammo_factor    = 1.0
