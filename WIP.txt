@@ -21,11 +21,5 @@ DONE : cages
 DONE : fence
 DONE : picture
 DONE : stairs
-
--  decor
-   !!  a group of barrels
-
-   >>  outdoor 64x64x64 box with SANDSQ2 or METL1
-
-   >>  a large coffin (stone)
+DONE : decor
 
