@@ -7,9 +7,8 @@ PREFABS.Pillar_square_A =
   file   = "decor/pillar2.wad"
   map    = "MAP01"
 
-  rank   = 2
-  prob   = 50
-  skip_prob = 80
+  prob   = 1000
+  skip_prob = 90
 
   where  = "point"
   env    = "building"

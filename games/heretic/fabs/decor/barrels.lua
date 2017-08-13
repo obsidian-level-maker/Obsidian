@@ -1,41 +1,43 @@
 --
--- Carpets (flat floor designs)
+-- Wooden Barrels
 --
 
-PREFABS.Decor_techfloor1 =
+PREFABS.Decor_barrels1 =
 {
-  file   = "decor/carpets.wad"
+  file   = "decor/barrels.wad"
   map    = "MAP01"
 
   prob   = 50
-  theme  = "tech"
   env    = "building"
 
   where  = "point"
-  size   = 80
+  size   = 96
 
   bound_z1 = 0
   bound_z2 = 32
 
-  sink_mode = "never"
+  solid_ents = true
+  sink_mode  = "never"
 }
 
 
-PREFABS.Decor_sunkgrate =
+PREFABS.Decor_barrels2 =
 {
-  file   = "decor/carpets.wad"
-  map    = "MAP02"
+  template = "Decor_barrels1"
+  map      = "MAP02"
+}
 
-  prob   = 50
-  theme  = "urban"
-  env    = "building"
 
-  where  = "point"
-  size   = 80
+PREFABS.Decor_barrels3 =
+{
+  template = "Decor_barrels1"
+  map      = "MAP03"
+}
 
-  bound_z1 = 0
-  bound_z2 = 32
 
-  sink_mode = "never"
+PREFABS.Decor_barrels4 =
+{
+  template = "Decor_barrels1"
+  map      = "MAP04"
 }
 

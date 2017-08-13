@@ -20,7 +20,7 @@ PREFABS.Crate_saint1 =
   file   = "decor/crates1.wad"
   map    = "MAP02"
 
-  prob   = 15
+  prob   = 10
   env    = "outdoor"
 
   where  = "point"
@@ -44,7 +44,7 @@ PREFABS.Crate_demonface =
   file   = "decor/crates1.wad"
   map    = "MAP12"
 
-  prob   = 200
+  prob   = 400
 
   where  = "point"
   size   = 128
