@@ -1,40 +1,27 @@
 --
--- Various crates
+-- Crate-like decorations
 --
 
-
--- a small crate, 64x64 in size
-
-UNFINISHED.Crate_small_brown =
+PREFABS.Crate_sandstone =
 {
   file   = "decor/crates1.wad"
   map    = "MAP01"
 
-  prob   = 20
+  prob   = 40
+  env    = "outdoor"
 
   where  = "point"
   size   = 64
 }
 
 
-UNFINISHED.Crate_small_gray =
-{
-  template = "Crate_small_brown"
-
-   tex_CRATE1  = "CRATE2"
-  flat_CRATOP2 = "CRATOP1"
-}
-
-
-
--- a tall narrow crate
-
-UNFINISHED.Crate_tall_brown =
+PREFABS.Crate_saint1 =
 {
   file   = "decor/crates1.wad"
   map    = "MAP02"
 
-  prob   = 8
+  prob   = 15
+  env    = "outdoor"
 
   where  = "point"
   size   = 64
@@ -42,29 +29,22 @@ UNFINISHED.Crate_tall_brown =
 }
 
 
--- a medium-size crate (96x96)
-
-UNFINISHED.Crate_medium_gray =
+PREFABS.Crate_saint1_B =
 {
-  file   = "decor/crates1.wad"
-  map    = "MAP03"
+  template = "Crate_saint1"
 
-  prob   = 8
-  env    = "!cave"
-
-  where  = "point"
-  size   = 96
+  prob   = 5
+  skip_prob = 50
+  env    = "building"
 }
 
 
--- a large, tall, wooden crate
-
-UNFINISHED.Crate_large_wooden =
+PREFABS.Crate_demonface =
 {
   file   = "decor/crates1.wad"
   map    = "MAP12"
 
-  prob   = 400
+  prob   = 200
 
   where  = "point"
   size   = 128
