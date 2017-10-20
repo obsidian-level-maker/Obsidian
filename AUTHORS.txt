@@ -27,6 +27,9 @@ Chris Pisarczyk (Glaice)
 Derek Braun (Dittohead)
   - DOOM tech prefabs
 
+Doctor Nick
+  - Makefile.macos file
+
 Enhas
   - ZDoom Marines module
   - Stealth Monsters module
