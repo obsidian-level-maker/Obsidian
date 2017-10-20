@@ -38,6 +38,8 @@ DOOM.PARAMETERS =
   ammo_factor    = 1.0
   time_factor    = 1.0
 
+  mon_along_factor = 8.4
+
   bex_map_prefix = "HUSTR_"
 
   bex_secret_name  = "C5TEXT"

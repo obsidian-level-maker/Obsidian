@@ -35,6 +35,8 @@ HERETIC.PARAMETERS =
   health_factor  = 1.0
   ammo_factor    = 1.0
   time_factor    = 1.0
+
+  mon_along_factor = 7.2
 }
 
 

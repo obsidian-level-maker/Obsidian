@@ -463,6 +463,12 @@ DOOM.THEMES =
       SLADWALL = 20
       WOODVERT = 20
     }
+
+    --  8 = oscillates
+    -- 12 = flashes @ 1 hz
+    -- 13 = flashes @ 2 hz
+    -- 17 = flickering
+    cage_lights = { 0, 8, 12, 13, 17 }
   }
 
   ------------------------------------
