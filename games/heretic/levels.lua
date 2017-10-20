@@ -73,6 +73,15 @@ HERETIC.EPISODES =
 
 HERETIC.PREBUILT_LEVELS =
 {
+  E1M8 =
+  {
+    { prob=50, file="games/heretic/data/boss_maw1.wad", map="E1M8" }
+  }
+
+  E2M8 =
+  {
+    { prob=50, file="games/heretic/data/boss_portal1.wad", map="E2M8" }
+  }
 }
 
 
