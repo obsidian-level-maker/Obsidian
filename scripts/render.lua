@@ -749,9 +749,14 @@ function Render_corner(cx, cy)
 
   local function make_post()
     local mx, my = corner.x, corner.y
-    local mat    = corner.post_mat or "METAL"
+    local mat    = corner.post_mat or THEME.post_mat or "METAL"
 
-    local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
+    local brush  = brushlib.quad(mx - 8, my - 8, mx + 8, my + 8)
+
+    each C in brush do
+      C.u1 = 0
+      C.v1 = 0
+    end
 
     if corner.post_top_h then
       brushlib.add_top(brush, corner.post_top_h)
@@ -884,8 +889,8 @@ function Render_corner(cx, cy)
     -- OK --
 
     -- handle different textures, use a neutral value
-    if L_tex != R_tex then
-      L_tex = "METAL"
+    if L_tex != R_tex and THEME.corner_fill_tex then
+      L_tex = THEME.corner_fill_tex
     end
 
     -- handle fence heights

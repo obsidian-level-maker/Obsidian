@@ -115,7 +115,6 @@ void VFS_InitAddons(const char *argv0)
 	VFS_AddFolder("games");
 	VFS_AddFolder("engines");
 	VFS_AddFolder("modules");
-	VFS_AddFolder("prefabs");
 	VFS_AddFolder("data");
 
 	LogPrintf("DONE.\n\n");

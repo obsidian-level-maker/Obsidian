@@ -1439,7 +1439,8 @@ function Room_border_up()
         Junction_make_wall(junc)
 
       elseif A2.border_type == "watery_drop" then
-        Junction_make_railing(junc, "MIDBARS3", "block")
+        local tex = THEME.water_rail_mat or "MIDBARS3"
+        Junction_make_railing(junc, tex, "block")
 
       else
         Junction_make_empty(junc)
@@ -2353,7 +2354,7 @@ function Room_floor_ceil_heights()
           continue
         end
 
-        A.floor_h  = N.floor_h - 16
+        A.floor_h  = N.floor_h - (THEME.pool_depth or 16)
         A.ceil_h   = N.ceil_h
         A.ceil_mat = N.ceil_mat
 
@@ -2411,12 +2412,8 @@ function Room_floor_ceil_heights()
 
 
   local function add_cage_lighting(R, A)
-    if not R.cage_light_fx then
-      --  8 = oscillates
-      -- 17 = flickering
-      -- 12 = flashes @ 1 hz
-      -- 13 = flashes @ 2 hz
-      R.cage_light_fx = rand.pick({ 0,8,12,13,17 })
+    if not R.cage_light_fx and THEME.cage_lights then
+      R.cage_light_fx = rand.pick(THEME.cage_lights)
     end
 
     if R.cage_light_fx == 0 then
@@ -2813,7 +2810,9 @@ function Room_add_cage_rails()
       -- don't place railings on higher floors (it looks silly)
       if N.floor_h and N.floor_h > A.floor_h then continue end
 
-      Junction_make_railing(junc, "MIDBARS3", "block")
+      local tex = THEME.cage_rail_mat or "MIDBARS3"
+
+      Junction_make_railing(junc, tex, "block")
     end
   end
 

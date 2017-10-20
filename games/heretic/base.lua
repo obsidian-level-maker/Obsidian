@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2015 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -22,7 +22,8 @@
 HERETIC = { }
 
 
-------------------------------------------------------------
+gui.import("params")
+gui.import("shapes")
 
 gui.import("entities")
 gui.import("monsters")
@@ -34,32 +35,13 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 
-------------------------------------------------------------
-
-HERETIC.PARAMETERS =
-{
-  teleporters = true
-
-  jump_height = 24
-
-  max_name_length = 28
-
-  skip_monsters = { 20,30 }
-
-  episodic_monsters = true
-
-  monster_factor = 1.0
-  health_factor  = 1.0
-  ammo_factor    = 1.0
-  time_factor    = 1.0
-}
 
 ------------------------------------------------------------
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = _("Heretic")
-  priority = 38
+  priority = 40
 
   format = "doom"
   game_dir = "heretic"

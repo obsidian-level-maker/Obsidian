@@ -1568,6 +1568,8 @@ function Layout_decorate_rooms(pass)
   local function switch_up_room(R)
     -- locking exits and items
 
+    if THEME.no_switches then return end
+
     local switch_prob = style_sel("switches", 0, 20, 40, 80)
 
     for loop = 1, 2 do

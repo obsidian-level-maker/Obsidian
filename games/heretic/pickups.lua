@@ -2,7 +2,7 @@
 --  HERETIC PICKUPS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -14,50 +14,23 @@
 
 HERETIC.PICKUPS =
 {
-  -- HEALTH --
+  -- HEALTH and ARMOR --
 
-  h_vial =
+  vial =
   {
     id = 81
-    prob = 70
-    rank = 1
+    kind = "health"
+    add_prob = 70
     cluster = { 1,4 }
     give = { {health=10} }
   }
 
-  h_flask =
-  {
-    id = 82
-    prob = 25
-    rank = 2
-    give = { {health=25} }
-  }
-
-  h_urn =
-  {
-    id = 32
-    prob = 5
-    rank = 3
-    give = { {health=100} }
-  }
-
-
-  -- ARMOR --
-
   shield1 =
   {
     id = 85
-    prob = 20
-    rank = 2
+    kind = "armor"
+    add_prob = 20
     give = { {health=50} }
-  }
-
-  shield2 =
-  {
-    id = 31
-    prob = 5
-    rank = 3
-    give = { {health=100} }
   }
 
 
@@ -66,8 +39,9 @@ HERETIC.PICKUPS =
   crystal =
   {
     id = 10
-    prob = 20
-    rank = 0
+    kind = "ammo"
+    rank = 1
+    add_prob = 20
     cluster = { 1,4 }
     give = { {ammo="crystal",count=10} }
   }
@@ -75,16 +49,18 @@ HERETIC.PICKUPS =
   geode =
   {
     id = 12
-    prob = 40
-    rank = 1
+    kind = "ammo"
+    rank = 2
+    add_prob = 40
     give = { {ammo="crystal",count=50} }
   }
 
   arrow =
   {
     id = 18
-    prob = 20
-    rank = 0
+    kind = "ammo"
+    rank = 1
+    add_prob = 20
     cluster = { 1,3 }
     give = { {ammo="arrow",count=5} }
   }
@@ -92,16 +68,18 @@ HERETIC.PICKUPS =
   quiver =
   {
     id = 19
-    prob = 40
-    rank = 1
+    kind = "ammo"
+    rank = 2
+    add_prob = 40
     give = { {ammo="arrow",count=20} }
   }
 
   claw_orb1 =
   {
     id = 54
-    prob = 20
-    rank = 0
+    kind = "ammo"
+    rank = 1
+    add_prob = 20
     cluster = { 1,3 }
     give = { {ammo="claw_orb",count=10} }
   }
@@ -109,16 +87,18 @@ HERETIC.PICKUPS =
   claw_orb2 =
   {
     id = 55
-    prob = 40
-    rank = 1
+    kind = "ammo"
+    rank = 2
+    add_prob = 40
     give = { {ammo="claw_orb",count=25} }
   }
 
   runes1 =
   {
     id = 20
-    prob = 20
+    kind = "ammo"
     rank = 1
+    add_prob = 20
     cluster = { 1,4 }
     give = { {ammo="rune",count=20} }
   }
@@ -126,16 +106,19 @@ HERETIC.PICKUPS =
   runes2 =
   {
     id = 21
-    prob = 40
+    kind = "ammo"
     rank = 2
+    add_prob = 40
+    storage_prob = 50
     give = { {ammo="rune",count=100} }
   }
 
   flame_orb1 =
   {
     id = 22
-    prob = 20
-    rank = 0
+    kind = "ammo"
+    rank = 1
+    add_prob = 20
     cluster = { 2,5 }
     give = { {ammo="flame_orb",count=1} }
   }
@@ -143,16 +126,19 @@ HERETIC.PICKUPS =
   flame_orb2 =
   {
     id = 23
-    prob = 40
-    rank = 1
+    kind = "ammo"
+    rank = 2
+    add_prob = 40
+    storage_prob = 50
     give = { {ammo="flame_orb",count=10} }
   }
 
   mace_orb1 =
   {
     id = 13
-    prob = 20
+    kind = "ammo"
     rank = 1
+    add_prob = 20
     cluster = { 1,4 }
     give = { {ammo="mace_orb",count=20} }
   }
@@ -160,8 +146,10 @@ HERETIC.PICKUPS =
   mace_orb2 =
   {
     id = 16
-    prob = 40
+    kind = "ammo"
     rank = 2
+    add_prob = 40
+    storage_prob = 50
     give = { {ammo="mace_orb",count=100} }
   }
 }
@@ -169,8 +157,131 @@ HERETIC.PICKUPS =
 
 --------------------------------------------------
 
+
 HERETIC.NICE_ITEMS =
 {
-  -- TODO : e.g. torch
+  -- HEALTH and AMMO --
+
+  flask =
+  {
+    id = 82
+    kind = "health"
+    add_prob = 30
+    closet_prob = 30
+    give = { {health=25} }
+  }
+
+  urn =
+  {
+    id = 32
+    kind = "health"
+    add_prob = 5
+    closet_prob = 5
+    secret_prob = 30
+    give = { {health=100} }
+  }
+
+  shield2 =
+  {
+    id = 31
+    kind = "armor"
+    add_prob = 20
+    closet_prob = 20
+    give = { {health=100} }
+  }
+
+
+  -- ARMOR --
+
+  bag =
+  {
+    id = 8
+    kind = "ammo"
+    add_prob = 5
+    closet_prob = 10
+
+    give = { {ammo="crystal",  count=10},
+             {ammo="arrow",    count=5},
+             {ammo="claw_orb", count=10},
+             {ammo="runes",    count=20},
+             {ammo="flame_orb",count=1},
+             {ammo="mace_orb", count=20} }
+  }
+
+
+  -- ARTIFACTS --
+
+  wings =
+  {
+    id = 83
+    kind = "powerup"
+
+    -- NOTE: never added, since it can allow the player to fly over
+    --       fences (and break the quest structure).
+  }
+
+  ovum =
+  {
+    id = 30
+    kind = "powerup"
+    secret_prob = 20
+    closet_prob = 5
+  }
+
+  torch =
+  {
+    id = 33
+    kind = "powerup"
+    add_prob = 10
+    closet_prob = 10
+  }
+
+  time_bomb =
+  {
+    id = 34
+    kind = "powerup"
+    add_prob = 20
+    closet_prob = 20
+  }
+
+  map =
+  {
+    id = 35
+    kind = "powerup"
+    secret_prob = 20
+    once_only = true
+  }
+
+  chaos =
+  {
+    id = 36
+    kind = "powerup"
+    secret_prob = 20
+    closet_prob = 5
+  }
+
+  shadow =
+  {
+    id = 75
+    kind = "powerup"
+    add_prob = 5
+    secret_prob = 20
+  }
+
+  ring =
+  {
+    id = 84
+    kind = "powerup"
+    secret_prob = 10
+  }
+
+  tome =
+  {
+    id = 86
+    kind = "powerup"
+    add_prob = 20
+    closet_prob = 20
+    secret_prob = 10
+  }
 }
 

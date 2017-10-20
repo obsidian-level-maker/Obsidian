@@ -2,7 +2,7 @@
 --  HERETIC LEVELS
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ HERETIC.EPISODES =
   {
     ep_index = 1
 
-    theme = "h_castle"
+    theme = "castle"
     boss = "Ironlich"
     sky_light = 0.65
   }
@@ -37,7 +37,7 @@ HERETIC.EPISODES =
   {
     ep_index = 2
 
-    theme = "h_urban"
+    theme = "castle"
     boss = "Maulotaur"
     sky_light = 0.75
   }
@@ -46,7 +46,7 @@ HERETIC.EPISODES =
   {
     ep_index = 3
 
-    theme = "h_castle"
+    theme = "castle"
     boss = "D_sparil"
     sky_light = 0.75
   }
@@ -55,7 +55,7 @@ HERETIC.EPISODES =
   {
     ep_index = 4
 
-    theme = "h_urban"
+    theme = "castle"
     boss = "Ironlich"
     sky_light = 0.50
   }
@@ -64,7 +64,7 @@ HERETIC.EPISODES =
   {
     ep_index = 5
 
-    theme = "h_castle"
+    theme = "castle"
     boss = "Maulotaur"
     sky_light = 0.65
   }

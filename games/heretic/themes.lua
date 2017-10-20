@@ -2,7 +2,7 @@
 --  HERETIC THEMES
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -35,13 +35,74 @@ HERETIC.THEMES =
       ROOTWALL = 50
     }
 
-    -- FIXME: temporary crud
+    cage_mats =
+    {
+      WOODWL = 60
+    }
+
+    floor_sinks =
+    {
+      PLAIN = 50
+    }
+
+    ceiling_sinks =
+    {
+      PLAIN = 50
+    }
+
+    wall_groups =
+    {
+      PLAIN = 50
+      torches1 = 50
+    }
+
+    window_groups =
+    {
+      square = 70
+      tall   = 30
+    }
+
+    wide_halls =
+    {
+      deuce = 50
+    }
+
     steps_mat = "FLOOR10"
-    no_doors = true
+
+    post_mat  = "METL2"
+
+    cage_rail_mat  = "GATMETL4"
+    water_rail_mat = "WDGAT64"
+
+    no_switches = true
+
+    cage_lights = { 0, 8, 12, 13 }
+
+    pool_depth = 24
   }
 
 
-  h_urban =
+  castle =
+  {
+    liquids =
+    {
+      water2 = 40
+      water  = 10
+
+      lava   = 50
+      sludge = 20
+    }
+
+    facades =
+    {
+      CSTLRCK  = 50
+      GRNBLOK1 = 30
+    }
+  }
+
+
+--[[
+  town =
   {
     liquids =
     {
@@ -55,32 +116,17 @@ HERETIC.THEMES =
       GRSTNPB = 50
     }
   }
+--]]
 
-
-  h_castle =
-  {
-    liquids =
-    {
-      lava   = 50
-      magma  = 20
-      sludge = 5
-    }
-
-    facades =
-    {
-      CSTLRCK  = 50
-      GRNBLOK1 = 30
-    }
-  }
 }
 
 
 HERETIC.ROOM_THEMES =
 {
-  -- TODO: one for each major theme
   any_Hallway =
   {
-    env = "hallway"
+    env  = "hallway"
+    prob = 1
 
     walls =
     {
@@ -104,142 +150,12 @@ HERETIC.ROOM_THEMES =
   }
 
 
-  ---- URBAN THEME ---------------------------------
-
-  h_urban_House1 =
-  {
-    env = "building"
-
-    walls =
-    {
-      CTYSTCI2 = 20
-      CTYSTCI4 = 40
-    }
-
-    floors =
-    {
-      FLOOR03 = 50
-      FLOOR06 = 50
-      FLOOR10 = 50
-    }
-
-    ceilings =
-    {
-      FLAT521 = 50
-      FLAT523 = 50
-    }
-  }
-
-
-  h_urban_House2 =
-  {
-    env = "building"
-
-    walls =
-    {
-      CTYSTUC4 = 50
-    }
-
-    floors =
-    {
-      FLOOR03 = 50
-      FLOOR06 = 50
-      FLOOR10 = 50
-    }
-
-    ceilings =
-    {
-      FLAT521 = 50
-      FLAT523 = 50
-    }
-  }
-
-
-  h_urban_Stone =
-  {
-    env = "building"
-
-    walls =
-    {
-      GRSTNPB = 50
-    }
-
-    floors =
-    {
-      FLOOR00 = 50
-      FLOOR19 = 50
-      FLAT522 = 50
-      FLAT523 = 50
-    }
-
-    ceilings =
-    {
-      FLAT520 = 50
-      FLAT523 = 50
-    }
-  }
-
-
-  h_urban_Wood =
-  {
-    env = "building"
-
-    walls =
-    {
-      WOODWL = 50
-    }
-
-    floors =
-    {
-      FLAT508 = 20
-      FLOOR11 = 20
-      FLOOR03 = 50
-      FLOOR06 = 50
-    }
-
-    ceilings =
-    {
-      FLOOR10 = 50
-      FLOOR11 = 30
-      FLOOR01 = 50
-    }
-  }
-
-
-  h_urban_Cave =
-  {
-    env = "cave"
-
-    naturals =
-    {
-      LOOSERCK=20, LAVA1=20, BRWNRCKS=20
-    }
-  }
-
-
-  h_urban_Outdoors =
-  {
-    env = "outdoor"
-
-    floors =
-    {
-      FLOOR00=20, FLOOR27=30, FLOOR18=50,
-      FLAT522=10, FLAT523=20,
-    }
-
-    naturals =
-    {
-      FLOOR17=50, FLAT509=20, FLAT510=20,
-      FLAT513=20, FLAT516=35, 
-    }
-  }
-
-
   ---- CASTLE THEME --------------------------------
 
-  h_castle_Green =
+  castle_Green =
   {
-    env = "building"
+    env  = "building"
+    prob = 50
 
     walls =
     {
@@ -263,9 +179,10 @@ HERETIC.ROOM_THEMES =
   }
 
 
-  h_castle_Gray =
+  castle_Gray =
   {
-    env = "building"
+    env  = "building"
+    prob = 50
 
     walls =
     {
@@ -288,9 +205,10 @@ HERETIC.ROOM_THEMES =
   }
 
 
-  h_castle_Orange =
+  castle_Orange =
   {
-    env = "building"
+    env  = "building"
+    prob = 50
 
     walls =
     {
@@ -315,20 +233,27 @@ HERETIC.ROOM_THEMES =
 
   -- TODO : these are same as urban theme, differentiate them!
 
-  h_castle_Cave =
+  castle_Cave =
   {
-    env = "cave"
+    env  = "cave"
+    prob = 50
 
-    naturals =
+    walls =
     {
-      LOOSERCK=20, LAVA1=20, BRWNRCKS=20
+      LOOSERCK=20, BRWNRCKS=20
+    }
+
+    floors =
+    {
+      LOOSERCK=20, BRWNRCKS=20
     }
   }
 
 
-  h_castle_Outdoors =
+  castle_Outdoors =
   {
-    env = "outdoor"
+    env  = "outdoor"
+    prob = 50
 
     floors =
     {
@@ -339,9 +264,187 @@ HERETIC.ROOM_THEMES =
     naturals =
     {
       FLOOR17=50, FLAT509=20, FLAT510=20,
-      FLAT513=20, FLAT516=35, 
+      FLAT513=20, FLAT516=35,
     }
   }
+
+
+  castle_deuce_Hallway =
+  {
+    env   = "hallway"
+    group = "deuce"
+    prob  = 50
+
+    walls =
+    {
+      SNDCHNKS = 30
+      SQPEB1   = 30
+      SQPEB2   = 20
+      SKULLSB1 = 10
+    }
+
+    floors =
+    {
+      FLOOR00 = 20
+      FLOOR01 = 20
+      FLOOR06 = 20
+      FLOOR07 = 20
+      FLOOR09 = 20
+      FLAT502 = 10
+    }
+
+    ceilings =
+    {
+      FLOOR29 = 20
+      FLOOR00 = 10
+      FLOOR09 = 10
+      FLAT510 = 10
+      FLAT520 = 10
+    }
+  }
+
+
+  ---- TOWN THEME ---------------------------------
+
+  town_House1 =
+  {
+    env  = "building"
+    prob = 50
+
+    walls =
+    {
+      CTYSTCI2 = 20
+      CTYSTCI4 = 40
+    }
+
+    floors =
+    {
+      FLOOR03 = 50
+      FLOOR06 = 50
+      FLOOR10 = 50
+    }
+
+    ceilings =
+    {
+      FLAT521 = 50
+      FLAT523 = 50
+    }
+  }
+
+
+  town_House2 =
+  {
+    env  = "building"
+    prob = 50
+
+    walls =
+    {
+      CTYSTUC4 = 50
+    }
+
+    floors =
+    {
+      FLOOR03 = 50
+      FLOOR06 = 50
+      FLOOR10 = 50
+    }
+
+    ceilings =
+    {
+      FLAT521 = 50
+      FLAT523 = 50
+    }
+  }
+
+
+  town_Stone =
+  {
+    env  = "building"
+    prob = 50
+
+    walls =
+    {
+      GRSTNPB = 50
+    }
+
+    floors =
+    {
+      FLOOR00 = 50
+      FLOOR19 = 50
+      FLAT522 = 50
+      FLAT523 = 50
+    }
+
+    ceilings =
+    {
+      FLAT520 = 50
+      FLAT523 = 50
+    }
+  }
+
+
+  town_Wood =
+  {
+    env  = "building"
+    prob = 50
+
+    walls =
+    {
+      WOODWL = 50
+    }
+
+    floors =
+    {
+      FLAT508 = 20
+      FLOOR11 = 20
+      FLOOR03 = 50
+      FLOOR06 = 50
+    }
+
+    ceilings =
+    {
+      FLOOR10 = 50
+      FLOOR11 = 30
+      FLOOR01 = 50
+    }
+  }
+
+
+  town_Cave =
+  {
+    env  = "cave"
+    prob = 50
+
+    walls =
+    {
+      LOOSERCK=20, BRWNRCKS=20
+    }
+
+    floors =
+    {
+      LOOSERCK=20, BRWNRCKS=20
+    }
+  }
+
+
+  town_Outdoors =
+  {
+    env  = "outdoor"
+    prob = 50
+
+    floors =
+    {
+      FLOOR00=20, FLOOR27=30, FLOOR18=50,
+      FLAT522=10, FLAT523=20,
+    }
+
+    naturals =
+    {
+      FLOOR17=50, FLAT509=20, FLAT510=20,
+      FLAT513=20, FLAT516=35,
+    }
+  }
+
 }
 
 
@@ -365,20 +468,22 @@ HERETIC.ROOMS =
 ------------------------------------------------------------------------
 
 
-OB_THEMES["h_urban"] =
+OB_THEMES["castle"] =
 {
-  label = _("Urban")
+  label = _("Castle")
   game = "heretic"
   name_theme = "URBAN"
   mixed_prob = 50
 }
 
 
-OB_THEMES["h_castle"] =
+--[[
+OB_THEMES["town"] =
 {
-  label = _("Castle")
+  label = _("Town")
   game = "heretic"
-  name_theme = "GOTHIC"
+  name_theme = "URBAN"
   mixed_prob = 50
 }
+--]]
 

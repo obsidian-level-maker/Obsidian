@@ -122,13 +122,15 @@ function HERETIC.make_cool_gfx()
   end
 
   -- patches for SKULLSB2, CHAINSD
-  gui.wad_logo_gfx("WALL41", "p", "PILL",  128,128, 1)
-  gui.wad_logo_gfx("WALL42", "p", carve,    64,128, c_map)
+
+---#  gui.wad_logo_gfx("WALL41", "p", "PILL",  128,128, 1)
+---#  gui.wad_logo_gfx("WALL42", "p", carve,    64,128, c_map)
 
   -- flats
   gui.wad_logo_gfx("O_BOLT",  "f", "BOLT",  64,64, 2)
-  gui.wad_logo_gfx("O_PILL",  "f", "PILL",  64,64, 1)
-  gui.wad_logo_gfx("O_CARVE", "f", carve,   64,64, c_map)
+
+---#  gui.wad_logo_gfx("O_PILL",  "f", "PILL",  64,64, 1)
+---#  gui.wad_logo_gfx("O_CARVE", "f", carve,   64,64, c_map)
 end
 
 

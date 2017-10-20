@@ -28,18 +28,6 @@ HERETIC.ENTITIES =
   k_green    = { id=73 }
   k_blue     = { id=79 }
 
-  --- powerups ---
-  bag     = { id=8  }
-  wings   = { id=83 }
-  ovum    = { id=30 }
-  torch   = { id=33 }
-  bomb    = { id=34 }
-  map     = { id=35 }
-  chaos   = { id=36 }
-  shadow  = { id=75 }
-  ring    = { id=84 }
-  tome    = { id=86 }
-
   --- scenery ---
   wall_torch    = { id=50, r=10, h=64, light=255, pass=true, add_mode="extend" }
   serpent_torch = { id=27, r=12, h=54, light=255 }

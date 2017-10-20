@@ -25,12 +25,20 @@ DOOM.PARAMETERS =
   -- number of lines for intermission and end-of-episode texts
   max_screen_lines = 16
 
+  titlepic_lump   = "TITLEPIC"
+  titlepic_format = "patch"
+
+  interpic_lump   = "INTERPIC"
+  interpic_format = "patch"
+
   skip_monsters = { 20,30,45 }
 
   monster_factor = 1.25
   health_factor  = 1.0
   ammo_factor    = 1.0
   time_factor    = 1.0
+
+  mon_along_factor = 8.4
 
   bex_map_prefix = "HUSTR_"
 

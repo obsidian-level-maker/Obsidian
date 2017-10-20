@@ -2308,7 +2308,7 @@ function Cave_make_waterfalls(R)
     {
       is_liquid  = true
       is_waterfall = true
-      floor_h = F1.floor_h - 16
+      floor_h = F1.floor_h - 24
     }
 
     local LOW_POOL =

@@ -347,10 +347,10 @@ function Episode_plan_monsters()
     if OB_CONFIG.strength == "harder" then mon_along = mon_along + 0.1 end
     if OB_CONFIG.strength == "tough"  then mon_along = mon_along + 0.2 end
 
-    mon_along = 1 + 8.4 * mon_along
+    mon_along = 1.0 + (PARAM.mon_along_factor or 8.0) * mon_along
 
     -- add some randomness
-    mon_along = mon_along + 1.4 * (gui.random() ^ 2)
+    mon_along = mon_along + 0.7 * (gui.random() ^ 2)
 
     LEV.monster_level = mon_along
   end

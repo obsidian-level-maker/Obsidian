@@ -44,11 +44,6 @@ cp -av modules $dest/modules
 cp -av games $dest/games
 
 #
-#  Prefabs
-#
-cp -av prefabs $dest/prefabs
-
-#
 #  Data files
 #
 cp -av data     $dest/data
