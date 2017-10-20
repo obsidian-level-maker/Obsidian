@@ -3,23 +3,3 @@ WORK IN PROGRESS
 ================
 
 
-Heretic prefabs
----------------
-
-DONE : exits
-DONE : misc
-DONE : starts
-DONE : teleporters
-DONE : walls
-DONE : keyed doors
-DONE : doors
-DONE : windows
-DONE : items
-DONE : switch
-DONE : joiner
-DONE : cages
-DONE : fence
-DONE : picture
-DONE : stairs
-DONE : decor
-
