@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2016 Andrew Apted
+--  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@ DOOM = { }
 
 
 gui.import("params")
+gui.import("shapes")
 
 gui.import("entities")
 gui.import("monsters")
