@@ -43,3 +43,18 @@ PREFABS.Joiner_archy1_wide =
   x_fit = "frame"
 }
 
+
+--
+-- NOTE: this is a workaround for an error when steepness == "NONE"
+--
+PREFABS.Joiner_archy_workaround =
+{
+  template = "Joiner_archy1"
+
+  prob  = 0.1
+  theme = "any"
+
+  x_fit = "frame"
+  y_fit = "stretch"
+}
+
