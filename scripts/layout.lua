@@ -1322,6 +1322,15 @@ function Layout_decorate_rooms(pass)
     if R.is_start then return end
     if R.is_exit  then return end
 
+    -- when there is an alternate start room, ensure we don't block the
+    -- path of a single player (who may begin on the wrong side).
+    if LEVEL.alt_start and
+       (R.zone == LEVEL.start_room.zone or
+        R.zone == LEVEL.alt_start.zone)
+    then
+      return
+    end
+
     local conn_list = {}
 
     each C in R.conns do
