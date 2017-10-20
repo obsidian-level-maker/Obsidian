@@ -174,6 +174,7 @@ HERETIC.MATERIALS =
   -- rails --
 
   WOODGATE = { t="WDGAT64", rail_h=64 }
+  WDGAT64  = { t="WDGAT64", rail_h=64 }
 
   GATE_BIG = { t="GATMETL",  rail_h=128 }
   GATMETL2 = { t="GATMETL2", rail_h=32 }
