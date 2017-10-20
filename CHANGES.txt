@@ -4,10 +4,10 @@ CHANGES IN 7.70
 
 +  Heretic support!
 
+-  Makefile.macos file, courtesy Doctor Nick
+
 -  fixed error when Steepness setting is "NONE"
 -  fixed blocked paths when using the "Alternate Starts" setting
-
--  a "Makefile.macos" file, courtesy Doctor Nick
 
 
 CHANGES IN 7.666

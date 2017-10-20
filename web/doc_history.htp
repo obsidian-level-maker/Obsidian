@@ -71,6 +71,7 @@ inspired by the concept of "shape grammars".
 
 <h3>RELEASE DATES</h3>
 
+<b>Version 7.70</b> &nbsp; : 2017-10-??<br>
 <b>Version 7.666</b> : 2017-07-29<br>
 <b>Version 7.50</b> &nbsp; : 2016-09-27<br>
 
@@ -100,6 +101,21 @@ inspired by the concept of "shape grammars".
 <b>Version 0.94</b> : 2007-07-05<br>
 <b>Version 0.85</b> : 2007-02-19<br>
 <b>Version 0.81</b> : 2007-01-21 &nbsp; (very first public release)<br>
+
+
+<h3 id="changes770">CHANGES IN 7.70</h3>
+<PRE>
++  Heretic support!
+
+-  Makefile.macos file, courtesy Doctor Nick
+
+-  fixed error when Steepness setting is "NONE"
+-  fixed blocked paths when using the "Alternate Starts" setting
+</PRE>
+
+<p> &nbsp;
+
+<hr>
 
 
 <h3 id="changes7666">CHANGES IN 7.666</h3>
