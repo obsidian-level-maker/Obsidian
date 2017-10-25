@@ -17,8 +17,9 @@
 
 <h3>INTRODUCTION</h3>
 
-OBLIGE is a random level generator for the classic FPS game 'DOOM'.
-The goal is to produce high quality levels which are fun to play.
+OBLIGE is a random level generator for the classic FPS games 'DOOM'
+and 'HERETIC'.
+The goal was to produce high quality levels which are fun to play.
 
 <p>
 <i>(see the <a href="doc_about.html">About</a> page for more information)</i>
@@ -29,15 +30,28 @@ The goal is to produce high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 7.666 is the current stable version.
-
-<p>
-<i>(Note: this version only supports the DOOM games.
-For other games please try version 4.28)
-</i>
+OBLIGE 7.70 is the current (and final) stable version.
 
 
 <h3>NEWS</h3>
+
+<div class="newsdate">25-Oct-2017:</div>
+<blockquote class="news">
+A final bug-fix release of OBLIGE has been made, version 7.70.
+This fixes two serious bugs, and also integrates support for 
+Heretic, which was previously a separate add-on.
+
+<p>
+My thanks go out again to everyone who helped the
+development of OBLIGE.  It has been an interesting journey,
+my only regret is that OBLIGE never reached my vision of
+what a great random level generator could be.
+</blockquote>
+
+
+<!--- ------------------------------------ --->
+
+<hr style="clear: right;">
 
 <div class="newsdate">29-Jul-2017:</div>
 <blockquote class="news">
