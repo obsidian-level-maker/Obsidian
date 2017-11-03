@@ -18,7 +18,7 @@ SHOW_STAIRCASE = false
 ALLOW_CLOSED_SQUARES = true
 
 -- lower this to make larger areas
-T_BRANCH_PROB = 65
+T_BRANCH_PROB = 75
 
 
 if arg[1] then
@@ -47,8 +47,8 @@ end
 
 GRID = {}
 
-GRID_W = 56
-GRID_H = 38
+GRID_W = 32
+GRID_H = 48
 
 
 function create_points()
@@ -80,7 +80,18 @@ function create_points()
 
     for dir = 1, 9 do
     if  dir ~= 5 then
-      local nx, ny = geom.nudge(gx, gy, dir)
+      local nx = gx
+      local ny = gy
+
+      if dir == 4 then nx = nx - 1 end
+      if dir == 6 then nx = nx + 1 end
+      if dir == 2 then ny = ny - 2 end
+      if dir == 8 then ny = ny + 2 end
+
+      if dir == 1 then nx = nx - (ny % 2)     ; ny = ny - 1 end
+      if dir == 3 then nx = nx + ((ny+1) % 2) ; ny = ny - 1 end
+      if dir == 7 then nx = nx - (ny % 2)     ; ny = ny + 1 end
+      if dir == 9 then nx = nx + ((ny+1) % 2) ; ny = ny + 1 end
 
       if table.valid_pos(GRID, nx, ny) then
         local N = GRID[nx][ny]
@@ -128,9 +139,9 @@ function remove_edge(gx, gy, dir)
 end
 
 
-function is_diagonal_blocked(P, dir)
-  -- not a diagonal?
-  if not (dir == 1 or dir == 3 or dir == 7 or dir == 9) then
+function is_edge_blocked(P, dir)
+  -- not straight?
+  if not (dir == 2 or dir == 4 or dir == 6 or dir == 8) then
     return false
   end
 
@@ -173,8 +184,8 @@ function eval_edge_at_point(P, dir)
   -- already an edge there?
   if P.edge[dir] then return -1 end
 
-  -- ensure it does not cross another diagonal
-  if is_diagonal_blocked(P, dir) then return -1 end
+  -- ensure it does not cross another edge
+  if is_edge_blocked(P, dir) then return -1 end
 
   -- rule # 1 : no more than 3 edges at any point
   if P.num_edges >= P.limit_edges then return -1 end
@@ -188,7 +199,7 @@ function eval_edge_at_point(P, dir)
   
   if N.edge[10 - L_dir] or N.edge[10 - R_dir] then return -1 end
 
-  if would_close_a_square(P, dir, N) then return -1 end
+--FIXME  if would_close_a_square(P, dir, N) then return -1 end
 
   if P.no_diagonals or N.no_diagonals then
     if dir == 1 or dir == 3 or dir == 7 or dir == 9 then return -1 end
@@ -359,8 +370,20 @@ function wr_line(fp, x1, y1, x2, y2, color, width)
 end
 
 
+function calc_coordinate(p, SIZE)
+    local gx = p.gx
+    local gy = (GRID_H - p.gy) * 0.5
+
+    if (p.gy % 2) == 0 then
+        gx = gx + 0.5
+    end
+
+    return (gx * SIZE), (gy * SIZE)
+end
+
+
 function save_as_svg()
-  local SIZE = 16
+  local SIZE = 24
 
   local fp = io.open("_weird.svg", "w")
 
@@ -371,14 +394,14 @@ function save_as_svg()
 
   -- grid
   local max_x = GRID_W * SIZE
-  local max_y = GRID_H * SIZE
+  local max_y = GRID_H * SIZE * 0.5
 
-  for x = 1, GRID_W do
-    wr_line(fp, x * SIZE, SIZE, x * SIZE, max_y, "#bbb")
+  for x = 1, GRID_W * 2 do
+    wr_line(fp, x * SIZE * 0.5, SIZE, x * SIZE * 0.5, max_y, "#bbb")
   end
 
-  for y = 1, GRID_H do
-    wr_line(fp, SIZE, y * SIZE, max_x, y * SIZE, "#bbb")
+  for y = 1, GRID_H * 2 do
+    wr_line(fp, SIZE, y * SIZE * 0.5, max_x, y * SIZE * 0.5, "#bbb")
   end
 
   -- points
@@ -386,15 +409,13 @@ function save_as_svg()
   for y = 1, GRID_H do
     local P = GRID[x][y]
 
-    local x1 = x * SIZE
-    local y1 = (GRID_H - y + 1) * SIZE
+    local x1, y1 = calc_coordinate(P, SIZE)
 
     for dir = 6,9 do
       local N = P.neighbor[dir]
 
       if N then
-        local x2 = N.gx * SIZE
-        local y2 = (GRID_H - N.gy + 1) * SIZE
+        local x2, y2 = calc_coordinate(N, SIZE)
 
         if P.edge[dir] then
           wr_line(fp, x1, y1, x2, y2, "#00f", 3)
@@ -426,7 +447,7 @@ create_points()
 
 add_edge(GRID_W / 2, GRID_H / 2, 6)
 
-for pass = 1, 4 do
+for pass = 1, 5 do
   for loop = 1, GRID_W * GRID_H * 2 do
     try_add_edge()
   end
@@ -434,7 +455,7 @@ for pass = 1, 4 do
   while remove_dead_ends() do end
 end
 
-find_staircases()
+--FIXME find_staircases()
 
 save_as_svg()
 
