@@ -18,7 +18,7 @@ SHOW_STAIRCASE = false
 ALLOW_CLOSED_SQUARES = true
 
 -- lower this to make larger areas
-T_BRANCH_PROB = 75
+T_BRANCH_PROB = 65
 
 
 if arg[1] then
