@@ -257,11 +257,6 @@ install: stripped
 	chown -R root $(SCRIPT_DIR)/games
 	chmod -R g-s  $(SCRIPT_DIR)/games
 	#
-	rm -Rf $(SCRIPT_DIR)/prefabs
-	cp -a prefabs $(SCRIPT_DIR)/prefabs
-	chown -R root $(SCRIPT_DIR)/prefabs
-	chmod -R g-s  $(SCRIPT_DIR)/prefabs
-	#
 	xdg-desktop-menu  install --novendor misc/oblige.desktop
 	xdg-icon-resource install --novendor --size 32 misc/oblige.xpm
 
