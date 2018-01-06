@@ -399,7 +399,11 @@ tga_image_c * TGA_LoadImage (const char *path)
 		}
 	}
 
+#ifdef HAVE_PHYSFS
 	VFS_FreeFile(buffer);
+#else
+	FileFree(buffer);
+#endif
 
 	img->opacity =	is_complex ? OPAC_Complex :
 					is_masked  ? OPAC_Masked  : OPAC_Solid;
