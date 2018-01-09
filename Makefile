@@ -248,8 +248,10 @@ install: stripped
 	install -o root -m 644 language/*.*  $(SCRIPT_DIR)/language
 	#
 	install -d $(SCRIPT_DIR)/data
+	install -d $(SCRIPT_DIR)/data/bg
 	install -d $(SCRIPT_DIR)/data/masks
 	install -o root -m 644 data/*.* $(SCRIPT_DIR)/data
+	install -o root -m 644 data/bg/*.* $(SCRIPT_DIR)/data/bg
 	install -o root -m 644 data/masks/*.* $(SCRIPT_DIR)/data/masks
 	#
 	rm -Rf $(SCRIPT_DIR)/games
