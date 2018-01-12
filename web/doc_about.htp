@@ -23,8 +23,11 @@
 OBLIGE is a random level maker for the classic FPS game '<b>DOOM</b>'.
 Just press a few buttons and <i>kazam!</i> out pops some fun maps
 to play.
-Well that's the goal anyway, it may take a long time to fully
-achieve it.
+That was the goal anyway, I will leave it to others to decide how
+well we achieved it.
+
+<p>
+<i>Please note that OBLIGE is no longer being developed.</i>
 
 <p>
 OBLIGE is <b>Free Software</b>, released under the GNU General
@@ -34,7 +37,7 @@ Please see the <a href="http://www.gnu.org/licenses/gpl-2.0.txt">
 gpl-2.0.txt</a> document for all the legal stuff.
 
 
-<h3>FEATURES / GOALS</h3>
+<h3>FEATURES</h3>
 
 <p>
 OBLIGE has the following features which set it apart
@@ -48,11 +51,11 @@ from existing random map generators:
 </ul>
 
 <p>
-OBLIGE currently supports the DOOM family of games, i.e.
-Ultimate DOOM, DOOM 2, TNT Evilution and The Plutonia Experiment.
-
-It is planned to support more games in the future,
-such as Heretic and Hexen.
+OBLIGE 7.70 supports the class DOOM family of games, i.e.
+Ultimate DOOM, DOOM 2, TNT Evilution and The Plutonia Experiment,
+as well as classic HERETIC.  Version 4.28 of OBLIGE supports several
+more games, including HEXEN and QUAKE, although the levels are not
+as good.
 
 
 <h3>SYSTEM REQUIREMENTS</h3>
@@ -66,21 +69,11 @@ such as Heretic and Hexen.
 
 <h3>GETTING IN CONTACT</h3>
 
-The best way of getting in contact, especially when reporting bugs,
-is to visit the
-<a href="http://oblige.sourceforge.net/forum/">Forum</a>.
-Creating a new account there is fairly easy.
+Please don't.
 
 <p>
-Alternatively you can email me:
-<a href="mailto:ajapted@users.sf.net">
-&lt;ajapted@users.sf.net&gt;</a>
-
-<p>
-Finally, you can visit the SourceForge
-<a href="http://sourceforge.net/projects/oblige">Project Page</a>
-for OBLIGE by clicking the SourceForge logo at the very bottom
-of these pages.
+I no longer develop OBLIGE and I don't want to answer any more
+questions about it.
 
 
 </div class="rest">
