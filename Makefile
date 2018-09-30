@@ -103,6 +103,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/zf_menu.o
 
 $(OBJ_DIR)/%.o: gui/%.cc
+	mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 
@@ -143,6 +144,7 @@ LUA_OBJS=\
 LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI -DLUA_USE_MKSTEMP
 
 $(OBJ_DIR)/lua/%.o: lua_src/%.cc
+	mkdir -p $(OBJ_DIR)/lua
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
 
@@ -163,6 +165,7 @@ GLBSP_OBJS= \
 GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
+	mkdir -p $(OBJ_DIR)/glbsp
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
 
 
@@ -177,6 +180,7 @@ AJPOLY_OBJS= \
 AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
 
 $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
+	mkdir -p $(OBJ_DIR)/ajpoly
 	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $<
 
 
@@ -194,6 +198,7 @@ PHYSFS_OBJS= \
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
 $(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
+	mkdir -p $(OBJ_DIR)/physfs
 	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $<
 
 
@@ -225,6 +230,9 @@ clean:
 
 halfclean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+
+fullclean:
+	rm -rf $(PROGRAM) $(OBJ_DIR) ERRS LANG_TEMPLATE.txt
 
 svgclean:
 	rm -f grow*.svg
@@ -272,7 +280,7 @@ uninstall:
 xgettext:
 	xgettext -o LANG_TEMPLATE.txt -k_ -kN_ -F -i --foreign-user --package-name="Oblige Level Maker" $(LANG_FILES)
 
-.PHONY: all clean halfclean stripped install uninstall xgettext
+.PHONY: all clean halfclean fullclean stripped install uninstall xgettext
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
