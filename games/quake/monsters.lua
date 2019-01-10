@@ -18,7 +18,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_dog"
     r = 32  -- dogs are fat!
-    h = 80 
+    h = 80
     -- we use 'replaces' here to simulate the way dogs
     -- usually appear with grunts.
     replaces = "grunt"
@@ -33,7 +33,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_fish"
     r = 16
-    h = 80 
+    h = 80
     -- only appears in water
     health = 25
     damage = 3
@@ -45,7 +45,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_army"
     r = 16
-    h = 80 
+    h = 80
     level = 1
     prob = 80
     health = 30
@@ -59,7 +59,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_enforcer"
     r = 16
-    h = 80 
+    h = 80
     level = 2
     prob = 40
     health = 80
@@ -73,7 +73,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_zombie"
     r = 16
-    h = 80 
+    h = 80
     level = 2
     prob = 40
     health = 60
@@ -87,7 +87,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_wizard"
     r = 16
-    h = 80 
+    h = 80
     level = 2
     prob = 60
     health = 80
@@ -100,7 +100,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_tarbaby"
     r = 16
-    h = 80 
+    h = 80
     level = 3
     prob = 1
     health = 80
@@ -114,7 +114,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_knight"
     r = 16
-    h = 80 
+    h = 80
     level = 1
     prob = 60
     density  =  0.6
@@ -127,7 +127,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_ogre"
     r = 32
-    h = 80 
+    h = 80
     level = 3
     prob = 40
     health = 200
@@ -141,7 +141,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_demon1"
     r = 32
-    h = 80 
+    h = 80
     level = 4
     prob = 10
     health = 300
@@ -157,7 +157,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_hell_knight"
     r = 32
-    h = 80 
+    h = 80
     level = 5
     boss_type = "minor"
     prob = 30
@@ -171,7 +171,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_shalrath"
     r = 32
-    h = 80 
+    h = 80
     level = 7
     boss_type = "tough"
     prob = 10
@@ -185,7 +185,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_shambler"
     r = 32
-    h = 80 
+    h = 80
     boss_type = "tough"
     level = 7
     prob = 10

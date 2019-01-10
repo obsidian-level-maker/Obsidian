@@ -39,7 +39,7 @@ class CONN
   hall      : HALLWAY
   crossover : CROSSOVER
 
-  dir1, dir2  -- direction value (2/4/6/8) 
+  dir1, dir2  -- direction value (2/4/6/8)
               -- dir1 leading out of R1 / K1 / C1
               -- dir2 leading out of R2 / K2 / C2
 
@@ -151,7 +151,7 @@ BIG_CONNECTIONS =
   L5 = { w=3, h=3, prob=20, exits={ 14, 98 } }
 
   ---==== THREE EXITS ====---
-  
+
   -- T shape, turning left and right
   T1 = { w=1, h=2, prob=70, exits={ 12, 44, 46 }, symmetry="x" }
   T2 = { w=1, h=3, prob=70, exits={ 12, 74, 76 }, symmetry="x" }
@@ -262,7 +262,7 @@ function Connect_test_big_conns()
 
     for y = H+1,0,-1 do
       local line = "      "
-      
+
       if y == H then
         line = string.sub(name, 1, 6)
       end
@@ -402,7 +402,7 @@ function Connect_rooms()
 
   local function already_connected(K1, K2)
     if not (K1 and K2 and K1.room) then return false end
-    
+
     each D in K1.room.conns do
       if (D.K1 == K1 and D.K2 == K2) or
          (D.K1 == K2 and D.K2 == K1)
@@ -468,7 +468,7 @@ function Connect_rooms()
     if true then
       MID = assert(K1:neighbor(dir))
 
-      MID.conn = D ; D.middle = MID 
+      MID.conn = D ; D.middle = MID
 
       Hallway_simple(K1, MID, K2, D, dir)
     end
@@ -529,7 +529,7 @@ function Connect_rooms()
     -- as much of the cave as possible.  So we want new connections
     -- to be far away from all existing ones.
 
-    local want_conn = rand.key_by_probs { 1, 10, 40, 80, 40 }    
+    local want_conn = rand.key_by_probs { 1, 10, 40, 80, 40 }
 
     want_conn = want_conn + math.min(4, R.kvolume) - 4
 -- stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_conn)
@@ -567,7 +567,7 @@ function Connect_rooms()
 
       if N1:same_room(dir) then N1 = N1:neighbor(dir) end
       if N2:same_room(dir) then N2 = N2:neighbor(dir) end
-        
+
       table.insert(optimal_locs, { K=N1, dir=dir })
       table.insert(optimal_locs, { K=N2, dir=dir })
 
@@ -684,7 +684,7 @@ function Connect_rooms()
 
       elseif not can_connect(K, dir) then
         return false
-      
+
       elseif do_it then
         add_connection(K, N, dir)
       end
@@ -1110,7 +1110,7 @@ do return end --!!!!!! FIXME
 
       if R.conn_group == g then
         gui.printf("Removing dead room: %s\n", R:tostr())
-        
+
         table.remove(LEVEL.rooms, i)
 
         kill_room(R)
@@ -1226,7 +1226,7 @@ end
 
 
 function Connect_cycles()
-  
+
   -- TODO: describe cycles........
 
 

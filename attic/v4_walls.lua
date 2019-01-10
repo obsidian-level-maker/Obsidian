@@ -75,20 +75,20 @@ require 'util'
 ----
 ---  MINIMUM SIZES
 ---  -------------
----  
+---
 ---  Door / Window / Important  @  EDGE  -->  192 x 64  (64 walk)
---- 
+---
 ---  Item / Switch  @  MIDDLE  -->  128 x 128  (64 walk)
----  
+---
 ---  Basic wall -->  32 thick
----  
+---
 ---  Basic corner -->  32 x 32
---  
+--
 
   --
   -- Straddlers are architecture which sits across two rooms.
   -- Currently there are only two kinds: DOORS and WINDOWS.
-  -- 
+  --
   -- The prefab to use (and hence their size) are decided before
   -- everything else.  The actual prefab and heights will be
   -- decided later in the normal layout code.
@@ -592,7 +592,7 @@ function Layout_flesh_out_walls(R)
 ---      local mx = int((long1 + long2) / 2)
 ---      RECURSIVE SUB-DIVISION
 ---    end
-    
+
     gui.debugf("flesh_out_range @ %s:%d : (%d %d) .. (%d %d)\n",
                E.K:tostr(), E.side, long1, deep1, long2, deep2)
 

@@ -22,21 +22,21 @@
 -- ========
 --
 --   !  get it working (see tiler.lua)
---   
+--
 --   +  push-walls for secret areas!
 --   +  secret elevators
 --   +  bosses!
--- 
+--
 --   -  decide_monster : skills are "tiered"
 --   -  health/ammo : no skills! -- use medium one
 --   -  place_items : never where monsters are!
 --   -  create rooms with 'endgame' object
---   
+--
 --   +  ensure limits are enforced:
 --      - MAXACTORS = 150  (remove actors at random)
 --      - MAXSTATS  = 400  (remove statics at random)
 --      - MAXDOORS  = 64   (remove unneeded doors at random)
---   
+--
 --   -  patrolling monsters (need to create path with arrows)
 --   -  secret levels (full of treasure)
 --   -  something interesting in middle of big rooms
@@ -228,7 +228,7 @@ WOLF.PARAMETERS =
 
   block_limit = 64,
 
-  border_seeds = 1, 
+  border_seeds = 1,
   free_seeds   = 0,
 
   no_height = true,
@@ -417,7 +417,7 @@ WOLF.COMBOS =
 
     theme_probs = { BUNKER=80 },
   },
- 
+
   PURPLE_STONE =
   {
     mat_pri = 1,
@@ -435,7 +435,7 @@ WOLF.COMBOS =
 
     theme_probs = { CAVE=90 },
   },
- 
+
   BROWN_BRICK =
   {
     mat_pri = 5,
@@ -555,7 +555,7 @@ WOLF.LEVEL_THEMES =
   -- Main Themes:
   --
   -- 1. BUNKER --> brick/wood, humans, quarters, plants/urns
-  -- 2. CELLS  --> blue_stone, dogs, skeletons 
+  -- 2. CELLS  --> blue_stone, dogs, skeletons
   -- 3. CAVE   --> cave/rock tex, vines, mutants
 
   wolf_bunker1 =
@@ -724,7 +724,7 @@ WOLF.MONSTERS =
   --| WOLF BOSSES |--
 
   -- FIXME: hit-points are just averages of skill 2 and 3
- 
+
   -- FIXME: proper damage values
 
   Hans =

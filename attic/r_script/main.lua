@@ -50,7 +50,7 @@ function ob_traceback(msg)
     end
 
     local base_fn = string.match(info.short_src, "[^/]*$")
- 
+
     return string.format("@ %s:%d", base_fn, info.currentline)
   end
 
@@ -216,7 +216,7 @@ function ob_console_dump(info, ...)
     end
   end
 
-  
+
   --| ob_console_dump |--
 
   if info and info.tab_ref then
@@ -282,7 +282,7 @@ function ob_update_modules()
   -- modules may depend on other modules, hence we may need
   -- to repeat this multiple times until all the dependencies
   -- have flowed through.
-  
+
   for loop = 1,100 do
     local changed = false
 
@@ -327,7 +327,7 @@ function ob_set_mod_option(name, option, value)
     gui.printf("Ignoring unknown module: %s\n", name)
     return
   end
-    
+
   if option == "self" then
     -- convert 'value' from string to a boolean
     value = not (value == "false" or value == "0")
@@ -534,7 +534,7 @@ function ob_init()
   local function create_buttons(what, DEFS)
     assert(DEFS)
     gui.debugf("creating buttons for %s\n", what)
-  
+
     local list = {}
 
     for name,def in pairs(DEFS) do

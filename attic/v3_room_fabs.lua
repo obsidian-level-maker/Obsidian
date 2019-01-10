@@ -49,7 +49,7 @@ SOLID_P1 =
   shape = "P",
   environment = "indoor",
   prob = 130,
-  
+
   structure =
   {
     "...",
@@ -71,7 +71,7 @@ SOLID_P2 =
   shape = "P",
   environment = "indoor",
   prob = 70,
-  
+
   structure =
   {
     ".....",
@@ -93,7 +93,7 @@ SOLID_P3 =
   shape = "P",
   environment = "indoor",
   prob = 30,
-  
+
   structure =
   {
     ".....",
@@ -116,7 +116,7 @@ SOLID_C1 =
   kind = "solid",
   environment = "indoor",
   prob = 100,
-  
+
   structure =
   {
     "#.#",
@@ -138,7 +138,7 @@ DIAG_C1 =
   shape = "O",
   environment = "indoor",
   prob = 500,
-  
+
   structure =
   {
     "/#.#%",
@@ -159,7 +159,7 @@ DIAG_C2 =
   kind = "solid",
   environment = "indoor",
   prob = 600,
-  
+
   structure =
   {
     "#/.%#",
@@ -180,7 +180,7 @@ DIAG_C3 =
   kind = "solid",
   environment = "indoor",
   prob = 500,
-  
+
   structure =
   {
     "/#.#%",
@@ -200,7 +200,7 @@ SOLID_C3 =
   kind = "solid",
   environment = "indoor",
   prob = 200,
-  
+
   structure =
   {
     "#.#.#",
@@ -223,7 +223,7 @@ SOLID_T1 =
   shape = "T",
   environment = "indoor",
   prob = 50,
-  
+
   structure =
   {
     "#.#",
@@ -244,7 +244,7 @@ DIAG_T1 =
   shape = "T",
   environment = "indoor",
   prob = 80,
- 
+
   structure =
   {
     "/.%",
@@ -262,7 +262,7 @@ SOLID_OPP1 =
   kind = "solid",
   environment = "indoor",
   prob = 100,
-  
+
   structure =
   {
     "..#",
@@ -281,7 +281,7 @@ DIAG_OPP1 =
   kind = "solid",
   environment = "indoor",
   prob = 300,
- 
+
   structure =
   {
     "..%",
@@ -299,7 +299,7 @@ SOLID_L1 =
   shape = "L",
   environment = "indoor",
   prob = 2000,
-  
+
   structure =
   {
     ".#",
@@ -316,7 +316,7 @@ DIAG_L1 =
   shape = "L",
   environment = "indoor",
   prob = 600,
-  
+
   structure =
   {
     "..##",
@@ -335,7 +335,7 @@ DIAG_L2 =
   shape = "L",
   environment = "indoor",
   prob = 300,
-  
+
   structure =
   {
     "..%#",
@@ -375,7 +375,7 @@ DIAG_HT_BIG =
 {
   environment = "indoor",
   prob = 5,
- 
+
   structure =
   {
     "/111%",
@@ -572,13 +572,13 @@ LIQUID_O4 =
   x_sizes = { "111010111", "111020111",
               "111111111", "111121111",
               "111212111", "111222111", "111313111",
-              "211010112", "211111112", "211212112" }, 
+              "211010112", "211111112", "211212112" },
 
   y_sizes = { "111000111",
               "111010111", "111020111",
               "111111111", "111121111",
               "111212111", "111222111", "111313111",
-              "211010112", "211111112", "211212112" }, 
+              "211010112", "211111112", "211212112" },
 
   symmetry = "xy",
 },
@@ -840,7 +840,7 @@ LIQUID_BIG_S1 =
   },
 
   x_sizes = { "11111", "12111", "12121", "13121", "13131" },
-              
+
   y_sizes = { "111", "121", "131", "141" },
 },
 
@@ -1212,7 +1212,7 @@ SOLID_CSUB =
   kind = "solid",
   environment = "indoor",
   prob = 200,
-  
+
   structure =
   {
     "#..v..#",
@@ -1243,7 +1243,7 @@ SOLID_CSUB4 =
   kind = "solid",
   environment = "indoor",
   prob = 300,
-  
+
   structure =
   {
     "#.v.#",
@@ -1274,7 +1274,7 @@ SOLID_REC_C1 =
   kind = "solid",
   environment = "indoor",
   prob = 500,
-  
+
   structure =
   {
     "#1#",
@@ -1306,7 +1306,7 @@ SOLID_REC_C2 =
   kind = "solid",
   environment = "indoor",
   prob = 900,
-  
+
   structure =
   {
     "#1#",
@@ -1336,7 +1336,7 @@ SOLID_REC_C3 =
   kind = "solid",
   environment = "indoor",
   prob = 900,
-  
+
   structure =
   {
     "#1#",
@@ -1367,7 +1367,7 @@ SOLID_REC_C4 =
   kind = "solid",
   environment = "indoor",
   prob = 900,
-  
+
   structure =
   {
     "#1#",
@@ -1396,7 +1396,7 @@ SOLID_REC_HT_C1 =
 {
   copy = "SOLID_REC_C1",
   prob = 950,
-  
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1407,7 +1407,7 @@ SOLID_REC_HT_C2 =
 {
   copy = "SOLID_REC_C2",
   prob = 950,
-  
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1418,7 +1418,7 @@ SOLID_REC_HT_C3 =
 {
   copy = "SOLID_REC_C3",
   prob = 950,
-  
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1429,7 +1429,7 @@ SOLID_REC_HT_C4 =
 {
   copy = "SOLID_REC_C4",
   prob = 950,
-  
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1441,7 +1441,7 @@ DIAG_REC_C1 =
   kind = "solid",
   environment = "indoor",
   prob = 900,
-  
+
   structure =
   {
     "/1%",
@@ -1470,7 +1470,7 @@ DIAG_REC_C3 =
   kind = "solid",
   environment = "indoor",
   prob = 900,
-  
+
   structure =
   {
     "/1%",
@@ -1499,7 +1499,7 @@ DIAG_REC_C4 =
   kind = "solid",
   environment = "indoor",
   prob = 900,
-  
+
   structure =
   {
     "/1%",
@@ -1525,7 +1525,7 @@ DIAG_REC_HT_C1 =
 {
   copy = "DIAG_REC_C1",
   prob = 950,
-  
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1536,7 +1536,7 @@ DIAG_REC_HT_C3 =
 {
   copy = "DIAG_REC_C3",
   prob = 950,
-  
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1547,7 +1547,7 @@ DIAG_REC_HT_C4 =
 {
   copy = "DIAG_REC_C4",
   prob = 950,
-  
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1672,7 +1672,7 @@ RECURSE_T_SOLID =
   shape = "T",
   environment = "indoor",
   prob = 999,
-  
+
   structure =
   {
     "#..v..#",
@@ -1687,7 +1687,7 @@ RECURSE_T_SOLID =
               "1132311", "1141411" },
 
   y_sizes = { "10111", "11101", "11111",
-              "12101", "10121", "11121", "12111", "12121", 
+              "12101", "10121", "11121", "12111", "12121",
               "13111", "11131", "12131", "13131", "13231",
               "14111", "11141", "14141", "14241" },
 
@@ -1717,7 +1717,7 @@ RECURSE_L1 =
     "1012", "1013", "1014", "1015", "1016", "1017",
     "1018", "1019", "101A", "101B",
 
-    "1210", "1310", "1410", "1510", "1610", "1710", 
+    "1210", "1310", "1410", "1510", "1610", "1710",
     "1810", "1910", "1A10", "1B10",
 
     "1111", "1112", "1212", "1213", "1313", "1314",
@@ -2445,7 +2445,7 @@ RECURSE_H3 =
   y_sizes =
   {
     "11111", "12121", "13131", "23132", "24142",
-    "11101", "12101", "13101", "14101", "15101", 
+    "11101", "12101", "13101", "14101", "15101",
     "24102", "25102", "26102", "27102", "28102",
   },
 

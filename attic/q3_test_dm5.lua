@@ -1,4 +1,4 @@
-ENT_MAP = 
+ENT_MAP =
 {
   ["func_button"]                = "func_button",
   ["func_door"]                  = "func_door",
@@ -26,7 +26,7 @@ ENT_MAP =
   ["weapon_supernailgun"]        = "weapon_supernailgun",
 }
 
-TEX_MAP = 
+TEX_MAP =
 {
   ["SKY4"]                       = "skies/nitesky",
   ["*TELEPORT"]                  = "TELEPORT",

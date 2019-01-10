@@ -27,7 +27,7 @@ end
 function EXPORT_MAP.add_brush(coords)
   local file = EXPORT_MAP.file
 
-  if not file then return end  
+  if not file then return end
 
   -- brushes are written directly to the file
   fprintf(file, "{\n")
@@ -80,7 +80,7 @@ function EXPORT_MAP.add_brush(coords)
     local C2 = xy_coords[k]
 
     fprintf(file, "( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1.000 1.000\n",
-            C1.x, C1.y, 0,  C1.x, C1.y, 64,  C2.x, C2.y, 0, C1.tex or def_tex)       
+            C1.x, C1.y, 0,  C1.x, C1.y, 64,  C2.x, C2.y, 0, C1.tex or def_tex)
   end
 
   fprintf(file, "}\n")
@@ -90,7 +90,7 @@ end
 function EXPORT_MAP.add_entity(ent, model)
   local file = EXPORT_MAP.file
 
-  if not file then return end  
+  if not file then return end
 
   -- ignore certain stuff
   if ent.id == "oblige_sun" then return end
@@ -179,7 +179,7 @@ end
 function EXPORT_MAP.add_model(model)
   local file = EXPORT_MAP.file
 
-  if not file then return end  
+  if not file then return end
 
   assert(model.entity)
 
@@ -188,7 +188,7 @@ end
 
 
 function EXPORT_MAP.setup()
-  gui.mkdir("debug")  
+  gui.mkdir("debug")
 
   -- clean up any previous run which got cancelled or aborted
   if EXPORT_MAP.file then
@@ -206,7 +206,7 @@ end
 
 function EXPORT_MAP.begin_level()
   -- pre-built levels cannot be exported
-  if LEVEL.prebuilt then return end  
+  if LEVEL.prebuilt then return end
 
   local filename = string.format("debug/%s.map", LEVEL.name)
 
@@ -230,7 +230,7 @@ function EXPORT_MAP.begin_level()
   fprintf(file, "\"classname\" \"worldspawn\"\n")
   fprintf(file, "\"worldtype\" \"0\"\n")  -- FIXME
   fprintf(file, "\"wad\" \"quake_tex.wad\"\n")
- 
+
   -- TODO: "message" : LEVEL.description
 end
 
@@ -238,7 +238,7 @@ end
 function EXPORT_MAP.end_level()
   local file = EXPORT_MAP.file
 
-  if not file then return end  
+  if not file then return end
 
   -- close off the worldspawn entity
   fprintf(file, "}\n")

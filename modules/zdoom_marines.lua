@@ -33,7 +33,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9101
     r = 16
-    h = 56 
+    h = 56
     prob = 1
     health = 100
     damage = 4
@@ -46,7 +46,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9102
     r = 16
-    h = 56 
+    h = 56
     prob = 6
     health = 100
     damage = 40
@@ -59,7 +59,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9103
     r = 16
-    h = 56 
+    h = 56
     prob = 4
     health = 100
     damage = 15
@@ -72,7 +72,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9104
     r = 16
-    h = 56 
+    h = 56
     prob = 12
     health = 100
     damage = 8
@@ -85,7 +85,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9105
     r = 16
-    h = 56 
+    h = 56
     prob = 4
     health = 100
     damage = 10
@@ -98,7 +98,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9106
     r = 16
-    h = 56 
+    h = 56
     prob = 6
     health = 100
     damage = 65
@@ -111,7 +111,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9107
     r = 16
-    h = 56 
+    h = 56
     prob = 6
     health = 100
     damage = 50
@@ -124,7 +124,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9108
     r = 16
-    h = 56 
+    h = 56
     prob = 4
     crazy_prob = 10
     health = 100
@@ -138,7 +138,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9109
     r = 16
-    h = 56 
+    h = 56
     prob = 4
     crazy_prob = 6
     health = 100
@@ -152,7 +152,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9110
     r = 16
-    h = 56 
+    h = 56
     prob = 2
     health = 100
     damage = 100
@@ -165,7 +165,7 @@ ZDOOM_MARINE.MONSTERS =
   {
     id = 9111
     r = 16
-    h = 56 
+    h = 56
     prob = 2
     health = 100
     damage = 100

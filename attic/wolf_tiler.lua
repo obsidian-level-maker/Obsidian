@@ -24,7 +24,7 @@ function Tiler_add_entity(name, tx, ty, angle, skill, flags)
   assert(1 <= ty and ty <= 64)
 
   local info = assert(GAME.ENTITIES[name])
-  
+
   local id = info.id
 
   if type(id) == "table" then
@@ -75,7 +75,7 @@ function OLD__Tiler_do_basic_room(R, wall, w_hue, floor)
     local ty = (S.sy - 1) * 3 + 2
 
     tx, ty = nudge_coord(tx, ty, side)
-    
+
     if side == 2 or side == 8 then
       gui.wolf_block(tx, ty, 1, tile_ns)
     else
@@ -154,7 +154,7 @@ end
 
 
 function Tiler_fill_section(K, wall, w_hue, floor)
- 
+
   -- floor --
 
   for x = K.bx1, K.bx2 do for y = K.by1, K.by2 do
@@ -232,7 +232,7 @@ function Tiler_layout_room(R)
   end
 
   if R.purpose == "START" or R.purpose == "EXIT" then
-    local K = R.sections[1]    
+    local K = R.sections[1]
 
     local x = K.bx1 + int(K.bw / 2)
     local y = K.by1 + int(K.bh / 2)

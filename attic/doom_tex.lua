@@ -61,8 +61,8 @@ COMMON_EXITS =
     ceil  = "FLAT1",
 
     hole_tex = "MARBLE1",
-    
-    front_mark = "EXITSTON", 
+
+    front_mark = "EXITSTON",
 
     switch =
     {
@@ -549,12 +549,12 @@ COMMON_CRATES =
   {
     wall = "CRATE1", h=64, floor = "CRATOP2"
   },
-  
+
   CRATE2 =
   {
     wall = "CRATE2", h=64, floor = "CRATOP1"
   },
-  
+
   CRATELIT =
   {
     wall = "CRATELIT", h=128, floor = "CRATOP1"
@@ -575,7 +575,7 @@ COMMON_CRATES =
   {
     wall = "SHAWN3", h=64, floor = "FLAT23", can_rotate=true
   },
-  
+
   WOOD3A =
   {
     wall = "WOOD3", h=64, floor = "CEIL1_1",
@@ -610,13 +610,13 @@ DOOM1_CRATES =
     wall = "PLANET1", h=128, floor = "FLAT23",
     side_x_offset=64
   },
- 
+
   PLANET2 =
   {
     wall = "PLANET1", h=64, floor = "FLAT23",
     x_offset=128, side_y_offset=64
   },
- 
+
   SKIN =
   {
     wall = "SKINBORD", h=64, floor = "CEIL3_3", can_rotate=true
@@ -679,7 +679,7 @@ DOOM2_CRATES =
   {
     wall = "MODWALL3", h=64, floor = "FLAT19"
   },
-  
+
   PIPES =
   {
     wall = "PIPES", h=64, floor = "CEIL3_2", can_rotate=true
@@ -747,56 +747,56 @@ COMMON_WALL_PREFABS =
   {
     prefab = "SOLID_WIDE", skin = { wall="CEMENT4" },
   },
-  
+
   solid_CEMENT5 =
   {
     prefab = "SOLID_WIDE", skin = { wall="CEMENT5" },
   },
-  
+
   solid_ICKWALL4 =
   {
     prefab = "SOLID", skin = { wall="ICKWALL4" },
   },
-  
+
   solid_ICKWALL5 =
   {
     prefab = "SOLID", skin = { wall="ICKWALL5" },
   },
-  
+
   solid_ICKWALL7 =
   {
     prefab = "SOLID", skin = { wall="ICKWALL7" },
   },
-  
+
   solid_PIPE4 =
   {
     prefab = "SOLID_WIDE", skin = { wall="PIPE4" },
   },
-  
+
   solid_SLADSKUL =
   {
     prefab = "SOLID", skin = { wall="SLADSKUL" },
   },
-  
+
   wall_lamp_RED_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="red_torch_sm" },
-    theme_probs = { CAVE=90, HELL=70 }, 
+    theme_probs = { CAVE=90, HELL=70 },
   },
 
   wall_lamp_GREEN_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="green_torch_sm" },
-    theme_probs = { CAVE=90, HELL=30, URBAN=10 }, 
+    theme_probs = { CAVE=90, HELL=30, URBAN=10 },
   },
 
   wall_lamp_BLUE_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="blue_torch_sm" },
-    theme_probs = { CAVE=90, URBAN=20 }, 
+    theme_probs = { CAVE=90, URBAN=20 },
   },
 
   wall_pic_MARBFACE =
@@ -955,32 +955,32 @@ DOOM2_WALL_PREFABS =
   {
     prefab = "SOLID", skin = { wall="STUCCO2" },
   },
-  
+
   solid_TEKGREN3 =
   {
     prefab = "SOLID", skin = { wall="TEKGREN3" },
   },
-  
+
   solid_TEKGREN4 =
   {
     prefab = "SOLID", skin = { wall="TEKGREN4" },
   },
-  
+
   solid_TEKGREN5 =
   {
     prefab = "SOLID", skin = { wall="TEKGREN5" },
   },
-  
+
   solid_PANEL8 =
   {
     prefab = "SOLID", skin = { wall="PANEL8" },
   },
-  
+
   solid_PANEL9 =
   {
     prefab = "SOLID", skin = { wall="PANEL9" },
   },
-  
+
   wall_pic_TV =
   {
     prefab = "WALL_PIC",
@@ -995,7 +995,7 @@ DOOM2_WALL_PREFABS =
     min_height = 160,
     skin = { pic_w="ZZWOLF6", lite_w="LITE5", pic_h=128 },
 
-    theme_probs = { URBAN=8 }, 
+    theme_probs = { URBAN=8 },
   },
 
   wall_pic_SPDUDE7 =
@@ -1034,7 +1034,7 @@ COMMON_ARCH_PREFABS =
 --  environment = "outdoor",
     skin = {},
   },
- 
+
   arch_wire_fence =
   {
     prefab = "ARCH_WIRE_FENCE",
@@ -1213,21 +1213,21 @@ COMMON_SCENERY_PREFABS =
     environment = "indoor",
     skin = { wall="COMPWERD" },
   },
-  
+
   pillar_GSTLION =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="GSTLION" },
   },
-  
+
   pillar_SPDUDE5 =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="SP_DUDE5" },
   },
-  
+
   pillar_light1_METAL =
   {
     prefab = "PILLAR_LIGHT1",
@@ -1288,7 +1288,7 @@ COMMON_SCENERY_PREFABS =
     min_height = 96,
 
     skin =
-    { 
+    {
       shawn_w = "SHAWN3", shawn_f = "FLAT1",
       lite_w  = "LITE5",  lite_f  = "CEIL5_1",
     },
@@ -1354,7 +1354,7 @@ COMMON_SCENERY_PREFABS =
     min_height = 80,
 
     skin =
-    { 
+    {
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
     },
@@ -1567,7 +1567,7 @@ DOOM2_SCENERY_PREFABS =
     prefab = "POND_SMALL",
     environment = "outdoor",
     theme_probs = { NATURE=90 },
-    skin = 
+    skin =
     {
       pond_w="ZIMMER4", pond_f="RROCK18",
       outer_w="BROWNHUG", liquid_f="FWATER1",
@@ -1588,25 +1588,25 @@ DOOM2_SCENERY_PREFABS =
     prefab = "COMPUTER_TALL",
     skin   = { comp_w="COMPSTA1", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_tall_STATION2 =
   {
     prefab = "COMPUTER_TALL",
     skin   = { comp_w="COMPSTA2", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_thin_STATION1 =
   {
     prefab = "COMPUTER_TALL_THIN",
     skin   = { comp_w="COMPSTA1", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_thin_STATION2 =
   {
     prefab = "COMPUTER_TALL_THIN",
     skin   = { comp_w="COMPSTA2", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_desk_EW8 =
   {
     prefab = "COMPUTER_DESK",
@@ -1770,28 +1770,28 @@ DOOM2_SCENERY_PREFABS =
     environment = "indoor",
     skin = { wall="MARBFAC4" },
   },
-  
+
   pillar_PANBLUE =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="PANBLUE" },
   },
- 
+
   pillar_PANRED =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="PANRED" },
   },
- 
+
   pillar_PANEL5 =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="PANEL5" },
   },
- 
+
   cage_small_METAL =
   {
     prefab = "CAGE_SMALL",
@@ -1930,7 +1930,7 @@ COMMON_FEATURE_PREFABS =
   {
     prefab = "POND_SMALL",
     theme_probs = { CAVE=30 },
-    skin = 
+    skin =
     {
       pond_f="LAVA1", pond_w="ROCKRED1",
       liquid_f="LAVA1", -- outer_w
@@ -1945,7 +1945,7 @@ COMMON_FEATURE_PREFABS =
     environment = "outdoor",
     theme_probs = { NATURE=40 },
     min_height = 256,
-    skin = 
+    skin =
     {
       rock_w="SP_ROCK1", rock_f="MFLR8_3",
       liquid_w="ROCKRED1", liquid_f="LAVA1",
@@ -2012,7 +2012,7 @@ COMMON_FEATURE_PREFABS =
     pickup_specialness = 90,
     force_dir = 2, -- optimisation
   },
-  
+
   launch_pad_med_F =
   {
     prefab = "LAUNCH_PAD_MEDIUM",
@@ -2030,7 +2030,7 @@ COMMON_FEATURE_PREFABS =
     pickup_specialness = 80,
     force_dir = 4, -- optimisation
   },
-  
+
   launch_pad_sml_S =
   {
     prefab = "LAUNCH_PAD_SMALL",
@@ -2048,7 +2048,7 @@ COMMON_FEATURE_PREFABS =
     pickup_specialness = 80,
     force_dir = 2, -- optimisation
   },
- 
+
   tech_pickup_STONE =
   {
     prefab = "TECH_PICKUP_LARGE",
@@ -2101,7 +2101,7 @@ COMMON_FEATURE_PREFABS =
       lite_lt=255, frame_lt=168, kind=8,
     }
   },
-  
+
   skylight_mega_METAL =
   {
     prefab = "SKYLIGHT_MEGA_1",
@@ -2111,7 +2111,7 @@ COMMON_FEATURE_PREFABS =
     -- max_height = 304,  ???
 
     skin =
-    { 
+    {
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
       beam_w = "METAL", beam_c = "CEIL5_2",
@@ -2222,13 +2222,13 @@ DOOM2_FEATURE_PREFABS =
     {
       wall="COMPWERD", floor="FLAT14", ceil="FLOOR4_8",
       step_w="STEP1", carpet_f="FLOOR1_1",
-      
+
       comp_w="SPACEW3", comp2_w="COMPTALL", span_w="COMPSPAN",
       comp_f="CEIL5_1", lite_c="TLITE6_5",
 
       lamp_t="lamp"
     },
-    
+
     theme_probs = { TECH=80, INDUSTRIAL=20 },
     force_dir = 2, -- optimisation
   },
@@ -2323,7 +2323,7 @@ DOOM2_FEATURE_PREFABS =
   {
     prefab = "POND_MEDIUM",
     environment = "outdoor",
-    skin = 
+    skin =
     {
       pond_w="BROWNHUG", pond_w2="ZIMMER2",
       pond_f="RROCK18",  pond_f2="RROCK19",
@@ -2332,13 +2332,13 @@ DOOM2_FEATURE_PREFABS =
     },
     theme_probs = { NATURE=100 },
   },
-  
+
   pond_large_GRASS =
   {
     prefab = "POND_LARGE",
     environment = "outdoor",
     theme_probs = { NATURE=170 },
-    skin = 
+    skin =
     {
       pond_w="ZIMMER2", pond_f="RROCK19",
       outer_w="BROWNHUG", liquid_f="FWATER1",
@@ -2366,7 +2366,7 @@ DOOM2_FEATURE_PREFABS =
     min_height = 96,
 
     skin =
-    { 
+    {
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
       beam_w = "WOOD12", beam_c = "FLAT5_2",
@@ -2491,7 +2491,7 @@ COMMON_MISC_PREFABS =
     prefab = "FENCE_RAIL",
     skin = { rail_w="BRNSMALC" },
   },
-  
+
   arch_arched =
   {
     prefab = "ARCH_ARCHED", skin = {},
@@ -2586,7 +2586,7 @@ DOOM2_MISC_PREFABS =
     prefab = "FENCE_RAIL",
     skin = { rail_w="MIDBARS3" },
   },
-  
+
   exit_hole_SKY =
   {
     prefab = "EXIT_HOLE_ROUND",

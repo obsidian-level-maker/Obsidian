@@ -21,7 +21,7 @@ FD_MONSTER_LIST =
   ---| fairly good |---
 
   "zombie", "shooter", "imp",
-  "demon",  "spectre", "caco", 
+  "demon",  "spectre", "caco",
   "arach", "revenant", "mancubus",
 
   ---| crappy but playable |---
@@ -29,15 +29,15 @@ FD_MONSTER_LIST =
   "skull",  -- missing death frames
   "baron",  -- not yet coloured
   "gunner",
-  "ss_dude", 
+  "ss_dude",
 
   ---| missing sprites |---
-  
-  -- "knight",  
-  -- "pain",    
 
-  -- "cyber",   
-  -- "spider",  
+  -- "knight",
+  -- "pain",
+
+  -- "cyber",
+  -- "spider",
   -- "vile",
 }
 
@@ -67,7 +67,7 @@ GAME_FACTORIES["freedoom"] = function()
   -- FreeDOOM is lacking many monster sprites
 
   T.monsters = {}
-  
+
   for zzz,mon in ipairs(FD_MONSTER_LIST) do
     T.monsters[mon] = DM_MONSTERS[mon] or D2_MONSTERS[mon]
   end

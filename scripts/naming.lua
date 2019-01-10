@@ -49,7 +49,7 @@ namelib.NAMES =
         ["Enter the"]=10
         ["Welcome to the"]=10
         ["Escape the"]=10
-        ["Flight from the"]=5 
+        ["Flight from the"]=5
         ["Journey to the"]=10
         ["Assault on the"]=15
         ["Death Awaits in the"]=5
@@ -211,7 +211,7 @@ namelib.NAMES =
         Support=5, Counteraction=3, Holding=5,
         Testing=5, Quarantine=5, Authorization=5,
         Synthesis=5, Unification=3, Loading=5,
-        Disposal=5, Dumping=3, Pumping=4, 
+        Disposal=5, Dumping=3, Pumping=4,
         Transfer=3, Mobilization=3, Irrigation=3,
         Communications=5, Operations=5,
         Training=5, Treatment=5, Shipment=5,
@@ -222,7 +222,7 @@ namelib.NAMES =
         -- descriptive
         Main=20, Entrance=10, Provisional=3,
         Planetary=3, Interstellar=7, Lunar=10,
-        Atlas=3, Promethus=2, Cronus=3, 
+        Atlas=3, Promethus=2, Cronus=3,
         Hyperion=2, Icarus=2, Echo=2,
         Morpheus=2, Eos=2, Orion=2,
         Tiephron=2, Psion=3,
@@ -279,9 +279,9 @@ namelib.NAMES =
         Complex=20, Center=20,
         Facility=10, Works=2,
         Area=15, Site=10, Zone=10,
-        Quadrant=5, Sector=5, Adjunct=3, 
+        Quadrant=5, Sector=5, Adjunct=3,
         Platform=5, Port=3, Grid=5,
-        Hub=10, Nexus=3, Core=5, 
+        Hub=10, Nexus=3, Core=5,
         Terminal=10, Installation=5,
         Project=5, Experiment=3,
         Infrastructure=5, Annex=5,
@@ -490,7 +490,7 @@ namelib.NAMES =
 
       e =
       {
-        Satan=10, ["The Devil"]=7, Lucifer=7, Helgor=3, 
+        Satan=10, ["The Devil"]=7, Lucifer=7, Helgor=3,
         Ceren=2, Mephisto=3, Vuradi=2, Oltion=2, Ktulu=2,
         Dozod=2, Draco=2, Kalrac=2, Minotaur=5, Pandora=1,
         Minos=2, Orgel=2, Nurgle=2, Odin=2, Balrok=2, Mammon=3,
@@ -570,7 +570,7 @@ namelib.NAMES =
         Divine=5, Devout=5, Sacerdotal=5, Desecrated=5,
         Sacred=5, Clerical=5, Accursed=5, Malodorous=5,
         Despicable=2, Heinous=5, Mephitic=2, Peccant=5,
-        Sordid=2, Sacreligious=5, Grievous=2, Fetid=2, 
+        Sordid=2, Sacreligious=5, Grievous=2, Fetid=2,
         Ferine=2, Unspiritual=2, Cruel=5, Crass=2,
       }
 
@@ -614,7 +614,7 @@ namelib.NAMES =
         Carnage=10, Gore=5, Shadows=10, Rapine=10,
         Darkness=10, Destruction=5, Famine=10,
         Suffering=5, Torment=10, Torture=10, Heresy=10,
-        Iconoclasm=10, Fallacy=10, Defection=10, 
+        Iconoclasm=10, Fallacy=10, Defection=10,
         Blasphemy=10, Infidelity=10, Paganism=10,
         Schism=10, Secularism=10, Sin=10, Mayhem=10,
         Sorrow=10, Trauma=10, Agony=10, Anguish=10,
@@ -1002,7 +1002,7 @@ namelib.NAMES =
         Crowded=3, Untamed=3,
 
         Bleak=30, Abandoned=15, Forsaken=10,
-        Cursed=20, Wretched=15, Bewitched=5, 
+        Cursed=20, Wretched=15, Bewitched=5,
         Forbidden=20, Sinister=10, Hostile=10,
         Mysterious=10, Obscure=10, Living=3,
         Ominous=15, Perilous=15,
@@ -1034,14 +1034,14 @@ namelib.NAMES =
         Neighborhood=3, Environs=2,
         Bypass=2, Barrio=2, Crossing=5,
         Promenade=5, Trek=5, Venture=5,
-        Voyage=7, Course=5, 
+        Voyage=7, Course=5,
 
         Camp=3, Campus=2, Compound=3, Venue=1,
         Harbor=10, Reserve=3, Ward=3,
         Junction=2, Seabed=5, Embankment=3,
-        Oasis=2, Odyssey=2, Habitat=2, Soil=10, 
+        Oasis=2, Odyssey=2, Habitat=2, Soil=10,
         Scum=5, Remnants=10, Remains=5, Debris=5,
-        Refuse=5, Dust=5, 
+        Refuse=5, Dust=5,
 
         Siege=5, Assault=5, Attack=5, Ambush=5,
         Onslaught=5, Stampede=5, Encounter=5,
@@ -1072,7 +1072,7 @@ namelib.NAMES =
         Tears=10, Helplessness=2, Misfortune=5,
         Misery=10, Turmoil=5, Decay=5,
         Blood=10, Insanity=5, Delirium=2,
-        Sabotage=5, 
+        Sabotage=5,
 
         -- residents
         Ghosts=15, Gods=10, Spirits=5,
@@ -1082,7 +1082,7 @@ namelib.NAMES =
         Murderers=3, Vultures=5, Pirates=3,
         Spiders=2, Snakes=5, Vermin=5,
         Madmen=2, Mortals=10, Martyrs=5,
-        Prophets=5, Prey=5, Crows=5, 
+        Prophets=5, Prey=5, Crows=5,
         Fools=1, Creeps=3, Demigods=3,
 
         ["the Bizarre"]=5
@@ -2380,7 +2380,7 @@ function namelib.one_from_pattern(DEF)
   local pos = 1
 
   while pos <= #pattern do
-    
+
     local c = string.sub(pattern, pos, pos)
     pos = pos + 1
 

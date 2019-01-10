@@ -52,7 +52,7 @@ end
 function compute_pow_factors()
 
   -- also copies radius/height values to monster info
-  
+
   local function pow_factor(info)
     return 5 + 19 * info.hp ^ 0.5 * (info.dm / sel(info.melee,80,50)) ^ 1.2
   end
@@ -80,7 +80,7 @@ function expand_prefabs(fabs)
 
   for name,P in pairs(fabs) do
     expand_copies(P.elements)
-  
+
     -- set size values
     local f_deep = #P.structure
     local f_long = #P.structure[1]

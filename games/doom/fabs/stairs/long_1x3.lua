@@ -10,7 +10,7 @@ PREFABS.Stair_long_1x3 =
 
   where  = "seeds"
   shape  = "I"
-  
+
   seed_h = 3
 
   x_fit  = "stretch"

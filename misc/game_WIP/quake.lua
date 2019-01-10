@@ -1106,7 +1106,7 @@ QUAKE.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    
+
     pic = "KEY03_1"
     pic_w = 32
     pic_h = 32
@@ -1119,7 +1119,7 @@ QUAKE.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    
+
     pic = "KEY03_2"
     pic_w = 32
     pic_h = 32
@@ -1129,7 +1129,7 @@ QUAKE.SKINS =
   }
 
 
-  ----| SWITCHED DOORS |---- 
+  ----| SWITCHED DOORS |----
 
   Door_SW_1 =
   {
@@ -1160,7 +1160,7 @@ QUAKE.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    
+
     pic = "KEY03_3"
     pic_w = 64
     pic_h = 64
@@ -1493,7 +1493,7 @@ QUAKE.ROOM_THEMES =
       FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
       SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
       WIZMET1_2=50, MMETAL1_6=50, MMETAL1_7=50, MMETAL1_8=50,
-      WMET4_5=50, WMET1_1=50, 
+      WMET4_5=50, WMET1_1=50,
     }
 
     ceilings =
@@ -1545,7 +1545,7 @@ QUAKE.ROOM_THEMES =
     {
       ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
       WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
-      GRAVE01_3=10, WSWAMP1_2=20, 
+      GRAVE01_3=10, WSWAMP1_2=20,
     }
   }
 
@@ -1554,7 +1554,7 @@ QUAKE.ROOM_THEMES =
   {
     floors =
     {
-      CITY4_6=30, CITY6_7=30, 
+      CITY4_6=30, CITY6_7=30,
       CITY4_5=30, CITY4_8=30, CITY6_8=30,
       WALL14_6=20, CITY4_1=30, CITY4_2=30, CITY4_7=30,
     }
@@ -1564,7 +1564,7 @@ QUAKE.ROOM_THEMES =
       GROUND1_2=50, GROUND1_5=50, GROUND1_6=20,
       GROUND1_7=30, GROUND1_8=20,
       ROCK3_7=50, ROCK3_8=50, ROCK4_2=50,
-      VINE1_2=50, 
+      VINE1_2=50,
     }
   }
 }
@@ -1653,7 +1653,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_dog"
     r = 32  -- dogs are fat!
-    h = 80 
+    h = 80
     -- we use 'replaces' here to simulate the way dogs
     -- usually appear with grunts.
     replaces = "grunt"
@@ -1668,7 +1668,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_fish"
     r = 16
-    h = 80 
+    h = 80
     -- only appears in water
     health = 25
     damage = 3
@@ -1680,7 +1680,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_army"
     r = 16
-    h = 80 
+    h = 80
     level = 1
     prob = 80
     health = 30
@@ -1694,7 +1694,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_enforcer"
     r = 16
-    h = 80 
+    h = 80
     level = 2
     prob = 40
     health = 80
@@ -1708,7 +1708,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_zombie"
     r = 16
-    h = 80 
+    h = 80
     level = 2
     prob = 40
     health = 60
@@ -1722,7 +1722,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_wizard"
     r = 16
-    h = 80 
+    h = 80
     level = 2
     prob = 60
     health = 80
@@ -1735,7 +1735,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_tarbaby"
     r = 16
-    h = 80 
+    h = 80
     level = 3
     prob = 1
     health = 80
@@ -1749,7 +1749,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_knight"
     r = 16
-    h = 80 
+    h = 80
     level = 1
     prob = 60
     density  =  0.6
@@ -1762,7 +1762,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_hell_knight"
     r = 32
-    h = 80 
+    h = 80
     level = 5
     prob = 30
     density  =  0.4
@@ -1775,7 +1775,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_ogre"
     r = 32
-    h = 80 
+    h = 80
     level = 3
     prob = 40
     health = 200
@@ -1789,7 +1789,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_demon1"
     r = 32
-    h = 80 
+    h = 80
     level = 4
     prob = 10
     health = 300
@@ -1803,7 +1803,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_shalrath"
     r = 32
-    h = 80 
+    h = 80
     level = 7
     prob = 10
     health = 400
@@ -1816,7 +1816,7 @@ QUAKE.MONSTERS =
   {
     id = "monster_shambler"
     r = 32
-    h = 80 
+    h = 80
     level = 7
     prob = 10
     health = 600

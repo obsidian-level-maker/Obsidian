@@ -53,7 +53,7 @@ Notes
 
    Your weapons can damage other monsters though, via such things
    as rocket splash, BFG spray, and shotgun spread.
-   
+
 *  Weapons are "fired" in short rounds.  Each round the weapon is
    chosen based on their intrinsic 'pref' value (and modified by a
    'factor' value if present), as well as other things like the
@@ -274,7 +274,7 @@ function Fight_Simulator(monsters, weapons, stats)
   each M in active_mons do
     stats.health = stats.health + M.info.damage
   end
- 
+
   -- simulate infighting
   -- [ done *after* computing player health, as the damage values are based
   --   on demo analysis and implicitly contain an infighing factor ]

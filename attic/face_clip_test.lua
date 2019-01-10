@@ -420,7 +420,7 @@ function CreateQuad()
     R2 = math.floor(math.random() * 8)
 
     if L2 < L1 then L1,L2 = L2,L1 end
-    if R2 < R1 then R1,R2 = R2,R1 end 
+    if R2 < R1 then R1,R2 = R2,R1 end
 
   until not (L1 == L2 and R1 == R2)
 

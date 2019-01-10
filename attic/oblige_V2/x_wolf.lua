@@ -245,7 +245,7 @@ WF_COMBOS =
 
     theme_probs = { BUNKER=80 },
   },
- 
+
   PURPLE_STONE =
   {
     mat_pri = 1,
@@ -263,7 +263,7 @@ WF_COMBOS =
 
     theme_probs = { CAVE=90 },
   },
- 
+
   BROWN_BRICK =
   {
     mat_pri = 5,
@@ -406,7 +406,7 @@ WF_THEMES =
   -- Main Themes:
   --
   -- 1. BUNKER --> brick/wood, humans, quarters, plants/urns
-  -- 2. CELLS  --> blue_stone, dogs, skeletons 
+  -- 2. CELLS  --> blue_stone, dogs, skeletons
   -- 3. CAVE   --> cave/rock tex, vines, mutants
 
   BUNKER =
@@ -502,7 +502,7 @@ WF_MONSTERS =
 WF_BOSSES =
 {
   -- FIXME: hit-points are just averages of skill 2 and 3
- 
+
   -- FIXME: dm values are crap!
 
   hans_grosse   = { hp=1000, dm=30, hitscan=true, give_key="k_gold" },

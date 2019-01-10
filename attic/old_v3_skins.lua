@@ -68,25 +68,25 @@ DOOM.STEPS =
 
 DOOM.LIFTS =
 {
-  shiny = 
+  shiny =
   {
     side_w="SUPPORT2", top_f="FLAT20"
     walk_kind=88, switch_kind=62
   }
 
-  rusty = 
+  rusty =
   {
     side_w="SUPPORT3", top_f="CEIL5_2"
     walk_kind=88, switch_kind=62
   }
 
-  platform = 
+  platform =
   {
     side_w="PLAT1", top_f="FLAT23"
     walk_kind=88, switch_kind=62
   }
 
-  spine = 
+  spine =
   {
     side_w="SKSPINE1", -- top_f="FLAT23"
     walk_kind=88, switch_kind=62
@@ -122,7 +122,7 @@ DOOM.CRATES =  -- temporary (until good prefab system)
 {
   crate1 = { side_w="CRATE1", top_f="CRATOP2" }
   crate2 = { side_w="CRATE2", top_f="CRATOP1" }
-  
+
   space = { side_w="SPACEW3",  top_f="CEIL5_1" }
   comp  = { side_w="COMPWERD", top_f="CEIL5_1" }
   mod   = { side_w="MODWALL3", top_f="FLAT19" }

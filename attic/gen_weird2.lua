@@ -65,7 +65,7 @@ function create_points()
       ghost = {},
       num_edges = 0
     }
-    
+
     GRID[gx][gy] = P
 
     P.limit_edges = rand.sel(T_BRANCH_PROB, 3, 2)
@@ -196,7 +196,7 @@ function eval_edge_at_point(P, dir)
   local R_dir = geom.RIGHT_45[dir]
 
   if P.edge[L_dir] or P.edge[R_dir] then return -1 end
-  
+
   if N.edge[10 - L_dir] or N.edge[10 - R_dir] then return -1 end
 
 --FIXME  if would_close_a_square(P, dir, N) then return -1 end
@@ -337,7 +337,7 @@ function check_point_is_staircase(P)
 
   assert(NX and NY)
 
-  -- diagonal direction from NX 
+  -- diagonal direction from NX
   local corner
   if x_dir == 4 then
     corner = sel(y_dir == 2, 3, 9)

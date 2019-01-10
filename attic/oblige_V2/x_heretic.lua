@@ -111,7 +111,7 @@ HC_THINGS =
   moss1   = { id=48, kind="scenery", r=16,h=24, ceil=true, pass=true },
   moss2   = { id=49, kind="scenery", r=16,h=28, ceil=true, pass=true },
   volcano = { id=87, kind="scenery", r=12,h=32 },
-  
+
   small_pillar = { id=29, kind="scenery", r=16,h=36 },
   brown_pillar = { id=47, kind="scenery", r=16,h=128 },
   glitter_red  = { id=74, kind="scenery", r=20,h=16, pass=true },
@@ -242,7 +242,7 @@ HC_COMBOS =
   {
     theme_probs = { CITY=20, DOME=20 },
     mat_pri = 1,
-    
+
     wall  = "CTYSTUC3",
     floor = "FLOOR10",
     ceil  = "FLOOR11",
@@ -253,11 +253,11 @@ HC_COMBOS =
 
   },
 
-  DISCO1 = 
+  DISCO1 =
   {
     theme_probs = { EGYPT=20 },
     mat_pri = 1,
-    
+
     wall  = "SPINE2",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -266,13 +266,13 @@ HC_COMBOS =
 --  void = "CTYSTUC4",
 
   },
- 
-  --- Grey-walls, pink/brown floors 
-  DISCO2 = 
+
+  --- Grey-walls, pink/brown floors
+  DISCO2 =
   {
     theme_probs = { DOME=20 },
     mat_pri = 1,
-    
+
     wall  = "SQPEB1",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -281,12 +281,12 @@ HC_COMBOS =
 --  void = "CTYSTUC4",
 
   },
-  
+
   PYRAMID =
   {
     theme_probs = { EGYPT=20 },
     mat_pri = 1,
-    
+
     wall  = "SNDPLAIN",
     floor = "FLOOR27",
     ceil  = "FLOOR10",
@@ -300,7 +300,7 @@ HC_COMBOS =
   {
     theme_probs = { EGYPT=15 },
     mat_pri = 1,
-    
+
     wall  = "TRISTON2",
     floor = "FLAT522",
     ceil  = "FLOOR20",
@@ -314,7 +314,7 @@ HC_COMBOS =
   {
     theme_probs = { EGYPT=15 },
     mat_pri = 1,
-    
+
     wall  = "SQPEB2",
     floor = "FLOOR06",
     ceil  = "FLOOR06",
@@ -329,7 +329,7 @@ HC_COMBOS =
   {
     theme_probs = { EGYPT=20 },
     mat_pri = 1,
-    
+
     wall  = "SNDBLCKS",
     floor = "FLOOR27",
     ceil  = "FLOOR10",
@@ -340,7 +340,7 @@ HC_COMBOS =
   },
 
 
-  CAVE1 = 
+  CAVE1 =
   {
     theme_probs = { CAVE=20 },
     mat_pri = 1,
@@ -349,10 +349,10 @@ HC_COMBOS =
     ceil = "FLOOR01",
 
     scenery = "stal_big_C",
- 
-  }, 
 
-  CAVE2 = 
+  },
+
+  CAVE2 =
   {
     theme_probs = { CAVE=20 },
     mat_pri = 1,
@@ -361,8 +361,8 @@ HC_COMBOS =
     ceil = "FLAT506",
 
     scenery = "stal_small_C",
- 
-  }, 
+
+  },
 
   CAVE3 =  -- Muddy walls, but one of the few outdoor textures
   {
@@ -373,8 +373,8 @@ HC_COMBOS =
     ceil = "FLAT516",
 
     scenery = "stal_small_C",
- 
-  }, 
+
+  },
 
   PURPLE =
   {
@@ -444,7 +444,7 @@ HC_COMBOS =
 
   ---- OUTDOOR ------------
 
-  CAVEO1 = 
+  CAVEO1 =
   {
     theme_probs = { CAVE=20 },
     mat_pri = 2,
@@ -454,10 +454,10 @@ HC_COMBOS =
     ceil = "FLOOR01",
 
     scenery = "stal_big_F",
- 
-  }, 
 
-  CAVEO2 = 
+  },
+
+  CAVEO2 =
   {
     theme_probs = { CAVE=20 },
     mat_pri = 2,
@@ -467,10 +467,10 @@ HC_COMBOS =
     ceil = "FLAT506",
 
     scenery = "stal_small_F",
- 
-  }, 
 
-  CAVEMUD = 
+  },
+
+  CAVEMUD =
   {
     theme_probs = { CAVE=15 },
     mat_pri = 2,
@@ -480,8 +480,8 @@ HC_COMBOS =
     ceil = "FLAT510",
 
     scenery = "stal_small_F",
- 
-  }, 
+
+  },
 
   --- Looks obnoxious outdoors; disabled
   ROOTO =
@@ -499,12 +499,12 @@ HC_COMBOS =
   },
 
 
-  ODISCO1 = 
+  ODISCO1 =
   {
     theme_probs = { EGYPT=20 },
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "SPINE2",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -513,13 +513,13 @@ HC_COMBOS =
 --  void = "CTYSTUC4",
 
   },
-  
-  ODISCO2 = 
+
+  ODISCO2 =
   {
     theme_probs = { DOME=20 },
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "SQPEB1",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -534,7 +534,7 @@ HC_COMBOS =
     theme_probs = { EGYPT=20 },
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "SNDPLAIN",
     floor = "FLOOR27",
     ceil  = "FLOOR27",
@@ -549,7 +549,7 @@ HC_COMBOS =
     theme_probs = { EGYPT=15 },
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "TRISTON2",
     floor = "FLAT521",
     ceil  = "FLAT503",
@@ -558,7 +558,7 @@ HC_COMBOS =
 --  void = "CTYSTUC4",
 
   },
-  
+
   WATER =
   {
     theme_probs = { GARISH=20 },
@@ -632,7 +632,7 @@ HC_COMBOS =
     scenery = "fire_brazier",
 
   },
-  
+
   SANDZ =
   {
     theme_probs = { EGYPT=20 },
@@ -653,7 +653,7 @@ HC_COMBOS =
     theme_probs = { CITY=20, DOME=20 },
     outdoor = true,
     mat_pri = 2,
-    
+
     wall  = "CTYSTUC2",
     floor = "FLOOR27",
     ceil  = "FLOOR27",
@@ -663,7 +663,7 @@ HC_COMBOS =
 
     scenery = "small_pillar",
   },
-  
+
 }
 
 HC_EXITS =
@@ -717,95 +717,95 @@ HC_EXITS =
 
 HC_HALLWAYS =
 {
- 
-  -- Hall with set stone walls 
+
+  -- Hall with set stone walls
   RCKHALL = {
         mat_pri = 0,
-	theme_probs = { CITY=20, DOME=20 },
-    	wall = "GRSTNPB",
-	void = "GRSTNPB",
-    	step  = "GRSTNPB",
-	pillar = "WOODWL",
-	
+    theme_probs = { CITY=20, DOME=20 },
+        wall = "GRSTNPB",
+    void = "GRSTNPB",
+        step  = "GRSTNPB",
+    pillar = "WOODWL",
+
     floor = "FLOOR03",
     ceil  = "FLOOR03",
-	trim_mode = "guillotine",	
-	
+    trim_mode = "guillotine",
+
   },
 
   -- Hall with natural stone walls
   STHALL = {
         mat_pri = 0,
-	theme_probs = { CITY=20, CAVE=20 },
-    	wall = "LOOSERCK",
-	void = "LOOSERCK",
-    	step  = "GRSTNPB",
-	pillar = "GRSTNPB",
-	
+    theme_probs = { CITY=20, CAVE=20 },
+        wall = "LOOSERCK",
+    void = "LOOSERCK",
+        step  = "GRSTNPB",
+    pillar = "GRSTNPB",
+
     floor = "FLOOR00",
     ceil  = "FLOOR00",
-	trim_mode = "guillotine",	
-	
+    trim_mode = "guillotine",
+
   },
 
   -- Hall with roots on the walls
   RTHALL = {
         mat_pri = 0,
-	theme_probs = { CAVE=20 },
-    	wall = "ROOTWALL",
-	void = "ROOTWALL",
-    	step  = "ROOTWALL",
-	pillar = "ROOTWALL",
-	
+    theme_probs = { CAVE=20 },
+        wall = "ROOTWALL",
+    void = "ROOTWALL",
+        step  = "ROOTWALL",
+    pillar = "ROOTWALL",
+
     floor = "FLAT506",
     ceil  = "FLAT506",
-	trim_mode = "guillotine",	
-	
+    trim_mode = "guillotine",
+
   },
 
   -- Hall with sandy walls
   SDHALL = {
         mat_pri = 0,
-	theme_probs = { EGYPT=20 },
-    	wall = "SNDPLAIN",
-	void = "SNDPLAIN",
-    	step  = "SPINE2",
-	pillar = "SPINE2",
-	
+    theme_probs = { EGYPT=20 },
+        wall = "SNDPLAIN",
+    void = "SNDPLAIN",
+        step  = "SPINE2",
+    pillar = "SPINE2",
+
     floor = "FLOOR27",
     ceil  = "FLOOR10",
-	trim_mode = "guillotine",	
-	
+    trim_mode = "guillotine",
+
   },
 
   -- Hall with wooden walls
   WDHALL = {
         mat_pri = 0,
-	theme_probs = { CITY=20, EGYPT=20 },
-    	wall = "SQPEB2",
-	void = "SQPEB2",
-    	step  = "SQPEB2",
-	pillar = "SQPEB2",
-	
+    theme_probs = { CITY=20, EGYPT=20 },
+        wall = "SQPEB2",
+    void = "SQPEB2",
+        step  = "SQPEB2",
+    pillar = "SQPEB2",
+
     floor = "FLOOR06",
     ceil  = "FLOOR06",
-	trim_mode = "guillotine",	
-	
+    trim_mode = "guillotine",
+
   },
 
   -- Garish blue watery hall
   WHALL = {
         mat_pri = 0,
-	theme_probs = { GARISH=20, DOME=20 },
-    	wall = "MOSAIC1",
-	void = "MOSAIC1",
-    	step  = "WATRWAL1",
-	pillar = "WATRWAL1",
-	
+    theme_probs = { GARISH=20, DOME=20 },
+        wall = "MOSAIC1",
+    void = "MOSAIC1",
+        step  = "WATRWAL1",
+    pillar = "WATRWAL1",
+
     floor = "FLTWAWA1",
     ceil  = "FLAT502",
-	trim_mode = "guillotine",	
-	
+    trim_mode = "guillotine",
+
   }
 }
 
@@ -999,9 +999,9 @@ HC_DOORS =
 ---              frame_f="FLAT1", frame_c="TLITE6_6",
                }
              },
-  
+
  d_wood   = { wall="DOORWOOD", w=64,  h=128, ceil="FLOOR10" },
-  
+
 --  d_stone  = { wall="DOORSTON", w=64,  h=128 },
 }
 
@@ -1018,7 +1018,7 @@ HC_KEY_DOORS =
       door_w="DOORSTON", door_c="FLOOR28",
       track_w="METL2",
       frame_f="FLOOR04",
-      door_h=128, 
+      door_h=128,
       door_kind=32, tag=0,  -- kind_rep=26
     },
 
@@ -1036,7 +1036,7 @@ HC_KEY_DOORS =
       door_w="DOORSTON", door_c="FLOOR28",
       track_w="METL2",
       frame_f="FLOOR04",
-      door_h=128, 
+      door_h=128,
       door_kind=33, tag=0, -- kind_rep=28,
     },
 
@@ -1054,7 +1054,7 @@ HC_KEY_DOORS =
       door_w="DOORSTON", door_c="FLOOR28",
       track_w="METL2",
       frame_f="FLOOR04",
-      door_h=128, 
+      door_h=128,
       door_kind=34, tag=0, -- kind_rep=27,
     },
 
@@ -1243,7 +1243,7 @@ HC_ROOMS =
     window_probs = { out_diff=1, combo_diff=1, normal=1 },
     space_range  = { 20, 65 },
   },
- 
+
   SCENIC =
   {
   },
@@ -1409,12 +1409,12 @@ HC_DEATHMATCH =
   },
 
   health =
-  { 
+  {
     h_vial=70, h_flask=25, h_urn=5
   },
 
   ammo =
-  { 
+  {
     crystal=10, geode=20,
     arrows=20, quiver=60,
     claw_orb1=10, claw_orb2=40,
@@ -1545,7 +1545,7 @@ GAME_FACTORIES["heretic"] = function()
     cell_size = 9,
     cell_min_size = 6,
 
-    caps = { heights=true, sky=true, 
+    caps = { heights=true, sky=true,
              fragments=true, move_frag=true, rails=true,
              closets=true,   depots=true,
              switches=true,  liquids=true,
@@ -1612,10 +1612,10 @@ GAME_FACTORIES["heretic"] = function()
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
-    
+
     diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 },
     bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
-    
+
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
 

@@ -30,7 +30,7 @@ HARMONY.ENTITIES =
 
   dm_player     = { id=11 }
   teleport_spot = { id=14 }
-  
+
   --- keys ---
   kc_green   = { id=5 }
   kc_yellow  = { id=6 }
@@ -215,7 +215,7 @@ HARMONY.MATERIALS =
   W_ICE   = { f="NUKAGE1", t="SFALL1"   }
   W_ROCK  = { f="SLIME05", t="SFALL1"   }
   W_STEEL = { f="BLOOD1",  t="GSTFONT1" }
-                          
+
   LAVA    = { f="SLIME01", t="0ROOD02"  }  -- NOTE: texture not animated
   NUKAGE  = { f="SLIME09", t="BFALL1"   }
 

@@ -16,7 +16,7 @@ HEXEN.LIQUIDS =
 {
   -- Hexen gets damage from the flat (not a sector special)
 
-  -- water and muck sometimes flow in a direction, but I'll leave that to 
+  -- water and muck sometimes flow in a direction, but I'll leave that to
   -- later code development.
   water  = { mat="X_005", light_add=16, special=0 }
   muck   = { mat="X_009", light_add=16, special=0 }
@@ -185,7 +185,7 @@ HEXEN.MATERIALS =
   PLANET1  = { t="PLANET1",  f="F_025" }
   PLANET2  = { t="PLANET2",  f="F_025" }
   PLAT01   = { t="PLAT01",   f="F_045" }
-  PLAT02   = { t="PLAT02",   f="F_065" }  
+  PLAT02   = { t="PLAT02",   f="F_065" }
   POOT     = { t="POOT",     f="F_048" }
   PRTL02   = { t="PRTL02",   f="F_057" }
   PRTL03   = { t="PRTL03",   f="F_019" }

@@ -32,7 +32,7 @@ AMULETS.ENTITIES =
 
   dm_player     = { id=11 }
   teleport_spot = { id=14 }
-  
+
   --- PICKUPS ---
 
   potion = { id=811 }
@@ -206,7 +206,7 @@ AMULETS.MONSTERS =
     health = 20
     attack = "melee"
     damage = 4
-  } 
+  }
 
 --[[ FIXME
 
@@ -238,7 +238,7 @@ AMULETS.MONSTERS =
   skeleton = { id=1033, kind="monster", r=20,h=56 }
   deathknight = { id=1035, kind="monster", r=20,h=56 }
   elmore = { id=1036, kind="monster", r=20,h=56 }
-   
+
   --- BOSSES ---
 
   Wyvern     = { id=1005, kind="monster", r=10,h=5644 }
@@ -284,7 +284,7 @@ bolt_wood     = { id=4302 }
 AMULETS.PICKUPS =
 {
   -- HEALTH --
-  
+
 
   -- ARMOR --
 }

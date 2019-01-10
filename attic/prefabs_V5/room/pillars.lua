@@ -92,7 +92,7 @@ DOOM.SKINS.Room_pillar4 =
   {
     b = { f_h=48 }
   }
- 
+
   north  = "bbb"
   south  = "b.b"
 

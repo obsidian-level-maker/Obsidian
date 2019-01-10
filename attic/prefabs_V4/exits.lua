@@ -407,7 +407,7 @@ PREFAB.QUAKE_EXIT_PAD =
 
       entity =
       {
-        ent = "change_lev", map = "?next_map",      
+        ent = "change_lev", map = "?next_map",
       }
     }
   }
@@ -491,7 +491,7 @@ PREFAB.QUAKE_WALL_EXIT =
 
       entity =
       {
-        ent = "change_lev", map = "?next_map",      
+        ent = "change_lev", map = "?next_map",
       }
     }
   }

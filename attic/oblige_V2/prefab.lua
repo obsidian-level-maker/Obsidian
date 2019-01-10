@@ -51,7 +51,7 @@ PLAIN_BIG =
     "..",
     "..",
   },
-  
+
   elements = { },
 },
 
@@ -1428,8 +1428,8 @@ WALL_PIC =
     p = { solid="pic_w" },
 
     L = { solid="wall",
-          [4] = { l_tex="lite_w" }, 
-          [6] = { l_tex="lite_w" }, 
+          [4] = { l_tex="lite_w" },
+          [6] = { l_tex="lite_w" },
         },
   },
 },
@@ -1519,8 +1519,8 @@ WALL_PIC_FOUR_SIDED =
 
     p = { solid="pic_w" },
 
-    L = { solid="wall", [4] = { l_tex="lite_w" }, [6] = { l_tex="lite_w" }}, 
-    M = { solid="wall", [2] = { l_tex="lite_w" }, [8] = { l_tex="lite_w" }}, 
+    L = { solid="wall", [4] = { l_tex="lite_w" }, [6] = { l_tex="lite_w" }},
+    M = { solid="wall", [2] = { l_tex="lite_w" }, [8] = { l_tex="lite_w" }},
   },
 },
 
@@ -2050,7 +2050,7 @@ STATUE_TECH_2 =
           l_peg="top", light=208,
         },
 
-    M = { copy="c", f_h=112, f_tex="tv_f", l_tex="tv_w",    
+    M = { copy="c", f_h=112, f_tex="tv_f", l_tex="tv_w",
         },
 
     a = { copy="M", f_h=64, l_tex="span_w",
@@ -2088,13 +2088,13 @@ STATUE_TECH_JR =
   elements =
   {
     -- inside
-    m = { f_h=32, f_tex="tech_f", 
+    m = { f_h=32, f_tex="tech_f",
           c_h=0,  c_tex="tech_c",
           light="tech_lt", kind="kind"
         },
-    
+
     T = { solid="tech_w" },
-    
+
     L = { f_h=12, f_rel="mid_h", f_tex="lite_f",
           l_tex="lite_w", c_tex="tech_c",
           light="tech_lt"
@@ -2184,7 +2184,7 @@ MACHINE_PUMP =
   {
     -- outside
     Z = { f_h=0, c_rel="floor_h", c_h=216 },
-    
+
     c = { f_h=112, c_rel="floor_h", c_h=176,
           f_tex="metal_f", l_tex="metal4_w", l_peg="top",
           c_tex="metal_c", u_tex="metal5_w", u_peg="bottom",
@@ -2564,7 +2564,7 @@ LIGHT_GROOVY =
     m = { c_h=-8, c_tex="frame_c", u_tex="frame_w", u_peg="top",
           light="frame_lt",
         },
- 
+
     r = { copy="L", mark=1, [1] = { VDEL=true }},
     s = { copy="L", mark=2, [3] = { VDEL=true }},
     t = { copy="L", mark=3, [7] = { VDEL=true }},
@@ -2872,7 +2872,7 @@ PENTAGRAM =
           f_tex="gram_f", l_tex="gram_w", l_peg="top",
           light="gram_lt", kind="kind",
         },
- 
+
     t = { copy="p",
           [7] = { dx= 22, dy= 32 },
           [9] = { dx=-22, dy= 32 },
@@ -2886,28 +2886,28 @@ PENTAGRAM =
           [3] = { dx=  0, dy=  0 },
           [9] = { dx=  0, dy=  0 },
         },
- 
+
     r = { copy="p",
           [9] = { dx= 20, dy= 18 },
           [3] = { dx= 20, dy= 30 },
           [1] = { dx=  0, dy=  0 },
           [7] = { dx=  0, dy=  0 },
         },
- 
+
     b = { copy="p",
           [1] = { dx=-26, dy=-24 },
           [3] = { dx=-38, dy=-24 },
           [7] = { dx=  0, dy= -4 },
           [9] = { dx=  6, dy=-16 },
         },
- 
+
     c = { copy="p",
           [3] = { dx= 26, dy=-24 },
           [1] = { dx= 38, dy=-24 },
           [9] = { dx=  0, dy= -4 },
           [7] = { dx= -6, dy=-16 },
         },
- 
+
     -- outside
     x = { l_tex="outer_w" },
   },
@@ -2948,7 +2948,7 @@ POND_LARGE =
     "xxxxxxxxxxxxxxxxxxxxxxxx",
     "xxxxxxxxxxxxxxxxxxxxxxxx",
   },
- 
+
   elements =
   {
     -- pool boundary
@@ -3070,7 +3070,7 @@ ROCK_PIECES =
   elements =
   {
     x = { l_tex="outer_w" },
-    
+
     e = { f_h=0, f_add="rock_h", f_tex="rock_f", l_tex="rock_w" },
 
     b = { copy="e",
@@ -3219,7 +3219,7 @@ STALAGMITE =
           [9] = { dx = -4, dy =  0 },
           [3] = { dx = -8, dy =  0 },
         },
-    
+
     -- outer column
     j = { f_h=16, c_h=-24, l_peg="top", c_peg="bottom",
           [1] = { dx = 00, dy = 00 },
@@ -3827,7 +3827,7 @@ CAGE_OPEN_W_POSTS =
     -- cage area
     c = { f_h=48, l_tex="cage_w", f_tex="cage_f",
         },
-    
+
     -- grating
     d = { copy="c", mark=1,
           [8] = { rail="rail_w", l_peg="bottom", impassible=true },
@@ -4495,7 +4495,7 @@ OVERHANG_1 =
 
   elements =
   {
-    P = { solid="beam_w" }, 
+    P = { solid="beam_w" },
 
     o = { c_h=-24, c_tex="hang_c", u_tex="hang_u",
           u_peg="top", light_add = -32,

@@ -1,5 +1,5 @@
 --
--- very cool Y-shapish 3x2 joiner 
+-- very cool Y-shapish 3x2 joiner
 --
 
 PREFABS.Joiner_y3 =

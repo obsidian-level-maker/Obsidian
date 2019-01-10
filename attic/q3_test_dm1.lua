@@ -1,4 +1,4 @@
-ENT_MAP = 
+ENT_MAP =
 {
   ["func_button"]                = "func_button",
   ["func_door"]                  = "func_door",
@@ -23,7 +23,7 @@ ENT_MAP =
   ["weapon_supershotgun"]        = "weapon_supershotgun",
 }
 
-TEX_MAP = 
+TEX_MAP =
 {
   ["XX"]                         = "base_trim/dark_tin2",
   ["+0BUTTON"]                   = "e7/e7panelwood",

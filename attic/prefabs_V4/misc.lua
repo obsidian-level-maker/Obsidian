@@ -562,7 +562,7 @@ PREFAB.QUAKE_TELEPORTER =
       { t = 144, mat = "?frame" }
     }
   }
-  
+
   models =
   {
     -- swirly bit

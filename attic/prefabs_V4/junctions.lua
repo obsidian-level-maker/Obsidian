@@ -437,7 +437,7 @@ PREFAB.JUNCTION_NUKEY_C =
       { x = 544, y = 464 }
       { x = 464, y = 544 }
     }
-    
+
     {
       { x = 464, y = 544, mat = "_LIQUID" }
       { x = 544, y = 464, mat = "_LIQUID" }

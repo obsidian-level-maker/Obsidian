@@ -90,7 +90,7 @@ TN_SCENERY_PREFABS =
     prefab = "CRATE_ROTATE",
     skin = { crate_w="CRLWDL6C", crate_h=64, crate_f="FLAT5_5" }
   }
-  
+
   crate_WOOD_H =
   {
     prefab = "CRATE",

@@ -1195,13 +1195,13 @@ function astar_find_path(sx, sy, ex, ey, W, H, score_func, data)
     if not open[nx][ny] or G < open[nx][ny].G then
       open[nx][ny] = { G=G, H=calc_H(nx,ny), px=cx, py=cy }
     end
-    
+
     return false
   end
 
   local function collect_path()
     local p = {}
-    
+
     repeat
       table.insert(p, 1, { x=cx, y=cy })
       cx, cy = closed[cx][cy].px, closed[cx][cy].py
@@ -1222,11 +1222,11 @@ function astar_find_path(sx, sy, ex, ey, W, H, score_func, data)
 
 
   ---- BEGIN ALGORITHM ----
-  
+
   if sx == ex and sy == ey then
     error("find_path: start and end are the same")
   end
-  
+
   -- add the start point to open list
   open[sx][sy] = { G=0, H=0 }
 

@@ -286,7 +286,7 @@ function HEXAGON_CLASS.used_dist_from_neighbors(C)
       dist = N.dist.used
     end
   end
-  
+
   return dist
 end
 
@@ -299,7 +299,7 @@ function HEXAGON_CLASS.touches_edge(C)
       return true
     end
   end
- 
+
   return false
 end
 
@@ -310,7 +310,7 @@ function HEXAGON_CLASS.can_travel_in_dir(C, dir)
   if not (N and N.room) then return false end
 
   if C.path[dir] then return true end
-  
+
   if N.room != C.room then return false end
 
   return true
@@ -408,7 +408,7 @@ function HEXAGON_CLASS.build_floor(C, f_h, mat)
   -- and six trapezoids...
 
   local m_brush = C:get_small_brush(C)
-  
+
   brushlib.add_top(m_brush, f_h)
   brushlib.set_mat(m_brush, mat, mat)
 
@@ -525,7 +525,7 @@ end
 
 
 function HEXAGON_CLASS.build(C)
-  
+
   for dir = 1, 6 do
     C:build_corner(dir)
   end
@@ -831,7 +831,7 @@ function Hex_setup()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
     local C = HEX_CELLS[cx][cy]
-  
+
     for dir = 1,6 do
       C.vertex[dir] = Hex_vertex_coord(C, dir)
 
@@ -1095,7 +1095,7 @@ function Hex_make_cycles()
     local dir_R = HEX_RIGHT[T.dir]
 
     local check_dirs = {}
-    
+
     check_dirs[dir_L] = T.grow_dirs[1]
     check_dirs[T.dir] = T.grow_dirs[2]
     check_dirs[dir_R] = T.grow_dirs[3]
@@ -1131,7 +1131,7 @@ function Hex_make_cycles()
 
   local function grow_threads()
     for index = #threads, 1, -1 do
-      
+
       local T = threads[index]
 
       if rand.odds(T.grow_prob) then
@@ -1149,14 +1149,14 @@ function Hex_make_cycles()
   ---| Hex_make_cycles |---
 
   add_thread()
-  
+
   if rand.odds(60) then add_thread() end
   if rand.odds(60) then add_thread() end
 
   -- loop until all threads are dead
 
   while #threads > 0 do
-    
+
     grow_threads()
     grow_threads()
     grow_threads()
@@ -1170,7 +1170,7 @@ end
 
 
 function Hex_trim_leaves()
-  
+
   local function trim_pass()
     local changes = 0
 
@@ -1189,7 +1189,7 @@ function Hex_trim_leaves()
       end
     end
     end
- 
+
     return (changes > 0)
   end
 
@@ -1250,7 +1250,7 @@ function Hex_check_map_is_valid()
 
 
   local function grow_contiguity(C, seen)
-    C.contiguous = true 
+    C.contiguous = true
 
     seen[C] = 1
 
@@ -1287,7 +1287,7 @@ function Hex_check_map_is_valid()
     for cx = 1, HEX_W do
     for cy = 1, HEX_MID_Y do
       local C = HEX_CELLS[cx][cy]
-      
+
       if C.kind == "used" and not C.contiguous then
         return false
       end
@@ -1477,7 +1477,7 @@ function Hex_add_rooms_DM()
     return ROOM
   end
 
-  
+
   local function fungible_cell(C)
     if C.kind == "edge" then return false end
     if C.room then return false end
@@ -1602,7 +1602,7 @@ function Hex_add_rooms_DM()
 
         table.insert(list, BUD)
       end
-      
+
     end -- cx, cy
     end
 
@@ -1737,7 +1737,7 @@ function Hex_add_rooms_CTF()
 
     repeat
       cx = math.random(1 + 2, HEX_W - 3)
-    
+
       cy = bottom_cell_in_column(cx)
     until cy
 
@@ -2238,7 +2238,7 @@ function Hex_place_stuff()
 
     assert(not table.empty(tab))
 
-    
+
     local want_num = how_many_weapons()
 
     LEVEL.weapons = {}
@@ -2326,7 +2326,7 @@ function Hex_place_stuff()
       end
     end
 
-    local spot = table.pick_best(walkable_cells, 
+    local spot = table.pick_best(walkable_cells,
         function(A, B) return A.score > B.score end)
 
     return assert(spot)
@@ -2741,7 +2741,7 @@ function Hex_assign_bases()
         else
           D.content.team = "blue"
         end
-      end 
+      end
     end
 
   end
@@ -2751,7 +2751,7 @@ end
 
 
 function Hex_decide_room_kinds()
-  
+
   local function decide_room_kind(R)
     -- choose between outdoor/indoor and cave/building
 
@@ -3126,7 +3126,7 @@ function Hex_border_up()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
     local C = HEX_CELLS[cx][cy]
-    
+
     border_up(C)
   end
   end
@@ -3136,7 +3136,7 @@ function Hex_border_up()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
     local C = HEX_CELLS[cx][cy]
-    
+
     corner_up(C)
   end
   end
@@ -3159,7 +3159,7 @@ end
 
 
 function Hex_create_level()
-  
+
   gui.printf("\n--==| Hexagonal Construction |==--\n\n")
 
   LEVEL.CTF = (OB_CONFIG.mode == "ctf")

@@ -5,7 +5,7 @@
 DOOM.SKINS.Joiner_TriPillar =
 {
   file = "joiner/tri_pillar.wad"
-  
+
   prob = 200
 
   seed_w = 3

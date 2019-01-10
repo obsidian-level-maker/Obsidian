@@ -76,8 +76,8 @@ Exit_Closet_urban =
 
   inner = { BIGBRIK3=20, WOOD9=10, STONE=10, WOODMET1=35,
             CEMENT9=5, PANEL6=20 }
-  
-  ceil = { RROCK04=20, RROCK13=20, RROCK03=10, 
+
+  ceil = { RROCK04=20, RROCK13=20, RROCK03=10,
            FLAT10=20, FLOOR6_2=10, FLAT4=20 }
 
   floor2  = { FLAT5_2=30, CEIL5_1=15, CEIL4_2=15,
@@ -215,7 +215,7 @@ MiniHall_Arch1 =
   _shape  = "I"
   _delta  = 0
 
-  pic = "SW1SATYR"    
+  pic = "SW1SATYR"
 }
 
 Door_silver =
@@ -1157,7 +1157,7 @@ Pic_SkinScroll =
   pic   = "SKINFACE"
   pic_w = 144
   pic_h = 80
-  
+
   y_offset = 24
 
   light = 32

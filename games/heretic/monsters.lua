@@ -196,7 +196,7 @@ HERETIC.MONSTERS =
   {
     id = 6
     r = 40
-    h = 72 
+    h = 72
     level = 5
     boss_type = "minor"
     boss_prob = 50
@@ -222,7 +222,7 @@ HERETIC.MONSTERS =
     health = 3000
     attack = "missile"
     damage = 100
-    give  = 
+    give  =
     {
       {ammo="flame_orb",count=3}
       {health=10}  -- occasionally drops an Urn

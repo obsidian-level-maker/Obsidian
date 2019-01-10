@@ -20,7 +20,7 @@ DOOM.SKINS.Border_urban_2x2_t =
   file   = "border/urban_2x2_t.wad"
   group  = "border_urban"
   shape  = "T"
-  
+
   seed_w = 2
   seed_h = 2
 

@@ -820,7 +820,7 @@ PREFAB.QUAKE_LIFT_UP =
       y1 =   0, y2 = 128, y_face = { mat="?lift" }
       z1 = 128, z2 = 144, z_face = { mat="?lift" }
 
-      delta_z = -8 
+      delta_z = -8
 
       entity =
       {
@@ -897,7 +897,7 @@ PREFAB.QUAKE_LIFT_DOWN =
       y1 =  64, y2 = 128, y_face = { mat="?lift" }
       z1 = 128, z2 = 144, z_face = { mat="?lift" }
 
-      delta_z = -8 
+      delta_z = -8
 
       entity =
       {

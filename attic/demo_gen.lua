@@ -61,7 +61,7 @@ function Demo_make_for_doom()
 
   local function p_physics(impetus)
     -- DOOM physics emulation
-    
+
     if player.momx < -MAXMOVE then player.momx = -MAXMOVE end
     if player.momy < -MAXMOVE then player.momy = -MAXMOVE end
 

@@ -450,7 +450,7 @@ CHEX3.MATERIALS =
   PIC_PAINTING  = { t="ART1",  f="CEIL5_1" }
 
   BLUE_SLOPE_DN = { t="STONPOIS", f="FLAT5_6" }  -- NB: 256 units tall
-  BLUE_SLOPE_UP = { t="SUPPORT2", f="FLAT5_6" }  -- 
+  BLUE_SLOPE_UP = { t="SUPPORT2", f="FLAT5_6" }  --
 
   TAN_STORAGE  = { t="STORAGE",  f="FLAT1" }
   STEEL_GRATE2 = { t="WORMHOL1", f="CEIL3_2" }
@@ -850,7 +850,7 @@ CHEX3.SKINS =
     _where  = "edge"
     _long   = 192
 
-    pic   = "CJLOGO1" 
+    pic   = "CJLOGO1"
     pic_w = 128
     pic_h = 128
 
@@ -989,7 +989,7 @@ CHEX3.ROOM_THEMES =
   Cave_generic =
   {
     naturals =
-    { 
+    {
       CAVE = 50
       CJMINE02 = 15
     }
@@ -1025,7 +1025,7 @@ CHEX3.LEVEL_THEMES =
     liquids = { water=50, slime1=50, slime2=50 }
 
     buildings = { Tech_generic=50 }
-    
+
     caves = { Cave_generic=50 }
 
     outdoors = { Outdoors_generic=50 }
@@ -1095,7 +1095,7 @@ CHEX3.MONSTERS =
 
   cycloptis =
   {
-    id = 58  
+    id = 58
     r = 30
     h = 56
     prob = 30
@@ -1486,7 +1486,7 @@ CHEX3.EPISODES =
     sky_light = 0.75
   }
 
--- E2M5 and E3M5 will exit when all bosses (Maximus, Flembomination 
+-- E2M5 and E3M5 will exit when all bosses (Maximus, Flembomination
 -- and Snotfolus) are dead, so perhaps prevent an exit door or
 -- switch from appearing if any of those appear in these levels?
 
@@ -1653,7 +1653,7 @@ UNFINISHED["chex_cave"] =  -- AJA: keep as separate theme??
 
 -- FIXME: chex2 themes
 
--- themes (CITY2 etc...): sewers, lodge, lots of trees 
+-- themes (CITY2 etc...): sewers, lodge, lots of trees
 -- and grassy / rocky terrain outdoors, wooden buildings
 
 UNFINISHED["chex3_city"] =

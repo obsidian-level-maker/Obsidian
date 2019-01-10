@@ -208,7 +208,7 @@ function Player_firepower()
   -- the same monsters.
 
   local function get_firepower(hmodel)
-    local firepower = 0 
+    local firepower = 0
     local divisor   = 0
 
     each weapon,_ in hmodel.weapons do
@@ -261,7 +261,7 @@ end
 
 
 function Player_has_weapon(weap_needed)
-  
+
   local function class_has_one(hmodel)
     each name,_ in hmodel.weapons do
       if weap_needed[name] then
@@ -446,7 +446,7 @@ end
 
 
 function Item_simulate_battle(R)
-  
+
 
   local function make_empty_stats()
     local stats = {}
@@ -684,7 +684,7 @@ function Item_distribute_stats()
           -- no change
         elseif stat == "health" then
           value = value * HEALTH_RATIO
-        else 
+        else
           value = value * AMMO_RATIO
         end
 
@@ -886,7 +886,7 @@ function Item_pickups_for_class(CL)
     local info = GAME.PICKUPS[name]
 
     local count = 1
-    
+
     if info.cluster then
       local each_qty = info.give[1].health or info.give[1].count
       local min_num  = info.cluster[1]

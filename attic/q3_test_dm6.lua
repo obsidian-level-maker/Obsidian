@@ -1,4 +1,4 @@
-ENT_MAP = 
+ENT_MAP =
 {
   ["func_door_secret"]           = "func_door",
   ["info_intermission"]          = "info_intermission",
@@ -26,7 +26,7 @@ ENT_MAP =
   ["weapon_supershotgun"]        = "weapon_supershotgun",
 }
 
-TEX_MAP = 
+TEX_MAP =
 {
   ["CITY2_6"]      = "gothic_block/blocks10",
   ["CITY2_7"]      = "gothic_block/blocks15",

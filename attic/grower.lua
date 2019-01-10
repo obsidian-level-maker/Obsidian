@@ -30,7 +30,7 @@ class SEED
 
   target_w, target_h : map size we want to be (bigger is OK)
 
-  x1, y1, z1, x2, y2, z2 : map coordinates for 3D bbox 
+  x1, y1, z1, x2, y2, z2 : map coordinates for 3D bbox
 
   -- grow phase only:
   grow, shrink : map size to grow/shrink along current axis
@@ -41,7 +41,7 @@ class BORDER
 {
   kind  : "solid" | "view" | "walk"
 
-  other : SEED  -- seed we are connected to, or nil 
+  other : SEED  -- seed we are connected to, or nil
 
   rlink : RLINK
 }
@@ -196,7 +196,7 @@ function Seed_dump_fabs()
   gui.printf("Room Fabs:\n")
 
   for y = SEED_H,1,-1 do
-    
+
     for x = 1,SEED_W do
       gui.printf("%s", char_for_seed(SEEDS[x][y][1].room))
     end
@@ -230,7 +230,7 @@ function debug_render()
   im:filledRectangle(0, 0, 500, 300, black);
 
   local function draw_seed(x, y, S)
-    
+
     local x1 = (S.x1 + 16) * 6
     local y1 = (S.y1 + 16) * 6
 
@@ -312,7 +312,7 @@ function TODO_REAL_Seed_grow()
   local function get_width(S)
     return S.x2 - S.x1 + 1
   end
-    
+
   local function get_height(S)
     return S.y2 - S.y1 + 1
   end
@@ -322,7 +322,7 @@ function TODO_REAL_Seed_grow()
   end
 
   local function seed_new_pos(S)
-    
+
     local x1,y1 = S.x1, S.y1
     local x2,y2 = S.x2, S.y2
 
@@ -386,7 +386,7 @@ function TODO_REAL_Seed_grow()
     elseif DIR == 8 then y2 = y2 + 1 ; y1 = y2
     elseif DIR == 2 then y1 = y1 - 1 ; y2 = y1
     end
-  
+
     -- FIXME: optimise, but how??
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local F = SEEDS[x][y]
@@ -601,13 +601,13 @@ function TODO_REAL_Seed_grow()
 
   local GROW_CHANCE   = { 25, 37, 50, 75, 99 }
   local SHRINK_CHANCE = {  5, 10, 15, 25, 50 }
- 
+
   local function select_growers()
 
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local S = SEEDS[x][y]
       if S then
-        
+
         local w = get_width(S)
         local h = get_height(S)
 
@@ -647,7 +647,7 @@ function TODO_REAL_Seed_grow()
 
     DIR = cur_dir
 --print("perform_pass: DIR=", DIR)
-     
+
     select_growers()
 
     repeat
@@ -779,7 +779,7 @@ function test_grow_all()
   local function add_room(room, sx, sy, sw, sh)
     sw = sw or 1
     sh = sh or 1
-    
+
     for x = sx,sx+sw-1,1 do
       for y = sy,sy+sh-1,1 do
         assert(not SEEDS[x][y])
@@ -900,7 +900,7 @@ MAX_Z =  2048
 PAD = 0
 
 function get_seed_wall(S, side)
-  
+
   if side == 4 then
     return
     {
@@ -945,7 +945,7 @@ function get_seed_wall(S, side)
 end
 
 function render_seed(S)
-  
+
   if S.kind == "solid" then return end
 
   local tex = "rock1_2" -- "STARTAN3"
@@ -975,7 +975,7 @@ function render_seed(S)
      (S.link[9].src == S and S.link[9].dest.kind == "solid") or
      (S.link[9].dest == S and S.link[9].src.kind == "solid")
   then
-    
+
     gui.add_brush(
     {
       t_face = { texture=tex },
@@ -996,9 +996,9 @@ function render_seed(S)
     local L = S.link[side]
     local other
     if L then other = assert(sel(S == L.src, L.dest, L.src)) end
-    
+
     if not L or other.kind == "solid" then
-    
+
       gui.add_brush(
       {
         t_face = { texture=tex },
@@ -1027,7 +1027,7 @@ function test_grow_3D()
   local function add_seed(x, y, z, rm, f_h, c_h, kind)
 
     if not kind then kind = "walkway" end
-    
+
     local S =
     {
       sx = x, sy = y, sz = z,
@@ -1117,7 +1117,7 @@ function test_grow_3D()
   add_seed(6,5,1, h_green, 0,128)
 
   -- BLUE:
-  add_seed(1,3,2, h_blue, 128,256) 
+  add_seed(1,3,2, h_blue, 128,256)
   add_seed(2,3,2, h_blue, 128,256)
   add_seed(6,3,2, h_blue, 128,256)
   add_seed(7,3,2, h_blue, 128,256)
@@ -1136,7 +1136,7 @@ function test_grow_3D()
   --
   add_seed(4,6,2, h_blue, 128,256)
   add_seed(4,7,2, h_blue, 128,256)
-  
+
   -- RED:
   add_seed(4,1,3, h_red, 256,364)
   add_seed(4,2,3, h_red, 256,364)
@@ -1172,10 +1172,10 @@ function test_grow_3D()
   -- BLUE
   add_link(1,3,2, 2,3,2)
   add_link(2,3,2, 3,3,2)
-  
+
   add_link(5,3,2, 6,3,2)
   add_link(6,3,2, 7,3,2)
-  
+
   add_link(4,5,2, 4,6,2)
   add_link(4,6,2, 4,7,2)
 

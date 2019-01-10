@@ -215,7 +215,7 @@ ALL_SHAPES =
 
 function compute_controls(points, cyclic)
   -- compute bezier control points (from angle information)
-  
+
 
   local function project_end(x, y, ang)
     x = x + 64 * math.cos(ang * math.pi / 180)
@@ -635,7 +635,7 @@ local function scale_down_track(points, cyclic)
     y_scale = math.max(x_scale, math.min(y_scale, 0.6))
   end
 
-  scale_track(points, x_scale, y_scale)  
+  scale_track(points, x_scale, y_scale)
 end
 
 

@@ -91,7 +91,7 @@ end
 
 
 function build_cool_shit()
- 
+
   assert(SETTINGS)
   assert(SETTINGS.game)
 

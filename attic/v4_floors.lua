@@ -99,7 +99,7 @@ function Layout_monotonic_spaces(R)
             return N
           end
         end
-        
+
       end
     end end
 
@@ -229,7 +229,7 @@ function Layout_monotonic_spaces(R)
     gui.debugf("\n")
   end
 
-  
+
   --| Layout_monotonic_spaces |--
 
   gui.debugf("Monotonic spaces in %s\n", R:tostr())
@@ -411,7 +411,7 @@ function Layout_the_floor(R)
 
     for _,fab in ipairs(R.prefabs) do
       local is_entry = (fab.straddler and fab.straddler.R2 == R)
-      
+
       if fab.room == R or is_entry then
         for _,B in ipairs(fab.brushes) do
           if B[1].m == kind and
@@ -453,7 +453,7 @@ function Layout_the_floor(R)
     end
   end
 
-  
+
   local function narrow_zone_for_walk(zone, brush)
     -- this is meant to handle a walk group penetrating a small
     -- distance into one side of the zone.
@@ -499,7 +499,7 @@ function Layout_the_floor(R)
     local K1 = SECTIONS[kx1][ky1]
     local K2 = SECTIONS[kx2][ky2]
 
-    local zone = 
+    local zone =
     {
       x1 = K1.x1,
       y1 = K1.y1,
@@ -709,7 +709,7 @@ gui.debugf("render_floor @ %s  z:%d low:%s high:%s  (%d %d)..(%d %d)\n",
     local tab = table.copy(THEME.floors)
 
     -- TODO: filter based on various stuff...
-    
+
     if table.empty(tab) then
       error("No floor prefabs are possible in room")
     end
@@ -808,7 +808,7 @@ gui.debugf("render_floor @ %s  z:%d low:%s high:%s  (%d %d)..(%d %d)\n",
 ---gui.debugf("|  nosplit cons : %d\n", #con)
       if table.empty(con) then return nil end
     end
-       
+
     -- #3 --
     for _,A in ipairs(F.airs) do
       if check_air_clobbered(fab, A) then return nil end
@@ -1052,7 +1052,7 @@ gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
     try_cut(x2, 40, x2,  0)
     try_cut( 0, y2, 40, y2)
     try_cut(40, y1,  0, y1)
-      
+
     local x3,y3,x4,y4 = Trans.brush_bbox(B)
 
     if not geom.boxes_overlap(x1,y1,x2,y2, x3,y3,x4,y4) then
@@ -1137,7 +1137,7 @@ gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
       for _,ZB in ipairs(info.fab.brushes) do
         if ZB[1].m == "zone" and ZB[1].space == space then
           local x1, y1, x2, y2 = Trans.brush_bbox(ZB)
-          
+
           x1 = math.max(x1, zone.x1) ; x2 = math.min(x2, zone.x2)
           y1 = math.max(y1, zone.y1) ; y2 = math.min(y2, zone.y2)
 
@@ -1190,7 +1190,7 @@ gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
 ---???    if B[1].dz_high then floor.z_high = floor.z + B[1].dz_high end
         end
       end
-    end 
+    end
 
     return floor
   end
@@ -1242,7 +1242,7 @@ gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
         -- floor can be subdivided when we know it's entry height
         if F.z then
           local info = find_usable_floor_fab(F)
-           
+
           if info then
             -- bump and build the chosen floor fab
             -- (do it now to set the heights on walk brushes)
@@ -1476,7 +1476,7 @@ function Layout_flesh_out_floors(R)
 
       table.insert(R.decor, DECOR)
 
-      Trans.entity(decor_item, x, y, z) 
+      Trans.entity(decor_item, x, y, z)
     end
   end
 
@@ -1527,7 +1527,7 @@ function Layout_flesh_out_floors(R)
 
     elseif h >= 2 and rand.odds(80) then
       pattern = {2,8}
-  
+
     else
       pattern = {5}
     end

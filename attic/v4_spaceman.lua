@@ -100,7 +100,7 @@ end
 
 function POLYGON_CLASS.copy(self)
   local P = POLYGON_CLASS.new(self.kind)
-  
+
   for _,C in ipairs(self.coords) do
     table.insert(P.coords, table.copy(C))
   end
@@ -214,7 +214,7 @@ function POLYGON_CLASS.on_front(self, px1, py1, px2, py2, fudge)
   if not fudge then fudge = 0.5 end
 
   fudge = -fudge
-  
+
   for _,C in ipairs(self.coords) do
     local d = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
     if d < fudge then return false end
@@ -312,7 +312,7 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
 
     local a_side = 0
     local b_side = 0
-    
+
     if a < -0.5 then a_side = -1 end
     if a >  0.5 then a_side =  1 end
 
@@ -347,7 +347,7 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
 
   return T
 end
-  
+
 
 -----==========================================================-----
 
@@ -413,7 +413,7 @@ function SPACE_CLASS.debugging_test()
   end end
 
   gui.debugf("\n")
-  
+
   for y = -50,250,100 do
     local c = P1:on_front(0, y, 20, y)
     gui.debugf("on_front of (%d %d) .. (%d %d) : %s\n",
@@ -587,7 +587,7 @@ gui.debugf("P=\n"); P:dump()
     -- hence we drop P and keep M in the polygon list
   end
 
-  M.kind = final_kind 
+  M.kind = final_kind
 
   table.insert(self.polys, M)
 end
@@ -626,7 +626,7 @@ function SPACE_CLASS.find_overlaps(self, M)
       table.insert(list, P)
     end
   end
- 
+
   return list
 end
 
@@ -659,7 +659,7 @@ function POLYGON_CLASS.do_tjunc(self, tx, ty)
     local k = 1 + (idx % #coords)
 
     local x1, y1 = C.x, C.y
-    
+
     local x2 = coords[k].x
     local y2 = coords[k].y
 
@@ -699,8 +699,8 @@ end
 
 function SPACE_CLASS.cut_in_half_X(self, mx)
   -- returns two new spaces: left and right
-  
-  local left  = SPACE_CLASS.new()  
+
+  local left  = SPACE_CLASS.new()
   local right = SPACE_CLASS.new()
 
   for _,P in ipairs(self.polys) do
@@ -723,8 +723,8 @@ end
 
 function SPACE_CLASS.cut_in_half_Y(self, my)
   -- returns two new spaces: bottom and top
-  
-  local bottom = SPACE_CLASS.new()  
+
+  local bottom = SPACE_CLASS.new()
   local top    = SPACE_CLASS.new()
 
   for _,P in ipairs(self.polys) do

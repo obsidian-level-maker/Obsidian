@@ -172,7 +172,7 @@ NUKEM.MATERIALS =
   OCTAFLOOR = { t=417 }
   BLOCKS4 = { t=827 }
   RUST = { t=767 }
-  
+
   COMPUTER1 = { t=875 }
   COMPUTER2 = { t=294 }
   COMPUTER3 = { t=297 }
@@ -205,7 +205,7 @@ NUKEM.PICTURES =
     pic_w="SCREEN_BREAK3", width=120, height=82,
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
-    depth=8, 
+    depth=8,
   }
 
   pill =
@@ -214,7 +214,7 @@ NUKEM.PICTURES =
     pic_w="SCREEN_BREAK4", width=120, height=82,
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
-    depth=8, 
+    depth=8,
   }
 }
 
@@ -263,10 +263,10 @@ NUKEM.MONSTERS =
   -- FIXME : NUKEM.MONSTERS
 
   pig_cop   = { id=2000, r=16, h=56 }
-  liz_troop = { id=1680, r=16, h=56 } 
+  liz_troop = { id=1680, r=16, h=56 }
   liz_man   = { id=2120, r=16, h=56 }
   commander = { id=1920, r=16, h=56 }
-  octabrain = { id=1820, r=16, h=56 } 
+  octabrain = { id=1820, r=16, h=56 }
   new_beast = { id=4610, r=16, h=56 }
 
   recon     = { id=1960, r=16, h=56 }

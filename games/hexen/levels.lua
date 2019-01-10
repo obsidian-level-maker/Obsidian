@@ -135,7 +135,7 @@ function HEXEN.get_levels()
       }
 
       -- make certain levels match original
-	  -- Was not working, so fixed above, BlackJar72
+      -- Was not working, so fixed above, BlackJar72
       if OB_CONFIG.theme == "original" then
         if ep_index == 3 then
           LEV.theme_name = "hexen_dungeon1"

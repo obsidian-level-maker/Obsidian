@@ -776,7 +776,7 @@ PREFAB.SECRET_NICHE_1 =
       { x =  32, y = 176 }
     }
   }
-  
+
   -- the juicy item
 
   entities =

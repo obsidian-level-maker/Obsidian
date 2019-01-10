@@ -1,5 +1,5 @@
 
-ENT_MAP = 
+ENT_MAP =
 {
   ["func_plat"]                  = "func_plat",
   ["info_intermission"]          = "info_intermission",
@@ -25,7 +25,7 @@ ENT_MAP =
   ["weapon_supershotgun"]        = "weapon_supershotgun",
 }
 
-TEX_MAP = 
+TEX_MAP =
 {
   ["SKY4"]                       = "skies/nitesky",
   ["TRIGGER"]                    = "base_wall/steed2f",

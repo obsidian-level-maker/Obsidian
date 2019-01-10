@@ -27,7 +27,7 @@ DM_LINE_TYPES =
 
   S1_secret_exit = { kind=51  },
   W1_secret_exit = { kind=124 },
-  
+
   WR_teleport = { kind=97  },
   MR_teleport = { kind=126 },  -- monster only
 
@@ -107,7 +107,7 @@ DM_COMBOS =
 
   TECH_BASE2 =
   {
-    theme_probs = { TECH=40 }, 
+    theme_probs = { TECH=40 },
     mat_pri = 8,
 
     wall  = "STARG3",
@@ -444,8 +444,8 @@ DM_EXITS =
     ceil  = "FLAT1",
 
     hole_tex = "MARBLE1",
-    
-    front_mark = "EXITSTON", 
+
+    front_mark = "EXITSTON",
 
     switch =
     {
@@ -791,12 +791,12 @@ DM_CRATES =
   {
     wall = "CRATE1", h=64, floor = "CRATOP2"
   },
-  
+
   CRATE2 =
   {
     wall = "CRATE2", h=64, floor = "CRATOP1"
   },
-  
+
   CRATELIT =
   {
     wall = "CRATELIT", h=128, floor = "CRATOP1"
@@ -817,7 +817,7 @@ DM_CRATES =
   {
     wall = "SHAWN3", h=64, floor = "FLAT23", can_rotate=true
   },
-  
+
   WOOD3A =
   {
     wall = "WOOD3", h=64, floor = "CEIL1_1",
@@ -1089,7 +1089,7 @@ DM_KEY_DOORS =
     w=128, h=112,
 
     prefab = "DOOR_LIT_LOCKED",
-    
+
     skin =
     {
       key_w="DOORBLU2",
@@ -1174,21 +1174,21 @@ DM_SCENERY_PREFABS =
     environment = "indoor",
     skin = { wall="COMPWERD" },
   },
-  
+
   pillar_GSTLION =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="GSTLION" },
   },
-  
+
   pillar_SPDUDE5 =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="SP_DUDE5" },
   },
-  
+
   pillar_light1_METAL =
   {
     prefab = "PILLAR_LIGHT1",
@@ -1249,7 +1249,7 @@ DM_SCENERY_PREFABS =
     min_height = 96,
 
     skin =
-    { 
+    {
       shawn_w = "SHAWN3", shawn_f = "FLAT1",
       lite_w  = "LITE5",  lite_f  = "CEIL5_1",
     },
@@ -1315,7 +1315,7 @@ DM_SCENERY_PREFABS =
     min_height = 80,
 
     skin =
-    { 
+    {
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
     },
@@ -1584,7 +1584,7 @@ DM_FEATURE_PREFABS =
   {
     prefab = "POND_SMALL",
     theme_probs = { CAVE=30 },
-    skin = 
+    skin =
     {
       pond_f="LAVA1", pond_w="ROCKRED1",
       liquid_f="LAVA1", -- outer_w
@@ -1599,7 +1599,7 @@ DM_FEATURE_PREFABS =
     environment = "outdoor",
     theme_probs = { NATURE=40 },
     min_height = 256,
-    skin = 
+    skin =
     {
       rock_w="SP_ROCK1", rock_f="MFLR8_3",
       liquid_w="ROCKRED1", liquid_f="LAVA1",
@@ -1666,7 +1666,7 @@ DM_FEATURE_PREFABS =
     pickup_specialness = 90,
     force_dir = 2, -- optimisation
   },
-  
+
   launch_pad_med_F =
   {
     prefab = "LAUNCH_PAD_MEDIUM",
@@ -1684,7 +1684,7 @@ DM_FEATURE_PREFABS =
     pickup_specialness = 80,
     force_dir = 4, -- optimisation
   },
-  
+
   launch_pad_sml_S =
   {
     prefab = "LAUNCH_PAD_SMALL",
@@ -1702,7 +1702,7 @@ DM_FEATURE_PREFABS =
     pickup_specialness = 80,
     force_dir = 2, -- optimisation
   },
- 
+
   tech_pickup_STONE =
   {
     prefab = "TECH_PICKUP_LARGE",
@@ -1755,7 +1755,7 @@ DM_FEATURE_PREFABS =
       lite_lt=255, frame_lt=168, kind=8,
     }
   },
-  
+
   skylight_mega_METAL =
   {
     prefab = "SKYLIGHT_MEGA_1",
@@ -1765,7 +1765,7 @@ DM_FEATURE_PREFABS =
     -- max_height = 304,  ???
 
     skin =
-    { 
+    {
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
       beam_w = "METAL", beam_c = "CEIL5_2",
@@ -1832,56 +1832,56 @@ DM_WALL_PREFABS =
   {
     prefab = "SOLID_WIDE", skin = { wall="CEMENT4" },
   },
-  
+
   solid_CEMENT5 =
   {
     prefab = "SOLID_WIDE", skin = { wall="CEMENT5" },
   },
-  
+
   solid_ICKWALL4 =
   {
     prefab = "SOLID", skin = { wall="ICKWALL4" },
   },
-  
+
   solid_ICKWALL5 =
   {
     prefab = "SOLID", skin = { wall="ICKWALL5" },
   },
-  
+
   solid_ICKWALL7 =
   {
     prefab = "SOLID", skin = { wall="ICKWALL7" },
   },
-  
+
   solid_PIPE4 =
   {
     prefab = "SOLID_WIDE", skin = { wall="PIPE4" },
   },
-  
+
   solid_SLADSKUL =
   {
     prefab = "SOLID", skin = { wall="SLADSKUL" },
   },
-  
+
   wall_lamp_RED_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="red_torch_sm" },
-    theme_probs = { CAVE=90, HELL=70 }, 
+    theme_probs = { CAVE=90, HELL=70 },
   },
 
   wall_lamp_GREEN_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="green_torch_sm" },
-    theme_probs = { CAVE=90, HELL=30, URBAN=10 }, 
+    theme_probs = { CAVE=90, HELL=30, URBAN=10 },
   },
 
   wall_lamp_BLUE_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="blue_torch_sm" },
-    theme_probs = { CAVE=90, URBAN=20 }, 
+    theme_probs = { CAVE=90, URBAN=20 },
   },
 
   wall_pic_MARBFACE =
@@ -1994,7 +1994,7 @@ DM_ARCH_PREFABS =
 --  environment = "outdoor",
     skin = {},
   },
- 
+
   arch_wire_fence =
   {
     prefab = "ARCH_WIRE_FENCE",
@@ -2102,7 +2102,7 @@ DM_DOOR_PREFABS =
 
     theme_probs = { HELL=90,CAVE=5 },
   },
- 
+
 }
 
 DM_WINDOW_PREFABS =
@@ -2145,7 +2145,7 @@ DM_MISC_PREFABS =
     prefab = "FENCE_RAIL",
     skin = { rail_w="BRNSMALC" },
   },
-  
+
   arch_arched =
   {
     prefab = "ARCH_ARCHED", skin = {},
@@ -2301,7 +2301,7 @@ DM_ROOMS =
     window_probs = { out_diff=1, combo_diff=1, normal=1 },
     space_range  = { 33, 66 },
   },
- 
+
   SCENIC =
   {
   },
@@ -2334,12 +2334,12 @@ DM_ROOMS =
 
 DM_THEMES =
 {
---[[  
+--[[
    (a) nature  (outdoor, grassy/rocky/muddy, water)
    (b) urban   (outdoor, bricks/concrete,  slime)
 
-   (c) gothic     (indoor, gstone, blood, castles) 
-   (d) tech       (indoor, computers, lights, lifts) 
+   (c) gothic     (indoor, gstone, blood, castles)
+   (d) tech       (indoor, computers, lights, lifts)
    (e) cave       (indoor, rocky/ashy, darkness, lava)
    (f) industrial (indoor, machines, lifts, crates, nukage)
 
@@ -2537,7 +2537,7 @@ DM_MONSTERS =
   demon     = { prob=45, hp=150, dm=25, fp=2.3, cage_prob=66,melee=true },
   spectre   = { prob=20, hp=150, dm=25, fp=2.3, cage_prob=40,melee=true },
   skull     = { prob=14, hp=100, dm=7,  fp=2.6, cage_prob= 2, melee=true, float=true },
- 
+
   barrel    = { prob=17, hp=10,  dm=2,  fp=1.0, melee=true, passive=true },
 
   -- FIXME: HACK! we lie here about Cybies' true power otherwise
@@ -2682,13 +2682,13 @@ DM_DEATHMATCH =
   },
 
   health =
-  { 
+  {
     potion=30, stimpack=60, medikit=20,
     helmet=20
   },
 
   ammo =
-  { 
+  {
     bullets=5,  bullet_box=30,
     shells=60,  shell_box=5,
     rockets=10, rocket_box=20,
@@ -2818,13 +2818,13 @@ D1_CRATES =
     wall = "PLANET1", h=128, floor = "FLAT23",
     side_x_offset=64
   },
- 
+
   PLANET2 =
   {
     wall = "PLANET1", h=64, floor = "FLAT23",
     x_offset=128, side_y_offset=64
   },
- 
+
   SKIN =
   {
     wall = "SKINBORD", h=64, floor = "CEIL3_3", can_rotate=true
@@ -2892,7 +2892,7 @@ D1_ROOMS =
   {
     wall_fabs =
     {
-      wall_pic_COMP2 = 30, 
+      wall_pic_COMP2 = 30,
       other = 100
     },
   },
@@ -2901,7 +2901,7 @@ D1_ROOMS =
   {
     wall_fabs =
     {
-      wall_pic_COMP2 = 30, 
+      wall_pic_COMP2 = 30,
       other = 100
     },
   },
@@ -3030,7 +3030,7 @@ function doom_common_factory()
     cell_size = 9,
     cell_min_size = 6,
 
-    caps = { heights=true, sky=true, 
+    caps = { heights=true, sky=true,
              fragments=true, move_frag=true, rails=true,
              closets=true,   depots=true,
              switches=true,  liquids=true,
@@ -3091,7 +3091,7 @@ function doom_common_factory()
     misc_fabs = DM_MISC_PREFABS,
 
     toughness_factor = 1.00,
-    
+
     depot_info = { teleport_kind=97 },
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },

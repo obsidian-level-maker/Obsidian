@@ -36,7 +36,7 @@ MUSIC_SWAP.doom1_music =
     "E1M4", "E1M5", "E1M6",
     "E1M7", "E1M8", "E1M9"
   }
-  
+
   episode2 =
   {
     "E2M1", "E2M2", "E2M3",
@@ -93,7 +93,7 @@ function MUSIC_SWAP.get_levels(self)
 
   each _,src in epi_list do
     local dest = table.copy(src)
-    
+
     -- this shuffle algorithm ensures first entry is never the same
     -- [ I really get sick of hearing D_RUNNIN.... ]
     for i = 1, (#dest-2) do

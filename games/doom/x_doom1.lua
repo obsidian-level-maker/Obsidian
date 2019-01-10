@@ -1576,10 +1576,10 @@ ULTDOOM.ROOM_THEMES =
     }
 
     naturals =
-    { 
+    {
       SP_ROCK1 = 60
       ASHWALL = 2
-      FLAT10 = 3 
+      FLAT10 = 3
     }
   }
 
@@ -1992,7 +1992,7 @@ ULTDOOM.ROOM_THEMES =
       FLOOR7_1 = 10
     }
   }
- 
+
 
   flesh_Marble =
   {
@@ -2379,7 +2379,7 @@ OB_GAMES["ultdoom"] =
   extends = "doom1"
 
   priority = 97  -- keep at third spot
-  
+
   -- no additional tables
 
   -- no additional hooks

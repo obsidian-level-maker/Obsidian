@@ -44,7 +44,7 @@ HERETIC.ENTITIES =
   moss1   = { id=48, r=16, h=24, ceil=true, pass=true }
   moss2   = { id=49, r=16, h=28, ceil=true, pass=true }
   volcano = { id=87, r=12, h=32 }
-  
+
   small_pillar = { id=29, r=16, h=36 }
   brown_pillar = { id=47, r=16, h=128 }
   glitter_red  = { id=74, r=20, h=16, pass=true }

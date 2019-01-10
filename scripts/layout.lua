@@ -1218,7 +1218,7 @@ end
 
 
 function Layout_decorate_rooms(pass)
-  -- 
+  --
   -- Decorate the rooms with crates, pillars, etc....
   --
   -- The 'pass' parameter is 1 for early pass, 2 for later pass.
@@ -1318,7 +1318,7 @@ function Layout_decorate_rooms(pass)
 
   local function try_intraroom_lock(R)
     -- try to lock an unlocked exit and place switch for it
-    
+
     if R.is_start then return end
     if R.is_exit  then return end
 

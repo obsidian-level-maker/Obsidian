@@ -18,7 +18,7 @@ UNFINISHED.Pic_bloodfountain =
 
   theme = "hell"
   prob  = 50
-  
+
   tex_GSTSATYR = { GSTGARG=20, GSTLION=20, GSTSATYR=20, MARBFAC4=20}--, GSTFONT1=20} --this is the mouth that spews blood, for some reason it gets replaced by water
 }
 

@@ -27,7 +27,7 @@ PLUTONIA.MATERIALS =
 {
   -- Note the actual texture names contain hyphens, but we must use
   -- an underscore for the OBLIGE material names.
-  
+
   A_BRBRK  = { t="A-BRBRK",  f="RROCK18" }
   A_BRBRK2 = { t="A-BRBRK2", f="RROCK16" }
   A_BRICK1 = { t="A-BRICK1", f="MFLR8_1" }
@@ -57,7 +57,7 @@ PLUTONIA.MATERIALS =
   A_POIS =   { t="A-POIS",   f="CEIL5_2" }
   A_REDROK = { t="A-REDROK", f="FLAT5_3" }
   A_ROCK =   { t="A-ROCK",   f="FLAT5_7" }
-  A_TILE =   { t="A-TILE",   f="GRNROCK" }  
+  A_TILE =   { t="A-TILE",   f="GRNROCK" }
   A_VINE3 =  { t="A-VINE3",  f="RROCK12" }
   A_VINE4 =  { t="A-VINE4",  f="RROCK16" }
   A_VINE5 =  { t="A-VINE5",  f="MFLR8_3" }
@@ -104,7 +104,7 @@ PLUTONIA.MATERIALS =
   BIGBRIK1 = { t="A-BRICK2", f="RROCK14" }
   RROCK14  = { t="A-BRICK2", f="RROCK14" }
   BRICK5   = { t="A-BRICK3", f="RROCK12" }
-  BRICJ10  = { t="A-TILE",   f="GRNROCK" }  
+  BRICJ10  = { t="A-TILE",   f="GRNROCK" }
   BRICK11  = { t="A-BRBRK",  f="RROCK18" }
   BRICK12  = { t="A-BROCK2", f="FLOOR4_6" }
 

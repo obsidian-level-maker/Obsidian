@@ -90,7 +90,7 @@ function CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
   {
     sx1=sx1, sy1=sy1
     sx2=sx2, sy2=sy2
-    
+
     content = {}
     parts = {}
     link = {}
@@ -208,7 +208,7 @@ function CHUNK_CLASS.is_adjacent(C1, C2)
   -- only touches at a corner?
   if (C1.sx1 > C2.sx2 or C1.sx2 < C2.sx1) and
      (C1.sy1 > C2.sy2 or C1.sy2 < C2.sy1)
-  then return false end 
+  then return false end
 
   return true
 end
@@ -486,7 +486,7 @@ function CHUNK_CLASS.similar_neighbor(C, dir)
 
 --do return (S and (S.room or S.hall)) end --!!!!!!!1
 
-  if C2 and C.hall and C.hall == C2.hall and 
+  if C2 and C.hall and C.hall == C2.hall and
      C.section and C2.section and (C.section.forky != C2.section.forky) and
      C.section  != C.hall.double_fork and
      C2.section != C.hall.double_fork
@@ -547,7 +547,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
 
 --[[
     -- FIXME: big hack !!!!!
-    if (OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen") and C.room and C.room.zone.fake_windows 
+    if (OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen") and C.room and C.room.zone.fake_windows
        and info.c_min - info.f_max >= 200
     then
       local skin2 = { pic="STNGLS1", pic_w=128, pic_h=128 }
@@ -627,7 +627,7 @@ function CHUNK_CLASS.build_scenic(C)
     local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
 
     local def_mat = "_ERROR"
-    
+
     if C.room then
       def_mat = C.room.wall_mat or def_mat
     end
@@ -905,7 +905,7 @@ do return end  -- RIP chunks
 
 
 --!!!! TESTINK STUFF
-  elseif OB_CONFIG.trim_floor then  
+  elseif OB_CONFIG.trim_floor then
 
     local cat, dir = C:categorize_floor_piece()
 

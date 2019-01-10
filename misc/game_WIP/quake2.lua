@@ -68,7 +68,7 @@ QUAKE2.ENTITIES =
 
   trigger  = { id="trigger_multiple" }
   trig_key = { id="trigger_key" }
-   
+
   change_lev = { id="target_changelevel" }
 
   camera = { id="info_player_intermission" }
@@ -1333,7 +1333,7 @@ QUAKE2.MATERIALS =
   YELLOW1_4  = { t="e1u1/yellow1_4" }
   YELLOW1_6  = { t="e1u1/yellow1_6" }
 
-  
+
   -- special stuff
 
   TRIGGER    = { t="e1u1/trigger" }
@@ -1582,7 +1582,7 @@ QUAKE2.SKINS =
   }
 
 
-  ----| SWITCHED DOORS |---- 
+  ----| SWITCHED DOORS |----
 
   Door_SW_1 =
   {
@@ -2413,7 +2413,7 @@ QUAKE2.PICKUPS =
     give = { {ammo="rocket",count=5} }
   }
 
-  am_slug = 
+  am_slug =
   {
     id = "ammo_slugs"
     prob = 20
@@ -2471,7 +2471,7 @@ QUAKE2.EPISODES =
     theme = "TECH"
     sky_light = 0.75
   }
-  
+
   episode4 =
   {
     theme = "TECH"

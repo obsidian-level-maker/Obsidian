@@ -160,7 +160,7 @@ function Weird_generate(point_W, point_H)
         ghost = {}
         num_edges = 0
       }
-      
+
       GRID[gx][gy] = P
 
       P.limit_edges = rand.sel(T_BRANCH_PROB, 3, 2)
@@ -298,7 +298,7 @@ function Weird_generate(point_W, point_H)
     local R_dir = geom.RIGHT_45[dir]
 
     if P.edge[L_dir] or P.edge[R_dir] then return -1 end
-    
+
     if N.edge[10 - L_dir] or N.edge[10 - R_dir] then return -1 end
 
     -- mirroring checks
@@ -417,7 +417,7 @@ function Weird_generate(point_W, point_H)
 
 
   local function add_lotsa_edges(qty)
-    local count = 10 + GRID_W * GRID_H * qty 
+    local count = 10 + GRID_W * GRID_H * qty
 
     for loop = 1, count do
       try_add_edge()
@@ -460,7 +460,7 @@ function Weird_generate(point_W, point_H)
 
     assert(NX and NY)
 
-    -- diagonal direction from NX 
+    -- diagonal direction from NX
     local corner
     if x_dir == 4 then
       corner = sel(y_dir == 2, 3, 9)
@@ -573,7 +573,7 @@ function Weird_generate(point_W, point_H)
 
       if tab[dir1] then tab[dir1] = 5 end
       if tab[dir2] then tab[dir2] = 5 end
-    end 
+    end
 
     -- find a usable direction
     -- [ luckily we don't need to backtrack ]
@@ -627,7 +627,7 @@ function Weird_generate(point_W, point_H)
 
     y1 = math.abs(mid_gy - y1)
     y2 = math.abs(mid_gy - y2)
-    
+
     return y1 == y2
   end
 
@@ -720,7 +720,7 @@ function Weird_generate(point_W, point_H)
       local P = GRID[gx][gy]
       local N = GRID[gx][mid_gy + (mid_gy - gy)]
 
-      local dir_list = sel(gy == mid_gy, HALF_DIRS, geom.ALL_DIRS) 
+      local dir_list = sel(gy == mid_gy, HALF_DIRS, geom.ALL_DIRS)
 
       each dir in dir_list do
         if N.edge[dir] then
@@ -753,7 +753,7 @@ function Weird_generate(point_W, point_H)
       local P = GRID[gx][gy]
       local N = GRID[mid_gx + (mid_gx - gx)][gy]
 
-      local dir_list = sel(gx == mid_gx, HALF_DIRS, geom.ALL_DIRS) 
+      local dir_list = sel(gx == mid_gx, HALF_DIRS, geom.ALL_DIRS)
 
       each dir in dir_list do
         if N.edge[dir] then
@@ -984,7 +984,7 @@ function Weird_create_areas()
 
         try_set_border(T4, 4, P1.edge[8])
         try_set_border(T6, 6, P3.edge[8])
-                                                 
+
         try_set_border(T2, 2, P1.edge[6])
         try_set_border(T8, 8, P2.edge[6])
 
@@ -993,7 +993,7 @@ function Weird_create_areas()
 
         try_set_border(S, 4, P1.edge[8])
         try_set_border(S, 6, P3.edge[8])
-                                                
+
         try_set_border(S, 2, P1.edge[6])
         try_set_border(S, 8, P2.edge[6])
       end
@@ -1132,7 +1132,7 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
 
   local function mark_boundary_areas()
     -- mark areas that lie outside of the boundary outline.
-    
+
     -- middle seed will be normal (non-boundary)
     local mx = int(SEED_W / 2)
     local my = int(SEED_H / 2)

@@ -22,7 +22,7 @@ HEXEN.ENTITIES =
 
   dm_player     = { id=11 }
   teleport_spot = { id=14 }
-  
+
   --- PICKUPS ---
 
   -- keys
@@ -37,7 +37,7 @@ HEXEN.ENTITIES =
   k_horn    = { id=8038 }  -- KEY9
   k_swamp   = { id=8039 }  -- KEYA
   k_castle  = { id=8200 }  -- KEYB
- 
+
   -- weapons
   c_staff   = { id=10,  r=20, h=16 }
   c_fire    = { id=8009,r=20, h=16 }

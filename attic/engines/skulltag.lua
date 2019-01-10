@@ -36,7 +36,7 @@ SKULLTAG.ENTITIES =
   doom_sphere    = { id=5036, kind="pickup", r=20,h=45, pass=true }
   guard_sphere   = { id=5037, kind="pickup", r=20,h=30, pass=true }
   random_sphere  = { id=5039, kind="pickup", r=20,h=45, pass=true }
- 
+
   -- special powerups (multiplayer only)
   hellstone  = { id=6000, kind="pickup", r=20,h=45, pass=true }
   terminator = { id=6001, kind="pickup", r=20,h=45, pass=true }

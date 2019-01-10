@@ -31,7 +31,7 @@ function astar_find_path(w, h, sx, sy, ex, ey, scorer)
   local function calc_H(x,y)
     x = math.abs(x - ex)
     y = math.abs(y - ey)
-    return math.sqrt(x * x + y * y) 
+    return math.sqrt(x * x + y * y)
   end
 
   function lowest_F()  -- brute force search (SLOW!)
@@ -70,7 +70,7 @@ function astar_find_path(w, h, sx, sy, ex, ey, scorer)
     if not open[nx][ny] or G < open[nx][ny].G then
       open[nx][ny] = { G=G, H=calc_H(nx,ny), px=cx, py=cy }
     end
-    
+
     return false
   end
 
@@ -84,11 +84,11 @@ function astar_find_path(w, h, sx, sy, ex, ey, scorer)
   end
 
   ---- BEGIN ALGORITHM ----
-  
+
   if sx == ex and sy == ey then
     error("find_path: start and end are the same")
   end
-  
+
   -- add the start point to open list
   open[sx][sy] = { G=0, H=0 }
 

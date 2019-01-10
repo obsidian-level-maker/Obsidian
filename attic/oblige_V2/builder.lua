@@ -21,7 +21,7 @@ function copy_block(B, ...)
   local result = copy_table(B)
 
   result.things = {}
-  
+
   -- copy the overrides and corner adjustments
   for i = 1,9 do
     if B[i] then result[i] = copy_table(B[i]) end
@@ -199,7 +199,7 @@ function frag_fill(c, sx, sy, ex, ey, F, F2)
     for y = sy,ey do
       local bx, fx = div_mod(x, FW)
       local by, fy = div_mod(y, FH)
-      
+
       if not PLAN.blocks[bx][by] then
         PLAN.blocks[bx][by] = {}
       end
@@ -268,7 +268,7 @@ function c_move_frag_corner(c, x,y,corner, dx,dy)
   F.mark = allocate_mark()
 end
 
- 
+
 function scale_block(B, scale)
   -- Note: doesn't set x_offsets
   scale = (scale - 1) * 32
@@ -336,7 +336,7 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
   local long = fab.long
   local deep = fab.deep
-  
+
   if fab.scale ~= 64 then
     long, deep = long*4, deep*4
   end
@@ -352,7 +352,7 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
     if fab.scale == 64 then
       return x + ex - 1, y + ey - 1
     end
-  
+
     local fx = 1 + (x-1)*FW + ex - 1
     local fy = 1 + (y-1)*FH + ey - 1
 
@@ -740,7 +740,7 @@ function cage_select_height(c, kind, rail, floor_h, ceil_h)
   if c[kind] and c[kind].z >= floor_h and rand_odds(80) then
     return c[kind].z, c[kind].open_top
   end
-  
+
   local open_top = false
 
   if rail.h < 72 then open_top = true end
@@ -854,13 +854,13 @@ end
 --
 -- c is the cell the walks out into the vista.
 -- The other cell actually contains the vista.
--- 
+--
 -- The 'kind' can be: "solid", "frame", "open", "wire" OR "fall_over".
 --
 function B_vista(src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
   local ROOM
-  
+
   if kind == "solid" then
     ROOM = copy_block(src.rmodel)
   else
@@ -900,7 +900,7 @@ function B_vista(src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
   if kind == "solid" then
     LEDGE.c_h = math.min(ROOM.c_h - 24, ROOM.f_h + 96)
-  
+
   elseif kind == "frame" then
     LEDGE.c_h = ROOM.c_h - 24
     LEDGE.c_tex = b_combo.ceil
@@ -923,7 +923,7 @@ function B_vista(src,dest, x1,y1, x2,y2, side, b_combo,kind)
   local deep = y2-y1+1
 
   if side==4 or side==6 then long,deep = deep,long end
-  
+
 
   if kind == "wire" or kind == "fall_over" then
 
@@ -1007,7 +1007,7 @@ function B_vista(src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
       local x = int(px1 + (px2-px1) * u)
       local y = int(py1 + (py2-py1) * u)
-      
+
       frag_fill(src, x,y, x,y, { solid=support })
     end
 
@@ -1016,15 +1016,15 @@ function B_vista(src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
       local x1 = int(px1 + (wx1-px1) * u)
       local y1 = int(py1 + (wy1-py1) * u)
-      
+
       frag_fill(src, x1,y1, x1,y1, { solid=support })
-      
+
       local x2 = int(px2 + (wx2-px2) * u)
       local y2 = int(py2 + (wy2-py2) * u)
 
       frag_fill(src, x2,y2, x2,y2, { solid=support })
     end
-  end 
+  end
 
 
   -- FIXME !!! add spots to room
@@ -1080,7 +1080,7 @@ SKY_LIGHT_FUNCS =
     return kx==2 and ky==2 and (x % 3 )== 2 and (y % 3) == 2 end,
 
   cross_1 = function(kx,ky, x,y)
-    return (kx==2 and (x % 3) == 2) or 
+    return (kx==2 and (x % 3) == 2) or
            (ky==2 and (y % 3) == 2) end,
 
   cross_2 = function(kx,ky, x,y)
@@ -1158,12 +1158,12 @@ function clip_reclaim_by_bbox(rec, x1,y1, x2,y2)
 
   if (side == 2 or side == 8) then
     if x1 > rec.x2 or x2 < rec.x1 then return end
-    
+
     p1 = math.max(p1, x1 - rec.x1 + 1)
     p2 = math.min(p2, x2 - rec.x1 + 1)
   else
     if y1 > rec.y2 or y2 < rec.y1 then return end
-    
+
     p1 = math.max(p1, y1 - rec.y1 + 1)
     p2 = math.min(p2, y2 - rec.y1 + 1)
   end
@@ -1263,7 +1263,7 @@ function make_chunks()
       elseif q_pos == 2 then return L, M, R
       else assert(q_pos==3); return R, L, M
       end
-    end 
+    end
 
     repeat
         L = rand_index_by_probs(K_BORD_PROBS)
@@ -1331,7 +1331,7 @@ function make_chunks()
 
 
   local function set_link_coords(c, side, link)
-    
+
     local D = c.border[side]
     assert(D)
 
@@ -1389,7 +1389,7 @@ function make_chunks()
 
     return true
   end
-  
+
   local function alloc_door_spot(c, side, link)
 
     local clasher
@@ -1407,7 +1407,7 @@ function make_chunks()
           K.kind = "link"
           K.link = link
         end
-      end 
+      end
     end end
 
     return clasher
@@ -1424,7 +1424,7 @@ function make_chunks()
     if link.where == "double" then
       table.insert(coords, {x=kx+ax, y=ky+ay})
       table.insert(coords, {x=kx-ax, y=ky-ay})
-      
+
       local no_void = c.closet[2] or c.closet[4] or c.closet[6] or c.closet[8]
 
       -- what shall we put in-between?
@@ -1452,7 +1452,7 @@ function make_chunks()
 
       local j1 = int((d_pos - 1) / JW)
       local j2 = int((d_pos - 1 + link.long-1) / JW)
-      
+
       for j = j1,j2 do
         assert (0 <= j and j < KW)
         table.insert(coords,
@@ -1573,7 +1573,7 @@ function make_chunks()
 
     local function init()
       local chunk_list = {}
-      
+
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
         K.travel_id = ky*10 + kx
@@ -1613,7 +1613,7 @@ function make_chunks()
         if not is_roomy(K) then
           -- skip it
         elseif not last then last = K
-        elseif K.travel_id ~= last.travel_id then 
+        elseif K.travel_id ~= last.travel_id then
           return true
         end
       end end
@@ -1621,7 +1621,7 @@ function make_chunks()
     end
 
     local function grow(chunk_list)
-      
+
       local function grow_a_pair(K, N, bridge)
 
         assert(N.kind == "empty")
@@ -1696,7 +1696,7 @@ function make_chunks()
           if valid_chunk(kx+dx, ky+dy) then
             local K2 = c.chunks[kx+dx][ky+dy]
             assert(K2)
-        
+
             if K2.kind == "empty" then
               grow_a_pair(K1, K2)
 con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
@@ -1735,10 +1735,10 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
 
     for loop=1,99 do
       if not has_islands() then break end
-      
+
       rand_shuffle(chunk_list)
       rand_shuffle(SIDES)
-      
+
       grow(chunk_list)
       merge()
     end
@@ -1769,7 +1769,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
 --    for x = x1,x2 do
 --      for y = y1,y2 do
 --        if not possible then break end
---        
+--
 --        local K = c.chunks[x][y]
 --
 --        if not K then
@@ -1830,7 +1830,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
 --  end
 
 --  local function try_add_special(c, kind)
---    
+--
 --    if kind == "liquid" then
 --      if not c.liquid then return end
 --      if c.is_exit and rand_odds(98) then return end
@@ -2001,9 +2001,9 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
     end
 
     --- STEP 1: setup known chunks
- 
+
     local highest
- 
+
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       assert(K)
@@ -2216,7 +2216,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
         if not K.connect_id then
           -- skip it
         elseif not last then last = K
-        elseif K.connect_id ~= last.connect_id then 
+        elseif K.connect_id ~= last.connect_id then
           return false
         end
       end end
@@ -2327,7 +2327,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
     local function select_stair_spots()
       for kx=1,3 do for ky=1,3 do
         local K = c.chunks[kx][ky]
-        K.stair_dir = nil  
+        K.stair_dir = nil
 
         for side=2,8,2 do
           local stair = K.stair[side]
@@ -2362,7 +2362,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
 
       -- be fair and pick one at random
       local stair = rand_element(bad_stairs)
-      
+
       stair.build = sel(stair.build == stair.k1, stair.k2, stair.k1)
     end
 
@@ -2377,7 +2377,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
       if is_fully_connected() then break end
 -- con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
       add_one_stair()
-    end 
+    end
 
     shuffle_stair_builds()
 
@@ -2479,9 +2479,9 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
     end end
 
     if #prob_list > 0 then
-      
+
       assert(c.q_spot)
-      
+
       c.q_spot.kind = "room"
       c.q_spot.purpose = purpose
 
@@ -2516,7 +2516,7 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
 
     if c == PLAN.quests[1].first then
       good_Q_spot(c, c.exit_dir, "player")
-    
+
     elseif c == c.quest.last then
       good_Q_spot(c, c.entry_dir, "quest")
     end
@@ -2613,7 +2613,7 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
 
   local clashes
 
-  for loop=1,(512+80) do 
+  for loop=1,(512+80) do
     clashes = 0
 
     for zzz,cell in ipairs(PLAN.all_cells) do
@@ -2687,7 +2687,7 @@ function setup_borders_and_corners()
       if c.hallway then hall_num = hall_num + 1 end
       table.insert(combos, c.combo)
     end
-  
+
     -- when some cells are hallways and some are not, we
     -- upgrade the hallways to their "outer" combo.
 
@@ -2707,7 +2707,7 @@ function setup_borders_and_corners()
     for zzz,T in ipairs(combos) do
       if T.outdoor then out_num = out_num + 1 end
     end
-    
+
     if (out_num > 0) and (#combos - out_num > 0) then
       for idx = #combos,1,-1 do
         if combos[idx].outdoor then
@@ -2759,7 +2759,7 @@ function setup_borders_and_corners()
         return "fence"
       end
     end
- 
+
     if c1.border[side].window then return "window" end
 
     return "solid"
@@ -3123,7 +3123,7 @@ function build_borders()
     -- door sides
     local side_tex
     local ax,ay = dir_to_across(side)
-    
+
     if def and def.lock_side then
       side_tex = def.lock_side
     elseif not def and D.combo.door_side then
@@ -3134,7 +3134,7 @@ function build_borders()
       gap_fill(c, link.x1-ax, link.y1-ay, link.x1+ax, link.y1+ay,
         { solid=side_tex })
     end
-    
+
     PLAN.blocks[link.x1][link.y1] =
     {
       f_tex = 0,
@@ -3206,7 +3206,7 @@ end
 --    local d_max = BW
 --
 --    local d_pos
---    
+--
 --    if link.where == "wide" then
 --      d_pos = d_min + 1
 --      long  = d_max - d_min - 1
@@ -3418,7 +3418,7 @@ end
   end
 
   local function build_sky_corner(side, x, y)
-    
+
     local wx = sel(side==2 or side==4, 1, FW)
     local wy = sel(side==2 or side==6, 1, FH)
 
@@ -3528,14 +3528,14 @@ end
     for loop=1,10 do
       local spot = find_border_spot(D)
       if not spot then break; end
-    
+
       if spot.long >= 4 then
         -- plain window
 
         local x1,y1 = spot.x, spot.y
         local x2    = x1 + (spot.long-1)*ax
         local    y2 = y1 + (spot.long-1)*ay
-       
+
         fill (c, x1,y1, x1,y1, { solid=D.combo.wall })
         fill (c, x2,y2, x2,y2, { solid=D.combo.wall })
 
@@ -3733,7 +3733,7 @@ function build_maze(c, x1,y1, x2,y2)
 end
 
 function build_grotto(c, x1,y1, x2,y2)
-  
+
   local ROOM = c.rmodel
   local WALL = { solid=c.combo.wall }
 
@@ -3765,7 +3765,7 @@ function build_pacman_level(c)
 
   local PACMAN_MID_FABS  = { "WOLF_PACMAN_MID_1", "WOLF_PACMAN_MID_2", "WOLF_PACMAN_MID_3" }
   local PACMAN_CORN_FABS = { "WOLF_PACMAN_CORN_1", "WOLF_PACMAN_CORN_2", "WOLF_PACMAN_CORN_3" }
- 
+
   local mid_fab = PREFABS[rand_element(PACMAN_MID_FABS)]
   assert(mid_fab)
 
@@ -3813,7 +3813,7 @@ function build_pacman_level(c)
   B_exit_elevator(c, mid_x+18, mid_y+28, 2)
 
   gap_fill(c, 2,2, 63,63, { solid=combo.wall })
-  
+
   -- player spot
   local px
   local py = rand_irange(mid_y-11, mid_y-3)
@@ -3827,7 +3827,7 @@ function build_pacman_level(c)
         if solid_spot(x,py+1) or solid_spot(x,py+2) then p_ang = 270 end
       end
       break;
-    end 
+    end
   end
 
   if not px then error("Could not find spot for pacman!") end
@@ -3839,7 +3839,7 @@ end
 
 
 function layout_cell(c)
- 
+
   local function decide_void_pic(c)
     if c.combo.pic_wd and rand_odds(60) then
       c.void_pic = { wall=c.combo.pic_wd, w=128, h=c.combo.pic_wd_h or 128 }
@@ -3860,7 +3860,7 @@ function layout_cell(c)
 
   local function chunk_pair(cell, other, side,n)
     local cx,cy, ox,oy
-    
+
         if side == 2 then cx,cy,ox,oy = n,1,n,3
     elseif side == 8 then cx,cy,ox,oy = n,3,n,1
     elseif side == 4 then cx,cy,ox,oy = 1,n,3,n
@@ -3884,7 +3884,7 @@ function layout_cell(c)
       sec = copy_block(sec)
       sec.l_tex = l_tex
       sec.u_tex = u_tex
-      
+
       for side = 1,9,2 do
         if side ~= 5 then
           local jx, jy = dir_to_corner(side, JW, JH)
@@ -3920,7 +3920,7 @@ function layout_cell(c)
       if not entry_dir then
         entry_dir = rand_irange(1,4)*2
       end
-      
+
       if kx==2 and ky==2 then
         return entry_dir
       end
@@ -3936,29 +3936,29 @@ function layout_cell(c)
 
 --     local K = c.chunks[kx][ky]
 --     assert(K)
--- 
--- 
--- 
+--
+--
+--
 --     if K.void then
 --       gap_fill(c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
 --       do return end
--- 
+--
 --       if K.closet then
 --         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
--- 
+--
 --         table.insert(K.place.spots,
 --           B_monster_closet(c, K,kx,ky, c.floor_h + 0,
 --             c.quest.closet.door_tag))
--- 
+--
 --       elseif K.dm_exit then
 --         B_deathmatch_exit(c, K,kx,ky,K.dir)
--- 
+--
 --       elseif GAME.pics and not c.small_exit
 --           and rand_odds(sel(c.combo.outdoor, 10, sel(c.hallway,20, 50)))
 --       then
 --         if not c.void_pic then decide_void_pic(c) end
 --         local pic,cut = c.void_pic,c.void_cut
--- 
+--
 --         if not c.quest.image and (PLAN.deathmatch or
 --              (c.quest.parent and rand_odds(33)))
 --         then
@@ -3966,25 +3966,25 @@ function layout_cell(c)
 --           cut = 1
 --           c.quest.image = "pic"
 --         end
--- 
+--
 --         B_void_pic(c, K,kx,ky, pic,cut)
--- 
+--
 --       else
 --         gap_fill(c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.wall })
 --       end
 --       return
 --     end -- K.void
--- 
+--
 --     if K.cage then
 --       B_big_cage(c, GAME.mats.CAGE, K,kx,ky)
 --       return
 --     end
--- 
--- 
--- 
+--
+--
+--
 --     local bx = K.x1 + 1
 --     local by = K.y1 + 1
---     
+--
 --     if K.player then
 --       local angle = player_angle(kx, ky)
 --       local offsets = sel(rand_odds(50), {1,3,7,9}, {2,4,6,8})
@@ -4007,23 +4007,23 @@ function layout_cell(c)
 --         end
 --         add_thing(c, bx, by, sel(PLAN.deathmatch, "dm_player", "player1"), true, angle)
 --         c.player_pos = {x=bx, y=by}
--- 
+--
 --       end
--- 
+--
 --     elseif K.dm_weapon then
 --       B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.WEAPON)
 --       add_thing(c, bx, by, K.dm_weapon, true)
--- 
+--
 --     elseif K.quest then
--- 
+--
 --       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
 --         B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.QUEST)
--- 
+--
 --         -- weapon and keys are non-blocking, but we don't want
 --         -- a monster sitting on top of our quest item (especially
 --         -- when it has a pedestal).
 --         add_thing(c, bx, by, c.quest.item, true)
--- 
+--
 --       elseif c.quest.kind == "switch" then
 --         local info = GAME.switches[c.quest.item]
 --         assert(info.switch)
@@ -4034,23 +4034,23 @@ function layout_cell(c)
 --         else
 --           B_pillar_switch(c, K,bx,by, info,kind, c.quest.tag + 1)
 --         end
--- 
+--
 --       elseif c.quest.kind == "exit" then
 --         assert(c.combo.switch)
--- 
+--
 --         local side = wall_switch_dir(kx, ky, c.entry_dir)
--- 
+--
 --         if OB_CONFIG.game == "plutonia" then
 --           B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped,
 --             { walk_kind = 52 }) -- FIXME "exit_W1"
--- 
+--
 --         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
 --           if c.combo.flush then
 --             B_flush_switch(c, bx,by, K.rmodel.f_h,side, c.combo.switch, 11)
 --           else
 --             B_wall_switch(c, bx,by, K.rmodel.f_h,side, 3, c.combo.switch, 11)
 --           end
--- 
+--
 --           -- make the area behind the switch solid
 --           local x1, y1 = K.x1, K.y1
 --           local x2, y2 = K.x2, K.y2
@@ -4060,9 +4060,9 @@ function layout_cell(c)
 --           elseif side == 8 then y2 = y2-2
 --           else   error("Bad side for small_exit switch: " .. side)
 --           end
--- 
+--
 --           gap_fill(c, x1,y1, x2,y2, { solid=c.combo.wall })
---           
+--
 --         elseif c.combo.hole_tex and rand_odds(75) then
 --           B_exit_hole(c, K,kx,ky, c.rmodel)
 --           return
@@ -4073,61 +4073,61 @@ function layout_cell(c)
 --         end
 --       end
 --     end -- if K.player | K.quest etc...
--- 
--- 
+--
+--
 --     ---| fill in the rest |---
--- 
+--
 --     local sec = copy_block(K.rmodel)
--- 
+--
 --     local surprise = c.quest.closet or c.quest.depot
--- 
+--
 --     if K.quest and surprise and c == surprise.trigger_cell then
--- 
+--
 --       sec.mark = allocate_mark()
 --       sec.walk_kind = 2
 --       sec.walk_tag  = surprise.door_tag
 --     end
--- 
+--
 --     if K.liquid then  -- FIXME: put into setup_chunk_rmodels
 --       sec.kind = c.liquid.sec_kind
 --     end
--- 
+--
 --     if K.player then
--- 
+--
 --       sec.near_player = true;
 --       if not sec.kind then
 --         sec.kind = 9  -- FIXME: "secret"
 --       end
--- 
+--
 --       if OB_CONFIG.mode == "coop" and OB_CONFIG.game == "plutonia" then
 --         sec.light = GAME.special_ped.coop_light
 --       end
 --     end
--- 
+--
 --     -- TEST CRUD : overhangs
 --     if rand_odds(9) and c.combo.outdoor
 --       and (sec.c_h - sec.f_h <= 256)
 --       and not (c.quest.kind == "exit" and c == c.quest.path[#c.quest.path-1])
 --       and not K.stair_dir
 --     then
--- 
+--
 --       K.overhang = true
--- 
+--
 --       if not c.overhang then
 --         local name
 --         name, c.overhang = rand_table_pair(GAME.hangs)
 --       end
 --       local overhang = c.overhang
--- 
+--
 --       K.sup_tex = overhang.thin
--- 
+--
 --       sec.c_tex = overhang.ceil
 --       sec.u_tex = overhang.upper
--- 
+--
 --       sec.c_h = sec.c_h - (overhang.h or 24)
 --       sec.light = sec.light - 48
 --     end
--- 
+--
 --     -- TEST CRUD : crates
 --     if not c.scenic and not K.stair_dir
 --       and GAME.crates
@@ -4140,7 +4140,7 @@ function layout_cell(c)
 --         c.crate_combo = get_rand_crate()
 --       end
 --     end
--- 
+--
 --     -- TEST CRUD : pillars
 --     if not K.crate and not c.scenic and not K.stair_dir
 --       and dual_odds(c.combo.outdoor, 12, 25)
@@ -4149,65 +4149,65 @@ function layout_cell(c)
 --     then
 --       K.pillar = true
 --     end
--- 
+--
 --     --FIXME: very cruddy check...
 --     if c.is_exit and chunk_touches_side(kx, ky, c.entry_dir) then
 --       K.crate  = nil
 --       K.pillar = nil
 --     end
--- 
+--
 --     -- TEST CRUD : sky lights
 --     if c.sky_light then
 --       if kx==2 and ky==2 and c.sky_light.pattern == "pillar" then
 --         K.pillar = true
 --       end
--- 
+--
 --       K.sky_light_sec = copy_block(sec)
 --       K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.sky_h, sec.c_h + c.sky_light.h)
 --       K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, GAME.SKY_TEX, c.sky_light.light_info.floor)
 --       K.sky_light_sec.light = 176
 --       K.sky_light_utex = c.sky_light.light_info.side
--- 
+--
 --       -- make sure sky light doesn't come down too low
 --       K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h,
 --         sel(c.sky_light.is_sky, c.c_max+16, c.c_min))
 --     end
---  
+--
 --     ---- Chunk Fill ----
--- 
+--
 --     local l_tex = c.rmodel.l_tex
--- 
+--
 --     do
 --       assert(sec)
--- 
+--
 --       if K.overhang then
 --         add_overhang_pillars(c, K, kx, ky, sec, sec.l_tex, sec.u_tex)
 --       end
--- 
+--
 --       if K.sky_light_sec then
 --         local x1,y1,x2,y2 = K.x1,K.y1,K.x2,K.y2
 --         if kx==1 then x1=x1+1 end
 --         if kx==3 then x2=x2-1 end
 --         if ky==1 then y1=y1+1 end
 --         if ky==3 then y2=y2-1 end
--- 
+--
 --         local func = SKY_LIGHT_FUNCS[c.sky_light.pattern]
 --         assert(func)
--- 
+--
 --         local BB = copy_block(K.sky_light_sec)
 --         BB.l_tex = sec.l_tex
 --         BB.u_tex = K.sky_light_utex or sec.u_tex
--- 
+--
 --         for x = x1,x2 do for y = y1,y2 do
 --           if func(kx,ky, x,y) then
 --             gap_fill(c, x,y, x,y, BB)
 --           end
 --         end end
 --       end
--- 
+--
 --       -- get this *after* doing sky lights
 --       local blocked = PLAN.blocks[K.x1+1][K.y1+1] --!!!
--- 
+--
 --       if K.crate and not blocked then
 --         local combo = c.crate_combo
 --         if not c.quest.image and not c.quest.parent and
@@ -4220,9 +4220,9 @@ function layout_cell(c)
 --         B_crate(c, combo, sec, kx,ky, K.x1+1,K.y1+1)
 --         blocked = true
 --       end
--- 
+--
 --       if K.pillar and not blocked then
--- 
+--
 --         -- TEST CRUD
 --         if rand_odds(22) and GAME.mats.CAGE and not PLAN.deathmatch
 --           and K.rmodel.c_h >= K.rmodel.f_h + 128
@@ -4233,9 +4233,9 @@ function layout_cell(c)
 --         end
 --         blocked = true
 --       end
--- 
+--
 --       gap_fill(c, K.x1, K.y1, K.x2, K.y2, sec)
--- 
+--
 --       if not blocked and c.combo.scenery and not K.stair_dir and
 --          (dual_odds(c.combo.outdoor, 37, 22)
 --           or (c.scenic and rand_odds(51)))
@@ -4275,7 +4275,7 @@ function layout_cell(c)
       or (K.ky == 1 and (side==2 or side==1 or side==3) and c.border[2])
       or (K.ky == 3 and (side==8 or side==7 or side==9) and c.border[8])
     end
-    
+
   local function reclaim_areas(c)
 
     local function create_reclaim(K, side)
@@ -4303,7 +4303,7 @@ function layout_cell(c)
     end
 
     local function best_reclaim(A, B)
-      
+
       -- FIXME: for wolf3d/spear: choose one next to border
 
       if A.total_blk > B.total_blk+1 then return A end
@@ -4314,7 +4314,7 @@ function layout_cell(c)
 
     local function neighbour_is_void(K, side)
       local N = chunk_neighbour(c, K, side)
-      if N then 
+      if N then
         return N.kind == "void"
       else
         return c.border[side] -- ???? border kinds? window?
@@ -4382,7 +4382,7 @@ sel(B.on_path, "YES", "NO"))
 
           return true --OK--
         end
-    
+
         if not test_area(x-ax, y-ay, x+ax+dx, y+ay+dy) then
           break;
         end
@@ -4446,7 +4446,7 @@ sel(B.on_path, "YES", "NO"))
         else
           K.rec2 = best_reclaim(K.rec2, rec)
         end
-      
+
       elseif K.rec then
         if is_parallel(K.rec.side, rec.side) then
           K.rec = best_reclaim(K.rec, rec)
@@ -4494,7 +4494,7 @@ sel(B.on_path, "YES", "NO"))
 
             clip_reclaim_by_bbox(R_clip, x1,y1, x2,y2)
           end
-        end 
+        end
       end
     end
 --]]
@@ -4575,7 +4575,7 @@ sel(B.on_path, "YES", "NO"))
       -- test if this block is covered by perpendicular rec
       -- NOTE: we assume that an existing hole can be enlarged
       --       (hence only need to test a single perp tendril).
-      
+
       local p_pos = T+1
       if p_pos > perp.long then return true end
 
@@ -4777,7 +4777,7 @@ c.x, c.y, other.x, other.y)
 
     return x1,y1, x2,y2
   end
-  
+
   local function vista_gap_fill(c, side, link, other)
 
     for kx = 1,3 do for ky = 1,3 do
@@ -4855,7 +4855,7 @@ con.debugf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
       end
     end
   end
- 
+
   local SHALLOW_PROBS = { 0, 1, 20, 50, 90 }
   local SHALLOW_DBLS  = { 0, 0,  1, 15, 30 }
 
@@ -4990,7 +4990,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
   end
 
   local function mark_link_walks(c)
-    
+
     for side = 2,8,2 do
       local dx,dy = dir_to_delta(10-side) -- inwards
 
@@ -5017,7 +5017,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     for side = 2,8,2 do
       local L = c.link[side]
       if L and L.kind == "vista" and L.vista_dest == c then
-        
+
         assert(L.vista_x1)
 
         -- surrounding coordinates
@@ -5060,7 +5060,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     if diff_h >= 72  then low = 2 end
     if diff_h >= 168 then low = 3 end
     if diff_h >= 264 then low = 4 end
-    
+
     local high = 1
     if diff_h >= 48  then high = 2 end
     if diff_h >= 96  then high = 3 end
@@ -5105,7 +5105,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
             K.sort_id, J.sort_id = J.sort_id, K.sort_id
           end
         end
-       end end 
+       end end
     end
 
     table.sort(result, function(k1,k2) return k1.sort_id < k2.sort_id end)
@@ -5132,7 +5132,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     local x1,y1, x2,y2 = side_coords(K.stair_dir, K.x1,K.y1, K.x2,K.y2)
 
     local long = K.x2 - K.x1 + 1
-    local deep = K.y2 - K.y1 + 1 
+    local deep = K.y2 - K.y1 + 1
 
     if (K.stair_dir==4 or K.stair_dir==6) then
       long,deep = deep,long
@@ -5232,7 +5232,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
           info.score = info.score + con.random()
 
           return info
-        end          
+        end
       end
 
       return nil
@@ -5253,7 +5253,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
     return best
   end
-  
+
   local function put_in_stair(c, mode, K,J, x,y, long,deep)
 
     local dir = K.stair_dir
@@ -5268,7 +5268,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     local max_fh = math.max(K.rmodel.f_h, J.rmodel.f_h)
 
     local step = -diff_h / (deep * 4)
-    
+
 con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey, dir, long, deep)
 
     if mode == "stair" then
@@ -5405,7 +5405,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
     end
 
     if mode == "lift" then
-      
+
       -- limit width to reasonable values (128 or 256 units)
           if long == 3 then long = 2
       elseif long >= 5 and rand_odds(95) then
@@ -5469,7 +5469,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
   local function build_stairs(c)
 
     local chunk_list = sort_stair_chunks(c)
-    
+
     for i = 1,#chunk_list do
       local K = chunk_list[i]
       if K.stair_dir then
@@ -5542,7 +5542,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
       if math.abs(C_fh - N_fh) > MAX_STEP then
         return -1
       end
-      
+
       return sel(C_fh == N_fh, 1.0, 1.2)
     end
 
@@ -5591,7 +5591,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
     end
 
     assert(#link_list > 0)
-    
+
     if #link_list >= 2 then
 
       rand_shuffle(link_list)
@@ -5674,7 +5674,7 @@ end
 
 
 function fill_reclaim_area(c, K, rec_kind, solid_combo, x1,y1, x2,y2)
- 
+
   if not solid_combo then
     solid_combo = c.combo
   end
@@ -5715,7 +5715,7 @@ function fill_reclaim_area(c, K, rec_kind, solid_combo, x1,y1, x2,y2)
     }
 
   else
-    error("fill_reclaim_area: unknown rec_kind: " .. tostring(K.rec_kind)) 
+    error("fill_reclaim_area: unknown rec_kind: " .. tostring(K.rec_kind))
   end
 
   gap_fill(c, x1,y1, x2,y2, AREA, { has_blocker=true })
@@ -5898,7 +5898,7 @@ function tizzy_up_room(c)
   local function verify_outer(c, f_h, x1,y1, x2,y2)
     if not valid_cell_block(c,x1,y1) then return false end
     if not valid_cell_block(c,x2,y2) then return false end
-    
+
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
       if not block_is_avail(B) then return false end
@@ -5925,7 +5925,7 @@ function tizzy_up_room(c)
   end
 
   local function verify_island_spot(c, f_h, x1,y1, x2,y2)
-   
+
     -- oooo
     -- oIIo
     -- oIIo
@@ -6010,7 +6010,7 @@ function tizzy_up_room(c)
 
       if verify_wall_extend(c, f_h, dir1, x1,y1, x2,y2) then
         return true, "extend", dir1
-      
+
       elseif dir1 ~= dir2 and
         verify_wall_extend(c, f_h, dir2, x1,y1, x2,y2)
       then
@@ -6054,7 +6054,7 @@ function tizzy_up_room(c)
       rand_shuffle(c.fab_spots)
 
     elseif mode == "near" then
-      
+
       table.sort(c.fab_spots,
         function (a, b)
           local a_dist = dist(x, y, a.x, a.y) + a.rand/2
@@ -6197,7 +6197,7 @@ function tizzy_up_room(c)
 
       if v_deep > B_deep then return -1 end
 
-      if not B then 
+      if not B then
         -- TODO: allow cell border (for VIP stuff)
         return -1
       end
@@ -6373,7 +6373,7 @@ function tizzy_up_room(c)
          valid_cell_block(c, x, y)
       then
         local B = PLAN.blocks[x][y]
-        
+
         if (B.walk and walk > B.walk) or block_is_avail(B) then
           B.walk = walk
         end
@@ -6413,7 +6413,7 @@ function tizzy_up_room(c)
       for zzz, side in ipairs(SIDES) do
         local N = chunk_neighbour(c, K, side)
         local D = c.border[side]
-        
+
         if N and N.rec_kind and rand_odds(50) then
           K.rec_kind = N.rec_kind
           K.solid_combo = N.solid_combo
@@ -6438,7 +6438,7 @@ function tizzy_up_room(c)
     end
 
     local function set_rec_kind(K, rec)
-      
+
       local B = chunk_neighbour(c, K, rec.side) -- behind chunk
 
       if B then
@@ -6486,7 +6486,7 @@ function tizzy_up_room(c)
   local function add_quest_object(c, name, ped, must_put, can_special, angle)
 
     local x,y,dir
-    
+
     if can_special and c.special_spots and #c.special_spots >= 1 then
       local spot = table.remove(c.special_spots, 1)
       return add_thing(c, spot.x, spot.y, name, true,
@@ -6522,7 +6522,7 @@ function tizzy_up_room(c)
       end
       return
     end
- 
+
     local K = PLAN.blocks[x][y].chunk
     assert(K)
 
@@ -6806,7 +6806,7 @@ con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     end
 
     local x,y,dir
-    
+
     if in_wall then
       x,y,dir = find_wallish_loc(c, def,fab, nil, c.q_spot)
 
@@ -6834,7 +6834,7 @@ con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     local skin = def.skin
     local parm = { }
 
-    if not c.is_exit then 
+    if not c.is_exit then
       parm.tag = c.quest.tag + 1
     end
 
@@ -6875,7 +6875,7 @@ fab.name, c.x,c.y, x,y,dir)
     local list = {}
 
     for name,def in pairs(fab_tab) do
-      
+
       local prob = def.prob
 
       local fab = PREFABS[def.prefab]
@@ -6949,7 +6949,7 @@ fab.name, c.x,c.y, x,y,dir)
 
       while def.repeat_chance and rand_odds(def.repeat_chance) do
         try_add_wall_prefab(c, def)
-      end 
+      end
     end
   end
 
@@ -7127,7 +7127,7 @@ con.debugf("add_scenery : %s\n", item)
       -- when there is wriggle room, use it!
       if info.r < 30 then
         local gap = 30 - info.r
-        
+
         if info.add_mode == "extend" and gap >= 4 then
           local odx,ody = dir_to_delta(10 - dir)
           th.dx = (gap - 2) * odx
@@ -7139,7 +7139,7 @@ con.debugf("add_scenery : %s\n", item)
       end
 
       fab_mark_walkable(c, x, y, 8, 1,1, 4)
-    
+
       -- some scenery looks good used multiple times
       if not (info.repeat_chance and rand_odds(info.rand_odds)) then
         return
@@ -7241,7 +7241,7 @@ con.debugf("add_scenery : %s\n", item)
       add_boss(c)
     end
 
-  elseif PLAN.deathmatch and (c.require_weapon or 
+  elseif PLAN.deathmatch and (c.require_weapon or
        rand_odds(DM_WEAPONS_1[OB_CONFIG.mons]))
   then
     add_dm_weapon(c)
@@ -7295,7 +7295,7 @@ end
 function build_rooms()
 
   local function create_blocks(c)
-    
+
     for kx=1,3 do for ky=1,3 do
       local K = c.chunks[kx][ky]
       for x = K.x1,K.x2 do for y = K.y1,K.y2 do
@@ -7303,9 +7303,9 @@ function build_rooms()
       end end
     end end
   end
-  
+
   local function GAP_FILL_ROOM(c)
-    
+
     local function gap_fill_block(B)
       if B.solid then return end
 
@@ -7486,7 +7486,7 @@ end
   con.ticker()
 
   con.progress(25); if con.abort() then return end
- 
+
   if PLAN.deathmatch then
     deathmatch_through_level()
   else

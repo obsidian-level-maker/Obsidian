@@ -62,7 +62,7 @@ UNFINISHED["hexen"] =
   label = _("Hexen")
   priority = 34
 
-  -- Hexen map format is a minor variation on the DOOM format 
+  -- Hexen map format is a minor variation on the DOOM format
   format = "doom"
   sub_format = "hexen"
 

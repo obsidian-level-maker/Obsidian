@@ -137,7 +137,7 @@ function plan_dm_arena(level)
     local count
 
     visited[sx][sy] = true  -- seed point
-    
+
     for loop = 1,(PLAN.w + PLAN.h + 10) do
       count = 0
 
@@ -156,7 +156,7 @@ function plan_dm_arena(level)
         end
       end end
     end
-    
+
     con.printf("COVERAGE = %d (want %d)\n", count, PLAN.w * PLAN.h)
 
     return count == (PLAN.w * PLAN.h)
@@ -179,7 +179,7 @@ function plan_dm_arena(level)
 
       dir = ((x % 2) == 0) and 6 or 8
       x = math.floor(x / 2)
-      
+
       y = 1 + math.floor(x / PLAN.w)
       x = 1 + (x % PLAN.w)
 
@@ -331,7 +331,7 @@ function plan_dm_arena(level)
         initial_links()
 
         remove_dm_links(max_links - num_links)
-        
+
         if test_coverage(1,1) then return end  -- Yay, success!
       end
     end
@@ -453,7 +453,7 @@ function plan_dm_arena(level)
   local function add_windows()  -- FIXME: duplicate code in planner.lua
 
     local function can_make_window(a, b)
-      
+
       local cc = math.min(a.ceil_h, b.ceil_h) - 32
       local ff = math.max(a.f_max,  b.f_max)  + 32
 
@@ -491,8 +491,8 @@ function plan_dm_arena(level)
     large   = { 0,  0, 20, 50, 75, 20,  4 },
   }
 
-  local W = rand_index_by_probs(SIZE_PROBS[OB_CONFIG.size]) 
-  local H = rand_index_by_probs(SIZE_PROBS[OB_CONFIG.size]) 
+  local W = rand_index_by_probs(SIZE_PROBS[OB_CONFIG.size])
+  local H = rand_index_by_probs(SIZE_PROBS[OB_CONFIG.size])
 
 ---#  if W < H then W,H = H,W end
 

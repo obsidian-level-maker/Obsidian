@@ -47,7 +47,7 @@ function add_thing(c, bx,by, name, blocking, angle, options, classes)
   end
 
   local B = PLAN.blocks[bx][by]
-  
+
   if not B then
     error("Thing placed in the void: " .. name)
   end
@@ -81,7 +81,7 @@ function add_monster_to_spot(spot, dx,dy, name,info, angle,options)
   local th = add_thing(spot.c, spot.x, spot.y, name, true, angle, options)
 
   if info.r >= 32 then
-    -- Note: cannot handle monsters with radius >= 64 
+    -- Note: cannot handle monsters with radius >= 64
     dx, dy = dx+32, dy+32
   end
 
@@ -103,7 +103,7 @@ function add_cage_spot(c, spot)
 
   table.insert(c.cage_spots, spot)
 end
-  
+
 function rectangle_to_spots(c, x,y, x2,y2)
 
   local w = x2-x+1
@@ -113,7 +113,7 @@ function rectangle_to_spots(c, x,y, x2,y2)
 
   local function carve_it_up(x,y, w,h)
     local w2, h2 = int(w/2), int(h/2)
-    
+
     if h > 2 then
       carve_it_up(x, y, w, h2)
       carve_it_up(x, y+h2, w, h-h2)
@@ -134,7 +134,7 @@ function rectangle_to_spots(c, x,y, x2,y2)
   end
 
   carve_it_up(x,y, w,h)
-  
+
   return spots
 end
 
@@ -262,8 +262,8 @@ function hm_give_item(HM, item)
   if item == "backpack" then
     HM.backpack = true
     HM.bullet = HM.bullet + 10
-    HM.shell  = HM.shell  + 4 
-    HM.rocket = HM.rocket + 1 
+    HM.shell  = HM.shell  + 4
+    HM.rocket = HM.rocket + 1
     HM.cell   = HM.cell   + 20
 
   elseif item == "armor" then
@@ -291,7 +291,7 @@ con.printf("&&&&& give_assumed_stuff: weap=%s &&&&&\n", def.weapon or "-")
     for xxx,CL in ipairs(GAME.classes) do
       for yyy,SK in ipairs(SKILLS) do
         local HM = PLAN.hmodels[CL][SK]
-    
+
         if def.weapon then
           hm_give_weapon(HM, def.weapon)
         else
@@ -381,11 +381,11 @@ function determine_face_dir(c, x, y, last_dir)
 
     if d1 == d2 then return 60 end
 
-    if d1 == rotate_ccw45(d2) then return 90 end 
-    if d1 == rotate_cw45 (d2) then return 90 end 
+    if d1 == rotate_ccw45(d2) then return 90 end
+    if d1 == rotate_cw45 (d2) then return 90 end
 
-    if d1 == rotate_ccw90(d2) then return 20 end 
-    if d1 == rotate_cw90 (d2) then return 20 end 
+    if d1 == rotate_ccw90(d2) then return 20 end
+    if d1 == rotate_cw90 (d2) then return 20 end
 
     return sel(d1 == 10-d2, 0.1, 1)
   end
@@ -408,7 +408,7 @@ end
 -- Updates the given player HModel.
 --
 function simulate_battle(HM, mon_set, quest)
- 
+
   local shoot_accuracy = ACCURACIES[HM.skill]
 
   local active_mon = {}
@@ -490,7 +490,7 @@ function simulate_battle(HM, mon_set, quest)
 
     local function select_weapon()
 
-      -- virtual reality mode 
+      -- virtual reality mode
       -- use current weapon for a small time, then switch
 
       if remain_shots > 0 then return cur_weap end
@@ -504,7 +504,7 @@ function simulate_battle(HM, mon_set, quest)
 
       local names = {}
       local probs = {}
-      
+
       for name,info in pairs(GAME.weapons) do
         if HM[name] then
           local freq = info.freq
@@ -620,7 +620,7 @@ zprint(active_mon, #active_mon, active_mon[1])
     end
 
     -------- monster_shoot ---------
-    -- 
+    --
     -- 1. monster #1 does full damage to player
     -- 1a.  (all other melee monsters do ZERO dm)
     -- 2. monster #2..#N does partial damage:
@@ -648,7 +648,7 @@ zprint(active_mon, #active_mon, active_mon[1])
         if idx >= 2 and mon_hurts_mon(AC.name, active_mon[idx-1].name) then
           hurt_mon(idx-1, AC.info.dm * (time * mon_fight) * infight_prob)
         end
-      end 
+      end
     end
   end
 
@@ -676,7 +676,7 @@ zprint(active_mon, #active_mon, active_mon[1])
       if quest.kind == "weapon" then
         hm_give_weapon(HM, quest.item)
         zprint("PICKED UP QUEST WEAPON", quest.item)
-      
+
       elseif quest.kind == "item" then
         hm_give_item(HM, quest.item)
         zprint("PICKED UP QUEST ITEM", quest.item)
@@ -1043,13 +1043,13 @@ function place_battle_stuff(c, stats)
     -- intermingle the new singles
     rand_shuffle(list)
   end
-  
+
   local function spot_dist(s1, s2)
     local dx = math.abs(s1.x - s2.x)
     local dy = math.abs(s1.y - s2.y)
     return math.max(dx, dy)
   end
-  
+
   local function alloc_spot(spots, want_big, near_to)
 
     if #spots == 0 then return nil, nil end
@@ -1146,7 +1146,7 @@ function place_battle_stuff(c, stats)
           place_pickup(spots, dat)
 
           -- re-use spots if we run out
-          if #spots == 0 then 
+          if #spots == 0 then
             spots = copy_shuffle_spots(c.free_spots)
             if pass == 2 then split_big_spots(spots) end
           end
@@ -1370,7 +1370,7 @@ function battle_in_cell(c)
     local probs = {}
 
     for name,info in pairs(GAME.monsters) do
-      if (info.cage_fallback) or 
+      if (info.cage_fallback) or
          ((info.pow < T*2/x_horde) and (fp >= int(info.fp)))
       then
         local prob = info.cage_prob or info.cage_fallback or 0
@@ -1416,7 +1416,7 @@ function battle_in_cell(c)
     local orig_T = T
 
     local fp = best_weapon_fp(SK)
- 
+
     local small = decide_cage_monster(T, fp, #c.cage_spots)
     local big   = decide_cage_monster(T, fp, #c.cage_spots, true, true)
 
@@ -1495,7 +1495,7 @@ function battle_in_cell(c)
 
   local function add_teleports_for_depot(spots)
     local prev
-    
+
     for zzz,place in ipairs(c.quest.depot.places) do
       if place.c == c then
 
@@ -1547,7 +1547,7 @@ zprint("BATTLE IN", c.x, c.y)
   if c.no_monsters then return end
 
   for zzz,skill in ipairs(SKILLS) do
-  
+
     SK = skill
 
     T = c.toughness * (free_space ^ 0.7) * TOUGH_FACTOR[SK]
@@ -1587,7 +1587,7 @@ function backtrack_to_cell(c)
       if c == place.c then
         for xxx,CL in ipairs(GAME.classes) do
           for zzz,SK in ipairs(SKILLS) do
-            simulate_battle(PLAN.hmodels[CL][SK], place.mon_set[SK]) 
+            simulate_battle(PLAN.hmodels[CL][SK], place.mon_set[SK])
             distribute_pickups(c, PLAN.hmodels[CL][SK], "backtrack")
           end
         end

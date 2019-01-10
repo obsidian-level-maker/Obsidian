@@ -578,7 +578,7 @@ ABSOLUTION.SKINS =
   }
 
 
-  ----| SWITCHED DOORS |---- 
+  ----| SWITCHED DOORS |----
 
   Door_SW_1 =
   {
@@ -1477,7 +1477,7 @@ function ABSOLUTION.make_cool_gfx()
 
   local GREEN =
   {
-    0, 127, 125, 123, 121, 119, 117, 113    
+    0, 127, 125, 123, 121, 119, 117, 113
   }
 
   local RED =

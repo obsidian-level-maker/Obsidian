@@ -287,7 +287,7 @@ end
 
 
 function Arena_Doom_MAP07()
-  
+
   local function make_room(x1,y1, x2,y2, z)
     local wall = get_mat("ROCK4", "MFLR8_3")
     local sky  = get_sky()
@@ -348,7 +348,7 @@ function Arena_Doom_MAP07()
 
     if entity then
       Trans_entity(entity, x, y, z, { angle=rand_irange(0,3)*90 })
-    end 
+    end
   end
 
   local function make_exit_switch(mx, my)
@@ -818,7 +818,7 @@ function Arena_Doom_E1M8()
 
 
   ---| Arena_Doom_E1M8 |---
-  
+
   -- outer floor --
   Trans_quad(dirt_i, -1200, 0, 1200, 3600, -EXTREME_H, -32)
   Trans_quad(sky_i,  -1200, 0, 1200, 3600, 320, EXTREME_H)
@@ -879,7 +879,7 @@ function Arena_Doom_E2M8()
   local function make_room()
     local x1, y1 = -mid_w, 0
     local x2, y2 =  mid_w, total_h
-    
+
     Trans_quad(dirt_i, x1, y1, x2, y2, -EXTREME_H, floor_z)
     Trans_quad(sky_i,  x1, y1, x2, y2, floor_z+768, EXTREME_H)
 
@@ -910,7 +910,7 @@ function Arena_Doom_E2M8()
 
     for i = 1,2 do
       TRANSFORM.mirror_y = sel(i==1, mid_y, nil)
-      
+
       -- curved niche --
 
       Trans_quad(floor_i, mid_x-160, mid_y+144, mid_x+160, mid_y+288, -EXTREME_H, 16)
@@ -1064,7 +1064,7 @@ function Arena_Doom_E2M8()
           { x=mid_x-160, y=mid_y+160 },
         },
         -EXTREME_H, EXTREME_H)
-      
+
         -- torches --
 
         Trans_entity(torch, mid_x-460, mid_y+120, -16)
@@ -1153,10 +1153,10 @@ function Arena_Doom_E2M8()
         local prof_ch = string.sub(pattern, k, k)
 
         if prof_ch == 'T' then ang_step = 3 end
-        
+
         for angle = 10,80,ang_step do
           local x,y = pole_coord(quadrant, k, angle)
-        
+
           if prof_ch == 'T' then
             Trans_entity(object, x, y, floor_z)
 
@@ -1196,7 +1196,7 @@ function Arena_Doom_E2M8()
     Trans_entity("Cyberdemon", 0, y, floor_z)
   end
 
-  
+
   ---| Arena_Doom_E2M8 |---
 
   make_room()
@@ -1206,5 +1206,5 @@ function Arena_Doom_E2M8()
 
   add_players()
   add_cybies()
-end  
+end
 

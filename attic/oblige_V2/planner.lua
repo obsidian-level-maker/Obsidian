@@ -287,7 +287,7 @@ function get_base_plan(level, plan_size, cell_size)
 
   return Plan
 end
- 
+
 function allocate_tag()
   local result = PLAN.free_tag
   PLAN.free_tag = PLAN.free_tag + 1
@@ -425,7 +425,7 @@ function create_cell(x, y, quest, along, combo, is_depot)
   local CELL =
   {
     x=x, y=y,
-    
+
     quest = quest,
     along = along,
     combo = combo,
@@ -485,7 +485,7 @@ function shuffle_build_sites()
 
   local function count_builds(c, external)
     local count = 0
-    
+
     for side = 2,8,2 do
       local L = c.link[side]
       if L then
@@ -494,12 +494,12 @@ function shuffle_build_sites()
         end
       end
     end
-    
+
     return count
   end
 
   -- shuffle_build_sites --
-  
+
   for zzz,link in ipairs(PLAN.all_links) do
 
     if link.is_exit or link.is_secret or link.kind == "vista" then
@@ -641,7 +641,7 @@ function resize_rooms()
     --   2: nudge against another valid cell
     --   3: nudge against the map's edge
 
-    if c.no_nudge then return end 
+    if c.no_nudge then return end
 
     if rand_odds(25) then return end
 
@@ -697,7 +697,7 @@ function resize_rooms()
       -- cannot move the border if the cells aren't aligned
       if (side == 2) or (side == 8) then
         if not (c.bx1 == other.bx1 and c.bx2 == other.bx2) then return end
-      else 
+      else
         if not (c.by1 == other.by1 and c.by2 == other.by2) then return end
       end
 
@@ -798,7 +798,7 @@ end
 function create_corners()
 
   local SUB_TO_DIR = { { 1, 3 }, { 7, 9 } }
-  
+
   local function find_corners(x, y)
 
     -- this table is indexed by a coordinate string, hence
@@ -844,7 +844,7 @@ function create_corners()
         if c and not c.is_depot and
            (CN.bx >= c.bx1-1) and (CN.by >= c.by1-1) and
            (CN.bx <= c.bx2+1) and (CN.by <= c.by2+1)
-        then 
+        then
           table.insert(CN.cells, c)
         end
       end end
@@ -1000,12 +1000,12 @@ end
 function match_borders_and_corners()
 
   local function try_add_border(c, E, D)
-    
+
     if D.y1 == E.by and D.y2 == E.by then
 
       if D.x1 == E.bx+1 then E.borders[6] = D end
       if D.x2 == E.bx-1 then E.borders[4] = D end
-      
+
     elseif D.x1 == E.bx and D.x2 == E.bx then
 
       if D.y1 == E.by+1 then E.borders[8] = D end
@@ -1108,7 +1108,7 @@ function plan_sp_level(level, is_coop)
   end
 
   local function find_branch_spot(Q)
-    local b_cells = {}  
+    local b_cells = {}
     local b_probs = {}
 
 --con.debugf(Q.parent and "SUB-Q: " or "QUEST: ", Q.level, "\n")
@@ -1141,7 +1141,7 @@ function plan_sp_level(level, is_coop)
   }
 
   local function where_now(x, y, path_dirs)
-    
+
     local function dir_score(dir)
       local dx, dy = dir_to_delta(dir)
 
@@ -1291,7 +1291,7 @@ function plan_sp_level(level, is_coop)
 
     Q.has_hallway = true
   end
-  
+
   local function specialize_rooms(Q)
 
     local cells = {}
@@ -1756,7 +1756,7 @@ con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
     end
 
     -- standard flood-fill
-    
+
     local seeds = { PLAN.quests[1].first }
 
     seeds[1].floor_code = allocate_floor_code()
@@ -1777,9 +1777,9 @@ con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
     until #seeds == 0
   end
 
-  
+
   local function shuffle_quests()
-    
+
     local function sequence_score(qlist)
       -- higher (worse) score when the same type of quest
       -- appears multiple times in a row.  Also checks for
@@ -1808,7 +1808,7 @@ con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
         end
       end
 
-      return score[4]*100 + score[3]*40 + score[2]*10 
+      return score[4]*100 + score[3]*40 + score[2]*10
     end
 
     local function shuffle_main_quests(qlist)
@@ -1835,7 +1835,7 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
     end
 
     local function sub_join_score(main_Q, sub_Q)
-      
+
       local score = 90
 
       if sub_Q.kind == "weapon" then
@@ -1908,7 +1908,7 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
     end
 
     ---- shuffle_quests ----
-    
+
     assert(PLAN.level)
     assert(PLAN.level.quests)
     assert(# PLAN.level.quests >= 1)
@@ -1946,7 +1946,7 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
     -- the secret quests can block off all possible branch
     -- spots for normal quests (which cannot connect to a
     -- secret quest).
-  
+
     for pass = 1,2 do
       for zzz,Q in ipairs(PLAN.quests) do
         if pass == sel(Q.is_secret,2,1) then
@@ -1981,7 +1981,7 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
 con.debugf("CHANGE_OVER = %d (total:%d)\n", mid_q, #PLAN.quests)
 
     for i = 1,#PLAN.quests do
-      
+
       local Q = PLAN.quests[i]
 
       Q.theme = sel(i >= mid_q, T2, T1)
@@ -2052,7 +2052,7 @@ Q.theme.name, Q.combo.name)
       end
     end
   end
-  
+
   local function add_scenic_cells()
     -- these cells improve the outdoor environment.
     -- When a outdoor->indoor transition occurs and a
@@ -2084,7 +2084,7 @@ Q.theme.name, Q.combo.name)
 
       if #empties ~= 1 or scenics > 1 or #outies < 1 then return end
 
-      if #outies == 1 and #innies == 2 and 
+      if #outies == 1 and #innies == 2 and
          (outies[1].x ~= empties[1].x) and
          (outies[1].y ~= empties[1].y)
       then return end
@@ -2177,7 +2177,7 @@ Q.theme.name, Q.combo.name)
 
       return 0
     end
-    
+
     local function can_make_falloff(a, b, dir)
 
       if b.scenic then return false end
@@ -2246,7 +2246,7 @@ Q.theme.name, Q.combo.name)
   end
 
   local function add_windows()
-    
+
     local function can_make_window(a, b, dir)
 
       local link = a.link[dir]
@@ -2472,7 +2472,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   local function toughen_it_up()
 
     local function toughen_quest(Q)
-      
+
       local peak = peak_toughness(Q)
       local skip = 0
 
@@ -2531,9 +2531,9 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   plot_quests()
   decide_links()
-  
+
   setup_exit_rooms()
-  
+
   shuffle_build_sites()
   add_scenic_cells()
 

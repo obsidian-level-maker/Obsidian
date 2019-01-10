@@ -149,7 +149,7 @@ HEXEN.MONSTERS =
     attack = "missile"
     float = true
   }
-  
+
   reiver_b  =
   {
     id = 10011
@@ -172,7 +172,7 @@ HEXEN.MONSTERS =
   {
     id = 254
     r = 20
-    h = 66 
+    h = 66
     level = 7
     boss_type = "minor"
     health = 640
@@ -195,7 +195,7 @@ HEXEN.MONSTERS =
   {
     id = 10100
     r = 16
-    h = 64 
+    h = 64
     level = 9
     boss_type = "tough"
     health = 5000
@@ -206,7 +206,7 @@ HEXEN.MONSTERS =
   {
     id = 10101
     r = 16
-    h = 64 
+    h = 64
     level = 9
     boss_type = "tough"
     health = 5000
@@ -217,7 +217,7 @@ HEXEN.MONSTERS =
   {
     id = 10102
     r = 16
-    h = 64 
+    h = 64
     level = 9
     boss_type = "tough"
     health = 5000

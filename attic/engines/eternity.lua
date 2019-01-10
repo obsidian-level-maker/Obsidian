@@ -25,7 +25,7 @@ OB_ENGINES["eternity"] =
   label = _("Eternity")
 
   extends = "boom"
-  
+
   game = { doom1=1, doom2=1, heretic=1, hexen=1 }
 
   tables =

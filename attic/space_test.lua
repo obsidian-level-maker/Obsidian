@@ -32,7 +32,7 @@ SHAPE_PROBS = { N=150, t=70, s=70, l=30, u=30, h=15, o=15 }
 
 
 function valid(x, y)
-  return x >= 1 and x <= SEED_W and 
+  return x >= 1 and x <= SEED_W and
          y >= 1 and y <= SEED_H
 end
 
@@ -302,7 +302,7 @@ function recursive_fill(x, y, w, h)
   if math.min(w, h) >= 2 then
 
     if math.min(w, h) >= 3 and math.max(w, h) <= 9 then
-      
+
       if shape == "s" then S_shape(x, y, w, h, side) ; return end
       if shape == "t" then T_shape(x, y, w, h, side) ; return end
       if shape == "h" then H_shape(x, y, w, h, side) ; return end

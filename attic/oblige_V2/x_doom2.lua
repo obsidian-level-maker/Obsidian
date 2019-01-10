@@ -368,7 +368,7 @@ D2_COMBOS =
 
 
   ---- CAVE ----------------
-  
+
   CAVE_ASH =
   {
     theme_probs = { CAVE=30 },
@@ -843,7 +843,7 @@ D2_CRATES =
   {
     wall = "MODWALL3", h=64, floor = "FLAT19"
   },
-  
+
   PIPES =
   {
     wall = "PIPES", h=64, floor = "CEIL3_2", can_rotate=true
@@ -931,7 +931,7 @@ D2_SCENERY_PREFABS =
     prefab = "POND_SMALL",
     environment = "outdoor",
     theme_probs = { NATURE=90 },
-    skin = 
+    skin =
     {
       pond_w="ZIMMER4", pond_f="RROCK18",
       outer_w="BROWNHUG", liquid_f="FWATER1",
@@ -952,25 +952,25 @@ D2_SCENERY_PREFABS =
     prefab = "COMPUTER_TALL",
     skin   = { comp_w="COMPSTA1", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_tall_STATION2 =
   {
     prefab = "COMPUTER_TALL",
     skin   = { comp_w="COMPSTA2", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_thin_STATION1 =
   {
     prefab = "COMPUTER_TALL_THIN",
     skin   = { comp_w="COMPSTA1", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_thin_STATION2 =
   {
     prefab = "COMPUTER_TALL_THIN",
     skin   = { comp_w="COMPSTA2", comp_f="FLAT23", side_w="SILVER1" },
   },
- 
+
   comp_desk_EW8 =
   {
     prefab = "COMPUTER_DESK",
@@ -1134,28 +1134,28 @@ D2_SCENERY_PREFABS =
     environment = "indoor",
     skin = { wall="MARBFAC4" },
   },
-  
+
   pillar_PANBLUE =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="PANBLUE" },
   },
- 
+
   pillar_PANRED =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="PANRED" },
   },
- 
+
   pillar_PANEL5 =
   {
     prefab = "PILLAR", add_mode = "island",
     environment = "indoor",
     skin = { wall="PANEL5" },
   },
- 
+
   cage_small_METAL =
   {
     prefab = "CAGE_SMALL",
@@ -1243,13 +1243,13 @@ D2_FEATURE_PREFABS =
     {
       wall="COMPWERD", floor="FLAT14", ceil="FLOOR4_8",
       step_w="STEP1", carpet_f="FLOOR1_1",
-      
+
       comp_w="SPACEW3", comp2_w="COMPTALL", span_w="COMPSPAN",
       comp_f="CEIL5_1", lite_c="TLITE6_5",
 
       lamp_t="lamp"
     },
-    
+
     theme_probs = { TECH=80, INDUSTRIAL=20 },
     force_dir = 2, -- optimisation
   },
@@ -1344,7 +1344,7 @@ D2_FEATURE_PREFABS =
   {
     prefab = "POND_MEDIUM",
     environment = "outdoor",
-    skin = 
+    skin =
     {
       pond_w="BROWNHUG", pond_w2="ZIMMER2",
       pond_f="RROCK18",  pond_f2="RROCK19",
@@ -1353,13 +1353,13 @@ D2_FEATURE_PREFABS =
     },
     theme_probs = { NATURE=100 },
   },
-  
+
   pond_large_GRASS =
   {
     prefab = "POND_LARGE",
     environment = "outdoor",
     theme_probs = { NATURE=170 },
-    skin = 
+    skin =
     {
       pond_w="ZIMMER2", pond_f="RROCK19",
       outer_w="BROWNHUG", liquid_f="FWATER1",
@@ -1387,7 +1387,7 @@ D2_FEATURE_PREFABS =
     min_height = 96,
 
     skin =
-    { 
+    {
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
       beam_w = "WOOD12", beam_c = "FLAT5_2",
@@ -1498,32 +1498,32 @@ D2_WALL_PREFABS =
   {
     prefab = "SOLID", skin = { wall="STUCCO2" },
   },
-  
+
   solid_TEKGREN3 =
   {
     prefab = "SOLID", skin = { wall="TEKGREN3" },
   },
-  
+
   solid_TEKGREN4 =
   {
     prefab = "SOLID", skin = { wall="TEKGREN4" },
   },
-  
+
   solid_TEKGREN5 =
   {
     prefab = "SOLID", skin = { wall="TEKGREN5" },
   },
-  
+
   solid_PANEL8 =
   {
     prefab = "SOLID", skin = { wall="PANEL8" },
   },
-  
+
   solid_PANEL9 =
   {
     prefab = "SOLID", skin = { wall="PANEL9" },
   },
-  
+
   wall_pic_TV =
   {
     prefab = "WALL_PIC",
@@ -1538,7 +1538,7 @@ D2_WALL_PREFABS =
     min_height = 160,
     skin = { pic_w="ZZWOLF6", lite_w="LITE5", pic_h=128 },
 
-    theme_probs = { URBAN=8 }, 
+    theme_probs = { URBAN=8 },
   },
 
   wall_pic_SPDUDE7 =
@@ -1616,7 +1616,7 @@ D2_MISC_PREFABS =
     prefab = "FENCE_RAIL",
     skin = { rail_w="MIDBARS3" },
   },
-  
+
   exit_hole_SKY =
   {
     prefab = "EXIT_HOLE_ROUND",
@@ -1660,7 +1660,7 @@ D2_ROOMS =
 
     wall_fabs =
     {
-      wall_pic_TV = 30, 
+      wall_pic_TV = 30,
       other = 100
     },
   },
@@ -1679,7 +1679,7 @@ D2_ROOMS =
 
     wall_fabs =
     {
-      wall_pic_TV = 30, 
+      wall_pic_TV = 30,
       other = 100
     },
   },
@@ -1779,7 +1779,7 @@ D2_QUESTS =
     sw_vine=10, -- sw_skin=40,
     sw_metl=50, sw_gray=20,
     -- FIXME: sw_rock=10,
-    -- FIXME: sw_wood=30, 
+    -- FIXME: sw_wood=30,
   },
 
   weapon =

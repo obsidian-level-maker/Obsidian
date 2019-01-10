@@ -253,7 +253,7 @@ XC =
   C_NORMAL = 16
   C_FAST   = 32
   C_TURBO  = 64
- 
+
   F_SLOW   = 8
   F_NORMAL = 16
   F_FAST   = 32
@@ -263,12 +263,12 @@ XC =
   D_NORMAL = 32
   D_FAST   = 64
   D_TURBO  = 128
- 
+
   ST_SLOW   = 2
   ST_NORMAL = 4
   ST_FAST   = 16
   ST_TURBO  = 32
- 
+
   P_CRAWL  = 4
   P_SLOW   = 8
   P_NORMAL = 16

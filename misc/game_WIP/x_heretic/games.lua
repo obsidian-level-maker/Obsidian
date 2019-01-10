@@ -65,7 +65,7 @@ HERETIC.ENTITIES =
   moss1   = { id=48, r=16, h=24, ceil=true, pass=true }
   moss2   = { id=49, r=16, h=28, ceil=true, pass=true }
   volcano = { id=87, r=12, h=32 }
-  
+
   small_pillar = { id=29, r=16, h=36 }
   brown_pillar = { id=47, r=16, h=128 }
   glitter_red  = { id=74, r=20, h=16, pass=true }
@@ -692,7 +692,7 @@ HERETIC.SKINS =
   }
 
 
-  ----| SWITCHED DOORS |---- 
+  ----| SWITCHED DOORS |----
 
   Door_SW_1 =
   {
@@ -919,7 +919,7 @@ HERETIC.COMBOS =
   {
     theme_probs = { CITY=20, DOME=20 }
     mat_pri = 1,
-    
+
     wall  = "CTYSTUC3",
     floor = "FLOOR10",
     ceil  = "FLOOR11",
@@ -930,11 +930,11 @@ HERETIC.COMBOS =
 
   }
 
-  DISCO1 = 
+  DISCO1 =
   {
     theme_probs = { EGYPT=20 }
     mat_pri = 1,
-    
+
     wall  = "SPINE2",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -943,13 +943,13 @@ HERETIC.COMBOS =
 --  void = "CTYSTUC4",
 
   }
- 
-  --- Grey-walls, pink/brown floors 
-  DISCO2 = 
+
+  --- Grey-walls, pink/brown floors
+  DISCO2 =
   {
     theme_probs = { DOME=20 }
     mat_pri = 1,
-    
+
     wall  = "SQPEB1",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -958,12 +958,12 @@ HERETIC.COMBOS =
 --  void = "CTYSTUC4",
 
   }
-  
+
   PYRAMID =
   {
     theme_probs = { EGYPT=20 }
     mat_pri = 1,
-    
+
     wall  = "SNDPLAIN",
     floor = "FLOOR27",
     ceil  = "FLOOR10",
@@ -977,7 +977,7 @@ HERETIC.COMBOS =
   {
     theme_probs = { EGYPT=15 }
     mat_pri = 1,
-    
+
     wall  = "TRISTON2",
     floor = "FLAT522",
     ceil  = "FLOOR20",
@@ -991,7 +991,7 @@ HERETIC.COMBOS =
   {
     theme_probs = { EGYPT=15 }
     mat_pri = 1,
-    
+
     wall  = "SQPEB2",
     floor = "FLOOR06",
     ceil  = "FLOOR06",
@@ -1006,7 +1006,7 @@ HERETIC.COMBOS =
   {
     theme_probs = { EGYPT=20 }
     mat_pri = 1,
-    
+
     wall  = "SNDBLCKS",
     floor = "FLOOR27",
     ceil  = "FLOOR10",
@@ -1017,7 +1017,7 @@ HERETIC.COMBOS =
   }
 
 
-  CAVE1 = 
+  CAVE1 =
   {
     theme_probs = { CAVE=20 }
     mat_pri = 1,
@@ -1026,10 +1026,10 @@ HERETIC.COMBOS =
     ceil = "FLOOR01",
 
     scenery = "stal_big_C",
- 
+
   }
 
-  CAVE2 = 
+  CAVE2 =
   {
     theme_probs = { CAVE=20 }
     mat_pri = 1,
@@ -1038,7 +1038,7 @@ HERETIC.COMBOS =
     ceil = "FLAT506",
 
     scenery = "stal_small_C",
- 
+
   }
 
   CAVE3 =  -- Muddy walls, but one of the few outdoor textures
@@ -1050,7 +1050,7 @@ HERETIC.COMBOS =
     ceil = "FLAT516",
 
     scenery = "stal_small_C",
- 
+
   }
 
   PURPLE =
@@ -1121,7 +1121,7 @@ HERETIC.COMBOS =
 
   ---- OUTDOOR ------------
 
-  CAVEO1 = 
+  CAVEO1 =
   {
     theme_probs = { CAVE=20 }
     mat_pri = 2,
@@ -1131,10 +1131,10 @@ HERETIC.COMBOS =
     ceil = "FLOOR01",
 
     scenery = "stal_big_F",
- 
+
   }
 
-  CAVEO2 = 
+  CAVEO2 =
   {
     theme_probs = { CAVE=20 }
     mat_pri = 2,
@@ -1144,10 +1144,10 @@ HERETIC.COMBOS =
     ceil = "FLAT506",
 
     scenery = "stal_small_F",
- 
+
   }
 
-  CAVEMUD = 
+  CAVEMUD =
   {
     theme_probs = { CAVE=15 }
     mat_pri = 2,
@@ -1157,7 +1157,7 @@ HERETIC.COMBOS =
     ceil = "FLAT510",
 
     scenery = "stal_small_F",
- 
+
   }
 
 
@@ -1177,12 +1177,12 @@ HERETIC.COMBOS =
   }
 
 
-  ODISCO1 = 
+  ODISCO1 =
   {
     theme_probs = { EGYPT=20 }
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "SPINE2",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -1192,13 +1192,13 @@ HERETIC.COMBOS =
 
   }
 
-  
-  ODISCO2 = 
+
+  ODISCO2 =
   {
     theme_probs = { DOME=20 }
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "SQPEB1",
     floor = "FLAT522",
     ceil  = "FLOOR06",
@@ -1213,7 +1213,7 @@ HERETIC.COMBOS =
     theme_probs = { EGYPT=20 }
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "SNDPLAIN",
     floor = "FLOOR27",
     ceil  = "FLOOR27",
@@ -1228,7 +1228,7 @@ HERETIC.COMBOS =
     theme_probs = { EGYPT=15 }
     mat_pri = 1,
     outdoor = true,
-    
+
     wall  = "TRISTON2",
     floor = "FLAT521",
     ceil  = "FLAT503",
@@ -1237,7 +1237,7 @@ HERETIC.COMBOS =
 --  void = "CTYSTUC4",
 
   }
-  
+
   WATER =
   {
     theme_probs = { GARISH=20 }
@@ -1311,7 +1311,7 @@ HERETIC.COMBOS =
     scenery = "fire_brazier",
 
   }
-  
+
   SANDZ =
   {
     theme_probs = { EGYPT=20 }
@@ -1332,7 +1332,7 @@ HERETIC.COMBOS =
     theme_probs = { CITY=20, DOME=20 }
     outdoor = true,
     mat_pri = 2,
-    
+
     wall  = "CTYSTUC2",
     floor = "FLOOR27",
     ceil  = "FLOOR27",
@@ -1342,7 +1342,7 @@ HERETIC.COMBOS =
 
     scenery = "small_pillar",
   }
-  
+
 }
 
 
@@ -1406,89 +1406,89 @@ HERETIC.EXITS =
 
 HERETIC.HALLWAYS =
 {
- 
-  -- Hall with set stone walls 
+
+  -- Hall with set stone walls
   RCKHALL = {
         mat_pri = 0,
-	theme_probs = { CITY=20, DOME=20 }
-    	wall = "GRSTNPB",
-	void = "GRSTNPB",
-    	step  = "GRSTNPB",
-	pillar = "WOODWL",
-	
+    theme_probs = { CITY=20, DOME=20 }
+        wall = "GRSTNPB",
+    void = "GRSTNPB",
+        step  = "GRSTNPB",
+    pillar = "WOODWL",
+
     floor = "FLOOR03",
     ceil  = "FLOOR03",
-	
+
   }
 
   -- Hall with natural stone walls
   STHALL = {
         mat_pri = 0,
-	theme_probs = { CITY=20, CAVE=20 }
-    	wall = "LOOSERCK",
-	void = "LOOSERCK",
-    	step  = "GRSTNPB",
-	pillar = "GRSTNPB",
-	
+    theme_probs = { CITY=20, CAVE=20 }
+        wall = "LOOSERCK",
+    void = "LOOSERCK",
+        step  = "GRSTNPB",
+    pillar = "GRSTNPB",
+
     floor = "FLOOR00",
     ceil  = "FLOOR00",
-	
+
   }
 
   -- Hall with roots on the walls
   RTHALL = {
         mat_pri = 0,
-	theme_probs = { CAVE=20 }
-    	wall = "ROOTWALL",
-	void = "ROOTWALL",
-    	step  = "ROOTWALL",
-	pillar = "ROOTWALL",
-	
+    theme_probs = { CAVE=20 }
+        wall = "ROOTWALL",
+    void = "ROOTWALL",
+        step  = "ROOTWALL",
+    pillar = "ROOTWALL",
+
     floor = "FLAT506",
     ceil  = "FLAT506",
-	
+
   }
 
   -- Hall with sandy walls
   SDHALL = {
         mat_pri = 0,
-	theme_probs = { EGYPT=20 }
-    	wall = "SNDPLAIN",
-	void = "SNDPLAIN",
-    	step  = "SPINE2",
-	pillar = "SPINE2",
-	
+    theme_probs = { EGYPT=20 }
+        wall = "SNDPLAIN",
+    void = "SNDPLAIN",
+        step  = "SPINE2",
+    pillar = "SPINE2",
+
     floor = "FLOOR27",
     ceil  = "FLOOR10",
-	
+
   }
 
   -- Hall with wooden walls
   WDHALL = {
         mat_pri = 0,
-	theme_probs = { CITY=20, EGYPT=20 }
-    	wall = "SQPEB2",
-	void = "SQPEB2",
-    	step  = "SQPEB2",
-	pillar = "SQPEB2",
-	
+    theme_probs = { CITY=20, EGYPT=20 }
+        wall = "SQPEB2",
+    void = "SQPEB2",
+        step  = "SQPEB2",
+    pillar = "SQPEB2",
+
     floor = "FLOOR06",
     ceil  = "FLOOR06",
-	
+
   }
 
   -- Garish blue watery hall
   WHALL = {
         mat_pri = 0,
-	theme_probs = { GARISH=20, DOME=20 }
-    	wall = "MOSAIC1",
-	void = "MOSAIC1",
-    	step  = "WATRWAL1",
-	pillar = "WATRWAL1",
-	
+    theme_probs = { GARISH=20, DOME=20 }
+        wall = "MOSAIC1",
+    void = "MOSAIC1",
+        step  = "WATRWAL1",
+    pillar = "WATRWAL1",
+
     floor = "FLTWAWA1",
     ceil  = "FLAT502",
-	
+
   }
 }
 
@@ -1657,9 +1657,9 @@ HERETIC.DOORS =
 ---              frame_f="FLAT1", frame_c="TLITE6_6",
                }
              }
-  
+
  d_wood   = { wall="DOORWOOD", w=64,  h=128, ceil="FLOOR10" }
-  
+
 --  d_stone  = { wall="DOORSTON", w=64,  h=128 }
 --]]
 
@@ -1668,7 +1668,7 @@ HERETIC.DOORS =
 
   k_blue =
   {
-    w=128, h=128, door_h=128, 
+    w=128, h=128, door_h=128,
 
     door_w="DOORSTON", door_c="FLOOR28",
     track="METL2",
@@ -2140,7 +2140,7 @@ HERETIC.ROOM_THEMES =
     naturals =
     {
       FLOOR17=50, FLAT509=20, FLAT510=20,
-      FLAT513=20, FLAT516=35, 
+      FLAT513=20, FLAT516=35,
     }
   }
 }
@@ -2379,7 +2379,7 @@ HERETIC.MONSTERS =
   {
     id = 6
     r = 40
-    h = 72 
+    h = 72
     health = 700
     damage = 60
     give = { {ammo="claw_orb",count=3} }
@@ -2393,7 +2393,7 @@ HERETIC.MONSTERS =
     h = 104
     health = 3000
     damage = 80
-    give  = 
+    give  =
     {
       {ammo="flame_orb",count=3}
       {health=10}  -- occasionally drops an Urn

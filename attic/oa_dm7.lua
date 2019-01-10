@@ -4266,7 +4266,7 @@ function get_bounds(brush)
   local z2 = -9e9
 
   for p = 1,#brush,4 do  -- plane
-    
+
     local px1 = brush[p+0][1]
     local py1 = brush[p+0][2]
     local pz1 = brush[p+0][3]

@@ -259,7 +259,7 @@ GLOBAL_PARAMETERS =
 
 --
 -- prefab stuff
--- 
+--
 GLOBAL_PREFAB_FIELDS =
 {
   -- Note the double underscore, since these materials actually

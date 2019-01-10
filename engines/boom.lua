@@ -47,7 +47,7 @@ BOOM.PARAMETERS =
 
 
 function BOOM.create_dehacked()
-  
+
   local data =
   {
     "#\n"

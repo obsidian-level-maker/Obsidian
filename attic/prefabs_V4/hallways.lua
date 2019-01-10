@@ -651,7 +651,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 360, y = 192, mat = "?wall" }
       { b = 236, mat = "?ceil" }
     }
-    
+
     {
       { x = 216, y = 184, mat = "?wall" }
       { x = 208, y = 176, mat = "?wall" }
@@ -666,7 +666,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 352, y = 128, mat = "?wall" }
       { b = 248, mat = "?ceil" }
     }
-    
+
     {
       { x = 208, y = 176, mat = "?wall" }
       { x = 200, y = 168, mat = "?wall" }
@@ -681,7 +681,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 312, y =  72, mat = "?wall" }
       { b = 260, mat = "?ceil" }
     }
-    
+
     {
       { x = 200, y = 168, mat = "?wall" }
       { x = 192, y = 168, mat = "?wall" }

@@ -26,7 +26,7 @@ SKTAG_MONS.MONSTERS =
   {
     id = 5003
     r = 20
-    h = 56 
+    h = 56
     level = 1
     prob = 55
     health = 120
@@ -39,7 +39,7 @@ SKTAG_MONS.MONSTERS =
   {
     id = 5005
     r = 20
-    h = 56 
+    h = 56
     level = 3
     prob = 33
     health = 120
@@ -53,7 +53,7 @@ SKTAG_MONS.MONSTERS =
   {
     id = 5004
     r = 30
-    h = 56 
+    h = 56
     level = 3
     prob = 20
     health = 300
@@ -66,7 +66,7 @@ SKTAG_MONS.MONSTERS =
   {
     id = 5006
     r = 31
-    h = 56 
+    h = 56
     level = 5
     prob = 25
     crazy_prob = 10
@@ -81,7 +81,7 @@ SKTAG_MONS.MONSTERS =
   {
     id = 5007
     r = 48
-    h = 64 
+    h = 64
     level = 7
     prob = 10
     skip_prob = 100
@@ -96,7 +96,7 @@ SKTAG_MONS.MONSTERS =
   {
     id = 5015
     r = 31
-    h = 56 
+    h = 56
     level = 7
     prob = 15
     health = 1200
@@ -110,7 +110,7 @@ SKTAG_MONS.MONSTERS =
   {
     id = 5008
     r = 24
-    h = 64 
+    h = 64
     level = 8
     prob = 10
     health = 1500
@@ -377,7 +377,7 @@ function SKTAG_MONS.weap_control_setup(self)
       if W.pref and prob > 0 then
         W.pref = W.pref * ((prob / 50) ^ 0.6)
       end
-      
+
       -- allow it to appear as often as the user wants
       W.level = 1
     end

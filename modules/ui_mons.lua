@@ -20,14 +20,14 @@ UI_MONS = { }
 
 UI_MONS.QUANTITIES =
 {
-	"none",   _("NONE"),
-	"scarce", _("Scarce"),
-	"less",   _("Less"),
-	"normal", _("Normal"),
-	"more",   _("More"),
-	"heaps",  _("Hordes"),
-	"nuts",   _("Nuts!"),
-	"mixed",  _("Mix It Up"),
+    "none",   _("NONE"),
+    "scarce", _("Scarce"),
+    "less",   _("Less"),
+    "normal", _("Normal"),
+    "more",   _("More"),
+    "heaps",  _("Hordes"),
+    "nuts",   _("Nuts!"),
+    "mixed",  _("Mix It Up"),
 }
 
 UI_MONS.STRENGTHS =

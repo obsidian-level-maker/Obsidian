@@ -94,7 +94,7 @@ HEXEN_ACTION_LOOKUP =
 
 
 function write_level(lev_name)
- 
+
   local sec_list   = {}
   local vert_list  = {}
   local line_list  = {}
@@ -222,7 +222,7 @@ function write_level(lev_name)
       cur_line = nil
     end
 
-    local function create_sidedef(f,b, f_over,b_over, sx, sy) 
+    local function create_sidedef(f,b, f_over,b_over, sx, sy)
       if f.solid then return nil end
 
       local SIDE = { block=f }
@@ -310,14 +310,14 @@ function write_level(lev_name)
       return flags
     end
 
-    
+
     local function new_group()
       total_group = total_group + 1
       return { id=total_group }
     end
 
     local function merge_groups(g, h)
-      
+
       if g == h then return end
 
       -- simplify pointer chains
@@ -387,7 +387,7 @@ function write_level(lev_name)
         --
         -- THIS MEANS: singleton blocks (no matching neighbour)
         -- will never get a 'group' field.
- 
+
         return false
       end
     end
@@ -457,7 +457,7 @@ function write_level(lev_name)
       if cur_line then
         local f_same = same_sector_w_merge(cur_line.f_block, f)
         local b_same = same_sector_w_merge(cur_line.b_block, b)
-      
+
         if f_same and b_same and
             cur_line.norm  == norm and
             cur_line.flags == flags and
@@ -672,7 +672,7 @@ function write_level(lev_name)
   end
 
   local function delete_linedefs()
-    
+
     -- Deleting one linedef can mean another (earlier) linedef
     -- should also be deleted (due to re-assigning vertices).
     -- Hence we must repeat this loop until all are done.
@@ -746,7 +746,7 @@ function write_level(lev_name)
       end
     end
   end
- 
+
   local function write_vertex(vert)
 
     vert.index = total_vert
@@ -768,7 +768,7 @@ function write_level(lev_name)
       sec.c_tex or GAME.ERROR_FLAT,
       sec.light or 0, sec.kind or 0, sec.tag or 0)
   end
-  
+
   local function write_sidedef(sd)
 
     sd.index = total_side
@@ -791,7 +791,7 @@ function write_level(lev_name)
       if not L.deleted then
         if not L.v1.index then write_vertex(L.v1) end
         if not L.v2.index then write_vertex(L.v2) end
-        
+
         if L.front and not L.front.index then
           write_sidedef(L.front)
         end
@@ -825,7 +825,7 @@ function write_level(lev_name)
   end
 
   local function write_things()
-    
+
     for zzz,th in pairs(thing_list) do
 
       wad.add_thing(
@@ -852,7 +852,7 @@ function write_level(lev_name)
 
     tx_file:write("VERTEXES_END\n")
   end
-  
+
   local function T_write_sectors()
     tx_file:write("SECTORS_START\n")
 
@@ -870,7 +870,7 @@ function write_level(lev_name)
 
     tx_file:write("SECTORS_END\n")
   end
-  
+
     local function T_write_sidedef(sd)
       if sd then
         tx_file:write(
@@ -903,13 +903,13 @@ function write_level(lev_name)
         T_write_sidedef(L.back)
       end
     end
-    
+
     tx_file:write("LINEDEFS_END\n")
   end
-  
+
   local function T_write_things()
     tx_file:write("THINGS_START\n")
-    
+
     for zzz,th in pairs(thing_list) do
       tx_file:write(
         string.format("%d : %d %d %d %d\n",
@@ -925,9 +925,9 @@ function write_level(lev_name)
   ---- BEGIN write_level ----
 
   construct_things()
-  
+
   con.progress(50); if con.abort() then return end
- 
+
   construct_linedefs()
   construct_sectors()
 
@@ -937,7 +937,7 @@ function write_level(lev_name)
   if not wad then
     tx_file = io.open("TEMP.txt", "w")
     if not tx_file then error("Unable to create file: TEMP.txt") end
-    
+
     tx_file:write("LEVEL_START 0 1 0 Doom2\n")
 
     T_write_vertexes()

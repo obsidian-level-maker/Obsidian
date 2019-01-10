@@ -27,7 +27,7 @@ XN_THINGS =
 
   dm_player     = { id=11, kind="other", r=16,h=64 },
   teleport_spot = { id=14, kind="other", r=16,h=64 },
-  
+
   --- MONSTERS ---
 
   ettin    = { id=10030,kind="monster", r=24,h=64 },
@@ -66,7 +66,7 @@ XN_THINGS =
   k_horn    = { id=8038, kind="pickup", r=8,h=16 },
   k_swamp   = { id=8039, kind="pickup", r=8,h=16 },
   k_castle  = { id=8200, kind="pickup", r=8,h=16 },
- 
+
   -- weapons --
   c_staff   = { id=10,  kind="pickup", r=20,h=16 },
   c_fire    = { id=8009,kind="pickup", r=20,h=16 },
@@ -609,7 +609,7 @@ XN_COMBOS =
 
     scenery = "gargoyle_short",
   },
-  
+
 }
 
 XN_EXITS =
@@ -1161,7 +1161,7 @@ XN_ROOMS =
     window_probs = { out_diff=1, combo_diff=1, normal=1 },
     space_range  = { 20, 65 },
   },
- 
+
   SCENIC =
   {
   },
@@ -1496,16 +1496,16 @@ XN_SCENERY_PREFABS =
 --   exit_dm_GREEN =
 --   {
 --     prefab = "EXIT_DEATHMATCH",
--- 
+--
 --     skin = { wall="FOREST05", front_w="FOREST05",
 --              floor="F_009", ceil="F_009",
 --              switch_w="SW51_OFF", side_w="FIRE07", switch_f="F_013",
 --              frame_f="F_048", frame_c="F_048",
 --              door_w="D_BRASS1", door_c="F_075",
--- 
+--
 --              inside_h=160, door_h=128,
 --              switch_yo=0,  tag=0,
--- 
+--
 --              door_kind  ={ id=12, act="S1", args={0, 16, 64} },
 --              switch_kind={ id=
 --            },
@@ -1634,12 +1634,12 @@ XN_DEATHMATCH =
   },
 
   health =
-  { 
+  {
     h_vial=50, h_flask=50, h_urn=5
   },
 
   ammo =
-  { 
+  {
     blue_mana=50, green_mana=50, dual_mana=80, krater=1
   },
 
@@ -1719,11 +1719,11 @@ XN_LEVELS =
 
   --- Cluster 4 ---
   {
-    { map=21, sky_info=XN_SKY_INFO[3] }, 
-    { map=22, sky_info=XN_SKY_INFO[3] }, 
-    { map=23, sky_info=XN_SKY_INFO[3] }, 
-    { map=24, sky_info=XN_SKY_INFO[3] }, 
-    { map=25, sky_info=XN_SKY_INFO[3] }, 
+    { map=21, sky_info=XN_SKY_INFO[3] },
+    { map=22, sky_info=XN_SKY_INFO[3] },
+    { map=23, sky_info=XN_SKY_INFO[3] },
+    { map=24, sky_info=XN_SKY_INFO[3] },
+    { map=25, sky_info=XN_SKY_INFO[3] },
     { map=26, sky_info=XN_SKY_INFO[3], boss_kind="heresiarch" },
   },
 
@@ -1870,7 +1870,7 @@ function hexen_get_levels(episode)
 
     local fwd_mode  = "sub"
     local back_mode = "end"
-    
+
     if src == 1 and not Gate.src.has_main then
       fwd_mode = "end"
       Gate.src.has_main = true
@@ -1940,7 +1940,7 @@ function hexen_get_levels(episode)
 
   -- item quests
 
-  local item_list = { 
+  local item_list = {
     "boots", "porkies", "repulser", "krater", -- these given twice
     "wings", "chaos", "banish",
     "servant", "incant", "defender" }
@@ -1979,7 +1979,7 @@ function hexen_get_levels(episode)
   rand_shuffle(switch_list)
 
   local QN_SWITCH_PROBS = { 700, 200, 40, 15, 5, 1 }
-  
+
   for sw = 1,#switch_list do
 
     -- randomly select a level, preferring ones with fewest quests
@@ -2016,12 +2016,12 @@ GAME_FACTORIES["hexen"] = function()
     cell_size = 9,
     cell_min_size = 6,
 
-    caps = { heights=true,   sky=true, 
+    caps = { heights=true,   sky=true,
              fragments=true, move_frag=true, rails=true,
              closets=true,   depots=true,
              switches=true,  liquids=true,
              teleporters=true,
-             
+
              -- Hexen unique stuff
              polyobjs=true,  three_part_weapons=true,
              hubs=true,      action_script=true,
@@ -2082,10 +2082,10 @@ GAME_FACTORIES["hexen"] = function()
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
-    
+
     diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 },
     bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
-    
+
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
