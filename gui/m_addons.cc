@@ -80,7 +80,7 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 		(! FileExists(filename) &&
 		 filename == fl_filename_name(filename)))
 	{
-		char *new_name = StringPrintf("%s/addons/%s", install_dir, filename);
+		char *new_name = StringPrintf("%s/addons/%s", home_dir, filename);
 		StringFree(filename);
 		filename = new_name;
 	}
@@ -177,7 +177,7 @@ void VFS_ScanForAddons()
 
 	all_addons.clear();
 
-	char *dir_name = StringPrintf("%s/addons", install_dir);
+	char *dir_name = StringPrintf("%s/addons", home_dir);
 
 	std::vector<std::string> list;
 	int result = ScanDir_MatchingFiles(dir_name, "pk3", list);
