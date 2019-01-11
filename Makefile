@@ -282,5 +282,8 @@ xgettext:
 
 .PHONY: all clean halfclean fullclean stripped install uninstall xgettext
 
+normalize:
+	misc/normalize-source.sh
+
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
