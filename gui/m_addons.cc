@@ -81,6 +81,11 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 		 filename == fl_filename_name(filename)))
 	{
 		char *new_name = StringPrintf("%s/addons/%s", home_dir, filename);
+		if (! FileExists(new_name))
+		{
+			StringFree(new_name);
+			new_name = StringPrintf("%s/addons/%s", install_dir, filename);
+		}
 		StringFree(filename);
 		filename = new_name;
 	}
@@ -180,15 +185,25 @@ void VFS_ScanForAddons()
 	char *dir_name = StringPrintf("%s/addons", home_dir);
 
 	std::vector<std::string> list;
-	int result = ScanDir_MatchingFiles(dir_name, "pk3", list);
+	int result1 = ScanDir_MatchingFiles(dir_name, "pk3", list);
 
 	StringFree(dir_name);
 
-	if (result < 0)
+	dir_name = StringPrintf("%s/addons", install_dir);
+
+	std::vector<std::string> list2;
+
+	int result2 = ScanDir_MatchingFiles(dir_name, "pk3", list2);
+
+	if ((result1 < 0) && (result2 < 0))
 	{
-		LogPrintf("FAILED -- missing folder??\n\n");
+		LogPrintf("FAILED -- no addon directory found.\n\n");
 		return;
 	}
+
+	list.insert(list.end(), list2.begin(), list2.end());
+
+	std::vector<std::string>().swap(list2);
 
 	for (unsigned int i = 0 ; i < list.size() ; i++)
 	{
