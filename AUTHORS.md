@@ -1,15 +1,14 @@
 
-OBLIGE AUTHORS
-==============
+# OBLIGE AUTHORS
 
-DEVELOPER:
+## DEVELOPER:
 
 Andrew Apted  <ajapted@gmail.com>
 
 I created OBLIGE and I continue to develop it.
 
 
-CONTRIBUTORS:
+## CONTRIBUTORS:
 
 Chris Pisarczyk (Glaice)
   - DOOM prefabs
@@ -62,7 +61,7 @@ SylandroProbopas
   - DOOM 1 boss map
 
 
-THANKS TO:
+## THANKS TO:
 
 DoomJedi : Wolf3D testing, list of Wolf3D mods. 
 
@@ -83,7 +82,7 @@ ideas for improvements (etc), both in email and on the forums.
 Your input has been greatly appreciated!
 
 
-TITLE ARTWORK:
+## TITLE ARTWORK:
 
 bg/lamp1.tga  : by Lanea Zimmerman, under CC-BY 3.0 license.
 bg/block1.tga : by Keith333 (user on OGA), under CC-BY 3.0 license.
@@ -94,7 +93,7 @@ Several textures and sprites from the FreeDoom project.
 (All other title artwork is under CC0 license / public domain)
 
 
-NOTES:
+## NOTES:
 
 OBLIGE was written from scratch. It does not contain any code
 from SLIGE (by David Chess) or from any other random level
