@@ -315,17 +315,19 @@ static int ZIP_seek(fvoid *opaque, PHYSFS_uint64 offset)
          */
         if (offset < finfo->uncompressed_position)
         {
-            /* we do a copy so state is sane if inflateInit2() fails. */
-            z_stream str;
-            initializeZStream(&str);
-            if (zlib_err(inflateInit2(&str, -MAX_WBITS)) != Z_OK)
-                return(0);
+            // andrewj: removed the creation of a new z_stream, because its
+            // internal state keeps a pointer to the z_steam and this ptr
+            // becomes invalid if you "move" the z_steam object -- and then
+            // zlib's inflateCheckState() function fails.
 
             if (!__PHYSFS_platformSeek(in, entry->offset))
                 return(0);
 
             inflateEnd(&finfo->stream);
-            memcpy(&finfo->stream, &str, sizeof (z_stream));
+            initializeZStream(&finfo->stream);
+            if (zlib_err(inflateInit2(&finfo->stream, -MAX_WBITS)) != Z_OK)
+                return(0);
+
             finfo->uncompressed_position = finfo->compressed_position = 0;
         } /* if */
 
