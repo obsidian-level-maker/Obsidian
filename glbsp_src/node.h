@@ -53,7 +53,7 @@ void FreeSuper(superblock_t *block);
 // returns GLBSP_E_OK, or GLBSP_E_Cancelled if user stopped it.
 //
 glbsp_ret_e BuildNodes(superblock_t *seg_list,
-    node_t ** N, subsec_t ** S, int depth, const bbox_t *bbox);
+    node_t ** N, subsec_t ** S, int depth, node_t *stale_nd);
 
 // compute the height of the bsp tree, starting at 'node'.
 int ComputeBspHeight(node_t *node);

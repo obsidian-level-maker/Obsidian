@@ -5,6 +5,7 @@
 
 1. C++ compiler (GNU's G++) and associated tools
    * packages: `g++` `binutils`
+   * if compiling with clang: `clang`
 
 2. GNU make
    * package: `make`
@@ -28,6 +29,10 @@ Assuming all those dependencies are met, then the following shell
 command will build the Oblige binary. (The '>' is just the prompt)
 
     > make
+
+If using clang:
+
+    > make "CXX=clang++-10" (your version of clang may differ, if so use that instead of 10)
 
 ## Windows Compilation
 

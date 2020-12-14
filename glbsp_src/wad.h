@@ -30,13 +30,10 @@ struct lump_s;
 
 // wad header
 
-#define IWAD  0
-#define PWAD  1
-
 typedef struct wad_s
 {
-  // kind of wad file : IWAD or PWAD
-  int kind;
+  // kind of wad file
+  enum { IWAD, PWAD } kind;
 
   // number of entries in directory
   int num_entries;
@@ -150,12 +147,12 @@ lump_t;
 // check if the filename has the given extension.  Returns 1 if yes,
 // otherwise zero.
 //
-int UtilCheckExtension(const char *filename, const char *ext);
+int CheckExtension(const char *filename, const char *ext);
 
 // remove any extension from the given filename, and add the given
 // extension, and return the newly creating filename.
 //
-char *UtilReplaceExtension(const char *filename, const char *ext);
+char *ReplaceExtension(const char *filename, const char *ext);
 
 // open the input wad file and read the contents into memory.  When
 // 'load_all' is false, lumps other than level info will be marked as

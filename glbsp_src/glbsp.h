@@ -22,8 +22,8 @@
 #define __GLBSP_GLBSP_H__
 
 
-#define GLBSP_VER  "2.27"
-#define GLBSP_VER_HEX  0x227
+#define GLBSP_VER  "2.24"
+#define GLBSP_VER_HEX  0x224
 
 
 // certain GCC attributes can be useful
@@ -35,12 +35,9 @@
 #endif
 
 
-/** OBLIGE change: assume C++ **/
-
-// #ifdef __cplusplus
-// extern "C" {
-// #endif // __cplusplus
-
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 
 /* ----- basic types --------------------------- */
@@ -286,8 +283,8 @@ const char *GlbspStrDup(const char *str);
 void GlbspFree(const char *str);
 
 
-// #ifdef __cplusplus
-// }
-// #endif // __cplusplus
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif /* __GLBSP_GLBSP_H__ */

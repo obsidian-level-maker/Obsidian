@@ -71,9 +71,12 @@ intersection_t;
 // scan all the segs in the list, and choose the best seg to use as a
 // partition line, returning it.  If no seg can be used, returns NULL.
 // The 'depth' parameter is the current depth in the tree, used for
-// computing  the current progress.
+// computing  the current progress.  When stale_nd is not NULL, it can
+// be used to quickly find a matching seg -- but if none match, or it
+// is unsuitable, the pointer should be cleared.
 //
-seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox); 
+seg_t *PickNode(superblock_t *seg_list, int depth, 
+    node_t ** stale_nd, int *stale_opposite);
 
 // compute the boundary of the list of segs
 void FindLimits(superblock_t *seg_list, bbox_t *bbox);

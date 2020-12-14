@@ -25,4 +25,16 @@ OBLIGE will then build all the maps, showing a blueprint of each one as it goes,
 
 ## About This Repository
 
-This is a fan-mantained repository for Oblige, now that Andrew has stepped down from developing it. Please see the CONTRIBUTING file for details on helping to maintain Oblige into the future.
+This is a fork containing the changes that were necessary for me to successfully compile and use Oblige on a Raspberry Pi 4 (arm64 architecture) running Ubuntu 20.04. It is also compatible with ObAddon and will load it from a *.pk3 file via the Addons menu.
+
+A brief summary of changes:
+
+Updated PHYSFS to version 3.02. I have made modifications to several of the sources files, mostly centered around explicitly casting the return of the UtilCalloc function from void* to the required pointer type.
+
+Replaced GLBSP 2.7 with GLBSP 2.4. I have modified several of these sources as well, again mostly centered around the casting of returns from UtilCalloc.
+
+Edited other source files in the gui and tools folders for the same UtilCalloc issue.
+
+Updated Makefile to account for the altered versions of PHYSFS/GLBSP.
+
+I used Clang version 10 for the compiler, with no flags passed to make other than "CXX=clang++-10", i.e. no -fpermissive or ignoring certain classes of error. That being said, there is probably more cleanup that could be done, especially since most of the PHYSFS functions being called by the original source have been deprecated by now. I will try to tackle these if the mood strikes me, but I have no encountered any actual problems (yet) when running the program.
