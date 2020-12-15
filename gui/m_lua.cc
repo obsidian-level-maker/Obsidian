@@ -52,6 +52,19 @@ static const char *import_dir;
 void Script_Load(const char *name);
 
 
+bool is_dir(char *temp_name)
+	{
+			PHYSFS_Stat stat;
+			PHYSFS_stat(temp_name, &stat);
+			if (stat.filetype == PHYSFS_FILETYPE_DIRECTORY)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+	}
 
 // random number generator
 static aj_Random_c GUI_RNG;
@@ -228,15 +241,15 @@ static bool scan_dir_process_name(const char *name, const char *parent, const ch
 	// [ generally skip directories, unless match is "DIRS" ]
 
 	char *temp_name = StringPrintf("%s/%s", parent, name);
-	bool is_dir = PHYSFS_isDirectory(temp_name);
+    bool is_it_dir = is_dir(temp_name);
 
 	if (strcmp(match, "DIRS") == 0)
 	{
 		StringFree(temp_name);
-		return is_dir;
+		return is_it_dir;
 	}
 
-	if (is_dir)
+	if (is_it_dir)
 	{
 		StringFree(temp_name);
 		return false;
@@ -254,7 +267,7 @@ static bool scan_dir_process_name(const char *name, const char *parent, const ch
 	if (! fp)
 		return false;
 
-	if (PHYSFS_read(fp, buffer, 1, 1) < 1)
+	if (PHYSFS_readBytes(fp, buffer, 1) < 1)
 	{
 		PHYSFS_close(fp);
 		return false;
@@ -309,7 +322,7 @@ int gui_scan_directory(lua_State *L)
 	// seems this only happens on out-of-memory error
 	if (! got_names)
 	{
-		return luaL_error(L, "gui.scan_directory: %s", PHYSFS_getLastError());
+		return luaL_error(L, "gui.scan_directory: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 
 	// transfer matching names into another list
@@ -1153,12 +1166,12 @@ static const char * my_reader(lua_State *L, void *ud, size_t *size)
 	if (PHYSFS_eof(info->fp))
 		return NULL;
 
-	PHYSFS_sint64 len = PHYSFS_read(info->fp, info->buffer, 1, sizeof(info->buffer));
+	PHYSFS_sint64 len = PHYSFS_readBytes(info->fp, info->buffer, sizeof(info->buffer));
 
 	// negative result indicates a "complete failure"
 	if (len < 0)
 	{
-		info->error_msg = StringDup(PHYSFS_getLastError());
+		info->error_msg = StringDup(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		len = 0;
 	}
 
@@ -1185,7 +1198,7 @@ static int my_loadfile(lua_State *L, const char *filename)
 
 	if (! info.fp)
 	{
-		lua_pushfstring(L, "file open error: %s", PHYSFS_getLastError());
+		lua_pushfstring(L, "file open error: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		lua_remove(L, fnameindex);
 
 		return LUA_ERRFILE;

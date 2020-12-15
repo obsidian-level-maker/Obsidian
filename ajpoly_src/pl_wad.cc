@@ -102,10 +102,10 @@ bool wad_c::ReadDirEntry()
 	raw_wad_entry_t entry;
 
 #ifdef HAVE_PHYSFS
-	int len = (int)PHYSFS_read(fp, &entry, sizeof(entry), 1);
+	int len = (int)(PHYSFS_readBytes(fp, &entry, sizeof(entry)) / sizeof(entry));
 	if (len != 1)
 	{
-		SetErrorMsg("Trouble reading wad directory --> %s", PHYSFS_getLastError());
+		SetErrorMsg("Trouble reading wad directory --> %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false;
 	}
 #else
@@ -142,10 +142,10 @@ bool wad_c::ReadDirectory()
 	raw_wad_header_t header;
 
 #ifdef HAVE_PHYSFS
-	int len = (int)PHYSFS_read(fp, &header, sizeof(header), 1);
+	int len = (int)(PHYSFS_readBytes(fp, &header, sizeof(header)) / sizeof(header));
 	if (len != 1)
 	{
-		SetErrorMsg("Error reading wad header --> %s", PHYSFS_getLastError());
+		SetErrorMsg("Error reading wad header --> %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false;
 	}
 #else
@@ -246,7 +246,7 @@ wad_c * wad_c::Open(const char *filename)
 
 	if (! in_file)
 	{
-		SetErrorMsg("Cannot open WAD file: %s --> %s", filename, PHYSFS_getLastError());
+		SetErrorMsg("Cannot open WAD file: %s --> %s", filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return NULL;
 	}
 #else
@@ -338,10 +338,10 @@ byte * wad_c::ReadLump(const char *name, int *length, int level)
 #ifdef HAVE_PHYSFS
 		PHYSFS_seek(fp, L->start);
 
-		int len = (int)PHYSFS_read(fp, data, L->length, 1);
+		int len = (int)(PHYSFS_readBytes(fp, data, L->length) / L->length);
 		if (len != 1)
 		{
-			SetErrorMsg("Trouble reading lump '%s' --> %s", name, PHYSFS_getLastError());
+			SetErrorMsg("Trouble reading lump '%s' --> %s", name, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 			return NULL;
 		}
 #else

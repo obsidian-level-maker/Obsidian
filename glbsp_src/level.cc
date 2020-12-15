@@ -81,6 +81,14 @@ int num_normal_vert = 0;
 int num_gl_vert = 0;
 int num_complete_seg = 0;
 
+const char *gl_vert_string = "GL_VERT";
+const char *gl_ssect_string = "GL_SSECT";
+const char *gl_nodes_string = "GL_NODES";
+const char *vertexes_string = "VERTEXES";
+const char *ssectors_string = "SSECTORS";
+const char *nodes_string = "NODES";
+
+
 
 /* ----- allocation routines ---------------------------- */
 
@@ -1732,7 +1740,7 @@ void SaveLevel(node_t *root_node)
     }
 
     if (cur_info->spec_version == 1)
-      PutVertices("GL_VERT", TRUE);
+      PutVertices((char*) gl_vert_string, TRUE);
     else
       PutV2Vertices(lev_force_v5);
 
@@ -1744,9 +1752,9 @@ void SaveLevel(node_t *root_node)
     if (lev_force_v3 || lev_force_v5)
       PutV3Subsecs(lev_force_v5);
     else
-      PutSubsecs("GL_SSECT", TRUE);
+      PutSubsecs((char*) gl_ssect_string, TRUE);
 
-    PutNodes("GL_NODES", TRUE, lev_force_v5, root_node);
+    PutNodes((char*) gl_nodes_string, TRUE, lev_force_v5, root_node);
 
     // -JL- Add empty PVS lump
     CreateGLLump("GL_PVS");
@@ -1759,7 +1767,7 @@ void SaveLevel(node_t *root_node)
  
     NormaliseBspTree(root_node);
 
-    PutVertices("VERTEXES", FALSE);
+    PutVertices((char*) vertexes_string, FALSE);
     PutSectors();
     PutSidedefs();
 
@@ -1779,8 +1787,8 @@ void SaveLevel(node_t *root_node)
     else
     {
       PutSegs();
-      PutSubsecs("SSECTORS", FALSE);
-      PutNodes("NODES", FALSE, FALSE, root_node);
+      PutSubsecs((char*) ssectors_string, FALSE);
+      PutNodes((char*) nodes_string, FALSE, FALSE, root_node);
     }
 
     // -JL- Don't touch blockmap and reject if not doing normal nodes

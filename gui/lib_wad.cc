@@ -63,7 +63,7 @@ bool WAD_OpenRead(const char *filename)
 	LogPrintf("Opened WAD file: %s\n", filename);
 
 #ifdef HAVE_PHYSFS
-	if (PHYSFS_read(wad_R_fp, &wad_R_header, sizeof(wad_R_header), 1) != 1)
+	if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) / sizeof(wad_R_header)) != 1)
 #else
 	if (fread(&wad_R_header, sizeof(wad_R_header), 1, wad_R_fp) != 1)
 #endif
@@ -126,7 +126,7 @@ bool WAD_OpenRead(const char *filename)
 		raw_wad_lump_t *L = &wad_R_dir[i];
 
 #ifdef HAVE_PHYSFS
-		size_t res = PHYSFS_read(wad_R_fp, L, sizeof(raw_wad_lump_t), 1);
+		size_t res = (PHYSFS_readBytes(wad_R_fp, L, sizeof(raw_wad_lump_t)) / sizeof(raw_wad_lump_t));
 		if (res != 1)
 #else
 		int res = fread(L, sizeof(raw_wad_lump_t), 1, wad_R_fp);
@@ -231,7 +231,7 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer)
 	if (! PHYSFS_seek(wad_R_fp, L->start + offset))
 		return false;
 
-	return (PHYSFS_read(wad_R_fp, buffer, length, 1) == 1);
+	return ((PHYSFS_readBytes(wad_R_fp, buffer, length) / length) == 1);
 #else
 	if (fseek(wad_R_fp, L->start + offset, SEEK_SET) != 0)
 		return false;
@@ -421,7 +421,7 @@ bool WAD2_OpenRead(const char *filename)
 	LogPrintf("Opened WAD2 file: %s\n", filename);
 
 #ifdef HAVE_PHYSFS
-	if (PHYSFS_read(wad2_R_fp, &wad2_R_header, sizeof(wad2_R_header), 1) != 1)
+	if ((PHYSFS_readBytes(wad2_R_fp, &wad2_R_header, sizeof(wad2_R_header)) / sizeof(wad2_R_header)) != 1)
 #else
 	if (fread(&wad2_R_header, sizeof(wad2_R_header), 1, wad2_R_fp) != 1)
 #endif
@@ -484,7 +484,7 @@ bool WAD2_OpenRead(const char *filename)
 		raw_wad2_lump_t *L = &wad2_R_dir[i];
 
 #ifdef HAVE_PHYSFS
-		size_t res = PHYSFS_read(wad2_R_fp, L, sizeof(raw_wad2_lump_t), 1);
+		size_t res = (PHYSFS_readBytes(wad2_R_fp, L, sizeof(raw_wad2_lump_t)) / sizeof(raw_wad2_lump_t));
 		if (res != 1)
 #else
 		int res = fread(L, sizeof(raw_wad2_lump_t), 1, wad2_R_fp);
@@ -593,7 +593,7 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
 	if (! PHYSFS_seek(wad2_R_fp, L->start + offset))
 		return false;
 
-	size_t res = PHYSFS_read(wad2_R_fp, buffer, length, 1);
+	size_t res = (PHYSFS_readBytes(wad2_R_fp, buffer, length) / length);
 #else
 	if (fseek(wad2_R_fp, L->start + offset, SEEK_SET) != 0)
 		return false;

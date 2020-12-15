@@ -162,7 +162,7 @@ GLBSP_OBJS= \
 
 GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
-$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.c
+$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
 
 
@@ -203,7 +203,7 @@ PHYSFS_OBJS= \
 
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
-$(OBJ_DIR)/physfs/%.o: physfs_src/%.c
+$(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
 	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $<
 
 

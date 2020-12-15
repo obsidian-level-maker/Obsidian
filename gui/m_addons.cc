@@ -56,7 +56,7 @@ void VFS_AddFolder(const char *name)
 	if (! PHYSFS_mount(path, mount, 0))
 	{
 		Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
-						name, PHYSFS_getLastError());
+						name, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return;  /* NOT REACHED */
 	}
 
@@ -89,10 +89,10 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 	{
 		if (options_file)
 			LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-					  filename, PHYSFS_getLastError());
+					  filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		else
 			Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
-							filename, PHYSFS_getLastError());
+							filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
 		return false;
 	}
@@ -107,7 +107,7 @@ void VFS_InitAddons(const char *argv0)
 
 	if (! PHYSFS_init(argv0))
 	{
-		Main_FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getLastError());
+		Main_FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return;  /* NOT REACHED */
 	}
 
@@ -248,7 +248,7 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name)
 
 	while (was_OK)
 	{
-		int rlen = (int)PHYSFS_read(src, buffer, 1, sizeof(buffer));
+		int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) / sizeof(buffer));
 		if (rlen < 0)
 			was_OK = false;
 
@@ -289,7 +289,7 @@ byte * VFS_LoadFile(const char *filename, int *length)
 	// ensure buffer is NUL-terminated
 	data[*length] = 0;
 
-	if (PHYSFS_read(fp, data, *length, 1) != 1)
+	if ((PHYSFS_readBytes(fp, data, *length) / *length) != 1)
 	{
 		VFS_FreeFile(data);
 		PHYSFS_close(fp);
@@ -621,7 +621,7 @@ void DLG_SelectAddons(void)
 		// persist the changed addon list into OPTIONS.txt
 		Options_Save(options_file);
 
-		fl_alert(_("Changes to addons require a restart.\nOBLIGE will now close."));
+		fl_alert("%s", _("Changes to addons require a restart.\nOBLIGE will now close."));
 
 		main_action = MAIN_QUIT;
 	}

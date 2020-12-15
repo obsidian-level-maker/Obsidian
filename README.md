@@ -31,10 +31,9 @@ A brief summary of changes:
 
 Updated PHYSFS to version 3.02. I have made modifications to several of the sources files, mostly centered around explicitly casting the return of the UtilCalloc function from void* to the required type.
 
+Updated deprecated PHYSFS function calls with their replacements
+
 Replaced GLBSP 2.7 with GLBSP 2.4. I have modified several of these sources as well, again mostly centered around the casting of returns from UtilCalloc.
 
-Edited other source files in the gui and tools folders for the same UtilCalloc issue.
+Addressed various compiler complaints about the handling and conversion of certain strings/string literals.
 
-Updated Makefile to account for the altered versions of PHYSFS/GLBSP.
-
-I used Clang version 10 for the compiler, with no flags passed to make other than "CXX=clang++-10", i.e. no -fpermissive or ignoring certain classes of error. That being said, there is probably more cleanup that could be done, especially since most of the PHYSFS functions being called by the original source have been deprecated by now. I will try to tackle these if the mood strikes me, but I have not encountered any actual problems (yet) when running the program.
