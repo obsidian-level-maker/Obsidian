@@ -33,7 +33,7 @@ Updated PHYSFS to version 3.02. I have made modifications to several of the sour
 
 Updated deprecated PHYSFS function calls with their replacements
 
-Replaced GLBSP 2.7 with GLBSP 2.4. I have modified several of these sources as well, again mostly centered around the casting of returns from UtilCalloc.
+Replaced GLBSP 2.27 with GLBSP 2.24. I have modified several of these sources as well, again mostly centered around the casting of returns from UtilCalloc.
 
 Addressed various compiler complaints about the handling and conversion of certain strings/string literals.
 
