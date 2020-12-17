@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -307,4 +308,3 @@ uint32_g Endian_U32(uint32_g x)
   else
     return x;
 }
-

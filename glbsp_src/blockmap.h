@@ -40,5 +40,4 @@ void GetBlockmapBounds(int *x, int *y, int *w, int *h);
 int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax,
     int x1, int y1, int x2, int y2);
 
-
 #endif /* __GLBSP_BLOCKMAP_H__ */

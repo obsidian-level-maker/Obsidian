@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -51,6 +52,7 @@ extern vertex_t  ** lev_vertices;
 extern linedef_t ** lev_linedefs;
 extern sidedef_t ** lev_sidedefs;
 extern sector_t  ** lev_sectors;
+
 extern boolean_g lev_doing_normal;
 
 
@@ -364,7 +366,7 @@ static int SidedefCompare(const void *p1, const void *p2)
 void DetectDuplicateVertices(void)
 {
   int i;
-  uint16_g *array = (uint16_g*) UtilCalloc(num_vertices * sizeof(uint16_g));
+  uint16_g *array = (uint16_g *)UtilCalloc(num_vertices * sizeof(uint16_g));
 
   DisplayTicker();
 
@@ -394,7 +396,7 @@ void DetectDuplicateVertices(void)
 void DetectDuplicateSidedefs(void)
 {
   int i;
-  uint16_g *array = (uint16_g*) UtilCalloc(num_sidedefs * sizeof(uint16_g));
+  uint16_g *array = (uint16_g *)UtilCalloc(num_sidedefs * sizeof(uint16_g));
 
   DisplayTicker();
 
@@ -686,7 +688,7 @@ void DetectOverlappingLines(void)
   //   Note: does not detect partially overlapping lines.
 
   int i;
-  int *array = (int*) UtilCalloc(num_linedefs * sizeof(int));
+  int *array = (int *)UtilCalloc(num_linedefs * sizeof(int));
   int count = 0;
 
   DisplayTicker();
@@ -760,11 +762,14 @@ void TestForWindowEffect(linedef_t *L)
 
   float_g back_dist = 999999.0;
   sector_t * back_open = NULL;
-  int back_line = -1;
 
   float_g front_dist = 999999.0;
   sector_t * front_open = NULL;
+
+#if DEBUG_WINDOW_FX
+  int back_line = -1;
   int front_line = -1;
+#endif
 
   for (i=0; i < num_linedefs; i++)
   {
@@ -831,7 +836,9 @@ void TestForWindowEffect(linedef_t *L)
       {
         front_dist = dist;
         front_open = hit_side ? hit_side->sector : NULL;
+#if DEBUG_WINDOW_FX
         front_line = i;
+#endif
       }
     }
     else
@@ -840,7 +847,9 @@ void TestForWindowEffect(linedef_t *L)
       {
         back_dist = dist;
         back_open = hit_side ? hit_side->sector : NULL;
-        back_line = i;
+#if DEBUG_WINDOW_FX
+		back_line = i;
+#endif
       }
     }
   }
@@ -1126,4 +1135,3 @@ sector_t * VertexCheckOpen(vertex_t *vert, float_g dx, float_g dy)
   InternalError("Vertex %d has no tips !", vert->index);
   return FALSE;
 }
-

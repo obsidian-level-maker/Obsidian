@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -73,21 +74,12 @@ LEVELARRAY(thing_t,   lev_things,     num_things)
 static LEVELARRAY(seg_t,     segs,       num_segs)
 static LEVELARRAY(subsec_t,  subsecs,    num_subsecs)
 static LEVELARRAY(node_t,    nodes,      num_nodes)
-static LEVELARRAY(node_t,    stale_nodes,num_stale_nodes)
 static LEVELARRAY(wall_tip_t,wall_tips,  num_wall_tips)
 
 
 int num_normal_vert = 0;
 int num_gl_vert = 0;
 int num_complete_seg = 0;
-
-const char *gl_vert_string = "GL_VERT";
-const char *gl_ssect_string = "GL_SSECT";
-const char *gl_nodes_string = "GL_NODES";
-const char *vertexes_string = "VERTEXES";
-const char *ssectors_string = "SSECTORS";
-const char *nodes_string = "NODES";
-
 
 
 /* ----- allocation routines ---------------------------- */
@@ -96,8 +88,7 @@ const char *nodes_string = "NODES";
 {  \
   if ((NUMVAR % ALLOC_BLKNUM) == 0)  \
   {  \
-    BASEVAR = (TYPE**) UtilRealloc(BASEVAR, (NUMVAR + ALLOC_BLKNUM) *   \
-        sizeof(TYPE *));  \
+    BASEVAR = (TYPE **) UtilRealloc(BASEVAR, (NUMVAR + ALLOC_BLKNUM) * sizeof(TYPE *));  \
   }  \
   BASEVAR[NUMVAR] = (TYPE *) UtilCalloc(sizeof(TYPE));  \
   NUMVAR += 1;  \
@@ -128,9 +119,6 @@ subsec_t *NewSubsec(void)
 
 node_t *NewNode(void)
   ALLIGATOR(node_t, nodes, num_nodes)
-
-node_t *NewStaleNode(void)
-  ALLIGATOR(node_t, stale_nodes, num_stale_nodes)
 
 wall_tip_t *NewWallTip(void)
   ALLIGATOR(wall_tip_t, wall_tips, num_wall_tips)
@@ -173,9 +161,6 @@ void FreeSubsecs(void)
 void FreeNodes(void)
   FREEMASON(node_t, nodes, num_nodes)
 
-void FreeStaleNodes(void)
-  FREEMASON(node_t, stale_nodes, num_stale_nodes)
-
 void FreeWallTips(void)
   FREEMASON(wall_tip_t, wall_tips, num_wall_tips)
 
@@ -213,9 +198,6 @@ subsec_t *LookupSubsec(int index)
   
 node_t *LookupNode(int index)
   LOOKERUPPER(nodes, num_nodes, "node")
-
-node_t *LookupStaleNode(int index)
-  LOOKERUPPER(stale_nodes, num_stale_nodes, "stale_node")
 
 
 /* ----- reading routines ------------------------------ */
@@ -266,7 +248,7 @@ void GetVertices(void)
   if (!lump || count == 0)
     FatalError("Couldn't find any Vertices");
 
-  raw = (raw_vertex_t *) lump->data;
+  raw = (raw_vertex_t *) lump->data; //TODO: V1004 https://www.viva64.com/en/w/v1004/ The 'lump' pointer was used unsafely after it was verified against nullptr. Check lines: 239, 251.
 
   for (i=0; i < count; i++, raw++)
   {
@@ -620,64 +602,6 @@ void GetLinedefsHexen(void)
   }
 }
 
-//
-// GetStaleNodes
-//
-void GetStaleNodes(void)
-{
-  int i, count=-1;
-  raw_node_t *raw;
-  lump_t *lump = FindLevelLump("NODES");
-
-  if (lump)
-    count = lump->length / sizeof(raw_node_t);
-
-  if (!lump || count < 5)
-    return;
-
-  DisplayTicker();
-
-# if DEBUG_LOAD
-  PrintDebug("GetStaleNodes: num = %d\n", count);
-# endif
-
-  raw = (raw_node_t *) lump->data;
-
-  /* must allocate all the nodes beforehand, since they contain
-   * internal references to each other.
-   */
-  for (i=0; i < count; i++)
-  {
-    NewStaleNode();
-  }
-
-  for (i=0; i < count; i++, raw++)
-  {
-    node_t *nd = LookupStaleNode(i);
-
-    nd->x  = SINT16(raw->x);
-    nd->y  = SINT16(raw->y);
-    nd->dx = SINT16(raw->dx);
-    nd->dy = SINT16(raw->dy);
-
-    nd->index = i;
-    
-    /* Note: we ignore the subsector references */
-     
-    if ((UINT16(raw->right) & 0x8000U) == 0)
-    {
-      nd->r.node = LookupStaleNode(UINT16(raw->right));
-    }
-
-    if ((UINT16(raw->left) & 0x8000U) == 0)
-    {
-      nd->l.node = LookupStaleNode(UINT16(raw->left));
-    }
-
-    /* we also ignore the bounding boxes -- not needed */
-  }
-}
-
 
 static INLINE_G int TransformSegDist(const seg_t *seg)
 {
@@ -720,7 +644,7 @@ static const uint8_g *lev_v2_magic = (uint8_g *) "gNd2";
 static const uint8_g *lev_v3_magic = (uint8_g *) "gNd3";
 static const uint8_g *lev_v5_magic = (uint8_g *) "gNd5";
 
-void PutVertices(char *name, int do_gl)
+void PutVertices(const char *name, int do_gl)
 {
   int count, i;
   lump_t *lump;
@@ -1107,7 +1031,7 @@ void PutV3Segs(int do_v5)
       num_complete_seg);
 }
 
-void PutSubsecs(char *name, int do_gl)
+void PutSubsecs(const char *name, int do_gl)
 {
   int i;
   lump_t *lump;
@@ -1275,7 +1199,7 @@ static void PutOneV5Node(node_t *node, lump_t *lump)
 # endif
 }
 
-void PutNodes(char *name, int do_gl, int do_v5, node_t *root)
+void PutNodes(const char *name, int do_gl, int do_v5, node_t *root)
 {
   lump_t *lump;
 
@@ -1477,8 +1401,8 @@ static void PutOneZNode(node_t *node)
   else
     InternalError("Bad left child in V5 node %d", node->index);
 
-  ZLibAppendLump(&raw.right, 4);
-  ZLibAppendLump(&raw.left,  4);
+  ZLibAppendLump(&raw.right, 4); //TODO: V614 https://www.viva64.com/en/w/v614/ Potentially uninitialized variable 'raw.right' used. Consider checking the first actual argument of the 'ZLibAppendLump' function.
+  ZLibAppendLump(&raw.left,  4); //TODO: V614 https://www.viva64.com/en/w/v614/ Potentially uninitialized variable 'raw.left' used. Consider checking the first actual argument of the 'ZLibAppendLump' function.
 
 # if DEBUG_BSP
   PrintDebug("PUT Z NODE %08X  Left %08X  Right %08X  "
@@ -1582,13 +1506,6 @@ void LoadLevel(void)
   PrintVerbose("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", 
       num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
 
-  if (cur_info->fast && !lev_doing_normal &&
-      normal_exists && num_sectors > 5 && num_linedefs > 100)
-  {
-    PrintVerbose("Using original nodes to speed things up\n");
-    GetStaleNodes();
-  }
- 
   if (lev_doing_normal)
   {
     // NOTE: order here is critical
@@ -1640,7 +1557,6 @@ void FreeLevel(void)
   FreeSegs();
   FreeSubsecs();
   FreeNodes();
-  FreeStaleNodes();
   FreeWallTips();
 }
 
@@ -1682,12 +1598,12 @@ void PutGLChecksum(void)
   lump = FindLevelLump("VERTEXES");
 
   if (lump && lump->length > 0)
-    Adler32_AddBlock(&crc, (const uint8_g*) lump->data, lump->length);
+    Adler32_AddBlock(&crc, (uint8_g*) lump->data, lump->length);
 
   lump = FindLevelLump("LINEDEFS");
 
   if (lump && lump->length > 0)
-    Adler32_AddBlock(&crc, (const uint8_g*) lump->data, lump->length);
+    Adler32_AddBlock(&crc, (uint8_g*) lump->data, lump->length);
 
   Adler32_Finish(&crc);
 
@@ -1740,7 +1656,7 @@ void SaveLevel(node_t *root_node)
     }
 
     if (cur_info->spec_version == 1)
-      PutVertices((char*) gl_vert_string, TRUE);
+      PutVertices("GL_VERT", TRUE);
     else
       PutV2Vertices(lev_force_v5);
 
@@ -1752,9 +1668,9 @@ void SaveLevel(node_t *root_node)
     if (lev_force_v3 || lev_force_v5)
       PutV3Subsecs(lev_force_v5);
     else
-      PutSubsecs((char*) gl_ssect_string, TRUE);
+      PutSubsecs("GL_SSECT", TRUE);
 
-    PutNodes((char*) gl_nodes_string, TRUE, lev_force_v5, root_node);
+    PutNodes("GL_NODES", TRUE, lev_force_v5, root_node);
 
     // -JL- Add empty PVS lump
     CreateGLLump("GL_PVS");
@@ -1767,7 +1683,7 @@ void SaveLevel(node_t *root_node)
  
     NormaliseBspTree(root_node);
 
-    PutVertices((char*) vertexes_string, FALSE);
+    PutVertices("VERTEXES", FALSE);
     PutSectors();
     PutSidedefs();
 
@@ -1787,8 +1703,8 @@ void SaveLevel(node_t *root_node)
     else
     {
       PutSegs();
-      PutSubsecs((char*) ssectors_string, FALSE);
-      PutNodes((char*) nodes_string, FALSE, FALSE, root_node);
+      PutSubsecs("SSECTORS", FALSE);
+      PutNodes("NODES", FALSE, FALSE, root_node);
     }
 
     // -JL- Don't touch blockmap and reject if not doing normal nodes
@@ -1815,4 +1731,3 @@ void SaveLevel(node_t *root_node)
   // so that we use the new VERTEXES lump in the checksum.
   PutGLChecksum();
 }
-

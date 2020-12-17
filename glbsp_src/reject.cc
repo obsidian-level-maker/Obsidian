@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -202,7 +203,7 @@ void PutReject(void)
   GroupSectors();
   
   reject_size = (num_sectors * num_sectors + 7) / 8;
-  matrix = (uint8_g*) UtilCalloc(reject_size);
+  matrix = (uint8_g *)UtilCalloc(reject_size);
 
   CreateReject(matrix);
 
@@ -218,4 +219,3 @@ void PutReject(void)
 
   UtilFree(matrix);
 }
-

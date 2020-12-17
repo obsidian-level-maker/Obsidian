@@ -160,7 +160,7 @@ GLBSP_OBJS= \
 	$(OBJ_DIR)/glbsp/util.o     \
 	$(OBJ_DIR)/glbsp/wad.o
 
-GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
+GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline -Iphysfs_src 
 
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<

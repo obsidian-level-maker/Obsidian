@@ -249,5 +249,4 @@ typedef struct raw_v5_node_s
 }
 raw_v5_node_t;
 
-
 #endif /* __GLBSP_STRUCTS_H__ */

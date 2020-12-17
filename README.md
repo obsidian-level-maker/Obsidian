@@ -31,9 +31,9 @@ A brief summary of changes:
 
 Updated PHYSFS to version 3.02. I have made modifications to several of the sources files, mostly centered around explicitly casting the return of the UtilCalloc function from void* to the required type.
 
-Updated deprecated PHYSFS function calls with their replacements
+Updated deprecated PHYSFS function calls with their replacements.
 
-Replaced GLBSP 2.7 with GLBSP 2.4. I have modified several of these sources as well, again mostly centered around the casting of returns from UtilCalloc.
+Replaced GLBSP 2.27 with GLBSP 2.28 from the EDGE project (https://https://github.com/3dfxdev/EDGE)
 
 Addressed various compiler complaints about the handling and conversion of certain strings/string literals.
 

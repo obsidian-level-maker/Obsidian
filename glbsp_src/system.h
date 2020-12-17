@@ -26,7 +26,7 @@
 
 // use this for inlining.  Usually defined in the makefile.
 #ifndef INLINE_G
-#define INLINE_G  /* nothing */
+#define INLINE_G  inline
 #endif
 
 

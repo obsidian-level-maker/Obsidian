@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -17,7 +18,7 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
- 
+
 #include "system.h"
 
 #include <stdio.h>
@@ -36,7 +37,6 @@
 #include "structs.h"
 #include "util.h"
 #include "wad.h"
-
 
 const nodebuildinfo_t *cur_info = NULL;
 const nodebuildfuncs_t *cur_funcs = NULL;
@@ -134,7 +134,7 @@ static void AddExtraFile(nodebuildinfo_t *info, const char *str)
     HANDLE_BOOLEAN(abbrev, field)  \
     HANDLE_BOOLEAN(name, field)
 
-glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info, 
+glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
     volatile nodebuildcomms_t *comms,
     const char ** argv, int argc)
 {
@@ -158,7 +158,7 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
         return GLBSP_E_BadArgs;
       }
 
-      if (CheckExtension(argv[0], "gwa"))
+      if (UtilCheckExtension(argv[0], "gwa"))
       {
         SetErrorMsg("Input file cannot be GWA (contains nothing to build)");
         cur_comms = NULL;
@@ -324,7 +324,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
     return GLBSP_E_BadArgs;
   }
 
-  if (CheckExtension(info->input_file, "gwa"))
+  if (UtilCheckExtension(info->input_file, "gwa"))
   {
     SetErrorMsg("Input file cannot be GWA (contains nothing to build)");
     return GLBSP_E_BadArgs;
@@ -333,7 +333,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
   if (!info->output_file || info->output_file[0] == 0)
   {
     GlbspFree(info->output_file);
-    info->output_file = GlbspStrDup(ReplaceExtension(
+    info->output_file = GlbspStrDup(UtilReplaceExtension(
           info->input_file, "gwa"));
 
     info->gwa_mode = TRUE;
@@ -341,7 +341,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
   }
   else  /* has output filename */
   {
-    if (CheckExtension(info->output_file, "gwa"))
+    if (UtilCheckExtension(info->output_file, "gwa"))
       info->gwa_mode = TRUE;
   }
 
@@ -364,14 +364,14 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
     SetErrorMsg("-forcenormal used, but GWA files don't have normal nodes");
     return GLBSP_E_BadInfoFixed;
   }
- 
+
   if (info->no_normal && info->force_normal)
   {
     info->force_normal = FALSE;
     SetErrorMsg("-forcenormal and -nonormal cannot be used together");
     return GLBSP_E_BadInfoFixed;
   }
- 
+
   if (info->factor <= 0 || info->factor > 32)
   {
     info->factor = DEFAULT_FACTOR;
@@ -427,8 +427,9 @@ void GlbspFree(const char *str)
 static glbsp_ret_e HandleLevel(void)
 {
   superblock_t *seg_list;
+  bbox_t seg_bbox;
+
   node_t *root_node;
-  node_t *root_stale_node;
   subsec_t *root_sub;
 
   glbsp_ret_e ret;
@@ -448,11 +449,10 @@ static glbsp_ret_e HandleLevel(void)
   // create initial segs
   seg_list = CreateSegs();
 
-  root_stale_node = (num_stale_nodes == 0) ? NULL : 
-      LookupStaleNode(num_stale_nodes - 1);
+  FindLimits(seg_list, &seg_bbox);
 
   // recursively create nodes
-  ret = BuildNodes(seg_list, &root_node, &root_sub, 0, root_stale_node);
+  ret = GlbspBuildNodes(seg_list, &root_node, &root_sub, 0, &seg_bbox);
   FreeSuper(seg_list);
 
   if (ret == GLBSP_E_OK)
@@ -507,7 +507,7 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
 
   InitDebug();
   InitEndian();
- 
+
   if (info->missing_output)
     PrintMsg("* No output file specified. Using: %s\n\n", info->output_file);
 
@@ -531,7 +531,7 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
     SetErrorMsg("No levels found in wad !");
     return GLBSP_E_Unknown;
   }
-   
+
   PrintMsg("\n");
   PrintVerbose("Creating nodes using tunable factor of %d\n", info->factor);
 
@@ -539,15 +539,15 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
   DisplaySetTitle("glBSP Build Progress");
 
   file_msg = UtilFormat("File: %s", cur_info->input_file);
- 
+
   DisplaySetBarText(2, file_msg);
   DisplaySetBarLimit(2, CountLevels() * 10);
   DisplaySetBar(2, 0);
 
   UtilFree(file_msg);
-  
+
   cur_comms->file_pos = 0;
-  
+
   // loop over each level in the wad
   while (FindNextLevel())
   {
@@ -589,4 +589,3 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
 
   return ret;
 }
-

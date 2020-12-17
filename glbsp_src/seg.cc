@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -58,7 +59,7 @@
 
 #define PRECIOUS_MULTIPLY  100
 
-#define SEG_REUSE_THRESHHOLD  200
+#define SEG_FAST_THRESHHOLD  200
 
 
 #define DEBUG_PICKNODE  0
@@ -98,7 +99,7 @@ static intersection_t *NewIntersection(void)
   }
   else
   {
-    cut = (intersection_t*) UtilCalloc(sizeof(intersection_t));
+    cut = (intersection_t *) UtilCalloc(sizeof(intersection_t));
   }
 
   return cut;
@@ -605,32 +606,45 @@ static int EvalPartition(superblock_t *seg_list, seg_t *part,
 }
 
 
-static seg_t *FindSegFromStaleNode(superblock_t *part_list,
-    node_t *stale_nd, int *stale_opposite)
+static void EvaluateFastWorker(superblock_t *seg_list,
+    seg_t **best_H, seg_t **best_V, int mid_x, int mid_y)
 {
   seg_t *part;
   int num;
 
-  for (part=part_list->segs; part; part = part->next)
+  for (part=seg_list->segs; part; part = part->next)
   {
-    float_g fa, fb; 
-
     /* ignore minisegs as partition candidates */
     if (! part->linedef)
       continue;
-    
-    fa = fabs(UtilPerpDist(part, stale_nd->x, stale_nd->y));
-    fb = fabs(UtilPerpDist(part, stale_nd->x + stale_nd->dx, 
-         stale_nd->y + stale_nd->dy));
 
-    if (fa < DIST_EPSILON && fb < DIST_EPSILON)
+    if (part->pdy == 0)
     {
-      /* OK found it.  check if runs in same direction */
+      // horizontal seg
+      if (! *best_H)
+        *best_H = part;
+      else
+      {
+        int old_dist = abs((int)(*best_H)->psy - mid_y);
+        int new_dist = abs((int)(   part)->psy - mid_y);
 
-      (*stale_opposite) = (stale_nd->dx * part->pdx + 
-          stale_nd->dy * part->pdy < 0) ? 1 : 0;
- 
-      return part;
+        if (new_dist < old_dist)
+          *best_H = part;
+      }
+    }
+    else if (part->pdx == 0)
+    {
+      // vertical seg
+      if (! *best_V)
+        *best_V = part;
+      else
+      {
+        int old_dist = abs((int)(*best_V)->psx - mid_x);
+        int new_dist = abs((int)(   part)->psx - mid_x);
+
+        if (new_dist < old_dist)
+          *best_V = part;
+      }
     }
   }
 
@@ -638,17 +652,45 @@ static seg_t *FindSegFromStaleNode(superblock_t *part_list,
 
   for (num=0; num < 2; num++)
   {
-    if (! part_list->subs[num])
+    if (! seg_list->subs[num])
       continue;
 
-    part = FindSegFromStaleNode(part_list->subs[num], stale_nd,
-        stale_opposite);
-
-    if (part)
-      return part;
+    EvaluateFastWorker(seg_list->subs[num], best_H, best_V, mid_x, mid_y);
   }
+}
 
-  return NULL;
+
+static seg_t *FindFastSeg(superblock_t *seg_list, const bbox_t *bbox)
+{
+  seg_t *best_H = NULL;
+  seg_t *best_V = NULL;
+
+  int mid_x = (bbox->minx + bbox->maxx) / 2;
+  int mid_y = (bbox->miny + bbox->maxy) / 2;
+
+  EvaluateFastWorker(seg_list, &best_H, &best_V, mid_x, mid_y);
+
+  int H_cost = -1;
+  int V_cost = -1;
+
+  if (best_H)
+    H_cost = EvalPartition(seg_list, best_H, 99999999);
+
+  if (best_V)
+    V_cost = EvalPartition(seg_list, best_V, 99999999);
+
+# if DEBUG_PICKNODE
+  PrintDebug("FindFastSeg: best_H=%p (cost %d) | best_V=%p (cost %d)\n",
+             best_H, H_cost, best_V, V_cost);
+# endif
+
+  if (H_cost < 0 && V_cost < 0)
+    return NULL;
+
+  if (H_cost < 0) return best_V;
+  if (V_cost < 0) return best_H;
+
+  return (V_cost < H_cost) ? best_V : best_H;
 }
 
 
@@ -721,8 +763,7 @@ static int PickNodeWorker(superblock_t *part_list,
 //
 // Find the best seg in the seg_list to use as a partition line.
 //
-seg_t *PickNode(superblock_t *seg_list, int depth,
-    node_t ** stale_nd, int *stale_opposite)
+seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox)
 {
   seg_t *best=NULL;
 
@@ -763,22 +804,13 @@ seg_t *PickNode(superblock_t *seg_list, int depth,
    *       good choices, and re-use them as much as possible, saving
    *       *heaps* of time on really large levels.
    */
-  if (*stale_nd && seg_list->real_num >= SEG_REUSE_THRESHHOLD)
+  if (cur_info->fast && seg_list->real_num >= SEG_FAST_THRESHHOLD)
   {
-    best = FindSegFromStaleNode(seg_list, *stale_nd, stale_opposite);
-
 #   if DEBUG_PICKNODE
-    PrintDebug("PickNode: Trying stale node %p\n", best);
+    PrintDebug("PickNode: Looking for Fast node...\n");
 #   endif
 
-    if (best && EvalPartition(seg_list, best, best_cost) < 0)
-    {
-      best = NULL;
- 
-#     if DEBUG_PICKNODE
-      PrintDebug("PickNode: Stale node unsuitable !\n");
-#     endif
-    }
+    best = FindFastSeg(seg_list, bbox);
 
     if (best)
     {
@@ -788,15 +820,13 @@ seg_t *PickNode(superblock_t *seg_list, int depth,
       DisplaySetBar(2, cur_comms->file_pos + cur_comms->build_pos / 100);
 
 #     if DEBUG_PICKNODE
-      PrintDebug("PickNode: Using Stale node (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+      PrintDebug("PickNode: Using Fast node (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
           best->start->x, best->start->y, best->end->x, best->end->y);
 #     endif
 
       return best;
     }
   }
-
-  (*stale_nd) = NULL;
 
   if (FALSE == PickNodeWorker(seg_list, seg_list, &best, &best_cost, 
       &progress, prog_step))
@@ -1211,4 +1241,3 @@ void AddMinisegs(seg_t *part,
     quick_alloc_cuts = cur;
   }
 }
-

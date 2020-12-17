@@ -287,6 +287,10 @@ typedef struct subsec_s
   // approximate middle point
   float_g mid_x;
   float_g mid_y;
+
+  // this is normally FALSE, only set for the "no nodes hack"
+  // [ see comments in the BuildNodes() function. ]
+  int is_dummy;
 }
 subsec_t;
 
@@ -371,7 +375,6 @@ extern int num_things;
 extern int num_segs;
 extern int num_subsecs;
 extern int num_nodes;
-extern int num_stale_nodes;
 
 extern int num_normal_vert;
 extern int num_gl_vert;
@@ -389,7 +392,6 @@ thing_t *NewThing(void);
 seg_t *NewSeg(void);
 subsec_t *NewSubsec(void);
 node_t *NewNode(void);
-node_t *NewStaleNode(void);
 wall_tip_t *NewWallTip(void);
 
 // lookup routines
@@ -401,7 +403,6 @@ thing_t *LookupThing(int index);
 seg_t *LookupSeg(int index);
 subsec_t *LookupSubsec(int index);
 node_t *LookupNode(int index);
-node_t *LookupStaleNode(int index);
 
 // check whether the current level already has normal nodes
 int CheckForNormalNodes(void);
