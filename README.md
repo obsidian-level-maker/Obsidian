@@ -37,3 +37,5 @@ Replaced GLBSP 2.27 with GLBSP 2.28 from the EDGE project (https://https://githu
 
 Addressed various compiler complaints about the handling and conversion of certain strings/string literals.
 
+Added scrolling functionality to Addons List window.
+
