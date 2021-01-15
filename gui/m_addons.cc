@@ -346,11 +346,10 @@ public:
 	{
 		return kf_h(34);
 	}
+
 };
 
-
 //----------------------------------------------------------------------
-
 
 class UI_AddonsWin : public Fl_Window
 {
@@ -398,7 +397,27 @@ private:
 
 	static void callback_Scroll(Fl_Widget *w, void *data)
 	{
-		// FIXME
+
+		UI_AddonsWin *that = (UI_AddonsWin *)data;
+
+		Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
+
+		int previous_y = that->offset_y;
+
+		that->offset_y = sbar->value();
+
+		int dy = that->offset_y - previous_y;
+
+		// simply reposition all the UI_Module widgets
+		for (int j = 0; j < that->pack->children(); j++)
+		{
+			Fl_Widget *F = that->pack->child(j);
+			SYS_ASSERT(F);
+
+			F->resize(F->x(), F->y() - dy, F->w(), F->h());
+		}
+
+		that->pack->redraw();
 	}
 
 	static void callback_Quit(Fl_Widget *w, void *data)
@@ -521,8 +540,39 @@ int UI_AddonsWin::handle(int event)
 
 void UI_AddonsWin::PositionAll()
 {
+	// calculate new total height
+	int new_height = 0;
 	int spacing = 4;
 
+	for (int k = 0 ; k < pack->children() ; k++)
+	{
+		UI_Addon *M = (UI_Addon *) pack->child(k);
+		SYS_ASSERT(M);
+
+		if (M->visible())
+			new_height += M->CalcHeight() + spacing;
+	}
+
+
+	// determine new offset_y
+	if (new_height <= mh)
+	{
+		offset_y = 0;
+	}
+	else
+	{
+		// when not shrinking, offset_y will remain valid
+		if (new_height < total_h)
+			offset_y = 0;
+	}
+
+	total_h = new_height;
+
+	SYS_ASSERT(offset_y >= 0);
+	SYS_ASSERT(offset_y <= total_h);
+
+
+	// reposition all the modules
 	int ny = my - offset_y;
 
 	for (int j = 0 ; j < pack->children() ; j++)
@@ -530,15 +580,17 @@ void UI_AddonsWin::PositionAll()
 		UI_Addon *M = (UI_Addon *) pack->child(j);
 		SYS_ASSERT(M);
 
-		int nh = kf_h(34);
+		int nh = M->visible() ? M->CalcHeight() : 1;
 
 		if (ny != M->y() || nh != M->h())
 		{
 			M->resize(M->x(), ny, M->w(), nh);
 		}
 
-		ny += nh + spacing;
+		if (M->visible())
+			ny += M->CalcHeight() + spacing;
 	}
+
 
 	// p = position, first line displayed
 	// w = window, number of lines displayed
@@ -547,6 +599,7 @@ void UI_AddonsWin::PositionAll()
 	sbar->value(offset_y, mh, 0, total_h);
 
 	pack->redraw();
+
 }
 
 
