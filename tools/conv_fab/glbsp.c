@@ -137,7 +137,7 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
     if (opt_str[0] == '-')
       opt_str++;
 
-#if 0
+if 0
     if (UtilStrCaseCmp(opt_str, "o") == 0)
     {
       if (got_output)
@@ -274,7 +274,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
     return GLBSP_E_BadArgs;
   }
 
-#if 0
+if 0
   if (CheckExtension(info->input_file, "gwa"))
   {
     SetErrorMsg("Input file cannot be GWA (contains nothing to build)");

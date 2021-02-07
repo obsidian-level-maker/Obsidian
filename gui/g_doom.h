@@ -95,7 +95,7 @@ typedef struct
 	u16_t end;       // ... to this vertex
 	u16_t flags;     // linedef flags (impassible, etc)
 	u16_t type;      // linedef type (0 for none, 97 for teleporter, etc)
-	s16_t tag;       // this linedef activates the sector with same tag
+	u16_t tag;       // this linedef activates the sector with same tag
 	u16_t sidedef1;  // right sidedef
 	u16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
 
