@@ -318,7 +318,22 @@ int wadfab_get_line(lua_State *L)
 
 	lua_pushinteger(L, LD->tag);
 	lua_setfield(L, -2, "tag");
+	
+    lua_pushinteger(L, LD->args[0]);
+    lua_setfield(L, -2, "arg1");
+    
+    lua_pushinteger(L, LD->args[1]);
+    lua_setfield(L, -2, "arg2");
 
+	lua_pushinteger(L, LD->args[2]);
+    lua_setfield(L, -2, "arg3");
+    
+    lua_pushinteger(L, LD->args[3]);
+    lua_setfield(L, -2, "arg4");
+    
+    lua_pushinteger(L, LD->args[4]);
+    lua_setfield(L, -2, "arg5");
+    
 	return 1;
 }
 

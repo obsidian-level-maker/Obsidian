@@ -1117,6 +1117,132 @@ function Fab_load_wad(def)
 
     return C2
   end
+  
+  local function decode_polygon_side_hexen(sec, C, pass)
+    -- pass is 1 for floor, 2 for ceiling
+    -- sec will be NIL for a polygon in void space
+
+    local C2 = { x=C.x, y=C.y }
+
+    C2.u1_along = C.along
+
+    local side
+    local line
+
+    if C.side then side = gui.wadfab_get_side(C.side) end
+    if C.line then line = gui.wadfab_get_line(C.line) end
+
+    -- get other sector (which the polygon side faces)
+    local other_sec
+
+    if line and side and side.sector then
+      other_sec = gui.wadfab_get_sector(side.sector)
+    end
+
+    local flags = (line and line.flags) or 0
+
+    local two_sided = (line and line.left and line.right)
+
+
+    --- determine texture to use ---
+
+    local upper_tex
+    local lower_tex
+    local   mid_tex
+
+    upper_tex = side and side.upper_tex
+    if upper_tex == "-" then upper_tex = nil end
+
+    lower_tex = side and side.lower_tex
+    if lower_tex == "-" then lower_tex = nil end
+
+    mid_tex = side and side.mid_tex
+    if mid_tex == "-" then mid_tex = nil end
+
+
+    local tex
+
+    -- if line is one-sided, use the middle texture
+    if line and not two_sided then
+      tex = mid_tex
+
+    elseif pass == 1 then
+      tex = lower_tex or upper_tex
+
+    else
+      tex = upper_tex or lower_tex
+    end
+
+    if tex then
+      C2.tex = tex
+    end
+
+
+    -- line type --
+
+    if line and line.special and line.special > 0 then
+      C2.special = line.special
+    end
+            
+    if line and line.arg1 and line.arg1 >= 0 then
+      C2.arg1 = line.arg1
+    end
+
+    if line and line.arg2 and line.arg2 >= 0 then
+      C2.arg2 = line.arg2
+    end
+    
+    if line and line.arg3 and line.arg3 >= 0 then
+      C2.arg3 = line.arg3
+    end
+
+    if line and line.arg4 and line.arg4 >= 0 then
+      C2.arg4 = line.arg4
+    end
+    
+    if line and line.arg5 and line.arg5 >= 0 then
+      C2.arg5 = line.arg5
+    end
+
+    -- line flags --
+
+    local MLF_UpperUnpegged = 0x0008
+    local MLF_LowerUnpegged = 0x0010
+
+    local upper_unpeg
+    local lower_unpeg
+
+    if not line then
+      -- nothing
+
+    else
+      -- keep these flags: block-all, block-mon, secret, no-draw,
+      --                   always-draw, block-sound, pass-thru
+      flags = bit.band(flags, 0x1EE3)
+
+      if flags != 0 then
+        C2.flags = flags
+
+        -- this makes sure the flags get applied
+        if not C2.special then C2.special = 0 end
+      end
+      
+      upper_unpeg = (bit.band(flags, MLF_UpperUnpegged) != 0)
+      lower_unpeg = (bit.band(flags, MLF_LowerUnpegged) != 0)
+    end
+
+    -- offsets --
+
+    if heights_are_same(sec, other_sec, pass) then
+      -- do not copy the offsets to the brush
+
+    elseif side and line then
+      C2.u1 = convert_offset(side.x_offset)
+      C2.v1 = convert_offset(side.y_offset)
+    end
+
+    return C2
+  end
 
 
   local function create_void_brush(coords)
@@ -1126,7 +1252,11 @@ function Fab_load_wad(def)
     }
 
     each C in coords do
-      table.insert(B, decode_polygon_side(nil, C, 1))
+      if OB_CONFIG.game == "hexen" then
+        table.insert(B, decode_polygon_side_hexen(nil, C, 1))
+      else
+        table.insert(B, decode_polygon_side(nil, C, 1))
+      end
     end
 
     -- add this new brush to the prefab
@@ -1167,7 +1297,11 @@ function Fab_load_wad(def)
     decode_lighting(S, B[1])
 
     each C in coords do
-      table.insert(B, decode_polygon_side(S, C, 1))
+      if OB_CONFIG.game == "hexen" then
+        table.insert(B, decode_polygon_side_hexen(S, C, 1))
+      else
+        table.insert(B, decode_polygon_side(S, C, 1))  
+      end    
     end
 
     table.insert(fab.brushes, B)
@@ -1259,7 +1393,11 @@ function Fab_load_wad(def)
     end
 
     each C in coords do
-      table.insert(B, decode_polygon_side(S, C, pass))
+      if OB_CONFIG.game == "hexen" then
+        table.insert(B, decode_polygon_side_hexen(S, C, pass))
+      else
+        table.insert(B, decode_polygon_side(S, C, pass))
+      end     
     end
 
     -- add this new brush to the prefab
