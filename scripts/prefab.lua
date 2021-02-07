@@ -1251,12 +1251,14 @@ function Fab_load_wad(def)
       { m="solid" }
     }
 
-    each C in coords do
-      if OB_CONFIG.game == "hexen" then
+    if OB_CONFIG.game == "hexen" then
+      each C in coords do
         table.insert(B, decode_polygon_side_hexen(nil, C, 1))
-      else
-        table.insert(B, decode_polygon_side(nil, C, 1))
       end
+    else
+      each C in coords do
+        table.insert(B, decode_polygon_side(nil, C, 1))
+      end        
     end
 
     -- add this new brush to the prefab
@@ -1296,12 +1298,14 @@ function Fab_load_wad(def)
 
     decode_lighting(S, B[1])
 
-    each C in coords do
-      if OB_CONFIG.game == "hexen" then
+    if OB_CONFIG.game == "hexen" then
+      each C in coords do
         table.insert(B, decode_polygon_side_hexen(S, C, 1))
-      else
-        table.insert(B, decode_polygon_side(S, C, 1))  
-      end    
+      end
+    else
+      each C in coords do 
+        table.insert(B, decode_polygon_side(S, C, 1))
+      end
     end
 
     table.insert(fab.brushes, B)
@@ -1392,12 +1396,14 @@ function Fab_load_wad(def)
       table.insert(B, C)
     end
 
-    each C in coords do
-      if OB_CONFIG.game == "hexen" then
+    if OB_CONFIG.game == "hexen" then
+      each C in coords do
         table.insert(B, decode_polygon_side_hexen(S, C, pass))
-      else
+      end
+    else
+      each C in coords do
         table.insert(B, decode_polygon_side(S, C, pass))
-      end     
+      end
     end
 
     -- add this new brush to the prefab
