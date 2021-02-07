@@ -39,4 +39,4 @@ Addressed various compiler complaints about the handling and conversion of certa
 
 Added scrolling functionality to Addons List window.
 
-Added compatibility with Hexen prefabs and preservation of action specials when converted Hexen linedefs.
+Added compatibility with Hexen prefabs and preservation of action specials when converting Hexen linedefs.
