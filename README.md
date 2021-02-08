@@ -25,7 +25,7 @@ OBLIGE will then build all the maps, showing a blueprint of each one as it goes,
 
 ## About This Repository
 
-This is a fork containing the changes that were necessary for me to successfully compile and use Oblige on a Raspberry Pi 4 (arm64 architecture) running Ubuntu 20.04, as well as some quality of life fixes. It is also compatible with ObAddon and will load it from a .pk3 file via the Addons menu.
+This is a fork containing the changes that were necessary for me to successfully compile and use Oblige on a Raspberry Pi 4 (arm64 architecture) running Ubuntu 20.04, as well as some quality of life fixes. Since then, I have successfully tested it with Linux and Win10 x86_64. It is also compatible with ObAddon and will load it from a .pk3 file via the Addons menu.
 
 A brief summary of changes:
 
@@ -40,3 +40,5 @@ Addressed various compiler complaints about the handling and conversion of certa
 Added scrolling functionality to Addons List window.
 
 Added compatibility with Hexen prefabs and preservation of action specials when converting Hexen linedefs.
+
+Added libraries needed to cross-compile for Windows using MingW.
