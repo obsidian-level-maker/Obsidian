@@ -84,7 +84,7 @@ static char *unicodeToUtf8Heap(const WCHAR *w_str)
     {
         void *ptr = NULL;
         const PHYSFS_uint64 len = (wStrLen(w_str) * 4) + 1;
-        retval = allocator.Malloc(len);
+        retval = (char *)allocator.Malloc(len);
         BAIL_IF(!retval, PHYSFS_ERR_OUT_OF_MEMORY, NULL);
         PHYSFS_utf8FromUtf16((const PHYSFS_uint16 *) w_str, retval, len);
         ptr = allocator.Realloc(retval, strlen(retval) + 1); /* shrink. */
@@ -249,7 +249,7 @@ static DWORD pollDiscDrives(void)
     DWORD i;
 
     if (lib)
-        stem = (fnSTEM) GetProcAddress(lib, "SetThreadErrorMode");
+        stem = (fnSTEM) GetProcAddress((HMODULE)lib, "SetThreadErrorMode");
 
     if (stem)
         stem(SEM_FAILCRITICALERRORS, &oldErrorMode);
@@ -275,7 +275,7 @@ static DWORD pollDiscDrives(void)
         SetErrorMode(oldErrorMode);
 
     if (lib)
-        FreeLibrary(lib);
+        FreeLibrary((HMODULE)lib);
 
     return drives;
 } /* pollDiscDrives */
@@ -531,7 +531,7 @@ char *__PHYSFS_platformCalcPrefDir(const char *org, const char *app)
     utf8 = unicodeToUtf8Heap(path);
     BAIL_IF_ERRPASS(!utf8, NULL);
     len = strlen(utf8) + strlen(org) + strlen(app) + 4;
-    retval = allocator.Malloc(len);
+    retval = (char *)allocator.Malloc(len);
     if (!retval)
     {
         allocator.Free(utf8);
@@ -558,7 +558,7 @@ char *__PHYSFS_platformCalcUserDir(void)
 
     lib = LoadLibraryA("userenv.dll");
     BAIL_IF(!lib, errcodeFromWinApi(), NULL);
-    pGetDir=(fnGetUserProfDirW) GetProcAddress(lib,"GetUserProfileDirectoryW");
+    pGetDir=(fnGetUserProfDirW) GetProcAddress((HMODULE)lib,"GetUserProfileDirectoryW");
     GOTO_IF(!pGetDir, errcodeFromWinApi(), done);
 
     if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &accessToken))
@@ -607,7 +607,7 @@ char *__PHYSFS_platformCalcUserDir(void)
 done:
     if (accessToken)
         CloseHandle(accessToken);
-    FreeLibrary(lib);
+    FreeLibrary((HMODULE)lib);
     return retval;  /* We made it: hit the showers. */
 #endif
 } /* __PHYSFS_platformCalcUserDir */
@@ -680,7 +680,7 @@ PHYSFS_EnumerateCallbackResult __PHYSFS_platformEnumerate(const char *dirname,
 
         utf8 = unicodeToUtf8Heap(fn);
         if (utf8 == NULL)
-            retval = -1;
+            retval = (PHYSFS_EnumerateCallbackResult)-1;
         else
         {
             retval = callback(callbackdata, origdir, utf8);
