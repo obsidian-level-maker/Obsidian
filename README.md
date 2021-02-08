@@ -41,4 +41,4 @@ Added scrolling functionality to Addons List window.
 
 Added compatibility with Hexen prefabs and preservation of action specials when converting Hexen linedefs.
 
-Added libraries needed to cross-compile for Windows using MingW.
+Added libraries needed to cross-compile for Windows using MinGW.
