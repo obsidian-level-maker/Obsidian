@@ -27,6 +27,7 @@ msgid	"Pick file to save to"
 msgstr	""
 
 #: gui/m_manage.cc:376
+#, c-format
 msgid	"Unable to save the file:\n\n%s"
 msgstr	""
 
@@ -35,6 +36,7 @@ msgid	"Error writing to file."
 msgstr	""
 
 #: gui/m_manage.cc:411
+#, c-format
 msgid	"Unable to save the file:\n\n%s"
 msgstr	""
 
@@ -43,10 +45,12 @@ msgid	"Select file to load"
 msgstr	""
 
 #: gui/m_manage.cc:496
+#, c-format
 msgid	"Unable to load the file:\n\n%s"
 msgstr	""
 
 #: gui/m_manage.cc:519
+#, c-format
 msgid	"Cannot open: %s\n\n%s"
 msgstr	""
 
@@ -103,6 +107,7 @@ msgid	"OBLIGE Config Manager"
 msgstr	""
 
 #: gui/g_doom.cc:204
+#, c-format
 msgid	"Unable to create wad file:\n\n%s"
 msgstr	""
 
@@ -135,6 +140,7 @@ msgid	"Unknown Error"
 msgstr	""
 
 #: gui/g_doom.cc:558
+#, c-format
 msgid	"glBSP Failure:\n%s"
 msgstr	""
 
@@ -219,10 +225,12 @@ msgid	"OBLIGE Misc Options"
 msgstr	""
 
 #: gui/m_lua.cc:612
+#, c-format
 msgid	"Making %s"
 msgstr	""
 
 #: gui/m_lua.cc:1083
+#, c-format
 msgid	"Script Error: %s"
 msgstr	""
 
@@ -255,6 +263,7 @@ msgid	"Select output file"
 msgstr	""
 
 #: gui/m_dialog.cc:260
+#, c-format
 msgid	"Unable to create the file:\n\n%s"
 msgstr	""
 
@@ -275,10 +284,12 @@ msgid	"Pick file to save to"
 msgstr	""
 
 #: gui/m_dialog.cc:620
+#, c-format
 msgid	"Unable to save the file:\n\n%s"
 msgstr	""
 
 #: gui/m_dialog.cc:647
+#, c-format
 msgid	"Unable to save the file:\n\n%s"
 msgstr	""
 
@@ -347,14 +358,17 @@ msgid	"Cancelled"
 msgstr	""
 
 #: gui/main.cc:797
+#, c-format
 msgid	"No such config file: %s\n"
 msgstr	""
 
 #: gui/main.cc:847
+#, c-format
 msgid	"No such config file: %s\n"
 msgstr	""
 
 #: gui/main.cc:905
+#, c-format
 msgid	"Sorry, an internal error occurred:\n%s"
 msgstr	""
 
