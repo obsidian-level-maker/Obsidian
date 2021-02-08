@@ -35,7 +35,7 @@ Updated deprecated PHYSFS function calls with their replacements.
 
 Replaced GLBSP 2.27 with GLBSP 2.28 from the EDGE project (https://https://github.com/3dfxdev/EDGE)
 
-Addressed various compiler complaints about the handling and conversion of certain strings/string literals.
+Addressed various compiler complaints about type conversion/casting in certain functions.
 
 Added scrolling functionality to Addons List window.
 
