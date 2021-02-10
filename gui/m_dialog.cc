@@ -320,7 +320,7 @@ void DLG_EditSeed(void)
 
 	sprintf(num_buf, "%1.0f", next_rand_seed);
 
-	const char * user_buf = fl_input("%s", _("Enter New Seed Number:"), num_buf);
+	const char * user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
 
 	// cancelled?
 	if (! user_buf)
