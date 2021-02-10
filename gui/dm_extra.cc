@@ -815,7 +815,7 @@ static void TransferFILEtoWAD(PHYSFS_File *fp, const char *dest_lump)
 
 	for (;;)
 	{
-		int got_len = (int)(PHYSFS_readBytes(fp, buffer, buf_size) / buf_size);
+		int got_len = (int)PHYSFS_readBytes(fp, buffer, buf_size);
 
 		if (got_len <= 0)
 			break;
