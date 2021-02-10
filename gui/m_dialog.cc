@@ -319,6 +319,13 @@ void DLG_EditSeed(void)
 	char num_buf[256];
 
 	sprintf(num_buf, "%1.0f", next_rand_seed);
+	
+// Some simple input checking on num_buf
+	if (strlen(num_buf) > 255)
+		return;
+	
+	if (num_buf[strlen(num_buf) + 1] != '\0')
+		return;	
 
 	const char * user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
 
