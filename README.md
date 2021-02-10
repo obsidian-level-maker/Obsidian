@@ -39,6 +39,6 @@ Addressed various compiler complaints about type conversion/casting in certain f
 
 Added scrolling functionality to Addons List window.
 
-Added compatibility with Hexen prefabs and preservation of action specials when converting Hexen linedefs.
+Added preservation of action specials when converting Hexen linedefs.
 
-Added libraries needed to cross-compile for Windows using MinGW.
+Added library sources needed to cross-compile for Windows using MinGW.
