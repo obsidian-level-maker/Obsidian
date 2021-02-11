@@ -740,15 +740,11 @@ int main(int argc, char **argv)
 	LogPrintf("install_dir: %s\n",   install_dir);
 	LogPrintf("config_file: %s\n\n", config_file);
 
-
-	LogEnableDebug(debug_messages);
-
 	Trans_Init();
 
 	if (! batch_mode)
 	{
 		Options_Load(options_file);
-
 		Trans_SetLanguage();
 	}
 
@@ -757,6 +753,8 @@ int main(int argc, char **argv)
 	{
 		Main_SetupFLTK();
 	}
+
+	LogEnableDebug(debug_messages);
 
 	Main_CalcNewSeed();
 

@@ -7,7 +7,7 @@
 
 PROGRAM=Oblige.exe
 
-CROSS=x86_64-w64-mingw32-
+CROSS=i686-w64-mingw32-
 
 CXX=$(CROSS)g++
 
