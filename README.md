@@ -35,10 +35,10 @@ Updated deprecated PHYSFS function calls with their replacements.
 
 Replaced GLBSP 2.27 with GLBSP 2.28 from the EDGE project (https://https://github.com/3dfxdev/EDGE)
 
-Addressed various compiler complaints about type conversion/casting in certain functions.
-
 Added scrolling functionality to Addons List window.
 
 Added preservation of action specials when converting Hexen linedefs.
 
 Added library sources needed to cross-compile for Windows using MinGW.
+
+Minor bugfixes as discovered.
