@@ -29,6 +29,9 @@
 
 #include <FL/fl_utf8.h>
 
+#include <iostream>
+#include <string>
+
 
 const char *last_directory = NULL;
 
@@ -317,7 +320,7 @@ const char * DLG_OutputFilename(const char *ext, const char *preset)
 void DLG_EditSeed(void)
 {
 	char num_buf[256];
-
+	
 	sprintf(num_buf, "%1.0f", next_rand_seed);
 	
 // Some simple input checking on num_buf
@@ -332,36 +335,35 @@ void DLG_EditSeed(void)
 	// cancelled?
 	if (! user_buf)
 		return;
-
-	// transfer to our own buffer
-	strncpy(num_buf, user_buf, sizeof(num_buf));
-	num_buf[sizeof(num_buf) - 1] = 0;
-
-	// remove spaces
-	int s, d;
-
-	for (s = d = 0 ; num_buf[s] ; s++)
-		if (! isspace(num_buf[s]))
-			num_buf[d++] = num_buf[s];
-
-	num_buf[d] = 0;
-
-	// nothing entered?
-	if (num_buf[0] == 0)
-		return;
-
-	// skip leading zeros
-	for (s = 0 ; num_buf[s] == '0' && num_buf[s+1] ; s++)
-	{ }
-
-	next_rand_seed = atof(&num_buf[s]);
-
-	// negative values are not valid
-	if (next_rand_seed < 0)
-		next_rand_seed = -next_rand_seed;
-
-	// fractional part is not used
-	next_rand_seed = floor(next_rand_seed);
+		
+    std::string word = user_buf;
+    try {
+        for (long unsigned int i = 0 ; i < word.size() ; i++) {
+            char character = word.at(i);
+            if (not std::isdigit(character)) {
+                throw std::runtime_error("String contains non-digits. Will process as string\n");
+            }
+        }
+        next_rand_seed = std::stoul(word);
+        return;
+    } catch (std::invalid_argument &e) {
+        std::cout << "Invalid argument. Will process as string.\n";
+    } catch (std::out_of_range &e) {
+        std::cout << "Resulting number would be out of range for a 32-bit unsigned integer. Will process as string.\n";
+    } catch (std::exception &e) {
+        std::cout << e.what();
+    }
+    for (long unsigned int i = 0 ; i < word.size() ; i++) {
+        char character = word.at(i);
+        if (not std::iscntrl(character)) {
+            if (next_rand_seed < 33818640) {
+                next_rand_seed *= int(character);
+            } else {
+                next_rand_seed /= int(character);
+            }
+        }
+    }
+    return;
 }
 
 
