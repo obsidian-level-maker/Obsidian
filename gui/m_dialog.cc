@@ -353,6 +353,7 @@ void DLG_EditSeed(void)
     } catch (std::exception &e) {
         std::cout << e.what();
     }
+    next_rand_seed = 33818640;
     for (long unsigned int i = 0 ; i < word.size() ; i++) {
         char character = word.at(i);
         if (not std::iscntrl(character)) {
