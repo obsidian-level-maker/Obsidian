@@ -37,11 +37,6 @@
 
 #include "twister.h"
 
-
-#define AJ_RANDOM_IMPLEMENTATION
-#include "aj_random.h"
-
-
 static lua_State *LUA_ST;
 
 static bool has_loaded = false;
@@ -67,9 +62,6 @@ bool is_dir(char *temp_name)
 				return false;
 			}
 	}
-
-// random number generator
-static aj_Random_c GUI_RNG;
 
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
@@ -661,8 +653,6 @@ int gui_rand_seed(lua_State *L)
 {
 	unsigned int the_seed = luaL_checknumber(L, 1);
 	
-	LogPrintf("The_seed is %d", the_seed);
-
 	if (the_seed < 0)
 		the_seed = - the_seed;
 
@@ -677,8 +667,6 @@ int gui_random(lua_State *L)
 {
 	lua_Number value = twister_Double();
 	
-	LogPrintf("value is %f", value);
-
 	lua_pushnumber(L, value);
 	return 1;
 }

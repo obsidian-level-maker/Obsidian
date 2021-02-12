@@ -21,13 +21,14 @@
 #include "headers.h"
 
 #include "lib_util.h"
-#include "aj_random.h"
 
 #include "main.h"
 #include "m_lua.h"
 
 #include "tx_forge.h"
 #include "tx_skies.h"
+
+#include "twister.h"
 
 
 byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors)
@@ -114,9 +115,7 @@ void SKY_AddStars(int seed, byte *pixels, int W, int H,
 	SYS_ASSERT(powscale > 0);
 	SYS_ASSERT(thresh < 0.99);
 
-	aj_Random_c twist;
-
-	twist.Seed(seed);
+	twister_Reseed(seed);
 
 	for (int y = 0; y < H; y++)
 	{
@@ -125,9 +124,9 @@ void SKY_AddStars(int seed, byte *pixels, int W, int H,
 
 		while (dest < d_end)
 		{
-			double v  = twist.Double();
-			v *= twist.Double();
-			v *= twist.Double();
+			double v  = twister_Double();
+			v *= twister_Double();
+			v *= twister_Double();
 
 			v = pow(v, powscale);
 
@@ -160,12 +159,9 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
 	TX_SpectralSynth(seed, height_map, W, fracdim, powscale);
 
+	twister_Reseed(seed ^ 0x1234567);
 
-	aj_Random_c twist;
-
-	twist.Seed(seed ^ 0x1234567);
-
-	bool use_slope_z = (twist.Int() & 255) < 20;
+	bool use_slope_z = (twister_UInt() & 255) < 20;
 
 
 	// convert range from 0.0 .. 1.0 to min_h . max_h
@@ -274,9 +270,7 @@ void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
 
 	win_prob = win_prob * 65535 / 100;
 
-	aj_Random_c bu_twist;
-
-	bu_twist.Seed(seed);
+	twister_Reseed(seed);
 
 	int x, y;
 
@@ -311,7 +305,7 @@ void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
 			{
 				byte fg = colors[1];
 
-				if (((int)bu_twist.Int() & 0xFFFF) > win_prob)
+				if (((int)twister_UInt() & 0xFFFF) > win_prob)
 					fg = (numcol >= 3) ? colors[2] : bg;
 
 				for (int dx = 0; dx < win_w; dx++)

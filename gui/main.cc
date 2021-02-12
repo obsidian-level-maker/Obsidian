@@ -748,8 +748,6 @@ int main(int argc, char **argv)
 	
 	Main_CalcNewSeed();
 	
-	LogPrintf("%f", next_rand_seed);
-
 	VFS_InitAddons(argv[0]);
 
 
