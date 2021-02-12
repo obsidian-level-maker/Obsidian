@@ -35,6 +35,8 @@
 #include "main.h"
 #include "m_lua.h"
 
+#include "twister.h"
+
 
 #define AJ_RANDOM_IMPLEMENTATION
 #include "aj_random.h"
@@ -657,25 +659,14 @@ int gui_abort(lua_State *L)
 //
 int gui_rand_seed(lua_State *L)
 {
-	double the_seed = luaL_checknumber(L, 1);
+	unsigned int the_seed = luaL_checknumber(L, 1);
+	
+	LogPrintf("The_seed is %d", the_seed);
 
 	if (the_seed < 0)
 		the_seed = - the_seed;
 
-	double A = fmod(the_seed, 1073741824.0);
-	the_seed = (the_seed - A) / 1073741824.0;
-
-	double B = fmod(the_seed, 1073741824.0);
-	the_seed = (the_seed - B) / 1073741824.0;
-
-	// s1 and s2 are the most important
-	// s3 and s4 are much less significant
-	uint32_t s1 = (uint32_t)A & 0x55555555;
-	uint32_t s2 = (uint32_t)A & 0x2AAAAAAA;
-	uint32_t s3 = (uint32_t)B ^ s1;
-	uint32_t s4 = s2 >> 11;
-
-	GUI_RNG.FullSeed(s1, s2, s3, s4);
+	twister_Reseed(the_seed);
 
 	return 0;
 }
@@ -684,7 +675,9 @@ int gui_rand_seed(lua_State *L)
 //
 int gui_random(lua_State *L)
 {
-	lua_Number value = GUI_RNG.Double();
+	lua_Number value = twister_Double();
+	
+	LogPrintf("value is %f", value);
 
 	lua_pushnumber(L, value);
 	return 1;

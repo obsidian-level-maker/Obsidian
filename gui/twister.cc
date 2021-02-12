@@ -20,6 +20,14 @@ void twister_Init() {
     twister.seed(std::time(nullptr));
 }
 
-double twister_Double() {
+void twister_Reseed(unsigned int random) {
+    twister.seed(random);
+}
+
+unsigned int twister_UInt() {
     return twister();
+}
+
+double twister_Double() {
+    return ldexp(twister(), -32);
 }

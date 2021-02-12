@@ -537,7 +537,7 @@ int Main_key_handler(int event)
 
 void Main_CalcNewSeed()
 {
-	next_rand_seed = twister_Double();
+	next_rand_seed = twister_UInt();
 }
 
 
@@ -745,8 +745,10 @@ int main(int argc, char **argv)
 	LogEnableDebug(debug_messages);
 	
 	twister_Init();
-
+	
 	Main_CalcNewSeed();
+	
+	LogPrintf("%f", next_rand_seed);
 
 	VFS_InitAddons(argv[0]);
 
