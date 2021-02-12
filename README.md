@@ -29,6 +29,8 @@ This is a fork containing the changes that were necessary for me to successfully
 
 A brief summary of changes:
 
+New random number generator based on the Mersenne Twister Engine.
+
 Updated PHYSFS to version 3.02.
 
 Updated deprecated PHYSFS function calls with their replacements.
