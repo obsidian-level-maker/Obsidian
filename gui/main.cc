@@ -39,7 +39,7 @@
 #include "csg_main.h"
 #include "g_nukem.h"
 
-#include <random>
+#include "twister.h"
 
 #define TICKER_TIME  50 /* ms */
 
@@ -73,8 +73,6 @@ bool debug_messages = false;
 
 game_interface_c * game_object = NULL;
 
-//Initialize random number generator
-std::mt19937 twister;
 
 /* ----- user information ----------------------------- */
 
@@ -539,9 +537,7 @@ int Main_key_handler(int event)
 
 void Main_CalcNewSeed()
 {
-	twister.seed(TimeGetMillies());
-
-	next_rand_seed = twister();
+	next_rand_seed = twister_Double();
 }
 
 
@@ -747,9 +743,10 @@ int main(int argc, char **argv)
 	}
 
 	LogEnableDebug(debug_messages);
+	
+	twister_Init();
 
 	Main_CalcNewSeed();
-
 
 	VFS_InitAddons(argv[0]);
 
