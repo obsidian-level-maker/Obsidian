@@ -39,6 +39,7 @@
 #include "csg_main.h"
 #include "g_nukem.h"
 
+#include <random>
 
 #define TICKER_TIME  50 /* ms */
 
@@ -72,6 +73,8 @@ bool debug_messages = false;
 
 game_interface_c * game_object = NULL;
 
+//Initialize random number generator
+std::mt19937 twister;
 
 /* ----- user information ----------------------------- */
 
@@ -536,20 +539,9 @@ int Main_key_handler(int event)
 
 void Main_CalcNewSeed()
 {
-	u32_t val = (u32_t)time(NULL);
+	twister.seed(TimeGetMillies());
 
-	// only use 31 bits (to allow adding values without overflow)
-	val = (val & 0x7FFFFFFF);
-
-	// reorder the bits to get more random-looking seeds
-	u32_t flipped = 0;
-
-	for (int i = 0 ; i < 31 ; i++)
-	{
-		flipped = (flipped << 1) | !! (val & (1 << ((i * 5) % 31)));
-	}
-
-	next_rand_seed = flipped;
+	next_rand_seed = twister();
 }
 
 
