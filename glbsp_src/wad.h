@@ -23,7 +23,7 @@
 
 #include "structs.h"
 #include "system.h"
-
+#include "physfs.h"
 
 struct lump_s;
 
@@ -56,6 +56,30 @@ typedef struct wad_s
   int num_level_names;
 }
 wad_t;
+
+typedef struct pak_s
+{
+	// kind of wad file : IWAD or PWAD
+	int kind;
+
+	// number of entries in directory
+	int entry_num;
+
+	// offset to start of directory
+	int dir_start;
+
+	// current directory entries
+	struct lump_s *dir_head;
+	struct lump_s *dir_tail;
+
+	// current level
+	struct lump_s *current_level;
+
+	// array of level names found
+	const char ** level_names;
+	int num_level_names;
+}
+pak_t;
 
 
 // level information
@@ -123,12 +147,14 @@ typedef struct lump_s
 
   // various flags
   int flags;
- 
+
   // data of lump
   void *data;
 
   // level information, usually NULL
   level_t *lev_info;
+
+  char fname[256];
 }
 lump_t;
 
@@ -240,7 +266,6 @@ void ReportFailedLevels(void);
 
 /* ----- conversion macros ----------------------- */
 
-
 #define UINT8(x)   ((uint8_g) (x))
 #define SINT8(x)   ((sint8_g) (x))
 
@@ -249,6 +274,5 @@ void ReportFailedLevels(void);
 
 #define SINT16(x)  ((sint16_g) Endian_U16((uint16_g) (x)))
 #define SINT32(x)  ((sint32_g) Endian_U32((uint32_g) (x)))
-
 
 #endif /* __GLBSP_WAD_H__ */

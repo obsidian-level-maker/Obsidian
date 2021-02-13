@@ -81,7 +81,7 @@ typedef struct raw_linedef_s
   uint16_g end;       // ... to this vertex
   uint16_g flags;     // linedef flags (impassible, etc)
   uint16_g type;      // linedef type (0 for none, 97 for teleporter, etc)
-  sint16_g tag;       // this linedef activates the sector with same tag
+  uint16_g tag;       // this linedef activates the sector with same tag
   uint16_g sidedef1;  // right sidedef
   uint16_g sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
 }
@@ -248,6 +248,5 @@ typedef struct raw_v5_node_s
   uint32_g right, left;  // children: Node or SSector (if high bit is set)
 }
 raw_v5_node_t;
-
 
 #endif /* __GLBSP_STRUCTS_H__ */

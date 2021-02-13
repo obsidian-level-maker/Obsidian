@@ -52,7 +52,7 @@ void FreeSuper(superblock_t *block);
 // and '*N' is the new node (and '*S' is set to NULL).  Normally
 // returns GLBSP_E_OK, or GLBSP_E_Cancelled if user stopped it.
 //
-glbsp_ret_e BuildNodes(superblock_t *seg_list,
+glbsp_ret_e GlbspBuildNodes(superblock_t *seg_list,
     node_t ** N, subsec_t ** S, int depth, const bbox_t *bbox);
 
 // compute the height of the bsp tree, starting at 'node'.
@@ -80,6 +80,5 @@ void RoundOffBspTree(node_t *root);
 
 // free all the superblocks on the quick-alloc list
 void FreeQuickAllocSupers(void);
-
 
 #endif /* __GLBSP_NODE_H__ */

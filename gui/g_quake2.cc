@@ -328,7 +328,7 @@ static void Q2_DummyLeafBrush()
 #endif
 
 
-const byte oblige_pop[256] =
+/* const byte oblige_pop[256] =
 {
   175, 175, 175, 221, 221, 221, 221, 221, 221, 221, 221, 221, 175, 175, 175, 175,
   175, 175, 175, 175, 221, 221, 221, 221, 221, 221, 221, 175, 175, 175, 175, 175,
@@ -346,7 +346,7 @@ const byte oblige_pop[256] =
   175, 175, 175, 175, 175, 175, 175, 175, 221, 221, 175, 175, 175, 175, 175, 175,
   175, 175, 175, 175, 175, 175, 175, 221, 221, 175, 175, 175, 175, 175, 175, 175,
   175, 175, 175, 175, 175, 175, 175, 221, 175, 175, 175, 175, 175, 175, 175, 175
-};
+}; */
 
 
 //------------------------------------------------------------------------
@@ -650,7 +650,11 @@ static void Q2_WriteNode(quake_node_c *node)
 
 	if (flipped)
 	{
-		std::swap(raw_node.children[0], raw_node.children[1]);
+		int node0 = raw_node.children[0];
+		int node1 = raw_node.children[1];
+		raw_node.children[0] = node1;
+		raw_node.children[1] = node0;
+//		std::swap(raw_node.children[0], raw_node.children[1]);
 	}
 
 
@@ -881,7 +885,11 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 		if (flipped)
 		{
-			std::swap(raw_node.children[0], raw_node.children[1]);
+			int node0 = raw_node.children[0];
+			int node1 = raw_node.children[1];
+			raw_node.children[0] = node1;
+			raw_node.children[1] = node0;
+//			std::swap(raw_node.children[0], raw_node.children[1]);
 		}
 
 		raw_node.firstface = face_base + face;

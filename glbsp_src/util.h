@@ -21,6 +21,7 @@
 #ifndef __GLBSP_UTIL_H__
 #define __GLBSP_UTIL_H__
 
+
 /* ----- useful macros ---------------------------- */
 
 #ifndef M_PI

@@ -329,10 +329,7 @@ static bool read_directory_entry(zip_central_entry_t *E)
 		name_length = ZIPF_MAX_PATH-2;
 	}
 
-	int sizeRead = fread(E->name, name_length, 1, r_zip_fp);
-	if (sizeRead != 1) {
-		printf("Unable to read data from file\n");
-	}
+	fread(E->name, name_length, 1, r_zip_fp);  // ??? CHECK ERROR
 
 	// ensure name is NUL terminated
 	E->name[name_length] = 0;

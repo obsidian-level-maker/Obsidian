@@ -1054,7 +1054,11 @@ static void DoWriteClip(dclipnode_t & raw_clip, bool flip)
 {
 	if (flip)
 	{
-		std::swap(raw_clip.children[0], raw_clip.children[1]);
+		short unsigned int clip0 = raw_clip.children[0];
+		short unsigned int clip1 = raw_clip.children[1];
+		raw_clip.children[0] = clip1;
+		raw_clip.children[1] = clip0;
+//		std::swap(raw_clip.children[0], raw_clip.children[1]);
 	}
 
 	// fix endianness

@@ -865,7 +865,11 @@ static void Q1_WriteNode(quake_node_c *node)
 
 	if (flipped)
 	{
-		std::swap(raw_node.children[0], raw_node.children[1]);
+		short int node0 = raw_node.children[0];
+		short int node1 = raw_node.children[1];
+		raw_node.children[0] = node1;
+		raw_node.children[1] = node0;
+//		std::swap(raw_node.children[0], raw_node.children[1]);
 	}
 
 
@@ -1199,7 +1203,11 @@ static void MapModel_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 		if (flipped)
 		{
-			std::swap(raw_node.children[0], raw_node.children[1]);
+			short int node0 = raw_node.children[0];
+			short int node1 = raw_node.children[1];
+			raw_node.children[0] = node1;
+			raw_node.children[1] = node0;
+//			std::swap(raw_node.children[0], raw_node.children[1]);
 		}
 
 		raw_node.firstface = face_base + face;

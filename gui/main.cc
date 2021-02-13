@@ -39,6 +39,7 @@
 #include "csg_main.h"
 #include "g_nukem.h"
 
+#include "twister.h"
 
 #define TICKER_TIME  50 /* ms */
 
@@ -536,20 +537,7 @@ int Main_key_handler(int event)
 
 void Main_CalcNewSeed()
 {
-	u32_t val = (u32_t)time(NULL);
-
-	// only use 31 bits (to allow adding values without overflow)
-	val = (val & 0x7FFFFFFF);
-
-	// reorder the bits to get more random-looking seeds
-	u32_t flipped = 0;
-
-	for (int i = 0 ; i < 31 ; i++)
-	{
-		flipped = (flipped << 1) | !! (val & (1 << ((i * 5) % 31)));
-	}
-
-	next_rand_seed = flipped;
+	next_rand_seed = twister_UInt();
 }
 
 
@@ -740,15 +728,11 @@ int main(int argc, char **argv)
 	LogPrintf("install_dir: %s\n",   install_dir);
 	LogPrintf("config_file: %s\n\n", config_file);
 
-
-	LogEnableDebug(debug_messages);
-
 	Trans_Init();
 
 	if (! batch_mode)
 	{
 		Options_Load(options_file);
-
 		Trans_SetLanguage();
 	}
 
@@ -758,9 +742,12 @@ int main(int argc, char **argv)
 		Main_SetupFLTK();
 	}
 
+	LogEnableDebug(debug_messages);
+	
+	twister_Init();
+	
 	Main_CalcNewSeed();
-
-
+	
 	VFS_InitAddons(argv[0]);
 
 

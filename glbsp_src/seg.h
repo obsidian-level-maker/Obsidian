@@ -24,7 +24,7 @@
 #include "structs.h"
 
 
-#define DEFAULT_FACTOR  11
+#define DEFAULT_FACTOR  16
 
 #define IFFY_LEN  4.0
 
@@ -109,6 +109,5 @@ void AddMinisegs(seg_t *part,
 
 // free the quick allocation cut list
 void FreeQuickAllocCuts(void);
-
 
 #endif /* __GLBSP_SEG_H__ */

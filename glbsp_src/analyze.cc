@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -847,7 +848,7 @@ void TestForWindowEffect(linedef_t *L)
         back_dist = dist;
         back_open = hit_side ? hit_side->sector : NULL;
 #if DEBUG_WINDOW_FX
-        back_line = i;
+		back_line = i;
 #endif
       }
     }
@@ -1134,4 +1135,3 @@ sector_t * VertexCheckOpen(vertex_t *vert, float_g dx, float_g dy)
   InternalError("Vertex %d has no tips !", vert->index);
   return FALSE;
 }
-

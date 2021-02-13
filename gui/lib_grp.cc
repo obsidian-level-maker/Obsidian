@@ -73,7 +73,7 @@ bool GRP_OpenRead(const char *filename)
 	LogPrintf("Opened GRP file: %s\n", filename);
 
 #ifdef HAVE_PHYSFS
-	if (PHYSFS_read(grp_R_fp, &grp_R_header, sizeof(grp_R_header), 1) != 1)
+	if ((PHYSFS_readBytes(grp_R_fp, &grp_R_header, sizeof(grp_R_header)) / sizeof(grp_R_header)) != 1)
 #else
 	if (fread(&grp_R_header, sizeof(grp_R_header), 1, grp_R_fp) != 1)
 #endif
@@ -124,7 +124,7 @@ bool GRP_OpenRead(const char *filename)
 		raw_grp_lump_t *L = &grp_R_dir[i];
 
 #ifdef HAVE_PHYSFS
-		size_t res = PHYSFS_read(grp_R_fp, L, sizeof(raw_grp_lump_t), 1);
+		size_t res = (PHYSFS_readBytes(grp_R_fp, L, sizeof(raw_grp_lump_t)) / sizeof(raw_grp_lump_t));
 		if (res != 1)
 #else
 		int res = fread(L, sizeof(raw_grp_lump_t), 1, grp_R_fp);
@@ -235,7 +235,7 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer)
 	if (! PHYSFS_seek(grp_R_fp, L_start + offset))
 		return false;
 
-	size_t res = PHYSFS_read(grp_R_fp, buffer, length, 1);
+	size_t res = (PHYSFS_readBytes(grp_R_fp, buffer, length) / length);
 
 #else
 	if (fseek(grp_R_fp, L_start + offset, SEEK_SET) != 0)

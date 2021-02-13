@@ -55,7 +55,7 @@ void LogEnableDebug(bool enable)
 {
 	if (debugging == enable)
 		return;
-
+		
 	debugging = enable;
 
 	if (debugging)

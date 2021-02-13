@@ -66,7 +66,7 @@ bool PAK_OpenRead(const char *filename)
 	LogPrintf("Opened PAK file: %s\n", filename);
 
 #ifdef HAVE_PHYSFS
-	if (PHYSFS_read(r_pak_fp, &r_header, sizeof(r_header), 1) != 1)
+	if ((PHYSFS_readBytes(r_pak_fp, &r_header, sizeof(r_header)) / sizeof(r_header)) != 1)
 #else
 	if (fread(&r_header, sizeof(r_header), 1, r_pak_fp) != 1)
 #endif
@@ -132,7 +132,7 @@ bool PAK_OpenRead(const char *filename)
 		raw_pak_entry_t *E = &r_directory[i];
 
 #ifdef HAVE_PHYSFS
-		size_t res = PHYSFS_read(r_pak_fp, E, sizeof(raw_pak_entry_t), 1);
+		size_t res = (PHYSFS_readBytes(r_pak_fp, E, sizeof(raw_pak_entry_t)) / sizeof(raw_pak_entry_t));
 		if (res != 1)
 #else
 		int res = fread(E, sizeof(raw_pak_entry_t), 1, r_pak_fp);
@@ -262,7 +262,7 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 	if (! PHYSFS_seek(r_pak_fp, E->offset + offset))
 		return false;
 
-	size_t res = PHYSFS_read(r_pak_fp, buffer, length, 1);
+	size_t res = (PHYSFS_readBytes(r_pak_fp, buffer, length) / length);
 #else
 	if (fseek(r_pak_fp, E->offset + offset, SEEK_SET) != 0)
 		return false;

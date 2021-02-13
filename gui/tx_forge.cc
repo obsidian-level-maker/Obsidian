@@ -37,15 +37,11 @@
 #include "headers.h"
 
 #include "lib_util.h"
-#include "aj_random.h"
 
 #include "main.h"
 #include "tx_forge.h"
 
-
-/* Definition for obtaining random numbers. */
-
-static aj_Random_c ss_twist;
+#include "twister.h"
 
 
 /* Definitions used to address real and imaginary parts in a two-dimensional
@@ -192,14 +188,14 @@ static double rand_gauss(void)
 	double sum = 0.0;
 
 	for (int i = 0; i < NRAND; i++)
-		sum += (ss_twist.Int() & 0xFFFF);
+		sum += (twister_UInt() & 0xFFFF);
 
 	return sum * gauss_mul - gauss_add;
 }
 
 static double rand_phase(void)
 {
-	return 2 * M_PI * ss_twist.Double();
+	return 2 * M_PI * twister_Double();
 }
 
 
@@ -322,7 +318,7 @@ void TX_SpectralSynth(int seed, float *buf, int width,
 			Main_FatalError("TX_SpectralSynth: width '%d' is not a power of two\n", width);
 	}
 
-	ss_twist.Seed(seed);
+	twister_Reseed(seed);
 
 	init_gauss();
 

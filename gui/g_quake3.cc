@@ -965,7 +965,11 @@ static void Q3_WriteNode(quake_node_c *node)
 
 	if (flipped)
 	{
-		std::swap(raw_node.children[0], raw_node.children[1]);
+		int node0 = raw_node.children[0];
+		int node1 = raw_node.children[1];
+		raw_node.children[0] = node1;
+		raw_node.children[1] = node0;
+//		std::swap(raw_node.children[0], raw_node.children[1]);
 	}
 
 

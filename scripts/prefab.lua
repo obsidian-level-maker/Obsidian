@@ -1117,8 +1117,7 @@ function Fab_load_wad(def)
 
     return C2
   end
-
-
+  
   local function create_void_brush(coords)
     local B =
     {
@@ -1127,7 +1126,7 @@ function Fab_load_wad(def)
 
     each C in coords do
       table.insert(B, decode_polygon_side(nil, C, 1))
-    end
+    end        
 
     -- add this new brush to the prefab
     table.insert(fab.brushes, B)
@@ -1166,7 +1165,7 @@ function Fab_load_wad(def)
 
     decode_lighting(S, B[1])
 
-    each C in coords do
+    each C in coords do 
       table.insert(B, decode_polygon_side(S, C, 1))
     end
 

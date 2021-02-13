@@ -35,10 +35,7 @@
 #include "main.h"
 #include "m_lua.h"
 
-
-#define AJ_RANDOM_IMPLEMENTATION
-#include "aj_random.h"
-
+#include "twister.h"
 
 static lua_State *LUA_ST;
 
@@ -52,9 +49,19 @@ static const char *import_dir;
 void Script_Load(const char *name);
 
 
-
-// random number generator
-static aj_Random_c GUI_RNG;
+bool is_dir(char *temp_name)
+	{
+			PHYSFS_Stat stat;
+			PHYSFS_stat(temp_name, &stat);
+			if (stat.filetype == PHYSFS_FILETYPE_DIRECTORY)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+	}
 
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
@@ -228,15 +235,15 @@ static bool scan_dir_process_name(const char *name, const char *parent, const ch
 	// [ generally skip directories, unless match is "DIRS" ]
 
 	char *temp_name = StringPrintf("%s/%s", parent, name);
-	bool is_dir = PHYSFS_isDirectory(temp_name);
+    bool is_it_dir = is_dir(temp_name);
 
 	if (strcmp(match, "DIRS") == 0)
 	{
 		StringFree(temp_name);
-		return is_dir;
+		return is_it_dir;
 	}
 
-	if (is_dir)
+	if (is_it_dir)
 	{
 		StringFree(temp_name);
 		return false;
@@ -254,7 +261,7 @@ static bool scan_dir_process_name(const char *name, const char *parent, const ch
 	if (! fp)
 		return false;
 
-	if (PHYSFS_read(fp, buffer, 1, 1) < 1)
+	if (PHYSFS_readBytes(fp, buffer, 1) < 1)
 	{
 		PHYSFS_close(fp);
 		return false;
@@ -309,7 +316,7 @@ int gui_scan_directory(lua_State *L)
 	// seems this only happens on out-of-memory error
 	if (! got_names)
 	{
-		return luaL_error(L, "gui.scan_directory: %s", PHYSFS_getLastError());
+		return luaL_error(L, "gui.scan_directory: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 
 	// transfer matching names into another list
@@ -644,25 +651,12 @@ int gui_abort(lua_State *L)
 //
 int gui_rand_seed(lua_State *L)
 {
-	double the_seed = luaL_checknumber(L, 1);
-
+	unsigned int the_seed = luaL_checknumber(L, 1);
+	
 	if (the_seed < 0)
 		the_seed = - the_seed;
 
-	double A = fmod(the_seed, 1073741824.0);
-	the_seed = (the_seed - A) / 1073741824.0;
-
-	double B = fmod(the_seed, 1073741824.0);
-	the_seed = (the_seed - B) / 1073741824.0;
-
-	// s1 and s2 are the most important
-	// s3 and s4 are much less significant
-	uint32_t s1 = (uint32_t)A & 0x55555555;
-	uint32_t s2 = (uint32_t)A & 0x2AAAAAAA;
-	uint32_t s3 = (uint32_t)B ^ s1;
-	uint32_t s4 = s2 >> 11;
-
-	GUI_RNG.FullSeed(s1, s2, s3, s4);
+	twister_Reseed(the_seed);
 
 	return 0;
 }
@@ -671,8 +665,8 @@ int gui_rand_seed(lua_State *L)
 //
 int gui_random(lua_State *L)
 {
-	lua_Number value = GUI_RNG.Double();
-
+	lua_Number value = twister_Double();
+	
 	lua_pushnumber(L, value);
 	return 1;
 }
@@ -1153,12 +1147,12 @@ static const char * my_reader(lua_State *L, void *ud, size_t *size)
 	if (PHYSFS_eof(info->fp))
 		return NULL;
 
-	PHYSFS_sint64 len = PHYSFS_read(info->fp, info->buffer, 1, sizeof(info->buffer));
+	PHYSFS_sint64 len = PHYSFS_readBytes(info->fp, info->buffer, sizeof(info->buffer));
 
 	// negative result indicates a "complete failure"
 	if (len < 0)
 	{
-		info->error_msg = StringDup(PHYSFS_getLastError());
+		info->error_msg = StringDup(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		len = 0;
 	}
 
@@ -1185,7 +1179,7 @@ static int my_loadfile(lua_State *L, const char *filename)
 
 	if (! info.fp)
 	{
-		lua_pushfstring(L, "file open error: %s", PHYSFS_getLastError());
+		lua_pushfstring(L, "file open error: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		lua_remove(L, fnameindex);
 
 		return LUA_ERRFILE;

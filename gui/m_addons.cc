@@ -56,13 +56,12 @@ void VFS_AddFolder(const char *name)
 	if (! PHYSFS_mount(path, mount, 0))
 	{
 		Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
-						name, PHYSFS_getLastError());
+						name, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return;  /* NOT REACHED */
 	}
 
 	DebugPrintf("mounted folder '%s'\n", name);
 }
-
 
 bool VFS_AddArchive(const char *filename, bool options_file)
 {
@@ -94,10 +93,10 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 	{
 		if (options_file)
 			LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-					  filename, PHYSFS_getLastError());
+					  filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		else
 			Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
-							filename, PHYSFS_getLastError());
+							filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
 		return false;
 	}
@@ -105,14 +104,13 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 	return true;  // Ok
 }
 
-
 void VFS_InitAddons(const char *argv0)
 {
 	LogPrintf("Initializing VFS...\n");
 
 	if (! PHYSFS_init(argv0))
 	{
-		Main_FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getLastError());
+		Main_FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return;  /* NOT REACHED */
 	}
 
@@ -182,28 +180,18 @@ void VFS_ScanForAddons()
 
 	all_addons.clear();
 
-	char *dir_name = StringPrintf("%s/addons", home_dir);
+	char *dir_name = StringPrintf("%s/addons", install_dir);
 
 	std::vector<std::string> list;
-	int result1 = ScanDir_MatchingFiles(dir_name, "pk3", list);
+	int result = ScanDir_MatchingFiles(dir_name, "pk3", list);
 
 	StringFree(dir_name);
 
-	dir_name = StringPrintf("%s/addons", install_dir);
-
-	std::vector<std::string> list2;
-
-	int result2 = ScanDir_MatchingFiles(dir_name, "pk3", list2);
-
-	if ((result1 < 0) && (result2 < 0))
+	if (result < 0)
 	{
-		LogPrintf("FAILED -- no addon directory found.\n\n");
+		LogPrintf("FAILED -- missing folder??\n\n");
 		return;
 	}
-
-	list.insert(list.end(), list2.begin(), list2.end());
-
-	std::vector<std::string>().swap(list2);
 
 	for (unsigned int i = 0 ; i < list.size() ; i++)
 	{
@@ -263,7 +251,7 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name)
 
 	while (was_OK)
 	{
-		int rlen = (int)PHYSFS_read(src, buffer, 1, sizeof(buffer));
+		int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) / sizeof(buffer));
 		if (rlen < 0)
 			was_OK = false;
 
@@ -304,7 +292,7 @@ byte * VFS_LoadFile(const char *filename, int *length)
 	// ensure buffer is NUL-terminated
 	data[*length] = 0;
 
-	if (PHYSFS_read(fp, data, *length, 1) != 1)
+	if ((PHYSFS_readBytes(fp, data, *length) / *length) != 1)
 	{
 		VFS_FreeFile(data);
 		PHYSFS_close(fp);
@@ -361,11 +349,10 @@ public:
 	{
 		return kf_h(34);
 	}
+
 };
 
-
 //----------------------------------------------------------------------
-
 
 class UI_AddonsWin : public Fl_Window
 {
@@ -413,7 +400,27 @@ private:
 
 	static void callback_Scroll(Fl_Widget *w, void *data)
 	{
-		// FIXME
+
+		UI_AddonsWin *that = (UI_AddonsWin *)data;
+
+		Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
+
+		int previous_y = that->offset_y;
+
+		that->offset_y = sbar->value();
+
+		int dy = that->offset_y - previous_y;
+
+		// simply reposition all the UI_Module widgets
+		for (int j = 0; j < that->pack->children(); j++)
+		{
+			Fl_Widget *F = that->pack->child(j);
+			SYS_ASSERT(F);
+
+			F->resize(F->x(), F->y() - dy, F->w(), F->h());
+		}
+
+		that->pack->redraw();
 	}
 
 	static void callback_Quit(Fl_Widget *w, void *data)
@@ -536,8 +543,39 @@ int UI_AddonsWin::handle(int event)
 
 void UI_AddonsWin::PositionAll()
 {
+	// calculate new total height
+	int new_height = 0;
 	int spacing = 4;
 
+	for (int k = 0 ; k < pack->children() ; k++)
+	{
+		UI_Addon *M = (UI_Addon *) pack->child(k);
+		SYS_ASSERT(M);
+
+		if (M->visible())
+			new_height += M->CalcHeight() + spacing;
+	}
+
+
+	// determine new offset_y
+	if (new_height <= mh)
+	{
+		offset_y = 0;
+	}
+	else
+	{
+		// when not shrinking, offset_y will remain valid
+		if (new_height < total_h)
+			offset_y = 0;
+	}
+
+	total_h = new_height;
+
+	SYS_ASSERT(offset_y >= 0);
+	SYS_ASSERT(offset_y <= total_h);
+
+
+	// reposition all the modules
 	int ny = my - offset_y;
 
 	for (int j = 0 ; j < pack->children() ; j++)
@@ -545,15 +583,17 @@ void UI_AddonsWin::PositionAll()
 		UI_Addon *M = (UI_Addon *) pack->child(j);
 		SYS_ASSERT(M);
 
-		int nh = kf_h(34);
+		int nh = M->visible() ? M->CalcHeight() : 1;
 
 		if (ny != M->y() || nh != M->h())
 		{
 			M->resize(M->x(), ny, M->w(), nh);
 		}
 
-		ny += nh + spacing;
+		if (M->visible())
+			ny += M->CalcHeight() + spacing;
 	}
+
 
 	// p = position, first line displayed
 	// w = window, number of lines displayed
@@ -562,6 +602,7 @@ void UI_AddonsWin::PositionAll()
 	sbar->value(offset_y, mh, 0, total_h);
 
 	pack->redraw();
+
 }
 
 
@@ -636,7 +677,7 @@ void DLG_SelectAddons(void)
 		// persist the changed addon list into OPTIONS.txt
 		Options_Save(options_file);
 
-		fl_alert(_("Changes to addons require a restart.\nOBLIGE will now close."));
+		fl_alert("%s", _("Changes to addons require a restart.\nOBLIGE will now close."));
 
 		main_action = MAIN_QUIT;
 	}

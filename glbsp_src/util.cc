@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -36,6 +37,7 @@
 #else
 #include <time.h>
 #endif
+
 
 
 //
@@ -94,7 +96,7 @@ char *UtilStrDup(const char *str)
   result = (char *) UtilCalloc(len+1);
 
   if (len > 0)
-    memcpy(result, str, len);
+    memcpy(result, str, len); //TODO: V575 https://www.viva64.com/en/w/v575/ The potential null pointer is passed into 'memcpy' function. Inspect the first argument.
   
   result[len] = 0;
 
@@ -139,7 +141,7 @@ char *UtilFormat(const char *str, ...)
 
     buf_size *= 2;
 
-    buf = (char *) realloc(buf, buf_size);
+    buf = (char *) realloc(buf, buf_size); //TODO: V701 https://www.viva64.com/en/w/v701/ realloc() possible leak: when realloc() fails in allocating memory, original pointer 'buf' is lost. Consider assigning realloc() to a temporary pointer.
     if (!buf)
       FatalError("Out of memory (formatting string)");
 

@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------
 //
 //  GL-Friendly Node Builder (C) 2000-2007 Andrew Apted
+//  (C) 2017-2018 The EDGE Team
 //
 //  Based on 'BSP 2.3' by Colin Reed, Lee Killough and others.
 //
@@ -247,7 +248,7 @@ void GetVertices(void)
   if (!lump || count == 0)
     FatalError("Couldn't find any Vertices");
 
-  raw = (raw_vertex_t *) lump->data;
+  raw = (raw_vertex_t *) lump->data; //TODO: V1004 https://www.viva64.com/en/w/v1004/ The 'lump' pointer was used unsafely after it was verified against nullptr. Check lines: 239, 251.
 
   for (i=0; i < count; i++, raw++)
   {
@@ -1400,8 +1401,8 @@ static void PutOneZNode(node_t *node)
   else
     InternalError("Bad left child in V5 node %d", node->index);
 
-  ZLibAppendLump(&raw.right, 4);
-  ZLibAppendLump(&raw.left,  4);
+  ZLibAppendLump(&raw.right, 4); //TODO: V614 https://www.viva64.com/en/w/v614/ Potentially uninitialized variable 'raw.right' used. Consider checking the first actual argument of the 'ZLibAppendLump' function.
+  ZLibAppendLump(&raw.left,  4); //TODO: V614 https://www.viva64.com/en/w/v614/ Potentially uninitialized variable 'raw.left' used. Consider checking the first actual argument of the 'ZLibAppendLump' function.
 
 # if DEBUG_BSP
   PrintDebug("PUT Z NODE %08X  Left %08X  Right %08X  "
@@ -1730,4 +1731,3 @@ void SaveLevel(node_t *root_node)
   // so that we use the new VERTEXES lump in the checksum.
   PutGLChecksum();
 }
-
