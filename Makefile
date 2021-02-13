@@ -13,7 +13,7 @@
 PROGRAM=Oblige
 
 # prefix choices: /usr  /usr/local  /opt
-PREFIX=/usr/local
+PREFIX=/usr
 
 SCRIPT_DIR=$(PREFIX)/share/oblige
 
