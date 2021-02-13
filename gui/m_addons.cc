@@ -63,6 +63,7 @@ void VFS_AddFolder(const char *name)
 	DebugPrintf("mounted folder '%s'\n", name);
 }
 
+
 bool VFS_AddArchive(const char *filename, bool options_file)
 {
 	LogPrintf("  using: %s\n", filename);
@@ -79,12 +80,7 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 		(! FileExists(filename) &&
 		 filename == fl_filename_name(filename)))
 	{
-		char *new_name = StringPrintf("%s/addons/%s", home_dir, filename);
-		if (! FileExists(new_name))
-		{
-			StringFree(new_name);
-			new_name = StringPrintf("%s/addons/%s", install_dir, filename);
-		}
+		char *new_name = StringPrintf("%s/addons/%s", install_dir, filename);
 		StringFree(filename);
 		filename = new_name;
 	}
@@ -103,6 +99,7 @@ bool VFS_AddArchive(const char *filename, bool options_file)
 
 	return true;  // Ok
 }
+
 
 void VFS_InitAddons(const char *argv0)
 {
