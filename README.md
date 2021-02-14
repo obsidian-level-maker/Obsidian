@@ -29,6 +29,8 @@ This is a fork containing some changes and updates to Oblige, as well as some qu
 
 A brief summary of changes:
 
+Overhaul of Lua-related scripts and functions to support Lua 5.4.x (in progress)
+
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
 
 Strings allowed for seed input (numbers with no other characters still processed as numbers).
