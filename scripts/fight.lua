@@ -54,7 +54,7 @@ Notes
    Your weapons can damage other monsters though, via such things
    as rocket splash, BFG spray, and shotgun spread.
 
-*  Weapons are "fired" in short rounds.  Each round the weapon is
+*  Weapons are "fired" in short rounds.  for round the weapon is
    chosen based on their intrinsic 'pref' value (and modified by a
    'factor' value if present), as well as other things like the
    'weap_prefs' of the current monster.  The weapon's damage is
@@ -72,9 +72,9 @@ Notes
    bonuses for the player.
 
 *  Infighting between monsters is modelled via 'infight_damage'
-   field of each monster.  Those values were determined from
+   field of for monster.  Those values were determined from
    demo analysis and represent an average amount of damage which
-   each monster of that kind inflicts on other monsters.
+   for monster of that kind inflicts on other monsters.
 
 
 ----------------------------------------------------------------]]
@@ -102,10 +102,10 @@ function Fight_Simulator(monsters, weapons, stats)
     local first_mon = active_mons[1].info
     assert(first_mon)
 
-    -- determine probability for each weapon
+    -- determine probability for for weapon
     local prob_tab = {}
 
-    each W in weapons do
+    for W in weapons do
       local prob = W.info.pref
 
       prob = prob * (W.factor or 1)
@@ -188,17 +188,17 @@ function Fight_Simulator(monsters, weapons, stats)
     -- have a reasonable default
     if sheet then
       result = sheet.paired[species1 .. "__" .. species2]
-      if result != nil then return result end
+      if result ~= nil then return result end
 
       -- try the pair reversed (assumes X__Y and Y__X are equivalent)
       result = sheet.paired[species2 .. "__" .. species1]
-      if result != nil then return result end
+      if result ~= nil then return result end
 
       result = sheet.defaults[species1]
-      if result != nil then return result end
+      if result ~= nil then return result end
 
       result = sheet.defaults["ALL"]
-      if result != nil then return result end
+      if result ~= nil then return result end
     end
 
     return true
@@ -213,13 +213,14 @@ function Fight_Simulator(monsters, weapons, stats)
 
     local total_weight = 0
 
-    each P in active_mons do
-      if P == M then continue end
+    for P in active_mons do
+      if P == M then goto continue end
 
       if can_infight(M.info, P.info) then
         table.insert(others, P)
         total_weight = total_weight + P.info.health
       end
+      ::continue::
     end
 
     -- nothing else to fight with?
@@ -235,7 +236,7 @@ function Fight_Simulator(monsters, weapons, stats)
     -- bump up the damage (higher than demo analysis, but seems necessary)
     damage = damage * 1.5
 
-    each P in others do
+    for P in others do
       -- damage is weighted, bigger monsters get a bigger share
       local factor = P.info.health / total_weight
 
@@ -257,7 +258,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
   stats.health = stats.health or 0
 
-  each M in monsters do
+  for M in monsters do
     local MON = table.copy(M)
 
     MON.health = MON.info.health
@@ -271,14 +272,14 @@ function Fight_Simulator(monsters, weapons, stats)
       function(A, B) return A.order > B.order end)
 
   -- compute health needed by player
-  each M in active_mons do
+  for M in active_mons do
     stats.health = stats.health + M.info.damage
   end
 
   -- simulate infighting
   -- [ done *after* computing player health, as the damage values are based
   --   on demo analysis and implicitly contain an infighing factor ]
-  each M in active_mons do
+  for M in active_mons do
     monster_infight(M)
   end
 

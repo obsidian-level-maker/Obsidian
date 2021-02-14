@@ -40,23 +40,23 @@ gui.import("resources")
 
 OB_GAMES["doom2"] =
 {
-  label = _("Doom 2")
+  label = _("Doom 2"),
 
-  priority = 99  -- keep at top
+  priority = 99,  -- keep at top
 
-  format = "doom"
-  game_dir = "doom"
-  iwad_name = "doom2.wad"
+  format = "doom",
+  game_dir = "doom",
+  iwad_name = "doom2.wad",
 
   tables =
   {
     DOOM
-  }
+  },
 
   hooks =
   {
-    get_levels = DOOM.get_levels
-    end_level  = DOOM.end_level
+    get_levels = DOOM.get_levels,
+    end_level  = DOOM.end_level,
     all_done   = DOOM.all_done
   }
 }

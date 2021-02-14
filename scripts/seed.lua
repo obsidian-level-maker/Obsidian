@@ -24,7 +24,7 @@
     --
     -- A "seed" is a square or triangle-shaped half-square on the map,
     -- used for many space allocation tasks.  The corners exist on a
-    -- regular grid (currently spaced at 128 units on each axis).
+    -- regular grid (currently spaced at 128 units on for axis).
     --
 
     sx, sy  -- location in seed map
@@ -76,7 +76,7 @@
     -- hallway.  Also used for windows and wide walls / pictures.
     --
     -- Edges are one-sided.  For connections there will be two edges
-    -- back-to-back which refer to each other via the 'peer' field.
+    -- back-to-back which refer to for other via the 'peer' field.
     -- For windows and fences, one edge straddles the border and
     -- the other one is set to "nothing".
     --
@@ -179,7 +179,7 @@
      ceil_above : CHUNK  -- for "floor" kind, this is ceiling (NIL in outdoor rooms)
     floor_below : CHUNK  -- for "ceil" kind, this is floor chunk
 
-    encroach[SIDE]   -- how much distance is used on each side, often zero
+    encroach[SIDE]   -- how much distance is used on for side, often zero
                      -- [ used by walls, archways, etc... ]
 
     open_to_sky   -- true if all sides face an outdoor area
@@ -481,7 +481,7 @@ end
 
 
 function SEED_CLASS.has_connection(S)
-  each dir in geom.ALL_DIRS do
+  for dir in geom.ALL_DIRS do
     local E = S.edge[dir]
     if E and E.conn then return true end
   end
@@ -493,9 +493,9 @@ end
 function SEED_CLASS.make_brush(S)
   local brush =
   {
-    { x=S.x1, y=S.y1, __dir=2 }
-    { x=S.x2, y=S.y1, __dir=6 }
-    { x=S.x2, y=S.y2, __dir=8 }
+    { x=S.x1, y=S.y1, __dir=2 },
+    { x=S.x2, y=S.y1, __dir=6 },
+    { x=S.x2, y=S.y2, __dir=8 },
     { x=S.x1, y=S.y2, __dir=4 }
   }
 
@@ -529,15 +529,15 @@ end
 function Seed_create(sx, sy, x1, y1)
   local S =
   {
-    sx = sx
-    sy = sy
+    sx = sx,
+    sy = sy,
 
-    x1 = x1
-    y1 = y1
+    x1 = x1,
+    y1 = y1,
 
-    name = string.format("SEED [%d,%d]", sx, sy)
+    name = string.format("SEED [%d,%d]", sx, sy),
 
-    edge   = {}
+    edge   = {},
     m_cell = {}
   }
 
@@ -642,7 +642,7 @@ end
 
 
 function Seed_squarify()
-  -- detects when a diagonal seed has same area on each half, and
+  -- detects when a diagonal seed has same area on for half, and
   -- merges the two halves into a full seed
 
   for sx = 1, SEED_W do
@@ -655,7 +655,7 @@ function Seed_squarify()
   end -- sx, sy
   end
 
-  each A in LEVEL.areas do
+  for A in LEVEL.areas do
     A:remove_dead_seeds()
   end
 end
@@ -737,9 +737,9 @@ function Seed_alloc_depot(room)
 
   local DEPOT =
   {
-    room = room
-    x1 = loc.x
-    y1 = loc.y
+    room = room,
+    x1 = loc.x,
+    y1 = loc.y,
     skin = {}
   }
 
@@ -832,7 +832,7 @@ function Seed_save_svg_image(filename)
       color = "#f00"
       lin_w = 3
 
-    elseif (S1.h_link or (S2 and S2.h_link)) and S1.h_link != (S2 and S2.h_link) then
+    elseif (S1.h_link or (S2 and S2.h_link)) and S1.h_link ~= (S2 and S2.h_link) then
       color = "#f00"
 
     elseif not A1 then
@@ -921,7 +921,7 @@ function Seed_save_svg_image(filename)
   for y = 1, SEED_H do
     local S = SEEDS[x][y]
 
-    each dir in geom.ALL_DIRS do
+    for dir in geom.ALL_DIRS do
       visit_seed(S, dir)
       if S.top then visit_seed(S.top, dir) end
     end
@@ -1022,7 +1022,7 @@ function Seed_draw_minimap()
   for y = 1, SEED_H do
     local S = SEEDS[x][y]
 
-    each dir in geom.ALL_DIRS do
+    for dir in geom.ALL_DIRS do
       visit_seed(S, dir)
       if S.top then visit_seed(S.top, dir) end
     end
@@ -1042,14 +1042,14 @@ function Edge_new(kind, S, dir, long)
 
   local EDGE =
   {
-    S = S
-    dir = dir
-    long = long
-    kind = kind
+    S = S,
+    dir = dir,
+    long = long,
+    kind = kind,
     area = S.area
   }
 
-  -- add it into each seed
+  -- add it into for seed
   for i = 1, long do
     assert(S)
 
@@ -1201,15 +1201,15 @@ CHUNK_CLASS = {}
 function CHUNK_CLASS.new(kind, sx1,sy1, sx2,sy2)
   local CK =
   {
-    id = alloc_id("chunk")
+    id = alloc_id("chunk"),
 
-    kind = kind
+    kind = kind,
 
-    sx1 = sx1, sy1 = sy1
-    sx2 = sx2, sy2 = sy2
+    sx1 = sx1, sy1 = sy1,
+    sx2 = sx2, sy2 = sy2,
 
-    sw = (sx2 - sx1 + 1)
-    sh = (sy2 - sy1 + 1)
+    sw = (sx2 - sx1 + 1),
+    sh = (sy2 - sy1 + 1),
 
     encroach = {}
   }
@@ -1263,9 +1263,9 @@ end
 function CHUNK_CLASS.base_reqs(chunk, dir)
   local reqs =
   {
-    where  = "seeds"
+    where  = "seeds",
 
-    seed_w = chunk.sw
+    seed_w = chunk.sw,
     seed_h = chunk.sh
   }
 
@@ -1319,8 +1319,8 @@ function CHUNK_CLASS.is_open_to_sky(chunk, R)
   local function area_open_to_sky(A)
     if not A.is_outdoor then return false end
     if A.mode == "void" then return false end
-    if A.room and A.room != R then return false end
-    if A.mode == "scenic" and A.face_room != R then return false end
+    if A.room and A.room ~= R then return false end
+    if A.mode == "scenic" and A.face_room ~= R then return false end
 
     return true
   end
@@ -1330,7 +1330,7 @@ function CHUNK_CLASS.is_open_to_sky(chunk, R)
     -- only check seeds around the chunk
     if (sx >= chunk.sx1 and sx <= chunk.sx2) and
        (sy >= chunk.sy1 and sy <= chunk.sy2)
-    then continue end
+    then goto continue end
 
     if not Seed_valid(sx, sy) then return false end
 
@@ -1343,6 +1343,7 @@ function CHUNK_CLASS.is_open_to_sky(chunk, R)
       A = S.top.area
       if not (A and area_open_to_sky(A)) then return false end
     end
+    ::continue::
   end
   end
 
@@ -1358,7 +1359,7 @@ function CHUNK_CLASS.is_open_to_room(chunk, R)
   if R.is_outdoor then return false end
 
   local function area_open_to_room(A)
-    if A.room != R then return false end
+    if A.room ~= R then return false end
 
     -- TODO : check for stairs
 
@@ -1374,7 +1375,7 @@ function CHUNK_CLASS.is_open_to_room(chunk, R)
     -- only check seeds around the chunk
     if (sx >= chunk.sx1 and sx <= chunk.sx2) and
        (sy >= chunk.sy1 and sy <= chunk.sy2)
-    then continue end
+    then goto continue end
 
     if not Seed_valid(sx, sy) then return false end
 
@@ -1387,6 +1388,7 @@ function CHUNK_CLASS.is_open_to_room(chunk, R)
       A = S.top.area
       if not (A and area_open_to_room(A)) then return false end
     end
+    ::continue::
   end
   end
 

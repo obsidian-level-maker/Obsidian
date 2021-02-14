@@ -216,9 +216,9 @@ int DM_wad_logo_gfx(lua_State *L)
 	if (strchr(kind, 'm'))
 		realign = true;
 
-	int new_W  = luaL_checkint(L, 4);
-	int new_H  = luaL_checkint(L, 5);
-	int map_id = luaL_checkint(L, 6);
+	int new_W  = luaL_checkinteger(L, 4);
+	int new_H  = luaL_checkinteger(L, 5);
+	int map_id = luaL_checkinteger(L, 6);
 
 	if (new_W < 1) return luaL_argerror(L, 4, "bad width");
 	if (new_H < 1) return luaL_argerror(L, 5, "bad height");
@@ -297,9 +297,9 @@ int DM_fsky_create(lua_State *L)
 {
 	// LUA: fsky_create(width, height, bg_col)
 
-	int W  = luaL_checkint(L, 1);
-	int H  = luaL_checkint(L, 2);
-	int bg = luaL_checkint(L, 3);
+	int W  = luaL_checkinteger(L, 1);
+	int H  = luaL_checkinteger(L, 2);
+	int bg = luaL_checkinteger(L, 3);
 
 	sky_final_W = W;
 
@@ -347,12 +347,12 @@ int DM_fsky_solid_box(lua_State *L)
 {
 	// LUA: fsky_solid_box(x, y, w, h, col)
 
-	int x1 = luaL_checkint(L, 1);
-	int y1 = luaL_checkint(L, 2);
-	int x2 = x1 + luaL_checkint(L, 3);
-	int y2 = y1 + luaL_checkint(L, 4);
+	int x1 = luaL_checkinteger(L, 1);
+	int y1 = luaL_checkinteger(L, 2);
+	int x2 = x1 + luaL_checkinteger(L, 3);
+	int y2 = y1 + luaL_checkinteger(L, 4);
 
-	int col = luaL_checkint(L, 5);
+	int col = luaL_checkinteger(L, 5);
 
 	SYS_ASSERT(sky_pixels);
 
@@ -391,8 +391,8 @@ int DM_fsky_add_stars(lua_State *L)
 	lua_getfield(L, 1, "power");
 	lua_getfield(L, 1, "thresh");
 
-	if (! lua_isnil(L, -4)) seed     = luaL_checkint(L, -4);
-	if (! lua_isnil(L, -3)) map_id   = luaL_checkint(L, -3);
+	if (! lua_isnil(L, -4)) seed     = luaL_checkinteger(L, -4);
+	if (! lua_isnil(L, -3)) map_id   = luaL_checkinteger(L, -3);
 	if (! lua_isnil(L, -2)) powscale = luaL_checknumber(L, -2);
 	if (! lua_isnil(L, -1)) thresh   = luaL_checknumber(L, -1);
 
@@ -436,8 +436,8 @@ int DM_fsky_add_clouds(lua_State *L)
 	lua_getfield(L, 1, "seed");
 	lua_getfield(L, 1, "colmap");
 
-	if (! lua_isnil(L, -2)) seed     = luaL_checkint(L, -2);
-	if (! lua_isnil(L, -1)) map_id   = luaL_checkint(L, -1);
+	if (! lua_isnil(L, -2)) seed     = luaL_checkinteger(L, -2);
+	if (! lua_isnil(L, -1)) map_id   = luaL_checkinteger(L, -1);
 
 	lua_pop(L, 2);
 
@@ -499,8 +499,8 @@ int DM_fsky_add_hills(lua_State *L)
 	lua_getfield(L, 1, "seed");
 	lua_getfield(L, 1, "colmap");
 
-	if (! lua_isnil(L, -2)) seed     = luaL_checkint(L, -2);
-	if (! lua_isnil(L, -1)) map_id   = luaL_checkint(L, -1);
+	if (! lua_isnil(L, -2)) seed     = luaL_checkinteger(L, -2);
+	if (! lua_isnil(L, -1)) map_id   = luaL_checkinteger(L, -1);
 
 	lua_pop(L, 2);
 
@@ -681,7 +681,7 @@ int DM_wad_name_gfx(lua_State *L)
 	const char *patch = luaL_checkstring(L, 1);
 	const char *text  = luaL_checkstring(L, 2);
 
-	int map_id = luaL_checkint(L, 3);
+	int map_id = luaL_checkinteger(L, 3);
 
 	if (map_id < 1 || map_id > MAX_COLOR_MAPS)
 		return luaL_argerror(L, 1, "colmap value out of range");
@@ -1358,8 +1358,8 @@ int DM_title_create(lua_State *L)
 {
 	// LUA: title_create(width, height, bg)
 
-	int W = luaL_checkint(L, 1);
-	int H = luaL_checkint(L, 2);
+	int W = luaL_checkinteger(L, 1);
+	int H = luaL_checkinteger(L, 2);
 
 	rgb_color_t bg = Grab_Color(L, 3);
 
@@ -1682,14 +1682,14 @@ int DM_title_property(lua_State *L)
 		title_drawctx.color[3] = Grab_Color(L, 2);
 
 	else if (strcmp(propname, "box_w") == 0)
-		title_drawctx.box_w = luaL_checkint(L, 2);
+		title_drawctx.box_w = luaL_checkinteger(L, 2);
 	else if (strcmp(propname, "box_h") == 0)
-		title_drawctx.box_h = luaL_checkint(L, 2);
+		title_drawctx.box_h = luaL_checkinteger(L, 2);
 
 	else if (strcmp(propname, "grad_y1") == 0)
-		title_drawctx.grad_y1 = luaL_checkint(L, 2);
+		title_drawctx.grad_y1 = luaL_checkinteger(L, 2);
 	else if (strcmp(propname, "grad_y2") == 0)
-		title_drawctx.grad_y2 = luaL_checkint(L, 2);
+		title_drawctx.grad_y2 = luaL_checkinteger(L, 2);
 
 	else if (strcmp(propname, "pen_type") == 0)
 		TitleParsePen(luaL_checkstring(L, 2));
@@ -2166,10 +2166,10 @@ int DM_title_draw_rect(lua_State *L)
 {
 	// LUA: title_draw_rect(x, y, w, h)
 
-	int x = luaL_checkint(L, 1);
-	int y = luaL_checkint(L, 2);
-	int w = luaL_checkint(L, 3);
-	int h = luaL_checkint(L, 4);
+	int x = luaL_checkinteger(L, 1);
+	int y = luaL_checkinteger(L, 2);
+	int w = luaL_checkinteger(L, 3);
+	int h = luaL_checkinteger(L, 4);
 
 	SYS_ASSERT(title_pix);
 
@@ -2182,10 +2182,10 @@ int DM_title_draw_disc(lua_State *L)
 {
 	// LUA: title_draw_disc(x, y, w, h)
 
-	int x = luaL_checkint(L, 1);
-	int y = luaL_checkint(L, 2);
-	int w = luaL_checkint(L, 3);
-	int h = luaL_checkint(L, 4);
+	int x = luaL_checkinteger(L, 1);
+	int y = luaL_checkinteger(L, 2);
+	int w = luaL_checkinteger(L, 3);
+	int h = luaL_checkinteger(L, 4);
 
 	SYS_ASSERT(title_pix);
 
@@ -2198,10 +2198,10 @@ int DM_title_draw_line(lua_State *L)
 {
 	// LUA: title_draw_line(x1, y1, x2, y2)
 
-	int x1 = luaL_checkint(L, 1);
-	int y1 = luaL_checkint(L, 2);
-	int x2 = luaL_checkint(L, 3);
-	int y2 = luaL_checkint(L, 4);
+	int x1 = luaL_checkinteger(L, 1);
+	int y1 = luaL_checkinteger(L, 2);
+	int x2 = luaL_checkinteger(L, 3);
+	int y2 = luaL_checkinteger(L, 4);
 
 	TDraw_Line(x1*3, y1*3, x2*3, y2*3);
 	return 0;
@@ -2212,8 +2212,8 @@ int DM_title_load_image(lua_State *L)
 {
 	// LUA: title_load_image(x, y, filename)
 
-	int x = luaL_checkint(L, 1);
-	int y = luaL_checkint(L, 2);
+	int x = luaL_checkinteger(L, 1);
+	int y = luaL_checkinteger(L, 2);
 
 	const char *filename = luaL_checkstring(L, 3);
 
@@ -2230,7 +2230,7 @@ int DM_title_draw_clouds(lua_State *L)
 {
 	// LUA: title_draw_clouds(seed, hue1,hue2,hue3, thresh, power, fracdim)
 
-	int seed = luaL_checkint(L, 1);
+	int seed = luaL_checkinteger(L, 1);
 
 	rgb_color_t hue1 = Grab_Color(L, 2);
 	rgb_color_t hue2 = Grab_Color(L, 3);
@@ -2314,13 +2314,13 @@ int DM_title_draw_planet(lua_State *L)
 	// LUA: title_draw_planet(x,y,r, seed, flags, hue1,hue2,hue3)
 
 #if 0
-	int px = luaL_checkint(L, 1);
-	int py = luaL_checkint(L, 2);
+	int px = luaL_checkinteger(L, 1);
+	int py = luaL_checkinteger(L, 2);
 
-	int ph = luaL_checkint(L, 3);
+	int ph = luaL_checkinteger(L, 3);
 	int pw = ph * 5 / 4;
 
-	int seed = luaL_checkint(L, 4);
+	int seed = luaL_checkinteger(L, 4);
 
 	const char *flag_str = luaL_checkstring(L, 5);
 

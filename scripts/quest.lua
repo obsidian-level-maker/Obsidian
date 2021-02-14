@@ -129,10 +129,10 @@ function Quest_new()
 
   local QUEST =
   {
-    id = id
-    name  = "QUEST_" .. id
-    rooms = {}
-    goals = {}
+    id = id,
+    name  = "QUEST_" .. id,
+    rooms = {},
+    goals = {},
     svolume = 0
   }
 
@@ -157,9 +157,9 @@ function Zone_new()
 
   local ZONE =
   {
-    id = id
-    name = "ZONE_" .. id
-    rooms = {}
+    id = id,
+    name = "ZONE_" .. id,
+    rooms = {},
     areas = {}
   }
 
@@ -174,8 +174,8 @@ function Goal_new(kind)
 
   local GOAL =
   {
-    id = id
-    name = "GOAL_" .. (kind or "XX") .. "_" .. id
+    id = id,
+    name = "GOAL_" .. (kind or "XX") .. "_" .. id,
     kind = kind
   }
 
@@ -187,7 +187,7 @@ end
 function Quest_size_of_room_set(rooms)
   local total = 0
 
-  each id, R in rooms do
+  for id, R in rooms do
     total = total + R.svolume
   end
 
@@ -221,7 +221,7 @@ function Quest_create_initial_quest()
 
       if conn.kind == "joiner" then
         -- no L-shape joiners!
-        if conn.joiner_chunk.shape != "I" then return -1 end
+        if conn.joiner_chunk.shape ~= "I" then return -1 end
       end
 
       -- don't waste big rooms on a secret exit
@@ -260,7 +260,7 @@ function Quest_create_initial_quest()
     local best
     local best_score = 0
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       local score = eval_exit_room(R, secret_mode)
 
       if score > best_score then
@@ -363,7 +363,7 @@ function Quest_create_initial_quest()
   -- this quest becomes head of the quest tree
   LEVEL.quest_root = Q
 
-  each R in LEVEL.rooms do
+  for R in LEVEL.rooms do
     R.quest = Q
 
     Q.rooms[R.id] = R
@@ -416,11 +416,11 @@ function Quest_eval_divide_at_conn(C, goal, info)
   local function collect_rooms(R, list)
     list[R.id] = R
 
-    each C2 in R.conns do
+    for C2 in R.conns do
       -- never pass through connection we are examining
-      if C2 == C then continue end
+      if C2 == C then goto continue end
 
-      if not same_quest(C2) then continue end
+      if not same_quest(C2) then goto continue end
 
       local R2
       if C2.R1 == R then
@@ -430,9 +430,10 @@ function Quest_eval_divide_at_conn(C, goal, info)
       end
 
       -- already seen?
-      if list[R2.id] then continue end
+      if list[R2.id] then goto continue end
 
       collect_rooms(R2, list)
+      ::continue::
     end
 
     return list
@@ -442,7 +443,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
   local function room_exits_in_set(R, rooms)
     local count = 0
 
-    each C in R.conns do
+    for C in R.conns do
       local R2 = C:other_room(R)
 
       if rooms[R2.id] then count = count + 1 end
@@ -457,22 +458,23 @@ function Quest_eval_divide_at_conn(C, goal, info)
   local function unused_rooms_in_set(rooms)
     local leafs = {}
 
-    each id, R in rooms do
-      if R.is_secret then continue end
+    for id, R in rooms do
+      if R.is_secret then goto continue end
 
-      if R.is_hallway then continue end
+      if R.is_hallway then goto continue end
 
       -- some goals already?
-      if #R.goals > 0 then continue end
+      if #R.goals > 0 then goto continue end
 
-      if quest.entry and quest.entry == R then continue end
+      if quest.entry and quest.entry == R then goto continue end
 
       -- skip the room immediately next to the proposed connection
-      if C.R1 == R or C.R2 == R then continue end
+      if C.R1 == R or C.R2 == R then goto continue end
 
       if room_exits_in_set(R, rooms) == 1 then
         table.add_unique(leafs, R)
       end
+      ::continue::
     end
 
     return leafs
@@ -541,15 +543,15 @@ gui.debugf("  quest : %s\n", quest.name)
     return
   end
 
-  -- collect rooms on each side of the connection
+  -- collect rooms on for side of the connection
   local before = collect_rooms(C.R1, {})
   local  after = collect_rooms(C.R2, {})
 
 --[[
 stderrf("BEFORE =\n  ")
-each id,_ in before do stderrf("%d ", id) end stderrf("\n\n")
+for id,_ in before do stderrf("%d ", id) end stderrf("\n\n")
 stderrf("AFTER =\n  ")
-each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
+for id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
 --]]
 
   local before_R = C.R1
@@ -632,7 +634,7 @@ function Quest_perform_division(info)
 
 
   local function assign_quest(Q)
-    each id, R in Q.rooms do
+    for id, R in Q.rooms do
       R.quest = Q
     end
   end
@@ -667,7 +669,7 @@ gui.debugf("   %s\n", targ.name)
     local best
     local best_score = 0
 
-    each R in info.leafs do
+    for R in info.leafs do
       local score = eval_goal_room(Q1, R)
 
       if score > best_score then
@@ -709,7 +711,7 @@ gui.debugf("   %s\n", targ.name)
 
 gui.debugf("PLACING NEW GOALS:\n")
 
-    each goal in info.new_goals do
+    for goal in info.new_goals do
       local R = pick_room_for_goal(Q1)
 
 gui.debugf("  %s @ %s in %s\n", goal.name, R.name, Q1.name)
@@ -787,33 +789,34 @@ function Quest_scan_all_conns(new_goals, do_quest)
 
   local info =
   {
-    new_goals = new_goals
+    new_goals = new_goals,
     score = 0
   }
 
   local need_joiner = (#new_goals >= 2 or new_goals[1].kind == "SWITCH")
 
 
-  each C in LEVEL.conns do
+  for C in LEVEL.conns do
     local quest = C.R1.quest
     assert(quest)
 
-    if do_quest and quest != do_quest then continue end
+    if do_quest and quest ~= do_quest then goto continue end
 
     if need_joiner and
        not (C.kind == "joiner" and
             C.joiner_chunk.shape == "I" and
             (C.joiner_chunk.sw >= 2 or C.joiner_chunk.sh >= 2))
     then
-      continue
+      goto continue
     end
 
-    -- must be same quest on each side
-    if C.R2.quest != quest then continue end
+    -- must be same quest on for side
+    if C.R2.quest ~= quest then goto continue end
 
-    each goal in quest.goals do
+    for goal in quest.goals do
       Quest_eval_divide_at_conn(C, goal, info)
     end
+    ::continue::
   end
 
 
@@ -846,7 +849,7 @@ function Quest_add_major_quests()
   local function count_unused_leafs(quest)
     local unused = 0
 
-    each id, R in quest.rooms do
+    for id, R in quest.rooms do
       if R:is_unused_leaf() then
         unused = unused + 1
       end
@@ -859,10 +862,10 @@ function Quest_add_major_quests()
   local function collect_key_goals(list)
     local key_tab = LEVEL.usable_keys or THEME.keys or {}
 
-    local each_prob = style_sel("keys", 0, 40, 80, 100)
+    local for_prob = style_sel("keys", 0, 40, 80, 100)
 
-    each name,_ in key_tab do
-      if rand.odds(each_prob) then
+    for name,_ in key_tab do
+      if rand.odds(for_prob) then
         local GOAL = Goal_new("KEY")
 
         GOAL.item = name
@@ -880,7 +883,7 @@ function Quest_add_major_quests()
     if THEME.no_switches then return end
 
     local  any_prob = style_sel("switches", 0, 50, 75, 100)
-    local each_prob = style_sel("switches", 0, 35, 65, 95)
+    local for_prob = style_sel("switches", 0, 35, 65, 95)
 
     if not rand.odds(any_prob) then return {} end
 
@@ -888,7 +891,7 @@ function Quest_add_major_quests()
     local max_num = 1 + int(#LEVEL.rooms / 5)
 
     for i = 1, max_num do
-      if rand.odds(each_prob) then
+      if rand.odds(for_prob) then
         local GOAL = Goal_new("SWITCH")
 
         GOAL.item = "sw_metal"
@@ -909,7 +912,7 @@ function Quest_add_major_quests()
 
     local prob_tab = {}
 
-    each goal in list do
+    for goal in list do
       prob_tab[_index] = assert(goal.prob)
     end
 
@@ -1037,7 +1040,7 @@ do return false end
     local list = table.copy(LEVEL.quests)
     rand.shuffle(list)
 
-    each Q in list do
+    for Q in list do
       lock_up_a_quest(Q, goal_list)
     end
   end
@@ -1088,7 +1091,7 @@ do return false end
 
 
   -- fixup quest sizes
-  each Q in LEVEL.quests do
+  for Q in LEVEL.quests do
     Q.svolume = Quest_size_of_room_set(Q.rooms)
   end
 end
@@ -1110,7 +1113,7 @@ function Quest_create_zones()
     --
     local total_svol = 0
 
-    each A in LEVEL.areas do
+    for A in LEVEL.areas do
       if A.room then
         total_svol = total_svol + A.svolume
       end
@@ -1145,7 +1148,7 @@ function Quest_create_zones()
 
     table.insert(zone.rooms, R)
 
-    each A in R.areas do
+    for A in R.areas do
       assign_area(A, zone)
     end
   end
@@ -1154,8 +1157,8 @@ function Quest_create_zones()
   local function other_zone(unwanted_zone)
     local list = {}
 
-    each Z in LEVEL.zones do
-      if Z != unwanted_zone then
+    for Z in LEVEL.zones do
+      if Z ~= unwanted_zone then
         table.insert(list, Z)
       end
     end
@@ -1169,7 +1172,7 @@ function Quest_create_zones()
 
 
   local function check_if_finished()
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       if not R.zone then return false end
     end
 
@@ -1181,17 +1184,17 @@ function Quest_create_zones()
     local conn_list = table.copy(LEVEL.conns)
     rand.shuffle(conn_list)
 
-    each C in conn_list do
+    for C in conn_list do
       local R = C.R1
       local N = C.R2
 
-      if R.zone and N.zone then continue end
+      if R.zone and N.zone then goto continue end
 
       if not R.zone then R, N = N, R end
-      if not R.zone then continue end
+      if not R.zone then goto continue end
 
       -- prefer not to cross quest boundaries
-      if C.lock and not do_locks then continue end
+      if C.lock and not do_locks then goto continue end
 
       if C.is_secret or C.kind == "teleporter" or C.lock then
         assign_room(N, other_zone(R.zone))
@@ -1199,12 +1202,13 @@ function Quest_create_zones()
         -- only do one locked connection per group
         if C.lock then return end
 
-        continue
+        goto continue
       end
 
       if rand.odds(50) then
         assign_room(N, R.zone)
       end
+      ::continue::
     end
 
 -- stderrf("spread_zones_via_conns: done = %s\n", string.bool(is_done))
@@ -1214,10 +1218,10 @@ function Quest_create_zones()
 
 
   local function sort_zones()
-    each Z in LEVEL.zones do
+    for Z in LEVEL.zones do
       Z.along = 99
 
-      each R in Z.rooms do
+      for R in Z.rooms do
         Z.along = math.min(Z.along, R.lev_along)
       end
     end
@@ -1230,7 +1234,7 @@ function Quest_create_zones()
   local function dump_zones()
     gui.printf("Zone list:\n")
 
-    each Z in LEVEL.zones do
+    for Z in LEVEL.zones do
       gui.printf("  %s : rooms:%d areas:%d\n", Z.name, #Z.rooms, #Z.areas)
     end
   end
@@ -1258,7 +1262,7 @@ function Quest_create_zones()
     start_zone = Zone_new()
   end
 
-  each R in LEVEL.rooms do
+  for R in LEVEL.rooms do
     if R.is_start then
       assign_room(R, start_zone)
     end
@@ -1269,20 +1273,21 @@ function Quest_create_zones()
   local quest_list = table.copy(LEVEL.quests)
   rand.shuffle(quest_list)
 
-  each Q in quest_list do
+  for Q in quest_list do
     -- hit the quota limit?
     if #LEVEL.zones >= quota then break; end
 
     local R = Q.entry
 
-    if not R or R.zone then continue end
+    if not R or R.zone then goto continue end
 
     if table.has_elem(Q.rooms, LEVEL.exit_room) then
       --???  assign_room(R, exit_zone)
-      continue
+      goto continue
     end
 
     assign_room(R, Zone_new())
+    ::continue::
   end
 
 
@@ -1294,7 +1299,7 @@ function Quest_create_zones()
   end
 
   -- sanity check
-  each R in LEVEL.rooms do
+  for R in LEVEL.rooms do
     assert(R.zone)
   end
 
@@ -1312,7 +1317,7 @@ end
 
 function Quest_calc_exit_dists()
   --
-  -- For each room, determine a distance metric for the room to the
+  -- For for room, determine a distance metric for the room to the
   -- nearest exit of the quest, which may be the level's exit room.
   -- If a quest does not have any exits, rooms will lack a dist.
   --
@@ -1322,20 +1327,20 @@ function Quest_calc_exit_dists()
     -- find the room which exits into the given quest
     local exit_R
 
-    each C in LEVEL.conns do
-      if C.R1 == Q.entry and C.R2.quest != Q then
+    for C in LEVEL.conns do
+      if C.R1 == Q.entry and C.R2.quest ~= Q then
         exit_R = C.R2
         break;
       end
 
-      if C.R2 == Q.entry and C.R1.quest != Q then
+      if C.R2 == Q.entry and C.R1.quest ~= Q then
         exit_R = C.R1
         break;
       end
     end
 
     if exit_R then
-      assert(exit_R.quest != Q)
+      assert(exit_R.quest ~= Q)
       exit_R.dist_to_exit = 0
     end
   end
@@ -1346,7 +1351,7 @@ function Quest_calc_exit_dists()
     local R2 = C.R2
 
     -- NEVER cross quest boundaries
-    if R1.quest != R2.quest then return false end
+    if R1.quest ~= R2.quest then return false end
 
     if not R1.dist_to_exit then
       R1, R2 = R2, R1
@@ -1376,7 +1381,7 @@ function Quest_calc_exit_dists()
   local function spread_dists()
     local did_spread = false
 
-    each C in LEVEL.conns do
+    for C in LEVEL.conns do
       if spread_through_conn(C) then
         did_spread = true
       end
@@ -1390,7 +1395,7 @@ function Quest_calc_exit_dists()
 
   LEVEL.exit_room.dist_to_exit = 0
 
-  each Q in LEVEL.quests do
+  for Q in LEVEL.quests do
     mark_exit_to_quest(Q)
   end
 
@@ -1408,7 +1413,7 @@ function Quest_start_room()
 
   local function find_start_quest()
     -- will be the quest without a current 'entry' area
-    each Q in LEVEL.quests do
+    for Q in LEVEL.quests do
       if not Q.entry then
         start_quest = Q
         return
@@ -1464,8 +1469,8 @@ function Quest_start_room()
     local best_R
     local best_score = 0
 
-    each R in LEVEL.rooms do
-      if R.quest != start_quest then continue end
+    for R in LEVEL.rooms do
+      if R.quest ~= start_quest then goto continue end
 
       local score = eval_start_room(R, alt_mode)
 
@@ -1473,6 +1478,7 @@ function Quest_start_room()
         best_R = R
         best_score = score
       end
+      ::continue::
     end
 
     return best_R
@@ -1620,16 +1626,16 @@ function Quest_order_by_visit()
     room_along = room_along + 1
 
     -- collect which rooms to visit next
-    each C in R.conns do
+    for C in R.conns do
       local R2 = C:other_room(R)
 
       -- done the other room?
-      if R2.lev_along then continue end
+      if R2.lev_along then goto continue end
 
       local loc = { R=R2 }
 
       -- we MUST honor the quest ordering
-      if R2.quest != R.quest then
+      if R2.quest ~= R.quest then
         loc.cost = 100 + 100 * math.max(R2.quest.lev_along, R.quest.lev_along)
 
       elseif R2.rough_exit_dist then
@@ -1643,6 +1649,7 @@ function Quest_order_by_visit()
       loc.cost = loc.cost + gui.random() * 0.1
 
       table.insert(next_locs, loc)
+      ::continue::
     end
   end
 
@@ -1650,7 +1657,7 @@ function Quest_order_by_visit()
   local function dump_quests()
     gui.printf("Quest list:\n")
 
-    each Q in LEVEL.quests do
+    for Q in LEVEL.quests do
       gui.printf("  %s : svolume:%d\n", Q.name, Q.svolume)
     end
   end
@@ -1659,7 +1666,7 @@ function Quest_order_by_visit()
   local function dump_room_order()
     gui.debugf("Room Visit Order:\n")
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       gui.debugf("  %1.3f : %s  %s\n",
                  R.lev_along, R.name, R.quest.name)
     end
@@ -1671,7 +1678,7 @@ function Quest_order_by_visit()
 
     seen[R] = 1
 
-    each C in R.conns do
+    for C in R.conns do
       local R2 = C:other_room(R)
 
       if not seen[R2] then
@@ -1711,7 +1718,7 @@ function Quest_order_by_visit()
   visit_quest_node(LEVEL.quest_root)
 
   -- sanity check
-  each Q in LEVEL.quests do
+  for Q in LEVEL.quests do
     assert(Q.lev_along)
   end
 
@@ -1730,7 +1737,7 @@ function Quest_order_by_visit()
   end
 
   -- sanity check
-  each R in LEVEL.rooms do
+  for R in LEVEL.rooms do
     if not R.lev_along then
       error("Room not visited: " .. R.name)
     end
@@ -1747,7 +1754,7 @@ end
 function Quest_find_backtracks()
 
   local function get_locked_conn(goal)
-    each C in LEVEL.conns do
+    for C in LEVEL.conns do
       if C.lock then
         if table.has_elem(C.lock.goals, goal) then
           return C
@@ -1760,14 +1767,14 @@ function Quest_find_backtracks()
 
 
   local function find_path_between_rooms(R1, R2, seen)
-    assert(R1 != R2)
+    assert(R1 ~= R2)
 
-    each C in R1.conns do
+    for C in R1.conns do
       local N = C:other_room(R1)
 
       if N == R2 then return { C } end
 
-      if seen[N] then continue end
+      if seen[N] then goto continue end
 
       local seen2 = table.copy(seen)
       seen2[R1] = true
@@ -1778,6 +1785,7 @@ function Quest_find_backtracks()
         table.insert(list, 1, C)
         return list
       end
+      ::continue::
     end
 
     return nil  -- no path
@@ -1804,7 +1812,7 @@ function Quest_find_backtracks()
       return
     end
 
-    each C2 in path do
+    for C2 in path do
       gui.debugf("   %s  :  %s <--> %s\n", C2.name, C2.R1.name, C2.R2.name)
     end
 
@@ -1815,7 +1823,7 @@ function Quest_find_backtracks()
 
     local cur_room = R
 
-    each C2 in path do
+    for C2 in path do
       assert(cur_room == C2.R1 or cur_room == C2.R2)
 
       cur_room = C2:other_room(cur_room)
@@ -1827,8 +1835,8 @@ function Quest_find_backtracks()
 
   ---| Quest_find_backtracks |---
 
-  each R in LEVEL.rooms do
-    each goal in R.goals do
+  for R in LEVEL.rooms do
+    for goal in R.goals do
       if goal.kind == "KEY" or goal.kind == "SWITCH" then
         look_for_path(R, goal)
       end
@@ -1858,14 +1866,14 @@ function Quest_add_weapons()
     local info2 = assert(GAME.WEAPONS[name2])
 
     -- only swap when the ammo is the same
-    if info1.ammo != info2.ammo then
+    if info1.ammo ~= info2.ammo then
       return false
     end
 
     local lev1 = info1.level or 1
     local lev2 = info2.level or 1
 
-    if lev1 != lev2 then
+    if lev1 ~= lev2 then
       return lev1 > lev2
     end
 
@@ -1946,7 +1954,7 @@ function Quest_add_weapons()
   local function usable_rooms_in_zone(Z)
     local count = 0
 
-    each R in Z.rooms do
+    for R in Z.rooms do
       if eval_weapon_room(R) > 0 then
         count = count + 1
       end
@@ -1964,15 +1972,15 @@ function Quest_add_weapons()
 
     if Z then list = Z.rooms end
 
-    -- evaluate each room and pick the best
+    -- evaluate for room and pick the best
     local best_R
     local best_score
 
-    each R in list do
+    for R in list do
       local score = eval_weapon_room(R)
 
       -- unusable room?
-      if Z and score < 0 then continue end
+      if Z and score < 0 then goto continue end
 
       -- tie breaker
       score = score + gui.random() * 4
@@ -1981,6 +1989,7 @@ function Quest_add_weapons()
         best_R = R
         best_score = score
       end
+      ::continue::
     end
 
 --  gui.debugf("|--> %s\n", best_R.name)
@@ -2038,7 +2047,7 @@ function Quest_add_weapons()
     local best_R
     local best_score = -1
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       if R.is_secret and not R.is_exit and not R.is_hallway then
         local score = R:usable_chunks() * 10
         score = score + gui.random()
@@ -2059,7 +2068,7 @@ function Quest_add_weapons()
   local function dump_weapons()
     gui.debugf("Weapon assignment:\n")
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       gui.debugf("  %s %s weapons = %s\n", R.zone.name, R.name,
                  table.list_str(R.weapons))
     end
@@ -2143,10 +2152,10 @@ function Quest_nice_items()
 
     pal = table.copy(pal)
 
-    each name1 in avoid_items do
+    for name1 in avoid_items do
       local info1 = assert(ALL_ITEMS[name1])
 
-      each name2,val in pal do
+      for name2,val in pal do
         local info2 = assert(ALL_ITEMS[name2])
 
         if info1.kind == info2.kind then
@@ -2165,9 +2174,9 @@ function Quest_nice_items()
   local function secret_palette(do_closet)
     local pal = {}
 
-    each name,info in ALL_ITEMS do
+    for name,info in ALL_ITEMS do
       if (info.level or 1) > max_level then
-        continue
+        goto continue
       end
 
       local prob
@@ -2181,6 +2190,7 @@ function Quest_nice_items()
       if prob and prob > 0 then
         pal[name] = prob
       end
+      ::continue::
     end
 
     return pal
@@ -2190,9 +2200,9 @@ function Quest_nice_items()
   local function normal_palette()
     local pal = {}
 
-    each name,info in GAME.NICE_ITEMS do
+    for name,info in GAME.NICE_ITEMS do
       if (info.level or 1) > max_level then
-        continue
+        goto continue
       end
 
       local prob = info.add_prob
@@ -2200,6 +2210,7 @@ function Quest_nice_items()
       if prob and prob > 0 then
         pal[name] = info.add_prob
       end
+      ::continue::
     end
 
     return pal
@@ -2211,13 +2222,13 @@ function Quest_nice_items()
 
     -- Note: no powerups in start room
 
-    each name,info in GAME.NICE_ITEMS do
+    for name,info in GAME.NICE_ITEMS do
       if (info.level or 1) > max_level then
-        continue
+        goto continue
       end
 
       if info.kind == "powerup" then
-        continue
+        goto continue
       end
 
       local prob = info.start_prob or info.add_prob
@@ -2225,6 +2236,7 @@ function Quest_nice_items()
       if prob and prob > 0 then
         pal[name] = prob
       end
+      ::continue::
     end
 
     return pal
@@ -2234,11 +2246,12 @@ function Quest_nice_items()
   local function crazy_palette()
     local pal = {}
 
-    each name,info in GAME.NICE_ITEMS do
+    for name,info in GAME.NICE_ITEMS do
       -- ignore secret-only items
-      if not info.add_prob then continue end
+      if not info.add_prob then goto continue end
 
       pal[name] = info.crazy_prob or 50
+      ::continue::
     end
 
     return pal
@@ -2246,8 +2259,8 @@ function Quest_nice_items()
 
 
   local function have_weapon_for_ammo(ammo)
-    each name,info in GAME.WEAPONS do
-      if info.ammo != ammo then continue end
+    for name,info in GAME.WEAPONS do
+      if info.ammo ~= ammo then goto continue end
 
       -- the player always has this weapon?
       local classname, hmodel = next(GAME.PLAYER_MODEL)
@@ -2263,6 +2276,7 @@ function Quest_nice_items()
 
       -- the weapon was given in an earlier map?
       if not PARAM.pistol_starts and EPISODE.seen_weapons[name] then return true end
+      ::continue::
     end
 
     return false
@@ -2272,17 +2286,18 @@ function Quest_nice_items()
   local function storage_palette()
     local pal = {}
 
-    each name,info in ALL_ITEMS do
-      if not info.storage_prob then continue end
+    for name,info in ALL_ITEMS do
+      if not info.storage_prob then goto continue end
 
       -- check if we have a weapon which uses this ammo
       if info.kind == "ammo" and not have_weapon_for_ammo(info.give[1].ammo) then
-        continue
+        goto continue
       end
 
       if info.storage_prob > 0 then
         pal[name] = info.storage_prob
       end
+      ::continue::
     end
 
     return pal
@@ -2293,7 +2308,7 @@ function Quest_nice_items()
     -- collect all secret leafs
     local rooms = {}
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       if R.is_secret and not R.is_exit and not R.is_hallway and
         table.empty(R.weapons)
       then
@@ -2303,7 +2318,7 @@ function Quest_nice_items()
 
     rand.shuffle(rooms)
 
-    each R in rooms do
+    for R in rooms do
       local item = pick_item(secret_items)
 
       if item == nil then break; end
@@ -2353,7 +2368,7 @@ function Quest_nice_items()
     local rooms = table.copy(LEVEL.rooms)
     rand.shuffle(rooms)
 
-    each R in rooms do
+    for R in rooms do
       secret_closets_in_room(R)
     end
   end
@@ -2379,12 +2394,12 @@ function Quest_nice_items()
     if OB_CONFIG.items == "heaps" and rand.odds(80) then quota = 2 end
 
     for loop = 1, quota do
-      -- add the same item into each start room
+      -- add the same item into for start room
       local item = pick_item(start_items)
 
       if item == nil then break; end
 
-      each R in rooms do
+      for R in rooms do
         table.insert(R.items, item)
 
         gui.debugf("Start Item '%s' --> %s\n", item, R.name)
@@ -2427,7 +2442,7 @@ function Quest_nice_items()
   local function collect_other_rooms()
     local list = {}
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       local score = eval_other_room(R)
 
       if score > 0 then
@@ -2487,9 +2502,9 @@ function Quest_nice_items()
     for i = 1, info.storage_qty or 1 do
       local pair =
       {
-        item  = info
-        count = 1
-        is_storage = true
+        item  = info,
+        count = 1,
+        is_storage = true,
         random = gui.random()
       }
 
@@ -2501,7 +2516,7 @@ function Quest_nice_items()
 
 
   local function find_storage_rooms()
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       -- this test automatically excludes hallways and secrets
       if R:is_unused_leaf() and
          #R.items == 0 and
@@ -2608,7 +2623,7 @@ function Quest_big_secrets()
 
     if conn.kind == "joiner" then
       -- no L-shape joiners!
-      if conn.joiner_chunk.shape != "I" then return -1 end
+      if conn.joiner_chunk.shape ~= "I" then return -1 end
     end
 
     -- split connections are no good because they create TWO sectors with
@@ -2630,7 +2645,7 @@ function Quest_big_secrets()
   local function collect_possible_secrets()
     local list = {}
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       local score = eval_secret_room(R)
 
       if score > 0 then
@@ -2648,7 +2663,7 @@ function Quest_big_secrets()
     local id = rand.key_by_probs(list)
     list[id] = nil
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       if R.id == id then
         return R
       end
@@ -2697,8 +2712,8 @@ end
 
 function Quest_room_themes()
   --
-  -- This decides the room themes to use in each room, and also
-  -- various textures (e.g. the fence material for each zone).
+  -- This decides the room themes to use in for room, and also
+  -- various textures (e.g. the fence material for for zone).
   --
 
   local function match_level_theme(name)
@@ -2717,7 +2732,7 @@ function Quest_room_themes()
 
     local vol = 0
 
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       if R.kind == kind then
         vol = vol + R.svolume
       end
@@ -2730,7 +2745,7 @@ function Quest_room_themes()
   local function collect_usable_themes(env, group)
     local tab = {}
 
-    each name,info in GAME.ROOM_THEMES do
+    for name,info in GAME.ROOM_THEMES do
       if info.kind then
         error("Room theme uses old 'kind' keyword: " .. name)
       end
@@ -2786,7 +2801,7 @@ function Quest_room_themes()
       local keep_prob = 35
 
       -- force theme change over zone boundaries or teleporters
-      if R.zone != last_R.zone or conn.keyword == "teleporter" then
+      if R.zone ~= last_R.zone or conn.keyword == "teleporter" then
         keep_prob = 0
       end
 
@@ -2811,7 +2826,7 @@ function Quest_room_themes()
       pick_building_theme(R, last_R, via_conn, theme_tab)
     end
 
-    each C in R.conns do
+    for C in R.conns do
       local R2 = C:other_room(R)
 
       if R2.lev_along > R.lev_along then
@@ -2830,7 +2845,7 @@ function Quest_room_themes()
 
 
   local function choose_hallway_themes()
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       if R.is_hallway then
         local tab = collect_usable_themes("hallway", R.hall_group)
 
@@ -2847,12 +2862,12 @@ function Quest_room_themes()
     local outdoor_tab = collect_usable_themes("outdoor")
     local    cave_tab = collect_usable_themes("cave")
 
-    each Z in LEVEL.zones do
+    for Z in LEVEL.zones do
       Z.outdoor_theme = pick_zone_theme(outdoor_tab)
       Z.   cave_theme = pick_zone_theme(cave_tab)
 
       -- apply it to all rooms in this zone
-      each R in Z.rooms do
+      for R in Z.rooms do
         if R.is_cave then
           R.theme = Z.cave_theme
         elseif R.is_outdoor then
@@ -2873,7 +2888,7 @@ function Quest_room_themes()
 --]]
     LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
 
-    each Z in LEVEL.zones do
+    for Z in LEVEL.zones do
       assert(THEME.fences)
 
       Z.fence_mat = rand.key_by_probs(THEME.fences)
@@ -2891,7 +2906,7 @@ function Quest_room_themes()
     local tab = table.copy(THEME.facades)
 
     for pass = 1,2 do
-    each Z in LEVEL.zones do
+    for Z in LEVEL.zones do
       local mat = rand.key_by_probs(tab)
 
       -- less likely to use it again
@@ -2911,7 +2926,7 @@ function Quest_room_themes()
     for loop = 1, num_try do
       local tex = rand.key_by_probs(tab)
 
-      if tex != prev then
+      if tex ~= prev then
         return tex
       end
     end
@@ -2946,9 +2961,9 @@ function Quest_room_themes()
 
     R.alt_floor_mat = pick_alternate_tex(floor_tab, R.floor_mat, 9)
 
-    if R.floor_mat != R.ceil_mat and rand.odds(50) then
+    if R.floor_mat ~= R.ceil_mat and rand.odds(50) then
       R.alt_ceil_mat = R.floor_mat
-    elseif R.alt_floor_mat != R.ceil_mat and rand.odds(50) then
+    elseif R.alt_floor_mat ~= R.ceil_mat and rand.odds(50) then
       R.alt_ceil_mat = R.alt_floor_mat
     else
       R.alt_ceil_mat = pick_alternate_tex(ceil_tab, R.ceil_mat, 9)
@@ -2983,15 +2998,15 @@ function Quest_room_themes()
     -- create a skin (for prefabs)
     R.skin =
     {
-      wall  = R.main_tex
-      floor = R.floor_mat  -- can be NIL
+      wall  = R.main_tex,
+      floor = R.floor_mat,  -- can be NIL
       ceil  = R.ceil_mat   -- ditto
     }
   end
 
 
   local function room_textures()
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       setup_room_theme(R)
     end
   end
@@ -3000,12 +3015,12 @@ function Quest_room_themes()
   local function dump_themes()
     gui.debugf("\nRoom themes:\n")
 
-    each Z in LEVEL.zones do
+    for Z in LEVEL.zones do
       gui.debugf("%s:\n", Z.name)
       gui.debugf("   facades   : %s / %s\n", Z.facade_mat, Z.other_facade)
       gui.debugf("   fence     : %s\n", Z.fence_mat)
 
-      each R in Z.rooms do
+      for R in Z.rooms do
         gui.debugf("   %s = %s  (main_tex: %s)\n", R.name, R.theme.name, R.main_tex)
       end
     end

@@ -27,7 +27,7 @@
 
 --class GRID : extends ARRAY_2D
 --[[
-    -- when used for caves, each cell can be:
+    -- when used for caves, for cell can be:
     --    NIL        : unused (e.g. another room)
     --    number > 0 : solid (i.e. wall)
     --    number < 0 : empty (i.e. a floor)
@@ -117,7 +117,7 @@ end
 
 function GRID_CLASS.copy(grid)
   -- a fairly shallow copy, only "w" and "h" members are copied
-  -- (NOT additional stuff like "flood" or "regions"), and each
+  -- (NOT additional stuff like "flood" or "regions"), and for
   -- cell is copied by value.
 
   local newbie = grid:blank_copy()
@@ -379,7 +379,7 @@ function GRID_CLASS.dump_regions(grid)
   local solid_regs  = 0
   local solid_cells = 0
 
-  each id, REG in grid.regions do
+  for id, REG in grid.regions do
     gui.debugf("  %+4d : (%d %d) .. (%d %d) size:%d\n",
                REG.id, REG.cx1, REG.cy1, REG.cx2, REG.cy2, REG.size)
 
@@ -399,7 +399,7 @@ end
 
 function GRID_CLASS.flood_fill(grid)
   --
-  -- Generate the 'flood' member, an array where each contiguous region
+  -- Generate the 'flood' member, an array where for contiguous region
   -- has a unique id.  Empty areas are negative, solid areas are positive,
   -- and everything else is NIL.
   --
@@ -442,16 +442,16 @@ function GRID_CLASS.flood_fill(grid)
 
     if not id then return end
 
-    assert(id != 0)
+    assert(id ~= 0)
 
     local REG = grid.regions[id]
 
     if not REG then
       REG =
       {
-        id = id
-        cx1 = x, cy1 = y
-        cx2 = x, cy2 = y
+        id = id,
+        cx1 = x, cy1 = y,
+        cx2 = x, cy2 = y,
         size = 0
       }
 
@@ -494,12 +494,12 @@ function GRID_CLASS.flood_fill(grid)
   while #next_points > 0 do
     local np_list = next_points ; next_points = {}
 
-    each P in np_list do
+    for P in np_list do
       flood_point(P.x, P.y)
     end
   end
 
-  -- create information for each region
+  -- create information for for region
 
   grid.regions = {}
 
@@ -527,8 +527,8 @@ function GRID_CLASS.solidify_pockets(grid, walk_id, solid_id)
 
 
   local function find_next()
-    each id, REG in grid.regions do
-      if id < 0 and id != walk_id then
+    for id, REG in grid.regions do
+      if id < 0 and id ~= walk_id then
         return id, REG
       end
     end
@@ -626,7 +626,7 @@ function GRID_CLASS.find_islands(grid)
         potentials[reg] = "no"
       end
 
-      if potentials[reg] != "no" then
+      if potentials[reg] ~= "no" then
         for dir = 2,8,2 do
           local nx, ny = geom.nudge(x, y, dir)
 
@@ -643,7 +643,7 @@ function GRID_CLASS.find_islands(grid)
 
   -- create the grids --
 
-  each reg, pot in potentials do
+  for reg, pot in potentials do
     if pot == "maybe" then
       local island = grid:copy_region(reg)
 
@@ -715,7 +715,7 @@ function GRID_CLASS.grow8(grid, keep_edges)
     local val = grid[x][y]
     local hit_edge
 
-    for dir = 1,9 do if dir != 5 then
+    for dir = 1,9 do if dir ~= 5 then
       local nx, ny = geom.nudge(x, y, dir)
 
       if not grid:valid(nx, ny) or not grid[nx][ny] then
@@ -803,7 +803,7 @@ function GRID_CLASS.shrink8(grid, keep_edges)
     local val = grid[x][y]
     local hit_edge
 
-    for dir = 1,9 do if dir != 5 then
+    for dir = 1,9 do if dir ~= 5 then
       local nx, ny = geom.nudge(x, y, dir)
 
       if not grid:valid(nx, ny) or not grid[nx][ny] then
@@ -861,7 +861,7 @@ function GRID_CLASS.remove_dots(grid)
   for y = 1, H do
     local val = grid[x][y]
 
-    if val and val != 0 and is_isolated(x, y, val) then
+    if val and val ~= 0 and is_isolated(x, y, val) then
       local dx = sel(x > W/2, -1, 1)
 
       grid[x][y] = grid[x+dx][y]
@@ -1029,7 +1029,7 @@ function GRID_CLASS.dump_blobs(grid)
 
     local line = ""
 
-    each id, reg in grid.regions do
+    for id, reg in grid.regions do
       line = line .. "  " .. string.format("%2d", reg.size)
 
       if #line > 40 then
@@ -1058,7 +1058,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   -- Divide the given grid into "blobs", which are small groups
   -- of contiguous cells.
   --
-  -- Returns a new grid, where each valid cell will contain a blob
+  -- Returns a new grid, where for valid cell will contain a blob
   -- identity number.
   --
   -- NOTE: the input region MUST be contiguous
@@ -1132,18 +1132,19 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   local function spawn_blobs()
     for cx = 1, W, step_x do
     for cy = 1, H, step_y do
-      if rand.odds(5) then continue end
+      if rand.odds(5) then goto continue end
 
       local dx = rand.irange(0, step_x - 1)
       local dy = rand.irange(0, step_y - 1)
 
       if not is_free(cx+dx, cy+dy) then
-        continue
+        goto continue
       end
 
       total_blobs = total_blobs + 1
 
       set_cell(cx+dx, cy+dy, total_blobs)
+      ::continue::
     end
     end
 
@@ -1174,9 +1175,9 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
     for cx = 1, W do
     for cy = 1, H do
       local id = result[cx][cy]
-      if not id then continue end
+      if not id then goto continue end
 
-      if result.regions[id].size >= 2 then continue end
+      if result.regions[id].size >= 2 then goto continue end
 
       if rand.odds(15) then
         local dx = rand.sel(50, -1, 1)
@@ -1185,7 +1186,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
         try_set_cell(cx+dx, cy   , id)
         try_set_cell(cx   , cy+dy, id)
         try_set_cell(cx+dx, cy+dy, id)
-        continue
+        goto continue
       end
 
       local x_dir = rand.irange(-2, 2)
@@ -1196,6 +1197,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
 
       if y_dir <=  1 then try_set_cell(cx, cy-1, id) end
       if y_dir >= -1 then try_set_cell(cx, cy+1, id) end
+      ::continue::
     end
     end
   end
@@ -1207,7 +1209,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
     local id = neighbor_blob(cx, cy, dir)
     if not id then return end
 
-    if grow_dirs[id] != dir then return end
+    if grow_dirs[id] ~= dir then return end
 
     if rand.odds(15) then return end
 
@@ -1322,7 +1324,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
 
     for cx = 1, grid.w do
     for cy = 1, grid.h do
-      if grid[cx][cy] != id then continue end
+      if grid[cx][cy] ~= id then goto continue end
 
       for dir = 2,8,2 do
         local nx, ny = geom.nudge(cx, cy, dir)
@@ -1330,7 +1332,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
         local nb
         if grid:valid(nx, ny) then nb = grid[nx][ny] end
 
-        if nb and nb != id and not seen[nb] and
+        if nb and nb ~= id and not seen[nb] and
            (allow_large or grid.regions[nb].size < min_size)
         then
           seen[nb] = true
@@ -1343,7 +1345,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
           end
         end
       end -- dir
-
+      ::continue::
     end -- cx, cy
     end
 
@@ -1355,7 +1357,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
     -- need to copy the keys, since we modify the table as we go
     local id_list = table.keys(grid.regions)
 
-    each id in id_list do
+    for id in id_list do
       if grid.regions[id] and grid.regions[id].size < min_size then
         local nb = candidate_to_merge(id)
 
@@ -1379,7 +1381,7 @@ end
 
 function GRID_CLASS.walkify_blobs(grid, walk_rects)
   --
-  -- For each cell rectangle in the walk_rects list,
+  -- For for cell rectangle in the walk_rects list,
   -- merge any group of blobs that span that rectangle
   -- (so that afterwards, only a single blob spans it).
   --
@@ -1396,14 +1398,15 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
 
       if cur_blob == nil then
          cur_blob = id
-         continue
+         goto continue
       end
 
       grid.regions[cur_blob].is_walk = true
 
-      if cur_blob != id then
+      if cur_blob ~= id then
         grid:merge_two_blobs(cur_blob, id)
       end
+      ::continue::
     end
     end
   end
@@ -1411,7 +1414,7 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
 
   ---| walkify_blobs |---
 
-  each rect in walk_rects do
+  for rect in walk_rects do
     handle_rect(rect)
   end
 end
@@ -1425,10 +1428,10 @@ function GRID_CLASS.merge_diagonal_blobs(grid, diagonals)
   for cx = 1, grid.w do
   for cy = 1, grid.h do
     local C = grid[cx][cy]
-    if not C then continue end
+    if not C then goto continue end
 
     local dir = diagonals[cx][cy]
-    if not dir then continue end
+    if not dir then goto continue end
 
     local nx, ny = geom.nudge(cx, cy, dir)
     local ax, ay = geom.nudge(cx, cy, geom. LEFT_45[dir])
@@ -1437,7 +1440,7 @@ function GRID_CLASS.merge_diagonal_blobs(grid, diagonals)
     local N = grid:valid(nx, ny) and grid[nx][ny]
 
     -- check the cell directly opposite
-    if N and N != C then
+    if N and N ~= C then
       grid:merge_two_blobs(C, N)
     end
 
@@ -1448,29 +1451,30 @@ function GRID_CLASS.merge_diagonal_blobs(grid, diagonals)
 
 --  stderrf(": %s %s / %s %s\n", tostring(C), tostring(N), tostring(A), tostring(B))
 
-    if not (A or B) then continue end
+    if not (A or B) then goto continue end
 
     if not A then A = B ; B = nil end
 
-    if A and A == C then continue end
-    if B and B == C then continue end
+    if A and A == C then goto continue end
+    if B and B == C then goto continue end
 
     if A and B then A = math.min(A, B) end
 
     grid:merge_two_blobs(C, A)
+    ::continue::
   end
   end
 end
 
 
 function GRID_CLASS.extent_of_blobs(grid)
-  -- determines bounding box for each blob
+  -- determines bounding box for for blob
 
   for cx = 1, grid.w do
   for cy = 1, grid.h do
     local id = grid[cx][cy]
 
-    if id == nil then continue end
+    if id == nil then goto continue end
 
     local reg = grid.regions[id]
     assert(reg)
@@ -1484,6 +1488,7 @@ function GRID_CLASS.extent_of_blobs(grid)
       reg.cx2 = math.max(reg.cx2, cx)
       reg.cy2 = math.max(reg.cy2, cy)
     end
+    ::continue::
   end
   end
 end
@@ -1506,7 +1511,7 @@ function GRID_CLASS.random_blob_cell(grid, id, req_four)
     local cx = rand.irange(reg.cx1, reg.cx2)
     local cy = rand.irange(reg.cy1, reg.cy2)
 
-    if grid[cx][cy] != id then continue end
+    if grid[cx][cy] ~= id then goto continue end
 
     local score = gui.random()
 
@@ -1525,6 +1530,7 @@ function GRID_CLASS.random_blob_cell(grid, id, req_four)
       best_cy = cy
       best_score = score
     end
+    ::continue::
   end
 
   return best_cx, best_cy
@@ -1532,7 +1538,7 @@ end
 
 
 function GRID_CLASS.neighbors_of_blobs(grid)
-  each id, reg in grid.regions do
+  for id, reg in grid.regions do
     reg.neighbors = {}
   end
 
@@ -1540,7 +1546,7 @@ function GRID_CLASS.neighbors_of_blobs(grid)
   for cy = 1, grid.h do
     local id = grid[cx][cy]
 
-    if id == nil then continue end
+    if id == nil then goto continue end
 
     local reg1 = grid.regions[id]
     assert(reg1)
@@ -1551,14 +1557,16 @@ function GRID_CLASS.neighbors_of_blobs(grid)
       local nb
       if grid:valid(nx, ny) then nb = grid[nx][ny] end
 
-      if not nb or nb == id then continue end
+      if not nb or nb == id then goto continue end
 
       local reg2 = grid.regions[nb]
       assert(reg2)
 
       table.add_unique(reg1.neighbors, reg2)
       table.add_unique(reg2.neighbors, reg1)
+      ::continue::
     end
+    ::continue::
   end
   end
 end
@@ -1574,18 +1582,18 @@ function GRID_CLASS.spread_blob_dists(grid, field)
   repeat
     changes = false
 
-    each _,B1 in grid.regions do
+    for _,B1 in grid.regions do
       -- compute minimum of neighbors
       local min_val
 
-      each _,B2 in B1.neighbors do
+      for _,B2 in B1.neighbors do
         if B2[field] and (not min_val or B2[field] < min_val) then
           min_val = B2[field]
         end
       end
 
       -- cannot do anything if all neighbors are unset
-      if not min_val then continue end
+      if not min_val then goto continue end
 
       min_val = min_val + 1
 
@@ -1593,6 +1601,7 @@ function GRID_CLASS.spread_blob_dists(grid, field)
         B1[field] = min_val
         changes   = true
       end
+      ::continue::
     end
 
   until not changes
@@ -1729,11 +1738,11 @@ function GRID_CLASS.maze_generate(maze)
       maze[p.x][p.y] = 1
     end
 
-    -- set how far we can move in each direction
+    -- set how far we can move in for direction
     local lens = {}
 
     for dir = 2,8,2 do
-      if dir != p.dir then
+      if dir ~= p.dir then
         local len = how_far_can_move(p.x, p.y, dir)
 
         if len > 0 then
@@ -1811,9 +1820,9 @@ function GRID_CLASS.maze_render(maze, brush_func, data)
     if true then
       brush_func(data,
       {
-        { x=bx+64, y=by }
-        { x=bx+64, y=by+64 }
-        { x=bx,    y=by+64 }
+        { x=bx+64, y=by },
+        { x=bx+64, y=by+64 },
+        { x=bx,    y=by+64 },
         { x=bx,    y=by }
       })
 

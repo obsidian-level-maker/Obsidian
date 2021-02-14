@@ -52,7 +52,7 @@ function _(s) return gui.gettext(s) end
 -- the default engine (basically Vanilla + limit removing)
 OB_ENGINES["nolimit"] =
 {
-  label = _("Limit Removing")
+  label = _("Limit Removing"),
   priority = 95
 }
 
@@ -60,39 +60,39 @@ OB_ENGINES["nolimit"] =
 -- special theme types, usable by all games
 OB_THEMES["original"] =
 {
-  label = _("Original")
+  label = _("Original"),
   priority = 91
 }
 
 OB_THEMES["mostly_original"] =
 {
-  label = _("Original-ish")
+  label = _("Original-ish"),
   priority = 90
 }
 
 
 OB_THEMES["epi"] =
 {
-  label = _("Episodic")
+  label = _("Episodic"),
   priority = 85,
 }
 
 OB_THEMES["mostly_epi"] =
 {
-  label = _("Episode-ish")
+  label = _("Episode-ish"),
   priority = 84,
 }
 
 
 OB_THEMES["jumble"] =
 {
-  label = _("Jumbled Up")
+  label = _("Jumbled Up"),
   priority = 80
 }
 
 OB_THEMES["bit_mixed"] =
 {
-  label = _("Bit Mixed")
+  label = _("Bit Mixed"),
   priority = 81
 }
 
@@ -134,59 +134,59 @@ SPOT_LEDGE    = 3
 -- monster and item stuff
 MONSTER_QUANTITIES =
 {
-  scarce = 0.35
-  less   = 0.7
-  normal = 1.0
-  more   = 1.5
-  heaps  = 2.5
+  scarce = 0.35,
+  less   = 0.7,
+  normal = 1.0,
+  more   = 1.5,
+  heaps  = 2.5,
   nuts   = 7.7
 }
 
 MONSTER_KIND_TAB =
 {
-  scarce = 0.5
-  less   = 0.75
-  normal = 1.0
-  more   = 1.33
-  heaps  = 1.6
+  scarce = 0.5,
+  less   = 0.75,
+  normal = 1.0,
+  more   = 1.33,
+  heaps  = 1.6,
   nuts   = 2.0
 }
 
 RAMP_UP_FACTORS =
 {
-  slow   = 0.60
-  medium = 1.00
+  slow   = 0.60,
+  medium = 1.00,
   fast   = 1.70
 }
 
 BOSS_FACTORS =
 {
-  easier = 0.30
-  medium = 0.60
+  easier = 0.30,
+  medium = 0.60,
   harder = 1.00
 }
 
 HEALTH_FACTORS =
 {
-  none     = 0
-  scarce   = 0.4
-  less     = 0.64
-  bit_less = 0.8
-  normal   = 1.0
-  bit_more = 1.3
-  more     = 1.6
+  none     = 0,
+  scarce   = 0.4,
+  less     = 0.64,
+  bit_less = 0.8,
+  normal   = 1.0,
+  bit_more = 1.3,
+  more     = 1.6,
   heaps    = 2.5
 }
 
 AMMO_FACTORS =
 {
-  none     = 0
-  scarce   = 0.64
-  less     = 0.8
-  bit_less = 0.9
-  normal   = 1.0
-  bit_more = 1.1
-  more     = 1.25
+  none     = 0,
+  scarce   = 0.64,
+  less     = 0.8,
+  bit_less = 0.9,
+  normal   = 1.0,
+  bit_more = 1.1,
+  more     = 1.25,
   heaps    = 1.6
 }
 
@@ -196,37 +196,37 @@ AMMO_FACTORS =
 --
 GLOBAL_STYLE_LIST =
 {
-  outdoors    = { none=0,  few=60, some=40, heaps=20 }
-  caves       = { none=60, few=20, some=20, heaps=5 }
-  liquids     = { none=0,  few=20, some=20, heaps=80 }
+  outdoors    = { none=0,  few=60, some=40, heaps=20 },
+  caves       = { none=60, few=20, some=20, heaps=5 },
+  liquids     = { none=0,  few=20, some=20, heaps=80 },
 
-  parks       = { none=10, few=40, some=50, heaps=10 }
-  hallways    = { none=0,  few=60, some=30, heaps=10 }
-  big_rooms   = { none=10, few=20, some=40, heaps=20 }
-  teleporters = { none=20, few=40, some=60, heaps=10 }
-  steepness   = { none=0,  few=10, some=70, heaps=10 }
+  parks       = { none=10, few=40, some=50, heaps=10 },
+  hallways    = { none=0,  few=60, some=30, heaps=10 },
+  big_rooms   = { none=10, few=20, some=40, heaps=20 },
+  teleporters = { none=20, few=40, some=60, heaps=10 },
+  steepness   = { none=0,  few=10, some=70, heaps=10 },
 
-  traps       = { none=0,  few=20, some=65, heaps=15 }
-  cages       = { none=10, few=20, some=40, heaps=10 }
-  secrets     = { none=0,  few=20, some=50, heaps=10 }
-  ambushes    = { none=10, few=0,  some=50, heaps=10 }
+  traps       = { none=0,  few=20, some=65, heaps=15 },
+  cages       = { none=10, few=20, some=40, heaps=10 },
+  secrets     = { none=0,  few=20, some=50, heaps=10 },
+  ambushes    = { none=10, few=0,  some=50, heaps=10 },
 
-  doors       = { none=5,  few=30, some=60, heaps=5 }
-  windows     = { none=0,  few=20, some=80, heaps=20 }
-  switches    = { none=10, few=30, some=50, heaps=10 }
-  keys        = { none=0,  few=10, some=20, heaps=60 }
+  doors       = { none=5,  few=30, some=60, heaps=5 },
+  windows     = { none=0,  few=20, some=80, heaps=20 },
+  switches    = { none=10, few=30, some=50, heaps=10 },
+  keys        = { none=0,  few=10, some=20, heaps=60 },
 
-  symmetry    = { none=20, few=40, some=60, heaps=10 }
-  pictures    = { none=0,  few=10, some=50, heaps=10 }
-  barrels     = { none=10, few=50, some=50, heaps=10 }
+  symmetry    = { none=20, few=40, some=60, heaps=10 },
+  pictures    = { none=0,  few=10, some=50, heaps=10 },
+  barrels     = { none=10, few=50, some=50, heaps=10 },
 
   -- PLANNED or UNFINISHED stuff --
 
-  cycles      = { none=50, few=0,  some=50, heaps=50 }
-  ex_floors   = { none=0,  few=40, some=60, heaps=20 }
-  porches     = { none=0,  few=10, some=60, heaps=10 }
-  fences      = { none=30, few=30, some=10, heaps=10 }
-  lakes       = { none=0,  few=60, some=0,  heaps=10 }
+  cycles      = { none=50, few=0,  some=50, heaps=50 },
+  ex_floors   = { none=0,  few=40, some=60, heaps=20 },
+  porches     = { none=0,  few=10, some=60, heaps=10 },
+  fences      = { none=30, few=30, some=10, heaps=10 },
+  lakes       = { none=0,  few=60, some=0,  heaps=10 },
   islands     = { none=0,  few=60, some=0,  heaps=40 }
 }
 
@@ -249,10 +249,10 @@ STYLE_CHOICES =
 --
 GLOBAL_PARAMETERS =
 {
-  step_height = 16
-  jump_height = 24
+  step_height = 16,
+  jump_height = 24,
 
-  spot_low_h  = 72
+  spot_low_h  = 72,
   spot_high_h = 128
 }
 
@@ -265,73 +265,73 @@ GLOBAL_PREFAB_FIELDS =
   -- Note the double underscore, since these materials actually
   -- begin with an underscore (like "_WALL" and "_FLOOR").
 
-   tex__WALL   = "?wall"
-  flat__WALL   = "?wall"
+   tex__WALL   = "?wall",
+  flat__WALL   = "?wall",
 
-   tex__OUTER  = "?outer"
-  flat__OUTER  = "?outer"
+   tex__OUTER  = "?outer",
+  flat__OUTER  = "?outer",
 
-   tex__FLOOR  = "?floor"
-  flat__FLOOR  = "?floor"
+   tex__FLOOR  = "?floor",
+  flat__FLOOR  = "?floor",
 
-   tex__CEIL   = "?ceil"
-  flat__CEIL   = "?ceil"
+   tex__CEIL   = "?ceil",
+  flat__CEIL   = "?ceil",
 
-   tex__FLOOR2 = "?floor2"
-  flat__FLOOR2 = "?floor2"
+   tex__FLOOR2 = "?floor2",
+  flat__FLOOR2 = "?floor2",
 
-   tex__CEIL2  = "?ceil2"
-  flat__CEIL2  = "?ceil2"
+   tex__CEIL2  = "?ceil2",
+  flat__CEIL2  = "?ceil2",
 
-  thing_8166   = "?object"
+  thing_8166   = "?object",
 
-  line_888     = "?switch_action"
+  line_888     = "?switch_action",
 
-  offset_301   = "?x_offset1"
-  offset_302   = "?x_offset2"
-  offset_303   = "?x_offset3"
-  offset_304   = "?x_offset4"
+  offset_301   = "?x_offset1",
+  offset_302   = "?x_offset2",
+  offset_303   = "?x_offset3",
+  offset_304   = "?x_offset4",
 
-  offset_401   = "?y_offset1"
-  offset_402   = "?y_offset2"
-  offset_403   = "?y_offset3"
+  offset_401   = "?y_offset1",
+  offset_402   = "?y_offset2",
+  offset_403   = "?y_offset3",
   offset_404   = "?y_offset4"
 }
 
 
 GLOBAL_SKIN_DEFAULTS =
 {
-  wall   = "_ERROR"
+  wall   = "_ERROR",
 
-  fence  = "?wall"
-  floor  = "?wall"
-  ceil   = "?wall"
+  fence  = "?wall",
+  floor  = "?wall",
+  ceil   = "?wall",
 
-  outer  = "?wall"
-  floor2 = "?outer"
-  ceil2  = "?outer"
+  outer  = "?wall",
+  floor2 = "?outer",
+  ceil2  = "?outer",
 
-  x_offset1 = ""
-  x_offset2 = ""
-  x_offset3 = ""
-  x_offset4 = ""
+  x_offset1 = "",
+  x_offset2 = "",
+  x_offset3 = "",
+  x_offset4 = "",
 
-  y_offset1 = ""
-  y_offset2 = ""
-  y_offset3 = ""
-  y_offset4 = ""
+  y_offset1 = "",
+  y_offset2 = "",
+  y_offset3 = "",
+  y_offset4 = "",
 
   -- Doom engine stuff
-  tag = ""
-  light = ""
-  object = ""
-  switch_action = ""
-  scroller = ""
+  tag = "",
+  light = "",
+  object = "",
+  switch_action = "",
+  scroller = "",
 
   -- Quake engine stuff
-  style = ""
-  message = ""
-  wait = ""
+  style = "",
+  message = "",
+  wait = "",
   targetname = ""
 }
 

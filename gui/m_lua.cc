@@ -148,7 +148,7 @@ int gui_mkdir(lua_State *L)
 //
 int gui_set_colormap(lua_State *L)
 {
-	int map_id = luaL_checkint(L, 1);
+	int map_id = luaL_checkinteger(L, 1);
 
 	if (map_id < 1 || map_id > MAX_COLOR_MAPS)
 		return luaL_argerror(L, 1, "colmap value out of range");
@@ -173,7 +173,7 @@ int gui_set_colormap(lua_State *L)
 			break;
 		}
 
-		map->colors[i] = luaL_checkint(L, -1);
+		map->colors[i] = luaL_checkinteger(L, -1);
 		map->size = i+1;
 
 		lua_pop(L, 1);
@@ -514,7 +514,7 @@ int gui_add_module_option(lua_State *L)
 	const char *label  = luaL_checkstring(L,3);
 	const char *tip    = luaL_optstring  (L,4, NULL);
 
-	int gap = luaL_optint(L,5, 0);
+	int gap = luaL_optinteger(L,5, 0);
 
 	SYS_ASSERT(module && option);
 
@@ -600,8 +600,8 @@ int gui_at_level(lua_State *L)
 {
 	const char *name = luaL_checkstring(L,1);
 
-	int index = luaL_checkint(L, 2);
-	int total = luaL_checkint(L, 3);
+	int index = luaL_checkinteger(L, 2);
+	int total = luaL_checkinteger(L, 3);
 
 	Main_ProgStatus(_("Making %s"), name);
 
@@ -676,8 +676,8 @@ int gui_random(lua_State *L)
 //
 int gui_bit_and(lua_State *L)
 {
-	int A = luaL_checkint(L, 1);
-	int B = luaL_checkint(L, 2);
+	int A = luaL_checkinteger(L, 1);
+	int B = luaL_checkinteger(L, 2);
 
 	lua_pushinteger(L, A & B);
 	return 1;
@@ -687,8 +687,8 @@ int gui_bit_and(lua_State *L)
 //
 int gui_bit_test(lua_State *L)
 {
-	int A = luaL_checkint(L, 1);
-	int B = luaL_checkint(L, 2);
+	int A = luaL_checkinteger(L, 1);
+	int B = luaL_checkinteger(L, 2);
 
 	lua_pushboolean(L, (A & B) != 0);
 	return 1;
@@ -698,8 +698,8 @@ int gui_bit_test(lua_State *L)
 //
 int gui_bit_or(lua_State *L)
 {
-	int A = luaL_checkint(L, 1);
-	int B = luaL_checkint(L, 2);
+	int A = luaL_checkinteger(L, 1);
+	int B = luaL_checkinteger(L, 2);
 
 	lua_pushinteger(L, A | B);
 	return 1;
@@ -709,8 +709,8 @@ int gui_bit_or(lua_State *L)
 //
 int gui_bit_xor(lua_State *L)
 {
-	int A = luaL_checkint(L, 1);
-	int B = luaL_checkint(L, 2);
+	int A = luaL_checkinteger(L, 1);
+	int B = luaL_checkinteger(L, 2);
 
 	lua_pushinteger(L, A ^ B);
 	return 1;
@@ -720,7 +720,7 @@ int gui_bit_xor(lua_State *L)
 //
 int gui_bit_not(lua_State *L)
 {
-	int A = luaL_checkint(L, 1);
+	int A = luaL_checkinteger(L, 1);
 
 	// do not make the result negative
 	lua_pushinteger(L, (~A) & 0x7FFFFFFF);
@@ -758,11 +758,11 @@ int gui_minimap_finish(lua_State *L)
 
 int gui_minimap_draw_line(lua_State *L)
 {
-	int x1 = luaL_checkint(L, 1);
-	int y1 = luaL_checkint(L, 2);
+	int x1 = luaL_checkinteger(L, 1);
+	int y1 = luaL_checkinteger(L, 2);
 
-	int x2 = luaL_checkint(L, 3);
-	int y2 = luaL_checkint(L, 4);
+	int x2 = luaL_checkinteger(L, 3);
+	int y2 = luaL_checkinteger(L, 4);
 
 	const char *color_str = luaL_checkstring(L, 5);
 
@@ -782,11 +782,11 @@ int gui_minimap_draw_line(lua_State *L)
 
 int gui_minimap_fill_box(lua_State *L)
 {
-	int x1 = luaL_checkint(L, 1);
-	int y1 = luaL_checkint(L, 2);
+	int x1 = luaL_checkinteger(L, 1);
+	int y1 = luaL_checkinteger(L, 2);
 
-	int x2 = luaL_checkint(L, 3);
-	int y2 = luaL_checkint(L, 4);
+	int x2 = luaL_checkinteger(L, 3);
+	int y2 = luaL_checkinteger(L, 4);
 
 	const char *color_str = luaL_checkstring(L, 5);
 
@@ -997,28 +997,16 @@ static const luaL_Reg bit_functions[] =
 };
 
 
-int Script_RegisterLib(const char *name, const luaL_Reg *reg)
-{
-	SYS_NULL_CHECK(LUA_ST);
-
-	luaL_register(LUA_ST, name, reg);
-
-	// remove the table which luaL_register created
-	lua_pop(LUA_ST, 1);
-
-	return 0;
-}
-
-
 static int p_init_lua(lua_State *L)
 {
 	/* stop collector during initialization */
 	lua_gc(L, LUA_GCSTOP, 0);
 	{
 		luaL_openlibs(L);  /* open libraries */
-
-		Script_RegisterLib("gui", gui_script_funcs);
-		Script_RegisterLib("bit", bit_functions);
+		luaL_newlib(L, gui_script_funcs);
+		lua_setglobal(L, "gui");
+		luaL_newlib(L, bit_functions);
+		lua_setglobal(L, "bit");
 	}
 	lua_gc(L, LUA_GCRESTART, 0);
 
@@ -1185,7 +1173,7 @@ static int my_loadfile(lua_State *L, const char *filename)
 		return LUA_ERRFILE;
 	}
 
-	int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
+	int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
 
 	/* close file (even in case of errors) */
 	PHYSFS_close(info.fp);
@@ -1200,7 +1188,7 @@ static int my_loadfile(lua_State *L, const char *filename)
 	}
 
 	lua_remove(L, fnameindex);
-
+	
 	return status;
 }
 
@@ -1247,7 +1235,8 @@ void Script_Open()
 	if (! LUA_ST)
 		Main_FatalError("LUA Init failed: cannot create new state");
 
-	int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
+	
+	int status = p_init_lua(LUA_ST);
 	if (status != 0)
 		Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 

@@ -498,7 +498,7 @@ function table.name_up(t)
 end
 
 function table.index_up(t)
-  each info in t do
+  for info in t do
     info.id = _index
   end
 end

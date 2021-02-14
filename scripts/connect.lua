@@ -83,9 +83,9 @@ CONN_CLASS = {}
 function CONN_CLASS.new(kind, R1, R2)
   local C =
   {
-    kind = kind
-    id   = alloc_id("conn")
-    R1   = R1
+    kind = kind,
+    id   = alloc_id("conn"),
+    R1   = R1,
     R2   = R2
   }
 
@@ -187,8 +187,8 @@ end
 function Lock_new(kind, conn)
   local LOCK =
   {
-    id   = alloc_id("lock")
-    kind = kind
+    id   = alloc_id("lock"),
+    kind = kind,
     conn = conn
   }
 
@@ -321,7 +321,7 @@ end
 
 
 function Connect_finalize()
-  each P in LEVEL.prelim_conns do
+  for P in LEVEL.prelim_conns do
     assert(P.kind)
 
     if P.kind == "teleporter" then

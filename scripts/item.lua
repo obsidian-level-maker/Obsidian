@@ -23,11 +23,11 @@
 --[[
     --
     -- This represents the weapons, health and ammo that a player has at
-    -- a particular time.  When each room is visited, Player_give_room_stuff()
+    -- a particular time.  When for room is visited, Player_give_room_stuff()
     -- updates the hmodel for the items in the room.  When placing items, we
     -- exclude stuff that the player already has.
     --
-    -- There is one 'HMODEL' for each player class (in HEXEN there are three
+    -- There is one 'HMODEL' for for player class (in HEXEN there are three
     -- player classes).  So LEVEL.hmodels is indexed by the class name.
     --
     -- The GAME.PLAYER_MODEL table contains the initial model, especially the
@@ -43,18 +43,18 @@
 -- Doom flags
 DOOM_FLAGS =
 {
-  EASY    = 1
-  MEDIUM  = 2
-  HARD    = 4
+  EASY    = 1,
+  MEDIUM  = 2,
+  HARD    = 4,
   DEAF    = 8
 }
 
 -- Hexen thing flags
 HEXEN_FLAGS =
 {
-  FIGHTER = 32
-  CLERIC  = 64
-  MAGE    = 128
+  FIGHTER = 32,
+  CLERIC  = 64,
+  MAGE    = 128,
 
   DM      = 1024
 }
@@ -62,25 +62,25 @@ HEXEN_FLAGS =
 -- Quake flags
 QUAKE_FLAGS =
 {
-  DEAF       = 1
+  DEAF       = 1,
 
-  NOT_EASY   = 256
-  NOT_MEDIUM = 512
-  NOT_HARD   = 1024
+  NOT_EASY   = 256,
+  NOT_MEDIUM = 512,
+  NOT_HARD   = 1024,
   NOT_DM     = 2048
 }
 
 -- Hexen2 flags  [NOT USED YET]
 HEXEN2_FLAGS =
 {
-  NOT_PALADIN  = 256
-  NOT_CLERIC   = 512
-  NOT_NECRO    = 1024
-  NOT_ASSASSIN = 2048
+  NOT_PALADIN  = 256,
+  NOT_CLERIC   = 512,
+  NOT_NECRO    = 1024,
+  NOT_ASSASSIN = 2048,
 
-  NOT_EASY     = 4096
-  NOT_MEDIUM   = 8192
-  NOT_HARD     = 16384
+  NOT_EASY     = 4096,
+  NOT_MEDIUM   = 8192,
+  NOT_HARD     = 16384,
   NOT_DM       = 32768
 }
 
@@ -88,7 +88,7 @@ HEXEN2_FLAGS =
 function Player_init()
   LEVEL.hmodels = table.deep_copy(GAME.PLAYER_MODEL)
 
-  each CL,hmodel in LEVEL.hmodels do
+  for CL,hmodel in LEVEL.hmodels do
     hmodel.class = CL
   end
 end
@@ -97,7 +97,7 @@ end
 function Player_give_weapon(weapon, only_CL)
   gui.printf("Giving weapon: %s\n", weapon)
 
-  each CL,hmodel in LEVEL.hmodels do
+  for CL,hmodel in LEVEL.hmodels do
     if not only_CL or (only_CL == CL) then
       hmodel.weapons[weapon] = 1
     end
@@ -106,8 +106,8 @@ end
 
 
 function Player_give_class_weapon(slot)
-  each name,W in GAME.WEAPONS do
-    each CL,hmodel in LEVEL.hmodels do
+  for name,W in GAME.WEAPONS do
+    for CL,hmodel in LEVEL.hmodels do
       if W.slot == slot and W.class == CL then
         hmodel.weapons[name] = 1
       end
@@ -118,7 +118,7 @@ end
 
 function Player_give_map_stuff()
   if LEVEL.assume_weapons then
-    each name,_ in LEVEL.assume_weapons do
+    for name,_ in LEVEL.assume_weapons do
           if name == "weapon2" then Player_give_class_weapon(2)
       elseif name == "weapon3" then Player_give_class_weapon(3)
       elseif name == "weapon4" then Player_give_class_weapon(4)
@@ -133,12 +133,12 @@ end
 function Player_give_room_stuff(R)
   -- give weapons, plus any ammo they come with
   if not PARAM.hexen_weapons then
-    each name in R.weapons do
+    for name in R.weapons do
       Player_give_weapon(name)
 
       local weap = GAME.WEAPONS[name]
       if weap and weap.give then
-        each CL,hmodel in LEVEL.hmodels do
+        for CL,hmodel in LEVEL.hmodels do
           Player_give_stuff(hmodel, weap.give)
         end
       end
@@ -149,10 +149,10 @@ function Player_give_room_stuff(R)
 
   -- take nice items into account too (except for secrets)
   if not R.is_secrets then
-    each name in R.items do
+    for name in R.items do
       local info = GAME.NICE_ITEMS[name] or GAME.PICKUPS[name]
       if info and info.give then
-        each CL,hmodel in LEVEL.hmodels do
+        for CL,hmodel in LEVEL.hmodels do
           Player_give_stuff(hmodel, info.give)
         end
       end
@@ -161,10 +161,10 @@ function Player_give_room_stuff(R)
 
   -- handle storage rooms too
   if R.storage_items then
-    each pair in R.storage_items do
+    for pair in R.storage_items do
       local info = assert(pair.item)
       if info.give then
-        each CL,hmodel in LEVEL.hmodels do
+        for CL,hmodel in LEVEL.hmodels do
           Player_give_stuff(hmodel, info.give)
         end
       end
@@ -174,7 +174,7 @@ end
 
 
 function Player_give_stuff(hmodel, give_list)
-  each give in give_list do
+  for give in give_list do
     if give.health then
       gui.debugf("Giving [%s] health: %d\n",
                  hmodel.class, give.health)
@@ -204,14 +204,14 @@ function Player_firepower()
   -- weapons.
   --
   -- If there are different classes (Hexen) then the result
-  -- will be an average of each class, as all classes face
+  -- will be an average of for class, as all classes face
   -- the same monsters.
 
   local function get_firepower(hmodel)
     local firepower = 0
     local divisor   = 0
 
-    each weapon,_ in hmodel.weapons do
+    for weapon,_ in hmodel.weapons do
       local info = GAME.WEAPONS[weapon]
 
       if not info then
@@ -249,7 +249,7 @@ function Player_firepower()
   local fp_total  = 0
   local class_num = 0
 
-  each CL,hmodel in LEVEL.hmodels do
+  for CL,hmodel in LEVEL.hmodels do
     fp_total = fp_total + get_firepower(hmodel)
     class_num = class_num + 1
   end
@@ -263,7 +263,7 @@ end
 function Player_has_weapon(weap_needed)
 
   local function class_has_one(hmodel)
-    each name,_ in hmodel.weapons do
+    for name,_ in hmodel.weapons do
       if weap_needed[name] then
         return true
       end
@@ -275,7 +275,7 @@ function Player_has_weapon(weap_needed)
 
   -- we require a match for every class
 
-  each CL,hmodel in LEVEL.hmodels do
+  for CL,hmodel in LEVEL.hmodels do
     if not class_has_one(hmodel) then
       return false
     end
@@ -288,7 +288,7 @@ end
 function Player_max_damage()
   local result = 5
 
-  each name,info in GAME.WEAPONS do
+  for name,info in GAME.WEAPONS do
     local W_damage = info.rate * info.damage
 
     if W_damage > result and Player_has_weapon({ [name]=1 }) then
@@ -304,8 +304,8 @@ function Player_find_initial_weapons()
   -- find with weapons the player always owns
   local list = {}
 
-  each CL,hmodel in LEVEL.hmodels do
-    each name,_ in hmodel.weapons do
+  for CL,hmodel in LEVEL.hmodels do
+    for name,_ in hmodel.weapons do
       list[name] = 1
     end
   end
@@ -316,8 +316,8 @@ end
 
 
 function Player_find_zone_weapons(Z, list)
-  each R in Z.rooms do
-    each name in R.weapons do
+  for R in Z.rooms do
+    for name in R.weapons do
       list[name] = 1
     end
   end
@@ -370,7 +370,7 @@ function Player_weapon_palettes()
   local function apply_pref_table(pal, prefs)
     if not prefs then return end
 
-    each name,factor in prefs do
+    for name,factor in prefs do
       if pal[name] then
          pal[name] = pal[name] * factor
       end
@@ -406,7 +406,7 @@ function Player_weapon_palettes()
 
     local quants = decide_quantities(total)
 
-    each name,_ in got_weaps do
+    for name,_ in got_weaps do
       pal[name] = table.remove(quants, 1)
     end
 
@@ -419,7 +419,7 @@ function Player_weapon_palettes()
 
 
   local function dump_palette(pal)
-    each weap,qty in pal do
+    for weap,qty in pal do
       gui.debugf("   %-9s* %1.2f\n", weap, qty)
     end
   end
@@ -431,7 +431,7 @@ function Player_weapon_palettes()
   --       weapons and it sucks to promote them.
   local got_weaps = {}
 
-  each Z in LEVEL.zones do
+  for Z in LEVEL.zones do
     Player_find_zone_weapons(Z, got_weaps)
 
     Z.weap_palette = gen_palette(got_weaps)
@@ -451,7 +451,7 @@ function Item_simulate_battle(R)
   local function make_empty_stats()
     local stats = {}
 
-    each CL,_ in GAME.PLAYER_MODEL do
+    for CL,_ in GAME.PLAYER_MODEL do
       stats[CL] = {}
     end
 
@@ -476,7 +476,7 @@ function Item_simulate_battle(R)
       ammo_mul = ammo_mul * factor
     end
 
-    each name,qty in stats do
+    for name,qty in stats do
       if name == "health" then
         stats[name] = qty * heal_mul
       else
@@ -487,7 +487,7 @@ function Item_simulate_battle(R)
 
 
   local function subtract_stuff_we_have(stats, hmodel)
-    each name,have_qty in hmodel.stats do
+    for name,have_qty in hmodel.stats do
       local need_qty = stats[name] or 0
       if have_qty > 0 and need_qty > 0 then
         local min_q = math.min(have_qty, need_qty)
@@ -500,18 +500,19 @@ function Item_simulate_battle(R)
 
 
   local function give_monster_drops(hmodel, mon_list)
-    each M in mon_list do
-      if M.is_cage then continue end
+    for M in mon_list do
+      if M.is_cage then goto continue end
 
       if M.info.give then
         Player_give_stuff(hmodel, M.info.give)
       end
+      ::continue::
     end
   end
 
 
   local function is_weapon_upgraded(name, list)
-    each W in list do
+    for W in list do
       if W.info.upgrades == name then
         return true
       end
@@ -525,7 +526,7 @@ function Item_simulate_battle(R)
     local list = {}
     local seen = {}
 
-    each name,_ in hmodel.weapons do
+    for name,_ in hmodel.weapons do
       local info = assert(GAME.WEAPONS[name])
 
       local factor = R.zone.weap_palette[name]
@@ -538,7 +539,7 @@ function Item_simulate_battle(R)
 
     if not PARAM.pistol_starts then
       -- allow weapons from previous levels
-      each name,_ in EPISODE.seen_weapons do
+      for name,_ in EPISODE.seen_weapons do
         if not seen[name] then
           local info = assert(GAME.WEAPONS[name])
           assert(info.pref)
@@ -574,7 +575,7 @@ function Item_simulate_battle(R)
     gui.debugf("Fight Simulator @ %s  class: %s\n", R.name, CL)
 
     gui.debugf("weapons = \n")
-    each W in weap_list do
+    for W in weap_list do
       gui.debugf("  %s\n", W.info.name)
     end
 
@@ -599,7 +600,7 @@ function Item_simulate_battle(R)
   R.item_stats = make_empty_stats()
 
   if #R.monster_list >= 1 then
-    each CL,hmodel in LEVEL.hmodels do
+    for CL,hmodel in LEVEL.hmodels do
       battle_for_class(CL, hmodel)
     end
   end
@@ -632,10 +633,10 @@ function Item_distribute_stats()
       N = N.entry_conn:other_room(N)
 
       -- do not cross zones
-      if N.zone != R.zone then break; end
+      if N.zone ~= R.zone then break; end
 
       -- never move stuff into hallways
-      if N.is_hallway then continue end
+      if N.is_hallway then goto continue end
 
       -- give more in larger rooms
       local val = ratio * (N.svolume ^ 0.7)
@@ -644,6 +645,7 @@ function Item_distribute_stats()
       total = total + val
 
       ratio = ratio * 0.7
+      ::continue::
     end
 
     -- handle hallways that are entered from a different zone
@@ -657,7 +659,7 @@ function Item_distribute_stats()
 
     -- adjust ratio values to be in range 0.0 - 1.0
     if total > 0 then
-      each loc in list do
+      for loc in list do
         loc.ratio = loc.ratio / total
       end
     end
@@ -670,11 +672,11 @@ function Item_distribute_stats()
     -- ratio is a value between 0.0 and 1.0, based on the number
     -- and size of the earlier rooms (in the loc list).
 
-    each CL,R_stats in R.item_stats do
+    for CL,R_stats in R.item_stats do
       local N_stats = N.item_stats[CL]
 
-      each stat,qty in R_stats do
-        if qty <= 0 then continue end
+      for stat,qty in R_stats do
+        if qty <= 0 then goto continue end
 
         local value = qty * ratio
 
@@ -693,6 +695,7 @@ function Item_distribute_stats()
 
 --      gui.debugf("  distributing %s:%1.1f [%s]  %s --> %s\n",
 --                 stat, value,  CL, R.name, N.name)
+        ::continue::
       end
     end
   end
@@ -702,14 +705,14 @@ function Item_distribute_stats()
     -- no stats?
     if not R.item_stats then return end
 
-    each loc in get_earlier_rooms(R) do
+    for loc in get_earlier_rooms(R) do
       distribute_to_room(R, loc.room, loc.ratio)
     end
   end
 
 
   local function dump_results()
-    each R in LEVEL.rooms do
+    for R in LEVEL.rooms do
       if R.item_stats then
         gui.debugf("final result @ %s = \n%s\n", R.name,
                    table.tostr(R.item_stats, 2))
@@ -720,7 +723,7 @@ function Item_distribute_stats()
 
   ---| Item_distribute_stats |---
 
-  each R in LEVEL.rooms do
+  for R in LEVEL.rooms do
     visit_room(R)
   end
 
@@ -748,7 +751,7 @@ function Item_pickups_for_class(CL)
             function(A, B) return A.score > B.score end, "remove")
 
     -- update remaining scores so next one chosen is far away
-    each spot in R.big_spots do
+    for spot in R.big_spots do
       local dist = Monster_dist_between_spots(spot, result, 80) / 256
 
       spot.score = spot.score + dist
@@ -793,7 +796,7 @@ function Item_pickups_for_class(CL)
       local spot = R.item_spots[index]
       local dist = 9e9
 
-      each prev in prev_spots do
+      for prev in prev_spots do
         local d = Monster_dist_between_spots(prev, spot)
         dist = math.min(dist, d)
       end
@@ -827,7 +830,7 @@ function Item_pickups_for_class(CL)
 
 
   local function place_item_list(R, item_list)
-    each pair in item_list do
+    for pair in item_list do
       local item  = pair.item
       local count = pair.count
 
@@ -837,7 +840,7 @@ function Item_pickups_for_class(CL)
       then
         local spot = grab_a_big_spot(R)
         place_item_in_spot(item.name, spot)
-        continue
+        goto continue
       end
 
       -- keep track of a limited number of previously chosen spots.
@@ -858,6 +861,7 @@ function Item_pickups_for_class(CL)
         spot.used = true
         table.insert(R.item_spots, spot)
       end
+      ::continue::
     end
   end
 
@@ -865,7 +869,7 @@ function Item_pickups_for_class(CL)
   local function decide_pickup(R, stat, qty)
     local item_tab = {}
 
-    each name,info in GAME.PICKUPS do
+    for name,info in GAME.PICKUPS do
       local prob = info.add_prob or 0
 
       if prob > 0 and
@@ -888,7 +892,7 @@ function Item_pickups_for_class(CL)
     local count = 1
 
     if info.cluster then
-      local each_qty = info.give[1].health or info.give[1].count
+      local for_qty = info.give[1].health or info.give[1].count
       local min_num  = info.cluster[1]
       local max_num  = info.cluster[2]
 
@@ -896,12 +900,12 @@ function Item_pickups_for_class(CL)
 
       --- count = rand.irange(min_num, max_num)
 
-      if min_num * each_qty >= qty then
+      if min_num * for_qty >= qty then
         count = min_num
-      elseif max_num * each_qty <= qty then
+      elseif max_num * for_qty <= qty then
         count = max_num - rand.sel(20,1,0)
       else
-        count = 1 + int(qty / each_qty)
+        count = 1 + int(qty / for_qty)
       end
     end
 
@@ -921,7 +925,7 @@ function Item_pickups_for_class(CL)
 
     -- when getting a weapon, should get some ammo for it too
     if R.weapons then
-      each name in R.weapons do
+      for name in R.weapons do
         local info = GAME.WEAPONS[name]
 
         if info.ammo and info.ammo == stat and info.bonus_ammo then
@@ -996,7 +1000,7 @@ function Item_pickups_for_class(CL)
     local A_rank = A.item.rank or 0
     local B_rank = B.item.rank or 0
 
-    if A_rank != B_rank then return A_rank > B_rank end
+    if A_rank ~= B_rank then return A_rank > B_rank end
 
      return (A.count + A.random) > (B.count + B.random)
   end
@@ -1010,12 +1014,12 @@ function Item_pickups_for_class(CL)
     local stats = R.item_stats[CL]
     local item_list = {}
 
-    each stat,qty in stats do
+    for stat,qty in stats do
       select_pickups(R, item_list, stat, qty)
 
       gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R.name)
 
-      each pair in item_list do
+      for pair in item_list do
         local item = pair.item
         gui.debugf("   %dx %s (%d)\n", pair.count, item.name,
                    item.give[1].health or item.give[1].count)
@@ -1039,7 +1043,7 @@ function Item_pickups_for_class(CL)
 
   ---| Item_pickups_for_class |---
 
-  each R in LEVEL.rooms do
+  for R in LEVEL.rooms do
     pickups_in_room(R)
   end
 end
@@ -1057,11 +1061,11 @@ function Item_add_pickups()
   -- 2. when no small item spots, convert monster spots
 
   -- ensure item spots are fairly small
-  each R in LEVEL.rooms do
+  for R in LEVEL.rooms do
     R.item_spots = Monster_split_spots(R.item_spots, 25)
   end
 
-  each CL,_ in LEVEL.hmodels do
+  for CL,_ in LEVEL.hmodels do
     Item_pickups_for_class(CL)
   end
 end
