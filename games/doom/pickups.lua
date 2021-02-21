@@ -43,125 +43,125 @@ DOOM.PICKUPS =
 
   potion =
   {
-    id = 2014
-    kind = "health"
-    add_prob = 20
-    cluster = { 4,7 }
+    id = 2014,
+    kind = "health",
+    add_prob = 20,
+    cluster = { 4,7 },
     give = { {health=1} }
-  }
+  },
 
   stimpack =
   {
-    id = 2011
-    kind = "health"
-    add_prob = 60
-    cluster = { 2,5 }
+    id = 2011,
+    kind = "health",
+    add_prob = 60,
+    cluster = { 2,5 },
     give = { {health=10} }
-  }
+  },
 
   medikit =
   {
-    id = 2012
-    kind = "health"
-    rank = 2
-    add_prob = 120
-    closet_prob = 20
-    secret_prob = 5
-    storage_prob = 80
-    storage_qty  = 2
+    id = 2012,
+    kind = "health",
+    rank = 2,
+    add_prob = 120,
+    closet_prob = 20,
+    secret_prob = 5,
+    storage_prob = 80,
+    storage_qty  = 2,
     give = { {health=25} }
-  }
+  },
 
   -- ARMOR --
 
   helmet =
   {
-    id = 2015
-    kind = "armor"
-    add_prob = 10
-    cluster = { 4,7 }
+    id = 2015,
+    kind = "armor",
+    add_prob = 10,
+    cluster = { 4,7 },
     give = { {health=1} }
-  }
+  },
 
   -- AMMO --
 
   bullets =
   {
-    id = 2007
-    kind = "ammo"
-    add_prob = 10
-    cluster = { 2,5 }
+    id = 2007,
+    kind = "ammo",
+    add_prob = 10,
+    cluster = { 2,5 },
     give = { {ammo="bullet",count=10} }
-  }
+  },
 
   bullet_box =
   {
-    id = 2048
-    kind = "ammo"
-    rank = 2
-    add_prob = 50
+    id = 2048,
+    kind = "ammo",
+    rank = 2,
+    add_prob = 50,
     give = { {ammo="bullet",count=50} }
-  }
+  },
 
   shells =
   {
-    id = 2008
-    kind = "ammo"
-    add_prob = 20
-    cluster = { 2,5 }
+    id = 2008,
+    kind = "ammo",
+    add_prob = 20,
+    cluster = { 2,5 },
     give = { {ammo="shell",count=4} }
-  }
+  },
 
   shell_box =
   {
-    id = 2049
-    kind = "ammo"
-    rank = 2
-    add_prob = 40
+    id = 2049,
+    kind = "ammo",
+    rank = 2,
+    add_prob = 40,
     give = { {ammo="shell",count=20} }
-  }
+  },
 
   rocket =
   {
-    id = 2010
-    kind = "ammo"
-    add_prob = 10
-    cluster = { 4,7 }
+    id = 2010,
+    kind = "ammo",
+    add_prob = 10,
+    cluster = { 4,7 },
     give = { {ammo="rocket",count=1} }
-  }
+  },
 
   rocket_box =
   {
-    id = 2046
-    kind = "ammo"
-    rank = 2
-    add_prob = 40
-    closet_prob = 20
-    secret_prob = 5
-    storage_prob = 20
-    storage_qty  = 3
+    id = 2046,
+    kind = "ammo",
+    rank = 2,
+    add_prob = 40,
+    closet_prob = 20,
+    secret_prob = 5,
+    storage_prob = 20,
+    storage_qty  = 3,
     give = { {ammo="rocket",count=5} }
-  }
+  },
 
   cells =
   {
-    id = 2047
-    kind = "ammo"
-    add_prob = 20
-    closet_prob = 20
-    cluster = { 2,5 }
+    id = 2047,
+    kind = "ammo",
+    add_prob = 20,
+    closet_prob = 20,
+    cluster = { 2,5 },
     give = { {ammo="cell",count=20} }
-  }
+  },
 
   cell_pack =
   {
-    id = 17
-    kind = "ammo"
-    rank = 2
-    add_prob = 40
-    secret_prob = 5
-    storage_prob = 40
-    storage_qty  = 2
+    id = 17,
+    kind = "ammo",
+    rank = 2,
+    add_prob = 40,
+    secret_prob = 5,
+    storage_prob = 40,
+    storage_qty  = 2,
     give = { {ammo="cell",count=100} }
   }
 
@@ -185,124 +185,124 @@ DOOM.NICE_ITEMS =
 
   green_armor =
   {
-    id = 2018
-    kind = "armor"
-    add_prob = 40
-    start_prob = 60
-    crazy_prob = 5
-    closet_prob = 10
+    id = 2018,
+    kind = "armor",
+    add_prob = 40,
+    start_prob = 60,
+    crazy_prob = 5,
+    closet_prob = 10,
     give = { {health=30} }
-  }
+  },
 
   blue_armor =
   {
-    id = 2019
-    kind = "armor"
-    add_prob = 5
-    start_prob = 10
-    secret_prob = 60
+    id = 2019,
+    kind = "armor",
+    add_prob = 5,
+    start_prob = 10,
+    secret_prob = 60,
     give = { {health=80} }
-  }
+  },
 
   soul =
   {
-    id = 2013
-    kind = "health"
-    add_prob = 5
-    start_prob = 0
-    closet_prob = 2
-    secret_prob = 40
+    id = 2013,
+    kind = "health",
+    add_prob = 5,
+    start_prob = 0,
+    closet_prob = 2,
+    secret_prob = 40,
     give = { {health=150} }
-  }
+  },
 
   backpack =
   {
-    id = 8
-    kind = "ammo"
-    add_prob = 40
-    start_prob = 80
-    closet_prob = 10
+    id = 8,
+    kind = "ammo",
+    add_prob = 40,
+    start_prob = 80,
+    closet_prob = 10,
     give = { {ammo="bullet",count=10 }, {ammo="shell", count=4 },
              {ammo="cell",  count=20 }, {ammo="rocket",count=1 } }
-  }
+  },
 
   -- WEAPONS --
 
   saw =
   {
-    id = 2005
-    kind = "other"  -- really a weapon
-    add_prob = 5
-    secret_prob = 10
+    id = 2005,
+    kind = "other",  -- really a weapon
+    add_prob = 5,
+    secret_prob = 10,
     once_only = true
-  }
+  },
 
   berserk =
   {
-    id = 2023
-    kind = "health"  -- treat it like a big health item
-    add_prob = 10
-    secret_prob = 20
+    id = 2023,
+    kind = "health",  -- treat it like a big health item
+    add_prob = 10,
+    secret_prob = 20,
     give = { {health=70} }
-  }
+  },
 
   -- POWERUP --
 
   invis =
   {
-    id = 2024
-    kind = "powerup"
-    add_prob = 7
-    start_prob = 0
-    closet_prob = 15
+    id = 2024,
+    kind = "powerup",
+    add_prob = 7,
+    start_prob = 0,
+    closet_prob = 15,
     time_limit = 100
-  }
+  },
 
   invul =
   {
-    id = 2022
-    kind = "powerup"
-    level = 4
-    add_prob = 2
-    start_prob = 0
-    closet_prob = 7
-    secret_prob = 7
+    id = 2022,
+    kind = "powerup",
+    level = 4,
+    add_prob = 2,
+    start_prob = 0,
+    closet_prob = 7,
+    secret_prob = 7,
     time_limit = 30
-  }
+  },
 
   allmap =
   {
-    id = 2026
-    kind = "powerup"
-    secret_prob = 10
+    id = 2026,
+    kind = "powerup",
+    secret_prob = 10,
     once_only = true
-  }
+  },
 
   goggles =
   {
-    id = 2045
-    kind = "powerup"
-    secret_prob = 10
+    id = 2045,
+    kind = "powerup",
+    secret_prob = 10,
     time_limit = 120
-  }
+  },
 
   radsuit =
   {
-    id = 2025
-    kind = "powerup"
+    id = 2025,
+    kind = "powerup",
     time_limit = 60
-  }
+  },
 
   -- Doom II only --
 
   mega =
   {
-    id = 83
-    kind = "health"
-    level = 3
-    add_prob = 1
-    start_prob = 0
-    secret_prob = 20
+    id = 83,
+    kind = "health",
+    level = 3,
+    add_prob = 1,
+    start_prob = 0,
+    secret_prob = 20,
     give = { {health=200} }
   }
 
