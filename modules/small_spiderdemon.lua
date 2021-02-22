@@ -27,17 +27,17 @@ end
 
 OB_MODULES["small_spiderdemon"] =
 {
-  label = _("Smaller Spiderdemon")
+  label = _("Smaller Spiderdemon"),
 
-  side = "left"
-  priority = 92
+  side = "left",
+  priority = 92,
 
-  engine = "boom"
+  engine = "boom",
 
   hooks =
   {
     setup = SMALL_SPIDERDEMON.setup
-  }
+  },
 
   tooltip=_(
     "Makes the Spider Mastermind smaller via a DEHACKED lump, " ..

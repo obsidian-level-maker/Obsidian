@@ -428,7 +428,7 @@ function ob_find_mod_option(mod, opt_name)
 
   -- if 'options' is a list, search it one-by-one
   if mod.options[1] then
-    for opt in mod.options do
+    for _,opt in pairs(mod.options) do
       if opt.name == opt_name then
         return opt
       end
@@ -529,7 +529,7 @@ function ob_set_config(name, value)
   -- [ this is only needed when parsing the CONFIG.txt file ]
   for _,mod in pairs(OB_MODULES) do
     if ob_check_ui_module(mod) then
-      for opt in mod.options do
+      for _,opt in pairs(mod.options) do
         if opt.name == name then
           ob_set_mod_option(mod.name, name, value)
           return
@@ -623,14 +623,14 @@ function ob_read_all_config(need_full, log_only)
   do_line("")
 
   -- the UI modules/panels use bare option names
-  for name in table.keys_sorted(OB_MODULES) do
+  for _,name in pairs(table.keys_sorted(OB_MODULES)) do
     local def = OB_MODULES[name]
 
     if ob_check_ui_module(def) then
       do_line("---- %s ----", def.label)
       do_line("")
 
-      for opt in def.options do
+      for _,opt in pairs(def.options) do
         do_value(opt.name, opt.value)
       end
 
@@ -641,7 +641,7 @@ function ob_read_all_config(need_full, log_only)
   do_line("---- Other Modules ----")
   do_line("")
 
-  for name in table.keys_sorted(OB_MODULES) do
+  for _,name in pairs(table.keys_sorted(OB_MODULES)) do
     local def = OB_MODULES[name]
 
     if ob_check_ui_module(def) then goto continue end
@@ -654,7 +654,7 @@ function ob_read_all_config(need_full, log_only)
     if need_full or def.enabled then
       if def.options and not table.empty(def.options) then
         if def.options[1] then
-          for opt in def.options do
+          for _,opt in pairs(def.options) do
             do_mod_value(opt.name, opt.value)
           end
         else
@@ -727,7 +727,7 @@ function ob_load_all_engines()
 
   gui.set_import_dir("engines")
 
-  for filename in list do
+  for _,filename in pairs(list) do
     gui.debugf("  %s\n", filename)
     gui.import(filename)
   end
@@ -748,7 +748,7 @@ function ob_load_all_modules()
 
   gui.set_import_dir("modules")
 
-  for filename in list do
+  for _,filename in pairs(list) do
     gui.debugf("  %s\n", filename)
     gui.import(filename)
   end
@@ -797,7 +797,7 @@ function ob_init()
       end
     end
 
-    for name in removed do
+    for _,name in pairs(removed) do
       DEFS[name] = nil
     end
   end
@@ -846,7 +846,7 @@ function ob_init()
 
     table.sort(list, button_sorter)
 
-    for def in list do
+    for _,def in pairs(list) do
       if what == "module" then
         local where = def.side or "right"
 
@@ -904,7 +904,7 @@ function ob_init()
           table.sort(list, button_sorter)
         end
 
-        for opt in list do
+        for _,opt in pairs(list) do
           assert(opt.label)
           assert(opt.choices)
 
@@ -1025,7 +1025,7 @@ end
 
 
 function ob_merge_table_list(tab_list)
-  for GT in tab_list do
+  for _,GT in pairs(tab_list) do
     assert(GT)
     for name,tab in pairs(GT) do
       -- upper-case names should always be tables to copy
@@ -1064,7 +1064,7 @@ function ob_add_current_game()
       child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
     end
 
-    for keyword in { "format", "sub_format", "game_dir" } do
+    for _,keyword in pairs({ "format", "sub_format", "game_dir" }) do
       if def[keyword] ~= nil then
         GAME[keyword] = def[keyword]
       end
@@ -1156,7 +1156,7 @@ end
 function ob_transfer_ui_options()
   for _,mod in pairs(OB_MODULES) do
     if ob_check_ui_module(mod) then
-      for opt in mod.options do
+      for _,opt in pairs(mod.options) do
         OB_CONFIG[opt.name] = opt.value or "UNSET"
       end
     end
@@ -1199,8 +1199,8 @@ function ob_build_setup()
   -- merge tables from for module
   -- [ but skip GAME and ENGINE, which are already merged ]
 
-  for mod in GAME.modules do
-    if _index > 2 and mod.tables then
+  for index,mod in pairs(GAME.modules) do
+    if index > 2 and mod.tables then
       ob_merge_table_list(mod.tables)
     end
   end

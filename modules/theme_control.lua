@@ -20,12 +20,12 @@ THEME_CONTROL = { }
 
 THEME_CONTROL.CHOICES =
 {
-  "no_change", "NO CHANGE"
+  "no_change", "NO CHANGE",
 
-  "tech",   "Tech"
-  "urban",  "Urban"
-  "hell",   "Hell"
-  "wolf",   "Wolfenstein"
+  "tech",   "Tech",
+  "urban",  "Urban",
+  "hell",   "Hell",
+  "wolf",   "Wolfenstein",
   "egypt",  "Egypt (TNT)"
 }
 
@@ -35,7 +35,7 @@ function THEME_CONTROL.set_a_theme(LEV, opt)
     return
   end
 
-  if opt.value == "egypt" and OB_CONFIG.game != "tnt" then
+  if opt.value == "egypt" and OB_CONFIG.game ~= "tnt" then
     error("Can only use Egypt theme with TNT Evilution.")
   end
 
@@ -44,7 +44,7 @@ end
 
 
 function THEME_CONTROL.get_levels(self)
-  each LEV in GAME.levels do
+  for LEV in GAME.levels do
     local name
 
     if LEV.is_secret then
@@ -56,29 +56,30 @@ function THEME_CONTROL.get_levels(self)
     local opt = self.options[name]
 
     -- ignore unknown episodes
-    if not opt then continue end
+    if not opt then goto continue end
 
     THEME_CONTROL.set_a_theme(LEV, opt)
+    ::continue::
   end
 end
 
 
 UNFINISHED["theme_ctl_doom2"] =
 {
-  label = _("Doom 2 Theme Control")
+  label = _("Doom 2 Theme Control"),
 
-  game = "doom2"
+  game = "doom2",
 
   hooks =
   {
     get_levels = THEME_CONTROL.get_levels
-  }
+  },
 
   options =
   {
-    episode1  = { label="Episode 1",     choices=THEME_CONTROL.CHOICES }
-    episode2  = { label="Episode 2",     choices=THEME_CONTROL.CHOICES }
-    episode3  = { label="Episode 3",     choices=THEME_CONTROL.CHOICES }
+    episode1  = { label="Episode 1",     choices=THEME_CONTROL.CHOICES },
+    episode2  = { label="Episode 2",     choices=THEME_CONTROL.CHOICES },
+    episode3  = { label="Episode 3",     choices=THEME_CONTROL.CHOICES },
     secret    = { label="Secret Levels", choices=THEME_CONTROL.CHOICES }
   }
 }
@@ -89,33 +90,33 @@ UNFINISHED["theme_ctl_doom2"] =
 
 THEME_CONTROL.DOOM1_CHOICES =
 {
-  "no_change", "NO CHANGE"
+  "no_change", "NO CHANGE",
 
-  "tech",   "Tech"
-  "deimos", "Deimos"
-  "hell",   "Hell"
+  "tech",   "Tech",
+  "deimos", "Deimos",
+  "hell",   "Hell",
   "flesh",  "Flesh"
 }
 
 
 UNFINISHED["theme_ctl_doom1"] =
 {
-  label = _("Doom 1 Theme Control")
+  label = _("Doom 1 Theme Control"),
 
-  game = "doom1"
+  game = "doom1",
 
   hooks =
   {
     -- using same function for both Doom 1 and Doom 2 modules
     get_levels = THEME_CONTROL.get_levels
-  }
+  },
 
   options =
   {
-    episode1  = { label="Episode 1",     choices=THEME_CONTROL.DOOM1_CHOICES }
-    episode2  = { label="Episode 2",     choices=THEME_CONTROL.DOOM1_CHOICES }
-    episode3  = { label="Episode 3",     choices=THEME_CONTROL.DOOM1_CHOICES }
-    episode4  = { label="Episode 4",     choices=THEME_CONTROL.DOOM1_CHOICES }
+    episode1  = { label="Episode 1",     choices=THEME_CONTROL.DOOM1_CHOICES },
+    episode2  = { label="Episode 2",     choices=THEME_CONTROL.DOOM1_CHOICES },
+    episode3  = { label="Episode 3",     choices=THEME_CONTROL.DOOM1_CHOICES },
+    episode4  = { label="Episode 4",     choices=THEME_CONTROL.DOOM1_CHOICES },
     secret    = { label="Secret Levels", choices=THEME_CONTROL.DOOM1_CHOICES }
   }
 }

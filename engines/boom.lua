@@ -23,25 +23,25 @@ BOOM = {}
 
 BOOM.ENTITIES =
 {
-  boom_player5 = { id=4001, r=16, h=56 }
-  boom_player6 = { id=4002, r=16, h=56 }
-  boom_player7 = { id=4003, r=16, h=56 }
-  boom_player8 = { id=4004, r=16, h=56 }
+  boom_player5 = { id=4001, r=16, h=56 },
+  boom_player6 = { id=4002, r=16, h=56 },
+  boom_player7 = { id=4003, r=16, h=56 },
+  boom_player8 = { id=4004, r=16, h=56 },
 
   -- CTF things
-  ctf_blue_flag  = { id=5130, r=16, h=56, pass=true }
-  ctf_blue_start = { id=5080, r=16, h=56, pass=true }
-  ctf_red_flag   = { id=5131, r=16, h=56, pass=true }
-  ctf_red_start  = { id=5081, r=16, h=56, pass=true }
+  ctf_blue_flag  = { id=5130, r=16, h=56, pass=true },
+  ctf_blue_start = { id=5080, r=16, h=56, pass=true },
+  ctf_red_flag   = { id=5131, r=16, h=56, pass=true },
+  ctf_red_start  = { id=5081, r=16, h=56, pass=true },
 
-  point_push = { id=5001, r=16,h=16, pass=true }
+  point_push = { id=5001, r=16,h=16, pass=true },
   point_pull = { id=5002, r=16,h=16, pass=true }
 }
 
 
 BOOM.PARAMETERS =
 {
-  boom_lines = true
+  boom_lines = true,
   boom_sectors = true
 }
 
@@ -50,8 +50,8 @@ function BOOM.create_dehacked()
 
   local data =
   {
-    "#\n"
-    "# BEX LUMP created by OBLIGE\n"
+    "#\n",
+    "# BEX LUMP created by OBLIGE\n",
     "#\n\n"
   }
 
@@ -84,7 +84,7 @@ function BOOM.create_dehacked()
 
   --- level names ---
 
-  each L in GAME.levels do
+  for L in GAME.levels do
     local prefix = PARAM.bex_map_prefix
 
     if L.description and prefix then
@@ -112,7 +112,7 @@ function BOOM.create_dehacked()
 
   --- episode texts ---
 
-  each EPI in GAME.episodes do
+  for EPI in GAME.episodes do
     if EPI.mid_text and EPI.bex_mid_name then
       add_string(EPI.bex_mid_name, EPI.mid_text)
     end
@@ -162,20 +162,20 @@ end
 
 OB_ENGINES["boom"] =
 {
-  label = _("BOOM Compat")
+  label = _("BOOM Compat"),
 
-  priority = 99  -- this makes it top-most, and the default engine
+  priority = 99,  -- this makes it top-most, and the default engine
 
-  game = "doomish"
+  game = "doomish",
 
   tables =
   {
     BOOM
-  }
+  },
 
   hooks =
   {
-    setup2   = BOOM.setup
+    setup2   = BOOM.setup,
     all_done = BOOM.all_done
   }
 }

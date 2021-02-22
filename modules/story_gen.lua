@@ -28,12 +28,12 @@ function STORY_GEN.generate_story()
 
   local WIDTH_TABLE =
   {
-    [' '] = 0.6
-    ['.'] = 0.6
-    [','] = 0.6
-    ['!'] = 0.6
-    ['\''] = 0.6
-    ['i'] = 0.6
+    [' '] = 0.6,
+    ['.'] = 0.6,
+    [','] = 0.6,
+    ['!'] = 0.6,
+    ['\''] = 0.6,
+    ['i'] = 0.6,
     ['I'] = 0.6
   }
 
@@ -71,24 +71,24 @@ function STORY_GEN.generate_story()
     local text = ""
 
     local function add_line(line)
-      if text != "" then text = text .. "\n" end
+      if text ~= "" then text = text .. "\n" end
       text = text .. line
     end
 
     local function maybe_add_line(line)
-      if line != "" then add_line(line) end
+      if line ~= "" then add_line(line) end
     end
 
     local cur_line = ""
     local new_line
 
-    each word in string.tokenize(raw_text) do
+    for word in string.tokenize(raw_text) do
       if string.sub(word, 1, 1) == '|' then
         maybe_add_line(cur_line)
         add_line("")
 
         cur_line = string.sub(word, 2)
-        continue
+        goto continue
       end
 
       if cur_line == "" then
@@ -102,12 +102,13 @@ function STORY_GEN.generate_story()
 
       if e2 < MAX_WIDTH then
         cur_line = new_line
-        continue
+        goto continue
       end
 
       maybe_add_line(cur_line)
 
       cur_line = word
+      ::continue::
     end
 
     maybe_add_line(cur_line)
@@ -182,7 +183,7 @@ function STORY_GEN.generate_story()
     -- count needed parts (generally 3 or 4)
     local num_parts = 0
 
-    each EPI in GAME.episodes do
+    for EPI in GAME.episodes do
       if EPI.bex_mid_name then num_parts = num_parts + 1 end
       if EPI.bex_end_name then num_parts = num_parts + 1 end
     end
@@ -197,7 +198,7 @@ function STORY_GEN.generate_story()
       return table.remove(texts, 1)
     end
 
-    each EPI in GAME.episodes do
+    for EPI in GAME.episodes do
       if EPI.bex_mid_name then EPI.mid_text = get_part() end
       if EPI.bex_end_name then EPI.end_text = get_part() end
     end

@@ -2352,7 +2352,7 @@ end
 
 
 function namelib.match_parts(word, parts)
-  for p,_ in parts do
+  for p,_ in pairs(parts) do
     for w in string.gmatch(word, "%a+") do
       local low = string.lower(w)
 
@@ -2418,10 +2418,10 @@ function namelib.choose_one(DEF, max_len)
   until #name <= max_len
 
   -- adjust probabilities
-  for c,word_tab in DEF.lexicon do
+  for c,word_tab in pairs(DEF.lexicon) do
     local divisor = DEF.divisors[c] or 10
 
-    for w,prob in word_tab do
+    for w,prob in pairs(word_tab) do
       if namelib.match_parts(w, parts) then
         DEF.lexicon[c][w] = prob / divisor
       end
@@ -2443,14 +2443,14 @@ function namelib.merge_theme(theme_name)
   local sources = { namelib.NAMES, GAME.NAMES or {} }
 
   -- always merge in the "COMMON" theme before the main one
-  for S in sources do
+  for _,S in pairs(sources) do
     if S["COMMON"] then
       table.deep_merge(theme, S["COMMON"])
     end
   end
 
   -- now merge in the actual specific theme
-  for S in sources do
+  for _,S in pairs(sources) do
     if S[theme_name] then
       table.deep_merge(theme, S[theme_name])
     end

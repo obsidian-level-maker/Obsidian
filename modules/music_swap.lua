@@ -35,14 +35,14 @@ MUSIC_SWAP.doom1_music =
     "E1M1", "E1M2", "E1M3",
     "E1M4", "E1M5", "E1M6",
     "E1M7", "E1M8", "E1M9"
-  }
+  },
 
   episode2 =
   {
     "E2M1", "E2M2", "E2M3",
     "E2M4", "E2M5", "E2M6",
     "E2M7", "E2M9",
-  }
+  },
 
   episode3 =
   {
@@ -59,13 +59,13 @@ MUSIC_SWAP.doom2_music =
   {
     "RUNNIN", "STALKS", "COUNTD", "BETWEE", "DOOM",
     "THE_DA", "SHAWN",  "DDTBLU", "IN_CIT", "DEAD"
-  }
+  },
 
   episode2 =
   {
     "STLKS2", "THEDA2", "DOOM2",  "DDTBL2", "RUNNI2",
     "DEAD2",  "STLKS3", "ROMERO", "SHAWN2", "MESSAG"
-  }
+  },
 
   episode3 =
   {
@@ -91,7 +91,7 @@ function MUSIC_SWAP.get_levels(self)
     epi_list = MUSIC_SWAP.doom1_music
   end
 
-  each _,src in epi_list do
+  for _,src in pairs(epi_list) do
     local dest = table.copy(src)
 
     -- this shuffle algorithm ensures first entry is never the same
@@ -112,14 +112,14 @@ end
 
 OB_MODULES["music_swapper"] =
 {
-  label = _("Music Swapper")
+  label = _("Music Swapper"),
 
-  side = "left"
-  priority = 80
+  side = "left",
+  priority = 80,
 
-  game = "doomish"
+  game = "doomish",
 
-  engine = "boom"
+  engine = "boom",
 
   hooks =
   {

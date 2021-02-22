@@ -32,23 +32,23 @@ CTL_QUAKE.MON_CHOICES =
 
 CTL_QUAKE.MON_PROBS =
 {
-  none   = 0
-  scarce = 2
-  less   = 15
-  plenty = 50
-  more   = 120
-  heaps  = 300
+  none   = 0,
+  scarce = 2,
+  less   = 15,
+  plenty = 50,
+  more   = 120,
+  heaps  = 300,
   insane = 2000
 }
 
 CTL_QUAKE.DENSITIES =
 {
-  none   = 0.1
-  scarce = 0.2
-  less   = 0.4
-  plenty = 0.7
-  more   = 1.2
-  heaps  = 3.3
+  none   = 0.1,
+  scarce = 0.2,
+  less   = 0.4,
+  plenty = 0.7,
+  more   = 1.2,
+  heaps  = 3.3,
   insane = 9.9
 }
 
@@ -57,7 +57,7 @@ function CTL_QUAKE.monster_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.MONSTERS[name]
 
-    if M and opt.value != "default" then
+    if M and opt.value ~= "default" then
       M.prob    = CTL_QUAKE.MON_PROBS[opt.value]
       M.density = CTL_QUAKE.DENSITIES[opt.value]
 
@@ -75,31 +75,31 @@ end
 
 OB_MODULES["quake_mon_control"] =
 {
-  label = _("Quake Monster Control")
+  label = _("Quake Monster Control"),
 
-  game = "quake"
+  game = "quake",
 
   hooks =
   {
     setup = CTL_QUAKE.monster_setup
-  }
+  },
 
   options =
   {
-    dog      = { label="Rottweiler", choices=CTL_QUAKE.MON_CHOICES }
-    fish     = { label="Rotfish",    choices=CTL_QUAKE.MON_CHOICES }
-    grunt    = { label="Grunt",      choices=CTL_QUAKE.MON_CHOICES }
-    enforcer = { label="Enforcer",   choices=CTL_QUAKE.MON_CHOICES }
-    zombie   = { label="Zombie",     choices=CTL_QUAKE.MON_CHOICES }
+    dog      = { label="Rottweiler", choices=CTL_QUAKE.MON_CHOICES },
+    fish     = { label="Rotfish",    choices=CTL_QUAKE.MON_CHOICES },
+    grunt    = { label="Grunt",      choices=CTL_QUAKE.MON_CHOICES },
+    enforcer = { label="Enforcer",   choices=CTL_QUAKE.MON_CHOICES },
+    zombie   = { label="Zombie",     choices=CTL_QUAKE.MON_CHOICES },
 
-    knight   = { label="Knight",     choices=CTL_QUAKE.MON_CHOICES }
-    scrag    = { label="Scrag",      choices=CTL_QUAKE.MON_CHOICES }
-    tarbaby  = { label="Spawn",      choices=CTL_QUAKE.MON_CHOICES }
-    ogre     = { label="Ogre",       choices=CTL_QUAKE.MON_CHOICES }
-    fiend    = { label="Fiend",      choices=CTL_QUAKE.MON_CHOICES }
+    knight   = { label="Knight",     choices=CTL_QUAKE.MON_CHOICES },
+    scrag    = { label="Scrag",      choices=CTL_QUAKE.MON_CHOICES },
+    tarbaby  = { label="Spawn",      choices=CTL_QUAKE.MON_CHOICES },
+    ogre     = { label="Ogre",       choices=CTL_QUAKE.MON_CHOICES },
+    fiend    = { label="Fiend",      choices=CTL_QUAKE.MON_CHOICES },
 
-    dth_knight = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES }
-    Vore       = { label="Vore",      choices=CTL_QUAKE.MON_CHOICES }
+    dth_knight = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES },
+    Vore       = { label="Vore",      choices=CTL_QUAKE.MON_CHOICES },
     Shambler   = { label="Schambler", choices=CTL_QUAKE.MON_CHOICES }
   }
 }
@@ -122,23 +122,23 @@ CTL_QUAKE.WEAPON_CHOICES =
 
 CTL_QUAKE.WEAPON_PROBS =
 {
-  none   = 0
-  scarce = 2
-  less   = 15
-  plenty = 50
-  more   = 120
-  heaps  = 300
+  none   = 0,
+  scarce = 2,
+  less   = 15,
+  plenty = 50,
+  more   = 120,
+  heaps  = 300,
   loveit = 1000
 }
 
 CTL_QUAKE.WEAPON_PREFS =
 {
-  none   = 1
-  scarce = 10
-  less   = 25
-  plenty = 40
-  more   = 70
-  heaps  = 100
+  none   = 1,
+  scarce = 10,
+  less   = 25,
+  plenty = 40,
+  more   = 70,
+  heaps  = 100,
   loveit = 170
 }
 
@@ -147,7 +147,7 @@ function CTL_QUAKE.weapon_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.WEAPONS[name]
 
-    if W and opt.value != "default" then
+    if W and opt.value ~= "default" then
       W.add_prob = CTL_QUAKE.WEAPON_PROBS[opt.value]
       W.pref     = CTL_QUAKE.WEAPON_PREFS[opt.value]
 
@@ -160,22 +160,22 @@ end
 
 OB_MODULES["quake_weapon_control"] =
 {
-  label = _("Quake Weapon Control")
+  label = _("Quake Weapon Control"),
 
-  game = "quake"
+  game = "quake",
 
   hooks =
   {
     setup = CTL_QUAKE.weapon_setup
-  }
+  },
 
   options =
   {
-    ssg      = { label="Double Shotgun",   choices=CTL_QUAKE.WEAPON_CHOICES }
-    nailgun  = { label="Nailgun",          choices=CTL_QUAKE.WEAPON_CHOICES }
-    nailgun2 = { label="Perforator",       choices=CTL_QUAKE.WEAPON_CHOICES }
-    grenade  = { label="Grenade Launcher", choices=CTL_QUAKE.WEAPON_CHOICES }
-    rocket   = { label="Rocket Launcher",  choices=CTL_QUAKE.WEAPON_CHOICES }
+    ssg      = { label="Double Shotgun",   choices=CTL_QUAKE.WEAPON_CHOICES },
+    nailgun  = { label="Nailgun",          choices=CTL_QUAKE.WEAPON_CHOICES },
+    nailgun2 = { label="Perforator",       choices=CTL_QUAKE.WEAPON_CHOICES },
+    grenade  = { label="Grenade Launcher", choices=CTL_QUAKE.WEAPON_CHOICES },
+    rocket   = { label="Rocket Launcher",  choices=CTL_QUAKE.WEAPON_CHOICES },
     zapper   = { label="Thunderbolt",      choices=CTL_QUAKE.WEAPON_CHOICES }
   }
 }

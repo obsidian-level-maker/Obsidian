@@ -41,19 +41,19 @@ MISC_STUFF.variety_tip = _(
 
 
 function MISC_STUFF.begin_level(self)
-  each opt in self.options do
+  for opt in self.options do
     local name  = assert(opt.name)
     local value = opt.value
 
     if opt.choices == STYLE_CHOICES then
-      if value != "mixed" then
+      if value ~= "mixed" then
         STYLE[name] = value
       end
 
     else
       -- pistol_starts, or other YES/NO stuff
 
-      if value != "no" then
+      if value ~= "no" then
         PARAM[name] = value
       end
     end
@@ -63,45 +63,45 @@ end
 
 OB_MODULES["misc"] =
 {
-  label = _("Miscellaneous")
+  label = _("Miscellaneous"),
 
-  side = "left"
-  priority = 70
+  side = "left",
+  priority = 70,
 
   hooks =
   {
     begin_level = MISC_STUFF.begin_level
-  }
+  },
 
   options =
   {
     {
-      name="pistol_starts"
-      label=_("Pistol Starts")
-      choices=MISC_STUFF.YES_NO
+      name="pistol_starts",
+      label=_("Pistol Starts"),
+      choices=MISC_STUFF.YES_NO,
       tooltip=_("Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)")
-    }
+    },
 
     {
-      name="alt_starts"
-      label=_("Alt-start Rooms")
-      choices=MISC_STUFF.YES_NO
-      tooltip=_("For Co-operative games, sometimes have players start in different rooms")
+      name="alt_starts",
+      label=_("Alt-start Rooms"),
+      choices=MISC_STUFF.YES_NO,
+      tooltip=_("For Co-operative games, sometimes have players start in different rooms"),
       gap=1
-    }
+    },
 
-    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES }
-    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES, gap=1 }
+    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES },
+    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES, gap=1 },
 
-    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES }
-    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, gap=1 }
+    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES },
+    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, gap=1 },
 
-    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES }
-    { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip }
-    { name="barrels",     label=_("Barrels"),        choices=STYLE_CHOICES, gap=1 }
+    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES },
+    { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES, tooltip=MISC_STUFF.variety_tip },
+    { name="barrels",     label=_("Barrels"),        choices=STYLE_CHOICES, gap=1 },
 
-    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES }
-    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES }
+    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES },
+    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES },
     { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES }
 
 ---- PLANNED (UNFINISHED) STUFF ----

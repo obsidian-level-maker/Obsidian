@@ -37,7 +37,7 @@ function EXPORT_MAP.add_brush(coords)
   local xy_coords = {}
 
   -- scan the coordinates and grab the bits we need
-  each C in coords do
+  for C in coords do
     -- first coordinate might be just the mode / material
     if C.m then
       mode = C.m
@@ -102,31 +102,32 @@ function EXPORT_MAP.add_entity(ent, model)
   local origin
   local light
 
-  each key, value in ent do
+  for key, value in ent do
 
     -- special handling for the origin
     if key == "x" or key == "y" or key == "z" then
       if not origin then origin = {} end
       origin[key] = value
-      continue
+      goto continue
     end
 
     -- ignore any model reference
-    if key == "model" then continue end
+    if key == "model" then goto continue end
 
     -- grab the classname
     if key == "id" then
       classname = value
-      continue
+      goto continue
     end
 
     -- convert lights
     if key == "light" then
       light = (0 + value) * 2.2
-      continue
+      goto continue
     end
 
     export_printf("\"%s\" \"%s\"\n", tostring(key), tostring(value))
+    ::continue::
   end
 
 
@@ -244,7 +245,7 @@ function EXPORT_MAP.end_level()
   fprintf(file, "}\n")
 
   -- write the entity data
-  each str in EXPORT_MAP.ent_data do
+  for str in EXPORT_MAP.ent_data do
     fprintf(file, "%s", str)
   end
 
@@ -263,20 +264,20 @@ end
 
 OB_MODULES["export_map"] =
 {
-  label = _("Export .MAP files")
+  label = _("Export .MAP files"),
 
-  side = "left"
-  priority = -75
+  side = "left",
+  priority = -75,
 
   tables =
   {
     EXPORT_MAP
-  }
+  },
 
   hooks =
   {
-    setup       = EXPORT_MAP.setup
-    begin_level = EXPORT_MAP.begin_level
+    setup       = EXPORT_MAP.setup,
+    begin_level = EXPORT_MAP.begin_level,
     end_level   = EXPORT_MAP.end_level
   }
 }

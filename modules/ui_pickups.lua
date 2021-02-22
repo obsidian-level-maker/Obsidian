@@ -53,18 +53,18 @@ UI_PICKUPS.ITEM_CHOICES =
 
 OB_MODULES["ui_pickups"] =
 {
-  label = _("Pickups")
+  label = _("Pickups"),
 
-  side = "right"
-  priority = 101
+  side = "right",
+  priority = 101,
 
   options =
   {
-    { name="health",     label=_("Health"),    choices=UI_PICKUPS.HEALTH_CHOICES }
-    { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1 }
+    { name="health",     label=_("Health"),    choices=UI_PICKUPS.HEALTH_CHOICES },
+    { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1 },
 
-    { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.WEAPON_CHOICES }
-    { name="items",      label=_("Items"),     choices=UI_PICKUPS.ITEM_CHOICES }
+    { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.WEAPON_CHOICES },
+    { name="items",      label=_("Items"),     choices=UI_PICKUPS.ITEM_CHOICES },
 
     { name="secrets",    label=_("Secrets"),   choices=STYLE_CHOICES }
   }
