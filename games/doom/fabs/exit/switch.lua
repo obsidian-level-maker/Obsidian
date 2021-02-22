@@ -4,12 +4,12 @@
 
 PREFABS.Exit_switch1 =
 {
-  file   = "exit/switch.wad"
+  file   = "exit/switch.wad",
 
-  prob   = 200
-  theme  = "!hell"
+  prob   = 200,
+  theme  = "!hell",
 
-  where  = "point"
-  size   = 128
+  where  = "point",
+  size   = 128,
 }
 

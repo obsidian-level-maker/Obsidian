@@ -1139,7 +1139,7 @@ end
 function ob_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
-    for mod in GAME.modules do
+    for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
 
       if func then

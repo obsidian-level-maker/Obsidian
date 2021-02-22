@@ -4,15 +4,15 @@
 
 PREFABS.Hallway_vent_p1 =
 {
-  file   = "hall/vent_p.wad"
-  map    = "MAP01"
+  file   = "hall/vent_p.wad",
+  map    = "MAP01",
 
-  group  = "vent"
-  prob   = 50
+  group  = "vent",
+  prob   = 50,
 
-  where  = "seeds"
-  shape  = "P"
+  where  = "seeds",
+  shape  = "P",
 
-  mon_height = 64
+  mon_height = 64,
 }
 

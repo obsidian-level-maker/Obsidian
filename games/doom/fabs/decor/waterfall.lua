@@ -4,19 +4,19 @@
 
 UNFINISHED.Decor_cave_waterfall =
 {
-  file   = "decor/waterfall.wad"
+  file   = "decor/waterfall.wad",
 
-  prob   = 100
-  env    = "cave"
+  prob   = 100,
+  env    = "cave",
 
-  where  = "seeds"
-  shape  = "U"
+  where  = "seeds",
+  shape  = "U",
 
-  seed_w = 3
-  seed_h = 1
+  seed_w = 3,
+  seed_h = 1,
 
-  deep   = 192
+  deep   = 192,
 
-  y_fit  = "top"
+  y_fit  = "top",
 }
 

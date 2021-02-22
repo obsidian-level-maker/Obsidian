@@ -720,7 +720,7 @@ function Grower_preprocess_grammar()
 
   table.expand_templates(grammar)
 
-  for name,cur_def in grammar do
+  for name,cur_def in pairs(grammar) do
     if cur_def.is_processed then goto continue end
     cur_def.is_processed = true
 

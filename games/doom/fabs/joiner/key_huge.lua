@@ -5,49 +5,49 @@
 
 PREFABS.Locked_huge_red =
 {
-  file   = "joiner/key_huge.wad"
-  map    = "MAP01"
+  file   = "joiner/key_huge.wad",
+  map    = "MAP01",
 
-  prob   = 200
+  prob   = 200,
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  key    = "k_red"
+  key    = "k_red",
 
-  seed_w = 3
-  seed_h = 2
+  seed_w = 3,
+  seed_h = 2,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  delta_h  = 8
-  nearby_h = 160
+  delta_h  = 8,
+  nearby_h = 160,
 
-  -- texture is already "DOORRED"
+  -- texture is already "DOORRED",
   -- line special is already #135 (open red door)
 }
 
 
 PREFABS.Locked_huge_blue =
 {
-  template = "Locked_huge_red"
+  template = "Locked_huge_red",
 
-  key      = "k_blue"
+  key      = "k_blue",
 
-  tex_DOORRED = "DOORBLU"
-  line_135    = 133
+  tex_DOORRED = "DOORBLU",
+  line_135    = 133,
 }
 
 
 PREFABS.Locked_huge_yellow =
 {
-  template = "Locked_huge_red"
+  template = "Locked_huge_red",
 
-  key      = "k_yellow"
+  key      = "k_yellow",
 
-  tex_DOORRED = "DOORYEL"
-  line_135    = 137
+  tex_DOORRED = "DOORYEL",
+  line_135    = 137,
 }
 
 
@@ -57,46 +57,46 @@ PREFABS.Locked_huge_yellow =
 
 PREFABS.Locked_huge3_red =
 {
-  template = "Locked_huge_red"
-  map = "MAP03"
+  template = "Locked_huge_red",
+  map = "MAP03",
 
-  prob = 800
+  prob = 800,
 
-  delta_h  = 0
+  delta_h  = 0,
 
-  -- texture is already "DOORRED"
+  -- texture is already "DOORRED",
   -- line special is already #33 (open red door)
 }
 
 
 PREFABS.Locked_huge3_blue =
 {
-  template = "Locked_huge_red"
-  map = "MAP03"
+  template = "Locked_huge_red",
+  map = "MAP03",
 
-  prob = 800
+  prob = 800,
 
-  key = "k_blue"
+  key = "k_blue",
 
-  delta_h  = 0
+  delta_h  = 0,
 
-  tex_DOORRED = "DOORBLU"
-  line_33     = 32
+  tex_DOORRED = "DOORBLU",
+  line_33     = 32,
 }
 
 
 PREFABS.Locked_huge3_yellow =
 {
-  template = "Locked_huge_red"
-  map = "MAP03"
+  template = "Locked_huge_red",
+  map = "MAP03",
 
-  prob = 800
+  prob = 800,
 
-  key = "k_yellow"
+  key = "k_yellow",
 
-  delta_h  = 0
+  delta_h  = 0,
 
-  tex_DOORRED = "DOORYEL"
-  line_33     = 34
+  tex_DOORRED = "DOORYEL",
+  line_33     = 34,
 }
 

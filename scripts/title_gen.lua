@@ -1684,7 +1684,7 @@ function Title_gen_space_scene()
     -- avoid the logo too
     local near_d = geom.dist(315, 195, x, y)
 
-    for B in big_stars do
+    for _,B in pairs(big_stars) do
       local d = distance_to_big_star(B.mx, B.my, B.r, x, y)
 
       near_d = math.min(near_d, d)
@@ -1750,7 +1750,7 @@ function Title_gen_space_scene()
 
     local BIG_SIZES = { 56, 36, 16 }
 
-    for r in BIG_SIZES do
+    for _,r in pairs(BIG_SIZES) do
       if rand.odds(50) then
         local mx, my = location_for_big_star(r)
         table.insert(big_stars, { mx=mx, my=my, r=r })
@@ -1958,7 +1958,7 @@ function Title_gen_wall_scene()
   for x = 0, 319 do
   for y = 0, 199  do
     local d = 9e9
-    for L in lights do
+    for _,L in pairs(lights) do
       d = math.min(d, geom.dist(L.x * xf, L.y, x * xf, y))
     end
 
@@ -2204,7 +2204,7 @@ function Title_pick_style(style_tab, reqs)
 
   local tab = {}
 
-  for name,def in style_tab do
+  for name,def in pairs(style_tab) do
     if matches(def) then
       tab[name] = def.prob or 50
     end
@@ -2472,7 +2472,7 @@ function Title_process_raw_fonts()
     dump_line("    points =\n")
     dump_line("    {\n")
 
-    for P in CH.points do
+    for _,P in pairs(CH.points) do
       local x = P.x
       local y = P.y
 
@@ -2502,7 +2502,7 @@ function Title_process_raw_fonts()
   local keys = table.keys(TITLE_LETTER_SHAPES)
   table.sort(keys)
 
-  for let in keys do
+  for _,let in pairs(keys) do
     local CH = TITLE_LETTER_SHAPES[let]
     if CH.rx then
       dump_line("RAW FONT '%s'\n", let)

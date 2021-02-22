@@ -4,9 +4,9 @@
 
 PREFABS.Item_pedestal =
 {
-  file  = "item/pedestal.wad"
-  where = "point"
+  file  = "item/pedestal.wad",
+  where = "point",
 
-  prob = 50
+  prob = 50,
 }
 

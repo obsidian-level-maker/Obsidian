@@ -4,15 +4,15 @@
 
 PREFABS.Switch_small_sw_blue =
 {
-  file   = "switch/small.wad"
+  file   = "switch/small.wad",
 
-  key    = "sw_blue"
-  prob   = 50
+  key    = "sw_blue",
+  prob   = 50,
 
-  where  = "point"
---???  size   = 64
+  where  = "point",
+--???  size   = 64,
 
-  tag_1  = "?switch_tag"
+  tag_1  = "?switch_tag",
 
   -- prefab has COMPBLUE / FLAT14 textures
 }
@@ -20,22 +20,22 @@ PREFABS.Switch_small_sw_blue =
 
 PREFABS.Switch_small_sw_red =
 {
-  template = "Switch_small_sw_blue"
+  template = "Switch_small_sw_blue",
 
-  key = "sw_red"
+  key = "sw_red",
 
-  tex_COMPBLUE = "REDWALL"
-  flat_FLAT14  = "REDWALL"
+  tex_COMPBLUE = "REDWALL",
+  flat_FLAT14  = "REDWALL",
 }
 
 
 PREFABS.Switch_small_sw_metal =
 {
-  template = "Switch_small_sw_blue"
+  template = "Switch_small_sw_blue",
 
-  key = "sw_metal"
+  key = "sw_metal",
 
-  tex_COMPBLUE = "METAL"
-  flat_FLAT14  = "METAL"
+  tex_COMPBLUE = "METAL",
+  flat_FLAT14  = "METAL",
 }
 

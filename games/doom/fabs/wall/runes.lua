@@ -4,57 +4,57 @@
 
 PREFABS.Wall_runes1_A =
 {
-  file   = "wall/runes.wad"
-  map    = "MAP01"
+  file   = "wall/runes.wad",
+  map    = "MAP01",
 
-  prob   = 50
-  group  = "runes1"
+  prob   = 50,
+  group  = "runes1",
 
-  where  = "edge"
-  deep   = 16
+  where  = "edge",
+  deep   = 16,
 
-  height = 128
+  height = 128,
 
-  x_fit  = "frame"
-  z_fit  = "frame"
+  x_fit  = "frame",
+  z_fit  = "frame",
 
-  bound_z1 = 0
-  bound_z2 = 128
+  bound_z1 = 0,
+  bound_z2 = 128,
 }
 
 
 PREFABS.Wall_runes1_B =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP02"
+  template = "Wall_runes1_A",
+  map      = "MAP02",
 }
 
 
 PREFABS.Wall_runes1_C =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP03"
+  template = "Wall_runes1_A",
+  map      = "MAP03",
 }
 
 
 PREFABS.Wall_runes1_D =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP04"
+  template = "Wall_runes1_A",
+  map      = "MAP04",
 }
 
 
 PREFABS.Wall_runes1_E =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP05"
+  template = "Wall_runes1_A",
+  map      = "MAP05",
 }
 
 
 PREFABS.Wall_runes1_F =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP06"
+  template = "Wall_runes1_A",
+  map      = "MAP06",
 }
 
 
@@ -63,61 +63,61 @@ PREFABS.Wall_runes1_F =
 
 PREFABS.Wall_runes2_A =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP02"
+  template = "Wall_runes1_A",
+  map      = "MAP02",
 
-  group = "runes2"
-  tex_FIREBLU1 = "FIRELAVA"
+  group = "runes2",
+  tex_FIREBLU1 = "FIRELAVA",
 }
 
 
 PREFABS.Wall_runes2_B =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP02"
+  template = "Wall_runes1_A",
+  map      = "MAP02",
 
-  group = "runes2"
-  tex_FIREBLU1 = "FIRELAVA"
+  group = "runes2",
+  tex_FIREBLU1 = "FIRELAVA",
 }
 
 
 PREFABS.Wall_runes2_C =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP03"
+  template = "Wall_runes1_A",
+  map      = "MAP03",
 
-  group = "runes2"
-  tex_FIREBLU1 = "FIRELAVA"
+  group = "runes2",
+  tex_FIREBLU1 = "FIRELAVA",
 }
 
 
 PREFABS.Wall_runes2_D =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP04"
+  template = "Wall_runes1_A",
+  map      = "MAP04",
 
-  group = "runes2"
-  tex_FIREBLU1 = "FIRELAVA"
+  group = "runes2",
+  tex_FIREBLU1 = "FIRELAVA",
 }
 
 
 PREFABS.Wall_runes2_E =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP05"
+  template = "Wall_runes1_A",
+  map      = "MAP05",
 
-  group = "runes2"
-  tex_FIREBLU1 = "FIRELAVA"
+  group = "runes2",
+  tex_FIREBLU1 = "FIRELAVA",
 }
 
 
 PREFABS.Wall_runes2_F =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP06"
+  template = "Wall_runes1_A",
+  map      = "MAP06",
 
-  group = "runes2"
-  tex_FIREBLU1 = "FIRELAVA"
+  group = "runes2",
+  tex_FIREBLU1 = "FIRELAVA",
 }
 
 
@@ -126,60 +126,60 @@ PREFABS.Wall_runes2_F =
 
 PREFABS.Wall_runes3_A =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP02"
+  template = "Wall_runes1_A",
+  map      = "MAP02",
 
-  group = "runes3"
-  tex_FIREBLU1 = "CRACKLE2"
+  group = "runes3",
+  tex_FIREBLU1 = "CRACKLE2",
 }
 
 
 PREFABS.Wall_runes3_B =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP02"
+  template = "Wall_runes1_A",
+  map      = "MAP02",
 
-  group = "runes3"
-  tex_FIREBLU1 = "CRACKLE2"
+  group = "runes3",
+  tex_FIREBLU1 = "CRACKLE2",
 }
 
 
 PREFABS.Wall_runes3_C =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP03"
+  template = "Wall_runes1_A",
+  map      = "MAP03",
 
-  group = "runes3"
-  tex_FIREBLU1 = "CRACKLE2"
+  group = "runes3",
+  tex_FIREBLU1 = "CRACKLE2",
 }
 
 
 PREFABS.Wall_runes3_D =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP04"
+  template = "Wall_runes1_A",
+  map      = "MAP04",
 
-  group = "runes3"
-  tex_FIREBLU1 = "CRACKLE2"
+  group = "runes3",
+  tex_FIREBLU1 = "CRACKLE2",
 }
 
 
 PREFABS.Wall_runes3_E =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP05"
+  template = "Wall_runes1_A",
+  map      = "MAP05",
 
-  group = "runes3"
-  tex_FIREBLU1 = "CRACKLE2"
+  group = "runes3",
+  tex_FIREBLU1 = "CRACKLE2",
 }
 
 
 PREFABS.Wall_runes3_F =
 {
-  template = "Wall_runes1_A"
-  map      = "MAP06"
+  template = "Wall_runes1_A",
+  map      = "MAP06",
 
-  group = "runes3"
-  tex_FIREBLU1 = "CRACKLE2"
+  group = "runes3",
+  tex_FIREBLU1 = "CRACKLE2",
 }
 

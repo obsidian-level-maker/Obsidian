@@ -4,14 +4,14 @@
 
 PREFABS.Switch_niche1 =
 {
-  file   = "switch/niche1.wad"
-  prob   = 50
+  file   = "switch/niche1.wad",
+  prob   = 50,
 
-  where  = "seeds"
+  where  = "seeds",
 
-  seed_w = 1
-  seed_h = 1
+  seed_w = 1,
+  seed_h = 1,
 
-  tag_1 = "?switch_tag"
+  tag_1 = "?switch_tag",
 }
 

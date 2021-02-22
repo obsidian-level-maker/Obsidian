@@ -6,23 +6,23 @@
 
 UNFINISHED.Joiner_y2 =
 {
-  file   = "joiner/y2.wad"
+  file   = "joiner/y2.wad",
 
-  prob   = 30
-  theme  = "!hell"
-  env    = "!cave"
+  prob   = 30,
+  theme  = "!hell",
+  env    = "!cave",
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  seed_w = 3
-  seed_h = 2
+  seed_w = 3,
+  seed_h = 2,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  delta_h  = 32
-  nearby_h = 200
+  delta_h  = 32,
+  nearby_h = 200,
   can_flip = false
 }
 

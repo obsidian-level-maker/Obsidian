@@ -4,46 +4,46 @@
 
 PREFABS.Door_plain2 =
 {
-  file   = "door/door1.wad"
-  map    = "MAP02"
+  file   = "door/door1.wad",
+  map    = "MAP02",
 
-  prob   = 500
---theme  = "tech"
+  prob   = 500,
+--theme  = "tech",
 
-  where  = "edge"
-  seed_w = 2
+  where  = "edge",
+  seed_w = 2,
 
-  deep   = 32
-  over   = 32
+  deep   = 32,
+  over   = 32,
 
-  x_fit  = "frame"
+  x_fit  = "frame",
 
-  bound_z1 = 0
-  bound_z2 = 128
+  bound_z1 = 0,
+  bound_z2 = 128,
 }
 
 
 PREFABS.Door_plain_diag =
 {
-  file   = "door/door1.wad"
-  map    = "MAP03"
+  file   = "door/door1.wad",
+  map    = "MAP03",
 
-  prob   = 100
+  prob   = 100,
 
-  where  = "diagonal"
+  where  = "diagonal",
 
-  bound_z1 = 0
-  bound_z2 = 128
+  bound_z1 = 0,
+  bound_z2 = 128,
 }
 
 
 PREFABS.Door_plain2_hell =
 {
-  template = "Door_plain2"
+  template = "Door_plain2",
 
-  theme  = "hell"
-  rank   = 2
+  theme  = "hell",
+  rank   = 2,
 
-  flat_TLITE6_6 = "FLAT1"
+  flat_TLITE6_6 = "FLAT1",
 }
 

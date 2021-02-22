@@ -4,22 +4,22 @@
 
 PREFABS.Cage_fake_switch =
 {
-  file   = "cage/fake_switch.wad"
+  file   = "cage/fake_switch.wad",
 
-  prob   = 20
-  style  = "traps"
+  prob   = 20,
+  style  = "traps",
 
-  where  = "seeds"
-  shape  = "U"
+  where  = "seeds",
+  shape  = "U",
 
-  seed_w = 2
-  seed_h = 1
+  seed_w = 2,
+  seed_h = 1,
 
-  deep   =  16
-  over   = -16
+  deep   =  16,
+  over   = -16,
 
-  y_fit  = "top"
+  y_fit  = "top",
 
-  bound_z1 = 0
+  bound_z1 = 0,
 }
 

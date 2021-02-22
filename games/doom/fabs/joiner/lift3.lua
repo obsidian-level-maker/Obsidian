@@ -4,26 +4,26 @@
 
 PREFABS.Joiner_lift3 =
 {
-  file   = "joiner/lift3.wad"
+  file   = "joiner/lift3.wad",
 
-  prob   = 5
-  style  = "steepness"
+  prob   = 5,
+  style  = "steepness",
 
-  env      = "!cave"
-  neighbor = "!cave"
+  env      = "!cave",
+  neighbor = "!cave",
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  seed_w = 2
-  seed_h = 1
+  seed_w = 2,
+  seed_h = 1,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  x_fit  = "frame"
+  x_fit  = "frame",
 
-  delta_h  = 104
+  delta_h  = 104,
   can_flip = true
 }
 

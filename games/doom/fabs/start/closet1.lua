@@ -4,20 +4,20 @@
 
 PREFABS.Start_closet1 =
 {
-  file  = "start/closet1.wad"
+  file  = "start/closet1.wad",
 
-  prob  = 80
+  prob  = 80,
 
-  where = "seeds"
+  where = "seeds",
 
-  deep  =  16
-  over  = -16
+  deep  =  16,
+  over  = -16,
 
-  x_fit = "frame"
-  y_fit = "top"
+  x_fit = "frame",
+  y_fit = "top",
 
   -- door variations
-  tex_DOOR1 = { DOOR1=50, DOOR3=50, SPCDOOR1=50, SPCDOOR3=50 }
+  tex_DOOR1 = { DOOR1=50, DOOR3=50, SPCDOOR1=50, SPCDOOR3=50 },
 
   -- wall variations
   tex_BROWN1 = { BROWN1=50, BRONZE3=50, BROWNGRN=50, SLADWALL=50 }

@@ -4,40 +4,40 @@
 
 PREFABS.Joiner_lift4 =
 {
-  file   = "joiner/lift4.wad"
+  file   = "joiner/lift4.wad",
 
-  prob   = 200
-  style  = "steepness"
-  theme  = "tech"
+  prob   = 200,
+  style  = "steepness",
+  theme  = "tech",
 
-  env      = "!cave"
-  neighbor = "!cave"
+  env      = "!cave",
+  neighbor = "!cave",
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  seed_w = 3
-  seed_h = 2
+  seed_w = 3,
+  seed_h = 2,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  x_fit  = "frame"
+  x_fit  = "frame",
 
-  delta_h  = 128
-  nearby_h = 128
+  delta_h  = 128,
+  nearby_h = 128,
 }
 
 
 PREFABS.Joiner_lift4_hell =
 {
-  template = "Joiner_lift4"
+  template = "Joiner_lift4",
 
-  theme = "!tech"
+  theme = "!tech",
 
-  tex_SUPPORT2  = "SUPPORT3"
-  tex_TEKWALL4  = "STONE3"
-  flat_MFLR8_2  = "MFLR8_1"
-  flat_TLITE6_5 = "TLITE6_6"
+  tex_SUPPORT2  = "SUPPORT3",
+  tex_TEKWALL4  = "STONE3",
+  flat_MFLR8_2  = "MFLR8_1",
+  flat_TLITE6_5 = "TLITE6_6",
 }
 

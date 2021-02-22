@@ -4,13 +4,13 @@
 
 PREFABS.Decor_dittohead_lamp =
 {
-  file   = "decor/dh_lamp.wad"
+  file   = "decor/dh_lamp.wad",
 
-  prob   = 50
-  theme  = "tech"
-  env    = "outdoor"
+  prob   = 50,
+  theme  = "tech",
+  env    = "outdoor",
 
-  where  = "point"
-  size   = 80
+  where  = "point",
+  size   = 80,
 }
 

@@ -4,24 +4,24 @@
 
 PREFABS.Joiner_barred1 =
 {
-  file   = "joiner/barred1.wad"
-  where  = "seeds"
-  shape  = "I"
+  file   = "joiner/barred1.wad",
+  where  = "seeds",
+  shape  = "I",
 
-  key    = "barred"
+  key    = "barred",
 
-  prob   = 50
+  prob   = 50,
 
-  seed_w = 2
-  seed_h = 1
+  seed_w = 2,
+  seed_h = 1,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  x_fit  = "frame"
-  y_fit  = "frame"
+  x_fit  = "frame",
+  y_fit  = "frame",
 
-  tag_1  = "?door_tag"
-  door_action = "S1_OpenDoor"
+  tag_1  = "?door_tag",
+  door_action = "S1_OpenDoor",
 }
 

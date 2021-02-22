@@ -4,26 +4,26 @@
 
 PREFABS.Arch_pic1 =
 {
-  file   = "door/arch_w_pic.wad"
-  map    = "MAP01"
+  file   = "door/arch_w_pic.wad",
+  map    = "MAP01",
 
-  prob   = 400
-  theme  = "tech"
+  prob   = 400,
+  theme  = "tech",
 
-  env      = "building"
-  neighbor = "building"
+  env      = "building",
+  neighbor = "building",
 
-  kind   = "arch"
-  where  = "edge"
-  seed_w = 3
+  kind   = "arch",
+  where  = "edge",
+  seed_w = 3,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  x_fit  = "frame"
+  x_fit  = "frame",
 
-  bound_z1 = 0
-  bound_z2 = 128
+  bound_z1 = 0,
+  bound_z2 = 128,
 }
 
 
@@ -31,31 +31,31 @@ PREFABS.Arch_pic1 =
 
 PREFABS.Arch_pic1_satyr =
 {
-  template = "Arch_pic1"
+  template = "Arch_pic1",
 
-  prob   = 250
-  theme  = "urban"
+  prob   = 250,
+  theme  = "urban",
 
-  tex_SILVER2 = "GSTSATYR"
+  tex_SILVER2 = "GSTSATYR",
 }
 
 PREFABS.Arch_pic1_garg =
 {
-  template = "Arch_pic1"
+  template = "Arch_pic1",
 
-  prob   = 250
-  theme  = "urban"
+  prob   = 250,
+  theme  = "urban",
 
-  tex_SILVER2 = "GSTGARG"
+  tex_SILVER2 = "GSTGARG",
 }
 
 PREFABS.Arch_pic1_lion =
 {
-  template = "Arch_pic1"
+  template = "Arch_pic1",
 
-  prob   = 250
-  theme  = "urban"
+  prob   = 250,
+  theme  = "urban",
 
-  tex_SILVER2 = "GSTLION"
+  tex_SILVER2 = "GSTLION",
 }
 

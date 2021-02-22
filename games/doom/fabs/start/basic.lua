@@ -4,13 +4,13 @@
 
 PREFABS.Start_basic =
 {
-  file   = "start/basic.wad"
+  file   = "start/basic.wad",
 
-  prob   = 50
+  prob   = 50,
 
-  where  = "point"
+  where  = "point",
 
-  flat_FLAT22 = "O_BOLT"
-  tex_SHAWN2  = "O_BOLT"
+  flat_FLAT22 = "O_BOLT",
+  tex_SHAWN2  = "O_BOLT",
 }
 

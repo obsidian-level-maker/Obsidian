@@ -498,8 +498,8 @@ function table.name_up(t)
 end
 
 function table.index_up(t)
-  for info in t do
-    info.id = _index
+  for index,info in pairs(t) do
+    info.id = index
   end
 end
 

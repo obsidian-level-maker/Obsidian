@@ -101,7 +101,7 @@ function Fab_load_all_definitions()
 
     gui.set_import_dir(dir)
 
-    for filename in list do
+    for _,filename in pairs(list) do
       gui.debugf("Loading %s/%s\n", sub, filename)
 
       gui.import(filename)
@@ -121,7 +121,7 @@ function Fab_load_all_definitions()
       return
     end
 
-    for sub in subdirs do
+    for top_level,sub in pairs(subdirs) do
       load_from_subdir(top_level, sub)
     end
 
@@ -129,7 +129,7 @@ function Fab_load_all_definitions()
     -- [ we assume previous defs also got it, hence this will only set
     --   the dir_name in the definitions just loaded ]
 
-    for name,def in PREFABS do
+    for name,def in pairs(PREFABS) do
       if not def.dir_name then
         def.dir_name = top_level
       end
@@ -186,7 +186,7 @@ function Fab_load_all_definitions()
     table.name_up(PREFABS)
     table.expand_templates(PREFABS)
 
-    for name,def in PREFABS do
+    for name,def in pairs(PREFABS) do
       if not def.kind then
         def.kind = kind_from_filename(def.file)
       end

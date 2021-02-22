@@ -194,7 +194,7 @@ end
 
 
 function Episode_determine_map_sizes()
-  for LEV in GAME.levels do
+  for _,LEV in pairs(GAME.levels) do
     local W, H = Level_determine_map_size(LEV)
 
     -- sanity check
@@ -221,13 +221,13 @@ function Episode_pick_names()
   gui.printf("Game title: %s\n\n", GAME.title)
   gui.printf("Game sub-title: %s\n\n", GAME.sub_title)
 
-  for EPI in GAME.episodes do
+  for index,EPI in pairs(GAME.episodes) do
     -- only generate names for used episodes
     if table.empty(EPI.levels) then goto continue end
 
     EPI.description = Naming_grab_one("EPISODE")
 
-    gui.printf("Episode %d title: %s\n\n", _index, EPI.description)
+    gui.printf("Episode %d title: %s\n\n", index, EPI.description)
     ::continue::
   end
 end
@@ -239,7 +239,7 @@ function Episode_decide_specials()
 
   ---| Episode_decide_specials |---
 
-  for EPI in GAME.episodes do
+  for _,EPI in pairs(GAME.episodes) do
     -- TODO
   end
 
@@ -249,7 +249,7 @@ function Episode_decide_specials()
 
   gui.printf("\nSpecial levels:\n")
 
-  for LEV in GAME.levels do
+  for _,LEV in pairs(GAME.levels) do
     if LEV.special then
       gui.printf("  %s : %s\n", LEV.name, LEV.special)
       count = count + 1
@@ -292,7 +292,7 @@ function Episode_plan_monsters()
 
 
   local function init_monsters()
-    for name,info in GAME.MONSTERS do
+    for name,info in pairs(GAME.MONSTERS) do
       if not info.id then
         error(string.format("Monster '%s' lacks an id field", name))
       end
@@ -386,11 +386,11 @@ function Episode_plan_monsters()
     -- which ones are NEW for that level.
     local seen_monsters = {}
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       LEV.new_monsters = {}
 
       if not (LEV.prebuilt or LEV.is_secret) then
-        for mon,info in GAME.MONSTERS do
+        for mon,info in pairs(GAME.MONSTERS) do
           if not seen_monsters[mon] and is_monster_usable(LEV, mon, info) then
             table.insert(LEV.new_monsters, mon)
             seen_monsters[mon] = true
@@ -449,7 +449,7 @@ function Episode_plan_monsters()
       return
     end
 
-    for name,_ in LEV.seen_monsters do
+    for name,_ in pairs(LEV.seen_monsters) do
       local info = GAME.MONSTERS[name]
       if not info.boss_type or OB_CONFIG.strength == "crazy" then
         LEV.global_pal[name] = 1
@@ -491,7 +491,7 @@ function Episode_plan_monsters()
 
     local tab = {}
 
-    for name,info in GAME.MONSTERS do
+    for name,info in pairs(GAME.MONSTERS) do
       if info.boss_type == what and is_boss_usable(LEV, name, info) then
         tab[name] = info.boss_prob or 50
       end
@@ -542,7 +542,7 @@ function Episode_plan_monsters()
   local function collect_usable_guards(LEV)
     local tab = {}
 
-    for name,info in GAME.MONSTERS do
+    for name,info in pairs(GAME.MONSTERS) do
       -- skip the real boss monsters
       if info.boss_type then goto continue end
 
@@ -778,7 +778,7 @@ function Episode_plan_monsters()
 
 
   local function decide_boss_fights()
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       LEV.boss_fights = {}
       LEV.seen_guards = {}
 
@@ -823,7 +823,7 @@ function Episode_plan_monsters()
   local function boss_fight_str(LEV)
     local names = {}
 
-    for F in LEV.boss_fights do
+    for _,F in pairs(LEV.boss_fights) do
       local s = F.mon
       if F.count > 1 then
         s = string.format("%dx %s", F.count, F.mon)
@@ -838,7 +838,7 @@ function Episode_plan_monsters()
   local function dump_monster_info()
     gui.debugf("\nPlanned monsters:\n\n")
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       gui.debugf("%s\n", LEV.name)
       gui.debugf("  level = %1.2f\n", LEV.monster_level)
       if LEV.dist_to_end then
@@ -860,13 +860,13 @@ function Episode_plan_monsters()
   if OB_CONFIG.bosses == "easier" then BOSS_AHEAD = 1.9 end
   if OB_CONFIG.bosses == "harder" then BOSS_AHEAD = 2.7 end
 
-  for LEV in GAME.levels do
+  for _,LEV in pairs(GAME.levels) do
     calc_monster_level(LEV)
   end
 
   mark_new_monsters()
 
-  for LEV in GAME.levels do
+  for _,LEV in pairs(GAME.levels) do
     pick_global_palette(LEV)
   end
 
@@ -970,7 +970,7 @@ function Episode_plan_weapons()
   local function dump_weapon_info()
     gui.debugf("\nPlanned weapons:\n\n")
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       gui.debugf("%s\n", LEV.name)
 
       gui.debugf("  new    = %s\n", table.list_str(LEV.new_weapons))
@@ -1274,7 +1274,7 @@ function Episode_plan_weapons()
   local function place_new_weapons()
     local level_list = {}
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       LEV.new_weapons = {}
 
       if LEV.prebuilt  then goto continue end
@@ -1286,7 +1286,7 @@ function Episode_plan_weapons()
 
     assert(#level_list >= 1)
 
-    for name,info in GAME.WEAPONS do
+    for name,info in pairs(GAME.WEAPONS) do
       -- skip non-item and disabled weapons
       if (info.add_prob or 0) == 0 then goto continue end
 
@@ -1313,7 +1313,7 @@ function Episode_plan_weapons()
   local function calc_max_damage(LEV)
     local max_damage = 5
 
-    for name,_ in LEV.seen_weapons do
+    for name,_ in pairs(LEV.seen_weapons) do
       local info = GAME.WEAPONS[name]
 
       local W_damage = info.rate * info.damage
@@ -1330,10 +1330,10 @@ function Episode_plan_weapons()
     -- (and does not include secret weapons)
     local seen_weapons = {}
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       LEV.seen_weapons = table.copy(seen_weapons)
 
-      for name in LEV.new_weapons do
+      for _,name in pairs(LEV.new_weapons) do
         seen_weapons[name] = true
       end
 
@@ -1347,7 +1347,7 @@ function Episode_plan_weapons()
 
     tab.NONE = 100
 
-    for name,info in GAME.WEAPONS do
+    for name,info in pairs(GAME.WEAPONS) do
       if not LEV.seen_weapons[name] then goto continue end
 
       local prob = info.hide_prob or 0
@@ -1369,9 +1369,9 @@ function Episode_plan_weapons()
   local function pick_secret_weapons()
     local last_one
 
-    for LEV in GAME.levels do
-      local NL = next_level_in_episode(_index)
-      local PL = next_next_level(_index)
+    for index,LEV in pairs(GAME.levels) do
+      local NL = next_level_in_episode(index)
+      local PL = next_next_level(index)
 
       -- build up a probability table
       local tab = {}
@@ -1434,7 +1434,7 @@ function Episode_plan_weapons()
     -- determine probabilities
     local tab = {}
 
-    for name,info in GAME.WEAPONS do
+    for name,info in pairs(GAME.WEAPONS) do
       local prob = prob_for_weapon(LEV, name, info, is_start)
 
       if prob > 0 then
@@ -1458,7 +1458,7 @@ function Episode_plan_weapons()
 
     local prev_ones
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       LEV.start_weapons = {}
 
       local want_num = 1
@@ -1508,12 +1508,12 @@ function Episode_plan_weapons()
   local function pick_other_weapons()
     local prev_ones
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       -- collect the ones we *must* give
       LEV.other_weapons = table.copy(LEV.new_weapons)
 
       -- subtract the ones already given
-      for sw in LEV.start_weapons do
+      for _,sw in pairs(LEV.start_weapons) do
         table.kill_elem(LEV.other_weapons, sw)
       end
 
@@ -1537,7 +1537,7 @@ function Episode_plan_weapons()
 
   ---| Episode_plan_weapons |---
 
-  for LEV in GAME.levels do
+  for _,LEV in pairs(GAME.levels) do
     calc_weapon_quota(LEV)
   end
 
@@ -1829,7 +1829,7 @@ function Level_choose_themes()
 
 
   local function collect_mixed_themes()
-    for name,info in OB_THEMES do
+    for name,info in pairs(OB_THEMES) do
       if info.shown and info.mixed_prob then
         theme_tab[name] = info.mixed_prob
       end
@@ -1949,7 +1949,7 @@ function Level_choose_themes()
       decide_mixins(EPI, name, mixins)
     end
 
-    for LEV in EPI.levels do
+    for _,LEV in pairs(EPI.levels) do
       set_a_theme(LEV, mixins[LEV.name] or name)
     end
   end
@@ -1981,7 +1981,7 @@ function Level_choose_themes()
 
 
   local function set_original_themes()
-    for EPI in GAME.episodes do
+    for _,EPI in pairs(GAME.episodes) do
       if not EPI.theme then
         error("Broken episode def : missing 'theme' field")
       end

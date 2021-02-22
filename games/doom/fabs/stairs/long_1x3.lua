@@ -4,20 +4,20 @@
 
 PREFABS.Stair_long_1x3 =
 {
-  file   = "stairs/long_1x3.wad"
+  file   = "stairs/long_1x3.wad",
 
-  prob   = 90
+  prob   = 90,
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  seed_h = 3
+  seed_h = 3,
 
-  x_fit  = "stretch"
+  x_fit  = "stretch",
 
-  bound_z1 = 0
-  bound_z2 = 96
+  bound_z1 = 0,
+  bound_z2 = 96,
 
-  delta_h = 96
+  delta_h = 96,
 }
 

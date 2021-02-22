@@ -4,21 +4,21 @@
 
 PREFABS.Start_Dropoff =
 {
-  file   = "start/dropoff.wad"
+  file   = "start/dropoff.wad",
 
-  prob   = 80
+  prob   = 80,
 
-  where  = "seeds"
+  where  = "seeds",
 
-  seed_w = 2
-  deep   =  16
-  over   = -16
+  seed_w = 2,
+  deep   =  16,
+  over   = -16,
 
-  height = 128
+  height = 128,
 
-  x_fit  = "frame"
-  y_fit  = "top"
+  x_fit  = "frame",
+  y_fit  = "top",
 
-  nearby_h = 160
+  nearby_h = 160,
 }
 

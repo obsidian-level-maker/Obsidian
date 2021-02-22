@@ -316,20 +316,20 @@ function SKY_GEN.generate_skies()
 
   gui.printf("\nSky generator:\n");
 
-  for EPI in GAME.episodes do
+  for index,EPI in pairs(GAME.episodes) do
     assert(EPI.sky_patch)
-    assert(_index <= #theme_list)
+    assert(index <= #theme_list)
 
     local seed = int(gui.random() * 1000000)
 
-    local is_starry = (_index == starry_ep) or rand.odds(2)
+    local is_starry = (index == starry_ep) or rand.odds(2)
     local is_nebula = is_starry and rand.odds(60)
 
     -- only rarely combine stars + nebula + hills
     local is_hilly  = rand.odds(sel(is_nebula, 25, 90))
 
 
-    local theme_name = theme_list[_index]
+    local theme_name = theme_list[index]
 
     if OB_CONFIG.theme == "original" then
       if EPI.theme == "hell" or EPI.theme == "flesh" then
@@ -378,7 +378,7 @@ function SKY_GEN.generate_skies()
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
 
-      gui.printf("  %d = %s\n", _index, name)
+      gui.printf("  %d = %s\n", index, name)
 
       gui.set_colormap(1, colormap)
       gui.fsky_add_clouds({ seed=seed, colmap=1, squish=2.0 })
@@ -398,7 +398,7 @@ function SKY_GEN.generate_skies()
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
 
-      gui.printf("  %d = %s\n", _index, name)
+      gui.printf("  %d = %s\n", index, name)
 
       gui.set_colormap(1, colormap)
       gui.fsky_add_stars({ seed=seed, colmap=1 })
