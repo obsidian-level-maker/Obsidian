@@ -220,11 +220,11 @@ static void WF_WriteHead(void)
 //
 int WF_wolf_block(lua_State *L)
 {
-  int x = luaL_checkinteger(L, 1);
-  int y = luaL_checkinteger(L, 2);
+  int x = (int)luaL_checkinteger(L, 1);
+  int y = (int)luaL_checkinteger(L, 2);
 
-  int plane = luaL_checkinteger(L, 3);
-  int value = luaL_checkinteger(L, 4);
+  int plane = (int)luaL_checkinteger(L, 3);
+  int value = (int)luaL_checkinteger(L, 4);
 
   // adjust and validate coords
   SYS_ASSERT(1 <= x && x <= 64);
@@ -255,10 +255,10 @@ int WF_wolf_block(lua_State *L)
 //
 int WF_wolf_read(lua_State *L)
 {
-  int x = luaL_checkinteger(L, 1);
-  int y = luaL_checkinteger(L, 2);
+  int x = (int)luaL_checkinteger(L, 1);
+  int y = (int)luaL_checkinteger(L, 2);
 
-  int plane = luaL_checkinteger(L, 3);
+  int plane = (int)luaL_checkinteger(L, 3);
 
   // adjust and validate coords
   SYS_ASSERT(1 <= x && x <= 64);

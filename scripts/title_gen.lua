@@ -859,7 +859,7 @@ function Title_make_stroke(T, x1,y1, x2,y2)
   x1, y1 = T.func(T, x1, y1)
   x2, y2 = T.func(T, x2, y2)
 
-  gui.title_draw_line(x1 + T.ofs_x, y1 + T.ofs_y, x2 + T.ofs_x, y2 + T.ofs_y)
+  gui.title_draw_line(int(x1 + T.ofs_x), int(y1 + T.ofs_y), int(x2 + T.ofs_x), int(y2 + T.ofs_y))
 end
 
 
@@ -1021,8 +1021,8 @@ function Title_centered_string(T, mx, my, text, style)
         T.ofs_y = base_ofs - i
       end
 
-      gui.title_prop("box_w", thick)
-      gui.title_prop("box_h", thick)
+      gui.title_prop("box_w", int(thick))
+      gui.title_prop("box_h", int(thick))
 
       Title_draw_string(T, text)
     end
@@ -1044,12 +1044,12 @@ function Title_centered_string(T, mx, my, text, style)
   end
 
   if style.mode == "gradient" or style.mode == "gradient3" then
-    gui.title_prop("grad_y1", T.y - T.fh + 1)
-    gui.title_prop("grad_y2", T.y - 1)
+    gui.title_prop("grad_y1", int(T.y - T.fh + 1))
+    gui.title_prop("grad_y2", int(T.y - 1))
   end
 
-  gui.title_prop("box_w", T.thick)
-  gui.title_prop("box_h", T.thick)
+  gui.title_prop("box_w", int(T.thick))
+  gui.title_prop("box_h", int(T.thick))
 
   T.ofs_x = base_ofs
   T.ofs_y = base_ofs
@@ -1882,7 +1882,7 @@ function Title_gen_ray_burst()
       Title_interp_color(color_list, ity, col)
 
       gui.title_prop("color", col)
-      gui.title_draw_line(mx, my, x1, y1, col)
+      gui.title_draw_line(mx, my, int(x1), int(y1), col)
     end
     end
   end
@@ -1975,7 +1975,7 @@ function Title_gen_wall_scene()
   end
 
   -- draw for lamp
-  for L in lights do
+  for _,L in pairs(lights) do
     gui.title_load_image(L.x - 10, L.y - 16, "data/bg/" .. lamp_sprite .. ".tga")
   end
 end
@@ -2064,7 +2064,7 @@ function Title_gen_cave_scene()
         Title_interp_color(color_list, ity, col)
 
         gui.title_prop("color", col)
-        gui.title_draw_rect(x, y, 1, 1)
+        gui.title_draw_rect(int(x), int(y), 1, 1)
       end
       ::continue::
     end
@@ -2126,7 +2126,7 @@ function Title_gen_tunnel_scene()
     Title_interp_color(color_list, ity, col)
 
     gui.title_prop("color", col)
-    gui.title_draw_disc(mx - r*x_mul, my - r*y_mul, r*1.2, r)
+    gui.title_draw_disc(int(mx - r*x_mul), int(my - r*y_mul), int(r*1.2), r)
   end
 end
 
@@ -2453,7 +2453,7 @@ end
 
 
 function Title_add_credit()
-  gui.title_prop("reset", "all")
+  gui.title_prop("reset")
   gui.title_prop("color", "#000")
 
   gui.title_draw_rect(310, 190, 10, 10)

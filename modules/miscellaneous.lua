@@ -41,7 +41,7 @@ MISC_STUFF.variety_tip = _(
 
 
 function MISC_STUFF.begin_level(self)
-  for opt in self.options do
+  for _,opt in pairs(self.options) do
     local name  = assert(opt.name)
     local value = opt.value
 

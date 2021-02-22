@@ -210,7 +210,7 @@ end
 function ROOM_CLASS.rough_size(R)
   local count = 0
 
-  for A in R.areas do
+  for _,A in pairs(R.areas) do
     count = count + #A.seeds
   end
 
@@ -221,7 +221,7 @@ end
 function ROOM_CLASS.num_floors(R)
   local count = 0
 
-  for A in R.areas do
+  for _,A in pairs(R.areas) do
     if A.mode == "floor" then
       count = count + 1
     end
@@ -236,7 +236,7 @@ function ROOM_CLASS.kill_it(R)
   assert(not R.is_dead)
 
   -- sanity check
-  for C in LEVEL.conns do
+  for _,C in pairs(LEVEL.conns) do
     if (C.R1 == R) or (C.R2 == R) then
       error("Killed a connected room!")
     end
@@ -247,7 +247,7 @@ function ROOM_CLASS.kill_it(R)
   -- remove from the trunk object
   table.kill_elem(R.trunk.rooms, R)
 
-  for A in R.areas do
+  for _,A in pairs(R.areas) do
     gui.debugf("   kill %s\n", A.name)
     A:kill_it()
   end
@@ -317,7 +317,7 @@ end
 
 
 function ROOM_CLASS.has_sky_neighbor(R)
-  for C in R.conns do
+  for _,C in pairs(R.conns) do
     if C.A1.room == C.A2.room then goto continue end
     local N = C:other_room(A)
     if N.is_outdoor and N.mode ~= "void" then return true end
@@ -329,7 +329,7 @@ end
 
 
 function ROOM_CLASS.has_teleporter(R)
-  for C in R.conns do
+  for _,C in pairs(R.conns) do
     if C.kind == "teleporter" then return true end
   end
 
@@ -340,7 +340,7 @@ end
 function ROOM_CLASS.prelim_conn_num(R)
   local count = 0
 
-  for PC in LEVEL.prelim_conns do
+  for _,PC in pairs(LEVEL.prelim_conns) do
     if PC.R1 == R or PC.R2 == R then
       count = count + 1
     end
@@ -353,7 +353,7 @@ end
 function ROOM_CLASS.calc_walk_vol(R)
   local vol = 0
 
-  for A in R.areas do
+  for _,A in pairs(R.areas) do
     if (A.mode == "floor" or A.mode == "nature") or
        (A.chunk and A.chunk.kind == "stair")
     then
@@ -372,7 +372,7 @@ end
 function ROOM_CLASS.total_conns(R, ignore_secrets)
   local count = 0
 
-  for C in R.conns do
+  for _,C in pairs(R.conns) do
     if ignore_secrets and C.is_secret then
       goto continue
     end
@@ -416,7 +416,7 @@ function ROOM_CLASS.secret_entry_conn(R, skip_room)
   -- find entry connection for a potential secret room.
   -- when skip_room is non-nil, ignore it.
 
-  for C in R.conns do
+  for _,C in pairs(R.conns) do
     local R2 = C:other_room(R)
 
     if R2 == skip_room then goto continue end
@@ -523,7 +523,7 @@ function ROOM_CLASS.spots_do_decor(R, floor_h)
   local low_h  = PARAM.spot_low_h
   local high_h = PARAM.spot_high_h
 
-  for ent in R.solid_ents do
+  for _,ent in pairs(R.solid_ents) do
     local z1 = ent.z
     local z2 = ent.z + ent.h
 
@@ -721,7 +721,7 @@ function Room_reckon_door_tex()
 
   ---| Room_reckon_door_tex |---
 
-  for C in LEVEL.conns do
+  for _,C in pairs(LEVEL.conns) do
     if C.kind == "edge" then
       visit_conn(C, C.E1, C.E2)
       visit_conn(C, C.F1, C.F2)
@@ -917,7 +917,7 @@ end
 
 
 function Room_reckon_doors()
-  for C in LEVEL.conns do
+  for _,C in pairs(LEVEL.conns) do
     if C.kind == "edge" then
       Room_pick_edge_prefab(C)
 
@@ -1032,7 +1032,7 @@ function Room_detect_porches(R)
     best_A = nil
     best_score = 0
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       local score = eval_porch(A, "indoor")
 
       if score > best_score then
@@ -1579,7 +1579,7 @@ function Room_set_kind(R, is_hallway, is_outdoor, is_cave)
     end
   end
 
-  for A in R.areas do
+  for _,A in pairs(R.areas) do
     A.is_outdoor = R.is_outdoor
   end
 end
@@ -1844,7 +1844,7 @@ function Room_floor_ceil_heights()
       group1, group2 = group2, group1
     end
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.floor_group == group2 then
          A.floor_group =  group1
       end
@@ -1898,7 +1898,7 @@ function Room_floor_ceil_heights()
       end
     end
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.floor_group then
         table.add_unique(R.floor_groups, A.floor_group)
       end
@@ -1939,7 +1939,7 @@ function Room_floor_ceil_heights()
 
 -- stderrf("%s : merging ceil %d --> %d\n", R.name, group2.id, group1.id)
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.ceil_group == group2 then
          A.ceil_group =  group1
       end
@@ -1984,7 +1984,7 @@ function Room_floor_ceil_heights()
   local function group_ceiling_pass(R)
     local groups = {}
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.ceil_group then
         table.add_unique(groups, A.ceil_group)
       end
@@ -2009,7 +2009,7 @@ function Room_floor_ceil_heights()
   local function group_ceilings(R)
     if R.is_outdoor then return end
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.mode == "floor" then
         A.ceil_group = { id=alloc_id("ceil_group") }
       end
@@ -2029,7 +2029,7 @@ function Room_floor_ceil_heights()
     end
 
     -- handle stairs
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.chunk and A.chunk.kind == "stair" and not A.chunk.prefab_def.plain_ceiling then
         local N1 = A.chunk.from_area
         local N2 = A.chunk.dest_area
@@ -2043,7 +2043,7 @@ function Room_floor_ceil_heights()
     end
 
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.ceil_group then
         table.add_unique(R.ceil_groups, A.ceil_group)
       end
@@ -2087,7 +2087,7 @@ function Room_floor_ceil_heights()
     end
 
     -- compute the actual floor heights, ensuring entry_area becomes 'entry_h'
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.prelim_h then
         set_floor(A, base_h + A.prelim_h)
       end
@@ -2134,7 +2134,7 @@ function Room_floor_ceil_heights()
       -- our flow logic cannot handle multiple areas [ which is not common ]
       -- hence these cases become a single flat hallway
 
-      for A in R.areas do
+      for _,A in pairs(R.areas) do
         A.floor_h = R.entry_h
 
         if not A.is_outdoor then
@@ -2207,7 +2207,7 @@ function Room_floor_ceil_heights()
       end
     end
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.mode ~= "floor" then goto continue end
 
       assert(A.floor_h)
@@ -2234,7 +2234,7 @@ function Room_floor_ceil_heights()
     local tab = R.theme.ceilings or R.theme.floors
     assert(tab)
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.is_outdoor then goto continue end
       if A.is_porch   then goto continue end
 
@@ -2320,7 +2320,7 @@ function Room_floor_ceil_heights()
     end
 
     -- recurse to neighbors
-    for C in R.conns do
+    for _,C in pairs(R.conns) do
       if C.is_cycle then goto continue end
 
       local R2 = C:other_room(R)
@@ -2360,7 +2360,7 @@ function Room_floor_ceil_heights()
 
 
   local function do_liquid_areas(R)
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.mode == "liquid" then
         local N = A:lowest_neighbor()
 
@@ -2403,7 +2403,7 @@ function Room_floor_ceil_heights()
   local function kill_cages(R, want_void)
     -- turn cages in start rooms into a plain floor
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.mode ~= "cage" then goto continue end
 
       if R.is_park or R.is_cave or want_void then
@@ -2521,7 +2521,7 @@ function Room_floor_ceil_heights()
 
     R.cage_rail_areas = {}
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.mode == "cage" then
         do_a_cage(R, A)
       end
@@ -2568,7 +2568,7 @@ function Room_floor_ceil_heights()
     R.max_floor_h = -EXTREME_H
     R.min_floor_h =  EXTREME_H
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.floor_h then
         R.max_floor_h = math.max(R.max_floor_h, A.max_floor_h or A.floor_h)
         R.min_floor_h = math.min(R.min_floor_h, A.min_floor_h or A.floor_h)
@@ -2583,7 +2583,7 @@ function Room_floor_ceil_heights()
 
   local function check_joiner_nearby_h(A)
     -- FIXME for terminators
-    for C in LEVEL.conns do
+    for _,C in pairs(LEVEL.conns) do
       if (C.kind == "joiner" or C.kind == "XXX_terminator") and
          (C.A1 == A or C.A2 == A)
       then
@@ -2598,7 +2598,7 @@ function Room_floor_ceil_heights()
   local function calc_ceil_stuff(R, group)
     group.vol = 0
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.ceil_group == group then
         group.vol = group.vol + A.svolume
 
@@ -2613,7 +2613,7 @@ function Room_floor_ceil_heights()
 
     group.min_h = 96
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.ceil_group == group and A:has_conn() then
         -- TODO : get nearby_h from arch/door prefab  [ but it aint picked yet... ]
         local min_h = A.floor_h + 128 - group.max_floor_h
@@ -2696,7 +2696,7 @@ function Room_floor_ceil_heights()
 
     local groups = {}
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.ceil_group then
         table.add_unique(groups, A.ceil_group)
       end
@@ -2725,7 +2725,7 @@ function Room_floor_ceil_heights()
       ceiling_group_heights(R)
     end
 
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.mode ~= "floor" then goto continue end
 
       -- outdoor heights are done later, get a dummy now
@@ -2773,7 +2773,7 @@ function Room_floor_ceil_heights()
       if not R.entry_h then
 --[[ "fubar" debug stuff
 R.entry_h = -77
-for A in R.areas do A.floor_h = R.entry_h end
+for _,A in pairs(R.areas) do A.floor_h = R.entry_h end
 end
 --]]
         error("Room did not get an entry_h")

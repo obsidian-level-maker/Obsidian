@@ -1956,7 +1956,7 @@ function Level_choose_themes()
 
 
   local function set_single_theme(name)
-    for EPI in GAME.episodes do
+    for _,EPI in pairs(GAME.episodes) do
       set_an_episode(EPI, name)
     end
   end
@@ -1965,7 +1965,7 @@ function Level_choose_themes()
   local function set_jumbled_themes()
     local last_theme
 
-    for LEV in GAME.levels do
+    for _,LEV in pairs(GAME.levels) do
       local tab = table.copy(theme_tab)
 
       -- prefer a different theme than the last one
@@ -2104,12 +2104,12 @@ function Level_do_styles()
   -- decide the values
   STYLE = {}
 
-  for name,prob_tab in style_tab do
+  for name,prob_tab in pairs(style_tab) do
     STYLE[name] = rand.key_by_probs(prob_tab)
   end
 
   -- apply user settings
-  for name,_ in GLOBAL_STYLE_LIST do
+  for name,_ in pairs(GLOBAL_STYLE_LIST) do
     if OB_CONFIG[name] and OB_CONFIG[name] ~= "mixed" then
       STYLE[name] = OB_CONFIG[name]
     end
@@ -2236,8 +2236,8 @@ function Level_handle_prebuilt()
   -- randomly pick one
   local probs = {}
 
-  for info in LEVEL.prebuilt do
-    probs[_index] = info.prob or 50
+  for index,info in pairs(LEVEL.prebuilt) do
+    probs[index] = info.prob or 50
   end
 
   local info = LEVEL.prebuilt[rand.index_by_probs(probs)]
@@ -2394,12 +2394,12 @@ function Level_make_all()
   Title_generate()
 
 
-  for EPI in GAME.episodes do
+  for _,EPI in pairs(GAME.episodes) do
     EPISODE = EPI
 
     EPISODE.seen_weapons = {}
 
-    for LEV in EPI.levels do
+    for _,LEV in pairs(EPI.levels) do
       LEV.allowances = {}
 
       if Level_make_level(LEV) == "abort" then

@@ -481,7 +481,7 @@ end
 
 
 function SEED_CLASS.has_connection(S)
-  for dir in geom.ALL_DIRS do
+  for _,dir in pairs(geom.ALL_DIRS) do
     local E = S.edge[dir]
     if E and E.conn then return true end
   end
@@ -655,7 +655,7 @@ function Seed_squarify()
   end -- sx, sy
   end
 
-  for A in LEVEL.areas do
+  for _,A in pairs(LEVEL.areas) do
     A:remove_dead_seeds()
   end
 end
@@ -921,7 +921,7 @@ function Seed_save_svg_image(filename)
   for y = 1, SEED_H do
     local S = SEEDS[x][y]
 
-    for dir in geom.ALL_DIRS do
+    for _,dir in pairs(geom.ALL_DIRS) do
       visit_seed(S, dir)
       if S.top then visit_seed(S.top, dir) end
     end
@@ -967,7 +967,7 @@ function Seed_draw_minimap()
     y1 = (y1 - min_y + ofs_y) * map_H / size
     y2 = (y2 - min_y + ofs_y) * map_H / size
 
-    gui.minimap_draw_line(x1,y1, x2,y2, color)
+    gui.minimap_draw_line(int(x1),int(y1), int(x2),int(y2), color)
   end
 
 
@@ -1022,7 +1022,7 @@ function Seed_draw_minimap()
   for y = 1, SEED_H do
     local S = SEEDS[x][y]
 
-    for dir in geom.ALL_DIRS do
+    for _,dir in pairs(geom.ALL_DIRS) do
       visit_seed(S, dir)
       if S.top then visit_seed(S.top, dir) end
     end

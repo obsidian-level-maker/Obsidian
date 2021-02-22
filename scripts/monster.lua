@@ -28,7 +28,7 @@ function Monster_init()
 
   local dead_ones = {}
 
-  for name,info in GAME.MONSTERS do
+  for name,info in pairs(GAME.MONSTERS) do
     local orig = info.replaces
     if orig then
       assert(info.replace_prob)
@@ -47,7 +47,7 @@ function Monster_init()
 
   -- remove a replacement monster if the monster it replaces
   -- does not exist (e.g. stealth_gunner in DOOM 1 mode).
-  for name,_ in dead_ones do
+  for name,_ in pairs(dead_ones) do
     GAME.MONSTERS[name] = nil
   end
 end
@@ -92,7 +92,7 @@ function Monster_pacing()
   local function collect_rooms()
     room_list = {}
 
-    for R in LEVEL.rooms do
+    for _,R in pairs(LEVEL.rooms) do
       if R.is_hallway or R.is_secret then
         R.pressure = "low"
         goto continue
@@ -105,7 +105,7 @@ function Monster_pacing()
 
 
   local function mark_connections()
-    for C in LEVEL.conns do
+    for _,C in pairs(LEVEL.conns) do
       local R1 = C.R1
       local R2 = C.R2
 
@@ -174,7 +174,7 @@ function Monster_pacing()
 
     local count = 0
 
-    for C in R.conns do
+    for _,C in pairs(R.conns) do
       if C.lock then goto continue end
       if C.is_secret then goto continue end
       if C.kind == "teleporter" then goto continue end
@@ -206,7 +206,7 @@ function Monster_pacing()
   local function find_isolated_rooms()
     rand.shuffle(room_list)
 
-    for R in room_list do
+    for _,R in pairs(room_list) do
       if not R.pressure and is_isolated(R) then
         handle_isolated_room(R)
       end
@@ -218,7 +218,7 @@ function Monster_pacing()
     local tab = { low=32, medium=64, high=32 }
 
     -- avoid being same as a direct neighbor
-    for C in R.conns do
+    for _,C in pairs(R.conns) do
       if C.lock then goto continue end
       if C.is_secret then goto continue end
 
@@ -247,7 +247,7 @@ function Monster_pacing()
   local function visit_the_rest()
     rand.shuffle(room_list)
 
-    for R in room_list do
+    for _,R in pairs(room_list) do
       if not R.pressure then
         handle_remaining_room(R)
       end
@@ -261,10 +261,10 @@ function Monster_pacing()
     gui.debugf("  quota : low=%d high=%d\n", low_quota, high_quota)
     gui.debugf("  totals: low=%d high=%d medium=%d\n", amounts.low, amounts.high, amounts.medium)
 
-    for Z in LEVEL.zones do
+    for _,Z in pairs(LEVEL.zones) do
       gui.debugf("%s:\n", Z.name)
 
-      for R in Z.rooms do
+      for _,R in pairs(Z.rooms) do
         gui.debugf("   %s = %-6s : %s\n", R.name, R.pressure or "--UNSET--",
                    (R.goals[1] and R.goals[1].kind) or "")
       end
@@ -283,7 +283,7 @@ function Monster_pacing()
 
   mark_connections()
 
-  for R in room_list do
+  for _,R in pairs(room_list) do
     handle_known_room(R)
   end
 
@@ -338,7 +338,7 @@ function Monster_assign_bosses()
     local best
     local best_score = 0
 
-    for R in LEVEL.rooms do
+    for _,R in pairs(LEVEL.rooms) do
       local score = eval_room(R, bf)
 
       if score > best_score then
@@ -357,7 +357,7 @@ function Monster_assign_bosses()
 
     R.avoid_mons[mon] = true
 
-    for N in R.quest.rooms do
+    for _,N in pairs(R.quest.rooms) do
       N.avoid_mons[mon] = true
     end
 
@@ -373,7 +373,7 @@ function Monster_assign_bosses()
 
   ---| Monster_assign_bosses |---
 
-  for bf in LEVEL.boss_fights do
+  for _,bf in pairs(LEVEL.boss_fights) do
     local R = pick_room(bf)
 
     if R then
@@ -2245,7 +2245,7 @@ function Monster_make_battles()
   -- Rooms have been sorted into a visitation order, so we just
   -- insert some monsters into for one and simulate for battle.
 
-  for R in LEVEL.rooms do
+  for _,R in pairs(LEVEL.rooms) do
     Player_give_room_stuff(R)
 
     Monster_collect_big_spots(R)
