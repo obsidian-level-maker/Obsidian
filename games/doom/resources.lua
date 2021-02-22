@@ -7,7 +7,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --------------------------------------------------------------------
@@ -67,8 +67,8 @@ DOOM.PALETTES =
     0,  0, 83,   0,  0, 71,   0,  0, 59,   0,  0, 47,   0,  0, 35,
     0,  0, 23,   0,  0, 11,   0, 47, 47, 255,159, 67, 255,231, 75,
   255,123,255, 255,  0,255, 207,  0,207, 159,  0,155, 111,  0,107,
-  167,107,107
-  }
+  167,107,107,
+  },
 }
 
 
@@ -76,13 +76,13 @@ DOOM.PALETTES =
 
 DOOM.LEVEL_GFX_COLORS =
 {
-  gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 }
-  silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 }
-  bronze = { 0,2, 191,188, 235,232, 221,218,215,213,211,209 }
-  iron   = { 0,7,5, 111,109,107,104,101,98,94,90,86,81 }
+  gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
+  silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
+  bronze = { 0,2, 191,188, 235,232, 221,218,215,213,211,209 },
+  iron   = { 0,7,5, 111,109,107,104,101,98,94,90,86,81 },
 
-  red    = { 0,2, 191,189,187,185,183,181,179 }
-  black  = { 0,0,0,0, 0,0,0,0 }
+  red    = { 0,2, 191,189,187,185,183,181,179 },
+  black  = { 0,0,0,0, 0,0,0,0 },
 }
 
 
@@ -90,19 +90,19 @@ function DOOM.make_cool_gfx()
   local GREEN =
   {
     0, 7, 127, 126, 125, 124, 123,
-    122, 120, 118, 116, 113
+    122, 120, 118, 116, 113,
   }
 
   local BRONZE_2 =
   {
     0, 2, 191, 189, 187, 235, 233,
-    223, 221, 219, 216, 213, 210
+    223, 221, 219, 216, 213, 210,
   }
 
   local RED =
   {
     0, 2, 188,185,184,183,182,181,
-    180,179,178,177,176,175,174,173,172
+    180,179,178,177,176,175,174,173,172,
   }
 
 
@@ -144,7 +144,7 @@ function DOOM.make_level_gfx()
   if not GAME.level_gfx_colors then
     local kind = rand.key_by_probs(
     {
-      gold=12, silver=3, bronze=8, iron=10
+      gold=12, silver=3, bronze=8, iron=10,
     })
 
     GAME.level_gfx_colors = assert(DOOM.LEVEL_GFX_COLORS[kind])
@@ -166,7 +166,7 @@ function DOOM.make_episode_gfx()
 
   gui.set_colormap(2, colors)
 
-  each EPI in GAME.episodes do
+  for EPI in GAME.episodes do
     if EPI.name_patch and EPI.description then
       gui.wad_name_gfx(EPI.name_patch, EPI.description, 2)
     end
@@ -183,7 +183,7 @@ function DOOM.all_done()
   DOOM.make_cool_gfx()
   DOOM.make_episode_gfx()
 
-  local dir = "games/doom/data/"
+  local dir = "games/doom/data/",
 
   gui.wad_merge_sections(dir .. "doom_falls.wad")
   gui.wad_merge_sections(dir .. "lift_flat.wad")
