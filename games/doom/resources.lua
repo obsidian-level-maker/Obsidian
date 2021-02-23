@@ -166,7 +166,7 @@ function DOOM.make_episode_gfx()
 
   gui.set_colormap(2, colors)
 
-  for EPI in GAME.episodes do
+  for _,EPI in pairs(GAME.episodes) do
     if EPI.name_patch and EPI.description then
       gui.wad_name_gfx(EPI.name_patch, EPI.description, 2)
     end
@@ -183,7 +183,7 @@ function DOOM.all_done()
   DOOM.make_cool_gfx()
   DOOM.make_episode_gfx()
 
-  local dir = "games/doom/data/",
+  local dir = "games/doom/data/"
 
   gui.wad_merge_sections(dir .. "doom_falls.wad")
   gui.wad_merge_sections(dir .. "lift_flat.wad")

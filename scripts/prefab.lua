@@ -91,7 +91,6 @@ function Fab_load_all_definitions()
     if sub == "_attic" then return end
 
     local dir = top_level .. "/" .. sub
-
     local list, err = gui.scan_directory(dir, "*.lua")
 
     if list == nil then
@@ -121,7 +120,7 @@ function Fab_load_all_definitions()
       return
     end
 
-    for top_level,sub in pairs(subdirs) do
+    for _,sub in pairs(subdirs) do
       load_from_subdir(top_level, sub)
     end
 
@@ -1617,7 +1616,7 @@ function Fab_collect_fields(fab)
   local function matching_fields()
     local list = { }
 
-    for k,v in fab do
+    for k,v in pairs(fab) do
       if match_prefix(k) then
         table.insert(list, k)
       end
@@ -1900,7 +1899,7 @@ function Fab_replacements(fab)
 
     if not THEME.entity_remap then return end
 
-    for name1,name2 in THEME.entity_remap do
+    for name1,name2 in pairs(THEME.entity_remap) do
       local id1 = get_entity_id(name1)
       local id2 = get_entity_id(name2)
 

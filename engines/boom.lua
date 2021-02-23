@@ -84,7 +84,7 @@ function BOOM.create_dehacked()
 
   --- level names ---
 
-  for L in GAME.levels do
+  for _,L in pairs(GAME.levels) do
     local prefix = PARAM.bex_map_prefix
 
     if L.description and prefix then
@@ -112,7 +112,7 @@ function BOOM.create_dehacked()
 
   --- episode texts ---
 
-  for EPI in GAME.episodes do
+  for _,EPI in pairs(GAME.episodes) do
     if EPI.mid_text and EPI.bex_mid_name then
       add_string(EPI.bex_mid_name, EPI.mid_text)
     end

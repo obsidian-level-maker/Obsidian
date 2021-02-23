@@ -270,7 +270,6 @@ static bool scan_dir_process_name(const char *name, const char *parent, const ch
 	PHYSFS_close(fp);
 
 	// lastly, check match
-
 	if (strcmp(match, "*") == 0)
 	{
 		return true;
@@ -303,7 +302,6 @@ int gui_scan_directory(lua_State *L)
 {
 	const char *dir_name = luaL_checkstring(L, 1);
 	const char *match    = luaL_checkstring(L, 2);
-
 	if (! PHYSFS_exists(dir_name))
 	{
 		lua_pushnil(L);

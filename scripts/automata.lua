@@ -1538,7 +1538,7 @@ end
 
 
 function GRID_CLASS.neighbors_of_blobs(grid)
-  for id, reg in grid.regions do
+  for id, reg in pairs(grid.regions) do
     reg.neighbors = {}
   end
 
@@ -1582,11 +1582,11 @@ function GRID_CLASS.spread_blob_dists(grid, field)
   repeat
     changes = false
 
-    for _,B1 in grid.regions do
+    for _,B1 in pairs(grid.regions) do
       -- compute minimum of neighbors
       local min_val
 
-      for _,B2 in B1.neighbors do
+      for _,B2 in pairs(B1.neighbors) do
         if B2[field] and (not min_val or B2[field] < min_val) then
           min_val = B2[field]
         end

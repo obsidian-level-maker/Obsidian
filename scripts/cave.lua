@@ -4607,7 +4607,7 @@ function Cave_build_a_scenic_vista(area)
 
     -- add some scenery objects
     if THEME.cliff_trees then
-      for id, reg in blob_map.regions do
+      for id, reg in pairs(blob_map.regions) do
         local cx, cy = blob_map:random_blob_cell(id)
         if not cx then goto continue end
 

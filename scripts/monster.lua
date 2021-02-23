@@ -397,7 +397,7 @@ function Monster_zone_palettes()
       return false
     end
 
-    for k,v1 in A do
+    for k,v1 in pairs(A) do
       local v2 = B[k]
 
       if not v2 or math.abs(v1 - v2) > 0.1 then
@@ -413,7 +413,7 @@ function Monster_zone_palettes()
     local total = 0
     local size  = table.size(pal)
 
-    for mon,qty in pal do
+    for mon,qty in pairs(pal) do
       if qty <= 0 then goto continue end
 
       local info = assert(GAME.MONSTERS[mon])
@@ -483,7 +483,7 @@ function Monster_zone_palettes()
 
     local quants = gen_quantity_set(total)
 
-    for mon,_ in base_pal do
+    for mon,_ in pairs(base_pal) do
       local qty = pick_quant(quants)
 
       if qty > 0 then
@@ -498,11 +498,11 @@ function Monster_zone_palettes()
 
 
   local function dump_palette(pal)
-    for mon,qty in pal do
+    for mon,qty in pairs(pal) do
       gui.debugf("   %-12s* %1.2f\n", mon, qty)
     end
 
-    gui.debugf("   TOUGHNESS: %d\n", palette_toughness(pal))
+    gui.debugf("   TOUGHNESS: %d\n", int(palette_toughness(pal)))
   end
 
 
@@ -561,7 +561,7 @@ function Monster_split_spots(list, max_size)
   -- recreate the spot list
   local new_list = {}
 
-  for spot in list do
+  for _,spot in pairs(list) do
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
     local XN = int(w / max_size)
@@ -600,7 +600,7 @@ end
 function Monster_collect_big_spots(R)
 
   local function big_spots_from_mon_spots()
-    for spot in R.mon_spots do
+    for _,spot in pairs(R.mon_spots) do
       local w = spot.x2 - spot.x1
       local h = spot.y2 - spot.y1
 
@@ -666,7 +666,7 @@ function Monster_visibility(R)
     local small_list = {}
     local large_list = {}
 
-    for spot in R.mon_spots do
+    for _,spot in pairs(R.mon_spots) do
       if is_large(spot) then
         table.insert(large_list, spot)
       else
@@ -753,10 +753,10 @@ function Monster_visibility(R)
 
 
   local function spread_vis(source_vis)
-    for A in spot_list do
+    for _,A in pairs(spot_list) do
       if A.vis ~= source_vis then goto continue end
 
-      for B in spot_list do
+      for _,B in pairs(spot_list) do
         if not B.vis and check_spot_to_spot(A, B) then
           B.vis = source_vis + 1
         end
@@ -770,8 +770,8 @@ function Monster_visibility(R)
 
   collect_spots()
 
-  for A in R.entry_spots do
-    for B in spot_list do
+  for _,A in pairs(R.entry_spots) do
+    for _,B in pairs(spot_list) do
       if check_spot_to_spot(A, B) then
         B.vis = 0
       end
@@ -780,7 +780,7 @@ function Monster_visibility(R)
 
   spread_vis(0)
 
-  for B in spot_list do
+  for _,B in pairs(spot_list) do
     if not B.vis then
       B.vis = 2
     end
@@ -850,7 +850,7 @@ function Monster_fill_room(R)
     if num < 1 then num = 1 end
     if num > 5 then num = 5 end
 
-    gui.debugf("number_of_kinds: %d (base: %d)\n", num, base_num)
+    gui.debugf("number_of_kinds: %d (base: %d)\n", num, int(base_num))
 
     return num
   end
@@ -921,7 +921,7 @@ function Monster_fill_room(R)
     -- value depends on total area of monster spots
     local area = 0
 
-    for spot in R.mon_spots do
+    for _,spot in pairs(R.mon_spots) do
       area = area + (spot.x2 - spot.x1) * (spot.y2 - spot.y1)
     end
 
@@ -996,7 +996,7 @@ function Monster_fill_room(R)
 
     local count = 0
 
-    for spot in spot_list do
+    for _,spot in pairs(spot_list) do
       local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
       w = int(w / 64) ; if w < 1 then w = 1 end
@@ -1012,7 +1012,7 @@ function Monster_fill_room(R)
   local function tally_cage_spots()
     local total = 0
 
-    for cage in R.cages do
+    for _,cage in pairs(R.cages) do
       total = total + tally_spots(cage.mon_spots)
     end
 
@@ -1043,7 +1043,7 @@ function Monster_fill_room(R)
 
     -- this also determines the 'central_dist' field of spots
 
-    for spot in R.mon_spots do
+    for _,spot in pairs(R.mon_spots) do
       -- already processed?
       if spot.marked then goto continue end
 
@@ -1221,7 +1221,7 @@ function Monster_fill_room(R)
 
     local list = {}
 
-    for mon,info in GAME.MONSTERS do
+    for mon,info in pairs(GAME.MONSTERS) do
       local prob = info.crazy_prob or 50
 
       if not LEVEL.global_pal[mon] then prob = 0 end
@@ -1262,7 +1262,7 @@ function Monster_fill_room(R)
     local list = {}
     gui.debugf("Monster list:\n")
 
-    for mon,qty in R.zone.mon_palette do
+    for mon,qty in pairs(R.zone.mon_palette) do
       local prob = prob_for_mon(mon, info)
 
       prob = prob * qty
@@ -1545,7 +1545,7 @@ function Monster_fill_room(R)
 
     local total = 0
 
-    for spot in R.mon_spots do
+    for _,spot in pairs(R.mon_spots) do
       local fit_num = mon_fits(mon, spot)
 
       if fit_num <= 0 then
@@ -1673,7 +1673,7 @@ function Monster_fill_room(R)
 
     local total_density = densities.NONE
 
-    for mon,_ in palette do
+    for mon,_ in pairs(palette) do
       densities[mon] = density_for_mon(mon)
 
       total_density = total_density + densities[mon]
@@ -1685,7 +1685,7 @@ gui.debugf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densit
     local wants = {}
     local total = 0
 
-    for mon,d in densities do
+    for mon,d in pairs(densities) do
       if mon ~= "NONE" then
         local num = want_total * d / total_density
 
@@ -1697,7 +1697,7 @@ gui.debugf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densit
 
     -- ensure we have at least one monster
     if total == 0 and not R.is_secret then
-      for mon in table.keys(wants) do
+      for _,mon in pairs(table.keys(wants)) do
         if wants[mon] == 0 then wants[mon] = 1 end
       end
     end
@@ -1725,7 +1725,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     local baddies = {}
 
-    for mon,_ in palette do
+    for mon,_ in pairs(palette) do
       local bad = rough_badness(mon)
 
       table.insert(baddies, { mon=mon, bad=bad })
@@ -1775,7 +1775,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- collect monsters that match the size range
     local want2 = {}
 
-    for mon,qty in wants do
+    for mon,qty in pairs(wants) do
       if qty > 0 then
         local r = GAME.MONSTERS[mon].r
 
@@ -1845,7 +1845,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     local list = {}
 
-    for mon,info in GAME.MONSTERS do
+    for mon,info in pairs(GAME.MONSTERS) do
       local prob = prob_for_mon(mon, what)
 
       if what == "cage" then prob = prob * (info.cage_factor or 1) end
@@ -1896,7 +1896,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     local pal2 = {}
 
-    for mon,prob in palette do
+    for mon,prob in pairs(palette) do
       if mon_fits(mon, spot) > 0 then
         pal2[mon] = prob
       end
@@ -1968,7 +1968,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     local what = assert(cage.kind)
 
 gui.debugf("fill_a_cage : palette =\n%s\n", table.tostr(palette))
-    for spot in cage.mon_spots do
+    for _,spot in pairs(cage.mon_spots) do
       local mon = decide_cage_monster(spot, palette)
 
 gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
@@ -2057,13 +2057,13 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
     local cage_pal = cage_palette("cage", 2, palette)
     local trap_pal = cage_palette("trap", 3, palette)
 
-    for cage in R.cages do
+    for _,cage in pairs(R.cages) do
 gui.debugf("FILLING CAGE in %s\n", R.name)
       cage.kind = "cage"
       fill_a_cage(cage, cage_pal)
     end
 
-    for trap in R.traps do
+    for _,trap in pairs(R.traps) do
 gui.debugf("FILLING TRAP in %s\n", R.name)
       trap.kind = "trap"
       fill_a_cage(trap, trap_pal)
@@ -2205,7 +2205,7 @@ end
 function Monster_show_stats()
   local total = 0
 
-  for _,count in LEVEL.mon_stats do
+  for _,count in pairs(LEVEL.mon_stats) do
     total = total + count
   end
 

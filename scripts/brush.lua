@@ -28,7 +28,7 @@ AMBIENT_LIGHT = {}
 
 function raw_add_brush(brush)
   -- check for obsolete crud
-  for C in brush do
+  for _,C in pairs(brush) do
     assert(not C.x_offset)
     assert(not C.y_offset)
   end
@@ -284,7 +284,7 @@ function Trans.brush(coords)
   -- apply transform
   coords = table.copy(coords)
 
-  for C in coords do
+  for _,C in pairs(coords) do
     if C.x then
       C.x, C.y = Trans.apply_xy(C.x, C.y)
     elseif C.b then
@@ -581,7 +581,7 @@ end
 function brushlib.dump(brush, title)
   gui.debugf("%s:\n{\n", title or "Brush")
 
-  for C in brush do
+  for _,C in pairs(brush) do
     local field_list = {}
 
     for name,val in C do
@@ -601,7 +601,7 @@ function brushlib.dump(brush, title)
 
     local line = ""
 
-    for name in field_list do
+    for _,name in pairs(field_list) do
       local val = C[name]
 
       if _index > 1 then line = line .. ", " end
@@ -619,7 +619,7 @@ end
 function brushlib.copy(brush)
   local newb = {}
 
-  for C in brush do
+  for _,C in pairs(brush) do
     table.insert(newb, table.copy(C))
   end
 
@@ -632,7 +632,7 @@ function brushlib.mid_point(brush)
   local sum_y = 0
   local total = 0
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.x then
       sum_x = sum_x + C.x
       sum_y = sum_y + C.y
@@ -652,7 +652,7 @@ function brushlib.bbox(brush)
   local x1, x2 = 9e9, -9e9
   local y1, y2 = 9e9, -9e9
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.x then
       x1 = math.min(x1, C.x) ; x2 = math.max(x2, C.x)
       y1 = math.min(y1, C.y) ; y2 = math.max(y2, C.y)
@@ -715,7 +715,7 @@ end
 
 
 function brushlib.get_bottom_h(brush)
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.b then return C.b end
   end
 
@@ -724,7 +724,7 @@ end
 
 
 function brushlib.get_top_h(brush)
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.t then return C.t end
   end
 
@@ -735,7 +735,7 @@ end
 function brushlib.slope_top(brush, nx, ny, nz)
   assert(nz > 0)
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.t then
       C.slope = { nx=nx, ny=ny, nz=nz }
       return
@@ -749,7 +749,7 @@ end
 function brushlib.slope_bottom(brush, nx, ny, nz)
   assert(nz < 0)
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.b then
       C.slope = { nx=nx, ny=ny, nz=nz }
       return
@@ -761,7 +761,7 @@ end
 
 
 function brushlib.set_tex(brush, wall, flat)
-  for C in brush do
+  for _,C in pairs(brush) do
     if wall and C.x and not C.tex then
       C.tex = wall
     end
@@ -782,7 +782,7 @@ function brushlib.set_mat(brush, wall, flat)
     -- handle the _LIQUID and _SKY materials
 
     if flat == "_LIQUID" and LEVEL.liquid then
-      for C in brush do
+      for _,C in pairs(brush) do
         if C.t then
           C.special   = C.special   or LEVEL.liquid.special
           C.light_add = C.light_add or LEVEL.liquid.light_add
@@ -803,7 +803,7 @@ end
 
 
 function brushlib.set_y_offset(brush, y_offset)
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.x then
       C.v1 = y_offset
     end
@@ -817,7 +817,7 @@ function brushlib.q3_liquid(brush, medium, top_tex)
   -- only top face has a real texture
   brushlib.set_tex(brush, "nothing")
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.t then
        C.tex = top_tex
     end
@@ -975,7 +975,7 @@ end
 
 
 function brushlib.set_line_flag(brush, key, value)
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.x then
       C[key] = value
     end
@@ -984,7 +984,7 @@ end
 
 
 function brushlib.collect_flags(coords)
-  for C in coords do
+  for _,C in pairs(coords) do
     -- these flags only apply to linedefs
     if not C.x then goto continue end
 
@@ -999,7 +999,7 @@ function brushlib.collect_flags(coords)
         flags = bit.bor(flags, spac)
       end
 
-      for name,value in DOOM_LINE_FLAGS do
+      for name,value in pairs(DOOM_LINE_FLAGS) do
         if C[name] and C[name] ~= 0 then
           flags = bit.bor(flags, value)
           C[name] = nil
@@ -1019,7 +1019,7 @@ end
 
 
 function brushlib.has_sky(brush)
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.mat == "_SKY" then return true end
   end
 
@@ -1030,7 +1030,7 @@ end
 function brushlib.is_quad(brush)
   local x1,y1, x2,y2 = brushlib.bbox(brush)
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.x then
       if C.x > x1+0.1 and C.x < x2-0.1 then return false end
       if C.y > y1+0.1 and C.y < y2-0.1 then return false end
@@ -1049,7 +1049,7 @@ function brushlib.reverse(brush)
 
   local xy_coords = {}
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.x then
       table.insert(xy_coords, { idx=_index, x=C.x, y=C.y })
     end
@@ -1088,7 +1088,7 @@ function brushlib.line_passes_through(brush, px1, py1, px2, py2)
 
   local front, back
 
-  for C in brush do
+  for _,C in pairs(brush) do
     if C.x then
       local d = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
 
@@ -1236,13 +1236,13 @@ end
 
 
 function Quake3_conversion()
-  for B in all_brushes do
+  for _,B in pairs(all_brushes) do
     if B[1].m ~= "xxxliquid" then
       Trans.brush(B)
     end
   end
 
-  for E in all_entities do
+  for _,E in pairs(all_entities) do
     if E.light then
       E.radius = E.light * 1.5
       E.light  = nil
