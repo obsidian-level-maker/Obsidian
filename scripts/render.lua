@@ -243,7 +243,7 @@ function Render_edge(E)
 
     local f_brush = brushlib.quad(x1, y1, x2, y2)
 
-    for C in f_brush do
+    for _,C in pairs(f_brush) do
       C.flags = DOOM_LINE_FLAGS.draw_never
     end
 
@@ -753,7 +753,7 @@ function Render_corner(cx, cy)
 
     local brush  = brushlib.quad(mx - 8, my - 8, mx + 8, my + 8)
 
-    for C in brush do
+    for _,C in pairs(brush) do
       C.u1 = 0
       C.v1 = 0
     end
@@ -776,7 +776,7 @@ function Render_corner(cx, cy)
   local function init_wall_analysis()
     analysis = {}
 
-    for dir in geom.ALL_DIRS do
+    for _,dir in pairs(geom.ALL_DIRS) do
       if corner.walls[dir] then
         analysis[dir] = corner.walls[dir]
       else
@@ -789,7 +789,7 @@ function Render_corner(cx, cy)
   local function init_fence_analysis()
     analysis = {}
 
-    for dir in geom.ALL_DIRS do
+    for _,dir in pairs(geom.ALL_DIRS) do
       if corner.fences[dir] then
         analysis[dir] = corner.fences[dir]
       else
@@ -942,7 +942,7 @@ function Render_corner(cx, cy)
       init_wall_analysis()
     end
 
-    for dir in geom.CORNERS do
+    for _,dir in pairs(geom.CORNERS) do
       if detect_gap(dir, 1, 1) or
          detect_gap(dir, 1, 2) or
          detect_gap(dir, 2, 1) or
@@ -952,7 +952,7 @@ function Render_corner(cx, cy)
       end
     end
 
-    for dir in geom.SIDES do
+    for _,dir in pairs(geom.SIDES) do
       if detect_gap(dir, 2, 2, "is_sharp") or
          detect_gap(dir, 3, 2, "is_sharp") or
          detect_gap(dir, 2, 3, "is_sharp")
@@ -1296,7 +1296,7 @@ end
 
 
 function Render_void_area(A, S)
-  for S in A.seeds do
+  for _,S in pairs(A.seeds) do
     local w_brush = S:make_brush()
 
     brushlib.set_mat(w_brush, "_DEFAULT")
@@ -1351,7 +1351,7 @@ function Render_floor(A)
 
   ---| Render_floor |---
 
-  for S in A.seeds do
+  for _,S in pairs(A.seeds) do
     if should_do_seed(S) then
       render_seed(S)
 
@@ -1399,7 +1399,7 @@ if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.to
 
   ---| Render_ceiling |---
 
-  for S in A.seeds do
+  for _,S in pairs(A.seeds) do
     if should_do_seed(S) then
       render_seed(S)
 
@@ -1742,7 +1742,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local brush = brushlib.quad(mx - r, my - r, mx + r, my + r)
 
     -- mark as "no draw"
-    for C in brush do
+    for _,C in pairs(brush) do
       C.draw_never = 1
     end
 
@@ -2135,7 +2135,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     A.ceil_mat = "_SKY"
 
     -- disable walls around/inside this chunk
-    for N in A.neighbors do
+    for _,N in pairs(A.neighbors) do
       Junction_make_empty(Junction_lookup(A, N))
     end
   end
@@ -2194,13 +2194,13 @@ function Render_area(A)
   if A.chunk and A.chunk.occupy == "whole" then
     -- whole chunks never build walls inside them
   else
-    for E in A.edges do
+    for _,E in pairs(A.edges) do
       assert(E.area == A)
       Render_edge(E)
     end
 
-    for S in A.seeds do
-      for dir in geom.ALL_DIRS do
+    for _,S in pairs(A.seeds) do
+      for _,dir in pairs(geom.ALL_DIRS) do
         Render_junction(A, S, dir)
       end
     end
@@ -2267,14 +2267,14 @@ function Render_all_chunks()
     -- [ to get correct action of the remote door, etc ]
     SWITCHES_ONLY = (pass == 2)
 
-    for R in LEVEL.rooms do
-      for chunk in R.floor_chunks do visit_chunk(chunk) end
-      for chunk in R.ceil_chunks  do visit_chunk(chunk) end
+    for _,R in pairs(LEVEL.rooms) do
+      for _,chunk in pairs(R.floor_chunks) do visit_chunk(chunk) end
+      for _,chunk in pairs(R.ceil_chunks ) do visit_chunk(chunk) end
 
-      for chunk in R.closets do visit_chunk(chunk) end
-      for chunk in R.stairs  do visit_chunk(chunk) end
-      for chunk in R.joiners do visit_chunk(chunk) end
-      for chunk in R.pieces  do visit_chunk(chunk) end
+      for _,chunk in pairs(R.closets) do visit_chunk(chunk) end
+      for _,chunk in pairs(R.stairs ) do visit_chunk(chunk) end
+      for _,chunk in pairs(R.joiners) do visit_chunk(chunk) end
+      for _,chunk in pairs(R.pieces ) do visit_chunk(chunk) end
     end
   end
 end
@@ -2312,7 +2312,7 @@ function Render_depot(depot)
   local cur_trap = assert(dest_R.traps[#dest_R.traps])
 
   if depot.max_spot_size then
-    for spot in cur_trap.mon_spots do
+    for _,spot in pairs(cur_trap.mon_spots) do
       if spot.x2 > spot.x1 + depot.max_spot_size then
          spot.x2 = spot.x1 + depot.max_spot_size
       end
@@ -2326,7 +2326,7 @@ end
 
 
 function Render_all_areas()
-  for A in LEVEL.areas do
+  for _,A in pairs(LEVEL.areas) do
     Render_area(A)
   end
 
@@ -2336,7 +2336,7 @@ function Render_all_areas()
   end
   end
 
-  for depot in LEVEL.depots do
+  for _,depot in pairs(LEVEL.depots) do
     Render_depot(depot)
   end
 end
@@ -2415,7 +2415,7 @@ end
 
 
 function Render_set_all_properties()
-  for A in LEVEL.areas do
+  for _,A in pairs(LEVEL.areas) do
     Render_properties_for_area(A)
   end
 end
@@ -2455,7 +2455,7 @@ function Render_triggers()
       brush = brushlib.quad(chunk.x1 + w, chunk.y1 + h, chunk.x2 - w, chunk.y2 - h)
     end
 
-    for C in brush do
+    for _,C in pairs(brush) do
       setup_coord(C, trig)
     end
 
@@ -2558,7 +2558,7 @@ function Render_triggers()
       do_spot_trigger(R, trig)
 
     elseif trig.kind == "edge" then
-      for E in trig.edges do
+      for _,E in pairs(trig.edges) do
         do_edge_trigger(R, trig, E)
       end
 
@@ -2569,7 +2569,7 @@ function Render_triggers()
 
 
   local function test_triggers()
-    for C in LEVEL.conns do
+    for _,C in pairs(LEVEL.conns) do
       local E = C.E1
       if C.R1.lev_along > C.R2.lev_along then E = C.E2 end
       if E then
@@ -2588,8 +2588,8 @@ function Render_triggers()
 
   ---| Render_triggers |---
 
-  for R in LEVEL.rooms do
-    for trig in R.triggers do
+  for _,R in pairs(LEVEL.rooms) do
+    for _,trig in pairs(R.triggers) do
       build_trigger(R, trig)
     end
   end
@@ -2628,12 +2628,12 @@ function Render_determine_spots()
     gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, A.floor_h, SPOT_LEDGE)
 
     -- clear polygons making up the floor
-    for brush in A.floor_brushes do
+    for _,brush in pairs(A.floor_brushes) do
       gui.spots_fill_poly(brush, SPOT_CLEAR)
     end
 
     -- set the edges of the area
-    for E in A.side_edges do
+    for _,E in pairs(A.side_edges) do
       gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
     end
 
@@ -2656,14 +2656,14 @@ function Render_determine_spots()
 
     -- this is mainly for traps
     if A.mon_focus then
-      for spot in mon_spots do
+      for _,spot in pairs(mon_spots) do
         spot.face = A.mon_focus
       end
     end
 
     -- for large cages/traps, adjust quantities
     if mode == "cage" or mode == "trap" then
-      for spot in mon_spots do
+      for _,spot in pairs(mon_spots) do
         spot.use_factor = 1.0 / (A.svolume ^ 0.64)
       end
     end
@@ -2749,7 +2749,7 @@ function Render_determine_spots()
     end
 
     -- set the edges of the room
-    for E in area.side_edges do
+    for _,E in pairs(area.side_edges) do
       gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
     end
 
@@ -2783,14 +2783,14 @@ gui.spots_dump("Cave spot dump")
 
 
   local function spots_in_natural_area(R, area)
-    for FL in area.walk_floors do
+    for _,FL in pairs(area.walk_floors) do
       spots_in_cave_floor(R, area, FL)
     end
   end
 
 
   local function spots_in_room(R)
-    for A in R.areas do
+    for _,A in pairs(R.areas) do
       if A.mode == "floor" or A.mode == "cage" then
         spots_in_flat_floor(R, A)
 
@@ -2819,7 +2819,7 @@ gui.spots_dump("Cave spot dump")
 
   ---| Render_determine_spots |---
 
-  for R in LEVEL.rooms do
+  for _,R in pairs(LEVEL.rooms) do
     spots_in_room(R)
 
     R:exclude_monsters()
@@ -3022,7 +3022,7 @@ function Render_cells(area)
 
     local result = 0
 
-    for L in area.cave_lights do
+    for _,L in pairs(area.cave_lights) do
       -- compute distance
       local dx = L.x - cell_x
       local dy = L.y - cell_y
@@ -3084,7 +3084,7 @@ function Render_cells(area)
 
     -- disable liquid lighting in outdoor rooms
     if f_mat == "_LIQUID" and area.is_outdoor and not LEVEL.is_dark then
-      for C in f_brush do
+      for _,C in pairs(f_brush) do
         if C.t then C.light_add = 0 end
       end
     end

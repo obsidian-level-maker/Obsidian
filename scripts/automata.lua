@@ -494,7 +494,7 @@ function GRID_CLASS.flood_fill(grid)
   while #next_points > 0 do
     local np_list = next_points ; next_points = {}
 
-    for P in np_list do
+    for _,P in pairs(np_list) do
       flood_point(P.x, P.y)
     end
   end
@@ -1357,7 +1357,7 @@ function GRID_CLASS.merge_small_blobs(grid, min_size)
     -- need to copy the keys, since we modify the table as we go
     local id_list = table.keys(grid.regions)
 
-    for id in id_list do
+    for _,id in pairs(id_list) do
       if grid.regions[id] and grid.regions[id].size < min_size then
         local nb = candidate_to_merge(id)
 
@@ -1414,7 +1414,7 @@ function GRID_CLASS.walkify_blobs(grid, walk_rects)
 
   ---| walkify_blobs |---
 
-  for rect in walk_rects do
+  for _,rect in pairs(walk_rects) do
     handle_rect(rect)
   end
 end

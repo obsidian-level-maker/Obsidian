@@ -376,13 +376,13 @@ function Fab_determine_bbox(fab)
   -- Note: no need to handle slopes, they are defined to be "shrinky"
   --       (i.e. never higher that t, never lower than b).
 
-  for B in fab.brushes do
+  for _,B in pairs(fab.brushes) do
     if B[1].outlier then goto continue end
     if B[1].m == "light" then goto continue end
     if B[1].m == "rail"  then goto continue end
     if B[1].m == "spot"  then goto continue end
 
-    for C in B do
+    for _,C in pairs(B) do
 
       if C.x then
         if not x1 then
@@ -432,7 +432,7 @@ end
 function Fab_transform_XY(fab, T)
 
   local function brush_xy(brush)
-    for C in brush do
+    for _,C in pairs(brush) do
       if C.x then C.x, C.y = Trans.apply_xy(C.x, C.y) end
 
       if C.slope then C.slope = Trans.apply_slope(C.slope) end
@@ -530,15 +530,15 @@ function Fab_transform_XY(fab, T)
 
   -- apply the coordinate transform to all parts of the prefab
 
-  for B in fab.brushes do
+  for _,B in pairs(fab.brushes) do
     brush_xy(B)
   end
 
-  for E in fab.entities do
+  for _,E in pairs(fab.entities) do
     entity_xy(E)
   end
 
-  for M in fab.models do
+  for _,M in pairs(fab.models) do
     model_xy(M)
     entity_xy(M.entity)
   end
@@ -553,7 +553,7 @@ function Fab_transform_Z(fab, T)
   local function brush_z(brush)
     local b, t
 
-    for C in brush do
+    for _,C in pairs(brush) do
       if C.b then C.b = Trans.apply_z(C.b) ; b = C.b end
       if C.t then C.t = Trans.apply_z(C.t) ; t = C.t end
     end
@@ -639,15 +639,15 @@ function Fab_transform_Z(fab, T)
 
   -- apply the coordinate transform to all parts of the prefab
 
-  for B in fab.brushes do
+  for _,B in pairs(fab.brushes) do
     brush_z(B)
   end
 
-  for E in fab.entities do
+  for _,E in pairs(fab.entities) do
     entity_z(E)
   end
 
-  for M in fab.models do
+  for _,M in pairs(fab.models) do
     model_z(M)
   end
 
@@ -659,7 +659,7 @@ end
 function Fab_bound_brushes_Z(fab, z1, z2)
   if not (z1 or z2) then return end
 
-  for B in fab.brushes do
+  for _,B in pairs(fab.brushes) do
     local b = Brush_get_b(B)
     local t = Brush_get_t(B)
 
@@ -676,17 +676,17 @@ function Fab_render(fab)
 
   fab.state = "rendered"
 
-  for B in fab.brushes do
+  for _,B in pairs(fab.brushes) do
     if B[1].m ~= "spot" then
       raw_add_brush(B)
     end
   end
 
-  for M in fab.models do
+  for _,M in pairs(fab.models) do
     raw_add_model(M)
   end
 
-  for E in fab.entities do
+  for _,E in pairs(fab.entities) do
     if E.id then
       raw_add_entity(E)
     end
@@ -704,7 +704,7 @@ function Fab_solid_entities(fab, room)
 
   if fab.solid_ents ~= true then return end
 
-  for E in fab.entities do
+  for _,E in pairs(fab.entities) do
     if E.id then
       room:add_solid_ent(E.id, E.x, E.y, E.z)
     end
@@ -727,7 +727,7 @@ function Fab_process_spots(fab, room)
     if brushlib.is_quad(B) then
       x1,y1, x2,y2 = brushlib.bbox(B)
 
-      for C in B do
+      for _,C in pairs(B) do
         if C.b then z1 = C.b end
         if C.t then z2 = C.t end
       end
@@ -757,11 +757,11 @@ function Fab_process_spots(fab, room)
   local function OLD__distribute_spots(R, list)
     local seen = {}
 
-    for spot in list do
+    for _,spot in pairs(list) do
       seen[spot.kind] = 1
     end
 
-    for spot in list do
+    for _,spot in pairs(list) do
       if not seen["big_item"] and spot.kind == "important" then
         local new_spot = table.copy(spot)
         new_spot.kind = "big_item"
@@ -819,7 +819,7 @@ gui.debugf("Fab_process_spots @ %s\n", room and room.name or "???")
   --TODO : review this
   if not room then return end
 
-  for B in fab.brushes do
+  for _,B in pairs(fab.brushes) do
     if B[1].m == "spot" then
       process_spot(B)
     end
@@ -1125,7 +1125,7 @@ function Fab_load_wad(def)
       { m="solid" }
     }
 
-    for C in coords do
+    for _,C in pairs(coords) do
       table.insert(B, decode_polygon_side(nil, C, 1))
     end        
 
@@ -1166,7 +1166,7 @@ function Fab_load_wad(def)
 
     decode_lighting(S, B[1])
 
-    for C in coords do 
+    for _,C in pairs(coords) do 
       table.insert(B, decode_polygon_side(S, C, 1))
     end
 
@@ -1258,7 +1258,7 @@ function Fab_load_wad(def)
       table.insert(B, C)
     end
 
-    for C in coords do
+    for _,C in pairs(coords) do
       table.insert(B, decode_polygon_side(S, C, pass))
     end
 
@@ -1286,7 +1286,7 @@ function Fab_load_wad(def)
     table.insert(B, TOP)
 
     -- sides
-    for C in coords do
+    for _,C in pairs(coords) do
       table.insert(B, decode_3d_floor_side(exfl, C))
     end
 
@@ -1581,7 +1581,7 @@ function Fab_merge_skins(fab, room, list)
     table.merge(result, room.skin)
   end
 
-  for skin in list do
+  for _,skin in pairs(list) do
     table.merge(result, skin)
   end
 
@@ -1631,7 +1631,7 @@ function Fab_collect_fields(fab)
 
   fab.fields = {}
 
-  for k in matching_fields() do
+  for _,k in pairs(matching_fields()) do
     fab.fields[k] = fab[k] ; fab[k] = nil
   end
 
@@ -1659,7 +1659,7 @@ function Fab_substitutions(fab, SKIN)
     -- most fields with a table value are considered to be random
     -- replacement, e.g. tex_FOO = { COMPSTA1=50, COMPSTA2=50 }.
 
-    for name in keys do
+    for _,name in pairs(keys) do
       local value = fab.fields[name]
 
       if type(value) ~= "table" then goto continue end
@@ -1700,7 +1700,7 @@ function Fab_substitutions(fab, SKIN)
 
 
   local function subst_pass(keys)
-    for name in keys do
+    for _,name in pairs(keys) do
       local value = fab.fields[name]
 
       if is_subst(value) then
@@ -1915,8 +1915,8 @@ function Fab_replacements(fab)
 
   build_entity_remap_table()
 
-  for B in fab.brushes do
-    for C in B do
+  for _,B in pairs(fab.brushes) do
+    for _,C in pairs(B) do
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
@@ -1933,7 +1933,7 @@ function Fab_replacements(fab)
     end
   end
 
-  for E in fab.entities do
+  for _,E in pairs(fab.entities) do
     check_props(E)
 
     -- unknown entities set the 'id' to NIL
@@ -2190,7 +2190,7 @@ function Fab_find_matches(reqs, match_state)
 
     local factor = 1.0
 
-    for name in style_tab do
+    for _,name in pairs(style_tab) do
       if STYLE[name] == nil then
         error("Unknown style name in prefab def: " .. tostring(name))
       end
@@ -2225,7 +2225,7 @@ function Fab_find_matches(reqs, match_state)
 
   local tab = {}
 
-  for name,def in PREFABS do
+  for name,def in pairs(PREFABS) do
     local prob = prob_for_match(def, match_state)
 
     if prob > 0 then

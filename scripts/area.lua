@@ -339,7 +339,7 @@ end
 
 
 function AREA_CLASS.has_conn(A)
-  for C in LEVEL.conns do
+  for _,C in pairs(LEVEL.conns) do
     if C.kind ~= "teleporter" and (C.A1 == A or C.A2 == A) then
       return true
     end
@@ -1027,11 +1027,11 @@ end
 
 
 function Corner_touches_wall(corner)
-  for E in corner.edges do
+  for _,E in pairs(corner.edges) do
     if Edge_is_wallish(E) then return true end
   end
 
-  for junc in corner.junctions do
+  for _,junc in pairs(corner.junctions) do
     if junc.E1 and Edge_is_wallish(junc.E1) then return true end
     if junc.E2 and Edge_is_wallish(junc.E2) then return true end
   end
@@ -1535,7 +1535,7 @@ function Area_inner_points_for_group(R, group, where)
 
   -- check bottom-left corner of for seed
 
-  for S in seeds do
+  for _,S in pairs(seeds) do
     -- point is outside of area
     if S.diagonal == 9 then goto continue end
 
@@ -1728,7 +1728,7 @@ function Area_pick_facing_rooms()
 
       if sel(R.is_outdoor, 1, 0) ~= sel(want_outdoor, 1, 0) then goto continue end
 
-      for T in scenics do
+      for _,T in pairs(scenics) do
         if T.zone then goto continue end
 
         local score = facings[face_id(R, T)]
@@ -1802,7 +1802,7 @@ function Area_pick_facing_rooms()
 --TODO : support making windows from building --> scenic
 --  assign_borders("building")
 
-  for A in scenics do
+  for _,A in pairs(scenics) do
     if A.zone then
       A.ceil_h = A.zone.sky_h
       A.ceil_mat = "_SKY"
