@@ -105,7 +105,7 @@ function Fight_Simulator(monsters, weapons, stats)
     -- determine probability for for weapon
     local prob_tab = {}
 
-    for W in weapons do
+    for _,W in pairs(weapons) do
       local prob = W.info.pref
 
       prob = prob * (W.factor or 1)
@@ -213,7 +213,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
     local total_weight = 0
 
-    for P in active_mons do
+    for _,P in pairs(active_mons) do
       if P == M then goto continue end
 
       if can_infight(M.info, P.info) then
@@ -236,7 +236,7 @@ function Fight_Simulator(monsters, weapons, stats)
     -- bump up the damage (higher than demo analysis, but seems necessary)
     damage = damage * 1.5
 
-    for P in others do
+    for _,P in pairs(others) do
       -- damage is weighted, bigger monsters get a bigger share
       local factor = P.info.health / total_weight
 
@@ -258,7 +258,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
   stats.health = stats.health or 0
 
-  for M in monsters do
+  for _,M in pairs(monsters) do
     local MON = table.copy(M)
 
     MON.health = MON.info.health
@@ -272,14 +272,14 @@ function Fight_Simulator(monsters, weapons, stats)
       function(A, B) return A.order > B.order end)
 
   -- compute health needed by player
-  for M in active_mons do
+  for _,M in pairs(active_mons) do
     stats.health = stats.health + M.info.damage
   end
 
   -- simulate infighting
   -- [ done *after* computing player health, as the damage values are based
   --   on demo analysis and implicitly contain an infighing factor ]
-  for M in active_mons do
+  for _,M in pairs(active_mons) do
     monster_infight(M)
   end
 

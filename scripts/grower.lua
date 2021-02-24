@@ -2887,8 +2887,8 @@ end
 
           best.link_chunk = link_chunk
         end
+        ::continue::
       end -- x, y
-      ::continue::
       end
     end -- transp, flip_x, flip_y
     end

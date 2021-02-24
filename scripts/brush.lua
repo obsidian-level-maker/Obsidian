@@ -1049,9 +1049,9 @@ function brushlib.reverse(brush)
 
   local xy_coords = {}
 
-  for _,C in pairs(brush) do
+  for index,C in pairs(brush) do
     if C.x then
-      table.insert(xy_coords, { idx=_index, x=C.x, y=C.y })
+      table.insert(xy_coords, { idx=index, x=C.x, y=C.y })
     end
   end
 

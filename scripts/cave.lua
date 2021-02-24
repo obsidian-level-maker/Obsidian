@@ -1391,7 +1391,7 @@ function Cave_bunch_areas(R, mode)
 
 
   local function touches_the_list(N, list, except)
-    for N2 in N.neighbors do
+    for N2 in pairs(N.neighbors) do
       if list[N2] and N2 ~= except then
         return true
       end
@@ -1404,7 +1404,7 @@ function Cave_bunch_areas(R, mode)
   local function grow_bunch(list)
     local poss = {}
 
-    for B,_ in list do
+    for B,_ in pairs(list) do
       for _,N in pairs(B.neighbors) do
         if list[N] then goto continue end
         if N.near_bunch then goto continue end
@@ -1429,7 +1429,7 @@ function Cave_bunch_areas(R, mode)
   local function install_bunch(list)
     local head_B
 
-    for B,_ in list do
+    for B,_ in pairs(list) do
       if not head_B then head_B = B end
 
       if mode == "sky"    then B.sky_bunch    = head_B ; B.is_sky    = true end
@@ -1903,7 +1903,7 @@ function Cave_fill_lakes(R)
 
   local path_id = cave.flood[p1.cx1][p1.cy1]
 
-  for id,reg in cave.regions do
+  for id,reg in pairs(cave.regions) do
     if (id > 0) then
       add_lake(id, reg)
     end
@@ -2965,7 +2965,7 @@ function Cave_build_a_park(R, entry_h)
     local sum   = 0
     local count = 0
 
-    for x,r in y_ranges do
+    for x,r in pairs(y_ranges) do
       local top = 0
       local bottom = 0
 
@@ -3205,7 +3205,7 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function hill_clear()
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       B.floor_id = nil
       B.stair    = nil
     end
@@ -3215,14 +3215,14 @@ function Cave_build_a_park(R, entry_h)
   local function hill_save(HILL)
     HILL.blob_floors = {}
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       HILL.blob_floors[B.id] = B.floor_id
     end
   end
 
 
   local function hill_restore(HILL)
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       B.floor_id = HILL.blob_floors[B.id]
     end
   end
@@ -3263,7 +3263,7 @@ function Cave_build_a_park(R, entry_h)
     -- pick the one with highest count
     local best
 
-    for id,count in counts do
+    for id,count in pairs(counts) do
       if not best or count > counts[best] then
         best = id
       end
@@ -3311,7 +3311,7 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function hill_can_use_stair(st, others)
-    for st2 in others do
+    for _,st2 in pairs(others) do
       -- blob is already in the list?
       if st2.B == st.B then return false end
 
@@ -3395,7 +3395,7 @@ function Cave_build_a_park(R, entry_h)
 
     -- mark stairs that are wholly contained in this floor
     -- [ EXCEPT the stair we are dividing! ]
-    for st2 in stairs do
+    for _,st2 in pairs(stairs) do
       st2.is_contained = false
 
       if st2 ~= st and st2.src.floor_id == old and st2.dest.floor_id == old then
@@ -3419,7 +3419,7 @@ function Cave_build_a_park(R, entry_h)
 
     local unfilled = {}
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       if B.floor_id == old then
         table.insert(unfilled, B)
       end
@@ -3427,7 +3427,7 @@ function Cave_build_a_park(R, entry_h)
 
     rand.shuffle(unfilled)
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       rand.shuffle(B.neighbors)
     end
 
@@ -3468,7 +3468,7 @@ function Cave_build_a_park(R, entry_h)
 
     -- check whether all blobs with old floor were replaced
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       if B.floor_id == old then
         return false
       end
@@ -3509,7 +3509,7 @@ function Cave_build_a_park(R, entry_h)
 
     local F1 = hill_new_floor()
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       hill_set_floor(B, F1)
     end
 
@@ -3532,7 +3532,7 @@ function Cave_build_a_park(R, entry_h)
 
     local floor_sizes = {}
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       local f_id = B.floor_id
 
       if f_id ~= "stair" then
@@ -3543,7 +3543,7 @@ function Cave_build_a_park(R, entry_h)
     local total_size = 0
     local min_size   = 9e9
 
-    for _,size in floor_sizes do
+    for _,size in pairs(floor_sizes) do
       total_size = total_size + size
       min_size   = math.min(min_size, size)
     end
@@ -3605,7 +3605,7 @@ function Cave_build_a_park(R, entry_h)
 
     local profile = {}
 
-    for id,_ in HILL.floors do
+    for id,_ in pairs(HILL.floors) do
       profile[id] = {}
     end
 
@@ -3613,7 +3613,7 @@ function Cave_build_a_park(R, entry_h)
 
     local start_f
 
-    for id, F in HILL.floors do
+    for id, F in pairs(HILL.floors) do
       assert(F.stair_num >= 1)
 
       if F.stair_num == 1 and (not start_f or rand.odds(50)) then
@@ -3653,7 +3653,7 @@ function Cave_build_a_park(R, entry_h)
 
 
     -- sanity check
-    for id, P in profile do
+    for id, P in pairs(profile) do
       assert(P.prelim_h)
     end
 
@@ -3706,7 +3706,7 @@ function Cave_build_a_park(R, entry_h)
   local function hill_add_towers(HILL)
     local prob = rand.pick({ 10, 30, 90 })
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       if rand.odds(prob) and can_make_tower(B) then
         B.is_tower = true
         B.prelim_h = B.prelim_h + 64
@@ -3770,13 +3770,13 @@ function Cave_build_a_park(R, entry_h)
     -- visit for blob and see if we can make a pool
     -- [ update prelim_h in a second pass, to two or more neighboring
     --   blobs to become liquid ]
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       if rand.odds(prob) and can_make_pool(B) then
         B.is_pool = true
       end
     end
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       if B.is_pool then
         hill_make_a_pool(B)
       end
@@ -3861,7 +3861,7 @@ function Cave_build_a_park(R, entry_h)
 
     local prob = rand.pick({ 10, 27, 65 })
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       if rand.odds(prob) then
         try_add_decor_item(B)
       end
@@ -3879,7 +3879,7 @@ function Cave_build_a_park(R, entry_h)
 
     local floors = {}  --  [floor_id] -> { prelim_h=xxx }
 
-    for _,f_id in HILL.blob_floors do
+    for _,f_id in pairs(HILL.blob_floors) do
       if f_id ~= "stair" and not floors[f_id] then
         floors[f_id] = { id=f_id, stair_num=0 }
       end
@@ -3903,7 +3903,7 @@ function Cave_build_a_park(R, entry_h)
     local h_list = {}
     local h_mats = {}
 
-    for _,P in HILL.profile do
+    for _,P in pairs(HILL.profile) do
       table.add_unique(h_list, P.prelim_h)
     end
 
@@ -3923,7 +3923,7 @@ function Cave_build_a_park(R, entry_h)
     -- install the height profile
     -- [ stairs are processed later.... ]
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       if B.floor_id ~= "stair" then
         local P1 = HILL.profile[B.floor_id]
         assert(P1)
@@ -3957,7 +3957,7 @@ function Cave_build_a_park(R, entry_h)
 
     local all_stairs = {}
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       for pass = 1, 2 do
         local is_vert = (pass == 2)
         local ok,src,dest = hill_blob_is_good_stair(B, is_vert)
@@ -4217,7 +4217,7 @@ function Cave_build_a_park(R, entry_h)
   local function hill_fill_gaps()
     local changes = false
 
-    for _,B in blob_map.regions do
+    for _,B in pairs(blob_map.regions) do
       local nb
 
       if not B.prelim_h then
@@ -4327,7 +4327,7 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
 
     -- TODO : merge neighboring blobs with same h/mat  [ must handle "decor" too!! ]
 
-    for _,reg in blob_map.regions do
+    for _,reg in pairs(blob_map.regions) do
       if reg.floor_id == "stair" then
         do_install_stair_blob(reg, base_h)
 

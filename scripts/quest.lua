@@ -458,7 +458,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
   local function unused_rooms_in_set(rooms)
     local leafs = {}
 
-    for id, R in rooms do
+    for id, R in pairs(rooms) do
       if R.is_secret then goto continue end
 
       if R.is_hallway then goto continue end
@@ -549,9 +549,9 @@ gui.debugf("  quest : %s\n", quest.name)
 
 --[[
 stderrf("BEFORE =\n  ")
-for id,_ in before do stderrf("%d ", id) end stderrf("\n\n")
+for id,_ in pairs(before) do stderrf("%d ", id) end stderrf("\n\n")
 stderrf("AFTER =\n  ")
-for id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
+for id,_ in pairs(after) do stderrf("%d ", id) end stderrf("\n\n")
 --]]
 
   local before_R = C.R1
@@ -634,7 +634,7 @@ function Quest_perform_division(info)
 
 
   local function assign_quest(Q)
-    for id, R in Q.rooms do
+    for id, R in pairs(Q.rooms) do
       R.quest = Q
     end
   end
@@ -669,7 +669,7 @@ gui.debugf("   %s\n", targ.name)
     local best
     local best_score = 0
 
-    for R in info.leafs do
+    for _,R in pairs(info.leafs) do
       local score = eval_goal_room(Q1, R)
 
       if score > best_score then
@@ -711,7 +711,7 @@ gui.debugf("   %s\n", targ.name)
 
 gui.debugf("PLACING NEW GOALS:\n")
 
-    for goal in info.new_goals do
+    for _,goal in pairs(info.new_goals) do
       local R = pick_room_for_goal(Q1)
 
 gui.debugf("  %s @ %s in %s\n", goal.name, R.name, Q1.name)
@@ -813,7 +813,7 @@ function Quest_scan_all_conns(new_goals, do_quest)
     -- must be same quest on for side
     if C.R2.quest ~= quest then goto continue end
 
-    for goal in quest.goals do
+    for _,goal in pairs(quest.goals) do
       Quest_eval_divide_at_conn(C, goal, info)
     end
     ::continue::
@@ -912,8 +912,8 @@ function Quest_add_major_quests()
 
     local prob_tab = {}
 
-    for goal in list do
-      prob_tab[_index] = assert(goal.prob)
+    for index,goal in pairs(list) do
+      prob_tab[index] = assert(goal.prob)
     end
 
     local idx = rand.index_by_probs(prob_tab)
@@ -944,7 +944,7 @@ function Quest_add_major_quests()
     if not Quest_scan_all_conns({ K1, K2, K3 }) then
       return false
     end
-
+    
     table.remove(key_list, 1)
     table.remove(key_list, 2)
     table.remove(key_list, 3)
@@ -1184,7 +1184,7 @@ function Quest_create_zones()
     local conn_list = table.copy(LEVEL.conns)
     rand.shuffle(conn_list)
 
-    for C in conn_list do
+    for _,C in pairs(conn_list) do
       local R = C.R1
       local N = C.R2
 
@@ -1658,7 +1658,7 @@ function Quest_order_by_visit()
     gui.printf("Quest list:\n")
 
     for _,Q in pairs(LEVEL.quests) do
-      gui.printf("  %s : svolume:%d\n", Q.name, Q.svolume)
+      gui.printf("  %s : svolume:%d\n", Q.name, int(Q.svolume))
     end
   end
 
@@ -1769,7 +1769,7 @@ function Quest_find_backtracks()
   local function find_path_between_rooms(R1, R2, seen)
     assert(R1 ~= R2)
 
-    for C in R1.conns do
+    for _,C in pairs(R1.conns) do
       local N = C:other_room(R1)
 
       if N == R2 then return { C } end
@@ -1812,7 +1812,7 @@ function Quest_find_backtracks()
       return
     end
 
-    for C2 in path do
+    for _,C2 in pairs(path) do
       gui.debugf("   %s  :  %s <--> %s\n", C2.name, C2.R1.name, C2.R2.name)
     end
 
@@ -1823,7 +1823,7 @@ function Quest_find_backtracks()
 
     local cur_room = R
 
-    for C2 in path do
+    for _,C2 in pairs(path) do
       assert(cur_room == C2.R1 or cur_room == C2.R2)
 
       cur_room = C2:other_room(cur_room)
@@ -2152,10 +2152,10 @@ function Quest_nice_items()
 
     pal = table.copy(pal)
 
-    for name1 in avoid_items do
+    for _,name1 in pairs(avoid_items) do
       local info1 = assert(ALL_ITEMS[name1])
 
-      for name2,val in pal do
+      for name2,val in pairs(pal) do
         local info2 = assert(ALL_ITEMS[name2])
 
         if info1.kind == info2.kind then

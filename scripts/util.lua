@@ -871,7 +871,7 @@ function geom.calc_angle(dx, dy)
     return nil
   end
 
-  local angle = math.atan2(dy, dx) * 180 / math.pi
+  local angle = math.atan(dy, dx) * 180 / math.pi
 
   if angle < 0 then angle = angle + 360 end
 

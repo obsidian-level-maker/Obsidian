@@ -1629,7 +1629,7 @@ function Area_spread_zones()
         if pass == 1 and not N.room then goto continue end
 
         -- OK --
-        if A.zone then
+        if N then
           A.zone = N.zone
           return
         end

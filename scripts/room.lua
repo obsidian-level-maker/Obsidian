@@ -1721,7 +1721,7 @@ function Room_prepare_hallways()
 
     -- recurse to other pieces
 
-    for dir, P in piece.h_join do
+    for dir, P in pairs(piece.h_join) do
       if not seen[P.id] then
         local new_h = h
 
@@ -2388,11 +2388,11 @@ function Room_floor_ceil_heights()
 
     if N then return N end
 
-    for N2 in A.neighbors do
+    for N2 in pairs(A.neighbors) do
       if N2.room == A.room and N2.mode == "liquid" then return N2 end
     end
 
-    for N3 in A.neighbors do
+    for N3 in pairs(A.neighbors) do
       if N3.room == A.room and N3.mode == "nature" then return N3 end
     end
 

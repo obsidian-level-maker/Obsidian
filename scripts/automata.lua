@@ -379,7 +379,7 @@ function GRID_CLASS.dump_regions(grid)
   local solid_regs  = 0
   local solid_cells = 0
 
-  for id, REG in grid.regions do
+  for id, REG in pairs(grid.regions) do
     gui.debugf("  %+4d : (%d %d) .. (%d %d) size:%d\n",
                REG.id, REG.cx1, REG.cy1, REG.cx2, REG.cy2, REG.size)
 
@@ -527,7 +527,7 @@ function GRID_CLASS.solidify_pockets(grid, walk_id, solid_id)
 
 
   local function find_next()
-    for id, REG in grid.regions do
+    for id, REG in pairs(grid.regions) do
       if id < 0 and id ~= walk_id then
         return id, REG
       end
@@ -643,7 +643,7 @@ function GRID_CLASS.find_islands(grid)
 
   -- create the grids --
 
-  for reg, pot in potentials do
+  for reg, pot in pairs(potentials) do
     if pot == "maybe" then
       local island = grid:copy_region(reg)
 
@@ -1029,7 +1029,7 @@ function GRID_CLASS.dump_blobs(grid)
 
     local line = ""
 
-    for id, reg in grid.regions do
+    for id, reg in pairs(grid.regions) do
       line = line .. "  " .. string.format("%2d", reg.size)
 
       if #line > 40 then
