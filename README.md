@@ -25,7 +25,7 @@ OBLIGE will then build all the maps, showing a blueprint of each one as it goes,
 
 ## About This Repository
 
-This is a fork containing some changes and updates to Oblige, as well as some quality of life fixes. Since then, I have successfully tested it with Linux and Win10 x86_64. It is also compatible with ObAddon and will load it from a .pk3 file via the Addons menu.
+This is a fork containing some changes and updates to Oblige, as well as some quality of life fixes. I have successfully tested it with Linux and Win10 x86_64, as well as arm64/Pi 4 (when compiled with Clang). It is also compatible with ObAddon and will load it from a .pk3 file via the Addons menu.
 
 A brief summary of changes:
 
