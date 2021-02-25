@@ -1376,8 +1376,8 @@ function Episode_plan_weapons()
       -- build up a probability table
       local tab = {}
 
-      if NL then for name in NL.new_weapons do tab[name] = 200 end end
-      if PL then for name in PL.new_weapons do tab[name] = 100 end end
+      if NL then for _,name in pairs(NL.new_weapons) do tab[name] = 200 end end
+      if PL then for _,name in pairs(PL.new_weapons) do tab[name] = 100 end end
 
       if last_one and tab[last_one] then
         tab[last_one] = tab[last_one] / 100

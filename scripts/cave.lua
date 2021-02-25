@@ -3099,7 +3099,7 @@ function Cave_build_a_park(R, entry_h)
 
     -- handle little cut-off pieces
 
-    for _,reg in map2.regions do
+    for _,reg in pairs(map2.regions) do
       if reg.size < 6 and reg.id ~= B1 and reg.id ~= B2 then
         merge_a_runt(map2, reg, RIVER)
       end
@@ -4135,8 +4135,8 @@ function Cave_build_a_park(R, entry_h)
     -- build the steps
     local along = 0
 
-    for _,w in pairs(div) do
-      local z = z1 + (z2 - z1) * _index / (#div + 1)
+    for index,w in pairs(div) do
+      local z = z1 + (z2 - z1) * index / (#div + 1)
 
       do_make_stair_step(B, st_dir, along, w, z, floor_mat)
 

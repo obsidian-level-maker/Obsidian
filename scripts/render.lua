@@ -2867,7 +2867,7 @@ function Render_cells(area)
     assert(B)
     assert(B.floor_h)
 
-    return string.format("1-%5d-%5d", B.floor_h + 50000, 50000 - (B.ceil_h or 0))
+    return string.format("1-%5d-%5d", int(B.floor_h + 50000), int(50000 - (B.ceil_h or 0)))
   end
 
 

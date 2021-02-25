@@ -944,10 +944,10 @@ function Quest_add_major_quests()
     if not Quest_scan_all_conns({ K1, K2, K3 }) then
       return false
     end
-    
-    table.remove(key_list, 1)
-    table.remove(key_list, 2)
+          
     table.remove(key_list, 3)
+    table.remove(key_list, 2)
+    table.remove(key_list, 1)
 
     gui.printf("Added triple-key quest.\n")
 

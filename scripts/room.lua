@@ -2388,11 +2388,11 @@ function Room_floor_ceil_heights()
 
     if N then return N end
 
-    for N2 in pairs(A.neighbors) do
+    for _,N2 in pairs(A.neighbors) do
       if N2.room == A.room and N2.mode == "liquid" then return N2 end
     end
 
-    for N3 in pairs(A.neighbors) do
+    for _,N3 in pairs(A.neighbors) do
       if N3.room == A.room and N3.mode == "nature" then return N3 end
     end
 
