@@ -19,7 +19,7 @@
 --
 ------------------------------------------------------------------------
 
-QUAKE = { },
+QUAKE = { }
 
 
 ------------------------------------------------------------
@@ -42,16 +42,16 @@ QUAKE.PARAMETERS =
   -- (limitation of the client/server protocol).
   map_limit = 8000,
 
-  centre_map = true
+  centre_map = true,
 
-  use_spawnflags = true
+  use_spawnflags = true,
   entity_delta_z = 24,
 
   -- keys are lost when you open a locked door
-  lose_keys = true
+  lose_keys = true,
 
-  extra_floors = true
-  deep_liquids = true
+  extra_floors = true,
+  deep_liquids = true,
 
   jump_height = 42,
 
@@ -61,19 +61,19 @@ QUAKE.PARAMETERS =
 
   skip_monsters = { 20,30 },
 
-  episodic_monsters = true
+  episodic_monsters = true,
 
   monster_factor = 0.7,
   health_factor  = 1.0,
   ammo_factor    = 1.0,
   time_factor    = 1.0,
-},
+}
 
 ------------------------------------------------------------
 
 UNFINISHED["quake"] =
 {
-  label = _("Quake")
+  label = _("Quake"),
   priority = 27,
 
   format = "quake",
@@ -86,8 +86,8 @@ UNFINISHED["quake"] =
 
   hooks =
   {
-    get_levels  = QUAKE.get_levels
+    get_levels  = QUAKE.get_levels,
     begin_level = QUAKE.begin_level
   },
-},
+}
 

@@ -4,43 +4,43 @@
 
 PREFABS.Arch_curved1 =
 {
-  file   = "door/arch_curved.wad"
-  map    = "MAP01"
+  file   = "door/arch_curved.wad",
+  map    = "MAP01",
 
-  prob   = 50
+  prob   = 50,
 
-  kind   = "arch"
-  where  = "edge"
+  kind   = "arch",
+  where  = "edge",
 
-  seed_w = 2
+  seed_w = 2,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  x_fit  = "frame"
+  x_fit  = "frame",
 
-  bound_z1 = 0
+  bound_z1 = 0,
 }
 
 
 PREFABS.Arch_curved2 =
 {
-  template = "Arch_curved1"
-  map      = "MAP02"
+  template = "Arch_curved1",
+  map      = "MAP02",
 
-  prob   = 200
+  prob   = 200,
 
-  seed_w = 3
+  seed_w = 3,
 }
 
 
 PREFABS.Arch_curved3 =
 {
-  template = "Arch_curved1"
-  map      = "MAP03"
+  template = "Arch_curved1",
+  map      = "MAP03",
 
-  prob   = 800
+  prob   = 800,
 
-  seed_w = 4
+  seed_w = 4,
 }
 

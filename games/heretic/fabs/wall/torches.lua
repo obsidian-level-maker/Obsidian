@@ -7,17 +7,17 @@
 
 PREFABS.Wall_torches1_diag =
 {
-  file   = "wall/torches.wad"
-  map    = "MAP02"
+  file   = "wall/torches.wad",
+  map    = "MAP02",
 
-  prob   = 50
-  group  = "torches1"
+  prob   = 50,
+  group  = "torches1",
 
-  where  = "diagonal"
+  where  = "diagonal",
 
-  bound_z1 = 0
-  bound_z2 = 64
+  bound_z1 = 0,
+  bound_z2 = 64,
 
-  z_fit  = "top"
+  z_fit  = "top",
 }
 

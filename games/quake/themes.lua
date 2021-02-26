@@ -73,7 +73,7 @@ QUAKE.THEMES =
       BRICKA2_4 = 50,
     },
   },
-},
+}
 
 
 QUAKE.ROOM_THEMES =
@@ -235,7 +235,7 @@ QUAKE.ROOM_THEMES =
       GRAVE01_3=10, WSWAMP1_2=20,
     },
   },
-},
+}
 
 
 ------------------------------------------------------------------------
@@ -243,7 +243,7 @@ QUAKE.ROOM_THEMES =
 QUAKE.NAMES =
 {
   -- TODO
-},
+}
 
 
 QUAKE.ROOMS =
@@ -252,7 +252,7 @@ QUAKE.ROOMS =
   {
     env = "any",
   },
-},
+}
 
 
 ------------------------------------------------------------------------
@@ -260,18 +260,18 @@ QUAKE.ROOMS =
 
 OB_THEMES["q1_tech"] =
 {
-  label = _("Tech")
+  label = _("Tech"),
   game = "quake",
   name_theme = "TECH",
   mixed_prob = 50,
-},
+}
 
 
 OB_THEMES["q1_castle"] =
 {
-  label = _("Castle")
+  label = _("Castle"),
   game = "quake",
   name_theme = "URBAN",
   mixed_prob = 50,
-},
+}
 

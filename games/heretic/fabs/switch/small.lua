@@ -4,14 +4,14 @@
 
 PREFABS.Switch_small =
 {
-  file   = "switch/small.wad"
-  map    = "MAP01"
+  file   = "switch/small.wad",
+  map    = "MAP01",
 
-  key    = "sw_metal"
-  prob   = 50
+  key    = "sw_metal",
+  prob   = 50,
 
-  where  = "point"
+  where  = "point",
 
-  tag_1  = "?switch_tag"
+  tag_1  = "?switch_tag",
 }
 

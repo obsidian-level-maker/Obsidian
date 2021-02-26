@@ -71,7 +71,7 @@ HEXEN.PICKUPS =
   -- Instead the 'best_class' gets the full amount and all
   -- other classes get half the amount.
   --
-},
+}
 
 
 --------------------------------------------------
@@ -134,5 +134,5 @@ HEXEN.NICE_ITEMS =
   p3 = { pickup="torch",     prob=2 },
 
 --]]
-},
+}
 

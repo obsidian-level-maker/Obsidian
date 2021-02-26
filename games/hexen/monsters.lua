@@ -234,5 +234,5 @@ HEXEN.MONSTERS =
     health = 5000,
     damage = 90,
   },
-},
+}
 

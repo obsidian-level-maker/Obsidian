@@ -43,7 +43,7 @@ HEXEN.EPISODES =
     theme = "DUNGEON",
     sky_light = 0.50,
   },
-},
+}
 
 
 HEXEN.THEME_FOR_MAP =
@@ -77,12 +77,12 @@ HEXEN.THEME_FOR_MAP =
   [31] = "hexen_dungeon3",
   [32] = "hexen_dungeon3",
   [35] = "hexen_dungeon2",
-},
+}
 
 
 HEXEN.PREBUILT_LEVELS =
 {
-},
+}
 
 
 function HEXEN.get_levels()
@@ -94,8 +94,8 @@ function HEXEN.get_levels()
   for ep_index = 1,EP_NUM do
     local EPI =
     {
-      levels = {},
-    },
+      levels = {}
+    }
 
     table.insert(GAME.episodes, EPI)
 
@@ -115,34 +115,34 @@ function HEXEN.get_levels()
 
       local LEV =
       {
-        episode = EPI
+        episode = EPI,
 
-        name  = string.format("MAP%02d", map_id)
+        name  = string.format("MAP%02d", map_id),
 --??    patch = string.format("WILV%d%d", ep_index-1, map-1)
 
-        map       = map_id
+        map       = map_id,
         next_map  = map_id + 1,
-        local_map = map
+        local_map = map,
 
-        cluster  = ep_index
+        cluster  = ep_index,
 
-          ep_along = ep_along
-        game_along = (ep_index - 1 + ep_along) / EP_NUM
+          ep_along = ep_along,
+        game_along = (ep_index - 1 + ep_along) / EP_NUM,
 
-        sky_light = ep_info.sky_light
+        sky_light = ep_info.sky_light,
 
-        name_theme = "GOTHIC",
-      },
+        name_theme = "GOTHIC"
+      }
 
       -- make certain levels match original
       -- Was not working, so fixed above, BlackJar72,
       if OB_CONFIG.theme == "original" then
         if ep_index == 3 then
-          LEV.theme_name = "hexen_dungeon1",
+          LEV.theme_name = "hexen_dungeon1"
         elseif ep_index == 4 then
-          LEV.theme_name = "hexen_dungeon2",
+          LEV.theme_name = "hexen_dungeon2"
         elseif ep_index == 5 then
-          LEV.theme_name = "hexen_dungeon3",
+          LEV.theme_name = "hexen_dungeon3"
         end -- Specific special levels
 
         LEV.theme_name = HEXEN.THEME_FOR_MAP[map_id]
@@ -156,7 +156,7 @@ function HEXEN.get_levels()
           {
             outdoors = { heaps=100 },
             caves = { some=50, heaps=50 },
-          },
+          }
         end
       end
 
@@ -164,9 +164,9 @@ function HEXEN.get_levels()
       -- last map in each episode is the boss map.
 
       if map == 6 then
-        LEV.kind = "SECRET",
+        LEV.kind = "SECRET"
       elseif map == 7 then
-        LEV.kind = "BOSS",
+        LEV.kind = "BOSS"
       end
 
       -- very last map of the game?
@@ -194,13 +194,13 @@ end
 
 
 function HEXEN.make_mapinfo()
-  local mapinfo = {},
+  local mapinfo = {}
 
   local function add(...)
     table.insert(mapinfo, string.format(...) .. "\n")
   end
 
-  for _,L in pairs(pairs(GAME.levels)) do
+  for _,L in pairs(pairs(pairs(GAME.levels))) do
     local desc = string.upper(L.description or L.name)
 
     add("map %d \"%s\"", L.map, desc)

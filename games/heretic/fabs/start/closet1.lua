@@ -4,16 +4,16 @@
 
 PREFABS.Start_closet1 =
 {
-  file  = "start/closet1.wad"
-  map   = "MAP01"
+  file  = "start/closet1.wad",
+  map   = "MAP01",
 
-  prob  = 80
+  prob  = 80,
 
-  where = "seeds"
-  deep  =  16
-  over  = -16
+  where = "seeds",
+  deep  =  16,
+  over  = -16,
 
-  x_fit = "frame"
-  y_fit = "top"
+  x_fit = "frame",
+  y_fit = "top",
 }
 

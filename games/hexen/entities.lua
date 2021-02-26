@@ -26,17 +26,17 @@ HEXEN.ENTITIES =
   --- PICKUPS ---
 
   -- keys
-  k_steel   = { id=8030 }  -- KEY1 sprite
-  k_cave    = { id=8031 }  -- KEY2,
-  k_axe     = { id=8032 }  -- KEY3,
-  k_fire    = { id=8033 }  -- KEY4,
-  k_emerald = { id=8034 }  -- KEY5,
-  k_dungeon = { id=8035 }  -- KEY6,
-  k_silver  = { id=8036 }  -- KEY7,
-  k_rusty   = { id=8037 }  -- KEY8,
-  k_horn    = { id=8038 }  -- KEY9,
-  k_swamp   = { id=8039 }  -- KEYA
-  k_castle  = { id=8200 }  -- KEYB
+  k_steel   = { id=8030 },  -- KEY1 sprite
+  k_cave    = { id=8031 },  -- KEY2,
+  k_axe     = { id=8032 },  -- KEY3,
+  k_fire    = { id=8033 },  -- KEY4,
+  k_emerald = { id=8034 },  -- KEY5,
+  k_dungeon = { id=8035 },  -- KEY6,
+  k_silver  = { id=8036 },  -- KEY7,
+  k_rusty   = { id=8037 },  -- KEY8,
+  k_horn    = { id=8038 },  -- KEY9,
+  k_swamp   = { id=8039 },  -- KEYA
+  k_castle  = { id=8200 },  -- KEYB
 
   -- weapons
   c_staff   = { id=10,  r=20, h=16 },
@@ -186,7 +186,7 @@ HEXEN.ENTITIES =
   snd_ice    = { id=1407 },
   snd_earth  = { id=1408 },
   snd_metal2 = { id=1409 },
-},
+}
 
 
 --------------------------------------------------
@@ -210,5 +210,5 @@ HEXEN.PLAYER_MODEL =
     stats   = { health=0 },
     weapons = { m_wand=1 },
   },
-},
+}
 

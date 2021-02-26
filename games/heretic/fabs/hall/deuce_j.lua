@@ -4,28 +4,28 @@
 
 PREFABS.Hallway_deuce_term =
 {
-  file   = "hall/deuce_j.wad"
-  map    = "MAP01"
-  kind   = "terminator"
+  file   = "hall/deuce_j.wad",
+  map    = "MAP01",
+  kind   = "terminator",
 
-  group  = "deuce"
-  prob   = 50
+  group  = "deuce",
+  prob   = 50,
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  seed_w = 2
-  seed_h = 1
+  seed_w = 2,
+  seed_h = 1,
 
-  deep   = 16
+  deep   = 16,
 }
 
 
 PREFABS.Hallway_deuce_secret =
 {
-  template = "Hallway_deuce_term"
+  template = "Hallway_deuce_term",
 
-  map  = "MAP05"
-  key  = "secret"
+  map  = "MAP05",
+  key  = "secret",
 }
 

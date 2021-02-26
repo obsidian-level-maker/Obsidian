@@ -182,7 +182,7 @@ function Player_give_stuff(hmodel, give_list)
 
     elseif give.ammo then
       gui.debugf("Giving [%s] ammo: %dx %s\n",
-                 hmodel.class, give.count, give.ammo)
+                 hmodel.class, int(give.count), give.ammo)
 
       hmodel.stats[give.ammo] = (hmodel.stats[give.ammo] or 0) + give.count
 

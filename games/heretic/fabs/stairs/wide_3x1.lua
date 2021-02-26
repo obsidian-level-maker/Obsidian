@@ -4,38 +4,38 @@
 
 PREFABS.Stair_wide_3x1 =
 {
-  file   = "stairs/wide_3x1.wad"
-  map    = "MAP01"
+  file   = "stairs/wide_3x1.wad",
+  map    = "MAP01",
 
-  prob   = 800
+  prob   = 800,
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  seed_w = 3
+  seed_w = 3,
 
-  bound_z1 = 0
-  bound_z2 = 32
+  bound_z1 = 0,
+  bound_z2 = 32,
 
-  delta_h = 32
+  delta_h = 32,
 }
 
 
 PREFABS.Stair_wide_3x1_torch =
 {
-  file   = "stairs/wide_3x1.wad"
-  map    = "MAP02"
+  file   = "stairs/wide_3x1.wad",
+  map    = "MAP02",
 
-  prob  = 400
+  prob  = 400,
 
-  where  = "seeds"
-  shape  = "I"
+  where  = "seeds",
+  shape  = "I",
 
-  seed_w = 3
+  seed_w = 3,
 
-  bound_z1 = 0
-  bound_z2 = 32
+  bound_z1 = 0,
+  bound_z2 = 32,
 
-  delta_h = 32
+  delta_h = 32,
 }
 

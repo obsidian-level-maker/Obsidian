@@ -69,7 +69,7 @@ HEXEN.PALETTES =
   120, 88,  0, 128, 96,  0, 149,112,  1, 181,136,  3, 212,160,  4,
   255,255,255,
   },
-},
+}
 
 
 ------------------------------------------------------------------------
@@ -78,38 +78,38 @@ function HEXEN.make_cool_gfx()
   local PURPLE =
   {
     0, 231, 232, 233, 234, 235, 236, 237, 238, 239,
-  },
+  }
 
   local GREEN =
   {
     0, 186, 188, 190, 192, 194, 196, 198, 200, 202,
-  },
+  }
 
   local BROWN =
   {
     0, 97, 99, 101, 103, 105, 107, 109, 111, 113, 115, 117, 119, 121,
-  },
+  }
 
   local RED =
   {
     0, 164, 166, 168, 170, 172, 174, 176, 178, 180, 183,
-  },
+  }
 
   local WHITE =
   {
     0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
-  },
+  }
 
   local BLUE =
   {
     0, 146, 148, 150, 152, 154, 156, 217, 219, 221, 223,
-  },
+  }
 
 
   local colmaps =
   {
     PURPLE, GREEN, BROWN, RED, BLUE
-  },
+  }
 
   rand.shuffle(colmaps)
 
@@ -118,12 +118,12 @@ function HEXEN.make_cool_gfx()
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, WHITE)
 
-  local carve = "RELIEF",
-  local c_map = 3,
+  local carve = "RELIEF"
+  local c_map = 3
 
   if rand.odds(33) then
-    carve = "CARVE",
-    c_map = 4,
+    carve = "CARVE"
+    c_map = 4
   end
 
   -- patches : SEWER08, BRASS3, BRASS4,

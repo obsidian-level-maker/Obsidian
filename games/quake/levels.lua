@@ -37,13 +37,13 @@ QUAKE.EPISODES =
     theme = "TECH",
     sky_light = 0.75,
   },
-},
+}
 
 
 QUAKE.SECRET_EXITS =
 {
   -- TODO
-},
+}
 
 
 ----------------------------------------------------
@@ -63,14 +63,14 @@ function QUAKE.get_levels()
     -- boss maps
     e1m7 = 2, e2m6 = 2,
     e3m6 = 2, e4m7 = 2,
-  },
+  }
 
   for ep_index = 1,EP_NUM do
     -- create episode info...
     local EPI =
     {
       levels = {},
-    },
+    }
 
     table.insert(GAME.episodes, EPI)
 
@@ -81,7 +81,7 @@ function QUAKE.get_levels()
       local name = string.format("e%dm%d", ep_index, map)
 
       if SKIP_MAPS[name] then
-        continue
+        goto continue
       end
 
       local ep_along = map / MAP_NUM
@@ -89,24 +89,24 @@ function QUAKE.get_levels()
       -- create level info....
       local LEV =
       {
-        episode = EPI
+        episode = EPI,
 
-        name = name
-        next_map = string.format("e%dm%d", ep_index, map+1)
+        name = name,
+        next_map = string.format("e%dm%d", ep_index, map+1),
 
-          ep_along = ep_along
+          ep_along = ep_along,
         game_along = (ep_index - 1 + ep_along) / EP_NUM
-      },
+      }
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
-
+      ::continue::
     end -- for map
 
     -- set "dist_to_end" value
     if MAP_NUM >= 3 then
-      EPI.levels[#EPI.levels    ].dist_to_end = 1,
-      EPI.levels[#EPI.levels - 1].dist_to_end = 2,
+      EPI.levels[#EPI.levels    ].dist_to_end = 1
+      EPI.levels[#EPI.levels - 1].dist_to_end = 2
     end
 
   end -- for episode

@@ -4,21 +4,21 @@
 
 PREFABS.Cage_wall =
 {
-  file   = "cage/wall_cage.wad"
-  map    = "MAP01"
+  file   = "cage/wall_cage.wad",
+  map    = "MAP01",
 
-  prob  = 100
+  prob  = 100,
 
-  where  = "seeds"
-  shape  = "U"
+  where  = "seeds",
+  shape  = "U",
 
-  seed_w = 1
-  seed_h = 1
+  seed_w = 1,
+  seed_h = 1,
 
-  deep   =  16
-  over   = -16
+  deep   =  16,
+  over   = -16,
 
-  x_fit = "stretch"
-  y_fit = "top"
+  x_fit = "stretch",
+  y_fit = "top",
 }
 

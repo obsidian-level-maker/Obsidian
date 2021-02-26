@@ -19,7 +19,7 @@
 --
 ------------------------------------------------------------------------
 
-HEXEN = { },
+HEXEN = { }
 
 
 ------------------------------------------------------------
@@ -39,9 +39,9 @@ gui.import("resources")
 HEXEN.PARAMETERS =
 {
   -- special logic for Hexen weapon system
-  hexen_weapons = true
+  hexen_weapons = true,
 
-  teleporters = true
+  teleporters = true,
 
   jump_height = 66,
 
@@ -53,13 +53,13 @@ HEXEN.PARAMETERS =
   health_factor  = 1.0,
   ammo_factor    = 1.0,
   time_factor    = 1.0,
-},
+}
 
 ------------------------------------------------------------
 
 UNFINISHED["hexen"] =
 {
-  label = _("Hexen")
+  label = _("Hexen"),
   priority = 34,
 
   -- Hexen map format is a minor variation on the DOOM format
@@ -76,8 +76,8 @@ UNFINISHED["hexen"] =
 
   hooks =
   {
-    get_levels = HEXEN.get_levels
+    get_levels = HEXEN.get_levels,
     all_done   = HEXEN.all_done
   },
-},
+}
 

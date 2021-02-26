@@ -133,5 +133,5 @@ QUAKE.WEAPONS =
   -- can only hit two monsters if (a) the hitscan passes by
   -- the first one, or (b) the first one is killed.
   --
-},
+}
 

@@ -4,50 +4,50 @@
 
 PREFABS.Crate_sandstone =
 {
-  file   = "decor/crates1.wad"
-  map    = "MAP01"
+  file   = "decor/crates1.wad",
+  map    = "MAP01",
 
-  prob   = 40
-  env    = "outdoor"
+  prob   = 40,
+  env    = "outdoor",
 
-  where  = "point"
-  size   = 64
+  where  = "point",
+  size   = 64,
 }
 
 
 PREFABS.Crate_saint1 =
 {
-  file   = "decor/crates1.wad"
-  map    = "MAP02"
+  file   = "decor/crates1.wad",
+  map    = "MAP02",
 
-  prob   = 10
-  env    = "outdoor"
+  prob   = 10,
+  env    = "outdoor",
 
-  where  = "point"
-  size   = 64
-  height = 160
+  where  = "point",
+  size   = 64,
+  height = 160,
 }
 
 
 PREFABS.Crate_saint1_B =
 {
-  template = "Crate_saint1"
+  template = "Crate_saint1",
 
-  prob   = 5
-  skip_prob = 50
-  env    = "building"
+  prob   = 5,
+  skip_prob = 50,
+  env    = "building",
 }
 
 
 PREFABS.Crate_demonface =
 {
-  file   = "decor/crates1.wad"
-  map    = "MAP12"
+  file   = "decor/crates1.wad",
+  map    = "MAP12",
 
-  prob   = 200
+  prob   = 200,
 
-  where  = "point"
-  size   = 128
-  height = 160
+  where  = "point",
+  size   = 128,
+  height = 160,
 }
 

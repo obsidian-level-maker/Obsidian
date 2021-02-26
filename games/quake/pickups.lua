@@ -22,7 +22,7 @@ QUAKE.PICKUPS =
     spawnflags = 1,
     prob = 20,
     cluster = { 1,2 },
-    give = { {health=8} }   -- real amount is 5-10 units
+    give = { {health=8} },   -- real amount is 5-10 units
   },
 
   heal_25 =
@@ -98,7 +98,7 @@ QUAKE.PICKUPS =
     prob = 20,
     give = { {ammo="cell",count=12} },
   },
-},
+}
 
 
 ----------------------------------------------------
@@ -111,7 +111,7 @@ QUAKE.NICE_ITEMS =
     id = "item_health",
     spawnflags = 2,
     add_prob = 3,
-    big_item = true
+    big_item = true,
     give = { {health=70} }  -- gives 100 but it rots aways
   },
 
@@ -141,5 +141,5 @@ QUAKE.NICE_ITEMS =
   -- POWERUPS --
 
   -- FIXME : quake powerups
-},
+}
 

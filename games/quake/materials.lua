@@ -18,13 +18,13 @@ QUAKE.LIQUIDS =
   slime0 = { mat="L_SLIME0", medium="slime", light=0, special=0, damage=99 },
   slime  = { mat="L_SLIME",  medium="slime", light=0, special=0, damage=99 },
   lava1  = { mat="L_LAVA1",  medium="lava",  light=1, special=0, damage=99, fireballs=1 },
-},
+}
 
 
 QUAKE.MATERIALS =
 {
   -- special materials --
-  _ERROR   = { t="metal1_1" }  -- METAL1_1,
+  _ERROR   = { t="metal1_1" },  -- METAL1_1,
   _DEFAULT = { t="wwall1_1" },
   _SKY     = { t="sky4" },
 
@@ -591,7 +591,7 @@ QUAKE.MATERIALS =
 ---  *04mwat2,
 ---  *04water1,
 ---  *04water2,
-},
+}
 
 
 ------------------------------------------------------------------------
@@ -604,10 +604,10 @@ QUAKE.PREFAB_FIELDS =
   thing_2 = "player2",
   thing_3 = "player3",
   thing_4 = "player4",
-},
+}
 
 
 QUAKE.SKIN_DEFAULTS =
 {
-},
+}
 

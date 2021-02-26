@@ -128,7 +128,7 @@ HEXEN.WEAPONS =
     attack = "missile",
     rate = 2.3,
     damage = 8,
-    splash = { 0, 6, 4, 2 }  -- model the penetrative nature
+    splash = { 0, 6, 4, 2 },  -- model the penetrative nature
     class = "mage",
     slot = 1,
   },
@@ -195,7 +195,7 @@ HEXEN.WEAPONS =
   -- on how many monsters are in view.  The damage values above
   -- are just guesses.
   --
-},
+}
 
 
 HEXEN.WEAPON_PIECES =
@@ -203,5 +203,5 @@ HEXEN.WEAPON_PIECES =
   fighter = { "f1_hilt",  "f2_cross", "f3_blade" },
   cleric  = { "c1_shaft", "c2_cross", "c3_arc"   },
   mage    = { "m1_stick", "m2_stub",  "m3_skull" },
-},
+}
 

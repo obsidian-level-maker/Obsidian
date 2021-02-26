@@ -4,30 +4,30 @@
 
 PREFABS.Door_wide_wood =
 {
-  file   = "door/wide_door.wad"
-  map    = "MAP01"
+  file   = "door/wide_door.wad",
+  map    = "MAP01",
 
-  prob   = 40
+  prob   = 40,
 
-  kind   = "arch"
-  where  = "edge"
+  kind   = "arch",
+  where  = "edge",
 
-  seed_w = 2
+  seed_w = 2,
 
-  deep   = 16
-  over   = 16
+  deep   = 16,
+  over   = 16,
 
-  x_fit  = "frame"
+  x_fit  = "frame",
 }
 
 
 PREFABS.Door_wide_chainman =
 {
-  template = "Door_wide_wood"
-  map      = "MAP03"
+  template = "Door_wide_wood",
+  map      = "MAP03",
 
-  prob   = 40
+  prob   = 40,
 
-  seed_w = 3
+  seed_w = 3,
 }
 

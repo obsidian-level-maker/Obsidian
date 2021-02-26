@@ -80,7 +80,7 @@ QUAKE.ENTITIES =
 
   camera = { id="info_intermission" },
   spiker = { id="trap_spikeshooter" },
-},
+}
 
 
 ----------------------------------------------------
@@ -92,5 +92,5 @@ QUAKE.PLAYER_MODEL =
     stats   = { health=0 },
     weapons = { pistol=1, axe=1 },
   },
-},
+}
 

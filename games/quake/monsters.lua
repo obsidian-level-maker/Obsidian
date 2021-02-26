@@ -17,7 +17,7 @@ QUAKE.MONSTERS =
   dog =
   {
     id = "monster_dog",
-    r = 32  -- dogs are fat!
+    r = 32,  -- dogs are fat!
     h = 80,
     -- we use 'replaces' here to simulate the way dogs
     -- usually appear with grunts.
@@ -196,5 +196,5 @@ QUAKE.MONSTERS =
     weap_prefs = { rocket=0.2,grenade=0.2 },
     density  =  0.2,
   },
-},
+}
 

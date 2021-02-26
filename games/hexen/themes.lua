@@ -36,7 +36,7 @@ HEXEN.THEMES =
   --------------------------------------------------
 
   -- FIXME
-},
+}
 
 
 
@@ -945,7 +945,7 @@ HEXEN.ROOM_THEMES =
     {
       STEEL01=40,
       STEEL02=10,
-      STEEL05=1  -- This one should be rare, since also the door texture, JB
+      STEEL05=1,  -- This one should be rare, since also the door texture, JB
       STEEL06=15,
       STEEL07=5,
       STEEL08=5,
@@ -1679,7 +1679,7 @@ HEXEN.ROOM_THEMES =
       F_055=20,
     },
   },
-},
+}
 
 
 HEXEN.LEVEL_THEMES =
@@ -1976,7 +1976,7 @@ HEXEN.LEVEL_THEMES =
   {
     prob = 20,
 
-    liquids = { icefloor=100 } -- ice1 will use "liquids = { ice=70, water=30 }" instead, for variety.
+    liquids = { icefloor=100 }, -- ice1 will use "liquids = { ice=70, water=30 }" instead, for variety.
 
     buildings = { Ice_room1=65, Ice_room2=35 },
     caves     = { Ice_cave=50 },
@@ -2019,7 +2019,7 @@ HEXEN.LEVEL_THEMES =
   {
     prob = 20,
 
-    square_caves = true
+    square_caves = true,
 
     liquids = { lava=20, icefloor=10, water=5, muck=5 },
 
@@ -2047,7 +2047,7 @@ HEXEN.LEVEL_THEMES =
       caves = { none=70, few=30,  some=5,  heaps=0 },
       outdoors = { none=70, few=5,   some=0,  heaps=0 },
       liquids  = { none=40, few=60,  some=10, heaps=0 },
-      lakes    = { none=60, few=40,  some=0,  heaps=0 } -- I don't think this is need, but to be safe...
+      lakes    = { none=60, few=40,  some=0,  heaps=0 }, -- I don't think this is need, but to be safe...
       pictures = { none=50, few=0,   some=0,  heaps=0 },
     },
   },
@@ -2152,7 +2152,7 @@ HEXEN.LEVEL_THEMES =
   {
     prob = 30,
 
-    liquids = { muck=100 }  -- for whole mulit-level swamp1 theme this will be "liquids = { muck=80, water 20 }",
+    liquids = { muck=100 },  -- for whole mulit-level swamp1 theme this will be "liquids = { muck=80, water 20 }",
 
     buildings = { Swamp1_castle=20, Dungeon_castle_gray=20, Swamp1_hut=60 },
     caves     = { Cave_swamp=20, Cave_gray=30 },
@@ -2431,7 +2431,7 @@ HEXEN.LEVEL_THEMES =
       afrit=3.0, etin=2.5, bishop=1.5,
     },
   },
-},
+}
 
 
 ------------------------------------------------------------------------
@@ -2442,7 +2442,7 @@ HEXEN.ROOMS =
   {
     environment = "any",
   },
-},
+}
 
 
 ------------------------------------------------------------------------
@@ -2670,57 +2670,57 @@ HEXEN.NAMES =
       },
     },
   },
-},
+}
 
 
 --------------------------------------------------
 
 UNFINISHED["x_dungeon"] =
 {
-  label = _("Dungeon")
+  label = _("Dungeon"),
   name_theme = "GOTHIC",
   mixed_prob = 50,
-},
+}
 
 UNFINISHED["x_element"] =
 {
-  label = _("Elemental")
+  label = _("Elemental"),
   name_theme = "GOTHIC",
   mixed_prob = 50,
-},
+}
 
 UNFINISHED["x_wild"] =
 {
-  label = _("Wilderness")
+  label = _("Wilderness"),
   name_theme = "GOTHIC",
   mixed_prob = 50,
-},
+}
 
 UNFINISHED["x_cave"] =
 {
-  label = _("Cave")
+  label = _("Cave"),
   name_theme = "GOTHIC",
   mixed_prob = 20,
-},
+}
 
 UNFINISHED["x_ice"] =
 {
-  label = _("Ice")
+  label = _("Ice"),
   name_theme = "GOTHIC",
   mixed_prob = 10,
-},
+}
 
 UNFINISHED["x_swamp"] =
 {
-  label = _("Swamp")
+  label = _("Swamp"),
   name_theme = "GOTHIC",
   mixed_prob = 20,
-},
+}
 
 UNFINISHED["x_village"] =
 {
-  label = _("Village")
+  label = _("Village"),
   name_theme = "URBAN",
   mixed_prob = 20,
-},
+}
 
