@@ -29,7 +29,7 @@ This is a fork containing some changes and updates to Oblige, as well as some qu
 
 A brief summary of changes:
 
-Overhaul of Lua-related scripts and functions to support Lua 5.4.x (in progress)
+Lua upgraded to 5.4.x. Lua scripts from previous versions of Oblige/ObAddon will be incompatible without conversion.
 
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
 
