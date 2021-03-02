@@ -1,5 +1,5 @@
 
-# OBLIGE 7.70
+# OBLIGE 8 (Working Title)
 by Andrew Apted.
 
 
@@ -25,7 +25,7 @@ OBLIGE will then build all the maps, showing a blueprint of each one as it goes,
 
 ## About This Repository
 
-This is a fork containing some changes and updates to Oblige, as well as some quality of life fixes. Since then, I have successfully tested it with Linux and Win10 x86_64. It is also compatible with ObAddon and will load it from a .pk3 file via the Addons menu.
+This is Oblige, updated to Lua 5.4.x in preparation for a new major version.
 
 A brief summary of changes:
 
