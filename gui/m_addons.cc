@@ -186,24 +186,28 @@ void VFS_ScanForAddons()
 
 	std::vector<std::string> list;
 	int result1 = ScanDir_MatchingFiles(dir_name, "pk3", list);
+	int result2 = 0;
 
-	StringFree(dir_name);
+    if (std::string(home_dir).compare(std::string(install_dir)) != 0)
+    {
+		StringFree(dir_name);
 
-	dir_name = StringPrintf("%s/addons", install_dir);
+		dir_name = StringPrintf("%s/addons", install_dir);
 
-	std::vector<std::string> list2;
+		std::vector<std::string> list2;
 
-	int result2 = ScanDir_MatchingFiles(dir_name, "pk3", list2);
+		result2 = ScanDir_MatchingFiles(dir_name, "pk3", list2);
+		
+		list.insert(list.end(), list2.begin(), list2.end());
+
+		std::vector<std::string>().swap(list2);	
+	}
 
 	if ((result1 < 0) && (result2 < 0))
 	{
 		LogPrintf("FAILED -- no addon directory found.\n\n");
 		return;
 	}
-
-	list.insert(list.end(), list2.begin(), list2.end());
-
-	std::vector<std::string>().swap(list2);
 	
 	for (unsigned int i = 0 ; i < list.size() ; i++)
 	{
