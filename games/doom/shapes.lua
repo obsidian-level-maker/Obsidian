@@ -2893,6 +2893,29 @@ GROW_COLLONADE_VAULT_THICK_PILLARS_NEW_AREA =
   },
 },
 
+GROW_357_OPEN_ROOF_NEW_AREA =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "............","111111111111",
+    "............","1#11111111#1",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","1#11111111#1",
+    "............","111111111111",
+    "xxxxx11xxxxx","xxxxx11xxxxx",
+  },
+},
+
 -- MSSP's liquid tiles. [MSSPLIQUID]
 
 GROW_LIQUID_GUTTER_SIDE =
@@ -10877,7 +10900,7 @@ STREET_BUILDING_ENTRANCE_WITH_JOINER_3X2 =
   {
     from_dir = 2,
   },
-},
+}
 
 -- end of SHAPE_GRAMMAR
 
