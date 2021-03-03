@@ -462,7 +462,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 
 	box(FL_FLAT_BOX);
 
-	Fl_Color bg_col = alternate_look ? FL_DARK2 : FL_DARK3;
+	Fl_Color bg_col = alternate_look ? FL_DARK2 : fl_rgb_color(221, 221, 221);
 
 	color(bg_col, bg_col);
 
@@ -485,12 +485,15 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
 	sbar->callback(callback_Scroll, this);
 
-	sbar->color(FL_DARK3+1, FL_DARK1);
+//	sbar->color(FL_DARK3+1, FL_DARK1);
 
 
-	const char *pack_title = StringPrintf("\n\n\n\n%s", _("List of Addons"));
-
-	pack = new Fl_Group(mx, my, mw, mh, pack_title);
+	const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
+    if (all_addons.empty()) {
+		pack = new Fl_Group(mx, my, mw, mh, pack_title);
+	} else {
+		pack = new Fl_Group(mx, my, mw, mh, 0);
+	}
 	pack->clip_children(1);
 	pack->end();
 

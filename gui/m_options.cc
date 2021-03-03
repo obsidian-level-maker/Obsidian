@@ -463,7 +463,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
 	darkish->box(FL_FLAT_BOX);
-	darkish->color(FL_DARK3, FL_DARK3);
+	darkish->color(WINDOW_BG, WINDOW_BG);
 	{
 		// finally add an "Close" button
 

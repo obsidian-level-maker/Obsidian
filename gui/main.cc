@@ -378,7 +378,7 @@ void Main_SetupFLTK()
 
 	if (! alternate_look)
 	{
-		Fl::background(236, 228, 224);
+		Fl::background(221, 221, 221);
 		Fl::background2(255, 255, 255);
 		Fl::foreground(0, 0, 0);
 

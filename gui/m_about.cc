@@ -26,7 +26,7 @@
 #include "lib_util.h"
 
 
-#define TITLE_COLOR  fl_color_cube(0,2,4)
+#define TITLE_COLOR  fl_rgb_color(0, 0, 0)
 
 #define INFO_COLOR   fl_rgb_color(153, 153, 153)
 
@@ -126,7 +126,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 	Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
-	box->labelcolor(0x00000000);
+	box->labelcolor(TITLE_COLOR);
 	box->labelsize(FL_NORMAL_SIZE * 5 / 3);
 
 	cy += box->h() + kf_h(6);
@@ -163,7 +163,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 	// finally add an "OK" button
 	Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
 	darkish->box(FL_FLAT_BOX);
-	darkish->color(FL_DARK3, FL_DARK3);
+	darkish->color(WINDOW_BG, WINDOW_BG);
 	{
 		int bw = kf_w(60);
 		int bh = kf_h(30);

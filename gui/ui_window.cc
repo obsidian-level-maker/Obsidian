@@ -45,9 +45,7 @@ int KF = 0;
 int  small_font_size;
 int header_font_size;
 
-#define MODULE_GREEN	fl_rgb_color(0,160,0)
-#define MODULE_RED		fl_rgb_color(224,0,0)
-#define XXX_PURPLE		fl_rgb_color(208,0,208)
+#define SELECTION	fl_rgb_color(62, 61, 57)
 
 
 
@@ -81,9 +79,9 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
 
-	right_mods = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, MODULE_RED);
+	right_mods = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, SELECTION);
 
-	left_mods = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H, MODULE_GREEN);
+	left_mods = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H, SELECTION);
 
 
 	end();

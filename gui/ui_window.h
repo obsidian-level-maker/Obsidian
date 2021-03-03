@@ -22,7 +22,7 @@
 #define __UI_WINDOW_H__
 
 
-#define WINDOW_BG  fl_gray_ramp(3)
+#define WINDOW_BG  fl_rgb_color(62, 61, 57)
 
 
 // support for scaling up the GUI
