@@ -8,7 +8,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -27,7 +27,7 @@
 
 --class GRID : extends ARRAY_2D
 --[[
-    -- when used for caves, for cell can be:
+    -- when used for caves, each cell can be:
     --    NIL        : unused (e.g. another room)
     --    number > 0 : solid (i.e. wall)
     --    number < 0 : empty (i.e. a floor)
@@ -117,7 +117,7 @@ end
 
 function GRID_CLASS.copy(grid)
   -- a fairly shallow copy, only "w" and "h" members are copied
-  -- (NOT additional stuff like "flood" or "regions"), and for
+  -- (NOT additional stuff like "flood" or "regions"), and each
   -- cell is copied by value.
 
   local newbie = grid:blank_copy()
@@ -399,7 +399,7 @@ end
 
 function GRID_CLASS.flood_fill(grid)
   --
-  -- Generate the 'flood' member, an array where for contiguous region
+  -- Generate the 'flood' member, an array where each contiguous region
   -- has a unique id.  Empty areas are negative, solid areas are positive,
   -- and everything else is NIL.
   --
@@ -452,7 +452,7 @@ function GRID_CLASS.flood_fill(grid)
         id = id,
         cx1 = x, cy1 = y,
         cx2 = x, cy2 = y,
-        size = 0
+        size = 0,
       }
 
       grid.regions[id] = REG
@@ -499,7 +499,7 @@ function GRID_CLASS.flood_fill(grid)
     end
   end
 
-  -- create information for for region
+  -- create information for each region
 
   grid.regions = {}
 
@@ -938,15 +938,15 @@ function GRID_CLASS.distance_map(grid, ref_points)
 
   -- perform the fill
 
-  for _,P in ipairs(ref_points) do
-    work[P.x][P.y] = 0
+  for _,P in pairs(ipairs(ref_points)) do
+    work[P.x][P.y] = 0,
     flood_point(P.x, P.y)
   end
 
   while #next_points > 0 do
     local np_list = next_points ; next_points = {}
 
-    for _,P in ipairs(np_list) do
+    for _,P in pairs(ipairs(np_list)) do
       flood_point(P.x, P.y)
     end
   end
@@ -1058,7 +1058,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
   -- Divide the given grid into "blobs", which are small groups
   -- of contiguous cells.
   --
-  -- Returns a new grid, where for valid cell will contain a blob
+  -- Returns a new grid, where each valid cell will contain a blob
   -- identity number.
   --
   -- NOTE: the input region MUST be contiguous
@@ -1227,7 +1227,7 @@ function GRID_CLASS.create_blobs(grid, step_x, step_y)
       end
       end
 
-    else  -- dir == 6 or dir == 8
+    else  -- dir == 6 or dir == 8,
 
       for cx = 1, W do
       for cy = 1, H do
@@ -1381,7 +1381,7 @@ end
 
 function GRID_CLASS.walkify_blobs(grid, walk_rects)
   --
-  -- For for cell rectangle in the walk_rects list,
+  -- For each cell rectangle in the walk_rects list,
   -- merge any group of blobs that span that rectangle
   -- (so that afterwards, only a single blob spans it).
   --
@@ -1468,7 +1468,7 @@ end
 
 
 function GRID_CLASS.extent_of_blobs(grid)
-  -- determines bounding box for for blob
+  -- determines bounding box for each blob
 
   for cx = 1, grid.w do
   for cy = 1, grid.h do
@@ -1738,7 +1738,7 @@ function GRID_CLASS.maze_generate(maze)
       maze[p.x][p.y] = 1
     end
 
-    -- set how far we can move in for direction
+    -- set how far we can move in each direction
     local lens = {}
 
     for dir = 2,8,2 do
@@ -1829,7 +1829,7 @@ function GRID_CLASS.maze_render(maze, brush_func, data)
       return
     end
 
-    -- FIXME: better method, find "wall spans"
+    -- FIXME: better method, find "wall spans",
   end
 
 

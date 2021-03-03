@@ -18,6 +18,7 @@ PREFABS.Joiner_archy1 =
   deep   = 16,
   over   = 16,
 
+  x_fit = "frame",
   y_fit = "stretch",
 }
 
@@ -39,5 +40,6 @@ PREFABS.Joiner_archy1_wide =
   over   = 16,
 
   x_fit = "frame",
+  y_fit = "frame",
 }
 

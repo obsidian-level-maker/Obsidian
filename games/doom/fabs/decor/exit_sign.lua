@@ -8,7 +8,7 @@ PREFABS.Decor_exit_sign =
   map    = "MAP01",
 
   group  = "exit_sign",
-  prob   = 50,
+  prob   = 80,
 
   where  = "point",
 }

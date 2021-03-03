@@ -8,7 +8,7 @@ PREFABS.Decor_hellgore1 =
   file   = "decor/hell_gore.wad",
   map    = "MAP01",
 
-  prob   = 80,
+  prob   = 5000,
   theme  = "hell",
   env    = "outdoor",
 
@@ -19,100 +19,53 @@ PREFABS.Decor_hellgore1 =
   bound_z1 = 0,
   bound_z2 = 192,
 
-  face_open = true
+  face_open = true,
 }
 
 
-PREFABS.Decor_hellgore2 =
+-- Inverted cross
+PREFABS.Decor_hellgore1_inverted =
 {
-  file   = "decor/hell_gore.wad",
-  map    = "MAP02",
+  file   = "decor/hellgore.wad",
+  map    = "MAP01",
 
-  prob   = 20,
+  prob   = 5000,
   theme  = "hell",
   env    = "outdoor",
 
   where  = "point",
   size   = 100,
-  height = 96,
+  height = 192,
 
   bound_z1 = 0,
+  bound_z2 = 192,
+
+  face_open = true,
 }
 
-
-PREFABS.Decor_hellgore3 =
+-- Hack to place normal decorations
+PREFABS.Decor_hellgore6 =
 {
-  file   = "decor/hell_gore.wad",
-  map    = "MAP03",
+  file   = "decor/hellgore.wad",
+  map    = "MAP06",
 
-  prob   = 40,
+  prob   = 5000,
   theme  = "hell",
-  env    = "outdoor",
 
   where  = "point",
-  size   = 100,
-  height = 96,
+  size   = 64,
+  height = 64, --guess
 
   bound_z1 = 0,
+
+  solid_ents = true,
 
   thing_34 =
   {
-    impaled_twitch = 60,
+    impaled_human = 50,
+    impaled_twitch = 30,
+    skull_kebab = 20,
+    skull_pole = 15,
     skull_cairn = 10,
   }
 }
-
-
-PREFABS.Decor_hellgore4 =
-{
-  file   = "decor/hell_gore.wad",
-  map    = "MAP04",
-
-  prob   = 60,
-  theme  = "hell",
-  env    = "outdoor",
-
-  where  = "point",
-  size   = 200,
-  height = { 152, 256 },
-
-  bound_z1 = 0,
-  bound_z2 = 152,
-
-  z_fit  = "bottom",
-
-  thing_34 =
-  {
-    hang_twitching = 30,
-    hang_arm_pair  = 20,
-    hang_leg_gone  = 10,
-  }
-}
-
-
-PREFABS.Decor_hellgore5 =
-{
-  file   = "decor/hell_gore.wad",
-  map    = "MAP05",
-
-  prob   = 30,
-  theme  = "hell",
-  env    = "outdoor",
-
-  where  = "point",
-  size   = 200,
-  height = { 128, 256 },
-
-  bound_z1 = 0,
-  bound_z2 = 128,
-
-  z_fit  = "top",
-
-  thing_34 =
-  {
-    gutted_victim2 = 40,
-    gutted_victim1 = 20,
-    gutted_torso3  = 10,
-  }
-}
-

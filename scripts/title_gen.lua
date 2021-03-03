@@ -2,13 +2,14 @@
 --  Title-pic generator
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2015-2017 Andrew Apted
+--  Copyright (C) 2019 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -29,7 +30,7 @@ TITLE_LETTER_SHAPES =
   [" "] =
   {
     width = 0.5000,
-    points = { }
+    points = { },
   },
 
   ["'"] =
@@ -40,8 +41,8 @@ TITLE_LETTER_SHAPES =
       { x=0.08333, y=1.00000 },
       { x=0.08333, y=0.88333 },
       { x=0.04167, y=0.80000 },
-      { x=0.00000, y=0.75833 }
-    }
+      { x=0.00000, y=0.75833 },
+    },
   },
 
   ["-"] =
@@ -50,8 +51,8 @@ TITLE_LETTER_SHAPES =
     points =
     {
       { x=0.00000, y=0.36250 },
-      { x=0.33750, y=0.36250 }
-    }
+      { x=0.33750, y=0.36250 },
+    },
   },
 
   ["."] =
@@ -60,8 +61,8 @@ TITLE_LETTER_SHAPES =
     points =
     {
       { x=0.10000, y=0.0 },
-      { x=0.10000, y=0.0 }
-    }
+      { x=0.10000, y=0.0 },
+    },
   },
 
   [":"] =
@@ -73,8 +74,8 @@ TITLE_LETTER_SHAPES =
       { x=0.10000, y=0.68750 },
       {},
       { x=0.10000, y=0.13750 },
-      { x=0.10000, y=0.13750 }
-    }
+      { x=0.10000, y=0.13750 },
+    },
   },
 
   ["A"] =
@@ -87,8 +88,8 @@ TITLE_LETTER_SHAPES =
       { x=0.80833, y=0.00417 },
       {},
       { x=0.14167, y=0.33333 },
-      { x=0.67083, y=0.33333 }
-    }
+      { x=0.67083, y=0.33333 },
+    },
   },
 
   ["B"] =
@@ -114,8 +115,8 @@ TITLE_LETTER_SHAPES =
       { x=0.55833, y=0.11667 },
       { x=0.45000, y=0.02083 },
       { x=0.34583, y=0.00000 },
-      { x=0.00000, y=0.00000 }
-    }
+      { x=0.00000, y=0.00000 },
+    },
   },
 
   ["C"] =
@@ -134,8 +135,8 @@ TITLE_LETTER_SHAPES =
       { x=0.29167, y=0.00000 },
       { x=0.43750, y=0.00000 },
       { x=0.60000, y=0.03000 },
-      { x=0.75417, y=0.08500 }
-    }
+      { x=0.75417, y=0.08500 },
+    },
   },
 
   ["D"] =
@@ -154,8 +155,8 @@ TITLE_LETTER_SHAPES =
       { x=0.63333, y=0.12500 },
       { x=0.43333, y=0.01667 },
       { x=0.30833, y=0.00000 },
-      { x=0.00000, y=0.00000 }
-    }
+      { x=0.00000, y=0.00000 },
+    },
   },
 
   ["E"] =
@@ -169,8 +170,8 @@ TITLE_LETTER_SHAPES =
       { x=0.53750, y=1.00000 },
       {},
       { x=0.00000, y=0.53750 },
-      { x=0.52083, y=0.53750 }
-    }
+      { x=0.52083, y=0.53750 },
+    },
   },
 
   ["F"] =
@@ -183,8 +184,8 @@ TITLE_LETTER_SHAPES =
       { x=0.47917, y=1.00000 },
       {},
       { x=0.00000, y=0.53750 },
-      { x=0.42917, y=0.53750 }
-    }
+      { x=0.42917, y=0.53750 },
+    },
   },
 
   ["G"] =
@@ -206,8 +207,8 @@ TITLE_LETTER_SHAPES =
       { x=0.33750, y=1.00000 },
       { x=0.45833, y=1.01250 },
       { x=0.66250, y=0.99167 },
-      { x=0.77917, y=0.93333 }
-    }
+      { x=0.77917, y=0.93333 },
+    },
   },
 
   ["H"] =
@@ -222,8 +223,8 @@ TITLE_LETTER_SHAPES =
       { x=0.66667, y=0.53333 },
       {},
       { x=0.66667, y=0.00000 },
-      { x=0.66667, y=1.00000 }
-    }
+      { x=0.66667, y=1.00000 },
+    },
   },
 
   ["I"] =
@@ -238,8 +239,8 @@ TITLE_LETTER_SHAPES =
       { x=0.33333, y=0.00000 },
       {},
       { x=0.00000, y=1.00000 },
-      { x=0.33333, y=1.00000 }
-    }
+      { x=0.33333, y=1.00000 },
+    },
   },
 
   ["J"] =
@@ -255,8 +256,8 @@ TITLE_LETTER_SHAPES =
       { x=0.25417, y=0.10000 },
       { x=0.19583, y=0.02917 },
       { x=0.10833, y=0.00000 },
-      { x=0.00000, y=0.00000 }
-    }
+      { x=0.00000, y=0.00000 },
+    },
   },
 
   ["K"] =
@@ -269,8 +270,8 @@ TITLE_LETTER_SHAPES =
       {},
       { x=0.54167, y=1.00000 },
       { x=0.03583, y=0.53333 },
-      { x=0.59167, y=0.00000 }
-    }
+      { x=0.59167, y=0.00000 },
+    },
   },
 
   ["L"] =
@@ -280,8 +281,8 @@ TITLE_LETTER_SHAPES =
     {
       { x=0.52917, y=0.00000 },
       { x=0.00000, y=0.00000 },
-      { x=0.00000, y=1.00000 }
-    }
+      { x=0.00000, y=1.00000 },
+    },
   },
 
   ["M"] =
@@ -295,8 +296,8 @@ TITLE_LETTER_SHAPES =
       { x=0.43000, y=0.21250 },
       { x=0.83000, y=1.00000 },
       { x=0.86000, y=1.00000 },
-      { x=0.86000, y=0.00000 }
-    }
+      { x=0.86000, y=0.00000 },
+    },
   },
 
   ["N"] =
@@ -309,8 +310,8 @@ TITLE_LETTER_SHAPES =
       { x=0.02500, y=1.00000 },
       { x=0.57917, y=0.00000 },
       { x=0.60417, y=0.00000 },
-      { x=0.60417, y=1.00000 }
-    }
+      { x=0.60417, y=1.00000 },
+    },
   },
 
   ["O"] =
@@ -334,8 +335,8 @@ TITLE_LETTER_SHAPES =
       { x=0.26250, y=0.00417 },
       { x=0.10000, y=0.11667 },
       { x=0.02083, y=0.30417 },
-      { x=0.00000, y=0.50833 }
-    }
+      { x=0.00000, y=0.50833 },
+    },
   },
 
   ["P"] =
@@ -352,8 +353,8 @@ TITLE_LETTER_SHAPES =
       { x=0.50417, y=0.57500 },
       { x=0.38333, y=0.47083 },
       { x=0.28750, y=0.45417 },
-      { x=0.00000, y=0.45417 }
-    }
+      { x=0.00000, y=0.45417 },
+    },
   },
 
   ["Q"] =
@@ -380,8 +381,8 @@ TITLE_LETTER_SHAPES =
       { x=0.00000, y=0.50833 },
       {},
       { x=0.54583, y=-0.03333 },
-      { x=0.69583, y=-0.19583 }
-    }
+      { x=0.69583, y=-0.19583 },
+    },
   },
 
   ["R"] =
@@ -403,8 +404,8 @@ TITLE_LETTER_SHAPES =
       { x=0.31250, y=0.42500 },
       { x=0.39583, y=0.37083 },
       { x=0.51250, y=0.02917 },
-      { x=0.60000, y=0.00000 }
-    }
+      { x=0.60000, y=0.00000 },
+    },
   },
 
   ["S"] =
@@ -427,8 +428,8 @@ TITLE_LETTER_SHAPES =
       { x=0.17917, y=1.00000 },
       { x=0.32083, y=1.02083 },
       { x=0.48333, y=1.00000 },
-      { x=0.60417, y=0.93750 }
-    }
+      { x=0.60417, y=0.93750 },
+    },
   },
 
   ["T"] =
@@ -440,8 +441,8 @@ TITLE_LETTER_SHAPES =
       { x=0.41667, y=1.00000 },
       {},
       { x=0.00000, y=1.00000 },
-      { x=0.83333, y=1.00000 }
-    }
+      { x=0.83333, y=1.00000 },
+    },
   },
 
   ["U"] =
@@ -459,8 +460,8 @@ TITLE_LETTER_SHAPES =
       { x=0.55417, y=0.04167 },
       { x=0.62500, y=0.12917 },
       { x=0.66250, y=0.35833 },
-      { x=0.66250, y=1.00000 }
-    }
+      { x=0.66250, y=1.00000 },
+    },
   },
 
   ["V"] =
@@ -471,8 +472,8 @@ TITLE_LETTER_SHAPES =
       { x=0.00000, y=1.00000 },
       { x=0.37500, y=0.00000 },
       { x=0.40000, y=0.00000 },
-      { x=0.82083, y=1.00000 }
-    }
+      { x=0.82083, y=1.00000 },
+    },
   },
 
   ["W"] =
@@ -487,8 +488,8 @@ TITLE_LETTER_SHAPES =
       { x=0.58750, y=0.58333 },
       { x=0.82917, y=0.00000 },
       { x=0.87083, y=0.00000 },
-      { x=1.12917, y=1.00000 }
-    }
+      { x=1.12917, y=1.00000 },
+    },
   },
 
   ["X"] =
@@ -500,8 +501,8 @@ TITLE_LETTER_SHAPES =
       { x=0.69167, y=1.00000 },
       {},
       { x=0.04583, y=1.00000 },
-      { x=0.72500, y=0.00000 }
-    }
+      { x=0.72500, y=0.00000 },
+    },
   },
 
   ["Y"] =
@@ -514,8 +515,8 @@ TITLE_LETTER_SHAPES =
       { x=0.00000, y=1.00000 },
       {},
       { x=0.36000, y=0.49167 },
-      { x=0.72000, y=1.00000 }
-    }
+      { x=0.72000, y=1.00000 },
+    },
   },
 
   ["Z"] =
@@ -526,8 +527,8 @@ TITLE_LETTER_SHAPES =
       { x=0.82917, y=0.00000 },
       { x=0.00000, y=0.00000 },
       { x=0.80833, y=1.00000 },
-      { x=0.01667, y=1.00000 }
-    }
+      { x=0.01667, y=1.00000 },
+    },
   },
 
   ["0"] =
@@ -555,8 +556,8 @@ TITLE_LETTER_SHAPES =
       { x=145, y=122 },
       { x=136, y=142 },
       { x=126, y=149 },
-      { x=118, y=150 }
-    }
+      { x=118, y=150 },
+    },
   },
 
   ["1"] =
@@ -571,8 +572,8 @@ TITLE_LETTER_SHAPES =
       { x=190,y= 63 },
       {},
       { x=184,y=152 },
-      { x=249,y=152 }
-    }
+      { x=249,y=152 },
+    },
   },
 
   ["2"] =
@@ -591,8 +592,8 @@ TITLE_LETTER_SHAPES =
       { x=336, y=96 },
 
       { x=285, y=151 },
-      { x=346, y=151 }
-    }
+      { x=346, y=151 },
+    },
   },
 
   ["3"] =
@@ -617,8 +618,8 @@ TITLE_LETTER_SHAPES =
       { x=442, y=143 },
       { x=426, y=152 },
       { x=410, y=152 },
-      { x=388, y=147 }
-    }
+      { x=388, y=147 },
+    },
   },
 
   ["4"] =
@@ -631,8 +632,8 @@ TITLE_LETTER_SHAPES =
       { x=558,y=121 },
       { x=490,y=121 },
       { x=539,y=48  },
-      { x=539,y=152 }
-    }
+      { x=539,y=152 },
+    },
   },
 
   ["5"] =
@@ -654,8 +655,8 @@ TITLE_LETTER_SHAPES =
       { x=130,y=330 },
       { x=115,y=338 },
       { x=100,y=338 },
-      { x= 82,y=332 }
-    }
+      { x= 82,y=332 },
+    },
   },
 
   ["6"] =
@@ -683,8 +684,8 @@ TITLE_LETTER_SHAPES =
       { x=226,y=273 },
       { x=214,y=273 },
       { x=201,y=279 },
-      { x=191,y=293 }
-    }
+      { x=191,y=293 },
+    },
   },
 
   ["7"] =
@@ -696,8 +697,8 @@ TITLE_LETTER_SHAPES =
     {
       { x=285,y=232 },
       { x=347,y=232 },
-      { x=307,y=341 }
-    }
+      { x=307,y=341 },
+    },
   },
 
   ["8"] =
@@ -734,8 +735,8 @@ TITLE_LETTER_SHAPES =
       { x=388,y=318 },
       { x=388,y=302 },
       { x=398,y=290 },
-      { x=415,y=281 }
-    }
+      { x=415,y=281 },
+    },
   },
 
   ["9"] =
@@ -764,9 +765,9 @@ TITLE_LETTER_SHAPES =
       { x=515,y=297 },
       { x=526,y=297 },
       { x=539,y=290 },
-      { x=548,y=277 }
-    }
-  }
+      { x=548,y=277 },
+    },
+  },
 
 -- end of letter_shapes
 }
@@ -1139,8 +1140,8 @@ TITLE_MAIN_STYLES =
       mode = "solid",
       colors = { "#ccf" },
       outline_mode = "zoom",
-      outlines = { "#77f", "#00f", "#000" }
-    }
+      outlines = { "#77f", "#00f", "#000" },
+    },
   },
 
   solid_red =
@@ -1161,8 +1162,8 @@ TITLE_MAIN_STYLES =
       mode = "solid",
       colors = { "#fff" },
       outline_mode = "surround",
-      outlines = { "#f44", "#900", "#000" }
-    }
+      outlines = { "#f44", "#900", "#000" },
+    },
   },
 
   solid_green =
@@ -1176,7 +1177,7 @@ TITLE_MAIN_STYLES =
     outline_mode = "shadow",
     outlines = { "#0c0", "#090", "#060", "#000" },
 
-    narrow = 0.4
+    narrow = 0.4,
   },
 
   solid_black_lightblue =
@@ -1189,7 +1190,7 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#009", "#99f", "#ddd" },
 
-    narrow = 0.7
+    narrow = 0.7,
   },
 
   shaded_white_n_blue =
@@ -1201,7 +1202,7 @@ TITLE_MAIN_STYLES =
     outline_mode = "shadow",
     outlines = { "#bbf", "#99f", "#55f", "#22f", "#00f", "#009", "#004", "#000" },
 
-    narrow = 0.4
+    narrow = 0.4,
   },
 
   shaded_white_n_red =
@@ -1213,7 +1214,7 @@ TITLE_MAIN_STYLES =
     outline_mode = "zoom",
     outlines = { "#f99", "#f66", "#e00", "#b00", "#800", "#400", "#000" },
 
-    narrow = 0.4
+    narrow = 0.4,
   },
 
   --- Gradient styles ---
@@ -1224,7 +1225,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#fff", "#000" },
 
-    outlines = { "#000", "#555" }
+    outlines = { "#000", "#555" },
   },
 
   gradient_green_black =
@@ -1233,7 +1234,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#7e6", "#000" },
 
-    outlines = { "#231", "#342" }
+    outlines = { "#231", "#342" },
   },
 
   gradient_pink_black =
@@ -1242,7 +1243,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#c77", "#611", "#000" },
 
-    outlines = { "#000", "#933" }
+    outlines = { "#000", "#933" },
   },
 
   gradient_black_brown =
@@ -1251,7 +1252,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#000", "#752", "#fb8" },
 
-    outlines = { "#432", "#000" }
+    outlines = { "#432", "#000" },
   },
 
   grad3_white_red_black =
@@ -1260,7 +1261,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#fff", "#f00", "#000" },
 
-    outlines = { "#c00" }
+    outlines = { "#c00" },
   },
 
   grad3_white_blue_black =
@@ -1269,7 +1270,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#fff", "#00f", "#000" },
 
-    outlines = { "#00c" }
+    outlines = { "#00c" },
   },
 
   grad3_white_orange_black =
@@ -1278,7 +1279,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#fff", "#720", "#000" },
 
-    outlines = { "#000" }
+    outlines = { "#000" },
   },
 
   gradmirror_orange_white =
@@ -1287,7 +1288,7 @@ TITLE_MAIN_STYLES =
 
     colors = { "#720", "#fff", "#720" },
 
-    outlines = { "#000" }
+    outlines = { "#000" },
   },
 
   gradmirror_yellow_orange =
@@ -1298,7 +1299,7 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#000", "#000", "#000" },
 
-    narrow = 0.7
+    narrow = 0.7,
   },
 
   --- Textured styles ---
@@ -1309,7 +1310,7 @@ TITLE_MAIN_STYLES =
 
     texture = "groovy1",
 
-    outlines = { "#000", "#864", "#000" }
+    outlines = { "#000", "#864", "#000" },
   },
 
   compgreen_1 =
@@ -1322,7 +1323,7 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#000", "#cb4" },
 
-    narrow = 0.9
+    narrow = 0.9,
   },
 
   yellowish_1 =
@@ -1331,7 +1332,7 @@ TITLE_MAIN_STYLES =
 
     texture = "yellowish",
 
-    outlines = { "#654", "#ca8", "#000" }
+    outlines = { "#654", "#ca8", "#000" },
   },
 
   redrock_1 =
@@ -1341,7 +1342,7 @@ TITLE_MAIN_STYLES =
     texture = "redrock",
 
     outline_mode = "zoom",
-    outlines = { "#c66", "#933", "#622", "#511" }
+    outlines = { "#c66", "#933", "#622", "#511" },
   },
 
   fireblu_1 =
@@ -1350,7 +1351,7 @@ TITLE_MAIN_STYLES =
 
     texture = "fireblu",
 
-    outlines = { "#ccc", "#000" }
+    outlines = { "#ccc", "#000" },
   },
 
   shawn_1 =
@@ -1361,8 +1362,8 @@ TITLE_MAIN_STYLES =
 
     outlines = { "#643", "#321", "#000" },
 
-    narrow = 0.8
-  }
+    narrow = 0.8,
+  },
 }
 
 
@@ -1372,7 +1373,7 @@ TITLE_SUB_STYLES =
   {
     mode = "solid",
     colors = { "#ddd" },
-    outlines = { "#000" }
+    outlines = { "#000" },
   },
 
   yellow =
@@ -1380,43 +1381,43 @@ TITLE_SUB_STYLES =
     prob = 25,
     mode = "solid",
     colors = { "#ff7" },
-    outlines = { "#431" }
+    outlines = { "#431" },
   },
 
   yellow_outline =
   {
     mode = "solid",
     colors = { "#000" },
-    outlines = { "#ff7" }
+    outlines = { "#ff7" },
   },
 
   red_outline =
   {
     mode = "solid",
     colors = { "#000" },
-    outlines = { "#f44" }
+    outlines = { "#f44" },
   },
 
   lightbrown =
   {
     mode = "solid",
     colors = { "#ea7" },
-    outlines = { "#431" }
+    outlines = { "#431" },
   },
 
   green =
   {
     mode = "solid",
     colors = { "#6d5" },
-    outlines = { "#242" }
+    outlines = { "#242" },
   },
 
   purple =
   {
     mode = "solid",
     colors = { "#f0f" },
-    outlines = { "#505" }
-  }
+    outlines = { "#505" },
+  },
 }
 
 
@@ -1427,7 +1428,7 @@ TITLE_SPACE_STYLES =
     hue1   = "#300",
     hue2   = "#f00",
     hue3   = "#fff",
-    thresh = 0.5
+    thresh = 0.5,
   },
 
   blue_nebula =
@@ -1435,7 +1436,7 @@ TITLE_SPACE_STYLES =
     hue1   = "#000",
     hue2   = "#00f",
     hue3   = "#99f",
-    thresh = 0.5
+    thresh = 0.5,
   },
 
   green_nebula =
@@ -1443,7 +1444,7 @@ TITLE_SPACE_STYLES =
     hue1   = "#000",
     hue2   = "#363",
     hue3   = "#6f6",
-    thresh = 0.5
+    thresh = 0.5,
   },
 
   brown_nebula =
@@ -1452,7 +1453,7 @@ TITLE_SPACE_STYLES =
     hue2   = "#ab6f43",
     hue3   = "#ffebdf",
     thresh = 0.25,
-    power  = 3.0
+    power  = 3.0,
   },
 
   firey_nebula =
@@ -1463,7 +1464,7 @@ TITLE_SPACE_STYLES =
     hue2   = "#732",
     hue3   = "#ff8",
     thresh = 0.2,
-    power  = 1.5
+    power  = 1.5,
   },
 
   grey_nebula =
@@ -1473,7 +1474,7 @@ TITLE_SPACE_STYLES =
     hue1   = "#000",
     hue2   = "#aaa",
     hue3   = "#000",
-    power  = 4
+    power  = 4,
   },
 
   purple_nebula =
@@ -1484,8 +1485,8 @@ TITLE_SPACE_STYLES =
     hue2   = "#f0f",
     hue3   = "#fff",
     thresh = 0.3,
-    power  = 2
-  }
+    power  = 2,
+  },
 }
 
 
@@ -1715,9 +1716,7 @@ function Title_gen_space_scene()
 
       gui.title_prop("color", { ity, ity, ity })
       gui.title_draw_rect(x, y, 1, 1)
-      
       ::continue::
-
     end -- x, y
     end
   end
@@ -1850,7 +1849,7 @@ function Title_gen_ray_burst()
 
     red = 10,
     pink = 10,
-    light_brown = 10
+    light_brown = 10,
   }
 
   local color_name = rand.key_by_probs(ray_colors)
@@ -1888,7 +1887,7 @@ function Title_gen_ray_burst()
   end
 
 
-  -- draw for ray
+  -- draw each ray
 
   for angle = step/2, 361-step/2, step do
     draw_ray(angle, step * 0.4, col)
@@ -1921,7 +1920,10 @@ function Title_gen_wall_scene()
       lamp_sprite = "lamp3"
     end
 
-    tex_list = { "block1", "block2" }
+   -- Added new shit here
+
+    tex_list = { "block1", "block2", "bodiesc", "bricks08", "bricks09", "bronze5", "darkf03", "goth6", "goth10", "goth36", "goth50", "goth51",
+                 "graymet2", "helmet1", "helmet2", "helwal1", "rdrok1" }
   end
 
   -- draw the texture over the whole screen
@@ -1962,7 +1964,7 @@ function Title_gen_wall_scene()
       d = math.min(d, geom.dist(L.x * xf, L.y, x * xf, y))
     end
 
-    local ity = math.exp(-d / 50) * 255  --- 255 - (d ^ 1.5) / 2.0
+    local ity = math.exp(-d / 50) * 255  --- 255 - (d ^ 1.5) / 2.0,
     ity = math.clamp(0, ity, 255)
 
     col[1] = ity
@@ -1974,7 +1976,7 @@ function Title_gen_wall_scene()
   end
   end
 
-  -- draw for lamp
+  -- draw each lamp
   for _,L in pairs(lights) do
     gui.title_load_image(L.x - 10, L.y - 16, "data/bg/" .. lamp_sprite .. ".tga")
   end
@@ -2003,7 +2005,7 @@ function Title_gen_cave_scene()
 
     blue_white = 10,
     pink = 10,
-    green = 10
+    green = 10,
   }
 
   local color_name = rand.key_by_probs(cave_colors)
@@ -2107,7 +2109,7 @@ function Title_gen_tunnel_scene()
     red_white    = 20,
     brown_yellow = 10,
     mid_green    = 10,
-    mid_grey     = 10
+    mid_grey     = 10,
   }
 
   local color_name = rand.key_by_probs(tunnel_colors)
@@ -2126,7 +2128,7 @@ function Title_gen_tunnel_scene()
     Title_interp_color(color_list, ity, col)
 
     gui.title_prop("color", col)
-    gui.title_draw_disc(int(mx - r*x_mul), int(my - r*y_mul), int(r*1.2), r)
+    gui.title_draw_disc(int(mx - r*x_mul), int(my - r*y_mul), int(r*1.2), int(r))
   end
 end
 
@@ -2140,24 +2142,76 @@ function Title_split_into_lines()
   --   (a) a single string -- use it on a single line
   --   (b) two or three words -- first two are main lines, third is the
   --       little "of", "in", etc.. to be placed in-between
-  --   (c) fourth value can be "The"
+  --   (c) fourth value can be "The",
   --
+
+  -- MSSP's notes:
+  -- The lines are in the format:
+  --
+  -- top_line
+  -- line1,
+  -- mid_line
+  -- line2,
+  --
+  -- Actual return pattern:
+  -- line1, line2, mid_line, top_line
+
   local words = {}
 
-  for w in string.gmatch(GAME.title, "%w+") do
+  for w in string.gmatch(GAME.title, "%S+") do
     table.insert(words, w)
   end
 
   local top_line
 
+  -- MSSP-FIXME: kind of broken
+  -- for apostrophes and colons
+  --[[if string.match(GAME.title, "'s")
+  or string.match(GAME.title, ":") then
+    local lf1 = "",
+    local lf2 = "",
+
+    local divider_encountered = false
+    local since_div = 0,
+
+    for w in string.gmatch(GAME.title, "%S+") do
+
+      if since_div <= 1 then
+        lf1 = lf1 .. w .. " ",
+      end
+
+      if since_div > 1 then
+        lf2 = lf2 .. w .. " ",
+      end
+
+      if string.gmatch(w, "'s")
+      or string.gmatch(w, ":") then
+        divider_encountered = true
+      end
+
+      if divider_encountered then
+        since_div = since_div + 1,
+      end
+
+    end
+
+    lf1 = lf1:match("^%s*(.-)%s*$")
+    lf2 = lf2:match("^%s*(.-)%s*$")
+
+    return lf1, lf2, nil, nil
+  end]]
+
   if words[1] == "The" or words[1] == "A" or words[1] == "An" then
     top_line = table.remove(words, 1)
   end
 
-  -- handle titles like "X of the Y"
-  if #words >= 4 then
+  -- handle titles like "X of the Y",
+  if #words >= 4 and #words <=5 then
     words[2] = words[2] .. " " .. words[3]
     words[3] = words[4]
+    if words[5] then
+      words[3] = words[3] .. " " .. words[5]
+    end
   end
 
   -- no choice?
@@ -2171,6 +2225,13 @@ function Title_split_into_lines()
   if not rand.odds(split_prob) then return GAME.title end
 
   -- multiple lines
+  if words[6] then
+    local line1 = words[1]
+    local line2 = words[4] .. " " .. words[5] .. " " .. words[6]
+    local mid_line = words[2] .. " " .. words[3]
+    return line1, line2, mid_line, top_line
+  end
+
   if words[3] then
     return words[1], words[3], words[2], top_line
   else
@@ -2232,13 +2293,12 @@ function Title_add_title()
 
   if mid_line then mid_line = string.upper(mid_line) end
 
-
   -- determine what kind of sub-title we will draw (if any)
   local sub_title
 
   local bottom_line
 
-  if rand.odds(33) then
+  if rand.odds(50) then
     if #GAME.sub_title <= 4 and string.upper(GAME.sub_title) == GAME.sub_title then
       -- this will be part of main title (a "version" string)
       bottom_line = GAME.sub_title
@@ -2453,7 +2513,7 @@ end
 
 
 function Title_add_credit()
-  gui.title_prop("reset")
+  gui.title_prop("reset", "all")
   gui.title_prop("color", "#000")
 
   gui.title_draw_rect(310, 190, 10, 10)
@@ -2601,4 +2661,3 @@ function Title_generate()
   Title_make_interpic()
   Title_make_titlepic()
 end
-

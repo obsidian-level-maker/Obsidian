@@ -139,7 +139,6 @@ end
 
 
 function HEXEN.all_done()
-  HEXEN.make_mapinfo()
   HEXEN.make_cool_gfx()
 end
 

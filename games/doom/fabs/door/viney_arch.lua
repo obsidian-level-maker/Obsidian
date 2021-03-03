@@ -7,7 +7,6 @@ PREFABS.Arch_viney1 =
   file   = "door/viney_arch.wad",
   map    = "MAP02",
 
-  rank = 1,
   prob = 400,
 
   env      = "cave",
@@ -24,6 +23,12 @@ PREFABS.Arch_viney1 =
 
   bound_z1 = 0,
   bound_z2 = 132,
+
+  tex_MIDVINE2 =
+  {
+    MIDVINE2 = 1,
+    ZZWOLF10 = 10 -- invisibility tex
+  }
 }
 
 
@@ -72,7 +77,13 @@ PREFABS.Joiner_viney1 =
   x_fit  = "frame",
   y_fit  = { 32,144 },
 
-  force_flip = false
+  force_flip = false,
+
+  tex_MIDVINE2 =
+  {
+    MIDVINE2 = 1,
+    ZZWOLF10 = 10 -- invisibility tex
+  }
 }
 
 
@@ -84,7 +95,7 @@ PREFABS.Joiner_viney1_B =
   env      = "cave",
   neighbor = "any",
 
-  force_flip = true
+  force_flip = true,
 }
 
 
@@ -96,6 +107,5 @@ PREFABS.Joiner_viney1_CC =
   env      = "cave",
   neighbor = "cave",
 
-  rank   = 4,
+  rank   = nil
 }
-

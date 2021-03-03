@@ -23,11 +23,13 @@ HEXEN = { }
 
 
 ------------------------------------------------------------
+gui.import("params")
 
 gui.import("entities")
 gui.import("monsters")
 gui.import("pickups")
 gui.import("weapons")
+gui.import("shapes")
 
 gui.import("materials")
 gui.import("themes")
@@ -36,28 +38,7 @@ gui.import("resources")
 
 ------------------------------------------------------------
 
-HEXEN.PARAMETERS =
-{
-  -- special logic for Hexen weapon system
-  hexen_weapons = true,
-
-  teleporters = true,
-
-  jump_height = 66,
-
-  max_name_length = 28,
-
-  skip_monsters = { 20,30 },
-
-  monster_factor = 1.0,
-  health_factor  = 1.0,
-  ammo_factor    = 1.0,
-  time_factor    = 1.0,
-}
-
-------------------------------------------------------------
-
-UNFINISHED["hexen"] =
+OB_GAMES["hexen"] =
 {
   label = _("Hexen"),
   priority = 34,

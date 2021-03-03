@@ -1,0 +1,2050 @@
+# Language Translation for ObAddon.
+# This file is put in the public domain.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Oblige Level Maker\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-09 23:41+1000\n"
+"PO-Revision-Date: 2021-02-11 12:20+0430\n"
+"Last-Translator:  Dasho\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# ###################################################################################################################################################################################### #
+# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liner (in Linux; run this from the ObAddon/src directory): #
+# grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid\t"/} | sed -r {s/"\)$"/"\nmsgstr\t\"\"\n"/} | sed -r {s/":$"/""/}              #
+# ###################################################################################################################################################################################### #
+#: gui/m_about.cc:189
+msgid "About OBLIGE"
+msgstr "About OBLIGE"
+
+#: gui/m_manage.cc:347
+msgid "CURRENT SETTINGS"
+msgstr "CURRENT SETTINGS"
+
+#: gui/m_manage.cc:409
+msgid "Error writing to file."
+msgstr "Error writing to file."
+
+#: gui/m_manage.cc:474
+msgid "Select file to load"
+msgstr "Select file to load"
+
+#: gui/m_manage.cc:496
+#, c-format
+msgid ""
+"Unable to load the file:\n"
+"\n"
+"%s"
+msgstr ""
+"Unable to load the file:\n"
+"\n"
+"%s"
+
+#: gui/m_manage.cc:519
+#, c-format
+msgid ""
+"Cannot open: %s\n"
+"\n"
+"%s"
+msgstr ""
+"Cannot open: %s\n"
+"\n"
+"%s"
+
+#: gui/m_manage.cc:527
+msgid "No config found in file."
+msgstr "No config found in file."
+
+#: gui/m_manage.cc:557
+msgid "PASTED TEXT"
+msgstr "PASTED TEXT"
+
+#: gui/m_manage.cc:761
+msgid "Load"
+msgstr "Load"
+
+#: gui/m_manage.cc:765
+msgid "(can be WAD or PAK)"
+msgstr "(can be WAD or PAK)"
+
+#: gui/m_manage.cc:769
+msgid "Recent"
+msgstr "Recent"
+
+#: gui/m_manage.cc:776
+msgid "Use"
+msgstr "Use"
+
+#: gui/m_manage.cc:779
+msgid ""
+"Note: this will replace\n"
+"all current settings!"
+msgstr ""
+"Note: this will replace\n"
+"all current settings!"
+
+#: gui/m_manage.cc:803
+msgid " Clipboard Operations"
+msgstr " Clipboard Operations"
+
+#: gui/m_manage.cc:813
+msgid "Cut"
+msgstr "Cut"
+
+#: gui/m_manage.cc:827
+msgid "Paste"
+msgstr "Paste"
+
+#: gui/m_manage.cc:858
+msgid "OBLIGE Config Manager"
+msgstr "OBLIGE Config Manager"
+
+#: gui/g_doom.cc:204
+#, c-format
+msgid ""
+"Unable to create wad file:\n"
+"\n"
+"%s"
+msgstr ""
+"Unable to create wad file:\n"
+"\n"
+"%s"
+
+#: gui/g_doom.cc:509
+msgid "Bad Arguments"
+msgstr "Bad Arguments"
+
+#: gui/g_doom.cc:513
+msgid "Bad Args (fixed)"
+msgstr "Bad Args (fixed)"
+
+#: gui/g_doom.cc:516
+msgid "Read Error"
+msgstr "Read Error"
+
+#: gui/g_doom.cc:517
+msgid "Write Error"
+msgstr "Write Error"
+
+#: gui/g_doom.cc:521
+msgid "Cancelled by User"
+msgstr "Cancelled by User"
+
+#: gui/g_doom.cc:526
+msgid "Unknown Error"
+msgstr "Unknown Error"
+
+#: gui/g_doom.cc:558
+#, c-format
+msgid ""
+"glBSP Failure:\n"
+"%s"
+msgstr ""
+"glBSP Failure:\n"
+"%s"
+
+#: gui/g_doom.cc:600
+msgid "Building nodes"
+msgstr "Building nodes"
+
+#: gui/m_options.cc:380
+msgid "Appearance"
+msgstr "Appearance"
+
+#: gui/m_options.cc:389
+msgid "Language: "
+msgstr "Language: "
+
+#: gui/m_options.cc:398
+msgid "Font Size: "
+msgstr "Font Size: "
+
+#: gui/m_options.cc:400
+msgid "AUTO|Tiny|Small|Medium|Large|Huge"
+msgstr "AUTO|Tiny|Small|Medium|Large|Huge"
+
+#: gui/m_options.cc:407
+msgid " Alternate Look"
+msgstr " Alternate Look"
+
+#: gui/m_options.cc:414
+msgid " Change Settings via Mouse Wheel"
+msgstr " Change Settings via Mouse Wheel"
+
+#: gui/m_options.cc:425
+msgid "File Options"
+msgstr "File Options"
+
+#: gui/m_options.cc:434
+msgid " Create Backups"
+msgstr " Create Backups"
+
+#: gui/m_options.cc:441
+msgid " Overwrite File Warning"
+msgstr " Overwrite File Warning"
+
+#: gui/m_options.cc:448
+msgid " Debugging Messages"
+msgstr " Debugging Messages"
+
+#: gui/m_options.cc:478
+msgid "Note: some options require a restart."
+msgstr "Note: some options require a restart."
+
+#: gui/m_options.cc:523
+msgid "OBLIGE Misc Options"
+msgstr "OBLIGE Misc Options"
+
+#: gui/m_lua.cc:599
+#, c-format
+msgid "Making %s"
+msgstr "Making %s"
+
+#: gui/m_lua.cc:1070
+#, c-format
+msgid "Script Error: %s"
+msgstr "Script Error: %s"
+
+#: gui/m_lua.cc:1405
+msgid "Script Error"
+msgstr "Script Error"
+
+#: gui/m_dialog.cc:209
+msgid "OBLIGE - Error Message"
+msgstr "OBLIGE - Error Message"
+
+#: gui/m_dialog.cc:235
+msgid "Select output file"
+msgstr "Select output file"
+
+#: gui/m_dialog.cc:260
+#, c-format
+msgid ""
+"Unable to create the file:\n"
+"\n"
+"%s"
+msgstr ""
+"Unable to create the file:\n"
+"\n"
+"%s"
+
+#: gui/m_dialog.cc:323
+msgid "Enter New Seed Number:"
+msgstr "Enter New Seed Number:"
+
+#: gui/m_dialog.cc:662
+msgid "OBLIGE Log Viewer"
+msgstr "OBLIGE Log Viewer"
+
+#: gui/g_quake.cc:1393
+msgid "BSP"
+msgstr "BSP"
+
+#: gui/g_quake.cc:1394
+msgid "Vis"
+msgstr "Vis"
+
+#: gui/g_quake.cc:1395
+msgid "Light"
+msgstr "Light"
+
+#: gui/g_quake.cc:1396
+msgid "Hull"
+msgstr "Hull"
+
+#: gui/main.cc:421
+msgid "Close"
+msgstr "Close"
+
+#: gui/main.cc:618
+msgid "Preparing..."
+msgstr "Preparing..."
+
+#: gui/main.cc:643
+msgid "Success"
+msgstr "Success"
+
+#: gui/main.cc:905
+#, c-format
+msgid ""
+"Sorry, an internal error occurred:\n"
+"%s"
+msgstr ""
+"Sorry, an internal error occurred:\n"
+"%s"
+
+#: gui/main.cc:909
+msgid "An unknown problem occurred (UI code)"
+msgstr "An unknown problem occurred (UI code)"
+
+#: gui/g_wolf.cc:451
+msgid "Error (write file)"
+msgstr "Error (write file)"
+
+#: gui/ui_game.cc:48
+msgid "Game Settings"
+msgstr "Game Settings"
+
+#: gui/ui_game.cc:62
+msgid "Game: "
+msgstr "Game: "
+
+#: gui/ui_game.cc:70
+msgid "Engine: "
+msgstr "Engine: "
+
+#: gui/ui_game.cc:78
+msgid "Length: "
+msgstr "Length: "
+
+#: gui/ui_game.cc:86
+msgid "Theme: "
+msgstr "Theme: "
+
+#: gui/m_addons.cc:453
+msgid "List of Addons"
+msgstr "List of Addons"
+
+#: gui/m_addons.cc:484
+msgid "Changes require a restart"
+msgstr "Changes require a restart"
+
+#: gui/m_addons.cc:606
+msgid "OBLIGE Addons"
+msgstr "OBLIGE Addons"
+
+#: gui/m_addons.cc:624
+msgid ""
+"Changes to addons require a restart.\n"
+"OBLIGE will now close."
+msgstr ""
+"Changes to addons require a restart.\n"
+"OBLIGE will now close."
+
+#: gui/ui_build.cc:63
+msgid "Menu"
+msgstr "Menu"
+
+#: gui/ui_build.cc:66
+msgid "About"
+msgstr "About"
+
+#: gui/ui_build.cc:67
+msgid "Options"
+msgstr "Options"
+
+#: gui/ui_build.cc:68
+msgid "Addon List"
+msgstr "Addon List"
+
+#: gui/ui_build.cc:69
+msgid "Set Seed"
+msgstr "Set Seed"
+
+#: gui/ui_build.cc:70
+msgid "View Logs"
+msgstr "View Logs"
+
+#: gui/ui_build.cc:71
+msgid "Config Manager"
+msgstr "Config Manager"
+
+#: gui/ui_build.cc:77
+msgid "Build"
+msgstr "Build"
+
+#: gui/ui_build.cc:98
+msgid "Ready to go!"
+msgstr "Ready to go!"
+
+#: gui/ui_build.cc:284
+msgid "Rooms"
+msgstr "Rooms"
+
+#: gui/ui_build.cc:285
+msgid "Mons"
+msgstr "Mons"
+
+#: modules/small_spiderdemon.lua:30
+msgid "Smaller Spiderdemon"
+msgstr "Smaller Spiderdemon"
+
+#: modules/zdoom_marines.lua:216
+msgid "ZDoom Marines"
+msgstr "ZDoom Marines"
+
+#: modules/zdoom_marines.lua:292
+msgid "ZDoom Marines : Control"
+msgstr "ZDoom Marines : Control"
+
+#: modules/complex_doom.lua:710
+msgid "Complex Doom Modifications"
+msgstr "Complex Doom Modifications"
+
+#: modules/gzdoom_boss_gen.lua:20
+msgid "Moderate"
+msgstr "Moderate"
+
+#: modules/gzdoom_boss_gen.lua:27
+msgid "Reduced by 50%"
+msgstr "Reduced by 50%"
+
+#: modules/gzdoom_boss_gen.lua:28
+msgid "Reduced by 25%"
+msgstr "Reduced by 25%"
+
+#: modules/gzdoom_boss_gen.lua:30
+msgid "Increased by 50%"
+msgstr "Increased by 50%"
+
+#: modules/gzdoom_boss_gen.lua:31
+msgid "Increased by 100%"
+msgstr "Increased by 100%"
+
+#: modules/gzdoom_boss_gen.lua:32
+msgid "Increased by 200%"
+msgstr "Increased by 200%"
+
+#: modules/gzdoom_boss_gen.lua:50
+msgid "50% less"
+msgstr "50% less"
+
+#: modules/gzdoom_boss_gen.lua:51
+msgid "80% less"
+msgstr "80% less"
+
+#: modules/gzdoom_boss_gen.lua:52
+msgid "100% less"
+msgstr "100% less"
+
+#: modules/gzdoom_boss_gen.lua:71
+msgid "Much Harder"
+msgstr "Much Harder"
+
+#: modules/gzdoom_boss_gen.lua:77
+msgid "Extremely slow"
+msgstr "Extremely slow"
+
+#: modules/gzdoom_boss_gen.lua:78
+msgid "Very slow"
+msgstr "Very slow"
+
+#: modules/gzdoom_boss_gen.lua:82
+msgid "Faster"
+msgstr "Faster"
+
+#: modules/gzdoom_boss_gen.lua:94
+msgid "Scatter around arena"
+msgstr "Scatter around arena"
+
+#: modules/gzdoom_boss_gen.lua:95
+msgid "Close to player start"
+msgstr "Close to player start"
+
+#: modules/gzdoom_boss_gen.lua:100
+msgid "Exit after 10 seconds"
+msgstr "Exit after 10 seconds"
+
+#: modules/gzdoom_boss_gen.lua:101
+msgid "Spawn pickup that exits the level"
+msgstr "Spawn pickup that exits the level"
+
+#: modules/gzdoom_boss_gen.lua:106
+msgid "Hard Limit"
+msgstr "Hard Limit"
+
+#: modules/gzdoom_boss_gen.lua:107
+msgid "Soft Limit"
+msgstr "Soft Limit"
+
+#: modules/gzdoom_boss_gen.lua:108
+msgid "No Limit"
+msgstr "No Limit"
+
+#: modules/gzdoom_boss_gen.lua:1653
+msgid "[Exp]GZDoom Boss Generator"
+msgstr "[Exp]GZDoom Boss Generator"
+
+#: modules/gzdoom_boss_gen.lua:1676
+msgid "Difficulty"
+msgstr "Difficulty"
+
+#: modules/gzdoom_boss_gen.lua:1686
+msgid "Health Modifier"
+msgstr "Health Modifier"
+
+#: modules/gzdoom_boss_gen.lua:1697
+msgid "Hitscan Bosses"
+msgstr "Hitscan Bosses"
+
+#: modules/gzdoom_boss_gen.lua:1707
+msgid "Visible Health Bar"
+msgstr "Visible Health Bar"
+
+#: modules/gzdoom_boss_gen.lua:1717
+msgid "Enable Boss Music"
+msgstr "Enable Boss Music"
+
+#: modules/gzdoom_boss_gen.lua:1729
+msgid "Arena Steepness"
+msgstr "Arena Steepness"
+
+#: modules/gzdoom_boss_gen.lua:1740
+msgid "Reinforcement Strength"
+msgstr "Reinforcement Strength"
+
+#: modules/gzdoom_boss_gen.lua:1750
+msgid "Reinforcement Rate"
+msgstr "Reinforcement Rate"
+
+#: modules/gzdoom_boss_gen.lua:1760
+msgid "Respect zero prob"
+msgstr "Respect zero prob"
+
+#: modules/gzdoom_boss_gen.lua:1770
+msgid "Monster limit type"
+msgstr "Monster limit type"
+
+#: modules/gzdoom_boss_gen.lua:1783
+msgid "Weapon placement"
+msgstr "Weapon placement"
+
+#: modules/gzdoom_boss_gen.lua:1793
+msgid "Exit type"
+msgstr "Exit type"
+
+#: modules/ctl_heretic.lua:83
+msgid "Heretic Monster Control"
+msgstr "Heretic Monster Control"
+
+#: modules/ctl_heretic.lua:171
+msgid "Heretic Weapon Control"
+msgstr "Heretic Weapon Control"
+
+#: modules/music_swap.lua:115
+msgid "Music Swapper"
+msgstr "Music Swapper"
+
+#: modules/procedural_gotcha.lua:24
+msgid "[+2] Stronger"
+msgstr "[+2] Stronger"
+
+#: modules/procedural_gotcha.lua:25
+msgid "[+4] Harder"
+msgstr "[+4] Harder"
+
+#: modules/procedural_gotcha.lua:26
+msgid "[+6] Tougher"
+msgstr "[+6] Tougher"
+
+#: modules/procedural_gotcha.lua:27
+msgid "[+8] CRAZIER"
+msgstr "[+8] CRAZIER"
+
+#: modules/procedural_gotcha.lua:28
+msgid "[+16] NIGHTMARISH"
+msgstr "[+16] NIGHTMARISH"
+
+#: modules/procedural_gotcha.lua:33
+msgid "-50% Monsters"
+msgstr "-50% Monsters"
+
+#: modules/procedural_gotcha.lua:34
+msgid "-25% Monsters"
+msgstr "-25% Monsters"
+
+#: modules/procedural_gotcha.lua:36
+msgid "+25% Monsters"
+msgstr "+25% Monsters"
+
+#: modules/procedural_gotcha.lua:37
+msgid "+50% Monsters"
+msgstr "+50% Monsters"
+
+#: modules/procedural_gotcha.lua:38
+msgid "+100% Monsters"
+msgstr "+100% Monsters"
+
+#: modules/procedural_gotcha.lua:39
+msgid "+200% Monsters"
+msgstr "+200% Monsters"
+
+#: modules/procedural_gotcha.lua:40
+msgid "+400% Monsters"
+msgstr "+400% Monsters"
+
+#: modules/procedural_gotcha.lua:46
+msgid "Regular"
+msgstr "Regular"
+
+#: modules/procedural_gotcha.lua:68
+msgid "Procedural Gotcha Options"
+msgstr "Procedural Gotcha Options"
+
+#: modules/procedural_gotcha.lua:86
+msgid "Extra Quantity"
+msgstr "Extra Quantity"
+
+#: modules/procedural_gotcha.lua:95
+msgid "Extra Strength"
+msgstr "Extra Strength"
+
+#: modules/procedural_gotcha.lua:104
+msgid "Map Size"
+msgstr "Map Size"
+
+#: modules/procedural_gotcha.lua:113
+msgid "Force Boss Fight"
+msgstr "Force Boss Fight"
+
+#: modules/gzdoom_fauna.lua:507
+msgid "GZDoom: Fauna"
+msgstr "GZDoom: Fauna"
+
+#: modules/gzdoom_fauna.lua:529
+msgid "Flies"
+msgstr "Flies"
+
+#: modules/gzdoom_fauna.lua:531
+msgid "Adds flies to maps. \n"
+msgstr "Adds flies to maps. \n"
+
+#: modules/gzdoom_fauna.lua:538
+msgid "Rats"
+msgstr "Rats"
+
+#: modules/gzdoom_fauna.lua:540
+msgid "Adds scurrying rats to maps. \n"
+msgstr "Adds scurrying rats to maps. \n"
+
+#: modules/modded_game_extras.lua:29
+msgid "DECORATE"
+msgstr "DECORATE"
+
+#: modules/modded_game_extras.lua:35
+msgid "ZScript - Universal"
+msgstr "ZScript - Universal"
+
+#: modules/modded_game_extras.lua:36
+msgid "ZScript - Project Brutality"
+msgstr "ZScript - Project Brutality"
+
+#: modules/modded_game_extras.lua:981
+msgid "Modded Game Extras"
+msgstr "Modded Game Extras"
+
+#: modules/modded_game_extras.lua:1002
+msgid "HN Markers"
+msgstr "HN Markers"
+
+#: modules/modded_game_extras.lua:1014
+msgid "Custom Actor Names"
+msgstr "Custom Actor Names"
+
+#: modules/modded_game_extras.lua:1029
+msgid "HD Cover Walls"
+msgstr "HD Cover Walls"
+
+#: modules/modded_game_extras.lua:1042
+msgid "QC:DE Lootboxes"
+msgstr "QC:DE Lootboxes"
+
+#: modules/modded_game_extras.lua:1052
+msgid "D4T Entities"
+msgstr "D4T Entities"
+
+#: modules/export_map.lua:266
+msgid "Export .MAP files"
+msgstr "Export .MAP files"
+
+#: modules/ui_mons.lua:25
+msgid "[0] None"
+msgstr "[0] None"
+
+#: modules/ui_mons.lua:68
+msgid "[0.59] Weak"
+msgstr "[0.59] Weak"
+
+#: modules/ui_mons.lua:69
+msgid "[0.77] Easier"
+msgstr "[0.77] Easier"
+
+#: modules/ui_mons.lua:70
+msgid "[1] Average"
+msgstr "[1] Average"
+
+#: modules/ui_mons.lua:71
+msgid "[1.3] Harder"
+msgstr "[1.3] Harder"
+
+#: modules/ui_mons.lua:72
+msgid "[1.7] Tough"
+msgstr "[1.7] Tough"
+
+#: modules/ui_mons.lua:73
+msgid "[2.5] Fierce"
+msgstr "[2.5] Fierce"
+
+#: modules/ui_mons.lua:74
+msgid "[12] CRAZY"
+msgstr "[12] CRAZY"
+
+#: modules/ui_mons.lua:87
+msgid "Very Slow"
+msgstr "Very Slow"
+
+#: modules/ui_mons.lua:91
+msgid "Very Fast"
+msgstr "Very Fast"
+
+#: modules/ui_mons.lua:92
+msgid "Extremely Fast"
+msgstr "Extremely Fast"
+
+#: modules/ui_mons.lua:99
+msgid "Teleports Only"
+msgstr "Teleports Only"
+
+#: modules/ui_mons.lua:100
+msgid "Closets Only"
+msgstr "Closets Only"
+
+#: modules/ui_mons.lua:101
+msgid "20% Closets - 80% Teleports"
+msgstr "20% Closets - 80% Teleports"
+
+#: modules/ui_mons.lua:102
+msgid "40% Closets - 60% Teleports"
+msgstr "40% Closets - 60% Teleports"
+
+#: modules/ui_mons.lua:103
+msgid "60% Closets - 40% Teleports"
+msgstr "60% Closets - 40% Teleports"
+
+#: modules/ui_mons.lua:104
+msgid "80% Closets - 20% Teleports"
+msgstr "80% Closets - 20% Teleports"
+
+#: modules/ui_mons.lua:112
+msgid "Tricky"
+msgstr "Tricky"
+
+#: modules/ui_mons.lua:113
+msgid "Treacherous"
+msgstr "Treacherous"
+
+#: modules/ui_mons.lua:114
+msgid "Dangerous"
+msgstr "Dangerous"
+
+#: modules/ui_mons.lua:115
+msgid "Deadly"
+msgstr "Deadly"
+
+#: modules/ui_mons.lua:116
+msgid "Lethal"
+msgstr "Lethal"
+
+#: modules/ui_mons.lua:117
+msgid "CRAZY"
+msgstr "CRAZY"
+
+#: modules/ui_mons.lua:122
+msgid "Yes - Full Strength"
+msgstr "Yes - Full Strength"
+
+#: modules/ui_mons.lua:123
+msgid "Yes - Weak"
+msgstr "Yes - Weak"
+
+#: modules/ui_mons.lua:135
+msgid "Disabled"
+msgstr "Disabled"
+
+#: modules/ui_mons.lua:136
+msgid "Minor Bosses Only"
+msgstr "Minor Bosses Only"
+
+#: modules/ui_mons.lua:137
+msgid "Minor and Nasty Bosses Only"
+msgstr "Minor and Nasty Bosses Only"
+
+#: modules/ui_mons.lua:138
+msgid "All Bosses"
+msgstr "All Bosses"
+
+#: modules/ui_mons.lua:143
+msgid "Monsters"
+msgstr "Monsters"
+
+#: modules/ui_mons.lua:152
+msgid "Quantity"
+msgstr "Quantity"
+
+#: modules/ui_mons.lua:182
+msgid "Strength"
+msgstr "Strength"
+
+#: modules/ui_mons.lua:183
+msgid "Ramp Up"
+msgstr "Ramp Up"
+
+#: modules/ui_mons.lua:184
+msgid "Monster Variety"
+msgstr "Monster Variety"
+
+#: modules/ui_mons.lua:191
+msgid "Bosses"
+msgstr "Bosses"
+
+#: modules/ui_mons.lua:194
+msgid "Bosses As Regulars"
+msgstr "Bosses As Regulars"
+
+#: modules/ui_mons.lua:199
+msgid "Traps"
+msgstr "Traps"
+
+#: modules/ui_mons.lua:202
+msgid "Trap Style"
+msgstr "Trap Style"
+
+#: modules/ui_mons.lua:210
+msgid "Trap Monsters"
+msgstr "Trap Monsters"
+
+#: modules/ui_mons.lua:217
+msgid "Cage Monsters"
+msgstr "Cage Monsters"
+
+#: modules/ui_mons.lua:223
+msgid "Cages"
+msgstr "Cages"
+
+#: modules/ui_mons.lua:227
+msgid "Monsters in Secrets"
+msgstr "Monsters in Secrets"
+
+#: modules/ui_mons.lua:234
+msgid "Quiet Start"
+msgstr "Quiet Start"
+
+#: modules/zdoom_frozsoul_sound.lua:55
+msgid "20000"
+msgstr "20000"
+
+#: modules/zdoom_frozsoul_sound.lua:56
+msgid "22000"
+msgstr "22000"
+
+#: modules/zdoom_frozsoul_sound.lua:57
+msgid "24000"
+msgstr "24000"
+
+#: modules/zdoom_frozsoul_sound.lua:58
+msgid "26000"
+msgstr "26000"
+
+#: modules/zdoom_frozsoul_sound.lua:59
+msgid "28000"
+msgstr "28000"
+
+#: modules/zdoom_frozsoul_sound.lua:60
+msgid "30000"
+msgstr "30000"
+
+#: modules/zdoom_frozsoul_sound.lua:239
+msgid "ZDoom: Ambient Sounds"
+msgstr "ZDoom: Ambient Sounds"
+
+#: modules/gzdoom_marine_closet.lua:18
+msgid "5%"
+msgstr "5%"
+
+#: modules/gzdoom_marine_closet.lua:19
+msgid "12%"
+msgstr "12%"
+
+#: modules/gzdoom_marine_closet.lua:20
+msgid "25%"
+msgstr "25%"
+
+#: modules/gzdoom_marine_closet.lua:21
+msgid "33%"
+msgstr "33%"
+
+#: modules/gzdoom_marine_closet.lua:22
+msgid "50%"
+msgstr "50%"
+
+#: modules/gzdoom_marine_closet.lua:23
+msgid "75%"
+msgstr "75%"
+
+#: modules/gzdoom_marine_closet.lua:24
+msgid "100%"
+msgstr "100%"
+
+#: modules/gzdoom_marine_closet.lua:29
+msgid "1"
+msgstr "1"
+
+#: modules/gzdoom_marine_closet.lua:30
+msgid "2"
+msgstr "2"
+
+#: modules/gzdoom_marine_closet.lua:31
+msgid "3"
+msgstr "3"
+
+#: modules/gzdoom_marine_closet.lua:32
+msgid "4"
+msgstr "4"
+
+#: modules/gzdoom_marine_closet.lua:33
+msgid "5"
+msgstr "5"
+
+#: modules/gzdoom_marine_closet.lua:34
+msgid "6"
+msgstr "6"
+
+#: modules/gzdoom_marine_closet.lua:35
+msgid "7"
+msgstr "7"
+
+#: modules/gzdoom_marine_closet.lua:36
+msgid "8"
+msgstr "8"
+
+#: modules/gzdoom_marine_closet.lua:37
+msgid "9"
+msgstr "9"
+
+#: modules/gzdoom_marine_closet.lua:38
+msgid "10"
+msgstr "10"
+
+#: modules/gzdoom_marine_closet.lua:43
+msgid "Very Low Tech"
+msgstr "Very Low Tech"
+
+#: modules/gzdoom_marine_closet.lua:44
+msgid "Low Tech"
+msgstr "Low Tech"
+
+#: modules/gzdoom_marine_closet.lua:45
+msgid "Mid Tech"
+msgstr "Mid Tech"
+
+#: modules/gzdoom_marine_closet.lua:46
+msgid "High Tech"
+msgstr "High Tech"
+
+#: modules/gzdoom_marine_closet.lua:49
+msgid "BFG Fiesta"
+msgstr "BFG Fiesta"
+
+#: modules/gzdoom_marine_closet.lua:60
+msgid "50"
+msgstr "50"
+
+#: modules/gzdoom_marine_closet.lua:61
+msgid "100"
+msgstr "100"
+
+#: modules/gzdoom_marine_closet.lua:62
+msgid "133"
+msgstr "133"
+
+#: modules/gzdoom_marine_closet.lua:63
+msgid "150"
+msgstr "150"
+
+#: modules/gzdoom_marine_closet.lua:64
+msgid "200"
+msgstr "200"
+
+#: modules/gzdoom_marine_closet.lua:65
+msgid "300"
+msgstr "300"
+
+#: modules/gzdoom_marine_closet.lua:66
+msgid "400"
+msgstr "400"
+
+#: modules/gzdoom_marine_closet.lua:67
+msgid "750"
+msgstr "750"
+
+#: modules/gzdoom_marine_closet.lua:68
+msgid "1000"
+msgstr "1000"
+
+#: modules/gzdoom_marine_closet.lua:69
+msgid "2000"
+msgstr "2000"
+
+#: modules/gzdoom_marine_closet.lua:74
+msgid "Sight"
+msgstr "Sight"
+
+#: modules/gzdoom_marine_closet.lua:75
+msgid "Range"
+msgstr "Range"
+
+#: modules/gzdoom_marine_closet.lua:76
+msgid "Close Range"
+msgstr "Close Range"
+
+#: modules/gzdoom_marine_closet.lua:77
+msgid "Map Start"
+msgstr "Map Start"
+
+#: modules/gzdoom_marine_closet.lua:84
+msgid "Lots"
+msgstr "Lots"
+
+#: modules/gzdoom_marine_closet.lua:85
+msgid "Hordes"
+msgstr "Hordes"
+
+#: modules/gzdoom_marine_closet.lua:90
+msgid "Unmodified"
+msgstr "Unmodified"
+
+#: modules/gzdoom_marine_closet.lua:92
+msgid "Tough"
+msgstr "Tough"
+
+#: modules/gzdoom_marine_closet.lua:93
+msgid "Fierce"
+msgstr "Fierce"
+
+#: modules/gzdoom_marine_closet.lua:100
+msgid "Regressive"
+msgstr "Regressive"
+
+#: modules/gzdoom_marine_closet.lua:102
+msgid "Regressive Episodic"
+msgstr "Regressive Episodic"
+
+#: modules/gzdoom_marine_closet.lua:107
+msgid "no"
+msgstr "no"
+
+#: modules/gzdoom_marine_closet.lua:108
+msgid "Yes + Merge"
+msgstr "Yes + Merge"
+
+#: modules/gzdoom_marine_closet.lua:109
+msgid "Yes + No Merge"
+msgstr "Yes + No Merge"
+
+#: modules/gzdoom_marine_closet.lua:1421
+msgid "[Exp]GZDoom Marine Closets"
+msgstr "[Exp]GZDoom Marine Closets"
+
+#: modules/gzdoom_marine_closet.lua:1443
+msgid "Chance per map"
+msgstr "Chance per map"
+
+#: modules/gzdoom_marine_closet.lua:1453
+msgid "Minimum closets"
+msgstr "Minimum closets"
+
+#: modules/gzdoom_marine_closet.lua:1463
+msgid "Maximum closets"
+msgstr "Maximum closets"
+
+#: modules/gzdoom_marine_closet.lua:1473
+msgid "Closet scaling type"
+msgstr "Closet scaling type"
+
+#: modules/gzdoom_marine_closet.lua:1487
+msgid "Minimum marines"
+msgstr "Minimum marines"
+
+#: modules/gzdoom_marine_closet.lua:1497
+msgid "Maximum marines"
+msgstr "Maximum marines"
+
+#: modules/gzdoom_marine_closet.lua:1507
+msgid "Marine scaling type"
+msgstr "Marine scaling type"
+
+#: modules/gzdoom_marine_closet.lua:1521
+msgid "Weapon tech level"
+msgstr "Weapon tech level"
+
+#: modules/gzdoom_marine_closet.lua:1538
+msgid "Strong Marines"
+msgstr "Strong Marines"
+
+#: modules/gzdoom_marine_closet.lua:1548
+msgid "Followers"
+msgstr "Followers"
+
+#: modules/gzdoom_marine_closet.lua:1559
+msgid "Marine Health"
+msgstr "Marine Health"
+
+#: modules/gzdoom_marine_closet.lua:1569
+msgid "Trigger Type"
+msgstr "Trigger Type"
+
+#: modules/gzdoom_marine_closet.lua:1583
+msgid "Monster Quantity Multiplier"
+msgstr "Monster Quantity Multiplier"
+
+#: modules/gzdoom_marine_closet.lua:1593
+msgid "Monster Strength Modifier"
+msgstr "Monster Strength Modifier"
+
+#: modules/gzdoom_marine_closet.lua:1602
+msgid "Friendly Fire"
+msgstr "Friendly Fire"
+
+#: modules/gzdoom_marine_closet.lua:1612
+msgid "Weapon Sprites"
+msgstr "Weapon Sprites"
+
+#: modules/ui_pickups.lua:27
+msgid "Bit Less"
+msgstr "Bit Less"
+
+#: modules/ui_pickups.lua:29
+msgid "Bit More"
+msgstr "Bit More"
+
+#: modules/ui_pickups.lua:37
+msgid "Very Soon"
+msgstr "Very Soon"
+
+#: modules/ui_pickups.lua:38
+msgid "Sooner"
+msgstr "Sooner"
+
+#: modules/ui_pickups.lua:40
+msgid "Later"
+msgstr "Later"
+
+#: modules/ui_pickups.lua:41
+msgid "Very Late"
+msgstr "Very Late"
+
+#: modules/ui_pickups.lua:59
+msgid "Rich"
+msgstr "Rich"
+
+#: modules/ui_pickups.lua:60
+msgid "Resplendent"
+msgstr "Resplendent"
+
+#: modules/ui_pickups.lua:66
+msgid "Pickups"
+msgstr "Pickups"
+
+#: modules/ui_pickups.lua:73
+msgid "Health"
+msgstr "Health"
+
+#: modules/ui_pickups.lua:74
+msgid "Ammo"
+msgstr "Ammo"
+
+#: modules/ui_pickups.lua:76
+msgid "Weapons"
+msgstr "Weapons"
+
+#: modules/ui_pickups.lua:77
+msgid "Items"
+msgstr "Items"
+
+#: modules/ui_pickups.lua:79
+msgid "Secrets"
+msgstr "Secrets"
+
+#: modules/ui_pickups.lua:81
+msgid "Secrets Bonus"
+msgstr "Secrets Bonus"
+
+#: modules/enemy_placement.lua:488
+msgid "Harder Enemy Setup"
+msgstr "Harder Enemy Setup"
+
+#: modules/megawad_swap.lua:92
+msgid "Megawad Music Swapper"
+msgstr "Megawad Music Swapper"
+
+#: modules/megawad_swap.lua:100
+msgid ""
+"Ideal if you have a music WAD replacing all tracks in the game. A note if "
+"you are using the ZDoom Specials Shuffle Music option, there is no need to "
+"use this module. This is ideal for non-ZDoom ports only."
+msgstr ""
+"Ideal if you have a music WAD replacing all tracks in the game. A note if "
+"you are using the ZDoom Specials Shuffle Music option, there is no need to "
+"use this module. This is ideal for non-ZDoom ports only."
+
+#: modules/ctl_quake.lua:78
+msgid "Quake Monster Control"
+msgstr "Quake Monster Control"
+
+#: modules/ctl_quake.lua:163
+msgid "Quake Weapon Control"
+msgstr "Quake Weapon Control"
+
+#: modules/ctl_quake2.lua:75
+msgid "Quake2 Monster Control"
+msgstr "Quake2 Monster Control"
+
+#: modules/ctl_quake2.lua:171
+msgid "Quake2 Weapon Control"
+msgstr "Quake2 Weapon Control"
+
+#: modules/zdoom_specials.lua:32
+msgid "Merge Doom 1 and 2"
+msgstr "Merge Doom 1 and 2"
+
+#: modules/zdoom_specials.lua:200
+msgid "Doom 2 Vanilla"
+msgstr "Doom 2 Vanilla"
+
+#: modules/zdoom_specials.lua:201
+msgid "Doom 1 Vanilla"
+msgstr "Doom 1 Vanilla"
+
+#: modules/zdoom_specials.lua:1334
+msgid "Episode Selection"
+msgstr "Episode Selection"
+
+#: modules/zdoom_armaetus_epic_textures.lua:40
+msgid "ZScript"
+msgstr "ZScript"
+
+#: modules/zdoom_armaetus_epic_textures.lua:41
+msgid "ACS-Decorate"
+msgstr "ACS-Decorate"
+
+#: modules/zdoom_armaetus_epic_textures.lua:49
+msgid "A Bit Mixed"
+msgstr "A Bit Mixed"
+
+#: modules/zdoom_armaetus_epic_textures.lua:50
+msgid "Snow-ish"
+msgstr "Snow-ish"
+
+#: modules/zdoom_armaetus_epic_textures.lua:51
+msgid "Desert-ish"
+msgstr "Desert-ish"
+
+#: modules/zdoom_armaetus_epic_textures.lua:52
+msgid "Always Snow"
+msgstr "Always Snow"
+
+#: modules/zdoom_armaetus_epic_textures.lua:53
+msgid "Always Desert"
+msgstr "Always Desert"
+
+#: modules/zdoom_armaetus_epic_textures.lua:1024
+msgid "ZDoom: Armaetus Texture Pack"
+msgstr "ZDoom: Armaetus Texture Pack"
+
+#: modules/zdoom_armaetus_epic_textures.lua:1049
+msgid "Custom Liquids"
+msgstr "Custom Liquids"
+
+#: modules/zdoom_armaetus_epic_textures.lua:1059
+msgid "Custom Trees"
+msgstr "Custom Trees"
+
+#: modules/zdoom_armaetus_epic_textures.lua:1073
+msgid "Environment Theme"
+msgstr "Environment Theme"
+
+#: modules/zdoom_armaetus_epic_textures.lua:1087
+msgid "Texture WAD Merge"
+msgstr "Texture WAD Merge"
+
+#: modules/theme_control.lua:37
+msgid "Mostly"
+msgstr "Mostly"
+
+#: modules/theme_control.lua:60
+msgid "Very Fast Curve"
+msgstr "Very Fast Curve"
+
+#: modules/theme_control.lua:61
+msgid "Fast Curve"
+msgstr "Fast Curve"
+
+#: modules/theme_control.lua:62
+msgid "Linear"
+msgstr "Linear"
+
+#: modules/theme_control.lua:63
+msgid "Slow Curve"
+msgstr "Slow Curve"
+
+#: modules/theme_control.lua:64
+msgid "Very Slow Curve"
+msgstr "Very Slow Curve"
+
+#: modules/theme_control.lua:70
+msgid "Smaller"
+msgstr "Smaller"
+
+#: modules/theme_control.lua:72
+msgid "Larger"
+msgstr "Larger"
+
+#: modules/theme_control.lua:116
+msgid "[Exp] Doom 2 Theme Control"
+msgstr "[Exp] Doom 2 Theme Control"
+
+#: modules/theme_control.lua:139
+msgid "Level/Theme Control"
+msgstr "Level/Theme Control"
+
+#: modules/theme_control.lua:155
+msgid "Mix-in Type"
+msgstr "Mix-in Type"
+
+#: modules/theme_control.lua:190
+msgid "Ramp Factor"
+msgstr "Ramp Factor"
+
+#: modules/theme_control.lua:207
+msgid "Level Size Bias"
+msgstr "Level Size Bias"
+
+#: modules/theme_control.lua:237
+msgid "[Exp] Doom 1 Theme Control"
+msgstr "[Exp] Doom 1 Theme Control"
+
+#: modules/procedural_textures.lua:26
+msgid "Vanilla Only"
+msgstr "Vanilla Only"
+
+#: modules/procedural_textures.lua:27
+msgid "Include Epic Textures"
+msgstr "Include Epic Textures"
+
+#: modules/procedural_textures.lua:238
+msgid "Procedural Textures"
+msgstr "Procedural Textures"
+
+#: modules/procedural_textures.lua:255
+msgid "Scope"
+msgstr "Scope"
+
+#: modules/ctl_doom.lua:87
+msgid "Doom Monster Control"
+msgstr "Doom Monster Control"
+
+#: modules/ctl_doom.lua:101
+msgid "SS Nazi"
+msgstr "SS Nazi"
+
+#: modules/ctl_doom.lua:104
+msgid "Lost Soul"
+msgstr "Lost Soul"
+
+#: modules/ctl_doom.lua:106
+msgid "Spectre"
+msgstr "Spectre"
+
+#: modules/ctl_doom.lua:107
+msgid "Pain Elemental"
+msgstr "Pain Elemental"
+
+#: modules/ctl_doom.lua:117
+msgid "Cyberdemon"
+msgstr "Cyberdemon"
+
+#: modules/ctl_doom.lua:118
+msgid "Spiderdemon"
+msgstr "Spiderdemon"
+
+#: modules/ctl_doom.lua:163
+msgid "Vanilla"
+msgstr "Vanilla"
+
+#: modules/ctl_doom.lua:208
+msgid "Doom Weapon Control"
+msgstr "Doom Weapon Control"
+
+#: modules/ctl_doom.lua:219
+msgid "Shotgun"
+msgstr "Shotgun"
+
+#: modules/ctl_doom.lua:220
+msgid "Super Shotgun"
+msgstr "Super Shotgun"
+
+#: modules/ctl_doom.lua:221
+msgid "Chaingun"
+msgstr "Chaingun"
+
+#: modules/ctl_doom.lua:222
+msgid "Rocket Launcher"
+msgstr "Rocket Launcher"
+
+#: modules/ctl_doom.lua:223
+msgid "Plasma Rifle"
+msgstr "Plasma Rifle"
+
+#: modules/ctl_doom.lua:224
+msgid "BFG"
+msgstr "BFG"
+
+#: modules/ctl_doom.lua:229
+msgid "Weapon Preferences"
+msgstr "Weapon Preferences"
+
+#: modules/ctl_doom.lua:270
+msgid "Doom Item Control"
+msgstr "Doom Item Control"
+
+#: modules/ctl_doom.lua:281
+msgid "Health Bonus"
+msgstr "Health Bonus"
+
+#: modules/ctl_doom.lua:282
+msgid "Stimpack"
+msgstr "Stimpack"
+
+#: modules/ctl_doom.lua:283
+msgid "Medikit"
+msgstr "Medikit"
+
+#: modules/ctl_doom.lua:284
+msgid "Armor Bonus"
+msgstr "Armor Bonus"
+
+#: modules/ctl_doom.lua:286
+msgid "Green Armor"
+msgstr "Green Armor"
+
+#: modules/ctl_doom.lua:287
+msgid "Blue Armor"
+msgstr "Blue Armor"
+
+#: modules/ctl_doom.lua:288
+msgid "Soulsphere"
+msgstr "Soulsphere"
+
+#: modules/ctl_doom.lua:289
+msgid "Backpack"
+msgstr "Backpack"
+
+#: modules/ctl_doom.lua:290
+msgid "Berserk Pack"
+msgstr "Berserk Pack"
+
+#: modules/ctl_doom.lua:291
+msgid "Invisibility"
+msgstr "Invisibility"
+
+#: modules/ctl_doom.lua:292
+msgid "Invulnerability"
+msgstr "Invulnerability"
+
+#: modules/ctl_doom.lua:293
+msgid "Map Computer"
+msgstr "Map Computer"
+
+#: modules/ctl_doom.lua:294
+msgid "Light Goggles"
+msgstr "Light Goggles"
+
+#: modules/ctl_doom.lua:295
+msgid "Radiation Suit"
+msgstr "Radiation Suit"
+
+#: modules/ctl_doom.lua:296
+msgid "Megasphere"
+msgstr "Megasphere"
+
+#: modules/ctl_doom.lua:298
+msgid "Clips"
+msgstr "Clips"
+
+#: modules/ctl_doom.lua:300
+msgid "Bullet Box"
+msgstr "Bullet Box"
+
+#: modules/ctl_doom.lua:301
+msgid "Shells"
+msgstr "Shells"
+
+#: modules/ctl_doom.lua:302
+msgid "Shell Box"
+msgstr "Shell Box"
+
+#: modules/ctl_doom.lua:303
+msgid "Rocket"
+msgstr "Rocket"
+
+#: modules/ctl_doom.lua:304
+msgid "Rocket Box"
+msgstr "Rocket Box"
+
+#: modules/ctl_doom.lua:305
+msgid "Cell"
+msgstr "Cell"
+
+#: modules/ctl_doom.lua:306
+msgid "Cell Pack"
+msgstr "Cell Pack"
+
+#: modules/jokewad_module.lua:381
+msgid "Jokewad Module"
+msgstr "Jokewad Module"
+
+#: modules/jokewad_module.lua:401
+msgid "FIREBLU Mode"
+msgstr "FIREBLU Mode"
+
+#: modules/jokewad_module.lua:414
+msgid "Pandemic Mode"
+msgstr "Pandemic Mode"
+
+#: modules/debugger.lua:29
+msgid "Test Level Names"
+msgstr "Test Level Names"
+
+#: modules/debugger.lua:30
+msgid "Test Title Names"
+msgstr "Test Title Names"
+
+#: modules/debugger.lua:36
+msgid "Show All Steps"
+msgstr "Show All Steps"
+
+#: modules/debugger.lua:37
+msgid "Show Successful Steps Only"
+msgstr "Show Successful Steps Only"
+
+#: modules/debugger.lua:44
+msgid "1 only"
+msgstr "1 only"
+
+#: modules/debugger.lua:45
+msgid "2 only"
+msgstr "2 only"
+
+#: modules/debugger.lua:46
+msgid "3 only"
+msgstr "3 only"
+
+#: modules/debugger.lua:47
+msgid "4 only"
+msgstr "4 only"
+
+#: modules/debugger.lua:48
+msgid "5 only"
+msgstr "5 only"
+
+#: modules/debugger.lua:49
+msgid "6 only"
+msgstr "6 only"
+
+#: modules/debugger.lua:50
+msgid "7 only"
+msgstr "7 only"
+
+#: modules/debugger.lua:51
+msgid "8 only"
+msgstr "8 only"
+
+#: modules/debugger.lua:52
+msgid "9 only"
+msgstr "9 only"
+
+#: modules/debugger.lua:53
+msgid "10 only"
+msgstr "10 only"
+
+#: modules/debugger.lua:54
+msgid "11 only"
+msgstr "11 only"
+
+#: modules/debugger.lua:55
+msgid "12 only"
+msgstr "12 only"
+
+#: modules/debugger.lua:56
+msgid "13 only"
+msgstr "13 only"
+
+#: modules/debugger.lua:57
+msgid "14 only"
+msgstr "14 only"
+
+#: modules/debugger.lua:58
+msgid "15 only"
+msgstr "15 only"
+
+#: modules/debugger.lua:59
+msgid "16 only"
+msgstr "16 only"
+
+#: modules/debugger.lua:60
+msgid "17 only"
+msgstr "17 only"
+
+#: modules/debugger.lua:61
+msgid "18 only"
+msgstr "18 only"
+
+#: modules/debugger.lua:62
+msgid "19 only"
+msgstr "19 only"
+
+#: modules/debugger.lua:63
+msgid "20 only"
+msgstr "20 only"
+
+#: modules/debugger.lua:64
+msgid "21 only"
+msgstr "21 only"
+
+#: modules/debugger.lua:65
+msgid "22 only"
+msgstr "22 only"
+
+#: modules/debugger.lua:66
+msgid "23 only"
+msgstr "23 only"
+
+#: modules/debugger.lua:67
+msgid "24 only"
+msgstr "24 only"
+
+#: modules/debugger.lua:68
+msgid "25 only"
+msgstr "25 only"
+
+#: modules/debugger.lua:69
+msgid "26 only"
+msgstr "26 only"
+
+#: modules/debugger.lua:70
+msgid "27 only"
+msgstr "27 only"
+
+#: modules/debugger.lua:71
+msgid "28 only"
+msgstr "28 only"
+
+#: modules/debugger.lua:72
+msgid "29 only"
+msgstr "29 only"
+
+#: modules/debugger.lua:73
+msgid "30 only"
+msgstr "30 only"
+
+#: modules/debugger.lua:74
+msgid "31 only"
+msgstr "31 only"
+
+#: modules/debugger.lua:75
+msgid "32 only"
+msgstr "32 only"
+
+#: modules/debugger.lua:76
+msgid "33 only"
+msgstr "33 only"
+
+#: modules/debugger.lua:77
+msgid "34 only"
+msgstr "34 only"
+
+#: modules/debugger.lua:78
+msgid "35 only"
+msgstr "35 only"
+
+#: modules/debugger.lua:79
+msgid "36 only"
+msgstr "36 only"
+
+#: modules/debugger.lua:101
+msgid "Debug Control"
+msgstr "Debug Control"
+
+#: modules/debugger.lua:119
+msgid "Name Generator"
+msgstr "Name Generator"
+
+#: modules/debugger.lua:131
+msgid "Print Growth Steps"
+msgstr "Print Growth Steps"
+
+#: modules/debugger.lua:144
+msgid "Print Prefab Usage"
+msgstr "Print Prefab Usage"
+
+#: modules/debugger.lua:154
+msgid "Print ZDoom Strings"
+msgstr "Print ZDoom Strings"
+
+#: modules/debugger.lua:165
+msgid "Build Level"
+msgstr "Build Level"
+
+#: modules/debugger.lua:176
+msgid "Shape Rule Stats"
+msgstr "Shape Rule Stats"
+
+#: modules/debugger.lua:187
+msgid "Extra Games"
+msgstr "Extra Games"
+
+#: modules/debugger.lua:198
+msgid "Peered Starts/Exits"
+msgstr "Peered Starts/Exits"
+
+#: modules/debugger.lua:207
+msgid "Steppy Caves"
+msgstr "Steppy Caves"
+
+#: modules/debugger.lua:223
+msgid "Room Size Variance"
+msgstr "Room Size Variance"
+
+#: modules/debugger.lua:248
+msgid "Attach DEBUG Info"
+msgstr "Attach DEBUG Info"
+
+#: modules/ui_arch.lua:47
+msgid "Every Level"
+msgstr "Every Level"
+
+#: modules/ui_arch.lua:48
+msgid "75% of Levels"
+msgstr "75% of Levels"
+
+#: modules/ui_arch.lua:49
+msgid "50% of Levels"
+msgstr "50% of Levels"
+
+#: modules/ui_arch.lua:50
+msgid "25% of Levels"
+msgstr "25% of Levels"
+
+#: modules/ui_arch.lua:56
+msgid "Sky-gen Smart"
+msgstr "Sky-gen Smart"
+
+#: modules/ui_arch.lua:78
+msgid "Final Map Only"
+msgstr "Final Map Only"
+
+#: modules/ui_arch.lua:79
+msgid "Episodic (MAP11, MAP20, MAP30)"
+msgstr "Episodic (MAP11, MAP20, MAP30)"
+
+#: modules/ui_arch.lua:80
+msgid "2 per ep (5,11,16,20,25,30)"
+msgstr "2 per ep (5,11,16,20,25,30)"
+
+#: modules/ui_arch.lua:81
+msgid "3 per ep (3,7,11,14,17,20,23,27,30)"
+msgstr "3 per ep (3,7,11,14,17,20,23,27,30)"
+
+#: modules/ui_arch.lua:82
+msgid "4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"
+msgstr "4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"
+
+#: modules/ui_arch.lua:83
+msgid "_"
+msgstr "_"
+
+#: modules/ui_arch.lua:84
+msgid "5% Chance, Any Map After MAP04"
+msgstr "5% Chance, Any Map After MAP04"
+
+#: modules/ui_arch.lua:85
+msgid "10% Chance, Any Map After MAP04"
+msgstr "10% Chance, Any Map After MAP04"
+
+#: modules/ui_arch.lua:86
+msgid "Everything"
+msgstr "Everything"
+
+#: modules/ui_arch.lua:91
+msgid "All Urban Maps"
+msgstr "All Urban Maps"
+
+#: modules/ui_arch.lua:92
+msgid "75% of Urban Maps"
+msgstr "75% of Urban Maps"
+
+#: modules/ui_arch.lua:93
+msgid "50% of Urban Maps"
+msgstr "50% of Urban Maps"
+
+#: modules/ui_arch.lua:94
+msgid "25% of Urban Maps"
+msgstr "25% of Urban Maps"
+
+#: modules/ui_arch.lua:95
+msgid "13% of Urban Maps"
+msgstr "13% of Urban Maps"
+
+#: modules/ui_arch.lua:100
+msgid "13% of All Levels"
+msgstr "13% of All Levels"
+
+#: modules/ui_arch.lua:110
+msgid "10% of All Levels"
+msgstr "10% of All Levels"
+
+#: modules/ui_arch.lua:111
+msgid "5% of All Levels"
+msgstr "5% of All Levels"
+
+#: modules/ui_arch.lua:117
+msgid "Architecture"
+msgstr "Architecture"
+
+#: modules/ui_arch.lua:124
+msgid "Level Size"
+msgstr "Level Size"
+
+#: modules/ui_arch.lua:133
+msgid "Streets Mode"
+msgstr "Streets Mode"
+
+#: modules/ui_arch.lua:140
+msgid "Linear Mode"
+msgstr "Linear Mode"
+
+#: modules/ui_arch.lua:151
+msgid "Nature Mode"
+msgstr "Nature Mode"
+
+#: modules/ui_arch.lua:159
+msgid "Outdoors"
+msgstr "Outdoors"
+
+#: modules/ui_arch.lua:160
+msgid "Caves"
+msgstr "Caves"
+
+#: modules/ui_arch.lua:161
+msgid "Liquids"
+msgstr "Liquids"
+
+#: modules/ui_arch.lua:163
+msgid "Hallways"
+msgstr "Hallways"
+
+#: modules/ui_arch.lua:164
+msgid "Teleports"
+msgstr "Teleports"
+
+#: modules/ui_arch.lua:165
+msgid "Steepness"
+msgstr "Steepness"
+
+#: modules/ui_arch.lua:169
+msgid "Prebuilt Levels"
+msgstr "Prebuilt Levels"
+
+#: modules/ui_arch.lua:175
+msgid "Procedural Gotcha"
+msgstr "Procedural Gotcha"
+
+#: modules/ui_arch.lua:187
+msgid "Layout Absurdity"
+msgstr "Layout Absurdity"
+
+#: modules/ui_arch.lua:199
+msgid "Bottomless Vistas"
+msgstr "Bottomless Vistas"
+
+#: modules/ui_arch.lua:210
+msgid "ZDoom 3D Skybox"
+msgstr "ZDoom 3D Skybox"
+
+#: modules/stealth_mons.lua:262
+msgid "Stealth Monsters"
+msgstr "Stealth Monsters"
+
+#: modules/stealth_mons.lua:335
+msgid "Stealth Monsters : Control"
+msgstr "Stealth Monsters : Control"
+
+#: games/hexen/themes.lua:2216
+msgid "Dungeon"
+msgstr "Dungeon"
+
+#: games/hexen/themes.lua:2224
+msgid "Fire"
+msgstr "Fire"
+
+#: games/hexen/themes.lua:2240
+msgid "Steel"
+msgstr "Steel"
+
+#: games/hexen/themes.lua:2248
+msgid "Desert"
+msgstr "Desert"
+
+#: games/hexen/themes.lua:2256
+msgid "Cave"
+msgstr "Cave"
+
+#: games/hexen/themes.lua:2264
+msgid "Swamp"
+msgstr "Swamp"
+
+#: games/hexen/themes.lua:2272
+msgid "Forest"
+msgstr "Forest"
+
+#: games/hexen/themes.lua:2280
+msgid "Village"
+msgstr "Village"
+
+#: games/hexen/base.lua:43
+msgid "Hexen"
+msgstr "Hexen"
+
+#: games/quake/themes.lua:272
+msgid "Castle"
+msgstr "Castle"
+
+#: games/quake/base.lua:76
+msgid "Quake"
+msgstr "Quake"
+
+#: games/doom/x_tnt.lua:466
+msgid "TNT Evilution"
+msgstr "TNT Evilution"
+
+#: games/doom/x_tnt.lua:483
+msgid "Egypt"
+msgstr "Egypt"
+
+#: games/doom/themes.lua:4593
+msgid "Urban"
+msgstr "Urban"
+
+#: games/doom/themes.lua:4603
+msgid "Hell"
+msgstr "Hell"
+
+#: games/doom/base.lua:43
+msgid "Doom 2"
+msgstr "Doom 2"
+
+#: games/doom/x_doom1.lua:3416
+msgid "Doom 1"
+msgstr "Doom 1"
+
+#: games/doom/x_doom1.lua:3442
+msgid "Ultimate Doom"
+msgstr "Ultimate Doom"
+
+#: games/doom/x_doom1.lua:3458
+msgid "Deimos"
+msgstr "Deimos"
+
+#: games/doom/x_doom1.lua:3468
+msgid "Thy Flesh"
+msgstr "Thy Flesh"
+
+#: games/doom/x_plutonia.lua:1044
+msgid "Plutonia"
+msgstr "Plutonia"
+
+#: games/strife/themes.lua:302
+msgid "Town"
+msgstr "Town"
+
+#: games/strife/base.lua:43
+msgid "Strife"
+msgstr "Strife"
+
+#: games/heretic/themes.lua:2833
+msgid "City"
+msgstr "City"
+
+#: games/heretic/themes.lua:2841
+msgid "Maw"
+msgstr "Maw"
+
+#: games/heretic/themes.lua:2849
+msgid "Dome"
+msgstr "Dome"
+
+#: games/heretic/themes.lua:2857
+msgid "Ossuary"
+msgstr "Ossuary"
+
+#: games/heretic/themes.lua:2865
+msgid "Demense"
+msgstr "Demense"
+
+#: games/heretic/base.lua:43
+msgid "Heretic"
+msgstr "Heretic"
+
+#: engines/boom.lua:165
+msgid "BOOM Compat"
+msgstr "BOOM Compat"
+
+#: engines/zdoom.lua:50
+msgid "ZDoom"
+msgstr "ZDoom"
+
+#: engines/zdoom.lua:92
+msgid "GZDoom"
+msgstr "GZDoom"
+
+#: scripts/defs.lua:59
+msgid "Limit Removing"
+msgstr "Limit Removing"
+
+#: scripts/defs.lua:67
+msgid "Original"
+msgstr "Original"
+
+#: scripts/defs.lua:81
+msgid "Jumbled Up"
+msgstr "Jumbled Up"
+
+#: scripts/defs.lua:88
+msgid "Bit Mixed"
+msgstr "Bit Mixed"
+
+#: scripts/defs.lua:95
+msgid "Psychedelic"
+msgstr "Psychedelic"
+
+#: scripts/defs.lua:103
+msgid "Single Level"
+msgstr "Single Level"
+
+#: scripts/defs.lua:104
+msgid "A Few Maps"
+msgstr "A Few Maps"
+
+#: scripts/defs.lua:105
+msgid "One Episode"
+msgstr "One Episode"
+
+#: scripts/defs.lua:106
+msgid "Full Game"
+msgstr "Full Game"

@@ -1,0 +1,417 @@
+version "3.2"
+
+class FancyObligeTree : BigTree replaces BigTree
+{
+
+	States
+	{
+		Spawn:
+			TRE2 A 0 NoDelay
+			{
+				StateLabel fstate;
+
+				bool onGrass = false;
+				bool onRock = false;
+				//snow and sand flats are only available
+				//via Epic Textures module.
+				bool onSnow = false;
+				bool onSand = false;
+				bool onHellscape = false;
+				bool unknownFlat = false;
+				bool indoors = false;
+
+				A_SetSize(10,-1,-1);
+
+				Name onFlat = TexMan.GetName(floorpic);
+				Name onCeil = TexMan.GetName(ceilingpic);
+				switch(onFlat)
+				{
+					case 'GRASS1':
+					case 'GRASS2':
+					case 'GROUND01':
+					case 'GROUND02':
+					case 'GROUND03':
+					case 'GROUND04':
+					case 'FLAT10':
+					case 'QFLAT07': //I think this is dirt?
+					case 'RROCK09':
+					case 'RROCK16':
+					case 'RROCK17':
+					case 'RROCK18':
+					case 'RROCK19':
+					case 'RROCK20':
+						onGrass = true;
+						break;
+					case 'SNOW1':
+					case 'SNOW5':
+					case 'SNOW6':
+					case 'SNOW7':
+					case 'SNOW8':
+					case 'SNOW10F':
+					case 'SNOW11F':
+					case 'SNOW12F':
+					case 'SNOW13F':
+					case 'SNOW14F':
+						onSnow = true;
+						break;
+					case 'SAND1':
+					case 'SAND2':
+					case 'SAND3':
+					case 'SAND4':
+					case 'SAND5':
+					case 'SAND6':
+					case 'SAND7':
+					case 'RROCK09': // Doubles as sand/rock
+						onSand = true;
+						break;
+					case 'RROCK01':
+					case 'RROCK02':
+					case 'RROCK05':
+					case 'RROCK06':
+					case 'RROCK07':
+					case 'RROCK08':
+					case 'FLOOR6_1':
+					case 'SFLR6_1':
+					case 'SFLR6_4':
+					case 'SKINFLT1':
+					case 'SLIME09':
+					case 'SLIME10':
+					case 'SLIME11':
+					case 'SLIME12':
+						onHellscape = true;
+						break;
+					default:
+						unknownFlat = true;
+				}
+
+				if(onGrass)
+				{
+					if(random(1,100) <= 75) //Trees
+					{
+						switch(random(1,5))
+						{
+							case 1:
+								fstate = "OakTree";
+								break;
+							case 2:
+								fstate = "RedwoodTree";
+								break;
+							case 3:
+								fstate = "SomeThinTree";
+								break;
+							case 4:
+								fstate = "TapwaveTreeA";
+								break;
+							case 5:
+								fstate = "TapwaveTreeB";
+								break;
+						}
+					}
+					else //Bushes
+					{
+						switch(random(1,2))
+						{
+							case 1:
+								fstate = "ShrubA";
+								break;
+							case 2:
+								fstate = "ShrubB";
+								break;
+						}
+					}
+				}
+
+				if(onSnow)
+				{
+					int index = 1;
+
+					if(random(1,4) >= 2)
+					{
+						index = random(10,14);
+					}else
+					{
+						index = random(1,9);
+					}
+
+					switch(index)
+					{
+						case 1:
+							fstate = "SnowTreeDeadA";
+							break;
+						case 2:
+							fstate = "SnowTreeKebab";
+							break;
+						case 3:
+							fstate = "SnowTreePloughed";
+							break;
+						case 4:
+							fstate = "SnowTreeDeadB";
+							break;
+						case 5:
+							fstate = "SnowTreeDeadC";
+							break;
+						case 6:
+							fstate = "SnowPineA";
+							break;
+						case 7:
+							fstate = "SnowPineB";
+							break;
+						case 8:
+							fstate = "SnowPineSmolA";
+							break;
+						case 9:
+							fstate = "SnowPineSmolB";
+							break;
+						case 10:
+							fstate = "CraneoPine1";
+							break;
+						case 11:
+							fstate = "CraneoPine2";
+							break;
+						case 12:
+							fstate = "CraneoPine3";
+							break;
+						case 13:
+							fstate = "CraneoPine4";
+							break;
+						case 14:
+							fstate = "CraneoPine5";
+							break;
+					}
+				}
+
+				if(onSand)
+				{
+					switch(random(1,5))
+					{
+						case 1:
+							fstate = "PalmTree";
+							break;
+						case 2:
+							fstate = "DesertTreeA";
+							break;
+						case 3:
+							fstate = "DesertTreeB";
+							break;
+						case 4:
+							fstate = "ShrubA";
+							break;
+						case 5:
+							fstate = "ShrubB";
+							break;
+					}
+				}
+
+				if(onHellscape)
+				{
+					switch(random(1,6))
+					{
+						case 1:
+							fstate = "CraneoEyeTreeA";
+							break;
+						case 2:
+							fstate = "CraneoEyeTreeB";
+							break;
+						case 3:
+							fstate = "CraneoEyeTreeC";
+							break;
+						case 4:
+							fstate = "CraneoWeirwoodTreeA";
+							break;
+						case 5:
+							fstate = "CraneoWeirwoodTreeB";
+							break;
+						case 6:
+							fstate = "CraneoWeirwoodTreeC";
+							break;
+					}
+				}
+
+				if(unknownFlat)
+				{
+					switch(random(1,3))
+					{
+						case 1:
+							fstate = "CraneoDeadTreeA";
+							break;
+						case 2:
+							fstate = "CraneoDeadTreeB";
+							break;
+						case 3:
+							fstate = "CraneoDeadTreeC";
+							break;
+					}
+				}
+
+				if(onCeil != 'F_SKY1')
+				{
+					scale.x *= 0.5; //For those occasional indoor planters
+					scale.y *= 0.5; //in urban theme.
+					switch(random(1,2))
+					{
+						case 1:
+							fstate = "ShrubA";
+							break;
+						case 2:
+							fstate = "ShrubB";
+							break;
+					}
+				}
+
+				//add a bit of random scaling jazz
+				//CraneoPine# set is already 200ish height and doesn't need
+				//adjustments
+				double randomscale = frandom(0.8, 1.5);
+				scale.x *= randomscale;
+				scale.y *= randomscale;
+
+				// 50% chance of flippin'
+				scale.x *= randompick(-1,1);
+
+				return ResolveState(fstate);
+			}
+
+		// temperate plants
+		OakTree:
+			OAK1 A 1;
+			Loop;
+
+		RedwoodTree:
+			RED1 A 1;
+			Loop;
+
+		SomeThinTree:
+			THN1 A 1;
+			Loop;
+
+		TapwaveTreeA:
+			TWTR A 1;
+			Loop;
+
+		TapwaveTreeB:
+			TWTR B 1;
+			Loop;
+
+		ShrubA:
+			SHB1 A 1;
+			Loop;
+
+		ShrubB:
+			SHB2 A 1;
+			Loop;
+
+		// snow world plants
+		SnowTreeDeadA:
+			XMAS A 1;
+			Loop;
+
+		SnowTreeKebab:
+			XMAS B 1;
+			Loop;
+
+		SnowTreePloughed:
+			XMAS C 1;
+			Loop;
+
+		SnowTreeDeadB:
+			XMAS D 1;
+			Loop;
+
+		SnowTreeDeadC:
+			XMAS E 1;
+			Loop;
+
+		SnowPineA:
+			XMAS F 1;
+			Loop;
+
+		SnowPineB:
+			XMAS G 1;
+			Loop;
+
+		SnowPineSmolA:
+			XMAS H 1;
+			Loop;
+
+		SnowPineSmolB:
+			XMAS I 1;
+			Loop;
+
+		CraneoPine1:
+			XMAS J -1;
+			Loop;
+
+		CraneoPine2:
+			XMAS K -1;
+			Loop;
+
+		CraneoPine3:
+			XMAS L -1;
+			Loop;
+
+		CraneoPine4:
+			XMAS M -1;
+			Loop;
+
+		CraneoPine5:
+			XMAS N -1;
+			Loop;
+
+		// desert assets
+		PalmTree:
+			PLM1 A 1;
+			Loop;
+
+		DesertTreeA:
+			DTR1 A 1;
+			Loop;
+
+		DesertTreeB:
+			DTR2 A 1;
+			Loop;
+
+		// hell trees
+		// eyeball trees
+		CraneoEyeTreeA:
+			OBET A 1;
+			Loop;
+
+		CraneoEyeTreeB:
+			OBET B 1;
+			Loop;
+
+		CraneoEyeTreeC:
+			OBET C 1;
+			Loop;
+
+		// weirwood trees
+		CraneoWeirwoodTreeA:
+			OBWT A 1;
+			Loop;
+
+		CraneoWeirwoodTreeB:
+			OBWT B 1;
+			Loop;
+
+		CraneoWeirwoodTreeC:
+			OBWT C 1;
+			Loop;
+
+		// sad, sad, sad dead trees very sad
+		CraneoDeadTreeA:
+			OBDT A 1;
+			Loop;
+
+		CraneoDeadTreeB:
+			OBDT B 1;
+			Loop;
+
+		CraneoDeadTreeC:
+			OBDT C 1;
+			Loop;
+	}
+}
+
+class FancyObligeTree2 : FancyObligeTree replaces TorchTree
+{
+}

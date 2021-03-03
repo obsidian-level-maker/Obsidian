@@ -22,6 +22,10 @@ PREFABS.Joiner_lift_curve =
 
   delta_h  = 128,
   nearby_h = 128,
+
+  tex_SW1BROWN = { SW1BROWN=50, SW2BROWN=50, SW1BRN1=50, SW2BRN1=50 },
+  tex_TEKWALL4 = { TEKWALL4=50, TEKWALL1=50 },
+
 }
 
 
@@ -52,6 +56,8 @@ PREFABS.Joiner_lift_curve_hell =
   map    = "MAP04",
 
   theme  = "hell",
+
+  tex_SW1SATYR = { SW1SATYR=50, SW1GARG=50, SW1LION=50 },
 }
 
 

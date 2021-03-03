@@ -2,13 +2,14 @@
 --  SEED MANAGEMENT / GROWING
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2008-2017 Andrew Apted
+--  Copyright (C) 2019 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -24,7 +25,7 @@
     --
     -- A "seed" is a square or triangle-shaped half-square on the map,
     -- used for many space allocation tasks.  The corners exist on a
-    -- regular grid (currently spaced at 128 units on for axis).
+    -- regular grid (currently spaced at 128 units on each axis).
     --
 
     sx, sy  -- location in seed map
@@ -57,6 +58,8 @@
     edge[DIR] : EDGE  -- set when an EDGE object exists at this seed
                       -- Note: it may be several seeds wide
 
+    walls : EDGE   -- actual edge object --MSSP
+
     chunk : CHUNK   -- only set when seed is part of a chunk
 
     mid_x, mid_y  -- mid point coordinate
@@ -76,7 +79,7 @@
     -- hallway.  Also used for windows and wide walls / pictures.
     --
     -- Edges are one-sided.  For connections there will be two edges
-    -- back-to-back which refer to for other via the 'peer' field.
+    -- back-to-back which refer to each other via the 'peer' field.
     -- For windows and fences, one edge straddles the border and
     -- the other one is set to "nothing".
     --
@@ -91,9 +94,10 @@
     kind : keyword  -- "nothing" (keep it empty)
                     -- "ignore" (use the junction instead)
                     -- "wall", "doorway",
-                    -- "window", "fence", "railing"
-                    -- "sky_edge"
+                    -- "window", "fence", "railing",
+                    -- "sky_edge",
                     -- [ "steps" ]
+                    -- "beams" -- ObAddon-only feature -MSSP
 
     S : SEED        -- first seed (the "left-most" one when facing the edge)
 
@@ -101,6 +105,7 @@
 
     long : number   -- width of edge (in seeds)
 
+    deep : number   -- if this edge is rendered, this is the wall's depth -MSSP
 
     area : AREA
 
@@ -121,12 +126,12 @@
 
     kind : keyword  -- "floor" (part of a walkable area)
                     -- "ceil"  (part of a ceiling)
-                    -- "liquid"
-                    -- "stair"
+                    -- "liquid",
+                    -- "stair",
                     -- "closet" ('T' elements in rules)
                     -- "joiner" ('J' elements in rules)
                     -- "hallway" piece
-                    -- "link"
+                    -- "link",
 
     area : AREA
 
@@ -144,14 +149,14 @@
                       -- "whole" (completely self-contained)
                       -- is NIL for content-only stuff (e.g. pillars)
 
-    shape : keyword  -- "U" or "I" or "L" or "T" or "P"
+    shape : keyword  -- "U" or "I" or "L" or "T" or "P",
                      -- used for stairs, closets, joiners, hallway pieces
 
     content : keyword  -- is NIL when unused / free
-                       -- "START", "EXIT", "SECRET_EXIT"
-                       -- "TELEPORTER", "SWITCH"
-                       -- "KEY", "WEAPON", "ITEM"
-                       -- "CAGE", "TRAP", "DECORATION"
+                       -- "START", "EXIT", "SECRET_EXIT",
+                       -- "TELEPORTER", "SWITCH",
+                       -- "KEY", "WEAPON", "ITEM",
+                       -- "CAGE", "TRAP", "DECORATION",
 
     is_secret      -- boolean
     is_bossy       -- boolean  (keep it clear for a boss monster)
@@ -179,7 +184,7 @@
      ceil_above : CHUNK  -- for "floor" kind, this is ceiling (NIL in outdoor rooms)
     floor_below : CHUNK  -- for "ceil" kind, this is floor chunk
 
-    encroach[SIDE]   -- how much distance is used on for side, often zero
+    encroach[SIDE]   -- how much distance is used on each side, often zero
                      -- [ used by walls, archways, etc... ]
 
     open_to_sky   -- true if all sides face an outdoor area
@@ -496,7 +501,7 @@ function SEED_CLASS.make_brush(S)
     { x=S.x1, y=S.y1, __dir=2 },
     { x=S.x2, y=S.y1, __dir=6 },
     { x=S.x2, y=S.y2, __dir=8 },
-    { x=S.x1, y=S.y2, __dir=4 }
+    { x=S.x1, y=S.y2, __dir=4 },
   }
 
   if S.diagonal == 3 then
@@ -538,7 +543,7 @@ function Seed_create(sx, sy, x1, y1)
     name = string.format("SEED [%d,%d]", sx, sy),
 
     edge   = {},
-    m_cell = {}
+    m_cell = {},
   }
 
   S.x2 = S.x1 + SEED_SIZE
@@ -642,7 +647,7 @@ end
 
 
 function Seed_squarify()
-  -- detects when a diagonal seed has same area on for half, and
+  -- detects when a diagonal seed has same area on each half, and
   -- merges the two halves into a full seed
 
   for sx = 1, SEED_W do
@@ -740,7 +745,7 @@ function Seed_alloc_depot(room)
     room = room,
     x1 = loc.x,
     y1 = loc.y,
-    skin = {}
+    skin = {},
   }
 
   DEPOT.skin.wall = "_ERROR"
@@ -755,7 +760,9 @@ end
 function Seed_dump_rooms()
   local function seed_to_char(S)
     if not S then return "!" end
+    if S.custom then return S.custom end
     if S.free then return "!" end
+    if S.error then return "?" end
 
     local R = S.room or (S.top and S.top.room)
 
@@ -1010,6 +1017,10 @@ function Seed_draw_minimap()
       color = "#11aaff"
     end
 
+    if (R1 and R1.is_park) or (R2 and R2.is_park) then
+      color = "#70d872"
+    end
+
     draw_edge(S1, dir, color)
   end
 
@@ -1049,12 +1060,26 @@ function Edge_new(kind, S, dir, long)
     area = S.area
   }
 
-  -- add it into for seed
+  -- add it into each seed
   for i = 1, long do
+    if not S then
+      gui.printf(table.tostr(EDGE) .. "\n")
+      gui.printf(table.tostr(EDGE.area) .. "\n")
+      gui.printf(table.tostr(EDGE.area.room) .. "\n")
+      -- note: this mostly only happens when a
+      -- room-to-room connection (direct or via joiner)
+      -- does not perfectly meet
+      -- each other on the edge
+      -- check shape rules for misbehaved shapes
+      EDGE.S.error = true
+      Seed_dump_rooms()
+      error("OH GOD I CAN'T COMPUTER PLS TO HELP")
+    end
+
     assert(S)
 
     if S.edge[dir] then
-      error("Seed already has an EDGE")
+      print("Seed already has an EDGE @ " .. S.mid_x .. ", ".. S.mid_y)
     end
 
     S.edge[dir] = EDGE
@@ -1081,6 +1106,11 @@ function Edge_new_opposite(kind, S, dir, long)
 
   for k = 1, long-1 do
     N = N:neighbor(geom.RIGHT[dir])
+    if not N then
+      S.error = true
+      gui.printf(table.tostr(S) .. "\n")
+      gui.printf(table.tostr(S.area) .. "\n")
+    end
     assert(N)
   end
 
@@ -1211,7 +1241,7 @@ function CHUNK_CLASS.new(kind, sx1,sy1, sx2,sy2)
     sw = (sx2 - sx1 + 1),
     sh = (sy2 - sy1 + 1),
 
-    encroach = {}
+    encroach = {},
   }
 
   CK.name = string.format("CHUNK_%d", CK.id)
@@ -1321,6 +1351,7 @@ function CHUNK_CLASS.is_open_to_sky(chunk, R)
     if A.mode == "void" then return false end
     if A.room and A.room ~= R then return false end
     if A.mode == "scenic" and A.face_room ~= R then return false end
+    if A.border_type == "no_vista" then return false end
 
     return true
   end
@@ -1413,7 +1444,13 @@ function CHUNK_CLASS.create_edge(chunk, kind, side)
 
   local S = SEEDS[sx][sy]
 
-  local E = Edge_new(kind, S, 10-side, long)
+  local E
+
+  if S then
+    E = Edge_new(kind, S, 10-side, long)
+  else
+    return nil
+  end
 
   E.other_area = chunk.area
 
@@ -1449,4 +1486,3 @@ function CHUNK_CLASS.flip(chunk)
 
   chunk.is_flipped = not chunk.is_flipped
 end
-

@@ -3,7 +3,8 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C)      2011 Chris Pisarczyk
+--  Copyright (C)      2011 Armaetus
+--  Copyright (C) 2019 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -34,7 +35,7 @@ DOOM.EPISODES =
     sky_patch = "RSKY1",
     dark_prob = 10,
     bex_mid_name = "C1TEXT",
-    bex_end_name = "C2TEXT",
+    bex_end_name = "C2TEXT"
   },
 
   episode2 =
@@ -44,7 +45,7 @@ DOOM.EPISODES =
     theme = "urban",
     sky_patch = "RSKY2",
     dark_prob = 40,
-    bex_end_name = "C3TEXT",
+    bex_end_name = "C3TEXT"
   },
 
   episode3 =
@@ -54,8 +55,8 @@ DOOM.EPISODES =
     theme = "hell",
     sky_patch = "RSKY3",
     dark_prob = 10,
-    bex_end_name = "C4TEXT",
-  },
+    bex_end_name = "C4TEXT"
+  }
 }
 
 
@@ -67,8 +68,8 @@ DOOM.PREBUILT_LEVELS =
     { prob=50, file="games/doom/data/boss2/icon2.wad", map="MAP30" },
     { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP01" },
     { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP02" },
-    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP03" },
-  },
+    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP03" }
+  }
 }
 
 
@@ -162,6 +163,10 @@ function DOOM.get_levels()
       LEV.style_list = { barrels = { heaps=100 } }
     end
 
+    --Not called "The Chasm" for nothing, right?
+    if map == 24 then
+      LEV.style_list = { steepness = { heaps=100 } }
+    end
     -- the 'dist_to_end' value is used for Boss monster decisions
     if map >= 26 and map <= 29 then
       LEV.dist_to_end = 30 - map
@@ -174,10 +179,114 @@ function DOOM.get_levels()
     -- prebuilt levels
     local pb_name = LEV.name
 
-    LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
+    if OB_CONFIG.prebuilt_levels == "yes" then
+      LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
+    end
 
     if LEV.prebuilt then
       LEV.name_class = LEV.prebuilt.name_class or "BOSS"
+    end
+
+    -- procedural gotcha management code
+
+    -- Prebuilts are to exist over procedural gotchas
+    -- this means procedural gotchas will not override
+    -- Icon of Sin for example if prebuilts are still on
+    if not LEV.prebuilt then
+
+      --handling for the Final Only option
+      if OB_CONFIG.procedural_gotchas == "final" then
+        if OB_CONFIG.length == "single" then
+          if map == 1 then LEV.is_procedural_gotcha = true end
+        elseif OB_CONFIG.length == "few" then
+          if map == 4 then LEV.is_procedural_gotcha = true end
+        elseif OB_CONFIG.length == "episode" then
+          if map == 11 then LEV.is_procedural_gotcha = true end
+        elseif OB_CONFIG.length == "game" then
+          if map == 30 then LEV.is_procedural_gotcha = true end
+        end
+      end
+
+      --every 10 maps
+      if OB_CONFIG.procedural_gotchas == "epi" then
+        if map == 11 or map == 20 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+      if OB_CONFIG.procedural_gotchas == "2epi" then
+        if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+      if OB_CONFIG.procedural_gotchas == "3epi" then
+        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+      if OB_CONFIG.procedural_gotchas == "4epi" then
+        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+
+      --5% of maps after map 4,
+      if OB_CONFIG.procedural_gotchas == "5p" then
+        if map > 4 and map ~= 15 and map ~= 31 then
+          if rand.odds(5) then LEV.is_procedural_gotcha = true end
+        end
+      end
+
+      -- 10% of maps after map 4,
+      if OB_CONFIG.procedural_gotchas == "10p" then
+        if map > 4 and map ~= 15 and map ~= 31 then
+          if rand.odds(10) then LEV.is_procedural_gotcha = true end
+        end
+      end
+
+      -- for masochists... or debug testing
+      if OB_CONFIG.procedural_gotchas == "all" then
+        LEV.is_procedural_gotcha = true
+      end
+    end
+
+    -- handling for street mode
+    -- actual handling for urban percentages are done
+    -- MSSP-TODO: Clean this up! Down with cascading elseif statements!
+    if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+      if OB_CONFIG.streets_mode == "75" and rand.odds(75) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "50" and rand.odds(50) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "25" and rand.odds(25) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "13" and rand.odds(13) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "all" then
+        LEV.has_streets = true
+      end
+    end
+
+    -- handling for linear mode chance choices
+    if not LEV.prebuilt then
+      if OB_CONFIG.linear_mode == "all" then
+        LEV.is_linear = true
+      elseif OB_CONFIG.linear_mode ~= "none" then
+        if rand.odds(int(OB_CONFIG.linear_mode)) then
+          LEV.is_linear = true
+        end
+      end
+
+      -- nature mode
+      if OB_CONFIG.nature_mode and not LEV.has_streets then
+        if OB_CONFIG.nature_mode == "all" then
+          LEV.is_nature = true
+        elseif OB_CONFIG.nature_mode ~= "none" then
+          if rand.odds(int(OB_CONFIG.nature_mode)) then
+            LEV.is_nature = true
+          end
+        end
+      end
+
     end
 
     if MAP_NUM == 1 or (map % 10) == 3 then
@@ -195,4 +304,3 @@ function DOOM.get_levels()
     end
   end
 end
-

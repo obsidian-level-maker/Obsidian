@@ -11,7 +11,7 @@ PREFABS.Exit_pillar1_secret =
   where  = "point",
   height = 144,
 
-  prob   = 200,
+  prob   = 0,
 
   -- replace normal exit special with "exit to secret" special
   line_11 = 51,

@@ -3,24 +3,24 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C) 2011,2014 Chris Pisarczyk
+--  Copyright (C) 2011,2017 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --------------------------------------------------------------------
 
 DOOM.LIQUIDS =
 {
-  water  = { mat="FWATER1", light_add=16, special=0 },
-  blood  = { mat="BLOOD1",  light_add=32, special=0 },
-  nukage = { mat="NUKAGE1", light_add=32, special=5,  damage=10 },
-  lava   = { mat="LAVA1",   light_add=48, special=16, damage=20 },
+  water  = { mat="FWATER1", special=0 },
+  blood  = { mat="BLOOD1",  special=0 },
+  nukage = { mat="NUKAGE1", light_add=24, special=7,  damage=5 },
+  lava   = { mat="LAVA1",   light_add=56, special=5, damage=10 },
 
   -- Doom II only --
-  slime  = { mat="SLIME01", light_add=16, special=0 }
+  slime  = { mat="SLIME01", special=0, light_add=8, damage=0 }
 }
 
 
@@ -33,7 +33,7 @@ DOOM.MATERIALS =
 
   -- special materials --
 
-  _ERROR   = { t="METAL",  f="CEIL5_2" },
+  _ERROR   = { t="ZZWOLF7",  f="ZZWOLF7" },
   _DEFAULT = { t="GRAY1",  f="FLAT1" },
   _SKY     = { t="METAL",  f="F_SKY1" },
 
@@ -49,8 +49,8 @@ DOOM.MATERIALS =
   -- walls --
 
   BIGDOOR1 = { t="BIGDOOR1", f="FLAT19" },
-  BIGDOOR2 = { t="BIGDOOR2", f="CEIL5_1" },
-  BIGDOOR3 = { t="BIGDOOR3", f="CEIL5_1" },
+  BIGDOOR2 = { t="BIGDOOR2", f="FLAT20" },
+  BIGDOOR3 = { t="BIGDOOR3", f="FLOOR7_2" },
   BIGDOOR4 = { t="BIGDOOR4", f="CEIL5_1" },
   BIGDOOR5 = { t="BIGDOOR5", f="CEIL5_2" },
   BIGDOOR6 = { t="BIGDOOR6", f="CEIL5_2" },
@@ -97,6 +97,7 @@ DOOM.MATERIALS =
 
   -- these three are animated
   FIREBLU1 = { t="FIREBLU1", f="FLOOR6_1" },
+  FIREBLU2 = { t="FIREBLU2", f="FLOOR6_1" },
   FIRELAVA = { t="FIRELAVA", f="FLOOR6_1" },
   FIREWALL = { t="FIREWALL", f="FLAT5_3" },
 
@@ -182,9 +183,9 @@ DOOM.MATERIALS =
   SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" },
 
   STARBR2  = { t="STARBR2",  f="FLOOR0_2" },
-  STARG1   = { t="STARG1",   f="FLOOR7_2" },
-  STARG2   = { t="STARG2",   f="FLOOR7_2" },
-  STARG3   = { t="STARG3",   f="FLOOR7_2" },
+  STARG1   = { t="STARG1",   f="FLAT23" },
+  STARG2   = { t="STARG2",   f="FLAT23" },
+  STARG3   = { t="STARG3",   f="FLAT23" },
   STARGR1  = { t="STARGR1",  f="FLAT3" },
   STARGR2  = { t="STARGR2",  f="FLAT3" },
   STARTAN2 = { t="STARTAN2", f="FLOOR4_1" },
@@ -258,7 +259,7 @@ DOOM.MATERIALS =
   CEIL1_3  = { f="CEIL1_3", t="WOOD1" },
   CEIL3_1  = { f="CEIL3_1", t="STARBR2" },
   CEIL3_2  = { f="CEIL3_2", t="STARTAN2" },
-  CEIL3_3  = { f="CEIL3_3", t="STARTAN2" },
+  CEIL3_3  = { f="CEIL3_3", t="BROWN1" },
   CEIL3_4  = { f="CEIL3_4", t="STARTAN2" },
   CEIL3_5  = { f="CEIL3_5", t="STONE2" },
   CEIL3_6  = { f="CEIL3_6", t="STONE2" },
@@ -279,7 +280,7 @@ DOOM.MATERIALS =
   DEM1_3   = { f="DEM1_3", t="MARBLE1" },
   DEM1_4   = { f="DEM1_4", t="MARBLE1" },
   DEM1_5   = { f="DEM1_5", t="MARBLE1" },
-  DEM1_6   = { f="DEM1_6", t="MARBLE1" },
+  DEM1_6   = { f="DEM1_6", t="MARBLE2" },
 
   FLAT1    = { f="FLAT1",   t="GRAY1" },
   FLAT2    = { f="FLAT2",   t="GRAY1" },
@@ -288,7 +289,7 @@ DOOM.MATERIALS =
 
   FLAT5    = { f="FLAT5",   t="BROWNHUG" },
   FLAT5_1  = { f="FLAT5_1", t="WOOD1" },
-  FLAT5_2  = { f="FLAT5_2", t="WOOD1" },
+  FLAT5_2  = { f="FLAT5_2", t="WOOD12" },
   FLAT5_3  = { f="FLAT5_3", t="REDWALL" },
   FLAT5_4  = { f="FLAT5_4", t="STONE" },
   FLAT5_6  = { f="FLAT5_6", t="CRACKLE4" },
@@ -297,31 +298,31 @@ DOOM.MATERIALS =
   FLAT9    = { f="FLAT9",  t="GRAY4" },
   FLAT14   = { f="FLAT14", t="COMPBLUE" },
   FLAT17   = { f="FLAT17", t="GRAY1" },
-  FLAT18   = { f="FLAT18", t="GRAY1" },
+  FLAT18   = { f="FLAT18", t="SILVER1" },
   FLAT19   = { f="FLAT19", t="GRAY1" },
-  FLAT20   = { f="FLAT20", t="SHAWN2" },
+  FLAT20   = { f="FLAT20", t="SILVER1" },
   FLAT22   = { f="FLAT22", t="SHAWN2" },
   FLAT23   = { f="FLAT23", t="SHAWN2" },
 
   FLOOR0_1 = { f="FLOOR0_1", t="STARTAN2" },
   FLOOR0_2 = { f="FLOOR0_2", t="STARBR2" },
   FLOOR0_3 = { f="FLOOR0_3", t="GRAY1" },
-  FLOOR0_5 = { f="FLOOR0_5", t="GRAY1" },
-  FLOOR0_6 = { f="FLOOR0_6", t="GRAY1" },
-  FLOOR0_7 = { f="FLOOR0_7", t="GRAY1" },
+  FLOOR0_5 = { f="FLOOR0_5", t="GRAY4" },
+  FLOOR0_6 = { f="FLOOR0_6", t="GRAY5" },
+  FLOOR0_7 = { f="FLOOR0_7", t="GRAY7" },
   FLOOR1_1 = { f="FLOOR1_1", t="COMPBLUE" },
   FLOOR1_6 = { f="FLOOR1_6", t="REDWALL" },
   FLOOR1_7 = { f="FLOOR1_7", t="REDWALL" },
   FLOOR3_3 = { f="FLOOR3_3", t="BROWN1" },
 
   FLOOR4_1 = { f="FLOOR4_1", t="STARTAN2" },
-  FLOOR4_5 = { f="FLOOR4_5", t="STARTAN2" },
-  FLOOR4_6 = { f="FLOOR4_6", t="STARTAN2" },
+  FLOOR4_5 = { f="FLOOR4_5", t="BRONZE1" },
+  FLOOR4_6 = { f="FLOOR4_6", t="BRONZE3" },
   FLOOR4_8 = { f="FLOOR4_8", t="METAL1" },
   FLOOR5_1 = { f="FLOOR5_1", t="METAL1" },
   FLOOR5_2 = { f="FLOOR5_2", t="BROWNHUG" },
-  FLOOR5_3 = { f="FLOOR5_3", t="BROWNHUG" },
-  FLOOR5_4 = { f="FLOOR5_4", t="BROWNHUG" },
+  FLOOR5_3 = { f="FLOOR5_3", t="BROWN1" },
+  FLOOR5_4 = { f="FLOOR5_4", t="STARTAN2" },
   FLOOR6_1 = { f="FLOOR6_1", t="REDWALL" },
   FLOOR7_1 = { f="FLOOR7_1", t="BROWNHUG" },
   FLOOR7_2 = { f="FLOOR7_2", t="MARBLE1" },
@@ -355,7 +356,7 @@ DOOM.MATERIALS =
   BRNSMAL2 = { t="BRNSMAL2", rail_h=64 },
   BRNSMALC = { t="BRNSMALC", rail_h=64 },
 
-  MIDBRN1  = { t="MIDBRN1",  rail_h=128 },
+  MIDBRN1  = { t="MIDBRN1",  rail_h=112 },
   MIDGRATE = { t="MIDGRATE", rail_h=128 },
 
 
@@ -373,9 +374,11 @@ DOOM.MATERIALS =
   O_BOLT   = { t="CEMENT2",  f="O_BOLT",   sane=1 },
   O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 },
   O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 },
-  O_NEON   = { t="CEMENT6",  f="CEIL5_1",  sane=1 },
+  O_NEON   = { t="CEMENT6",  f="O_NEON",  sane=1 },
 
   O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 },
+
+  O_INVIST = { t="ZZWOLF10",  f="O_INVIST", sane=1 },
 
   -- new flat, added by data/lift_flat.wad
   LIFTFLAT = { f="LIFTFLAT", t="SUPPORT2" },
@@ -396,13 +399,13 @@ DOOM.MATERIALS =
 
   -- walls --
 
-  ASHWALL2 = { t="ASHWALL2", f="MFLR8_4" },
-  ASHWALL3 = { t="ASHWALL3", f="FLAT10" },
+  ASHWALL2 = { t="ASHWALL2", f="FLOOR6_2" },
+  ASHWALL3 = { t="ASHWALL3", f="RROCK03" },
   ASHWALL4 = { t="ASHWALL4", f="FLAT10" },
   ASHWALL6 = { t="ASHWALL6", f="RROCK20" },
   ASHWALL7 = { t="ASHWALL7", f="RROCK18" },
   BIGBRIK1 = { t="BIGBRIK1", f="RROCK14" },
-  BIGBRIK2 = { t="BIGBRIK2", f="MFLR8_1" },
+  BIGBRIK2 = { t="BIGBRIK2", f="FLAT5_4" },
   BIGBRIK3 = { t="BIGBRIK3", f="RROCK14" },
   BLAKWAL1 = { t="BLAKWAL1", f="CEIL5_1" },
   BLAKWAL2 = { t="BLAKWAL2", f="CEIL5_1" },
@@ -431,6 +434,7 @@ DOOM.MATERIALS =
   BSTONE3  = { t="BSTONE3",  f="RROCK12" },
 
   CEMENT7  = { t="CEMENT7",  f="FLAT19" },
+  CEMENT8  = { t="CEMENT8",  f="FLAT19" },
   CEMENT9  = { t="CEMENT9",  f="FLAT19" },
   CRACKLE2 = { t="CRACKLE2", f="RROCK01" },
   CRACKLE4 = { t="CRACKLE4", f="RROCK02" },
@@ -573,6 +577,7 @@ DOOM.MATERIALS =
   SW1PANEL = { t="SW1PANEL", f="CEIL1_1" },
   SW1ROCK  = { t="SW1ROCK",  f="RROCK13" },
   SW1SKULL = { t="SW1SKULL", f="FLAT5_6" },
+  SW2SKULL = { t="SW2SKULL", f="FLAT5_6" },
   SW1STON6 = { t="SW1STON6", f="RROCK11" },
   SW1TEK   = { t="SW1TEK",   f="RROCK20" },
   SW1WDMET = { t="SW1WDMET", f="CEIL5_2" },
@@ -623,7 +628,7 @@ DOOM.MATERIALS =
   SLIME09  = { f="SLIME09", t="ROCKRED1" }, -- animated
   SLIME13  = { f="SLIME13", t="BRICK10" },
   SLIME14  = { f="SLIME14", t="METAL2" },
-  SLIME15  = { f="SLIME15", t="COMPSPAN" },
+  SLIME15  = { f="SLIME15", t="METAL2" },
   SLIME16  = { f="SLIME16", t="SPACEW4" },
 
 
@@ -650,7 +655,31 @@ DOOM.MATERIALS =
   KFALL1   = { t="BLODRIP1", f="SLIME01", sane=1 },  -- new patches
   KFALL5   = { t="BLODRIP1", f="SLIME05", sane=1 },
   SLIME01  = { t="BLODRIP1", f="SLIME01", sane=1 },
-  SLIME05  = { t="BLODRIP1", f="SLIME05", sane=1 }
+  SLIME05  = { t="BLODRIP1", f="SLIME05", sane=1 },
+
+
+  -- walls as flats and vice versa --
+  XCEIL5_1 = { t="CEIL5_1", f="CEIL5_1" },
+  XFLAT14 = { t="FLAT14", f="FLAT14" },
+  XFLOOR16 = { t="FLOOR1_6", f="FLOOR1_6" },
+  XMETAL3 = { t="METAL3", f="METAL3" },
+  XMETAL2 = { t="METAL2", f="METAL3" },
+  XSILVER3 = { t="SILVER3", f="SILVER3" },
+  XSHAWN2 = { t="SHAWN2", f="SHAWN2" },
+  XMETAL3 = { t="METAL3", f="METAL3" },
+  XSTEPTOP = { t="STEPTOP", f="STEPTOP" },
+  XCRATOP1 = { t="CRATOP1", f="CRATOP1" },
+  XDOORTRA = { t="DOORTRAK", f="DOORTRAK" },
+  XEMPTY = { t="-", f="-" },
+  XTEKGREN = { t="TEKGREN2", f="TEKGREN2" },
+  XCEIL3_3 = { t="CEIL3_3", f="CEIL3_3" },
+  XMIDVINE  = { t="MIDVINE1", f="MIDVINE1" },
+  XFLAT3  = { t="FLAT3", f="FLAT3" },
+  XG19  = { t="G19", f="G19" },
+
+  -- Allows compatibility with Egypt theme prefabs (if Prefabs are set to not match Theme)
+  MURAL2   = { t="MARBFAC3",   f="FLAT1_1" },
+  BIGMURAL = { t="STARTAN3",   f="FLAT1_1" }
 }
 
 
@@ -664,4 +693,3 @@ DOOM.PREFAB_FIELDS =
 DOOM.SKIN_DEFAULTS =
 {
 }
-

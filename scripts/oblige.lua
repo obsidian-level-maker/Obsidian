@@ -2,13 +2,14 @@
 --  OBLIGE  :  INTERFACE WITH GUI CODE
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
+--  Copyright (C) 2019 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -22,8 +23,10 @@ gui.import("defs")
 gui.import("util")
 gui.import("brush")
 gui.import("prefab")
+gui.import("autodetail")
 
 gui.import("seed")
+--gui.import("shapes")
 gui.import("grower")
 gui.import("area")
 gui.import("connect")
@@ -33,7 +36,6 @@ gui.import("automata")
 gui.import("cave")
 gui.import("layout")
 gui.import("render")
-gui.import("boss_map")
 gui.import("room")
 
 gui.import("fight")
@@ -43,6 +45,7 @@ gui.import("naming")
 gui.import("title_gen")
 gui.import("level")
 
+gui.import("script_manager")
 
 function ob_traceback(msg)
 
@@ -251,9 +254,17 @@ function ob_match_playmode(T)
 end
 
 
-function ob_match_level_theme(T)
+function ob_match_level_theme(T, override)
   if not T.theme then return true end
   if T.theme == "any" then return true end
+
+  -- if match theme toggle is disabled, everything qualifies
+  if PARAM.fab_match_theme == "off" then return true end
+
+  local level_theme_name = LEVEL.theme_name
+  if override then
+    level_theme_name = override
+  end
 
   local theme  = T.theme
   local result = true
@@ -264,8 +275,37 @@ function ob_match_level_theme(T)
     result = not result
   end
 
+  -- MSSP-REVIEW: These hack fixes should probably be more generalized elsewhere
+  -- for future-proofing.
+
+  -- hack fix for Deimos theme. It is now to use tech and hell defs altogether.
+  if level_theme_name == "deimos"
+    and (theme == "tech"
+    or theme == "hell"
+    or theme == "any"
+    or not theme) then
+    return result
+  end
+
+  -- hack fix for Thy Flesh theme too. Basically combine urban and hell fabs.
+  if level_theme_name == "flesh"
+    and (theme == "urban"
+    or theme == "hell"
+    or theme == "any"
+    or not theme) then
+    return result
+  end
+
+  -- hack fix for TNT's Egypt theme, sigh
+  if level_theme_name == "egypt"
+    and (theme == "any"
+    or theme == "hell"
+    or not theme) then
+    return result
+  end
+
   -- normal check
-  if ob_match_word_or_table(theme, LEVEL.theme_name) then
+  if ob_match_word_or_table(theme, level_theme_name) then
     return result
   end
 
@@ -285,7 +325,7 @@ function ob_match_module(T)
 
   -- require ALL specified modules to be present and enabled
 
-  for name,_ in pairs(mod_tab) do
+  for _,name in pairs(mod_tab) do
     local def = OB_MODULES[name]
 
     if not (def and def.shown and def.enabled) then
@@ -309,7 +349,7 @@ function ob_match_feature(T)
 
   -- require ALL specified features to be available
 
-  for name,_ in pairs(feat_tab) do
+  for _,name in pairs(feat_tab) do
     local param = PARAM[name]
 
     if param == nil or param == false then
@@ -335,6 +375,38 @@ end
 
 
 
+function ob_resolve_theme_keyword(T)
+  local keys =
+  {
+    deimos =
+    {
+      "tech",
+      "hell"
+    },
+
+    industrial =
+    {
+      "tech",
+      "urban"
+    },
+
+    flesh =
+    {
+      "hell",
+      "urban"
+    }
+  }
+
+  if keys[T] then
+    return rand.pick(keys[T])
+  end
+
+  return T
+end
+
+
+
+
 function ob_update_engines()
   local need_new = false
 
@@ -349,7 +421,7 @@ function ob_update_engines()
   end
 
   if need_new then
-    OB_CONFIG.engine = "nolimit"
+    OB_CONFIG.engine = "nolimit",
     gui.set_button("engine", OB_CONFIG.engine)
   end
 end
@@ -383,7 +455,7 @@ function ob_update_themes()
     end
 
     -- otherwise revert to As Original
-    OB_CONFIG.theme = "original"
+    OB_CONFIG.theme = "original",
     gui.set_button("theme", OB_CONFIG.theme)
   end
 end
@@ -607,8 +679,27 @@ function ob_read_all_config(need_full, log_only)
      need_full = false
   end
 
+  do_line("-- ObAddon (C) 2018-2020")
+  do_line("-- MsrSgtShooterPerson")
+  do_line("-- Armaetus")
+  do_line("-- Garrett")
+  do_line("-- Caligari87")
+  do_line("-- Frozsoul")
+  do_line("-- Simon-v")
+  do_line("-- Beed28")
+  do_line("-- Craneo")
+  do_line("-- MogWaltz")
+  do_line("-- EpicTyphlosion")
+  do_line("-- Tapwave")
+  do_line("-- Swedra")
+  do_line("-- Demios")
+  do_line("-- Scionox")
+  do_line("-- josh771")
+  do_line("-- dashodanger")
+  do_line("-- https://github.com/caligari87/ObAddon/\n")
+
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
-    do_line("seed = %d",   OB_CONFIG.seed)
+    do_line("seed = " .. OB_CONFIG.seed)
     do_line("")
   end
 
@@ -704,7 +795,7 @@ function ob_load_all_games()
     gui.printf("Only loading one game: '%s'\n", OB_CONFIG.only_game)
     ob_load_game(OB_CONFIG.only_game)
   else
-    for _, game in pairs(list) do
+    for _,game in pairs(list) do
       ob_load_game(game)
     end
   end
@@ -740,6 +831,7 @@ function ob_load_all_modules()
   gui.printf("Loading all modules...\n")
 
   local list = gui.scan_directory("modules", "*.lua")
+  local subdirs = gui.scan_directory("modules", "DIRS")
 
   if not list then
     gui.printf("FAILED: scan 'modules' directory\n")
@@ -748,9 +840,24 @@ function ob_load_all_modules()
 
   gui.set_import_dir("modules")
 
-  for _,filename in pairs(list) do
+  for  _,filename in pairs(list) do
     gui.debugf("  %s\n", filename)
     gui.import(filename)
+  end
+
+  if subdirs then
+    for _,directory in pairs(subdirs) do
+      list = gui.scan_directory("modules/" .. directory, "*.lua")
+      if not list then
+        gui.printf("FAILED: scan 'modules' subdirectory\n")
+        return
+      end
+      gui.set_import_dir("modules/" .. directory)
+      for _,filename in pairs(list) do
+        gui.debugf("  %s\n", filename)
+        gui.import(filename)
+      end
+    end
   end
 
   gui.set_import_dir("")
@@ -769,6 +876,32 @@ function ob_init()
     if fmt then gui.raw_debug_print(string.format(fmt, ...)) end
   end
 
+  gui.printf("***************************\n")
+  gui.printf("** ObAddon (C) 2018-2020 **\n")
+  gui.printf("***************************\n")
+  gui.printf("|    A Creation of the    |\n")
+  gui.printf("|        Community        |\n")
+  gui.printf("\\_________________________/\n\n")
+  gui.printf("    MsrSgtShooterPerson\n")
+  gui.printf("          Armaetus\n")
+  gui.printf("          Garrett\n")
+  gui.printf("         Caligari87\n")
+  gui.printf("          Frozsoul\n")
+  gui.printf("          Simon-v\n")
+  gui.printf("           Beed28\n")
+  gui.printf("          Craneo\n")
+  gui.printf("          MogWaltz\n")
+  gui.printf("      EpicTyphlosion\n")
+  gui.printf("          Tapwave\n")
+  gui.printf("          Swedra\n")
+  gui.printf("          Demios\n")
+  gui.printf("          Scionox\n")
+  gui.printf("          josh771\n")
+  gui.printf("        dashodanger\n")
+  gui.printf("    And All of Our Fans!\n\n")
+  gui.printf("--------------------------------------------\n")
+  gui.printf("-- https://github.com/caligari87/ObAddon/ --\n")
+  gui.printf("--------------------------------------------\n\n")
 
   gui.printf("~~ Obsidian Lua initialization begun ~~\n\n")
 
@@ -939,7 +1072,7 @@ function ob_init()
   end
 
 
-  OB_CONFIG.seed = 0
+  OB_CONFIG.seed = 0,
 
   create_buttons("game",   OB_GAMES)
   create_buttons("engine", OB_ENGINES)
@@ -990,14 +1123,35 @@ function ob_default_filename()
   Naming_init()
 
   OB_CONFIG.title = Naming_grab_one("TITLE")
+  GAME.title = OB_CONFIG.title
 
   -- massage into a usable filename
   local str = string.lower(OB_CONFIG.title)
 
   str = string.gsub(str, "%p", "")
   str = string.gsub(str, " ", "_")
+  str = string.gsub(str, ":", "")
+  str = string.gsub(str, "'", "")
+  str = string.gsub(str, ",", "")
 
-  return str
+  local current_date = os.date("*t")
+
+  local date_str = current_date.year .. "-" .. current_date.month .. "-" .. current_date.day .. "-"
+  local time_str
+
+  if current_date.hour < 10 then
+    time_str = "0" .. current_date.hour
+  else
+    time_str = current_date.hour
+  end
+
+  if current_date.min < 10 then
+    time_str = time_str .. "0" .. current_date.min
+  else
+    time_str = time_str .. current_date.min
+  end
+
+  return date_str .. time_str .. "_" .. str
 end
 
 
@@ -1137,7 +1291,7 @@ end
 
 
 function ob_invoke_hook(name, ...)
-  -- two passes, for example: setup and setup2
+  -- two passes, for example: setup and setup2,
   for pass = 1,2 do
     for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
@@ -1170,10 +1324,6 @@ function ob_transfer_ui_options()
   if OB_CONFIG.theme == "mixed" then
      OB_CONFIG.theme = "epi"
   end
-
-  if OB_CONFIG.size == "tiny" then
-     OB_CONFIG.size = "small"
-  end
 end
 
 
@@ -1196,7 +1346,7 @@ function ob_build_setup()
   ob_add_current_game()
   ob_add_current_engine()
 
-  -- merge tables from for module
+  -- merge tables from each module
   -- [ but skip GAME and ENGINE, which are already merged ]
 
   for index,mod in pairs(GAME.modules) do
@@ -1212,21 +1362,17 @@ function ob_build_setup()
 
 
   -- load all the prefab definitions
+  ob_invoke_hook("setup")
 
   Fab_load_all_definitions()
 
-  Grower_preprocess_grammar()
-
-
   gui.rand_seed(OB_CONFIG.seed + 0)
-
-  ob_invoke_hook("setup")
-
 
   table.name_up(GAME.THEMES)
   table.name_up(GAME.ROOM_THEMES)
   table.name_up(GAME.ROOMS)
 
+  Grower_preprocess_grammar()
 
   if GAME.sub_format then
     gui.property("sub_format", GAME.sub_format)
@@ -1249,6 +1395,8 @@ function ob_clean_up()
   PREFABS = nil
   SEEDS   = nil
 
+  gui.rand_seed(OB_CONFIG.seed)
+
   collectgarbage("collect")
 end
 
@@ -1260,6 +1408,7 @@ function ob_build_cool_shit()
 
   gui.printf("\n\n")
   gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
+  gui.printf("-- CONFIG FILE : OBLIGE 7.70\n\n")
 
   ob_read_all_config(false, "log_only")
 
@@ -1284,4 +1433,3 @@ function ob_build_cool_shit()
 
   return "ok"
 end
-

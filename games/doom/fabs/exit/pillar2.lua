@@ -6,7 +6,7 @@ PREFABS.Exit_pillar2 =
 {
   file  = "exit/pillar2.wad",
 
-  prob  = 100,
+  prob  = 0,
   theme = "tech",
 
   where = "point",
@@ -17,7 +17,6 @@ PREFABS.Exit_pillar2_hell =
 {
   template = "Exit_pillar2",
 
-  prob  = 100,
   theme = "!tech",
 
   tex_SW1STRTN = "SW2GARG",
@@ -28,7 +27,6 @@ PREFABS.Exit_pillar2_urban =
 {
   template = "Exit_pillar2",
 
-  prob  = 500,
   theme = "urban",
 
   tex_SW1STRTN = "SW1CMT",
@@ -42,6 +40,8 @@ PREFABS.Exit_pillar2_secret =
 
   -- this kind means "an exit to a secret level",
   kind = "secret_exit",
+
+  prob = 10,
 
   theme = "any",
 

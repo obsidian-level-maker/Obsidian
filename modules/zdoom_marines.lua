@@ -190,6 +190,7 @@ ZDOOM_MARINE.FACTORS =
   heaps  = 2.5,
 }
 
+
 function ZDOOM_MARINE.setup(self)
   if not PARAM.doom2_weapons then
     GAME.MONSTERS["marine_ssg"] = nil

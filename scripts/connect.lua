@@ -2,13 +2,14 @@
 --  CONNECTIONS
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
+--  Copyright (C) 2018-2020 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -34,7 +35,7 @@
 
     id, name   -- debugging aids
 
-    kind : keyword  -- "edge", "joiner", "terminator", "teleporter"
+    kind : keyword  -- "edge", "joiner", "terminator", "teleporter",
 
     lock : LOCK
 
@@ -86,7 +87,7 @@ function CONN_CLASS.new(kind, R1, R2)
     kind = kind,
     id   = alloc_id("conn"),
     R1   = R1,
-    R2   = R2
+    R2   = R2,
   }
 
   C.name = string.format("CONN_%d", C.id)
@@ -208,7 +209,9 @@ end
 function Connect_directly(P)
   local kind = P.kind
 
-  gui.debugf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
+  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
+    gui.printf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
+  end
 
   local C = CONN_CLASS.new(kind, P.R1, P.R2)
 
@@ -274,6 +277,20 @@ function Connect_directly(P)
   C.A1 = assert(E1.S.area)
   C.A2 = assert(E2.S.area)
 
+  -- error check from MSSP
+  if C.A1.room ~= C.R1 or C.A2.room ~= C.R2 then
+    if C.R1 then
+      print(table.tostr(C.R1))
+    else
+      print("Hof")
+    end
+    if C.R2 then
+      print(table.tostr(C.R2))
+    else
+      print("Haf")
+    end
+  end
+
   assert(C.A1.room == C.R1)
   assert(C.A2.room == C.R2)
 
@@ -300,7 +317,7 @@ function Connect_teleporter_rooms(P)
   local R1 = P.R1
   local R2 = P.R2
 
-  gui.debugf("Teleporter connection: %s --> %s\n", R1.name, R2.name)
+  gui.printf("Teleporter connection: %s --> %s\n", R1.name, R2.name)
 
   local C = CONN_CLASS.new("teleporter", R1, R2)
 
@@ -331,4 +348,3 @@ function Connect_finalize()
     end
   end
 end
-

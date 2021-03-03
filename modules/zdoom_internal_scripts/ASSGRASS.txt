@@ -1,0 +1,54 @@
+#library "ASSGRASS"
+
+#include "zcommon.acs"
+
+Script "IsMyAssGrass" (void)
+{
+
+  if (CheckActorFloorTexture(0, "GRASS1")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "GRASS2")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "RROCK19")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "RROCK20")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "GROUND01")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "GROUND02")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "GROUND03")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "GROUND04")) GiveInventory("AssIsGrass", 1);
+  if (CheckActorFloorTexture(0, "QFLAT07")) GiveInventory("AssIsGrass", 1);
+
+  if (CheckActorFloorTexture(0, "SNOW1")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW5")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW6")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW7")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW8")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW10F")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW11F")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW12F")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW13F")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW14F")) GiveInventory("AssIsSnow", 1);
+  if (CheckActorFloorTexture(0, "SNOW15F")) GiveInventory("AssIsSnow", 1);
+
+  if (CheckActorFloorTexture(0, "SAND1")) GiveInventory("AssIsSand", 1);
+  if (CheckActorFloorTexture(0, "SAND2")) GiveInventory("AssIsSand", 1);
+  if (CheckActorFloorTexture(0, "SAND3")) GiveInventory("AssIsSand", 1);
+  if (CheckActorFloorTexture(0, "SAND4")) GiveInventory("AssIsSand", 1);
+  if (CheckActorFloorTexture(0, "SAND5")) GiveInventory("AssIsSand", 1);
+  if (CheckActorFloorTexture(0, "SAND6")) GiveInventory("AssIsSand", 1);
+  if (CheckActorFloorTexture(0, "SAND7")) GiveInventory("AssIsSand", 1);
+
+  if (CheckActorFloorTexture(0, "RROCK01")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "RROCK02")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "RROCK05")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "RROCK06")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "RROCK07")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "RROCK08")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "FLOOR6_1")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "SFLR6_1")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "SFLR6_4")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "SKINFLT1")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "SLIME09")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "SLIME10")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "SLIME11")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "SLIME12")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "FIRELAF1")) GiveInventory("AssIsHell", 1);
+  if (CheckActorFloorTexture(0, "FIRELAF2")) GiveInventory("AssIsHell", 1);
+}

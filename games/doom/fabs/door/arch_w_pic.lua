@@ -34,7 +34,7 @@ PREFABS.Arch_pic1_satyr =
   template = "Arch_pic1",
 
   prob   = 250,
-  theme  = "urban",
+  theme  = "!tech",
 
   tex_SILVER2 = "GSTSATYR",
 }
@@ -44,7 +44,7 @@ PREFABS.Arch_pic1_garg =
   template = "Arch_pic1",
 
   prob   = 250,
-  theme  = "urban",
+  theme  = "!tech",
 
   tex_SILVER2 = "GSTGARG",
 }
@@ -54,7 +54,7 @@ PREFABS.Arch_pic1_lion =
   template = "Arch_pic1",
 
   prob   = 250,
-  theme  = "urban",
+  theme  = "!tech",
 
   tex_SILVER2 = "GSTLION",
 }

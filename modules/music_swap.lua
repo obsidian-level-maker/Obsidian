@@ -6,7 +6,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -34,7 +34,7 @@ MUSIC_SWAP.doom1_music =
   {
     "E1M1", "E1M2", "E1M3",
     "E1M4", "E1M5", "E1M6",
-    "E1M7", "E1M8", "E1M9"
+    "E1M7", "E1M8", "E1M9",
   },
 
   episode2 =
@@ -48,8 +48,8 @@ MUSIC_SWAP.doom1_music =
   {
     "E3M1", "E3M2", "E3M3",
     "E3M4", "E3M5", "E3M6",
-    "E3M7", "E3M9"
-  }
+    "E3M7", "E3M9",
+  },
 }
 
 
@@ -58,20 +58,20 @@ MUSIC_SWAP.doom2_music =
   episode1 =
   {
     "RUNNIN", "STALKS", "COUNTD", "BETWEE", "DOOM",
-    "THE_DA", "SHAWN",  "DDTBLU", "IN_CIT", "DEAD"
+    "THE_DA", "SHAWN",  "DDTBLU", "IN_CIT", "DEAD",
   },
 
   episode2 =
   {
     "STLKS2", "THEDA2", "DOOM2",  "DDTBL2", "RUNNI2",
-    "DEAD2",  "STLKS3", "ROMERO", "SHAWN2", "MESSAG"
+    "DEAD2",  "STLKS3", "ROMERO", "SHAWN2", "MESSAG",
   },
 
   episode3 =
   {
     "COUNT2", "DDTBL3", "AMPIE",  "THEDA3", "ADRIAN",
-    "MESSG2", "ROMER2", "TENSE",  "SHAWN3"
-  }
+    "MESSG2", "ROMER2", "TENSE",  "SHAWN3",
+  },
 }
 
 
@@ -124,6 +124,6 @@ OB_MODULES["music_swapper"] =
   hooks =
   {
     get_levels = MUSIC_SWAP.get_levels
-  }
+  },
 }
 

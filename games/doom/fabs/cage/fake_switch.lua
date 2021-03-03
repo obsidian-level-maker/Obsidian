@@ -6,7 +6,7 @@ PREFABS.Cage_fake_switch =
 {
   file   = "cage/fake_switch.wad",
 
-  prob   = 20,
+  prob   = 25,
   style  = "traps",
 
   where  = "seeds",
@@ -21,5 +21,9 @@ PREFABS.Cage_fake_switch =
   y_fit  = "top",
 
   bound_z1 = 0,
+
+  -- use the occasional-blink FX (fairly rarely)
+  sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=3, [13]=3 }
+
 }
 

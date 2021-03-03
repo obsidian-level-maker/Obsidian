@@ -1,8 +1,10 @@
 ------------------------------------------------------------------------
---  MODULE: sky generator
+--  MODULE: Sky Generator
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2008-2017 Andrew Apted
+--  Copyright (C) 2018-2019 Armaetus
+--  Copyright (C) 2018-2020 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,6 +20,74 @@
 
 SKY_GEN = { }
 
+SKY_GEN.SKY_CHOICES =
+{
+  "sky_default", _("Default"),
+  "50",          _("Random"),
+  "sky_night",   _("Night"),
+  "sky_day",     _("Day"),
+}
+
+SKY_GEN.HILL_STATE =
+{
+  "hs_random", _("Random"),
+  "hs_none",   _("Never"),
+  "hs_always", _("Always"),
+}
+
+SKY_GEN.HILL_PARAMS =
+{
+  "hp_random",      _("Random"),
+  "hp_hilly",       _("Hills"),
+  "hp_mountainous", _("Mountainous"),
+  "hp_cavernous",   _("Cavernous"),
+}
+
+SKY_GEN.CLOUD_COLOR_CHOICES =
+{
+  "default", _("DEFAULT"),
+  "SKY_CLOUDS", _("Blue + White Clouds"),
+  "GREY_CLOUDS", _("Grey"),
+  "DARK_CLOUDS", _("Dark Grey"),
+  "BLUE_CLOUDS", _("Dark Blue"),
+  "HELL_CLOUDS", _("Red"),
+  "ORANGE_CLOUDS", _("Orange"),
+  "HELLISH_CLOUDS", _("Red-ish"),
+  "BROWN_CLOUDS", _("Brown"),
+  "BROWNISH_CLOUDS", _("Brown-ish"),
+  "YELLOW_CLOUDS", _("Yellow"),
+  "GREEN_CLOUDS", _("Green"),
+  "JADE_CLOUDS", _("Jade"),
+  "DARKRED_CLOUDS", _("Dark Red"),
+  "PEACH_CLOUDS", _("Peach"),
+  "WHITE_CLOUDS", _("White"),
+  "PURPLE_CLOUDS", _("Purple"),
+  "RAINBOW_CLOUDS", _("Rainbow"),
+}
+
+SKY_GEN.TERRAIN_COLOR_CHOICES =
+{
+  "default", _("DEFAULT"),
+  "BLACK_HILLS", _("Black"),
+  "BROWN_HILLS", _("Brown"),
+  "TAN_HILLS", _("Tan"),
+  "GREEN_HILLS", _("Green"),
+  "DARKGREEN_HILLS", _("Dark Green"),
+  "HELL_HILLS", _("Red"),
+  "DARKBROWN_HILLS", _("Dark Brown"),
+  "GREENISH_HILLS", _("Green-ish"),
+  "ICE_HILLS", _("Ice"),
+}
+
+SKY_GEN.NEBULA_COLOR_CHOICES =
+{
+  "default", _("DEFAULT"),
+  "none", _("None"),
+  "BLUE_NEBULA", _("Blue"),
+  "RED_NEBULA", _("Red"),
+  "BROWN_NEBULA", _("Brown"),
+  "GREEN_NEBULA", _("Green"),
+}
 
 SKY_GEN.colormaps =
 {
@@ -47,6 +117,13 @@ SKY_GEN.colormaps =
   {
     0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
     2,2,1,1, 79,79,78,77,76,75,74,73,71,69,
+  },
+
+  GREEN_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    127, 126, 125, 124, 123, 122, 121,
+    120, 119, 118, 117, 115, 113, 112,
   },
 
   -- cloud colors --
@@ -209,7 +286,20 @@ SKY_GEN.colormaps =
     207, 206, 205, 204, 203, 202, 201,
     200, 198, 197, 195, 194, 193, 192,
   },
+
+  SNOW_HILLS =
+  {
+    0, 8, 6, 5, 111, 109, 107, 105,
+    90, 88, 86, 84, 82, 80, 4,
+    --87, 86, 85, 84, 83, 82, 81, 80, 4,
+  },
 }
+
+-- Some ideas for Doom/Ultimate Doom if going with a theme to make it like "Original" theming:
+-- Phobos: White/Gray/Dark skies, brown/brown-green/ice hills/mountains
+-- Deimos: Red/Orange/Dark skies, brown/black/ice hills/mountains
+-- Hell: Red/Orange/Yellow/Green skies, any hill/mountain type goes
+-- E4: Orange/Yellow/White/Gray/Dark skies, any hill/mountain type goes
 
 
 SKY_GEN.themes =
@@ -218,17 +308,19 @@ SKY_GEN.themes =
   {
     clouds =
     {
-      SKY_CLOUDS = 150,
+      SKY_CLOUDS = 130,
       BLUE_CLOUDS = 80,
       WHITE_CLOUDS = 80,
-      GREY_CLOUDS = 80,
-      DARK_CLOUDS = 50,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
 
-      BROWN_CLOUDS = 40,
+      BROWN_CLOUDS = 60,
       BROWNISH_CLOUDS = 40,
       PEACH_CLOUDS = 40,
-      GREEN_CLOUDS = 20,
-      JADE_CLOUDS = 20,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
     },
 
     hills =
@@ -237,8 +329,9 @@ SKY_GEN.themes =
       BROWN_HILLS = 50,
       DARKBROWN_HILLS = 50,
       GREENISH_HILLS = 30,
-      ICE_HILLS = 10,
+      ICE_HILLS = 12,
       BLACK_HILLS = 5,
+      SNOW_HILLS = 20,
     },
 
     dark_hills =
@@ -254,11 +347,18 @@ SKY_GEN.themes =
   {
     clouds =
     {
-      HELL_CLOUDS = 70,
-      DARKRED_CLOUDS = 50,
-      HELLISH_CLOUDS = 30,
-      YELLOW_CLOUDS = 30,
-      ORANGE_CLOUDS = 30,
+      HELL_CLOUDS = 100,
+      DARKRED_CLOUDS = 70,
+      HELLISH_CLOUDS = 55,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      JADE_CLOUDS = 35,
+      GREEN_CLOUDS = 30,
+      WHITE_CLOUDS = 30,
+      GREY_CLOUDS = 30,
+      PEACH_CLOUDS = 20,
+      DARK_CLOUDS = 40,
+
     },
 
     hills =
@@ -267,6 +367,7 @@ SKY_GEN.themes =
       BROWN_HILLS = 50,
       DARKBROWN_HILLS = 50,
       BLACK_HILLS = 25,
+      SNOW_HILLS = 25,
     },
 
     dark_hills =
@@ -275,8 +376,47 @@ SKY_GEN.themes =
       DARKBROWN_HILLS = 20,
     },
   },
+
+  psycho =
+  {
+    clouds =
+    {
+      PURPLE_CLOUDS  = 90,
+      YELLOW_CLOUDS  = 70,
+      HELLISH_CLOUDS = 20,
+      RAINBOW_CLOUDS = 10,
+
+      GREEN_CLOUDS = 70,
+      BLUE_CLOUDS  = 70,
+      WHITE_CLOUDS = 30,
+      GREY_CLOUDS  = 30,
+    },
+
+    hills =
+    {
+      BLUE_CLOUDS = 50,
+      GREEN_HILLS = 50,
+      RAINBOW_CLOUDS = 50,
+      PURPLE_CLOUDS = 30,
+      YELLOW_CLOUDS = 30,
+      ORANGE_CLOUDS = 30,
+      WHITE_CLOUDS = 30,
+      HELLISH_CLOUDS = 20,
+    },
+
+    -- no dark_hills
+  },
+
 }
 
+function SKY_GEN.setup(self)
+  for name,opt in pairs(self.options) do
+    local value = self.options[name].value
+    PARAM[name] = value
+  end
+
+  PARAM.episode_sky_color = {}
+end
 
 function SKY_GEN.generate_skies()
 
@@ -294,22 +434,6 @@ function SKY_GEN.generate_skies()
     starry_ep = -7
   end
 
-  -- determine themes for each episode
-  local theme_list = { "urban", "urban", "hell", "hell" }
-
-  -- when user has picked a specific theme, honor it
-  if OB_CONFIG.theme == "hell" then
-    theme_list[1] = "hell"
-    theme_list[2] = "hell"
-  elseif OB_CONFIG.theme == "urban" then
-    theme_list[3] = "urban"
-    theme_list[4] = "urban"
-  elseif OB_CONFIG.theme == "tech" then
-    theme_list[3] = "urban"
-  end
-
-  rand.shuffle(theme_list)
-
   -- copy all theme tables [so we can safely modify them]
   local all_themes = table.deep_copy(SKY_GEN.themes)
 
@@ -317,26 +441,44 @@ function SKY_GEN.generate_skies()
   gui.printf("\nSky generator:\n");
 
   for index,EPI in pairs(GAME.episodes) do
+
+    if not EPI.levels[1] then return end -- empty game episode?
+
     assert(EPI.sky_patch)
-    assert(index <= #theme_list)
 
     local seed = int(gui.random() * 1000000)
 
-    local is_starry = (index == starry_ep) or rand.odds(2)
+    local is_starry = (_index == starry_ep) or rand.odds(2)
+
+    if PARAM.force_sky == "sky_day" then
+      is_starry = false
+    elseif PARAM.force_sky == "sky_night"
+    or (PARAM.force_sky == "50" and rand.odds(50)) then
+      is_starry = true
+    end
+
+    gui.printf("Forced sky: " .. PARAM.force_sky .. "\n")
+
     local is_nebula = is_starry and rand.odds(60)
+
+    if PARAM.nebula_color == "none" then
+      is_nebula = false
+    end
 
     -- only rarely combine stars + nebula + hills
     local is_hilly  = rand.odds(sel(is_nebula, 25, 90))
 
+    -- MSSP-SUGGESTS: add sky themes for other level theme types?
+    local theme_name = rand.pick{"urban", "hell"}
 
-    local theme_name = theme_list[index]
+    if OB_CONFIG.theme == "psycho" then
+      theme_name = "psycho"
+    end
 
-    if OB_CONFIG.theme == "original" then
-      if EPI.theme == "hell" or EPI.theme == "flesh" then
-        theme_name = "hell"
-      else
-        theme_name = "urban"
-      end
+    if EPI.levels[1].theme_name == "tech" then
+      theme_name = "urban"
+    elseif EPI.levels[1].theme_name == "hell" then
+      theme_name = "hell"
     end
 
     local theme = all_themes[theme_name]
@@ -347,9 +489,10 @@ function SKY_GEN.generate_skies()
 
     local nebula_tab =
     {
-      BLUE_NEBULA  = 90,
-       RED_NEBULA  = 60,
-      BROWN_NEBULA = 30
+      BLUE_NEBULA  = 6,
+      RED_NEBULA  = 6,
+      BROWN_NEBULA = 4,
+      GREEN_NEBULA = 3,
     }
 
 
@@ -367,10 +510,17 @@ function SKY_GEN.generate_skies()
         -- don't use same one again
         nebula_tab[name] = nebula_tab[name] / 1000
 
+        if PARAM.nebula_color ~= "default" then
+          name = PARAM.nebula_color
+        end
       else
         name = rand.key_by_probs(cloud_tab)
         -- don't use same one again
         cloud_tab[name] = cloud_tab[name] / 1000
+
+        if PARAM.cloud_color ~= "default" then
+          name = PARAM.cloud_color
+        end
       end
 
       local colormap = SKY_GEN.colormaps[name]
@@ -378,12 +528,15 @@ function SKY_GEN.generate_skies()
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
 
+      gui.printf("Sky theme: " .. theme_name .. "\n")
       gui.printf("  %d = %s\n", index, name)
 
       gui.set_colormap(1, colormap)
       gui.fsky_add_clouds({ seed=seed, colmap=1, squish=2.0 })
 
       EPI.dark_prob = 10
+
+      PARAM.episode_sky_color[index] = name
     end
 
 
@@ -412,12 +565,21 @@ function SKY_GEN.generate_skies()
 
 
     --- Hills ---
+    if PARAM.force_hills == "hs_none" then
+       is_hilly = false
+    elseif PARAM.force_hills == "hs_always" then
+       is_hilly = true
+    end
 
     if is_hilly then
 
       local name = rand.key_by_probs(hill_tab)
       -- don't use same one again
       hill_tab[name] = hill_tab[name] / 1000
+
+      if PARAM.terrain_color ~= "default" then
+        name = PARAM.terrain_color
+      end
 
       local colormap = SKY_GEN.colormaps[name]
       if not colormap then
@@ -429,7 +591,7 @@ function SKY_GEN.generate_skies()
       local info =
       {
         seed = seed + 1,
-        colmap = 2
+        colmap = 2,
       }
 
       info.max_h = rand.pick({0.6, 0.65, 0.7, 0.8 })
@@ -437,12 +599,24 @@ function SKY_GEN.generate_skies()
 
       info.frac_dim = rand.pick({1.4, 1.65, 1.8, 1.9 })
 
+      if PARAM.force_hill_params == "hp_hilly" then
+        info.max_h = rand.pick({0.5, 0.55, 0.6, 0.65 })
+      elseif PARAM.force_hill_params == "hp_mountainous" then
+        info.max_h = rand.pick({.7, 0.75, 0.8, 0.85})
+      elseif PARAM.force_hill_params == "hp_cavernous" then
+        info.max_h = rand.pick({0.9, 1, 1.1, 1.2, 1.3})
+        info.min_h = rand.pick({0, 0.1, 0.2, 0.3, 0.4, 0.5})
+      end
+
       -- sometimes make more pointy mountains
       if rand.odds(50) then
         info.power = 3.1
         info.max_h = info.max_h + 0.1
         info.min_h = info.min_h + 0.3
       end
+
+      EPI.has_mountains = true
+
 
       gui.set_colormap(2, colormap)
       gui.fsky_add_hills(info)
@@ -472,7 +646,81 @@ OB_MODULES["sky_generator"] =
 
   hooks =
   {
-    get_levels = SKY_GEN.generate_skies
+    setup = SKY_GEN.setup,
+    get_levels_after_themes = SKY_GEN.generate_skies
+  },
+
+  options =
+  {
+    force_sky =
+    {
+      label=_("Time of Day"),
+      choices=SKY_GEN.SKY_CHOICES,
+      priority = 10,
+      tooltip = "This forces the sky background (behind the hills and clouds) to either be night or day. " ..
+      "Default means vanilla Oblige behavior of picking one episode to be night. Random means 50% chance of " ..
+      "night or day to be picked per episode.",
+      default = "sky_default",
+    },
+
+    force_hills =
+    {
+      label=_("Terrain Foreground"),
+      choices=SKY_GEN.HILL_STATE,
+      priority = 9,
+      tooltip = "Influences whether the sky generator should generate terrain in the skybox.",
+      default = "hs_random",
+    },
+
+    force_hill_params =
+    {
+      label=_("Terrain Parameters"),
+      choices=SKY_GEN.HILL_PARAMS,
+      priority = 8,
+      tooltip = "Changes the parameters of generated hills, if there are any. " ..
+                "'Cavernous' causes the terrain to nearly fill up most of the sky," ..
+                "making an impression of being inside a cave or crater.",
+      default = "hp_random",
+      gap = 1,
+    },
+
+    cloud_color =
+    {
+      label = _("Day Sky Color"),
+      choices = SKY_GEN.CLOUD_COLOR_CHOICES,
+      priority= 7,
+      tooltip = "Picks the color of the sky if day. Default means random and theme-ish.",
+      default = "default",
+    },
+
+    terrain_color =
+    {
+      label = _("Terrain Color"),
+      choices = SKY_GEN.TERRAIN_COLOR_CHOICES,
+      priority = 6,
+      tooltip = "Picks the color of the terrain in the sky if available. Default means random and theme-ish.",
+      default = "default",
+    },
+
+    nebula_color =
+    {
+      label = _("Nebula Color"),
+      choices = SKY_GEN.NEBULA_COLOR_CHOICES,
+      priority = 5,
+      tooltip = "Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. " ..
+                "Default means random and theme-ish.",
+      default = "default",
+      gap = 1,
+    },
+
+    influence_map_darkness =
+    {
+      label=_("Sky Gen Lighting"),
+      choices=MISC_STUFF.YES_NO,
+      priority = 4,
+      tooltip = "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator " ..
+      "creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish.",
+      default = "no",
+    },
   },
 }
-

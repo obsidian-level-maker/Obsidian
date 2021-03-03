@@ -28,6 +28,7 @@ HERETIC.PARAMETERS =
 
   titlepic_lump   = "TITLE",
   titlepic_format = "raw",
+  bex_map_prefix = "HHUSTR_",
 
   skip_monsters = { 10,20 },
 

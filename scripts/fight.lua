@@ -8,7 +8,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -54,7 +54,7 @@ Notes
    Your weapons can damage other monsters though, via such things
    as rocket splash, BFG spray, and shotgun spread.
 
-*  Weapons are "fired" in short rounds.  for round the weapon is
+*  Weapons are "fired" in short rounds.  Each round the weapon is
    chosen based on their intrinsic 'pref' value (and modified by a
    'factor' value if present), as well as other things like the
    'weap_prefs' of the current monster.  The weapon's damage is
@@ -72,9 +72,9 @@ Notes
    bonuses for the player.
 
 *  Infighting between monsters is modelled via 'infight_damage'
-   field of for monster.  Those values were determined from
+   field of each monster.  Those values were determined from
    demo analysis and represent an average amount of damage which
-   for monster of that kind inflicts on other monsters.
+   each monster of that kind inflicts on other monsters.
 
 
 ----------------------------------------------------------------]]
@@ -102,7 +102,7 @@ function Fight_Simulator(monsters, weapons, stats)
     local first_mon = active_mons[1].info
     assert(first_mon)
 
-    -- determine probability for for weapon
+    -- determine probability for each weapon
     local prob_tab = {}
 
     for _,W in pairs(weapons) do

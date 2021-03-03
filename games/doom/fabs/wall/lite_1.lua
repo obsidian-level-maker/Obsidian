@@ -21,6 +21,6 @@ PREFABS.Wall_lite1 =
   bound_z2 = 128,
 
   -- sometimes use random-off light FX
-  sector_1 = { [0]=50, [1]=20 }
+  sector_1 = { [0]=50, [1]=20 },
 }
 

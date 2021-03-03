@@ -7,7 +7,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --------------------------------------------------------------------
@@ -46,8 +46,8 @@ DOOM.PICKUPS =
     id = 2014,
     kind = "health",
     add_prob = 20,
-    cluster = { 4,7 },
-    give = { {health=1} }
+    cluster = { 3,7 },
+    give = { {health=1} },
   },
 
   stimpack =
@@ -56,7 +56,7 @@ DOOM.PICKUPS =
     kind = "health",
     add_prob = 60,
     cluster = { 2,5 },
-    give = { {health=10} }
+    give = { {health=10} },
   },
 
   medikit =
@@ -69,7 +69,7 @@ DOOM.PICKUPS =
     secret_prob = 5,
     storage_prob = 80,
     storage_qty  = 2,
-    give = { {health=25} }
+    give = { {health=25} },
   },
 
   -- ARMOR --
@@ -79,8 +79,8 @@ DOOM.PICKUPS =
     id = 2015,
     kind = "armor",
     add_prob = 10,
-    cluster = { 4,7 },
-    give = { {health=1} }
+    cluster = { 3,7 },
+    give = { {health=1} },
   },
 
   -- AMMO --
@@ -91,7 +91,7 @@ DOOM.PICKUPS =
     kind = "ammo",
     add_prob = 10,
     cluster = { 2,5 },
-    give = { {ammo="bullet",count=10} }
+    give = { {ammo="bullet",count=10} },
   },
 
   bullet_box =
@@ -100,7 +100,7 @@ DOOM.PICKUPS =
     kind = "ammo",
     rank = 2,
     add_prob = 50,
-    give = { {ammo="bullet",count=50} }
+    give = { {ammo="bullet",count=50} },
   },
 
   shells =
@@ -109,7 +109,7 @@ DOOM.PICKUPS =
     kind = "ammo",
     add_prob = 20,
     cluster = { 2,5 },
-    give = { {ammo="shell",count=4} }
+    give = { {ammo="shell",count=4} },
   },
 
   shell_box =
@@ -118,7 +118,7 @@ DOOM.PICKUPS =
     kind = "ammo",
     rank = 2,
     add_prob = 40,
-    give = { {ammo="shell",count=20} }
+    give = { {ammo="shell",count=20} },
   },
 
   rocket =
@@ -127,7 +127,7 @@ DOOM.PICKUPS =
     kind = "ammo",
     add_prob = 10,
     cluster = { 4,7 },
-    give = { {ammo="rocket",count=1} }
+    give = { {ammo="rocket",count=1} },
   },
 
   rocket_box =
@@ -140,7 +140,7 @@ DOOM.PICKUPS =
     secret_prob = 5,
     storage_prob = 20,
     storage_qty  = 3,
-    give = { {ammo="rocket",count=5} }
+    give = { {ammo="rocket",count=5} },
   },
 
   cells =
@@ -150,7 +150,7 @@ DOOM.PICKUPS =
     add_prob = 20,
     closet_prob = 20,
     cluster = { 2,5 },
-    give = { {ammo="cell",count=20} }
+    give = { {ammo="cell",count=20} },
   },
 
   cell_pack =
@@ -162,8 +162,8 @@ DOOM.PICKUPS =
     secret_prob = 5,
     storage_prob = 40,
     storage_qty  = 2,
-    give = { {ammo="cell",count=100} }
-  }
+    give = { {ammo="cell",count=100} },
+  },
 
   --
   -- NOTES:
@@ -191,7 +191,7 @@ DOOM.NICE_ITEMS =
     start_prob = 60,
     crazy_prob = 5,
     closet_prob = 10,
-    give = { {health=30} }
+    give = { {health=30} },
   },
 
   blue_armor =
@@ -201,7 +201,7 @@ DOOM.NICE_ITEMS =
     add_prob = 5,
     start_prob = 10,
     secret_prob = 60,
-    give = { {health=80} }
+    give = { {health=80} },
   },
 
   soul =
@@ -212,7 +212,7 @@ DOOM.NICE_ITEMS =
     start_prob = 0,
     closet_prob = 2,
     secret_prob = 40,
-    give = { {health=150} }
+    give = { {health=150} },
   },
 
   backpack =
@@ -223,7 +223,7 @@ DOOM.NICE_ITEMS =
     start_prob = 80,
     closet_prob = 10,
     give = { {ammo="bullet",count=10 }, {ammo="shell", count=4 },
-             {ammo="cell",  count=20 }, {ammo="rocket",count=1 } }
+             {ammo="cell",  count=20 }, {ammo="rocket",count=1 } },
   },
 
   -- WEAPONS --
@@ -240,10 +240,10 @@ DOOM.NICE_ITEMS =
   berserk =
   {
     id = 2023,
-    kind = "health",  -- treat it like a big health item
+    kind = "health", -- treat it like a big health item
     add_prob = 10,
     secret_prob = 20,
-    give = { {health=70} }
+    give = { {health=70} },
   },
 
   -- POWERUP --
@@ -255,7 +255,7 @@ DOOM.NICE_ITEMS =
     add_prob = 7,
     start_prob = 0,
     closet_prob = 15,
-    time_limit = 100
+    time_limit = 100,
   },
 
   invul =
@@ -267,7 +267,7 @@ DOOM.NICE_ITEMS =
     start_prob = 0,
     closet_prob = 7,
     secret_prob = 7,
-    time_limit = 30
+    time_limit = 30,
   },
 
   allmap =
@@ -283,14 +283,14 @@ DOOM.NICE_ITEMS =
     id = 2045,
     kind = "powerup",
     secret_prob = 10,
-    time_limit = 120
+    time_limit = 120,
   },
 
   radsuit =
   {
     id = 2025,
     kind = "powerup",
-    time_limit = 60
+    time_limit = 60,
   },
 
   -- Doom II only --
@@ -303,8 +303,8 @@ DOOM.NICE_ITEMS =
     add_prob = 1,
     start_prob = 0,
     secret_prob = 20,
-    give = { {health=200} }
-  }
+    give = { {health=200} },
+  },
 
   --
   -- NOTES:

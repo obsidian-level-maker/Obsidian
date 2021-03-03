@@ -35,4 +35,3 @@ PREFABS.Wall_plain_diag =
 
   z_fit  = "stretch",
 }
-

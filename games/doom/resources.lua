@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C)      2011 Chris Pisarczyk
+--  Copyright (C)      2011 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -190,15 +190,15 @@ function DOOM.all_done()
   gui.wad_merge_sections(dir .. "metal_step.wad")
   gui.wad_merge_sections(dir .. "vine_dude.wad")
   gui.wad_merge_sections(dir .. "logos.wad")
+  gui.wad_merge_sections(dir .. "invisible_wall.wad")
+  gui.wad_merge_sections(dir .. "error_wall.wad")
 
   if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
     gui.wad_merge_sections(dir .. "short_bars.wad")
-  else
-    gui.wad_merge_sections(dir .. "hang_lamp.wad")
   end
 
+-- Honestly, this really should be an option
   if OB_CONFIG.length == "game" then
     gui.wad_merge_sections(dir .. "freedoom_face.wad")
   end
 end
-

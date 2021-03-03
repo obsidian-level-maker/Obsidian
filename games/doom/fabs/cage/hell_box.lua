@@ -2,7 +2,7 @@
 -- Hell-ish medium size cage
 --
 
-UNFINISHED.Cage_hellbox1 =
+PREFABS.Cage_hellbox1 =
 {
   file   = "cage/hell_box.wad",
   map    = "MAP01",
@@ -14,11 +14,11 @@ UNFINISHED.Cage_hellbox1 =
 
   where  = "point",
   size   = 128,
-  height = { 160,256 },
+  height = 168,
 
   bound_z1 = 0,
-  bound_z2 = 160,
+  bound_z2 = 168,
 
-  z_fit = "frame",
+  z_fit = "top",
 }
 

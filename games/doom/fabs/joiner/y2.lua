@@ -2,13 +2,11 @@
 -- huge joiner with a round glowy thing
 --
 
--- disabled for now, since connected area is almost always too low
-
-UNFINISHED.Joiner_y2 =
+PREFABS.Joiner_y2 =
 {
   file   = "joiner/y2.wad",
 
-  prob   = 30,
+  prob   = 120,
   theme  = "!hell",
   env    = "!cave",
 
@@ -21,8 +19,17 @@ UNFINISHED.Joiner_y2 =
   deep   = 16,
   over   = 16,
 
+  flat_CRATOP1 = "FLOOR1_6",
+
   delta_h  = 32,
-  nearby_h = 200,
+  nearby_h = 128,
   can_flip = false
 }
 
+PREFABS.Joiner_y2_blue =
+{
+  template = "Joiner_y2",
+
+  tex_REDWALL = "COMPBLUE",
+  flat_CRATOP1 = "CEIL4_2",
+}

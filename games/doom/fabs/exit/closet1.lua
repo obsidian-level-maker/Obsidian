@@ -18,6 +18,9 @@ PREFABS.Exit_closet1 =
 
   x_fit  = "frame",
   y_fit  = "top",
+
+  sector_1  = { [0]=70, [1]=15 }
+
 }
 
 
@@ -31,6 +34,9 @@ PREFABS.Exit_closet1_tech =
 
   tex_GRAYVINE = "COMPBLUE",
   tex_SW1VINE  = "SW1BLUE",
+
+  sector_1  = { [0]=70, [1]=15 }
+
 }
 
 
@@ -65,6 +71,9 @@ PREFABS.Exit_closet1_trap =
 
   seed_w = 1,
   seed_h = 2,
+
+  sector_1  = { [0]=70, [1]=15 }
+
 }
 
 
@@ -84,5 +93,8 @@ PREFABS.Exit_closet1_trap_tech =
 
   tex_GRAYVINE = "COMPBLUE",
   tex_SW1VINE  = "SW1BLUE",
+
+  sector_1  = { [0]=70, [1]=15 }
+
 }
 

@@ -2,13 +2,14 @@
 --  CAVES and MAZES
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2009-2017 Andrew Apted
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -137,6 +138,9 @@ function Cave_setup_stuff(area)
   area.base_sx = sx1
   area.base_sy = sy1
 
+  area.bound_sx = sx2
+  area.bound_sy = sy2
+
   area.base_x = SEEDS[sx1][sy1].x1
   area.base_y = SEEDS[sx1][sy1].y1
 
@@ -162,7 +166,7 @@ function Cave_collect_walk_rects(R, area)
       kind = kind,
 
       cx1 = (sx1 - area.base_sx) * 2 + 1,
-      cy1 = (sy1 - area.base_sy) * 2 + 1
+      cy1 = (sy1 - area.base_sy) * 2 + 1,
     }
 
     rect.cx2 = rect.cx1 + (sx2 - sx1 + 1) * 2 - 1
@@ -547,9 +551,9 @@ function Cave_generate_cave(R, area)
   end
 
 
-  local function check_walks_rforable()
+  local function check_walks_reachable()
     --
-    -- checks that all walking points can rfor for other.
+    -- checks that all walking points can reach each other.
     --
 
     assert(cave.flood)
@@ -585,7 +589,7 @@ function Cave_generate_cave(R, area)
   local function is_cave_good(cave)
     -- check that all important parts are connected
 
-    if not check_walks_rforable(area.walk_rects) then
+    if not check_walks_reachable(area.walk_rects) then
       -- gui.debugf("cave failed connection check\n")
       return false
     end
@@ -654,7 +658,7 @@ function Cave_generate_cave(R, area)
       end
 
       -- randomly clear some seeds in the room.
-      -- After for iteration the number of cleared cells will keep
+      -- After each iteration the number of cleared cells will keep
       -- increasing, making it more likely to generate a valid cave.
       clear_some_seeds()
     end
@@ -687,8 +691,8 @@ function Cave_liquid_pools__OLD()
 --[[ OLD STUFF.... TODO: REVIEW IF USEFUL
 
   local function heights_near_island(island)
-    local min_floor =  9e9
-    local max_ceil  = -9e9
+    local min_floor =  9e9,
+    local max_ceil  = -9e9,
 
     for x = 1, area.cw do
     for y = 1, area.ch do
@@ -726,8 +730,8 @@ function Cave_liquid_pools__OLD()
     -- FIXME! should not happen
     if f_h >= c_h then return end
 
-    f_h = f_h - 24
-    c_h = c_h + 64
+    f_h = f_h - 24,
+    c_h = c_h + 64,
 
     -- TODO: fireballs for Quake
 
@@ -992,7 +996,7 @@ function Cave_create_areas(R, area)
 
     install_blob(AREA, cave, -1)
 
-    -- compute properties of for sink
+    -- compute properties of each sink
     local SINK1 = { parent=AREA }
     local SINK2 = { parent=AREA }
 
@@ -1057,9 +1061,9 @@ function Cave_create_areas(R, area)
 
     group_map = GRID_CLASS.blank_copy(area.cave_map)
 
----##  for _,G in pairs(R.cave_imps) do
----##    add_group_to_map(G)
----##  end
+    for _,WC in pairs(area.walk_rects) do
+      add_group_to_map(WC)
+    end
   end
 
 
@@ -1070,7 +1074,7 @@ function Cave_create_areas(R, area)
     pos_list[1] =
     {
       x = area.walk_rects[1].cx1,
-      y = area.walk_rects[1].cy1
+      y = area.walk_rects[1].cy1,
     }
 
 
@@ -1088,6 +1092,8 @@ function Cave_create_areas(R, area)
 
     local touched_groups
 
+    area.floor_mat = area.room.floor_mat
+    area.ceil_mat = area.room.ceil_mat
 
     -- mark free areas with zero instead of negative
     for fx = 1, cw do
@@ -1201,7 +1207,7 @@ function Cave_create_areas(R, area)
       -- set initial point
       grow_add(cx, cy)
 
-      local count = rand.pick { 3, 4, 5 }
+      local count = rand.pick { 1, 2, 3 },
 
       grow_it(100)
 
@@ -1217,22 +1223,25 @@ function Cave_create_areas(R, area)
 step:dump("Step:")
 
       -- when the step is too small, merge it into previous area
-      if size < 4 and prev_B then
+      --if size < 4 and prev_B then
 
-        install_blob(prev_B, step, 1)
+        --install_blob(prev_B, step, 1)
 
-      else
+      --else
         local AREA =
         {
-          neighbors = {}
+          neighbors = {},
         }
+
+        AREA.floor_mat = area.room.floor_mat
+        AREA.ceil_mat = area.room.ceil_mat
 
         table.insert(area.walk_floors, AREA)
 
         install_blob(AREA, step, 1)
 
         prev_B = AREA
-      end
+      --end
 
 
       -- remember area of covered groups (e.g. for outgoing heights)
@@ -1345,9 +1354,17 @@ step:dump("Step:")
 
     grow_step_areas()
 
-    if #group_list > 0 then
-      error("Cave steps failed to cover all important chunks\n")
-    end
+    --[[if #group_list > 0 then
+      gui.printf("WARNING:\nCave steps failed to cover all important chunks " ..
+      "in ROOM" .. area.room.id .. "\n")
+      gui.printf(table.tostr(group_list,2) .. "\n")
+      for _,G in pairs(group_list) do
+        if G.kind and G.kind == "conn" then
+          gui.printf(table.tostr(G.conn),2)
+          gui.printf(table.tostr(G.conn.joiner_chunk),2)
+        end
+      end
+    end]]
   end
 
   determine_touching_areas()
@@ -1391,7 +1408,7 @@ function Cave_bunch_areas(R, mode)
 
 
   local function touches_the_list(N, list, except)
-    for N2 in pairs(N.neighbors) do
+    for _,N2 in pairs(N.neighbors) do
       if list[N2] and N2 ~= except then
         return true
       end
@@ -1561,6 +1578,34 @@ function Cave_floor_heights(R, entry_h)
   end
 
 
+  local function blobify()
+    local src = area.walk_map:copy()
+
+    for x = 1, area.cw do
+    for y = 1, area.ch do
+      if src[x][y] then src[x][y] = 1 end
+    end
+    end
+
+    blob_map = src:create_blobs(4, 3)
+
+    -- ensure walk-rects are fully contained in a single blob
+    blob_map:walkify_blobs(area.walk_rects)
+
+    -- ensure half-cells are merged with the blob touching the
+    -- corner away from the diagonal, otherwise the gap which
+    -- could exist there may be too narrow for players to pass
+    --blob_map:merge_diagonal_blobs(area.diagonals)
+
+    --blob_map:merge_small_blobs(4)
+
+    blob_map:extent_of_blobs()
+    blob_map:neighbors_of_blobs()
+
+    blob_map:dump_blobs()
+  end
+
+
   local function floor_for_river(bunch_B, h)
     assert(not bunch_B.floor_h)
 
@@ -1613,7 +1658,7 @@ function Cave_floor_heights(R, entry_h)
 
   local function visit_area(B, z_dir, h)
     --|
-    --| recursively spread floors heights into for area
+    --| recursively spread floors heights into each area
     --|
 
     assert(not B.visited)
@@ -1663,16 +1708,37 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function find_entry_area()
---[[ FIXME
-    for _,imp in pairs(R.cave_imps) do
-      assert(imp.area)
-      if imp.conn and imp.conn.conn_h then
-        return imp.area
+
+    local e_blob = area.entry_walk
+
+    local cx = (e_blob.cx1 + e_blob.cx2) / 2
+    local cy = (e_blob.cy1 + e_blob.cy2) / 2
+    local nearest_dist = EXTREME_H
+
+    for _,WF in pairs(area.walk_floors) do
+      --[[local cx_c = (WF.cx1 + WF.cx2) / 2,
+      local cy_c = (WF.cy1 + WF.cy2) / 2,
+
+      -- distance check
+      WF.dist_to_entry = geom.dist(cx,cy,cx_c,cy_c)
+      nearest_dist = math.min(nearest_dist, WF.dist_to_entry)]]
+
+      -- touching check
+      WF.dist_to_entry = geom.box_dist(
+        e_blob.cx1, e_blob.cy1, e_blob.cx2, e_blob.cy2,
+        WF.cx1, WF.cy1, WF.cx2, WF.cy2
+      )
+    end
+
+    for _,WF in pairs(area.walk_floors) do
+      if WF.dist_to_entry == 0 then
+        return WF
       end
     end
---]]
 
-    return rand.pick(area.walk_floors)
+    error("No entry walk floor found!!! Life is meaningless meow\n" ..
+    "Everything is terrible and food doesn't taste the same " ..
+    "and the bottle is running low on pills")
   end
 
 
@@ -1834,12 +1900,14 @@ function Cave_floor_heights(R, entry_h)
   area.ceil_h  = entry_h + R.walkway_height
 
   local entry_area = find_entry_area()
+  assert(entry_area)
+
+  blobify()
 
   visit_area(entry_area, z_dir, entry_h)
 
---TODO : only needed for caves with varying floor heights
---       [ currently caves are always flat ]
---  transfer_heights()
+  -- transfer_heights()
+-- Heights already transfered after all cave operations.
 
   update_min_max_floor()
   update_walk_ways()
@@ -1871,7 +1939,7 @@ function Cave_fill_lakes(R)
       cx1 = reg.cx1,
       cy1 = reg.cy1,
       cx2 = reg.cx2,
-      cy2 = reg.cy2
+      cy2 = reg.cy2,
     }
 
     table.insert(area.lakes, LAKE)
@@ -2084,7 +2152,7 @@ function Cave_make_waterfalls(R)
 
 
   local function can_still_traverse(cx, cy, dir)
-    -- see if cells on for side has same floor
+    -- see if cells on each side has same floor
 
     local A_dir = geom.LEFT [dir]
     local B_dir = geom.RIGHT[dir]
@@ -2326,14 +2394,14 @@ function Cave_make_waterfalls(R)
     {
       is_liquid  = true,
       is_waterfall = true,
-      floor_h = F1.floor_h - 24
+      floor_h = F1.floor_h - 24,
     }
 
     local LOW_POOL =
     {
       is_liquid  = true,
       is_waterfall = true,
-      floor_h = low_floor.floor_h - 12
+      floor_h = low_floor.floor_h - 12,
     }
 
     area.blobs[cx][cy] = HIGH_POOL
@@ -2487,7 +2555,7 @@ function Cave_decorations(R)
     end
 
     -- match neighborhood string
-    -- Note: for '.' in the pattern means "Dont Care"
+    -- Note: each '.' in the pattern means "Dont Care",
 
     return string.match(nb_str, "^11.100.00$") or
            string.match(nb_str, "^.1100100.$") or
@@ -2614,14 +2682,28 @@ function Cave_decide_properties(R, area)
   --     Getting the other STEP_MODES working again is non-trivial.
   --     But I also think that the steppy caves are too random, and
   --     an approach of making a small number of distinct areas which
-  --     border for other (and connect via cavey stairs or a lift
+  --     border each other (and connect via cavey stairs or a lift
   --     prefab) is going to better results.
   --
 
+  -- Attempting to restore steppy caves... -MSSP, February 6, 2020,
 
   -- step mode --
 
   area.step_mode = "walkway"
+
+  -- MSSP: Steppy caves are back, baby!
+  if rand.odds(style_sel("steepness", 0, 25, 50, 75)) or (PARAM.steppy_caves and PARAM.steppy_caves == "always") then
+    if rand.odds(50) then
+      area.step_mode = "up"
+    else
+      area.step_mode = "down"
+    end
+  end
+
+  if PARAM.steppy_caves and PARAM.steppy_caves == "no" then
+    area.step_mode = "walkway"
+  end
 
   -- liquid mode --
 
@@ -2698,19 +2780,109 @@ function Cave_build_a_cave(R, entry_h)
 
   Cave_generate_cave(R, area)
 
----  Cave_lake_fences(R)
----  Cave_fill_lakes(R)
+  Cave_lake_fences(R)
+  Cave_fill_lakes(R)
 
   Cave_create_areas(R, area)
 
----  Cave_bunch_areas(R, "liquid")
----  Cave_bunch_areas(R, "sky")
+  Cave_bunch_areas(R, "liquid")
+  Cave_bunch_areas(R, "sky")
 
   Cave_floor_heights(R, entry_h)
 
----  Cave_make_waterfalls(R)
+  Cave_make_waterfalls(R)
 
   Cave_decorations(R)
+
+  -- distribute info for importants
+  for _,WC in pairs(area.walk_rects) do
+    local blob = area.blobs[WC.cx1][WC.cy1]
+    assert(blob)
+
+
+    if WC.kind == "conn" and WC.conn.kind ~= "teleporter" then
+      WC.conn.conn_h = assert(blob.floor_h)
+    end
+
+    if WC.chunk then
+      WC.chunk.floor_h   = assert(blob.floor_h)
+      WC.chunk.ceil_h    = assert(blob.ceil_h)
+      WC.chunk.floor_mat = assert(blob.floor_mat or area.room.floor_mat)
+
+      -- distribute cell floor height info to seeds
+      local x = WC.chunk.sx1
+      local y
+
+      while x <= WC.chunk.sx2 do
+
+        y = WC.chunk.sy1
+        while y <= WC.chunk.sy2 do
+
+          SEEDS[x][y].floor_h = WC.chunk.floor_h
+          SEEDS[x][y].ceil_h = WC.chunk.ceil_h
+          SEEDS[x][y].floor_mat = WC.chunk.floor_mat
+
+          y = y + 1
+        end
+        x = x + 1
+      end
+    end
+  end
+
+  --[[ sync heights of blobs near to walk rects
+  for _,WC in pairs(area.walk_rects) do
+    for _,BOT in pairs(area.blobs) do
+      for _,B in pairs(BOT) do
+        if B.is_wall then continue end
+
+        local dist
+        local dist_to_check = 1,
+
+        local points =
+        {
+          [1] = {x=WC.cx1, y=WC.cy1},
+          [2] = {x=WC.cx1, y=WC.cy2},
+          [3] = {x=WC.cx2, y=WC.cy1},
+          [4] = {x=WC.cx2, y=WC.cy2}
+        }
+
+        local points_to_compare =
+        {
+          [1] = {x=B.cx1, y=B.cy1},
+          [2] = {x=B.cx1, y=B.cy2},
+          [3] = {x=B.cx2, y=B.cy2},
+          [4] = {x=B.cx2, y=B.cy1}
+        }
+
+        local yas_queen = false
+
+        for _,P in pairs(points) do
+          for _,CP in pairs(points_to_compare) do
+            dist = geom.dist(P.x, P.y, CP.x, CP.y)
+            if dist <= dist_to_check then
+              yas_queen = true
+              continue
+            end
+          end
+        end
+
+        if yas_queen then
+          if WC.chunk then
+            B.floor_h = WC.chunk.floor_h
+            B.ceil_h = WC.chunk.ceil_h
+          elseif WC.conn then
+            local diff = math.abs(B.floor_h - WC.conn.conn_h)
+            if diff < 24 then
+              B.floor_h = WC.conn.conn_h
+            end
+          end
+        end
+
+      end
+    end
+  end]]
+  --
+
 end
 
 
@@ -2728,7 +2900,7 @@ function Cave_build_a_park(R, entry_h)
 
   local RAISE_HEIGHTS =
   {
-    [16] = 40, [32] = 60, [48] = 40, [64] = 20
+    [16] = 40, [32] = 60, [48] = 40, [64] = 20,
   }
 
 
@@ -2802,7 +2974,7 @@ function Cave_build_a_park(R, entry_h)
       floor_mat = assert(R.floor_mat),
 
       -- TEMP RUBBISH
-      floor_h   = entry_h
+      floor_h = entry_h
     }
 
     area.floor_blob = FLOOR
@@ -2813,6 +2985,42 @@ function Cave_build_a_park(R, entry_h)
 
     temp_install_floor(area.floor_blob)
   end
+
+
+  local function do_install_floor_blob(B, base_h)
+    local BLOB =
+    {
+      floor_h   = B.prelim_h + base_h,
+      floor_mat = B.floor_mat
+    }
+
+    assert(BLOB.floor_h)
+    assert(BLOB.floor_mat)
+
+    temp_install_blob(BLOB, B)
+
+    table.insert(area.walk_floors, BLOB)
+
+    area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
+    area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
+
+    if B.decor then
+      local mx = area.base_x + (B.decor.cx - 1) * 64 + 32
+      local my = area.base_y + (B.decor.cy - 1) * 64 + 32
+
+      Trans.entity(B.decor.ent, mx, my, BLOB.floor_h, B.decor.props)
+
+      R:add_solid_ent(B.decor.ent, mx, my, BLOB.floor_h)
+    end
+
+    -- inhibit pickup items in damaging liquid
+    if BLOB.floor_mat == "_LIQUID" and LEVEL.liquid.damage then
+      BLOB.no_items = true
+    end
+  end
+
+
+  ----===========  RIVER STUFF  ===========----
 
 
   local function check_river_point(cx, cy)
@@ -2958,10 +3166,10 @@ function Cave_build_a_park(R, entry_h)
     -- computes a measure of how well the river divides the
     -- floor space into two halves.
 
-    -- first, determine Y range for for x coordinate
+    -- first, determine Y range for each x coordinate
     local y_ranges = get_river_ranges(points)
 
-    -- second, see how much space is above and below for column
+    -- second, see how much space is above and below each column
     local sum   = 0
     local count = 0
 
@@ -2993,7 +3201,7 @@ function Cave_build_a_park(R, entry_h)
 
     sum = sum / count
 
-    -- not enough space on for side?
+    -- not enough space on each side?
     if sum > 0.31 then return -1 end
 
     local score = (1.0 - sum) * 30 + count
@@ -3125,7 +3333,7 @@ function Cave_build_a_park(R, entry_h)
     local reqs =
     {
       kind  = "bridge",
-      where = "point"
+      where = "point",
     }
 
     local def = Fab_pick(reqs)
@@ -3160,13 +3368,59 @@ function Cave_build_a_park(R, entry_h)
     end
 
 
-    -- check if all walk-points can be rfored
+    -- check if all walk-points can be reached
 
     if not check_walkables(RIVER, bx, by) then
       -- make it very shallow, disable the bridge
       RIVER.floor_h = entry_h - 24
     else
       add_the_bridge(RIVER, bx, by)
+    end
+  end
+
+
+  local function can_make_river_tower(B)
+    if B.is_walk then return end
+
+    -- check whether the blob is completely surrounded by
+    -- cells at the same height.
+
+    for cx = B.cx1, B.cx2 do
+    for cy = B.cy1, B.cy2 do
+      if blob_map[cx][cy] ~= B.id then goto continue end
+
+      for _,dir in pairs(geom.ALL_DIRS) do
+        local nx, ny = geom.nudge(cx, cy, dir)
+        if not blob_map:valid(nx, ny) then return false end
+
+        local n_id = blob_map[nx][ny]
+        if not n_id then return false end
+        if n_id == B.id then goto continue end
+
+        local N = blob_map.regions[n_id]
+        assert(N)
+
+        if N.floor_id ~= B.floor_id then return false end
+
+        if N.is_tower then return false end
+        ::continue::
+      end
+      ::continue::
+    end
+    end
+
+    return true
+  end
+
+
+  local function river_add_towers()
+    local prob = rand.pick({ 10, 30, 90 })
+
+    for _,B in pairs(blob_map.regions) do
+      if rand.odds(prob) and can_make_river_tower(B) then
+        B.is_tower = true
+        B.prelim_h = B.prelim_h + 64
+      end
     end
   end
 
@@ -3198,6 +3452,20 @@ function Cave_build_a_park(R, entry_h)
     if best then
       install_river(best, RIVER)
     end
+
+    --[[for _,B in pairs(RIVER) do
+      B.prelim_h = entry_h
+      B.floor_mat = area.room.floor_mat
+    end
+
+    river_add_towers(blob_map)
+
+    -- render em
+    for _,reg in pairs(RIVER) do
+      if reg.is_tower then
+        do_install_floor_blob(reg, 0)
+      end
+    end]]
   end
 
 
@@ -3487,7 +3755,7 @@ function Cave_build_a_park(R, entry_h)
     -- {
     --   stairs : list(STAIR_INFO)
     --
-    --   blob_floors[blob_id] -> integer / "stair"
+    --   blob_floors[blob_id] -> integer / "stair",
     -- }
     --
 
@@ -3505,7 +3773,7 @@ function Cave_build_a_park(R, entry_h)
 
 
     -- initial setup : place all blobs on a single floor, but
-    -- the stair blobs are marked as "stair"
+    -- the stair blobs are marked as "stair",
 
     local F1 = hill_new_floor()
 
@@ -3518,7 +3786,7 @@ function Cave_build_a_park(R, entry_h)
     end
 
 
-    -- then for for stair we divide its floor into two new floors.
+    -- then for each stair we divide its floor into two new floors.
     -- if this fails, then we abort the attempt.
 
     for _,st in pairs(stairs) do
@@ -3567,7 +3835,7 @@ function Cave_build_a_park(R, entry_h)
 
 
   local function mark_features_of_floors(HILL)
-    -- count how many stairs connect to for floor.
+    -- count how many stairs connect to each floor.
 
     local floors = HILL.floors
 
@@ -3579,7 +3847,7 @@ function Cave_build_a_park(R, entry_h)
       floors[dest].stair_num = floors[dest].stair_num + 1
     end
 
-    -- see what walk_rects are used on for floor
+    -- see what walk_rects are used on each floor
     for _,WC in pairs(area.walk_rects) do
       local id = blob_map[WC.cx1][WC.cy1]
       assert(id)
@@ -3765,9 +4033,12 @@ function Cave_build_a_park(R, entry_h)
     if not LEVEL.liquid then return end
     if not rand.odds(room_prob) then return end
 
-    if rand.odds(all_prob) then prob = 95 end
+    if rand.odds(all_prob) then
+      prob = 95
+      if R.is_plain then prob = 45 end
+    end
 
-    -- visit for blob and see if we can make a pool
+    -- visit each blob and see if we can make a pool
     -- [ update prelim_h in a second pass, to two or more neighboring
     --   blobs to become liquid ]
     for _,B in pairs(blob_map.regions) do
@@ -3859,7 +4130,7 @@ function Cave_build_a_park(R, entry_h)
 
     tree_locs = {}
 
-    local prob = rand.pick({ 10, 27, 65 })
+    local prob = style_sel("park_detail", 0, 30, 60, 90)
 
     for _,B in pairs(blob_map.regions) do
       if rand.odds(prob) then
@@ -3875,7 +4146,7 @@ function Cave_build_a_park(R, entry_h)
     hill_clear()
     hill_restore(HILL)
 
-    -- create an info table for for floor
+    -- create an info table for each floor
 
     local floors = {}  --  [floor_id] -> { prelim_h=xxx }
 
@@ -3997,44 +4268,11 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function do_install_floor_blob(B, base_h)
-    local BLOB =
-    {
-      floor_h   = B.prelim_h + base_h,
-      floor_mat = B.floor_mat
-    }
-
-    assert(BLOB.floor_h)
-    assert(BLOB.floor_mat)
-
-    temp_install_blob(BLOB, B)
-
-    table.insert(area.walk_floors, BLOB)
-
-    area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
-    area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
-
-    if B.decor then
-      local mx = area.base_x + (B.decor.cx - 1) * 64 + 32
-      local my = area.base_y + (B.decor.cy - 1) * 64 + 32
-
-      Trans.entity(B.decor.ent, mx, my, BLOB.floor_h, B.decor.props)
-
-      R:add_solid_ent(B.decor.ent, mx, my, BLOB.floor_h)
-    end
-
-    -- inhibit pickup items in damaging liquid
-    if BLOB.floor_mat == "_LIQUID" and LEVEL.liquid.damage then
-      BLOB.no_items = true
-    end
-  end
-
-
   local function division_for_stair(width, num_div)
     -- the stair blob is 'width' cells wide (in the travel direction).
     --
     -- returns a table of length 'num_div' with how many cells to use
-    -- for for step of the stair.
+    -- for each step of the stair.
 
     assert(num_div <= width)
 
@@ -4107,7 +4345,7 @@ function Cave_build_a_park(R, entry_h)
     local floor_mat = sel(z1 > z2, st.src.floor_mat, st.dest.floor_mat)
     assert(floor_mat)
 
-    -- determine how many steps, and width of for step
+    -- determine how many steps, and width of each step
     local width
     local num_div
 
@@ -4242,14 +4480,14 @@ function Cave_build_a_park(R, entry_h)
 
   local function hill_grow_with_steps_OLD(entry_reg)
     --
-    -- 1. start with a blob 'B', make it FLOOR #0
+    -- 1. start with a blob 'B', make it FLOOR #0,
     --
     -- 2. pick a chain of neighbors from B
     --    (B -> X -> Y -> Z -> C)
     --    where none of X/Y/Z are walk chunks
     --    and none of X/Y/Z are HUGE chunks
     --
-    -- 3. mark blob 'C' as FLOOR #1, X/Y/Z marked as "step"
+    -- 3. mark blob 'C' as FLOOR #1, X/Y/Z marked as "step",
     --
     -- 4. neighbors of X/Y/Z are marked as FLOOR #0  [ REVIEW THIS! ]
     --
@@ -4311,6 +4549,7 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
     local ecy = area.entry_walk.cy1
 
     if not hill_grow_with_stairs() then
+      area.room.cannot_into_hills = true
       return
     end
 
@@ -4343,19 +4582,126 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
     -- closets too
     -- [ FIXME : use this logic for normal CAVES too ]
 
+    -- MSSP-TODO
+    --print_area(area)
+    --[[for _,B in pairs(area.blobs) do
+      for _,cell in pairs(B) do
+        local bx = area.base_sx
+        local by = area.base_sy
+
+        if cell.cx1 then
+          local x = math.round(cell.cx1 / 2)
+          local y = math.round(cell.cy1 / 2)
+
+          while x <= cell.cx2 do
+            y = math.round(cell.cy1 / 2)
+            while y <= cell.cy2 do
+              local nx = bx + math.round(x / 2) - 1,
+              local ny = by + math.round(y / 2) - 1,
+
+              if not SEEDS[nx][ny].floor_h then
+                SEEDS[nx][ny].floor_h = cell.floor_h
+
+              elseif SEEDS[nx][ny].floor_h then
+
+                local h = SEEDS[nx][ny].floor_h
+                local nh = cell.floor_h
+
+                SEEDS[nx][ny].floor_h = math.max(h,nh)
+              end
+
+              SEEDS[nx][ny].floor_mat = cell.floor_mat
+
+              y = y + 1,
+            end
+
+            x = x + 1,
+          end
+        end
+
+      end
+    end]]
+
     for _,WC in pairs(area.walk_rects) do
       local blob = area.blobs[WC.cx1][WC.cy1]
       assert(blob)
+
 
       if WC.kind == "conn" and WC.conn.kind ~= "teleporter" then
         WC.conn.conn_h = assert(blob.floor_h)
       end
 
-      if WC.kind == "floor" or WC.kind == "decor" or WC.kind == "closet" then
+      if WC.chunk then
         WC.chunk.floor_h   = assert(blob.floor_h)
         WC.chunk.floor_mat = assert(blob.floor_mat)
+
+        -- distribute cell floor height info to seeds
+        local x = WC.chunk.sx1
+        local y
+
+        while x <= WC.chunk.sx2 do
+
+          y = WC.chunk.sy1
+          while y <= WC.chunk.sy2 do
+
+            SEEDS[x][y].floor_h = WC.chunk.floor_h
+            SEEDS[x][y].floor_mat = WC.chunk.floor_mat
+            --SEEDS[x][y].free = true
+
+            y = y + 1
+          end
+          x = x + 1
+        end
+
+      end
+
+    end
+  end
+
+
+  -- MSSP-TODO: My weird solution to the bland, empty parks. Once I figure it out that is.
+  local function make_some_plains()
+    if not area.entry_walk then return end
+
+    local ecx = area.entry_walk.cx1
+    local ecy = area.entry_walk.cy1
+
+    R.has_hills = true
+    R.is_plain = true
+
+    for cx = 1, area.cw do
+      for cy = 1, area.ch do
+        local id = blob_map[cx][cy]
+        if not id then goto continue end
+
+        local reg = blob_map.regions[id]
+
+        local info = {}
+        info.floor_h = entry_h
+        info.floor_mat = R.floor_mat
+
+        area.blobs[cx][cy] = info
+        ::continue::
       end
     end
+
+    --
+    for _,B in pairs(blob_map.regions) do
+      B.prelim_h = entry_h
+      B.floor_mat = R.floor_mat
+    end
+
+    hill_add_towers(blob_map)
+    hill_add_pools(blob_map)
+    hill_add_decor(blob_map)
+
+    -- render em
+    for _,reg in pairs(blob_map.regions) do
+      if reg.prelim_h then
+        do_install_floor_blob(reg, 0)
+      end
+    end
+
   end
 
 
@@ -4385,10 +4731,26 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   do_parky_stuff()
 
-  if rand.odds(75) then
+  if LEVEL.liquid and rand.odds(style_sel("liquids", 0, 16.67, 33.33, 50)) then
+    R.park_type = "river"
+  end
+
+  if rand.odds(style_sel("steepness", 0, 33, 66,100)) then
+    R.park_type = "hills"
+  end
+
+  if R.park_type == "hills" then
     make_a_hillside()
-  elseif LEVEL.liquid and rand.odds(50) then
+  elseif R.park_type == "river" then
     make_a_river()
+  end
+
+  -- fallback if in case hillside function
+  -- doesn't fetch valid profiles
+  if R.cannot_into_hills or not R.park_type then
+    R.park_type = "plains"
+
+    make_some_plains()
   end
 
   update_chunk_textures()
@@ -4402,11 +4764,96 @@ function Cave_prepare_scenic_vista(area)
 
   -- decide what kind of vista to make
 
-  if room.has_hills or not LEVEL.liquid or rand.odds(50) then
-    area.border_type = "simple_fence"
-  else
-    area.border_type = "watery_drop"
+  local vista_type
+  local vista_list = {}
+
+  if OB_CONFIG.zdoom_vista == "enable" then
+    vista_list =
+    {
+      bottomless_drop = 3,
+      cliff_gradient = 7,
+    }
   end
+
+  if (OB_CONFIG.zdoom_vista == "sky_gen_smart" and not EPISODE.has_mountains) then
+    vista_list =
+    {
+      bottomless_drop = 2,
+      cliff_gradient = 8,
+    }
+  end
+
+  vista_list.simple_fence = 3
+  vista_list.watery_drop = 3
+
+  if LEVEL.liquid then
+    vista_list.ocean = 4
+  end
+
+  if not room.is_exit then
+    vista_list.fake_room = 4
+  end
+
+  vista_type = rand.key_by_probs(vista_list)
+
+  local nice_view_prob = style_sel("scenics", 0, 33, 67, 100)
+  nice_view_prob = math.clamp(0, nice_view_prob - (LEVEL.autodetail_group_walls_factor * 4) + 1, 100)
+
+  if not rand.odds(nice_view_prob) then
+    vista_type = "no_vista"
+  end
+
+  if room.is_natural_park then
+    area.is_natural_park = true
+  end
+
+  if vista_type == "watery_drop" then
+    area.border_type = "watery_drop"
+  elseif vista_type == "cliff_gradient" then
+    area.border_type = "cliff_gradient"
+  elseif vista_type == "bottomless_drop" then
+    area.border_type = "bottomless_drop"
+  -- MSSP-TODO: find a better way to mix it up with interior facing rooms
+  elseif vista_type == "fake_room"
+  and not room.is_park and room.is_outdoor then
+    area.border_type = "fake_room"
+  elseif vista_type == "ocean" and LEVEL.liquid then
+    area.border_type = "ocean"
+  elseif vista_type == "no_vista" then
+    area.border_type = "no_vista"
+  elseif room.has_hills or vista_type == "simple_fence" then
+    area.border_type = "simple_fence"
+  end
+
+  if not area.border_type or room.is_cave then
+    area.border_type = "no_vista"
+  end
+
+  local fence_tab =
+  {
+    fence = 3,
+    railing = 5.5,
+    wall = 1.5,
+  }
+
+  local edge_tab =
+  {
+    wall = 1,
+    edge = 9,
+  }
+
+  if room.is_park then fence_tab.railing = 0 end
+
+  if area.border_type == "bottomless_drop"
+  or area.border_type == "cliff_gradient" then
+    edge_tab.wall = 0
+  end
+
+  -- decide border junction
+  area.fence_type = rand.key_by_probs(fence_tab)
+
+  -- decide map edge junction type
+  area.map_edge_type = rand.key_by_probs(edge_tab)
 end
 
 
@@ -4519,15 +4966,89 @@ function Cave_build_a_scenic_vista(area)
   end
 
 
+  local function get_most_extreme_neighbor_floor(A, mode)
+
+    if mode == "highest" then
+
+      local tallest_h = -EXTREME_H
+
+      for _,N in pairs(A.neighbors) do
+        if N.floor_h and N.room then
+          tallest_h = math.max(tallest_h, N.floor_h)
+        end
+      end
+
+      return tallest_h
+
+    elseif mode == "lowest" then
+
+      local lowest_h = EXTREME_H
+
+      for _,N in pairs(A.neighbors) do
+        if N.floor_h and N.room then
+          lowest_h = math.min(lowest_h, N.floor_h)
+        end
+      end
+
+      return lowest_h
+    end
+  end
+
+
+  local function get_random_area(room)
+    local tab = {}
+
+    for _,A in pairs(room.areas) do
+      if A.mode == "floor" and A.floor_h then
+        table.insert(tab, A)
+      end
+    end
+
+    return rand.pick(tab)
+  end
+
+
   local function make_simple_fence()
     --
     -- WHAT: a basic fence, like in E1M1 or MAP01 of standard DOOM
     --
 
+    local function can_rail()
+      local rail_top = area.floor_h + room.scenic_fences.rail_h
+      if rail_top <= area.zone.sky_h then return true end
+
+      return false
+    end
+
     local FL = new_blob()
 
     FL.floor_h = (room.max_floor_h or room.entry_h) + 72
+
     FL.floor_mat = assert(area.zone.fence_mat)
+
+    FL.floor_y_offset = 0
+
+    temp_install_floor(FL)
+
+    area.fence_FLOOR = FL
+
+    area.floor_h = FL.floor_h
+
+    if rand.odds(75) and can_rail() then
+      area.fence_type = "railing"
+    else
+      area.fence_type = false
+    end
+  end
+
+
+  local function make_bottomless_drop()
+
+    local FL = new_blob()
+
+    FL.floor_h = get_most_extreme_neighbor_floor(area, "lowest") - 8192
+
+    FL.floor_mat = assert("_SKY" --[[area.zone.fence_mat]])
 
     FL.floor_y_offset = 0
 
@@ -4538,6 +5059,162 @@ function Cave_build_a_scenic_vista(area)
 
     -- TEMP RUBBISH
     area.floor_h = FL.floor_h
+  end
+
+
+  local function make_ocean()
+
+    -- lots of water - lots and lots and lots of water
+
+    blobify()
+
+    calc_room_dists()
+    calc_mapedge_dists()
+
+    local FL = new_blob()
+
+    FL.floor_h = get_most_extreme_neighbor_floor(area, "lowest") - 16
+
+    FL.floor_mat = assert(LEVEL.liquid.mat)
+
+    FL.floor_y_offset = 0
+
+    temp_install_floor(FL)
+
+    area.fence_FLOOR = FL
+
+    -- make some cliffs
+
+    local CLIFF = new_blob()
+    local WATERFALLS = new_blob()
+
+    CLIFF.floor_h = get_most_extreme_neighbor_floor(area, "highest") + rand.pick({56,64,72,96})
+    CLIFF.floor_mat = assert(room.zone.nature_facade)
+
+    WATERFALLS.floor_h = rand.irange(FL.floor_h + 16, CLIFF.floor_h - 16)
+    WATERFALLS.floor_mat = LEVEL.liquid.mat
+
+    for cx = 1, area.cw do
+    for cy = 1, area.ch do
+      local id = blob_map[cx][cy]
+      if not id then goto continue end
+
+      local reg = blob_map.regions[id]
+
+      if not (reg.room_dist and reg.mapedge_dist) then goto continue end
+
+      if reg.mapedge_dist * 2.4 <= reg.room_dist  then
+        area.blobs[cx][cy] = CLIFF
+      elseif reg.mapedge_dist * 2.2 <= reg.room_dist  then
+        area.blobs[cx][cy] = WATERFALLS
+      end
+      ::continue::
+    end
+    end
+
+    if THEME.cliff_trees then
+      for id, reg in pairs(blob_map.regions) do
+        local cx, cy = blob_map:random_blob_cell(id)
+        if not cx then goto continue end
+
+        local B = area.blobs[cx][cy]
+        assert(B)
+
+        if not B.floor_h then goto continue end
+        if B.floor_h < CLIFF.floor_h then goto continue end
+
+        -- don't place trees too close to the rooms... -MSSP
+        if reg.room_dist < 1 then goto continue end
+
+        local mx = area.base_x + (cx-1) * 64 + 32
+        local my = area.base_y + (cy-1) * 64 + 32
+
+        local tree = rand.key_by_probs(THEME.cliff_trees)
+
+        Trans.entity(tree, mx, my, B.floor_h)
+        ::continue::
+      end
+    end
+
+    -- TEMP RUBBISH
+    area.floor_h = FL.floor_h
+  end
+
+
+  local function make_cliff_gradient()
+
+    -- cliffs slowly receding into the distance
+
+    blobify()
+
+    calc_room_dists()
+    calc_mapedge_dists()
+
+    -- initial base room is just a sky, just like bottomless drop
+    local FL = new_blob()
+
+    local main_h = get_most_extreme_neighbor_floor(area, "lowest")
+    FL.floor_h = main_h - 8192
+    FL.floor_mat = "_SKY"
+
+    temp_install_floor(FL)
+
+    -- make some purteh wurteh cluffs
+
+    local CLIFF = new_blob()
+    local CLIFF2 = new_blob()
+
+    CLIFF.floor_h = main_h - 16
+    CLIFF.floor_mat = assert(room.zone.nature_facade)
+
+    CLIFF2.floor_h = CLIFF.floor_h - 64
+    CLIFF2.floor_mat = assert(room.zone.other_nature_facade)
+
+    for cx = 1, area.cw do
+    for cy = 1, area.ch do
+      local id = blob_map[cx][cy]
+      if not id then goto continue end
+
+      local reg = blob_map.regions[id]
+
+      if not (reg.room_dist and reg.mapedge_dist) then goto continue end
+
+      if reg.mapedge_dist * 0.4 >= reg.room_dist  then
+        area.blobs[cx][cy] = CLIFF
+      elseif reg.mapedge_dist * 1.0 >= reg.room_dist  then
+        area.blobs[cx][cy] = CLIFF2
+      end
+      ::continue::
+    end
+    end
+
+    if THEME.cliff_trees then
+      for id, reg in pairs(blob_map.regions) do
+        local cx, cy = blob_map:random_blob_cell(id)
+        if not cx then goto continue end
+
+        local B = area.blobs[cx][cy]
+        assert(B)
+
+        if not B.floor_h then goto continue end
+        if B.floor_h < CLIFF2.floor_h then goto continue end
+
+        -- don't place trees too close to the rooms... -MSSP
+        if reg.room_dist < 1 then goto continue end
+
+        local mx = area.base_x + (cx-1) * 64 + 32
+        local my = area.base_y + (cy-1) * 64 + 32
+
+        local tree = rand.key_by_probs(THEME.cliff_trees)
+
+        Trans.entity(tree, mx, my, B.floor_h)
+        ::continue::
+      end
+    end
+
+    area.cliff_FLOOR = CLIFF
+    area.floor_h = CLIFF.floor_h
+
   end
 
 
@@ -4553,14 +5230,25 @@ function Cave_build_a_scenic_vista(area)
 
     -- create the liquid area --
 
-    local drop_h = rand.pick({ 64,96,128,192 })
+    local drop_h = rand.key_by_probs({
+      [16]=4,
+      [64]=1,
+      [96]=1,
+      [128]=1,
+      [192]=1,
+    })
 
     if room.has_hills then drop_h = drop_h / 2 end
 
     local FL = new_blob()
 
-    FL.floor_h   = (room.min_floor_h or room.entry_h) - drop_h
-    FL.is_liquid = true
+    local initial_h = get_most_extreme_neighbor_floor(area, "lowest")
+    FL.floor_h   = initial_h - drop_h
+    if LEVEL.liquid then
+      FL.is_liquid = true
+    else
+      FL.floor_mat = assert(room.zone.other_nature_facade)
+    end
 
     temp_install_floor(FL)
 
@@ -4573,14 +5261,16 @@ function Cave_build_a_scenic_vista(area)
     local CLIFF2 = new_blob()
     local CLIFF3 = new_blob()
 
-    CLIFF.floor_h   = (room.max_floor_h or room.entry_h) + 96
-    CLIFF.floor_mat = assert(LEVEL.cliff_mat)
+    CLIFF.floor_h   = get_most_extreme_neighbor_floor(area, "highest") + 96
+    CLIFF.floor_mat = assert(room.zone.nature_facade)
 
-    CLIFF3.floor_h   = (room.max_floor_h or room.entry_h) - drop_h/2
-    CLIFF3.floor_mat = assert(LEVEL.cliff_mat)
+    local drop_diff = CLIFF.floor_h - FL.floor_h
 
-    CLIFF2.floor_h   = (CLIFF.floor_h + CLIFF3.floor_h) * 0.5
-    CLIFF2.floor_mat = assert(LEVEL.cliff_mat)
+    CLIFF3.floor_h   = FL.floor_h + math.ceil(drop_diff * 0.33)
+    CLIFF3.floor_mat = assert(room.zone.other_nature_facade)
+
+    CLIFF2.floor_h   = FL.floor_h + math.ceil(drop_diff * 0.66)
+    CLIFF2.floor_mat = assert(room.zone.nature_facade)
 
     for cx = 1, area.cw do
     for cy = 1, area.ch do
@@ -4604,8 +5294,8 @@ function Cave_build_a_scenic_vista(area)
 
     area.cliff_FLOOR = CLIFF
 
+    --add some scenery objects
 
-    -- add some scenery objects
     if THEME.cliff_trees then
       for id, reg in pairs(blob_map.regions) do
         local cx, cy = blob_map:random_blob_cell(id)
@@ -4615,11 +5305,18 @@ function Cave_build_a_scenic_vista(area)
         assert(B)
 
         if not B.floor_h then goto continue end
-        if B.floor_h < CLIFF3.floor_h then goto continue end
+        if B.floor_h < CLIFF3.floor_h then
+          if FL.is_liquid then
+            goto continue
+          end
+        end
 
         -- less chance of using a tree on highest cliff
         if rand.odds(30) then goto continue end
         if B.floor_h > CLIFF2.floor_h and rand.odds(70) then goto continue end
+
+        -- don't place trees too close to the rooms... -MSSP
+        if reg.room_dist < 1 then goto continue end
 
         -- OK --
         local mx = area.base_x + (cx-1) * 64 + 32
@@ -4632,11 +5329,41 @@ function Cave_build_a_scenic_vista(area)
       end
     end
 
-
     -- TEMP RUBBISH
-    area.floor_h = CLIFF.floor_h
+    area.floor_h = initial_h
+
+
 
     -- NOTE: the railing is setup in Room_border_up()
+  end
+
+
+  local function make_fake_room()
+
+    local FL = new_blob()
+
+    local src_area = get_random_area(room)
+
+    area.map_edge_type = "wall"
+
+    FL.floor_h = src_area.floor_h
+    FL.floor_mat = src_area.floor_mat
+    FL.floor_y_offset = 0
+
+    temp_install_floor(FL)
+
+    area.floor_h = FL.floor_h
+
+    area.fence_FLOOR = src_area.fence_mat
+    area.floor_mat = FL.floor_mat
+    area.main_tex = room.main_tex
+
+  end
+
+
+  local function make_no_vista()
+    -- for people who don't like nice views
+    area.mode = "void"
   end
 
 
@@ -4655,6 +5382,21 @@ function Cave_build_a_scenic_vista(area)
 
   elseif area.border_type == "watery_drop" then
     make_watery_drop()
+
+  elseif area.border_type == "cliff_gradient" then
+    make_cliff_gradient()
+
+  elseif area.border_type == "bottomless_drop" then
+    make_bottomless_drop()
+
+  elseif area.border_type == "ocean" then
+    make_ocean()
+
+  elseif area.border_type == "fake_room" then
+    make_fake_room()
+
+  elseif area.border_type == "no_vista" then
+    make_no_vista()
 
   else
     error("Unknown border_type: " .. tostring(area.border_type))
@@ -4698,7 +5440,16 @@ function Cave_join_scenic_borders(junc)
     return
   end
 
---[[ DISABLED FOR NOW...
+  if A.border_type == "ocean" and B.border_type == "ocean" then
+      lower_floors(A.fence_FLOOR, B.fence_FLOOR)
+    return
+  end
+
+  if A.border_type == "bottomless_drop" and B.border_type == "bottomless_drop" then
+    return
+  end
+
+  --[[DISABLED FOR NOW...
 
   if A.border_type == "watery_drop" and B.border_type == "watery_drop" then
     lower_floors(A.liquid_FLOOR, B.liquid_FLOOR)
@@ -4716,10 +5467,8 @@ function Cave_join_scenic_borders(junc)
        A.fence_FLOOR.floor_mat = B.cliff_FLOOR.floor_mat
        return
     end
-  end
---]]
+  end]]
 
   -- in all other cases, make a wall
   Junction_make_wall(junc)
 end
-

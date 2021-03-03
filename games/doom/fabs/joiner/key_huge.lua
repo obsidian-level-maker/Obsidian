@@ -10,6 +10,8 @@ PREFABS.Locked_huge_red =
 
   prob   = 200,
 
+  theme  = "!tech",
+
   where  = "seeds",
   shape  = "I",
 
@@ -24,8 +26,12 @@ PREFABS.Locked_huge_red =
   delta_h  = 8,
   nearby_h = 160,
 
+  y_fit = "frame",
+
   -- texture is already "DOORRED",
   -- line special is already #135 (open red door)
+
+  can_flip = true,
 }
 
 
@@ -50,6 +56,44 @@ PREFABS.Locked_huge_yellow =
   line_135    = 137,
 }
 
+-- Tech variant -MSSP
+
+PREFABS.Locked_huge_red_tech =
+{
+  template     = "Locked_huge_red",
+
+  theme        = "tech",
+
+  tex_BIGDOOR6 = "BIGDOOR4",
+}
+
+PREFABS.Locked_huge_blue_tech =
+{
+  template     = "Locked_huge_red",
+
+  theme        = "tech",
+
+  tex_BIGDOOR6 = "BIGDOOR4",
+
+  key          = "k_blue",
+
+  tex_DOORRED  = "DOORBLU",
+  line_135     = 133,
+}
+
+PREFABS.Locked_huge_yellow_tech =
+{
+  template     = "Locked_huge_red",
+
+  theme        = "tech",
+
+  tex_BIGDOOR6 = "BIGDOOR4",
+
+  key          = "k_yellow",
+
+  tex_DOORRED  = "DOORYEL",
+  line_135     = 137,
+}
 
 --------------------------------------------
 ------- Another huge locked door -----------
@@ -99,4 +143,3 @@ PREFABS.Locked_huge3_yellow =
   tex_DOORRED = "DOORYEL",
   line_33     = 34,
 }
-

@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C) 2011,2014 Chris Pisarczyk
+--  Copyright (C) 2011-2021 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -234,6 +234,31 @@ TNT.THEMES =
       candelabra = 20,
     },
 
+    beam_groups =
+    {
+      beam_gothic = 50,
+      beam_quakeish = 50,
+    },
+
+    fence_groups =
+    {
+      PLAIN = 50,
+      crenels = 50,
+      gappy = 50,
+      fence_gothic = 50,
+    },
+
+    fence_posts =
+    {
+      Post_metal = 25,
+      Post_gothic_blue = 10,
+      Post_gothic_green = 10,
+      Post_gothic_red = 15,
+      Post_gothic_blue_2 = 10,
+      Post_gothic_green_2 = 10,
+      Post_gothic_red_2 = 15,
+    },
+
 --Mostly based on what is seen in TNT.WAD MAP31,
     monster_prefs =
     {
@@ -242,10 +267,16 @@ TNT.THEMES =
       demon   = 1.5,
     },
 
-    archy_arches = true
-
 --Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Chris
+    scenic_fences =
+    {
+      MIDBARS3 = 50,
+    },
 
+    skyboxes =
+    {
+      Skybox_generic = 50,
+    },
   },
 }
 
@@ -456,4 +487,3 @@ OB_THEMES["egypt"] =
   mixed_prob = 5,
   bit_limited = true
 }
-

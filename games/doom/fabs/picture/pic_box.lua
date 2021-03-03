@@ -21,7 +21,7 @@ TEMPLATES.Pic_box_template =
   x_fit = "frame",
   y_fit = "top",
 
-  sector_1 = 0,  -- sector special
+  sector_1 = 0,   -- sector special
   line_2   = 0,   -- line special
 
   offset_1 = 0,   -- X offset
@@ -35,6 +35,7 @@ TEMPLATES.Pic_box_template =
 PREFABS.Pic_box_liteblu1 =
 {
   template = "Pic_box_template",
+  map      = "MAP13",
 
   theme = "tech",
 
@@ -45,6 +46,8 @@ PREFABS.Pic_box_liteblu1 =
 PREFABS.Pic_box_tekgren3 =
 {
   template = "Pic_box_template",
+  map  = "MAP13",
+  prob = 10,
 
   theme = "tech",
   game  = "doom2",
@@ -53,10 +56,20 @@ PREFABS.Pic_box_tekgren3 =
 }
 
 
+PREFABS.Pic_box_shawn3 =
+{
+  template = "Pic_box_template",
+  map  = "MAP13",
+
+  theme = "tech",
+
+  tex_PIPES = "SHAWN3",
+}
+
 PREFABS.Pic_box_silver3 =
 {
   template = "Pic_box_template",
-  map      = "MAP02",
+  map      = "MAP12",
 
   theme = "tech",
 
@@ -65,11 +78,11 @@ PREFABS.Pic_box_silver3 =
   tex_PIPES = "SILVER3",
 }
 
-
+--flashy sides, 128px height
 PREFABS.Pic_box_silver2 =
 {
   template = "Pic_box_template",
-  map      = "MAP06",
+  map      = "MAP11",
 
   theme = "tech",
 
@@ -79,11 +92,11 @@ PREFABS.Pic_box_silver2 =
   tex_PIPES = "SILVER2",
 }
 
-
+--flashy sides, 64px height
 PREFABS.Pic_box_UAC =
 {
   template = "Pic_box_template",
-  map      = "MAP04",
+  map      = "MAP10",
 
   prob  = 50,
   theme = "tech",
@@ -91,24 +104,35 @@ PREFABS.Pic_box_UAC =
   seed_w = 2,
 
   tex_PIPES = "SHAWN1",
+  -- use the occasional-blink FX (fairly rarely)
+  sector_1  = { [0]=50, [1]=15 },
 }
 
 
+--flashy sides, 48px height, sides edited to match Tech theme
 PREFABS.Pic_box_computer =
 {
   template = "Pic_box_template",
-  map      = "MAP03",
+  map      = "MAP09",
 
   prob  = 300,
   theme = "tech",
 
   seed_w = 2,
 
-  tex_PIPES = { COMPSTA1=40, COMPSTA2=40 },
+  tex_PIPES = { COMPSTA1=40, COMPSTA2=40, SPACEW3=40 },
 
   -- use the occasional-blink FX (fairly rarely)
-  sector_1  = { [0]=30, [1]=10 }
+  sector_1  = { [0]=50, [1]=20, [8]=7 },
 }
+
+-- References --
+--MAP07: 128x96, techy silver sides
+--MAP09: 128x48, techy silver sides
+--MAP10: 128x64, techy silver sides
+--MAP11: 128x128, techy silver sides
+--MAP12: 64x128, techy silver sides
+--MAP13: 64x64, techy silver sides
 
 
 ----- URBAN THEME -----------------------------
@@ -119,7 +143,7 @@ PREFABS.Pic_box_gargoyles =
   template = "Pic_box_template",
 
   prob  = 50,
-  theme = "urban",
+  theme = "!tech",
 
   tex_PIPES = { GSTGARG=20, GSTLION=20, GSTSATYR=20 },
   offset_2  = 9,
@@ -131,7 +155,7 @@ PREFABS.Pic_box_gargoyles2 =
   template = "Pic_box_template",
 
   prob  = 150,
-  theme = "urban",
+  theme = "!tech",
 
   tex_PIPES = { SW1GARG=20, SW1LION=20, SW1GARG=20 },
   offset_2  = 55,
@@ -144,7 +168,7 @@ PREFABS.Pic_box_woodskull =
   map      = "MAP04",
 
   prob   = 150,
-  theme  = "urban",
+  theme  = "!tech",
 
   seed_w = 2,
 
@@ -193,7 +217,10 @@ PREFABS.Pic_box_sp_face1 =
   theme  = "hell",
 
   tex_PIPES = "SP_FACE1",
-  line_2    = 48  -- scrolling
+  line_2    = 48,  -- scrolling
+
+  sector_1  = { [0]=50, [1]=15 },
+
 }
 
 
@@ -208,25 +235,12 @@ PREFABS.Pic_box_skinface =
   seed_w = 2,
   height = 160,
 
-  tex_PIPES = "SKINFACE",
+  tex_PIPES = { SKINFACE=50, SP_FACE2=50 },
   offset_2  = 16,
   line_2    = 48  -- scrolling
 }
 
 
-PREFABS.Pic_box_huge_demon =
-{
-  template = "Pic_box_template",
-  map      = "MAP08",
-
-  rank  = 3,
-  theme = "hell",
-
-  seed_w = 3,
-  height = 176,
-
-  tex_PIPES = "ZZZFACE4",
-}
 
 
 ----- EGYPT THEME ------------------------------
@@ -261,3 +275,34 @@ PREFABS.Pic_box_huge_mural =
   tex_PIPES = "BIGMURAL",
 }
 
+-- HELL THEME --
+
+PREFABS.Pic_crucified1 =
+{
+  template = "Pic_box_template",
+  map      = "MAP06",
+
+ prob = 75,
+
+  theme = "hell",
+
+  seed_w = 2,
+  height = 176,
+
+  tex_PIPES = { SP_DUDE1=50, SP_DUDE2=50, SP_DUDE7=50 },
+}
+
+PREFABS.Pic_crucified2 =
+{
+  template = "Pic_box_template",
+  map      = "MAP02",
+
+ prob = 55,
+
+  theme = "hell",
+
+  seed_w = 2,
+  height = 176,
+
+  tex_PIPES = { SP_DUDE4=50, SP_DUDE5=50 },
+}

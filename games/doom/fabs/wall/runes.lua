@@ -183,3 +183,126 @@ PREFABS.Wall_runes3_F =
   tex_FIREBLU1 = "CRACKLE2",
 }
 
+----------- SP_FACE1 variation --------------------
+
+
+PREFABS.Wall_runes4_A =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP02",
+
+  group = "runes4",
+  tex_FIREBLU1 = "SP_FACE1",
+}
+
+
+PREFABS.Wall_runes4_B =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP02",
+
+  group = "runes4",
+  tex_FIREBLU1 = "SP_FACE1",
+}
+
+
+PREFABS.Wall_runes4_C =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP03",
+
+  group = "runes4",
+  tex_FIREBLU1 = "SP_FACE1",
+}
+
+
+PREFABS.Wall_runes4_D =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP04",
+
+  group = "runes4",
+  tex_FIREBLU1 = "SP_FACE1",
+}
+
+
+PREFABS.Wall_runes4_E =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP05",
+
+  group = "runes4",
+  tex_FIREBLU1 = "SP_FACE1",
+}
+
+
+PREFABS.Wall_runes4_F =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP06",
+
+  group = "runes4",
+  tex_FIREBLU1 = "SP_FACE1",
+}
+
+----------- SLOPPY1 variation --------------------
+
+
+PREFABS.Wall_runes5_A =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP02",
+
+  group = "runes5",
+  tex_FIREBLU1 = "SLOPPY1",
+}
+
+
+PREFABS.Wall_runes5_B =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP02",
+
+  group = "runes5",
+  tex_FIREBLU1 = "SP_FACE1",
+}
+
+
+PREFABS.Wall_runes5_C =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP03",
+
+  group = "runes5",
+  tex_FIREBLU1 = "SLOPPY1",
+}
+
+
+PREFABS.Wall_runes5_D =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP04",
+
+  group = "runes5",
+  tex_FIREBLU1 = "SLOPPY1",
+}
+
+
+PREFABS.Wall_runes5_E =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP05",
+
+  group = "runes5",
+  tex_FIREBLU1 = "SLOPPY1",
+}
+
+
+PREFABS.Wall_runes5_F =
+{
+  template = "Wall_runes1_A",
+  map      = "MAP06",
+
+  group = "runes5",
+  tex_FIREBLU1 = "SLOPPY1",
+}

@@ -8,7 +8,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -23,11 +23,11 @@
 --[[
     --
     -- This represents the weapons, health and ammo that a player has at
-    -- a particular time.  When for room is visited, Player_give_room_stuff()
+    -- a particular time.  When each room is visited, Player_give_room_stuff()
     -- updates the hmodel for the items in the room.  When placing items, we
     -- exclude stuff that the player already has.
     --
-    -- There is one 'HMODEL' for for player class (in HEXEN there are three
+    -- There is one 'HMODEL' for each player class (in HEXEN there are three
     -- player classes).  So LEVEL.hmodels is indexed by the class name.
     --
     -- The GAME.PLAYER_MODEL table contains the initial model, especially the
@@ -204,7 +204,7 @@ function Player_firepower()
   -- weapons.
   --
   -- If there are different classes (Hexen) then the result
-  -- will be an average of for class, as all classes face
+  -- will be an average of each class, as all classes face
   -- the same monsters.
 
   local function get_firepower(hmodel)
@@ -468,6 +468,11 @@ function Item_simulate_battle(R)
     heal_mul = heal_mul * (PARAM.health_factor or 1)
     ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
 
+    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+      ammo_mul = ammo_mul * (tonumber(PARAM.boss_gen_ammo) * PARAM.boss_gen_mult)
+      heal_mul = heal_mul * tonumber(PARAM.boss_gen_heal)
+    end
+
     -- give less ammo in later maps (to counter the build-up over an episode)
     if not PARAM.pistol_starts then
       local along = math.clamp(0, LEVEL.ep_along - 0.2, 0.8)
@@ -657,7 +662,7 @@ function Item_distribute_stats()
       total = 1.0
     end
 
-    -- adjust ratio values to be in range 0.0 - 1.0
+    -- adjust ratio values to be in range 0.0 - 1.0,
     if total > 0 then
       for _,loc in pairs(list) do
         loc.ratio = loc.ratio / total
@@ -892,7 +897,7 @@ function Item_pickups_for_class(CL)
     local count = 1
 
     if info.cluster then
-      local for_qty = info.give[1].health or info.give[1].count
+      local each_qty = info.give[1].health or info.give[1].count
       local min_num  = info.cluster[1]
       local max_num  = info.cluster[2]
 
@@ -900,12 +905,12 @@ function Item_pickups_for_class(CL)
 
       --- count = rand.irange(min_num, max_num)
 
-      if min_num * for_qty >= qty then
+      if min_num * each_qty >= qty then
         count = min_num
-      elseif max_num * for_qty <= qty then
+      elseif max_num * each_qty <= qty then
         count = max_num - rand.sel(20,1,0)
       else
-        count = 1 + int(qty / for_qty)
+        count = 1 + int(qty / each_qty)
       end
     end
 
@@ -1014,7 +1019,22 @@ function Item_pickups_for_class(CL)
     local stats = R.item_stats[CL]
     local item_list = {}
 
+    -- at least have health inside
+    -- while ammo for undiscovered
+    -- weapons is unavailable
+    if R.is_secret then
+      if not stats.health then
+        stats.health = 1
+      end
+    end
+
     for stat,qty in pairs(stats) do
+
+      -- this secret room is a treasure trove, baby!
+      if R.is_secret then
+        qty = R.svolume * SECRET_BONUS_FACTORS[OB_CONFIG.secrets_bonus]
+      end
+
       select_pickups(R, item_list, stat, qty)
 
       gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R.name)
@@ -1069,4 +1089,3 @@ function Item_add_pickups()
     Item_pickups_for_class(CL)
   end
 end
-

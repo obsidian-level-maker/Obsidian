@@ -8,7 +8,7 @@ PREFABS.Decor_dittohead_computer =
   map    = "MAP01",
 
   prob   = 5000,
-  theme  = "tech",
+  theme  = "!hell",
   env    = "building",
 
   where  = "point",
@@ -20,4 +20,3 @@ PREFABS.Decor_dittohead_computer =
 
   z_fit  = { 128,136 }
 }
-

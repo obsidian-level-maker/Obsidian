@@ -7,7 +7,7 @@ PREFABS.Decor_techfloor1 =
   file   = "decor/carpets.wad",
   map    = "MAP01",
 
-  prob   = 50,
+  prob   = 5000,
   theme  = "tech",
   env    = "building",
 
@@ -26,7 +26,7 @@ PREFABS.Decor_sunkgrate =
   file   = "decor/carpets.wad",
   map    = "MAP02",
 
-  prob   = 50,
+  prob   = 5000,
   theme  = "urban",
   env    = "building",
 

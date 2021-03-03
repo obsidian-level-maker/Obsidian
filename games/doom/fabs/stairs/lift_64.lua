@@ -6,7 +6,7 @@ PREFABS.Lift_64 =
 {
   file   = "stairs/lift_64.wad",
 
-  prob   = 1,
+  prob   = 15,
   theme  = "!hell",
   style  = "steepness",
 
@@ -20,6 +20,13 @@ PREFABS.Lift_64 =
   bound_z1 = 0,
 
   delta_h = 64,
-  plain_ceiling = true
+  plain_ceiling = true,
 }
 
+PREFABS.Lift_64_other =
+{
+  template = "Lift_64",
+
+  theme  = "!tech",
+  tex_SUPPORT2 = "SUPPORT3",
+}

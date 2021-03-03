@@ -7,7 +7,7 @@ PREFABS.Light_hanging =
   file   = "decor/hang_lamp.wad",
   map    = "MAP01",
 
-  prob   = 100,
+  prob   = 0,
   theme  = "urban",
   env    = "building",
 

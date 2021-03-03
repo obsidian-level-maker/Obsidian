@@ -7,7 +7,7 @@ PREFABS.Bars_shiny =
   file   = "fence/bars_16.wad",
   map    = "MAP01",
 
-  prob   = 100,
+  prob   = 120,
 
   where  = "edge",
   key    = "barred",
@@ -45,3 +45,23 @@ PREFABS.Bars_shiny_diag =
   bound_z1 = 0,
 }
 
+PREFABS.Bars_shiny_hell =
+{
+  template = "Bars_shiny",
+  map    = "MAP01",
+  theme    = "!tech",
+
+  tex_SUPPORT2 = "SUPPORT3",
+  flat_FLAT23  = "CEIL5_2",
+}
+
+PREFABS.Bars_shiny_diag_hell =
+{
+  template = "Bars_shiny_diag",
+  map    = "MAP02",
+  theme  = "!tech",
+
+  tex_SUPPORT2 = "SUPPORT3",
+  flat_FLAT23  = "CEIL5_2",
+
+}

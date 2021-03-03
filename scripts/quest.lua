@@ -2,13 +2,14 @@
 --  QUEST ASSIGNMENT
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -81,6 +82,9 @@
     facade_mat      -- material for outer walls of buildings
     other_facade    -- another one
 
+    nature_facade       -- natural facade for fully natural parks
+    other_nature_facade
+
     fence_mat       -- material for fences
 
 
@@ -103,8 +107,8 @@
 
     id, name  -- debugging aids
 
-    kind : keyword  --  "KEY", "SWITCH"
-                    --  "START", "EXIT" or "SECRET_EXIT"
+    kind : keyword  --  "KEY", "SWITCH",
+                    --  "START", "EXIT" or "SECRET_EXIT",
 
     item : keyword  -- name of key or switch
 
@@ -133,7 +137,7 @@ function Quest_new()
     name  = "QUEST_" .. id,
     rooms = {},
     goals = {},
-    svolume = 0
+    svolume = 0,
   }
 
   table.insert(LEVEL.quests, QUEST)
@@ -160,7 +164,7 @@ function Zone_new()
     id = id,
     name = "ZONE_" .. id,
     rooms = {},
-    areas = {}
+    areas = {},
   }
 
   table.insert(LEVEL.zones, ZONE)
@@ -543,7 +547,7 @@ gui.debugf("  quest : %s\n", quest.name)
     return
   end
 
-  -- collect rooms on for side of the connection
+  -- collect rooms on each side of the connection
   local before = collect_rooms(C.R1, {})
   local  after = collect_rooms(C.R2, {})
 
@@ -790,7 +794,7 @@ function Quest_scan_all_conns(new_goals, do_quest)
   local info =
   {
     new_goals = new_goals,
-    score = 0
+    score = 0,
   }
 
   local need_joiner = (#new_goals >= 2 or new_goals[1].kind == "SWITCH")
@@ -810,7 +814,7 @@ function Quest_scan_all_conns(new_goals, do_quest)
       goto continue
     end
 
-    -- must be same quest on for side
+    -- must be same quest on each side
     if C.R2.quest ~= quest then goto continue end
 
     for _,goal in pairs(quest.goals) do
@@ -862,10 +866,13 @@ function Quest_add_major_quests()
   local function collect_key_goals(list)
     local key_tab = LEVEL.usable_keys or THEME.keys or {}
 
-    local for_prob = style_sel("keys", 0, 40, 80, 100)
+    local each_prob = style_sel("keys", 0, 40, 80, 100)
+
+    -- decide maximum number
+    local max_num = 1 + int(#LEVEL.rooms / 5)
 
     for name,_ in pairs(key_tab) do
-      if rand.odds(for_prob) then
+      if rand.odds(each_prob) then
         local GOAL = Goal_new("KEY")
 
         GOAL.item = name
@@ -883,7 +890,7 @@ function Quest_add_major_quests()
     if THEME.no_switches then return end
 
     local  any_prob = style_sel("switches", 0, 50, 75, 100)
-    local for_prob = style_sel("switches", 0, 35, 65, 95)
+    local each_prob = style_sel("switches", 0, 35, 65, 95)
 
     if not rand.odds(any_prob) then return {} end
 
@@ -891,7 +898,7 @@ function Quest_add_major_quests()
     local max_num = 1 + int(#LEVEL.rooms / 5)
 
     for i = 1, max_num do
-      if rand.odds(for_prob) then
+      if rand.odds(each_prob) then
         local GOAL = Goal_new("SWITCH")
 
         GOAL.item = "sw_metal"
@@ -928,7 +935,7 @@ function Quest_add_major_quests()
     -- TODO: check that a usable prefab exists
     if not THEME.has_triple_key_door then return false end
 
-    local prob = 35
+    local prob = style_sel("trikeys", 0, 35, 70, 100)
 
     if not rand.odds(prob) then return false end
 
@@ -944,7 +951,7 @@ function Quest_add_major_quests()
     if not Quest_scan_all_conns({ K1, K2, K3 }) then
       return false
     end
-          
+
     table.remove(key_list, 3)
     table.remove(key_list, 2)
     table.remove(key_list, 1)
@@ -981,8 +988,8 @@ do return false end
     GOAL2.item = "sw_metal"
     GOAL2.same_tag = true
 
---FIXME    GOAL1.action = fab_def.action1
---FIXME    GOAL2.action = fab_def.action2
+--FIXME    GOAL1.action = fab_def.action1,
+--FIXME    GOAL2.action = fab_def.action2,
 
     if not Quest_scan_all_conns({ GOAL1, GOAL2 }, quest) then
       return false
@@ -1007,7 +1014,7 @@ do return false end
   end
 
 
-  -- index by unused :  1   2   3    4
+  -- index by unused :  1   2   3    4,
   local LOCK_PROBS = { 10, 60, 90, 100 }
 
 
@@ -1317,7 +1324,7 @@ end
 
 function Quest_calc_exit_dists()
   --
-  -- For for room, determine a distance metric for the room to the
+  -- For each room, determine a distance metric for the room to the
   -- nearest exit of the quest, which may be the level's exit room.
   -- If a quest does not have any exits, rooms will lack a dist.
   --
@@ -1458,7 +1465,7 @@ function Quest_start_room()
     -- prefer no teleporter
     if not R:has_teleporter() then score = score + 1 end
 
-    gui.debugf("eval_start_room in %s --> space:%d dist:%d %1.2f\n", R.name, space, R.dist_to_exit or -1, score)
+    gui.debugf("eval_start_room in %s --> space:%d dist:%d %1.2f\n", R.name, space, int(R.dist_to_exit or -1), score)
 
     -- tie breaker
     return score + gui.random() * 2
@@ -1521,7 +1528,7 @@ function Quest_start_room()
   local function partition_coop_players()
     --
     -- Partition players between the two rooms.  Since Co-op is often
-    -- played by two people, have a large tendency to place player #1
+    -- played by two people, have a large tendency to place player #1,
     -- and player #2 in different rooms.
     --
     -- Also never place both player #1 and player #2 in the alternate
@@ -1529,15 +1536,10 @@ function Quest_start_room()
     -- room to be blocked off be an intraroom lock.
     --
 
-    local set1, set2
+    local set1, set2,
 
-    if rand.odds(50) then
-      set1 = { "player1", "player3" }
-      set2 = { "player2", "player4" }
-    else
-      set1 = { "player2", "player3" }
-      set2 = { "player1", "player4" }
-    end
+    set1 = { "player1", "player3" }
+    set2 = { "player2", "player4" }
 
     LEVEL.start_room.player_set = set1
     LEVEL.alt_start .player_set = set2
@@ -1562,7 +1564,7 @@ function Quest_start_room()
     GOAL.alt_start = true
 
     table.insert(R.goals, GOAL)
-    R.used_chunks = R.used_chunks + 1
+    R.used_chunks = R.used_chunks + 1,
 
     partition_coop_players()
   end
@@ -1900,9 +1902,9 @@ function Quest_add_weapons()
           R1.weapons[w1] = name2
           R2.weapons[w2] = name1
         end
-      end -- w1, w2
+      end -- w1, w2,
       end
-    end -- idx1, idx2
+    end -- idx1, idx2,
     end
   end
 
@@ -1972,7 +1974,7 @@ function Quest_add_weapons()
 
     if Z then list = Z.rooms end
 
-    -- evaluate for room and pick the best
+    -- evaluate each room and pick the best
     local best_R
     local best_score
 
@@ -2138,7 +2140,7 @@ function Quest_nice_items()
     --[[ TODO : REVIEW THIS
     if info.kind == "powerup" or info.kind == "weapon" then
       local old_prob = secret_items[name]
-      secret_items[name] = old_prob / 8
+      secret_items[name] = old_prob / 8,
     end
     --]]
 
@@ -2152,7 +2154,7 @@ function Quest_nice_items()
 
     pal = table.copy(pal)
 
-    for _,name1 in pairs(avoid_items) do
+    for  _,name1 in pairs(avoid_items) do
       local info1 = assert(ALL_ITEMS[name1])
 
       for name2,val in pairs(pal) do
@@ -2394,7 +2396,7 @@ function Quest_nice_items()
     if OB_CONFIG.items == "heaps" and rand.odds(80) then quota = 2 end
 
     for loop = 1, quota do
-      -- add the same item into for start room
+      -- add the same item into each start room
       local item = pick_item(start_items)
 
       if item == nil then break; end
@@ -2530,6 +2532,71 @@ function Quest_nice_items()
   end
 
 
+  local function assign_secondary_importants()
+    if not LEVEL.secondary_importants then return end
+    if table.empty(LEVEL.secondary_importants) then return end
+
+    local simp_tab = LEVEL.secondary_importants
+    rand.shuffle(simp_tab)
+
+    local room_tab = {}
+    local chosen_room
+
+    -- secondary importants table attributes:
+
+    -- level_prob: probability for this SI to appear in map
+    -- min_count: minimum number the SI fab should appear in map
+    -- max_count: maximum number
+    -- not_start: if true, start rooms are excluded from room pick
+    -- not_exit: if true, exit rooms are excluded
+    -- min_prog: 0-1 value; how far along in the level should
+    --   SI fab start spawning
+    -- max_prog: 0-1 value; how far along in the level should
+    --   SI fab stop spawning
+
+    local function pick_room_for_si(info)
+      for _,R in pairs(LEVEL.rooms) do
+        if R.closets and #R.closets > 2
+        and not R.secondary_important
+        and not R.is_hallway then
+          local do_it = false
+
+          if info.min_prog and info.max_prog then
+            if R.lev_along >= info.min_prog and
+            R.lev_along <= info.max_prog then
+              do_it = true
+            end
+          end
+
+          if (not_start and R.is_start) or
+          (not_exit and R.is_exit) then
+            do_it = false
+          end
+
+          if do_it then
+            table.insert(room_tab, R)
+          end
+        end
+      end
+
+      for count = info.min_count or 1, info.max_count do
+        if table.empty(room_tab) then goto continue end
+
+        chosen_room = rand.pick(room_tab)
+        chosen_room.secondary_important =
+        {
+          kind = info.kind
+        }
+        ::continue::
+      end
+    end
+
+    for _,SI in pairs(simp_tab) do
+      if rand.odds(SI.level_prob) then pick_room_for_si(SI) end
+    end
+  end
+
+
   ---| Quest_nice_items |---
 
   max_level = 1 + LEVEL.ep_along * 9
@@ -2567,12 +2634,24 @@ function Quest_nice_items()
 
   -- mark all remaining unused leafs as STORAGE rooms
   find_storage_rooms()
+
+  assign_secondary_importants()
 end
 
 
 
 function Quest_make_room_secret(R)
   R.is_secret = true
+
+  -- hack-fix to prevent small outdoor secret rooms
+  -- being porched, and the ceiling line division
+  -- causing the fence gate to be b0rked -MSSP
+  for _,A in pairs(R.areas) do
+    A.is_porch = false
+    if R.is_outdoor then
+      A.is_outdoor = true
+    end
+  end
 
   local C = R:secret_entry_conn()
   assert(C)
@@ -2712,13 +2791,20 @@ end
 
 function Quest_room_themes()
   --
-  -- This decides the room themes to use in for room, and also
-  -- various textures (e.g. the fence material for for zone).
+  -- This decides the room themes to use in each room, and also
+  -- various textures (e.g. the fence material for each zone).
   --
 
-  local function match_level_theme(name)
+  local function match_level_theme(name, override)
+    local keyword
+    if not override then
+      keyword = LEVEL.theme_name
+    else
+      keyword = override
+    end
+
     if string.match(name, "^any_") or
-       string.match(name, "^" .. LEVEL.theme_name .. "_")
+       string.match(name, "^" .. keyword .. "_")
     then
       return true
     end
@@ -2742,7 +2828,7 @@ function Quest_room_themes()
   end
 
 
-  local function collect_usable_themes(env, group)
+  local function collect_usable_themes(env, group, override)
     local tab = {}
 
     for name,info in pairs(GAME.ROOM_THEMES) do
@@ -2753,14 +2839,16 @@ function Quest_room_themes()
       if info.prob and
          info.env == env and
          info.group == group and
-         match_level_theme(name)
+         match_level_theme(name, override)
       then
         tab[name] = info.prob
       end
     end
 
     if table.empty(tab) then
-      error("No rooms themes for env: " .. env)
+      error("No rooms themes found for...\n" ..
+      "env: " .. env .. "\n" ..
+      "group: " .. group)
     end
 
     return tab
@@ -2798,7 +2886,8 @@ function Quest_room_themes()
       assert(conn)
 
       -- IDEA : make this depend on combined size of both rooms
-      local keep_prob = 35
+      local keep_prob = 65
+      if last_theme.keep_prob then keep_prob = last_theme.keep_prob end
 
       -- force theme change over zone boundaries or teleporters
       if R.zone ~= last_R.zone or conn.keyword == "teleporter" then
@@ -2875,6 +2964,29 @@ function Quest_room_themes()
         end
       end
     end
+
+    if THEME.outdoor_wall_groups then -- MSSP-TODO: No need for this check
+                                      -- once all themes have outdoor_wall_groups?
+      LEVEL.outdoor_wall_group = rand.key_by_probs(THEME.outdoor_wall_groups)
+      gui.debugf("outdoor_wall_group : " .. LEVEL.outdoor_wall_group .. "\n")
+    end
+
+  end
+
+
+  local function misc_fabs()
+    local theme
+
+    for _,R in pairs(LEVEL.rooms) do
+      theme = LEVEL.theme_name
+
+      if R.theme.theme_override then
+        theme = ob_resolve_theme_keyword(R.theme.theme_override)
+      end
+
+      R.fence_group = rand.key_by_probs(GAME.THEMES[theme].fence_groups)
+      R.beam_group = rand.key_by_probs(GAME.THEMES[theme].beam_groups)
+    end
   end
 
 
@@ -2886,7 +2998,6 @@ function Quest_room_themes()
     gui.debugf("outdoor_volume : %d\n", outdoor_volume)
     gui.debugf("cave_volume : %d\n", cave_volume)
 --]]
-    LEVEL.cliff_mat = rand.key_by_probs(THEME.cliff_mats)
 
     for _,Z in pairs(LEVEL.zones) do
       assert(THEME.fences)
@@ -2894,6 +3005,14 @@ function Quest_room_themes()
       Z.fence_mat = rand.key_by_probs(THEME.fences)
       Z.cage_mat  = rand.key_by_probs(THEME.cage_mats)
       Z.steps_mat = THEME.steps_mat
+
+      Z.post_type = rand.key_by_probs(THEME.fence_posts)
+
+      Z.scenic_fences = GAME.MATERIALS[rand.key_by_probs(THEME.scenic_fences)]
+    end
+
+    for _,R in pairs(LEVEL.rooms) do
+      R.scenic_fences = R.zone.scenic_fences
     end
   end
 
@@ -2904,18 +3023,24 @@ function Quest_room_themes()
     end
 
     local tab = table.copy(THEME.facades)
+    local nature_tab = collect_usable_themes("outdoor")
+    local nature_theme = pick_zone_theme(nature_tab)
 
     for pass = 1,2 do
     for _,Z in pairs(LEVEL.zones) do
       local mat = rand.key_by_probs(tab)
+      local nature_mat = rand.key_by_probs(nature_theme.naturals)
 
       -- less likely to use it again
       tab[mat] = tab[mat] / 20
+      nature_theme.naturals[nature_mat] = nature_theme.naturals[nature_mat] / 20
 
       if pass == 1 then
         Z.facade_mat = mat
+        Z.nature_facade = nature_mat
       else
         Z.other_facade = mat
+        Z.other_nature_facade = nature_mat
       end
     end -- pass, Z
     end
@@ -2973,6 +3098,10 @@ function Quest_room_themes()
 
   local function setup_room_theme(R)
     assert(R.theme)
+    local theme = LEVEL.theme_name
+    if R.theme.theme_override then
+      theme = ob_resolve_theme_keyword(R.theme.theme_override)
+    end
 
     if R.is_cave then
       setup_cave_theme(R)
@@ -2984,7 +3113,15 @@ function Quest_room_themes()
       R.alt_floor_mat = pick_alternate_tex(R.theme.naturals, R.floor_mat, 3)
 
     elseif R.is_outdoor then
-      R.main_tex = R.zone.fence_mat
+      if rand.odds(50) then
+        R.main_tex = R.zone.facade_mat
+      else
+        R.main_tex = R.zone.other_facade
+      end
+
+      if R.exit_facade then
+        R.main_tex = R.exit_facade
+      end
 
     else
       R.main_tex = rand.key_by_probs(R.theme.walls)
@@ -2995,13 +3132,75 @@ function Quest_room_themes()
       R. ceil_mat = rand.key_by_probs(R.theme.ceilings)
     end
 
+    if R.is_natural_park then
+      R.main_tex = R.zone.nature_facade
+    end
+
     -- create a skin (for prefabs)
     R.skin =
     {
       wall  = R.main_tex,
       floor = R.floor_mat,  -- can be NIL
-      ceil  = R.ceil_mat   -- ditto
+      ceil  = R.ceil_mat,   -- ditto
     }
+
+    -- pillarz
+    if not R.is_cave or not R.is_park then
+      local reqs =
+      {
+        kind = "pillar",
+        where = "point",
+
+        height = EXTREME_H,
+        size = 128,
+      }
+
+      local def = Fab_pick(reqs)
+
+      R.pillar_def = def
+    end
+  end
+
+
+  local function choose_exit_theme()
+    local exit_room = LEVEL.exit_room
+    local env = exit_room:get_env()
+    local next_theme
+    local tab = {}
+
+    if exit_room.is_street then return end
+    if LEVEL.is_procedural_gotcha then return end
+
+    if GAME.levels[LEVEL.id + 1] then
+      next_theme = GAME.levels[LEVEL.id + 1].theme_name
+    end
+
+    if next_theme == LEVEL.theme_name then return end
+    if not next_theme then return end
+    if env == "park" then env = "outdoor" end
+
+    tab = collect_usable_themes(env, nil, next_theme)
+
+    exit_room.theme = GAME.ROOM_THEMES[rand.key_by_probs(tab)]
+
+    if not exit_room.theme.theme_override then
+      exit_room.theme.theme_override = next_theme
+    end
+
+    local f_tab = GAME.THEMES[next_theme].facades
+
+    if GAME.THEMES[next_theme].outdoor_wall_groups then
+      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(GAME.THEMES[next_theme].outdoor_wall_groups)
+    else
+      LEVEL.alt_outdoor_wall_group = "PLAIN"
+    end
+
+    if exit_room.is_outdoor and not exit_room.is_park then
+      exit_room.exit_facade = rand.key_by_probs(f_tab)
+      f_tab[exit_room.exit_facade] = f_tab[exit_room.exit_facade] / 10
+      exit_room.alt_exit_facade = rand.key_by_probs(f_tab)
+      f_tab[exit_room.exit_facade] = f_tab[exit_room.exit_facade] / 10
+    end
   end
 
 
@@ -3032,6 +3231,12 @@ function Quest_room_themes()
   choose_building_themes()
   choose_hallway_themes()
   choose_other_themes()
+
+  if PARAM.foreshadowing_exit and PARAM.foreshadowing_exit == "yes" then
+    choose_exit_theme()
+  end
+
+        misc_fabs()
 
     misc_textures()
   facade_textures()
@@ -3078,4 +3283,3 @@ function Quest_make_quests()
   Monster_pacing()
   Monster_assign_bosses()
 end
-

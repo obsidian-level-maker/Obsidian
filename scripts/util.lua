@@ -8,7 +8,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -163,7 +163,7 @@ function string.tokenize(text)
   -- returns a list of words
   local words = {}
 
---##  text = " " .. text .. " "
+--##  text = " " .. text .. " ",
 --##  text = string.gsub(text, "%s%s+", " ")
 
   for w in string.gmatch(text, "(%S+)") do
@@ -515,7 +515,7 @@ function table.expand_templates(t)
       if orig == nil then
         error("Missing template: " .. tostring(sub.template) .. " in: " .. name)
       end
-
+      
       if orig.template then
         error("Template reference cannot use templates (" .. tostring(sub.template) .. ")")
       end
@@ -643,6 +643,7 @@ function rand.index_by_probs(p)
 
   if total > 0 then
     local value = gui.random() * total
+
     for idx, prob in ipairs(p) do
       value = value - prob
       if (value <= 0) then return idx end
@@ -658,13 +659,12 @@ function rand.key_by_probs(tab)
   -- This function returns one of the keys.
   local key_list  = {}
   local prob_list = {}
-  for key,_ in pairs(tab) do
+
+  for key,prob in pairs(tab) do
     table.insert(key_list,  key)
+    table.insert(prob_list, prob)
   end
-  table.sort(key_list)
-  for _,key in ipairs(key_list) do
-    table.insert(prob_list, tab[key])
-  end
+
   local idx = rand.index_by_probs(prob_list)
 
   return key_list[idx]
@@ -773,7 +773,6 @@ function geom.intersect_lines(ax1,ay1, ax2,ay2,  bx1,by1,bx2,by2)
   return ix, iy
 end
 
-
 function geom.delta(dir)
   if dir == 1 then return -1, -1 end
   if dir == 2 then return  0, -1 end
@@ -830,7 +829,7 @@ end
 
 
 function geom.angle_add(A, B)
-  -- result ranges from 0 to 360
+  -- result ranges from 0 to 360,
   local D = A + B
 
   while D <    0 do D = D + 360 end
@@ -841,7 +840,7 @@ end
 
 function geom.angle_diff(A, B)
   -- A + result = B
-  -- result ranges from -180 to +180
+  -- result ranges from -180 to +180,
 
   local D = (B - A)
 
@@ -1082,7 +1081,7 @@ function geom.bezier_coord(S, C, E, t)
   -- C = control point
   -- E = end point
 
-  -- t ranges from 0.0 to 1.0
+  -- t ranges from 0.0 to 1.0,
 
   local ks = (1 - t) * (1 - t)
   local kc = 2 * (1 - t) * t
@@ -1131,6 +1130,48 @@ function geom.bezier_length(S, C, E, divisions)
   return length
 end
 
+-- MSSP: Script utilities
+function script_lines_to_table(string)
+  local table_of_strings = {}
+  for line in string:gmatch("[^\r\n]+") do
+    table.insert(table_of_strings, line .. "\n")
+  end
+  return table_of_strings
+end
+
+
+function add_script_lump(lumpname, string)
+  gui.wad_add_text_lump(lumpname, script_lines_to_table(string))
+end
+
+
+function link_seed_info_to_areas()
+  for _,R in pairs(LEVEL.rooms) do
+    for _,A in pairs(R.areas) do
+      for _,S in pairs(A.seeds) do
+        SEEDS[S.sx][S.sy] = S
+      end
+    end
+  end
+end
+
+
+-- safe area printing function
+function print_area(area)
+  if not area.printed then
+    gui.printf("AREA_" .. area.id .. " = {\n")
+    for k,v in pairs(area) do
+      if type(v) == "table" then
+        gui.printf("  " .. k .. " = " .. (v.name or v.id or "<table>") .. "\n")
+      elseif type(v) == "boolean" then
+        gui.printf("  " .. k .. "\n")
+      else
+        gui.printf("  " .. k .. " = " .. v .. "\n")
+      end
+    end
+    gui.printf("}\n")
+  end
+end
 
 
 --------========| A* PATHING ALGORITHM |========--------
@@ -1246,4 +1287,3 @@ function astar_find_path(sx, sy, ex, ey, W, H, score_func, data)
     end
   end
 end
-

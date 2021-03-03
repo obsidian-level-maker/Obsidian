@@ -8,7 +8,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -50,7 +50,7 @@ end
 
 function raw_add_entity(ent)
   -- skip unknown entities (from wad-fab loader)
-  if not ent.id then return end
+  if not ent.id or (ent.id and ent.id == 0) then return end
 
   if GAME.format == "quake" then
     ent.mangle = ent.angles ; ent.angles = nil
@@ -369,7 +369,7 @@ function Trans.rect_coords(x1, y1, x2, y2)
     { x=x2, y=y1 },
     { x=x2, y=y2 },
     { x=x1, y=y2 },
-    { x=x1, y=y1 },
+    { x=x1, y=y1 }
   }
 end
 
@@ -463,12 +463,41 @@ end
 --  Material  System
 ------------------------------------------------------------------------
 
+function Mat_prepare_trip()
+
+  -- build the psychedelic mapping
+  local m_before = {}
+  local m_after  = {}
+
+  for m,def in pairs(GAME.MATERIALS) do
+    if not def.sane and
+       not def.rail_h and
+       not (string.sub(m,1,1) == "_") and
+       not (string.sub(m,1,2) == "SW") and
+       not (string.sub(m,1,3) == "BUT")
+    then
+      table.insert(m_before, m)
+      table.insert(m_after,  m)
+    end
+  end
+
+  rand.shuffle(m_after)
+
+  LEVEL.psycho_map = {}
+
+  for i = 1,#m_before do
+    LEVEL.psycho_map[m_before[i]] = m_after[i]
+  end
+end
 
 function Mat_lookup_tex(name)
   if not name or name == "" or name == "-" then
     name = "_ERROR"
   end
 
+  if LEVEL.psychedelic and LEVEL.psycho_map[name] then
+    name = LEVEL.psycho_map[name]
+  end
   local mat = GAME.MATERIALS[name]
 
   -- special handling for DOOM switches
@@ -499,6 +528,10 @@ end
 function Mat_lookup_flat(name)
   if not name or name == "" or name == "-" then
     name = "_ERROR"
+  end
+
+  if LEVEL.psychedelic and LEVEL.psycho_map[name] then
+    name = LEVEL.psycho_map[name]
   end
 
   local mat = GAME.MATERIALS[name]
@@ -533,7 +566,9 @@ DOOM_LINE_FLAGS =
   draw_never  = 0x80,
   draw_always = 0x100,
 
-  pass_thru   = 0x200  -- Boom
+  pass_thru   = 0x200,  -- Boom
+
+  tridee_midtex   = 0x400,
 }
 
 
@@ -584,7 +619,7 @@ function brushlib.dump(brush, title)
   for _,C in pairs(brush) do
     local field_list = {}
 
-    for name,val in C do
+    for name,val in pairs(C) do
       local pos
       if name == "m" or name == "x" or name == "b" or name == "t" then
         pos = 1
@@ -601,10 +636,10 @@ function brushlib.dump(brush, title)
 
     local line = ""
 
-    for index,name in pairs(field_list) do
+    for _,name in pairs(field_list) do
       local val = C[name]
 
-      if index > 1 then line = line .. ", " end
+      if _index > 1 then line = line .. ", " end
 
       line = line .. string.format("%s=%s", name, tostring(val))
     end
@@ -881,9 +916,9 @@ end
 function brushlib.solve_equation(X1,Y1,R1, X2,Y2,R2, X3,Y3,R3)
   --
   -- given the three simultaneous equations:
-  --    X1*a + Y1*b + c = R1
-  --    X2*a + Y2*b + c = R2
-  --    X3*a + Y3*b + c = R3
+  --    X1*a + Y1*b + c = R1,
+  --    X2*a + Y2*b + c = R2,
+  --    X3*a + Y3*b + c = R3,
   --
   -- computes and returns: a, b, c
   --
@@ -931,7 +966,7 @@ end
 function brushlib.calc_uv_vector(mode, x1,y1,z1,r1, x2,y2,z2,r2,
                                  x3,y3,z3,r3, out_mat)
 
-  -- mode can be "xy", "xz" or "yz"
+  -- mode can be "xy", "xz" or "yz",
   -- [ the other coordinate is linearly dependent on those two
   --   since a triangle always lies on a plane ]
 
@@ -1217,7 +1252,7 @@ function Quake3_test()
 
       x = 0,
       y = 0,
-      z = 0
+      z = 0,
     }
 
     raw_add_entity(ent)
@@ -1253,4 +1288,3 @@ function Quake3_conversion()
     end
   end
 end
-

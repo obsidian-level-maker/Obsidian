@@ -2,13 +2,14 @@
 --  AREA MANAGEMENT
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -27,12 +28,12 @@
 
     mode : keyword  -- "floor"  (a flat traversible part of a normal room)
                     -- "nature" (a non-flat traversible part of a cave or park)
-                    -- "liquid"
-                    -- "cage"
+                    -- "liquid",
+                    -- "cage",
 
                     -- "chunk" (whole area is a single chunk)
-                    -- "scenic"
-                    -- "void"
+                    -- "scenic",
+                    -- "void",
 
     is_outdoor    -- true if outdoors (sky ceiling)
     is_boundary   -- true for areas outside the boundary line
@@ -42,10 +43,13 @@
 
     zone : ZONE
 
-    chunk : CHUNK   -- only used when mode == "chunk"
+    chunk : CHUNK   -- only used when mode == "chunk",
 
-    border_type : keyword  -- "simple_fence"
-                           -- "watery_drop"
+    border_type : keyword  -- "simple_fence",
+                           -- "watery_drop",
+                           -- "bottomless_drop",
+                           -- "ocean",
+                           -- "cliff_gradient",
 
     facade_group : FACADE_GROUP   -- used by facade logic (temporarily)
 
@@ -96,7 +100,7 @@
     diagonals : array   -- marks which cells are on a diagonal seed
                         -- (using the numbers 1/3/7/9)
 
-    blobs : array(BLOB)  -- info for for 64x64 block
+    blobs : array(BLOB)  -- info for each 64x64 block
                          -- [ used for the final rendering of cells ]
 
     delta_x_map : array
@@ -110,15 +114,15 @@
 
     cave_map : GRID   -- the raw generated cave
 
-    step_mode   : keyword  -- "walkway", "up", "down", "mixed"
+    step_mode   : keyword  -- "walkway", "up", "down", "mixed",
 
-    liquid_mode : keyword  -- "none", "some", "lake"
+    liquid_mode : keyword  -- "none", "some", "lake",
 
-    sky_mode    : keyword  -- "none"
+    sky_mode    : keyword  -- "none",
                            -- "some" (indoor rooms only)
                            -- "low_wall", "high_wall"  (outdoor rooms)
 
-    torch_mode  : keyword  -- "none", "few", "some"
+    torch_mode  : keyword  -- "none", "few", "some",
 
     cave_lights : list     -- position of lamps and other point-lights
 --]]
@@ -141,7 +145,7 @@
 --[[
     -- contains info about the symmetry in a room
 
-    kind    -- "mirror" or "rotate"
+    kind    -- "mirror" or "rotate",
 
     x, y    -- seed coordinate for focal point
 
@@ -163,11 +167,11 @@
     --
     -- The junction kind can be overridden by a specific EDGE object.
     -- For example, solid walls are inhibited where two rooms connect
-    -- to for other.
+    -- to each other.
     --
 
     A1 : AREA
-    A2 : AREA   -- can be special value "map_edge"
+    A2 : AREA   -- can be special value "map_edge",
 
     --
     -- These are "pseudo edges" which will be used to render the
@@ -194,7 +198,10 @@
     --
 
     kind : keyword   -- NIL for nothing, otherwise can be:
-                     -- "post" (thin), "pillar" (fat)
+                     -- "post" (type: simple) - exists along rails
+                     -- "post" (type: fancy) - exists along thick, brush fences
+                     -- "pillar" - exists between certain wall junctions
+                                   mostly on the corners of porch/gazebo areas
 
     cx, cy  -- corner coordinate [1..SEED_W+1 / 1..SEED_H+1]
 
@@ -210,6 +217,8 @@
     fences[DIR]  --
 
     inner_point : AREA  -- usually NIL
+
+    seeds : list(SEED) -- MSSP: the seeds around this corner
 --]]
 
 
@@ -414,6 +423,17 @@ function AREA_CLASS.lowest_neighbor(A)
 end
 
 
+function AREA_CLASS.get_fseed_coord(A)
+  if A.seeds then
+    local string = "(" .. A.seeds[1].mid_x .. ", " ..
+    A.seeds[1].mid_y .. ")"
+    return string
+  end
+
+  return ""
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -535,7 +555,7 @@ function Symmetry_new(kind)
 
     transform = Symmetry_transform,
     conv_dir  = Symmetry_conv_dir,
-    on_axis   = Symmetry_on_axis
+    on_axis   = Symmetry_on_axis,
   }
 
   return SYM
@@ -546,9 +566,9 @@ end
 
 
 function Junction_lookup(A1, A2, create_it)
-  -- one area can be the special keyword "map_edge"
+  -- one area can be the special keyword "map_edge",
 
-  -- returns NIL when areas do not touch, or A1 == A2
+  -- returns NIL when areas do not touch, or A1 == A2,
 
   if A1 == A2 then return nil end
 
@@ -587,7 +607,7 @@ function Junction_init()
   end
   end
 
-  -- compute the perimeter of for junction.
+  -- compute the perimeter of each junction.
 
   for _,A in pairs(LEVEL.areas) do
   for _,S in pairs(A.seeds) do
@@ -618,7 +638,7 @@ function Junction_init()
   end
 
 --[[ DEBUG
-  for name,J in LEVEL.junctions do
+  for name,J in pairs(LEVEL.junctions) do
     gui.printf("Junc %s : perimeter %d\n", name, J.perimeter)
   end
 --]]
@@ -656,19 +676,53 @@ end
 
 function Junction_calc_wall_tex(A1, A2)
 
+  -- foreshadowing exit override
+  if A1.room then
+    if A1.room.exit_facade then
+      if rand.odds(80) then
+        return A1.room.exit_facade
+      else
+        return A1.room.alt_exit_facade
+      end
+    end
+  end
+
+  if A1.is_natural_park then return A1.zone.nature_facade end
+  --if A2.is_natural_park then return A2.zone.nature_facade end
+
+  if A1 == "map_edge" or A2 == "map_edge" then
+    if A1.zone then
+      return A1.zone.facade_mat
+    elseif A2.zone then
+      return A2.zone.facade_mat
+    end
+  end
+
   if A1.zone ~= A2.zone then
+
     if A1.room and not A1.is_outdoor then
       return assert(A1.room.main_tex)
     end
 
     if A1.is_boundary and A1.touches_edge and A2.is_boundary then
-      return LEVEL.cliff_mat
+      return A1.zone.facade_mat
+    end
+
+    if A1.room then
+      if A1.room.is_natural_park then
+        return assert(A1.room.main_tex)
+      end
     end
 
     return assert(A1.zone.facade_mat)
   end
 
   if A1.is_outdoor and A2:is_indoor() then
+
+    if A1.room and A1.room.is_natural_park then
+      return assert(A1.room.main_tex)
+    end
+
     if A2.facade_crap then
       return A2.facade_crap
     end
@@ -677,6 +731,9 @@ function Junction_calc_wall_tex(A1, A2)
   end
 
   if A1.room then
+    if A1.room.is_outdoor and A1.is_porch then
+      return assert(A1.zone.facade_mat)
+    end
     return assert(A1.room.main_tex)
   else
     return assert(A1.zone.fence_mat)
@@ -689,7 +746,7 @@ function Junction_make_wall(junc)
     local A1 = sel(pass == 1, junc.A1, junc.A2)
     local A2 = sel(pass == 1, junc.A2, junc.A1)
 
-    assert(A2 ~= "map_edge")
+    --assert(A2 ~= "map_edge")
 
     -- do not need walls inside a void area
     if A1.mode == "void" then goto continue end
@@ -697,6 +754,15 @@ function Junction_make_wall(junc)
     local E = { kind="wall", area=A1 }
 
     E.wall_mat = Junction_calc_wall_tex(A1, A2)
+
+    local plain_wall_prob = 0
+
+    if PARAM.wall_prob and PARAM.wall_prob ~= "fab_default" then
+      plain_wall_prob = plain_wall_prob + (PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.wall_prob] * 100)
+      plain_wall_prob = math.clamp(0, plain_wall_prob, 100)
+    end
+
+    if rand.odds(plain_wall_prob) then E.plain = true end
 
     if pass == 1 then
       junc.E1 = E
@@ -715,16 +781,76 @@ function Junction_calc_fence_z(A1, A2)
   if A1.podium_h then z1 = z1 + A1.podium_h end
   if A2.podium_h then z2 = z2 + A2.podium_h end
 
+  assert(z2 or A2.room.max_floor_h)
+  assert(z1 or A2.room.max_floor_h)
+
   if A1.room then z1 = math.max(z1, A1.room.max_floor_h) end
   if A2.room then z2 = math.max(z2, A2.room.max_floor_h) end
 
+  -- pick max floor height in the zone (super tall brush fences
+  -- but this is essentially the Oblige default)
   local top_z = math.max(z1, z2)
+
+  -- pick max height between two areas
+  local alt_top_z = math.max(A1.floor_h, A2.floor_h)
+
+  if A1.room and A2.room then
+    if A1.room.is_outdoor and A2.room.is_outdoor then
+      if not A1.room.is_park and not A2.room.is_park then
+        if rand.odds(85) then
+          top_z = alt_top_z
+        end
+      end
+    end
+  end
+
+  -- porch worchy problems: specifically, fence gates straddled between
+  -- areas that involve at least one porch is cut off wrongly by the
+  -- one of the areas' ceiling heights (usually the one with the porch)
+  -- MSSP
+  if A1.is_porch or A2.is_porch then
+    if not A1.room.is_outdoor or not A2.room.is_outdoor then
+      top_z = alt_top_z
+    end
+
+    if A1.room.is_outdoor or A2.room.is_outdoor then
+      if A1.floor_h == A2.floor_h then
+        top_z = A1.floor_h
+      end
+    end
+  end
+
+  -- accomodating fences along stair chunks
+  if A1.chunk and A1.chunk.kind == "stair" then
+    local tmp_z
+    tmp_z = math.max(A1.chunk.from_area.floor_h, A1.chunk.dest_area.floor_h)
+    top_z = math.max(tmp_z, top_z)
+  end
+  if A2.chunk and A2.chunk.kind == "stair" then
+    local tmp_z
+    tmp_z = math.max(A2.chunk.from_area.floor_h, A2.chunk.dest_area.floor_h)
+    top_z = math.max(tmp_z, top_z)
+  end
 
   return top_z + PARAM.jump_height + 8
 end
 
 
+function Junction_calc_beam_z(A1, A2)
+  local z1 = A1.floor_h
+  local z2 = A2.floor_h
+
+  if A1.podium_h then z1 = z1 + A1.podium_h end
+  if A2.podium_h then z2 = z2 + A2.podium_h end
+
+  local z = math.min(z1, z2)
+
+  return z
+end
+
+
 function Junction_make_fence(junc)
+
   junc.E1 =
   {
     kind = "fence",
@@ -733,31 +859,78 @@ function Junction_make_fence(junc)
     area = junc.A1
   }
 
+  -- indoor fences use indoor main_tex -- MSSP
+  if not junc.A1.room.is_outdoor then
+    junc.E1.fence_mat = assert(junc.A1.room.main_tex)
+  end
+
   junc.E2 = { kind="nothing", area=junc.A2 }
 
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1
+
+end
+
+
+function Junction_make_beams(junc)
+
+  junc.E1 =
+  {
+    kind = "beams",
+    fence_mat = assert(junc.A1.zone.fence_mat),
+    beam_z = Junction_calc_beam_z(junc.A1, junc.A2),
+    area = junc.A1,
+  }
+
+  junc.E2 = { kind="nothing", area=junc.A2 }
+
+  junc.E1.peer = junc.E2
+  junc.E2.peer = junc.E1
+
 end
 
 
 function Junction_make_railing(junc, rail_mat, block)
+
+  local offset_h = 0
+  if rail_mat == "FENCE_MAT_FROM_THEME" then
+    rail_mat = junc.A1.room.scenic_fences.t
+    offset_h = junc.A1.room.scenic_fences.rail_h
+  elseif not rail_mat then
+    rail_mat = "MIDBARS3"
+    offset_h = 96
+  end
+
   junc.E1 =
   {
     kind = "railing",
-    rail_mat = assert(rail_mat),
+    rail_mat = rail_mat,
     rail_block = block and 1,
-    area = junc.A1
+    area = junc.A1,
   }
+
+  -- 3D midtex blocking support for rails
+  if PARAM.passable_railings then
+    if PARAM.passable_railings == "on_occasion" then
+      if junc.A1.room and junc.A2.room
+      and not (junc.A1.mode == "cage" or junc.A2.mode == "cage") then
+        junc.E1.rail_3dmidtex = 1
+        junc.E1.rail_block = nil
+      end
+    elseif PARAM.passable_railings == "always" then
+      junc.E1.rail_3dmidtex = 1
+      junc.E1.rail_block = nil
+    end
+  end
 
   -- calculate base Z
   -- TODO : handle "nature" areas better (checks cells along the junction)
-  local z1 = junc.A1.max_floor_h or junc.A1.floor_h
-  local z2 = junc.A2.max_floor_h or junc.A2.floor_h
-
-  if junc.A1.mode == "scenic" then z1 = z2 end
-  if junc.A2.mode == "scenic" then z2 = z1 end
+  local z1 = junc.A1.max_floor_h or junc.A1.floor_h or -EXTREME_H
+  local z2 = junc.A2.max_floor_h or junc.A2.floor_h or -EXTREME_H
 
   junc.E1.rail_z = math.max(z1, z2)
+
+  junc.E1.rail_offset = offset_h
 
   junc.E2 = { kind="nothing", area=junc.A2 }
 
@@ -818,7 +991,8 @@ function Corner_init()
       junctions = {},
       edges = {},
       walls = {},
-      fences = {}
+      fences = {},
+      seeds = {} -- MSSP
     }
 
     LEVEL.corners[cx][cy] = CORNER
@@ -836,6 +1010,7 @@ function Corner_init()
     local corner = S:get_corner(dir)
 
     table.add_unique(corner.areas, A)
+    table.add_unique(corner.seeds, S)
     ::continue::
   end  -- A, S, dir
   end
@@ -1040,6 +1215,105 @@ function Corner_touches_wall(corner)
 end
 
 
+
+function Corner_get_env(corner)
+  local outdoor_score = 0
+  local building_score = 0
+
+  for _,A in pairs(corner.areas) do
+    if A.room then
+      if A.room.is_outdoor or not A.room then
+        outdoor_score = outdoor_score + 1
+      elseif not A.room.is_outdoor then
+        building_score = building_score + 1
+      end
+    end
+  end
+
+  if outdoor_score > building_score then
+    return "outdoor"
+  else
+    return "building"
+  end
+end
+
+
+
+function Corner_is_at_area_corner(corner)
+
+  -- corner isn't at a corner when along parallel walls
+  local wall_count = 0
+  for _,junc in pairs(corner.junctions) do
+    if junc.E1 then
+      if Edge_is_wallish(junc.E1) then
+        wall_count = wall_count + 1
+      end
+    end
+    if wall_count >= 2 then return false end
+  end
+
+  -- no pillars if all junctions are beams
+  local beam_count = 0
+  for _,junc in pairs(corner.junctions) do
+    if junc.E1 then
+      if junc.E1.kind == "beams" or Edge_is_wallish(junc.E1) then
+        beam_count = beam_count + 1
+      end
+    end
+    if beam_count == #corner.junctions then
+      return false
+    end
+  end
+
+  -- corner is definitely at a corner if more than two areas meet
+  if #corner.areas > 2 then return true end
+
+  -- corner is definitely at a corner if one seed has an area
+  -- that doesn't match all the others
+  if #corner.seeds == 4 then
+
+    if corner.seeds[1].area ~= corner.seeds[2].area and
+    corner.seeds[1].area ~= corner.seeds[3].area and
+    corner.seeds[1].area ~= corner.seeds[4].area then
+      return true
+    end
+
+    if corner.seeds[2].area ~= corner.seeds[1].area and
+    corner.seeds[2].area ~= corner.seeds[3].area and
+    corner.seeds[2].area ~= corner.seeds[4].area then
+      return true
+    end
+
+    if corner.seeds[3].area ~= corner.seeds[1].area and
+    corner.seeds[3].area ~= corner.seeds[3].area and
+    corner.seeds[3].area ~= corner.seeds[4].area then
+      return true
+    end
+
+    if corner.seeds[4].area ~= corner.seeds[1].area and
+    corner.seeds[4].area ~= corner.seeds[2].area and
+    corner.seeds[4].area ~= corner.seeds[3].area then
+      return true
+    end
+
+  end
+
+  -- corner is by at least one diagonal and is between two areas
+  if #corner.areas > 1 then
+    local diagonal_score = 0
+
+    for _,S in pairs(corner.seeds) do
+      if S.top then diagonal_score = diagonal_score + 1 end
+    end
+
+    if diagonal_score == 1 then return true end
+  end
+
+  return false
+end
+
+
+
 ------------------------------------------------------------------------
 
 
@@ -1133,7 +1407,7 @@ function Area_locate_chunks()
     [24] = 15,
 
     [32] = 15,
-    [23] = 15
+    [23] = 15,
   }
 
 
@@ -1437,7 +1711,7 @@ function Area_analyse_areas()
   Area_find_neighbors()
 
 --[[
-  local total_seeds = 0
+  local total_seeds = 0,
 
   for _,R in pairs(LEVEL.rooms) do
     total_seeds = total_seeds + R.svolume
@@ -1453,7 +1727,7 @@ end
 function Area_find_inner_points()
 
   local function collect_inner_points(A)
-    -- check bottom-left corner of for seed
+    -- check bottom-left corner of each seed
 
     for _,S in pairs(A.seeds) do
       -- point is outside of area
@@ -1473,7 +1747,7 @@ function Area_find_inner_points()
 
       if not (NC and NC.area == A) then goto continue end
 
-      -- we should rfor the same seed going both ways
+      -- we should reach the same seed going both ways
       if ND ~= NC then goto continue end
 
       -- OK --
@@ -1533,7 +1807,7 @@ function Area_inner_points_for_group(R, group, where)
   end
 
 
-  -- check bottom-left corner of for seed
+  -- check bottom-left corner of each seed
 
   for _,S in pairs(seeds) do
     -- point is outside of area
@@ -1553,7 +1827,7 @@ function Area_inner_points_for_group(R, group, where)
 
     if not same_group(NC) then goto continue end
 
-    -- we should rfor the same seed going both ways
+    -- we should reach the same seed going both ways
     if ND ~= NC then goto continue end
 
     -- OK --
@@ -1629,10 +1903,8 @@ function Area_spread_zones()
         if pass == 1 and not N.room then goto continue end
 
         -- OK --
-        if N then
-          A.zone = N.zone
-          return
-        end
+        A.zone = N.zone
+        if N then return end
         ::continue::
       end
     end
@@ -1748,7 +2020,7 @@ function Area_pick_facing_rooms()
 
 
   local function assign_borders(mode)
-    -- mode can be "outdoor", "cave" or "building"
+    -- mode can be "outdoor", "cave" or "building",
     local want_outdoor = (mode == "outdoor")
 
     build_facing_database(want_outdoor)
@@ -1799,12 +2071,11 @@ function Area_pick_facing_rooms()
 
   assign_borders("outdoor")
 
---TODO : support making windows from building --> scenic
---  assign_borders("building")
+  assign_borders("building")
 
   for _,A in pairs(scenics) do
     if A.zone then
-      A.ceil_h = A.zone.sky_h
+      A.ceil_h = A.zone.sky_h + 16
       A.ceil_mat = "_SKY"
     end
 
@@ -1826,8 +2097,8 @@ end
 function Area_divvy_up_borders()
   --
   -- Subdivides the boundary area(s) of the map into pieces
-  -- belonging to for room, so that zone walls can be placed
-  -- and to allow for zone to do different bordery stuff.
+  -- belonging to each room, so that zone walls can be placed
+  -- and to allow each zone to do different bordery stuff.
   --
   -- As a by-product, this also ensures every seed inside the
   -- absolute boundary rectangle of the map gets an "area" value.
@@ -1842,9 +2113,9 @@ function Area_divvy_up_borders()
   --
   --   (b) spread these continuously, filling most of the map.
   --
-  --   (c) there will be gaps now, choose how to fill for seed:
-  --       (1) empty on sides 4/6, filled on sides 2/8 -> pick side 2
-  --       (2) empty on sides 2/8, filled on sides 4/6 -> pick side 4
+  --   (c) there will be gaps now, choose how to fill each seed:
+  --       (1) empty on sides 4/6, filled on sides 2/8 -> pick side 2,
+  --       (2) empty on sides 2/8, filled on sides 4/6 -> pick side 4,
   --       (3) if filled on all sides, with only two choices and
   --           forming a diagonal -> make a diagonal seed
   --       (4) if have a majority in the neighbors -> pick that one
@@ -2193,10 +2464,9 @@ function Area_divvy_up_borders()
       assert(not T2.is_dead)
 
       if S.zborder ~= N.zborder then goto continue end
-      if T2 then
-        perform_merge(T1, T2)
-        return true
-      end
+
+      perform_merge(T1, T2)
+      if dir then return true end
       ::continue::
     end  -- S, dir
     end
@@ -2448,8 +2718,8 @@ local test_textures =
   "BLOOD1",   "ASHWALL2", "SHAWN2",
   "TEKWALL4", "ASHWALL4", "ASHWALL7",
   "BRICK10",  "CEMENT9",
-  "DOORBLU2", "DOORRED2", "DOORYEL2"
-}
+  "DOORBLU2", "DOORRED2", "DOORYEL2",
+},
 --]]
 
 
@@ -2572,7 +2842,6 @@ function Area_create_rooms()
   Area_find_inner_points()
   Area_closet_edges()
 
-
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
 
@@ -2580,9 +2849,7 @@ function Area_create_rooms()
     gui.debugf("Final %s   size: %dx%d\n", R.name, R.sw, R.sh)
   end
 
-
   Connect_finalize()
 
   Area_locate_chunks()
 end
-

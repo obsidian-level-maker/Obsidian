@@ -9,7 +9,11 @@ PREFABS.Fence_plain =
 
   prob   = 50,
 
+  group  = "PLAIN",
+
   where  = "edge",
+
+  passable = true,
 
   deep   = 16,
   over   = 16,
@@ -26,10 +30,13 @@ PREFABS.Fence_plain_diag =
 
   prob   = 50,
 
+  group  = "PLAIN",
+
+  passable = true,
+
   where  = "diagonal",
 
   fence_h = 32,
 
   bound_z1 = 0,
 }
-

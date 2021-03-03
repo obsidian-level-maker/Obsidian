@@ -20,7 +20,7 @@ PREFABS.Joiner_secret2_A =
   over   = 16,
 
   x_fit  = "frame",
-  y_fit  = { 64,96 }
+  y_fit  = { 64,96 },
 }
 
 

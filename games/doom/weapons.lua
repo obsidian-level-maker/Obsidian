@@ -7,7 +7,7 @@
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --------------------------------------------------------------------
@@ -46,7 +46,7 @@ DOOM.WEAPONS =
   {
     attack = "melee",
     rate = 1.5,
-    damage = 10
+    damage = 10,
   },
 
   pistol =
@@ -57,7 +57,7 @@ DOOM.WEAPONS =
     accuracy = 75,
     damage = 10,
     ammo = "bullet",
-    per = 1
+    per = 1,
   },
 
   shotty =
@@ -74,7 +74,7 @@ DOOM.WEAPONS =
     ammo = "shell",
     per = 1,
     give = { {ammo="shell",count=8} },
-    bonus_ammo = 8
+    bonus_ammo = 8,
   },
 
   chain =
@@ -91,7 +91,7 @@ DOOM.WEAPONS =
     ammo = "bullet",
     per = 1,
     give = { {ammo="bullet",count=20} },
-    bonus_ammo = 50
+    bonus_ammo = 50,
   },
 
   -- the super shotgun is Doom II only
@@ -111,7 +111,7 @@ DOOM.WEAPONS =
     ammo = "shell",
     per = 2,
     give = { {ammo="shell",count=8} },
-    bonus_ammo = 12
+    bonus_ammo = 12,
   },
 
   launch =
@@ -129,7 +129,7 @@ DOOM.WEAPONS =
     ammo = "rocket",
     per = 1,
     give = { {ammo="rocket",count=2} },
-    bonus_ammo = 5
+    bonus_ammo = 5,
   },
 
   plasma =
@@ -145,7 +145,7 @@ DOOM.WEAPONS =
     ammo = "cell",
     per = 1,
     give = { {ammo="cell",count=40} },
-    bonus_ammo = 40
+    bonus_ammo = 40,
   },
 
   bfg =
@@ -164,7 +164,7 @@ DOOM.WEAPONS =
     ammo = "cell",
     per = 40,
     give = { {ammo="cell",count=40} },
-    bonus_ammo = 40
-  }
+    bonus_ammo = 40,
+  },
 }
 

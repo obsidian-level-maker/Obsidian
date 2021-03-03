@@ -1,0 +1,10 @@
+#library "COUNTTIS"
+
+#include "zcommon.acs"
+
+Script "CountTissues" (void)
+{
+  int x = CheckInventory("ObE_LootValue");
+  Print(s:"It is foretold, the Slayer will make hell pay for hoarding toiletries.\n You have ",
+    d:x, s:" recovered from hell!");
+}

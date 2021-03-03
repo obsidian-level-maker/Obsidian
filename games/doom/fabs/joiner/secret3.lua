@@ -23,9 +23,8 @@ PREFABS.Joiner_secret3_cage =
   over   = 16,
 
   x_fit  = "frame",
-  y_fit  = "top",
 
-  y_fit  = { 128,144 }
+  y_fit  = { 128,144 },
 }
 
 
@@ -38,6 +37,6 @@ PREFABS.Joiner_secret3_niche =
   prob   = 50,
   env    = "building",
 
-  y_fit  = { 16,32 }
+  y_fit  = { 16,32 },
 }
 

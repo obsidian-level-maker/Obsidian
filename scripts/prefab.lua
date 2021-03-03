@@ -2,13 +2,14 @@
 --  WAD PREFAB SYSTEM
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2013-2017 Andrew Apted
+--  Copyright (C) 2019 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -57,6 +58,10 @@ WADFAB_ENTITIES =
 
   [8181] = { kind="light" },
 
+  -- souuuuund
+
+  [8185] = { kind="sound" },
+
   -- miscellaneous
 
   [8199] = { kind="secret" }
@@ -76,7 +81,7 @@ WADFAB_FX_DELTAS =
 }
 
 
-WADFAB_RforABLE   = 992
+WADFAB_REACHABLE   = 992
 WADFAB_MOVER       = 995
 WADFAB_DOOR        = 996
 WADFAB_DELTA_12    = 997
@@ -91,6 +96,7 @@ function Fab_load_all_definitions()
     if sub == "_attic" then return end
 
     local dir = top_level .. "/" .. sub
+
     local list, err = gui.scan_directory(dir, "*.lua")
 
     if list == nil then
@@ -124,7 +130,7 @@ function Fab_load_all_definitions()
       load_from_subdir(top_level, sub)
     end
 
-    -- give for loaded definition a 'dir_name' field.
+    -- give each loaded definition a 'dir_name' field.
     -- [ we assume previous defs also got it, hence this will only set
     --   the dir_name in the definitions just loaded ]
 
@@ -162,6 +168,61 @@ function Fab_load_all_definitions()
 
 
   local function calc_prob(def)
+
+    -- attachment for the Hideous Destructor cover walls
+    if PARAM["hd_cover_walls"] ~= "enable" then
+      if def.is_hideous_destructor_fab == true then
+        def.skip_prob = 100
+      end
+    end
+
+    -- attachment for fabs that use Armaetus's Epic textures
+    if def.texture_pack then
+      if def.texture_pack == "armaetus"
+      and not PARAM["epic_textures_activated"] then
+        def.skip_prob = 100
+      end
+    end
+
+    -- support for the new replace field
+    if PARAM.epic_textures_activated then
+      if def.replaces then
+
+        -- HARD replace mode causes pre-existing fabs to be removed
+        -- entirely, to be replaced with the replacing fab.
+        if def.replace_mode == "hard" then
+          PREFABS[def.replaces] = def
+          table.remove(PREFABS[def.name])
+
+          -- remove templates of a replaced fab as well
+          for name,odef in pairs(PREFABS) do
+            if odef.template == def.replaces then
+              table.remove(PREFABS[odef])
+            end
+          end
+        end
+
+        -- SOFT replace mode simply causes pre-existing fabs to
+        -- have a probability of 0. This is more prefered as it
+        -- is more likely to not break things.
+        if not def.replace_mode or def.replace_mode == "soft" then
+          PREFABS[def.replaces].prob = 0
+          PREFABS[def.replaces].use_prob = 0
+          PREFABS[def.replaces].skip_prob = 100
+
+          for name,odef in pairs(PREFABS) do
+            if odef.template == def.replaces then
+              PREFABS[odef].prob = 0
+              PREFABS[odef].use_prob = 0
+              PREFABS[odef].skip_prob = 100
+            end
+          end
+        end
+      end
+    end
+
+
+
     if def.skip_prob then
       if rand.odds(def.skip_prob) then return 0 end
     end
@@ -185,13 +246,19 @@ function Fab_load_all_definitions()
     table.name_up(PREFABS)
     table.expand_templates(PREFABS)
 
+    local count = 0
+
     for name,def in pairs(PREFABS) do
       if not def.kind then
         def.kind = kind_from_filename(def.file)
       end
 
       def.use_prob = calc_prob(def)
+
+      count = count + 1
     end
+
+    gui.printf(count .. " prefab definitions loaded!\n\n")
   end
 
 
@@ -208,20 +275,40 @@ end
 
 
 
-function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
+function Fab_update_skip_prob()
+  for name,def in pairs(PREFABS) do
+    if def.skip_prob then
+      if rand.odds(def.skip_prob) then
+        def.use_prob = 0
+      else
+        def.use_prob = def.prob
+      end
+    end
+  end
+end
+
+
+
+function Fab_expansion_groups(list, axis_name, fit_size, pf_size, fabinfo)
   local extra = fit_size - pf_size
 
   -- nothing needed if the size is the same
   if math.abs(extra) < 1 then return nil end
 
+
   if extra < 0 then
-    error("Prefab does not fit! (on " .. axis_name .. " axis)")
+    local problem_string = "\n\nPREFAB DOES NOT FIT!!!\n"
+    problem_string = problem_string .. "(on " .. axis_name .. " axis)\n"
+    problem_string = problem_string .. "Fab info:\n"
+    problem_string = problem_string .. table.tostr(fabinfo) .. "\n"
+    problem_string = problem_string .. "Required: " .. fit_size .. " Prefab has: " .. pf_size .. "\n\n"
+    gui.printf(problem_string)
   end
 
-  assert(extra > 0)
+  --assert(extra > 0)
 
   -- check some special keywords.
-  -- missing 'x_fit' field (etc) defaults to "stretch"
+  -- missing 'x_fit' field (etc) defaults to "stretch",
 
   if not list or list == "stretch" then
     local G =
@@ -298,7 +385,7 @@ function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
     G.low2  = pos
     G.high2 = pos + G.size2
 
-    pos = pos + G.size2
+    pos = pos + G.size2,
 
     table.insert(groups, G)
   end
@@ -316,8 +403,8 @@ end
 function Fab_apply_substitute(value, SKIN)
   assert(is_subst(value))
 
-  -- a simple substitution is just: "?varname"
-  -- a more complex one has an operator: "?varname+3",  "?foo==1"
+  -- a simple substitution is just: "?varname",
+  -- a more complex one has an operator: "?varname+3",  "?foo==1",
 
   local neg, var_name, op, number = string.match(value, "(.)([%w_]*)(%p*)(%-?[%d.]*)");
 
@@ -358,7 +445,7 @@ function Fab_apply_substitute(value, SKIN)
     if op == "-" then return value - number end
 
     if op == "==" then return sel(value == number, 1, 0) end
-    if op == "~=" then return sel(value ~= number, 1, 0) end
+    if op == "!=" then return sel(value ~= number, 1, 0) end
 
     error("bad subst operator: " .. tostring(op))
   end
@@ -372,7 +459,7 @@ function Fab_determine_bbox(fab)
   local x1, y1, z1
   local x2, y2, z2
 
-  -- Note: no need to handle slopes, they are defined to be "shrinky"
+  -- Note: no need to handle slopes, they are defined to be "shrinky",
   --       (i.e. never higher that t, never lower than b).
 
   for _,B in pairs(fab.brushes) do
@@ -413,7 +500,7 @@ function Fab_determine_bbox(fab)
   -- Note: it is OK when z1 and z2 are not set (this happens with
   --       prefabs consisting entirely of infinitely tall solids).
 
-  -- Note: It is possible to get dz == 0
+  -- Note: It is possible to get dz == 0,
 
   local dz
   if z1 then dz = z2 - z1 end
@@ -492,16 +579,17 @@ function Fab_transform_XY(fab, T)
 
   if fab.x_fit or T.fitted_x then
     if not T.fitted_x then
-      error("Fitted prefab used without fitted X transform")
+      error("Fitted prefab used without fitted X transform Culprit: " .. fab.map .. " from " .. fab.name)
 
     elseif T.scale_x then
-      error("Fitted transform used with scale_x")
+      error("Fitted transform used with scale_x Culprit: " .. fab.map .. " from " .. fab.name)
 
     elseif math.abs(bbox.x1) > 0.1 then
-      error("Fitted prefab must have lowest X coord at 0")
+      error("Fitted prefab must have lowest X coord at 0. Culprit: " .. fab.map .. " from " .. fab.name)
     end
 
-    Trans.TRANSFORM.groups_x = Fab_expansion_groups(fab.x_fit, "x", T.fitted_x, bbox.x2)
+    Trans.TRANSFORM.groups_x = Fab_expansion_groups(fab.x_fit, "x", T.fitted_x, bbox.x2, fab)
+
 
   else
     -- "loose" placement
@@ -512,16 +600,16 @@ function Fab_transform_XY(fab, T)
 
   if fab.y_fit or T.fitted_y then
     if not T.fitted_y then
-      error("Fitted prefab used without fitted Y transform")
+      error("Fitted prefab used without fitted Y transform. Culprit: " .. fab.map .. " from " .. fab.name)
 
     elseif T.scale_y then
-      error("Fitted transform used with scale_y")
+      error("Fitted transform used with scale_y. Culprit: " .. fab.map .. " from " .. fab.name)
 
     elseif math.abs(bbox.y1) > 0.1 then
-      error("Fitted prefab must have lowest Y coord at 0")
+      error("Fitted prefab must have lowest Y coord at 0. Culprit: " .. fab.map .. " from " .. fab.name)
     end
 
-    Trans.TRANSFORM.groups_y = Fab_expansion_groups(fab.y_fit, "y", T.fitted_y, bbox.y2)
+    Trans.TRANSFORM.groups_y = Fab_expansion_groups(fab.y_fit, "y", T.fitted_y, bbox.y2, fab)
 
   else
     -- "loose" placement
@@ -618,19 +706,20 @@ function Fab_transform_Z(fab, T)
 
   if fab.z_fit or T.fitted_z then
     if not T.fitted_z then
-      error("Fitted prefab used without fitted Z transform")
+      error("Fitted prefab used without fitted Z transform. Culprit: " .. fab.map .. " from " .. fab.name)
 
     elseif T.scale_z then
-      error("Fitted transform used with scale_z")
+      error("Fitted transform used with scale_z. Culprit: " .. fab.map .. " from " .. fab.name)
 
     elseif not (bbox.dz and bbox.dz >= 1) then
-      error("Fitted prefab has no vertical range!")
+      error("Fitted prefab has no vertical range! Culprit: " .. fab.map .. " from " .. fab.name)
 
     elseif math.abs(bbox.z1) > 0.1 then
-      error("Fitted prefab must have lowest Z coord at 0")
+      error("Fitted prefab must have lowest Z coord at 0. Culprit: " .. fab.map .. " from " .. fab.name ..
+    " Bounding box z1: " .. bbox.z1)
     end
 
-    Trans.TRANSFORM.groups_z = Fab_expansion_groups(fab.z_fit, "z", T.fitted_z, bbox.z2)
+    Trans.TRANSFORM.groups_z = Fab_expansion_groups(fab.z_fit, "z", T.fitted_z, bbox.z2, fab)
 
   else
     -- "loose" mode
@@ -674,6 +763,13 @@ function Fab_render(fab)
   assert(fab.state == "transform_z")
 
   fab.state = "rendered"
+  local fab_map
+
+  if fab.map then
+    fab_map = fab.map
+  else
+    fab_map = "object"
+  end
 
   for _,B in pairs(fab.brushes) do
     if B[1].m ~= "spot" then
@@ -746,7 +842,7 @@ function Fab_process_spots(fab, room)
       rank  = B[1].rank,
 
       x1 = x1, y1 = y1, z1 = z1,
-      x2 = x2, y2 = y2, z2 = z2
+      x2 = x2, y2 = y2, z2 = z2,
     }
 
     return SPOT
@@ -928,7 +1024,7 @@ function Fab_parse_edges__OLD(skin)
       error("edge string does not match prefab size")
     end
 
-    -- process for element of the edge string
+    -- process each element of the edge string
     for n = 1, #str do
       local x, y
 
@@ -948,7 +1044,7 @@ function Fab_parse_edges__OLD(skin)
   end
 
 
-  for k, edge in skin do
+  for k, edge in pairs(skin) do
     if k == "north" then parse_edge(8, edge) end
     if k == "south" then parse_edge(2, edge) end
     if k == "east"  then parse_edge(6, edge) end
@@ -1003,7 +1099,6 @@ function Fab_load_wad(def)
 
     C2.u1_along = C.along
 
-    -- these will be NIL for mini-segs (i.e. sector splits)
     local side
     local line
 
@@ -1106,7 +1201,6 @@ function Fab_load_wad(def)
     return C2
   end
 
-
   local function decode_3d_floor_side(exfl, C)
     local C2 = { x=C.x, y=C.y }
 
@@ -1117,16 +1211,18 @@ function Fab_load_wad(def)
 
     return C2
   end
-  
+
+
   local function create_void_brush(coords)
     local B =
     {
       { m="solid" }
     }
 
+
     for _,C in pairs(coords) do
       table.insert(B, decode_polygon_side(nil, C, 1))
-    end        
+    end
 
     -- add this new brush to the prefab
     table.insert(fab.brushes, B)
@@ -1165,7 +1261,7 @@ function Fab_load_wad(def)
 
     decode_lighting(S, B[1])
 
-    for _,C in pairs(coords) do 
+    for _,C in pairs(coords) do
       table.insert(B, decode_polygon_side(S, C, 1))
     end
 
@@ -1196,8 +1292,8 @@ function Fab_load_wad(def)
     if pass == 1 then
       local C = { t=S.floor_h, tex=S.floor_tex }
 
-      if S.special == WADFAB_RforABLE then
-        C.rforable = true
+      if S.special == WADFAB_REACHABLE then
+        C.reachable = true
       elseif S.special == WADFAB_MOVER then
         B[1].mover = 1
       elseif S.special == WADFAB_DOOR then
@@ -1337,6 +1433,30 @@ function Fab_load_wad(def)
       return
     end
 
+    -- sound control logic
+    if spot_info.kind == "sound" then
+      if PARAM.ambient_sounds then
+        if not fab.sound then
+          error(fab.name .. " has a sound thing without a sound def.\n" ..
+          "Y U DO THIS?!?!?! Y HUH Y???!?!")
+        end
+
+        local picked_sound = 0
+
+        if type(fab.sound) == "table" then
+          picked_sound = rand.key_by_probs(fab.sound)
+        elseif type(fab.sound) == "string" then
+          picked_sound = fab.sound
+        end
+
+        E.id = ZDOOM_SOUND_DEFS[picked_sound].id
+
+        E.flags = nil
+        table.insert(fab.entities, E)
+      end
+      return
+    end
+
     if spot_info.kind == "secret" then
       E.id = "oblige_secret"
       E.flags = nil
@@ -1360,7 +1480,7 @@ function Fab_load_wad(def)
 
     local r = spot_info.r
 
-    local mon_height = def.mon_height or 128
+    local mon_height = def.mon_height or 128,
 
     table.insert(B, { x = E.x - r, y = E.y - r })
     table.insert(B, { x = E.x + r, y = E.y - r })
@@ -1431,7 +1551,7 @@ function Fab_load_wad(def)
       local B = brushlib.rail_brush(x1,y1, x2,y2, z, props)
 
       table.insert(fab.brushes, B)
-    ::continue::
+      ::continue::
     end
   end
 
@@ -1492,7 +1612,7 @@ function Fab_load_wad(def)
 
         create_3d_floor(exfl, coords)
       end
-    ::continue::
+      ::continue::
     end
 
     for line_idx = 0,9999 do
@@ -1668,7 +1788,7 @@ function Fab_substitutions(fab, SKIN)
       end
 
       fab.fields[name] = rand.key_by_probs(value)
-    ::continue::
+      ::continue::
     end
   end
 
@@ -1967,7 +2087,8 @@ function Fabricate(room, def, T, skins)
   -- room can be NIL
 
   if not def.file then
-    error("Old-style prefab skin used")
+    error("Expecting prefab def table, not string!:\n"
+    .. def)
   end
 
   gui.debugf("=========  FABRICATE %s\n", def.file)
@@ -1983,7 +2104,29 @@ function Fabricate(room, def, T, skins)
   Fab_substitutions(fab, SKIN)
   Fab_replacements (fab)
 
+  if PARAM.marine_gen and PARAM.level_has_marine_closets and fab.group == "marine_closet" then
+    MARINE_CLOSET_TUNE.randomize_count()
+    local marines = PARAM.marine_marines
+    for _,E in pairs(fab.entities) do
+      if E.id and E.id == 8001 then
+        if marines > 0 then
+          E.id = MARINE_CLOSET_TUNE.grab_type()
+          marines = marines - 1
+        else
+          E.id = 0
+       end
+      end
+    end
+    if marines > 0 then warning("Failed to spawn marine") end
+  end
+
   fab.state = "skinned"
+
+  if PARAM.print_prefab_use ~= "no" then
+    if fab.where == "point" or fab.where == "seeds" then
+      gui.printf(LEVEL.name .. ": Adding " .. fab.name .. " ")
+    end
+  end
 
   Fab_transform_XY(fab, T)
   Fab_transform_Z (fab, T)
@@ -1993,6 +2136,13 @@ function Fabricate(room, def, T, skins)
 
   Fab_solid_entities(fab, room)
   Fab_process_spots(fab, room)
+
+  if PARAM.print_prefab_use ~= "no" then
+    if fab.where == "point" or fab.where == "seeds" then
+      gui.printf("{" .. T.add_x .. "," .. T.add_y .. "}")
+      gui.printf("\n")
+    end
+  end
 end
 
 
@@ -2011,7 +2161,7 @@ PREFAB SIZE MATCHING
 
    (a) prefab have "seed_w" and "seed_h" fields, default to 1 if not present
 
-   (b) prefabs can only occupy a larger space when "x_fit" / "y_fit"
+   (b) prefabs can only occupy a larger space when "x_fit" / "y_fit",
        is present in the definition
 
 3. for "edge" prefabs, only have "seed_w", and require "x_fit" to expand
@@ -2031,7 +2181,7 @@ function Fab_find_matches(reqs, match_state)
       return (def.size or 0) <= (reqs.size or 0)
     end
 
-    -- prefab definition defaults to 1
+    -- prefab definition defaults to 1,
     local sw = def.seed_w or 1
     local sh = def.seed_h or 1
 
@@ -2084,13 +2234,18 @@ function Fab_find_matches(reqs, match_state)
 
     if req_k == nil then return false end
 
+    if def_k == "nature" then
+      if match_environment(req_k, "park") then return true end
+      if match_environment(req_k, "cave") then return true end
+    end
+
     if def_k == "outdoor" then
       if match_environment(req_k, "park")      then return true end
       if match_environment(req_k, "courtyard") then return true end
     end
 
     -- negated check?
-    if string.sub(def_k, 1, 1) == '!' then
+    if string.sub(def_k, 1, 1) == '~' then
       def_k = string.sub(def_k, 2)
 
       return not match_environment(def_k, req_k)
@@ -2102,8 +2257,8 @@ function Fab_find_matches(reqs, match_state)
 
   local function match_word_or_table(req_k, def_k)
     if type(req_k) == "table" and def_k then
-      -- recursively check for keyword to allow table<-->table matches
-      for r2,_ in req_k do
+      -- recursively check each keyword to allow table<-->table matches
+      for r2,_ in pairs(req_k) do
         if match_word_or_table(r2, def_k) then return true end
       end
 
@@ -2167,11 +2322,70 @@ function Fab_find_matches(reqs, match_state)
       if def.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
     end
 
+    -- on liquids check
+    if def.on_liquids == "never" and reqs.on_liquids == "liquid" then return 0 end
+    if def.on_liquids == "only" and reqs.on_liquids ~= "liquid" then return 0 end
+
     -- sink check
     if reqs.is_sink and def.sink_mode == "never" then return 0 end
+    if reqs.is_sink == "liquid" and def.sink_mode == "never_liquids" then return 0 end
 
     -- darkness check
     if def.dark_map and not LEVEL.is_dark then return 0 end
+
+    -- for fabs to spawn on roads (and not sidewalks)
+    if reqs.is_road and not def.can_be_on_roads then return 0 end
+
+    -- disable outdoor wall fab from appearing in scenic rooms
+    if reqs.scenic and def.on_scenics == "never" then return 0 end
+
+    -- wall fabs that need to be flat, to prevent high-depth walls from intersecting
+    if reqs.deep and def.deep then
+      if def.deep > reqs.deep then return 0 end
+    end
+
+    -- for fabs that need the illusion of depth
+    if not reqs.has_solid_back and def.need_solid_back then return 0 end
+
+    -- REMOVE-ME - temporary fix for the issue of non-natural walls looking
+    -- when placed in parks
+    if reqs.no_top_fit and def.z_fit == "top" then return 0 end
+
+    -- fabs that require a plain ceiling are disqualified if
+    -- the ceiling has already content in it
+    if reqs.filled_ceiling and def.plain_ceiling then return 0 end
+
+    if reqs.porch and def.in_porches == "never" then return 0 end
+
+    -- special code for checking on climate-theme fabs based on the Epic
+    -- Textures module Environment Themes -MSSP
+    if not reqs.outdoor_theme then
+      if def.outdoor_theme then
+        if def.outdoor_theme ~= "temperate" then
+          return 0
+        end
+      end
+    elseif reqs.outdoor_theme then
+      if reqs.outdoor_theme == "temperate" then
+        if def.outdoor_theme then
+          if def.outdoor_theme ~= "temperate" then
+            return 0
+          end
+        end
+      elseif reqs.outdoor_theme == "snow" then
+        if def.outdoor_theme then
+          if def.outdoor_theme ~= "snow" then
+            return 0
+          end
+        end
+      elseif reqs.outdoor_theme == "desert" then
+        if def.outdoor_theme then
+          if def.outdoor_theme ~= "desert" then
+            return 0
+          end
+        end
+      end
+  end
 
     return 1
   end
@@ -2201,13 +2415,13 @@ function Fab_find_matches(reqs, match_state)
   end
 
 
-  local function prob_for_match(def, match_state)
+  local function prob_for_match(def, match_state, theme_override)
     local prob = assert(def.use_prob)
 
     if prob <= 0 then return 0 end
 
-    if not ob_match_level_theme(def) then return 0 end
-    if not ob_match_feature(def)     then return 0 end
+    if not ob_match_level_theme(def, theme_override) then return 0 end
+    if not ob_match_feature(def) then return 0 end
 
     if (def.rank or 0) < match_state.rank then return 0 end
 
@@ -2225,7 +2439,7 @@ function Fab_find_matches(reqs, match_state)
   local tab = {}
 
   for name,def in pairs(PREFABS) do
-    local prob = prob_for_match(def, match_state)
+    local prob = prob_for_match(def, match_state, reqs.theme_override)
 
     if prob > 0 then
       -- Ok, add it
@@ -2260,14 +2474,14 @@ function Fab_pick(reqs, allow_none)
   end
 
   if DEBUG_FAB_PICK then
-     gui.debugf("\n\nFAB_PICK = \n%s\n\n", table.tostr(tab))
+     gui.printf("\n\nFAB_PICK = \n%s\n\n", table.tostr(tab))
   end
 
   if table.empty(tab) then
     if allow_none then return nil end
 
-    gui.debugf("Fab_pick:\n")
-    gui.debugf("reqs  = \n%s\n", table.tostr(reqs))
+    gui.printf("Fab_pick:\n")
+    gui.printf("reqs  = \n%s\n", table.tostr(reqs))
 
     error("No matching prefabs for: " .. reqs.kind)
   end
@@ -2293,4 +2507,3 @@ function Fab_pick(reqs, allow_none)
 
   return assert(PREFABS[name])
 end
-

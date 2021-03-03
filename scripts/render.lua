@@ -2,13 +2,14 @@
 --  RENDER : CONSTRUCT AREAS
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2008-2017 Andrew Apted
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -169,14 +170,40 @@ function Render_edge(E)
 
 
   local function pick_wall_prefab()
+
+    local function check_area_state(S1, S2, mode)
+
+      if mode == "narrow_area" then
+        if S1.area ~= S2.area then return true end
+      end
+
+      if mode == "potentially_obstructing" then
+
+        if not S2.area then return true end
+
+        if S1.area.room and S2.area.room then
+          if S1.area.room ~= S2.area.room then return true end
+          if S2.area.chunk then return true end
+        end
+      end
+
+      return false
+    end
+
     local reqs =
     {
       kind = "wall",
 
       seed_w = assert(E.long),
 
-      height = A.ceil_h - A.floor_h
+      height = math.abs(A.ceil_h - A.floor_h),
+
+      on_liquids = E.area.mode
     }
+
+    if reqs.height <= 2 then
+      reqs.height = 2
+    end
 
     if geom.is_corner(dir) then
       reqs.where = "diagonal"
@@ -187,20 +214,159 @@ function Render_edge(E)
 
     if A.room then
       reqs.env = A.room:get_env()
+
+      if A.is_porch or A.is_porch_neighbor then
+        reqs.env = "building"
+      end
     end
 
+    if A.mode == "scenic" then
+      reqs.env = "outdoor"
+      reqs.scenic = true
+    end
 
-    if E.area.floor_group and E.area.floor_group.wall_group then
-      reqs.group = E.area.floor_group.wall_group
+    if A.floor_group and A.floor_group.wall_group then
+      reqs.group = A.floor_group.wall_group
+    end
+
+    if A.is_outdoor then
+      reqs.group = LEVEL.outdoor_wall_group
+
+      if A.room and A.room.is_exit and LEVEL.alt_outdoor_wall_group then
+        reqs.group = LEVEL.alt_outdoor_wall_group
+      end
+
+      if reqs.group == "PLAIN" or rand.odds(10) then
+        reqs.group = nil
+      end
+    end
+
+    if A.is_natural_park or (A.room and A.room.is_natural_park) then
+      reqs.group = "natural_walls"
+    end
+
+    -- Don't get prefabs with a z_fit other than "top" for parks.
+    if A.room and A.room.is_park then
+      if not E.S.floor_h and A.room.park_type == "hills" then
+        reqs.no_top_fit = true
+      end
+    end
+
+    -- smart checking for wall fabs that are too long
+    -- stop them from occupying each others' space
+    if reqs.where == "edge" then
+
+      -- don't allow more than one wall that's not flat enough
+      -- on the same seed
+      if E.S.wall_depth and E.S.wall_depth > 16 then
+        reqs.deep = 16
+      end
+
+      -- don't allow anything more than flat walls if
+      -- at least one seed ahead is not in the same area
+      -- as the current wall
+      local tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, 10-dir, 128)
+      local S2 = Seed_from_coord(tx, ty)
+
+      if check_area_state(E.S, S2, "narrow_area") then
+        reqs.deep = 16
+      end
+
+      -- use only flat walls if in a corner
+      tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, geom.LEFT[dir], 128)
+      S2 = Seed_from_coord(tx, ty)
+      if check_area_state(E.S, S2, "potentially_obstructing") then
+        reqs.deep = 16
+      end
+      tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, geom.RIGHT[dir], 128)
+      S2 = Seed_from_coord(tx, ty)
+      if check_area_state(E.S, S2, "potentially_obstructing") then
+        reqs.deep = 16
+      end
+
+      local chunk
+      if E.S.chunk then
+        chunk = E.S.chunk
+
+        -- if seed in front of the edge has anything on it
+        -- choose a flat wall fab instead
+        if chunk.content and chunk.content ~= "MON_TELEPORT" then
+          if chunk.prefab_def and chunk.prefab_def.size then
+            reqs.deep = math.clamp(16, chunk.space - chunk.prefab_def.size, 9999)
+
+          -- prefabs without a size definition are assumed to occupy the whole chunk
+          -- mostly for exit fabs
+          else
+            reqs.deep = 16
+          end
+        end
+
+        -- never use anything other than the flat walls on stair chunks
+        -- this is to prevent oddities like ZDoom slopes from being cut-off
+        if chunk.kind == "stair" and not A.dead_end then
+          reqs.deep = 16
+          reqs.scenic = true
+        end
+      end
+
+      -- check for wall pieces that require solid depth behind
+      -- i.e. fake doors and windows
+      reqs.has_solid_back = true
+      tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, 10-dir, -128)
+      S2 = Seed_from_coord(tx, ty)
+
+      -- if seeds on either side don't belong to the same room
+      -- then it's not solid
+      if S2.area then
+        reqs.has_solid_back = false
+
+        if S2.area.mode == "liquid" then
+          reqs.has_solid_back = false
+        end
+
+        -- override: but if there are height differences
+        -- why not allow it?
+        if S2.area.floor_h and E.S.area.floor_h then
+          if S2.area.floor_h >= E.S.area.floor_h + 128 then
+            reqs.has_solid_back = true
+          end
+        end
+        if S2.area.ceil_h and E.S.area.ceil_h then
+          if S2.area.ceil_h <= E.S.area.floor_h then
+            reqs.has_solid_back = true
+          end
+        end
+
+        if S2.area.chunk then
+          reqs.has_solid_back = false
+        end
+
+        if S2.area.mode == "void" then
+          reqs.has_solid_back = true
+        end
+      end
+    end
+
+    -- theme override
+    if A.room and A.room.theme.theme_override then
+      reqs.theme_override = A.room.theme.theme_override
     end
 
     local def = Fab_pick(reqs, sel(reqs.group, "none_ok", nil))
 
-    -- when a fancy wall is not available, use the plain one
+    -- autodetail and prefab control override
+    if E.plain then
+      if reqs.where == "edge" then def = PREFABS["Wall_plain"]
+      elseif reqs.where == "diagonal" then def = PREFABS["Wall_plain_diag"] end
+    end
+
+    -- when a wall group is not selected, use the ungrouped walls
     if not def then
       reqs.group = nil
       def = Fab_pick(reqs)
     end
+
+    E.S.wall_depth = math.max(E.S.wall_depth or 16, def.deep or 16)
 
     return def
   end
@@ -210,6 +376,31 @@ function Render_edge(E)
     local reqs =
     {
       kind = "fence",
+
+      group = assert(E.area.room.fence_group),
+
+      seed_w = assert(E.long)
+    }
+
+    if geom.is_corner(dir) then
+      reqs.where = "diagonal"
+      reqs.seed_h = reqs.seed_w
+    else
+      reqs.where = "edge"
+    end
+
+    local def = Fab_pick(reqs)
+
+    return def
+  end
+
+
+  local function pick_beam_prefab()
+    local reqs =
+    {
+      kind = "beam",
+
+      group = assert(E.area.room.beam_group),
 
       seed_w = assert(E.long)
     }
@@ -251,8 +442,8 @@ function Render_edge(E)
 
     local c_brush = brushlib.copy(f_brush)
 
-    table.insert(f_brush, { t=A.floor_h, rforable=true })
-    table.insert(c_brush, { b=A.floor_h + 16, delta_z = -16 })
+    table.insert(f_brush, { t=A.floor_h - 8192, reachable=false })
+    table.insert(c_brush, { b=A.floor_h - 8192 + 16, delta_z = -8192 - 16 })
 
     brushlib.set_mat(f_brush, "_SKY", "_SKY")
     brushlib.set_mat(c_brush, "_SKY", "_SKY")
@@ -264,6 +455,34 @@ function Render_edge(E)
   end
 
 
+  local function set_blocking_line(edge)
+
+    local side_props =
+    {
+      tex = "ZZWOLF10", -- currently patch-replaced as an invisible wall
+
+      blocked = 1,
+    }
+
+    local x1,y1, x2,y2 = Edge_line_coords(edge)
+
+    local z
+    local z1 = (E.area.ceil_h or -EXTREME_H)
+    local z2 = (E.peer.area.ceil_h or -EXTREME_H)
+    z = math.max(z1,z2)
+
+    for pass = 1, 2 do
+      local B = brushlib.rail_brush(x1,y1, x2,y2, z, side_props)
+
+      Trans.brush(B)
+
+      x1, x2 = x2, x1
+      y1, y2 = y2, y1
+    end
+
+  end
+
+
   local function edge_wall()
 
     -- TODO : pictures
@@ -271,10 +490,28 @@ function Render_edge(E)
     local skin = {}
 
     skin.wall = assert(E.wall_mat)
+    if E.area.ceil_mat then
+      skin.ceil = assert(E.area.ceil_mat)
+    end
+    if E.area.floor_mat then
+      skin.floor = assert (E.area.floor_mat)
+    end
 
     local def = pick_wall_prefab()
 
-    local z = A.floor_h
+    local z1 = A.floor_h
+    local z2 = A.ceil_h
+
+    if A.room and A.room.is_park then
+      if E.S.floor_h then
+        z1 = E.S.floor_h
+      end
+      skin.floor = E.S.floor_mat
+    end
+
+    if A.chunk and A.chunk.kind == "stair" then
+      z1 = A.chunk.dest_area.floor_h
+    end
 
     local T
 
@@ -282,14 +519,18 @@ function Render_edge(E)
       local dir2 = DIAG_DIR_MAP[dir]
       local S = E.S
 
-      T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
+      if not def then def = PREFABS[Wall_plain_diag] end
+
+      T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z1, dir2)
 
     else  -- axis-aligned edge
 
-      T = Trans.edge_transform(E, z, 0, 0, def.deep, 0, false)
+      if not def then def = PREFABS[Wall_plain] end
+
+      T = Trans.edge_transform(E, z1, 0, 0, def.deep, 0, false)
     end
 
-    Trans.set_fitted_z(T, A.floor_h, A.ceil_h)
+    Trans.set_fitted_z(T, z1, z2)
 
     Fabricate(A.room, def, T, { skin })
   end
@@ -304,7 +545,8 @@ function Render_edge(E)
       tex = mat.t,
       v1  = 0,
 
-      blocked = E.rail_block
+      blocked = E.rail_block,
+      tridee_midtex = E.rail_3dmidtex
     }
 
     local x1,y1, x2,y2 = Edge_line_coords(E)
@@ -352,7 +594,63 @@ function Render_edge(E)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
     end
 
-    -- choose lighting to be the minimum of for side
+    -- choose lighting to be the minimum of each side
+    local min_light = math.min(E.area.lighting, E.peer.area.lighting)
+    Ambient_push(min_light)
+
+    -- for fences, add impassable lines on certain occasions
+    if def.passable then
+      if PARAM.passable_windows == "not_on_vistas"
+      or not PARAM.passable_windows then
+        if E.peer.area.mode == "scenic"
+        or E.area.mode == "scenic" then
+          set_blocking_line(E)
+        end
+      elseif PARAM.passable_windows == "never" then
+        set_blocking_line(E)
+      end
+    end
+
+    Fabricate(A.room, def, T, { skin })
+
+    Ambient_pop()
+  end
+
+
+  local function straddle_beams()
+    local def = pick_beam_prefab()
+
+    local z = assert(E.beam_z)
+
+    if E.area.room and E.area.room.beam_density then
+      local beam_density = E.area.room.beam_density
+
+      if not E.count then E.count = 1 end
+      if E.count then E.count = E.count + 1 end
+      if beam_density == "sparse-even" and E.count%2 == 0 then return end
+      if beam_density == "sparse-odd" and E.count%2 ~= 0 then return end
+    end
+
+    local T
+
+    if geom.is_corner(dir) then
+      local dir2 = DIAG_DIR_MAP[dir]
+      local S = E.S
+
+      T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
+
+    else  -- axis-aligned edge
+
+      T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
+    end
+
+    if def.z_fit then
+      local min_ceil = math.min(E.area.ceil_h, E.peer.area.ceil_h)
+      local max_floor = math.max(E.area.floor_h, E.peer.area.floor_h)
+      Trans.set_fitted_z(T, max_floor, min_ceil)
+    end
+
+    -- choose lighting to be the minimum of each side
     local min_light = math.min(E.area.lighting, E.peer.area.lighting)
     Ambient_push(min_light)
 
@@ -541,7 +839,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     -- wrong side?
     assert(steps_z2 > steps_z1)
 
-    local diff_h = steps_z2 - steps_z1
+    local diff_h = steps_z2 - steps_z1,
     assert(diff_h > 8)
 
     local num_steps = 1
@@ -594,6 +892,13 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local inner_mat = assert(E.wall_mat)
     local outer_mat = assert(E.peer.wall_mat)
 
+    -- park hack
+    if E.area.room and E.area.room.is_park then
+      inner_mat = E.area.zone.facade_mat
+    elseif E.peer.area.room and E.peer.area.room.is_park then
+      outer_mat = E.peer.area.zone.facade_mat
+    end
+
     local floor1_mat = E.area.floor_mat
     local floor2_mat = E.peer.area.floor_mat
 
@@ -643,13 +948,31 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, flip_it)
     end
 
-    -- choose lighting to be the minimum of for side
+    if def.z_fit then
+      local min_ceil = math.min(E.area.ceil_h, E.peer.area.ceil_h)
+      Trans.set_fitted_z(T, z, min_ceil)
+    end
+
+    -- choose lighting to be the minimum of each side
     local min_light = math.min(E.area.lighting, E.peer.area.lighting)
     Ambient_push(min_light)
 
     Fabricate(A.room, def, T, { skin })
 
     Ambient_pop()
+
+    -- for windows, add impassable lines on certain occasions
+    if def.passable then
+      if PARAM.passable_windows == "not_on_vistas"
+      or not PARAM.passable_windows then
+        if E.peer.area.mode == "scenic"
+        or E.area.mode == "scenic" then
+          set_blocking_line(E)
+        end
+      elseif PARAM.passable_windows == "never" then
+        set_blocking_line(E)
+      end
+    end
 
 
     -- maybe add exit signs
@@ -658,7 +981,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      Render_add_exit_sign(E, z)
+      if PARAM.exit_signs then
+          Render_add_exit_sign(E, z)
+      end
     end
   end
 
@@ -683,6 +1008,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif E.kind == "doorway" or
          E.kind == "window" then
     straddle_door()
+
+  elseif E.kind == "beams" then
+    straddle_beams()
 
   else
     error("Unknown edge kind: " .. tostring(E.kind))
@@ -751,25 +1079,47 @@ function Render_corner(cx, cy)
     local mx, my = corner.x, corner.y
     local mat    = corner.post_mat or THEME.post_mat or "METAL"
 
-    local brush  = brushlib.quad(mx - 8, my - 8, mx + 8, my + 8)
+    if not corner.post_type then
+      local brush  = brushlib.quad(mx - 8, my - 8, mx + 8, my + 8)
 
-    for _,C in pairs(brush) do
-      C.u1 = 0
-      C.v1 = 0
+      for _,C in pairs(brush) do
+        C.u1 = 0
+        C.v1 = 0
+      end
+
+      if corner.post_top_h then
+        brushlib.add_top(brush, corner.post_top_h)
+      end
+
+      brushlib.set_mat(brush, mat, mat)
+
+      Trans.brush(brush)
+
+    elseif corner.post_type then
+      local T = Trans.spot_transform(mx, my, corner.post_top_h, 2)
+
+      local skins =
+      {
+        wall = mat,
+        floor = mat
+      }
+
+      Fabricate(corner.areas[1].room, PREFABS[corner.post_type], T, {skins})
     end
-
-    if corner.post_top_h then
-      brushlib.add_top(brush, corner.post_top_h)
-    end
-
-    brushlib.set_mat(brush, mat, mat)
-
-    Trans.brush(brush)
   end
 
 
   local function make_pillar()
-    -- TODO
+    local mx, my = corner.x, corner.y
+    local mat = corner.mat
+
+    local def = corner.areas[1].room.pillar_def
+
+    local T = Trans.spot_transform(mx, my, 1024, dir)
+
+    local skin = {wall=mat}
+
+    Fabricate(nil, def, T, {skin})
   end
 
 
@@ -919,7 +1269,7 @@ function Render_corner(cx, cy)
     --
     -- Algorithm:
     --   1. analyse the eight lines coming off this corner.
-    --      for line may have a wall on for side (left and right).
+    --      each line may have a wall on each side (left and right).
     --      [ this data is collected while rendering all the edges ]
     --
     --   2. detect the cases where we need a gap filler.
@@ -927,6 +1277,8 @@ function Render_corner(cx, cy)
     --      anything (no gap), but two diagonal walls with a 180 degree
     --      gap needs to be filled at the corner.
     --
+
+    -- MSSP-TODO: how about some prefabs-based gap fillers?
 
     if do_fence then
       if table.empty(corner.fences) then return end
@@ -977,6 +1329,9 @@ function Render_corner(cx, cy)
   elseif corner.kind == "post" then
     make_post()
 
+  elseif corner.kind == "pillar" then
+    make_pillar()
+
   else
     error("Unknown corner kind: " .. tostring(corner.kind))
   end
@@ -990,6 +1345,7 @@ function Render_sink_part(A, S, where, sink)
 
   local corner_field = where .. "_inner"
 
+  local c_style = assert(A.room.corner_style or "curved")
 
   local function check_inner_point(cx, cy)
     local corner = Corner_lookup(cx, cy)
@@ -1033,7 +1389,16 @@ function Render_sink_part(A, S, where, sink)
 
       T.light_add = sink.trim_light
 
-      brushlib.set_mat(brush, sink.trim_mat, sink.trim_mat)
+      local trim_mat
+      if sink.trim_mat == "_FLOOR" then
+        trim_mat = assert(A.room.floor_sink_mat or "_ERROR")
+      elseif sink.trim_mat == "_WALL" then
+        trim_mat = A.room.main_tex
+      elseif sink.trim_mat == "_CEIL" then
+        trim_mat = assert(A.room.ceil_sink_mat or "_ERROR")
+      else trim_mat = sink.trim_mat end
+
+      brushlib.set_mat(brush, trim_mat, trim_mat)
 
       -- ensure trim is unpeg (especially for trims like COMPTALL)
       if where == "ceil" then
@@ -1047,7 +1412,16 @@ function Render_sink_part(A, S, where, sink)
       T.light_add = sink.light
       T.special   = sink.special
 
-      brushlib.set_mat(brush, sink.mat, sink.mat)
+      local sink_mat
+      if sink.mat == "_FLOOR" then
+        sink_mat = assert(A.room.floor_sink_mat or "_ERROR")
+      elseif sink.mat == "_WALL" then
+        sink_mat = A.room.main_tex
+      elseif sink.mat == "_CEIL" then
+        sink_mat = assert(A.room.ceil_sink_mat or "_ERROR")
+      else sink_mat = sink.mat end
+
+      brushlib.set_mat(brush, sink_mat, sink_mat)
     end
 
     Trans.brush(brush)
@@ -1100,7 +1474,7 @@ function Render_sink_part(A, S, where, sink)
     local ax2, ay2 = (ax + cx) / 2, (ay + cy) / 2
     local bx2, by2 = (bx + cx) / 2, (by + cy) / 2
 
-    local k1 = 0.375
+    local k1 = 0.375 --0.375,
     local k2 = 1 - k1
 
     if away then k1, k2 = k2, k1 end
@@ -1108,33 +1482,35 @@ function Render_sink_part(A, S, where, sink)
     local ax3, ay3 = ax * k2 + cx * k1, ay * k2 + cy * k1
     local bx3, by3 = bx * k2 + cx * k1, by * k2 + cy * k1
 
-    if curve_mode == "curve" or curve_mode == "outie" then
-      -- either B and C are on the diagonal line, otherwise A and C are
+    if c_style == "curved" then
+      if curve_mode == "curve" or curve_mode == "outie" then
+        -- either B and C are on the diagonal line, otherwise A and C are
 
-      if B + C == 10 then
-        if curve_mode == "outie" then
-          bx3 = bx * 0.25 + cx * 0.75
-          by3 = by * 0.25 + cy * 0.75
-        else
-          bx3, by3 = bx2, by2
-        end
+        if B + C == 10 then
+          if curve_mode == "outie" then
+            bx3 = bx * 0.25 + cx * 0.75
+            by3 = by * 0.25 + cy * 0.75
+          else
+            bx3, by3 = bx2, by2
+          end
 
-        bx2 = bx * 0.375 + cx * 0.625
-        by2 = by * 0.375 + cy * 0.625
+          bx2 = bx * 0.375 + cx * 0.625 --.375 .625,
+          by2 = by * 0.375 + cy * 0.625
 
-      elseif A + C == 10 then
-        if curve_mode == "outie" then
-          ax3 = ax * 0.25 + cx * 0.75
-          ay3 = ay * 0.25 + cy * 0.75
-        else
-          ax3, ay3 = ax2, ay2
-        end
+        elseif A + C == 10 then
+          if curve_mode == "outie" then
+            ax3 = ax * 0.25 + cx * 0.75
+            ay3 = ay * 0.25 + cy * 0.75
+          else
+            ax3, ay3 = ax2, ay2
+          end
 
         ax2 = ax * 0.375 + cx * 0.625
         ay2 = ay * 0.375 + cy * 0.625
 
-      else
-        error("do_triangle problem")
+        else
+          error("do_triangle problem")
+        end
       end
     end
 
@@ -1276,8 +1652,8 @@ stderrf("away = %s\n\n", string.bool(away))
     if p_val == 10 then do_triangle(1,3,7, false) ; do_triangle(9,7,3, true)  end
 
     -- the "proper" way
-    --if p_val ==  9 then do_triangle(7,1,3, false) ; do_triangle(3,9,7, false) end
-    --if p_val ==  6 then do_triangle(9,7,1, false) ; do_triangle(1,3,9, false) end
+    -- if p_val ==  9 then do_triangle(7,1,3, false) ; do_triangle(3,9,7, false) end
+    -- if p_val ==  6 then do_triangle(9,7,1, false) ; do_triangle(1,3,9, false) end
 
     -- the "alternative" way : connects the two sub-areas
     if p_val ==  6 then do_triangle(7,1,3, true) ; do_triangle(3,9,7, true) end
@@ -1285,11 +1661,21 @@ stderrf("away = %s\n\n", string.bool(away))
 
     -- three corners open
 
-    if p_val == 14 then do_triangle(7,1,9, "outie")  ; do_triangle(9,1,3, "outie")  end
-    if p_val == 13 then do_triangle(1,3,7, "outie")  ; do_triangle(7,3,9, "outie")  end
+    if c_style == "sharp" then
+      if p_val == 14 then do_triangle(7,1,3, "outie")  ; do_whole_triangle(3,9,7)  end
+      if p_val == 13 then do_triangle(1,3,9, "outie")  ; do_whole_triangle(7,1,9)  end
 
-    if p_val == 11 then do_triangle(3,7,1, "outie")  ; do_triangle(9,7,3, "outie")  end
-    if p_val ==  7 then do_triangle(1,9,7, "outie")  ; do_triangle(3,9,1, "outie")  end
+      if p_val == 11 then do_triangle(9,7,1, "outie")  ; do_whole_triangle(3,9,1)  end
+      if p_val ==  7 then do_triangle(3,9,7, "outie")  ; do_whole_triangle(1,3,7)  end
+    else
+      if p_val == 14 then do_triangle(7,1,9, "outie")  ; do_triangle(9,1,3, "outie")  end
+      if p_val == 13 then do_triangle(1,3,7, "outie")  ; do_triangle(7,3,9, "outie")  end
+
+      if p_val == 11 then do_triangle(3,7,1, "outie")  ; do_triangle(9,7,3, "outie")  end
+      if p_val ==  7 then do_triangle(1,9,7, "outie")  ; do_triangle(3,9,1, "outie")  end
+    end
+
+
   end
 end
 
@@ -1381,8 +1767,14 @@ function Render_ceiling(A)
 
   local function render_seed(S)
     local c_h = S.ceil_h or A.ceil_h
-if not c_h then stderrf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.tostr(A)) end
-    assert(c_h)
+
+    if not c_h then
+      gui.printf("%s : %s\n", (A.chunk and A.chunk.kind) or "-", table.tostr(A))
+      gui.printf("\nblah:\n\n " .. table.tostr(S))
+      gui.printf("\nblah:\n\n " .. table.tostr(A.room))
+      gui.printf("\nblah:\n\n " .. table.tostr(S.room))
+      assert(c_h)
+    end
 
     local c_mat  = S.ceil_mat  or A.ceil_mat
     local c_side = S.ceil_side or S.ceil_mat or A.ceil_side or c_mat
@@ -1499,7 +1891,7 @@ function Render_chunk(chunk)
 
     local avg = 0
 
-    -- for wide chunks, check for seed along the chunk edge
+    -- for wide chunks, check each seed along the chunk edge
     -- and average the result
 
     if geom.is_vert(dir) then
@@ -1557,8 +1949,11 @@ function Render_chunk(chunk)
       where = "point",
 
       size   = assert(chunk.space),
-      height = z2 - z1
+      height = z2 - z1,
     }
+
+    local A = assert(chunk.area)
+    reqs.env = A.room:get_env()
 
     local skin = { object=item }
 
@@ -1591,7 +1986,7 @@ function Render_chunk(chunk)
       where = "point",
 
       size  = assert(chunk.space),
-      height = z2 - z1
+      height = z2 - z1,
     }
 
     local def = Fab_pick(reqs)
@@ -1631,6 +2026,9 @@ function Render_chunk(chunk)
 
 
   local function content_exit(chunk, secret_exit)
+
+    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then return -1 end
+
     local dir = player_face_dir(chunk)
 
     local reqs =
@@ -1639,7 +2037,7 @@ function Render_chunk(chunk)
       where = "point",
 
       size  = assert(chunk.space),
-      height = z2 - z1
+      height = z2 - z1,
     }
 
     if secret_exit then
@@ -1665,7 +2063,7 @@ function Render_chunk(chunk)
       where = "point",
 
       size   = assert(chunk.space),
-      height = z2 - z1
+      height = z2 - z1,
     }
 
     reqs.key = "sw_metal"  -- FIXME GET IT PROPERLY
@@ -1705,7 +2103,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       where = "point",
 
       size   = assert(chunk.space),
-      height = z2 - z1
+      height = z2 - z1,
     }
 
     local def = Fab_pick(reqs)
@@ -1741,7 +2139,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     local brush = brushlib.quad(mx - r, my - r, mx + r, my + r)
 
-    -- mark as "no draw"
+    -- mark as "no draw",
     for _,C in pairs(brush) do
       C.draw_never = 1
     end
@@ -1847,6 +2245,35 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local skin = { ceil=ceil_mat }
     local T = Trans.spot_transform(chunk.mx, chunk.my, ceil_h, chunk.prefab_dir or 2)
 
+    -- dynamic light fabrication for ZDoom dynamic lights module
+    if PARAM.dynamic_lights == "yes" then
+      if def.kind == "light" and def.light_color ~= "none" then
+        local light_ent = {
+          x = chunk.mx,
+          y = chunk.my,
+          z = ceil_h - def.bound_z1 - 8,
+        }
+
+        local light_id_table =
+        {
+          red = 14998,
+          orange = 14997,
+          yellow = 14996,
+          blue = 14995,
+          green = 14994,
+          beige = 14993,
+          purple = 14992,
+          white = 14999,
+        }
+
+        if def.light_color then
+          light_ent.id = light_id_table[def.light_color]
+        end
+
+        raw_add_entity(light_ent)
+      end
+    end
+
     assert(def.z_fit == nil)
 
     Fabricate(A.room, def, T, { skin })
@@ -1884,6 +2311,23 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   local function do_decoration()
     -- prefab already chosen
     assert(chunk.prefab_def)
+
+    -- hack for normal parks - no height info
+    -- is available when the fab is initially
+    -- picked, so pick a new one if the height
+    -- has a mismatch
+    if R.is_park and not R.is_natural_park then
+      local h_diff = R.zone.sky_h - chunk.floor_h
+
+      if chunk.prefab_def.height and
+      chunk.prefab_def.height > h_diff then
+        chunk.prefab_def = nil
+        reqs.kind = "picture"
+        reqs.height = h_diff
+
+        gui.printf("SHIT HAPPENED!\n")
+      end
+    end
   end
 
   local function do_teleporter()
@@ -1931,7 +2375,9 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       end
 
       if E and not E.area.room.is_hallway then
-        Render_add_exit_sign(E, z1)
+        if PARAM.exit_signs then
+          Render_add_exit_sign(E, z1)
+        end
       end
     end
   end
@@ -1996,6 +2442,37 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     return x1,y1, x2,y2
   end
 
+  -- code for peered exits
+  local function check_peered_exits(def, chunk)
+    if def.kind == "start" then
+      local p_start_fab = {}
+
+      if SCRIPTS.start_fab_peer then
+        p_start_fab = PREFABS[SCRIPTS.start_fab_peer]
+
+        SCRIPTS.start_fab_peer = nil
+
+        -- check chunk sizes
+        if p_start_fab.seed_h <= chunk.sh
+        and p_start_fab.seed_w <= chunk.sw then
+          return p_start_fab
+        else
+          return nil
+        end
+      end
+    end
+
+    if def.kind == "exit" then
+      if def.start_fab_peer then
+        if type(def.start_fab_peer) == "table" then
+          SCRIPTS.start_fab_peer = rand.pick(def.start_fab_peer)
+        else
+          SCRIPTS.start_fab_peer = def.start_fab_peer
+        end
+      end
+    end
+  end
+
 
   ---| Render_chunk |---
 
@@ -2032,6 +2509,19 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     if A.room.is_outdoor then
       z2 = A.zone.sky_h
     end
+
+    if A.room.is_natural_park then
+      reqs.group = "natural_walls"
+    end
+
+    if A.room.theme.theme_override then
+      reqs.theme_override = A.room.theme.theme_override
+    end
+  end
+
+  -- wall group association
+  if A.floor_group and A.floor_group.wall_group then
+    reqs.group = A.floor_group.wall_group
   end
 
   if z2 then
@@ -2093,7 +2583,12 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   --- pick the prefab ---
 
-  local def = chunk.prefab_def or Fab_pick(reqs)
+  local def = chunk.prefab_def or Fab_pick(reqs, "none_ok")
+
+  if not def then
+    reqs.group = nil
+    def = Fab_pick(reqs)
+  end
 
 
   -- texturing --
@@ -2140,12 +2635,43 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     end
   end
 
+  if A.is_natural_park then
+    if def.group == "natural_walls" or reqs.key == "secret" then
+      if chunk.kind == "joiner" then
+        if chunk.from_area.is_natural_park then
+          skin.wall = chunk.from_area.zone.nature_facade
+        end
+        if chunk.dest_area.is_natural_park then
+          skin.outer = chunk.dest_area.zone.nature_facade
+        end
+      else
+        skin.wall = A.zone.nature_facade
+      end
+    else
+      skin.wall = A.zone.facade_mat
+    end
+  end
+
 
   -- build the prefab --
 
   local x1, y1, x2, y2 = chunk_coords(def)
 
   local T = Trans.box_transform(x1, y1, x2, y2, z1, dir)
+
+  if def.z_fit then
+    if not z2 and chunk.from_area.ceil_h then
+      z2 = chunk.from_area.ceil_h
+    end
+
+    if R.is_outdoor then
+      z2 = z2 + 16
+    end
+
+    if z2 then
+      Trans.set_fitted_z(T, z1, z2)
+    end
+  end
 
   if (chunk.kind == "stair" or chunk.kind == "joiner" or chunk.kind == "hallway") and
      chunk.shape == "L" and
@@ -2154,8 +2680,28 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     T.mirror_x = chunk.sw * SEED_SIZE / 2
   end
 
+  -- MSSP: special code for flipped hallway sections, mostly for stairs
+  if chunk.hallway_flip then
+    T.mirror_y = chunk.sw * SEED_SIZE / 2
+  end
+
+  -- code for mirroring hallway sections sideways (mostly for plain I pieces)
+  if chunk.hallway_mirror then
+    T.mirror_x = chunk.sw * SEED_SIZE / 2
+  end
+
+  if def.mirror_x and rand.odds(50) then
+    T.mirror_x = chunk.sw * SEED_SIZE / 2
+  end
 
   Ambient_push(A.lighting)
+
+  if PARAM.peered_exits and PARAM.peered_exits == "yes" then
+    local start_fab_override = check_peered_exits(def, chunk)
+    if start_fab_override then
+      def = start_fab_override
+    end
+  end
 
   Fabricate(A.room, def, T, { skin })
 
@@ -2325,6 +2871,19 @@ end
 
 
 
+function Render_skybox()
+  local skybox = LEVEL.skybox or LEVEL.episode.skybox
+  if not skybox then return end
+
+  local x = SEED_W * SEED_SIZE - 512
+  local y = SEED_H * SEED_SIZE + 1024 -- should probably the actual prefab bbox size
+
+  local T = Trans.spot_transform(x, y, 0, 0)
+  Fabricate(nil, skybox, T, {})
+end
+
+
+
 function Render_all_areas()
   for _,A in pairs(LEVEL.areas) do
     Render_area(A)
@@ -2339,7 +2898,642 @@ function Render_all_areas()
   for _,depot in pairs(LEVEL.depots) do
     Render_depot(depot)
   end
+
+  Render_skybox()
+
+  if LEVEL.has_streets and PARAM.road_markings == "yes" then
+    Render_find_street_markings()
+    Render_all_street_markings()
+    Render_establish_street_lanes()
+    Render_all_street_traffic()
+  end
+
+  Render_scenic_fabs()
+
 end
+
+
+------------------------------------------------------------------------
+
+
+function Render_all_street_markings()
+
+  -- MSSP-TODO: should probably be placed in themes.lua along with the sink info
+  local road_fab_list =
+  {
+    Road_lane_marker = 100,
+    Road_crosswalk = 5,
+    Road_lane_marker_with_stop = 5,
+  }
+
+  local road_segments = 0
+  local road_dead_ends = 0
+  for name,info in pairs(LEVEL.road_marking_spots) do
+    local x = info.x
+    local y = info.y
+    local z = info.z
+    local dir = info.dir
+    local kind = info.kind
+
+    if kind == "segment" then
+      local name = rand.key_by_probs(road_fab_list)
+
+      if rand.odds(50) then
+        if dir == 2 then
+          dir = 8
+        else
+          dir = 4
+        end
+      end
+
+      local T = Trans.spot_transform(x, y, z, dir)
+      Fabricate(nil, PREFABS[name], T, {})
+      road_segments = road_segments + 1
+    elseif kind == "dead_end" then
+      road_dead_ends = road_dead_ends + 1
+    end
+  end
+  gui.printf("Road dead ends: " .. road_dead_ends .. "\n")
+  gui.printf("Road segments: " .. road_segments .. "\n")
+end
+
+
+
+function Render_all_street_traffic()
+  LEVEL.street_traffic = {}
+
+  local function get_parking_distance(pos)
+    local smallest_distance = 9999
+
+    local i = 1
+    while i <= #LEVEL.street_traffic do
+
+      local cur_distance = geom.dist(pos.x,pos.y,
+
+      LEVEL.street_traffic[i].x,LEVEL.street_traffic[i].y)
+
+      if LEVEL.street_traffic[i].size then
+        cur_distance = cur_distance - LEVEL.street_traffic[i].size
+      end
+
+      if cur_distance < smallest_distance and pos.dir == LEVEL.street_traffic[i].dir then
+        smallest_distance = cur_distance
+      end
+
+      i = i + 1
+    end
+
+    return smallest_distance
+  end
+
+
+  local function distance_to_dead_end(seed,dir)
+
+    local function seed_from_nudge(seed, direction, distance)
+      x,y = geom.nudge(seed.sx, seed.sy, direction, distance)
+      return SEEDS[x][y]
+    end
+
+    local distance = 0
+
+    local cur_area = seed.area
+    local S = {}
+    S.area = cur_area
+
+    local gaining_distance = 1
+
+    while S.area == cur_area and S.area.mode == "floor" do
+      S = seed_from_nudge(seed,dir,gaining_distance)
+      gaining_distance = gaining_distance + 1
+      distance = distance + SEED_SIZE
+    end
+
+    -- compensation for the thickness of the assumed wall ahead
+    distance = distance -16
+
+    -- corrections for the fact that the reference seed is offset
+    -- SS
+    -- XS
+    if dir == 8 or dir == 6 then
+      distance = distance - (SEED_SIZE)
+    end
+
+    return distance
+  end
+
+
+  gui.printf("Found " .. #LEVEL.road_street_traffic_spots .. " places to park the car.\n")
+
+
+  rand.shuffle(LEVEL.road_street_traffic_spots)
+
+  for _,SPOT in pairs(LEVEL.road_street_traffic_spots) do
+
+    -- stagger positions a bit
+    SPOT.x = SPOT.x + int(rand.range(-32,32))
+    SPOT.y = SPOT.y + int(rand.range(-32,32))
+
+    local T = Trans.spot_transform(SPOT.x, SPOT.y, SPOT.z, SPOT.dir)
+    local reqs = {}
+
+    reqs =
+    {
+      kind = "decor",
+      env = "outdoor",
+
+      is_road = true,
+      where = "point",
+      size = 9999,
+      height = SPOT.height
+    }
+
+    -- check distance to dead end
+    local forward_distance = 9999
+    local back_distance = 9999
+    local initial_size
+
+    if SPOT.dir == 2 then SPOT.back_dir = 8 end
+    if SPOT.dir == 8 then SPOT.back_dir = 2 end
+    if SPOT.dir == 4 then SPOT.back_dir = 6 end
+    if SPOT.dir == 6 then SPOT.back_dir = 4 end
+
+    forward_distance = distance_to_dead_end(SPOT.ref_seed, SPOT.dir)
+    back_distance = distance_to_dead_end(SPOT.ref_seed, SPOT.back_dir)
+    initial_size = math.min(forward_distance, back_distance)
+
+    -- check spot size against everything
+    local distance_to_nearest_used_spot = 9999
+    if #LEVEL.street_traffic > 0 then
+      distance_to_nearest_used_spot = get_parking_distance(SPOT)
+    end
+
+    reqs.size = math.min(initial_size, distance_to_nearest_used_spot)
+
+    local def
+    local prob = style_sel("street_traffic", 0, 13, 27, 40)
+
+    if rand.odds(prob) then
+      def = Fab_pick(reqs, "is_ok_man")
+    end
+
+    -- capture the material of the road sink, damn it!
+    local skin =
+    {
+      floor = "CEIL5_1",
+    }
+
+    if def then
+      Fabricate(nil, def, T, {skin})
+
+      local street_traffic_spot =
+      {
+        x = SPOT.x,
+        y = SPOT.y,
+        dir = SPOT.dir,
+        size = def.size,
+        def = def.name
+      }
+
+      table.insert(LEVEL.street_traffic, street_traffic_spot)
+    end
+  end
+
+  gui.printf(#LEVEL.street_traffic .. " cars parked.\n")
+
+end
+
+
+
+function Render_find_street_markings()
+
+  -- Render street markings
+  --
+  -- This street marking algorithm attempts to scan
+  -- seeds that are inside a street area.
+  --
+  -- 1. Given a seed, it will scan either south
+  --    or east.
+  -- 2. From the pivot, it will scan in the pattern of
+  --    XVRRRX where X means anything that's not a road,
+  --    R is a road and V is the pivot seed (which, of course
+  --    is also a road). If this pattern exists, this is
+  --    therefore a valid and markable road section.
+  -- 3. Given all new road marking spot info, render
+  --    road markings.
+  --
+  -- The idea being this algorithm should reliably retrieve
+  -- all straight markable spots, but ignore curves, junctions
+  -- and intersections for now.
+  --
+  -- table road_marking_spots
+  --
+  --   id : unique ID for debug
+  --   x : x-position
+  --   y : y-position
+  --   z : z-position
+  --   dir : direction
+  --   kind : "dead_end" or "segment",
+
+  gui.printf("--== Render street markings ==--\n")
+
+  LEVEL.road_marking_spots = {}
+
+  local markable_seeds = 0
+  local marked_seeds = 0
+
+  local function debug_dump_seeds_by_table(mode)
+    local i, j
+    i = 1
+    j = 1
+    i_max = SEED_W
+    j_max = SEED_H
+    repeat
+      i = 1
+      repeat
+        S = SEEDS[i][j]
+        if not mode then
+          print(table.tostr(S))
+        elseif mode == "roads" then
+          if S.area and S.area.is_road then
+            print(table.tostr(S))
+          end
+        end
+        i = i + 1
+      until i >= i_max
+      j = j + 1
+    until j >= j_max
+  end
+
+  local function update_seeds_table()
+    for _,R in pairs(LEVEL.rooms) do
+      for _,A in pairs(R.areas) do
+        for _,S in pairs(A.seeds) do
+          SEEDS[S.sx][S.sy] = S
+          if S.area.is_road and R.svolume > 48 then
+            markable_seeds = markable_seeds + 1
+          end
+        end
+      end
+    end
+  end
+
+  local function seed_from_nudge(seed, direction, distance)
+    x,y = geom.nudge(seed.sx, seed.sy, direction, distance)
+    return SEEDS[x][y]
+  end
+
+  local function check_extents()
+
+    local function check_road_border(S, dir)
+
+      local distance_to_check = 5
+      local distance_checked = 1
+      local score = 0
+
+      if S.area.is_road and S.area.mode == "floor" then
+        score = score + 1
+      end
+
+      -- check seeds from the pivot seed
+      local S2 = seed_from_nudge(S,dir,-1)
+
+      if not S2.area.is_road then
+        score = score + 1
+      elseif S2.area.is_road and
+      S.area.room.id ~= S2.area.room.id then
+        score = score + 1
+      end
+
+      repeat
+
+        S2 = seed_from_nudge(S,dir,distance_checked)
+
+        if distance_checked < 4
+        and S2.area.is_road
+        and S2.area.room == S.area.room
+        and S2.area.mode == "floor" then
+          score = score + 1
+        end
+
+        if distance_checked == 4 then
+          if not S2.area.is_road then
+            score = score + 1
+          elseif S2.area.is_road and
+          S.area.room.id ~= S2.area.room.id then
+            score = score + 1
+          end
+        end
+
+        distance_checked = distance_checked + 1
+      until distance_checked >= distance_to_check
+
+      -- if the XVRRRX pattern checks out, this
+      -- road section can be marked
+      if score == 6 then
+        local mark_x = S.x2
+        local mark_y = S.y1
+        local mark_z = S.area.floor_h
+        local mark_dir = 2
+        local mark_kind = "segment"
+
+        -- include proper offsets for each road section
+        if dir == 2 then
+          mark_x = mark_x - 64
+          mark_y = mark_y - 128
+        elseif dir == 6 then
+          mark_x = mark_x + 128
+          mark_y = mark_y + 64
+          mark_dir = 6
+        end
+
+        -- determine if road section is a dead end
+        -- for dead ends on horizontal roads
+        if dir == 2 then
+
+          S2 = seed_from_nudge(S,4,1)
+          if not S2.area.is_road or
+          S2.area.mode ~= "floor" or
+          S2.area.room ~= S.area.room then
+            mark_kind = "dead_end"
+          end
+
+          S2 = seed_from_nudge(S,6,1)
+          if not S2.area.is_road or
+          S2.area.mode ~= "floor" or
+          S2.area.room ~= S.area.room then
+            mark_kind = "dead_end"
+          end
+        end
+
+        -- for dead ends on vertical roads
+        if dir == 6 then
+
+          S2 = seed_from_nudge(S,8,1)
+          if not S2.area.is_road or
+          S2.area.mode ~= "floor" or
+          S2.area.room ~= S.area.room then
+            mark_kind = "dead_end"
+          end
+
+          S2 = seed_from_nudge(S,2,1)
+          if not S2.area.is_road or
+          S2.area.mode ~= "floor" or
+          S2.area.room ~= S.area.room then
+            mark_kind = "dead_end"
+          end
+        end
+
+        -- mark lane facing directions for street traffic code
+        if dir == 2 then
+          S.lane_dir = 4
+          seed_from_nudge(S,dir,1).lane_dir = 4
+          seed_from_nudge(S,dir,2).lane_dir = 6
+          seed_from_nudge(S,dir,3).lane_dir = 6
+        end
+
+        if dir == 6 then
+          S.lane_dir = 2
+          seed_from_nudge(S,dir,1).lane_dir = 2
+          seed_from_nudge(S,dir,2).lane_dir = 8
+          seed_from_nudge(S,dir,3).lane_dir = 8
+        end
+
+        local road_pos =
+        {
+          id = #LEVEL.road_marking_spots + 1,
+          x = mark_x,
+          y = mark_y,
+          z = mark_z,
+          dir = mark_dir,
+          kind = mark_kind
+        }
+
+        table.insert(LEVEL.road_marking_spots,road_pos)
+      end
+    end
+
+    local x = 1
+    local y = 1
+    local max_x = SEED_W
+    local max_y = SEED_H
+
+    repeat
+      x = 1
+      repeat
+        S = SEEDS[x][y]
+        if S.area and S.area.is_road
+        and S.area.room.svolume > 48
+        and not S.diagonal then
+          check_road_border(S, 2)
+          check_road_border(S, 6)
+        end
+        x = x + 1
+      until x >= max_x
+      y = y + 1
+    until y >= max_y
+
+  end
+
+  update_seeds_table()
+  gui.printf("Total road tile/seed count: " .. markable_seeds .. "\n")
+  check_extents()
+  gui.printf("Road mark spots found: " .. #LEVEL.road_marking_spots .. "\n")
+end
+
+
+
+function Render_establish_street_lanes()
+
+  -- Render_establish_street_lanes
+  --
+  -- This next phase of the street building process
+  -- is directed towards properly grouping marked road spots
+  -- into linear street lanes. By having a general distance and positions
+  -- for lanes around the marking spots, it would be possible
+  -- to spawn things like vehicles and other fabs on those lanes.
+  --
+  -- 1. For each existing seed, check if they have a lane_dir,
+  --    which should already have been establishe in the street
+  --    marking code.
+  -- 2. Get 2x2 bounding boxes of seeds with the same directions
+  --    in the following pattern:
+  --    SS
+  --    XS
+  --    Where X is the pivot, and S are the neighboring seeds to check.
+  -- 3. If all seeds in the box have the same lane_dir, this is a potential spot
+  --    for street objects like vehicles, barricades, whatever. Add it to
+  --    LEVEL.road_street_traffic_spots
+
+  local remaining_street_spots = LEVEL.road_marking_spots
+  LEVEL.road_street_traffic_spots = {}
+
+  local function get_viable_spot(S)
+    local spot = {}
+
+    local cur_dir = S.lane_dir
+    local S2 = SEEDS[S.sx + 1][S.sy]
+    local S3 = SEEDS[S.sx][S.sy + 1]
+    local S4 = SEEDS[S.sx + 1][S.sy + 1]
+
+    if S2.lane_dir ~= cur_dir then return false end
+    if S3.lane_dir ~= cur_dir then return false end
+    if S4.lane_dir ~= cur_dir then return false end
+
+    local off_x = (S.mid_x + S4.mid_x) / 2
+    local off_y = (S.mid_y + S4.mid_y) / 2
+
+    if cur_dir == 4 then
+      off_y = off_y - 32
+    elseif cur_dir == 6 then
+      off_y = off_y + 32
+    elseif cur_dir == 2 then
+      off_x = off_x + 32
+    elseif cur_dir == 8 then
+      off_x = off_x - 32
+    end
+
+    if not S.area.ceil_h then
+      return nil
+    end
+
+    spot =
+    {
+      ref_seed = S,
+      x = off_x,
+      y = off_y,
+      z = S.area.floor_h + 2,
+      height = S.area.ceil_h - 2,
+      dir = cur_dir
+    }
+
+    return spot
+  end
+
+  local x = 1
+  local y = 1
+  local max_x = SEED_W
+  local max_y = SEED_H
+
+  repeat
+    x = 1
+    repeat
+      S = SEEDS[x][y]
+      if S.area and S.area.is_road
+      and not S.diagonal and S.lane_dir then
+        local SPOT = get_viable_spot(S)
+        if SPOT then
+          table.insert(LEVEL.road_street_traffic_spots, SPOT)
+        end
+      end
+      x = x + 1
+    until x >= max_x
+    y = y + 1
+  until y >= max_y
+
+end
+
+
+
+function Render_scenic_fabs()
+
+  local function place_scenic_fabs(area)
+    local function try_decor_here(area)
+      local reqs =
+      {
+        height = area.ceil_h - area.floor_h,
+        env = "outdoor",
+        kind = "decor",
+        where = "point",
+      }
+
+      local skin =
+      {
+        floor = area.floor_mat,
+        wall = area.zone.facade_mat,
+        ceil = "_SKY",
+      }
+
+      local pick = rand.pick(area.seeds)
+      x = pick.sx
+      y = pick.sy
+
+      local cell_size = 2
+      if x + cell_size > SEED_W then return end
+      if y + cell_size > SEED_H then return end
+
+      reqs.size = cell_size * SEED_SIZE
+
+      --check if this fab doesn't crossover others
+      local bb_x = 0
+      local bb_y = 0
+      while bb_x < cell_size do
+        bb_y = 0
+        while bb_y < cell_size do
+          local new_x = x + bb_x
+          local new_y = y + bb_y
+
+          local S = SEEDS[new_x][new_y]
+
+          if not S.area then return end
+          if S.area and S.area ~= area then return end
+          if S.walls then return end
+          if S.diagonal then return end
+          if S.occupied then return end
+          S.occupied = true
+
+          bb_y = bb_y + 1
+        end
+        bb_x = bb_x + 1
+      end
+
+      local def = Fab_pick(reqs, "none_ok")
+
+      if def then
+        local fx = x * SEED_SIZE + 32
+        local fy = y * SEED_SIZE + 32
+
+        local fab =
+        {
+          prefab_def = def,
+          x = fx,
+          y = fy,
+          z1 = area.floor_h,
+          z2 = area.ceil_h,
+          prefab_skin = skin
+        }
+
+        table.insert(LEVEL.scenic_fabs, fab)
+      end
+    end
+
+    for i = 1, int(area.svolume/32) do
+      try_decor_here(area)
+    end
+  end
+
+  local function render_the_fabs()
+    for _,info in pairs(LEVEL.scenic_fabs) do
+      local T = Trans.spot_transform(info.x, info.y, info.z1, rand.pick({2,4,6,8}))
+
+      local def = info.prefab_def
+      local skin = info.prefab_skin
+
+      if def.z_fit then
+        Trans.set_fitted_z(T, info.z1, info.z2)
+      end
+
+      Fabricate(nil, def, T, {skin})
+    end
+  end
+
+  for _,A in pairs(LEVEL.areas) do
+    if A.border_type == "fake_room" then
+      place_scenic_fabs(A)
+    end
+  end
+  render_the_fabs()
+end
+
 
 
 ------------------------------------------------------------------------
@@ -2375,6 +3569,11 @@ function Render_properties_for_area(A)
   if not A.lighting then
     if A.is_outdoor then
       A.lighting = LEVEL.sky_light
+
+      -- porchy worchy -- MSSP
+      if A.is_porch then
+        A.lighting = A.lighting - 32
+      end
 
     elseif A.room and A.room.is_outdoor then
       -- this for outdoor closets
@@ -2603,7 +3802,7 @@ function Render_determine_spots()
   --
   -- ALGORITHM:
   --
-  -- For for area of for room:
+  -- For each area of each room:
   --
   --   1. initialize grid to be LEDGE.
   --
@@ -2618,14 +3817,18 @@ function Render_determine_spots()
   --
 
   local function spots_in_flat_floor(R, A, mode)
-    -- the 'mode' is normally NIL, can also be "cage" or "trap"
+    -- the 'mode' is normally NIL, can also be "cage" or "trap",
     if not mode then mode = A.mode end
 
     -- get bbox of room
     local rx1, ry1, rx2, ry2 = A:calc_real_bbox()
 
-    -- initialize grid to "ledge"
-    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, A.floor_h, SPOT_LEDGE)
+    -- initialize grid to "ledge",
+    local floor_height = A.floor_h
+
+    if A.is_road then floor_height = A.floor_h + 2 end
+
+    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, floor_height, SPOT_LEDGE)
 
     -- clear polygons making up the floor
     for _,brush in pairs(A.floor_brushes) do
@@ -2678,10 +3881,10 @@ function Render_determine_spots()
     else
       -- do not place items in damaging liquids
       -- [ we skip monsters too because we can place big items in a mon spot ]
-      if A.mode ~= "liquid" then
+      --if A.mode ~= "liquid" then
         table.append(R.item_spots, item_spots)
         table.append(R.mon_spots,  mon_spots)
-      end
+      --end
     end
 
     gui.spots_end()
@@ -2731,7 +3934,7 @@ function Render_determine_spots()
     local x2 = area.base_x + (FL.cx2 + 1) * 64
     local y2 = area.base_y + (FL.cy2 + 1) * 64
 
-    -- initialize grid to "ledge"
+    -- initialize grid to "ledge",
     gui.spots_begin(x1, y1, x2, y2, FL.floor_h, SPOT_LEDGE)
 
     -- clear the floors
@@ -2770,6 +3973,13 @@ gui.spots_dump("Cave spot dump")
     gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
 
+    if LEVEL.liquid then
+      if FL.floor_mat == LEVEL.liquid.mat and LEVEL.liquid.damage then
+        gui.spots_end()
+        return
+      end
+    end
+
     if not FL.no_items then
       table.append(R.item_spots, item_spots)
     end
@@ -2792,6 +4002,22 @@ gui.spots_dump("Cave spot dump")
   local function spots_in_room(R)
     for _,A in pairs(R.areas) do
       if A.mode == "floor" or A.mode == "cage" then
+        if not A.floor_group then
+          spots_in_flat_floor(R, A)
+        elseif A.floor_group then
+          if A.floor_group.sink then
+            if A.floor_group.sink.mat == "_LIQUID" and not LEVEL.liquid.damage then
+              spots_in_flat_floor(R, A)
+            elseif A.floor_group.sink.mat ~= "_LIQUID" then
+              spots_in_flat_floor(R, A)
+            end
+          else
+            spots_in_flat_floor(R, A)
+          end
+        end
+
+      elseif A.mode == "liquid" and not LEVEL.liquid.damage
+      and A.seeds[1] then
         spots_in_flat_floor(R, A)
 
       elseif A.mode == "nature" then
@@ -2834,7 +4060,7 @@ end
 
 function Render_cells(area)
 
-  -- the delta map specifies how to move for corner of the 64x64 cells
+  -- the delta map specifies how to move each corner of the 64x64 cells
   -- (where the cells form a continuous mesh).
   local delta_x_map
   local delta_y_map
@@ -3008,7 +4234,7 @@ function Render_cells(area)
     if d >  104 then return 16 end
     if d >   40 then return 32 end
     if R.light_level ~= "verydark" then return 32 end
-    return 48
+    return 48,
   end
 --]]
 
@@ -3060,7 +4286,7 @@ function Render_cells(area)
         top.is_cave = 1
       end
 
--- top.rforable = 1
+-- top.reachable = 1,
 
 -- if area.room and area.room.id then top.tag = 1000 + area.room.id end
 
@@ -3077,9 +4303,9 @@ function Render_cells(area)
     if B.is_liquid then
       f_mat = "_LIQUID"
     elseif f_h then
-      f_mat = assert(B.floor_mat)
+      f_mat = assert(B.floor_mat or "_ERROR")
     else
-      f_mat = assert(B.wall_mat)
+      f_mat = assert(B.wall_mat or "_ERROR")
     end
 
     -- disable liquid lighting in outdoor rooms
@@ -3116,7 +4342,7 @@ function Render_cells(area)
         bottom.light_add = 32
       end
     else
-      c_mat = assert(B.ceil_mat)
+      c_mat = B.ceil_mat or "_ERROR"
     end
 
     brushlib.set_mat(c_brush, c_mat, c_mat)
@@ -3196,4 +4422,3 @@ function Render_cells(area)
 
   render_all_cells(2)
 end
-

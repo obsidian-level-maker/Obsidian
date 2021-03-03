@@ -31,6 +31,7 @@ HEXEN.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="STEEL01", f="F_075" },
+  _DEFAULT = { t="STEEL01",  f="F_074" },
   _SKY   = { t="STEEL01", f="F_SKY" },
 
   -- walls --

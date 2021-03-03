@@ -6,7 +6,7 @@ PREFABS.Joiner_lift4 =
 {
   file   = "joiner/lift4.wad",
 
-  prob   = 200,
+  prob   = 15,
   style  = "steepness",
   theme  = "tech",
 

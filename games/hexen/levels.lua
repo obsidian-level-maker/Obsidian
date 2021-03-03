@@ -12,71 +12,51 @@
 --
 ------------------------------------------------------------------------
 
+HEXEN.SECRET_EXITS =
+{
+}
+
 HEXEN.EPISODES =
 {
   episode1 =
   {
-    theme = "ELEMENTAL",
+    ep_index = 1,
+
+    theme = "dungeon",
     sky_light = 0.65,
   },
 
   episode2 =
   {
-    theme = "WILDERNESS",
+    ep_index = 2,
+
+    theme = "dungeon",
     sky_light = 0.75,
   },
 
   episode3 =
   {
-    theme = "DUNGEON",
+    ep_index = 3,
+
+    theme = "dungeon",
     sky_light = 0.65,
   },
 
   episode4 =
   {
-    theme = "DUNGEON",
+    ep_index = 4,
+
+    theme = "dungeon",
     sky_light = 0.60,
   },
 
   episode5 =
   {
-    theme = "DUNGEON",
+    ep_index = 5,
+
+    theme = "dungeon",
     sky_light = 0.50,
   },
-}
-
-
-HEXEN.THEME_FOR_MAP =
-{
-  [1]  = "hexen_wild4",
-  [2]  = "hexen_dungeon5",
-  [3]  = "hexen_element2",
-  [4]  = "hexen_element1",
-  [5]  = "hexen_element3",
-  [8]  = "hexen_wild4",
-  [9]  = "hexen_wild3",
-  [10] = "hexen_wild2",
-  [11] = "hexen_wild1",
-  [14] = "hexen_dungeon6",
-  [15] = "hexen_dungeon1",
-  [16] = "hexen_dungeon1",
-  [17] = "hexen_wild4",
-  [18] = "hexen_dungeon1",
-  [19] = "hexen_dungeon1",
-  [20] = "hexen_dungeon1",
-  [21] = "hexen_dungeon1",
-  [22] = "hexen_dungeon2",
-  [23] = "hexen_dungeon2",
-  [24] = "hexen_dungeon1",
-  [25] = "hexen_dungeon4",
-  [26] = "hexen_dungeon2",
-  [27] = "hexen_dungeon2",
-  [28] = "hexen_dungeon2",
-  [29] = "hexen_dungeon3",
-  [30] = "hexen_dungeon3",
-  [31] = "hexen_dungeon3",
-  [32] = "hexen_dungeon3",
-  [35] = "hexen_dungeon2",
 }
 
 
@@ -87,98 +67,157 @@ HEXEN.PREBUILT_LEVELS =
 
 function HEXEN.get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "game",   5, 1)
-  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
---??  GAME.original_themes = {},
+  if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
-  for ep_index = 1,EP_NUM do
-    local EPI =
-    {
-      levels = {}
-    }
+  -- create episode info...
 
-    table.insert(GAME.episodes, EPI)
-
+  for ep_index = 1,5 do
     local ep_info = HEXEN.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
---??    GAME.original_themes[episode] = ep_info.orig_theme
+    local EPI = table.copy(ep_info)
+
+    EPI.levels = { }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  -- create level info...
+
+  for ep_index = 1,EP_NUM do
+    local EPI = GAME.episodes[ep_index]
 
     for map = 1,MAP_NUM do
-      local map_id = (ep_index - 1) * MAP_NUM + map
-
+      -- create level info...
       local ep_along = map / MAP_NUM
-
-      if MAP_NUM == 1 then
-        ep_along = rand.range(0.3, 0.7)
-      end
 
       local LEV =
       {
-        episode = EPI,
+        episode  = EPI,
 
-        name  = string.format("MAP%02d", map_id),
---??    patch = string.format("WILV%d%d", ep_index-1, map-1)
-
-        map       = map_id,
-        next_map  = map_id + 1,
-        local_map = map,
-
-        cluster  = ep_index,
+        name  = string.format("MAP%02d", map),
+        --name = string.format("E%dM%d", ep_index, map)
 
           ep_along = ep_along,
-        game_along = (ep_index - 1 + ep_along) / EP_NUM,
-
-        sky_light = ep_info.sky_light,
-
-        name_theme = "GOTHIC"
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
       }
-
-      -- make certain levels match original
-      -- Was not working, so fixed above, BlackJar72,
-      if OB_CONFIG.theme == "original" then
-        if ep_index == 3 then
-          LEV.theme_name = "hexen_dungeon1"
-        elseif ep_index == 4 then
-          LEV.theme_name = "hexen_dungeon2"
-        elseif ep_index == 5 then
-          LEV.theme_name = "hexen_dungeon3"
-        end -- Specific special levels
-
-        LEV.theme_name = HEXEN.THEME_FOR_MAP[map_id]
-
-        if LEV.theme_name then
-           LEV.theme = assert(GAME.LEVEL_THEMES[LEV.theme_name])
-        end
-
-        if map_id == 29 then
-          LEV.style_list =
-          {
-            outdoors = { heaps=100 },
-            caves = { some=50, heaps=50 },
-          }
-        end
-      end
-
-      -- second last map in each episode is a secret level, and
-      -- last map in each episode is the boss map.
-
-      if map == 6 then
-        LEV.kind = "SECRET"
-      elseif map == 7 then
-        LEV.kind = "BOSS"
-      end
-
-      -- very last map of the game?
-      if ep_index == 5 and map == 7 then
-        LEV.next_map = nil
-      end
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
+
+      LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
+
+      -- prebuilt levels
+      LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
+
+      if LEV.prebuilt then
+        LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
+      end
+
+          -- procedural gotcha management code
+
+    -- Prebuilts are to exist over procedural gotchas
+    -- this means procedural gotchas will not override
+    -- Icon of Sin for example if prebuilts are still on
+    if not LEV.prebuilt then
+
+      --handling for the Final Only option
+      if OB_CONFIG.procedural_gotchas == "final" then
+        if OB_CONFIG.length == "single" then
+          if map == 1 then LEV.is_procedural_gotcha = true end
+        elseif OB_CONFIG.length == "few" then
+          if map == 4 then LEV.is_procedural_gotcha = true end
+        elseif OB_CONFIG.length == "episode" then
+          if map == 11 then LEV.is_procedural_gotcha = true end
+        elseif OB_CONFIG.length == "game" then
+          if map == 30 then LEV.is_procedural_gotcha = true end
+        end
+      end
+
+      --every 10 maps
+      if OB_CONFIG.procedural_gotchas == "epi" then
+        if map == 11 or map == 20 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+      if OB_CONFIG.procedural_gotchas == "2epi" then
+        if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+      if OB_CONFIG.procedural_gotchas == "3epi" then
+        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+      if OB_CONFIG.procedural_gotchas == "4epi" then
+        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
+          LEV.is_procedural_gotcha = true
+        end
+      end
+
+      --5% of maps after map 4,
+      if OB_CONFIG.procedural_gotchas == "5p" then
+        if map > 4 and map ~= 15 and map ~= 31 then
+          if rand.odds(5) then LEV.is_procedural_gotcha = true end
+        end
+      end
+
+      -- 10% of maps after map 4,
+      if OB_CONFIG.procedural_gotchas == "10p" then
+        if map > 4 and map ~= 15 and map ~= 31 then
+          if rand.odds(10) then LEV.is_procedural_gotcha = true end
+        end
+      end
+
+      -- for masochists... or debug testing
+      if OB_CONFIG.procedural_gotchas == "all" then
+        LEV.is_procedural_gotcha = true
+      end
     end
 
-    -- link hub together (unless only making a single level)
+ -- handling for street mode
+    -- actual handling for urban percentages are done
+    -- MSSP-TODO: Clean this up! Down with cascading elseif statements!
+    if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+      if OB_CONFIG.streets_mode == "75" and rand.odds(75) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "50" and rand.odds(50) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "25" and rand.odds(25) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "13" and rand.odds(13) then
+        LEV.has_streets = true
+      elseif OB_CONFIG.streets_mode == "all" then
+        LEV.has_streets = true
+      end
+    end
+
+    if not LEV.prebuilt then
+      if OB_CONFIG.linear_mode == "all" then
+        LEV.is_linear = true
+      elseif OB_CONFIG.linear_mode ~= "none" then
+        if rand.odds(int(OB_CONFIG.linear_mode)) then
+          LEV.is_linear = true
+        end
+      end
+
+      -- nature mode
+      if OB_CONFIG.nature_mode and not LEV.has_streets then
+        if OB_CONFIG.nature_mode == "all" then
+          LEV.is_nature = true
+        elseif OB_CONFIG.nature_mode ~= "none" then
+          if rand.odds(int(OB_CONFIG.nature_mode)) then
+            LEV.is_nature = true
+          end
+        end
+      end
+
+    end
+
+    end -- for map
 
     if MAP_NUM > 1 then
       Hub_connect_levels(EPI, GAME.THEME_DEFAULTS.hub_keys)
@@ -188,30 +227,12 @@ function HEXEN.get_levels()
       Hub_assign_pieces(EPI, { "piece1", "piece2", "piece3" })
     end
 
+    -- set "dist_to_end" value
+    if MAP_NUM >= 9 then
+      EPI.levels[7].dist_to_end = 1
+      EPI.levels[6].dist_to_end = 2
+    end
+
   end -- for episode
 
 end
-
-
-function HEXEN.make_mapinfo()
-  local mapinfo = {}
-
-  local function add(...)
-    table.insert(mapinfo, string.format(...) .. "\n")
-  end
-
-  for _,L in pairs(pairs(pairs(GAME.levels))) do
-    local desc = string.upper(L.description or L.name)
-
-    add("map %d \"%s\"", L.map, desc)
-    add("warptrans %d", L.map)
-    add("next %d", L.next_map or 1)
-    add("cluster %d", L.cluster)
-    add("sky1 SKY2 0")
-    add("sky2 SKY3 0")
-    add("")
-  end
-
-  gui.wad_add_text_lump("MAPINFO", mapinfo)
-end
-

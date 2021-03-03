@@ -2,13 +2,14 @@
 --  SHAPE GROWING SYSTEM
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker
+--  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2015-2017 Andrew Apted
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
+--  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
 --  This program is distributed in the hope that it will be useful,
@@ -18,6 +19,7 @@
 --
 ------------------------------------------------------------------------
 
+GROWER_DEBUG_INFO = {} -- MSSP: table for containing details about growth statistics
 
 function Grower_preprocess_grammar()
 
@@ -279,7 +281,7 @@ function Grower_preprocess_grammar()
     def.input  = table.array_2D(W, H)
     def.output = table.array_2D(W, H)
 
-    -- must iterate line by line, then across for line
+    -- must iterate line by line, then across each line
     for y = 1, H do
     for x = 1, W do
       convert_element("input",  def.input,  x, y)
@@ -505,7 +507,7 @@ function Grower_preprocess_grammar()
         gx = x,
         gy = y
       }
-    ::continue::
+      ::continue::
     end -- x, y
     end
 
@@ -601,7 +603,7 @@ function Grower_preprocess_grammar()
       E = def.output[x][y]
     until E.kind ~= kind
 
-    -- FIXME : handle "diagonal"
+    -- FIXME : handle "diagonal",
 
     if E.kind ~= "area" then return nil end
 
@@ -611,8 +613,8 @@ function Grower_preprocess_grammar()
 
   local function find_info_for_part(kind, lx, ly)
     -- lx, ly is the lowest left corner of the part
-    -- look for coordinate specific entry, e.g. "stair3_2"
-    -- if that fails, look for generic entry e.g. "stair"
+    -- look for coordinate specific entry, e.g. "stair3_2",
+    -- if that fails, look for generic entry e.g. "stair",
 
     local full_name = kind .. lx .. "_" .. ly
 
@@ -712,53 +714,75 @@ function Grower_preprocess_grammar()
 
   ---| Grower_preprocess_grammar |---
 
-  gui.debugf("Grower_preprocess_grammar...\n")
+  local gramgram = GAME.SHAPE_GRAMMAR
 
-  local grammar = SHAPE_GRAMMAR
+  local function process_some_cool_grammars(grammar)
 
-  table.name_up(grammar)
+      gui.printf("Preprocess shape grammars...\n")
 
-  table.expand_templates(grammar)
+      PARAM.shape_rule_count = 0
 
-  for name,cur_def in pairs(grammar) do
-    if cur_def.is_processed then goto continue end
-    cur_def.is_processed = true
+      table.name_up(grammar)
 
-    gui.debugf("processing: %s\n", name)
+      table.expand_templates(grammar)
 
-    def = cur_def
+      for name,cur_def in pairs(grammar) do
 
-    if cur_def.pass == nil then
-       cur_def.pass = name_to_pass(name)
-    end
+        if cur_def.is_processed then goto continue end
+        cur_def.is_processed = true
 
-    if not def.styles then def.styles = {} end
+        PARAM.shape_rule_count = PARAM.shape_rule_count + 1 -- debug counter for amount of shape rules read
 
-    convert_structure()
-    finalize_structure()
-    check_symmetries()
+        -- instantiate debug stats for growth
+        GROWER_DEBUG_INFO[cur_def.name] =
+        {
+          name = cur_def.name,
+          applied = 0,
+          trials = 0,
+        }
 
-    find_focal_points()
-    find_connections()
+        gui.debugf("processing: %s\n", name)
 
-    locate_all_contiguous_parts("stair")
-    locate_all_contiguous_parts("joiner")
-    locate_all_contiguous_parts("closet")
+        def = cur_def
 
-    locate_all_contiguous_parts("hallway")
-    locate_all_contiguous_parts("hall2")
-    locate_all_contiguous_parts("hall3")
+        if cur_def.pass == nil then
+           cur_def.pass = name_to_pass(name)
+        end
 
-    locate_all_contiguous_parts("link")
-    locate_all_contiguous_parts("link2")
+        if not def.styles then def.styles = {} end
 
-    if cur_def.teleporter then add_style("teleporters") end
+        convert_structure()
+        finalize_structure()
+        check_symmetries()
 
-    if string.match(name, "^HALL_") then cur_def.env = "hallway" end
-    if string.match(name, "^CAVE_") then cur_def.env = "cave" end
-    if string.match(name, "^PARK_") then cur_def.env = "park" end
-    ::continue::
+        find_focal_points()
+        find_connections()
+
+        locate_all_contiguous_parts("stair")
+        locate_all_contiguous_parts("joiner")
+        locate_all_contiguous_parts("closet")
+
+        locate_all_contiguous_parts("hallway")
+        locate_all_contiguous_parts("hall2")
+        locate_all_contiguous_parts("hall3")
+
+        locate_all_contiguous_parts("link")
+        locate_all_contiguous_parts("link2")
+
+        if cur_def.teleporter then add_style("teleporters") end
+
+        if string.match(name, "^HALL_") then cur_def.env = "hallway" end
+        if string.match(name, "^CAVE_") then cur_def.env = "cave" end
+        if string.match(name, "^PARK_") then cur_def.env = "park" end
+        ::continue::
+      end
+
+      gui.printf(PARAM.shape_rule_count .. " rules loaded!\n")
+
   end
+
+  process_some_cool_grammars(gramgram)
+
 end
 
 
@@ -767,7 +791,7 @@ function Grower_calc_rule_probs()
   --
   -- Modify the probability of all rules, based on current game and
   -- theme, the chosen styles for the level, and a random factor.
-  -- This gives for level a distinctive feel.
+  -- This gives each level a distinctive feel.
   --
 
   local function style_factor(rule)
@@ -810,19 +834,23 @@ function Grower_calc_rule_probs()
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
-       table.has_elem(rule.styles, "liquids")
+      table.has_elem(rule.styles, "liquids")
     then
       return 0
     end
 
     -- check hallway types
     if rule.new_room and rule.new_room.hall_type == "narrow" and
-       table.empty(THEME.narrow_halls or {})
-    then return 0 end
+      table.empty(THEME.narrow_halls or {})
+    then
+      return 0
+    end
 
     if rule.new_room and rule.new_room.hall_type == "wide" and
-       table.empty(THEME.wide_halls or {})
-    then return 0 end
+      table.empty(THEME.wide_halls or {})
+    then
+      return 0
+    end
 
     -- normal logic --
 
@@ -837,8 +865,94 @@ function Grower_calc_rule_probs()
 
   ---| Grower_calc_rule_probs |---
 
-  for name,rule in pairs(SHAPE_GRAMMAR) do
+  PARAM.skipped_rules = 0
+
+  for name,rule in pairs(GAME.SHAPE_GRAMMAR) do
     rule.use_prob = calc_prob(rule)
+    if rule.use_prob == 0 then
+      PARAM.skipped_rules = PARAM.skipped_rules + 1
+    end
+  end
+
+  gui.printf("Shape rules skipped for this level: " .. PARAM.skipped_rules ..
+  " / " .. PARAM.shape_rule_count .. "\n")
+  gui.printf("Rules can be disabled via skip probability or level styles.\n")
+
+  -- Shape grouping system
+  PARAM.cur_shape_group = ""
+  PARAM.cur_shape_group_apply_count = 0
+
+  -- Layout Absurdifier
+
+  if OB_CONFIG.layout_absurdity then
+    gui.printf("\n--== Layout Absurdity Module ==--\n\n")
+  end
+
+  if not LEVEL.is_procedural_gotcha then
+    if OB_CONFIG.layout_absurdity == "all" then
+      LEVEL.is_absurd = true
+    elseif OB_CONFIG.layout_absurdity ~= "none" then
+      if rand.odds(int(OB_CONFIG.layout_absurdity)) then
+        LEVEL.is_absurd = true
+      end
+    end
+  end
+
+  if LEVEL.is_absurd then
+    gui.printf("This level is absurd!\n\n")
+  else
+    gui.printf("This level is not absurd...\n\n")
+  end
+
+  local function Grower_absurdify()
+    local rules_to_absurdify = rand.pick({1,2,2,2,3,3,3,4,4,5,6,7,8})
+    gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
+
+    local grammarset = {}
+    for name,rule in pairs(GAME.SHAPE_GRAMMAR) do
+      table.insert(grammarset, rule.name)
+    end
+
+    while rules_to_absurdify > 0 do
+      local absurded_rule = rand.pick(grammarset)
+
+      if not string.match(absurded_rule,"ROOT")
+      and not string.match(absurded_rule,"JOINER")
+      and not string.match(absurded_rule,"EMERGENCY")
+      and not string.match(absurded_rule,"STREET")
+      and not string.match(absurded_rule,"SIDEWALK")
+      and not string.match(absurded_rule,"hall")
+      and not string.match(absurded_rule,"HALL")
+      and GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
+      and GAME.SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
+
+        local ab_factor = 0
+        if rand.odds(75) then
+          ab_factor = rand.range( 100,1000000 )
+          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
+          if GAME.SHAPE_GRAMMAR[absurded_rule].new_area then
+            LEVEL.has_absurd_new_area_rules = true
+          end
+        else
+          ab_factor = rand.range( 0.01,0.75 )
+          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
+        end
+
+        GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd = true
+
+        if  PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
+          gui.printf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
+          gui.printf("Factor: x" .. ab_factor .. "\n")
+        end
+
+        rules_to_absurdify = rules_to_absurdify - 1
+      end
+    end
+  end
+
+  if LEVEL.is_absurd then
+    Grower_absurdify()
+    gui.printf("\n\n")
   end
 end
 
@@ -848,6 +962,40 @@ function Grower_decide_extents()
   --
   -- decides how much of the map we can use for growing rooms.
   --
+
+  -- urban streets code, because level theme is not yet
+  -- determined if it was done from games/[game]/level.lua
+  -- MSSP-TODO: Clean this up, boi!
+  if LEVEL.theme_name == "urban" then
+    if OB_CONFIG.streets_mode == "100urban" then
+      LEVEL.has_streets = true
+    elseif OB_CONFIG.streets_mode == "75urban" then
+      if rand.odds(75) then
+        LEVEL.has_streets = true
+      end
+    elseif OB_CONFIG.streets_mode == "50urban" then
+      if rand.odds(50) then
+        LEVEL.has_streets = true
+      end
+    elseif OB_CONFIG.streets_mode == "25urban" then
+      if rand.odds(25) then
+        LEVEL.has_streets = true
+      end
+    elseif OB_CONFIG.streets_mode == "13urban" then
+      if rand.odds(13) then
+        LEVEL.has_streets = true
+      end
+    end
+  end
+
+  -- let nature mode take precedence over streets mode
+  if LEVEL.is_nature then
+    LEVEL.has_streets = false
+  end
+
+  if LEVEL.has_streets and LEVEL.is_procedural_gotcha then
+    LEVEL.has_streets = false
+  end
 
   assert(LEVEL.map_W < SEED_W)
   assert(LEVEL.map_H < SEED_H)
@@ -911,12 +1059,62 @@ function Grower_decide_extents()
   LEVEL.min_rooms = math.max(3, int(base / 3))
   LEVEL.max_rooms = math.max(6, int(base))
 
-  gui.debugf("Target # of rooms : %d .. %d\n", LEVEL.min_rooms, LEVEL.max_rooms)
+  -- add extra rooms based on extra size and area multiplier
+
+  if LEVEL.size_multiplier then
+    if LEVEL.size_multiplier < 1 then
+      LEVEL.max_rooms = int(LEVEL.max_rooms * ((1 - LEVEL.size_multiplier)+1) * 2/3)
+    end
+    if LEVEL.area_multiplier < 1 then
+      LEVEL.max_rooms = int(LEVEL.max_rooms * ((1 - LEVEL.area_multiplier)+1) * 2/3)
+    end
+  end
+
+  -- specific instructions for procedural gotcha
+
+  if LEVEL.is_procedural_gotcha == true then
+    if PARAM.boss_gen == true then
+      LEVEL.min_rooms = 1
+      LEVEL.max_rooms = 1
+    else
+      LEVEL.min_rooms = 2
+      LEVEL.max_rooms = 2
+    end
+  end
+
+  gui.printf("Target # of rooms : %d .. %d\n\n", LEVEL.min_rooms, LEVEL.max_rooms)
 
 
   -- calculate the coverage target
 
   LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.85)
+
+  if LEVEL.has_streets then
+    gui.printf("--==| Streets Mode activated! |==--\n\n")
+  end
+
+  if LEVEL.is_linear then
+    gui.printf("--==| Linear mode activated! |==--\n\n")
+  end
+
+  if LEVEL.is_nature then
+    gui.printf("--==| Nature mode activated! Take a walk! |==--\n\n")
+  end
+
+  -- linear start code
+  if PARAM.linear_start then
+    if PARAM.linear_start ~= "default" then
+      if PARAM.linear_start == "all" then
+        LEVEL.has_linear_start = true
+      elseif rand.odds(int(PARAM.linear_start)) then
+        LEVEL.has_linear_start = true
+      end
+    end
+  end
+
+  if LEVEL.has_linear_start then
+    gui.printf("--==| Linear Start activated! |==--\n\n")
+  end
 end
 
 
@@ -1049,6 +1247,11 @@ function Grower_split_liquids()
       if A.mode == "liquid" or A.mode == "cage" then
         local S = A.seeds[1]
 
+        if not S then
+          A.mode = "void"
+          return
+        end
+
         assert(S)
         assert(S.area == A)
 
@@ -1110,7 +1313,9 @@ function Grower_add_room(parent_R, info, trunk)
 
   local R = ROOM_CLASS.new()
 
-gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
+  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
+gui.printf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
+  end
 
   if info.force_start then
     R.is_start = true
@@ -1120,6 +1325,22 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
   if info.force_exit then
     R.is_exit = true
     LEVEL.exit_room = R
+  end
+
+  -- streets you gotta have
+  if LEVEL.has_streets then
+    if info.env ~= "hallway"
+    and info.env ~= "cave"
+    and not R.is_park then
+      if R.id%2 == 0 and rand.odds(66) then
+        R.is_street = true
+        R.is_outdoor = true
+      end
+    end
+  end
+
+  if info.force_no_street then
+    R.is_street = false
   end
 
   if trunk == nil then
@@ -1152,6 +1373,16 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
 
   Room_set_kind(R, is_hallway, is_outdoor, is_cave)
 
+  if info.force_no_hallway then
+    R.is_hallway = false
+  end
+
+  if R.is_street then
+    is_outdoor = true
+    is_hallway = false
+    is_cave = false
+  end
+
   Room_choose_size(R)
 
   -- always need at least one floor area
@@ -1180,10 +1411,14 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     -- max size of new area  [ for caves it is whole room ]
     if R.is_cave or R.is_park then
       A.max_size = R.size_limit
+    elseif R.is_big then
+      A.max_size = R.size_limit
     else
       A.max_size = rand.pick({ 16, 24, 32 })
     end
+
   end
+
 
   R.delta_limit_mode = rand.sel(50, "positive", "negative")
   R.delta_up_chance  = 50
@@ -1205,6 +1440,9 @@ function Grower_kill_room(R)
 
   local hallway_neighbor
 
+  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
+    gui.printf("Killing " .. R.id .. "\n")
+  end
 
   local function turn_joiner_into_closet(R2, chunk)
     chunk.kind = "closet"
@@ -1303,15 +1541,17 @@ function Grower_kill_room(R)
   Seed_squarify()
 end
 
-
-
 function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
                                  parent_rule, is_create, is_emergency)
   --
   -- Creates rooms using Shape Grammars.
   --
 
-  local grammar = SHAPE_GRAMMAR
+  -- Trying to force liquid-bordered outdoors if parks haven't shown up yet.
+
+  grammar = GAME.SHAPE_GRAMMAR
+
+  --
 
   local cur_rule
   local cur_symmetry
@@ -1343,7 +1583,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   local new_chunks
   local old_chunks
 
-  -- true when room has rfored the limit on floor areas
+  -- true when room has reached the limit on floor areas
   local hit_floor_limit
 
 
@@ -1415,7 +1655,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   local function set_cage_fancy(S)
     if not R.fancy_cage then
        R.fancy_cage = AREA_CLASS.new("cage")
-       R.fancy_cage.cage_mode = "fancy"
+       R.fancy_cage.cage_mode = "fancy",
 
        R:add_area(R.fancy_cage)
     end
@@ -1434,6 +1674,11 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
     if rule.emergency then
       if not is_emergency then return 0 end
+    end
+
+    -- hallways cannot be used for teleporter breaks in Linear Mode
+    if LEVEL.is_linear and is_emergency then
+      if string.match(rule.name, "hallway") then return 0 end
     end
 
     if not ob_match_level_theme(rule) then return 0 end
@@ -1480,6 +1725,15 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       if R.is_park and rule.env ~= "park" then return 0 end
     end
 
+
+    --MSSP attachment: never use liquids nor steepness in caves and stuff ever - very evil stuff ya know
+    if pass == "sprout" or pass == "decorate" then
+      if R.is_park and table.has_elem(rule.styles, "steepness") then return 0 end
+      if R.is_park and table.has_elem(rule.styles, "liquids") then return 0 end
+      if R.is_cave and table.has_elem(rule.styles, "steepness") then return 0 end
+      if R.is_cave and table.has_elem(rule.styles, "liquids") then return 0 end
+    end
+
     if rule.new_room and rule.new_room.env == "cave" then
       if R.is_cave then
         prob = prob * LEVEL.cave_extend_factor
@@ -1496,6 +1750,8 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
     if R.is_hallway then return 0 end
 
     if R.is_cave then return 0 end
+
+    if R.is_street then return 0 end
 
     if R.is_outdoor then
       return style_sel("symmetry", 0,  5, 15, 50)
@@ -1732,6 +1988,11 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         mx = LEVEL.sprout_x2 + 2
         dx = 8
       end
+
+--[[      if cur_rule.absolute_pos == "bottom" then
+        mx = LEVEL.sprout_x2 - 2,
+        dx = 8,
+      end]]
 
       return mx-dx, my-dy, mx+dx, my+dy
     end
@@ -2297,7 +2558,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       kind = kind or "direct",
 
       A1 = A1,
-      A2 = A2
+      A2 = A2,
     }
 
     if cur_rule.has_stair then
@@ -2371,6 +2632,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
     if A.room then
       reqs.env = A.room:get_env()
+
+      if R.theme and R.theme.theme_override then
+        reqs.theme_override = R.theme.theme_override
+      end
     end
 
     -- prevent small areas connected with a lift
@@ -2509,14 +2774,18 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
           local h = assert(stair_prefab.delta_h)
 
-          if R.trunk.stair_z_dir > 0 then
-            new_area.prelim_h = from_area.prelim_h + h
-          else
-            new_area.prelim_h = from_area.prelim_h - h
+          if R.trunk.stair_z_dir < 0 then
+            h = h * -1
           end
+
+          if rand.odds(R.trunk.stair_z_dir_fudge_prob) then
+            h = h * -1
+          end
+
+          new_area.prelim_h = from_area.prelim_h + h
         end
 
-        if R.trunk.stair_z_dir < 0 then
+        if new_area.prelim_h < from_area.prelim_h then
           chunk.area.prelim_h = chunk.area.prelim_h - stair_prefab.delta_h
           chunk:flip()
         end
@@ -2573,8 +2842,8 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
          prev_chunk.area.name, dir1,
               chunk.area.name, dir2)
 --]]
-          assert(prev_chunk.h_join[dir1] == nil)
-          assert(     chunk.h_join[dir2] == nil)
+          --assert(prev_chunk.h_join[dir1] == nil)
+          --assert(     chunk.h_join[dir2] == nil)
 
           prev_chunk.h_join[dir1] = chunk
                chunk.h_join[dir2] = prev_chunk
@@ -2808,7 +3077,7 @@ end
 
       -- an exit room should only have a single connection, so
       -- inhibit a mirrored sprout.
-      if what == "INSTALL" and pass == "sprout" and R.is_exit then
+      if what == "INSTALL" and pass == "sprout" and R.is_exit and not LEVEL.is_procedural_gotcha then
         -- la la la
       elseif not match_or_install_pat_raw(what, T2) then
         return false
@@ -2842,7 +3111,11 @@ end
     -- successful, pick it and apply the substitution.
     --
 
---- gui.debugf("  Trying rule '%s'...\n", cur_rule.name)
+    if PARAM.print_shape_steps and PARAM.print_shape_steps == "showmore" then
+      gui.printf("  Trying rule '%s'...\n", cur_rule.name)
+    end
+
+    GROWER_DEBUG_INFO[cur_rule.name].trials = GROWER_DEBUG_INFO[cur_rule.name].trials + 1
 
     best = { score=-1, areas={} }
 
@@ -2895,6 +3168,7 @@ end
     end
 
     if best.score < 0 then
+      --gui.printf(" NOPE!\n")
       return false
     end
 
@@ -2931,6 +3205,158 @@ end
     end
 
     R.aversions[rule.name] = R.aversions[rule.name] / rule.aversion
+  end
+
+
+  -- MSSP: update smart groupings
+  local function update_shape_groupings(rule)
+
+
+    local function style_factor(rule)
+      if not rule.styles then return 1 end
+
+      local factor = 1.0
+
+      for _,name in pairs(rule.styles) do
+        if STYLE[name] == nil then
+          error("Unknown style in grammar rule: " .. tostring(name))
+        end
+
+        factor = factor * style_sel(name, 0, 0.28, 1.0, 3.5)
+      end
+
+      return factor
+    end
+
+
+    local function random_factor(rule)
+      if not rule.prob_skew then return 1 end
+
+      local prob_skew = rule.prob_skew
+      local half_skew = (1.0 + prob_skew) / 2.0
+
+      return rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
+    end
+
+
+    local function calc_prob(rule, x_prob, mode)
+      -- MSSP: this is a modification of calc_prob function.
+      -- x_prob is used for absurdity and shape groupings,
+      -- such that absurdification still runs through all
+      -- game filters and styles
+
+      if rule.skip_prob then
+        if rand.odds(rule.skip_prob) then return 0 end
+      end
+
+      if not ob_match_game(rule)     then return 0 end
+      if not ob_match_engine(rule)   then return 0 end
+      if not ob_match_playmode(rule) then return 0 end
+
+      if not LEVEL.liquid and rule.styles and
+         table.has_elem(rule.styles, "liquids")
+      then
+        return 0
+      end
+
+      if rule.new_room and rule.new_room.hall_type == "narrow" and
+         table.empty(THEME.narrow_halls or {})
+      then return 0 end
+
+      if rule.new_room and rule.new_room.hall_type == "wide" and
+         table.empty(THEME.wide_halls or {})
+      then return 0 end
+
+      local prob = rule.prob or 0
+
+      prob = prob *  style_factor(rule)
+      prob = prob * random_factor(rule)
+
+      if x_prob then
+        if mode == "multiply" or not mode then
+          prob = prob * x_prob
+        elseif mode == "divide" then
+          prob = prob / x_prob
+        end
+      end
+
+      return prob
+    end
+
+
+    local function change_group_probs(mode)
+      for name,cur_def in pairs(grammar) do
+        if rule.group == cur_def.group
+        and rule.group_pos ~= "entry" then
+          if mode == "highlight" then
+            calc_prob(cur_def, 1000000, "multiply")
+          elseif mode == "reduce" then
+            calc_prob(cur_def, 1.2, "divide")
+          elseif mode == "reset" then
+            calc_prob(cur_def)
+          end
+        end
+      end
+    end
+
+    if not rule.group then return end
+
+    if LEVEL.is_procedural_gotcha then return end
+
+    if LEVEL.is_absurd then return end
+
+    -- reset when rooms have changed
+    if PARAM.operated_room ~= R.id and PARAM.cur_shape_group then
+      PARAM.operated_room = R.id
+      change_group_probs("reset")
+      PARAM.cur_shape_groop = ""
+      PARAM.cur_shape_group_apply_count = 0
+    end
+
+    PARAM.operated_room = R.id
+
+    if PARAM.cur_shape_group ~= ""
+    and PARAM.print_shape_steps
+    and PARAM.print_shape_steps ~= "no" then
+      gui.printf("Shape group: " .. PARAM.cur_shape_group .. "\n")
+      gui.printf("Shape count: " .. PARAM.cur_shape_group_apply_count .. "\n")
+    end
+
+    -- start it up
+    if (rule.group and PARAM.cur_shape_group == "")
+    and PARAM.cur_shape_group_apply_count == 0
+    and rand.odds(50) then
+      PARAM.cur_shape_group = rule.group
+
+      change_group_probs("highlight")
+
+      PARAM.cur_shape_group_apply_count = rand.irange(6,15)
+    end
+
+    -- behavior for subsequent use of the same rules
+    if (rule.group == PARAM.cur_shape_group) then
+      PARAM.cur_shape_group_apply_count = PARAM.cur_shape_group_apply_count - 1
+
+      -- decrease probability for rules as each rule in the same
+      -- 'smart group' is applied
+      if PARAM.cur_shape_group_apply_count > 0 then
+        change_group_probs("reduce")
+
+      -- reset the probabilities of all rules in the smart group
+      -- once the apply count has reached count
+      elseif PARAM.cur_shape_group_apply_count <= 0 then
+        change_group_probs("reset")
+
+        PARAM.cur_shape_group = ""
+      end
+
+    end
+
+    -- end of the rine - sometimes the shape group doesn't manifest
+    if PARAM.cur_shape_group_apply_count == 0 then
+      PARAM.cur_shape_group = ""
+    end
+
   end
 
 
@@ -2997,20 +3423,46 @@ end
 
     -- SUCCESS --
 
-    gui.debugf("APPLIED rule: %s\n", cur_rule.name)
+    if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
+      gui.printf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
+    end
+
+    -- debug statistics
+    GROWER_DEBUG_INFO[cur_rule.name].applied = GROWER_DEBUG_INFO[cur_rule.name].applied + 1
+
+    if PARAM.live_minimap == "step" then
+      Seed_draw_minimap()
+    end
 
     update_aversions(cur_rule)
+
+    update_shape_groupings(cur_rule)
 
     -- apply any auxiliary rules
     if cur_rule.auxiliary then
       apply_auxiliary_rules()
+    end
+
+    if is_emergency then
+      gui.printf("Emergency in ROOM_" .. R.id .. " is resolved OMG AMAZING!!!!\n")
+      if not R.emergency_sprout_attempts then
+        R.emergency_sprout_attempts = 1
+      else
+        R.emergency_sprout_attempts = R.emergency_sprout_attempts + 1
+      end
+    end
+
+    if R.emergency_sprout_attempts then
+      gui.printf(R.id .. " Emergency Sprout attempts: " .. R.emergency_sprout_attempts .. "\n")
     end
   end
 
 
   ---| Grower_grammatical_pass |---
 
-  gui.debugf("Growing %s with [%s x %d].....\n", R.name, pass, apply_num)
+  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
+    gui.printf("Growing %s with [%s x %d].....\n", R.name, pass, apply_num)
+  end
 
   -- we should have a known bbox (unless creating a room)
   if not is_create then
@@ -3033,6 +3485,30 @@ end
       break;
     end
 
+    -- Linear Mode
+    if LEVEL.is_linear then
+
+      if pass == "sprout" then
+
+        if R:prelim_conn_num() >= 2 then
+          break;
+        end
+
+        if R.is_start and R:prelim_conn_num() >= 1 then
+          break;
+        end
+
+      end
+    end
+
+    if LEVEL.has_linear_start then
+      if pass == "sprout" then
+        if not R.is_street and R:prelim_conn_num() >= 1 and R.is_start then
+          break;
+        end
+      end
+    end
+
     -- stderrf("LOOP %d\n", loop)
     apply_a_rule(rule_tab)
 
@@ -3049,7 +3525,7 @@ function Grower_grammatical_room(R, pass, is_emergency)
   local apply_num
 
   if pass == "grow" then
-    apply_num = rand.pick({ 10,20,30 })
+    apply_num = rand.pick( {10,20,30} )
 
     if R.is_hallway then
       pass = assert(R.grow_pass)
@@ -3071,16 +3547,60 @@ function Grower_grammatical_room(R, pass, is_emergency)
       pass = R.grow_pass .. "_sprout"
     end
 
+    if R.is_street then
+      apply_num = rand.irange(6,20)
+    end
+
+    if LEVEL.is_linear then
+      apply_num = 1
+    end
+
   elseif pass == "decorate" then
     -- TODO: review this (and stop_prob), see what works best
-    apply_num = sel(R.is_big, 10, 6)
-    if R.is_outdoor or R.is_cave then apply_num = apply_num / 2 end
+    local tmp_num = sel(R.is_big, 10, 6)
+    if R.is_outdoor or R.is_cave then apply_num = tmp_num / 2 end
+    if R.is_natural_park then apply_num = tmp_num * 2 end
+
+    apply_num = tmp_num
 
   elseif pass == "filler" then
     apply_num = 30
 
   elseif pass == "smoother" then
     apply_num = 15
+
+  elseif pass == "streets" then
+    apply_num = rand.irange(5,10)
+
+  elseif pass == "streets_entry_4"
+  or pass == "streets_entry_6"
+  or pass == "streets_entry_8" then
+    apply_num = 1
+
+  elseif pass == "sidewalk" then
+    R.areas[1]:calc_volume()
+    local sidewalk_apply_num = math.ceil(R.areas[1].svolume/4.5)
+    gui.printf("Road volume: " .. R.areas[1].svolume .. "\n")
+    apply_num = sidewalk_apply_num
+
+  elseif pass == "street_fixer" then
+    apply_num = 15
+
+  elseif pass == "building_entrance" then
+    apply_num = rand.irange(5,10)
+
+  elseif pass == "square_out" then
+
+    for _,A in pairs(R.areas) do
+      A:calc_volume()
+      R.svolume = R.svolume + A.svolume
+    end
+
+    apply_num = math.floor(R.svolume/rand.irange(4,8))
+
+    if LEVEL.is_procedural_gotcha then
+      apply_num = math.ceil(apply_num * 0.25)
+    end
 
   else
     error("unknown grammar pass: " .. tostring(pass))
@@ -3092,7 +3612,17 @@ function Grower_grammatical_room(R, pass, is_emergency)
   if pass == "grow"     then stop_prob =  5 end
   if pass == "decorate" then stop_prob = 10 end
 
+  --
+  if LEVEL.is_procedural_gotcha then
+    if pass == "grow" or pass == "sprout" then
+      apply_num = 50
+    elseif pass == "decorate" then
+      apply_num = 15
+    end
+  end
+
   Grower_grammatical_pass(R, pass, apply_num, stop_prob, nil, nil, is_emergency)
+
 end
 
 
@@ -3216,15 +3746,34 @@ end
 function Grower_grow_room(R)
   gui.ticker()
 
-  local function is_too_small(R)
-    -- never prune a root room (including the exit)
-    if R.is_root then return false end
-
-    return R:calc_walk_vol() < 8
+  if R.is_street then
+    R.is_grown = true
+    return
   end
 
+  local function is_too_small(R)
+    -- never prune a root room (including the exit)
+
+    -- MSSP: Unless we're in linear mode, where
+    -- the map must continue growing elsewhere
+    -- or in Procedural Gotchas where the arena
+    -- is much too small.
+    if LEVEL.is_linear or
+    LEVEL.is_procedural_gotcha then
+      if R.is_start then return false end
+    end
+
+    if R.is_root then return false end
+
+    if LEVEL.is_procedural_gotcha then
+      return R:calc_walk_vol() < 24
+    else
+      return R:calc_walk_vol() < 8
+    end
+  end
 
   ---| Grower_grow_room |---
+
 
   Grower_grammatical_room(R, "grow")
 
@@ -3233,10 +3782,35 @@ function Grower_grow_room(R)
   if not R.is_hallway and is_too_small(R) then
     Grower_grammatical_room(R, "grow")
 
-    if is_too_small(R) then
+    if is_too_small(R) and not LEVEL.is_linear then
       Grower_kill_room(R)
       return
     end
+  end
+
+  -- Linear Mode, kill mirrored sprouts of symmetric rooms
+  if LEVEL.is_linear then
+  if R.grow_parent then
+    if R.grow_parent:prelim_conn_num() > 2 then
+        gui.printf("ROOM_" .. R.id .. " was SHOT DOWN VIOLENTLY by the Linear Mode thugz.\n")
+        Grower_kill_room(R)
+        return
+      end
+    end
+  end
+
+  if LEVEL.has_linear_start or LEVEL.is_linear then
+    if R.grow_parent then
+      if R.grow_parent.is_start and R.grow_parent:prelim_conn_num() > 1 then
+        gui.printf("'OH SHIT HERE WE GO AGAIN', says ROOM " .. R.id .. " before " ..
+        "he was violently gunned down by the Linear Mode thugz...\n")
+        Grower_kill_room(R)
+      end
+    end
+  end
+
+  if PARAM["live_minimap"] == "room" then
+    Seed_draw_minimap()
   end
 
   R.is_grown = true
@@ -3245,9 +3819,18 @@ end
 
 
 function Grower_sprout_room(R)
-  if R.is_dead then return end
+  if R.is_dead or R.is_street then return end
 
   Grower_grammatical_room(R, "sprout")
+
+  if rand.odds(LEVEL.squareishness) and not R.is_cave and not R.is_park
+  and not R.is_hallway and not R.is_street then
+
+    -- square_out pass - makes rooms a bit more buff and square
+    -- to distort the layout a bit more
+    Grower_grammatical_room(R, "square_out")
+    R.is_squarified = true
+  end
 
   -- if hallway did not sprout, try again
   if R.is_hallway and R:prelim_conn_num() < 2 then
@@ -3260,6 +3843,53 @@ function Grower_sprout_room(R)
   if R.is_hallway then
     Grower_prune_hallway(R)
   end
+end
+
+
+
+function Grower_make_street(R)
+  if R.is_streeted then return end
+
+  R.areas[1]:calc_volume()
+  R.svolume = R.areas[1].svolume
+  if R.svolume == 4 then
+    Grower_grammatical_room(R, "streets_entry_4")
+  elseif R.svolume == 6 then
+    Grower_grammatical_room(R, "streets_entry_6")
+  elseif R.svolume == 8 then
+    Grower_grammatical_room(R, "streets_entry_8")
+  end
+
+  Grower_grammatical_room(R, "streets")
+  Grower_grammatical_room(R, "street_fixer")
+
+  for _,A in pairs(R.areas) do
+    if not A.is_sidewalk then
+      A.is_road = true
+    end
+  end
+
+  Grower_grammatical_room(R, "sidewalk")
+
+  --[[if not R.is_start then
+    Grower_grammatical_room(R, "building_entrance")
+  end]]
+
+  -- sanity check: failed street rooms shall now become just
+  -- regular rooms
+  if R.areas[1].svolume < 16 then
+    R.is_street = false
+    R.areas[1].is_road = false
+    return
+  end
+
+  for _,A in pairs(R.areas) do
+    if not A.is_road then
+      A.is_sidewalk = true
+    end
+  end
+
+  R.is_streeted = true
 end
 
 
@@ -3297,6 +3927,10 @@ function Grower_create_and_grow_room(trunk, mode, info)
     return R
   end
 
+  -- if it's a street, street it
+  if R.is_street then
+    Grower_make_street(R)
+  end
 
   -- grow it now
   Grower_grow_room(R)
@@ -3311,12 +3945,13 @@ function Grower_add_a_trunk()
   local trunk =
   {
     id = alloc_id("trunk"),
-    rooms = {}
+    rooms = {},
   }
 
   trunk.name = string.format("TRUNK_%d", trunk.id)
 
   trunk.stair_z_dir = rand.sel(50, 1, -1)
+  trunk.stair_z_dir_fudge_prob = rand.pick({0,13,25,33,50})
 
   table.insert(LEVEL.trunks, trunk)
 
@@ -3345,7 +3980,7 @@ function Grower_begin_trunks()
   -- Trunks are parts of the map grown separately, and will be
   -- connected via teleporters (only).
   --
-  -- Here we decide how many to make, create for one and its
+  -- Here we decide how many to make, create each one and its
   -- first room [ which is grown later ].
   --
   -- The very first room of the first trunk will be the EXIT room
@@ -3370,6 +4005,11 @@ function Grower_begin_trunks()
     end
   end
 
+  -- ignore teleporter style setting for linear mode
+  -- don't you get enough teleporters already anyway?!
+  if LEVEL.is_linear then
+    max_trunks = 1
+  end
 
   LEVEL.trunks = {}
 
@@ -3404,16 +4044,19 @@ end
 
 
 
-function Grower_add_teleporter_trunk(parent_R)
+function Grower_add_teleporter_trunk(parent_R, is_emergency)
 
   local trunk = Grower_add_a_trunk()
   local info  = {}
 
 --[[ FIXME
   if rand.odds(LEVEL.cave_trunk_prob) then
-    info.env = "cave"
+    info.env = "cave",
   end
 --]]
+  if is_emergency then
+    info.force_no_street = true
+  end
 
   local R = Grower_create_and_grow_room(trunk, "normal", info)
 
@@ -3433,7 +4076,7 @@ function Grower_grow_all_rooms()
   local cov_rooms
 
 
-  local function rfored_coverage()
+  local function reached_coverage()
 gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         coverage,  LEVEL.min_coverage,
         cov_rooms, LEVEL.min_rooms)
@@ -3485,6 +4128,10 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         if PC.R1 == R or PC.R2 == R then
           local other = sel(PC.R1 == R, PC.R2, PC.R1)
 
+          if other.is_street then
+            Grower_make_street(R)
+          end
+
           Grower_grow_room(other)
           Grower_sprout_room(other)
           break;
@@ -3501,13 +4148,19 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   local function handle_next_room()
     coverage, cov_rooms = Grower_determine_coverage()
 
-    if rfored_coverage() then return "rfored" end
+    if reached_coverage() then return "reached" end
 
     if grow_teleport_trunk() then
       return "ok"
     end
 
     for _,R in pairs(LEVEL.rooms) do
+
+      -- if it's a street, street it
+      if R.is_street then
+        Grower_make_street(R)
+      end
+
       if not R.is_grown then
         Grower_grow_room(R)
         Grower_sprout_room(R)
@@ -3538,9 +4191,40 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     LEVEL.sprout_x2 = math.min(LEVEL.sprout_x2 + 2, LEVEL.walkable_x2)
     LEVEL.sprout_y2 = math.min(LEVEL.sprout_y2 + 2, LEVEL.walkable_y2)
 
-    if cov_rooms >= LEVEL.max_rooms then
+    if cov_rooms >= LEVEL.max_rooms and not LEVEL.is_procedural_gotcha then
       LEVEL.max_rooms = cov_rooms + 1
     end
+
+  end
+
+
+  local function emergency_teleport_break()
+    local final_R = LEVEL.rooms[#LEVEL.rooms]
+
+    gui.printf("ROOM_" .. final_R.id .. " in critical condition! " ..
+    "GET THE TELEPORNEPHERINE!\n")
+    Grower_add_teleporter_trunk(final_R, true)
+  end
+
+
+  -- a version of emergency_sprouts() except for the last
+  -- room in the stack only of a linear level only
+  local function emergency_linear_sprouts()
+    local R = LEVEL.rooms[#LEVEL.rooms]
+    if not reached_coverage() then
+
+      if R.is_hallway then return end
+
+      gui.printf("Oh noes! Attempting emergency sprout in ROOM_" .. R.id .. "!!!\n")
+      Grower_grammatical_room(R, "sprout", "is_emergency")
+    end
+
+    if not R.emergency_sprout_attempts then
+      return "oof"
+    elseif R.emergency_sprout_attempts > 1 then
+      return "oof"
+    end
+    return "yas queen"
   end
 
 
@@ -3559,7 +4243,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       kw = handle_next_room()
     until kw ~= "ok"
 
-    if kw == "rfored" then
+    if kw == "reached" then
       kill_surplus_rooms()
 
       -- go around again if the initial room resprouted
@@ -3574,7 +4258,14 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     expand_limits()
 
-    emergency_sprouts()
+    if LEVEL.is_linear then
+      if emergency_linear_sprouts() == "oof" then
+        emergency_teleport_break()
+      end
+    else
+      emergency_sprouts()
+    end
+
   end
 end
 
@@ -3590,8 +4281,11 @@ function Grower_decorate_rooms()
   rand.shuffle(room_list)
 
   for _,R in pairs(room_list) do
-    if not R.is_hallway then
+    if not R.is_hallway and not R.is_street then
       Grower_grammatical_room(R, "decorate")
+      if PARAM["live_minimap"] == "room" then
+        Seed_draw_minimap()
+      end
     end
   end
 end
@@ -3604,7 +4298,7 @@ function Grower_expand_parks()
   rand.shuffle(room_list)
 
   for _,R in pairs(room_list) do
-    if R.is_outdoor then
+    if R.is_outdoor and not R.is_street then
       -- disable the seed limit
       for _,A in pairs(R.areas) do
         if A.max_size then A.max_size = 999 end
@@ -3615,8 +4309,11 @@ function Grower_expand_parks()
   end
 
   for _,R in pairs(room_list) do
-    if R.is_outdoor then
+    if R.is_outdoor and not R.is_street then
       Grower_grammatical_room(R, "smoother")
+    end
+    if PARAM["live_minimap"] == "room" then
+    Seed_draw_minimap()
     end
   end
 
@@ -3732,9 +4429,11 @@ function Grower_flatten_outdoor_fences()
           for _,N in pairs(change_list) do
             set_liquid(R, N)
           end
-        return
         end
-
+        
+        if S then
+          return
+        end
         ::continue::
       end
 
@@ -3943,14 +4642,46 @@ function Grower_create_rooms()
 
   Grower_decorate_rooms()
   Grower_expand_parks()
---TODO  Grower_flatten_outdoor_fences()
+
   Grower_split_liquids()
 
   Seed_squarify()
 
   -- debugging aid
-  if OB_CONFIG.svg then
+  if OB_CONFIG.svg or (PARAM.save_svg and PARAM.save_svg == "yes") then
     Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
+  end
+
+  if PARAM.shape_rule_stats == "yes" then
+    table.sort(GROWER_DEBUG_INFO, function(A,B)
+    return (A.trials > B.trials) end)
+
+    gui.printf("\n--==| Shape Rule Statistics |==--\n" ..
+    "NAME: APPLY COUNT / TRIAL COUNT : USE PROBABILITY\n")
+    for rule, info in pairs(GROWER_DEBUG_INFO) do
+
+      local cur_prob = GAME.SHAPE_GRAMMAR[info.name].use_prob
+
+      gui.printf(info.name .. ": ")
+      if info.trials > 0 then
+        gui.printf(info.applied .. " / " .. info.trials)
+        gui.printf(" : " .. cur_prob)
+      elseif info.trials == 0 then
+        gui.printf(cur_prob .. " ***UNUSED***")
+      end
+
+
+      if GAME.SHAPE_GRAMMAR[info.name].is_absurd then
+        gui.printf(" (ABSURD)")
+      end
+
+      if info.trials > 0 then
+        local perc = math.floor((info.applied / info.trials) * 10000) / 100
+        gui.printf(" (" .. perc .. "%% success)")
+      end
+
+      gui.printf("\n")
+    end
   end
 
   Seed_draw_minimap()
@@ -3959,8 +4690,7 @@ function Grower_create_rooms()
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
       local K = SEEDS[sx][sy].chunk
-      if K then assert(K.kind ~= "link") end
+      --if K then assert(K.kind ~= "link") end
     end
     end
 end
-
