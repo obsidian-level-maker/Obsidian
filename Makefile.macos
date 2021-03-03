@@ -10,12 +10,12 @@
 # NOTE: a system-wide FLTK library is assumed
 #
 
-PROGRAM=Oblige
+PROGRAM=Obsidian
 
 # prefix choices: /usr  /usr/local  /opt
 PREFIX=/usr/local
 
-SCRIPT_DIR=$(PREFIX)/share/oblige
+SCRIPT_DIR=$(PREFIX)/share/obsidian
 
 CXX=g++
 
@@ -39,7 +39,7 @@ LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
 
-#----- OBLIGE Objects ----------------------------------------------
+#----- OBSIDIAN Objects ----------------------------------------------
 .SECONDEXPANSION:
 
 OBJS=	$(OBJ_DIR)/main.o      \
@@ -100,8 +100,8 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/ui_module.o \
 	$(OBJ_DIR)/ui_rchoice.o \
 	$(OBJ_DIR)/ui_window.o \
-	\
-	$(OBJ_DIR)/zf_menu.o
+	$(OBJ_DIR)/zf_menu.o \
+	$(OBJ_DIR)/twister.o
 
 $(OBJ_DIR)/%.o: gui/%.cc $$(@D)/.f
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
@@ -115,40 +115,42 @@ $(OBJ_DIR)/%.o: gui/%.cc $$(@D)/.f
 #----- LUA Objects --------------------------------------------------
 
 LUA_OBJS=\
-	$(OBJ_DIR)/lua/lapi.o     \
-	$(OBJ_DIR)/lua/lcode.o    \
-	$(OBJ_DIR)/lua/ldebug.o   \
-	$(OBJ_DIR)/lua/ldo.o      \
-	$(OBJ_DIR)/lua/ldump.o    \
-	$(OBJ_DIR)/lua/lfunc.o    \
-	$(OBJ_DIR)/lua/lgc.o      \
-	$(OBJ_DIR)/lua/llex.o     \
-	$(OBJ_DIR)/lua/lmem.o     \
-	$(OBJ_DIR)/lua/lobject.o  \
-	$(OBJ_DIR)/lua/lopcodes.o \
-	$(OBJ_DIR)/lua/lparser.o  \
-	$(OBJ_DIR)/lua/lstate.o   \
-	$(OBJ_DIR)/lua/lstring.o  \
-	$(OBJ_DIR)/lua/ltable.o   \
-	$(OBJ_DIR)/lua/ltm.o      \
-	$(OBJ_DIR)/lua/lundump.o  \
-	$(OBJ_DIR)/lua/lvm.o      \
-	$(OBJ_DIR)/lua/lzio.o     \
-	\
+	$(OBJ_DIR)/lua/lapi.o   \
 	$(OBJ_DIR)/lua/lauxlib.o   \
-	$(OBJ_DIR)/lua/lbaselib.o  \
-	$(OBJ_DIR)/lua/ldblib.o    \
-	$(OBJ_DIR)/lua/liolib.o    \
-	$(OBJ_DIR)/lua/lmathlib.o  \
-	$(OBJ_DIR)/lua/loslib.o    \
-	$(OBJ_DIR)/lua/ltablib.o   \
-	$(OBJ_DIR)/lua/lstrlib.o   \
+	$(OBJ_DIR)/lua/lbaselib.o   \
+	$(OBJ_DIR)/lua/lcode.o   \
+	$(OBJ_DIR)/lua/lcorolib.o   \
+	$(OBJ_DIR)/lua/lctype.o   \
+	$(OBJ_DIR)/lua/ldblib.o   \
+	$(OBJ_DIR)/lua/ldebug.o   \
+	$(OBJ_DIR)/lua/ldo.o   \
+	$(OBJ_DIR)/lua/ldump.o   \
+	$(OBJ_DIR)/lua/lfunc.o   \
+	$(OBJ_DIR)/lua/lgc.o   \
+	$(OBJ_DIR)/lua/linit.o   \
+	$(OBJ_DIR)/lua/liolib.o   \
+	$(OBJ_DIR)/lua/llex.o   \
+	$(OBJ_DIR)/lua/lmathlib.o   \
+	$(OBJ_DIR)/lua/lmem.o   \
 	$(OBJ_DIR)/lua/loadlib.o   \
-	$(OBJ_DIR)/lua/linit.o
+	$(OBJ_DIR)/lua/lobject.o   \
+	$(OBJ_DIR)/lua/lopcodes.o   \
+	$(OBJ_DIR)/lua/loslib.o   \
+	$(OBJ_DIR)/lua/lparser.o   \
+	$(OBJ_DIR)/lua/lstate.o   \
+	$(OBJ_DIR)/lua/lstring.o   \
+	$(OBJ_DIR)/lua/lstrlib.o   \
+	$(OBJ_DIR)/lua/ltable.o   \
+	$(OBJ_DIR)/lua/ltablib.o   \
+	$(OBJ_DIR)/lua/ltm.o   \
+	$(OBJ_DIR)/lua/lundump.o   \
+	$(OBJ_DIR)/lua/lutf8lib.o   \
+	$(OBJ_DIR)/lua/lvm.o   \
+	$(OBJ_DIR)/lua/lzio.o 
 
 LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI -DLUA_USE_MKSTEMP
 
-$(OBJ_DIR)/lua/%.o: lua_src/%.cc $$(@D)/.f
+$(OBJ_DIR)/lua/%.o: lua_src/%.c $$(@D)/.f
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
 %/.f:
@@ -205,13 +207,23 @@ $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc $$(@D)/.f
 #----- PhysFS Objects ---------------------------------------------
 
 PHYSFS_OBJS= \
-	$(OBJ_DIR)/physfs/byteorder.o  \
+	$(OBJ_DIR)/physfs/physfs_byteorder.o  \
 	$(OBJ_DIR)/physfs/physfs.o  \
-	$(OBJ_DIR)/physfs/unicode.o  \
-	$(OBJ_DIR)/physfs/arch_dir.o   \
-	$(OBJ_DIR)/physfs/arch_zip.o   \
-	$(OBJ_DIR)/physfs/sys_unix.o   \
-	$(OBJ_DIR)/physfs/sys_posix.o
+	$(OBJ_DIR)/physfs/physfs_unicode.o  \
+	$(OBJ_DIR)/physfs/physfs_archiver_7z.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_grp.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_dir.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_qpak.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_hog.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_mvl.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_wad.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_slb.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_iso9660.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_unpacked.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_vdf.o   \
+	$(OBJ_DIR)/physfs/physfs_archiver_zip.o   \
+	$(OBJ_DIR)/physfs/physfs_platform_unix.o   \
+	$(OBJ_DIR)/physfs/physfs_platform_posix.o 
 
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
@@ -260,7 +272,7 @@ stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
 
 install: stripped
-	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/oblige
+	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/obsidian
 	#
 	install -d $(SCRIPT_DIR)/scripts
 	install -d $(SCRIPT_DIR)/engines
@@ -287,7 +299,7 @@ install: stripped
 	chmod -R g-s  $(SCRIPT_DIR)/games
 
 uninstall:
-	rm -v $(PREFIX)/bin/oblige
+	rm -v $(PREFIX)/bin/obsidian
 	rm -Rv $(SCRIPT_DIR)
 
 

@@ -675,7 +675,7 @@ void DLG_SelectAddons(void)
 		int opt_w = kf_w(350);
 		int opt_h = kf_h(380);
 
-		addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBLIGE Addons"));
+		addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
 
 		addons_window->Populate();
 	}
@@ -693,7 +693,7 @@ void DLG_SelectAddons(void)
 		// persist the changed addon list into OPTIONS.txt
 		Options_Save(options_file);
 
-		fl_alert("%s", _("Changes to addons require a restart.\nOBLIGE will now close."));
+		fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will now close."));
 
 		main_action = MAIN_QUIT;
 	}

@@ -1,11 +1,11 @@
 #----------------------------------------------------------------
-# OBLIGE
+# OBSIDIAN
 #----------------------------------------------------------------
 #
 # GNU Makefile for WIN32, using CROSS-COMPILER on Linux
 #
 
-PROGRAM=Oblige.exe
+PROGRAM=Obsidian.exe
 
 CROSS=i686-w64-mingw32-
 
@@ -44,7 +44,7 @@ LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
      -lcomctl32 -lwsock32 -lsupc++
 
 
-#----- OBLIGE Objects ----------------------------------------------
+#----- OBSIDIAN Objects ----------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_about.o  \
@@ -230,7 +230,7 @@ $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 stripped: $(PROGRAM)
 	$(CROSS)strip $(STRIP_FLAGS) $(PROGRAM)
 
-$(OBJ_DIR)/oblige_res.o: gui/oblige.rc
+$(OBJ_DIR)/oblige_res.o: gui/obsidian.rc
 	$(CROSS)windres $^ -o $@
 
 .PHONY: all clean stripped

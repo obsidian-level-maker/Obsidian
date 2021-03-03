@@ -28,7 +28,7 @@
 
 #define TITLE_COLOR  fl_color_cube(0,2,4)
 
-#define INFO_COLOR   fl_rgb_color(144, 192, 255)
+#define INFO_COLOR   fl_rgb_color(153, 153, 153)
 
 
 class UI_About : public Fl_Window
@@ -86,9 +86,10 @@ private:
 
 const char *UI_About::Text =
 	N_(
-	"OBLIGE is a random level generator\n"
+	"OBSIDIAN is a random level generator\n"
 	"for classic FPS games like DOOM\n"
 	"\n"
+	"It is a continuation of the OBLIGE Level Maker\n"
 	"Copyright (C) 2006-2017 Andrew Apted, et al\n"
 	"\n"
 	"This program is free software, and may be\n"
@@ -99,7 +100,7 @@ const char *UI_About::Text =
 	"Use at your OWN RISK");
 
 
-const char *UI_About::URL = "http://oblige.sourceforge.net";
+const char *UI_About::URL = "https://caligari87.github.io/ObAddon/";
 
 
 //
@@ -125,7 +126,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 	Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
-	box->labelcolor(TITLE_COLOR);
+	box->labelcolor(0x00000000);
 	box->labelsize(FL_NORMAL_SIZE * 5 / 3);
 
 	cy += box->h() + kf_h(6);
@@ -149,7 +150,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 	UI_HyperLink *link = new UI_HyperLink(pad, cy, W-pad*2, kf_h(30), URL, URL);
 	link->align(FL_ALIGN_CENTER);
-	link->labelsize(FL_NORMAL_SIZE * 3 / 2);
+	link->labelsize(FL_NORMAL_SIZE * 2 / 2);
 
 	if (alternate_look)
 		link->color(FL_LIGHT3, FL_LIGHT3);
@@ -186,7 +187,7 @@ void DLG_AboutText(void)
 		int about_w = kf_w(400);
 		int about_h = kf_h(400) + KF * 20;
 
-		about_window = new UI_About(about_w, about_h, _("About OBLIGE"));
+		about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
 	}
 
 	about_window->want_quit = false;

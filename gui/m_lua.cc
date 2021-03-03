@@ -664,7 +664,6 @@ int gui_rand_seed(lua_State *L)
 int gui_random(lua_State *L)
 {
 	lua_Number value = twister_Double();
-	
 	lua_pushnumber(L, value);
 	return 1;
 }

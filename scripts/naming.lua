@@ -2481,8 +2481,8 @@ function namelib.test()
       gui.rand_seed(set)
       local list = namelib.generate(T, 12, 28)
 
-      for name in list do
-        gui.debugf("%s Set %d Name %2d: %s\n", T, set, _index, name)
+      for index,name in list do
+        gui.debugf("%s Set %d Name %2d: %s\n", T, set, index, name)
       end
 
       gui.debugf("\n");

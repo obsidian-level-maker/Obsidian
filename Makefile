@@ -1,5 +1,5 @@
 #----------------------------------------------------------------
-# OBLIGE
+# OBSIDIAN
 #----------------------------------------------------------------
 #
 # GNU Makefile for Unix/Linux with system-wide install
@@ -10,12 +10,12 @@
 # NOTE: a system-wide FLTK library is assumed
 #
 
-PROGRAM=Oblige
+PROGRAM=Obsidian
 
 # prefix choices: /usr  /usr/local  /opt
 PREFIX=/usr
 
-SCRIPT_DIR=$(PREFIX)/share/oblige
+SCRIPT_DIR=$(PREFIX)/share/obsidian
 
 CXX=g++
 
@@ -39,7 +39,7 @@ LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
 
-#----- OBLIGE Objects ----------------------------------------------
+#----- OBSIDIAN Objects ----------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_about.o  \
@@ -246,7 +246,7 @@ stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
 
 install: stripped
-	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/oblige
+	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/obsidian
 	#
 	install -d $(SCRIPT_DIR)/scripts
 	install -d $(SCRIPT_DIR)/engines
@@ -272,18 +272,18 @@ install: stripped
 	chown -R root $(SCRIPT_DIR)/games
 	chmod -R g-s  $(SCRIPT_DIR)/games
 	#
-	xdg-desktop-menu  install --novendor misc/oblige.desktop
-	xdg-icon-resource install --novendor --size 32 misc/oblige.xpm
+	xdg-desktop-menu  install --novendor misc/obsidian.desktop
+	xdg-icon-resource install --novendor --size 32 misc/obsidian.xpm
 
 uninstall:
-	rm -v $(PREFIX)/bin/oblige
+	rm -v $(PREFIX)/bin/obsidian
 	rm -Rv $(SCRIPT_DIR)
 	#
-	xdg-desktop-menu  uninstall --novendor misc/oblige.desktop
-	xdg-icon-resource uninstall --novendor --size 32 oblige
+	xdg-desktop-menu  uninstall --novendor misc/obsidian.desktop
+	xdg-icon-resource uninstall --novendor --size 32 obsidian
 
 xgettext:
-	xgettext -o LANG_TEMPLATE.txt -k_ -kN_ -F -i --foreign-user --package-name="Oblige Level Maker" $(LANG_FILES)
+	xgettext -o LANG_TEMPLATE.txt -k_ -kN_ -F -i --foreign-user --package-name="Obsidian Level Maker" $(LANG_FILES)
 
 .PHONY: all clean halfclean stripped install uninstall xgettext
 

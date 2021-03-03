@@ -21,10 +21,10 @@
 #ifndef __OBLIGE_MAIN_H__
 #define __OBLIGE_MAIN_H__
 
-#define OBLIGE_TITLE  "OBLIGE Level Maker"
+#define OBLIGE_TITLE  "OBSIDIAN Level Maker"
 
-#define OBLIGE_VERSION  "7.70"
-#define OBLIGE_HEX_VER  0x770
+#define OBLIGE_VERSION  "Beta"
+#define OBLIGE_HEX_VER  0x800
 
 
 #define CONFIG_FILENAME   "CONFIG.txt"

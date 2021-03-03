@@ -669,7 +669,7 @@ void DLG_ViewLogs(void)
 	int log_w = kf_w(560);
 	int log_h = kf_h(380);
 
-	UI_LogViewer *log_viewer = new UI_LogViewer(log_w, log_h, _("OBLIGE Log Viewer"));
+	UI_LogViewer *log_viewer = new UI_LogViewer(log_w, log_h, _("OBSIDIAN Log Viewer"));
 
 	log_viewer->ReadLogs();
 

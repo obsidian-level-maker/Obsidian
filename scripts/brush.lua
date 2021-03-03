@@ -601,10 +601,10 @@ function brushlib.dump(brush, title)
 
     local line = ""
 
-    for _,name in pairs(field_list) do
+    for index,name in pairs(field_list) do
       local val = C[name]
 
-      if _index > 1 then line = line .. ", " end
+      if index > 1 then line = line .. ", " end
 
       line = line .. string.format("%s=%s", name, tostring(val))
     end

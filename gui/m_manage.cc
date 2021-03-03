@@ -150,8 +150,8 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf)
 		if (stream.hit_eof())
 			return false;  // not found
 
-		if (stream.match("-- CONFIG FILE : OBLIGE ") ||
-			stream.match("-- Levels created by OBLIGE "))
+		if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
+			stream.match("-- Levels created by OBSIDIAN "))
 		{
 			break;  // found it
 		}
@@ -328,9 +328,9 @@ public:
 	{
 		Clear();
 
-		text_buf->append("-- CONFIG FILE : OBLIGE " OBLIGE_VERSION "\n"); 
-		text_buf->append("-- " OBLIGE_TITLE " (C) 2006-2017 Andrew Apted\n");
-		text_buf->append("-- http://oblige.sourceforge.net/\n\n");
+		text_buf->append("-- CONFIG FILE : OBSIDIAN " OBLIGE_VERSION "\n"); 
+		text_buf->append("-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+		text_buf->append("-- https://caligari87.github.io/ObAddon/\n\n");
 
 		std::vector<std::string> lines;
 
@@ -855,7 +855,7 @@ void DLG_ManageConfig(void)
 		int manage_w = kf_w(600);
 		int manage_h = kf_h(380);
 
-		config_window = new UI_Manage_Config(manage_w, manage_h, _("OBLIGE Config Manager"));
+		config_window = new UI_Manage_Config(manage_w, manage_h, _("OBSIDIAN Config Manager"));
 	}
 
 	config_window->want_quit = false;

@@ -231,9 +231,9 @@ bool Cookie_Save(const char *filename)
 	LogPrintf("Saving config file...\n");
 
 	// header...
-	fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
-	fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2017 Andrew Apted\n");
-	fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
+	fprintf(cookie_fp, "-- CONFIG FILE : OBSIDIAN %s\n", OBLIGE_VERSION); 
+	fprintf(cookie_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+	fprintf(cookie_fp, "-- https://caligari87.github.io/ObAddon/\n\n");
 
 	// settings...
 	std::vector<std::string> lines;

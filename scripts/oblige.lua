@@ -770,7 +770,7 @@ function ob_init()
   end
 
 
-  gui.printf("~~ Oblige Lua initialization begun ~~\n\n")
+  gui.printf("~~ Obsidian Lua initialization begun ~~\n\n")
 
 
   -- load definitions for all games

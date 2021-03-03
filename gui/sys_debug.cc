@@ -45,7 +45,7 @@ bool LogInit(const char *filename)
 			return false;
 	}
 
-	LogPrintf("====== START OF OBLIGE LOGS ======\n");
+	LogPrintf("====== START OF OBSIDIAN LOGS ======\n");
 
 	return true;
 }
@@ -72,7 +72,7 @@ void LogEnableTerminal(bool enable)
 
 void LogClose(void)
 {
-	LogPrintf("\n====== END OF OBLIGE LOGS ======\n\n");
+	LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
 	if (log_file)
 	{

@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Oblige Level Maker
+Name=Obsidian Level Maker
 Comment=Generate random levels for classic FPS games (DOOM etc)
-Exec=oblige
-Icon=oblige
+Exec=obsidian
+Icon=obsidian
 Terminal=false
 Type=Application
 Categories=Game;ActionGame;

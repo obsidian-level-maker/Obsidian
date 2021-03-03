@@ -80,12 +80,13 @@ static void ShowInfo()
 {
 	printf(
 		"\n"
-		"** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2017 Andrew Apted **\n"
+		"** " OBLIGE_TITLE " " OBLIGE_VERSION " **\n"
+		"** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
 		"\n"
 	);
 
 	printf(
-		"Usage: Oblige [options...] [key=value...]\n"
+		"Usage: Obsidian [options...] [key=value...]\n"
 		"\n"
 		"Available options:\n"
 		"     --home     <dir>      Home directory\n"
@@ -108,7 +109,7 @@ static void ShowInfo()
 
 	printf(
 		"Please visit the web site for complete information:\n"
-		"   http://oblige.sourceforge.net\n"
+		"   https://caligari87.github.io/ObAddon/\n"
 		"\n"
 	);
 
@@ -125,7 +126,7 @@ static void ShowInfo()
 
 static void ShowVersion()
 {
-	printf("Oblige version " OBLIGE_VERSION " (" __DATE__ ")\n");
+	printf("Obsidian version " OBLIGE_VERSION " (" __DATE__ ")\n");
 
 	fflush(stdout);
 }
@@ -143,7 +144,7 @@ void Determine_WorkingPath(const char *argv0)
 	{
 		if (home_arg+1 >= arg_count || ArgvIsOption(home_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing path for --home\n");
+			fprintf(stderr, "OBSIDIAN ERROR: missing path for --home\n");
 			exit(9);
 		}
 
@@ -157,7 +158,7 @@ void Determine_WorkingPath(const char *argv0)
 #else
 	char *path = StringNew(FL_PATH_MAX + 4);
 
-	if (fl_filename_expand(path, "$HOME/.oblige") == 0)
+	if (fl_filename_expand(path, "$HOME/.obsidian") == 0)
 		Main_FatalError("Unable to find $HOME directory!\n");
 
 	home_dir = path;
@@ -201,7 +202,7 @@ void Determine_InstallDir(const char *argv0)
 	{
 		if (inst_arg+1 >= arg_count || ArgvIsOption(inst_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing path for --install\n");
+			fprintf(stderr, "OBSIDIAN ERROR: missing path for --install\n");
 			exit(9);
 		}
 
@@ -233,7 +234,7 @@ void Determine_InstallDir(const char *argv0)
 
 	for (int i = 0 ; prefixes[i] ; i++)
 	{
-		install_dir = StringPrintf("%s/share/oblige", prefixes[i]);
+		install_dir = StringPrintf("%s/share/obsidian", prefixes[i]);
 
 		if (Verify_InstallDir(install_dir))
 			return;
@@ -244,7 +245,7 @@ void Determine_InstallDir(const char *argv0)
 #endif
 
 	if (! install_dir)
-		Main_FatalError("Unable to find Oblige's install directory!\n");
+		Main_FatalError("Unable to find Obsidian's install directory!\n");
 }
 
 
@@ -256,7 +257,7 @@ void Determine_ConfigFile()
 	{
 		if (conf_arg+1 >= arg_count || ArgvIsOption(conf_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing path for --config\n");
+			fprintf(stderr, "OBSIDIAN ERROR: missing path for --config\n");
 			exit(9);
 		}
 
@@ -277,7 +278,7 @@ void Determine_OptionsFile()
 	{
 		if (optf_arg+1 >= arg_count || ArgvIsOption(optf_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing path for --options\n");
+			fprintf(stderr, "OBSIDIAN ERROR: missing path for --options\n");
 			exit(9);
 		}
 
@@ -298,7 +299,7 @@ void Determine_LoggingFile()
 	{
 		if (logf_arg+1 >= arg_count || ArgvIsOption(logf_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing path for --log\n");
+			fprintf(stderr, "OBSIDIAN ERROR: missing path for --log\n");
 			exit(9);
 		}
 
@@ -688,7 +689,7 @@ int main(int argc, char **argv)
 	{
 		if (batch_arg+1 >= arg_count || ArgvIsOption(batch_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing filename for --batch\n");
+			fprintf(stderr, "OBSIDIAN ERROR: missing filename for --batch\n");
 			exit(9);
 		}
 
@@ -717,7 +718,7 @@ int main(int argc, char **argv)
 
 	LogPrintf("\n");
 	LogPrintf("********************************************************\n");
-	LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2017 Andrew Apted **\n");
+	LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " **\n");
 	LogPrintf("********************************************************\n");
 	LogPrintf("\n");
 
@@ -758,7 +759,7 @@ int main(int argc, char **argv)
 	{
 		if (load_arg+1 >= arg_count || ArgvIsOption(load_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing filename for --load\n");
+			fprintf(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
 			exit(9);
 		}
 
@@ -839,7 +840,7 @@ int main(int argc, char **argv)
 	// show window (pass some dummy arguments)
 	{
 		char *argv[2];
-		argv[0] = strdup("Oblige.exe");
+		argv[0] = strdup("Obsidian.exe");
 		argv[1] = NULL;
 
 		main_win->show(1 /* argc */, argv);

@@ -1768,8 +1768,8 @@ function Hub_assign_pieces(epi, pieces)
 
   rand.shuffle(levels)
 
-  for piece in pieces do
-    local L = levels[_index]
+  for index,piece in pieces do
+    local L = levels[index]
 
     L.hub_piece = piece
 
@@ -2292,7 +2292,7 @@ function Level_make_level(LEV)
   gui.at_level(LEVEL.name, index, total)
 
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
-
+  print("OB_CONFIG SEED: " .. OB_CONFIG.seed)
   LEVEL.seed = OB_CONFIG.seed + index * 10
   LEVEL.ids  = {}
 
@@ -2301,7 +2301,7 @@ function Level_make_level(LEV)
   if GAME.THEMES.DEFAULTS then
     table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
   end
-
+  print(LEVEL.seed)
   gui.rand_seed(LEVEL.seed + 0)
 
 

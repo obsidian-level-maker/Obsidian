@@ -643,7 +643,6 @@ function rand.index_by_probs(p)
 
   if total > 0 then
     local value = gui.random() * total
-
     for idx, prob in ipairs(p) do
       value = value - prob
       if (value <= 0) then return idx end
@@ -659,12 +658,13 @@ function rand.key_by_probs(tab)
   -- This function returns one of the keys.
   local key_list  = {}
   local prob_list = {}
-
-  for key,prob in pairs(tab) do
+  for key,_ in pairs(tab) do
     table.insert(key_list,  key)
-    table.insert(prob_list, prob)
   end
-
+  table.sort(key_list)
+  for _,key in ipairs(key_list) do
+    table.insert(prob_list, tab[key])
+  end
   local idx = rand.index_by_probs(prob_list)
 
   return key_list[idx]
