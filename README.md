@@ -1,5 +1,5 @@
 
-# OBSIDIAN (Working Title)
+# OBSIDIAN
 by the ObAddon Community.
 
 
