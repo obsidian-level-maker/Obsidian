@@ -1,9 +1,9 @@
-# Language Translation for Oblige Level Maker.
+# Language Translation for Obsidian Level Maker.
 # This file is put in the public domain.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Oblige Level Maker\n"
+"Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
 "PO-Revision-Date: 2021-02-11 12:17+0430\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: gui/m_about.cc:189
-msgid "About OBLIGE"
-msgstr "About OBLIGE"
+msgid "About OBSIDIAN"
+msgstr "About OBSIDIAN"
 
 #: gui/m_manage.cc:347
 msgid "CURRENT SETTINGS"
@@ -98,8 +98,8 @@ msgid "Paste"
 msgstr "Paste"
 
 #: gui/m_manage.cc:858
-msgid "OBLIGE Config Manager"
-msgstr "OBLIGE Config Manager"
+msgid "OBSIDIAN Config Manager"
+msgstr "OBSIDIAN Config Manager"
 
 #: gui/g_doom.cc:204
 #, c-format
@@ -194,8 +194,8 @@ msgid "Note: some options require a restart."
 msgstr "Note: some options require a restart."
 
 #: gui/m_options.cc:523
-msgid "OBLIGE Misc Options"
-msgstr "OBLIGE Misc Options"
+msgid "OBSIDIAN Misc Options"
+msgstr "OBSIDIAN Misc Options"
 
 #: gui/m_lua.cc:612
 #, c-format
@@ -212,8 +212,8 @@ msgid "Script Error"
 msgstr "Script Error"
 
 #: gui/m_dialog.cc:209
-msgid "OBLIGE - Error Message"
-msgstr "OBLIGE - Error Message"
+msgid "OBSIDIAN - Error Message"
+msgstr "OBSIDIAN - Error Message"
 
 #: gui/m_dialog.cc:235
 msgid "Select output file"
@@ -235,8 +235,8 @@ msgid "Enter New Seed Number:"
 msgstr "Enter New Seed Number:"
 
 #: gui/m_dialog.cc:662
-msgid "OBLIGE Log Viewer"
-msgstr "OBLIGE Log Viewer"
+msgid "OBSIDIAN Log Viewer"
+msgstr "OBSIDIAN Log Viewer"
 
 #: gui/g_quake.cc:1401
 msgid "BSP"
@@ -312,16 +312,16 @@ msgid "Changes require a restart"
 msgstr "Changes require a restart"
 
 #: gui/m_addons.cc:659
-msgid "OBLIGE Addons"
-msgstr "OBLIGE Addons"
+msgid "OBSIDIAN Addons"
+msgstr "OBSIDIAN Addons"
 
 #: gui/m_addons.cc:677
 msgid ""
 "Changes to addons require a restart.\n"
-"OBLIGE will now close."
+"OBSIDIAN will now close."
 msgstr ""
 "Changes to addons require a restart.\n"
-"OBLIGE will now close."
+"OBSIDIAN will now close."
 
 #: gui/ui_build.cc:63
 msgid "Menu"
