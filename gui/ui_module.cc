@@ -254,7 +254,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 	mod_pack->labelcolor(FL_DARK1);
 
 	mod_pack->box(FL_FLAT_BOX);
-	mod_pack->color(WINDOW_BG);  
+	mod_pack->color(WINDOW_BG);
 	mod_pack->resizable(NULL);
 
 

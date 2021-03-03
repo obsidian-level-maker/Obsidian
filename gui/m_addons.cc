@@ -352,7 +352,6 @@ public:
 		button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), name2);
 		// if (tip)
 		//	button->tooltip(tip);
-
 		end();
 
 		resizable(NULL);

@@ -29,7 +29,7 @@
 #include "m_lua.h"
 
 
-#define BG_COLOR  fl_gray_ramp(10)
+#define BG_COLOR  fl_rgb_color(221, 221, 221)
 
 
 // forward decls
