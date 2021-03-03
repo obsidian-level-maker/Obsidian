@@ -1408,7 +1408,7 @@ function ob_build_cool_shit()
 
   gui.printf("\n\n")
   gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
-  gui.printf("-- CONFIG FILE : OBLIGE 7.70\n\n")
+  gui.printf("-- CONFIG FILE : OBSIDIAN Beta\n\n")
 
   ob_read_all_config(false, "log_only")
 
