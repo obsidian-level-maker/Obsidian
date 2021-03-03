@@ -25,7 +25,7 @@ OBSIDIAN will then build all the maps, showing a blueprint of each one as it goe
 
 ## About This Repository
 
-This is an community continuation of the OBLIGE Level Maker, originally created by Andrew Apted.
+This is a community continuation of the OBLIGE Level Maker, originally created by Andrew Apted.
 
 A brief summary of changes:
 
