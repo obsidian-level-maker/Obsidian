@@ -546,7 +546,7 @@ void Main_SetSeed()
 {
 	char num_buf[256];
 
-	sprintf(num_buf, "%lu", next_rand_seed);
+	sprintf(num_buf, "%llu", next_rand_seed);
 
 	ob_set_config("seed", num_buf);
 }
