@@ -31,14 +31,14 @@ BEGIN
     // 0409 means "US English"; 04B0 means "Unicode encoding"
     BLOCK "040904B0"
     BEGIN
-      VALUE "CompanyName",      "Andrew Apted\0"
-      VALUE "FileDescription",  "OBLIGE Level Maker\0"
-      VALUE "FileVersion",      "7.70\0"
-      VALUE "InternalName",     "OBLIGE\0"
+      VALUE "CompanyName",      "ObAddon Community\0"
+      VALUE "FileDescription",  "OBSIDIAN Level Maker\0"
+      VALUE "FileVersion",      "Beta\0"
+      VALUE "InternalName",     "OBSIDIAN\0"
       VALUE "LegalCopyright",   "\251 Andrew Apted, GNU General Public License\0"
-      VALUE "OriginalFilename", "OBLIGE.EXE\0"
-      VALUE "ProductName",      "OBLIGE\0"
-      VALUE "ProductVersion",   "7.70\0"
+      VALUE "OriginalFilename", "OBSIDIAN.EXE\0"
+      VALUE "ProductName",      "OBSIDIAN\0"
+      VALUE "ProductVersion",   "Beta\0"
     END
   END
   BLOCK "VarFileInfo"

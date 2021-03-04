@@ -2,49 +2,44 @@
 # OBSIDIAN
 #----------------------------------------------------------------
 #
-# GNU Makefile for WIN64, using CROSS-COMPILER on Linux
+# GNU Makefile for Unix/Linux with system-wide install
+#
+# Using this makefile (make, make install) will place the
+# executable, script and data files in standard Unixy places.
+#
+# NOTE: a system-wide FLTK library is assumed
 #
 
-PROGRAM=Obsidian.exe
+PROGRAM=Obsidian
 
-CROSS=x86_64-w64-mingw32-
+# prefix choices: /usr  /usr/local  /opt
+PREFIX=/usr
 
-CXX=$(CROSS)g++
+SCRIPT_DIR=$(PREFIX)/share/obsidian
 
-LIB_LOC=lib_win32
-OBJ_DIR=obj_win32
+CXX=g++
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.3.5
-ZLIB_DIR=$(LIB_LOC)/zlib-1.2.11
+OBJ_DIR=obj_linux
 
-OPTIMISE=-O2 -fno-strict-aliasing
+OPTIMISE=-O2
 
-STRIP_FLAGS=--strip-unneeded
-
-OS=WIN32
+# operating system choices: UNIX WIN32
+OS=UNIX
 
 
 #--- Internal stuff from here -----------------------------------
 
-FLTK_FLAGS=-I$(FLTK_DIR)
-FLTK_LIBS=$(FLTK_DIR)/mingw/lib/libfltk_images.a \
-	  $(FLTK_DIR)/mingw/lib/libfltk.a
+# assumes system-wide FLTK installation
+FLTK_CONFIG=fltk-config
+FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
+FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
-ZLIB_FLAGS=-I$(ZLIB_DIR)
-ZLIB_LIBS=$(ZLIB_DIR)/mingw/libzlibstatic.a
-
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
-         -Ilua_src -Iglbsp_src -Iajpoly_src -Iphysfs_src \
-	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
-
-LDFLAGS=-static-libgcc -static-libstdc++
-
-LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
-     -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
-     -lcomctl32 -lwsock32 -lsupc++
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src -Iphysfs_src $(FLTK_FLAGS)
+LDFLAGS=-L/usr/X11R6/lib
+LIBS=-lm -lz $(FLTK_LIBS)
 
 
-#----- OBLIGE Objects ----------------------------------------------
+#----- OBSIDIAN Objects ----------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main_64.o      \
 	$(OBJ_DIR)/m_about.o  \
@@ -168,10 +163,11 @@ GLBSP_OBJS= \
 	$(OBJ_DIR)/glbsp/util.o     \
 	$(OBJ_DIR)/glbsp/wad.o
 
-GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline -Iphysfs_src $(ZLIB_FLAGS) 
+GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline -Iphysfs_src 
 
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
+
 
 #----- AJ-Polygonator Objects --------------------------------------
 
@@ -205,7 +201,8 @@ PHYSFS_OBJS= \
 	$(OBJ_DIR)/physfs/physfs_archiver_unpacked.o   \
 	$(OBJ_DIR)/physfs/physfs_archiver_vdf.o   \
 	$(OBJ_DIR)/physfs/physfs_archiver_zip.o   \
-	$(OBJ_DIR)/physfs/physfs_platform_windows.o 
+	$(OBJ_DIR)/physfs/physfs_platform_unix.o   \
+	$(OBJ_DIR)/physfs/physfs_platform_posix.o 
 
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
@@ -213,9 +210,23 @@ $(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
 	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $<
 
 
+#----- Language Analysis ------------------------------------------
+
+LANG_FILES= \
+	gui/*.cc \
+	gui/*.h  \
+	scripts/*.lua \
+	engines/*.lua \
+	modules/*.lua \
+	games/*/*.lua
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
+
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
+	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
@@ -223,17 +234,58 @@ clean:
 	rm -f $(OBJ_DIR)/glbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 	rm -f $(OBJ_DIR)/physfs/*.o
+	rm -f LANG_TEMPLATE.txt
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
+halfclean:
+	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+
+svgclean:
+	rm -f grow*.svg
 
 stripped: $(PROGRAM)
-	$(CROSS)strip $(STRIP_FLAGS) $(PROGRAM)
+	strip --strip-unneeded $(PROGRAM)
 
-$(OBJ_DIR)/oblige_res.o: gui/obsidian.rc
-	$(CROSS)windres $^ -o $@
+install: stripped
+	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/obsidian
+	#
+	install -d $(SCRIPT_DIR)/scripts
+	install -d $(SCRIPT_DIR)/engines
+	install -d $(SCRIPT_DIR)/modules
+	install -d $(SCRIPT_DIR)/addons
+	install -d $(SCRIPT_DIR)/language
+	#
+	install -o root -m 644 scripts/*.lua $(SCRIPT_DIR)/scripts
+	install -o root -m 644 engines/*.lua $(SCRIPT_DIR)/engines
+	install -o root -m 644 modules/*.lua $(SCRIPT_DIR)/modules
+#	install -o root -m 644  addons/*.pk3 $(SCRIPT_DIR)/addons
+	install -o root -m 644 language/*.*  $(SCRIPT_DIR)/language
+	#
+	install -d $(SCRIPT_DIR)/data
+	install -d $(SCRIPT_DIR)/data/bg
+	install -d $(SCRIPT_DIR)/data/masks
+	install -o root -m 644 data/*.* $(SCRIPT_DIR)/data
+	install -o root -m 644 data/bg/*.* $(SCRIPT_DIR)/data/bg
+	install -o root -m 644 data/masks/*.* $(SCRIPT_DIR)/data/masks
+	#
+	rm -Rf $(SCRIPT_DIR)/games
+	cp -a games $(SCRIPT_DIR)/games
+	chown -R root $(SCRIPT_DIR)/games
+	chmod -R g-s  $(SCRIPT_DIR)/games
+	#
+	xdg-desktop-menu  install --novendor misc/obsidian.desktop
+	xdg-icon-resource install --novendor --size 32 misc/obsidian.xpm
 
-.PHONY: all clean stripped
+uninstall:
+	rm -v $(PREFIX)/bin/obsidian
+	rm -Rv $(SCRIPT_DIR)
+	#
+	xdg-desktop-menu  uninstall --novendor misc/obsidian.desktop
+	xdg-icon-resource uninstall --novendor --size 32 obsidian
+
+xgettext:
+	xgettext -o LANG_TEMPLATE.txt -k_ -kN_ -F -i --foreign-user --package-name="Obsidian Level Maker" $(LANG_FILES)
+
+.PHONY: all clean halfclean stripped install uninstall xgettext
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
