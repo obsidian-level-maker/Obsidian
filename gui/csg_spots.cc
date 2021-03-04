@@ -746,9 +746,9 @@ int SPOT_begin(lua_State *L)
 	int max_x = (int) ceil(luaL_checknumber(L, 3));
 	int max_y = (int) ceil(luaL_checknumber(L, 4));
 
-	grid_floor_h = (int)luaL_checkinteger(L, 5);
+	grid_floor_h = luaL_checkinteger(L, 5);
 
-	int content = (int)luaL_checkinteger(L, 6);
+	int content = luaL_checkinteger(L, 6);
 
 	SPOT_CreateGrid(content, min_x, min_y, max_x, max_y);
 
@@ -765,7 +765,7 @@ int SPOT_draw_line(lua_State *L)
 	int x2 = I_ROUND(luaL_checknumber(L, 3));
 	int y2 = I_ROUND(luaL_checknumber(L, 4));
 
-	int content = (int)luaL_checkinteger(L, 5);
+	int content = luaL_checkinteger(L, 5);
 
 	SPOT_DrawLine(content, x1, y1, x2, y2);
 
@@ -807,7 +807,7 @@ static int polygon_coord(lua_State *L, int stack_pos,
 //
 int SPOT_fill_poly(lua_State *L)
 {
-	int content = (int)luaL_checkinteger(L, 2);
+	int content = luaL_checkinteger(L, 2);
 
 	std::vector<grid_point_c> points;
 
@@ -849,12 +849,12 @@ int SPOT_fill_poly(lua_State *L)
 //
 int SPOT_fill_box(lua_State *L)
 {
-	int x1 = (int)luaL_checkinteger(L, 1);
-	int y1 = (int)luaL_checkinteger(L, 2);
-	int x2 = (int)luaL_checkinteger(L, 3);
-	int y2 = (int)luaL_checkinteger(L, 4);
+	int x1 = luaL_checkinteger(L, 1);
+	int y1 = luaL_checkinteger(L, 2);
+	int x2 = luaL_checkinteger(L, 3);
+	int y2 = luaL_checkinteger(L, 4);
 
-	int content = (int)luaL_checkinteger(L, 5);
+	int content = luaL_checkinteger(L, 5);
 
 	std::vector<grid_point_c> points;
 
