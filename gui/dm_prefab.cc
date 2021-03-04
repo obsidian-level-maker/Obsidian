@@ -168,7 +168,7 @@ static int calc_thing_z(int x, int y)
 
 int wadfab_get_thing(lua_State *L)
 {
-	int index = (int)luaL_checkinteger(L, 1);
+	int index = luaL_checkinteger(L, 1);
 
 	if (index < 0 || index >= ajpoly::num_things)
 		return 0;
@@ -201,7 +201,7 @@ int wadfab_get_thing(lua_State *L)
 
 int wadfab_get_sector(lua_State *L)
 {
-	int index = (int)luaL_checkinteger(L, 1);
+	int index = luaL_checkinteger(L, 1);
 
 	if (index < 0 || index >= ajpoly::num_sectors)
 		return 0;
@@ -241,7 +241,7 @@ int wadfab_get_sector(lua_State *L)
 
 int wadfab_get_side(lua_State *L)
 {
-	int index = (int)luaL_checkinteger(L, 1);
+	int index = luaL_checkinteger(L, 1);
 
 	if (index < 0 || index >= ajpoly::num_sidedefs)
 		return 0;
@@ -277,7 +277,7 @@ int wadfab_get_side(lua_State *L)
 
 int wadfab_get_line(lua_State *L)
 {
-	int index = (int)luaL_checkinteger(L, 1);
+	int index = luaL_checkinteger(L, 1);
 
 	if (index < 0 || index >= ajpoly::num_linedefs)
 		return 0;
@@ -395,7 +395,7 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c * E)
 
 int wadfab_get_polygon(lua_State *L)
 {
-	int index = (int)luaL_checkinteger(L, 1);
+	int index = luaL_checkinteger(L, 1);
 
 	if (index < 0 || index >= ajpoly::num_polygons)
 		return 0;
@@ -436,8 +436,8 @@ int wadfab_get_polygon(lua_State *L)
 
 int wadfab_get_3d_floor(lua_State *L)
 {
-	int  poly_idx = (int)luaL_checkinteger(L, 1);
-	int floor_idx = (int)luaL_checkinteger(L, 2);
+	int  poly_idx = luaL_checkinteger(L, 1);
+	int floor_idx = luaL_checkinteger(L, 2);
 
 	if (poly_idx < 0 || poly_idx >= ajpoly::num_polygons)
 		return 0;

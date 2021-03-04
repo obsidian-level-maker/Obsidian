@@ -339,7 +339,7 @@ int NK_grp_logo_gfx(lua_State *L)
 {
 	// LUA: grp_logo_gfx(index, image, W, H, colmap)
 
-	int index = (int)luaL_checkinteger(L, 1);
+	int index = luaL_checkinteger(L, 1);
 	if (index < 1 || index > MAX_LOGOS)
 		return luaL_argerror(L, 1, "index value out of range");
 
@@ -347,9 +347,9 @@ int NK_grp_logo_gfx(lua_State *L)
 
 	const char *image = luaL_checkstring(L, 2);
 
-	int new_W  = (int)luaL_checkinteger(L, 3);
-	int new_H  = (int)luaL_checkinteger(L, 4);
-	int map_id = (int)luaL_checkinteger(L, 5);
+	int new_W  = luaL_checkinteger(L, 3);
+	int new_H  = luaL_checkinteger(L, 4);
+	int map_id = luaL_checkinteger(L, 5);
 
 	if (new_W < 1) return luaL_argerror(L, 3, "bad width");
 	if (new_H < 1) return luaL_argerror(L, 4, "bad height");
