@@ -20,11 +20,11 @@ void twister_Init() {
     twister.seed(std::time(nullptr));
 }
 
-void twister_Reseed(unsigned int random) {
+void twister_Reseed(uint_fast32_t random) {
     twister.seed(random);
 }
 
-unsigned int twister_UInt() {
+uint_fast32_t twister_UInt() {
     return twister();
 }
 

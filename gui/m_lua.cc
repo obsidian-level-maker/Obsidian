@@ -649,7 +649,7 @@ int gui_abort(lua_State *L)
 //
 int gui_rand_seed(lua_State *L)
 {
-	unsigned int the_seed = luaL_checknumber(L, 1);
+	uint_fast32_t the_seed = luaL_checknumber(L, 1);
 	
 	if (the_seed < 0)
 		the_seed = - the_seed;
