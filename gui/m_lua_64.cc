@@ -35,7 +35,7 @@
 #include "main.h"
 #include "m_lua.h"
 
-#include "twister.h"
+#include "twister_64.h"
 
 static lua_State *LUA_ST;
 
@@ -649,10 +649,7 @@ int gui_abort(lua_State *L)
 //
 int gui_rand_seed(lua_State *L)
 {
-	uint_fast32_t the_seed = luaL_checkinteger(L, 1);
-
-	if (the_seed < 0)
-		the_seed = - the_seed;
+	uint_fast64_t the_seed = luaL_checknumber(L, 1);
 
 	twister_Reseed(the_seed);
 

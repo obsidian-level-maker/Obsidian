@@ -342,11 +342,11 @@ void DLG_EditSeed(void)
     } catch (std::invalid_argument &e) {
         std::cout << "Invalid argument. Will process as string.\n";
     } catch (std::out_of_range &e) {
-        std::cout << "Resulting number would be out of range for a 32-bit unsigned integer. Will process as string.\n";
+        std::cout << "Resulting number would be out of range for a 64-bit unsigned integer. Will process as string.\n";
     } catch (std::exception &e) {
         std::cout << e.what();
     }
-    uint_fast32_t split_limit = (UINT_FAST32_MAX / 127);
+    uint_fast64_t split_limit = (UINT_FAST64_MAX / 127);
     next_rand_seed = split_limit;
     for (long unsigned int i = 0 ; i < word.size() ; i++) {
         char character = word.at(i);

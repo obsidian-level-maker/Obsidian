@@ -30,16 +30,16 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 
-#include "main.h"
+#include "main_64.h"
 #include "m_addons.h"
 #include "m_cookie.h"
-#include "m_lua.h"
+#include "m_lua_64.h"
 #include "m_trans.h"
 
 #include "csg_main.h"
 #include "g_nukem.h"
 
-#include "twister.h"
+#include "twister_64.h"
 
 #define TICKER_TIME  50 /* ms */
 
@@ -56,7 +56,7 @@ int screen_h;
 
 int main_action;
 
-uint_fast32_t next_rand_seed;
+uint_fast64_t next_rand_seed;
 
 bool batch_mode = false;
 const char *batch_output_file = NULL;
@@ -546,7 +546,7 @@ void Main_SetSeed()
 {
 	char num_buf[256];
 
-	sprintf(num_buf, "%ld", next_rand_seed);
+	sprintf(num_buf, "%lu", next_rand_seed);
 
 	ob_set_config("seed", num_buf);
 }
