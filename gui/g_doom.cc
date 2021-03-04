@@ -630,10 +630,10 @@ static const nodebuildfuncs_t edge_build_funcs =
 };
 
 
-static bool DM_BuildNodes(const char *filename, const char *out_name)
+static bool DM_BuildNodes(const char *filename)
 {
 	LogPrintf("\n");
-
+/*
 	display_mode = DIS_INVALID;
 
 	memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
@@ -675,6 +675,14 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
 
 		Main_ProgStatus(_("glBSP Error"));
+		return false;
+	}
+*/
+	std::string ajbspcall = "tools/ajbsp -v ";
+	ajbspcall.append(filename);
+
+	if (std::system(ajbspcall.c_str()) != 0) {
+		LogPrintf("AJBSP FAILED!\n");
 		return false;
 	}
 
@@ -747,7 +755,7 @@ bool doom_game_interface_c::Start(const char *preset)
 
 bool doom_game_interface_c::BuildNodes()
 {
-	char *temp_name = ReplaceExtension(filename, "tmp");
+/*	char *temp_name = ReplaceExtension(filename, "tmp");
 
 	FileDelete(temp_name);
 
@@ -756,13 +764,13 @@ bool doom_game_interface_c::BuildNodes()
 		LogPrintf("WARNING: could not rename file to .TMP!\n");
 		StringFree(temp_name);
 		return false;
-	}
+	}*/
 
-	bool result = DM_BuildNodes(temp_name, filename);
+	bool result = DM_BuildNodes(filename);
 
-	FileDelete(temp_name);
+/*	FileDelete(temp_name);
 
-	StringFree(temp_name);
+	StringFree(temp_name);*/
 
 	return result;
 }
