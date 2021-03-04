@@ -29,6 +29,10 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
+ZDBSP as a node builder for modern ports. GLBSP will still remain as an option.
+
+64-bit seeds and random numbers for 64-bit builds.
+
 Lua upgraded to 5.4.x. Lua scripts from previous versions of Oblige/ObAddon will be incompatible without conversion.
 
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
