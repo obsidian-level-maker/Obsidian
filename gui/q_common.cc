@@ -905,9 +905,9 @@ qLump_c * BSP_CreateInfoLump()
 	L->SetCRLF(true);
 
 	L->Printf("\n");
-	L->Printf("-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
-	L->Printf("-- " OBLIGE_TITLE " (C) 2006-2017 Andrew Apted\n");
-	L->Printf("-- http://oblige.sourceforge.net/\n");
+	L->Printf("-- Levels created by OBSIDIAN %s\n", OBLIGE_VERSION);
+	L->Printf("-- Based on the OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+	L->Printf("-- https://github.com/caligari87/ObAddon\n");
 	L->Printf("\n");
 
 	std::vector<std::string> lines;
