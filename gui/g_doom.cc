@@ -678,11 +678,11 @@ static bool DM_BuildNodes(const char *filename)
 		return false;
 	}
 */
-	std::string ajbspcall = "tools/ajbsp -v ";
-	ajbspcall.append(filename);
+	std::string zdbspcall = "tools/zdbsp -w ";
+	zdbspcall.append(filename);
 
-	if (std::system(ajbspcall.c_str()) != 0) {
-		LogPrintf("AJBSP FAILED!\n");
+	if (std::system(zdbspcall.c_str()) != 0) {
+		LogPrintf("ZDBSP FAILED!\n");
 		return false;
 	}
 

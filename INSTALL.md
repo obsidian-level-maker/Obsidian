@@ -22,6 +22,10 @@
 5. XDG Utils
    * (only needed for Linux, to install the desktop and icon files)
    * package: `xdg-utils`
+   
+6. ZDBSP
+   * Source is located in the zdbsp_src directory
+   * Must place executable under the "tools" folder after compilation
 
 ## Linux Compilation
 
