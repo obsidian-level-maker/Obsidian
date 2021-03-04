@@ -25,7 +25,7 @@
 #include "lib_util.h"
 #include "lib_file.h"
 
-#include "main.h"
+#include "main_64.h"
 
 #include <FL/fl_utf8.h>
 
@@ -321,7 +321,7 @@ void DLG_EditSeed(void)
 {
 	char num_buf[256];
 	
-	sprintf(num_buf, "%lu", next_rand_seed);
+	sprintf(num_buf, "%llu", next_rand_seed);
 	
 	const char * user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
 
@@ -337,7 +337,7 @@ void DLG_EditSeed(void)
                 throw std::runtime_error("String contains non-digits. Will process as string\n");
             }
         }
-        next_rand_seed = std::stoul(word);
+        next_rand_seed = std::stoull(word);
         return;
     } catch (std::invalid_argument &e) {
         std::cout << "Invalid argument. Will process as string.\n";
