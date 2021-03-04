@@ -740,11 +740,11 @@ void SPOT_DebuggingTest()
 //
 int SPOT_begin(lua_State *L)
 {
-	int min_x = (int)floor(luaL_checknumber(L, 1));
-	int min_y = (int)floor(luaL_checknumber(L, 2));
+	int min_x = floor(luaL_checknumber(L, 1));
+	int min_y = floor(luaL_checknumber(L, 2));
 
-	int max_x = (int) ceil(luaL_checknumber(L, 3));
-	int max_y = (int) ceil(luaL_checknumber(L, 4));
+	int max_x = ceil(luaL_checknumber(L, 3));
+	int max_y = ceil(luaL_checknumber(L, 4));
 
 	grid_floor_h = luaL_checkinteger(L, 5);
 

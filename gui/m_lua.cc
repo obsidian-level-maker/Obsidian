@@ -512,7 +512,7 @@ int gui_add_module_option(lua_State *L)
 	const char *label  = luaL_checkstring(L,3);
 	const char *tip    = luaL_optstring  (L,4, NULL);
 
-	int gap = (int)luaL_optinteger(L,5, 0);
+	int gap = luaL_optinteger(L,5, 0);
 
 	SYS_ASSERT(module && option);
 
@@ -649,10 +649,7 @@ int gui_abort(lua_State *L)
 //
 int gui_rand_seed(lua_State *L)
 {
-	uint_fast32_t the_seed = luaL_checknumber(L, 1);
-	
-	if (the_seed < 0)
-		the_seed = - the_seed;
+	uint_fast32_t the_seed = luaL_checkinteger(L, 1);
 
 	twister_Reseed(the_seed);
 
