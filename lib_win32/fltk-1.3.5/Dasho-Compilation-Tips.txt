@@ -1,4 +1,4 @@
-To create the necessary files to cross-compile FLTK for Oblige on Windows:
+To create the necessary files to cross-compile FLTK for Obsidian on Windows:
 cd mingw
 cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw64.cmake -DCMAKE_BUILD_TYPE=Release -DOPTION_USE_GL=OFF -DOPTION_USE_THREADS=OFF
 make

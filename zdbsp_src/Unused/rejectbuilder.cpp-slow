@@ -1,0 +1,278 @@
+// This is the same algorithm used by DoomBSP:
+//
+// Represent each sector by its bounding box. Then for each pair of
+// sectors, see if any chains of one-sided lines can walk from one
+// side of the convex hull for that pair to the other side.
+//
+// It works, but it's far from being perfect. It's quite easy for
+// this algorithm to consider two sectors as being visible from
+// each other when they are really not. But it won't erroneously
+// flag two sectors as obstructed when they're really not, and that's
+// the only thing that really matters when building a REJECT lump.
+
+#include <string.h>
+#include <stdio.h>
+
+#include "zdbsp.h"
+#include "nodebuild.h"
+#include "rejectbuilder.h"
+#include "templates.h"
+
+FRejectBuilder::FRejectBuilder (FLevel &level)
+	: Level (level)
+{
+	int i;
+	
+	i = Level.NumGLSubsectors * Level.NumGLSubsectors;
+	SubSeeMatrix = new BYTE[i];
+	memset (SubSeeMatrix, 0, i);
+
+	SegSubsectors = new WORD[Level.NumGLSegs];
+	for (i = 0; i < Level.NumGLSubsectors; ++i)
+	{
+		for (int j = 0; j < Level.GLSubsectors[i].numlines; ++j)
+		{
+			SegSubsectors[j + Level.GLSubsectors[i].firstline] = i;
+		}
+	}
+
+	BuildReject ();
+}
+
+FRejectBuilder::~FRejectBuilder ()
+{
+	delete[] SubSeeMatrix;
+	delete[] SegSubsectors;
+}
+
+BYTE *FRejectBuilder::GetReject ()
+{
+	int i, j; 
+
+	int rejectSize = (Level.NumSectors*Level.NumSectors + 7) / 8;
+	BYTE *reject = new BYTE[rejectSize];
+	memset (reject, 0xff, rejectSize);
+
+	int pvs_size = (Level.NumGLSubsectors * Level.NumGLSubsectors) + 7 / 8;
+	Level.GLPVS = new BYTE[pvs_size];
+	Level.GLPVSSize = pvs_size;
+	memset (Level.GLPVS, 0, pvs_size);
+
+	for (i = 0; i < Level.NumGLSubsectors; ++i)
+	{
+		int row = i*Level.NumGLSubsectors;
+		int sector1 =
+			Level.Sides[
+				Level.Lines[
+					Level.GLSegs[
+						Level.GLSubsectors[i].firstline].linedef]
+				.sidenum[
+					Level.GLSegs[
+						Level.GLSubsectors[i].firstline].side]]
+			.sector;
+		int srow = sector1*Level.NumSectors;
+		for (j = 0; j < Level.NumGLSubsectors; ++j)
+		{
+			if (SubSeeMatrix[row + j])
+			{
+				int sector2 =
+					Level.Sides[
+						Level.Lines[
+							Level.GLSegs[
+								Level.GLSubsectors[j].firstline].linedef]
+						.sidenum[
+							Level.GLSegs[
+								Level.GLSubsectors[j].firstline].side]]
+					.sector;
+				int l = (srow + sector2) >> 3;
+				int r = (srow + sector2) & 7;
+				reject[l] &= ~(1 << r);
+
+				l = (row + j) >> 3;
+				r = (row + j) & 7;
+				Level.GLPVS[l] |= 1 << r;
+			}
+		}
+	}
+
+	return reject;
+}
+
+void FRejectBuilder::BuildReject ()
+{
+	int s1, s2;
+
+	for (s1 = 0; s1 < Level.NumGLSubsectors; ++s1)
+	{
+		//printf ("   Reject: %3d%%\r",s1*100/Level.NumGLSubsectors);
+		printf ("%d/%d\r", s1, Level.NumGLSubsectors);
+
+		// A subsector can always see itself
+		SourceRow = s1 * Level.NumGLSubsectors;
+		SubSeeMatrix[SourceRow + s1] = 1;
+
+		WORD pusher = s1;
+
+		for (s2 = 0; s2 < Level.GLSubsectors[s1].numlines; ++s2)
+		{
+			int segnum = s2 + Level.GLSubsectors[s1].firstline;
+			const MapSegGL *seg = &Level.GLSegs[segnum];
+			if (seg->partner == NO_INDEX)
+			{
+				continue;
+			}
+
+			SourceSeg = segnum;
+			SegRow = segnum * Level.NumGLSegs;
+
+			TracePath (s1, seg);
+		}
+	}
+	printf ("   Reject: 100%%\n");
+}
+
+inline const WideVertex *FRejectBuilder::GetVertex (WORD vertnum)
+{
+	if (vertnum & 0x8000)
+	{
+		return &Level.GLVertices[vertnum & 0x7fff];
+	}
+	else
+	{
+		return &Level.Vertices[vertnum];
+	}
+}
+
+void FRejectBuilder::TracePath (int subsector, const MapSegGL *window)
+{
+	// Neighboring subsectors can always see each other
+	SubSeeMatrix[SourceRow + SegSubsectors[window->partner]] = 1;
+	const MapSubsector *backsub = &Level.GLSubsectors[SegSubsectors[window->partner]];
+
+	Portal source;
+
+	source.Subsector = backsub;
+	source.Left = GetVertex (window->v1);
+	source.Right = GetVertex (window->v2);
+
+	PortalStack.Clear ();
+	PortalStack.Push (source);
+
+	fixed_t wdx = source.Right->x - source.Left->x;
+	fixed_t wdy = source.Right->y - source.Left->y;
+
+//	printf ("start window %d\n", window - Level.GLSegs);
+
+	for (int i = 0; i < backsub->numlines; ++i)
+	{
+		int segnum = backsub->firstline + i;
+
+		if (segnum == window->partner)
+		{
+			continue;
+		}
+
+		const MapSegGL *cseg = &Level.GLSegs[segnum];
+
+		if (cseg->partner == NO_INDEX)
+		{
+			continue;
+		}
+
+		const WideVertex *cv1 = GetVertex (cseg->v1);
+		const WideVertex *cv2 = GetVertex (cseg->v2);
+
+		if (FNodeBuilder::PointOnSide (cv1->x, cv1->y, source.Left->x, source.Left->y, wdx, wdy) == 0 &&
+			FNodeBuilder::PointOnSide (cv2->x, cv2->y, source.Left->x, source.Left->y, wdx, wdy) == 0)
+		{
+			continue;
+		}
+
+		TracePathDeep (cseg);
+	}
+}
+
+void FRejectBuilder::TracePathDeep (const MapSegGL *window)
+{
+	SubSeeMatrix[SourceRow + SegSubsectors[window->partner]] = 1;
+	const MapSubsector *backsub = &Level.GLSubsectors[SegSubsectors[window->partner]];
+	size_t j;
+
+	for (j = PortalStack.Size(); j-- > 0; )
+	{
+		if (PortalStack[j].Subsector == backsub)
+		{
+			return;
+		}
+	}
+
+	Portal entrance;
+
+	entrance.Subsector = backsub;
+	entrance.Left = GetVertex (window->v1);
+	entrance.Right = GetVertex (window->v2);
+	PortalStack.Push (entrance);
+
+	fixed_t wdx = entrance.Right->x - entrance.Left->x;
+	fixed_t wdy = entrance.Right->y - entrance.Left->y;
+
+	//printf ("deep through %d\n", window - Level.GLSegs);
+
+	for (int i = 0; i < backsub->numlines; ++i)
+	{
+		int segnum = backsub->firstline + i;
+
+		if (segnum == window->partner)
+		{
+			continue;
+		}
+
+		const MapSegGL *cseg = &Level.GLSegs[segnum];
+
+		if (cseg->partner == NO_INDEX)
+		{
+			continue;
+		}
+
+		const WideVertex *cv1 = GetVertex (cseg->v1);
+		const WideVertex *cv2 = GetVertex (cseg->v2);
+
+		if (FNodeBuilder::PointOnSide (cv1->x, cv1->y, entrance.Left->x, entrance.Left->y, wdx, wdy) <= 0 &&
+			FNodeBuilder::PointOnSide (cv2->x, cv2->y, entrance.Left->x, entrance.Left->y, wdx, wdy) <= 0)
+		{
+			continue;
+		}
+
+		fixed_t leftx = PortalStack[0].Left->x;
+		fixed_t lefty = PortalStack[0].Left->y;
+		fixed_t rightx = PortalStack[0].Right->x;
+		fixed_t righty = PortalStack[0].Right->y;
+
+		fixed_t leftdx = cv1->x - leftx;
+		fixed_t leftdy = cv1->y - lefty;
+		fixed_t rightdx = rightx - cv2->x;
+		fixed_t rightdy = righty - cv2->y;
+
+		if (FNodeBuilder::PointOnSide (cv1->x, cv1->y, rightx, righty, rightdx, rightdy) >= 0 ||
+			FNodeBuilder::PointOnSide (cv2->x, cv2->y, leftx, lefty, leftdx, leftdy) >= 0)
+		{
+			continue;
+		}
+
+		for (j = PortalStack.Size(); j-- > 1; )
+		{
+			if (FNodeBuilder::PointOnSide (PortalStack[j].Left->x, PortalStack[j].Left->y,
+				rightx, righty, rightdx, rightdy) >= 0 ||
+				FNodeBuilder::PointOnSide (PortalStack[j].Right->x, PortalStack[j].Right->y,
+				leftx, lefty, leftdx, leftdy) >= 0)
+			{
+				break;
+			}
+		}
+		if (j == 0)
+		{
+			TracePathDeep (cseg);
+		}
+	}
+	PortalStack.Pop (entrance);
+}
