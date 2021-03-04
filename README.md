@@ -29,6 +29,8 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
+Revised default visual style.
+
 ZDBSP as a node builder for modern ports. GLBSP will still remain as an option.
 
 64-bit seeds and random numbers for 64-bit builds.
