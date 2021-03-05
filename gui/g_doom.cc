@@ -37,6 +37,8 @@
 #include "dm_extra.h"
 #include "g_doom.h"
 
+#include "zdmain.h"
+
 
 extern void CSG_DOOM_Write();
 
@@ -630,11 +632,11 @@ static const nodebuildfuncs_t edge_build_funcs =
 };
 
 
-static bool DM_BuildNodes(const char *filename, const char *out_name)
+static bool DM_BuildNodes(const char *filename)
 {
 	LogPrintf("\n");
 
-	display_mode = DIS_INVALID;
+/*	display_mode = DIS_INVALID;
 
 	memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
 	memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
@@ -676,15 +678,16 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 
 		Main_ProgStatus(_("glBSP Error"));
 		return false;
+	}*/
+
+//  ZDBSP shim function
+	
+	if (zdmain(filename) != 0) {
+		LogPrintf("ZDBSP Failed!\n");
+		return false;
 	}
 
-/* ZDBSP shim placeholder
-	std::string zdbspcall = "tools/zdbsp -w -o ";
-	zdbspcall.append(filename);
-	zdbspcall.append(" ");
-	zdbspcall.append(filename);
-
-	std::system(zdbspcall.c_str()); */
+	LogPrintf("ZDBSP Successfully Built Nodes\n");
 
 	return true;
 }
@@ -755,7 +758,7 @@ bool doom_game_interface_c::Start(const char *preset)
 
 bool doom_game_interface_c::BuildNodes()
 {
-	char *temp_name = ReplaceExtension(filename, "tmp");
+/*	char *temp_name = ReplaceExtension(filename, "tmp");
 
 	FileDelete(temp_name);
 
@@ -764,13 +767,13 @@ bool doom_game_interface_c::BuildNodes()
 		LogPrintf("WARNING: could not rename file to .TMP!\n");
 		StringFree(temp_name);
 		return false;
-	}
+	}*/
 
-	bool result = DM_BuildNodes(temp_name, filename);
+	bool result = DM_BuildNodes(filename);
 
-	FileDelete(temp_name);
+//	FileDelete(temp_name);
 
-	StringFree(temp_name);
+//	StringFree(temp_name);
 
 	return result;
 }
