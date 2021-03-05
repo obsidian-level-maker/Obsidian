@@ -38,7 +38,7 @@
 
 #include "lib_util.h"
 
-#include "main.h"
+#include "main_64.h"
 #include "tx_forge_64.h"
 
 #include "twister_64.h"
