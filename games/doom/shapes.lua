@@ -5189,7 +5189,7 @@ GROW_MAZE_STRAIGHT_STAIRED_LONG =
 
 GROW_MAZE_L =
 {
-  prob = 8,
+  prob = 3,
   skip_prob = 35,
 
   structure =
