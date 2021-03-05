@@ -2,10 +2,10 @@
 --  OBLIGE  :  INTERFACE WITH GUI CODE
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2019 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -679,7 +679,7 @@ function ob_read_all_config(need_full, log_only)
      need_full = false
   end
 
-  do_line("-- ObAddon (C) 2018-2020")
+  do_line("-- Obsidian (C) 2018-2021")
   do_line("-- MsrSgtShooterPerson")
   do_line("-- Armaetus")
   do_line("-- Garrett")
@@ -876,12 +876,12 @@ function ob_init()
     if fmt then gui.raw_debug_print(string.format(fmt, ...)) end
   end
 
-  gui.printf("***************************\n")
-  gui.printf("** ObAddon (C) 2018-2020 **\n")
-  gui.printf("***************************\n")
-  gui.printf("|    A Creation of the    |\n")
-  gui.printf("|        Community        |\n")
-  gui.printf("\\_________________________/\n\n")
+  gui.printf("****************************\n")
+  gui.printf("** Obsidian (C) 2018-2021 **\n")
+  gui.printf("****************************\n")
+  gui.printf("|    A Creation of the     |\n")
+  gui.printf("|        Community         |\n")
+  gui.printf("\\__________________________/\n\n")
   gui.printf("    MsrSgtShooterPerson\n")
   gui.printf("          Armaetus\n")
   gui.printf("          Garrett\n")
