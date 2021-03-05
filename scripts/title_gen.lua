@@ -2120,7 +2120,8 @@ function Title_gen_tunnel_scene()
   local col = { 0,0,0 }
 
   for r = 1202, 2, -2 do
-    local bump = (gui.random() ^ 10) * 0.7
+    local bump = (gui.random() ^ 5) * 0.7
+    print("BUMP: " .. bump)
     local ity = math.clamp(0.0, r / 1200, 0.9) + bump
 
     ity = ity * (1.0 - r / 900)
@@ -2656,7 +2657,7 @@ function Title_generate()
 
   Title_process_raw_fonts()
 
-  TITLE_SEED = int(gui.random() * 1000000)
+  TITLE_SEED = gui.random_int()
 
   Title_make_interpic()
   Title_make_titlepic()
