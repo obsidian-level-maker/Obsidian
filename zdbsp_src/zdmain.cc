@@ -84,7 +84,7 @@ const char		*Map = NULL;
 const char		*InName;
 const char		*OutName = "tmp.wad";
 bool			 BuildNodes = true;
-bool			 BuildGLNodes = true;
+bool			 BuildGLNodes = false;
 bool			 ConformNodes = false;
 bool			 NoPrune = false;
 EBlockmapMode	 BlockmapMode = EBM_Rebuild;

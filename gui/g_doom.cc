@@ -37,7 +37,8 @@
 #include "dm_extra.h"
 #include "g_doom.h"
 
-#include "zdmain.h"
+#include <string>
+#include <iostream>
 
 
 extern void CSG_DOOM_Write();
@@ -484,10 +485,11 @@ int DM_NumThings()
 
 
 //----------------------------------------------------------------------------
-//  GLBSP NODE BUILDING
+//  GLBSP/ZDBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
 #include "glbsp.h"
+#include "zdmain.h"
 
 
 static nodebuildinfo_t nb_info;
@@ -632,64 +634,79 @@ static const nodebuildfuncs_t edge_build_funcs =
 };
 
 
-static bool DM_BuildNodes(const char *filename)
+static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
 
-/*	display_mode = DIS_INVALID;
-
-	memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
-	memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
-
-	nb_info.input_file  = GlbspStrDup(filename);
-	nb_info.output_file = GlbspStrDup(out_name);
-
-	nb_info.quiet = TRUE;
-	nb_info.pack_sides = FALSE;
-	nb_info.force_normal = TRUE;
-	nb_info.fast = TRUE;
-
-	glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
-
-	if (ret != GLBSP_E_OK)
-	{
-		// check info failure (unlikely to happen)
-		GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
-		GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-		Main_ProgStatus(_("glBSP Error"));
-		return false;
-	}
-
-	ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
-
-	if (ret == GLBSP_E_Cancelled)
-	{
-		GB_PrintMsg("Building CANCELLED.\n\n");
-		Main_ProgStatus(_("Cancelled"));
-		return false;
-	}
-
-	if (ret != GLBSP_E_OK)
-	{
-		// build nodes failed
-		GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
-		GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-		Main_ProgStatus(_("glBSP Error"));
-		return false;
-	}*/
-
-//  ZDBSP shim function
+	std::string current_engine = main_win->game_box->engine->GetID();
 	
-	if (zdmain(filename) != 0) {
-		LogPrintf("ZDBSP Failed!\n");
-		return false;
+	std::cout << "ENGINE: " << current_engine << "\n";
+
+	if (current_engine != "zdoom" && current_engine != "gzdoom") 
+	{
+
+		LogPrintf("\n");
+
+		display_mode = DIS_INVALID;
+
+		memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
+		memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
+
+		nb_info.input_file  = GlbspStrDup(filename);
+		nb_info.output_file = GlbspStrDup(out_name);
+
+		nb_info.quiet = TRUE;
+		nb_info.pack_sides = FALSE;
+		nb_info.force_normal = TRUE;
+		nb_info.fast = TRUE;
+
+		glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
+
+		if (ret != GLBSP_E_OK)
+		{
+			// check info failure (unlikely to happen)
+			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
+			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
+
+			Main_ProgStatus(_("glBSP Error"));
+			return false;
+		}
+
+		ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
+
+		if (ret == GLBSP_E_Cancelled)
+		{
+			GB_PrintMsg("Building CANCELLED.\n\n");
+			Main_ProgStatus(_("Cancelled"));
+			return false;
+		}
+
+		if (ret != GLBSP_E_OK)
+		{
+			// build nodes failed
+			GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
+			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
+
+			Main_ProgStatus(_("glBSP Error"));
+			return false;
+		}
+		
+			return true;
+			
+	} 
+	else
+	{
+		if (zdmain(filename) != 0) 
+		{
+			LogPrintf("ZDBSP Failed!\n");
+			return false;
+		} 
+		else 
+		{
+			LogPrintf("ZDBSP Successfully Built Nodes.\n");
+			return true;
+		}
 	}
-
-	LogPrintf("ZDBSP Successfully Built Nodes\n");
-
-	return true;
 }
 
 
@@ -758,7 +775,7 @@ bool doom_game_interface_c::Start(const char *preset)
 
 bool doom_game_interface_c::BuildNodes()
 {
-/*	char *temp_name = ReplaceExtension(filename, "tmp");
+	char *temp_name = ReplaceExtension(filename, "tmp");
 
 	FileDelete(temp_name);
 
@@ -767,13 +784,13 @@ bool doom_game_interface_c::BuildNodes()
 		LogPrintf("WARNING: could not rename file to .TMP!\n");
 		StringFree(temp_name);
 		return false;
-	}*/
+	}
 
-	bool result = DM_BuildNodes(filename);
+	bool result = DM_BuildNodes(temp_name, filename);
 
-//	FileDelete(temp_name);
+	FileDelete(temp_name);
 
-//	StringFree(temp_name);
+	StringFree(temp_name);
 
 	return result;
 }
