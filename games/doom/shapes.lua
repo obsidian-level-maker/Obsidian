@@ -5108,7 +5108,7 @@ GROW_NARROW_CANAL_OUTER_CURVE =
 -- MSSP's maze parts. [MAZE]
 GROW_MAZE_STRAIGHT =
 {
-  prob = 10,
+  prob = 3,
   skip_prob = 35,
 
   structure =
