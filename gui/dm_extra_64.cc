@@ -30,7 +30,7 @@
 #include "lib_util.h"
 #include "lib_wad.h"
 
-#include "main.h"
+#include "main_64.h"
 #include "m_lua_64.h"
 
 #include "csg_main.h"

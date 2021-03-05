@@ -18,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_TX_SKIES_H__
-#define __OBLIGE_TX_SKIES_H__
+#ifndef __OBLIGE_TX_SKIES_64_H__
+#define __OBLIGE_TX_SKIES_64_H__
 
 void SKY_AddStars(uint_fast64_t seed, byte *pixels, int W, int H,
                   color_mapping_t *map, double powscale, double thresh);
