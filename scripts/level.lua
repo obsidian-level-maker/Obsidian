@@ -2770,7 +2770,7 @@ function Level_handle_prebuilt()
   -- randomly pick one
   local probs = {}
 
-  for index,o in pairs(LEVEL.prebuilt) do
+  for index,info in pairs(LEVEL.prebuilt) do
     probs[index] = info.prob or 50
   end
 
