@@ -38,7 +38,6 @@
 #include "g_doom.h"
 
 #include <string>
-#include <iostream>
 
 
 extern void CSG_DOOM_Write();
@@ -639,8 +638,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	LogPrintf("\n");
 
 	std::string current_engine = main_win->game_box->engine->GetID();
-	
-	std::cout << "ENGINE: " << current_engine << "\n";
 
 	if (current_engine != "zdoom" && current_engine != "gzdoom") 
 	{
@@ -704,6 +701,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		else 
 		{
 			LogPrintf("ZDBSP Successfully Built Nodes.\n");
+			FileRename(filename, out_name);
 			return true;
 		}
 	}
@@ -778,7 +776,7 @@ bool doom_game_interface_c::BuildNodes()
 	char *temp_name = ReplaceExtension(filename, "tmp");
 
 	FileDelete(temp_name);
-
+	
 	if (! FileRename(filename, temp_name))
 	{
 		LogPrintf("WARNING: could not rename file to .TMP!\n");
