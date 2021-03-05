@@ -5,7 +5,7 @@
 #pragma once
 #endif
 
-#include "wad.h"
+#include "zdwad.h"
 #include "doomdata.h"
 #include "workdata.h"
 #include "tarray.h"
