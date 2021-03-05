@@ -686,6 +686,14 @@ static bool DM_BuildNodes(const char *filename)
 		return false;
 	}
 
+/* ZDBSP shim placeholder
+	std::string zdbspcall = "tools/zdbsp -w -o ";
+	zdbspcall.append(filename);
+	zdbspcall.append(" ");
+	zdbspcall.append(filename);
+
+	std::system(zdbspcall.c_str()); */
+
 	return true;
 }
 
