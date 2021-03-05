@@ -2,7 +2,7 @@
 --  SCRIPT MANAGER
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2019 MsrSgtShooterPerson
 --

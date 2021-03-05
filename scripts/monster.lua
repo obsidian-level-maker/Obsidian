@@ -2,7 +2,7 @@
 --  MONSTERS / HEALTH / AMMO
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2008-2017 Andrew Apted
 --  Copyright (C) 2019 MsrSgtShooterPerson

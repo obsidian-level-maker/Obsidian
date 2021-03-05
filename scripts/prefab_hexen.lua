@@ -2,7 +2,7 @@
 --  WAD PREFAB SYSTEM
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2013-2017 Andrew Apted
 --  Copyright (C) 2019 MsrSgtShooterPerson

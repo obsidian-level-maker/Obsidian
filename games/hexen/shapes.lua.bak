@@ -2,7 +2,7 @@
 --  GRAMMAR RULES
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2015-2017 Andrew Apted
 --  Copyright (C) 2018-2019 MsrSgtShooterPerson

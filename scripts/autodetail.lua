@@ -2,7 +2,7 @@
 --  AUTODETAIL
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2018-2021 MsrSgtShooterPerson
 --

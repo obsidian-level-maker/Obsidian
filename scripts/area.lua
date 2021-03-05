@@ -2,7 +2,7 @@
 --  AREA MANAGEMENT
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2019-2021 MsrSgtShooterPerson

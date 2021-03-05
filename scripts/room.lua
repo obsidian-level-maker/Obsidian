@@ -2,7 +2,7 @@
 --  ROOM MANAGEMENT
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2019-2021 MsrSgtShooterPerson
@@ -1163,7 +1163,8 @@ function Room_make_windows(A1, A2)
 
     if A.mode == "scenic" then return false end
 
-    if A.chunk and A.chunk.kind ~= "floor" then return false end
+    if A.chunk and (A.chunk.kind ~= "floor" 
+    or A.chunk.kind ~= "stair") then return false end
 
     if A.room.is_hallway then return false end
 

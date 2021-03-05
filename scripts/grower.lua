@@ -2,7 +2,7 @@
 --  SHAPE GROWING SYSTEM
 ------------------------------------------------------------------------
 --
---  Oblige Level Maker // ObAddon
+--  // Obsidian //
 --
 --  Copyright (C) 2015-2017 Andrew Apted
 --  Copyright (C) 2020-2021 MsrSgtShooterPerson
