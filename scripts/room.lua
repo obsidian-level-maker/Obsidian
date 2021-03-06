@@ -1211,6 +1211,13 @@ function Room_make_windows(A1, A2)
     local max_f = math.max(f1, f2)
     local min_c = math.min(c1, c2)
 
+    if A1.chunk and A1.chunk.kind == "stair" then
+      max_f = math.max(A1.from_area.floor_h, A1.dest_area.floor_h, max_f)
+    end
+    if A2.chunk and A2.chunk.kind == "stair" then
+      max_f = math.max(A2.from_area.floor_h, A2.dest_area.floor_h, max_f)
+    end
+
     return max_f, (min_c - max_f)
   end
 
