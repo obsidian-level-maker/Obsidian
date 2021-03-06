@@ -1100,9 +1100,9 @@ function Title_interp_color(list, ity, out)
       local A = list[pos]
       local B = list[pos+1]
 
-      out[1] = A[1] * (1 - ity) + B[1] * ity
-      out[2] = A[2] * (1 - ity) + B[2] * ity
-      out[3] = A[3] * (1 - ity) + B[3] * ity
+      out[1] = int(A[1] * (1 - ity) + B[1] * ity)
+      out[2] = int(A[2] * (1 - ity) + B[2] * ity)
+      out[3] = int(A[3] * (1 - ity) + B[3] * ity)
       return
     end
 
@@ -1713,6 +1713,8 @@ function Title_gen_space_scene()
       ity = 240 * math.clamp(0, ity, 1)
 
       if ity < 50 then goto continue end
+      
+      ity = int(ity)
 
       gui.title_prop("color", { ity, ity, ity })
       gui.title_draw_rect(x, y, 1, 1)
@@ -1778,9 +1780,9 @@ function Title_gen_space_scene()
     else
       gui.title_draw_rect(mx, my, 1, 1)
 
-      col[1] = col[1] * 0.6
-      col[2] = col[2] * 0.6
-      col[3] = col[3] * 0.6
+      col[1] = int(col[1] * 0.6)
+      col[2] = int(col[2] * 0.6)
+      col[3] = int(col[3] * 0.6)
 
       gui.title_prop("color", col)
 
@@ -1928,6 +1930,7 @@ function Title_gen_wall_scene()
 
   -- draw the texture over the whole screen
   local tex = rand.pick(tex_list)
+
   gui.title_prop("texture", "data/bg/" .. tex .. ".tga")
 
   gui.title_draw_rect(0, 0, 320, 200)
@@ -1952,7 +1955,7 @@ function Title_gen_wall_scene()
   gui.title_prop("render_mode", "multiply")
 
   local col = { 0,0,0 }
-
+  
   local xf = 1.0
   if lamp_num == 1 then xf = 0.7 end
   if lamp_num == 3 then xf = 1.6 end
@@ -1966,6 +1969,8 @@ function Title_gen_wall_scene()
 
     local ity = math.exp(-d / 50) * 255  --- 255 - (d ^ 1.5) / 2.0,
     ity = math.clamp(0, ity, 255)
+    
+    ity = int(ity)
 
     col[1] = ity
     col[2] = ity
@@ -2121,7 +2126,6 @@ function Title_gen_tunnel_scene()
 
   for r = 1202, 2, -2 do
     local bump = (gui.random() ^ 5) * 0.7
-    print("BUMP: " .. bump)
     local ity = math.clamp(0.0, r / 1200, 0.9) + bump
 
     ity = ity * (1.0 - r / 900)
