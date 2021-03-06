@@ -18,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_MAIN_H__
-#define __OBLIGE_MAIN_H__
+#ifndef __OBLIGE_MAIN_64_H__
+#define __OBLIGE_MAIN_64_H__
 
 #define OBLIGE_TITLE  "OBSIDIAN Level Maker"
 

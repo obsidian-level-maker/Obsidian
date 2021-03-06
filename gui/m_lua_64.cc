@@ -32,8 +32,8 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 
-#include "main.h"
-#include "m_lua.h"
+#include "main_64.h"
+#include "m_lua_64.h"
 
 #include "twister_64.h"
 
@@ -665,6 +665,15 @@ int gui_random(lua_State *L)
 	return 1;
 }
 
+// LUA: random() --> number
+//
+int gui_random_int(lua_State *L)
+{
+	lua_Integer value = twister_UInt();
+	lua_pushnumber(L, value);
+	return 1;
+}
+
 
 // LUA: bit_and(A, B) --> number
 //
@@ -893,6 +902,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "abort",       gui_abort },
 	{ "rand_seed",   gui_rand_seed },
 	{ "random",      gui_random },
+	{ "random_int",  gui_random_int },
 
 	// file & directory functions
 	{ "import",          gui_import },
