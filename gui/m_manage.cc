@@ -151,7 +151,9 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf)
 			return false;  // not found
 
 		if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
-			stream.match("-- Levels created by OBSIDIAN "))
+			stream.match("-- Levels created by OBSIDIAN ") ||
+			stream.match("-- CONFIG FILE : OBLIGE ") ||
+			stream.match("-- Levels created by OBLIGE "))
 		{
 			break;  // found it
 		}
