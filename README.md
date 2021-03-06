@@ -1,3 +1,4 @@
+# This is the Legacy branch! https://github.com/dashodanger/Oblige/tree/obsidian hosts the current release, which merges the new Oblige (Obsidian) with ObAddon
 
 # OBLIGE 7.70
 by Andrew Apted.
