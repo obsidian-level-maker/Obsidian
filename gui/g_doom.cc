@@ -662,13 +662,9 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
 			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
       
-		  Main_ProgStatus(_("glBSP Error"));
-		  return false;
-	  }
-
-			Main_ProgStatus(_("glBSP Error"));
-			return false;
-		}
+		    Main_ProgStatus(_("glBSP Error"));
+		    return false;
+	    }
 
 		ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
 
