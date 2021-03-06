@@ -37,6 +37,8 @@
 #include "dm_extra.h"
 #include "g_doom.h"
 
+#include <string>
+
 
 extern void CSG_DOOM_Write();
 
@@ -482,10 +484,11 @@ int DM_NumThings()
 
 
 //----------------------------------------------------------------------------
-//  GLBSP NODE BUILDING
+//  GLBSP/ZDBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
 #include "glbsp.h"
+#include "zdmain.h"
 
 
 static nodebuildinfo_t nb_info;
@@ -633,60 +636,72 @@ static const nodebuildfuncs_t edge_build_funcs =
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
+  
+	std::string current_engine = main_win->game_box->engine->GetID();
 
-	display_mode = DIS_INVALID;
-
-	memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
-	memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
-
-	nb_info.input_file  = GlbspStrDup(filename);
-	nb_info.output_file = GlbspStrDup(out_name);
-
-	nb_info.quiet = TRUE;
-	nb_info.pack_sides = FALSE;
-	nb_info.force_normal = TRUE;
-	nb_info.fast = TRUE;
-
-	glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
-
-	if (ret != GLBSP_E_OK)
+	if (current_engine != "zdoom" && current_engine != "gzdoom") 
 	{
-		// check info failure (unlikely to happen)
-		GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
-		GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
+		display_mode = DIS_INVALID;
 
-		Main_ProgStatus(_("glBSP Error"));
-		return false;
-	}
+		memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
+		memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
 
-	ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
+		nb_info.input_file  = GlbspStrDup(filename);
+		nb_info.output_file = GlbspStrDup(out_name);
 
-	if (ret == GLBSP_E_Cancelled)
+		nb_info.quiet = TRUE;
+		nb_info.pack_sides = FALSE;
+		nb_info.force_normal = TRUE;
+		nb_info.fast = TRUE;
+
+		glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
+
+		if (ret != GLBSP_E_OK)
+		{
+			// check info failure (unlikely to happen)
+			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
+			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
+      
+		    Main_ProgStatus(_("glBSP Error"));
+		    return false;
+	    }
+
+		ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
+
+		if (ret == GLBSP_E_Cancelled)
+		{
+			GB_PrintMsg("Building CANCELLED.\n\n");
+			Main_ProgStatus(_("Cancelled"));
+			return false;
+		}
+
+		if (ret != GLBSP_E_OK)
+		{
+			// build nodes failed
+			GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
+			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
+
+			Main_ProgStatus(_("glBSP Error"));
+			return false;
+		}
+		
+			return true;
+			
+	} 
+	else
 	{
-		GB_PrintMsg("Building CANCELLED.\n\n");
-		Main_ProgStatus(_("Cancelled"));
-		return false;
+		if (zdmain(filename) != 0) 
+		{
+			LogPrintf("ZDBSP Failed!\n");
+			return false;
+		} 
+		else 
+		{
+			LogPrintf("ZDBSP Successfully Built Nodes.\n");
+			FileRename(filename, out_name);
+			return true;
+		}
 	}
-
-	if (ret != GLBSP_E_OK)
-	{
-		// build nodes failed
-		GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
-		GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-		Main_ProgStatus(_("glBSP Error"));
-		return false;
-	}
-
-/* ZDBSP shim placeholder
-	std::string zdbspcall = "tools/zdbsp -w -o ";
-	zdbspcall.append(filename);
-	zdbspcall.append(" ");
-	zdbspcall.append(filename);
-
-	std::system(zdbspcall.c_str()); */
-
-	return true;
 }
 
 
@@ -758,7 +773,7 @@ bool doom_game_interface_c::BuildNodes()
 	char *temp_name = ReplaceExtension(filename, "tmp");
 
 	FileDelete(temp_name);
-
+	
 	if (! FileRename(filename, temp_name))
 	{
 		LogPrintf("WARNING: could not rename file to .TMP!\n");

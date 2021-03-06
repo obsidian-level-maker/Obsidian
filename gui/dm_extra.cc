@@ -1192,7 +1192,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
 {
 	if (lua_isstring(L, stack_idx))
 	{
-		const char *name = lua_tostring(L, stack_idx);
+		const char *name = luaL_checkstring(L, stack_idx);
 
 		if (name[0] != '#')
 			luaL_error(L, "bad color string (missing #)");
@@ -1238,9 +1238,9 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
 			luaL_error(L, "bad color table");
 		}
 
-		r = lua_tointeger(L, -3);
-		g = lua_tointeger(L, -2);
-		b = lua_tointeger(L, -1);
+		r = luaL_checkinteger(L, -3);
+		g = luaL_checkinteger(L, -2);
+		b = luaL_checkinteger(L, -1);
 
 		lua_pop(L, 3);
 

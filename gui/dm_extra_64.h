@@ -18,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_DM_EXTRA_H__
-#define __OBLIGE_DM_EXTRA_H__
+#ifndef __OBLIGE_DM_EXTRA_64_H__
+#define __OBLIGE_DM_EXTRA_64_H__
 
 
 #endif /* __OBLIGE_DM_EXTRA_H__ */
