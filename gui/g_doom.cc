@@ -636,14 +636,11 @@ static const nodebuildfuncs_t edge_build_funcs =
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
-
+  
 	std::string current_engine = main_win->game_box->engine->GetID();
 
 	if (current_engine != "zdoom" && current_engine != "gzdoom") 
 	{
-
-		LogPrintf("\n");
-
 		display_mode = DIS_INVALID;
 
 		memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
@@ -664,6 +661,10 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 			// check info failure (unlikely to happen)
 			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
 			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
+      
+		  Main_ProgStatus(_("glBSP Error"));
+		  return false;
+	  }
 
 			Main_ProgStatus(_("glBSP Error"));
 			return false;

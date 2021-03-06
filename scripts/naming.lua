@@ -2943,6 +2943,7 @@ namelib.NAMES =
         ["Do You Want To Live Forever?"]=10,
         ["Endgame"]=10,
         ["Exterminatus"]=10,
+        ["Famous Last Words, Yours"]=10,
         ["Fear No Evil"]=10,
         ["Forlorn Hope"]=10,
         ["FUBAR"]=10,
@@ -2968,6 +2969,7 @@ namelib.NAMES =
         ["Killing Fields"]=10,
         ["Max Pain"]=10,
         ["Meatgrinder"]=10,
+        ["Musical Chairs but the Chair Explodes"]=10,
         ["Nine Inch Nails"]=10,
         ["No Chance in Hell"]=10,
         ["No Rest For The Wicked"]=10,
@@ -5362,6 +5364,7 @@ namelib.NAMES =
 
         -- MSSP adds names
         ["Hell is Infinite"] = 50,
+        ["Nobody Knows About Legacy 3D Lines"] = 20,
 
         -- based on popular movie/TV slogans
         ["A Minute in Hell"] = 20,
