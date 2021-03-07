@@ -74,10 +74,6 @@
 
 static void ShowVersion ();
 
-#ifndef DISABLE_SSE
-static void CheckSSE ();
-#endif
-
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 const char		*Map = NULL;
@@ -102,8 +98,6 @@ bool			 CompressGLNodes = false;
 bool			 ForceCompression = false;
 bool			 GLOnly = false;
 bool			 V5GLNodes = false;
-bool			 HaveSSE1, HaveSSE2;
-int				 SSELevel;
 
 // CODE --------------------------------------------------------------------
 
@@ -114,17 +108,7 @@ ShowVersion();
 
 bool fixSame = false;
 
-#ifdef DISABLE_SSE
-	HaveSSE1 = HaveSSE2 = false;
-#else
-	HaveSSE1 = HaveSSE2 = true;
-#endif
-
 InName = filename;
-
-#ifndef DISABLE_SSE
-	CheckSSE ();
-#endif
 
 	try
 	{
@@ -280,99 +264,6 @@ static void ShowVersion ()
 
 		" : " __DATE__ ")\n");
 }
-
-//==========================================================================
-//
-// CheckSSE
-//
-// Checks if the processor supports SSE or SSE2.
-//
-//==========================================================================
-
-#ifndef DISABLE_SSE
-static void CheckSSE ()
-{
-#ifdef __SSE2__
-	// If we compiled with SSE2 support enabled for everything, then
-	// obviously it's available, or the program won't get very far.
-	return;
-#endif
-
-	if (!HaveSSE2 && !HaveSSE1)
-	{
-		return;
-	}
-
-	bool forcenosse1 = !HaveSSE1;
-	bool forcenosse2 = !HaveSSE2;
-
-	HaveSSE1 = false;
-	HaveSSE2 = false;
-#if defined(_MSC_VER) && !defined(__clang__)
-
-#ifdef _M_X64
-	// Processors implementing AMD64 are required to support SSE2.
-	return;
-#else
-	__asm
-	{
-		pushfd				// save EFLAGS
-		pop eax				// store EFLAGS in EAX
-		mov edx,eax			// save in EDX for later testing
-		xor eax,0x00200000	// toggle bit 21
-		push eax			// put to stack
-		popfd				// save changed EAX to EFLAGS
-		pushfd				// push EFLAGS to TOS
-		pop eax				// store EFLAGS in EAX
-		cmp eax,edx			// see if bit 21 has changed
-		jz noid				// if no change, then no CPUID
-
-		// Check the feature flag for SSE/SSE2
-		mov eax,1
-		cpuid
-		test edx,(1<<25)	// Check for SSE
-		setnz HaveSSE1
-		test edx,(1<<26)	// Check for SSE2
-		setnz HaveSSE2
-noid:
-	}
-#endif
-
-#elif defined(__GNUC__) || defined(__clang__)
-
-	// Same as above, but for GCC
-	asm volatile
-		("pushfl\n\t"
-		 "popl %%eax\n\t"
-		 "movl %%eax,%%edx\n\t"
-		 "xorl $0x200000,%%eax\n\t"
-		 "pushl %%eax\n\t"
-		 "popfl\n\t"
-		 "pushfl\n\t"
-		 "popl %%eax\n\t"
-		 "cmp %%edx,%%eax\n\t"
-		 "jz noid\n\t"
-		 "mov $1,%%eax\n\t"
-		 "cpuid\n\t"
-		 "test $(1<<25),%%edx\n\t"
-		 "setneb %0\n"
-		 "test $(1<<26),%%edx\n\t"
-		 "setneb %1\n"
-		 "noid:"
-		 :"=m" (HaveSSE1),"=m" (HaveSSE2)::"eax","ebx","ecx","edx");
-
-#endif
-
-	if (forcenosse1)
-	{
-		HaveSSE1 = false;
-	}
-	if (forcenosse2)
-	{
-		HaveSSE2 = false;
-	}
-}
-#endif
 
 //==========================================================================
 //

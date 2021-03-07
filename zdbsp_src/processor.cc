@@ -575,18 +575,6 @@ void FProcessor::Write (FWadWriter &out)
 		
 		try
 		{
-			if (HaveSSE2)
-			{
-				SSELevel = 2;
-			}
-			else if (HaveSSE1)
-			{
-				SSELevel = 1;
-			}
-			else
-			{
-				SSELevel = 0;
-			}
 			builder = new FNodeBuilder (Level, PolyStarts, PolyAnchors, Wad.LumpName (Lump), BuildGLNodes);
 			if (builder == NULL)
 			{
