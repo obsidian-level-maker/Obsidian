@@ -319,7 +319,7 @@ const char * DLG_OutputFilename(const char *ext, const char *preset)
 
 void DLG_EditSeed(void)
 {
-	char num_buf[256];
+	char num_buf[1000];
 	
 	sprintf(num_buf, "%lu", next_rand_seed);
 	
