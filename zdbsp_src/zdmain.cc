@@ -93,9 +93,9 @@ bool			 CheckPolyobjs = true;
 bool			 ShowMap = false;
 bool			 ShowWarnings = true;
 bool			 NoTiming = false;
-bool			 CompressNodes = false;
-bool			 CompressGLNodes = false;
-bool			 ForceCompression = false;
+bool			 CompressNodes = true;
+bool			 CompressGLNodes = true;
+bool			 ForceCompression = true;
 bool			 GLOnly = false;
 bool			 V5GLNodes = false;
 
