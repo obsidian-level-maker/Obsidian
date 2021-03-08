@@ -62,6 +62,7 @@ static qLump_c *vertex_lump;
 static qLump_c *sector_lump;
 static qLump_c *sidedef_lump;
 static qLump_c *linedef_lump;
+static qLump_c *textmap_lump;
 
 static int errors_seen;
 
@@ -238,6 +239,7 @@ static void DM_FreeLumps()
 	delete vertex_lump;  vertex_lump  = NULL;
 	delete sidedef_lump; sidedef_lump = NULL;
 	delete linedef_lump; linedef_lump = NULL;
+	delete textmap_lump; textmap_lump = NULL;
 }
 
 
@@ -251,6 +253,7 @@ void DM_BeginLevel()
 	sector_lump  = new qLump_c();
 	linedef_lump = new qLump_c();
 	sidedef_lump = new qLump_c();
+	textmap_lump = new qLump_c();
 }
 
 
@@ -277,6 +280,8 @@ void DM_EndLevel(const char *level_name)
 
 	if (dm_sub_format == SUBFMT_Hexen)
 		DM_WriteBehavior();
+		
+	DM_WriteLump("TEXTMAP", textmap_lump);
 
 	DM_FreeLumps();
 }
@@ -424,6 +429,10 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 		thing.options = LE_U16(options);
 
 		thing_lump->Append(&thing, sizeof(thing));
+		
+//		const char *x_coord = std::to_string(LE_S16(x)).c_str();		
+		
+//		textmap_lump->Printf(x_coord);
 	}
 	else  // Hexen format
 	{
