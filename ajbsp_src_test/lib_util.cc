@@ -549,7 +549,7 @@ double PointLineDist(double x, double y,
 		return sqrt(x*x + y*y);
 
 	else if (along_frac >= 1)
-		return ComputeDist(x, y, x2, y2);
+		return ComputeDistDouble(x, y, x2, y2);
 
 	else
 		// perp dist
@@ -579,7 +579,7 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
 void AlongCoord(double along, double px1, double py1, double px2, double py2,
                 double *x, double *y)
 {
-	double len = ComputeDist(px1, py1, px2, py2);
+	double len = ComputeDistDouble(px1, py1, px2, py2);
 
 	*x = px1 + along * (px2 - px1) / len;
 	*y = py1 + along * (py2 - py1) / len;
