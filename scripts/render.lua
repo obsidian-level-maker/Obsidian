@@ -305,7 +305,6 @@ function Render_edge(E)
         -- this is to prevent oddities like ZDoom slopes from being cut-off
         if chunk.kind == "stair" and not A.dead_end then
           reqs.deep = 16
-          reqs.scenic = true
         end
       end
 
