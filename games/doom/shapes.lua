@@ -4053,8 +4053,8 @@ GROW_SQUEEZE_CURVE_LIQUID_SIDE =
 
 GROW_SQUEEZE_DRAIN =
 {
-  prob = 8,
-  skip_prob = 60,
+  prob = 3,
+  skip_prob = 75,
 
   structure =
   {
@@ -4474,7 +4474,7 @@ GROW_DIAGONAL_L =
     "......","/11111",
     "....xx","111/xx",
     "...xxx","111xxx",
-    "111xxx","111xxx",
+    "x11xxx","x11xxx",
   },
 
   diagonals =
@@ -5108,8 +5108,8 @@ GROW_NARROW_CANAL_OUTER_CURVE =
 -- MSSP's maze parts. [MAZE]
 GROW_MAZE_STRAIGHT =
 {
-  prob = 3,
-  skip_prob = 35,
+  prob = 2,
+  skip_prob = 75,
 
   structure =
   {
@@ -5136,6 +5136,7 @@ GROW_MAZE_STRAIGHT_NEW_AREA =
     "x1x","x1x",
   },
 },
+
 GROW_MAZE_STRAIGHT_STAIRED =
 {
   prob = 10,
@@ -5462,30 +5463,28 @@ GROW_LAKE_BIG_O_WIDE_NEW_AREA =
 
 GROW_LAKE_BIG_L_NEW_AREA =
 {
-  prob = 35,
+  prob = 45,
   skip_prob = 75,
 
   structure =
   {
-    "xxxxx11xxxxxxxxxxxxx","xxxxx11xxxxxxxxxxxxx",
-    "............xxxxxxxx","/1111111111%xxxxxxxx",
-    "............xxxxxxxx","111111111111xxxxxxxx",
-    "............xxxxxxxx","111111111111xxxxxxxx",
-    "............xxxxxxxx","111/~~~~%111xxxxxxxx",
-    "............xxxxxxxx","111~~~~~~111xxxxxxxx",
-    "............xxxxxxxx","111~~~~~~111xxxxxxxx",
-    "............xxxxxxxx","vvv~~~~~~vvvxxxxxxxx",
-    "............xxxxxxxx","AAA~~~~~~AAAxxxxxxxx",
-    "....................","AAA~~~~~~AAAAAAAAAA%",
-    "....................","AAA~~~~~~AAAAAAAAAAA",
-    "....................","AAA~~~~~~%AAAAAAAAAA",
-    "....................","AAA~~~~~~~~~~~~~%AAA",
-    "....................","AAA~~~~~~~~~~~~~~AAA",
-    "....................","AAA~~~~~~~~~~~~~~AAA",
-    "....................","AAA%~~~~~~~~~~~~/AAA",
-    "....................","AAAAAAAAAAAAAAAAAAAA",
-    "....................","AAAAAAAAAAAAAAAAAAAA",
-    "....................","%AAAAAAAAAAAAAAAAAA/",
+    "xxxxx11xxxxxxxxxxx","xxxxx11xxxxxxxxxxx",
+    "............xxxxxx","/1111111111%xxxxxx",
+    "............xxxxxx","111111111111xxxxxx",
+    "............xxxxxx","111111111111xxxxxx",
+    "............xxxxxx","111/~~~~%111xxxxxx",
+    "............xxxxxx","vvv~~~~~~vvvxxxxxx",
+    "............xxxxxx","AAA~~~~~~AAAxxxxxx",
+    "..................","AAA~~~~~~AAAAAAAA%",
+    "..................","AAA~~~~~~AAAAAAAAA",
+    "..................","AAA~~~~~~%AAAAAAAA",
+    "..................","AAA~~~~~~~~~~~%AAA",
+    "..................","AAA~~~~~~~~~~~~AAA",
+    "..................","AAA~~~~~~~~~~~~AAA",
+    "..................","AAA%~~~~~~~~~~/AAA",
+    "..................","AAAAAAAAAAAAAAAAAA",
+    "..................","AAAAAAAAAAAAAAAAAA",
+    "..................","%AAAAAAAAAAAAAAAA/",
   },
 
   diagonals =
@@ -5517,6 +5516,39 @@ GROW_LAKE_BIG_J_NEW_AREA =
     ".........xxx","111~~~~~~xxx",
     ".........xxx","vvv~~~~~~xxx",
     ".........xxx","vvv~~~~~~xxx",
+    "............","AAA~~~~~~AAA",
+    "............","AAA~~~~~~AAA",
+    "............","AAA~~~~~~AAA",
+    "............","AAA%~~~~/AAA",
+    "............","AAAAAAAAAAAA",
+    "............","AAAAAAAAAAAA",
+    "............","%AAAAAAAAAA/",
+  },
+
+  diagonals =
+  {
+    "A~","~A",
+    ".A","A.",
+  },
+},
+
+GROW_LAKE_BIG_J_NEW_AREA_2 =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x11xxxxxxxxx","x11xxxxxxxxx",
+    "............","111~~~~~~111",
+    "............","111~~~~~~111",
+    "............","111~~~~~~111",
+    "............","111~~~~~~111",
+    "............","111~~~~~~111",
+    "............","111~~~~~~111",
+    "............","111~~~~~~111",
+    "............","vvv~~~~~~vvv",
+    "............","vvv~~~~~~vvv",
     "............","AAA~~~~~~AAA",
     "............","AAA~~~~~~AAA",
     "............","AAA~~~~~~AAA",
@@ -5611,7 +5643,7 @@ GROW_LAKE_CROSS_NEW_AREA_STRAIGHT =
 
 GROW_LAKE_BIG_X_NEW_AREA =
 {
-  prob = 35,
+  prob = 45,
   skip_prob = 60,
 
   structure =
@@ -5651,7 +5683,7 @@ GROW_LAKE_BIG_X_NEW_AREA =
 
 GROW_BIG_REACTOR_ARENA =
 {
-  prob = 25,
+  prob = 35,
   skip_prob = 75,
 
   structure =
@@ -5690,7 +5722,7 @@ GROW_BIG_REACTOR_ARENA =
 
 GROW_PRIMITIVE_CIRCLE_3X =
 {
-  prob = 35,
+  prob = 45,
   skip_prob = 25,
 
   structure =
