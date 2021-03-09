@@ -38,6 +38,8 @@
 #include "g_doom.h"
 
 #include <string>
+#include <bitset>
+#include <iostream>
 
 
 extern void CSG_DOOM_Write();
@@ -63,8 +65,19 @@ static qLump_c *sector_lump;
 static qLump_c *sidedef_lump;
 static qLump_c *linedef_lump;
 static qLump_c *textmap_lump;
+static qLump_c *endmap_lump;
 
 static int errors_seen;
+
+std::string current_engine;
+
+static bool UDMF_mode;
+
+int udmf_vertexes = 0;
+int udmf_sectors = 0;
+int udmf_linedefs = 0;
+int udmf_things = 0;
+int udmf_sidedefs = 0;
 
 
 typedef enum
@@ -234,12 +247,19 @@ bool DM_EndWAD()
 static void DM_FreeLumps()
 {
 	delete header_lump;  header_lump  = NULL;
-	delete thing_lump;   thing_lump   = NULL;
-	delete sector_lump;  sector_lump  = NULL;
-	delete vertex_lump;  vertex_lump  = NULL;
-	delete sidedef_lump; sidedef_lump = NULL;
-	delete linedef_lump; linedef_lump = NULL;
-	delete textmap_lump; textmap_lump = NULL;
+	if (not UDMF_mode)
+	{
+		delete thing_lump;   thing_lump   = NULL;
+		delete sector_lump;  sector_lump  = NULL;
+		delete vertex_lump;  vertex_lump  = NULL;
+		delete sidedef_lump; sidedef_lump = NULL;
+		delete linedef_lump; linedef_lump = NULL;
+	}
+	else
+	{
+		delete textmap_lump; textmap_lump = NULL;
+		delete endmap_lump; endmap_lump = NULL;
+	}
 }
 
 
@@ -248,12 +268,20 @@ void DM_BeginLevel()
 	DM_FreeLumps();
 
 	header_lump  = new qLump_c();
-	thing_lump   = new qLump_c();
-	vertex_lump  = new qLump_c();
-	sector_lump  = new qLump_c();
-	linedef_lump = new qLump_c();
-	sidedef_lump = new qLump_c();
-	textmap_lump = new qLump_c();
+	if (not UDMF_mode)
+	{
+		thing_lump   = new qLump_c();
+		vertex_lump  = new qLump_c();
+		sector_lump  = new qLump_c();
+		linedef_lump = new qLump_c();
+		sidedef_lump = new qLump_c();
+	}
+	else
+	{
+		textmap_lump = new qLump_c();
+		textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
+		endmap_lump = new qLump_c();
+	}
 }
 
 
@@ -265,23 +293,33 @@ void DM_EndLevel(const char *level_name)
 		const byte nuls[4] = { 0,0,0,0 };
 		header_lump->Append(nuls, 1);
 	}
-
+	
 	DM_WriteLump(level_name, header_lump);
-
-	DM_WriteLump("THINGS",   thing_lump);
-	DM_WriteLump("LINEDEFS", linedef_lump);
-	DM_WriteLump("SIDEDEFS", sidedef_lump);
-	DM_WriteLump("VERTEXES", vertex_lump);
-
-	DM_WriteLump("SEGS",     NULL, 0);
-	DM_WriteLump("SSECTORS", NULL, 0);
-	DM_WriteLump("NODES",    NULL, 0);
-	DM_WriteLump("SECTORS",  sector_lump);
-
+	
+	if (UDMF_mode)
+	{
+		DM_WriteLump("TEXTMAP", textmap_lump);	
+	}
+	
 	if (dm_sub_format == SUBFMT_Hexen)
 		DM_WriteBehavior();
-		
-	DM_WriteLump("TEXTMAP", textmap_lump);
+	
+	if (not UDMF_mode)
+	{
+		DM_WriteLump("THINGS",   thing_lump);
+		DM_WriteLump("LINEDEFS", linedef_lump);
+		DM_WriteLump("SIDEDEFS", sidedef_lump);
+		DM_WriteLump("VERTEXES", vertex_lump);
+
+		DM_WriteLump("SEGS",     NULL, 0);
+		DM_WriteLump("SSECTORS", NULL, 0);
+		DM_WriteLump("NODES",    NULL, 0);
+		DM_WriteLump("SECTORS",  sector_lump);
+	}
+	else
+	{	
+		DM_WriteLump("ENDMAP",    NULL, 0);
+	}
 
 	DM_FreeLumps();
 }
@@ -313,13 +351,24 @@ void DM_AddVertex(int x, int y)
 		x += 32;
 		y += 32;
 	}
-
+	
 	raw_vertex_t vert;
 
 	vert.x = LE_S16(x);
 	vert.y = LE_S16(y);
-
-	vertex_lump->Append(&vert, sizeof(vert));
+	
+	if (not UDMF_mode) 
+	{
+		vertex_lump->Append(&vert, sizeof(vert));
+	}
+	else
+	{	
+		textmap_lump->Printf("\nvertex\n{\n");
+		textmap_lump->Printf("\tx = %f;\n", (double)x);
+		textmap_lump->Printf("\ty = %f;\n", (double)y);
+		textmap_lump->Printf("}\n");
+		udmf_vertexes += 1;
+	}
 }
 
 
@@ -339,7 +388,23 @@ void DM_AddSector(int f_h, const char * f_tex,
 	sec.special = LE_U16(special);
 	sec.tag     = LE_S16(tag);
 
-	sector_lump->Append(&sec, sizeof(sec));
+	if (not UDMF_mode)
+	{
+		sector_lump->Append(&sec, sizeof(sec));
+	}
+	else
+	{	
+		textmap_lump->Printf("\nsector\n{\n");
+		textmap_lump->Printf("\theightfloor = %d;\n", f_h);
+		textmap_lump->Printf("\theightceiling = %d;\n", c_h);
+		textmap_lump->Printf("\ttexturefloor = \"%s\";\n", f_tex);
+		textmap_lump->Printf("\ttextureceiling = \"%s\";\n", c_tex);
+		textmap_lump->Printf("\tlightlevel = %d;\n", light);
+		textmap_lump->Printf("\tspecial = %d;\n", special);
+		textmap_lump->Printf("\tid = %d;\n", tag);
+		textmap_lump->Printf("}\n");
+		udmf_sectors += 1;
+	}	
 }
 
 
@@ -357,8 +422,23 @@ void DM_AddSidedef(int sector, const char *l_tex,
 
 	side.x_offset = LE_S16(x_offset);
 	side.y_offset = LE_S16(y_offset);
-
+	
+	if (not UDMF_mode)
+	{
 	sidedef_lump->Append(&side, sizeof(side));
+	}
+	else
+	{
+		textmap_lump->Printf("\nsidedef\n{\n");
+		textmap_lump->Printf("\toffsetx = %d;\n", x_offset);
+		textmap_lump->Printf("\toffsety = %d;\n", y_offset);
+		textmap_lump->Printf("\ttexturetop = \"%s\";\n", u_tex);
+		textmap_lump->Printf("\ttexturemiddle = \"%s\";\n", m_tex);
+		textmap_lump->Printf("\ttexturebottom = \"%s\";\n", l_tex);
+		textmap_lump->Printf("\tsector = %d;\n", sector);
+		textmap_lump->Printf("}\n");
+		udmf_sidedefs += 1;
+	}
 }
 
 
@@ -378,9 +458,42 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 
 		line.type  = LE_U16(type);
 		line.flags = LE_U16(flags);
-		line.tag   = LE_U16(tag);
 
-		linedef_lump->Append(&line, sizeof(line));
+		if (not UDMF_mode) 
+		{
+			linedef_lump->Append(&line, sizeof(line));
+		} 
+		else 
+		{
+			textmap_lump->Printf("\nlinedef\n{\n");
+			textmap_lump->Printf("\tv1 = %d;\n", vert1);
+			textmap_lump->Printf("\tv2 = %d;\n", vert2);
+			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? 0xFFFF : side1);
+			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? 0xFFFF : side2);
+			textmap_lump->Printf("\targ0 = %d;\n", tag);
+			textmap_lump->Printf("\tspecial = %d;\n", type);
+			std::bitset<16> udmf_flags(line.flags);
+			if (udmf_flags.test(0))
+				textmap_lump->Printf("\tblocking = true;\n");
+			if (udmf_flags.test(1))
+				textmap_lump->Printf("\tblockmonsters = true;\n");
+			if (udmf_flags.test(2))
+				textmap_lump->Printf("\ttwosided = true;\n");
+			if (udmf_flags.test(3))
+				textmap_lump->Printf("\tdontpegtop = true;\n");
+			if (udmf_flags.test(4))
+				textmap_lump->Printf("\tdontpegbottom = true;\n");
+			if (udmf_flags.test(5))
+				textmap_lump->Printf("\tsecret = true;\n");
+			if (udmf_flags.test(6))
+				textmap_lump->Printf("\tblocksound = true;\n");
+			if (udmf_flags.test(7))
+				textmap_lump->Printf("\tdontdraw = true;\n");
+			if (udmf_flags.test(8))
+				textmap_lump->Printf("\tmapped = true;\n");
+			textmap_lump->Printf("}\n");
+			udmf_linedefs += 1;
+		}
 	}
 	else  // Hexen format
 	{
@@ -427,12 +540,64 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 		thing.type    = LE_U16(type);
 		thing.angle   = LE_S16(angle);
 		thing.options = LE_U16(options);
-
+		
+		if (not UDMF_mode)
+		{
 		thing_lump->Append(&thing, sizeof(thing));
-		
-//		const char *x_coord = std::to_string(LE_S16(x)).c_str();		
-		
-//		textmap_lump->Printf(x_coord);
+		}
+		else
+		{		
+			textmap_lump->Printf("\nthing\n{\n");
+			textmap_lump->Printf("\tx = %f;\n", (double)x);
+			textmap_lump->Printf("\ty = %f;\n", (double)y);
+			textmap_lump->Printf("\ttype = %d;\n", type);
+			textmap_lump->Printf("\tangle = %d;\n", angle);
+			std::bitset<16> udmf_flags(thing.options);
+			if (udmf_flags.test(0))
+			{
+				textmap_lump->Printf("\tskill1 = true;\n");
+				textmap_lump->Printf("\tskill2 = true;\n");
+			}
+			if (udmf_flags.test(1))
+				textmap_lump->Printf("\tskill3 = true;\n");
+			if (udmf_flags.test(2))
+			{
+				textmap_lump->Printf("\tskill4 = true;\n");
+				textmap_lump->Printf("\tskill5 = true;\n");
+			}
+			if (udmf_flags.test(3))
+				textmap_lump->Printf("\tambush = true;\n");
+			if (udmf_flags.test(4))
+			{
+				textmap_lump->Printf("\tsingle = false;\n");
+			}
+			else
+			{
+				textmap_lump->Printf("\tsingle = true;\n");
+			}
+			if (udmf_flags.test(5)) 
+			{
+				textmap_lump->Printf("\tdm = false;\n");
+			}
+			else
+			{
+				textmap_lump->Printf("\tdm = true;\n");
+			}
+			if (udmf_flags.test(6)) 
+			{
+				textmap_lump->Printf("\tcoop = false;\n");
+			}
+			else
+			{
+				textmap_lump->Printf("\tcoop = true;\n");
+			}
+			if (udmf_flags.test(7))
+			{
+				textmap_lump->Printf("\tfriend = true;\n");
+			}
+			textmap_lump->Printf("}\n");
+			udmf_things += 1;
+		}		
 	}
 	else  // Hexen format
 	{
@@ -462,42 +627,76 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 
 int DM_NumVertexes()
 {
-	return vertex_lump->GetSize() / sizeof(raw_vertex_t);
+	if (not UDMF_mode) 
+	{
+		return vertex_lump->GetSize() / sizeof(raw_vertex_t);
+	}
+	else
+	{
+		return udmf_vertexes;
+	}
 }
 
 int DM_NumSectors()
 {
-	return sector_lump->GetSize() / sizeof(raw_sector_t);
+	if (not UDMF_mode) 
+	{
+		return sector_lump->GetSize() / sizeof(raw_sector_t);
+	}
+	else
+	{
+		return udmf_sectors;
+	}
 }
 
 int DM_NumSidedefs()
 {
-	return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
+	if (not UDMF_mode) 
+	{
+		return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
+	}
+	else
+	{
+		return udmf_sidedefs;
+	}
 }
 
 int DM_NumLinedefs()
 {
-	if (dm_sub_format == SUBFMT_Hexen)
-		return linedef_lump->GetSize() / sizeof(raw_hexen_linedef_t);
+	if (not UDMF_mode) 
+	{
+		if (dm_sub_format == SUBFMT_Hexen)
+			return linedef_lump->GetSize() / sizeof(raw_hexen_linedef_t);
 
-	return linedef_lump->GetSize() / sizeof(raw_linedef_t);
+		return linedef_lump->GetSize() / sizeof(raw_linedef_t);
+	}
+	else
+	{
+		return udmf_linedefs;
+	}
 }
 
 int DM_NumThings()
 {
-	if (dm_sub_format == SUBFMT_Hexen)
-		return thing_lump->GetSize() / sizeof(raw_hexen_thing_t);
+	if (not UDMF_mode) 
+	{
+		if (dm_sub_format == SUBFMT_Hexen)
+			return thing_lump->GetSize() / sizeof(raw_hexen_thing_t);
 
-	return thing_lump->GetSize() / sizeof(raw_thing_t);
+		return thing_lump->GetSize() / sizeof(raw_thing_t);
+	}
+	else
+	{
+		return udmf_things;
+	}
 }
 
 
 //----------------------------------------------------------------------------
-//  GLBSP/ZDBSP NODE BUILDING
+//  GLBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
 #include "glbsp.h"
-#include "zdmain.h"
 
 
 static nodebuildinfo_t nb_info;
@@ -646,9 +845,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
   
-	std::string current_engine = main_win->game_box->engine->GetID();
-
-	if (current_engine != "zdoom" && current_engine != "gzdoom") 
+	if (not UDMF_mode) 
 	{
 		display_mode = DIS_INVALID;
 
@@ -699,17 +896,9 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	} 
 	else
 	{
-		if (zdmain(filename) != 0) 
-		{
-			LogPrintf("ZDBSP Failed!\n");
-			return false;
-		} 
-		else 
-		{
-			LogPrintf("ZDBSP Successfully Built Nodes.\n");
-			FileRename(filename, out_name);
-			return true;
-		}
+		LogPrintf("UDMF Map Format -- Skipping Nodes...\n");
+		FileRename(filename, out_name);
+		return true;
 	}
 }
 
@@ -772,6 +961,16 @@ bool doom_game_interface_c::Start(const char *preset)
 
 	if (main_win)
 		main_win->build_box->Prog_Init(20, N_("CSG"));
+		
+	current_engine = main_win->game_box->engine->GetID();
+	if (current_engine == "zdoom" || current_engine == "gzdoom") 
+	{
+		UDMF_mode = true;
+	}
+	else
+	{
+		UDMF_mode = false;
+	}
 
 	return true;
 }

@@ -34,7 +34,7 @@ FLTK_CONFIG=fltk-config
 FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
 FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Izdbsp_src -Iajpoly_src -Iphysfs_src $(FLTK_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src -Iphysfs_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
@@ -168,28 +168,6 @@ GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline -Iphysfs_src
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
 	
-#----- ZDBSP Objects ------------------------------------------------
-
-ZDBSP_OBJS= \
-	$(OBJ_DIR)/zdbsp/zdmain.o  \
-	$(OBJ_DIR)/zdbsp/blockmapbuilder.o \
-	$(OBJ_DIR)/zdbsp/processor.o     \
-	$(OBJ_DIR)/zdbsp/processor_udmf.o     \
-	$(OBJ_DIR)/zdbsp/sc_man.o  \
-	$(OBJ_DIR)/zdbsp/zdwad.o \
-	$(OBJ_DIR)/zdbsp/nodebuild.o     \
-	$(OBJ_DIR)/zdbsp/nodebuild_events.o  \
-	$(OBJ_DIR)/zdbsp/nodebuild_extract.o   \
-	$(OBJ_DIR)/zdbsp/nodebuild_gl.o      \
-	$(OBJ_DIR)/zdbsp/nodebuild_utility.o   \
-	$(OBJ_DIR)/zdbsp/nodebuild_classify_nosse2.o   
-
-ZDBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
-
-$(OBJ_DIR)/zdbsp/%.o: zdbsp_src/%.cc
-	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
-
-
 #----- AJ-Polygonator Objects --------------------------------------
 
 AJPOLY_OBJS= \
@@ -246,7 +224,7 @@ LANG_FILES= \
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(ZDBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
@@ -255,7 +233,6 @@ clean:
 	rm -f $(OBJ_DIR)/glbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 	rm -f $(OBJ_DIR)/physfs/*.o
-	rm -f $(OBJ_DIR)/zdbsp/*.o
 	rm -f LANG_TEMPLATE.txt
 
 halfclean:

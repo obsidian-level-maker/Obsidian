@@ -2848,13 +2848,11 @@ int doom_sidedef_c::Write()
 void doom_linedef_c::Write()
 {
 	SYS_ASSERT(start && end);
-
 	int v1 = start->Write();
 	int v2 = end  ->Write();
 
 	int f = front ? front->Write() : -1;
 	int b = back  ? back ->Write() : -1;
-
 	DM_AddLinedef(v1, v2, f, b, special, flags, tag, args);
 }
 
@@ -3090,13 +3088,10 @@ void CSG_DOOM_Write()
 	DM_ProcessDepots();
 
 	DM_CreateDummies();
-
 	// this writes vertices, sidedefs and sectors too
 	DM_WriteLinedefs();
-
 	DM_WriteThings();
 	DM_WriteFraggleScript();
-
 	DM_FreeStuff();
 }
 
