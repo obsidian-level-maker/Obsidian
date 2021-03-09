@@ -48,7 +48,6 @@ const char *Level_name;
 
 map_format_e Level_format;
 
-int total_empty_files = 0;
 int total_built_maps = 0;
 int total_failed_maps = 0;
 
@@ -234,7 +233,6 @@ static build_result_e BuildFile()
 	if (num_levels == 0)
 	{
 		PrintMsg("  No levels in wad\n");
-		total_empty_files += 1;
 		return BUILD_OK;
 	}
 
@@ -288,7 +286,6 @@ static build_result_e BuildFile()
 	if (visited == 0)
 	{
 		PrintMsg("  No matching levels\n");
-		total_empty_files += 1;
 		return BUILD_OK;
 	}
 
@@ -476,24 +473,16 @@ int ajbsp_main(const char *filename)
 
 	PrintMsg("\n");
 
-	else if (total_built_maps == 0)
+	if (total_built_maps == 0)
 	{
 		PrintMsg("NOTHING was built!\n");
 
 		return 1;
 	}
-	else if (total_empty_files == 0)
-	{
-		PrintMsg("Ok, built all files.\n");
-	}
 	else
 	{
-		int built = total_files - total_empty_files;
-		int empty = total_empty_files;
-
-		PrintMsg("Ok, built %d file%s, %d file%s empty.\n",
-				built, (built == 1 ? "" : "s"),
-				empty, (empty == 1 ? " was" : "s were"));
+		PrintMsg("Ok, built nodes for %d map%s!\n",
+				total_built_maps, (total_built_maps == 1 ? "" : "s"));
 	}
 
 	// that's all folks!

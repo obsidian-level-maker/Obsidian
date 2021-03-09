@@ -32,6 +32,7 @@
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 #endif
 
+#include <algorithm>
 
 bool FileExists(const char *filename)
 {
@@ -666,7 +667,7 @@ struct filename_nocase_CMP
 {
 	inline bool operator() (const std::string& A, const std::string& B) const
 	{
-		return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+		return y_stricmp(A.c_str(), B.c_str()) < 0;
 	}
 };
 

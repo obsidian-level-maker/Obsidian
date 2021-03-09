@@ -27,6 +27,8 @@
 #define DIR_SEP_STR  "/"
 #endif
 
+#include <string>
+
 // filename functions
 bool HasExtension(const char *filename);
 bool MatchExtension(const char *filename, const char *ext);
