@@ -963,7 +963,7 @@ bool doom_game_interface_c::Start(const char *preset)
 		main_win->build_box->Prog_Init(20, N_("CSG"));
 		
 	current_engine = main_win->game_box->engine->GetID();
-	if (current_engine == "zdoom" || current_engine == "gzdoom") 
+	if (current_engine == "zdoom_udmf" || current_engine == "gzdoom_udmf") 
 	{
 		UDMF_mode = true;
 	}
