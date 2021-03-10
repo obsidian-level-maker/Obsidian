@@ -23,7 +23,7 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
-#include "glbsp.h"
+//#include "ajbsp.h"
 
 #include "lib_argv.h"
 #include "lib_file.h"
