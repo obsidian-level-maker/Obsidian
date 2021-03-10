@@ -43,7 +43,6 @@
 #include "tx_forge_64.h"
 #include "tx_skies_64.h"
 
-#include "w_rawdef.h"
 
 static byte *sky_pixels;
 static int sky_W;
@@ -231,13 +230,13 @@ int DM_wad_logo_gfx(lua_State *L)
 	// find the requested image (TODO: look in a table)
 	const logo_image_t *logo = NULL;
 
-	if (y_stricmp(image, logo_BOLT.name) == 0)
+	if (StringCaseCmp(image, logo_BOLT.name) == 0)
 		logo = &logo_BOLT;
-	else if (y_stricmp(image, logo_PILL.name) == 0)
+	else if (StringCaseCmp(image, logo_PILL.name) == 0)
 		logo = &logo_PILL;
-	else if (y_stricmp(image, logo_CARVE.name) == 0)
+	else if (StringCaseCmp(image, logo_CARVE.name) == 0)
 		logo = &logo_CARVE;
-	else if (y_stricmp(image, logo_RELIEF.name) == 0)
+	else if (StringCaseCmp(image, logo_RELIEF.name) == 0)
 		logo = &logo_RELIEF;
 	else
 		return luaL_argerror(L, 3, "unknown image name");
@@ -1566,9 +1565,9 @@ int DM_title_write(lua_State *L)
 
 	qLump_c *lump;
 
-	if (y_stricmp(format, "tga") == 0)
+	if (StringCaseCmp(format, "tga") == 0)
 		lump = TitleCreateTGA();
-	else if (y_stricmp(format, "raw") == 0)
+	else if (StringCaseCmp(format, "raw") == 0)
 		lump = TitleCreateRaw();
 	else
 		lump = TitleCreatePatch();

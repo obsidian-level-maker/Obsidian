@@ -37,8 +37,8 @@
 // Rewritten again by Andrew Apted (-AJA-), 1999-2000.
 //
 
-#include "ajbsp_main.h"
-#include "headers.h"
+#include "ajbsp.h"
+
 
 namespace ajbsp
 {
@@ -146,10 +146,10 @@ static seg_t * SplitSeg(seg_t *old_seg, double x, double y)
 
 # if DEBUG_SPLIT
 	if (old_seg->linedef)
-		AJDebugPrintf("Splitting Linedef %d (%p) at (%1.1f,%1.1f)\n",
+		DebugPrintf("Splitting Linedef %d (%p) at (%1.1f,%1.1f)\n",
 				old_seg->linedef->index, old_seg, x, y);
 	else
-		AJDebugPrintf("Splitting Miniseg %p at (%1.1f,%1.1f)\n", old_seg, x, y);
+		DebugPrintf("Splitting Miniseg %p at (%1.1f,%1.1f)\n", old_seg, x, y);
 # endif
 
 	// update superblock, if needed
@@ -170,7 +170,7 @@ static seg_t * SplitSeg(seg_t *old_seg, double x, double y)
 	RecomputeSeg(new_seg);
 
 # if DEBUG_SPLIT
-	AJDebugPrintf("Splitting Vertex is %04X at (%1.1f,%1.1f)\n",
+	DebugPrintf("Splitting Vertex is %04X at (%1.1f,%1.1f)\n",
 			new_vert->index, new_vert->x, new_vert->y);
 # endif
 
@@ -179,7 +179,7 @@ static seg_t * SplitSeg(seg_t *old_seg, double x, double y)
 	if (old_seg->partner)
 	{
 #   if DEBUG_SPLIT
-		AJDebugPrintf("Splitting Partner %p\n", old_seg->partner);
+		DebugPrintf("Splitting Partner %p\n", old_seg->partner);
 #   endif
 
 		// update superblock, if needed
@@ -539,7 +539,7 @@ static int EvalPartition(superblock_t *seg_list, seg_t *part,
 	if (info.real_left == 0 || info.real_right == 0)
 	{
 #   if DEBUG_PICKNODE
-		AJDebugPrintf("Eval : No real segs on %s%sside\n",
+		DebugPrintf("Eval : No real segs on %s%sside\n",
 				info.real_left  ? "" : "left ",
 				info.real_right ? "" : "right ");
 #   endif
@@ -563,7 +563,7 @@ static int EvalPartition(superblock_t *seg_list, seg_t *part,
 		info.cost += 25;
 
 # if DEBUG_PICKNODE
-	AJDebugPrintf("Eval %p: splits=%d iffy=%d near=%d left=%d+%d right=%d+%d "
+	DebugPrintf("Eval %p: splits=%d iffy=%d near=%d left=%d+%d right=%d+%d "
 			"cost=%d.%02d\n", part, info.splits, info.iffy, info.near_miss,
 			info.real_left, info.mini_left, info.real_right, info.mini_right,
 			info.cost / 100, info.cost % 100);
@@ -647,7 +647,7 @@ static seg_t *FindFastSeg(superblock_t *seg_list, const bbox_t *bbox)
 		V_cost = EvalPartition(seg_list, best_V, 99999999);
 
 # if DEBUG_PICKNODE
-	AJDebugPrintf("FindFastSeg: best_H=%p (cost %d) | best_V=%p (cost %d)\n",
+	DebugPrintf("FindFastSeg: best_H=%p (cost %d) | best_V=%p (cost %d)\n",
 			best_H, H_cost, best_V, V_cost);
 # endif
 
@@ -677,7 +677,7 @@ static bool PickNodeWorker(superblock_t *part_list,
 			return false;
 
 #   if DEBUG_PICKNODE
-		AJDebugPrintf("PickNode:   %sSEG %p  sector=%d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+		DebugPrintf("PickNode:   %sSEG %p  sector=%d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
 				part->linedef ? "" : "MINI", part,
 				part->sector ? part->sector->index : -1,
 				part->start->x, part->start->y, part->end->x, part->end->y);
@@ -722,7 +722,7 @@ seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox)
 	int best_cost=INT_MAX;
 
 # if DEBUG_PICKNODE
-	AJDebugPrintf("PickNode: BEGUN (depth %d)\n", depth);
+	DebugPrintf("PickNode: BEGUN (depth %d)\n", depth);
 # endif
 
 	/* -AJA- here is the logic for "fast mode".  We look for segs which
@@ -732,7 +732,7 @@ seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox)
 	if (cur_info->fast && seg_list->real_num >= SEG_FAST_THRESHHOLD)
 	{
 #   if DEBUG_PICKNODE
-		AJDebugPrintf("PickNode: Looking for Fast node...\n");
+		DebugPrintf("PickNode: Looking for Fast node...\n");
 #   endif
 
 		best = FindFastSeg(seg_list, bbox);
@@ -740,7 +740,7 @@ seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox)
 		if (best)
 		{
 #     if DEBUG_PICKNODE
-			AJDebugPrintf("PickNode: Using Fast node (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+			DebugPrintf("PickNode: Using Fast node (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
 					best->start->x, best->start->y, best->end->x, best->end->y);
 #     endif
 
@@ -757,11 +757,11 @@ seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox)
 # if DEBUG_PICKNODE
 	if (! best)
 	{
-		AJDebugPrintf("PickNode: NO BEST FOUND !\n");
+		DebugPrintf("PickNode: NO BEST FOUND !\n");
 	}
 	else
 	{
-		AJDebugPrintf("PickNode: Best has score %d.%02d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+		DebugPrintf("PickNode: Best has score %d.%02d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
 				best_cost / 100, best_cost % 100, best->start->x, best->start->y,
 				best->end->x, best->end->y);
 	}
@@ -958,13 +958,13 @@ void AddMinisegs(seg_t *part,
 		return;
 
 # if DEBUG_CUTLIST
-	AJDebugPrintf("CUT LIST:\n");
-	AJDebugPrintf("PARTITION: (%1.1f,%1.1f) += (%1.1f,%1.1f)\n",
+	DebugPrintf("CUT LIST:\n");
+	DebugPrintf("PARTITION: (%1.1f,%1.1f) += (%1.1f,%1.1f)\n",
 			part->psx, part->psy, part->pdx, part->pdy);
 
 	for (cur=cut_list ; cur ; cur=cur->next)
 	{
-		AJDebugPrintf("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]  %s\n",
+		DebugPrintf("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]  %s\n",
 				cur->vertex->index, cur->vertex->x, cur->vertex->y,
 				cur->along_dist,
 				cur->before ? cur->before->index : -1,
@@ -1002,7 +1002,7 @@ void AddMinisegs(seg_t *part,
 		// merge the two intersections into one
 
 # if DEBUG_CUTLIST
-		AJDebugPrintf("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n",
+		DebugPrintf("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n",
 				cur->vertex->x, cur->vertex->y,
 				cur->before ? cur->before->index : -1,
 				cur->after ? cur->after->index : -1,
@@ -1030,7 +1030,7 @@ void AddMinisegs(seg_t *part,
 			cur->after = next->after;
 
 # if DEBUG_CUTLIST
-		AJDebugPrintf("---> merged (%1.0f,%1.0f) [%d/%d] %s\n",
+		DebugPrintf("---> merged (%1.0f,%1.0f) [%d/%d] %s\n",
 				cur->vertex->x, cur->vertex->y,
 				cur->before ? cur->before->index : -1,
 				cur->after ? cur->after->index : -1,
@@ -1129,11 +1129,11 @@ void AddMinisegs(seg_t *part,
 		AddSegToSuper(left_list, buddy);
 
 #   if DEBUG_CUTLIST
-		AJDebugPrintf("AddMiniseg: %p RIGHT  sector %d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+		DebugPrintf("AddMiniseg: %p RIGHT  sector %d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
 				seg, seg->sector ? seg->sector->index : -1,
 				seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 
-		AJDebugPrintf("AddMiniseg: %p LEFT   sector %d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+		DebugPrintf("AddMiniseg: %p LEFT   sector %d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
 				buddy, buddy->sector ? buddy->sector->index : -1,
 				buddy->start->x, buddy->start->y, buddy->end->x, buddy->end->y);
 #   endif
@@ -1588,7 +1588,7 @@ static void ClockwiseOrder(subsec_t *sub)
 	int score = -1;
 
 # if DEBUG_SUBSEC
-	AJDebugPrintf("Subsec: Clockwising %d\n", sub->index);
+	DebugPrintf("Subsec: Clockwising %d\n", sub->index);
 # endif
 
 	// count segs and create an array to manipulate them
@@ -1673,14 +1673,14 @@ static void ClockwiseOrder(subsec_t *sub)
 		UtilFree(array);
 
 # if DEBUG_SORTER
-	AJDebugPrintf("Sorted SEGS around (%1.1f,%1.1f)\n", sub->mid_x, sub->mid_y);
+	DebugPrintf("Sorted SEGS around (%1.1f,%1.1f)\n", sub->mid_x, sub->mid_y);
 
 	for (seg=sub->seg_list ; seg ; seg=seg->next)
 	{
 		angle_g angle = UtilComputeAngle(seg->start->x - sub->mid_x,
 				seg->start->y - sub->mid_y);
 
-		AJDebugPrintf("  Seg %p: Angle %1.6f  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+		DebugPrintf("  Seg %p: Angle %1.6f  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
 				seg, angle, seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 	}
 # endif
@@ -1711,7 +1711,7 @@ static void SanityCheckClosed(subsec_t *sub)
 #   if DEBUG_SUBSEC
 		for (seg=sub->seg_list ; seg ; seg=seg->next)
 		{
-			AJDebugPrintf("  SEG %p  (%1.1f,%1.1f) --> (%1.1f,%1.1f)\n", seg,
+			DebugPrintf("  SEG %p  (%1.1f,%1.1f) --> (%1.1f,%1.1f)\n", seg,
 					seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 		}
 #   endif
@@ -1791,7 +1791,7 @@ static void RenumberSubsecSegs(subsec_t *sub)
 	seg_t *seg;
 
 # if DEBUG_SUBSEC
-	AJDebugPrintf("Subsec: Renumbering %d\n", sub->index);
+	DebugPrintf("Subsec: Renumbering %d\n", sub->index);
 # endif
 
 	sub->seg_count = 0;
@@ -1804,7 +1804,7 @@ static void RenumberSubsecSegs(subsec_t *sub)
 		sub->seg_count++;
 
 #   if DEBUG_SUBSEC
-		AJDebugPrintf("Subsec:   %d: Seg %p  Index %d\n", sub->seg_count,
+		DebugPrintf("Subsec:   %d: Seg %p  Index %d\n", sub->seg_count,
 				seg, seg->index);
 #   endif
 	}
@@ -1866,7 +1866,7 @@ static subsec_t *CreateSubsec(superblock_t *seg_list)
 	DetermineMiddle(sub);
 
 # if DEBUG_SUBSEC
-	AJDebugPrintf("Subsec: Creating %d\n", sub->index);
+	DebugPrintf("Subsec: Creating %d\n", sub->index);
 # endif
 
 	return sub;
@@ -1898,7 +1898,7 @@ static void DebugShowSegs(superblock_t *seg_list)
 
 	for (seg=seg_list->segs ; seg ; seg=seg->next)
 	{
-		AJDebugPrintf("Build:   %sSEG %p  sector=%d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+		DebugPrintf("Build:   %sSEG %p  sector=%d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
 				seg->linedef ? "" : "MINI", seg, seg->sector->index,
 				seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 	}
@@ -1933,7 +1933,7 @@ build_result_e BuildNodes(superblock_t *seg_list,
 		return BUILD_Cancelled;
 
 # if DEBUG_BUILDER
-	AJDebugPrintf("Build: BEGUN @ %d\n", depth);
+	DebugPrintf("Build: BEGUN @ %d\n", depth);
 	DebugShowSegs(seg_list);
 # endif
 
@@ -1946,7 +1946,7 @@ build_result_e BuildNodes(superblock_t *seg_list,
 			return BUILD_Cancelled;
 
 #   if DEBUG_BUILDER
-		AJDebugPrintf("Build: CONVEX\n");
+		DebugPrintf("Build: CONVEX\n");
 #   endif
 
 		*S = CreateSubsec(seg_list);
@@ -1955,7 +1955,7 @@ build_result_e BuildNodes(superblock_t *seg_list,
 	}
 
 # if DEBUG_BUILDER
-	AJDebugPrintf("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n",
+	DebugPrintf("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n",
 			best, best->start->x, best->start->y, best->end->x, best->end->y);
 # endif
 
@@ -2019,7 +2019,7 @@ build_result_e BuildNodes(superblock_t *seg_list,
 	FindLimits(rights, &node->r.bounds);
 
 # if DEBUG_BUILDER
-	AJDebugPrintf("Build: Going LEFT\n");
+	DebugPrintf("Build: Going LEFT\n");
 # endif
 
 	ret = BuildNodes(lefts,  &node->l.node, &node->l.subsec, depth+1,
@@ -2033,7 +2033,7 @@ build_result_e BuildNodes(superblock_t *seg_list,
 	}
 
 # if DEBUG_BUILDER
-	AJDebugPrintf("Build: Going RIGHT\n");
+	DebugPrintf("Build: Going RIGHT\n");
 # endif
 
 	ret = BuildNodes(rights, &node->r.node, &node->r.subsec, depth+1,
@@ -2041,7 +2041,7 @@ build_result_e BuildNodes(superblock_t *seg_list,
 	FreeSuper(rights);
 
 # if DEBUG_BUILDER
-	AJDebugPrintf("Build: DONE\n");
+	DebugPrintf("Build: DONE\n");
 # endif
 
 	return ret;
@@ -2072,7 +2072,7 @@ static void NormaliseSubsector(subsec_t *sub)
 	seg_t *new_tail = NULL;
 
 # if DEBUG_SUBSEC
-	AJDebugPrintf("Subsec: Normalising %d\n", sub->index);
+	DebugPrintf("Subsec: Normalising %d\n", sub->index);
 # endif
 
 	while (sub->seg_list)
@@ -2099,7 +2099,7 @@ static void NormaliseSubsector(subsec_t *sub)
 		else
 		{
 #     if DEBUG_SUBSEC
-			AJDebugPrintf("Subsec: Removing miniseg %p\n", seg);
+			DebugPrintf("Subsec: Removing miniseg %p\n", seg);
 #     endif
 
 			// set index to a really high value, so that SortSegs() will
@@ -2160,7 +2160,7 @@ static void RoundOffSubsector(subsec_t *sub)
 	int degen_total = 0;
 
 # if DEBUG_SUBSEC
-	AJDebugPrintf("Subsec: Rounding off %d\n", sub->index);
+	DebugPrintf("Subsec: Rounding off %d\n", sub->index);
 # endif
 
 	// do an initial pass, just counting the degenerates
@@ -2184,7 +2184,7 @@ static void RoundOffSubsector(subsec_t *sub)
 	}
 
 # if DEBUG_SUBSEC
-	AJDebugPrintf("Subsec: degen=%d real=%d\n", degen_total, real_total);
+	DebugPrintf("Subsec: degen=%d real=%d\n", degen_total, real_total);
 # endif
 
 	// handle the (hopefully rare) case where all of the real segs
@@ -2196,7 +2196,7 @@ static void RoundOffSubsector(subsec_t *sub)
 					sub->index);
 
 #   if DEBUG_SUBSEC
-		AJDebugPrintf("Degenerate before: (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
+		DebugPrintf("Degenerate before: (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
 				last_real_degen->start->x, last_real_degen->start->y,
 				last_real_degen->end->x, last_real_degen->end->y);
 #   endif
@@ -2206,7 +2206,7 @@ static void RoundOffSubsector(subsec_t *sub)
 				last_real_degen->start, last_real_degen->end);
 
 #   if DEBUG_SUBSEC
-		AJDebugPrintf("Degenerate after:  (%d,%d) -> (%d,%d)\n",
+		DebugPrintf("Degenerate after:  (%d,%d) -> (%d,%d)\n",
 				I_ROUND(last_real_degen->start->x),
 				I_ROUND(last_real_degen->start->y),
 				I_ROUND(last_real_degen->end->x),
@@ -2240,7 +2240,7 @@ static void RoundOffSubsector(subsec_t *sub)
 		else
 		{
 #     if DEBUG_SUBSEC
-			AJDebugPrintf("Subsec: Removing degenerate %p\n", seg);
+			DebugPrintf("Subsec: Removing degenerate %p\n", seg);
 #     endif
 
 			// set index to a really high value, so that SortSegs() will

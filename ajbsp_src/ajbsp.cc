@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 
-#include "ajbsp_main.h"
+#include "ajbsp.h"
 
 #include <time.h>
 
@@ -26,7 +26,7 @@
 #include <time.h>
 #endif
 
-#include "headers.h"
+namespace ajbsp {
 
 #define MAX_SPLIT_COST  32
 
@@ -184,7 +184,7 @@ void PrintMapName(const char *name)
 }
 
 
-void AJDebugPrintf(const char *fmt, ...)
+void DebugPrintf(const char *fmt, ...)
 {
 	(void) fmt;
 }
@@ -291,10 +291,11 @@ static build_result_e BuildFile()
 
 	PrintMsg("\n");
 
+	total_failed_maps += failures;
+
 	if (res == BUILD_BadFile)
 	{
 		PrintMsg("  Corrupted wad or level detected.\n");
-
 		return BUILD_OK;
 	}
 
@@ -460,7 +461,7 @@ void ParseMapList(const char *from_arg)
 //
 //  the program starts here
 //
-int ajbsp_main(const char *filename)
+int main(const char *filename)
 {
 	// sanity check on type sizes (useful when porting)
 	CheckTypeSizes();
@@ -483,13 +484,18 @@ int ajbsp_main(const char *filename)
 	{
 		PrintMsg("Ok, built nodes for %d map%s!\n",
 				total_built_maps, (total_built_maps == 1 ? "" : "s"));
-		total_built_maps = 0;
 	}
 
 	// that's all folks!
 	return 0;
 }
 
+} //namespace ajbsp
+
+int AJBSP_Build(const char *filename)
+{
+	return ajbsp::main(filename);
+}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

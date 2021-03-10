@@ -41,8 +41,6 @@
 #include <bitset>
 #include <iostream>
 
-#include "w_rawdef.h"
-
 
 extern void CSG_DOOM_Write();
 
@@ -380,14 +378,14 @@ void DM_AddSector(int f_h, const char * f_tex,
 {
 	raw_sector_t sec;
 
-	sec.floorh = LE_S16(f_h);
-	sec.ceilh  = LE_S16(c_h);
+	sec.floor_h = LE_S16(f_h);
+	sec.ceil_h  = LE_S16(c_h);
 
 	strncpy(sec.floor_tex, f_tex, 8);
 	strncpy(sec.ceil_tex,  c_tex, 8);
 
 	sec.light   = LE_U16(light);
-	sec.type = LE_U16(special);
+	sec.special = LE_U16(special);
 	sec.tag     = LE_S16(tag);
 
 	if (not UDMF_mode)
@@ -455,8 +453,8 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 		line.start = LE_U16(vert1);
 		line.end   = LE_U16(vert2);
 
-		line.right = side1 < 0 ? 0xFFFF : LE_U16(side1);
-		line.left = side2 < 0 ? 0xFFFF : LE_U16(side2);
+		line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
+		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
 		line.type  = LE_U16(type);
 		line.flags = LE_U16(flags);
@@ -507,10 +505,10 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 		line.start = LE_U16(vert1);
 		line.end   = LE_U16(vert2);
 
-		line.right = side1 < 0 ? 0xFFFF : LE_U16(side1);
-		line.left = side2 < 0 ? 0xFFFF : LE_U16(side2);
+		line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
+		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
-		line.type = type; // 8 bits
+		line.special = type; // 8 bits
 		line.flags = LE_U16(flags);
 
 		// tag value is UNUSED
@@ -693,12 +691,11 @@ int DM_NumThings()
 	}
 }
 
-
 //----------------------------------------------------------------------------
 //  AJBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
-#include "ajbsp_main.h"
+#include "ajbsp.h"
 
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
@@ -706,7 +703,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
   
 	if (not UDMF_mode && current_engine != "zdoom" && current_engine != "gzdoom")
 	{
-		ajbsp_main(filename);
+		ajbsp::main(filename);
 		FileRename(filename, out_name);		
 		return true;
 			
@@ -848,39 +845,39 @@ void doom_game_interface_c::BeginLevel()
 
 void doom_game_interface_c::Property(const char *key, const char *value)
 {
-	if (y_stricmp(key, "level_name") == 0)
+	if (StringCaseCmp(key, "level_name") == 0)
 	{
 		level_name = StringDup(value);
 	}
-	else if (y_stricmp(key, "description") == 0)
+	else if (StringCaseCmp(key, "description") == 0)
 	{
 		// ignored (for now)
 		// [another mechanism sets the description via BEX/DDF]
 	}
-	else if (y_stricmp(key, "sub_format") == 0)
+	else if (StringCaseCmp(key, "sub_format") == 0)
 	{
-		if (y_stricmp(value, "doom") == 0)
+		if (StringCaseCmp(value, "doom") == 0)
 			dm_sub_format = 0;
-		else if (y_stricmp(value, "hexen") == 0)
+		else if (StringCaseCmp(value, "hexen") == 0)
 			dm_sub_format = SUBFMT_Hexen;
-		else if (y_stricmp(value, "strife") == 0)
+		else if (StringCaseCmp(value, "strife") == 0)
 			dm_sub_format = SUBFMT_Strife;
 		else
 			LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
 	}
-	else if (y_stricmp(key, "offset_map") == 0)
+	else if (StringCaseCmp(key, "offset_map") == 0)
 	{
 		dm_offset_map = atoi(value);
 	}
-	else if (y_stricmp(key, "ef_solid_type") == 0)
+	else if (StringCaseCmp(key, "ef_solid_type") == 0)
 	{
 		ef_solid_type = atoi(value);
 	}
-	else if (y_stricmp(key, "ef_liquid_type") == 0)
+	else if (StringCaseCmp(key, "ef_liquid_type") == 0)
 	{
 		ef_liquid_type = atoi(value);
 	}
-	else if (y_stricmp(key, "ef_thing_mode") == 0)
+	else if (StringCaseCmp(key, "ef_thing_mode") == 0)
 	{
 		ef_thing_mode = atoi(value);
 	}

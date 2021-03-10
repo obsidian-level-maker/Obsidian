@@ -1181,11 +1181,11 @@ void quake2_game_interface_c::BeginLevel()
 
 void quake2_game_interface_c::Property(const char *key, const char *value)
 {
-	if (y_stricmp(key, "level_name") == 0)
+	if (StringCaseCmp(key, "level_name") == 0)
 	{
 		level_name = StringDup(value);
 	}
-	else if (y_stricmp(key, "description") == 0)
+	else if (StringCaseCmp(key, "description") == 0)
 	{
 		description = StringDup(value);
 	}

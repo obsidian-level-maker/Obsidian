@@ -18,13 +18,12 @@
 //
 //------------------------------------------------------------------------
 
-#include "ajbsp_main.h"
+#include "ajbsp.h"
 
 #ifdef HAVE_ZLIB
 #include <zlib.h>
 #endif
 
-#include "headers.h"
 
 namespace ajbsp
 {
@@ -144,7 +143,7 @@ static void BlockAdd(int blk_num, int line_index)
 	u16_t *cur = block_lines[blk_num];
 
 # if DEBUG_BLOCKMAP
-	AJDebugPrintf("Block %d has line %d\n", blk_num, line_index);
+	DebugPrintf("Block %d has line %d\n", blk_num, line_index);
 # endif
 
 	if (blk_num < 0 || blk_num >= block_count)
@@ -191,7 +190,7 @@ static void BlockAddLine(linedef_t *L)
 	int line_index = L->index;
 
 # if DEBUG_BLOCKMAP
-	AJDebugPrintf("BlockAddLine: %d (%d,%d) -> (%d,%d)\n", line_index,
+	DebugPrintf("BlockAddLine: %d (%d,%d) -> (%d,%d)\n", line_index,
 			x1, y1, x2, y2);
 # endif
 
@@ -374,7 +373,7 @@ static void CompressBlockmap(void)
 	}
 
 # if DEBUG_BLOCKMAP
-	AJDebugPrintf("Blockmap: Last ptr = %d  duplicates = %d\n",
+	DebugPrintf("Blockmap: Last ptr = %d  duplicates = %d\n",
 			cur_offset, dup_count);
 # endif
 
@@ -532,7 +531,7 @@ static void FindBlockmapLimits(bbox_t *bbox)
 	}
 
 # if DEBUG_BLOCKMAP
-	AJDebugPrintf("Blockmap lines centered at (%d,%d)\n", block_mid_x, block_mid_y);
+	DebugPrintf("Blockmap lines centered at (%d,%d)\n", block_mid_x, block_mid_y);
 # endif
 }
 
@@ -730,7 +729,7 @@ static void Reject_DebugGroups()
 			num++;
 		}
 
-		AJDebugPrintf("Group %d  Sectors %d\n", group, num);
+		DebugPrintf("Group %d  Sectors %d\n", group, num);
 	}
 }
 #endif
@@ -985,7 +984,7 @@ void GetVertices(void)
 		count = lump->Length() / sizeof(raw_vertex_t);
 
 # if DEBUG_LOAD
-	AJDebugPrintf("GetVertices: num = %d\n", count);
+	DebugPrintf("GetVertices: num = %d\n", count);
 # endif
 
 	if (!lump || count == 0)
@@ -1029,7 +1028,7 @@ void GetSectors(void)
 		FatalError("Error seeking to sectors.\n");
 
 # if DEBUG_LOAD
-	AJDebugPrintf("GetSectors: num = %d\n", count);
+	DebugPrintf("GetSectors: num = %d\n", count);
 # endif
 
 	for (i = 0 ; i < count ; i++)
@@ -1079,7 +1078,7 @@ void GetThings(void)
 		FatalError("Error seeking to things.\n");
 
 # if DEBUG_LOAD
-	AJDebugPrintf("GetThings: num = %d\n", count);
+	DebugPrintf("GetThings: num = %d\n", count);
 # endif
 
 	for (i = 0 ; i < count ; i++)
@@ -1118,7 +1117,7 @@ void GetThingsHexen(void)
 		FatalError("Error seeking to things.\n");
 
 # if DEBUG_LOAD
-	AJDebugPrintf("GetThingsHexen: num = %d\n", count);
+	DebugPrintf("GetThingsHexen: num = %d\n", count);
 # endif
 
 	for (i = 0 ; i < count ; i++)
@@ -1157,7 +1156,7 @@ void GetSidedefs(void)
 		FatalError("Error seeking to sidedefs.\n");
 
 # if DEBUG_LOAD
-	AJDebugPrintf("GetSidedefs: num = %d\n", count);
+	DebugPrintf("GetSidedefs: num = %d\n", count);
 # endif
 
 	for (i = 0 ; i < count ; i++)
@@ -1215,7 +1214,7 @@ void GetLinedefs(void)
 		FatalError("Error seeking to linedefs.\n");
 
 # if DEBUG_LOAD
-	AJDebugPrintf("GetLinedefs: num = %d\n", count);
+	DebugPrintf("GetLinedefs: num = %d\n", count);
 # endif
 
 	for (i = 0 ; i < count ; i++)
@@ -1291,7 +1290,7 @@ void GetLinedefsHexen(void)
 		FatalError("Error seeking to linedefs.\n");
 
 # if DEBUG_LOAD
-	AJDebugPrintf("GetLinedefsHexen: num = %d\n", count);
+	DebugPrintf("GetLinedefsHexen: num = %d\n", count);
 # endif
 
 	for (i = 0 ; i < count ; i++)
@@ -1547,7 +1546,7 @@ void PutSegs(void)
 		count++;
 
 #   if DEBUG_BSP
-		AJDebugPrintf("PUT SEG: %04X  Vert %04X->%04X  Line %04X %s  "
+		DebugPrintf("PUT SEG: %04X  Vert %04X->%04X  Line %04X %s  "
 				"Angle %04X  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", seg->index,
 				LE_U16(raw.start), LE_U16(raw.end), LE_U16(raw.linedef),
 				seg->side ? "L" : "R", LE_U16(raw.angle),
@@ -1605,7 +1604,7 @@ void PutGLSegs(void)
 		count++;
 
 #   if DEBUG_BSP
-		AJDebugPrintf("PUT GL SEG: %04X  Line %04X %s  Partner %04X  "
+		DebugPrintf("PUT GL SEG: %04X  Line %04X %s  Partner %04X  "
 				"(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", seg->index, LE_U16(raw.linedef),
 				seg->side ? "L" : "R", LE_U16(raw.partner),
 				seg->start->x, seg->start->y, seg->end->x, seg->end->y);
@@ -1660,7 +1659,7 @@ void PutGLSegs_V5()
 		count++;
 
 #   if DEBUG_BSP
-		AJDebugPrintf("PUT V3 SEG: %06X  Line %04X %s  Partner %06X  "
+		DebugPrintf("PUT V3 SEG: %06X  Line %04X %s  Partner %06X  "
 				"(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", seg->index, LE_U16(raw.linedef),
 				seg->side ? "L" : "R", LE_U32(raw.partner),
 				seg->start->x, seg->start->y, seg->end->x, seg->end->y);
@@ -1693,7 +1692,7 @@ void PutSubsecs(const char *name, int do_gl)
 		lump->Write(&raw, sizeof(raw));
 
 #   if DEBUG_BSP
-		AJDebugPrintf("PUT SUBSEC %04X  First %04X  Num %04X\n",
+		DebugPrintf("PUT SUBSEC %04X  First %04X  Num %04X\n",
 				sub->index, LE_U16(raw.first), LE_U16(raw.num));
 #   endif
 	}
@@ -1726,7 +1725,7 @@ void PutGLSubsecs_V5()
 		lump->Write(&raw, sizeof(raw));
 
 #   if DEBUG_BSP
-		AJDebugPrintf("PUT V3 SUBSEC %06X  First %06X  Num %06X\n",
+		DebugPrintf("PUT V3 SUBSEC %06X  First %06X  Num %06X\n",
 					sub->index, LE_U32(raw.first), LE_U32(raw.num));
 #   endif
 	}
@@ -1779,7 +1778,7 @@ static void PutOneNode(node_t *node, Lump_c *lump)
 	lump->Write(&raw, sizeof(raw));
 
 # if DEBUG_BSP
-	AJDebugPrintf("PUT NODE %04X  Left %04X  Right %04X  "
+	DebugPrintf("PUT NODE %04X  Left %04X  Right %04X  "
 			"(%d,%d) -> (%d,%d)\n", node->index, LE_U16(raw.left),
 			LE_U16(raw.right), node->x, node->y,
 			node->x + node->dx, node->y + node->dy);
@@ -1831,7 +1830,7 @@ static void PutOneNode_V5(node_t *node, Lump_c *lump)
 	lump->Write(&raw, sizeof(raw));
 
 # if DEBUG_BSP
-	AJDebugPrintf("PUT V5 NODE %08X  Left %08X  Right %08X  "
+	DebugPrintf("PUT V5 NODE %08X  Left %08X  Right %08X  "
 			"(%d,%d) -> (%d,%d)\n", node->index, LE_U32(raw.left),
 			LE_U32(raw.right), node->x, node->y,
 			node->x + node->dx, node->y + node->dy);
@@ -2100,7 +2099,7 @@ static void PutOneZNode(node_t *node)
 	ZLibAppendLump(&raw.left,  4);
 
 # if DEBUG_BSP
-	AJDebugPrintf("PUT Z NODE %08X  Left %08X  Right %08X  "
+	DebugPrintf("PUT Z NODE %08X  Left %08X  Right %08X  "
 			"(%d,%d) -> (%d,%d)\n", node->index, LE_U32(raw.left),
 			LE_U32(raw.right), node->x, node->y,
 			node->x + node->dx, node->y + node->dy);
@@ -2724,13 +2723,13 @@ build_result_e BuildNodesForLevel(nodebuildinfo_t *info, short lev_idx)
 	return ret;
 }
 
-}  // namespace ajbsp
-
-
 build_result_e AJBSP_BuildLevel(nodebuildinfo_t *info, short lev_idx)
 {
-	return ajbsp::BuildNodesForLevel(info, lev_idx);
+	return BuildNodesForLevel(info, lev_idx);
 }
+
+}  // namespace ajbsp
+
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

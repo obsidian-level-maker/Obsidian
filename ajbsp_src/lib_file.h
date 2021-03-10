@@ -2,9 +2,7 @@
 //  File Utilities
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
-//
-//  Copyright (C) 2006-2017 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -21,6 +19,8 @@
 #ifndef __LIB_FILE_H__
 #define __LIB_FILE_H__
 
+namespace ajbsp {
+
 #ifdef WIN32
 #define DIR_SEP_CH   '\\'
 #define DIR_SEP_STR  "\\"
@@ -34,8 +34,8 @@ bool HasExtension(const char *filename);
 bool MatchExtension(const char *filename, const char *ext);
 char *ReplaceExtension(const char *filename, const char *ext);
 const char *FindBaseName(const char *filename);
-
 bool FilenameIsBare(const char *filename);
+const char *FilenameReposition(const char *filename, const char *othername);
 void FilenameGetPath(char *dest, size_t maxsize, const char *filename);
 
 // file utilities
@@ -46,8 +46,8 @@ bool FileDelete(const char *filename);
 bool FileChangeDir(const char *dir_name);
 bool FileMakeDir(const char *dir_name);
 
-byte *FileLoad(const char *filename, int *length);
-void  FileFree(const byte *mem);
+u8_t *FileLoad(const char *filename, int *length);
+void FileFree(u8_t *mem);
 
 const char * FileFindInPath(const char *paths, const char *base_name);
 
@@ -84,15 +84,7 @@ typedef void (* directory_iter_f)(const char *name, int flags, void *priv_dat);
 // or a negative value on error (SCAN_ERR_xx value).
 int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 
-// scan directory and populate the list with the sub-directory names.
-// the list will be sorted (case-insensitively).
-// result is same as ScanDirectory().
-int ScanDir_GetSubDirs(const char *path, std::vector<std::string> & list);
-
-// scan directory and populate the list with all non-hidden files which
-// have the given extension.  the list is sorted (case-insensitively).
-// result is same as ScanDirectory().
-int ScanDir_MatchingFiles(const char *path, const char *ext, std::vector<std::string> & list);
+} // namespace ajbsp
 
 #endif /* __LIB_FILE_H__ */
 

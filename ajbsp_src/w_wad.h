@@ -19,6 +19,8 @@
 #ifndef __AJBSP_W_WAD_H__
 #define __AJBSP_W_WAD_H__
 
+namespace ajbsp {
+
 class Wad_file;
 
 
@@ -313,6 +315,7 @@ extern Wad_file * edit_wad;
 int  W_LoadLumpData(Lump_c *lump, byte ** buf_ptr);
 void W_FreeLumpData(byte ** buf_ptr);
 
+} // namespace ajbsp
 
 #endif  /* __AJBSP_W_WAD_H__ */
 

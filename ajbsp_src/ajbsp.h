@@ -24,7 +24,6 @@
 
 #define AJBSP_VERSION  "1.01"
 
-
 /*
  *  Windows support
  */
@@ -74,12 +73,16 @@
 
 #include "bsp.h"
 
+namespace ajbsp {
 
 /*
  *  Misc constants
  */
 
 #define AJ_PATH_MAX  4096
+
+#define MSG_BUF_LEN  2000
+
 
 /*
  *  Global variables
@@ -105,16 +108,30 @@ void PrintMsg(const char *fmt, ...);
 void PrintVerbose(const char *fmt, ...);
 void PrintDetail(const char *fmt, ...);
 
-void AJDebugPrintf(const char *fmt, ...);
+void DebugPrintf(const char *fmt, ...);
 
 void PrintMapName(const char *name);
 
-int ajbsp_main(const char *filename);
-
 #define BugError  FatalError
 
+int main(const char *filename);
+
+
+/*
+ *  Assertions
+ */
+
+#if defined(__GNUC__)
+#define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
+        BugError("Assertion (%s) failed\nIn function %s (%s:%d)\n", #cond , __func__, __FILE__, __LINE__))
+
+#else
+#define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
+        BugError("Assertion (%s) failed\nIn file %s:%d\n", #cond , __FILE__, __LINE__))
+#endif
+
+} // namespace ajbsp
 
 #endif  /* __AJBSP_MAIN_H__ */
-
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

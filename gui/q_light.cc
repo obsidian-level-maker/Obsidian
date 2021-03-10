@@ -78,17 +78,17 @@ public:
 
 	bool ParseProp(const char *key, const char *value)
 	{
-		if (y_stricmp(key, "color") == 0)
+		if (StringCaseCmp(key, "color") == 0)
 		{
 			color = QLIT_ParseColorString(value);
 			return true;
 		}
-		else if (y_stricmp(key, "intensity") == 0)
+		else if (StringCaseCmp(key, "intensity") == 0)
 		{
 			intensity = atof(value);
 			return true;
 		}
-		else if (y_stricmp(key, "dropoff") == 0)
+		else if (StringCaseCmp(key, "dropoff") == 0)
 		{
 			dropoff = atof(value);
 			return true;
@@ -164,43 +164,43 @@ rgb_color_t QLIT_ParseColorString(const char *name)
 
 bool QLIT_ParseProperty(const char *key, const char *value)
 {
-	if (y_stricmp(key, "q_light_quality") == 0)
+	if (StringCaseCmp(key, "q_light_quality") == 0)
 	{
-		if (y_stricmp(value, "low") == 0)
+		if (StringCaseCmp(value, "low") == 0)
 			q_light_quality = -1;
-		else if (y_stricmp(value, "high") == 0)
+		else if (StringCaseCmp(value, "high") == 0)
 			q_light_quality = +1;
 		else
 			q_light_quality = 0;
 
 		return true;
 	}
-	else if (y_stricmp(key, "q_light_scale") == 0)
+	else if (StringCaseCmp(key, "q_light_scale") == 0)
 	{
 		q_light_scale = atof(value);
 		return true;
 	}
-	else if (y_stricmp(key, "q_low_light") == 0)
+	else if (StringCaseCmp(key, "q_low_light") == 0)
 	{
 		q_low_light = atoi(value);
 		return true;
 	}
-	else if (y_stricmp(key, "q3_luxel_size") == 0)  // Q3 only
+	else if (StringCaseCmp(key, "q3_luxel_size") == 0)  // Q3 only
 	{
 		q3_luxel_size = atof(value);
 		return true;
 	}
-	else if (y_stricmp(key, "q3_overbrighting") == 0)  // Q3 only
+	else if (StringCaseCmp(key, "q3_overbrighting") == 0)  // Q3 only
 	{
 		q3_overbrighting = (atoi(value) > 0);
 		return true;
 	}
-	else if (y_stricmp(key, "grid_ambient_scale") == 0)  // Q3 only
+	else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
 	{
 		grid_ambient_scale = atof(value);
 		return true;
 	}
-	else if (y_stricmp(key, "grid_directed_scale") == 0) // Q3 only
+	else if (StringCaseCmp(key, "grid_directed_scale") == 0) // Q3 only
 	{
 		grid_directed_scale = atof(value);
 		return true;
@@ -1429,7 +1429,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t& light, int pass)
 		}
 		else
 		{
-			float dist = ComputeDistDouble(P.x, P.y, P.z, light.x, light.y, light.z);
+			float dist = ComputeDist(P.x, P.y, P.z, light.x, light.y, light.z);
 
 			if (dist < light.radius)
 			{
@@ -1568,7 +1568,7 @@ void QLIT_LightMapModel(quake_mapmodel_c *model)
 		}
 		else
 		{
-			float dist = ComputeDistDouble(mx, my, mz, light.x, light.y, light.z);
+			float dist = ComputeDist(mx, my, mz, light.x, light.y, light.z);
 
 			if (dist < light.radius)
 			{
@@ -1670,7 +1670,7 @@ static void Q3_ProcessLightForGrid(quake_light_t& light,
 {
 	*r = *g = *b = 0;
 
-	float dist = ComputeDistDouble(gx, gy, gz, light.x, light.y, light.z);
+	float dist = ComputeDist(gx, gy, gz, light.x, light.y, light.z);
 
 	// fast check on distance
 	if (light.kind != LTK_Sun && dist >= light.radius)

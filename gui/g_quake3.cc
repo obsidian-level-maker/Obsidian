@@ -232,11 +232,11 @@ static s32_t Q3_AddBrush(const csg_brush_c *A)
 
 	if (medium)
 	{
-		if (y_stricmp(medium, "slime") == 0)
+		if (StringCaseCmp(medium, "slime") == 0)
 			raw_brush.shaderNum = SHADER_COMMON_SLIME;
-		else if (y_stricmp(medium, "lava") == 0)
+		else if (StringCaseCmp(medium, "lava") == 0)
 			raw_brush.shaderNum = SHADER_COMMON_LAVA;
-		else if (y_stricmp(medium, "trigger") == 0)
+		else if (StringCaseCmp(medium, "trigger") == 0)
 			raw_brush.shaderNum = SHADER_COMMON_TRIGGER;
 		else
 			raw_brush.shaderNum = SHADER_COMMON_WATER;
@@ -1395,27 +1395,27 @@ void quake3_game_interface_c::BeginLevel()
 
 void quake3_game_interface_c::Property(const char *key, const char *value)
 {
-	if (y_stricmp(key, "level_name") == 0)
+	if (StringCaseCmp(key, "level_name") == 0)
 	{
 		level_name = StringDup(value);
 	}
-	else if (y_stricmp(key, "description") == 0)
+	else if (StringCaseCmp(key, "description") == 0)
 	{
 		description = StringDup(value);
 	}
-	else if (y_stricmp(key, "default_tex_scale") == 0)
+	else if (StringCaseCmp(key, "default_tex_scale") == 0)
 	{
 		q3_default_tex_scale = atof(value);
 	}
-	else if (y_stricmp(key, "water_shader") == 0)
+	else if (StringCaseCmp(key, "water_shader") == 0)
 	{
 		water_shader = StringDup(value);
 	}
-	else if (y_stricmp(key, "slime_shader") == 0)
+	else if (StringCaseCmp(key, "slime_shader") == 0)
 	{
 		slime_shader = StringDup(value);
 	}
-	else if (y_stricmp(key, "lava_shader") == 0)
+	else if (StringCaseCmp(key, "lava_shader") == 0)
 	{
 		lava_shader = StringDup(value);
 	}

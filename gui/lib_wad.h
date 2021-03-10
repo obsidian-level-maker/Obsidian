@@ -76,14 +76,15 @@ void WAD2_FinishLump(void);
 
 /* ----- WAD structure (Doom) ---------------------- */
 
-/*typedef struct
+typedef struct
 {
 	char magic[4];
 
 	u32_t num_lumps;
 	u32_t dir_start;
 
-} PACKEDATTR raw_wad_header_t;*/
+} PACKEDATTR raw_wad_header_t;
+
 
 typedef struct
 {

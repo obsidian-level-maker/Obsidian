@@ -34,8 +34,6 @@
 #include "dm_extra.h"
 #include "g_doom.h"
 
-#include "w_rawdef.h"
-
 
 
 // Properties
@@ -462,7 +460,7 @@ public:
 
 	void CalcLength()
 	{
-		length = ComputeDistDouble(start->x, start->y, end->x, end->y);
+		length = ComputeDist(start->x, start->y, end->x, end->y);
 	}
 
 	inline doom_vertex_c *OtherVert(const doom_vertex_c *V) const
@@ -1211,7 +1209,7 @@ static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox)
 
 	if (S)
 	{
-		along = ComputeDistDouble(V->x, V->y, S->x2, S->y2);
+		along = ComputeDist(V->x, V->y, S->x2, S->y2);
 	}
 
 	return (int)(along + ox);
@@ -1340,7 +1338,7 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		if (back && back->f_h > sec->f_h && !rail && l_oy != IVAL_NONE)
 		{
-			L->flags &= ~MLF_LowerUnpegged;
+			L->flags &= ~MLF_LowerUnpeg;
 			unpeg_L = false;
 		}
 
@@ -1513,7 +1511,7 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 
 		if (T->props.getInt("mover"))
 		{
-			L->flags |= MLF_LowerUnpegged;
+			L->flags |= MLF_LowerUnpeg;
 		}
 
 		return;
@@ -1534,7 +1532,7 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 
 	if (has_rail)
 	{
-		L->flags |= MLF_LowerUnpegged;
+		L->flags |= MLF_LowerUnpeg;
 	}
 	else if ((/*  back->f_h > front->f_h && */ B2->props.getInt("mover")) ||
 			 (/* front->f_h >  back->f_h && */ B1->props.getInt("mover")))
@@ -1543,7 +1541,7 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 	}
 	else
 	{
-		L->flags |= MLF_LowerUnpegged;
+		L->flags |= MLF_LowerUnpeg;
 	}
 
 	if ((/*  back->c_h < front->c_h && */ T2->props.getInt("mover")) ||
@@ -1553,7 +1551,7 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 	}
 	else
 	{
-		L->flags |= MLF_UpperUnpegged;
+		L->flags |= MLF_UpperUnpeg;
 	}
 }
 
@@ -1655,8 +1653,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 	DM_DeterminePegging(L, R, N, (f_rail || b_rail) ? true : false);
 
-	bool unpeg_L = (L->flags & MLF_LowerUnpegged) != 0;
-	bool unpeg_U = (L->flags & MLF_UpperUnpegged) != 0;
+	bool unpeg_L = (L->flags & MLF_LowerUnpeg) != 0;
+	bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;
 
 
 	L->front = DM_MakeSidedef(L, front, back, S->partner, S, f_rail, unpeg_L, unpeg_U);
@@ -1685,7 +1683,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 	if (! L->back)
 	{
-		L->flags |= MLF_Blocking;
+		L->flags |= MLF_BlockAll;
 	}
 	else
 	{
@@ -1699,7 +1697,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	if (L->special == LIN_FAKE_UNPEGGED)
 	{
 		L->special = 0;
-		L->flags |= MLF_LowerUnpegged;
+		L->flags |= MLF_LowerUnpeg;
 	}
 
 	if (L->front && L->back && L->front->sector->sound_area != L->back->sector->sound_area)
@@ -2313,7 +2311,7 @@ public:
 			L->flags   = info[index]->flags;
 		}
 
-		L->flags |= MLF_Blocking | MLF_DontDraw;
+		L->flags |= MLF_BlockAll | MLF_DontDraw;
 
 		if (front > 0 && back > 0)
 			L->flags |= MLF_TwoSided;

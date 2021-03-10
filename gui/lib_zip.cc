@@ -439,7 +439,7 @@ int ZIPF_FindEntry(const char *name)
 {
 	for (unsigned int i = 0 ; i < r_end_part.total_entries ; i++)
 	{
-		if (y_stricmp(name, r_directory[i].name) == 0)
+		if (StringCaseCmp(name, r_directory[i].name) == 0)
 			return i;
 	}
 

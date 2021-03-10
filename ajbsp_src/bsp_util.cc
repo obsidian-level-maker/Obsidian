@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 
-#include "ajbsp_main.h"
+#include "ajbsp.h"
 
 
 namespace ajbsp
@@ -242,7 +242,7 @@ static void MarkPolyobjSector(sector_t *sector)
 		return;
 
 # if DEBUG_POLYOBJ
-	AJDebugPrintf("  Marking SECTOR %d\n", sector->index);
+	DebugPrintf("  Marking SECTOR %d\n", sector->index);
 # endif
 
 	/* already marked ? */
@@ -295,7 +295,7 @@ static void MarkPolyobjPoint(double x, double y)
 					(int) L->end->x, (int) L->end->y))
 		{
 #     if DEBUG_POLYOBJ
-			AJDebugPrintf("  Touching line was %d\n", L->index);
+			DebugPrintf("  Touching line was %d\n", L->index);
 #     endif
 
 			if (L->left)
@@ -355,7 +355,7 @@ static void MarkPolyobjPoint(double x, double y)
 	y2 = best_match->end->y;
 
 # if DEBUG_POLYOBJ
-	AJDebugPrintf("  Closest line was %d Y=%1.0f..%1.0f (dist=%1.1f)\n",
+	DebugPrintf("  Closest line was %d Y=%1.0f..%1.0f (dist=%1.1f)\n",
 			best_match->index, y1, y2, best_dist);
 # endif
 
@@ -363,7 +363,7 @@ static void MarkPolyobjPoint(double x, double y)
 # if DEBUG_POLYOBJ
 	if (fabs(best_dist) < DIST_EPSILON)
 	{
-		AJDebugPrintf("  Polyobj FAILURE: directly on the line (%d)\n",
+		DebugPrintf("  Polyobj FAILURE: directly on the line (%d)\n",
 				best_match->index);
 	}
 # endif
@@ -377,7 +377,7 @@ static void MarkPolyobjPoint(double x, double y)
 		sector = best_match->left ? best_match->left->sector : NULL;
 
 # if DEBUG_POLYOBJ
-	AJDebugPrintf("  Sector %d contains the polyobj.\n",
+	DebugPrintf("  Sector %d contains the polyobj.\n",
 			sector ? sector->index : -1);
 # endif
 
@@ -438,7 +438,7 @@ void DetectPolyobjSectors(void)
 	}
 
 # if DEBUG_POLYOBJ
-	AJDebugPrintf("Using %s style polyobj things\n",
+	DebugPrintf("Using %s style polyobj things\n",
 			hexen_style ? "HEXEN" : "ZDOOM");
 # endif
 
@@ -464,7 +464,7 @@ void DetectPolyobjSectors(void)
 		}
 
 #   if DEBUG_POLYOBJ
-		AJDebugPrintf("Thing %d at (%1.0f,%1.0f) is a polyobj spawner.\n", i, x, y);
+		DebugPrintf("Thing %d at (%1.0f,%1.0f) is a polyobj spawner.\n", i, x, y);
 #   endif
 
 		MarkPolyobjPoint(x, y);
@@ -750,11 +750,11 @@ void CalculateWallTips(void)
 	{
 		vertex_t *V = LookupVertex(i);
 
-		AJDebugPrintf("WallTips for vertex %d:\n", i);
+		DebugPrintf("WallTips for vertex %d:\n", i);
 
 		for (wall_tip_t *tip = V->tip_set ; tip ; tip = tip->next)
 		{
-			AJDebugPrintf("  Angle=%1.1f left=%d right=%d\n", tip->angle,
+			DebugPrintf("  Angle=%1.1f left=%d right=%d\n", tip->angle,
 					tip->left ? tip->left->index : -1,
 					tip->right ? tip->right->index : -1);
 		}

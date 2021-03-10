@@ -111,7 +111,7 @@ public:
 public:
 	double Length() const
 	{
-		return ComputeDistDouble(x1,y1, x2,y2);
+		return ComputeDist(x1,y1, x2,y2);
 	}
 
 	bool TwoSided() const
@@ -1859,13 +1859,13 @@ static int ParseLiquidMedium(csg_property_set_c *props)
 
 	if (str)
 	{
-		if (y_stricmp(str, "water") == 0)
+		if (StringCaseCmp(str, "water") == 0)
 			return MEDIUM_WATER;
 
-		if (y_stricmp(str, "slime") == 0)
+		if (StringCaseCmp(str, "slime") == 0)
 			return MEDIUM_SLIME;
 
-		if (y_stricmp(str, "lava") == 0)
+		if (StringCaseCmp(str, "lava") == 0)
 			return MEDIUM_LAVA;
 
 		LogPrintf("WARNING: unknown liquid medium '%s'\n", str);

@@ -16,12 +16,11 @@
 //
 //------------------------------------------------------------------------
 
-#include "ajbsp_main.h"
+#include "ajbsp.h"
 
 #include <algorithm>
 
-#include "headers.h"
-
+namespace ajbsp {
 
 Wad_file * game_wad;
 Wad_file * edit_wad;
@@ -70,7 +69,7 @@ Lump_c::Lump_c(Wad_file *_par, const struct raw_wad_entry_s *entry) :
 	l_start  = LE_U32(entry->pos);
 	l_length = LE_U32(entry->size);
 
-//	AJDebugPrintf("new lump '%s' @ %d len:%d\n", name, l_start, l_length);
+//	DebugPrintf("new lump '%s' @ %d len:%d\n", name, l_start, l_length);
 }
 
 
@@ -258,7 +257,7 @@ retry:
 
 	w->total_size = (int)ftell(fp);
 
-	AJDebugPrintf("total_size = %d\n", w->total_size);
+	DebugPrintf("total_size = %d\n", w->total_size);
 
 	if (w->total_size < 0)
 		FatalError("Error determining WAD size.\n");
@@ -610,7 +609,7 @@ void Wad_file::DetectLevels()
 		{
 			levels.push_back(k);
 
-			AJDebugPrintf("Detected level : %s\n", directory[k]->name);
+			DebugPrintf("Detected level : %s\n", directory[k]->name);
 		}
 	}
 
@@ -737,7 +736,7 @@ void Wad_file::ProcessNamespaces()
 				continue;
 			}
 
-//			AJDebugPrintf("Namespace %c lump : %s\n", active, name);
+//			DebugPrintf("Namespace %c lump : %s\n", active, name);
 
 			switch (active)
 			{
@@ -1109,7 +1108,7 @@ int Wad_file::PositionForWrite(int max_size)
 			FatalError("Error seeking to new write position.\n");
 	}
 
-	AJDebugPrintf("POSITION FOR WRITE: %d  (total_size %d)\n", want_pos, total_size);
+	DebugPrintf("POSITION FOR WRITE: %d  (total_size %d)\n", want_pos, total_size);
 
 	return want_pos;
 }
@@ -1168,8 +1167,8 @@ void Wad_file::WriteDirectory()
 	dir_start = PositionForWrite();
 	dir_count = NumLumps();
 
-	AJDebugPrintf("WriteDirectory...\n");
-	AJDebugPrintf("dir_start:%d  dir_count:%d\n", dir_start, dir_count);
+	DebugPrintf("WriteDirectory...\n");
+	DebugPrintf("dir_start:%d  dir_count:%d\n", dir_start, dir_count);
 
 	for (short k = 0 ; k < dir_count ; k++)
 	{
@@ -1187,7 +1186,7 @@ void Wad_file::WriteDirectory()
 	fflush(fp);
 
 	total_size = (int)ftell(fp);
-	AJDebugPrintf("total_size: %d\n", total_size);
+	DebugPrintf("total_size: %d\n", total_size);
 
 	if (total_size < 0)
 		FatalError("Error determining WAD size.\n");
@@ -1250,6 +1249,7 @@ void W_FreeLumpData(byte ** buf_ptr)
 	}
 }
 
+} // namespace ajbsp
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

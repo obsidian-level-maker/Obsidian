@@ -39,41 +39,41 @@ static void Parse_Option(const char *name, const char *value)
 		return;
 	}
 
-	if (y_stricmp(name, "addon") == 0)
+	if (StringCaseCmp(name, "addon") == 0)
 	{
 		VFS_OptParse(value);
 	}
-	else if (y_stricmp(name, "language") == 0)
+	else if (StringCaseCmp(name, "language") == 0)
 	{
 		t_language = StringDup(value);
 	}
-	else if (y_stricmp(name, "font_size") == 0 ||
-	         y_stricmp(name, "window_size") == 0 /* backwards compat */)
+	else if (StringCaseCmp(name, "font_size") == 0 ||
+	         StringCaseCmp(name, "window_size") == 0 /* backwards compat */)
 	{
 		window_size = atoi(value);
 		window_size = CLAMP(0, window_size, 5);
 	}
-	else if (y_stricmp(name, "alternate_look") == 0)
+	else if (StringCaseCmp(name, "alternate_look") == 0)
 	{
 		alternate_look = atoi(value) ? true : false;
 	}
-	else if (y_stricmp(name, "wheel_can_bump") == 0)
+	else if (StringCaseCmp(name, "wheel_can_bump") == 0)
 	{
 		wheel_can_bump = atoi(value) ? true : false;
 	}
-	else if (y_stricmp(name, "create_backups") == 0)
+	else if (StringCaseCmp(name, "create_backups") == 0)
 	{
 		create_backups = atoi(value) ? true : false;
 	}
-	else if (y_stricmp(name, "overwrite_warning") == 0)
+	else if (StringCaseCmp(name, "overwrite_warning") == 0)
 	{
 		overwrite_warning = atoi(value) ? true : false;
 	}
-	else if (y_stricmp(name, "debug_messages") == 0)
+	else if (StringCaseCmp(name, "debug_messages") == 0)
 	{
 		debug_messages = atoi(value) ? true : false;
 	}
-	else if (y_stricmp(name, "last_directory") == 0)
+	else if (StringCaseCmp(name, "last_directory") == 0)
 	{
 		last_directory = StringDup(value);
 	}

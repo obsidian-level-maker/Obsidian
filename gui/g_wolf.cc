@@ -512,11 +512,11 @@ void wolf_game_interface_c::EndLevel()
 
 void wolf_game_interface_c::Property(const char *key, const char *value)
 {
-  if (y_stricmp(key, "level_name") == 0)
+  if (StringCaseCmp(key, "level_name") == 0)
   {
     level_name = StringDup(value);
   }
-  else if (y_stricmp(key, "file_ext") == 0)
+  else if (StringCaseCmp(key, "file_ext") == 0)
   {
     file_ext = std::string(value);
   }

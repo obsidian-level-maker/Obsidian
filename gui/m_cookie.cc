@@ -75,7 +75,7 @@ static void Cookie_SetValue(const char *name, const char *value)
 
 
 	// need special handling for the 'seed' value
-	if (y_stricmp(name, "seed") == 0)
+	if (StringCaseCmp(name, "seed") == 0)
 	{
 		// ignore seed when loading a config file
 		// unless the -k / --keep option is given.
@@ -458,10 +458,10 @@ static RecentFiles_c  recent_configs;
 
 void Recent_Parse(const char *name, const char *value)
 {
-	if (y_stricmp(name, "recent_wad") == 0)
+	if (StringCaseCmp(name, "recent_wad") == 0)
 		recent_wads.insert(value);
 
-	else if (y_stricmp(name, "recent_config") == 0)
+	else if (StringCaseCmp(name, "recent_config") == 0)
 		recent_configs.insert(value);
 }
 

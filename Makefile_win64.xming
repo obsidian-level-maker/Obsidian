@@ -34,7 +34,7 @@ ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/mingw/libzlibstatic.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
-         -Ilua_src -Iajpoly_src -Iphysfs_src \
+         -Ilua_src -Iajbsp_src -Iajpoly_src -Iphysfs_src \
 	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
 
 LDFLAGS=-static-libgcc -static-libstdc++
@@ -47,11 +47,6 @@ LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
 #----- OBLIGE Objects ----------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main_64.o      \
-	$(OBJ_DIR)/ajbsp_main.o  \
-	$(OBJ_DIR)/bsp_level.o  \
-	$(OBJ_DIR)/bsp_node.o  \
-	$(OBJ_DIR)/bsp_util.o  \
-	$(OBJ_DIR)/w_wad.o    \
 	$(OBJ_DIR)/m_about.o  \
 	$(OBJ_DIR)/m_addons.o  \
 	$(OBJ_DIR)/m_cookie.o  \
@@ -157,6 +152,23 @@ LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI -DLUA_USE_MKSTEMP
 
 $(OBJ_DIR)/lua/%.o: lua_src/%.c
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
+
+
+#----- AJBSP Objects ------------------------------------------------
+
+AJBSP_OBJS= \
+	$(OBJ_DIR)/ajbsp/ajbsp.o  \
+	$(OBJ_DIR)/ajbsp/bsp_level.o \
+	$(OBJ_DIR)/ajbsp/bsp_node.o    \
+	$(OBJ_DIR)/ajbsp/bsp_util.o    \
+	$(OBJ_DIR)/ajbsp/lib_file.o     \
+	$(OBJ_DIR)/ajbsp/lib_util.o   \
+	$(OBJ_DIR)/ajbsp/w_wad.o
+
+AJBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
+
+$(OBJ_DIR)/ajbsp/%.o: ajbsp_src/%.cc
+	$(CXX) $(AJBSP_CXXFLAGS) -o $@ -c $<
 	
 #----- AJ-Polygonator Objects --------------------------------------
 
@@ -205,10 +217,11 @@ all: $(PROGRAM)
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
+	rm -f $(OBJ_DIR)/ajbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 	rm -f $(OBJ_DIR)/physfs/*.o
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(AJBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)

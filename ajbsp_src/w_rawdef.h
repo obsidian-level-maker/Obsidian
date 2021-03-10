@@ -19,7 +19,7 @@
 #ifndef __AJBSP_W_RAWDEF_H__
 #define __AJBSP_W_RAWDEF_H__
 
-
+namespace ajbsp {
 /* ----- The wad structures ---------------------- */
 
 #define WAD_TEX_NAME   8
@@ -80,9 +80,8 @@ typedef struct raw_v2_vertex_s
 {
 	s32_t x, y;
 
-} PACKEDATTR raw_v2_vertex_t; //raw_gl_vertex_t in Obsidian
+} PACKEDATTR raw_v2_vertex_t;
 
-#define IS_GL_VERT  0x8000 //from Obsidian
 
 typedef struct raw_linedef_s
 {
@@ -90,9 +89,9 @@ typedef struct raw_linedef_s
 	u16_t end;      // ... to this vertex
 	u16_t flags;    // linedef flags (impassible, etc)
 	u16_t type;     // special type (0 for none, 97 for teleporter, etc)
-	u16_t tag;      // this linedef activates the sector with same tag
-	u16_t right;    // right sidedef (sidedef1 in obsidian)
-	u16_t left;     // left sidedef (only if this line adjoins 2 sectors) (sidedef2 in obsidian)
+	s16_t tag;      // this linedef activates the sector with same tag
+	u16_t right;    // right sidedef
+	u16_t left;     // left sidedef (only if this line adjoins 2 sectors)
 
 } PACKEDATTR raw_linedef_t;
 
@@ -101,10 +100,10 @@ typedef struct raw_hexen_linedef_s
 	u16_t start;      // from this vertex...
 	u16_t end;        // ... to this vertex
 	u16_t flags;      // linedef flags (impassible, etc)
-	u8_t  type;       // special type (special in Obsidian)
+	u8_t  type;       // special type
 	u8_t  args[5];    // special arguments
-	u16_t right;      // right sidedef (sidedef1 in Obsidian)
-	u16_t left;       // left sidedef (sidedef2 in Obsidian)
+	u16_t right;      // right sidedef
+	u16_t left;       // left sidedef
 
 } PACKEDATTR raw_hexen_linedef_t;
 
@@ -125,14 +124,14 @@ typedef struct raw_sidedef_s
 
 typedef struct raw_sector_s
 {
-	s16_t floorh;   // floor height (floor_h in Obsidian)
-	s16_t ceilh;    // ceiling height (ceil_h in Obsidian)
+	s16_t floorh;   // floor height
+	s16_t ceilh;    // ceiling height
 
 	char floor_tex[8];  // floor texture
 	char ceil_tex[8];   // ceiling texture
 
 	u16_t light;     // light level (0-255)
-	u16_t type;      // special type (0 = normal, 9 = secret, ...) (special in Obsidian)
+	u16_t type;      // special type (0 = normal, 9 = secret, ...)
 	s16_t tag;       // sector activated by a linedef with same tag
 
 } PACKEDATTR raw_sector_t;
@@ -357,23 +356,13 @@ typedef struct patch_s
 } PACKEDATTR patch_t;
 
 
-typedef struct //from Obsidian
-{
-	u16_t width;
-	u16_t height;
-
-	s16_t x_offset;
-	s16_t y_offset;
-
-} PACKEDATTR raw_patch_header_t;
-
 //
 // LineDef attributes.
 //
 
 typedef enum
 {
-	// solid, is an obstacle (MLF_BlockAll in Obsidian)
+	// solid, is an obstacle
 	MLF_Blocking = 0x0001,
 
 	// blocks monsters only
@@ -392,10 +381,10 @@ typedef enum
 	// the texture at the top pixel of the line for both
 	// top and bottom textures (use next to windows).
 
-	// upper texture unpegged (MLF_UpperUnpeg)
+	// upper texture unpegged
 	MLF_UpperUnpegged = 0x0008,
 
-	// lower texture unpegged (MLF_LowerUnpeg)
+	// lower texture unpegged
 	MLF_LowerUnpegged = 0x0010,
 
 	// in AutoMap: don't map as two sided: IT'S A SECRET!
@@ -414,7 +403,7 @@ typedef enum
 	//       be pushed simultaneously.
 	MLF_Boom_PassThru = 0x0200,
 }
-lineflag_e; //doom_lineflag_e
+lineflag_e;
 
 
 typedef enum
@@ -510,9 +499,8 @@ typedef enum
 
 	MTF_Friend    = 128,
 	MTF_Reserved  = 256,
-	MTF_Dormant  = 512, 
 }
-thing_option_e; // doom_thingflag_e in Obsidian
+thing_option_e;
 
 #define MTF_EXFLOOR_MASK    0x3C00
 #define MTF_EXFLOOR_SHIFT   10
@@ -531,16 +519,6 @@ typedef enum
 }
 hexen_option_e;
 
-typedef struct raw_behavior_header_s
-{
-	char marker[4];  // 'ACS' 0
-
-	u32_t offset;
-
-	u32_t func_num;
-	u32_t str_num;
-
-} PACKEDATTR raw_behavior_header_t;
 
 //
 // Polyobject stuff
@@ -558,6 +536,7 @@ typedef struct raw_behavior_header_s
 #define ZDOOM_PO_SPAWN_TYPE       9301
 #define ZDOOM_PO_SPAWNCRUSH_TYPE  9302
 
+} // namespace ajbsp
 
 #endif  /* __AJBSP_W_RAWDEF_H__ */
 
