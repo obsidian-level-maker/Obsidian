@@ -845,7 +845,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
   
-	if (not UDMF_mode) 
+	if (not UDMF_mode && current_engine != "zdoom" && current_engine != "gzdoom")
 	{
 		display_mode = DIS_INVALID;
 
@@ -896,7 +896,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	} 
 	else
 	{
-		LogPrintf("UDMF Map Format -- Skipping Nodes...\n");
+		LogPrintf("ZDoom/GZDoom Selected -- Skipping Nodes...\n");
 		FileRename(filename, out_name);
 		return true;
 	}
