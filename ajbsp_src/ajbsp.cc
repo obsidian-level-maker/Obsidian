@@ -477,13 +477,15 @@ int main(const char *filename)
 	if (total_built_maps == 0)
 	{
 		PrintMsg("NOTHING was built!\n");
-
+		total_failed_maps = 0;
 		return 1;
 	}
 	else
 	{
 		PrintMsg("Ok, built nodes for %d map%s!\n",
 				total_built_maps, (total_built_maps == 1 ? "" : "s"));
+		total_built_maps = 0;
+		total_failed_maps = 0;
 	}
 
 	// that's all folks!
