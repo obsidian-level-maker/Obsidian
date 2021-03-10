@@ -31,7 +31,7 @@ A brief summary of changes:
 
 Revised default visual style.
 
-UDMF map generation for ZDoom/GZDoom by default.
+UDMF map generation option for ZDoom/GZDoom.
 
 64-bit seeds and random numbers for 64-bit builds.
 
