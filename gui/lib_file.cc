@@ -2,9 +2,7 @@
 //  File Utilities
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
-//
-//  Copyright (C) 2006-2017 Andrew Apted
+//  Copyright (C) 2006-2016 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -18,18 +16,12 @@
 //
 //------------------------------------------------------------------------
 
+#include "ajbsp_main.h"
 #include "headers.h"
-
-#include "lib_file.h"
-#include "lib_util.h"
-
-#include <algorithm>
 
 #ifdef WIN32
 #include <io.h>
-#endif
-
-#ifdef UNIX
+#else  // UNIX or MACOSX
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -41,10 +33,7 @@
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 #endif
 
-#ifndef PATH_MAX
-#define PATH_MAX  2048
-#endif
-
+#include <algorithm>
 
 bool FileExists(const char *filename)
 {
@@ -67,7 +56,7 @@ bool HasExtension(const char *filename)
 	if (A > 0 && filename[A] == '.')
 		return false;
 
-	for (; A >= 0; A--)
+	for (; A >= 0 ; A--)
 	{
 		if (filename[A] == '.')
 			return true;
@@ -84,21 +73,20 @@ bool HasExtension(const char *filename)
 	return false;
 }
 
-
 //
 // MatchExtension
 //
-// When ext is NULL or "", checks if the file has no extension.
+// When ext is NULL, checks if the file has no extension.
 //
 bool MatchExtension(const char *filename, const char *ext)
 {
-	if (! (ext && ext[0]))
+	if (! ext)
 		return ! HasExtension(filename);
 
 	int A = (int)strlen(filename) - 1;
 	int B = (int)strlen(ext) - 1;
 
-	for (; B >= 0; B--, A--)
+	for (; B >= 0 ; B--, A--)
 	{
 		if (A < 0)
 			return false;
@@ -114,7 +102,7 @@ bool MatchExtension(const char *filename, const char *ext)
 //
 // ReplaceExtension
 //
-// When ext is NULL or "", any existing extension is removed.
+// When ext is NULL, any existing extension is removed.
 //
 // Returned string is a COPY.
 //
@@ -130,7 +118,7 @@ char *ReplaceExtension(const char *filename, const char *ext)
 
 	char *dot_pos = buffer + strlen(buffer) - 1;
 
-	for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--)
+	for (; dot_pos >= buffer && *dot_pos != '.' ; dot_pos--)
 	{
 		if (*dot_pos == '/')
 			break;
@@ -144,7 +132,7 @@ char *ReplaceExtension(const char *filename, const char *ext)
 	if (dot_pos < buffer || *dot_pos != '.')
 		dot_pos = NULL;
 
-	if (! (ext && ext[0]))
+	if (! ext)
 	{
 		if (dot_pos)
 			dot_pos[0] = 0;
@@ -172,7 +160,7 @@ const char *FindBaseName(const char *filename)
 
 	const char *pos = filename + strlen(filename) - 1;
 
-	for (; pos >= filename; pos--)
+	for (; pos >= filename ; pos--)
 	{
 		if (*pos == '/')
 			return pos + 1;
@@ -224,6 +212,35 @@ void FilenameStripBase(char *buffer)
 	else
 		strcpy(buffer, ".");
 }
+
+
+//
+// takes the basename in 'filename' and prepends the path from 'othername'.
+// returns a newly allocated string.
+//
+/* CURRENTLY DISABLED
+const char *FilenameReposition(const char *filename, const char *othername)
+{
+	filename = fl_filename_name(filename);
+
+	const char *op = fl_filename_name(othername);
+
+	if (op <= othername)
+		return StringDup(filename);
+
+	size_t dir_len = op - othername;
+	size_t len = strlen(filename) + dir_len;
+
+	char *result = StringNew((int)len + 10);
+
+	memcpy(result, othername, dir_len);
+	result[dir_len] = 0;
+
+	strcat(result, filename);
+
+	return result;
+}
+*/
 
 
 void FilenameGetPath(char *dest, size_t maxsize, const char *filename)
@@ -292,7 +309,7 @@ bool FileRename(const char *old_name, const char *new_name)
 #ifdef WIN32
 	return (::MoveFile(old_name, new_name) != 0);
 
-#else // UNIX or MacOSX
+#else // UNIX or MACOSX
 
 	return (rename(old_name, new_name) == 0);
 #endif
@@ -304,7 +321,7 @@ bool FileDelete(const char *filename)
 #ifdef WIN32
 	return (::DeleteFile(filename) != 0);
 
-#else // UNIX or MacOSX
+#else // UNIX or MACOSX
 
 	return (remove(filename) == 0);
 #endif
@@ -312,11 +329,11 @@ bool FileDelete(const char *filename)
 
 
 bool FileChangeDir(const char *dir_name)
-{ 
+{
 #ifdef WIN32
 	return (::SetCurrentDirectory(dir_name) != 0);
 
-#else // UNIX or MacOSX
+#else // UNIX or MACOSX
 
 	return (chdir(dir_name) == 0);
 #endif
@@ -328,14 +345,14 @@ bool FileMakeDir(const char *dir_name)
 #ifdef WIN32
 	return (::CreateDirectory(dir_name, NULL) != 0);
 
-#else // UNIX or MacOSX
+#else // UNIX or MACOSX
 
 	return (mkdir(dir_name, 0775) == 0);
 #endif
 }
 
 
-byte *FileLoad(const char *filename, int *length)
+u8_t * FileLoad(const char *filename, int *length)
 {
 	*length = 0;
 
@@ -357,15 +374,15 @@ byte *FileLoad(const char *filename, int *length)
 		return NULL;
 	}
 
-	byte *data = (byte *) malloc(*length + 1);
+	u8_t *data = (u8_t *) malloc(*length + 1);
 
 	if (! data)
-		AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
+		FatalError("Out of memory (%d bytes for FileLoad)\n", *length);
 
 	// ensure buffer is NUL-terminated
 	data[*length] = 0;
 
-	if (1 != fread(data, *length, 1, fp))
+	if (*length > 0 && 1 != fread(data, *length, 1, fp))
 	{
 		FileFree(data);
 		fclose(fp);
@@ -378,12 +395,9 @@ byte *FileLoad(const char *filename, int *length)
 }
 
 
-void FileFree(const byte *mem)
+void FileFree(u8_t *mem)
 {
-	if (mem)
-	{
-		free((void*) mem);
-	}
+	free((void*) mem);
 }
 
 
@@ -404,7 +418,7 @@ bool PathIsDirectory(const char *path)
 
 	return result;
 
-#else // UNIX or MacOSX
+#else // UNIX or MACOSX
 
 	struct stat finfo;
 
@@ -425,11 +439,11 @@ const char * FileFindInPath(const char *paths, const char *base_name)
 	for (;;)
 	{
 		const char *sep = strchr(paths, ';');
-		int len = sep ? (sep - paths) : strlen(paths);
+		size_t len = sep ? (sep - paths) : strlen(paths);
 
 		SYS_ASSERT(len > 0);
 
-		const char *filename = StringPrintf("%.*s/%s", len, paths, base_name);
+		const char *filename = StringPrintf("%.*s/%s", (int)len, paths, base_name);
 
 		//  fprintf(stderr, "Trying data file: [%s]\n", filename);
 
@@ -455,7 +469,7 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 #ifdef WIN32
 
 	// this is a bit clunky.  We set the current directory to the
-	// target and use FindFirstFile with "*.*" as the pattern. 
+	// target and use FindFirstFile with "*.*" as the pattern.
 	// Afterwards we restore the current directory.
 
 	char old_dir[MAX_PATH+1];
@@ -496,7 +510,7 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 		if (strcmp(fdata.cFileName, ".")  == 0 ||
 				strcmp(fdata.cFileName, "..") == 0)
 		{
-			// skip the funky "." and ".." dirs 
+			// skip the funky "." and ".." dirs
 		}
 		else
 		{
@@ -527,7 +541,7 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 		if (strlen(fdata->d_name) == 0)
 			continue;
 
-		// skip the funky "." and ".." dirs 
+		// skip the funky "." and ".." dirs
 		if (strcmp(fdata->d_name, ".")  == 0 ||
 				strcmp(fdata->d_name, "..") == 0)
 			continue;
@@ -570,11 +584,91 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 }
 
 
+//------------------------------------------------------------------------
+
+const char *GetExecutablePath(const char *argv0)
+{
+	char *path;
+
+#ifdef WIN32
+	path = StringNew(AJ_PATH_MAX+2);
+
+	int length = GetModuleFileName(GetModuleHandle(NULL), path, AJ_PATH_MAX);
+
+	if (length > 0 && length < AJ_PATH_MAX)
+	{
+		if (access(path, 0) == 0)  // sanity check
+		{
+			FilenameStripBase(path);
+			return path;
+		}
+	}
+
+	// didn't work, free the memory
+	StringFree(path);
+
+#elif !defined(__APPLE__) // UNIX
+	path = StringNew(AJ_PATH_MAX+2);
+
+	int length = readlink("/proc/self/exe", path, AJ_PATH_MAX);
+
+	if (length > 0)
+	{
+		path[length] = 0; // add the missing NUL
+
+		if (access(path, 0) == 0)  // sanity check
+		{
+			FilenameStripBase(path);
+			return path;
+		}
+	}
+
+	// didn't work, free the memory
+	StringFree(path);
+
+#else
+	/*
+	   from http://www.hmug.org/man/3/NSModule.html
+
+	   extern int _NSGetExecutablePath(char *buf, uint32_t *bufsize);
+
+	   _NSGetExecutablePath copies the path of the executable
+	   into the buffer and returns 0 if the path was successfully
+	   copied in the provided buffer. If the buffer is not large
+	   enough, -1 is returned and the expected buffer size is
+	   copied in *bufsize.
+	 */
+	uint32_t pathlen = AJ_PATH_MAX * 2;
+
+	path = StringNew(pathlen+2);
+
+	if (0 == _NSGetExecutablePath(path, &pathlen))
+	{
+		// FIXME: will this be _inside_ the .app folder???
+		FilenameStripBase(path);
+		return path;
+	}
+
+	// didn't work, free the memory
+	StringFree(path);
+#endif
+
+	// fallback method: use argv[0]
+	path = StringDup(argv0);
+
+#ifdef __APPLE__
+	// FIXME: check if _inside_ the .app folder
+#endif
+
+	FilenameStripBase(path);
+	return path;
+}
+
 struct filename_nocase_CMP
 {
 	inline bool operator() (const std::string& A, const std::string& B) const
 	{
-		return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+		return y_stricmp(A.c_str(), B.c_str()) < 0;
 	}
 };
 
@@ -648,89 +742,6 @@ int ScanDir_MatchingFiles(const char *path, const char *ext, std::vector<std::st
 	}
 
 	return count;
-}
-
-
-//------------------------------------------------------------------------
-
-const char *GetExecutablePath(const char *argv0)
-{
-	char *path;
-
-#ifdef WIN32
-	path = StringNew(PATH_MAX+2);
-
-	int length = GetModuleFileName(GetModuleHandle(NULL), path, PATH_MAX);
-
-	if (length > 0 && length < PATH_MAX)
-	{
-		if (access(path, 0) == 0)  // sanity check
-		{
-			FilenameStripBase(path);
-			return path;
-		}
-	}
-
-	// didn't work, free the memory
-	StringFree(path);
-#endif
-
-#ifdef UNIX
-	path = StringNew(PATH_MAX+2);
-
-	int length = readlink("/proc/self/exe", path, PATH_MAX);
-
-	if (length > 0)
-	{
-		path[length] = 0; // add the missing NUL
-
-		if (access(path, 0) == 0)  // sanity check
-		{
-			FilenameStripBase(path);
-			return path;
-		}
-	}
-
-	// didn't work, free the memory
-	StringFree(path);
-#endif
-
-#ifdef __APPLE__
-	/*
-	   from http://www.hmug.org/man/3/NSModule.html
-
-	   extern int _NSGetExecutablePath(char *buf, unsigned long *bufsize);
-
-	   _NSGetExecutablePath copies the path of the executable
-	   into the buffer and returns 0 if the path was successfully
-	   copied in the provided buffer. If the buffer is not large
-	   enough, -1 is returned and the expected buffer size is
-	   copied in *bufsize.
-	 */
-	uint32_t pathlen = PATH_MAX * 2;
-
-	path = StringNew(pathlen+2);
-
-	if (0 == _NSGetExecutablePath(path, &pathlen))
-	{
-		// FIXME: will this be _inside_ the .app folder???
-		FilenameStripBase(path);
-		return path;
-	}
-
-	// didn't work, free the memory
-	StringFree(path);
-#endif
-
-	// fallback method: use argv[0]
-	path = StringDup(argv0);
-
-#ifdef __APPLE__
-	// FIXME: check if _inside_ the .app folder
-#endif
-
-	FilenameStripBase(path);
-	return path;
 }
 
 //--- editor settings ---

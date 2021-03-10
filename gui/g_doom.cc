@@ -41,6 +41,8 @@
 #include <bitset>
 #include <iostream>
 
+#include "w_rawdef.h"
+
 
 extern void CSG_DOOM_Write();
 
@@ -378,14 +380,14 @@ void DM_AddSector(int f_h, const char * f_tex,
 {
 	raw_sector_t sec;
 
-	sec.floor_h = LE_S16(f_h);
-	sec.ceil_h  = LE_S16(c_h);
+	sec.floorh = LE_S16(f_h);
+	sec.ceilh  = LE_S16(c_h);
 
 	strncpy(sec.floor_tex, f_tex, 8);
 	strncpy(sec.ceil_tex,  c_tex, 8);
 
 	sec.light   = LE_U16(light);
-	sec.special = LE_U16(special);
+	sec.type = LE_U16(special);
 	sec.tag     = LE_S16(tag);
 
 	if (not UDMF_mode)
@@ -453,8 +455,8 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 		line.start = LE_U16(vert1);
 		line.end   = LE_U16(vert2);
 
-		line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+		line.right = side1 < 0 ? 0xFFFF : LE_U16(side1);
+		line.left = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
 		line.type  = LE_U16(type);
 		line.flags = LE_U16(flags);
@@ -505,10 +507,10 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 		line.start = LE_U16(vert1);
 		line.end   = LE_U16(vert2);
 
-		line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+		line.right = side1 < 0 ? 0xFFFF : LE_U16(side1);
+		line.left = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
-		line.special = type; // 8 bits
+		line.type = type; // 8 bits
 		line.flags = LE_U16(flags);
 
 		// tag value is UNUSED
@@ -693,153 +695,10 @@ int DM_NumThings()
 
 
 //----------------------------------------------------------------------------
-//  GLBSP NODE BUILDING
+//  AJBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
-#include "glbsp.h"
-
-
-static nodebuildinfo_t nb_info;
-static volatile nodebuildcomms_t nb_comms;
-
-static int display_mode = DIS_INVALID;
-static int progress_limit;
-
-static char message_buf[MSG_BUF_LEN];
-
-
-static const char *GetErrorString(glbsp_ret_e ret)
-{
-	switch (ret)
-	{
-		case GLBSP_E_OK:
-			return _("OK");
-
-		// the arguments were bad/inconsistent.
-		case GLBSP_E_BadArgs:
-			return _("Bad Arguments");
-
-		// the info was bad/inconsistent, but has been fixed
-		case GLBSP_E_BadInfoFixed:
-			return _("Bad Args (fixed)");
-
-		// file errors
-		case GLBSP_E_ReadError:  return _("Read Error");
-		case GLBSP_E_WriteError: return _("Write Error");
-
-		// building was cancelled
-		case GLBSP_E_Cancelled:
-			return _("Cancelled by User");
-
-		// an unknown error occurred (this is the catch-all value)
-		case GLBSP_E_Unknown:
-		default:
-			return _("Unknown Error");
-	}
-}
-
-static void GB_PrintMsg(const char *str, ...)
-{
-	va_list args;
-
-	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
-	va_end(args);
-
-	message_buf[MSG_BUF_LEN-1] = 0;
-
-	LogPrintf("GLBSP: %s", message_buf);
-}
-
-//
-// GB_FatalError
-//
-// Terminates the program reporting an error.
-//
-static void GB_FatalError(const char *str, ...)
-{
-	va_list args;
-
-	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
-	va_end(args);
-
-	message_buf[MSG_BUF_LEN-1] = 0;
-
-	Main_FatalError(_("glBSP Failure:\n%s"), message_buf);
-	/* NOT REACHED */
-}
-
-static void GB_Ticker(void)
-{
-	Main_Ticker();
-
-	if (main_action >= MAIN_CANCEL)
-	{
-		nb_comms.cancelled = TRUE;
-	}
-}
-
-static boolean_g GB_DisplayOpen(displaytype_e type)
-{
-	display_mode = type;
-	return TRUE;
-}
-
-static void GB_DisplaySetTitle(const char *str)
-{
-	/* does nothing */
-}
-
-static void GB_DisplaySetBarText(int barnum, const char *str)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 1)
-	{
-		/* IDEA: extract map name from 'str' */
-
-		if (batch_mode)
-			fprintf(stderr, "%s\n", str);
-	}
-}
-
-static void GB_DisplaySetBarLimit(int barnum, int limit)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
-	{
-		progress_limit = limit;
-
-		main_win->build_box->SetStatus(_("Building nodes"));
-		main_win->build_box->Prog_Nodes(0, limit);
-	}
-}
-
-static void GB_DisplaySetBar(int barnum, int count)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
-	{
-		main_win->build_box->Prog_Nodes(count, progress_limit);
-	}
-}
-
-static void GB_DisplayClose(void)
-{
-	/* does nothing */
-}
-
-static const nodebuildfuncs_t edge_build_funcs =
-{
-	GB_FatalError,
-	GB_PrintMsg,
-	GB_Ticker,
-
-	GB_DisplayOpen,
-	GB_DisplaySetTitle,
-	GB_DisplaySetBar,
-	GB_DisplaySetBarLimit,
-	GB_DisplaySetBarText,
-	GB_DisplayClose
-};
-
+#include "ajbsp_main.h"
 
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
@@ -847,51 +706,9 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
   
 	if (not UDMF_mode && current_engine != "zdoom" && current_engine != "gzdoom")
 	{
-		display_mode = DIS_INVALID;
-
-		memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
-		memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
-
-		nb_info.input_file  = GlbspStrDup(filename);
-		nb_info.output_file = GlbspStrDup(out_name);
-
-		nb_info.quiet = TRUE;
-		nb_info.pack_sides = FALSE;
-		nb_info.force_normal = TRUE;
-		nb_info.fast = TRUE;
-
-		glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
-
-		if (ret != GLBSP_E_OK)
-		{
-			// check info failure (unlikely to happen)
-			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
-			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-      
-		    Main_ProgStatus(_("glBSP Error"));
-		    return false;
-	    }
-
-		ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
-
-		if (ret == GLBSP_E_Cancelled)
-		{
-			GB_PrintMsg("Building CANCELLED.\n\n");
-			Main_ProgStatus(_("Cancelled"));
-			return false;
-		}
-
-		if (ret != GLBSP_E_OK)
-		{
-			// build nodes failed
-			GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
-			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-			Main_ProgStatus(_("glBSP Error"));
-			return false;
-		}
-		
-			return true;
+		ajbsp_main(filename);
+		FileRename(filename, out_name);		
+		return true;
 			
 	} 
 	else
@@ -1031,39 +848,39 @@ void doom_game_interface_c::BeginLevel()
 
 void doom_game_interface_c::Property(const char *key, const char *value)
 {
-	if (StringCaseCmp(key, "level_name") == 0)
+	if (y_stricmp(key, "level_name") == 0)
 	{
 		level_name = StringDup(value);
 	}
-	else if (StringCaseCmp(key, "description") == 0)
+	else if (y_stricmp(key, "description") == 0)
 	{
 		// ignored (for now)
 		// [another mechanism sets the description via BEX/DDF]
 	}
-	else if (StringCaseCmp(key, "sub_format") == 0)
+	else if (y_stricmp(key, "sub_format") == 0)
 	{
-		if (StringCaseCmp(value, "doom") == 0)
+		if (y_stricmp(value, "doom") == 0)
 			dm_sub_format = 0;
-		else if (StringCaseCmp(value, "hexen") == 0)
+		else if (y_stricmp(value, "hexen") == 0)
 			dm_sub_format = SUBFMT_Hexen;
-		else if (StringCaseCmp(value, "strife") == 0)
+		else if (y_stricmp(value, "strife") == 0)
 			dm_sub_format = SUBFMT_Strife;
 		else
 			LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
 	}
-	else if (StringCaseCmp(key, "offset_map") == 0)
+	else if (y_stricmp(key, "offset_map") == 0)
 	{
 		dm_offset_map = atoi(value);
 	}
-	else if (StringCaseCmp(key, "ef_solid_type") == 0)
+	else if (y_stricmp(key, "ef_solid_type") == 0)
 	{
 		ef_solid_type = atoi(value);
 	}
-	else if (StringCaseCmp(key, "ef_liquid_type") == 0)
+	else if (y_stricmp(key, "ef_liquid_type") == 0)
 	{
 		ef_liquid_type = atoi(value);
 	}
-	else if (StringCaseCmp(key, "ef_thing_mode") == 0)
+	else if (y_stricmp(key, "ef_thing_mode") == 0)
 	{
 		ef_thing_mode = atoi(value);
 	}

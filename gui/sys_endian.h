@@ -1,10 +1,8 @@
 //------------------------------------------------------------------------
-//  EDGE Endian handling
+//  Endian handling
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
-//
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2008 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -121,17 +119,6 @@ static inline u32_t UT_Swap32(u32_t x) {
 #define BE_S16(X)  ((s16_t) BE_U16((u16_t) (X)))
 #define BE_S32(X)  ((s32_t) BE_U32((u32_t) (X)))
 
-
-// ---- floating point ----
-
-static inline float UT_SwapFloat(float x)
-{
-  union { float f; u32_t u; } in, out;
-  in.f = x;
-  out.u = UT_Swap32(in.u);
-  return out.f;
-}
-
 #if (UT_BYTEORDER == UT_LIL_ENDIAN)
 #define LE_Float32(X)  (X)
 #define BE_Float32(X)  UT_SwapFloat(X)
@@ -139,7 +126,6 @@ static inline float UT_SwapFloat(float x)
 #define LE_Float32(X)  UT_SwapFloat(X)
 #define BE_Float32(X)  (X)
 #endif
-
 
 #endif // __SYS_ENDIAN_H__
 

@@ -30,6 +30,8 @@
 #include "lib_util.h"
 #include "lib_wad.h"
 
+#include "w_rawdef.h"
+
 // #define LogPrintf  printf
 
 
@@ -77,7 +79,7 @@ bool WAD_OpenRead(const char *filename)
 		return false;
 	}
 
-	if (0 != memcmp(wad_R_header.magic+1, "WAD", 3))
+	if (0 != memcmp(wad_R_header.ident+1, "WAD", 3))
 	{
 		LogPrintf("WAD_OpenRead: not a WAD file!\n");
 #ifdef HAVE_PHYSFS
@@ -88,14 +90,14 @@ bool WAD_OpenRead(const char *filename)
 		return false;
 	}
 
-	wad_R_header.num_lumps = LE_U32(wad_R_header.num_lumps);
+	wad_R_header.num_entries = LE_U32(wad_R_header.num_entries);
 	wad_R_header.dir_start = LE_U32(wad_R_header.dir_start);
 
 	/* read directory */
 
-	if (wad_R_header.num_lumps >= 5000)  // sanity check
+	if (wad_R_header.num_entries >= 5000)  // sanity check
 	{
-		LogPrintf("WAD_OpenRead: bad header (%d entries?)\n", wad_R_header.num_lumps);
+		LogPrintf("WAD_OpenRead: bad header (%d entries?)\n", wad_R_header.num_entries);
 #ifdef HAVE_PHYSFS
 		PHYSFS_close(wad_R_fp);
 #else
@@ -119,9 +121,9 @@ bool WAD_OpenRead(const char *filename)
 		return false;
 	}
 
-	wad_R_dir = new raw_wad_lump_t[wad_R_header.num_lumps + 1];
+	wad_R_dir = new raw_wad_lump_t[wad_R_header.num_entries + 1];
 
-	for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
+	for (int i = 0; i < (int)wad_R_header.num_entries; i++)
 	{
 		raw_wad_lump_t *L = &wad_R_dir[i];
 
@@ -143,7 +145,7 @@ bool WAD_OpenRead(const char *filename)
 			LogPrintf("WAD_OpenRead: hit EOF reading dir-entry %d\n", i);
 
 			// truncate directory
-			wad_R_header.num_lumps = i;
+			wad_R_header.num_entries = i;
 			break;
 		}
 
@@ -174,19 +176,19 @@ void WAD_CloseRead(void)
 
 int WAD_NumEntries(void)
 {
-	return (int)wad_R_header.num_lumps;
+	return (int)wad_R_header.num_entries;
 }
 
 
 int WAD_FindEntry(const char *name)
 {
-	for (unsigned int i = 0; i < wad_R_header.num_lumps; i++)
+	for (unsigned int i = 0; i < wad_R_header.num_entries; i++)
 	{
 		char buffer[16];
 		strncpy(buffer, wad_R_dir[i].name, 8);
 		buffer[8] = 0;
 
-		if (StringCaseCmp(name, buffer) == 0)
+		if (y_stricmp(name, buffer) == 0)
 			return i;
 	}
 
@@ -196,7 +198,7 @@ int WAD_FindEntry(const char *name)
 
 int WAD_EntryLen(int entry)
 {
-	SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+	SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_entries);
 
 	return wad_R_dir[entry].length;
 }
@@ -206,7 +208,7 @@ const char * WAD_EntryName(int entry)
 {
 	static char name_buf[16];
 
-	SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+	SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_entries);
 
 	// entries are often not NUL terminated, hence return a static copy
 	strncpy(name_buf, wad_R_dir[entry].name, 8);
@@ -218,7 +220,7 @@ const char * WAD_EntryName(int entry)
 
 bool WAD_ReadData(int entry, int offset, int length, void *buffer)
 {
-	SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+	SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_entries);
 	SYS_ASSERT(offset >= 0);
 	SYS_ASSERT(length > 0);
 
@@ -246,13 +248,13 @@ void WAD_ListEntries(void)
 {
 	printf("--------------------------------------------------\n");
 
-	if (wad_R_header.num_lumps == 0)
+	if (wad_R_header.num_entries == 0)
 	{
 		printf("WAD file is empty\n");
 	}
 	else
 	{
-		for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
+		for (int i = 0; i < (int)wad_R_header.num_entries; i++)
 		{
 			raw_wad_lump_t *L = &wad_R_dir[i];
 
@@ -309,10 +311,10 @@ void WAD_CloseWrite(void)
 
 	raw_wad_header_t header;
 
-	memcpy(header.magic, "PWAD", sizeof(header.magic));
+	memcpy(header.ident, "PWAD", sizeof(header.ident));
 
 	header.dir_start = (int)ftell(wad_W_fp);
-	header.num_lumps = 0;
+	header.num_entries = 0;
 
 	std::list<raw_wad_lump_t>::iterator WDI;
 
@@ -322,7 +324,7 @@ void WAD_CloseWrite(void)
 
 		fwrite(L, sizeof(raw_wad_lump_t), 1, wad_W_fp);
 
-		header.num_lumps++;
+		header.num_entries++;
 	}
 
 	fflush(wad_W_fp);
@@ -330,7 +332,7 @@ void WAD_CloseWrite(void)
 	// finally write the _real_ WAD header
 
 	header.dir_start = LE_U32(header.dir_start);
-	header.num_lumps = LE_U32(header.num_lumps);
+	header.num_entries = LE_U32(header.num_entries);
 
 	fseek(wad_W_fp, 0, SEEK_SET);
 
@@ -544,7 +546,7 @@ int WAD2_FindEntry(const char *name)
 {
 	for (unsigned int i = 0; i < wad2_R_header.num_lumps; i++)
 	{
-		if (StringCaseCmp(name, wad2_R_dir[i].name) == 0)
+		if (y_stricmp(name, wad2_R_dir[i].name) == 0)
 			return i;
 	}
 

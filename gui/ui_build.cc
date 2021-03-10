@@ -306,7 +306,7 @@ void UI_Build::ParseSteps(const char *names)
 int UI_Build::FindStep(const char *name)
 {
 	for (int i = 0; i < (int)step_names.size(); i++)
-		if (StringCaseCmp(step_names[i].c_str(), name) == 0)
+		if (y_stricmp(step_names[i].c_str(), name) == 0)
 			return i;
 
 	return -1;  // not found

@@ -147,7 +147,7 @@ snag_c::~snag_c()
 
 double snag_c::Length() const
 {
-	return ComputeDist(x1,y1, x2,y2);
+	return ComputeDistDouble(x1,y1, x2,y2);
 }
 
 

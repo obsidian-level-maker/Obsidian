@@ -23,7 +23,7 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
-#include "glbsp.h"
+#include "ajbsp_main.h"
 
 #include "lib_argv.h"
 #include "lib_file.h"
@@ -576,22 +576,22 @@ bool Build_Cool_Shit()
 
 	// create game object
 	{
-		if (StringCaseCmp(format, "doom") == 0)
+		if (y_stricmp(format, "doom") == 0)
 			game_object = Doom_GameObject();
 
-		else if (StringCaseCmp(format, "nukem") == 0)
+		else if (y_stricmp(format, "nukem") == 0)
 			game_object = Nukem_GameObject();
 
-		/// else if (StringCaseCmp(format, "wolf3d") == 0)
+		/// else if (y_stricmp(format, "wolf3d") == 0)
 		///   game_object = Wolf_GameObject();
 
-		else if (StringCaseCmp(format, "quake") == 0)
+		else if (y_stricmp(format, "quake") == 0)
 			game_object = Quake1_GameObject();
 
-		else if (StringCaseCmp(format, "quake2") == 0)
+		else if (y_stricmp(format, "quake2") == 0)
 			game_object = Quake2_GameObject();
 
-		else if (StringCaseCmp(format, "quake3") == 0)
+		else if (y_stricmp(format, "quake3") == 0)
 			game_object = Quake3_GameObject();
 
 		else

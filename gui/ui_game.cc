@@ -157,22 +157,22 @@ void UI_Game::Locked(bool value)
 
 bool UI_Game::AddChoice(const char *button, const char *id, const char *label)
 {
-	if (StringCaseCmp(button, "game") == 0)
+	if (y_stricmp(button, "game") == 0)
 	{
 		game->AddChoice(id, label);
 		return true;
 	}
-	if (StringCaseCmp(button, "engine") == 0)
+	if (y_stricmp(button, "engine") == 0)
 	{
 		engine->AddChoice(id, label);
 		return true;
 	}
-	if (StringCaseCmp(button, "length") == 0)
+	if (y_stricmp(button, "length") == 0)
 	{
 		length->AddChoice(id, label);
 		return true;
 	}
-	if (StringCaseCmp(button, "theme") == 0)
+	if (y_stricmp(button, "theme") == 0)
 	{
 		theme->AddChoice(id, label);
 		return true;
@@ -184,22 +184,22 @@ bool UI_Game::AddChoice(const char *button, const char *id, const char *label)
 
 bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it)
 {
-	if (StringCaseCmp(button, "game") == 0)
+	if (y_stricmp(button, "game") == 0)
 	{
 		game->EnableChoice(id, enable_it);
 		return true;
 	}
-	if (StringCaseCmp(button, "engine") == 0)
+	if (y_stricmp(button, "engine") == 0)
 	{
 		engine->EnableChoice(id, enable_it);
 		return true;
 	}
-	if (StringCaseCmp(button, "length") == 0)
+	if (y_stricmp(button, "length") == 0)
 	{
 		length->EnableChoice(id, enable_it);
 		return true;
 	}
-	if (StringCaseCmp(button, "theme") == 0)
+	if (y_stricmp(button, "theme") == 0)
 	{
 		theme->EnableChoice(id, enable_it);
 		return true;
@@ -211,22 +211,22 @@ bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it)
 
 bool UI_Game::SetButton(const char *button, const char *id)
 {
-	if (StringCaseCmp(button, "game") == 0)
+	if (y_stricmp(button, "game") == 0)
 	{
 		game->ChangeTo(id);
 		return true;
 	}
-	if (StringCaseCmp(button, "engine") == 0)
+	if (y_stricmp(button, "engine") == 0)
 	{
 		engine->ChangeTo(id);
 		return true;
 	}
-	if (StringCaseCmp(button, "length") == 0)
+	if (y_stricmp(button, "length") == 0)
 	{
 		length->ChangeTo(id);
 		return true;
 	}
-	if (StringCaseCmp(button, "theme") == 0)
+	if (y_stricmp(button, "theme") == 0)
 	{
 		theme->ChangeTo(id);
 		return true;

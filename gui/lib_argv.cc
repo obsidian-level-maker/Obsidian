@@ -108,7 +108,7 @@ int ArgvFind(char short_name, const char *long_name, int *num_params)
 		if (short_name && (short_name == tolower(str[1])) && str[2] == 0)
 			break;
 
-		if (long_name && (StringCaseCmp(long_name, str + 1) == 0))
+		if (long_name && (y_stricmp(long_name, str + 1) == 0))
 			break;
 	}
 

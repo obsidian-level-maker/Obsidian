@@ -288,7 +288,7 @@ struct scan_dir_nocase_CMP
 {
 	inline bool operator() (const std::string& A, const std::string& B) const
 	{
-		return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+		return y_stricmp(A.c_str(), B.c_str()) < 0;
 	}
 };
 
@@ -440,10 +440,10 @@ int gui_add_module(lua_State *L)
 	if (has_added_buttons)
 		Main_FatalError("Script problem: gui.add_module called late.\n");
 
-	if (StringCaseCmp(where, "left") == 0)
+	if (y_stricmp(where, "left") == 0)
 		main_win->left_mods->AddModule(id, label, tip);
 
-	else if (StringCaseCmp(where, "right") == 0)
+	else if (y_stricmp(where, "right") == 0)
 		main_win->right_mods->AddModule(id, label, tip);
 
 	else
@@ -579,7 +579,7 @@ int gui_set_module_option(lua_State *L)
 	if (! main_win)
 		return 0;
 
-	if (StringCaseCmp(option, "self") == 0)
+	if (y_stricmp(option, "self") == 0)
 		return luaL_error(L, "set_module_option: cannot use 'self' here\n", option);
 
 	if (! (main_win-> left_mods->SetOption(module, option, value) ||

@@ -2,9 +2,7 @@
 //  Type definitions
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
-//
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2008 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -26,7 +24,7 @@
 typedef char  s8_t;
 typedef short s16_t;
 typedef int   s32_t;
- 
+
 typedef unsigned char  u8_t;
 typedef unsigned short u16_t;
 typedef unsigned int   u32_t;

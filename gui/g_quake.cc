@@ -39,7 +39,6 @@
 #include "csg_main.h"
 #include "csg_local.h"
 #include "csg_quake.h"
-
 #include "img_all.h"
 
 
@@ -1507,21 +1506,21 @@ void quake1_game_interface_c::BeginLevel()
 
 void quake1_game_interface_c::Property(const char *key, const char *value)
 {
-	if (StringCaseCmp(key, "level_name") == 0)
+	if (y_stricmp(key, "level_name") == 0)
 	{
 		level_name = StringDup(value);
 	}
-	else if (StringCaseCmp(key, "description") == 0)
+	else if (y_stricmp(key, "description") == 0)
 	{
 		description = StringDup(value);
 	}
-	else if (StringCaseCmp(key, "sub_format") == 0)
+	else if (y_stricmp(key, "sub_format") == 0)
 	{
-		if (StringCaseCmp(value, "quake") == 0)
+		if (y_stricmp(value, "quake") == 0)
 			qk_sub_format = 0;
-		else if (StringCaseCmp(value, "hexen2") == 0)
+		else if (y_stricmp(value, "hexen2") == 0)
 			qk_sub_format = SUBFMT_Hexen2;
-		else if (StringCaseCmp(value, "halflife") == 0)
+		else if (y_stricmp(value, "halflife") == 0)
 			qk_sub_format = SUBFMT_HalfLife;
 		else
 			LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value);
@@ -1530,7 +1529,7 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
 		if (main_win)
 			main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
 	}
-	else if (StringCaseCmp(key, "worldtype") == 0)
+	else if (y_stricmp(key, "worldtype") == 0)
 	{
 		qk_worldtype = atoi(value);
 	}

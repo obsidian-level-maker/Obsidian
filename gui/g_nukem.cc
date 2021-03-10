@@ -361,13 +361,13 @@ int NK_grp_logo_gfx(lua_State *L)
 	// find the requested image (TODO: look in a table)
 	const logo_image_t *logo = NULL;
 
-	if (StringCaseCmp(image, logo_BOLT.name) == 0)
+	if (y_stricmp(image, logo_BOLT.name) == 0)
 		logo = &logo_BOLT;
-	else if (StringCaseCmp(image, logo_PILL.name) == 0)
+	else if (y_stricmp(image, logo_PILL.name) == 0)
 		logo = &logo_PILL;
-	else if (StringCaseCmp(image, logo_CARVE.name) == 0)
+	else if (y_stricmp(image, logo_CARVE.name) == 0)
 		logo = &logo_CARVE;
-	else if (StringCaseCmp(image, logo_RELIEF.name) == 0)
+	else if (y_stricmp(image, logo_RELIEF.name) == 0)
 		logo = &logo_RELIEF;
 	else
 		return luaL_argerror(L, 2, "unknown image name");
@@ -536,11 +536,11 @@ void nukem_game_interface_c::BeginLevel()
 
 void nukem_game_interface_c::Property(const char *key, const char *value)
 {
-	if (StringCaseCmp(key, "level_name") == 0)
+	if (y_stricmp(key, "level_name") == 0)
 	{
 		level_name = StringDup(value);
 	}
-	else if (StringCaseCmp(key, "description") == 0)
+	else if (y_stricmp(key, "description") == 0)
 	{
 		// ignored (for now)
 		// [another mechanism sets the description via BEX/DDF]

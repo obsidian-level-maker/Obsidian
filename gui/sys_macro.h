@@ -2,9 +2,8 @@
 //  Macros
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
-//
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2008 Andrew Apted
+//  Copyright (C) 2005      Simon Howard
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -29,6 +28,10 @@
 
 #ifndef M_PI
 #define M_PI  3.14159265358979323846
+#endif
+
+#ifndef M_SQRT2
+#define M_SQRT2  1.41421356237309504880
 #endif
 
 #ifndef MAX
@@ -56,8 +59,17 @@
     ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
 #endif
 
+//
+// The packed attribute forces structures to be packed into the minimum
+// space necessary.  If this is not done, the compiler may align structure
+// fields differently to optimize memory access, inflating the overall
+// structure size.  It is important to use the packed attribute on certain
+// structures where alignment is important, particularly data read/written
+// to disk.
+//
+
 #ifdef __GNUC__
-#define PACKEDATTR  __attribute__((packed))
+#define PACKEDATTR __attribute__((packed))
 #else
 #define PACKEDATTR
 #endif

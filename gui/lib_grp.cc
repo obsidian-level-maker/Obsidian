@@ -190,7 +190,7 @@ int GRP_FindEntry(const char *name)
 		strncpy(buffer, grp_R_dir[i].name, GRP_NAME_LEN);
 		buffer[GRP_NAME_LEN] = 0;
 
-		if (StringCaseCmp(name, buffer) == 0)
+		if (y_stricmp(name, buffer) == 0)
 			return i;
 	}
 

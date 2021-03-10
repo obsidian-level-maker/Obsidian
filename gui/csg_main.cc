@@ -369,10 +369,10 @@ int csg_brush_c::CalcMedium() const
 		{
 			const char *str = props.getStr("medium", "");
 
-			if (StringCaseCmp(str, "slime") == 0)
+			if (y_stricmp(str, "slime") == 0)
 				return MEDIUM_SLIME;
 
-			if (StringCaseCmp(str, "lava") == 0)
+			if (y_stricmp(str, "lava") == 0)
 				return MEDIUM_LAVA;
 
 			return MEDIUM_WATER;
@@ -930,37 +930,37 @@ static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind)
 
 	SYS_ASSERT(kind);
 
-	if (StringCaseCmp(kind, "solid") == 0)
+	if (y_stricmp(kind, "solid") == 0)
 	{
 		B->bkind = BKIND_Solid;
 	}
-	else if (StringCaseCmp(kind, "liquid") == 0)
+	else if (y_stricmp(kind, "liquid") == 0)
 	{
 		B->bkind = BKIND_Liquid;
 	}
-	else if (StringCaseCmp(kind, "trigger") == 0)
+	else if (y_stricmp(kind, "trigger") == 0)
 	{
 		B->bkind = BKIND_Trigger;
 	}
-	else if (StringCaseCmp(kind, "light") == 0)
+	else if (y_stricmp(kind, "light") == 0)
 	{
 		B->bkind = BKIND_Light;
 	}
-	else if (StringCaseCmp(kind, "rail") == 0)
+	else if (y_stricmp(kind, "rail") == 0)
 	{
 		B->bkind = BKIND_Rail;
 	}
-	else if (StringCaseCmp(kind, "sky") == 0)   // back compat
+	else if (y_stricmp(kind, "sky") == 0)   // back compat
 	{
 		B->bkind = BKIND_Solid;
 		B->bflags |= BFLAG_Sky;
 	}
-	else if (StringCaseCmp(kind, "clip") == 0)   // back compat
+	else if (y_stricmp(kind, "clip") == 0)   // back compat
 	{
 		B->bkind = BKIND_Solid;
 		B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
 	}
-	else if (StringCaseCmp(kind, "detail") == 0)   // back compat
+	else if (y_stricmp(kind, "detail") == 0)   // back compat
 	{
 		B->bkind = BKIND_Solid;
 		B->bflags |= BFLAG_Detail;
@@ -1165,12 +1165,12 @@ int CSG_property(lua_State *L)
 		spot_high_h = atoi(value);
 		return 0;
 	}
-	else if (StringCaseCmp(key, "chunk_size") == 0)
+	else if (y_stricmp(key, "chunk_size") == 0)
 	{
 		CHUNK_SIZE = atof(value);
 		return 0;
 	}
-	else if (StringCaseCmp(key, "cluster_size") == 0)
+	else if (y_stricmp(key, "cluster_size") == 0)
 	{
 		CLUSTER_SIZE = atof(value);
 		return 0;
@@ -1417,7 +1417,7 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key)
 		if (! E_key)
 			continue;
 
-		if (StringCaseCmp(E_key, link_key) == 0)
+		if (y_stricmp(E_key, link_key) == 0)
 		{
 			B->link_ent = E;
 			return;

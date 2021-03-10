@@ -97,7 +97,7 @@ public:
 public:
 	double Length() const
 	{
-		return ComputeDist(x1,y1, x2,y2);
+		return ComputeDistDouble(x1,y1, x2,y2);
 	}
 
 	bool TwoSided() const
@@ -460,7 +460,7 @@ static void CalcNormal(double x1, double y1, double x2, double y2,
 	*nx = (y2 - y1);
 	*ny = (x1 - x2);
 
-	double n_len = ComputeDist(x1, y1, x2, y2);
+	double n_len = ComputeDistDouble(x1, y1, x2, y2);
 	SYS_ASSERT(n_len > 0.0001);
 
 	*nx /= n_len;

@@ -191,7 +191,7 @@ int PAK_FindEntry(const char *name)
 {
 	for (unsigned int i = 0; i < r_header.entry_num; i++)
 	{
-		if (StringCaseCmp(name, r_directory[i].name) == 0)
+		if (y_stricmp(name, r_directory[i].name) == 0)
 			return i;
 	}
 
