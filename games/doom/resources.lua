@@ -191,7 +191,6 @@ function DOOM.all_done()
   gui.wad_merge_sections(dir .. "vine_dude.wad")
   gui.wad_merge_sections(dir .. "logos.wad")
   gui.wad_merge_sections(dir .. "invisible_wall.wad")
-  gui.wad_merge_sections(dir .. "error_wall.wad")
 
   if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
     gui.wad_merge_sections(dir .. "short_bars.wad")

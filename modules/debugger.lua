@@ -86,11 +86,21 @@ function DEBUG_CONTROL.setup(self)
   end
 end
 
+function DEBUG_CONTROL.get_levels()
+  if PARAM.custom_error_texture and PARAM.custom_error_texture == "yes" then
+    GAME.MATERIALS._ERROR.t = "ZZWOLF7"
+  end
+end
+
 function DEBUG_CONTROL.all_done()
-  if PARAM.attach_debug_info and PARAM.attach_debug_info == "yes" then
+  --[[if PARAM.attach_debug_info and PARAM.attach_debug_info == "yes" then
     local log_text = {}
 
     gui.wad_add_text_lump("OBLOGS", log_text)
+  end]]
+
+  if PARAM.custom_error_texture and PARAM.custom_error_texture == "yes" then
+    gui.wad_merge_sections("games/doom/data/error_wall.wad")
   end
 end
 
@@ -108,7 +118,8 @@ OB_MODULES["debugger"] =
 
   hooks =
   {
-    setup = DEBUG_CONTROL.setup
+    setup = DEBUG_CONTROL.setup,
+    get_levels = DEBUG_CONTROL.get_levels
   },
 
   options =
@@ -227,6 +238,18 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
+    custom_error_texture =
+    {
+      name = "custom_error_texture",
+      label = _("Custom Error Texture"),
+      choices = DEBUG_CONTROL.YES_NO,
+      tooltip = "Replaces Obsidian's default texture with a high visibility version " ..
+        "for easier detection of broken level geometry or missing textures.",
+      default = "no",
+      priority = 50,
+      gap = 1,
+    },
+
     start_room_size =
     {
       name = "start_room_size",
@@ -234,8 +257,8 @@ OB_MODULES["debugger"] =
       choices = DEBUG_CONTROL.YES_NO,
       tooltip = "Affects whether Room Size Variance also influences start rooms.",
       default = "no",
-      priority = 50,
-    },
+      priority = 49
+    }
 
 --[[
     attach_debug_info =
@@ -245,7 +268,7 @@ OB_MODULES["debugger"] =
       choices = DEBUG_CONTROL.YES_NO
       tooltip = "Attaches certain debug info into an OBLOGS text lump in the generated WAD.",
       priority = 91,
-    },
+    }
 ]]
   },
 }
