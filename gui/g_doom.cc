@@ -73,11 +73,11 @@ std::string current_engine;
 
 static bool UDMF_mode;
 
-int udmf_vertexes = 0;
-int udmf_sectors = 0;
-int udmf_linedefs = 0;
-int udmf_things = 0;
-int udmf_sidedefs = 0;
+int udmf_vertexes;
+int udmf_sectors;
+int udmf_linedefs;
+int udmf_things;
+int udmf_sidedefs;
 
 
 typedef enum
@@ -351,14 +351,13 @@ void DM_AddVertex(int x, int y)
 		x += 32;
 		y += 32;
 	}
-	
-	raw_vertex_t vert;
-
-	vert.x = LE_S16(x);
-	vert.y = LE_S16(y);
-	
+		
 	if (not UDMF_mode) 
 	{
+		raw_vertex_t vert;
+
+		vert.x = LE_S16(x);
+		vert.y = LE_S16(y);
 		vertex_lump->Append(&vert, sizeof(vert));
 	}
 	else
@@ -376,20 +375,19 @@ void DM_AddSector(int f_h, const char * f_tex,
 		int c_h, const char * c_tex,
 		int light, int special, int tag)
 {
-	raw_sector_t sec;
-
-	sec.floor_h = LE_S16(f_h);
-	sec.ceil_h  = LE_S16(c_h);
-
-	strncpy(sec.floor_tex, f_tex, 8);
-	strncpy(sec.ceil_tex,  c_tex, 8);
-
-	sec.light   = LE_U16(light);
-	sec.special = LE_U16(special);
-	sec.tag     = LE_S16(tag);
-
 	if (not UDMF_mode)
 	{
+		raw_sector_t sec;
+
+		sec.floor_h = LE_S16(f_h);
+		sec.ceil_h  = LE_S16(c_h);
+
+		strncpy(sec.floor_tex, f_tex, 8);
+		strncpy(sec.ceil_tex,  c_tex, 8);
+
+		sec.light   = LE_U16(light);
+		sec.special = LE_U16(special);
+		sec.tag     = LE_S16(tag);
 		sector_lump->Append(&sec, sizeof(sec));
 	}
 	else
@@ -412,20 +410,19 @@ void DM_AddSidedef(int sector, const char *l_tex,
 		const char *m_tex, const char *u_tex,
 		int x_offset, int y_offset)
 {
-	raw_sidedef_t side;
-
-	side.sector = LE_S16(sector);
-
-	strncpy(side.lower_tex, l_tex, 8);
-	strncpy(side.mid_tex,   m_tex, 8);
-	strncpy(side.upper_tex, u_tex, 8);
-
-	side.x_offset = LE_S16(x_offset);
-	side.y_offset = LE_S16(y_offset);
-	
 	if (not UDMF_mode)
 	{
-	sidedef_lump->Append(&side, sizeof(side));
+		raw_sidedef_t side;
+
+		side.sector = LE_S16(sector);
+
+		strncpy(side.lower_tex, l_tex, 8);
+		strncpy(side.mid_tex,   m_tex, 8);
+		strncpy(side.upper_tex, u_tex, 8);
+
+		side.x_offset = LE_S16(x_offset);
+		side.y_offset = LE_S16(y_offset);
+		sidedef_lump->Append(&side, sizeof(side));
 	}
 	else
 	{
@@ -448,20 +445,19 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 {
 	if (dm_sub_format != SUBFMT_Hexen)
 	{
-		raw_linedef_t line;
-
-		line.start = LE_U16(vert1);
-		line.end   = LE_U16(vert2);
-
-		line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
-
-		line.type  = LE_U16(type);
-		line.flags = LE_U16(flags);
-		line.tag   = LE_U16(tag);
-
 		if (not UDMF_mode) 
 		{
+			raw_linedef_t line;
+
+			line.start = LE_U16(vert1);
+			line.end   = LE_U16(vert2);
+
+			line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
+			line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+
+			line.type  = LE_U16(type);
+			line.flags = LE_U16(flags);
+			line.tag   = LE_U16(tag);
 			linedef_lump->Append(&line, sizeof(line));
 		} 
 		else 
@@ -473,7 +469,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? 0xFFFF : side2);
 			textmap_lump->Printf("\targ0 = %d;\n", tag);
 			textmap_lump->Printf("\tspecial = %d;\n", type);
-			std::bitset<16> udmf_flags(line.flags);
+			std::bitset<16> udmf_flags(flags);
 			if (udmf_flags.test(0))
 				textmap_lump->Printf("\tblocking = true;\n");
 			if (udmf_flags.test(1))
@@ -532,19 +528,18 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 	}
 
 	if (dm_sub_format != SUBFMT_Hexen)
-	{
-		raw_thing_t thing;
-
-		thing.x = LE_S16(x);
-		thing.y = LE_S16(y);
-
-		thing.type    = LE_U16(type);
-		thing.angle   = LE_S16(angle);
-		thing.options = LE_U16(options);
-		
+	{	
 		if (not UDMF_mode)
 		{
-		thing_lump->Append(&thing, sizeof(thing));
+			raw_thing_t thing;
+
+			thing.x = LE_S16(x);
+			thing.y = LE_S16(y);
+
+			thing.type    = LE_U16(type);
+			thing.angle   = LE_S16(angle);
+			thing.options = LE_U16(options);
+			thing_lump->Append(&thing, sizeof(thing));
 		}
 		else
 		{		
@@ -553,7 +548,7 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 			textmap_lump->Printf("\ty = %f;\n", (double)y);
 			textmap_lump->Printf("\ttype = %d;\n", type);
 			textmap_lump->Printf("\tangle = %d;\n", angle);
-			std::bitset<16> udmf_flags(thing.options);
+			std::bitset<16> udmf_flags(options);
 			if (udmf_flags.test(0))
 			{
 				textmap_lump->Printf("\tskill1 = true;\n");
@@ -1021,6 +1016,14 @@ bool doom_game_interface_c::Finish(bool build_ok)
 
 void doom_game_interface_c::BeginLevel()
 {
+	if (UDMF_mode)
+	{
+		udmf_vertexes = 0;
+		udmf_sectors = 0;
+		udmf_linedefs = 0;
+		udmf_things = 0;
+		udmf_sidedefs = 0;
+	}
 	DM_BeginLevel();
 }
 
