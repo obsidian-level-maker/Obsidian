@@ -458,6 +458,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 
 		line.type  = LE_U16(type);
 		line.flags = LE_U16(flags);
+		line.tag   = LE_U16(tag);
 
 		if (not UDMF_mode) 
 		{
@@ -691,13 +692,11 @@ int DM_NumThings()
 	}
 }
 
-
 //----------------------------------------------------------------------------
-//  GLBSP NODE BUILDING
+//  glBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
 #include "glbsp.h"
-
 
 static nodebuildinfo_t nb_info;
 static volatile nodebuildcomms_t nb_comms;
@@ -840,7 +839,6 @@ static const nodebuildfuncs_t edge_build_funcs =
 	GB_DisplayClose
 };
 
-
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
@@ -867,10 +865,10 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 			// check info failure (unlikely to happen)
 			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
 			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-      
-		    Main_ProgStatus(_("glBSP Error"));
-		    return false;
-	    }
+
+			Main_ProgStatus(_("glBSP Error"));
+			return false;
+		}
 
 		ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
 
@@ -890,9 +888,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 			Main_ProgStatus(_("glBSP Error"));
 			return false;
 		}
-		
-			return true;
-			
+		return true;	
 	} 
 	else
 	{
