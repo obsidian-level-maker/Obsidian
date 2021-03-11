@@ -2874,6 +2874,26 @@ GROW_COLLONADE_VAULT_NEW_AREA =
   }
 },
 
+GROW_COLLONADE_VAULT_NEW_AREA_CROSS =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xxx......xxx","xxxA1111Axxx",
+    "xxx......xxx","xxxA#11#Axxx",
+    "............","AAAA1111AAAA",
+    "............","AA#A#11#A#AA",
+    "............","AAAA1111AAAA",
+    "............","AA#A#11#A#AA",
+    "............","AAAA1111AAAA",
+    "xxx......xxx","xxxA#11#Axxx",
+    "xxx......xxx","xxxA1111Axxx",
+    "xxxxx11xxxxx","xxxxx11xxxxx",
+  }
+},
+
 GROW_COLLONADE_VAULT_THICK_PILLARS_NEW_AREA =
 {
   prob = 25,
@@ -4296,6 +4316,30 @@ GROW_CAGE_SIDEWAYS_BOTH_SIDES =
   },
 },
 
+GROW_CAGE_SPIRAL =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x.....","xCCCC%",
+    "1.....","1111%C",
+    "1.....","11111C",
+    "xx....","xx#vvC",
+    "......","AAAAAC",
+    "......","AAAA/C",
+    "x.....","xCCCC/",
+  },
+
+  diagonals =
+  {
+        "C.",
+    "1C",
+    "AC",
+        "C.",
+  },
+},
 
 GROW_CAGE_ROUND_RAFTERS_ONE_SIDE =
 {
@@ -4620,13 +4664,12 @@ GROW_DIAGONAL_SIDE_BLOB_ALT =
 
   structure =
   {
-    "x..xxx","x11xxx",
     "...xxx","111xxx",
     "....xx","11/%xx",
     "x....x","x/AA%x",
     "x.....","x%AA/1",
     "xx....","xx%/11",
-    "xxx11x","xxx11x",
+    "xxx111","xxx.11",
   },
 
   diagonals =
