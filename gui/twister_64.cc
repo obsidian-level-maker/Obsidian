@@ -14,7 +14,7 @@ as possible in order to minimize changes in other sections of code
 #include <random>
 #include <ctime>
 
-std::mt19937_64 twister;
+std::independent_bits_engine<std::mt19937_64, 63, uint_fast64_t> twister;
 
 void twister_Init() {
     twister.seed(std::time(nullptr));
@@ -29,5 +29,5 @@ uint_fast64_t twister_UInt() {
 }
 
 double twister_Double() {
-    return ldexp(twister(), -64);
+    return ldexp(twister(), -63);
 }
