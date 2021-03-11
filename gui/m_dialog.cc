@@ -337,16 +337,16 @@ void DLG_EditSeed(void)
                 throw std::runtime_error("String contains non-digits. Will process as string\n");
             }
         }
-        next_rand_seed = std::stoul(word);
+        next_rand_seed = std::stoll(word);
         return;
     } catch (std::invalid_argument &e) {
         std::cout << "Invalid argument. Will process as string.\n";
     } catch (std::out_of_range &e) {
-        std::cout << "Resulting number would be out of range for a 32-bit unsigned integer. Will process as string.\n";
+        std::cout << "Resulting number would be out of range for a 32-bit signed integer. Will process as string.\n";
     } catch (std::exception &e) {
         std::cout << e.what();
     }
-    uint_fast32_t split_limit = (UINT_FAST32_MAX / 127);
+    uint_fast32_t split_limit = (INT_FAST32_MAX / 127);
     next_rand_seed = split_limit;
     for (long unsigned int i = 0 ; i < word.size() ; i++) {
         char character = word.at(i);
