@@ -2835,7 +2835,7 @@ function Level_make_level(LEV)
 
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
-  LEVEL.seed = (OB_CONFIG.seed * 36) + index - 1
+  LEVEL.seed = (OB_CONFIG.seed) + index - 1
   gui.printf("Level seed: " .. LEVEL.seed .. "\n")
   LEVEL.ids  = {}
 
