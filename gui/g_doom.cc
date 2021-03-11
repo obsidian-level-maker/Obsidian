@@ -458,6 +458,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 
 		line.type  = LE_U16(type);
 		line.flags = LE_U16(flags);
+		line.tag   = LE_U16(tag);
 
 		if (not UDMF_mode) 
 		{
