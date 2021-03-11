@@ -1183,7 +1183,7 @@ static doom_vertex_c * DM_MakeVertex(int x, int y)
 	doom_vertex_c * V = new doom_vertex_c(x, y);
 
 	dm_vertex_map[combo] = dm_vertices.size();
-
+	
 	dm_vertices.push_back(V);
 
 	return V;
