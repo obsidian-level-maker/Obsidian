@@ -2174,12 +2174,12 @@ function Fab_find_matches(reqs, match_state)
       return (def.size or 0) <= (reqs.size or 0)
     end
 
-    -- prefab definition defaults to 1,
-    local sw = def.seed_w or 1,
-    local sh = def.seed_h or 1,
+    -- prefab definition defaults to 1
+    local sw = int(def.seed_w or 1)
+    local sh = int(def.seed_h or 1)
 
-    local req_w = reqs.seed_w or 1,
-    local req_h = reqs.seed_h or 1,
+    local req_w = int(reqs.seed_w or 1)
+    local req_h = int(reqs.seed_h or 1)
 
     -- "diagonal" prefabs need an exact same square
     if def.where == "diagonal" then
