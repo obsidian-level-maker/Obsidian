@@ -567,10 +567,10 @@ function Seed_init()
   -- Centre the map : needed for Quake, Hexen2 (etc).
   -- This formula ensures that 'coord 0' is still a seed boundary,
   -- which is VITAL for the Quake visibility code.
-  if PARAM.centre_map then
-    BASE_X = 0 - int(SEED_W / 2) * SEED_SIZE
-    BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
-  end
+--  if PARAM.centre_map then
+    BASE_X = 32 - int(SEED_W / 2) * SEED_SIZE
+    BASE_Y = 32 - int(SEED_H / 2) * SEED_SIZE
+--  end
 
   for sx = 1, SEED_W do
   for sy = 1, SEED_H do
