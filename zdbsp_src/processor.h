@@ -11,7 +11,7 @@
 #include "tarray.h"
 #include "nodebuild.h"
 #include "blockmapbuilder.h"
-#include <zlib.h>
+#include "zlib/zlib.h"
 
 class ZLibOut
 {
