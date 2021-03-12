@@ -463,6 +463,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 		else 
 		{
 			textmap_lump->Printf("\nlinedef\n{\n");
+			textmap_lump->Printf("\tid = %d;\n", tag);
 			textmap_lump->Printf("\tv1 = %d;\n", vert1);
 			textmap_lump->Printf("\tv2 = %d;\n", vert2);
 			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? 0xFFFF : side1);
