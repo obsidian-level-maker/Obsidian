@@ -466,8 +466,8 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			textmap_lump->Printf("\tid = %d;\n", tag);
 			textmap_lump->Printf("\tv1 = %d;\n", vert1);
 			textmap_lump->Printf("\tv2 = %d;\n", vert2);
-			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? 0xFFFF : side1);
-			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? 0xFFFF : side2);
+			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? -1 : side1);
+			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? -1 : side2);
 			textmap_lump->Printf("\targ0 = %d;\n", tag);
 			textmap_lump->Printf("\tspecial = %d;\n", type);
 			std::bitset<16> udmf_flags(flags);
@@ -693,6 +693,7 @@ int DM_NumThings()
 //----------------------------------------------------------------------------
 
 #include "glbsp.h"
+#include "zdmain.h"
 
 static nodebuildinfo_t nb_info;
 static volatile nodebuildcomms_t nb_comms;
@@ -889,6 +890,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	else
 	{
 		LogPrintf("ZDoom/GZDoom Selected -- Skipping Nodes...\n");
+		zdmain(filename);
 		FileRename(filename, out_name);
 		return true;
 	}
