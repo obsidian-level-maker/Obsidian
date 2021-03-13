@@ -281,7 +281,14 @@ void DM_BeginLevel()
 	else
 	{
 		textmap_lump = new qLump_c();
-		textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
+		if (dm_sub_format == SUBFMT_Hexen)
+		{
+			textmap_lump->Printf("namespace = \"Hexen\";\n\n");
+		}
+		else
+		{
+			textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");	
+		}
 		endmap_lump = new qLump_c();
 	}
 }
@@ -491,32 +498,97 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 				textmap_lump->Printf("\tdontdraw = true;\n");
 			if (udmf_flags.test(8))
 				textmap_lump->Printf("\tmapped = true;\n");
+			if (udmf_flags.test(9))
+				textmap_lump->Printf("\tpassuse = true;\n");
 			textmap_lump->Printf("}\n");
 			udmf_linedefs += 1;
 		}
 	}
 	else  // Hexen format
 	{
-		raw_hexen_linedef_t line;
+		if (not UDMF_mode)
+		{
+			raw_hexen_linedef_t line;
 
-		// clear unused fields (esp. arguments)
-		memset(&line, 0, sizeof(line));
+			// clear unused fields (esp. arguments)
+			memset(&line, 0, sizeof(line));
 
-		line.start = LE_U16(vert1);
-		line.end   = LE_U16(vert2);
+			line.start = LE_U16(vert1);
+			line.end   = LE_U16(vert2);
 
-		line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+			line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
+			line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
-		line.special = type; // 8 bits
-		line.flags = LE_U16(flags);
+			line.special = type; // 8 bits
+			line.flags = LE_U16(flags);
 
-		// tag value is UNUSED
+			// tag value is UNUSED
 
-		if (args)
-			memcpy(line.args, args, 5);
+			if (args)
+				memcpy(line.args, args, 5);
 
-		linedef_lump->Append(&line, sizeof(line));
+			linedef_lump->Append(&line, sizeof(line));
+		}
+		else
+		{
+			textmap_lump->Printf("\nlinedef\n{\n");
+			if (type == 121)
+			{
+				textmap_lump->Printf("\tid = %d;\n", args[0]);
+			}
+			textmap_lump->Printf("\tv1 = %d;\n", vert1);
+			textmap_lump->Printf("\tv2 = %d;\n", vert2);
+			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? -1 : side1);
+			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? -1 : side2);
+			if (type == 121)
+			{
+				textmap_lump->Printf("\tspecial = 0;\n");
+				textmap_lump->Printf("\targ0 = 0;\n");
+			}
+			else
+			{
+				textmap_lump->Printf("\tspecial = %d;\n", type);
+				if (args)
+				{
+					textmap_lump->Printf("\targ0 = %d;\n", args[0]);
+				}
+				else
+				{
+					textmap_lump->Printf("\targ0 = 0;\n");					
+				}	
+			}
+			if (args)
+			{
+				textmap_lump->Printf("\targ1 = %d;\n", args[1]);
+				textmap_lump->Printf("\targ2 = %d;\n", args[2]);
+				textmap_lump->Printf("\targ3 = %d;\n", args[3]);
+				textmap_lump->Printf("\targ4 = %d;\n", args[4]);
+			}
+			std::bitset<16> udmf_flags(flags);
+			if (udmf_flags.test(0))
+				textmap_lump->Printf("\tblocking = true;\n");
+			if (udmf_flags.test(1))
+				textmap_lump->Printf("\tblockmonsters = true;\n");
+			if (udmf_flags.test(2))
+				textmap_lump->Printf("\ttwosided = true;\n");
+			if (udmf_flags.test(3))
+				textmap_lump->Printf("\tdontpegtop = true;\n");
+			if (udmf_flags.test(4))
+				textmap_lump->Printf("\tdontpegbottom = true;\n");
+			if (udmf_flags.test(5))
+				textmap_lump->Printf("\tsecret = true;\n");
+			if (udmf_flags.test(6))
+				textmap_lump->Printf("\tblocksound = true;\n");
+			if (udmf_flags.test(7))
+				textmap_lump->Printf("\tdontdraw = true;\n");
+			if (udmf_flags.test(8))
+				textmap_lump->Printf("\tmapped = true;\n");
+			if (udmf_flags.test(9))
+				textmap_lump->Printf("\trepeatspecial = true;\n");
+			textmap_lump->Printf("}\n");
+//			LogPrintf("ACTIVATION: %d\n", ((flags & 0x1C00) >> 10)); To determine SPAC activation if necessary. No use for now.
+			udmf_linedefs += 1;
+		}
 	}
 }
 
@@ -600,26 +672,92 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 	}
 	else  // Hexen format
 	{
-		raw_hexen_thing_t thing;
+		if (not UDMF_mode)
+		{
+			raw_hexen_thing_t thing;
 
-		// clear unused fields (esp. arguments)
-		memset(&thing, 0, sizeof(thing));
+			// clear unused fields (esp. arguments)
+			memset(&thing, 0, sizeof(thing));
 
-		thing.x = LE_S16(x);
-		thing.y = LE_S16(y);
+			thing.x = LE_S16(x);
+			thing.y = LE_S16(y);
 
-		thing.height  = LE_S16(h);
-		thing.type    = LE_U16(type);
-		thing.angle   = LE_S16(angle);
-		thing.options = LE_U16(options);
+			thing.height  = LE_S16(h);
+			thing.type    = LE_U16(type);
+			thing.angle   = LE_S16(angle);
+			thing.options = LE_U16(options);
 
-		thing.tid     = LE_S16(tid);
-		thing.special = special;
+			thing.tid     = LE_S16(tid);
+			thing.special = special;
 
-		if (args)
-			memcpy(thing.args, args, 5);
+			if (args)
+				memcpy(thing.args, args, 5);
 
-		thing_lump->Append(&thing, sizeof(thing));
+			thing_lump->Append(&thing, sizeof(thing));
+		}
+		else
+		{
+			textmap_lump->Printf("\nthing\n{\n");
+			textmap_lump->Printf("\tid = %d;\n", tid);
+			textmap_lump->Printf("\tx = %f;\n", (double)x);
+			textmap_lump->Printf("\ty = %f;\n", (double)y);
+			textmap_lump->Printf("\ttype = %d;\n", type);
+			textmap_lump->Printf("\tangle = %d;\n", angle);
+			std::bitset<16> udmf_flags(options);
+			if (udmf_flags.test(0))
+			{
+				textmap_lump->Printf("\tskill1 = true;\n");
+				textmap_lump->Printf("\tskill2 = true;\n");
+			}
+			if (udmf_flags.test(1))
+				textmap_lump->Printf("\tskill3 = true;\n");
+			if (udmf_flags.test(2))
+			{
+				textmap_lump->Printf("\tskill4 = true;\n");
+				textmap_lump->Printf("\tskill5 = true;\n");
+			}
+			if (udmf_flags.test(3))
+				textmap_lump->Printf("\tambush = true;\n");
+			if (udmf_flags.test(4))
+			{
+				textmap_lump->Printf("\tdormant = true;\n");
+			}
+			if (udmf_flags.test(5)) 
+			{
+				textmap_lump->Printf("\tclass1 = true;\n");
+			}
+			if (udmf_flags.test(6)) 
+			{
+				textmap_lump->Printf("\tclass2 = true;\n");
+			}
+			if (udmf_flags.test(7))
+			{
+				textmap_lump->Printf("\tclass3 = true;\n");
+			}
+			if (udmf_flags.test(8))
+			{
+				textmap_lump->Printf("\tsingle = true;\n");
+			}
+			if (udmf_flags.test(9))
+			{
+				textmap_lump->Printf("\tcoop = true;\n");
+			}
+			if (udmf_flags.test(10))
+			{
+				textmap_lump->Printf("\tdm = true;\n");
+			}
+			textmap_lump->Printf("\tspecial = %d;\n", special);
+			if (args)
+			{
+				textmap_lump->Printf("\targ0 = %d;\n", args[0]);
+				textmap_lump->Printf("\targ1 = %d;\n", args[1]);
+				textmap_lump->Printf("\targ2 = %d;\n", args[2]);
+				textmap_lump->Printf("\targ3 = %d;\n", args[3]);
+				textmap_lump->Printf("\targ4 = %d;\n", args[4]);
+			}
+			textmap_lump->Printf("}\n");
+			udmf_things += 1;
+		}
 	}
 }
 
