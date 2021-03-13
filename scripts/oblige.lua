@@ -1118,7 +1118,7 @@ function ob_default_filename()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  gui.rand_seed(OB_CONFIG.seed + 0)
+  gui.rand_seed(OB_CONFIG.seed)
 
   Naming_init()
 
@@ -1366,7 +1366,7 @@ function ob_build_setup()
 
   Fab_load_all_definitions()
 
-  gui.rand_seed(OB_CONFIG.seed + 0)
+  gui.rand_seed(OB_CONFIG.seed)
 
   table.name_up(GAME.THEMES)
   table.name_up(GAME.ROOM_THEMES)
