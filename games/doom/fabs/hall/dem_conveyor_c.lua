@@ -24,36 +24,32 @@ PREFABS.Hallway_conveyor_c1 =
  thing_2035 =
   {
     barrel = 60,
-    nothing = 40,
+    nothing = 40
   },
 
-  sound = "Conveyor_Mech",
+  sound = "Conveyor_Mech"
 }
 
 PREFABS.Hallway_conveyor_c2 =
 {
   template  = "Hallway_conveyor_c1",
-  map    = "MAP02",
-
+  map    = "MAP02"
 }
 
 PREFABS.Hallway_conveyor_c3 =
 {
   template  = "Hallway_conveyor_c1",
-  map    = "MAP03",
-
+  map    = "MAP03"
 }
 
 PREFABS.Hallway_conveyor_c4 =
 {
   template  = "Hallway_conveyor_c1",
   map    = "MAP04",
-
 }
 
 PREFABS.Hallway_conveyor_c5 =
 {
   template  = "Hallway_conveyor_c1",
-  map    = "MAP05",
-
+  map    = "MAP05"
 }

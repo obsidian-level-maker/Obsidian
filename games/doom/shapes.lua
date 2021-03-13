@@ -700,8 +700,6 @@ GROW_DIAG_WING =
   prob_skew = 2,
   skip_prob = 5, --35,
 
-  env = "building",
-
   structure =
   {
     "x...", "x#AA",
@@ -6068,8 +6066,6 @@ GROW_ELEVATED_PILLAR_ROUND =
   prob = 35,
   skip_prob = 40,
 
-  env = "!cave",
-
   structure =
   {
     ".........","111111111",
@@ -6093,8 +6089,6 @@ GROW_ELEVATED_PILLAR_U =
   prob = 20,
   skip_prob = 70,
 
-  env = "!cave",
-
   structure =
   {
     "1....","1>AAA",
@@ -6109,8 +6103,6 @@ GROW_ELEVATED_PILLAR_U_FULL =
 {
   prob = 20,
   skip_prob = 70,
-
-  env = "!cave",
 
   structure =
   {
@@ -6128,8 +6120,6 @@ GROW_WIDE_SPACE_DEPRESSION =
   skip_prob = 70,
 
   aversion = 5,
-
-  env = "!cave",
 
   structure =
   {
@@ -6149,8 +6139,6 @@ GROW_WIDE_SPACE_CATWALK_PLAIN =
   prob = 50,
   skip_prob = 35,
 
-  env = "!cave",
-
   structure =
   {
     "......","11AA11",
@@ -6165,8 +6153,6 @@ GROW_WIDE_SPACE_CATWALK_TALL_PLAIN =
 {
   prob = 50,
   skip_prob = 35,
-
-  env = "!cave",
 
   structure =
   {

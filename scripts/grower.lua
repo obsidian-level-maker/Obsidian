@@ -904,12 +904,23 @@ function Grower_calc_rule_probs()
     gui.printf("This level is not absurd...\n\n")
   end
 
+  local function Grower_reset_absurdities()
+    for _,rule in pairs(GAME.SHAPE_GRAMMAR) do
+      if not rule.initial_env then goto continue end
+
+      if rule.initial_env == "none" then rule.env = nil 
+      else rule.env = rule.initial_env end
+
+      ::continue::
+    end
+  end
+
   local function Grower_absurdify()
-    local rules_to_absurdify = rand.pick({1,2,2,2,3,3,3,4,4,5,6,7,8})
+    local rules_to_absurdify = rand.pick({2,2,2,3,3,3,4,4,5,6,7,8})
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
     local grammarset = {}
-    for name,rule in pairs(GAME.SHAPE_GRAMMAR) do
+    for _,rule in pairs(GAME.SHAPE_GRAMMAR) do
       table.insert(grammarset, rule.name)
     end
 
@@ -938,6 +949,19 @@ function Grower_calc_rule_probs()
           GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
         end
 
+        -- diversify environments
+        local new_env
+        if rand.odds(50) then
+          if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
+            new_env = "outdoor"
+          else
+            new_env = "building" 
+          end
+        end
+
+        GAME.SHAPE_GRAMMAR[absurded_rule].initial_env = GAME.SHAPE_GRAMMAR[absurded_rule].env
+        GAME.SHAPE_GRAMMAR[absurded_rule].env = new_env
+
         GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd = true
 
         if  PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
@@ -950,6 +974,7 @@ function Grower_calc_rule_probs()
     end
   end
 
+  Grower_reset_absurdities()
   if LEVEL.is_absurd then
     Grower_absurdify()
     gui.printf("\n\n")

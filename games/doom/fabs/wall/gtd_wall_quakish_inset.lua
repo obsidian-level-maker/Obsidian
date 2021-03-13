@@ -15,25 +15,37 @@ PREFABS.Wall_quakish_insets_1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  z_fit  = "top",
+  z_fit  = "top"
 }
 
 PREFABS.Wall_quakish_insets_diagonal =
 {
-  file   = "wall/gtd_wall_quakish_inset.wad",
+  template = "Wall_quakish_insets_1",
   map    = "MAP02",
 
-  prob   = 50,
-  env = "building",
+  where  = "diagonal"
+}
 
-  group = "gtd_wall_quakish_insets",
+--
 
-  where  = "diagonal",
-  deep   = 16,
-  height = 128,
+PREFABS.Wall_quakish_insets_2 =
+{
+  template = "Wall_quakish_insets_1",
+  map = "MAP03",
 
-  bound_z1 = 0,
-  bound_z2 = 128,
+  engine = "zdoom",
 
-  z_fit  = "top",
+  group = "gtd_wall_quakish_insets_2"
+}
+
+PREFABS.Wall_quakish_insets_2_limit =
+{
+  template = "Wall_quakish_insets_1",
+  map = "MAP03",
+
+  engine = "!zdoom",
+
+  group = "gtd_wall_quakish_insets_2",
+
+  line_344 = 0
 }
