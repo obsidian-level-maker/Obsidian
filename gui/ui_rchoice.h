@@ -79,9 +79,12 @@ public:
 	// change the currently shown value via the new 'id'.
 	// If does not exist, returns false and nothing was changed.
 	bool ChangeTo(const char *id);
+	
+	const char *GetLabel() const;
+	
+	choice_data_c * FindID(const char *id) const;
 
 private:
-	choice_data_c * FindID(const char *id) const;
 	choice_data_c * FindMapped() const;
 
 	// call this to update the available choices to reflect their
@@ -91,7 +94,7 @@ private:
 	// first entry.
 	void Recreate();
 
-	const char *GetLabel() const;  // ????
+//	const char *GetLabel() const;  // ????
 
 	void GotoPrevious();
 	void GotoNext();
