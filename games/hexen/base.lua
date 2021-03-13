@@ -38,7 +38,7 @@ gui.import("resources")
 
 ------------------------------------------------------------
 
-UNFINISHED["hexen"] =
+OB_GAMES["hexen"] =
 {
   label = _("Hexen"),
   priority = 34,
