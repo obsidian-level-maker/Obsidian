@@ -62,53 +62,6 @@ OB_ENGINES["zdoom"] =
   }
 }
 
-
-----------------------------------------------------------------
-
-ZDOOM_UDMF = {}
-
-
-ZDOOM_UDMF.ENTITIES =
-{
-  -- monsters --
-
---  mbf_dog = { id=888, r=12,h=28 },
-
-  -- scenery --
-
---  fountain_red    = { id=9027, r=16,h=16, pass=true },
---  fountain_green  = { id=9028, r=16,h=16, pass=true },
---  fountain_blue   = { id=9029, r=16,h=16, pass=true },
---  fountain_yellow = { id=9030, r=16,h=16, pass=true },
---  fountain_purple = { id=9031, r=16,h=16, pass=true },
---  fountain_black  = { id=9032, r=16,h=16, pass=true },
---  fountain_white  = { id=9033, r=16,h=16, pass=true }
-}
-
-
-ZDOOM_UDMF.PARAMETERS =
-{
-  -- TODO
-}
-
-
-OB_ENGINES["zdoom_udmf"] =
-{
-  label = _("ZDoom-UDMF"),
-
-  extends = "zdoom",
-
-  game =
-  {
-    chex3=1, doom1=1, doom2=1, heretic=1, hexen=1, strife=1,
-  },
-
-  tables =
-  {
-    ZDOOM_UDMF
-  }
-}
-
 ----------------------------------------------------------------
 
 GZDOOM = { }
@@ -153,53 +106,6 @@ OB_ENGINES["gzdoom"] =
   hooks =
   {
     setup = GZDOOM.setup
-  }
-}
-
-----------------------------------------------------------------
-
-GZDOOM_UDMF = { }
-
-GZDOOM_UDMF.PARAMETERS =
-{
---  bridges = true,
---  extra_floors = true,
---  liquid_floors = true,
---  tga_images = true
-}
-
-
-function GZDOOM_UDMF.setup()
-  -- extrafloors : use Legacy types
---  gui.property("ef_solid_type",  281)
---  gui.property("ef_liquid_type", 301)
-
-  -- currently using Fragglescript for things on 3D floors
-  -- [later we will use the Hexen map format]
---  gui.property("ef_thing_mode", 1)
-end
-
-
-OB_ENGINES["gzdoom_udmf"] =
-{
-  label = _("GZDoom-UDMF"),
-  priority = -1,  -- keep at bottom with ZDoom
-
-  extends = "gzdoom",
-
-  game =
-  {
-    chex3=1, doom1=1, doom2=1, heretic=1, hexen=1, strife=1
-  },
-
-  tables =
-  {
-    GZDOOM_UDMF
-  },
-
-  hooks =
-  {
---    setup = GZDOOM_UDMF.setup
   }
 }
 

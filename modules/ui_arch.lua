@@ -112,6 +112,12 @@ UI_ARCH.LEVEL_PERCENTAGE_CHOICES =
   "none", _("NONE"),
 }
 
+UI_ARCH.MAP_FORMAT_CHOICES = 
+{
+  "binary",  _("Binary"),
+  "udmf", _("UDMF"),
+}
+
 OB_MODULES["ui_arch"] =
 {
   label = _("Architecture"),
@@ -125,9 +131,23 @@ OB_MODULES["ui_arch"] =
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
       "at sizes of Huge and above, Autodetail is required on. (on by default if you do not have " ..
       "Prefab Control module on. The stability of maps with sizes Colossal and beyond is not predictable.",
-      gap = 1,
     },
-
+    {
+      name = "build_nodes",
+      label = _("Build Nodes"),
+      choices = UI_ARCH.YES_NO,
+      default = "yes",
+      tooltip = "For ZDoom based engines, choose to either build nodes or allow the engine itself to do so " ..
+      "upon loading the map. No effect on other engines.",
+    },
+    {
+      name = "map_format",
+      label = _("Map Format"),
+      choices = UI_ARCH.MAP_FORMAT_CHOICES,
+      default = "binary",
+      tooltip = "For ZDoom based engines, choose between UDMF and binary map format. No effect on other engines.",
+      gap = 1
+    },
     {
       name = "streets_mode",
       label = _("Streets Mode"),

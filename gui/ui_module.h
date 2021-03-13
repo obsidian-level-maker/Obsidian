@@ -57,9 +57,10 @@ public:
 	int CalcHeight() const;
 
 	void update_Enable();
+	
+	UI_RChoice *FindOpt(const char *opt); // const;
 
 protected:
-	UI_RChoice *FindOpt(const char *opt); // const;
 
 private:
 	static void callback_OptChange(Fl_Widget *w, void *data);
@@ -105,9 +106,10 @@ public:
 	bool SetOption(const char *module, const char *option, const char *value);
 
 	void Locked(bool value);
+	
+	UI_Module *FindID(const char *id) const;
 
 private:
-	UI_Module *FindID(const char *id) const;
 
 	void PositionAll(UI_Module *focus = NULL);
 

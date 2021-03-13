@@ -34,7 +34,7 @@ ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/mingw/libzlibstatic.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
-         -Ilua_src -Iglbsp_src -Iajpoly_src -Izdbsp_src -Iphysfs_src \
+         -Ilua_src -Iajpoly_src -Izdbsp_src -Iphysfs_src \
 	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
 
 LDFLAGS=-static-libgcc -static-libstdc++
@@ -154,25 +154,6 @@ $(OBJ_DIR)/lua/%.o: lua_src/%.c
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
 
-#----- glBSP Objects ------------------------------------------------
-
-GLBSP_OBJS= \
-	$(OBJ_DIR)/glbsp/analyze.o  \
-	$(OBJ_DIR)/glbsp/blockmap.o \
-	$(OBJ_DIR)/glbsp/glbsp.o    \
-	$(OBJ_DIR)/glbsp/level.o    \
-	$(OBJ_DIR)/glbsp/node.o     \
-	$(OBJ_DIR)/glbsp/reject.o   \
-	$(OBJ_DIR)/glbsp/seg.o      \
-	$(OBJ_DIR)/glbsp/system.o   \
-	$(OBJ_DIR)/glbsp/util.o     \
-	$(OBJ_DIR)/glbsp/wad.o
-
-GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline -Iphysfs_src $(ZLIB_FLAGS) 
-
-$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
-	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $<
-
 #----- ZDBSP Objects ------------------------------------------------
 
 ZDBSP_OBJS= \
@@ -241,13 +222,12 @@ all: $(PROGRAM)
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
-	rm -f $(OBJ_DIR)/glbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 	rm -f $(OBJ_DIR)/physfs/*.o
 	rm -f $(OBJ_DIR)/zdbsp/*.o
 	rm -f LANG_TEMPLATE.txt
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(ZDBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(ZDBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)

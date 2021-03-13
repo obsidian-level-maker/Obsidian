@@ -70,6 +70,8 @@ static qLump_c *endmap_lump;
 static int errors_seen;
 
 std::string current_engine;
+std::string map_format;
+std::string build_nodes;
 
 static bool UDMF_mode;
 
@@ -689,211 +691,45 @@ int DM_NumThings()
 }
 
 //----------------------------------------------------------------------------
-//  glBSP NODE BUILDING
+//  ZDBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
-#include "glbsp.h"
 #include "zdmain.h"
-
-static nodebuildinfo_t nb_info;
-static volatile nodebuildcomms_t nb_comms;
-
-static int display_mode = DIS_INVALID;
-static int progress_limit;
-
-static char message_buf[MSG_BUF_LEN];
-
-
-static const char *GetErrorString(glbsp_ret_e ret)
-{
-	switch (ret)
-	{
-		case GLBSP_E_OK:
-			return _("OK");
-
-		// the arguments were bad/inconsistent.
-		case GLBSP_E_BadArgs:
-			return _("Bad Arguments");
-
-		// the info was bad/inconsistent, but has been fixed
-		case GLBSP_E_BadInfoFixed:
-			return _("Bad Args (fixed)");
-
-		// file errors
-		case GLBSP_E_ReadError:  return _("Read Error");
-		case GLBSP_E_WriteError: return _("Write Error");
-
-		// building was cancelled
-		case GLBSP_E_Cancelled:
-			return _("Cancelled by User");
-
-		// an unknown error occurred (this is the catch-all value)
-		case GLBSP_E_Unknown:
-		default:
-			return _("Unknown Error");
-	}
-}
-
-static void GB_PrintMsg(const char *str, ...)
-{
-	va_list args;
-
-	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
-	va_end(args);
-
-	message_buf[MSG_BUF_LEN-1] = 0;
-
-	LogPrintf("GLBSP: %s", message_buf);
-}
-
-//
-// GB_FatalError
-//
-// Terminates the program reporting an error.
-//
-static void GB_FatalError(const char *str, ...)
-{
-	va_list args;
-
-	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
-	va_end(args);
-
-	message_buf[MSG_BUF_LEN-1] = 0;
-
-	Main_FatalError(_("glBSP Failure:\n%s"), message_buf);
-	/* NOT REACHED */
-}
-
-static void GB_Ticker(void)
-{
-	Main_Ticker();
-
-	if (main_action >= MAIN_CANCEL)
-	{
-		nb_comms.cancelled = TRUE;
-	}
-}
-
-static boolean_g GB_DisplayOpen(displaytype_e type)
-{
-	display_mode = type;
-	return TRUE;
-}
-
-static void GB_DisplaySetTitle(const char *str)
-{
-	/* does nothing */
-}
-
-static void GB_DisplaySetBarText(int barnum, const char *str)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 1)
-	{
-		/* IDEA: extract map name from 'str' */
-
-		if (batch_mode)
-			fprintf(stderr, "%s\n", str);
-	}
-}
-
-static void GB_DisplaySetBarLimit(int barnum, int limit)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
-	{
-		progress_limit = limit;
-
-		main_win->build_box->SetStatus(_("Building nodes"));
-		main_win->build_box->Prog_Nodes(0, limit);
-	}
-}
-
-static void GB_DisplaySetBar(int barnum, int count)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
-	{
-		main_win->build_box->Prog_Nodes(count, progress_limit);
-	}
-}
-
-static void GB_DisplayClose(void)
-{
-	/* does nothing */
-}
-
-static const nodebuildfuncs_t edge_build_funcs =
-{
-	GB_FatalError,
-	GB_PrintMsg,
-	GB_Ticker,
-
-	GB_DisplayOpen,
-	GB_DisplaySetTitle,
-	GB_DisplaySetBar,
-	GB_DisplaySetBarLimit,
-	GB_DisplaySetBarText,
-	GB_DisplayClose
-};
 
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
   
-	if (not UDMF_mode && current_engine != "zdoom" && current_engine != "gzdoom")
+  	// Node building and map format options are a moot point for non-ZDoom engines
+ 
+	if (current_engine != "zdoom" && current_engine != "gzdoom")
 	{
-		display_mode = DIS_INVALID;
-
-		memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
-		memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
-
-		nb_info.input_file  = GlbspStrDup(filename);
-		nb_info.output_file = GlbspStrDup(out_name);
-
-		nb_info.quiet = TRUE;
-		nb_info.pack_sides = FALSE;
-		nb_info.force_normal = TRUE;
-		nb_info.fast = TRUE;
-
-		glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
-
-		if (ret != GLBSP_E_OK)
+		if (zdmain(filename) != 0)
 		{
-			// check info failure (unlikely to happen)
-			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
-			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-			Main_ProgStatus(_("glBSP Error"));
+			Main_ProgStatus(_("ZDBSP Error!"));
 			return false;
 		}
-
-		ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
-
-		if (ret == GLBSP_E_Cancelled)
-		{
-			GB_PrintMsg("Building CANCELLED.\n\n");
-			Main_ProgStatus(_("Cancelled"));
-			return false;
-		}
-
-		if (ret != GLBSP_E_OK)
-		{
-			// build nodes failed
-			GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
-			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-			Main_ProgStatus(_("glBSP Error"));
-			return false;
-		}
+		FileRename(filename, out_name);
 		return true;	
 	} 
 	else
 	{
-		LogPrintf("ZDoom/GZDoom Selected -- Skipping Nodes...\n");
-		zdmain(filename);
+		if (build_nodes == "no") 
+		{
+			LogPrintf("Skipping nodes per user selection...\n");
+			FileRename(filename, out_name);
+			return true;		
+		}
+		if (zdmain(filename) != 0)
+		{
+			Main_ProgStatus(_("ZDBSP Error!"));
+			return false;
+		}
 		FileRename(filename, out_name);
-		return true;
+		return true;	
 	}
+	// This shouldn't be reached, so return false if it is
+	return false;
 }
 
 
@@ -957,7 +793,9 @@ bool doom_game_interface_c::Start(const char *preset)
 		main_win->build_box->Prog_Init(20, N_("CSG"));
 		
 	current_engine = main_win->game_box->engine->GetID();
-	if (current_engine == "zdoom_udmf" || current_engine == "gzdoom_udmf") 
+	map_format = main_win->left_mods->FindID("ui_arch")->FindOpt("map_format")->GetID();
+	build_nodes = main_win->left_mods->FindID("ui_arch")->FindOpt("build_nodes")->GetID();
+	if ((current_engine == "zdoom" || current_engine == "gzdoom") && map_format == "udmf")
 	{
 		UDMF_mode = true;
 	}
