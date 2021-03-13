@@ -46,7 +46,7 @@ Updated PHYSFS to version 3.02.
 
 Updated deprecated PHYSFS function calls with their replacements.
 
-Replaced GLBSP with AJBSP.
+GLBSP updated to version 2.28 from the EDGE project.
 
 Added scrolling functionality to Addons List window.
 

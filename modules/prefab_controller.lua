@@ -71,6 +71,14 @@ PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS =
   "8", _("I LOVE IT")
 }
 
+PREFAB_CONTROL.FILTER_CATEGORIES =
+{
+  gamble = "pf_gamble",
+  crushers = "pf_crushers",
+  dexterity = "pf_dexterity",
+  mirror_maze = "pf_mirror_mazes"
+}
+
 function PREFAB_CONTROL.setup(self)
   for name,opt in pairs(self.options) do
     local value = self.options[name].value
@@ -79,42 +87,19 @@ function PREFAB_CONTROL.setup(self)
 end
 
 function PREFAB_CONTROL.fine_tune_filters()
-  for name,fab in pairs(PREFABS) do
-    if fab.filter == "gamble" then
-      fab.prob = fab.prob * tonumber(PARAM.pf_gamble)
-      fab.use_prob = fab.use_prob * tonumber(PARAM.pf_gamble)
+  for _,fab in pairs(PREFABS) do
 
-      if fab.skip_prob then
-        fab.skip_prob = math.clamp(0,fab.skip_prob / tonumber(PARAM.pf_gamble),100)
+    for filter,pname in pairs(PREFAB_CONTROL.FILTER_CATEGORIES) do
+      if fab.filter == filter then
+        fab.prob = fab.prob * tonumber(PARAM[pname])
+        fab.use_prob = fab.use_prob * tonumber(PARAM[pname])
+  
+        if fab.skip_prob then
+          fab.skip_prob = math.clamp(0,fab.skip_prob / tonumber(PARAM[pname]), 100)
+        end
       end
     end
 
-    if fab.filter == "crushers" then
-      fab.prob = fab.prob * tonumber(PARAM.pf_crushers)
-      fab.use_prob = fab.use_prob * tonumber(PARAM.pf_crushers)
-
-      if fab.skip_prob then
-        fab.skip_prob = math.clamp(0,fab.skip_prob / tonumber(PARAM.pf_crushers),100)
-      end
-    end
-
-    if fab.filter == "dexterity" then
-      fab.prob = fab.prob * tonumber(PARAM.pf_dexterity)
-      fab.use_prob = fab.use_prob * tonumber(PARAM.pf_dexterity)
-
-      if fab.skip_prob then
-        fab.skip_prob = math.clamp(0,fab.skip_prob / tonumber(PARAM.pf_dexterity),100)
-      end
-    end
-
-    if fab.filter == "mirror_maze" then
-      fab.prob = fab.prob * tonumber(PARAM.pf_mirror_mazes)
-      fab.use_prob = fab.use_prob * tonumber(PARAM.pf_mirror_mazes)
-
-      if fab.skip_prob then
-        fab.skip_prob = math.clamp(0,fab.skip_prob / tonumber(PARAM.pf_mirror_mazes),100)
-      end
-    end
   end
 end
 
