@@ -934,6 +934,7 @@ function Grower_calc_rule_probs()
       and not string.match(absurded_rule,"SIDEWALK")
       and not string.match(absurded_rule,"hall")
       and not string.match(absurded_rule,"HALL")
+      and not string.match(absurded_rule,"START")
       and GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
       and GAME.SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
 
