@@ -309,10 +309,7 @@ void DM_EndLevel(const char *level_name)
 	{
 		DM_WriteLump("TEXTMAP", textmap_lump);	
 	}
-	
-	if (dm_sub_format == SUBFMT_Hexen)
-		DM_WriteBehavior();
-	
+		
 	if (not UDMF_mode)
 	{
 		DM_WriteLump("THINGS",   thing_lump);
@@ -324,9 +321,13 @@ void DM_EndLevel(const char *level_name)
 		DM_WriteLump("SSECTORS", NULL, 0);
 		DM_WriteLump("NODES",    NULL, 0);
 		DM_WriteLump("SECTORS",  sector_lump);
+		if (dm_sub_format == SUBFMT_Hexen)
+			DM_WriteBehavior();
 	}
 	else
 	{	
+		if (dm_sub_format == SUBFMT_Hexen)
+			DM_WriteBehavior();
 		DM_WriteLump("ENDMAP",    NULL, 0);
 	}
 
@@ -516,8 +517,8 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			line.start = LE_U16(vert1);
 			line.end   = LE_U16(vert2);
 
-			line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-			line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+			line.sidedef1 = side1 < 0 ? 0xffff : LE_U16(side1);
+			line.sidedef2 = side2 < 0 ? 0xffff : LE_U16(side2);
 
 			line.special = type; // 8 bits
 			line.flags = LE_U16(flags);
@@ -701,6 +702,7 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 			textmap_lump->Printf("\tid = %d;\n", tid);
 			textmap_lump->Printf("\tx = %f;\n", (double)x);
 			textmap_lump->Printf("\ty = %f;\n", (double)y);
+			textmap_lump->Printf("\theight = %f;\n", (double)h);
 			textmap_lump->Printf("\ttype = %d;\n", type);
 			textmap_lump->Printf("\tangle = %d;\n", angle);
 			std::bitset<16> udmf_flags(options);
