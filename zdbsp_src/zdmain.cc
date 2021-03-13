@@ -52,7 +52,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <stdarg.h>
+#include <stdarg.h>
 
 #include "zdbsp.h"
 #include "zdwad.h"
@@ -82,7 +82,7 @@ const char		*OutName = "tmp.wad";
 bool			 BuildNodes = true;
 bool			 BuildGLNodes = false;
 bool			 ConformNodes = false;
-bool			 NoPrune = true;
+bool			 NoPrune = false;
 EBlockmapMode	 BlockmapMode = EBM_Rebuild;
 ERejectMode		 RejectMode = ERM_DontTouch;
 bool			 WriteComments = false;
@@ -93,8 +93,8 @@ bool			 CheckPolyobjs = true;
 bool			 ShowMap = false;
 bool			 ShowWarnings = true;
 bool			 NoTiming = false;
-bool			 CompressNodes = false;
-bool			 CompressGLNodes = false;
+bool			 CompressNodes = true;
+bool			 CompressGLNodes = true;
 bool			 ForceCompression = false;
 bool			 GLOnly = false;
 bool			 V5GLNodes = false;
