@@ -908,7 +908,7 @@ function Grower_calc_rule_probs()
     for _,rule in pairs(GAME.SHAPE_GRAMMAR) do
       if not rule.initial_env then goto continue end
 
-      if rule.initial_env == "none" then rule.env = nil 
+      if rule.initial_env == "none" then rule.env = nil
       else rule.env = rule.initial_env end
 
       ::continue::
@@ -934,6 +934,7 @@ function Grower_calc_rule_probs()
       and not string.match(absurded_rule,"SIDEWALK")
       and not string.match(absurded_rule,"hall")
       and not string.match(absurded_rule,"HALL")
+      and not string.match(absurded_rule,"START")
       and GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
       and GAME.SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
 
@@ -955,11 +956,11 @@ function Grower_calc_rule_probs()
           if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
             new_env = "outdoor"
           else
-            new_env = "building" 
+            new_env = "building"
           end
         end
 
-        GAME.SHAPE_GRAMMAR[absurded_rule].initial_env = GAME.SHAPE_GRAMMAR[absurded_rule].env
+        GAME.SHAPE_GRAMMAR[absurded_rule].initial_env = GAME.SHAPE_GRAMMAR[absurded_rule].env or "none"
         GAME.SHAPE_GRAMMAR[absurded_rule].env = new_env
 
         GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd = true
