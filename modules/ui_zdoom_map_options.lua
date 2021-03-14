@@ -53,9 +53,8 @@ OB_MODULES["ui_zdoom_map_options"] =
       name = "map_format",
       label = _("Map Format"),
       choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
-      default = "binary",
+      default = "udmf",
       tooltip = "For ZDoom based engines, choose between UDMF and binary map format. No effect on other engines.",
-      gap = 1
     }
   }
 }
