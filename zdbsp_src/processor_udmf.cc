@@ -321,7 +321,7 @@ void FProcessor::ParseMapProperties()
 		if (!strcasecmp(key, "namespace"))
 		{
 			// all unknown namespaces are assumed to be standard.
-			Extended = !strcasecmp(value, "\"ZDoom\"") || !strcasecmp(value, "\"Hexen\"") || !strcasecmp(value, "\"Vavoom\"") || !strcasecmp(value, "\"ZDoomTranslated\"");
+			Extended = !strcasecmp(value, "\"ZDoom\"") || !strcasecmp(value, "\"Hexen\"") || !strcasecmp(value, "\"Vavoom\"");
 		}
 
 		// now store the key in its unprocessed form

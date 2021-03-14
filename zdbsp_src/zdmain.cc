@@ -54,7 +54,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "zdbsp.h"
+#include "zdmain.h"
 #include "zdwad.h"
 #include "processor.h"
 
@@ -101,14 +101,22 @@ bool			 V5GLNodes = false;
 
 // CODE --------------------------------------------------------------------
 
-int zdmain (const char *filename)
+int zdmain (const char *filename, zdbsp_options options)
 {
 
-ShowVersion();
+	BuildNodes = options.build_nodes;
+	BuildGLNodes = options.build_gl_nodes;
+	RejectMode = options.reject_mode;
+	CheckPolyobjs = options.check_polyobjs;
+	CompressNodes = options.compress_nodes;
+	CompressGLNodes = options.compress_gl_nodes;
+	ForceCompression = options.force_compression;
 
-bool fixSame = false;
+    ShowVersion();
 
-InName = filename;
+    bool fixSame = false;
+
+    InName = filename;
 
 	try
 	{

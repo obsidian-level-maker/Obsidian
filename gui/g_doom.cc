@@ -94,7 +94,6 @@ typedef enum
 }
 wad_section_e;
 
-
 typedef std::vector<qLump_c *> lump_bag_t;
 
 static lump_bag_t * sections[NUM_SECTIONS];
@@ -587,7 +586,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			if (udmf_flags.test(9))
 				textmap_lump->Printf("\trepeatspecial = true;\n");
 			textmap_lump->Printf("}\n");
-//			LogPrintf("ACTIVATION: %d\n", ((flags & 0x1C00) >> 10)); To determine SPAC activation if necessary. No use for now.
+//			LogPrintf("ACTIVATION: %d\n", ((flags & 0x1C00) >> 10)); To determine SPAC activation if necessary. Placeholder for now.
 			udmf_linedefs += 1;
 		}
 	}
@@ -844,7 +843,28 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
  
 	if (current_engine != "zdoom" && current_engine != "gzdoom")
 	{
-		if (zdmain(filename) != 0)
+		zdbsp_options options;
+		if (current_engine == "nolimit")
+		{
+			options.build_nodes = true;
+			options.build_gl_nodes = false;
+			options.reject_mode = ERM_CreateZeroes;
+			options.check_polyobjs = false;
+			options.compress_nodes = false;
+			options.compress_gl_nodes = false;
+			options.force_compression = false;
+		}
+		else if (current_engine == "boom")
+		{
+			options.build_nodes = true;
+			options.build_gl_nodes = false;
+			options.reject_mode = ERM_CreateZeroes;
+			options.check_polyobjs = false;
+			options.compress_nodes = true;
+			options.compress_gl_nodes = true;
+			options.force_compression = false;
+		}
+		if (zdmain(filename, options) != 0)
 		{
 			Main_ProgStatus(_("ZDBSP Error!"));
 			return false;
@@ -860,8 +880,17 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 			FileRename(filename, out_name);
 			return true;		
 		}
-		if (zdmain(filename) != 0)
+		zdbsp_options options;
+		options.build_nodes = true;
+		options.build_gl_nodes = false;
+		options.reject_mode = ERM_DontTouch;
+		options.check_polyobjs = true;
+		options.compress_nodes = true;
+		options.compress_gl_nodes = true;
+		options.force_compression = true;
+		if (zdmain(filename, options) != 0)
 		{
+			zdbsp_options options;
 			Main_ProgStatus(_("ZDBSP Error!"));
 			return false;
 		}
