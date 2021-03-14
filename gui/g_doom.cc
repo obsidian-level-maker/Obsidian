@@ -70,6 +70,8 @@ static qLump_c *endmap_lump;
 static int errors_seen;
 
 std::string current_engine;
+std::string map_format;
+std::string build_nodes;
 
 static bool UDMF_mode;
 
@@ -91,7 +93,6 @@ typedef enum
 	NUM_SECTIONS
 }
 wad_section_e;
-
 
 typedef std::vector<qLump_c *> lump_bag_t;
 
@@ -279,7 +280,14 @@ void DM_BeginLevel()
 	else
 	{
 		textmap_lump = new qLump_c();
-		textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
+		if (dm_sub_format == SUBFMT_Hexen)
+		{
+			textmap_lump->Printf("namespace = \"Hexen\";\n\n");
+		}
+		else
+		{
+			textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");	
+		}
 		endmap_lump = new qLump_c();
 	}
 }
@@ -300,10 +308,7 @@ void DM_EndLevel(const char *level_name)
 	{
 		DM_WriteLump("TEXTMAP", textmap_lump);	
 	}
-	
-	if (dm_sub_format == SUBFMT_Hexen)
-		DM_WriteBehavior();
-	
+		
 	if (not UDMF_mode)
 	{
 		DM_WriteLump("THINGS",   thing_lump);
@@ -315,9 +320,13 @@ void DM_EndLevel(const char *level_name)
 		DM_WriteLump("SSECTORS", NULL, 0);
 		DM_WriteLump("NODES",    NULL, 0);
 		DM_WriteLump("SECTORS",  sector_lump);
+		if (dm_sub_format == SUBFMT_Hexen)
+			DM_WriteBehavior();
 	}
 	else
 	{	
+		if (dm_sub_format == SUBFMT_Hexen)
+			DM_WriteBehavior();
 		DM_WriteLump("ENDMAP",    NULL, 0);
 	}
 
@@ -466,8 +475,8 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			textmap_lump->Printf("\tid = %d;\n", tag);
 			textmap_lump->Printf("\tv1 = %d;\n", vert1);
 			textmap_lump->Printf("\tv2 = %d;\n", vert2);
-			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? 0xFFFF : side1);
-			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? 0xFFFF : side2);
+			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? -1 : side1);
+			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? -1 : side2);
 			textmap_lump->Printf("\targ0 = %d;\n", tag);
 			textmap_lump->Printf("\tspecial = %d;\n", type);
 			std::bitset<16> udmf_flags(flags);
@@ -489,32 +498,97 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 				textmap_lump->Printf("\tdontdraw = true;\n");
 			if (udmf_flags.test(8))
 				textmap_lump->Printf("\tmapped = true;\n");
+			if (udmf_flags.test(9))
+				textmap_lump->Printf("\tpassuse = true;\n");
 			textmap_lump->Printf("}\n");
 			udmf_linedefs += 1;
 		}
 	}
 	else  // Hexen format
 	{
-		raw_hexen_linedef_t line;
+		if (not UDMF_mode)
+		{
+			raw_hexen_linedef_t line;
 
-		// clear unused fields (esp. arguments)
-		memset(&line, 0, sizeof(line));
+			// clear unused fields (esp. arguments)
+			memset(&line, 0, sizeof(line));
 
-		line.start = LE_U16(vert1);
-		line.end   = LE_U16(vert2);
+			line.start = LE_U16(vert1);
+			line.end   = LE_U16(vert2);
 
-		line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+			line.sidedef1 = side1 < 0 ? 0xffff : LE_U16(side1);
+			line.sidedef2 = side2 < 0 ? 0xffff : LE_U16(side2);
 
-		line.special = type; // 8 bits
-		line.flags = LE_U16(flags);
+			line.special = type; // 8 bits
+			line.flags = LE_U16(flags);
 
-		// tag value is UNUSED
+			// tag value is UNUSED
 
-		if (args)
-			memcpy(line.args, args, 5);
+			if (args)
+				memcpy(line.args, args, 5);
 
-		linedef_lump->Append(&line, sizeof(line));
+			linedef_lump->Append(&line, sizeof(line));
+		}
+		else
+		{
+			textmap_lump->Printf("\nlinedef\n{\n");
+			if (type == 121)
+			{
+				textmap_lump->Printf("\tid = %d;\n", args[0]);
+			}
+			textmap_lump->Printf("\tv1 = %d;\n", vert1);
+			textmap_lump->Printf("\tv2 = %d;\n", vert2);
+			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? -1 : side1);
+			textmap_lump->Printf("\tsideback = %d;\n", side2 < 0 ? -1 : side2);
+			if (type == 121)
+			{
+				textmap_lump->Printf("\tspecial = 0;\n");
+				textmap_lump->Printf("\targ0 = 0;\n");
+			}
+			else
+			{
+				textmap_lump->Printf("\tspecial = %d;\n", type);
+				if (args)
+				{
+					textmap_lump->Printf("\targ0 = %d;\n", args[0]);
+				}
+				else
+				{
+					textmap_lump->Printf("\targ0 = 0;\n");					
+				}	
+			}
+			if (args)
+			{
+				textmap_lump->Printf("\targ1 = %d;\n", args[1]);
+				textmap_lump->Printf("\targ2 = %d;\n", args[2]);
+				textmap_lump->Printf("\targ3 = %d;\n", args[3]);
+				textmap_lump->Printf("\targ4 = %d;\n", args[4]);
+			}
+			std::bitset<16> udmf_flags(flags);
+			if (udmf_flags.test(0))
+				textmap_lump->Printf("\tblocking = true;\n");
+			if (udmf_flags.test(1))
+				textmap_lump->Printf("\tblockmonsters = true;\n");
+			if (udmf_flags.test(2))
+				textmap_lump->Printf("\ttwosided = true;\n");
+			if (udmf_flags.test(3))
+				textmap_lump->Printf("\tdontpegtop = true;\n");
+			if (udmf_flags.test(4))
+				textmap_lump->Printf("\tdontpegbottom = true;\n");
+			if (udmf_flags.test(5))
+				textmap_lump->Printf("\tsecret = true;\n");
+			if (udmf_flags.test(6))
+				textmap_lump->Printf("\tblocksound = true;\n");
+			if (udmf_flags.test(7))
+				textmap_lump->Printf("\tdontdraw = true;\n");
+			if (udmf_flags.test(8))
+				textmap_lump->Printf("\tmapped = true;\n");
+			if (udmf_flags.test(9))
+				textmap_lump->Printf("\trepeatspecial = true;\n");
+			textmap_lump->Printf("}\n");
+//			LogPrintf("ACTIVATION: %d\n", ((flags & 0x1C00) >> 10)); To determine SPAC activation if necessary. Placeholder for now.
+			udmf_linedefs += 1;
+		}
 	}
 }
 
@@ -598,26 +672,93 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 	}
 	else  // Hexen format
 	{
-		raw_hexen_thing_t thing;
+		if (not UDMF_mode)
+		{
+			raw_hexen_thing_t thing;
 
-		// clear unused fields (esp. arguments)
-		memset(&thing, 0, sizeof(thing));
+			// clear unused fields (esp. arguments)
+			memset(&thing, 0, sizeof(thing));
 
-		thing.x = LE_S16(x);
-		thing.y = LE_S16(y);
+			thing.x = LE_S16(x);
+			thing.y = LE_S16(y);
 
-		thing.height  = LE_S16(h);
-		thing.type    = LE_U16(type);
-		thing.angle   = LE_S16(angle);
-		thing.options = LE_U16(options);
+			thing.height  = LE_S16(h);
+			thing.type    = LE_U16(type);
+			thing.angle   = LE_S16(angle);
+			thing.options = LE_U16(options);
 
-		thing.tid     = LE_S16(tid);
-		thing.special = special;
+			thing.tid     = LE_S16(tid);
+			thing.special = special;
 
-		if (args)
-			memcpy(thing.args, args, 5);
+			if (args)
+				memcpy(thing.args, args, 5);
 
-		thing_lump->Append(&thing, sizeof(thing));
+			thing_lump->Append(&thing, sizeof(thing));
+		}
+		else
+		{
+			textmap_lump->Printf("\nthing\n{\n");
+			textmap_lump->Printf("\tid = %d;\n", tid);
+			textmap_lump->Printf("\tx = %f;\n", (double)x);
+			textmap_lump->Printf("\ty = %f;\n", (double)y);
+			textmap_lump->Printf("\theight = %f;\n", (double)h);
+			textmap_lump->Printf("\ttype = %d;\n", type);
+			textmap_lump->Printf("\tangle = %d;\n", angle);
+			std::bitset<16> udmf_flags(options);
+			if (udmf_flags.test(0))
+			{
+				textmap_lump->Printf("\tskill1 = true;\n");
+				textmap_lump->Printf("\tskill2 = true;\n");
+			}
+			if (udmf_flags.test(1))
+				textmap_lump->Printf("\tskill3 = true;\n");
+			if (udmf_flags.test(2))
+			{
+				textmap_lump->Printf("\tskill4 = true;\n");
+				textmap_lump->Printf("\tskill5 = true;\n");
+			}
+			if (udmf_flags.test(3))
+				textmap_lump->Printf("\tambush = true;\n");
+			if (udmf_flags.test(4))
+			{
+				textmap_lump->Printf("\tdormant = true;\n");
+			}
+			if (udmf_flags.test(5)) 
+			{
+				textmap_lump->Printf("\tclass1 = true;\n");
+			}
+			if (udmf_flags.test(6)) 
+			{
+				textmap_lump->Printf("\tclass2 = true;\n");
+			}
+			if (udmf_flags.test(7))
+			{
+				textmap_lump->Printf("\tclass3 = true;\n");
+			}
+			if (udmf_flags.test(8))
+			{
+				textmap_lump->Printf("\tsingle = true;\n");
+			}
+			if (udmf_flags.test(9))
+			{
+				textmap_lump->Printf("\tcoop = true;\n");
+			}
+			if (udmf_flags.test(10))
+			{
+				textmap_lump->Printf("\tdm = true;\n");
+			}
+			textmap_lump->Printf("\tspecial = %d;\n", special);
+			if (args)
+			{
+				textmap_lump->Printf("\targ0 = %d;\n", args[0]);
+				textmap_lump->Printf("\targ1 = %d;\n", args[1]);
+				textmap_lump->Printf("\targ2 = %d;\n", args[2]);
+				textmap_lump->Printf("\targ3 = %d;\n", args[3]);
+				textmap_lump->Printf("\targ4 = %d;\n", args[4]);
+			}
+			textmap_lump->Printf("}\n");
+			udmf_things += 1;
+		}
 	}
 }
 
@@ -689,209 +830,75 @@ int DM_NumThings()
 }
 
 //----------------------------------------------------------------------------
-//  glBSP NODE BUILDING
+//  ZDBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
-#include "glbsp.h"
-
-static nodebuildinfo_t nb_info;
-static volatile nodebuildcomms_t nb_comms;
-
-static int display_mode = DIS_INVALID;
-static int progress_limit;
-
-static char message_buf[MSG_BUF_LEN];
-
-
-static const char *GetErrorString(glbsp_ret_e ret)
-{
-	switch (ret)
-	{
-		case GLBSP_E_OK:
-			return _("OK");
-
-		// the arguments were bad/inconsistent.
-		case GLBSP_E_BadArgs:
-			return _("Bad Arguments");
-
-		// the info was bad/inconsistent, but has been fixed
-		case GLBSP_E_BadInfoFixed:
-			return _("Bad Args (fixed)");
-
-		// file errors
-		case GLBSP_E_ReadError:  return _("Read Error");
-		case GLBSP_E_WriteError: return _("Write Error");
-
-		// building was cancelled
-		case GLBSP_E_Cancelled:
-			return _("Cancelled by User");
-
-		// an unknown error occurred (this is the catch-all value)
-		case GLBSP_E_Unknown:
-		default:
-			return _("Unknown Error");
-	}
-}
-
-static void GB_PrintMsg(const char *str, ...)
-{
-	va_list args;
-
-	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
-	va_end(args);
-
-	message_buf[MSG_BUF_LEN-1] = 0;
-
-	LogPrintf("GLBSP: %s", message_buf);
-}
-
-//
-// GB_FatalError
-//
-// Terminates the program reporting an error.
-//
-static void GB_FatalError(const char *str, ...)
-{
-	va_list args;
-
-	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
-	va_end(args);
-
-	message_buf[MSG_BUF_LEN-1] = 0;
-
-	Main_FatalError(_("glBSP Failure:\n%s"), message_buf);
-	/* NOT REACHED */
-}
-
-static void GB_Ticker(void)
-{
-	Main_Ticker();
-
-	if (main_action >= MAIN_CANCEL)
-	{
-		nb_comms.cancelled = TRUE;
-	}
-}
-
-static boolean_g GB_DisplayOpen(displaytype_e type)
-{
-	display_mode = type;
-	return TRUE;
-}
-
-static void GB_DisplaySetTitle(const char *str)
-{
-	/* does nothing */
-}
-
-static void GB_DisplaySetBarText(int barnum, const char *str)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 1)
-	{
-		/* IDEA: extract map name from 'str' */
-
-		if (batch_mode)
-			fprintf(stderr, "%s\n", str);
-	}
-}
-
-static void GB_DisplaySetBarLimit(int barnum, int limit)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
-	{
-		progress_limit = limit;
-
-		main_win->build_box->SetStatus(_("Building nodes"));
-		main_win->build_box->Prog_Nodes(0, limit);
-	}
-}
-
-static void GB_DisplaySetBar(int barnum, int count)
-{
-	if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
-	{
-		main_win->build_box->Prog_Nodes(count, progress_limit);
-	}
-}
-
-static void GB_DisplayClose(void)
-{
-	/* does nothing */
-}
-
-static const nodebuildfuncs_t edge_build_funcs =
-{
-	GB_FatalError,
-	GB_PrintMsg,
-	GB_Ticker,
-
-	GB_DisplayOpen,
-	GB_DisplaySetTitle,
-	GB_DisplaySetBar,
-	GB_DisplaySetBarLimit,
-	GB_DisplaySetBarText,
-	GB_DisplayClose
-};
+#include "zdmain.h"
 
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
   
-	if (not UDMF_mode && current_engine != "zdoom" && current_engine != "gzdoom")
+  	// Node building and map format options are a moot point for non-ZDoom engines
+ 
+	if (current_engine != "zdoom" && current_engine != "gzdoom")
 	{
-		display_mode = DIS_INVALID;
-
-		memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));
-		memcpy((void*)&nb_comms, &default_buildcomms, sizeof(nodebuildcomms_t));
-
-		nb_info.input_file  = GlbspStrDup(filename);
-		nb_info.output_file = GlbspStrDup(out_name);
-
-		nb_info.quiet = TRUE;
-		nb_info.pack_sides = FALSE;
-		nb_info.force_normal = TRUE;
-		nb_info.fast = TRUE;
-
-		glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
-
-		if (ret != GLBSP_E_OK)
+		zdbsp_options options;
+		if (current_engine == "nolimit")
 		{
-			// check info failure (unlikely to happen)
-			GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
-			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-			Main_ProgStatus(_("glBSP Error"));
+			options.build_nodes = true;
+			options.build_gl_nodes = false;
+			options.reject_mode = ERM_CreateZeroes;
+			options.check_polyobjs = false;
+			options.compress_nodes = false;
+			options.compress_gl_nodes = false;
+			options.force_compression = false;
+		}
+		else if (current_engine == "boom")
+		{
+			options.build_nodes = true;
+			options.build_gl_nodes = false;
+			options.reject_mode = ERM_CreateZeroes;
+			options.check_polyobjs = false;
+			options.compress_nodes = true;
+			options.compress_gl_nodes = true;
+			options.force_compression = false;
+		}
+		if (zdmain(filename, options) != 0)
+		{
+			Main_ProgStatus(_("ZDBSP Error!"));
 			return false;
 		}
-
-		ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
-
-		if (ret == GLBSP_E_Cancelled)
-		{
-			GB_PrintMsg("Building CANCELLED.\n\n");
-			Main_ProgStatus(_("Cancelled"));
-			return false;
-		}
-
-		if (ret != GLBSP_E_OK)
-		{
-			// build nodes failed
-			GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
-			GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
-
-			Main_ProgStatus(_("glBSP Error"));
-			return false;
-		}
+		FileRename(filename, out_name);
 		return true;	
 	} 
 	else
 	{
-		LogPrintf("ZDoom/GZDoom Selected -- Skipping Nodes...\n");
+		if (build_nodes == "no") 
+		{
+			LogPrintf("Skipping nodes per user selection...\n");
+			FileRename(filename, out_name);
+			return true;		
+		}
+		zdbsp_options options;
+		options.build_nodes = true;
+		options.build_gl_nodes = false;
+		options.reject_mode = ERM_DontTouch;
+		options.check_polyobjs = true;
+		options.compress_nodes = true;
+		options.compress_gl_nodes = true;
+		options.force_compression = true;
+		if (zdmain(filename, options) != 0)
+		{
+			zdbsp_options options;
+			Main_ProgStatus(_("ZDBSP Error!"));
+			return false;
+		}
 		FileRename(filename, out_name);
-		return true;
+		return true;	
 	}
+	// This shouldn't be reached, so return false if it is
+	return false;
 }
 
 
@@ -955,7 +962,9 @@ bool doom_game_interface_c::Start(const char *preset)
 		main_win->build_box->Prog_Init(20, N_("CSG"));
 		
 	current_engine = main_win->game_box->engine->GetID();
-	if (current_engine == "zdoom_udmf" || current_engine == "gzdoom_udmf") 
+	map_format = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("map_format")->GetID();
+	build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_nodes")->GetID();
+	if ((current_engine == "zdoom" || current_engine == "gzdoom") && map_format == "udmf")
 	{
 		UDMF_mode = true;
 	}

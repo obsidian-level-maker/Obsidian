@@ -125,9 +125,7 @@ OB_MODULES["ui_arch"] =
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
       "at sizes of Huge and above, Autodetail is required on. (on by default if you do not have " ..
       "Prefab Control module on. The stability of maps with sizes Colossal and beyond is not predictable.",
-      gap = 1,
     },
-
     {
       name = "streets_mode",
       label = _("Streets Mode"),
