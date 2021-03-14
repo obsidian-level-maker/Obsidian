@@ -30,6 +30,8 @@ A brief summary of changes:
 
 Revised default visual style.
 
+ZDBSP as the internal nodebuilder, replacing GLBSP.
+
 UDMF map generation option for ZDoom/GZDoom.
 
 64-bit seeds and random numbers for 64-bit builds.
@@ -45,8 +47,6 @@ New random number generator based on the Mersenne Twister Engine.
 Updated PHYSFS to version 3.02.
 
 Updated deprecated PHYSFS function calls with their replacements.
-
-GLBSP updated to version 2.28 from the EDGE project.
 
 Added scrolling functionality to Addons List window.
 
