@@ -7,6 +7,8 @@ PREFABS.Exit_armaetus_chamber_exit_tech =
 
   theme = "!hell",
 
+  start_fab_peer = "Start_armaetus_chamber_start_tech",
+
   where  = "seeds",
 
   seed_w = 2,
@@ -15,13 +17,15 @@ PREFABS.Exit_armaetus_chamber_exit_tech =
   deep   = 16,
 
   x_fit  = "frame",
-  y_fit  = "top",
+  y_fit  = "top"
 }
 
-PREFABS.Exit_armaetus_chamber_exit4_gothic =
+PREFABS.Exit_armaetus_chamber_exit_gothic =
 {
   template = "Exit_armaetus_chamber_exit_tech",
   map = "MAP02",
 
   theme = "hell",
+
+  start_fab_peer = "Start_armaetus_chamber_start_gothic"
 }
