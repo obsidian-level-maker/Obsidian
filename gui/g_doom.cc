@@ -962,8 +962,8 @@ bool doom_game_interface_c::Start(const char *preset)
 		main_win->build_box->Prog_Init(20, N_("CSG"));
 		
 	current_engine = main_win->game_box->engine->GetID();
-	map_format = main_win->left_mods->FindID("ui_arch")->FindOpt("map_format")->GetID();
-	build_nodes = main_win->left_mods->FindID("ui_arch")->FindOpt("build_nodes")->GetID();
+	map_format = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("map_format")->GetID();
+	build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_nodes")->GetID();
 	if ((current_engine == "zdoom" || current_engine == "gzdoom") && map_format == "udmf")
 	{
 		UDMF_mode = true;

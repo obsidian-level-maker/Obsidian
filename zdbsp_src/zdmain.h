@@ -9,7 +9,7 @@ bool check_polyobjs;
 bool compress_nodes;
 bool compress_gl_nodes;
 bool force_compression;
-};
+} zdbsp_options;
 
 
 int zdmain (const char *filename, zdbsp_options options);
