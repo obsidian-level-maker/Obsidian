@@ -2229,7 +2229,7 @@ int DM_title_draw_clouds(lua_State *L)
 {
 	// LUA: title_draw_clouds(seed, hue1,hue2,hue3, thresh, power, fracdim)
 
-	int seed = luaL_checkinteger(L, 1);
+	uintmax_t seed = luaL_checkinteger(L, 1);
 
 	rgb_color_t hue1 = Grab_Color(L, 2);
 	rgb_color_t hue2 = Grab_Color(L, 3);

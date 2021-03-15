@@ -43,7 +43,7 @@ extern bool batch_mode;
 
 extern const char *batch_output_file;
 
-extern uint_fast32_t next_rand_seed;
+extern uintmax_t next_rand_seed;
 
 
 // this records the user action, e.g. Cancel or Quit buttons

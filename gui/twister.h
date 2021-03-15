@@ -16,9 +16,9 @@ as possible in order to minimize changes in other sections of code
 
 void twister_Init();
 
-void twister_Reseed(uint_fast32_t random);
+void twister_Reseed(uintmax_t random);
 
-uint_fast32_t twister_UInt();
+uintmax_t twister_UInt();
 
 double twister_Double();
 

@@ -209,7 +209,7 @@ void DLG_ShowError(const char *msg, ...)
 	ParseHyperLink(buffer, sizeof(buffer), &link_title, &link_url);
 
 	if (! batch_mode)
-		DialogShowAndRun(buffer, _("OBSIDIAN - Error Message"), link_title, link_url);
+		DialogShowAndRun(buffer, _("OBLIGE - Error Message"), link_title, link_url);
 }
 
 
@@ -342,11 +342,11 @@ void DLG_EditSeed(void)
     } catch (std::invalid_argument &e) {
         std::cout << "Invalid argument. Will process as string.\n";
     } catch (std::out_of_range &e) {
-        std::cout << "Resulting number would be out of range for a 32-bit signed integer. Will process as string.\n";
+        std::cout << "Resulting number would be out of range for the signed integer. Will process as string.\n";
     } catch (std::exception &e) {
         std::cout << e.what();
     }
-    uint_fast32_t split_limit = (INT_FAST32_MAX / 127);
+    intmax_t split_limit = (INTMAX_MAX / 127);
     next_rand_seed = split_limit;
     for (long unsigned int i = 0 ; i < word.size() ; i++) {
         char character = word.at(i);

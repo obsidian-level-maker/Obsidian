@@ -107,7 +107,7 @@ void SKY_AddClouds(uint_fast32_t seed, byte *pixels, int W, int H,
 }
 
 
-void SKY_AddStars(uint_fast32_t seed, byte *pixels, int W, int H,
+void SKY_AddStars(uintmax_t seed, byte *pixels, int W, int H,
 				  color_mapping_t *map,
 				  double powscale, double thresh)
 {
@@ -147,7 +147,7 @@ void SKY_AddStars(uint_fast32_t seed, byte *pixels, int W, int H,
 }
 
 
-void SKY_AddHills(uint_fast32_t seed, byte *pixels, int W, int H,
+void SKY_AddHills(uintmax_t seed, byte *pixels, int W, int H,
                   color_mapping_t *map, double min_h, double max_h,
                   double powscale, double fracdim)
 {
@@ -260,7 +260,7 @@ void SKY_AddHills(uint_fast32_t seed, byte *pixels, int W, int H,
 }
 
 
-void SKY_AddBuilding(uint_fast32_t seed, byte *pixels, int W, int H,
+void SKY_AddBuilding(uintmax_t seed, byte *pixels, int W, int H,
                      std::vector<byte> & colors,
                      int pos_x, int width, int base_h, int top_h,
                      int win_prob, int win_w, int win_h, int antenna)

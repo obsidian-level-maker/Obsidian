@@ -46,12 +46,12 @@ LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
 
 #----- OBLIGE Objects ----------------------------------------------
 
-OBJS=	$(OBJ_DIR)/main_64.o      \
+OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_about.o  \
 	$(OBJ_DIR)/m_addons.o  \
 	$(OBJ_DIR)/m_cookie.o  \
-	$(OBJ_DIR)/m_dialog_64.o  \
-	$(OBJ_DIR)/m_lua_64.o     \
+	$(OBJ_DIR)/m_dialog.o  \
+	$(OBJ_DIR)/m_lua.o     \
 	$(OBJ_DIR)/m_manage.o  \
 	$(OBJ_DIR)/m_options.o  \
 	$(OBJ_DIR)/m_trans.o  \
@@ -80,7 +80,7 @@ OBJS=	$(OBJ_DIR)/main_64.o      \
 	$(OBJ_DIR)/csg_quake.o \
 	$(OBJ_DIR)/csg_shade.o \
 	$(OBJ_DIR)/csg_spots.o \
-	$(OBJ_DIR)/dm_extra_64.o  \
+	$(OBJ_DIR)/dm_extra.o  \
 	$(OBJ_DIR)/dm_prefab.o \
 	$(OBJ_DIR)/g_doom.o    \
 	$(OBJ_DIR)/g_nukem.o   \
@@ -95,8 +95,8 @@ OBJS=	$(OBJ_DIR)/main_64.o      \
 	$(OBJ_DIR)/vis_buffer.o \
 	$(OBJ_DIR)/vis_occlude.o \
 	\
-	$(OBJ_DIR)/tx_forge_64.o  \
-	$(OBJ_DIR)/tx_skies_64.o  \
+	$(OBJ_DIR)/tx_forge.o  \
+	$(OBJ_DIR)/tx_skies.o  \
 	$(OBJ_DIR)/ui_build.o  \
 	$(OBJ_DIR)/ui_game.o   \
 	$(OBJ_DIR)/ui_hyper.o  \
@@ -106,7 +106,7 @@ OBJS=	$(OBJ_DIR)/main_64.o      \
 	$(OBJ_DIR)/ui_window.o \
 	\
 	$(OBJ_DIR)/zf_menu.o \
-	$(OBJ_DIR)/twister_64.o
+	$(OBJ_DIR)/twister.o
 
 $(OBJ_DIR)/%.o: gui/%.cc
 	$(CXX) $(CXXFLAGS) -o $@ -c $<

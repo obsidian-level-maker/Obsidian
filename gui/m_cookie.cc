@@ -30,6 +30,8 @@
 #include "m_cookie.h"
 #include "m_lua.h"
 
+#include <iostream>
+
 
 typedef enum
 {
@@ -80,10 +82,18 @@ static void Cookie_SetValue(const char *name, const char *value)
 		// ignore seed when loading a config file
 		// unless the -k / --keep option is given.
 
-		if (context == CCTX_Arguments || keep_seed)
+//		if (context == CCTX_Arguments || keep_seed)
+//		{
+		try 
 		{
-			next_rand_seed = floor(atof(value));
+		    next_rand_seed = std::stoll(value);
+		    return;
+		} catch (std::invalid_argument &e) {
+		    std::cout << "Invalid argument. Will generate new seed.\n";
+		} catch (std::out_of_range &e) {
+		    std::cout << "Resulting number would be out of range. Will generate new seed.\n";
 		}
+//		}
 
 		return;
 	}
