@@ -859,8 +859,7 @@ function Monster_fill_room(R)
 --]]
     num = int(base_num)
 
-    if num < 1 then num = 1 end
-    if num > 5 then num = 5 end
+    num = math.clamp(1, num, 5)
 
     gui.debugf("number_of_kinds: %d (base: %d)\n", num, int(base_num))
 

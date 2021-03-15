@@ -916,7 +916,8 @@ function Grower_calc_rule_probs()
   end
 
   local function Grower_absurdify()
-    local rules_to_absurdify = rand.pick({2,2,2,3,3,3,4,4,5,6,7,8})
+    local rules_to_absurdify = rand.pick({1,2,2,2,3,3,3,4,4,5,6,7,8})
+    local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
     local grammarset = {}
@@ -924,7 +925,7 @@ function Grower_calc_rule_probs()
       table.insert(grammarset, rule.name)
     end
 
-    while rules_to_absurdify > 0 do
+    while count > 0 do
       local absurded_rule = rand.pick(grammarset)
 
       if not string.match(absurded_rule,"ROOT")
@@ -952,7 +953,7 @@ function Grower_calc_rule_probs()
 
         -- diversify environments
         local new_env
-        if rand.odds(50) then
+        if rand.odds(50) and rules_to_absurdify > 1 then
           if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
             new_env = "outdoor"
           else
@@ -970,7 +971,7 @@ function Grower_calc_rule_probs()
           gui.printf("Factor: x" .. ab_factor .. "\n")
         end
 
-        rules_to_absurdify = rules_to_absurdify - 1
+        count = count - 1
       end
     end
   end
