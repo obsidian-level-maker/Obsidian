@@ -25,7 +25,7 @@
 
 #define OBSIDIAN_VERSION  "Beta 8"
 #define OBSIDIAN_HEX_VER  0x008
-#define OBSIDIAN_WEBSITE "https://github.com/dashodanger/Oblige"
+#define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
 
 
 #define CONFIG_FILENAME   "CONFIG.txt"
