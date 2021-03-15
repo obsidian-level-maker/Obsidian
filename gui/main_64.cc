@@ -78,7 +78,7 @@ static void ShowInfo()
 {
 	printf(
 		"\n"
-		"** " OBLIGE_TITLE " " OBLIGE_VERSION " **\n"
+		"** " OBSIDIAN_TITLE " " OBSIDIAN_VERSION " **\n"
 		"** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
 		"\n"
 	);
@@ -107,7 +107,7 @@ static void ShowInfo()
 
 	printf(
 		"Please visit the web site for complete information:\n"
-		"   https://caligari87.github.io/ObAddon/\n"
+		"  " OBSIDIAN_WEBSITE " \n"
 		"\n"
 	);
 
@@ -124,7 +124,7 @@ static void ShowInfo()
 
 static void ShowVersion()
 {
-	printf("Obsidian version " OBLIGE_VERSION " (" __DATE__ ")\n");
+	printf("Obsidian version " OBSIDIAN_VERSION " (" __DATE__ ")\n");
 
 	fflush(stdout);
 }
@@ -716,7 +716,7 @@ int main(int argc, char **argv)
 
 	LogPrintf("\n");
 	LogPrintf("********************************************************\n");
-	LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " **\n");
+	LogPrintf("** " OBSIDIAN_TITLE " " OBSIDIAN_VERSION " **\n");
 	LogPrintf("********************************************************\n");
 	LogPrintf("\n");
 
@@ -812,7 +812,7 @@ int main(int argc, char **argv)
 	int main_w, main_h;
 	UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
-	const char *main_title = StringPrintf("%s %s", _(OBLIGE_TITLE), OBLIGE_VERSION);
+	const char *main_title = StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
 	main_win = new UI_MainWin(main_w, main_h, main_title);
 
 //???	Default_Location();

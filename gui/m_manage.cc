@@ -330,9 +330,9 @@ public:
 	{
 		Clear();
 
-		text_buf->append("-- CONFIG FILE : OBSIDIAN " OBLIGE_VERSION "\n"); 
+		text_buf->append("-- CONFIG FILE : OBSIDIAN " OBSIDIAN_VERSION "\n"); 
 		text_buf->append("-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-		text_buf->append("-- https://caligari87.github.io/ObAddon/\n\n");
+		text_buf->append("-- " OBSIDIAN_WEBSITE "\n\n");
 
 		std::vector<std::string> lines;
 

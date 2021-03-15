@@ -175,7 +175,7 @@ static void WF_WriteBlankPlane(int *offset, int *length)
 
 static void WF_WriteMap(void)
 {
-  const char *message = OBLIGE_TITLE " " OBLIGE_VERSION;
+  const char *message = OBSIDIAN_TITLE " " OBSIDIAN_VERSION;
 
   WF_PutNString(message, 64, map_fp);
 

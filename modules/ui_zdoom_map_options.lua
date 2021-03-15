@@ -45,7 +45,7 @@ OB_MODULES["ui_zdoom_map_options"] =
       name = "build_nodes",
       label = _("Build Nodes"),
       choices = UI_ZDOOM_MAP_OPTIONS.YES_NO,
-      default = "yes",
+      default = "no",
       tooltip = "For ZDoom based engines, choose to either build nodes or allow the engine itself to do so " ..
       "upon loading the map. No effect on other engines.",
     },
@@ -53,9 +53,8 @@ OB_MODULES["ui_zdoom_map_options"] =
       name = "map_format",
       label = _("Map Format"),
       choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
-      default = "binary",
+      default = "udmf",
       tooltip = "For ZDoom based engines, choose between UDMF and binary map format. No effect on other engines.",
-      gap = 1
     }
   }
 }

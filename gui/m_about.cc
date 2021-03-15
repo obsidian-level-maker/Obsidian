@@ -100,7 +100,7 @@ const char *UI_About::Text =
 	"Use at your OWN RISK");
 
 
-const char *UI_About::URL = "https://caligari87.github.io/ObAddon/";
+const char *UI_About::URL = OBSIDIAN_WEBSITE;
 
 
 //
@@ -122,7 +122,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 	int cy = kf_h(6);
 
 	// nice big logo text
-	const char *logo_text = StringPrintf("%s %s", _(OBLIGE_TITLE), OBLIGE_VERSION);
+	const char *logo_text = StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
 
 	Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);

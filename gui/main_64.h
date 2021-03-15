@@ -21,10 +21,11 @@
 #ifndef __OBLIGE_MAIN_64_H__
 #define __OBLIGE_MAIN_64_H__
 
-#define OBLIGE_TITLE  "OBSIDIAN Level Maker"
+#define OBSIDIAN_TITLE  "OBSIDIAN Level Maker"
 
-#define OBLIGE_VERSION  "Beta"
-#define OBLIGE_HEX_VER  0x800
+#define OBSIDIAN_VERSION  "Beta 8"
+#define OBSIDIAN_HEX_VER  0x008
+#define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
 
 
 #define CONFIG_FILENAME   "CONFIG.txt"
