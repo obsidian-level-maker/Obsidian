@@ -14,41 +14,24 @@ other sections of code.
 #include <random>
 #include <ctime>
 
-int bits;
-std::independent_bits_engine<std::mt19937, 31, uint_fast32_t> twister1;
-std::mt19937 twister2;
+std::independent_bits_engine<std::mersenne_twister_engine<unsigned long long, 64, 312, 156, 31,
+                             0xb5026f5aa96619e9, 29,
+                             0x5555555555555555, 17,
+                             0x71d67fffeda60000, 37,
+                             0xfff7eee000000000, 43, 6364136223846793005>, 63, unsigned long long> twister;
 
 void twister_Init() {
-    bits = sizeof(uintmax_t) * 8;
-    twister1.seed(std::time(nullptr));
-    if (bits == 64)
-        twister2.seed(std::time(nullptr)); 
+    twister.seed(std::time(nullptr));
 }
 
-void twister_Reseed(uintmax_t random) {
-    twister1.seed(random);
-    if (bits == 64)
-        twister2.seed(random); 
+void twister_Reseed(unsigned long long random) {
+    twister.seed(random);  
 }
 
-uintmax_t twister_UInt() {
-    if (bits == 32)
-    {
-        return twister1();
-    }
-    else
-    {
-        return (uintmax_t) twister1() << 32 | twister2();    
-    }
+unsigned long long twister_UInt() {
+    return twister();
 }
 
 double twister_Double() {
-    if (bits == 32)
-    {
-        return ldexp(twister1(), -31);
-    }
-    else
-    {
-       return ldexp((uintmax_t) twister1() << 32 | twister2(), -63);    
-    }
+    return ldexp(twister(), -63);
 }

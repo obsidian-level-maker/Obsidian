@@ -541,9 +541,7 @@ void Main_CalcNewSeed()
 
 void Main_SetSeed()
 {
-	char num_buf[1000];
-	sprintf(num_buf, "%lu", next_rand_seed);
-	ob_set_config("seed", num_buf);
+	ob_set_config("seed", std::to_string(next_rand_seed).c_str());
 }
 
 
