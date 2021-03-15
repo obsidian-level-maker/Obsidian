@@ -34,7 +34,7 @@ ZDBSP as the internal nodebuilder, replacing GLBSP.
 
 UDMF map generation option for ZDoom/GZDoom.
 
-64-bit seeds and random numbers for 64-bit builds.
+64-bit seeds and random numbers.
 
 Lua upgraded to 5.4.x. Lua scripts from previous versions of Oblige/ObAddon will be incompatible without conversion.
 
