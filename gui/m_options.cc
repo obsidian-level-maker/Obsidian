@@ -192,9 +192,9 @@ bool Options_Save(const char *filename)
 
 	LogPrintf("Saving options file...\n");
 
-	fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s\n", OBLIGE_VERSION); 
+	fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s\n", OBSIDIAN_VERSION); 
 	fprintf(option_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-	fprintf(option_fp, "-- https://caligari87.github.io/ObAddon/\n\n");
+	fprintf(option_fp, "-- " OBSIDIAN_WEBSITE "\n\n");
 
 	fprintf(option_fp, "language = %s\n", t_language);
 	fprintf(option_fp, "\n");
