@@ -209,7 +209,7 @@ void DLG_ShowError(const char *msg, ...)
 	ParseHyperLink(buffer, sizeof(buffer), &link_title, &link_url);
 
 	if (! batch_mode)
-		DialogShowAndRun(buffer, _("OBLIGE - Error Message"), link_title, link_url);
+		DialogShowAndRun(buffer, _("OBSIDIAN - Error Message"), link_title, link_url);
 }
 
 
