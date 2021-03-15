@@ -2928,8 +2928,41 @@ function Quest_room_themes()
   local function choose_building_themes()
     local building_tab = collect_usable_themes("building")
 
-    -- recursively flow through the level
-    visit_room(LEVEL.start_room, nil, nil, building_tab)
+    if rand.odds(50) then
+      -- distribute room themes (vanilla Oblige behavior)
+      -- recursively flow through the level
+      visit_room(LEVEL.start_room, nil, nil, building_tab)
+    else
+      -- use a single theme for all indoors
+      local the_one_room_theme = GAME.ROOM_THEMES[rand.key_by_probs(building_tab)]
+      local the_one_wall_group_tab = {}
+
+      -- sometimes prefer particular wall groups over others
+      if rand.odds(50) then
+        local x = rand.irange(1,3)
+
+        while x >= 1 do
+          local wg_pick = rand.key_by_probs(LEVEL.theme.wall_groups)
+          the_one_wall_group_tab[wg_pick] = 50
+          x = x - 1
+        end
+      end
+
+      for _,R in pairs(LEVEL.rooms) do
+        -- TODO: respect Foreshadowing Exit feature
+        -- maybe do next_level checks way before here instead
+
+        if R:get_env() == "building" then
+          R.theme = the_one_room_theme
+          if not table.empty(the_one_wall_group_tab) then
+            R.forced_wall_groups = the_one_wall_group_tab
+          end
+        end
+
+        ::continue::
+      end
+    end
+
   end
 
 

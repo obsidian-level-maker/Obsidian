@@ -2038,6 +2038,10 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       tab = GAME.THEMES[ob_resolve_theme_keyword(R.theme.theme_override)].wall_groups
     end
 
+    if R.forced_wall_groups then
+      tab = R.forced_wall_groups
+    end
+
     if not tab then return end
 
     local prob = THEME.wall_group_prob or 35
@@ -2045,10 +2049,13 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       prob = prob - math.clamp(0, LEVEL.autodetail_group_walls_factor, 35)
     end
 
+    if R.forced_wall_groups then prob = prob + 25 end
+
     if PARAM.group_wall_prob and PARAM.group_wall_prob ~= "fab_default" then
       prob = prob * (1 - PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.group_wall_prob])
-      prob = math.clamp(0, prob, 100)
     end
+
+    prob = math.clamp(0, prob, 100)
 
     for _,fg in pairs(R.floor_groups) do
       if rand.odds(prob) then
