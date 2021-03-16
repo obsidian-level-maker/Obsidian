@@ -304,7 +304,7 @@ static void power_law_scale(float *buf, double powscale)
 }
 
 
-void TX_SpectralSynth(uint_fast32_t seed, float *buf, int width,
+void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
                       double fracdim, double powscale)
 {
 	SYS_ASSERT(width > 0 && (width & 1) == 0);

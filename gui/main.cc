@@ -54,7 +54,7 @@ int screen_h;
 
 int main_action;
 
-uint_fast32_t next_rand_seed;
+unsigned long long next_rand_seed;
 
 bool batch_mode = false;
 const char *batch_output_file = NULL;
@@ -70,7 +70,6 @@ bool debug_messages = false;
 
 
 game_interface_c * game_object = NULL;
-
 
 /* ----- user information ----------------------------- */
 
@@ -542,11 +541,7 @@ void Main_CalcNewSeed()
 
 void Main_SetSeed()
 {
-	char num_buf[256];
-
-	sprintf(num_buf, "%ld", next_rand_seed);
-
-	ob_set_config("seed", num_buf);
+	ob_set_config("seed", std::to_string(next_rand_seed).c_str());
 }
 
 
@@ -667,6 +662,7 @@ bool Build_Cool_Shit()
 
 int main(int argc, char **argv)
 {
+
 	// initialise argument parser (skipping program name)
 	ArgvInit(argc-1, (const char **)(argv+1));
 
