@@ -113,6 +113,16 @@ PREFABS.Wall_generic_artsy_center_braced_hell =
   z_fit = "top",
 }
 
+PREFABS.Wall_generic_artsy_step1_banded_wall =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP08",
+
+  group = "gtd_generic_artsy_step1_banded",
+
+  z_fit = "top",
+}
+
 -- diagonals
 
 PREFABS.Wall_generic_mid_band_diag =
@@ -161,6 +171,18 @@ PREFABS.Wall_generic_artsy_center_braced_hell_diag =
   map = "MAP17",
 
   group = "gtd_generic_artsy_center_braced_hell",
+
+  where = "diagonal",
+
+  z_fit = "top",
+}
+
+PREFABS.Wall_generic_artsy_step1_banded_diagonal =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP18",
+
+  group = "gtd_generic_artsy_step1_banded",
 
   where = "diagonal",
 
