@@ -679,10 +679,10 @@ function Junction_calc_wall_tex(A1, A2)
   -- foreshadowing exit override
   if A1.room then
     if A1.room.exit_facade then
-      if rand.odds(80) then
-        return A1.room.exit_facade
-      else
+      if A2.facade_crap then
         return A1.room.alt_exit_facade
+      else
+        return A1.room.exit_facade
       end
     end
   end
