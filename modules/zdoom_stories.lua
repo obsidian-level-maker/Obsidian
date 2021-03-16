@@ -1638,7 +1638,7 @@ ZDOOM_STORIES.SECRET_TEXTS =
     it, and arrive just in time to join a group of marines, fighting
     off a small horde of hellspawn.
     _SPACE
-    With your timely aid, the battle ends almost instantaneously.
+    With your timely aid, the battle ends almost quickly.
     The survivors, relieved and encouraged by your presence, thank
     you, by giving you their military map, clear and detailed,
     with every bunker, barricade and stockpile clearly marked.
@@ -1646,7 +1646,7 @@ ZDOOM_STORIES.SECRET_TEXTS =
     passageway, right ahead...]],
 
     [[Unexpectedly, you find a survivor hiding under the rubble.
-    Surprisingly, his speech is coherent and his thinking is clear.
+    His speech is coherent and his thinking is clear.
     What's more, he is armed with a machine pistol he scavenged off
     a dead troop. He confirms he had been hiding and fighting for
     weeks and has established a set of hideouts and observation posts.
@@ -1659,15 +1659,15 @@ ZDOOM_STORIES.SECRET_TEXTS =
     supplies there - or survivors...]],
 
     [[You wipe the sweat off your forehead and grip your weapon
-    more tightly. The battle seems endless, and you begin to wonder
+    tighter. The battle seems endless and you begin to wonder
     if you can finish what you began. Suddenly, you spot a glimmer
     in the distance, as if a portal opened and immediately closed.
     _SPACE
     This looks like it could turn out interesting...]],
 
     [[You come across the mutilated corpse of a marine. The agony
-    is frozen on his face, and his hand is tightly clutched around
-    a blooded piece of paper. You carefully pry his hand open and
+    is frozen on his face and his hand is tightly clutched around
+    a bloodied piece of paper. You carefully pry his hand open and
     straighten the note.
     _SPACE
     It looks like a scout's report, detailing the formations and
