@@ -109,7 +109,7 @@ function PREFAB_CONTROL.set_damaging_hallways()
   for name,fab in pairs(PREFABS) do
     if fab.group == "hellcata" then
       fab.flat_LAVA1 = "BLOOD1"
-      fab.tex_FIREMAG1 = "BFALL1"
+      fab.tex_LFALL1 = "BFALL1"
       fab.tex_FF2200 = "BF0526" -- top lighting
       fab.tex_FF8629 = "130406" -- liquid fog color
       fab.sector_5 = 0 -- nullify damaging sectors
