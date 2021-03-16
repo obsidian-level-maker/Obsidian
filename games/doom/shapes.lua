@@ -5160,7 +5160,57 @@ GROW_MAZE_STRAIGHT =
     "...","#1#",
     "x1x","x1x",
     "x1x","x1x",
+  }
+},
+
+GROW_MAZE_ZIGZAG =
+{
+  prob = 2,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx.x","xx1x",
+    "xx.x","xx1x",
+    "....","#/1#",
+    "....","#1/#",
+    "x1xx","x1xx",
+    "x1xx","x1xx",
   },
+
+  diagonals =
+  {
+    "1.",
+    ".1",
+  }
+},
+
+GROW_MAZE_ZIGZAG_DOUBLE =
+{
+  prob = 1,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx.x","xx1x",
+    "xx.x","xx1x",
+    "....","#/1#",
+    "....","#1/#",
+    "x..x","x1#x",
+    "x..x","x1#x",
+    "....","#1%#",
+    "....","#%1#",
+    "xx1x","xx1x",
+    "xx1x","xx1x",
+  },
+
+  diagonals =
+  {
+    "1.",
+    ".1",
+    ".1",
+    "1.",
+  }
 },
 
 GROW_MAZE_STRAIGHT_NEW_AREA =
@@ -5175,7 +5225,7 @@ GROW_MAZE_STRAIGHT_NEW_AREA =
     "...","#1#",
     "x1x","x1x",
     "x1x","x1x",
-  },
+  }
 },
 
 GROW_MAZE_STRAIGHT_STAIRED =
@@ -5191,7 +5241,7 @@ GROW_MAZE_STRAIGHT_STAIRED =
     "...","#1#",
     "x1x","x1x",
     "x1x","x1x",
-  },
+  }
 },
 
 GROW_MAZE_STRAIGHT_LONG =
@@ -5209,7 +5259,7 @@ GROW_MAZE_STRAIGHT_LONG =
     "...","#1#",
     "x1x","x1x",
     "x1x","x1x",
-  },
+  }
 },
 
 GROW_MAZE_STRAIGHT_STAIRED_LONG =
@@ -5226,7 +5276,7 @@ GROW_MAZE_STRAIGHT_STAIRED_LONG =
     "...","#^#",
     "x1x","x1x",
     "x1x","x1x",
-  },
+  }
 },
 
 GROW_MAZE_L =
@@ -5242,7 +5292,7 @@ GROW_MAZE_L =
     "...xx","#1#xx",
     "x1xxx","x1xxx",
     "x1xxx","x1xxx",
-  },
+  }
 },
 
 GROW_MAZE_L_DIAG =
@@ -5265,7 +5315,7 @@ GROW_MAZE_L_DIAG =
          ".1",
     ".1","1.",
     "1.",
-  },
+  }
 },
 
 GROW_MAZE_T =
@@ -5281,7 +5331,7 @@ GROW_MAZE_T =
     "xx...xx","xx#1#xx",
     "xxx1xxx","xxx1xxx",
     "xxx1xxx","xxx1xxx",
-  },
+  }
 },
 
 GROW_MAZE_T_DIAG =
@@ -5304,7 +5354,7 @@ GROW_MAZE_T_DIAG =
     "1.",".1",
     ".1","1.",
     ".1","1.",
-  },
+  }
 },
 
 GROW_MAZE_CROSS =
@@ -5321,7 +5371,7 @@ GROW_MAZE_CROSS =
     "xx...xx","xx#1#xx",
     "xxx1xxx","xxx1xxx",
     "xxx1xxx","xxx1xxx",
-  },
+  }
 },
 
 GROW_MAZE_U =
@@ -5337,7 +5387,7 @@ GROW_MAZE_U =
     ".....","#1#1#",
     "x1x1x","x1x1x",
     "x1x1x","x1x1x",
-  },
+  }
 },
 
 GROW_STRAIGHT_CAGE =
@@ -5353,7 +5403,7 @@ GROW_STRAIGHT_CAGE =
     "...","#1C",
     "x1x","x1x",
     "x1x","x1x",
-  },
+  }
 },
 
 GROW_STRAIGHT_CAGE_ALT =
@@ -5370,7 +5420,7 @@ GROW_STRAIGHT_CAGE_ALT =
     "...","#1C",
     "x1x","x1x",
     "x1x","x1x",
-  },
+  }
 },
 
 -- MSSP's liquid slabs. [LIQUID_SLABS]
