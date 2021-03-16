@@ -106,7 +106,7 @@ PREFABS.Wall_modquake_set_jawlike_boom =
 PREFABS.Wall_modquake_top_heavy_brace_set =
 {
   template = "Wall_modquake_set_industrial",
-  map = "MAP03"
+  map = "MAP03",
 
   rank = 2,
 
