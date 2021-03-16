@@ -1,6 +1,6 @@
 PREFABS.Start_armaetus_chamber_start_tech =
 {
-  file   = "start/gtd_armaetus_chamber_exit.wad",
+  file   = "start/gtd_armaetus_chamber_start.wad",
   map    = "MAP01",
 
   prob   = 150,
