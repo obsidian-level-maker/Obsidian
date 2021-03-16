@@ -3107,12 +3107,11 @@ function Room_floor_ceil_heights()
       A.ceil_h = math.max(A.floor_h + A.room.scenic_fences.rail_h, A.floor_h + 96, N.ceil_h)
     end
 
-    A.floor_mat = assert(A.zone.cage_mat)
-    A.ceil_mat = assert(A.zone.cage_mat)
+    A.floor_mat = assert(R.cage_mat or A.zone.cage_mat)
+    A.ceil_mat = assert(R.cage_mat or A.zone.cage_mat)
 
     -- fancy cages
     if A.cage_mode or (#A.seeds >= 4 and rand.odds(50)) then
-      A.floor_mat = A.zone.cage_mat
 
       table.insert(R.cage_rail_areas, A)
 

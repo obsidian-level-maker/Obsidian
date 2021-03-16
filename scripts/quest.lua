@@ -3046,6 +3046,10 @@ function Quest_room_themes()
 
     for _,R in pairs(LEVEL.rooms) do
       R.scenic_fences = R.zone.scenic_fences
+
+      if R:get_env() == "building" then
+        R.cage_mat = rand.key_by_probs(R.theme.floors)
+      end
     end
   end
 
