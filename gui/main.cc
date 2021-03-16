@@ -54,7 +54,7 @@ int screen_h;
 
 int main_action;
 
-uintmax_t next_rand_seed;
+unsigned long long next_rand_seed;
 
 bool batch_mode = false;
 const char *batch_output_file = NULL;
