@@ -5,7 +5,7 @@
 #ifndef __OBLIGE_TX_FORGE_H__
 #define __OBLIGE_TX_FORGE_H__
 
-void TX_SpectralSynth(uint_fast32_t seed, float *buf, int width,
+void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
                       double fracdim = 2.4, double powscale = 1.2);
 
 #endif /* __OBLIGE_TX_FORGE_H__ */

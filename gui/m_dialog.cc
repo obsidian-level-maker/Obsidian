@@ -31,6 +31,7 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 
 
 const char *last_directory = NULL;
@@ -321,7 +322,7 @@ void DLG_EditSeed(void)
 {
 	char num_buf[1000];
 	
-	sprintf(num_buf, "%lu", next_rand_seed);
+	sprintf(num_buf, std::to_string(next_rand_seed).c_str());
 	
 	const char * user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
 
@@ -337,16 +338,16 @@ void DLG_EditSeed(void)
                 throw std::runtime_error("String contains non-digits. Will process as string\n");
             }
         }
-        next_rand_seed = std::stoll(word);
+        next_rand_seed = std::stoull(word);
         return;
     } catch (std::invalid_argument &e) {
         std::cout << "Invalid argument. Will process as string.\n";
     } catch (std::out_of_range &e) {
-        std::cout << "Resulting number would be out of range for a 32-bit signed integer. Will process as string.\n";
+        std::cout << "Resulting number would be out of range. Will process as string.\n";
     } catch (std::exception &e) {
         std::cout << e.what();
     }
-    uint_fast32_t split_limit = (INT_FAST32_MAX / 127);
+    unsigned long long split_limit = (std::numeric_limits<unsigned long long>::max() / 127);
     next_rand_seed = split_limit;
     for (long unsigned int i = 0 ; i < word.size() ; i++) {
         char character = word.at(i);

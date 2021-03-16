@@ -30,6 +30,8 @@
 #include "m_cookie.h"
 #include "m_lua.h"
 
+#include <iostream>
+
 
 typedef enum
 {
@@ -82,7 +84,15 @@ static void Cookie_SetValue(const char *name, const char *value)
 
 		if (context == CCTX_Arguments || keep_seed)
 		{
-			next_rand_seed = floor(atof(value));
+			try 
+			{
+				next_rand_seed = std::stoull(value);
+				return;
+			} catch (std::invalid_argument &e) {
+				std::cout << "Invalid argument. Will generate new seed.\n";
+			} catch (std::out_of_range &e) {
+				std::cout << "Resulting number would be out of range. Will generate new seed.\n";
+			}
 		}
 
 		return;
