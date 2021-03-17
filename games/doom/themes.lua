@@ -1280,7 +1280,10 @@ DOOM.THEMES =
       gtd_generic_artsy_step1_banded = 25,
       gtd_modquake_set = 13,
       gtd_modquake_jawlike = 13,
-      gtd_modquake_top_heavy_brace = 13
+      gtd_modquake_top_heavy_brace = 13,
+      gtd_wall_lamp_stubby = 8,
+      gtd_wall_lamp_thin = 8,
+      gtd_wall_lamp_thicc = 8
     },
 
     outdoor_wall_groups =
@@ -1653,9 +1656,13 @@ DOOM.THEMES =
       gtd_generic_d64_2x_blue = 2,
       gtd_generic_tek_grate = 15,
       gtd_generic_artsy_step1_banded = 15,
-      gtd_modquake_set = 5,
-      gtd_modquake_jawlike = 5,
-      gtd_modquake_top_heavy_brace = 5
+      gtd_modquake_set = 7,
+      gtd_modquake_jawlike = 7,
+      gtd_modquake_top_heavy_brace = 7,
+      gtd_wall_lamp_stubby = 5,
+      gtd_wall_lamp_thin = 5,
+      gtd_wall_lamp_thicc = 5
+
     },
 
     window_groups =
