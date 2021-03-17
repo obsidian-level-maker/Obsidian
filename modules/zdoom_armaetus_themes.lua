@@ -1503,6 +1503,148 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
+  hell_rocky_ruins =
+  {
+    env = "building",
+    prob = 30,
+    
+    walls =
+    {
+      ASHWALL2 = 5,
+      ASHWALL3 = 5,
+      ASHWALL4 = 5,
+      ASHWALL6 = 5,
+      ASHWALL7 = 5,
+
+      BROVINE2 = 5,
+
+      BSTONE1 = 5,
+      BSTONE2 = 5,
+      GSTVINE1 = 5,
+      GSTVINE2 = 5,
+      ROCK2 = 5,
+      ROCK3 = 5,
+
+      STONE6 = 5,
+      TANROCK2 = 5,
+      TANROCK3 = 5,
+      TANROCK4 = 5,
+      TANROCK5 = 5,
+      TANROCK6 = 5,
+      TANROCK7 = 5,
+      TANROCK8 = 5,
+
+      ZIMMER3 = 5,
+      ZIMMER4 = 5,
+      ZIMMER5 = 5,
+      ZIMMER8 = 5,
+
+      -- 
+
+      ASHWALL1 = 7,
+      BRIKS11 = 7,
+      BRIKS13 = 7,
+      BRIKS29 = 7,
+      BRIKS30 = 7,
+      BRIKS39 = 7,
+      CATACMB3 = 7,
+      CATACMB6 = 7,
+      DESBRIK7 = 7,
+      EGYPT03 = 7,
+      EGYPT05 = 7,
+      GOTH12 = 7,
+      GOTH13 = 7,
+      GOTH14 = 7,
+      GOTH30 = 7,
+      GOTH46 = 7,
+      GOTH47 = 7,
+      GOTH48 = 7,
+      GOTH49 = 7,
+      MM205 = 7,
+      MM206 = 7,
+      RDROK2 = 7,
+      ROK03 = 7,
+      ROK07 = 7,
+      ROK08 = 7,
+      ROK09 = 7,
+      ROK10 = 7,
+      ROK12 = 7,
+      ROK16 = 7,
+      ROK21 = 7,
+
+      WOOD13 = 7,
+      WOOD14 = 7,
+      WOOD15 = 7,
+      WOOD16 = 7,
+      WOOD17 = 7,
+      WOOD18 = 7
+    },
+
+    floors =
+    {
+      FLAT1_1 = 5,
+      FLAT5_7 = 5,
+      FLOOR6_2 = 5,
+      FLOOR7_2 = 5,
+      GRNROCK = 5,
+      MFLR8_2 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK13 = 5,
+      RROCK15 = 5,
+
+      --
+
+      FLOOR7_3 = 7,
+      G11 = 7,
+      G12 = 7,
+      G20 = 7,
+      GMET02 = 7,
+      GMET03 = 7,
+      GMET04 = 7,
+      GMET05 = 7,
+      GMET06 = 7,
+      GMET07 = 7,
+      QFLAT03 = 7,
+      QFLAT04 = 7,
+      QFLAT05 = 7,
+      QFLAT06 = 7,
+      QFLAT07 = 7
+    },
+
+    ceilings =
+    {
+      FLAT1_1 = 5,
+      FLAT5_7 = 5,
+      FLOOR6_2 = 5,
+      FLOOR7_2 = 5,
+      GRNROCK = 5,
+      MFLR8_2 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK13 = 5,
+      RROCK15 = 5,
+
+      --
+
+      FLOOR7_3 = 7,
+      G11 = 7,
+      G12 = 7,
+      G20 = 7,
+      GMET02 = 7,
+      GMET03 = 7,
+      GMET04 = 7,
+      GMET05 = 7,
+      GMET06 = 7,
+      GMET07 = 7,
+      QFLAT03 = 7,
+      QFLAT04 = 7,
+      QFLAT05 = 7,
+      QFLAT06 = 7,
+      QFLAT07 = 7
+    }
+  },
+
   hell_armaetuscave =
   {
     env  = "cave",
