@@ -1759,6 +1759,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       if R.is_park and table.has_elem(rule.styles, "liquids") then return 0 end
       if R.is_cave and table.has_elem(rule.styles, "steepness") then return 0 end
       if R.is_cave and table.has_elem(rule.styles, "liquids") then return 0 end
+      if R.is_cave and table.has_elem(rule.styles, "cages") then return 0 end
     end
 
     if rule.new_room and rule.new_room.env == "cave" then
