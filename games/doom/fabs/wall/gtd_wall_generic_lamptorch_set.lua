@@ -74,4 +74,96 @@ PREFABS.Wall_generic_gtd_lamp_thin_diag =
   thing_45 = 85
 }
 
--- TODO: hell versions
+-- gothic versions
+
+-- candalebra
+
+PREFABS.Wall_generic_gtd_candalebra =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  group = "gtd_wall_candalebra",
+
+  thing_2028 = 35
+}
+
+PREFABS.Wall_generic_gtd_candalebra_diag =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  file = "wall/torches.wad",
+  map = "MAP02",
+
+  group = "gtd_wall_candalebra",
+
+  where = "digonal",
+
+  thing_45 = 35
+}
+
+-- blue torch
+
+PREFABS.Wall_generic_gtd_blue_torch =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  group = "gtd_wall_blue_torch",
+
+  thing_2028 = 44
+}
+
+PREFABS.Wall_generic_gtd_blue_torch_diag =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  file = "wall/torches.wad",
+  map = "MAP02",
+
+  group = "gtd_wall_blue_torch",
+
+  where = "digonal",
+
+  thing_45 = 44
+}
+
+-- green torch
+
+PREFABS.Wall_generic_gtd_green_torch =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  group = "gtd_wall_green_torch",
+
+  thing_2028 = 45
+}
+
+PREFABS.Wall_generic_gtd_green_torch_diag =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  file = "wall/torches.wad",
+  map = "MAP02",
+
+  group = "gtd_wall_green_torch",
+
+  where = "digonal",
+
+  thing_45 = 45
+}
+
+-- red torch
+
+PREFABS.Wall_generic_gtd_red_torch =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  group = "gtd_wall_red_torch",
+
+  thing_2028 = 46
+}
+
+PREFABS.Wall_generic_gtd_red_torch_diag =
+{
+  template = "Wall_generic_gtd_lamp_stubby",
+  file = "wall/torches.wad",
+  map = "MAP02",
+
+  group = "gtd_wall_red_torch",
+
+  where = "digonal",
+
+  thing_45 = 46
+}
