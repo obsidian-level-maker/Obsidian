@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  MODULE: prefab spawn quantity controller
+--  MODULE: Prefab Controller
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2019-2020 MsrSgtShooterPerson
@@ -45,6 +45,15 @@ PREFAB_CONTROL.POINT_CHOICES =
   "fab_default", _("DEFAULT"),
   "fab_more",    _("More"),
   "fab_heaps",   _("Heaps")
+}
+
+PREFAB_CONTROL.PERCENTAGE_CHOICES =
+{
+  "0",  _("NONE"),
+  "25", _("25% of Levels"),
+  "50", _("50% of Levels"),
+  "75", _("75% of Levels"),
+  "100", _("100% of Levels")
 }
 
 PREFAB_CONTROL.ON_OFF =
@@ -136,7 +145,7 @@ end
 
 OB_MODULES["prefab_control"] =
 {
-  label = _("Prefab Control"),
+  label = _("Advanced Level Control"),
 
   side = "left",
   priority = 93,
@@ -165,19 +174,19 @@ OB_MODULES["prefab_control"] =
     point_prob =
     {
       name = "point_prob",
-      label=_("Decor"),
+      label=_("Point Decor"),
       choices=PREFAB_CONTROL.POINT_CHOICES,
       tooltip = "Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n\nNote: DEFAULT actually behaves like Mix-It-Up.",
       default = "fab_default",
       priority = 101
     },
 
-    wall_prob = -- code for this option is currently under revision
+    wall_prob =
     {
       name = "wall_prob",
-      label=_("Walls"),
+      label=_("Wall Decor"),
       choices=PREFAB_CONTROL.WALL_CHOICES,
-      tooltip = "Determines the amount plain wall prefabs. What it actually does is greatly increase the probability of Oblige's basic plain wall prefab, rather than reduce the probability of all the prefabs in the library.",
+      tooltip = "Determines the odds for decorated wall junctions in a map versus plain ones.",
       default = "fab_default",
       priority = 100
     },
@@ -195,12 +204,37 @@ OB_MODULES["prefab_control"] =
 
     --
 
+    single_room_theme =
+    {
+      name = "single_room_theme",
+      label = _("Single Room Themes"),
+      choices = PREFAB_CONTROL.PERCENTAGE_CHOICES,
+      tooltip = "Determines the odds at which a level would use a universal, single room theme " ..
+                "for all indoors (buildings). Default is 50%.",
+      default = "50", 
+      priority = 50,
+    },
+
+    limit_wall_groups =
+    {
+      name = "limit_wall_groups",
+      label = _("Limited Wall Groups"),
+      choices = PREFAB_CONTROL.PERCENTAGE_CHOICES,
+      tooltip = "Determines the odds at which a level would use fewer wall group choices but at greater quantites " ..
+                "for more consistent visuals. Default is 50%.",
+      default = "50",
+      priority = 49,
+      gap = 1
+    },
+
+    --
+
     pf_crushers =
     {
       name="pf_crushers", label=_("Crushers"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs with crushing sectors. Default is on.",
       default="1",
-      priority = 49
+      priority = 14
     },
 
     pf_dexterity =
@@ -208,7 +242,7 @@ OB_MODULES["prefab_control"] =
       name="pf_dexterity", label=_("Dexterity Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs featuring Chasm-ish navigation. Default is on.",
       default="1",
-      priority = 48
+      priority = 13
     },
 
     pf_gamble =
@@ -216,7 +250,7 @@ OB_MODULES["prefab_control"] =
       name="pf_dexterity", label=_("Gambling Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs that may lockout a player on items. Default is on.",
       default="1",
-      priority = 47,
+      priority = 12,
     },
 
     pf_sight_ambushes =
@@ -225,7 +259,7 @@ OB_MODULES["prefab_control"] =
       tooltip="Changes probabilities for cages that unleash its monsters when player is in sight. " ..
       "Default is on.",
       default="1",
-      priority = 46,
+      priority = 11,
     },
 
     pf_mirror_mazes =
@@ -233,7 +267,7 @@ OB_MODULES["prefab_control"] =
       name = "pf_mirror_mazes", label=_("Mirror Mazes"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for hell mirror maze closets and joiners.",
       default="1",
-      priority = 45,
+      priority = 10,
       gap = 1
     },
 
@@ -244,18 +278,7 @@ OB_MODULES["prefab_control"] =
       name = "pf_damaging_halls", label = _("Damaging Hallways"), choices=PREFAB_CONTROL.DAMAGING_HALLWAY_CHOICES,
       tooltip = "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging.",
       default = "default",
-      priority = 25,
-      gap = 1
-    },
-
-    --
-
-    damaging_hallways =
-    {
-      name = "pf_damaging_halls", label = _("Damaging Hallways"), choices=PREFAB_CONTROL.DAMAGING_HALLWAY_CHOICES,
-      tooltip = "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging.",
-      default = "default",
-      priority = 25,
+      priority = 5,
       gap = 1
     },
 

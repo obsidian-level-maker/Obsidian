@@ -2928,7 +2928,10 @@ function Quest_room_themes()
   local function choose_building_themes()
     local building_tab = collect_usable_themes("building")
 
-    if rand.odds(50) then
+    local single_room_theme_prob = int(PARAM.single_room_theme or 50)
+    local limit_wall_group_prob = int(PARAM.limit_wall_groups or 50)
+
+    if rand.odds(single_room_theme_prob) then
       -- distribute room themes (vanilla Oblige behavior)
       -- recursively flow through the level
       visit_room(LEVEL.start_room, nil, nil, building_tab)
@@ -2938,7 +2941,7 @@ function Quest_room_themes()
       local the_one_wall_group_tab = {}
 
       -- sometimes prefer particular wall groups over others
-      if rand.odds(50) then
+      if rand.odds(limit_wall_group_prob) then
         local x = rand.irange(1,3)
 
         while x >= 1 do
@@ -2949,12 +2952,10 @@ function Quest_room_themes()
       end
 
       for _,R in pairs(LEVEL.rooms) do
-        -- TODO: respect Foreshadowing Exit feature
-        -- maybe do next_level checks way before here instead
-
         if R:get_env() == "building" then
           R.theme = the_one_room_theme
-          if not table.empty(the_one_wall_group_tab) then
+
+          if not table.empty(the_one_wall_group_tab) and not R.is_exit then
             R.forced_wall_groups = the_one_wall_group_tab
           end
         end
