@@ -83,7 +83,10 @@ PREFABS.Wall_generic_gtd_candalebra =
   template = "Wall_generic_gtd_lamp_stubby",
   group = "gtd_wall_candalebra",
 
-  thing_2028 = 35
+  thing_2028 = 35,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
 
 PREFABS.Wall_generic_gtd_candalebra_diag =
@@ -96,7 +99,10 @@ PREFABS.Wall_generic_gtd_candalebra_diag =
 
   where = "digonal",
 
-  thing_45 = 35
+  thing_45 = 35,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
 
 -- blue torch
@@ -106,7 +112,10 @@ PREFABS.Wall_generic_gtd_blue_torch =
   template = "Wall_generic_gtd_lamp_stubby",
   group = "gtd_wall_blue_torch",
 
-  thing_2028 = 44
+  thing_2028 = 44,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
 
 PREFABS.Wall_generic_gtd_blue_torch_diag =
@@ -119,7 +128,10 @@ PREFABS.Wall_generic_gtd_blue_torch_diag =
 
   where = "digonal",
 
-  thing_45 = 44
+  thing_45 = 44,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
 
 -- green torch
@@ -129,7 +141,10 @@ PREFABS.Wall_generic_gtd_green_torch =
   template = "Wall_generic_gtd_lamp_stubby",
   group = "gtd_wall_green_torch",
 
-  thing_2028 = 45
+  thing_2028 = 45,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
 
 PREFABS.Wall_generic_gtd_green_torch_diag =
@@ -142,7 +157,10 @@ PREFABS.Wall_generic_gtd_green_torch_diag =
 
   where = "digonal",
 
-  thing_45 = 45
+  thing_45 = 45,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
 
 -- red torch
@@ -152,7 +170,10 @@ PREFABS.Wall_generic_gtd_red_torch =
   template = "Wall_generic_gtd_lamp_stubby",
   group = "gtd_wall_red_torch",
 
-  thing_2028 = 46
+  thing_2028 = 46,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
 
 PREFABS.Wall_generic_gtd_red_torch_diag =
@@ -165,5 +186,8 @@ PREFABS.Wall_generic_gtd_red_torch_diag =
 
   where = "digonal",
 
-  thing_45 = 46
+  thing_45 = 46,
+
+  flat_FLAT23 = "CEIL5_2",
+  tex_SHAWN2 = "METAL"
 }
