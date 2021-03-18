@@ -5225,8 +5225,8 @@ GROW_MAZE_ZIGZAG =
 
   diagonals =
   {
-    "1.",
     ".1",
+    "1.",
   }
 },
 
