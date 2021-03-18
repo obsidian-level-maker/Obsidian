@@ -2092,6 +2092,7 @@ function Fabricate(room, def, T, skins)
   end
 
   gui.debugf("=========  FABRICATE %s\n", def.file)
+  gui.debugf(table.tostr(T).."\n")
 
   local fab = Fab_load_wad(def)
 

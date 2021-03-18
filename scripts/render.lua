@@ -579,6 +579,7 @@ function Render_edge(E)
 
 
     local z = assert(E.fence_top_z) - def.fence_h
+    E.post_offset_h = def.post_offset_h or 0
 
     local T
 
@@ -1095,7 +1096,19 @@ function Render_corner(cx, cy)
       Trans.brush(brush)
 
     elseif corner.post_type then
-      local T = Trans.spot_transform(mx, my, corner.post_top_h, 2)
+      local def = assert(PREFABS[corner.post_type])
+      local z = corner.post_top_h
+
+      local offset_h = -EXTREME_H
+
+      for _,J in pairs(corner.junctions) do
+        if J.E1 and J.E1.kind == "fence" then
+          offset_h = math.max(offset_h, J.E1.fence_top_z + J.E1.post_offset_h)
+        end
+      end
+      z = math.max(z, offset_h)
+
+      local T = Trans.spot_transform(mx, my, z, 2)
 
       local skins =
       {
@@ -1103,7 +1116,7 @@ function Render_corner(cx, cy)
         floor = mat
       }
 
-      Fabricate(corner.areas[1].room, PREFABS[corner.post_type], T, {skins})
+      Fabricate(corner.areas[1].room, def, T, {skins})
     end
   end
 
@@ -2907,7 +2920,8 @@ function Render_all_areas()
     Render_all_street_traffic()
   end
 
-  Render_scenic_fabs()
+  -- FIXME: Offets are wrong because map is now centered!
+  -- Render_scenic_fabs()
 
 end
 
@@ -3442,14 +3456,14 @@ function Render_scenic_fabs()
         height = area.ceil_h - area.floor_h,
         env = "outdoor",
         kind = "decor",
-        where = "point",
+        where = "point"
       }
 
       local skin =
       {
         floor = area.floor_mat,
         wall = area.zone.facade_mat,
-        ceil = "_SKY",
+        ceil = "_SKY"
       }
 
       local pick = rand.pick(area.seeds)
