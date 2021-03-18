@@ -7,6 +7,8 @@ PREFABS.Fence_gothic =
 
   group  = "fence_gothic",
 
+  post_offset_h = 96,
+
   where  = "edge",
 
   deep   = 16,
@@ -16,7 +18,6 @@ PREFABS.Fence_gothic =
   bound_z1 = 0,
 }
 
-
 PREFABS.Fence_gothic_diag =
 {
   file   = "fence/gtd_fence_gothic.wad",
@@ -25,6 +26,8 @@ PREFABS.Fence_gothic_diag =
   prob   = 50,
 
   group  = "fence_gothic",
+
+  post_offset_h = 96,
 
   where  = "diagonal",
 
