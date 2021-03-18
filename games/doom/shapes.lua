@@ -4172,15 +4172,13 @@ GROW_CAGE_Z =
 
 GROW_CAGE_SIMPLE_CORNER =
 {
-  prob = 6,
+  prob = 10,
   skip_prob = 70,
-
-  aversion = 10,
 
   structure =
   {
     "....","/C11",
-    ".111","C111",
+    "..11","C111",
   },
 
   diagonals =
@@ -4188,7 +4186,54 @@ GROW_CAGE_SIMPLE_CORNER =
     ".C",
   },
 
-  cage_mode = "fancy",
+  cage_mode = "fancy"
+},
+
+GROW_CAGE_SIMPLE_DOUBLE_CORNER =
+{
+  prob = 10,
+  skip_prob = 70,
+
+  structure =
+  {
+    "......","/C11C%",
+    "......","C1111C",
+    "......","111111",
+    "......","111111",
+    "xx11xx","xx11xx",
+  },
+
+  diagonals =
+  {
+    ".C","C.",
+  },
+
+  cage_mode = "fancy"
+},
+
+GROW_CAGE_SIMPLE_QUAD_CORNER =
+{
+  prob = 10,
+  skip_prob = 70,
+
+  structure =
+  {
+    "......","/C11C%",
+    "......","C1111C",
+    "......","111111",
+    "......","111111",
+    "......","C1111C",
+    "......","%C11C/",
+    "xx11xx","xx11xx",
+  },
+
+  diagonals =
+  {
+    ".C","C.",
+    ".C","C.",
+  },
+
+  cage_mode = "fancy"
 },
 
 GROW_CAGE_DOOM_MAP01 =
@@ -4206,7 +4251,7 @@ GROW_CAGE_DOOM_MAP01 =
     "......","1C11C1",
     "......","111111",
     "xx11xx","xx11xx",
-  },
+  }
 },
 
 GROW_CAGE_DOOM_MAP01_PILLARED =
@@ -4225,7 +4270,7 @@ GROW_CAGE_DOOM_MAP01_PILLARED =
     "......","1C11C1",
     "......","111111",
     "xx11xx","xx11xx",
-  },
+  }
 },
 
 DECORATE_CAGE_ON_LIQUID_CANAL_SIDE =
@@ -5215,7 +5260,7 @@ GROW_MAZE_ZIGZAG_DOUBLE =
 
 GROW_MAZE_STRAIGHT_NEW_AREA =
 {
-  prob = 10,
+  prob = 2,
   skip_prob = 35,
 
   structure =
@@ -5230,7 +5275,7 @@ GROW_MAZE_STRAIGHT_NEW_AREA =
 
 GROW_MAZE_STRAIGHT_STAIRED =
 {
-  prob = 10,
+  prob = 2,
   skip_prob = 35,
 
   structure =
@@ -5246,7 +5291,7 @@ GROW_MAZE_STRAIGHT_STAIRED =
 
 GROW_MAZE_STRAIGHT_LONG =
 {
-  prob = 8,
+  prob = 1,
   skip_prob = 35,
 
   structure =
@@ -5297,7 +5342,7 @@ GROW_MAZE_L =
 
 GROW_MAZE_L_DIAG =
 {
-  prob = 8,
+  prob = 2,
   skip_prob = 35,
 
   structure =
@@ -5320,7 +5365,7 @@ GROW_MAZE_L_DIAG =
 
 GROW_MAZE_T =
 {
-  prob = 8,
+  prob = 2,
   skip_prob = 35,
 
   structure =
@@ -5336,8 +5381,8 @@ GROW_MAZE_T =
 
 GROW_MAZE_T_DIAG =
 {
-  prob = 8,
-  skip_prob = 35,
+  prob = 2,
+  skip_prob = 65,
 
   structure =
   {
@@ -5359,7 +5404,7 @@ GROW_MAZE_T_DIAG =
 
 GROW_MAZE_CROSS =
 {
-  prob = 7,
+  prob = 4,
   skip_prob = 45,
 
   structure =
@@ -5376,7 +5421,7 @@ GROW_MAZE_CROSS =
 
 GROW_MAZE_U =
 {
-  prob = 7,
+  prob = 5,
   skip_prob = 45,
 
   structure =
@@ -5385,14 +5430,30 @@ GROW_MAZE_U =
     "x.x.x","x1x1x",
     ".....","#1#1#",
     ".....","#1#1#",
-    "x1x1x","x1x1x",
-    "x1x1x","x1x1x",
+    "x1x.x","x1x1x",
+    "x1x.x","x1x1x",
   }
 },
 
-GROW_STRAIGHT_CAGE =
+GROW_MAZE_SQUARE =
 {
-  prob = 10,
+  prob = 5,
+  skip_prob = 50,
+  
+  structure =
+  {
+    "xx..xx","xx##xx",
+    "x....x","x1111x",
+    "......","#1..1#",
+    "......","#1..1#",
+    "x1...x","x1111x",
+    "x1..xx","x1##xx",
+  }
+},
+
+GROW_MAZE_STRAIGHT_CAGE =
+{
+  prob = 2,
   skip_prob = 35,
 
   structure =
@@ -5406,9 +5467,9 @@ GROW_STRAIGHT_CAGE =
   }
 },
 
-GROW_STRAIGHT_CAGE_ALT =
+GROW_MAZE_STRAIGHT_CAGE_ALT =
 {
-  prob = 10,
+  prob = 2,
   skip_prob = 35,
 
   structure =
