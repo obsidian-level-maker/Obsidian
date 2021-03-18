@@ -2920,8 +2920,7 @@ function Render_all_areas()
     Render_all_street_traffic()
   end
 
-  -- FIXME: Offets are wrong because map is now centered!
-  -- Render_scenic_fabs()
+  Render_scenic_fabs()
 
 end
 
@@ -3489,7 +3488,7 @@ function Render_scenic_fabs()
 
           if not S.area then return end
           if S.area and S.area ~= area then return end
-          if S.walls then return end
+          if S.wall_depth then return end
           if S.diagonal then return end
           if S.occupied then return end
           S.occupied = true
@@ -3502,8 +3501,8 @@ function Render_scenic_fabs()
       local def = Fab_pick(reqs, "none_ok")
 
       if def then
-        local fx = x * SEED_SIZE + 32
-        local fy = y * SEED_SIZE + 32
+        local fx = pick.mid_x + (SEED_SIZE/2)
+        local fy = pick.mid_y + (SEED_SIZE/2)
 
         local fab =
         {
