@@ -1103,6 +1103,14 @@ function Render_corner(cx, cy)
 
       for _,J in pairs(corner.junctions) do
         if J.E1 and J.E1.kind == "fence" then
+-- REMOVE-ME: temporary error checking for some edge cases... literally!
+  if not J.E1.post_offset_h then
+    gui.printf(table.tostr(J.E1) .. "\n")
+    print_area(J.E1.area)
+    gui.printf("\n")
+    error("MISSING POST OFFSET HEIGHT! OMGOMGOMGOMFGOMFGOFMG")
+  end
+--
           offset_h = math.max(offset_h, J.E1.fence_top_z + J.E1.post_offset_h)
         end
       end
