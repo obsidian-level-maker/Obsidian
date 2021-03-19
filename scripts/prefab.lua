@@ -2341,6 +2341,12 @@ function Fab_find_matches(reqs, match_state)
     if reqs.scenic and def.on_scenics == "never" then return 0 end
     if not reqs.scenic and def.on_scenics == "only" then return 0 end
 
+    --
+    if reqs.on_stairs and def.on_stairs == "never" then return 0 end
+
+    --
+    if reqs.group and reqs.group == "natural_park" and def.park_mode = "no_nature" then return 0 end
+
     -- wall fabs that need to be flat, to prevent high-depth walls from intersecting
     if reqs.deep and def.deep then
       if def.deep > reqs.deep then return 0 end
