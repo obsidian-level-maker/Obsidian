@@ -1717,7 +1717,11 @@ function Fab_load_wad(def)
     gui.wadfab_load(filename, def.map or "*")
 
     for thing_idx = 0,9999 do
-      local E = gui.wadfab_get_thing(thing_idx)
+--      if OB_CONFIG.game == "hexen" then
+--        local E = gui.wadfab_get_thing_hexen(thing_idx)
+--      else
+        local E = gui.wadfab_get_thing(thing_idx)
+--      end
 
       -- nil result marks the end
       if not E then break; end
@@ -1754,7 +1758,11 @@ function Fab_load_wad(def)
     end
 
     for line_idx = 0,9999 do
-      local L = gui.wadfab_get_line(line_idx)
+--      if OB_CONFIG.game == "hexen" then
+--       local L = gui.wadfab_get_line_hexen(line_idx)
+--      else
+        local L = gui.wadfab_get_line(line_idx)
+--      end
 
       -- nil result marks the end
       if not L then break; end
@@ -2085,7 +2093,7 @@ function Fab_replacements(fab)
 
     return fab.fields[k]
   end
-
+  
 
   local function get_entity_id(name)
     -- allow specifying a raw ID number
@@ -2178,6 +2186,10 @@ function Fab_replacements(fab)
       if C.special and not C.x then C.special = check("sector", C.special) end
 
       if C.tag then C.tag = check_tag(C.tag) end
+      
+      if OB_CONFIG.game == "hexen" then
+        if C.arg1 then C.arg1 = C.tag end
+      end
 
       if C.u1  then C.u1  = check("offset", C.u1) end
       if C.v1  then C.v1  = check("offset", C.v1) end

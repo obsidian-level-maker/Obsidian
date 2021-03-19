@@ -198,6 +198,59 @@ int wadfab_get_thing(lua_State *L)
 	return 1;
 }
 
+int wadfab_get_thing_hexen(lua_State *L)
+{
+	int index = luaL_checkinteger(L, 1);
+
+	if (index < 0 || index >= ajpoly::num_things)
+		return 0;
+
+	const ajpoly::thing_c * TH = ajpoly::Thing(index);
+
+	lua_newtable(L);
+
+	lua_pushinteger(L, TH->x);
+	lua_setfield(L, -2, "x");
+
+	lua_pushinteger(L, TH->y);
+	lua_setfield(L, -2, "y");
+
+	lua_pushinteger(L, calc_thing_z(TH->x, TH->y));
+	lua_setfield(L, -2, "z");
+
+	lua_pushinteger(L, TH->angle);
+	lua_setfield(L, -2, "angle");
+
+	lua_pushinteger(L, TH->type);
+	lua_setfield(L, -2, "type");
+
+	lua_pushinteger(L, TH->options);
+	lua_setfield(L, -2, "options");
+
+	lua_pushinteger(L, TH->special);
+	lua_setfield(L, -2, "special");
+	
+	lua_pushinteger(L, TH->index);
+	lua_setfield(L, -2, "tid");
+	
+    lua_pushinteger(L, TH->args[0]);
+    lua_setfield(L, -2, "arg1");
+    
+    lua_pushinteger(L, TH->args[1]);
+    lua_setfield(L, -2, "arg2");
+
+	lua_pushinteger(L, TH->args[2]);
+    lua_setfield(L, -2, "arg3");
+    
+    lua_pushinteger(L, TH->args[3]);
+    lua_setfield(L, -2, "arg4");
+    
+    lua_pushinteger(L, TH->args[4]);
+    lua_setfield(L, -2, "arg5");
+
+	return 1;
+}
+
 
 int wadfab_get_sector(lua_State *L)
 {
