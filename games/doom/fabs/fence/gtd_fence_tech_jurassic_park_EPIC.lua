@@ -31,6 +31,14 @@ PREFABS.Fence_jurassic_park_diag =
   where = "diagonal"
 }
 
+PREFABS.Fence_jurassic_park_straight_battery =
+{
+  template = "Fence_jurassic_park_straight",
+  map = "MAP03",
+
+  prob = 10
+}
+
 --
 
 PREFABS.Fence_jurassic_park_straight_limit =
@@ -64,4 +72,12 @@ PREFABS.Fence_jurassic_park_diag_limit =
   map = "MAP02",
 
   where = "diagonal"
+}
+
+PREFABS.Fence_jurassic_park_straight_battery_limit =
+{
+  template = "Fence_jurassic_park_straight_limit",
+  map = "MAP03",
+
+  prob = 10
 }
