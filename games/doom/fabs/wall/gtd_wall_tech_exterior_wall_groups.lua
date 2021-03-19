@@ -502,7 +502,7 @@ PREFABS.Wall_tech_outdoor_tall_light_alt_color = --#
   group = "tech_o_tall_light_alt",
 
   tex_COMPBLUE = "REDWALL",
-  tex_CEIL4_3 = "FLOOR1_6",
+  flat_CEIL4_3 = "FLOOR1_6",
 
   z_fit = "top"
 }

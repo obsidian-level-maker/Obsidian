@@ -2928,7 +2928,7 @@ function Quest_room_themes()
   local function choose_building_themes()
     local building_tab = collect_usable_themes("building")
 
-    if rand.odds(50) then
+    if rand.odds(style_sel("outdoors", 0, 25, 50, 75)) then
       -- distribute room themes (vanilla Oblige behavior)
       -- recursively flow through the level
       visit_room(LEVEL.start_room, nil, nil, building_tab)
@@ -2938,7 +2938,7 @@ function Quest_room_themes()
       local the_one_wall_group_tab = {}
 
       -- sometimes prefer particular wall groups over others
-      if rand.odds(50) then
+      if rand.odds(75) then
         local x = rand.irange(1,3)
 
         while x >= 1 do

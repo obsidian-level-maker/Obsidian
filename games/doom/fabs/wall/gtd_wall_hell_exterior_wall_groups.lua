@@ -143,7 +143,7 @@ PREFABS.Wall_hell_outdoor_lava_falls = --#
   {
     FIREMAG1 = 15,
     SLADWALL = 50,
-    SLADSKULL = 15,
+    SLADSKUL = 15,
   },
 
   z_fit = { 48,72 },
