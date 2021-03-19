@@ -318,6 +318,50 @@ int wadfab_get_line(lua_State *L)
 
 	lua_pushinteger(L, LD->tag);
 	lua_setfield(L, -2, "tag");
+	    
+	return 1;
+}
+
+int wadfab_get_line_hexen(lua_State *L)
+{
+	int index = luaL_checkinteger(L, 1);
+
+	if (index < 0 || index >= ajpoly::num_linedefs)
+		return 0;
+
+	const ajpoly::linedef_c * LD = ajpoly::Linedef(index);
+
+	lua_newtable(L);
+
+	lua_pushinteger(L, LD->start->x);
+	lua_setfield(L, -2, "x1");
+
+	lua_pushinteger(L, LD->start->y);
+	lua_setfield(L, -2, "y1");
+
+	lua_pushinteger(L, LD->end->x);
+	lua_setfield(L, -2, "x2");
+
+	lua_pushinteger(L, LD->end->y);
+	lua_setfield(L, -2, "y2");
+
+	if (LD->right)
+	{
+		lua_pushinteger(L, LD->right->index);
+		lua_setfield(L, -2, "right");
+	}
+
+	if (LD->left)
+	{
+		lua_pushinteger(L, LD->left->index);
+		lua_setfield(L, -2, "left");
+	}
+
+	lua_pushinteger(L, LD->special);
+	lua_setfield(L, -2, "special");
+
+	lua_pushinteger(L, LD->flags);
+	lua_setfield(L, -2, "flags");
 	
     lua_pushinteger(L, LD->args[0]);
     lua_setfield(L, -2, "arg1");
