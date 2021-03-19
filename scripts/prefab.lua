@@ -1301,14 +1301,14 @@ function Fab_load_wad(def)
     else
       -- keep these flags: block-all, block-mon, secret, no-draw,
       --                   always-draw, block-sound, pass-thru
-      flags = bit.band(flags, 0xFFFF)
-
       if flags ~= 0 then
         C2.flags = flags
 
         -- this makes sure the flags get applied
         if not C2.special then C2.special = 0 end
       end
+      
+      C.act = bit.band(flags, 0x1C00) >> 10
 
       upper_unpeg = (bit.band(flags, MLF_UpperUnpegged) ~= 0)
       lower_unpeg = (bit.band(flags, MLF_LowerUnpegged) ~= 0)
