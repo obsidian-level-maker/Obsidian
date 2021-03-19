@@ -5430,6 +5430,7 @@ namelib.NAMES =
         ["Siri Look Up Doom Eternal"] = 10,
         ["So Sad Alexa Play D RUNNIN"] = 10,
         ["The World isn't Flat"] = 30,
+        ["Now Sashay Away"] = 30,
 
         -- Based on music, be it artists, song titles or album titles
         ["Doomtanic Hellucinations"] = 20, -- Acid Witch - "Witchtanic Hellucinations" (song)

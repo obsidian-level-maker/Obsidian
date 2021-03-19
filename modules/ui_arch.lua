@@ -38,23 +38,25 @@ UI_ARCH.SIZES =
   "huge",     _("Huge"),
   "colossal", _("Colossal"),
   "gargan",   _("Gargantuan"),
-  "trans",    _("Transcendent"),
+  "trans",    _("Transcendent")
 }
 
 UI_ARCH.ABSURDITY_CHOICES =
 {
   "none", _("NONE"),
   "all",  _("Every Level"),
+  "85",   _("85% of Levels"),
   "75",   _("75% of Levels"),
   "50",   _("50% of Levels"),
   "25",   _("25% of Levels"),
+  "10",   _("10% of Levels")
 }
 
 UI_ARCH.ZDOOM_VISTA_CHOICES =
 {
   "enable",        _("Enable"),
   "sky_gen_smart", _("Sky-gen Smart"),
-  "disable",       _("Disable"),
+  "disable",       _("Disable")
 }
 
 UI_ARCH.ZDOOM_SKYBOX_CHOICES =
@@ -63,13 +65,13 @@ UI_ARCH.ZDOOM_SKYBOX_CHOICES =
   "episodic", _("Episodic"),
   "random",   _("Random"),
   "generic",  _("Generic"),
-  "disable",  _("Disable"),
+  "disable",  _("Disable")
 }
 
 UI_ARCH.YES_NO =
 {
   "yes", _("Yes"),
-  "no",  _("No"),
+  "no",  _("No")
 }
 
 UI_ARCH.PROC_GOTCHA_CHOICES =
@@ -83,7 +85,7 @@ UI_ARCH.PROC_GOTCHA_CHOICES =
   "_",     _("_"),
   "5p",    _("5% Chance, Any Map After MAP04"),
   "10p",   _("10% Chance, Any Map After MAP04"),
-  "all",   _("Everything"),
+  "all",   _("Everything")
 }
 
 UI_ARCH.STREETS_CHOICES =
@@ -98,7 +100,7 @@ UI_ARCH.STREETS_CHOICES =
   "50",       _("50% of All Levels"),
   "25",       _("25% of All Levels"),
   "13",       _("13% of All Levels"),
-  "no",       _("NONE"),
+  "no",       _("NONE")
 }
 
 UI_ARCH.LEVEL_PERCENTAGE_CHOICES =
@@ -109,7 +111,7 @@ UI_ARCH.LEVEL_PERCENTAGE_CHOICES =
   "25",   _("25% of All Levels"),
   "10",   _("10% of All Levels"),
   "5",    _("5% of All Levels"),
-  "none", _("NONE"),
+  "none", _("NONE")
 }
 
 OB_MODULES["ui_arch"] =
@@ -124,15 +126,17 @@ OB_MODULES["ui_arch"] =
     { name="size", label=_("Level Size"), choices=UI_ARCH.SIZES,  default="epi",
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
       "at sizes of Huge and above, Autodetail is required on. (on by default if you do not have " ..
-      "Prefab Control module on. The stability of maps with sizes Colossal and beyond is not predictable.",
+      "Prefab Control module on. The stability of maps with sizes Colossal and beyond is not predictable."
     },
+
     {
       name = "streets_mode",
       label = _("Streets Mode"),
       choices = UI_ARCH.STREETS_CHOICES,
       default = "no",
-      tooltip = "Allows Oblige to create large street-like outdoor rooms.",
+      tooltip = "Allows Oblige to create large street-like outdoor rooms."
     },
+
     {
       name = "linear_mode",
       label = _("Linear Mode"),
@@ -142,8 +146,9 @@ OB_MODULES["ui_arch"] =
       "linear layout from start to exit. \n\nNote: Due to the nature of linear levels, " ..
       "you may encounter teleports even if you have teleports off. This is necessary " ..
       "in order for linear levels not to prematuraly terminate and therefore become stunted " ..
-      "i.e. only have 2-5 rooms.",
+      "i.e. only have 2-5 rooms."
     },
+
     {
       name = "nature_mode",
       label = _("Nature Mode"),
@@ -151,7 +156,7 @@ OB_MODULES["ui_arch"] =
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
       default = "10",
-      gap = 1,
+      gap = 1
     },
 
     { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES },
@@ -166,8 +171,9 @@ OB_MODULES["ui_arch"] =
       name="prebuilt_levels",
       label=_("Prebuilt Levels"),
       choices=UI_ARCH.YES_NO,
-      tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead.",
+      tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."
     },
+
     {
       name="procedural_gotchas",
       label=_("Procedural Gotcha"),
@@ -177,7 +183,7 @@ OB_MODULES["ui_arch"] =
       "but immensely-sized exit room with gratitiously intensified monster strength. " ..
       "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
       "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
-      gap=1,
+      gap=1
     },
 
     {
@@ -189,7 +195,7 @@ OB_MODULES["ui_arch"] =
       "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
       "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
       "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
-      gap=1,
+      gap=1
     },
 
     {
@@ -201,8 +207,9 @@ OB_MODULES["ui_arch"] =
       "This does not prevent skybox tiling.\n" ..
       "Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n" ..
       "Sky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n" ..
-      "Disable - Old Oblige behavior - no bottomless vistas.",
+      "Disable - Old Oblige behavior - no bottomless vistas."
     },
+
     {
       name = "zdoom_skybox",
       label = _("ZDoom 3D Skybox"),
@@ -210,7 +217,7 @@ OB_MODULES["ui_arch"] =
       default="disable",
       tooltip = "If a ZDoom based engine is selected, one has the option " ..
       "to enable a custom 3D skybox to be rendered into the map. " ..
-      "It is preferable to put this on if you have ZDoom Vista enabled.",
-    },
+      "It is preferable to put this on if you have ZDoom Vista enabled."
+    }
   },
 }
