@@ -1301,7 +1301,7 @@ function Fab_load_wad(def)
     else
       -- keep these flags: block-all, block-mon, secret, no-draw,
       --                   always-draw, block-sound, pass-thru
-      flags = bit.band(flags, 0xFFF)
+      flags = bit.band(flags, 0xFFFF)
 
       if flags ~= 0 then
         C2.flags = flags
@@ -1550,7 +1550,7 @@ function Fab_load_wad(def)
 
   local function handle_entity(fab, E)
     local spot_info = WADFAB_ENTITIES[E.id]
-
+    
     if not spot_info then
       table.insert(fab.entities, E)
       return
@@ -1716,12 +1716,14 @@ function Fab_load_wad(def)
     -- [ if map is not specified, use "*" to load the first one ]
     gui.wadfab_load(filename, def.map or "*")
 
+    local E
+
     for thing_idx = 0,9999 do
---      if OB_CONFIG.game == "hexen" then
---        local E = gui.wadfab_get_thing_hexen(thing_idx)
---      else
-        local E = gui.wadfab_get_thing(thing_idx)
---      end
+      if OB_CONFIG.game == "hexen" then
+        E = gui.wadfab_get_thing_hexen(thing_idx)
+      else
+        E = gui.wadfab_get_thing(thing_idx)
+      end
 
       -- nil result marks the end
       if not E then break; end
@@ -1756,13 +1758,15 @@ function Fab_load_wad(def)
       end
       ::continue::
     end
+    
+    local L
 
     for line_idx = 0,9999 do
---      if OB_CONFIG.game == "hexen" then
---       local L = gui.wadfab_get_line_hexen(line_idx)
---      else
-        local L = gui.wadfab_get_line(line_idx)
---      end
+      if OB_CONFIG.game == "hexen" then
+        L = gui.wadfab_get_line_hexen(line_idx)
+      else
+        L = gui.wadfab_get_line(line_idx)
+      end
 
       -- nil result marks the end
       if not L then break; end

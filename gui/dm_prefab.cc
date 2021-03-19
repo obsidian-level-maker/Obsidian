@@ -209,6 +209,9 @@ int wadfab_get_thing_hexen(lua_State *L)
 
 	lua_newtable(L);
 
+	lua_pushinteger(L, TH->type);
+	lua_setfield(L, -2, "id");
+
 	lua_pushinteger(L, TH->x);
 	lua_setfield(L, -2, "x");
 
@@ -221,18 +224,12 @@ int wadfab_get_thing_hexen(lua_State *L)
 	lua_pushinteger(L, TH->angle);
 	lua_setfield(L, -2, "angle");
 
-	lua_pushinteger(L, TH->type);
-	lua_setfield(L, -2, "type");
-
 	lua_pushinteger(L, TH->options);
-	lua_setfield(L, -2, "options");
+	lua_setfield(L, -2, "flags");
 
 	lua_pushinteger(L, TH->special);
 	lua_setfield(L, -2, "special");
-	
-	lua_pushinteger(L, TH->index);
-	lua_setfield(L, -2, "tid");
-	
+		
     lua_pushinteger(L, TH->args[0]);
     lua_setfield(L, -2, "arg1");
     
