@@ -305,6 +305,7 @@ function Render_edge(E)
         -- this is to prevent oddities like ZDoom slopes from being cut-off
         if chunk.kind == "stair" and not A.dead_end then
           reqs.deep = 16
+          reqs.on_stairs = "yes"
         end
       end
 
@@ -579,6 +580,7 @@ function Render_edge(E)
 
 
     local z = assert(E.fence_top_z) - def.fence_h
+    if def.post_offset_h then E.post_offset_h = def.post_offset_h end
 
     local T
 
@@ -1095,7 +1097,19 @@ function Render_corner(cx, cy)
       Trans.brush(brush)
 
     elseif corner.post_type then
-      local T = Trans.spot_transform(mx, my, corner.post_top_h, 2)
+      local def = assert(PREFABS[corner.post_type])
+      local z = corner.post_top_h
+
+      local offset_h = -EXTREME_H
+
+      for _,J in pairs(corner.junctions) do
+        if J.E1 and J.E1.post_offset_h then
+          offset_h = math.max(offset_h, J.E1.fence_top_z + J.E1.post_offset_h)
+        end
+      end
+      z = math.max(z, offset_h)
+
+      local T = Trans.spot_transform(mx, my, z, 2)
 
       local skins =
       {
@@ -1103,7 +1117,7 @@ function Render_corner(cx, cy)
         floor = mat
       }
 
-      Fabricate(corner.areas[1].room, PREFABS[corner.post_type], T, {skins})
+      Fabricate(corner.areas[1].room, def, T, {skins})
     end
   end
 
@@ -3442,14 +3456,14 @@ function Render_scenic_fabs()
         height = area.ceil_h - area.floor_h,
         env = "outdoor",
         kind = "decor",
-        where = "point",
+        where = "point"
       }
 
       local skin =
       {
         floor = area.floor_mat,
         wall = area.zone.facade_mat,
-        ceil = "_SKY",
+        ceil = "_SKY"
       }
 
       local pick = rand.pick(area.seeds)
@@ -3475,7 +3489,7 @@ function Render_scenic_fabs()
 
           if not S.area then return end
           if S.area and S.area ~= area then return end
-          if S.walls then return end
+          if S.wall_depth then return end
           if S.diagonal then return end
           if S.occupied then return end
           S.occupied = true
@@ -3488,8 +3502,8 @@ function Render_scenic_fabs()
       local def = Fab_pick(reqs, "none_ok")
 
       if def then
-        local fx = x * SEED_SIZE + 32
-        local fy = y * SEED_SIZE + 32
+        local fx = pick.mid_x + (SEED_SIZE/2)
+        local fy = pick.mid_y + (SEED_SIZE/2)
 
         local fab =
         {

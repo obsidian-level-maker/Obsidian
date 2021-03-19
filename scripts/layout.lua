@@ -2590,6 +2590,7 @@ function Layout_handle_corners()
           corner.post_mat = corner.areas[1].zone.fence_mat
           corner.kind = "post"
           corner.post_type = assert(corner.areas[1].zone.post_type)
+
           if corner.post_top_h < tallest_h then
             corner.post_top_h = tallest_h + 32
           end

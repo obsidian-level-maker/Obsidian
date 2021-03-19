@@ -11,6 +11,7 @@ PREFABS.Wall_fake_door =
   on_liquids = "never",
 
   on_scenics = "never",
+  on_stairs = "never",
 
   need_solid_back = true,
 
@@ -109,8 +110,8 @@ PREFABS.Wall_modern_shutter =
   theme = "urban",
 
   on_liquids = "never",
-
   on_scenics = "never",
+  on_stairs = "never",
 
   need_solid_back = true,
 
@@ -146,8 +147,8 @@ PREFABS.Wall_modern_shutter_EPIC =
   replaces = "Wall_modern_shutter",
 
   on_liquids = "never",
-
   on_scenics = "never",
+  on_stairs = "never",
 
   need_solid_back = true,
 
@@ -274,8 +275,8 @@ PREFABS.Wall_wide_dark_windows_with_door =
   prob = 40,
 
   on_liquids = "never",
-
   on_scenics = "never",
+  on_stairs = "never",
 
   z_fit = "top",
 
