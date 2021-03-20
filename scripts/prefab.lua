@@ -2184,15 +2184,21 @@ function Fab_replacements(fab)
 
   build_entity_remap_table()
 
+  current_tag = 0 -- Used to help Hexen arg1 match with appropriate sector tag when needed
+
   for _,B in pairs(fab.brushes) do
+    print("CURRENT TAG: " .. current_tag)
     for _,C in pairs(B) do
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
-      if C.tag then C.tag = check_tag(C.tag) end
+      if C.tag then 
+        C.tag = check_tag(C.tag) 
+        current_tag = C.tag  
+      end
       
       if OB_CONFIG.game == "hexen" then
-        if C.arg1 then C.arg1 = C.tag end
+        if C.x and C.special and (C.special >= 10 and C.special <= 12) then C.arg1 = current_tag end -- Flesh out which special ranges need to have arg1 match a sector tag
       end
 
       if C.u1  then C.u1  = check("offset", C.u1) end
