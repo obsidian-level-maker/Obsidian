@@ -853,7 +853,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		{
 			options.build_nodes = true;
 			options.build_gl_nodes = false;
-			options.reject_mode = ERM_CreateZeroes;
+			options.reject_mode = ERM_Rebuild;
 			options.check_polyobjs = false;
 			options.compress_nodes = false;
 			options.compress_gl_nodes = false;
@@ -863,7 +863,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		{
 			options.build_nodes = true;
 			options.build_gl_nodes = false;
-			options.reject_mode = ERM_CreateZeroes;
+			options.reject_mode = ERM_Rebuild;
 			options.check_polyobjs = false;
 			options.compress_nodes = true;
 			options.compress_gl_nodes = true;
@@ -888,7 +888,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		zdbsp_options options;
 		options.build_nodes = true;
 		options.build_gl_nodes = false;
-		options.reject_mode = ERM_DontTouch;
+		options.reject_mode = ERM_Rebuild;
 		options.check_polyobjs = true;
 		options.compress_nodes = true;
 		options.compress_gl_nodes = true;

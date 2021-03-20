@@ -19,7 +19,7 @@
 */
 
 #include "processor.h"
-//#include "rejectbuilder.h"
+#include "rejectbuilder.h"
 
 enum
 {
@@ -653,10 +653,13 @@ void FProcessor::Write (FWadWriter &out)
 		switch (RejectMode)
 		{
 		case ERM_Rebuild:
-			//FRejectBuilder reject (Level);
-			//Level.Reject = reject.GetReject ();
-			printf ("   Rebuilding the reject is unsupported.\n");
-			// Intentional fall-through
+		    {
+			    FRejectBuilder reject(Level);
+			    Level.Reject = reject.GetReject();
+			    //printf ("   Rebuilding the reject is unsupported.\n");
+			    // Intentional fall-through
+			    break;
+			 }
 
 		case ERM_DontTouch:
 			{
@@ -692,9 +695,11 @@ void FProcessor::Write (FWadWriter &out)
 			break;
 
 		case ERM_CreateZeroes:
-			Level.Reject = new BYTE[Level.RejectSize];
-			memset (Level.Reject, 0, Level.RejectSize);
-			break;
+		    {
+			    Level.Reject = new BYTE[Level.RejectSize];
+			    memset (Level.Reject, 0, Level.RejectSize);
+			    break;
+			}
 		}
 	}
 
