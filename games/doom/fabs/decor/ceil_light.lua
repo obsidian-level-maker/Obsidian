@@ -182,7 +182,7 @@ PREFABS.Light_tech_blue =
 
 }
 
--- Fans, ceiling sink does not look very nice so moved it here as a "light".
+--[[ Fans, ceiling sink does not look very nice so moved it here as a "light".
 PREFABS.Light_fan_tech =
 {
   template = "Light_basic",
@@ -217,3 +217,4 @@ PREFABS.Light_fan_rusty =
   flat_CEIL5_2  = "CEIL5_2",
   tex_METAL = "METAL",
 }
+]] -- replaced by point decor version
