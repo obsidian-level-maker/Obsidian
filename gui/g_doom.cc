@@ -887,7 +887,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		}
 		zdbsp_options options;
 		options.build_nodes = true;
-		options.build_gl_nodes = false;
+		options.build_gl_nodes = true;
 		options.reject_mode = ERM_Rebuild;
 		options.check_polyobjs = true;
 		options.compress_nodes = true;

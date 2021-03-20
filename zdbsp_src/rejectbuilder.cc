@@ -1,14 +1,20 @@
-// This is the same algorithm used by DoomBSP:
+// The old code used the same algorithm as DoomBSP:
 //
-// Represent each sector by its bounding box. Then for each pair of
-// sectors, see if any chains of one-sided lines can walk from one
-// side of the convex hull for that pair to the other side.
+//   Represent each sector by its bounding box. Then for each pair of
+//   sectors, see if any chains of one-sided lines can walk from one
+//   side of the convex hull for that pair to the other side.
 //
-// It works, but it's far from being perfect. It's quite easy for
-// this algorithm to consider two sectors as being visible from
-// each other when they are really not. But it won't erroneously
-// flag two sectors as obstructed when they're really not, and that's
-// the only thing that really matters when building a REJECT lump.
+//   It works, but it's far from being perfect. It's quite easy for
+//   this algorithm to consider two sectors as being visible from
+//   each other when they are really not. But it won't erroneously
+//   flag two sectors as obstructed when they're really not, and that's
+//   the only thing that really matters when building a REJECT lump.
+//
+// Because that was next to useless, I scrapped that code and adapted
+// Quake's vis utility to work in a 2D world. Since this is basically vis,
+// it depends on GL nodes being present to function. As the usefulness
+// of a REJECT lump is debatable, I have chosen to not compile this module
+// in with ZDBSP. Save yourself some space and run ZDBSP with the -r option.
 
 #include <string.h>
 #include <stdio.h>
@@ -18,35 +24,32 @@
 #include "rejectbuilder.h"
 #include "templates.h"
 
-FRejectBuilder::FRejectBuilder (FLevel &level)
-	: Level (level)
-{
-	int i;
-	
-	i = Level.NumGLSubsectors * Level.NumGLSubsectors;
-	SubSeeMatrix = new BYTE[i];
-	memset (SubSeeMatrix, 0, i);
+bool		MergeVis=1;
 
-	SegSubsectors = new WORD[Level.NumGLSegs];
-	for (i = 0; i < Level.NumGLSubsectors; ++i)
+FRejectBuilder::FRejectBuilder (FLevel &level)
+	: Level (level), testlevel (2), totalvis (0)
+{
+	LoadPortals ();
+
+	if (MergeVis)
 	{
-		for (int j = 0; j < Level.GLSubsectors[i].numlines; ++j)
-		{
-			SegSubsectors[j + Level.GLSubsectors[i].firstline] = i;
-		}
+		MergeLeaves ();
+		MergeLeafPortals ();
 	}
+
+	CountActivePortals ();
+	CalcVis ();
 
 	BuildReject ();
 }
 
 FRejectBuilder::~FRejectBuilder ()
 {
-	delete[] SubSeeMatrix;
-	delete[] SegSubsectors;
 }
 
 BYTE *FRejectBuilder::GetReject ()
 {
+	WORD *sectormap;
 	int i, j; 
 
 	int rejectSize = (Level.NumSectors()*Level.NumSectors() + 7) / 8;
@@ -58,39 +61,27 @@ BYTE *FRejectBuilder::GetReject ()
 	Level.GLPVSSize = pvs_size;
 	memset (Level.GLPVS, 0, pvs_size);
 
+	sectormap = new WORD[Level.NumGLSubsectors];
 	for (i = 0; i < Level.NumGLSubsectors; ++i)
 	{
-		int row = i*Level.NumGLSubsectors;
-		int sector1 =
-			Level.Sides[
-				Level.Lines[
-					Level.GLSegs[
-						Level.GLSubsectors[i].firstline].linedef]
-				.sidenum[
-					Level.GLSegs[
-						Level.GLSubsectors[i].firstline].side]]
-			.sector;
-		int srow = sector1*Level.NumSectors();
+		const MapSegGLEx *seg = &Level.GLSegs[Level.GLSubsectors[i].firstline];
+		sectormap[i] = Level.Sides[Level.Lines[seg->linedef].sidenum[seg->side]].sector;
+	}
+
+	for (i = 0; i < Level.NumGLSubsectors; ++i)
+	{
+		int rowpvs = i*Level.NumGLSubsectors;
+		int rowrej = sectormap[i]*Level.NumSectors();
+		BYTE *bytes = visBytes + i*leafbytes;
 		for (j = 0; j < Level.NumGLSubsectors; ++j)
 		{
-			if (SubSeeMatrix[row + j])
+			if (bytes[j>>3] & (1<<(j&7)))
 			{
-				int sector2 =
-					Level.Sides[
-						Level.Lines[
-							Level.GLSegs[
-								Level.GLSubsectors[j].firstline].linedef]
-						.sidenum[
-							Level.GLSegs[
-								Level.GLSubsectors[j].firstline].side]]
-					.sector;
-				int l = (srow + sector2) >> 3;
-				int r = (srow + sector2) & 7;
-				reject[l] &= ~(1 << r);
+				int mark = rowpvs + j;
+				Level.GLPVS[mark>>3] |= 1<<(mark&7);
 
-				l = (row + j) >> 3;
-				r = (row + j) & 7;
-				Level.GLPVS[l] |= 1 << r;
+				mark = rowrej + sectormap[j];
+				reject[mark>>3] &= ~(1<<(mark&7));
 			}
 		}
 	}
@@ -100,179 +91,126 @@ BYTE *FRejectBuilder::GetReject ()
 
 void FRejectBuilder::BuildReject ()
 {
-	int s1, s2;
-
-	for (s1 = 0; s1 < Level.NumGLSubsectors; ++s1)
-	{
-		//printf ("   Reject: %3d%%\r",s1*100/Level.NumGLSubsectors);
-		printf ("%d/%d\r", s1, Level.NumGLSubsectors);
-
-		// A subsector can always see itself
-		SourceRow = s1 * Level.NumGLSubsectors;
-		SubSeeMatrix[SourceRow + s1] = 1;
-
-		WORD pusher = s1;
-
-		for (s2 = 0; s2 < Level.GLSubsectors[s1].numlines; ++s2)
-		{
-			int segnum = s2 + Level.GLSubsectors[s1].firstline;
-			const MapSegGL *seg = (const MapSegGL*)&Level.GLSegs[segnum];
-			if (seg->partner == NO_INDEX)
-			{
-				continue;
-			}
-
-			SourceSeg = segnum;
-			SegRow = segnum * Level.NumGLSegs;
-
-			TracePath (s1, seg);
-		}
-	}
-	printf ("   Reject: 100%%\n");
 }
 
 inline const WideVertex *FRejectBuilder::GetVertex (WORD vertnum)
 {
-	if (vertnum & 0x8000)
+	return &Level.Vertices[vertnum];
+}
+
+FRejectBuilder::FLeaf::FLeaf ()
+	: numportals (0), merged (-1), portals (NULL)
+{
+}
+
+FRejectBuilder::FLeaf::~FLeaf ()
+{
+	if (portals != NULL)
 	{
-		return &Level.GLVertices[vertnum & 0x7fff];
-	}
-	else
-	{
-		return &Level.Vertices[vertnum];
+		delete[] portals;
 	}
 }
 
-void FRejectBuilder::TracePath (int subsector, const MapSegGL *window)
+int FRejectBuilder::PointOnSide (const FPoint &point, const FLine &line)
 {
-	// Neighboring subsectors can always see each other
-	SubSeeMatrix[SourceRow + SegSubsectors[window->partner]] = 1;
-	const MapSubsector *backsub = (const MapSubsector*)&Level.GLSubsectors[SegSubsectors[window->partner]];
-
-	Portal source;
-
-	source.Subsector = backsub;
-	source.Left = GetVertex (window->v1);
-	source.Right = GetVertex (window->v2);
-
-	PortalStack.Clear ();
-	PortalStack.Push (source);
-
-	fixed_t wdx = source.Right->x - source.Left->x;
-	fixed_t wdy = source.Right->y - source.Left->y;
-
-//	printf ("start window %d\n", window - Level.GLSegs);
-
-	for (int i = 0; i < backsub->numlines; ++i)
-	{
-		int segnum = backsub->firstline + i;
-
-		if (segnum == window->partner)
-		{
-			continue;
-		}
-
-		const MapSegGL *cseg = (const MapSegGL*)&Level.GLSegs[segnum];
-
-		if (cseg->partner == NO_INDEX)
-		{
-			continue;
-		}
-
-		const WideVertex *cv1 = GetVertex (cseg->v1);
-		const WideVertex *cv2 = GetVertex (cseg->v2);
-
-		if (FNodeBuilder::PointOnSide (cv1->x, cv1->y, source.Left->x, source.Left->y, wdx, wdy) == 0 &&
-			FNodeBuilder::PointOnSide (cv2->x, cv2->y, source.Left->x, source.Left->y, wdx, wdy) == 0)
-		{
-			continue;
-		}
-
-		TracePathDeep (cseg);
-	}
+	return FNodeBuilder::PointOnSide (point.x, point.y, line.x, line.y, line.dx, line.dy);
 }
 
-void FRejectBuilder::TracePathDeep (const MapSegGL *window)
+void FRejectBuilder::LoadPortals ()
 {
-	SubSeeMatrix[SourceRow + SegSubsectors[window->partner]] = 1;
-	const MapSubsector *backsub = (const MapSubsector*)&Level.GLSubsectors[SegSubsectors[window->partner]];
-	size_t j;
+	WORD		*segleaf;
+	int			i, j, k, max;
+	VPortal		*p;
+	FLeaf		*l;
+	FWinding	*w;
+	
+	printf("GL SUBS: %d\n", Level.NumGLSubsectors);
+	portalclusters = Level.NumGLSubsectors;
 
-	for (j = PortalStack.Size(); j-- > 0; )
+	for (numportals = 0, i = 0; i < Level.NumGLSegs; ++i)
 	{
-		if (PortalStack[j].Subsector == backsub)
+		if (Level.GLSegs[i].partner != DWORD_MAX)
 		{
-			return;
+			++numportals;
 		}
 	}
 
-	Portal entrance;
+	// these counts should take advantage of 64 bit systems automatically
+	leafbytes = ((portalclusters+63)&~63)>>3;
+	leaflongs = leafbytes/sizeof(long);
 
-	entrance.Subsector = backsub;
-	entrance.Left = GetVertex (window->v1);
-	entrance.Right = GetVertex (window->v2);
-	PortalStack.Push (entrance);
+	portalbytes = ((numportals+63)&~63)>>3;
+	portallongs = portalbytes/sizeof(long);
 
-	fixed_t wdx = entrance.Right->x - entrance.Left->x;
-	fixed_t wdy = entrance.Right->y - entrance.Left->y;
+	portals = new VPortal[numportals];
+	memset (portals, 0, numportals*sizeof(VPortal));
+	
+	leafs = new FLeaf[portalclusters];
 
-	//printf ("deep through %d\n", window - Level.GLSegs);
+	numVisBytes = portalclusters*leafbytes;
+	visBytes = new BYTE[numVisBytes];
 
-	for (int i = 0; i < backsub->numlines; ++i)
+	segleaf = new WORD[Level.NumGLSegs];
+	for (i = 0; i < Level.NumGLSubsectors; ++i)
 	{
-		int segnum = backsub->firstline + i;
+		j = Level.GLSubsectors[i].firstline;
+		max = j + Level.GLSubsectors[i].numlines;
 
-		if (segnum == window->partner)
+		for (; j < max; ++j)
 		{
-			continue;
+			segleaf[j] = i;
 		}
+	}
 
-		const MapSegGL *cseg = (const MapSegGL*)&Level.GLSegs[segnum];
+	p = portals;
+	l = leafs;
+	for (i = 0; i < Level.NumGLSubsectors; ++i, ++l)
+	{
+		j = Level.GLSubsectors[i].firstline;
+		max = j + Level.GLSubsectors[i].numlines;
 
-		if (cseg->partner == NO_INDEX)
+		// Count portals in this leaf
+		for (; j < max; ++j)
 		{
-			continue;
-		}
-
-		const WideVertex *cv1 = GetVertex (cseg->v1);
-		const WideVertex *cv2 = GetVertex (cseg->v2);
-
-		if (FNodeBuilder::PointOnSide (cv1->x, cv1->y, entrance.Left->x, entrance.Left->y, wdx, wdy) <= 0 &&
-			FNodeBuilder::PointOnSide (cv2->x, cv2->y, entrance.Left->x, entrance.Left->y, wdx, wdy) <= 0)
-		{
-			continue;
-		}
-
-		fixed_t leftx = PortalStack[0].Left->x;
-		fixed_t lefty = PortalStack[0].Left->y;
-		fixed_t rightx = PortalStack[0].Right->x;
-		fixed_t righty = PortalStack[0].Right->y;
-
-		fixed_t leftdx = cv1->x - leftx;
-		fixed_t leftdy = cv1->y - lefty;
-		fixed_t rightdx = rightx - cv2->x;
-		fixed_t rightdy = righty - cv2->y;
-
-		if (FNodeBuilder::PointOnSide (cv1->x, cv1->y, rightx, righty, rightdx, rightdy) >= 0 ||
-			FNodeBuilder::PointOnSide (cv2->x, cv2->y, leftx, lefty, leftdx, leftdy) >= 0)
-		{
-			continue;
-		}
-
-		for (j = PortalStack.Size(); j-- > 1; )
-		{
-			if (FNodeBuilder::PointOnSide (PortalStack[j].Left->x, PortalStack[j].Left->y,
-				rightx, righty, rightdx, rightdy) >= 0 ||
-				FNodeBuilder::PointOnSide (PortalStack[j].Right->x, PortalStack[j].Right->y,
-				leftx, lefty, leftdx, leftdy) >= 0)
+			if (Level.GLSegs[j].partner != DWORD_MAX)
 			{
-				break;
+				++l->numportals;
 			}
 		}
-		if (j == 0)
+
+		if (l->numportals == 0)
 		{
-			TracePathDeep (cseg);
+			continue;
+		}
+
+		l->portals = new VPortal *[l->numportals];
+
+		for (k = 0, j = Level.GLSubsectors[i].firstline; j < max; ++j)
+		{
+			const MapSegGLEx *seg = &Level.GLSegs[j];
+
+			if (seg->partner == DWORD_MAX)
+			{
+				continue;
+			}
+
+			// create portal from seg
+			l->portals[k++] = p;
+			
+			w = &p->winding;
+			w->points[0] = GetVertex (seg->v1);
+			w->points[1] = GetVertex (seg->v2);
+
+			p->hint = seg->linedef != NO_INDEX;
+			p->line.x = w->points[1].x;
+			p->line.y = w->points[1].y;
+			p->line.dx = w->points[0].x - p->line.x;
+			p->line.dy = w->points[0].y - p->line.y;
+			p->leaf = segleaf[seg->partner];
+
+			p++;
 		}
 	}
-	PortalStack.Pop (entrance);
+
+	delete[] segleaf;
 }
