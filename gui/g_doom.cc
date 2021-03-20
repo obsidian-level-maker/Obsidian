@@ -532,7 +532,10 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 		else
 		{
 			textmap_lump->Printf("\nlinedef\n{\n");
-			textmap_lump->Printf("\tid = %d;\n", args[0]);
+			if (type == 121)
+			{
+				textmap_lump->Printf("\tid = %d;\n", args[0]);
+			}
 			textmap_lump->Printf("\tv1 = %d;\n", vert1);
 			textmap_lump->Printf("\tv2 = %d;\n", vert2);
 			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? -1 : side1);
@@ -575,17 +578,17 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			int spac = (flags & 0x1C00) >> 10;
 			if (type > 0) 
 			{
-				if ((spac == 0x0000) || (spac == 0x0200))
+				if (spac == 0)
 					textmap_lump->Printf("\tplayercross = true;\n");
-				if ((spac == 0x0400) || (spac == 0x0600))
+				if (spac == 1)
 					textmap_lump->Printf("\tplayeruse = true;\n");
-				if ((spac == 0x0800) || (spac == 0x0A00))
+				if (spac == 2)
 					textmap_lump->Printf("\tmonstercross = true;\n");
-				if ((spac == 0x0C00) || (spac == 0x0E00))
+				if (spac == 3)
 					textmap_lump->Printf("\timpact = true;\n");	
-				if ((spac == 0x1000) || (spac == 0x1200))
+				if (spac == 4)
 					textmap_lump->Printf("\tplayerpush = true;\n");
-				if ((spac == 0x1400) || (spac == 0x1600))
+				if (spac == 5)
 					textmap_lump->Printf("\tmissilecross = true;\n");				
 			}
 			textmap_lump->Printf("}\n");
