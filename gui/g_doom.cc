@@ -532,10 +532,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 		else
 		{
 			textmap_lump->Printf("\nlinedef\n{\n");
-			if (type == 121)
-			{
-				textmap_lump->Printf("\tid = %d;\n", args[0]);
-			}
+			textmap_lump->Printf("\tid = %d;\n", args[0]);
 			textmap_lump->Printf("\tv1 = %d;\n", vert1);
 			textmap_lump->Printf("\tv2 = %d;\n", vert2);
 			textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? -1 : side1);
@@ -548,22 +545,12 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			else
 			{
 				textmap_lump->Printf("\tspecial = %d;\n", type);
-				if (args)
-				{
-					textmap_lump->Printf("\targ0 = %d;\n", args[0]);
-				}
-				else
-				{
-					textmap_lump->Printf("\targ0 = 0;\n");					
-				}	
+				textmap_lump->Printf("\targ0 = %d;\n", args[0]);	
 			}
-			if (args)
-			{
-				textmap_lump->Printf("\targ1 = %d;\n", args[1]);
-				textmap_lump->Printf("\targ2 = %d;\n", args[2]);
-				textmap_lump->Printf("\targ3 = %d;\n", args[3]);
-				textmap_lump->Printf("\targ4 = %d;\n", args[4]);
-			}
+			textmap_lump->Printf("\targ1 = %d;\n", args[1]);
+			textmap_lump->Printf("\targ2 = %d;\n", args[2]);
+			textmap_lump->Printf("\targ3 = %d;\n", args[3]);
+			textmap_lump->Printf("\targ4 = %d;\n", args[4]);
 			std::bitset<16> udmf_flags(flags);
 			if (udmf_flags.test(0))
 				textmap_lump->Printf("\tblocking = true;\n");
@@ -585,8 +572,23 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 				textmap_lump->Printf("\tmapped = true;\n");
 			if (udmf_flags.test(9))
 				textmap_lump->Printf("\trepeatspecial = true;\n");
+			int spac = (flags & 0x1C00) >> 10;
+			if (type > 0) 
+			{
+				if ((spac == 0x0000) || (spac == 0x0200))
+					textmap_lump->Printf("\tplayercross = true;\n");
+				if ((spac == 0x0400) || (spac == 0x0600))
+					textmap_lump->Printf("\tplayeruse = true;\n");
+				if ((spac == 0x0800) || (spac == 0x0A00))
+					textmap_lump->Printf("\tmonstercross = true;\n");
+				if ((spac == 0x0C00) || (spac == 0x0E00))
+					textmap_lump->Printf("\timpact = true;\n");	
+				if ((spac == 0x1000) || (spac == 0x1200))
+					textmap_lump->Printf("\tplayerpush = true;\n");
+				if ((spac == 0x1400) || (spac == 0x1600))
+					textmap_lump->Printf("\tmissilecross = true;\n");				
+			}
 			textmap_lump->Printf("}\n");
-//			LogPrintf("ACTIVATION: %d\n", ((flags & 0x1C00) >> 10)); To determine SPAC activation if necessary. Placeholder for now.
 			udmf_linedefs += 1;
 		}
 	}

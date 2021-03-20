@@ -2187,7 +2187,6 @@ function Fab_replacements(fab)
   current_tag = 0 -- Used to help Hexen arg1 match with appropriate sector tag when needed
 
   for _,B in pairs(fab.brushes) do
-    print("CURRENT TAG: " .. current_tag)
     for _,C in pairs(B) do
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
