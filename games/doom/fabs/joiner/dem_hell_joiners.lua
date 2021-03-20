@@ -325,8 +325,8 @@ PREFABS.Joiner_mirrors1S =
   thing_2013 =
   {
     soul = 50,
-    blue_armor = 50,
-  },
+    blue_armor = 50
+  }
 }
 
 --room of mirrors2 secret
@@ -336,7 +336,7 @@ PREFABS.Joiner_mirrors2S =
   map    = "MAP16",
 
   seed_w = 2,
-  seed_h = 3,
+  seed_h = 3
 }
 
 --room of eyes1,
@@ -351,6 +351,8 @@ PREFABS.Joiner_eyes1 =
 
   theme  = "hell",
 
+  filter = "pf_dark_mazes",
+
   where  = "seeds",
   shape  = "I",
 
@@ -363,98 +365,34 @@ PREFABS.Joiner_eyes1 =
   x_fit = "frame",
   y_fit  = "frame",
 
-  can_flip = true,
-
-
+  can_flip = true
 }
 
 --room of eyes2,
 PREFABS.Joiner_eyes2 =
 {
-  file   = "joiner/dem_hell_joiners.wad",
+  template = "Joiner_eyes1",
   map    = "MAP18",
 
-  engine = "zdoom",
-
-  prob   = 1250,
-
-  theme  = "hell",
-
-  where  = "seeds",
-  shape  = "I",
-
   seed_w = 2,
-  seed_h = 3,
-
-  deep = 16,
-  over = 16,
-
-  x_fit = "frame",
-  y_fit  = "frame",
-
-  can_flip = true,
-
-
+  seed_h = 3
 }
 
 --room of eyes3,
 PREFABS.Joiner_eyes3 =
 {
-  file   = "joiner/dem_hell_joiners.wad",
+  template = "Joiner_eyes1",
   map    = "MAP19",
 
-  engine = "zdoom",
-
-  prob   = 1250,
-
-
-  theme  = "hell",
-
-  where  = "seeds",
-  shape  = "I",
-
   seed_w = 2,
-  seed_h = 3,
-
-  deep = 16,
-  over = 16,
-
-  x_fit = "frame",
-  y_fit  = "frame",
-
-  can_flip = true,
-
-
+  seed_h = 3
 }
 
 --room of eyes4,
 PREFABS.Joiner_eyes4 =
 {
-  file   = "joiner/dem_hell_joiners.wad",
-  map    = "MAP20",
-
-  engine = "zdoom",
-
-  prob   = 1250,
-
-
-  theme  = "hell",
-
-  where  = "seeds",
-  shape  = "I",
-
-  seed_w = 3,
-  seed_h = 2,
-
-  deep = 16,
-  over = 16,
-
-  x_fit = "frame",
-  y_fit  = "frame",
-
-  can_flip = true,
-
-
+  template = "Joiner_eyes1",
+  map    = "MAP20"
 }
 
 --room of eyes1secret
@@ -491,45 +429,16 @@ PREFABS.Joiner_eyes1s =
     berserk = 50,
     invis = 50,
     allmap = 50,
-    goggles = 50,
-  },
-
+    goggles = 50
+  }
 }
 
 --room of eyes2secret
 PREFABS.Joiner_eyes2s =
 {
-  file   = "joiner/dem_hell_joiners.wad",
+  template = "Joiner_eyes1s",
   map    = "MAP22",
 
-  engine = "zdoom",
-
-  prob   = 550,
-
-  theme  = "hell",
-
-  style = "secrets",
-
-  where  = "seeds",
-  shape  = "I",
-
   seed_w = 2,
-  seed_h = 3,
-
-  deep = 16,
-  over = 16,
-
-  x_fit = "frame",
-  y_fit  = "frame",
-
-  can_flip = true,
-
-  thing_2023 =
-  {
-    green_armor = 50,
-    berserk = 50,
-    invis = 50,
-    allmap = 50,
-    goggles = 50,
-  },
+  seed_h = 3
 }
