@@ -2251,6 +2251,7 @@ function Fabricate(room, def, T, skins)
   end
 
   gui.debugf("=========  FABRICATE %s\n", def.file)
+  gui.debugf(table.tostr(T).."\n")
 
   local fab = Fab_load_wad(def)
 
@@ -2498,6 +2499,12 @@ function Fab_find_matches(reqs, match_state)
     -- disable outdoor wall fab from appearing in scenic rooms
     if reqs.scenic and def.on_scenics == "never" then return 0 end
     if not reqs.scenic and def.on_scenics == "only" then return 0 end
+
+    --
+    if reqs.on_stairs and def.on_stairs == "never" then return 0 end
+
+    --
+    if reqs.group and reqs.group == "natural_park" and def.park_mode == "no_nature" then return 0 end
 
     -- wall fabs that need to be flat, to prevent high-depth walls from intersecting
     if reqs.deep and def.deep then

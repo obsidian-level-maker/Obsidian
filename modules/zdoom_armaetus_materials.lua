@@ -1552,4 +1552,22 @@ brightmap texture SW2CHN
 {
   map OBRS2CN
 }
+
+// liquids
+
+// Oblige lava patch
+brightmap texture FIREMAG1
+{
+  map OBRLFAL1
+}
+
+brightmap texture FIREMAG2
+{
+  map OBRLFAL2
+}
+
+brightmap texture FIREMAG3
+{
+  map OBRLFAL3
+}
 ]]

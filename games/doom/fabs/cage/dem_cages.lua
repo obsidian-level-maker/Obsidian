@@ -233,6 +233,7 @@ PREFABS.Cage_dem_ledge_ambush1 =
   theme  = "!hell",
 
   env = "park",
+  park_mode = "no_nature",
 
   where  = "seeds",
   shape  = "U",
@@ -280,9 +281,10 @@ PREFABS.Cage_dem_ledge_ambush3 =
 PREFABS.Cage_dem_ledge_ambush4 =
 {
   template = "Cage_dem_ledge_ambush1",
-
   map = "MAP17",
+
   env = "park",
+  park_mode = "no_nature",
 
   bound_z1 = 0,
   bound_z2 = 184,
@@ -292,9 +294,10 @@ PREFABS.Cage_dem_ledge_ambush4 =
 PREFABS.Cage_dem_ledge_ambush5 =
 {
   template = "Cage_dem_ledge_ambush1",
-
   map = "MAP18",
+
   env = "park",
+  park_mode = "no_nature",
 
   bound_z1 = 0,
   bound_z2 = 232,

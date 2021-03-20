@@ -1278,9 +1278,14 @@ DOOM.THEMES =
       gtd_generic_d64_2x_blue = 4,
       gtd_generic_tek_grate = 25,
       gtd_generic_artsy_step1_banded = 25,
-      gtd_modquake_set = 13,
-      gtd_modquake_jawlike = 13,
-      gtd_modquake_top_heavy_brace = 13
+      gtd_modquake_set = 10,
+      gtd_modquake_jawlike = 10,
+      gtd_modquake_top_heavy_brace = 10,
+      gtd_modquake_tek_slope_brace = 10,
+      gtd_modquake_ex_light_slope_brace = 10,
+      gtd_wall_lamp_stubby = 8,
+      gtd_wall_lamp_thin = 8,
+      gtd_wall_lamp_thicc = 8
     },
 
     outdoor_wall_groups =
@@ -1350,7 +1355,8 @@ DOOM.THEMES =
       fence_corrugated_steel = 50,
       fence_tech_hl_bars = 50,
       fence_sloped_silver = 50,
-      fence_highway_bars = 10
+      fence_highway_bars = 10,
+      fence_jurassic_park = 50
     },
 
     fence_posts =
@@ -1653,9 +1659,18 @@ DOOM.THEMES =
       gtd_generic_d64_2x_blue = 2,
       gtd_generic_tek_grate = 15,
       gtd_generic_artsy_step1_banded = 15,
-      gtd_modquake_set = 5,
-      gtd_modquake_jawlike = 5,
-      gtd_modquake_top_heavy_brace = 5
+      gtd_modquake_set = 6,
+      gtd_modquake_jawlike = 6,
+      gtd_modquake_top_heavy_brace = 6,
+      gtd_modquake_tek_slope_brace = 6,
+      gtd_modquake_ex_light_slope_brace = 6,
+      gtd_wall_lamp_stubby = 5,
+      gtd_wall_lamp_thin = 5,
+      gtd_wall_lamp_thicc = 5,
+      gtd_wall_candalebra = 3,
+      gtd_wall_blue_torch = 3,
+      gtd_wall_green_torch = 3,
+      gtd_wall_red_torch = 3
     },
 
     window_groups =
@@ -1694,7 +1709,8 @@ DOOM.THEMES =
       fence_corrugated_steel = 50,
       fence_tech_hl_bars = 12,
       fence_sloped_silver = 12,
-      fence_highway_bars = 25
+      fence_highway_bars = 25,
+      fence_jurassic_park = 12
     },
 
     fence_posts =
@@ -2074,9 +2090,15 @@ DOOM.THEMES =
       gtd_generic_d64_2x_blue = 6,
       gtd_generic_tek_grate = 40,
       gtd_generic_artsy_step1_banded = 20,
-      gtd_modquake_set = 10,
-      gtd_modquake_jawlike = 10,
-      gtd_modquake_top_heavy_brace = 10
+      gtd_modquake_set = 12,
+      gtd_modquake_jawlike = 12,
+      gtd_modquake_top_heavy_brace = 12,
+      gtd_modquake_tek_slope_brace = 12,
+      gtd_modquake_ex_light_slope_brace = 12,
+      gtd_wall_candalebra = 8,
+      gtd_wall_blue_torch = 8,
+      gtd_wall_green_torch = 8,
+      gtd_wall_red_torch = 8
     },
 
     outdoor_wall_groups =

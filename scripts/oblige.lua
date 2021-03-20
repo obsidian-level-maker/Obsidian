@@ -1389,6 +1389,7 @@ function ob_clean_up()
   THEME  = {}
   PARAM  = {}
   STYLE  = {}
+  SCRIPTS = {}
 
   LEVEL   = nil
   EPISODE = nil
