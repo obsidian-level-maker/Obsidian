@@ -2543,6 +2543,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[By the time you read this message, you already lost.]],
   [[We insist you stay and play just a little bit longer.]],
   [[Quitters are not winners.]],
+  [[If you don't love yourself, how the hell you gonna love somebody else?]],
 
 
   -- hardcore philosophy

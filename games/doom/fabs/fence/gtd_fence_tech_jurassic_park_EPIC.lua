@@ -47,7 +47,6 @@ PREFABS.Fence_jurassic_park_straight_limit =
   map = "MAP01",
 
   prob = 50,
-  engine = "!zdoom",
 
   group = "fence_jurassic_park",
 
