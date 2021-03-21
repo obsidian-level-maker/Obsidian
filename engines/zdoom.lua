@@ -41,13 +41,26 @@ ZDOOM.ENTITIES =
 
 ZDOOM.PARAMETERS =
 {
-  -- TODO
+  bridges = true,
+  extra_floors = true,
+  liquid_floors = true,
+  tga_images = true
 }
 
+function ZDOOM.setup()
+  -- extrafloors : use Legacy types
+  gui.property("ef_solid_type",  281)
+  gui.property("ef_liquid_type", 301)
+
+  -- currently using Fragglescript for things on 3D floors
+  -- [later we will use the Hexen map format]
+  gui.property("ef_thing_mode", 1)
+end
 
 OB_ENGINES["zdoom"] =
 {
-  label = _("ZDoom"),
+  label = _("GZDoom"),
+  priority = -1,
 
   extends = "boom",
 
@@ -59,53 +72,12 @@ OB_ENGINES["zdoom"] =
   tables =
   {
     ZDOOM
-  }
-}
-
-----------------------------------------------------------------
-
-GZDOOM = { }
-
-GZDOOM.PARAMETERS =
-{
-  bridges = true,
-  extra_floors = true,
-  liquid_floors = true,
-  tga_images = true
-}
-
-
-function GZDOOM.setup()
-  -- extrafloors : use Legacy types
-  gui.property("ef_solid_type",  281)
-  gui.property("ef_liquid_type", 301)
-
-  -- currently using Fragglescript for things on 3D floors
-  -- [later we will use the Hexen map format]
-  gui.property("ef_thing_mode", 1)
-end
-
-
-OB_ENGINES["gzdoom"] =
-{
-  label = _("GZDoom"),
-  priority = -1,  -- keep at bottom with ZDoom
-
-  extends = "zdoom",
-
-  game =
-  {
-    chex3=1, doom1=1, doom2=1, heretic=1, hexen=1, strife=1
   },
-
-  tables =
-  {
-    GZDOOM
-  },
-
+  
   hooks =
   {
-    setup = GZDOOM.setup
+    setup = ZDOOM.setup
   }
+  
 }
 

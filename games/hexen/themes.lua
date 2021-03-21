@@ -86,6 +86,11 @@ HEXEN.THEMES =
         beam_metal = 50,
       },
 
+      wall_groups =
+      {
+        PLAIN = 0.01,
+      },
+
       fences =
       {
         CASTLE07=35,

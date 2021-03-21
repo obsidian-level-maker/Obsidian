@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  PANEL: ZDoom Map Options
+--  PANEL: REJECT Builder Options
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2021 Dashodanger
@@ -16,25 +16,19 @@
 --
 ------------------------------------------------------------------------
 
-UI_ZDOOM_MAP_OPTIONS = { }
+UI_REJECT_OPTIONS = { }
 
-UI_ZDOOM_MAP_OPTIONS.YES_NO =
+UI_REJECT_OPTIONS.YES_NO =
 {
   "yes", _("Yes"),
   "no",  _("No"),
 }
 
-UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES = 
-{
-  "binary",  _("Binary"),
-  "udmf", _("UDMF"),
-}
-
-OB_MODULES["ui_zdoom_map_options"] =
+OB_MODULES["ui_reject_options"] =
 {
   label = _("Map Build Options"),
   
-  engine = "zdoom",
+  engine = "!zdoom",
 
   side = "left",
   priority = 105,
@@ -42,26 +36,11 @@ OB_MODULES["ui_zdoom_map_options"] =
   options =
   {
     {
-      name = "build_nodes",
-      label = _("Build Nodes"),
-      choices = UI_ZDOOM_MAP_OPTIONS.YES_NO,
-      default = "no",
-      tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map.",
-    },
-    {
-      name = "map_format",
-      label = _("Map Format"),
-      choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
-      default = "udmf",
-      tooltip = "Choose between UDMF and binary map format.",
-    },
-    {
       name = "build_reject",
       label = _("Build REJECT"),
-      choices = UI_ZDOOM_MAP_OPTIONS.YES_NO,
+      choices = UI_REJECT_OPTIONS.YES_NO,
       default = "no",
-      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
+      tooltip = "Choose to build a proper REJECT lump. WARNING: This can be very time consuming!",
     }
   }
 }

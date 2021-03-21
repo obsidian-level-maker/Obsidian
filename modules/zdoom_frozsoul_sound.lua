@@ -244,7 +244,7 @@ OB_MODULES["zdoom_ambient_sound"] =
 
   priority = 69,
 
-  engine = { zdoom=1, gzdoom=1 },
+  engine = "zdoom",
 
   hooks =
   {

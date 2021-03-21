@@ -263,7 +263,7 @@ OB_MODULES["stealth_mons"] =
 
   game = "doomish",
 
-  engine = { edge=1, zdoom=1, gzdoom=1, skulltag=1 },
+  engine = "zdoom",
 
   tables =
   {

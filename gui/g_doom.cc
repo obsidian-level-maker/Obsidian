@@ -72,6 +72,7 @@ static int errors_seen;
 std::string current_engine;
 std::string map_format;
 std::string build_nodes;
+std::string build_reject;
 
 static bool UDMF_mode;
 
@@ -548,22 +549,12 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 			else
 			{
 				textmap_lump->Printf("\tspecial = %d;\n", type);
-				if (args)
-				{
-					textmap_lump->Printf("\targ0 = %d;\n", args[0]);
-				}
-				else
-				{
-					textmap_lump->Printf("\targ0 = 0;\n");					
-				}	
+				textmap_lump->Printf("\targ0 = %d;\n", args[0]);	
 			}
-			if (args)
-			{
-				textmap_lump->Printf("\targ1 = %d;\n", args[1]);
-				textmap_lump->Printf("\targ2 = %d;\n", args[2]);
-				textmap_lump->Printf("\targ3 = %d;\n", args[3]);
-				textmap_lump->Printf("\targ4 = %d;\n", args[4]);
-			}
+			textmap_lump->Printf("\targ1 = %d;\n", args[1]);
+			textmap_lump->Printf("\targ2 = %d;\n", args[2]);
+			textmap_lump->Printf("\targ3 = %d;\n", args[3]);
+			textmap_lump->Printf("\targ4 = %d;\n", args[4]);
 			std::bitset<16> udmf_flags(flags);
 			if (udmf_flags.test(0))
 				textmap_lump->Printf("\tblocking = true;\n");
@@ -585,8 +576,23 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 				textmap_lump->Printf("\tmapped = true;\n");
 			if (udmf_flags.test(9))
 				textmap_lump->Printf("\trepeatspecial = true;\n");
+			int spac = (flags & 0x1C00) >> 10;
+			if (type > 0) 
+			{
+				if (spac == 0)
+					textmap_lump->Printf("\tplayercross = true;\n");
+				if (spac == 1)
+					textmap_lump->Printf("\tplayeruse = true;\n");
+				if (spac == 2)
+					textmap_lump->Printf("\tmonstercross = true;\n");
+				if (spac == 3)
+					textmap_lump->Printf("\timpact = true;\n");	
+				if (spac == 4)
+					textmap_lump->Printf("\tplayerpush = true;\n");
+				if (spac == 5)
+					textmap_lump->Printf("\tmissilecross = true;\n");				
+			}
 			textmap_lump->Printf("}\n");
-//			LogPrintf("ACTIVATION: %d\n", ((flags & 0x1C00) >> 10)); To determine SPAC activation if necessary. Placeholder for now.
 			udmf_linedefs += 1;
 		}
 	}
@@ -839,40 +845,44 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
   
-  	// Node building and map format options are a moot point for non-ZDoom engines
- 
-	if (current_engine != "zdoom" && current_engine != "gzdoom")
+	zdbsp_options options;
+	if (current_engine == "nolimit")
 	{
-		zdbsp_options options;
-		if (current_engine == "nolimit")
+		options.build_nodes = true;
+		options.build_gl_nodes = false;
+		options.build_gl_only = false;
+		if (build_reject == "yes")
 		{
-			options.build_nodes = true;
-			options.build_gl_nodes = false;
+			options.reject_mode = ERM_Rebuild_NoGL;
+		}
+		else
+		{
 			options.reject_mode = ERM_CreateZeroes;
-			options.check_polyobjs = false;
-			options.compress_nodes = false;
-			options.compress_gl_nodes = false;
-			options.force_compression = false;
-		}
-		else if (current_engine == "boom")
+		}			
+		options.check_polyobjs = false;
+		options.compress_nodes = false;
+		options.compress_gl_nodes = false;
+		options.force_compression = false;
+	}
+	else if (current_engine == "boom")
+	{
+		options.build_nodes = true;
+		options.build_gl_nodes = true;
+		options.build_gl_only = true;
+		if (build_reject == "yes")
 		{
-			options.build_nodes = true;
-			options.build_gl_nodes = false;
+			options.reject_mode = ERM_Rebuild;
+		}
+		else
+		{
 			options.reject_mode = ERM_CreateZeroes;
-			options.check_polyobjs = false;
-			options.compress_nodes = true;
-			options.compress_gl_nodes = true;
-			options.force_compression = false;
-		}
-		if (zdmain(filename, options) != 0)
-		{
-			Main_ProgStatus(_("ZDBSP Error!"));
-			return false;
-		}
-		FileRename(filename, out_name);
-		return true;	
-	} 
-	else
+		}	
+		options.check_polyobjs = false;
+		options.compress_nodes = true;
+		options.compress_gl_nodes = false;
+		options.force_compression = false;
+	}
+	else if (current_engine == "zdoom")
 	{
 		if (build_nodes == "no") 
 		{
@@ -880,25 +890,31 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 			FileRename(filename, out_name);
 			return true;		
 		}
-		zdbsp_options options;
 		options.build_nodes = true;
-		options.build_gl_nodes = false;
-		options.reject_mode = ERM_DontTouch;
+		options.build_gl_nodes = true;
+		options.build_gl_only = true;
+		if (build_reject == "yes")
+		{
+			options.reject_mode = ERM_Rebuild;
+		}
+		else
+		{
+			options.reject_mode = ERM_DontTouch;
+		}	
 		options.check_polyobjs = true;
 		options.compress_nodes = true;
 		options.compress_gl_nodes = true;
-		options.force_compression = true;
-		if (zdmain(filename, options) != 0)
-		{
-			zdbsp_options options;
-			Main_ProgStatus(_("ZDBSP Error!"));
-			return false;
-		}
-		FileRename(filename, out_name);
-		return true;	
+		options.force_compression = true;			
 	}
-	// This shouldn't be reached, so return false if it is
-	return false;
+	
+	if (zdmain(filename, options) != 0)
+	{
+		Main_ProgStatus(_("ZDBSP Error!"));
+		return false;
+	}
+	
+	FileRename(filename, out_name);
+	return true;	
 }
 
 
@@ -962,9 +978,17 @@ bool doom_game_interface_c::Start(const char *preset)
 		main_win->build_box->Prog_Init(20, N_("CSG"));
 		
 	current_engine = main_win->game_box->engine->GetID();
+	if (current_engine == "zdoom")
+	{
+		build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_reject")->GetID();
+	}
+	else
+	{
+		build_reject = main_win->left_mods->FindID("ui_reject_options")->FindOpt("build_reject")->GetID();	
+	}
 	map_format = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("map_format")->GetID();
 	build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_nodes")->GetID();
-	if ((current_engine == "zdoom" || current_engine == "gzdoom") && map_format == "udmf")
+	if (current_engine == "zdoom" && map_format == "udmf")
 	{
 		UDMF_mode = true;
 	}
