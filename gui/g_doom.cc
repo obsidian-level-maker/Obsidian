@@ -898,7 +898,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.force_compression = true;
 		if (zdmain(filename, options) != 0)
 		{
-			zdbsp_options options;
 			Main_ProgStatus(_("ZDBSP Error!"));
 			return false;
 		}

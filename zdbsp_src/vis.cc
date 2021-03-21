@@ -9,7 +9,7 @@
 #include "templates.h"
 #include <functional>
 
-bool		FastVis=0;
+bool		FastVis=1;
 bool		NoPassageVis=1;
 bool		NoSort;
 

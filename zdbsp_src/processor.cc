@@ -20,6 +20,7 @@
 
 #include "processor.h"
 #include "rejectbuilder.h"
+#include "rejectbuilder_nogl.h"
 
 enum
 {
@@ -652,12 +653,18 @@ void FProcessor::Write (FWadWriter &out)
 
 		switch (RejectMode)
 		{
+			
+		case ERM_Rebuild_NoGL:
+		    {
+			    FRejectBuilderNoGL reject(Level);
+			    Level.Reject = reject.GetReject();
+			    break;
+			 }
+			
 		case ERM_Rebuild:
 		    {
 			    FRejectBuilder reject(Level);
 			    Level.Reject = reject.GetReject();
-			    //printf ("   Rebuilding the reject is unsupported.\n");
-			    // Intentional fall-through
 			    break;
 			 }
 
