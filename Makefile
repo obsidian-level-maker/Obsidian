@@ -191,19 +191,22 @@ $(OBJ_DIR)/zdbsp/%.o: zdbsp_src/%.cc
 #----- ZokumBSP Objects ------------------------------------------------
 
 ZOKUM_OBJS= \
-	$(OBJ_DIR)/zokum/zenmain.o  \
-	$(OBJ_DIR)/zokum/zenreject.o \
-	$(OBJ_DIR)/zokum/console.o \
+	$(OBJ_DIR)/zokum/blockmap.o \
+	$(OBJ_DIR)/zokum/console.o  \
+	$(OBJ_DIR)/zokum/endoom.o \
 	$(OBJ_DIR)/zokum/level.o \
+	$(OBJ_DIR)/zokum/preprocess.o \
+	$(OBJ_DIR)/zokum/quicksort.o \
 	$(OBJ_DIR)/zokum/wad.o \
 	$(OBJ_DIR)/zokum/wadlist.o \
-	$(OBJ_DIR)/zokum/blockmap.o \
-	$(OBJ_DIR)/zokum/quicksort.o \
-	$(OBJ_DIR)/zokum/preprocess.o  
+	$(OBJ_DIR)/zokum/zenmain.o  \
+	$(OBJ_DIR)/zokum/zennode.o \
+	$(OBJ_DIR)/zokum/zenreject.o \
+	$(OBJ_DIR)/zokum/zenrmb.o
 
 ZOKUM_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
-$(OBJ_DIR)/zokum/%.o: zokum_src/%.cc
+$(OBJ_DIR)/zokum/%.o: zokum_src/%.cpp
 	$(CXX) $(ZOKUM_CXXFLAGS) -o $@ -c $<
 
 

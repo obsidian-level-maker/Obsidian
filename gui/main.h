@@ -23,8 +23,8 @@
 
 #define OBSIDIAN_TITLE  "OBSIDIAN Level Maker"
 
-#define OBSIDIAN_VERSION  "Beta 10"
-#define OBSIDIAN_HEX_VER  0x00A
+#define OBSIDIAN_VERSION  "Beta 12"
+#define OBSIDIAN_HEX_VER  0x00C
 #define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
 
 
