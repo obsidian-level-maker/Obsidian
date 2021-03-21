@@ -846,7 +846,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
   
   	// Node building and map format options are a moot point for non-ZDoom engines
  
-	if (current_engine != "zdoom" && current_engine != "gzdoom")
+	if (current_engine != "zdoom")
 	{
 		zdbsp_options options;
 		if (current_engine == "nolimit")
@@ -972,7 +972,7 @@ bool doom_game_interface_c::Start(const char *preset)
 	current_engine = main_win->game_box->engine->GetID();
 	map_format = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("map_format")->GetID();
 	build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_nodes")->GetID();
-	if ((current_engine == "zdoom" || current_engine == "gzdoom") && map_format == "udmf")
+	if (current_engine == "zdoom" && map_format == "udmf")
 	{
 		UDMF_mode = true;
 	}

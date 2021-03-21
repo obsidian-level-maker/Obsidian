@@ -1132,7 +1132,7 @@ OB_MODULES["zdoom_specials_heretic"] =
 
   priority = 68,
 
-  engine = { zdoom=1, gzdoom=1, skulltag=1 },
+  engine = "zdoom",
 
   hooks =
   {

@@ -34,7 +34,7 @@ OB_MODULES["ui_zdoom_map_options"] =
 {
   label = _("Map Build Options"),
   
-  engine = { zdoom=1, gzdoom=1 },
+  engine = "zdoom",
 
   side = "left",
   priority = 105,

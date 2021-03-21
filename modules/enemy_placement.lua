@@ -493,7 +493,7 @@ OB_MODULES["harder_enemy"] =
 
   tooltip = "Changes enemy placement and thus makes overall gameplay a bit to fair bit harder, depending if you use additional mods in the case of GZDoom.",
 
-  engine = { zdoom=1, gzdoom=1, skulltag=1, limit=1, boom=1 },
+  engine = { zdoom=1, limit=1, boom=1 },
 
   tables =
   {

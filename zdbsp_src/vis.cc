@@ -284,8 +284,6 @@ void FRejectBuilder::CalcVis ()
 	// assemble the leaf vis lists by oring and compressing the portal lists
 	//
 	printf ("creating leaf vis...\n");
-	printf ("PORTAL CLUSTERS: %d\n", portalclusters);
-	printf ("TOTAL VIS: %d\n", totalvis);
 	for (int i = 0; i < portalclusters; i++)
 	{
 		ClusterMerge (i);

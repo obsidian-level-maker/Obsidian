@@ -124,7 +124,6 @@ void FRejectBuilder::LoadPortals ()
 	FLeaf		*l;
 	FWinding	*w;
 	
-	printf("GL SUBS: %d\n", Level.NumGLSubsectors);
 	portalclusters = Level.NumGLSubsectors;
 
 	for (numportals = 0, i = 0; i < Level.NumGLSegs; ++i)
