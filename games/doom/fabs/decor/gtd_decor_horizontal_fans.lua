@@ -1,14 +1,16 @@
 PREFABS.Decor_ceiling_fan =
 {
-  file   = "decor/gtd_decor_horizontal_fans.wad",
-  map    = "MAP01",
+  file = "decor/gtd_decor_horizontal_fans.wad",
+  map = "MAP01",
 
-  prob   = 3000,
+  prob = 3000,
   skip_prob = 50,
   theme  = "!hell",
 
-  where  = "point",
-  size   = 48,
+  env = "building",
+
+  where = "point",
+  size = 48,
   height = 128,
 
   texture_pack = "armaetus",
