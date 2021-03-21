@@ -844,42 +844,30 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
   
-  	// Node building and map format options are a moot point for non-ZDoom engines
- 
-	if (current_engine != "zdoom")
+	zdbsp_options options;
+	if (current_engine == "nolimit")
 	{
-		zdbsp_options options;
-		if (current_engine == "nolimit")
-		{
-			options.build_nodes = true;
-			options.build_gl_nodes = false;
-			options.build_gl_only = false;
-			options.reject_mode = ERM_CreateZeroes;
-			options.check_polyobjs = false;
-			options.compress_nodes = false;
-			options.compress_gl_nodes = false;
-			options.force_compression = false;
-		}
-		else if (current_engine == "boom")
-		{
-			options.build_nodes = true;
-			options.build_gl_nodes = true;
-			options.build_gl_only = true;
-			options.reject_mode = ERM_Rebuild;
-			options.check_polyobjs = false;
-			options.compress_nodes = true;
-			options.compress_gl_nodes = false;
-			options.force_compression = false;
-		}
-		if (zdmain(filename, options) != 0)
-		{
-			Main_ProgStatus(_("ZDBSP Error!"));
-			return false;
-		}
-		FileRename(filename, out_name);
-		return true;	
-	} 
-	else
+		options.build_nodes = true;
+		options.build_gl_nodes = false;
+		options.build_gl_only = false;
+		options.reject_mode = ERM_CreateZeroes;
+		options.check_polyobjs = false;
+		options.compress_nodes = false;
+		options.compress_gl_nodes = false;
+		options.force_compression = false;
+	}
+	else if (current_engine == "boom")
+	{
+		options.build_nodes = true;
+		options.build_gl_nodes = true;
+		options.build_gl_only = true;
+		options.reject_mode = ERM_Rebuild;
+		options.check_polyobjs = false;
+		options.compress_nodes = true;
+		options.compress_gl_nodes = false;
+		options.force_compression = false;
+	}
+	else if (current_engine == "zdoom")
 	{
 		if (build_nodes == "no") 
 		{
@@ -887,7 +875,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 			FileRename(filename, out_name);
 			return true;		
 		}
-		zdbsp_options options;
 		options.build_nodes = true;
 		options.build_gl_nodes = true;
 		options.build_gl_only = true;
@@ -895,17 +882,17 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.check_polyobjs = true;
 		options.compress_nodes = true;
 		options.compress_gl_nodes = true;
-		options.force_compression = true;
-		if (zdmain(filename, options) != 0)
-		{
-			Main_ProgStatus(_("ZDBSP Error!"));
-			return false;
-		}
-		FileRename(filename, out_name);
-		return true;	
+		options.force_compression = true;			
 	}
-	// This shouldn't be reached, so return false if it is
-	return false;
+	
+	if (zdmain(filename, options) != 0)
+	{
+		Main_ProgStatus(_("ZDBSP Error!"));
+		return false;
+	}
+	
+	FileRename(filename, out_name);
+	return true;	
 }
 
 
