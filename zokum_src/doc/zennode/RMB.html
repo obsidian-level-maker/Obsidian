@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>ZenNode's RMB Support</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+
+    <link rel="up" href="index.html" title="Up">
+    <link rel="prev" href="compare.html" title="REJECT comparison utility">
+    <link rel="next" href="Custom.html" title="Customizing ZenNode">
+    <link rel="first" href="Overview.html" title="ZenNode overview">
+    <link rel="last" href="Custom.html" title="Customizing ZenNode">
+
+	<style>
+	    .done          { font-style: bold; }
+	    .first         { color: blue; }
+	    .second        { color: green; }
+	    .third         { color: red; }
+            .unsupported   { font-style: italic; color: gray; }
+            td             { text-align: center; padding: 0 5px 0 5px; }
+            td + td + td   { text-align: left; }
+	</style>
+
+  </head>
+
+  <body>
+
+    <center>
+      <h1>ZenNode's Reject Map Builder (RMB) support</h1>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <br/>
+
+    <h2>Reject Map Builder (RMB) and ZenNode</h2>
+
+    <div class="boxtext">
+      <p>Starting with version 1.2.0, ZenNode includes limited support for RMB option files. Since the underlying design of ZenNode is different from RMB, not all options can be supported. A full discussion of RMB options and their behavior is beyond the scope of this document. For a detailed discussion of RMB options, see the included copy of the <a href="manual.html">RMB manual</a> by Jens Hykkelbjerg and Steve Benner.</p>
+</p>
+    </div>
+
+    <br/>
+
+    <center>
+
+      <table class="boxtext2" summary="">
+<tr>
+<th>Option</th><th>Supported</th><th>Description</th>
+</tr>
+        <tr class="boxtext">
+          <td><b>BAND</b></td>
+          <td>Y</th>
+          <td class="done">Makes <q>bands</q> of blindness/safety</td>
+        </tr>
+        <tr>
+          <td><b>BLIND</b></td>
+          <td>Y</th>
+          <td class="done">Makes sector(s) blind (or partially so)</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>BLOCK</b></td>
+          <td>N</th>
+          <td class="second">Needs sSeeThruLine lines tracked inside PolyLines</td>
+        </tr>
+        <tr>
+          <td><b>DISTANCE</b></td>
+          <td>Y</th>
+          <td class="done">Specifies how far (in map units) monsters can see generally</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>DOOR</b></td>
+          <td>N</th>
+          <td class="second">Smarter version of BLOCK</td>
+        </tr>
+        <tr>
+          <td><b>EXCLUDE</b></td>
+          <td>Y</th>
+          <td class="done">Forces exclusion of view from one sector to another</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>GROUP</b></td>
+          <td>N</th>
+          <td class="third">Needs a new 'Group' member to sSectorStuff?</td>
+        </tr>
+        <tr>
+          <td><b>INCLUDE</b></td>
+          <td>Y</th>
+          <td class="done">Forces inclusion of view from one sector to another</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>INVERT</b></td>
+          <td>Y</th>
+          <td class="done">See BAND/BLIND/SAFE</td>
+        </tr>
+        <tr>
+          <td><b>LEFT</b></td>
+          <td>N</th>
+          <td class="second">Needs sSeeThruLine lines tracked inside PolyLines</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>LENGTH</b></td>
+          <td>Y</th>
+          <td class="done">Specifies how far (by sector) monsters can see generally</td>
+        </tr>
+        <tr>
+          <td><b>LINE</b></td>
+          <td>N</th>
+          <td class="third">Add a sSeeThruLine line to the indexToSolid mapping (need to derive sSeeThruLine from sSolidLine)</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>NODOOR</b></td>
+          <td>N</th>
+          <td class="second">Need to support DOOR first!</td>
+        </tr>
+        <tr>
+          <td><b>NOMAP</b></td>
+          <td>-</th>
+          <td class="unsupported">Not supported (Has no effect - primarily used to speed things up)</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>NOPROCESS</b></td>
+          <td>-</th>
+          <td class="unsupported">Not supported (Primarily used to speed things up)</td>
+        </tr>
+        <tr>
+          <td><b>ONE</b></td>
+          <td>N</th>
+          <td class="second">Needs sSeeThruLine lines tracked inside PolyLines (primarily used to speed things up)</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>PERFECT</b></td>
+          <td>Y</th>
+          <td class="done">Always on</td>
+        </tr>
+        <tr>
+          <td><b>PREPROCESS</b></td>
+          <td>-</th>
+          <td class="unsupported">Not supported (Primarily used to speed things up)</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>PROCESS</b></td>
+          <td>Y</th>
+          <td class="done">Always on</td>
+        </tr>
+        <tr>
+          <td><b>REPORT</b></td>
+          <td>N</th>
+          <td class="first">Looks easy enough!</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>RIGHT</b></td>
+          <td>N</th>
+          <td class="second">Needs sSeeThruLine lines tracked inside PolyLines</td>
+        </tr>
+        <tr>
+          <td><b>SAFE</b></td>
+          <td>Y</th>
+          <td class="done">Makes sector(s) invisible to far monsters</td>
+        </tr>
+        <tr class="boxtext">
+          <td><b>TRACE</b></td>
+          <td>-</th>
+          <td class="unsupported">Not supported (Used for debugging RMB)</td>
+        </tr>
+      </table>
+
+    </center>
+
+  </body>
+
+</html>

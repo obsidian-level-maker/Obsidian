@@ -1,0 +1,4 @@
+Author: Jens Hykkelbjerg	(hykkelbj@daimi.aau.dk)
+
+This is a DOOM ][ WAD demonstrating all the special effects
+described in the 'neat', 'sky' and 'special' text files.

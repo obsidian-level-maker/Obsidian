@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>Customizing ZenNode</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="up" href="index.html" title="Up">
+    <link rel="prev" href="RMB.html" title="ZenNode RMB support">
+    <link rel="first" href="Overview.html" title="ZenNode overview">
+  </head>
+
+  <body>
+
+    <center>
+      <h1>ZenNode - Possibly the fastest DOOM&trade; BSP builder yet.</h1>
+      by <a href="mailto:zennode@mrousseau.org">Marc Rousseau</a>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <br>
+
+    <p>ZenNode supports a customization file to allow more flexibility in the BSP generating process. This file allows you to specify:</p>
+
+    <ul>
+      <li>LINEDEFS that should be ignored when creating the initial SEGS lists.</li>
+      <li>Whether or not a specific SECTORS must be unique within a SSECTORS.</li>
+      <li>LINEDEFS/SECTORS that should not be split (can't be guaranteed).</li>
+    </ul>
+
+    <br>
+
+    <p><em>NOTE:</em> The last item currently will only work when using the minimum-depth algorithm (-n2). The default &amp; fast algorithms (-n1 &amp; -n3) don't check these flags. The other two entries work with all algorithms. (If you find yourself using the no-split options frequently, you may want to create a ZenNode.cfg file with the -n2 option set as your default.)</p>
+
+    <p>The information in this file will overide any options that have already been specified. For example, if -nu- is being used, the customization file may overide this and require all sectors be unique. The file is a simple ASCII file, similar to a MS-Windows&trade; .INI file. The format is as follows:</p>
+
+    <blockquote>
+<pre>[MAPxx] &lt;- or [ExMx]
+[ignore-linedefs]
+xxx
+[dont-split-linedefs]
+xxx
+[dont-split-sectors]
+xxx
+[unique-sectors]
+xxx</pre>
+    </blockquote>
+
+    <p>The name of the customization file should match the name of the .wad file it applies to. Each file may contain multiple [MAPxx] sections. Any section that is not needed does not need to have an entry in the file. The current directory is searched, then the directory containing the .wad file.</p>
+
+    <p>Each line in a particular entry is one or more of the following:</p>
+
+    <ul>
+      <li>all - all objects in the wad will be affected.</li>
+      <li>x - the specified object is affected (indices start at 0).</li>
+      <li>y-z - applies to all objects starting at y up to and including z.</li>
+    </ul>
+
+    <br>
+
+    <p>Any line may be preceded by a '!' to indicate that the appropriate effect is NOT to be applied to the indicated objects. Multiple entries can be placed on one line seperated by a comma. (i.e.: 5-9,15,20,300-310).</p>
+
+    <p><b>USES:</b></p>
+
+    <p>Special Effects - Some special effects can not normally be mixed in a .wad file. One example is the 'deep-water-effect' and the 'invisible-door' effect. ZenNode's default settings usually allow the 'deep-water-effect' to work correctly, but the 'invisible-door' messes up. Conversely, if you get the 'invisible-door' to work, the 'deep-water-effect' messes up. Now you can get both to work in the same .wad file.</p>
+
+    <p>How it works: the 'deep-water-effect' requires the -nu switch, while the 'invisible-door' requires the -nu- switch. By defaulting to the -nu switch and using the customization file to specify the specific sectors that do not need to be unique (the two sectors on the inside of the door), you can get them both to work in the same wad. For example, if you had a .wad file named pooldoor.wad, the following file (pooldoor.zen) would solve the problem (assuming that the sector referenced inside the 'invisible-door' were 95 &amp; 97).</p>
+
+    <br>
+    <blockquote>
+<pre>&lt;begin pooldoor.zen>
+[MAP01]
+[unique-sectors]
+!95
+!97
+&lt;end pooldoor.zen></pre>
+    </blockquote>
+
+    <center><b>******** THIS SECTION IS UNDER CONSTRUCTION ********</b></center>
+
+    <br>
+
+    <p>2) PolyObjects in Hexen - There are two ways to use this file for the PolyObjects in Hexen. The first is to use the [ignore-linedefs] section to exclude the linedefs that initially contain the polyObjs (NOT the polyObjs themselves!). This will reduce the size and complexity of the BSP tree and make it build faster too!</p>
+
+    <p>The second is to make sure the region where a polyObj is going to be placed/move is not divided by the NODES builder. By creating a non-convex sector on the map and listing that sector in the [dont-split-sectors] section (or listing each linedef in the [dont-split-linedefs] section). This is a request that sectors and/or linedefs marked this way not be split. This may not be possible, given previous choices of partition lines. However, ZenNode will attempt to avoid splitting them whenever possible. Ensuring that the sectors specified are non-convex should improve the odds of this happening.</p>
+
+    <center><b>******** END OF CONSTRUCTION *********</b></center>
+
+    <p>3) ????</p>
+
+    <p>These are a few of the obvious uses for these options. Others might include trying to effect the BSP tree directly by requiring selected linedefs not be split. Others will probably be discovered by trial and error. So, try it out and see what happens.</p>
+
+    <p>Two sample .zen files have been included as a guideline for creating your own.</p>
+
+  </body>
+
+</html>

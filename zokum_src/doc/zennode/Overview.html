@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>ZenNode</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="up" href="index.html" title="Up">
+    <link rel="next" href="README.html" title="README">
+    <link rel="last" href="Custom.html" title="Customizing ZenNode">
+    <meta name="KeyWords" content="ZenNode DOOM Heretic Hexen WAD BSP">
+  </head>
+
+  <body>
+
+    <center>
+      <h1>ZenNode - Possibly the fastest DOOM&trade; BSP builder yet.</h1>
+      by <a href="mailto:zennode@mrousseau.org">Marc Rousseau</a>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <br>
+
+    <h2>Background</h2>
+
+    <div class="boxtext">
+      <p>After playing around with a few level editors for DOOM, I noticed that most of them took a long time to build the NODES structure. Even worse, some of them built NODES that didn't work! So, I decided I'd try writing a NODES builder that 1) built valid NODES and 2) built them FAST. Well, after a month or two of fooling around, ZenNode is here. I believe both objectives have been reached. I've compared it to several other NODES builders out there and it blows them all away! It's written entirely in C/C++. It could probably be sped up with a little assembly code (or a better optimizing compiler).</p>
+      <p>The .zip file contains a fully functional BLOCKMAP, NODES, and REJECT builder for DOOM .WAD files. ZenNode will rebuild either a single level or all the levels in a .WAD file. ZenNode will accept either DOOM, DOOM II, Heretic, and/or HEXEN .WADs. Try it out. Let me know what you think.</p>
+    </div>
+
+    <h2>Description</h2>
+
+    <div class="boxtext">
+      <p>ZenNode will read the level description from a .WAD file and create either a new BLOCKMAP resource, REJECT resource, and/or NODES/SEGS/SSECTOR resources. Levels in a .WAD may be specified on the command line, or, if none are specified, all of the maps in a .WAD will be rebuilt.</p>
+      <p>As it completes a resource, ZenNode will print information indicating the results. When a BLOCKMAP is completed, it will display the new/old size of the block map and a percentage of the block map that is actually used by the map. After it rebuilds the BSP tree, it will display the number of new/old NODES and SEGS that it created along with the original numbers. For the REJECT resource, it displays the new and old efficiencies (higher numbers mean less work for the game engine at run time).
+    </div>
+
+    <h2>Features</h2>
+
+    <div class="boxtext">
+      <ul>
+        <li>All the source code is included under the <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a>.</li>
+        <li>Rebuild the BLOCKMAP resource - compressed or uncompressed.</li>
+        <li>Fast, customizable BSP tree generator.
+          <ul>
+            <li>Select from 3 different partitioning algorithms.</li>
+            <li>Control the parameters the algorithms use to select the partitions.</li>
+            <li>Indicate which LINEDEFs should be ignored by the BSP tree.</li>
+            <li>Select LINEDEFs/SECTORs that should not be split.</li>
+            <li>Specify whether or not a specific SECTORs must remain unique.</li>
+          </ul></li>
+        <li>Rebuild the REJECT resource.
+          <ul>
+            <li>Insert a zero-filled resource.</li>
+            <li>Do a complete line-of-sight test for every sector.</li>
+            <li>Add special effects using an RMB option file.</li>
+          </ul></li>
+        <li>Extract maps to a new PWAD file.</li>
+        <li>Merge multiple maps into a single .WAD file.</li>
+        <li>Automatic detection of special effects in the REJECT structure. If special effects are found, the REJECT structure will not be rebuilt unless explicitly requested.</li>
+      </ul>
+    </div>
+
+    <h2>Requirements</h2>
+
+    <div class="boxtext">
+      <ol>
+        <li>A machine capable of running DOOM - 386 or better with a few Megs of RAM</li>
+        <li>A supported operating system:
+          <ul style=disc>
+            <li>Linux (or any other *nix platform that supports the g++ compiler)</li>
+            <li>Any PC-based Win32 platform (Windows 9x, Windows ME, Windows NT, or Windows 2000)</li>
+            <li><i><b>No longer supported: </b>DOS (v?.?? or higher - tested with 5.0 &amp; 6.22)</i></li>
+            <li><i><b>No longer supported: </b>a 16-bit Windows platform (Windows 3.x or Windows for Workroups)</i></li>
+            <li><i><b>No longer supported: </b>OS/2 v2.0 or higher</i></li>
+          </ul>
+        </li>
+        <li>A .WAD file</li>
+      </ol>
+    </div>
+
+    <h2>Acknowledgments</h2>
+
+    <div class="boxtext">
+      <p>DOOM &amp; DOOM II are trademarks of id Software, inc.,&copy;1994.
+      <br>Heretic &amp; HEXEN were developed by Raven Software for id Software.</p>
+
+      <ul>
+        <li>Thanks to the guys at id Software for creating DOOM.</li>
+        <li>Thanks to Raven Software for putting out Heretic &amp; Hexen.</li>
+        <li>Matt Fell and everyone who helped put together the unofficial DOOM specs. This program was written entirely from the descriptions in this file and wouldn't have been possible without it.</li>
+        <li>Jens Hykkelbjerg for permission to include spcial2b.wad and a copy of the RMB users manul and for creating RMB - the only other REJECT builder I'm aware of that can generate a 'perfect' REJECT resource.</li>
+        <li>Everyone that has sent me bug reports or pointed out problems with ZenNode. Special thanks to:
+        <ul>
+          <li>Jean-Yves <q lang="fr">Jive</q> Delpech - testing too many wads and mega-wads to mention</li>
+          <li>John W Anderson a.k.a. <q>Dr Sleep</q> - helping me verify RMB option support</li>
+          <li>Jens Hykkelbjerg - helping me verify the REJECT builder</li>
+          <li>and many more... (sorry if I forgot to include you)</li>
+        </ul></li>
+      </ul>
+    </div>
+
+    <h2>Disclaimer</h2>
+
+    <div class="boxtext">
+      <p>I've tested the .WADs generated by ZenNode and haven't found any fatal or HOM (Hall-of-mirrors) side effects from any level I've tested. However, by using this program you assume all responsibility for lost/damaged files resulting from the use of a .WAD generated by ZenNode. If you find a level that causes either an error in ZenNode, HOMs, or any other problem inside DOOM, DOOM II, Heretic, or Hexen please let <a href="mailto:zennode@mrousseau.org">me</a> know. (Please indicate which ZenNode version you are using and what OS &amp; version - i.e.: v0.97 running on OS/2 v3.0).</p>
+    </div>
+
+  </body>
+
+</html>

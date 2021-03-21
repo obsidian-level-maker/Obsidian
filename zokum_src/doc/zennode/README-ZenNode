@@ -1,0 +1,22 @@
+ZenNode v1.2.0
+==============
+
+This is directory tree includes the source code necessary to build ZenNode.
+Since I don't have a lot of time to spend maintaining the code and there 
+haven't been too many changes in the past few years, I've decided to release
+the source under the GPL license.  See the file COPYING for details.
+
+Several of the files (i.e. those in the DOOM directory) evolved from earlier
+projects.  They contain functionality that is not used in ZenNode and may not
+have been kept up to date.  I think it all works, but I won't make any
+guarantees.
+
+There is a makefile included in the ZenNode directory that can be used as is
+under Linux.  To build ZenNode in any other environment, you can use the
+makefile as a guide.  I've built and tested it under Windows using Borland
+and Microsoft compilers.  Older versions have been compiled under OS/2 using
+Borland.  The code should be portable to other compilers, but it has never
+been tested.
+
+Enjoy,
+Marc

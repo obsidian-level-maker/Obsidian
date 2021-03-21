@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>README</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="up" href="index.html" title="Up">
+    <link rel="next" href="History.html" title="History">
+    <link rel="prev" href="Overview.html" title="ZenNode overiew">
+    <link rel="first" href="Overview.html" title="ZenNode overview">
+    <link rel="last" href="Custom.html" title="Customizing ZenNode">
+  </head>
+
+  <body>
+
+    <center>
+      <h1>Readme</h1>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <h2>Usage</h2>
+
+<div class="shadow">
+    <div class="indent">
+
+      <p>OK, I've heard a few people saying that using ZenNode is confusing and needs a real README. Well, I'm the first to admit that I'm not one for writing documentation, so if anyone would like to submit a 'decent README' or a tutorial, I'll be glad to include it (with credits) in future releases.</p>
+
+      <p>In the meantime, I'll give you the simplest tutorial I can think of.  Suppose you have a .wad file, lets call it DOOM.WAD, and you want to use ZenNode with it.  Create a command prompt window, change to the directory where you have ZenNode installed (I'll use C:\ZENNODE for this example) and, assuming your DOOM.WAD file is located the directory C:\DOOM, type:</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode c:\doom\doom.wad</p>
+
+      <p>Now press the [Enter] key. It's as simple as that! ZenNode should now process each level in the wad file, creating/updating the BLOCKMAP, BSP structures (NODES, SEGS, SSECTOR), and REJECT resources. Once the processing is completed, ZenNode will write the output file. By default, the output file has the same name as the input file (i.e. DOOM.WAD), but is put in the current directory (i.e. C:\ZENNODE in this example). If you want to change the name of the output file (to say ZENDOOM.WAD) use this instead:</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode c:\doom\doom.wad -o zendoom.wad
+
+      <p>This will create a new file called zendoom.wad in the current directory. You can specify a full path name (i.e. -o c:\doom\zendoom.wad) if you don't want the new .wad file to end up in the current directory. By default, the output file contains everything found in the input file. If you don't want the entire .wad file to be copied, but only the levels that ZenNode has processed, you can e<b>x</b>tract them to a new file which will be a new PWAD file containing only those levels:</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode c:\doom\doom.wad -x zendoom.wad</p>
+
+      <p>Lets assume that you only want to update specific levels inside the wad file (lets use E2M3 and E3M4). You can specify the levels on the command line after the name of the .wad file, but before any output options (i.e. -o or -x):</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode c:\doom\doom.wad e2m3+e3m4 -x zendoom.wad</p>
+
+      <p>This will create a PWAD file that contains only levels e2m3 and e3m4. If you use the -o option (or no output option) the output file will be a copy of the original with only these two level modified.</p>
+
+      <p>You can also use ZenNode to merge individual .wad files in to a larger one. If you had two .wad files (i.e. file1.wad and file2.wad) and wanted to merge them, you could type:</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode file1+file2 -o zendoom.wad</p>
+
+      <p>The resulting zendoom.wad file will contain all the levels found in both file1.wad and file2.wad. If both files have any level(s) with the same name, the ones in the last file listed will be used.  So, if file1.wad contained E1M1 and E1M2 and file2.wad contained E1M2 and E1M3, the output file would contain the E1M2 level found in file2.wad and not file1.wad.</p>
+
+      <p>By default, ZenNode will process the BLOCKMAP, BSP structures and REJECT resources. If you don't want any of these to be processed, you can tell ZenNode to turn off processing for any or all of them.  To tell ZenNode to skip the BLOCKMAP you would use:</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode -b- c:\doom\doom.wad</p>
+
+      <p>Similarly, you can use -n- to turn off the NODES builder and -r- to turn off the REJECT builder. You can also specify options (just type zennode for a complete list) for each step. For example, if you think ZenNode is taking too long to build the BSP tree and REJECT, you can tell it to use a faster algorithm (-n3) and an empty reject (-rz):</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode -n3 -rz c:\doom\doom.wad</p>
+
+      <p>Once ZenNode finishes processing a file (or set of files) and writing the output file, it will continue processing the command line. If you're really adventurous, try to figure out what this does:</p>
+
+      <p class="code"><b>C:\ZENNODE&gt;</b>ZenNode -n3 -rz -nq c:\doom\doom.wad e1m1 -r+ -n2 doom e1m2 -x level2</p>
+
+      <p>One last thing: Avoid spaces in filenames! The command line interpretor (and ZenNode) treat spaces as seperators for arguments. If your filename has a space in it, enclose the entire filename in quotes, otherwise you'll get some unexpected/confusing results. If you don't like quotes, you can also use the 8.3 version of the filename:</p>
+
+      <p class="code">
+        <b>C:\ZENNODE&gt;</b>ZenNode "c:\Program Files\wads\doom.wad" ThisFileNameIsOk.wad "This file needs quotes.wad"<br/>
+        <b>C:\ZENNODE&gt;</b>ZenNode c:\PROGRA~1\wads\doom.wad THISFI~1.WAD THISFI~2.WAD
+      </p>
+
+    </div>
+</div>
+
+    <h2>How does it work?</h2>
+
+    <div class="indent">
+
+      <h3>The BLOCKMAP Resource</h3>
+
+      <div class="indent">
+
+        <p>The BLOCKMAP is the simplest structure created by ZenNode. This resource breaks the level down into squares 128x128 pixels and, for each square, lists the LINEDEFs that are found there. The BLOCKMAP makes it easy for the game to quickly find all of the lines in an area of the map without having to go through each and every LINEDEF and checking to see if any part of it is in the area of interest. Like many other programs, ZenNode attempts to compress the data in the BLOCKMAP when possible to keep the size of the WAD as small as possible.</p>
+
+        <p>The BLOCKMAP consists of three distinct parts: A short data structure describing it's origin and size, a list of offsets for each square, and the data pointed to by the list of offsets. The offsets in the second section are 16-bit numbers that point to the start of the list of lines found in the data section. There is a limit imposed by this arrangement. If the map becomes too big, these offsets cannot reach the data at the end of the data section. When this happens, it is impossible to create a valid BLOCKMAP for the map. The only way to fix this is to make the map smaller until the the BLOCKMAP can be built properly. As a general guideline, if you BLOCKMAP is approaching 128K in size, you've reached the upper limit for the size of your map.</p>
+
+        <p>Options:</p>
+
+        <ul>
+          <li>-bc - Compress the BLOCKMAP.</li>
+        </ul>
+
+      </div>
+
+      <h3>Building a BSP</h3>
+
+      <div class="indent">
+
+        <p>The BSP, ZenNode's raison d'être. The BSP (Binary Space Partition) is a collection of resources that describe where lines are in relation to each other.  ZenNode starts with a collection of LINEDEFS, SIDEDEFS, and SECTORS. From these, it creates the 'BSP' for the level in the form of the NODES, SEGS, and SSECTORS.  To begin with, a SEG is created for each side of a LINEDEF. ZenNode's job is to take this collection of SEGS and break it up into SSECTORS. If you think of a SECTOR as a room, an SSECTOR is that part of the room where no wall blocks the view of any other wall. Each sector will end up being divided up into one or more SSECTORS as the BSP is built.</p>
+
+        <p>The process of breaking up the collection of SEGS is a simple, recursive opration. First, one SEG is chosen, the partition line, from the collection to serve as a dividing line that breaks the list into two halves (hence the name binary paritition). Once the list of SEGS is split into two (all SEGS that are on the left side of the partition line and all those to the right), each half is split again until no partition for a group of SEGS can be found. This happens when all of the SEGS in a list form a convex region, an SSECTOR. The job of ZenNode, or any other NODES builder, is to choose the partition line as best as possible to keep the number of SEGS/SSECTORS/NODES as small as possible. In the perfect case, each split would create an equal number of SSECTORS on each side of the partition. The problem is, you don't know where the SSECTORS are until you can't find a new parition line. So, the best a NODES builder can do is use some kind of metric that, hopefully, will achieve this. Since the only thing you have to start with is a bunch of SEGS, the metric is usually some function of the number of SEGS on each side of a partition line. Another possible measurement for the metric is the number of SECTORS on each side of the partition line. Most NODES builders take the SEGS approach, since it's the easiest. One consideration to keep in mind when selecting the partition line is how many SEGS will be split if this partition is chosen. Each split increases the total number of SEGS in the final list. Because of this, most metric functions try to factor in the number of splits. Once you have a metric function, you're set to go. Just keep recursively dividing SEGS until you're finished!</p>
+
+        <p>Testing each SEG in the list at each step, and doing the math to figure out which side of the partion a SEG is is time consuming. There are a few ways to speed things up. The one used by some other NODES builders is only look at a portion of all the available SEGS at each step. This can speed thing up considerably, at the expense of possibly missing the 'optimal' partition line. ZenNode tries to speed things up a bit without sacrificing thouroughness. First, most maps have several SEGS that lie along the same line. Since a partition line is really a line extended from a SEG, testing each SEG along a line is redundant, and time consuming. ZenNode solves this by making a list of unique lines, internally referred to as an alias, in the map before starting the BSP building process. At each step, as a SEG is tested, it's alias is marked as checked. If another SEG lies along an alias that has been checked, it is skipped. At each level, any line that was chosen as a partition earlier cannot be chosen again, since all lines will be to one side of it. ZenNode elminates each partition line from the list of SEGS to check at each successive step. Also, if a SEG is found to be an outside wall (which also can't be a partition line), it is eliminated from the list as well. Another step ZenNode takes it to cache the side calculation information whenever possible. When ZenNode needs to know which side of a partition line a SEGS is on it looks in the cache first. If it's there, all of the time consuming calculations can be skipped. Finally, at each step, the optimal metric value is calculated up front. If any partition line's metric matches the optimal metric, the search stops there, since we can't find a better partition line.</p>
+
+        <p>ZenNode provides three different ways to create the BSP. Two are almost identical - the only difference is the metric used to select the partition. The third takes the shortcut mentioned above and only looks at a portion of the available SEGS.</p>
+
+        <p>Options:</p>
+
+        <ul>
+          <li>-n1 - Uses a simple SEGS based metric to reduce the number of SEGS split and balance the left and right group of SEGS.</li>
+          <li>-n2 - Uses a simple SEGS based metric in combination with a similar metric based on SECTORS to reduce the number of SEGS and SECTORS split and balance the left and right group of SEGS/SECTORS.</li>
+          <li>-n3 - Uses the same metric as -n1, but only examines the first 30 SEGS at each step.</li>
+          <li>-nq - Stop the progress indications from being displayed as ZenNode works. If you're really concerned about speed, use this option.</li>
+          <li>-nu - Forces all SSECTORS to contain SEGS from only one SECTORS. Turning this off may create a smaller BSP, but some special effects don't work with this option set.</li>
+          <li>-ni - If a line can't be seen in the game, don't include it in the BSP tree. Turning this on may create a smaller BSP, but some special effects don't work with this option set.</li>
+        </ul>
+
+      </div>
+
+      <h3>The REJECT Resource</h3>
+
+      <div class="indent">
+
+        <p>The REJECT map is a 2-dimensional array, indexed by sector, that indicates who can see whom in the map. For each ordered pair of sectors (A,B), a single bit is stored in the REJECT map. If this bit is a '1', then there is no line-of-sight (LOS) from sector A to sector B. A '0' means there is at least one position somewhere within sector A that see somewhere into sector B. If a sector pair is marked with a '0' and there is, in fact, no real LOS, nothing bad will happen - the game won't crash but it will slow things down as it tries to find that LOS. The more sectors that are marked with a '1', the faster the game will play. For every ordered-pair (A,B), there is also an ordered pair (B,A). Normally the bits for these pairs are the same (i.e. If A can see B, then B can see A as well). If these bits are different, it means that a special effect has been applied to the map (see <a href="#RMB">RMB Options</a> below).</p>
+        
+        <p>To do the actual LOS calculations, ZenNode creates two lines that connect the two lines under test. These are internally referred to as polyLines, since they are lines that may contain multiple segments. They can be thought of as an elastic band wrapped around the two lines being tested. As each intervening 1-sided line is tested, the rubber bands may be pushed inward. Processing continues until either none of the intervening lines touch the polyLines or the two polyLines touch. In the first case, a LOS is possible. In the second case the LOS is blocked. <em>Note:</em> If there are still lines within the enclosing polyLines, ZenNode considers the two lines under test as visible. These remaining lines, internally referred to as obstacles, are usually things like columns or small walls. If there are more than one of them, there may in fact be no true LOS, but ZenNode will still mark the lines being tested as visible. This is actually OK as we saw earlier. This is somewhat of a simplification, but more or less depicts how it works. This method allows ZenNode to definatively find a LOS if one exists. Other REJECT builders simply try plotting lines between several points along the two lines being tested and looking for a blocking line. If fewer lines are plotted, the time to process the REJECT can be decreased, but it is more likely to miss a valid LOS. Likewise, to get the accuracy that ZenNode can achieve would require a large number of lines to be plotted and would take an <em>extremely</em> long time.</p>
+
+        <h4>Using Graphs</h4>
+
+        <div class="indent">
+
+          <p>Performing the actual LOS calculations for each pair of lines in the map can take a long time. To speed things up, ZenNode tries to go about tesing lines in an intelligent manner. Instead of doing a brute force check of all the lines in the map, a graph is created that describes how sectors are connected to each other. This information is obtained from the two-sided linedefs in the map. With this information, ZenNode can make decisions that speed up the REJECT building process by eliminating <em>many</em> unnecessary LOS calculations. For example, if you have to pass through a narrow passageway to get from one part of a map to another, and there is no other way to get there, then any portion of the map that can't see through the passageway can't possibly see anything beyond it. ZenNode looks for restrictions like this and attempts to find them first. If it finds one, it immediately marks all the obscured sectors without having to do the LOS calculations.</p>
+
+          <div class="indent">
+
+            <p><b>Q:</b><em> Graphs sound great! Why shouldn't I use them?</em><br/>
+               <b>A:</b> Any special effects that 'lie' about the sectors on each side of a linedef ('deep water' or 'invisible stairs' for example) can confuse this process. If this happens, sectors that may be physically adjacent may appear to have no connection at all. If you have a map where monsters are active a bit passive in areas with special effects, you probably need to turn of the graph option (-rg-).</p>
+
+            <p><b>Q:</b><em> If graphs cause problems, why use them at all?</em><br/>
+               <b>A:</b> For the most part, graphs don't cause noticeably problems in most maps. Using graphs speeds up the REJECT build time by a factor of 4.5 on average (and a speedup of a factor of over 10 is not unusual). If you're making frequent changes to the map, but want to keep the REJECT up-to-date, graphs are perfectly suited for the task.</p>
+
+          </div>
+
+        </div>
+
+        <h4><a name="RMB">RMB Options</a></h4>
+
+        <div class="indent">
+
+          <p>If there is a LOS, but the REJECT is contains a '1', the monsters won't react as you might expect - they won't be able to see the player. Some programs (like the ZenNode or the Reject Map Builder a.k.a. RMB) allow you to apply special effects that mark sectors with a '1' or '0' without taking into account the actual LOS. This allows you to create regions where you are safe from monsters, monsters that won't attack you, or increase the efficiency of the map (the number of 1's in the map) by telling the REJECT builder that two sectors really can't be seen (i.e. they're too far apart, or are blocked by differences in the heights of intervening celings and floors). Before rebuilding a REJECT map, ZenNode will attempt to detect the presence of special effects (which appear as asymetric 0's and 1's in the REJECT) and will refuse to rebuild a new one unless forced to or told use an RMB option file (if forced, the resulting REJECT will destroy all the effects present).</p>
+
+          <p>Starting with version 1.2, ZenNode supports an RMB option file to implement special effects. A full description of which options are supported and which are ignored can be found in <a href="RMB.html">ZenNode RMB Support</a>. When building a REJECT table, ZenNode assumes that entries in the table are symetric. Because of this, many RMB options cannot be applied up front. This means that options that might speed up RMB will have no effect on ZenNode's speed. Before beginning the LOS calculations, ZenNode will apply the LENGTH option. This RMB option has the potential to make the biggest speed improvement. While performing the LOS calculations, the DISTANCE option is taken into consideration. After all LOS calculations have been made, the remaining supported RMB options are applied.</p>
+          
+        </div>
+
+        <p>Options:</p>
+
+        <ul>
+          <li>-rz - Insert a 0-filled REJECT. Useful while you're developing your map and don't want to wait for a full REJECT to be built.</li>
+          <li>-rf - Rebuild the REJECT even if ZenNode detects REJECT-based special effects in the old REJECT.</li>
+          <li>-rg - Use graphs to locate articulation points in the map to reduce LOS calculations.</li>
+          <li>-rmb - Parse options found in an RMB option file (filename.rej)</li>
+        </ul>
+
+        <p>There are several things lined up for ZenNode's REJECT builder. Some will be included soon, others are just ideas for things to speed things up a bit more. These include:</p>
+
+        <ul>
+          <li>Add hints in the .zen file to tell the REJECT builder which sectors are actually neighbors (which isn't obvious in the presence of sector-based special effects).</li>
+        </ul>
+
+      </div>
+
+    </div>
+
+    <h2>Notes</h2>
+
+    <ol>
+
+      <li>The REJECT algorithm may ignore some 'obstacles' (i.e.: pillars in a sector). This means that a sector pair may be reported as visible, when the actual LOS is blocked by an obstacle. This does not adversely affect the game (it's similar to a 'default' reject of all zeros), but does decrease the reject efficiency slightly (usually by less than 0.01%).</li>
+      <li>I still haven't completely verified that ZenNode works properly with PolyObjects (the moving sectors in HEXEN).</li>
+      <li>This program only does a cursory validity check of the level. It does not check to see if you have a completely valid .WAD file to begin with. If you don't, ZenNode will dutifully build it's data structures for the .WAD file, but DOOM may behave unpredictably.</li>
+      <li>If you don't specify an output filename, the results will be written to a .WAD with the orignal filename in the current directory. If the .WAD you specified as the source is in the current directory, <em>YOUR ORIGINAL .WAD WILL BE OVERWRITTEN</em>.</li>
+      <li>If ZenNode detects that the new resources (NODES, SEGS, BLOCKMAP, etc.) are the same as those in the original file, the file is not rewritten. That is, if you run the program twice on the same .WAD file, the second time, after generating the resources, it will not update the file. (No big deal, just thought you might like to know.)</li>
+      <li>Since ZenNode only builds resources (i.e.: NODES and related structures), it WILL rebuild levels E1M1 - E1M9. By id Software's request, you are asked not to distribute custom levels below E2M1 for DOOM/Heretic.</li>
+      <li>At any time while building a .WAD, file pressing &lt;ESC&gt; will stop ZenNode from rebuilding any further levels in the .WAD file. However, it will continue rebuilding the level it is currently on. Any levels that have been rebuilt will be written to the .WAD file before exiting.</li>
+      <li>ZenNode stores any new data for a level in memory until the .WAD file is rewritten. This means that if you rebuild a large .WAD file with lots of levels (id's IWADs for example), ZenNode may need a lot of memory. If you run into memory problems (usually indicated by an 'Abnormal program termination' message), use the level  selection option and do a few at a time. For example:
+        <p class="code">
+          <b>C:\&gt;</b>ZenNode DOOM2 map01+map02+map03+map+04+map05<br/>
+          <b>C:\&gt;</b>ZenNode DOOM2 map06+map07+map08+map+09+map10<br/>
+          ...
+        </p>
+      </li>
+
+    </ol>
+    
+    <br/>
+
+  </body>
+
+</html>
