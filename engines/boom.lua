@@ -198,7 +198,7 @@ PRBOOM.PARAMETERS =
 
 OB_ENGINES["prboom"] =
 {
-  label = _("PRBoom Compat"),
+  label = _("PrBoom Compat"),
   priority = 97,
 
   extends = "boom",
