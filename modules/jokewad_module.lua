@@ -293,37 +293,37 @@ function JOKEWAD_MODULE.populate_level(stuff)
       render_items(item.id, mid_x, mid_y, h)
     elseif count == 2 then
       if rand.odds(50) then
-        render_items(item.id, mid_x, mid_y + 32, h)
-        render_items(item.id, mid_x, mid_y - 32, h)
+        render_items(item.id, mid_x, mid_y + 16, h)
+        render_items(item.id, mid_x, mid_y - 16, h)
       else
-        render_items(item.id, mid_x + 32, mid_y, h)
-        render_items(item.id, mid_x - 32, mid_y, h)
+        render_items(item.id, mid_x + 16, mid_y, h)
+        render_items(item.id, mid_x - 16, mid_y, h)
       end
     elseif count == 3 then
       if rand.odds(33) then
-        render_items(item.id, mid_x + 32, mid_y + 32, h)
+        render_items(item.id, mid_x + 24, mid_y + 24, h)
         render_items(item.id, mid_x, mid_y, h)
-        render_items(item.id, mid_x - 32, mid_y - 32, h)
+        render_items(item.id, mid_x - 24, mid_y - 24, h)
       elseif rand.odds(33) then
-        render_items(item.id, mid_x - 32, mid_y + 32, h)
+        render_items(item.id, mid_x - 24, mid_y + 24, h)
         render_items(item.id, mid_x, mid_y, h)
-        render_items(item.id, mid_x + 32, mid_y - 32, h)
+        render_items(item.id, mid_x + 24, mid_y - 24, h)
       else
         render_items(item.id, mid_x, mid_y + 20, h)
         render_items(item.id, mid_x + 16, mid_y - 16, h)
         render_items(item.id, mid_x - 16, mid_y - 16, h)
       end
     elseif count == 4 then
+      render_items(item.id, mid_x + 20, mid_y + 20, h)
+      render_items(item.id, mid_x - 20, mid_y + 20, h)
+      render_items(item.id, mid_x - 20, mid_y - 20, h)
+      render_items(item.id, mid_x + 20, mid_y - 20, h)
+    elseif count == 5 then
+      render_items(item.id, mid_x, mid_y, h + 2)
       render_items(item.id, mid_x + 24, mid_y + 24, h)
       render_items(item.id, mid_x - 24, mid_y + 24, h)
       render_items(item.id, mid_x - 24, mid_y - 24, h)
       render_items(item.id, mid_x + 24, mid_y - 24, h)
-    elseif count == 5 then
-      render_items(item.id, mid_x, mid_y, h + 2)
-      render_items(item.id, mid_x + 32, mid_y + 32, h)
-      render_items(item.id, mid_x - 32, mid_y + 32, h)
-      render_items(item.id, mid_x - 32, mid_y - 32, h)
-      render_items(item.id, mid_x + 32, mid_y - 32, h)
     elseif count > 5 then
       for i = 1, count do
         render_items(item.id, 
