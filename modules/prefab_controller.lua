@@ -85,7 +85,8 @@ PREFAB_CONTROL.FILTER_CATEGORIES =
   gamble = "pf_gamble",
   crushers = "pf_crushers",
   dexterity = "pf_dexterity",
-  mirror_maze = "pf_mirror_mazes"
+  mirror_maze = "pf_mirror_mazes",
+  dark_maze = "pf_dark_mazes"
 }
 
 function PREFAB_CONTROL.setup(self)
@@ -212,7 +213,7 @@ OB_MODULES["prefab_control"] =
       tooltip = "Determines the odds at which a level would use a universal, single room theme " ..
                 "for all indoors (buildings). Default is 50%.",
       default = "50", 
-      priority = 50,
+      priority = 50
     },
 
     limit_wall_groups =
@@ -250,7 +251,7 @@ OB_MODULES["prefab_control"] =
       name="pf_dexterity", label=_("Gambling Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs that may lockout a player on items. Default is on.",
       default="1",
-      priority = 12,
+      priority = 12
     },
 
     pf_sight_ambushes =
@@ -259,7 +260,7 @@ OB_MODULES["prefab_control"] =
       tooltip="Changes probabilities for cages that unleash its monsters when player is in sight. " ..
       "Default is on.",
       default="1",
-      priority = 11,
+      priority = 11
     },
 
     pf_mirror_mazes =
@@ -267,7 +268,15 @@ OB_MODULES["prefab_control"] =
       name = "pf_mirror_mazes", label=_("Mirror Mazes"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for hell mirror maze closets and joiners.",
       default="1",
-      priority = 10,
+      priority = 10
+    },
+
+    pf_dark_mazes =
+    {
+      name = "pf_dark_mazes", label=_("Dark Mazes"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
+      tooltip="Changes probabilities for dark/eye maze joiners in hell theme.",
+      default="1",
+      priority = 9,
       gap = 1
     },
 
