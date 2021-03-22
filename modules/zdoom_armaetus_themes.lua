@@ -28,18 +28,18 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      GRAY5 = 1,
+      GRAY5 = 1
     },
 
     floors =
     {
-      FLAT1 = 1,
+      FLAT1 = 1
     },
 
     ceilings =
     {
-      FLAT1 = 1,
-    },
+      FLAT1 = 1
+    }
   },
 
   any_pipeline_Hallway =
@@ -50,18 +50,18 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      GRAY5 = 1,
+      GRAY5 = 1
     },
 
     floors =
     {
-      FLAT1 = 1,
+      FLAT1 = 1
     },
 
     ceilings =
     {
-      FLAT1 = 1,
-    },
+      FLAT1 = 1
+    }
   },
 
   any_hellcata_Hallway =
@@ -72,18 +72,18 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      GRAY5 = 1,
+      GRAY5 = 1
     },
 
     floors =
     {
-      FLAT1 = 1,
+      FLAT1 = 1
     },
 
     ceilings =
     {
-      FLAT1 = 1,
-    },
+      FLAT1 = 1
+    }
   },
 
   any_sewers_Hallway =
@@ -94,18 +94,18 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      GRAY5 = 1,
+      GRAY5 = 1
     },
 
     floors =
     {
-      FLAT1 = 1,
+      FLAT1 = 1
     },
 
     ceilings =
     {
-      FLAT1 = 1,
-    },
+      FLAT1 = 1
+    }
   },
 
   any_organs_Hallway =
@@ -116,18 +116,18 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      GRAY5 = 1,
+      GRAY5 = 1
     },
 
     floors =
     {
-      FLAT1 = 1,
+      FLAT1 = 1
     },
 
     ceilings =
     {
-      FLAT1 = 1,
-    },
+      FLAT1 = 1
+    }
   },
 
   any_conveyor_Hallway =
@@ -138,18 +138,18 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      GRAY5 = 1,
+      GRAY5 = 1
     },
 
     floors =
     {
-      FLAT1 = 1,
+      FLAT1 = 1
     },
 
     ceilings =
     {
-      FLAT1 = 1,
-    },
+      FLAT1 = 1
+    }
   },
 
   any_conveyorh_Hallway =
@@ -160,18 +160,18 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      GRAY5 = 1,
+      GRAY5 = 1
     },
 
     floors =
     {
-      FLAT1 = 1,
+      FLAT1 = 1
     },
 
     ceilings =
     {
-      FLAT1 = 1,
-    },
+      FLAT1 = 1
+    }
   },
 
   tech_GrayMet =
@@ -231,7 +231,7 @@ ARMAETUS_ROOM_THEMES =
       TEKWALLB = 10,
       TEKWALLC = 10,
       TEKWALLD = 10,
-      TEKWALLE = 10,
+      TEKWALLE = 10
     },
 
     floors =
@@ -268,7 +268,7 @@ ARMAETUS_ROOM_THEMES =
       SHINY01 = 75,
       SHINY02 = 75,
       SHINY03 = 75,
-      SHINY04 = 35,
+      SHINY04 = 35
     },
 
     ceilings =
@@ -285,8 +285,8 @@ ARMAETUS_ROOM_THEMES =
       FLAT19 = 20,
       FLAT4  = 20,
       FLAT9  = 15,
-      FLAT23 = 5,
-    },
+      FLAT23 = 5
+    }
   },
 
   tech_Computers =
@@ -299,7 +299,7 @@ ARMAETUS_ROOM_THEMES =
       COMPSPAN = 30,
       CMPOHSO = 10,
       CMPTILE = 15,
-      COMPBLUE = 10,
+      COMPBLUE = 10
     },
 
     floors =
@@ -310,7 +310,7 @@ ARMAETUS_ROOM_THEMES =
       CEIL4_1 = 20,
       CEIL4_2 = 20,
       CEIL5_1 = 20,
-      CEIL4_4 = 20,
+      CEIL4_4 = 20
     },
 
     ceilings =
@@ -322,10 +322,10 @@ ARMAETUS_ROOM_THEMES =
       TEK1    = 7,
       TEK2    = 7,
       QFLAT09 = 5,
-      GRATE3  = 5,
+      GRATE3  = 5
     },
 
-    keep_prob = 10,
+    keep_prob = 10
   },
 
   -- Multi colors here!
@@ -346,7 +346,7 @@ ARMAETUS_ROOM_THEMES =
       COMPTIL6 = 20,
       COMPBLUE = 10,
       COMPGREN = 10,
-      COMPRED  = 10,
+      COMPRED  = 10
     },
 
     floors =
@@ -359,7 +359,7 @@ ARMAETUS_ROOM_THEMES =
       CEIL4_1 = 20,
       CEIL4_2 = 20,
       CEIL5_1 = 20,
-      CEIL4_4 = 20,
+      CEIL4_4 = 20
     },
 
     ceilings =
@@ -371,10 +371,10 @@ ARMAETUS_ROOM_THEMES =
       TEK1    = 7,
       TEK2    = 7,
       QFLAT09 = 5,
-      GRATE3  = 5,
+      GRATE3  = 5
     },
 
-    keep_prob = 10,
+    keep_prob = 10
   },
 
   -- single color comp rooms
@@ -390,7 +390,7 @@ ARMAETUS_ROOM_THEMES =
       COMPTIL2 = 20,
       COMPRED  = 10,
       TEKWALL8 = 20,
-      GRAYMET9 = 20,
+      GRAYMET9 = 20
     },
 
     floors =
@@ -418,7 +418,7 @@ ARMAETUS_ROOM_THEMES =
       GRATE6 = 10,
       GRATE7 = 20,
       SHINY01 = 10,
-      SHINY03 = 10,
+      SHINY03 = 10
     },
 
     ceilings =
@@ -428,10 +428,10 @@ ARMAETUS_ROOM_THEMES =
       FLOOR1_6 = 10,
       TEK1    = 20,
       QFLAT09 = 5,
-      GRATE3  = 5,
+      GRATE3  = 5
     },
 
-    keep_prob = 10,
+    keep_prob = 10
   },
 
   tech_ComputersBlue =
@@ -450,7 +450,7 @@ ARMAETUS_ROOM_THEMES =
       TEKWALLB = 20,
       TEKWALLD = 20,
       GRAYMET6 = 15,
-      GRAYMETA = 15,
+      GRAYMETA = 15
     },
 
     floors =
@@ -475,7 +475,7 @@ ARMAETUS_ROOM_THEMES =
       GRATE6 = 10,
       GRATE7 = 20,
       SHINY01 = 10,
-      SHINY03 = 10,
+      SHINY03 = 10
     },
 
     ceilings =
@@ -488,10 +488,10 @@ ARMAETUS_ROOM_THEMES =
       TEK4    = 20,
       TEK6    = 20,
       QFLAT09 = 5,
-      GRATE3  = 5,
+      GRATE3  = 5
     },
 
-    keep_prob = 10,
+    keep_prob = 10
   },
 
   tech_ComputersGreen =
@@ -504,7 +504,7 @@ ARMAETUS_ROOM_THEMES =
       TEKWALL9 = 20,
       COMPGREN = 20,
       COMPTIL4 = 20,
-      GRAYMET8 = 15,
+      GRAYMET8 = 15
     },
 
     floors =
@@ -529,7 +529,7 @@ ARMAETUS_ROOM_THEMES =
       GRATE6 = 10,
       GRATE7 = 20,
       SHINY01 = 10,
-      SHINY03 = 10,
+      SHINY03 = 10
     },
 
     ceilings =
@@ -538,10 +538,10 @@ ARMAETUS_ROOM_THEMES =
       CEIL5_2 = 20,
       TEK2    = 30,
       QFLAT09 = 5,
-      GRATE3  = 5,
+      GRATE3  = 5
     },
 
-    keep_prob = 10,
+    keep_prob = 10
   },
 
   tech_ComputersYellowish =
@@ -555,7 +555,7 @@ ARMAETUS_ROOM_THEMES =
       COMPTIL5 = 20,
       COMPTIL3 = 8,
       COMPBLAK = 8,
-      GRAYMETC = 8,
+      GRAYMETC = 8
     },
 
     floors =
@@ -581,7 +581,7 @@ ARMAETUS_ROOM_THEMES =
       GRATE6 = 10,
       GRATE7 = 20,
       SHINY01 = 10,
-      SHINY03 = 10,
+      SHINY03 = 10
     },
 
     ceilings =
@@ -590,10 +590,10 @@ ARMAETUS_ROOM_THEMES =
       CEIL5_2 = 30,
       TEK7    = 30,
       QFLAT09 = 5,
-      GRATE3  = 5,
+      GRATE3  = 5
     },
 
-    keep_prob = 10,
+    keep_prob = 10
   },
 
   tech_ComputersParple =
@@ -609,7 +609,7 @@ ARMAETUS_ROOM_THEMES =
       COMPTIL3 = 10,
       COMPBLAK = 10,
       GRAYMET7 = 10,
-      GRAYMETB = 10,
+      GRAYMETB = 10
     },
 
     floors =
@@ -631,7 +631,7 @@ ARMAETUS_ROOM_THEMES =
       GRATE6 = 10,
       GRATE7 = 20,
       SHINY01 = 10,
-      SHINY03 = 10,
+      SHINY03 = 10
     },
 
     ceilings =
@@ -641,10 +641,10 @@ ARMAETUS_ROOM_THEMES =
       TEK3    = 20,
       TEK5    = 20,
       QFLAT09 = 5,
-      GRATE3  = 5,
+      GRATE3  = 5
     },
 
-    keep_prob = 10,
+    keep_prob = 10
   },
 
   -- Hooray, CEMENT textures!
@@ -659,7 +659,7 @@ ARMAETUS_ROOM_THEMES =
       CEM04 = 15,
       CEM06 = 120,
       CEM07 = 120,
-      CEM09 = 120,
+      CEM09 = 120
     },
 
     floors =
@@ -674,7 +674,7 @@ ARMAETUS_ROOM_THEMES =
       FLOOR46D = 15,
       FLOOR46E = 15,
       DARKF01 = 15,
-      DARKF02 = 15,
+      DARKF02 = 15
     },
 
     ceilings =
@@ -685,8 +685,8 @@ ARMAETUS_ROOM_THEMES =
       FLAT5_2 = 5,
       CEIL1_1 = 5,
       FLAT5_2 = 5,
-      GRATE4  = 10,
-    },
+      GRATE4  = 10
+    }
   },
 
   tech_Shiny =
@@ -716,7 +716,7 @@ ARMAETUS_ROOM_THEMES =
       SNOWWAL1 = 15,
       SNOWWAL2 = 15,
       SNOWWAL3 = 15,
-      SNOWWAL4 = 15,
+      SNOWWAL4 = 15
     },
 
     floors =
@@ -733,7 +733,7 @@ ARMAETUS_ROOM_THEMES =
       SHINY02 = 30,
       SHINY03 = 25,
       TILES4  = 5,
-      TILES6  = 5,
+      TILES6  = 5
     },
 
     ceilings =
@@ -744,8 +744,8 @@ ARMAETUS_ROOM_THEMES =
       SHINY02 = 15,
       FLOOR4_7 = 10,
       SHINY03 = 15,
-      SHINY04 = 10,
-    },
+      SHINY04 = 10
+    }
   },
 
   tech_HeavyMetal =
@@ -1652,28 +1652,28 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-    RDROK1   = 80,
-    RDROK2   = 80,
-    SP_ROCK1 = 50,
-    ASHWALL2 = 50,
-    ASHWALL3 = 50,
-    ASHWALL4 = 50,
-    ASHWALL6 = 50,
-    ASHWALL7 = 50,
-    ASH05    = 50,
-    ROK04    = 35,
-    ROK05    = 35,
-    ROK12    = 35,
-    ROK13    = 35,
-    ROK14    = 30,
-    ROK15    = 30,
-    ROK20    = 20,
-    ROK21    = 20,
-    ROK22    = 20,
-    ROK23    = 20,
-    ROK24    = 15,
-    ROK25    = 15,
-    ROK26    = 10,
+      RDROK1   = 80,
+      RDROK2   = 80,
+      SP_ROCK1 = 50,
+      ASHWALL2 = 50,
+      ASHWALL3 = 50,
+      ASHWALL4 = 50,
+      ASHWALL6 = 50,
+      ASHWALL7 = 50,
+      ASH05    = 50,
+      ROK04    = 35,
+      ROK05    = 35,
+      ROK12    = 35,
+      ROK13    = 35,
+      ROK14    = 30,
+      ROK15    = 30,
+      ROK20    = 20,
+      ROK21    = 20,
+      ROK22    = 20,
+      ROK23    = 20,
+      ROK24    = 15,
+      ROK25    = 15,
+      ROK26    = 10,
     },
 
     floors =
@@ -1681,8 +1681,8 @@ ARMAETUS_ROOM_THEMES =
      FLAT10 = 60,
      MFLR8_3 = 50,
      RROCK03 = 50,
-     RROCK09 = 30,
-    },
+     RROCK09 = 30
+    }
   },
 
   hell_fireycave =
@@ -1703,7 +1703,7 @@ ARMAETUS_ROOM_THEMES =
       FIREBLU1 = 15,
       CRACKLE2 =  5,
       CRACKLE4 =  5,
-      FIREBLK1 =  3,
+      FIREBLK1 =  3
     },
 
     floors =
@@ -1714,8 +1714,8 @@ ARMAETUS_ROOM_THEMES =
       RROCK01  = 20,
       RROCK05  = 20,
       RROCK03  = 10,
-      RROCK02  = 5,
-    },
+      RROCK02  = 5
+    }
   },
 
   -- Hell has frozen over!
@@ -1728,26 +1728,26 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-    SNOW03 = 50,
-    SNOW07 = 100,
-    SNOW08 = 100,
-    SNOW09 = 100,
-    SNOW10 = 100,
-    SNOW11 = 100,
-    SNOW12 = 100,
-    SNOW13 = 100,
-    SNOW14 = 100,
-    SNOW15 = 100,
+      SNOW03 = 50,
+      SNOW07 = 100,
+      SNOW08 = 100,
+      SNOW09 = 100,
+      SNOW10 = 100,
+      SNOW11 = 100,
+      SNOW12 = 100,
+      SNOW13 = 100,
+      SNOW14 = 100,
+      SNOW15 = 100
     },
 
     floors =
     {
-    SNOW1 = 50,
-    SNOW5 = 50,
-    SNOW6 = 50,
-    SNOW7 = 50,
-    SNOW8 = 50,
-    },
+      SNOW1 = 50,
+      SNOW5 = 50,
+      SNOW6 = 50,
+      SNOW7 = 50,
+      SNOW8 = 50
+    }
   },
 
 --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
@@ -1792,7 +1792,7 @@ ARMAETUS_ROOM_THEMES =
 
       URBAN1 = 15,
       URBAN2 = 15,
-      URBAN3 = 15,
+      URBAN3 = 15
     },
 
     floors =
@@ -1833,7 +1833,7 @@ ARMAETUS_ROOM_THEMES =
       CARPET7 = 15,
       CARPET8 = 15,
 
-      FFLAT01 = 80,
+      FFLAT01 = 80
     },
 
     ceilings =
@@ -1846,7 +1846,7 @@ ARMAETUS_ROOM_THEMES =
       CEIL1_1 = 30,
       FLAT5_2 = 10,
       MFLR8_1 = 10,
-      SLIME13 = 5,
+      SLIME13 = 5
     },
   },
 
@@ -1867,7 +1867,7 @@ ARMAETUS_ROOM_THEMES =
       WOOD15 = 50,
       WOOD16 = 50,
       WOOD17 = 50,
-      WOOD18 = 30,
+      WOOD18 = 30
     },
 
     floors =
@@ -1887,7 +1887,7 @@ ARMAETUS_ROOM_THEMES =
 
       WOODTIL = 30,
       WOODTI2 = 30,
-      FFLAT01 = 30,
+      FFLAT01 = 30
     },
 
     ceilings =
@@ -1897,8 +1897,8 @@ ARMAETUS_ROOM_THEMES =
       GSTN01  = 30,
       GSTN02  = 30,
       SLIME14 = 20,
-      SLIME15 = 20,
-    },
+      SLIME15 = 20
+    }
   },
 
   -- MSSP: anything that vaguely looks like cement
@@ -1935,7 +1935,7 @@ ARMAETUS_ROOM_THEMES =
       SHAWN01E = 5,
       SHAWN01F = 5,
       SHAWN4 = 2.5,
-      SHAWN5 = 5,
+      SHAWN5 = 5
     },
 
     floors =
@@ -1959,7 +1959,7 @@ ARMAETUS_ROOM_THEMES =
       FLAT20 = 25,
       FLAT1 = 50,
       FLOOR0_5 = 75,
-      FLOOR0_3 = 75,
+      FLOOR0_3 = 75
     },
 
     ceilings =
@@ -1968,8 +1968,8 @@ ARMAETUS_ROOM_THEMES =
       FLAT18 = 50,
       FLAT19 = 50,
       FLAT3 = 25,
-      FLAT5_4 = 50,
-    },
+      FLAT5_4 = 50
+    }
   },
 
   -- MSSP: emphasis on a sort of dilapitated, grimy, semi-industrial look
@@ -2062,8 +2062,8 @@ ARMAETUS_ROOM_THEMES =
       GRATE4 = 50,
       MEM01 = 50,
       QFLAT06 = 50,
-      QFLAT09 = 50,
-    },
+      QFLAT09 = 50
+    }
   },
 
   -- MSSP: inspired by Return to Castle Wolfenstein!
@@ -2110,7 +2110,7 @@ ARMAETUS_ROOM_THEMES =
       KSTONE1 = 50,
       ROK03 = 50,
       ROK17 = 50,
-      ROK18 = 50,
+      ROK18 = 50
     },
 
     floors =
@@ -2125,7 +2125,7 @@ ARMAETUS_ROOM_THEMES =
       GWOD03 = 50,
       GWOD04 = 50,
       WOODTI2 = 50,
-      WOODTIL = 50,
+      WOODTIL = 50
 
       -- deliberately no stone floors
     },
@@ -2174,8 +2174,8 @@ ARMAETUS_ROOM_THEMES =
       MEM01 = 50,
       QFLAT10 = 50,
       RROCK13 = 25,
-      TILES5 = 25,
-    },
+      TILES5 = 25
+    }
   },
 
   urban_armaetuscave =
@@ -2185,39 +2185,37 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-
-    SP_ROCK1 = 30,
-    ASHWALL2 = 50,
-    ASHWALL3 = 50,
-    ASHWALL4 = 50,
-    ASHWALL6 = 50,
-    ASHWALL7 = 50,
-    ASH05    = 50,
-    ROK04    = 35,
-    ROK05    = 35,
-    ROK12    = 35,
-    ROK13    = 35,
-    ROK14    = 30,
-    ROK15    = 30,
-    ROK20    = 20,
-    ROK21    = 20,
-    ROK22    = 20,
-    ROK23    = 20,
-    ROK24    = 15,
-    ROK25    = 15,
-    ROK26    = 10,
+      SP_ROCK1 = 30,
+      ASHWALL2 = 50,
+      ASHWALL3 = 50,
+      ASHWALL4 = 50,
+      ASHWALL6 = 50,
+      ASHWALL7 = 50,
+      ASH05    = 50,
+      ROK04    = 35,
+      ROK05    = 35,
+      ROK12    = 35,
+      ROK13    = 35,
+      ROK14    = 30,
+      ROK15    = 30,
+      ROK20    = 20,
+      ROK21    = 20,
+      ROK22    = 20,
+      ROK23    = 20,
+      ROK24    = 15,
+      ROK25    = 15,
+      ROK26    = 10
     },
 
     floors =
     {
-     FLAT10 = 60,
-     MFLR8_3 = 50,
-     RROCK03 = 50,
-     RROCK09 = 30,
-     FLAT5_4 = 10,
-    },
-  },
-
+      FLAT10 = 60,
+      MFLR8_3 = 50,
+      RROCK03 = 50,
+      RROCK09 = 30,
+      FLAT5_4 = 10
+    }
+  }
 }
 
 -- Custom liquids
@@ -2234,8 +2232,8 @@ ARMAETUS_LIQUIDS =
       sludge  = 40,
       gwater  = 50,
       ice     = 20,
-      ice2    = 20,
-    },
+      ice2    = 20
+    }
   },
 
   urban =
@@ -2249,8 +2247,8 @@ ARMAETUS_LIQUIDS =
       sludge  = 60,
       gwater  = 60,
       ice     = 20,
-      ice2    = 20,
-    },
+      ice2    = 20
+    }
   },
 
   hell =
@@ -2262,17 +2260,17 @@ ARMAETUS_LIQUIDS =
     sludge  = 20,
     gwater  = 25,
     ice     = 40,
-    ice2    = 40,
+    ice2    = 40
   },
 
   exclusions =
   {
     desert =
     {
-      "ice1",
-      "ice2",
-    },
-  },
+      "ice",
+      "ice2"
+    }
+  }
 }
 
 -- Custom sink definitions as well as probability tables.
