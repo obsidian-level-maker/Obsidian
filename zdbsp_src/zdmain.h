@@ -4,6 +4,7 @@ typedef struct zdbsp_options
 {
 bool build_nodes;
 bool build_gl_nodes;
+bool build_gl_only;
 ERejectMode	reject_mode; // = ERM_DontTouch;
 bool check_polyobjs;
 bool compress_nodes;

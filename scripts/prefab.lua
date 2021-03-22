@@ -1200,6 +1200,132 @@ function Fab_load_wad(def)
 
     return C2
   end
+  
+ local function decode_polygon_side_hexen(sec, C, pass)
+    -- pass is 1 for floor, 2 for ceiling
+    -- sec will be NIL for a polygon in void space
+
+    local C2 = { x=C.x, y=C.y }
+
+    C2.u1_along = C.along
+
+    local side
+    local line
+
+    if C.side then side = gui.wadfab_get_side(C.side) end
+    if C.line then line = gui.wadfab_get_line_hexen(C.line) end
+
+    -- get other sector (which the polygon side faces)
+    local other_sec
+
+    if line and side and side.sector then
+      other_sec = gui.wadfab_get_sector(side.sector)
+    end
+
+    local flags = (line and line.flags) or 0
+
+    local two_sided = (line and line.left and line.right)
+
+
+    --- determine texture to use ---
+
+    local upper_tex
+    local lower_tex
+    local   mid_tex
+
+    upper_tex = side and side.upper_tex
+    if upper_tex == "-" then upper_tex = nil end
+
+    lower_tex = side and side.lower_tex
+    if lower_tex == "-" then lower_tex = nil end
+
+    mid_tex = side and side.mid_tex
+    if mid_tex == "-" then mid_tex = nil end
+
+
+    local tex
+
+    -- if line is one-sided, use the middle texture
+    if line and not two_sided then
+      tex = mid_tex
+
+    elseif pass == 1 then
+      tex = lower_tex or upper_tex
+
+    else
+      tex = upper_tex or lower_tex
+    end
+
+    if tex then
+      C2.tex = tex
+    end
+
+
+    -- line type --
+
+    if line and line.special and line.special > 0 then
+      C2.special = line.special
+    end
+
+    if line and line.arg1 and line.arg1 >= 0 then
+      C2.arg1 = line.arg1
+    end
+
+    if line and line.arg2 and line.arg2 >= 0 then
+      C2.arg2 = line.arg2
+    end
+
+    if line and line.arg3 and line.arg3 >= 0 then
+      C2.arg3 = line.arg3
+    end
+
+    if line and line.arg4 and line.arg4 >= 0 then
+      C2.arg4 = line.arg4
+    end
+
+    if line and line.arg5 and line.arg5 >= 0 then
+      C2.arg5 = line.arg5
+    end
+
+    -- line flags --
+
+    local MLF_UpperUnpegged = 0x0008
+    local MLF_LowerUnpegged = 0x0010
+
+    local upper_unpeg
+    local lower_unpeg
+
+    if not line then
+      -- nothing
+
+    else
+      -- keep these flags: block-all, block-mon, secret, no-draw,
+      --                   always-draw, block-sound, pass-thru
+      if flags ~= 0 then
+        C2.flags = flags
+
+        -- this makes sure the flags get applied
+        if not C2.special then C2.special = 0 end
+      end
+      
+      C.act = bit.band(flags, 0x1C00) >> 10
+
+      upper_unpeg = (bit.band(flags, MLF_UpperUnpegged) ~= 0)
+      lower_unpeg = (bit.band(flags, MLF_LowerUnpegged) ~= 0)
+    end
+
+    -- offsets --
+
+    if heights_are_same(sec, other_sec, pass) then
+      -- do not copy the offsets to the brush
+
+    elseif side and line then
+      C2.u1 = convert_offset(side.x_offset)
+      C2.v1 = convert_offset(side.y_offset)
+    end
+
+    return C2
+  end
 
   local function decode_3d_floor_side(exfl, C)
     local C2 = { x=C.x, y=C.y }
@@ -1221,7 +1347,11 @@ function Fab_load_wad(def)
 
 
     for _,C in pairs(coords) do
-      table.insert(B, decode_polygon_side(nil, C, 1))
+      if OB_CONFIG.game == "hexen" then
+        table.insert(B, decode_polygon_side_hexen(nil, C, 1))
+      else
+        table.insert(B, decode_polygon_side(nil, C, 1))
+      end
     end
 
     -- add this new brush to the prefab
@@ -1262,7 +1392,11 @@ function Fab_load_wad(def)
     decode_lighting(S, B[1])
 
     for _,C in pairs(coords) do
-      table.insert(B, decode_polygon_side(S, C, 1))
+      if OB_CONFIG.game == "hexen" then
+        table.insert(B, decode_polygon_side_hexen(S, C, 1))
+      else
+        table.insert(B, decode_polygon_side(S, C, 1))  
+      end  
     end
 
     table.insert(fab.brushes, B)
@@ -1354,7 +1488,11 @@ function Fab_load_wad(def)
     end
 
     for _,C in pairs(coords) do
-      table.insert(B, decode_polygon_side(S, C, pass))
+      if OB_CONFIG.game == "hexen" then
+        table.insert(B, decode_polygon_side_hexen(S, C, pass))
+      else
+        table.insert(B, decode_polygon_side(S, C, pass))
+      end  
     end
 
     -- add this new brush to the prefab
@@ -1412,7 +1550,7 @@ function Fab_load_wad(def)
 
   local function handle_entity(fab, E)
     local spot_info = WADFAB_ENTITIES[E.id]
-
+    
     if not spot_info then
       table.insert(fab.entities, E)
       return
@@ -1578,8 +1716,14 @@ function Fab_load_wad(def)
     -- [ if map is not specified, use "*" to load the first one ]
     gui.wadfab_load(filename, def.map or "*")
 
+    local E
+
     for thing_idx = 0,9999 do
-      local E = gui.wadfab_get_thing(thing_idx)
+      if OB_CONFIG.game == "hexen" then
+        E = gui.wadfab_get_thing_hexen(thing_idx)
+      else
+        E = gui.wadfab_get_thing(thing_idx)
+      end
 
       -- nil result marks the end
       if not E then break; end
@@ -1614,9 +1758,15 @@ function Fab_load_wad(def)
       end
       ::continue::
     end
+    
+    local L
 
     for line_idx = 0,9999 do
-      local L = gui.wadfab_get_line(line_idx)
+      if OB_CONFIG.game == "hexen" then
+        L = gui.wadfab_get_line_hexen(line_idx)
+      else
+        L = gui.wadfab_get_line(line_idx)
+      end
 
       -- nil result marks the end
       if not L then break; end
@@ -1947,7 +2097,7 @@ function Fab_replacements(fab)
 
     return fab.fields[k]
   end
-
+  
 
   local function get_entity_id(name)
     -- allow specifying a raw ID number
@@ -2034,12 +2184,21 @@ function Fab_replacements(fab)
 
   build_entity_remap_table()
 
+  current_tag = 0 -- Used to help Hexen arg1 match with appropriate sector tag when needed
+
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
-      if C.tag then C.tag = check_tag(C.tag) end
+      if C.tag then 
+        C.tag = check_tag(C.tag) 
+        current_tag = C.tag  
+      end
+      
+      if OB_CONFIG.game == "hexen" then
+        if C.x and C.special and (C.special >= 10 and C.special <= 12) then C.arg1 = current_tag end -- Flesh out which special ranges need to have arg1 match a sector tag
+      end
 
       if C.u1  then C.u1  = check("offset", C.u1) end
       if C.v1  then C.v1  = check("offset", C.v1) end

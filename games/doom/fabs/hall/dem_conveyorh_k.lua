@@ -6,7 +6,7 @@ PREFABS.Hallway_conveyorh_locked_red1 =
 {
   file   = "hall/dem_conveyorh_k.wad",
   map    = "MAP01",
-  engine = "gzdoom",
+  engine = "zdoom",
 
   theme  = "hell",
 
@@ -31,7 +31,7 @@ PREFABS.Hallway_conveyorh_locked_blue1 =
 {
   template = "Hallway_conveyorh_locked_red1",
   map    = "MAP01",
-  engine = "gzdoom",
+  engine = "zdoom",
 
   key    = "k_blue",
 
@@ -44,7 +44,7 @@ PREFABS.Hallway_conveyorh_locked_yellow1 =
 {
   template = "Hallway_conveyorh_locked_red1",
   map    = "MAP01",
-  engine = "gzdoom",
+  engine = "zdoom",
 
   key    = "k_yellow",
 
@@ -186,7 +186,7 @@ PREFABS.Hallway_conveyorh_barred1 =
 {
   file   = "hall/dem_conveyorh_k.wad",
   map    = "MAP04",
-  engine = "gzdoom",
+  engine = "zdoom",
 
   kind   = "terminator",
   group  = "conveyorh",

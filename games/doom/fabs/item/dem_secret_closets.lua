@@ -407,7 +407,7 @@ PREFABS.Item_dem_campsiteC_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP13",
 
-  engine = "gzdoom",
+  engine = "zdoom",
 
   theme = "!hell",
 

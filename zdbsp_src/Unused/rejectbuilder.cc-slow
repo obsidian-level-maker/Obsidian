@@ -49,7 +49,7 @@ BYTE *FRejectBuilder::GetReject ()
 {
 	int i, j; 
 
-	int rejectSize = (Level.NumSectors*Level.NumSectors + 7) / 8;
+	int rejectSize = (Level.NumSectors()*Level.NumSectors() + 7) / 8;
 	BYTE *reject = new BYTE[rejectSize];
 	memset (reject, 0xff, rejectSize);
 
@@ -70,7 +70,7 @@ BYTE *FRejectBuilder::GetReject ()
 					Level.GLSegs[
 						Level.GLSubsectors[i].firstline].side]]
 			.sector;
-		int srow = sector1*Level.NumSectors;
+		int srow = sector1*Level.NumSectors();
 		for (j = 0; j < Level.NumGLSubsectors; ++j)
 		{
 			if (SubSeeMatrix[row + j])
@@ -116,7 +116,7 @@ void FRejectBuilder::BuildReject ()
 		for (s2 = 0; s2 < Level.GLSubsectors[s1].numlines; ++s2)
 		{
 			int segnum = s2 + Level.GLSubsectors[s1].firstline;
-			const MapSegGL *seg = &Level.GLSegs[segnum];
+			const MapSegGL *seg = (const MapSegGL*)&Level.GLSegs[segnum];
 			if (seg->partner == NO_INDEX)
 			{
 				continue;
@@ -147,7 +147,7 @@ void FRejectBuilder::TracePath (int subsector, const MapSegGL *window)
 {
 	// Neighboring subsectors can always see each other
 	SubSeeMatrix[SourceRow + SegSubsectors[window->partner]] = 1;
-	const MapSubsector *backsub = &Level.GLSubsectors[SegSubsectors[window->partner]];
+	const MapSubsector *backsub = (const MapSubsector*)&Level.GLSubsectors[SegSubsectors[window->partner]];
 
 	Portal source;
 
@@ -172,7 +172,7 @@ void FRejectBuilder::TracePath (int subsector, const MapSegGL *window)
 			continue;
 		}
 
-		const MapSegGL *cseg = &Level.GLSegs[segnum];
+		const MapSegGL *cseg = (const MapSegGL*)&Level.GLSegs[segnum];
 
 		if (cseg->partner == NO_INDEX)
 		{
@@ -195,7 +195,7 @@ void FRejectBuilder::TracePath (int subsector, const MapSegGL *window)
 void FRejectBuilder::TracePathDeep (const MapSegGL *window)
 {
 	SubSeeMatrix[SourceRow + SegSubsectors[window->partner]] = 1;
-	const MapSubsector *backsub = &Level.GLSubsectors[SegSubsectors[window->partner]];
+	const MapSubsector *backsub = (const MapSubsector*)&Level.GLSubsectors[SegSubsectors[window->partner]];
 	size_t j;
 
 	for (j = PortalStack.Size(); j-- > 0; )
@@ -227,7 +227,7 @@ void FRejectBuilder::TracePathDeep (const MapSegGL *window)
 			continue;
 		}
 
-		const MapSegGL *cseg = &Level.GLSegs[segnum];
+		const MapSegGL *cseg = (const MapSegGL*)&Level.GLSegs[segnum];
 
 		if (cseg->partner == NO_INDEX)
 		{

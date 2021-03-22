@@ -173,6 +173,10 @@ ZDBSP_OBJS= \
 	$(OBJ_DIR)/zdbsp/sc_man.o  \
 	$(OBJ_DIR)/zdbsp/zdwad.o \
 	$(OBJ_DIR)/zdbsp/nodebuild.o     \
+	$(OBJ_DIR)/zdbsp/rejectbuilder.o  \
+	$(OBJ_DIR)/zdbsp/rejectbuilder_nogl.o  \
+	$(OBJ_DIR)/zdbsp/vis.o  \
+	$(OBJ_DIR)/zdbsp/visflow.o  \
 	$(OBJ_DIR)/zdbsp/nodebuild_events.o  \
 	$(OBJ_DIR)/zdbsp/nodebuild_extract.o   \
 	$(OBJ_DIR)/zdbsp/nodebuild_gl.o      \
