@@ -265,7 +265,19 @@ end
 
 function JOKEWAD_MODULE.populate_level(stuff)
 
-  local function render_items(h, x, y, offset)
+  local function place_items(h, mid_x, mid_y, offset)
+
+    local function render_items(id, x, y, z)
+      local thing = {}
+
+      thing.id = id
+      thing.x = x
+      thing.y = y
+      thing.z = z
+
+      raw_add_entity(thing)
+    end
+
     if not rand.odds(stuff.odds) then return end
 
     local choice = rand.key_by_probs(stuff.items)
@@ -277,18 +289,51 @@ function JOKEWAD_MODULE.populate_level(stuff)
       count = rand.irange(1, item.cluster)
     end
 
-    for i = 1, count do
-      local thing = {}
-
-      local final_z = h
-
-      thing.id = stuff.templates[choice].id
-      thing.z = final_z
-      thing.x = rand.irange(x + offset, x - offset)
-      thing.y = rand.irange(y + offset, y - offset)
-
-      raw_add_entity(thing)
+    if count == 1 then
+      render_items(item.id, mid_x, mid_y, h)
+    elseif count == 2 then
+      if rand.odds(50) then
+        render_items(item.id, mid_x, mid_y + 16, h)
+        render_items(item.id, mid_x, mid_y - 16, h)
+      else
+        render_items(item.id, mid_x + 16, mid_y, h)
+        render_items(item.id, mid_x - 16, mid_y, h)
+      end
+    elseif count == 3 then
+      if rand.odds(33) then
+        render_items(item.id, mid_x + 24, mid_y + 24, h)
+        render_items(item.id, mid_x, mid_y, h)
+        render_items(item.id, mid_x - 24, mid_y - 24, h)
+      elseif rand.odds(33) then
+        render_items(item.id, mid_x - 24, mid_y + 24, h)
+        render_items(item.id, mid_x, mid_y, h)
+        render_items(item.id, mid_x + 24, mid_y - 24, h)
+      else
+        render_items(item.id, mid_x, mid_y + 20, h)
+        render_items(item.id, mid_x + 16, mid_y - 16, h)
+        render_items(item.id, mid_x - 16, mid_y - 16, h)
+      end
+    elseif count == 4 then
+      render_items(item.id, mid_x + 20, mid_y + 20, h)
+      render_items(item.id, mid_x - 20, mid_y + 20, h)
+      render_items(item.id, mid_x - 20, mid_y - 20, h)
+      render_items(item.id, mid_x + 20, mid_y - 20, h)
+    elseif count == 5 then
+      render_items(item.id, mid_x, mid_y, h + 2)
+      render_items(item.id, mid_x + 24, mid_y + 24, h)
+      render_items(item.id, mid_x - 24, mid_y + 24, h)
+      render_items(item.id, mid_x - 24, mid_y - 24, h)
+      render_items(item.id, mid_x + 24, mid_y - 24, h)
+    elseif count > 5 then
+      for i = 1, count do
+        render_items(item.id, 
+          rand.irange(mid_x - 48, mid_x + 48), 
+          rand.irange(mid_y - 48, mid_y + 48), 
+          h + 2
+        )
+      end
     end
+
   end
 
   for _,A in pairs(LEVEL.areas) do
@@ -298,14 +343,14 @@ function JOKEWAD_MODULE.populate_level(stuff)
         -- not on chunks with something on it
         if S.chunk and S.chunk.content then goto continue end
 
-        -- not by walls and diagonals
-        if S.wall_depth or S.diagonal then goto continue end
+        -- not by thick walls and diagonals
+        if (S.wall_depth and S.wall_depth <= 16) or S.diagonal then goto continue end
 
         -- not on areas with liquid sinks
         if A.floor_group and A.floor_group.sink
         and A.floor_group.sink.mat == "_LIQUID" then goto continue end
 
-        render_items(A.ceil_h, S.mid_x, S.mid_y, 48)
+        place_items(A.ceil_h - 2, S.mid_x, S.mid_y, 0)
         ::continue::
       end
     elseif A.mode == "nature" then
@@ -317,13 +362,10 @@ function JOKEWAD_MODULE.populate_level(stuff)
 
           while i_x <= WC.chunk.sx2 do
           while i_y <= WC.chunk.sy2 do
-            local pos_x = (i_x * SEED_SIZE) - 32
-            local pos_y = (i_y * SEED_SIZE) - 32
-
             local S = SEEDS[i_x][i_y]
 
             if not S.wall_depth then
-              render_items(WC.chunk.floor_h + 2, pos_x, pos_y, 32)
+              place_items(WC.chunk.floor_h + 2, S.mid_x, S.mid_y, 0)
             end
 
             i_y = i_y + 1
