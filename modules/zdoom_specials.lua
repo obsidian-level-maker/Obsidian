@@ -2,7 +2,7 @@
 --  MODULE: ZDoom Special Addons
 ----------------------------------------------------------------
 --
---  Copyright (C) 2019 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
