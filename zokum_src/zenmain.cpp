@@ -2026,7 +2026,7 @@ char *ConvertNumber ( UINT32 value ) {
    */
 
 
-int main ( int argc, const char *argv [] ) {
+int zokum_main ( int argc, const char *argv [] ) {
 	FUNCTION_ENTRY ( NULL, "main", true );
 
 	SaveConsoleSettings ();
@@ -2036,8 +2036,8 @@ int main ( int argc, const char *argv [] ) {
 	cprintf ( "%s\r\n", ZOKBANNER );
 	cprintf ( "%s\r\n\r\n", BANNER );
 
-	if ( ! isatty ( fileno ( stdout ))) fprintf ( stdout, "%s\n\n", BANNER );
-	if ( ! isatty ( fileno ( stderr ))) fprintf ( stderr, "%s\n\n", BANNER );
+//	if ( ! isatty ( fileno ( stdout ))) fprintf ( stdout, "%s\n\n", BANNER );
+//	if ( ! isatty ( fileno ( stderr ))) fprintf ( stderr, "%s\n\n", BANNER );
 
 	config.BlockMap.Rebuild     = true;
 	config.BlockMap.Compress    = true;
@@ -2064,7 +2064,7 @@ int main ( int argc, const char *argv [] ) {
 	config.Nodes.Rebuild        = true;
 	config.Nodes.Method         = 2;
 	config.Nodes.Thoroughness   = 1;
-	config.Nodes.Quiet          = isatty ( fileno ( stdout )) ? false : true;
+//	config.Nodes.Quiet          = isatty ( fileno ( stdout )) ? false : true;
 	config.Nodes.Unique         = true;
 	config.Nodes.ReduceLineDefs = false;
 	config.Nodes.SegBAMs		= true;
