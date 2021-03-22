@@ -821,7 +821,7 @@ PREFABS.Pic_dem_campsiteC =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP52",
 
-  engine = "gzdoom",
+  engine = "zdoom",
 
   theme = "!hell",
 

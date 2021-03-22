@@ -217,7 +217,7 @@ OB_MODULES["zdoom_marines"] =
 
   game = "doomish",
 
-  engine = { zdoom=1, gzdoom=1, skulltag=1 },
+  engine = "zdoom",
 
   tables =
   {

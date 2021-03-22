@@ -870,8 +870,10 @@ extern int wadfab_get_polygon(lua_State *L);
 extern int wadfab_get_sector(lua_State *L);
 extern int wadfab_get_side(lua_State *L);
 extern int wadfab_get_line(lua_State *L);
+extern int wadfab_get_line_hexen(lua_State *L);
 extern int wadfab_get_3d_floor(lua_State *L);
 extern int wadfab_get_thing(lua_State *L);
+extern int wadfab_get_thing_hexen(lua_State *L);
 
 extern int Q1_add_mapmodel(lua_State *L);
 extern int Q1_add_tex_wad(lua_State *L);
@@ -969,8 +971,10 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "wadfab_get_sector",   wadfab_get_sector },
 	{ "wadfab_get_side",     wadfab_get_side },
 	{ "wadfab_get_line",     wadfab_get_line },
+	{ "wadfab_get_line_hexen",     wadfab_get_line_hexen },
 	{ "wadfab_get_3d_floor", wadfab_get_3d_floor },
 	{ "wadfab_get_thing",    wadfab_get_thing },
+	{ "wadfab_get_thing_hexen",    wadfab_get_thing_hexen },
 
 	// Quake functions
 	{ "q1_add_mapmodel",  Q1_add_mapmodel },

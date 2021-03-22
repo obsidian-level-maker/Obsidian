@@ -111,6 +111,7 @@ int zdmain (const char *filename, zdbsp_options options)
 	CompressNodes = options.compress_nodes;
 	CompressGLNodes = options.compress_gl_nodes;
 	ForceCompression = options.force_compression;
+	GLOnly = options.build_gl_only;
 
     ShowVersion();
 

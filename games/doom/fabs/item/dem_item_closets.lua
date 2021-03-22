@@ -693,7 +693,7 @@ PREFABS.Item_dem_campsiteC_closet =
   file   = "item/dem_item_closets.wad",
   map    = "MAP21",
 
-  engine = "gzdoom",
+  engine = "zdoom",
 
   theme = "!hell",
 

@@ -512,7 +512,7 @@ OB_MODULES["fauna_module"] =
   side = "left",
   priority = 68,
 
-  engine = { gzdoom=1 },
+  engine = "zdoom",
 
   hooks =
   {

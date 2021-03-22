@@ -2836,7 +2836,7 @@ function Level_make_level(LEV)
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
   LEVEL.seed = gui.random_int()
-  gui.printf("Level seed: " .. LEVEL.seed .. "\n")
+  gui.printf("Level seed: %u\n", LEVEL.seed)
   LEVEL.ids  = {}
 
   THEME = table.copy(assert(LEVEL.theme))

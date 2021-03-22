@@ -716,7 +716,7 @@ OB_MODULES["complex_doom"] =
   tooltip = "Alters to better fit the difficulty that Complex Doom provides. Do not use with 'Harder Enemy Setup' addon, will conflict.",
 
   -- Zandronum *SHOULD* work with v27, otherwise will remove it.
-  engine = { zdoom=1, gzdoom=1, skulltag=1 },
+  engine = "zdoom",
 
   tables =
   {
