@@ -3451,6 +3451,7 @@ ARMAETUS_THEMES =
 
     skyboxes =
     {
+      Skybox_garrett_city_EPIC = 25,
       Skybox_tech_ffvii_EPIC = 50,
       Skybox_generic_EPIC = 50,
       Skybox_craneo_fishing_village_EPIC = 25,

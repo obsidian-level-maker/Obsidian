@@ -1834,7 +1834,7 @@ DOOM.THEMES =
     {
       Skybox_hellish_city = 50,
       Skybox_garrett_city = 50
-    },
+    }
   },
 
   ------------------------------------
