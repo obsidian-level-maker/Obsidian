@@ -172,7 +172,7 @@ ZDBSP_OBJS= \
 	$(OBJ_DIR)/zdbsp/nodebuild_extract.o   \
 	$(OBJ_DIR)/zdbsp/nodebuild_gl.o      \
 	$(OBJ_DIR)/zdbsp/nodebuild_utility.o   \
-	$(OBJ_DIR)/zdbsp/nodebuild_classify_nosse2.o   
+	$(OBJ_DIR)/zdbsp/nodebuild_classify_nosse2.o    
 
 ZDBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 

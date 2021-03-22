@@ -24,7 +24,7 @@
 #include "rejectbuilder.h"
 #include "templates.h"
 
-bool		MergeVis=1;
+bool		MergeVis=true;
 
 FRejectBuilder::FRejectBuilder (FLevel &level)
 	: Level (level), testlevel (2), totalvis (0)
