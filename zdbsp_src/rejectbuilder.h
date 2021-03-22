@@ -25,8 +25,8 @@ private:
 
 // can't have more seperators than the max number of points on a winding
 	static const int MAX_SEPERATORS = 2;
-	static const int MAX_PORTALS = 65536*2/3;
-	static const int MAX_MAP_LEAFS = 32768;
+	static const int MAX_PORTALS = 65536*3;
+	static const int MAX_MAP_LEAFS = 65536;
 	static const int MAX_PORTALS_ON_LEAF = MAX_PORTALS;
 
 	struct FPoint
@@ -159,7 +159,7 @@ private:
 	void CreatePassages (int portalnum);
 	void PassageFlow (int portalnum);
 
-	VPortal	*sorted_portals[65536];
+	VPortal	*sorted_portals[MAX_PORTALS];
 
 	static int CountBits (BYTE *bits, int numbits);
 
