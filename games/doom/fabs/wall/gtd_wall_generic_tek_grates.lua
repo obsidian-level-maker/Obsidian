@@ -54,3 +54,67 @@ PREFABS.Wall_generic_tek_grate_hell_diagonal =
   tex_TEKWALL4 = "FIREMAG1",
   tex_MIDBARS3 = "MIDGRATE",
 }
+
+--
+
+PREFABS.Wall_generic_tek_grate_bottom_slope_tech =
+{
+  template = "Wall_generic_tek_grate_tech",
+  map = "MAP03",
+
+  engine = "zdoom",
+
+  rank = 2,
+  group = "gtd_generic_tek_grate_bottom_slope",
+
+  deep = 32
+}
+
+PREFABS.Wall_generic_tek_grate_bottom_slope_hell =
+{
+  template = "Wall_generic_tek_grate_tech",
+  map = "MAP03",
+
+  engine = "zdoom",
+  theme = "hell",
+
+  rank = 2,
+  deep = 32,
+
+  group = "gtd_generic_tek_grate_bottom_slope",
+
+  tex_TEKWALL4 = "SP_FACE2",
+  tex_MIDBARS3 = "MIDGRATE"
+}
+
+--
+
+PREFABS.Wall_generic_tek_grate_bottom_slope_tech_limit =
+{
+  template = "Wall_generic_tek_grate_tech",
+  map = "MAP03",
+
+  engine = "!zdoom",
+
+  rank = 1,
+  group = "gtd_generic_tek_grate_bottom_slope",
+
+  deep = 32,
+
+  line_341 = 0
+}
+
+PREFABS.Wall_generic_tek_grate_bottom_slope_hell_limit =
+{
+  template = "Wall_generic_tek_grate_tech",
+  map = "MAP03",
+
+  engine = "!zdoom",
+
+  rank = 1,
+  group = "gtd_generic_tek_grate_bottom_slope",
+
+  deep = 32,
+
+  line_341 = 0
+}
