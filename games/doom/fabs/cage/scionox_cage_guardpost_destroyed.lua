@@ -13,11 +13,10 @@ PREFABS.Cage_scionox_guardpost_destroyed =
   where  = "seeds",
   shape  = "U",
 
+  deep = 16,
+
   seed_w = 2,
   seed_h = 2,
-
-  deep   = 16,
-  over   = 16,
 
   x_fit  = "frame",
   y_fit  = "frame",
