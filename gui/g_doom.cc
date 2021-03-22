@@ -840,7 +840,6 @@ int DM_NumThings()
 //----------------------------------------------------------------------------
 
 #include "zdmain.h"
-#include "zenmain.h"
 
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
@@ -854,7 +853,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.build_gl_only = false;
 		if (build_reject == "yes")
 		{
-			options.reject_mode = ERM_DontTouch;
+			options.reject_mode = ERM_Rebuild_NoGL;
 		}
 		else
 		{
@@ -890,7 +889,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.build_gl_only = false;
 		if (build_reject == "yes")
 		{
-			options.reject_mode = ERM_DontTouch;
+			options.reject_mode = ERM_Rebuild_NoGL;
 		}
 		else
 		{
@@ -933,14 +932,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	}
 	
 	FileRename(filename, out_name);
-/*	if ((current_engine == "nolimit" || current_engine == "boom" || current_engine == "woof") && build_reject == "yes")
-	{
-		if (zokum_main(filename) != 0)
-		{
-			Main_ProgStatus(_("ZokumBSP Reject Build Error!"));
-			return false;			
-		}
-	}*/
+	
 	return true;	
 }
 
