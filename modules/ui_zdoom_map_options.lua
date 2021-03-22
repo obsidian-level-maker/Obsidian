@@ -57,7 +57,7 @@ OB_MODULES["ui_zdoom_map_options"] =
       tooltip = "Choose between UDMF and binary map format.",
     },
     {
-      name = "build_reject",
+      name = "build_reject_zdoom",
       label = _("Build REJECT"),
       choices = UI_ZDOOM_MAP_OPTIONS.YES_NO,
       default = "no",

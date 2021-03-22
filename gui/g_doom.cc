@@ -980,7 +980,7 @@ bool doom_game_interface_c::Start(const char *preset)
 	current_engine = main_win->game_box->engine->GetID();
 	if (current_engine == "zdoom")
 	{
-		build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_reject")->GetID();
+		build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_reject_zdoom")->GetID();
 	}
 	else
 	{
