@@ -1,0 +1,29 @@
+ZokumBSP 1.x
+==============
+
+This is the directory tree with all the files needed to build ZokumBSP from
+source. 
+
+The code is a fork of the GPLed ZenNode, and is thus also a GPL project with
+the same license as ZenNode 1.2.0.
+
+The executables produced are currently slot-in compatible with ZenNode. This
+allows you to replace your ZenNode executable in your current setup to test 
+this setup. The default behaviour is fairly conservative and fairly similar
+to the behaviour an output of ZenNode, but usually producing smaller 
+blockmaps.
+
+There is a fair bit of cruft and things in need of cleanup in this project.
+This is due to the slightly experimental nature of this project and that the 
+original ZenNode code also has unused and problematic code.
+
+The main focus of this release is to produce a node/blockmap/reject builder
+that alows for the production of big maps that are compatible with the 
+original dos based doom executables and the chocolate doom project.
+
+There might be some features that are handled badly by some Doom ports that
+deviate from the classic behaviour. The output of this code has mainly
+been tested with Chocolate Doom.
+
+For more information about the original project that this fork is based on,
+see the README-ZenNode.

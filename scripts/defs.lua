@@ -57,7 +57,7 @@ function _(s) return gui.gettext(s) end
 OB_ENGINES["nolimit"] =
 {
   label = _("Limit Removing"),
-  priority = 95
+  priority = 99
 }
 
 

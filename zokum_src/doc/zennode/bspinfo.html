@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>BSP Information Utility</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="up" href="index.html" title="Up">
+    <link rel="next" href="compare.html" title="REJECT Comparision Utility">
+    <link rel="prev" href="bspdiff.html" title="BSP Difference Utility">
+    <link rel="first" href="Overview.html" title="ZenNode overview">
+    <link rel="last" href="Custom.html" title="Customizing ZenNode">
+  </head>
+
+  <body>
+
+    <center>
+      <h1>bspinfo</h1>
+      by <a href="mailto:zennode@mrousseau.org">Marc Rousseau</a>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <br/>
+
+    <h2>Background</h2>
+
+    <div class="boxtext">
+
+      <p>During the development of ZenNode, I often wondered what was going on with the BSP structures that were being built. Was this algorithm doing better than that one? How balanced is the tree? How deep is it going? <b>bspinfo</b> grew out of the tool used to see what was going on. It reports statistics to describe the BSP tree. It can be used to give you a feel of how particular BSP builders are performing.</p>
+
+    </div>
+
+    <h2>Description</h2>
+
+    <div class="boxtext">
+
+      <p>The following is a brief description of each of the values displayed by <b>bspinfo</b>:</p>
+
+      <br/>
+ 
+      <div class="indent">
+
+        <p><b>Max/Avg Depth:</b> The maximum depth of the BSP tree. The deeper the tree, the more work DOOM has to do to update the display. A smaller value means that, on average, DOOM will have fewer NODES to traverse when updating the screen.</p>
+
+        <p><b>FOM:</b> (Figure of Merit) This is an attempt to measure the 'balance' of the tree. Each node with both a right and left child or no children is considered balanced. The valid range for the FOM value is from 0.000 to 1.000. An FOM of 0.000 represents the worst possible case for a binary tree (each non-terminal node has only 1 child). A FOM value of 1.000 represents optimal binary tree.</p>
+
+        <p><b>Balance:</b> Indicates the ratio of nodes to the left and right of the root node. The values range from 0.000+ (very poorly balanced) to 0.500 (perfectly balanced). Generally, a more balanced tree is preferable to a less balanced tree, since, the average depth for any node is likely to be smaller. (This actually is an indication of how well the node builder chose it's first partition.)</p>
+
+        <p><b>Splits:</b> How many times the Node builder had to split segments to fit everything into the tree. There are no hard rules saying that splits are bad, however fewer is generally better.</p>
+
+        <p><b>Diagonals:</b> The number of BSP partition lines chosen that were diagonal. The DOOM rendering engine runs much faster when the partition lines are either vertical or horizontal. Generally the fewer diagonal partitions the better.</p>
+
+        <p><b>Nodes:</b> Number of NODES in the map.</p>
+
+        <p><b>Segs:</b> Number of SEGS in the map.</p>
+
+      </div>
+
+      <br/>
+
+      <p><em>NOTE:</em> None of these figures are meant to imply that one BSP builder is better (or worse) than another. They are simply designed to describe the type of BSP trees being built. Some favor shallow tree depths, others attempt to reduce splits, others favor reducing diagonal partitions. No one value should be viewed as more important than the others. In general, if a Node builder builds a BSP tree with all values significantly lower, except FOM, than other Node builders, it most likely means that that level will play slightly faster in DOOM but is no more or less 'correct' than any other Node builder. Of course these numbers aren't important. The only thing that is important is that the BSP tree created works correctly under DOOM.</p>
+
+    </div>
+
+  </body>
+
+</html>

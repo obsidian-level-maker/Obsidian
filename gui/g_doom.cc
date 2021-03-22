@@ -840,20 +840,21 @@ int DM_NumThings()
 //----------------------------------------------------------------------------
 
 #include "zdmain.h"
+#include "zenmain.h"
 
 static bool DM_BuildNodes(const char *filename, const char *out_name)
 {
 	LogPrintf("\n");
   
 	zdbsp_options options;
-	if (current_engine == "nolimit")
+	if (current_engine == "nolimit" || current_engine == "boom")
 	{
 		options.build_nodes = true;
 		options.build_gl_nodes = false;
 		options.build_gl_only = false;
 		if (build_reject == "yes")
 		{
-			options.reject_mode = ERM_Rebuild_NoGL;
+			options.reject_mode = ERM_DontTouch;
 		}
 		else
 		{
@@ -864,7 +865,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.compress_gl_nodes = false;
 		options.force_compression = false;
 	}
-	else if (current_engine == "boom")
+	else if (current_engine == "prboom")
 	{
 		options.build_nodes = true;
 		options.build_gl_nodes = true;
@@ -881,6 +882,24 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.compress_nodes = true;
 		options.compress_gl_nodes = false;
 		options.force_compression = false;
+	}
+	else if (current_engine == "woof")
+	{
+		options.build_nodes = true;
+		options.build_gl_nodes = false;
+		options.build_gl_only = false;
+		if (build_reject == "yes")
+		{
+			options.reject_mode = ERM_DontTouch;
+		}
+		else
+		{
+			options.reject_mode = ERM_CreateZeroes;
+		}	
+		options.check_polyobjs = false;
+		options.compress_nodes = true;
+		options.compress_gl_nodes = false;
+		options.force_compression = true;
 	}
 	else if (current_engine == "zdoom")
 	{
@@ -914,6 +933,14 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	}
 	
 	FileRename(filename, out_name);
+/*	if ((current_engine == "nolimit" || current_engine == "boom" || current_engine == "woof") && build_reject == "yes")
+	{
+		if (zokum_main(filename) != 0)
+		{
+			Main_ProgStatus(_("ZokumBSP Reject Build Error!"));
+			return false;			
+		}
+	}*/
 	return true;	
 }
 

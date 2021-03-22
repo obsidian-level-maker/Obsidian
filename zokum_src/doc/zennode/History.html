@@ -1,0 +1,500 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>ZenNode: Revision History</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="up" href="index.html" title="Up">
+    <link rel="next" href="bspdiff.html" title="BSP Difference Utility">
+    <link rel="prev" href="README.html" title="README">
+    <link rel="first" href="Overview.html" title="ZenNode overview">
+    <link rel="last" href="Custom.html" title="Customizing ZenNode">
+    <meta name="KeyWords" content="ZenNode Changes Revision History">
+  </head>
+
+  <body>
+
+    <center>
+      <h1>Revision History</h1>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <table border="0" cellspacing="5" cellpadding="3" width="100%" summary="">
+
+      <tr>
+        <td class="boxtitle">Version 1.2.1</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Just a minor update to fix a long standing bug in ZenNode.</p>
+          <ul>
+            <li>Fix the BLOCKMAP code to determine if the resulting data structure is valid and refuse to update the BLOCKMAP if it is not.</li>
+            <li>Change the REJECT code to use an internally generated BLOCKMAP instead of the one found in the .wad file.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.2.0</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Another minor version update! Support for a number of RMB options has been added to the REJECT builder as well as a complete rewrite of the graph parsing logic. The RMB options supported include: BAND, BLIND, DISTANCE, EXCLUDE, INCLUDE, INVERT, LENGTH, and SAFE.</p>
+          <ul>
+            <li>Changed default options for building the BSP (don't require unique sub-sectors).</li>
+            <li>Fixed BSP code to properly create unique subsectors when requested.</li>
+            <li>Added support for basic RMB options.</li>
+            <li>Rewrote graph code in the REJECT builder to reduce the number of calculations required.</li>
+            <li>Change code to use mkstemp instead of tmpnam and tempnam.</li>
+            <li>Update code to compile &amp; run properly on an AMD 64-bit CPU.</li>
+            <li>Changed .WAD and level handling routines to properly handle little-endian &amp; big-endian architectures correctly.</li>
+            <li>Fixed 2 bugs that could cause small levels to crash the NODES builder.</li>
+            <li>Removed debug code from ZenMain that accidentally made it into v1.1.0.</li>
+            <li>Updated bspinfo to provide a better FOM measurement.</li>
+            <li>Added bspdiff utility to provide extra information about a map.</li>
+            <li>Added wadinfo utility to provide extra information about a map.</li>
+            <li>Minor updates to the documentation.</li>
+            <li>Added Mac OS X support.</li>
+            <li>Added extra DEBUG and DIAGNOSTIC checks to Debug version of the BSP builder.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <br>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.1.0</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>ZenNode's got a minor version update! There are finally enough changes since v1.0 to warrant the change (it probably should have been bumped back around v1.0.6/v1.0.7 but hey...).</p>
+          <p>ZenNode has switched to using floating point math in the BSP builder. This means ZenNode is slower than it has been (sorry), but it also means that it is more accurate. This change was necessary to avoid problems with newer OpenGL ports of DOOM that use floating point internally. If integer based routines can be found that retain the accuracy required, ZenNode will definitely use them again (faster is better), but until then, this is it.</p>
+          <ul>
+            <li>Switched to floating point code in the BSP builder to work around problems with DOOM's limitation of integer coordinates.</li>
+            <li>Added code to verify that the float-integer conversion did not create an invalid SSECTOR.</li>
+            <li>Cleaned up several parts of the BSP routines to make things simpler.</li>
+            <li>Changed code in the BSP builder to handle exhausting the VERTEX, NODES, and SSECTOR pools - ZenNode can now handle larger levels.</li>
+            <li>Changed .WAD handling code to support maps using FraggleScript correctly.</li>
+            <li>Fixed minor memory access bug in .WAD handling code.</li>
+            <li>Fixed cursor positioning problem under Linux</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <br>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.8</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Bug fix release - Fixed bug that corrupted wad files.</p>
+          <ul>
+            <li>Fixed a cut-n-paste bug that resulted in a 4-byte corruption immediately after the wad header.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.7</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>More changes to the REJECT builder. The simple distance based pruning done in v1.0.6 has been replaced with a slightly more sophisticated mechanism using graph theory and articulation points (see README.html for details). The result is that most levels now rebuild <em>much</em> faster than before. On a sample set of almost 400 levels, the average time to rebuild the REJECT structure has decreased by a factor of 3! There is a price to pay however. As with the distance check in v1.0.6, irregular sectors can cause the optimizations to build an incorrect REJECT structure. In the sample set that I tested, 28 levels were affected by this problem. If your level has special effects that might trip up the new REJECT builder, or if you just want to be sure you have a 100% accurate REJECT, you can now turn off all the optimizations ZenNode uses (with the new -rc- and -rg- options).</p>
+          <ul>
+            <li>Added graph-based optimizations to the REJECT builder.</li>
+            <li>Added -rg switch to enable/disable the new graph-based optimizations.</li>
+            <li>Changed the -rc switch to disable child sector-based optimizations.</li>
+            <li>Fixed a problem where a LMP with a name similar to a valid level name would crash ZenNode.</li>
+            <li>Fixed a bug that prevented ZenNode from rebuilding the BSP if the existing BSP structures were invalid.</li>
+            <li>Minor change to compare to limit comparisons to levels common to both files.</li>
+            <li>Changed compare to produce a more compact output.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.6</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Miscellaneous changes in the BSP builder - now <i>up to 45% faster than v1.0.5</i>!</p>
+          <p>Added a new feature to the REJECT builder. Before building the REJECT map, ZenNode now creates a list of distances between every sector pair. It uses this list to prune the number of lines that have to be checked. If there is no walkable path between two sectors, they are marked as hidden up front, before the lines are checked. For maps that have more than one contiguous area (i.e. areas that can only be reached through a teleporter) this can speed up REJECT building considerably (on one particularly large map, I've seen a 500% speed increase!). The downside to this is that some special effects can confuse the REJECT builder. Special effects like 'Deep Water' will throw off the distance calculations, since the 'deep' sector(s) will appear to be isolated from all other sectors, and hence marked as hidden from everyone. If you have levels that use this effect, you should turn off this option (-rc-) for these levels.</p>
+          <ul>
+            <li>Changed code to simplify the creation  of aliases (speed improvement).</li>
+            <li>Changed WhichSide to use LINEDEF rather than SECTOR based decisions (speed improvement).</li>
+            <li>Changed DivideSeg and WhichSide to use 64-bit math to avoid a potential overflow problem.</li>
+            <li>Fixed REJECT builder to ignore 0-length LINEDEFs.</li>
+            <li>Added new feature the the REJECT builder to calculate the distance between two sectors.</li>
+            <li>Re-organized the documentation files.</li>
+            <li>Added extra documentation to README.html.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.5</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Bug fix release - More changes to the BSP builder (v1.0.3 didn't quite do it) to finally fix the known bugs.</p>
+          <ul>
+            <li>Change makefile to use '-mcpu=' rather than '-march=' to allow code to run correctly on an i386.</li>
+            <li>Added new logic to correctly detect lines that have already been split in _WhichSide.</li>
+            <li>Fixed overflow problems in _WhichSide and DivideSeg.</li>
+            <li>Changed ComputeStaticVariable to use the original LINEDEF's start/end vertices for calculations.</li>
+            <li>Changed the metric function to allow finer control with ZEN_Xx variables.</li>
+            <li>Changed default values for ZEN_Xx variables.</li>
+            <li>Fixed logic in REJECT builder that detects special effects.</li>
+            <li>Updated .html files to use CSS style sheets and be HTML 4.01 compliant.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.4</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Bug fix release - Fixed bugs in the list/wad/level code to handle levels that are missing lumps that are generated by ZenNode.</p>
+          <ul>
+            <li>Fixed bugs in the list/wad/level code to handle levels that are missing lumps that are generated by ZenNode.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.3</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Bug fix release - Changed code in BSP builder to fix a long-standing bug that could occasionally result in an invalid BSP tree to be built.</p>
+          <ul>
+            <li>Fixed bugs in _WhichSide and DivideSeg that caused SEGS to be split incorrectly, or placed on the wrong side of the partition.</li>
+            <li>Changed timer function used in Win32 to get better timing information.
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.2</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Bug fix release - Fixed a bugs introduced in v1.0.1 that stopped changes from being written to disk. Also added feature to stop special effects in the REJECT structure from being destroyed by accident.</p>
+          <ul>
+            <li>Fixed the code that detected whether or not a level was changed before writing changes to disk.</li>
+            <li>Added code to look for special effects in the existing REJECT resource before modifying it.
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0.1</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Bug fix release - Fixed several bugs related to handling larger and invalid levels.</p>
+          <ul>
+            <li>Increased several internal limits to allow larger levels to be processed.</li>
+            <li>Modified level sanity check to ignore unused SIDEDEFs.</li>
+            <li>Fixed a bug in the REJECT builder that would cause ZenNode to lock up if it encountered an invalid level.</li>
+            <li>Fixed a bug in the REJECT builder that resulted in an invalid REJECT structure.</li>
+            <li>Moved conole I/O code to it's own file.</li>
+            <li>No longer packs vertices when building the REJECT resource.</li>
+            <li>Handle levels that are incomplete (not all lumps present in the .wad file).</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 1.0</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>All of the source code is now included.</p>
+          <p>The code to build the REJECT structure has been modified and cleaned up and should run ~36% faster than before.</p>
+          <p>Added support for Linux.</p>
+          <ul>
+            <li>Added support for Linux</li>
+            <li>Cleaned up REJECT builder code and inlined a few routines.</li>
+            <li>Added code to REJECT builder to use sector hierarchy to speed up build time.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">*Version 0.99</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>The memory requirements for ZenNode have been reduced. In some cases, ZenNode now requires significantly less memory (up to 3M less!) to rebuild the BSP tree. A minor change was made to the REJECT algorithm to handle maps that are large (i.e.: maps that cover a large area).</p>
+          <ul>
+            <li>Added simple level sanity check before processing any level.</li>
+            <li>Reduced run-time memory requirements for BSP Algorithms.</li>
+            <li>Changed logic in REJECT algorithm to handle larger levels.</li>
+            <li>Fixed logic for checking map level names.</li>
+            <li>Fixed bug in BSP code to detect 'almost' parallel lines.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">*Version 0.98b</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <ul>
+            <li>Fixed bug in REJECT algorithm.</li>
+          </ul>
+        </td>
+      </tr>
+
+
+      <tr>
+        <td class="boxtitle">Version 0.98a</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <ul>
+            <li>Fix run-time error building BSP.</li>
+            <li>Improved REJECT algorithm.</li>
+            <li>Win32: Restore cursor after Ctrl-C, Ctrl-Break, or GP-Fault.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.98</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>ZenNode will now build a REJECT resource! Given a valid .wad file, ZenNode will conduct a complete set of line-of-sight (LOS) calculations for every sector in the map. There are several methods currently in use to create a REJECT resource: distance, # of intervening sectors, sampling, and 'perfect' testing. The first two base the results solely on distances without regards to solid walls and LOS but are relatively fast. The third tests several points along two linedefs and bases it's decision on the results. This results in a more accurate resource than the first two methods, but may miss a valid LOS if the test points aren't chosen correctly or too few are used. However, the more points that are used, the slower this method runs (it slows down exponentially as the number of test points increases). The fourth is the most accurate (and the one used in ZenNode). It attempts to look at all of the intervening solid lines and find a LOS if one exists. This exhaustive test can be slow at times, but as usual, things may speed up in the future... ;)</p>
+          <ul>
+            <li>Added REJECT builder.</li>
+            <li>Changed command-line default to create a real REJECT.</li>
+            <li>Improved method used to determine the PWAD type.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.97a</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>IMPORTANT BUG FIX: ZenNode now handles the case where a fully qualified pathname to the input .WAD is specified on the command line for a .WAD file in the current directory. Previous versions would not handle this case properly and would create invalid .WAD files.</p>
+          <ul>
+            <li>Fix - related to saving .WADs given a full pathname.</li>
+            <li>Fix - related to [unique-sectors] option in .zen files.</li>
+            <li>Fix - related -n2 switch on large levels.</li>
+            <li>Improved error detection for .WAD file operations.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.97</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>You can now extract the maps to a new PWAD file. From the command line, use the -x switch to indicate that the specified levels are to be extracted to a separate PWAD file. This feature can be used to extract any map(s) without modifying them by turning off all the other options (i.e.: -b- -n-).</p>
+          <p>The default settings for the -n2 option have been changed. The new values are: y1=1, y2=7, y3=0, y4=1.</p>
+          <p>You can now set all your favorite command line settings in a configuration file. When ZenNode starts, it looks for a file called ZenNode.cfg. It will look in the current directory, then in the directory where the ZenNode.exe file is located. If one is found, it's contents override the normal default values. Then, actual command line parameters are checked.</p>
+          <p>Improved support for special effects. By using a customization file, you can now add virtually any special effect to a .wad file. See custom.doc for a more detailed description of how to use the customization file. A sample .wad file has been included showing a variety of special effects and a custom file demonstrating how to get all the effects in the .wad to work. For more information regarding this .wad file and a description of how to create all the effects (and more) check out:</p>
+
+          <div class="indent">
+            <p>spcial12.zip by Jens Hykkelbjerg it can be found at:</p>
+            <a href="ftp://ftp.cdrom.com/pub/doom/docs/editing/spcial12.zip">ftp://ftp.cdrom.com/pub/doom/docs/editing/spcial12.zip</a>
+          </div>
+
+          <ul>
+            <li>Added -x switch to extract rebuilt levels to a PWAD</li>
+            <li>Added configuration file for default command-line switches</li>
+            <li>Added customization file indicating:
+              <ul>
+                <li>linedefs that should be ignored</li>
+                <li>sectors/linedefs that should not be split</li>
+                <li>sectors that should/should not be unique in a SSECTOR</li>
+              </ul>
+            </li>
+            <li>Improved BLOCKMAP compression routines</li>
+            <li>Fixed bugs in the minimize depth algorithm</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.96</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Support for 'special effects' has been improved. Using the -nu switch, you can affect the creation of sub-sectors. What this means (for those of you who don't know/care what a sub-sector is) is that you can get most of the special effects to work in your .WAD file. By default all sub-sectors are unique. This works with most special effects (i.e.: deep-water, invisible stairs, ...). If the effect you're trying to achieve doesn't work, try turning off this feature with -nu-. This works for other effects, such as light striking a wall from no visible source (different sector).</p>
+          <p>For those of you who think ZenNode is too slow &lt;g>, there's a new method for partitioning (-n3) available for you! Both of the existing algorithms (-n1 &amp; -n2) examine every valid segment to see if they should be used as the partition for a node. Examining every segment can slow things down, so if you really can't wait, if ZenNode is way too slow for you, try the new algorithm. It only looks at a small sub-set of segments instead (saving you valuable seconds that could be used testing your new .WAD).</p>
+          <p>You can now 'customize' ZenNode's partitioning logic! The formula used to determine the merit of a particular SEG is now user adjustable. You can now set the four coefficients used in the calculation. If you don't like the way ZenNode picks lines, or you just want to experiment, now you can actually do something about it. The metric formula used is:</p>
+
+          <p class="code">metric = ( L * R ) / ( x1 * S / x2 ) - ( x3 * S + x4 ) * S;</p>
+
+          <p>Where L, R, and S represent the # of SEGS to the left, right, and split by the candidate SEG. Checks are made to avoid division by zero. The programmable values x1, x2, x3, and x4 can be modified by setting the environment variables ZEN_X1, ZEN_X2, ZEN_X3, and ZEN_X4 respectively. The default settings are:
+
+          <p><span class="code">x1=24, x2=5, x3=1, x4=25</span> (Older versions of ZenNode used the values x1=4 or 5, x2=1, x3=0, x4=0).</p>
+
+          <p>Algorithm 2 also uses a similar set of variables, ZEN_Y1, ZEN_Y2, ZEN_Y3, and ZEN_Y4, where L, R, and S represent sectors rather than SEGS. The default settings are: y1=0, y2=1, y3=1, y4=5. Have fun.</p>
+
+          <ul>
+            <li>Changed command line option syntax.</li>
+            <li>Added user customization of the partition formula</li>
+            <li>Added BLOCKMAP compression</li>
+            <li>Added minimal support for the REJECT structure</li>
+            <li>Added -nu switch for controlling unique sub-sector creation</li>
+            <li>Added a new algorithm (-n3) for more speed</li>
+            <li>Changed switch for minimizing BSP tree depth (-d) to -n2</li>
+            <li>Modified the original algorithm - fewer splits/a little slower :(
+              <ul>
+                <li>uses fewer diagonal partitions</li>
+                <li>slightly slower than before :( - but just a little - &#x263A;</li>
+              </ul>
+            </li>
+            <li>Modified the algorithm for minimizing BSP tree depth - lower depth</li>
+            <li>Fixed bugs in the BLOCKMAP routines</li>
+            <li>Added balance information to BSPInfo</li>
+          </ul>
+        </td>
+      </tr>
+
+
+      <tr>
+        <td class="boxtitle">Version 0.95</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <p>Support for Hexen has been added. This has been largely untested, but a quick test of the hexen.wad file seems to be working. So, as soon as you get your favorite WAD Editor to support Hexen, ZenNode will be ready!</p>
+          <p>ZenNode now offers two methods of partitioning your level. The new method makes an attempt to minimize the average depth of the BSP tree. This should make it slightly faster for the DOOM engine to render a screen, since it has to traverse fewer NODES each time. The original method is still intact and attempts to minimize the number of splits made. Currently the new method has not been optimized for speed but it is still reasonably fast.</p>
+          <p>BSPInfo has been included to allow you to gather information about how your node builders compare to each other. You can see if one favors certain characteristics over others, or just get an overall feel for their performance.</p>
+          <ul>
+            <li>Added support for HEXEN WADs</li>
+            <li>Added -d switch for minimizing BSP tree depth</li>
+            <li>Added -ri switch to ignore non important linedefs</li>
+            <li>Improved error messages for invalid/open WADs</li>
+            <li>Fixed bug related to WADs w/o existing NODES/SEGS</li>
+            <li>A few more minor speed-ups</li>
+            <li>Included BSPInfo</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.94</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <ul>
+            <li>Added BLOCKMAP creation</li>
+            <li>Added new command line options:
+              <ul>
+                <li>select multiple levels for each WAD</li>
+                <li>merge multiple WADs into one</li>
+                <li>specify output filename</li>
+                <li>handle multiple seperate WADs</li>
+              </ul>
+            </li>
+            <li>Replaced ZenNT with a 32-bit DPMI/Win32 Console version</li>
+            <li>Placed each platform version in its own sub-directory in .ZIP</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.93</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <ul>
+            <li>Added ZenNT - Win32 Console version</li>
+            <li>A few more minor speed-ups</li>
+            <li>Fixed minor bugs</li>
+            <li>Added /q switch</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.92</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <ul>
+            <li>Added new routines to speed up the BSP build process.</li>
+            <li>Added /t switch</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.91</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <ul>
+            <li>Replaced Borland C++'s malloc/free to avoid a bug that causes a GP Fault at run-time on large levels.</li>
+            <li>Added Heretic&trade; to the help screen.</li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="boxtitle">Version 0.90</td>
+      </tr>
+
+      <tr>
+        <td class="boxtext">
+          <ul>
+            <li>First public release. Rebuilds BSP found in a single .WAD file specified on the command line.</li>
+          </ul>
+        </td>
+      </tr>
+
+
+    </table>
+
+    *Not publicly released
+
+  </body>
+
+</html>

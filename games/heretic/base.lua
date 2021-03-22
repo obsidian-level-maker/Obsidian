@@ -41,7 +41,8 @@ gui.import("resources")
 OB_GAMES["heretic"] =
 {
   label = _("Heretic"),
-  priority = 40,
+
+  priority = 94,
 
   format = "doom",
   game_dir = "heretic",

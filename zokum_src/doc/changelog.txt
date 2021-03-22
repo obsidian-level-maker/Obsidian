@@ -1,0 +1,194 @@
+Changelog for ZokumBSP
+
+ZokumBSP 1.1 
+- Yule release! Happy holidays!
+- New vertex based algorithm available for testing. -na=v to use it.
+- Support for two progress bars, used in vertex mode.
+- Minor text output bugs, nothing too bad.
+
+ZokumBSP 1.0.11
+- Doom 25 year anniversary release.
+
+ZokumBSP 1.0.11-rc2
+- Cleanups and further speed optimizations.
+- Experimental code to show tree progress, uses #define for now.
+
+ZokumBSP 1.0.11-rc1
+- Major speed optimizations in multi-tree algorithm.
+- Major speed optimization in the balanced (default) algorithm.
+- Fixed -nu parameter that was broken.
+- Made -nu default to ON, this makes invisible floors work like expected.
+
+ZokumBSP 1.0.10-rc1
+- Fixed windows text output.
+- Cleaned up help screen.
+- Win64 builds now available.
+- WinX builds now compiled with GCC 8.2.0
+
+ZokumBSP 1.0.10-beta13
+- Many minor speed and memory optimizations.
+
+ZokumBSP 1.0.10-beta12
+- Improvments to win32 console output.
+- Added balanced metric for multi-tree algorithm.
+- Balanced metric is now standard metric for MTA.
+- New algorithm for texture offsets on segs.
+
+ZokumBSP 1.0.10-beta11
+- Removed code that added 256 to all SEG angles for testing.
+
+ZokumBSP 1.0.10-beta10
+- Verified fixing slime trails when using angle from segs not linedefs.
+
+ZokumBSP 1.0.10-beta9
+- Refined wide algorith, sped it up a lot.
+- Added switch to turn on colored output, now off by default.
+- Added support for vertex-moving linedef types 1078 and 1079.
+
+ZokumBSP 1.0.10-beta8
+- Wide algorithm seems to be working, but is still very slow. Only usable for
+  final builds of maps. Invoke with -na=mw=2, swap out the number with how
+  many sub trees you want to build.  
+
+ZokumBSP 1.0.10-beta7
+- New adaptive algorithm to allow for hybrid trees using depth for the big
+  partitions and split reduction when segs go below a certain limit. This
+  limit is tunable with -nt=?, where ? is an integer.
+- Multiple split lines is still broken.
+
+ZokumBSP 1.0.10-beta6
+- New algorithm for testing multiple split lines recursively!
+- Minor tweaks to improve balanced algorithm metrics.
+
+ZokumBSP 1.0.10-beta5
+- Added support for selecting metric for what node tree is considered best.
+- Added cache to speed up multiple node rebuilds when using adaptive. This can
+  in some rare cases be wrong, so use with caution.
+- Added an option to make the balanced node picker aggressible pick lines that 
+  cause no splits, even if they are bery unbalanced. Supported options are:
+  no favoring, favor no seg splits, favor fewer subsectors, fabor both, try
+  all variations.
+
+ZokumBSP 1.0.10-beta4
+- Improved node picking algorithm. 
+- Fxed a crash bug.
+
+ZokumBSP 1.0.10-beta3
+- Fixed a problem with non-twosided walls with 2s flag on.
+- Built win32 version as static, forgot that last time.
+- New node build paramter s=[z,a] to toggle seg split roundoff error handling.
+  s=z turns off checks, allows for faster node builds and possibly fewer segs.
+  s=a avoid seg splits that lead to 'slime trails'.
+
+ZokumBSP 1.0.10-beta2
+- Improved split reduction to favor balanced trees over unbalanced.
+- Added geometry options as a separate sub type, use -g.
+- Added statistics options for more output and totals, use -s.
+- Various minor display fixes for the adaptive algorithm.
+- Minor tweaks of the split algorithm.
+
+ZokumBSP 1.0.10-beta1
+- Renamed structs and methods in doom/level.* and wad.*
+- Converted filenames to lower case.
+- Renamed source dirs to all lower case.
+- Split wadlist object into its own file, wadlist.cpp
+- Added support for linedef 1080-1083 for seg bam trickery.
+- Fixed nodes algorithm paramters, a=s,d,f.
+- Old nodes algorithms selection now act as aliases for a=s,d,f.
+- Rewrote the output, more info, xaser had the column header idea!
+- Removed a bug in the split reduction algorithm, it no longer favors lines
+  that are horisontal over diagonal or vertical lines with fewer splits.
+- Split-reduction algorithm now favors non-diagonal lines if splits are same.
+- Adaptive algorithm will not try seg thresholds above the seg count;
+- Node split algorithm will favor splits near the middle if same  split count.
+- Added a small summary output, adding up data from all processed maps.
+
+ZokumBSP 1.0.9-rc2
+- Turning off blockmap compression is once again possible.
+- "-bi" parameter no longer claims to not use basic compression.
+- Added checking of return values of memory reallocs in ZenNode.cpp
+- Fixed a minor error in the va_args handling in ZenRMB.
+- Fixed a mismatch new[] / delete in wad.cpp.
+
+ZokumBSP 1.0.9-rc1
+- Added geometry simplification blockmap compression. Also speeds up the
+  DOOM engine due to less calculations runtime.
+- Added more aggressive simplification of one sided walls in different
+  sectors, set with level g=2.
+- Made 00 headers default due to bad optimizations in many ports.
+- Added a method to add new linedefs.
+- Added trimming of linedef list to reduce unneeded linedefs.
+- Linedefs with tag 998 will not be added to BSP tree, ie not rendered.
+- Renamed PREPROCESS TO GEOMETRY. Added statistics, progress and run time.
+
+ZokumBSP 1.0.8-rc2
+- Using 64bit uints in reject code to stop it crashing on large maps. This
+  fixed building a reject table on a 2k sector map. Bigger maps still crash
+  in a different location.
+
+ZokumBSP 1.0.8-rc1
+- Anotak found a nice optimization, moved checks out of a core loop. This 
+  gives a 33% speedup.
+
+ZokumBSP 1.0.7-rc2
+- Many minor cleanups of the Git repo.
+- Anotak added Visual Studio tweaks to make it compile.
+
+ZokumBSP 1.0.7-rc1
+- Preprocessing is now done in a seperate step, and data can be used by reject
+  and nodes structures if needed.
+- New format for the changelog.txt, should be easier to read.
+
+ZokumBSP 1.0.6 (Choose your own offset adventure)
+- No changes from rc2.
+
+ZokumBSP 1.0.6-rc2
+- Added support for detecting BOOM generalized linedefs and extended linedefs.
+- Limited support for a 32bit BLOCKMAP format.
+
+ZokumBSP 1.0.6-rc1
+- Use -bo=x,y to specify a specific offset, useful for special effects.
+- LoadHexenInfo in level.cpp now checks if the sscanf matches anything. 
+
+ZokumBSP 1.0.5 (Boundary box discarding)
+- No changes from rc3
+
+ZokumBSP 1.0.5-rc3
+- Fixed several memory leaks.
+
+ZokumBSP 1.0.5-rc2
+- Distributed prebuilt windows version is built static. No dlls needed.
+
+ZokumBSP 1.0.5-rc1
+- Discards looking blocks farther away than the longest linedef in a block.
+
+ZokumBSP 1.0.4 (Argument cleanup and a bit of heuristics)
+- Added new heuristic approach to reduce brute force solution space.
+- Changed command line arguments to be easier and more foolproof.
+
+ZokumBSP 1.0.3 (Sub block improvement release)
+- All non id-compatibe blockmaps are now 2 bytes smaller.
+- No longer assumes 2s flag means a linedef is two-sided.
+
+ZokumBSP 1.0.2  (Speed improvements)
+- Sorted blocks allow for quicker generation / comparisons.
+- Minor enhancements. Better sorting algorithm from stdlib.
+- HTML output switch.
+- HTML output is now usable.
+- Massive speed improvements.
+- Reformatted help screen.
+- Fixed a ZenNode bug when an invalid wad file is specified.
+
+ZokumBSP 1.0.1 (Released as closed source for testing)
+- Compiles on windows vis MinGW.
+- Id blockmap header now optional
+- Support for 8x8 id offset.
+- Can generate id-compatible smaller blockmaps.
+- Support for tag 999 never blocking lines.
+- Algorithm for finding never blocking lines.
+- Option: Find sub block lists to improve blockmap size.
+
+ZokumBSP 1.0.0 (Initial test release)
+- Added brute force 128*128 origin.
+
+

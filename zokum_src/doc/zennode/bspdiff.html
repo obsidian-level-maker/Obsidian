@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>BSP Difference Utility</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="up" href="index.html" title="Up">
+    <link rel="next" href="bspinfo.html" title="BSP Information Utility">
+    <link rel="prev" href="History.html" title="History">
+    <link rel="first" href="Overview.html" title="ZenNode overview">
+    <link rel="last" href="Custom.html" title="Customizing ZenNode">
+  </head>
+
+  <body>
+
+    <center>
+      <h1>bspdiff</h1>
+      by <a href="mailto:zennode@mrousseau.org">Marc Rousseau</a>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <br/>
+
+    <h2>Description</h2>
+
+    <div class="boxtext">
+      <p>Ever wonder what happened when you changed a minor part of the BSP code? Probably not, but if you are, this utility may help show what happened. <b>bspinfo</b> compares the BSP tree of two .wad files and displays the point at which they differ. Since the BSP is essentially a binary tree, a single difference in a partition for a given group of SEGS will create a tree that is radically different for all pointes below that node. <b>bspinfo</b> compares the partition lines at each node and if they are different, prints them out and aborts the rest of the tree below that point. If the partition lines are the same (It does not compare the <em>entire</em> node), it will recursively compare the contents of the leaf nodes. If you're not <em>really</em> curious about the BSP tree, this is probably not going to be very interesting to you.</p>
+    </div>
+
+  </body>
+
+</html>

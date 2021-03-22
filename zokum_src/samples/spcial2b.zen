@@ -1,0 +1,20 @@
+#
+#  Sample .zen file for spcial2b.wad by Jens Hykkelbjerg
+#
+#  This file will allow ZenNode to build the wad with ALL special effects
+#    working correctly.
+#
+
+[MAP01]
+
+[ignore-linedefs]
+# Override the command-line defaults
+!all
+
+[unique-sectors]
+# Override the command-line defaults
+all
+
+# Make sure the two sectors used in the transparent door aren't split into
+#   different sub-sectors.
+!95,97

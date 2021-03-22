@@ -1,0 +1,99 @@
+#
+#  Sample .zen file for HEXEN.WAD
+#
+
+[MAP01]			# 'Winnowing Hall'
+
+[ignore-linedefs]
+# lineDefs that are not visible to the user - their only purpose seems to
+#   be to block polyObjects from view in case they 'bleed'.
+510
+1134
+1254,1255
+1637-1639
+1562-1565
+1749-1753
+
+# lineDefs bounding polyObjects
+566-569			# bounding box for doors & panels
+1570-1573		# bounding box for sliding bars
+
+# polyObject lineDefs - !!! DON'T IGNORE THESE !!!
+!1071-1102		# sliding bars ( 8 )
+!558-561		# door
+!562-565		# door
+!692-695		# rotating panel
+!704-707		# rotating panel
+
+[dont-split-linedefs]
+#
+# None - implied by sectors below
+#      
+
+[dont-split-sectors]
+262			# left rotating panel
+279			# right rotating panel
+266			# doorway to chapel
+
+[unique-sectors]
+#
+# None - command-line default ( /nu ) is 'all' but can be changed here
+#							  
+
+[MAP02]			# 'Seven Portals'
+
+[ignore-linedefs]
+
+# lineDefs bounding polyObjects
+1561-1564		# outer bounding box
+1465-1560		# inner bounding boxes
+
+# extraneous lines - to reduce 'polyobject bleeding' ???
+1636-1659		# 'triangles' around the 6 doors
+1675-1677		# 'step' in front of 1st door ( middle right )
+
+# polyObject lineDefs - !!! DONT IGNORE THESE !!!
+!931-934		# courtyard pillar	20
+!935-938		# courtyard pillar	25
+!939-942		# courtyard pillar	19
+!943-946		# courtyard pillar	24
+!947-950		# courtyard pillar	22
+!951-954		# courtyard pillar	23
+!955-958		# courtyard pillar	21
+!809,810,812,815	# rotating panel	27
+!987,808,811,814	# rotating panel	26
+!805,806,813,816	# rotating panel	28
+!601-604		# south door		1
+!605-608		# south door		3
+!612-615		# portal door		2
+!616-619		# portal door		7
+!644-647		# portal door		8
+!648-651		# portal door		9
+!652-655		# portal door		10
+!656-659		# portal door		11
+!705,706,777,780	# portal door		16
+!707,708,783,786	# portal door		17
+!750,751,779,782	# portal door		12
+!725,726,778,781	# portal door		14
+!727,728,784,787	# portal door		15
+!752,753,785,788	# portal door		13
+
+[dont-split-linedefs]
+# linedefs enclosing courtyard pillars ( sector 49 would include too many )
+156,157,158,790
+1371,1372,1373,1374
+1379,1380,1381,1382
+1375,1376,1377,1378
+1565,1566,1567
+1570,1571,1572
+
+[dont-split-sectors]
+150			# upper - right			10, 11
+142			# middle - right		8, 9
+148			# lower - right			2, 7
+76			# upper - left			16, 17
+80			# middle - left			14, 15
+127			# lower - left			12, 13
+#49 - see note above	# courtyard pillars		19-25
+262		     	# 2 doors to the south		1, 3
+247			# 3 panels in south end of map	26, 27, 28

@@ -1,0 +1,2015 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Cygwin (vers 1st June 2002), see www.w3.org">
+    <title>RMB: Reject Map Builder</title>
+    <meta name="generator" content="txt2html v1.28">
+
+<style type="text/css">
+body { font: 10pt verdana; }
+h1          { font-variant: small-caps; }
+li.level1   { font-size: 12pt; }
+li.level2   { font-size: 10pt; }
+li.level3   { font-size:  9pt; }
+p           { margin-left: 1em; }
+hr			{ height: 2px; border: none; background: gray; }
+table       { margin: 5px auto 5px 2%; width: 90%; font: 8pt verdana; }
+pre         { margin: 5px auto 5px 25%; width: 90% }
+.syntax     { font: 12pt arial bold; border-style: solid none; border-color: gray transparent; padding: 5px; margin-left: 1em; margin-top: 10px; background: #eee }
+</style>
+
+  </head>
+
+  <body>
+    <center>
+      <h1>RMB: Reject Map Builder Version 2.1</h1>
+
+      <p>Software by Jens Hykkelbjerg</p>
+
+      <p>=+=+=+=+=+=+=+=+=+=+=+=<br/>
+       U S E R M A N U A L<br/>
+       =+=+=+=+=+=+=+=+=+=+=+=<br/>
+      </p>
+
+      <p>written by<br/>
+       Jens Hykkelbjerg and Steve Benner</p>
+    </center>
+
+    <a name="#section-0."/></a>
+
+    <ol start="0">
+      <li class="level1"><a href="#section-0.">CONTENTS</a></li>
+      <li class="level1"><a href="#section-1.">REJECT MAP BUILDER: SOME FAQs</a>
+
+        <ol start=1.1">
+          <li class="level2"><a href="#section-1.1.">What is RMB?</a></li>
+          <li class="level2"><a href="#section-1.2.">What is the REJECT resource?</a></li>
+          <li class="level2"><a href="#section-1.3.">What is REJECT efficiency?</a></li>
+          <li class="level2"><a href="#section-1.4.">Why use RMB? Can't any WAD editor do this?</a></li>
+          <li class="level2"><a href="#section-1.5.">I'm not a WAD designer but can I use RMB on other people's WADs?</a></li>
+          <li class="level2"><a href="#section-1.6.">Will RMB alter the way the game plays (apart from speed)?</a></li>
+          <li class="level2"><a href="#section-1.7.">Tell me more about these special effects</a></li>
+          <li class="level2"><a href="#section-1.8.">Hmmm... Interesting. What use is it, though?</a></li>
+          <li class="level2"><a href="#section-1.9.">So I can use RMB with impunity, then?</a></li>
+          <li class="level2"><a href="#section-1.10.">How do I optimise someone else's WAD safely, then?</a></li>
+          <li class="level2"><a href="#section-1.11.">How thorough is RMB?</a></li>
+          <li class="level2"><a href="#section-1.12.">Does RMB work with any WAD?</a></li>
+          <li class="level2"><a href="#section-1.13.">OK, so how do I use RMB?</a></li>
+        </ol>
+      </li>
+
+      <li class="level1">
+        <a href="#section-2.">INSTALLATION AND USE</a>
+
+        <ol>
+          <li class="level2"><a href="#section-2.1.">Installation</a></li>
+          <li class="level2"><a href="#section-2.2.">RMB Utilities</a>
+
+            <ol>
+              <li class="level2"><a href="#section-2.2.1.">DxBETTER</a></li>
+              <li class="level2"><a href="#section-2.2.2.">INSPECT</a></li>
+              <li class="level2"><a href="#section-2.2.3.">RMB</a></li>
+              <li class="level2"><a href="#section-2.2.4.">EFFECT</a></li>
+            </ol>
+          </li>
+
+          <li class="level2">
+            <a href="#section-2.3.">USING OPTIONS FILES</a>
+
+            <ol>
+              <li class="level2"><a href="#section-2.3.1.">Combining REJECT optimisation and special effects</a></li>
+              <li class="level2"><a href="#section-2.3.2.">The structure of an Options file</a></li>
+              <li class="level2"><a href="#section-2.3.3.">RMB options: a full list</a></li>
+              <li class="level2"><a href="#section-2.3.4.">Processing time implications of RMB options</a></li>
+            </ol>
+          </li>
+
+          <li class="level2"><a href="#section-2.3.">Miscellaneous</a></li>
+        </ol>
+      </li>
+
+      <li class="level1">
+        <a href="#section-3.">OPTIONS REFERENCE</a>
+
+        <ol>
+          <li class="level2"><a href="#section-3.1.">Explanation of argument types</a></li>
+          <li class="level2"><a href="#section-3.2.">Individual Option Details</a></li>
+          <li class="level2"><a href="#section-3.3.">Combining Options</a></li>
+        </ol>
+      </li>
+
+      <li class="level1"><a href="#section-4.">TROUBLESHOOTING</a></li>
+      <li class="level1"><a href="#section-5.">COPYRIGHT NOTICES, DISCLAIMER AND CONDITIONS OF USE</a></li>
+      <li class="level1"><a href="#section-6.">AUTHOR'S NOTE</a></li>
+      <li class="level1"><a href="#section-7.">ACKNOWLEDGEMENTS</a></li>
+    </ol>
+    <hr/>
+
+    <h2><a name="section-1.">1. REJECT MAP BUILDER: SOME FAQs</a></h2>
+
+    <h3><a name="section-1.1.">1.1 What is RMB?</a></h3>
+
+    <p>Reject Map Builder (RMB) is a DOS-based program designed to allow DOOM
+    users and level-designers to both optimise and customise the REJECT
+    resource associated with either their id-supplied DOOM.WAD or other
+    third-party PWAD files. This includes any DOOM 1, DOOM ][ or Heretic PWAD.</p>
+
+    <p>Using RMB can provide greatly improved playing-speed, particularly in
+    complex WADs with many monsters. The REJECT resource also provides scope
+    for the WAD designer to implement a number of special effects, to which RMB
+    provides full and easy access. The RMB package contains utilities to
+    inspect and report on REJECTs in any single- or multi-level WAD. There are
+    also a few sample WADs for DOOM 1 to demonstrate the potential of the
+    special effects which become available through the REJECT map.</p>
+
+    <h3><a name="section-1.2.">1.2 What is the REJECT resource?</a></h3>
+
+    <p>The purpose of the REJECT map within a WAD file is to tell the Doom gaming
+    engine whether or not it is feasible for a monster located in a particular
+    sector to see anything to shoot at, or attack, thereby saving the engine
+    from having to work this out for itself while a game is in progress. Within
+    the resource, the information is stored as a series of bits, which, on a
+    sector by sector basis, we may think of as a table, thus: </p>
+
+<pre>
+                    Sector the player is in
+                     0    1    2    3    4 ....       NB: Doom <em>never</em>
+                  +----------------------------           uses this table to
+  Sector the   0  |  b    b    b    b    b ....           determine what the
+   monster     1  |  b    b    b    b    b ....           PLAYER might be able
+    is in      2  |  b    b    b    b    b ....           to see.
+               3  |  b    b    b    b    b ....
+               :  |  :    :    :    :    :
+               :  |  :    :    :    :    :
+</pre>
+
+    <p>The value of each bit, b, has the meaning: (0) player's sector can be
+    seen (at least in part) from monster's sector; (1) player's sector cannot
+    be seen at all from monster's sector.</p>
+
+    <p>The following WAD map, for example:</p>
+<pre>
+    o-------------o----------------o-----------o
+    |             :                :           |      The numbers indicate
+    |      1      :       2        :     3     |      SECTORS
+    |             :                :           |
+    |             o----------------o-----------o      Dashed/solid lines are
+    |             |                                   1-sided LINEDEFs
+    |             |
+    |             |                                   Dotted lines are
+    o.............o                                   2-sided LINEDEFs
+    |             |
+    |      0      |                                   o's are VERTEXES
+    |             |
+    o-------------o
+</pre>
+
+    <p>would give rise to the following REJECT table:</p>
+<pre>
+                      (Player sector)
+                     0    1    2    3
+                  +-------------------
+               0  |  0    0    0    1
+   (Monster    1  |  0    0    0    0
+    Sector)    2  |  0    0    0    0
+               3  |  1    0    0    0
+
+</pre>
+
+    <p>which indicates that all sectors can see every other sector, with the
+    exception of sectors 0 and 3, which are not in direct line of sight of each
+    other.</p>
+
+    <p>Note that this does not mean that any monsters in sector 0, say, will
+    definitely see the player who enters sector 2: it merely means that it is
+    feasible for them to do so. Any number of factors may prevent a monster
+    from actually spotting the player during play - not all of the player's
+    sector may be visible from the monster's actual location; the monster may
+    be looking in the wrong direction and so on. In the example above, the game
+    engine will have to resolve the actual line of sight between a monster in
+    sector 0 and a player in sector 2 at game time. On the other hand, the
+    presence of a 1 in the REJECT map indicates immediately to the game engine
+    that it is <em>not</em> feasible for monsters to see from one of these sectors to
+    the other. In such cases, the engine will not bother to perform any
+    line-of-sight (los-) calculation and will move on to considering other
+    monster-occupied sectors. As los-calculations are often not trivial, any
+    such calculations that can be avoided while the game is in play will
+    improve game speed and make frame updates smoother. Obviously in the simple
+    example above, the amount of work being saved is small: the benefits during
+    play provided by this particular REJECT map are probably undetectable. For
+    large WADs with many monsters and complex geography, however, the time
+    savings that can be had from a fully optimised REJECT table may be
+    considerable and can make all the difference to the playability of the
+    level.</p>
+
+    <h3><a name="section-1.3.">1.3 What is REJECT efficiency?</a></h3>
+
+    <p>It should be obvious from the discussion above that, in general, the more
+    1's there are in the REJECT map, the greater the potential savings in
+    los-calculation time. RMB uses this simple fact to provide a rough
+    indication of the effectiveness of a WAD's REJECT map. Whenever RMB is used
+    to create or inspect a REJECT map, it will count the number of 1's in the
+    resource and then report this as a percentage of the total number of
+    entries. This so-called efficiency figure will only give a rough indication
+    of the amount of speed-up of the level attributable to the REJECT map (this
+    will obviously depend ultimately on the number and distribution of monsters
+    in the level) but for most practical WADs a high efficiency rating usually
+    means that the speed-up will be good in most areas.</p>
+
+    <h3><a name="section-1.4.">1.4 Why use RMB? Can't any WAD editor do this?</a></h3>
+
+    <p>Although it is a simple structure to understand, the calculations which are
+    needed to generate the REJECT map successfully are quite involved and can
+    be fairly time consuming, even with a fast processor. Consequently, the
+    majority of WAD editors currently available prefer not to bother about this
+    resource, concentrating instead on other areas of WAD construction. Most
+    editors simply generate an empty REJECT, (i.e. a table entirely of 0's)
+    which benefits playability not one iota. It was to address this lack that
+    RMB was written: with RMB, the Doom level developer can easily integrate
+    automatic REJECT generation into his edit/play development cycle. Or he may
+    choose to leave REJECT optimisation to the end, using RMB just on the final
+    WAD. </p>
+
+    <h3><a name="section-1.5.">1.5 I'm not a WAD designer but can I use RMB
+    on other people's WADs?</a></h3>
+    <p>You may be tempted to use RMB to try to speed up your favourite third-party
+    WAD. This is OK provided you proceed with caution, as explained below. </p>
+
+    <h3><a name="section-1.6.">1.6 Will RMB alter the way the game plays
+    (apart from speed)?</a></h3>
+    <p>The answer to this question is no.. and yes! To understand this answer, let
+    us look briefly at how the Doom engine resolves monster behaviour during
+    play. In grossly over-simplified form, the Doom monster control loop works
+    something like this:</p>
+
+<pre>
+for each monster
+  if the REJECT map says it's feasible then         &lt;-- i.e. REJECT entry of 0
+    if player is in sight then                      &lt;-- note los calculation
+      if monster is awake then                     \
+        if monster within range of player then      |
+          attack player                             |
+        else                                        |
+          move to get in range                      |
+        endif                                       |    This part
+      else                                           &gt;   skipped if player
+        wake monster                                |    cannot be seen
+      endif                                         |
+    else                                            |
+      if monster is awake then                      |
+        try to home in on player                    |
+      endif                                        /
+    endif
+  else
+    if monster is awake then                       &lt;--  Note the duplication
+      try to home in on player                     &lt;--   of this
+    endif
+  endif
+next monster
+</pre>
+
+    <p>This shows how a REJECT entry of 0 makes no difference to Doom's monster
+    decision-making: hopefully you can also see that in the cases where the
+    REJECT map contains 1's (where a los-calculation would definitely fail
+    because the two sectors are not in sight of each other) there is no
+    difference in the logic either: a los-calculation is merely avoided. Rest
+    assured, therefore, that supplying Doom with a REJECT map that has all
+    unsighted sector pairs marked will make no difference to monster behaviour
+    during game play. The only change you should see is an increase in
+    playing-speed.</p>
+
+    <p>What about the other half of the answer to our question above? How may
+    it come about that RMB can change the playing characteristics of a WAD?
+    Well, RMB is a fully featured REJECT map builder: in addition to its
+    default 'automatic' mode, RMB provides the WAD designer with full access to
+    the REJECT map, allowing individual bits to be set or cleared at will. This
+    can introduce some useful (or at least novel!) special effects which the
+    WAD designer may wish to exploit.</p>
+
+    <h3><a name="section-1.7.">1.7 Tell me more about these special
+    effects</a></h3>
+    <p>By way of an example, consider our earlier 4-sector map. Here is the REJECT
+    map that RMB would generate by default: </p>
+<pre>
+                     0    1    2    3   (Player Sector)
+                  +-------------------
+   (Monster    0  |  0    0    0    1
+    sector)    1  |  0    0    0    0
+               2  |  0    0    0    0
+               3  |  1    0    0    0
+</pre>
+
+    <p>If this table were to be altered thus:</p>
+<pre>
+                     0    1    2    3   (Player Sector)
+                  +-------------------
+   (Monster    0  |  0    0    0    1
+    sector)    1  |  0    1    0    0         &lt;- one bit changed at 1,1
+               2  |  0    0    0    0
+               3  |  1    0    0    0
+</pre>
+
+    <p>the effect would be to make monsters in sector 1 unable to see any
+    player in that sector! Under these circumstances, the effect during play
+    would be that while in sector one, the player would be immune from attack
+    by monsters in the sector with him. Note, though, that he may still be
+    attacked by monsters from other sectors. Furthermore, if he moved out of
+    sector 1, any monsters left there would then be able to see him and attack
+    him. It is important to remember that this 'blindness' of monsters is a
+    function of the sectors they occupy, not of the monsters themselves. In
+    this example, assuming monsters are not constrained from moving between
+    sectors by other factors, if the player entered sector 1 (from sector 0,
+    say) and was spotted by a monster in sector 3, that monster would wake up
+    and would start to pursue (and possibly fire at) the player. The monster
+    would move from sector 3 into 2, where it could still see the player and so
+    may continue to fire. Once it entered sector 1, however, the player would
+    'disappear' from view, as far as the gaming engine is concerned, and the
+    monster would now cease its attacks. Note from the logic presented earlier,
+    though, that the monster would continue to track the player and, of course,
+    would resume its attack as soon as either it or the player left sector 1. A
+    single bit change in the REJECT map has produced an unusual but interesting
+    behavioural change in the game.</p>
+
+    <h3><a name="section-1.8.">1.8 Hmmm... Interesting. What use is it,
+    though?</a></h3>
+    <p>We could make a couple of other changes to the map: </p>
+<pre>
+                     0    1    2    3           Note the whole of the
+                  +-------------------          player sector 1 column
+   (Monster    0  |  0    1    0    1           set to 1's.
+    sector)    1  |  0    1    0    0
+               2  |  0    1    0    0
+               3  |  1    1    0    0
+</pre>
+
+    <p>Here we have produced a map where the player is completely 'safe' in
+    sector 1: no monster anywhere can see him there. There is potential here
+    for producing 'safe havens' in areas of complete mayhem, areas where a
+    player can catch his breath before returning to the fray (provided he can
+    recognise the 'haven' and get to it, or course :-) - better than having the
+    player keep reaching for the pause key!</p>
+
+    <p>Alternatively, here:</p>
+<pre>
+                     0    1    2    3   (Player sector)
+                  +-------------------
+    (Monster   0  |  0    0    0    1
+     sector)   1  |  1    1    1    1          &lt;-- whole row set to 1's.
+               2  |  0    0    0    0
+               3  |  1    0    0    0
+</pre>
+
+    <p>we've produced a sector (1, again) which is completely 'blind'. Monsters
+    in it will not see anything in any sector. Note that although these
+    monsters will not awaken or attack if the player moves in front of them
+    (they can never see him while they remain in sector 1), they can still be
+    awakened by noises (assuming they're not flagged as deaf, of course - and
+    just what use deaf <em>and</em> blind monsters would be, I'm not sure: although
+    even those monsters will wake up if hit with shot) whereupon they will
+    start tracking the player - and will fall upon him once they are no longer
+    in sector 1! There is scope here for rooms full of sleeping monsters
+    through which a player must creep in order to find the means of disposing
+    of them.</p>
+
+    <p>These are just two examples of special effects which can be introduced
+    to a WAD by means of the REJECT map. Naturally, RMB provides simple access
+    to these and to a range of others for WAD designers - full details of each
+    effect option are given in the "<a href="#section-3.">Options Reference</a>" section of this manual.
+    You can introduce as many (or as few) such effects as you wish - none of
+    them add anything to the size of a WAD and they may even speed it up into
+    the bargain (they will certainly never slow it down any): of how many
+    things can that be said in Doom? By default, of course, RMB applies no
+    special effects at all, so that you need not worry about any such things
+    being introduced unexpectedly to your WADs.</p>
+
+    <h3><a name="section-1.9.">1.9 So I can use RMB with impunity, then?</a></h3>
+    <p>Up to a point, yes. If you are the designer of a WAD, you will of course
+    know whether your WAD needs any of the special effect settings that RMB
+    provides and you will be using RMB accordingly. If you don't want any
+    special effects, then just use RMB to optimise the REJECT table for speed
+    and away you go. If, however, you are using RMB to try to improve the
+    performance of someone else's WAD, you should proceed with caution. The
+    reason for this is that the original WAD author may have edited the REJECT
+    map to produce some special effect or other at some place in the WAD.
+    Running RMB on such a WAD will destroy the tailored REJECT and replace it
+    with a 'plain' (albeit optimised) one and the special effects will be lost.
+    This could completely destroy the functionality of the WAD. Naturally,
+    applying RMB to a WAD which already has a fully optimised REJECT map will
+    achieve nothing (but then it shouldn't do any damage, either). </p>
+
+    <h3><a name="section-1.10.">1.10 How do I optimise someone else's WAD
+    safely, then?</a></h3>
+    <p>The recommended method for using RMB with another designer's WAD (where you
+    know nothing about the REJECT map beforehand) is as follows: </p>
+
+    <p>Start by making a back-up copy of the WAD: that way it doesn't matter
+    what damage you do! Then use the RMB's INSPECT utility (described later) to
+    test the WAD for special effects. If INSPECT finds special effects it is,
+    of course, not a good idea to process the WAD with RMB, as that would
+    remove the special effects.</p>
+
+    <p>INSPECT only reports symmetry errors, so some special effects could
+    still be hiding even if INSPECT reports that there are none. If INSPECT
+    doesn't find any special effects the efficiency is reported. A reported
+    efficiency of 0 indicates that the REJECT map is empty: in all such cases,
+    RMB can be used quite safely, as there is no information in the REJECT map
+    to damage. A very low but non-zero efficiency on the other hand, (say only
+    a dozen 1's out of a few thousand) means that you probably have a WAD where
+    the author has deliberately set bits to achieve special effects but has not
+    bothered to optimise the rest of the table. It is probably best not to
+    apply RMB to such a WAD, unless you can be sure of keeping the existing 1's
+    intact. Such WADs are likely to be very rare in reality - any author so
+    REJECT-aware would almost certainly have optimised the table (unless, of
+    course, they didn't have a program as good as RMB!) In cases where INSPECT
+    reports a high efficiency there is almost certainly nothing to be gained by
+    applying RMB to the WAD. RMB may produce a higher efficiency but the
+    resulting speed difference may not be detectable and, of course, you will
+    have destroyed any special effects in the process!</p>
+
+    <h3><a name="section-1.11.">1.11 How thorough is RMB?</a></h3>
+    <p>To perform a complete check on all inter-sector lines-of-sight, in any
+    fair-sized WAD, would require a vast number of calculations. In order to
+    achieve a good working compromise between the number of absolute 'blind
+    pairs' which are located and the time taken to find them, RMB uses a number
+    of processing short-cuts of which the WAD designer needs to be aware. There
+    are options to extend RMB's processing to locate more true 'blind pairs'
+    but these are not likely to be needed very often: usually only when trying
+    to build special effects, (when it is probably easier to take full manual
+    control of the problem areas anyway,) or for WADs where you need the
+    absolute maximum amount of speed-up possible.</p> 
+
+    <p>Another point to bear in mind about RMB's methodology is that it always
+    defaults safe - by this we mean that it will, unless instructed otherwise,
+    introduce no extraneous special effects (after all, nothing spoils a WAD
+    more than monsters who don't want to play!) Once again, special processing
+    'limitations' are imposed to ensure this behaviour.</p>
+
+    <p>The first such limitation is that RMB considers only lines-of-sight in
+    the 2- dimensional plane of the WAD map: no height differences are taken
+    into consideration. This limitation is imposed for reasons of both speed
+    and safety. As you will be aware, height differences between sectors may be
+    only a temporary thing in DOOM: consider the following area of a map, seen
+    here as a side view:</p>
+<pre>
+                            4      5
+                         |------|------|        The numbers identify
+                         |         o   |        sectors;
+                         |         -\  |
+   Sector 4 is a lift in |          /\ |
+   the 'up' position. -&gt; |------|------|
+                         |      :   ^
+                         |   S  :   |
+       1       2      3  |   H  :   example player
+    |------|------|------|   A  :   position
+    |                        F  :
+    |                        T  :
+    |                           :
+    |------|------|------|......:
+</pre>
+
+    <p>Here, sectors 4 &amp; 5 are not in view from sectors 1, 2 &amp; 3 (and
+    vice versa). RMB will be unaware of this, however, as it will only consider
+    the map view:</p>
+<pre>
+    o------o------o------o------o------o
+    |      :      :      :      :      |   where every sector appears to
+    |  1   :   2  :   3  :   4  :  5   |   be able to see all others.
+    |      :      :      :      :      |
+    o------o------o------o------o------o
+</pre>
+
+    <p>This is a desirable state of affairs, because we would not wish to block
+    the line of sight between sectors 3 &amp; 4 which will exist as soon as the
+    lift descends. Similar arguments also apply either side of doors.</p>
+
+    <p>There being no mechanism for changing resources during play, the REJECT
+    table must allow for all <em>eventual</em> lines-of-sight. The only limitation
+    which results from RMB's methodology in the above example, is that the true
+    obstruction to the lines-of-sight between sectors pairs 1-5 and 2-5 will go
+    unrepresented in the REJECT map and in these particular instances, Doom
+    will have some unnecessary los-checking to do at game-time. This is a small
+    price to pay for correct monster behaviour in this area. Any time you spent
+    searching out and correcting the few sector pairs that are affected by this
+    short-coming would most likely be time wasted.</p>
+
+    <p>The other short-cut that RMB uses in order to speed up its calculations,
+    is to treat all sectors that are wholly enclosed within another sector (and
+    consequently have no 1-sided LINEDEFs) as part of the enclosing sector. In
+    most WADs, this greatly cuts down the number of sectors that RMB needs to
+    consider (inter-sector connections rising as the square of the number of
+    sectors). Think of this as processing by the 'room', rather than by the
+    sector and you'll see that it makes sense. A variety of options exist to
+    make RMB vary this short-cut to suit your individual WAD (these are
+    explained in detail in section 3 of this manual): most of the time you
+    should find that the default mode works just fine.</p>
+
+    <h3><a name="section-1.12.">1.12 Does RMB work with any WAD?</a></h3>
+
+    <p>RMB v2.0 will work with any WAD, single- or multi-level, IWAD or PWAD,
+    produced with any WAD editor, provided that a REJECT resource of the
+    correct size is present in the WAD. (Its contents are of course
+    immaterial.) RMB will work with WADs for Doom (v1.1 - 1.666), Doom2 or
+    Heretic. If you encounter a problem WAD, please contact the author (contact
+    details are at the end of this manual) with a description of the problem. </p>
+
+    <h3><a name="section-1.13.">1.13 OK, so how do I use RMB?</a></h3>
+
+    <p>Read on: the next section of this manual tells you how to install the
+    program and describes the various utilities supplied with it. After that,
+    Section 3 gives full details of the various options which can be used with
+    RMB. </p>
+
+    <h2><a name="section-2.">2. INSTALLATION AND USE</a></h2>
+
+    <h3><a name="section-2.1.">2.1 Installation</a></h3>
+
+    <p>Installation of RMB is very simple: just unpack it into its own directory
+    (you've probably done this already). You will find that apart from the main
+    RMB.EXE itself, there are a number of other .EXE utilities (these are
+    described below) as well as some .BGI files which are required for correct
+    graphical display of the map as RMB processes the WAD. There is also a
+    couple of batch files which you can use to run through all of your
+    (registered copy) Doom levels, to optimise them one by one: details below. </p>
+
+    <h3><a name="section-2.2.">2.2 RMB Utilities</a></h3>
+    <p>NOTE: When the syntax of a command is given, the follow conventions apply: </p>
+
+    <ul>
+       <li>items in square brackets are optional parameters;</li>
+       <li>items in curly brackets indicate possible choices;</li>
+	   <li> &lt;an item&gt; like this refers to a particular type of item (usually obvious);</li>
+       <li>nothing in RMB is case-sensitive.</li>
+	</ul>
+
+    <p>For example, for a command specified thus:</p>
+
+<pre>
+    EFFECT &lt;WADfile&gt; [&lt;level id&gt;] {BLIND, SAFE} {0, 1} {&lt;sector number&gt;, ALL}
+</pre>
+
+    <p>any of the following are valid:</p>
+
+<pre>
+    effect myfile.wad blind 0 22
+    effect my2file.wad E1M2 safe 1 43 (for use with Doom 1 WAD) effect
+    myfile.wad MAP02 blind 0 all (for use with Doom 2 WAD)
+</pre>
+
+    <p>(An explanation of this command is given in section 2.2.4, below.)</p>
+
+    <p>Note also that all examples assume that the commands are typed while in
+    the RMB directory. WAD designers who are likely to make heavy use of RMB
+    may wish to prepare DOS batch files to perform the necessary directory
+    switching for them: I (Steve) use a set like this:</p>
+
+	<hr/>
+    FIX.BAT                        invokes my editor with a chosen WAD<br/>
+    <p>cd waded                    (no, I don't use DEU - just call me perverse)<br/>
+    waded %1.wad<br/>
+    cd ..</p>
+    <hr/>
+    MAKEFX.BAT lets me edit my RMB option file (see below) 
+
+    <p>edit waded\%1.rej</p>
+    <hr/>
+    REJECT.BAT invokes RMB 
+
+    <p>rmb ..\waded\%1 ..\wads\%1 %2</p>
+    <hr/>
+    TRY.BAT lets me play-test the WAD 
+
+    <p>doom -file wads\%1.wad -devparm -warp %2 %3</p>
+    <hr/>
+    TRYRAW.BAT lets me play-test the version without REJECT 
+
+    <p>doom -file waded\%1.wad -devparm -warp %2 %3</p>
+    <hr/>
+
+    <p>No doubt, each developer will prefer their own.</p>
+
+    <h4><a name="section-2.2.1">2.2.1 DxBETTER</a></h4>
+
+    <p>The D1BETTER.BAT utility supplied with RMB will run through all of your
+    (registered copy) Doom1 levels, optimising them one by one. To use it, copy
+    your DOOM.WAD to your RMB directory, type D1BETTER then go and make some
+    coffee. When you have finished your cup(s) of coffee, rename your original
+    DOOM.WAD to something like DOOM.BAK, copy the new one back to the DOOM
+    directory and try it out. (Remember that when you have changed the original
+    Doom files, Id offers no support...) [If you're short on disk space (and
+    who isn't?) copy RMB.EXE to your Doom directory, make a file called
+    DOOM.REJ with a single line saying NOMAP in it and then type \RMB\D1BETTER
+    (or whatever is necessary to locate the batch file). Of course, if this
+    goes wrong, you'll have to re-install DOOM.WAD. But then you've got the
+    original disks, haven't you?] Another batch file called D2BETTER.BAT is
+    supplied to work the same wonders with the Doom2 WAD. It is used in
+    precisely the same way as D1BETTER, except that you will have time to make
+    and drink a large flask of coffee, go for a jog, wash and polish the
+    Porsche (don't worry if you don't have a Porsche right now: you may have
+    one by the time D2BETTER finishes...;-) </p>
+
+    <h4><a name="section-2.2.2.">2.2.2 INSPECT</a></h4>
+
+    <p>The INSPECT utility will report on a WAD's current REJECT map without
+    changing it. This is useful for finding out whether a third party WAD has
+    anything in its REJECT or not, prior to using RMB on it. It also can be
+    used to provide reassurance that any specific processing you requested has
+    taken effect. The statement syntax is: </p>
+
+    <div class="syntax">INSPECT &lt;WADfile&gt; [&lt;level id&gt;] [{&lt;sector number&gt;,
+    TEST}]</div>
+
+    <p>&lt;WADfile&gt; specifies the path and filename of the file to be
+    inspected. Be sure to include the .WAD file extension.</p>
+
+    <p>Use the optional &lt;level id&gt; parameter to specify the level you
+    want to inspect in a multi-level WAD. Levels are specified in the standard
+    ExMy format for Doom1 WADs, or in MAPnn form for Doom2 WADs. Omitting this
+    parameter results in just the first map in the WAD being inspected.</p>
+
+    <p>When a &lt;sector number&gt; is specified, INSPECT will report the list
+    of all sectors that are currently flagged as potentially visible from the
+    sector of interest.</p>
+
+    <p>&gt;inspect c:\wadfiles\think12.wad 2</p>
+
+    <p>Sectors visible from sector 2: 0,1,2,...</p>
+
+    <p>If no &lt;sector number&gt; is given, INSPECT will just calculate and
+    report the efficiency of the WAD's current REJECT map.</p>
+
+    <p>e.g. &gt;inspect c:\wadfiles\think12.wad</p>
+
+    <p>Efficiency: 40%</p>
+
+    <p>Instead of the sector number you can also specify TEST. In that case
+    INSPECT will test whether the REJECT map is symmetric. The REJECT map is
+    symmetric if for all sectors A that can see sector B, B can also see A.
+    Most special effects will destroy this symmetry, so the TEST option can be
+    thought of as a test for special effects. In fact, INSPECT will report
+    either <q>No special effects found</q> or <q>Special effects found</q> as a
+    result of a TEST query.</p>
+
+    <p>&gt;Inspect c:\wadfiles\think12.wad test</p>
+
+    <p>No special effects found...</p>
+
+    <h4><a name="section-2.2.3.">2.2.3 RMB</a></h4>
+
+    <p>Note: The syntax has changed since v2.1 </p>
+
+    <p>The syntax for the main REJECT Map Builder (RMB) is:</p>
+
+    <div class="syntax">RMB &lt;InputWADfile&gt; &lt;OutputWADfile&gt; [OPTIONS]</div>
+
+    <p>Where OPTIONS is a list of some of the following possible options:</p>
+<pre>
+  -EnMx           Process level EnMx
+  -MAPnn          Process level MAPnn
+  -PREPROCESS n   Preprocessing efficiency, n is one of [1..9+] (default: 4)
+  -PERFECT        Generates a perfect reject map. (Very slow)
+  -DISTANCE d     The maximum distance in map units of a line of sight.
+  -LENGTH n       The maximum length (by sector), n is one of [0..150+]
+  -DOOR n         The maximum # of doors a LOS can pass. d is one of [1..10+]
+  -NOMAP          Don't display the graphics while running.
+</pre>
+
+    <p>An interval like [3..7+] means that the value in question should be
+    larger than 3, and it can be larger than 7, but values above 7 are normally
+    not useful.</p>
+
+    <p>Example command line:<br/>
+    C:&gt; RMB mywad.wad newwad.wad -e1m1 -prepro 3 -nomap</p>
+
+    <p>If the wad only contains one level, you don't have to specify any
+    options. Just the input and output filenames are needed.</p>
+
+    <p>The input WAD filename may be the same as the output WAD filename if you
+    wish the original will be overwritten. Most WAD developers will no doubt
+    cringe at this idea and it is certainly not recommended unless you have a
+    back-up of the file. (Some people like to live dangerously, though, and who
+    are we to stop them? See the REJECT.BAT batch file above for one suggested
+    better way of doing things though.)</p>
+
+    <p>The options -EnMx and -MAPnn are the level identifiers. Using these
+    options you can specify which level in the wad you want rmb to take care of
+    (only one level can be processed each time rmb is run). If the level is not
+    specified, rmb will process the first level in the wad.</p>
+
+    <p>Doom1 example: &gt;rmb c:\wadfiles\starwar2.wad mystar2.wad -e1m2
+    (Processes e1m2 from starwar2.wad; saves the result in mystar2.wad).</p>
+
+    <p>Doom2 example: &gt;rmb doom2.wad doom2.wad -MAP13 (Processes map 13 of
+    doom2.wad).</p>
+
+    <p>All the other command line options are equivalent to options that can be
+    used in the .REJ option file. See section 2.3.3 for more information about
+    these options.</p>
+
+    <p>During the processing of a WAD, a map of the level being processed is
+    shown on the screen, with the number of the sector currently being
+    processed given in the top left corner of the screen, together with the
+    total number of sectors to process in the level. The map may look a little
+    different from the view of the WAD that you are used to seeing: all 2-sided
+    LINEDEFs appear initially in blue with a selection of 1-sided LINEDEFs in
+    white. As the program looks at each sector in turn and works round all the
+    sector's 2-sided LINEDEFs, lines on the map will turn red (to show that
+    they're being processed) and then cyan (when finished). From the current
+    (red) LINEDEF, it will be possible to see other 2-sided LINEDEFs. The first
+    of these out from the sector being processed will show yellow on the
+    display for a while, finally turning magenta as processing on it completes.
+    As the program progresses, there should always be a red and a yellow line,
+    showing where the program is currently processing los-calculations. The
+    sector count will rise steadily: processing finishes when all sectors have
+    been examined.</p>
+
+    <p>When processing is complete, the program will create the specified WAD
+    file, writing the new REJECT map to it, along with the rest of the WAD's
+    resources. The final efficiency of the REJECT will be reported, and RMB
+    will beep to let you know that it has finished (and drag you away from your
+    coffee drinking).</p>
+
+    <h4><a name="section-2.2.4.">2.2.4 EFFECT</a></h4>
+
+    <p>The EFFECT command allows simple special effects to be applied to WAD files
+    through the REJECT map. </p>
+
+    <p>The syntax of the EFFECT command is:</p>
+
+    <div class="syntax">EFFECT &lt;WADfile&gt; [&lt;Level id&gt;] {SAFE, BLIND} {0,1}
+    {&lt;sector number&gt;, ALL}</div>
+
+    <p>Once again, don't forget the .WAD file extension to the &lt;WADfile&gt;
+    parameter.</p>
+
+    <p>The optional &lt;Level id&gt; is either a Doom1 episode and mission
+    number like E2M3, or a Doom2 map number like MAP03. EFFECT will process the
+    specified map or, if none is specified, the first level in the WAD.</p>
+
+    <p>The SAFE option makes sectors safe, as described in section 1.8 above.
+    As long as a player is in a safe sector, he can't be seen: monsters won't
+    wake up or attack. The other available effect is BLIND: this blinds a
+    sector so that monsters in it will be prevented from seeing the player,
+    wherever he might be.</p>
+
+    <p>The parameter immediately following the SAFE or BLIND keyword specifies
+    the degree of safety or blindness that the EFFECT command will produce.
+    Currently only 0 or 1 are supported here. Their meanings are:</p>
+
+<pre>
+ SAFE: (0) : Sector is completely safe: no sector has sight of it.
+       (1) : Sector is safe only from other sectors: monsters within it can
+             see the player.
+ BLIND (0) : Sector is completely blind: no sectors can be seen from it,
+             player cannot be seen in it.
+       (1) : Sector is blind only to other sectors: monsters within it can see
+             the player in it.
+</pre>
+
+    <p>In all four cases above, you can use ALL instead of the sector number
+    for the last parameter. With a degree setting of 0, this will make all
+    sectors totally safe (or blind - there is no distinction between the two,
+    the table being filled with 1's either way): all monsters will be total
+    pacifists. A degree setting of 1 creates a level full of near-sighted
+    monsters, who will only notice players in the same sector as
+    themselves.</p>
+
+    <p>Making all monsters blind will make for a very dull game but it may be
+    useful for play-testing a WAD, to check, for instance that all monsters are
+    placed correctly (but do remember that noises will wake them up and cause
+    them to move around) or to see what the absolute maximum REJECT speed-up of
+    the WAD would be like.</p>
+
+    <p>Although this command is quite powerful, it is really only intended as a
+    quick way of applying the occasional special effect. For more comprehensive
+    application of special effects, as well as specialist processing, it is
+    recommended that the RMB command be used, in conjunction with an options
+    file: see the next section.</p>
+
+    <p>Remember also that if you use the RMB command on a WAD after it has been
+    EFFECTed, you will remove all of the added effects! (Most editors will
+    happily do this for you too!)</p>
+
+    <h3><a name="section-2.3.">2.3 USING OPTIONS FILES</a></h3>
+
+    <h4><a name="section-2.3.1.">2.3.1 Combining REJECT optimisation and
+    special effects</a></h4>
+    <p>So far, we have demonstrated the use of RMB to optimise a WAD's REJECT
+    table and have presented the utility EFFECT, which introduces special
+    effects to a WAD via its REJECT resource. For some users, the simple
+    application of these utilities as described above will be sufficient. For
+    the serious WAD developer, however, the more convenient and powerful
+    approach will be to utilise RMB options files during WAD development. These
+    allow full control of RMB's optimisation methodology, as well as complete
+    'manual' access to the REJECT resource. RMB does not need to be invoked in
+    any special way to make use of an options file: all you need to do is
+    create a text file containing the options you wish to apply, making sure
+    that it is located in the same directory and has the same name as the WAD
+    file you wish to process but with the extension .REJ. So, to apply a set of
+    RMB options to MYLEVEL.WAD located in your \NEWWADS directory, saving the
+    new, processed WAD in your \REJWADS directory, you would create an options
+    file MYLEVEL.REJ in \NEWWADS and issue the command: </p>
+
+    <p>&gt;rmb \newwads\mylevel.wad \rejwads\mylevel.wad</p>
+
+    <p>RMB will automatically notice your \NEWWADS\MYLEVEL.REJ file and apply
+    it.</p>
+
+    <h4><a name="section-2.3.2.">2.3.2 The structure of an Options
+    file</a></h4>
+
+    <p>Note: The way RMB reads the option file has changed since v 2.0</p>
+
+    <p>RMB options files do not need to have a particular structure beyond
+    being straightforward ASCII text files, with a single RMB option statement
+    on each line (empty lines are permitted). Options can be entered in upper
+    or lowercase. Options can appear in the file in any order: the only
+    exception being that options intended for particular levels in multi-level
+    WADs must be grouped together under a heading for that level. The first
+    part of the file before the first level identifier contains the default
+    options, which RMB will always use.</p>
+
+    <p>A sample .REJ options file should make this clearer (full details of the
+    RMB options used in this example are given in the next section of this
+    manual):</p>
+
+    <p><strong>MYWAD.REJ:</strong><br/>
+<pre>
+    # This is an example of a multilevel options file, for use with
+    MYWAD.WAD.
+
+    # The first lines are the defaults.
+     # These options will always be used.
+
+    length 17
+     Distance 800
+
+    # Now comes the options used to process E1M1:
+
+    E1M1
+     # ^ This marks the end of the defaults, and the beginning # of the options
+    that apply to e1m1. # Use MAPxx for options to levels in Doom2 WADs
+
+    Left 311
+     Right 217
+
+    E1M2
+     # ^ Here end the options for episode 1 mission 1: # options for episode 1
+    mission 2 begin.
+
+    Length 14
+     # ^ This option overrides the LENGTH option in the defaults section. #
+    Read the section <q>Overriding options</q> later. Report 14
+     Block 23 56
+
+    E1M1
+     # ^ Here the options for E1M1 take over again.
+
+    INCLUDE (4) (6)
+    EXCLUDE (2) (3)
+
+    # If RMB is called with a mission that is not in the options # file
+    (e.g. "e1m3" here), only the default options at the beginning of # the file
+    are used.
+
+    # ==END OF OPTIONS==
+</pre>
+
+    <p>To summarise: if you want to apply different options to different levels
+    in a multilevel WAD, you must divide your <q>wad_filename.rej</q> option
+    file into sections started by a line containing nothing but the level id.
+    For WADs containing only one level, you can just use the default options
+    without worry.</p>
+
+    <h4><a name="section-2.3.3.">2.3.3 RMB options: a full list</a></h4>
+    <p>As explained earlier, in its default operation, RMB tries to maintain a
+    balance between complete optimisation of the REJECT map and the time taken
+    to locate blind pairs, while at the same time preserving the behavioural
+    integrity of the WAD. The use of an RMB options file permits the designer
+    to vary RMB's processing, in order to achieve greater or lesser degrees of
+    optimisation, or produce particular special effects. A full list of the
+    available options, with a short explanation of the function of each, is
+    given below. Detailed descriptions of the operation of each option (ordered
+    alphabetically) is left to the next section. </p>
+
+    <p>NOTE: Options marked with &amp; gained new syntax in v2.1.
+      Options marked with + are new to v2.1.
+      No options require the PERFECT option to function correctly any more.
+      Options marked with ! can cause problems in combination with PREPROCESS.</p>
+
+<pre>
+   #          Marks a comment line in the option file
++  BAND       Makes <q>bands</q> of blindness/ safety
+&amp;! BLIND      Makes sector(s) blind (or partially so)
+   BLOCK      Stops monsters seeing through a pair of specified lines
+   DISTANCE   Specifies how far (on the ground) monsters can see generally
+   DOOR       Specifies the max. # of doors monsters can see through generally
+   EnMy       Marks start of options for a particular Doom1 level
+&amp;  EXCLUDE    Forces exclusion of view from one sector to another
++  GROUP      Merges sectors into one. (Sectors get the same REJECT maps)
+&amp;  INCLUDE    Forces inclusion of view from one sector to another
+&amp;  INV BLIND  Makes sector(s) long-sighted
+&amp;  INV SAFE   Makes sector(s) invisible to close monsters (but not far ones)
+   LEFT       Makes a 2s line one-way see-through (from left to right)
+ ! LENGTH     Specifies how far (by sector) monsters can see generally
+   LINE       Makes a 2s line impossible to look through for monsters
+   MAPxx      Marks start of options for a particular Doom2 map
+&amp;  NODOOR     Marks sector(s) as not being a door [used only with DOOR option]
+   NOMAP      Removes the graphical display; reports progress as dots instead
++  NOPROCESS  Only applies special effects; no processing done. Very fast.
+   ONE        Same as BLOCK, but only operates in one direction
+   PERFECT    Generates a perfect REJECT map: forces processing of all sectors
++  PREPROCESS Groups sectors to gain processing speed. (The efficiency drops)
+&amp;  PROCESS    Forces processing of specified sector(s)
+   REPORT     Reports all detected distances &gt;= DISTANCE setting to file
+   RIGHT      Makes a 2s line one-way see-through (from right to left)
+&amp;! SAFE       Makes sector(s) invisible to far monsters
++  TRACE      For debugging only: use is not recommended
+</pre>
+
+    <p>INV is short for INVERT. Any option can be abbreviated to its shortest
+    unique form. If you wish SAFE can be abbreviated S, as no other options
+    start with S. Equivalently PREPROCESS can be abbreviated PRE, but not PR as
+    PROCESS also starts with PR.</p>
+
+    <h4><a name="section-2.3.4.">2.3.4 Processing time implications of RMB
+    options</a></h4>
+    <p>Because many of these options alter RMB's processing methodology, their use
+    will have implications for the time taken by RMB to build the REJECT map.
+    Below is a list of all the options, graded by their effect on the program's
+    processing speed. </p>
+
+    <p>These options speed RMB up (greatest first):</p>
+
+<pre>
+    NOPROCESS [&lt;Wadfile&gt; [&lt;Level id&gt;]]
+    PREPROCESS &lt;Number&gt;
+    LENGTH     &lt;Distance&gt;
+    DISTANCE   &lt;Map distance&gt;
+    DOOR       &lt;Number&gt;
+    GROUP      &lt;Sector&gt; &lt;Sector list&gt;
+    BLIND      &lt;Distance&gt; &lt;Sector list&gt;
+    LINE       &lt;Line no&gt;
+    LEFT       &lt;Line no&gt;
+    RIGHT      &lt;Line no&gt;
+    BLOCK      &lt;Line no&gt; &lt;Line no&gt;
+    ONE        &lt;Line no&gt; &lt;Line no&gt;
+</pre>
+
+    <p>These options have no effect on speed:</p>
+
+<pre>
+    # &lt;Comment&gt;
+    EnMy
+    MAPxx
+    NOMAP
+    INCLUDE    &lt;Sector&gt; &lt;Sector&gt;
+    EXCLUDE    &lt;Sector&gt; &lt;Sector&gt;
+    SAFE       &lt;Distance&gt; &lt;Sector list&gt;
+    INV SAFE   &lt;Distance&gt; &lt;Sector list&gt;
+    INV BLIND  &lt;Distance&gt; &lt;Sector list&gt;
+    BAND {SAFE, BLIND} &lt;Distance&gt; &lt;Distance&gt; &lt;Sector list&gt;
+    INV BAND {SAFE, BLIND} &lt;Distance&gt; &lt;Distance&gt; &lt;Sector list&gt;
+</pre>
+
+    <p>These options cause RMB to slow down (greatest last):</p>
+
+<pre>
+    REPORT     &lt;Distance&gt;
+    NODOOR     &lt;Sector list&gt;
+    PROCESS    &lt;Sector list&gt;
+    TRACE      &lt;Sector list&gt;
+    PERFECT
+</pre>
+
+    <p>Bear in mind that the longer RMB works, the greater the final efficiency
+    of the REJECT table (and the better the final speed-up) is likely to be.
+    Nevertheless, there will come a point where the additional return will not
+    be worth the extra effort.</p>
+
+    <h3><a name="section-2.4.">2.4 Miscellaneous</a></h3>
+
+    <p>A few example WADs are supplied with the RMB package. Take a look at the
+    .REJ files, and play the WADs to get some idea about what RMB can do. Not
+    all possible uses has been covered in these WADs, but they give some idea
+    about what RMB is all about. The WADs are all very small, so you won't be
+    able so notice any speedup. As a rule of thumb, you need a WAD with more
+    than 200 sectors and lots of monsters before you start feeling the
+    speedup.</p>
+
+    <h2><a name="section-3.">3. OPTIONS REFERENCE</a></h2>
+
+    <h3><a name="section-3.1.">3.1 Explanation of argument types</a></h3>
+    <p>The following terms are used to describe the arguments which RMB options
+    take: </p>
+
+	<table>
+	  <tr>
+		<td>&lt;Comment&gt;</td><td>  Any text, terminated by end-of-line.</td>
+	  </tr>
+	  <tr>
+		<td>&lt;Distance&gt;</td><td> A distance, measured in sectors, including the specified
+			   sector, so that 0 means "no distance", 1 means "this sector only",
+			   2 means "this and all immediately adjacent sectors" and so on.</td>
+	  </tr>
+	  <tr>
+		<td>&lt;Line no&gt;</td><td> The identification number of a 2-sided LINEDEF bordering
+			   two different sectors. e.g. a line with the 2s bit set and two
+			   sidedefs that point to two different sectors. You will find the
+			   linedef number in your WAD editor. (If yours won't tell you,
+			   you're using the wrong one!)</td>
+	  </tr>
+	  <tr>
+		<td>&lt;Map distance&gt;</td><td> Distance as measured in Doom map co-ordinates.
+			   Opinions vary as to how this equates to distance in the real world: a
+			   good rule of thumb seems to be 1 map unit is equivalent to 2cm.</td>
+	  </tr>
+	  <tr>
+		<td>&lt;Number&gt;</td><td> A positive integer.</td>
+	  </tr>
+	  <tr>
+		<td>&lt;Sector&gt;</td><td> The identification number of a SECTOR, determined from a
+			   WAD editor.</td>
+	  </tr>
+	  <tr>
+		<td>&lt;Sector list&gt;</td><td> A list of &lt;sectors&gt;, separated from each other
+			   by spaces and surrounded by brackets. e.g. (1 2 5 7 9)</td>
+	  </tr>
+	</table>
+
+    <h3><a name="section-3.2.">3.2 Individual Option Details</a></h3>
+    <p>This section contains full details of the operation of each RMB option,
+    arranged in alphabetical order: </p>
+
+    <div class="syntax"># [Comment] Syntax: # &lt;Comment&gt;</div>
+
+    <p>Lines in the options file which start with a # character are regarded by
+    RMB as comment lines: the entire line will be ignored. Comments are
+    terminated by an end of line and may contain any characters whatsoever. Use
+    comments in your options file to remind yourself of what you are trying to
+    achieve in the file, or to temporarily disable options in the file without
+    deleting them.</p>
+
+    <div class="syntax">BAND Syntax: BAND {BLIND, SAFE} &lt;From&gt; &lt;To&gt; &lt;Sector list&gt;</div>
+
+    <p>(The &lt;From&gt; and &lt;To&gt; part of this option are both distances
+    by sector).</p>
+
+    <p>The BAND option is more complicated than the SAFE and BLIND options. If
+    you haven't read about those yet maybe you should do that, and return here
+    later.</p>
+
+    <p>The BAND option is used to create <q>bands</q> of blindness (or of
+    safety). Each sector in the &lt;Sector list&gt; is processed separately
+    with all sectors lying between &lt;From&gt; and &lt;To&gt; sectors away
+    marked as BLIND to (or SAFE from) the sector being processed.</p>
+
+    <p>Applied to this map:</p>
+<pre>
+    o----o----o----o----o----o----o----o----o
+    |    :    :    :    :    :    :    :    |
+    | 1  : 2  : 3  : 4  : 5  : 6  : 7  : 8  | (a ':' marks a 2s line)
+    |    :    :    :    :    :    :    :    | (The numbers are sector numbers)
+    o----o----o----o----o----o----o----o----o
+</pre>
+
+    <p>the option</p>
+
+    <p><strong>BAND BLIND 3 5 (1 2)</strong></p>
+
+    <p>will create two bands of blind sectors: all of those between 3 and 5
+    sectors from sector 1; and those the same distance from sector 2. In this
+    example, this means that monsters in sector 1 will be unable to see players
+    in sectors 3, 4 or 5; similarly, monsters in sector 2 will be blind to
+    players in 4, 5 or 6. Note that the sectors at the &lt;To&gt; and
+    &lt;From&gt; distances are included in the band.</p>
+
+    <p>The option</p>
+
+    <p><strong>BAND SAFE 2 3 (1 2)</strong></p>
+
+    <p>will create the same bands of sectors as before but will mean that a
+    player in sector 1 or 2 will be safe from monsters in the appropriate
+    band.</p>
+
+    <p>Any BAND option can also be inverted:</p>
+
+    <p><strong>INVERT BAND SAFE</strong></p>
+
+    <p>will make the specified sectors safe from anything outside the band;
+    and</p>
+
+    <p><strong>INVERT BAND BLIND</strong></p>
+
+    <p>will make the specified sectors blind to anything outside the band. For
+    instance, using:</p>
+
+    <p><strong>INVERT BAND BLIND 2 3 (1 2)</strong></p>
+
+    <p>will cause monsters in sectors 1 and 2 unable to see anything outside
+    the band, making sector 1 able to see only sectors 3, 4 and 5, whereas
+    sector 2 will be able to see sectors 4, 5 and 6 but nothing else.</p>
+
+    <div class="syntax">BLIND Syntax: BLIND &lt;Distance&gt; &lt;Sector list&gt;</div>
+
+    <p>This is a similar option to the BLIND parameter in the EFFECT utility
+    but with rather more flexible usage. It turns all of the sectors in the
+    &lt;sector list&gt; blind for the specified &lt;distance&gt;. A value of 0
+    for &lt;distance&gt; will produce a sector in which monsters can see
+    nothing at all. A &lt;distance&gt; of 1 prevents monsters from seeing out
+    of the sector. With &lt;distance&gt; 2, monsters can see their own sector
+    and all immediately neighbouring sectors, and so on.</p>
+
+    <p>Applied to this map:</p>
+<pre>
+    o----o----o----o----o----o----o----o----o
+    |    :    :    :    :    :    :    :    |
+    | 1  : 2  : 3  : 4  : 5  : 6  : 7  : 8  | (a ':' marks a 2s line)
+    |    :    :    :    :    :    :    :    | (The numbers are sector numbers)
+    o----o----o----o----o----o----o----o----o
+</pre>
+
+    <p>the option</p>
+
+    <p><strong>BLIND 3 (5 7)</strong></p>
+
+    <p>will allow monsters in sector 5 to see up to 3 sectors each way
+    (counting their own sector) i.e. sectors 3, 4, 5, 6 and 7 but not sectors
+    1, 2 or 8. In addition, monsters in sector 7 get to see into sectors 5, 6,
+    7 and 8, but not sectors 1, 2, 3 or 4.</p>
+
+    <p>This option is useful if you want to restrict monsters' viewing range in
+    certain areas, to allow for low light intensities, perhaps; or just to
+    prevent them from waking too soon.</p>
+
+    <p>The BLIND option can be prefixed by the option INV as below:</p>
+
+    <p><strong>INV BLIND 1 (2 3 4)</strong></p>
+
+    <p>While BLIND (without INV) makes monsters near-sighted or totally blind,
+    inverting this with INV BLIND makes monsters LONG-sighted. This means that
+    a monster in any of the sectors specified in &lt;sector list&gt; will only
+    be able to see sectors <em>beyond</em> the specified &lt;distance&gt;. This means
+    that where BLIND 1 &lt;sector list&gt; makes the monsters in one of the
+    specified sectors unable to see anything but their own sector, INV BLIND 1
+    &lt;sector list&gt; will make them unable to see their own sector, but
+    quite capable of seeing all sectors beyond it.</p>
+
+    <p>There may be occasions when you want to prevent a sector from seeing
+    other sectors within a range of distances, say between 2 and 4 sectors
+    distant. RMB allows you to achieve this effect by combining the BLIND and
+    INV BLIND options in the following way: if you specify both INV BLIND and
+    BLIND options for any particular sector(s) and the value you specify as the
+    distance for the INV BLIND option is greater than that for the BLIND
+    option, then RMB will blind the specified sector(s) from only those sectors
+    located where the two distances overlap. For example, if you use</p>
+
+    <p><strong>INV BLIND 4 1</strong><br/>
+    <strong>BLIND 2 1</strong></p>
+
+    <p>RMB interprets this to mean "make sector 1 blind to only those sectors
+    which are closer than 4 but further away than 2". Note that this is a
+    specific exception to the general rules about the combination of options
+    which are set out in the next section.</p>
+
+    <p>An easier way of making the same would be to use the BAND option (BAND
+    BLIND 2 4 &lt;Sector list&gt;).</p>
+
+    <p>In cases where BLIND and INV BLIND options affect the same sector and
+    the INV BLIND distance is the smaller of the two, standard combination
+    rules apply:</p>
+
+    <p><strong>INV BLIND 2 1</strong><br/>
+    <strong>BLIND 4 1</strong></p>
+
+    <p>will be interpreted as "make sector 1 blind to sectors closer than 2 and
+    to sectors further away than 4". Here, each option is applied just as would
+    be expected. The same thing can again be achieved by</p>
+
+    <p>INV BAND BLIND 2 4 &lt;Sector list&gt;</p>
+
+    <div class="syntax">BLOCK Syntax: Block &lt;Line no&gt; &lt;Line no&gt;</div>
+
+    <p>This option sets a block to any los-calculation that attempts to pass
+    through <em>both</em> of the specified &lt;Line no&gt;'s. The ability to set such
+    blocks is provided to compensate for RMB's over-cautious treatment of
+    vertical differences between sectors (remember that it ignores height
+    changes in its own los-calculations). Recall our earlier lift shaft? With
+    the lift in the 'down' position, it looks like this (in side view):</p>
+<pre>
+                            4      5
+                         |------|------|        Plain numbers identify
+                         |         o   |        sectors;
+                         |         -\  |
+                         |          /\ |        Sector 4 is a lift in
+                         |      |------|        the 'down' position.
+                         |      |   ^
+                         |      |   |
+       1       2      3  |      |   example player
+    |------|------|------|      |   position
+    |                           |
+    |                           |
+    |                           |
+    |------|------|------|------|
+          #0     #1     #2     #3      &lt;- These numbers identify 2-s
+</pre>
+
+    <p>LINEDEFs</p>
+
+    <p>Because of the relative floor and ceiling heights, sectors 1 and 2
+    cannot see sector 5 or vice versa. RMB cannot work this out from the level
+    map, however, which looks like this:</p>
+<pre>
+    o------o------o------o------o------o
+    |      :      :      :      :      |
+    |  1   :   2  :   3  :   4  :  5   |   where every sector appears to
+    |     #0     #1     #2     #3      |   be able to see all others.
+    |      :      :      :      :      |
+    o------o------o------o------o------o
+</pre>
+
+    <p>If you want RMB to know about this particular blocked line-of-sight,
+    you'll need to tell it. In this case, the block is between line #1 and line
+    #3 (i.e. nothing to the left of #1 can see anything to the right of #3 and
+    vice versa) and you would use the option</p>
+
+    <p><strong>BLOCK 1 3</strong></p>
+
+    <p>As already mentioned, hunting through your WADs for blocks such as this
+    just to gain some playing speed is unlikely to pay off. The BLOCK option is
+    useful for chopping short particularly long lines of sight, such as those
+    identified for you by the REPORT option (see below); or for handling those
+    areas where you want to make absolutely sure (as in the example above) that
+    monsters don't see more than is good for them (or good for you, at any
+    rate!)</p>
+
+    <p>[You may be interested to know that the Doom game engine does not seem
+    to know too much about vertical blocks such as these either: if you'd like
+    to see an example, check out the accompanying RMBTESTS.ZIP].</p>
+
+    <p>Obtain the &lt;Line no&gt; identification of the lines you wish to BLOCK
+    from your WAD editor.</p>
+
+    <p>Note that for a BLOCK to be successfully specified with this option,
+    both of the specified lines must be on inter-sector boundaries. Internal
+    lines, acting as triggers or monster-blockers, cannot be specified, as they
+    occupy only one sector and the REJECT map only contains information about
+    intersector sight-lines. If you need to set a block at a particular line
+    within a sector, you will need to divide the sector into additional sectors
+    using your WAD editor, before applying RMB.</p>
+
+    <div class="syntax">DISTANCE Syntax: DISTANCE &lt;Map distance&gt;</div>
+
+    <p>The DISTANCE option allows you to set a limit on how far monsters can
+    see generally, in the WAD you are processing: sectors further apart than
+    the specified distance will not be able to see each other (subject to some
+    conditions, set out below). DISTANCE is similar in operation to the LENGTH
+    option, but it takes a distance parameter specified in Doom map units,
+    rather than sectors: this is usually the better way to limit the lines of
+    sight.</p>
+
+    <p>The distance being specified is the maximum distance by which you want
+    sectors in sight of each other to be separated. It is important to realise,
+    however, that RMB will not start to check on whether or not to apply any
+    DISTANCE limitation until the sectors being examined are three or more
+    sectors removed from each other, thus:</p>
+<pre>
+    o------o------o------o------o------o----------o--
+    |      :      :      :      :      :          :
+    |  1   :   2  :   3  :   4  :  5   :     6    :  7
+    |      :      :      :      :      :          :
+    o------o------o------o------o------o----------o--
+           &lt;------d4-----&gt;                d4 = distance between sector 1 &amp; 4
+           &lt;----------d5--------&gt;         d5 = distance between sector 1 &amp; 5
+           &lt;--------------d6-----------&gt;     etc.
+</pre>
+
+    <p>Here, sector 1 will be marked as seeing sectors 2 and 3 regardless of
+    any DISTANCE option setting. Along any sight-line from sector 1 (and there
+    is only one here), subsequent sectors will be considered until the
+    inter-sector distance (here d4, d5, d6 etc.) exceeds the value specified in
+    the DISTANCE option. Sectors within the distance are within sight, those
+    further away are marked as being out of sight. In the above example, if we
+    take each dash (-) on the map to equate to 10 Doom map units, then the
+    distances between sector 1 and all of the other sectors shown are:</p>
+
+    <p>d4: 140<br/>
+     d5: 210<br/>
+     d6: 280<br/>
+     d7: 390 etc.</p>
+
+    <p>If the option</p>
+
+    <p><strong>DISTANCE 300</strong></p>
+
+    <p>was specified for this level, then sector 1 would be able to see all
+    other sectors as far as sector 6. Sector 7, however, would be too far away
+    and consequently would be marked as out-of-sight. A DISTANCE setting of 130
+    would prevent sector 1 from seeing as far as sector 4. There is no setting
+    of this option that you could use to prevent sector 1 from seeing sectors 2
+    or 3.</p>
+
+    <p>To gain some feel for how far any distance setting actually is, bear in
+    mind that a normal door is 128 units wide. Another good rule of thumb,
+    which many designers use, is that one Doom (horizontal) unit equates to
+    about 2cm in the real world. A setting of</p>
+
+    <p><strong>DISTANCE 1000</strong></p>
+
+    <p>would therefore prevent monsters from seeing between any sectors that
+    were more than (approx.) 20 (virtual) metres apart at their closest point
+    (provided there were at least two sectors in between).</p>
+
+    <p>Use this command to increase the efficiency of the REJECT map, by
+    preventing monsters from seeing great distances. Don't use it, of course,
+    if you have areas of your WAD that rely for effect on monsters being able
+    to see long distances: like in E2M3 of DOOM.WAD, for example.</p>
+
+    <p>Take care also not to confuse this option with LENGTH.</p>
+
+    <div class="syntax">DOOR Syntax: DOOR &lt;Number&gt;</div>
+
+    <p>This option makes RMB attempt to recognise sectors which are doors and
+    then adjust the REJECT table to prevent monsters from seeing through more
+    than the specified &lt;number&gt; of doors at any one time.</p>
+
+    <p>The option is provided to allow an increase in the REJECT map efficiency
+    by utilising the fact that it is usually hard for monsters to see through a
+    long string of doors (more than 4 or 5, say) because they are unlikely ever
+    to all be open at the same time. Choose the value with care: 5 is usually
+    safe; 3 can be: you may have to experiment to find the best setting for
+    your WAD. Remember that monsters can open some doors. Remember too that
+    during Death Match or Co-operative play there may be up to four players all
+    capable of opening doors simultaneously. (I didn't say it was likely, I
+    merely said it could happen!)</p>
+
+    <p>Sectors are identified as doors by RMB if they have their floor and
+    ceiling heights set to the same value. If you have sectors set this way
+    that you don't want RMB to treat as a door for the purposes of sight-line
+    blocking (because it stays open, for example), you can use the NODOOR
+    option (see below) to tell RMB which sectors to ignore.</p>
+
+    <div class="syntax">EXCLUDE Syntax: EXCLUDE &lt;Sector list1&gt; &lt;Sector list2&gt;</div>
+
+    <p>This option allows you to specifically exclude particular inter-sector
+    lines of sight. Its action is to make it impossible for monsters in any of
+    the sectors in &lt;Sector list1&gt; to see any of the sectors in &lt;Sector
+    list2&gt;. Note that EXCLUDE operates only in one direction (affecting just
+    a single bit in the REJECT map for each sector pair) and that it overrides
+    ALL other option settings for the specified sight-line.</p>
+
+    <p>EXC can be used to make small adjustments after the wider application of
+    other options, or to make minor modifications to a REJECT table. It is
+    particularly useful for setting small 'safe' areas within larger rooms. The
+    option:</p>
+
+    <p><strong>EXCLUDE (1 2) (4 5)</strong></p>
+
+    <p>will exclude all the LOS pairs: (1,4) (1,5) (2,4) and (2,5).</p>
+
+    <div class="syntax">GROUP Syntax: GROUP &lt;Sector&gt; &lt;Sector list&gt;</div>
+
+    <p>The group option is used to make RMB consider multiple sectors as one.
+    When the following option is used:</p>
+
+    <p><strong>GROUP 5 (2 4 7)</strong></p>
+
+    <p>sectors 2, 4, 5 and 7 will be considered by RMB to be one big sector.
+    This will speed up RMB, as it now only needs to process one sector in the
+    place of four! The only disadvantage is that the efficiency of the
+    generated REJECT map might drop. If, for instance, in the above example
+    only sector 4 is able to see sector 6, this will be copied, resulting in
+    sectors 5, 2 and 7 having a zero in the REJECT map at position 6, too.
+    Thus, the number of bits set will drop by three. Provided only neighbouring
+    sectors are grouped, this loss of efficiency should be very small. Whether
+    you notice this or not in the final WAD will obviously depend upon the
+    number and distribution of monsters and the layout of sectors.</p>
+
+    <p>Once sectors have been GROUPed using this option, they will be treated
+    as one sector for all of RMB's processing. Options cannot be applied to
+    individual members of the group, with the exception of the INCLUDE and
+    EXCLUDE options.</p>
+
+    <p>If you want to apply special effects to the group as a whole, you must
+    refer to the single sector into which you have grouped all of the others.
+    This is the number specified in the single &lt;Sector&gt; parameter: 5, in
+    the example above.</p>
+
+    <p>This can be used when you want multiple sectors to be able to see
+    exactly the same things. If for instance sectors 2, 4, 5 and 7 are ambush
+    spots, and you want the monsters in these sectors to wake up when the
+    player enters sector 10, you can give the following options:</p>
+<pre>
+        GROUP 5 (2 4 7)
+        BLIND 0 (5)
+        INCLUDE 5 10
+</pre>
+
+    <p>This will do the trick: the only thing seen from sectors 2, 4, 5 and 7
+    now will be sector 10. As a further example of the processing of grouped
+    sectors, consider the following options:</p>
+<pre>
+        GROUP 5 (2 4 7)
+        BLIND 1 (5)
+</pre>
+
+    <p>Here BLIND 1 means that the grouped sector 5 will be able to see itself,
+    but what does that mean? It means that all the sectors in the group: i.e.
+    sector 2 can see sectors 2, 4, 5 and 7.</p>
+
+    <div class="syntax">INCLUDE Syntax: INCLUDE &lt;Sector list&gt; &lt;Sector list&gt;</div>
+
+    <p>This option allows you to force particular sight-lines to be examined by
+    the game engine at game-time. It marks it as feasible for monsters in the
+    first &lt;Sector list&gt; to see a player in any of the second &lt;Sector
+    list&gt;, no matter what all the other options say. INCLUDE overrides all
+    other options except EXCLUDE. The option:</p>
+
+    <p><strong>INCLUDE (1 2) (5 6)</strong></p>
+
+    <p>Will include the following LOS in the REJECT map: (1,2) (1,5) (2,5) and
+    (2,6).</p>
+
+    <p>It can be used to make special effects like this:</p>
+
+    <p>Blind a sector completely with BLIND 0. Put a lot of monsters in it,
+    then make a platform in sight of the blinded sector. Use the INC option to
+    make the monsters able to see the platform and nothing else. If it is
+    difficult for the player to see from the platform to the blinded sector,
+    the player will be surprised when he is suddenly attacked...</p>
+
+    <p>"I stepped onto the platform and took the key. There was no sound of
+    doors opening, so I was home free... suddenly, the room was flying with
+    fireballs. Where the &lt;censored&gt; did those imps come from?"</p>
+
+	<div class="syntax">INVERT BAND     Syntax: INVERT BAND BLIND &lt;From&gt; &lt;To&gt; &lt;Sector list&gt;<br/>
+	                        INVERT BAND SAFE &lt;From&gt; &lt;To&gt; &lt;Sector list&gt;</div>
+
+    <p>See the BAND option for details of the INVERT BAND option.</p>
+
+    <div class="syntax">INVERT BLIND/SAFE Syntax: INV BLIND &lt;Distance&gt; &lt;Sector list&gt;<br/>
+                              INV SAFE &lt;Distance&gt; &lt;Sector list&gt;</div>
+
+    <p>See BLIND and SAFE for details of the INVERT option.</p>
+
+    <div class="syntax">LEFT Syntax: LEFT &lt;Line no&gt;</div>
+
+    <p>This option makes a two-sided LINEDEF, specified through its &lt;Line
+    no&gt;, into a line through which monsters can only see from its left side.
+    This option is useful if you have a wall (or curtain) that has a solid
+    texture on one side but not on the other and you want monsters to respond
+    logically to it. (Normally, monsters can see through all 2-sided LINEDEFs,
+    irrespective of their textures.)</p>
+
+    <p>Note that for this option to be applied successfully, the specified line
+    must be on an inter-sector boundary. Internal lines cannot be specified: if
+    you need to apply this type of block to a particular line within a sector,
+    you will need to divide the sector into additional sectors along this line
+    using your WAD editor, before applying RMB.</p>
+
+    <div class="syntax">LENGTH Syntax: LENGTH &lt;Distance&gt;</div>
+
+    <p>The LENGTH option allows you to set a limit on how far (in terms of
+    sectors) monsters can see generally: sectors further apart than the
+    specified distance will not be able to see each other. The &lt;Distance&gt;
+    limit is the number of 2- sided LINEDEFs through which monsters can
+    see.</p>
+
+    <p>Use this command to increase the efficiency of the REJECT map by
+    preventing monsters from seeing too many sectors ahead. Use it with care,
+    however. A setting of 20 is often safe: any lower may make monsters behave
+    strangely - if you want your monsters to be able to see from the top to the
+    bottom of a flight of stairs, for instance, you must allow sufficient
+    sectors in the LENGTH option to cover the entire staircase. For most WADs,
+    the DISTANCE option gives better (more realistic) results.</p>
+
+    <div class="syntax">LINE Syntax: LINE &lt;Line no&gt;</div>
+
+    <p>This option makes it impossible for monsters to see through a 2-sided
+    line at all. This is useful if you have such a line with texture on both
+    sides, so that the player can't see through it. Normally monsters can see
+    through <em>any</em> 2-sided line: with this option you can prevent them from
+    doing so.</p>
+
+    <p>Note that for this option to be applied successfully, the specified line
+    must be on an inter-sector boundary. Internal lines cannot be specified: if
+    you need to apply this type of block to a particular line within a sector,
+    you will need to use your WAD editor to divide the sector into additional
+    sectors along this line, before applying RMB.</p>
+
+    <div class="syntax">NODOOR Syntax: NODOOR &lt;Sector list&gt;</div>
+
+    <p>This option allows you to specify which sectors should not be considered
+    to be doors, when processing the DOOR option. (See DOOR for details.)
+    Obviously, there is only any point specifying sectors that could be
+    mistaken for doors (by virtue of them having their floor and ceiling at the
+    same height).</p>
+
+    <p>RMB does not consider doors unless the DOOR option is used, so the
+    NODOOR option does nothing unless a DOOR option is in effect.</p>
+
+    <div class="syntax">NOMAP Syntax: NOMAP </div>
+
+    <p>This option instructs RMB not to display the graphical view of the level
+    being processed. Instead, the number of the sector being processed is
+    shown, followed by a dot as each sector adjacent to the current sector is
+    processed. In effect, a new dot is printed each time a line would have
+    changed to yellow on the map display.</p>
+
+    <p>It takes <em>exactly</em> the same time to process a wad in the graphics mode
+    as it takes in the text mode.</p>
+
+    <p>When NOMAP is used you can start the program without being in the same
+    directory as RMB.</p>
+
+    <div class="syntax">NOPROCESS Syntax: NOPROCESS [&lt;Wadfile&gt; [&lt;Level id&gt;]] </div>
+
+    <p>The NOPROCESS option allows you to add just a few special effects to
+    your WAD's REJECT map, without having to wait for RMB to complete all other
+    line-of-sight calculations. You can use this option if you only want to add
+    special effects and are not interested in optimising the REJECT, or if you
+    want to add some more effects to a WAD that has already been optimised.</p>
+
+    <p>If you specify NOPROCESS, the only other options that will have any
+    effect are:</p>
+
+    <p>INCLUDE, EXCLUDE, BLIND 0/1, SAFE 0/1 and GROUP</p>
+
+    <p>The NOPROCESS options is provided for reasons of speed. If all you want
+    to do is to add a few simple special effects, and you don't want to
+    optimise the REJECT structure NOPROCESS will do the job for you.</p>
+
+    <p>If NOPROCESS is used with no arguments, your source WADfile's
+    current</p>
+
+    <p>REJECT map is loaded as the starting basis of the remaining option
+    processing.</p>
+
+    <p>If you specify a &lt;WADfile&gt; for this option, the starting REJECT
+    will be read from this file, rather than your source WAD. It makes no sense
+    at all to load a REJECT map from a WAD that is not related to your source
+    WAD, of course. If the REJECT map in the specified file is not of the
+    correct size, this option will be ignored and the whole WAD processed from
+    scratch.</p>
+
+    <p>RMB works much faster with the NOPROCESS option turned on. The only
+    problem is that the REJECT map will not be optimised in any way. The only
+    thing that happens is that the special effects will be added. If you have
+    just built the REJECT map and you find that you need just one more INCLUDE
+    for your special effect to work, specifying NOPROCESS might be the thing to
+    do!</p>
+
+    <p>If you are working with a (big!) WAD and want to use RMB every time you
+    have made changes, you could make a batch file like this:</p>
+
+    <p>EDITOR thefile.WAD<br/>
+     RMB thefile.WAD tmp.wad<br/>
+     DOOM -file tmp.wad</p>
+
+    <p>Maybe you would also like to run a nodebuilder, in which case you just
+    run it before RMB. (Some nodebuilders destroy the REJECT map). In your
+    option file you can now specify:</p>
+
+    <p>NOPROCESS tmp.wad</p>
+
+    <p>This means that the REJECT map previously built and saved in tmp.wad
+    will be loaded and used to apply RMB's special effects quickly. It is a
+    little dangerous to use this scheme, as RMB will not be able to detect a
+    change in the WAD, if the number of sectors hasn't changed. If you have
+    moved some lines around changing the sector pairs that can see each other,
+    maybe you should rebuild the REJECT map. Rebuilding can easily be achieved
+    by deleting the <q>tmp.wad</q> file, or by renaming it. That would force
+    RMB to rebuild from scratch the next time you run the batch file.</p>
+
+    <p>For multilevel WAD's you might need to provide the NOPROCESS option with
+    the extra &lt;level id&gt; parameter. For example if you are editing a doom
+    2 multilevel wad this might make sense:</p>
+
+    <p>NOPROCESS tmp.wad MAP03</p>
+
+    <div class="syntax">ONE Syntax: ONE &lt;Line #1&gt; &lt;Line #2&gt;</div>
+
+    <p>Whereas BLOCK blocks a line-of-sight both ways across two specified
+    lines, the ONE option sets a block in one direction only: from &lt;Line
+    #1&gt; to &lt;Line #2&gt;. This is useful in areas where you would
+    ordinarily use a BLOCK option, but you know that there is already some
+    other one-way block in operation (a RIGHT or LEFT, say) somewhere between
+    the two BLOCK lines, making RMB's further blocking of both directions
+    superfluous. Reducing such extraneous operations will increase the speed of
+    RMB's processing.</p>
+
+    <p>Note that for a block to be successfully specified with this option,
+    both of the lines must be on inter-sector boundaries. Internal lines, which
+    act just as triggers and monster-blockers, cannot be specified: if you need
+    to set a block at a particular line within a sector, you will need to use
+    your WAD editor to divide the sector into additional sectors along that
+    line, before applying RMB.</p>
+
+    <div class="syntax">PERFECT Syntax: PERFECT </div>
+
+    <p>Ordinarily, RMB will treat all sectors that are totally enclosed within
+    another sector as part of the enclosing sector (provided they have no
+    1-sided LINEDEFs). In most WADs, this greatly cuts down the number of
+    sectors that RMB needs to consider. It also leads to a less than perfect
+    REJECT map: use the PERFECT option to prevent RMB from taking this
+    processing short-cut and make it consider all sector-to-sector sight-lines.
+    Be prepared for long processing times, however, if you have a large
+    WAD.</p>
+
+    <p>Note that from v2.0 of RMB, all sectors referenced in a SAFE, BLIND,
+    BLOCK, ONE, LEFT, RIGHT or PROCESS option will be processed, regardless of
+    whether PERFECT has been specified or not. However, sectors that are
+    internal to the sectors referenced in the SAFE or BLIND options will not be
+    treated separately from their enclosing sector, unless PERFECT has been
+    specified or PROCESS has been used for these specific sectors. If you don't
+    use PERFECT or PROCESS, any sector specified as SAFE, say, will have all
+    its internal sectors marked safe as well. Don't be tempted to use PERFECT
+    just to prevent the SAFE and BLIND options from working in this way over a
+    small area, especially if you are processing a larger WAD. You will add a
+    large processing over-head to prevent only a small number of unwanted
+    effects: it is better to identify the areas which will be treated
+    incorrectly (to your way of thinking) and force their inclusion in RMB's
+    processing with a PROCESS option (see below). Using PERFECT on large WADs
+    can add considerably to RMB's processing time for very little gain in
+    REJECT efficiency.</p>
+
+    <p>You may find it beneficial to think in terms of rooms, rather than
+    sectors when planning and applying your special effects: in the default
+    mode of operation (i.e. without PERFECT) if you apply the SAFE option to a
+    sector that encloses other sectors (a room), you will make all the
+    'decorational' sectors in that room safe too: this is usually what is
+    wanted. Consider this room, for example:</p>
+<pre>
+  Sector 12 is main room;
+      :                                    :      v. low light levels
+      :   o.......o       o.....o   o...o  :
+      :   :       :       :     :   :   :  :      sectors 13, 14, 15 are
+      :   :       :       :  14 :   : 7 :  :      platforms in the room
+      :   :   13  :       o.....o   o...o  :      also at v. low light
+      :   :       :   12                   :      levels;
+  10  :   :       :       o.....o   o...o  : 11
+      :   o.......o       :     :   :   :  :      sectors 7, 8 are
+      :                   :  15 :   : 8 :  :      areas brightly lit.
+      :                   :     :   o...o  :
+      o.....o             o.....o          :
+      :  9  :                              :      sector 9 = high ledge
+   ---o-----o------------------------------o---
+</pre>
+
+    <p>You may decide that because the room is very dark, the player should not
+    be seen there easily and you would like it to be safe from attack from
+    monsters who aren't in it: in sectors 10 &amp; 11, for instance, or off to
+    the east and west, somewhere. You would therefore use the option SAFE 1 12.
+    Without PERFECT, the resulting REJECT table looks like this:</p>
+<pre>
+                        PLAYER
+           7   8   9  10  11  12  13  14  15     Note that all other bits in
+        +-------------------------------------   the player sector columns
+    7   |  0   0   0   0   0   0   0   0   0       7, 8, 12, 13, 14 &amp; 15
+ M  8   |  0   0   0   0   0   0   0   0   0            will be 1's.
+ O  9   |  1   1   0   0   0   1   1   1   1
+ N 10   |  1   1   0   0   0   1   1   1   1
+ S 11   |  1   1   0   0   0   1   1   1   1
+ T 12   |  0   0   0   0   0   0   0   0   0
+ E 13   |  0   0   0   0   0   0   0   0   0
+ R 14   |  0   0   0   0   0   0   0   0   0
+   15   |  0   0   0   0   0   0   0   0   0
+</pre>
+
+    <p>You should be able to see that this makes all sectors inside sector 12
+    (as well as sector 12 itself) safe from attack from monsters outside the
+    room. [Note that the platform, sector 9, has not been included in the room
+    here: it has a 1-sided LINEDEF, as well as a connection with another sector
+    and therefore is not an enclosed sector.] Within the 'room' (i.e. the main
+    sector and all its enclosed sectors), though, monsters can see
+    everything.</p>
+
+    <p>If the PERFECT option had been specified, on the other hand, the REJECT
+    map would have looked like this:</p>
+<pre>
+                        PLAYER
+           7   8   9  10  11  12  13  14  15
+        +-------------------------------------
+    7   |  0   0   0   0   0   1   0   0   0    Note: all other bits in
+ M  8   |  0   0   0   0   0   1   0   0   0     player sector 12 will
+ O  9   |  0   0   0   0   0   1   0   0   0           be 1's.
+ N 10   |  0   0   0   0   0   1   0   0   0
+ S 11   |  0   0   0   0   0   1   0   0   0
+ T 12   |  0   0   0   0   0   0   0   0   0
+ E 13   |  0   0   0   0   0   1   0   0   0
+ R 14   |  0   0   0   0   0   1   0   0   0
+   15   |  0   0   0   0   0   1   0   0   0
+</pre>
+
+    <p>Notice that here none of the enclosed sectors act as part of the larger
+    'room' any more: no longer are they safe (from anything, anywhere) and
+    monsters in them will behave oddly, in that they can no longer fire into
+    the main sector.</p>
+
+    <p>By and large, you will usually find that the default operation of RMB
+    (i.e. without PERFECT) will give more 'desirable' handling of the SAFE and
+    BLIND special effects.</p>
+
+    <p>If you then want certain enclosed areas not to inherit the general level
+    of safety of the overall room, use a PROCESS option to prevent it. (See
+    below)</p>
+
+    <div class="syntax">PREPROCESS Syntax: PREPROCESS &lt;number&gt;</div>
+
+    <p>If you think RMB is slow, PREPROCESS is the option for you. PREPROCESS
+    will group neighbouring sectors almost at random. The number you specify is
+    the maximum number of sectors you want in one such group. The reason for
+    grouping sectors is to gain processing speed. A setting of</p>
+
+    <p><strong>PREPROCESS 2</strong></p>
+
+    <p>means that RMB only needs to process half as many sectors. When there is
+    no option file found, RMB applies a default preprocessing with 4 sectors in
+    every group. This causes RMB v 2.1 to become a lot faster than v 2.0, as
+    this type of preprocessing was not performed by version 2.0. Naturally
+    grouping like this can cause some troubles for your special effects, so the
+    default preprocessing is disabled when an option file is detected and it is
+    left up to you to decide if it's safe to PREPROCESS. It is always safe to
+    use PREPROCESSing when you don't use any options with a length (by sector)
+    parameter above 1. This means that</p>
+
+    <p><strong>BLIND 1 (2 3)</strong></p>
+
+    <p>is OK to use together with PREPROCESS, but</p>
+
+    <p><strong>SAFE 2 (2 3)</strong></p>
+
+    <p>isn't (because 2 is used as a length by sector parameter).</p>
+
+    <p>Note that the options LENGTH, SAFE and BLIND are the ones that specify
+    loslengths by sector. You need to use<br/>
+    PREPROCESS with care in conjunction with these options.</p>
+
+    <div class="syntax">PROCESS Syntax: PROCESS &lt;Sector list&gt;</div>
+
+    <p>This option forces RMB to process fully the sectors specified in the
+    &lt;Sector list&gt;, regardless of whether they happen to be contained
+    wholly within another sector or not. The option is designed to force
+    processing in areas where you are applying special effects, where you wish
+    to prevent the grouping of enclosed sectors with their surrounding sector,
+    or where you need rigorous optimisation of the REJECT map. Naturally, its
+    use is entirely superfluous if you also use the PERFECT option.</p>
+
+    <p>In the example room used to demonstrate the PERFECT option above, it
+    would make sense for the player to come under fire from monsters outside
+    the room if he stepped into the brightly lit areas (sectors 7 and 8),
+    because he would now become more visible. To achieve this, simply use
+    PROCESS 7 8 in the options file: this will result in RMB processing these
+    two sectors separately from the rest of the room. In effect, the bit
+    settings for sectors 7 &amp; 8 shown in the second of the two REJECT maps
+    (the PERFECT version) will be substituted for those shown in the earlier
+    map, and the player will now be open to attack from all monsters while in
+    the two brightly-lit areas of our room. Of course, this will also mean that
+    monsters in sectors 7 &amp; 8 will now no longer be able to see into the
+    main 'room' (because these sectors have no been processed as if they were
+    separate from it). If you don't think that monsters in these sectors will
+    be dazzled by the extra light and would like them to be able to fire into
+    the room, you'll need to use a couple of INC options to override this
+    aspect of the PROCESS effect.</p>
+
+    <div class="syntax">REPORT Syntax: REPORT &lt;Distance&gt;</div>
+
+    <p>If this option is used, a file with the same name as the WAD file but
+    with the extension .RPT is generated. After the execution of RMB, this file
+    will contain a list of all sector pairs that are separated from each other
+    by a distance in excess of that specified (measured in sectors) and are
+    also in line of sight of each other. This is useful for the identification
+    of areas where sight-lines would seem to be excessively long. In practice,
+    such lines of sight are more than likely blocked by differences of floor
+    and ceiling height, or by several doors. The REPORT file will then help you
+    identify suitable places to apply a BLOCK.</p>
+
+    <p>Using a REPORT &lt;distance&gt; factor greater than any distance
+    specified in a LENGTH option would be a waste of time, as RMB will already
+    have applied a BLOCK itself. It is often a good idea, though, to use REPORT
+    and LENGTH together, with the same &lt;distance&gt; value. A value around
+    20 is generally a good one to use (although see comments on LENGTH values,
+    above.)</p>
+
+    <div class="syntax">RIGHT Syntax: RIGHT &lt;Line no&gt;</div>
+
+    <p>This option works exactly as LEFT, except that it allows monsters to see
+    through the line from its right side only. See LEFT for details.</p>
+
+    <div class="syntax">SAFE Syntax: SAFE &lt;Distance&gt; &lt;Sector list&gt;</div>
+
+    <p>This option operates much as the SAFE parameter in the EFFECT command,
+    but with rather more flexible usage. The &lt;Distance&gt; parameter allows
+    you to specify how close (in sectors, of course) monsters must be in order
+    to see into the specified sector(s). Distance is reckoned exactly the same
+    way as for the BLIND option: SAFE 0 indicates that a sector is only safe
+    from within itself; SAFE 1 sets a sector that is unsighted from all of its
+    neighbours but can be seen by monsters actually in the sector, and so
+    on.</p>
+
+    <p>The SAFE option can be prefixed by the option INVERT as here:</p>
+
+    <p><strong>INVERT SAFE 1 (2 3 4)</strong></p>
+
+    <p>This option allows you to specify sectors which are safe from the
+    attention of monsters <em>within</em> the specified &lt;distance&gt; but which
+    will still suffer attacks from monsters further away. Because it is in the
+    nature of monsters to always try to move closer to the player, this will
+    have the effect that the monsters will disable themselves as they move
+    closer to INVERT SAFE sector(s)!</p>
+
+    <p>INV SAFE and SAFE can be combined to cover ranges of distances, in the
+    same way as INV BLIND and BLIND: see the BLIND option for more details.</p>
+
+    <div class="syntax">TRACE Syntax: TRACE &lt;Sector list&gt;</div>
+
+    <p>The use of this option is not recommended. It is mainly used for
+    debugging purposes, to see if RMB processes correctly. TRACE only works
+    when the graphic is enabled, and it displays the LOS being processed. Every
+    time the user presses a key, RMB takes another step in its processing. This
+    is very slow, so don't use it unless you are very interested in the way RMB
+    works. While tracing, the available memory is displayed in the top left
+    corner (the number to the right of the three numbers).</p>
+
+    <h3><a name="section-3.3.">3.3 Combining Options</a></h3>
+
+    <p>Most RMB options can be applied quite independently of other options. It is
+    possible, however, for conflicting options to be specified for individual
+    sectors and it is important to understand how RMB resolves these conflicts.</p>
+    
+
+    <p>In cases where an attempt is made to apply the same option to any
+    particular sector in different ways, as here, for example:</p>
+
+    <p><strong>SAFE 2 3</strong><br/>
+    <strong>SAFE 0 3</strong></p>
+
+    <p>it is only the last version that is applied. In this example, the SAFE 2
+    3 option is never used. This is the only case where the order of options in
+    an options file is significant.</p>
+
+    <p>Generally, if different options are applied to the same sector in such a
+    way as to produce a conflict, both options will be applied fully with any
+    losblocks created by one of the options preserved, whatever the other
+    options say.</p>
+
+    <p>In this example:</p>
+
+    <p><strong>SAFE 1 3</strong><br/>
+    <strong>BLIND 0 3</strong></p>
+
+    <p>the BLIND option will blind sector 3 from itself despite the SAFE option
+    implying that it shouldn't. Reversing these two options in the options file
+    would make no difference to the resulting REJECT map.</p>
+
+    <p>There are a number of specific exceptions to this general rule:</p>
+
+    <p>I. the BLIND and INV BLIND options can be combined in a special way to
+    produce 'bands' of blindness: this occurs when the distance parameter
+    supplied to INV BLIND exceeds that supplied to BLIND. See the description
+    of the BLIND option for details. From version 2.1 it is now possible to do
+    the same thing with the BAND option, which is recommended.</p>
+
+    <p>II. the SAFE and INV SAFE options can be combined in the same way as
+    BLIND and INV BLIND: see the description of the SAFE option for
+    details.</p>
+
+    <p>III. the BAND SAFE option overrides any other SAFE option for the sector
+    in question. And BAND BLIND overrides any other BLIND option for the
+    sector. But BLIND or SAFE can't override BAND BLIND/SAFE
+    (respectively).</p>
+
+    <p>IV. the INC option overrides all other options, except EXC.</p>
+
+    <p>Sometimes it is a good thing to be able to override options. If you have
+    an option file for a multilevel WAD with a general part containing a few
+    general options, you can override some of the general options in the
+    specific level parts. Options that can be overridden are:</p>
+
+    <p><strong>BAND, BLIND, DISTANCE, DOOR, LENGTH, NOPROCESS, PREPROCESS,
+    REPORT, SAFE.</strong></p>
+
+    <p>This means that if you apply</p>
+
+    <p><strong>SAFE 0 (1 2 3)</strong><br/>
+    <strong>SAFE 1 (3 4 5)</strong></p>
+
+    <p>The safe parameter for sector 3 will be overridden, and sector 3 becomes
+    SAFE 1</p>
+
+    <p>The BAND &lt;SAFE/BLIND&gt; option must NOT be used in conjunction with
+    a &lt;SAFE/BLIND&gt; option for the same sector. The following is
+    illegal:</p>
+
+    <p><strong>BAND BLIND 2 4 (3 5)</strong><br/>
+    <strong>INV BLIND 0 (1 5)</strong></p>
+
+    <p>Here a BLIND option is used twice for sector 5, which can cause
+    surprising effects, as BLIND is not supposed to be combined with BAND BLIND
+    for the same sector! (The same applies to SAFE).</p>
+
+    <p>BAND BLIND can, of course, be combined with SAFE and vice versa (as well
+    as for the same sector)</p>
+
+    <h2><a name="section-4.">4. TROUBLESHOOTING</a></h2>
+    <hr/>
+
+    <h3><a name="section-4.1.">RMB won't run</a></h3>
+
+    <p>Check that you have given the right path to the RMB.EXE, and that the
+    file you are trying to process exists. If RMB still doesn't run try to make
+    an option file for your WAD, with only one option: NOMAP. An option file
+    like that will simplify the way RMB executes, and maybe it will run.</p>
+
+    <p>Also RMB might not run if your WAD has more than 1200 sectors. The
+    precise upper bound before RMB get memory problems is unknown because WADs
+    with more than 1000 sectors are rare. If you suspect that RMB has memory
+    problems try the TRACE &lt;Sector list&gt; option to see how much free
+    memory is left.</p>
+
+    <h3><a name="section-4.2.">RMB doesn't display the graphics</a></h3>
+
+    <p>This is normally because RMB can't find the .BGI files needed, or
+    because the .BGI files doesn't work with your graphics card. In the first
+    case try to set the environment variable RMB:</p>
+
+    <p>set RMB=c:\RMBdir<br/>
+    (Or wherever you want to store the BGI files)</p>
+
+    <p>If RMB still won't display the graphics, you might as well make an
+    option file with the NOMAP option in it, and get the ASCII output
+    instead.</p>
+
+    <h3><a name="section-4.3.">The troubleshooting section doesn't help me
+    with my problem</a></h3>
+
+    <p>Send me a mail! My internet address is: hykkelbj@daimi.aau.dk. My snail
+    mail address is:</p>
+<pre>
+        Jens Hykkelbjerg
+        Haslehoejvej 5 b
+        8210 AArhus V.
+        Denmark (DK)
+</pre>
+
+    <p>But who wants to waste money on snail mail?</p>
+
+    <h2><a name="section-5.">5. COPYRIGHT NOTICES, DISCLAIMER AND CONDITIONS
+    OF USE</a></h2>
+    <p>This program is copyright of its author, Jens Hykkelbjerg. This
+    documentation is copyright of its authors Jens Hykkelbjerg and Steve
+    Benner.</p> 
+
+    <p>Doom and Doom 2 are Id software products, and are not free of
+    charge.</p>
+
+    <p>The credit for any WADs mentioned in this text goes to the respective
+    authors.</p>
+
+    <p>This program and its documentation is supplied completely free of
+    charge. The program and its documentation may be freely distributed,
+    providing that it is intact and has not been modified in any way. The
+    program, documentation or parts thereof may NOT be used for commercial
+    purposes or financial gain or be included in commercial packages (including
+    shareware releases). You may not charge for handling or distributing this
+    program, its documentation of any part thereof.</p>
+
+    <p>The author accepts no responsibility for ANYTHING that may happen as a
+    result of using this software. If your computer mutates into something
+    large, pink and savage, that's your problem.</p>
+
+    <h2><a name="section-6.">6. AUTHORS' NOTES</a></h2>
+    <p>This software was written by Jens Hykkelbjerg: email: jensh@cybernet.dk </p>
+
+    <p>I was a student on The University of Aarhus when I wrote RMB. Today I
+    work at a Danish Company called TeleDanmark. RMB was inspired by a
+    discussion on the Doom-editing list (long may it run) and written entirely
+    from scratch using Borland's Turbo Pascal 6.0.</p>
+
+    <p>I use different editors, ZenNode and WinTex for my own WADs. I recommend
+    the use of a rule checker like the one in DEU5.21 before using this
+    program!</p>
+
+    <p>The manual was written by Jens Hykkelbjerg and Steve Benner: email
+    S.Benner@lancaster.ac.uk</p>
+
+    <p>Steve is a computer support officer for the Environmental Science Dept
+    at Lancaster University, UK. He has been playing computer simulations for
+    more years than he likes to admit. He uses WADED for his WADs but wouldn't
+    want to start an argument over it!</p>
+
+    <h2><a name="section-7.">7. ACKNOWLEDGEMENTS</a></h2>
+    <p>"The Unofficial Doom Specs" was a great help in the production of this
+    program: without it, this program could never have been written. </p>
+
+    <p>Thanks also to Steve Benner for mangling, mutilating and generally
+    hacking this manual into its current form: if it's too long now, blame him.
+    Send any moans, grumbles or suggestions for improvement that you may have
+    about the documentation to him: email: S.Benner@lancaster.ac.uk</p>
+    <hr/>
+    Jens Hykkelbjerg / Steve Benner<br/>
+    25 Jan 95
+  </body>
+</html>
+

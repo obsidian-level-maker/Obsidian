@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="Author" content="Marc Rousseau">
+    <title>REJECT Comparision Utility</title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="up" href="index.html" title="Up">
+    <link rel="next" href="RMB.html" title="Zennode RMB support">
+    <link rel="prev" href="bspinfo.html" title="BSP Information Utility">
+    <link rel="first" href="Overview.html" title="ZenNode overview">
+    <link rel="last" href="Custom.html" title="Customizing ZenNode">
+  </head>
+
+  <body>
+
+    <center>
+      <h1>compare</h1>
+      by <a href="mailto:zennode@mrousseau.org">Marc Rousseau</a>
+      <p class="hide"><b>NOTE:</b> This page is designed to use CSS styles - you may want to upgrade your browser.</p>
+    </center>
+
+    <br/>
+
+    <h2>Background</h2>
+
+    <div class="boxtext">
+
+      <p>When I first started working on adding REJECT support into ZenNode, I needed some way to compare one REJECT map to another. It's easy to fire up DOOM and tell if you have a problem with the BSP tree, but errors in the REJECT map are much more subtle. I needed a way to compare a good REJECT map (like a <q>PERFECT</q> REJECT from <a href="manual.html">RMB</a>) to the one built by ZenNode.</p>
+
+    </div>
+
+    <h2>Description</h2>
+
+    <div class="boxtext">
+
+      <p><b>compare</b> is a simple utility to compare two REJECT maps and display any differences between them. The command line syntax is similar to that of ZenNode except that two .wad files must be specified. After loading each .wad file, the list of levels in each file si compared and for each matching level, the REJECT maps are compared and the results displayed.</p>
+
+      <p><em>NOTE:</em> The REJECT map itself may not always use all the bits in the last byte of the structure. When making the comparison, <b>compare</b> will ignore any unused bits. What does this mean? Nothing, just though you might like to know.</p>
+
+    </div>
+
+  </body>
+
+</html>
