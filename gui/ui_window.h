@@ -40,6 +40,8 @@ class UI_MainWin : public Fl_Double_Window
 public:
 	// main child widgets
 
+//	UI_Menu *menu_bar;
+
 	UI_Game   *game_box;
 
 	UI_Build  *build_box;

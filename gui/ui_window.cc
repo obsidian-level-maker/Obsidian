@@ -61,7 +61,7 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
 UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	Fl_Double_Window(W, H, title)
 {
-	// only vertically resizable
+
 	size_range(W, H, 0, 0);
 
 	callback((Fl_Callback *) main_win_close_CB);
@@ -74,6 +74,8 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	int TOP_H   = kf_h(228);
 	int BOT_H   = H - TOP_H - 4;
+
+//	menu_bar = new UI_Menu(0,0, W, 30);
 
 	game_box = new UI_Game(0, 0, LEFT_W, TOP_H);
 
@@ -117,7 +119,7 @@ void UI_MainWin::CalcWindowSize(int *W, int *H)
 void UI_MainWin::Locked(bool value)
 {
 	game_box  ->Locked(value);
-	build_box ->Locked(value);
+//	build_box ->Locked(value);
 	left_mods ->Locked(value);
 	right_mods->Locked(value);
 }

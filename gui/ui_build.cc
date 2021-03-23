@@ -26,7 +26,7 @@
 #include "main.h"
 
 
-#define ABORT_COLOR  fl_color_cube(3,1,1)
+//#define ABORT_COLOR  fl_color_cube(3,1,1)
 
 #define PROGRESS_FG  fl_color_cube(3,3,0)
 #define PROGRESS_BG  fl_gray_ramp(10)
@@ -42,23 +42,23 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	status_label[0] = 0;
 
 
-	int button_w = W * 0.35;
-	int button_h = kf_h(30);
-	int button_x = X + kf_w(16);
+//	int button_w = W * 0.35;
+//	int button_h = kf_h(30);
+//	int button_x = X + kf_w(16);
 
 
 	int mini_w = W * 0.42;
 	int mini_h = mini_w;
-	int mini_x = button_x + button_w + kf_w(24);
+	int mini_x = kf_w(24);
 	int mini_y = Y + kf_h(28);
 
 	mini_map = new UI_MiniMap(mini_x, mini_y, mini_w, mini_h);
 	resizable(mini_map);
 
 
-	int cy = mini_y - button_h/2;
+	int cy = mini_y;
 
-	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
+/*	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
 		StringPrintf("     %s @-3>", _("Menu")));
 	misc_menu->selection_color(WINDOW_BG);
 
@@ -67,13 +67,13 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	misc_menu->add(_("Addon List"),    FL_F+3, menu_do_addons);
 	misc_menu->add(_("Set Seed"),      FL_F+5, menu_do_edit_seed);
 	misc_menu->add(_("View Logs"),     FL_F+6, menu_do_view_logs);
-	misc_menu->add(_("Config Manager"),FL_F+9, menu_do_manage_config);
+	misc_menu->add(_("Config Manager"),FL_F+9, menu_do_manage_config);*/
 
 
-	cy = mini_y + mini_h / 2 - (button_h+4) / 2;
+//	cy = mini_y + mini_h / 2 - (button_h+4) / 2;
 
 
-	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
+/*	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
 	build->labelfont(FL_HELVETICA_BOLD);
 	build->labelsize(FL_NORMAL_SIZE + 2);
 	build->callback(build_callback, this);
@@ -84,12 +84,12 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, _("Quit"));
 	quit->callback(quit_callback, this);
-	quit->shortcut(FL_COMMAND + 'q');
+	quit->shortcut(FL_COMMAND + 'q');*/
 
 
 	/* --- Status Area --- */
 
-	cy = cy + button_h + kf_h(16);
+//	cy = cy + button_h + kf_h(16);
 
 
 	int pad = kf_w(14);
@@ -202,19 +202,19 @@ void UI_Build::resize(int X, int Y, int W, int H) {
 this->mini_map->EmptyMap();
 }
 
-void UI_Build::Locked(bool value)
+/*void UI_Build::Locked(bool value)
 {
 	if (value)
 	{
-		misc_menu->deactivate();
+//		misc_menu->deactivate();
 		build->deactivate();
 	}
 	else
 	{
-		misc_menu->activate();
+//		misc_menu->activate();
 		build->activate();
 	}
-}
+}*/
 
 
 //----------------------------------------------------------------
@@ -324,7 +324,7 @@ void UI_Build::SetStatus(const char *msg)
 }
 
 
-void UI_Build::SetAbortButton(bool abort)
+/*void UI_Build::SetAbortButton(bool abort)
 {
 	if (abort)
 	{
@@ -346,7 +346,7 @@ void UI_Build::SetAbortButton(bool abort)
 
 		build->labelfont(FL_HELVETICA_BOLD);
 	}
-}
+}*/
 
 
 void UI_Build::ParseSteps(const char *names)
@@ -441,7 +441,7 @@ void UI_Build::DisplaySeed(double value)
 
 //----------------------------------------------------------------
 
-void UI_Build::build_callback(Fl_Widget *w, void *data)
+/*void UI_Build::build_callback(Fl_Widget *w, void *data)
 {
 	if (main_action == 0)
 	{
@@ -491,7 +491,7 @@ void UI_Build::menu_do_view_logs(Fl_Widget *w, void *data)
 void UI_Build::menu_do_manage_config(Fl_Widget *w, void *data)
 {
 	DLG_ManageConfig();
-}
+}*/
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

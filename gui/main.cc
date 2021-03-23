@@ -596,7 +596,7 @@ bool Build_Cool_Shit()
 	if (main_win)
 	{
 		main_win->Locked(true);
-		main_win->build_box->SetAbortButton(true);
+		main_win->game_box->SetAbortButton(true);
 		main_win->build_box->SetStatus(_("Preparing..."));
 		main_win->build_box->DisplaySeed(next_rand_seed);
 	}
@@ -638,7 +638,7 @@ bool Build_Cool_Shit()
 	if (main_win)
 	{
 		main_win->build_box->Prog_Finish();
-		main_win->build_box->SetAbortButton(false);
+		main_win->game_box->SetAbortButton(false);
 
 		main_win->Locked(false);
 	}
