@@ -164,7 +164,7 @@ OB_ENGINES["boom"] =
 {
   label = _("BOOM Compat"),
 
-  priority = 99,  -- this makes it top-most, and the default engine
+  priority = 98,  -- this makes it top-most, and the default engine
 
   game = "doomish",
 
@@ -178,5 +178,79 @@ OB_ENGINES["boom"] =
     setup2   = BOOM.setup,
     all_done = BOOM.all_done
   }
+}
+
+----------------------------------------------------------------
+
+PRBOOM = {}
+
+
+PRBOOM.ENTITIES =
+{
+
+}
+
+
+PRBOOM.PARAMETERS =
+{
+
+}
+
+OB_ENGINES["prboom"] =
+{
+  label = _("PrBoom Compat"),
+  priority = 97,
+
+  extends = "boom",
+
+  game = "doomish",
+
+  tables =
+  {
+    PRBOOM
+  },
+  
+  hooks =
+  {
+  
+  }
+  
+}
+
+----------------------------------------------------------------
+
+WOOF = {}
+
+
+WOOF.ENTITIES =
+{
+
+}
+
+
+WOOF.PARAMETERS =
+{
+
+}
+
+OB_ENGINES["woof"] =
+{
+  label = _("WOOF"),
+  priority = 96,
+
+  extends = "boom",
+
+  game = "doomish",
+
+  tables =
+  {
+    WOOF
+  },
+  
+  hooks =
+  {
+  
+  }
+  
 }
 

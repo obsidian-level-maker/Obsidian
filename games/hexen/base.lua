@@ -41,7 +41,8 @@ gui.import("resources")
 OB_GAMES["hexen"] =
 {
   label = _("Hexen"),
-  priority = 34,
+  
+  priority = 93,
 
   -- Hexen map format is a minor variation on the DOOM format
   format = "doom",
