@@ -92,7 +92,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	end();
 
-	resizable(NULL);  // don't resize our children
+	//resizable(NULL);  // don't resize our children
 }
 
 

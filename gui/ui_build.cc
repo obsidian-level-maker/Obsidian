@@ -39,8 +39,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 {
 	box(FL_THIN_UP_BOX);
 
-	resizable(NULL);
-
 	status_label[0] = 0;
 
 
@@ -55,6 +53,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	int mini_y = Y + kf_h(28);
 
 	mini_map = new UI_MiniMap(mini_x, mini_y, mini_w, mini_h);
+	resizable(mini_map);
 
 
 	int cy = mini_y - button_h/2;
@@ -127,6 +126,81 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 UI_Build::~UI_Build()
 { }
 
+//Same as regular Fl_Group resize with the exception of calling the minimap to redraw afterwards
+void UI_Build::resize(int X, int Y, int W, int H) {
+
+  int dx = X-x();
+  int dy = Y-y();
+  int dw = W-w();
+  int dh = H-h();
+  
+  int *p = sizes(); // save initial sizes and positions
+
+  Fl_Widget::resize(X,Y,W,H); // make new xywh values visible for children
+
+  if (!resizable() || (dw==0 && dh==0) ) {
+
+    if (type() < FL_WINDOW) {
+      Fl_Widget*const* a = array();
+      for (int i=this->children(); i--;) {
+	Fl_Widget* o = *a++;
+	o->resize(o->x()+dx, o->y()+dy, o->w(), o->h());
+      }
+    }
+
+  } else if (this->children()) {
+
+    // get changes in size/position from the initial size:
+    dx = X - p[0];
+    dw = W - (p[1]-p[0]);
+    dy = Y - p[2];
+    dh = H - (p[3]-p[2]);
+    if (type() >= FL_WINDOW) dx = dy = 0;
+    p += 4;
+
+    // get initial size of resizable():
+    int IX = *p++;
+    int IR = *p++;
+    int IY = *p++;
+    int IB = *p++;
+
+    Fl_Widget*const* a = array();
+    for (int i=this->children(); i--;) {
+      Fl_Widget* o = *a++;
+#if 1
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX = IX+((XX-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = IX+((R-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = IY+((YY-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = IY+((B-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+#else // much simpler code from Francois Ostiguy:
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX += dw * (XX-IX)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = R + dw * (R-IX)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = YY + dh*(YY-IY)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = B + dh*(B-IY)/(IB-IY);
+#endif
+      o->resize(XX+dx, YY+dy, R-XX, B-YY);
+    }
+  }
+this->mini_map->EmptyMap();
+}
 
 void UI_Build::Locked(bool value)
 {

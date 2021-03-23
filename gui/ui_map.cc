@@ -46,7 +46,6 @@ UI_MiniMap::~UI_MiniMap()
 		delete[] pixels;
 }
 
-
 void UI_MiniMap::EmptyMap()
 {
 	MapBegin();

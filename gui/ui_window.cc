@@ -62,7 +62,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	Fl_Double_Window(W, H, title)
 {
 	// only vertically resizable
-	size_range(W, H, W, 2000);
+	size_range(W, H, 0, 0);
 
 	callback((Fl_Callback *) main_win_close_CB);
 
@@ -85,8 +85,8 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 
 	end();
+	resizable(this);
 
-	resizable(right_mods);
 }
 
 

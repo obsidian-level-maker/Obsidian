@@ -54,6 +54,8 @@ public:
 	virtual ~UI_Build();
 
 public:
+
+
 	void Prog_Init(int node_perc, const char *extra_steps);
 	void Prog_AtLevel(int index, int total);
 	void Prog_Step(const char *step_name);
@@ -67,6 +69,9 @@ public:
 	void Locked(bool value);
 
 private:
+
+	void resize(int X, int Y, int W, int H);
+
 	void ParseSteps(const char *list);
 	int  FindStep(const char *name);  // -1 if not found
 
