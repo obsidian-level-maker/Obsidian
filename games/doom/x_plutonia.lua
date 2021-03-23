@@ -1044,6 +1044,8 @@ OB_GAMES["plutonia"] =
   label = _("Plutonia"),
 
   extends = "doom2",
+  
+  priority = 96,
 
   iwad_name = "plutonia.wad",
 

@@ -9,9 +9,9 @@
 #include "templates.h"
 #include <functional>
 
-bool		FastVis=1;
-bool		NoPassageVis=1;
-bool		NoSort;
+bool		FastVis=true;
+bool		NoPassageVis=false;
+bool		NoSort=true;
 
 //=============================================================================
 
@@ -163,7 +163,7 @@ void FRejectBuilder::ClusterMerge (int leafnum)
 	{
 		mergedleafnum = leafs[mergedleafnum].merged;
 	}
-
+//    printf("MERGEDLEAFNUM COMPLETE\n");
 	memset (portalvector, 0, portalbytes);
 	leaf = &leafs[mergedleafnum];
 	for (i = 0; i < leaf->numportals; i++)
@@ -268,11 +268,9 @@ void FRejectBuilder::CalcVis ()
 {
 	printf (" Vis 1: ");
 	RunThreadsOnIndividual (numportals, true, &FRejectBuilder::BasePortalVis);
-
-//	RunThreadsOnIndividual (numportals, true, BetterPortalVis);
+//	RunThreadsOnIndividual (numportals, true, &FRejectBuilder::BetterPortalVis);
 
 	SortPortals ();
-
 	printf (" Vis 2: ");
 	if (FastVis)
 		CalcFastVis();

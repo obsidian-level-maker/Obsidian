@@ -846,7 +846,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	LogPrintf("\n");
   
 	zdbsp_options options;
-	if (current_engine == "nolimit")
+	if (current_engine == "nolimit" || current_engine == "boom")
 	{
 		options.build_nodes = true;
 		options.build_gl_nodes = false;
@@ -864,7 +864,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.compress_gl_nodes = false;
 		options.force_compression = false;
 	}
-	else if (current_engine == "boom")
+	else if (current_engine == "prboom")
 	{
 		options.build_nodes = true;
 		options.build_gl_nodes = true;
@@ -881,6 +881,24 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 		options.compress_nodes = true;
 		options.compress_gl_nodes = false;
 		options.force_compression = false;
+	}
+	else if (current_engine == "woof")
+	{
+		options.build_nodes = true;
+		options.build_gl_nodes = false;
+		options.build_gl_only = false;
+		if (build_reject == "yes")
+		{
+			options.reject_mode = ERM_Rebuild_NoGL;
+		}
+		else
+		{
+			options.reject_mode = ERM_CreateZeroes;
+		}	
+		options.check_polyobjs = false;
+		options.compress_nodes = true;
+		options.compress_gl_nodes = false;
+		options.force_compression = true;
 	}
 	else if (current_engine == "zdoom")
 	{
@@ -914,6 +932,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 	}
 	
 	FileRename(filename, out_name);
+	
 	return true;	
 }
 
@@ -980,7 +999,7 @@ bool doom_game_interface_c::Start(const char *preset)
 	current_engine = main_win->game_box->engine->GetID();
 	if (current_engine == "zdoom")
 	{
-		build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_reject")->GetID();
+		build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_reject_zdoom")->GetID();
 	}
 	else
 	{

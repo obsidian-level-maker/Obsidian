@@ -467,6 +467,8 @@ OB_GAMES["tnt"] =
 
   extends = "doom2",
 
+  priority = 95,
+
   iwad_name = "tnt.wad",
 
   tables =

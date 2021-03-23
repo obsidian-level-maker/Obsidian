@@ -187,8 +187,7 @@ ZDBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
 $(OBJ_DIR)/zdbsp/%.o: zdbsp_src/%.cc
 	$(CXX) $(ZDBSP_CXXFLAGS) -o $@ -c $<
-
-
+	
 #----- PhysFS Objects ---------------------------------------------
 
 PHYSFS_OBJS= \

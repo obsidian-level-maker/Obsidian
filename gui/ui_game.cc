@@ -64,7 +64,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	game->selection_color(WINDOW_BG);
 	game->callback(callback_Game, this);
 
-	cy += y_step;
+	cy += y_step2;
 
 
 	engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
