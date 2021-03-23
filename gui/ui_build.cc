@@ -38,16 +38,12 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	status_label[0] = 0;
 
-	int mini_w = W * 0.42;
+	int pad = kf_w(12);
+
+	int mini_w = W * .80;
 	int mini_h = mini_w;
-	int mini_x = kf_w(24);
-	int mini_y = Y + kf_h(28);
 
-	mini_map = new UI_MiniMap(mini_x, mini_y, mini_w, mini_h);
-	resizable(mini_map);
-
-
-	int cy = mini_y;
+	int cy = Y + kf_h(12);
 
 /*	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
 		StringPrintf("     %s @-3>", _("Menu")));
@@ -62,13 +58,14 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	/* --- Status Area --- */
 
-	int pad = kf_w(14);
+	mini_map = new UI_MiniMap(X + (W * .10), cy, mini_w, mini_h);
+
+	cy += mini_map->h() + kf_h(6);
 
 	status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad*2, kf_h(26), _("Ready to go!"));
-	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
-
-	cy += status->h() + kf_h(12);
-
+	status->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+	
+	cy += status->h() + kf_h(6);
 
 	progress = new Fl_Progress(X + pad, cy, W - pad*2, kf_h(26));
 	progress->align(FL_ALIGN_INSIDE);
@@ -77,7 +74,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	progress->value(0.0);
 	progress->labelsize(FL_NORMAL_SIZE + 2);
 
-	cy = cy + progress->h() + kf_h(8);
+	cy = cy + progress->h() + kf_h(4);
 
 
 	int cw = kf_w(10);
@@ -88,6 +85,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	seed_display->labelsize(FL_NORMAL_SIZE + 2);
 	seed_display->labelcolor(34);
 
+	resizable(mini_map);
 
 	end();
 }
