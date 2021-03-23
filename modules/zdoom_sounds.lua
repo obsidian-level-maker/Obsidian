@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019 MsrSgtShooterPerson
---  Copyright (C) 2019 Frozsoul
+--  Copyright (C) 2019-2021 Frozsoul
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License

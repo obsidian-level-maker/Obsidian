@@ -2,7 +2,7 @@
 --  MODULE: Armaetus Themes
 ----------------------------------------------------------------
 --
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --  Copyright (C) 2019 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
@@ -1507,7 +1507,7 @@ ARMAETUS_ROOM_THEMES =
   {
     env = "building",
     prob = 30,
-    
+
     walls =
     {
       ASHWALL2 = 5,
@@ -1539,7 +1539,7 @@ ARMAETUS_ROOM_THEMES =
       ZIMMER5 = 5,
       ZIMMER8 = 5,
 
-      -- 
+      --
 
       ASHWALL1 = 7,
       BRIKS11 = 7,
