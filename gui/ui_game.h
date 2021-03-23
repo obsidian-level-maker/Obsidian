@@ -55,7 +55,6 @@ private:
 	static void build_callback(Fl_Widget *, void*);
 	static void stop_callback(Fl_Widget *, void*);
 	static void quit_callback(Fl_Widget *, void*);
-	
 };
 
 #endif /* __UI_GAME_H__ */

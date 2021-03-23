@@ -29,9 +29,6 @@ public:
 private:
 	//Fl_Menu_Across *misc_menu;
 
-//	Fl_Button *build;
-//	Fl_Button *quit;
-
 	Fl_Box *status;
 	Fl_Progress *progress;
 
@@ -65,9 +62,6 @@ public:
 	void SetStatus(const char *msg);
 	void DisplaySeed(double value);
 
-	//void SetAbortButton(bool abort);
-	//void Locked(bool value);
-
 private:
 
 	void resize(int X, int Y, int W, int H);
@@ -77,11 +71,7 @@ private:
 
 	void AddStatusStep(const char *name);
 
-/*	static void build_callback(Fl_Widget *, void*);
-	static void stop_callback(Fl_Widget *, void*);
-	static void quit_callback(Fl_Widget *, void*);
-
-	static void menu_do_about(Fl_Widget *, void*);
+/*	static void menu_do_about(Fl_Widget *, void*);
 	static void menu_do_options(Fl_Widget *, void*);
 	static void menu_do_addons(Fl_Widget *, void*);
 	static void menu_do_edit_seed(Fl_Widget *, void*);

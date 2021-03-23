@@ -40,12 +40,12 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 	int button_w = W * 0.35;
 	int button_h = kf_h(30);
-	int button_x = X + kf_w(16);
+	int button_x = X + kf_w(25);
 
 	int y_step  = kf_h(30);
 	int y_step2 = kf_h(44);
 
-	int cx = X + W * 0.39;
+	int cx = X + W * 0.29;
 	int cy = Y + kf_h(4);
 
 
@@ -60,7 +60,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy = Y + kf_h(32);
 
 
-	int cw = W * 0.58;
+	int cw = W * 0.60;
 	int ch = kf_h(24);
 
 	game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
@@ -100,7 +100,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	build->callback(build_callback, this);
 	build->shortcut(FL_F+2);
   
-	quit = new Fl_Button(button_x + build->x(), cy, button_w, button_h + 4, _("Quit"));
+	quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h + 4, _("Quit"));
 	quit->callback(quit_callback, this);
 	quit->shortcut(FL_COMMAND + 'q');
 

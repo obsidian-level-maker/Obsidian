@@ -25,9 +25,6 @@
 #include "lib_util.h"
 #include "main.h"
 
-
-//#define ABORT_COLOR  fl_color_cube(3,1,1)
-
 #define PROGRESS_FG  fl_color_cube(3,3,0)
 #define PROGRESS_BG  fl_gray_ramp(10)
 
@@ -40,12 +37,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	box(FL_THIN_UP_BOX);
 
 	status_label[0] = 0;
-
-
-//	int button_w = W * 0.35;
-//	int button_h = kf_h(30);
-//	int button_x = X + kf_w(16);
-
 
 	int mini_w = W * 0.42;
 	int mini_h = mini_w;
@@ -69,28 +60,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	misc_menu->add(_("View Logs"),     FL_F+6, menu_do_view_logs);
 	misc_menu->add(_("Config Manager"),FL_F+9, menu_do_manage_config);*/
 
-
-//	cy = mini_y + mini_h / 2 - (button_h+4) / 2;
-
-
-/*	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
-	build->labelfont(FL_HELVETICA_BOLD);
-	build->labelsize(FL_NORMAL_SIZE + 2);
-	build->callback(build_callback, this);
-	build->shortcut(FL_F+2);
-
-
-	cy = mini_y + mini_h - button_h/2;
-
-	quit = new Fl_Button(button_x, cy, button_w, button_h, _("Quit"));
-	quit->callback(quit_callback, this);
-	quit->shortcut(FL_COMMAND + 'q');*/
-
-
 	/* --- Status Area --- */
-
-//	cy = cy + button_h + kf_h(16);
-
 
 	int pad = kf_w(14);
 
@@ -202,21 +172,6 @@ void UI_Build::resize(int X, int Y, int W, int H) {
 this->mini_map->EmptyMap();
 }
 
-/*void UI_Build::Locked(bool value)
-{
-	if (value)
-	{
-//		misc_menu->deactivate();
-		build->deactivate();
-	}
-	else
-	{
-//		misc_menu->activate();
-		build->activate();
-	}
-}*/
-
-
 //----------------------------------------------------------------
 
 void UI_Build::Prog_Init(int node_perc, const char *extra_steps)
@@ -323,32 +278,6 @@ void UI_Build::SetStatus(const char *msg)
 	status->redraw();
 }
 
-
-/*void UI_Build::SetAbortButton(bool abort)
-{
-	if (abort)
-	{
-		quit->label(_("Cancel"));
-		quit->labelcolor(ABORT_COLOR);
-		quit->labelfont(FL_HELVETICA_BOLD);
-
-		quit->callback(stop_callback, this);
-
-		build->labelfont(FL_HELVETICA);
-	}
-	else
-	{
-		quit->label(_("Quit"));
-		quit->labelcolor(FL_FOREGROUND_COLOR);
-		quit->labelfont(FL_HELVETICA);
-
-		quit->callback(quit_callback, this);
-
-		build->labelfont(FL_HELVETICA_BOLD);
-	}
-}*/
-
-
 void UI_Build::ParseSteps(const char *names)
 {
 	step_names.clear();
@@ -441,29 +370,7 @@ void UI_Build::DisplaySeed(double value)
 
 //----------------------------------------------------------------
 
-/*void UI_Build::build_callback(Fl_Widget *w, void *data)
-{
-	if (main_action == 0)
-	{
-		main_action = MAIN_BUILD;
-	}
-}
-
-void UI_Build::stop_callback(Fl_Widget *w, void *data)
-{
-	if (main_action != MAIN_QUIT)
-	{
-		main_action = MAIN_CANCEL;
-	}
-}
-
-void UI_Build::quit_callback(Fl_Widget *w, void *data)
-{
-	main_action = MAIN_QUIT;
-}
-
-
-void UI_Build::menu_do_about(Fl_Widget *w, void *data)
+/*void UI_Build::menu_do_about(Fl_Widget *w, void *data)
 {
 	DLG_AboutText();
 }
