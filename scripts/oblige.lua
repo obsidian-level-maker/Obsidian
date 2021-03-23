@@ -216,6 +216,9 @@ function ob_match_engine(T)
   local engine = T.engine
   local result = true
 
+  -- Compatibility stub for old "gzdoom" selection
+  if engine == "gzdoom" then engine = "zdoom" end
+
   -- negated check?
   if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
     engine = string.sub(engine, 2)
@@ -226,6 +229,8 @@ function ob_match_engine(T)
   if ob_match_word_or_table(engine, OB_CONFIG.engine) then
     return result
   end
+  
+  
 
   -- handle extended engines
 
