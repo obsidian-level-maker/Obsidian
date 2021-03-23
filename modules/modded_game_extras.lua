@@ -306,7 +306,8 @@ function MODDED_GAME_EXTRAS.create_hn_info()
   local function generate_name(zone)
     local name = Naming_grab_one(LEVEL.name_class)
 
-    if #zone.rooms == 1 and zone.rooms[1].is_exit then
+    if #zone.rooms == 1 and zone.rooms[1].is_exit
+    and not zone.rooms[1].is_start then
       if zone.rooms[1].conns then
         name = zone.rooms[1].conns[1].R1.zone.hn_name
         zone.single_exit = true

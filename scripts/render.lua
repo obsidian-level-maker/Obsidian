@@ -2337,8 +2337,6 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
         chunk.prefab_def = nil
         reqs.kind = "picture"
         reqs.height = h_diff
-
-        gui.printf("SHIT HAPPENED!\n")
       end
     end
   end

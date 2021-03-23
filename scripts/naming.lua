@@ -859,7 +859,7 @@ namelib.NAMES =
         ["Mostly Destructive"]=10,
         ["Munitions Replication Center"]=10, -- Demios
         ["Nuclear Missile Banks"]=10, -- Demios
-        ["Off-Site Data Storage Hub"]=10
+        ["Off-Site Data Storage Hub"]=10,
         ["Painkiller"]=10,
         ["Power Station 1A"]=10,
         ["Power Station 2A"]=10,
@@ -947,14 +947,14 @@ namelib.NAMES =
         ["Digital Flametongue"]=10,
         ["Orbitdancer"]=10,
         ["Powder Burns"]=10, -- Bolt Thrower
-        ["The Particle Storm"]=10 -- Mostly Dark Tranquility, "Into the Particle Storm" won't fit, I think?
+        ["The Particle Storm"]=10, -- Mostly Dark Tranquility, "Into the Particle Storm" won't fit, I think?
 
         -- Wow! More names!
-        ["Biological Research"]=10
-        ["Nebulae and Novae"]=10
-        ["Recreational Zone"]=10
-        ["Steel Coffins"]=10
-        ["Threshold of Machinery"]=10
+        ["Biological Research"]=10,
+        ["Nebulae and Novae"]=10,
+        ["Recreational Zone"]=10,
+        ["Steel Coffins"]=10,
+        ["Threshold of Machinery"]=10,
         ["Trolling the U.A.C"]=10
       }
     }

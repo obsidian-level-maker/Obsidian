@@ -4271,8 +4271,8 @@ ARMAETUS_DESERT_OUTDOORS =
       T_SDTCH2 = 5,
       T_SDTCH3 = 5,
       T_SDTCH4 = 5,
-      T_SDTCH5 = 5,
-    },
+      T_SDTCH5 = 5
+    }
   },
 
   urban =
@@ -4290,8 +4290,8 @@ ARMAETUS_DESERT_OUTDOORS =
       EG05  = 10,
       EG03  = 15,
       EG02  = 10,
-      EG01  = 15,
-    },
+      EG01  = 15
+    }
   },
 
   hell =
@@ -4309,8 +4309,8 @@ ARMAETUS_DESERT_OUTDOORS =
       EG05  = 10,
       EG03  = 15,
       EG02  = 10,
-      EG01  = 15,
-    },
+      EG01  = 15
+    }
   },
 
   naturals =
@@ -4321,8 +4321,8 @@ ARMAETUS_DESERT_OUTDOORS =
     DESROCK2 = 20,
     DESROCK3 = 20,
     DESROCK4 = 25,
-    DESROCK5 = 20,
-  },
+    DESROCK5 = 20
+  }
 }
 
 --[[ARMAETUS_DESERT_FACADES =

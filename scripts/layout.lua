@@ -2215,11 +2215,22 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       env = R:get_env()
     }
 
+    if LEVEL.light_group and not table.empty(LEVEL.light_group) then
+      reqs.light_color = rand.key_by_probs(LEVEL.light_group)
+    end
+
     if R.theme.theme_override then
       reqs.theme_override = R.theme.theme_override
     end
 
-    return Fab_pick(reqs, "none_ok")
+    local def = Fab_pick(reqs, "none_ok")
+
+    if not def then
+      reqs.light_color = nil
+      def = Fab_pick(reqs, "none_ok")
+    end
+
+    return def
   end
 
 
@@ -2235,8 +2246,19 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       env = "building",
     }
 
+    if LEVEL.light_group and not table.empty(LEVEL.light_group) then
+      reqs.light_color = rand.key_by_probs(LEVEL.light_group)
+    end
+  
     if A.room.theme.theme_override then
       reqs.theme_override = A.room.theme.theme_override
+    end
+
+    local def = Fab_pick(reqs, "none_ok")
+
+    if not def then
+      reqs.light_color = nil
+      def = Fab_pick(reqs, "none_ok")
     end
 
     return Fab_pick(reqs, "none_ok")
