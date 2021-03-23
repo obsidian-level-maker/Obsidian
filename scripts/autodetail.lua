@@ -43,6 +43,9 @@ function Autodetail_get_level_svolume()
   LEVEL.autodetail_group_walls_factor = 1
 
   if PARAM.autodetail == "off" then return end
+  if not PARAM.autodetail
+  and OB_CONFIG.map_format
+  and OB_CONFIG.map_format == "udmf" then return end
 
   local total_walkable_area = 0
 
@@ -63,6 +66,9 @@ function Autodetail_plain_walls()
   LEVEL.autodetail_plain_walls_factor = 0
 
   if PARAM.autodetail == "off" then return end
+  if not PARAM.autodetail
+  and OB_CONFIG.map_format
+  and OB_CONFIG.map_format == "udmf" then return end
 
   local total_perimeter = 0
   for _,junc in pairs(LEVEL.junctions) do
@@ -100,6 +106,9 @@ end
 
 function Autodetail_report()
   if PARAM.autodetail == "off" then return end
+  if not PARAM.autodetail
+  and OB_CONFIG.map_format
+  and OB_CONFIG.map_format == "udmf" then return end
 
   gui.printf("\n--==| Auto Detail Report |==--\n\n")
   gui.printf("Total walkable volume: " .. LEVEL.total_svolume .. "\n")

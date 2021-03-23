@@ -58,15 +58,12 @@
     edge[DIR] : EDGE  -- set when an EDGE object exists at this seed
                       -- Note: it may be several seeds wide
 
-    walls : EDGE   -- actual edge object --MSSP
-
     chunk : CHUNK   -- only set when seed is part of a chunk
 
     mid_x, mid_y  -- mid point coordinate
 
     floor_h, ceil_h -- floor and ceiling heights
     f_tex,   c_tex  -- floor and ceiling textures
-
 --]]
 
 

@@ -2551,10 +2551,13 @@ function Level_choose_liquid()
 
   -- exclude liquids from certain environment themes
   if LEVEL.outdoor_theme then
-    if THEME.liquids.exclusions
-    and THEME.liquids.exclusions[LEVEL.outdoor_theme] then
-      for _,L in pairs(THEME.liquids.exclusions[LEVEL.outdoor_theme]) do
-        liq_tab[L] = 0
+    local exclusions
+    if ARMAETUS_LIQUIDS then
+      exclusions = ARMAETUS_LIQUIDS.exclusions[LEVEL.outdoor_theme]
+      if exclusions then
+        for _,L in pairs(exclusions) do
+          liq_tab[L] = 0
+        end
       end
     end
   end

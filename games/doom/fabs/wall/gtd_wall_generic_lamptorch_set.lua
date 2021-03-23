@@ -23,7 +23,7 @@ PREFABS.Wall_generic_gtd_lamp_stubby_diag =
   file = "wall/torches.wad",
   map = "MAP02",
 
-  where = "digonal",
+  where = "diagonal",
 
   thing_45 = 2028
 }
@@ -44,7 +44,7 @@ PREFABS.Wall_generic_gtd_lamp_thicc_diag =
   file = "wall/torches.wad",
   map = "MAP02",
 
-  where = "digonal",
+  where = "diagonal",
 
   group = "gtd_wall_lamp_thicc",
 
@@ -69,7 +69,7 @@ PREFABS.Wall_generic_gtd_lamp_thin_diag =
 
   group = "gtd_wall_lamp_thin",
 
-  where = "digonal",
+  where = "diagonal",
 
   thing_45 = 85
 }
@@ -97,7 +97,7 @@ PREFABS.Wall_generic_gtd_candalebra_diag =
 
   group = "gtd_wall_candalebra",
 
-  where = "digonal",
+  where = "diagonal",
 
   thing_45 = 35,
 
@@ -126,7 +126,7 @@ PREFABS.Wall_generic_gtd_blue_torch_diag =
 
   group = "gtd_wall_blue_torch",
 
-  where = "digonal",
+  where = "diagonal",
 
   thing_45 = 44,
 
@@ -155,7 +155,7 @@ PREFABS.Wall_generic_gtd_green_torch_diag =
 
   group = "gtd_wall_green_torch",
 
-  where = "digonal",
+  where = "diagonal",
 
   thing_45 = 45,
 
@@ -184,7 +184,7 @@ PREFABS.Wall_generic_gtd_red_torch_diag =
 
   group = "gtd_wall_red_torch",
 
-  where = "digonal",
+  where = "diagonal",
 
   thing_45 = 46,
 

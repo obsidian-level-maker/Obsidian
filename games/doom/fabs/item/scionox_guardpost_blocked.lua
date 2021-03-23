@@ -12,10 +12,10 @@ PREFABS.Item_scionox_guardpost_blocked =
 
   where  = "seeds",
 
+  deep = 16,
+
   seed_w = 2,
   seed_h = 2,
-
-  deep   = 16,
 
   x_fit  = "frame",
   y_fit  = "frame",
@@ -46,8 +46,6 @@ PREFABS.Item_scionox_guardpost_secret =
 
   seed_w = 3,
   seed_h = 2,
-
-  deep   = 16,
 
   x_fit  = "frame",
   y_fit  = "frame",
