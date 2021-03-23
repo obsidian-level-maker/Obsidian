@@ -34,7 +34,7 @@ FLTK_CONFIG=fltk-config
 FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
 FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Izdbsp_src -Iajpoly_src -Iphysfs_src -Izokum_src $(FLTK_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Izdbsp_src -Iajpoly_src -Iphysfs_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
@@ -188,28 +188,6 @@ ZDBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 $(OBJ_DIR)/zdbsp/%.o: zdbsp_src/%.cc
 	$(CXX) $(ZDBSP_CXXFLAGS) -o $@ -c $<
 	
-#----- ZokumBSP Objects ------------------------------------------------
-
-ZOKUM_OBJS= \
-	$(OBJ_DIR)/zokum/blockmap.o \
-	$(OBJ_DIR)/zokum/console.o  \
-	$(OBJ_DIR)/zokum/endoom.o \
-	$(OBJ_DIR)/zokum/level.o \
-	$(OBJ_DIR)/zokum/preprocess.o \
-	$(OBJ_DIR)/zokum/quicksort.o \
-	$(OBJ_DIR)/zokum/wad.o \
-	$(OBJ_DIR)/zokum/wadlist.o \
-	$(OBJ_DIR)/zokum/zenmain.o  \
-	$(OBJ_DIR)/zokum/zennode.o \
-	$(OBJ_DIR)/zokum/zenreject.o \
-	$(OBJ_DIR)/zokum/zenrmb.o
-
-ZOKUM_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
-
-$(OBJ_DIR)/zokum/%.o: zokum_src/%.cpp
-	$(CXX) $(ZOKUM_CXXFLAGS) -o $@ -c $<
-
-
 #----- PhysFS Objects ---------------------------------------------
 
 PHYSFS_OBJS= \
@@ -252,7 +230,7 @@ LANG_FILES= \
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(ZDBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS) $(ZOKUM_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(ZDBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
@@ -261,7 +239,6 @@ clean:
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 	rm -f $(OBJ_DIR)/physfs/*.o
 	rm -f $(OBJ_DIR)/zdbsp/*.o
-	rm -f $(OBJ_DIR)/zokum/*.o
 	rm -f LANG_TEMPLATE.txt
 
 halfclean:

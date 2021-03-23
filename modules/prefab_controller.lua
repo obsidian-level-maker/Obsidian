@@ -166,7 +166,8 @@ OB_MODULES["prefab_control"] =
       name = "autodetail",
       label=("Auto Detailing"),
       choices=PREFAB_CONTROL.ON_OFF,
-      tooltip = "Reduces the amount of complex architecture in a map based on its size. Default is on.",
+      tooltip = "Reduces the amount of complex architecture in a map based on its size. " ..
+        "Default is on in binary map format, off in UDMF map format.",
       default = "on",
       priority = 102,
       gap = 1
@@ -177,7 +178,11 @@ OB_MODULES["prefab_control"] =
       name = "point_prob",
       label=_("Point Decor"),
       choices=PREFAB_CONTROL.POINT_CHOICES,
-      tooltip = "Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n\nNote: DEFAULT actually behaves like Mix-It-Up.",
+      tooltip = "Decor prefabs are prefabs placed along the floors such as " ..
+      "crates, pillars, and other decorative elements which aren't tied to walls. " ..
+      "This directly modifies probabilities on a per-room basis, " .. 
+      "not the density for decor prefabs in any given room. " ..
+      "\n\nNote: DEFAULT actually behaves like Mix-It-Up.",
       default = "fab_default",
       priority = 101
     },
