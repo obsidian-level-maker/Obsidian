@@ -92,21 +92,27 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	theme->selection_color(WINDOW_BG);
 	theme->callback(callback_Theme, this);
 
-	cy += y_step2;
+	cy += y_step + kf_h(5);
 
-	build = new Fl_Button(button_x, cy, button_w, button_h + 4, _("Build"));
+	build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
 	build->labelfont(FL_HELVETICA_BOLD);
 	build->labelsize(FL_NORMAL_SIZE + 2);
 	build->callback(build_callback, this);
 	build->shortcut(FL_F+2);
-  
-	quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h + 4, _("Quit"));
+	  
+	quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h, _("Quit"));
 	quit->callback(quit_callback, this);
 	quit->shortcut(FL_COMMAND + 'q');
+	
+	cy += y_step2;
+
+	seed_display = new Fl_Box(FL_FLAT_BOX, X + cw, cy, W - cw*2, ch, "--------------------");
+	seed_display->labelfont(FL_COURIER);
+	seed_display->labelsize(FL_NORMAL_SIZE + 2);
+	seed_display->labelcolor(34);
+	seed_display->align(FL_ALIGN_INSIDE);
 
 	end();
-
-	//resizable(NULL);  // don't resize our children
 }
 
 
@@ -157,7 +163,7 @@ void UI_Game::Locked(bool value)
 		engine->deactivate();
 		length->deactivate();
 		theme ->deactivate();
-		build->deactivate();
+		build ->deactivate();
 	}
 	else
 	{
@@ -165,7 +171,7 @@ void UI_Game::Locked(bool value)
 		engine->activate();
 		length->activate();
 		theme ->activate();
-		build->activate();
+		build ->activate();
 	}
 }
 
@@ -272,6 +278,18 @@ void UI_Game::SetAbortButton(bool abort)
 
 		build->labelfont(FL_HELVETICA_BOLD);
 	}
+}
+
+void UI_Game::DisplaySeed(unsigned long long value)
+{
+	if (value < 0)
+	{
+		seed_display->copy_label("--------------------");
+		return;
+	}
+
+	seed_display->copy_label(std::to_string(value).c_str());
+		
 }
 
 void UI_Game::build_callback(Fl_Widget *w, void *data)

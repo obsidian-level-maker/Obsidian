@@ -77,13 +77,13 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	cy = cy + progress->h() + kf_h(4);
 
 
-	int cw = kf_w(10);
+/*	int cw = kf_w(10);
 	int ch = kf_h(26);
 
 	seed_display = new Fl_Box(FL_NO_BOX, X + cw, cy, W - cw*2, ch, "---- ---- ---- ----");
 	seed_display->labelfont(FL_COURIER);
 	seed_display->labelsize(FL_NORMAL_SIZE + 2);
-	seed_display->labelcolor(34);
+	seed_display->labelcolor(34);*/
 
 	resizable(mini_map);
 
@@ -333,7 +333,7 @@ void UI_Build::AddStatusStep(const char *name)
 }
 
 
-void UI_Build::DisplaySeed(double value)
+/*void UI_Build::DisplaySeed(double value)
 {
 	if (value < 0)
 	{
@@ -363,7 +363,7 @@ void UI_Build::DisplaySeed(double value)
 	}
 
 	seed_display->copy_label(newbuf);
-}
+}*/
 
 
 //----------------------------------------------------------------

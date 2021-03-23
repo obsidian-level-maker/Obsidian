@@ -32,7 +32,7 @@ private:
 	Fl_Box *status;
 	Fl_Progress *progress;
 
-	Fl_Box *seed_display;
+//	Fl_Box *seed_display;
 
 	char  status_label[200];
 	char  prog_label[100];
@@ -60,7 +60,7 @@ public:
 	void Prog_Finish();
 
 	void SetStatus(const char *msg);
-	void DisplaySeed(double value);
+//	void DisplaySeed(double value);
 
 private:
 

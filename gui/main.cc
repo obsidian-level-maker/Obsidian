@@ -560,7 +560,9 @@ bool Build_Cool_Shit()
 {
 	// clear the map
 	if (main_win)
+	{
 		main_win->build_box->mini_map->EmptyMap();
+	}		
 
 	const char *format = ob_game_format();
 
@@ -595,10 +597,10 @@ bool Build_Cool_Shit()
 	// lock most widgets of user interface
 	if (main_win)
 	{
-		main_win->Locked(true);
+		main_win->game_box->DisplaySeed(next_rand_seed);
 		main_win->game_box->SetAbortButton(true);
 		main_win->build_box->SetStatus(_("Preparing..."));
-		main_win->build_box->DisplaySeed(next_rand_seed);
+		main_win->Locked(true);
 	}
 
 	u32_t start_time = TimeGetMillies();
@@ -632,7 +634,7 @@ bool Build_Cool_Shit()
 	else
 	{
 		if (main_win)
-			main_win->build_box->DisplaySeed(-1);
+			main_win->game_box->DisplaySeed(-1);
 	}
 
 	if (main_win)

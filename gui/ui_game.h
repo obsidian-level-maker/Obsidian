@@ -32,6 +32,7 @@ public:
 private:
 	Fl_Button *build;
 	Fl_Button *quit;
+	Fl_Box *seed_display;
 
 public:
 	UI_Game(int x, int y, int w, int h, const char *label = NULL);
@@ -46,6 +47,8 @@ public:
 	bool SetButton(const char *button, const char *id);
 	
 	void SetAbortButton(bool abort);
+	
+	void DisplaySeed(unsigned long long value);
 
 private:
 	static void callback_Game  (Fl_Widget *, void*);

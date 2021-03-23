@@ -119,7 +119,7 @@ void UI_MainWin::CalcWindowSize(int *W, int *H)
 void UI_MainWin::Locked(bool value)
 {
 	game_box  ->Locked(value);
-//	build_box ->Locked(value);
+	//build_box ->Locked(value);
 	left_mods ->Locked(value);
 	right_mods->Locked(value);
 }
