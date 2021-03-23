@@ -2215,7 +2215,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       env = R:get_env()
     }
 
-    if LEVEL.light_group then
+    if LEVEL.light_group and not table.empty(LEVEL.light_group) then
       reqs.light_color = rand.key_by_probs(LEVEL.light_group)
     end
 
@@ -2246,7 +2246,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       env = "building",
     }
 
-    if LEVEL.light_group then
+    if LEVEL.light_group and not table.empty(LEVEL.light_group) then
       reqs.light_color = rand.key_by_probs(LEVEL.light_group)
     end
   
