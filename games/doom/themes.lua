@@ -3129,7 +3129,7 @@ DOOM.ROOM_THEMES =
     {
       MARBLE1 = 20,
       MARBLE2 = 50,
-      MARBLE3 = 50,
+      MARBLE3 = 50
     },
 
     floors =
@@ -3144,7 +3144,7 @@ DOOM.ROOM_THEMES =
 
       FLAT10   = 10,
       FLOOR6_2 = 10,
-      MFLR8_2  = 10,
+      MFLR8_2  = 10
     },
 
     ceilings =
@@ -3153,10 +3153,9 @@ DOOM.ROOM_THEMES =
       DEM1_5   = 20,
       FLOOR6_1 = 20,
       FLOOR6_2 = 20,
-      MFLR8_4  = 15,
-    },
+      MFLR8_4  = 15
+    }
   },
-
 
   hell_GrayMarble =
   {
@@ -3165,7 +3164,7 @@ DOOM.ROOM_THEMES =
 
     walls =
     {
-      MARBGRAY = 50,
+      MARBGRAY = 50
     },
 
     floors =
@@ -3178,7 +3177,7 @@ DOOM.ROOM_THEMES =
       FLAT5_7  = 20,
       FLAT5_8  = 20,
       FLAT5_1  = 5,
-      FLAT5_2  = 5,
+      FLAT5_2  = 5
     },
 
     ceilings =
@@ -3187,7 +3186,7 @@ DOOM.ROOM_THEMES =
       DEM1_5   = 20,
       FLOOR6_1 = 20,
       FLOOR6_2 = 20,
-      MFLR8_4  = 15,
+      MFLR8_4  = 15
     },
   },
 
@@ -3201,7 +3200,7 @@ DOOM.ROOM_THEMES =
     {
       GSTONE1 = 80,
       GSTVINE1 = 5,
-      GSTVINE2 = 5,
+      GSTVINE2 = 5
     },
 
     floors =
@@ -3214,7 +3213,7 @@ DOOM.ROOM_THEMES =
       DEM1_5 = 20,
       FLAT5_1  = 2,
       FLAT5_2  = 2,
-      FLAT1_1 = 2,
+      FLAT1_1 = 2
     },
 
     ceilings =
@@ -3224,9 +3223,8 @@ DOOM.ROOM_THEMES =
       FLOOR6_2 = 3,
       FLOOR7_2 = 30,
       FLOOR6_1 = 3,
-      DEM1_5 = 10,
-    },
-
+      DEM1_5 = 10
+    }
   },
 
 
@@ -3237,7 +3235,7 @@ DOOM.ROOM_THEMES =
 
     walls =
     {
-      SP_HOT1 = 50,
+      SP_HOT1 = 50
     },
 
     floors =
@@ -3249,7 +3247,7 @@ DOOM.ROOM_THEMES =
       FLAT5_7 = 10,
       FLAT5_8 = 10,
       FLOOR6_1 = 10,
-      FLOOR6_2 = 5,
+      FLOOR6_2 = 5
     },
 
     ceilings =
@@ -3257,8 +3255,8 @@ DOOM.ROOM_THEMES =
       FLOOR6_1 = 20,
       FLOOR6_2 = 20,
       FLAT10 = 15,
-      FLAT5_3 = 10,
-    },
+      FLAT5_3 = 10
+    }
   },
 
 
@@ -3270,7 +3268,7 @@ DOOM.ROOM_THEMES =
     walls =
     {
       STONE3 = 50,
-      STONE2 = 10,
+      STONE2 = 10
     },
 
     floors =
@@ -3279,7 +3277,7 @@ DOOM.ROOM_THEMES =
       RROCK13  = 30,
       GRNROCK  = 30,
       DEM1_6   = 30,
-      SLIME13  = 30,
+      SLIME13  = 30
     },
 
     ceilings =
@@ -3287,8 +3285,8 @@ DOOM.ROOM_THEMES =
       RROCK12  = 30,
       RROCK03  = 30,
       MFLR8_2  = 30,
-      FLAT5_1  = 30,
-    },
+      FLAT5_1  = 30
+    }
   },
 
 
@@ -3300,7 +3298,7 @@ DOOM.ROOM_THEMES =
     walls =
     {
       GSTVINE2 = 50,
-      GSTVINE1 = 10,
+      GSTVINE1 = 10
     },
 
     floors =
@@ -3309,15 +3307,15 @@ DOOM.ROOM_THEMES =
       FLOOR7_1 = 10,
       DEM1_6 = 5,
       DEM1_5 = 5,
-      FLOOR7_2 = 10,
+      FLOOR7_2 = 10
     },
 
     ceilings =
     {
       FLAT1 = 5,
       FLOOR7_2 = 20,
-      FLOOR6_1 = 3,
-    },
+      FLOOR6_1 = 3
+    }
   },
 
 
@@ -3332,7 +3330,7 @@ DOOM.ROOM_THEMES =
       WOOD3 = 30,
       WOOD5 = 30,
       WOOD12 = 30,
-      WOODVERT = 10,
+      WOODVERT = 10
     },
 
     floors =
@@ -3344,7 +3342,7 @@ DOOM.ROOM_THEMES =
       FLOOR4_6 = 10,
       FLAT5    = 10,
       FLAT1_1  = 10,
-      DEM1_6  = 5,
+      DEM1_6  = 5
     },
 
     ceilings =
@@ -3355,8 +3353,8 @@ DOOM.ROOM_THEMES =
       FLAT5_2 = 15,
       FLAT5_7 = 10,
       RROCK13 = 10,
-      FLOOR7_1 = 5,
-    },
+      FLOOR7_1 = 5
+    }
   },
 
   hell_Panel =
@@ -3378,7 +3376,7 @@ DOOM.ROOM_THEMES =
       WOOD3 = 5,
       WOOD5 = 5,
       WOOD12 = 5,
-      WOODVERT = 5,
+      WOODVERT = 5
     },
 
     floors =
@@ -3389,7 +3387,7 @@ DOOM.ROOM_THEMES =
       FLOOR3_3 = 15,
       FLOOR1_6 = 10,
       FLAT5 = 10,
-      DEM1_6 = 3,
+      DEM1_6 = 3
     },
 
     ceilings =
@@ -3398,8 +3396,8 @@ DOOM.ROOM_THEMES =
       CEIL1_1 = 20,
       FLAT5_1 = 25,
       FLAT5_2 = 25,
-      FLOOR7_1 = 5,
-    },
+      FLOOR7_1 = 5
+    }
   },
 
 
@@ -3413,7 +3411,7 @@ DOOM.ROOM_THEMES =
       SKINMET1 = 50,
       SKINMET2 = 50,
       SKINCUT  = 5,
-      SKINSYMB = 5,
+      SKINSYMB = 5
     },
 
     floors =
@@ -3425,7 +3423,7 @@ DOOM.ROOM_THEMES =
       SFLR6_1  = 10,
       FLOOR7_1 = 20,
       FLOOR6_1 = 40,
-      SLIME13 = 20,
+      SLIME13 = 20
     },
 
     ceilings =
@@ -3436,8 +3434,8 @@ DOOM.ROOM_THEMES =
       FLAT5_3 = 7,
       FLAT5_4 = 5,
       FLOOR7_2 = 10,
-      DEM1_5 = 10,
-    },
+      DEM1_5 = 10
+    }
   },
 
 
@@ -3464,7 +3462,7 @@ DOOM.ROOM_THEMES =
       SKINEDGE = 10,
       CRACKLE4 = 10,
       SKSNAKE1 = 10,
-      SKSNAKE2 = 10,
+      SKSNAKE2 = 10
     },
 
     floors =
@@ -3479,8 +3477,8 @@ DOOM.ROOM_THEMES =
       STONE    = 10,
 
       RROCK02  = 10,
-      SKSNAKE1 = 10,
-    },
+      SKSNAKE1 = 10
+    }
   },
 
 
@@ -3497,7 +3495,7 @@ DOOM.ROOM_THEMES =
       FIRELAVA = 15,
       FIREBLU1 = 15,
       CRACKLE2 =  5,
-      CRACKLE4 =  5,
+      CRACKLE4 =  5
     },
 
     floors =
@@ -3508,8 +3506,8 @@ DOOM.ROOM_THEMES =
       RROCK01  = 20,
       RROCK05  = 20,
       RROCK03  = 10,
-      RROCK02  = 5,
-    },
+      RROCK02  = 5
+    }
   },
 
 
@@ -3532,7 +3530,7 @@ DOOM.ROOM_THEMES =
       RROCK12 = 10,
       RROCK13 = 5,
       RROCK01 = 5,
-      RROCK02 = 3,
+      RROCK02 = 3
     },
 
     naturals =
@@ -3546,7 +3544,7 @@ DOOM.ROOM_THEMES =
       ASHWALL4 = 30,
       SKIN2 = 10,
       SKSNAKE1 = 30,
-      SKSNAKE2 = 30,
+      SKSNAKE2 = 30
     },
 
     porch_floors =
@@ -3564,8 +3562,8 @@ DOOM.ROOM_THEMES =
       RROCK09 = 10,
       RROCK12 = 10,
       RROCK13 = 10,
-      RROCK14 = 10,
-    },
+      RROCK14 = 10
+    }
   },
 
 
@@ -3594,7 +3592,7 @@ DOOM.ROOM_THEMES =
 
       GSTGARG = 10,
       GSTLION = 10,
-      GSTSATYR = 10,
+      GSTSATYR = 10
     },
 
     floors =
@@ -3604,7 +3602,7 @@ DOOM.ROOM_THEMES =
       FLOOR6_2 = 15,
       FLOOR7_1 = 20,
       FLOOR7_2 = 25,
-      FLAT10  = 20,
+      FLAT10  = 20
     },
 
     ceilings =
@@ -3616,9 +3614,8 @@ DOOM.ROOM_THEMES =
       FLOOR7_2 = 20,
       CEIL1_1 = 15,
       BLOOD1 = 20,
-      LAVA1 = 15,
+      LAVA1 = 15
     },
-
 
     y_offsets =
     {
@@ -3633,8 +3630,8 @@ DOOM.ROOM_THEMES =
       SW1SATYR  = 47,
       WOODMET4 = 16,
       WOODMET2 = 16,
-      WOODMET1 = 16,
-    },
+      WOODMET1 = 16
+    }
   },
 
 
@@ -3648,21 +3645,21 @@ DOOM.ROOM_THEMES =
     {
       WOOD3 = 50,
       WOOD5 = 50,
-      WOODMET1 = 50,
+      WOODMET1 = 50
     },
 
     floors =
     {
       FLAT5_1 = 50,
-      FLAT5_2 = 50,
+      FLAT5_2 = 50
     },
 
     ceilings =
     {
       CEIL1_1 = 50,
       CEIL3_2 = 50,
-      CEIL3_3 = 50,
-    },
+      CEIL3_3 = 50
+    }
   },
 
 
@@ -3682,7 +3679,7 @@ DOOM.ROOM_THEMES =
       METAL = 50,
       BROWNHUG = 50,
       GSTONE1 = 50,
-      SP_HOT1 = 50,
+      SP_HOT1 = 50
     },
 
     floors =
@@ -3699,7 +3696,7 @@ DOOM.ROOM_THEMES =
       FLAT1_1 = 50,
       FLAT1_2 = 50,
       DEM1_5 = 50,
-      DEM1_6 = 50,
+      DEM1_6 = 50
     },
 
     ceilings =
@@ -3728,8 +3725,8 @@ DOOM.ROOM_THEMES =
       DEM1_5 = 50,
       DEM1_6 = 50,
       CEIL3_2 = 50,
-      CEIL3_5 = 50,
-    },
+      CEIL3_5 = 50
+    }
   },
 
 
@@ -3754,7 +3751,7 @@ DOOM.ROOM_THEMES =
       SKSNAKE2 = 50,
       SKSPINE2 = 50,
       ZIMMER5 = 50,
-      ROCKRED1 = 50,
+      ROCKRED1 = 50
     },
 
     floors =
@@ -3777,14 +3774,14 @@ DOOM.ROOM_THEMES =
       RROCK16 = 50,
       SFLR6_1 = 50,
       SFLR6_4 = 50,
-      SLIME09 = 50,
+      SLIME09 = 50
     },
 
     ceilings =
     {
       FLAT3 = 50 -- the mineshafts don't actually have
                  -- separate _CEIL textures
-    },
+    }
   },
 
 ----  URBAN / CITY / EARTH  -----------------------
@@ -3808,7 +3805,7 @@ DOOM.ROOM_THEMES =
       BRICK2  = 20,
       BRICK8  = 20,
       BRICK1  = 10,
-      BRICK9  = 10,
+      BRICK9  = 10
     },
 
     floors =
@@ -3828,7 +3825,7 @@ DOOM.ROOM_THEMES =
       FLOOR0_3 = 20,
       FLOOR4_6 = 20,
       FLOOR5_3 = 25,
-      FLOOR5_4 = 10,
+      FLOOR5_4 = 10
     },
 
     ceilings =
@@ -3841,8 +3838,8 @@ DOOM.ROOM_THEMES =
       CEIL1_1 = 30,
       FLAT5_2 = 10,
       MFLR8_1 = 10,
-      SLIME13 = 5,
-    },
+      SLIME13 = 5
+    }
   },
 
 
@@ -3859,7 +3856,7 @@ DOOM.ROOM_THEMES =
       PANEL7 = 20,
       PANEL3 = 50,
       PANEL2 = 50,
-      PANCASE2 = 30,
+      PANCASE2 = 30
     },
 
     floors =
@@ -3876,7 +3873,7 @@ DOOM.ROOM_THEMES =
       FLAT5_2 = 40,
       FLAT5 = 20,
       FLOOR3_3 = 10,
-      FLOOR4_6 = 10,
+      FLOOR4_6 = 10
     },
 
     ceilings =
@@ -3888,8 +3885,8 @@ DOOM.ROOM_THEMES =
       RROCK10 = 20,
       RROCK11 = 10,
       FLOOR7_1 = 5,
-      CEIL3_5 = 5,
-    },
+      CEIL3_5 = 5
+    }
   },
 
 
@@ -3904,7 +3901,7 @@ DOOM.ROOM_THEMES =
       STONE2 = 60,
       STONE3 = 50,
       ROCK1  = 10,
-      ROCK3  = 10,
+      ROCK3  = 10
     },
 
     floors =
@@ -3919,7 +3916,7 @@ DOOM.ROOM_THEMES =
       FLAT5_5 = 20,
       FLAT5_1 = 50,
       SLIME14 = 15,
-      SLIME15 = 15,
+      SLIME15 = 15
     },
 
     ceilings =
@@ -3931,8 +3928,8 @@ DOOM.ROOM_THEMES =
       FLAT5_4 = 20,
       RROCK11 = 20,
       RROCK12 = 20,
-      FLAT5_2 = 10,
-    },
+      FLAT5_2 = 10
+    }
   },
 
 
@@ -3943,7 +3940,7 @@ DOOM.ROOM_THEMES =
 
     walls =
     {
-      BRICK11 = 50,
+      BRICK11 = 50
     },
 
     floors =
@@ -3953,7 +3950,7 @@ DOOM.ROOM_THEMES =
       FLAT1_1  = 40,
       FLOOR3_3 = 20,
       FLOOR5_4 = 20,
-      FLOOR6_2 = 10,
+      FLOOR6_2 = 10
     },
 
     ceilings =
@@ -3963,8 +3960,8 @@ DOOM.ROOM_THEMES =
       CEIL3_5  = 20,
       FLAT8    = 10,
       FLAT5_2  = 10,
-      FLAT5_4  = 5,
-    },
+      FLAT5_4  = 5
+    }
   },
 
 
@@ -3985,7 +3982,7 @@ DOOM.ROOM_THEMES =
       FLAT5_8  = 30,
       FLAT1    = 20,
       FLOOR7_1 = 10,
-      FLOOR3_3 = 10,
+      FLOOR3_3 = 10
     },
 
     ceilings =
@@ -3996,8 +3993,8 @@ DOOM.ROOM_THEMES =
       CEIL3_5  = 20,
       CEIL5_1  = 20,
       RROCK13  = 20,
-      FLAT8    = 10,
-    },
+      FLAT8    = 10
+    }
   },
 
 
@@ -4019,7 +4016,7 @@ DOOM.ROOM_THEMES =
       STONE2 = 15,
       STARG1 = 15,
       STARTAN3 = 15,
-      MARBLE1 = 10,
+      MARBLE1 = 10
     },
 
     floors =
@@ -4033,7 +4030,7 @@ DOOM.ROOM_THEMES =
       FLOOR4_8 = 10,
       FLOOR5_1 = 10,
       FLAT5_2 = 5,
-      FLAT5_1 = 5,
+      FLAT5_1 = 5
     },
 
     ceilings =
@@ -4048,8 +4045,8 @@ DOOM.ROOM_THEMES =
       FLAT4    = 10,
       FLAT9 = 5,
       FLAT5_2 = 5,
-      CEIL1_1 = 5,
-    },
+      CEIL1_1 = 5
+    }
   },
 
 
@@ -4066,7 +4063,7 @@ DOOM.ROOM_THEMES =
       WOOD3 = 30,
       WOOD5 = 30,
       WOOD12 = 30,
-      WOODVERT = 10,
+      WOODVERT = 10
     },
 
     floors =
@@ -4078,7 +4075,7 @@ DOOM.ROOM_THEMES =
       FLOOR4_6 = 10,
       FLAT5_5  = 15,
       DEM1_5   = 10,
-      DEM1_6   = 15,
+      DEM1_6   = 15
     },
 
     ceilings =
@@ -4091,8 +4088,8 @@ DOOM.ROOM_THEMES =
       RROCK10 = 10,
       RROCK11 = 10,
       RROCK12 = 10,
-      FLOOR7_1 = 5,
-    },
+      FLOOR7_1 = 5
+    }
   },
 
 
@@ -4122,7 +4119,7 @@ DOOM.ROOM_THEMES =
       MFLR8_2  = 20,
       FLOOR1_6 = 10,
       FLAT5_1  = 10,
-      FLAT5_2  = 10,
+      FLAT5_2  = 10
     },
 
     ceilings =
@@ -4136,8 +4133,8 @@ DOOM.ROOM_THEMES =
       FLAT19   = 30,
       RROCK03  = 10,
       RROCK10  = 10,
-      RROCK12  = 5,
-    },
+      RROCK12  = 5
+    }
   },
 
 
@@ -4156,7 +4153,7 @@ DOOM.ROOM_THEMES =
       BROWN144 = 40,
       BROWNHUG = 20,
       BRONZE1 = 20,
-      BRONZE3 = 20,
+      BRONZE3 = 20
     },
 
     floors =
@@ -4171,7 +4168,7 @@ DOOM.ROOM_THEMES =
       MFLR8_2  = 20,
       FLOOR1_6 = 10,
       FLAT5_1  = 10,
-      FLAT5_2  = 10,
+      FLAT5_2  = 10
     },
 
     ceilings =
@@ -4185,8 +4182,8 @@ DOOM.ROOM_THEMES =
       FLAT19   = 30,
       RROCK03  = 10,
       RROCK10  = 10,
-      RROCK12  = 5,
-    },
+      RROCK12  = 5
+    }
   },
 
 
@@ -4206,7 +4203,7 @@ DOOM.ROOM_THEMES =
       STONE2 = 20,
 
       ICKWALL1 = 10, -- well, some hospitals and offices
-      ICKWALL2 = 10, -- have probably fallen into disrepair by now
+      ICKWALL2 = 10 -- have probably fallen into disrepair by now
     },
 
     floors =
@@ -4223,7 +4220,7 @@ DOOM.ROOM_THEMES =
       FLAT14 = 80, -- nice colored carpet look
       FLOOR1_6 = 80,
       FLOOR7_1 = 25,
-      CEIL3_3 = 25,
+      CEIL3_3 = 25
     },
 
     ceilings =
@@ -4234,8 +4231,8 @@ DOOM.ROOM_THEMES =
       FLAT9 = 20,
       FLOOR0_3 = 20,
       FLOOR0_5 = 20,
-      FLAT5_4 = 50,
-    },
+      FLAT5_4 = 50
+    }
   },
 
 
@@ -4263,7 +4260,7 @@ DOOM.ROOM_THEMES =
       PANEL9   = 30,
       STUCCO   = 30,
       STUCCO1  = 30,
-      STUCCO3  = 30,
+      STUCCO3  = 30
     },
 
     floors =
@@ -4274,7 +4271,7 @@ DOOM.ROOM_THEMES =
       FLAT5_4 = 50,
       MFLR8_1 = 50,
       FLOOR5_3 = 20,
-      FLAT5 = 20,
+      FLAT5 = 20
     },
 
     ceilings =
@@ -4283,8 +4280,8 @@ DOOM.ROOM_THEMES =
       FLAT5_2 = 25,
       CEIL3_5 = 20,
       MFLR8_1 = 50,
-      FLAT1   = 30,
-    },
+      FLAT1   = 30
+    }
   },
 
 
@@ -4304,7 +4301,7 @@ DOOM.ROOM_THEMES =
       CEMENT9 = 50,
       PANCASE1 = 50,
       METAL2 = 50,
-      BRONZE1 = 50,
+      BRONZE1 = 50
     },
 
     floors =
@@ -4325,7 +4322,7 @@ DOOM.ROOM_THEMES =
       RROCK13 = 50,
       SLIME14 = 50,
       SLIME15 = 50,
-      SLIME16 = 50,
+      SLIME16 = 50
     },
 
     ceilings =
@@ -4344,8 +4341,8 @@ DOOM.ROOM_THEMES =
       FLOOR0_5 = 50,
       FLOOR3_3 = 50,
       FLOOR4_6 = 50,
-      FLOOR5_4 = 50,
-    },
+      FLOOR5_4 = 50
+    }
   },
 
 
@@ -4385,14 +4382,14 @@ DOOM.ROOM_THEMES =
       RROCK15 = 50,
       RROCK16 = 50,
       RROCK17 = 50,
-      RROCK18 = 50,
+      RROCK18 = 50
     },
 
     ceilings =
     {
       FLAT3 = 50 -- the mineshafts don't actually have
                  -- separate _CEIL textures
-    },
+    }
   },
 
 
@@ -4422,7 +4419,7 @@ DOOM.ROOM_THEMES =
       BSTONE2  = 10,
       STONE4   = 10,
       STONE5   = 10,
-      ASHWALL7 = 10,
+      ASHWALL7 = 10
     },
 
     floors =
@@ -4437,8 +4434,8 @@ DOOM.ROOM_THEMES =
       BSTONE2  = 10,
       STONE5   = 10,
       RROCK18  = 20,
-      RROCK19  = 20,
-    },
+      RROCK19  = 20
+    }
   },
 
 
@@ -4460,7 +4457,7 @@ DOOM.ROOM_THEMES =
       GRASS2   = 15,
       RROCK03  = 10,
       MFLR8_3  = 10,
-      FLOOR6_2 = 5,
+      FLOOR6_2 = 5
     },
 
     naturals =
@@ -4486,7 +4483,7 @@ DOOM.ROOM_THEMES =
       TANROCK7 = 15,
       ROCK1    = 30,
       ROCK2    = 20,
-      ROCK3    = 70,
+      ROCK3    = 70
     },
 
     porch_floors =
@@ -4511,9 +4508,9 @@ DOOM.ROOM_THEMES =
       RROCK14 = 10,
       SLIME14 = 10,
       SLIME15 = 10,
-      SLIME16 = 10,
-    },
-  },
+      SLIME16 = 10
+    }
+  }
 }
 
 
@@ -4523,7 +4520,7 @@ DOOM.ROOMS =
 {
   GENERIC =
   {
-    env = "any",
+    env = "any"
   },
 
 
@@ -4532,43 +4529,43 @@ DOOM.ROOMS =
   COMPUTER =
   {
     theme = "tech",
-    prob  = 50,
+    prob  = 50
   },
 
   STORAGE =
   {
-    prob  = 50,
+    prob  = 50
   },
 
   WASTE =
   {
     theme = "!hell",
     style = "liquids",
-    prob  = 50,
+    prob  = 50
   },
 
   PRISON =
   {
     style = "cages",
-    prob  = 50,
+    prob  = 50
   },
 
   TORTURE =
   {
     theme = { hell=1, urban=0.2 },
-    prob  = 50,
+    prob  = 50
   },
 
   CHAPEL =
   {
     theme = "hell",
-    prob  = 15,
+    prob  = 15
   },
 
   LIBRARY =
   {
     theme = "urban",
-    prob  = 15,
+    prob  = 15
   },
 
 
@@ -4578,22 +4575,22 @@ DOOM.ROOMS =
   {
     env = "outdoor",
     theme = "tech",
-    prob = 10,
+    prob = 10
   },
 
   GARDEN =
   {
     env = "outdoor",
     theme = "urban",
-    prob = 50,
+    prob = 50
   },
 
   GRAVEYARD =
   {
     env = "outdoor",
     theme = { hell=1, urban=0.4 },
-    prob = 20,
-  },
+    prob = 20
+  }
 }
 
 
@@ -4619,20 +4616,20 @@ DOOM.NAMES =
         Mimas=10,
         Rhea=10,
         Iapetus=10,
-        ["Tei Tenga"]=15,
+        ["Tei Tenga"]=15
       },
 
       b =
       {
-        UAC=30,
+        UAC=30
       },
 
       s =
       {
-        ["UAC Crisis"]=30,
-      },
-    },
-  },
+        ["UAC Crisis"]=30
+      }
+    }
+  }
 }
 
 --------------------------------------------------------------------
