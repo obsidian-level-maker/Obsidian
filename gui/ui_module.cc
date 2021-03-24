@@ -94,10 +94,10 @@ opt_change_callback_data_t;
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 						  int gap, Fl_Color select_col)
 {
-	int nw = kf_w(112);
+	int nw = this->parent()->w();
 //	int nh = kf_h(30);
 
-	int nx = x() + w() - nw - kf_w(10);
+	int nx = x() + kf_w(6);
 	int ny = y() + cur_opt_y;
 
 	// make label with ': ' suffixed
@@ -106,8 +106,8 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	strcpy(new_label, label);
 	strcat(new_label, ": ");
 
-	UI_RChoice *rch = new UI_RChoice(nx, ny, nw, kf_h(24), new_label);
-	rch->align(FL_ALIGN_LEFT);
+	UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .80, kf_h(24), new_label);
+	rch->align(FL_ALIGN_TOP_LEFT);
 	rch->selection_color(select_col);
 
 	if (! tip)
@@ -125,7 +125,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	add(rch);
 
-	cur_opt_y += gap ? kf_h(44) : kf_h(30);
+	cur_opt_y += gap ? kf_h(59) : kf_h(45);
 
 	resize(x(), y(), w(), CalcHeight());
 	redraw();

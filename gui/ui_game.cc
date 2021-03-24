@@ -36,7 +36,7 @@
 UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	Fl_Group(X, Y, W, H, label)
 {
-	box(FL_FLAT_BOX);
+	box(FL_THIN_UP_BOX);
 
 	int button_w = W * 0.35;
 	int button_h = kf_h(30);
