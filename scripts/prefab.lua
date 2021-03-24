@@ -2405,7 +2405,7 @@ function Fab_find_matches(reqs, match_state)
     end
 
     -- negated check?
-    if string.sub(def_k, 1, 1) == '~' then
+    if string.sub(def_k, 1, 1) == '!' then
       def_k = string.sub(def_k, 2)
 
       return not match_environment(def_k, req_k)
