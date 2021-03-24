@@ -27,12 +27,9 @@ public:
 	UI_MiniMap *mini_map;
 
 private:
-	//Fl_Menu_Across *misc_menu;
 
 	Fl_Box *status;
 	Fl_Progress *progress;
-
-//	Fl_Box *seed_display;
 
 	char  status_label[200];
 	char  prog_label[100];
@@ -60,7 +57,6 @@ public:
 	void Prog_Finish();
 
 	void SetStatus(const char *msg);
-//	void DisplaySeed(double value);
 
 private:
 
@@ -70,13 +66,6 @@ private:
 	int  FindStep(const char *name);  // -1 if not found
 
 	void AddStatusStep(const char *name);
-
-/*	static void menu_do_about(Fl_Widget *, void*);
-	static void menu_do_options(Fl_Widget *, void*);
-	static void menu_do_addons(Fl_Widget *, void*);
-	static void menu_do_edit_seed(Fl_Widget *, void*);
-	static void menu_do_view_logs(Fl_Widget *, void*);
-	static void menu_do_manage_config(Fl_Widget *, void*);*/
 };
 
 #endif /* __UI_BUILD_H__ */

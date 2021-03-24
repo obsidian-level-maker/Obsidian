@@ -75,15 +75,22 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	int TOP_H   = kf_h(228);
 	int BOT_H   = H - TOP_H - 4;
 
-//	menu_bar = new UI_Menu(0,0, W, 30);
+	menu_bar = new Fl_Menu_Bar(0,0, W, 25);
+	menu_bar->box(FL_FLAT_BOX);
+	menu_bar->add("File/Options", 0, menu_do_options);
+	menu_bar->add("File/Addon List", 0, menu_do_addons);
+	menu_bar->add("File/Set Seed", 0, menu_do_edit_seed);
+	menu_bar->add("File/Config Manager", 0, menu_do_manage_config);
+	menu_bar->add("Help/About", 0, menu_do_about);
+	menu_bar->add("Help/View Logs", 0, menu_do_view_logs);
 
-	game_box = new UI_Game(0, 0, LEFT_W, TOP_H);
+	game_box = new UI_Game(0, 27, LEFT_W, TOP_H-27);
 
 	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
 
-	right_mods = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, SELECTION);
+	right_mods = new UI_CustomMods(W - MOD_W, 27, MOD_W, H-27, SELECTION);
 
-	left_mods = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H, SELECTION);
+	left_mods = new UI_CustomMods(LEFT_W+4, 27, MOD_W, H-27, SELECTION);
 
 
 	end();
@@ -119,11 +126,38 @@ void UI_MainWin::CalcWindowSize(int *W, int *H)
 void UI_MainWin::Locked(bool value)
 {
 	game_box  ->Locked(value);
-	//build_box ->Locked(value);
 	left_mods ->Locked(value);
 	right_mods->Locked(value);
 }
 
+void UI_MainWin::menu_do_about(Fl_Widget*w, void*data)
+{
+	DLG_AboutText();
+}
 
+void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data)
+{
+	DLG_ViewLogs();
+}
+
+void UI_MainWin::menu_do_options(Fl_Widget *w, void *data)
+{
+	DLG_OptionsEditor();
+}
+
+void UI_MainWin::menu_do_addons(Fl_Widget *w, void *data)
+{
+	DLG_SelectAddons();
+}
+
+void UI_MainWin::menu_do_edit_seed(Fl_Widget *w, void *data)
+{
+	DLG_EditSeed();
+}
+
+void UI_MainWin::menu_do_manage_config(Fl_Widget *w, void *data)
+{
+	DLG_ManageConfig();
+}
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

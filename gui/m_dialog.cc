@@ -339,6 +339,7 @@ void DLG_EditSeed(void)
             }
         }
         next_rand_seed = std::stoull(word);
+        main_win->game_box->DisplaySeed(next_rand_seed);
         return;
     } catch (std::invalid_argument &e) {
         std::cout << "Invalid argument. Will process as string.\n";
@@ -359,6 +360,7 @@ void DLG_EditSeed(void)
             }
         }
     }
+    main_win->game_box->DisplaySeed(next_rand_seed);
     return;
 }
 

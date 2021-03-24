@@ -45,17 +45,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	int cy = Y + kf_h(12);
 
-/*	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h,
-		StringPrintf("     %s @-3>", _("Menu")));
-	misc_menu->selection_color(WINDOW_BG);
-
-	misc_menu->add(_("About"),         FL_F+1, menu_do_about);
-	misc_menu->add(_("Options"),       FL_F+4, menu_do_options);
-	misc_menu->add(_("Addon List"),    FL_F+3, menu_do_addons);
-	misc_menu->add(_("Set Seed"),      FL_F+5, menu_do_edit_seed);
-	misc_menu->add(_("View Logs"),     FL_F+6, menu_do_view_logs);
-	misc_menu->add(_("Config Manager"),FL_F+9, menu_do_manage_config);*/
-
 	/* --- Status Area --- */
 
 	mini_map = new UI_MiniMap(X + (W * .10), cy, mini_w, mini_h);
@@ -75,15 +64,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	progress->labelsize(FL_NORMAL_SIZE + 2);
 
 	cy = cy + progress->h() + kf_h(4);
-
-
-/*	int cw = kf_w(10);
-	int ch = kf_h(26);
-
-	seed_display = new Fl_Box(FL_NO_BOX, X + cw, cy, W - cw*2, ch, "---- ---- ---- ----");
-	seed_display->labelfont(FL_COURIER);
-	seed_display->labelsize(FL_NORMAL_SIZE + 2);
-	seed_display->labelcolor(34);*/
 
 	resizable(mini_map);
 
@@ -331,72 +311,6 @@ void UI_Build::AddStatusStep(const char *name)
 	status->label(status_label);
 	status->redraw();
 }
-
-
-/*void UI_Build::DisplaySeed(double value)
-{
-	if (value < 0)
-	{
-		seed_display->label("---- ---- ---- ----");
-		return;
-	}
-
-	// format the number to be 4 groups of 4 digits.
-	// if the seed is longer than 16 digits, then we truncate it.
-
-	char buffer[256];
-
-	sprintf(buffer, "%016.0f", value);
-
-	char newbuf[64];
-	memset(newbuf, 0, sizeof(newbuf));
-
-	int i, k;
-
-	for (i = 0 ; i < 4 ; i++)
-	{
-		for (k = 0 ; k < 4 ; k++)
-			newbuf[i*5 + k] = buffer[i*4 + k];
-
-		if (i < 3)
-			newbuf[(i+1) * 5 - 1] = ' ';
-	}
-
-	seed_display->copy_label(newbuf);
-}*/
-
-
-//----------------------------------------------------------------
-
-/*void UI_Build::menu_do_about(Fl_Widget *w, void *data)
-{
-	DLG_AboutText();
-}
-
-void UI_Build::menu_do_options(Fl_Widget *w, void *data)
-{
-	DLG_OptionsEditor();
-}
-
-void UI_Build::menu_do_addons(Fl_Widget *w, void *data)
-{
-	DLG_SelectAddons();
-}
-
-void UI_Build::menu_do_edit_seed(Fl_Widget *w, void *data)
-{
-	DLG_EditSeed();
-}
-
-void UI_Build::menu_do_view_logs(Fl_Widget *w, void *data)
-{
-	DLG_ViewLogs();
-}
-
-void UI_Build::menu_do_manage_config(Fl_Widget *w, void *data)
-{
-	DLG_ManageConfig();
-}*/
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

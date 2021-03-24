@@ -43,7 +43,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	int button_x = X + kf_w(25);
 
 	int y_step  = kf_h(30);
-	int y_step2 = kf_h(44);
 
 	int cx = X + W * 0.29;
 	int cy = Y + kf_h(4);
@@ -61,7 +60,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 
 
 	int cw = W * 0.60;
-	int ch = kf_h(24);
+	int ch = kf_h(22);
 
 	game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
 	game->align(FL_ALIGN_LEFT);
@@ -92,7 +91,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	theme->selection_color(WINDOW_BG);
 	theme->callback(callback_Theme, this);
 
-	cy += y_step + kf_h(5);
+	cy += y_step;
 
 	build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
 	build->labelfont(FL_HELVETICA_BOLD);
@@ -104,13 +103,14 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	quit->callback(quit_callback, this);
 	quit->shortcut(FL_COMMAND + 'q');
 	
-	cy += y_step2;
+	cy += y_step + 7;
 
-	seed_display = new Fl_Box(FL_FLAT_BOX, X + cw, cy, W - cw*2, ch, "--------------------");
-	seed_display->labelfont(FL_COURIER);
-	seed_display->labelsize(FL_NORMAL_SIZE + 2);
-	seed_display->labelcolor(34);
-	seed_display->align(FL_ALIGN_INSIDE);
+	seed_buffer = new Fl_Text_Buffer();
+	seed_display = new Fl_Text_Display(X + (W * .10), cy, (W * .80), ch);
+	seed_display->box(FL_FLAT_BOX);
+	seed_display->color(fl_rgb_color(221, 221, 221));
+	seed_display->buffer(seed_buffer);
+	seed_buffer->text("-");
 
 	end();
 }
@@ -282,15 +282,17 @@ void UI_Game::SetAbortButton(bool abort)
 
 void UI_Game::DisplaySeed(unsigned long long value)
 {
-	if (value < 0)
-	{
-		seed_display->copy_label("--------------------");
-		return;
-	}
+	seed_buffer->text(std::to_string(value).c_str());
 
-	seed_display->copy_label(std::to_string(value).c_str());
-		
 }
+
+void UI_Game::ClearSeed()
+{
+
+	seed_buffer->text("-");
+
+}
+
 
 void UI_Game::build_callback(Fl_Widget *w, void *data)
 {

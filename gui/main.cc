@@ -542,6 +542,7 @@ void Main_CalcNewSeed()
 void Main_SetSeed()
 {
 	ob_set_config("seed", std::to_string(next_rand_seed).c_str());
+	main_win->game_box->DisplaySeed(next_rand_seed);
 }
 
 
@@ -634,7 +635,7 @@ bool Build_Cool_Shit()
 	else
 	{
 		if (main_win)
-			main_win->game_box->DisplaySeed(-1);
+			main_win->game_box->ClearSeed();
 	}
 
 	if (main_win)
