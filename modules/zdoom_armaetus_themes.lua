@@ -1530,7 +1530,6 @@ ARMAETUS_ROOM_THEMES =
       TANROCK3 = 5,
       TANROCK4 = 5,
       TANROCK5 = 5,
-      TANROCK6 = 5,
       TANROCK7 = 5,
       TANROCK8 = 5,
 
