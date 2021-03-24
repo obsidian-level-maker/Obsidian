@@ -2,12 +2,12 @@
 --  MODULE: ZDoom Story Tables
 ----------------------------------------------------------------
 --
---  Copyright (C) 2020 MsrSgtShooterPerson
---  Copyright (C) 2020 Armaetus
---  Copyright (C) 2020 Tapwave
---  Copyright (C) 2020 Simon-v
---  Copyright (C) 2020 EpicTyphlosion
---  Copyright (C) 2020 Beed28,
+--  Copyright (C) 2021 MsrSgtShooterPerson
+--  Copyright (C) 2021 Armaetus
+--  Copyright (C) 2021 Tapwave
+--  Copyright (C) 2021 Simon-v
+--  Copyright (C) 2021 EpicTyphlosion
+--  Copyright (C) 2021 Beed28,
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
