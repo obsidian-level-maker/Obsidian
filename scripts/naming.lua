@@ -5374,6 +5374,8 @@ namelib.NAMES =
         -- MSSP adds names
         ["Hell is Infinite"] = 50,
         ["Nobody Knows About Legacy 3D Lines"] = 20,
+        ["Live! Work! SLAY!"] = 20,
+        ["Too Much Fabs, Too Few Fabs"] = 20,
 
         -- based on popular movie/TV slogans
         ["A Minute in Hell"] = 20,
