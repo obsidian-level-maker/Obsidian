@@ -61,6 +61,7 @@ void UI_MiniMap::MapBegin()
 	if (pixels)
 		delete[] pixels;
 
+
 	pixels = new u8_t[map_W * map_H * 3];
 
 	MapClear();
@@ -85,7 +86,7 @@ void UI_MiniMap::MapClear()
 		}
 	}
 	
-main_win->build_box->seed_disp->redraw();
+	main_win->build_box->seed_disp->redraw();
 	
 }
 
@@ -145,7 +146,6 @@ void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b)
 		return;
 
 	RawPixel(x, y, r, g, b);
-	main_win->build_box->seed_disp->redraw();
 }
 
 
@@ -165,8 +165,6 @@ void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2,
 	for (int y = y1; y <= y2; y++)
 		for (int x = x1; x <= x2; x++)
 			RawPixel(x, y, r, g, b);
-			
-	main_win->build_box->seed_disp->redraw();
 	
 }
 
@@ -334,7 +332,6 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
 			RawPixel(x, y, r, g, b);
 		}
 	}
-	main_win->build_box->seed_disp->redraw();
 }
 
 
@@ -353,7 +350,6 @@ void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b)
 	RawPixel(x+1, y, r, g, b);
 	RawPixel(x, y-1, r, g, b);
 	RawPixel(x, y+1, r, g, b);
-main_win->build_box->seed_disp->redraw();
 }
 
 
