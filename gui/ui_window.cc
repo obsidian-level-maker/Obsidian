@@ -70,13 +70,14 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 
 	int LEFT_W = kf_w(232);
-	int MOD_W   = (W - LEFT_W) / 2 - 4;
+	int MOD_W   = (W - LEFT_W) / 2 - kf_h(4);
 
 	int TOP_H   = kf_h(228);
-	int BOT_H   = H - TOP_H - 4;
+	int BOT_H   = H - TOP_H - kf_h(4);
 
-	menu_bar = new Fl_Menu_Bar(0,0, W, 25);
+	menu_bar = new Fl_Menu_Bar(0,0, W, kf_h(15));
 	menu_bar->box(FL_FLAT_BOX);
+	menu_bar->textsize(menu_bar->textsize() * .75);
 	menu_bar->add("File/Options", 0, menu_do_options);
 	menu_bar->add("File/Addon List", 0, menu_do_addons);
 	menu_bar->add("File/Set Seed", 0, menu_do_edit_seed);
@@ -84,17 +85,22 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	menu_bar->add("Help/About", 0, menu_do_about);
 	menu_bar->add("Help/View Logs", 0, menu_do_view_logs);
 
-	game_box = new UI_Game(0, 27, LEFT_W, TOP_H-27);
+	sizing_group = new Fl_Group(0,kf_h(17),W, H-kf_h(17));
+	sizing_group->box(FL_NO_BOX);	
+	
+	game_box = new UI_Game(0, kf_h(17), LEFT_W, TOP_H-kf_h(17));
 
-	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
+	build_box = new UI_Build(0, TOP_H+kf_h(4), LEFT_W, BOT_H);
 
-	right_mods = new UI_CustomMods(W - MOD_W, 27, MOD_W, H-27, SELECTION);
+	right_mods = new UI_CustomMods(W - MOD_W, kf_h(17), MOD_W, H-kf_h(17), SELECTION);
 
-	left_mods = new UI_CustomMods(LEFT_W+4, 27, MOD_W, H-27, SELECTION);
-
+	left_mods = new UI_CustomMods(LEFT_W+kf_h(4), kf_h(17), MOD_W, H-kf_h(17), SELECTION);
 
 	end();
-	resizable(this);
+
+	resizable(sizing_group);
+
+	end();
 
 }
 

@@ -91,7 +91,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	theme->selection_color(WINDOW_BG);
 	theme->callback(callback_Theme, this);
 
-	cy += y_step;
+	cy += y_step + kf_h(10);
 
 	build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
 	build->labelfont(FL_HELVETICA_BOLD);

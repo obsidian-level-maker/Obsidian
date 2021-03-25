@@ -41,6 +41,8 @@ public:
 	// main child widgets
 
 	Fl_Menu_Bar *menu_bar;
+	
+	Fl_Group *sizing_group;
 
 	UI_Game   *game_box;
 
