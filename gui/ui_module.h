@@ -118,6 +118,8 @@ public:
 private:
 	
 	void PositionAll(UI_Module *focus = NULL);
+	
+	void resize(int X, int Y, int W, int H);
 
 	static void callback_Scroll(Fl_Widget *w, void *data);
 	static void callback_ModEnable(Fl_Widget *w, void *data);
