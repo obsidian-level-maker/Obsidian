@@ -73,6 +73,9 @@ private:
 class UI_CustomMods : public Fl_Group
 {
 private:
+
+	Fl_Group *mod_pack_group;
+
 	Fl_Group *mod_pack;
 
 	Fl_Scrollbar *sbar;

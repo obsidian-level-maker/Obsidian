@@ -242,7 +242,9 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 
 	sbar->color(FL_DARK3+1, FL_DARK1);
 
-
+	mod_pack_group = new Fl_Group(mx, my, mw, mh);
+	mod_pack_group->box(FL_NO_BOX);
+	
 	mod_pack = new Fl_Group(mx, my, mw, mh);
 	mod_pack->clip_children(1);
 	mod_pack->end();
@@ -257,6 +259,9 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 	mod_pack->color(WINDOW_BG);
 	mod_pack->resizable(mod_pack);
 
+	end();
+	
+	resizable(mod_pack_group);
 
 	end();
 }
