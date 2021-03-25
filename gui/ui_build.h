@@ -25,6 +25,7 @@ class UI_Build : public Fl_Group
 {
 public:
 	UI_MiniMap *mini_map;
+	Fl_Box *seed_disp;
 
 private:
 

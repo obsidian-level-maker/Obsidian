@@ -102,15 +102,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h, _("Quit"));
 	quit->callback(quit_callback, this);
 	quit->shortcut(FL_COMMAND + 'q');
-	
-	cy += y_step + 7;
-
-	seed_buffer = new Fl_Text_Buffer();
-	seed_display = new Fl_Text_Display(X + (W * .10), cy, (W * .80), ch);
-	seed_display->box(FL_FLAT_BOX);
-	seed_display->color(fl_rgb_color(221, 221, 221));
-	seed_display->buffer(seed_buffer);
-	seed_buffer->text("-");
 
 	end();
 }
@@ -278,19 +269,6 @@ void UI_Game::SetAbortButton(bool abort)
 
 		build->labelfont(FL_HELVETICA_BOLD);
 	}
-}
-
-void UI_Game::DisplaySeed(unsigned long long value)
-{
-	seed_buffer->text(std::to_string(value).c_str());
-
-}
-
-void UI_Game::ClearSeed()
-{
-
-	seed_buffer->text("-");
-
 }
 
 
