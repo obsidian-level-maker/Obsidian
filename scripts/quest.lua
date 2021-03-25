@@ -3021,6 +3021,53 @@ function Quest_room_themes()
       R.fence_group = rand.key_by_probs(GAME.THEMES[theme].fence_groups)
       R.beam_group = rand.key_by_probs(GAME.THEMES[theme].beam_groups)
     end
+
+    -- decide light groups
+    -- white is excluded here as it's a main color
+    local colors =
+    {
+      blue = 20,
+      red = 20,
+      yellow = 20,
+      orange = 20,
+      green = 20,
+      beige = 25,
+      purple = 5
+    }
+
+    local light_grouping = rand.key_by_probs(
+      {
+        plain = 30, -- neutral color (white or beige)
+        monochrome = 50, -- neutral color and one other color
+        bichrome = 50, -- neutral color and two other colors
+        single = 25, -- completely random color
+        double = 25, -- two completely random colors
+        all = 30 -- the kitchen sink
+      }
+    )
+
+    if PARAM.dynamic_lights == "yes" then
+      LEVEL.light_group = {}
+
+      if light_grouping == "plain" then
+        LEVEL.light_group["white"] = 1
+      elseif light_grouping == "monochrome" then
+        LEVEL.light_group["white"] = 1
+        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+      elseif light_grouping == "bichrome" then
+        LEVEL.light_group["white"] = 1
+        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+      elseif light_grouping == "single" then
+        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+      elseif light_grouping == "double" then
+        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+      end
+
+      gui.printf("\nLevel light group: " .. light_grouping .. "\n")
+      gui.printf(table.tostr(LEVEL.light_group) .. "\n")
+    end
   end
 
 

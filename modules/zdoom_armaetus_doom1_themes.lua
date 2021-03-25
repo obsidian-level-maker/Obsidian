@@ -2,7 +2,7 @@
 --  MODULE: Armaetus Doom/Ultimate Doom Themes
 ----------------------------------------------------------------
 --
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --  Copyright (C) 2019 Armaetus
 --
 --  This program is free software; you can redistribute it and/or

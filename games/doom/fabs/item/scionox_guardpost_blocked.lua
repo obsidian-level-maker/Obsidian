@@ -44,6 +44,8 @@ PREFABS.Item_scionox_guardpost_secret =
   where  = "seeds",
   key   = "secret",
 
+  deep = 16,
+
   seed_w = 3,
   seed_h = 2,
 

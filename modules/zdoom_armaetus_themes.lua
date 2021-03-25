@@ -2,7 +2,7 @@
 --  MODULE: Armaetus Themes
 ----------------------------------------------------------------
 --
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --  Copyright (C) 2019 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
@@ -1507,7 +1507,7 @@ ARMAETUS_ROOM_THEMES =
   {
     env = "building",
     prob = 30,
-    
+
     walls =
     {
       ASHWALL2 = 5,
@@ -1539,7 +1539,7 @@ ARMAETUS_ROOM_THEMES =
       ZIMMER5 = 5,
       ZIMMER8 = 5,
 
-      -- 
+      --
 
       ASHWALL1 = 7,
       BRIKS11 = 7,
@@ -4271,8 +4271,8 @@ ARMAETUS_DESERT_OUTDOORS =
       T_SDTCH2 = 5,
       T_SDTCH3 = 5,
       T_SDTCH4 = 5,
-      T_SDTCH5 = 5,
-    },
+      T_SDTCH5 = 5
+    }
   },
 
   urban =
@@ -4290,8 +4290,8 @@ ARMAETUS_DESERT_OUTDOORS =
       EG05  = 10,
       EG03  = 15,
       EG02  = 10,
-      EG01  = 15,
-    },
+      EG01  = 15
+    }
   },
 
   hell =
@@ -4309,8 +4309,8 @@ ARMAETUS_DESERT_OUTDOORS =
       EG05  = 10,
       EG03  = 15,
       EG02  = 10,
-      EG01  = 15,
-    },
+      EG01  = 15
+    }
   },
 
   naturals =
@@ -4321,8 +4321,8 @@ ARMAETUS_DESERT_OUTDOORS =
     DESROCK2 = 20,
     DESROCK3 = 20,
     DESROCK4 = 25,
-    DESROCK5 = 20,
-  },
+    DESROCK5 = 20
+  }
 }
 
 --[[ARMAETUS_DESERT_FACADES =

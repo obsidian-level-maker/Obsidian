@@ -2405,7 +2405,7 @@ function Fab_find_matches(reqs, match_state)
     end
 
     -- negated check?
-    if string.sub(def_k, 1, 1) == '~' then
+    if string.sub(def_k, 1, 1) == '!' then
       def_k = string.sub(def_k, 2)
 
       return not match_environment(def_k, req_k)
@@ -2500,10 +2500,10 @@ function Fab_find_matches(reqs, match_state)
     if reqs.scenic and def.on_scenics == "never" then return 0 end
     if not reqs.scenic and def.on_scenics == "only" then return 0 end
 
-    --
+    -- stair check
     if reqs.on_stairs and def.on_stairs == "never" then return 0 end
 
-    --
+    -- park mode check
     if reqs.group and reqs.group == "natural_park" and def.park_mode == "no_nature" then return 0 end
 
     -- wall fabs that need to be flat, to prevent high-depth walls from intersecting
@@ -2523,6 +2523,9 @@ function Fab_find_matches(reqs, match_state)
     if reqs.filled_ceiling and def.plain_ceiling then return 0 end
 
     if reqs.porch and def.in_porches == "never" then return 0 end
+
+    -- light color check
+    if reqs.light_color and def.light_color ~= reqs.light_color then return 0 end
 
     -- special code for checking on climate-theme fabs based on the Epic
     -- Textures module Environment Themes -MSSP

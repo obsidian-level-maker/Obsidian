@@ -4,7 +4,7 @@
 --
 --  Copyright (C) 2008-2017 Andrew Apted
 --  Copyright (C) 2018-2019 Armaetus
---  Copyright (C) 2018-2020 MsrSgtShooterPerson
+--  Copyright (C) 2018-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -292,7 +292,7 @@ SKY_GEN.colormaps =
     0, 8, 6, 5, 111, 109, 107, 105,
     90, 88, 86, 84, 82, 80, 4,
     --87, 86, 85, 84, 83, 82, 81, 80, 4,
-  },
+  }
 }
 
 -- Some ideas for Doom/Ultimate Doom if going with a theme to make it like "Original" theming:
@@ -320,7 +320,7 @@ SKY_GEN.themes =
       YELLOW_CLOUDS = 40,
       ORANGE_CLOUDS = 40,
       GREEN_CLOUDS = 25,
-      JADE_CLOUDS = 25,
+      JADE_CLOUDS = 25
     },
 
     hills =
@@ -331,15 +331,15 @@ SKY_GEN.themes =
       GREENISH_HILLS = 30,
       ICE_HILLS = 12,
       BLACK_HILLS = 5,
-      SNOW_HILLS = 20,
+      SNOW_HILLS = 20
     },
 
     dark_hills =
     {
       DARKGREEN_HILLS = 50,
       DARKBROWN_HILLS = 50,
-      ICE_HILLS = 25,
-    },
+      ICE_HILLS = 25
+    }
   },
 
 
@@ -357,8 +357,7 @@ SKY_GEN.themes =
       WHITE_CLOUDS = 30,
       GREY_CLOUDS = 30,
       PEACH_CLOUDS = 20,
-      DARK_CLOUDS = 40,
-
+      DARK_CLOUDS = 40
     },
 
     hills =
@@ -367,14 +366,14 @@ SKY_GEN.themes =
       BROWN_HILLS = 50,
       DARKBROWN_HILLS = 50,
       BLACK_HILLS = 25,
-      SNOW_HILLS = 25,
+      SNOW_HILLS = 25
     },
 
     dark_hills =
     {
       HELL_HILLS = 50,
-      DARKBROWN_HILLS = 20,
-    },
+      DARKBROWN_HILLS = 20
+    }
   },
 
   psycho =
@@ -389,7 +388,7 @@ SKY_GEN.themes =
       GREEN_CLOUDS = 70,
       BLUE_CLOUDS  = 70,
       WHITE_CLOUDS = 30,
-      GREY_CLOUDS  = 30,
+      GREY_CLOUDS  = 30
     },
 
     hills =
@@ -401,11 +400,11 @@ SKY_GEN.themes =
       YELLOW_CLOUDS = 30,
       ORANGE_CLOUDS = 30,
       WHITE_CLOUDS = 30,
-      HELLISH_CLOUDS = 20,
-    },
+      HELLISH_CLOUDS = 20
+    }
 
     -- no dark_hills
-  },
+  }
 
 }
 
