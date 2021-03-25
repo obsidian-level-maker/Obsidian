@@ -3024,15 +3024,21 @@ function Quest_room_themes()
 
     -- decide light groups
     -- white is excluded here as it's a main color
-    local colors =
+    local hue_colors =
     {
-      blue = 20,
-      red = 20,
-      yellow = 20,
-      orange = 20,
-      green = 20,
-      beige = 25,
-      purple = 5
+      blue = 10,
+      red = 10,
+      orange = 10,
+      yellow = 10,
+      beige = 6,
+      green = 10,
+      purple = 2
+    }
+
+    local neutral_color =
+    {
+      white = 10,
+      beige = 10
     }
 
     local light_grouping = rand.key_by_probs(
@@ -3050,19 +3056,19 @@ function Quest_room_themes()
       LEVEL.light_group = {}
 
       if light_grouping == "plain" then
-        LEVEL.light_group["white"] = 1
+        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
       elseif light_grouping == "monochrome" then
-        LEVEL.light_group["white"] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       elseif light_grouping == "bichrome" then
-        LEVEL.light_group["white"] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       elseif light_grouping == "single" then
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       elseif light_grouping == "double" then
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       end
 
       gui.printf("\nLevel light group: " .. light_grouping .. "\n")
