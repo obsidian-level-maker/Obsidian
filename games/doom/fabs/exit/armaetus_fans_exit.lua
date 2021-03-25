@@ -21,7 +21,7 @@ PREFABS.Exit_armaetus_fans_exit =
   x_fit  = "frame",
   y_fit  = "top",
 
-  sound = "Indoor_Fan"
+  sound = "Indoor_Fan",
 
   tex_SW1BLUE = "SW1METAL"
 }
