@@ -541,9 +541,10 @@ void Main_CalcNewSeed()
 
 void Main_SetSeed()
 {
-	const char* seed = std::to_string(next_rand_seed).c_str();
-	ob_set_config("seed", seed);
-	main_win->build_box->seed_disp->copy_label(seed);
+	std::string label = "Seed: ";
+	std::string seed = std::to_string(next_rand_seed);	
+	ob_set_config("seed", seed.c_str());
+	main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
 	main_win->build_box->seed_disp->redraw();
 }
 
@@ -600,7 +601,9 @@ bool Build_Cool_Shit()
 	// lock most widgets of user interface
 	if (main_win)
 	{
-		main_win->build_box->seed_disp->copy_label(std::to_string(next_rand_seed).c_str());
+		std::string label = "Seed: ";
+		std::string seed = std::to_string(next_rand_seed);	
+		main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
 		main_win->build_box->seed_disp->redraw();
 		main_win->game_box->SetAbortButton(true);
 		main_win->build_box->SetStatus(_("Preparing..."));
@@ -638,7 +641,7 @@ bool Build_Cool_Shit()
 	else
 	{
 		if (main_win)
-			main_win->build_box->seed_disp->copy_label("-");
+			main_win->build_box->seed_disp->copy_label("Seed: -");
 			main_win->build_box->seed_disp->redraw();			
 	}
 

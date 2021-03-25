@@ -53,7 +53,8 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 	seed_disp->box(FL_NO_BOX);
 	seed_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_TOP_LEFT);
 	seed_disp->labelcolor(FL_WHITE);
-	seed_disp->copy_label("-");
+	seed_disp->labelsize(seed_disp->labelsize() * .75);
+	seed_disp->copy_label("Seed: -");
 
 	cy += mini_map->h() + kf_h(6);
 
