@@ -63,6 +63,9 @@ public:
 protected:
 
 private:
+
+	void resize(int X, int Y, int W, int H);
+
 	static void callback_OptChange(Fl_Widget *w, void *data);
 };
 
@@ -110,7 +113,7 @@ public:
 	UI_Module *FindID(const char *id) const;
 
 private:
-
+	
 	void PositionAll(UI_Module *focus = NULL);
 
 	static void callback_Scroll(Fl_Widget *w, void *data);

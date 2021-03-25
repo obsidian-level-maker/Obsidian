@@ -106,7 +106,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	strcpy(new_label, label);
 	strcat(new_label, ": ");
 
-	UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .80, kf_h(24), new_label);
+	UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
 	rch->align(FL_ALIGN_TOP_LEFT);
 	rch->selection_color(select_col);
 
@@ -488,6 +488,85 @@ void UI_CustomMods::PositionAll(UI_Module *focus)
 	mod_pack->redraw();
 }
 
+void UI_Module::resize(int X, int Y, int W, int H) {
+
+  int dx = X-x();
+  int dy = Y-y();
+  int dw = W-w();
+  int dh = H-h();
+  
+  int *p = sizes(); // save initial sizes and positions
+
+  Fl_Widget::resize(X,Y,W,H); // make new xywh values visible for children
+
+  if (!resizable() || (dw==0 && dh==0) ) {
+
+    if (type() < FL_WINDOW) {
+      Fl_Widget*const* a = array();
+      for (int i=children(); i--;) {
+	Fl_Widget* o = *a++;
+	o->resize(o->x()+dx, o->y()+dy, o->w(), o->h());
+      }
+    }
+
+  } else if (children()) {
+
+    // get changes in size/position from the initial size:
+    dx = X - p[0];
+    dw = W - (p[1]-p[0]);
+    dy = Y - p[2];
+    dh = H - (p[3]-p[2]);
+    if (type() >= FL_WINDOW) dx = dy = 0;
+    p += 4;
+
+    // get initial size of resizable():
+    int IX = *p++;
+    int IR = *p++;
+    int IY = *p++;
+    int IB = *p++;
+
+    Fl_Widget*const* a = array();
+    for (int i=children(); i--;) {
+      Fl_Widget* o = *a++;
+#if 1
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX = IX+((XX-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = IX+((R-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = IY+((YY-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = IY+((B-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+#else // much simpler code from Francois Ostiguy:
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX += dw * (XX-IX)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = R + dw * (R-IX)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = YY + dh*(YY-IY)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = B + dh*(B-IY)/(IB-IY);
+#endif
+      o->resize(XX+dx, YY+dy, R-XX, B-YY);
+    }
+  }
+  
+  	for (int i=0; i < this->children(); i++) {
+	  	this->child(i)->resize(this->child(i)->x(), this->child(i)->y(), w() * .95, this->child(i)->h());
+	  	this->child(i)->redraw();
+	}
+  
+}
 
 void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
 {
