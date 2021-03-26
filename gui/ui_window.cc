@@ -78,12 +78,12 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	menu_bar = new Fl_Menu_Bar(0,0, W, kf_h(20));
 	menu_bar->box(FL_FLAT_BOX);
 	menu_bar->textsize(menu_bar->textsize() * .90);
-	menu_bar->add("File/Options", 0, menu_do_options);
-	menu_bar->add("File/Addon List", 0, menu_do_addons);
-	menu_bar->add("File/Set Seed", 0, menu_do_edit_seed);
-	menu_bar->add("File/Config Manager", 0, menu_do_manage_config);
-	menu_bar->add("Help/About", 0, menu_do_about);
-	menu_bar->add("Help/View Logs", 0, menu_do_view_logs);
+	menu_bar->add("File/Options", FL_F+4, menu_do_options);
+	menu_bar->add("File/Addon List", FL_F+3, menu_do_addons);
+	menu_bar->add("File/Set Seed", FL_F+5, menu_do_edit_seed);
+	menu_bar->add("File/Config Manager", FL_F+9, menu_do_manage_config);
+	menu_bar->add("Help/About", FL_F+1, menu_do_about);
+	menu_bar->add("Help/View Logs", FL_F+6, menu_do_view_logs);
 
 	sizing_group = new Fl_Group(0,kf_h(22),W, H-kf_h(22));
 	sizing_group->box(FL_NO_BOX);	
