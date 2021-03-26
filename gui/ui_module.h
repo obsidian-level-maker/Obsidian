@@ -63,6 +63,9 @@ public:
 protected:
 
 private:
+
+	void resize(int X, int Y, int W, int H);
+
 	static void callback_OptChange(Fl_Widget *w, void *data);
 };
 
@@ -70,6 +73,9 @@ private:
 class UI_CustomMods : public Fl_Group
 {
 private:
+
+	Fl_Group *mod_pack_group;
+
 	Fl_Group *mod_pack;
 
 	Fl_Scrollbar *sbar;
@@ -110,8 +116,10 @@ public:
 	UI_Module *FindID(const char *id) const;
 
 private:
-
+	
 	void PositionAll(UI_Module *focus = NULL);
+	
+	void resize(int X, int Y, int W, int H);
 
 	static void callback_Scroll(Fl_Widget *w, void *data);
 	static void callback_ModEnable(Fl_Widget *w, void *data);

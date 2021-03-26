@@ -40,6 +40,10 @@ class UI_MainWin : public Fl_Double_Window
 public:
 	// main child widgets
 
+	Fl_Menu_Bar *menu_bar;
+	
+	Fl_Group *sizing_group;
+
 	UI_Game   *game_box;
 
 	UI_Build  *build_box;
@@ -54,6 +58,16 @@ public:
 	static void CalcWindowSize(int *W, int *H);
 
 	void Locked(bool value);
+	
+private:
+
+	static void menu_do_about(Fl_Widget*w, void*data);
+	static void menu_do_view_logs(Fl_Widget *w, void *data);
+	static void menu_do_options(Fl_Widget *w, void *data);
+	static void menu_do_addons(Fl_Widget *w, void *data);
+	static void menu_do_edit_seed(Fl_Widget *w, void *data);
+	static void menu_do_manage_config(Fl_Widget *w, void *data);
+
 };
 
 extern UI_MainWin * main_win;
