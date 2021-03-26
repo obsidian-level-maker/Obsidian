@@ -544,8 +544,11 @@ void Main_SetSeed()
 	std::string label = "Seed: ";
 	std::string seed = std::to_string(next_rand_seed);	
 	ob_set_config("seed", seed.c_str());
-	main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
-	main_win->build_box->seed_disp->redraw();
+	if (! batch_mode)
+	{
+		main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
+		main_win->build_box->seed_disp->redraw();
+	}
 }
 
 
@@ -773,10 +776,12 @@ int main(int argc, char **argv)
 
 	if (batch_mode)
 	{
+	
+
 		VFS_ParseCommandLine();
 
 		Script_Open();
-
+		
 		// inform Lua code about batch mode (the value doesn't matter)
 		ob_set_config("batch", "yes");
 
@@ -787,7 +792,7 @@ int main(int argc, char **argv)
 		if (load_file)
 			if (! Cookie_Load(load_file))
 				Main_FatalError(_("No such config file: %s\n"), load_file);
-
+				
 		Cookie_ParseArguments();
 
 		Main_SetSeed();

@@ -996,24 +996,27 @@ bool doom_game_interface_c::Start(const char *preset)
 	if (main_win)
 		main_win->build_box->Prog_Init(20, N_("CSG"));
 		
-	current_engine = main_win->game_box->engine->GetID();
-	if (current_engine == "zdoom")
+	if (main_win)
 	{
-		build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_reject_zdoom")->GetID();
-	}
-	else
-	{
-		build_reject = main_win->left_mods->FindID("ui_reject_options")->FindOpt("build_reject")->GetID();	
-	}
-	map_format = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("map_format")->GetID();
-	build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_nodes")->GetID();
-	if (current_engine == "zdoom" && map_format == "udmf")
-	{
-		UDMF_mode = true;
-	}
-	else
-	{
-		UDMF_mode = false;
+		current_engine = main_win->game_box->engine->GetID();
+		if (current_engine == "zdoom")
+		{
+			build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_reject_zdoom")->GetID();
+		}
+		else
+		{
+			build_reject = main_win->left_mods->FindID("ui_reject_options")->FindOpt("build_reject")->GetID();	
+		}
+		map_format = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("map_format")->GetID();
+		build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")->FindOpt("build_nodes")->GetID();
+		if (current_engine == "zdoom" && map_format == "udmf")
+		{
+			UDMF_mode = true;
+		}
+		else
+		{
+			UDMF_mode = false;
+		}
 	}
 
 	return true;
