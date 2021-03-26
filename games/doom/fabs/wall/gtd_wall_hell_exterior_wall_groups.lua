@@ -137,7 +137,7 @@ PREFABS.Wall_hell_outdoor_lava_falls = --#
 
   group = "hell_o_lava_falls",
 
-  on_scenics = "never",
+  scenic_mode = "never",
 
   tex_FIREMAG1 =
   {

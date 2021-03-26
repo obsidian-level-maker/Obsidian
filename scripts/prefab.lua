@@ -2497,8 +2497,8 @@ function Fab_find_matches(reqs, match_state)
     if reqs.is_road and not def.can_be_on_roads then return 0 end
 
     -- disable outdoor wall fab from appearing in scenic rooms
-    if reqs.scenic and def.on_scenics == "never" then return 0 end
-    if not reqs.scenic and def.on_scenics == "only" then return 0 end
+    if reqs.scenic and def.scenic_mode == "never" then return 0 end
+    if not reqs.scenic and def.scenic_mode == "only" then return 0 end
 
     -- stair check
     if reqs.on_stairs and def.on_stairs == "never" then return 0 end
@@ -2512,7 +2512,10 @@ function Fab_find_matches(reqs, match_state)
     end
 
     -- for fabs that need the illusion of depth
-    if not reqs.has_solid_back and def.need_solid_back then return 0 end
+    if def.need_solid_depth and not reqs.solid_depth then return 0 end
+    if reqs.solid_depth and def.need_solid_depth then
+      if def.need_solid_depth > reqs.solid_depth then return 0 end 
+    end
 
     -- REMOVE-ME - temporary fix for the issue of non-natural walls looking
     -- when placed in parks
