@@ -61,8 +61,8 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
 UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	Fl_Double_Window(W, H, title)
 {
-	// only vertically resizable
-	size_range(W, H, W, 2000);
+
+	size_range(W, H, 0, 0);
 
 	callback((Fl_Callback *) main_win_close_CB);
 
@@ -70,23 +70,38 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 
 	int LEFT_W = kf_w(232);
-	int MOD_W   = (W - LEFT_W) / 2 - 4;
+	int MOD_W   = (W - LEFT_W) / 2 - kf_h(4);
 
 	int TOP_H   = kf_h(228);
-	int BOT_H   = H - TOP_H - 4;
+	int BOT_H   = H - TOP_H - kf_h(4);
 
-	game_box = new UI_Game(0, 0, LEFT_W, TOP_H);
+	menu_bar = new Fl_Menu_Bar(0,0, W, kf_h(20));
+	menu_bar->box(FL_FLAT_BOX);
+	menu_bar->textsize(menu_bar->textsize() * .90);
+	menu_bar->add("File/Options", FL_F+4, menu_do_options);
+	menu_bar->add("File/Addon List", FL_F+3, menu_do_addons);
+	menu_bar->add("File/Set Seed", FL_F+5, menu_do_edit_seed);
+	menu_bar->add("File/Config Manager", FL_F+9, menu_do_manage_config);
+	menu_bar->add("Help/About", FL_F+1, menu_do_about);
+	menu_bar->add("Help/View Logs", FL_F+6, menu_do_view_logs);
 
-	build_box = new UI_Build(0, TOP_H+4, LEFT_W, BOT_H);
+	sizing_group = new Fl_Group(0,kf_h(22),W, H-kf_h(22));
+	sizing_group->box(FL_NO_BOX);	
+	
+	game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H-kf_h(22));
 
-	right_mods = new UI_CustomMods(W - MOD_W, 0, MOD_W, H, SELECTION);
+	build_box = new UI_Build(0, TOP_H+kf_h(4), LEFT_W, BOT_H);
 
-	left_mods = new UI_CustomMods(LEFT_W+4, 0, MOD_W, H, SELECTION);
+	right_mods = new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H-kf_h(22), SELECTION);
 
+	left_mods = new UI_CustomMods(LEFT_W+kf_h(4), kf_h(22), MOD_W, H-kf_h(22), SELECTION);
 
 	end();
 
-	resizable(right_mods);
+	resizable(sizing_group);
+
+	end();
+
 }
 
 
@@ -117,11 +132,38 @@ void UI_MainWin::CalcWindowSize(int *W, int *H)
 void UI_MainWin::Locked(bool value)
 {
 	game_box  ->Locked(value);
-	build_box ->Locked(value);
 	left_mods ->Locked(value);
 	right_mods->Locked(value);
 }
 
+void UI_MainWin::menu_do_about(Fl_Widget*w, void*data)
+{
+	DLG_AboutText();
+}
 
+void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data)
+{
+	DLG_ViewLogs();
+}
+
+void UI_MainWin::menu_do_options(Fl_Widget *w, void *data)
+{
+	DLG_OptionsEditor();
+}
+
+void UI_MainWin::menu_do_addons(Fl_Widget *w, void *data)
+{
+	DLG_SelectAddons();
+}
+
+void UI_MainWin::menu_do_edit_seed(Fl_Widget *w, void *data)
+{
+	DLG_EditSeed();
+}
+
+void UI_MainWin::menu_do_manage_config(Fl_Widget *w, void *data)
+{
+	DLG_ManageConfig();
+}
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

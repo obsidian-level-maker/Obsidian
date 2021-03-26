@@ -94,10 +94,10 @@ opt_change_callback_data_t;
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 						  int gap, Fl_Color select_col)
 {
-	int nw = kf_w(112);
+	int nw = this->parent()->w();
 //	int nh = kf_h(30);
 
-	int nx = x() + w() - nw - kf_w(10);
+	int nx = x() + kf_w(6);
 	int ny = y() + cur_opt_y;
 
 	// make label with ': ' suffixed
@@ -106,8 +106,8 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	strcpy(new_label, label);
 	strcat(new_label, ": ");
 
-	UI_RChoice *rch = new UI_RChoice(nx, ny, nw, kf_h(24), new_label);
-	rch->align(FL_ALIGN_LEFT);
+	UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
+	rch->align(FL_ALIGN_TOP_LEFT);
 	rch->selection_color(select_col);
 
 	if (! tip)
@@ -125,7 +125,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	add(rch);
 
-	cur_opt_y += gap ? kf_h(44) : kf_h(30);
+	cur_opt_y += gap ? kf_h(59) : kf_h(45);
 
 	resize(x(), y(), w(), CalcHeight());
 	redraw();
@@ -242,7 +242,9 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 
 	sbar->color(FL_DARK3+1, FL_DARK1);
 
-
+	mod_pack_group = new Fl_Group(mx, my, mw, mh);
+	mod_pack_group->box(FL_NO_BOX);
+	
 	mod_pack = new Fl_Group(mx, my, mw, mh);
 	mod_pack->clip_children(1);
 	mod_pack->end();
@@ -255,8 +257,11 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
 
 	mod_pack->box(FL_FLAT_BOX);
 	mod_pack->color(WINDOW_BG);
-	mod_pack->resizable(NULL);
+	mod_pack->resizable(mod_pack);
 
+	end();
+	
+	resizable(mod_pack_group);
 
 	end();
 }
@@ -488,6 +493,216 @@ void UI_CustomMods::PositionAll(UI_Module *focus)
 	mod_pack->redraw();
 }
 
+//Normal FLTK resize except it will resize the module options as well
+void UI_Module::resize(int X, int Y, int W, int H) {
+
+  int dx = X-x();
+  int dy = Y-y();
+  int dw = W-w();
+  int dh = H-h();
+  
+  int *p = sizes(); // save initial sizes and positions
+
+  Fl_Widget::resize(X,Y,W,H); // make new xywh values visible for children
+
+  if (!resizable() || (dw==0 && dh==0) ) {
+
+    if (type() < FL_WINDOW) {
+      Fl_Widget*const* a = array();
+      for (int i=children(); i--;) {
+	Fl_Widget* o = *a++;
+	o->resize(o->x()+dx, o->y()+dy, o->w(), o->h());
+      }
+    }
+
+  } else if (children()) {
+
+    // get changes in size/position from the initial size:
+    dx = X - p[0];
+    dw = W - (p[1]-p[0]);
+    dy = Y - p[2];
+    dh = H - (p[3]-p[2]);
+    if (type() >= FL_WINDOW) dx = dy = 0;
+    p += 4;
+
+    // get initial size of resizable():
+    int IX = *p++;
+    int IR = *p++;
+    int IY = *p++;
+    int IB = *p++;
+
+    Fl_Widget*const* a = array();
+    for (int i=children(); i--;) {
+      Fl_Widget* o = *a++;
+#if 1
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX = IX+((XX-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = IX+((R-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = IY+((YY-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = IY+((B-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+#else // much simpler code from Francois Ostiguy:
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX += dw * (XX-IX)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = R + dw * (R-IX)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = YY + dh*(YY-IY)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = B + dh*(B-IY)/(IB-IY);
+#endif
+      o->resize(XX+dx, YY+dy, R-XX, B-YY);
+    }
+  }
+  
+  	for (int i=0; i < this->children(); i++) {
+	  	this->child(i)->resize(this->child(i)->x(), this->child(i)->y(), w() * .95, this->child(i)->h());
+	  	this->child(i)->redraw();
+	}
+  
+}
+
+//Normal FLTK resize except it will reset the scrollbar to the top
+void UI_CustomMods::resize(int X, int Y, int W, int H) {
+
+  int dx = X-x();
+  int dy = Y-y();
+  int dw = W-w();
+  int dh = H-h();
+  
+  int *p = sizes(); // save initial sizes and positions
+
+  Fl_Widget::resize(X,Y,W,H); // make new xywh values visible for children
+
+  if (!resizable() || (dw==0 && dh==0) ) {
+
+    if (type() < FL_WINDOW) {
+      Fl_Widget*const* a = array();
+      for (int i=children(); i--;) {
+	Fl_Widget* o = *a++;
+	o->resize(o->x()+dx, o->y()+dy, o->w(), o->h());
+      }
+    }
+
+  } else if (children()) {
+
+    // get changes in size/position from the initial size:
+    dx = X - p[0];
+    dw = W - (p[1]-p[0]);
+    dy = Y - p[2];
+    dh = H - (p[3]-p[2]);
+    if (type() >= FL_WINDOW) dx = dy = 0;
+    p += 4;
+
+    // get initial size of resizable():
+    int IX = *p++;
+    int IR = *p++;
+    int IY = *p++;
+    int IB = *p++;
+
+    Fl_Widget*const* a = array();
+    for (int i=children(); i--;) {
+      Fl_Widget* o = *a++;
+#if 1
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX = IX+((XX-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = IX+((R-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = IY+((YY-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = IY+((B-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
+#else // much simpler code from Francois Ostiguy:
+      int XX = *p++;
+      if (XX >= IR) XX += dw;
+      else if (XX > IX) XX += dw * (XX-IX)/(IR-IX);
+      int R = *p++;
+      if (R >= IR) R += dw;
+      else if (R > IX) R = R + dw * (R-IX)/(IR-IX);
+
+      int YY = *p++;
+      if (YY >= IB) YY += dh;
+      else if (YY > IY) YY = YY + dh*(YY-IY)/(IB-IY);
+      int B = *p++;
+      if (B >= IB) B += dh;
+      else if (B > IY) B = B + dh*(B-IY)/(IB-IY);
+#endif
+      o->resize(XX+dx, YY+dy, R-XX, B-YY);
+    }
+  }
+
+	// calculate new total height
+	int new_height = 0;
+	int spacing = 4;
+
+	for (int k = 0 ; k < this->mod_pack->children() ; k++)
+	{
+		UI_Module *M = (UI_Module *) mod_pack->child(k);
+		SYS_ASSERT(M);
+
+		if (M->visible())
+			new_height += M->CalcHeight() + spacing;
+	}
+
+
+	// determine new offset_y
+	if (new_height <= mh)
+	{
+		offset_y = 0;
+	}
+
+	total_h = new_height;
+
+	SYS_ASSERT(offset_y >= 0);
+	SYS_ASSERT(offset_y <= total_h);
+
+
+	// reposition all the modules
+	int ny = my - offset_y;
+
+	for (int j = 0 ; j < mod_pack->children() ; j++)
+	{
+		UI_Module *M = (UI_Module *) mod_pack->child(j);
+		SYS_ASSERT(M);
+
+		int nh = M->visible() ? M->CalcHeight() : 1;
+
+		if (ny != M->y() || nh != M->h())
+		{
+			M->resize(M->x(), ny, M->w(), nh);
+		}
+
+		if (M->visible())
+			ny += M->CalcHeight() + spacing;
+	}
+
+
+	// p = position, first line displayed
+	// w = window, number of lines displayed
+	// t = top, number of first line
+	// l = length, total number of lines
+	this->sbar->value(offset_y, mh, 0, total_h);
+
+	this->mod_pack->redraw();
+	
+}
 
 void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
 {

@@ -28,6 +28,7 @@
 #include "main.h"
 #include "m_lua.h"
 
+#define ABORT_COLOR  fl_color_cube(3,1,1)
 
 //
 // Constructor
@@ -35,13 +36,15 @@
 UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	Fl_Group(X, Y, W, H, label)
 {
-	box(FL_FLAT_BOX);
+	box(FL_THIN_UP_BOX);
 
+	int button_w = W * 0.35;
+	int button_h = kf_h(30);
+	int button_x = X + kf_w(25);
 
 	int y_step  = kf_h(30);
-	int y_step2 = kf_h(44);
 
-	int cx = X + W * 0.39;
+	int cx = X + W * 0.29;
 	int cy = Y + kf_h(4);
 
 
@@ -56,15 +59,15 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	cy = Y + kf_h(32);
 
 
-	int cw = W * 0.58;
-	int ch = kf_h(24);
+	int cw = W * 0.60;
+	int ch = kf_h(22);
 
 	game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
 	game->align(FL_ALIGN_LEFT);
 	game->selection_color(WINDOW_BG);
 	game->callback(callback_Game, this);
 
-	cy += y_step2;
+	cy += y_step;
 
 
 	engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
@@ -72,7 +75,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	engine->selection_color(WINDOW_BG);
 	engine->callback(callback_Engine, this);
 
-	cy += y_step2;
+	cy += y_step;
 
 
 	length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
@@ -80,7 +83,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	length->selection_color(WINDOW_BG);
 	length->callback(callback_Length, this);
 
-	cy += y_step2;
+	cy += y_step;
 
 
 	theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
@@ -88,11 +91,19 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label) :
 	theme->selection_color(WINDOW_BG);
 	theme->callback(callback_Theme, this);
 
-	cy += y_step;
+	cy += y_step + kf_h(10);
+
+	build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
+	build->labelfont(FL_HELVETICA_BOLD);
+	build->labelsize(FL_NORMAL_SIZE + 2);
+	build->callback(build_callback, this);
+	build->shortcut(FL_F+2);
+	  
+	quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h, _("Quit"));
+	quit->callback(quit_callback, this);
+	quit->shortcut(FL_COMMAND + 'q');
 
 	end();
-
-	resizable(NULL);  // don't resize our children
 }
 
 
@@ -143,6 +154,7 @@ void UI_Game::Locked(bool value)
 		engine->deactivate();
 		length->deactivate();
 		theme ->deactivate();
+		build ->deactivate();
 	}
 	else
 	{
@@ -150,6 +162,7 @@ void UI_Game::Locked(bool value)
 		engine->activate();
 		length->activate();
 		theme ->activate();
+		build ->activate();
 	}
 }
 
@@ -234,6 +247,51 @@ bool UI_Game::SetButton(const char *button, const char *id)
 	return false;  // unknown button
 }
 
+void UI_Game::SetAbortButton(bool abort)
+{
+	if (abort)
+	{
+		quit->label(_("Cancel"));
+		quit->labelcolor(ABORT_COLOR);
+		quit->labelfont(FL_HELVETICA_BOLD);
+
+		quit->callback(stop_callback, this);
+
+		build->labelfont(FL_HELVETICA);
+	}
+	else
+	{
+		quit->label(_("Quit"));
+		quit->labelcolor(FL_FOREGROUND_COLOR);
+		quit->labelfont(FL_HELVETICA);
+
+		quit->callback(quit_callback, this);
+
+		build->labelfont(FL_HELVETICA_BOLD);
+	}
+}
+
+
+void UI_Game::build_callback(Fl_Widget *w, void *data)
+{
+	if (main_action == 0)
+	{
+		main_action = MAIN_BUILD;
+	}
+}
+
+void UI_Game::stop_callback(Fl_Widget *w, void *data)
+{
+	if (main_action != MAIN_QUIT)
+	{
+		main_action = MAIN_CANCEL;
+	}
+}
+
+void UI_Game::quit_callback(Fl_Widget *w, void *data)
+{
+	main_action = MAIN_QUIT;
+}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -46,7 +46,6 @@ UI_MiniMap::~UI_MiniMap()
 		delete[] pixels;
 }
 
-
 void UI_MiniMap::EmptyMap()
 {
 	MapBegin();
@@ -61,6 +60,7 @@ void UI_MiniMap::MapBegin()
 
 	if (pixels)
 		delete[] pixels;
+
 
 	pixels = new u8_t[map_W * map_H * 3];
 
@@ -85,6 +85,10 @@ void UI_MiniMap::MapClear()
 			pix[2] = 176;
 		}
 	}
+	
+	main_win->build_box->seed_disp->redraw();
+	main_win->build_box->name_disp->redraw();
+	
 }
 
 
@@ -162,6 +166,7 @@ void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2,
 	for (int y = y1; y <= y2; y++)
 		for (int x = x1; x <= x2; x++)
 			RawPixel(x, y, r, g, b);
+	
 }
 
 

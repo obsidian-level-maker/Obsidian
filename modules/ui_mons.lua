@@ -143,7 +143,7 @@ OB_MODULES["ui_mons"] =
   label = _("Monsters"),
 
   side = "right",
-  priority = 102,
+  priority = 105,
 
   options =
   {
