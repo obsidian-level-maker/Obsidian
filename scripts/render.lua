@@ -197,6 +197,7 @@ function Render_edge(E)
 
       -- no area at the back (edge of the map?)
       if not S2 then solid = true end
+      if not A2 then solid = true end
 
       if A2.mode == "void" then solid = true end
 
