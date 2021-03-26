@@ -2661,8 +2661,8 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if A.room then
       reqs.env = A.room:get_env()
 
-      if R.theme and R.theme.theme_override then
-        reqs.theme_override = R.theme.theme_override
+      if LEVEL.next_theme and R.is_exit then
+        reqs.theme_override = LEVEL.next_theme
       end
     end
 

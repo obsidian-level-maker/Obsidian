@@ -79,7 +79,7 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CITY11 = 1,
     CITY12 = 1,
     CITY13 = 1,
-    CITY14 = 1,
+    CITY14 = 1
   },
 
   tex_FENCE1 =
@@ -88,28 +88,28 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     FENCE3 = 1,
     FENCE6 = 1,
     FENCE7 = 1,
-    ZZWOLF10 = 5,
+    ZZWOLF10 = 5
   },
 
   bound_z1 = 0,
-  bound_z2 = 368,
+  bound_z2 = 368
 }
 
 PREFABS.Pic_urban_downtown_facade_cyber_mid_inset_top_fit =
 {
   template = "Pic_urban_downtown_facade_cyber_mid_inset",
 
-  z_fit = { 260,264 },
+  z_fit = { 260,264 }
 }
 
-PREFABS.Pic_urban_downtown_facade_cyber_notched =
+PREFABS.Pic_urban_downtown_facade_cyber_walltop =
 {
   template = "Pic_urban_downtown_facade_cyber_mid_inset",
   map = "MAP02",
 
   height = 256,
 
-  z_fit = { 140,252 },
+  z_fit = "top",
 
-  bound_z2 = 256,
+  bound_z2 = 256
 }

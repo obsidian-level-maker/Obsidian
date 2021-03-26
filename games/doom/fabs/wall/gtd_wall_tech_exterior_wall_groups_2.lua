@@ -51,7 +51,7 @@ PREFABS.Wall_tech_outdoor_sewer_hatches = --#
     NUKESLAD = 5
   },
 
-  on_scenics = "never"
+  scenic_mode = "never"
 }
 
 PREFABS.Wall_tech_outdoor_red_wall = --#

@@ -2135,7 +2135,8 @@ DOOM.THEMES =
       hell_o_egyptish = 1,
       hell_o_blood_ocatgon = 1,
       hell_o_catamet = 1,
-      hell_o_crematorium_windows = 1
+      hell_o_crematorium_windows = 1,
+      hell_o_orange_arch_window = 1
     },
 
     window_groups =

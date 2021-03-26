@@ -190,6 +190,38 @@ function Render_edge(E)
       return false
     end
 
+    local function has_solid_back(S1, S2)
+      local A1 = S1.area
+      local A2 = S2.area
+
+      -- no area at the back (edge of the map?)
+      if not S2 then return true end
+      if not A2 then return true end
+
+      if A2.mode == "void" then return true end
+
+      if S2.diagonal then return false end
+      if A2.chunk then return false end
+      if A2.mode == "scenic" then return false end
+
+      -- check for height differences
+      if A2.mode == "floor" then
+        if A1.floor_h and A2.floor_h then
+          if A1.floor_h <= A2.floor_h + 128 then
+            return true
+          end
+        end
+
+        if A1.ceil_h and A2.floor_h then
+          if A2.ceil_h > A1.floor_h then
+            return true
+          end
+        end
+      end
+
+      return false
+    end
+
     local reqs =
     {
       kind = "wall",
@@ -245,9 +277,10 @@ function Render_edge(E)
       reqs.group = "natural_walls"
     end
 
-    -- Don't get prefabs with a z_fit other than "top" for parks.
+    -- don't get prefabs with a z_fit other than "top" for parks.
+    local S1 = E.S
     if A.room and A.room.is_park then
-      if not E.S.floor_h and A.room.park_type == "hills" then
+      if not S1.floor_h and A.room.park_type == "hills" then
         reqs.no_top_fit = true
       end
     end
@@ -258,35 +291,35 @@ function Render_edge(E)
 
       -- don't allow more than one wall that's not flat enough
       -- on the same seed
-      if E.S.wall_depth and E.S.wall_depth > 16 then
+      if S1.wall_depth and S1.wall_depth > 16 then
         reqs.deep = 16
       end
 
       -- don't allow anything more than flat walls if
       -- at least one seed ahead is not in the same area
       -- as the current wall
-      local tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, 10-dir, 128)
+      local tx, ty = geom.nudge(S1.mid_x, S1.mid_y, 10-dir, 128)
       local S2 = Seed_from_coord(tx, ty)
 
-      if check_area_state(E.S, S2, "narrow_area") then
+      if check_area_state(S1, S2, "narrow_area") then
         reqs.deep = 16
       end
 
       -- use only flat walls if in a corner
-      tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, geom.LEFT[dir], 128)
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], 128)
       S2 = Seed_from_coord(tx, ty)
-      if check_area_state(E.S, S2, "potentially_obstructing") then
+      if check_area_state(S1, S2, "potentially_obstructing") then
         reqs.deep = 16
       end
-      tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, geom.RIGHT[dir], 128)
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.RIGHT[dir], 128)
       S2 = Seed_from_coord(tx, ty)
-      if check_area_state(E.S, S2, "potentially_obstructing") then
+      if check_area_state(S1, S2, "potentially_obstructing") then
         reqs.deep = 16
       end
 
       local chunk
-      if E.S.chunk then
-        chunk = E.S.chunk
+      if S1.chunk then
+        chunk = S1.chunk
 
         -- if seed in front of the edge has anything on it
         -- choose a flat wall fab instead
@@ -311,40 +344,25 @@ function Render_edge(E)
 
       -- check for wall pieces that require solid depth behind
       -- i.e. fake doors and windows
-      reqs.has_solid_back = true
-      tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, 10-dir, -128)
-      S2 = Seed_from_coord(tx, ty)
+      tx, ty = geom.nudge(S1.sx, S1.sy, dir)
+      S2 = SEEDS[tx][ty] or nil
+      tx, ty = geom.nudge(S1.sx, S1.sy, dir, 2)
+      S3 = SEEDS[tx][ty] or nil
 
-      -- if seeds on either side don't belong to the same room
-      -- then it's not solid
-      if S2.area then
-        reqs.has_solid_back = false
+--gui.printf(dir.." DIRECTION\n")
+--gui.printf(S1.mid_x .. ", " .. S1.mid_y .. " -> " .. S2.mid_x .. ", " .. S2.mid_y .."\n")
+--gui.printf(S2.area.mode .. "\n")
 
-        if S2.area.mode == "liquid" then
-          reqs.has_solid_back = false
-        end
-
-        -- override: but if there are height differences
-        -- why not allow it?
-        if S2.area.floor_h and E.S.area.floor_h then
-          if S2.area.floor_h >= E.S.area.floor_h + 128 then
-            reqs.has_solid_back = true
-          end
-        end
-        if S2.area.ceil_h and E.S.area.ceil_h then
-          if S2.area.ceil_h <= E.S.area.floor_h then
-            reqs.has_solid_back = true
-          end
-        end
-
-        if S2.area.chunk then
-          reqs.has_solid_back = false
-        end
-
-        if S2.area.mode == "void" then
-          reqs.has_solid_back = true
-        end
+      if has_solid_back(S1, S2) then
+        reqs.solid_depth = 1
       end
+      if has_solid_back(S1, S2)
+      and has_solid_back(S1, S3) then
+        reqs.solid_depth = 2
+      end
+
+--if reqs.solid_depth then gui.printf("solid_depth: " .. reqs.solid_depth .."\n") end
+
     end
 
     -- theme override
@@ -366,7 +384,7 @@ function Render_edge(E)
       def = Fab_pick(reqs)
     end
 
-    E.S.wall_depth = math.max(E.S.wall_depth or 16, def.deep or 16)
+    S1.wall_depth = math.max(S1.wall_depth or 16, def.deep or 16)
 
     return def
   end
