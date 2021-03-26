@@ -35,7 +35,7 @@ FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
 FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Izdbsp_src -Iajpoly_src -Iphysfs_src $(FLTK_FLAGS)
-LDFLAGS=-L/usr/X11R6/lib
+LDFLAGS=-L/usr/X11R6/lib -lstdc++fs
 LIBS=-lm -lz $(FLTK_LIBS)
 
 

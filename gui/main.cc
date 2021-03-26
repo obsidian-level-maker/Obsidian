@@ -600,6 +600,7 @@ bool Build_Cool_Shit()
 			Main_FatalError("ERROR: unknown format: '%s'\n", format);
 	}
 
+	const char *def_filename = ob_default_filename();
 
 	// lock most widgets of user interface
 	if (main_win)
@@ -614,8 +615,6 @@ bool Build_Cool_Shit()
 	}
 
 	u32_t start_time = TimeGetMillies();
-
-	const char *def_filename = ob_default_filename();
 
 	// this will ask for output filename (among other things)
 	bool was_ok = game_object->Start(def_filename);
@@ -645,7 +644,9 @@ bool Build_Cool_Shit()
 	{
 		if (main_win)
 			main_win->build_box->seed_disp->copy_label("Seed: -");
-			main_win->build_box->seed_disp->redraw();			
+			main_win->build_box->seed_disp->redraw();
+			main_win->build_box->name_disp->copy_label("");
+			main_win->build_box->name_disp->redraw();					
 	}
 
 	if (main_win)

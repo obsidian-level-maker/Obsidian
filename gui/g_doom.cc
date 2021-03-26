@@ -993,11 +993,12 @@ bool doom_game_interface_c::Start(const char *preset)
 		return false;
 	}
 
-	if (main_win)
-		main_win->build_box->Prog_Init(20, N_("CSG"));
 		
 	if (main_win)
 	{
+		main_win->build_box->name_disp->copy_label(FindBaseName(filename));
+		main_win->build_box->name_disp->redraw();
+		main_win->build_box->Prog_Init(20, N_("CSG"));
 		current_engine = main_win->game_box->engine->GetID();
 		if (current_engine == "zdoom")
 		{

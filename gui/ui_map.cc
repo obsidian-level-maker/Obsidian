@@ -87,6 +87,7 @@ void UI_MiniMap::MapClear()
 	}
 	
 	main_win->build_box->seed_disp->redraw();
+	main_win->build_box->name_disp->redraw();
 	
 }
 
