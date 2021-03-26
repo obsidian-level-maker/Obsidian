@@ -137,7 +137,7 @@ PREFABS.Wall_hell_outdoor_lava_falls = --#
 
   group = "hell_o_lava_falls",
 
-  on_scenics = "never",
+  scenic_mode = "never",
 
   tex_FIREMAG1 =
   {
@@ -556,4 +556,36 @@ PREFABS.Wall_hell_crematorium_windows = --#
   group = "hell_o_crematorium_windows",
 
   z_fit = "bottom",
+}
+
+PREFABS.Wall_hell_orange_arch_window_EPIC = --#
+{
+  template = "Wall_hell_stone_brace",
+  map = "MAP23",
+
+  rank = 1,
+
+  texture_pack = "armaetus",
+
+  group = "hell_o_orange_arch_window",
+
+  z_fit = "top"
+}
+
+PREFABS.Wall_hell_orange_arch_window =
+{
+  template = "Wall_hell_stone_brace",
+  map = "MAP23",
+
+  group = "hell_o_orange_arch_window",
+
+  tex_MIDWIND1 = "MIDSPACE",
+  tex_GRAYMETC = "CRACKLE2",
+  tex_GLASS12 = "WOODMET1",
+  tex_SUPPORT4 = "WOODMET1",
+
+  flat_ORANFLOOR = "RROCK2",
+  tex_COLLITE2 = "CRACKLE2",
+
+  z_fit = "top"
 }

@@ -9,7 +9,7 @@ PREFABS.Wall_urban_scenic_building_facade =
   env = "outdoor",
   theme = "urban",
 
-  on_scenics = "only",
+  scenic_mode = "only",
   
   where  = "edge",
   height = 128,
@@ -61,7 +61,7 @@ PREFABS.Wall_urban_scenic_building_facade_modwall_EPIC =
   texture_pack = "armaetus",
   replaces = "Wall_urban_scenic_building_facade",
 
-  on_scenics = "only",
+  scenic_mode = "only",
   
   where  = "edge",
   height = 128,

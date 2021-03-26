@@ -48,7 +48,7 @@ PREFABS.Wall_hell_churchy_window_big_bottom =
 
   env = "outdoor",
 
-  on_scenics = "never",
+  scenic_mode = "never",
 
   z_fit = "bottom",
 }
@@ -62,7 +62,7 @@ PREFABS.Wall_hell_churchy_window_big_stretch =
 
   env = "outdoor",
 
-  on_scenics = "never",
+  scenic_mode = "never",
 
   z_fit = { 48,104 },
 }
@@ -74,7 +74,7 @@ PREFABS.Wall_hell_churchy_window_small_bottom =
 
   env = "outdoor",
 
-  on_scenics = "never",
+  scenic_mode = "never",
 
   z_fit = "bottom",
 }
@@ -88,7 +88,7 @@ PREFABS.Wall_hell_churchy_window_small_stretch =
 
   env = "outdoor",
 
-  on_scenics = "never",
+  scenic_mode = "never",
 
   z_fit = { 48,104 },
 }
