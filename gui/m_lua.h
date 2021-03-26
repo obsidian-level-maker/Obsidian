@@ -42,6 +42,7 @@ extern color_mapping_t color_mappings[MAX_COLOR_MAPS];
 // Wrappers which call Lua functions:
 
 bool ob_set_config(const char *key, const char *value);
+//const char * ob_get_config(const char *key);
 bool ob_set_mod_option(const char *module, const char *option,
                        const char *value);
 

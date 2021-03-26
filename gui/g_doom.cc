@@ -1018,7 +1018,6 @@ bool doom_game_interface_c::Start(const char *preset)
 			UDMF_mode = false;
 		}
 	}
-
 	return true;
 }
 

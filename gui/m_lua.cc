@@ -1313,6 +1313,37 @@ bool ob_set_config(const char *key, const char *value)
 	return Script_CallFunc("ob_set_config", 0, params);
 }
 
+/*const char * ob_get_config(const char *key)
+{
+	// See the document 'doc/Config_Flow.txt' for a good
+	// description of the flow of configuration values
+	// between the C++ GUI and the Lua scripts.
+
+	SYS_NULL_CHECK(key);
+
+	if (! has_loaded)
+	{
+		DebugPrintf("ob_set_config(%s) called before loaded!\n", key);
+		return NULL;
+	}
+
+	const char *params[2];
+
+	params[0] = key;
+	params[1] = NULL; // end of list
+
+	Script_CallFunc("ob_get_config", 0, params);
+	
+	const char *res = lua_tolstring(LUA_ST, -1, NULL);
+
+	if (res)
+		res = StringDup(res);
+
+	// remove result from lua stack
+	lua_pop(LUA_ST, 1);
+
+	return res;
+}*/
 
 bool ob_set_mod_option(const char *module, const char *option,
 		const char *value)
