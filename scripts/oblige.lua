@@ -587,7 +587,11 @@ function ob_set_mod_option(name, option, value)
   -- (nothing ever depends on custom options)
 end
 
-
+--function ob_get_config(name)
+  
+--    if OB_CONFIG[name] return OB_CONFIG[name] else return "NULL" end
+    
+--end
 
 function ob_set_config(name, value)
   -- See the document 'doc/Config_Flow.txt' for a good

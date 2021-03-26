@@ -193,33 +193,33 @@ function Render_edge(E)
     local function has_solid_back(S1, S2)
       local A1 = S1.area
       local A2 = S2.area
-      local solid
 
       -- no area at the back (edge of the map?)
-      if not S2 then solid = true end
+      if not S2 then return true end
+      if not A2 then return true end
 
-      if A2.mode == "void" then solid = true end
+      if A2.mode == "void" then return true end
 
-      if S2.diagonal then solid = false end
-      if A2.chunk then solid = false end
-      if A2.mode == "scenic" then solid = false end
+      if S2.diagonal then return false end
+      if A2.chunk then return false end
+      if A2.mode == "scenic" then return false end
 
       -- check for height differences
       if A2.mode == "floor" then
         if A1.floor_h and A2.floor_h then
           if A1.floor_h <= A2.floor_h + 128 then
-            solid = true
+            return true
           end
         end
 
         if A1.ceil_h and A2.floor_h then
           if A2.ceil_h > A1.floor_h then
-            solid = true
+            return true
           end
         end
       end
 
-      if solid then return true else return false end
+      return false
     end
 
     local reqs =
