@@ -541,7 +541,14 @@ void Main_CalcNewSeed()
 
 void Main_SetSeed()
 {
-	ob_set_config("seed", std::to_string(next_rand_seed).c_str());
+	std::string label = "Seed: ";
+	std::string seed = std::to_string(next_rand_seed);	
+	ob_set_config("seed", seed.c_str());
+	if (! batch_mode)
+	{
+		main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
+		main_win->build_box->seed_disp->redraw();
+	}
 }
 
 
@@ -560,7 +567,9 @@ bool Build_Cool_Shit()
 {
 	// clear the map
 	if (main_win)
+	{
 		main_win->build_box->mini_map->EmptyMap();
+	}		
 
 	const char *format = ob_game_format();
 
@@ -591,19 +600,21 @@ bool Build_Cool_Shit()
 			Main_FatalError("ERROR: unknown format: '%s'\n", format);
 	}
 
+	const char *def_filename = ob_default_filename();
 
 	// lock most widgets of user interface
 	if (main_win)
 	{
-		main_win->Locked(true);
-		main_win->build_box->SetAbortButton(true);
+		std::string label = "Seed: ";
+		std::string seed = std::to_string(next_rand_seed);	
+		main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
+		main_win->build_box->seed_disp->redraw();
+		main_win->game_box->SetAbortButton(true);
 		main_win->build_box->SetStatus(_("Preparing..."));
-		main_win->build_box->DisplaySeed(next_rand_seed);
+		main_win->Locked(true);
 	}
 
 	u32_t start_time = TimeGetMillies();
-
-	const char *def_filename = ob_default_filename();
 
 	// this will ask for output filename (among other things)
 	bool was_ok = game_object->Start(def_filename);
@@ -632,13 +643,16 @@ bool Build_Cool_Shit()
 	else
 	{
 		if (main_win)
-			main_win->build_box->DisplaySeed(-1);
+			main_win->build_box->seed_disp->copy_label("Seed: -");
+			main_win->build_box->seed_disp->redraw();
+			main_win->build_box->name_disp->copy_label("");
+			main_win->build_box->name_disp->redraw();					
 	}
 
 	if (main_win)
 	{
 		main_win->build_box->Prog_Finish();
-		main_win->build_box->SetAbortButton(false);
+		main_win->game_box->SetAbortButton(false);
 
 		main_win->Locked(false);
 	}
@@ -763,10 +777,12 @@ int main(int argc, char **argv)
 
 	if (batch_mode)
 	{
+	
+
 		VFS_ParseCommandLine();
 
 		Script_Open();
-
+		
 		// inform Lua code about batch mode (the value doesn't matter)
 		ob_set_config("batch", "yes");
 
@@ -777,7 +793,7 @@ int main(int argc, char **argv)
 		if (load_file)
 			if (! Cookie_Load(load_file))
 				Main_FatalError(_("No such config file: %s\n"), load_file);
-
+				
 		Cookie_ParseArguments();
 
 		Main_SetSeed();

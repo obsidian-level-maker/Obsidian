@@ -25,17 +25,13 @@ class UI_Build : public Fl_Group
 {
 public:
 	UI_MiniMap *mini_map;
+	Fl_Box *seed_disp;
+	Fl_Box *name_disp;
 
 private:
-	Fl_Menu_Across *misc_menu;
-
-	Fl_Button *build;
-	Fl_Button *quit;
 
 	Fl_Box *status;
 	Fl_Progress *progress;
-
-	Fl_Box *seed_display;
 
 	char  status_label[200];
 	char  prog_label[100];
@@ -54,6 +50,8 @@ public:
 	virtual ~UI_Build();
 
 public:
+
+
 	void Prog_Init(int node_perc, const char *extra_steps);
 	void Prog_AtLevel(int index, int total);
 	void Prog_Step(const char *step_name);
@@ -61,27 +59,15 @@ public:
 	void Prog_Finish();
 
 	void SetStatus(const char *msg);
-	void DisplaySeed(double value);
-
-	void SetAbortButton(bool abort);
-	void Locked(bool value);
 
 private:
+
+	void resize(int X, int Y, int W, int H);
+
 	void ParseSteps(const char *list);
 	int  FindStep(const char *name);  // -1 if not found
 
 	void AddStatusStep(const char *name);
-
-	static void build_callback(Fl_Widget *, void*);
-	static void stop_callback(Fl_Widget *, void*);
-	static void quit_callback(Fl_Widget *, void*);
-
-	static void menu_do_about(Fl_Widget *, void*);
-	static void menu_do_options(Fl_Widget *, void*);
-	static void menu_do_addons(Fl_Widget *, void*);
-	static void menu_do_edit_seed(Fl_Widget *, void*);
-	static void menu_do_view_logs(Fl_Widget *, void*);
-	static void menu_do_manage_config(Fl_Widget *, void*);
 };
 
 #endif /* __UI_BUILD_H__ */
