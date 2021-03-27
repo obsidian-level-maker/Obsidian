@@ -950,12 +950,23 @@ namelib.NAMES =
         ["The Particle Storm"]=10, -- Mostly Dark Tranquility, "Into the Particle Storm" won't fit, I think?
 
         -- Wow! More names!
+        ["Acceptance of Surrender"]=10,
         ["Biological Research"]=10,
+        ["Data Structure Collapse"]=10,
+        ["Displaced and Deconstructed"]=10,
+        ["Division by Zero"]=10,
         ["Nebulae and Novae"]=10,
         ["Recreational Zone"]=10,
         ["Steel Coffins"]=10,
         ["Threshold of Machinery"]=10,
-        ["Trolling the U.A.C"]=10
+        ["Trolling the U.A.C"]=10,
+
+        -- Doom 64 music names, or based on them
+        ["Clawing at the Terminal"]=10,
+        ["Dark Echos"]=10,
+        ["Glitch Rot"]=10,
+        ["Transmission Unsent"]=10
+
       }
     }
   },
@@ -1921,7 +1932,30 @@ namelib.NAMES =
         ["Void"]=10,
         ["Windfall of Delerium"]=10,
         ["Winds of Dusk"]=10,
-        ["Withered and Forgotten"]=10
+        ["Withered and Forgotten"]=10,
+
+        -- More shit here. Hell names seem to be easiest to think of..
+        ["Acceptance of Submission"]=10,
+        ["Another Day in Hell"]=10,
+        ["Ashen Crucifix"]=10,
+        ["Blood Winds"]=10,
+        ["Candles and Incense"]=10,
+        ["Cascade of Death"]=10,
+        ["Chainsaw Bisectioning"]=10,
+        ["Draped in Filth"]=10,
+        ["Drill it and Kill it"]=10,
+        ["Eternal Darkness"]=10, -- GREAT game!
+        ["Flames and Fury"]=10,
+        ["Frozen Fog"]=10,
+        ["Lead Us To Sin"]=10,
+        ["Lunar Funeral"]=10,
+        ["No Light Here"]=10,
+        ["Sins of the Icon"]=10,
+        ["Skeletal Rage"]=10, -- AHHHHHHHHHHHHHHHHHHHHHHHH
+        ["The Corpse Collector"]=10,
+        ["Unhallowed Purity"]=10,
+        ["Viviseduction"]=10,
+        ["Wretched Human Mirror"]=10 -- Bloodbath song name
       }
     }
   },
@@ -2573,13 +2607,13 @@ namelib.NAMES =
         ["Nothing But A Husk"]=10,
         ["Nuclear Annihilation"]=10,
         ["Null and Void"]=10,
+        ["Planetary Destruction"]=10,
         ["Scrounge"]=10,
         ["Stand Your Ground"]=10,
         ["Steel Scraps"]=10,
         ["The Mysteries of Octothorp"]=10, -- Come on crowbars82, come and finish your mod lol
         ["The No Go Zone"]=10,
         ["The Twisted Abode"]=10,
-        ["Planetary Destruction"]=10,
 
         -- MSSP adds more names as well
         ["Damned Demon Destruction"]=10, -- Demios
@@ -2602,6 +2636,7 @@ namelib.NAMES =
 
         -- 2021 naming convention by Armaetus
         ["A Clouded Sun"]=10,
+        ["A Cruel Fate"]=10,
         ["A Fate No Worse"]=10,
         ["Abandoned"]=10,
         ["Among the Abyss"]=10,
@@ -2610,29 +2645,39 @@ namelib.NAMES =
         ["Beyond the Mist"]=10,
         ["Beyond Survival"]=10,
         ["Blazing Skyscrapers"]=10,
+        ["Bleak Outlook"]=10,
         ["Blessed Twilight"]=10,
         ["Blood Among the Soot"]=10,
+        ["Body, Soul and Rifle"]=10,
         ["Contemporary Silence"]=10,
         ["Cold, Icy Winds"]=10,
         ["Corporatis Infernus"]=10,
         ["Crawling Through Glass"]=10,
         ["Criteria of a Bum"]=10,
+        ["Darkened Nights"]=10,
         ["Decay of Sunlight"]=10,
         ["Desolation Deluxe"]=10,
+        ["Departure of Humanity"]=10,
         ["Dumpsters and Demons"]=10,
         ["Dwelling in the Shroud"]=10,
         ["End of Seasons"]=10,
+        ["Exodus Unto Nowhere"]=10,
         ["Fading Sun"]=10,
         ["Firestorm"]=10,
         ["Frontier of Dust"]=10,
         ["Hymn of Solitude"]=10,
+        ["In Hiding"]=10,
         ["Letting it all Go"]=10,
         ["Long Forgotten"]=10,
+        ["Lost Forever"]=10,
         ["Lurking Death"]=10,
         ["Monoliths of Ruin"]=10,
         ["No Go Zone"]=10,
         ["No Peace Here"]=10,
         ["No Return"]=10,
+        ["Northern Lights"]=10,
+        ["Nothing But Ash"]=10,
+        ["Peace Through Firepower"]=10, -- Command & Conquer reference
         ["Rain"]=10,
         ["Retirement of Man"]=10,
         ["Ruined"]=10,
@@ -5376,6 +5421,7 @@ namelib.NAMES =
         ["Nobody Knows About Legacy 3D Lines"] = 20,
         ["Live! Work! SLAY!"] = 20,
         ["Too Much Fabs, Too Few Fabs"] = 20,
+        ["The Category is... DOOM!"] = 20,
 
         -- based on popular movie/TV slogans
         ["A Minute in Hell"] = 20,
