@@ -31,6 +31,7 @@
 class choice_data_c
 {
 friend class UI_RChoice;
+friend class UI_RSlide;
 
 public:
 	const char *id;     // terse identifier
@@ -47,7 +48,6 @@ public:
 	 choice_data_c(const char *_id = NULL, const char *_label = NULL);
 	~choice_data_c();
 };
-
 
 class UI_RChoice : public Fl_Choice
 {
@@ -98,6 +98,36 @@ private:
 
 	void GotoPrevious();
 	void GotoNext();
+};
+
+class UI_RSlide : public Fl_Slider
+{
+private:
+	std::vector<choice_data_c *> opt_list;
+
+public:
+	UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
+	virtual ~UI_RSlide();
+
+
+public:
+
+	// get the id string for the currently shown value.
+	// Returns the string "none" if there are no choices.
+	const char *GetID() const;
+
+	// change the currently shown value via the new 'id'.
+	// If does not exist, returns false and nothing was changed.
+	bool ChangeTo(const char *id);
+	
+	const char *GetLabel() const;
+	
+	choice_data_c * FindID(const char *id) const;
+
+private:
+
+	choice_data_c * FindMapped() const;
+
 };
 
 
