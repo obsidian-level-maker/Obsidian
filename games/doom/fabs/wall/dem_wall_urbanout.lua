@@ -55,7 +55,7 @@ PREFABS.Wall_dumpsteropen =
 
   scenic_mode = "never",
 
-  deep = 64
+  deep = 64,
 
   flat_FLAT5_8 = "FLAT5_8"
 }
