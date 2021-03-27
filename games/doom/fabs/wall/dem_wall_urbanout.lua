@@ -56,6 +56,8 @@ PREFABS.Wall_dumpsteropen =
   scenic_mode = "never",
 
   deep = 64
+
+  flat_FLAT5_8 = "FLAT5_8"
 }
 
 PREFABS.Wall_dumpsterclosed =
@@ -106,34 +108,8 @@ PREFABS.Wall_doorstopstep =
 
 PREFABS.Wall_doorstep =
 {
-  file   = "wall/dem_wall_urbanout.wad",
-  map    = "MAP07",
-
-  prob   = 20,
-  theme = "urban",
-  env    = "outdoor",
-
-  on_liquids = "never",
-
-  scenic_mode = "never",
-
-  need_solid_depth = 2,
-
-  where  = "edge",
-  height = 128,
-  deep   = 56,
-
-  bound_z1 = 0,
-  bound_z2 = 128,
-
-  x_fit = "frame",
-  z_fit = "top",
-
-  tex_DOOR3 =
-  {
-    DOOR1 = 50,
-    DOOR3 = 50
-  }
+  template = "Wall_doorstopstep",
+  map = "MAP07"
 }
 
 PREFABS.Wall_boombox =
