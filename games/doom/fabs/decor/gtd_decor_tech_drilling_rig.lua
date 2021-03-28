@@ -5,7 +5,7 @@ PREFABS.Decor_tech_drilling_rig =
 
   where = "point",
 
-  -- rank = 1, -- remove comment to force fab on all possible test cases
+  --rank = 1, -- remove comment to force fab on all possible test cases
   prob = 10000,
   theme = "tech",
   env = "building",
