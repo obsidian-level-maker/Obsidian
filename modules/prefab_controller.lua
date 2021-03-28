@@ -149,7 +149,7 @@ OB_MODULES["prefab_control"] =
   label = _("Advanced Level Control"),
 
   side = "left",
-  priority = 93,
+  priority = 95,
 
   game = "doomish",
 
