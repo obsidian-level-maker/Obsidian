@@ -1426,6 +1426,8 @@ function Fab_load_wad(def)
     if pass == 1 then
       local C = { t=S.floor_h, tex=S.floor_tex }
 
+      --if (def.delta) then print("DELTA: " .. def.delta) end  // "Debugging"
+
       if S.special == WADFAB_REACHABLE then
         C.reachable = true
       elseif S.special == WADFAB_MOVER then
@@ -1433,7 +1435,11 @@ function Fab_load_wad(def)
       elseif S.special == WADFAB_DOOR then
         -- not used on the floor
       elseif S.special == WADFAB_DELTA_12 then
-        C.delta_z = -12
+        if (def.delta) then
+          C.delta_z = -(def.delta)
+        else
+          C.delta_z = -12
+        end
       elseif S.special and S.special > 0 then
         C.special = S.special
       end
@@ -1651,8 +1657,20 @@ function Fab_load_wad(def)
       local z1 = S1.floor_h
       local z2 = S2.floor_h
 
-      if S1.special == WADFAB_DELTA_12 then z1 = z1 - 12 end
-      if S2.special == WADFAB_DELTA_12 then z2 = z2 - 12 end
+      if S1.special == WADFAB_DELTA_12 then 
+        if (def.delta) then
+          z1 = z1 - def.delta
+        else
+          z1 = z1 - 12 
+        end
+      end
+      if S2.special == WADFAB_DELTA_12 then 
+        if (def.delta) then
+          z2 = z2 - def.delta
+        else
+          z2 = z2 - 12 
+        end
+      end
 
       z = math.max(z1, z2)
     end
@@ -1878,6 +1896,7 @@ function Fab_collect_fields(fab)
     if string.match(name, "^tag_")    then return true end
 
     if string.match(name, "^offset_") then return true end
+    if string.match(name, "^delta") then return true end
 
     return false
   end
