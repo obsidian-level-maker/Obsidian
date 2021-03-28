@@ -967,11 +967,9 @@ function Grower_calc_rule_probs()
 
         GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd = true
 
-        if  PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
-          gui.printf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
-          gui.printf("Factor: x" .. ab_factor .. "\n")
-          if new_env then gui.printf("New env: " .. new_env .. "\n") end
-        end
+        gui.debugf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
+        gui.debugf("Factor: x" .. ab_factor .. "\n")
+        if new_env then gui.debugf("New env: " .. new_env .. "\n") end
 
         count = count - 1
       end
@@ -1342,9 +1340,7 @@ function Grower_add_room(parent_R, info, trunk)
 
   local R = ROOM_CLASS.new()
 
-  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
-gui.printf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
-  end
+gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
 
   if info.force_start then
     R.is_start = true
@@ -1469,9 +1465,7 @@ function Grower_kill_room(R)
 
   local hallway_neighbor
 
-  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
-    gui.printf("Killing " .. R.id .. "\n")
-  end
+  gui.debugf("Killing " .. R.id .. "\n")
 
   local function turn_joiner_into_closet(R2, chunk)
     chunk.kind = "closet"
@@ -3141,9 +3135,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
-    if PARAM.print_shape_steps and PARAM.print_shape_steps == "showmore" then
-      gui.printf("  Trying rule '%s'...\n", cur_rule.name)
-    end
+      gui.debugf("  Trying rule '%s'...\n", cur_rule.name)
 
     GROWER_DEBUG_INFO[cur_rule.name].trials = GROWER_DEBUG_INFO[cur_rule.name].trials + 1
 
@@ -3345,12 +3337,12 @@ end
 
     PARAM.operated_room = R.id
 
-    if PARAM.cur_shape_group ~= ""
+    --[[if PARAM.cur_shape_group ~= ""
     and PARAM.print_shape_steps
     and PARAM.print_shape_steps ~= "no" then
       gui.printf("Shape group: " .. PARAM.cur_shape_group .. "\n")
       gui.printf("Shape count: " .. PARAM.cur_shape_group_apply_count .. "\n")
-    end
+    end]]
 
     -- start it up
     if (rule.group and PARAM.cur_shape_group == "")
@@ -3453,9 +3445,7 @@ end
 
     -- SUCCESS --
 
-    if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
-      gui.printf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
-    end
+    gui.debugf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
 
     -- debug statistics
     GROWER_DEBUG_INFO[cur_rule.name].applied = GROWER_DEBUG_INFO[cur_rule.name].applied + 1
@@ -3490,9 +3480,7 @@ end
 
   ---| Grower_grammatical_pass |---
 
-  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
-    gui.printf("Growing %s with [%s x %d].....\n", R.name, pass, apply_num)
-  end
+  gui.debugf("Growing %s with [%s x %d].....\n", R.name, pass, apply_num)
 
   -- we should have a known bbox (unless creating a room)
   if not is_create then
