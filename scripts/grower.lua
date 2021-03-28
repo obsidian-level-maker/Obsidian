@@ -930,6 +930,7 @@ function Grower_calc_rule_probs()
 
       if not string.match(absurded_rule,"ROOT")
       and not string.match(absurded_rule,"JOINER")
+      and not string.match(absurded_rule,"SPROUT")
       and not string.match(absurded_rule,"EMERGENCY")
       and not string.match(absurded_rule,"STREET")
       and not string.match(absurded_rule,"SIDEWALK")
@@ -969,6 +970,7 @@ function Grower_calc_rule_probs()
         if  PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
           gui.printf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
           gui.printf("Factor: x" .. ab_factor .. "\n")
+          if new_env then gui.printf("New env: " .. new_env .. "\n") end
         end
 
         count = count - 1
