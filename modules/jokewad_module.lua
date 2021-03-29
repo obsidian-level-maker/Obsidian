@@ -344,7 +344,7 @@ function JOKEWAD_MODULE.populate_level(stuff)
         if S.chunk and S.chunk.content then goto continue end
 
         -- not by thick walls and diagonals
-        if (S.wall_depth and S.wall_depth <= 16) or S.diagonal then goto continue end
+        if (S.wall_depth and S.wall_depth > 16) or S.diagonal then goto continue end
 
         -- not on areas with liquid sinks
         if A.floor_group and A.floor_group.sink
