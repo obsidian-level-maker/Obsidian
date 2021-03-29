@@ -292,7 +292,7 @@ function Render_edge(E)
       -- don't allow more than one wall that's not flat enough
       -- on the same seed
       if S1.wall_depth then
-        reqs.deep = math.max(SEED_SIZE - S1.wall_depth, 16)
+        reqs.deep = math.max(SEED_SIZE - S1.wall_depth + 32, 16)
       end
 
       -- don't allow anything more than flat walls if
