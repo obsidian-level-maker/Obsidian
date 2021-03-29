@@ -21,7 +21,7 @@ JOKEWAD_MODULE = {}
 JOKEWAD_MODULE.ENABLE_DISABLE =
 {
   "enable",  _("Enable"),
-  "disable", _("Disable"),
+  "disable", _("Disable")
 }
 
 function JOKEWAD_MODULE.setup(self)
@@ -204,29 +204,29 @@ JOKEWAD_MODULE.TISSUES =
   ob_1roll =
   {
     id = 14949,
-    cluster = 5,
+    cluster = 5
   },
 
   ob_2roll =
   {
     id = 14950,
-    cluster = 3,
+    cluster = 3
   },
 
   ob_5roll =
   {
-    id = 14951,
+    id = 14951
   },
 
   ob_handsanitizer =
   {
-    id = 14952,
+    id = 14952
   },
 
   ob_mask =
   {
-    id = 14953,
-  },
+    id = 14953
+  }
 }
 
 function JOKEWAD_MODULE.get_levels()
@@ -394,14 +394,16 @@ function JOKEWAD_MODULE.add_tissues()
   item_params =
   {
     odds = 7,
+
     items =
     {
       ob_1roll = 2,
       ob_2roll = 1,
       ob_5roll = 1,
       ob_handsanitizer = 1,
-      ob_mask = 1,
+      ob_mask = 1
     },
+
     templates = JOKEWAD_MODULE.TISSUES
   }
 
@@ -449,7 +451,7 @@ OB_MODULES["jokewad_module"] =
         "on the face of the earth. Warning: ticking this waives any " ..
         "liability for potential emotional and physical damage on the " ..
         "part of the user. \n"),
-      default = "disable",
+      default = "disable"
     },
 
     pandemic_mode =
@@ -460,7 +462,7 @@ OB_MODULES["jokewad_module"] =
       tooltip = _("Do your part in preventing the coronavirus crisis! Hell is taking " ..
       "away all our tissue rolls and hand sanitizers! It's up to the Slayer to take " ..
       "it back. Every square and every squeeze."),
-      default = "disable",
-    },
-  },
+      default = "disable"
+    }
+  }
 }
