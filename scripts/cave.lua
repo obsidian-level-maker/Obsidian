@@ -654,7 +654,7 @@ function Cave_generate_cave(R, area)
       cave:flood_fill()
 
       if is_cave_good(cave) then
-        break;
+        break
       end
 
       -- randomly clear some seeds in the room.
