@@ -350,6 +350,8 @@ function JOKEWAD_MODULE.populate_level(stuff)
         if A.floor_group and A.floor_group.sink
         and A.floor_group.sink.mat == "_LIQUID" then goto continue end
 
+        if A.is_road then goto continue end
+
         place_items(A.ceil_h - 2, S.mid_x, S.mid_y, 0)
         ::continue::
       end
