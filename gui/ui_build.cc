@@ -225,6 +225,13 @@ void UI_Build::Prog_Step(const char *step_name)
 
 	progress->value(val);
 	progress->label(prog_label);
+	std::string newtitle = "[ ";
+	newtitle.append(prog_label);
+	newtitle.append(" ] ");
+	newtitle.append(StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+	newtitle.append(" - ");
+	newtitle.append(status_label);
+	main_win->label(newtitle.c_str());
 
 	AddStatusStep(_(step_name));
 
@@ -265,13 +272,12 @@ void UI_Build::SetStatus(const char *msg)
 	strncpy(status_label, msg, limit);
 
 	status_label[limit-1] = 0;
+	
+	if (StringCaseCmp(status_label, "Success") == 0)
+		main_win->label(StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
 
 	status->label(status_label);
 	status->redraw();
-	std::string newtitle = StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
-	newtitle = newtitle.append(" - ");
-	newtitle = newtitle.append(status_label);
-	main_win->label(newtitle.c_str());
 }
 
 void UI_Build::ParseSteps(const char *names)
