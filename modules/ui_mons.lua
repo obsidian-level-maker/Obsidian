@@ -130,6 +130,15 @@ UI_MONS.START_ROOM_MON_CHOICES =
   "yes", _("Yes"),
 }
 
+UI_MONS.MONSTER_KIND_JUMPSTART_CHOICES =
+{
+  "default", _("DEFAULT"),
+  "harder", _("Harder"),
+  "tougher", _("Tougher"),
+  "fiercer", _("Fiercer"),
+  "crazier", _("CRAZIER")
+}
+
 UI_MONS.BOSSREGULARS =
 {
   "no",  _("Disabled"),
@@ -185,7 +194,13 @@ OB_MODULES["ui_mons"] =
       tooltip= "Affects how many different monster types can " ..
                "appear in each room.\n" ..
                "Setting this to NONE will make each level use a single monster type",
-      gap=1,
+    },
+    {
+      name="mon_variety_jumpstart", label=_("Monster Variety Jumpstart"), 
+      choices=UI_MONS.MONSTER_KIND_JUMPSTART_CHOICES,
+      default = "default",
+      tooltip = "Affects how many monster variations initially appear at the very first map.",
+      gap = 1
     },
 
     { name="bosses",    label=_("Bosses"),    choices=UI_MONS.BOSSES },

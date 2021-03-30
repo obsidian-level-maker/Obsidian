@@ -291,8 +291,8 @@ function Render_edge(E)
 
       -- don't allow more than one wall that's not flat enough
       -- on the same seed
-      if S1.wall_depth and S1.wall_depth > 16 then
-        reqs.deep = 16
+      if S1.wall_depth then
+        reqs.deep = math.max(SEED_SIZE - S1.wall_depth + 32, 16)
       end
 
       -- don't allow anything more than flat walls if
@@ -383,8 +383,6 @@ function Render_edge(E)
       reqs.group = nil
       def = Fab_pick(reqs)
     end
-
-    S1.wall_depth = math.max(S1.wall_depth or 16, def.deep or 16)
 
     return def
   end
@@ -512,10 +510,23 @@ function Render_edge(E)
       skin.ceil = assert(E.area.ceil_mat)
     end
     if E.area.floor_mat then
-      skin.floor = assert (E.area.floor_mat)
+      skin.floor = assert(E.area.floor_mat)
     end
 
     local def = pick_wall_prefab()
+
+    if not E.S.depth then E.S.depth = {} end
+    E.S.depth[dir] = def.deep
+    E.S.wall_depth = 0
+
+    -- calculate wall depth (remaining space in the seed)
+    local D_deep = E.S.depth[2] or 0
+    local L_deep = E.S.depth[4] or 0
+    local R_deep = E.S.depth[6] or 0
+    local U_deep = E.S.depth[8] or 0
+
+    E.S.wall_depth = U_deep + D_deep
+    E.S.wall_depth = math.max(E.S.wall_depth, R_deep + L_deep)
 
     local z1 = A.floor_h
     local z2 = A.ceil_h
@@ -1081,6 +1092,7 @@ function Render_junction(A, S, dir)
   E.S    = S
   E.dir  = dir
   E.long = 1
+  E.deep = 16
 
   Render_edge(E)
 end

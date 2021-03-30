@@ -136,19 +136,6 @@ OB_MODULES["debugger"] =
       priority=100,
     },
 
-    print_shape_steps =
-    {
-      name = "print_shape_steps",
-      label=_("Print Growth Steps"),
-      choices=DEBUG_CONTROL.GROWTH_STEP_CHOICES,
-      tooltip="Displays more information about the shape grammar steps "..
-              "in the LOG. 'Show All Steps' will print all actions " ..
-              "the shape grammar system performs but will greatly " ..
-              "bloat your LOG file. Default is 'Show Succesful Steps Only'.",
-      default="show",
-      priority=99,
-    },
-
     print_prefab_use =
     {
       name = "print_prefab_use",

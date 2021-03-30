@@ -15,6 +15,13 @@ PREFABS.Hallway_vent_plain =
   where  = "seeds",
   shape  = "I",
 
-  deep   = 16,
+  deep   = 16
 }
 
+PREFABS.Hallway_vent_secret =
+{
+  template = "Hallway_vent_plain",
+
+  map    = "MAP05",
+  key    = "secret",
+}
