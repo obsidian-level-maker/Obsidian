@@ -200,7 +200,7 @@ PREFABS.Wall_modquake_round_braced_lit_pillar_industrial =
   template = "Wall_modquake_set_industrial",
   map = "MAP06",
 
-  theme = "!hell"
+  theme = "!hell",
 
   rank = 2,
 
@@ -218,7 +218,7 @@ PREFABS.Wall_modquake_round_braced_lit_pillar_hell =
   template = "Wall_modquake_set_industrial",
   map = "MAP06",
 
-  theme = "hell"
+  theme = "hell",
 
   rank = 3,
 
@@ -237,7 +237,7 @@ PREFABS.Wall_modquake_round_braced_lit_pillar_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP06",
 
-  theme = "any"
+  theme = "any",
 
   rank = 1,
 
