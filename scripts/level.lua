@@ -588,7 +588,9 @@ function Episode_plan_monsters()
   local function is_monster_usable(LEV, mon, info)
     if info.prob <= 0 then return false end
 
-    if info.level > LEV.monster_level then return false end
+    if info.level > LEV.monster_level 
+    + (MONSTER_KIND_JUMPSTART_LEVELS[OB_CONFIG.mon_variety_jumpstart] or 0)
+    then return false end
 
     if info.weap_min_damage and info.weap_min_damage > LEV.weap_max_damage then return false end
 
@@ -1630,6 +1632,8 @@ function Episode_plan_weapons()
 
   local function calc_max_damage(LEV)
     local max_damage = 5
+
+    max_damage = MONSTER_KIND_JUMPSTART[OB_CONFIG.mon_variety_jumpstart] or 0
 
     for name,_ in pairs(LEV.seen_weapons) do
       local info = GAME.WEAPONS[name]

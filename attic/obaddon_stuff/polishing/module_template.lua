@@ -42,22 +42,22 @@ function TEMPLATE_MODULE.setup(self)
     -- insert a new shape rule into the shape grammars list
     SHAPE_GRAMMAR["GROW_FUNKY_LONG_CORRIDOR"] =
     {
-      name = "GROW_FUNKY_LONG_CORRIDOR"
-      prob = 2147483647
-      use_prob = 2147483647
+      name = "GROW_FUNKY_LONG_CORRIDOR",
+      prob = 2147483647,
+      use_prob = 2147483647,
 
       structure =
       {
-        "....",".11."
-        "....",".11."
-        "#..#","#11#"
-        "#..#","#11#"
-        "#..#","#11#"
-        "#..#","#11#"
-        "#..#","#11#"
-        "#..#","#11#"
-        "#..#","#11#"
-        "x11x","x11x"
+        "....",".11.",
+        "....",".11.",
+        "#..#","#11#",
+        "#..#","#11#",
+        "#..#","#11#",
+        "#..#","#11#",
+        "#..#","#11#",
+        "#..#","#11#",
+        "#..#","#11#",
+        "x11x","x11x",
         "x11x","x11x"
       }
     }
@@ -78,15 +78,15 @@ end
 
 OB_MODULES["template_module"] =
 {
-  label = _("Template Module") -- Module's GUI display name.
+  label = _("Template Module"), -- Module's GUI display name.
 
-  engine = "zdoom"
-  game = "doomish"
+  engine = "zdoom",
+  game = "doomish",
 
-  side = "right" -- Horizontal position of the module in the GUI (left or right column)
-  priority = -100 -- Vertical position of the module in the GUI, larger number means higher
+  side = "right", -- Horizontal position of the module in the GUI (left or right column)
+  priority = -100, -- Vertical position of the module in the GUI, larger number means higher
 
-  tooltip = "This is a template module for custom Oblige addons."
+  tooltip = "This is a template module for custom Oblige addons.",
 
   hooks = -- Hooks are calls from the level generation process that allows you
           -- to attach new functions after the generator reaches certain states
@@ -115,20 +115,20 @@ OB_MODULES["template_module"] =
       all_done                - called when all levels have been built.
                               - e.g. The ZDoom MAPINFO is generated during this period and merged into the WAD.
     ]]
-    setup = TEMPLATE_MODULE.setup
+    setup = TEMPLATE_MODULE.setup,
     begin_level = TEMPLATE_MODULE.do_funky_things
-  }
+  },
 
   options =
   {
     activate_this =
     {
-      name = "activate_this"
-      label = _("Activate Module")
-      priority = 7
-      tooltip = "This is a description of this option."
-      choices = TEMPLATE_MODULE.CHOICES
-      default = "yes"
+      name = "activate_this",
+      label = _("Activate Module"),
+      priority = 7,
+      tooltip = "This is a description of this option.",
+      choices = TEMPLATE_MODULE.CHOICES,
+      default = "yes",
       gap = 1
     }
   }
