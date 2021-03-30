@@ -1,9 +1,9 @@
 PREFABS.Exit_armaetus_fans_exit =
 {
-  file   = "exit/armaetus_fans_exit.wad",
-  map    = "MAP01",
+  file = "exit/armaetus_fans_exit.wad",
+  map = "MAP01",
 
-  prob   = 125,
+  prob = 125,
 
   theme = "tech",
 
@@ -16,10 +16,10 @@ PREFABS.Exit_armaetus_fans_exit =
   seed_w = 2,
   seed_h = 2,
 
-  deep   = 16,
+  deep = 16,
 
-  x_fit  = "frame",
-  y_fit  = "top",
+  x_fit = "frame",
+  y_fit = "top",
 
   sound = "Indoor_Fan",
 
@@ -28,7 +28,7 @@ PREFABS.Exit_armaetus_fans_exit =
 
 PREFABS.Exit_armaetus_fans_exit_urban =
 {
-  template   = "Exit_armaetus_fans_exit",
+  template = "Exit_armaetus_fans_exit",
 
   theme = "urban",
 
@@ -41,7 +41,7 @@ PREFABS.Exit_armaetus_fans_exit_urban =
 
 PREFABS.Exit_armaetus_fans_exit_hell =
 {
-  template   = "Exit_armaetus_fans_exit",
+  template = "Exit_armaetus_fans_exit",
 
   theme = "hell",
 
