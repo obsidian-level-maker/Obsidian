@@ -2946,7 +2946,7 @@ function Quest_room_themes()
 
         while x >= 1 do
           local wg_pick = rand.key_by_probs(LEVEL.theme.wall_groups)
-          the_one_wall_group_tab[wg_pick] = 50
+          the_one_wall_group_tab[wg_pick] = 50 / x
           x = x - 1
         end
       end
@@ -3024,15 +3024,21 @@ function Quest_room_themes()
 
     -- decide light groups
     -- white is excluded here as it's a main color
-    local colors =
+    local hue_colors =
     {
-      blue = 20,
-      red = 20,
-      yellow = 20,
-      orange = 20,
-      green = 20,
-      beige = 25,
-      purple = 5
+      blue = 10,
+      red = 10,
+      orange = 10,
+      yellow = 10,
+      beige = 6,
+      green = 10,
+      purple = 2
+    }
+
+    local neutral_color =
+    {
+      white = 10,
+      beige = 10
     }
 
     local light_grouping = rand.key_by_probs(
@@ -3050,19 +3056,19 @@ function Quest_room_themes()
       LEVEL.light_group = {}
 
       if light_grouping == "plain" then
-        LEVEL.light_group["white"] = 1
+        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
       elseif light_grouping == "monochrome" then
-        LEVEL.light_group["white"] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       elseif light_grouping == "bichrome" then
-        LEVEL.light_group["white"] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       elseif light_grouping == "single" then
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       elseif light_grouping == "double" then
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
-        LEVEL.light_group[rand.key_by_probs(colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
+        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
       end
 
       gui.printf("\nLevel light group: " .. light_grouping .. "\n")
@@ -3262,6 +3268,9 @@ function Quest_room_themes()
 
     if next_theme == LEVEL.theme_name then return end
     if not next_theme then return end
+
+    LEVEL.next_theme = next_theme
+
     if env == "park" then env = "outdoor" end
 
     tab = collect_usable_themes(env, nil, next_theme)
@@ -3273,11 +3282,10 @@ function Quest_room_themes()
     end
 
     local f_tab = GAME.THEMES[next_theme].facades
+    local wg_tab = GAME.THEMES[next_theme].outdoor_wall_groups
 
-    if GAME.THEMES[next_theme].outdoor_wall_groups then
-      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(GAME.THEMES[next_theme].outdoor_wall_groups)
-    else
-      LEVEL.alt_outdoor_wall_group = "PLAIN"
+    if wg_tab then
+      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab) or "PLAIN"
     end
 
     if exit_room.is_outdoor and not exit_room.is_park then

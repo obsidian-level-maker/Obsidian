@@ -407,6 +407,8 @@ PREFABS.Joiner_eyes1s =
 
   theme  = "hell",
 
+  filter = "pf_dark_mazes",
+
   style = "secrets",
 
   where  = "seeds",

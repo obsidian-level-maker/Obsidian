@@ -2911,6 +2911,66 @@ GROW_COLLONADE_VAULT_THICK_PILLARS_NEW_AREA =
   }
 },
 
+GROW_COLLONADE_STRAIGHT_VAULT =
+{
+  prob = 30,
+  skip_prob = 35,
+
+  structure =
+  {
+    "....","A11A",
+    "....","A11A",
+    "....","A11A",
+    "....","A11A",
+    "....","A11A",
+    "....","A11A",
+    "x11x","x11x",
+  }
+},
+
+GROW_COLLONADE_STRAIGHT_VAULT_LARGE =
+{
+  prob = 40,
+  skip_prob = 35,
+
+  structure =
+  {
+    "........","AA1111AA",
+    "........","AA1111AA",
+    "........","AA1111AA",
+    "........","AA1111AA",
+    "........","AA1111AA",
+    "........","AA1111AA",
+    "xxx11xxx","xxx11xxx",
+  }
+},
+
+GROW_COLLONADE_STRAIGHT_VAULT_ORION_BELT =
+{
+  prob = 40,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x........x","xAA1111AAx",
+    "..........","/AA1111AA%",
+    "..........","AA/%11/%AA",
+    "..........","AA##AA##AA",
+    "..........","AA%/11%/AA",
+    "..........","%AA1111AA/",
+    "x........x","xAA1111AAx",
+    "xxxx11xxxx","xxxx11xxxx",
+  },
+
+  diagonals =
+  {
+         ".A","A.",
+    "A.",".1","1.",".A",
+    "A.",".1","1.",".A",
+         ".A","A.",
+  }
+},
+
 GROW_357_OPEN_ROOF_NEW_AREA =
 {
   prob = 25,

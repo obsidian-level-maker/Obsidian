@@ -177,6 +177,27 @@ MONSTER_KIND_TAB =
   ludicrous = 2.0
 }
 
+-- weapon max_damage thresholds
+-- larger numbers means more monsters are
+-- added to the global palette
+MONSTER_KIND_JUMPSTART =
+{
+  default = 5,
+  harder = 40,
+  tougher = 80,
+  fiercer = 160,
+  crazier = 240
+}
+
+MONSTER_KIND_JUMPSTART_LEVELS =
+{
+  default = 0,
+  harder = 2,
+  tougher = 4,
+  fiercer = 8,
+  crazier = 12
+}
+
 RAMP_UP_FACTORS =
 {
   veryslow = 0.5,

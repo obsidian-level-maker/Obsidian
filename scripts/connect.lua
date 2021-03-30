@@ -209,9 +209,7 @@ end
 function Connect_directly(P)
   local kind = P.kind
 
-  if PARAM.print_shape_steps and PARAM.print_shape_steps ~= "no" then
-    gui.printf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
-  end
+  gui.debugf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
 
   local C = CONN_CLASS.new(kind, P.R1, P.R2)
 

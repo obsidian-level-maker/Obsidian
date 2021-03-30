@@ -7,6 +7,8 @@ PREFABS.Exit_armaetus_fans_exit =
 
   theme = "tech",
 
+  start_fab_peer = "Start_armaetus_fans_tech",
+
   where  = "seeds",
 
   texture_pack = "armaetus",
@@ -19,15 +21,9 @@ PREFABS.Exit_armaetus_fans_exit =
   x_fit  = "frame",
   y_fit  = "top",
 
-  tex_SW1BLUE =
-  {
-    SW1BLUE=50, SW1BRN2=50, SW1BRNGN=50,
-    SW1COMP=50, SW1METAL=50, SW1STON1=50,
-    SW1STRTN=50, SW1SLAD=30, SW1GRAY=50,
-    SW1GRAY1=50,
-  },
-
   sound = "Indoor_Fan",
+
+  tex_SW1BLUE = "SW1METAL"
 }
 
 PREFABS.Exit_armaetus_fans_exit_urban =
@@ -36,15 +32,11 @@ PREFABS.Exit_armaetus_fans_exit_urban =
 
   theme = "urban",
 
-  flat_CEIL4_2 = "FLAT5_1", -- Feel free to expand this
+  start_fab_peer = "Start_armaetus_fans_urban",
 
-  tex_SW1BLUE =
-  {
-    SW1GOTH=20, SW1QUAK=20, SW1BRN2=50,
-    SW1BRNGN=50, SW1METAL=50, SW1STON1=50,
-    SW1LION=50, SW1GARG=50, SW1SATYR=50,
-    SW1SLAD=30, SW1WOOD=50,
-  }
+  flat_CEIL4_2 = "FLAT5_1",
+  wall_COMPBLUE = "STEP2",
+  tex_SW1BLUE = "SW1BLUE"
 }
 
 PREFABS.Exit_armaetus_fans_exit_hell =
@@ -53,13 +45,11 @@ PREFABS.Exit_armaetus_fans_exit_hell =
 
   theme = "hell",
 
-  flat_CEIL4_2 = "DEM1_6", -- Feel free to expand this
+  start_fab_peer = "Start_armaetus_fans_hell",
 
-  tex_SW1BLUE =
-  {
-    SW1GOTH=70, SW1QUAK=70, SW1METAL=50,
-    SW1STON1=50, SW1LION=50, SW1GARG=50,
-    SW1SATYR=50, SW1SKIN=50, SW1SKULL=50,
-    SW1WOOD=50, SW1GSTON=50, SW1HOT=30,
-  }
+  flat_CEIL4_2 = "DEM1_6",
+  wall_COMPBLUE = "MARBLE1",
+  tex_SW1BLUE = "SW1GOTH"
 }
+
+-- MSSP: Texture randomization has been removed to keep up with peered starts/exit better
