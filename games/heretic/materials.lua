@@ -29,6 +29,18 @@ HERETIC.MATERIALS =
   _ERROR   = { t="WOODWL",  f="FLOOR10" },
   _DEFAULT = { t="GRSTNPB", f="FLOOR03" },
   _SKY     = { t="CHAINSD", f="F_SKY1"  },
+  
+  -- materials for generic prefab set --
+  _METAL   = { t="METL2",   f="FLOOR30" },
+  _MTLBARS = { t="GATMETL3", f="FLOOR30" }, -- Short metal bars, i.e. railings
+  _MTLBART = { t="GATMETL5", f="FLOOR30" }, -- Tall metal baqrs, i.e. cage/jail bars
+  _LTWOOD  = { t="DRIPWALL", f="FLOOR27" }, -- Light wood
+  _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Wooden crate
+  _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover
+  _WATER   = { t="WATRWAL1", f="FLTWAWA1" }, -- "Standing water", sorta
+  _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
+  _STONE   = { t="SQPEB1", f="FLAT504" }, -- Loosely arranged stone (gray)
+  _BRWNSTN = { t="SNDCHNKS", f="FLAT522" }, -- Loosely arranged stone (brown/tan)
 
   -- general purpose --
 

@@ -14,6 +14,11 @@
 
 HERETIC.ENTITIES =
 {
+
+  --- entities for generic prefabs --
+  generic_barrel = { id=7000, r=12, h=32 },
+  generic_ceiling_light = { id=7001, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" },
+
   --- player stuff ---
   player1 = { id=1, r=16, h=56 },
   player2 = { id=2, r=16, h=56 },
