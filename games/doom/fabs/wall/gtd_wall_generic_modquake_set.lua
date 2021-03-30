@@ -43,7 +43,7 @@ PREFABS.Wall_modquake_set_industrial_boom =
 {
   template = "Wall_modquake_set_industrial",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 2,
 
@@ -56,7 +56,7 @@ PREFABS.Wall_modquake_set_hell_boom =
 
   theme = "hell",
 
-  engine = "limit",
+  engine = "nolimit",
   rank = 1,
 
   line_342 = 0,
@@ -86,7 +86,7 @@ PREFABS.Wall_modquake_set_jawlike_boom =
   template = "Wall_modquake_set_industrial",
   map = "MAP02",
 
-  engine = "limit",
+  engine = "nolimit",
 
   theme = "any",
   rank = 1,
@@ -117,7 +117,7 @@ PREFABS.Wall_modquake_top_heavy_brace_set_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP03",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 1,
 
@@ -148,7 +148,7 @@ PREFABS.Wall_modquake_tek_slope_brace_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP04",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 1,
 
@@ -181,7 +181,7 @@ PREFABS.Wall_modquake_ex_light_slope_brace_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP05",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 1,
 
