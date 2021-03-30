@@ -41,6 +41,9 @@ HERETIC.MATERIALS =
   _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
   _STONE   = { t="SQPEB1", f="FLAT504" }, -- Loosely arranged stone (gray)
   _BRWNSTN = { t="SNDCHNKS", f="FLAT522" }, -- Loosely arranged stone (brown/tan)
+  _WDDOOR  = { t="DOORWOOD", f="FLAT507" }, -- Wooden/brown door
+  _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
+  _STNDOOR = { t="CHAINSD", f="FLOOR08"}, -- Stone/gray door
 
   -- general purpose --
 
