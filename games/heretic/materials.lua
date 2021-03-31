@@ -33,6 +33,7 @@ HERETIC.MATERIALS =
   -- materials for generic prefab set --
   _METAL   = { t="METL2",   f="FLOOR30" },
   _MTLBARS = { t="GATMETL3", f="FLOOR30" }, -- Short metal bars, i.e. railings
+  _MTLBARM = { t="GATMETL4", f="FLOOR30" }, -- Medium metal bars
   _MTLBART = { t="GATMETL5", f="FLOOR30" }, -- Tall metal baqrs, i.e. cage/jail bars
   _LTWOOD  = { t="DRIPWALL", f="FLOOR27" }, -- Light wood
   _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Wooden crate
@@ -43,7 +44,11 @@ HERETIC.MATERIALS =
   _BRWNSTN = { t="SNDCHNKS", f="FLAT522" }, -- Loosely arranged stone (brown/tan)
   _WDDOOR  = { t="DOORWOOD", f="FLAT507" }, -- Wooden/brown door
   _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
-  _STNDOOR = { t="CHAINSD", f="FLOOR08"}, -- Stone/gray door
+  _STNDOOR = { t="DOORSTON", f="FLOOR08"}, -- Stone/gray door
+  _WOOD    = { t="WOODWL", f="FLOOR10"}, -- Plain ol' wood
+  _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
+  _PIC1    = { t="CELTIC", f="FLOOR06"}, -- Picture for pic box prefab inset
+  _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
 
   -- general purpose --
 

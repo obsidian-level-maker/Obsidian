@@ -18,6 +18,10 @@ HERETIC.ENTITIES =
   --- entities for generic prefabs --
   generic_barrel = { id=7000, r=12, h=32 },
   generic_ceiling_light = { id=7001, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" },
+  generic_standalone_light = { id=7002, r=12, h=54, light=255 }, -- "torches" and such, freestanding on a floor
+  generic_wall_light    = { id=7003, r=10, h=64, light=255, pass=true, add_mode="extend" }, -- "torches" and such, attached to a wall
+  generic_wide_light    = { id=7004, r=16, h=44, light=255 }, -- wide standalone light, braziers, etc
+  generic_small_pillar  = { id=7005, r=16, h=36 },
 
   --- player stuff ---
   player1 = { id=1, r=16, h=56 },
