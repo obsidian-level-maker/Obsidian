@@ -25,7 +25,10 @@ HERETIC.ENTITIES =
   k_one = { id=7006 },
   k_two = { id=7007 },
   k_three = { id=7008 },
-
+  generic_p1_start = {id=7009, r=16, h=56},
+  generic_p2_start = { id=7010, r=16, h=56 },
+  generic_p3_start = { id=7011, r=16, h=56 },
+  generic_p4_start = { id=7012, r=16, h=56 },
   --- player stuff ---
   player1 = { id=1, r=16, h=56 },
   player2 = { id=2, r=16, h=56 },

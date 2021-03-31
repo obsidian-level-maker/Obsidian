@@ -54,6 +54,9 @@ HERETIC.MATERIALS =
   _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 1 (Blue)
   _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
   _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  _SWITCH  = { t="SW1OFF", f="FLOOR28" }, -- Wall swtich
+  _SWITCH2  = { t="SW2OFF", f="FLOOR28" }, -- Wall swtich
+  _TELE1 = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
   
 
   -- general purpose --
