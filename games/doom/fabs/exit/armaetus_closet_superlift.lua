@@ -1,14 +1,16 @@
 PREFABS.Exit_armaetus_superlift_up =
 {
-  file   = "exit/armaetus_closet_superlift.wad",
-  map    = "MAP01",
+  file = "exit/armaetus_closet_superlift.wad",
+  map = "MAP01",
 
-  prob   = 200,
+  prob = 200,
 
-  theme  = "!hell",
+  theme = "!hell",
+
+  start_fab_peer = "Start_armaetus_superlift",
 
   where  = "seeds",
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 2,
 
   deep = 16,
@@ -18,8 +20,8 @@ PREFABS.Exit_armaetus_superlift_up =
   bound_z1 = -1024,
   bound_z2 = 136,
 
-  x_fit  = "frame",
-  y_fit  = "bottom",
+  x_fit = "frame",
+  y_fit = "bottom",
 }
 
 PREFABS.Exit_armaetus_superlift_down =

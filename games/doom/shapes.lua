@@ -1244,6 +1244,9 @@ AUX_LIQUID_3 =
 ------------------------------------------
 
 
+-- DIRECT_1
+
+
 SPROUT_DIRECT_1 =
 {
   prob = 3, --3,
@@ -1264,6 +1267,35 @@ SPROUT_DIRECT_1 =
 },
 
 
+SPROUT_DIRECT_1_SYMM =
+{
+  prob = 3,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "x11x", "x11x",
+  },
+
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=4, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=4, dir=8 },
+    symmetry3 = { kind="rotate", x=1, y=3, x1=3, y2=5 }
+  }
+},
+
+
+-- DIRECT_2
+
+
 SPROUT_DIRECT_2 =
 {
   prob = 100,
@@ -1281,6 +1313,33 @@ SPROUT_DIRECT_2 =
     conn = { x=2, y=2, w=2, dir=8 },
 
     symmetry = { x=2, y=3, w=2, dir=8 }
+  }
+},
+
+
+SPROUT_DIRECT_2_SYMM =
+{
+  prob = 100,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "x11x", "x11x",
+    "x11x", "x11x",
+  },
+
+  new_room =
+  {
+    conn = { x=2, y=2, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=5, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=5, dir=4 },
+    symmetry3 = { kind="rotate", x=1, y=4, x2=3, y2=6 }
   }
 },
 
@@ -1409,6 +1468,9 @@ SPROUT_DIRECT_FROM_DIAGONAL =
 },
 
 
+-- DIRECT_3
+
+
 SPROUT_DIRECT_3 =
 {
   prob = 400,
@@ -1429,6 +1491,37 @@ SPROUT_DIRECT_3 =
 },
 
 
+SPROUT_DIRECT_3_SYMM =
+{
+  prob = 400,
+
+  style = "symmetry",
+
+  structure =
+  {
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    "x111x", "x111x",
+  },
+
+  new_room =
+  {
+    conn = { x=2, y=1, w=3, dir=8 },
+
+    symmetry = { kind="mirror", x=3, y=6, dir=6 },
+    symmetry2 = { kind="mirror", x=2, y=6, dir=4 },
+    symmetry3 = { kind="rotate", x=1, y=4, x2=4, y2=7 }
+  }
+},
+
+
+-- DIRECT_4
+
+
 SPROUT_DIRECT_4 =
 {
   prob = 4000,
@@ -1447,6 +1540,35 @@ SPROUT_DIRECT_4 =
     symmetry = { x=2, y=3, w=2, dir=8 }
   }
 },
+
+
+SPROUT_DIRECT_4_SYMM =
+{
+  prob = 4000,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "1111", "1111",
+  },
+
+  new_room =
+  {
+    conn = { x=1, y=1, w=4, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=5, dir=6 },
+    symmetry2 = { kind="mirror", x=2, y=5, dir=4 },
+    symmetry3 = { kind="rotate", x=0, y=3, x2=4, y2=7 }
+  }
+},
+
 
 
 SPROUT_CASTLE_2 =
@@ -1521,6 +1643,9 @@ SPROUT_SYMMETRY_3 =
 },
 
 
+-- JOINER_2x1
+
+
 SPROUT_JOINER_2x1 =
 {
   prob = 350, --360,
@@ -1543,6 +1668,39 @@ SPROUT_JOINER_2x1 =
     from_dir = 2
   }
 },
+
+
+SPROUT_JOINER_2x1_SYMM =
+{
+  prob = 350,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "....",".RR.",
+    "....",".RR.",
+    "....",".RR.",
+    "....",".RR.",
+    "x..x","xJJx",
+    "x11x","x11x",
+  },
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=2, y=5, dir=6},
+    symmetry2 = { kind="mirror", x=2, y=5, dir=4},
+    symmetry3 = { kind="rotate", x=1, y=4, x2=3, y2=6}
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+
+-- JOINER_3x1
 
 
 SPROUT_JOINER_3x1 =
@@ -1569,6 +1727,41 @@ SPROUT_JOINER_3x1 =
 },
 
 
+SPROUT_JOINER_3x1_SYMM =
+{
+  prob = 1500,
+
+  style = "symmetry",
+
+  structure =
+  {
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    "x...x", "xJJJx",
+    "x111x", "x111x",
+  },
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=3, y=7, dir=6},
+    symmetry2 = { kind="mirror", x=3, y=7, dir=4},
+    symmetry3 = { kind="rotate", x=1, y=5, x2=4, y2=7}
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+
+-- JOINER_4x1
+
+
 SPROUT_JOINER_4x1 =
 {
   prob = 3000,
@@ -1591,6 +1784,41 @@ SPROUT_JOINER_4x1 =
     from_dir = 2
   }
 },
+
+
+SPROUT_JOINER_4x1_SYMM =
+{
+  prob = 3000,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "JJJJ",
+    "1111", "1111",
+  },
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=2, y=7, dir=6},
+    symmetry2 = { kind="mirror", x=2, y=7, dir=4},
+    symmetry3 = { kind="rotate", x=0, y=6, x2=4, y2=8}
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+
+-- JOINER_2x2
 
 
 SPROUT_JOINER_2x2 =
@@ -1618,6 +1846,40 @@ SPROUT_JOINER_2x2 =
 },
 
 
+SPROUT_JOINER_2x2_SYMM =
+{
+  prob = 2000,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "x..x", "xJJx",
+    "x..x", "xJJx",
+    "x11x", "x11x",
+  },
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=2, y=6, dir=6},
+    symmetry2 = { kind="mirror", x=2, y=6, dir=4},
+    symmetry3 = { kind="rotate", x=1, y=5, x2=3, y2=7}
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+
+-- JOINER_3x2
+
+
 SPROUT_JOINER_3x2 =
 {
   prob = 3000,
@@ -1643,6 +1905,42 @@ SPROUT_JOINER_3x2 =
 },
 
 
+SPROUT_JOINER_3x2_SYMM =
+{
+  prob = 3000,
+
+  style = "symmetry",
+
+  structure =
+  {
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    ".....", ".RRR.",
+    "x...x", "xJJJx",
+    "x...x", "xJJJx",
+    "x111x", "x111x",
+  },
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=3, y=8, dir=6},
+    symmetry2 = { kind="mirror", x=2, y=8, dir=4},
+    symmetry3 = { kind="rotate", x=2, y=7, x2=4, y2=9}
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+
+-- JOINER_4x2
+
+
 SPROUT_JOINER_4x2 =
 {
   prob = 2500,
@@ -1666,6 +1964,42 @@ SPROUT_JOINER_4x2 =
     from_dir = 2
   }
 },
+
+
+SPROUT_JOINER_4x2_SYMM =
+{
+  prob = 2500,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "......", ".RRRR.",
+    "......", ".RRRR.",
+    "......", ".RRRR.",
+    "......", ".RRRR.",
+    "......", ".RRRR.",
+    "......", ".RRRR.",
+    "x....x", "xJJJJx",
+    "x....x", "xJJJJx",
+    "x1111x", "x1111x",
+  },
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=3, y=8, dir=6},
+    symmetry2 = { kind="mirror", x=2, y=8, dir=4},
+    symmetry3 = { kind="rotate", x=1, y=5, x2=5, y2=9}
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+
+-- JOINER_2x3
 
 
 SPROUT_JOINER_2x3 =
@@ -1694,9 +2028,41 @@ SPROUT_JOINER_2x3 =
 },
 
 
+SPROUT_JOINER_2x3_SYMM =
+{
+  prob = 200,
+
+  style = "symmetry",
+
+  structure =
+  {
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "....", ".RR.",
+    "x..x", "xJJx",
+    "x..x", "xJJx",
+    "x..x", "xJJx",
+    "x11x", "x11x",
+  },
+
+  new_room =
+  {
+    symmetry = { kind="mirror", x=2, y=7, dir=6},
+    symmetry2 = { kind="mirror", x=2, y=7, dir=4},
+    symmetry3 = { kind="rotate", x=2, y=6, x2=4, y2=8}
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+
 SPROUT_JOINER_L =
 {
-  prob = 60, --40 --30,
+  prob = 120, -- 60
 
   structure =
   {
