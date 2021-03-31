@@ -298,7 +298,7 @@ function Render_edge(E)
       -- don't allow anything more than flat walls if
       -- at least one seed ahead is not in the same area
       -- as the current wall
-      local tx, ty = geom.nudge(S1.mid_x, S1.mid_y, 10-dir, 128)
+      local tx, ty = geom.nudge(S1.mid_x, S1.mid_y, 10-dir, SEED_SIZE)
       local S2 = Seed_from_coord(tx, ty)
 
       if check_area_state(S1, S2, "narrow_area") then
@@ -306,12 +306,12 @@ function Render_edge(E)
       end
 
       -- use only flat walls if in a corner
-      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], 128)
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], SEED_SIZE)
       S2 = Seed_from_coord(tx, ty)
       if check_area_state(S1, S2, "potentially_obstructing") then
         reqs.deep = 16
       end
-      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.RIGHT[dir], 128)
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.RIGHT[dir], SEED_SIZE)
       S2 = Seed_from_coord(tx, ty)
       if check_area_state(S1, S2, "potentially_obstructing") then
         reqs.deep = 16
@@ -344,13 +344,13 @@ function Render_edge(E)
 
       -- check for wall pieces that require solid depth behind
       -- i.e. fake doors and windows
-      tx, ty = geom.nudge(S1.sx, S1.sy, dir)
-      S2 = SEEDS[tx][ty] or nil
-      tx, ty = geom.nudge(S1.sx, S1.sy, dir, 2)
-      S3 = SEEDS[tx][ty] or nil
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, dir, SEED_SIZE)
+      S2 = Seed_from_coord(tx, ty)
+      tx, ty = geom.nudge(S1.sx, S1.sy, dir, SEED_SIZE * 2)
+      S3 = Seed_from_coord(tx, ty)
 
 --gui.printf(dir.." DIRECTION\n")
---gui.printf(S1.mid_x .. ", " .. S1.mid_y .. " -> " .. S2.mid_x .. ", " .. S2.mid_y .."\n")
+--gui.printf(S1.mid_x .. ", " .. S1.mid_y .. " -> " .. S2.mid_x .. ", " .. S2.mid_y .. "\n")
 --gui.printf(S2.area.mode .. "\n")
 
       if has_solid_back(S1, S2) then
