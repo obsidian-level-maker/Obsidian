@@ -2679,18 +2679,17 @@ function Level_choose_skybox()
   and ARMAETUS_SKYBOX_EXCLUSIONS then
 
     local pick_attempts = 0
+    local ex_list = ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]
     while same_skyfab == "yes" do
 
-      for _,x in pairs(ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]) do
-        if OB_CONFIG.zdoom_skybox == "episodic" then
-          if LEVEL.episode.skybox.name == ex then
-            same_skyfab = "yes"
-          else same_skyfab = "no" end
-        elseif OB_CONFIG.zdoom_skybox ~= "disable" then
-          if LEVEL.skybox.name == ex then
-            same_skyfab = "yes"
-          else same_skyfab = "no" end
-        end
+      if OB_CONFIG.zdoom_skybox == "episodic" then
+        if table.has_elem(ex_list, LEVEL.episode.skybox.name) then
+          same_skyfab = "yes"
+        else same_skyfab = "no" end
+      elseif OB_CONFIG.zdoom_skybox ~= "disable" then
+        if table.has_elem(ex_list, LEVEL.skybox.name) == ex then
+          same_skyfab = "yes"
+        else same_skyfab = "no" end
       end
 
       if same_skyfab == "yes" then
