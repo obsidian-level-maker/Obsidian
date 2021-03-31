@@ -22,6 +22,9 @@ HERETIC.ENTITIES =
   generic_wall_light    = { id=7003, r=10, h=64, light=255, pass=true, add_mode="extend" }, -- "torches" and such, attached to a wall
   generic_wide_light    = { id=7004, r=16, h=44, light=255 }, -- wide standalone light, braziers, etc
   generic_small_pillar  = { id=7005, r=16, h=36 },
+  k_one = { id=7006 },
+  k_two = { id=7007 },
+  k_three = { id=7008 },
 
   --- player stuff ---
   player1 = { id=1, r=16, h=56 },

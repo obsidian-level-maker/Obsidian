@@ -34,7 +34,7 @@ HERETIC.MATERIALS =
   _METAL   = { t="METL2",   f="FLOOR30" },
   _MTLBARS = { t="GATMETL3", f="FLOOR30" }, -- Short metal bars, i.e. railings
   _MTLBARM = { t="GATMETL4", f="FLOOR30" }, -- Medium metal bars
-  _MTLBART = { t="GATMETL5", f="FLOOR30" }, -- Tall metal baqrs, i.e. cage/jail bars
+  _MTLBART = { t="GATMETL5", f="FLOOR30" }, -- Tall metal bars, i.e. cage/jail bars
   _LTWOOD  = { t="DRIPWALL", f="FLOOR27" }, -- Light wood
   _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Wooden crate
   _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover
@@ -49,6 +49,12 @@ HERETIC.MATERIALS =
   _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
   _PIC1    = { t="CELTIC", f="FLOOR06"}, -- Picture for pic box prefab inset
   _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
+  _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1 (Yellow)
+  _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 1 (Green)
+  _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 1 (Blue)
+  _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
+  _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  
 
   -- general purpose --
 

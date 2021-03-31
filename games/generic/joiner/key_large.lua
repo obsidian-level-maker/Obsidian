@@ -2,14 +2,14 @@
 -- Large keyed door
 --
 
-PREFABS.Locked_joiner_green =
+PREFABS.Locked_joiner_key1 =
 {
   file   = "joiner/key_large.wad",
   map    = "MAP01",
 
   prob   = 100,
 
-  key    = "k_green",
+  key    = "k_one",
   where  = "seeds",
   shape  = "I",
 
@@ -29,26 +29,24 @@ PREFABS.Locked_joiner_green =
 }
 
 
-PREFABS.Locked_joiner_blue =
+PREFABS.Locked_joiner_key2 =
 {
-  template = "Locked_joiner_green",
+  template = "Locked_joiner_key1",
 
-  key      = "k_blue",
-
-  -- use the blue statue and correct line special
-  thing_95 = 94,
+  key      = "k_two",
+  tex__KEYTRM1 = "_KEYTRM2",
+  
   line_33  = 32,
 }
 
 
-PREFABS.Locked_joiner_yellow =
+PREFABS.Locked_joiner_key3 =
 {
-  template = "Locked_joiner_green",
+  template = "Locked_joiner_key1",
 
-  key      = "k_yellow",
-
-  -- use the yellow statue and correct line special
-  thing_95 = 96,
+  key      = "k_three",
+  tex__KEYTRM1 = "_KEYTRM3",
+  
   line_33  = 34,
 }
 

@@ -2,14 +2,14 @@
 -- vent piece : locked terminators
 --
 
-PREFABS.Hallway_vent_locked_yellow =
+PREFABS.Hallway_vent_locked_key1 =
 {
   file   = "hall/vent_k.wad",
   map    = "MAP01",
 
   kind   = "terminator",
   group  = "vent",
-  key    = "k_yellow",
+  key    = "k_one",
 
   prob   = 50,
 
@@ -21,25 +21,25 @@ PREFABS.Hallway_vent_locked_yellow =
 }
 
 
-PREFABS.Hallway_vent_locked_green =
+PREFABS.Hallway_vent_locked_key2 =
 {
-  template = "Hallway_vent_locked_yellow",
+  template = "Hallway_vent_locked_key1",
 
-  key    = "k_green",
+  key    = "k_two",
 
   line_34     = 33,
-  tex_DRIPWALL = "GRNBLOK1",
+  tex__KEYTRM1 = "_KEYTRM2",
 }
 
 
-PREFABS.Hallway_vent_locked_blue =
+PREFABS.Hallway_vent_locked_key3 =
 {
-  template = "Hallway_vent_locked_yellow",
+  template = "Hallway_vent_locked_key1",
 
-  key    = "k_blue",
+  key    = "k_three",
 
   line_34     = 32,
-  tex_DRIPWALL = "BLUEFRAG",
+  tex__KEYTRM1 = "_KEYTRM3",
 }
 
 

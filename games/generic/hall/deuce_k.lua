@@ -2,14 +2,14 @@
 -- 2-seed-wide hallway : locked terminators
 --
 
-PREFABS.Hallway_deuce_locked_yellow =
+PREFABS.Hallway_deuce_locked_key1 =
 {
   file   = "hall/deuce_k.wad",
   map    = "MAP01",
 
   kind   = "terminator",
   group  = "deuce",
-  key    = "k_yellow",
+  key    = "k_one",
 
   prob   = 50,
 
@@ -22,25 +22,25 @@ PREFABS.Hallway_deuce_locked_yellow =
   deep   = 16,
 }
 
-PREFABS.Hallway_deuce_locked_green =
+PREFABS.Hallway_deuce_locked_key2 =
 {
-  template  = "Hallway_deuce_locked_yellow",
+  template  = "Hallway_deuce_locked_key1",
   map    = "MAP01",
-  key = "k_green",
+  key = "k_two",
 
+  tex__KEYTRM1 = "_KEYTRM2",
   line_34 = 33,
-  thing_96 = 95,
 }
 
 
-PREFABS.Hallway_deuce_locked_blue =
+PREFABS.Hallway_deuce_locked_key3 =
 {
-  template = "Hallway_deuce_locked_yellow",
+  template = "Hallway_deuce_locked_key1",
   map  = "MAP01",
-  key  = "k_blue",
+  key  = "k_three",
 
+  tex__KEYTRM1 = "_KEYTRM3",
   line_34 = 32,
-  thing_96 = 94,
 }
 
 

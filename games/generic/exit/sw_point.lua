@@ -2,9 +2,9 @@
 --  Exit switch for Heretic
 --
 
-PREFABS.Exit_heretic =
+PREFABS.Exit_point =
 {
-  file   = "exit/sw_heretic.wad",
+  file   = "exit/sw_point.wad",
   map    = "MAP01",
 
   prob   = 5,
@@ -13,9 +13,9 @@ PREFABS.Exit_heretic =
 }
 
 
-PREFABS.Exit_heretic_secret =
+PREFABS.Exit_point_secret =
 {
-  file   = "exit/sw_heretic.wad",
+  file   = "exit/sw_point.wad",
   map    = "MAP02",
 
   prob   = 5,
