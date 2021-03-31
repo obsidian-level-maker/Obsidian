@@ -3294,6 +3294,21 @@ GROW_COLLONADE_STRAIGHT_VAULT =
   }
 },
 
+GROW_COLLONADE_STRAIGHT_VAULT_FROM_SIDE =
+{
+  prob = 30,
+  skip_prob = 35,
+
+  structure =
+  {
+    "......","111111",
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","111111",
+    "xx11xx","xx11xx",
+  }
+},
+
 GROW_COLLONADE_STRAIGHT_VAULT_LARGE =
 {
   prob = 40,
@@ -3307,6 +3322,23 @@ GROW_COLLONADE_STRAIGHT_VAULT_LARGE =
     "........","AA1111AA",
     "........","AA1111AA",
     "........","AA1111AA",
+    "xxx11xxx","xxx11xxx",
+  }
+},
+
+GROW_COLLONADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
+{
+  prob = 40,
+  skip_prob = 35,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+    "........","11111111",
+    "........","11111111",
     "xxx11xxx","xxx11xxx",
   }
 },
