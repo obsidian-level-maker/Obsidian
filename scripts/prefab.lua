@@ -267,8 +267,8 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  visit_dir("games/generic/fabs")
-  visit_dir("games/" .. GAME.game_dir .. "/fabs")
+  if OB_CONFIG.game == "heretic" then visit_dir("games/generic/fabs") end
+  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
   preprocess_all()
 end
@@ -1564,7 +1564,6 @@ function Fab_load_wad(def)
       for _,v in pairs(GAME.ENTITIES) do
         if E.id == v.id then
           E.id = v.rid
-          print("E.ID: " .. E.id)
           goto continue
         end
       end

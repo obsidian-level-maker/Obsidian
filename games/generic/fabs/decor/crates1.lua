@@ -20,6 +20,23 @@ PREFABS.Crate_small =
   sink_mode = "never_liquids",
 }
 
+PREFABS.Crate_small_alt =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP01",
+
+  prob   = 3500,
+  tex__CRATE = "_CRATE2",
+  flat__CRATE = "_CRATE2",
+
+  where  = "point",
+  size   = 64,
+
+  bound_z1 = 0,
+
+  sink_mode = "never_liquids",
+}
+
 -- a tall narrow crate
 
 PREFABS.Crate_tall =
@@ -28,6 +45,24 @@ PREFABS.Crate_tall =
   map    = "MAP02",
 
   prob   = 3500,
+
+  where  = "point",
+  size   = 64,
+  height = 160,
+
+  bound_z1 = 0,
+
+  sink_mode = "never_liquids",
+}
+
+PREFABS.Crate_tall_alt =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP02",
+
+  prob   = 3500,
+  tex__CRATE = "_CRATE2",
+  flat__CRATE = "_CRATE2",
 
   where  = "point",
   size   = 64,
@@ -47,6 +82,24 @@ PREFABS.Crate_medium =
 
   prob   = 3500,
   env    = "!cave",
+
+  where  = "point",
+  size   = 96,
+
+  bound_z1 = 0,
+
+  sink_mode = "never_liquids",
+}
+
+PREFABS.Crate_medium_alt =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP03",
+
+  prob   = 3500,
+  env    = "!cave",
+  tex__CRATE = "_CRATE2",
+  flat__CRATE = "_CRATE2",
 
   where  = "point",
   size   = 96,
@@ -76,7 +129,27 @@ PREFABS.Crate_group_medium =
   sink_mode = "never_liquids",
 }
 
-PREFABS.Small_gray_cover =
+PREFABS.Crate_group_medium_alt =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP04",
+
+  prob   = 3500,
+  env    = "!cave",
+  tex__CRATE = "_CRATE2",
+  flat__CRATE = "_CRATE2",
+
+  where  = "point",
+  size   = 128,
+  height = 160,
+
+  bound_z1 = 0,
+
+  sink_mode = "never_liquids",
+}
+
+
+PREFABS.Small_cover =
 {
   file   = "decor/crates1.wad",
   map    = "MAP13",
@@ -89,7 +162,7 @@ PREFABS.Small_gray_cover =
   height = 128,
 }
 
-PREFABS.Small_gray_cover_2 =
+PREFABS.Small_cover_2 =
 {
   file   = "decor/crates1.wad",
   map    = "MAP14",

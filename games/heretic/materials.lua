@@ -33,12 +33,17 @@ HERETIC.MATERIALS =
   
   -- materials for generic prefab set --
   _METAL   = { t="METL2",   f="FLOOR30" },
-  _MTLBARS = { t="GATMETL3", f="FLOOR30" }, -- Short metal bars, i.e. railings
-  _MTLBARM = { t="GATMETL4", f="FLOOR30" }, -- Medium metal bars
-  _MTLBART = { t="GATMETL5", f="FLOOR30" }, -- Tall metal bars, i.e. cage/jail bars
-  _LTWOOD  = { t="DRIPWALL", f="FLOOR27" }, -- Light wood
-  _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Wooden crate
-  _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover
+  
+  _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
+  _SBARS2 = { t="GATMETL2", f="FLOOR30" }, -- Short bars variant
+  _MBARS = { t="GATMETL4", f="FLOOR30" }, -- Medium bars, i.e. barred windows
+  _TBARS = { t="GATMETL5", f="FLOOR30" }, -- Tall bars, i.e. cage/jail bars
+  
+  _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Crate/box
+  _CRATE2  = { t="CTYSTCI4", f="FLOOR10" }, -- Crate variant
+
+  _LTWOOD  = { t="DRIPWALL", f="FLOOR27" }, -- Light wood 
+  _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
   _WATER   = { t="WATRWAL1", f="FLTWAWA1" }, -- "Standing water", sorta
   _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
   _STONE   = { t="SQPEB1", f="FLAT504" }, -- Loosely arranged stone (gray)
@@ -48,16 +53,36 @@ HERETIC.MATERIALS =
   _STNDOOR = { t="DOORSTON", f="FLOOR08"}, -- Stone/gray door
   _WOOD    = { t="WOODWL", f="FLOOR10"}, -- Plain ol' wood
   _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
-  _PIC1    = { t="CELTIC", f="FLOOR06"}, -- Picture for pic box prefab inset
+  
+  _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert
+  _NPIC2    = { t="MOSAIC5", f="FLAT502"},
+  _NPIC3    = { t="SAINT1", f="FLAT523"},
+  
+  _MPIC    = { t="CELTIC", f="FLOOR06"}, -- Medium (or tiling) pic box insert
+  _MPIC2    = { t="DMNMSK", f="FLAT521"},
+  _MPIC3    = { t="GRSKULL3", f="FLAT521"},
+  _MPIC4    = { t="SKULLSB2", f="FLOOR30"},
+  _MPIC5    = { t="STNGLS1", f="FLOOR30"},
+  _MPIC6    = { t="STNGLS2", f="FLOOR30"},
+  _MPIC7    = { t="STNGLS3", f="FLOOR30"},
+  
+  _WPIC    = { t="CHAINMAN", f="FLAT520"}, -- Wide (or tiling) pic box insert
+  _WPIC2    = { t="HORSES1", f="FLAT502"},
+  _WPIC3    = { t="CELTIC", f="FLOOR06"},
+  
   _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
+  
   _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1 (Yellow)
   _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2 (Green)
   _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3 (Blue)
+  
   _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
   _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  
   _SWITCH  = { t="SW1OFF", f="FLOOR28" }, -- Wall swtich
   _SWITCH2  = { t="SW2OFF", f="FLOOR28" }, -- Wall swtich
-  _TELE1 = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
+  
+  _TELE = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
   
 
   -- general purpose --

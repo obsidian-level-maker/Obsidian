@@ -2,7 +2,7 @@
 -- Pictures (via the closet system)
 --
 
-TEMPLATES.Pic_box_template =
+TEMPLATES.Pic_box =
 {
   file   = "picture/pic_box.wad",
   map    = "MAP02",
@@ -15,6 +15,7 @@ TEMPLATES.Pic_box_template =
   where  = "seeds",
   seed_w = 1,
   seed_h = 1,
+  tex__NPIC = { _NPIC=50, _NPIC2=50, _NPIC3=50 },
 
   height = 128,
   deep   =  16,
@@ -24,34 +25,23 @@ TEMPLATES.Pic_box_template =
   y_fit = "top",
 }
 
-
------ BANNERS ------------------------------
-
-PREFABS.Pic_box_banner =
-{
-  template = "Pic_box_template",
-
-  tex_CELTIC = { BANNER1=50, BANNER2=50, BANNER5=50, BANNER6=50 }
-}
-
-
 ----- 128 HIGH PICTURES ------------------------------
 
 PREFABS.Pic_box_saint1 =
 {
-  template = "Pic_box_template",
+  template = "Pic_box",
   map      = "MAP04",
 
   seed_w   = 1,
   height   = 160,
 
-  tex_CELTIC = "SAINT1",
+  tex__NPIC = { _NPIC=50, _NPIC2=50, _NPIC3=50 }
 }
 
 
 PREFABS.Pic_box_glass =
 {
-  template = "Pic_box_template",
+  template = "Pic_box",
   map      = "MAP05",
 
   seed_w   = 2,
@@ -59,27 +49,14 @@ PREFABS.Pic_box_glass =
 
   prob     = 200,
 
-  tex_CELTIC = { STNGLS1=50, STNGLS2=50 }
+  tex__MPIC = { _MPIC=50, _MPIC2=50, _MPIC3=50, _MPIC4=50, _MPIC5=50, _MPIC6=50, _MPIC7=50 }
 }
-
-
-PREFABS.Pic_box_demon =
-{
-  template = "Pic_box_template",
-  map      = "MAP05",
-
-  seed_w   = 2,
-  height   = 160,
-
-  tex_CELTIC = { GRSKULL3=50, DMNMSK=30, SKULLSB2=10 }
-}
-
 
 ----- VERY WIDE PICTURES ------------------------------
 
 PREFABS.Pic_box_wide =
 {
-  template = "Pic_box_template",
+  template = "Pic_box",
   map      = "MAP06",
 
   seed_w   = 3,
@@ -88,6 +65,6 @@ PREFABS.Pic_box_wide =
   rank      = 3,
   skip_prob = 10,
 
-  tex_CELTIC = { HORSES1=50, CHAINMAN=15, CELTIC=5 }
+  tex__WPIC = { _WPIC=50, _WPIC2=50, _WPIC3=50 }
 }
 
