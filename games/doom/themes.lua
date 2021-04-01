@@ -1236,13 +1236,16 @@ DOOM.THEMES =
       low_gap4 = 10,
       mid_band = 10,
       mid_band2 = 10,
+      --
       lite1 = 20,
       lite2 = 20,
+      --
       torches4 = 12, --35
       torches5 = 12, --35
       torches6 = 5, --3
       torches7 = 15, --65
       torches11 = 5, --7
+      --
       gtd_wall_urban_storage = 50,
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_server_room = 50,
@@ -1252,39 +1255,52 @@ DOOM.THEMES =
       gtd_writhing_mass = 10,
       gtd_wall_octagon_insets = 50,
       gtd_wall_grated_machines = 50,
+      --
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
+      --
       gtd_ribbed_lights = 50,
+      --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
+      --
       gtd_generic_half_floor = 20,
       gtd_generic_half_floor_no_trim = 20,
       gtd_generic_half_floor_inverted_braced = 20,
+      --
       gtd_wall_urban_cement_frame = 10,
       gtd_generic_ceilwall = 50,
       gtd_generic_glow_wall = 50,
-      gtd_generic_artsy_bedazzled = 5,
-      gtd_generic_alt_colors = 50,
-      gtd_generic_mid_band = 50,
+
       gtd_generic_double_banded_ceil = 50,
+      --
       gtd_generic_frame_light_band = 50,
       gtd_generic_frame_metal = 50,
-      gtd_generic_artsy_center_braced_ind = 50,
+      --
       gtd_generic_d64_1x = 8,
       gtd_generic_d64_1x_yellow = 8,
       gtd_generic_d64_1x_blue = 8,
       gtd_generic_d64_2x = 8,
       gtd_generic_d64_2x_yellow = 8,
       gtd_generic_d64_2x_blue = 8,
+      --
       gtd_generic_tek_grate = 25,
       gtd_generic_tek_grate_bottom_slope = 25,
-      gtd_generic_artsy_step1_banded = 50,
+      --
+      gtd_generic_artsy_bedazzled = 5,
+      gtd_generic_alt_colors = 20,
+      gtd_generic_mid_band = 20,
+      gtd_generic_artsy_center_braced_ind = 20,
+      gtd_generic_artsy_step1_banded = 20,
+      gtd_generic_artsy_slope_y_inset = 20,
+      --
       gtd_modquake_set = 15,
       gtd_modquake_jawlike = 15,
       gtd_modquake_top_heavy_brace = 15,
       gtd_modquake_tek_slope_brace = 15,
       gtd_modquake_ex_light_slope_brace = 15,
       gtd_modquake_round_braced_lit_pillar = 15,
+      --
       gtd_wall_lamp_stubby = 16,
       gtd_wall_lamp_thin = 16,
       gtd_wall_lamp_thicc = 16
@@ -1632,42 +1648,55 @@ DOOM.THEMES =
       gtd_writhing_mass = 20,
       gtd_library = 50,
       gtd_wall_grated_machines = 20,
+      --
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
+      --
       gtd_ribbed_lights = 25,
+      --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
+      --
       gtd_generic_half_floor = 16,
       gtd_generic_half_floor_no_trim = 16,
       gtd_generic_half_floor_inverted_braced = 16,
+      --
       gtd_woodframe = 25,
       gtd_woodframe_green = 25,
+      --
       gtd_round_inset = 15,
       gtd_wall_urban_cement_frame = 25,
       gtd_generic_ceilwall = 40,
       gtd_generic_glow_wall = 50,
-      gtd_generic_artsy_bedazzled = 50,
-      gtd_generic_alt_colors = 50,
-      gtd_generic_mid_band = 40,
       gtd_generic_double_banded_ceil = 50,
+      --
       gtd_generic_frame_light_band = 50,
       gtd_generic_frame_metal = 50,
-      gtd_generic_artsy_center_braced_ind = 50,
+      --
       gtd_generic_d64_1x = 10,
       gtd_generic_d64_1x_yellow = 10,
       gtd_generic_d64_1x_blue = 10,
       gtd_generic_d64_2x = 10,
       gtd_generic_d64_2x_yellow = 10,
       gtd_generic_d64_2x_blue = 10,
+      --
       gtd_generic_tek_grate = 40,
       gtd_generic_tek_grate_bottom_slope = 40,
-      gtd_generic_artsy_step1_banded = 50,
+      --
+      gtd_generic_artsy_bedazzled = 20,
+      gtd_generic_alt_colors = 20,
+      gtd_generic_mid_band = 20,
+      gtd_generic_artsy_center_braced_ind = 20,
+      gtd_generic_artsy_step1_banded = 20,
+      gtd_generic_artsy_slope_y_inset = 20,
+      --
       gtd_modquake_set = 15,
       gtd_modquake_jawlike = 15,
       gtd_modquake_top_heavy_brace = 15,
       gtd_modquake_tek_slope_brace = 15,
       gtd_modquake_ex_light_slope_brace = 15,
       gtd_modquake_round_braced_lit_pillar = 15,
+      --
       gtd_wall_lamp_stubby = 7,
       gtd_wall_lamp_thin = 7,
       gtd_wall_lamp_thicc = 7,
@@ -2068,39 +2097,50 @@ DOOM.THEMES =
       gtd_wall_marbface = 50,
       gtd_wall_quakish_insets = 50,
       gtd_wall_hell_ossuary = 50,
+      --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
+      --
       gtd_generic_half_floor = 20,
       gtd_generic_half_floor_no_trim = 20,
       gtd_generic_half_floor_inverted_braced = 20,
+      --
       gtd_woodframe = 25,
       gtd_woodframe_green = 25,
+      --
       gtd_round_inset = 50,
       gtd_generic_ceilwall = 50,
       gtd_generic_glow_wall = 30,
-      gtd_generic_artsy_bedazzled = 30,
-      gtd_generic_alt_colors = 30,
-      gtd_generic_mid_band = 30,
       gtd_generic_double_banded_ceil = 30,
       gtd_wall_hell_vaults_ftex = 50,
+      --
       gtd_generic_frame_light_band = 50,
       gtd_generic_frame_metal = 50,
-      gtd_generic_artsy_center_braced_hell = 50,
+      --
       gtd_generic_d64_1x = 10,
       gtd_generic_d64_1x_yellow = 10,
       gtd_generic_d64_1x_blue = 10,
       gtd_generic_d64_2x = 10,
       gtd_generic_d64_2x_yellow = 10,
       gtd_generic_d64_2x_blue = 10,
+      --
       gtd_generic_tek_grate = 25,
       gtd_generic_tek_grate_bottom_slope = 25,
-      gtd_generic_artsy_step1_banded = 25,
+      --
+      gtd_generic_artsy_bedazzled = 20,
+      gtd_generic_alt_colors = 20,
+      gtd_generic_mid_band = 20,
+      gtd_generic_artsy_center_braced_hell = 20,
+      gtd_generic_artsy_step1_banded = 20,
+      gtd_generic_artsy_slope_y_inset = 20,
+      --
       gtd_modquake_set = 15,
       gtd_modquake_jawlike = 15,
       gtd_modquake_top_heavy_brace = 15,
       gtd_modquake_tek_slope_brace = 15,
       gtd_modquake_ex_light_slope_brace = 15,
       gtd_modquake_round_braced_lit_pillar = 15,
+      --
       gtd_wall_candalebra = 12,
       gtd_wall_blue_torch = 12,
       gtd_wall_green_torch = 12,
