@@ -2155,6 +2155,7 @@ DOOM.THEMES =
       gtd_window_cage_hell = 50,
       gtd_window_arched = 60,
       gtd_window_arched_tall = 60,
+      gtd_window_arched_inverse = 30,
       gtd_window_full_open = 40,
       gtd_window_full_open_tall = 40,
       gtd_window_absurdly_open = 60,
