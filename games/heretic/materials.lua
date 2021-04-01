@@ -4,6 +4,7 @@
 --
 --  Copyright (C) 2006-2016 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
+--  Additions by Dashodanger 2021
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -50,8 +51,8 @@ HERETIC.MATERIALS =
   _PIC1    = { t="CELTIC", f="FLOOR06"}, -- Picture for pic box prefab inset
   _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
   _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1 (Yellow)
-  _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 1 (Green)
-  _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 1 (Blue)
+  _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2 (Green)
+  _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3 (Blue)
   _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
   _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
   _SWITCH  = { t="SW1OFF", f="FLOOR28" }, -- Wall swtich

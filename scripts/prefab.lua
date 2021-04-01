@@ -118,7 +118,6 @@ function Fab_load_all_definitions()
 
   local function visit_dir(top_level)
     gui.printf("Loading prefabs from: '%s'\n", top_level)
-
     local subdirs, err = gui.scan_directory(top_level, "DIRS")
 
     if not subdirs then
@@ -268,6 +267,7 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
+  visit_dir("games/generic/fabs")
   visit_dir("games/" .. GAME.game_dir .. "/fabs")
 
   preprocess_all()
@@ -1555,7 +1555,21 @@ function Fab_load_wad(def)
 
 
   local function handle_entity(fab, E)
+  
+    -- Convert things from generic prefabs to their actual id
+  
     local spot_info = WADFAB_ENTITIES[E.id]
+    
+    if E.id >= 7000 and E.id <= 7012 then
+      for _,v in pairs(GAME.ENTITIES) do
+        if E.id == v.id then
+          E.id = v.rid
+          print("E.ID: " .. E.id)
+          goto continue
+        end
+      end
+      ::continue::
+    end
     
     if not spot_info then
       table.insert(fab.entities, E)
@@ -2659,7 +2673,7 @@ function Fab_pick(reqs, allow_none)
   local cur_req = reqs
 
   while cur_req do
-    -- keep the earliest matches (they override later matches)
+      -- keep the earliest matches (they override later matches)
     table.merge_missing(tab, Fab_find_matches(cur_req, match_state))
 
     cur_req = cur_req.alt_req
