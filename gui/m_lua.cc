@@ -1060,6 +1060,7 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0, const char *
 		// this will appear in the log file too
 
 		DLG_ShowError(_("Script Error: %s"), err_msg);
+		main_win->label(StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
 
 		lua_pop(LUA_ST, 2);  // ob_traceback, message
 		return false;
@@ -1427,6 +1428,7 @@ bool ob_build_cool_shit()
 	if (! Script_CallFunc("ob_build_cool_shit", 1))
 	{
 		Main_ProgStatus(_("Script Error"));
+		main_win->label(StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
 		return false;
 	}
 
