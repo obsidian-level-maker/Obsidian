@@ -267,7 +267,7 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  if OB_CONFIG.game == "heretic" or OB_CONFIG.game == "chex3" then visit_dir("games/generic/fabs") end -- Heretic and Chex Quest 3 are the only games at the moment with generic definitions
+  if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
   visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
   preprocess_all()
@@ -2687,15 +2687,17 @@ function Fab_pick(reqs, allow_none)
     table.merge_missing(tab, Fab_find_matches(cur_req, match_state))
   
     if cur_req.key then
+      if GAME.GENERIC_REQS then
       -- Also add generic locked prefabs to matches
-      for _,v in pairs (GAME.GENERIC_REQS) do
-          if cur_req.key == v.rkind then
-            cur_req.key = v.kind
-          goto continue
-        end      
-      end  
-      ::continue::
-      table.merge_missing(tab, Fab_find_matches(cur_req, match_state))      
+        for _,v in pairs (GAME.GENERIC_REQS) do
+            if cur_req.key == v.rkind then
+              cur_req.key = v.kind
+            goto continue
+          end      
+        end  
+        ::continue::
+        table.merge_missing(tab, Fab_find_matches(cur_req, match_state))      
+      end
     end
   
     cur_req = cur_req.alt_req
