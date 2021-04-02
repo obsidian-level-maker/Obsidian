@@ -267,7 +267,7 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  if OB_CONFIG.game == "heretic" then visit_dir("games/generic/fabs") end
+  if OB_CONFIG.game == "heretic" or OB_CONFIG.game == "chex3" then visit_dir("games/generic/fabs") end -- Heretic and Chex Quest 3 are the only games at the moment with generic definitions
   visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
   preprocess_all()
