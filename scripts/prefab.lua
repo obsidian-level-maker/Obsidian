@@ -297,12 +297,15 @@ function Fab_expansion_groups(list, axis_name, fit_size, pf_size, fabinfo)
 
 
   if extra < 0 then
+    -- TO-DO: Fix issue with beam fit
+    if fabinfo.kind == "beam" then goto continue end
     local problem_string = "\n\nPREFAB DOES NOT FIT!!!\n"
     problem_string = problem_string .. "(on " .. axis_name .. " axis)\n"
     problem_string = problem_string .. "Fab info:\n"
     problem_string = problem_string .. table.tostr(fabinfo) .. "\n"
     problem_string = problem_string .. "Required: " .. fit_size .. " Prefab has: " .. pf_size .. "\n\n"
     gui.printf(problem_string)
+    ::continue::
   end
 
   --assert(extra > 0)

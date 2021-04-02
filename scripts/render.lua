@@ -230,7 +230,7 @@ function Render_edge(E)
     end
 
     if A.chunk and A.chunk.kind == "stair" then
-      reqs.height = A.ceil_h - math.max(A.chunk.from_area.floor_h,
+      reqs.height = A.ceil_h - math.max(A.chunk.dest_area.floor_h,
         A.chunk.from_area.floor_h)
     end
 
