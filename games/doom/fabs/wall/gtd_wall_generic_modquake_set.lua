@@ -43,7 +43,7 @@ PREFABS.Wall_modquake_set_industrial_boom =
 {
   template = "Wall_modquake_set_industrial",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 2,
 
@@ -56,7 +56,7 @@ PREFABS.Wall_modquake_set_hell_boom =
 
   theme = "hell",
 
-  engine = "limit",
+  engine = "nolimit",
   rank = 1,
 
   line_342 = 0,
@@ -86,7 +86,7 @@ PREFABS.Wall_modquake_set_jawlike_boom =
   template = "Wall_modquake_set_industrial",
   map = "MAP02",
 
-  engine = "limit",
+  engine = "nolimit",
 
   theme = "any",
   rank = 1,
@@ -117,7 +117,7 @@ PREFABS.Wall_modquake_top_heavy_brace_set_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP03",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 1,
 
@@ -148,7 +148,7 @@ PREFABS.Wall_modquake_tek_slope_brace_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP04",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 1,
 
@@ -181,7 +181,7 @@ PREFABS.Wall_modquake_ex_light_slope_brace_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP05",
 
-  engine = "limit",
+  engine = "nolimit",
 
   rank = 1,
 
@@ -246,4 +246,75 @@ PREFABS.Wall_modquake_round_braced_lit_pillar_limit =
   group = "gtd_modquake_round_braced_lit_pillar",
 
   line_342 = 0
+}
+
+-- hexagonal wall inset with a brace inside and a light
+--
+
+PREFABS.Wall_modquake_hexagon_inset_braced_industrial =
+{
+  template = "Wall_modquake_set_industrial",
+  map = "MAP07",
+
+  theme = "!hell",
+
+  rank = 4,
+
+  group = "gtd_modquake_hexagon_inset_braced",
+}
+
+PREFABS.Wall_modquake_hexagon_inset_braced_hell =
+{
+  template = "Wall_modquake_set_industrial",
+  map = "MAP07",
+
+  theme = "hell",
+
+  rank = 3,
+
+  group = "gtd_modquake_hexagon_inset_braced",
+
+  tex_DOORSTOP = "METAL",
+  tex_EXITDOOR = "FIREMAG1",
+  tex_METAL3 = "METAL2"
+}
+
+-- LIMIT-SAFE:
+
+PREFABS.Wall_modquake_hexagon_inset_braced_industrial_limit =
+{
+  template = "Wall_modquake_set_industrial",
+  map = "MAP07",
+
+  theme = "!hell",
+
+  engine = "!zdoom",
+
+  rank = 2,
+
+  group = "gtd_modquake_hexagon_inset_braced",
+
+  line_342 = 0,
+  line_345 = 0
+}
+
+PREFABS.Wall_modquake_hexagon_inset_braced_hell_limit =
+{
+  template = "Wall_modquake_set_industrial",
+  map = "MAP07",
+
+  theme = "hell",
+
+  engine = "!zdoom",
+
+  rank = 1,
+
+  group = "gtd_modquake_hexagon_inset_braced",
+
+  line_342 = 0,
+  line_345 = 0,
+
+  tex_DOORSTOP = "METAL",
+  tex_EXITDOOR = "FIREMAG1",
+  tex_METAL3 = "METAL2"
 }

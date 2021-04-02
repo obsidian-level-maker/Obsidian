@@ -4,8 +4,6 @@ PREFABS.Wall_tech_hydroponics =
   map    = "MAP01",
 
   prob   = 50,
-  theme  = "tech",
-  env = "building",
 
   group = "gtd_wall_hydroponics",
 
