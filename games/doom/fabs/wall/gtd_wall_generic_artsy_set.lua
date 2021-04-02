@@ -4,7 +4,6 @@ PREFABS.Wall_generic_artsy_bedazzled =
   map = "MAP01",
 
   prob = 50,
-  env = "building",
 
   group = "gtd_generic_artsy_bedazzled",
 
@@ -187,4 +186,58 @@ PREFABS.Wall_generic_artsy_step1_banded_diagonal =
   where = "diagonal",
 
   z_fit = "top",
+}
+
+--
+
+PREFABS.Wall_generic_artsy_slope_y_inset =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP09",
+
+  rank = 2,
+  theme = "zdoom",
+
+  group = "gtd_generic_artsy_slope_y_inset"
+}
+
+PREFABS.Wall_generic_artsy_slope_y_inset_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP19",
+
+  rank = 2,
+  theme = "zdoom",
+
+  group = "gtd_generic_artsy_slope_y_inset",
+
+  where = "diagonal"
+}
+
+-- LIMIT-SAFE:
+
+PREFABS.Wall_generic_artsy_slope_y_inset_limit =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP09",
+
+  theme = "!zdoom",
+
+  group = "gtd_generic_artsy_slope_y_inset",
+
+  line_342 = 0
+}
+
+PREFABS.Wall_generic_artsy_slope_y_inset_diag_limit =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP19",
+
+  theme = "!zdoom",
+
+  group = "gtd_generic_artsy_slope_y_inset",
+
+  where = "diagonal",
+
+  line_342 = 0
 }

@@ -5549,20 +5549,21 @@ namelib.COMMUNITY_MEMBERS =
   -- Core ObAddon or regular(ish) contributors.
   contributors =
   {
-    "Sgt. Shooter", --MsrSgtShooterPerson
     "Armaetus", -- Used to be known as Glaice
-    "Frozsoul",
-    "Caligari", --Caligari87,
-    "Simon Vee", --Simon-v
-    "Garrett",
     "Beed 28",
-    "EpicTyphlosion",
-    "Tapwave",
+    "Caligari", --Caligari87,
     "Craneo",
-    "Swedra",
+    "Dasho", --dashodanger
     "Demios",
+    "EpicTyphlosion",
+    "Frozsoul",
+    "Garrett",
+    "Josh Seven", --josh771,
+    "Sgt. Shooter", --MsrSgtShooterPerson
+    "Simon Vee", --Simon-v
     "Scionox",
-    "Josh Seven" --josh771,
+    "Swedra",
+    "Tapwave",
   },
 
   -- These people helped out OBLIGE and how they contributed.
@@ -5583,6 +5584,7 @@ namelib.COMMUNITY_MEMBERS =
     "leilei", -- Base Amulets & Armor definition and general feedback
     "Maxim Samoylenko", -- General encouragement and testing
     "thesleeve", -- Monster placement analysis
+    "Samiam" -- Mr. ObHack!
   },
 
   -- this is an arbitrary list of regulars at the Unofficial Oblige
@@ -5590,31 +5592,36 @@ namelib.COMMUNITY_MEMBERS =
   -- here, feel free to add it yourself! (or ask a contributor to do so!)
   regulars =
   {
-    "Samiam", -- Mr. ObHack!
-    "Crowbars", -- crowbars82, Mr. Octothrop!
-    "Big C",
     "Brad Man X",
-    "DZ",
-    "Elkinda",
+    "Crowbars", -- crowbars82, Mr. Octothrop!
+    "Dan the Noob",
     "Hexa Doken",
     "Kinker 31",
     "Kinsie",
     "Magpie", --MagPie
     "Mog Waltz",
     "Monika",
-    "Obsidian Plague",
+    "Mr. Liden", --mrliden, created the R667ized ObAddon
     "Nisteth",
+    "Phytolizer",
     "Roundabout Lout",
-    "Saint",
-    "Sanser",
     "Sharahfluff",
     "Sharp",
     "TiZ",
     "The Dude", --TheDude1,
-    "The Nate",
-    "Thexare",
     "TTBNC",
-    "Yandere Princess"
+    "Yandere Princess",
+
+    -- the following individuals are no longer active
+    -- or haven't been in the server for a while...
+    --"Big C",
+    --"DZ",
+    --"Elkinda",
+    --"Obsidian Plague",
+    --"Saint",
+    --"Sanser",
+    --"The Nate",
+    --"Thexare",
   }
 }
 
