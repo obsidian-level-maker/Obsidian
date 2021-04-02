@@ -30,6 +30,7 @@ HERETIC.ENTITIES =
   generic_p2_start = { id=7010, rid=2, r=16, h=56 },
   generic_p3_start = { id=7011, rid=3, r=16, h=56 },
   generic_p4_start = { id=7012, rid=4, r=16, h=56 },
+  generic_teleport_spot = { id=7013, rid=14},
   
   --- player stuff ---
   player1 = { id=1, r=16, h=56 },
