@@ -2222,6 +2222,17 @@ function Fab_replacements(fab)
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
+      --Convert generic linedef types to game-specific ones
+      if C.special and C.special >= 700 and C.special <= 702 then
+        for _,v in pairs (GAME.ACTIONS) do
+          if C.special == v.id then
+              C.special = v.rid
+            goto continue
+          end      
+        end
+        ::continue::
+      end
+
       if C.tag then 
         C.tag = check_tag(C.tag) 
         current_tag = C.tag  
