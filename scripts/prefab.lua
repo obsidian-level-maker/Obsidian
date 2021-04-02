@@ -2671,9 +2671,22 @@ function Fab_pick(reqs, allow_none)
   local cur_req = reqs
 
   while cur_req do
+
       -- keep the earliest matches (they override later matches)
     table.merge_missing(tab, Fab_find_matches(cur_req, match_state))
-
+  
+    if cur_req.key then
+      -- Also add generic locked prefabs to matches
+      for _,v in pairs (GAME.GENERIC_REQS) do
+          if cur_req.key == v.rkind then
+            cur_req.key = v.kind
+          goto continue
+        end      
+      end  
+      ::continue::
+      table.merge_missing(tab, Fab_find_matches(cur_req, match_state))      
+    end
+  
     cur_req = cur_req.alt_req
   end
 

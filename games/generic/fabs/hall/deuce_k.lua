@@ -29,7 +29,7 @@ PREFABS.Hallway_deuce_locked_key2 =
   key = "k_two",
 
   tex__KEYTRM1 = "_KEYTRM2",
-  line_34 = 33,
+  line_700 = 701,
 }
 
 
@@ -40,7 +40,7 @@ PREFABS.Hallway_deuce_locked_key3 =
   key  = "k_three",
 
   tex__KEYTRM1 = "_KEYTRM3",
-  line_34 = 32,
+  line_700 = 702,
 }
 
 

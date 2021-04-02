@@ -21,8 +21,7 @@ PREFABS.Joiner_gtd_basic_keyed_curve_key2 =
   key = "k_two",
   tex__KEYTRM1 = "_KEYTRM2",
 
-  line_33 = 32,
-  thing_95 = 94,
+  line_700 = 701,
 }
 
 PREFABS.Joiner_gtd_basic_keyed_curve_key3 =
@@ -32,6 +31,5 @@ PREFABS.Joiner_gtd_basic_keyed_curve_key3 =
   key = "k_three",
   tex__KEYTRM1 = "_KEYTRM3",
   
-  line_33 = 34,
-  thing_95 = 96,
+  line_700 = 702,
 }

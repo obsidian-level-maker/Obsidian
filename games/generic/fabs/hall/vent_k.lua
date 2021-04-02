@@ -27,7 +27,7 @@ PREFABS.Hallway_vent_locked_key2 =
 
   key    = "k_two",
 
-  line_34     = 33,
+  line_700     = 701,
   tex__KEYTRM1 = "_KEYTRM2",
 }
 
@@ -38,7 +38,7 @@ PREFABS.Hallway_vent_locked_key3 =
 
   key    = "k_three",
 
-  line_34     = 32,
+  line_700     = 702,
   tex__KEYTRM1 = "_KEYTRM3",
 }
 

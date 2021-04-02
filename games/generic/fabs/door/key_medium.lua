@@ -46,7 +46,7 @@ PREFABS.Locked_medium_key2 =
   key      = "k_two",
 
   tex__KEYTRM1 = "_KEYTRM2",
-  line_33     = 32,
+  line_700     = 701,
 }
 
 
@@ -56,7 +56,7 @@ PREFABS.Locked_medium_key2_diag =
   key      = "k_two",
 
   tex__KEYTRM1 = "_KEYTRM2",
-  line_33     = 32,
+  line_700     = 701,
 }
 
 
@@ -69,7 +69,7 @@ PREFABS.Locked_medium_key3 =
   key      = "k_three",
 
   tex__KEYTRM1 = "_KEYTRM3",
-  line_33     = 34,
+  line_700     = 702,
 }
 
 
@@ -79,5 +79,5 @@ PREFABS.Locked_medium_key3_diag =
   key      = "k_three",
 
   tex__KEYTRM1 = "_KEYTRM3",
-  line_33     = 34,
+  line_700     = 702,
 }
