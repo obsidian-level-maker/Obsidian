@@ -5,6 +5,8 @@ PREFABS.Pic_tech_hydroponics_1 =
 
   prob   = 50,
 
+  group = "gtd_wall_hydroponics",
+
   where  = "seeds",
   height = 128,
 
