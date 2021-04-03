@@ -14,32 +14,33 @@ HACX.MATERIALS =
   -- special materials --
   _ERROR = { t="HW209", f="RROCK03" },
   _SKY   = { t="HW209", f="F_SKY1" },
+  _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
-  _METAL   = { t="METL2",   f="FLOOR30" }, -- Self explanatory
+  _METAL   = { t="HW209",   f="RROCK03" }, -- Self explanatory
   
-  _WOOD    = { t="WOODWL", f="FLOOR10"}, -- Yep, it's wood
-  _WOOD2  = { t="DRIPWALL", f="FLOOR27" },  
+  _WOOD    = { t="COMPTALL", f="RROCK14" }, -- Yep, it's wood
+  _WOOD2  = { t="A-WOOD1", f="RROCK14" },  
   
-  _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
-  _SBARS2 = { t="GATMETL2", f="FLOOR30" },
-  _MBARS = { t="GATMETL4", f="FLOOR30" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="GATMETL5", f="FLOOR30" }, -- Tall bars, i.e. cage/jail bars
+  _SBARS = { t="HW211", f="RROCK03" }, -- Short bars, i.e. railings
+  _SBARS2 = { t="A-RAIL1", f="RROCK03" },
+  _MBARS = { t="TEKGREN2", f="RROCK03" }, -- Medium bars, i.e. barred windows
+  _TBARS = { t="HW203", f="RROCK03" }, -- Tall bars, i.e. cage/jail bars
   
-  _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Crate/box
-  _CRATE2  = { t="CTYSTCI4", f="FLOOR10" },
+  _CRATE   = { t="CRLWDL12",  f="RROCK14" }, -- Crate/box
+  _CRATE2  = { t="CRWDL128", f="RROCK14" },
 
   _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
   
-  _WATER   = { t="WATRWAL1", f="FLTWAWA1" }, -- "Standing water", sorta
-  _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
+  _WATER   = { f="FWATER1", t="BLODRIP1" }, -- "Standing water", sorta
+  _WTRFALL = { f="SLIME05", t="WFALL1"  }, -- "Flowing water", sorta
   
-  _STONE   = { t="SQPEB1", f="FLAT504" }, -- It rocks lOLOLol
-  _STONE2 = { t="SNDCHNKS", f="FLAT522" },
+  _STONE   = { t="PLANET1",  f="GRNROCK" }, -- It rocks lOLOLol
+  _STONE2 = { t="HW185", f="FLOOR0_1" },
   
-  _DOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
-  _DOOR2 = { t="DOORSTON", f="FLOOR08"},
-  _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
+  _DOOR  = { t="BIGDOOR1", f="RROCK03" }, -- Open says me
+  _DOOR2 = { t="BIGDOOR2", f="RROCK03" },
+  _DORRAIL = { t="HW209", f="RROCK03" }, -- Inner door slider thingys
   
   _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
   _NPIC2    = { t="MOSAIC5", f="FLAT502"},
@@ -67,10 +68,10 @@ HACX.MATERIALS =
   _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
   _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
   
-  _SWITCH  = { t="SW1OFF", f="FLOOR28" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="SW2OFF", f="FLOOR28" },
+  _SWITCH  = { t="SW1CMT", f="DEM1_2" }, -- Wall/general purpose swtich
+  _SWITCH2  = { t="SW1PSKUL", f="RROCK03" },
   
-  _TELE = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
+  _TELE = { f="BLOOD1",  t="BRONZE1" }, -- Teleporter
 
   -- general purpose --
 
@@ -86,6 +87,7 @@ HACX.MATERIALS =
   DOORTRAK = { t="HW209", f="RROCK03" },
 
   HD6   = { t="HD6",   f="RROCK03" },
+  HW211 = { t="HW211", f="RROCK03" },
   HW510 = { t="HW510", f="SLIME15" },
   HW511 = { t="HW511", f="SLIME14" },
   HW512 = { t="HW512", f="SLIME13" },

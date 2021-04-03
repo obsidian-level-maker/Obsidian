@@ -129,3 +129,26 @@ HACX.PICKUPS =
     give = { {ammo="molecule",count=100} }
   }
 }
+
+HACX.NICE_ITEMS =
+{
+
+  smart_drug =
+  {
+    id = 2013,
+    prob = 3,
+    big_item = true,
+    give = { {health=150} }
+  },
+  
+  super_armor =
+  {
+    id = 2019,
+    prob = 2,
+    armor = true,
+    big_item = true,
+    give = { {health=90} }
+  },
+
+}
+
