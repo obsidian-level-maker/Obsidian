@@ -679,7 +679,14 @@ DOOM.MATERIALS =
 
   -- Allows compatibility with Egypt theme prefabs (if Prefabs are set to not match Theme)
   MURAL2   = { t="MARBFAC3",   f="FLAT1_1" },
-  BIGMURAL = { t="STARTAN3",   f="FLAT1_1" }
+  BIGMURAL = { t="STARTAN3",   f="FLAT1_1" },
+
+  -- hex colors used in some Set Line specials - these are NOT actually usable materials
+  -- and are just here to suppress warnings regarding them
+  ["13131C"] = { t="13131C", f="13131C" },
+  ["4548BA"] = { t="4548BA", f="4548BA" },
+  ["041C08"] = { t="041C08", f="041C08" },
+  ["1F4525"] = { t="1F4525", f="1F4525" }
 }
 
 

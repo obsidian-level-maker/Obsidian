@@ -171,20 +171,12 @@ function Render_edge(E)
 
   local function pick_wall_prefab()
 
-    local function check_area_state(S1, S2, mode)
+    local function check_area_state(S1, S2)
+      if not S2.area then return true end
 
-      if mode == "narrow_area" then
+      if S1.area and S2.area then
         if S1.area ~= S2.area then return true end
-      end
-
-      if mode == "potentially_obstructing" then
-
-        if not S2.area then return true end
-
-        if S1.area.room and S2.area.room then
-          if S1.area.room ~= S2.area.room then return true end
-          if S2.area.chunk then return true end
-        end
+        if S2.area.chunk then return true end
       end
 
       return false
@@ -235,6 +227,11 @@ function Render_edge(E)
 
     if reqs.height <= 2 then
       reqs.height = 2
+    end
+
+    if A.chunk and A.chunk.kind == "stair" then
+      reqs.height = A.ceil_h - math.max(A.chunk.dest_area.floor_h,
+        A.chunk.from_area.floor_h)
     end
 
     if geom.is_corner(dir) then
@@ -291,29 +288,19 @@ function Render_edge(E)
 
       -- don't allow more than one wall that's not flat enough
       -- on the same seed
-      if S1.wall_depth then
-        reqs.deep = math.max(SEED_SIZE - S1.wall_depth + 32, 16)
-      end
-
-      -- don't allow anything more than flat walls if
-      -- at least one seed ahead is not in the same area
-      -- as the current wall
-      local tx, ty = geom.nudge(S1.mid_x, S1.mid_y, 10-dir, 128)
-      local S2 = Seed_from_coord(tx, ty)
-
-      if check_area_state(S1, S2, "narrow_area") then
+      if S1.depth and not table.empty(S1.depth) then
         reqs.deep = 16
       end
 
       -- use only flat walls if in a corner
-      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], 128)
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], SEED_SIZE)
       S2 = Seed_from_coord(tx, ty)
-      if check_area_state(S1, S2, "potentially_obstructing") then
+      if check_area_state(S1, S2) then
         reqs.deep = 16
       end
-      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.RIGHT[dir], 128)
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.RIGHT[dir], SEED_SIZE)
       S2 = Seed_from_coord(tx, ty)
-      if check_area_state(S1, S2, "potentially_obstructing") then
+      if check_area_state(S1, S2) then
         reqs.deep = 16
       end
 
@@ -344,13 +331,13 @@ function Render_edge(E)
 
       -- check for wall pieces that require solid depth behind
       -- i.e. fake doors and windows
-      tx, ty = geom.nudge(S1.sx, S1.sy, dir)
-      S2 = SEEDS[tx][ty] or nil
-      tx, ty = geom.nudge(S1.sx, S1.sy, dir, 2)
-      S3 = SEEDS[tx][ty] or nil
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, dir, SEED_SIZE)
+      S2 = Seed_from_coord(tx, ty)
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, dir, SEED_SIZE * 2)
+      S3 = Seed_from_coord(tx, ty)
 
 --gui.printf(dir.." DIRECTION\n")
---gui.printf(S1.mid_x .. ", " .. S1.mid_y .. " -> " .. S2.mid_x .. ", " .. S2.mid_y .."\n")
+--gui.printf(S1.mid_x .. ", " .. S1.mid_y .. " -> " .. S2.mid_x .. ", " .. S2.mid_y .. "\n")
 --gui.printf(S2.area.mode .. "\n")
 
       if has_solid_back(S1, S2) then
@@ -539,7 +526,8 @@ function Render_edge(E)
     end
 
     if A.chunk and A.chunk.kind == "stair" then
-      z1 = A.chunk.dest_area.floor_h
+      z1 = math.max(A.chunk.dest_area.floor_h,
+        A.chunk.from_area.floor_h)
     end
 
     local T
@@ -3517,7 +3505,11 @@ function Render_scenic_fabs()
 
           if not S.area then return end
           if S.area and S.area ~= area then return end
-          if S.wall_depth then return end
+          if S.depth and not table.empty(S.depth) then
+            for _,dir_depth in pairs(S.depth) do
+              if dir_depth > 16 then return end
+            end
+          end
           if S.diagonal then return end
           if S.occupied then return end
           S.occupied = true

@@ -429,8 +429,12 @@ function Monster_zone_palettes()
       ::continue::
     end
 
-    -- tie breaker
-    return (total / size) * 10 + gui.random()
+    -- tie breaker    
+    if size == 0 then
+      return gui.random()
+    else
+      return (total / size) * 10 + gui.random()
+    end
   end
 
 
@@ -508,7 +512,7 @@ function Monster_zone_palettes()
     for mon,qty in pairs(pal) do
       gui.debugf("   %-12s* %1.2f\n", mon, qty)
     end
-
+    
     gui.debugf("   TOUGHNESS: %d\n", int(palette_toughness(pal)))
   end
 

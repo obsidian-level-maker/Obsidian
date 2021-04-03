@@ -144,6 +144,7 @@ PREFABS.Light_typh_sticks_alt =
   light_color = "blue",
 
   tex_LITE5 = "LITEBLU4",
+  flat_FLAT1 = "CEIL4_2"
 }
 
 PREFABS.Light_typh_sticks_alt2 =
@@ -156,8 +157,8 @@ PREFABS.Light_typh_sticks_alt2 =
 
   light_color = "red",
 
-  flat_FLAT23 = "FLAT5_3",
   tex_LITE5 = "REDWALL",
+  flat_FLAT1 = "FLAT5_3"
 }
 
 PREFABS.Light_typh_short =

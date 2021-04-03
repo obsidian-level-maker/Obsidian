@@ -925,6 +925,9 @@ function Grower_calc_rule_probs()
       table.insert(grammarset, rule.name)
     end
 
+    local high_ab_factor = rand.range( 100,1000000 )
+    local low_ab_factor = rand.range( 0.01,0.75 )
+
     while count > 0 do
       local absurded_rule = rand.pick(grammarset)
 
@@ -940,16 +943,17 @@ function Grower_calc_rule_probs()
       and GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
       and GAME.SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
 
-        local ab_factor = 0
+        local new_factor
+
         if rand.odds(75) then
-          ab_factor = rand.range( 100,1000000 )
-          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
+          new_factor = high_ab_factor * rand.range( 0.75,1.25 )
+          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
           if GAME.SHAPE_GRAMMAR[absurded_rule].new_area then
             LEVEL.has_absurd_new_area_rules = true
           end
         else
-          ab_factor = rand.range( 0.01,0.75 )
-          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
+          new_factor = low_ab_factor * rand.range( 0.75,1.25 )
+          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
         end
 
         -- diversify environments
@@ -964,11 +968,10 @@ function Grower_calc_rule_probs()
 
         GAME.SHAPE_GRAMMAR[absurded_rule].initial_env = GAME.SHAPE_GRAMMAR[absurded_rule].env or "none"
         GAME.SHAPE_GRAMMAR[absurded_rule].env = new_env
-
         GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd = true
 
         gui.debugf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
-        gui.debugf("Factor: x" .. ab_factor .. "\n")
+        gui.debugf("Factor: x" .. new_factor .. "\n")
         if new_env then gui.debugf("New env: " .. new_env .. "\n") end
 
         count = count - 1
@@ -3810,7 +3813,7 @@ function Grower_grow_room(R)
   if LEVEL.is_linear then
   if R.grow_parent then
     if R.grow_parent:prelim_conn_num() > 2 then
-        gui.printf("ROOM_" .. R.id .. " was SHOT DOWN VIOLENTLY by the Linear Mode thugz.\n")
+        gui.debugf("ROOM_" .. R.id .. " was SHOT DOWN VIOLENTLY by the Linear Mode thugz.\n")
         Grower_kill_room(R)
         return
       end
@@ -3820,7 +3823,7 @@ function Grower_grow_room(R)
   if LEVEL.has_linear_start or LEVEL.is_linear then
     if R.grow_parent then
       if R.grow_parent.is_start and R.grow_parent:prelim_conn_num() > 1 then
-        gui.printf("'OH SHIT HERE WE GO AGAIN', says ROOM " .. R.id .. " before " ..
+        gui.debugf("'OH SHIT HERE WE GO AGAIN', says ROOM " .. R.id .. " before " ..
         "he was violently gunned down by the Linear Mode thugz...\n")
         Grower_kill_room(R)
       end
