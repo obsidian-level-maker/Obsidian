@@ -14,6 +14,7 @@ HACX.MATERIALS =
   -- special materials --
   _ERROR = { t="HW209", f="RROCK03" },
   _SKY   = { t="HW209", f="F_SKY1" },
+  _DEFAULT = { t="HW209", f="RROCK03" },
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
