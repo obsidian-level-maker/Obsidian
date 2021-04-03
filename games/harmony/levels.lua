@@ -53,10 +53,10 @@ function HARMONY.get_levels()
 
     local LEV =
     {
-      episode = EPI
+      episode = EPI,
 
-      name  = string.format("MAP%02d", map)
-      patch = string.format("CWILV%02d", map-1)
+      name  = string.format("MAP%02d", map),
+      patch = string.format("CWILV%02d", map-1),
 
       ep_along = ep_along
     }

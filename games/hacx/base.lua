@@ -34,7 +34,7 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-OB_GAMES["hacx"] =
+UNFINISHED["hacx"] =
 {
 	label = _("HacX 1.2"),
 	priority = 30,
