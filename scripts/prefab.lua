@@ -118,7 +118,6 @@ function Fab_load_all_definitions()
 
   local function visit_dir(top_level)
     gui.printf("Loading prefabs from: '%s'\n", top_level)
-
     local subdirs, err = gui.scan_directory(top_level, "DIRS")
 
     if not subdirs then
@@ -268,7 +267,8 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  visit_dir("games/" .. GAME.game_dir .. "/fabs")
+  if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
+  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
   preprocess_all()
 end
@@ -1558,7 +1558,19 @@ function Fab_load_wad(def)
 
 
   local function handle_entity(fab, E)
+  
     local spot_info = WADFAB_ENTITIES[E.id]
+    
+    -- Convert things from generic things to their actual id
+    if E.id >= 7000 and E.id <= 7013 then
+      for _,v in pairs(GAME.ENTITIES) do
+        if E.id == v.id then
+          E.id = v.rid
+          goto continue
+        end
+      end
+      ::continue::
+    end
     
     if not spot_info then
       table.insert(fab.entities, E)
@@ -2213,6 +2225,17 @@ function Fab_replacements(fab)
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
+      --Convert generic linedef types to game-specific ones
+      if C.special and C.special >= 700 and C.special <= 702 then
+        for _,v in pairs (GAME.ACTIONS) do
+          if C.special == v.id then
+              C.special = v.rid
+            goto continue
+          end      
+        end
+        ::continue::
+      end
+
       if C.tag then 
         C.tag = check_tag(C.tag) 
         current_tag = C.tag  
@@ -2662,9 +2685,24 @@ function Fab_pick(reqs, allow_none)
   local cur_req = reqs
 
   while cur_req do
-    -- keep the earliest matches (they override later matches)
-    table.merge_missing(tab, Fab_find_matches(cur_req, match_state))
 
+      -- keep the earliest matches (they override later matches)
+    table.merge_missing(tab, Fab_find_matches(cur_req, match_state))
+  
+    if cur_req.key then
+      if GAME.GENERIC_REQS then
+      -- Also add generic locked prefabs to matches
+        for _,v in pairs (GAME.GENERIC_REQS) do
+            if cur_req.key == v.rkind then
+              cur_req.key = v.kind
+            goto continue
+          end      
+        end  
+        ::continue::
+        table.merge_missing(tab, Fab_find_matches(cur_req, match_state))      
+      end
+    end
+  
     cur_req = cur_req.alt_req
   end
 
