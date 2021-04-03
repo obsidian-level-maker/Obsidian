@@ -34,7 +34,7 @@ FLTK_CONFIG=fltk-config
 FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
 FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Izdbsp_src -Iajpoly_src -Iphysfs_src $(FLTK_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Izdbsp_src -Iajpoly_src -Iacc_src -Iphysfs_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
@@ -162,6 +162,23 @@ AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
 $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
 	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $<
 
+#----- ACC Objects --------------------------------------------------
+
+ACC_OBJS= \
+	$(OBJ_DIR)/acc/acc.o  \
+	$(OBJ_DIR)/acc/error.o \
+	$(OBJ_DIR)/acc/misc.o     \
+	$(OBJ_DIR)/acc/parse.o     \
+	$(OBJ_DIR)/acc/pcode.o  \
+	$(OBJ_DIR)/acc/strlist.o \
+	$(OBJ_DIR)/acc/symbol.o     \
+	$(OBJ_DIR)/acc/token.o  
+
+ACC_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
+
+$(OBJ_DIR)/acc/%.o: acc_src/%.c
+	$(CXX) $(ACC_CXXFLAGS) -o $@ -c $<
+
 
 #----- ZDBSP Objects ------------------------------------------------
 
@@ -230,12 +247,13 @@ LANG_FILES= \
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(ZDBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(ZDBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS) $(ACC_OBJS)
 	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
+	rm -f $(OBJ_DIR)/acc/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 	rm -f $(OBJ_DIR)/physfs/*.o
 	rm -f $(OBJ_DIR)/zdbsp/*.o

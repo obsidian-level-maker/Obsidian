@@ -1,0 +1,50 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }} | ${{ matrix.build_type }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Visual Studio 64-bit",
+            os: windows-latest,
+            extra_options: "-A x64"
+          }
+        - {
+            name: "Visual Studio 32-bit",
+            os: windows-latest,
+            extra_options: "-A Win32"
+          }
+        - {
+            name: "macOS",
+            os: macos-latest
+          }
+        - {
+            name: "Linux GCC",
+            os: ubuntu-latest
+          }
+        - {
+            name: "Linux Clang",
+            os: ubuntu-latest,
+            extra_options: "-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
+          }
+        build_type: ["Release", "Debug"]
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Configure
+      shell: bash
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ${{ matrix.config.extra_options }} .
+
+    - name: Build
+      shell: bash
+      run: |
+        export MAKEFLAGS=--keep-going
+        cmake --build build --config ${{ matrix.build_type }} --parallel 3

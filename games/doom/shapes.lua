@@ -2712,7 +2712,8 @@ HALL_1_GROW_I1 =
 HALL_1_GROW_L1 =
 {
   pass = "hall_1",
-  prob = 90, --50,
+  prob = 60, --50,
+  prob_skew = 2,
 
   structure =
   {
@@ -2728,7 +2729,8 @@ HALL_1_GROW_L1 =
 HALL_1_GROW_T1 =
 {
   pass = "hall_1",
-  prob = 90, --50,
+  prob = 60, --50,
+  prob_skew = 2,
 
   structure =
   {
@@ -2748,6 +2750,7 @@ HALL_1_GROW_P1 =
 {
   pass = "hall_1",
   prob = 30, --5,
+  prob_skew = 2,
 
   structure =
   {
@@ -2832,6 +2835,7 @@ HALL_2_GROW_L1 =
 {
   pass = "hall_2",
   prob = 35, --50,
+  prob_skew = 2,
 
   structure =
   {
@@ -2848,6 +2852,7 @@ HALL_2_GROW_T1 =
 {
   pass = "hall_2",
   prob = 30, --25,
+  prob_skew = 2,
 
   structure =
   {
@@ -2867,6 +2872,7 @@ HALL_2_GROW_P1 =
 {
   pass = "hall_2",
   prob = 10, --5,
+  prob_skew = 2,
 
   structure =
   {

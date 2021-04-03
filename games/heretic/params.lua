@@ -43,6 +43,12 @@ HERETIC.PARAMETERS =
 
 HERETIC.ACTIONS =
 {
+  -- These are used for converting generic linedef types
+  
+  Generic_Key_One = { id=700, rid=27 },
+  Generic_Key_Two = { id=701, rid=28 },
+  Generic_Key_Three = { id=702, rid=26 },
+
   --
   -- These keywords are used by prefabs that are remotely
   -- triggered (by a switch or walk-over line).
