@@ -293,6 +293,13 @@ function Render_edge(E)
       end
 
       -- use only flat walls if in a corner
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, 10-dir, SEED_SIZE)
+      S2 = Seed_from_coord(tx, ty)
+      if check_area_state(S1, S2) then
+        reqs.deep = 16
+      end
+
+      -- use only flat walls if in a corner
       tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], SEED_SIZE)
       S2 = Seed_from_coord(tx, ty)
       if check_area_state(S1, S2) then
