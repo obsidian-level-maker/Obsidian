@@ -21,8 +21,8 @@
 #ifndef __UI_WINDOW_H__
 #define __UI_WINDOW_H__
 
-#include "Fl/Fl_Double_Window.h"
-#include "Fl/Fl_Menu_Bar.h"
+#include "Fl/Fl_Double_Window.H"
+#include "Fl/Fl_Menu_Bar.H"
 #include "ui_build.h"
 #include "ui_game.h"
 #include "ui_module.h"

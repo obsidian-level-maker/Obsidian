@@ -24,9 +24,9 @@
 #include <string>
 #include <vector>
 
-#include "Fl/Fl_Box.h"
-#include "Fl/Fl_Group.h"
-#include "Fl/Fl_Progress.h"
+#include "Fl/Fl_Box.H"
+#include "Fl/Fl_Group.H"
+#include "Fl/Fl_Progress.H"
 #include "ui_map.h"
 
 class UI_Build : public Fl_Group {

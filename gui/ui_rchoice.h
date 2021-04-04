@@ -23,9 +23,9 @@
 
 #include <vector>
 
-#include "Fl/Fl_Check_Button.h"
-#include "Fl/Fl_Choice.h"
-#include "Fl/Fl_Slider.h"
+#include "Fl/Fl_Check_Button.H"
+#include "Fl/Fl_Choice.H"
+#include "Fl/Fl_Slider.H"
 
 //
 // DESCRIPTION:

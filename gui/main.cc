@@ -544,19 +544,7 @@ bool Build_Cool_Shit() {
 
         LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
     } else {
-        if (main_win) main_win->build_box->seed_disp->copy_label("Seed: -");
-        main_win->build_box->seed_disp->redraw();
-        main_win->build_box->name_disp->copy_label("");
-        main_win->build_box->name_disp->redraw();
-    }
-
-
-		LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
-	}
-	else
-	{
-		if (main_win)
-		{
+		if (main_win) {
 			main_win->build_box->seed_disp->copy_label("Seed: -");
 			main_win->build_box->seed_disp->redraw();
 			main_win->build_box->name_disp->copy_label("");
@@ -564,8 +552,11 @@ bool Build_Cool_Shit() {
 		}
 	}
 
-        main_win->Locked(false);
-    }
+	if (main_win) {
+		main_win->build_box->Prog_Finish();
+		main_win->game_box->SetAbortButton(false);
+		main_win->Locked(false);
+	}
 
     if (main_action == MAIN_CANCEL) {
         main_action = 0;

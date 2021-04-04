@@ -23,8 +23,8 @@
 
 #include <cstddef>
 
-#include "Fl/Fl_Button.h"
-#include "Fl/Fl_Group.h"
+#include "Fl/Fl_Button.H"
+#include "Fl/Fl_Group.H"
 #include "ui_rchoice.h"
 
 class UI_Game : public Fl_Group {
