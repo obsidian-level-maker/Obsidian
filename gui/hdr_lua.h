@@ -23,9 +23,8 @@
 
 /* LUA Scripting Language */
 
-#include "lua.h"
 #include "lauxlib.h"
+#include "lua.h"
 #include "lualib.h"
 
-#endif // __OB_HDR_LUA__
-
+#endif  // __OB_HDR_LUA__

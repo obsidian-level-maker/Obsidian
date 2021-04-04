@@ -22,16 +22,16 @@
 void DialogLoadImages(void);
 void DialogFreeImages(void);
 
-int DialogShowAndGetChoice(const char *title, Fl_Pixmap *pic, 
-    const char *message, const char *left = "OK", 
-    const char *middle = NULL, const char *right = NULL);
+int DialogShowAndGetChoice(const char *title, Fl_Pixmap *pic,
+                           const char *message, const char *left = "OK",
+                           const char *middle = NULL, const char *right = NULL);
 
-int DialogQueryFilename(const char *message,
-    const char ** name_ptr, const char *guess_name);
+int DialogQueryFilename(const char *message, const char **name_ptr,
+                        const char *guess_name);
 
 void GUI_FatalError(const char *str, ...);
 
-#define ALERT_TXT  (PROG_NAME "Alert")
-#define MISSING_COMMS  "(Not Specified)"
+#define ALERT_TXT (PROG_NAME "Alert")
+#define MISSING_COMMS "(Not Specified)"
 
 #endif /* __OBLIGE_DIALOG_H__ */

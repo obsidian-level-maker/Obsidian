@@ -24,23 +24,23 @@
 /* ----- useful macros ---------------------------- */
 
 #ifndef M_PI
-#define M_PI  3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 #ifndef MAX
-#define MAX(x,y)  ((x) > (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #endif
 
 #ifndef MIN
-#define MIN(x,y)  ((x) < (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
 #ifndef ABS
-#define ABS(x)  ((x) >= 0 ? (x) : -(x))
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
 #endif
 
 #ifndef I_ROUND
-#define I_ROUND(x)  ((int) (((x) < 0.0f) ? ((x) - 0.5f) : ((x) + 0.5f)))
+#define I_ROUND(x) ((int)(((x) < 0.0f) ? ((x)-0.5f) : ((x) + 0.5f)))
 #endif
 
 /* ----- function prototypes ---------------------------- */
@@ -57,7 +57,7 @@ char *UtilStrNDup(const char *str, int size);
 
 // format the string and return the allocated memory.
 // The memory must be freed with UtilFree.
-char *UtilFormat(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+char *UtilFormat(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 
 // free some memory or a string.
 void UtilFree(void *data);
@@ -74,18 +74,18 @@ int UtilRoundPOW2(int x);
 
 // compute angle & distance from (0,0) to (dx,dy)
 angle_g UtilComputeAngle(double dx, double dy);
-#define UtilComputeDist(dx,dy)  sqrt((dx) * (dx) + (dy) * (dy))
+#define UtilComputeDist(dx, dy) sqrt((dx) * (dx) + (dy) * (dy))
 
 // compute the parallel and perpendicular distances from a partition
 // line to a point.
 //
-#define UtilParallelDist(part,x,y)  \
-    (((x) * (part)->pdx + (y) * (part)->pdy + (part)->p_para)  \
-     / (part)->p_length)
+#define UtilParallelDist(part, x, y)                            \
+    (((x) * (part)->pdx + (y) * (part)->pdy + (part)->p_para) / \
+     (part)->p_length)
 
-#define UtilPerpDist(part,x,y)  \
-    (((x) * (part)->pdy - (y) * (part)->pdx + (part)->p_perp)  \
-     / (part)->p_length)
+#define UtilPerpDist(part, x, y)                                \
+    (((x) * (part)->pdy - (y) * (part)->pdx + (part)->p_perp) / \
+     (part)->p_length)
 
 // check if the file exists.
 int UtilFileExists(const char *filename);

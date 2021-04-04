@@ -19,9 +19,8 @@
 #ifndef __OBLIGE_ROOM_H__
 #define __OBLIGE_ROOM_H__
 
-namespace room_build
-{
-	void CreateRooms();
+namespace room_build {
+void CreateRooms();
 }
 
 #endif /* __OBLIGE_ROOM_H__ */

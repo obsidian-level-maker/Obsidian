@@ -25,8 +25,8 @@
 struct Fl_Menu_Item;
 class Fluid_Image;
 
-extern void* const LOAD;
-extern Fl_Widget_Type *current_widget; // one of the selected ones
+extern void *const LOAD;
+extern Fl_Widget_Type *current_widget;  // one of the selected ones
 
 //
 // End of "$Id$".

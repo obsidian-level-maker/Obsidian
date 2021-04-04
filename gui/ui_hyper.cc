@@ -24,152 +24,128 @@
 //
 //------------------------------------------------------------------------
 
-#include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-
+#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
 
-#define LINK_BLUE  FL_BLUE  // fl_rgb_color(0,0,192)
-
+#define LINK_BLUE FL_BLUE  // fl_rgb_color(0,0,192)
 
 UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
-                           const char *_url) :
-	Fl_Button(x, y, w, h, label),
-	hover(false),
-	label_X(0), label_Y(0), label_W(0), label_H(0)
-{
-	// copy the URL string
-	url = StringDup(_url);
+                           const char *_url)
+    : Fl_Button(x, y, w, h, label),
+      hover(false),
+      label_X(0),
+      label_Y(0),
+      label_W(0),
+      label_H(0) {
+    // copy the URL string
+    url = StringDup(_url);
 
-	box(FL_FLAT_BOX);
-	color(FL_GRAY);
-	labelcolor(LINK_BLUE);
+    box(FL_FLAT_BOX);
+    color(FL_GRAY);
+    labelcolor(LINK_BLUE);
 
-	// setup the callback
-	callback(callback_Link, NULL);
+    // setup the callback
+    callback(callback_Link, NULL);
 }
 
+UI_HyperLink::~UI_HyperLink() { StringFree(url); }
 
-UI_HyperLink::~UI_HyperLink()
-{
-	StringFree(url);
+void UI_HyperLink::checkLink() {
+    // change the cursor if the mouse is over the link.
+    // the 'hover' variable reduces the number of times fl_cursor()
+    // needs to be called (since it can be expensive).
+
+    if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H)) {
+        if (!hover) fl_cursor(FL_CURSOR_HAND);
+
+        hover = true;
+    } else {
+        if (hover) fl_cursor(FL_CURSOR_DEFAULT);
+
+        hover = false;
+    }
 }
 
+int UI_HyperLink::handle(int event) {
+    if (!active_r()) return Fl_Button::handle(event);
 
-void UI_HyperLink::checkLink()
-{
-	// change the cursor if the mouse is over the link.
-	// the 'hover' variable reduces the number of times fl_cursor()
-	// needs to be called (since it can be expensive).
+    switch (event) {
+        case FL_MOVE: {
+            checkLink();
+            return 1;
+        }
 
-	if (Fl::event_inside(x()+label_X, y()+label_Y, label_W, label_H))
-	{
-		if (! hover)
-			fl_cursor(FL_CURSOR_HAND);
+        case FL_ENTER: {
+            checkLink();
+            redraw();
+            return 1;
+        }
 
-		hover = true;
-	}
-	else
-	{
-		if (hover)
-			fl_cursor(FL_CURSOR_DEFAULT);
+        case FL_LEAVE: {
+            checkLink();
+            redraw();
+            return 1;
+        }
 
-		hover = false;
-	}
+        default:
+            break;
+    }
+
+    return Fl_Button::handle(event);
 }
 
+void UI_HyperLink::draw() {
+    if (type() == FL_HIDDEN_BUTTON) return;
 
-int UI_HyperLink::handle(int event)
-{
-	if (!active_r())
-		return Fl_Button::handle(event);
+    // determine where to draw the label
 
-	switch (event)
-	{
-		case FL_MOVE:
-		{
-			checkLink();
-			return 1;
-		}
+    label_X = label_Y = label_W = label_H = 0;
 
-		case FL_ENTER:
-		{
-			checkLink();
-			redraw();
-			return 1;
-		}
+    fl_font(labelfont(), labelsize());
+    fl_measure(label(), label_W, label_H, 1);
 
-		case FL_LEAVE:
-		{
-			checkLink();
-			redraw();
-			return 1;
-		}
+    if (align() & FL_ALIGN_LEFT)
+        label_X = 2;
+    else if (align() & FL_ALIGN_RIGHT)
+        label_X = w() - label_W - 2;
+    else
+        label_X = (w() - label_W) / 2;
 
-		default:
-			break;
-	}
+    label_Y += h() / 2 - labelsize() / 2 - 2;
 
-	return Fl_Button::handle(event);
+    // draw the link text
+
+    fl_draw_box(box(), x(), y(), w(), h(), color());
+
+    fl_color(labelcolor());
+    fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
+            FL_ALIGN_LEFT);
+
+    // draw the underline
+
+    if (!value()) {
+        int yy = y() + label_Y + label_H - 2;
+
+        fl_line_style(FL_SOLID);
+        fl_line(x() + label_X, yy, x() + label_X + label_W, yy);
+        fl_line_style(0);
+    }
+
+    /*
+       if (Fl::focus() == this)
+       draw_focus();
+     */
 }
 
+void UI_HyperLink::callback_Link(Fl_Widget *w, void *data) {
+    UI_HyperLink *link = (UI_HyperLink *)w;
 
-void UI_HyperLink::draw()
-{
-	if (type() == FL_HIDDEN_BUTTON)
-		return;
-
-	// determine where to draw the label
-
-	label_X = label_Y = label_W = label_H = 0;
-
-	fl_font(labelfont(), labelsize());
-	fl_measure(label(), label_W, label_H, 1);
-
-	if (align() & FL_ALIGN_LEFT)
-		label_X = 2;
-	else if (align() & FL_ALIGN_RIGHT)
-		label_X = w() - label_W - 2;
-	else
-		label_X = (w() - label_W) / 2;
-
-	label_Y += h() / 2 - labelsize() / 2 - 2;
-
-	// draw the link text
-
-	fl_draw_box(box(), x(), y(), w(), h(), color());
-
-	fl_color(labelcolor());
-	fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H, FL_ALIGN_LEFT);
-
-	// draw the underline
-
-	if (! value())
-	{
-		int yy = y() + label_Y + label_H-2;
-
-		fl_line_style(FL_SOLID);
-		fl_line(x() + label_X, yy, x() + label_X + label_W, yy);
-		fl_line_style(0);
-	}
-
-	/*
-	   if (Fl::focus() == this)
-	   draw_focus();
-	 */
-}
-
-
-void UI_HyperLink::callback_Link(Fl_Widget *w, void *data)
-{
-	UI_HyperLink *link = (UI_HyperLink *)w;
-
-	if (! fl_open_uri(link->url))
-	{
-		LogPrintf("\nOpen URL failed: %s\n\n", link->url);
-	}
+    if (!fl_open_uri(link->url)) {
+        LogPrintf("\nOpen URL failed: %s\n\n", link->url);
+    }
 }
 
 //--- editor settings ---

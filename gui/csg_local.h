@@ -21,9 +21,11 @@
 #ifndef __OBLIGE_CSG_LOCAL_H__
 #define __OBLIGE_CSG_LOCAL_H__
 
+#include <vector>
 
-#define SNAG_EPSILON  0.001
+#include "csg_main.h"
 
+#define SNAG_EPSILON 0.001
 
 /***** CLASSES ****************/
 
@@ -31,210 +33,198 @@ class partition_c;
 class region_c;
 class gap_c;
 
+class snag_c {
+   public:
+    double x1, y1;
+    double x2, y2;
 
-class snag_c
-{
-public:
-	double x1, y1;
-	double x2, y2;
+    bool mini;
 
-	bool mini;
+    partition_c *on_node;
 
-	partition_c * on_node;
+    region_c *region;  // only valid AFTER MergeRegions()
 
-	region_c *region;  // only valid AFTER MergeRegions()
+    snag_c *partner;  // only valid AFTER HandleOverlaps()
 
-	snag_c *partner;  // only valid AFTER HandleOverlaps()
+    std::vector<brush_vert_c *> sides;
 
-	std::vector<brush_vert_c *> sides;
+    // quantized along values, used for overlap detection
+    int q_along1;
+    int q_along2;
 
-	// quantized along values, used for overlap detection
-	int q_along1;
-	int q_along2;
+    // used by CSG DOOM code
+    bool seen;
 
-	// used by CSG DOOM code
-	bool seen;
+   private:
+    snag_c(const snag_c &other);
 
-private:
-	snag_c(const snag_c& other);
+   public:
+    snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2);
 
-public:
-	snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2);
+    snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part);
 
-	snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part);
+    ~snag_c();
 
-	~snag_c();
+    double Length() const;
 
-	double Length() const;
+    snag_c *Cut(double ix, double iy);
 
-	snag_c * Cut(double ix, double iy);
+    void CalcAlongs();
 
-	void CalcAlongs();
+    // this is for the MiniMap code, returns true if brushes are the same
+    // on both sides.  CSG_SortBrushes() must have been called already.
+    bool SameSides() const;
 
-	// this is for the MiniMap code, returns true if brushes are the same
-	// on both sides.  CSG_SortBrushes() must have been called already.
-	bool SameSides() const;
+    // also for minimap
+    bool IsTwoSided() const;
 
-	// also for minimap
-	bool IsTwoSided() const;
+    void TransferSides(snag_c *other);
 
-	void TransferSides(snag_c *other);
+    void RemoveSide(int index);
+    void RemoveSidesForBrush(const csg_brush_c *B);
 
-	void RemoveSide(int index);
-	void RemoveSidesForBrush(const csg_brush_c *B);
-
-	// brush side finding functions, return NULL if not found
-	brush_vert_c * FindOneSidedVert(double z);
-	brush_vert_c * FindBrushVert(const csg_brush_c *B);
+    // brush side finding functions, return NULL if not found
+    brush_vert_c *FindOneSidedVert(double z);
+    brush_vert_c *FindBrushVert(const csg_brush_c *B);
 };
 
+class region_c {
+   public:
+    std::vector<snag_c *> snags;
 
-class region_c
-{
-public:
-	std::vector<snag_c *> snags;
+    std::vector<csg_brush_c *> brushes;
 
-	std::vector<csg_brush_c *> brushes;
+    std::vector<csg_entity_c *> entities;
 
-	std::vector<csg_entity_c *> entities;
+    std::vector<gap_c *> gaps;
 
-	std::vector<gap_c *> gaps;
+    double mid_x, mid_y;
 
-	double mid_x, mid_y;
+    // this forms a bounding box (dist from the mid point)
+    float rw, rh;
 
-	// this forms a bounding box (dist from the mid point)
-	float rw, rh;
+    bool degenerate;
 
-	bool degenerate;
+    // used by DOOM and QUAKE Clipping (etc)
+    int index;
 
-	// used by DOOM and QUAKE Clipping (etc)
-	int index;
+    // used by DOOM shading code
+    int shade;
 
-	// used by DOOM shading code
-	int shade;
+   public:
+    region_c();
 
-public:
-	region_c();
+    region_c(const region_c &other);
 
-	region_c(const region_c& other);
+    ~region_c();
 
-	~region_c();
+    void AddSnag(snag_c *S);
+    bool HasSnag(snag_c *S) const;
+    bool RemoveSnag(snag_c *S);
 
-	void AddSnag(snag_c *S);
-	bool HasSnag(snag_c *S) const;
-	bool RemoveSnag(snag_c *S);
+    void AddBrush(csg_brush_c *P);
+    void RemoveBrush(int index);
 
-	void AddBrush(csg_brush_c *P);
-	void RemoveBrush(int index);
+    void AddGap(gap_c *G);
+    void RemoveGap(int index);
 
-	void AddGap(gap_c *G);
-	void RemoveGap(int index);
+    int TestSide(partition_c *P);
 
-	int TestSide(partition_c *P);
+    void MergeOther(region_c *other);
 
-	void MergeOther(region_c *other);
+    bool isClosed() const;
 
-	bool isClosed() const;
+    // these use mid-point of region to compute Z for a brush top/bottom
+    double TopZ(csg_brush_c *B) const;
+    double BottomZ(csg_brush_c *B) const;
 
-	// these use mid-point of region to compute Z for a brush top/bottom
-	double TopZ   (csg_brush_c *B) const;
-	double BottomZ(csg_brush_c *B) const;
+    void GetBounds(double *x1, double *y1, double *x2, double *y2) const;
 
-	void GetBounds(double *x1, double *y1, double *x2, double *y2) const;
+    bool ContainsPoint(double x, double y) const;
+    double DistanceToPoint(float x, float y) const;
+    double SquareDistance(float x, float y) const;
 
-	bool ContainsPoint(double x, double y) const;
-	double DistanceToPoint(float x, float y) const;
-	double SquareDistance (float x, float y) const;
+    void SortBrushes();
 
-	void SortBrushes();
+    void RemoveSidesForBrush(const csg_brush_c *B);
 
-	void RemoveSidesForBrush(const csg_brush_c *B);
+    // this requires CSG_SortBrushes() to have been called earlier
+    bool HasSameBrushes(const region_c *other) const;
 
-	// this requires CSG_SortBrushes() to have been called earlier
-	bool HasSameBrushes(const region_c *other) const;
+    bool HasFlattened() const;
 
-	bool HasFlattened() const;
+    void ComputeMidPoint();
+    void ComputeBounds();
+    void ClockwiseSnags();  // requires CalcMidPoint()
 
-	void ComputeMidPoint();
-	void ComputeBounds();
-	void ClockwiseSnags();  // requires CalcMidPoint()
-
-	void DebugDump();
+    void DebugDump();
 };
 
+class gap_c {
+   public:
+    csg_brush_c *bottom;
+    csg_brush_c *top;
 
-class gap_c
-{
-public:
-	csg_brush_c *bottom;
-	csg_brush_c *top;
+    bool reachable;
 
-	bool reachable;
+    std::vector<gap_c *> neighbors;
 
-	std::vector<gap_c *> neighbors;
+    // liquid brush whose surface is in this gap (or clipped above it)
+    csg_brush_c *liquid;
 
-	// liquid brush whose surface is in this gap (or clipped above it)
-	csg_brush_c *liquid;
+   public:
+    gap_c(csg_brush_c *B, csg_brush_c *T);
 
-public:
-	gap_c(csg_brush_c *B, csg_brush_c *T);
+    ~gap_c();
 
-	~gap_c();
-
-	void AddNeighbor(gap_c *N);
-	bool HasNeighbor(gap_c *N) const;
+    void AddNeighbor(gap_c *N);
+    bool HasNeighbor(gap_c *N) const;
 };
 
+class bsp_node_c {
+   public:
+    // partition
+    double x1, y1, x2, y2;
 
-class bsp_node_c
-{
-public:
-	// partition
-	double x1, y1, x2, y2;
+    // front : one of these should be non-NULL
+    bsp_node_c *front_node;
+    region_c *front_leaf;
 
-	// front : one of these should be non-NULL
-	bsp_node_c *front_node;
-	region_c *front_leaf;
+    // back : one of these should be non-NULL
+    bsp_node_c *back_node;
+    region_c *back_leaf;
 
-	// back : one of these should be non-NULL
-	bsp_node_c *back_node;
-	region_c *back_leaf;
+    // bounding box of this node
+    float bb_x1, bb_y1;
+    float bb_x2, bb_y2;
 
-	// bounding box of this node
-	float bb_x1, bb_y1;
-	float bb_x2, bb_y2;
+   public:
+    bsp_node_c(double px1, double py1, double px2, double py2);
 
-public:
-	bsp_node_c(double px1, double py1, double px2, double py2);
+    // destructor deletes child nodes (but not leafs)
+    ~bsp_node_c();
 
-	// destructor deletes child nodes (but not leafs)
-	~bsp_node_c();
+    void ComputeBBox();
 
-	void ComputeBBox();
-
-private:
-	void AddBBox(bsp_node_c *node);
-	void AddBBox(region_c *leaf);
+   private:
+    void AddBBox(bsp_node_c *node);
+    void AddBBox(region_c *leaf);
 };
-
-
 
 /***** VARIABLES ****************/
 
 extern std::vector<region_c *> all_regions;
 
-extern bsp_node_c * bsp_root;
-
+extern bsp_node_c *bsp_root;
 
 /***** FUNCTIONS ****************/
 
 void CSG_BSP(double grid, bool is_clip_hull = false);
 void CSG_BSP_Free();
 
-region_c * CSG_PointInRegion(double x, double y);
+region_c *CSG_PointInRegion(double x, double y);
 
 void CSG_Shade();
-
 
 #endif /* __OBLIGE_CSG_LOCAL_H__ */
 

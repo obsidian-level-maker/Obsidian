@@ -21,9 +21,12 @@
 #ifndef __LIB_SIGNAL_H__
 #define __LIB_SIGNAL_H__
 
-typedef void (* signal_notify_f)(const char *name, void *priv_dat);
+#include <cstddef>
 
-void Signal_Watch(const char *name, signal_notify_f func, void *priv_dat = NULL);
+typedef void (*signal_notify_f)(const char *name, void *priv_dat);
+
+void Signal_Watch(const char *name, signal_notify_f func,
+                  void *priv_dat = NULL);
 // adds a signal notifier function for the signal name.
 // If the same name/func pair already exists, it is simply
 // replaced (useful for changing the private data pointer).

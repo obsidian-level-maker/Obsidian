@@ -17,191 +17,147 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 */
-#include <string.h>
 #include <stdio.h>
-#include "zdbsp.h"
+#include <string.h>
+
 #include "nodebuild.h"
+#include "zdbsp.h"
 
-FEventTree::FEventTree ()
-: Root (&Nil), Spare (NULL)
-{
-	memset (&Nil, 0, sizeof(Nil));
+FEventTree::FEventTree() : Root(&Nil), Spare(NULL) {
+    memset(&Nil, 0, sizeof(Nil));
 }
 
-FEventTree::~FEventTree ()
-{
-	FEvent *probe;
+FEventTree::~FEventTree() {
+    FEvent *probe;
 
-	DeleteAll ();
-	probe = Spare;
-	while (probe != NULL)
-	{
-		FEvent *next = probe->Left;
-		delete probe;
-		probe = next;
-	}
+    DeleteAll();
+    probe = Spare;
+    while (probe != NULL) {
+        FEvent *next = probe->Left;
+        delete probe;
+        probe = next;
+    }
 }
 
-void FEventTree::DeleteAll ()
-{
-	DeletionTraverser (Root);
-	Root = &Nil;
+void FEventTree::DeleteAll() {
+    DeletionTraverser(Root);
+    Root = &Nil;
 }
 
-void FEventTree::DeletionTraverser (FEvent *node)
-{
-	if (node != &Nil && node != NULL)
-	{
-		DeletionTraverser (node->Left);
-		DeletionTraverser (node->Right);
-		node->Left = Spare;
-		Spare = node;
-	}
+void FEventTree::DeletionTraverser(FEvent *node) {
+    if (node != &Nil && node != NULL) {
+        DeletionTraverser(node->Left);
+        DeletionTraverser(node->Right);
+        node->Left = Spare;
+        Spare = node;
+    }
 }
 
-FEvent *FEventTree::GetNewNode ()
-{
-	FEvent *node;
+FEvent *FEventTree::GetNewNode() {
+    FEvent *node;
 
-	if (Spare != NULL)
-	{
-		node = Spare;
-		Spare = node->Left;
-	}
-	else
-	{
-		node = new FEvent;
-	}
-	return node;
+    if (Spare != NULL) {
+        node = Spare;
+        Spare = node->Left;
+    } else {
+        node = new FEvent;
+    }
+    return node;
 }
 
-void FEventTree::Insert (FEvent *z)
-{
-	FEvent *y = &Nil;
-	FEvent *x = Root;
+void FEventTree::Insert(FEvent *z) {
+    FEvent *y = &Nil;
+    FEvent *x = Root;
 
-	while (x != &Nil)
-	{
-		y = x;
-		if (z->Distance < x->Distance)
-		{
-			x = x->Left;
-		}
-		else
-		{
-			x = x->Right;
-		}
-	}
-	z->Parent = y;
-	if (y == &Nil)
-	{
-		Root = z;
-	}
-	else if (z->Distance < y->Distance)
-	{
-		y->Left = z;
-	}
-	else
-	{
-		y->Right = z;
-	}
-	z->Left = &Nil;
-	z->Right = &Nil;
+    while (x != &Nil) {
+        y = x;
+        if (z->Distance < x->Distance) {
+            x = x->Left;
+        } else {
+            x = x->Right;
+        }
+    }
+    z->Parent = y;
+    if (y == &Nil) {
+        Root = z;
+    } else if (z->Distance < y->Distance) {
+        y->Left = z;
+    } else {
+        y->Right = z;
+    }
+    z->Left = &Nil;
+    z->Right = &Nil;
 }
 
-FEvent *FEventTree::Successor (FEvent *event) const
-{
-	if (event->Right != &Nil)
-	{
-		event = event->Right;
-		while (event->Left != &Nil)
-		{
-			event = event->Left;
-		}
-		return event;
-	}
-	else
-	{
-		FEvent *y = event->Parent;
-		while (y != &Nil && event == y->Right)
-		{
-			event = y;
-			y = y->Parent;
-		}
-		return y;
-	}
+FEvent *FEventTree::Successor(FEvent *event) const {
+    if (event->Right != &Nil) {
+        event = event->Right;
+        while (event->Left != &Nil) {
+            event = event->Left;
+        }
+        return event;
+    } else {
+        FEvent *y = event->Parent;
+        while (y != &Nil && event == y->Right) {
+            event = y;
+            y = y->Parent;
+        }
+        return y;
+    }
 }
 
-FEvent *FEventTree::Predecessor (FEvent *event) const
-{
-	if (event->Left != &Nil)
-	{
-		event = event->Left;
-		while (event->Right != &Nil)
-		{
-			event = event->Right;
-		}
-		return event;
-	}
-	else
-	{
-		FEvent *y = event->Parent;
-		while (y != &Nil && event == y->Left)
-		{
-			event = y;
-			y = y->Parent;
-		}
-		return y;
-	}
+FEvent *FEventTree::Predecessor(FEvent *event) const {
+    if (event->Left != &Nil) {
+        event = event->Left;
+        while (event->Right != &Nil) {
+            event = event->Right;
+        }
+        return event;
+    } else {
+        FEvent *y = event->Parent;
+        while (y != &Nil && event == y->Left) {
+            event = y;
+            y = y->Parent;
+        }
+        return y;
+    }
 }
 
-FEvent *FEventTree::FindEvent (double key) const
-{
-	FEvent *node = Root;
+FEvent *FEventTree::FindEvent(double key) const {
+    FEvent *node = Root;
 
-	while (node != &Nil)
-	{
-		if (node->Distance == key)
-		{
-			return node;
-		}
-		else if (node->Distance > key)
-		{
-			node = node->Left;
-		}
-		else
-		{
-			node = node->Right;
-		}
-	}
-	return NULL;
+    while (node != &Nil) {
+        if (node->Distance == key) {
+            return node;
+        } else if (node->Distance > key) {
+            node = node->Left;
+        } else {
+            node = node->Right;
+        }
+    }
+    return NULL;
 }
 
-FEvent *FEventTree::GetMinimum ()
-{
-	FEvent *node = Root;
+FEvent *FEventTree::GetMinimum() {
+    FEvent *node = Root;
 
-	if (node == &Nil)
-	{
-		return NULL;
-	}
-	while (node->Left != &Nil)
-	{
-		node = node->Left;
-	}
-	return node;
+    if (node == &Nil) {
+        return NULL;
+    }
+    while (node->Left != &Nil) {
+        node = node->Left;
+    }
+    return node;
 }
 
-void FEventTree::PrintTree (const FEvent *event) const
-{
-	if (event->Left != &Nil)
-	{
-		PrintTree (event->Left);
-	}
-	printf (" Distance %g, vertex %d, seg %u\n",
-		sqrt(event->Distance/4294967296.0), event->Info.Vertex, (unsigned)event->Info.FrontSeg);
-	if (event->Right != &Nil)
-	{
-		PrintTree (event->Right);
-	}
+void FEventTree::PrintTree(const FEvent *event) const {
+    if (event->Left != &Nil) {
+        PrintTree(event->Left);
+    }
+    printf(" Distance %g, vertex %d, seg %u\n",
+           sqrt(event->Distance / 4294967296.0), event->Info.Vertex,
+           (unsigned)event->Info.FrontSeg);
+    if (event->Right != &Nil) {
+        PrintTree(event->Right);
+    }
 }

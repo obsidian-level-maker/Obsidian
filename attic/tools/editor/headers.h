@@ -22,16 +22,14 @@
 //
 //  SYSTEM INCLUDES
 //
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include <string.h>
 #include <ctype.h>
 #include <errno.h>
-
-#include <math.h>
 #include <limits.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef WIN32
 #include <FL/x.H>
@@ -43,7 +41,7 @@
 //  FLTK INCLUDES
 //
 #ifdef __MWERKS__
-# define FL_DLL
+#define FL_DLL
 #endif
 
 #include <FL/Fl.H>
@@ -58,8 +56,8 @@
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Menu_Item.H>
-#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Multi_Browser.H>
+#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Return_Button.H>
@@ -74,7 +72,6 @@
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
-
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
 #include <FL/fl_file_chooser.H>
@@ -82,29 +79,27 @@
 //
 //  LOCAL INCLUDES
 //
-#include "sys_type.h"
-#include "sys_macro.h"
-#include "sys_assert.h"
-
-#include "lib_argv.h"
-#include "lib_file.h"
-#include "lib_util.h"
-
 #include "e_chooser.h"
 #include "e_dialog.h"
 #include "e_editor.h"
 #include "e_menu.h"
 #include "e_status.h"
 #include "e_window.h"
+#include "lib_argv.h"
+#include "lib_file.h"
+#include "lib_util.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
+#include "sys_type.h"
 
-// 
+//
 // GLOBAL DEFS
 //
-#define PROG_NAME      "Tailor"
+#define PROG_NAME "Tailor"
 #define PROG_NAME_FULL "Tailor Lua Editor"
 
-#define VERSION_STR  "0.30"
-#define VERSION_HEX  0x030
+#define VERSION_STR "0.30"
+#define VERSION_HEX 0x030
 
 #endif /* __LM_HEADERS_H__ */
 

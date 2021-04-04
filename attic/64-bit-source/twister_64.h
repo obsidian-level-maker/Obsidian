@@ -1,4 +1,4 @@
-/* 
+/*
 Twister Engine Random Generator
 
 By Dashodanger, 2020
@@ -11,8 +11,8 @@ variants available. Function names will be as similar to AJ_Random
 as possible in order to minimize changes in other sections of code
 */
 
-#include <random>
 #include <ctime>
+#include <random>
 
 void twister_Init();
 
@@ -21,4 +21,3 @@ void twister_Reseed(uint_fast64_t random);
 uint_fast64_t twister_UInt();
 
 double twister_Double();
-

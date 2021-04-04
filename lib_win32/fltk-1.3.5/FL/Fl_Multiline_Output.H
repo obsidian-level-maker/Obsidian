@@ -32,21 +32,20 @@
   Note that this widget does not support scrollbars, or per-character
   color control.
 
-  If you are presenting large amounts of read-only text 
+  If you are presenting large amounts of read-only text
   and need scrollbars, or full color control of characters,
   then use Fl_Text_Display. If you want to display HTML text,
   use Fl_Help_View.
 */
 class FL_EXPORT Fl_Multiline_Output : public Fl_Output {
-public:
+   public:
+    /**
+      Creates a new Fl_Multiline_Output widget using the given position,
+      size, and label string. The default boxtype is FL_DOWN_BOX.
 
-  /**
-    Creates a new Fl_Multiline_Output widget using the given position,
-    size, and label string. The default boxtype is FL_DOWN_BOX.
-
-    Inherited destructor destroys the widget and any value associated with it.
-  */
-  Fl_Multiline_Output(int X,int Y,int W,int H,const char *l = 0);
+      Inherited destructor destroys the widget and any value associated with it.
+    */
+    Fl_Multiline_Output(int X, int Y, int W, int H, const char *l = 0);
 };
 
 #endif

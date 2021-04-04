@@ -17,7 +17,7 @@
 //
 
 /* \file
-   Fl_Multiline_Input widget . */ 
+   Fl_Multiline_Input widget . */
 
 #ifndef Fl_Multiline_Input_H
 #define Fl_Multiline_Input_H
@@ -43,14 +43,14 @@
   Fl_Text_Editor.
 */
 class FL_EXPORT Fl_Multiline_Input : public Fl_Input {
-public:
-  /**
-    Creates a new Fl_Multiline_Input widget using the given
-    position, size, and label string. The default boxtype is FL_DOWN_BOX.
+   public:
+    /**
+      Creates a new Fl_Multiline_Input widget using the given
+      position, size, and label string. The default boxtype is FL_DOWN_BOX.
 
-    Inherited destructor destroys the widget and any value associated with it.
-  */
-  Fl_Multiline_Input(int X,int Y,int W,int H,const char *l = 0);
+      Inherited destructor destroys the widget and any value associated with it.
+    */
+    Fl_Multiline_Input(int X, int Y, int W, int H, const char *l = 0);
 };
 
 #endif

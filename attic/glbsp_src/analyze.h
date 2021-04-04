@@ -21,8 +21,8 @@
 #ifndef __GLBSP_ANALYZE_H__
 #define __GLBSP_ANALYZE_H__
 
-#include "structs.h"
 #include "level.h"
+#include "structs.h"
 
 // detection routines
 void DetectDuplicateVertices(void);
@@ -56,6 +56,6 @@ vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end);
 // at this vertex is open.  Returns a sector reference if it's open,
 // or NULL if closed (void space or directly along a linedef).
 //
-sector_t * VertexCheckOpen(vertex_t *vert, float_g dx, float_g dy);
+sector_t *VertexCheckOpen(vertex_t *vert, float_g dx, float_g dy);
 
 #endif /* __GLBSP_ANALYZE_H__ */

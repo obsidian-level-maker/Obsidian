@@ -19,21 +19,17 @@
 #ifndef __OBLIGE_LBLOCK_H__
 #define __OBLIGE_LBLOCK_H__
 
+namespace level_block {
 
-namespace level_block
-{
+class entity_c {
+   public:
+    entity_c(short _x, short _y, short _z, short _type);
+    virtual ~entity_c();
 
-class entity_c
-{
-public:
-	entity_c(short _x, short _y, short _z, short _type);
-	virtual ~entity_c();
-
-	short x, y, z;
-	short type;
-	short angle;
+    short x, y, z;
+    short type;
+    short angle;
 };
-
 
 //------------------------------------------------------------------------
 
@@ -42,6 +38,5 @@ void AddThing(short x, short y, short type);
 void WriteBlock(const char *filename);
 
 }  // namespace level_block
-
 
 #endif /* __OBLIGE_LBLOCK_H__ */

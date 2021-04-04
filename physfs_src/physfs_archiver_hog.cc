@@ -34,19 +34,17 @@
 
 #if PHYSFS_SUPPORTS_HOG
 
-static int hogLoadEntries(PHYSFS_Io *io, void *arc)
-{
+static int hogLoadEntries(PHYSFS_Io *io, void *arc) {
     const PHYSFS_uint64 iolen = io->length(io);
     PHYSFS_uint32 pos = 3;
 
-    while (pos < iolen)
-    {
+    while (pos < iolen) {
         PHYSFS_uint32 size;
         char name[13];
 
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, name, 13), 0);
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &size, 4), 0);
-        name[12] = '\0';  /* just in case. */
+        name[12] = '\0'; /* just in case. */
         pos += 13 + 4;
 
         size = PHYSFS_swapULE32(size);
@@ -60,14 +58,12 @@ static int hogLoadEntries(PHYSFS_Io *io, void *arc)
     return 1;
 } /* hogLoadEntries */
 
-
-static void *HOG_openArchive(PHYSFS_Io *io, const char *name,
-                             int forWriting, int *claimed)
-{
+static void *HOG_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
+                             int *claimed) {
     PHYSFS_uint8 buf[3];
     void *unpkarc = NULL;
 
-    assert(io != NULL);  /* shouldn't ever happen. */
+    assert(io != NULL); /* shouldn't ever happen. */
     BAIL_IF(forWriting, PHYSFS_ERR_READ_ONLY, NULL);
     BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, buf, 3), NULL);
     BAIL_IF(memcmp(buf, "DHF", 3) != 0, PHYSFS_ERR_UNSUPPORTED, NULL);
@@ -77,8 +73,7 @@ static void *HOG_openArchive(PHYSFS_Io *io, const char *name,
     unpkarc = UNPK_openArchive(io);
     BAIL_IF_ERRPASS(!unpkarc, NULL);
 
-    if (!hogLoadEntries(io, unpkarc))
-    {
+    if (!hogLoadEntries(io, unpkarc)) {
         UNPK_abandonArchive(unpkarc);
         return NULL;
     } /* if */
@@ -86,16 +81,11 @@ static void *HOG_openArchive(PHYSFS_Io *io, const char *name,
     return unpkarc;
 } /* HOG_openArchive */
 
-
-const PHYSFS_Archiver __PHYSFS_Archiver_HOG =
-{
+const PHYSFS_Archiver __PHYSFS_Archiver_HOG = {
     CURRENT_PHYSFS_ARCHIVER_API_VERSION,
     {
-        "HOG",
-        "Descent I/II HOG file format",
-        "Bradley Bell <btb@icculus.org>",
-        "https://icculus.org/physfs/",
-        0,  /* supportsSymlinks */
+        "HOG", "Descent I/II HOG file format", "Bradley Bell <btb@icculus.org>",
+        "https://icculus.org/physfs/", 0, /* supportsSymlinks */
     },
     HOG_openArchive,
     UNPK_enumerate,
@@ -105,10 +95,8 @@ const PHYSFS_Archiver __PHYSFS_Archiver_HOG =
     UNPK_remove,
     UNPK_mkdir,
     UNPK_stat,
-    UNPK_closeArchive
-};
+    UNPK_closeArchive};
 
-#endif  /* defined PHYSFS_SUPPORTS_HOG */
+#endif /* defined PHYSFS_SUPPORTS_HOG */
 
 /* end of physfs_archiver_hog.c ... */
-

@@ -21,26 +21,26 @@
 
 /* ----- useful macros ---------------------------- */
 
-#define DIST_EPSILON  (1.0 / 128.0)
+#define DIST_EPSILON (1.0 / 128.0)
 
 #ifndef M_PI
-#define M_PI  3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 #ifndef MAX
-#define MAX(x,y)  ((x) > (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #endif
 
 #ifndef MIN
-#define MIN(x,y)  ((x) < (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
 #ifndef ABS
-#define ABS(x)  ((x) >= 0 ? (x) : -(x))
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
 #endif
 
 #ifndef I_ROUND
-#define I_ROUND(x)  int(((x) < 0) ? ((x) - 0.5f) : ((x) + 0.5f))
+#define I_ROUND(x) int(((x) < 0) ? ((x)-0.5f) : ((x) + 0.5f))
 #endif
 
 /* ----- function prototypes ---------------------------- */
@@ -66,18 +66,18 @@ int UtilRoundPOW2(int x);
 
 // compute angle & distance from (0,0) to (dx,dy)
 angle_g UtilComputeAngle(double dx, double dy);
-#define UtilComputeDist(dx,dy)  sqrt((dx) * (dx) + (dy) * (dy))
+#define UtilComputeDist(dx, dy) sqrt((dx) * (dx) + (dy) * (dy))
 
 // compute the parallel and perpendicular distances from a partition
 // line to a point.
 //
-#define UtilParallelDist(part,x,y)  \
-    (((x) * (part)->pdx + (y) * (part)->pdy + (part)->p_para)  \
-     / (part)->p_length)
+#define UtilParallelDist(part, x, y)                            \
+    (((x) * (part)->pdx + (y) * (part)->pdy + (part)->p_para) / \
+     (part)->p_length)
 
-#define UtilPerpDist(part,x,y)  \
-    (((x) * (part)->pdy - (y) * (part)->pdx + (part)->p_perp)  \
-     / (part)->p_length)
+#define UtilPerpDist(part, x, y)                                \
+    (((x) * (part)->pdy - (y) * (part)->pdx + (part)->p_perp) / \
+     (part)->p_length)
 
 // return the millisecond counter.  Note: it WILL overflow.
 unsigned int UtilGetMillis();
@@ -93,10 +93,10 @@ const char *FileBaseName(const char *filename);
 int RandomRange(int low, int high);
 int RandomShuffle(int *values, int size, bool fill = false);
 
-#define RandomIndex(TOP)     RandomRange(0, (TOP)-1)
-#define RandomOdds(X,Y)      ((X) > RandomIndex(Y))
-#define RandomPerc(X)        (RandomIndex(100) < (X))
-#define RandomBool()         RandomOdds(1,2) // !!!! RandomPerc(50)
+#define RandomIndex(TOP) RandomRange(0, (TOP)-1)
+#define RandomOdds(X, Y) ((X) > RandomIndex(Y))
+#define RandomPerc(X) (RandomIndex(100) < (X))
+#define RandomBool() RandomOdds(1, 2)  // !!!! RandomPerc(50)
 
 void UtilSort(int *values, int size);
 

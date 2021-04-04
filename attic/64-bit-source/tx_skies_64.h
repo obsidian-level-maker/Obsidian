@@ -33,10 +33,9 @@ void SKY_AddHills(uint_fast64_t seed, byte *pixels, int W, int H,
                   double powscale, double fracdim);
 
 void SKY_AddBuilding(uint_fast64_t seed, byte *pixels, int W, int H,
-                     std::vector<byte> & colors,
-                     int pos_x, int width, int base_h, int top_h=0,
-                     int win_prob=50, int win_w=2, int win_h=2,
-                     int antenna=0);
+                     std::vector<byte> &colors, int pos_x, int width,
+                     int base_h, int top_h = 0, int win_prob = 50,
+                     int win_w = 2, int win_h = 2, int antenna = 0);
 
 #endif /* __OBLIGE_TX_SKIES_H__ */
 

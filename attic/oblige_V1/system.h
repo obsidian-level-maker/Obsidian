@@ -19,19 +19,17 @@
 #ifndef __OBLIGE_SYSTEM_H__
 #define __OBLIGE_SYSTEM_H__
 
-
 /* ----- basic types and macros ---------------------------- */
 
-typedef signed char  sint8_g;
+typedef signed char sint8_g;
 typedef signed short sint16_g;
-typedef signed int   sint32_g;
-   
-typedef unsigned char  uint8_g;
+typedef signed int sint32_g;
+
+typedef unsigned char uint8_g;
 typedef unsigned short uint16_g;
-typedef unsigned int   uint32_g;
+typedef unsigned int uint32_g;
 
 typedef double angle_g;  // degrees, 0 is E, 90 is N
-
 
 /* ----- function prototypes ---------------------------- */
 
@@ -62,17 +60,15 @@ void InitDebug(bool enable);
 void TermDebug();
 void PrintDebug(const char *str, ...);
 
-
 /* ----- conversion macros ----------------------- */
 
-#define UINT8(x)   ((uint8_g) (x))
-#define SINT8(x)   ((sint8_g) (x))
+#define UINT8(x) ((uint8_g)(x))
+#define SINT8(x) ((sint8_g)(x))
 
-#define UINT16(x)  Endian_U16(x)
-#define UINT32(x)  Endian_U32(x)
+#define UINT16(x) Endian_U16(x)
+#define UINT32(x) Endian_U32(x)
 
-#define SINT16(x)  ((sint16_g) Endian_U16((uint16_g) (x)))
-#define SINT32(x)  ((sint32_g) Endian_U32((uint32_g) (x)))
-
+#define SINT16(x) ((sint16_g)Endian_U16((uint16_g)(x)))
+#define SINT32(x) ((sint32_g)Endian_U32((uint32_g)(x)))
 
 #endif /* __OBLIGE_SYSTEM_H__ */

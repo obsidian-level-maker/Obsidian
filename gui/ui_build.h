@@ -21,53 +21,56 @@
 #ifndef __UI_BUILD_H__
 #define __UI_BUILD_H__
 
-class UI_Build : public Fl_Group
-{
-public:
-	UI_MiniMap *mini_map;
-	Fl_Box *seed_disp;
-	Fl_Box *name_disp;
+#include <string>
+#include <vector>
 
-private:
+#include "Fl/Fl_Box.h"
+#include "Fl/Fl_Group.h"
+#include "Fl/Fl_Progress.h"
+#include "ui_map.h"
 
-	Fl_Box *status;
-	Fl_Progress *progress;
+class UI_Build : public Fl_Group {
+   public:
+    UI_MiniMap *mini_map;
+    Fl_Box *seed_disp;
+    Fl_Box *name_disp;
 
-	char  status_label[200];
-	char  prog_label[100];
+   private:
+    Fl_Box *status;
+    Fl_Progress *progress;
 
-	int   level_index;  // starts at 1
-	int   level_total;
+    char status_label[200];
+    char prog_label[100];
 
-	bool  node_begun;
-	float node_ratio;
-	float node_along;
+    int level_index;  // starts at 1
+    int level_total;
 
-	std::vector<std::string> step_names;
+    bool node_begun;
+    float node_ratio;
+    float node_along;
 
-public:
-	UI_Build(int x, int y, int w, int h, const char *label = NULL);
-	virtual ~UI_Build();
+    std::vector<std::string> step_names;
 
-public:
+   public:
+    UI_Build(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_Build();
 
+   public:
+    void Prog_Init(int node_perc, const char *extra_steps);
+    void Prog_AtLevel(int index, int total);
+    void Prog_Step(const char *step_name);
+    void Prog_Nodes(int pos, int limit);
+    void Prog_Finish();
 
-	void Prog_Init(int node_perc, const char *extra_steps);
-	void Prog_AtLevel(int index, int total);
-	void Prog_Step(const char *step_name);
-	void Prog_Nodes(int pos, int limit);
-	void Prog_Finish();
+    void SetStatus(const char *msg);
 
-	void SetStatus(const char *msg);
+   private:
+    void resize(int X, int Y, int W, int H);
 
-private:
+    void ParseSteps(const char *list);
+    int FindStep(const char *name);  // -1 if not found
 
-	void resize(int X, int Y, int W, int H);
-
-	void ParseSteps(const char *list);
-	int  FindStep(const char *name);  // -1 if not found
-
-	void AddStatusStep(const char *name);
+    void AddStatusStep(const char *name);
 };
 
 #endif /* __UI_BUILD_H__ */

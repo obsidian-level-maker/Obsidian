@@ -21,23 +21,21 @@
 #ifndef __OBLIGE_PAK_FILES_H__
 #define __OBLIGE_PAK_FILES_H__
 
-
 /* PAK reading */
 
 bool PAK_OpenRead(const char *filename);
 void PAK_CloseRead(void);
 
-int  PAK_NumEntries(void);
-int  PAK_FindEntry(const char *name);
-void PAK_FindMaps(std::vector<int>& entries);
+int PAK_NumEntries(void);
+int PAK_FindEntry(const char *name);
+void PAK_FindMaps(std::vector<int> &entries);
 
-int  PAK_EntryLen(int entry);
-const char * PAK_EntryName(int entry);
+int PAK_EntryLen(int entry);
+const char *PAK_EntryName(int entry);
 
 bool PAK_ReadData(int entry, int offset, int length, void *buffer);
 
 void PAK_ListEntries(void);
-
 
 /* PAK writing */
 
@@ -48,30 +46,25 @@ void PAK_NewLump(const char *name);
 bool PAK_AppendData(const void *data, int length);
 void PAK_FinishLump(void);
 
-
 /* ----- PAK structures ---------------------- */
 
-typedef struct
-{
-	char magic[4];
+typedef struct {
+    char magic[4];
 
-	u32_t dir_start;
-	u32_t entry_num;
+    u32_t dir_start;
+    u32_t entry_num;
 
 } PACKEDATTR raw_pak_header_t;
 
-#define PAK_MAGIC  "PACK"
+#define PAK_MAGIC "PACK"
 
+typedef struct {
+    char name[56];
 
-typedef struct
-{
-	char name[56];
-
-	u32_t offset;
-	u32_t length;
+    u32_t offset;
+    u32_t length;
 
 } PACKEDATTR raw_pak_entry_t;
-
 
 #endif /* __OBLIGE_PAK_FILES_H__ */
 
