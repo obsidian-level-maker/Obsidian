@@ -2093,8 +2093,10 @@ DOOM.THEMES =
       gtd_generic_beamed_inset = 50,
       gtd_writhing_mass = 50,
       gtd_library = 50,
+      --
       gtd_furnace = 25,
       gtd_furnace_face = 25,
+      --
       gtd_wall_marbface = 50,
       gtd_wall_quakish_insets = 50,
       gtd_wall_hell_ossuary = 50,
