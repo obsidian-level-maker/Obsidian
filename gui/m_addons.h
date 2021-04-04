@@ -21,6 +21,10 @@
 #ifndef __OBLIGE_ADDONS_H__
 #define __OBLIGE_ADDONS_H__
 
+#include <cstdio>
+
+#include "sys_type.h"
+
 void VFS_InitAddons(const char *argv0);
 void VFS_ParseCommandLine();
 void VFS_ScanForAddons();
@@ -29,9 +33,9 @@ void VFS_OptParse(const char *name);
 void VFS_OptWrite(FILE *fp);
 
 // util functions
-bool   VFS_CopyFile(const char *src_name, const char *dest_name);
-byte * VFS_LoadFile(const char *filename, int *length);
-void   VFS_FreeFile(const byte *mem);
+bool VFS_CopyFile(const char *src_name, const char *dest_name);
+byte *VFS_LoadFile(const char *filename, int *length);
+void VFS_FreeFile(const byte *mem);
 
 #endif /* __OBLIGE_ADDONS_H__ */
 

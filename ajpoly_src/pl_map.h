@@ -17,28 +17,25 @@
 #ifndef __AJPOLY_MAP_H__
 #define __AJPOLY_MAP_H__
 
-
 /* ----- OBJECTS --------------------------------- */
 
 // a wall_tip is where a wall meets a vertex
 
-class wall_tip_c
-{
-public:
-	// link in list.  List is kept in ANTI-clockwise order.
-	wall_tip_c *next;
-	wall_tip_c *prev;
-  
-	// angle that line makes at vertex (degrees).
-	double angle;
+class wall_tip_c {
+   public:
+    // link in list.  List is kept in ANTI-clockwise order.
+    wall_tip_c *next;
+    wall_tip_c *prev;
 
-	// sectors on each side of wall.  Left is the side of increasing
-	// angles, right is the side of decreasing angles.  Either can be
-	// NULL for one sided walls.
-	sector_c *left;
-	sector_c *right;
+    // angle that line makes at vertex (degrees).
+    double angle;
+
+    // sectors on each side of wall.  Left is the side of increasing
+    // angles, right is the side of decreasing angles.  Either can be
+    // NULL for one sided walls.
+    sector_c *left;
+    sector_c *right;
 };
-
 
 /* ----- VARIABLES --------------------------------- */
 
@@ -47,25 +44,24 @@ extern int limit_x1, limit_y1;
 extern int limit_x2, limit_y2;
 
 // a special sector used to represent the void (empty space)
-extern sector_c * void_sector;
-
+extern sector_c *void_sector;
 
 /* ----- FUNCTIONS --------------------------------- */
 
-vertex_c  * NewVertex();
-linedef_c * NewLinedef();
-sidedef_c * NewSidedef();
-sector_c  * NewSector();
-thing_c   * NewThing();
+vertex_c *NewVertex();
+linedef_c *NewLinedef();
+sidedef_c *NewSidedef();
+sector_c *NewSector();
+thing_c *NewThing();
 
-vertex_c   * NewSplit();
-edge_c     * NewEdge();
-polygon_c  * NewPolygon();
-wall_tip_c * NewWallTip();
+vertex_c *NewSplit();
+edge_c *NewEdge();
+polygon_c *NewPolygon();
+wall_tip_c *NewWallTip();
 
 // return a new vertex (with correct wall_tip info) for the split that
 // happens along the given edge at the given location.
-vertex_c * NewVertexFromSplit(edge_c *E, double x, double y);
+vertex_c *NewVertexFromSplit(edge_c *E, double x, double y);
 
 bool VerifyOuterLines();
 

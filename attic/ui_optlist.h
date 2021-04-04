@@ -36,84 +36,81 @@
 //   before a build.
 //
 
-class option_data_c
-{
-friend class UI_OptionList;
-friend class UI_RChoice;
+class option_data_c {
+    friend class UI_OptionList;
+    friend class UI_RChoice;
 
-public:
-  const char *id;     // terse identifier
-  const char *label;  // description (for the UI)
- 
-  int shown;      // 0 = hidden, 1 = shown, -1 = greyed out
-  int value;      // 0 or 1
+   public:
+    const char *id;     // terse identifier
+    const char *label;  // description (for the UI)
 
-//????  protected:
-  Fl_Check_Button *widget;
+    int shown;  // 0 = hidden, 1 = shown, -1 = greyed out
+    int value;  // 0 or 1
 
-  int mapped;  // for RChoice, the index in the current list,
-               // or -1 if not present.
- 
-public:
-  option_data_c() : id(NULL), label(NULL), shown(0), value(-1),
-                    widget(NULL), mapped(-1)
-  { }
-   
-  option_data_c(const char *_id, const char *_label, int _val = 0);
- 
-  ~option_data_c();
+    //????  protected:
+    Fl_Check_Button *widget;
 
-public:
-  bool Equal(const option_data_c& other) const;
-  // returns true if they both have the same 'id' and 'label'.
+    int mapped;  // for RChoice, the index in the current list,
+                 // or -1 if not present.
+
+   public:
+    option_data_c()
+        : id(NULL),
+          label(NULL),
+          shown(0),
+          value(-1),
+          widget(NULL),
+          mapped(-1) {}
+
+    option_data_c(const char *_id, const char *_label, int _val = 0);
+
+    ~option_data_c();
+
+   public:
+    bool Equal(const option_data_c &other) const;
+    // returns true if they both have the same 'id' and 'label'.
 };
-
 
 class UI_OptionList;
 
 // must return true if modified the option
-typedef bool (* option_iter_f)(option_data_c *opt, void *data);
+typedef bool (*option_iter_f)(option_data_c *opt, void *data);
 
+typedef void (*option_callback_f)(option_data_c *opt, void *data);
 
-typedef void (* option_callback_f)(option_data_c *opt, void *data);
+class UI_OptionList : public Fl_Scroll {
+   private:
+    std::vector<option_data_c *> opt_list;
 
+    option_callback_f cb_func;
+    void *cb_data;
 
-class UI_OptionList : public Fl_Scroll
-{
-private:
+   public:
+    UI_OptionList(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_OptionList();
 
-  std::vector<option_data_c *> opt_list;
- 
-  option_callback_f cb_func;
-  void *cb_data;
+   public:
+    void callback2(option_callback_f func, void *priv_dat);
+    // call this function whenever the user modifies an option.
 
-public:
-  UI_OptionList(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_OptionList();
+    void AddPair(const char *id, const char *label, int val = 0);
+    // add a new option to the list.  If an option with the same 'id'
+    // already exists, that option is replaced instead.
+    // The option will begin as hidden (shown == 0).
 
-public:
-  void callback2(option_callback_f func, void *priv_dat);
-  // call this function whenever the user modifies an option.
-      
-  void AddPair(const char *id, const char *label, int val = 0);
-  // add a new option to the list.  If an option with the same 'id'
-  // already exists, that option is replaced instead.
-  // The option will begin as hidden (shown == 0).
+    bool SetOption(const char *id, int value);
 
-  bool SetOption(const char *id, int value);
+    bool ShowOrHide(const char *id, int shown);
 
-  bool ShowOrHide(const char *id, int shown);
+    void IterateOptions(option_iter_f func, void *data);
 
-  void IterateOptions(option_iter_f func, void *data);
+   private:
+    void Recreate();
 
-private:
-  void Recreate();
-  
-  option_data_c *FindOption(const char *id);
+    option_data_c *FindOption(const char *id);
 
-  static void callback_Widget(Fl_Widget*, void*);
+    static void callback_Widget(Fl_Widget *, void *);
 };
-
 
 #endif /* __UI_OPTLIST_H__ */
 

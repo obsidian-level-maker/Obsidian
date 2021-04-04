@@ -8,17 +8,18 @@
 #ifndef __PARSE_H__
 #define __PARSE_H__
 
+#include "common.h"
+
 // HEADER FILES ------------------------------------------------------------
 
 // MACROS ------------------------------------------------------------------
 
 // TYPES -------------------------------------------------------------------
 
-struct ScriptTypes
-{
-	const char *TypeName;
-	int TypeBase;
-	int TypeCount;
+struct ScriptTypes {
+    const char *TypeName;
+    int TypeBase;
+    int TypeCount;
 };
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
@@ -34,7 +35,7 @@ extern int pa_WorldVarCount;
 extern int pa_GlobalVarCount;
 extern int pa_WorldArrayCount;
 extern int pa_GlobalArrayCount;
-extern enum ImportModes ImportMode;
+extern ImportModes ImportMode;
 extern boolean ExporterFlagged;
 extern boolean pa_ConstExprIsString;
 

@@ -21,35 +21,34 @@
 #ifndef __UI_FILE_H__
 #define __UI_FILE_H__
 
-class UI_File : public Fl_Group
-{
-private:
-	Fl_NameInput *filename;
+class UI_File : public Fl_Group {
+   private:
+    Fl_NameInput *filename;
 
-	Fl_Box *ext;
+    Fl_Box *ext;
 
-	Fl_Output *dir_name;
-	Fl_Button *browse;
+    Fl_Output *dir_name;
+    Fl_Button *browse;
 
-	char *full_path;
+    char *full_path;
 
-public:
-	UI_File(int x, int y, int w, int h, const char *label = NULL);
-	virtual ~UI_File();
+   public:
+    UI_File(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_File();
 
-public:
-	void SetDefaultLocation();
-	void AbbreviatePath();
+   public:
+    void SetDefaultLocation();
+    void AbbreviatePath();
 
-	char *CopyFilename(const char *ext);
-	// free the result using StringFree()
+    char *CopyFilename(const char *ext);
+    // free the result using StringFree()
 
-	void Locked(bool value);
+    void Locked(bool value);
 
-	void resize(int X, int Y, int W, int H);
+    void resize(int X, int Y, int W, int H);
 
-private:
-	static void browse_callback(Fl_Widget *, void*);
+   private:
+    static void browse_callback(Fl_Widget *, void *);
 };
 
 #endif /* __UI_FILE_H__ */

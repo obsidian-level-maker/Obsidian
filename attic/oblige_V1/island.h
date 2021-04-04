@@ -19,11 +19,10 @@
 #ifndef __OBLIGE_ISLAND_H__
 #define __OBLIGE_ISLAND_H__
 
-namespace island_build
-{
-	void CreateIslands();
+namespace island_build {
+void CreateIslands();
 
-	void Cleanup();
-}
+void Cleanup();
+}  // namespace island_build
 
 #endif /* __OBLIGE_ISLAND_H__ */

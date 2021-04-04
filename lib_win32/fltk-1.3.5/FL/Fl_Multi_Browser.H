@@ -29,22 +29,23 @@
   which lets the user select any set of the lines.  The user interface
   is Macintosh style: clicking an item turns off all the others and
   selects that one, dragging selects all the items the mouse moves over,
-  and ctrl + click (Cmd+click on the Mac OS platform) toggles the items.  
+  and ctrl + click (Cmd+click on the Mac OS platform) toggles the items.
   Shift + click extends the selection until the clicked item.
-  This is different from how forms did it.  
+  This is different from how forms did it.
   Normally the callback is done when the user releases the
   mouse, but you can change this with when().
   <P>See Fl_Browser for methods to add and remove lines from the browser.
 */
 class FL_EXPORT Fl_Multi_Browser : public Fl_Browser {
-public:
-  /**
-      Creates a new Fl_Multi_Browser widget using the given
-    position, size, and label string. The default boxtype is FL_DOWN_BOX.
-    The constructor specializes Fl_Browser() by setting the type to FL_MULTI_BROWSER.
-    The destructor destroys the widget and frees all memory that has been allocated.
-  */
-    Fl_Multi_Browser(int X,int Y,int W,int H,const char *L=0);
+   public:
+    /**
+        Creates a new Fl_Multi_Browser widget using the given
+      position, size, and label string. The default boxtype is FL_DOWN_BOX.
+      The constructor specializes Fl_Browser() by setting the type to
+      FL_MULTI_BROWSER. The destructor destroys the widget and frees all memory
+      that has been allocated.
+    */
+    Fl_Multi_Browser(int X, int Y, int W, int H, const char *L = 0);
 };
 
 #endif

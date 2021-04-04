@@ -23,22 +23,20 @@ class W_Posit;
 class W_Environ;
 class W_Area;
 
+class W_Control : public Fl_Group {
+   public:
+    W_Control(int X, int Y, int W, int H, const char *label = 0);
+    ~W_Control();
 
-class W_Control : public Fl_Group
-{
-public:
-	W_Control(int X, int Y, int W, int H, const char *label = 0);
-	~W_Control();
+   private:
+    W_Posit *posit;
+    W_Environ *environ;
+    W_Area *area;
 
-private:
-	W_Posit *posit;
-	W_Environ *environ;
-	W_Area *area;
+   public:
+    void UpdatePos(int bx, int by, int mx, int my);
 
-public:
-	void UpdatePos(int bx, int by, int mx, int my);
-
-	void UpdateEnv(const location_c& loc);
+    void UpdateEnv(const location_c &loc);
 };
 
 #endif /* __OBLIGE_CONTROL_H__ */

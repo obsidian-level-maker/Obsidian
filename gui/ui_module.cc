@@ -18,763 +18,683 @@
 //
 //------------------------------------------------------------------------
 
-#include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
-
+#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
 
+UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
+                     const char *label, const char *tip)
+    : Fl_Group(X, Y, W, H), id_name(id), choice_map(), cur_opt_y(0) {
+    box(FL_THIN_UP_BOX);
 
-UI_Module::UI_Module(int X, int Y, int W, int H,
-					 const char *id, const char *label,
-					 const char *tip) :
-	Fl_Group(X, Y, W, H),
-	id_name(id),
-	choice_map(),
-	cur_opt_y(0)
-{
-	box(FL_THIN_UP_BOX);
+    mod_button =
+        new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
 
-	mod_button = new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
+    if (Is_UI()) {
+        mod_button->value(1);
+        mod_button->hide();
+    }
 
-	if (Is_UI())
-	{
-		mod_button->value(1);
-		mod_button->hide();
-	}
+    int tx = Is_UI() ? 8 : 28;
 
-	int tx = Is_UI() ? 8 : 28;
+    Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4),
+                                 W - kf_w(tx + 4), kf_h(24), label);
+    heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+    heading->labelfont(FL_HELVETICA_BOLD);
 
-	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx+4), kf_h(24), label);
-	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-	heading->labelfont(FL_HELVETICA_BOLD);
+    if (Is_UI()) heading->labelsize(header_font_size);
 
-	if (Is_UI())
-		heading->labelsize(header_font_size);
+    if (tip) {
+        mod_button->tooltip(tip);
+        heading->tooltip(tip);
+    }
 
-	if (tip)
-	{
-		mod_button->tooltip(tip);
-		heading->tooltip(tip);
-	}
+    cur_opt_y += kf_h(32);
 
-	cur_opt_y += kf_h(32);
+    end();
 
-	end();
+    resizable(NULL);
 
-	resizable(NULL);
-
-	hide();
+    hide();
 }
 
+UI_Module::~UI_Module() {}
 
-UI_Module::~UI_Module()
-{ }
-
-
-bool UI_Module::Is_UI() const
-{
-	return (id_name[0] == 'u' &&
-			id_name[1] == 'i' &&
-			id_name[2] == '_');
+bool UI_Module::Is_UI() const {
+    return (id_name[0] == 'u' && id_name[1] == 'i' && id_name[2] == '_');
 }
 
-
-typedef struct
-{
-	UI_Module  *mod;
-	const char *opt_name;
-}
-opt_change_callback_data_t;
-
+typedef struct {
+    UI_Module *mod;
+    const char *opt_name;
+} opt_change_callback_data_t;
 
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
-						  int gap, Fl_Color select_col)
-{
-	int nw = this->parent()->w();
-//	int nh = kf_h(30);
+                          int gap, Fl_Color select_col) {
+    int nw = this->parent()->w();
+    //	int nh = kf_h(30);
 
-	int nx = x() + kf_w(6);
-	int ny = y() + cur_opt_y;
+    int nx = x() + kf_w(6);
+    int ny = y() + cur_opt_y;
 
-	// make label with ': ' suffixed
-	int len = strlen(label);
-	char *new_label = StringNew(len + 4);
-	strcpy(new_label, label);
-	strcat(new_label, ": ");
+    // make label with ': ' suffixed
+    int len = strlen(label);
+    char *new_label = StringNew(len + 4);
+    strcpy(new_label, label);
+    strcat(new_label, ": ");
 
-	UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
-	rch->align(FL_ALIGN_TOP_LEFT);
-	rch->selection_color(select_col);
+    UI_RChoice *rch =
+        new UI_RChoice(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
+    rch->align(FL_ALIGN_TOP_LEFT);
+    rch->selection_color(select_col);
 
-	if (! tip)
-		tip = "";
-	rch->tooltip(tip);
+    if (!tip) tip = "";
+    rch->tooltip(tip);
 
-	opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
-	cb_data->mod = this;
-	cb_data->opt_name = StringDup(opt);
+    opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
+    cb_data->mod = this;
+    cb_data->opt_name = StringDup(opt);
 
-	rch->callback(callback_OptChange, cb_data);
+    rch->callback(callback_OptChange, cb_data);
 
-	if (! mod_button->value())
-		rch->hide();
+    if (!mod_button->value()) rch->hide();
 
-	add(rch);
+    add(rch);
 
-	cur_opt_y += gap ? kf_h(59) : kf_h(45);
+    cur_opt_y += gap ? kf_h(59) : kf_h(45);
 
-	resize(x(), y(), w(), CalcHeight());
-	redraw();
+    resize(x(), y(), w(), CalcHeight());
+    redraw();
 
-	choice_map[opt] = rch;
+    choice_map[opt] = rch;
 }
 
-
-int UI_Module::CalcHeight() const
-{
-	if (mod_button->value())
-		return cur_opt_y + kf_h(6);
-	else
-		return kf_h(34);
+int UI_Module::CalcHeight() const {
+    if (mod_button->value())
+        return cur_opt_y + kf_h(6);
+    else
+        return kf_h(34);
 }
 
+void UI_Module::update_Enable() {
+    std::map<std::string, UI_RChoice *>::const_iterator IT;
 
-void UI_Module::update_Enable()
-{
-	std::map<std::string, UI_RChoice *>::const_iterator IT;
+    for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
+        UI_RChoice *M = IT->second;
 
-	for (IT = choice_map.begin() ; IT != choice_map.end() ; IT++)
-	{
-		UI_RChoice *M = IT->second;
-
-		if (mod_button->value())
-			M->show();
-		else
-			M->hide();
-	}
+        if (mod_button->value())
+            M->show();
+        else
+            M->hide();
+    }
 }
 
+void UI_Module::AddOptionChoice(const char *option, const char *id,
+                                const char *label) {
+    UI_RChoice *rch = FindOpt(option);
 
-void UI_Module::AddOptionChoice(const char *option, const char *id, const char *label)
-{
-	UI_RChoice *rch = FindOpt(option);
+    if (!rch) {
+        LogPrintf("Warning: module '%s' lacks option '%s' (for choice '%s')\n",
+                  id_name.c_str(), option, id);
+        return;
+    }
 
-	if (! rch)
-	{
-		LogPrintf("Warning: module '%s' lacks option '%s' (for choice '%s')\n",
-				id_name.c_str(), option, id);
-		return;
-	}
-
-	rch->AddChoice(id, label);
-	rch->EnableChoice(id, 1);
+    rch->AddChoice(id, label);
+    rch->EnableChoice(id, 1);
 }
 
+bool UI_Module::SetOption(const char *option, const char *value) {
+    UI_RChoice *rch = FindOpt(option);
 
-bool UI_Module::SetOption(const char *option, const char *value)
-{
-	UI_RChoice *rch = FindOpt(option);
+    if (!rch) return false;
 
-	if (! rch)
-		return false;
+    rch->ChangeTo(value);
 
-	rch->ChangeTo(value);
-
-	return true;
+    return true;
 }
 
+UI_RChoice *UI_Module::FindOpt(const char *option) {
+    if (choice_map.find(option) == choice_map.end()) return NULL;
 
-UI_RChoice * UI_Module::FindOpt(const char *option)
-{
-	if (choice_map.find(option) == choice_map.end())
-		return NULL;
-
-	return choice_map[option];
+    return choice_map[option];
 }
 
+void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
+    UI_RChoice *rch = (UI_RChoice *)w;
 
-void UI_Module::callback_OptChange(Fl_Widget *w, void *data)
-{
-	UI_RChoice *rch = (UI_RChoice*) w;
+    opt_change_callback_data_t *cb_data = (opt_change_callback_data_t *)data;
 
-	opt_change_callback_data_t *cb_data = (opt_change_callback_data_t*) data;
+    SYS_ASSERT(rch);
+    SYS_ASSERT(cb_data);
 
-	SYS_ASSERT(rch);
-	SYS_ASSERT(cb_data);
+    UI_Module *M = cb_data->mod;
 
-	UI_Module *M = cb_data->mod;
-
-	ob_set_mod_option(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
+    ob_set_mod_option(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
 }
-
 
 //----------------------------------------------------------------
 
+UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
+    : Fl_Group(X, Y, W, H), button_col(_button_col) {
+    box(FL_FLAT_BOX);
 
-UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col) :
-	Fl_Group(X, Y, W, H),
-	button_col(_button_col)
-{
-	box(FL_FLAT_BOX);
+    color(WINDOW_BG, WINDOW_BG);
 
-	color(WINDOW_BG, WINDOW_BG);
+    int cy = Y;
 
+    // area for module list
+    mx = X;
+    my = cy;
+    mw = W - Fl::scrollbar_size();
+    mh = Y + H - cy;
 
-	int cy = Y;
+    offset_y = 0;
+    total_h = 0;
 
+    sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
+    sbar->callback(callback_Scroll, this);
 
-	// area for module list
-	mx = X;
-	my = cy;
-	mw = W - Fl::scrollbar_size();
-	mh = Y + H - cy;
+    sbar->color(FL_DARK3 + 1, FL_DARK1);
 
-	offset_y = 0;
-	total_h  = 0;
+    mod_pack_group = new Fl_Group(mx, my, mw, mh);
+    mod_pack_group->box(FL_NO_BOX);
 
+    mod_pack = new Fl_Group(mx, my, mw, mh);
+    mod_pack->clip_children(1);
+    mod_pack->end();
 
-	sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
-	sbar->callback(callback_Scroll, this);
+    mod_pack->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM);
+    mod_pack->labeltype(FL_NORMAL_LABEL);
+    mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
-	sbar->color(FL_DARK3+1, FL_DARK1);
+    mod_pack->labelcolor(FL_DARK1);
 
-	mod_pack_group = new Fl_Group(mx, my, mw, mh);
-	mod_pack_group->box(FL_NO_BOX);
-	
-	mod_pack = new Fl_Group(mx, my, mw, mh);
-	mod_pack->clip_children(1);
-	mod_pack->end();
+    mod_pack->box(FL_FLAT_BOX);
+    mod_pack->color(WINDOW_BG);
+    mod_pack->resizable(mod_pack);
 
-	mod_pack->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM);
-	mod_pack->labeltype(FL_NORMAL_LABEL);
-	mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
+    end();
 
-	mod_pack->labelcolor(FL_DARK1);
+    resizable(mod_pack_group);
 
-	mod_pack->box(FL_FLAT_BOX);
-	mod_pack->color(WINDOW_BG);
-	mod_pack->resizable(mod_pack);
-
-	end();
-	
-	resizable(mod_pack_group);
-
-	end();
+    end();
 }
 
+UI_CustomMods::~UI_CustomMods() {}
 
-UI_CustomMods::~UI_CustomMods()
-{ }
+typedef struct {
+    UI_Module *mod;
+    UI_CustomMods *parent;
+} mod_enable_callback_data_t;
 
+void UI_CustomMods::AddModule(const char *id, const char *label,
+                              const char *tip) {
+    UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip);
 
-typedef struct
-{
-	UI_Module     *mod;
-	UI_CustomMods *parent;
+    mod_enable_callback_data_t *cb_data = new mod_enable_callback_data_t;
+    cb_data->mod = M;
+    cb_data->parent = this;
+
+    if (!M->Is_UI()) M->mod_button->callback(callback_ModEnable, cb_data);
+
+    mod_pack->add(M);
+
+    PositionAll();
 }
-mod_enable_callback_data_t;
-
-
-void UI_CustomMods::AddModule(const char *id, const char *label, const char *tip)
-{
-	UI_Module *M = new UI_Module(mx, my, mw-4, kf_h(34), id, label, tip);
-
-	mod_enable_callback_data_t *cb_data = new mod_enable_callback_data_t;
-	cb_data->mod = M;
-	cb_data->parent = this;
-
-	if (! M->Is_UI())
-		M->mod_button->callback(callback_ModEnable, cb_data);
-
-	mod_pack->add(M);
-
-	PositionAll();
-}
-
 
 bool UI_CustomMods::AddOption(const char *module, const char *option,
-							  const char *label, const char *tip,
-							  int gap)
-{
-	UI_Module *M = FindID(module);
+                              const char *label, const char *tip, int gap) {
+    UI_Module *M = FindID(module);
 
-	if (! M)
-		return false;
+    if (!M) return false;
 
-	M->AddOption(option, label, tip, gap, button_col);
+    M->AddOption(option, label, tip, gap, button_col);
 
-	PositionAll();
+    PositionAll();
 
-	return true;
+    return true;
 }
-
 
 void UI_CustomMods::AddOptionChoice(const char *module, const char *option,
-                                    const char *id, const char *label)
-{
-	UI_Module *M = FindID(module);
+                                    const char *id, const char *label) {
+    UI_Module *M = FindID(module);
 
-	if (! M)
-		return;
+    if (!M) return;
 
-	M->AddOptionChoice(option, id, label);
+    M->AddOptionChoice(option, id, label);
 }
 
+bool UI_CustomMods::ShowModule(const char *id, bool new_shown) {
+    SYS_ASSERT(id);
 
-bool UI_CustomMods::ShowModule(const char *id, bool new_shown)
-{
-	SYS_ASSERT(id);
+    UI_Module *M = FindID(id);
 
-	UI_Module *M = FindID(id);
+    if (!M) return false;
 
-	if (! M)
-		return false;
+    if ((M->visible() ? 1 : 0) == (new_shown ? 1 : 0)) return true;
 
-	if ((M->visible() ? 1:0) == (new_shown ? 1:0))
-		return true;
+    // visibility definitely changed
 
-	// visibility definitely changed
+    if (new_shown)
+        M->show();
+    else
+        M->hide();
 
-	if (new_shown)
-		M->show();
-	else
-		M->hide();
+    PositionAll();
 
-	PositionAll();
-
-	return true;
+    return true;
 }
-
 
 bool UI_CustomMods::SetOption(const char *module, const char *option,
-							  const char *value)
-{
-	UI_Module *M = FindID(module);
+                              const char *value) {
+    UI_Module *M = FindID(module);
 
-	if (! M)
-		return false;
+    if (!M) return false;
 
-	return M->SetOption(option, value);
+    return M->SetOption(option, value);
 }
 
+bool UI_CustomMods::EnableMod(const char *id, bool enable) {
+    SYS_ASSERT(id);
 
-bool UI_CustomMods::EnableMod(const char *id, bool enable)
-{
-	SYS_ASSERT(id);
+    UI_Module *M = FindID(id);
 
-	UI_Module *M = FindID(id);
+    if (!M) return false;
 
-	if (! M)
-		return false;
+    if ((M->mod_button->value() ? 1 : 0) == (enable ? 1 : 0))
+        return true;  // no change
 
-	if ((M->mod_button->value() ? 1:0) == (enable ? 1:0))
-		return true; // no change
+    M->mod_button->value(enable ? 1 : 0);
+    M->update_Enable();
 
-	M->mod_button->value(enable ? 1 : 0);
-	M->update_Enable();
+    // no options => no height change => no need to reposition
+    if (M->choice_map.size() > 0) {
+        PositionAll();
+    }
 
-	// no options => no height change => no need to reposition
-	if (M->choice_map.size() > 0)
-	{
-		PositionAll();
-	}
-
-	return true;
+    return true;
 }
 
+void UI_CustomMods::PositionAll(UI_Module *focus) {
+    // determine focus [closest to top without going past it]
+    if (!focus) {
+        int best_dist = 9999;
 
-void UI_CustomMods::PositionAll(UI_Module *focus)
-{
-	// determine focus [closest to top without going past it]
-	if (! focus)
-	{
-		int best_dist = 9999;
+        for (int j = 0; j < mod_pack->children(); j++) {
+            UI_Module *M = (UI_Module *)mod_pack->child(j);
+            SYS_ASSERT(M);
 
-		for (int j = 0 ; j < mod_pack->children() ; j++)
-		{
-			UI_Module *M = (UI_Module *) mod_pack->child(j);
-			SYS_ASSERT(M);
+            if (!M->visible() || M->y() < my || M->y() >= my + mh) continue;
 
-			if (!M->visible() || M->y() < my || M->y() >= my+mh)
-				continue;
+            int dist = M->y() - my;
 
-			int dist = M->y() - my;
+            if (dist < best_dist) {
+                focus = M;
+                best_dist = dist;
+            }
+        }
+    }
 
-			if (dist < best_dist)
-			{
-				focus = M;
-				best_dist = dist;
-			}
-		}
-	}
+    // calculate new total height
+    int new_height = 0;
+    int spacing = 4;
 
+    for (int k = 0; k < mod_pack->children(); k++) {
+        UI_Module *M = (UI_Module *)mod_pack->child(k);
+        SYS_ASSERT(M);
 
-	// calculate new total height
-	int new_height = 0;
-	int spacing = 4;
+        if (M->visible()) new_height += M->CalcHeight() + spacing;
+    }
 
-	for (int k = 0 ; k < mod_pack->children() ; k++)
-	{
-		UI_Module *M = (UI_Module *) mod_pack->child(k);
-		SYS_ASSERT(M);
+    // determine new offset_y
+    if (new_height <= mh) {
+        offset_y = 0;
+    } else if (focus) {
+        int focus_oy = focus->y() - my;
 
-		if (M->visible())
-			new_height += M->CalcHeight() + spacing;
-	}
+        int above_h = 0;
+        for (int k = 0; k < mod_pack->children(); k++) {
+            UI_Module *M = (UI_Module *)mod_pack->child(k);
+            if (M->visible() && M->y() < focus->y()) {
+                above_h += M->CalcHeight() + spacing;
+            }
+        }
 
+        offset_y = above_h - focus_oy;
 
-	// determine new offset_y
-	if (new_height <= mh)
-	{
-		offset_y = 0;
-	}
-	else if (focus)
-	{
-		int focus_oy = focus->y() - my;
+        offset_y = MAX(offset_y, 0);
+        offset_y = MIN(offset_y, new_height - mh);
+    } else {
+        // when not shrinking, offset_y will remain valid
+        if (new_height < total_h) offset_y = 0;
+    }
 
-		int above_h = 0;
-		for (int k = 0 ; k < mod_pack->children() ; k++)
-		{
-			UI_Module *M = (UI_Module *) mod_pack->child(k);
-			if (M->visible() && M->y() < focus->y())
-			{
-				above_h += M->CalcHeight() + spacing;
-			}
-		}
+    total_h = new_height;
 
-		offset_y = above_h - focus_oy;
+    SYS_ASSERT(offset_y >= 0);
+    SYS_ASSERT(offset_y <= total_h);
 
-		offset_y = MAX(offset_y, 0);
-		offset_y = MIN(offset_y, new_height - mh);
-	}
-	else
-	{
-		// when not shrinking, offset_y will remain valid
-		if (new_height < total_h)
-			offset_y = 0;
-	}
+    // reposition all the modules
+    int ny = my - offset_y;
 
-	total_h = new_height;
+    for (int j = 0; j < mod_pack->children(); j++) {
+        UI_Module *M = (UI_Module *)mod_pack->child(j);
+        SYS_ASSERT(M);
 
-	SYS_ASSERT(offset_y >= 0);
-	SYS_ASSERT(offset_y <= total_h);
+        int nh = M->visible() ? M->CalcHeight() : 1;
 
+        if (ny != M->y() || nh != M->h()) {
+            M->resize(M->x(), ny, M->w(), nh);
+        }
 
-	// reposition all the modules
-	int ny = my - offset_y;
+        if (M->visible()) ny += M->CalcHeight() + spacing;
+    }
 
-	for (int j = 0 ; j < mod_pack->children() ; j++)
-	{
-		UI_Module *M = (UI_Module *) mod_pack->child(j);
-		SYS_ASSERT(M);
+    // p = position, first line displayed
+    // w = window, number of lines displayed
+    // t = top, number of first line
+    // l = length, total number of lines
+    sbar->value(offset_y, mh, 0, total_h);
 
-		int nh = M->visible() ? M->CalcHeight() : 1;
-
-		if (ny != M->y() || nh != M->h())
-		{
-			M->resize(M->x(), ny, M->w(), nh);
-		}
-
-		if (M->visible())
-			ny += M->CalcHeight() + spacing;
-	}
-
-
-	// p = position, first line displayed
-	// w = window, number of lines displayed
-	// t = top, number of first line
-	// l = length, total number of lines
-	sbar->value(offset_y, mh, 0, total_h);
-
-	mod_pack->redraw();
+    mod_pack->redraw();
 }
 
-//Normal FLTK resize except it will resize the module options as well
+// Normal FLTK resize except it will resize the module options as well
 void UI_Module::resize(int X, int Y, int W, int H) {
+    int dx = X - x();
+    int dy = Y - y();
+    int dw = W - w();
+    int dh = H - h();
 
-  int dx = X-x();
-  int dy = Y-y();
-  int dw = W-w();
-  int dh = H-h();
-  
-  int *p = sizes(); // save initial sizes and positions
+    int *p = sizes();  // save initial sizes and positions
 
-  Fl_Widget::resize(X,Y,W,H); // make new xywh values visible for children
+    Fl_Widget::resize(X, Y, W, H);  // make new xywh values visible for children
 
-  if (!resizable() || (dw==0 && dh==0) ) {
+    if (!resizable() || (dw == 0 && dh == 0)) {
+        if (type() < FL_WINDOW) {
+            Fl_Widget *const *a = array();
+            for (int i = children(); i--;) {
+                Fl_Widget *o = *a++;
+                o->resize(o->x() + dx, o->y() + dy, o->w(), o->h());
+            }
+        }
 
-    if (type() < FL_WINDOW) {
-      Fl_Widget*const* a = array();
-      for (int i=children(); i--;) {
-	Fl_Widget* o = *a++;
-	o->resize(o->x()+dx, o->y()+dy, o->w(), o->h());
-      }
-    }
+    } else if (children()) {
+        // get changes in size/position from the initial size:
+        dx = X - p[0];
+        dw = W - (p[1] - p[0]);
+        dy = Y - p[2];
+        dh = H - (p[3] - p[2]);
+        if (type() >= FL_WINDOW) dx = dy = 0;
+        p += 4;
 
-  } else if (children()) {
+        // get initial size of resizable():
+        int IX = *p++;
+        int IR = *p++;
+        int IY = *p++;
+        int IB = *p++;
 
-    // get changes in size/position from the initial size:
-    dx = X - p[0];
-    dw = W - (p[1]-p[0]);
-    dy = Y - p[2];
-    dh = H - (p[3]-p[2]);
-    if (type() >= FL_WINDOW) dx = dy = 0;
-    p += 4;
-
-    // get initial size of resizable():
-    int IX = *p++;
-    int IR = *p++;
-    int IY = *p++;
-    int IB = *p++;
-
-    Fl_Widget*const* a = array();
-    for (int i=children(); i--;) {
-      Fl_Widget* o = *a++;
+        Fl_Widget *const *a = array();
+        for (int i = children(); i--;) {
+            Fl_Widget *o = *a++;
 #if 1
-      int XX = *p++;
-      if (XX >= IR) XX += dw;
-      else if (XX > IX) XX = IX+((XX-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
-      int R = *p++;
-      if (R >= IR) R += dw;
-      else if (R > IX) R = IX+((R-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+            int XX = *p++;
+            if (XX >= IR)
+                XX += dw;
+            else if (XX > IX)
+                XX = IX +
+                     ((XX - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            int R = *p++;
+            if (R >= IR)
+                R += dw;
+            else if (R > IX)
+                R = IX +
+                    ((R - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
 
-      int YY = *p++;
-      if (YY >= IB) YY += dh;
-      else if (YY > IY) YY = IY+((YY-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
-      int B = *p++;
-      if (B >= IB) B += dh;
-      else if (B > IY) B = IY+((B-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
-#else // much simpler code from Francois Ostiguy:
-      int XX = *p++;
-      if (XX >= IR) XX += dw;
-      else if (XX > IX) XX += dw * (XX-IX)/(IR-IX);
-      int R = *p++;
-      if (R >= IR) R += dw;
-      else if (R > IX) R = R + dw * (R-IX)/(IR-IX);
+            int YY = *p++;
+            if (YY >= IB)
+                YY += dh;
+            else if (YY > IY)
+                YY = IY +
+                     ((YY - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            int B = *p++;
+            if (B >= IB)
+                B += dh;
+            else if (B > IY)
+                B = IY +
+                    ((B - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+#else  // much simpler code from Francois Ostiguy:
+            int XX = *p++;
+            if (XX >= IR)
+                XX += dw;
+            else if (XX > IX)
+                XX += dw * (XX - IX) / (IR - IX);
+            int R = *p++;
+            if (R >= IR)
+                R += dw;
+            else if (R > IX)
+                R = R + dw * (R - IX) / (IR - IX);
 
-      int YY = *p++;
-      if (YY >= IB) YY += dh;
-      else if (YY > IY) YY = YY + dh*(YY-IY)/(IB-IY);
-      int B = *p++;
-      if (B >= IB) B += dh;
-      else if (B > IY) B = B + dh*(B-IY)/(IB-IY);
+            int YY = *p++;
+            if (YY >= IB)
+                YY += dh;
+            else if (YY > IY)
+                YY = YY + dh * (YY - IY) / (IB - IY);
+            int B = *p++;
+            if (B >= IB)
+                B += dh;
+            else if (B > IY)
+                B = B + dh * (B - IY) / (IB - IY);
 #endif
-      o->resize(XX+dx, YY+dy, R-XX, B-YY);
+            o->resize(XX + dx, YY + dy, R - XX, B - YY);
+        }
     }
-  }
-  
-  	for (int i=0; i < this->children(); i++) {
-	  	this->child(i)->resize(this->child(i)->x(), this->child(i)->y(), w() * .95, this->child(i)->h());
-	  	this->child(i)->redraw();
-	}
-  
+
+    for (int i = 0; i < this->children(); i++) {
+        this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
+                               w() * .95, this->child(i)->h());
+        this->child(i)->redraw();
+    }
 }
 
-//Normal FLTK resize except it will reset the scrollbar to the top
+// Normal FLTK resize except it will reset the scrollbar to the top
 void UI_CustomMods::resize(int X, int Y, int W, int H) {
+    int dx = X - x();
+    int dy = Y - y();
+    int dw = W - w();
+    int dh = H - h();
 
-  int dx = X-x();
-  int dy = Y-y();
-  int dw = W-w();
-  int dh = H-h();
-  
-  int *p = sizes(); // save initial sizes and positions
+    int *p = sizes();  // save initial sizes and positions
 
-  Fl_Widget::resize(X,Y,W,H); // make new xywh values visible for children
+    Fl_Widget::resize(X, Y, W, H);  // make new xywh values visible for children
 
-  if (!resizable() || (dw==0 && dh==0) ) {
+    if (!resizable() || (dw == 0 && dh == 0)) {
+        if (type() < FL_WINDOW) {
+            Fl_Widget *const *a = array();
+            for (int i = children(); i--;) {
+                Fl_Widget *o = *a++;
+                o->resize(o->x() + dx, o->y() + dy, o->w(), o->h());
+            }
+        }
 
-    if (type() < FL_WINDOW) {
-      Fl_Widget*const* a = array();
-      for (int i=children(); i--;) {
-	Fl_Widget* o = *a++;
-	o->resize(o->x()+dx, o->y()+dy, o->w(), o->h());
-      }
-    }
+    } else if (children()) {
+        // get changes in size/position from the initial size:
+        dx = X - p[0];
+        dw = W - (p[1] - p[0]);
+        dy = Y - p[2];
+        dh = H - (p[3] - p[2]);
+        if (type() >= FL_WINDOW) dx = dy = 0;
+        p += 4;
 
-  } else if (children()) {
+        // get initial size of resizable():
+        int IX = *p++;
+        int IR = *p++;
+        int IY = *p++;
+        int IB = *p++;
 
-    // get changes in size/position from the initial size:
-    dx = X - p[0];
-    dw = W - (p[1]-p[0]);
-    dy = Y - p[2];
-    dh = H - (p[3]-p[2]);
-    if (type() >= FL_WINDOW) dx = dy = 0;
-    p += 4;
-
-    // get initial size of resizable():
-    int IX = *p++;
-    int IR = *p++;
-    int IY = *p++;
-    int IB = *p++;
-
-    Fl_Widget*const* a = array();
-    for (int i=children(); i--;) {
-      Fl_Widget* o = *a++;
+        Fl_Widget *const *a = array();
+        for (int i = children(); i--;) {
+            Fl_Widget *o = *a++;
 #if 1
-      int XX = *p++;
-      if (XX >= IR) XX += dw;
-      else if (XX > IX) XX = IX+((XX-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
-      int R = *p++;
-      if (R >= IR) R += dw;
-      else if (R > IX) R = IX+((R-IX)*(IR+dw-IX)+(IR-IX)/2)/(IR-IX);
+            int XX = *p++;
+            if (XX >= IR)
+                XX += dw;
+            else if (XX > IX)
+                XX = IX +
+                     ((XX - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            int R = *p++;
+            if (R >= IR)
+                R += dw;
+            else if (R > IX)
+                R = IX +
+                    ((R - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
 
-      int YY = *p++;
-      if (YY >= IB) YY += dh;
-      else if (YY > IY) YY = IY+((YY-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
-      int B = *p++;
-      if (B >= IB) B += dh;
-      else if (B > IY) B = IY+((B-IY)*(IB+dh-IY)+(IB-IY)/2)/(IB-IY);
-#else // much simpler code from Francois Ostiguy:
-      int XX = *p++;
-      if (XX >= IR) XX += dw;
-      else if (XX > IX) XX += dw * (XX-IX)/(IR-IX);
-      int R = *p++;
-      if (R >= IR) R += dw;
-      else if (R > IX) R = R + dw * (R-IX)/(IR-IX);
+            int YY = *p++;
+            if (YY >= IB)
+                YY += dh;
+            else if (YY > IY)
+                YY = IY +
+                     ((YY - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            int B = *p++;
+            if (B >= IB)
+                B += dh;
+            else if (B > IY)
+                B = IY +
+                    ((B - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+#else  // much simpler code from Francois Ostiguy:
+            int XX = *p++;
+            if (XX >= IR)
+                XX += dw;
+            else if (XX > IX)
+                XX += dw * (XX - IX) / (IR - IX);
+            int R = *p++;
+            if (R >= IR)
+                R += dw;
+            else if (R > IX)
+                R = R + dw * (R - IX) / (IR - IX);
 
-      int YY = *p++;
-      if (YY >= IB) YY += dh;
-      else if (YY > IY) YY = YY + dh*(YY-IY)/(IB-IY);
-      int B = *p++;
-      if (B >= IB) B += dh;
-      else if (B > IY) B = B + dh*(B-IY)/(IB-IY);
+            int YY = *p++;
+            if (YY >= IB)
+                YY += dh;
+            else if (YY > IY)
+                YY = YY + dh * (YY - IY) / (IB - IY);
+            int B = *p++;
+            if (B >= IB)
+                B += dh;
+            else if (B > IY)
+                B = B + dh * (B - IY) / (IB - IY);
 #endif
-      o->resize(XX+dx, YY+dy, R-XX, B-YY);
+            o->resize(XX + dx, YY + dy, R - XX, B - YY);
+        }
     }
-  }
 
-	// calculate new total height
-	int new_height = 0;
-	int spacing = 4;
+    // calculate new total height
+    int new_height = 0;
+    int spacing = 4;
 
-	for (int k = 0 ; k < this->mod_pack->children() ; k++)
-	{
-		UI_Module *M = (UI_Module *) mod_pack->child(k);
-		SYS_ASSERT(M);
+    for (int k = 0; k < this->mod_pack->children(); k++) {
+        UI_Module *M = (UI_Module *)mod_pack->child(k);
+        SYS_ASSERT(M);
 
-		if (M->visible())
-			new_height += M->CalcHeight() + spacing;
-	}
+        if (M->visible()) new_height += M->CalcHeight() + spacing;
+    }
 
+    // determine new offset_y
+    if (new_height <= mh) {
+        offset_y = 0;
+    }
 
-	// determine new offset_y
-	if (new_height <= mh)
-	{
-		offset_y = 0;
-	}
+    total_h = new_height;
 
-	total_h = new_height;
+    SYS_ASSERT(offset_y >= 0);
+    SYS_ASSERT(offset_y <= total_h);
 
-	SYS_ASSERT(offset_y >= 0);
-	SYS_ASSERT(offset_y <= total_h);
+    // reposition all the modules
+    int ny = my - offset_y;
 
+    for (int j = 0; j < mod_pack->children(); j++) {
+        UI_Module *M = (UI_Module *)mod_pack->child(j);
+        SYS_ASSERT(M);
 
-	// reposition all the modules
-	int ny = my - offset_y;
+        int nh = M->visible() ? M->CalcHeight() : 1;
 
-	for (int j = 0 ; j < mod_pack->children() ; j++)
-	{
-		UI_Module *M = (UI_Module *) mod_pack->child(j);
-		SYS_ASSERT(M);
+        if (ny != M->y() || nh != M->h()) {
+            M->resize(M->x(), ny, M->w(), nh);
+        }
 
-		int nh = M->visible() ? M->CalcHeight() : 1;
+        if (M->visible()) ny += M->CalcHeight() + spacing;
+    }
 
-		if (ny != M->y() || nh != M->h())
-		{
-			M->resize(M->x(), ny, M->w(), nh);
-		}
+    // p = position, first line displayed
+    // w = window, number of lines displayed
+    // t = top, number of first line
+    // l = length, total number of lines
+    this->sbar->value(offset_y, mh, 0, total_h);
 
-		if (M->visible())
-			ny += M->CalcHeight() + spacing;
-	}
-
-
-	// p = position, first line displayed
-	// w = window, number of lines displayed
-	// t = top, number of first line
-	// l = length, total number of lines
-	this->sbar->value(offset_y, mh, 0, total_h);
-
-	this->mod_pack->redraw();
-	
+    this->mod_pack->redraw();
 }
 
-void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
-{
-	UI_CustomMods *that = (UI_CustomMods *)data;
+void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data) {
+    UI_CustomMods *that = (UI_CustomMods *)data;
 
-	Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
+    Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
 
-	int previous_y = that->offset_y;
+    int previous_y = that->offset_y;
 
-	that->offset_y = sbar->value();
+    that->offset_y = sbar->value();
 
-	int dy = that->offset_y - previous_y;
+    int dy = that->offset_y - previous_y;
 
-	// simply reposition all the UI_Module widgets
-	for (int j = 0; j < that->mod_pack->children(); j++)
-	{
-		Fl_Widget *F = that->mod_pack->child(j);
-		SYS_ASSERT(F);
+    // simply reposition all the UI_Module widgets
+    for (int j = 0; j < that->mod_pack->children(); j++) {
+        Fl_Widget *F = that->mod_pack->child(j);
+        SYS_ASSERT(F);
 
-		F->resize(F->x(), F->y() - dy, F->w(), F->h());
-	}
+        F->resize(F->x(), F->y() - dy, F->w(), F->h());
+    }
 
-	that->mod_pack->redraw();
+    that->mod_pack->redraw();
 }
 
+void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data) {
+    mod_enable_callback_data_t *cb_data = (mod_enable_callback_data_t *)data;
+    SYS_ASSERT(cb_data);
 
-void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data)
-{
-	mod_enable_callback_data_t *cb_data = (mod_enable_callback_data_t*) data;
-	SYS_ASSERT(cb_data);
+    UI_Module *M = cb_data->mod;
 
-	UI_Module *M = cb_data->mod;
+    M->update_Enable();
 
-	M->update_Enable();
+    // no options => no height change => no need to reposition
+    if (M->choice_map.size() > 0) {
+        cb_data->parent->PositionAll(M);
+    }
 
-	// no options => no height change => no need to reposition
-	if (M->choice_map.size() > 0)
-	{
-		cb_data->parent->PositionAll(M);
-	}
-
-	ob_set_mod_option(M->id_name.c_str(), "self", M->mod_button->value() ? "true" : "false");
+    ob_set_mod_option(M->id_name.c_str(), "self",
+                      M->mod_button->value() ? "true" : "false");
 }
 
+UI_Module *UI_CustomMods::FindID(const char *id) const {
+    for (int j = 0; j < mod_pack->children(); j++) {
+        UI_Module *M = (UI_Module *)mod_pack->child(j);
+        SYS_ASSERT(M);
 
-UI_Module * UI_CustomMods::FindID(const char *id) const
-{
-	for (int j = 0 ; j < mod_pack->children() ; j++)
-	{
-		UI_Module *M = (UI_Module *) mod_pack->child(j);
-		SYS_ASSERT(M);
+        if (strcmp(M->id_name.c_str(), id) == 0) return M;
+    }
 
-		if (strcmp(M->id_name.c_str(), id) == 0)
-			return M;
-	}
-
-	return NULL;
+    return NULL;
 }
 
-
-void UI_CustomMods::Locked(bool value)
-{
-	if (value)
-	{
-		mod_pack->deactivate();
-	}
-	else
-	{
-		mod_pack->activate();
-	}
+void UI_CustomMods::Locked(bool value) {
+    if (value) {
+        mod_pack->deactivate();
+    } else {
+        mod_pack->activate();
+    }
 }
-
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

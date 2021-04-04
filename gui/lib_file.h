@@ -21,12 +21,18 @@
 #ifndef __LIB_FILE_H__
 #define __LIB_FILE_H__
 
+#include <cstddef>
+#include <string>
+#include <vector>
+
+#include "sys_type.h"
+
 #ifdef WIN32
-#define DIR_SEP_CH   '\\'
-#define DIR_SEP_STR  "\\"
+#define DIR_SEP_CH '\\'
+#define DIR_SEP_STR "\\"
 #else
-#define DIR_SEP_CH   '/'
-#define DIR_SEP_STR  "/"
+#define DIR_SEP_CH '/'
+#define DIR_SEP_STR "/"
 #endif
 
 // filename functions
@@ -47,9 +53,9 @@ bool FileChangeDir(const char *dir_name);
 bool FileMakeDir(const char *dir_name);
 
 byte *FileLoad(const char *filename, int *length);
-void  FileFree(const byte *mem);
+void FileFree(const byte *mem);
 
-const char * FileFindInPath(const char *paths, const char *base_name);
+const char *FileFindInPath(const char *paths, const char *base_name);
 
 // miscellanous
 const char *GetExecutablePath(const char *argv0);
@@ -59,24 +65,20 @@ const char *GetExecutablePath(const char *argv0);
 // directory functions
 bool PathIsDirectory(const char *path);
 
-typedef enum
-{
-	SCAN_F_IsDir    = (1 << 0),
-	SCAN_F_Hidden   = (1 << 1),
-	SCAN_F_ReadOnly = (1 << 2),
-}
-scan_flags_e;
+typedef enum {
+    SCAN_F_IsDir = (1 << 0),
+    SCAN_F_Hidden = (1 << 1),
+    SCAN_F_ReadOnly = (1 << 2),
+} scan_flags_e;
 
-typedef enum
-{
-	SCAN_ERROR = -1,  // general catch-all
+typedef enum {
+    SCAN_ERROR = -1,  // general catch-all
 
-	SCAN_ERR_NoExist  = -2,  // could not find given path
-	SCAN_ERR_NotDir   = -3,  // path was not a directory
-}
-scan_error_e;
+    SCAN_ERR_NoExist = -2,  // could not find given path
+    SCAN_ERR_NotDir = -3,   // path was not a directory
+} scan_error_e;
 
-typedef void (* directory_iter_f)(const char *name, int flags, void *priv_dat);
+typedef void (*directory_iter_f)(const char *name, int flags, void *priv_dat);
 
 // scan the directory with the given path and call the given
 // function (passing the private data pointer to it) for each
@@ -87,12 +89,13 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 // scan directory and populate the list with the sub-directory names.
 // the list will be sorted (case-insensitively).
 // result is same as ScanDirectory().
-int ScanDir_GetSubDirs(const char *path, std::vector<std::string> & list);
+int ScanDir_GetSubDirs(const char *path, std::vector<std::string> &list);
 
 // scan directory and populate the list with all non-hidden files which
 // have the given extension.  the list is sorted (case-insensitively).
 // result is same as ScanDirectory().
-int ScanDir_MatchingFiles(const char *path, const char *ext, std::vector<std::string> & list);
+int ScanDir_MatchingFiles(const char *path, const char *ext,
+                          std::vector<std::string> &list);
 
 #endif /* __LIB_FILE_H__ */
 

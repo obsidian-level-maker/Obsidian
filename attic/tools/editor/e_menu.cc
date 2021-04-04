@@ -19,9 +19,7 @@
 // this includes everything we need
 #include "headers.h"
 
-
 static int last_line_num = -1;
-
 
 #if 0
 static void menu_quit_CB(Fl_Widget *w, void *data)
@@ -30,167 +28,109 @@ static void menu_quit_CB(Fl_Widget *w, void *data)
 }
 #endif
 
-
 #ifndef MACOSX
-void M_File_Quit(Fl_Widget *w, void * data)
-{
-    main_win->want_quit = true;
-}
+void M_File_Quit(Fl_Widget *w, void *data) { main_win->want_quit = true; }
 #endif
 
-
-void M_File_New(Fl_Widget *w, void * data)
-{
+void M_File_New(Fl_Widget *w, void *data) {
     // FIXME
 }
 
-
-void M_File_Open(Fl_Widget *w, void * data)
-{
+void M_File_Open(Fl_Widget *w, void *data) {
     // FIXME
 }
 
-
-void M_File_SaveAs(Fl_Widget *w, void * data)
-{
+void M_File_SaveAs(Fl_Widget *w, void *data) {
     // FIXME
-    // 
+    //
     // Select_Output_File()
     // main_win->ed->SetFilename(filename)
     // main_win->ed->Save();
 }
 
-
-void M_File_Save(Fl_Widget *w, void * data)
-{
+void M_File_Save(Fl_Widget *w, void *data) {
     if (main_win->ed->HasFilename())
         main_win->ed->Save();
     else
         M_File_SaveAs(w, data);
 }
 
-
 //------------------------------------------------------------------------
 
-void M_Edit_Undo(Fl_Widget *w, void * data)
-{
+void M_Edit_Undo(Fl_Widget *w, void *data) {
     Fl_Text_Editor::kf_undo('z' & 0x1f, main_win->ed);
 }
 
-
-void M_Edit_Cut(Fl_Widget *w, void * data)
-{
+void M_Edit_Cut(Fl_Widget *w, void *data) {
     Fl_Text_Editor::kf_cut('x' & 0x1f, main_win->ed);
 }
 
-
-void M_Edit_Copy(Fl_Widget *w, void * data)
-{
+void M_Edit_Copy(Fl_Widget *w, void *data) {
     Fl_Text_Editor::kf_copy('c' & 0x1f, main_win->ed);
 }
 
-
-void M_Edit_Paste(Fl_Widget *w, void * data)
-{
+void M_Edit_Paste(Fl_Widget *w, void *data) {
     Fl_Text_Editor::kf_paste('v' & 0x1f, main_win->ed);
 }
 
-
-void M_Edit_Delete(Fl_Widget *w, void * data)
-{
+void M_Edit_Delete(Fl_Widget *w, void *data) {
     Fl_Text_Editor::kf_delete(FL_Delete, main_win->ed);
 }
 
-
-void M_Edit_Find(Fl_Widget *w, void * data)
-{
+void M_Edit_Find(Fl_Widget *w, void *data) {
     // FIXME
 }
 
-
-void M_Edit_FindNext(Fl_Widget *w, void * data)
-{
+void M_Edit_FindNext(Fl_Widget *w, void *data) {
     // FIXME
 }
 
-
-void M_Edit_GotoLine(Fl_Widget *w, void * data)
-{
+void M_Edit_GotoLine(Fl_Widget *w, void *data) {
     static char num_buffer[64];
 
     sprintf(num_buffer, "%d", last_line_num);
 
-    const char *val = fl_input("Goto Line Number:", (last_line_num <= 0) ? num_buffer : NULL);
-    if (! val)
-        return;
+    const char *val =
+        fl_input("Goto Line Number:", (last_line_num <= 0) ? num_buffer : NULL);
+    if (!val) return;
 
     int num = atoi(val);
-    if (num <= 0)
-        return;
+    if (num <= 0) return;
 
     last_line_num = num;
 
-    if (! main_win->ed->GotoLine(num))
-    {
+    if (!main_win->ed->GotoLine(num)) {
         main_win->status->ShowError("No such line!");
     }
 }
 
-
-void M_Edit_SelectAll(Fl_Widget *w, void * data)
-{
+void M_Edit_SelectAll(Fl_Widget *w, void *data) {
     Fl_Text_Editor::kf_select_all('a' & 0x1f, main_win->ed);
 }
 
-
 //------------------------------------------------------------------------
 
-void M_Font_LightTheme(Fl_Widget *w, void * data)
-{
+void M_Font_LightTheme(Fl_Widget *w, void *data) {
     main_win->ed->SetDark(false);
 }
 
-void M_Font_DarkTheme(Fl_Widget *w, void * data)
-{
-    main_win->ed->SetDark(true);
-}
+void M_Font_DarkTheme(Fl_Widget *w, void *data) { main_win->ed->SetDark(true); }
 
+void M_Font_Size10(Fl_Widget *w, void *data) { main_win->ed->SetFont(10); }
 
-void M_Font_Size10(Fl_Widget *w, void * data)
-{
-    main_win->ed->SetFont(10);
-}
+void M_Font_Size12(Fl_Widget *w, void *data) { main_win->ed->SetFont(12); }
 
-void M_Font_Size12(Fl_Widget *w, void * data)
-{
-    main_win->ed->SetFont(12);
-}
+void M_Font_Size14(Fl_Widget *w, void *data) { main_win->ed->SetFont(14); }
 
-void M_Font_Size14(Fl_Widget *w, void * data)
-{
-    main_win->ed->SetFont(14);
-}
+void M_Font_Size16(Fl_Widget *w, void *data) { main_win->ed->SetFont(16); }
 
-void M_Font_Size16(Fl_Widget *w, void * data)
-{
-    main_win->ed->SetFont(16);
-}
+void M_Font_Size18(Fl_Widget *w, void *data) { main_win->ed->SetFont(18); }
 
-void M_Font_Size18(Fl_Widget *w, void * data)
-{
-    main_win->ed->SetFont(18);
-}
-
-void M_Font_Size20(Fl_Widget *w, void * data)
-{
-    main_win->ed->SetFont(20);
-}
-
+void M_Font_Size20(Fl_Widget *w, void *data) { main_win->ed->SetFont(20); }
 
 //------------------------------------------------------------------------
 
-void M_Help_About(Fl_Widget *w, void * data)
-{
+void M_Help_About(Fl_Widget *w, void *data) {
 #if 0
     menu_want_to_quit = false;
 
@@ -249,71 +189,66 @@ void M_Help_About(Fl_Widget *w, void * data)
 #endif
 }
 
-
 //------------------------------------------------------------------------
 
 #undef FCAL
-#define FCAL  (Fl_Callback *)
+#define FCAL (Fl_Callback *)
 
-static Fl_Menu_Item menu_items[] = 
-{
-  { "&File", 0, 0, 0, FL_SUBMENU },
-    { "&New...",   FL_COMMAND + 'n', FCAL M_File_New },
-    { "&Open...",  FL_COMMAND + 'o', FCAL M_File_Open },
-    { "&Save",     FL_COMMAND + 's', FCAL M_File_Save },
-    { "Save &As...", 0,              FCAL M_File_SaveAs, 0, FL_MENU_DIVIDER },
+static Fl_Menu_Item menu_items[] = {
+    {"&File", 0, 0, 0, FL_SUBMENU},
+    {"&New...", FL_COMMAND + 'n', FCAL M_File_New},
+    {"&Open...", FL_COMMAND + 'o', FCAL M_File_Open},
+    {"&Save", FL_COMMAND + 's', FCAL M_File_Save},
+    {"Save &As...", 0, FCAL M_File_SaveAs, 0, FL_MENU_DIVIDER},
 #ifndef MACOSX
-    { "&Quit",     FL_COMMAND + 'q', FCAL M_File_Quit },
+    {"&Quit", FL_COMMAND + 'q', FCAL M_File_Quit},
 #endif
-    { 0 },
+    {0},
 
-  { "&Edit", 0, 0, 0, FL_SUBMENU },
-    { "&Undo",   0,  FCAL M_Edit_Undo, 0, FL_MENU_DIVIDER },
+    {"&Edit", 0, 0, 0, FL_SUBMENU},
+    {"&Undo", 0, FCAL M_Edit_Undo, 0, FL_MENU_DIVIDER},
 
-    { "Cu&t",    0, FCAL M_Edit_Cut },
-    { "&Copy",   0, FCAL M_Edit_Copy },
-    { "&Paste",  0, FCAL M_Edit_Paste },
-    { "&Delete", 0, FCAL M_Edit_Delete, 0, FL_MENU_DIVIDER },
+    {"Cu&t", 0, FCAL M_Edit_Cut},
+    {"&Copy", 0, FCAL M_Edit_Copy},
+    {"&Paste", 0, FCAL M_Edit_Paste},
+    {"&Delete", 0, FCAL M_Edit_Delete, 0, FL_MENU_DIVIDER},
 
-    { "&Find...",      FL_COMMAND + 'f', FCAL M_Edit_Find },
-    { "Find &Next",    FL_COMMAND + 'g', FCAL M_Edit_FindNext },
-    { "&Goto Line...", FL_COMMAND + 'l', FCAL M_Edit_GotoLine },
-    { "Select &All",   FL_COMMAND + 'a', FCAL M_Edit_SelectAll },
-    { 0 },
+    {"&Find...", FL_COMMAND + 'f', FCAL M_Edit_Find},
+    {"Find &Next", FL_COMMAND + 'g', FCAL M_Edit_FindNext},
+    {"&Goto Line...", FL_COMMAND + 'l', FCAL M_Edit_GotoLine},
+    {"Select &All", FL_COMMAND + 'a', FCAL M_Edit_SelectAll},
+    {0},
 
-  { "&Font", 0, 0, 0, FL_SUBMENU },
-    { "&Light Theme", 0, FCAL M_Font_LightTheme },
-    { "&Dark Theme",  0, FCAL M_Font_DarkTheme, 0, FL_MENU_DIVIDER },
+    {"&Font", 0, 0, 0, FL_SUBMENU},
+    {"&Light Theme", 0, FCAL M_Font_LightTheme},
+    {"&Dark Theme", 0, FCAL M_Font_DarkTheme, 0, FL_MENU_DIVIDER},
 
-    { "Size 10", 0, FCAL M_Font_Size10 },
-    { "Size 12", 0, FCAL M_Font_Size12 },
-    { "Size 14", 0, FCAL M_Font_Size14 },
-    { "Size 16", 0, FCAL M_Font_Size16 },
-    { "Size 18", 0, FCAL M_Font_Size18 },
-    { "Size 20", 0, FCAL M_Font_Size20 },
-    { 0 },
+    {"Size 10", 0, FCAL M_Font_Size10},
+    {"Size 12", 0, FCAL M_Font_Size12},
+    {"Size 14", 0, FCAL M_Font_Size14},
+    {"Size 16", 0, FCAL M_Font_Size16},
+    {"Size 18", 0, FCAL M_Font_Size18},
+    {"Size 20", 0, FCAL M_Font_Size20},
+    {0},
 
-  { "&Help", 0, 0, 0, FL_SUBMENU },
-    { "&About...",         0,  FCAL M_Help_About },
-    { 0 },
+    {"&Help", 0, 0, 0, FL_SUBMENU},
+    {"&About...", 0, FCAL M_Help_About},
+    {0},
 
-  { 0 } // END OF MENU
+    {0}  // END OF MENU
 };
-
 
 //
 // MenuCreate
 //
 #ifdef MACOSX
-Fl_Sys_Menu_Bar * MenuCreate(int x, int y, int w, int h)
-{
+Fl_Sys_Menu_Bar *MenuCreate(int x, int y, int w, int h) {
     Fl_Sys_Menu_Bar *bar = new Fl_Sys_Menu_Bar(x, y, w, h);
     bar->menu(menu_items);
     return bar;
 }
 #else
-Fl_Menu_Bar * MenuCreate(int x, int y, int w, int h)
-{
+Fl_Menu_Bar *MenuCreate(int x, int y, int w, int h) {
     Fl_Menu_Bar *bar = new Fl_Menu_Bar(x, y, w, h);
     bar->menu(menu_items);
     return bar;

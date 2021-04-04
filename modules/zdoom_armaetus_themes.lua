@@ -3321,24 +3321,32 @@ ARMAETUS_THEMES =
     wall_groups =
     {
       gtd_wall_server_room2 = 50,
+      --
       gtd_collite_set_green = 13,
       gtd_collite_set_orange = 13,
       gtd_collite_set_blue = 13,
       gtd_collite_set_red = 13,
+      --
       gtd_wall_lit_box_blue = 13,
       gtd_wall_lit_box_red = 13,
       gtd_wall_lit_box_white = 13,
       gtd_wall_lit_box_yellow = 13,
+      --
       gtd_wall_metal_warning = 25,
+      --
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
+      --
       gtd_wall_hydroponics = 50,
+      --
       gtd_computers_shawn = 25,
       gtd_computers_compsta = 25,
+      --
       gtd_wall_teklitecomp_red = 16,
       gtd_wall_teklitecomp_orange = 16,
       gtd_wall_teklitecomp_blue = 16,
+      --
       gtd_wall_grated_machines_epic = 50,
     },
 
@@ -3561,26 +3569,36 @@ ARMAETUS_THEMES =
       gtd_tall_glass_epic_blue = 8,
       gtd_wall_churchy_glass = 5,
       gtd_winglass_wall = 5,
+      --
       gtd_collite_set_green = 12,
       gtd_collite_set_orange = 12,
       gtd_collite_set_blue = 12,
       gtd_collite_set_red = 12,
+      --
       gtd_wall_lit_box_blue = 12,
       gtd_wall_lit_box_red = 12,
       gtd_wall_lit_box_white = 12,
       gtd_wall_lit_box_yellow = 12,
+      --
       gtd_wall_metal_warning = 50,
+      --
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
+      --
       gtd_epic_craneo_paintings = 40,
+      --
       gtd_computers_shawn = 25,
       gtd_computers_compsta = 25,
+      --
       gtd_wall_hell_bottom_glass = 15,
+      --
       gtd_wall_arcade = 50,
+      --
       gtd_wall_teklitecomp_red = 8,
       gtd_wall_teklitecomp_orange = 8,
       gtd_wall_teklitecomp_blue = 8,
+      --
       gtd_wall_grated_machines_epic = 25,
     },
 
@@ -3807,18 +3825,22 @@ ARMAETUS_THEMES =
       gtd_tall_glass_epic_red = 15,
       gtd_tall_glass_epic_blue = 15,
       gtd_wall_churchy_glass = 30,
+      --
       armaetus_catacomb_wall_set = 50,
       armaetus_catacombs_brown = 50,
+      --
       gtd_winglass_wall = 50,
       gtd_collite_set_green = 6,
       gtd_collite_set_orange = 6,
       gtd_collite_set_blue = 6,
       gtd_collite_set_red = 6,
       gtd_g99 = 50,
+      --
       armaetus_wallbodies = 12,
       armaetus_wallbodies_bloody = 12,
       armaetus_wallbodies_old = 12,
       armaetus_wallbodies_bones = 12,
+      --
       gtd_wall_metal_warning = 25,
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,

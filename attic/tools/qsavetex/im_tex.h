@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------
 //  Texture Extraction
 //------------------------------------------------------------------------
-// 
+//
 //  Copyright (c) 2008-2009  Andrew J Apted
-// 
+//
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
 //  as published by the Free Software Foundation; either version 2
@@ -24,7 +24,7 @@ void TEX_ExtractDone();
 
 void TEX_ExtractFromPAK(const char *filename);
 
-#endif  /* __IMAGE_TEXTURE_H__ */
+#endif /* __IMAGE_TEXTURE_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

@@ -19,9 +19,8 @@
 #ifndef __OBLIGE_ENVIRON_H__
 #define __OBLIGE_ENVIRON_H__
 
-namespace environ_build
-{
-	void CreateEnv();
+namespace environ_build {
+void CreateEnv();
 }
 
 #endif /* __OBLIGE_ENVIRON_H__ */

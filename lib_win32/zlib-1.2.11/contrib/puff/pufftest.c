@@ -18,14 +18,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "puff.h"
 
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
-#  include <fcntl.h>
-#  include <io.h>
-#  define SET_BINARY_MODE(file) setmode(fileno(file), O_BINARY)
+#include <fcntl.h>
+#include <io.h>
+#define SET_BINARY_MODE(file) setmode(fileno(file), O_BINARY)
 #else
-#  define SET_BINARY_MODE(file)
+#define SET_BINARY_MODE(file)
 #endif
 
 #define local static
@@ -34,16 +35,13 @@
    3, or 5 times a power of 2 -- the result is always > size, until the result
    is the maximum value of an unsigned long, where it remains.  This is useful
    to keep reallocations less than ~33% over the actual data. */
-local size_t bythirds(size_t size)
-{
+local size_t bythirds(size_t size) {
     int n;
     size_t m;
 
     m = size;
-    for (n = 0; m; n++)
-        m >>= 1;
-    if (n < 3)
-        return size + 1;
+    for (n = 0; m; n++) m >>= 1;
+    if (n < 3) return size + 1;
     n -= 3;
     m = size >> n;
     m += m == 6 ? 2 : 1;
@@ -57,16 +55,14 @@ local size_t bythirds(size_t size)
    failure.  *len is the number of bytes of data read from the input file (even
    if load() returns NULL).  If the input file was empty or could not be opened
    or read, *len is zero. */
-local void *load(const char *name, size_t *len)
-{
+local void *load(const char *name, size_t *len) {
     size_t size;
     void *buf, *swap;
     FILE *in;
 
     *len = 0;
     buf = malloc(size = 4096);
-    if (buf == NULL)
-        return NULL;
+    if (buf == NULL) return NULL;
     in = name == NULL ? stdin : fopen(name, "rb");
     if (in != NULL) {
         for (;;) {
@@ -85,8 +81,7 @@ local void *load(const char *name, size_t *len)
     return buf;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     int ret, put = 0, fail = 0;
     unsigned skip = 0;
     char *arg, *name = NULL;
@@ -107,12 +102,10 @@ int main(int argc, char **argv)
                 fprintf(stderr, "invalid option %s\n", arg);
                 return 3;
             }
-        }
-        else if (name != NULL) {
+        } else if (name != NULL) {
             fprintf(stderr, "only one file name allowed\n");
             return 3;
-        }
-        else
+        } else
             name = arg;
     source = load(name, &len);
     if (source == NULL) {
@@ -139,14 +132,13 @@ int main(int argc, char **argv)
         fprintf(stderr, "puff() failed with return code %d\n", ret);
     else {
         fprintf(stderr, "puff() succeeded uncompressing %lu bytes\n", destlen);
-        if (sourcelen < len) fprintf(stderr, "%lu compressed bytes unused\n",
-                                     len - sourcelen);
+        if (sourcelen < len)
+            fprintf(stderr, "%lu compressed bytes unused\n", len - sourcelen);
     }
 
     /* if requested, inflate again and write decompressd data to stdout */
     if (put && ret == 0) {
-        if (fail)
-            destlen >>= 1;
+        if (fail) destlen >>= 1;
         dest = malloc(destlen);
         if (dest == NULL) {
             fprintf(stderr, "memory allocation failure\n");

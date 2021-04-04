@@ -19,9 +19,8 @@
 #ifndef __OBLIGE_PATH_H__
 #define __OBLIGE_PATH_H__
 
-namespace path_build
-{
-	void CreatePaths();
+namespace path_build {
+void CreatePaths();
 }
 
 #endif /* __OBLIGE_PATH_H__ */

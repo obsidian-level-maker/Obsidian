@@ -21,6 +21,8 @@
 #ifndef __LIB_UTIL_H__
 #define __LIB_UTIL_H__
 
+#include "sys_type.h"
+
 /* string utilities */
 
 int StringCaseCmp(const char *A, const char *B);
@@ -30,13 +32,13 @@ void StringMaxCopy(char *dest, const char *src, int max);
 char *StringUpper(const char *name);
 char *StringNew(int length);
 char *StringDup(const char *orig, int limit = -1);
-char *StringPrintf(const char *str, ...); // GCCATTR((format (printf, 1, 2)));
+char *StringPrintf(const char *str, ...);  // GCCATTR((format (printf, 1, 2)));
 void StringFree(const char *str);
 
 void StringRemoveCRLF(char *str);
 void StringReplaceChar(char *str, char old_ch, char new_ch);
 
-char *mem_gets(char *buf, int size, const char ** str_ptr);
+char *mem_gets(char *buf, int size, const char **str_ptr);
 
 /* time utilities */
 
@@ -48,26 +50,25 @@ void TimeDelay(u32_t millies);
 u32_t IntHash(u32_t key);
 u32_t StringHash(const char *str);
 
-#define ALIGN_LEN(x)  (((x) + 3) & ~3)
+#define ALIGN_LEN(x) (((x) + 3) & ~3)
 
-double  PerpDist(double x, double y,
-                 double x1, double y1, double x2, double y2);
-double AlongDist(double x, double y,
-                 double x1, double y1, double x2, double y2);
+double PerpDist(double x, double y, double x1, double y1, double x2, double y2);
+double AlongDist(double x, double y, double x1, double y1, double x2,
+                 double y2);
 
 double CalcAngle(double sx, double sy, double ex, double ey);
 double DiffAngle(double A, double B);  // A + result = B
 
 double ComputeDist(double sx, double sy, double ex, double ey);
-double ComputeDist(double sx, double sy, double sz,
-                   double ex, double ey, double ez);
+double ComputeDist(double sx, double sy, double sz, double ex, double ey,
+                   double ez);
 
-double PointLineDist(double x, double y,
-                     double x1, double y1, double x2, double y2); 
+double PointLineDist(double x, double y, double x1, double y1, double x2,
+                     double y2);
 
 void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
-                      double px1, double py1, double px2, double py2,
-                      double *x, double *y);
+                      double px1, double py1, double px2, double py2, double *x,
+                      double *y);
 
 void AlongCoord(double along, double px1, double py1, double px2, double py2,
                 double *x, double *y);

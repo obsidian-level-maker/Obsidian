@@ -19,21 +19,19 @@
 #ifndef __OBLIGE_DEFS_H__
 #define __OBLIGE_DEFS_H__
 
-#define PROG_NAME  "Oblige Viewer"
+#define PROG_NAME "Oblige Viewer"
 
 //
 //  SYSTEM INCLUDES
 //
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include <string.h>
 #include <ctype.h>
 #include <errno.h>
-
-#include <math.h>
 #include <limits.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #ifdef WIN32
@@ -62,8 +60,8 @@
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Menu_Item.H>
-#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Multi_Browser.H>
+#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Return_Button.H>
@@ -76,7 +74,6 @@
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
-
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
 #include <FL/fl_file_chooser.H>
@@ -84,35 +81,32 @@
 //
 //  LOCAL INCLUDES
 //
-#include "system.h"
-#include "u_assert.h"
-#include "u_list.h"
-#include "util.h"
-#include "u_heap.h"
-
-#include "name_gen.h"
-#include "w_enums.h"
-#include "world.h"
-#include "environ.h"
 #include "a_star.h"
 #include "area.h"
+#include "environ.h"
+#include "g_control.h"
+#include "g_dialog.h"
+#include "g_grid.h"
+#include "g_menu.h"
+#include "g_window.h"
 #include "island.h"
-#include "stage.h"
-#include "path.h"
-#include "room.h"
-
 #include "l_block.h"
 #include "l_cube.h"
+#include "l_doom.h"
 #include "l_dstruct.h"
 #include "l_dwad.h"
-#include "l_doom.h"
 #include "l_quake.h"
 #include "l_wolf.h"
-
-#include "g_dialog.h"
-#include "g_menu.h"
-#include "g_control.h"
-#include "g_grid.h"
-#include "g_window.h"
+#include "name_gen.h"
+#include "path.h"
+#include "room.h"
+#include "stage.h"
+#include "system.h"
+#include "u_assert.h"
+#include "u_heap.h"
+#include "u_list.h"
+#include "util.h"
+#include "w_enums.h"
+#include "world.h"
 
 #endif /* __OBLIGE_DEFS_H__ */

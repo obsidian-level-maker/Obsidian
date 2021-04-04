@@ -19,15 +19,12 @@
 #ifndef __OBLIGE_NAMEGEN_H__
 #define __OBLIGE_NAMEGEN_H__
 
+namespace name_gen {
+const char *Encode(uint32_g seed);
 
-namespace name_gen
-{
-	const char *Encode(uint32_g seed);
+uint32_g Decode(const char *name);
 
-	uint32_g Decode(const char *name);
-
-	void JumpTest();
-}
-
+void JumpTest();
+}  // namespace name_gen
 
 #endif /* __OBLIGE_NAMEGEN_H__ */

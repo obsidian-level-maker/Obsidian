@@ -29,41 +29,41 @@
 
 /* C library */
 
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
-#include <ctype.h>
-#include <math.h>
-#include <limits.h>
-#include <errno.h>
 #include <time.h>
 
 /* STL goodies */
 
-#include <string>
-#include <vector>
 #include <list>
 #include <map>
+#include <string>
+#include <vector>
 
 /* Our own system defs */
 
-#include "sys_type.h"
-#include "sys_macro.h"
 #include "sys_assert.h"
 #include "sys_debug.h"
 #include "sys_endian.h"
+#include "sys_macro.h"
+#include "sys_type.h"
 
-#define HAVE_PHYSFS  1
+#define HAVE_PHYSFS 1
 
-#define MSG_BUF_LEN  2000
+#define MSG_BUF_LEN 2000
 
 /* Internationalization / Localization */
 
-#define  _(s)  ob_gettext(s)
-#define N_(s)  (s)
+#define _(s) ob_gettext(s)
+#define N_(s) (s)
 
-const char * ob_gettext(const char *s);
+const char *ob_gettext(const char *s);
 
 #endif /* __OBLIGE_INCLUDES_H__ */
 

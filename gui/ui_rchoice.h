@@ -21,6 +21,12 @@
 #ifndef __UI_RCHOICE_H__
 #define __UI_RCHOICE_H__
 
+#include <vector>
+
+#include "Fl/Fl_Check_Button.H"
+#include "Fl/Fl_Choice.H"
+#include "Fl/Fl_Slider.H"
+
 //
 // DESCRIPTION:
 //   A sub-classed Fl_Choice widget which remembers an 'id'
@@ -28,108 +34,100 @@
 //   these ids and labels to be updated at any time.
 //
 
-class choice_data_c
-{
-friend class UI_RChoice;
-friend class UI_RSlide;
+class choice_data_c {
+    friend class UI_RChoice;
+    friend class UI_RSlide;
 
-public:
-	const char *id;     // terse identifier
-	const char *label;  // description (for the UI)
+   public:
+    const char *id;     // terse identifier
+    const char *label;  // description (for the UI)
 
-	bool enabled;	// shown to the user
+    bool enabled;  // shown to the user
 
-	// the index in the current list, or -1 if not present
-	int mapped;
+    // the index in the current list, or -1 if not present
+    int mapped;
 
-	Fl_Check_Button *widget;
+    Fl_Check_Button *widget;
 
-public:
-	 choice_data_c(const char *_id = NULL, const char *_label = NULL);
-	~choice_data_c();
+   public:
+    choice_data_c(const char *_id = NULL, const char *_label = NULL);
+    ~choice_data_c();
 };
 
-class UI_RChoice : public Fl_Choice
-{
-private:
-	std::vector<choice_data_c *> opt_list;
+class UI_RChoice : public Fl_Choice {
+   private:
+    std::vector<choice_data_c *> opt_list;
 
-public:
-	UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
-	virtual ~UI_RChoice();
+   public:
+    UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RChoice();
 
-	// FLTK method override
-	int handle(int event);
+    // FLTK method override
+    int handle(int event);
 
-public:
-	// add a new choice to the list.  If a choice with the same 'id'
-	// already exists, it is just replaced instead.
-	// The choice will begin disabled (shown == false).
-	void AddChoice(const char *id, const char *label);
+   public:
+    // add a new choice to the list.  If a choice with the same 'id'
+    // already exists, it is just replaced instead.
+    // The choice will begin disabled (shown == false).
+    void AddChoice(const char *id, const char *label);
 
-	// finds the option with the given ID, and update its 'enabled'
-	// value.  Returns true if successful, or false if no such
-	// option exists.  Any change will call Recreate().
-	bool EnableChoice(const char *id, bool enable_it);
+    // finds the option with the given ID, and update its 'enabled'
+    // value.  Returns true if successful, or false if no such
+    // option exists.  Any change will call Recreate().
+    bool EnableChoice(const char *id, bool enable_it);
 
-	// get the id string for the currently shown value.
-	// Returns the string "none" if there are no choices.
-	const char *GetID() const;
+    // get the id string for the currently shown value.
+    // Returns the string "none" if there are no choices.
+    const char *GetID() const;
 
-	// change the currently shown value via the new 'id'.
-	// If does not exist, returns false and nothing was changed.
-	bool ChangeTo(const char *id);
-	
-	const char *GetLabel() const;
-	
-	choice_data_c * FindID(const char *id) const;
+    // change the currently shown value via the new 'id'.
+    // If does not exist, returns false and nothing was changed.
+    bool ChangeTo(const char *id);
 
-private:
-	choice_data_c * FindMapped() const;
+    const char *GetLabel() const;
 
-	// call this to update the available choices to reflect their
-	// 'shown' values.  If the previous selected item is still
-	// valid, it remains set, otherwise we try and find a shown
-	// value with the same label, and failing that: select the
-	// first entry.
-	void Recreate();
+    choice_data_c *FindID(const char *id) const;
 
-//	const char *GetLabel() const;  // ????
+   private:
+    choice_data_c *FindMapped() const;
 
-	void GotoPrevious();
-	void GotoNext();
+    // call this to update the available choices to reflect their
+    // 'shown' values.  If the previous selected item is still
+    // valid, it remains set, otherwise we try and find a shown
+    // value with the same label, and failing that: select the
+    // first entry.
+    void Recreate();
+
+    //	const char *GetLabel() const;  // ????
+
+    void GotoPrevious();
+    void GotoNext();
 };
 
-class UI_RSlide : public Fl_Slider
-{
-private:
-	std::vector<choice_data_c *> opt_list;
+class UI_RSlide : public Fl_Slider {
+   private:
+    std::vector<choice_data_c *> opt_list;
 
-public:
-	UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
-	virtual ~UI_RSlide();
+   public:
+    UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RSlide();
 
+   public:
+    // get the id string for the currently shown value.
+    // Returns the string "none" if there are no choices.
+    const char *GetID() const;
 
-public:
+    // change the currently shown value via the new 'id'.
+    // If does not exist, returns false and nothing was changed.
+    bool ChangeTo(const char *id);
 
-	// get the id string for the currently shown value.
-	// Returns the string "none" if there are no choices.
-	const char *GetID() const;
+    const char *GetLabel() const;
 
-	// change the currently shown value via the new 'id'.
-	// If does not exist, returns false and nothing was changed.
-	bool ChangeTo(const char *id);
-	
-	const char *GetLabel() const;
-	
-	choice_data_c * FindID(const char *id) const;
+    choice_data_c *FindID(const char *id) const;
 
-private:
-
-	choice_data_c * FindMapped() const;
-
+   private:
+    choice_data_c *FindMapped() const;
 };
-
 
 #endif /* __UI_RCHOICE_H__ */
 

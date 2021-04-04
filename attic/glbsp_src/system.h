@@ -23,12 +23,10 @@
 
 #include "glbsp.h"
 
-
 // use this for inlining.  Usually defined in the makefile.
 #ifndef INLINE_G
-#define INLINE_G  inline
+#define INLINE_G inline
 #endif
-
 
 // internal storage of node building parameters
 
@@ -36,21 +34,20 @@ extern const nodebuildinfo_t *cur_info;
 extern const nodebuildfuncs_t *cur_funcs;
 extern volatile nodebuildcomms_t *cur_comms;
 
-
 /* ----- function prototypes ---------------------------- */
 
 // fatal error messages (these don't return)
-void FatalError(const char *str, ...) GCCATTR((format (printf, 1, 2)));
-void InternalError(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+void FatalError(const char *str, ...) GCCATTR((format(printf, 1, 2)));
+void InternalError(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 
 // display normal messages & warnings to the screen
-void PrintMsg(const char *str, ...) GCCATTR((format (printf, 1, 2)));
-void PrintVerbose(const char *str, ...) GCCATTR((format (printf, 1, 2)));
-void PrintWarn(const char *str, ...) GCCATTR((format (printf, 1, 2)));
-void PrintMiniWarn(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+void PrintMsg(const char *str, ...) GCCATTR((format(printf, 1, 2)));
+void PrintVerbose(const char *str, ...) GCCATTR((format(printf, 1, 2)));
+void PrintWarn(const char *str, ...) GCCATTR((format(printf, 1, 2)));
+void PrintMiniWarn(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 
 // set message for certain errors
-void SetErrorMsg(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+void SetErrorMsg(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 
 // endian handling
 void InitEndian(void);
@@ -60,17 +57,16 @@ uint32_g Endian_U32(uint32_g);
 // these are only used for debugging
 void InitDebug(void);
 void TermDebug(void);
-void PrintDebug(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+void PrintDebug(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 
 // macros for the display stuff
-#define DisplayOpen        (* cur_funcs->display_open)
-#define DisplaySetTitle    (* cur_funcs->display_setTitle)
-#define DisplaySetBar      (* cur_funcs->display_setBar)
-#define DisplaySetBarLimit (* cur_funcs->display_setBarLimit)
-#define DisplaySetBarText  (* cur_funcs->display_setBarText)
-#define DisplayClose       (* cur_funcs->display_close)
+#define DisplayOpen (*cur_funcs->display_open)
+#define DisplaySetTitle (*cur_funcs->display_setTitle)
+#define DisplaySetBar (*cur_funcs->display_setBar)
+#define DisplaySetBarLimit (*cur_funcs->display_setBarLimit)
+#define DisplaySetBarText (*cur_funcs->display_setBarText)
+#define DisplayClose (*cur_funcs->display_close)
 
-#define DisplayTicker      (* cur_funcs->ticker)
-
+#define DisplayTicker (*cur_funcs->ticker)
 
 #endif /* __GLBSP_SYSTEM_H__ */

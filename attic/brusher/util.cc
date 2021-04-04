@@ -19,192 +19,166 @@
 // this includes everything we need
 #include "main.h"
 
-
 //
 // Allocate memory with error checking.  Zeros the memory.
 //
-void *UtilCalloc(int size)
-{
-  void *ret = calloc(1, size);
+void *UtilCalloc(int size) {
+    void *ret = calloc(1, size);
 
-  if (!ret)
-    FatalError("Out of memory (cannot allocate %d bytes)", size);
+    if (!ret) FatalError("Out of memory (cannot allocate %d bytes)", size);
 
-  return ret;
+    return ret;
 }
 
 //
 // Reallocate memory with error checking.
 //
-void *UtilRealloc(void *old, int size)
-{
-  void *ret = realloc(old, size);
+void *UtilRealloc(void *old, int size) {
+    void *ret = realloc(old, size);
 
-  if (!ret)
-    FatalError("Out of memory (cannot reallocate %d bytes)", size);
+    if (!ret) FatalError("Out of memory (cannot reallocate %d bytes)", size);
 
-  return ret;
+    return ret;
 }
 
 //
 // Free the memory with error checking.
 //
-void UtilFree(void *data)
-{
-  if (data == NULL)
-    InternalError("Trying to free a NULL pointer");
+void UtilFree(void *data) {
+    if (data == NULL) InternalError("Trying to free a NULL pointer");
 
-  free(data);
+    free(data);
 }
 
 //
 // Duplicate a string with error checking.
 //
-char *UtilStrDup(const char *str)
-{
-  char *result;
-  int len = (int)strlen(str);
+char *UtilStrDup(const char *str) {
+    char *result;
+    int len = (int)strlen(str);
 
-  result = (char *)UtilCalloc(len+1);
+    result = (char *)UtilCalloc(len + 1);
 
-  if (len > 0)
-    memcpy(result, str, len);
+    if (len > 0) memcpy(result, str, len);
 
-  result[len] = 0;
+    result[len] = 0;
 
-  return result;
+    return result;
 }
 
 //
 // Duplicate a limited length string.
 //
-char *UtilStrNDup(const char *str, int size)
-{
-  char *result;
-  int len;
+char *UtilStrNDup(const char *str, int size) {
+    char *result;
+    int len;
 
-  for (len=0; len < size && str[len]; len++)
-  { }
+    for (len = 0; len < size && str[len]; len++) {
+    }
 
-  result = (char *)UtilCalloc(len+1);
+    result = (char *)UtilCalloc(len + 1);
 
-  if (len > 0)
-    memcpy(result, str, len);
+    if (len > 0) memcpy(result, str, len);
 
-  result[len] = 0;
+    result[len] = 0;
 
-  return result;
+    return result;
 }
 
-int UtilStrCaseCmp(const char *A, const char *B)
-{
-  for (; *A || *B; A++, B++)
-  {
-    // this test also catches end-of-string conditions
-    if (toupper(*A) != toupper(*B))
-      return (toupper(*A) - toupper(*B));
-  }
+int UtilStrCaseCmp(const char *A, const char *B) {
+    for (; *A || *B; A++, B++) {
+        // this test also catches end-of-string conditions
+        if (toupper(*A) != toupper(*B)) return (toupper(*A) - toupper(*B));
+    }
 
-  // strings are equal
-  return 0;
+    // strings are equal
+    return 0;
 }
 
-char *UtilStrUpper(const char *name)
-{
-  char *copy = UtilStrDup(name);
+char *UtilStrUpper(const char *name) {
+    char *copy = UtilStrDup(name);
 
-  for (char *p = copy; *p; p++)
-    *p = toupper(*p);
+    for (char *p = copy; *p; p++) *p = toupper(*p);
 
-  return copy;
+    return copy;
 }
 
 //
 // Rounds the value _up_ to the nearest power of two.
 //
-int UtilRoundPOW2(int x)
-{
-  int tmp;
+int UtilRoundPOW2(int x) {
+    int tmp;
 
-  if (x <= 2)
-    return x;
+    if (x <= 2) return x;
 
-  x--;
+    x--;
 
-  for (tmp=x / 2; tmp; tmp /= 2)
-    x |= tmp;
+    for (tmp = x / 2; tmp; tmp /= 2) x |= tmp;
 
-  return (x + 1);
+    return (x + 1);
 }
-
 
 //
 // Translate (dx, dy) into an angle value (degrees)
 //
-double ComputeAngle(double dx, double dy)
-{
-  double angle;
+double ComputeAngle(double dx, double dy) {
+    double angle;
 
-  if (dx == 0)
-    return (dy > 0) ? 90.0 : 270.0;
+    if (dx == 0) return (dy > 0) ? 90.0 : 270.0;
 
-  angle = atan2((double) dy, (double) dx) * 180.0 / M_PI;
+    angle = atan2((double)dy, (double)dx) * 180.0 / M_PI;
 
-  if (angle < 0) 
-    angle += 360.0;
+    if (angle < 0) angle += 360.0;
 
-  return angle;
+    return angle;
 }
 
-double ComputeDist(double dx, double dy)
-{
-  return sqrt((dx) * (dx) + (dy) * (dy));
+double ComputeDist(double dx, double dy) {
+    return sqrt((dx) * (dx) + (dy) * (dy));
 }
 
+double PerpDist(double x, double y, double x1, double y1, double x2,
+                double y2) {
+    x -= x1;
+    y -= y1;
+    x2 -= x1;
+    y2 -= y1;
 
-double PerpDist(double x, double y,
-                double x1, double y1, double x2, double y2)
-{
-  x  -= x1; y  -= y1;
-  x2 -= x1; y2 -= y1;
+    double len = sqrt(x2 * x2 + y2 * y2);
 
-  double len = sqrt(x2*x2 + y2*y2);
+    SYS_ASSERT(len > 0);
 
-  SYS_ASSERT(len > 0);
-
-  return (x * y2 - y * x2) / len;
+    return (x * y2 - y * x2) / len;
 }
 
-double AlongDist(double x, double y,
-                 double x1, double y1, double x2, double y2)
-{
-  x  -= x1; y  -= y1;
-  x2 -= x1; y2 -= y1;
+double AlongDist(double x, double y, double x1, double y1, double x2,
+                 double y2) {
+    x -= x1;
+    y -= y1;
+    x2 -= x1;
+    y2 -= y1;
 
-  double len = sqrt(x2*x2 + y2*y2);
+    double len = sqrt(x2 * x2 + y2 * y2);
 
-  SYS_ASSERT(len > 0);
+    SYS_ASSERT(len > 0);
 
-  return (x * x2 + y * y2) / len;
+    return (x * x2 + y * y2) / len;
 }
-
-
 
 //
 // Be sure to handle the result overflowing (it WILL happen !).
 //
-unsigned int UtilGetMillis()
-{
+unsigned int UtilGetMillis() {
 #ifdef WIN32
-  unsigned long ticks = GetTickCount();
+    unsigned long ticks = GetTickCount();
 
-  return (unsigned int) ticks;
+    return (unsigned int)ticks;
 #else
-  struct timeval tm;
+    struct timeval tm;
 
-  gettimeofday(&tm, NULL);
+    gettimeofday(&tm, NULL);
 
-  return (unsigned int) ((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
+    return (unsigned int)((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
 #endif
 }
 
@@ -212,112 +186,92 @@ unsigned int UtilGetMillis()
 //  FILE UTILITIES
 //------------------------------------------------------------------------
 
-bool FileExists(const char *filename)
-{
-  FILE *fp = fopen(filename, "rb");
+bool FileExists(const char *filename) {
+    FILE *fp = fopen(filename, "rb");
 
-  if (fp)
-  {
-    fclose(fp);
-    return true;
-  }
+    if (fp) {
+        fclose(fp);
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
-bool HasExtension(const char *filename)
-{
-  int A = (int)strlen(filename) - 1;
+bool HasExtension(const char *filename) {
+    int A = (int)strlen(filename) - 1;
 
-  if (A > 0 && filename[A] == '.')
-    return false;
+    if (A > 0 && filename[A] == '.') return false;
 
-  for (; A >= 0; A--)
-  {
-    if (filename[A] == '.')
-      return true;
+    for (; A >= 0; A--) {
+        if (filename[A] == '.') return true;
 
-    if (filename[A] == '/')
-      break;
+        if (filename[A] == '/') break;
 
 #ifdef WIN32
-    if (filename[A] == '\\' || filename[A] == ':')
-      break;
+        if (filename[A] == '\\' || filename[A] == ':') break;
 #endif
-  }
+    }
 
-  return false;
+    return false;
 }
 
 //
 // When ext is NULL, checks if the file has no extension.
 //
-bool CheckExtension(const char *filename, const char *ext)
-{
-  if (! ext)
-    return ! HasExtension(filename);
+bool CheckExtension(const char *filename, const char *ext) {
+    if (!ext) return !HasExtension(filename);
 
-  int A = (int)strlen(filename) - 1;
-  int B = (int)strlen(ext) - 1;
+    int A = (int)strlen(filename) - 1;
+    int B = (int)strlen(ext) - 1;
 
-  for (; B >= 0; B--, A--)
-  {
-    if (A < 0)
-      return false;
+    for (; B >= 0; B--, A--) {
+        if (A < 0) return false;
 
-    if (toupper(filename[A]) != toupper(ext[B]))
-      return false;
-  }
+        if (toupper(filename[A]) != toupper(ext[B])) return false;
+    }
 
-  return (A >= 1) && (filename[A] == '.');
+    return (A >= 1) && (filename[A] == '.');
 }
 
 //
 // When ext is NULL, any existing extension is removed.
 // NOTE: returned string is static storage.
 //
-const char *ReplaceExtension(const char *filename, const char *ext)
-{
-  char *dot_pos;
-  static char buffer[1024];
+const char *ReplaceExtension(const char *filename, const char *ext) {
+    char *dot_pos;
+    static char buffer[1024];
 
-  SYS_ASSERT(strlen(filename)+(ext ? strlen(ext) : 0)+4 < sizeof(buffer));
-  SYS_ASSERT(filename[0] != 0);
+    SYS_ASSERT(strlen(filename) + (ext ? strlen(ext) : 0) + 4 < sizeof(buffer));
+    SYS_ASSERT(filename[0] != 0);
 
-  strcpy(buffer, filename);
+    strcpy(buffer, filename);
 
-  dot_pos = buffer + strlen(buffer) - 1;
+    dot_pos = buffer + strlen(buffer) - 1;
 
-  for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--)
-  {
-    if (*dot_pos == '/')
-      break;
+    for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--) {
+        if (*dot_pos == '/') break;
 
 #ifdef WIN32
-    if (*dot_pos == '\\' || *dot_pos == ':')
-      break;
+        if (*dot_pos == '\\' || *dot_pos == ':') break;
 #endif
-  }
+    }
 
-  if (dot_pos < buffer || *dot_pos != '.')
-    dot_pos = NULL;
+    if (dot_pos < buffer || *dot_pos != '.') dot_pos = NULL;
 
-  if (! ext)
-  {
+    if (!ext) {
+        if (dot_pos) dot_pos[0] = 0;
+
+        return buffer;
+    }
+
     if (dot_pos)
-      dot_pos[0] = 0;
+        dot_pos[1] = 0;
+    else
+        strcat(buffer, ".");
+
+    strcat(buffer, ext);
 
     return buffer;
-  }
-
-  if (dot_pos)
-    dot_pos[1] = 0;
-  else
-    strcat(buffer, ".");
-
-  strcat(buffer, ext);
-
-  return buffer;
 }
 
 //
@@ -325,23 +279,19 @@ const char *ReplaceExtension(const char *filename, const char *ext)
 // The result always points within the given string.
 //
 // Example:  "C:\Foo\Bar.wad"  ->  "Bar.wad"
-// 
-const char *FileBaseName(const char *filename)
-{
-  const char *pos = filename + strlen(filename) - 1;
+//
+const char *FileBaseName(const char *filename) {
+    const char *pos = filename + strlen(filename) - 1;
 
-  for (; pos >= filename; pos--)
-  {
-    if (*pos == '/')
-      return pos + 1;
+    for (; pos >= filename; pos--) {
+        if (*pos == '/') return pos + 1;
 
 #ifdef WIN32
-    if (*pos == '\\' || *pos == ':')
-      return pos + 1;
+        if (*pos == '\\' || *pos == ':') return pos + 1;
 #endif
-  }
+    }
 
-  return filename;
+    return filename;
 }
 
 //--- editor settings ---

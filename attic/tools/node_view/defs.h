@@ -19,21 +19,19 @@
 #ifndef __NODEVIEW_DEFS_H__
 #define __NODEVIEW_DEFS_H__
 
-#define PROG_NAME  "GL-Node Viewer"
+#define PROG_NAME "GL-Node Viewer"
 
 //
 //  SYSTEM INCLUDES
 //
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include <string.h>
 #include <ctype.h>
 #include <errno.h>
-
-#include <math.h>
 #include <limits.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef WIN32
 #include <FL/x.H>
@@ -56,8 +54,8 @@
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Menu_Item.H>
-#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Multi_Browser.H>
+#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Return_Button.H>
@@ -67,27 +65,26 @@
 #ifdef MACOSX
 #include <FL/Fl_Sys_Menu_Bar.H>
 #endif
+#include <FL/Fl_File_Chooser.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
-
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
-#include <FL/Fl_File_Chooser.H>
 
 //
 //  LOCAL INCLUDES
 //
-#include "system.h"
 #include "asserts.h"
-#include "lists.h"
-#include "structs.h"
-#include "util.h"
 #include "dialog.h"
-#include "menu.h"
-#include "level.h"
 #include "grid.h"
 #include "info.h"
+#include "level.h"
+#include "lists.h"
+#include "menu.h"
+#include "structs.h"
+#include "system.h"
+#include "util.h"
 #include "window.h"
 
 #endif /* __NODEVIEW_DEFS_H__ */

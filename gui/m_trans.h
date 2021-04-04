@@ -29,8 +29,8 @@ void Trans_Init();
 void Trans_SetLanguage();
 
 // these are for the UI:
-const char * Trans_GetAvailCode(int idx);
-const char * Trans_GetAvailLanguage(int idx);
+const char *Trans_GetAvailCode(int idx);
+const char *Trans_GetAvailLanguage(int idx);
 
 #endif /* __OBLIGE_I18N_H__ */
 

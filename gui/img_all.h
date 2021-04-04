@@ -21,16 +21,14 @@
 #ifndef __OBLIGE_LOGOS_H__
 #define __OBLIGE_LOGOS_H__
 
-typedef struct
-{
-  const char *name;
+typedef struct {
+    const char *name;
 
-  int width;
-  int height;
+    int width;
+    int height;
 
-  const byte *data;
-}
-logo_image_t;
+    const byte *data;
+} logo_image_t;
 
 extern const logo_image_t logo_BOLT;
 extern const logo_image_t logo_PILL;

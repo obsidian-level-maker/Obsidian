@@ -21,6 +21,9 @@
 #ifndef __OBLIGE_TX_SKIES_H__
 #define __OBLIGE_TX_SKIES_H__
 
+#include "m_lua.h"
+#include "sys_type.h"
+
 void SKY_AddStars(unsigned long long seed, byte *pixels, int W, int H,
                   color_mapping_t *map, double powscale, double thresh);
 
@@ -33,10 +36,9 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
                   double powscale, double fracdim);
 
 void SKY_AddBuilding(unsigned long long seed, byte *pixels, int W, int H,
-                     std::vector<byte> & colors,
-                     int pos_x, int width, int base_h, int top_h=0,
-                     int win_prob=50, int win_w=2, int win_h=2,
-                     int antenna=0);
+                     std::vector<byte> &colors, int pos_x, int width,
+                     int base_h, int top_h = 0, int win_prob = 50,
+                     int win_w = 2, int win_h = 2, int antenna = 0);
 
 #endif /* __OBLIGE_TX_SKIES_H__ */
 

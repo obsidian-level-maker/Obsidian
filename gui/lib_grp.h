@@ -21,21 +21,19 @@
 #ifndef __OBLIGE_LIB_GRP_H__
 #define __OBLIGE_LIB_GRP_H__
 
-
 /* GRP reading */
 
 bool GRP_OpenRead(const char *filename);
 void GRP_CloseRead(void);
 
-int  GRP_NumEntries(void);
-int  GRP_FindEntry(const char *name);
-int  GRP_EntryLen(int entry);
-const char * GRP_EntryName(int entry);
+int GRP_NumEntries(void);
+int GRP_FindEntry(const char *name);
+int GRP_EntryLen(int entry);
+const char *GRP_EntryName(int entry);
 
 bool GRP_ReadData(int entry, int offset, int length, void *buffer);
 
 void GRP_ListEntries(void);
-
 
 /* GRP writing */
 
@@ -46,28 +44,22 @@ void GRP_NewLump(const char *name);
 bool GRP_AppendData(const void *data, int length);
 void GRP_FinishLump(void);
 
-
-
 /* ----- GRP structure ---------------------- */
 
-#define GRP_MAGIC_LEN   12
-#define GRP_NAME_LEN    12
+#define GRP_MAGIC_LEN 12
+#define GRP_NAME_LEN 12
 
-typedef struct
-{
-	char magic[GRP_MAGIC_LEN];
-	u32_t num_lumps;
+typedef struct {
+    char magic[GRP_MAGIC_LEN];
+    u32_t num_lumps;
 
 } PACKEDATTR raw_grp_header_t;
 
-
-typedef struct
-{
-	char name[GRP_NAME_LEN];
-	u32_t length;
+typedef struct {
+    char name[GRP_NAME_LEN];
+    u32_t length;
 
 } PACKEDATTR raw_grp_lump_t;
-
 
 #endif /* __OBLIGE_LIB_GRP_H__ */
 

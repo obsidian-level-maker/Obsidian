@@ -21,10 +21,10 @@
 #ifndef __GLBSP_BLOCKMAP_H__
 #define __GLBSP_BLOCKMAP_H__
 
-#include "structs.h"
 #include "level.h"
+#include "structs.h"
 
-#define DEFAULT_BLOCK_LIMIT  16000
+#define DEFAULT_BLOCK_LIMIT 16000
 
 // compute blockmap origin & size (the block_x/y/w/h variables)
 // based on the set of loaded linedefs.
@@ -37,7 +37,7 @@ void PutBlockmap(void);
 // utility routines...
 void GetBlockmapBounds(int *x, int *y, int *w, int *h);
 
-int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax,
-    int x1, int y1, int x2, int y2);
+int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
+                          int y1, int x2, int y2);
 
 #endif /* __GLBSP_BLOCKMAP_H__ */

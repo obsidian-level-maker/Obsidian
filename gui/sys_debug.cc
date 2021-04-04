@@ -19,164 +19,136 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
-#include "main.h"
 #include "lib_util.h"
+#include "main.h"
 
-
-#define DEBUG_BUF_LEN  20000
-
+#define DEBUG_BUF_LEN 20000
 
 static FILE *log_file = NULL;
 static char *log_filename = NULL;
 
 static bool debugging = false;
-static bool terminal  = false;
+static bool terminal = false;
 
+bool LogInit(const char *filename) {
+    if (filename) {
+        log_filename = StringDup(filename);
 
-bool LogInit(const char *filename)
-{
-	if (filename)
-	{
-		log_filename = StringDup(filename);
+        log_file = fopen(log_filename, "w");
 
-		log_file = fopen(log_filename, "w");
+        if (!log_file) return false;
+    }
 
-		if (! log_file)
-			return false;
-	}
+    LogPrintf("====== START OF OBSIDIAN LOGS ======\n");
 
-	LogPrintf("====== START OF OBSIDIAN LOGS ======\n");
-
-	return true;
+    return true;
 }
 
+void LogEnableDebug(bool enable) {
+    if (debugging == enable) return;
 
-void LogEnableDebug(bool enable)
-{
-	if (debugging == enable)
-		return;
-		
-	debugging = enable;
+    debugging = enable;
 
-	if (debugging)
-		LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
-	else
-		LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
+    if (debugging)
+        LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
+    else
+        LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
 }
 
-void LogEnableTerminal(bool enable)
-{
-	terminal = enable;
+void LogEnableTerminal(bool enable) { terminal = enable; }
+
+void LogClose(void) {
+    LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
+
+    if (log_file) {
+        fclose(log_file);
+        log_file = NULL;
+
+        StringFree(log_filename);
+        log_filename = NULL;
+    }
 }
 
+void LogPrintf(const char *str, ...) {
+    if (log_file) {
+        va_list args;
 
-void LogClose(void)
-{
-	LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
+        va_start(args, str);
+        vfprintf(log_file, str, args);
+        va_end(args);
 
-	if (log_file)
-	{
-		fclose(log_file);
-		log_file = NULL;
+        fflush(log_file);
+    }
 
-		StringFree(log_filename);
-		log_filename = NULL;
-	}
+    // show on the Linux terminal too
+    if (terminal) {
+        va_list args;
+
+        va_start(args, str);
+        vfprintf(stdout, str, args);
+        va_end(args);
+    }
 }
 
+void DebugPrintf(const char *str, ...) {
+    if (debugging) {
+        static char buffer[DEBUG_BUF_LEN];
 
-void LogPrintf(const char *str, ...)
-{
-	if (log_file)
-	{
-		va_list args;
+        va_list args;
 
-		va_start(args, str);
-		vfprintf(log_file, str, args);
-		va_end(args);
+        va_start(args, str);
+        vsnprintf(buffer, DEBUG_BUF_LEN - 1, str, args);
+        va_end(args);
 
-		fflush(log_file);
-	}
+        buffer[DEBUG_BUF_LEN - 2] = 0;
 
-	// show on the Linux terminal too
-	if (terminal)
-	{
-		va_list args;
+        // prefix each debugging line with a special symbol
 
-		va_start(args, str);
-		vfprintf(stdout, str, args);
-		va_end(args);
-	}
+        char *pos = buffer;
+        char *next;
+
+        while (pos && *pos) {
+            next = strchr(pos, '\n');
+
+            if (next) *next++ = 0;
+
+            LogPrintf("# %s\n", pos);
+
+            pos = next;
+        }
+    }
 }
 
+void LogReadLines(log_display_func_t display_func, void *priv_data) {
+    if (!log_file) return;
 
-void DebugPrintf(const char *str, ...)
-{
-	if (debugging)
-	{
-		static char buffer[DEBUG_BUF_LEN];
+    // we close the log file so we can read it, and then open it
+    // again when finished.  That is because Windows OSes can be
+    // fussy about opening already open files (in Linux it would
+    // not be an issue).
 
-		va_list args;
+    fclose(log_file);
 
-		va_start(args, str);
-		vsnprintf(buffer, DEBUG_BUF_LEN-1, str, args);
-		va_end(args);
+    log_file = fopen(log_filename, "r");
 
-		buffer[DEBUG_BUF_LEN-2] = 0;
+    // this is very unlikely to happen, but check anyway
+    if (!log_file) return;
 
-		// prefix each debugging line with a special symbol
+    char buffer[MSG_BUF_LEN];
 
-		char *pos = buffer;
-		char *next;
+    while (fgets(buffer, MSG_BUF_LEN - 2, log_file)) {
+        // remove any newline at the end (LF or CR/LF)
+        StringRemoveCRLF(buffer);
 
-		while (pos && *pos)
-		{
-			next = strchr(pos, '\n');
+        // remove any DEL characters (mainly to workaround an FLTK bug)
+        StringReplaceChar(buffer, 0x7f, 0);
 
-			if (next) *next++ = 0;
+        display_func(buffer, priv_data);
+    }
 
-			LogPrintf("# %s\n", pos);
-
-			pos = next;
-		}
-	}
-}
-
-
-void LogReadLines(log_display_func_t display_func, void *priv_data)
-{
-	if (! log_file)
-		return;
-
-	// we close the log file so we can read it, and then open it
-	// again when finished.  That is because Windows OSes can be
-	// fussy about opening already open files (in Linux it would
-	// not be an issue).
-
-	fclose(log_file);
-
-	log_file = fopen(log_filename, "r");
-
-	// this is very unlikely to happen, but check anyway
-	if (! log_file)
-		return;
-
-	char buffer[MSG_BUF_LEN];
-
-	while (fgets(buffer, MSG_BUF_LEN-2, log_file))
-	{
-		// remove any newline at the end (LF or CR/LF)
-		StringRemoveCRLF(buffer);
-
-		// remove any DEL characters (mainly to workaround an FLTK bug)
-		StringReplaceChar(buffer, 0x7f, 0);
-
-		display_func(buffer, priv_data);
-	}
-
-	// open the log file for writing again
-	// [ it is unlikely to fail, but if it does then no biggie ]
-	log_file = fopen(log_filename, "a");
+    // open the log file for writing again
+    // [ it is unlikely to fail, but if it does then no biggie ]
+    log_file = fopen(log_filename, "a");
 }
 
 //--- editor settings ---
