@@ -17,7 +17,7 @@ HACX.SINKS =
 
   liquid_plain =
   {
-    mat = "_LIQUID",
+    mat = water,
     dz  = -12
   }
 
@@ -183,7 +183,7 @@ HACX.THEMES =
 
     steps_mat = "CEIL5_1",
 
-    post_mat  = "COMPSPAN"
+    post_mat  = "HW209"
 
   }
 
@@ -198,6 +198,82 @@ HACX.ROOM_THEMES =
   hacx_urban_Generic =
   {
     env  = "building",
+    prob = 50,
+
+    walls =
+    {
+      MODWALL3 = 30,
+      STONY1 = 10,
+      TECHY1 = 20,
+      CAVEY1 = 10,
+      BLOCKY1 = 30,
+      BLOCKY2 = 10,
+    },
+
+    floors =
+    {
+      MODWALL3 = 50,
+      STONY1 = 50,
+      TECHY1 = 50,
+      CAVEY1 = 50,
+      BLOCKY1 = 50,
+      WOODY1 = 50,
+      WOOD_TILE = 50
+    },
+
+    ceilings =
+    {
+      MODWALL3 = 30,
+      STONY1 = 10,
+      TECHY1 = 20,
+      CAVEY1 = 10,
+      BLOCKY1 = 30,
+      WOODY1 = 10,
+    }
+  },
+
+ hacx_urban_Hallway_deuce =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob = 50,
+
+    walls =
+    {
+      MODWALL3 = 30,
+      STONY1 = 10,
+      TECHY1 = 20,
+      CAVEY1 = 10,
+      BLOCKY1 = 30,
+      BLOCKY2 = 10,
+    },
+
+    floors =
+    {
+      MODWALL3 = 50,
+      STONY1 = 50,
+      TECHY1 = 50,
+      CAVEY1 = 50,
+      BLOCKY1 = 50,
+      WOODY1 = 50,
+      WOOD_TILE = 50
+    },
+
+    ceilings =
+    {
+      MODWALL3 = 30,
+      STONY1 = 10,
+      TECHY1 = 20,
+      CAVEY1 = 10,
+      BLOCKY1 = 30,
+      WOODY1 = 10,
+    }
+  },
+
+ hacx_urban_Hallway_vent =
+  {
+    env   = "hallway",
+    group = "vent",
     prob = 50,
 
     walls =

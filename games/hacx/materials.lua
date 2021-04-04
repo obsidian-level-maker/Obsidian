@@ -21,17 +21,17 @@ HACX.MATERIALS =
   _METAL   = { t="HW209",   f="RROCK03" }, -- Self explanatory
   
   _WOOD    = { t="COMPTALL", f="RROCK14" }, -- Yep, it's wood
-  _WOOD2  = { t="A-WOOD1", f="RROCK14" },  
+  _WOOD2  = { t="HW505", f="RROCK14" },  
   
   _SBARS = { t="HW211", f="RROCK03" }, -- Short bars, i.e. railings
-  _SBARS2 = { t="A-RAIL1", f="RROCK03" },
+  _SBARS2 = { t="HW211", f="RROCK03" },
   _MBARS = { t="TEKGREN2", f="RROCK03" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="HW203", f="RROCK03" }, -- Tall bars, i.e. cage/jail bars
   
-  _CRATE   = { t="CRLWDL12",  f="RROCK14" }, -- Crate/box
-  _CRATE2  = { t="CRWDL128", f="RROCK14" },
+  _CRATE   = { t="HW200",  f="RROCK14" }, -- Crate/box
+  _CRATE2  = { t="HW200", f="RROCK14" },
 
-  _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
+  _GRYWALL = { t="GRAYTALL",  f="RROCK12" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
   
   _WATER   = { f="FWATER1", t="BLODRIP1" }, -- "Standing water", sorta
   _WTRFALL = { f="SLIME05", t="WFALL1"  }, -- "Flowing water", sorta
@@ -43,34 +43,34 @@ HACX.MATERIALS =
   _DOOR2 = { t="BIGDOOR2", f="RROCK03" },
   _DORRAIL = { t="HW209", f="RROCK03" }, -- Inner door slider thingys
   
-  _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="MOSAIC5", f="FLAT502"},
-  _NPIC3    = { t="SAINT1", f="FLAT523"},
+  _NPIC    = { t="HW223", f="RROCK03"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
+  _NPIC2    = { t="HW209", f="RROCK03"},
+  _NPIC3    = { t="HW223", f="RROCK03"},
   
-  _MPIC    = { t="CELTIC", f="FLOOR06"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  _MPIC2    = { t="DMNMSK", f="FLAT521"},
-  _MPIC3    = { t="GRSKULL3", f="FLAT521"},
-  _MPIC4    = { t="SKULLSB2", f="FLOOR30"},
-  _MPIC5    = { t="STNGLS1", f="FLOOR30"},
-  _MPIC6    = { t="STNGLS2", f="FLOOR30"},
-  _MPIC7    = { t="STNGLS3", f="FLOOR30"},
+  _MPIC    = { t="HW191", f="RROCK03"}, -- Medium (or tiling) pic box insert, 128 pixels wide x 128 high
+  _MPIC2    = { t="HW192", f="RROCK03"},
+  _MPIC3    = { t="HW193", f="RROCK03"},
+  _MPIC4    = { t="PANEL6", f="RROCK03"},
+  _MPIC5    = { t="STUCCO3", f="RROCK03"},
+  _MPIC6    = { t="HD6", f="RROCK03"},
+  _MPIC7    = { t="PANEL7", f="RROCK03"},
   
-  _WPIC    = { t="CHAINMAN", f="FLAT520"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-  _WPIC2    = { t="HORSES1", f="FLAT502"},
-  _WPIC3    = { t="CELTIC", f="FLOOR06"},
+  _WPIC    = { t="HW331", f="RROCK03"}, -- Wide (or tiling) pic box insert, 256 pixels wide x 128 high
+  _WPIC2    = { t="HW337", f="RROCK03"},
+  _WPIC3    = { t="HW341", f="RROCK03"},
   
-  _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
-  _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
+  _REDSTON = { t="STONE2", f="FLOOR5_2"}, -- Red stone
+  _BLUSTON = { t="MARBGRAY", f="TLITE6_1"}, -- Blue stone (it's green for Hacx)
   
-  _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3
+  _KEYTRM1 = { t="HW512", f="RROCK03" }, -- Trim for locked door, Key 1
+  _KEYTRM2 = { t="HW511", f="RROCK03" }, -- Trim for locked door, Key 2
+  _KEYTRM3 = { t="HW510", f="RROCK03" }, -- Trim for locked door, Key 3
   
-  _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
-  _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  _EXITDOR = { t="DOORRED", f="RROCK03" }, -- Exit door
+  _EXITSW  = { t="HD5", f="RROCK03" }, -- Exit switch
   
-  _SWITCH  = { t="SW1CMT", f="DEM1_2" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="SW1PSKUL", f="RROCK03" },
+  _SWITCH  = { t="HD5", f="CEIL3_5" }, -- Wall/general purpose swtich
+  _SWITCH2  = { t="HD5", f="CEIL3_5"  },
   
   _TELE = { f="BLOOD1",  t="BRONZE1" }, -- Teleporter
 
@@ -79,7 +79,6 @@ HACX.MATERIALS =
   METAL  = { t="HW209", f="RROCK03" },
 
   LIFT   = { t="HW176", f="DEM1_1" },
-
 
   -- walls --
 
@@ -121,6 +120,15 @@ HACX.MATERIALS =
 
   LOGO_1 = { t="PANEL6", f="RROCK03" },
 
+  -- doors --
+  
+  BIGDOOR1   = { t="BIGDOOR1",   f="RROCK03" },
+  BIGDOOR2 = { t="BIGDOOR2", f="RROCK03" },
+  BIGDOOR4 = { t="BIGDOOR4", f="RROCK03" },
+  DOOR1 = { t="DOOR1", f="RROCK03" },
+  DOOR3 = { t="DOOR3", f="RROCK03" },
+  DOORBLU = { t="DOORBLU", f="RROCK03" },
+  DOORRED = { t="DOORRED", f="RROCK03" },
 
   -- switches --
 
