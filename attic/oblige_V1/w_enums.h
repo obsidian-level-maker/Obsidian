@@ -19,70 +19,74 @@
 #ifndef __OBLIGE_WENUMS_H__
 #define __OBLIGE_WENUMS_H__
 
+typedef enum {
+    ENV_EMPTY = 0,
+    ENV_VOID,
 
-typedef enum
-{
-	ENV_EMPTY = 0,
-	ENV_VOID,
+    ENV_Land,
+    ENV_Water,
+    ENV_Building,
+    ENV_Cave
+} world_environment_e;
 
-	ENV_Land, ENV_Water,
-	ENV_Building, ENV_Cave
-}
-world_environment_e;
+typedef enum {
+    MAT_INVALID = 0,
 
+    // Land
+    MAT_Grass,
+    MAT_Sand,
+    MAT_Rock,
+    MAT_Stone,
 
-typedef enum
-{
-	MAT_INVALID = 0,
+    // Water
+    MAT_Water,
+    MAT_Lava,
+    MAT_Nukage,
+    MAT_Slime,
+    MAT_Blood,
 
-	// Land
-	MAT_Grass, MAT_Sand, MAT_Rock,  MAT_Stone,
+    // Building
+    MAT_Lead,
+    MAT_Alum,
+    MAT_Tech,
+    MAT_Light,
+    MAT_Wood,
+    MAT_Brick,
+    MAT_Marble,
 
-	// Water
-	MAT_Water,  MAT_Lava, MAT_Nukage, MAT_Slime, MAT_Blood,
+    // Cave
+    MAT_Ash
+} world_material_e;
 
-	// Building
-	MAT_Lead, MAT_Alum,  MAT_Tech, MAT_Light,
-	MAT_Wood, MAT_Brick, MAT_Marble,
+typedef enum {
+    STRU_INVALID = 0,
 
-	// Cave
-	MAT_Ash 
-}
-world_material_e;
+    // simple floor/ceiling stuff
+    STRU_CoopStart,
+    STRU_DM_Start,
 
+    STRU_Item,
+    STRU_Monster,
 
-typedef enum
-{
-	STRU_INVALID = 0,
+    STRU_Teleporter,
+    STRU_LandingPad,
 
-	// simple floor/ceiling stuff
-	STRU_CoopStart,
-	STRU_DM_Start,
+    STRU_Tunnel,
 
-	STRU_Item,
-	STRU_Monster,
+    // more complex 3D stuff
+    STRU_Wall,
+    STRU_Window,
+    STRU_Railing,
+    STRU_Railing2,  // TEMP
 
-	STRU_Teleporter,
-	STRU_LandingPad,
+    STRU_Door,
+    STRU_Bars,
+    STRU_Lift,
+    STRU_Stairs,
 
-	STRU_Tunnel,
+    STRU_Switch,
 
-	// more complex 3D stuff
-	STRU_Wall,
-	STRU_Window,
-	STRU_Railing,
-	STRU_Railing2,  //TEMP
-
-	STRU_Door,
-	STRU_Bars,
-	STRU_Lift,
-	STRU_Stairs,
-
-	STRU_Switch,
-
-	//...
-}
-world_structure_e;
-
+    //...
+} world_structure_e;
 
 #endif /* __OBLIGE_WENUMS_H__ */

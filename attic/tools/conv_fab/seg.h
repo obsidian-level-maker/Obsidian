@@ -23,17 +23,14 @@
 
 #include "structs.h"
 
+#define DEFAULT_FACTOR 11
 
-#define DEFAULT_FACTOR  11
-
-#define IFFY_LEN  4.0
-
+#define IFFY_LEN 4.0
 
 // smallest distance between two points before being considered equal
-#define DIST_EPSILON  (1.0 / 128.0)
+#define DIST_EPSILON (1.0 / 128.0)
 
 // smallest degrees between two angles before being considered equal
-#define ANG_EPSILON  (1.0 / 1024.0)
-
+#define ANG_EPSILON (1.0 / 1024.0)
 
 #endif /* __GLBSP_SEG_H__ */

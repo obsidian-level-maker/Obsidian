@@ -24,275 +24,253 @@
 
 static char *last_file;
 
-void Default_Location(void)
-{
-  last_file = StringNew(FL_PATH_MAX + 4);
+void Default_Location(void) {
+    last_file = StringNew(FL_PATH_MAX + 4);
 
-#if 0 // ifdef WIN32
+#if 0  // ifdef WIN32
   // don't include a path.  Hence GetSaveFileName() will go to
   // the default place.
   last_file[0] = 0;
 #else
-  fl_filename_absolute(last_file, ".");
+    fl_filename_absolute(last_file, ".");
 
-  // add a directory separator on the end (if needed)
-  int len = strlen(last_file);
+    // add a directory separator on the end (if needed)
+    int len = strlen(last_file);
 
-  if (len > 0 && last_file[len-1] != DIR_SEP_CH)
-  {
-    last_file[len] = DIR_SEP_CH;
-    last_file[len+1] = 0;
-  }
+    if (len > 0 && last_file[len - 1] != DIR_SEP_CH) {
+        last_file[len] = DIR_SEP_CH;
+        last_file[len + 1] = 0;
+    }
 #endif
 
-  strcat(last_file, "TEST");
+    strcat(last_file, "TEST");
 
-//  DebugPrintf("Default_Location: [%s]\n", last_file);
+    //  DebugPrintf("Default_Location: [%s]\n", last_file);
 }
 
-bool UI_SetLastFile(const char *filename)
-{
-  if (filename[0] != '\"')
-  {
-//  LogPrintf("Weird filename in config: [%s]\n", filename);
-    return false;
-  }
+bool UI_SetLastFile(const char *filename) {
+    if (filename[0] != '\"') {
+        //  LogPrintf("Weird filename in config: [%s]\n", filename);
+        return false;
+    }
 
-  int len = strlen(filename);
+    int len = strlen(filename);
 
-  if (filename[len-1] != '\"')
-  {
-//  LogPrintf("Unterminated filename in config: [%s]\n", filename);
-    return false;
-  }
+    if (filename[len - 1] != '\"') {
+        //  LogPrintf("Unterminated filename in config: [%s]\n", filename);
+        return false;
+    }
 
-  filename++, len -= 2;
+    filename++, len -= 2;
 
-  SYS_ASSERT(len >= 0);
+    SYS_ASSERT(len >= 0);
 
-  last_file = StringDup(filename);
-  last_file[len] = 0;
+    last_file = StringDup(filename);
+    last_file[len] = 0;
 
-//  DebugPrintf("Parsed last_file as: [%s]\n", last_file);
- 
-  return true;
+    //  DebugPrintf("Parsed last_file as: [%s]\n", last_file);
+
+    return true;
 }
 
-const char *UI_GetLastFile(void)
-{
-  if (! last_file)
-    return "\"\"";
+const char *UI_GetLastFile(void) {
+    if (!last_file) return "\"\"";
 
-  return StringPrintf("\"%s\"", last_file);
+    return StringPrintf("\"%s\"", last_file);
 }
-
 
 //------------------------------------------------------------------------
 
-char *Select_Output_File(const char *ext)
-{
-  SYS_ASSERT(last_file);
+char *Select_Output_File(const char *ext) {
+    SYS_ASSERT(last_file);
 
 #ifdef WIN32
-  // remember current directory and restore it after the call to
-  // GetSaveFileName(), which might change it.
-  char *cur_dir = StringNew(MAX_PATH);
+    // remember current directory and restore it after the call to
+    // GetSaveFileName(), which might change it.
+    char *cur_dir = StringNew(MAX_PATH);
 
-  DWORD gcd_res = ::GetCurrentDirectory(MAX_PATH, cur_dir);
+    DWORD gcd_res = ::GetCurrentDirectory(MAX_PATH, cur_dir);
 
-  if (0 == gcd_res || gcd_res > MAX_PATH)
-    Main_FatalError("GetCurrentDirectory failed!");
+    if (0 == gcd_res || gcd_res > MAX_PATH)
+        Main_FatalError("GetCurrentDirectory failed!");
 
-//  DebugPrintf("Select_Output_File: cur_dir=[%s]\n", cur_dir);
-  
-  char pattern_buf[128];
-  pattern_buf[0] = toupper(ext[0]);
-  sprintf(pattern_buf+1, "%s Files%c*.%s%c%c", ext+1, 0, ext, 0, 0);
+    //  DebugPrintf("Select_Output_File: cur_dir=[%s]\n", cur_dir);
 
-  // --- call the bitch ---
+    char pattern_buf[128];
+    pattern_buf[0] = toupper(ext[0]);
+    sprintf(pattern_buf + 1, "%s Files%c*.%s%c%c", ext + 1, 0, ext, 0, 0);
 
-  char *name = StringNew(FL_PATH_MAX);
-  name[0] = 0;
-  // THIS FUCKS UP: strcpy(name, last_file);
+    // --- call the bitch ---
 
-  OPENFILENAME ofn;
-  memset(&ofn, 0, sizeof(ofn));
+    char *name = StringNew(FL_PATH_MAX);
+    name[0] = 0;
+    // THIS FUCKS UP: strcpy(name, last_file);
 
-  ofn.lStructSize = sizeof(OPENFILENAME); 
-  ofn.hwndOwner = fl_xid(main_win);
-  ofn.lpstrFilter = pattern_buf;
-  ofn.lpstrFile = name;
-  ofn.nMaxFile  = FL_PATH_MAX;
-  ofn.lpstrInitialDir = (LPSTR)NULL; 
-  ofn.Flags = OFN_EXPLORER | OFN_HIDEREADONLY |
-              OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT |
-              OFN_NONETWORKBUTTON;
-  ofn.lpstrTitle = "Select output file"; 
- 
-  BOOL result = ::GetSaveFileName(&ofn);
+    OPENFILENAME ofn;
+    memset(&ofn, 0, sizeof(ofn));
 
-  if (result == 0)
-  {
-    DWORD err = ::CommDlgExtendedError();
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = fl_xid(main_win);
+    ofn.lpstrFilter = pattern_buf;
+    ofn.lpstrFile = name;
+    ofn.nMaxFile = FL_PATH_MAX;
+    ofn.lpstrInitialDir = (LPSTR)NULL;
+    ofn.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST |
+                OFN_OVERWRITEPROMPT | OFN_NONETWORKBUTTON;
+    ofn.lpstrTitle = "Select output file";
 
-//  DebugPrintf("Select_Output_File: failed, err=0x%08x\n", err);
+    BOOL result = ::GetSaveFileName(&ofn);
 
-    // user cancelled, or error occurred
+    if (result == 0) {
+        DWORD err = ::CommDlgExtendedError();
+
+        //  DebugPrintf("Select_Output_File: failed, err=0x%08x\n", err);
+
+        // user cancelled, or error occurred
+        ::SetCurrentDirectory(cur_dir);
+        return NULL;
+    }
+
+    if (ofn.lpstrFile != name) {
+        SYS_ASSERT(ofn.lpstrFile);
+
+        // NOTE: memory leak.  I cannot be sure what the GetSaveFileName()
+        // call has placed into lpstrFile field, maybe a subset of our
+        // existing buffer, maybe something entirely different.
+
+        name = StringDup(ofn.lpstrFile);
+    }
+
+    if (name[0] != '\\' && !(name[0] && name[1] == ':')) {
+        // name was relative.  Since I'm assuming the GetSaveFileName()
+        // call might modify the current directory, we need to make the
+        // filename absolute _BEFORE_ we restore the original dir.
+
+        char *copy = StringNew(FL_PATH_MAX);
+
+        fl_filename_absolute(copy, FL_PATH_MAX, name);
+
+        StringFree(name);
+        name = copy;
+    }
+
     ::SetCurrentDirectory(cur_dir);
-    return NULL;
-  }
-
-  if (ofn.lpstrFile != name)
-  {
-    SYS_ASSERT(ofn.lpstrFile);
-
-    // NOTE: memory leak.  I cannot be sure what the GetSaveFileName()
-    // call has placed into lpstrFile field, maybe a subset of our
-    // existing buffer, maybe something entirely different.
-
-    name = StringDup(ofn.lpstrFile);
-  }
-
-  if (name[0] != '\\' && ! (name[0] && name[1] == ':'))
-  {
-    // name was relative.  Since I'm assuming the GetSaveFileName()
-    // call might modify the current directory, we need to make the
-    // filename absolute _BEFORE_ we restore the original dir.
-
-    char *copy = StringNew(FL_PATH_MAX);
-
-    fl_filename_absolute(copy, FL_PATH_MAX, name);
-
-    StringFree(name);
-    name = copy;
-  }
-
-  ::SetCurrentDirectory(cur_dir);
 
 #else  // Linux and MacOSX
 
-  char pattern_buf[64];
-  sprintf(pattern_buf, "*.%s", ext);
+    char pattern_buf[64];
+    sprintf(pattern_buf, "*.%s", ext);
 
-  char *name = fl_file_chooser("Select output file", pattern_buf, last_file);
-  if (! name)
-    return NULL;
+    char *name = fl_file_chooser("Select output file", pattern_buf, last_file);
+    if (!name) return NULL;
 
-  name = StringDup(name);
+    name = StringDup(name);
 #endif
 
-  if (! HasExtension(name))
-  {
-    char *new_name = ReplaceExtension(name, ext);
-    StringFree(name);
-    name = new_name;
-  }
-  
-//  DebugPrintf("Select_Output_File: OK, name=[%s]\n", name);
+    if (!HasExtension(name)) {
+        char *new_name = ReplaceExtension(name, ext);
+        StringFree(name);
+        name = new_name;
+    }
 
-  StringFree(last_file);
-  last_file = StringDup(name);
+    //  DebugPrintf("Select_Output_File: OK, name=[%s]\n", name);
 
-  return name;
+    StringFree(last_file);
+    last_file = StringDup(name);
+
+    return name;
 }
-
 
 //------------------------------------------------------------------------
 
-char *Select_Input_File(const char *ext)
-{
+char *Select_Input_File(const char *ext) {
 #ifdef WIN32
-  // remember current directory and restore it after the call to
-  // GetSaveFileName(), which might change it.
-  char *cur_dir = StringNew(MAX_PATH);
+    // remember current directory and restore it after the call to
+    // GetSaveFileName(), which might change it.
+    char *cur_dir = StringNew(MAX_PATH);
 
-  DWORD gcd_res = ::GetCurrentDirectory(MAX_PATH, cur_dir);
+    DWORD gcd_res = ::GetCurrentDirectory(MAX_PATH, cur_dir);
 
-  if (0 == gcd_res || gcd_res > MAX_PATH)
-    Main_FatalError("GetCurrentDirectory failed!");
+    if (0 == gcd_res || gcd_res > MAX_PATH)
+        Main_FatalError("GetCurrentDirectory failed!");
 
-//  DebugPrintf("Select_Input_File: cur_dir=[%s]\n", cur_dir);
+    //  DebugPrintf("Select_Input_File: cur_dir=[%s]\n", cur_dir);
 
-  char pattern_buf[128];
-  pattern_buf[0] = toupper(ext[0]);
-  sprintf(pattern_buf+1, "%s Files%c*.%s%c%c", ext+1, 0, ext, 0, 0);
-  
-  // --- call the bitch ---
+    char pattern_buf[128];
+    pattern_buf[0] = toupper(ext[0]);
+    sprintf(pattern_buf + 1, "%s Files%c*.%s%c%c", ext + 1, 0, ext, 0, 0);
 
-  char *name = StringNew(FL_PATH_MAX);
-  name[0] = 0;
+    // --- call the bitch ---
 
-  OPENFILENAME ofn;
-  memset(&ofn, 0, sizeof(ofn));
+    char *name = StringNew(FL_PATH_MAX);
+    name[0] = 0;
 
-  ofn.lStructSize = sizeof(OPENFILENAME); 
-  ofn.hwndOwner = fl_xid(main_win);
-  ofn.lpstrFilter = pattern_buf;
-  ofn.lpstrFile = name;
-  ofn.nMaxFile  = FL_PATH_MAX;
-  ofn.lpstrInitialDir = (LPSTR)NULL; 
-  ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_NONETWORKBUTTON;
-  ofn.lpstrTitle = "Select input file"; 
- 
-  BOOL result = ::GetOpenFileName(&ofn);
+    OPENFILENAME ofn;
+    memset(&ofn, 0, sizeof(ofn));
 
-  if (result == 0)
-  {
-    DWORD err = ::CommDlgExtendedError();
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = fl_xid(main_win);
+    ofn.lpstrFilter = pattern_buf;
+    ofn.lpstrFile = name;
+    ofn.nMaxFile = FL_PATH_MAX;
+    ofn.lpstrInitialDir = (LPSTR)NULL;
+    ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_NONETWORKBUTTON;
+    ofn.lpstrTitle = "Select input file";
 
-//  DebugPrintf("Select_Input_File: failed, err=0x%08x\n", err);
+    BOOL result = ::GetOpenFileName(&ofn);
 
-    // user cancelled, or error occurred
+    if (result == 0) {
+        DWORD err = ::CommDlgExtendedError();
+
+        //  DebugPrintf("Select_Input_File: failed, err=0x%08x\n", err);
+
+        // user cancelled, or error occurred
+        ::SetCurrentDirectory(cur_dir);
+        return NULL;
+    }
+
+    if (ofn.lpstrFile != name) {
+        SYS_ASSERT(ofn.lpstrFile);
+
+        // NOTE: memory leak.  I cannot be sure what the GetOpenFileName()
+        // call has placed into lpstrFile field, maybe a subset of our
+        // existing buffer, maybe something entirely different.
+
+        name = StringDup(ofn.lpstrFile);
+    }
+
+    if (name[0] != '\\' && !(name[0] && name[1] == ':')) {
+        // name was relative.  Since I'm assuming the GetOpenFileName()
+        // call might modify the current directory, we need to make the
+        // filename absolute _BEFORE_ we restore the original dir.
+
+        char *copy = StringNew(FL_PATH_MAX);
+
+        fl_filename_absolute(copy, FL_PATH_MAX, name);
+
+        StringFree(name);
+        name = copy;
+    }
+
     ::SetCurrentDirectory(cur_dir);
-    return NULL;
-  }
-
-  if (ofn.lpstrFile != name)
-  {
-    SYS_ASSERT(ofn.lpstrFile);
-
-    // NOTE: memory leak.  I cannot be sure what the GetOpenFileName()
-    // call has placed into lpstrFile field, maybe a subset of our
-    // existing buffer, maybe something entirely different.
-
-    name = StringDup(ofn.lpstrFile);
-  }
-
-  if (name[0] != '\\' && ! (name[0] && name[1] == ':'))
-  {
-    // name was relative.  Since I'm assuming the GetOpenFileName()
-    // call might modify the current directory, we need to make the
-    // filename absolute _BEFORE_ we restore the original dir.
-
-    char *copy = StringNew(FL_PATH_MAX);
-
-    fl_filename_absolute(copy, FL_PATH_MAX, name);
-
-    StringFree(name);
-    name = copy;
-  }
-
-  ::SetCurrentDirectory(cur_dir);
 
 #else  // Linux and MacOSX
 
-  char *name = fl_file_chooser("Select input file", "*.pak", NULL);
-  if (! name)
-    return NULL;
+    char *name = fl_file_chooser("Select input file", "*.pak", NULL);
+    if (!name) return NULL;
 
-  name = StringDup(name);
+    name = StringDup(name);
 #endif
 
-  if (! HasExtension(name))
-  {
-    char *new_name = ReplaceExtension(name, "pak");
-    StringFree(name);
-    name = new_name;
-  }
-  
-//  DebugPrintf("Select_Input_File: OK, name=[%s]\n", name);
+    if (!HasExtension(name)) {
+        char *new_name = ReplaceExtension(name, "pak");
+        StringFree(name);
+        name = new_name;
+    }
 
-  return name;
+    //  DebugPrintf("Select_Input_File: OK, name=[%s]\n", name);
+
+    return name;
 }
 
 //--- editor settings ---

@@ -24,45 +24,44 @@
 // basic macros
 
 #ifndef NULL
-#define NULL    ((void*) 0)
+#define NULL ((void *)0)
 #endif
 
 #ifndef M_PI
-#define M_PI  3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 #ifndef MAX
-#define MAX(a,b)  ((a) > (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
 #ifndef MIN
-#define MIN(a,b)  ((a) < (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
 #ifndef ABS
-#define ABS(a)  ((a) < 0 ? -(a) : (a))
+#define ABS(a) ((a) < 0 ? -(a) : (a))
 #endif
 
 #ifndef SGN
-#define SGN(a)  ((a) < 0 ? -1 : (a) > 0 ? +1 : 0)
+#define SGN(a) ((a) < 0 ? -1 : (a) > 0 ? +1 : 0)
 #endif
 
 #ifndef I_ROUND
-#define I_ROUND(x)  ((int) (((x) < 0.0f) ? ((x) - 0.5f) : ((x) + 0.5f)))
+#define I_ROUND(x) ((int)(((x) < 0.0f) ? ((x)-0.5f) : ((x) + 0.5f)))
 #endif
 
 #ifndef CLAMP
-#define CLAMP(low,x,high)  \
-    ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
+#define CLAMP(low, x, high) ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
 #endif
 
 #ifdef __GNUC__
-#define PACKEDATTR  __attribute__((packed))
+#define PACKEDATTR __attribute__((packed))
 #else
 #define PACKEDATTR
 #endif
 
-#endif  /* __SYS_MACRO_H__ */
+#endif /* __SYS_MACRO_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -19,9 +19,7 @@
 // this includes everything we need
 #include "defs.h"
 
-
 static bool menu_want_to_quit;
-
 
 #if 0
 static void menu_quit_CB(Fl_Widget *w, void *data)
@@ -30,30 +28,21 @@ static void menu_quit_CB(Fl_Widget *w, void *data)
 }
 #endif
 
-
 #ifndef MACOSX
-static void menu_do_exit(Fl_Widget *w, void * data)
-{
-  guix_win->want_quit = true;
+static void menu_do_exit(Fl_Widget *w, void *data) {
+    guix_win->want_quit = true;
 }
 #endif
 
+//------------------------------------------------------------------------
+
+static void menu_do_prefs(Fl_Widget *w, void *data) {}
 
 //------------------------------------------------------------------------
 
-static void menu_do_prefs(Fl_Widget *w, void * data)
-{
-}
+static const char *about_Info = "By Andrew Apted (C) 2004-2007";
 
-
-//------------------------------------------------------------------------
-
-static const char *about_Info =
-  "By Andrew Apted (C) 2004-2007";
-
-
-static void menu_do_about(Fl_Widget *w, void * data)
-{
+static void menu_do_about(Fl_Widget *w, void *data) {
 #if 0
   menu_want_to_quit = false;
 
@@ -117,69 +106,53 @@ static void menu_do_about(Fl_Widget *w, void * data)
 #endif
 }
 
+//------------------------------------------------------------------------
+
+static void menu_do_manual(Fl_Widget *w, void *data) {}
 
 //------------------------------------------------------------------------
 
-static void menu_do_manual(Fl_Widget *w, void * data)
-{
-}
-
+static void menu_do_license(Fl_Widget *w, void *data) {}
 
 //------------------------------------------------------------------------
 
-static void menu_do_license(Fl_Widget *w, void * data)
-{
-}
-
-
-//------------------------------------------------------------------------
-
-static void menu_do_save_log(Fl_Widget *w, void * data)
-{
-}
-
+static void menu_do_save_log(Fl_Widget *w, void *data) {}
 
 //------------------------------------------------------------------------
 
 #undef FCAL
-#define FCAL  (Fl_Callback *)
+#define FCAL (Fl_Callback *)
 
-static Fl_Menu_Item menu_items[] = 
-{
-    { "&File", 0, 0, 0, FL_SUBMENU },
-        { "&Preferences...",    0, FCAL menu_do_prefs },
-        { "&Save Log...",       0, FCAL menu_do_save_log },
+static Fl_Menu_Item menu_items[] = {
+    {"&File", 0, 0, 0, FL_SUBMENU},
+    {"&Preferences...", 0, FCAL menu_do_prefs},
+    {"&Save Log...", 0, FCAL menu_do_save_log},
 #ifndef MACOSX
-        { "E&xit",   FL_ALT + 'q', FCAL menu_do_exit },
+    {"E&xit", FL_ALT + 'q', FCAL menu_do_exit},
 #endif
-        { 0 },
+    {0},
 
-    { "&Help", 0, 0, 0, FL_SUBMENU },
-        { "&About...",         0,  FCAL menu_do_about },
-        { "&License...",       0,  FCAL menu_do_license },
-        { "&Manual...",   FL_F+1,  FCAL menu_do_manual },
-        { 0 },
+    {"&Help", 0, 0, 0, FL_SUBMENU},
+    {"&About...", 0, FCAL menu_do_about},
+    {"&License...", 0, FCAL menu_do_license},
+    {"&Manual...", FL_F + 1, FCAL menu_do_manual},
+    {0},
 
-    { 0 }
-};
-
+    {0}};
 
 //
 // MenuCreate
 //
 #ifdef MACOSX
-Fl_Sys_Menu_Bar * MenuCreate(int x, int y, int w, int h)
-{
-  Fl_Sys_Menu_Bar *bar = new Fl_Sys_Menu_Bar(x, y, w, h);
-  bar->menu(menu_items);
-  return bar;
+Fl_Sys_Menu_Bar *MenuCreate(int x, int y, int w, int h) {
+    Fl_Sys_Menu_Bar *bar = new Fl_Sys_Menu_Bar(x, y, w, h);
+    bar->menu(menu_items);
+    return bar;
 }
 #else
-Fl_Menu_Bar * MenuCreate(int x, int y, int w, int h)
-{
-  Fl_Menu_Bar *bar = new Fl_Menu_Bar(x, y, w, h);
-  bar->menu(menu_items);
-  return bar;
+Fl_Menu_Bar *MenuCreate(int x, int y, int w, int h) {
+    Fl_Menu_Bar *bar = new Fl_Menu_Bar(x, y, w, h);
+    bar->menu(menu_items);
+    return bar;
 }
 #endif
-

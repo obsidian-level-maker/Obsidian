@@ -18,18 +18,18 @@
 //
 //------------------------------------------------------------------------
 
-#include "system.h"
+#include "util.h"
 
+#include <assert.h>
+#include <ctype.h>
+#include <limits.h>
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
-#include <ctype.h>
-#include <math.h>
-#include <limits.h>
-#include <assert.h>
 
-#include "util.h"
+#include "system.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -37,20 +37,17 @@
 #include <time.h>
 #endif
 
-
 //
 // UtilCalloc
 //
 // Allocate memory with error checking.  Zeros the memory.
 //
-void *UtilCalloc(int size)
-{
-  void *ret = calloc(1, size);
-  
-  if (!ret)
-    FatalError("Out of memory (cannot allocate %d bytes)", size);
+void *UtilCalloc(int size) {
+    void *ret = calloc(1, size);
 
-  return ret;
+    if (!ret) FatalError("Out of memory (cannot allocate %d bytes)", size);
+
+    return ret;
 }
 
 //
@@ -58,14 +55,12 @@ void *UtilCalloc(int size)
 //
 // Reallocate memory with error checking.
 //
-void *UtilRealloc(void *old, int size)
-{
-  void *ret = realloc(old, size);
+void *UtilRealloc(void *old, int size) {
+    void *ret = realloc(old, size);
 
-  if (!ret)
-    FatalError("Out of memory (cannot reallocate %d bytes)", size);
+    if (!ret) FatalError("Out of memory (cannot reallocate %d bytes)", size);
 
-  return ret;
+    return ret;
 }
 
 //
@@ -73,12 +68,10 @@ void *UtilRealloc(void *old, int size)
 //
 // Free the memory with error checking.
 //
-void UtilFree(void *data)
-{
-  if (data == NULL)
-    InternalError("Trying to free a NULL pointer");
-  
-  free(data);
+void UtilFree(void *data) {
+    if (data == NULL) InternalError("Trying to free a NULL pointer");
+
+    free(data);
 }
 
 //
@@ -86,19 +79,17 @@ void UtilFree(void *data)
 //
 // Duplicate a string with error checking.
 //
-char *UtilStrDup(const char *str)
-{
-  char *result;
-  int len = (int)strlen(str);
+char *UtilStrDup(const char *str) {
+    char *result;
+    int len = (int)strlen(str);
 
-  result = UtilCalloc(len+1);
+    result = UtilCalloc(len + 1);
 
-  if (len > 0)
-    memcpy(result, str, len);
-  
-  result[len] = 0;
+    if (len > 0) memcpy(result, str, len);
 
-  return result;
+    result[len] = 0;
+
+    return result;
 }
 
 //
@@ -106,189 +97,156 @@ char *UtilStrDup(const char *str)
 //
 // Duplicate a limited length string.
 //
-char *UtilStrNDup(const char *str, int size)
-{
-  char *result;
-  int len;
+char *UtilStrNDup(const char *str, int size) {
+    char *result;
+    int len;
 
-  for (len=0; len < size && str[len]; len++)
-  { }
+    for (len = 0; len < size && str[len]; len++) {
+    }
 
-  result = UtilCalloc(len+1);
+    result = UtilCalloc(len + 1);
 
-  if (len > 0)
-    memcpy(result, str, len);
-  
-  result[len] = 0;
+    if (len > 0) memcpy(result, str, len);
 
-  return result;
+    result[len] = 0;
+
+    return result;
 }
 
-char *UtilFormat(const char *str, ...)
-{
-  /* Algorithm: keep doubling the allocated buffer size
-   * until the output fits. Based on code by Darren Salt.
-   */
-  char *buf = NULL;
-  int buf_size = 128;
-  
-  for (;;)
-  {
-    va_list args;
-    int out_len;
+char *UtilFormat(const char *str, ...) {
+    /* Algorithm: keep doubling the allocated buffer size
+     * until the output fits. Based on code by Darren Salt.
+     */
+    char *buf = NULL;
+    int buf_size = 128;
 
-    buf_size *= 2;
+    for (;;) {
+        va_list args;
+        int out_len;
 
-    buf = realloc(buf, buf_size);
-    if (!buf)
-      FatalError("Out of memory (formatting string)");
+        buf_size *= 2;
 
-    va_start(args, str);
-    out_len = vsnprintf(buf, buf_size, str, args);
-    va_end(args);
+        buf = realloc(buf, buf_size);
+        if (!buf) FatalError("Out of memory (formatting string)");
 
-    // old versions of vsnprintf() simply return -1 when
-    // the output doesn't fit.
-    if (out_len < 0 || out_len >= buf_size)
-      continue;
+        va_start(args, str);
+        out_len = vsnprintf(buf, buf_size, str, args);
+        va_end(args);
 
-    return buf;
-  }
+        // old versions of vsnprintf() simply return -1 when
+        // the output doesn't fit.
+        if (out_len < 0 || out_len >= buf_size) continue;
+
+        return buf;
+    }
 }
 
-int UtilStrCaseCmp(const char *A, const char *B)
-{
-  for (; *A || *B; A++, B++)
-  {
-    // this test also catches end-of-string conditions
-    if (toupper(*A) != toupper(*B))
-      return (toupper(*A) - toupper(*B));
-  }
+int UtilStrCaseCmp(const char *A, const char *B) {
+    for (; *A || *B; A++, B++) {
+        // this test also catches end-of-string conditions
+        if (toupper(*A) != toupper(*B)) return (toupper(*A) - toupper(*B));
+    }
 
-  // strings are equal
-  return 0;
+    // strings are equal
+    return 0;
 }
-
 
 //
 // UtilRoundPOW2
 //
 // Rounds the value _up_ to the nearest power of two.
 //
-int UtilRoundPOW2(int x)
-{
-  int tmp;
+int UtilRoundPOW2(int x) {
+    int tmp;
 
-  if (x <= 2)
-    return x;
+    if (x <= 2) return x;
 
-  x--;
-  
-  for (tmp=x / 2; tmp; tmp /= 2)
-    x |= tmp;
-  
-  return (x + 1);
+    x--;
+
+    for (tmp = x / 2; tmp; tmp /= 2) x |= tmp;
+
+    return (x + 1);
 }
-
 
 //
 // UtilComputeAngle
 //
 // Translate (dx, dy) into an angle value (degrees)
 //
-angle_g UtilComputeAngle(float_g dx, float_g dy)
-{
-  double angle;
+angle_g UtilComputeAngle(float_g dx, float_g dy) {
+    double angle;
 
-  if (dx == 0)
-    return (dy > 0) ? 90.0 : 270.0;
+    if (dx == 0) return (dy > 0) ? 90.0 : 270.0;
 
-  angle = atan2((double) dy, (double) dx) * 180.0 / M_PI;
+    angle = atan2((double)dy, (double)dx) * 180.0 / M_PI;
 
-  if (angle < 0) 
-    angle += 360.0;
+    if (angle < 0) angle += 360.0;
 
-  return angle;
+    return angle;
 }
-
 
 //
 // UtilFileExists
 //
-int UtilFileExists(const char *filename)
-{
-  FILE *fp = fopen(filename, "rb");
+int UtilFileExists(const char *filename) {
+    FILE *fp = fopen(filename, "rb");
 
-  if (fp)
-  {
-    fclose(fp);
-    return TRUE;
-  }
+    if (fp) {
+        fclose(fp);
+        return TRUE;
+    }
 
-  return FALSE;
+    return FALSE;
 }
 
 //
 // UtilTimeString
 //
-char *UtilTimeString(void)
-{
+char *UtilTimeString(void) {
 #ifdef WIN32
 
-  SYSTEMTIME sys_time;
+    SYSTEMTIME sys_time;
 
-  GetSystemTime(&sys_time);
+    GetSystemTime(&sys_time);
 
-  return UtilFormat("%04d-%02d-%02d %02d:%02d:%02d.%04d",
-      sys_time.wYear, sys_time.wMonth, sys_time.wDay,
-      sys_time.wHour, sys_time.wMinute, sys_time.wSecond,
-      sys_time.wMilliseconds * 10);
+    return UtilFormat("%04d-%02d-%02d %02d:%02d:%02d.%04d", sys_time.wYear,
+                      sys_time.wMonth, sys_time.wDay, sys_time.wHour,
+                      sys_time.wMinute, sys_time.wSecond,
+                      sys_time.wMilliseconds * 10);
 
-#else // LINUX or MACOSX
+#else  // LINUX or MACOSX
 
-  time_t epoch_time;
-  struct tm *calend_time;
+    time_t epoch_time;
+    struct tm *calend_time;
 
-  if (time(&epoch_time) == (time_t)-1)
-    return NULL;
+    if (time(&epoch_time) == (time_t)-1) return NULL;
 
-  calend_time = localtime(&epoch_time);
-  if (! calend_time)
-    return NULL;
+    calend_time = localtime(&epoch_time);
+    if (!calend_time) return NULL;
 
-  return UtilFormat("%04d-%02d-%02d %02d:%02d:%02d.%04d",
-      calend_time->tm_year + 1900, calend_time->tm_mon + 1,
-      calend_time->tm_mday,
-      calend_time->tm_hour, calend_time->tm_min,
-      calend_time->tm_sec,  0);
-#endif  
+    return UtilFormat("%04d-%02d-%02d %02d:%02d:%02d.%04d",
+                      calend_time->tm_year + 1900, calend_time->tm_mon + 1,
+                      calend_time->tm_mday, calend_time->tm_hour,
+                      calend_time->tm_min, calend_time->tm_sec, 0);
+#endif
 }
 
 //------------------------------------------------------------------------
 //  Adler-32 CHECKSUM Code
 //------------------------------------------------------------------------
 
-void Adler32_Begin(uint32_g *crc)
-{
-  *crc = 1;
-}
+void Adler32_Begin(uint32_g *crc) { *crc = 1; }
 
-void Adler32_AddBlock(uint32_g *crc, const uint8_g *data, int length)
-{
+void Adler32_AddBlock(uint32_g *crc, const uint8_g *data, int length) {
     uint32_g s1 = (*crc) & 0xFFFF;
     uint32_g s2 = ((*crc) >> 16) & 0xFFFF;
 
-    for (; length > 0; data++, length--)
-    {
+    for (; length > 0; data++, length--) {
         s1 = (s1 + *data) % 65521;
-        s2 = (s2 + s1)    % 65521;
+        s2 = (s2 + s1) % 65521;
     }
 
     *crc = (s2 << 16) | s1;
 }
 
-void Adler32_Finish(uint32_g *crc)
-{
-  /* nothing to do */
-}
-
+void Adler32_Finish(uint32_g *crc) { /* nothing to do */ }

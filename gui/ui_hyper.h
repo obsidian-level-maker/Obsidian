@@ -22,34 +22,33 @@
 #ifndef __UI_HYPER_H__
 #define __UI_HYPER_H__
 
-class UI_HyperLink : public Fl_Button
-{
-private:
-	// true when mouse is over this widget
-	bool hover;
+class UI_HyperLink : public Fl_Button {
+   private:
+    // true when mouse is over this widget
+    bool hover;
 
-	// area containing the label
-	int label_X, label_Y, label_W, label_H;
+    // area containing the label
+    int label_X, label_Y, label_W, label_H;
 
-	// the URL to visit when clicked
-	const char *url;
+    // the URL to visit when clicked
+    const char *url;
 
-public:
-	UI_HyperLink(int x, int y, int w, int h, const char *label,
-			const char *_url);
-	virtual ~UI_HyperLink();
+   public:
+    UI_HyperLink(int x, int y, int w, int h, const char *label,
+                 const char *_url);
+    virtual ~UI_HyperLink();
 
-public:
-	// FLTK overrides
+   public:
+    // FLTK overrides
 
-	int handle(int event);
+    int handle(int event);
 
-	void draw();
+    void draw();
 
-private:
-	void checkLink();
+   private:
+    void checkLink();
 
-	static void callback_Link(Fl_Widget *w, void *data);
+    static void callback_Link(Fl_Widget *w, void *data);
 };
 
 #endif /* __UI_HYPER_H__ */

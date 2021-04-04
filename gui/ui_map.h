@@ -21,63 +21,60 @@
 #ifndef __UI_MAP_H__
 #define __UI_MAP_H__
 
-class UI_MiniMap : public Fl_Box
-{
-private:
-	int map_W, map_H;
+#include "FL/Fl_Image.H"
+#include "Fl/Fl_Box.H"
+#include "sys_type.h"
 
-	u8_t *pixels;
+class UI_MiniMap : public Fl_Box {
+   private:
+    int map_W, map_H;
 
-	Fl_RGB_Image *cur_image;
+    u8_t *pixels;
 
-public:
-	UI_MiniMap(int x, int y, int w, int h, const char *label = NULL);
-	virtual ~UI_MiniMap();
+    Fl_RGB_Image *cur_image;
 
-public:
+   public:
+    UI_MiniMap(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_MiniMap();
 
-	int GetWidth()  const { return map_W; }
-	int GetHeight() const { return map_H; }
+   public:
+    int GetWidth() const { return map_W; }
+    int GetHeight() const { return map_H; }
 
-	void EmptyMap();
+    void EmptyMap();
 
-	void MapBegin();
-	void MapFinish();
+    void MapBegin();
+    void MapFinish();
 
-	void DrawPixel(int x, int y, byte r, byte g, byte b);
-	void DrawBox  (int x1, int y1, int x2, int y2, byte r, byte g, byte b);
-	void DrawLine (int x1, int y1, int x2, int y2, byte r, byte g, byte b);
-	void DrawEntity(int x, int y, byte r, byte g, byte b);
+    void DrawPixel(int x, int y, byte r, byte g, byte b);
+    void DrawBox(int x1, int y1, int x2, int y2, byte r, byte g, byte b);
+    void DrawLine(int x1, int y1, int x2, int y2, byte r, byte g, byte b);
+    void DrawEntity(int x, int y, byte r, byte g, byte b);
 
-	void MapClear();
+    void MapClear();
 
-private:
+   private:
+    void MapCorner(int x, int y, int dx, int dy);
 
-	void MapCorner(int x, int y, int dx, int dy);
+    inline void RawPixel(int x, int y, byte r, byte g, byte b) {
+        u8_t *pos = pixels + ((map_H - 1 - y) * map_W + x) * 3;
 
-	inline void RawPixel(int x, int y, byte r, byte g, byte b)
-	{
-		u8_t *pos = pixels + ((map_H-1 - y)*map_W + x) * 3;
+        *pos++ = r;
+        *pos++ = g;
+        *pos = b;
+    }
 
-		*pos++ = r; *pos++ = g; *pos = b;
-	}
+    enum outcode_flags_e {
+        O_TOP = 1,
+        O_BOTTOM = 2,
+        O_LEFT = 4,
+        O_RIGHT = 8,
+    };
 
-	enum outcode_flags_e
-	{
-		O_TOP    = 1,
-		O_BOTTOM = 2,
-		O_LEFT   = 4,
-		O_RIGHT  = 8,
-	};
-
-	int Calc_Outcode(int x, int y)
-	{
-		return
-			((y < 0)       ? O_BOTTOM : 0) |
-			((y > map_H-1) ? O_TOP    : 0) |
-			((x < 0)       ? O_LEFT   : 0) |
-			((x > map_W-1) ? O_RIGHT  : 0);
-	}
+    int Calc_Outcode(int x, int y) {
+        return ((y < 0) ? O_BOTTOM : 0) | ((y > map_H - 1) ? O_TOP : 0) |
+               ((x < 0) ? O_LEFT : 0) | ((x > map_W - 1) ? O_RIGHT : 0);
+    }
 };
 
 #endif /* __UI_MAP_H__ */

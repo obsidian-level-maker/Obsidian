@@ -21,9 +21,9 @@
    Fl_File_Input widget . */
 
 #ifndef Fl_File_Input_H
-#  define Fl_File_Input_H
+#define Fl_File_Input_H
 
-#  include <FL/Fl_Input.H>
+#include <FL/Fl_Input.H>
 
 /**
   \class Fl_File_Input
@@ -36,61 +36,59 @@
   FL_WHEN_RELEASE callback won't be called if the directory clicked
   is the same as the current one.
 
-  <P align=CENTER> \image html Fl_File_Input.png </P> 
+  <P align=CENTER> \image html Fl_File_Input.png </P>
   \image latex Fl_File_Input.png "Fl_File_Input"  width=6cm
 
   \note As all Fl_Input derived objects, Fl_File_Input may call its callback
   when losing focus (see FL_UNFOCUS) to update its state like its cursor shape.
-  One resulting side effect is that you should call clear_changed() early in your callback
-  to avoid reentrant calls if you plan to show another window or dialog box in the callback.
+  One resulting side effect is that you should call clear_changed() early in
+  your callback to avoid reentrant calls if you plan to show another window or
+  dialog box in the callback.
 */
 class FL_EXPORT Fl_File_Input : public Fl_Input {
-  
-  Fl_Color	errorcolor_;
-  char		ok_entry_;
-  uchar		down_box_;
-  short		buttons_[200];
-  short		pressed_;
+    Fl_Color errorcolor_;
+    char ok_entry_;
+    uchar down_box_;
+    short buttons_[200];
+    short pressed_;
 
-  void		draw_buttons();
-  int		handle_button(int event);
-  void		update_buttons();
+    void draw_buttons();
+    int handle_button(int event);
+    void update_buttons();
 
-public:
+   public:
+    Fl_File_Input(int X, int Y, int W, int H, const char *L = 0);
 
-  Fl_File_Input(int X, int Y, int W, int H, const char *L=0);
+    virtual int handle(int event);
 
-  virtual int handle(int event);
+   protected:
+    virtual void draw();
 
-protected:
-  virtual void draw();
+   public:
+    /** Gets the box type used for the navigation bar. */
+    Fl_Boxtype down_box() const { return (Fl_Boxtype)down_box_; }
+    /** Sets the box type to use for the navigation bar.  */
+    void down_box(Fl_Boxtype b) { down_box_ = b; }
 
-public:
-  /** Gets the box type used for the navigation bar. */
-  Fl_Boxtype	down_box() const { return (Fl_Boxtype)down_box_; }
-  /** Sets the box type to use for the navigation bar.  */
-  void		down_box(Fl_Boxtype b) { down_box_ = b; }
+    /**
+      Gets the current error color.
+      \todo Better docs for Fl_File_Input::errorcolor() - is it even used?
+    */
+    Fl_Color errorcolor() const { return errorcolor_; }
+    /** Sets the current error color to \p c */
+    void errorcolor(Fl_Color c) { errorcolor_ = c; }
 
-  /**
-    Gets the current error color.
-    \todo Better docs for Fl_File_Input::errorcolor() - is it even used?
-  */
-  Fl_Color	errorcolor() const { return errorcolor_; }
-  /** Sets the current error color to \p c */
-  void		errorcolor(Fl_Color c) { errorcolor_ = c; }
+    int value(const char *str);
+    int value(const char *str, int len);
 
-  int	value(const char *str);
-  int	value(const char *str, int len);
-
-  /**
-    Returns the current value, which is a pointer to an internal buffer
-    and is valid only until the next event is handled.
-  */
-  const char	*value() { return Fl_Input_::value(); }
+    /**
+      Returns the current value, which is a pointer to an internal buffer
+      and is valid only until the next event is handled.
+    */
+    const char *value() { return Fl_Input_::value(); }
 };
 
-#endif // !Fl_File_Input_H
-
+#endif  // !Fl_File_Input_H
 
 //
 // End of "$Id$".

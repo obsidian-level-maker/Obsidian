@@ -16,200 +16,174 @@
 // of a REJECT lump is debatable, I have chosen to not compile this module
 // in with ZDBSP. Save yourself some space and run ZDBSP with the -r option.
 
-#include <string.h>
-#include <stdio.h>
-
-#include "zdbsp.h"
-#include "nodebuild.h"
 #include "rejectbuilder.h"
+
+#include <stdio.h>
+#include <string.h>
+
+#include "nodebuild.h"
 #include "templates.h"
+#include "zdbsp.h"
 
-bool		MergeVis=1;
+bool MergeVis = 1;
 
-FRejectBuilder::FRejectBuilder (FLevel &level)
-	: Level (level), testlevel (2), totalvis (0)
-{
-	LoadPortals ();
+FRejectBuilder::FRejectBuilder(FLevel &level)
+    : Level(level), testlevel(2), totalvis(0) {
+    LoadPortals();
 
-	if (MergeVis)
-	{
-		MergeLeaves ();
-		MergeLeafPortals ();
-	}
+    if (MergeVis) {
+        MergeLeaves();
+        MergeLeafPortals();
+    }
 
-	CountActivePortals ();
-	CalcVis ();
+    CountActivePortals();
+    CalcVis();
 
-	BuildReject ();
+    BuildReject();
 }
 
-FRejectBuilder::~FRejectBuilder ()
-{
+FRejectBuilder::~FRejectBuilder() {}
+
+BYTE *FRejectBuilder::GetReject() {
+    WORD *sectormap;
+    int i, j;
+
+    int rejectSize = (Level.NumSectors() * Level.NumSectors() + 7) / 8;
+    BYTE *reject = new BYTE[rejectSize];
+    memset(reject, 0xff, rejectSize);
+
+    int pvs_size = (Level.NumGLSubsectors * Level.NumGLSubsectors) + 7 / 8;
+    Level.GLPVS = new BYTE[pvs_size];
+    Level.GLPVSSize = pvs_size;
+    memset(Level.GLPVS, 0, pvs_size);
+
+    sectormap = new WORD[Level.NumGLSubsectors];
+    for (i = 0; i < Level.NumGLSubsectors; ++i) {
+        const MapSegGLEx *seg = &Level.GLSegs[Level.GLSubsectors[i].firstline];
+        sectormap[i] =
+            Level.Sides[Level.Lines[seg->linedef].sidenum[seg->side]].sector;
+    }
+
+    for (i = 0; i < Level.NumGLSubsectors; ++i) {
+        int rowpvs = i * Level.NumGLSubsectors;
+        int rowrej = sectormap[i] * Level.NumSectors();
+        BYTE *bytes = visBytes + i * leafbytes;
+        for (j = 0; j < Level.NumGLSubsectors; ++j) {
+            if (bytes[j >> 3] & (1 << (j & 7))) {
+                int mark = rowpvs + j;
+                Level.GLPVS[mark >> 3] |= 1 << (mark & 7);
+
+                mark = rowrej + sectormap[j];
+                reject[mark >> 3] &= ~(1 << (mark & 7));
+            }
+        }
+    }
+
+    return reject;
 }
 
-BYTE *FRejectBuilder::GetReject ()
-{
-	WORD *sectormap;
-	int i, j; 
+void FRejectBuilder::BuildReject() {}
 
-	int rejectSize = (Level.NumSectors()*Level.NumSectors() + 7) / 8;
-	BYTE *reject = new BYTE[rejectSize];
-	memset (reject, 0xff, rejectSize);
-
-	int pvs_size = (Level.NumGLSubsectors * Level.NumGLSubsectors) + 7 / 8;
-	Level.GLPVS = new BYTE[pvs_size];
-	Level.GLPVSSize = pvs_size;
-	memset (Level.GLPVS, 0, pvs_size);
-
-	sectormap = new WORD[Level.NumGLSubsectors];
-	for (i = 0; i < Level.NumGLSubsectors; ++i)
-	{
-		const MapSegGLEx *seg = &Level.GLSegs[Level.GLSubsectors[i].firstline];
-		sectormap[i] = Level.Sides[Level.Lines[seg->linedef].sidenum[seg->side]].sector;
-	}
-
-	for (i = 0; i < Level.NumGLSubsectors; ++i)
-	{
-		int rowpvs = i*Level.NumGLSubsectors;
-		int rowrej = sectormap[i]*Level.NumSectors();
-		BYTE *bytes = visBytes + i*leafbytes;
-		for (j = 0; j < Level.NumGLSubsectors; ++j)
-		{
-			if (bytes[j>>3] & (1<<(j&7)))
-			{
-				int mark = rowpvs + j;
-				Level.GLPVS[mark>>3] |= 1<<(mark&7);
-
-				mark = rowrej + sectormap[j];
-				reject[mark>>3] &= ~(1<<(mark&7));
-			}
-		}
-	}
-
-	return reject;
+inline const WideVertex *FRejectBuilder::GetVertex(WORD vertnum) {
+    return &Level.Vertices[vertnum];
 }
 
-void FRejectBuilder::BuildReject ()
-{
+FRejectBuilder::FLeaf::FLeaf() : numportals(0), merged(-1), portals(NULL) {}
+
+FRejectBuilder::FLeaf::~FLeaf() {
+    if (portals != NULL) {
+        delete[] portals;
+    }
 }
 
-inline const WideVertex *FRejectBuilder::GetVertex (WORD vertnum)
-{
-	return &Level.Vertices[vertnum];
+int FRejectBuilder::PointOnSide(const FPoint &point, const FLine &line) {
+    return FNodeBuilder::PointOnSide(point.x, point.y, line.x, line.y, line.dx,
+                                     line.dy);
 }
 
-FRejectBuilder::FLeaf::FLeaf ()
-	: numportals (0), merged (-1), portals (NULL)
-{
-}
+void FRejectBuilder::LoadPortals() {
+    WORD *segleaf;
+    int i, j, k, max;
+    VPortal *p;
+    FLeaf *l;
+    FWinding *w;
 
-FRejectBuilder::FLeaf::~FLeaf ()
-{
-	if (portals != NULL)
-	{
-		delete[] portals;
-	}
-}
+    portalclusters = Level.NumGLSubsectors;
 
-int FRejectBuilder::PointOnSide (const FPoint &point, const FLine &line)
-{
-	return FNodeBuilder::PointOnSide (point.x, point.y, line.x, line.y, line.dx, line.dy);
-}
+    for (numportals = 0, i = 0; i < Level.NumGLSegs; ++i) {
+        if (Level.GLSegs[i].partner != DWORD_MAX) {
+            ++numportals;
+        }
+    }
 
-void FRejectBuilder::LoadPortals ()
-{
-	WORD		*segleaf;
-	int			i, j, k, max;
-	VPortal		*p;
-	FLeaf		*l;
-	FWinding	*w;
-	
-	portalclusters = Level.NumGLSubsectors;
+    // these counts should take advantage of 64 bit systems automatically
+    leafbytes = ((portalclusters + 63) & ~63) >> 3;
+    leaflongs = leafbytes / sizeof(long);
 
-	for (numportals = 0, i = 0; i < Level.NumGLSegs; ++i)
-	{
-		if (Level.GLSegs[i].partner != DWORD_MAX)
-		{
-			++numportals;
-		}
-	}
+    portalbytes = ((numportals + 63) & ~63) >> 3;
+    portallongs = portalbytes / sizeof(long);
 
-	// these counts should take advantage of 64 bit systems automatically
-	leafbytes = ((portalclusters+63)&~63)>>3;
-	leaflongs = leafbytes/sizeof(long);
+    portals = new VPortal[numportals];
+    memset(portals, 0, numportals * sizeof(VPortal));
 
-	portalbytes = ((numportals+63)&~63)>>3;
-	portallongs = portalbytes/sizeof(long);
+    leafs = new FLeaf[portalclusters];
 
-	portals = new VPortal[numportals];
-	memset (portals, 0, numportals*sizeof(VPortal));
-	
-	leafs = new FLeaf[portalclusters];
+    numVisBytes = portalclusters * leafbytes;
+    visBytes = new BYTE[numVisBytes];
 
-	numVisBytes = portalclusters*leafbytes;
-	visBytes = new BYTE[numVisBytes];
+    segleaf = new WORD[Level.NumGLSegs];
+    for (i = 0; i < Level.NumGLSubsectors; ++i) {
+        j = Level.GLSubsectors[i].firstline;
+        max = j + Level.GLSubsectors[i].numlines;
 
-	segleaf = new WORD[Level.NumGLSegs];
-	for (i = 0; i < Level.NumGLSubsectors; ++i)
-	{
-		j = Level.GLSubsectors[i].firstline;
-		max = j + Level.GLSubsectors[i].numlines;
+        for (; j < max; ++j) {
+            segleaf[j] = i;
+        }
+    }
 
-		for (; j < max; ++j)
-		{
-			segleaf[j] = i;
-		}
-	}
+    p = portals;
+    l = leafs;
+    for (i = 0; i < Level.NumGLSubsectors; ++i, ++l) {
+        j = Level.GLSubsectors[i].firstline;
+        max = j + Level.GLSubsectors[i].numlines;
 
-	p = portals;
-	l = leafs;
-	for (i = 0; i < Level.NumGLSubsectors; ++i, ++l)
-	{
-		j = Level.GLSubsectors[i].firstline;
-		max = j + Level.GLSubsectors[i].numlines;
+        // Count portals in this leaf
+        for (; j < max; ++j) {
+            if (Level.GLSegs[j].partner != DWORD_MAX) {
+                ++l->numportals;
+            }
+        }
 
-		// Count portals in this leaf
-		for (; j < max; ++j)
-		{
-			if (Level.GLSegs[j].partner != DWORD_MAX)
-			{
-				++l->numportals;
-			}
-		}
+        if (l->numportals == 0) {
+            continue;
+        }
 
-		if (l->numportals == 0)
-		{
-			continue;
-		}
+        l->portals = new VPortal *[l->numportals];
 
-		l->portals = new VPortal *[l->numportals];
+        for (k = 0, j = Level.GLSubsectors[i].firstline; j < max; ++j) {
+            const MapSegGLEx *seg = &Level.GLSegs[j];
 
-		for (k = 0, j = Level.GLSubsectors[i].firstline; j < max; ++j)
-		{
-			const MapSegGLEx *seg = &Level.GLSegs[j];
+            if (seg->partner == DWORD_MAX) {
+                continue;
+            }
 
-			if (seg->partner == DWORD_MAX)
-			{
-				continue;
-			}
+            // create portal from seg
+            l->portals[k++] = p;
 
-			// create portal from seg
-			l->portals[k++] = p;
-			
-			w = &p->winding;
-			w->points[0] = GetVertex (seg->v1);
-			w->points[1] = GetVertex (seg->v2);
+            w = &p->winding;
+            w->points[0] = GetVertex(seg->v1);
+            w->points[1] = GetVertex(seg->v2);
 
-			p->hint = seg->linedef != NO_INDEX;
-			p->line.x = w->points[1].x;
-			p->line.y = w->points[1].y;
-			p->line.dx = w->points[0].x - p->line.x;
-			p->line.dy = w->points[0].y - p->line.y;
-			p->leaf = segleaf[seg->partner];
+            p->hint = seg->linedef != NO_INDEX;
+            p->line.x = w->points[1].x;
+            p->line.y = w->points[1].y;
+            p->line.dx = w->points[0].x - p->line.x;
+            p->line.dy = w->points[0].y - p->line.y;
+            p->leaf = segleaf[seg->partner];
 
-			p++;
-		}
-	}
+            p++;
+        }
+    }
 
-	delete[] segleaf;
+    delete[] segleaf;
 }

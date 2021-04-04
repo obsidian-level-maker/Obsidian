@@ -29,14 +29,14 @@
 #include <FL/Fl_Menu_.H>
 
 class FL_EXPORT Fl_Menu_Across : public Fl_Menu_ {
-protected:
-  void draw();
-public:
-  int handle(int);
-  const Fl_Menu_Item* popup();
-  Fl_Menu_Across(int,int,int,int,const char * =0);
-  int add(const char*, int shortcut, Fl_Callback*, void* = 0, int = 0);
+   protected:
+    void draw();
+
+   public:
+    int handle(int);
+    const Fl_Menu_Item *popup();
+    Fl_Menu_Across(int, int, int, int, const char * = 0);
+    int add(const char *, int shortcut, Fl_Callback *, void * = 0, int = 0);
 };
 
 #endif
-

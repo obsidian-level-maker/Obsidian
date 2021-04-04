@@ -79,7 +79,8 @@ void aj_rand_Seed(aj_rand_t *R, uint32_t seed)
 //    getpid(), getppid(), getuid()  [for Unixes]
 
 void aj_rand_FullSeed(aj_rand_t *R, uint32_t s1, uint32_t s2,
-									uint32_t s3, uint32_t s4)
+                                                                        uint32_t
+s3, uint32_t s4)
 
 // FIXME : Document rest of C API
 
@@ -100,7 +101,6 @@ myRand.Double() --> produce a double in range [0.0 - 1.0)
 
 */
 
-
 /* ---------------- API ------------------ */
 
 #ifndef __AJ_RANDOM_API_H__
@@ -114,16 +114,14 @@ myRand.Double() --> produce a double in range [0.0 - 1.0)
 extern "C" {
 #endif
 
-typedef struct
-{
-	uint32_t x, y, z, w, c;
+typedef struct {
+    uint32_t x, y, z, w, c;
 
 } aj_rand_t;
 
-
 void aj_rand_Seed(aj_rand_t *R, uint32_t seed);
-void aj_rand_FullSeed(aj_rand_t *R, uint32_t s1, uint32_t s2,
-									uint32_t s3, uint32_t s4);
+void aj_rand_FullSeed(aj_rand_t *R, uint32_t s1, uint32_t s2, uint32_t s3,
+                      uint32_t s4);
 
 unsigned int aj_rand_Int(aj_rand_t *R);
 double aj_rand_Double(aj_rand_t *R);
@@ -136,213 +134,171 @@ double aj_rand_Skew(aj_rand_t *R, double mid, double dist);
 }
 #endif
 
-
 /******  C++ API  ******/
 
 #ifdef __cplusplus
-class aj_Random_c
-{
-private:
-	aj_rand_t R;
+class aj_Random_c {
+   private:
+    aj_rand_t R;
 
-public:
-	aj_Random_c()
-	{
-		R.x = R.y = R.z = R.w = R.c = 1;
-	}
+   public:
+    aj_Random_c() { R.x = R.y = R.z = R.w = R.c = 1; }
 
-	~aj_Random_c()
-	{ }
+    ~aj_Random_c() {}
 
-	void Seed(uint32_t seed)
-	{
-		aj_rand_Seed(&R, seed);
-	}
+    void Seed(uint32_t seed) { aj_rand_Seed(&R, seed); }
 
-	void FullSeed(uint32_t s1, uint32_t s2,
-				  uint32_t s3, uint32_t s4 = 0)
-	{
-		aj_rand_FullSeed(&R, s1, s2, s3, s4);
-	}
+    void FullSeed(uint32_t s1, uint32_t s2, uint32_t s3, uint32_t s4 = 0) {
+        aj_rand_FullSeed(&R, s1, s2, s3, s4);
+    }
 
-	inline uint32_t Int()
-	{
-		return aj_rand_Int(&R);
-	}
+    inline uint32_t Int() { return aj_rand_Int(&R); }
 
-	inline double Double()
-	{
-		return aj_rand_Double(&R);
-	}
+    inline double Double() { return aj_rand_Double(&R); }
 
-	inline int IntRange(int low, int high)
-	{
-		return aj_rand_IntRange(&R, low, high);
-	}
+    inline int IntRange(int low, int high) {
+        return aj_rand_IntRange(&R, low, high);
+    }
 
-	inline double DoubleRange(double low, double high)
-	{
-		return aj_rand_DoubleRange(&R, low, high);
-	}
+    inline double DoubleRange(double low, double high) {
+        return aj_rand_DoubleRange(&R, low, high);
+    }
 
-	inline double Skew(double mid = 0.0, double dist = 1.0)
-	{
-		return aj_rand_Skew(&R, mid, dist);
-	}
+    inline double Skew(double mid = 0.0, double dist = 1.0) {
+        return aj_rand_Skew(&R, mid, dist);
+    }
 };
 #endif
 
 #endif /* __AJ_RANDOM_API_H__ */
 
-
 /* -------------- IMPLEMENTATION ---------------- */
 
 #ifdef AJ_RANDOM_IMPLEMENTATION
 
-#include <math.h>  /* ldexp */
+#include <math.h> /* ldexp */
 
+static void ajrand__WarmUp(aj_rand_t *R) {
+    /* warm up the generator : discard some initial values */
 
-static void ajrand__WarmUp(aj_rand_t *R)
-{
-	/* warm up the generator : discard some initial values */
+    int loop;
 
-	int loop;
-
-	for (loop = 0 ; loop < 1000 ; loop++)
-	{
-		aj_rand_Int(R);
-	}
+    for (loop = 0; loop < 1000; loop++) {
+        aj_rand_Int(R);
+    }
 }
 
+void aj_rand_Seed(aj_rand_t *R, uint32_t seed) {
+    R->x = 1;
+    R->y = (seed & 0xcccccccc) | 1;
+    R->z = (seed & 0x33333333);
+    R->w = 12345678;
+    R->c = 0;
 
-void aj_rand_Seed(aj_rand_t *R, uint32_t seed)
-{
-	R->x = 1;
-	R->y = (seed & 0xcccccccc) | 1;
-	R->z = (seed & 0x33333333);
-	R->w = 12345678;
-	R->c = 0;
-
-	ajrand__WarmUp(R);
+    ajrand__WarmUp(R);
 }
 
+void aj_rand_FullSeed(aj_rand_t *R, uint32_t s1, uint32_t s2, uint32_t s3,
+                      uint32_t s4) {
+    R->y = s1;
 
-void aj_rand_FullSeed(aj_rand_t *R, uint32_t s1, uint32_t s2,
-					  uint32_t s3, uint32_t s4)
-{
-	R->y = s1;
+    if (R->y == 0) R->y = 0x1337beef;
 
-	if (R->y == 0)
-		R->y = 0x1337beef;
+    R->z = s2;
+    R->w = s3;
+    R->c = 1;
 
-	R->z = s2;
-	R->w = s3;
-	R->c = 1;
+    R->x = s4;
 
-	R->x = s4;
-
-	ajrand__WarmUp(R);
+    ajrand__WarmUp(R);
 }
 
+uint32_t aj_rand_Int(aj_rand_t *R) {
+    uint32_t t;
 
-uint32_t aj_rand_Int(aj_rand_t *R)
-{
-	uint32_t t;
+    /* y is an 'xorshift' generator, y must never be 0 */
+    R->y ^= (R->y << 5);
+    R->y ^= (R->y >> 7);
+    R->y ^= (R->y << 22);
 
-	/* y is an 'xorshift' generator, y must never be 0 */
-	R->y ^= (R->y << 5);
-	R->y ^= (R->y >> 7);
-	R->y ^= (R->y << 22);
+    /* the 'add-with-carry' (AWC) generator */
+    t = R->z + R->w + R->c;
 
-	/* the 'add-with-carry' (AWC) generator */
-	t = R->z + R->w + R->c;
+    R->z = R->w;
+    R->c = (t & 0x80000000) >> 31;
+    R->w = (t & 0x7fffffff);
 
-	R->z = R->w;
-	R->c = (t & 0x80000000) >> 31;
-	R->w = (t & 0x7fffffff);
+    /* simple accumulator */
+    R->x += 1411392427;
 
-	/* simple accumulator */
-	R->x += 1411392427;
-
-	/* combine three generators into one result */
-	return R->y + R->w + R->x;
+    /* combine three generators into one result */
+    return R->y + R->w + R->x;
 }
 
+double aj_rand_Double(aj_rand_t *R) {
+    uint32_t a; /* Upper 26 bits */
+    uint32_t b; /* Lower 27 bits */
 
-double aj_rand_Double(aj_rand_t *R)
-{
-	uint32_t a;  /* Upper 26 bits */
-	uint32_t b;  /* Lower 27 bits */
+    double res;
 
-	double res;
+    a = aj_rand_Int(R) & 0x3ffffff;
+    b = aj_rand_Int(R) & 0x7ffffff;
 
-	a = aj_rand_Int(R) & 0x3ffffff;
-	b = aj_rand_Int(R) & 0x7ffffff;
+    res = ldexp(a * (double)0x8000000 + b, -53);
 
-	res = ldexp(a * (double)0x8000000 + b, -53);
-
-	return res;
+    return res;
 }
 
+int aj_rand_IntRange(aj_rand_t *R, int low, int high) {
+    uint32_t range, mod, limit, val;
 
-int aj_rand_IntRange(aj_rand_t *R, int low, int high)
-{
-	uint32_t range, mod, limit, val;
+    if (low >= high) return low;
 
-	if (low >= high)
-		return low;
+    range = high - low + 1;
 
-	range = high - low + 1;
+    /* compute remainder of (2 ^ 32) % range */
+    mod = 0xffffffff % range;
+    mod = (mod + 1) % range;
 
-	/* compute remainder of (2 ^ 32) % range */
-	mod = 0xffffffff % range;
-	mod =  (mod + 1) % range;
+    /* values above this would induce a bias into the result,
+     * so we must skip them.
+     */
+    limit = 0xffffffff - mod;
 
-	/* values above this would induce a bias into the result,
-	 * so we must skip them.
-	 */
-	limit = 0xffffffff - mod;
+    do {
+        val = aj_rand_Int(R);
 
-	do
-	{
-		val = aj_rand_Int(R);
+    } while (val > limit);
 
-	} while (val > limit);
+    val = val % range;
 
-	val = val % range;
-
-	return low + (int)val;
+    return low + (int)val;
 }
 
+double aj_rand_DoubleRange(aj_rand_t *R, double low, double high) {
+    double val;
 
-double aj_rand_DoubleRange(aj_rand_t *R, double low, double high)
-{
-	double val;
+    if (low >= high) return low;
 
-	if (low >= high)
-		return low;
+    val = aj_rand_Double(R);
 
-	val = aj_rand_Double(R);
-
-	return low + val * (high - low);
+    return low + val * (high - low);
 }
 
+double aj_rand_Skew(aj_rand_t *R, double mid, double dist) {
+    /* this is a poor man's normal distribution */
 
-double aj_rand_Skew(aj_rand_t *R, double mid, double dist)
-{
-	/* this is a poor man's normal distribution */
+    double val;
 
-	double val;
+    val = aj_rand_Double(R);
+    val -= aj_rand_Double(R);
+    val += aj_rand_Double(R);
+    val -= aj_rand_Double(R);
 
-	val  = aj_rand_Double(R);
-	val -= aj_rand_Double(R);
-	val += aj_rand_Double(R);
-	val -= aj_rand_Double(R);
-
-	return mid + dist * val / 2.0;
+    return mid + dist * val / 2.0;
 }
 
-#endif  /* AJ_RANDOM_IMPLEMENTATION */
+#endif /* AJ_RANDOM_IMPLEMENTATION */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

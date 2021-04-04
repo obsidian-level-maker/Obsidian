@@ -17,14 +17,13 @@
  *     http://www.fltk.org/str.php
  */
 
-
 #if defined(WIN32) && !defined(__CYGWIN__)
-#  include "scandir_win32.c"
+#include "scandir_win32.c"
 #else
-#  include <config.h>
-#  ifndef HAVE_SCANDIR
-#   include "scandir_posix.c"
-#  endif /* HAVE_SCANDIR */
+#include <config.h>
+#ifndef HAVE_SCANDIR
+#include "scandir_posix.c"
+#endif /* HAVE_SCANDIR */
 #endif
 
 /* Avoid "ISO C forbids an empty translation unit" warning */

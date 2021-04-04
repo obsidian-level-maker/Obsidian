@@ -24,98 +24,87 @@
 #include "structs.h"
 #include "system.h"
 
-
 struct lump_s;
-
 
 // wad header
 
-typedef struct wad_s
-{
-  // kind of wad file
-  enum { IWAD, PWAD } kind;
+typedef struct wad_s {
+    // kind of wad file
+    enum { IWAD, PWAD } kind;
 
-  // number of entries in directory
-  int num_entries;
+    // number of entries in directory
+    int num_entries;
 
-  // offset to start of directory
-  int dir_start;
+    // offset to start of directory
+    int dir_start;
 
-  // current directory entries
-  struct lump_s *dir_head;
-  struct lump_s *dir_tail;
+    // current directory entries
+    struct lump_s *dir_head;
+    struct lump_s *dir_tail;
 
-  // current level
-  struct lump_s *current_level;
+    // current level
+    struct lump_s *current_level;
 
-  // array of level names found
-  const char ** level_names;
-  int num_level_names;
-}
-wad_t;
-
+    // array of level names found
+    const char **level_names;
+    int num_level_names;
+} wad_t;
 
 // level information
 
-typedef struct level_s
-{
-  // various flags
-  int flags;
+typedef struct level_s {
+    // various flags
+    int flags;
 
-  // the child lump list
-  struct lump_s *children;
+    // the child lump list
+    struct lump_s *children;
 
-  // for normal levels, this is the associated GL level lump
-  struct lump_s *buddy;
-}
-level_t;
+    // for normal levels, this is the associated GL level lump
+    struct lump_s *buddy;
+} level_t;
 
 /* this level information holds GL lumps */
-#define LEVEL_IS_GL      0x0002
-
+#define LEVEL_IS_GL 0x0002
 
 // directory entry
 
-typedef struct lump_s
-{
-  // link in list
-  struct lump_s *next;
-  struct lump_s *prev;
+typedef struct lump_s {
+    // link in list
+    struct lump_s *next;
+    struct lump_s *prev;
 
-  // name of lump
-  char *name;
+    // name of lump
+    char *name;
 
-  // offset to start of lump
-  int start;
-  int new_start;
+    // offset to start of lump
+    int start;
+    int new_start;
 
-  // length of lump
-  int length;
-  int space;
+    // length of lump
+    int length;
+    int space;
 
-  // various flags
-  int flags;
- 
-  // data of lump
-  void *data;
+    // various flags
+    int flags;
 
-  // level information, usually NULL
-  level_t *lev_info;
-}
-lump_t;
+    // data of lump
+    void *data;
+
+    // level information, usually NULL
+    level_t *lev_info;
+} lump_t;
 
 /* this lump should be copied from the input wad */
-#define LUMP_COPY_ME       0x0004
+#define LUMP_COPY_ME 0x0004
 
 /* this lump shouldn't be written to the output wad */
-#define LUMP_IGNORE_ME     0x0008
+#define LUMP_IGNORE_ME 0x0008
 
 /* this lump needs to be loaded */
-#define LUMP_READ_ME       0x0100
+#define LUMP_READ_ME 0x0100
 
 /* this lump is new (didn't exist in the original) */
-#define LUMP_NEW           0x0200
-
+#define LUMP_NEW 0x0200
 
 /* ----- function prototypes --------------------- */
 
@@ -191,18 +180,15 @@ lump_t *CreateGLLump(const char *name);
 //
 void AppendLevelLump(lump_t *lump, const void *data, int length);
 
-
 /* ----- conversion macros ----------------------- */
 
+#define UINT8(x) ((uint8_g)(x))
+#define SINT8(x) ((sint8_g)(x))
 
-#define UINT8(x)   ((uint8_g) (x))
-#define SINT8(x)   ((sint8_g) (x))
+#define UINT16(x) Endian_U16(x)
+#define UINT32(x) Endian_U32(x)
 
-#define UINT16(x)  Endian_U16(x)
-#define UINT32(x)  Endian_U32(x)
-
-#define SINT16(x)  ((sint16_g) Endian_U16((uint16_g) (x)))
-#define SINT32(x)  ((sint32_g) Endian_U32((uint32_g) (x)))
-
+#define SINT16(x) ((sint16_g)Endian_U16((uint16_g)(x)))
+#define SINT32(x) ((sint32_g)Endian_U32((uint32_g)(x)))
 
 #endif /* __GLBSP_WAD_H__ */

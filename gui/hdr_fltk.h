@@ -32,7 +32,6 @@
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_File_Chooser.H>
-#include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_File_Icon.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Image.H>
@@ -42,6 +41,7 @@
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Multi_Browser.H>
+#include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Progress.H>
@@ -58,15 +58,13 @@
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
-
+#include <FL/filename.H>
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
-#include <FL/filename.H>
 #include <FL/x.H>
 
 /* Customisations */
 
 // #include "zf_input.h"
 
-#endif // __OB_HDR_FLTK__
-
+#endif  // __OB_HDR_FLTK__

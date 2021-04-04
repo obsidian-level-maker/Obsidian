@@ -21,110 +21,110 @@
 #ifndef __UI_MODS_H__
 #define __UI_MODS_H__
 
+#include <map>
+#include <string>
 
-class UI_Module : public Fl_Group
-{
-friend class UI_CustomMods;
+#include "Fl/Fl_Check_Button.H"
+#include "Fl/Fl_Group.H"
+#include "Fl/Fl_Scrollbar.H"
+#include "ui_rchoice.h"
 
-	// NOTES:
-	// -  module is "enabled" when mod_button->value() == 1
-	// -  module is "shown" when visible() == true
+class UI_Module : public Fl_Group {
+    friend class UI_CustomMods;
 
-private:
-	std::string id_name;
+    // NOTES:
+    // -  module is "enabled" when mod_button->value() == 1
+    // -  module is "shown" when visible() == true
 
-	Fl_Check_Button *mod_button;  
+   private:
+    std::string id_name;
 
-	std::map<std::string, UI_RChoice *> choice_map;
+    Fl_Check_Button *mod_button;
 
-	// only used while positioning the options (as they are added)
-	int cur_opt_y;
+    std::map<std::string, UI_RChoice *> choice_map;
 
-public:
-	UI_Module(int X, int Y, int W, int H, const char *id, const char *label, const char *tip);
-	virtual ~UI_Module();
+    // only used while positioning the options (as they are added)
+    int cur_opt_y;
 
-	void AddOption(const char *option, const char *label, const char *tip,
-	               int gap, Fl_Color select_col);
+   public:
+    UI_Module(int X, int Y, int W, int H, const char *id, const char *label,
+              const char *tip);
+    virtual ~UI_Module();
 
-	void AddOptionChoice(const char *option, const char *id, const char *label);
+    void AddOption(const char *option, const char *label, const char *tip,
+                   int gap, Fl_Color select_col);
 
-	bool SetOption(const char *option, const char *value);
+    void AddOptionChoice(const char *option, const char *id, const char *label);
 
-	bool Is_UI() const;
+    bool SetOption(const char *option, const char *value);
 
-public:
-	int CalcHeight() const;
+    bool Is_UI() const;
 
-	void update_Enable();
-	
-	UI_RChoice *FindOpt(const char *opt); // const;
+   public:
+    int CalcHeight() const;
 
-protected:
+    void update_Enable();
 
-private:
+    UI_RChoice *FindOpt(const char *opt);  // const;
 
-	void resize(int X, int Y, int W, int H);
+   protected:
+   private:
+    void resize(int X, int Y, int W, int H);
 
-	static void callback_OptChange(Fl_Widget *w, void *data);
+    static void callback_OptChange(Fl_Widget *w, void *data);
 };
 
+class UI_CustomMods : public Fl_Group {
+   private:
+    Fl_Group *mod_pack_group;
 
-class UI_CustomMods : public Fl_Group
-{
-private:
+    Fl_Group *mod_pack;
 
-	Fl_Group *mod_pack_group;
+    Fl_Scrollbar *sbar;
 
-	Fl_Group *mod_pack;
+    // area occupied by module list
+    int mx, my, mw, mh;
 
-	Fl_Scrollbar *sbar;
+    // number of pixels "lost" above the top of the module area
+    int offset_y;
 
-	// area occupied by module list
-	int mx, my, mw, mh;
+    // total height of all shown modules
+    int total_h;
 
-	// number of pixels "lost" above the top of the module area
-	int offset_y;
+    // highlight color for option buttons
+    Fl_Color button_col;
 
-	// total height of all shown modules
-	int total_h;
+   public:
+    UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col);
+    virtual ~UI_CustomMods();
 
-	// highlight color for option buttons
-	Fl_Color button_col;
+   public:
+    void AddModule(const char *id, const char *label, const char *tip);
 
-public:
-	UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col);
-	virtual ~UI_CustomMods();
+    // these return false if module is unknown
+    bool ShowModule(const char *id, bool new_shown);
+    bool EnableMod(const char *id, bool enable);
 
-public:
-	void AddModule(const char *id, const char *label, const char *tip);
+    bool AddOption(const char *module, const char *option, const char *label,
+                   const char *tip, int gap);
 
-	// these return false if module is unknown
-	bool ShowModule(const char *id, bool new_shown);
-	bool EnableMod(const char *id, bool enable);
+    void AddOptionChoice(const char *module, const char *option, const char *id,
+                         const char *label);
 
-	bool AddOption (const char *module, const char *option, const char *label,
-	                const char *tip, int gap);
+    bool SetOption(const char *module, const char *option, const char *value);
 
-	void AddOptionChoice(const char *module, const char *option,
-						 const char *id, const char *label);
+    void Locked(bool value);
 
-	bool SetOption(const char *module, const char *option, const char *value);
+    UI_Module *FindID(const char *id) const;
 
-	void Locked(bool value);
-	
-	UI_Module *FindID(const char *id) const;
+   private:
+    void PositionAll(UI_Module *focus = NULL);
 
-private:
-	
-	void PositionAll(UI_Module *focus = NULL);
-	
-	void resize(int X, int Y, int W, int H);
+    void resize(int X, int Y, int W, int H);
 
-	static void callback_Scroll(Fl_Widget *w, void *data);
-	static void callback_ModEnable(Fl_Widget *w, void *data);
+    static void callback_Scroll(Fl_Widget *w, void *data);
+    static void callback_ModEnable(Fl_Widget *w, void *data);
 };
-
 
 #endif /* __UI_MODS_H__ */
 

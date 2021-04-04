@@ -23,17 +23,17 @@
 
 // basic types
 
-typedef char  s8_t;
+typedef char s8_t;
 typedef short s16_t;
-typedef int   s32_t;
- 
-typedef unsigned char  u8_t;
+typedef int s32_t;
+
+typedef unsigned char u8_t;
 typedef unsigned short u16_t;
-typedef unsigned int   u32_t;
+typedef unsigned int u32_t;
 
 typedef u8_t byte;
 
-#endif  /* __SYS_TYPE_H__ */
+#endif /* __SYS_TYPE_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

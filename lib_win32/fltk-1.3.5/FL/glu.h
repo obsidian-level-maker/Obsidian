@@ -24,27 +24,27 @@
 //
 
 #ifndef FL_glu_H
-#  define FL_glu_H
+#define FL_glu_H
 
-#  include "Enumerations.H" // for color names
-#  ifdef WIN32
-#    include <windows.h>
-#  endif
-#  ifndef APIENTRY
-#    if defined(__CYGWIN__)
-#      define APIENTRY __attribute__ ((__stdcall__))
-#    else
-#      define APIENTRY
-#    endif
-#  endif
+#include "Enumerations.H"  // for color names
+#ifdef WIN32
+#include <windows.h>
+#endif
+#ifndef APIENTRY
+#if defined(__CYGWIN__)
+#define APIENTRY __attribute__((__stdcall__))
+#else
+#define APIENTRY
+#endif
+#endif
 
-#  ifdef __APPLE__
-#    include <OpenGL/glu.h>
-#  else
-#    include <GL/glu.h>
-#  endif
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
 
-#endif // !FL_glu_H
+#endif  // !FL_glu_H
 
 //
 // End of "$Id$".
