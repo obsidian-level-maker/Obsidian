@@ -643,10 +643,12 @@ bool Build_Cool_Shit()
 	else
 	{
 		if (main_win)
+		{
 			main_win->build_box->seed_disp->copy_label("Seed: -");
 			main_win->build_box->seed_disp->redraw();
 			main_win->build_box->name_disp->copy_label("");
 			main_win->build_box->name_disp->redraw();					
+		}
 	}
 
 	if (main_win)
