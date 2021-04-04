@@ -18,7 +18,7 @@
 //
 //  Based on the "editor.cxx" sample program from FLTK 1.1.6,
 //  as described in Chapter 4 of the FLTK Programmer's Guide.
-//  
+//
 //  Copyright 1998-2004 by Bill Spitzak, Mike Sweet and others.
 //
 //------------------------------------------------------------------------
@@ -26,27 +26,26 @@
 #ifndef __LM_EDITOR_H__
 #define __LM_EDITOR_H__
 
-class W_Editor : public Fl_Text_Editor
-{
-public:
+class W_Editor : public Fl_Text_Editor {
+   public:
     Fl_Text_Buffer *textbuf;
     Fl_Text_Buffer *stylebuf;
 
-private:
+   private:
     bool cur_dark;
-    int  cur_font_h;
+    int cur_font_h;
 
     const char *cur_filename;
 
-public:
+   public:
     W_Editor(int X, int Y, int W, int H, const char *label = 0);
     ~W_Editor();
 
-public:
+   public:
     // FLTK virtual method for handling input events.
     int handle(int event);
 
-public:
+   public:
     void SetDark(bool dark);
     void SetFont(int font_h);
 
@@ -79,18 +78,19 @@ public:
     int ParseKeyword(const char *text, const char *t_end, char *style);
     int ParseComment(const char *text, const char *t_end, char *style);
 
-    int ParseString(const char *text, const char *t_end, char *style, char& context);
-    int ParseCommentBig(const char *text, const char *t_end, char *style, char& context);
+    int ParseString(const char *text, const char *t_end, char *style,
+                    char &context);
+    int ParseCommentBig(const char *text, const char *t_end, char *style,
+                        char &context);
 
     static const char *keywords[];
 
-private:
+   private:
     static const int TABLE_SIZE = 20;
 
-    static Fl_Text_Display::Style_Table_Entry table_dark [TABLE_SIZE];
+    static Fl_Text_Display::Style_Table_Entry table_dark[TABLE_SIZE];
     static Fl_Text_Display::Style_Table_Entry table_light[TABLE_SIZE];
 };
-
 
 #endif /* __LM_EDITOR_H__ */
 

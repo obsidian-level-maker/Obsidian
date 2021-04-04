@@ -18,27 +18,26 @@
 #define __AJPOLY_LOCAL_H__
 
 #include <ctype.h>
+#include <errno.h>
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <math.h>
-#include <errno.h>
 
 #include <vector>
 
 #include "ajpoly.h"
 
-#define HAVE_PHYSFS  1
+#define HAVE_PHYSFS 1
 #include "physfs.h"
 
-namespace ajpoly
-{
+namespace ajpoly {
 
-#include "pl_util.h"
 #include "pl_endian.h"
 #include "pl_map.h"
 #include "pl_structs.h"
+#include "pl_util.h"
 #include "pl_wad.h"
 
 }  // namespace ajpoly

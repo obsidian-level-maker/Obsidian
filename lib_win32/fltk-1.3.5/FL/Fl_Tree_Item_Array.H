@@ -6,10 +6,11 @@
 #define _FL_TREE_ITEM_ARRAY_H
 
 #include <FL/Fl.H>
+
 #include "Fl_Export.H"
 
-class Fl_Tree_Item;		// forward decl must *precede* first doxygen comment block
-				// or doxygen will not document our class..
+class Fl_Tree_Item;  // forward decl must *precede* first doxygen comment block
+                     // or doxygen will not document our class..
 
 //////////////////////////
 // FL/Fl_Tree_Item_Array.H
@@ -31,7 +32,8 @@ class Fl_Tree_Item;		// forward decl must *precede* first doxygen comment block
 
 ///
 /// \file
-/// \brief This file defines a class that manages an array of Fl_Tree_Item pointers.
+/// \brief This file defines a class that manages an array of Fl_Tree_Item
+/// pointers.
 ///
 
 /// \brief Manages an array of Fl_Tree_Item pointers.
@@ -45,64 +47,61 @@ class Fl_Tree_Item;		// forward decl must *precede* first doxygen comment block
 ///
 
 class FL_EXPORT Fl_Tree_Item_Array {
-  Fl_Tree_Item **_items;	// items array
-  int _total;			// #items in array
-  int _size;			// #items *allocated* for array
-  int _chunksize;		// #items to enlarge mem allocation
+    Fl_Tree_Item **_items;  // items array
+    int _total;             // #items in array
+    int _size;              // #items *allocated* for array
+    int _chunksize;         // #items to enlarge mem allocation
 #if FLTK_ABI_VERSION >= 10303
-  enum {			
-    MANAGE_ITEM = 1,		///> manage the Fl_Tree_Item's internals (internal use only)
-  };
-  char _flags;			// flags to control behavior
+    enum {
+        MANAGE_ITEM =
+            1,  ///> manage the Fl_Tree_Item's internals (internal use only)
+    };
+    char _flags;  // flags to control behavior
 #endif
-  void enlarge(int count);
-public:
-  Fl_Tree_Item_Array(int new_chunksize = 10);		// CTOR
-  ~Fl_Tree_Item_Array();				// DTOR
-  Fl_Tree_Item_Array(const Fl_Tree_Item_Array *o);	// COPY CTOR
-  /// Return the item and index \p i.
-  Fl_Tree_Item *operator[](int i) {
-    return(_items[i]);
-  }
-  /// Const version of operator[](int i)
-  const Fl_Tree_Item *operator[](int i) const {
-    return(_items[i]);
-  }
-  /// Return the total items in the array, or 0 if empty.
-  int total() const {
-    return(_total);
-  }
-  /// Swap the two items at index positions \p ax and \p bx.
+    void enlarge(int count);
+
+   public:
+    Fl_Tree_Item_Array(int new_chunksize = 10);       // CTOR
+    ~Fl_Tree_Item_Array();                            // DTOR
+    Fl_Tree_Item_Array(const Fl_Tree_Item_Array *o);  // COPY CTOR
+    /// Return the item and index \p i.
+    Fl_Tree_Item *operator[](int i) { return (_items[i]); }
+    /// Const version of operator[](int i)
+    const Fl_Tree_Item *operator[](int i) const { return (_items[i]); }
+    /// Return the total items in the array, or 0 if empty.
+    int total() const { return (_total); }
+    /// Swap the two items at index positions \p ax and \p bx.
 #if FLTK_ABI_VERSION >= 10301
-  // NEW -- code moved to .cxx
-  void swap(int ax, int bx);
-#else /*FLTK_ABI_VERSION*/
-  // OLD
-  void swap(int ax, int bx) {
-    Fl_Tree_Item *asave = _items[ax];
-    _items[ax] = _items[bx];
-    _items[bx] = asave;
-  }
+    // NEW -- code moved to .cxx
+    void swap(int ax, int bx);
+#else  /*FLTK_ABI_VERSION*/
+    // OLD
+    void swap(int ax, int bx) {
+        Fl_Tree_Item *asave = _items[ax];
+        _items[ax] = _items[bx];
+        _items[bx] = asave;
+    }
 #endif /*FLTK_ABI_VERSION*/
-  int move(int to, int from);
-  int deparent(int pos);
-  int reparent(Fl_Tree_Item *item, Fl_Tree_Item *newparent, int pos);
-  void clear();
-  void add(Fl_Tree_Item *val);
-  void insert(int pos, Fl_Tree_Item *new_item);
-  void replace(int pos, Fl_Tree_Item *new_item);
-  void remove(int index);
-  int  remove(Fl_Tree_Item *item);
+    int move(int to, int from);
+    int deparent(int pos);
+    int reparent(Fl_Tree_Item *item, Fl_Tree_Item *newparent, int pos);
+    void clear();
+    void add(Fl_Tree_Item *val);
+    void insert(int pos, Fl_Tree_Item *new_item);
+    void replace(int pos, Fl_Tree_Item *new_item);
+    void remove(int index);
+    int remove(Fl_Tree_Item *item);
 #if FLTK_ABI_VERSION >= 10303
-  /// Option to control if Fl_Tree_Item_Array's destructor will also destroy the Fl_Tree_Item's.
-  /// If set: items and item array is destroyed. 
-  /// If clear: only the item array is destroyed, not items themselves.
-  void manage_item_destroy(int val) {
-    if ( val ) _flags |= MANAGE_ITEM; else _flags &= ~MANAGE_ITEM;
-  }
-  int manage_item_destroy() const {
-    return _flags & MANAGE_ITEM ? 1 : 0;
-  }
+    /// Option to control if Fl_Tree_Item_Array's destructor will also destroy
+    /// the Fl_Tree_Item's. If set: items and item array is destroyed. If clear:
+    /// only the item array is destroyed, not items themselves.
+    void manage_item_destroy(int val) {
+        if (val)
+            _flags |= MANAGE_ITEM;
+        else
+            _flags &= ~MANAGE_ITEM;
+    }
+    int manage_item_destroy() const { return _flags & MANAGE_ITEM ? 1 : 0; }
 #endif
 };
 

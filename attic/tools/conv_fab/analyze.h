@@ -21,8 +21,8 @@
 #ifndef __GLBSP_ANALYZE_H__
 #define __GLBSP_ANALYZE_H__
 
-#include "structs.h"
 #include "level.h"
+#include "structs.h"
 
 // detection routines
 void DetectDuplicateVertices(void);

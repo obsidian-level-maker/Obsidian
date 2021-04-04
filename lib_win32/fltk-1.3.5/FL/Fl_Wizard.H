@@ -24,10 +24,9 @@
 //
 
 #ifndef _Fl_Wizard_H_
-#  define _Fl_Wizard_H_
+#define _Fl_Wizard_H_
 
-#  include <FL/Fl_Group.H>
-
+#include <FL/Fl_Group.H>
 
 /**
     This widget is based off the Fl_Tabs
@@ -39,22 +38,20 @@
     Fl_Group) widgets. Navigation buttons must be added separately.
 */
 class FL_EXPORT Fl_Wizard : public Fl_Group {
+    Fl_Widget *value_;
 
-  Fl_Widget *value_;
+    void draw();
 
-  void draw();
+   public:
+    Fl_Wizard(int, int, int, int, const char * = 0);
 
-  public:
-
-  Fl_Wizard(int, int, int, int, const char * = 0);
-
-  void		next();
-  void		prev();
-  Fl_Widget	*value();
-  void		value(Fl_Widget *);
+    void next();
+    void prev();
+    Fl_Widget *value();
+    void value(Fl_Widget *);
 };
 
-#endif // !_Fl_Wizard_H_
+#endif  // !_Fl_Wizard_H_
 
 //
 // End of "$Id$".

@@ -25,8 +25,8 @@
 #include "Fl_Light_Button.H"
 
 class FL_EXPORT Fl_Radio_Light_Button : public Fl_Light_Button {
-public:
-  Fl_Radio_Light_Button(int X,int Y,int W,int H,const char *l=0);
+   public:
+    Fl_Radio_Light_Button(int X, int Y, int W, int H, const char *l = 0);
 };
 
 #endif

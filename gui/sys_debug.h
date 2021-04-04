@@ -27,10 +27,10 @@ void LogClose(void);
 void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
-void   LogPrintf(const char *str, ...);
+void LogPrintf(const char *str, ...);
 void DebugPrintf(const char *str, ...);
 
-typedef void (* log_display_func_t)(const char *line, void *priv_data);
+typedef void (*log_display_func_t)(const char *line, void *priv_data);
 
 void LogReadLines(log_display_func_t display_func, void *priv_data);
 

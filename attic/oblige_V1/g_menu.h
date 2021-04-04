@@ -19,8 +19,8 @@
 #ifndef __OBLIGE_MENU_H__
 #define __OBLIGE_MENU_H__
 
-#define MANUAL_WINDOW_MIN_W  500
-#define MANUAL_WINDOW_MIN_H  200
+#define MANUAL_WINDOW_MIN_W 500
+#define MANUAL_WINDOW_MIN_H 200
 
 #ifdef MACOSX
 Fl_Sys_Menu_Bar

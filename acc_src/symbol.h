@@ -19,97 +19,87 @@
 
 // TYPES -------------------------------------------------------------------
 
-typedef enum
-{
-	SY_DUMMY,
-	SY_LABEL,
-	SY_SCRIPTVAR,
-	SY_SCRIPTALIAS,
-	SY_MAPVAR,
-	SY_WORLDVAR,
-	SY_GLOBALVAR,
-	SY_SCRIPTARRAY,
-	SY_MAPARRAY,
-	SY_WORLDARRAY,
-	SY_GLOBALARRAY,
-	SY_SPECIAL,
-	SY_CONSTANT,
-	SY_INTERNFUNC,
-	SY_SCRIPTFUNC
+typedef enum {
+    SY_DUMMY,
+    SY_LABEL,
+    SY_SCRIPTVAR,
+    SY_SCRIPTALIAS,
+    SY_MAPVAR,
+    SY_WORLDVAR,
+    SY_GLOBALVAR,
+    SY_SCRIPTARRAY,
+    SY_MAPARRAY,
+    SY_WORLDARRAY,
+    SY_GLOBALARRAY,
+    SY_SPECIAL,
+    SY_CONSTANT,
+    SY_INTERNFUNC,
+    SY_SCRIPTFUNC
 } symbolType_t;
 
-typedef struct
-{
-	U_BYTE index;
+typedef struct {
+    U_BYTE index;
 } symVar_t;
 
-typedef struct
-{
-	U_BYTE index;
-	int dimensions[MAX_ARRAY_DIMS];
-	int ndim;
-	int size;
+typedef struct {
+    U_BYTE index;
+    int dimensions[MAX_ARRAY_DIMS];
+    int ndim;
+    int size;
 } symArray_t;
 
-typedef struct
-{
-	int address;
+typedef struct {
+    int address;
 } symLabel_t;
 
-typedef struct
-{
-	int value;
-	int argCount;
+typedef struct {
+    int value;
+    int argCount;
 } symSpecial_t;
 
-typedef struct
-{
-	int value;
-	char *strValue;
-	int fileDepth;
+typedef struct {
+    int value;
+    char *strValue;
+    int fileDepth;
 } symConstant_t;
 
-typedef struct
-{
-	pcd_t directCommand;
-	pcd_t stackCommand;
-	int argCount;
-	int optMask;
-	int outMask;
-	boolean hasReturnValue;
-	boolean latent;
+typedef struct {
+    pcd_t directCommand;
+    pcd_t stackCommand;
+    int argCount;
+    int optMask;
+    int outMask;
+    boolean hasReturnValue;
+    boolean latent;
 } symInternFunc_t;
 
-typedef struct
-{
-	int address;
-	int argCount;
-	int varCount;
-	int funcNumber;
-	boolean hasReturnValue;
-	int sourceLine;
-	char *sourceName;
-	boolean predefined;
+typedef struct {
+    int address;
+    int argCount;
+    int varCount;
+    int funcNumber;
+    boolean hasReturnValue;
+    int sourceLine;
+    char *sourceName;
+    boolean predefined;
 } symScriptFunc_t;
 
-typedef struct symbolNode_s
-{
-	struct symbolNode_s *left;
-	struct symbolNode_s *right;
-	char *name;
-	symbolType_t type;
-	boolean unused;
-	boolean imported;
-	union
-	{
-		symVar_t var;
-		symArray_t array;
-		symLabel_t label;
-		symSpecial_t special;
-		symConstant_t constant;
-		symInternFunc_t internFunc;
-		symScriptFunc_t scriptFunc;
-	} info;
+typedef struct symbolNode_s {
+    struct symbolNode_s *left;
+    struct symbolNode_s *right;
+    char *name;
+    symbolType_t type;
+    boolean unused;
+    boolean imported;
+    union {
+        symVar_t var;
+        symArray_t array;
+        symLabel_t label;
+        symSpecial_t special;
+        symConstant_t constant;
+        symInternFunc_t internFunc;
+        symScriptFunc_t scriptFunc;
+    } info;
 } symbolNode_t;
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------

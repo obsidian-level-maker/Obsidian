@@ -26,16 +26,13 @@ typedef struct lua_State lua_State;
 void Script_Open();
 void Script_Close();
 
+#define MAX_COLOR_MAPS 9  // 1 to 9 (from Lua)
+#define MAX_COLORS_PER_MAP 260
 
-#define MAX_COLOR_MAPS  9  // 1 to 9 (from Lua)
-#define MAX_COLORS_PER_MAP  260
-
-typedef struct
-{
-	byte colors[MAX_COLORS_PER_MAP];
-	int  size;
-}
-color_mapping_t;
+typedef struct {
+    byte colors[MAX_COLORS_PER_MAP];
+    int size;
+} color_mapping_t;
 
 extern color_mapping_t color_mappings[MAX_COLOR_MAPS];
 
@@ -45,10 +42,10 @@ bool ob_set_config(const char *key, const char *value);
 bool ob_set_mod_option(const char *module, const char *option,
                        const char *value);
 
-bool ob_read_all_config(std::vector<std::string> * lines, bool need_full);
+bool ob_read_all_config(std::vector<std::string> *lines, bool need_full);
 
-const char * ob_game_format();
-const char * ob_default_filename();
+const char *ob_game_format();
+const char *ob_default_filename();
 
 bool ob_build_cool_shit();
 

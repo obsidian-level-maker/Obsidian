@@ -21,7 +21,6 @@
 #ifndef __OBLIGE_DM_EXTRA_H__
 #define __OBLIGE_DM_EXTRA_H__
 
-
 #endif /* __OBLIGE_DM_EXTRA_H__ */
 
 //--- editor settings ---

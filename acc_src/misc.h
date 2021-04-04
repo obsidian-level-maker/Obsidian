@@ -11,6 +11,7 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include <stddef.h>
+
 #include "error.h"
 
 // MACROS ------------------------------------------------------------------
@@ -21,12 +22,7 @@
 
 // TYPES -------------------------------------------------------------------
 
-typedef enum
-{
-	MSG_NORMAL,
-	MSG_VERBOSE,
-	MSG_DEBUG
-} msg_t;
+typedef enum { MSG_NORMAL, MSG_VERBOSE, MSG_DEBUG } msg_t;
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
@@ -52,7 +48,7 @@ boolean MS_IsDirectoryDelimiter(char test);
 
 #ifdef _MSC_VER
 // Get rid of the annoying deprecation warnings with VC++2005 and newer.
-#pragma warning(disable:4996)
+#pragma warning(disable : 4996)
 #endif
 
 #endif

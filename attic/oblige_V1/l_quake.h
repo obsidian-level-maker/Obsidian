@@ -19,44 +19,37 @@
 #ifndef __OBLIGE_LQUAKE_H__
 #define __OBLIGE_LQUAKE_H__
 
+namespace level_quake {
 
-namespace level_quake
-{
+class brush_c {
+   public:
+    brush_c(short _x, short _y, short _low, short _high, const char *_tex);
+    virtual ~brush_c();
 
-class brush_c
-{
-public:
-	brush_c(short _x, short _y, short _low, short _high, const char *_tex);
-	virtual ~brush_c();
+    short x, y;
+    short low, high;
 
-	short x, y;
-	short low, high;
-
-	char tex_name[20];
+    char tex_name[20];
 };
 
+class entity_c {
+   public:
+    entity_c(short _x, short _y, short _z, short _type);
+    virtual ~entity_c();
 
-class entity_c
-{
-public:
-	entity_c(short _x, short _y, short _z, short _type);
-	virtual ~entity_c();
+    short x, y, z;
+    short angle;  // degress
+    short type;
+    short options;
+    short light_ity;
 
-	short x, y, z;
-	short angle;  // degress
-	short type;
-	short options;
-	short light_ity;
-
-public:
-	const char *ClassName() const
-	{
-		if (type == 1) return "info_player_start"; //!!!!
-		if (type == 2) return "light_flame_small_white";
-		return "monster_dog";
-	}
+   public:
+    const char *ClassName() const {
+        if (type == 1) return "info_player_start";  //!!!!
+        if (type == 2) return "light_flame_small_white";
+        return "monster_dog";
+    }
 };
-
 
 //------------------------------------------------------------------------
 

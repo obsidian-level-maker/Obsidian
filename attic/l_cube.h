@@ -19,21 +19,17 @@
 #ifndef __OBLIGE_LCUBE_H__
 #define __OBLIGE_LCUBE_H__
 
+namespace level_cube {
 
-namespace level_cube
-{
+class entity_c {
+   public:
+    entity_c(short _x, short _y, short _z, short _type);
+    virtual ~entity_c();
 
-class entity_c
-{
-public:
-	entity_c(short _x, short _y, short _z, short _type);
-	virtual ~entity_c();
-
-	short x, y, z;
-	short type;
-	short attrs[4];
+    short x, y, z;
+    short type;
+    short attrs[4];
 };
-
 
 //------------------------------------------------------------------------
 
@@ -42,6 +38,5 @@ void AddThing(short x, short y, short type);
 void WriteCube(const char *filename);
 
 }  // namespace level_cube
-
 
 #endif /* __OBLIGE_LCUBE_H__ */

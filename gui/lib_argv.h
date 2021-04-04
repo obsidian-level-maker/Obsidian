@@ -21,6 +21,8 @@
 #ifndef __LIB_ARGV_H__
 #define __LIB_ARGV_H__
 
+#include <cstddef>
+
 extern const char **arg_list;
 extern int arg_count;
 

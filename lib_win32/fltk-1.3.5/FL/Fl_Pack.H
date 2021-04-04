@@ -34,38 +34,38 @@
   other.  Then the Fl_Pack resizes itself to surround the child
   widgets.
   <P>This widget is needed for the Fl_Tabs.
-  In addition you may want to put the Fl_Pack inside an 
+  In addition you may want to put the Fl_Pack inside an
   Fl_Scroll.
 
   <P>The resizable for Fl_Pack is set to NULL by default.</p>
   <P>See also: Fl_Group::resizable()
 */
 class FL_EXPORT Fl_Pack : public Fl_Group {
-  int spacing_;
+    int spacing_;
 
-public:
-  enum { // values for type(int)
-    VERTICAL = 0,
-    HORIZONTAL = 1
-  };
+   public:
+    enum {  // values for type(int)
+        VERTICAL = 0,
+        HORIZONTAL = 1
+    };
 
-protected:
-  void draw();
+   protected:
+    void draw();
 
-public:
-  Fl_Pack(int x,int y,int w ,int h,const char *l = 0);
-  /**
-    Gets the number of extra pixels of blank space that are added
-    between the children.
-  */
-  int spacing() const {return spacing_;}
-  /**
-    Sets the number of extra pixels of blank space that are added
-    between the children.
-  */
-  void spacing(int i) {spacing_ = i;}
-  /** Same as Fl_Group::type() */
-  uchar horizontal() const {return type();}
+   public:
+    Fl_Pack(int x, int y, int w, int h, const char *l = 0);
+    /**
+      Gets the number of extra pixels of blank space that are added
+      between the children.
+    */
+    int spacing() const { return spacing_; }
+    /**
+      Sets the number of extra pixels of blank space that are added
+      between the children.
+    */
+    void spacing(int i) { spacing_ = i; }
+    /** Same as Fl_Group::type() */
+    uchar horizontal() const { return type(); }
 };
 
 #endif

@@ -18,7 +18,7 @@
 //
 //  Based on the "editor.cxx" sample program from FLTK 1.1.6,
 //  as described in Chapter 4 of the FLTK Programmer's Guide.
-//  
+//
 //  Copyright 1998-2004 by Bill Spitzak, Mike Sweet and others.
 //
 //------------------------------------------------------------------------

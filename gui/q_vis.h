@@ -21,52 +21,50 @@
 #ifndef __QUAKE_VIS_H__
 #define __QUAKE_VIS_H__
 
+#include <vector>
+
+#include "sys_type.h"
 
 // Quake 1 ambient sounds
-#define AMBIENT_WATER  0
-#define AMBIENT_SKY    1
-#define AMBIENT_SLIME  2
-#define AMBIENT_LAVA   3
-
+#define AMBIENT_WATER 0
+#define AMBIENT_SKY 1
+#define AMBIENT_SLIME 2
+#define AMBIENT_LAVA 3
 
 class quake_leaf_c;
 
+class qCluster_c {
+   public:
+    // cluster coordinate (starts at 0)
+    int cx, cy;
 
-class qCluster_c
-{
-public:
-  // cluster coordinate (starts at 0)
-  int cx, cy;
+    std::vector<quake_leaf_c *> leafs;
 
-  std::vector<quake_leaf_c *> leafs;
+    byte ambient_dists[4];
 
-  byte ambient_dists[4];
+    // offset into LUMP_VISIBILITY
+    int visofs;
+    int hearofs;  // Quake 2 only
 
-  // offset into LUMP_VISIBILITY
-  int visofs;
-  int hearofs;  // Quake 2 only
+   public:
+    qCluster_c(int _x, int _y);
 
-public:
-  qCluster_c(int _x, int _y);
+    ~qCluster_c();
 
-  ~qCluster_c();
+    void AddLeaf(quake_leaf_c *leaf);
 
-  void AddLeaf(quake_leaf_c *leaf);
+    // for Quake II, get the ID of the cluster (-1 for unused ones)
+    int CalcID() const;
 
-  // for Quake II, get the ID of the cluster (-1 for unused ones)
-  int CalcID() const;
-
-  void MarkAmbient(int kind);
+    void MarkAmbient(int kind);
 };
-
 
 /***** VARIABLES **********/
 
 extern int cluster_X, cluster_Y;
 extern int cluster_W, cluster_H;
 
-extern qCluster_c ** qk_clusters;
-
+extern qCluster_c **qk_clusters;
 
 /***** FUNCTIONS **********/
 
@@ -74,14 +72,13 @@ void QVIS_MakeTraceNodes();
 void QVIS_FreeTraceNodes();
 
 // returns true if OK, false if blocked
-bool QVIS_TraceRay(float x1, float y1, float z1,
-                   float x2, float y2, float z2);
+bool QVIS_TraceRay(float x1, float y1, float z1, float x2, float y2, float z2);
 
 // returns true if point is in air, false for solid or sky
 bool QVIS_TracePoint(float x, float y, float z);
 
-void QVIS_CreateClusters(double min_x, double min_y,
-                         double max_x, double max_y);
+void QVIS_CreateClusters(double min_x, double min_y, double max_x,
+                         double max_y);
 void QVIS_FreeClusters();
 
 void QVIS_MarkWall(int cx, int cy, int side);

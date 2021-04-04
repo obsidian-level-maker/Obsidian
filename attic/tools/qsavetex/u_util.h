@@ -28,7 +28,7 @@ void StringMaxCopy(char *dest, const char *src, int max);
 char *StringUpper(const char *name);
 char *StringNew(int length);
 char *StringDup(const char *orig);
-char *StringPrintf(const char *str, ...); // GCCATTR((format (printf, 1, 2)));
+char *StringPrintf(const char *str, ...);  // GCCATTR((format (printf, 1, 2)));
 void StringFree(const char *str);
 
 /* time utilities */
@@ -41,17 +41,16 @@ void TimeDelay(u32_t millies);
 u32_t IntHash(u32_t key);
 u32_t StringHash(const char *str);
 
-#define AlignLen(x)  (((x) + 3) & ~3)
+#define AlignLen(x) (((x) + 3) & ~3)
 
-double  PerpDist(double x, double y,
-                 double x1, double y1, double x2, double y2);
-double AlongDist(double x, double y,
-                 double x1, double y1, double x2, double y2);
+double PerpDist(double x, double y, double x1, double y1, double x2, double y2);
+double AlongDist(double x, double y, double x1, double y1, double x2,
+                 double y2);
 double CalcAngle(double sx, double sy, double ex, double ey);
 
 double ComputeDist(double sx, double sy, double ex, double ey);
-double ComputeDist(double sx, double sy, double sz,
-                   double ex, double ey, double ez);
+double ComputeDist(double sx, double sy, double sz, double ex, double ey,
+                   double ez);
 
 #endif /* __LIB_UTIL_H__ */
 

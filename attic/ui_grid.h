@@ -19,31 +19,29 @@
 #ifndef __UI_GRID_H__
 #define __UI_GRID_H__
 
-class UI_Grid : public Fl_Widget
-{
+class UI_Grid : public Fl_Widget {
+   public:
+    UI_Grid(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_Grid();
 
-public:
-  UI_Grid(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Grid();
+   public:
+    /* FLTK event handler method */
+    int handle(int event);
 
-public:
-  /* FLTK event handler method */
-  int handle(int event);
+    /* FLTK resize method */
+    void resize(int X, int Y, int W, int H);
 
-  /* FLTK resize method */
-  void resize(int X, int Y, int W, int H);
+   private:
+    /* FLTK draw method */
+    void draw();
 
-private:
-  /* FLTK draw method */
-  void draw();
+    void draw_grid();
+    void draw_rooms();
+    void draw_seeds();
+    void draw_links();
 
-  void draw_grid();
-  void draw_rooms();
-  void draw_seeds();
-  void draw_links();
-
-  int  handle_key(int key);
-  void handle_mouse(int wx, int wy);
+    int handle_key(int key);
+    void handle_mouse(int wx, int wy);
 };
 
 #endif /* __UI_GRID_H__ */
