@@ -29,15 +29,16 @@
 /**
   The Fl_Roller widget is a "dolly" control commonly used to
   move 3D objects.
-  <P ALIGN=CENTER>\image html Fl_Roller.png 
+  <P ALIGN=CENTER>\image html Fl_Roller.png
   \image latex Fl_Roller.png "Fl_Roller" width=4cm
 */
 class FL_EXPORT Fl_Roller : public Fl_Valuator {
-protected:
-  void draw();
-public:
-  int handle(int);
-  Fl_Roller(int X,int Y,int W,int H,const char* L=0);
+   protected:
+    void draw();
+
+   public:
+    int handle(int);
+    Fl_Roller(int X, int Y, int W, int H, const char *L = 0);
 };
 
 #endif

@@ -23,44 +23,38 @@
 
 #include "structs.h"
 
+#define DEFAULT_FACTOR 11
 
-#define DEFAULT_FACTOR  11
-
-#define IFFY_LEN  4.0
-
+#define IFFY_LEN 4.0
 
 // smallest distance between two points before being considered equal
-#define DIST_EPSILON  (1.0 / 128.0)
+#define DIST_EPSILON (1.0 / 128.0)
 
 // smallest degrees between two angles before being considered equal
-#define ANG_EPSILON  (1.0 / 1024.0)
-
+#define ANG_EPSILON (1.0 / 1024.0)
 
 // an "intersection" remembers the vertex that touches a BSP divider
 // line (especially a new vertex that is created at a seg split).
 
-typedef struct intersection_s
-{
-  // link in list.  The intersection list is kept sorted by
-  // along_dist, in ascending order.
-  struct intersection_s *next;
-  struct intersection_s *prev;
+typedef struct intersection_s {
+    // link in list.  The intersection list is kept sorted by
+    // along_dist, in ascending order.
+    struct intersection_s *next;
+    struct intersection_s *prev;
 
-  // vertex in question
-  vertex_t *vertex;
+    // vertex in question
+    vertex_t *vertex;
 
-  // how far along the partition line the vertex is.  Zero is at the
-  // partition seg's start point, positive values move in the same
-  // direction as the partition's direction, and negative values move
-  // in the opposite direction.
-  double along_dist;
+    // how far along the partition line the vertex is.  Zero is at the
+    // partition seg's start point, positive values move in the same
+    // direction as the partition's direction, and negative values move
+    // in the opposite direction.
+    double along_dist;
 
-  // open flag on each side of the vertex (along the partition)
-  int before;
-  int after;
-}
-intersection_t;
-
+    // open flag on each side of the vertex (along the partition)
+    int before;
+    int after;
+} intersection_t;
 
 /* -------- functions ---------------------------- */
 
@@ -69,7 +63,7 @@ intersection_t;
 // The 'depth' parameter is the current depth in the tree, used for
 // computing  the current progress.
 //
-seg_t *PickNode(seg_t *seg_list, int depth); 
+seg_t *PickNode(seg_t *seg_list, int depth);
 
 // compute the seg private info (psx/y, pex/y, pdx/y, etc).
 void RecomputeSeg(seg_t *seg);
@@ -80,28 +74,24 @@ void RecomputeSeg(seg_t *seg);
 // well.  Updates the intersection list if the seg lies on or crosses
 // the partition line.
 //
-void DivideOneSeg(seg_t *cur, seg_t *part, 
-    seg_t ** left_list, seg_t ** right_list,
-    intersection_t ** cut_list);
+void DivideOneSeg(seg_t *cur, seg_t *part, seg_t **left_list,
+                  seg_t **right_list, intersection_t **cut_list);
 
 // remove all the segs from the list, partitioning them into the left
 // or right lists based on the given partition line.  Adds any
 // intersections onto the intersection list as it goes.
 //
-void SeparateSegs(seg_t *seg_list, seg_t *part,
-    seg_t ** left_list, seg_t ** right_list,
-    intersection_t ** cut_list);
+void SeparateSegs(seg_t *seg_list, seg_t *part, seg_t **left_list,
+                  seg_t **right_list, intersection_t **cut_list);
 
 // analyse the intersection list, and add any needed minisegs to the
 // given seg lists (one miniseg on each side).  All the intersection
 // structures will be freed back into a quick-alloc list.
 //
-void AddMinisegs(seg_t *part, 
-    seg_t ** left_list, seg_t ** right_list, 
-    intersection_t *cut_list);
+void AddMinisegs(seg_t *part, seg_t **left_list, seg_t **right_list,
+                 intersection_t *cut_list);
 
 // free the quick allocation cut list
 void FreeQuickAllocCuts(void);
-
 
 #endif /* __GLBSP_SEG_H__ */

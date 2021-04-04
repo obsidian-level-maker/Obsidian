@@ -23,111 +23,94 @@
 #define PACKEDATTR
 #endif
 
-typedef struct
-{
-	char type[4];
+typedef struct {
+    char type[4];
 
-	u32_t num_entries;
-	u32_t dir_start;
+    u32_t num_entries;
+    u32_t dir_start;
 
 } PACKEDATTR raw_wad_header_t;
 
+typedef struct {
+    u32_t start;
+    u32_t length;
 
-typedef struct
-{
-	u32_t start;
-	u32_t length;
-
-	char name[8];
+    char name[8];
 
 } PACKEDATTR raw_wad_entry_t;
 
-
-typedef struct
-{
-	s16_t x, y;
+typedef struct {
+    s16_t x, y;
 
 } PACKEDATTR raw_vertex_t;
 
-
-typedef struct
-{
-	u16_t start;     // from this vertex...
-	u16_t end;       // ... to this vertex
-	u16_t flags;     // linedef flags (impassible, etc)
-	u16_t type;      // linedef type (0 for none, 97 for teleporter, etc)
-	u16_t tag;       // this linedef activates the sector with same tag
-	u16_t sidedef1;  // right sidedef
-	u16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
+typedef struct {
+    u16_t start;     // from this vertex...
+    u16_t end;       // ... to this vertex
+    u16_t flags;     // linedef flags (impassible, etc)
+    u16_t type;      // linedef type (0 for none, 97 for teleporter, etc)
+    u16_t tag;       // this linedef activates the sector with same tag
+    u16_t sidedef1;  // right sidedef
+    u16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
 
 } PACKEDATTR raw_linedef_t;
 
-typedef struct
-{
-	u16_t start;        // from this vertex...
-	u16_t end;          // ... to this vertex
-	u16_t flags;        // linedef flags (impassible, etc)
-	u8_t  type;         // linedef type
-	u8_t  specials[5];  // hexen specials
-	u16_t sidedef1;     // right sidedef
-	u16_t sidedef2;     // left sidedef
+typedef struct {
+    u16_t start;       // from this vertex...
+    u16_t end;         // ... to this vertex
+    u16_t flags;       // linedef flags (impassible, etc)
+    u8_t type;         // linedef type
+    u8_t specials[5];  // hexen specials
+    u16_t sidedef1;    // right sidedef
+    u16_t sidedef2;    // left sidedef
 
 } PACKEDATTR raw_hexen_linedef_t;
 
+typedef struct {
+    s16_t x_offset;  // X offset for texture
+    s16_t y_offset;  // Y offset for texture
 
-typedef struct
-{
-	s16_t x_offset;  // X offset for texture
-	s16_t y_offset;  // Y offset for texture
+    char upper_tex[8];  // texture name for the part above
+    char lower_tex[8];  // texture name for the part below
+    char mid_tex[8];    // texture name for the regular part
 
-	char upper_tex[8];  // texture name for the part above
-	char lower_tex[8];  // texture name for the part below
-	char mid_tex[8];    // texture name for the regular part
-
-	u16_t sector;    // adjacent sector
+    u16_t sector;  // adjacent sector
 
 } PACKEDATTR raw_sidedef_t;
 
+typedef struct {
+    s16_t floor_h;  // floor height
+    s16_t ceil_h;   // ceiling height
 
-typedef struct
-{
-	s16_t floor_h;   // floor height
-	s16_t ceil_h;    // ceiling height
+    char floor_tex[8];  // floor texture
+    char ceil_tex[8];   // ceiling texture
 
-	char floor_tex[8];  // floor texture
-	char ceil_tex[8];   // ceiling texture
-
-	u16_t light;     // light level (0-255)
-	u16_t special;   // special behaviour (0 = normal, 9 = secret, ...)
-	s16_t tag;       // sector activated by a linedef with same tag
+    u16_t light;    // light level (0-255)
+    u16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
+    s16_t tag;      // sector activated by a linedef with same tag
 
 } PACKEDATTR raw_sector_t;
 
-
-typedef struct
-{
-	s16_t x, y;      // position of thing
-	s16_t angle;     // angle thing faces (degrees)
-	u16_t type;      // type of thing
-	u16_t options;   // when appears, deaf, etc..
+typedef struct {
+    s16_t x, y;     // position of thing
+    s16_t angle;    // angle thing faces (degrees)
+    u16_t type;     // type of thing
+    u16_t options;  // when appears, deaf, etc..
 
 } PACKEDATTR raw_thing_t;
 
+typedef struct {
+    s16_t tid;      // thing tag id (for scripts/specials)
+    s16_t x, y;     // position
+    s16_t height;   // start height above floor
+    s16_t angle;    // angle thing faces
+    u16_t type;     // type of thing
+    u16_t options;  // when appears, deaf, dormant, etc..
 
-typedef struct
-{
-	s16_t tid;       // thing tag id (for scripts/specials)
-	s16_t x, y;      // position
-	s16_t height;    // start height above floor
-	s16_t angle;     // angle thing faces
-	u16_t type;      // type of thing
-	u16_t options;   // when appears, deaf, dormant, etc..
+    u8_t special;  // special type
+    u8_t arg[5];   // special arguments
 
-	u8_t special;    // special type
-	u8_t arg[5];     // special arguments
-
-}  PACKEDATTR raw_hexen_thing_t;
-
+} PACKEDATTR raw_hexen_thing_t;
 
 #endif /* __AJPOLY_STRUCTS_H__ */
 

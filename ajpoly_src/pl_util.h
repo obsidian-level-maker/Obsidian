@@ -19,48 +19,45 @@
 
 /* ----- TYPES ----------------------------------- */
 
-typedef signed char  s8_t;
+typedef signed char s8_t;
 typedef signed short s16_t;
-typedef signed int   s32_t;
-   
-typedef unsigned char  u8_t;
+typedef signed int s32_t;
+
+typedef unsigned char u8_t;
 typedef unsigned short u16_t;
-typedef unsigned int   u32_t;
+typedef unsigned int u32_t;
 
-typedef u8_t  byte;
-
+typedef u8_t byte;
 
 /* ----- MARCOS ------------------------------------- */
 
 #ifndef M_PI
-#define M_PI  3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 #ifndef MAX
-#define MAX(x,y)  ((x) > (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #endif
 
 #ifndef MIN
-#define MIN(x,y)  ((x) < (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
 #ifndef ABS
-#define ABS(x)  ((x) >= 0 ? (x) : -(x))
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
 #endif
 
 #ifndef I_ROUND
-#define I_ROUND(x)  ((int) (((x) < 0.0f) ? ((x) - 0.5f) : ((x) + 0.5f)))
+#define I_ROUND(x) ((int)(((x) < 0.0f) ? ((x)-0.5f) : ((x) + 0.5f)))
 #endif
-
 
 /* ----- CONSTANTS ---------------------------------- */
 
 // smallest distance between two points before being considered equal
-#define DIST_EPSILON  (1.0 / 128.0)
+#define DIST_EPSILON (1.0 / 128.0)
 
 // smallest degrees between two angles before being considered equal
-#define ANG_EPSILON  (1.0 / 1024.0)
-
+#define ANG_EPSILON (1.0 / 1024.0)
 
 /* ----- FUNCTIONS ---------------------------------- */
 
@@ -69,7 +66,6 @@ void SetErrorMsg(const char *str, ...);
 
 // compute angle for a 2D vector
 double ComputeAngle(double dx, double dy);
-
 
 #endif /* __AJPOLY_UTIL_H__ */
 

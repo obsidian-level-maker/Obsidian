@@ -23,14 +23,14 @@
 #define Fl_Simple_Counter_H
 
 #include "Fl_Counter.H"
-/** 
-  This widget creates a counter with only 2 arrow buttons 
-  <P align=center>\image html counter.png</P> 
+/**
+  This widget creates a counter with only 2 arrow buttons
+  <P align=center>\image html counter.png</P>
   \image latex  counter.png "Fl_Simple_Counter" width=4cm
 */
 class FL_EXPORT Fl_Simple_Counter : public Fl_Counter {
-public:
-  Fl_Simple_Counter(int X,int Y,int W,int H, const char *L = 0);
+   public:
+    Fl_Simple_Counter(int X, int Y, int W, int H, const char *L = 0);
 };
 
 #endif

@@ -18,48 +18,39 @@
 
 #include "defs.h"
 
-assert_fail_c::assert_fail_c(const char *_msg)
-{
-  strncpy(message, _msg, sizeof(message));
+assert_fail_c::assert_fail_c(const char *_msg) {
+    strncpy(message, _msg, sizeof(message));
 
-  message[sizeof(message) - 1] = 0;
+    message[sizeof(message) - 1] = 0;
 }
 
-assert_fail_c::~assert_fail_c()
-{
-  /* nothing needed */
-}
+assert_fail_c::~assert_fail_c() { /* nothing needed */ }
 
-assert_fail_c::assert_fail_c(const assert_fail_c &other)
-{
-  strcpy(message, other.message);
-}
-
-assert_fail_c& assert_fail_c::operator=(const assert_fail_c &other)
-{
-  if (this != &other)
+assert_fail_c::assert_fail_c(const assert_fail_c &other) {
     strcpy(message, other.message);
-  
-  return *this;
+}
+
+assert_fail_c &assert_fail_c::operator=(const assert_fail_c &other) {
+    if (this != &other) strcpy(message, other.message);
+
+    return *this;
 }
 
 //------------------------------------------------------------------------
 
-void AssertFail(const char *msg, ...)
-{
-  char buffer[1024];
+void AssertFail(const char *msg, ...) {
+    char buffer[1024];
 
-  va_list argptr;
+    va_list argptr;
 
-  va_start(argptr, msg);
-  vsprintf(buffer, msg, argptr);
-  va_end(argptr);
+    va_start(argptr, msg);
+    vsprintf(buffer, msg, argptr);
+    va_end(argptr);
 
-  // assertion messages shouldn't overflow... (famous last words)
-  buffer[sizeof(buffer) - 1] = 0;
+    // assertion messages shouldn't overflow... (famous last words)
+    buffer[sizeof(buffer) - 1] = 0;
 
-  PrintDebug("%s\n", buffer);
-  
-  throw assert_fail_c(buffer);
+    PrintDebug("%s\n", buffer);
+
+    throw assert_fail_c(buffer);
 }
-

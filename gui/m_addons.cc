@@ -18,228 +18,197 @@
 //
 //----------------------------------------------------------------------
 
-#include "headers.h"
+#include "m_addons.h"
+
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-
-#include "physfs.h"
-
+#include "headers.h"
 #include "lib_argv.h"
 #include "lib_file.h"
 #include "lib_util.h"
-
-#include "main.h"
-#include "m_addons.h"
 #include "m_cookie.h"
-
+#include "main.h"
+#include "physfs.h"
 
 // need this because the OPTIONS file is loaded *before* the addons
 // folder is scanned for PK3 packages, so remember enabled ones here.
 static std::map<std::string, int> initial_enabled_addons;
 
-typedef struct
-{
-	const char *name;	// base filename, includes ".pk3" extension
+typedef struct {
+    const char *name;  // base filename, includes ".pk3" extension
 
-	bool enabled;
+    bool enabled;
 
 } addon_info_t;
 
 static std::vector<addon_info_t> all_addons;
 
+void VFS_AddFolder(const char *name) {
+    char *path = StringPrintf("%s/%s", install_dir, name);
+    char *mount = StringPrintf("/%s", name);
 
-void VFS_AddFolder(const char *name)
-{
-	char *path  = StringPrintf("%s/%s", install_dir, name);
-	char *mount = StringPrintf("/%s", name);
+    if (!PHYSFS_mount(path, mount, 0)) {
+        Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name,
+                        PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        return; /* NOT REACHED */
+    }
 
-	if (! PHYSFS_mount(path, mount, 0))
-	{
-		Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
-						name, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-		return;  /* NOT REACHED */
-	}
-
-	DebugPrintf("mounted folder '%s'\n", name);
+    DebugPrintf("mounted folder '%s'\n", name);
 }
 
+bool VFS_AddArchive(const char *filename, bool options_file) {
+    LogPrintf("  using: %s\n", filename);
 
-bool VFS_AddArchive(const char *filename, bool options_file)
-{
-	LogPrintf("  using: %s\n", filename);
+    if (!HasExtension(filename))
+        filename = ReplaceExtension(filename, "pk3");
+    else
+        filename = StringDup(filename);
 
-	if (! HasExtension(filename))
-		filename = ReplaceExtension(filename, "pk3");
-	else
-		filename = StringDup(filename);
+    // when handling "bare" filenames from the command line (i.e. ones
+    // containing no paths or drive spec) and the file does not exist in
+    // the current dir, look for it in the standard addons/ folder.
+    if (options_file ||
+        (!FileExists(filename) && filename == fl_filename_name(filename))) {
+        char *new_name = StringPrintf("%s/addons/%s", home_dir, filename);
+        if (!FileExists(new_name)) {
+            StringFree(new_name);
+            new_name = StringPrintf("%s/addons/%s", install_dir, filename);
+        }
+        StringFree(filename);
+        filename = new_name;
+    }
 
-	// when handling "bare" filenames from the command line (i.e. ones
-	// containing no paths or drive spec) and the file does not exist in
-	// the current dir, look for it in the standard addons/ folder.
-	if (options_file ||
-		(! FileExists(filename) &&
-		 filename == fl_filename_name(filename)))
-	{
-		char *new_name = StringPrintf("%s/addons/%s", home_dir, filename);
-		if (! FileExists(new_name))
-		{
-			StringFree(new_name);
-			new_name = StringPrintf("%s/addons/%s", install_dir, filename);
-		}
-		StringFree(filename);
-		filename = new_name;
-	}
+    if (!PHYSFS_mount(filename, "/", 0)) {
+        if (options_file)
+            LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", filename,
+                      PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        else
+            Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
+                            filename,
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
-	if (! PHYSFS_mount(filename, "/", 0))
-	{
-		if (options_file)
-			LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-					  filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-		else
-			Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
-							filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        return false;
+    }
 
-		return false;
-	}
-
-	return true;  // Ok
+    return true;  // Ok
 }
 
+void VFS_InitAddons(const char *argv0) {
+    LogPrintf("Initializing VFS...\n");
 
-void VFS_InitAddons(const char *argv0)
-{
-	LogPrintf("Initializing VFS...\n");
+    if (!PHYSFS_init(argv0)) {
+        Main_FatalError("Failed to init PhysFS:\n%s\n",
+                        PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        return; /* NOT REACHED */
+    }
 
-	if (! PHYSFS_init(argv0))
-	{
-		Main_FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-		return;  /* NOT REACHED */
-	}
+    VFS_AddFolder("scripts");
+    VFS_AddFolder("games");
+    VFS_AddFolder("engines");
+    VFS_AddFolder("modules");
+    VFS_AddFolder("data");
 
-	VFS_AddFolder("scripts");
-	VFS_AddFolder("games");
-	VFS_AddFolder("engines");
-	VFS_AddFolder("modules");
-	VFS_AddFolder("data");
-
-	LogPrintf("DONE.\n\n");
+    LogPrintf("DONE.\n\n");
 }
 
+void VFS_ParseCommandLine() {
+    int arg = ArgvFind('a', "addon");
+    int count = 0;
 
-void VFS_ParseCommandLine()
-{
-	int arg = ArgvFind('a', "addon");
-	int count = 0;
+    if (arg < 0) return;
 
-	if (arg < 0)
-		return;
+    arg++;
 
-	arg++;
+    LogPrintf("Command-line addons....\n");
 
-	LogPrintf("Command-line addons....\n");
+    for (; arg < arg_count && !ArgvIsOption(arg); arg++, count++) {
+        VFS_AddArchive(arg_list[arg], false /* options_file */);
+    }
 
-	for (; arg < arg_count && ! ArgvIsOption(arg) ; arg++, count++)
-	{
-		VFS_AddArchive(arg_list[arg], false /* options_file */);
-	}
+    if (!count) Main_FatalError("Missing filename for --addon option\n");
 
-	if (! count)
-		Main_FatalError("Missing filename for --addon option\n");
-
-	LogPrintf("DONE\n\n");
+    LogPrintf("DONE\n\n");
 }
 
-
-void VFS_OptParse(const char *name)
-{
-	// just remember it now
-	if (initial_enabled_addons.find(name) == initial_enabled_addons.end())
-	{
-		initial_enabled_addons[name] = 1;
-	}
+void VFS_OptParse(const char *name) {
+    // just remember it now
+    if (initial_enabled_addons.find(name) == initial_enabled_addons.end()) {
+        initial_enabled_addons[name] = 1;
+    }
 }
 
+void VFS_OptWrite(FILE *fp) {
+    fprintf(fp, "---- Enabled Addons ----\n\n");
 
-void VFS_OptWrite(FILE *fp)
-{
-	fprintf(fp, "---- Enabled Addons ----\n\n");
+    for (unsigned int i = 0; i < all_addons.size(); i++) {
+        const addon_info_t *info = &all_addons[i];
 
-	for (unsigned int i = 0 ; i < all_addons.size() ; i++)
-	{
-		const addon_info_t * info = &all_addons[i];
+        if (info->enabled) fprintf(fp, "addon = %s\n", info->name);
+    }
 
-		if (info->enabled)
-			fprintf(fp, "addon = %s\n", info->name);
-	}
-
-	fprintf(fp, "\n");
+    fprintf(fp, "\n");
 }
 
+void VFS_ScanForAddons() {
+    LogPrintf("Scanning for addons....\n");
 
-void VFS_ScanForAddons()
-{
-	LogPrintf("Scanning for addons....\n");
+    all_addons.clear();
 
-	all_addons.clear();
+    char *dir_name = StringPrintf("%s/addons", home_dir);
 
-	char *dir_name = StringPrintf("%s/addons", home_dir);
+    std::vector<std::string> list;
+    int result1 = ScanDir_MatchingFiles(dir_name, "pk3", list);
+    int result2 = 0;
 
-	std::vector<std::string> list;
-	int result1 = ScanDir_MatchingFiles(dir_name, "pk3", list);
-	int result2 = 0;
+    if (std::string(home_dir).compare(std::string(install_dir)) != 0) {
+        StringFree(dir_name);
 
-    if (std::string(home_dir).compare(std::string(install_dir)) != 0)
-    {
-		StringFree(dir_name);
+        dir_name = StringPrintf("%s/addons", install_dir);
 
-		dir_name = StringPrintf("%s/addons", install_dir);
+        std::vector<std::string> list2;
 
-		std::vector<std::string> list2;
+        result2 = ScanDir_MatchingFiles(dir_name, "pk3", list2);
 
-		result2 = ScanDir_MatchingFiles(dir_name, "pk3", list2);
-		
-		list.insert(list.end(), list2.begin(), list2.end());
+        list.insert(list.end(), list2.begin(), list2.end());
 
-		std::vector<std::string>().swap(list2);	
-	}
+        std::vector<std::string>().swap(list2);
+    }
 
-	if ((result1 < 0) && (result2 < 0))
-	{
-		LogPrintf("FAILED -- no addon directory found.\n\n");
-		return;
-	}
-	
-	for (unsigned int i = 0 ; i < list.size() ; i++)
-	{
-		addon_info_t info;
+    if ((result1 < 0) && (result2 < 0)) {
+        LogPrintf("FAILED -- no addon directory found.\n\n");
+        return;
+    }
 
-		info.name = StringDup(list[i].c_str());
+    for (unsigned int i = 0; i < list.size(); i++) {
+        addon_info_t info;
 
-		info.enabled = false;
+        info.name = StringDup(list[i].c_str());
 
-		if (initial_enabled_addons.find(list[i]) != initial_enabled_addons.end())
-			info.enabled = true;
+        info.enabled = false;
 
-//DEBUG
-//info.enabled = true;
+        if (initial_enabled_addons.find(list[i]) !=
+            initial_enabled_addons.end())
+            info.enabled = true;
 
-		LogPrintf("  found: %s%s\n", info.name, info.enabled ? " (Enabled)" : " (Disabled)");
+        // DEBUG
+        // info.enabled = true;
 
-		all_addons.push_back(info);
+        LogPrintf("  found: %s%s\n", info.name,
+                  info.enabled ? " (Enabled)" : " (Disabled)");
 
-		// if enabled, install into the VFS
-		if (info.enabled)
-			VFS_AddArchive(info.name, true /* options_file */);
-	}
+        all_addons.push_back(info);
 
-	if (list.size() == 0)
-		LogPrintf("DONE (none found)\n");
-	else
-		LogPrintf("DONE\n");
+        // if enabled, install into the VFS
+        if (info.enabled) VFS_AddArchive(info.name, true /* options_file */);
+    }
 
-	LogPrintf("\n");
+    if (list.size() == 0)
+        LogPrintf("DONE (none found)\n");
+    else
+        LogPrintf("DONE\n");
+
+    LogPrintf("\n");
 }
-
 
 //----------------------------------------------------------------------
 
@@ -248,460 +217,388 @@ void VFS_ScanForAddons()
 // file system so we can use normal stdio file operations on it
 // [ especially a _library_ that uses stdio.h ]
 //
-bool VFS_CopyFile(const char *src_name, const char *dest_name)
-{
-	char buffer[1024];
+bool VFS_CopyFile(const char *src_name, const char *dest_name) {
+    char buffer[1024];
 
-	PHYSFS_file *src = PHYSFS_openRead(src_name);
-	if (! src)
-		return false;
+    PHYSFS_file *src = PHYSFS_openRead(src_name);
+    if (!src) return false;
 
-	FILE *dest = fopen(dest_name, "wb");
-	if (! dest)
-	{
-		PHYSFS_close(src);
-		return false;
-	}
+    FILE *dest = fopen(dest_name, "wb");
+    if (!dest) {
+        PHYSFS_close(src);
+        return false;
+    }
 
-	bool was_OK = true;
+    bool was_OK = true;
 
-	while (was_OK)
-	{
-		int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) / sizeof(buffer));
-		if (rlen < 0)
-			was_OK = false;
+    while (was_OK) {
+        int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) /
+                         sizeof(buffer));
+        if (rlen < 0) was_OK = false;
 
-		if (rlen <= 0)
-			break;
+        if (rlen <= 0) break;
 
-		int wlen = fwrite(buffer, 1, rlen, dest);
-		if (wlen < rlen || ferror(dest))
-			was_OK = false;
-	}
+        int wlen = fwrite(buffer, 1, rlen, dest);
+        if (wlen < rlen || ferror(dest)) was_OK = false;
+    }
 
-	fclose(dest);
-	PHYSFS_close(src);
+    fclose(dest);
+    PHYSFS_close(src);
 
-	return was_OK;
+    return was_OK;
 }
 
+byte *VFS_LoadFile(const char *filename, int *length) {
+    *length = 0;
 
-byte * VFS_LoadFile(const char *filename, int *length)
-{
-	*length = 0;
+    PHYSFS_File *fp = PHYSFS_openRead(filename);
 
-	PHYSFS_File *fp = PHYSFS_openRead(filename);
+    if (!fp) return NULL;
 
-	if (! fp)
-		return NULL;
+    *length = (int)PHYSFS_fileLength(fp);
 
-	*length = (int)PHYSFS_fileLength(fp);
+    if (*length < 0) {
+        PHYSFS_close(fp);
+        return NULL;
+    }
 
-	if (*length < 0)
-	{
-		PHYSFS_close(fp);
-		return NULL;
-	}
+    byte *data = new byte[*length + 1];
 
-	byte *data = new byte[*length + 1];
+    // ensure buffer is NUL-terminated
+    data[*length] = 0;
 
-	// ensure buffer is NUL-terminated
-	data[*length] = 0;
+    if ((PHYSFS_readBytes(fp, data, *length) / *length) != 1) {
+        VFS_FreeFile(data);
+        PHYSFS_close(fp);
+        return NULL;
+    }
 
-	if ((PHYSFS_readBytes(fp, data, *length) / *length) != 1)
-	{
-		VFS_FreeFile(data);
-		PHYSFS_close(fp);
-		return NULL;
-	}
+    PHYSFS_close(fp);
 
-	PHYSFS_close(fp);
-
-	return data;
+    return data;
 }
 
-
-void VFS_FreeFile(const byte *mem)
-{
-	if (mem)
-	{
-		delete[] mem;
-	}
+void VFS_FreeFile(const byte *mem) {
+    if (mem) {
+        delete[] mem;
+    }
 }
-
 
 //----------------------------------------------------------------------
 
-class UI_Addon : public Fl_Group
-{
-public:
-	addon_info_t *info;
+class UI_Addon : public Fl_Group {
+   public:
+    addon_info_t *info;
 
-	Fl_Check_Button *button;
+    Fl_Check_Button *button;
 
-public:
-	UI_Addon(int x, int y, int w, int h, addon_info_t *_info) :
-		Fl_Group(x, y, w, h),
-		info(_info)
-	{
-		box(FL_THIN_UP_BOX);
+   public:
+    UI_Addon(int x, int y, int w, int h, addon_info_t *_info)
+        : Fl_Group(x, y, w, h), info(_info) {
+        box(FL_THIN_UP_BOX);
 
-		// prefix the name with a space
-		const char *name2 = StringPrintf(" %s", info->name);
+        // prefix the name with a space
+        const char *name2 = StringPrintf(" %s", info->name);
 
-		button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), name2);
-		// if (tip)
-		//	button->tooltip(tip);
-		end();
+        button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12),
+                                     kf_h(24), name2);
+        // if (tip)
+        //	button->tooltip(tip);
+        end();
 
-		resizable(NULL);
-	}
+        resizable(NULL);
+    }
 
-	virtual ~UI_Addon()
-	{ }
+    virtual ~UI_Addon() {}
 
-	int CalcHeight() const
-	{
-		return kf_h(34);
-	}
-
+    int CalcHeight() const { return kf_h(34); }
 };
 
 //----------------------------------------------------------------------
 
-class UI_AddonsWin : public Fl_Window
-{
-public:
-	bool want_quit;
+class UI_AddonsWin : public Fl_Window {
+   public:
+    bool want_quit;
 
-	Fl_Group *pack;
+    Fl_Group *pack;
 
-	Fl_Scrollbar *sbar;
+    Fl_Scrollbar *sbar;
 
-	// area occupied by addon list
-	int mx, my, mw, mh;
+    // area occupied by addon list
+    int mx, my, mw, mh;
 
-	// number of pixels "lost" above the top
-	int offset_y;
+    // number of pixels "lost" above the top
+    int offset_y;
 
-	// total height of all shown addons
-	int total_h;
+    // total height of all shown addons
+    int total_h;
 
-public:
-	UI_AddonsWin(int W, int H, const char *label = NULL);
+   public:
+    UI_AddonsWin(int W, int H, const char *label = NULL);
 
-	virtual ~UI_AddonsWin()
-	{
-		// nothing needed
-	}
+    virtual ~UI_AddonsWin() {
+        // nothing needed
+    }
 
-	void Populate();
+    void Populate();
 
-	bool ApplyChanges();
+    bool ApplyChanges();
 
-	bool WantQuit() const
-	{
-		return want_quit;
-	}
+    bool WantQuit() const { return want_quit; }
 
-public:
-	// FLTK virtual method for handling input events.
-	int handle(int event);
+   public:
+    // FLTK virtual method for handling input events.
+    int handle(int event);
 
-private:
-	void InsertAddon(addon_info_t *info);
+   private:
+    void InsertAddon(addon_info_t *info);
 
-	void PositionAll();
+    void PositionAll();
 
-	static void callback_Scroll(Fl_Widget *w, void *data)
-	{
+    static void callback_Scroll(Fl_Widget *w, void *data) {
+        UI_AddonsWin *that = (UI_AddonsWin *)data;
 
-		UI_AddonsWin *that = (UI_AddonsWin *)data;
+        Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
 
-		Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
+        int previous_y = that->offset_y;
 
-		int previous_y = that->offset_y;
+        that->offset_y = sbar->value();
 
-		that->offset_y = sbar->value();
+        int dy = that->offset_y - previous_y;
 
-		int dy = that->offset_y - previous_y;
+        // simply reposition all the UI_Module widgets
+        for (int j = 0; j < that->pack->children(); j++) {
+            Fl_Widget *F = that->pack->child(j);
+            SYS_ASSERT(F);
 
-		// simply reposition all the UI_Module widgets
-		for (int j = 0; j < that->pack->children(); j++)
-		{
-			Fl_Widget *F = that->pack->child(j);
-			SYS_ASSERT(F);
+            F->resize(F->x(), F->y() - dy, F->w(), F->h());
+        }
 
-			F->resize(F->x(), F->y() - dy, F->w(), F->h());
-		}
+        that->pack->redraw();
+    }
 
-		that->pack->redraw();
-	}
+    static void callback_Quit(Fl_Widget *w, void *data) {
+        UI_AddonsWin *that = (UI_AddonsWin *)data;
 
-	static void callback_Quit(Fl_Widget *w, void *data)
-	{
-		UI_AddonsWin *that = (UI_AddonsWin *)data;
-
-		that->want_quit = true;
-	}
+        that->want_quit = true;
+    }
 };
-
 
 //
 // Constructor
 //
-UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
-	Fl_Window(W, H, label),
-	want_quit(false)
-{
-	callback(callback_Quit, this);
+UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
+    : Fl_Window(W, H, label), want_quit(false) {
+    callback(callback_Quit, this);
 
-	// non-resizable
-	size_range(W, H, W, H);
+    // non-resizable
+    size_range(W, H, W, H);
 
-	box(FL_FLAT_BOX);
+    box(FL_FLAT_BOX);
 
-	Fl_Color bg_col = alternate_look ? FL_DARK2 : fl_rgb_color(221, 221, 221);
+    Fl_Color bg_col = alternate_look ? FL_DARK2 : fl_rgb_color(221, 221, 221);
 
-	color(bg_col, bg_col);
+    color(bg_col, bg_col);
 
+    //	int pad = kf_w(6);
 
-//	int pad = kf_w(6);
+    int dh = kf_h(64);
 
-	int dh = kf_h(64);
+    // area for addons list
+    mx = 0;
+    my = 0;
+    mw = W - Fl::scrollbar_size();
+    mh = H - dh;
 
+    offset_y = 0;
+    total_h = 0;
 
-	// area for addons list
-	mx = 0;
-	my = 0;
-	mw = W - Fl::scrollbar_size();
-	mh = H - dh;
+    sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
+    sbar->callback(callback_Scroll, this);
 
-	offset_y = 0;
-	total_h  = 0;
+    //	sbar->color(FL_DARK3+1, FL_DARK1);
 
-
-	sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
-	sbar->callback(callback_Scroll, this);
-
-//	sbar->color(FL_DARK3+1, FL_DARK1);
-
-
-	const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
+    const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
     if (all_addons.empty()) {
-		pack = new Fl_Group(mx, my, mw, mh, pack_title);
-	} else {
-		pack = new Fl_Group(mx, my, mw, mh, 0);
-	}
-	pack->clip_children(1);
-	pack->end();
+        pack = new Fl_Group(mx, my, mw, mh, pack_title);
+    } else {
+        pack = new Fl_Group(mx, my, mw, mh, 0);
+    }
+    pack->clip_children(1);
+    pack->end();
 
-	pack->align(FL_ALIGN_INSIDE);
-	pack->labeltype(FL_NORMAL_LABEL);
-	pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
+    pack->align(FL_ALIGN_INSIDE);
+    pack->labeltype(FL_NORMAL_LABEL);
+    pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
-	pack->box(FL_FLAT_BOX);
-	pack->color(bg_col);
-	pack->resizable(NULL);
+    pack->box(FL_FLAT_BOX);
+    pack->color(bg_col);
+    pack->resizable(NULL);
 
+    //----------------
 
-	//----------------
+    Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
+    darkish->box(FL_FLAT_BOX);
+    darkish->color(WINDOW_BG, WINDOW_BG);
+    {
+        // finally add the close button
+        int bw = kf_w(60);
+        int bh = kf_h(30);
+        int bx = bw;
+        int by = H - dh / 2 - bh / 2 + 2;
 
-	Fl_Group *darkish = new Fl_Group(0, H-dh, W, dh);
-	darkish->box(FL_FLAT_BOX);
-	darkish->color(WINDOW_BG, WINDOW_BG);
-	{
-		// finally add the close button
-		int bw = kf_w(60);
-		int bh = kf_h(30);
-		int bx = bw;
-		int by = H - dh/2 - bh/2 + 2;
+        Fl_Button *apply_but = new Fl_Button(W - bx - bw, by, bw, bh, fl_close);
+        apply_but->callback(callback_Quit, this);
 
-		Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, fl_close);
-		apply_but->callback(callback_Quit, this);
+        // show warning about needing a restart
+        Fl_Box *sep = new Fl_Box(FL_NO_BOX, x(), by, W * 3 / 5, bh,
+                                 _("Changes require a restart"));
+        sep->align(FL_ALIGN_INSIDE);
+        sep->labelcolor(FL_DARK1);
+        sep->labelsize(small_font_size);
+    }
+    darkish->end();
 
-		// show warning about needing a restart
-		Fl_Box * sep = new Fl_Box(FL_NO_BOX, x(), by, W*3/5, bh, _("Changes require a restart"));
-		sep->align(FL_ALIGN_INSIDE);
-		sep->labelcolor(FL_DARK1);
-		sep->labelsize(small_font_size);
-	}
-	darkish->end();
+    end();
 
-	end();
-
-	resizable(NULL);
+    resizable(NULL);
 }
 
+int UI_AddonsWin::handle(int event) {
+    if (event == FL_KEYDOWN || event == FL_SHORTCUT) {
+        int key = Fl::event_key();
 
-int UI_AddonsWin::handle(int event)
-{
-	if (event == FL_KEYDOWN || event == FL_SHORTCUT)
-	{
-		int key = Fl::event_key();
+        switch (key) {
+            case FL_Escape:
+                want_quit = true;
+                return 1;
 
-		switch (key)
-		{
-			case FL_Escape:
-				want_quit = true;
-				return 1;
+            default:
+                break;
+        }
 
-			default:
-				break;
-		}
+        // eat all other function keys
+        if (FL_F + 1 <= key && key <= FL_F + 12) return 1;
+    }
 
-		// eat all other function keys
-		if (FL_F+1 <= key && key <= FL_F+12)
-			return 1;
-	}
-
-	return Fl_Window::handle(event);
+    return Fl_Window::handle(event);
 }
 
+void UI_AddonsWin::PositionAll() {
+    // calculate new total height
+    int new_height = 0;
+    int spacing = 4;
 
-void UI_AddonsWin::PositionAll()
-{
-	// calculate new total height
-	int new_height = 0;
-	int spacing = 4;
+    for (int k = 0; k < pack->children(); k++) {
+        UI_Addon *M = (UI_Addon *)pack->child(k);
+        SYS_ASSERT(M);
 
-	for (int k = 0 ; k < pack->children() ; k++)
-	{
-		UI_Addon *M = (UI_Addon *) pack->child(k);
-		SYS_ASSERT(M);
+        if (M->visible()) new_height += M->CalcHeight() + spacing;
+    }
 
-		if (M->visible())
-			new_height += M->CalcHeight() + spacing;
-	}
+    // determine new offset_y
+    if (new_height <= mh) {
+        offset_y = 0;
+    } else {
+        // when not shrinking, offset_y will remain valid
+        if (new_height < total_h) offset_y = 0;
+    }
 
+    total_h = new_height;
 
-	// determine new offset_y
-	if (new_height <= mh)
-	{
-		offset_y = 0;
-	}
-	else
-	{
-		// when not shrinking, offset_y will remain valid
-		if (new_height < total_h)
-			offset_y = 0;
-	}
+    SYS_ASSERT(offset_y >= 0);
+    SYS_ASSERT(offset_y <= total_h);
 
-	total_h = new_height;
+    // reposition all the modules
+    int ny = my - offset_y;
 
-	SYS_ASSERT(offset_y >= 0);
-	SYS_ASSERT(offset_y <= total_h);
+    for (int j = 0; j < pack->children(); j++) {
+        UI_Addon *M = (UI_Addon *)pack->child(j);
+        SYS_ASSERT(M);
 
+        int nh = M->visible() ? M->CalcHeight() : 1;
 
-	// reposition all the modules
-	int ny = my - offset_y;
+        if (ny != M->y() || nh != M->h()) {
+            M->resize(M->x(), ny, M->w(), nh);
+        }
 
-	for (int j = 0 ; j < pack->children() ; j++)
-	{
-		UI_Addon *M = (UI_Addon *) pack->child(j);
-		SYS_ASSERT(M);
+        if (M->visible()) ny += M->CalcHeight() + spacing;
+    }
 
-		int nh = M->visible() ? M->CalcHeight() : 1;
+    // p = position, first line displayed
+    // w = window, number of lines displayed
+    // t = top, number of first line
+    // l = length, total number of lines
+    sbar->value(offset_y, mh, 0, total_h);
 
-		if (ny != M->y() || nh != M->h())
-		{
-			M->resize(M->x(), ny, M->w(), nh);
-		}
-
-		if (M->visible())
-			ny += M->CalcHeight() + spacing;
-	}
-
-
-	// p = position, first line displayed
-	// w = window, number of lines displayed
-	// t = top, number of first line
-	// l = length, total number of lines
-	sbar->value(offset_y, mh, 0, total_h);
-
-	pack->redraw();
-
+    pack->redraw();
 }
 
+void UI_AddonsWin::InsertAddon(addon_info_t *info) {
+    UI_Addon *addon = new UI_Addon(mx, my, mw - 4, kf_h(34), info);
 
-void UI_AddonsWin::InsertAddon(addon_info_t *info)
-{
-	UI_Addon *addon = new UI_Addon(mx, my, mw - 4, kf_h(34), info);
+    if (info->enabled) addon->button->value(1);
 
-	if (info->enabled)
-		addon->button->value(1);
+    pack->add(addon);
 
-	pack->add(addon);
-
-	PositionAll();
+    PositionAll();
 }
 
-
-void UI_AddonsWin::Populate()
-{
-	for (unsigned int i = 0 ; i < all_addons.size() ; i++)
-	{
-		InsertAddon(&all_addons[i]);
-	}
+void UI_AddonsWin::Populate() {
+    for (unsigned int i = 0; i < all_addons.size(); i++) {
+        InsertAddon(&all_addons[i]);
+    }
 }
 
+bool UI_AddonsWin::ApplyChanges() {
+    bool has_changes = false;
 
-bool UI_AddonsWin::ApplyChanges()
-{
-	bool has_changes = false;
+    for (int j = 0; j < pack->children(); j++) {
+        UI_Addon *M = (UI_Addon *)pack->child(j);
+        SYS_ASSERT(M);
 
-	for (int j = 0 ; j < pack->children() ; j++)
-	{
-		UI_Addon *M = (UI_Addon *) pack->child(j);
-		SYS_ASSERT(M);
+        bool new_val = M->button->value() ? true : false;
 
-		bool new_val = M->button->value() ? true : false;
+        if (M->info->enabled != new_val) {
+            has_changes = true;
+            M->info->enabled = new_val;
+        }
+    }
 
-		if (M->info->enabled != new_val)
-		{
-			has_changes = true;
-			M->info->enabled = new_val;
-		}
-	}
-
-	return has_changes;
+    return has_changes;
 }
 
+void DLG_SelectAddons(void) {
+    static UI_AddonsWin *addons_window = NULL;
 
-void DLG_SelectAddons(void)
-{
-	static UI_AddonsWin * addons_window = NULL;
+    if (!addons_window) {
+        int opt_w = kf_w(350);
+        int opt_h = kf_h(380);
 
-	if (! addons_window)
-	{
-		int opt_w = kf_w(350);
-		int opt_h = kf_h(380);
+        addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
 
-		addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
+        addons_window->Populate();
+    }
 
-		addons_window->Populate();
-	}
+    addons_window->want_quit = false;
+    addons_window->set_modal();
+    addons_window->show();
 
-	addons_window->want_quit = false;
-	addons_window->set_modal();
-	addons_window->show();
+    // run the GUI until the user closes
+    while (!addons_window->WantQuit()) Fl::wait();
 
-	// run the GUI until the user closes
-	while (! addons_window->WantQuit())
-		Fl::wait();
+    if (addons_window->ApplyChanges()) {
+        // persist the changed addon list into OPTIONS.txt
+        Options_Save(options_file);
 
-	if (addons_window->ApplyChanges())
-	{
-		// persist the changed addon list into OPTIONS.txt
-		Options_Save(options_file);
+        fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
+                         "now close."));
 
-		fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will now close."));
+        main_action = MAIN_QUIT;
+    }
 
-		main_action = MAIN_QUIT;
-	}
-
-	addons_window->set_non_modal();
-	addons_window->hide();
+    addons_window->set_non_modal();
+    addons_window->hide();
 }
 
 //--- editor settings ---

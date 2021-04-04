@@ -30,8 +30,7 @@
 int BoxOnLineSide(seg_t *part, double x1, double y1, double x2, double y2);
 
 // add the seg to the given list
-void AddSegToList(seg_t ** list_ptr, seg_t *seg);
-
+void AddSegToList(seg_t **list_ptr, seg_t *seg);
 
 // scan all the linedef of the level and convert each sidedef into a
 // seg (or seg pair).  Returns the list of segs.
@@ -56,6 +55,5 @@ glbsp_ret_e BuildEverything(void);
 // order-wise.
 //
 void ClockwiseSubsectors(void);
-
 
 #endif /* __GLBSP_NODE_H__ */

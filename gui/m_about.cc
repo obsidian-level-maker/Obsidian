@@ -18,188 +18,161 @@
 //
 //------------------------------------------------------------------------
 
-#include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-
-#include "main.h"
+#include "headers.h"
 #include "lib_util.h"
+#include "main.h"
 
+#define TITLE_COLOR fl_rgb_color(0, 0, 0)
 
-#define TITLE_COLOR  fl_rgb_color(0, 0, 0)
+#define INFO_COLOR fl_rgb_color(153, 153, 153)
 
-#define INFO_COLOR   fl_rgb_color(153, 153, 153)
+class UI_About : public Fl_Window {
+   public:
+    bool want_quit;
 
+   public:
+    UI_About(int W, int H, const char *label = NULL);
 
-class UI_About : public Fl_Window
-{
-public:
-	bool want_quit;
+    virtual ~UI_About() {
+        // nothing needed
+    }
 
-public:
-	UI_About(int W, int H, const char *label = NULL);
+    bool WantQuit() const { return want_quit; }
 
-	virtual ~UI_About()
-	{
-		// nothing needed
-	}
+   public:
+    // FLTK virtual method for handling input events.
+    int handle(int event) {
+        if (event == FL_KEYDOWN || event == FL_SHORTCUT) {
+            int key = Fl::event_key();
 
-	bool WantQuit() const
-	{
-		return want_quit;
-	}
+            if (key == FL_Escape) {
+                want_quit = true;
+                return 1;
+            }
 
-public:
-	// FLTK virtual method for handling input events.
-	int handle(int event)
-	{
-		if (event == FL_KEYDOWN || event == FL_SHORTCUT)
-		{
-			int key = Fl::event_key();
+            // eat all other function keys
+            if (FL_F + 1 <= key && key <= FL_F + 12) return 1;
+        }
 
-			if (key == FL_Escape)
-			{
-				want_quit = true;
-				return 1;
-			}
+        return Fl_Window::handle(event);
+    }
 
-			// eat all other function keys
-			if (FL_F+1 <= key && key <= FL_F+12)
-				return 1;
-		}
+   private:
+    static void callback_Quit(Fl_Widget *w, void *data) {
+        UI_About *that = (UI_About *)data;
 
-		return Fl_Window::handle(event);
-	}
+        that->want_quit = true;
+    }
 
-private:
-	static void callback_Quit(Fl_Widget *w, void *data)
-	{
-		UI_About *that = (UI_About *)data;
-
-		that->want_quit = true;
-	}
-
-	static const char *Text;
-	static const char *URL;
+    static const char *Text;
+    static const char *URL;
 };
 
-
 const char *UI_About::Text =
-	N_(
-	"OBSIDIAN is a random level generator\n"
-	"for classic FPS games like DOOM\n"
-	"\n"
-	"It is a continuation of the OBLIGE Level Maker\n"
-	"Copyright (C) 2006-2017 Andrew Apted, et al\n"
-	"\n"
-	"This program is free software, and may be\n"
-	"distributed and modified under the terms of\n"
-	"the GNU General Public License\n"
-	"\n"
-	"There is ABSOLUTELY NO WARRANTY\n"
-	"Use at your OWN RISK");
-
+    N_("OBSIDIAN is a random level generator\n"
+       "for classic FPS games like DOOM\n"
+       "\n"
+       "It is a continuation of the OBLIGE Level Maker\n"
+       "Copyright (C) 2006-2017 Andrew Apted, et al\n"
+       "\n"
+       "This program is free software, and may be\n"
+       "distributed and modified under the terms of\n"
+       "the GNU General Public License\n"
+       "\n"
+       "There is ABSOLUTELY NO WARRANTY\n"
+       "Use at your OWN RISK");
 
 const char *UI_About::URL = OBSIDIAN_WEBSITE;
-
 
 //
 // Constructor
 //
-UI_About::UI_About(int W, int H, const char *label) :
-	Fl_Window(W, H, label),
-	want_quit(false)
-{
-	// non-resizable
-	size_range(W, H, W, H);
+UI_About::UI_About(int W, int H, const char *label)
+    : Fl_Window(W, H, label), want_quit(false) {
+    // non-resizable
+    size_range(W, H, W, H);
 
-	if (alternate_look)
-		color(FL_LIGHT3, FL_LIGHT3);
+    if (alternate_look) color(FL_LIGHT3, FL_LIGHT3);
 
-	callback(callback_Quit, this);
+    callback(callback_Quit, this);
 
+    int cy = kf_h(6);
 
-	int cy = kf_h(6);
+    // nice big logo text
+    const char *logo_text =
+        StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
 
-	// nice big logo text
-	const char *logo_text = StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
+    Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+    box->labelcolor(TITLE_COLOR);
+    box->labelsize(FL_NORMAL_SIZE * 5 / 3);
 
-	Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
-	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
-	box->labelcolor(TITLE_COLOR);
-	box->labelsize(FL_NORMAL_SIZE * 5 / 3);
+    cy += box->h() + kf_h(6);
 
-	cy += box->h() + kf_h(6);
+    // the very informative text
+    int pad = kf_w(22);
 
+    int text_h = H * 0.55;
 
-	// the very informative text
-	int pad = kf_w(22);
+    box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+    box->box(FL_UP_BOX);
+    box->color(INFO_COLOR);
 
-	int text_h = H * 0.55;
+    cy += box->h() + kf_h(10);
 
-	box = new Fl_Box(pad, cy, W-pad-pad, text_h, _(Text));
-	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
-	box->box(FL_UP_BOX);
-	box->color(INFO_COLOR);
+    // website address
+    pad = kf_w(8);
 
-	cy += box->h() + kf_h(10);
+    UI_HyperLink *link =
+        new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
+    link->align(FL_ALIGN_CENTER);
+    link->labelsize(FL_NORMAL_SIZE * 2 / 2);
 
+    if (alternate_look) link->color(FL_LIGHT3, FL_LIGHT3);
 
-	// website address
-	pad = kf_w(8);
+    cy += link->h() + kf_h(16);
 
-	UI_HyperLink *link = new UI_HyperLink(pad, cy, W-pad*2, kf_h(30), URL, URL);
-	link->align(FL_ALIGN_CENTER);
-	link->labelsize(FL_NORMAL_SIZE * 2 / 2);
+    SYS_ASSERT(cy < H);
 
-	if (alternate_look)
-		link->color(FL_LIGHT3, FL_LIGHT3);
+    // finally add an "OK" button
+    Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
+    darkish->box(FL_FLAT_BOX);
+    darkish->color(WINDOW_BG, WINDOW_BG);
+    {
+        int bw = kf_w(60);
+        int bh = kf_h(30);
+        int by = H - (H - cy + bh) / 2;
 
-	cy += link->h() + kf_h(16);
+        Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
+        button->callback(callback_Quit, this);
+    }
+    darkish->end();
 
-	SYS_ASSERT(cy < H);
-
-
-	// finally add an "OK" button
-	Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
-	darkish->box(FL_FLAT_BOX);
-	darkish->color(WINDOW_BG, WINDOW_BG);
-	{
-		int bw = kf_w(60);
-		int bh = kf_h(30);
-		int by = H - (H - cy + bh)/2;
-
-		Fl_Button *button = new Fl_Button(W - bw*2, by, bw, bh, fl_ok);
-		button->callback(callback_Quit, this);
-	}
-	darkish->end();
-
-	end();
+    end();
 }
 
+void DLG_AboutText(void) {
+    static UI_About *about_window = NULL;
 
-void DLG_AboutText(void)
-{
-	static UI_About * about_window = NULL;
+    if (!about_window) {
+        int about_w = kf_w(400);
+        int about_h = kf_h(400) + KF * 20;
 
-	if (! about_window)
-	{
-		int about_w = kf_w(400);
-		int about_h = kf_h(400) + KF * 20;
+        about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
+    }
 
-		about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
-	}
+    about_window->want_quit = false;
+    about_window->set_modal();
+    about_window->show();
 
-	about_window->want_quit = false;
-	about_window->set_modal();
-	about_window->show();
+    // run the GUI until the user closes
+    while (!about_window->WantQuit()) Fl::wait();
 
-	// run the GUI until the user closes
-	while (! about_window->WantQuit())
-		Fl::wait();
-
-	about_window->set_non_modal();
-	about_window->hide();
+    about_window->set_non_modal();
+    about_window->hide();
 }
 
 //--- editor settings ---

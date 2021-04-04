@@ -19,20 +19,16 @@
 #ifndef __OBLIGE_LWOLF_H__
 #define __OBLIGE_LWOLF_H__
 
+namespace level_wolf {
 
-namespace level_wolf
-{
+class thing_c {
+   public:
+    thing_c(short _x, short _y, short _type);
+    virtual ~thing_c();
 
-class thing_c
-{
-public:
-	thing_c(short _x, short _y, short _type);
-	virtual ~thing_c();
-
-	short x, y;
-	short type;
+    short x, y;
+    short type;
 };
-
 
 //------------------------------------------------------------------------
 
@@ -44,6 +40,6 @@ void WriteWolf();
 
 void Cleanup();
 
-} // namespace level_wolf
+}  // namespace level_wolf
 
 #endif /* __OBLIGE_LWOLF_H__ */

@@ -7,23 +7,19 @@
 
 #include "zdbsp.h"
 
-struct vertex_t
-{
-	fixed_t x, y;
+struct vertex_t {
+    fixed_t x, y;
 };
 
-struct node_t
-{
-	fixed_t x, y, dx, dy;
-	fixed_t bbox[2][4];
-	unsigned int intchildren[2];
+struct node_t {
+    fixed_t x, y, dx, dy;
+    fixed_t bbox[2][4];
+    unsigned int intchildren[2];
 };
 
-struct subsector_t
-{
-	DWORD numlines;
-	DWORD firstline;
+struct subsector_t {
+    DWORD numlines;
+    DWORD firstline;
 };
 
-
-#endif //__WORKDATA_H__
+#endif  //__WORKDATA_H__

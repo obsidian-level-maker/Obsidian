@@ -21,34 +21,30 @@
 #ifndef __GLBSP_GLBSP_H__
 #define __GLBSP_GLBSP_H__
 
-
-#define GLBSP_VER  "2.27"
-#define GLBSP_VER_HEX  0x227
-
+#define GLBSP_VER "2.27"
+#define GLBSP_VER_HEX 0x227
 
 // certain GCC attributes can be useful
 #undef GCCATTR
 #ifdef __GNUC__
-#define GCCATTR(xyz)  __attribute__ (xyz)
+#define GCCATTR(xyz) __attribute__(xyz)
 #else
-#define GCCATTR(xyz)  /* nothing */
+#define GCCATTR(xyz) /* nothing */
 #endif
-
 
 #ifdef __cplusplus
 extern "C" {
-#endif // __cplusplus
-
+#endif  // __cplusplus
 
 /* ----- basic types --------------------------- */
 
-typedef signed char  sint8_g;
+typedef signed char sint8_g;
 typedef signed short sint16_g;
-typedef signed int   sint32_g;
-   
-typedef unsigned char  uint8_g;
+typedef signed int sint32_g;
+
+typedef unsigned char uint8_g;
 typedef unsigned short uint16_g;
-typedef unsigned int   uint32_g;
+typedef unsigned int uint32_g;
 
 typedef double angle_g;  // degrees, 0 is E, 90 is N
 
@@ -56,170 +52,157 @@ typedef double angle_g;  // degrees, 0 is E, 90 is N
 typedef int boolean_g;
 
 #ifndef FALSE
-#define FALSE  0
+#define FALSE 0
 #endif
 #ifndef TRUE
-#define TRUE   1
+#define TRUE 1
 #endif
-
 
 /* ----- complex types --------------------------- */
 
-// Node Build Information Structure 
+// Node Build Information Structure
 //
 // Memory note: when changing the string values here (and in
 // nodebuildcomms_t) they should be freed using GlbspFree() and
 // allocated with GlbspStrDup().  The application has the final
 // responsibility to free the strings in here.
-// 
-typedef struct nodebuildinfo_s
-{
-  const char *filename;
+//
+typedef struct nodebuildinfo_s {
+    const char *filename;
 
-  int factor;
+    int factor;
 
-  boolean_g no_reject;
-  boolean_g no_progress;
-  boolean_g quiet;
-  boolean_g mini_warnings;
-  boolean_g force_hexen;
-  boolean_g pack_sides;
-  boolean_g fast;
+    boolean_g no_reject;
+    boolean_g no_progress;
+    boolean_g quiet;
+    boolean_g mini_warnings;
+    boolean_g force_hexen;
+    boolean_g pack_sides;
+    boolean_g fast;
 
-  int spec_version;  // 1, 2, 3 or 5
+    int spec_version;  // 1, 2, 3 or 5
 
-  boolean_g load_all;
-  boolean_g no_normal;
-  boolean_g force_normal;
-  boolean_g prune_sect;
-  boolean_g no_prune;
-  boolean_g merge_vert;
+    boolean_g load_all;
+    boolean_g no_normal;
+    boolean_g force_normal;
+    boolean_g prune_sect;
+    boolean_g no_prune;
+    boolean_g merge_vert;
 
-  int block_limit;
+    int block_limit;
 
-  // private stuff -- values computed in GlbspParseArgs or
-  // GlbspCheckInfo that need to be passed to GlbspBuildNodes.
+    // private stuff -- values computed in GlbspParseArgs or
+    // GlbspCheckInfo that need to be passed to GlbspBuildNodes.
 
-  boolean_g missing_output;
-  boolean_g same_filenames;
-}
-nodebuildinfo_t;
+    boolean_g missing_output;
+    boolean_g same_filenames;
+} nodebuildinfo_t;
 
 // This is for two-way communication (esp. with the GUI).
 // Should be flagged 'volatile' since multiple threads (real or
 // otherwise, e.g. signals) may read or change the values.
 //
-typedef struct nodebuildcomms_s
-{
-  // if the node builder failed, this will contain the error
-  const char *message;
+typedef struct nodebuildcomms_s {
+    // if the node builder failed, this will contain the error
+    const char *message;
 
-  // the GUI can set this to tell the node builder to stop
-  boolean_g cancelled;
+    // the GUI can set this to tell the node builder to stop
+    boolean_g cancelled;
 
-  // from here on, various bits of internal state
-  int total_small_warn, total_big_warn;
-  int build_pos, file_pos;
-}
-nodebuildcomms_t;
-
+    // from here on, various bits of internal state
+    int total_small_warn, total_big_warn;
+    int build_pos, file_pos;
+} nodebuildcomms_t;
 
 // Display Prototypes
-typedef enum
-{
-  DIS_INVALID,        // Nonsense value is always useful
-  DIS_BUILDPROGRESS,  // Build Box, has 2 bars
-  DIS_FILEPROGRESS,   // File Box, has 1 bar
-  NUMOFGUITYPES
-}
-displaytype_e;
+typedef enum {
+    DIS_INVALID,        // Nonsense value is always useful
+    DIS_BUILDPROGRESS,  // Build Box, has 2 bars
+    DIS_FILEPROGRESS,   // File Box, has 1 bar
+    NUMOFGUITYPES
+} displaytype_e;
 
 // Callback functions
-typedef struct nodebuildfuncs_s
-{
-  // Fatal errors are called as a last resort when something serious
-  // goes wrong, e.g. out of memory.  This routine should show the
-  // error to the user and abort the program.
-  // 
-  void (* fatal_error)(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+typedef struct nodebuildfuncs_s {
+    // Fatal errors are called as a last resort when something serious
+    // goes wrong, e.g. out of memory.  This routine should show the
+    // error to the user and abort the program.
+    //
+    void (*fatal_error)(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 
-  // The print_msg routine is used to display the various messages
-  // that occur, e.g. "Building GL nodes on MAP01" and that kind of
-  // thing.
-  // 
-  void (* print_msg)(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+    // The print_msg routine is used to display the various messages
+    // that occur, e.g. "Building GL nodes on MAP01" and that kind of
+    // thing.
+    //
+    void (*print_msg)(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 
-  // This routine is called frequently whilst building the nodes, and
-  // can be used to keep a GUI responsive to user input.  Many
-  // toolkits have a "do iteration" or "check events" type of function
-  // that this can call.  Avoid anything that sleeps though, or it'll
-  // slow down the build process unnecessarily.
-  //
-  void (* ticker)(void);
+    // This routine is called frequently whilst building the nodes, and
+    // can be used to keep a GUI responsive to user input.  Many
+    // toolkits have a "do iteration" or "check events" type of function
+    // that this can call.  Avoid anything that sleeps though, or it'll
+    // slow down the build process unnecessarily.
+    //
+    void (*ticker)(void);
 
-  // These display routines is used for tasks that can show a progress
-  // bar, namely: building nodes, loading the wad, and saving the wad.
-  // The command line version could show a percentage value, or even
-  // draw a bar using characters.
- 
-  // Display_open is called at the beginning, and 'type' holds the
-  // type of progress (and determines how many bars to display).
-  // Returns TRUE if all went well, or FALSE if it failed (in which
-  // case the other routines should do nothing when called).
-  // 
-  boolean_g (* display_open)(displaytype_e type);
+    // These display routines is used for tasks that can show a progress
+    // bar, namely: building nodes, loading the wad, and saving the wad.
+    // The command line version could show a percentage value, or even
+    // draw a bar using characters.
 
-  // For GUI versions this can be used to set the title of the
-  // progress window.  OK to ignore it (e.g. command line version).
-  //
-  void (* display_setTitle)(const char *str);
+    // Display_open is called at the beginning, and 'type' holds the
+    // type of progress (and determines how many bars to display).
+    // Returns TRUE if all went well, or FALSE if it failed (in which
+    // case the other routines should do nothing when called).
+    //
+    boolean_g (*display_open)(displaytype_e type);
 
-  // The next three routines control the appearance of each progress
-  // bar.  Display_setBarText is called to change the message above
-  // the bar.  Display_setBarLimit sets the integer limit of the
-  // progress (the target value), and display_setBar sets the current
-  // value (which will count up from 0 to the limit, inclusive).
-  // 
-  void (* display_setBar)(int barnum, int count);
-  void (* display_setBarLimit)(int barnum, int limit);
-  void (* display_setBarText)(int barnum, const char *str);
+    // For GUI versions this can be used to set the title of the
+    // progress window.  OK to ignore it (e.g. command line version).
+    //
+    void (*display_setTitle)(const char *str);
 
-  // The display_close routine is called when the task is finished,
-  // and should remove the progress indicator/window from the screen.
-  //
-  void (* display_close)(void);
-}
-nodebuildfuncs_t;
+    // The next three routines control the appearance of each progress
+    // bar.  Display_setBarText is called to change the message above
+    // the bar.  Display_setBarLimit sets the integer limit of the
+    // progress (the target value), and display_setBar sets the current
+    // value (which will count up from 0 to the limit, inclusive).
+    //
+    void (*display_setBar)(int barnum, int count);
+    void (*display_setBarLimit)(int barnum, int limit);
+    void (*display_setBarText)(int barnum, const char *str);
+
+    // The display_close routine is called when the task is finished,
+    // and should remove the progress indicator/window from the screen.
+    //
+    void (*display_close)(void);
+} nodebuildfuncs_t;
 
 // Default build info and comms
 extern const nodebuildinfo_t default_buildinfo;
 extern const nodebuildcomms_t default_buildcomms;
 
-
 /* -------- engine prototypes ----------------------- */
 
-typedef enum
-{
-  // everything went peachy keen
-  GLBSP_E_OK = 0,
+typedef enum {
+    // everything went peachy keen
+    GLBSP_E_OK = 0,
 
-  // an unknown error occurred (this is the catch-all value)
-  GLBSP_E_Unknown,
+    // an unknown error occurred (this is the catch-all value)
+    GLBSP_E_Unknown,
 
-  // the arguments were bad/inconsistent.
-  GLBSP_E_BadArgs,
+    // the arguments were bad/inconsistent.
+    GLBSP_E_BadArgs,
 
-  // the info was bad/inconsistent, but has been fixed
-  GLBSP_E_BadInfoFixed,
+    // the info was bad/inconsistent, but has been fixed
+    GLBSP_E_BadInfoFixed,
 
-  // file errors
-  GLBSP_E_ReadError,
-  GLBSP_E_WriteError,
+    // file errors
+    GLBSP_E_ReadError,
+    GLBSP_E_WriteError,
 
-  // building was cancelled
-  GLBSP_E_Cancelled
-}
-glbsp_ret_e;
+    // building was cancelled
+    GLBSP_E_Cancelled
+} glbsp_ret_e;
 
 // parses the arguments, modifying the 'info' structure accordingly.
 // Returns GLBSP_E_OK if all went well, otherwise another error code.
@@ -229,8 +212,8 @@ glbsp_ret_e;
 // of arguments does not include the program's name.
 //
 glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
-    volatile nodebuildcomms_t *comms,
-    const char ** argv, int argc);
+                           volatile nodebuildcomms_t *comms, const char **argv,
+                           int argc);
 
 // checks the node building parameters in 'info'.  If they are valid,
 // returns GLBSP_E_OK, otherwise an error code is returned.  This
@@ -250,7 +233,7 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
 // 'output_file' field to NULL each time.
 //
 glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
-    volatile nodebuildcomms_t *comms);
+                           volatile nodebuildcomms_t *comms);
 
 // main routine, this will build the nodes (GL and/or normal) for the
 // given input wad file out to the given output file.  Returns
@@ -261,8 +244,8 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
 // comms->message field usually contains a string describing it.
 //
 glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
-    const nodebuildfuncs_t *funcs, 
-    volatile nodebuildcomms_t *comms);
+                            const nodebuildfuncs_t *funcs,
+                            volatile nodebuildcomms_t *comms);
 
 // string memory routines.  These should be used for all strings
 // shared between the main glBSP code and the UI code (including code
@@ -271,9 +254,8 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
 const char *GlbspStrDup(const char *str);
 void GlbspFree(const char *str);
 
-
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif  // __cplusplus
 
 #endif /* __GLBSP_GLBSP_H__ */

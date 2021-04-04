@@ -15,13 +15,13 @@
  *
  *     http://www.fltk.org/str.php
  */
- 
+
 #ifdef __APPLE__
-#  ifdef __BIG_ENDIAN__
-#    define WORDS_BIGENDIAN 1
-#  else
-#    define WORDS_BIGENDIAN 0
-#  endif
+#ifdef __BIG_ENDIAN__
+#define WORDS_BIGENDIAN 1
+#else
+#define WORDS_BIGENDIAN 0
+#endif
 #endif
 
 /*

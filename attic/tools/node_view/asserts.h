@@ -19,52 +19,54 @@
 #ifndef __NODEVIEW_ASSERT_H__
 #define __NODEVIEW_ASSERT_H__
 
-class assert_fail_c
-{
-public:
-  assert_fail_c(const char *_msg);
-  assert_fail_c(const assert_fail_c &other);
-  ~assert_fail_c();
-  
-private:
-  static const int MSG_MAX = 200;
+class assert_fail_c {
+   public:
+    assert_fail_c(const char *_msg);
+    assert_fail_c(const assert_fail_c &other);
+    ~assert_fail_c();
 
-  char message[MSG_MAX];
+   private:
+    static const int MSG_MAX = 200;
 
-public:
-  const char* GetMessage() const { return message; }
+    char message[MSG_MAX];
 
-  assert_fail_c& operator=(const assert_fail_c &other);
+   public:
+    const char *GetMessage() const { return message; }
+
+    assert_fail_c &operator=(const assert_fail_c &other);
 };
 
 // -------- the macros --------
 
 #ifdef NDEBUG
-#define SYS_ASSERT(cond)  ((void) 0)
+#define SYS_ASSERT(cond) ((void)0)
 
 #elif 1  // FIXME: proper test for __func__
-#define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
-  AssertFail("Assertion (%s) failed\nIn function %s (%s:%d)\n", #cond , __func__, __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                    \
+    ((cond) ? (void)0                                                       \
+            : AssertFail("Assertion (%s) failed\nIn function %s (%s:%d)\n", \
+                         #cond, __func__, __FILE__, __LINE__))
 
 #else
-#define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
-    AssertFail("Assertion (%s) failed\nIn file %s:%d\n", #cond , __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                  \
+    ((cond) ? (void)0                                                     \
+            : AssertFail("Assertion (%s) failed\nIn file %s:%d\n", #cond, \
+                         __FILE__, __LINE__))
 
 #endif  // NDEBUG
 
 #ifdef NDEBUG
-#define SYS_ASSERT_MSG(cond, arglist)  ((void) 0)
+#define SYS_ASSERT_MSG(cond, arglist) ((void)0)
 #else
-#define SYS_ASSERT_MSG(cond, arglist)  ((cond) ? (void)0 :  \
-    AssertFail arglist )
+#define SYS_ASSERT_MSG(cond, arglist) ((cond) ? (void)0 : AssertFail arglist)
 #endif
 
-#define SYS_NULL_CHECK(ptr)    SYS_ASSERT((ptr) != NULL)
-#define SYS_ZERO_CHECK(value)  SYS_ASSERT((value) != 0)
+#define SYS_NULL_CHECK(ptr) SYS_ASSERT((ptr) != NULL)
+#define SYS_ZERO_CHECK(value) SYS_ASSERT((value) != 0)
 
-// -------- the support code -------- 
+// -------- the support code --------
 
 void AssertFail(const char *msg, ...);
 // throw an assertion exception with the given message.
 
-#endif  /* __NODEVIEW_ASSERT_H__ */
+#endif /* __NODEVIEW_ASSERT_H__ */

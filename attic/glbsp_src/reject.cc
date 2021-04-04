@@ -19,45 +19,41 @@
 //
 //------------------------------------------------------------------------
 
-#include "system.h"
+#include "reject.h"
 
+#include <assert.h>
+#include <ctype.h>
+#include <limits.h>
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
-#include <ctype.h>
-#include <math.h>
-#include <limits.h>
-#include <assert.h>
 
-#include "reject.h"
 #include "level.h"
 #include "node.h"
 #include "seg.h"
 #include "structs.h"
+#include "system.h"
 #include "util.h"
 #include "wad.h"
 
-
-#define DEBUG_REJECT  0
-
+#define DEBUG_REJECT 0
 
 //
 // InitReject
 //
 // Puts each sector into individual groups.
-// 
-static void InitReject(void)
-{
-  int i;
+//
+static void InitReject(void) {
+    int i;
 
-  for (i=0; i < num_sectors; i++)
-  {
-    sector_t *sec = LookupSector(i);
+    for (i = 0; i < num_sectors; i++) {
+        sector_t *sec = LookupSector(i);
 
-    sec->rej_group = i;
-    sec->rej_next = sec->rej_prev = sec;
-  }
+        sec->rej_group = i;
+        sec->rej_next = sec->rej_prev = sec;
+    }
 }
 
 //
@@ -67,121 +63,109 @@ static void InitReject(void)
 // scan the linedef list.  For each 2-sectored line, merge the two
 // sector groups into one.  That's it !
 //
-static void GroupSectors(void)
-{
-  int i;
+static void GroupSectors(void) {
+    int i;
 
-  for (i=0; i < num_linedefs; i++)
-  {
-    linedef_t *line = LookupLinedef(i);
-    sector_t *sec1, *sec2, *tmp;
+    for (i = 0; i < num_linedefs; i++) {
+        linedef_t *line = LookupLinedef(i);
+        sector_t *sec1, *sec2, *tmp;
 
-    if (! line->right || ! line->left)
-      continue;
-    
-    // the standard DOOM engine will not allow sight past lines
-    // lacking the TWOSIDED flag, so we can skip them here too.
-    if (! line->two_sided)
-      continue;
+        if (!line->right || !line->left) continue;
 
-    sec1 = line->right->sector;
-    sec2 = line->left->sector;
-    
-    if (! sec1 || ! sec2 || sec1 == sec2)
-      continue;
+        // the standard DOOM engine will not allow sight past lines
+        // lacking the TWOSIDED flag, so we can skip them here too.
+        if (!line->two_sided) continue;
 
-    // already in the same group ?
-    if (sec1->rej_group == sec2->rej_group)
-      continue;
+        sec1 = line->right->sector;
+        sec2 = line->left->sector;
 
-    // swap sectors so that the smallest group is added to the biggest
-    // group.  This is based on the assumption that sector numbers in
-    // wads will generally increase over the set of linedefs, and so
-    // (by swapping) we'll tend to add small groups into larger
-    // groups, thereby minimising the updates to 'rej_group' fields
-    // that is required when merging.
+        if (!sec1 || !sec2 || sec1 == sec2) continue;
 
-    if (sec1->rej_group > sec2->rej_group)
-    {
-      tmp = sec1; sec1 = sec2; sec2 = tmp;
+        // already in the same group ?
+        if (sec1->rej_group == sec2->rej_group) continue;
+
+        // swap sectors so that the smallest group is added to the biggest
+        // group.  This is based on the assumption that sector numbers in
+        // wads will generally increase over the set of linedefs, and so
+        // (by swapping) we'll tend to add small groups into larger
+        // groups, thereby minimising the updates to 'rej_group' fields
+        // that is required when merging.
+
+        if (sec1->rej_group > sec2->rej_group) {
+            tmp = sec1;
+            sec1 = sec2;
+            sec2 = tmp;
+        }
+
+        // update the group numbers in the second group
+
+        sec2->rej_group = sec1->rej_group;
+
+        for (tmp = sec2->rej_next; tmp != sec2; tmp = tmp->rej_next)
+            tmp->rej_group = sec1->rej_group;
+
+        // merge 'em baby...
+
+        sec1->rej_next->rej_prev = sec2;
+        sec2->rej_next->rej_prev = sec1;
+
+        tmp = sec1->rej_next;
+        sec1->rej_next = sec2->rej_next;
+        sec2->rej_next = tmp;
     }
-    
-    // update the group numbers in the second group
-    
-    sec2->rej_group = sec1->rej_group;
-
-    for (tmp=sec2->rej_next; tmp != sec2; tmp=tmp->rej_next)
-      tmp->rej_group = sec1->rej_group;
-    
-    // merge 'em baby...
-
-    sec1->rej_next->rej_prev = sec2;
-    sec2->rej_next->rej_prev = sec1;
-
-    tmp = sec1->rej_next; 
-    sec1->rej_next = sec2->rej_next;
-    sec2->rej_next = tmp;
-  }
 }
 
 #if DEBUG_REJECT
-static void CountGroups(void)
-{
-  // Note: this routine is destructive to the group numbers
-  
-  int i;
+static void CountGroups(void) {
+    // Note: this routine is destructive to the group numbers
 
-  for (i=0; i < num_sectors; i++)
-  {
-    sector_t *sec = LookupSector(i);
-    sector_t *tmp;
+    int i;
 
-    int group = sec->rej_group;
-    int num = 0;
+    for (i = 0; i < num_sectors; i++) {
+        sector_t *sec = LookupSector(i);
+        sector_t *tmp;
 
-    if (group < 0)
-      continue;
+        int group = sec->rej_group;
+        int num = 0;
 
-    sec->rej_group = -1;
-    num++;
+        if (group < 0) continue;
 
-    for (tmp=sec->rej_next; tmp != sec; tmp=tmp->rej_next)
-    {
-      tmp->rej_group = -1;
-      num++;
+        sec->rej_group = -1;
+        num++;
+
+        for (tmp = sec->rej_next; tmp != sec; tmp = tmp->rej_next) {
+            tmp->rej_group = -1;
+            num++;
+        }
+
+        PrintDebug("Group %d  Sectors %d\n", group, num);
     }
-
-    PrintDebug("Group %d  Sectors %d\n", group, num);
-  }
 }
 #endif
 
 //
 // CreateReject
 //
-static void CreateReject(uint8_g *matrix)
-{
-  int view, target;
+static void CreateReject(uint8_g *matrix) {
+    int view, target;
 
-  for (view=0; view < num_sectors; view++)
-  for (target=0; target < view; target++)
-  {
-    sector_t *view_sec = LookupSector(view);
-    sector_t *targ_sec = LookupSector(target);
+    for (view = 0; view < num_sectors; view++)
+        for (target = 0; target < view; target++) {
+            sector_t *view_sec = LookupSector(view);
+            sector_t *targ_sec = LookupSector(target);
 
-    int p1, p2;
+            int p1, p2;
 
-    if (view_sec->rej_group == targ_sec->rej_group)
-      continue;
+            if (view_sec->rej_group == targ_sec->rej_group) continue;
 
-    // for symmetry, do two bits at a time
+            // for symmetry, do two bits at a time
 
-    p1 = view * num_sectors + target;
-    p2 = target * num_sectors + view;
-    
-    matrix[p1 >> 3] |= (1 << (p1 & 7));
-    matrix[p2 >> 3] |= (1 << (p2 & 7));
-  }
+            p1 = view * num_sectors + target;
+            p2 = target * num_sectors + view;
+
+            matrix[p1 >> 3] |= (1 << (p1 & 7));
+            matrix[p2 >> 3] |= (1 << (p2 & 7));
+        }
 }
 
 //
@@ -191,31 +175,30 @@ static void CreateReject(uint8_g *matrix)
 // determining all isolated groups of sectors (islands that are
 // surrounded by void space).
 //
-void PutReject(void)
-{
-  int reject_size;
-  uint8_g *matrix;
-  lump_t *lump;
+void PutReject(void) {
+    int reject_size;
+    uint8_g *matrix;
+    lump_t *lump;
 
-  DisplayTicker();
+    DisplayTicker();
 
-  InitReject();
-  GroupSectors();
-  
-  reject_size = (num_sectors * num_sectors + 7) / 8;
-  matrix = (uint8_g *)UtilCalloc(reject_size);
+    InitReject();
+    GroupSectors();
 
-  CreateReject(matrix);
+    reject_size = (num_sectors * num_sectors + 7) / 8;
+    matrix = (uint8_g *)UtilCalloc(reject_size);
 
-# if DEBUG_REJECT
-  CountGroups();
-# endif
+    CreateReject(matrix);
 
-  lump = CreateLevelLump("REJECT");
+#if DEBUG_REJECT
+    CountGroups();
+#endif
 
-  AppendLevelLump(lump, matrix, reject_size);
+    lump = CreateLevelLump("REJECT");
 
-  PrintVerbose("Added simple reject lump\n");
+    AppendLevelLump(lump, matrix, reject_size);
 
-  UtilFree(matrix);
+    PrintVerbose("Added simple reject lump\n");
+
+    UtilFree(matrix);
 }

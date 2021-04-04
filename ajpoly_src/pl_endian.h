@@ -22,120 +22,110 @@
 #ifndef __AJPOLY_ENDIAN_H__
 #define __AJPOLY_ENDIAN_H__
 
+#include "pl_util.h"
 
 // ---- determine byte order ----
 
-#define UT_LIL_ENDIAN  1234
-#define UT_BIG_ENDIAN  4321
+#define UT_LIL_ENDIAN 1234
+#define UT_BIG_ENDIAN 4321
 
-#if defined(__LITTLE_ENDIAN__) || defined(WIN32) ||  \
-    defined(__i386__) || defined(__i386) ||          \
-    defined(__ia64__) || defined(__x86_64__)  ||     \
-    defined(__alpha__) || defined(__alpha)  ||       \
-    defined(__arm__) || defined(__SYMBIAN32__) ||    \
-    (defined(__mips__) && defined(__MIPSEL__))
-#define UT_BYTEORDER   UT_LIL_ENDIAN
+#if defined(__LITTLE_ENDIAN__) || defined(WIN32) || defined(__i386__) || \
+    defined(__i386) || defined(__ia64__) || defined(__x86_64__) ||       \
+    defined(__alpha__) || defined(__alpha) || defined(__arm__) ||        \
+    defined(__SYMBIAN32__) || (defined(__mips__) && defined(__MIPSEL__))
+#define UT_BYTEORDER UT_LIL_ENDIAN
 #else
-#define UT_BYTEORDER   UT_BIG_ENDIAN
+#define UT_BYTEORDER UT_BIG_ENDIAN
 #endif
-
 
 // ---- the gruntwork of swapping ----
 
 #if defined(__GNUC__) && defined(__i386__)
-static inline u16_t UT_Swap16(u16_t x)
-{
-  __asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
-  return x;
+static inline u16_t UT_Swap16(u16_t x) {
+    __asm__("xchgb %b0,%h0" : "=q"(x) : "0"(x));
+    return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-static inline u16_t UT_Swap16(u16_t x)
-{
-  __asm__("xchgb %b0,%h0" : "=Q" (x) :  "0" (x));
-  return x;
+static inline u16_t UT_Swap16(u16_t x) {
+    __asm__("xchgb %b0,%h0" : "=Q"(x) : "0"(x));
+    return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static inline u16_t UT_Swap16(u16_t x)
-{
-  u16_t result;
+static inline u16_t UT_Swap16(u16_t x) {
+    u16_t result;
 
-  __asm__("rlwimi %0,%2,8,16,23" : "=&r" (result) : "0" (x >> 8), "r" (x));
-  return result;
+    __asm__("rlwimi %0,%2,8,16,23" : "=&r"(result) : "0"(x >> 8), "r"(x));
+    return result;
 }
 #else
-static inline u16_t UT_Swap16(u16_t x) {
-  return((x<<8)|(x>>8));
-}
+static inline u16_t UT_Swap16(u16_t x) { return ((x << 8) | (x >> 8)); }
 #endif
 
 #if defined(__GNUC__) && defined(__i386__)
-static inline u32_t UT_Swap32(u32_t x)
-{
-  __asm__("bswap %0" : "=r" (x) : "0" (x));
-  return x;
+static inline u32_t UT_Swap32(u32_t x) {
+    __asm__("bswap %0" : "=r"(x) : "0"(x));
+    return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-static inline u32_t UT_Swap32(u32_t x)
-{
-  __asm__("bswapl %0" : "=r" (x) : "0" (x));
-  return x;
+static inline u32_t UT_Swap32(u32_t x) {
+    __asm__("bswapl %0" : "=r"(x) : "0"(x));
+    return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static inline u32_t UT_Swap32(u32_t x)
-{
-  u32_t result;
+static inline u32_t UT_Swap32(u32_t x) {
+    u32_t result;
 
-  __asm__("rlwimi %0,%2,24,16,23" : "=&r" (result) : "0" (x>>24), "r" (x));
-  __asm__("rlwimi %0,%2,8,8,15"   : "=&r" (result) : "0" (result),    "r" (x));
-  __asm__("rlwimi %0,%2,24,0,7"   : "=&r" (result) : "0" (result),    "r" (x));
-  return result;
+    __asm__("rlwimi %0,%2,24,16,23" : "=&r"(result) : "0"(x >> 24), "r"(x));
+    __asm__("rlwimi %0,%2,8,8,15" : "=&r"(result) : "0"(result), "r"(x));
+    __asm__("rlwimi %0,%2,24,0,7" : "=&r"(result) : "0"(result), "r"(x));
+    return result;
 }
 #else
 static inline u32_t UT_Swap32(u32_t x) {
-  return ((x<<24)|((x<<8)&0x00FF0000)|((x>>8)&0x0000FF00)|(x>>24));
+    return ((x << 24) | ((x << 8) & 0x00FF0000) | ((x >> 8) & 0x0000FF00) |
+            (x >> 24));
 }
 #endif
-
 
 // ---- byte swap from specified endianness to native ----
 
 #if (UT_BYTEORDER == UT_LIL_ENDIAN)
-#define LE_U16(X)  ((u16_t)(X))
-#define LE_U32(X)  ((u32_t)(X))
-#define BE_U16(X)  UT_Swap16(X)
-#define BE_U32(X)  UT_Swap32(X)
+#define LE_U16(X) ((u16_t)(X))
+#define LE_U32(X) ((u32_t)(X))
+#define BE_U16(X) UT_Swap16(X)
+#define BE_U32(X) UT_Swap32(X)
 #else
-#define LE_U16(X)  UT_Swap16(X)
-#define LE_U32(X)  UT_Swap32(X)
-#define BE_U16(X)  ((u16_t)(X))
-#define BE_U32(X)  ((u32_t)(X))
+#define LE_U16(X) UT_Swap16(X)
+#define LE_U32(X) UT_Swap32(X)
+#define BE_U16(X) ((u16_t)(X))
+#define BE_U32(X) ((u32_t)(X))
 #endif
 
 // signed versions of the above
-#define LE_S16(X)  ((s16_t) LE_U16((u16_t) (X)))
-#define LE_S32(X)  ((s32_t) LE_U32((u32_t) (X)))
-#define BE_S16(X)  ((s16_t) BE_U16((u16_t) (X)))
-#define BE_S32(X)  ((s32_t) BE_U32((u32_t) (X)))
-
+#define LE_S16(X) ((s16_t)LE_U16((u16_t)(X)))
+#define LE_S32(X) ((s32_t)LE_U32((u32_t)(X)))
+#define BE_S16(X) ((s16_t)BE_U16((u16_t)(X)))
+#define BE_S32(X) ((s32_t)BE_U32((u32_t)(X)))
 
 // ---- floating point ----
 
-static inline float UT_SwapFloat(float x)
-{
-  union { float f; u32_t u; } in, out;
-  in.f = x;
-  out.u = UT_Swap32(in.u);
-  return out.f;
+static inline float UT_SwapFloat(float x) {
+    union {
+        float f;
+        u32_t u;
+    } in, out;
+    in.f = x;
+    out.u = UT_Swap32(in.u);
+    return out.f;
 }
 
 #if (UT_BYTEORDER == UT_LIL_ENDIAN)
-#define LE_Float32(X)  (X)
-#define BE_Float32(X)  UT_SwapFloat(X)
+#define LE_Float32(X) (X)
+#define BE_Float32(X) UT_SwapFloat(X)
 #else
-#define LE_Float32(X)  UT_SwapFloat(X)
-#define BE_Float32(X)  (X)
+#define LE_Float32(X) UT_SwapFloat(X)
+#define BE_Float32(X) (X)
 #endif
-
 
 #endif /* __AJPOLY_ENDIAN_H__ */
 

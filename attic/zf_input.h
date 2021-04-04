@@ -37,19 +37,20 @@
 
 #include <FL/Fl_Input_.H>
 
-class FL_EXPORT Fl_NameInput : public Fl_Input_
-{
-  int handle_key();
-  int shift_position(int p);
-  int shift_up_down_position(int p);
-  void handle_mouse(int keepmark=0);
-public:
-  Fl_NameInput(int,int,int,int,const char * = 0);
-  void draw();
-  int handle(int);
-private:
-  void filter_text();
-  bool valid_char(char ch);
+class FL_EXPORT Fl_NameInput : public Fl_Input_ {
+    int handle_key();
+    int shift_position(int p);
+    int shift_up_down_position(int p);
+    void handle_mouse(int keepmark = 0);
+
+   public:
+    Fl_NameInput(int, int, int, int, const char * = 0);
+    void draw();
+    int handle(int);
+
+   private:
+    void filter_text();
+    bool valid_char(char ch);
 };
 
-#endif // Fl_NameInput_H
+#endif  // Fl_NameInput_H

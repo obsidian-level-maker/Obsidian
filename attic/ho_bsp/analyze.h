@@ -21,20 +21,17 @@
 #ifndef __GLBSP_ANALYZE_H__
 #define __GLBSP_ANALYZE_H__
 
-#include "structs.h"
 #include "level.h"
-
+#include "structs.h"
 
 void DetermineMapLimits(void);
 
-int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax,
-    int x1, int y1, int x2, int y2);
-
+int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
+                          int y1, int x2, int y2);
 
 // detection routines
 void DetectDuplicateVertices(void);
 void DetectOverlappingLines(void);
-
 
 // computes the wall tips for all of the vertices
 void CalculateWallTips(void);
@@ -48,6 +45,6 @@ vertex_t *NewVertexFromSplitSeg(seg_t *seg, double x, double y);
 // at this vertex is open.  Returns a sector reference if it's open,
 // or NULL if closed (void space or directly along a linedef).
 //
-sector_t * VertexCheckOpen(vertex_t *vert, double dx, double dy);
+sector_t *VertexCheckOpen(vertex_t *vert, double dx, double dy);
 
 #endif /* __GLBSP_ANALYZE_H__ */

@@ -21,26 +21,26 @@
 
 /* ----- useful macros ---------------------------- */
 
-#define DIST_EPSILON  (1.0 / 128.0)
+#define DIST_EPSILON (1.0 / 128.0)
 
 #ifndef M_PI
-#define M_PI  3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 #ifndef MAX
-#define MAX(x,y)  ((x) > (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #endif
 
 #ifndef MIN
-#define MIN(x,y)  ((x) < (y) ? (x) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
 #ifndef ABS
-#define ABS(x)  ((x) >= 0 ? (x) : -(x))
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
 #endif
 
 #ifndef I_ROUND
-#define I_ROUND(x)  int(((x) < 0) ? ((x) - 0.5f) : ((x) + 0.5f))
+#define I_ROUND(x) int(((x) < 0) ? ((x)-0.5f) : ((x) + 0.5f))
 #endif
 
 /* ----- function prototypes ---------------------------- */
@@ -57,7 +57,7 @@ char *UtilStrNDup(const char *str, int size);
 
 // copy the string and make it uppercase
 char *UtilStrUpper(const char *name);
-  
+
 // free some memory or a string.
 void UtilFree(void *data);
 
@@ -71,11 +71,9 @@ int UtilRoundPOW2(int x);
 double ComputeAngle(double dx, double dy);
 double ComputeDist(double dx, double dy);
 
-double  PerpDist(double x, double y,
-                 double x1, double y1, double x2, double y2);
-double AlongDist(double x, double y,
-                 double x1, double y1, double x2, double y2);
-
+double PerpDist(double x, double y, double x1, double y1, double x2, double y2);
+double AlongDist(double x, double y, double x1, double y1, double x2,
+                 double y2);
 
 // return the millisecond counter.  Note: it WILL overflow.
 unsigned int UtilGetMillis();

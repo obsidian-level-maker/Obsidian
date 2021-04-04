@@ -1,6 +1,6 @@
 /*
     Reads wad files, builds nodes, and saves new wad files.
-	Copyright (C) 1996 Raven Software 
+        Copyright (C) 1996 Raven Software
     Copyright (C) 2002-2006 Randy Heit
 
     This program is free software; you can redistribute it and/or modify
@@ -21,15 +21,16 @@
 
 // HEADER FILES ------------------------------------------------------------
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <limits.h>
 #include "sc_man.h"
 
+#include <limits.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #ifdef _MSC_VER
-#pragma warning(disable:4996)
+#pragma warning(disable : 4996)
 #endif
 
 // MACROS ------------------------------------------------------------------
@@ -50,8 +51,8 @@
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-static void SC_PrepareScript (void);
-static void CheckOpen (void);
+static void SC_PrepareScript(void);
+static void CheckOpen(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -66,7 +67,7 @@ bool sc_End;
 bool sc_Crossed;
 bool sc_StringQuoted;
 bool sc_FileScripts = false;
-//FILE *sc_Out;
+// FILE *sc_Out;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -87,16 +88,15 @@ static bool CMode;
 //
 // SC_OpenFile
 //
-// Loads a script 
+// Loads a script
 //
 //==========================================================================
 
-void SC_OpenMem (const char *name, char *buffer, int len)
-{
-	SC_Close ();
-	ScriptSize = len;
-	ScriptBuffer = buffer;
-	SC_PrepareScript ();
+void SC_OpenMem(const char *name, char *buffer, int len) {
+    SC_Close();
+    ScriptSize = len;
+    ScriptBuffer = buffer;
+    SC_PrepareScript();
 }
 
 //==========================================================================
@@ -107,17 +107,16 @@ void SC_OpenMem (const char *name, char *buffer, int len)
 //
 //==========================================================================
 
-static void SC_PrepareScript (void)
-{
-	ScriptPtr = ScriptBuffer;
-	ScriptEndPtr = ScriptPtr + ScriptSize;
-	sc_Line = 1;
-	sc_End = false;
-	ScriptOpen = true;
-	sc_String = StringBuffer;
-	AlreadyGot = false;
-	SavedScriptPtr = NULL;
-	CMode = false;
+static void SC_PrepareScript(void) {
+    ScriptPtr = ScriptBuffer;
+    ScriptEndPtr = ScriptPtr + ScriptSize;
+    sc_Line = 1;
+    sc_End = false;
+    ScriptOpen = true;
+    sc_String = StringBuffer;
+    AlreadyGot = false;
+    SavedScriptPtr = NULL;
+    CMode = false;
 }
 
 //==========================================================================
@@ -126,13 +125,11 @@ static void SC_PrepareScript (void)
 //
 //==========================================================================
 
-void SC_Close (void)
-{
-	if (ScriptOpen)
-	{
-		ScriptBuffer = NULL;
-		ScriptOpen = false;
-	}
+void SC_Close(void) {
+    if (ScriptOpen) {
+        ScriptBuffer = NULL;
+        ScriptOpen = false;
+    }
 }
 
 //==========================================================================
@@ -143,18 +140,14 @@ void SC_Close (void)
 //
 //==========================================================================
 
-void SC_SavePos (void)
-{
-	CheckOpen ();
-	if (sc_End)
-	{
-		SavedScriptPtr = NULL;
-	}
-	else
-	{
-		SavedScriptPtr = ScriptPtr;
-		SavedScriptLine = sc_Line;
-	}
+void SC_SavePos(void) {
+    CheckOpen();
+    if (sc_End) {
+        SavedScriptPtr = NULL;
+    } else {
+        SavedScriptPtr = ScriptPtr;
+        SavedScriptLine = sc_Line;
+    }
 }
 
 //==========================================================================
@@ -165,15 +158,13 @@ void SC_SavePos (void)
 //
 //==========================================================================
 
-void SC_RestorePos (void)
-{
-	if (SavedScriptPtr)
-	{
-		ScriptPtr = SavedScriptPtr;
-		sc_Line = SavedScriptLine;
-		sc_End = false;
-		AlreadyGot = false;
-	}
+void SC_RestorePos(void) {
+    if (SavedScriptPtr) {
+        ScriptPtr = SavedScriptPtr;
+        sc_Line = SavedScriptLine;
+        sc_End = false;
+        AlreadyGot = false;
+    }
 }
 
 //==========================================================================
@@ -185,10 +176,7 @@ void SC_RestorePos (void)
 //
 //==========================================================================
 
-void SC_SetCMode (bool cmode)
-{
-	CMode = cmode;
-}
+void SC_SetCMode(bool cmode) { CMode = cmode; }
 
 //==========================================================================
 //
@@ -196,169 +184,141 @@ void SC_SetCMode (bool cmode)
 //
 //==========================================================================
 
-bool SC_GetString ()
-{
-	char *text;
-	bool foundToken;
+bool SC_GetString() {
+    char *text;
+    bool foundToken;
 
-	CheckOpen();
-	if (AlreadyGot)
-	{
-		AlreadyGot = false;
-		return true;
-	}
-	foundToken = false;
-	sc_Crossed = false;
-	sc_StringQuoted = false;
-	if (ScriptPtr >= ScriptEndPtr)
-	{
-		sc_End = true;
-		return false;
-	}
-	while (foundToken == false)
-	{
-		while (ScriptPtr < ScriptEndPtr && *ScriptPtr <= ' ')
-		{
-			if (*ScriptPtr++ == '\n')
-			{
-				sc_Line++;
-				sc_Crossed = true;
-			}
-		}
-		if (ScriptPtr >= ScriptEndPtr)
-		{
-			sc_End = true;
-			return false;
-		}
-		if ((CMode || *ScriptPtr != ASCII_COMMENT) &&
-			!(ScriptPtr[0] == CPP_COMMENT && ScriptPtr < ScriptEndPtr - 1 &&
-			  (ScriptPtr[1] == CPP_COMMENT || ScriptPtr[1] == C_COMMENT)))
-		{ // Found a token
-			foundToken = true;
-		}
-		else
-		{ // Skip comment
-			if (ScriptPtr[0] == CPP_COMMENT && ScriptPtr[1] == C_COMMENT)
-			{	// C comment
-				while (ScriptPtr[0] != C_COMMENT || ScriptPtr[1] != CPP_COMMENT)
-				{
-					if (ScriptPtr[0] == '\n')
-					{
-						sc_Line++;
-						sc_Crossed = true;
-					}
-//					fputc(ScriptPtr[0], sc_Out);
-					ScriptPtr++;
-					if (ScriptPtr >= ScriptEndPtr - 1)
-					{
-						sc_End = true;
-						return false;
-					}
-//					fputs("*/", sc_Out);
-				}
-				ScriptPtr += 2;
-			}
-			else
-			{	// C++ comment
-				while (*ScriptPtr++ != '\n')
-				{
-//					fputc(ScriptPtr[-1], sc_Out);
-					if (ScriptPtr >= ScriptEndPtr)
-					{
-						sc_End = true;
-						return false;
-					}
-				}
-				sc_Line++;
-				sc_Crossed = true;
-//				fputc('\n', sc_Out);
-			}
-		}
-	}
-	text = sc_String;
-	if (*ScriptPtr == ASCII_QUOTE)
-	{ // Quoted string - return string including the quotes
-		*text++ = *ScriptPtr++;
-		sc_StringQuoted = true;
-		while (*ScriptPtr != ASCII_QUOTE)
-		{
-			if (*ScriptPtr >= 0 && *ScriptPtr < ' ')
-			{
-				ScriptPtr++;
-			}
-			else if (*ScriptPtr == '\\')
-			{
-				// Add the backslash character and the following chararcter to the text.
-				// We do not translate the escape sequence in any way, since the only
-				// thing that will happen to this string is that it will be written back
-				// out to disk. Basically, we just need this special case here so that
-				// string reading won't terminate prematurely when a \" sequence is
-				// used to embed a quote mark in the string.
-				*text++ = *ScriptPtr++;
-				*text++ = *ScriptPtr++;
-			}
-			else
-			{
-				*text++ = *ScriptPtr++;
-			}
-			if (ScriptPtr == ScriptEndPtr
-				|| text == &sc_String[MAX_STRING_SIZE-1])
-			{
-				break;
-			}
-		}
-		*text++ = '"';
-		ScriptPtr++;
-	}
-	else
-	{ // Normal string
-		static const char *stopchars;
+    CheckOpen();
+    if (AlreadyGot) {
+        AlreadyGot = false;
+        return true;
+    }
+    foundToken = false;
+    sc_Crossed = false;
+    sc_StringQuoted = false;
+    if (ScriptPtr >= ScriptEndPtr) {
+        sc_End = true;
+        return false;
+    }
+    while (foundToken == false) {
+        while (ScriptPtr < ScriptEndPtr && *ScriptPtr <= ' ') {
+            if (*ScriptPtr++ == '\n') {
+                sc_Line++;
+                sc_Crossed = true;
+            }
+        }
+        if (ScriptPtr >= ScriptEndPtr) {
+            sc_End = true;
+            return false;
+        }
+        if ((CMode || *ScriptPtr != ASCII_COMMENT) &&
+            !(ScriptPtr[0] == CPP_COMMENT && ScriptPtr < ScriptEndPtr - 1 &&
+              (ScriptPtr[1] == CPP_COMMENT ||
+               ScriptPtr[1] == C_COMMENT))) {  // Found a token
+            foundToken = true;
+        } else {  // Skip comment
+            if (ScriptPtr[0] == CPP_COMMENT &&
+                ScriptPtr[1] == C_COMMENT) {  // C comment
+                while (ScriptPtr[0] != C_COMMENT ||
+                       ScriptPtr[1] != CPP_COMMENT) {
+                    if (ScriptPtr[0] == '\n') {
+                        sc_Line++;
+                        sc_Crossed = true;
+                    }
+                    //					fputc(ScriptPtr[0],
+                    //sc_Out);
+                    ScriptPtr++;
+                    if (ScriptPtr >= ScriptEndPtr - 1) {
+                        sc_End = true;
+                        return false;
+                    }
+                    //					fputs("*/", sc_Out);
+                }
+                ScriptPtr += 2;
+            } else {  // C++ comment
+                while (*ScriptPtr++ != '\n') {
+                    //					fputc(ScriptPtr[-1],
+                    //sc_Out);
+                    if (ScriptPtr >= ScriptEndPtr) {
+                        sc_End = true;
+                        return false;
+                    }
+                }
+                sc_Line++;
+                sc_Crossed = true;
+                //				fputc('\n', sc_Out);
+            }
+        }
+    }
+    text = sc_String;
+    if (*ScriptPtr ==
+        ASCII_QUOTE) {  // Quoted string - return string including the quotes
+        *text++ = *ScriptPtr++;
+        sc_StringQuoted = true;
+        while (*ScriptPtr != ASCII_QUOTE) {
+            if (*ScriptPtr >= 0 && *ScriptPtr < ' ') {
+                ScriptPtr++;
+            } else if (*ScriptPtr == '\\') {
+                // Add the backslash character and the following chararcter to
+                // the text. We do not translate the escape sequence in any way,
+                // since the only thing that will happen to this string is that
+                // it will be written back out to disk. Basically, we just need
+                // this special case here so that string reading won't terminate
+                // prematurely when a \" sequence is used to embed a quote mark
+                // in the string.
+                *text++ = *ScriptPtr++;
+                *text++ = *ScriptPtr++;
+            } else {
+                *text++ = *ScriptPtr++;
+            }
+            if (ScriptPtr == ScriptEndPtr ||
+                text == &sc_String[MAX_STRING_SIZE - 1]) {
+                break;
+            }
+        }
+        *text++ = '"';
+        ScriptPtr++;
+    } else {  // Normal string
+        static const char *stopchars;
 
-		if (CMode)
-		{
-			stopchars = "`~!@#$%^&*(){}[]/=\?+|;:<>,";
+        if (CMode) {
+            stopchars = "`~!@#$%^&*(){}[]/=\?+|;:<>,";
 
-			// '-' can be its own token, or it can be part of a negative number
-			if (*ScriptPtr == '-')
-			{
-				*text++ = '-';
-				ScriptPtr++;
-				if (ScriptPtr < ScriptEndPtr || (*ScriptPtr >= '0' && *ScriptPtr <= '9'))
-				{
-					goto grabtoken;
-				}
-				goto gottoken;
-			}
-		}
-		else
-		{
-			stopchars = "{}|=";
-		}
-		if (strchr (stopchars, *ScriptPtr))
-		{
-			*text++ = *ScriptPtr++;
-		}
-		else
-		{
-grabtoken:
-			while ((*ScriptPtr > ' ') && (strchr (stopchars, *ScriptPtr) == NULL)
-				&& (CMode || *ScriptPtr != ASCII_COMMENT)
-				&& !(ScriptPtr[0] == CPP_COMMENT && (ScriptPtr < ScriptEndPtr - 1) &&
-					 (ScriptPtr[1] == CPP_COMMENT || ScriptPtr[1] == C_COMMENT)))
-			{
-				*text++ = *ScriptPtr++;
-				if (ScriptPtr == ScriptEndPtr
-					|| text == &sc_String[MAX_STRING_SIZE-1])
-				{
-					break;
-				}
-			}
-		}
-	}
+            // '-' can be its own token, or it can be part of a negative number
+            if (*ScriptPtr == '-') {
+                *text++ = '-';
+                ScriptPtr++;
+                if (ScriptPtr < ScriptEndPtr ||
+                    (*ScriptPtr >= '0' && *ScriptPtr <= '9')) {
+                    goto grabtoken;
+                }
+                goto gottoken;
+            }
+        } else {
+            stopchars = "{}|=";
+        }
+        if (strchr(stopchars, *ScriptPtr)) {
+            *text++ = *ScriptPtr++;
+        } else {
+        grabtoken:
+            while (
+                (*ScriptPtr > ' ') && (strchr(stopchars, *ScriptPtr) == NULL) &&
+                (CMode || *ScriptPtr != ASCII_COMMENT) &&
+                !(ScriptPtr[0] == CPP_COMMENT &&
+                  (ScriptPtr < ScriptEndPtr - 1) &&
+                  (ScriptPtr[1] == CPP_COMMENT || ScriptPtr[1] == C_COMMENT))) {
+                *text++ = *ScriptPtr++;
+                if (ScriptPtr == ScriptEndPtr ||
+                    text == &sc_String[MAX_STRING_SIZE - 1]) {
+                    break;
+                }
+            }
+        }
+    }
 gottoken:
-	*text = 0;
-	sc_StringLen = int(text - sc_String);
-	return true;
+    *text = 0;
+    sc_StringLen = int(text - sc_String);
+    return true;
 }
 
 //==========================================================================
@@ -367,12 +327,10 @@ gottoken:
 //
 //==========================================================================
 
-void SC_MustGetString (void)
-{
-	if (SC_GetString () == false)
-	{
-		SC_ScriptError ("Missing string (unexpected end of file).");
-	}
+void SC_MustGetString(void) {
+    if (SC_GetString() == false) {
+        SC_ScriptError("Missing string (unexpected end of file).");
+    }
 }
 
 //==========================================================================
@@ -381,13 +339,11 @@ void SC_MustGetString (void)
 //
 //==========================================================================
 
-void SC_MustGetStringName (const char *name)
-{
-	SC_MustGetString ();
-	if (SC_Compare (name) == false)
-	{
-		SC_ScriptError ("Expected '%s', got '%s'.", name, sc_String);
-	}
+void SC_MustGetStringName(const char *name) {
+    SC_MustGetString();
+    if (SC_Compare(name) == false) {
+        SC_ScriptError("Expected '%s', got '%s'.", name, sc_String);
+    }
 }
 
 //==========================================================================
@@ -398,17 +354,14 @@ void SC_MustGetStringName (const char *name)
 // it does. If it doesn't, it ungets it and returns false.
 //==========================================================================
 
-bool SC_CheckString (const char *name)
-{
-	if (SC_GetString ())
-	{
-		if (SC_Compare (name))
-		{
-			return true;
-		}
-		SC_UnGet ();
-	}
-	return false;
+bool SC_CheckString(const char *name) {
+    if (SC_GetString()) {
+        if (SC_Compare(name)) {
+            return true;
+        }
+        SC_UnGet();
+    }
+    return false;
 }
 
 //==========================================================================
@@ -417,32 +370,25 @@ bool SC_CheckString (const char *name)
 //
 //==========================================================================
 
-bool SC_GetNumber (void)
-{
-	char *stopper;
+bool SC_GetNumber(void) {
+    char *stopper;
 
-	CheckOpen ();
-	if (SC_GetString())
-	{
-		if (strcmp (sc_String, "MAXINT") == 0)
-		{
-			sc_Number = INT_MAX;
-		}
-		else
-		{
-			sc_Number = strtol (sc_String, &stopper, 0);
-			if (*stopper != 0)
-			{
-				SC_ScriptError ("SC_GetNumber: Bad numeric constant \"%s\".", sc_String);
-			}
-		}
-		sc_Float = sc_Number;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    CheckOpen();
+    if (SC_GetString()) {
+        if (strcmp(sc_String, "MAXINT") == 0) {
+            sc_Number = INT_MAX;
+        } else {
+            sc_Number = strtol(sc_String, &stopper, 0);
+            if (*stopper != 0) {
+                SC_ScriptError("SC_GetNumber: Bad numeric constant \"%s\".",
+                               sc_String);
+            }
+        }
+        sc_Float = sc_Number;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==========================================================================
@@ -451,49 +397,39 @@ bool SC_GetNumber (void)
 //
 //==========================================================================
 
-void SC_MustGetNumber (void)
-{
-	if (SC_GetNumber() == false)
-	{
-		SC_ScriptError ("Missing integer (unexpected end of file).");
-	}
+void SC_MustGetNumber(void) {
+    if (SC_GetNumber() == false) {
+        SC_ScriptError("Missing integer (unexpected end of file).");
+    }
 }
 
 //==========================================================================
 //
 // SC_CheckNumber
-// similar to SC_GetNumber but ungets the token if it isn't a number 
+// similar to SC_GetNumber but ungets the token if it isn't a number
 // and does not print an error
 //
 //==========================================================================
 
-bool SC_CheckNumber (void)
-{
-	char *stopper;
+bool SC_CheckNumber(void) {
+    char *stopper;
 
-	//CheckOpen ();
-	if (SC_GetString())
-	{
-		if (strcmp (sc_String, "MAXINT") == 0)
-		{
-			sc_Number = INT_MAX;
-		}
-		else
-		{
-			sc_Number = strtol (sc_String, &stopper, 0);
-			if (*stopper != 0)
-			{
-				SC_UnGet();
-				return false;
-			}
-		}
-		sc_Float = sc_Number;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    // CheckOpen ();
+    if (SC_GetString()) {
+        if (strcmp(sc_String, "MAXINT") == 0) {
+            sc_Number = INT_MAX;
+        } else {
+            sc_Number = strtol(sc_String, &stopper, 0);
+            if (*stopper != 0) {
+                SC_UnGet();
+                return false;
+            }
+        }
+        sc_Float = sc_Number;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==========================================================================
@@ -503,28 +439,22 @@ bool SC_CheckNumber (void)
 //
 //==========================================================================
 
-bool SC_CheckFloat (void)
-{
-	char *stopper;
+bool SC_CheckFloat(void) {
+    char *stopper;
 
-	//CheckOpen ();
-	if (SC_GetString())
-	{
-		sc_Float = strtod (sc_String, &stopper);
-		sc_Number = (int)sc_Float;
-		if (*stopper != 0)
-		{
-			SC_UnGet();
-			return false;
-		}
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    // CheckOpen ();
+    if (SC_GetString()) {
+        sc_Float = strtod(sc_String, &stopper);
+        sc_Number = (int)sc_Float;
+        if (*stopper != 0) {
+            SC_UnGet();
+            return false;
+        }
+        return true;
+    } else {
+        return false;
+    }
 }
-
 
 //==========================================================================
 //
@@ -532,25 +462,21 @@ bool SC_CheckFloat (void)
 //
 //==========================================================================
 
-bool SC_GetFloat (void)
-{
-	char *stopper;
+bool SC_GetFloat(void) {
+    char *stopper;
 
-	CheckOpen ();
-	if (SC_GetString())
-	{
-		sc_Float = strtod (sc_String, &stopper);
-		if (*stopper != 0)
-		{
-			SC_ScriptError("SC_GetFloat: Bad numeric constant \"%s\".\n",sc_String);
-		}
-		sc_Number = (int)sc_Float;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    CheckOpen();
+    if (SC_GetString()) {
+        sc_Float = strtod(sc_String, &stopper);
+        if (*stopper != 0) {
+            SC_ScriptError("SC_GetFloat: Bad numeric constant \"%s\".\n",
+                           sc_String);
+        }
+        sc_Number = (int)sc_Float;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==========================================================================
@@ -559,12 +485,11 @@ bool SC_GetFloat (void)
 //
 //==========================================================================
 
-void SC_MustGetFloat (void)
-{
-	if (SC_GetFloat() == false)
-	{
-		SC_ScriptError ("Missing floating-point number (unexpected end of file).");
-	}
+void SC_MustGetFloat(void) {
+    if (SC_GetFloat() == false) {
+        SC_ScriptError(
+            "Missing floating-point number (unexpected end of file).");
+    }
 }
 
 //==========================================================================
@@ -575,10 +500,7 @@ void SC_MustGetFloat (void)
 //
 //==========================================================================
 
-void SC_UnGet (void)
-{
-	AlreadyGot = true;
-}
+void SC_UnGet(void) { AlreadyGot = true; }
 
 //==========================================================================
 //
@@ -591,31 +513,31 @@ void SC_UnGet (void)
 /*
 bool SC_Check(void)
 {
-	char *text;
+        char *text;
 
-	CheckOpen();
-	text = ScriptPtr;
-	if(text >= ScriptEndPtr)
-	{
-		return false;
-	}
-	while(*text <= 32)
-	{
-		if(*text == '\n')
-		{
-			return false;
-		}
-		text++;
-		if(text == ScriptEndPtr)
-		{
-			return false;
-		}
-	}
-	if(*text == ASCII_COMMENT)
-	{
-		return false;
-	}
-	return true;
+        CheckOpen();
+        text = ScriptPtr;
+        if(text >= ScriptEndPtr)
+        {
+                return false;
+        }
+        while(*text <= 32)
+        {
+                if(*text == '\n')
+                {
+                        return false;
+                }
+                text++;
+                if(text == ScriptEndPtr)
+                {
+                        return false;
+                }
+        }
+        if(*text == ASCII_COMMENT)
+        {
+                return false;
+        }
+        return true;
 }
 */
 
@@ -628,18 +550,15 @@ bool SC_Check(void)
 //
 //==========================================================================
 
-int SC_MatchString (const char **strings)
-{
-	int i;
+int SC_MatchString(const char **strings) {
+    int i;
 
-	for (i = 0; *strings != NULL; i++)
-	{
-		if (SC_Compare (*strings++))
-		{
-			return i;
-		}
-	}
-	return -1;
+    for (i = 0; *strings != NULL; i++) {
+        if (SC_Compare(*strings++)) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 //==========================================================================
@@ -648,16 +567,14 @@ int SC_MatchString (const char **strings)
 //
 //==========================================================================
 
-int SC_MustMatchString (const char **strings)
-{
-	int i;
+int SC_MustMatchString(const char **strings) {
+    int i;
 
-	i = SC_MatchString (strings);
-	if (i == -1)
-	{
-		SC_ScriptError (NULL);
-	}
-	return i;
+    i = SC_MatchString(strings);
+    if (i == -1) {
+        SC_ScriptError(NULL);
+    }
+    return i;
 }
 
 //==========================================================================
@@ -666,12 +583,11 @@ int SC_MustMatchString (const char **strings)
 //
 //==========================================================================
 
-bool SC_Compare (const char *text)
-{
+bool SC_Compare(const char *text) {
 #ifdef _MSC_VER
-	return (_stricmp (text, sc_String) == 0);
+    return (_stricmp(text, sc_String) == 0);
 #else
-	return (strcasecmp (text, sc_String) == 0);
+    return (strcasecmp(text, sc_String) == 0);
 #endif
 }
 
@@ -681,21 +597,19 @@ bool SC_Compare (const char *text)
 //
 //==========================================================================
 
-void SC_ScriptError (const char *message, ...)
-{
-	char composed[2048];
-	if (message == NULL)
-	{
-		message = "Bad syntax.";
-	}
+void SC_ScriptError(const char *message, ...) {
+    char composed[2048];
+    if (message == NULL) {
+        message = "Bad syntax.";
+    }
 
-	va_list arglist;
-	va_start (arglist, message);
-	vsprintf (composed, message, arglist);
-	va_end (arglist);
+    va_list arglist;
+    va_start(arglist, message);
+    vsprintf(composed, message, arglist);
+    va_end(arglist);
 
-	printf ("Script error, line %d:\n%s\n", sc_Line, composed);
-	exit(1);
+    printf("Script error, line %d:\n%s\n", sc_Line, composed);
+    exit(1);
 }
 
 //==========================================================================
@@ -704,11 +618,9 @@ void SC_ScriptError (const char *message, ...)
 //
 //==========================================================================
 
-static void CheckOpen(void)
-{
-	if (ScriptOpen == false)
-	{
-		printf ("SC_ call before SC_Open().\n");
-		exit(1);
-	}
+static void CheckOpen(void) {
+    if (ScriptOpen == false) {
+        printf("SC_ call before SC_Open().\n");
+        exit(1);
+    }
 }

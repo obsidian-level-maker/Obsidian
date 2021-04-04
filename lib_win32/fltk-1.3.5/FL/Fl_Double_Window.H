@@ -38,32 +38,33 @@
   does not exist for every visual.
 */
 class FL_EXPORT Fl_Double_Window : public Fl_Window {
-protected:
-  void flush(int eraseoverlay);
-  /**
-    Force double buffering, even if the OS already buffers windows
-    (overlays need that on MacOS and Windows2000)
-  */
-  char force_doublebuffering_;
-public:
-  void show();
-  void show(int a, char **b) {Fl_Window::show(a,b);}
-  void flush();
-  void resize(int,int,int,int);
-  void hide();
-  ~Fl_Double_Window();
-  
-  /**
-   Creates a new Fl_Double_Window widget using the given
-   position, size, and label (title) string.
-  */
-  Fl_Double_Window(int W, int H, const char *l = 0);
-  
-  /**
-   See  Fl_Double_Window::Fl_Double_Window(int w, int h, const char *label = 0)
-  */
-  Fl_Double_Window(int X, int Y, int W, int H, const char *l = 0);
+   protected:
+    void flush(int eraseoverlay);
+    /**
+      Force double buffering, even if the OS already buffers windows
+      (overlays need that on MacOS and Windows2000)
+    */
+    char force_doublebuffering_;
 
+   public:
+    void show();
+    void show(int a, char **b) { Fl_Window::show(a, b); }
+    void flush();
+    void resize(int, int, int, int);
+    void hide();
+    ~Fl_Double_Window();
+
+    /**
+     Creates a new Fl_Double_Window widget using the given
+     position, size, and label (title) string.
+    */
+    Fl_Double_Window(int W, int H, const char *l = 0);
+
+    /**
+     See  Fl_Double_Window::Fl_Double_Window(int w, int h, const char *label =
+     0)
+    */
+    Fl_Double_Window(int X, int Y, int W, int H, const char *l = 0);
 };
 
 #endif

@@ -20,19 +20,23 @@
 #define __SYS_ASSERT__
 
 #ifdef NDEBUG
-#define SYS_ASSERT(cond)  ((void) 0)
+#define SYS_ASSERT(cond) ((void)0)
 
 #elif defined(__GNUC__)
-#define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
-        FatalError("Assertion (%s) failed\nIn function %s (%s:%d)\n", #cond , __func__, __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                    \
+    ((cond) ? (void)0                                                       \
+            : FatalError("Assertion (%s) failed\nIn function %s (%s:%d)\n", \
+                         #cond, __func__, __FILE__, __LINE__))
 
 #else
-#define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
-        FatalError("Assertion (%s) failed\nIn file %s:%d\n", #cond , __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                  \
+    ((cond) ? (void)0                                                     \
+            : FatalError("Assertion (%s) failed\nIn file %s:%d\n", #cond, \
+                         __FILE__, __LINE__))
 
 #endif  // NDEBUG
 
-#endif  /* __SYS_ASSERT__ */
+#endif /* __SYS_ASSERT__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

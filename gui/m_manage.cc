@@ -18,179 +18,147 @@
 //
 //------------------------------------------------------------------------
 
-#include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-
+#include "headers.h"
 #include "lib_util.h"
-
-#include "main.h"
 #include "m_cookie.h"
 #include "m_lua.h"
+#include "main.h"
 
-
-#define BG_COLOR  fl_rgb_color(221, 221, 221)
-
+#define BG_COLOR fl_rgb_color(221, 221, 221)
 
 // forward decls
 class UI_Manage_Config;
-
 
 //
 // This does the job of scanning a file and extracting any config.
 // The text is appended into the given text buffer.
 // Returns false if no config can be found in the file.
-// 
-#define LOOKAHEAD_SIZE  1024
+//
+#define LOOKAHEAD_SIZE 1024
 
-class Lookahead_Stream_c
-{
-private:
-	FILE *fp;
+class Lookahead_Stream_c {
+   private:
+    FILE *fp;
 
-	char buffer[LOOKAHEAD_SIZE];
+    char buffer[LOOKAHEAD_SIZE];
 
-	// number of characters in buffer, usually the buffer is full
-	int buf_len;
+    // number of characters in buffer, usually the buffer is full
+    int buf_len;
 
-	// read position in buffer, < LOOKAHEAD_SIZE/2 except at EOF
-	int pos;
+    // read position in buffer, < LOOKAHEAD_SIZE/2 except at EOF
+    int pos;
 
-private:
-	void shift_data()
-	{
-		SYS_ASSERT(pos > 0);
-		SYS_ASSERT(pos <= buf_len);
+   private:
+    void shift_data() {
+        SYS_ASSERT(pos > 0);
+        SYS_ASSERT(pos <= buf_len);
 
-		// compute the new length of buffer
-		// (we are eating 'pos' characters at the head)
-		buf_len -= pos;
+        // compute the new length of buffer
+        // (we are eating 'pos' characters at the head)
+        buf_len -= pos;
 
-		if (buf_len > 0)
-			memmove(buffer, buffer + pos, buf_len);
+        if (buf_len > 0) memmove(buffer, buffer + pos, buf_len);
 
-		pos = 0;
-	}
+        pos = 0;
+    }
 
-	void read_data()
-	{
-		int want_len = LOOKAHEAD_SIZE - buf_len;
-		SYS_ASSERT(want_len > 0);
+    void read_data() {
+        int want_len = LOOKAHEAD_SIZE - buf_len;
+        SYS_ASSERT(want_len > 0);
 
-		int got_len = fread(buffer + buf_len, 1, want_len, fp);
+        int got_len = fread(buffer + buf_len, 1, want_len, fp);
 
-		if (got_len < 0)
-			got_len = 0;
+        if (got_len < 0) got_len = 0;
 
-		buf_len = buf_len + got_len;
-	}
+        buf_len = buf_len + got_len;
+    }
 
-public:
-	Lookahead_Stream_c(FILE *_fp) : fp(_fp), buf_len(0), pos(0)
-	{
-		// need an initial packet of data
-		read_data();
-	}
+   public:
+    Lookahead_Stream_c(FILE *_fp) : fp(_fp), buf_len(0), pos(0) {
+        // need an initial packet of data
+        read_data();
+    }
 
-	virtual ~Lookahead_Stream_c()
-	{ }
+    virtual ~Lookahead_Stream_c() {}
 
-public:
-	bool hit_eof()
-	{
-		return (pos >= buf_len);
-	}
+   public:
+    bool hit_eof() { return (pos >= buf_len); }
 
-	char peek_char(int offset = 0)
-	{
-		int new_pos = pos + offset;
+    char peek_char(int offset = 0) {
+        int new_pos = pos + offset;
 
-		if (new_pos >= buf_len)
-			return 0;
+        if (new_pos >= buf_len) return 0;
 
-		return buffer[new_pos];
-	}
+        return buffer[new_pos];
+    }
 
-	char get_char()
-	{
-		if (hit_eof())
-			return 0;
+    char get_char() {
+        if (hit_eof()) return 0;
 
-		int ch = buffer[pos++];
+        int ch = buffer[pos++];
 
-		// time to read more from the file?
-		if (pos >= LOOKAHEAD_SIZE / 2)
-		{
-			shift_data();
-			read_data();
-		}
+        // time to read more from the file?
+        if (pos >= LOOKAHEAD_SIZE / 2) {
+            shift_data();
+            read_data();
+        }
 
-		return ch;
-	}
+        return ch;
+    }
 
-	bool match(const char *str)
-	{
-		for (int offset = 0 ; *str ; str++, offset++)
-			if (peek_char(offset) != *str)
-				return false;
+    bool match(const char *str) {
+        for (int offset = 0; *str; str++, offset++)
+            if (peek_char(offset) != *str) return false;
 
-		return true;
-	}
+        return true;
+    }
 };
 
+static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
+    Lookahead_Stream_c stream(fp);
 
-static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf)
-{
-	Lookahead_Stream_c stream(fp);
+    /* look for a starting string */
 
-	/* look for a starting string */
+    while (1) {
+        if (stream.hit_eof()) return false;  // not found
 
-	while (1)
-	{
-		if (stream.hit_eof())
-			return false;  // not found
+        if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
+            stream.match("-- Levels created by OBSIDIAN ") ||
+            stream.match("-- CONFIG FILE : OBLIGE ") ||
+            stream.match("-- Levels created by OBLIGE ")) {
+            break;  // found it
+        }
 
-		if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
-			stream.match("-- Levels created by OBSIDIAN ") ||
-			stream.match("-- CONFIG FILE : OBLIGE ") ||
-			stream.match("-- Levels created by OBLIGE "))
-		{
-			break;  // found it
-		}
+        stream.get_char();
+    }
 
-		stream.get_char();
-	}
+    /* copy lines until we hit the end */
 
-	/* copy lines until we hit the end */
+    char mini_buf[4];
 
-	char mini_buf[4];
+    while (!stream.hit_eof()) {
+        if (stream.match("-- END")) {
+            buf->append("-- END --\n\n");
+            break;
+        }
 
-	while (! stream.hit_eof())
-	{
-		if (stream.match("-- END"))
-		{
-			buf->append("-- END --\n\n");
-			break;
-		}
+        int ch = stream.get_char();
 
-		int ch = stream.get_char();
+        if (ch == 0 || ch == 26) break;
 
-		if (ch == 0 || ch == 26)
-			break;
+        // remove CR (Carriage Return) characters
+        if (ch == '\r') continue;
 
-		// remove CR (Carriage Return) characters
-		if (ch == '\r')
-			continue;
+        mini_buf[0] = ch;
+        mini_buf[1] = 0;
 
-		mini_buf[0] = ch;
-		mini_buf[1] = 0;
+        buf->append(mini_buf);
+    }
 
-		buf->append(mini_buf);
-	}
-
-	return true;  // Success!
+    return true;  // Success!
 }
-
 
 //------------------------------------------------------------------------
 
@@ -198,287 +166,261 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf)
 // this prevents the text display widget from selecting areas,
 // as well as eating the CTRL-A and CTRL-C keyboard events.
 //
-class Fl_Text_Display_NoSelect : public Fl_Text_Display
-{
-public:
-	Fl_Text_Display_NoSelect(int X, int Y, int W, int H, const char *label = 0) : 
-		Fl_Text_Display(X, Y, W, H, label)
-	{ }
+class Fl_Text_Display_NoSelect : public Fl_Text_Display {
+   public:
+    Fl_Text_Display_NoSelect(int X, int Y, int W, int H, const char *label = 0)
+        : Fl_Text_Display(X, Y, W, H, label) {}
 
-	virtual ~Fl_Text_Display_NoSelect()
-	{ }
+    virtual ~Fl_Text_Display_NoSelect() {}
 
-	virtual int handle(int e)
-	{
-		switch (e)
-		{
-			case FL_KEYBOARD: case FL_KEYUP:
-			case FL_PUSH: case FL_RELEASE:
-			case FL_DRAG:
-				return Fl_Group::handle(e);
-		}
+    virtual int handle(int e) {
+        switch (e) {
+            case FL_KEYBOARD:
+            case FL_KEYUP:
+            case FL_PUSH:
+            case FL_RELEASE:
+            case FL_DRAG:
+                return Fl_Group::handle(e);
+        }
 
-		return Fl_Text_Display::handle(e);
-	}
+        return Fl_Text_Display::handle(e);
+    }
 };
 
+#define RECENT_NUM 10
 
-#define RECENT_NUM  10
+typedef struct {
+    int group;
+    int index;
 
-typedef struct
-{
-	int group;
-	int index;
+    char short_name[100];
 
-	char short_name[100];
-
-	UI_Manage_Config *widget;
+    UI_Manage_Config *widget;
 
 } recent_file_data_t;
 
+class UI_Manage_Config : public Fl_Double_Window {
+   public:
+    bool want_quit;
 
+    Fl_Text_Buffer *text_buf;
 
-class UI_Manage_Config : public Fl_Double_Window
-{
-public:
-	bool want_quit;
+    Fl_Text_Display_NoSelect *conf_disp;
 
-	Fl_Text_Buffer *text_buf;
+    Fl_Button *load_but;
+    Fl_Menu_Across *recent_menu;
 
-	Fl_Text_Display_NoSelect *conf_disp;
+    Fl_Button *save_but;
+    Fl_Button *use_but;
+    Fl_Button *close_but;
 
-	Fl_Button *load_but;
-	Fl_Menu_Across *recent_menu;
+    Fl_Button *cut_but;
+    Fl_Button *copy_but;
+    Fl_Button *paste_but;
 
-	Fl_Button *save_but;
-	Fl_Button *use_but;
-	Fl_Button *close_but;
+    static recent_file_data_t recent_wads[RECENT_NUM];
+    static recent_file_data_t recent_configs[RECENT_NUM];
 
-	Fl_Button *cut_but;
-	Fl_Button *copy_but;
-	Fl_Button *paste_but;
+   public:
+    UI_Manage_Config(int W, int H, const char *label = NULL);
 
-	static recent_file_data_t recent_wads   [RECENT_NUM];
-	static recent_file_data_t recent_configs[RECENT_NUM];
+    virtual ~UI_Manage_Config();
 
-public:
-	UI_Manage_Config(int W, int H, const char *label = NULL);
+    bool WantQuit() const { return want_quit; }
 
-	virtual ~UI_Manage_Config();
+    void MarkSource(const char *where) {
+        char *full = StringPrintf("[ %s ]", where);
 
-	bool WantQuit() const
-	{
-		return want_quit;
-	}
+        conf_disp->copy_label(full);
 
-	void MarkSource(const char *where)
-	{
-		char *full = StringPrintf("[ %s ]", where);
+        StringFree(full);
+        redraw();
+    }
 
-		conf_disp->copy_label(full);
+    void MarkSource_FILE(const char *filename) {
+        char *full;
 
-		StringFree(full);
-		redraw();
-	}
+        // abbreviate the filename if too long
+        int len = strlen(filename);
 
-	void MarkSource_FILE(const char *filename)
-	{
-		char *full;
+        if (len < 42)
+            full = StringPrintf("[ %s ]", filename);
+        else
+            full = StringPrintf("[ %.10s....%s ]", filename,
+                                filename + (len - 30));
 
-		// abbreviate the filename if too long
-		int len = strlen(filename);
+        conf_disp->copy_label(full);
 
-		if (len < 42)
-			full = StringPrintf("[ %s ]", filename);
-		else
-			full = StringPrintf("[ %.10s....%s ]", filename, filename + (len - 30));
+        StringFree(full);
+        redraw();
+    }
 
-		conf_disp->copy_label(full);
+    void Clear() {
+        MarkSource("");
 
-		StringFree(full);
-		redraw();
-	}
+        text_buf->select(0, text_buf->length());
+        text_buf->remove_selection();
 
-	void Clear()
-	{
-		MarkSource("");
+        save_but->deactivate();
+        use_but->deactivate();
 
-		text_buf->select(0, text_buf->length());
-		text_buf->remove_selection();
+        cut_but->deactivate();
+        copy_but->deactivate();
 
-		save_but->deactivate();
-		 use_but->deactivate();
+        redraw();
+    }
 
-		 cut_but->deactivate();
-		copy_but->deactivate();
+    void Enable() {
+        save_but->activate();
+        use_but->activate();
 
-		redraw();
-	}
+        cut_but->activate();
+        copy_but->activate();
 
-	void Enable()
-	{
-		save_but->activate();
-		 use_but->activate();
+        redraw();
+    }
 
-		 cut_but->activate();
-		copy_but->activate();
+    void ReadCurrentSettings() {
+        Clear();
 
-		redraw();
-	}
+        text_buf->append("-- CONFIG FILE : OBSIDIAN " OBSIDIAN_VERSION "\n");
+        text_buf->append(
+            "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+        text_buf->append("-- " OBSIDIAN_WEBSITE "\n\n");
 
-	void ReadCurrentSettings()
-	{
-		Clear();
+        std::vector<std::string> lines;
 
-		text_buf->append("-- CONFIG FILE : OBSIDIAN " OBSIDIAN_VERSION "\n"); 
-		text_buf->append("-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-		text_buf->append("-- " OBSIDIAN_WEBSITE "\n\n");
+        ob_read_all_config(&lines, false /* need_full */);
 
-		std::vector<std::string> lines;
+        for (unsigned int i = 0; i < lines.size(); i++) {
+            text_buf->append(lines[i].c_str());
+            text_buf->append("\n");
+        }
 
-		ob_read_all_config(&lines, false /* need_full */);
+        Enable();
 
-		for (unsigned int i = 0 ; i < lines.size() ; i++)
-		{
-			text_buf->append(lines[i].c_str());
-			text_buf->append("\n");
-		}
+        MarkSource(_("CURRENT SETTINGS"));
+    }
 
-		Enable();
+    void ReplaceWithString(const char *new_text) {
+        Clear();
 
-		MarkSource(_("CURRENT SETTINGS"));
-	}
+        text_buf->append(new_text);
 
-	void ReplaceWithString(const char *new_text)
-	{
-		Clear();
+        Enable();
+    }
 
-		text_buf->append(new_text);
+    const char *AskSaveFilename() {
+        Fl_Native_File_Chooser chooser;
 
-		Enable();
-	}
+        chooser.title(_("Pick file to save to"));
+        chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+        chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
+        chooser.filter("Text files\t*.txt");
 
-	const char * AskSaveFilename()
-	{
-		Fl_Native_File_Chooser  chooser;
+        // TODO: chooser.directory(LAST_USED_DIRECTORY)
 
-		chooser.title(_("Pick file to save to"));
-		chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
-		chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
-		chooser.filter("Text files\t*.txt");
+        switch (chooser.show()) {
+            case -1:
+                LogPrintf("Error choosing save file:\n");
+                LogPrintf("   %s\n", chooser.errmsg());
 
-		// TODO: chooser.directory(LAST_USED_DIRECTORY)
+                DLG_ShowError(_("Unable to save the file:\n\n%s"),
+                              chooser.errmsg());
+                return NULL;
 
-		switch (chooser.show())
-		{
-			case -1:
-				LogPrintf("Error choosing save file:\n");
-				LogPrintf("   %s\n", chooser.errmsg());
+            case 1:  // cancelled
+                return NULL;
 
-				DLG_ShowError(_("Unable to save the file:\n\n%s"), chooser.errmsg());
-				return NULL;
+            default:
+                break;  // OK
+        }
 
-			case 1:  // cancelled
-				return NULL;
+        static char filename[FL_PATH_MAX + 10];
 
-			default:
-				break;  // OK
-		}
+        strcpy(filename, chooser.filename());
 
-		static char filename[FL_PATH_MAX + 10];
+        // if extension is missing then add ".txt"
+        char *pos = (char *)fl_filename_ext(filename);
+        if (!*pos) strcat(filename, ".txt");
 
-		strcpy(filename, chooser.filename());
+        return filename;
+    }
 
-		// if extension is missing then add ".txt"
-		char *pos = (char *)fl_filename_ext(filename);
-		if (! *pos)
-			strcat(filename, ".txt");
+    void SaveToFile(const char *filename) {
+        // looking at FLTK code, the file is opened in "w" mode, so
+        // it should handle end-of-line in an OS-appropriate way.
+        int res = text_buf->savefile(filename);
 
-		return filename;
-	}
+        int err_no = errno;
 
-	void SaveToFile(const char *filename)
-	{
-		// looking at FLTK code, the file is opened in "w" mode, so
-		// it should handle end-of-line in an OS-appropriate way.
-		int res = text_buf->savefile(filename);
+        if (res) {
+            const char *reason = (res == 1 && err_no)
+                                     ? strerror(err_no)
+                                     : _("Error writing to file.");
 
-		int err_no = errno;
+            DLG_ShowError(_("Unable to save the file:\n\n%s"), reason);
+        } else {
+            Recent_AddFile(RECG_Config, filename);
+        }
+    }
 
-		if (res)
-		{
-			const char *reason = (res == 1 && err_no) ? strerror(err_no) :
-								 _("Error writing to file.");
+    int PopulateRecentMenu(Fl_Menu_Across *menu, int group, int max_num) {
+        SYS_ASSERT(max_num <= RECENT_NUM);
 
-			DLG_ShowError(_("Unable to save the file:\n\n%s"), reason);
-		}
-		else
-		{
-			Recent_AddFile(RECG_Config, filename);
-		}
-	}
+        recent_file_data_t *ptr;
 
-	int PopulateRecentMenu(Fl_Menu_Across *menu, int group, int max_num)
-	{
-		SYS_ASSERT(max_num <= RECENT_NUM);
+        if (group == RECG_Output)
+            ptr = &recent_wads[0];
+        else
+            ptr = &recent_configs[0];
 
-		recent_file_data_t *ptr;
+        for (int k = 0; k < RECENT_NUM; k++) {
+            ptr[k].group = -1;
+            ptr[k].index = -1;
+            ptr[k].widget = NULL;
+        }
 
-		if (group == RECG_Output)
-			ptr = &recent_wads[0];
-		else
-			ptr = &recent_configs[0];
+        int i;
 
-		for (int k = 0 ; k < RECENT_NUM ; k++)
-		{
-			ptr[k].group  = -1;
-			ptr[k].index  = -1;
-			ptr[k].widget = NULL;
-		}
+        for (i = 0; i < max_num; i++, ptr++) {
+            if (!Recent_GetName(group, i, ptr->short_name, true /* for_menu */))
+                break;
 
-		int i;
+            ptr->group = group;
+            ptr->index = i;
+            ptr->widget = this;
 
-		for (i = 0 ; i < max_num ; i++, ptr++)
-		{
-			if (! Recent_GetName(group, i, ptr->short_name, true /* for_menu */))
-				break;
+            menu->add(ptr->short_name, 0, callback_Recent, ptr);
+        }
 
-			ptr->group = group;
-			ptr->index = i;
-			ptr->widget = this;
+        return i;  // total number
+    }
 
-			menu->add(ptr->short_name, 0, callback_Recent, ptr);
-		}
+    void SetupRecent() {
+        recent_menu->clear();
 
-		return i;  // total number
-	}
+        int count1 = PopulateRecentMenu(recent_menu, RECG_Config, 6);
 
-	void SetupRecent()
-	{
-		recent_menu->clear();
+        recent_menu->add("", 0, 0, 0, FL_MENU_DIVIDER | FL_MENU_INACTIVE);
 
-		int count1 = PopulateRecentMenu(recent_menu, RECG_Config, 6);
+        int count2 = PopulateRecentMenu(recent_menu, RECG_Output, 8);
 
-		recent_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
+        if (count1 + count2 > 0)
+            recent_menu->activate();
+        else
+            recent_menu->deactivate();
+    }
 
-		int count2 = PopulateRecentMenu(recent_menu, RECG_Output, 8);
+    const char *AskLoadFilename() {
+        Fl_Native_File_Chooser chooser;
 
-		if (count1 + count2 > 0)
-			recent_menu->activate();
-		else
-			recent_menu->deactivate();
-	}
+        chooser.title(_("Select file to load"));
+        chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
-	const char * AskLoadFilename()
-	{
-		Fl_Native_File_Chooser chooser;
-
-		chooser.title(_("Select file to load"));
-		chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
-
-		// These filters (in FLTK's own browser at least) are a choice
-		// and only one is active at a time.  That sucks, since only
-		// files matching the active filter are shown.
+        // These filters (in FLTK's own browser at least) are a choice
+        // and only one is active at a time.  That sucks, since only
+        // files matching the active filter are shown.
 #if 0
 		chooser.filter("Text files\t*.txt\n"
 		               "Config files\t*.cfg\n"
@@ -487,392 +429,364 @@ public:
 					   "PAK files\t*.pak\n");
 #endif
 
-		// TODO: chooser.directory(LAST_USED_DIRECTORY)
+        // TODO: chooser.directory(LAST_USED_DIRECTORY)
 
-		switch (chooser.show())
-		{
-			case -1:
-				LogPrintf("Error choosing load file:\n");
-				LogPrintf("   %s\n", chooser.errmsg());
+        switch (chooser.show()) {
+            case -1:
+                LogPrintf("Error choosing load file:\n");
+                LogPrintf("   %s\n", chooser.errmsg());
 
-				DLG_ShowError(_("Unable to load the file:\n\n%s"), chooser.errmsg());
-				return NULL;
+                DLG_ShowError(_("Unable to load the file:\n\n%s"),
+                              chooser.errmsg());
+                return NULL;
 
-			case 1:  // cancelled
-				return NULL;
+            case 1:  // cancelled
+                return NULL;
 
-			default:
-				break;  // OK
-		}
+            default:
+                break;  // OK
+        }
 
-		static char filename[FL_PATH_MAX + 10];
+        static char filename[FL_PATH_MAX + 10];
 
-		strcpy(filename, chooser.filename());
+        strcpy(filename, chooser.filename());
 
-		return filename;
-	}
+        return filename;
+    }
 
-	bool LoadFromFile(const char *filename)
-	{
-		FILE *fp = fl_fopen(filename, "rb");
+    bool LoadFromFile(const char *filename) {
+        FILE *fp = fl_fopen(filename, "rb");
 
-		if (! fp)
-		{
-			DLG_ShowError(_("Cannot open: %s\n\n%s"), filename, strerror(errno));
-			return false;
-		}
+        if (!fp) {
+            DLG_ShowError(_("Cannot open: %s\n\n%s"), filename,
+                          strerror(errno));
+            return false;
+        }
 
-		Clear();
+        Clear();
 
-		if (! ExtractConfigData(fp, text_buf))
-		{
-			DLG_ShowError(_("No config found in file."));
-			fclose(fp);
-			return false;
-		}
+        if (!ExtractConfigData(fp, text_buf)) {
+            DLG_ShowError(_("No config found in file."));
+            fclose(fp);
+            return false;
+        }
 
-		fclose(fp);
+        fclose(fp);
 
-		Enable();
+        Enable();
 
-		MarkSource_FILE(filename);
+        MarkSource_FILE(filename);
 
-		return true;
-	}
+        return true;
+    }
 
-private:
-	// FLTK virtual method for handling input events
-	int handle(int event)
-	{
-		if (event == FL_PASTE)
-		{
-			const char *text = Fl::event_text();
-			SYS_ASSERT(text);
+   private:
+    // FLTK virtual method for handling input events
+    int handle(int event) {
+        if (event == FL_PASTE) {
+            const char *text = Fl::event_text();
+            SYS_ASSERT(text);
 
-			if (strlen(text) == 0)
-			{
-				fl_beep();
-			}
-			else
-			{
-				ReplaceWithString(text);
-				MarkSource(_("PASTED TEXT"));
-			}
-			return 1;
-		}
+            if (strlen(text) == 0) {
+                fl_beep();
+            } else {
+                ReplaceWithString(text);
+                MarkSource(_("PASTED TEXT"));
+            }
+            return 1;
+        }
 
-		return Fl_Double_Window::handle(event);
-	}
+        return Fl_Double_Window::handle(event);
+    }
 
-private:
-	/* Loading stuff */
+   private:
+    /* Loading stuff */
 
-	static void callback_Load(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
+    static void callback_Load(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		// save and restore the font height
-		// (because FLTK's own browser gets totally borked)
-		int old_font_h = FL_NORMAL_SIZE;
-		FL_NORMAL_SIZE = 14 + KF;
+        // save and restore the font height
+        // (because FLTK's own browser gets totally borked)
+        int old_font_h = FL_NORMAL_SIZE;
+        FL_NORMAL_SIZE = 14 + KF;
 
-		const char *filename = that->AskLoadFilename();
+        const char *filename = that->AskLoadFilename();
 
-		FL_NORMAL_SIZE = old_font_h;
+        FL_NORMAL_SIZE = old_font_h;
 
-		if (! filename)
-			return;
+        if (!filename) return;
 
-		that->LoadFromFile(filename);
-	}
+        that->LoadFromFile(filename);
+    }
 
-	static void callback_Recent(Fl_Widget *w, void *data)
-	{
-		recent_file_data_t *priv = (recent_file_data_t *)data;
+    static void callback_Recent(Fl_Widget *w, void *data) {
+        recent_file_data_t *priv = (recent_file_data_t *)data;
 
-		// invalid data? -- should not happen, but don't choke on it
-		if (priv->index < 0)
-		{
-			LogPrintf("WARNING: callback_Recent with dud data\n");
-			return;
-		}
+        // invalid data? -- should not happen, but don't choke on it
+        if (priv->index < 0) {
+            LogPrintf("WARNING: callback_Recent with dud data\n");
+            return;
+        }
 
-		static char filename[FL_PATH_MAX];
+        static char filename[FL_PATH_MAX];
 
-		// this also should not happen...
-		if (! Recent_GetName(priv->group, priv->index, filename))
-		{
-			LogPrintf("WARNING: callback_Recent with bad index\n");
-			return;
-		}
+        // this also should not happen...
+        if (!Recent_GetName(priv->group, priv->index, filename)) {
+            LogPrintf("WARNING: callback_Recent with bad index\n");
+            return;
+        }
 
-		UI_Manage_Config *that = priv->widget;
-		SYS_ASSERT(that);
+        UI_Manage_Config *that = priv->widget;
+        SYS_ASSERT(that);
 
-		if (! that->LoadFromFile(filename))
-		{
-			// unable to load that file, it has probably been deleted
-			// so remove it from the recent list
-			Recent_RemoveFile(priv->group, filename);
-			that->SetupRecent();
-		}
-	}
+        if (!that->LoadFromFile(filename)) {
+            // unable to load that file, it has probably been deleted
+            // so remove it from the recent list
+            Recent_RemoveFile(priv->group, filename);
+            that->SetupRecent();
+        }
+    }
 
-	/* Saving and Using */
+    /* Saving and Using */
 
-	static void callback_Save(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
+    static void callback_Save(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		if (that->text_buf->length() == 0)
-		{
-			fl_beep();
-			return;
-		}
+        if (that->text_buf->length() == 0) {
+            fl_beep();
+            return;
+        }
 
-		// save and restore the font height
-		// (because FLTK's own browser gets totally borked)
-		int old_font_h = FL_NORMAL_SIZE;
-		FL_NORMAL_SIZE = 14 + KF;
+        // save and restore the font height
+        // (because FLTK's own browser gets totally borked)
+        int old_font_h = FL_NORMAL_SIZE;
+        FL_NORMAL_SIZE = 14 + KF;
 
-		const char *filename = that->AskSaveFilename();
+        const char *filename = that->AskSaveFilename();
 
-		FL_NORMAL_SIZE = old_font_h;
+        FL_NORMAL_SIZE = old_font_h;
 
-		if (! filename)
-			return;
+        if (!filename) return;
 
-		that->SaveToFile(filename);
+        that->SaveToFile(filename);
 
-		that->SetupRecent();
-	}
+        that->SetupRecent();
+    }
 
-	static void callback_Use(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
+    static void callback_Use(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		if (that->text_buf->length() == 0)
-		{
-			fl_beep();
-			return;
-		}
+        if (that->text_buf->length() == 0) {
+            fl_beep();
+            return;
+        }
 
-		const char *str = that->text_buf->text();
+        const char *str = that->text_buf->text();
 
-		Cookie_LoadString(str, true /* keep_seed */);
+        Cookie_LoadString(str, true /* keep_seed */);
 
-		free((void*)str);
-	}
+        free((void *)str);
+    }
 
-	/* Leaving */
+    /* Leaving */
 
-	static void callback_Quit(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
+    static void callback_Quit(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		that->want_quit = true;
-	}
+        that->want_quit = true;
+    }
 
-	/* Clipboard stuff */
+    /* Clipboard stuff */
 
-	static void callback_Copy(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
+    static void callback_Copy(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		if (that->text_buf->length() == 0)
-		{
-			fl_beep();
-			return;
-		}
+        if (that->text_buf->length() == 0) {
+            fl_beep();
+            return;
+        }
 
-		const char *str = that->text_buf->text();
+        const char *str = that->text_buf->text();
 
-		Fl::copy(str, strlen(str), 1);
+        Fl::copy(str, strlen(str), 1);
 
-		free((void*)str);
-	}
+        free((void *)str);
+    }
 
-	static void callback_Cut(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
+    static void callback_Cut(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		callback_Copy(w, data);
+        callback_Copy(w, data);
 
-		if (that->text_buf->length() > 0)
-			that->Clear();
-	}
+        if (that->text_buf->length() > 0) that->Clear();
+    }
 
-	static void callback_Paste(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
+    static void callback_Paste(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		Fl::paste(*that, 1);
-	}
+        Fl::paste(*that, 1);
+    }
 };
 
-
 // define the recent arrays
-recent_file_data_t UI_Manage_Config::recent_wads   [RECENT_NUM];
+recent_file_data_t UI_Manage_Config::recent_wads[RECENT_NUM];
 recent_file_data_t UI_Manage_Config::recent_configs[RECENT_NUM];
-
 
 //
 // Constructor
 //
-UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
-    Fl_Double_Window(W, H, label),
-	want_quit(false)
-{
-	size_range(W, H);
+UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
+    : Fl_Double_Window(W, H, label), want_quit(false) {
+    size_range(W, H);
 
-	if (alternate_look)
-		color(FL_DARK2, FL_DARK2);
-	else
-		color(BG_COLOR, BG_COLOR);
+    if (alternate_look)
+        color(FL_DARK2, FL_DARK2);
+    else
+        color(BG_COLOR, BG_COLOR);
 
-	callback(callback_Quit, this);
+    callback(callback_Quit, this);
 
+    text_buf = new Fl_Text_Buffer();
 
-	text_buf = new Fl_Text_Buffer();
+    int conf_w = kf_w(420);
+    int conf_h = H * 0.75;
+    int conf_x = W - conf_w - kf_w(10);
+    int conf_y = kf_h(30);
 
+    conf_disp =
+        new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, "");
+    conf_disp->align(Fl_Align(FL_ALIGN_TOP));
+    conf_disp->buffer(text_buf);
+    conf_disp->textfont(FL_COURIER);
+    conf_disp->textsize(small_font_size);
 
-	int conf_w = kf_w(420);
-	int conf_h = H * 0.75;
-	int conf_x = W - conf_w - kf_w(10);
-	int conf_y = kf_h(30);
+    /* Main Buttons */
 
-	conf_disp = new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, "");
-	conf_disp->align(Fl_Align(FL_ALIGN_TOP));
-	conf_disp->buffer(text_buf);
-	conf_disp->textfont(FL_COURIER);
-	conf_disp->textsize(small_font_size);
+    int button_x = kf_w(20);
+    int button_w = kf_w(100);
+    int button_h = kf_h(35);
 
+    Fl_Box *o;
 
-	/* Main Buttons */
+    {
+        Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
+        g->resizable(NULL);
 
-	int button_x = kf_w(20);
-	int button_w = kf_w(100);
-	int button_h = kf_h(35);
+        load_but =
+            new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
+        load_but->callback(callback_Load, this);
+        load_but->shortcut(FL_CTRL + 'l');
 
-	Fl_Box * o;
+        o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40),
+                       _("(can be WAD or PAK)"));
+        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
+        o->labelsize(small_font_size);
 
-	{
-		Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
-		g->resizable(NULL);
+        const char *recent_title = StringPrintf("   %s @-3>", _("Recent"));
+        recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
+                                         recent_title);
 
-		load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
-		load_but->callback(callback_Load, this);
-		load_but->shortcut(FL_CTRL + 'l');
+        save_but =
+            new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
+        save_but->callback(callback_Save, this);
+        save_but->shortcut(FL_CTRL + 's');
 
-		o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40), _("(can be WAD or PAK)"));
-		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
-		o->labelsize(small_font_size);
+        use_but =
+            new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
+        use_but->callback(callback_Use, this);
 
-		const char *recent_title = StringPrintf("   %s @-3>", _("Recent"));
-		recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h, recent_title);
+        o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50),
+                       _("Note: this will replace\nall current settings!"));
+        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
+        o->labelsize(small_font_size);
 
-		save_but = new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
-		save_but->callback(callback_Save, this);
-		save_but->shortcut(FL_CTRL + 's');
+        g->end();
+    }
 
-		use_but = new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
-		use_but->callback(callback_Use, this);
+    close_but =
+        new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
+    close_but->labelfont(FL_HELVETICA_BOLD);
+    close_but->labelsize(FL_NORMAL_SIZE + 2);
+    close_but->callback(callback_Quit, this);
+    close_but->shortcut(FL_CTRL + 'w');
 
-		o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50), _("Note: this will replace\nall current settings!"));
-		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
-		o->labelsize(small_font_size);
+    /* Clipboard buttons */
 
-		g->end();
-	}
+    {
+        int cx = conf_x + kf_w(40);
 
-	close_but = new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
-	close_but->labelfont(FL_HELVETICA_BOLD);
-	close_but->labelsize(FL_NORMAL_SIZE + 2);
-	close_but->callback(callback_Quit, this);
-	close_but->shortcut(FL_CTRL + 'w');
+        int base_y = conf_y + conf_h + 1;
 
+        Fl_Group *g = new Fl_Group(conf_x, base_y, conf_w, H - base_y);
+        g->resizable(NULL);
 
-	/* Clipboard buttons */
+        o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30),
+                       _(" Clipboard Operations"));
+        o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
+        o->labelsize(small_font_size);
 
-	{
-		int cx = conf_x + kf_w(40);
+        cx += kf_w(30);
+        base_y += kf_h(30);
 
-		int base_y = conf_y + conf_h + 1;
+        button_w = kf_w(80);
+        button_h = kf_h(25);
 
-		Fl_Group *g = new Fl_Group(conf_x, base_y, conf_w, H - base_y);
-		g->resizable(NULL);
+        cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
+        cut_but->labelsize(small_font_size);
+        cut_but->shortcut(FL_CTRL + 'x');
+        cut_but->callback(callback_Cut, this);
 
-		o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30), _(" Clipboard Operations"));
-		o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
-		o->labelsize(small_font_size);
+        cx += kf_w(115);
 
-		cx += kf_w(30);
-		base_y += kf_h(30);
+        copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
+        copy_but->labelsize(small_font_size);
+        copy_but->shortcut(FL_CTRL + 'c');
+        copy_but->callback(callback_Copy, this);
 
-		button_w = kf_w(80);
-		button_h = kf_h(25);
+        cx += kf_w(115);
 
-		cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
-		cut_but->labelsize(small_font_size);
-		cut_but->shortcut(FL_CTRL + 'x');
-		cut_but->callback(callback_Cut, this);
+        paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
+        paste_but->labelsize(small_font_size);
+        paste_but->shortcut(FL_CTRL + 'v');
+        paste_but->callback(callback_Paste, this);
 
-		cx += kf_w(115);
+        g->end();
+    }
 
-		copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
-		copy_but->labelsize(small_font_size);
-		copy_but->shortcut(FL_CTRL + 'c');
-		copy_but->callback(callback_Copy, this);
+    end();
 
-		cx += kf_w(115);
-
-		paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
-		paste_but->labelsize(small_font_size);
-		paste_but->shortcut(FL_CTRL + 'v');
-		paste_but->callback(callback_Paste, this);
-
-		g->end();
-	}
-
-	end();
-
-	resizable(conf_disp);
+    resizable(conf_disp);
 }
-
 
 //
 // Destructor
 //
-UI_Manage_Config::~UI_Manage_Config()
-{ }
+UI_Manage_Config::~UI_Manage_Config() {}
 
+void DLG_ManageConfig(void) {
+    static UI_Manage_Config *config_window = NULL;
 
-void DLG_ManageConfig(void)
-{
-	static UI_Manage_Config * config_window = NULL;
+    // if it already exists, simply re-show it
+    if (!config_window) {
+        int manage_w = kf_w(600);
+        int manage_h = kf_h(380);
 
-	// if it already exists, simply re-show it
-	if (! config_window)
-	{
-		int manage_w = kf_w(600);
-		int manage_h = kf_h(380);
+        config_window = new UI_Manage_Config(manage_w, manage_h,
+                                             _("OBSIDIAN Config Manager"));
+    }
 
-		config_window = new UI_Manage_Config(manage_w, manage_h, _("OBSIDIAN Config Manager"));
-	}
+    config_window->want_quit = false;
+    config_window->set_modal();
+    config_window->show();
 
-	config_window->want_quit = false;
-	config_window->set_modal();
-	config_window->show();
+    config_window->SetupRecent();
+    config_window->ReadCurrentSettings();
 
-	config_window->SetupRecent();
-	config_window->ReadCurrentSettings();
+    // run the window until the user closes it
+    while (!config_window->WantQuit()) Fl::wait();
 
-	// run the window until the user closes it
-	while (! config_window->WantQuit())
-		Fl::wait();
-
-	config_window->set_non_modal();
-	config_window->hide();
+    config_window->set_non_modal();
+    config_window->hide();
 }
 
 //--- editor settings ---

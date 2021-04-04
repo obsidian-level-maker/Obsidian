@@ -23,23 +23,17 @@
 #include <unistd.h>
 #endif
 
-
 W_MainWindow *main_win;
 
-
-static void main_win_close_CB(Fl_Widget *w, void *data)
-{
-    if (main_win)
-        main_win->want_quit = true;
+static void main_win_close_CB(Fl_Widget *w, void *data) {
+    if (main_win) main_win->want_quit = true;
 }
-
 
 //
 // MainWin Constructor
 //
-W_MainWindow::W_MainWindow(const char *title) :
-     Fl_Double_Window(600, 420, title)
-{
+W_MainWindow::W_MainWindow(const char *title)
+    : Fl_Double_Window(600, 420, title) {
     // turn off auto-add-widget mode
     end();
 
@@ -54,16 +48,15 @@ W_MainWindow::W_MainWindow(const char *title) :
 
     ///  position(guix_prefs.win_x, guix_prefs.win_y);
 
-    callback((Fl_Callback *) main_win_close_CB);
+    callback((Fl_Callback *)main_win_close_CB);
 
     // set a nice darkish gray for the space between main boxes
     color(MAIN_BG_COLOR, MAIN_BG_COLOR);
 
     want_quit = false;
 
-
     // create contents
-    int hw = (w() - 8*2 - 4) / 2;
+    int hw = (w() - 8 * 2 - 4) / 2;
     int mh = 28;
 
 #ifdef MACOSX
@@ -75,24 +68,18 @@ W_MainWindow::W_MainWindow(const char *title) :
     menu_bar = MenuCreate(0, 0, w() - sb_w, 28);
     add(menu_bar);
 
-
     status = new W_Status(w() - sb_w, 0, sb_w, 28);
     add(status);
 
-
-    ed = new W_Editor(0, mh, w(), h()-mh);
+    ed = new W_Editor(0, mh, w(), h() - mh);
     add(ed);
     resizable(ed);
-
 }
 
 //
 // MainWin Destructor
 //
-W_MainWindow::~W_MainWindow()
-{
-}
-
+W_MainWindow::~W_MainWindow() {}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:expandtab

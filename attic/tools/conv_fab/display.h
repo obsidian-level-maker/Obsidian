@@ -21,15 +21,14 @@
 #ifndef __CMDLINE_DISPLAY_H__
 #define __CMDLINE_DISPLAY_H__
 
-
 extern const nodebuildfuncs_t cmdline_funcs;
 
 void TextStartup(void);
 void TextShutdown(void);
 void TextDisableProgress(void);
 
-void TextFatalError(const char *str, ...) GCCATTR((format (printf, 1, 2)));
-void TextPrintMsg(const char *str, ...) GCCATTR((format (printf, 1, 2)));
+void TextFatalError(const char *str, ...) GCCATTR((format(printf, 1, 2)));
+void TextPrintMsg(const char *str, ...) GCCATTR((format(printf, 1, 2)));
 void TextTicker(void);
 
 boolean_g TextDisplayOpen(displaytype_e type);
@@ -38,6 +37,5 @@ void TextDisplaySetBar(int barnum, int count);
 void TextDisplaySetBarLimit(int barnum, int limit);
 void TextDisplaySetBarText(int barnum, const char *str);
 void TextDisplayClose(void);
-
 
 #endif /* __CMDLINE_DISPLAY_H__ */

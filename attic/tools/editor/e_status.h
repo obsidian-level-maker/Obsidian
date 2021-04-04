@@ -19,28 +19,26 @@
 #ifndef __E_STATUS_H__
 #define __E_STATUS_H__
 
+class W_Status : public Fl_Group {
+   public:
+    W_Status(int X, int Y, int W, int H, const char *label = NULL);
+    virtual ~W_Status();
 
-class W_Status : public Fl_Group
-{
-public:
-  W_Status(int X, int Y, int W, int H, const char *label = NULL);
-  virtual ~W_Status();
+   public:
+    int cur_line;
+    int cur_col;
 
-public:
-  int cur_line;
-  int cur_col;
+    Fl_Box *line_box;
+    Fl_Box *column_box;
+    Fl_Box *error_box;
 
-  Fl_Box *line_box;
-  Fl_Box *column_box;
-  Fl_Box *error_box;
+   public:
+    void SetPos(int line, int col);
 
-public:
-  void SetPos(int line, int col);
+    void ShowError(const char *msg);
+    void ClearError();
 
-  void ShowError(const char *msg);
-  void ClearError();
-
-private:
+   private:
 };
 
 #endif /* __E_STATUS_H__ */

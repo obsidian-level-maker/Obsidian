@@ -22,16 +22,14 @@
 //
 //  SYSTEM INCLUDES
 //
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include <string.h>
 #include <ctype.h>
 #include <errno.h>
-
-#include <math.h>
 #include <limits.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef WIN32
 #include <sys/time.h>
@@ -44,10 +42,10 @@
 //
 //  LOCAL INCLUDES
 //
+#include "level.h"
 #include "system.h"
 #include "util.h"
 #include "wad.h"
-#include "level.h"
 
 extern FILE *output_fp;
 
