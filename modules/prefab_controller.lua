@@ -50,9 +50,11 @@ PREFAB_CONTROL.POINT_CHOICES =
 PREFAB_CONTROL.PERCENTAGE_CHOICES =
 {
   "0",  _("NONE"),
+  "13", _("13% of Levels"),
   "25", _("25% of Levels"),
   "50", _("50% of Levels"),
   "75", _("75% of Levels"),
+  "88", _("88% of Levels"),
   "100", _("100% of Levels")
 }
 
