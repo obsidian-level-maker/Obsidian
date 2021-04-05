@@ -34,7 +34,7 @@ FLTK_CONFIG=fltk-config
 FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
 FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Izdbsp_src -Iajpoly_src -Iacc_src -Iphysfs_src $(FLTK_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Isource_files/lua_src -Isource_files/zdbsp_src -Isource_files/ajpoly_src -Isource_files/acc_src -Isource_files/physfs_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
@@ -103,7 +103,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/zf_menu.o \
 	$(OBJ_DIR)/twister.o
 
-$(OBJ_DIR)/%.o: gui/%.cc
+$(OBJ_DIR)/%.o: source_files/gui/%.cc
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 
@@ -145,7 +145,7 @@ LUA_OBJS=\
 
 LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI -DLUA_USE_MKSTEMP
 
-$(OBJ_DIR)/lua/%.o: lua_src/%.c
+$(OBJ_DIR)/lua/%.o: source_files/lua_src/%.c
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
 
@@ -157,9 +157,9 @@ AJPOLY_OBJS= \
 	$(OBJ_DIR)/ajpoly/pl_util.o  \
 	$(OBJ_DIR)/ajpoly/pl_wad.o
 
-AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Iphysfs_src
+AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall -Isource_files/physfs_src
 
-$(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
+$(OBJ_DIR)/ajpoly/%.o: source_files/ajpoly_src/%.cc
 	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $<
 
 #----- ACC Objects --------------------------------------------------
@@ -176,7 +176,7 @@ ACC_OBJS= \
 
 ACC_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
-$(OBJ_DIR)/acc/%.o: acc_src/%.c
+$(OBJ_DIR)/acc/%.o: source_files/acc_src/%.c
 	$(CXX) $(ACC_CXXFLAGS) -o $@ -c $<
 
 
@@ -202,7 +202,7 @@ ZDBSP_OBJS= \
 
 ZDBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
 
-$(OBJ_DIR)/zdbsp/%.o: zdbsp_src/%.cc
+$(OBJ_DIR)/zdbsp/%.o: source_files/zdbsp_src/%.cc
 	$(CXX) $(ZDBSP_CXXFLAGS) -o $@ -c $<
 	
 #----- PhysFS Objects ---------------------------------------------
@@ -228,15 +228,15 @@ PHYSFS_OBJS= \
 
 PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
 
-$(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
+$(OBJ_DIR)/physfs/%.o: source_files/physfs_src/%.cc
 	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $<
 
 
 #----- Language Analysis ------------------------------------------
 
 LANG_FILES= \
-	gui/*.cc \
-	gui/*.h  \
+	source_files/gui/*.cc \
+	source_files/gui/*.h  \
 	scripts/*.lua \
 	engines/*.lua \
 	modules/*.lua \
