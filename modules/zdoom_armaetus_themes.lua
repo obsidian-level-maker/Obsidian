@@ -716,7 +716,12 @@ ARMAETUS_ROOM_THEMES =
       SNOWWAL1 = 15,
       SNOWWAL2 = 15,
       SNOWWAL3 = 15,
-      SNOWWAL4 = 15
+      SNOWWAL4 = 15,
+
+      OBTBSLV1 = 15,
+      OBTBSLV2 = 15,
+      OBTBSLV3 = 15,
+      OBTBSLV4 = 15
     },
 
     floors =
@@ -3308,6 +3313,11 @@ ARMAETUS_THEMES =
       SHAWN4 = 15,
       SHAWN5 = 15,
       HEX01 = 15,
+
+      OBTBSLV1 = 15,
+      OBTBSLV2 = 15,
+      OBTBSLV3 = 15,
+      OBTBSLV4 = 15
     },
 
     fence_groups =

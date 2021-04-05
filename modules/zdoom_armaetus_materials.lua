@@ -1247,11 +1247,19 @@ ARMAETUS_MATERIALS = {
   T_GHFLG = { t="G16", f="T_GHFLG" },
   T_GHFLP = { t="G16", f="T_GHFLP" },
 
+  ------------------
+  -- MSSP Stuff --
+  ------------------
+  OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
+  OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
+  OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
+  OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
+
   ----------------------
   -- Special Textures --
   ----------------------
+  FINVSBLE = { t="FINVSBLE", f="FINVSBLE"}
 
-  FINVSBLE = { t="FINVSBLE", f="FINVSBLE"},
 }
 
 EPIC_BRIGHTMAPS =
