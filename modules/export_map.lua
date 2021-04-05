@@ -37,7 +37,7 @@ function EXPORT_MAP.add_brush(coords)
   local xy_coords = {}
 
   -- scan the coordinates and grab the bits we need
-  for C in coords do
+  for _,C in pairs(coords) do
     -- first coordinate might be just the mode / material
     if C.m then
       mode = C.m
@@ -102,7 +102,7 @@ function EXPORT_MAP.add_entity(ent, model)
   local origin
   local light
 
-  for key, value in ent do
+  for key, value in pairs(ent) do
 
     -- special handling for the origin
     if key == "x" or key == "y" or key == "z" then
@@ -245,7 +245,7 @@ function EXPORT_MAP.end_level()
   fprintf(file, "}\n")
 
   -- write the entity data
-  for str in EXPORT_MAP.ent_data do
+  for _, str in pairs(EXPORT_MAP.ent_data) do
     fprintf(file, "%s", str)
   end
 
