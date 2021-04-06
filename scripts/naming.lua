@@ -892,7 +892,10 @@ namelib.NAMES =
         ["2 Imps 1 Shotgun"]=10, -- retxirT
         ["3 Keys 1 Doomguy"]=10, -- there's a '3 guys 1 hammer' thing out there apparently
         ["Bad Optics"]=10, -- retxirT
+        ["Customer Lifecycle"]=10,
         ["Engineering Gone Bad"]=10, -- Demios, also based on Romero's "Tech Gone Bad",
+        ["Organizational Downsizing"]=10,
+        ["Segmentation Fault"]=10,
         ["Short-Circuit"]=10, -- Demios
 
         -- Frozsoul
@@ -1005,7 +1008,7 @@ namelib.NAMES =
       ["%v %n"]    = 25,
       ["%v %a %n"] = 25,
 
-      ["%s"] = 25,
+      ["%s"] = 100,
 
       ["Killing for %e"] = 3,
       ["Killing in %e's name"] = 3,
@@ -1955,7 +1958,13 @@ namelib.NAMES =
         ["The Corpse Collector"]=10,
         ["Unhallowed Purity"]=10,
         ["Viviseduction"]=10,
-        ["Wretched Human Mirror"]=10 -- Bloodbath song name
+        ["Wretched Human Mirror"]=10, -- Bloodbath song name
+
+        -- MSSP names:
+        ["Deep Rock Satanic"]=10,
+        ["Mausoleum of History"]=10, -- quote from FreeSpace 2's intro
+        ["Meathooks"]=10,
+        ["The Needleworks"]=10
       }
     }
   },
@@ -1998,7 +2007,7 @@ namelib.NAMES =
       ["%v %n %x"] = 5,
       ["%v %a %n %x"] = 5,
 
-      ["%s"] = 25,
+      ["%s"] = 50,
 
       -- Types of roads, useful when Streets Mode
       -- kicks in.
@@ -2615,9 +2624,6 @@ namelib.NAMES =
         ["The No Go Zone"]=10,
         ["The Twisted Abode"]=10,
 
-        -- MSSP adds more names as well
-        ["Damned Demon Destruction"]=10, -- Demios
-
         -- Doom Eternal stuff. Would these be better under Hell?
         ["Ardur"]=10,
         ["Kher Lodur"]=10,
@@ -2688,7 +2694,11 @@ namelib.NAMES =
         ["Unspoken Stars"]=10,
         ["Urban Megalths"]=10,
         ["When All Hope is Lost"]=10,
-        ["Wicked Corridors"]=10
+        ["Wicked Corridors"]=10,
+
+        -- MSSP adds more names as well
+        ["Damned Demon Destruction"]=10, -- Demios
+        ["Nothing Personnel"]=10
       }
     }
   },
@@ -2728,7 +2738,7 @@ namelib.NAMES =
       ["%v %n %x"] = 5,
       ["%v %a %n %x"] = 5,
 
-      ["%s"] = 25,
+      ["%s"] = 50,
 
       -- Types of roads, useful when Streets Mode
       -- kicks in.
