@@ -5559,6 +5559,7 @@ namelib.COMMUNITY_MEMBERS =
     "Frozsoul",
     "Garrett",
     "Josh Seven", --josh771,
+    "Phytolizer",
     "Sgt. Shooter", --MsrSgtShooterPerson
     "Simon Vee", --Simon-v
     "Scionox",
@@ -5603,7 +5604,6 @@ namelib.COMMUNITY_MEMBERS =
     "Monika",
     "Mr. Liden", --mrliden, created the R667ized ObAddon
     "Nisteth",
-    "Phytolizer",
     "Roundabout Lout",
     "Sharahfluff",
     "Sharp",
