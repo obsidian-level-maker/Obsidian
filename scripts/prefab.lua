@@ -2495,8 +2495,8 @@ function Fab_find_matches(reqs, match_state)
     -- group check
     if not match_word_or_table(reqs.group, def.group) then return 0 end
 
-    -- flavor check
-    if not match_word_or_table(reqs.flavor, def.flavor) then return 0 end
+    -- flavor check   MSSP: not actually used?!
+    -- if not match_word_or_table(reqs.flavor, def.flavor) then return 0 end
 
     -- shape check
     if not match_word_or_table(reqs.shape, def.shape) then return 0 end
