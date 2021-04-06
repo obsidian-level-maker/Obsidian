@@ -3906,9 +3906,7 @@ ARMAETUS_THEMES =
       CREYEWLL = 7,
       CRFSHWLL = 7,
       CRGRSWLL = 7,
-      CRHRTWLL = 7,
-
-      OBTBSTX1 = 15
+      CRHRTWLL = 7
     },
 
     wall_groups =

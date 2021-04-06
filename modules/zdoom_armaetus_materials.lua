@@ -1187,6 +1187,19 @@ ARMAETUS_MATERIALS = {
   ARCD10 = { t="ARCD10", f="CEIL4_3"},
   ARCD11 = { t="ARCD11", f="CEIL4_3"},
 
+  -- Craneo's classical painting textures
+  CPAQLRRE = { t="CPAQLRRE", f="CEIL4_3"},
+  CPFLAYIN = { t="CPFLAYIN", f="CEIL4_3"},
+  CPGARDEN = { t="CPGARDEN", f="CEIL4_3"},
+  CPGARDN2 = { t="CPGARDN2", f="CEIL4_3"},
+  CPMEDUS = { t="CPMEDUS", f="CEIL4_3"},
+  CPHEGOAT = { t="CPHEGOAT", f="CEIL4_3"},
+  CPHLLDEM = { t="CPHLLDEM", f="CEIL4_3"},
+  CPHRSEMN = { t="CPHRSEMN", f="CEIL4_3"},
+  CPHRSMN2 = { t="CPHRSMN2", f="CEIL4_3"},
+  CPSATRN = { t="CPSATRN", f="CEIL4_3"},
+  CPVLAD = { t="CPVLAD", f="CEIL4_3"},
+
   ------------------------
   -- Composite textures --
   ------------------------
