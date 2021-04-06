@@ -1664,6 +1664,7 @@ OB_MODULES["gzdoom_boss_gen"] =
 --  game = "doomish",
 
   side = "right",
+  engine = "zdoom",
   priority = 92,
 
   hooks =
