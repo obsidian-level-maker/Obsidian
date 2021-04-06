@@ -462,4 +462,20 @@ Texture "COMPYELL", 64, 128
     Translation "192:207=160:163", "240:247=164:167"
   }
 }
+
+WallTexture "OBTSTX1B", 128, 128
+{
+	Patch "OBTBSTX1", 0, 0
+	{
+		Blend "#805656"
+	}
+}
+
+WallTexture "OBTSTX1G", 128, 128
+{
+	Patch "OBTBSTX1", 0, 0
+	{
+		Blend "#568056"
+	}
+}
 ]]

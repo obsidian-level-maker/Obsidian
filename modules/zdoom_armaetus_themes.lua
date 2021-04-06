@@ -534,7 +534,9 @@ ARMAETUS_ROOM_THEMES =
       TEKWALL9 = 20,
       COMPGREN = 20,
       COMPTIL4 = 20,
-      GRAYMET8 = 15
+      GRAYMET8 = 15,
+
+      OBTSTX1G = 10
     },
 
     floors =
@@ -591,7 +593,9 @@ ARMAETUS_ROOM_THEMES =
       COMPTIL5 = 20,
       COMPTIL3 = 8,
       COMPBLAK = 8,
-      GRAYMETC = 8
+      GRAYMETC = 8,
+
+      OBTSTX1B = 10
     },
 
     floors =
@@ -821,6 +825,9 @@ ARMAETUS_ROOM_THEMES =
       BRONZE3 = 30,
       METAL1 = 25,
       RUSTWALL = 20,
+
+      OBTSTX1B = 20,
+      OBTSTX1G = 20
     },
 
     floors =
@@ -960,6 +967,8 @@ ARMAETUS_ROOM_THEMES =
       BROWN96 = 10,
       BRVINE = 5,
       BROVINE2 = 5,
+
+      OBTSTX1B = 10
     },
 
     floors =
@@ -3398,7 +3407,10 @@ ARMAETUS_THEMES =
 
       OBTBSTX1 = 20,
       OBTBSTX2 = 20,
-      OBTBSTX3 = 20
+      OBTBSTX3 = 20,
+
+      OBTSTX1B = 15,
+      OBTSTX1G = 15
     },
 
     fence_groups =

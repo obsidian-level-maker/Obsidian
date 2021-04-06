@@ -1274,6 +1274,9 @@ ARMAETUS_MATERIALS = {
   OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
   OBTBSTX3 = { t="OBTBSTX3", f="GRATE6"},
 
+  OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
+  OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
+
   -- flats
   OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"},
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
