@@ -1250,15 +1250,21 @@ ARMAETUS_MATERIALS = {
   ------------------
   -- MSSP Stuff --
   ------------------
+  -- walls
   OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
   OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
   OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
   OBTBSLV5 = { t="OBTBSLV4", f="FLAT3"},
 
-  OBTBSLF1 = { t="OBTBSLF1", f="SHINY03"},
-  OBTBSLF2 = { t="OBTBSLF2", f="GRATE1"},
-  OBTBSLF3 = { t="OBTBSLF3", f="GRATE6"},
+  OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},
+  OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
+  OBTBSTX3 = { t="OBTBSTX3", f="GRATE6"},
+
+  -- flats
+  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"},
+  OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
+  OBTBSFL3 = { t="OBTBSTX1", f="OBTBSFL3"},
 
   ----------------------
   -- Special Textures --
