@@ -297,6 +297,7 @@ add_executable(obsidian
 target_include_directories(obsidian PRIVATE source_files/physfs_src)
 target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
+target_include_directories(obsidian PRIVATE source_files/lua_src)
 
 if(UNIX)
     target_compile_definitions(obsidian PRIVATE UNIX)
@@ -307,7 +308,7 @@ find_package(Lua REQUIRED)
 
 target_link_libraries(obsidian PRIVATE 
     ${FLTK_LIBRARIES} 
-    ${Lua_LIBRARIES}
+    ${LUA_LIBRARIES}
     z 
     obsidian_lua 
     obsidian_physfs 
