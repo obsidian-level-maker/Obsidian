@@ -1255,6 +1255,10 @@ ARMAETUS_MATERIALS = {
   OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
 
+  OBTBSLF1 = { t="OBTBSLF1", f="SHINY03"},
+  OBTBSLF2 = { t="OBTBSLF2", f="GRATE1"},
+  OBTBSLF3 = { t="OBTBSLF3", f="GRATE6"},
+
   ----------------------
   -- Special Textures --
   ----------------------

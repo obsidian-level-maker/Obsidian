@@ -232,6 +232,15 @@ ARMAETUS_ROOM_THEMES =
       TEKWALLC = 10,
       TEKWALLD = 10,
       TEKWALLE = 10
+
+      OBTBSLV1 = 20,
+      OBTBSLV2 = 10,
+      OBTBSLV3 = 10,
+      OBTBSLV4 = 20,
+
+      OBTBSLF1 = 30,
+      OBTBSLF2 = 30,
+      OBTBSLF3 = 30
     },
 
     floors =
@@ -719,9 +728,13 @@ ARMAETUS_ROOM_THEMES =
       SNOWWAL4 = 15,
 
       OBTBSLV1 = 15,
-      OBTBSLV2 = 15,
-      OBTBSLV3 = 15,
+      OBTBSLV2 = 9,
+      OBTBSLV3 = 9,
       OBTBSLV4 = 15
+
+      OBTBSLF1 = 15,
+      OBTBSLF2 = 15,
+      OBTBSLF3 = 15
     },
 
     floors =
