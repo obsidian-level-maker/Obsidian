@@ -241,7 +241,7 @@ OB_MODULES["prefab_control"] =
     {
       name = "peered_exits",
       label = _("Peered Starts/Exits"),
-      choices = DEBUG_CONTROL.ON_OFF,
+      choices = PREFAB_CONTROL.ON_OFF,
       default = "no",
       priority = 48,
     },
