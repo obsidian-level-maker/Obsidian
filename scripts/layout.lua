@@ -1760,7 +1760,7 @@ function Layout_decorate_rooms(pass)
     -- locking exits and items
 
     if THEME.no_switches then return end
-    local switch_prob = style_sel("switches", 0, 20, 40, 80)
+    local switch_prob = style_sel("local_switches", 0, 20, 40, 80)
 
     for loop = 1, 2 do
       if rand.odds(switch_prob) then
