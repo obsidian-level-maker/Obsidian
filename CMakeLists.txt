@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.12..3.20)
 
-project(obsidian_lua LANGUAGES C VERSION 0.1.0)
+project(obsidian_lua LANGUAGES C CXX VERSION 0.1.0)
 
-add_library(obsidian_lua 
+add_library(obsidian_lua STATIC
     source_files/lua_src/lapi.c
     source_files/lua_src/lapi.h
     source_files/lua_src/lauxlib.c
@@ -52,10 +52,7 @@ add_library(obsidian_lua
     source_files/lua_src/ltablib.c
     source_files/lua_src/ltm.c
     source_files/lua_src/ltm.h
-    source_files/lua_src/lua.c
-    source_files/lua_src/lua.h
     source_files/lua_src/lua.hpp
-    source_files/lua_src/luac.c
     source_files/lua_src/luaconf.h
     source_files/lua_src/lualib.h
     source_files/lua_src/lundump.c
@@ -310,7 +307,7 @@ target_link_libraries(obsidian PRIVATE
     ${FLTK_LIBRARIES} 
     ${LUA_LIBRARIES}
     z 
-    obsidian_lua 
+    obsidian_lua
     obsidian_physfs 
     obsidian_acc 
     obsidian_ajpoly 
