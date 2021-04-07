@@ -20,5 +20,11 @@ PREFABS.Pic_gtd_hell_skull_grinding_mill =
   bound_z2 = 128,
 
   x_fit = "frame",
-  y_fit = "top",
+  y_fit = "top"
+}
+
+PREFABS.Pic_gtd_hell_skull_grinding_mill_2 =
+{
+  template = "Pic_gtd_hell_skull_grinding_mill",
+  map = "MAP02"
 }

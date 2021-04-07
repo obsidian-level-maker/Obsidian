@@ -1500,6 +1500,7 @@ OB_MODULES["gzdoom_marine_closets"] =
   label = _("[Exp]GZDoom Marine Closets"),
 
   game = "doomish",
+  engine = "zdoom",
 
   side = "right",
   priority = 93,

@@ -25,13 +25,13 @@ PREFABS.Pic_urban_downtown_facade1_vanilla =
     MODWALL3 = 50,
     MODWALL4 = 50,
     BLAKWAL1 = 50,
-    BLAKWAL2 = 50,
+    BLAKWAL2 = 50
   },
 
   flat_TLITE6_6 =
   {
     TLITE6_5 = 25,
-    TLITE6_6 = 25,
+    TLITE6_6 = 25
   },
 
   -- textures for the top half of the 'door' area
@@ -41,7 +41,7 @@ PREFABS.Pic_urban_downtown_facade1_vanilla =
     MODWALL3 = 50,
     MODWALL4 = 50,
     BLAKWAL1 = 50,
-    BLAKWAL2 = 50,
+    BLAKWAL2 = 50
   },
 
   -- textures for the bottom half (and all of the 'doors' in facade2)
@@ -57,7 +57,7 @@ PREFABS.Pic_urban_downtown_facade1_vanilla =
     STEP3 = 50,
     STEP4 = 50,
     STEP5 = 50,
-    STEPLAD1 = 50,
+    STEPLAD1 = 50
   },
 
   tex_STEP4 =
@@ -70,14 +70,14 @@ PREFABS.Pic_urban_downtown_facade1_vanilla =
     STEP6=50,
     STEPLAD1=50,
     COMPBLUE=50,
-    REDWALL=50,
-  },
+    REDWALL=50
+  }
 }
 
 PREFABS.Pic_urban_downtown_facade2_vanilla =
 {
   template = "Pic_urban_downtown_facade1_vanilla",
-  map      = "MAP02",
+  map      = "MAP02"
 }
 
 PREFABS.Pic_urban_downtown_facade1_EPIC =
@@ -122,7 +122,7 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     CITY11 = 25,
     CITY12 = 25,
     CITY13 = 25,
-    CITY14 = 25,
+    CITY14 = 25
   },
 
   flat_TLITE6_6 =
@@ -144,7 +144,7 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     LIGHTS1 = 50,
     LIGHTS2 = 50,
     LIGHTS3 = 50,
-    LIGHTS4 = 50,
+    LIGHTS4 = 50
   },
 
   -- textures for the top half of the 'door' area
@@ -164,7 +164,7 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     TEKWALLE = 15,
     COLLITE1 = 50,
     COLLITE2 = 50,
-    COLLITE3 = 50,
+    COLLITE3 = 50
   },
 
   -- textures for the bottom half (and all of the 'doors' in facade2)
@@ -182,7 +182,7 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     STEP5 = 50,
     STEPLAD1 = 50,
     URBAN6 = 175,
-    URBAN8 = 175,
+    URBAN8 = 175
   },
 
   tex_STEP4 =
@@ -195,8 +195,8 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     STEP6=50,
     STEPLAD1=50,
     COMPBLUE=50,
-    REDWALL=50,
-  },
+    REDWALL=50
+  }
 }
 
 PREFABS.Pic_urban_downtown_facade2_EPIC =
@@ -204,7 +204,7 @@ PREFABS.Pic_urban_downtown_facade2_EPIC =
   template = "Pic_urban_downtown_facade1_EPIC",
   map      = "MAP02",
 
-  replaces = "Pic_urban_downtown_facade2_vanilla",
+  replaces = "Pic_urban_downtown_facade2_vanilla"
 }
 
 
@@ -242,13 +242,13 @@ PREFABS.Pic_urban_downtown_facade3_vanilla =
     MODWALL3 = 50,
     MODWALL4 = 50,
     BLAKWAL1 = 50,
-    BLAKWAL2 = 50,
+    BLAKWAL2 = 50
   },
 
   flat_TLITE6_6 =
   {
     TLITE6_5 = 25,
-    TLITE6_6 = 25,
+    TLITE6_6 = 25
   },
 
   -- textures for the top half of the 'door' area
@@ -258,7 +258,7 @@ PREFABS.Pic_urban_downtown_facade3_vanilla =
     MODWALL3 = 50,
     MODWALL4 = 50,
     BLAKWAL1 = 50,
-    BLAKWAL2 = 50,
+    BLAKWAL2 = 50
   },
 
   -- textures for the bottom half (and all of the 'doors' in facade2)
@@ -274,21 +274,21 @@ PREFABS.Pic_urban_downtown_facade3_vanilla =
     STEP3 = 50,
     STEP4 = 50,
     STEP5 = 50,
-    STEPLAD1 = 50,
+    STEPLAD1 = 50
   },
 
   tex_STEP4 =
   {
-    STEP1=50,
-    STEP2=50,
-    STEP3=50,
-    STEP4=50,
-    STEP5=50,
-    STEP6=50,
-    STEPLAD1=50,
-    COMPBLUE=50,
-    REDWALL=50,
-  },
+    STEP1 = 50,
+    STEP2 = 50,
+    STEP3 = 50,
+    STEP4 = 50,
+    STEP5 = 50,
+    STEP6 = 50,
+    STEPLAD1 = 50,
+    COMPBLUE = 50,
+    REDWALL = 50
+  }
 }
 
 PREFABS.Pic_urban_downtown_facade3_EPIC =
@@ -333,7 +333,7 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     CITY11 = 25,
     CITY12 = 25,
     CITY13 = 25,
-    CITY14 = 25,
+    CITY14 = 25
   },
 
   tex_STEP4 =
@@ -346,8 +346,8 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     STEP6=50,
     STEPLAD1=50,
     COMPBLUE=50,
-    REDWALL=50,
-  },
+    REDWALL=50
+  }
 }
 
 PREFABS.Pic_urban_downtown_facade_EPIC_destroyed =
@@ -362,7 +362,7 @@ PREFABS.Pic_urban_downtown_facade_EPIC_destroyed =
 
   over = 0,
 
-  x_fit = "frame",
+  x_fit = "frame"
 }
 
 PREFABS.Pic_urban_downtown_facade_fenced_out =
@@ -373,7 +373,7 @@ PREFABS.Pic_urban_downtown_facade_fenced_out =
   prob = 200,
 
   y_fit = { 32,40 },
-  z_fit = "top",
+  z_fit = "top"
 }
 
 PREFABS.Pic_urban_downtown_facade_alley =
@@ -390,7 +390,7 @@ PREFABS.Pic_urban_downtown_facade_alley =
   prob = 200,
 
   y_fit = { 32,40 },
-  z_fit = { 72,80 },
+  z_fit = "top"
 }
 
 PREFABS.Pic_urban_downtown_facade_fenced_roof =
@@ -424,8 +424,8 @@ PREFABS.Pic_urban_downtown_facade_fenced_roof =
     FENCE2 = 1,
     FENCE3 = 1,
     FENCE6 = 1,
-    FENCE7 = 1,
-  },
+    FENCE7 = 1
+  }
 }
 
 PREFABS.Pic_urban_downtown_facade_destroyed_roof =
@@ -447,5 +447,5 @@ PREFABS.Pic_urban_downtown_facade_destroyed_roof =
   z_fit = { 88,104 , 216,236 },
 
   bound_z1 = 0,
-  bound_z2 = 240,
+  bound_z2 = 240
 }

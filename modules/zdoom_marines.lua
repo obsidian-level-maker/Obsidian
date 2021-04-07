@@ -292,7 +292,6 @@ OB_MODULES["zdoom_marine_control"] =
   label = _("ZDoom Marines : Control"),
 
   module = "zdoom_marines",
-
   hooks =
   {
     setup = ZDOOM_MARINE.control_setup
