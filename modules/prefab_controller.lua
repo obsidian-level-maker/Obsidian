@@ -270,7 +270,7 @@ OB_MODULES["prefab_control"] =
       default = "on",
       priority = 46,
       gap = 1
-    }
+    },
 
     --
 
