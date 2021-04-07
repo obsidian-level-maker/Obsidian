@@ -889,9 +889,7 @@ function Grower_calc_rule_probs()
   end
 
   if not LEVEL.is_procedural_gotcha then
-    if OB_CONFIG.layout_absurdity == "all" then
-      LEVEL.is_absurd = true
-    elseif OB_CONFIG.layout_absurdity ~= "none" then
+    if OB_CONFIG.layout_absurdity ~= "none" then
       if rand.odds(int(OB_CONFIG.layout_absurdity)) then
         LEVEL.is_absurd = true
       end

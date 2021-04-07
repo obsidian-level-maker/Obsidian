@@ -19,14 +19,12 @@
 #include <FL/Fl_Button.H>
 
 class Shortcut_Button : public Fl_Button {
-   public:
-    int svalue;
-    int handle(int);
-    void draw();
-    Shortcut_Button(int X, int Y, int W, int H, const char *l = 0)
-        : Fl_Button(X, Y, W, H, l) {
-        svalue = 0;
-    }
+public:
+  int svalue;
+  int handle(int);
+  void draw();
+  Shortcut_Button(int X,int Y,int W,int H, const char* l = 0) :
+    Fl_Button(X,Y,W,H,l) {svalue = 0;}
 };
 
 //

@@ -29,8 +29,8 @@
 #endif
 
 // values for type():
-#define FL_NORMAL_COUNTER 0 /**< type() for counter with fast buttons */
-#define FL_SIMPLE_COUNTER 1 /**< type() for counter without fast buttons */
+#define FL_NORMAL_COUNTER	0	/**< type() for counter with fast buttons */
+#define FL_SIMPLE_COUNTER	1	/**< type() for counter without fast buttons */
 
 /**
   Controls a single floating point value with button (or keyboard) arrows.
@@ -46,65 +46,66 @@
   \li \c FL_SIMPLE_COUNTER: Displays a counter with only 2 arrow buttons.
 */
 class FL_EXPORT Fl_Counter : public Fl_Valuator {
-    Fl_Font textfont_;
-    Fl_Fontsize textsize_;
-    Fl_Color textcolor_;
-    double lstep_;
-    uchar mouseobj;
-    static void repeat_callback(void *);
-    int calc_mouseobj();
-    void increment_cb();
 
-   protected:
-    void draw();
+  Fl_Font textfont_;
+  Fl_Fontsize textsize_;
+  Fl_Color textcolor_;
+  double lstep_;
+  uchar mouseobj;
+  static void repeat_callback(void *);
+  int calc_mouseobj();
+  void increment_cb();
 
-   public:
-    int handle(int);
+protected:
 
-    Fl_Counter(int X, int Y, int W, int H, const char *L = 0);
-    ~Fl_Counter();
+  void draw();
 
-    /**
-      Sets the increment for the large step buttons.
-      The default value is 1.0.
-      \param[in] a large step increment.
-    */
-    void lstep(double a) { lstep_ = a; }
+public:
 
-    /**
-      Sets the increments for the normal and large step buttons.
-      \param[in] a, b normal and large step increments.
-    */
-    void step(double a, double b) {
-        Fl_Valuator::step(a);
-        lstep_ = b;
-    }
+  int handle(int);
 
-    /**
-      Sets the increment for the normal step buttons.
-      \param[in] a normal step increment.
-    */
-    void step(double a) { Fl_Valuator::step(a); }
+  Fl_Counter(int X, int Y, int W, int H, const char* L = 0);
+  ~Fl_Counter();
 
-    /**
-      Returns the increment for normal step buttons.
-     */
-    double step() const { return Fl_Valuator::step(); }
+  /**
+    Sets the increment for the large step buttons.
+    The default value is 1.0.
+    \param[in] a large step increment.
+  */
+  void lstep(double a) {lstep_ = a;}
 
-    /** Gets the text font */
-    Fl_Font textfont() const { return textfont_; }
-    /** Sets the text font to \p s */
-    void textfont(Fl_Font s) { textfont_ = s; }
+  /**
+    Sets the increments for the normal and large step buttons.
+    \param[in] a, b normal and large step increments.
+  */
+  void step(double a,double b) {Fl_Valuator::step(a); lstep_ = b;}
 
-    /** Gets the font size */
-    Fl_Fontsize textsize() const { return textsize_; }
-    /** Sets the font size to \p s */
-    void textsize(Fl_Fontsize s) { textsize_ = s; }
+  /**
+    Sets the increment for the normal step buttons.
+    \param[in] a normal step increment.
+  */
+  void step(double a) {Fl_Valuator::step(a);}
 
-    /** Gets the font color */
-    Fl_Color textcolor() const { return textcolor_; }
-    /** Sets the font color to \p s */
-    void textcolor(Fl_Color s) { textcolor_ = s; }
+  /**
+    Returns the increment for normal step buttons.
+   */
+  double step() const {return Fl_Valuator::step();}
+
+  /** Gets the text font */
+  Fl_Font textfont() const {return textfont_;}
+  /** Sets the text font to \p s */
+  void textfont(Fl_Font s) {textfont_ = s;}
+
+  /** Gets the font size */
+  Fl_Fontsize textsize() const {return textsize_;}
+  /** Sets the font size to \p s */
+  void textsize(Fl_Fontsize s) {textsize_ = s;}
+
+  /** Gets the font color */
+  Fl_Color textcolor() const {return textcolor_;}
+  /** Sets the font color to \p s */
+  void textcolor(Fl_Color s) {textcolor_ = s;}
+
 };
 
 #endif

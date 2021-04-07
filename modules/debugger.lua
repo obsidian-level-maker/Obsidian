@@ -200,31 +200,6 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    peered_exits =
-    {
-      name = "peered_exits",
-      label = _("Peered Starts/Exits"),
-      choices = DEBUG_CONTROL.YES_NO,
-      default = "no",
-      priority = 52,
-    },
-
-    steppy_caves =
-    {
-      name = "steppy_caves",
-      label = _("Steppy Caves"),
-      choices =
-      {
-        "always", _("Always"),
-        "yes", _("Yes"),
-        "no", _("No"),
-      },
-      tooltip = "Disables or enables caves with height variations.",
-      default = "yes",
-      priority = 51,
-      gap = 1,
-    },
-
     custom_error_texture =
     {
       name = "custom_error_texture",
@@ -236,16 +211,6 @@ OB_MODULES["debugger"] =
       priority = 50,
       gap = 1,
     },
-
-    start_room_size =
-    {
-      name = "start_room_size",
-      label = _ ("Start Size Variance"),
-      choices = DEBUG_CONTROL.YES_NO,
-      tooltip = "Affects whether Room Size Variance also influences start rooms.",
-      default = "no",
-      priority = 49
-    }
 
 --[[
     attach_debug_info =

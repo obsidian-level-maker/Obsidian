@@ -2931,7 +2931,7 @@ function Quest_room_themes()
     local single_room_theme_prob = int(PARAM.single_room_theme or 50)
     local limit_wall_group_prob = int(PARAM.limit_wall_groups or 50)
 
-    if rand.odds(single_room_theme_prob) then
+    if not rand.odds(single_room_theme_prob) then
       -- distribute room themes (vanilla Oblige behavior)
       -- recursively flow through the level
       visit_room(LEVEL.start_room, nil, nil, building_tab)
@@ -3045,10 +3045,10 @@ function Quest_room_themes()
       {
         plain = 30, -- neutral color (white or beige)
         monochrome = 50, -- neutral color and one other color
-        bichrome = 50, -- neutral color and two other colors
-        single = 25, -- completely random color
+        bichrome = 25, -- neutral color and two other colors
+        single = 50, -- completely random color
         double = 25, -- two completely random colors
-        all = 30 -- the kitchen sink
+        all = 15 -- the kitchen sink
       }
     )
 

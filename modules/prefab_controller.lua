@@ -50,9 +50,11 @@ PREFAB_CONTROL.POINT_CHOICES =
 PREFAB_CONTROL.PERCENTAGE_CHOICES =
 {
   "0",  _("NONE"),
+  "13", _("13% of Levels"),
   "25", _("25% of Levels"),
   "50", _("50% of Levels"),
   "75", _("75% of Levels"),
+  "88", _("88% of Levels"),
   "100", _("100% of Levels")
 }
 
@@ -169,7 +171,7 @@ OB_MODULES["prefab_control"] =
       tooltip = "Reduces the amount of complex architecture in a map based on its size. " ..
         "Default is on in binary map format, off in UDMF map format.",
       default = "on",
-      priority = 102,
+      priority = 150,
       gap = 1
     },
 
@@ -230,6 +232,43 @@ OB_MODULES["prefab_control"] =
                 "for more consistent visuals. Default is 50%.",
       default = "50",
       priority = 49,
+      gap = 1
+    },
+
+    --
+
+    peered_exits =
+    {
+      name = "peered_exits",
+      label = _("Peered Starts/Exits"),
+      choices = PREFAB_CONTROL.ON_OFF,
+      default = "on",
+      priority = 48
+    },
+
+    steppy_caves =
+    {
+      name = "steppy_caves",
+      label = _("Steppy Caves"),
+      choices =
+      {
+        "always", _("Always"),
+        "yes", _("Yes"),
+        "no", _("No"),
+      },
+      tooltip = "Disables or enables caves with height variations.",
+      default = "yes",
+      priority = 47
+    },
+
+    start_room_size =
+    {
+      name = "start_room_size",
+      label = _ ("Start Size Variance"),
+      choices = PREFAB_CONTROL.ON_OFF,
+      tooltip = "Affects whether Room Size Variance also influences start rooms.",
+      default = "on",
+      priority = 46,
       gap = 1
     },
 

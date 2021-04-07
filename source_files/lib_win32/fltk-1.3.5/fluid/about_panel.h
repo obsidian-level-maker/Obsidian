@@ -21,15 +21,14 @@
 #ifndef about_panel_h
 #define about_panel_h
 #include <FL/Fl.H>
-extern void show_help(const char *name);
+extern void show_help(const char *name); 
 #include <FL/Fl_Double_Window.H>
-
 #include "../src/flstring.h"
 extern Fl_Double_Window *about_panel;
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Return_Button.H>
-Fl_Double_Window *make_about_panel();
+Fl_Double_Window* make_about_panel();
 extern unsigned char fluid_org_png[27580];
 #endif
 

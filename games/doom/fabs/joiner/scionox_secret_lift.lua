@@ -26,7 +26,7 @@ PREFABS.Joiner_scionox_secret_lift =
   bound_z2 = 192,
 
   x_fit  = "frame",
-  y_fit  = {72,152},
+  y_fit  = {84,156},
 
   tex_PIPES = { PIPES=50, BLAKWAL1=50, COMPBLUE=50, GRAY5=50, PIPEWAL2=50, SILVER3=50, TEKLITE2=50 },
 }
@@ -71,7 +71,7 @@ PREFABS.Joiner_scionox_secret_lift_4 =
   bound_z2 = 192,
 
   x_fit  = "frame",
-  y_fit  = {72,152},
+  y_fit  = {84,156},
 
   thing_15 =
   {
@@ -127,7 +127,7 @@ PREFABS.Joiner_scionox_secret_lift_down =
   bound_z2 = 128,
 
   x_fit  = "frame",
-  y_fit  = {84,156},
+  y_fit  = {88,156},
 
   tex_PIPES = { PIPES=50, BLAKWAL1=50, COMPBLUE=50, GRAY5=50, PIPEWAL2=50, SILVER3=50, TEKLITE2=50 },
 }
@@ -172,7 +172,7 @@ PREFABS.Joiner_scionox_secret_lift_down_corpse_hint =
   bound_z2 = 128,
 
   x_fit  = "frame",
-  y_fit  = {84,156},
+  y_fit  = {88,156},
 
   thing_15 =
   {

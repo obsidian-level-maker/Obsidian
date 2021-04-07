@@ -1187,6 +1187,19 @@ ARMAETUS_MATERIALS = {
   ARCD10 = { t="ARCD10", f="CEIL4_3"},
   ARCD11 = { t="ARCD11", f="CEIL4_3"},
 
+  -- Craneo's classical painting textures
+  CPAQLRRE = { t="CPAQLRRE", f="CEIL4_3"},
+  CPFLAYIN = { t="CPFLAYIN", f="CEIL4_3"},
+  CPGARDEN = { t="CPGARDEN", f="CEIL4_3"},
+  CPGARDN2 = { t="CPGARDN2", f="CEIL4_3"},
+  CPMEDUS = { t="CPMEDUS", f="CEIL4_3"},
+  CPHEGOAT = { t="CPHEGOAT", f="CEIL4_3"},
+  CPHLLDEM = { t="CPHLLDEM", f="CEIL4_3"},
+  CPHRSEMN = { t="CPHRSEMN", f="CEIL4_3"},
+  CPHRSMN2 = { t="CPHRSMN2", f="CEIL4_3"},
+  CPSATRN = { t="CPSATRN", f="CEIL4_3"},
+  CPVLAD = { t="CPVLAD", f="CEIL4_3"},
+
   ------------------------
   -- Composite textures --
   ------------------------
@@ -1247,11 +1260,33 @@ ARMAETUS_MATERIALS = {
   T_GHFLG = { t="G16", f="T_GHFLG" },
   T_GHFLP = { t="G16", f="T_GHFLP" },
 
+  ------------------
+  -- MSSP Stuff --
+  ------------------
+  -- walls
+  OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
+  OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
+  OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
+  OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
+  OBTBSLV5 = { t="OBTBSLV4", f="FLAT3"},
+
+  OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},
+  OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
+  OBTBSTX3 = { t="OBTBSTX3", f="GRATE6"},
+
+  OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
+  OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
+
+  -- flats
+  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"},
+  OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
+  OBTBSFL3 = { t="OBTBSTX1", f="OBTBSFL3"},
+
   ----------------------
   -- Special Textures --
   ----------------------
+  FINVSBLE = { t="FINVSBLE", f="FINVSBLE"}
 
-  FINVSBLE = { t="FINVSBLE", f="FINVSBLE"},
 }
 
 EPIC_BRIGHTMAPS =

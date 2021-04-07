@@ -22,7 +22,7 @@
 #define __UI_MAP_H__
 
 #include "FL/Fl_Image.H"
-#include "Fl/Fl_Box.H"
+#include "FL/Fl_Box.H"
 #include "sys_type.h"
 
 class UI_MiniMap : public Fl_Box {
