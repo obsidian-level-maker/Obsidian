@@ -392,15 +392,15 @@ function SKY_GEN_HERETIC.generate_skies()
 
   gui.printf("\nSky generator:\n");
 
-  for _,EPI in pairs(GAME.episodes) do
+  for index,EPI in pairs(GAME.episodes) do
 
     if not EPI.levels[1] then return end -- empty game episode?
 
     assert(EPI.sky_patch)
 
-    local seed = int(gui.random() * 1000000)
+    local seed = gui.random_int()
 
-    local is_starry = (_index == starry_ep) or rand.odds(2)
+    local is_starry = (index == starry_ep) or rand.odds(2)
 
     if PARAM.force_sky == "sky_day" then
       is_starry = false
@@ -474,14 +474,14 @@ function SKY_GEN_HERETIC.generate_skies()
       end
 
       gui.printf("Sky theme: " .. theme_name .. "\n")
-      gui.printf("  %d = %s\n", _index, name)
+      gui.printf("  %d = %s\n", index, name)
 
       gui.set_colormap(1, colormap)
       gui.fsky_add_clouds({ seed=seed, colmap=1, squish=2.0 })
 
       EPI.dark_prob = 10
 
-      PARAM.episode_sky_color[_index] = name
+      PARAM.episode_sky_color[index] = name
     end
 
 
@@ -496,7 +496,7 @@ function SKY_GEN_HERETIC.generate_skies()
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
 
-      gui.printf("  %d = %s\n", _index, name)
+      gui.printf("  %d = %s\n", index, name)
 
       gui.set_colormap(1, colormap)
       gui.fsky_add_stars({ seed=seed, colmap=1 })
