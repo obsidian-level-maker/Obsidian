@@ -1263,24 +1263,31 @@ ARMAETUS_MATERIALS = {
   ------------------
   -- MSSP Stuff --
   ------------------
-  -- walls
+
+  -- 256-wide silver walls
   OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
   OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
   OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
   OBTBSLV5 = { t="OBTBSLV4", f="FLAT3"},
 
+  -- 128-wide silver walls
   OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},
   OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
   OBTBSTX3 = { t="OBTBSTX3", f="GRATE6"},
 
+  OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
+  OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
+
+  -- 128-wide techy brick walls
   OBTBSLB1 = { t="OBTBSLB1", f="SHINY03"},
   OBTBSLB2 = { t="OBTBSLB2", f="FLOOR4_8"},
   OBTBSLB3 = { t="OBTBSLB3", f="SLIME14"},
   OBTBSLB4 = { t="OBTBSLB4", f="SLIME15"},
 
-  OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
-  OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
+  OBTBSB2B = { t="OBTBSB2B", f="FLOOR5_3"}, -- brown color composite
+  OBTBSB3B = { t="OBTBSB3B", f="SLIME16"}, -- brown color composite
+  OBTBSB4B = { t="OBTBSB4B", f="FLOOR4_1"}, -- brown color composite
 
   -- flats
   OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"},

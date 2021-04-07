@@ -985,7 +985,11 @@ ARMAETUS_ROOM_THEMES =
       BRVINE = 5,
       BROVINE2 = 5,
 
-      OBTSTX1B = 10
+      OBTSTX1B = 10,
+
+      OBTBSB2B = 15,
+      OBTBSB3B = 15,
+      OBTBSB4B = 15
     },
 
     floors =
@@ -1483,6 +1487,13 @@ ARMAETUS_ROOM_THEMES =
       PIPEDRK1 = 5,
       RUSTWALL = 5,
 
+      OBTBSLB2 = 5,
+      OBTBSLB3 = 5,
+      OBTBSLB4 = 5,
+
+      OBTBSB2B = 5,
+      OBTBSB3B = 5,
+      OBTBSB4B = 5,
     },
 
     floors =
@@ -3445,7 +3456,11 @@ ARMAETUS_THEMES =
       OBTBSLB1 = 20,
       OBTBSLB2 = 20,
       OBTBSLB3 = 20,
-      OBTBSLB4 = 20
+      OBTBSLB4 = 20,
+
+      OBTBSB2B = 15,
+      OBTBSB3B = 15,
+      OBTBSB4B = 15
     },
 
     fence_groups =
@@ -3704,7 +3719,11 @@ ARMAETUS_THEMES =
       OBTBSLB1 = 20,
       OBTBSLB2 = 20,
       OBTBSLB3 = 20,
-      OBTBSLB4 = 20
+      OBTBSLB4 = 20,
+
+      OBTBSB2B = 15,
+      OBTBSB3B = 15,
+      OBTBSB4B = 15
     },
 
     fence_groups =

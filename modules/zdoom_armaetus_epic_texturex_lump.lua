@@ -463,7 +463,8 @@ Texture "COMPYELL", 64, 128
   }
 }
 
-WallTexture "OBTSTX1B", 128, 128
+// MSSP texture composites
+Texture "OBTSTX1B", 128, 128
 {
 	Patch "OBTBSTX1", 0, 0
 	{
@@ -471,11 +472,43 @@ WallTexture "OBTSTX1B", 128, 128
 	}
 }
 
-WallTexture "OBTSTX1G", 128, 128
+Texture "OBTSTX1B", 128, 128
+{
+	Patch "OBTBSTX1", 0, 0
+	{
+		Blend "#805656"
+	}
+}
+
+Texture "OBTSTX1G", 128, 128
 {
 	Patch "OBTBSTX1", 0, 0
 	{
 		Blend "#568056"
+	}
+}
+
+Texture "OBTBSB2B", 256, 128
+{
+	Patch "OBTBSLB2", 0, 0
+	{
+		Blend "#E4AA7E"
+	}
+}
+
+Texture "OBTBSB3B", 256, 128
+{
+	Patch "OBTBSLB3", 0, 0
+	{
+		Blend "#E4AA7E"
+	}
+}
+
+Texture "OBTBSB4B", 256, 128
+{
+	Patch "OBTBSLB4", 0, 0
+	{
+		Blend "#E4AA7E"
 	}
 }
 ]]
