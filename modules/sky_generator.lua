@@ -445,9 +445,9 @@ function SKY_GEN.generate_skies()
 
     assert(EPI.sky_patch)
 
-    local seed = int(gui.random() * 1000000)
+    local seed = gui.random_int()
 
-    local is_starry = (_index == starry_ep) or rand.odds(2)
+    local is_starry = (index == starry_ep) or rand.odds(2)
 
     if PARAM.force_sky == "sky_day" then
       is_starry = false
