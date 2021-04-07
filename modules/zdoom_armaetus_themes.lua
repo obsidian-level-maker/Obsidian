@@ -241,7 +241,10 @@ ARMAETUS_ROOM_THEMES =
 
       OBTBSTX1 = 30,
       OBTBSTX2 = 30,
-      OBTBSTX3 = 30
+      OBTBSTX3 = 30,
+
+      OBTBSLB1 = 30,
+      OBTBSLB1 = 30
     },
 
     floors =
@@ -827,7 +830,10 @@ ARMAETUS_ROOM_THEMES =
       RUSTWALL = 20,
 
       OBTSTX1B = 20,
-      OBTSTX1G = 20
+      OBTSTX1G = 20,
+
+      OBTBSLB1 = 20,
+      OBTBSLB2 = 20
     },
 
     floors =
@@ -909,7 +915,14 @@ ARMAETUS_ROOM_THEMES =
       OBTBSLV2 = 20,
       OBTBSLV3 = 20,
       OBTBSLV4 = 20,
-      OBTBSLV5 = 20
+      OBTBSLV5 = 20,
+
+      OBTBSTX1 = 20,
+      OBTBSTX2 = 20,
+      OBTBSTX3 = 20,
+
+      OBTBSLB1 = 20,
+      OBTBSLB2 = 20
     },
 
     floors =
@@ -1876,7 +1889,9 @@ ARMAETUS_ROOM_THEMES =
 
       URBAN1 = 15,
       URBAN2 = 15,
-      URBAN3 = 15
+      URBAN3 = 15,
+
+      OBTBSLB2 = 20
     },
 
     floors =
@@ -2096,6 +2111,9 @@ ARMAETUS_ROOM_THEMES =
       METL03 = 25,
       RUSTWALL = 60,
       RUSTWAL2 = 60,
+
+      OBTBSLB1 = 20,
+      OBTBSLB2 = 20
     },
 
     floors =
@@ -3410,7 +3428,10 @@ ARMAETUS_THEMES =
       OBTBSTX3 = 20,
 
       OBTSTX1B = 15,
-      OBTSTX1G = 15
+      OBTSTX1G = 15,
+
+      OBTBSLB1 = 20,
+      OBTBSLB2 = 20,
     },
 
     fence_groups =
@@ -3656,6 +3677,18 @@ ARMAETUS_THEMES =
       METAL2 = 15,
       BRONZE1 = 10,
       BRONZE3 = 10,
+
+      OBTBSLV1 = 15,
+      OBTBSLV2 = 15,
+
+      OBTBSTX1 = 15,
+      OBTBSTX3 = 15,
+
+      OBTSTX1B = 20,
+      OBTSTX1G = 20,
+
+      OBTBSLB1 = 20,
+      OBTBSLB2 = 20
     },
 
     fence_groups =
@@ -3918,7 +3951,9 @@ ARMAETUS_THEMES =
       CREYEWLL = 7,
       CRFSHWLL = 7,
       CRGRSWLL = 7,
-      CRHRTWLL = 7
+      CRHRTWLL = 7,
+
+      OBTBSLB2 = 20
     },
 
     wall_groups =
