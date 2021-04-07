@@ -200,31 +200,6 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    peered_exits =
-    {
-      name = "peered_exits",
-      label = _("Peered Starts/Exits"),
-      choices = DEBUG_CONTROL.YES_NO,
-      default = "no",
-      priority = 52,
-    },
-
-    steppy_caves =
-    {
-      name = "steppy_caves",
-      label = _("Steppy Caves"),
-      choices =
-      {
-        "always", _("Always"),
-        "yes", _("Yes"),
-        "no", _("No"),
-      },
-      tooltip = "Disables or enables caves with height variations.",
-      default = "yes",
-      priority = 51,
-      gap = 1,
-    },
-
     custom_error_texture =
     {
       name = "custom_error_texture",

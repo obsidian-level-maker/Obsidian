@@ -237,6 +237,33 @@ OB_MODULES["prefab_control"] =
 
     --
 
+    peered_exits =
+    {
+      name = "peered_exits",
+      label = _("Peered Starts/Exits"),
+      choices = DEBUG_CONTROL.ON_OFF,
+      default = "no",
+      priority = 48,
+    },
+
+    steppy_caves =
+    {
+      name = "steppy_caves",
+      label = _("Steppy Caves"),
+      choices =
+      {
+        "always", _("Always"),
+        "yes", _("Yes"),
+        "no", _("No"),
+      },
+      tooltip = "Disables or enables caves with height variations.",
+      default = "yes",
+      priority = 47,
+      gap = 1,
+    },
+
+    --
+
     pf_crushers =
     {
       name="pf_crushers", label=_("Crushers"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
