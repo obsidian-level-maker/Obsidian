@@ -1691,10 +1691,15 @@ function Layout_decorate_rooms(pass)
         if A.floor_group.sink.mat == "_LIQUID" then
           reqs.is_sink = "liquid"
         end
-        for _,liquid in pairs(GAME.LIQUIDS) do
-          if A.floor_group.sink.mat == liquid.mat then
-            reqs.is_sink = "liquid"
-          end
+
+        if A.floor_group.sink.mat == "_SKY" then
+          reqs.is_sink = "sky"
+        end
+
+        -- check for when sinks have predefined liquids
+        local liq_mat = A.floor_group.sink.mat
+        if GAME.LIQUIDS[liq_mat] then
+          reqs.is_sink = "liquid"
         end
       end
 
