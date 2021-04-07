@@ -560,6 +560,10 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
             if (udmf_flags.test(7)) {
                 textmap_lump->Printf("\tfriend = true;\n");
             }
+            // Testing fix for compatibility with ZDoom mods that add classes in games other than Hexen
+            textmap_lump->Printf("\tclass1 = true;\n");
+            textmap_lump->Printf("\tclass2 = true;\n");
+            textmap_lump->Printf("\tclass3 = true;\n");
             textmap_lump->Printf("}\n");
             udmf_things += 1;
         }
