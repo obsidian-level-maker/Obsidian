@@ -25,8 +25,8 @@
 #include "Fl_Slider.H"
 
 class FL_EXPORT Fl_Hor_Fill_Slider : public Fl_Slider {
-   public:
-    Fl_Hor_Fill_Slider(int X, int Y, int W, int H, const char *L = 0);
+public:
+  Fl_Hor_Fill_Slider(int X,int Y,int W,int H,const char *L=0);
 };
 
 #endif

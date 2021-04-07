@@ -50,10 +50,8 @@
   - Fl_Scroll::HORIZONTAL        - Only a horizontal scrollbar.
   - Fl_Scroll::VERTICAL          - Only a vertical scrollbar.
   - Fl_Scroll::BOTH              - The default is both scrollbars.
-  - Fl_Scroll::HORIZONTAL_ALWAYS - Horizontal scrollbar always on, vertical
-  always off.
-  - Fl_Scroll::VERTICAL_ALWAYS   - Vertical scrollbar always on, horizontal
-  always off.
+  - Fl_Scroll::HORIZONTAL_ALWAYS - Horizontal scrollbar always on, vertical always off.
+  - Fl_Scroll::VERTICAL_ALWAYS   - Vertical scrollbar always on, horizontal always off.
   - Fl_Scroll::BOTH_ALWAYS       - Both always on.
 
   Use <B> scrollbar.align(int) ( see void Fl_Widget::align(Fl_Align) ) :</B>
@@ -87,120 +85,121 @@
   scrollbars and neighboring objects.</I>
 */
 class FL_EXPORT Fl_Scroll : public Fl_Group {
-    int xposition_, yposition_;
-    int oldx, oldy;
-    int scrollbar_size_;
-    static void hscrollbar_cb(Fl_Widget *, void *);
-    static void scrollbar_cb(Fl_Widget *, void *);
-    void fix_scrollbar_order();
-    static void draw_clip(void *, int, int, int, int);
+
+  int xposition_, yposition_;
+  int oldx, oldy;
+  int scrollbar_size_;
+  static void hscrollbar_cb(Fl_Widget*, void*);
+  static void scrollbar_cb(Fl_Widget*, void*);
+  void fix_scrollbar_order();
+  static void draw_clip(void*,int,int,int,int);
 
 #if FLTK_ABI_VERSION >= 10303
-   protected:  // NEW (STR#1895)
+protected:	// NEW (STR#1895)
 #else
-   private:  // OLD
+private:	// OLD
 #endif
-    /**
-      Structure to manage scrollbar and widget interior sizes.
-      This is filled out by recalc_scrollbars() for use in calculations
-      that need to know the visible scroll area size, etc.
-      \note Availability in FLTK_ABI_VERSION 10303 or higher.
-    */
+  /**
+    Structure to manage scrollbar and widget interior sizes.
+    This is filled out by recalc_scrollbars() for use in calculations
+    that need to know the visible scroll area size, etc.
+    \note Availability in FLTK_ABI_VERSION 10303 or higher.
+  */
+  typedef struct {
+    /// A local struct to manage a region defined by xywh
+    typedef struct { int x,y,w,h; } Fl_Region_XYWH;
+    /// A local struct to manage a region defined by left/right/top/bottom
     typedef struct {
-        /// A local struct to manage a region defined by xywh
-        typedef struct {
-            int x, y, w, h;
-        } Fl_Region_XYWH;
-        /// A local struct to manage a region defined by left/right/top/bottom
-        typedef struct {
-            int l;  ///< (l)eft "x" position, aka x1
-            int r;  ///< (r)ight "x" position, aka x2
-            int t;  ///< (t)op "y" position, aka y1
-            int b;  ///< (b)ottom "y" position, aka y2
-        } Fl_Region_LRTB;
-        /// A local struct to manage a scrollbar's xywh region and tab values
-        typedef struct {
-            int x, y, w, h;
-            int pos;    ///< scrollbar tab's "position of first line displayed"
-            int size;   ///< scrollbar tab's "size of window in lines"
-            int first;  ///< scrollbar tab's "number of first line"
-            int total;  ///< scrollbar tab's "total number of lines"
-        } Fl_Scrollbar_Data;
-        int scrollsize;  ///< the effective scrollbar thickness (local or
-                         ///< global)
-        Fl_Region_XYWH innerbox;  ///< widget's inner box, excluding scrollbars
-        Fl_Region_XYWH
-            innerchild;        ///< widget's inner box, including scrollbars
-        Fl_Region_LRTB child;  ///< child bounding box: left/right/top/bottom
-        int hneeded;           ///< horizontal scrollbar visibility
-        int vneeded;           ///< vertical scrollbar visibility
-        Fl_Scrollbar_Data hscroll;  ///< horizontal scrollbar region + values
-        Fl_Scrollbar_Data vscroll;  ///< vertical scrollbar region + values
-    } ScrollInfo;
-    void recalc_scrollbars(ScrollInfo &si);
+      int l;			///< (l)eft "x" position, aka x1
+      int r;			///< (r)ight "x" position, aka x2
+      int t;			///< (t)op "y" position, aka y1
+      int b;			///< (b)ottom "y" position, aka y2
+    } Fl_Region_LRTB;
+    /// A local struct to manage a scrollbar's xywh region and tab values
+    typedef struct {
+      int x,y,w,h;
+      int pos;			///< scrollbar tab's "position of first line displayed"
+      int size;			///< scrollbar tab's "size of window in lines"
+      int first;		///< scrollbar tab's "number of first line"
+      int total;		///< scrollbar tab's "total number of lines"
+    } Fl_Scrollbar_Data;
+    int scrollsize;		///< the effective scrollbar thickness (local or global)
+    Fl_Region_XYWH innerbox;	///< widget's inner box, excluding scrollbars
+    Fl_Region_XYWH innerchild;	///< widget's inner box, including scrollbars
+    Fl_Region_LRTB child;	///< child bounding box: left/right/top/bottom
+    int hneeded;		///< horizontal scrollbar visibility
+    int vneeded;		///< vertical scrollbar visibility
+    Fl_Scrollbar_Data hscroll;	///< horizontal scrollbar region + values
+    Fl_Scrollbar_Data vscroll;	///< vertical scrollbar region + values
+  } ScrollInfo;
+  void recalc_scrollbars(ScrollInfo &si);
 
-   protected:
-    void bbox(int &, int &, int &, int &);
-    void draw();
+protected:
 
-   public:
-    Fl_Scrollbar scrollbar;
-    Fl_Scrollbar hscrollbar;
+  void bbox(int&,int&,int&,int&);
+  void draw();
 
-    void resize(int X, int Y, int W, int H);
-    int handle(int);
+public:
 
-    Fl_Scroll(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Scrollbar scrollbar;
+  Fl_Scrollbar hscrollbar;
 
-    enum {  // values for type()
-        HORIZONTAL = 1,
-        VERTICAL = 2,
-        BOTH = 3,
-        ALWAYS_ON = 4,
-        HORIZONTAL_ALWAYS = 5,
-        VERTICAL_ALWAYS = 6,
-        BOTH_ALWAYS = 7
-    };
+  void resize(int X, int Y, int W, int H);
+  int handle(int);
 
-    /**    Gets the current horizontal scrolling position.  */
-    int xposition() const { return xposition_; }
-    /**    Gets the current vertical scrolling position.  */
-    int yposition() const { return yposition_; }
-    void scroll_to(int, int);
-    void clear();
-    /**
-      Gets the current size of the scrollbars' troughs, in pixels.
+  Fl_Scroll(int X,int Y,int W,int H,const char*l=0);
 
-      If this value is zero (default), this widget will use the
-      Fl::scrollbar_size() value as the scrollbar's width.
+  enum { // values for type()
+    HORIZONTAL = 1,
+    VERTICAL = 2,
+    BOTH = 3,
+    ALWAYS_ON = 4,
+    HORIZONTAL_ALWAYS = 5,
+    VERTICAL_ALWAYS = 6,
+    BOTH_ALWAYS = 7
+  };
 
-      \returns Scrollbar size in pixels, or 0 if the global Fl::scrollbar_size()
-      is being used. \see Fl::scrollbar_size(int)
-    */
-    int scrollbar_size() const { return (scrollbar_size_); }
-    /**
-      Sets the pixel size of the scrollbars' troughs to \p newSize, in pixels.
+  /**    Gets the current horizontal scrolling position.  */
+  int xposition() const {return xposition_;}
+  /**    Gets the current vertical scrolling position.  */
+  int yposition() const {return yposition_;}
+  void scroll_to(int, int);
+  void clear();
+  /**
+    Gets the current size of the scrollbars' troughs, in pixels.
 
-      Normally you should not need this method, and should use
-      Fl::scrollbar_size(int) instead to manage the size of ALL
-      your widgets' scrollbars. This ensures your application
-      has a consistent UI, is the default behavior, and is normally
-      what you want.
+    If this value is zero (default), this widget will use the
+    Fl::scrollbar_size() value as the scrollbar's width.
 
-      Only use THIS method if you really need to override the global
-      scrollbar size. The need for this should be rare.
+    \returns Scrollbar size in pixels, or 0 if the global Fl::scrollbar_size() is being used.
+    \see Fl::scrollbar_size(int)
+  */
+  int scrollbar_size() const {
+      return(scrollbar_size_);
+  }
+  /**
+    Sets the pixel size of the scrollbars' troughs to \p newSize, in pixels.
 
-      Setting \p newSize to the special value of 0 causes the widget to
-      track the global Fl::scrollbar_size(), which is the default.
+    Normally you should not need this method, and should use
+    Fl::scrollbar_size(int) instead to manage the size of ALL
+    your widgets' scrollbars. This ensures your application
+    has a consistent UI, is the default behavior, and is normally
+    what you want.
 
-      \param[in] newSize Sets the scrollbar size in pixels.\n
-                      If 0 (default), scrollbar size tracks the global
-      Fl::scrollbar_size() \see Fl::scrollbar_size()
-    */
-    void scrollbar_size(int newSize) {
-        if (newSize != scrollbar_size_) redraw();
-        scrollbar_size_ = newSize;
-    }
+    Only use THIS method if you really need to override the global
+    scrollbar size. The need for this should be rare.
+
+    Setting \p newSize to the special value of 0 causes the widget to
+    track the global Fl::scrollbar_size(), which is the default.
+
+    \param[in] newSize Sets the scrollbar size in pixels.\n
+                    If 0 (default), scrollbar size tracks the global Fl::scrollbar_size()
+    \see Fl::scrollbar_size()
+  */
+  void scrollbar_size(int newSize) {
+      if ( newSize != scrollbar_size_ ) redraw();
+      scrollbar_size_ = newSize;
+  }
 };
 
 #endif

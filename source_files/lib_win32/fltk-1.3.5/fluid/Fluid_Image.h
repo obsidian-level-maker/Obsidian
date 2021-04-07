@@ -21,30 +21,30 @@
 //
 
 #ifndef FLUID_IMAGE_H
-#define FLUID_IMAGE_H
+#  define FLUID_IMAGE_H
 
-#include <FL/Fl_Shared_Image.H>
+#  include <FL/Fl_Shared_Image.H>
+
 
 class Fluid_Image {
-    const char *name_;
-    int refcount;
-    Fl_Shared_Image *img;
-    const char *function_name_;
-
-   protected:
-    Fluid_Image(const char *name);  // no public constructor
-    ~Fluid_Image();                 // no public destructor
-   public:
-    int written;
-    static Fluid_Image *find(const char *);
-    void decrement();  // reference counting & automatic free
-    void increment();
-    void image(Fl_Widget *);    // set the image of this widget
-    void deimage(Fl_Widget *);  // set the deimage of this widget
-    void write_static();
-    void write_initializer(const char *type_name, const char *format, ...);
-    void write_code(const char *var, int inactive = 0);
-    const char *name() const { return name_; }
+  const char *name_;
+  int refcount;
+  Fl_Shared_Image *img;
+  const char *function_name_;
+protected:
+  Fluid_Image(const char *name); // no public constructor
+  ~Fluid_Image(); // no public destructor
+public:
+  int written;
+  static Fluid_Image* find(const char *);
+  void decrement(); // reference counting & automatic free
+  void increment();
+  void image(Fl_Widget *); // set the image of this widget
+  void deimage(Fl_Widget *); // set the deimage of this widget
+  void write_static();
+  void write_initializer(const char *type_name, const char *format, ...);
+  void write_code(const char *var, int inactive = 0);
+  const char *name() const {return name_;}
 };
 
 // pop up file chooser and return a legal image selected by user,

@@ -25,7 +25,7 @@
 #include "Fl_Input.H"
 /**
   This widget displays a piece of text.
-
+  
   When you set the value() , Fl_Output does a strcpy() to its own storage,
   which is useful for program-generated values.  The user may select
   portions of the text using the mouse and paste the contents into other
@@ -45,18 +45,18 @@
   assumes the font can draw any characters in the ISO-Latin1 character set.
 */
 class FL_EXPORT Fl_Output : public Fl_Input {
-   public:
-    /**
-      Creates a new Fl_Output widget using the given position,
-      size, and label string. The default boxtype is FL_DOWN_BOX.
+public:
+  /**
+    Creates a new Fl_Output widget using the given position,
+    size, and label string. The default boxtype is FL_DOWN_BOX.
 
-      Inherited destructor destroys the widget and any value associated with it.
-    */
+    Inherited destructor destroys the widget and any value associated with it.
+  */
 
-    Fl_Output(int X, int Y, int W, int H, const char *l = 0);
+    Fl_Output(int X,int Y,int W,int H, const char *l = 0);
 };
 
-#endif
+#endif 
 
 //
 // End of "$Id$".

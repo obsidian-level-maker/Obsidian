@@ -24,7 +24,7 @@
 #define FL_TYPES_H
 
 /** \name	Miscellaneous */
-/*@{*/ /* group: Miscellaneous */
+/*@{*/	/* group: Miscellaneous */
 
 /** unsigned char */
 typedef unsigned char uchar;
@@ -48,7 +48,7 @@ typedef unsigned int Fl_Shortcut;
 /** 24-bit Unicode character - upper 8 bits are unused */
 typedef unsigned int Fl_Char;
 
-/*@}*/ /* group: Miscellaneous */
+/*@}*/	/* group: Miscellaneous */
 
 #endif
 

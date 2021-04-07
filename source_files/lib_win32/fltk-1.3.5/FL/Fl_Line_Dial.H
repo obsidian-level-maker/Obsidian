@@ -25,8 +25,8 @@
 #include "Fl_Dial.H"
 
 class FL_EXPORT Fl_Line_Dial : public Fl_Dial {
-   public:
-    Fl_Line_Dial(int X, int Y, int W, int H, const char *L = 0);
+public:
+  Fl_Line_Dial(int X,int Y,int W,int H, const char *L = 0);
 };
 
 #endif

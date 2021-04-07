@@ -21,7 +21,7 @@
 
 #ifndef Fl_GIF_Image_H
 #define Fl_GIF_Image_H
-#include "Fl_Pixmap.H"
+#  include "Fl_Pixmap.H"
 
 /**
  The Fl_GIF_Image class supports loading, caching,
@@ -29,8 +29,10 @@
  loads the first image and supports transparency.
  */
 class FL_EXPORT Fl_GIF_Image : public Fl_Pixmap {
-   public:
-    Fl_GIF_Image(const char *filename);
+
+  public:
+
+  Fl_GIF_Image(const char* filename);
 };
 
 #endif

@@ -25,8 +25,8 @@
 #include "Fl_Round_Button.H"
 
 class FL_EXPORT Fl_Radio_Round_Button : public Fl_Round_Button {
-   public:
-    Fl_Radio_Round_Button(int X, int Y, int W, int H, const char *L = 0);
+public:
+  Fl_Radio_Round_Button(int X,int Y,int W,int H,const char *L=0);
 };
 
 #endif
