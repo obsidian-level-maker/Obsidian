@@ -892,7 +892,10 @@ namelib.NAMES =
         ["2 Imps 1 Shotgun"]=10, -- retxirT
         ["3 Keys 1 Doomguy"]=10, -- there's a '3 guys 1 hammer' thing out there apparently
         ["Bad Optics"]=10, -- retxirT
+        ["Customer Lifecycle"]=10,
         ["Engineering Gone Bad"]=10, -- Demios, also based on Romero's "Tech Gone Bad",
+        ["Organizational Downsizing"]=10,
+        ["Segmentation Fault"]=10,
         ["Short-Circuit"]=10, -- Demios
 
         -- Frozsoul
@@ -1005,7 +1008,7 @@ namelib.NAMES =
       ["%v %n"]    = 25,
       ["%v %a %n"] = 25,
 
-      ["%s"] = 25,
+      ["%s"] = 100,
 
       ["Killing for %e"] = 3,
       ["Killing in %e's name"] = 3,
@@ -1955,7 +1958,13 @@ namelib.NAMES =
         ["The Corpse Collector"]=10,
         ["Unhallowed Purity"]=10,
         ["Viviseduction"]=10,
-        ["Wretched Human Mirror"]=10 -- Bloodbath song name
+        ["Wretched Human Mirror"]=10, -- Bloodbath song name
+
+        -- MSSP names:
+        ["Deep Rock Satanic"]=10,
+        ["Mausoleum of History"]=10, -- quote from FreeSpace 2's intro
+        ["Meathooks"]=10,
+        ["The Needleworks"]=10
       }
     }
   },
@@ -1998,7 +2007,7 @@ namelib.NAMES =
       ["%v %n %x"] = 5,
       ["%v %a %n %x"] = 5,
 
-      ["%s"] = 25,
+      ["%s"] = 50,
 
       -- Types of roads, useful when Streets Mode
       -- kicks in.
@@ -2615,9 +2624,6 @@ namelib.NAMES =
         ["The No Go Zone"]=10,
         ["The Twisted Abode"]=10,
 
-        -- MSSP adds more names as well
-        ["Damned Demon Destruction"]=10, -- Demios
-
         -- Doom Eternal stuff. Would these be better under Hell?
         ["Ardur"]=10,
         ["Kher Lodur"]=10,
@@ -2688,7 +2694,11 @@ namelib.NAMES =
         ["Unspoken Stars"]=10,
         ["Urban Megalths"]=10,
         ["When All Hope is Lost"]=10,
-        ["Wicked Corridors"]=10
+        ["Wicked Corridors"]=10,
+
+        -- MSSP adds more names as well
+        ["Damned Demon Destruction"]=10, -- Demios
+        ["Nothing Personnel"]=10
       }
     }
   },
@@ -2728,7 +2738,7 @@ namelib.NAMES =
       ["%v %n %x"] = 5,
       ["%v %a %n %x"] = 5,
 
-      ["%s"] = 25,
+      ["%s"] = 50,
 
       -- Types of roads, useful when Streets Mode
       -- kicks in.
@@ -5197,48 +5207,48 @@ namelib.NAMES =
         ["EpicTyphlosion A OK"] = 20,
 
         -- describe the place
-        ["The Evil Within"] = 20,
-        ["What Lurks Beneath"] = 20,
         ["A God-forsaken Place"] = 20,
         ["A Land In Turmoil"] = 20,
-        ["Point Of No Return"] = 20,
-        ["Gateway to Hell"] = 20,
-        ["Where Devils Spawn"] = 20,
-        ["Hell's Fury"] = 25,
         ["Demise of Humanity"] = 25,
+        ["Point Of No Return"] = 20,
+        ["Hell's Fury"] = 25,
+        ["Gateway to Hell"] = 20,
+        ["What Lurks Beneath"] = 20,
+        ["Where Devils Spawn"] = 20,
+        ["The Evil Within"] = 20,
 
         -- miscellaneous
         ["A Dreaded Obligation"] = 30,
-        ["Your Dire Obligation"] = 30,
-        ["Obligated to Die"] = 30,
-        ["Redemption Denied"]    = 30,
-        ["Humanity's Epitaph"]   = 30,
-        ["Senseless Violence"]   = 40,
-        ["Souls Denied"] = 30,
+        ["Bullets and Death"] = 25,
         ["Cycle of Death"] = 30,
-        ["Of Dark Light"] = 30,
         ["Crushing Odds"] = 30,
         ["Die and Die Again"] = 30,
-        ["Bullets and Death"] = 25,
+        ["Humanity's Epitaph"]   = 30,
+        ["Obligated to Die"] = 30,
+        ["Of Dark Light"] = 30,
+        ["Redemption Denied"]    = 30,
+        ["Senseless Violence"]   = 40,
+        ["Souls Denied"] = 30,
+        ["Your Dire Obligation"] = 30,
 
-        ["The Final Hour"] = 20,
-        ["Out Of Time"] = 20,
+        ["A Fight for Survival"] = 20,
         ["All Or Nothing"] = 20,
+        ["Chaos Ensues"] = 20,
         ["Days Of Rage"] = 20,
         ["Beyond Salvation"] = 20,
+        ["Last Chance"] = 20,
         ["No Salvation"] = 20,
         ["No More Time"] = 20,
         ["No Time To Waste"] = 20,
         ["No Time Left"] = 20,
         ["One Last Chance"] = 20,
-        ["Last Chance"] = 20,
-        ["Chaos Ensues"] = 20,
-        ["A Fight for Survival"] = 20,
-        ["Thirst for Vengeance"] = 20,
+        ["Out Of Time"] = 20,
         ["Hell's Pinnacle"] = 20,
+        ["The Final Hour"] = 20,
+        ["Thirst for Vengeance"] = 20,
 
-        ["The Brink of Disaster"] = 20,
         ["The Apocalypse Has Come"] = 20,
+        ["The Brink of Disaster"] = 20,
         ["Nobody Is Safe"] = 10,
         ["Nowhere Is Safe"] = 10,
         ["The Seeds of War"] = 20,
@@ -5314,7 +5324,6 @@ namelib.NAMES =
         ["Fantastic!"] = 30,
         ["Feel the Pain!"] = 25,
         ["For The Emperor!"] = 30, -- Warhammer 40K
-        ["Game Journos Need Not Apply!"] = 20,
         ["Get Psyched!"] = 30, -- Wolfenstein 3D
         ["Get Scorched"] = 30,
         ["Getting a Bit Spicy"] = 20,
@@ -5559,6 +5568,7 @@ namelib.COMMUNITY_MEMBERS =
     "Frozsoul",
     "Garrett",
     "Josh Seven", --josh771,
+    "Phytolizer",
     "Sgt. Shooter", --MsrSgtShooterPerson
     "Simon Vee", --Simon-v
     "Scionox",
@@ -5603,7 +5613,6 @@ namelib.COMMUNITY_MEMBERS =
     "Monika",
     "Mr. Liden", --mrliden, created the R667ized ObAddon
     "Nisteth",
-    "Phytolizer",
     "Roundabout Lout",
     "Sharahfluff",
     "Sharp",

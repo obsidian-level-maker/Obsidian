@@ -293,6 +293,13 @@ function Render_edge(E)
       end
 
       -- use only flat walls if in a corner
+      tx, ty = geom.nudge(S1.mid_x, S1.mid_y, 10-dir, SEED_SIZE)
+      S2 = Seed_from_coord(tx, ty)
+      if check_area_state(S1, S2) then
+        reqs.deep = 16
+      end
+
+      -- use only flat walls if in a corner
       tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], SEED_SIZE)
       S2 = Seed_from_coord(tx, ty)
       if check_area_state(S1, S2) then
@@ -2725,7 +2732,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   Ambient_push(A.lighting)
 
-  if PARAM.peered_exits and PARAM.peered_exits == "yes" then
+  if PARAM.peered_exits and PARAM.peered_exits == "on" then
     local start_fab_override = check_peered_exits(def, chunk)
     if start_fab_override then
       def = start_fab_override

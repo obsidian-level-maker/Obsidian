@@ -44,7 +44,7 @@ UI_ARCH.SIZES =
 UI_ARCH.ABSURDITY_CHOICES =
 {
   "none", _("NONE"),
-  "all",  _("Every Level"),
+  "100",  _("Every Level"),
   "85",   _("85% of Levels"),
   "75",   _("75% of Levels"),
   "50",   _("50% of Levels"),

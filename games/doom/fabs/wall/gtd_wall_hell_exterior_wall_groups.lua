@@ -569,7 +569,9 @@ PREFABS.Wall_hell_orange_arch_window_EPIC = --#
 
   group = "hell_o_orange_arch_window",
 
-  z_fit = "top"
+  z_fit = "top",
+
+  sector_17 = {[17] = 1, [0] = 9}
 }
 
 PREFABS.Wall_hell_orange_arch_window =
@@ -587,5 +589,7 @@ PREFABS.Wall_hell_orange_arch_window =
   flat_ORANFLOOR = "RROCK2",
   tex_COLLITE2 = "CRACKLE2",
 
-  z_fit = "top"
+  z_fit = "top",
+
+  sector_17 = {[17] = 1, [0] = 9}
 }

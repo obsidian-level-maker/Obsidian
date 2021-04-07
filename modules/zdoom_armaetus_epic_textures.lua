@@ -981,10 +981,13 @@ end
 
 function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   local wad_file = "games/doom/data/ObAddon_Textures.wad"
+  local wad_file_2 = "games/doom/data/ObAddon_Textures_2.wad"
+
   if PARAM.include_package ~= "no" then
     gui.wad_transfer_lump(wad_file, "ANIMDEFS", "ANIMDEFS")
     gui.wad_transfer_lump(wad_file, "CREDITS", "CREDITS")
     gui.wad_merge_sections(wad_file)
+    gui.wad_merge_sections(wad_file_2)
 
     local dir = "games/doom/data/"
     -- wad_merge_sections currently does not support merging HI_START

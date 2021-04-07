@@ -2073,28 +2073,34 @@ DOOM.THEMES =
       torches8 = 10, --evil eye
       torches9 = 5,  --burning barrel
       torches10 = 5, --skull rock
+      --
       lowhell1 = 16,
       lowhell2 = 16,
       lowhell3 = 16,
+      --
       runes1 = 10,
       runes2 = 10,
       runes3 = 10,
       runes4 = 10,
       runes5 = 10,
+      --
       cross1 = 7, --7
       cross2 = 15, --15
       cross3 = 7, --7
       cross4 = 10, --5
       cross5 = 15, --10
+      --
       mid_band_hell = 2,
+      --
       gtd_wall_hell_bloodgutters = 25,
       gtd_wall_tech_top_corner_light_set = 50,
-      gtd_wall_hell_vaults = 50,
       gtd_generic_beamed_inset = 50,
       gtd_writhing_mass = 50,
       gtd_library = 50,
+      --
       gtd_furnace = 25,
       gtd_furnace_face = 25,
+      --
       gtd_wall_marbface = 50,
       gtd_wall_quakish_insets = 50,
       gtd_wall_hell_ossuary = 50,
@@ -2110,9 +2116,12 @@ DOOM.THEMES =
       gtd_woodframe_green = 25,
       --
       gtd_round_inset = 50,
+      --
       gtd_generic_ceilwall = 50,
       gtd_generic_glow_wall = 30,
       gtd_generic_double_banded_ceil = 30,
+      --
+      gtd_wall_hell_vaults = 50,
       gtd_wall_hell_vaults_ftex = 50,
       --
       gtd_generic_frame_light_band = 50,
