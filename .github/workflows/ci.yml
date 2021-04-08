@@ -16,7 +16,7 @@ defaults:
 
 jobs:
   build:
-    name: Try building the project
+    name: Build
     strategy:
       matrix:
         os:
@@ -26,6 +26,8 @@ jobs:
     runs-on:
       ${{ matrix.os }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
       - name: Configure with CMake
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
