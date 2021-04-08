@@ -28,6 +28,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
+      - name: Setup MSYS2
+        if: ${{ matrix.os == 'windows-latest' }}
+        uses: msys2/setup-msys2@v2
+      - name: Install dependencies
+        run: |
+          if [ ${{ matrix.os }} = 'windows-latest' ]; then
+            choco install fltk
+          elif [ ${{ matrix.os }} = 'ubuntu-latest' ]; then
+            sudo apt-get install libfltk1.3-dev
+          elif [ ${{ matrix.os }} = 'macos-latest' ]; then
+            brew install fltk
+          fi
       - name: Configure with CMake
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
