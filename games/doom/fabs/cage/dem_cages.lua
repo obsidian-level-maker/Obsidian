@@ -12,6 +12,8 @@ PREFABS.Cage_dem_garage_ambush1 =
 
   prob   = 700,
 
+  filter = "sight_ambush_cage",
+
   theme  = "urban",
   env    = "outdoor",
 
@@ -65,6 +67,8 @@ PREFABS.Cage_dem_garage_ambush2 =
   engine = "zdoom",
 
   prob   = 700,
+
+  filter = "sight_ambush_cage",
 
   theme  = "urban",
   env    = "outdoor",
@@ -128,26 +132,26 @@ PREFABS.Cage_dem_store_ambush =
 
   thing_59 =
   {
-  hang_twitching = 50,
-  hang_torso = 50,
-  hang_leg   = 50,
-  hang_leg_gone = 50,
+    hang_twitching = 50,
+    hang_torso = 50,
+    hang_leg   = 50,
+    hang_leg_gone = 50,
   },
 
   thing_62 =
   {
-  hang_twitching = 50,
-  hang_torso = 50,
-  hang_leg   = 50,
-  hang_leg_gone = 50,
+    hang_twitching = 50,
+    hang_torso = 50,
+    hang_leg   = 50,
+    hang_leg_gone = 50,
   },
 
   thing_12 =
   {
-  hang_twitching = 50,
-  hang_torso = 50,
-  hang_leg   = 50,
-  hang_leg_gone = 50,
+    hang_twitching = 50,
+    hang_torso = 50,
+    hang_leg   = 50,
+    hang_leg_gone = 50,
   }
 }
 
@@ -334,7 +338,6 @@ PREFABS.Cage_dem_shrineC =
   z_fit = { 56,64 },
 
   texture_pack = "armaetus",
-
 }
 
 PREFABS.Cage_dem_shrineN =
@@ -344,8 +347,6 @@ PREFABS.Cage_dem_shrineN =
   map = "MAP11",
   env = "nature",
   group = "natural_walls",
-
-
 }
 
 ---- Ruins with enemies hidden inside ----
@@ -379,7 +380,6 @@ PREFABS.Cage_dem_ruinsN1amb =
   z_fit = { 84,92 },
 
   texture_pack = "armaetus",
-
 }
 
 PREFABS.Cage_dem_ruinsN2amb =
@@ -415,13 +415,12 @@ PREFABS.Cage_dem_ruinsC1amb =
   z_fit = { 84,92 },
 
   texture_pack = "armaetus",
-
 }
 
 PREFABS.Cage_dem_ruinsC2amd =
 {
   template  = "Cage_dem_ruinsC1amb",
-  map    = "MAP15",
+  map = "MAP15",
 }
 
 
@@ -468,5 +467,4 @@ PREFABS.Cage_dem_cabinamb =
     dead_shooter = 50,
     dead_imp = 50,
   }
-
 }
