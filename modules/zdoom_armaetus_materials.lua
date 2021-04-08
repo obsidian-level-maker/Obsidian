@@ -1289,10 +1289,22 @@ ARMAETUS_MATERIALS = {
   OBTBSB3B = { t="OBTBSB3B", f="SLIME16"}, -- brown color composite
   OBTBSB4B = { t="OBTBSB4B", f="FLOOR4_1"}, -- brown color composite
 
-  -- flats
-  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"},
+  -- flats (128x128)
+  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
   OBTBSFL3 = { t="OBTBSTX1", f="OBTBSFL3"},
+
+  OBTSVBF1 = { t="OBTBSLB2", f="OBTSVBF1"}, --< brick
+  OBTSVBF2 = { t="OBTBSLB3", f="OBTSVBF2"},
+  OBTSVBF3 = { t="OBTBSLB4", f="OBTSVBF3"},
+
+  OBTSBF1B = { t="OBTBSLB2", f="OBTSBF1B"}, -- brown color composite
+  OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"}, -- brown color composite
+  OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"}, -- brown color composite
+
+  OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
+  OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"}, -- red
+  OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"}, -- red
 
   ----------------------
   -- Special Textures --
