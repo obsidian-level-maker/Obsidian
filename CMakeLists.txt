@@ -10,6 +10,7 @@ project(obsidian LANGUAGES CXX VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
+set(CMAKE_CXX_CLANG_TIDY clang-tidy --config=)
 
 add_executable(obsidian 
     source_files/gui/csg_bsp.cc
