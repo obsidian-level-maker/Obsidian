@@ -21,6 +21,11 @@
 #ifndef __OBLIGE_PAK_FILES_H__
 #define __OBLIGE_PAK_FILES_H__
 
+#include <vector>
+
+#include "sys_macro.h"
+#include "sys_type.h"
+
 /* PAK reading */
 
 bool PAK_OpenRead(const char *filename);

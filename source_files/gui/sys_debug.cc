@@ -36,7 +36,9 @@ bool LogInit(const char *filename) {
 
         log_file = fopen(log_filename, "w");
 
-        if (!log_file) return false;
+        if (!log_file) {
+            return false;
+        }
     }
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n");
@@ -45,14 +47,17 @@ bool LogInit(const char *filename) {
 }
 
 void LogEnableDebug(bool enable) {
-    if (debugging == enable) return;
+    if (debugging == enable) {
+        return;
+    }
 
     debugging = enable;
 
-    if (debugging)
+    if (debugging) {
         LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
-    else
+    } else {
         LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
+    }
 }
 
 void LogEnableTerminal(bool enable) { terminal = enable; }
@@ -110,7 +115,9 @@ void DebugPrintf(const char *str, ...) {
         while (pos && *pos) {
             next = strchr(pos, '\n');
 
-            if (next) *next++ = 0;
+            if (next) {
+                *next++ = 0;
+            }
 
             LogPrintf("# %s\n", pos);
 
@@ -120,7 +127,9 @@ void DebugPrintf(const char *str, ...) {
 }
 
 void LogReadLines(log_display_func_t display_func, void *priv_data) {
-    if (!log_file) return;
+    if (!log_file) {
+        return;
+    }
 
     // we close the log file so we can read it, and then open it
     // again when finished.  That is because Windows OSes can be
@@ -132,7 +141,9 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     log_file = fopen(log_filename, "r");
 
     // this is very unlikely to happen, but check anyway
-    if (!log_file) return;
+    if (!log_file) {
+        return;
+    }
 
     char buffer[MSG_BUF_LEN];
 

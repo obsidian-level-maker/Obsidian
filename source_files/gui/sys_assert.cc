@@ -27,14 +27,17 @@ assert_fail_c::assert_fail_c(const char *_msg) {
     message[sizeof(message) - 1] = 0;
 }
 
-assert_fail_c::~assert_fail_c() { /* nothing needed */ }
+assert_fail_c::~assert_fail_c() { /* nothing needed */
+}
 
 assert_fail_c::assert_fail_c(const assert_fail_c &other) {
     strcpy(message, other.message);
 }
 
 assert_fail_c &assert_fail_c::operator=(const assert_fail_c &other) {
-    if (this != &other) strcpy(message, other.message);
+    if (this != &other) {
+        strcpy(message, other.message);
+    }
 
     return *this;
 }

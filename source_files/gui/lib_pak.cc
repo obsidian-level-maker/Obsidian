@@ -179,7 +179,9 @@ int PAK_NumEntries(void) { return (int)r_header.entry_num; }
 
 int PAK_FindEntry(const char *name) {
     for (unsigned int i = 0; i < r_header.entry_num; i++) {
-        if (StringCaseCmp(name, r_directory[i].name) == 0) return i;
+        if (StringCaseCmp(name, r_directory[i].name) == 0) {
+            return i;
+        }
     }
 
     return -1;  // not found
@@ -205,14 +207,20 @@ void PAK_FindMaps(std::vector<int> &entries) {
 
         const char *name = E->name;
 
-        if (strncmp(name, "maps/", 5) != 0) continue;
+        if (strncmp(name, "maps/", 5) != 0) {
+            continue;
+        }
 
         name += 5;
 
         // ignore the ammo boxes
-        if (strncmp(name, "b_", 2) == 0) continue;
+        if (strncmp(name, "b_", 2) == 0) {
+            continue;
+        }
 
-        while (*name && *name != '/' && *name != '.') name++;
+        while (*name && *name != '/' && *name != '.') {
+            name++;
+        }
 
         if (strcmp(name, ".bsp") == 0) {
             entries.push_back(i);
@@ -229,11 +237,14 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer) {
 
     raw_pak_entry_t *E = &r_directory[entry];
 
-    if ((u32_t)offset + (u32_t)length > E->length)  // EOF
+    if ((u32_t)offset + (u32_t)length > E->length) {  // EOF
         return false;
+    }
 
 #ifdef HAVE_PHYSFS
-    if (!PHYSFS_seek(r_pak_fp, E->offset + offset)) return false;
+    if (!PHYSFS_seek(r_pak_fp, E->offset + offset)) {
+        return false;
+    }
 
     size_t res = (PHYSFS_readBytes(r_pak_fp, buffer, length) / length);
 #else
@@ -347,7 +358,9 @@ void PAK_NewLump(const char *name) {
 }
 
 bool PAK_AppendData(const void *data, int length) {
-    if (length == 0) return true;
+    if (length == 0) {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 

@@ -50,7 +50,9 @@ int qLump_c::GetSize() const { return (int)buffer.size(); }
 const u8_t *qLump_c::GetBuffer() const { return &buffer[0]; }
 
 void qLump_c::Append(const void *data, u32_t len) {
-    if (len == 0) return;
+    if (len == 0) {
+        return;
+    }
 
     u32_t old_size = buffer.size();
     u32_t new_size = old_size + len;
@@ -67,7 +69,9 @@ void qLump_c::Append(qLump_c *other) {
 }
 
 void qLump_c::Prepend(const void *data, u32_t len) {
-    if (len == 0) return;
+    if (len == 0) {
+        return;
+    }
 
     u32_t old_size = buffer.size();
     u32_t new_size = old_size + len;
@@ -94,7 +98,9 @@ void qLump_c::RawPrintf(const char *str) {
 
         Append(str, next ? (next - str) : strlen(str));
 
-        if (!next) break;
+        if (!next) {
+            break;
+        }
 
         Append("\r\n", 2);
 
@@ -167,11 +173,19 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new) {
 
     // never use negative zero (minus zero) in normals
     // [ this prevents duplicate planes ]
-    if (raw_plane.normal[0] == -0.0f) raw_plane.normal[0] = +0.0f;
-    if (raw_plane.normal[1] == -0.0f) raw_plane.normal[1] = +0.0f;
-    if (raw_plane.normal[2] == -0.0f) raw_plane.normal[2] = +0.0f;
+    if (raw_plane.normal[0] == -0.0f) {
+        raw_plane.normal[0] = +0.0f;
+    }
+    if (raw_plane.normal[1] == -0.0f) {
+        raw_plane.normal[1] = +0.0f;
+    }
+    if (raw_plane.normal[2] == -0.0f) {
+        raw_plane.normal[2] = +0.0f;
+    }
 
-    if (raw_plane.dist == -0.0f) raw_plane.dist = +0.0f;
+    if (raw_plane.dist == -0.0f) {
+        raw_plane.dist = +0.0f;
+    }
 
     int hash = I_ROUND(raw_plane.dist * 1.1);
 
@@ -189,7 +203,9 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new) {
 
     *was_new = false;
 
-    if (!plane_hashtab[hash]) plane_hashtab[hash] = new std::vector<int>;
+    if (!plane_hashtab[hash]) {
+        plane_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = plane_hashtab[hash];
 
@@ -198,8 +214,9 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new) {
 
         SYS_ASSERT(index < (int)bsp_planes.size());
 
-        if (memcmp(&raw_plane, &bsp_planes[index], sizeof(raw_plane)) == 0)
+        if (memcmp(&raw_plane, &bsp_planes[index], sizeof(raw_plane)) == 0) {
             return index;  // found it
+        }
     }
 
     // not found, so add new one...
@@ -263,18 +280,19 @@ u16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
     raw_plane.dist = (x * nx + y * ny + z * nz);
 
     // determine 'type' field
-    if (ax > 0.999)
+    if (ax > 0.999) {
         raw_plane.type = PLANE_X;
-    else if (ay > 0.999)
+    } else if (ay > 0.999) {
         raw_plane.type = PLANE_Y;
-    else if (az > 0.999)
+    } else if (az > 0.999) {
         raw_plane.type = PLANE_Z;
-    else if (ax >= MAX(ay, az))
+    } else if (ax >= MAX(ay, az)) {
         raw_plane.type = PLANE_ANYX;
-    else if (ay >= MAX(ax, az))
+    } else if (ay >= MAX(ax, az)) {
         raw_plane.type = PLANE_ANYY;
-    else
+    } else {
         raw_plane.type = PLANE_ANYZ;
+    }
 
     bool was_new;
 
@@ -292,7 +310,9 @@ u16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
         AddRawPlane(&raw_plane, &was_new);
     }
 
-    if (flip_var) *flip_var = did_flip;
+    if (flip_var) {
+        *flip_var = did_flip;
+    }
 
     return plane_idx;
 }
@@ -322,9 +342,10 @@ void BSP_WritePlanes(int lump_num, int max_planes) {
         }
     }
 
-    if (lump->GetSize() >= max_planes)
+    if (lump->GetSize() >= max_planes) {
         Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
                         max_planes);
+    }
 
     BSP_ClearPlanes();
 }
@@ -371,15 +392,18 @@ u16_t BSP_AddVertex(float x, float y, float z) {
     // find existing vertex...
     // for speed we use a hash-table
 
-    if (!vert_hashtab[hash]) vert_hashtab[hash] = new std::vector<int>;
+    if (!vert_hashtab[hash]) {
+        vert_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = vert_hashtab[hash];
 
     for (unsigned int i = 0; i < hashtab->size(); i++) {
         int index = (*hashtab)[i];
 
-        if (memcmp(&raw_vert, &bsp_vertices[index], sizeof(raw_vert)) == 0)
+        if (memcmp(&raw_vert, &bsp_vertices[index], sizeof(raw_vert)) == 0) {
             return index;  // found it!
+        }
     }
 
     // not found, so add new one...
@@ -398,9 +422,10 @@ u16_t BSP_AddVertex(const quake_vertex_c *V) {
 }
 
 void BSP_WriteVertices(int lump_num, int max_verts) {
-    if ((int)bsp_vertices.size() >= max_verts)
+    if ((int)bsp_vertices.size() >= max_verts) {
         Main_FatalError("Quake build failure: exceeded limit of %d VERTEXES\n",
                         max_verts);
+    }
 
     qLump_c *lump = BSP_NewLump(lump_num);
 
@@ -462,9 +487,10 @@ s32_t BSP_AddEdge(u16_t start, u16_t end) {
 }
 
 void BSP_WriteEdges(int lump_num, int max_edges) {
-    if ((int)bsp_edges.size() >= max_edges)
+    if ((int)bsp_edges.size() >= max_edges) {
         Main_FatalError("Quake build failure: exceeded limit of %d EDGES\n",
                         max_edges);
+    }
 
     qLump_c *lump = BSP_NewLump(lump_num);
 
@@ -496,7 +522,9 @@ static void BSP_WriteLump(qLump_c *lump) {
 
     int len = lump->GetSize();
 
-    if (len == 0) return;
+    if (len == 0) {
+        return;
+    }
 
     if (qk_game == 3) {
         ZIPF_AppendData(lump->GetBuffer(), len);
@@ -523,17 +551,20 @@ bool BSP_OpenLevel(const char *entry_in_pak) {
     // assumes that PAK_OpenWrite() has already been called.
 
     // begin the .BSP file
-    if (qk_game == 3)
+    if (qk_game == 3) {
         ZIPF_NewLump(entry_in_pak);
-    else
+    } else {
         PAK_NewLump(entry_in_pak);
+    }
 
     switch (qk_game) {
         case 1:
             bsp_version = Q1_BSP_VERSION;
             bsp_numlumps = Q1_HEADER_LUMPS;
 
-            if (qk_sub_format == SUBFMT_HalfLife) bsp_version = HL_BSP_VERSION;
+            if (qk_sub_format == SUBFMT_HalfLife) {
+                bsp_version = HL_BSP_VERSION;
+            }
             break;
 
         case 2:
@@ -575,10 +606,11 @@ static void BSP_WriteHeader() {
 
     s32_t raw_version = LE_S32(bsp_version);
 
-    if (qk_game == 3)
+    if (qk_game == 3) {
         ZIPF_AppendData(&raw_version, 4);
-    else
+    } else {
         PAK_AppendData(&raw_version, 4);
+    }
 
     offset += 4;
 
@@ -588,7 +620,9 @@ static void BSP_WriteHeader() {
         lump_t raw_info;
 
         // handle missing lumps : create an empty one
-        if (!bsp_directory[i]) bsp_directory[i] = new qLump_c();
+        if (!bsp_directory[i]) {
+            bsp_directory[i] = new qLump_c();
+        }
 
         u32_t length = bsp_directory[i]->GetSize();
 
@@ -611,7 +645,9 @@ static csg_entity_c *FindObligeWorldspawn() {
     for (unsigned int k = 0; k < all_entities.size(); k++) {
         csg_entity_c *E = all_entities[k];
 
-        if (strcmp(E->id.c_str(), "oblige_worldspawn") == 0) return E;
+        if (strcmp(E->id.c_str(), "oblige_worldspawn") == 0) {
+            return E;
+        }
     }
 
     return NULL;
@@ -624,10 +660,11 @@ void BSP_WriteEntities(int lump_num, const char *description) {
 
     lump->Printf("{\n");
 
-    if (qk_game >= 3)
+    if (qk_game >= 3) {
         lump->KeyPair("_generated_by", "OBSIDIAN " OBSIDIAN_VERSION);
-    else if (description)
+    } else if (description) {
         lump->KeyPair("message", description);
+    }
 
     // TODO : do this via oblige_worldspawn entity
     if (qk_game == 1) {
@@ -669,13 +706,19 @@ void BSP_WriteEntities(int lump_num, const char *description) {
         const char *name = E->id.c_str();
 
         // this is mainly to skip broken map-models
-        if (strcmp(name, "nothing") == 0) continue;
+        if (strcmp(name, "nothing") == 0) {
+            continue;
+        }
 
         // skip special (Oblige only) entities
-        if (strncmp(name, "oblige_", 7) == 0) continue;
+        if (strncmp(name, "oblige_", 7) == 0) {
+            continue;
+        }
 
         // skip light entities for Quake3
-        if (qk_game == 3 && strcmp(name, "light") == 0) continue;
+        if (qk_game == 3 && strcmp(name, "light") == 0) {
+            continue;
+        }
 
         lump->Printf("{\n");
 
@@ -708,10 +751,11 @@ bool BSP_CloseLevel() {
     }
 
     // finish the .BSP file
-    if (qk_game == 3)
+    if (qk_game == 3) {
         ZIPF_FinishLump();
-    else
+    } else {
         PAK_FinishLump();
+    }
 
     // free all the memory
     BSP_ClearLumps();
@@ -725,9 +769,10 @@ bool BSP_CloseLevel() {
 qLump_c *BSP_NewLump(int entry) {
     SYS_ASSERT(0 <= entry && entry < bsp_numlumps);
 
-    if (bsp_directory[entry] != NULL)
+    if (bsp_directory[entry] != NULL) {
         Main_FatalError(
             "INTERNAL ERROR: BSP_NewLump: already created entry [%d]\n", entry);
+    }
 
     bsp_directory[entry] = new qLump_c;
 
@@ -750,8 +795,9 @@ qLump_c *BSP_CreateInfoLump() {
 
     ob_read_all_config(&lines, false /* need_full */);
 
-    for (unsigned int i = 0; i < lines.size(); i++)
+    for (unsigned int i = 0; i < lines.size(); i++) {
         L->Printf("%s\n", lines[i].c_str());
+    }
 
     L->Printf("\n\n\n");
 

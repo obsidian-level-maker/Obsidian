@@ -42,10 +42,11 @@ static std::string active_module;
 static bool keep_seed;
 
 static void Cookie_SetValue(const char *name, const char *value) {
-    if (context == CCTX_Load)
+    if (context == CCTX_Load) {
         DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
-    else if (context == CCTX_Arguments)
+    } else if (context == CCTX_Arguments) {
         DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name, value);
+    }
 
     // the new style module syntax
     if (name[0] == '@') {
@@ -86,19 +87,29 @@ static void Cookie_SetValue(const char *name, const char *value) {
 
 static bool Cookie_ParseLine(char *buf) {
     // remove whitespace
-    while (isspace(*buf)) buf++;
+    while (isspace(*buf)) {
+        buf++;
+    }
 
     int len = strlen(buf);
 
-    while (len > 0 && isspace(buf[len - 1])) buf[--len] = 0;
+    while (len > 0 && isspace(buf[len - 1])) {
+        buf[--len] = 0;
+    }
 
     // ignore blank lines and comments
-    if (*buf == 0) return true;
+    if (*buf == 0) {
+        return true;
+    }
 
-    if (buf[0] == '-' && buf[1] == '-') return true;
+    if (buf[0] == '-' && buf[1] == '-') {
+        return true;
+    }
 
     // curly brackets are just for aesthetics : ignore them
-    if (*buf == '{' || *buf == '}') return true;
+    if (*buf == '{' || *buf == '}') {
+        return true;
+    }
 
     if (!(isalpha(*buf) || *buf == '@')) {
         LogPrintf("Weird config line: [%s]\n", buf);
@@ -115,7 +126,9 @@ static bool Cookie_ParseLine(char *buf) {
          buf++) { /* nothing here */
     }
 
-    while (isspace(*buf)) *buf++ = 0;
+    while (isspace(*buf)) {
+        *buf++ = 0;
+    }
 
     if (*buf != '=') {
         LogPrintf("Config line missing '=': [%s]\n", buf);
@@ -124,7 +137,9 @@ static bool Cookie_ParseLine(char *buf) {
 
     *buf++ = 0;
 
-    while (isspace(*buf)) buf++;
+    while (isspace(*buf)) {
+        buf++;
+    }
 
     if (*buf == 0) {
         LogPrintf("Config line missing value!\n");
@@ -146,7 +161,9 @@ bool Cookie_Load(const char *filename) {
 
     cookie_fp = fopen(filename, "r");
 
-    if (!cookie_fp) return false;
+    if (!cookie_fp) {
+        return false;
+    }
 
     LogPrintf("Loading config file: %s\n", filename);
 
@@ -156,13 +173,16 @@ bool Cookie_Load(const char *filename) {
     int error_count = 0;
 
     while (fgets(buffer, MSG_BUF_LEN - 2, cookie_fp)) {
-        if (!Cookie_ParseLine(buffer)) error_count += 1;
+        if (!Cookie_ParseLine(buffer)) {
+            error_count += 1;
+        }
     }
 
-    if (error_count > 0)
+    if (error_count > 0) {
         LogPrintf("DONE (found %d parse errors)\n\n", error_count);
-    else
+    } else {
         LogPrintf("DONE.\n\n");
+    }
 
     fclose(cookie_fp);
     return true;
@@ -229,9 +249,13 @@ void Cookie_ParseArguments(void) {
     for (int i = 0; i < arg_count; i++) {
         const char *arg = arg_list[i];
 
-        if (arg[0] == '-') continue;
+        if (arg[0] == '-') {
+            continue;
+        }
 
-        if (arg[0] == '{' || arg[0] == '}') continue;
+        if (arg[0] == '{' || arg[0] == '}') {
+            continue;
+        }
 
         if (strcmp(arg, "@@") == 0) {
             active_module.clear();
@@ -249,7 +273,9 @@ void Cookie_ParseArguments(void) {
         const char *eq_pos = strchr(arg, '=');
         if (!eq_pos) {
             // allow module names to omit the (rather useless) value
-            if (arg[0] == '@') Cookie_SetValue(arg, "1");
+            if (arg[0] == '@') {
+                Cookie_SetValue(arg, "1");
+            }
 
             continue;
         }
@@ -262,8 +288,9 @@ void Cookie_ParseArguments(void) {
 
         name[eq_offset] = 0;
 
-        if (name[0] == 0 || value[0] == 0)
+        if (name[0] == 0 || value[0] == 0) {
             Main_FatalError("Bad setting on command line: '%s'\n", arg);
+        }
 
         Cookie_SetValue(name, value);
 
@@ -286,7 +313,9 @@ class RecentFiles_c {
 
    public:
     RecentFiles_c() : size(0) {
-        for (int k = 0; k < MAX_RECENT; k++) filenames[k] = NULL;
+        for (int k = 0; k < MAX_RECENT; k++) {
+            filenames[k] = NULL;
+        }
     }
 
     ~RecentFiles_c() { clear(); }
@@ -307,7 +336,9 @@ class RecentFiles_c {
         for (int k = 0; k < size; k++) {
             const char *B = fl_filename_name(filenames[k]);
 
-            if (fl_utf_strcasecmp(A, B) == 0) return k;
+            if (fl_utf_strcasecmp(A, B) == 0) {
+                return k;
+            }
         }
 
         return -1;  // not found
@@ -322,16 +353,22 @@ class RecentFiles_c {
 
         SYS_ASSERT(size < MAX_RECENT);
 
-        for (; index < size; index++) filenames[index] = filenames[index + 1];
+        for (; index < size; index++) {
+            filenames[index] = filenames[index + 1];
+        }
 
         filenames[index] = NULL;
     }
 
     void push_front(const char *file) {
-        if (size >= MAX_RECENT) erase(MAX_RECENT - 1);
+        if (size >= MAX_RECENT) {
+            erase(MAX_RECENT - 1);
+        }
 
         // shift elements up
-        for (int k = size - 1; k >= 0; k--) filenames[k + 1] = filenames[k];
+        for (int k = size - 1; k >= 0; k--) {
+            filenames[k + 1] = filenames[k];
+        }
 
         filenames[0] = StringDup(file);
 
@@ -342,7 +379,9 @@ class RecentFiles_c {
         // ensure filename (without any path) is unique
         int f = find(file);
 
-        if (f >= 0) erase(f);
+        if (f >= 0) {
+            erase(f);
+        }
 
         push_front(file);
     }
@@ -350,7 +389,9 @@ class RecentFiles_c {
     void remove(const char *file) {
         int f = find(file);
 
-        if (f >= 0) erase(f);
+        if (f >= 0) {
+            erase(f);
+        }
     }
 
     void write_all(FILE *fp, const char *keyword) const {
@@ -362,11 +403,15 @@ class RecentFiles_c {
             fprintf(fp, "%s = %s\n", keyword, filenames[k]);
         }
 
-        if (size > 0) fprintf(fp, "\n");
+        if (size > 0) {
+            fprintf(fp, "\n");
+        }
     }
 
     bool get_name(int index, char *buffer, bool for_menu) const {
-        if (index >= size) return false;
+        if (index >= size) {
+            return false;
+        }
 
         const char *name = filenames[index];
 
@@ -385,11 +430,12 @@ static RecentFiles_c recent_wads;
 static RecentFiles_c recent_configs;
 
 void Recent_Parse(const char *name, const char *value) {
-    if (StringCaseCmp(name, "recent_wad") == 0)
+    if (StringCaseCmp(name, "recent_wad") == 0) {
         recent_wads.insert(value);
 
-    else if (StringCaseCmp(name, "recent_config") == 0)
+    } else if (StringCaseCmp(name, "recent_config") == 0) {
         recent_configs.insert(value);
+    }
 }
 
 void Recent_Write(FILE *fp) {
@@ -413,7 +459,9 @@ void Recent_AddFile(int group, const char *filename) {
     }
 
     // push to disk now -- why wait?
-    if (!batch_mode) Options_Save(options_file);
+    if (!batch_mode) {
+        Options_Save(options_file);
+    }
 }
 
 void Recent_RemoveFile(int group, const char *filename) {
@@ -430,7 +478,9 @@ void Recent_RemoveFile(int group, const char *filename) {
     }
 
     // push to disk now -- why wait?
-    if (!batch_mode) Options_Save(options_file);
+    if (!batch_mode) {
+        Options_Save(options_file);
+    }
 }
 
 bool Recent_GetName(int group, int index, char *name_buf, bool for_menu) {

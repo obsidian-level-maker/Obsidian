@@ -35,7 +35,9 @@ UI_MiniMap::~UI_MiniMap() {
         delete cur_image;
     }
 
-    if (pixels) delete[] pixels;
+    if (pixels) {
+        delete[] pixels;
+    }
 }
 
 void UI_MiniMap::EmptyMap() {
@@ -47,7 +49,9 @@ void UI_MiniMap::MapBegin() {
     map_W = w();
     map_H = h();
 
-    if (pixels) delete[] pixels;
+    if (pixels) {
+        delete[] pixels;
+    }
 
     pixels = new u8_t[map_W * map_H * 3];
 
@@ -59,7 +63,7 @@ void UI_MiniMap::MapClear() {
 
     // draw the grid
 
-    for (int py = 0; py < map_H; py++)
+    for (int py = 0; py < map_H; py++) {
         for (int px = 0; px < map_W; px++) {
             u8_t *pix = pixels + (py * map_W + px) * 3;
 
@@ -68,6 +72,7 @@ void UI_MiniMap::MapClear() {
                 pix[2] = 176;
             }
         }
+    }
 
     main_win->build_box->seed_disp->redraw();
     main_win->build_box->name_disp->redraw();
@@ -118,24 +123,39 @@ void UI_MiniMap::MapCorner(int x, int y, int dx, int dy) {
 }
 
 void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b) {
-    if (x < 0 || x >= map_W || y < 0 || y >= map_H) return;
+    if (x < 0 || x >= map_W || y < 0 || y >= map_H) {
+        return;
+    }
 
     RawPixel(x, y, r, g, b);
 }
 
 void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2, byte r, byte g,
                          byte b) {
-    if (x1 < 0) x1 = 0;
-    if (y1 < 0) y1 = 0;
+    if (x1 < 0) {
+        x1 = 0;
+    }
+    if (y1 < 0) {
+        y1 = 0;
+    }
 
-    if (x2 >= map_W) x2 = map_W - 1;
-    if (y2 >= map_H) y2 = map_H - 1;
+    if (x2 >= map_W) {
+        x2 = map_W - 1;
+    }
+    if (y2 >= map_H) {
+        y2 = map_H - 1;
+    }
 
     // fully clipped?
-    if (x1 > x2 || y1 > y2) return;
+    if (x1 > x2 || y1 > y2) {
+        return;
+    }
 
-    for (int y = y1; y <= y2; y++)
-        for (int x = x1; x <= x2; x++) RawPixel(x, y, r, g, b);
+    for (int y = y1; y <= y2; y++) {
+        for (int x = x1; x <= x2; x++) {
+            RawPixel(x, y, r, g, b);
+        }
+    }
 }
 
 void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
@@ -143,7 +163,9 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
     int out1 = Calc_Outcode(x1, y1);
     int out2 = Calc_Outcode(x2, y2);
 
-    if (out1 & out2) return;
+    if (out1 & out2) {
+        return;
+    }
 
     // handle simple (but common) cases of horiz/vert lines
 
@@ -157,7 +179,9 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
         x1 = MAX(0, x1);
         x2 = MIN(map_W - 1, x2);
 
-        for (; x1 <= x2; x1++) RawPixel(x1, y1, r, g, b);
+        for (; x1 <= x2; x1++) {
+            RawPixel(x1, y1, r, g, b);
+        }
 
         return;
     }
@@ -172,7 +196,9 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
         y1 = MAX(0, y1);
         y2 = MIN(map_H - 1, y2);
 
-        for (; y1 <= y2; y1++) RawPixel(x1, y1, r, g, b);
+        for (; y1 <= y2; y1++) {
+            RawPixel(x1, y1, r, g, b);
+        }
 
         return;
     }
@@ -189,7 +215,9 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
 
         // this almost certainly cannot happen, but for the sake of
         // robustness we check anyway (just in case)
-        if (dx == 0 && dy == 0) return;
+        if (dx == 0 && dy == 0) {
+            return;
+        }
 
         int new_x, new_y;
 
@@ -224,7 +252,9 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
             out2 = Calc_Outcode(x2, y2);
         }
 
-        if (out1 & out2) return;
+        if (out1 & out2) {
+            return;
+        }
     }
 
     // this is the Bresenham line drawing algorithm
@@ -280,7 +310,9 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
 }
 
 void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b) {
-    if (x < 1 || x > map_W - 2 || y < 1 || y > map_H - 2) return;
+    if (x < 1 || x > map_W - 2 || y < 1 || y > map_H - 2) {
+        return;
+    }
 
     RawPixel(x, y, r, g, b);
 

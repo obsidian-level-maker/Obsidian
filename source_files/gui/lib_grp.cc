@@ -173,7 +173,9 @@ int GRP_FindEntry(const char *name) {
         strncpy(buffer, grp_R_dir[i].name, GRP_NAME_LEN);
         buffer[GRP_NAME_LEN] = 0;
 
-        if (StringCaseCmp(name, buffer) == 0) return i;
+        if (StringCaseCmp(name, buffer) == 0) {
+            return i;
+        }
     }
 
     return -1;  // not found
@@ -204,11 +206,14 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer) {
 
     int L_start = grp_R_starts[entry];
 
-    if ((u32_t)offset + (u32_t)length > grp_R_dir[entry].length)  // EOF
+    if ((u32_t)offset + (u32_t)length > grp_R_dir[entry].length) {  // EOF
         return false;
+    }
 
 #ifdef HAVE_PHYSFS
-    if (!PHYSFS_seek(grp_R_fp, L_start + offset)) return false;
+    if (!PHYSFS_seek(grp_R_fp, L_start + offset)) {
+        return false;
+    }
 
     size_t res = (PHYSFS_readBytes(grp_R_fp, buffer, length) / length);
 
@@ -303,8 +308,9 @@ void GRP_CloseWrite(void) {
 
     raw_grp_header_t header;
 
-    for (unsigned int i = 0; i < GRP_MAGIC_LEN; i++)
+    for (unsigned int i = 0; i < GRP_MAGIC_LEN; i++) {
         header.magic[i] = ~grp_magic_data[i];
+    }
 
     header.num_lumps = LE_U32(GRP_MAX_LUMPS);
 
@@ -332,11 +338,13 @@ void GRP_CloseWrite(void) {
 }
 
 void GRP_NewLump(const char *name) {
-    if (grp_W_directory.size() >= GRP_MAX_LUMPS)
+    if (grp_W_directory.size() >= GRP_MAX_LUMPS) {
         Main_FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
+    }
 
-    if (strlen(name) > GRP_NAME_LEN)
+    if (strlen(name) > GRP_NAME_LEN) {
         Main_FatalError("GRP_NewLump: name too long: '%s'\n", name);
+    }
 
     memset(&grp_W_lump, 0, sizeof(grp_W_lump));
 
@@ -344,11 +352,15 @@ void GRP_NewLump(const char *name) {
 }
 
 bool GRP_AppendData(const void *data, int length) {
-    if (length == 0) return true;
+    if (length == 0) {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 
-    if (fwrite(data, length, 1, grp_W_fp) != 1) return false;
+    if (fwrite(data, length, 1, grp_W_fp) != 1) {
+        return false;
+    }
 
     grp_W_lump.length += (u32_t)length;
     return true;  // OK

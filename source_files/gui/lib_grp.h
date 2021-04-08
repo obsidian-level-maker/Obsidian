@@ -23,6 +23,9 @@
 
 /* GRP reading */
 
+#include "sys_macro.h"
+#include "sys_type.h"
+
 bool GRP_OpenRead(const char *filename);
 void GRP_CloseRead(void);
 

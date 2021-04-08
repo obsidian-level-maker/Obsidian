@@ -114,7 +114,9 @@ static u16_t Q2_AddBrush(const csg_brush_c *A) {
         plane = BSP_AddPlane(v1->x, v1->y, 0, (v2->y - v1->y), (v1->x - v2->x),
                              0, &flipped);
 
-        if (flipped) plane ^= 1;
+        if (flipped) {
+            plane ^= 1;
+        }
 
         DoWriteBrushSide(plane, texinfo);
 
@@ -161,15 +163,18 @@ static void Q2_ClearTexInfo(void) {
 
 u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
                     float *t4) {
-    if (!texture[0]) texture = "error";
+    if (!texture[0]) {
+        texture = "error";
+    }
 
     // create texinfo structure, fix endianness
     texinfo2_t raw_tex;
 
     memset(&raw_tex, 0, sizeof(raw_tex));
 
-    if (strlen(texture) + 1 >= sizeof(raw_tex.texture))
+    if (strlen(texture) + 1 >= sizeof(raw_tex.texture)) {
         Main_FatalError("Quake2 texture name too long: '%s'\n", texture);
+    }
 
     strcpy(raw_tex.texture, texture);
 
@@ -188,7 +193,9 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
 
     SYS_ASSERT(hash >= 0);
 
-    if (!texinfo_hashtab[hash]) texinfo_hashtab[hash] = new std::vector<int>;
+    if (!texinfo_hashtab[hash]) {
+        texinfo_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = texinfo_hashtab[hash];
 
@@ -197,8 +204,9 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
 
         SYS_ASSERT(index < (int)q2_texinfos.size());
 
-        if (memcmp(&raw_tex, &q2_texinfos[index], sizeof(raw_tex)) == 0)
+        if (memcmp(&raw_tex, &q2_texinfos[index], sizeof(raw_tex)) == 0) {
             return index;  // found it
+        }
     }
 
     // not found, so add new one
@@ -212,9 +220,10 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
 }
 
 static void Q2_WriteTexInfo() {
-    if (q2_texinfos.size() >= MAX_MAP_TEXINFO)
+    if (q2_texinfos.size() >= MAX_MAP_TEXINFO) {
         Main_FatalError("Quake2 build failure: exceeded limit of %d TEXINFOS\n",
                         MAX_MAP_TEXINFO);
+    }
 
     qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
@@ -412,15 +421,21 @@ static void Q2_WriteFace(quake_face_c *face) {
     if (face->lmap) {
         raw_face.lightofs = face->lmap->offset;
 
-        for (int n = 0; n < 4; n++) raw_face.styles[n] = face->lmap->styles[n];
+        for (int n = 0; n < 4; n++) {
+            raw_face.styles[n] = face->lmap->styles[n];
+        }
     }
 
     const char *texture = face->texture.c_str();
 
     int flags = 0;
 
-    if (face->flags & FACE_F_Sky) flags |= SURF_SKY;
-    if (face->flags & FACE_F_Liquid) flags |= SURF_WARP | SURF_TRANS66;
+    if (face->flags & FACE_F_Sky) {
+        flags |= SURF_SKY;
+    }
+    if (face->flags & FACE_F_Liquid) {
+        flags |= SURF_WARP | SURF_TRANS66;
+    }
 
     raw_face.texinfo =
         Q2_AddTexInfo(texture, flags, 0, face->uv_mat.s, face->uv_mat.t);
@@ -543,15 +558,17 @@ static void Q2_WriteNode(quake_node_c *node) {
 
     raw_node.planenum = BSP_AddPlane(&node->plane, &flipped);
 
-    if (node->front_N)
+    if (node->front_N) {
         raw_node.children[0] = node->front_N->index;
-    else
+    } else {
         raw_node.children[0] = (-1 - node->front_L->index);
+    }
 
-    if (node->back_N)
+    if (node->back_N) {
         raw_node.children[1] = node->back_N->index;
-    else
+    } else {
         raw_node.children[1] = (-1 - node->back_L->index);
+    }
 
     if (flipped) {
         int node0 = raw_node.children[0];
@@ -579,15 +596,17 @@ static void Q2_WriteNode(quake_node_c *node) {
 
     // recurse now, AFTER adding the current node
 
-    if (node->front_N)
+    if (node->front_N) {
         Q2_WriteNode(node->front_N);
-    else
+    } else {
         Q2_WriteLeaf(node->front_L);
+    }
 
-    if (node->back_N)
+    if (node->back_N) {
         Q2_WriteNode(node->back_N);
-    else
+    } else {
         Q2_WriteLeaf(node->back_L);
+    }
 }
 
 static void Q2_WriteBSP() {
@@ -611,17 +630,20 @@ static void Q2_WriteBSP() {
 
     Q2_WriteNode(qk_bsp_root);
 
-    if (q2_total_faces >= MAX_MAP_FACES)
+    if (q2_total_faces >= MAX_MAP_FACES) {
         Main_FatalError("Quake2 build failure: exceeded limit of %d FACES\n",
                         MAX_MAP_FACES);
+    }
 
-    if (q2_total_leafs >= MAX_MAP_LEAFS)
+    if (q2_total_leafs >= MAX_MAP_LEAFS) {
         Main_FatalError("Quake2 build failure: exceeded limit of %d LEAFS\n",
                         MAX_MAP_LEAFS);
+    }
 
-    if (q2_total_nodes >= MAX_MAP_NODES)
+    if (q2_total_nodes >= MAX_MAP_NODES) {
         Main_FatalError("Quake2 build failure: exceeded limit of %d NODES\n",
                         MAX_MAP_NODES);
+    }
 }
 
 //------------------------------------------------------------------------
@@ -706,7 +728,9 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane,
     // using SURF_WARP to disable the check on extents
     // (trigger models are never rendered anyway)
 
-    if (strstr(texture, "trigger") != NULL) flags |= SURF_NODRAW | SURF_WARP;
+    if (strstr(texture, "trigger") != NULL) {
+        flags |= SURF_NODRAW | SURF_WARP;
+    }
 
     raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, s, t);
 
@@ -767,7 +791,7 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs) {
             raw_node.children[0] = node1;
             raw_node.children[1] = node0;
             //			std::swap(raw_node.children[0],
-            //raw_node.children[1]);
+            // raw_node.children[1]);
         }
 
         raw_node.firstface = face_base + face;
@@ -900,7 +924,9 @@ static void Q2_WriteModels() {
 //------------------------------------------------------------------------
 
 static void Q2_LightWorld() {
-    if (main_win) main_win->build_box->Prog_Step("Light");
+    if (main_win) {
+        main_win->build_box->Prog_Step("Light");
+    }
 
     QLIT_LightAllFaces();
 
@@ -908,7 +934,9 @@ static void Q2_LightWorld() {
 }
 
 static void Q2_VisWorld() {
-    if (main_win) main_win->build_box->Prog_Step("Vis");
+    if (main_win) {
+        main_win->build_box->Prog_Step("Vis");
+    }
 
     // no need for numleafs, as Quake II uses clusters directly
 
@@ -979,17 +1007,20 @@ bool quake2_game_interface_c::Start(const char *preset) {
 
     QLIT_InitProperties();
 
-    if (batch_mode)
+    if (batch_mode) {
         filename = StringDup(batch_output_file);
-    else
+    } else {
         filename = DLG_OutputFilename("pak");
+    }
 
     if (!filename) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
-    if (create_backups) Main_BackupFile(filename, "old");
+    if (create_backups) {
+        Main_BackupFile(filename, "old");
+    }
 
     if (!PAK_OpenWrite(filename)) {
         Main_ProgStatus(_("Error (create file)"));
@@ -998,7 +1029,9 @@ bool quake2_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
-    if (main_win) main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
+    if (main_win) {
+        main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
+    }
 
     return true;
 }
@@ -1007,10 +1040,11 @@ bool quake2_game_interface_c::Finish(bool build_ok) {
     PAK_CloseWrite();
 
     // remove the file if an error occurred
-    if (!build_ok)
+    if (!build_ok) {
         FileDelete(filename);
-    else
+    } else {
         Recent_AddFile(RECG_Output, filename);
+    }
 
     return build_ok;
 }
@@ -1035,12 +1069,14 @@ void quake2_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void quake2_game_interface_c::EndLevel() {
-    if (!level_name)
+    if (!level_name) {
         Main_FatalError("Script problem: did not set level name!\n");
+    }
 
-    if (strlen(level_name) >= 32)
+    if (strlen(level_name) >= 32) {
         Main_FatalError("Script problem: level name too long: %s\n",
                         level_name);
+    }
 
     char entry_in_pak[64];
     sprintf(entry_in_pak, "maps/%s.bsp", level_name);
@@ -1049,7 +1085,9 @@ void quake2_game_interface_c::EndLevel() {
 
     StringFree(level_name);
 
-    if (description) StringFree(description);
+    if (description) {
+        StringFree(description);
+    }
 }
 
 game_interface_c *Quake2_GameObject(void) {
