@@ -7,6 +7,9 @@ add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
 
 project(obsidian LANGUAGES CXX VERSION 0.1.0)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_FLAGS "-O2 -Wall")
 
 add_executable(obsidian 
     source_files/gui/csg_bsp.cc
