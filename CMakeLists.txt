@@ -124,8 +124,8 @@ add_library(obsidian_physfs
     source_files/physfs_src/physfs_internal.h
     source_files/physfs_src/physfs_lzmasdk.h
     source_files/physfs_src/physfs_miniz.h
-    source_files/physfs_src/physfs_platform_apple.m
-    source_files/physfs_src/physfs_platform_os2.cc
+#    source_files/physfs_src/physfs_platform_apple.m
+#    source_files/physfs_src/physfs_platform_os2.cc
     source_files/physfs_src/physfs_platform_posix.cc
     source_files/physfs_src/physfs_platform_qnx.cc
     source_files/physfs_src/physfs_platform_unix.cc
@@ -301,11 +301,11 @@ if(UNIX)
 endif()
 
 find_package(FLTK REQUIRED)
-find_package(Lua REQUIRED)
+#find_package(Lua REQUIRED)
 
 target_link_libraries(obsidian PRIVATE 
     ${FLTK_LIBRARIES} 
-    ${LUA_LIBRARIES}
+#    ${LUA_LIBRARIES}
     z 
     obsidian_lua
     obsidian_physfs 
