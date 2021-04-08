@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - obsidian
+  pull_request:
+    branches:
+      - obsidian
+
+env:
+  CI: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Try building the project
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+    runs-on:
+      ${{ matrix.os }}
+    steps:
+      - name: Configure with CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: |
+          cmake --build build -j 10
