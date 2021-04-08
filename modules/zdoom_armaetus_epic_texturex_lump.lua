@@ -504,6 +504,14 @@ Texture "OBTBSB4B", 256, 128
 	}
 }
 
+Texture "OBTBSB5B", 256, 128
+{
+	Patch "OBTBSLB5", 0, 0
+	{
+		Blend "#E4AA7E"
+	}
+}
+
 Texture "OBTSBF1B", 128, 128
 {
 	Patch "OBTSVBF1", 0, 0

@@ -1284,10 +1284,12 @@ ARMAETUS_MATERIALS = {
   OBTBSLB2 = { t="OBTBSLB2", f="FLOOR4_8"},
   OBTBSLB3 = { t="OBTBSLB3", f="SLIME14"},
   OBTBSLB4 = { t="OBTBSLB4", f="SLIME15"},
+  OBTBSLB5 = { t="OBTBSLB5", f="MFLR8_1"},
 
   OBTBSB2B = { t="OBTBSB2B", f="FLOOR5_3"}, -- brown color composite
-  OBTBSB3B = { t="OBTBSB3B", f="SLIME16"}, -- brown color composite
-  OBTBSB4B = { t="OBTBSB4B", f="FLOOR4_1"}, -- brown color composite
+  OBTBSB3B = { t="OBTBSB3B", f="SLIME16"},
+  OBTBSB4B = { t="OBTBSB4B", f="FLOOR4_1"},
+  OBTBSB5B = { t="OBTBSB5B", f="FLAT5"},
 
   -- flats (128x128)
   OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
@@ -1299,12 +1301,12 @@ ARMAETUS_MATERIALS = {
   OBTSVBF3 = { t="OBTBSLB4", f="OBTSVBF3"},
 
   OBTSBF1B = { t="OBTBSLB2", f="OBTSBF1B"}, -- brown color composite
-  OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"}, -- brown color composite
-  OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"}, -- brown color composite
+  OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"},
+  OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"},
 
   OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
-  OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"}, -- red
-  OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"}, -- red
+  OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
+  OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
 
   ----------------------
   -- Special Textures --
@@ -1420,7 +1422,7 @@ brightmap texture SILVER2G
 }
 
 // vent (the only one that needs a brightmap TBH
-brightmap texture COMPVEN2,
+brightmap texture COMPVEN2
 {
   map OBRCPVN2
 }
@@ -1490,6 +1492,36 @@ brightmap texture NOISE4
 {
   map OBRNOIS1
 }
+
+// quad monitors
+brightmap texture COMPSD1
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD2
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD3
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD4
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD6
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD7
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD8
+{
+  map OBRCPSD1
+}
 //
 brightmap texture NOISE2A
 {
@@ -1525,7 +1557,7 @@ brightmap texture NOISE3D
   map OBRNOIS3
 }
 
-// lite5 recolors - excluding the original lite5,
+// lite5 recolors - excluding the original lite5
 brightmap texture T_VSLTEG
 {
   map OBRLITE5
