@@ -21,90 +21,78 @@
 
 #ifndef Fl_Pixmap_H
 #define Fl_Pixmap_H
-#include "Fl_Image.H"
+#  include "Fl_Image.H"
 #if defined(WIN32)
-#include "x.H"
+#  include "x.H"
 #endif
 
 class Fl_Widget;
 struct Fl_Menu_Item;
 
 // Older C++ compilers don't support the explicit keyword... :(
-#if defined(__sgi) && !defined(_COMPILER_VERSION)
-#define explicit
-#endif  // __sgi && !_COMPILER_VERSION
+#  if defined(__sgi) && !defined(_COMPILER_VERSION)
+#    define explicit
+#  endif // __sgi && !_COMPILER_VERSION
 
 /**
   The Fl_Pixmap class supports caching and drawing of colormap
   (pixmap) images, including transparency.
 */
 class FL_EXPORT Fl_Pixmap : public Fl_Image {
-    friend class Fl_Quartz_Graphics_Driver;
-    friend class Fl_GDI_Graphics_Driver;
-    friend class Fl_GDI_Printer_Graphics_Driver;
-    friend class Fl_Xlib_Graphics_Driver;
-    void copy_data();
-    void delete_data();
-    void set_data(const char *const *p);
-    int prepare(int XP, int YP, int WP, int HP, int &cx, int &cy, int &X,
-                int &Y, int &W, int &H);
+  friend class Fl_Quartz_Graphics_Driver;
+  friend class Fl_GDI_Graphics_Driver;
+  friend class Fl_GDI_Printer_Graphics_Driver;
+  friend class Fl_Xlib_Graphics_Driver;
+  void copy_data();
+  void delete_data();
+  void set_data(const char * const *p);
+  int prepare(int XP, int YP, int WP, int HP, int &cx, int &cy,
+			 int &X, int &Y, int &W, int &H);
 
-   protected:
-    void measure();
+  protected:
 
-   public:
-    int alloc_data;  // Non-zero if data was allocated
+  void measure();
 
-   private:
+  public:
+
+  int alloc_data; // Non-zero if data was allocated
+  
+  private:
+
 #if defined(WIN32)
 #if FLTK_ABI_VERSION < 10301
-    static  // a static member is needed for ABI compatibility
+  static // a static member is needed for ABI compatibility
 #endif
-        UINT pixmap_bg_color;  // RGB color used for pixmap background
-#endif                         // WIN32
+  UINT pixmap_bg_color; // RGB color used for pixmap background
+#endif // WIN32
 #if defined(__APPLE__) || defined(WIN32)
-    void *id_;    // for internal use
-    void *mask_;  // for internal use (mask bitmap)
+  void *id_; // for internal use
+  void *mask_; // for internal use (mask bitmap)
 #else
-    unsigned id_;    // for internal use
-    unsigned mask_;  // for internal use (mask bitmap)
-#endif  // __APPLE__ || WIN32
+  unsigned id_; // for internal use
+  unsigned mask_; // for internal use (mask bitmap)
+#endif // __APPLE__ || WIN32
+  
+  public:
 
-   public:
-    /**    The constructors create a new pixmap from the specified XPM data.  */
-    explicit Fl_Pixmap(char *const *D)
-        : Fl_Image(-1, 0, 1), alloc_data(0), id_(0), mask_(0) {
-        set_data((const char *const *)D);
-        measure();
-    }
-    /**    The constructors create a new pixmap from the specified XPM data.  */
-    explicit Fl_Pixmap(uchar *const *D)
-        : Fl_Image(-1, 0, 1), alloc_data(0), id_(0), mask_(0) {
-        set_data((const char *const *)D);
-        measure();
-    }
-    /**    The constructors create a new pixmap from the specified XPM data.  */
-    explicit Fl_Pixmap(const char *const *D)
-        : Fl_Image(-1, 0, 1), alloc_data(0), id_(0), mask_(0) {
-        set_data((const char *const *)D);
-        measure();
-    }
-    /**    The constructors create a new pixmap from the specified XPM data.  */
-    explicit Fl_Pixmap(const uchar *const *D)
-        : Fl_Image(-1, 0, 1), alloc_data(0), id_(0), mask_(0) {
-        set_data((const char *const *)D);
-        measure();
-    }
-    virtual ~Fl_Pixmap();
-    virtual Fl_Image *copy(int W, int H);
-    Fl_Image *copy() { return copy(w(), h()); }
-    virtual void color_average(Fl_Color c, float i);
-    virtual void desaturate();
-    virtual void draw(int X, int Y, int W, int H, int cx = 0, int cy = 0);
-    void draw(int X, int Y) { draw(X, Y, w(), h(), 0, 0); }
-    virtual void label(Fl_Widget *w);
-    virtual void label(Fl_Menu_Item *m);
-    virtual void uncache();
+  /**    The constructors create a new pixmap from the specified XPM data.  */
+  explicit Fl_Pixmap(char * const * D) : Fl_Image(-1,0,1), alloc_data(0), id_(0), mask_(0) {set_data((const char*const*)D); measure();}
+  /**    The constructors create a new pixmap from the specified XPM data.  */
+  explicit Fl_Pixmap(uchar* const * D) : Fl_Image(-1,0,1), alloc_data(0), id_(0), mask_(0) {set_data((const char*const*)D); measure();}
+  /**    The constructors create a new pixmap from the specified XPM data.  */
+  explicit Fl_Pixmap(const char * const * D) : Fl_Image(-1,0,1), alloc_data(0), id_(0), mask_(0) {set_data((const char*const*)D); measure();}
+  /**    The constructors create a new pixmap from the specified XPM data.  */
+  explicit Fl_Pixmap(const uchar* const * D) : Fl_Image(-1,0,1), alloc_data(0), id_(0), mask_(0) {set_data((const char*const*)D); measure();}
+  virtual ~Fl_Pixmap();
+  virtual Fl_Image *copy(int W, int H);
+  Fl_Image *copy() { return copy(w(), h()); }
+  virtual void color_average(Fl_Color c, float i);
+  virtual void desaturate();
+  virtual void draw(int X, int Y, int W, int H, int cx=0, int cy=0);
+  void draw(int X, int Y) {draw(X, Y, w(), h(), 0, 0);}
+  virtual void label(Fl_Widget*w);
+  virtual void label(Fl_Menu_Item*m);
+  virtual void uncache();
 };
 
 #endif

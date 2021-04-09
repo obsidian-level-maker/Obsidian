@@ -24,20 +24,20 @@
 #ifndef print_panel_h
 #define print_panel_h
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Check_Button.H>
-#include <FL/Fl_Choice.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Group.H>
-#include <FL/Fl_Input.H>
-#include <FL/Fl_Progress.H>
-#include <FL/Fl_Return_Button.H>
+#include <FL/Fl_Choice.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Round_Button.H>
+#include <FL/Fl_Input.H>
 #include <FL/Fl_Spinner.H>
-enum printing_style { SystemV, BSD };
-static Fl_Double_Window *make_print_panel();
-static void print_cb(Fl_Return_Button *, void *);
+#include <FL/Fl_Check_Button.H>
+#include <FL/Fl_Return_Button.H>
+#include <FL/Fl_Progress.H>
+enum printing_style {SystemV, BSD};
+static Fl_Double_Window* make_print_panel();
+static void print_cb(Fl_Return_Button *, void *); 
 static printing_style print_load();
 static void print_update_status();
 #endif

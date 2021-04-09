@@ -16,15 +16,15 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Enumerations.H>
 #include <config.h>
+#include <FL/Enumerations.H>
 
 // one of these for each color in fltk's "colormap":
 // if overlays are enabled, another one for the overlay
 struct Fl_XColor {
-    unsigned char r, g, b;  // actual color used by X
-    unsigned char mapped;   // true when XAllocColor done
-    unsigned long pixel;    // the X pixel to use
+  unsigned char r,g,b;	// actual color used by X
+  unsigned char mapped;	// true when XAllocColor done
+  unsigned long pixel;	// the X pixel to use
 };
 extern Fl_XColor fl_xmap[/*overlay*/][256];
 

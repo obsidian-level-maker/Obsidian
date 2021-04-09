@@ -5,6 +5,14 @@ Obsidian.exe
 .f
 .DS_Store
 
+# VS Code
+build/
+.cache/
+.vscode/
+
+# User dirs
+addons/*.pk3
+
 tools/dumpbsp/dumpbsp_q3
 tools/dumpbsp/dumpbsp_q3/obj_q3
 

@@ -1,6 +1,6 @@
 PREFABS.Pillar_gtd_generic1 =
 {
-  file   = "decor/gtd_pillar_generic.wad",
+  file   = "decor/gtd_decor_generic_pillar.wad",
   map    = "MAP01",
 
   prob   = 15000,
@@ -39,7 +39,11 @@ PREFABS.Pillar_gtd_generic1_hell =
     FIREBLU1 = 50,
     FIRELAVA = 50,
     FIREMAG1 = 50,
-  }
+  },
+
+  tex_GRAY7 = "METAL",
+  tex_DOORSTOP = "METAL",
+  flat_FLAT1 = "CEIL5_2"
 }
 
 PREFABS.Pillar_gtd_generic2 =
@@ -130,7 +134,11 @@ PREFABS.Pillar_gtd_generic1_hell_2x =
     FIREBLU1 = 50,
     FIRELAVA = 50,
     FIREMAG1 = 50,
-  }
+  },
+
+  tex_GRAY7 = "METAL",
+  tex_DOORSTOP = "METAL",
+  flat_FLAT1 = "CEIL5_2"
 }
 
 PREFABS.Pillar_gtd_generic1_4x =
@@ -170,7 +178,11 @@ PREFABS.Pillar_gtd_generic1_hell_4x =
     FIREBLU1 = 50,
     FIRELAVA = 50,
     FIREMAG1 = 50,
-  }
+  },
+
+  tex_GRAY7 = "METAL",
+  tex_DOORSTOP = "METAL",
+  flat_FLAT1 = "CEIL5_2"
 }
 
 PREFABS.Pillar_gtd_generic3_2x =

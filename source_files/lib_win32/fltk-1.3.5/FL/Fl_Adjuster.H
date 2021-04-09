@@ -31,7 +31,7 @@
 /**
   The Fl_Adjuster widget was stolen from Prisms, and has proven
   to be very useful for values that need a large dynamic range.
-  \image html adjuster1.png
+  \image html adjuster1.png 
   \image latex adjuster1.png "Fl_Adjuster" width=4cm
   <P>When you  press a button and drag to the right the value increases.
   When you drag  to the left it decreases.  The largest button adjusts by
@@ -41,31 +41,29 @@
   click decrements by 10 times  the amount.
 */
 class FL_EXPORT Fl_Adjuster : public Fl_Valuator {
-    int drag;
-    int ix;
-    int soft_;
-
-   protected:
-    void draw();
-    int handle(int);
-    void value_damage();
-
-   public:
-    Fl_Adjuster(int X, int Y, int W, int H, const char *l = 0);
-    /**
-      If "soft" is turned on, the user is allowed to drag the value outside
-      the range.  If they drag the value to one of the ends, let go, then
-      grab again and continue to drag, they can get to any value.  Default is
-      one.
-    */
-    void soft(int s) { soft_ = s; }
-    /**
-      If "soft" is turned on, the user is allowed to drag the value outside
-      the range.  If they drag the value to one of the ends, let go, then
-      grab again and continue to drag, they can get to any value.  Default is
-      one.
-    */
-    int soft() const { return soft_; }
+  int drag;
+  int ix;
+  int soft_;
+protected:
+  void draw();
+  int handle(int);
+  void value_damage();
+public:
+  Fl_Adjuster(int X,int Y,int W,int H,const char *l=0);
+  /**
+    If "soft" is turned on, the user is allowed to drag the value outside
+    the range.  If they drag the value to one of the ends, let go, then
+    grab again and continue to drag, they can get to any value.  Default is
+    one.
+  */
+  void soft(int s) {soft_ = s;}
+  /**
+    If "soft" is turned on, the user is allowed to drag the value outside
+    the range.  If they drag the value to one of the ends, let go, then
+    grab again and continue to drag, they can get to any value.  Default is
+    one.
+  */
+  int soft() const {return soft_;}
 };
 
 #endif

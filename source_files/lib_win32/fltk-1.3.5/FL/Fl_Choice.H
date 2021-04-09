@@ -42,7 +42,7 @@
   and then:
 
       - The item's callback is done if one has been set; the
-        Fl_Choice is passed as the Fl_Widget* argument,
+        Fl_Choice is passed as the Fl_Widget* argument, 
         along with any userdata configured for the callback.
 
       - If the item does not have a callback, the Fl_Choice widget's
@@ -81,23 +81,22 @@
       Sets the current down box type to \p b.
  */
 class FL_EXPORT Fl_Choice : public Fl_Menu_ {
-   protected:
-    void draw();
+protected:
+  void draw();
+public:
+  int handle(int);
 
-   public:
-    int handle(int);
+  Fl_Choice(int X, int Y, int W, int H, const char *L = 0);
 
-    Fl_Choice(int X, int Y, int W, int H, const char *L = 0);
+  /**
+    Gets the index of the last item chosen by the user.
+    The index is zero initially.
+   */
+  int value() const {return Fl_Menu_::value();}
 
-    /**
-      Gets the index of the last item chosen by the user.
-      The index is zero initially.
-     */
-    int value() const { return Fl_Menu_::value(); }
+  int value(int v);
 
-    int value(int v);
-
-    int value(const Fl_Menu_Item *v);
+  int value(const Fl_Menu_Item* v);
 };
 
 #endif

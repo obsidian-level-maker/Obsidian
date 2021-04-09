@@ -37,46 +37,41 @@
 */
 class FL_EXPORT Fl_Overlay_Window : public Fl_Double_Window {
 #ifndef FL_DOXYGEN
-    friend class _Fl_Overlay;
+  friend class _Fl_Overlay;
 #endif
-   protected:
-    /**
-     You must subclass Fl_Overlay_Window and provide this method.
-     It is just like a draw() method, except it draws the overlay.
-     The overlay will have already been "cleared" when this is called.  You
-     can use any of the routines described in &lt;FL/fl_draw.H&gt;.
-     */
-    virtual void draw_overlay() = 0;
-
-   private:
-    Fl_Window *overlay_;
-
-   public:
-    void show();
-    void flush();
-    void hide();
-    void resize(int, int, int, int);
-    ~Fl_Overlay_Window();
-    /** Returns non-zero if there's hardware overlay support */
-    int can_do_overlay();
-    void redraw_overlay();
-
-   protected:
-    /**
-     See Fl_Overlay_Window::Fl_Overlay_Window(int X, int Y, int W, int H, const
-     char *l=0)
-     */
-    Fl_Overlay_Window(int W, int H, const char *l = 0);
-    /**
-     Creates a new Fl_Overlay_Window widget using the given
-     position, size, and label (title) string. If the
-     positions (x,y) are not given, then the window manager
-     will choose them.
-     */
-    Fl_Overlay_Window(int X, int Y, int W, int H, const char *l = 0);
-
-   public:
-    void show(int a, char **b) { Fl_Double_Window::show(a, b); }
+protected:
+  /**
+   You must subclass Fl_Overlay_Window and provide this method.
+   It is just like a draw() method, except it draws the overlay.
+   The overlay will have already been "cleared" when this is called.  You
+   can use any of the routines described in &lt;FL/fl_draw.H&gt;.
+   */
+  virtual void draw_overlay() = 0;
+private:
+  Fl_Window *overlay_;
+public:
+  void show();
+  void flush();
+  void hide();
+  void resize(int,int,int,int);
+  ~Fl_Overlay_Window();
+  /** Returns non-zero if there's hardware overlay support */
+  int can_do_overlay();
+  void redraw_overlay();
+protected:
+  /**
+   See Fl_Overlay_Window::Fl_Overlay_Window(int X, int Y, int W, int H, const char *l=0)
+   */
+  Fl_Overlay_Window(int W, int H, const char *l=0);
+  /**
+   Creates a new Fl_Overlay_Window widget using the given
+   position, size, and label (title) string. If the 
+   positions (x,y) are not given, then the window manager
+   will choose them.
+   */
+  Fl_Overlay_Window(int X, int Y, int W, int H, const char *l=0);
+public:
+  void show(int a, char **b) {Fl_Double_Window::show(a,b);}
 };
 
 #endif

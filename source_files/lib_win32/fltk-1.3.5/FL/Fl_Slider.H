@@ -27,12 +27,12 @@
 #endif
 
 // values for type(), lowest bit indicate horizontal:
-#define FL_VERT_SLIDER 0
-#define FL_HOR_SLIDER 1
-#define FL_VERT_FILL_SLIDER 2
-#define FL_HOR_FILL_SLIDER 3
-#define FL_VERT_NICE_SLIDER 4
-#define FL_HOR_NICE_SLIDER 5
+#define FL_VERT_SLIDER		0
+#define FL_HOR_SLIDER		1
+#define FL_VERT_FILL_SLIDER	2
+#define FL_HOR_FILL_SLIDER	3
+#define FL_VERT_NICE_SLIDER	4
+#define FL_HOR_NICE_SLIDER	5
 
 /**
   The Fl_Slider widget contains a sliding knob inside a box. It is
@@ -41,9 +41,9 @@
   maximum().  The minimum() may be greater than the maximum() to
   reverse the slider direction.
 
-  Use void Fl_Widget::type(int) to set how the slider is drawn,
+  Use void Fl_Widget::type(int) to set how the slider is drawn, 
   which can be one of the following:
-
+  
   \li FL_VERTICAL - Draws a vertical slider (this is the default).
   \li FL_HORIZONTAL - Draws a horizontal slider.
   \li FL_VERT_FILL_SLIDER - Draws a filled vertical slider,
@@ -55,50 +55,53 @@
   \li FL_HOR_NICE_SLIDER - Draws a horizontal slider with  a
       nice looking control knob.
 
-  \image html  slider.png
+  \image html  slider.png 
   \image latex slider.png "Fl_Slider" width=4cm
 */
 class FL_EXPORT Fl_Slider : public Fl_Valuator {
-    float slider_size_;
-    uchar slider_;
-    void _Fl_Slider();
-    void draw_bg(int, int, int, int);
 
-   protected:
-    // these allow subclasses to put the slider in a smaller area:
-    void draw(int, int, int, int);
-    int handle(int, int, int, int, int);
-    void draw();
+  float slider_size_;
+  uchar slider_;
+  void _Fl_Slider();
+  void draw_bg(int, int, int, int);
 
-   public:
-    int handle(int);
-    Fl_Slider(int X, int Y, int W, int H, const char *L = 0);
-    Fl_Slider(uchar t, int X, int Y, int W, int H, const char *L);
+protected:
 
-    int scrollvalue(int pos, int size, int first, int total);
-    void bounds(double a, double b);
+  // these allow subclasses to put the slider in a smaller area:
+  void draw(int, int, int, int);
+  int handle(int, int, int, int, int);
+  void draw();
 
-    /**
-      Get the dimensions of the moving piece of slider.
-    */
-    float slider_size() const { return slider_size_; }
+public:
 
-    /**
-      Set the dimensions of the moving piece of slider. This is
-      the fraction of the size of the entire widget. If you set this
-      to 1 then the slider cannot move.  The default value is .08.
+  int handle(int);
+  Fl_Slider(int X,int Y,int W,int H, const char *L = 0);
+  Fl_Slider(uchar t,int X,int Y,int W,int H, const char *L);
 
-      For the "fill" sliders this is the size of the area around the
-      end that causes a drag effect rather than causing the slider to
-      jump to the mouse.
-    */
-    void slider_size(double v);
+  int scrollvalue(int pos,int size,int first,int total);
+  void bounds(double a, double b);
 
-    /** Gets the slider box type. */
-    Fl_Boxtype slider() const { return (Fl_Boxtype)slider_; }
+  /**
+    Get the dimensions of the moving piece of slider.
+  */
+  float slider_size() const {return slider_size_;}
 
-    /** Sets the slider box type. */
-    void slider(Fl_Boxtype c) { slider_ = c; }
+  /**
+    Set the dimensions of the moving piece of slider. This is
+    the fraction of the size of the entire widget. If you set this
+    to 1 then the slider cannot move.  The default value is .08.
+
+    For the "fill" sliders this is the size of the area around the
+    end that causes a drag effect rather than causing the slider to
+    jump to the mouse.
+  */
+  void slider_size(double v);
+
+  /** Gets the slider box type. */
+  Fl_Boxtype slider() const {return (Fl_Boxtype)slider_;}
+
+  /** Sets the slider box type. */
+  void slider(Fl_Boxtype c) {slider_ = c;}
 };
 
 #endif

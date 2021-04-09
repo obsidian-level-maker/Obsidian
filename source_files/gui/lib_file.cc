@@ -59,12 +59,18 @@ bool FileExists(const char *filename) {
 bool HasExtension(const char *filename) {
     int A = (int)strlen(filename) - 1;
 
-    if (A > 0 && filename[A] == '.') return false;
+    if (A > 0 && filename[A] == '.') {
+        return false;
+    }
 
     for (; A >= 0; A--) {
-        if (filename[A] == '.') return true;
+        if (filename[A] == '.') {
+            return true;
+        }
 
-        if (filename[A] == '/') break;
+        if (filename[A] == '/') {
+            break;
+        }
 
 #ifdef WIN32
         if (filename[A] == '\\' || filename[A] == ':') break;
@@ -80,15 +86,21 @@ bool HasExtension(const char *filename) {
 // When ext is NULL or "", checks if the file has no extension.
 //
 bool MatchExtension(const char *filename, const char *ext) {
-    if (!(ext && ext[0])) return !HasExtension(filename);
+    if (!(ext && ext[0])) {
+        return !HasExtension(filename);
+    }
 
     int A = (int)strlen(filename) - 1;
     int B = (int)strlen(ext) - 1;
 
     for (; B >= 0; B--, A--) {
-        if (A < 0) return false;
+        if (A < 0) {
+            return false;
+        }
 
-        if (toupper(filename[A]) != toupper(ext[B])) return false;
+        if (toupper(filename[A]) != toupper(ext[B])) {
+            return false;
+        }
     }
 
     return (A >= 1) && (filename[A] == '.');
@@ -113,25 +125,32 @@ char *ReplaceExtension(const char *filename, const char *ext) {
     char *dot_pos = buffer + strlen(buffer) - 1;
 
     for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--) {
-        if (*dot_pos == '/') break;
+        if (*dot_pos == '/') {
+            break;
+        }
 
 #ifdef WIN32
         if (*dot_pos == '\\' || *dot_pos == ':') break;
 #endif
     }
 
-    if (dot_pos < buffer || *dot_pos != '.') dot_pos = NULL;
+    if (dot_pos < buffer || *dot_pos != '.') {
+        dot_pos = NULL;
+    }
 
     if (!(ext && ext[0])) {
-        if (dot_pos) dot_pos[0] = 0;
+        if (dot_pos) {
+            dot_pos[0] = 0;
+        }
 
         return buffer;
     }
 
-    if (dot_pos)
+    if (dot_pos) {
         dot_pos[1] = 0;
-    else
+    } else {
         strcat(buffer, ".");
+    }
 
     strcat(buffer, ext);
 
@@ -147,7 +166,9 @@ const char *FindBaseName(const char *filename) {
     const char *pos = filename + strlen(filename) - 1;
 
     for (; pos >= filename; pos--) {
-        if (*pos == '/') return pos + 1;
+        if (*pos == '/') {
+            return pos + 1;
+        }
 
 #ifdef WIN32
         if (*pos == '\\' || *pos == ':') return pos + 1;
@@ -158,10 +179,18 @@ const char *FindBaseName(const char *filename) {
 }
 
 bool FilenameIsBare(const char *filename) {
-    if (strchr(filename, '.')) return false;
-    if (strchr(filename, '/')) return false;
-    if (strchr(filename, '\\')) return false;
-    if (strchr(filename, ':')) return false;
+    if (strchr(filename, '.')) {
+        return false;
+    }
+    if (strchr(filename, '/')) {
+        return false;
+    }
+    if (strchr(filename, '\\')) {
+        return false;
+    }
+    if (strchr(filename, ':')) {
+        return false;
+    }
 
     return true;
 }
@@ -170,7 +199,9 @@ void FilenameStripBase(char *buffer) {
     char *pos = buffer + strlen(buffer) - 1;
 
     for (; pos > buffer; pos--) {
-        if (*pos == '/') break;
+        if (*pos == '/') {
+            break;
+        }
 
 #ifdef WIN32
         if (*pos == '\\') break;
@@ -182,10 +213,11 @@ void FilenameStripBase(char *buffer) {
 #endif
     }
 
-    if (pos > buffer)
+    if (pos > buffer) {
         *pos = 0;
-    else
+    } else {
         strcpy(buffer, ".");
+    }
 }
 
 void FilenameGetPath(char *dest, size_t maxsize, const char *filename) {
@@ -202,7 +234,9 @@ void FilenameGetPath(char *dest, size_t maxsize, const char *filename) {
         return;
     }
 
-    if (len >= maxsize) len = maxsize - 1;
+    if (len >= maxsize) {
+        len = maxsize - 1;
+    }
 
     strncpy(dest, filename, len);
     dest[len] = 0;
@@ -212,7 +246,9 @@ bool FileCopy(const char *src_name, const char *dest_name) {
     char buffer[1024];
 
     FILE *src = fopen(src_name, "rb");
-    if (!src) return false;
+    if (!src) {
+        return false;
+    }
 
     FILE *dest = fopen(dest_name, "wb");
     if (!dest) {
@@ -222,10 +258,14 @@ bool FileCopy(const char *src_name, const char *dest_name) {
 
     while (true) {
         size_t rlen = fread(buffer, 1, sizeof(buffer), src);
-        if (rlen == 0) break;
+        if (rlen == 0) {
+            break;
+        }
 
         size_t wlen = fwrite(buffer, 1, rlen, dest);
-        if (wlen != rlen) break;
+        if (wlen != rlen) {
+            break;
+        }
     }
 
     bool was_OK = !ferror(src) && !ferror(dest);
@@ -281,7 +321,9 @@ byte *FileLoad(const char *filename, int *length) {
 
     FILE *fp = fopen(filename, "rb");
 
-    if (!fp) return NULL;
+    if (!fp) {
+        return NULL;
+    }
 
     // determine size of file (via seeking)
     fseek(fp, 0, SEEK_END);
@@ -295,7 +337,9 @@ byte *FileLoad(const char *filename, int *length) {
 
     byte *data = (byte *)malloc(*length + 1);
 
-    if (!data) AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
+    if (!data) {
+        AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
+    }
 
     // ensure buffer is NUL-terminated
     data[*length] = 0;
@@ -336,7 +380,9 @@ bool PathIsDirectory(const char *path) {
 
     struct stat finfo;
 
-    if (stat(path, &finfo) != 0) return false;
+    if (stat(path, &finfo) != 0) {
+        return false;
+    }
 
     return (S_ISDIR(finfo.st_mode)) ? true : false;
 #endif
@@ -357,11 +403,15 @@ const char *FileFindInPath(const char *paths, const char *base_name) {
 
         //  fprintf(stderr, "Trying data file: [%s]\n", filename);
 
-        if (FileExists(filename)) return filename;
+        if (FileExists(filename)) {
+            return filename;
+        }
 
         StringFree(filename);
 
-        if (!sep) return NULL;  // not found
+        if (!sep) {
+            return NULL;  // not found
+        }
 
         paths = sep + 1;
     }
@@ -392,7 +442,7 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
         SetCurrentDirectory(old_dir);
 
         return 0;  //??? (GetLastError() == ERROR_FILE_NOT_FOUND) ? 0 :
-                   //SCAN_ERROR;
+                   // SCAN_ERROR;
     }
 
     do {
@@ -428,17 +478,25 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
 #else  // ---- UNIX ------------------------------------------------
 
     DIR *handle = opendir(path);
-    if (handle == NULL) return SCAN_ERR_NoExist;
+    if (handle == NULL) {
+        return SCAN_ERR_NoExist;
+    }
 
     for (;;) {
         const struct dirent *fdata = readdir(handle);
-        if (fdata == NULL) break;
+        if (fdata == NULL) {
+            break;
+        }
 
-        if (strlen(fdata->d_name) == 0) continue;
+        if (strlen(fdata->d_name) == 0) {
+            continue;
+        }
 
         // skip the funky "." and ".." dirs
-        if (strcmp(fdata->d_name, ".") == 0 || strcmp(fdata->d_name, "..") == 0)
+        if (strcmp(fdata->d_name, ".") == 0 ||
+            strcmp(fdata->d_name, "..") == 0) {
             continue;
+        }
 
         const char *full_name = StringPrintf("%s/%s", path, fdata->d_name);
 
@@ -454,13 +512,17 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
 
         int flags = 0;
 
-        if (S_ISDIR(finfo.st_mode)) flags |= SCAN_F_IsDir;
+        if (S_ISDIR(finfo.st_mode)) {
+            flags |= SCAN_F_IsDir;
+        }
 
-        if ((finfo.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0)
+        if ((finfo.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0) {
             flags |= SCAN_F_ReadOnly;
+        }
 
-        if (fdata->d_name[0] == '.' && isalpha(fdata->d_name[1]))
+        if (fdata->d_name[0] == '.' && isalpha(fdata->d_name[1])) {
             flags |= SCAN_F_Hidden;
+        }
 
         (*func)(fdata->d_name, flags, priv_dat);
 
@@ -482,7 +544,9 @@ struct filename_nocase_CMP {
 static void add_subdir_name(const char *name, int flags, void *priv_dat) {
     std::vector<std::string> *list = (std::vector<std::string> *)priv_dat;
 
-    if ((flags & SCAN_F_Hidden) || name[0] == '.') return;
+    if ((flags & SCAN_F_Hidden) || name[0] == '.') {
+        return;
+    }
 
     if (flags & SCAN_F_IsDir) {
         list->push_back(name);
@@ -510,11 +574,17 @@ static void add_matching_name(const char *name, int flags, void *priv_dat) {
 
     std::vector<std::string> *list = match_data->list;
 
-    if ((flags & SCAN_F_Hidden) || name[0] == '.') return;
+    if ((flags & SCAN_F_Hidden) || name[0] == '.') {
+        return;
+    }
 
-    if (flags & SCAN_F_IsDir) return;
+    if (flags & SCAN_F_IsDir) {
+        return;
+    }
 
-    if (!MatchExtension(name, match_data->ext)) return;
+    if (!MatchExtension(name, match_data->ext)) {
+        return;
+    }
 
     list->push_back(name);
 }

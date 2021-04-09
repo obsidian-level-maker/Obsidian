@@ -64,8 +64,9 @@ class infinite_line_c {
 
         double len = sqrt(nx * nx + ny * ny + nz * nz);
 
-        if (len < 0.0001)
+        if (len < 0.0001) {
             Main_FatalError("Fix TJunc: face has zero length edge!\n");
+        }
 
         nx /= len;
         ny /= len;
@@ -92,7 +93,9 @@ class infinite_line_c {
 
     // make sure the normal faces a consistent direction
     void MakeConsistent() {
-        if (nx > NORMAL_EPSILON) return;
+        if (nx > NORMAL_EPSILON) {
+            return;
+        }
         if (nx < -NORMAL_EPSILON) {
             Flip();
             return;
@@ -100,7 +103,9 @@ class infinite_line_c {
 
         nx = 0;
 
-        if (ny > NORMAL_EPSILON) return;
+        if (ny > NORMAL_EPSILON) {
+            return;
+        }
         if (ny < -NORMAL_EPSILON) {
             Flip();
             return;
@@ -108,7 +113,9 @@ class infinite_line_c {
 
         ny = 0;
 
-        if (nz > NORMAL_EPSILON) return;
+        if (nz > NORMAL_EPSILON) {
+            return;
+        }
         if (nz < -NORMAL_EPSILON) {
             Flip();
             return;
@@ -156,7 +163,9 @@ class infinite_line_c {
     }
 
     void SortVerts() {
-        if (vertices.empty()) return;
+        if (vertices.empty()) {
+            return;
+        }
 
         std::sort(vertices.begin(), vertices.end());
 
@@ -167,12 +176,16 @@ class infinite_line_c {
         unsigned int total = vertices.size();
 
         for (; s < total; s++) {
-            if (fabs(vertices[s] - vertices[s - 1]) < ALONG_EPSILON) continue;
+            if (fabs(vertices[s] - vertices[s - 1]) < ALONG_EPSILON) {
+                continue;
+            }
 
             vertices[d++] = vertices[s];
         }
 
-        if (d < s) vertices.resize(d);
+        if (d < s) {
+            vertices.resize(d);
+        }
     }
 };
 
@@ -212,7 +225,9 @@ static infinite_line_c *TJ_HashLookup(const quake_vertex_c &A,
 
     int hash = IL.CalcHash() & (INF_LINE_HASH_SIZE - 1);
 
-    if (!inf_line_hashtab[hash]) inf_line_hashtab[hash] = new std::vector<int>;
+    if (!inf_line_hashtab[hash]) {
+        inf_line_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = inf_line_hashtab[hash];
 
@@ -221,7 +236,9 @@ static infinite_line_c *TJ_HashLookup(const quake_vertex_c &A,
 
         infinite_line_c *test = &infinite_lines[index];
 
-        if (test->Match(IL)) return test;
+        if (test->Match(IL)) {
+            return test;
+        }
     }
 
     // not found, make new one
@@ -257,8 +274,12 @@ static void TJ_AddFaces(quake_node_c *node) {
         }
     }
 
-    if (node->front_N) TJ_AddFaces(node->front_N);
-    if (node->back_N) TJ_AddFaces(node->back_N);
+    if (node->front_N) {
+        TJ_AddFaces(node->front_N);
+    }
+    if (node->back_N) {
+        TJ_AddFaces(node->back_N);
+    }
 }
 
 static void TJ_SortVertices() {
@@ -299,9 +320,13 @@ static bool TJ_FixOneFace(quake_face_c *F) {
         for (unsigned int n = 0; n < IL->vertices.size(); n++) {
             float along_N = IL->vertices[n];
 
-            if (along_N < along_A + ALONG_EPSILON) continue;
+            if (along_N < along_A + ALONG_EPSILON) {
+                continue;
+            }
 
-            if (along_N > along_B - ALONG_EPSILON) break;
+            if (along_N > along_B - ALONG_EPSILON) {
+                break;
+            }
 
             // we have found a T-junction folks!
             tjunc_count++;
@@ -325,12 +350,18 @@ static bool TJ_FixOneFace(quake_face_c *F) {
 static void TJ_FixFaces(quake_node_c *node) {
     for (unsigned int i = 0; i < node->faces.size(); i++) {
         for (int loop = 0; loop < 16; loop++) {
-            if (TJ_FixOneFace(node->faces[i])) break;
+            if (TJ_FixOneFace(node->faces[i])) {
+                break;
+            }
         }
     }
 
-    if (node->front_N) TJ_FixFaces(node->front_N);
-    if (node->back_N) TJ_FixFaces(node->back_N);
+    if (node->front_N) {
+        TJ_FixFaces(node->front_N);
+    }
+    if (node->back_N) {
+        TJ_FixFaces(node->back_N);
+    }
 }
 
 void QCOM_Fix_T_Junctions() {

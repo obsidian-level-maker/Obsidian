@@ -67,7 +67,9 @@ int gui_raw_log_print(lua_State *L) {
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1])) res += 2;
+        if (res[0] == '@' && isdigit(res[1])) {
+            res += 2;
+        }
 
         LogPrintf("%s", res);
     }
@@ -127,8 +129,9 @@ int gui_mkdir(lua_State *L) {
 int gui_set_colormap(lua_State *L) {
     int map_id = luaL_checkinteger(L, 1);
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
         return luaL_argerror(L, 1, "colmap value out of range");
+    }
 
     if (lua_type(L, 2) != LUA_TTABLE) {
         return luaL_argerror(L, 2, "expected a table: colors");
@@ -175,7 +178,9 @@ int gui_import(lua_State *L) {
 int gui_set_import_dir(lua_State *L) {
     const char *dir_name = luaL_checkstring(L, 1);
 
-    if (import_dir) StringFree(import_dir);
+    if (import_dir) {
+        StringFree(import_dir);
+    }
 
     import_dir = StringDup(dir_name);
 
@@ -191,7 +196,9 @@ int gui_get_install_dir(lua_State *L) {
 
 static bool scan_dir_process_name(const char *name, const char *parent,
                                   const char *match) {
-    if (name[0] == '.') return false;
+    if (name[0] == '.') {
+        return false;
+    }
 
     // fprintf(stderr, "scan_dir_process_name: '%s'\n", name);
 
@@ -220,7 +227,9 @@ static bool scan_dir_process_name(const char *name, const char *parent,
 
     StringFree(temp_name);
 
-    if (!fp) return false;
+    if (!fp) {
+        return false;
+    }
 
     if (PHYSFS_readBytes(fp, buffer, 1) < 1) {
         PHYSFS_close(fp);
@@ -276,7 +285,9 @@ int gui_scan_directory(lua_State *L) {
     char **p;
 
     for (p = got_names; *p; p++) {
-        if (scan_dir_process_name(*p, dir_name, match)) list.push_back(*p);
+        if (scan_dir_process_name(*p, dir_name, match)) {
+            list.push_back(*p);
+        }
     }
 
     PHYSFS_freeList(got_names);
@@ -308,14 +319,18 @@ int gui_add_choice(lua_State *L) {
 
     //	DebugPrintf("  add_choice: %s id:%s\n", button, id);
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
     // only allowed during startup
-    if (has_added_buttons)
+    if (has_added_buttons) {
         Main_FatalError("Script problem: gui.add_choice called late.\n");
+    }
 
-    if (!main_win->game_box->AddChoice(button, id, label))
+    if (!main_win->game_box->AddChoice(button, id, label)) {
         return luaL_error(L, "add_choice: unknown button '%s'\n", button);
+    }
 
     return 0;
 }
@@ -333,10 +348,13 @@ int gui_enable_choice(lua_State *L) {
     //	DebugPrintf("  enable_choice: %s id:%s %s\n", button, id, enable ?
     //"enable" : "DISABLE");
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
-    if (!main_win->game_box->EnableChoice(button, id, enable))
+    if (!main_win->game_box->EnableChoice(button, id, enable)) {
         return luaL_error(L, "enable_choice: unknown button '%s'\n", button);
+    }
 
     return 0;
 }
@@ -351,10 +369,13 @@ int gui_set_button(lua_State *L) {
 
     //	DebugPrintf("  change_button: %s --> %s\n", button, id);
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
-    if (!main_win->game_box->SetButton(button, id))
+    if (!main_win->game_box->SetButton(button, id)) {
         return luaL_error(L, "set_button: unknown button '%s'\n", button);
+    }
 
     return 0;
 }
@@ -371,20 +392,24 @@ int gui_add_module(lua_State *L) {
 
     //	DebugPrintf("  add_module: %s id:%s\n", where, id);
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
     // only allowed during startup
-    if (has_added_buttons)
+    if (has_added_buttons) {
         Main_FatalError("Script problem: gui.add_module called late.\n");
+    }
 
-    if (StringCaseCmp(where, "left") == 0)
+    if (StringCaseCmp(where, "left") == 0) {
         main_win->left_mods->AddModule(id, label, tip);
 
-    else if (StringCaseCmp(where, "right") == 0)
+    } else if (StringCaseCmp(where, "right") == 0) {
         main_win->right_mods->AddModule(id, label, tip);
 
-    else
+    } else {
         return luaL_error(L, "add_module: unknown where value '%s'\n", where);
+    }
 
     return 0;
 }
@@ -400,7 +425,9 @@ int gui_set_module(lua_State *L) {
 
     //	DebugPrintf("  set_module: %s --> %s\n", module, opt_val);
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
     // FIXME : error if module is unknown
 
@@ -423,7 +450,9 @@ int gui_show_module(lua_State *L) {
     //	DebugPrintf("  show_module: %s --> %s\n", what, module, shown ? "show" :
     //"HIDE");
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
     // FIXME : error if module is unknown
 
@@ -448,11 +477,14 @@ int gui_add_module_option(lua_State *L) {
 
     //	DebugPrintf("  add_module_option: %s.%s\n", module, option);
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
     // only allowed during startup
-    if (has_added_buttons)
+    if (has_added_buttons) {
         Main_FatalError("Script problem: gui.add_module_option called late.\n");
+    }
 
     // FIXME : error if module is unknown
 
@@ -475,11 +507,14 @@ int gui_add_option_choice(lua_State *L) {
 
     //	DebugPrintf("  add_option_choice: %s.%s\n", module, option);
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
     // only allowed during startup
-    if (has_added_buttons)
+    if (has_added_buttons) {
         Main_FatalError("Script problem: gui.add_option_choice called late.\n");
+    }
 
     // FIXME : error if module or option is unknown
 
@@ -499,13 +534,16 @@ int gui_set_module_option(lua_State *L) {
     SYS_ASSERT(module && option && value);
 
     //	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option,
-    //value);
+    // value);
 
-    if (!main_win) return 0;
+    if (!main_win) {
+        return 0;
+    }
 
-    if (StringCaseCmp(option, "self") == 0)
+    if (StringCaseCmp(option, "self") == 0) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option);
+    }
 
     if (!(main_win->left_mods->SetOption(module, option, value) ||
           main_win->right_mods->SetOption(module, option, value))) {
@@ -526,7 +564,9 @@ int gui_at_level(lua_State *L) {
 
     Main_ProgStatus(_("Making %s"), name);
 
-    if (main_win) main_win->build_box->Prog_AtLevel(index, total);
+    if (main_win) {
+        main_win->build_box->Prog_AtLevel(index, total);
+    }
 
     return 0;
 }
@@ -536,7 +576,9 @@ int gui_at_level(lua_State *L) {
 int gui_prog_step(lua_State *L) {
     const char *name = luaL_checkstring(L, 1);
 
-    if (main_win) main_win->build_box->Prog_Step(name);
+    if (main_win) {
+        main_win->build_box->Prog_Step(name);
+    }
 
     return 0;
 }
@@ -565,7 +607,9 @@ int gui_abort(lua_State *L) {
 int gui_rand_seed(lua_State *L) {
     unsigned long long the_seed = luaL_checkinteger(L, 1);
 
-    if (the_seed < 0) the_seed = -the_seed;
+    if (the_seed < 0) {
+        the_seed = -the_seed;
+    }
 
     twister_Reseed(the_seed);
 
@@ -655,7 +699,9 @@ int gui_minimap_begin(lua_State *L) {
 }
 
 int gui_minimap_finish(lua_State *L) {
-    if (main_win) main_win->build_box->mini_map->MapFinish();
+    if (main_win) {
+        main_win->build_box->mini_map->MapFinish();
+    }
 
     return 0;
 }
@@ -915,18 +961,22 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0,
 
     lua_getglobal(LUA_ST, "ob_traceback");
 
-    if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    if (lua_type(LUA_ST, -1) == LUA_TNIL) {
         Main_FatalError("Script problem: missing function '%s'",
                         "ob_traceback");
+    }
 
     lua_getglobal(LUA_ST, func_name);
 
-    if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    if (lua_type(LUA_ST, -1) == LUA_TNIL) {
         Main_FatalError("Script problem: missing function '%s'", func_name);
+    }
 
     int nargs = 0;
     if (params) {
-        for (; *params; params++, nargs++) lua_pushstring(LUA_ST, *params);
+        for (; *params; params++, nargs++) {
+            lua_pushstring(LUA_ST, *params);
+        }
     }
 
     int status = lua_pcall(LUA_ST, nargs, nresult, -2 - nargs);
@@ -935,10 +985,11 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0,
 
         // skip the filename
         const char *err_msg = strstr(msg, ": ");
-        if (err_msg)
+        if (err_msg) {
             err_msg += 2;
-        else
+        } else {
             err_msg = msg;
+        }
 
         // this will appear in the log file too
         main_win->label(StringPrintf("[ ERROR ] %s %s", _(OBSIDIAN_TITLE),
@@ -1025,7 +1076,9 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size) {
 
     load_info_t *info = (load_info_t *)ud;
 
-    if (PHYSFS_eof(info->fp)) return NULL;
+    if (PHYSFS_eof(info->fp)) {
+        return NULL;
+    }
 
     PHYSFS_sint64 len =
         PHYSFS_readBytes(info->fp, info->buffer, sizeof(info->buffer));
@@ -1039,7 +1092,9 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size) {
 
     *size = (size_t)len;
 
-    if (!size) return NULL;
+    if (!size) {
+        return NULL;
+    }
 
     return info->buffer;  // OK
 }
@@ -1096,7 +1151,9 @@ void Script_Load(const char *script_name) {
 
     int status = my_loadfile(LUA_ST, filename);
 
-    if (status == 0) status = lua_pcall(LUA_ST, 0, 0, 0);
+    if (status == 0) {
+        status = lua_pcall(LUA_ST, 0, 0, 0);
+    }
 
     if (status != 0) {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
@@ -1113,12 +1170,15 @@ void Script_Open() {
     // create Lua state
 
     LUA_ST = luaL_newstate();
-    if (!LUA_ST) Main_FatalError("LUA Init failed: cannot create new state");
+    if (!LUA_ST) {
+        Main_FatalError("LUA Init failed: cannot create new state");
+    }
 
     int status = p_init_lua(LUA_ST);
-    if (status != 0)
+    if (status != 0) {
         Main_FatalError("LUA Init failed: cannot load standard libs (%d)",
                         status);
+    }
 
     // load main scripts
 
@@ -1134,14 +1194,17 @@ void Script_Open() {
     // ob_init() will load all the game-specific scripts, engine scripts, and
     // module scripts.
 
-    if (!Script_CallFunc("ob_init"))
+    if (!Script_CallFunc("ob_init")) {
         Main_FatalError("The ob_init script failed.\n");
+    }
 
     has_added_buttons = true;
 }
 
 void Script_Close() {
-    if (LUA_ST) lua_close(LUA_ST);
+    if (LUA_ST) {
+        lua_close(LUA_ST);
+    }
 
     LUA_ST = NULL;
 
@@ -1244,11 +1307,15 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
 }
 
 const char *ob_game_format() {
-    if (!Script_CallFunc("ob_game_format", 1)) return NULL;
+    if (!Script_CallFunc("ob_game_format", 1)) {
+        return NULL;
+    }
 
     const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
-    if (res) res = StringDup(res);
+    if (res) {
+        res = StringDup(res);
+    }
 
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
@@ -1257,11 +1324,15 @@ const char *ob_game_format() {
 }
 
 const char *ob_default_filename() {
-    if (!Script_CallFunc("ob_default_filename", 1)) return NULL;
+    if (!Script_CallFunc("ob_default_filename", 1)) {
+        return NULL;
+    }
 
     const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
-    if (res) res = StringDup(res);
+    if (res) {
+        res = StringDup(res);
+    }
 
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
@@ -1284,7 +1355,9 @@ bool ob_build_cool_shit() {
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
 
-    if (res && strcmp(res, "ok") == 0) return true;
+    if (res && strcmp(res, "ok") == 0) {
+        return true;
+    }
 
     Main_ProgStatus(_("Cancelled"));
     return false;

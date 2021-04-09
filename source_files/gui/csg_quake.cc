@@ -110,11 +110,17 @@ class quake_side_c {
     double Length() const { return ComputeDist(x1, y1, x2, y2); }
 
     bool TwoSided() const {
-        if (!snag->partner) return false;
+        if (!snag->partner) {
+            return false;
+        }
 
-        if (!snag->partner->region) return false;
+        if (!snag->partner->region) {
+            return false;
+        }
 
-        if (snag->partner->region->gaps.empty()) return false;
+        if (snag->partner->region->gaps.empty()) {
+            return false;
+        }
 
         return true;
     }
@@ -199,7 +205,9 @@ class quake_group_c {
         for (unsigned int i = 0; i < sides.size(); i++) {
             quake_side_c *S = sides[i];
 
-            if (S->snag && S->snag->region) return S->snag->region;
+            if (S->snag && S->snag->region) {
+                return S->snag->region;
+            }
         }
 
         // failed to find one, because all the sides were "mini sides".
@@ -278,17 +286,25 @@ int quake_plane_c::BrushSide(csg_brush_c *B, float epsilon) const {
         }
     }
 
-    if (min_d > -epsilon) return +1;
-    if (max_d < epsilon) return -1;
+    if (min_d > -epsilon) {
+        return +1;
+    }
+    if (max_d < epsilon) {
+        return -1;
+    }
 
     return 0;
 }
 
 double quake_plane_c::CalcZ(double ax, double ay) const {
     // for vertical planes, result is meaningless
-    if (fabs(nz) < 0.01) return 0;
+    if (fabs(nz) < 0.01) {
+        return 0;
+    }
 
-    if (fabs(nz) > 0.999) return z;
+    if (fabs(nz) > 0.999) {
+        return z;
+    }
 
     // solve the plane equation:
     //    nx*(ax-x) + ny*(ay-y) + nz*(az-z) = 0
@@ -328,12 +344,20 @@ quake_node_c::quake_node_c(const quake_plane_c &P)
 
 quake_node_c::~quake_node_c() {
     // free child leafs
-    if (front_L && front_L != qk_solid_leaf) delete front_L;
-    if (back_L && back_L != qk_solid_leaf) delete back_L;
+    if (front_L && front_L != qk_solid_leaf) {
+        delete front_L;
+    }
+    if (back_L && back_L != qk_solid_leaf) {
+        delete back_L;
+    }
 
     // free child nodes
-    if (front_N) delete front_N;
-    if (back_N) delete back_N;
+    if (front_N) {
+        delete front_N;
+    }
+    if (back_N) {
+        delete back_N;
+    }
 }
 
 void quake_node_c::AddFace(quake_face_c *F) {
@@ -345,8 +369,12 @@ void quake_node_c::AddFace(quake_face_c *F) {
 int quake_node_c::CountNodes() const {
     int count = 1;
 
-    if (front_N) count += front_N->CountNodes();
-    if (back_N) count += back_N->CountNodes();
+    if (front_N) {
+        count += front_N->CountNodes();
+    }
+    if (back_N) {
+        count += back_N->CountNodes();
+    }
 
     return count;
 }
@@ -354,15 +382,17 @@ int quake_node_c::CountNodes() const {
 int quake_node_c::CountLeafs() const {
     int count = 0;
 
-    if (front_N)
+    if (front_N) {
         count += front_N->CountLeafs();
-    else if (front_L != qk_solid_leaf)
+    } else if (front_L != qk_solid_leaf) {
         count += 1;
+    }
 
-    if (back_N)
+    if (back_N) {
         count += back_N->CountLeafs();
-    else if (back_L != qk_solid_leaf)
+    } else if (back_L != qk_solid_leaf) {
         count += 1;
+    }
 
     return count;
 }
@@ -383,7 +413,9 @@ quake_mapmodel_c::quake_mapmodel_c()
       firstBrush(0),
       numBrushes(0),
       light(64) {
-    for (int i = 0; i < 6; i++) nodes[i] = 0;
+    for (int i = 0; i < 6; i++) {
+        nodes[i] = 0;
+    }
 }
 
 quake_mapmodel_c::~quake_mapmodel_c() {}
@@ -392,14 +424,18 @@ static void CreateSides(quake_group_c &group) {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->gaps.empty()) continue;
+        if (R->gaps.empty()) {
+            continue;
+        }
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             snag_c *snag = R->snags[k];
 
             region_c *N = snag->partner ? snag->partner->region : NULL;
 
-            if (N && R->HasSameBrushes(N)) continue;
+            if (N && R->HasSameBrushes(N)) {
+                continue;
+            }
 
             quake_side_c *S = new quake_side_c(snag);
 
@@ -420,7 +456,9 @@ static void CreateBrushes(quake_group_c &group) {
         for (unsigned int k = 0; k < R->brushes.size(); k++) {
             csg_brush_c *B = R->brushes[k];
 
-            if (B->bflags & BRU_IF_Seen) continue;
+            if (B->bflags & BRU_IF_Seen) {
+                continue;
+            }
 
             if (B->bkind == BKIND_Solid && !(B->bflags & BFLAG_NoClip)) {
                 group.AddBrush(R->brushes[k]);
@@ -507,20 +545,22 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
                             int vert, int dir, int kind) {
     double along;
 
-    if (vert == 0)
+    if (vert == 0) {
         along = AlongDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
-    else
+    } else {
         along = AlongDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
+    }
 
     // compute the angle between the two vectors
     double s_angle = 0;
     double p_angle;
 
     if (kind != K1_SITTING) {
-        if (vert == 0)
+        if (vert == 0) {
             s_angle = CalcAngle(S->x1, S->y1, S->x2, S->y2);
-        else
+        } else {
             s_angle = CalcAngle(S->x2, S->y2, S->x1, S->y1);
+        }
 
         p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
 
@@ -532,10 +572,11 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
 
         s_angle = s_angle - p_angle;
 
-        if (s_angle > 180.0)
+        if (s_angle > 180.0) {
             s_angle -= 360.0;
-        else if (s_angle < -180.0)
+        } else if (s_angle < -180.0) {
             s_angle += 360.0;
+        }
 
         // DebugPrintf("angle_diff ---> %1.2f\n", s_angle);
     }
@@ -550,25 +591,31 @@ static bool TestIntersectionOpen(std::vector<intersect_t> &cuts, int first,
     const double ANG_EPSILON = 1e-5;
 
     // if have sitting with same dir : not open
-    for (i = first; i <= last; i++)
-        if (cuts[i].kind == K1_SITTING && cuts[i].dir == dir) return false;
+    for (i = first; i <= last; i++) {
+        if (cuts[i].kind == K1_SITTING && cuts[i].dir == dir) {
+            return false;
+        }
+    }
 
     // find intersection with closest angle along dir
     int closest = -1;
     double cl_angle = 999.0;
 
     for (i = first; i <= last; i++) {
-        if (cuts[i].kind == K1_SITTING) continue;
+        if (cuts[i].kind == K1_SITTING) {
+            continue;
+        }
 
         double angle = cuts[i].angle;
 
         // angles are relative to forward direction on partition,
         // so adjust them for the backward direction.
         if (dir < 0) {
-            if (angle < 0)
+            if (angle < 0) {
                 angle = -180 - angle;
-            else
+            } else {
                 angle = 180 - angle;
+            }
         }
 
         if (fabs(angle) + ANG_EPSILON < fabs(cl_angle)) {
@@ -585,7 +632,9 @@ static bool TestIntersectionOpen(std::vector<intersect_t> &cuts, int first,
     }
 
     // none?? (should not happen)
-    if (closest < 0) return false;
+    if (closest < 0) {
+        return false;
+    }
 
     // check if closest seg is open towards given dir
 
@@ -601,8 +650,9 @@ static void MergeIntersections(std::vector<intersect_t> &cuts,
         unsigned int last = first;
 
         while (last + 1 < cuts.size() &&
-               cuts[last + 1].q_dist == cuts[first].q_dist)
+               cuts[last + 1].q_dist == cuts[first].q_dist) {
             last++;
+        }
 
         /// LogPrintf("DIST %1.0f [%d..%d]\n", cuts[first].along, first, last);
 
@@ -675,20 +725,38 @@ static void CheckClusterEdges(quake_group_c &group, int cx, int cy) {
     for (unsigned int i = 0; i < group.sides.size(); i++) {
         quake_side_c *S = group.sides[i];
 
-        if (S->snag && !S->TwoSided()) continue;
+        if (S->snag && !S->TwoSided()) {
+            continue;
+        }
 
-        if (MAX(S->y1, S->y2) > y2 - 2) closed_N = false;
-        if (MIN(S->y1, S->y2) < y1 + 2) closed_S = false;
+        if (MAX(S->y1, S->y2) > y2 - 2) {
+            closed_N = false;
+        }
+        if (MIN(S->y1, S->y2) < y1 + 2) {
+            closed_S = false;
+        }
 
-        if (MAX(S->x1, S->x2) > x2 - 2) closed_E = false;
-        if (MIN(S->x1, S->x2) < x1 + 2) closed_W = false;
+        if (MAX(S->x1, S->x2) > x2 - 2) {
+            closed_E = false;
+        }
+        if (MIN(S->x1, S->x2) < x1 + 2) {
+            closed_W = false;
+        }
     }
 
     // send data to vis code
-    if (closed_N) QVIS_MarkWall(cx, cy, 8);
-    if (closed_S) QVIS_MarkWall(cx, cy, 2);
-    if (closed_E) QVIS_MarkWall(cx, cy, 6);
-    if (closed_W) QVIS_MarkWall(cx, cy, 4);
+    if (closed_N) {
+        QVIS_MarkWall(cx, cy, 8);
+    }
+    if (closed_S) {
+        QVIS_MarkWall(cx, cy, 2);
+    }
+    if (closed_E) {
+        QVIS_MarkWall(cx, cy, 6);
+    }
+    if (closed_W) {
+        QVIS_MarkWall(cx, cy, 4);
+    }
 }
 
 static int XY_BrushSide(const csg_brush_c *B, const quake_side_c *part) {
@@ -704,8 +772,12 @@ static int XY_BrushSide(const csg_brush_c *B, const quake_side_c *part) {
         max_d = MAX(max_d, d);
     }
 
-    if (min_d > -Q_EPSILON) return +1;
-    if (max_d < Q_EPSILON) return -1;
+    if (min_d > -Q_EPSILON) {
+        return +1;
+    }
+    if (max_d < Q_EPSILON) {
+        return -1;
+    }
 
     return 0;  // straddles
 }
@@ -770,10 +842,11 @@ static void Split_XY(quake_group_c &group, quake_node_c *node,
         if (a_side >= 0 && b_side >= 0) {
             front.AddSide(S);
 
-            if (a_side == 0)
+            if (a_side == 0) {
                 AddIntersection(cut_list, part, S, 0, -1, K1_NORMAL);
-            else if (b_side == 0)
+            } else if (b_side == 0) {
                 AddIntersection(cut_list, part, S, 1, +1, K1_NORMAL);
+            }
 
             continue;
         }
@@ -782,10 +855,11 @@ static void Split_XY(quake_group_c &group, quake_node_c *node,
         if (a_side <= 0 && b_side <= 0) {
             back.AddSide(S);
 
-            if (a_side == 0)
+            if (a_side == 0) {
                 AddIntersection(cut_list, part, S, 0, +1, K1_NORMAL);
-            else if (b_side == 0)
+            } else if (b_side == 0) {
                 AddIntersection(cut_list, part, S, 1, -1, K1_NORMAL);
+            }
 
             continue;
         }
@@ -814,8 +888,12 @@ static void Split_XY(quake_group_c &group, quake_node_c *node,
 
         int side = XY_BrushSide(B, part);
 
-        if (side <= 0) back.AddBrush(B);
-        if (side >= 0) front.AddBrush(B);
+        if (side <= 0) {
+            back.AddBrush(B);
+        }
+        if (side >= 0) {
+            front.AddBrush(B);
+        }
     }
 
     CreateMiniSides(cut_list, node, part, front, back);
@@ -888,14 +966,18 @@ static bool FindPartition_XY(quake_group_c &group, quake_side_c *part,
     for (unsigned int i = 0; i < group.sides.size(); i++) {
         quake_side_c *S = group.sides[i];
 
-        if (S->on_node) continue;
+        if (S->on_node) {
+            continue;
+        }
 
         bool axis_aligned = (S->x1 == S->x2) || (S->y1 == S->y2);
 
         // MUST choose 2-sided snag BEFORE any 1-sided snag
 
         if (!S->TwoSided()) {
-            if (!poss1 || axis_aligned) poss1 = S;
+            if (!poss1 || axis_aligned) {
+                poss1 = S;
+            }
 
             continue;
         }
@@ -910,7 +992,9 @@ static bool FindPartition_XY(quake_group_c &group, quake_side_c *part,
 
     quake_side_c *best = poss2 ? poss2 : poss1;
 
-    if (!best) return false;
+    if (!best) {
+        return false;
+    }
 
     part->x1 = best->x1;
     part->y1 = best->y1;
@@ -1069,8 +1153,12 @@ void quake_face_c::ST_Bounds(double *min_s, double *min_t, double *max_s,
         *max_t = MAX(*max_t, tt);
     }
 
-    if (*min_s > *max_s) *min_s = *max_s = 0;
-    if (*min_t > *max_t) *min_t = *max_t = 0;
+    if (*min_s > *max_s) {
+        *min_s = *max_s = 0;
+    }
+    if (*min_t > *max_t) {
+        *min_t = *max_t = 0;
+    }
 }
 
 void quake_face_c::ComputeMidPoint(float *mx, float *my, float *mz) {
@@ -1086,7 +1174,9 @@ void quake_face_c::ComputeMidPoint(float *mx, float *my, float *mz) {
         sum_z += verts[i].z;
     }
 
-    if (num == 0) num = 1;
+    if (num == 0) {
+        num = 1;
+    }
 
     *mx = sum_x / (double)num;
     *my = sum_y / (double)num;
@@ -1132,8 +1222,12 @@ bool quake_face_c::IntersectRay(float x1, float y1, float z1, float x2,
     float dist1 = plane.PointDist(x1, y1, z1);
     float dist2 = plane.PointDist(x2, y2, z2);
 
-    if (dist1 < -0.01 && dist2 < -0.01) return false;
-    if (dist1 > +0.01 && dist2 > +0.01) return false;
+    if (dist1 < -0.01 && dist2 < -0.01) {
+        return false;
+    }
+    if (dist1 > +0.01 && dist2 > +0.01) {
+        return false;
+    }
 
     // compute intersection of ray and plane
     double frac = dist1 / (double)(dist1 - dist2);
@@ -1154,7 +1248,9 @@ bool quake_face_c::IntersectRay(float x1, float y1, float z1, float x2,
 
         GenerateBoundaryPlane(this, V1, V2, &test);
 
-        if (test.PointDist(mx, my, mz) > 0.1) return false;
+        if (test.PointDist(mx, my, mz) > 0.1) {
+            return false;
+        }
     }
 
     return true;
@@ -1164,14 +1260,17 @@ static void DoAddFace(quake_face_c *F, csg_property_set_c *props,
                       uv_matrix_c *uv_mat, quake_node_c *node,
                       quake_leaf_c *leaf) {
     F->plane = node->plane;
-    if (F->node_side == 1) F->plane.Flip();
+    if (F->node_side == 1) {
+        F->plane.Flip();
+    }
 
     F->texture = props->getStr("tex", "missing");
 
-    if (uv_mat)
+    if (uv_mat) {
         F->uv_mat.Set(uv_mat);
-    else
+    } else {
         F->SetupMatrix();
+    }
 
     node->AddFace(F);
     leaf->AddFace(F);
@@ -1190,7 +1289,9 @@ static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
     if (BP.slope) {
         node->plane = *BP.slope;
 
-        if (node->plane.nz < 0) node->plane.Flip();
+        if (node->plane.nz < 0) {
+            node->plane.Flip();
+        }
     } else {
         node->plane.x = node->plane.y = 0;
         node->plane.nx = node->plane.ny = 0;
@@ -1205,10 +1306,11 @@ static void FloorOrCeilFace(quake_node_c *node, quake_leaf_c *leaf,
 
     F->StoreWinding(winding, &node->plane, is_ceil);
 
-    if (is_liquid)
+    if (is_liquid) {
         F->flags |= FACE_F_Liquid;
-    else if (B->bflags & BFLAG_Sky)
+    } else if (B->bflags & BFLAG_Sky) {
         F->flags |= FACE_F_Sky;
+    }
 
     DoAddFace(F, &BP.face, BP.uv_mat, node, leaf);
 }
@@ -1226,8 +1328,12 @@ static void WallFace_Quad(quake_node_c *node, quake_leaf_c *leaf,
                           double L_tz, double R_bz, double R_tz) {
     int tri_side = 0;
 
-    if (fabs(L_tz - L_bz) < Z_EPSILON) tri_side = -1;
-    if (fabs(R_tz - R_bz) < Z_EPSILON) tri_side = +1;
+    if (fabs(L_tz - L_bz) < Z_EPSILON) {
+        tri_side = -1;
+    }
+    if (fabs(R_tz - R_bz) < Z_EPSILON) {
+        tri_side = +1;
+    }
 
     quake_face_c *F = new quake_face_c();
 
@@ -1235,15 +1341,21 @@ static void WallFace_Quad(quake_node_c *node, quake_leaf_c *leaf,
 
     F->AddVert(S->x1, S->y1, L_bz);
 
-    if (tri_side >= 0) F->AddVert(S->x1, S->y1, L_tz);
+    if (tri_side >= 0) {
+        F->AddVert(S->x1, S->y1, L_tz);
+    }
 
     F->AddVert(S->x2, S->y2, R_tz);
 
-    if (tri_side <= 0) F->AddVert(S->x2, S->y2, R_bz);
+    if (tri_side <= 0) {
+        F->AddVert(S->x2, S->y2, R_bz);
+    }
 
     SYS_ASSERT(F->verts.size() >= 3);
 
-    if (bvert->parent->bflags & BFLAG_Sky) F->flags |= FACE_F_Sky;
+    if (bvert->parent->bflags & BFLAG_Sky) {
+        F->flags |= FACE_F_Sky;
+    }
 
     DoAddFace(F, &bvert->face, bvert->uv_mat, node, leaf);
 }
@@ -1254,9 +1366,13 @@ static int CheckEdgeIntersect(double g_z1, double g_z2, double f_z1,
     //          +1 if face edge completely above gap edge
     //          -1 if face edge completely below gap edge
 
-    if ((f_z1 > g_z1 - Z_EPSILON) && (f_z2 > g_z2 - Z_EPSILON)) return +1;
+    if ((f_z1 > g_z1 - Z_EPSILON) && (f_z2 > g_z2 - Z_EPSILON)) {
+        return +1;
+    }
 
-    if ((f_z1 < g_z1 + Z_EPSILON) && (f_z2 < g_z2 + Z_EPSILON)) return -1;
+    if ((f_z1 < g_z1 + Z_EPSILON) && (f_z2 < g_z2 + Z_EPSILON)) {
+        return -1;
+    }
 
     // find the intersection point
     if (along) {
@@ -1284,14 +1400,24 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
                          double f_Lz2, /* face */
                          double f_Rz1, double f_Rz2) {
     // ensure the face is sane  [ triangles are Ok ]
-    if ((f_Lz1 > f_Lz2 - Z_EPSILON) && (f_Rz1 > f_Rz2 - Z_EPSILON)) return;
+    if ((f_Lz1 > f_Lz2 - Z_EPSILON) && (f_Rz1 > f_Rz2 - Z_EPSILON)) {
+        return;
+    }
 
-    if (f_Lz1 > f_Lz2) f_Lz1 = f_Lz2 = (f_Lz1 + f_Lz2) * 0.5;
-    if (f_Rz1 > f_Rz2) f_Rz1 = f_Rz2 = (f_Rz1 + f_Rz2) * 0.5;
+    if (f_Lz1 > f_Lz2) {
+        f_Lz1 = f_Lz2 = (f_Lz1 + f_Lz2) * 0.5;
+    }
+    if (f_Rz1 > f_Rz2) {
+        f_Rz1 = f_Rz2 = (f_Rz1 + f_Rz2) * 0.5;
+    }
 
     // trivial reject
-    if ((f_Lz1 > g_Lz2 - Z_EPSILON) && (f_Rz1 > g_Rz2 - Z_EPSILON)) return;
-    if ((f_Lz2 < g_Lz1 + Z_EPSILON) && (f_Rz2 < g_Rz1 + Z_EPSILON)) return;
+    if ((f_Lz1 > g_Lz2 - Z_EPSILON) && (f_Rz1 > g_Rz2 - Z_EPSILON)) {
+        return;
+    }
+    if ((f_Lz2 < g_Lz1 + Z_EPSILON) && (f_Rz2 < g_Rz1 + Z_EPSILON)) {
+        return;
+    }
 
     // subdivide faces which are too tall  [ recursively... ]
     float len1 = MIN(f_Lz2, g_Lz2) - MAX(f_Lz1, g_Lz1);
@@ -1320,7 +1446,9 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
     int tt = CheckEdgeIntersect(g_Lz2, g_Rz2, f_Lz2, f_Rz2, &a_tt);
 
     // full-reject cases  [ checked earlier, but handle it again ]
-    if (bt < 0 || tb > 0) return;
+    if (bt < 0 || tb > 0) {
+        return;
+    }
 
     if (!(bb == 0 || bt == 0 || tb == 0 || tt == 0)) {
         // handle the simple cases (no intersections)
@@ -1357,7 +1485,9 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
         F->AddVert(S->x1, S->y1, z1);
 
-        if (z2 > z1 + Z_EPSILON) F->AddVert(S->x1, S->y1, z2);
+        if (z2 > z1 + Z_EPSILON) {
+            F->AddVert(S->x1, S->y1, z2);
+        }
     }
 
     // top edge
@@ -1372,8 +1502,12 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
         }
     }
 
-    if (bt == 0) DoAddVertex(F, S, a_bt, g_Lz1, g_Rz1);
-    if (tt == 0) DoAddVertex(F, S, a_tt, g_Lz2, g_Rz2);
+    if (bt == 0) {
+        DoAddVertex(F, S, a_bt, g_Lz1, g_Rz1);
+    }
+    if (tt == 0) {
+        DoAddVertex(F, S, a_tt, g_Lz2, g_Rz2);
+    }
 
     // right edge
 
@@ -1385,7 +1519,9 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
         F->AddVert(S->x2, S->y2, z2);
 
-        if (z1 < z2 - Z_EPSILON) F->AddVert(S->x2, S->y2, z1);
+        if (z1 < z2 - Z_EPSILON) {
+            F->AddVert(S->x2, S->y2, z1);
+        }
     }
 
     // bottom edge
@@ -1400,8 +1536,12 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
         }
     }
 
-    if (bb == 0) DoAddVertex(F, S, a_bb, g_Lz1, g_Rz1);
-    if (tb == 0) DoAddVertex(F, S, a_tb, g_Lz2, g_Rz2);
+    if (bb == 0) {
+        DoAddVertex(F, S, a_bb, g_Lz1, g_Rz1);
+    }
+    if (tb == 0) {
+        DoAddVertex(F, S, a_tb, g_Lz2, g_Rz2);
+    }
 
     // check face is OK
     // [ this should not happen, but just in case... ]
@@ -1445,15 +1585,18 @@ static void AddPotentialFace(quake_side_c *S, csg_brush_c *B, brush_vert_c *V,
 
     // check coords are sane
     if ((pface.Lz1 > pface.Lz2 - Z_EPSILON) &&
-        (pface.Rz1 > pface.Rz2 - Z_EPSILON))
+        (pface.Rz1 > pface.Rz2 - Z_EPSILON)) {
         return;
+    }
 
     // check intersection with the gap
-    if ((pface.Lz1 > g_Lz2 - Z_EPSILON) && (pface.Rz1 > g_Rz2 - Z_EPSILON))
+    if ((pface.Lz1 > g_Lz2 - Z_EPSILON) && (pface.Rz1 > g_Rz2 - Z_EPSILON)) {
         return;
+    }
 
-    if ((pface.Lz2 < g_Lz1 + Z_EPSILON) && (pface.Rz2 < g_Rz1 + Z_EPSILON))
+    if ((pface.Lz2 < g_Lz1 + Z_EPSILON) && (pface.Rz2 < g_Rz1 + Z_EPSILON)) {
         return;
+    }
 
     pface.bvert = V;
 
@@ -1494,13 +1637,19 @@ static void CollectPotentialFaces(quake_side_c *S, gap_c *G, double g_Lz1,
 }
 
 static void Potface_TryMerge(potential_face_t *A, potential_face_t *B) {
-    if (A->bvert == NULL || B->bvert == NULL) return;
+    if (A->bvert == NULL || B->bvert == NULL) {
+        return;
+    }
 
     // A is above B?
-    if ((A->Lz1 > B->Lz2 - Z_EPSILON) && (A->Rz1 > B->Rz2 - Z_EPSILON)) return;
+    if ((A->Lz1 > B->Lz2 - Z_EPSILON) && (A->Rz1 > B->Rz2 - Z_EPSILON)) {
+        return;
+    }
 
     // A is below B?
-    if ((A->Lz2 < B->Lz1 + Z_EPSILON) && (A->Rz2 < B->Rz1 + Z_EPSILON)) return;
+    if ((A->Lz2 < B->Lz1 + Z_EPSILON) && (A->Rz2 < B->Rz1 + Z_EPSILON)) {
+        return;
+    }
 
     // they overlap, merge B into A
 
@@ -1508,7 +1657,9 @@ static void Potface_TryMerge(potential_face_t *A, potential_face_t *B) {
     double A_size = (A->Lz2 - A->Lz1) + (A->Rz2 + A->Rz1);
     double B_size = (B->Lz2 - B->Lz1) + (B->Rz2 + B->Rz1);
 
-    if (B_size > A_size) A->bvert = B->bvert;
+    if (B_size > A_size) {
+        A->bvert = B->bvert;
+    }
 
     B->bvert = NULL;
 
@@ -1523,8 +1674,9 @@ static void CreateWallFaces(quake_group_c &group, quake_leaf_c *leaf,
                             quake_side_c *S, gap_c *G) {
     SYS_ASSERT(S->on_node);
 
-    if (!S->snag)  // "mini sides" never have faces
+    if (!S->snag) {  // "mini sides" never have faces
         return;
+    }
 
     SYS_ASSERT(S->node_side >= 0);
 
@@ -1535,10 +1687,16 @@ static void CreateWallFaces(quake_group_c &group, quake_leaf_c *leaf,
     double g_Rz2 = G->top->b.CalcZ(S->x2, S->y2);
 
     // ensure the gap is sane
-    if ((g_Lz1 > g_Lz2 - Z_EPSILON) && (g_Rz1 > g_Rz2 - Z_EPSILON)) return;
+    if ((g_Lz1 > g_Lz2 - Z_EPSILON) && (g_Rz1 > g_Rz2 - Z_EPSILON)) {
+        return;
+    }
 
-    if (g_Lz1 > g_Lz2) g_Lz1 = g_Lz2 = (g_Lz1 + g_Lz2) * 0.5;
-    if (g_Rz1 > g_Rz2) g_Rz1 = g_Rz2 = (g_Rz1 + g_Rz2) * 0.5;
+    if (g_Lz1 > g_Lz2) {
+        g_Lz1 = g_Lz2 = (g_Lz1 + g_Lz2) * 0.5;
+    }
+    if (g_Rz1 > g_Rz2) {
+        g_Rz1 = g_Rz2 = (g_Rz1 + g_Rz2) * 0.5;
+    }
 
     // collect all faces which overlap the gap
     std::vector<potential_face_t> pots;
@@ -1551,10 +1709,11 @@ static void CreateWallFaces(quake_group_c &group, quake_leaf_c *leaf,
     // when two faces overlap, merge them
     // [ can "kill" a potential face by setting bvert to NULL ]
     for (int pass = 0; pass < 6; pass++) {
-        for (unsigned int i = 1; i < pots.size(); i++)
+        for (unsigned int i = 1; i < pots.size(); i++) {
             for (unsigned int k = 0; k < i; k++) {
                 Potface_TryMerge(&pots[k], &pots[i]);
             }
+        }
     }
 
     // clip them to the gap
@@ -1588,7 +1747,9 @@ void quake_leaf_c::BBoxFromSolids() {
 }
 
 void quake_leaf_c::FilterBrush(csg_brush_c *B, leaf_map_t *touched) {
-    if (medium == MEDIUM_SOLID) return;
+    if (medium == MEDIUM_SOLID) {
+        return;
+    }
 
     AddBrush(B);
 
@@ -1600,11 +1761,17 @@ static int ParseLiquidMedium(csg_property_set_c *props) {
     const char *str = props->getStr("medium");
 
     if (str) {
-        if (StringCaseCmp(str, "water") == 0) return MEDIUM_WATER;
+        if (StringCaseCmp(str, "water") == 0) {
+            return MEDIUM_WATER;
+        }
 
-        if (StringCaseCmp(str, "slime") == 0) return MEDIUM_SLIME;
+        if (StringCaseCmp(str, "slime") == 0) {
+            return MEDIUM_SLIME;
+        }
 
-        if (StringCaseCmp(str, "lava") == 0) return MEDIUM_LAVA;
+        if (StringCaseCmp(str, "lava") == 0) {
+            return MEDIUM_LAVA;
+        }
 
         LogPrintf("WARNING: unknown liquid medium '%s'\n", str);
     }
@@ -1614,7 +1781,9 @@ static int ParseLiquidMedium(csg_property_set_c *props) {
 
 static quake_leaf_c *Solid_Wall_Leaf(quake_group_c &group) {
     // Quake 1 and related games have a shared solid leaf
-    if (qk_game == 1) return qk_solid_leaf;
+    if (qk_game == 1) {
+        return qk_solid_leaf;
+    }
 
     quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
@@ -1631,7 +1800,9 @@ static quake_leaf_c *Solid_Wall_Leaf(quake_group_c &group) {
 
 static quake_leaf_c *Solid_FloorOrCeil(region_c *R, unsigned int g, int is_ceil,
                                        quake_group_c &group) {
-    if (qk_game == 1) return qk_solid_leaf;
+    if (qk_game == 1) {
+        return qk_solid_leaf;
+    }
 
     quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
@@ -1641,11 +1812,15 @@ static quake_leaf_c *Solid_FloorOrCeil(region_c *R, unsigned int g, int is_ceil,
     if (is_ceil) {
         range_z1 = R->gaps[g]->top->b.z - 1;
 
-        if (g + 1 < R->gaps.size()) range_z2 = R->gaps[g + 1]->bottom->t.z + 1;
+        if (g + 1 < R->gaps.size()) {
+            range_z2 = R->gaps[g + 1]->bottom->t.z + 1;
+        }
     } else {
         range_z2 = R->gaps[g]->bottom->t.z + 1;
 
-        if (g > 0) range_z1 = R->gaps[g - 1]->top->b.z - 1;
+        if (g > 0) {
+            range_z1 = R->gaps[g - 1]->top->b.z - 1;
+        }
     }
 
     for (unsigned int i = 0; i < group.brushes.size(); i++) {
@@ -1711,8 +1886,12 @@ static quake_node_c *CreateLeaf(region_c *R, int g /* gap */,
     leaf->bbox.maxs[2] = gap->top->b.z;
 
     // TODO : this is hacky, determine proper Z value
-    if (gap->bottom->t.slope) leaf->bbox.mins[2] = gap->bottom->b.z;
-    if (gap->top->b.slope) leaf->bbox.maxs[2] = gap->top->t.z;
+    if (gap->bottom->t.slope) {
+        leaf->bbox.mins[2] = gap->bottom->b.z;
+    }
+    if (gap->top->b.slope) {
+        leaf->bbox.maxs[2] = gap->top->t.z;
+    }
 
     // --- handle liquids ---
 
@@ -1732,7 +1911,9 @@ static quake_node_c *CreateLeaf(region_c *R, int g /* gap */,
             // the liquid covers the whole gap : don't need an extra leaf/node
             leaf->medium = medium;
 
-            if (qk_game >= 2) leaf->AddBrush(gap->liquid);
+            if (qk_game >= 2) {
+                leaf->AddBrush(gap->liquid);
+            }
 
             cluster->MarkAmbient(AMBIENT_WATER);
         } else {
@@ -1748,7 +1929,9 @@ static quake_node_c *CreateLeaf(region_c *R, int g /* gap */,
 
             L_leaf->bbox = leaf->bbox;
 
-            if (qk_game >= 2) L_leaf->AddBrush(gap->liquid);
+            if (qk_game >= 2) {
+                L_leaf->AddBrush(gap->liquid);
+            }
 
             cluster->AddLeaf(L_leaf);
             cluster->MarkAmbient(AMBIENT_WATER);
@@ -1861,11 +2044,12 @@ static quake_node_c *Partition_Group(quake_group_c &group,
         new_node->front_N =
             Partition_Group(front, reached_cluster, new_node, 0);
 
-        if (back.sides.empty())
+        if (back.sides.empty()) {
             new_node->back_L = Solid_Wall_Leaf(back);
-        else
+        } else {
             new_node->back_N =
                 Partition_Group(back, reached_cluster, new_node, 1);
+        }
 
 #if (NODE_DEBUG == 1)
         LogPrintf("part_info %p = %s / %s\n", new_node,
@@ -1906,34 +2090,61 @@ void quake_bbox_c::Begin() {
 }
 
 void quake_bbox_c::End() {
-    for (int b = 0; b < 3; b++)
-        if (mins[b] > maxs[b]) mins[b] = maxs[b] = 0;
+    for (int b = 0; b < 3; b++) {
+        if (mins[b] > maxs[b]) {
+            mins[b] = maxs[b] = 0;
+        }
+    }
 }
 
 void quake_bbox_c::Add_X(float x) {
-    if (x < mins[0]) mins[0] = x;
-    if (x > maxs[0]) maxs[0] = x;
+    if (x < mins[0]) {
+        mins[0] = x;
+    }
+    if (x > maxs[0]) {
+        maxs[0] = x;
+    }
 }
 
 void quake_bbox_c::Add_Y(float y) {
-    if (y < mins[1]) mins[1] = y;
-    if (y > maxs[1]) maxs[1] = y;
+    if (y < mins[1]) {
+        mins[1] = y;
+    }
+    if (y > maxs[1]) {
+        maxs[1] = y;
+    }
 }
 
 void quake_bbox_c::Add_Z(float z) {
-    if (z < mins[2]) mins[2] = z;
-    if (z > maxs[2]) maxs[2] = z;
+    if (z < mins[2]) {
+        mins[2] = z;
+    }
+    if (z > maxs[2]) {
+        maxs[2] = z;
+    }
 }
 
 void quake_bbox_c::AddPoint(float x, float y, float z) {
-    if (x < mins[0]) mins[0] = x;
-    if (x > maxs[0]) maxs[0] = x;
+    if (x < mins[0]) {
+        mins[0] = x;
+    }
+    if (x > maxs[0]) {
+        maxs[0] = x;
+    }
 
-    if (y < mins[1]) mins[1] = y;
-    if (y > maxs[1]) maxs[1] = y;
+    if (y < mins[1]) {
+        mins[1] = y;
+    }
+    if (y > maxs[1]) {
+        maxs[1] = y;
+    }
 
-    if (z < mins[2]) mins[2] = z;
-    if (z > maxs[2]) maxs[2] = z;
+    if (z < mins[2]) {
+        mins[2] = z;
+    }
+    if (z > maxs[2]) {
+        maxs[2] = z;
+    }
 }
 
 void quake_bbox_c::Merge(const quake_bbox_c &other) {
@@ -1944,14 +2155,26 @@ void quake_bbox_c::Merge(const quake_bbox_c &other) {
 }
 
 bool quake_bbox_c::Touches(float x, float y, float z, float r) const {
-    if (x > maxs[0] + r) return false;
-    if (x < mins[0] - r) return false;
+    if (x > maxs[0] + r) {
+        return false;
+    }
+    if (x < mins[0] - r) {
+        return false;
+    }
 
-    if (y > maxs[1] + r) return false;
-    if (y < mins[1] - r) return false;
+    if (y > maxs[1] + r) {
+        return false;
+    }
+    if (y < mins[1] - r) {
+        return false;
+    }
 
-    if (z > maxs[2] + r) return false;
-    if (z < mins[2] - r) return false;
+    if (z > maxs[2] + r) {
+        return false;
+    }
+    if (z < mins[2] - r) {
+        return false;
+    }
 
     return true;
 }
@@ -1961,15 +2184,17 @@ void quake_node_c::ComputeBBox() {
 
     bbox.Begin();
 
-    if (front_N)
+    if (front_N) {
         bbox.Merge(front_N->bbox);
-    else if (front_L != qk_solid_leaf)
+    } else if (front_L != qk_solid_leaf) {
         bbox.Merge(front_L->bbox);
+    }
 
-    if (back_N)
+    if (back_N) {
         bbox.Merge(back_N->bbox);
-    else if (back_L != qk_solid_leaf)
+    } else if (back_L != qk_solid_leaf) {
         bbox.Merge(back_L->bbox);
+    }
 
     bbox.End();
 }
@@ -1978,24 +2203,28 @@ void quake_node_c::FilterBrush(csg_brush_c *B, leaf_map_t *touched) {
     int side = plane.BrushSide(B);
 
     if (side >= 0) {
-        if (front_N)
+        if (front_N) {
             front_N->FilterBrush(B, touched);
-        else if (front_L != qk_solid_leaf)
+        } else if (front_L != qk_solid_leaf) {
             front_L->FilterBrush(B, touched);
+        }
     }
 
     if (side <= 0) {
-        if (back_N)
+        if (back_N) {
             back_N->FilterBrush(B, touched);
-        else if (back_L != qk_solid_leaf)
+        } else if (back_L != qk_solid_leaf) {
             back_L->FilterBrush(B, touched);
+        }
     }
 }
 
 static void AssignLeafIndex(quake_leaf_c *leaf, int *cur_leaf) {
     SYS_ASSERT(leaf);
 
-    if (leaf == qk_solid_leaf) return;
+    if (leaf == qk_solid_leaf) {
+        return;
+    }
 
     // must add 1 because leaf #0 is the SOLID_LEAF
     leaf->index = 1 + *cur_leaf;
@@ -2008,15 +2237,17 @@ void CSG_AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf) {
 
     *cur_node += 1;
 
-    if (node->front_N)
+    if (node->front_N) {
         CSG_AssignIndexes(node->front_N, cur_node, cur_leaf);
-    else
+    } else {
         AssignLeafIndex(node->front_L, cur_leaf);
+    }
 
-    if (node->back_N)
+    if (node->back_N) {
         CSG_AssignIndexes(node->back_N, cur_node, cur_leaf);
-    else
+    } else {
         AssignLeafIndex(node->back_L, cur_leaf);
+    }
 
     // determine node's bounding box now
     node->ComputeBBox();
@@ -2070,17 +2301,21 @@ static void Detail_StoreFace(quake_face_c *F, csg_property_set_c *props,
         return;
     }
 
-    if (is_model)
+    if (is_model) {
         F->flags |= FACE_F_Model;
-    else
+    } else {
         F->flags |= FACE_F_Detail;
+    }
 
-    if (props->getInt("noshadow") > 0) F->flags |= FACE_F_NoShadow;
+    if (props->getInt("noshadow") > 0) {
+        F->flags |= FACE_F_NoShadow;
+    }
 
-    if (uv_mat)
+    if (uv_mat) {
         F->uv_mat.Set(uv_mat);
-    else
+    } else {
         F->SetupMatrix();
+    }
 
     leaf_map_t::iterator LMI;
 
@@ -2121,7 +2356,9 @@ static void Detail_FloorOrCeilFace(csg_brush_c *B, bool is_ceil,
         F->AddVert(V->x, V->y, z);
     }
 
-    if (B->bflags & BFLAG_NoShadow) F->flags |= FACE_F_NoShadow;
+    if (B->bflags & BFLAG_NoShadow) {
+        F->flags |= FACE_F_NoShadow;
+    }
 
     Detail_StoreFace(F, &BP.face, BP.uv_mat, touched_leafs, is_model);
 }
@@ -2134,10 +2371,11 @@ static void Detail_SideFace(csg_brush_c *B, unsigned int k,
     brush_vert_c *V1 = B->verts[k];
     brush_vert_c *V2;
 
-    if (k + 1 < B->verts.size())
+    if (k + 1 < B->verts.size()) {
         V2 = B->verts[k + 1];
-    else
+    } else {
         V2 = B->verts[0];
+    }
 
     F->plane.x = V1->x;
     F->plane.y = V1->y;
@@ -2165,28 +2403,42 @@ static void Detail_SideFace(csg_brush_c *B, unsigned int k,
 
     int tri_side = 0;
 
-    if (f_Lz1 > f_Lz2 - Z_EPSILON) tri_side = -1;
-    if (f_Rz1 > f_Rz2 - Z_EPSILON) tri_side = +1;
+    if (f_Lz1 > f_Lz2 - Z_EPSILON) {
+        tri_side = -1;
+    }
+    if (f_Rz1 > f_Rz2 - Z_EPSILON) {
+        tri_side = +1;
+    }
 
     F->AddVert(V1->x, V1->y, f_Lz1);
 
-    if (tri_side >= 0) F->AddVert(V1->x, V1->y, f_Lz2);
+    if (tri_side >= 0) {
+        F->AddVert(V1->x, V1->y, f_Lz2);
+    }
 
     F->AddVert(V2->x, V2->y, f_Rz2);
 
-    if (tri_side <= 0) F->AddVert(V2->x, V2->y, f_Rz1);
+    if (tri_side <= 0) {
+        F->AddVert(V2->x, V2->y, f_Rz1);
+    }
 
     SYS_ASSERT(F->verts.size() >= 3);
 
-    if (B->bflags & BFLAG_NoShadow) F->flags |= FACE_F_NoShadow;
+    if (B->bflags & BFLAG_NoShadow) {
+        F->flags |= FACE_F_NoShadow;
+    }
 
     Detail_StoreFace(F, &V1->face, V1->uv_mat, touched_leafs, is_model);
 }
 
 static void Detail_CreateFaces(csg_brush_c *B, leaf_map_t *touched_leafs) {
-    if (B->bflags & BFLAG_NoDraw) return;
+    if (B->bflags & BFLAG_NoDraw) {
+        return;
+    }
 
-    if (touched_leafs->empty()) return;
+    if (touched_leafs->empty()) {
+        return;
+    }
 
     // TODO : discard faces which lie inside a nearby solid brush
     //        [ quite difficult, perhaps use the quad tree... ]
@@ -2251,7 +2503,9 @@ static void Model_ProcessBrush(quake_leaf_c *mod, csg_brush_c *B) {
 static void Model_ProcessEntity(csg_entity_c *E) {
     const char *link_id = E->props.getStr("link_id");
 
-    if (!link_id) return;  // not a model
+    if (!link_id) {
+        return;  // not a model
+    }
 
     E->props.Remove("link_id");
 
@@ -2267,7 +2521,9 @@ static void Model_ProcessEntity(csg_entity_c *E) {
     for (unsigned int i = 0; i < all_brushes.size(); i++) {
         csg_brush_c *B = all_brushes[i];
 
-        if (B->link_ent == E) Model_ProcessBrush(leaf, B);
+        if (B->link_ent == E) {
+            Model_ProcessBrush(leaf, B);
+        }
     }
 
     leaf->bbox.End();
@@ -2297,17 +2553,23 @@ static void ProcessDetailModels() {
 void CSG_QUAKE_Build() {
     LogPrintf("QUAKE CSG...\n");
 
-    if (main_win) main_win->build_box->Prog_Step("CSG");
+    if (main_win) {
+        main_win->build_box->Prog_Step("CSG");
+    }
 
     CSG_BSP(1.0);
 
-    if (main_win) main_win->build_box->Prog_Step("BSP");
+    if (main_win) {
+        main_win->build_box->Prog_Step("BSP");
+    }
 
     quake_group_c GROUP;
 
     CreateSides(GROUP);
 
-    if (qk_game >= 2) CreateBrushes(GROUP);
+    if (qk_game >= 2) {
+        CreateBrushes(GROUP);
+    }
 
     CreateClusters(GROUP);
 
@@ -2325,7 +2587,9 @@ void CSG_QUAKE_Build() {
     LogPrintf("root = %p\n", qk_bsp_root);
 #endif
 
-    if (qk_game == 1) RemoveSolidNodes(qk_bsp_root);
+    if (qk_game == 1) {
+        RemoveSolidNodes(qk_bsp_root);
+    }
 
     SYS_ASSERT(qk_bsp_root);
 
@@ -2346,12 +2610,17 @@ void CSG_QUAKE_Free() {
     delete qk_solid_leaf;
     qk_solid_leaf = NULL;
 
-    for (i = 0; i < qk_all_faces.size(); i++) delete qk_all_faces[i];
+    for (i = 0; i < qk_all_faces.size(); i++) {
+        delete qk_all_faces[i];
+    }
 
-    for (i = 0; i < qk_all_mapmodels.size(); i++) delete qk_all_mapmodels[i];
+    for (i = 0; i < qk_all_mapmodels.size(); i++) {
+        delete qk_all_mapmodels[i];
+    }
 
-    for (i = 0; i < qk_all_detail_models.size(); i++)
+    for (i = 0; i < qk_all_detail_models.size(); i++) {
         delete qk_all_detail_models[i];
+    }
 
     qk_all_faces.clear();
     qk_all_mapmodels.clear();
@@ -2376,8 +2645,9 @@ int Q1_add_mapmodel(lua_State *L) {
     //   y_face  : face table for Y sides
     //   z_face  : face table for top and bottom
 
-    if (lua_type(L, 1) != LUA_TTABLE)
+    if (lua_type(L, 1) != LUA_TTABLE) {
         return luaL_argerror(L, 1, "missing table: mapmodel info");
+    }
 
     quake_mapmodel_c *model = new quake_mapmodel_c;
 

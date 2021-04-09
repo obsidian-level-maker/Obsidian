@@ -1691,10 +1691,15 @@ function Layout_decorate_rooms(pass)
         if A.floor_group.sink.mat == "_LIQUID" then
           reqs.is_sink = "liquid"
         end
-        for _,liquid in pairs(GAME.LIQUIDS) do
-          if A.floor_group.sink.mat == liquid.mat then
-            reqs.is_sink = "liquid"
-          end
+
+        if A.floor_group.sink.mat == "_SKY" then
+          reqs.is_sink = "sky"
+        end
+
+        -- check for when sinks have predefined liquids
+        local liq_mat = A.floor_group.sink.mat
+        if GAME.LIQUIDS[liq_mat] then
+          reqs.is_sink = "liquid"
         end
       end
 
@@ -1760,7 +1765,7 @@ function Layout_decorate_rooms(pass)
     -- locking exits and items
 
     if THEME.no_switches then return end
-    local switch_prob = style_sel("switches", 0, 20, 40, 80)
+    local switch_prob = style_sel("local_switches", 0, 20, 40, 80)
 
     for loop = 1, 2 do
       if rand.odds(switch_prob) then

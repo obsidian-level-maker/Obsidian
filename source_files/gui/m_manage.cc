@@ -59,7 +59,9 @@ class Lookahead_Stream_c {
         // (we are eating 'pos' characters at the head)
         buf_len -= pos;
 
-        if (buf_len > 0) memmove(buffer, buffer + pos, buf_len);
+        if (buf_len > 0) {
+            memmove(buffer, buffer + pos, buf_len);
+        }
 
         pos = 0;
     }
@@ -70,7 +72,9 @@ class Lookahead_Stream_c {
 
         int got_len = fread(buffer + buf_len, 1, want_len, fp);
 
-        if (got_len < 0) got_len = 0;
+        if (got_len < 0) {
+            got_len = 0;
+        }
 
         buf_len = buf_len + got_len;
     }
@@ -89,13 +93,17 @@ class Lookahead_Stream_c {
     char peek_char(int offset = 0) {
         int new_pos = pos + offset;
 
-        if (new_pos >= buf_len) return 0;
+        if (new_pos >= buf_len) {
+            return 0;
+        }
 
         return buffer[new_pos];
     }
 
     char get_char() {
-        if (hit_eof()) return 0;
+        if (hit_eof()) {
+            return 0;
+        }
 
         int ch = buffer[pos++];
 
@@ -109,8 +117,11 @@ class Lookahead_Stream_c {
     }
 
     bool match(const char *str) {
-        for (int offset = 0; *str; str++, offset++)
-            if (peek_char(offset) != *str) return false;
+        for (int offset = 0; *str; str++, offset++) {
+            if (peek_char(offset) != *str) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -122,7 +133,9 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
     /* look for a starting string */
 
     while (1) {
-        if (stream.hit_eof()) return false;  // not found
+        if (stream.hit_eof()) {
+            return false;  // not found
+        }
 
         if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
             stream.match("-- Levels created by OBSIDIAN ") ||
@@ -146,10 +159,14 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
 
         int ch = stream.get_char();
 
-        if (ch == 0 || ch == 26) break;
+        if (ch == 0 || ch == 26) {
+            break;
+        }
 
         // remove CR (Carriage Return) characters
-        if (ch == '\r') continue;
+        if (ch == '\r') {
+            continue;
+        }
 
         mini_buf[0] = ch;
         mini_buf[1] = 0;
@@ -243,11 +260,12 @@ class UI_Manage_Config : public Fl_Double_Window {
         // abbreviate the filename if too long
         int len = strlen(filename);
 
-        if (len < 42)
+        if (len < 42) {
             full = StringPrintf("[ %s ]", filename);
-        else
+        } else {
             full = StringPrintf("[ %.10s....%s ]", filename,
                                 filename + (len - 30));
+        }
 
         conf_disp->copy_label(full);
 
@@ -342,7 +360,9 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         // if extension is missing then add ".txt"
         char *pos = (char *)fl_filename_ext(filename);
-        if (!*pos) strcat(filename, ".txt");
+        if (!*pos) {
+            strcat(filename, ".txt");
+        }
 
         return filename;
     }
@@ -370,10 +390,11 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         recent_file_data_t *ptr;
 
-        if (group == RECG_Output)
+        if (group == RECG_Output) {
             ptr = &recent_wads[0];
-        else
+        } else {
             ptr = &recent_configs[0];
+        }
 
         for (int k = 0; k < RECENT_NUM; k++) {
             ptr[k].group = -1;
@@ -384,8 +405,10 @@ class UI_Manage_Config : public Fl_Double_Window {
         int i;
 
         for (i = 0; i < max_num; i++, ptr++) {
-            if (!Recent_GetName(group, i, ptr->short_name, true /* for_menu */))
+            if (!Recent_GetName(group, i, ptr->short_name,
+                                true /* for_menu */)) {
                 break;
+            }
 
             ptr->group = group;
             ptr->index = i;
@@ -406,10 +429,11 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         int count2 = PopulateRecentMenu(recent_menu, RECG_Output, 8);
 
-        if (count1 + count2 > 0)
+        if (count1 + count2 > 0) {
             recent_menu->activate();
-        else
+        } else {
             recent_menu->deactivate();
+        }
     }
 
     const char *AskLoadFilename() {
@@ -514,7 +538,9 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         FL_NORMAL_SIZE = old_font_h;
 
-        if (!filename) return;
+        if (!filename) {
+            return;
+        }
 
         that->LoadFromFile(filename);
     }
@@ -566,7 +592,9 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         FL_NORMAL_SIZE = old_font_h;
 
-        if (!filename) return;
+        if (!filename) {
+            return;
+        }
 
         that->SaveToFile(filename);
 
@@ -618,7 +646,9 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         callback_Copy(w, data);
 
-        if (that->text_buf->length() > 0) that->Clear();
+        if (that->text_buf->length() > 0) {
+            that->Clear();
+        }
     }
 
     static void callback_Paste(Fl_Widget *w, void *data) {
@@ -639,10 +669,11 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     : Fl_Double_Window(W, H, label), want_quit(false) {
     size_range(W, H);
 
-    if (alternate_look)
+    if (alternate_look) {
         color(FL_DARK2, FL_DARK2);
-    else
+    } else {
         color(BG_COLOR, BG_COLOR);
+    }
 
     callback(callback_Quit, this);
 
@@ -783,7 +814,9 @@ void DLG_ManageConfig(void) {
     config_window->ReadCurrentSettings();
 
     // run the window until the user closes it
-    while (!config_window->WantQuit()) Fl::wait();
+    while (!config_window->WantQuit()) {
+        Fl::wait();
+    }
 
     config_window->set_non_modal();
     config_window->hide();

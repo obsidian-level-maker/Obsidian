@@ -59,12 +59,17 @@ typedef struct {
 static tnode_t *trace_nodes;
 
 static int ConvertTraceLeaf(quake_leaf_c *leaf) {
-    if (leaf->medium != MEDIUM_SOLID) return TRACE_EMPTY;
+    if (leaf->medium != MEDIUM_SOLID) {
+        return TRACE_EMPTY;
+    }
 
     // look for sky ceiling, require all brushes to be "sky"
     if (leaf->brushes.size() > 0) {
-        for (unsigned int k = 0; k < leaf->brushes.size(); k++)
-            if (!(leaf->brushes[k]->bflags & BFLAG_Sky)) return TRACE_SOLID;
+        for (unsigned int k = 0; k < leaf->brushes.size(); k++) {
+            if (!(leaf->brushes[k]->bflags & BFLAG_Sky)) {
+                return TRACE_SOLID;
+            }
+        }
 
         return TRACE_SKY;
     }
@@ -106,26 +111,29 @@ static int ConvertTraceNode(quake_node_c *node, int &index_var) {
         TN->dist = -TN->dist;
     }
 
-    if (fx > 0.9999)
+    if (fx > 0.9999) {
         TN->type = PLANE_X;
-    else if (fy > 0.9999)
+    } else if (fy > 0.9999) {
         TN->type = PLANE_Y;
-    else if (fz > 0.9999)
+    } else if (fz > 0.9999) {
         TN->type = PLANE_Z;
-    else
+    } else {
         TN->type = PLANE_OTHER;
+    }
 
-    if (node->front_N)
+    if (node->front_N) {
         TN->children[side] = ConvertTraceNode(node->front_N, index_var);
-    else
+    } else {
         TN->children[side] = ConvertTraceLeaf(node->front_L);
+    }
 
     side ^= 1;
 
-    if (node->back_N)
+    if (node->back_N) {
         TN->children[side] = ConvertTraceNode(node->back_N, index_var);
-    else
+    } else {
         TN->children[side] = ConvertTraceLeaf(node->back_L);
+    }
 
     return this_idx;
 }
@@ -150,7 +158,9 @@ void QVIS_FreeTraceNodes() {
 static int RecursiveTestRay(int nodenum, float x1, float y1, float z1, float x2,
                             float y2, float z2) {
     for (;;) {
-        if (nodenum < 0) return nodenum;
+        if (nodenum < 0) {
+            return nodenum;
+        }
 
         tnode_t *TN = &trace_nodes[nodenum];
 
@@ -211,7 +221,9 @@ static int RecursiveTestRay(int nodenum, float x1, float y1, float z1, float x2,
         // -AJA- here is where my TRACE_SKY logic comes into play.
         //       It assumes the ray is cast from luxel to sun light
         //       (and won't work the other way around).
-        if (r != TRACE_EMPTY) return r;
+        if (r != TRACE_EMPTY) {
+            return r;
+        }
 
         // yes it was, so continue with the back half
 
@@ -232,11 +244,17 @@ static int RecursiveTestDetail(quake_node_c *N, quake_leaf_c *L, float x1,
             for (unsigned int k = 0; k < L->faces.size(); k++) {
                 quake_face_c *F = L->faces[k];
 
-                if (!(F->flags & FACE_F_Detail)) continue;
+                if (!(F->flags & FACE_F_Detail)) {
+                    continue;
+                }
 
-                if (F->flags & FACE_F_NoShadow) continue;
+                if (F->flags & FACE_F_NoShadow) {
+                    continue;
+                }
 
-                if (F->IntersectRay(x1, y1, z1, x2, y2, z2)) return TRACE_SOLID;
+                if (F->IntersectRay(x1, y1, z1, x2, y2, z2)) {
+                    return TRACE_SOLID;
+                }
             }
 
             return TRACE_EMPTY;
@@ -274,7 +292,9 @@ static int RecursiveTestDetail(quake_node_c *N, quake_leaf_c *L, float x1,
 
         int r = RecursiveTestDetail(N0, L0, x1, y1, z1, mx, my, mz);
 
-        if (r != TRACE_EMPTY) return r;
+        if (r != TRACE_EMPTY) {
+            return r;
+        }
 
         // yes it was, so continue with the back half
 
@@ -290,20 +310,26 @@ static int RecursiveTestDetail(quake_node_c *N, quake_leaf_c *L, float x1,
 bool QVIS_TraceRay(float x1, float y1, float z1, float x2, float y2, float z2) {
     int r = RecursiveTestRay(0, x1, y1, z1, x2, y2, z2);
 
-    if (r == TRACE_SOLID) return false;
+    if (r == TRACE_SOLID) {
+        return false;
+    }
 
     // check for detail faces *after* the main trace
 
     r = RecursiveTestDetail(qk_bsp_root, NULL, x1, y1, z1, x2, y2, z2);
 
-    if (r == TRACE_SOLID) return false;
+    if (r == TRACE_SOLID) {
+        return false;
+    }
 
     return true;
 }
 
 static int RecursiveTestPoint(int nodenum, float x, float y, float z) {
     for (;;) {
-        if (nodenum < 0) return nodenum;
+        if (nodenum < 0) {
+            return nodenum;
+        }
 
         tnode_t *TN = &trace_nodes[nodenum];
 
@@ -348,7 +374,9 @@ static int RecursiveTestPoint(int nodenum, float x, float y, float z) {
 
         // we treat sky brushes as solid here
 
-        if (A == TRACE_EMPTY && B == TRACE_EMPTY) return TRACE_EMPTY;
+        if (A == TRACE_EMPTY && B == TRACE_EMPTY) {
+            return TRACE_EMPTY;
+        }
 
         return TRACE_SOLID;
     }
@@ -392,7 +420,9 @@ void qCluster_c::AddLeaf(quake_leaf_c *leaf) {
 }
 
 int qCluster_c::CalcID() const {
-    if (leafs.empty()) return -1;
+    if (leafs.empty()) {
+        return -1;
+    }
 
     return (cy * cluster_W) + cx;
 }
@@ -437,7 +467,9 @@ void QVIS_CreateClusters(double min_x, double min_y, double max_x,
 
 void QVIS_FreeClusters() {
     if (qk_clusters) {
-        for (int i = 0; i < cluster_W * cluster_H; i++) delete qk_clusters[i];
+        for (int i = 0; i < cluster_W * cluster_H; i++) {
+            delete qk_clusters[i];
+        }
 
         delete[] qk_clusters;
         qk_clusters = NULL;
@@ -450,10 +482,11 @@ void QVIS_FreeClusters() {
 void QVIS_MarkWall(int cx, int cy, int side) {
     SYS_ASSERT(qk_visbuf);
 
-    if (side & 1)
+    if (side & 1) {
         qk_visbuf->AddDiagonal(cx, cy, side);
-    else
+    } else {
         qk_visbuf->AddWall(cx, cy, side);
+    }
 
 // debugging
 #if 0
@@ -464,27 +497,33 @@ void QVIS_MarkWall(int cx, int cy, int side) {
 static void MarkSolidClusters() {
     // any cluster without a leaf must be totally solid
 
-    for (int cy = 0; cy < cluster_H; cy++)
+    for (int cy = 0; cy < cluster_H; cy++) {
         for (int cx = 0; cx < cluster_W; cx++) {
             qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
             if (cluster->leafs.empty()) {
-                for (int side = 2; side <= 8; side += 2)
+                for (int side = 2; side <= 8; side += 2) {
                     QVIS_MarkWall(cx, cy, side);
+                }
             }
         }
+    }
 }
 
 static void FloodAmbientSounds() {
-    for (int pass = 0; pass < 8; pass++)
-        for (int cy = 0; cy < cluster_H; cy++)
+    for (int pass = 0; pass < 8; pass++) {
+        for (int cy = 0; cy < cluster_H; cy++) {
             for (int cx = 0; cx < cluster_W; cx++) {
                 qCluster_c *S = qk_clusters[cy * cluster_W + cx];
 
-                if (S->leafs.empty()) continue;
+                if (S->leafs.empty()) {
+                    continue;
+                }
 
                 for (int side = 2; side <= 8; side += 2) {
-                    if (qk_visbuf->TestWall(cx, cy, side)) continue;
+                    if (qk_visbuf->TestWall(cx, cy, side)) {
+                        continue;
+                    }
 
                     int nx = (side == 4) ? -1 : (side == 6) ? +1 : 0;
                     int ny = (side == 2) ? -1 : (side == 8) ? +1 : 0;
@@ -492,8 +531,10 @@ static void FloodAmbientSounds() {
                     nx += cx;
                     ny += cy;
 
-                    if (nx < 0 || nx >= cluster_W || ny < 0 || ny >= cluster_H)
+                    if (nx < 0 || nx >= cluster_W || ny < 0 ||
+                        ny >= cluster_H) {
                         continue;
+                    }
 
                     qCluster_c *N = qk_clusters[ny * cluster_W + nx];
 
@@ -501,7 +542,9 @@ static void FloodAmbientSounds() {
                         byte src = S->ambient_dists[k];
                         byte dest = N->ambient_dists[k];
 
-                        if (src == 255) continue;
+                        if (src == 255) {
+                            continue;
+                        }
 
                         src++;
 
@@ -509,6 +552,8 @@ static void FloodAmbientSounds() {
                     }
                 }
             }
+        }
+    }
 }
 
 //------------------------------------------------------------------------
@@ -545,15 +590,21 @@ typedef struct {
     }
 
     void AddValue(float perc) {
-        if (perc < best) best = perc;
-        if (perc > worst) worst = perc;
+        if (perc < best) {
+            best = perc;
+        }
+        if (perc > worst) {
+            worst = perc;
+        }
 
         average += perc;
         total += 1;
     }
 
     void Finish() {
-        if (total > 0) average /= total;
+        if (total > 0) {
+            average /= total;
+        }
     }
 
     float CalcRatio() const {
@@ -620,10 +671,11 @@ static void CollectRowData(int src_x, int src_y, bool PHS) {
 
     unsigned int blocked = 0;  // statistics
 
-    for (int cy = 0; cy < cluster_H; cy++)
+    for (int cy = 0; cy < cluster_H; cy++) {
         for (int cx = 0; cx < cluster_W; cx++) {
-            if ((cx == src_x && cy == src_y) || qk_visbuf->CanSee(cx, cy))
+            if ((cx == src_x && cy == src_y) || qk_visbuf->CanSee(cx, cy)) {
                 continue;
+            }
 
             qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
@@ -657,6 +709,7 @@ static void CollectRowData(int src_x, int src_y, bool PHS) {
                 }
             }
         }
+    }
 
 #if 0
 	fprintf(stderr, "cluster: %2d %2d  blocked: %d = %1.2f%%   \n",
@@ -682,7 +735,7 @@ static void Build_PVS() {
 
     int done = 0;
 
-    for (int cy = 0; cy < cluster_H; cy++)
+    for (int cy = 0; cy < cluster_H; cy++) {
         for (int cx = 0; cx < cluster_W; cx++) {
             qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
@@ -725,11 +778,14 @@ static void Build_PVS() {
             if (done % 80 == 0) {
                 Main_Ticker();
 
-                if (main_action >= MAIN_CANCEL) return;
+                if (main_action >= MAIN_CANCEL) {
+                    return;
+                }
             }
 
             done++;
         }
+    }
 }
 
 static void Q2_PrependOffsets(int num_clusters) {
@@ -743,8 +799,12 @@ static void Q2_PrependOffsets(int num_clusters) {
         qCluster_c *cluster = qk_clusters[i];
 
         // dummy offset for unused clusters
-        if (cluster->visofs < 0) cluster->visofs = 0;
-        if (cluster->hearofs < 0) cluster->hearofs = 0;
+        if (cluster->visofs < 0) {
+            cluster->visofs = 0;
+        }
+        if (cluster->hearofs < 0) {
+            cluster->hearofs = 0;
+        }
 
         // fix endianness too
 
@@ -795,10 +855,11 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
 
     FloodAmbientSounds();
 
-    if (qk_game >= 2)
+    if (qk_game >= 2) {
         v_row_bits = num_clusters;
-    else
+    } else {
         v_row_bits = numleafs;
+    }
 
     v_bytes_per_row = (v_row_bits + 7) >> 3;
 
@@ -827,13 +888,16 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
     if (!(main_action >= MAIN_CANCEL)) {
         ShowVisStats();
 
-        if (qk_game == 2) Q2_PrependOffsets(num_clusters);
+        if (qk_game == 2) {
+            Q2_PrependOffsets(num_clusters);
+        }
 
         // TODO: handle overflow: store visdata in memory, and "merge" the
         //       clusters into pairs or 2x2 contiguous pieces.
 
-        if (q_visibility->GetSize() >= max_size)
+        if (q_visibility->GetSize() >= max_size) {
             Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");
+        }
     }
 
     delete[] v_row_buffer;

@@ -1263,13 +1263,15 @@ ARMAETUS_MATERIALS = {
   ------------------
   -- MSSP Stuff --
   ------------------
-  -- walls
+
+  -- 256-wide silver walls
   OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
   OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
   OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
   OBTBSLV5 = { t="OBTBSLV4", f="FLAT3"},
 
+  -- 128-wide silver walls
   OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},
   OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
   OBTBSTX3 = { t="OBTBSTX3", f="GRATE6"},
@@ -1277,10 +1279,34 @@ ARMAETUS_MATERIALS = {
   OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
   OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
 
-  -- flats
-  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"},
+  -- 128-wide techy brick walls
+  OBTBSLB1 = { t="OBTBSLB1", f="SHINY03"},
+  OBTBSLB2 = { t="OBTBSLB2", f="FLOOR4_8"},
+  OBTBSLB3 = { t="OBTBSLB3", f="SLIME14"},
+  OBTBSLB4 = { t="OBTBSLB4", f="SLIME15"},
+  OBTBSLB5 = { t="OBTBSLB5", f="MFLR8_1"},
+
+  OBTBSB2B = { t="OBTBSB2B", f="FLOOR5_3"}, -- brown color composite
+  OBTBSB3B = { t="OBTBSB3B", f="SLIME16"},
+  OBTBSB4B = { t="OBTBSB4B", f="FLOOR4_1"},
+  OBTBSB5B = { t="OBTBSB5B", f="FLAT5"},
+
+  -- flats (128x128)
+  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
   OBTBSFL3 = { t="OBTBSTX1", f="OBTBSFL3"},
+
+  OBTSVBF1 = { t="OBTBSLB2", f="OBTSVBF1"}, --< brick
+  OBTSVBF2 = { t="OBTBSLB3", f="OBTSVBF2"},
+  OBTSVBF3 = { t="OBTBSLB4", f="OBTSVBF3"},
+
+  OBTSBF1B = { t="OBTBSLB2", f="OBTSBF1B"}, -- brown color composite
+  OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"},
+  OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"},
+
+  OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
+  OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
+  OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
 
   ----------------------
   -- Special Textures --
@@ -1396,7 +1422,7 @@ brightmap texture SILVER2G
 }
 
 // vent (the only one that needs a brightmap TBH
-brightmap texture COMPVEN2,
+brightmap texture COMPVEN2
 {
   map OBRCPVN2
 }
@@ -1466,6 +1492,36 @@ brightmap texture NOISE4
 {
   map OBRNOIS1
 }
+
+// quad monitors
+brightmap texture COMPSD1
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD2
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD3
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD4
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD6
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD7
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD8
+{
+  map OBRCPSD1
+}
 //
 brightmap texture NOISE2A
 {
@@ -1501,7 +1557,7 @@ brightmap texture NOISE3D
   map OBRNOIS3
 }
 
-// lite5 recolors - excluding the original lite5,
+// lite5 recolors - excluding the original lite5
 brightmap texture T_VSLTEG
 {
   map OBRLITE5

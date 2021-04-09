@@ -20,6 +20,7 @@
 
 extern FL_EXPORT void gl_remove_displaylist_fonts();
 
+
 //
 // End of "$Id$".
 //

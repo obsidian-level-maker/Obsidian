@@ -338,7 +338,13 @@ OB_MODULES["misc"] =
     { name="trikeys",     label=_("Triple-Keyed Doors"),          choices=STYLE_CHOICES,
       tooltip = "Controls the chance to get three key door whenever three keys are present.",
     },
-    { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES, gap=1 },
+    { name="switches",    label=_("Switch Goals"), choices=STYLE_CHOICES, 
+      tooltip = "Controls the chance for long-distance switch and lock quests."
+    },
+    { name="local_switches",    label=_("Switch Rooms"), choices=STYLE_CHOICES, 
+      tooltip = "Controls the chance same-room switches and locks.",
+      gap=1 
+    },
 
     {
       name="road_markings",
