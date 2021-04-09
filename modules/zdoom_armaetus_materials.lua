@@ -1284,6 +1284,10 @@ ARMAETUS_MATERIALS = {
   G8_BRNW2 = { t="G8_BRNW2", f="FLOOR4_1"},
   G8_BRNW3 = { t="G8_BRNW3", f="FLOOR4_5"},
 
+  G8_BR1GY = { t="G8_BRNW1", f="GRATE2"}, -- grey recolor composite
+  G8_BR2GY = { t="G8_BRNW2", f="FLOOR4_8"},
+  G8_BR3GY = { t="G8_BRNW3", f="G15"},
+
   -- 128-wide techy brick walls
   OBTBSLB1 = { t="OBTBSLB1", f="SHINY03"},
   OBTBSLB2 = { t="OBTBSLB2", f="FLOOR4_8"},

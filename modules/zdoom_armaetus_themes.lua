@@ -244,7 +244,11 @@ ARMAETUS_ROOM_THEMES =
       OBTBSTX3 = 30,
 
       OBTBSLB1 = 30,
-      OBTBSLB1 = 30
+      OBTBSLB1 = 30,
+
+      G8_BR1GY = 20,
+      G8_BR2GY = 20,
+      G8_BR3GY = 20
     },
 
     floors =
@@ -846,7 +850,10 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNW1 = 10,
       G8_BRNW2 = 10,
-      G8_BRNW3 = 10
+      G8_BRNW3 = 10,
+      G8_BR1GY = 10,
+      G8_BR2GY = 10,
+      G8_BR3GY = 10
     },
 
     floors =
@@ -943,6 +950,10 @@ ARMAETUS_ROOM_THEMES =
       OBTBSLB3 = 20,
       OBTBSLB4 = 20,
       OBTBSLB5 = 20,
+
+      G8_BR1GY = 20,
+      G8_BR2GY = 20,
+      G8_BR3GY = 20,
     },
 
     floors =
@@ -1101,7 +1112,9 @@ ARMAETUS_ROOM_THEMES =
       OBTBSLB4 = 10,
 
       G8_BRNW1 = 20,
-      G8_BRNW3 = 20
+      G8_BRNW3 = 20,
+      G8_BR1GY = 20,
+      G8_BR2GY = 20
     },
 
     floors =
@@ -1367,10 +1380,13 @@ ARMAETUS_ROOM_THEMES =
       KMARBLE3 = 50,
       KMARBLE1 = 20,
 
-      OBTBSLB2 = 10,
-      OBTBSLB3 = 10,
-      OBTBSLB4 = 10,
-      OBTBSLB5 = 10
+      OBTBSLB2 = 8,
+      OBTBSLB3 = 8,
+      OBTBSLB4 = 8,
+      OBTBSLB5 = 8,
+
+      G8_BR1GY = 8,
+      G8_BR3GY = 8
     },
 
     floors =
@@ -1565,6 +1581,8 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNW1 = 10,
       G8_BRNW3 = 10,
+      G8_BR1GY = 10,
+      G8_BR3GY = 10
     },
 
     floors =
@@ -2243,7 +2261,10 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNW1 = 10,
       G8_BRNW2 = 10,
-      G8_BRNW3 = 10
+      G8_BRNW3 = 10,
+      G8_BR1GY = 10,
+      G8_BR2GY = 10,
+      G8_BR3GY = 10
     },
 
     floors =
@@ -3575,9 +3596,12 @@ ARMAETUS_THEMES =
       OBTBSB4B = 15,
       OBTBSB5B = 15,
 
-      G8_BRNW1 = 20,
-      G8_BRNW2 = 20,
-      G8_BRNW3 = 20
+      G8_BRNW1 = 10,
+      G8_BRNW2 = 10,
+      G8_BRNW3 = 10,
+      G8_BR1GY = 10,
+      G8_BR2GY = 10,
+      G8_BR3GY = 10
     },
 
     fence_groups =
@@ -4110,7 +4134,9 @@ ARMAETUS_THEMES =
       OBTBSLB4 = 15,
 
       G8_BRNW1 = 15,
-      G8_BRNW3 = 15
+      G8_BRNW3 = 15,
+      G8_BR2GY = 15,
+      G8_BR3GY = 15
     },
 
     wall_groups =
