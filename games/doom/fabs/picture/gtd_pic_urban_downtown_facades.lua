@@ -390,7 +390,7 @@ PREFABS.Pic_urban_downtown_facade_alley =
   prob = 200,
 
   y_fit = { 32,40 },
-  z_fit = "top"
+  z_fit = { 208,240 }
 }
 
 PREFABS.Pic_urban_downtown_facade_fenced_roof =

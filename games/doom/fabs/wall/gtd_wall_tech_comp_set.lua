@@ -1,6 +1,6 @@
 PREFABS.Wall_gtd_computer_wall_1 =
 {
-  file   = "wall/gtd_wall_comp_set.wad",
+  file   = "wall/gtd_wall_tech_comp_set.wad",
   map    = "MAP01",
 
   prob   = 50,
