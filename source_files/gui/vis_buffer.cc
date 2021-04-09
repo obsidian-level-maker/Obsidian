@@ -52,61 +52,75 @@ void Vis_Buffer::AddWall(int x, int y, int side) {
         side = 2;
     }
 
-    if (!isValid(x, y)) return;
+    if (!isValid(x, y)) {
+        return;
+    }
 
-    if (side == 2)
+    if (side == 2) {
         at(x, y) |= V_BOTTOM;
-    else
+    } else {
         at(x, y) |= V_LEFT;
+    }
 }
 
 bool Vis_Buffer::TestWall(int x, int y, int side) {
     side = Trans_Side(side);
 
     if (side == 6) {
-        if (flip_x)
+        if (flip_x) {
             x--;
-        else
+        } else {
             x++;
+        }
         side = 4;
     }
 
     if (side == 8) {
-        if (flip_y)
+        if (flip_y) {
             y--;
-        else
+        } else {
             y++;
+        }
         side = 2;
     }
 
-    if (!isValid(x, y)) return true;
+    if (!isValid(x, y)) {
+        return true;
+    }
 
-    if (side == 2)
+    if (side == 2) {
         return (at(x, y) & V_BOTTOM) ? true : false;
-    else
+    } else {
         return (at(x, y) & V_LEFT) ? true : false;
+    }
 }
 
 void Vis_Buffer::AddDiagonal(int x, int y, int dir) {
-    if (!isValid(x, y)) return;
+    if (!isValid(x, y)) {
+        return;
+    }
 
-    if (dir == 1 || dir == 9)
+    if (dir == 1 || dir == 9) {
         at(x, y) |= V_DIAG_NE;
-    else
+    } else {
         at(x, y) |= V_DIAG_SE;
+    }
 }
 
 void Vis_Buffer::ReadMap(const char *filename) {
     FILE *fp = fopen(filename, "r");
-    if (!fp) Main_FatalError("No such file: %s\n", filename);
+    if (!fp) {
+        Main_FatalError("No such file: %s\n", filename);
+    }
 
     int x, y, side;
 
     while (fscanf(fp, " %d %d %d ", &x, &y, &side) == 3) {
-        if (side & 1)
+        if (side & 1) {
             AddDiagonal(x, y, side);
-        else
+        } else {
             AddWall(x, y, side);
+        }
     }
 
     fclose(fp);
@@ -114,13 +128,20 @@ void Vis_Buffer::ReadMap(const char *filename) {
 
 void Vis_Buffer::WriteMap(const char *filename) {
     FILE *fp = fopen(filename, "w");
-    if (!fp) Main_FatalError("Cannot create file: %s\n", filename);
+    if (!fp) {
+        Main_FatalError("Cannot create file: %s\n", filename);
+    }
 
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
-            if (at(x, y) & V_BOTTOM) fprintf(fp, "%d %d %d\n", x, y, 2);
-            if (at(x, y) & V_LEFT) fprintf(fp, "%d %d %d\n", x, y, 4);
+            if (at(x, y) & V_BOTTOM) {
+                fprintf(fp, "%d %d %d\n", x, y, 2);
+            }
+            if (at(x, y) & V_LEFT) {
+                fprintf(fp, "%d %d %d\n", x, y, 4);
+            }
         }
+    }
 
     fclose(fp);
 }
@@ -134,9 +155,13 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side) {
     int L = 0, R = 0;
 
     for (;;) {
-        if (!isValid(x, y)) return;
+        if (!isValid(x, y)) {
+            return;
+        }
 
-        if (TestWall(x, y, side)) break;
+        if (TestWall(x, y, side)) {
+            break;
+        }
 
         x += dx;
         y += dy;
@@ -144,26 +169,32 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side) {
 
     for (;;) {
         while (isValid(x + dy * (L + 1), y + dx * (L + 1)) &&
-               TestWall(x + dy * (L + 1), y + dx * (L + 1), side))
+               TestWall(x + dy * (L + 1), y + dx * (L + 1), side)) {
             L++;
+        }
 
         while (isValid(x - dy * (R + 1), y - dx * (R + 1)) &&
-               TestWall(x - dy * (R + 1), y - dx * (R + 1), side))
+               TestWall(x - dy * (R + 1), y - dx * (R + 1), side)) {
             R++;
+        }
 
         x += dx;
         y += dy;
 
-        if (!isValid(x, y)) return;
+        if (!isValid(x, y)) {
+            return;
+        }
 
-        for (int j = -R; j <= L; j++) at(x + dy * j, y + dx * j) |= V_BASIC;
+        for (int j = -R; j <= L; j++) {
+            at(x + dy * j, y + dx * j) |= V_BASIC;
+        }
     }
 }
 
 void Vis_Buffer::DoFill() {
     // NOTE: assumes transform is already set (by DoSteps)
 
-    for (int dy = 0; dy < H; dy++)
+    for (int dy = 0; dy < H; dy++) {
         for (int dx = 0; dx < W; dx++) {
             // if (dx == 0 && dy == 0)
             //    continue;
@@ -171,8 +202,12 @@ void Vis_Buffer::DoFill() {
             int sx = loc_x + dx;
             int sy = loc_y + dy;
 
-            if (!isValid(loc_x, sy + 1)) return;
-            if (!isValid(sx + 1, loc_y)) break;
+            if (!isValid(loc_x, sy + 1)) {
+                return;
+            }
+            if (!isValid(sx + 1, loc_y)) {
+                break;
+            }
 
             if (!(at(sx + 1, sy + 1) & V_ANY) &&
                 ((at(sx + 1, sy) & V_ANY) || TestWall(sx + 1, sy, 8)) &&
@@ -180,6 +215,7 @@ void Vis_Buffer::DoFill() {
                 at(sx + 1, sy + 1) |= V_FILL;
             }
         }
+    }
 }
 
 void Vis_Buffer::AddStep(Stair_Steps &dest, int x, int y, int side) {
@@ -193,11 +229,15 @@ void Vis_Buffer::AddStep(Stair_Steps &dest, int x, int y, int side) {
 }
 
 void Vis_Buffer::CopySteps(Stair_Steps &dest, const Stair_Steps &src) {
-    for (unsigned int i = 0; i < src.size(); i++) dest.push_back(src[i]);
+    for (unsigned int i = 0; i < src.size(); i++) {
+        dest.push_back(src[i]);
+    }
 }
 
 void Vis_Buffer::MarkSteps(const Stair_Steps &steps) {
-    if (steps.size() < 2) return;
+    if (steps.size() < 2) {
+        return;
+    }
 
     // determine bounding box
     int lx = steps.front().x;
@@ -206,18 +246,25 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps) {
     int ww = steps.back().x - lx;
     int hh = steps.front().y - ly;
 
-    if (steps.back().side == 2) ww++;
+    if (steps.back().side == 2) {
+        ww++;
+    }
 
-    if (steps.front().side == 4) hh++;
+    if (steps.front().side == 4) {
+        hh++;
+    }
 
     // skip if too small
-    if (lx > loc_x && ww <= 1 && ly > loc_y && hh <= 1) return;
+    if (lx > loc_x && ww <= 1 && ly > loc_y && hh <= 1) {
+        return;
+    }
 
     // fill in the "gaps" inside the bbox (behind the stair-step)
     for (unsigned int i = 0; i < steps.size(); i++) {
         if (steps[i].side == 4) {
-            for (int sx = steps[i].x; sx < lx + ww; sx++)
+            for (int sx = steps[i].x; sx < lx + ww; sx++) {
                 at(sx, steps[i].y) |= V_LSHAPE;
+            }
         }
     }
 
@@ -228,7 +275,9 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps) {
         limit_y = ly + hh;
     }
 
-    if (quick_mode) return;
+    if (quick_mode) {
+        return;
+    }
 
     // normal case : mark all squares in the quadrant which lie
     // in the shadow area cast by the stair-step's bounding box.
@@ -239,10 +288,14 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps) {
     double bx = lx - loc_x + ww - 1;
     double by = ly - loc_y;
 
-    if (bx == 0 && ly > loc_y) return;
+    if (bx == 0 && ly > loc_y) {
+        return;
+    }
 
     for (int nx = loc_x; nx < loc_x + W; nx++) {
-        if (!isValid(nx, loc_y)) return;
+        if (!isValid(nx, loc_y)) {
+            return;
+        }
 
         int y1 = loc_y;
         int y2 = loc_y + H;
@@ -257,7 +310,9 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps) {
             y1 = (int)ceil(z);
         }
 
-        if (nx < lx + ww) y1 = MAX(y1, ly + hh);
+        if (nx < lx + ww) {
+            y1 = MAX(y1, ly + hh);
+        }
 
         for (int ny = y1; ny <= y2 && isValid(nx, ny); ny++) {
             at(nx, ny) |= V_SPAN;
@@ -272,7 +327,9 @@ void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side,
     for (;;) {
         if (side == 2) {
             sx++;
-            if (!isValid(sx, sy)) break;
+            if (!isValid(sx, sy)) {
+                break;
+            }
 
             bool go_right = TestWall(sx, sy, 2);
             bool go_down = (sy - 1 >= loc_y) && TestWall(sx, sy - 1, 4);
@@ -291,12 +348,15 @@ void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side,
             } else if (go_down) {
                 sy--;  // OK
                 side = 4;
-            } else
+            } else {
                 break;
+            }
         } else {
             /// assert(side == 4);
 
-            if (sy <= loc_y) break;
+            if (sy <= loc_y) {
+                break;
+            }
 
             bool go_right = TestWall(sx, sy, 2);
             bool go_down = (sy - 1 >= loc_y) && TestWall(sx, sy - 1, 4);
@@ -315,8 +375,9 @@ void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side,
                 side = 2;
             } else if (go_down) {
                 sy--;  // OK
-            } else
+            } else {
                 break;
+            }
         }
 
         AddStep(steps, sx, sy, side);
@@ -332,13 +393,17 @@ void Vis_Buffer::DoSteps(int quadrant) {
     limit_x = W;
     limit_y = H;
 
-    for (int dy = 0; dy < limit_y; dy++)
+    for (int dy = 0; dy < limit_y; dy++) {
         for (int dx = 0; dx < limit_x; dx++) {
             int sx = loc_x + dx;
             int sy = loc_y + dy;
 
-            if (!isValid(loc_x, sy)) return;
-            if (!isValid(sx, sy)) break;
+            if (!isValid(loc_x, sy)) {
+                return;
+            }
+            if (!isValid(sx, sy)) {
+                break;
+            }
 
             if ((dy > 0 && TestWall(sx, sy, 2)) &&
                 !(dx > 0 && TestWall(sx - 1, sy, 2)) &&
@@ -353,6 +418,7 @@ void Vis_Buffer::DoSteps(int quadrant) {
                 FollowStair(base, sx, sy, 4, 0);
             }
         }
+    }
 }
 
 //------------------------------------------------------------------------
@@ -364,9 +430,11 @@ void Vis_Buffer::FloodEmpties() {
     // the way) will become unblocked.  The trick is to prevent flow-on
     // effects, and that is what V_UNLOCK is for.
 
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
-            if (at(x, y) & V_ANY) continue;
+            if (at(x, y) & V_ANY) {
+                continue;
+            }
 
             for (int side = 2; side <= 8; side += 2) {
                 int nx = x + ((side == 4) ? -1 : (side == 6) ? +1 : 0);
@@ -378,13 +446,15 @@ void Vis_Buffer::FloodEmpties() {
                 }
             }
         }
+    }
 
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
             if (at(x, y) & V_UNLOCK) {
                 at(x, y) &= ~V_ANY;  // clears V_UNLOCK too
             }
         }
+    }
 }
 
 void Vis_Buffer::FloodFill(int passes) {
@@ -394,7 +464,7 @@ void Vis_Buffer::FloodFill(int passes) {
 }
 
 void Vis_Buffer::Truncate(int dist) {
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
             int dx = abs(x - loc_x);
             int dy = abs(y - loc_y);
@@ -403,6 +473,7 @@ void Vis_Buffer::Truncate(int dist) {
                 at(x, y) |= V_FILL;
             }
         }
+    }
 }
 
 //------------------------------------------------------------------------
@@ -418,7 +489,9 @@ void Vis_Buffer::AddWallSave(int x, int y, int side) {
         side = 2;
     }
 
-    if (!isValid(x, y)) return;
+    if (!isValid(x, y)) {
+        return;
+    }
 
     // save original contents (mask out vis results)
     Stair_Pos pos;
@@ -429,10 +502,11 @@ void Vis_Buffer::AddWallSave(int x, int y, int side) {
 
     saved_cells.push_back(pos);
 
-    if (side == 2)
+    if (side == 2) {
         at(x, y) |= V_BOTTOM;
-    else
+    } else {
         at(x, y) |= V_LEFT;
+    }
 }
 
 void Vis_Buffer::ConvertDiagonals() {
@@ -440,9 +514,11 @@ void Vis_Buffer::ConvertDiagonals() {
     // instead we convert them to normal walls based on the source loc.
     // we need to restore those changes afterwards.
 
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
-            if (x == loc_x && y == loc_y) continue;
+            if (x == loc_x && y == loc_y) {
+                continue;
+            }
 
             short se = (at(x, y) & V_DIAG_SE);
             short ne = (at(x, y) & V_DIAG_NE);
@@ -465,6 +541,7 @@ void Vis_Buffer::ConvertDiagonals() {
                 AddWallSave(x, y, 6);
             }
         }
+    }
 }
 
 void Vis_Buffer::RestoreDiagonals() {
@@ -486,7 +563,7 @@ void Vis_Buffer::SimplifySolid() {
     // this removes walls which lie between two solid cells, in order
     // to prevent the need for excessive recursion in FollowStair().
 
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
             at(x, y) &= ~V_BASIC;
 
@@ -495,10 +572,13 @@ void Vis_Buffer::SimplifySolid() {
                 at(x, y) |= V_BASIC;
             }
         }
+    }
 
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
-            if (!(at(x, y) & V_BASIC)) continue;
+            if (!(at(x, y) & V_BASIC)) {
+                continue;
+            }
 
             if (x < (W - 1) && (at(x + 1, y) & V_LEFT) &&
                 (at(x + 1, y) & V_BASIC)) {
@@ -510,12 +590,15 @@ void Vis_Buffer::SimplifySolid() {
                 at(x, y + 1) &= ~V_BOTTOM;
             }
         }
+    }
 }
 
 void Vis_Buffer::ClearVis() {
     int len = W * H;
 
-    for (int i = 0; i < len; i++) data[i] &= ~V_ANY;
+    for (int i = 0; i < len; i++) {
+        data[i] &= ~V_ANY;
+    }
 }
 
 void Vis_Buffer::ProcessVis(int x, int y) {

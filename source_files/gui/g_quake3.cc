@@ -103,16 +103,30 @@ static int GetBrushSidePlane(float px, float py, float pz, float nx, float ny,
 
     plane = BSP_AddPlane(px, py, pz, nx, ny, nz, &flipped);
 
-    if (flipped) plane ^= 1;
+    if (flipped) {
+        plane ^= 1;
+    }
 
     *axial = -1;
 
-    if (nx < -0.999) *axial = 0;
-    if (nx > +0.999) *axial = 1;
-    if (ny < -0.999) *axial = 2;
-    if (ny > +0.999) *axial = 3;
-    if (nz < -0.999) *axial = 4;
-    if (nz > +0.999) *axial = 5;
+    if (nx < -0.999) {
+        *axial = 0;
+    }
+    if (nx > +0.999) {
+        *axial = 1;
+    }
+    if (ny < -0.999) {
+        *axial = 2;
+    }
+    if (ny > +0.999) {
+        *axial = 3;
+    }
+    if (nz < -0.999) {
+        *axial = 4;
+    }
+    if (nz > +0.999) {
+        *axial = 5;
+    }
 
     return plane;
 }
@@ -184,7 +198,9 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
     }
 
     // clear the used planes
-    for (i = 0; i < MAX_BRUSH_PLANES; i++) planes[i] = -1;
+    for (i = 0; i < MAX_BRUSH_PLANES; i++) {
+        planes[i] = -1;
+    }
 
     // prepare the brush structure
     dbrush3_t raw_brush;
@@ -198,14 +214,15 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
     const char *medium = A->props.getStr("medium", NULL);
 
     if (medium) {
-        if (StringCaseCmp(medium, "slime") == 0)
+        if (StringCaseCmp(medium, "slime") == 0) {
             raw_brush.shaderNum = SHADER_COMMON_SLIME;
-        else if (StringCaseCmp(medium, "lava") == 0)
+        } else if (StringCaseCmp(medium, "lava") == 0) {
             raw_brush.shaderNum = SHADER_COMMON_LAVA;
-        else if (StringCaseCmp(medium, "trigger") == 0)
+        } else if (StringCaseCmp(medium, "trigger") == 0) {
             raw_brush.shaderNum = SHADER_COMMON_TRIGGER;
-        else
+        } else {
             raw_brush.shaderNum = SHADER_COMMON_WATER;
+        }
     } else if (A->bflags & BFLAG_NoDraw) {
         raw_brush.shaderNum = SHADER_COMMON_CLIP;
     } else if (strstr(A->t.face.getStr("tex", ""), "skies/") != NULL) {
@@ -234,22 +251,34 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
     // if some of our planes were not axial, we need to fill in
     // the missing axial planes.
 
-    if (planes[0] < 0) DoAddBrushPlane(planes, A->min_x, 0, 0, -1, 0, 0);
+    if (planes[0] < 0) {
+        DoAddBrushPlane(planes, A->min_x, 0, 0, -1, 0, 0);
+    }
     SYS_ASSERT(planes[0] >= 0);
 
-    if (planes[1] < 0) DoAddBrushPlane(planes, A->max_x, 0, 0, +1, 0, 0);
+    if (planes[1] < 0) {
+        DoAddBrushPlane(planes, A->max_x, 0, 0, +1, 0, 0);
+    }
     SYS_ASSERT(planes[1] >= 0);
 
-    if (planes[2] < 0) DoAddBrushPlane(planes, 0, A->min_y, 0, 0, -1, 0);
+    if (planes[2] < 0) {
+        DoAddBrushPlane(planes, 0, A->min_y, 0, 0, -1, 0);
+    }
     SYS_ASSERT(planes[2] >= 0);
 
-    if (planes[3] < 0) DoAddBrushPlane(planes, 0, A->max_y, 0, 0, +1, 0);
+    if (planes[3] < 0) {
+        DoAddBrushPlane(planes, 0, A->max_y, 0, 0, +1, 0);
+    }
     SYS_ASSERT(planes[3] >= 0);
 
-    if (planes[4] < 0) DoAddBrushPlane(planes, 0, 0, A->b.z, 0, 0, -1);
+    if (planes[4] < 0) {
+        DoAddBrushPlane(planes, 0, 0, A->b.z, 0, 0, -1);
+    }
     SYS_ASSERT(planes[4] >= 0);
 
-    if (planes[5] < 0) DoAddBrushPlane(planes, 0, 0, A->t.z, 0, 0, +1);
+    if (planes[5] < 0) {
+        DoAddBrushPlane(planes, 0, 0, A->t.z, 0, 0, +1);
+    }
     SYS_ASSERT(planes[5] >= 0);
 
     // write the planes
@@ -301,7 +330,9 @@ static void Q3_ClearShaders(void) {
 }
 
 s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
-    if (!texture[0]) texture = "error";
+    if (!texture[0]) {
+        texture = "error";
+    }
 
     // create shader structure, fix endianness
     dshader3_t raw_tex;
@@ -319,7 +350,9 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
 
     SYS_ASSERT(hash >= 0);
 
-    if (!shader_hashtab[hash]) shader_hashtab[hash] = new std::vector<int>;
+    if (!shader_hashtab[hash]) {
+        shader_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = shader_hashtab[hash];
 
@@ -346,9 +379,10 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
 }
 
 static void Q3_WriteShaders() {
-    if (q3_shaders.size() >= MAX_MAP_SHADERS)
+    if (q3_shaders.size() >= MAX_MAP_SHADERS) {
         Main_FatalError("Quake3 build failure: exceeded limit of %d SHADERS\n",
                         MAX_MAP_SHADERS);
+    }
 
     qLump_c *lump = BSP_NewLump(LUMP_SHADERS);
 
@@ -438,7 +472,9 @@ static bool FaceHasDegenTriangle(quake_face_c *face) {
     int total_v = (int)face->verts.size();
 
     for (int i = 2; i < total_v; i++) {
-        if (IsTriangleDegenerate(face, 0, i - 1, i)) return true;
+        if (IsTriangleDegenerate(face, 0, i - 1, i)) {
+            return true;
+        }
     }
 
     return false;
@@ -581,9 +617,10 @@ static void Q3_TriangulateSurface(quake_face_c *face, dsurface3_t *raw_surf) {
     raw_surf->firstVert = q3_total_drawverts;
     raw_surf->numVerts = (int)face->verts.size();
 
-    if (raw_surf->numVerts + 2 > MAX_FACE_VERTS)
+    if (raw_surf->numVerts + 2 > MAX_FACE_VERTS) {
         Main_FatalError("Quake3 build failure: face with more than %d verts\n",
                         MAX_FACE_VERTS);
+    }
 
     // create the usual drawverts
 
@@ -667,7 +704,9 @@ static inline void DoWriteSurface(dsurface3_t &raw_surf) {
 
 static void Q3_AddSurface(quake_face_c *face) {
     // already added?
-    if (face->index >= 0) return;
+    if (face->index >= 0) {
+        return;
+    }
 
     face->index = q3_total_surfaces;
 
@@ -696,13 +735,14 @@ static void Q3_AddSurface(quake_face_c *face) {
     int flags = 0;
     int contents = CONTENTS_SOLID;
 
-    if (strstr(texture, "skies/") != NULL)
+    if (strstr(texture, "skies/") != NULL) {
         flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP |
                  SURF_NODLIGHT | SURF_NOSTEPS;
 
-    else if (strstr(texture, "liquids/") != NULL)
+    } else if (strstr(texture, "liquids/") != NULL) {
         flags |= SURF_NOIMPACT | SURF_NOMARKS | SURF_NOLIGHTMAP |
                  SURF_NODLIGHT | SURF_NOSTEPS;
+    }
 
     raw_surf.shaderNum = Q3_AddShader(texture, flags, contents);
 
@@ -826,15 +866,17 @@ static void Q3_WriteNode(quake_node_c *node) {
 
     raw_node.planeNum = BSP_AddPlane(&node->plane, &flipped);
 
-    if (node->front_N)
+    if (node->front_N) {
         raw_node.children[0] = node->front_N->index;
-    else
+    } else {
         raw_node.children[0] = (-1 - node->front_L->index);
+    }
 
-    if (node->back_N)
+    if (node->back_N) {
         raw_node.children[1] = node->back_N->index;
-    else
+    } else {
         raw_node.children[1] = (-1 - node->back_L->index);
+    }
 
     if (flipped) {
         int node0 = raw_node.children[0];
@@ -853,15 +895,17 @@ static void Q3_WriteNode(quake_node_c *node) {
 
     // recurse now, AFTER adding the current node
 
-    if (node->front_N)
+    if (node->front_N) {
         Q3_WriteNode(node->front_N);
-    else
+    } else {
         Q3_WriteLeaf(node->front_L);
+    }
 
-    if (node->back_N)
+    if (node->back_N) {
         Q3_WriteNode(node->back_N);
-    else
+    } else {
         Q3_WriteLeaf(node->back_L);
+    }
 }
 
 static void Q3_WriteBSP() {
@@ -900,18 +944,21 @@ static void Q3_WriteBSP() {
 
     Q3_WriteNode(qk_bsp_root);
 
-    if (q3_total_surfaces >= MAX_MAP_DRAW_SURFS)
+    if (q3_total_surfaces >= MAX_MAP_DRAW_SURFS) {
         Main_FatalError(
             "Quake3 build failure: exceeded limit of %d DRAW_SURFS\n",
             MAX_MAP_DRAW_SURFS);
+    }
 
-    if (q3_total_leafs >= MAX_MAP_LEAFS)
+    if (q3_total_leafs >= MAX_MAP_LEAFS) {
         Main_FatalError("Quake3 build failure: exceeded limit of %d LEAFS\n",
                         MAX_MAP_LEAFS);
+    }
 
-    if (q3_total_nodes >= MAX_MAP_NODES)
+    if (q3_total_nodes >= MAX_MAP_NODES) {
         Main_FatalError("Quake3 build failure: exceeded limit of %d NODES\n",
                         MAX_MAP_NODES);
+    }
 }
 
 //------------------------------------------------------------------------
@@ -1015,7 +1062,9 @@ static void Q3_SetGridLights() {
 }
 
 static void Q3_LightWorld() {
-    if (main_win) main_win->build_box->Prog_Step("Light");
+    if (main_win) {
+        main_win->build_box->Prog_Step("Light");
+    }
 
     QLIT_LightAllFaces();
 
@@ -1025,7 +1074,9 @@ static void Q3_LightWorld() {
 }
 
 static void Q3_VisWorld() {
-    if (main_win) main_win->build_box->Prog_Step("Vis");
+    if (main_win) {
+        main_win->build_box->Prog_Step("Vis");
+    }
 
     // Quake 3 uses clusters directly
 
@@ -1111,7 +1162,9 @@ static void DP_CreateRTLights(const char *entry_in_pak) {
     for (unsigned int i = 0; i < all_entities.size(); i++) {
         csg_entity_c *E = all_entities[i];
 
-        if (strcmp(E->id.c_str(), "oblige_rtlight") != 0) continue;
+        if (strcmp(E->id.c_str(), "oblige_rtlight") != 0) {
+            continue;
+        }
 
         if (!has_file) {
             ZIPF_NewLump(entry_in_pak);
@@ -1136,7 +1189,9 @@ static void DP_CreateRTLights(const char *entry_in_pak) {
         ZIPF_AppendData(buffer, (int)strlen(buffer));
     }
 
-    if (has_file) ZIPF_FinishLump();
+    if (has_file) {
+        ZIPF_FinishLump();
+    }
 }
 
 //------------------------------------------------------------------------
@@ -1171,21 +1226,30 @@ bool quake3_game_interface_c::Start(const char *preset) {
     // this is not used here
     qk_world_model = NULL;
 
-    if (!water_shader) water_shader = StringDup("liquids/water");
-    if (!slime_shader) slime_shader = StringDup("liquids/slime");
-    if (!lava_shader) lava_shader = StringDup("liquids/lava");
+    if (!water_shader) {
+        water_shader = StringDup("liquids/water");
+    }
+    if (!slime_shader) {
+        slime_shader = StringDup("liquids/slime");
+    }
+    if (!lava_shader) {
+        lava_shader = StringDup("liquids/lava");
+    }
 
-    if (batch_mode)
+    if (batch_mode) {
         filename = StringDup(batch_output_file);
-    else
+    } else {
         filename = DLG_OutputFilename("pk3");
+    }
 
     if (!filename) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
-    if (create_backups) Main_BackupFile(filename, "old");
+    if (create_backups) {
+        Main_BackupFile(filename, "old");
+    }
 
     if (!ZIPF_OpenWrite(filename)) {
         Main_ProgStatus(_("Error (create file)"));
@@ -1194,7 +1258,9 @@ bool quake3_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
-    if (main_win) main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
+    if (main_win) {
+        main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
+    }
 
     return true;
 }
@@ -1203,10 +1269,11 @@ bool quake3_game_interface_c::Finish(bool build_ok) {
     ZIPF_CloseWrite();
 
     // remove the file if an error occurred
-    if (!build_ok)
+    if (!build_ok) {
         FileDelete(filename);
-    else
+    } else {
         Recent_AddFile(RECG_Output, filename);
+    }
 
     return build_ok;
 }
@@ -1239,12 +1306,14 @@ void quake3_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void quake3_game_interface_c::EndLevel() {
-    if (!level_name)
+    if (!level_name) {
         Main_FatalError("Script problem: did not set level name!\n");
+    }
 
-    if (strlen(level_name) >= 32)
+    if (strlen(level_name) >= 32) {
         Main_FatalError("Script problem: level name too long: %s\n",
                         level_name);
+    }
 
     char entry_in_pak[64];
     sprintf(entry_in_pak, "maps/%s.bsp", level_name);
@@ -1257,7 +1326,9 @@ void quake3_game_interface_c::EndLevel() {
 
     StringFree(level_name);
 
-    if (description) StringFree(description);
+    if (description) {
+        StringFree(description);
+    }
 }
 
 game_interface_c *Quake3_GameObject(void) {

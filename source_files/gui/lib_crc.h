@@ -25,6 +25,8 @@
 #ifndef __LIB_CRC_H__
 #define __LIB_CRC_H__
 
+#include "sys_type.h"
+
 class crc32_c {
    public:
     u32_t raw;

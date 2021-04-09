@@ -24,9 +24,9 @@
 #include <map>
 #include <string>
 
-#include "Fl/Fl_Check_Button.H"
-#include "Fl/Fl_Group.H"
-#include "Fl/Fl_Scrollbar.H"
+#include "FL/Fl_Check_Button.H"
+#include "FL/Fl_Group.H"
+#include "FL/Fl_Scrollbar.H"
 #include "ui_rchoice.h"
 
 class UI_Module : public Fl_Group {

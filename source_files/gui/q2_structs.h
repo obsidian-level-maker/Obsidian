@@ -35,6 +35,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ==============================================================================
 */
 
+#include "sys_macro.h"
+#include "sys_type.h"
+
 #define IDBSPHEADER (('P' << 24) + ('S' << 16) + ('B' << 8) + 'I')
 
 #define BSPVERSION 38

@@ -176,7 +176,9 @@ int WAD_FindEntry(const char *name) {
         strncpy(buffer, wad_R_dir[i].name, 8);
         buffer[8] = 0;
 
-        if (StringCaseCmp(name, buffer) == 0) return i;
+        if (StringCaseCmp(name, buffer) == 0) {
+            return i;
+        }
     }
 
     return -1;  // not found
@@ -207,11 +209,14 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer) {
 
     raw_wad_lump_t *L = &wad_R_dir[entry];
 
-    if ((u32_t)offset + (u32_t)length > L->length)  // EOF
+    if ((u32_t)offset + (u32_t)length > L->length) {  // EOF
         return false;
+    }
 
 #if HAVE_PHYSFS
-    if (!PHYSFS_seek(wad_R_fp, L->start + offset)) return false;
+    if (!PHYSFS_seek(wad_R_fp, L->start + offset)) {
+        return false;
+    }
 
     return ((PHYSFS_readBytes(wad_R_fp, buffer, length) / length) == 1);
 #else
@@ -313,8 +318,9 @@ void WAD_CloseWrite(void) {
 }
 
 void WAD_NewLump(const char *name) {
-    if (strlen(name) > 8)
+    if (strlen(name) > 8) {
         Main_FatalError("WAD_NewLump: name too long: '%s'\n", name);
+    }
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));
 
@@ -324,7 +330,9 @@ void WAD_NewLump(const char *name) {
 }
 
 bool WAD_AppendData(const void *data, int length) {
-    if (length == 0) return true;
+    if (length == 0) {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 
@@ -494,7 +502,9 @@ int WAD2_NumEntries(void) { return (int)wad2_R_header.num_lumps; }
 
 int WAD2_FindEntry(const char *name) {
     for (unsigned int i = 0; i < wad2_R_header.num_lumps; i++) {
-        if (StringCaseCmp(name, wad2_R_dir[i].name) == 0) return i;
+        if (StringCaseCmp(name, wad2_R_dir[i].name) == 0) {
+            return i;
+        }
     }
 
     return -1;  // not found
@@ -515,7 +525,9 @@ const char *WAD2_EntryName(int entry) {
 int WAD2_EntryType(int entry) {
     SYS_ASSERT(entry >= 0 && entry < (int)wad2_R_header.num_lumps);
 
-    if (wad2_R_dir[entry].compression != 0) return TYP_COMPRESSED;
+    if (wad2_R_dir[entry].compression != 0) {
+        return TYP_COMPRESSED;
+    }
 
     return wad2_R_dir[entry].type;
 }
@@ -527,11 +539,14 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer) {
 
     raw_wad2_lump_t *L = &wad2_R_dir[entry];
 
-    if ((u32_t)offset + (u32_t)length > L->length)  // EOF
+    if ((u32_t)offset + (u32_t)length > L->length) {  // EOF
         return false;
+    }
 
 #ifdef HAVE_PHYSFS
-    if (!PHYSFS_seek(wad2_R_fp, L->start + offset)) return false;
+    if (!PHYSFS_seek(wad2_R_fp, L->start + offset)) {
+        return false;
+    }
 
     size_t res = (PHYSFS_readBytes(wad2_R_fp, buffer, length) / length);
 #else
@@ -667,7 +682,9 @@ void WAD2_NewLump(const char *name, int type) {
 }
 
 bool WAD2_AppendData(const void *data, int length) {
-    if (length == 0) return true;
+    if (length == 0) {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 

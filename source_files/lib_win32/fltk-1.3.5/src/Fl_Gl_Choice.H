@@ -48,74 +48,71 @@
 // Warning: whatever GLContext is defined to must take exactly the same
 // space in a structure as a void*!!!
 #ifdef WIN32
-#include <FL/gl.h>
-#define GLContext HGLRC
+#  include <FL/gl.h>
+#  define GLContext HGLRC
 #elif defined(__APPLE_QUARTZ__)
-#include <OpenGL/gl.h>
+#  include <OpenGL/gl.h>
 #ifdef __OBJC__
 @class NSOpenGLPixelFormat;
 @class NSOpenGLContext;
 #else
 class NSOpenGLPixelFormat;
 class NSOpenGLContext;
-#endif  // __OBJC__
-typedef NSOpenGLContext *FLOpenGLContextPtr;
-#define GLContext FLOpenGLContextPtr
+#endif // __OBJC__
+typedef NSOpenGLContext* FLOpenGLContextPtr;
+#  define GLContext FLOpenGLContextPtr
 #else
-#include <GL/glx.h>
-#define GLContext GLXContext
-#if !defined(GLX_VERSION_1_3)
-#typedef void *GLXFBConfig;
-#endif
+#  include <GL/glx.h>
+#  define GLContext GLXContext
+#  if ! defined(GLX_VERSION_1_3)
+#    typedef void *GLXFBConfig;
+#  endif
 #endif
 
 // Describes crap needed to create a GLContext.
 class Fl_Gl_Choice {
-    int mode;
-    const int *alist;
-    Fl_Gl_Choice *next;
-
-   public:
+  int mode;
+  const int *alist;
+  Fl_Gl_Choice *next;
+public:
 #ifdef WIN32
-    int pixelformat;            // the visual to use
-    PIXELFORMATDESCRIPTOR pfd;  // some wgl calls need this thing
+  int pixelformat;	// the visual to use
+  PIXELFORMATDESCRIPTOR pfd; // some wgl calls need this thing
 #elif defined(__APPLE_QUARTZ__)
-    NSOpenGLPixelFormat *pixelformat;
+  NSOpenGLPixelFormat* pixelformat;
 #else
-    XVisualInfo *vis;   // the visual to use
-    Colormap colormap;  // a colormap for that visual
-    GLXFBConfig best_fb;
+  XVisualInfo *vis;	// the visual to use
+  Colormap colormap;	// a colormap for that visual
+  GLXFBConfig best_fb;
 #endif
-    // Return one of these structures for a given gl mode.
-    // The second argument is a glX attribute list, and is used if mode is
-    // zero.  This is not supported on Win32:
-    static Fl_Gl_Choice *find(int mode, const int *);
+  // Return one of these structures for a given gl mode.
+  // The second argument is a glX attribute list, and is used if mode is
+  // zero.  This is not supported on Win32:
+  static Fl_Gl_Choice *find(int mode, const int *);
 };
 
 class Fl_Window;
 
 #ifdef WIN32
 
-GLContext fl_create_gl_context(Fl_Window *, const Fl_Gl_Choice *,
-                               int layer = 0);
+GLContext fl_create_gl_context(Fl_Window*, const Fl_Gl_Choice*, int layer=0);
 
 #elif defined(__APPLE_QUARTZ__)
 
-GLContext fl_create_gl_context(Fl_Window *, const Fl_Gl_Choice *,
-                               int layer = 0);
+GLContext fl_create_gl_context(Fl_Window*, const Fl_Gl_Choice*, int layer=0);
 
 #else
 
-GLContext fl_create_gl_context(XVisualInfo *vis);
+GLContext fl_create_gl_context(XVisualInfo* vis);
 
-// static inline
-GLContext fl_create_gl_context(Fl_Window *, const Fl_Gl_Choice *g); /* {
-   return fl_create_gl_context(g->vis);
- }*/
+//static inline
+ GLContext fl_create_gl_context(Fl_Window*, const Fl_Gl_Choice* g);/* {
+  return fl_create_gl_context(g->vis);
+}*/
 
 #endif
 
-void fl_set_gl_context(Fl_Window *, GLContext);
+void fl_set_gl_context(Fl_Window*, GLContext);
 void fl_no_gl_context();
 void fl_delete_gl_context(GLContext);
 

@@ -29,7 +29,9 @@ typedef u16_t angle_t;
 #define ANG_MAX 0xffff
 
 static inline angle_t ToAngle(float ang) {
-    if (ang < 0) ang += 720.0;
+    if (ang < 0) {
+        ang += 720.0;
+    }
 
     ang = ang * (65536.0 / 360.0);
 
@@ -132,34 +134,38 @@ static inline void LinkBefore(angle_range_t *X, angle_range_t *N) {
 
     X->prev = N;
 
-    if (N->prev)
+    if (N->prev) {
         N->prev->next = N;
-    else
+    } else {
         occbuf_head = N;
+    }
 }
 
 static inline void LinkInTail(angle_range_t *N) {
     N->next = NULL;
     N->prev = occbuf_tail;
 
-    if (occbuf_tail)
+    if (occbuf_tail) {
         occbuf_tail->next = N;
-    else
+    } else {
         occbuf_head = N;
+    }
 
     occbuf_tail = N;
 }
 
 static inline void RemoveRange(angle_range_t *R) {
-    if (R->next)
+    if (R->next) {
         R->next->prev = R->prev;
-    else
+    } else {
         occbuf_tail = R->prev;
+    }
 
-    if (R->prev)
+    if (R->prev) {
         R->prev->next = R->next;
-    else
+    } else {
         occbuf_head = R->next;
+    }
 
     // add it to the quick-alloc list
     R->next = free_range_chickens;
@@ -175,7 +181,9 @@ static void DoSet(angle_t low, angle_t high) {
             return;
         }
 
-        if (low > AR->high) continue;
+        if (low > AR->high) {
+            continue;
+        }
 
         // the new range overlaps the old range.
         //
@@ -217,9 +225,9 @@ void Occlusion_Set(float low, float high) {
 
     SYS_ASSERT((angle_t)(a2 - a1) < ANG180);
 
-    if (a1 <= a2)
+    if (a1 <= a2) {
         DoSet(a1, a2);
-    else {
+    } else {
         DoSet(a1, ANG_MAX);
         DoSet(0, a2);
     }
@@ -231,9 +239,13 @@ void Occlusion_Set(float low, float high) {
 
 static inline bool DoTest(angle_t low, angle_t high) {
     for (angle_range_t *AR = occbuf_head; AR; AR = AR->next) {
-        if (AR->low <= low && high <= AR->high) return true;
+        if (AR->low <= low && high <= AR->high) {
+            return true;
+        }
 
-        if (AR->high > low) break;
+        if (AR->high > low) {
+            break;
+        }
     }
 
     return false;
@@ -249,10 +261,11 @@ bool Occlusion_Blocked(float low, float high) {
 
     SYS_ASSERT((angle_t)(a2 - a1) < ANG180);
 
-    if (a1 <= a2)
+    if (a1 <= a2) {
         return DoTest(a1, a2);
-    else
+    } else {
         return DoTest(a1, ANG_MAX) && DoTest(0, a2);
+    }
 }
 
 //--- editor settings ---

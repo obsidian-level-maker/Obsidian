@@ -8,6 +8,7 @@
  * This file contains software version identification.
  */
 
-#define JVERSION "9a  19-Jan-2014"
 
-#define JCOPYRIGHT "Copyright (C) 2014, Thomas G. Lane, Guido Vollbeding"
+#define JVERSION	"9a  19-Jan-2014"
+
+#define JCOPYRIGHT	"Copyright (C) 2014, Thomas G. Lane, Guido Vollbeding"

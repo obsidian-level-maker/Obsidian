@@ -59,10 +59,11 @@ void VFS_AddFolder(const char *name) {
 bool VFS_AddArchive(const char *filename, bool options_file) {
     LogPrintf("  using: %s\n", filename);
 
-    if (!HasExtension(filename))
+    if (!HasExtension(filename)) {
         filename = ReplaceExtension(filename, "pk3");
-    else
+    } else {
         filename = StringDup(filename);
+    }
 
     // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
@@ -79,13 +80,14 @@ bool VFS_AddArchive(const char *filename, bool options_file) {
     }
 
     if (!PHYSFS_mount(filename, "/", 0)) {
-        if (options_file)
+        if (options_file) {
             LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", filename,
                       PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-        else
+        } else {
             Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
                             filename,
                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        }
 
         return false;
     }
@@ -115,7 +117,9 @@ void VFS_ParseCommandLine() {
     int arg = ArgvFind('a', "addon");
     int count = 0;
 
-    if (arg < 0) return;
+    if (arg < 0) {
+        return;
+    }
 
     arg++;
 
@@ -125,7 +129,9 @@ void VFS_ParseCommandLine() {
         VFS_AddArchive(arg_list[arg], false /* options_file */);
     }
 
-    if (!count) Main_FatalError("Missing filename for --addon option\n");
+    if (!count) {
+        Main_FatalError("Missing filename for --addon option\n");
+    }
 
     LogPrintf("DONE\n\n");
 }
@@ -143,7 +149,9 @@ void VFS_OptWrite(FILE *fp) {
     for (unsigned int i = 0; i < all_addons.size(); i++) {
         const addon_info_t *info = &all_addons[i];
 
-        if (info->enabled) fprintf(fp, "addon = %s\n", info->name);
+        if (info->enabled) {
+            fprintf(fp, "addon = %s\n", info->name);
+        }
     }
 
     fprintf(fp, "\n");
@@ -187,8 +195,9 @@ void VFS_ScanForAddons() {
         info.enabled = false;
 
         if (initial_enabled_addons.find(list[i]) !=
-            initial_enabled_addons.end())
+            initial_enabled_addons.end()) {
             info.enabled = true;
+        }
 
         // DEBUG
         // info.enabled = true;
@@ -199,13 +208,16 @@ void VFS_ScanForAddons() {
         all_addons.push_back(info);
 
         // if enabled, install into the VFS
-        if (info.enabled) VFS_AddArchive(info.name, true /* options_file */);
+        if (info.enabled) {
+            VFS_AddArchive(info.name, true /* options_file */);
+        }
     }
 
-    if (list.size() == 0)
+    if (list.size() == 0) {
         LogPrintf("DONE (none found)\n");
-    else
+    } else {
         LogPrintf("DONE\n");
+    }
 
     LogPrintf("\n");
 }
@@ -221,7 +233,9 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name) {
     char buffer[1024];
 
     PHYSFS_file *src = PHYSFS_openRead(src_name);
-    if (!src) return false;
+    if (!src) {
+        return false;
+    }
 
     FILE *dest = fopen(dest_name, "wb");
     if (!dest) {
@@ -234,12 +248,18 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name) {
     while (was_OK) {
         int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) /
                          sizeof(buffer));
-        if (rlen < 0) was_OK = false;
+        if (rlen < 0) {
+            was_OK = false;
+        }
 
-        if (rlen <= 0) break;
+        if (rlen <= 0) {
+            break;
+        }
 
         int wlen = fwrite(buffer, 1, rlen, dest);
-        if (wlen < rlen || ferror(dest)) was_OK = false;
+        if (wlen < rlen || ferror(dest)) {
+            was_OK = false;
+        }
     }
 
     fclose(dest);
@@ -253,7 +273,9 @@ byte *VFS_LoadFile(const char *filename, int *length) {
 
     PHYSFS_File *fp = PHYSFS_openRead(filename);
 
-    if (!fp) return NULL;
+    if (!fp) {
+        return NULL;
+    }
 
     *length = (int)PHYSFS_fileLength(fp);
 
@@ -478,7 +500,9 @@ int UI_AddonsWin::handle(int event) {
         }
 
         // eat all other function keys
-        if (FL_F + 1 <= key && key <= FL_F + 12) return 1;
+        if (FL_F + 1 <= key && key <= FL_F + 12) {
+            return 1;
+        }
     }
 
     return Fl_Window::handle(event);
@@ -493,7 +517,9 @@ void UI_AddonsWin::PositionAll() {
         UI_Addon *M = (UI_Addon *)pack->child(k);
         SYS_ASSERT(M);
 
-        if (M->visible()) new_height += M->CalcHeight() + spacing;
+        if (M->visible()) {
+            new_height += M->CalcHeight() + spacing;
+        }
     }
 
     // determine new offset_y
@@ -501,7 +527,9 @@ void UI_AddonsWin::PositionAll() {
         offset_y = 0;
     } else {
         // when not shrinking, offset_y will remain valid
-        if (new_height < total_h) offset_y = 0;
+        if (new_height < total_h) {
+            offset_y = 0;
+        }
     }
 
     total_h = new_height;
@@ -522,7 +550,9 @@ void UI_AddonsWin::PositionAll() {
             M->resize(M->x(), ny, M->w(), nh);
         }
 
-        if (M->visible()) ny += M->CalcHeight() + spacing;
+        if (M->visible()) {
+            ny += M->CalcHeight() + spacing;
+        }
     }
 
     // p = position, first line displayed
@@ -537,7 +567,9 @@ void UI_AddonsWin::PositionAll() {
 void UI_AddonsWin::InsertAddon(addon_info_t *info) {
     UI_Addon *addon = new UI_Addon(mx, my, mw - 4, kf_h(34), info);
 
-    if (info->enabled) addon->button->value(1);
+    if (info->enabled) {
+        addon->button->value(1);
+    }
 
     pack->add(addon);
 
@@ -585,7 +617,9 @@ void DLG_SelectAddons(void) {
     addons_window->show();
 
     // run the GUI until the user closes
-    while (!addons_window->WantQuit()) Fl::wait();
+    while (!addons_window->WantQuit()) {
+        Fl::wait();
+    }
 
     if (addons_window->ApplyChanges()) {
         // persist the changed addon list into OPTIONS.txt

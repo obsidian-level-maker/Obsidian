@@ -49,7 +49,9 @@ static int sky_final_W;
 
 static void AddPost(qLump_c *lump, int y, int len, const byte *pixels, int W,
                     int H) {
-    if (len <= 0) return;
+    if (len <= 0) {
+        return;
+    }
 
     byte buffer[512];
     byte *dest = buffer;
@@ -59,7 +61,9 @@ static void AddPost(qLump_c *lump, int y, int len, const byte *pixels, int W,
 
     *dest++ = CUR_PIXEL(y);  // TOP-PADDING
 
-    for (; len > 0; len--, y++) *dest++ = CUR_PIXEL(y);
+    for (; len > 0; len--, y++) {
+        *dest++ = CUR_PIXEL(y);
+    }
 
     *dest++ = CUR_PIXEL(y - 1);  // BOTTOM-PADDING
 
@@ -97,7 +101,9 @@ qLump_c *DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
                 len++;
             }
 
-            if (y <= 252) AddPost(lump, y, len, pixels, W, H);
+            if (y <= 252) {
+                AddPost(lump, y, len, pixels, W, H);
+            }
 
             y = y + len;
         }
@@ -105,7 +111,9 @@ qLump_c *DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
         EndOfPost(lump);
     }
 
-    for (x = W; x < new_W; x++) offsets[x] = offsets[x % W];
+    for (x = W; x < new_W; x++) {
+        offsets[x] = offsets[x % W];
+    }
 
     lump->Prepend(offsets, new_W * sizeof(u32_t));
 
@@ -130,17 +138,18 @@ qLump_c *DM_CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H) {
 
     // create a skewed but working flat when original is 128x32
     if (W != new_W && W == new_W * 2 && H * 2 == new_H) {
-        for (int y = 0; y < new_H; y++)
+        for (int y = 0; y < new_H; y++) {
             for (int x = 0; x < new_W; x++) {
                 int oy = (y + x / 2) % new_H;
                 int ox = x + ((oy >= H) ? W / 2 : 0);
 
                 lump->Append(&pixels[(oy % H) * W + (ox % W)], 1);
             }
+        }
         return lump;
     }
 
-    for (int y = 0; y < new_H; y++)
+    for (int y = 0; y < new_H; y++) {
         for (int x = 0; x < new_W; x += W) {
             int span = MIN(W, new_W - x);
 
@@ -148,6 +157,7 @@ qLump_c *DM_CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H) {
 
             lump->Append(&pixels[(y % H) * W + (x % W)], span);
         }
+    }
 
     return lump;
 }
@@ -156,13 +166,14 @@ static byte *Flat_Realign(const byte *pixels, int W, int H, int dx = 32,
                           int dy = 32) {
     byte *new_pix = new byte[W * H];
 
-    for (int y = 0; y < H; y++)
+    for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
             int nx = (x + dx + W) % W;
             int ny = (y + dy + H) % H;
 
             new_pix[ny * W + nx] = pixels[y * W + x];
         }
+    }
 
     return new_pix;
 }
@@ -177,43 +188,54 @@ int DM_wad_logo_gfx(lua_State *L) {
     bool is_flat = false;
     bool realign = false;
 
-    if (strchr(kind, 'p'))
+    if (strchr(kind, 'p')) {
         is_flat = false;
-    else if (strchr(kind, 'f'))
+    } else if (strchr(kind, 'f')) {
         is_flat = true;
-    else
+    } else {
         return luaL_argerror(L, 2, "unknown kind");
+    }
 
-    if (strchr(kind, 'm')) realign = true;
+    if (strchr(kind, 'm')) {
+        realign = true;
+    }
 
     int new_W = luaL_checkinteger(L, 4);
     int new_H = luaL_checkinteger(L, 5);
     int map_id = luaL_checkinteger(L, 6);
 
-    if (new_W < 1) return luaL_argerror(L, 4, "bad width");
-    if (new_H < 1) return luaL_argerror(L, 5, "bad height");
+    if (new_W < 1) {
+        return luaL_argerror(L, 4, "bad width");
+    }
+    if (new_H < 1) {
+        return luaL_argerror(L, 5, "bad height");
+    }
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
         return luaL_argerror(L, 6, "colmap value out of range");
+    }
 
     // find the requested image (TODO: look in a table)
     const logo_image_t *logo = NULL;
 
-    if (StringCaseCmp(image, logo_BOLT.name) == 0)
+    if (StringCaseCmp(image, logo_BOLT.name) == 0) {
         logo = &logo_BOLT;
-    else if (StringCaseCmp(image, logo_PILL.name) == 0)
+    } else if (StringCaseCmp(image, logo_PILL.name) == 0) {
         logo = &logo_PILL;
-    else if (StringCaseCmp(image, logo_CARVE.name) == 0)
+    } else if (StringCaseCmp(image, logo_CARVE.name) == 0) {
         logo = &logo_CARVE;
-    else if (StringCaseCmp(image, logo_RELIEF.name) == 0)
+    } else if (StringCaseCmp(image, logo_RELIEF.name) == 0) {
         logo = &logo_RELIEF;
-    else
+    } else {
         return luaL_argerror(L, 3, "unknown image name");
+    }
 
     // colorize logo
     color_mapping_t *map = &color_mappings[map_id - 1];
 
-    if (map->size < 2) return luaL_error(L, "wad_logo_gfx: colormap too small");
+    if (map->size < 2) {
+        return luaL_error(L, "wad_logo_gfx: colormap too small");
+    }
 
     byte *pixels = new byte[logo->width * logo->height];
     byte *p_end = pixels + (logo->width * logo->height);
@@ -262,11 +284,17 @@ int DM_fsky_create(lua_State *L) {
 
     sky_final_W = W;
 
-    if (W != 256) return luaL_argerror(L, 1, "bad width");
+    if (W != 256) {
+        return luaL_argerror(L, 1, "bad width");
+    }
 
-    if (H < 128 || H > 256) return luaL_argerror(L, 2, "bad height");
+    if (H < 128 || H > 256) {
+        return luaL_argerror(L, 2, "bad height");
+    }
 
-    if (sky_pixels && !(sky_W == W && sky_H == H)) delete[] sky_pixels;
+    if (sky_pixels && !(sky_W == W && sky_H == H)) {
+        delete[] sky_pixels;
+    }
 
     if (!sky_pixels) {
         sky_W = W;
@@ -315,7 +343,9 @@ int DM_fsky_solid_box(lua_State *L) {
     y2 = MIN(y2, sky_H);
 
     for (int y = y1; y < y2; y++) {
-        if (x2 > x1) memset(&sky_pixels[y * sky_W + x1], col, (x2 - x1));
+        if (x2 > x1) {
+            memset(&sky_pixels[y * sky_W + x1], col, (x2 - x1));
+        }
     }
 
     return 0;
@@ -324,8 +354,9 @@ int DM_fsky_solid_box(lua_State *L) {
 int DM_fsky_add_stars(lua_State *L) {
     // LUA: fsky_add_stars { seed=X, colmap=X, power=X, thresh=X }
 
-    if (lua_type(L, 1) != LUA_TTABLE)
+    if (lua_type(L, 1) != LUA_TTABLE) {
         return luaL_argerror(L, 1, "missing table: star info");
+    }
 
     int seed = 1;
     int map_id = 1;
@@ -338,23 +369,35 @@ int DM_fsky_add_stars(lua_State *L) {
     lua_getfield(L, 1, "power");
     lua_getfield(L, 1, "thresh");
 
-    if (!lua_isnil(L, -4)) seed = luaL_checkinteger(L, -4);
-    if (!lua_isnil(L, -3)) map_id = luaL_checkinteger(L, -3);
-    if (!lua_isnil(L, -2)) powscale = luaL_checknumber(L, -2);
-    if (!lua_isnil(L, -1)) thresh = luaL_checknumber(L, -1);
+    if (!lua_isnil(L, -4)) {
+        seed = luaL_checkinteger(L, -4);
+    }
+    if (!lua_isnil(L, -3)) {
+        map_id = luaL_checkinteger(L, -3);
+    }
+    if (!lua_isnil(L, -2)) {
+        powscale = luaL_checknumber(L, -2);
+    }
+    if (!lua_isnil(L, -1)) {
+        thresh = luaL_checknumber(L, -1);
+    }
 
     lua_pop(L, 4);
 
     // validation...
     SYS_ASSERT(sky_pixels);
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
         return luaL_error(L, "fsky_add_stars: colmap value out of range");
+    }
 
-    if (powscale < 0.01)
+    if (powscale < 0.01) {
         return luaL_error(L, "fsky_add_stars: bad power value");
+    }
 
-    if (thresh > 0.98) return luaL_error(L, "fsky_add_stars: bad thresh value");
+    if (thresh > 0.98) {
+        return luaL_error(L, "fsky_add_stars: bad thresh value");
+    }
 
     SKY_AddStars(seed, sky_pixels, sky_W, sky_H, &color_mappings[map_id - 1],
                  powscale, thresh);
@@ -366,8 +409,9 @@ int DM_fsky_add_clouds(lua_State *L) {
     // LUA: fsky_add_clouds { seed=X, colmap=X, power=X, thresh=X,
     //                        fracdim=X, squish=X }
 
-    if (lua_type(L, 1) != LUA_TTABLE)
+    if (lua_type(L, 1) != LUA_TTABLE) {
         return luaL_argerror(L, 1, "missing table: cloud info");
+    }
 
     int seed = 1;
     int map_id = 1;
@@ -380,8 +424,12 @@ int DM_fsky_add_clouds(lua_State *L) {
     lua_getfield(L, 1, "seed");
     lua_getfield(L, 1, "colmap");
 
-    if (!lua_isnil(L, -2)) seed = luaL_checkinteger(L, -2);
-    if (!lua_isnil(L, -1)) map_id = luaL_checkinteger(L, -1);
+    if (!lua_isnil(L, -2)) {
+        seed = luaL_checkinteger(L, -2);
+    }
+    if (!lua_isnil(L, -1)) {
+        map_id = luaL_checkinteger(L, -1);
+    }
 
     lua_pop(L, 2);
 
@@ -390,30 +438,43 @@ int DM_fsky_add_clouds(lua_State *L) {
     lua_getfield(L, 1, "fracdim");
     lua_getfield(L, 1, "squish");
 
-    if (!lua_isnil(L, -4)) powscale = luaL_checknumber(L, -4);
-    if (!lua_isnil(L, -3)) thresh = luaL_checknumber(L, -3);
-    if (!lua_isnil(L, -2)) fracdim = luaL_checknumber(L, -2);
-    if (!lua_isnil(L, -1)) squish = luaL_checknumber(L, -1);
+    if (!lua_isnil(L, -4)) {
+        powscale = luaL_checknumber(L, -4);
+    }
+    if (!lua_isnil(L, -3)) {
+        thresh = luaL_checknumber(L, -3);
+    }
+    if (!lua_isnil(L, -2)) {
+        fracdim = luaL_checknumber(L, -2);
+    }
+    if (!lua_isnil(L, -1)) {
+        squish = luaL_checknumber(L, -1);
+    }
 
     lua_pop(L, 4);
 
     // validation...
     SYS_ASSERT(sky_pixels);
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
         return luaL_error(L, "fsky_add_clouds: colmap value out of range");
+    }
 
-    if (powscale < 0.01)
+    if (powscale < 0.01) {
         return luaL_error(L, "fsky_add_clouds: bad power value");
+    }
 
-    if (thresh > 0.98)
+    if (thresh > 0.98) {
         return luaL_error(L, "fsky_add_clouds: bad thresh value");
+    }
 
-    if (fracdim > 2.99 || fracdim < 0.2)
+    if (fracdim > 2.99 || fracdim < 0.2) {
         return luaL_error(L, "fsky_add_clouds: bad fracdim value");
+    }
 
-    if (squish > 4.1 || squish < 0.24)
+    if (squish > 4.1 || squish < 0.24) {
         return luaL_error(L, "fsky_add_clouds: bad squish value");
+    }
 
     SKY_AddClouds(seed, sky_pixels, sky_W, sky_H, &color_mappings[map_id - 1],
                   powscale, thresh, fracdim, squish);
@@ -425,8 +486,9 @@ int DM_fsky_add_hills(lua_State *L) {
     // LUA: fsky_add_hills { seed=X, colmap=X, power=X, fracdim=X,
     //                       min_h=X, max_h=X }
 
-    if (lua_type(L, 1) != LUA_TTABLE)
+    if (lua_type(L, 1) != LUA_TTABLE) {
         return luaL_argerror(L, 1, "missing table: cloud info");
+    }
 
     int seed = 1;
     int map_id = 1;
@@ -440,8 +502,12 @@ int DM_fsky_add_hills(lua_State *L) {
     lua_getfield(L, 1, "seed");
     lua_getfield(L, 1, "colmap");
 
-    if (!lua_isnil(L, -2)) seed = luaL_checkinteger(L, -2);
-    if (!lua_isnil(L, -1)) map_id = luaL_checkinteger(L, -1);
+    if (!lua_isnil(L, -2)) {
+        seed = luaL_checkinteger(L, -2);
+    }
+    if (!lua_isnil(L, -1)) {
+        map_id = luaL_checkinteger(L, -1);
+    }
 
     lua_pop(L, 2);
 
@@ -450,27 +516,39 @@ int DM_fsky_add_hills(lua_State *L) {
     lua_getfield(L, 1, "power");
     lua_getfield(L, 1, "fracdim");
 
-    if (!lua_isnil(L, -4)) min_h = luaL_checknumber(L, -4);
-    if (!lua_isnil(L, -3)) max_h = luaL_checknumber(L, -3);
-    if (!lua_isnil(L, -2)) powscale = luaL_checknumber(L, -2);
-    if (!lua_isnil(L, -1)) fracdim = luaL_checknumber(L, -1);
+    if (!lua_isnil(L, -4)) {
+        min_h = luaL_checknumber(L, -4);
+    }
+    if (!lua_isnil(L, -3)) {
+        max_h = luaL_checknumber(L, -3);
+    }
+    if (!lua_isnil(L, -2)) {
+        powscale = luaL_checknumber(L, -2);
+    }
+    if (!lua_isnil(L, -1)) {
+        fracdim = luaL_checknumber(L, -1);
+    }
 
     lua_pop(L, 4);
 
     // validation...
     SYS_ASSERT(sky_pixels);
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
         return luaL_error(L, "fsky_add_hills: colmap value out of range");
+    }
 
-    if (min_h >= max_h || max_h <= 0.0)
+    if (min_h >= max_h || max_h <= 0.0) {
         return luaL_error(L, "fsky_add_hills: bad height range");
+    }
 
-    if (powscale < 0.01)
+    if (powscale < 0.01) {
         return luaL_error(L, "fsky_add_hills: bad power value");
+    }
 
-    if (fracdim > 2.99 || fracdim < 0.2)
+    if (fracdim > 2.99 || fracdim < 0.2) {
         return luaL_error(L, "fsky_add_hills: bad fracdim value");
+    }
 
     SKY_AddHills(seed, sky_pixels, sky_W, sky_H, &color_mappings[map_id - 1],
                  min_h, max_h, powscale, fracdim);
@@ -483,11 +561,17 @@ int DM_fsky_add_hills(lua_State *L) {
 static int FontIndexForChar(char ch) {
     ch = toupper(ch);
 
-    if (ch == ' ') return 0;
+    if (ch == ' ') {
+        return 0;
+    }
 
-    if ('A' <= ch && ch <= 'Z') return 12 + (ch - 'A');
+    if ('A' <= ch && ch <= 'Z') {
+        return 12 + (ch - 'A');
+    }
 
-    if ('0' <= ch && ch <= '9') return 1 + (ch - '0');
+    if ('0' <= ch && ch <= '9') {
+        return 1 + (ch - '0');
+    }
 
     switch (ch) {
         case ':':
@@ -540,17 +624,20 @@ static void BlastFontChar(int index, int x, int y, byte *pixels, int W, int H,
     SYS_ASSERT(0 <= x && x + fw <= W);
     SYS_ASSERT(0 <= y && y + fh <= H);
 
-    for (int dy = 0; dy < fh; dy++)
+    for (int dy = 0; dy < fh; dy++) {
         for (int dx = 0; dx < fw; dx++) {
             byte pix = font->data[(fy + dy) * font->width + (fx + dx)];
 
-            if (pix < thresh) continue;
+            if (pix < thresh) {
+                continue;
+            }
 
             // map pixel
             pix = map->colors[map->size * (pix - thresh) / (256 - thresh)];
 
             pixels[(y + dy) * W + (x + dx)] = pix;
         }
+    }
 }
 
 static void CreateNamePatch(const char *patch, const char *text,
@@ -570,7 +657,9 @@ static void CreateNamePatch(const char *patch, const char *text,
     for (; *text && length < 60; text++) {
         int idx = FontIndexForChar(*text);
 
-        if (idx >= 0) buffer[length++] = idx;
+        if (idx >= 0) {
+            buffer[length++] = idx;
+        }
     }
 
     if (length == 0) {
@@ -586,7 +675,9 @@ static void CreateNamePatch(const char *patch, const char *text,
     memset(pixels, 255, W * H);
 
     for (int p = 0; p < length; p++) {
-        if (buffer[p] <= 0) continue;
+        if (buffer[p] <= 0) {
+            continue;
+        }
 
         BlastFontChar(buffer[p] - 1, p * font_w, 0, pixels, W, H, font, font_w,
                       font_h, map, thresh);
@@ -608,8 +699,9 @@ int DM_wad_name_gfx(lua_State *L) {
 
     int map_id = luaL_checkinteger(L, 3);
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
         return luaL_argerror(L, 1, "colmap value out of range");
+    }
 
     CreateNamePatch(patch, text, &font_CWILV, &color_mappings[map_id - 1]);
 
@@ -639,9 +731,10 @@ int DM_wad_add_text_lump(lua_State *L) {
             break;
         }
 
-        if (lua_type(L, -1) != LUA_TSTRING)
+        if (lua_type(L, -1) != LUA_TSTRING) {
             return luaL_error(L, "wad_add_text_lump: item #%d is not a string",
                               1 + i);
+        }
 
         // use this method since it allows embedded zeros in the string
         // (just in case some crazy person wants to write a binary lump).
@@ -728,7 +821,9 @@ static void TransferFILEtoWAD(PHYSFS_File *fp, const char *dest_lump) {
     for (;;) {
         int got_len = (int)PHYSFS_readBytes(fp, buffer, buf_size);
 
-        if (got_len <= 0) break;
+        if (got_len <= 0) {
+            break;
+        }
 
         WAD_AppendData(buffer, got_len);
     }
@@ -750,7 +845,9 @@ static void TransferWADtoWAD(int src_entry, const char *dest_lump) {
         int want_len = MIN(buf_size, length - pos);
 
         // FIXME: handle error better
-        if (!WAD_ReadData(src_entry, pos, want_len, buffer)) break;
+        if (!WAD_ReadData(src_entry, pos, want_len, buffer)) {
+            break;
+        }
 
         WAD_AppendData(buffer, want_len);
 
@@ -774,7 +871,9 @@ static qLump_c *DoLoadLump(int src_entry) {
         int want_len = MIN(buf_size, length - pos);
 
         // FIXME: handle error better
-        if (!WAD_ReadData(src_entry, pos, want_len, buffer)) break;
+        if (!WAD_ReadData(src_entry, pos, want_len, buffer)) {
+            break;
+        }
 
         lump->Append(buffer, want_len);
 
@@ -796,8 +895,11 @@ static const char *level_lumps[NUM_LEVEL_LUMPS] = {
 };
 
 static bool IsLevelLump(const char *name) {
-    for (int i = 0; i < NUM_LEVEL_LUMPS; i++)
-        if (strcmp(name, level_lumps[i]) == 0) return true;
+    for (int i = 0; i < NUM_LEVEL_LUMPS; i++) {
+        if (strcmp(name, level_lumps[i]) == 0) {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -810,8 +912,9 @@ int DM_wad_insert_file(lua_State *L) {
 
     PHYSFS_File *fp = PHYSFS_openRead(filename);
 
-    if (!fp)  // this is unlikely (we know it exists)
+    if (!fp) {  // this is unlikely (we know it exists)
         return luaL_error(L, "wad_insert_file: cannot open file: %s", filename);
+    }
 
     TransferFILEtoWAD(fp, dest_lump);
 
@@ -829,12 +932,14 @@ int DM_wad_transfer_lump(lua_State *L) {
     const char *src_lump = luaL_checkstring(L, 2);
     const char *dest_lump = luaL_checkstring(L, 3);
 
-    if (!MatchExtension(pkg_name, "wad"))
+    if (!MatchExtension(pkg_name, "wad")) {
         return luaL_error(
             L, "wad_transfer_lump: file extension is not WAD: %s\n", pkg_name);
+    }
 
-    if (!WAD_OpenRead(pkg_name))
+    if (!WAD_OpenRead(pkg_name)) {
         return luaL_error(L, "wad_transfer_lump: bad WAD file: %s", pkg_name);
+    }
 
     int entry = WAD_FindEntry(src_lump);
     if (entry < 0) {
@@ -859,12 +964,14 @@ int DM_wad_transfer_map(lua_State *L) {
     const char *src_map = luaL_checkstring(L, 2);
     const char *dest_map = luaL_checkstring(L, 3);
 
-    if (!MatchExtension(pkg_name, "wad"))
+    if (!MatchExtension(pkg_name, "wad")) {
         return luaL_error(
             L, "wad_transfer_map: file extension is not WAD: %s\n", pkg_name);
+    }
 
-    if (!WAD_OpenRead(pkg_name))
+    if (!WAD_OpenRead(pkg_name)) {
         return luaL_error(L, "wad_transfer_map: bad WAD file: %s", pkg_name);
+    }
 
     int entry = WAD_FindEntry(src_map);
     if (entry < 0) {
@@ -878,10 +985,14 @@ int DM_wad_transfer_map(lua_State *L) {
 
     // step 2: copy all the lumps belonging to the map.
     for (int loop = 0; loop < 15; loop++) {
-        if (entry >= WAD_NumEntries()) break;
+        if (entry >= WAD_NumEntries()) {
+            break;
+        }
 
         const char *src_lump = WAD_EntryName(entry);
-        if (!IsLevelLump(src_lump)) break;
+        if (!IsLevelLump(src_lump)) {
+            break;
+        }
 
         TransferWADtoWAD(entry, src_lump);
         entry++;
@@ -900,7 +1011,9 @@ static void DoMergeSection(char ch, const char *start1, const char *start2,
         start = WAD_FindEntry(start1);
     }
 
-    if (start < 0) return;
+    if (start < 0) {
+        return;
+    }
 
     int end = WAD_FindEntry(end1);
     if (end < 0 && end2) {
@@ -918,7 +1031,9 @@ static void DoMergeSection(char ch, const char *start1, const char *start2,
 
     for (int i = start + 1; i < end; i++) {
         // skip other markers (e.g. F1_START)
-        if (WAD_EntryLen(i) == 0) continue;
+        if (WAD_EntryLen(i) == 0) {
+            continue;
+        }
 
         DM_AddSectionLump(ch, WAD_EntryName(i), DoLoadLump(i));
     }
@@ -935,12 +1050,14 @@ int DM_wad_merge_sections(lua_State *L) {
 
     LogPrintf("Merging WAD sections from: %s\n", pkg_name);
 
-    if (!MatchExtension(pkg_name, "wad"))
+    if (!MatchExtension(pkg_name, "wad")) {
         return luaL_error(
             L, "wad_merge_sections: file extension is not WAD: %s\n", pkg_name);
+    }
 
-    if (!WAD_OpenRead(pkg_name))
+    if (!WAD_OpenRead(pkg_name)) {
         return luaL_error(L, "wad_merge_sections: bad WAD file: %s", pkg_name);
+    }
 
     DoMergeSection('P', "P_START", "PP_START", "P_END", "PP_END");
     DoMergeSection('S', "S_START", "SS_START", "S_END", "SS_END");
@@ -958,11 +1075,12 @@ int DM_wad_merge_sections(lua_State *L) {
 void G_PushCleanString(lua_State *L, const char *buf, int len) {
     bool dirty = false;
 
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < len; i++) {
         if (DIRTY_CHAR(buf[i])) {
             dirty = true;
             break;
         }
+    }
 
     if (!dirty) {
         lua_pushlstring(L, buf, len);
@@ -978,8 +1096,11 @@ void G_PushCleanString(lua_State *L, const char *buf, int len) {
     char *new_str = StringNew(len);
     char *dest = new_str;
 
-    for (; src < s_end; src++)
-        if (!DIRTY_CHAR(*src)) *dest++ = *src;
+    for (; src < s_end; src++) {
+        if (!DIRTY_CHAR(*src)) {
+            *dest++ = *src;
+        }
+    }
 
     *dest = 0;
 
@@ -1001,12 +1122,14 @@ int DM_wad_read_text_lump(lua_State *L) {
     const char *pkg_name = luaL_checkstring(L, 1);
     const char *src_lump = luaL_checkstring(L, 2);
 
-    if (!MatchExtension(pkg_name, "wad"))
+    if (!MatchExtension(pkg_name, "wad")) {
         return luaL_error(
             L, "wad_read_text_lump: file extension is not WAD: %s\n", pkg_name);
+    }
 
-    if (!WAD_OpenRead(pkg_name))
+    if (!WAD_OpenRead(pkg_name)) {
         return luaL_error(L, "wad_read_text_lump: bad WAD file: %s", pkg_name);
+    }
 
     int entry = WAD_FindEntry(src_lump);
     if (entry < 0) {
@@ -1030,9 +1153,13 @@ int DM_wad_read_text_lump(lua_State *L) {
 
     while (buf < b_end) {
         const byte *next = buf;
-        while (next < b_end && *next != '\n') next++;
+        while (next < b_end && *next != '\n') {
+            next++;
+        }
 
-        if (next < b_end) next++;
+        if (next < b_end) {
+            next++;
+        }
 
         size_t len = (next - buf);
 
@@ -1061,7 +1188,9 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx) {
     if (lua_isstring(L, stack_idx)) {
         const char *name = luaL_checkstring(L, stack_idx);
 
-        if (name[0] != '#') luaL_error(L, "bad color string (missing #)");
+        if (name[0] != '#') {
+            luaL_error(L, "bad color string (missing #)");
+        }
 
         int raw_hex = strtol(name + 1, NULL, 16);
         int r = 0, g = 0, b = 0;
@@ -1074,8 +1203,9 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx) {
             r = (raw_hex >> 16) & 0xff;
             g = (raw_hex >> 8) & 0xff;
             b = (raw_hex)&0xff;
-        } else
+        } else {
             luaL_error(L, "bad color string");
+        }
 
         return MAKE_RGBA(r, g, b, 255);
     }
@@ -1187,7 +1317,9 @@ static struct {
 
         render_mode = REND_Solid;
 
-        for (int i = 0; i < 4; i++) color[i] = MAKE_RGBA(0, 0, 0, 255);
+        for (int i = 0; i < 4; i++) {
+            color[i] = MAKE_RGBA(0, 0, 0, 255);
+        }
 
         box_w = 1;
         box_h = 1;
@@ -1207,11 +1339,17 @@ int DM_title_create(lua_State *L) {
 
     rgb_color_t bg = Grab_Color(L, 3);
 
-    if (W < 16 || W > 1024) return luaL_argerror(L, 1, "bad width");
+    if (W < 16 || W > 1024) {
+        return luaL_argerror(L, 1, "bad width");
+    }
 
-    if (H < 16 || H > 256) return luaL_argerror(L, 2, "bad height");
+    if (H < 16 || H > 256) {
+        return luaL_argerror(L, 2, "bad height");
+    }
 
-    if (title_pix) delete[] title_pix;
+    if (title_pix) {
+        delete[] title_pix;
+    }
 
     title_W = W;
     title_H = H;
@@ -1260,7 +1398,9 @@ static bool TitleCacheImage(const char *filename) {
 
         title_last_tga = TGA_LoadImage(filename);
 
-        if (!title_last_tga) return false;
+        if (!title_last_tga) {
+            return false;
+        }
 
         title_last_filename = StringDup(filename);
     }
@@ -1277,7 +1417,7 @@ static int TitleAveragePixel(int x, int y) {
     int g = 0;
     int b = 0;
 
-    for (int ky = 0; ky < 3; ky++)
+    for (int ky = 0; ky < 3; ky++) {
         for (int kx = 0; kx < 3; kx++) {
             const rgb_color_t c = title_pix[(y + ky) * title_W3 + (x + kx)];
 
@@ -1285,6 +1425,7 @@ static int TitleAveragePixel(int x, int y) {
             g += RGB_GREEN(c);
             b += RGB_BLUE(c);
         }
+    }
 
     r = r / 9;
     g = g / 9;
@@ -1320,7 +1461,7 @@ static qLump_c *TitleCreateTGA() {
     lump->AddByte(24);  // pixel_bits
     lump->AddByte(0);   // attributes
 
-    for (int y = title_H - 1; y >= 0; y--)
+    for (int y = title_H - 1; y >= 0; y--) {
         for (int x = 0; x < title_W; x++) {
             rgb_color_t col = TitleAveragePixel(x, y);
 
@@ -1328,6 +1469,7 @@ static qLump_c *TitleCreateTGA() {
             lump->AddByte(RGB_GREEN(col));
             lump->AddByte(RGB_RED(col));
         }
+    }
 
     return lump;
 }
@@ -1337,12 +1479,13 @@ static qLump_c *TitleCreatePatch() {
 
     byte *conv_pixels = new byte[title_W * title_H];
 
-    for (int y = 0; y < title_H; y++)
+    for (int y = 0; y < title_H; y++) {
         for (int x = 0; x < title_W; x++) {
             rgb_color_t col = TitleAveragePixel(x, y);
 
             conv_pixels[y * title_W + x] = PaletteLookup(col, title_palette);
         }
+    }
 
     qLump_c *lump =
         DM_CreatePatch(title_W, title_H, 0, 0, conv_pixels, title_W, title_H);
@@ -1357,12 +1500,13 @@ static qLump_c *TitleCreateRaw() {
 
     byte *conv_pixels = new byte[title_W * title_H];
 
-    for (int y = 0; y < title_H; y++)
+    for (int y = 0; y < title_H; y++) {
         for (int x = 0; x < title_W; x++) {
             rgb_color_t col = TitleAveragePixel(x, y);
 
             conv_pixels[y * title_W + x] = PaletteLookup(col, title_palette);
         }
+    }
 
     qLump_c *lump = new qLump_c;
 
@@ -1383,12 +1527,13 @@ int DM_title_write(lua_State *L) {
 
     qLump_c *lump;
 
-    if (StringCaseCmp(format, "tga") == 0)
+    if (StringCaseCmp(format, "tga") == 0) {
         lump = TitleCreateTGA();
-    else if (StringCaseCmp(format, "raw") == 0)
+    } else if (StringCaseCmp(format, "raw") == 0) {
         lump = TitleCreateRaw();
-    else
+    } else {
         lump = TitleCreatePatch();
+    }
 
     DM_WriteLump(lumpname, lump);
 
@@ -1402,8 +1547,9 @@ int DM_title_set_palette(lua_State *L) {
 
     int stack_idx = 1;
 
-    if (!lua_istable(L, stack_idx))
+    if (!lua_istable(L, stack_idx)) {
         luaL_argerror(L, 1, "bad palette (not a table)");
+    }
 
     for (int c = 0; c < 256; c++) {
         lua_pushinteger(L, c * 3 + 1);
@@ -1433,38 +1579,41 @@ int DM_title_set_palette(lua_State *L) {
 }
 
 static void TitleParsePen(const char *what) {
-    if (strcmp(what, "circle") == 0)
+    if (strcmp(what, "circle") == 0) {
         title_drawctx.pen_type = PEN_Circle;
-    else if (strcmp(what, "box") == 0)
+    } else if (strcmp(what, "box") == 0) {
         title_drawctx.pen_type = PEN_Box;
-    else if (strcmp(what, "slash") == 0)
+    } else if (strcmp(what, "slash") == 0) {
         title_drawctx.pen_type = PEN_Slash;
-    else if (strcmp(what, "slash2") == 0)
+    } else if (strcmp(what, "slash2") == 0) {
         title_drawctx.pen_type = PEN_Slash2;
+    }
 }
 
 static void TitleParseRenderMode(const char *what) {
     // Note: REND_Textured is handled differently
 
-    if (strcmp(what, "solid") == 0)
+    if (strcmp(what, "solid") == 0) {
         title_drawctx.render_mode = REND_Solid;
-    else if (strcmp(what, "additive") == 0)
+    } else if (strcmp(what, "additive") == 0) {
         title_drawctx.render_mode = REND_Additive;
-    else if (strcmp(what, "subtract") == 0)
+    } else if (strcmp(what, "subtract") == 0) {
         title_drawctx.render_mode = REND_Subtract;
-    else if (strcmp(what, "multiply") == 0)
+    } else if (strcmp(what, "multiply") == 0) {
         title_drawctx.render_mode = REND_Multiply;
-    else if (strcmp(what, "gradient") == 0)
+    } else if (strcmp(what, "gradient") == 0) {
         title_drawctx.render_mode = REND_Gradient;
-    else if (strcmp(what, "gradient3") == 0)
+    } else if (strcmp(what, "gradient3") == 0) {
         title_drawctx.render_mode = REND_Gradient3;
-    else if (strcmp(what, "random") == 0)
+    } else if (strcmp(what, "random") == 0) {
         title_drawctx.render_mode = REND_Random;
+    }
 }
 
 static void TitleParseTexture(lua_State *L, const char *filename) {
-    if (!TitleCacheImage(filename))
+    if (!TitleCacheImage(filename)) {
         luaL_error(L, "title_prop: no such image: %s", filename);
+    }
 
     title_drawctx.render_mode = REND_Textured;
 }
@@ -1474,43 +1623,49 @@ int DM_title_property(lua_State *L) {
 
     const char *propname = luaL_checkstring(L, 1);
 
-    if (strcmp(propname, "reset") == 0)
+    if (strcmp(propname, "reset") == 0) {
         title_drawctx.Reset();
 
-    else if (strcmp(propname, "color") == 0 || strcmp(propname, "color1") == 0)
+    } else if (strcmp(propname, "color") == 0 ||
+               strcmp(propname, "color1") == 0) {
         title_drawctx.color[0] = Grab_Color(L, 2);
-    else if (strcmp(propname, "color2") == 0)
+    } else if (strcmp(propname, "color2") == 0) {
         title_drawctx.color[1] = Grab_Color(L, 2);
-    else if (strcmp(propname, "color3") == 0)
+    } else if (strcmp(propname, "color3") == 0) {
         title_drawctx.color[2] = Grab_Color(L, 2);
-    else if (strcmp(propname, "color4") == 0)
+    } else if (strcmp(propname, "color4") == 0) {
         title_drawctx.color[3] = Grab_Color(L, 2);
 
-    else if (strcmp(propname, "box_w") == 0)
+    } else if (strcmp(propname, "box_w") == 0) {
         title_drawctx.box_w = luaL_checkinteger(L, 2);
-    else if (strcmp(propname, "box_h") == 0)
+    } else if (strcmp(propname, "box_h") == 0) {
         title_drawctx.box_h = luaL_checkinteger(L, 2);
 
-    else if (strcmp(propname, "grad_y1") == 0)
+    } else if (strcmp(propname, "grad_y1") == 0) {
         title_drawctx.grad_y1 = luaL_checkinteger(L, 2);
-    else if (strcmp(propname, "grad_y2") == 0)
+    } else if (strcmp(propname, "grad_y2") == 0) {
         title_drawctx.grad_y2 = luaL_checkinteger(L, 2);
 
-    else if (strcmp(propname, "pen_type") == 0)
+    } else if (strcmp(propname, "pen_type") == 0) {
         TitleParsePen(luaL_checkstring(L, 2));
-    else if (strcmp(propname, "render_mode") == 0)
+    } else if (strcmp(propname, "render_mode") == 0) {
         TitleParseRenderMode(luaL_checkstring(L, 2));
 
-    else if (strcmp(propname, "texture") == 0)
+    } else if (strcmp(propname, "texture") == 0) {
         TitleParseTexture(L, luaL_checkstring(L, 2));
+    }
 
     return 0;
 }
 
 static inline rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2,
                                          int alpha) {
-    if (alpha == 255) return C2;
-    if (alpha == 0) return C1;
+    if (alpha == 255) {
+        return C2;
+    }
+    if (alpha == 0) {
+        return C1;
+    }
 
     int r = RGB_RED(C1) * (256 - alpha) + RGB_RED(C2) * alpha;
     int g = RGB_GREEN(C1) * (256 - alpha) + RGB_GREEN(C2) * alpha;
@@ -1524,8 +1679,12 @@ static inline rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2,
 }
 
 static inline rgb_color_t CalcGradient(float along) {
-    if (along < 0) along = 0;
-    if (along > 1) along = 1;
+    if (along < 0) {
+        along = 0;
+    }
+    if (along > 1) {
+        along = 1;
+    }
 
     rgb_color_t col1 = title_drawctx.color[0];
     rgb_color_t col2 = title_drawctx.color[1];
@@ -1610,7 +1769,9 @@ static inline rgb_color_t CalcPixel(int x, int y) {
                                 title_drawctx.color[0]);
 
         case REND_Textured:
-            if (!title_last_tga) return MAKE_RGBA(0, 255, 255, 255);
+            if (!title_last_tga) {
+                return MAKE_RGBA(0, 255, 255, 255);
+            }
 
             px = (x / 3) % title_last_tga->width;
             py = (y / 3) % title_last_tga->height;
@@ -1619,10 +1780,11 @@ static inline rgb_color_t CalcPixel(int x, int y) {
 
         case REND_Gradient:
         case REND_Gradient3:
-            if (title_drawctx.grad_y2 > title_drawctx.grad_y1)
+            if (title_drawctx.grad_y2 > title_drawctx.grad_y1) {
                 along = (float)(y - 3 * title_drawctx.grad_y1) /
                         (float)(3 * title_drawctx.grad_y2 -
                                 3 * title_drawctx.grad_y1);
+            }
             return CalcGradient(along);
 
         case REND_Random:
@@ -1649,16 +1811,21 @@ static void TDraw_Box(int x, int y, int w, int h) {
     x2 = MIN(x2, title_W3);
     y2 = MIN(y2, title_H3);
 
-    if (x1 > x2 || y1 > y2) return;
+    if (x1 > x2 || y1 > y2) {
+        return;
+    }
 
-    for (int y = y1; y < y2; y++)
+    for (int y = y1; y < y2; y++) {
         for (int x = x1; x < x2; x++) {
             title_pix[y * title_W3 + x] = CalcPixel(x, y);
         }
+    }
 }
 
 static void TDraw_Slash(int x, int y, int w, int dir) {
-    if (!dir) y = y + w;
+    if (!dir) {
+        y = y + w;
+    }
 
     int box_size = title_drawctx.box_h * 3;
 
@@ -1686,17 +1853,22 @@ static void TDraw_Circle(int x, int y, int w, int h) {
     x2 = MIN(x2, title_W3);
     y2 = MIN(y2, title_H3);
 
-    if (x1 > x2 || y1 > y2) return;
+    if (x1 > x2 || y1 > y2) {
+        return;
+    }
 
-    for (int y = y1; y < y2; y++)
+    for (int y = y1; y < y2; y++) {
         for (int x = x1; x < x2; x++) {
             float dx = (x - bmx) / (float)w;
             float dy = (y - bmy) / (float)h;
 
-            if (dx * dx + dy * dy > 0.25) continue;
+            if (dx * dx + dy * dy > 0.25) {
+                continue;
+            }
 
             title_pix[y * title_W3 + x] = CalcPixel(x, y);
         }
+    }
 }
 
 static void TDraw_LinePart(int x, int y) {
@@ -1736,7 +1908,9 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
     int out1 = CalcOutcode(x1, y1);
     int out2 = CalcOutcode(x2, y2);
 
-    if (out1 & out2) return;
+    if (out1 & out2) {
+        return;
+    }
 
     // handle simple (but common) cases of horiz/vert lines
 
@@ -1750,7 +1924,9 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
         x1 = MAX(0, x1);
         x2 = MIN(title_W3 - 1, x2);
 
-        for (; x1 <= x2; x1++) TDraw_LinePart(x1, y1);
+        for (; x1 <= x2; x1++) {
+            TDraw_LinePart(x1, y1);
+        }
 
         return;
     }
@@ -1765,7 +1941,9 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
         y1 = MAX(0, y1);
         y2 = MIN(title_H3 - 1, y2);
 
-        for (; y1 <= y2; y1++) TDraw_LinePart(x1, y1);
+        for (; y1 <= y2; y1++) {
+            TDraw_LinePart(x1, y1);
+        }
 
         return;
     }
@@ -1782,7 +1960,9 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
 
         // this almost certainly cannot happen, but for the sake of
         // robustness we check anyway (just in case)
-        if (dx == 0 && dy == 0) return;
+        if (dx == 0 && dy == 0) {
+            return;
+        }
 
         int new_x, new_y;
 
@@ -1817,7 +1997,9 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
             out2 = CalcOutcode(x2, y2);
         }
 
-        if (out1 & out2) return;
+        if (out1 & out2) {
+            return;
+        }
     }
 
     // this is the Bresenham line drawing algorithm
@@ -1874,30 +2056,42 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
 
 static void TDraw_Image(int x, int y, tga_image_c *img) {
     for (int dy = 0; dy < img->height; dy++, y++) {
-        if (y < 0) continue;
-        if (y >= title_H) break;
+        if (y < 0) {
+            continue;
+        }
+        if (y >= title_H) {
+            break;
+        }
 
         for (int dx = 0; dx < img->width; dx++) {
             int nx = x + dx;
 
-            if (nx < 0) continue;
-            if (nx >= title_W) break;
+            if (nx < 0) {
+                continue;
+            }
+            if (nx >= title_W) {
+                break;
+            }
 
             rgb_color_t pix = img->pixels[dy * img->width + dx];
 
             int alpha = RGB_ALPHA(pix);
-            if (alpha == 0) continue;
+            if (alpha == 0) {
+                continue;
+            }
 
-            for (int ky = 0; ky < 3; ky++)
+            for (int ky = 0; ky < 3; ky++) {
                 for (int kx = 0; kx < 3; kx++) {
                     int pos = (y * 3 + ky) * title_W3 + nx * 3 + kx;
 
-                    if (alpha == 255)
+                    if (alpha == 255) {
                         title_pix[pos] = pix;
-                    else
+                    } else {
                         title_pix[pos] =
                             CalcAlphaBlend(title_pix[pos], pix, alpha);
+                    }
                 }
+            }
         }
     }
 }
@@ -1949,8 +2143,9 @@ int DM_title_load_image(lua_State *L) {
 
     const char *filename = luaL_checkstring(L, 3);
 
-    if (!TitleCacheImage(filename))
+    if (!TitleCacheImage(filename)) {
         luaL_error(L, "title_load_image: no such file: %s", filename);
+    }
 
     TDraw_Image(x, y, title_last_tga);
 
@@ -1970,14 +2165,17 @@ int DM_title_draw_clouds(lua_State *L) {
     double powscale = luaL_optnumber(L, 6, 1.0);
     double fracdim = luaL_optnumber(L, 7, 2.4);
 
-    if (thresh > 0.98)
+    if (thresh > 0.98) {
         return luaL_error(L, "title_draw_clouds: bad thresh value");
+    }
 
-    if (powscale < 0.01)
+    if (powscale < 0.01) {
         return luaL_error(L, "title_draw_clouds: bad power value");
+    }
 
-    if (fracdim > 2.99 || fracdim < 0.2)
+    if (fracdim > 2.99 || fracdim < 0.2) {
         return luaL_error(L, "title_draw_clouds: bad fracdim value");
+    }
 
     SYS_ASSERT(title_pix);
     SYS_ASSERT(title_W > 0);
@@ -1986,18 +2184,22 @@ int DM_title_draw_clouds(lua_State *L) {
     // [ it is a square, and size must be a power of two ]
 
     int W = MAX(title_W, title_H) - 1;
-    for (int k = 0; k < 30; k++) W |= (W >> 1);
+    for (int k = 0; k < 30; k++) {
+        W |= (W >> 1);
+    }
     W += 1;
 
     float *synth = new float[W * W];
 
     TX_SpectralSynth(seed, synth, W, fracdim, powscale);
 
-    for (int y = 0; y < title_H; y++)
+    for (int y = 0; y < title_H; y++) {
         for (int x = 0; x < title_W; x++) {
             float src = synth[y * W + x];
 
-            if (src < thresh) continue;
+            if (src < thresh) {
+                continue;
+            }
 
             src = (src - thresh) * 2 / (1.0 - thresh);
 
@@ -2021,11 +2223,13 @@ int DM_title_draw_clouds(lua_State *L) {
 
             rgb_color_t col = MAKE_RGBA(r2, g2, b2, 255);
 
-            for (int dy = 0; dy < 3; dy++)
+            for (int dy = 0; dy < 3; dy++) {
                 for (int dx = 0; dx < 3; dx++) {
                     title_pix[(y * 3 + dy) * title_W3 + (x * 3 + dx)] = col;
                 }
+            }
         }
+    }
 
     delete[] synth;
 

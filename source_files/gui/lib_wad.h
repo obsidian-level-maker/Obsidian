@@ -23,6 +23,9 @@
 
 /* WAD reading */
 
+#include "sys_macro.h"
+#include "sys_type.h"
+
 bool WAD_OpenRead(const char *filename);
 void WAD_CloseRead(void);
 

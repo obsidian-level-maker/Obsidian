@@ -65,30 +65,29 @@
   callbacks exactly the same as when you pick the item with the mouse.
 */
 class FL_EXPORT Fl_Menu_Bar : public Fl_Menu_ {
-   protected:
+protected:
     void draw();
-
-   public:
+public:
     int handle(int);
-    /**
-      Creates a new Fl_Menu_Bar widget using the given position,
-      size, and label string. The default boxtype is FL_UP_BOX.
+  /**
+    Creates a new Fl_Menu_Bar widget using the given position,
+    size, and label string. The default boxtype is FL_UP_BOX.
 
-      The constructor sets menu() to NULL.  See
-      Fl_Menu_ for the methods to set or change the menu.
+    The constructor sets menu() to NULL.  See
+    Fl_Menu_ for the methods to set or change the menu.
 
-      labelsize(), labelfont(), and labelcolor()
-      are used to control how the menubar items are drawn.  They are
-      initialized from the Fl_Menu static variables, but you can
-      change them if desired.
+    labelsize(), labelfont(), and labelcolor()
+    are used to control how the menubar items are drawn.  They are
+    initialized from the Fl_Menu static variables, but you can
+    change them if desired.
 
-      label() is ignored unless you change align() to
-      put it outside the menubar.
+    label() is ignored unless you change align() to
+    put it outside the menubar.
 
-      The destructor removes the Fl_Menu_Bar widget and all of its
-      menu items.
-    */
-    Fl_Menu_Bar(int X, int Y, int W, int H, const char *l = 0);
+    The destructor removes the Fl_Menu_Bar widget and all of its
+    menu items.
+  */
+  Fl_Menu_Bar(int X, int Y, int W, int H, const char *l=0);
 };
 
 #endif

@@ -26,11 +26,11 @@
 
 #include <config.h>
 
-#if USE_XFT
+#  if USE_XFT
 typedef struct _XftFont XftFont;
-#elif !defined(WIN32) && !defined(__APPLE__)
-#include "Xutf8.h"
-#endif  // USE_XFT
+#  elif !defined(WIN32) && !defined(__APPLE__)
+#    include "Xutf8.h"
+#  endif // USE_XFT
 
 /**
    This a structure for an actual system font, with junk to
@@ -39,69 +39,67 @@ typedef struct _XftFont XftFont;
    font/size combination is used.
 */
 class Fl_Font_Descriptor {
-   public:
-    /** linked list for this Fl_Fontdesc */
-    Fl_Font_Descriptor *next;
-    Fl_Fontsize size; /**< font size */
-#ifndef FL_DOXYGEN    // don't bother with platorm dependant details in the doc.
-#ifdef WIN32
-    HFONT fid;
-    int *width[64];
-    TEXTMETRIC metr;
-    int angle;
-    FL_EXPORT Fl_Font_Descriptor(const char *fontname, Fl_Fontsize size);
-#elif defined(__APPLE_QUARTZ__)
-    FL_EXPORT Fl_Font_Descriptor(const char *fontname, Fl_Fontsize size);
-    ATSUTextLayout layout;
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
-    CTFontRef fontref;
-    // the unicode span is divided in 512 blocks of 128 characters
-    float *width[512];  // array of arrays of character widths
-#endif
-    ATSUStyle style;
-    short ascent, descent, q_width;
-#elif USE_XFT
-    XftFont *font;
-    // const char* encoding;
-    int angle;
-    FL_EXPORT Fl_Font_Descriptor(const char *xfontname, Fl_Fontsize size,
-                                 int angle);
-#else
-    XUtf8FontStruct *font;  // X UTF-8 font information
-    FL_EXPORT Fl_Font_Descriptor(const char *xfontname);
-#endif
-#if HAVE_GL
-    unsigned int listbase;  // base of display list, 0 = none
+public:
+  /** linked list for this Fl_Fontdesc */
+  Fl_Font_Descriptor *next;	
+  Fl_Fontsize size; /**< font size */
+#ifndef FL_DOXYGEN // don't bother with platorm dependant details in the doc. 
+#  ifdef WIN32
+  HFONT fid;
+  int *width[64];
+  TEXTMETRIC metr;
+  int angle;
+  FL_EXPORT Fl_Font_Descriptor(const char* fontname, Fl_Fontsize size);
+#  elif defined(__APPLE_QUARTZ__)
+  FL_EXPORT Fl_Font_Descriptor(const char* fontname, Fl_Fontsize size);
+  ATSUTextLayout layout;
+#     if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+  CTFontRef fontref;
+  // the unicode span is divided in 512 blocks of 128 characters
+  float *width[512]; // array of arrays of character widths
+#     endif
+  ATSUStyle style;
+  short ascent, descent, q_width;
+#  elif USE_XFT
+  XftFont* font;
+  //const char* encoding;
+  int angle;
+  FL_EXPORT Fl_Font_Descriptor(const char* xfontname, Fl_Fontsize size, int angle);
+#  else
+  XUtf8FontStruct* font;	// X UTF-8 font information
+  FL_EXPORT Fl_Font_Descriptor(const char* xfontname);
+#  endif
+#  if HAVE_GL
+  unsigned int listbase;// base of display list, 0 = none
 #ifndef __APPLE_QUARTZ__
-    char glok[64];
-#endif  // __APPLE_QUARTZ__
-#endif  // HAVE_GL
+  char glok[64];
+#endif // __APPLE_QUARTZ__
+#  endif // HAVE_GL
 
-    FL_EXPORT ~Fl_Font_Descriptor();
+  FL_EXPORT ~Fl_Font_Descriptor();
 
-#endif  // FL_DOXYGEN
+#endif // FL_DOXYGEN
 };
 
-// extern FL_EXPORT Fl_Font_Descriptor *fl_fontsize; // the currently selected
-// one
+//extern FL_EXPORT Fl_Font_Descriptor *fl_fontsize; // the currently selected one
 
 struct Fl_Fontdesc {
-    const char *name;
-    char fontname[128];         // "Pretty" font name
-    Fl_Font_Descriptor *first;  // linked list of sizes of this style
-#ifndef WIN32
-    char **xlist;  // matched X font names
-    int n;         // size of xlist, negative = don't free xlist!
-#endif
+  const char *name;
+  char fontname[128];	// "Pretty" font name
+  Fl_Font_Descriptor *first;	// linked list of sizes of this style
+#  ifndef WIN32
+  char **xlist;		// matched X font names
+  int n;		// size of xlist, negative = don't free xlist!
+#  endif
 };
 
-extern FL_EXPORT Fl_Fontdesc *fl_fonts;  // the table
+extern FL_EXPORT Fl_Fontdesc *fl_fonts; // the table
 
-#ifndef WIN32
+#  ifndef WIN32
 // functions for parsing X font names:
-FL_EXPORT const char *fl_font_word(const char *p, int n);
+FL_EXPORT const char* fl_font_word(const char *p, int n);
 FL_EXPORT char *fl_find_fontsize(char *name);
-#endif
+#  endif
 
 #endif
 

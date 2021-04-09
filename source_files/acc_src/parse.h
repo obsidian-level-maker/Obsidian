@@ -35,7 +35,7 @@ extern int pa_WorldVarCount;
 extern int pa_GlobalVarCount;
 extern int pa_WorldArrayCount;
 extern int pa_GlobalArrayCount;
-extern ImportModes ImportMode;
+extern enum ImportModes ImportMode;
 extern boolean ExporterFlagged;
 extern boolean pa_ConstExprIsString;
 
