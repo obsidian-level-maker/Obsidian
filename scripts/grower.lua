@@ -3468,7 +3468,7 @@ end
     end
 
     if is_emergency then
-      gui.printf("Emergency in ROOM_" .. R.id .. " is resolved OMG AMAZING!!!!\n")
+      gui.debugf("Emergency in ROOM_" .. R.id .. " is resolved OMG AMAZING!!!!\n")
       if not R.emergency_sprout_attempts then
         R.emergency_sprout_attempts = 1
       else
@@ -3477,7 +3477,7 @@ end
     end
 
     if R.emergency_sprout_attempts then
-      gui.printf(R.id .. " Emergency Sprout attempts: " .. R.emergency_sprout_attempts .. "\n")
+      gui.debugf(R.id .. " Emergency Sprout attempts: " .. R.emergency_sprout_attempts .. "\n")
     end
   end
 
