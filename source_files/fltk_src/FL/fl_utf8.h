@@ -32,14 +32,14 @@
 #include "fl_types.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef WIN32
-#  include <sys/types.h>
-#  include <sys/stat.h>
-#  include <locale.h>
 #  include <ctype.h>
+#  include <locale.h>
+#  include <sys/stat.h>
+#  include <sys/types.h>
 #  define xchar wchar_t
 #  if !defined(FL_DLL) && !defined(__CYGWIN__)
 #    undef strdup
@@ -54,15 +54,15 @@
 #    define chdir _chdir
 #  endif
 #elif defined(__APPLE__)
-#  include <wchar.h>
 #  include <sys/stat.h>
+#  include <wchar.h>
 #  define xchar wchar_t
 #else /* X11 */
-#  include <sys/types.h>
 #  include <sys/stat.h>
+#  include <sys/types.h>
 #  if defined(FL_LIBRARY) /* don't expose X11 headers in user space */
-#    include <X11/Xlocale.h>
 #    include <X11/Xlib.h>
+#    include <X11/Xlocale.h>
 #  endif /* defined(FL_LIBRARY) -- don't expose X11 headers in user space */
 #  include <locale.h>
 #  define xchar unsigned short

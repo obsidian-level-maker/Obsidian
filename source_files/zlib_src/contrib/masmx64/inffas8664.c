@@ -32,11 +32,11 @@
  *
  */
 
-#include <stdio.h>
-#include "zutil.h"
-#include "inftrees.h"
-#include "inflate.h"
 #include "inffast.h"
+#include "inflate.h"
+#include "inftrees.h"
+#include "zutil.h"
+#include <stdio.h>
 
 /* Mark Adler's comments from inffast.c: */
 

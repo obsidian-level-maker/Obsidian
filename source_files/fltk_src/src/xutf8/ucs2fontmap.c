@@ -28,8 +28,11 @@ typedef struct {
 } Summary16;
 
 #define NEED_TOMB /* indicates what part of these include files is needed here (avoid compilation warnings) */
-#include "lcUniConv/cp936ext.h"
+#include "headers/dingbats_.h"
+#include "headers/symbol_.h"
 #include "lcUniConv/big5.h"
+#include "lcUniConv/cp1251.h"
+#include "lcUniConv/cp936ext.h"
 #include "lcUniConv/gb2312.h"
 #include "lcUniConv/iso8859_10.h"
 #include "lcUniConv/iso8859_11.h"
@@ -50,9 +53,6 @@ typedef struct {
 #include "lcUniConv/koi8_r.h"
 #include "lcUniConv/koi8_u.h"
 #include "lcUniConv/ksc5601.h"
-#include "lcUniConv/cp1251.h"
-#include "headers/symbol_.h"
-#include "headers/dingbats_.h"
   
 /*************** conv_gen.c ************/
 

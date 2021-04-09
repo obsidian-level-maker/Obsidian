@@ -24,10 +24,10 @@
 //    o Row headings (only column headings supported currently)
 //
 
-#include <stdio.h>		// for debugging
 #include <FL/Fl.H>
-#include <FL/fl_draw.H>
 #include <FL/Fl_Table_Row.H>
+#include <FL/fl_draw.H>
+#include <stdio.h>		// for debugging
 
 // Is row selected?
 int Fl_Table_Row::row_selected(int row) {

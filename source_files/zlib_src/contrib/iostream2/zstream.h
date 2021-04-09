@@ -24,10 +24,10 @@
  * $Id: zstream.h 1.1 1997-06-25 12:00:56+02 tyge Exp tyge $
  */
 
-#include <strstream.h>
-#include <string.h>
-#include <stdio.h>
 #include "zlib.h"
+#include <stdio.h>
+#include <string.h>
+#include <strstream.h>
 
 #if defined(_WIN32)
 #   include <fcntl.h>

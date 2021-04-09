@@ -16,10 +16,10 @@
 //     http://www.fltk.org/str.php
 //
 
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Choice.H>
 #include <FL/fl_draw.H>
-#include "flstring.h"
 
 // Emulates the Forms choice widget.  This is almost exactly the same
 // as an Fl_Menu_Button.  The only difference is the appearance of the

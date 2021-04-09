@@ -16,18 +16,18 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdio.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Input.H>
-#include <FL/Fl_Float_Input.H>
-#include <FL/Fl_Int_Input.H>
-#include <FL/Fl_Secret_Input.H>
-#include <FL/Fl_Multiline_Input.H>
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Toggle_Button.H>
-#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Color_Chooser.H>
+#include <FL/Fl_Float_Input.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Int_Input.H>
+#include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Multiline_Input.H>
+#include <FL/Fl_Secret_Input.H>
+#include <FL/Fl_Toggle_Button.H>
+#include <FL/Fl_Window.H>
+#include <stdio.h>
 
 void cb(Fl_Widget *ob) {
   printf("Callback for %s '%s'\n",ob->label(),((Fl_Input*)ob)->value());

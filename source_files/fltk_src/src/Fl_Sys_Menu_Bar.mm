@@ -33,17 +33,17 @@
  */
 
 #if defined(__APPLE__) || defined(FL_DOXYGEN)
+#include <FL/Fl.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Sys_Menu_Bar.H>
 #include <FL/x.H>
-#include <FL/Fl.H>
 
 #import <Cocoa/Cocoa.h>
 
 #include "flstring.h"
-#include <stdio.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include <stdio.h>
 
 typedef const Fl_Menu_Item *pFl_Menu_Item;
 

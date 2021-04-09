@@ -23,9 +23,9 @@
 
 // More code in Fl_Menu_add.cxx
 
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Menu_.H>
-#include "flstring.h"
 #include <stdio.h>
 #include <stdlib.h>
 

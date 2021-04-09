@@ -31,15 +31,15 @@ int main(int, char**) {
 #else
 // end of added block
 
+#include "trackball.c"	// changed from trackball.h for fltk
+#include <FL/glu.h>     // added for fltk
+#include <FL/glut.H>	// changed for fltk
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
-#include <math.h>
-#include <FL/glut.H>	// changed for fltk
-#include <FL/glu.h>     // added for fltk
-#include "trackball.c"	// changed from trackball.h for fltk
 
 #define WIDTH 4
 #define HEIGHT 5

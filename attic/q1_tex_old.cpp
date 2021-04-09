@@ -16,24 +16,24 @@
 //
 //------------------------------------------------------------------------
 
-#include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
+#include "headers.h"
 
 #include <map>
 
 #include "lib_file.h"
-#include "lib_util.h"
 #include "lib_pak.h"
+#include "lib_util.h"
 #include "main.h"
 
 #include "ui_chooser.h"
 
 
-#include "q_bsp.h"
 #include "q1_main.h"
 #include "q1_structs.h"
+#include "q_bsp.h"
 
 
 // WAD2_OpenWrite

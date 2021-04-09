@@ -16,12 +16,12 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <config.h>
-#include <FL/Fl_Printer.H>
-#include <FL/Fl_Gl_Window.H>
-#include "Fl_Gl_Choice.H"
-#include <FL/Fl_RGB_Image.H>
 #include "FL/Fl.H"
+#include "Fl_Gl_Choice.H"
+#include <FL/Fl_Gl_Window.H>
+#include <FL/Fl_Printer.H>
+#include <FL/Fl_RGB_Image.H>
+#include <config.h>
 
 #if defined(__APPLE__)
 uchar *convert_BGRA_to_RGB(uchar *baseAddress, int w, int h, int mByteWidth)

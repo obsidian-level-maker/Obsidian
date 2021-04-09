@@ -19,9 +19,9 @@
 */
 
 
-#include <float.h>
 #include "processor.h"
 #include "sc_man.h"
+#include <float.h>
 
 typedef double real64;
 typedef unsigned int uint32;

@@ -2,8 +2,8 @@
 #ifndef zfstream_h
 #define zfstream_h
 
-#include <fstream.h>
 #include "zlib.h"
+#include <fstream.h>
 
 class gzfilebuf : public streambuf {
 

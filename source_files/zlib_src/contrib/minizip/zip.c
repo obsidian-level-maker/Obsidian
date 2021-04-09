@@ -22,17 +22,17 @@
 */
 
 
+#include "zip.h"
+#include "zlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "zlib.h"
-#include "zip.h"
 
 #ifdef STDC
 #  include <stddef.h>
-#  include <string.h>
 #  include <stdlib.h>
+#  include <string.h>
 #endif
 #ifdef NO_ERRNO_H
     extern int errno;

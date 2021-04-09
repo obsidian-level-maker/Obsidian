@@ -20,10 +20,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "zdbsp.h"
-#include "templates.h"
-#include "tarray.h"
 #include "blockmapbuilder.h"
+#include "tarray.h"
+#include "templates.h"
+#include "zdbsp.h"
 
 #undef BLOCK_TEST
 

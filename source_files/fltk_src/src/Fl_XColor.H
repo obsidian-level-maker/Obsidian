@@ -16,8 +16,8 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <config.h>
 #include <FL/Enumerations.H>
+#include <config.h>
 
 // one of these for each color in fltk's "colormap":
 // if overlays are enabled, another one for the overlay

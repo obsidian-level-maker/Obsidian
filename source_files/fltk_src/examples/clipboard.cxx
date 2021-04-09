@@ -16,14 +16,14 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl_Window.H>
+#include <FL/Fl.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Image.H>
+#include <FL/Fl_Tabs.H>
 #include <FL/Fl_Text_Buffer.H>
 #include <FL/Fl_Text_Display.H>
-#include <FL/Fl_Tabs.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #ifdef WIN32
 #include <windows.h>

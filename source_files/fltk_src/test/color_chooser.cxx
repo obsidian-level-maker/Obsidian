@@ -17,17 +17,17 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
-#include <FL/fl_show_colormap.H>
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Image.H>
-#include <FL/x.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
+#include <FL/fl_show_colormap.H>
+#include <FL/x.H>
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #if !defined(WIN32) && !defined(__APPLE__)
 #include "list_visuals.cxx"
 #endif

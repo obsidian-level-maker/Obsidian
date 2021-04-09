@@ -21,11 +21,11 @@
 extern "C" {
 #  endif
 
+#include <FL/Fl_Export.H>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xlocale.h>
 #include <X11/Xutil.h>
-#include <FL/Fl_Export.H>
 
 typedef struct {
 	int nb_font;

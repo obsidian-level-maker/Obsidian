@@ -16,9 +16,9 @@
    testing, and causes pufftest to fail with not enough output space (-f does
    a write like -w, so -w is not required). */
 
+#include "puff.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "puff.h"
 
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
 #  include <fcntl.h>

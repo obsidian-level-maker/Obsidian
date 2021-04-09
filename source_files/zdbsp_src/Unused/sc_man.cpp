@@ -21,12 +21,12 @@
 
 // HEADER FILES ------------------------------------------------------------
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <limits.h>
 #include "sc_man.h"
+#include <limits.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef _MSC_VER
 #pragma warning(disable:4996)

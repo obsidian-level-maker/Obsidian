@@ -26,8 +26,8 @@
 // Not at all guaranteed to be Forms compatible, especially with any
 // string with a % sign in it!
 
-#include <FL/Fl_Menu_.H>
 #include "flstring.h"
+#include <FL/Fl_Menu_.H>
 #include <stdio.h>
 #include <stdlib.h>
 

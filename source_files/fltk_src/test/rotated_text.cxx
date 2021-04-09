@@ -17,12 +17,12 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Hor_Value_Slider.H>
-#include <FL/Fl_Toggle_Button.H>
-#include <FL/Fl_Input.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Hor_Value_Slider.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Toggle_Button.H>
 #include <FL/fl_draw.H>
 
 #include <math.h>

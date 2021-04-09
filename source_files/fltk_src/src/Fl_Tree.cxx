@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <FL/Fl_Tree.H>
 #include <FL/Fl_Preferences.H>
+#include <FL/Fl_Tree.H>
 
 //////////////////////
 // Fl_Tree.cxx

@@ -25,15 +25,15 @@
 
 #include "Fl_Native_File_Chooser_common.cxx"		// strnew/strfree/strapp/chrcat
 #include <libgen.h>		// dirname(3)
-#include <sys/types.h>		// stat(2)
 #include <sys/stat.h>		// stat(2)
+#include <sys/types.h>		// stat(2)
 
 
 #include <FL/Fl.H>
-#include <FL/x.H>
-#include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_File_Chooser.H>
+#include <FL/Fl_Native_File_Chooser.H>
 #include <FL/filename.H>
+#include <FL/x.H>
 
 // FREE PATHNAMES ARRAY, IF IT HAS ANY CONTENTS
 void Fl_Native_File_Chooser::clear_pathnames() {

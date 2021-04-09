@@ -20,11 +20,11 @@
 // Include necessary headers...
 //
 
+#include "CodeEditor.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include "CodeEditor.h"
 
 
 Fl_Text_Display::Style_Table_Entry CodeEditor::

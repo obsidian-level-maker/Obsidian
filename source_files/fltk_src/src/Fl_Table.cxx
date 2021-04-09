@@ -17,9 +17,9 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdio.h>		// fprintf
-#include <FL/fl_draw.H>
 #include <FL/Fl_Table.H>
+#include <FL/fl_draw.H>
+#include <stdio.h>		// fprintf
 
 #if defined(USE_UTF8) && ( defined(MICROSOFT) || defined(LINUX) )
 #include <FL/fl_utf8.H>	// currently only Windows and Linux

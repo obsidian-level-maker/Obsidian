@@ -21,15 +21,15 @@
    to & from may be the same buffer.
 */
 
+#include "flstring.h"
 #include <FL/filename.H>
 #include <FL/fl_utf8.h>
 #include <stdlib.h>
-#include "flstring.h"
 #if defined(WIN32) && !defined(__CYGWIN__)
 #include <windows.h>
 #else
-# include <unistd.h>
 # include <pwd.h>
+# include <unistd.h>
 #endif
 
 #if defined(WIN32) || defined(__EMX__) && !defined(__CYGWIN__)

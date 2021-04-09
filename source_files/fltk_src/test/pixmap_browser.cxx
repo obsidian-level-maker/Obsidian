@@ -18,14 +18,14 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Shared_Image.H>
-#include <FL/Fl_Printer.H>
-#include <string.h>
-#include <errno.h>
+#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_File_Chooser.H>
+#include <FL/Fl_Printer.H>
+#include <FL/Fl_Shared_Image.H>
 #include <FL/fl_message.H>
+#include <errno.h>
+#include <string.h>
 
 Fl_Box *b;
 Fl_Double_Window *w;

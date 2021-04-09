@@ -19,12 +19,12 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <stdio.h>
-#include <math.h>		// powf()
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Tree.H>
 #include <FL/Fl_Table.H>
+#include <FL/Fl_Tree.H>
+#include <math.h>		// powf()
+#include <stdio.h>
 #ifndef PI
 #define PI 3.14159
 #endif

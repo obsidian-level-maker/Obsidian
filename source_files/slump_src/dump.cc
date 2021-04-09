@@ -29,12 +29,12 @@
  * - Please do not call any derivative of this program SLIGE.
  */
 
+#include "slump.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <assert.h>
-#include "slump.h"
 
 /* Global variables */
 

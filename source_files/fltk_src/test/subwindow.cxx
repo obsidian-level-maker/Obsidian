@@ -21,14 +21,14 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Toggle_Button.H>
-#include <FL/Fl_Menu_Button.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Menu_Button.H>
+#include <FL/Fl_Toggle_Button.H>
+#include <FL/Fl_Window.H>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifdef DEBUG
 #include <FL/names.h>

@@ -16,14 +16,14 @@
 //     http://www.fltk.org/str.php
 //
 
+#include "flstring.h"
+#include <FL/Fl.H>
+#include <FL/Fl_Text_Editor.H>
+#include <FL/Fl_Window.H>
+#include <FL/fl_ask.H>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "flstring.h"
-#include <ctype.h>
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Text_Editor.H>
-#include <FL/fl_ask.H>
 
 
 /* Keyboard Control Matrix

@@ -16,13 +16,13 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Overlay_Window.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Overlay_Window.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
+#include <stdio.h>
+#include <stdlib.h>
 
 int width=10,height=10;
 

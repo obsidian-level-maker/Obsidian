@@ -17,26 +17,26 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_File_Chooser.H>
 #include <FL/Fl_File_Icon.H>
 #include <FL/Fl_Help_Dialog.H>
 #include <FL/Fl_Hold_Browser.H>
-#include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Native_File_Chooser.H>
+#include <FL/Fl_PNG_Image.H>
 #include <FL/Fl_Plugin.H>
+#include <FL/Fl_Printer.H>
+#include <FL/filename.H>
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
-#include <FL/Fl_File_Chooser.H>
-#include <FL/Fl_PNG_Image.H>
 #include <FL/fl_message.H>
-#include <FL/filename.H>
-#include <FL/Fl_Native_File_Chooser.H>
-#include <FL/Fl_Printer.H>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <sys/stat.h>
 #include <time.h> // time(), localtime(), etc.
 
@@ -46,12 +46,12 @@
 #include "template_panel.h"
 
 #if defined(WIN32) && !defined(__CYGWIN__)
-#  include <direct.h>
-#  include <windows.h>
-#  include <io.h>
-#  include <fcntl.h>
-#  include <commdlg.h>
 #  include <FL/x.H>
+#  include <commdlg.h>
+#  include <direct.h>
+#  include <fcntl.h>
+#  include <io.h>
+#  include <windows.h>
 #  ifndef __WATCOMC__
 // Visual C++ 2005 incorrectly displays a warning about the use of POSIX APIs
 // on Windows, which is supposed to be POSIX compliant...

@@ -14,8 +14,8 @@
  *     http://www.fltk.org/str.php
  */
 
-#include <wchar.h>
 #include <stdio.h>
+#include <wchar.h>
 char buffer[1000000];
 
 /*** you can try to modifie this value to have better performences **/

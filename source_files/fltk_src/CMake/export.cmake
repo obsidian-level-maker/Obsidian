@@ -6,38 +6,27 @@
 #
 # Copyright 1998-2016 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     http://www.fltk.org/COPYING.php
+# http://www.fltk.org/COPYING.php
 #
 # Please report all bugs and problems on the following page:
 #
-#     http://www.fltk.org/str.php
+# http://www.fltk.org/str.php
 #
 
-#######################################################################
+# ##############################################################################
 # final config and export
-#######################################################################
-# Set the fluid executable path
-#if(CMAKE_CROSSCOMPILING)
-#   find_file(FLUID_PATH
-#      NAMES fluid fluid.exe
-#      PATHS ENV PATH
-#      NO_CMAKE_FIND_ROOT_PATH
-#   )
-#   add_executable(fluid IMPORTED)
-#   set(FLTK_FLUID_EXECUTABLE ${FLUID_PATH})
-#   set(FLUID)       # no export
-#   set_target_properties(fluid
-#      PROPERTIES IMPORTED_LOCATION ${FLUID_PATH}
-#   )
-#else()
-#   add_subdirectory(fluid)
-#   set(FLTK_FLUID_EXECUTABLE fluid)
-#   set(FLUID fluid) # export
-#endif(CMAKE_CROSSCOMPILING)
+# ##############################################################################
+# Set the fluid executable path if(CMAKE_CROSSCOMPILING) find_file(FLUID_PATH
+# NAMES fluid fluid.exe PATHS ENV PATH NO_CMAKE_FIND_ROOT_PATH )
+# add_executable(fluid IMPORTED) set(FLTK_FLUID_EXECUTABLE ${FLUID_PATH})
+# set(FLUID)       # no export set_target_properties(fluid PROPERTIES
+# IMPORTED_LOCATION ${FLUID_PATH} ) else() add_subdirectory(fluid)
+# set(FLTK_FLUID_EXECUTABLE fluid) set(FLUID fluid) # export
+# endif(CMAKE_CROSSCOMPILING)
 
 add_subdirectory(src)
 
@@ -46,26 +35,23 @@ export(TARGETS ${FLTK_LIBRARIES} FILE ${CMAKE_BINARY_DIR}/FLTK-Targets.cmake)
 
 # generate FLTK-Functions.cmake for build directory use
 configure_file(
-    ${FLTK_SOURCE_DIR}/CMake/FLTK-Functions.cmake
-    ${FLTK_BINARY_DIR}/FLTK-Functions.cmake
-    COPYONLY
-    )
+  ${FLTK_SOURCE_DIR}/CMake/FLTK-Functions.cmake
+  ${FLTK_BINARY_DIR}/FLTK-Functions.cmake COPYONLY
+)
 
 # generate FLTKConfig.cmake for build directory use
 set(INCLUDE_DIRS "${FLTK_INCLUDE_DIRS}")
 set(CONFIG_PATH ${FLTK_BINARY_DIR})
 
 configure_file(
-   ${FLTK_SOURCE_DIR}/CMake/FLTKConfig.cmake.in
-   ${FLTK_BINARY_DIR}/FLTKConfig.cmake
-   @ONLY
+  ${FLTK_SOURCE_DIR}/CMake/FLTKConfig.cmake.in
+  ${FLTK_BINARY_DIR}/FLTKConfig.cmake @ONLY
 )
 
 # generate UseFLTK.cmake for build directory use
 configure_file(
-   ${FLTK_SOURCE_DIR}/CMake/UseFLTK.cmake.in
-   ${FLTK_BINARY_DIR}/UseFLTK.cmake
-   @ONLY
+  ${FLTK_SOURCE_DIR}/CMake/UseFLTK.cmake.in ${FLTK_BINARY_DIR}/UseFLTK.cmake
+  @ONLY
 )
 
 # generate fltk-config for build directory use
@@ -79,14 +65,12 @@ set(srcdir ".")
 set(LIBNAME "${libdir}/libfltk.a")
 
 configure_file(
-   "${FLTK_SOURCE_DIR}/fltk-config.in"
-   "${FLTK_BINARY_DIR}/fltk-config"
-   @ONLY
+  "${FLTK_SOURCE_DIR}/fltk-config.in" "${FLTK_BINARY_DIR}/fltk-config" @ONLY
 )
 if(UNIX)
-   execute_process(COMMAND chmod 755 fltk-config
-      WORKING_DIRECTORY "${FLTK_BINARY_DIR}"
-   )
+  execute_process(
+    COMMAND chmod 755 fltk-config WORKING_DIRECTORY "${FLTK_BINARY_DIR}"
+  )
 endif(UNIX)
 
 # prepare some variables for config.h
@@ -109,21 +93,18 @@ set(CONFIG_H config.h)
 # generate config.h
 
 configure_file(
-   "${FLTK_SOURCE_DIR}/${CONFIG_H_IN}"
-   "${FLTK_BINARY_DIR}/${CONFIG_H}"
-   @ONLY
+  "${FLTK_SOURCE_DIR}/${CONFIG_H_IN}" "${FLTK_BINARY_DIR}/${CONFIG_H}" @ONLY
 )
 
 if(OPTION_CREATE_LINKS)
-   # Set PREFIX_INCLUDE to the proper value.
-   if(IS_ABSOLUTE ${FLTK_INCLUDEDIR})
-      set(PREFIX_INCLUDE ${FLTK_INCLUDEDIR})
-   else()
-      set(PREFIX_INCLUDE "${CMAKE_INSTALL_PREFIX}/${FLTK_INCLUDEDIR}")
-   endif(IS_ABSOLUTE ${FLTK_INCLUDEDIR})
-   configure_file(
-      "${FLTK_SOURCE_DIR}/CMake/install-symlinks.cmake.in"
-      "${FLTK_BINARY_DIR}/install-symlinks.cmake"
-      @ONLY
-   )
+  # Set PREFIX_INCLUDE to the proper value.
+  if(IS_ABSOLUTE ${FLTK_INCLUDEDIR})
+    set(PREFIX_INCLUDE ${FLTK_INCLUDEDIR})
+  else()
+    set(PREFIX_INCLUDE "${CMAKE_INSTALL_PREFIX}/${FLTK_INCLUDEDIR}")
+  endif(IS_ABSOLUTE ${FLTK_INCLUDEDIR})
+  configure_file(
+    "${FLTK_SOURCE_DIR}/CMake/install-symlinks.cmake.in"
+    "${FLTK_BINARY_DIR}/install-symlinks.cmake" @ONLY
+  )
 endif(OPTION_CREATE_LINKS)

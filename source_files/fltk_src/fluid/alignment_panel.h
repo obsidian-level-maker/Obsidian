@@ -37,11 +37,11 @@ extern Fl_Text_Buffer *shell_run_buffer;
 #include <FL/Fl_Preferences.H>
 #include <FL/Fl_Tooltip.H>
 extern Fl_Double_Window *project_window;
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Tabs.H>
-#include <FL/Fl_Group.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Group.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Tabs.H>
 extern void header_input_cb(Fl_Input*, void*);
 extern Fl_Input *header_file_input;
 extern void code_input_cb(Fl_Input*, void*);

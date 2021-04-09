@@ -10,9 +10,9 @@
 #ifndef ZFSTREAM_H
 #define ZFSTREAM_H
 
+#include "zlib.h"
 #include <istream>  // not iostream, since we don't need cin/cout
 #include <ostream>
-#include "zlib.h"
 
 /*****************************************************************************/
 

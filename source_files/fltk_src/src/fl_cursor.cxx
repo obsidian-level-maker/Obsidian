@@ -23,17 +23,17 @@
 // portable to other systems.
 
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_RGB_Image.H>
-#include <FL/x.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
+#include <FL/x.H>
 
-#include "fl_cursor_wait.xpm"
 #include "fl_cursor_help.xpm"
-#include "fl_cursor_nwse.xpm"
 #include "fl_cursor_nesw.xpm"
 #include "fl_cursor_none.xpm"
+#include "fl_cursor_nwse.xpm"
+#include "fl_cursor_wait.xpm"
 
 /**
   Sets the cursor for the current window to the specified shape and colors.

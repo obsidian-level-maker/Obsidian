@@ -16,8 +16,8 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <string.h>
 #include <FL/Enumerations.H>
+#include <string.h>
 
 // COPY A STRING WITH 'new'
 //    Value can be NULL

@@ -5,8 +5,8 @@
 #ifndef _FL_TREE_ITEM_ARRAY_H
 #define _FL_TREE_ITEM_ARRAY_H
 
-#include <FL/Fl.H>
 #include "Fl_Export.H"
+#include <FL/Fl.H>
 
 class Fl_Tree_Item;		// forward decl must *precede* first doxygen comment block
 				// or doxygen will not document our class..

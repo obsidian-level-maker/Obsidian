@@ -19,11 +19,11 @@
 
 // Base class for sliders and all other one-value "knobs"
 
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Valuator.H>
 #include <FL/math.h>
 #include <stdio.h>
-#include "flstring.h"
 
 Fl_Valuator::Fl_Valuator(int X, int Y, int W, int H, const char* L)
 /**

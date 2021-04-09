@@ -32,11 +32,11 @@
 // The above comments were checked in as r2, and much has changed since then;
 // transparency added, color cube not required, etc.      -erco Oct 20 2013
 
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
 #include <FL/x.H>
 #include <stdio.h>
-#include "flstring.h"
 
 static int ncolors, chars_per_pixel;
 

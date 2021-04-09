@@ -28,22 +28,22 @@
 #ifndef Fl_File_Chooser_H
 #define Fl_File_Chooser_H
 #include <FL/Fl.H>
+#include <FL/Fl_Box.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Check_Button.H>
+#include <FL/Fl_Choice.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_File_Browser.H>
+#include <FL/Fl_File_Input.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Menu_Button.H>
+#include <FL/Fl_Preferences.H>
+#include <FL/Fl_Return_Button.H>
+#include <FL/Fl_Tile.H>
+#include <FL/fl_ask.H>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Choice.H>
-#include <FL/Fl_Menu_Button.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Preferences.H>
-#include <FL/Fl_Tile.H>
-#include <FL/Fl_File_Browser.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Check_Button.H>
-#include <FL/Fl_File_Input.H>
-#include <FL/Fl_Return_Button.H>
-#include <FL/fl_ask.H>
 
 class FL_EXPORT Fl_File_Chooser {
 public:

@@ -30,8 +30,8 @@ extern Fl_Box *template_preview;
 #include <FL/Fl_Input.H>
 extern Fl_Input *template_name;
 extern Fl_Input *template_instance;
-#include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Group.H>
 extern Fl_Button *template_delete;
 #include <FL/Fl_Return_Button.H>
 extern Fl_Return_Button *template_submit;

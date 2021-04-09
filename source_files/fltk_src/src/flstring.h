@@ -21,8 +21,8 @@
 
 #  include <FL/Fl_Export.H>
 #  include <config.h>
-#  include <stdio.h>
 #  include <stdarg.h>
+#  include <stdio.h>
 #  include <string.h>
 #  ifdef HAVE_STRINGS_H
 #    include <strings.h>

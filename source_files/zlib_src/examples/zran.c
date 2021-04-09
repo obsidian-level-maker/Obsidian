@@ -52,10 +52,10 @@
    index in a file.
  */
 
+#include "zlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "zlib.h"
 
 #define local static
 

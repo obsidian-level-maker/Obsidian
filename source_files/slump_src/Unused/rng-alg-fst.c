@@ -57,8 +57,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "rng-alg-fst.h"
 #include "rng-32bit-tables.h"
+#include "rng-alg-fst.h"
 
 static const u32 rcon[] = {
 	0x01000000, 0x02000000, 0x04000000, 0x08000000,

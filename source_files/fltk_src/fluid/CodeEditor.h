@@ -23,13 +23,13 @@
 // Include necessary headers...
 //
 
-#  include <stdio.h>
-#  include <stdlib.h>
-#  include <string.h>
-#  include <ctype.h>
 #  include <FL/Fl.H>
 #  include <FL/Fl_Text_Buffer.H>
 #  include <FL/Fl_Text_Editor.H>
+#  include <ctype.h>
+#  include <stdio.h>
+#  include <stdlib.h>
+#  include <string.h>
 
 
 class CodeEditor : public Fl_Text_Editor {

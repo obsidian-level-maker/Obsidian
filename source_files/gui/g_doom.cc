@@ -105,11 +105,11 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 //------------------------------------------------------------------------
 //  SLUMP WAD Creation for Vanilla Doom
 //------------------------------------------------------------------------
-int Slump_MakeWAD(const char* filename) {
-	s_config slump_config;
-	slump_config.outfile = (char *)filename;
-	return slump_main(slump_config);    
-}	
+int Slump_MakeWAD(const char *filename) {
+    s_config slump_config;
+    slump_config.outfile = (char *)filename;
+    return slump_main(slump_config);
+}
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -779,7 +779,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.check_polyobjs = false;
         options.compress_nodes = false;
         options.compress_gl_nodes = false;
-        options.force_compression = false;    	
+        options.force_compression = false;
     } else if (current_engine == "nolimit" || current_engine == "boom") {
         options.build_nodes = true;
         options.build_gl_nodes = false;
@@ -893,17 +893,17 @@ bool doom_game_interface_c::Start(const char *preset) {
         Main_BackupFile(filename, "old");
     }
 
-	// Need to preempt the rest of this process if we are using Vanilla Doom
-	if (main_win) {
-		current_engine = main_win->game_box->engine->GetID();
-		if (current_engine == "vanilla") {
-			if (Slump_MakeWAD(filename) == 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
+    // Need to preempt the rest of this process if we are using Vanilla Doom
+    if (main_win) {
+        current_engine = main_win->game_box->engine->GetID();
+        if (current_engine == "vanilla") {
+            if (Slump_MakeWAD(filename) == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
     if (!DM_StartWAD(filename)) {
         Main_ProgStatus(_("Error (create file)"));
@@ -959,12 +959,12 @@ bool doom_game_interface_c::BuildNodes() {
 }
 
 bool doom_game_interface_c::Finish(bool build_ok) {
-	// Skip DM_EndWAD if using Vanilla Doom
-	if (current_engine != "vanilla") {
-		   // TODO: handle write errors
-    		DM_EndWAD();
-	}
-	
+    // Skip DM_EndWAD if using Vanilla Doom
+    if (current_engine != "vanilla") {
+        // TODO: handle write errors
+        DM_EndWAD();
+    }
+
     if (build_ok) {
         build_ok = BuildNodes();
     }

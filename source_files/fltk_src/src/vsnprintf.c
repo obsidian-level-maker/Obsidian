@@ -16,8 +16,8 @@
  *     http://www.fltk.org/str.php
  */
 
-#include <stdio.h>
 #include "flstring.h"
+#include <stdio.h>
 
 #ifdef HAVE_SYS_STDTYPES_H
 #  include <sys/stdtypes.h>

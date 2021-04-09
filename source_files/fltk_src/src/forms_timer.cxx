@@ -28,12 +28,12 @@
 #  ifdef __MWERKS__
 #    include <time.h>
 #  else
-#    include <sys/types.h> 
 #    include <sys/timeb.h>
+#    include <sys/types.h> 
 #  endif
 #else
-#  include <time.h>
 #  include <sys/time.h>
+#  include <time.h>
 #endif
 #include <stdio.h>
 

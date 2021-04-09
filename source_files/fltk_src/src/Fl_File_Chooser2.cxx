@@ -344,18 +344,18 @@
 //
 
 #include <FL/Fl_File_Chooser.H>
+#include <FL/Fl_Shared_Image.H>
 #include <FL/filename.H>
 #include <FL/fl_ask.H>
-#include <FL/x.H>
-#include <FL/Fl_Shared_Image.H>
 #include <FL/fl_draw.H>
+#include <FL/x.H>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "flstring.h"
 #include <errno.h>
-#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #if defined(WIN32) && ! defined (__CYGWIN__)
 #  include <direct.h>
@@ -370,8 +370,8 @@
 #    undef DIRECTORY
 #  endif // DIRECTORY
 #else
-#  include <unistd.h>
 #  include <pwd.h>
+#  include <unistd.h>
 #endif /* WIN32 */
 
 

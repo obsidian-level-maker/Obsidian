@@ -17,10 +17,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 */
-#include <string.h>
-#include <stdio.h>
-#include "zdbsp.h"
 #include "nodebuild.h"
+#include "zdbsp.h"
+#include <stdio.h>
+#include <string.h>
 
 FEventTree::FEventTree ()
 : Root (&Nil), Spare (NULL)

@@ -22,14 +22,14 @@
 /** \fn Fl_Bitmap::Fl_Bitmap(const unsigned char *array, int W, int H)
   The constructors create a new bitmap from the specified bitmap data.*/
 
-#include <FL/Fl.H>
-#include <FL/x.H>
-#include <FL/fl_draw.H>
-#include <FL/Fl_Widget.H>
-#include <FL/Fl_Menu_Item.H>
-#include <FL/Fl_Bitmap.H>
-#include <FL/Fl_Printer.H>
 #include "flstring.h"
+#include <FL/Fl.H>
+#include <FL/Fl_Bitmap.H>
+#include <FL/Fl_Menu_Item.H>
+#include <FL/Fl_Printer.H>
+#include <FL/Fl_Widget.H>
+#include <FL/fl_draw.H>
+#include <FL/x.H>
 
 #if defined(__APPLE_QUARTZ__)
 
