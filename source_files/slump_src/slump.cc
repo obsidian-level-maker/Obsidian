@@ -1055,7 +1055,7 @@ genus *new_genus(config *c,int thingid)
   answer = (genus *)malloc(sizeof(*answer));
   /* Default mask */
   answer->gamemask = DOOM0_BIT|DOOM1_BIT|DOOM2_BIT|DOOMC_BIT|DOOMI_BIT;
-  answer->compatible = ~(unsigned long)0;     /* Assume all themes OK */
+  answer->compatible = ~(u_int32_t)0;     /* Assume all themes OK */
   answer->thingid = thingid;
   answer->width = 65;  /* Sort of sensible default */
   answer->height = 56; /* Just "not tall" */
@@ -8779,7 +8779,7 @@ void dump_foo_flat(flat *f,config *c)
 void dump_foo_genus(genus *g,config *c)
 {
   if (g->compatible==0) return;
-  if (g->compatible==~(unsigned long)0) return;
+  if (g->compatible==~(u_int32_t)0) return;
   printf("Thing %d ",g->thingid);
   dump_foo_themebits(g->compatible,0,"comp",c);
   printf("\n");
@@ -9540,7 +9540,7 @@ char *absorb_thing(char *p, config *c)
 
   p += 1+strlen(p);  /* That's the number */
   g = find_genus(c,atoi(p));
-  if (g->compatible==~(unsigned long)0) g->compatible = 0;
+  if (g->compatible==~(u_int32_t)0) g->compatible = 0;
 
   q = p;
   for (;;) {
