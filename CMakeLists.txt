@@ -135,11 +135,9 @@ if(UNIX)
 endif()
 
 find_package(FLTK REQUIRED)
-#find_package(Lua REQUIRED)
 
 target_link_libraries(obsidian PRIVATE 
     ${FLTK_LIBRARIES} 
-#    ${LUA_LIBRARIES}
     z 
     obsidian_lua
     obsidian_physfs 
