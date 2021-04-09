@@ -78,7 +78,7 @@ option(OPTION_BUILD_SHARED_LIBS
     )
 
 #######################################################################
-option(OPTION_BUILD_EXAMPLES "build example programs" ON)
+option(OPTION_BUILD_EXAMPLES "build example programs" OFF)
 
 #######################################################################
 if(DOXYGEN_FOUND)
@@ -204,7 +204,7 @@ if(OPTION_LARGE_FILE)
 endif(OPTION_LARGE_FILE)
 
 #######################################################################
-option(OPTION_USE_SYSTEM_ZLIB "use system zlib" ON)
+option(OPTION_USE_SYSTEM_ZLIB "use system zlib" OFF)
 
 if(OPTION_USE_SYSTEM_ZLIB AND LIB_zlib)
    include(FindZLIB)
