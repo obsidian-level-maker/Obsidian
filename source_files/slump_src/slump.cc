@@ -373,15 +373,18 @@
 #include <time.h>
 #include <assert.h>
 #include "slump.h"
-#include "../gui/twister.h"
+#include "twister.h"
 
 // Shim functions to replace old SLUMP RNG
 int roll(int n) {
+    if (n<1) {
+        return 0;
+    }
     return (twister_UInt() % n);
 }
 
 boolean rollpercent(int n) {
-    return ((twister_Double() * 100) < n);
+    return (roll(100) < n);
 }
 
 /* Global variables */

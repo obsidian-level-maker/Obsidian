@@ -36,6 +36,10 @@
 #include "m_trans.h"
 #include "twister.h"
 
+//Experimental
+#include "slump_main.h"
+#include "zdmain.h"
+
 #define TICKER_TIME 50 /* ms */
 
 const char *home_dir = NULL;
@@ -683,6 +687,23 @@ int main(int argc, char **argv) {
     twister_Init();
 
     Main_CalcNewSeed();
+
+
+	// SLUMP TEST STUB FUNCTION JUST DEAL WITH IT FOR NOW
+
+	slump_main(1, NULL);
+	zdbsp_options options;
+    options.build_nodes = true;
+    options.build_gl_nodes = false;
+    options.build_gl_only = false;
+    options.reject_mode = ERM_Rebuild_NoGL;
+    options.check_polyobjs = false;
+    options.compress_nodes = false;
+    options.compress_gl_nodes = false;
+    options.force_compression = false;
+    zdmain("SLUMP.OUT", options);
+
+	// END SLUMP TEST
 
     VFS_InitAddons(argv[0]);
 

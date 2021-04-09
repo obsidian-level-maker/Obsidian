@@ -5,4 +5,7 @@ add_library(obsidian_slump
     slump.cc
     slump.h
     slump_main.cc
+    slump_main.h
 )
+
+target_include_directories(obsidian_slump PRIVATE ../gui)
