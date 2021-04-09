@@ -768,6 +768,19 @@ function Seed_dump_rooms()
     if S.diagonal == 1 then return "\\" end
     if S.diagonal == 3 then return "/" end
 
+    if S.area then
+      if S.area.chunk then
+        if S.area.chunk.kind == "closet" then return "#" end
+        if S.area.chunk.kind == "joiner" then return "=" end
+        if S.area.chunk.kind == "stair" then
+          if S.area.chunk.from_dir == 2 then return "|" end
+          if S.area.chunk.from_dir == 4 then return "<" end
+          if S.area.chunk.from_dir == 6 then return ">" end
+          if S.area.chunk.from_dir == 8 then return "^" end
+        end
+      end
+    end
+
     if R.is_outdoor then
       local n = 1 + ((R.id - 1) % 26)
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
