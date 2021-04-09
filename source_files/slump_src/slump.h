@@ -736,7 +736,6 @@ typedef struct s_config {
   char *configdata;    /* Contents of the configuration file */
   char *outfile;       /* Name of the output file */
   boolean cwadonly;    /* Do we want just the customization lumps? */
-  unsigned int ranseed;
   unsigned char themecount;   /* How many (non-secret) themes there are */
   unsigned char sthemecount;  /* How many secret themes there are */
   boolean secret_themes;

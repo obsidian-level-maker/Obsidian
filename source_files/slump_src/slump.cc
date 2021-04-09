@@ -1384,15 +1384,10 @@ config *get_config(int argc, char *argv[])
   answer->configfile = strdup("SLUMP.CFG");  /* So's we kin free() it */
   answer->outfile = NULL;
   answer->cwadonly = FALSE;
-  answer->ranseed = (time(0) % 20000) + 1; /* Default seed */
-  if(answer->ranseed < 2 || answer->ranseed > 20000) 
-	answer->ranseed = 2;
 
-  /* Do initial parsing for possible other config file and ranseed */
+  /* Do initial parsing for possible other config file */
   if (!do_switches(argc,argv,answer,"Command line",1)) return NULL;
 
-  //init_rng();
-  //rng_set_seed(answer->ranseed);
   ok_to_roll = TRUE;
 
   /* Set other defaults, possibly involving random numbers */
@@ -2144,21 +2139,10 @@ boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
         if (i<(argc-1)) {   /* If -config is the last arg, just ignore it */
           c->configfile = strdup(argv[++i]);
         }  /* end if enough args */
-      } else if (!stricmp(argv[i],"-seed")) {
-        c->ranseed = atoi(argv[++i]) % 20020;
-	if(c->ranseed < 1 || c->ranseed > 20020) 
-		c->ranseed = 1;
       } else if (!stricmp(argv[i],"-v")) {
         global_verbosity = 1;
       }  /* end if -config arg */
     }  /* end for args */
-    /* Now we have the seed, from timer or cmdline, so use it */
-    srand(c->ranseed);
-    {
-    char logstring[60];
-    sprintf(logstring,"Seed: %d",c->ranseed);
-    announce(LOG,logstring);
-    }
   } else {  /* not conly */
     for (i=1;i<argc;i++) {
       if (argv[i][0]!='-') {
@@ -6330,9 +6314,6 @@ void arena_gate(level *l,sector *s,haa *haa,config *c)
 
   /* Now put down some powerups and stuff in s... */
   prepare_arena_gate(l,s,ThisArena,haa,c);
-
-  /* Make the arena... */
-  //rng_set_level(99,99,99,c->ranseed,c->minrooms);
 
   install_arena(l,ThisArena,s,haa,c);
 
@@ -12691,7 +12672,6 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
    int keys_used = 0;
 
    current_level_number = c->map + (9 * c->episode) + c->mission;
-   //rng_set_level(c->episode,c->map,c->mission,c->ranseed,c->minrooms);
 
    empty_level(l,c);
 

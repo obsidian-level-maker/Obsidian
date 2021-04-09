@@ -176,9 +176,8 @@ void make_slinfo(dumphandle dh, config *c)
 {
   static byte slinfo[100];
 
-  sprintf((char *)slinfo,"SLUMP (%d.%03d.%02d) %d",
-		  SOURCE_VERSION,SOURCE_SERIAL,SOURCE_PATCHLEVEL,
-		  c->ranseed);
+  sprintf((char *)slinfo,"SLUMP (%d.%03d.%02d)",
+		  SOURCE_VERSION,SOURCE_SERIAL,SOURCE_PATCHLEVEL);
   RegisterLmp(dh,"SLINFO",strlen((char *)slinfo)+1);
   fwrite(slinfo,strlen((char *)slinfo)+1,1,dh->f);
 
