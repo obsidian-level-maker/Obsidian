@@ -1309,6 +1309,10 @@ ARMAETUS_MATERIALS = {
   OBTSVBF2 = { t="OBTBSLB3", f="OBTSVBF2"},
   OBTSVBF3 = { t="OBTBSLB4", f="OBTSVBF3"},
 
+  G8_BRNF1 = { t="G8_BRNW1", f="G8_BRNF1"}, --< brown floors/ceils
+  G8_BRNF2 = { t="G8_BRNW3", f="G8_BRNF2"},
+  G8_BRNF3 = { t="G8_BRNW2", f="G8_BRNF3"},
+
   OBTSBF1B = { t="OBTBSLB2", f="OBTSBF1B"}, -- brown color composite
   OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"},
   OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"},
