@@ -177,6 +177,7 @@ OB_MODULES["misc"] =
   label = _("Miscellaneous"),
 
   game = "doomish",
+  engine = "!vanilla",
 
   side = "left",
   priority = 103,

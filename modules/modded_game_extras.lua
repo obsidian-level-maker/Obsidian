@@ -987,6 +987,7 @@ OB_MODULES["modded_game_extras"] =
   priority = 75,
 
   game = "doomish",
+  engine = "!vanilla",
 
   hooks =
   {

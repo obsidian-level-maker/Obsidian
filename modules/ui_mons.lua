@@ -153,6 +153,7 @@ OB_MODULES["ui_mons"] =
 
   side = "right",
   priority = 105,
+  engine = "!vanilla",
 
   options =
   {

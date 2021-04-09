@@ -696,7 +696,7 @@ int main(int argc, char **argv) {
     options.build_nodes = true;
     options.build_gl_nodes = false;
     options.build_gl_only = false;
-    options.reject_mode = ERM_Rebuild_NoGL;
+    options.reject_mode = ERM_CreateZeroes;
     options.check_polyobjs = false;
     options.compress_nodes = false;
     options.compress_gl_nodes = false;

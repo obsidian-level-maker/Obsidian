@@ -111,6 +111,7 @@ OB_MODULES["debugger"] =
   label = _("Debug Control"),
 
   side = "left",
+  engine = "!vanilla",
   priority = 50,
 
   tooltip = "Provides options for printing out more verbose log information. " ..

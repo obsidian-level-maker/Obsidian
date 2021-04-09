@@ -67,6 +67,7 @@ OB_MODULES["ui_pickups"] =
 
   side = "right",
   priority = 104,
+  engine = "!vanilla",
 
   options =
   {
