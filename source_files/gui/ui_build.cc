@@ -113,7 +113,9 @@ void UI_Build::resize(int X, int Y, int W, int H) {
         dw = W - (p[1] - p[0]);
         dy = Y - p[2];
         dh = H - (p[3] - p[2]);
-        if (type() >= FL_WINDOW) dx = dy = 0;
+        if (type() >= FL_WINDOW) {
+            dx = dy = 0;
+        }
         p += 4;
 
         // get initial size of resizable():
@@ -127,30 +129,34 @@ void UI_Build::resize(int X, int Y, int W, int H) {
             Fl_Widget *o = *a++;
 #if 1
             int XX = *p++;
-            if (XX >= IR)
+            if (XX >= IR) {
                 XX += dw;
-            else if (XX > IX)
+            } else if (XX > IX) {
                 XX = IX +
                      ((XX - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
             int R = *p++;
-            if (R >= IR)
+            if (R >= IR) {
                 R += dw;
-            else if (R > IX)
+            } else if (R > IX) {
                 R = IX +
                     ((R - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
 
             int YY = *p++;
-            if (YY >= IB)
+            if (YY >= IB) {
                 YY += dh;
-            else if (YY > IY)
+            } else if (YY > IY) {
                 YY = IY +
                      ((YY - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
             int B = *p++;
-            if (B >= IB)
+            if (B >= IB) {
                 B += dh;
-            else if (B > IY)
+            } else if (B > IY) {
                 B = IY +
                     ((B - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
 #else  // much simpler code from Francois Ostiguy:
             int XX = *p++;
             if (XX >= IR)
@@ -216,7 +222,9 @@ void UI_Build::Prog_AtLevel(int index, int total) {
 void UI_Build::Prog_Step(const char *step_name) {
     int pos = FindStep(step_name);
 
-    if (pos < 0) return;
+    if (pos < 0) {
+        return;
+    }
 
     SYS_ASSERT(level_total > 0);
 
@@ -226,8 +234,12 @@ void UI_Build::Prog_Step(const char *step_name) {
 
     val = (val / (float)level_total) * (1 - node_ratio);
 
-    if (val < 0) val = 0;
-    if (val > 1) val = 1;
+    if (val < 0) {
+        val = 0;
+    }
+    if (val > 1) {
+        val = 1;
+    }
 
     sprintf(prog_label, "%d%%", int(val * 100));
 
@@ -258,8 +270,12 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
 
     val = 1 + node_ratio * (val - 1);
 
-    if (val < 0) val = 0;
-    if (val > 1) val = 1;
+    if (val < 0) {
+        val = 0;
+    }
+    if (val > 1) {
+        val = 1;
+    }
 
     sprintf(prog_label, "%d%%", int(val * 100));
 
@@ -276,9 +292,10 @@ void UI_Build::SetStatus(const char *msg) {
 
     status_label[limit - 1] = 0;
 
-    if (StringCaseCmp(status_label, "Success") == 0)
+    if (StringCaseCmp(status_label, "Success") == 0) {
         main_win->label(
             StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+    }
 
     status->label(status_label);
     status->redraw();
@@ -309,8 +326,11 @@ void UI_Build::ParseSteps(const char *names) {
 }
 
 int UI_Build::FindStep(const char *name) {
-    for (int i = 0; i < (int)step_names.size(); i++)
-        if (StringCaseCmp(step_names[i].c_str(), name) == 0) return i;
+    for (int i = 0; i < (int)step_names.size(); i++) {
+        if (StringCaseCmp(step_names[i].c_str(), name) == 0) {
+            return i;
+        }
+    }
 
     return -1;  // not found
 }
@@ -320,10 +340,11 @@ void UI_Build::AddStatusStep(const char *name) {
 
     char *pos = strchr(status_label, ':');
 
-    if (pos)
+    if (pos) {
         pos[1] = 0;
-    else
+    } else {
         strcat(status_label, " :");
+    }
 
     strcat(status_label, " ");
     strcat(status_label, name);

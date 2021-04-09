@@ -146,12 +146,13 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
     // convert range from 0.0 .. 1.0 to min_h . max_h
     int x, z;
 
-    for (z = 0; z < W; z++)
+    for (z = 0; z < W; z++) {
         for (x = 0; x < W; x++) {
             float &f = height_map[z * W + x];
 
             f = min_h + f * (max_h - min_h);
         }
+    }
 
     // modify heightmap so that all values at Z=0 are negative
     float z0_max_h = -99;
@@ -187,7 +188,9 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
         int high_span = 0;
 
         int x2 = x + 1;
-        if (x2 >= W) x2 = 0;
+        if (x2 >= W) {
+            x2 = 0;
+        }
 
         for (int z = 0; z < W - 1; z++) {
             float f = height_map[z * W + x];
@@ -195,9 +198,13 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
             int span = int(f * H);
 
             // hidden by previous spans?
-            if (span <= high_span) continue;
+            if (span <= high_span) {
+                continue;
+            }
 
-            if (span >= H) span = H - 1;
+            if (span >= H) {
+                span = H - 1;
+            }
 
             // determine slopes at current point
             float slope_x = height_map[z * W + x2] - f;
@@ -205,10 +212,11 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
 
             float ity = 0.75 - (max_h - f);
 
-            if (use_slope_z)
+            if (use_slope_z) {
                 ity += fabs(slope_z) * 60 - 0.25;
-            else
+            } else {
                 ity += slope_x * 50;
+            }
 
             int col_idx = (int)(ity * map->size);
             col_idx = CLAMP(0, col_idx, map->size - 1);
@@ -245,7 +253,9 @@ void SKY_AddBuilding(unsigned long long seed, byte *pixels, int W, int H,
     byte bg = colors[0];
 
     for (y = 0; y < base_h + top_h; y++) {
-        if (y >= H) break;
+        if (y >= H) {
+            break;
+        }
 
         int x1 = pos_x;
         int x2 = pos_x + width - 1;
@@ -264,20 +274,23 @@ void SKY_AddBuilding(unsigned long long seed, byte *pixels, int W, int H,
             for (win_x = x1 + 2; win_x + win_w <= x2 - 2; win_x += win_w + 1) {
                 byte fg = colors[1];
 
-                if (((int)twister_UInt() & 0xFFFF) > win_prob)
+                if (((int)twister_UInt() & 0xFFFF) > win_prob) {
                     fg = (numcol >= 3) ? colors[2] : bg;
+                }
 
-                for (int dx = 0; dx < win_w; dx++)
+                for (int dx = 0; dx < win_w; dx++) {
                     for (int dy = 0; dy < win_h; dy++) {
                         pixels[(H - 1 - win_y + dy) * W + ((win_x + dx) % W)] =
                             fg;
                     }
+                }
             }
 
             win_y += win_h + 1;
 
-            if (base_h <= win_y && win_y <= base_h + win_h)
+            if (base_h <= win_y && win_y <= base_h + win_h) {
                 win_y = base_h + win_h + 1;
+            }
         }
     }
 }

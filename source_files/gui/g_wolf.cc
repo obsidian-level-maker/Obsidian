@@ -94,7 +94,9 @@ int rle_compress_plane(u16_t *plane, int src_len) {
         // determine longest run
         int run = 1;
 
-        while (src + run < endp && run < 100 && src[run - 1] == src[run]) run++;
+        while (src + run < endp && run < 100 && src[run - 1] == src[run]) {
+            run++;
+        }
 
         if (run > 3) {
             // Note: use src[2] since src may == dest, hence src[0] and src[1]
@@ -106,7 +108,9 @@ int rle_compress_plane(u16_t *plane, int src_len) {
 
             src += run;
         } else {
-            for (; run > 0; run--) *dest++ = *src++;
+            for (; run > 0; run--) {
+                *dest++ = *src++;
+            }
         }
     }
 
@@ -269,30 +273,31 @@ static void WF_DumpMap(void) {
 
             int ch;
 
-            if (tile == NO_TILE)
+            if (tile == NO_TILE) {
                 ch = '#';
-            else if (obj >= 19 && obj <= 22)
+            } else if (obj >= 19 && obj <= 22) {
                 ch = 'p';  // player_angles[obj-19];
-            else if (tile < 52)
+            } else if (tile < 52) {
                 ch = 'A' + (tile / 2);
-            else if (tile < 64)
+            } else if (tile < 64) {
                 ch = (show_floors ? 'A' : '1') + ((tile - 52) / 2);
-            else if (90 <= tile && tile <= 101)
+            } else if (90 <= tile && tile <= 101) {
                 ch = '+';
-            else if (show_floors && 108 <= tile && tile <= 143)
+            } else if (show_floors && 108 <= tile && tile <= 143) {
                 ch = '0' + ((tile - 108) % 10);
-            else if (obj == NO_OBJ)
+            } else if (obj == NO_OBJ) {
                 ch = '.';
-            else if ((obj >= 43 && obj <= 56) || obj == 29)
+            } else if ((obj >= 43 && obj <= 56) || obj == 29) {
                 ch = '$';  // pickup
-            else if ((obj >= 23 && obj <= 71) || obj == 124)
+            } else if ((obj >= 23 && obj <= 71) || obj == 124) {
                 ch = '%';  // scenery
-            else if (obj >= 108)
+            } else if (obj >= 108) {
                 ch = 'm';  // monster
-            else if (90 <= obj && obj <= 97)
+            } else if (90 <= obj && obj <= 97) {
                 ch = turning_points[obj - 90];
-            else
+            } else {
                 ch = '?';
+            }
 
             line_buf[x] = ch;
         }
@@ -370,7 +375,9 @@ bool wolf_game_interface_c::Start(const char *preset) {
     solid_plane = new u16_t[64 * 64 + 8];  // extra space for compressor
     thing_plane = new u16_t[64 * 64 + 8];
 
-    if (main_win) main_win->build_box->Prog_Init(0, "");
+    if (main_win) {
+        main_win->build_box->Prog_Init(0, "");
+    }
 
     return true;
 }

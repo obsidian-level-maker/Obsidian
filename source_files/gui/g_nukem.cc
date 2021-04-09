@@ -73,7 +73,9 @@ static void NK_WriteLump(const char *name, qLump_c *lump) {
 }
 
 bool NK_StartGRP(const char *filename) {
-    if (!GRP_OpenWrite(filename)) return false;
+    if (!GRP_OpenWrite(filename)) {
+        return false;
+    }
 
     qLump_c *info = BSP_CreateInfoLump();
     NK_WriteLump("OBLIGE.DAT", info);
@@ -147,7 +149,9 @@ void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
     raw.ceil_flags = LE_U16(c_flags);
 
     // preven the space skies from killing the player
-    if (c_flags & SECTOR_F_PARALLAX) raw.ceil_palette = 3;
+    if (c_flags & SECTOR_F_PARALLAX) {
+        raw.ceil_palette = 3;
+    }
 
     raw.visibility = visibility;
 
@@ -281,8 +285,9 @@ int NK_grp_logo_gfx(lua_State *L) {
     // LUA: grp_logo_gfx(index, image, W, H, colmap)
 
     int index = luaL_checkinteger(L, 1);
-    if (index < 1 || index > MAX_LOGOS)
+    if (index < 1 || index > MAX_LOGOS) {
         return luaL_argerror(L, 1, "index value out of range");
+    }
 
     index--;
 
@@ -292,34 +297,44 @@ int NK_grp_logo_gfx(lua_State *L) {
     int new_H = luaL_checkinteger(L, 4);
     int map_id = luaL_checkinteger(L, 5);
 
-    if (new_W < 1) return luaL_argerror(L, 3, "bad width");
-    if (new_H < 1) return luaL_argerror(L, 4, "bad height");
+    if (new_W < 1) {
+        return luaL_argerror(L, 3, "bad width");
+    }
+    if (new_H < 1) {
+        return luaL_argerror(L, 4, "bad height");
+    }
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
         return luaL_argerror(L, 5, "colmap value out of range");
+    }
 
     // find the requested image (TODO: look in a table)
     const logo_image_t *logo = NULL;
 
-    if (StringCaseCmp(image, logo_BOLT.name) == 0)
+    if (StringCaseCmp(image, logo_BOLT.name) == 0) {
         logo = &logo_BOLT;
-    else if (StringCaseCmp(image, logo_PILL.name) == 0)
+    } else if (StringCaseCmp(image, logo_PILL.name) == 0) {
         logo = &logo_PILL;
-    else if (StringCaseCmp(image, logo_CARVE.name) == 0)
+    } else if (StringCaseCmp(image, logo_CARVE.name) == 0) {
         logo = &logo_CARVE;
-    else if (StringCaseCmp(image, logo_RELIEF.name) == 0)
+    } else if (StringCaseCmp(image, logo_RELIEF.name) == 0) {
         logo = &logo_RELIEF;
-    else
+    } else {
         return luaL_argerror(L, 2, "unknown image name");
+    }
 
     // colorize logo
     color_mapping_t *map = &color_mappings[map_id - 1];
 
-    if (map->size < 2) return luaL_error(L, "grp_logo_gfx: colormap too small");
+    if (map->size < 2) {
+        return luaL_error(L, "grp_logo_gfx: colormap too small");
+    }
 
     nukem_picture_c *pic = new nukem_picture_c(new_W, new_H);
 
-    if (nk_logos[index]) delete nk_logos[index];
+    if (nk_logos[index]) {
+        delete nk_logos[index];
+    }
 
     nk_logos[index] = pic;
 
@@ -374,7 +389,9 @@ void NK_WriteLogos() {
         GRP_AppendData(&anim, sizeof(anim));
     }
 
-    for (i = 0; i < MAX_LOGOS; i++) nk_logos[i]->Write();
+    for (i = 0; i < MAX_LOGOS; i++) {
+        nk_logos[i]->Write();
+    }
 
     GRP_FinishLump();
 
@@ -406,24 +423,29 @@ class nukem_game_interface_c : public game_interface_c {
 };
 
 bool nukem_game_interface_c::Start(const char *preset) {
-    if (batch_mode)
+    if (batch_mode) {
         filename = StringDup(batch_output_file);
-    else
+    } else {
         filename = DLG_OutputFilename("grp");
+    }
 
     if (!filename) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
-    if (create_backups) Main_BackupFile(filename, "old");
+    if (create_backups) {
+        Main_BackupFile(filename, "old");
+    }
 
     if (!NK_StartGRP(filename)) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }
 
-    if (main_win) main_win->build_box->Prog_Init(0, N_("CSG"));
+    if (main_win) {
+        main_win->build_box->Prog_Init(0, N_("CSG"));
+    }
 
     return true;
 }
@@ -432,10 +454,11 @@ bool nukem_game_interface_c::Finish(bool build_ok) {
     NK_EndGRP();
 
     // remove the file if an error occurred
-    if (!build_ok)
+    if (!build_ok) {
         FileDelete(filename);
-    else
+    } else {
         Recent_AddFile(RECG_Output, filename);
+    }
 
     return build_ok;
 }
@@ -454,12 +477,15 @@ void nukem_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void nukem_game_interface_c::EndLevel() {
-    if (!level_name)
+    if (!level_name) {
         Main_FatalError("Script problem: did not set level name!\n");
+    }
 
     NK_BeginLevel(level_name);
 
-    if (main_win) main_win->build_box->Prog_Step("CSG");
+    if (main_win) {
+        main_win->build_box->Prog_Step("CSG");
+    }
 
     CSG_NUKEM_Write();
 

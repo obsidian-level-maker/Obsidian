@@ -399,7 +399,9 @@ static const char *remove_codeset(const char *langcode) {
         buf[sizeof(buf) - 1] = 0;
 
         char *p = strchr(buf, '.');
-        if (p) *p = 0;
+        if (p) {
+            *p = 0;
+        }
 
         langcode = StringDup(buf);
     }
@@ -415,7 +417,9 @@ static const char *remove_territory(const char *langcode) {
         buf[sizeof(buf) - 1] = 0;
 
         char *p = strchr(buf, '_');
-        if (p) *p = 0;
+        if (p) {
+            *p = 0;
+        }
 
         langcode = StringDup(buf);
     }
@@ -734,15 +738,21 @@ static const char *Trans_GetUserLanguage() {
 
     res = setlocale(LC_ALL, NULL /* query only */);
 
-    if (res && res[0] && res[0] != 'C') return remove_codeset(res);
+    if (res && res[0] && res[0] != 'C') {
+        return remove_codeset(res);
+    }
 
     // check the LC_ALL and LANG environment variables
 
     res = getenv("LC_ALL");
-    if (res && res[0] && res[0] != 'C') return remove_codeset(res);
+    if (res && res[0] && res[0] != 'C') {
+        return remove_codeset(res);
+    }
 
     res = getenv("LANG");
-    if (res && res[0] && res[0] != 'C') return remove_codeset(res);
+    if (res && res[0] && res[0] != 'C') {
+        return remove_codeset(res);
+    }
 
     return "UNKNOWN";
 #endif
@@ -769,22 +779,32 @@ void Trans_ParseLangLine(char *line) {
 
     // remove CR/LF line ending
     pos = (char *)strchr(line, '\r');
-    if (pos) pos[0] = 0;
+    if (pos) {
+        pos[0] = 0;
+    }
 
     pos = (char *)strchr(line, '\n');
-    if (pos) pos[0] = 0;
+    if (pos) {
+        pos[0] = 0;
+    }
 
     // ignore blank lines and comments
-    if (line[0] == 0 || line[0] == '#') return;
+    if (line[0] == 0 || line[0] == '#') {
+        return;
+    }
 
     // find separator
     pos = (char *)strchr(line, '=');
 
-    if (!pos) return;  // uh oh
+    if (!pos) {
+        return;  // uh oh
+    }
 
     *pos++ = 0;
 
-    if (strlen(line) < 2 || strlen(pos) < 2) return;  // uh oh
+    if (strlen(line) < 2 || strlen(pos) < 2) {
+        return;  // uh oh
+    }
 
     // Ok, add the language
 
@@ -803,12 +823,16 @@ void Trans_AddMessage(const char *before, const char *after) {
     // an empty before string has special meaning in a PO file,
     // providing a bunch of meta-information (which we ignore).
 
-    if (before[0] == 0) return;
+    if (before[0] == 0) {
+        return;
+    }
 
     // an empty after string means the translator has not yet
     // provided a translation.  hence we ignore that too.
 
-    if (after[0] == 0) return;
+    if (after[0] == 0) {
+        return;
+    }
 
     trans_store[before] = std::string(after);
 }
@@ -848,7 +872,9 @@ typedef struct {
 
         dest = dest + d_len;
 
-        while (*p && isspace(*p)) p++;
+        while (*p && isspace(*p)) {
+            p++;
+        }
 
         if (*p++ != '"') {
             LogPrintf("WARNING: missing string on line %d\n", line_number);
@@ -924,12 +950,13 @@ typedef struct {
     }
 
     void Append(const char *p) {
-        if (has_str)
+        if (has_str) {
             ParseString(p, str, sizeof(str));
-        else if (has_id)
+        } else if (has_id) {
             ParseString(p, id, sizeof(id));
-        else
+        } else {
             LogPrintf("WARNING: unexpected string on line %d\n", line_number);
+        }
     }
 
     void SetContext(const char *p) {
@@ -977,7 +1004,9 @@ void Trans_Read_PO_File(FILE *fp) {
 
         // NOTE: I assume whitespace at start of line is not valid
 
-        if (isspace(*p) || *p == '#') continue;
+        if (isspace(*p) || *p == '#') {
+            continue;
+        }
 
         // extension string?
         if (*p == '"') {
@@ -1087,7 +1116,9 @@ const char *Trans_GetAvailCode(int idx) {
     SYS_ASSERT(idx >= 0);
 
     // end of list?
-    if (idx >= (int)available_langs.size()) return NULL;
+    if (idx >= (int)available_langs.size()) {
+        return NULL;
+    }
 
     return available_langs[idx].langcode;
 }
@@ -1096,7 +1127,9 @@ const char *Trans_GetAvailLanguage(int idx) {
     SYS_ASSERT(idx >= 0);
 
     // end of list?
-    if (idx >= (int)available_langs.size()) return NULL;
+    if (idx >= (int)available_langs.size()) {
+        return NULL;
+    }
 
     return available_langs[idx].fullname;
 }
@@ -1109,7 +1142,9 @@ const char *mucked_up_string(const char *s) {
     int p, q;
     for (p = strlen(s) - 1, q = 0; p >= 0 && q < 250; p--, q++) {
         int ch = s[p];
-        if (ch == '%') ch = '#';
+        if (ch == '%') {
+            ch = '#';
+        }
         ch = (isupper(ch) ? tolower(ch) : toupper(ch));
         buffer[q] = ch;
     }
@@ -1126,7 +1161,9 @@ const char *ob_gettext(const char *s) {
 
     IT = trans_store.find(s);
 
-    if (IT != trans_store.end()) return IT->second.c_str();
+    if (IT != trans_store.end()) {
+        return IT->second.c_str();
+    }
 
     return s;
 }

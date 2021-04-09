@@ -98,9 +98,10 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2,
       partner(NULL),
       sides(),
       seen(false) {
-    if (Length() < SNAG_EPSILON)
+    if (Length() < SNAG_EPSILON) {
         Main_FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n",
                         x1, y1);
+    }
 
     sides.push_back(side);
 }
@@ -130,8 +131,9 @@ snag_c::snag_c(const snag_c &other)
       sides(),
       seen(false) {
     // copy sides
-    for (unsigned int i = 0; i < other.sides.size(); i++)
+    for (unsigned int i = 0; i < other.sides.size(); i++) {
         sides.push_back(other.sides[i]);
+    }
 }
 
 snag_c::~snag_c() {}
@@ -165,7 +167,9 @@ void snag_c::CalcAlongs() {
 }
 
 bool snag_c::SameSides() const {
-    if (!partner || !partner->region) return false;
+    if (!partner || !partner->region) {
+        return false;
+    }
 
     return region->HasSameBrushes(partner->region);
 }
@@ -190,7 +194,9 @@ void snag_c::RemoveSidesForBrush(const csg_brush_c *B) {
     for (int k = (int)sides.size() - 1; k >= 0; k--) {
         brush_vert_c *V = sides[k];
 
-        if (V->parent == B) RemoveSide(k);
+        if (V->parent == B) {
+            RemoveSide(k);
+        }
     }
 }
 
@@ -198,10 +204,13 @@ brush_vert_c *snag_c::FindOneSidedVert(double z) {
     for (unsigned int i = 0; i < sides.size(); i++) {
         brush_vert_c *V = sides[i];
 
-        if (!(V->parent->bkind == BKIND_Solid)) continue;
+        if (!(V->parent->bkind == BKIND_Solid)) {
+            continue;
+        }
 
-        if (z > V->parent->b.z - Z_EPSILON && z < V->parent->t.z + Z_EPSILON)
+        if (z > V->parent->b.z - Z_EPSILON && z < V->parent->t.z + Z_EPSILON) {
             return V;
+        }
     }
 
     return NULL;
@@ -211,7 +220,9 @@ brush_vert_c *snag_c::FindBrushVert(const csg_brush_c *B) {
     for (unsigned int i = 0; i < sides.size(); i++) {
         brush_vert_c *V = sides[i];
 
-        if (V->parent == B) return V;
+        if (V->parent == B) {
+            return V;
+        }
     }
 
     return NULL;
@@ -242,23 +253,31 @@ region_c::region_c(const region_c &other)
       degenerate(false),
       index(-1),
       shade(0) {
-    for (unsigned int i = 0; i < other.brushes.size(); i++)
+    for (unsigned int i = 0; i < other.brushes.size(); i++) {
         brushes.push_back(other.brushes[i]);
+    }
 }
 
 region_c::~region_c() {
     unsigned int i;
 
-    for (i = 0; i < snags.size(); i++) delete snags[i];
+    for (i = 0; i < snags.size(); i++) {
+        delete snags[i];
+    }
 
-    for (i = 0; i < gaps.size(); i++) delete gaps[i];
+    for (i = 0; i < gaps.size(); i++) {
+        delete gaps[i];
+    }
 }
 
 void region_c::AddSnag(snag_c *S) { snags.push_back(S); }
 
 bool region_c::HasSnag(snag_c *S) const {
-    for (unsigned int i = 0; i < snags.size(); i++)
-        if (snags[i] == S) return true;
+    for (unsigned int i = 0; i < snags.size(); i++) {
+        if (snags[i] == S) {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -305,7 +324,9 @@ void region_c::RemoveGap(int index) {
 
     SYS_ASSERT(index < total);
 
-    for (; index + 1 < total; index++) gaps[index] = gaps[index + 1];
+    for (; index + 1 < total; index++) {
+        gaps[index] = gaps[index + 1];
+    }
 
     gaps.pop_back();
 }
@@ -316,16 +337,22 @@ void region_c::MergeOther(region_c *other) {
     // TODO: snags and brushes should never be duplicated by a merge,
     //       however for robustness we should check and skip them.
 
-    for (i = 0; i < other->snags.size(); i++) AddSnag(other->snags[i]);
+    for (i = 0; i < other->snags.size(); i++) {
+        AddSnag(other->snags[i]);
+    }
 
-    for (i = 0; i < other->brushes.size(); i++) AddBrush(other->brushes[i]);
+    for (i = 0; i < other->brushes.size(); i++) {
+        AddBrush(other->brushes[i]);
+    }
 
     other->snags.clear();
     other->brushes.clear();
 }
 
 bool region_c::isClosed() const {
-    if (gaps.size() == 0) return true;
+    if (gaps.size() == 0) {
+        return true;
+    }
 
     csg_brush_c *B = gaps.front()->bottom;
     csg_brush_c *T = gaps.back()->top;
@@ -356,7 +383,9 @@ void region_c::GetBounds(double *x1, double *y1, double *x2, double *y2) const {
 void region_c::ComputeMidPoint() {
     mid_x = mid_y = 0;
 
-    if (snags.empty()) return;
+    if (snags.empty()) {
+        return;
+    }
 
     for (unsigned int i = 0; i < snags.size(); i++) {
         const snag_c *S = snags[i];
@@ -388,14 +417,18 @@ bool region_c::ContainsPoint(double x, double y) const {
 
         double d = PerpDist(x, y, S->x1, S->y1, S->x2, S->y2);
 
-        if (d < -SNAG_EPSILON) return false;
+        if (d < -SNAG_EPSILON) {
+            return false;
+        }
     }
 
     return true;
 }
 
 double region_c::DistanceToPoint(float x, float y) const {
-    if (ContainsPoint(x, y)) return 0;
+    if (ContainsPoint(x, y)) {
+        return 0;
+    }
 
     double best = 9e9;
 
@@ -424,10 +457,15 @@ double region_c::SquareDistance(float x, float y) const {
 bool region_c::HasSameBrushes(const region_c *other) const {
     // NOTE WELL: assumes brushes have been sorted
 
-    if (brushes.size() != other->brushes.size()) return false;
+    if (brushes.size() != other->brushes.size()) {
+        return false;
+    }
 
-    for (unsigned int i = 0; i < brushes.size(); i++)
-        if (brushes[i] != other->brushes[i]) return false;
+    for (unsigned int i = 0; i < brushes.size(); i++) {
+        if (brushes[i] != other->brushes[i]) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -439,7 +477,9 @@ double region_c::BottomZ(csg_brush_c *B) const {
 }
 
 void region_c::ClockwiseSnags() {
-    if (snags.size() < 2) return;
+    if (snags.size() < 2) {
+        return;
+    }
 
     int i;
     int total = (int)snags.size();
@@ -469,7 +509,9 @@ void region_c::ClockwiseSnags() {
             std::swap(angles[i], angles[i + 1]);
 
             // bubble down
-            if (i > 0) i--;
+            if (i > 0) {
+                i--;
+            }
         } else {
             // bubble up
             i++;
@@ -480,10 +522,14 @@ void region_c::ClockwiseSnags() {
 struct csg_brush_ptr_Compare {
     inline bool operator()(const csg_brush_c *A, const csg_brush_c *B) const {
         // want lowest bottom to be first
-        if (fabs(A->b.z - B->b.z) >= Z_EPSILON) return A->b.z < B->b.z;
+        if (fabs(A->b.z - B->b.z) >= Z_EPSILON) {
+            return A->b.z < B->b.z;
+        }
 
         // if bottom is the same, want highest top to be first
-        if (fabs(A->t.z - B->t.z) >= Z_EPSILON) return A->t.z > B->t.z;
+        if (fabs(A->t.z - B->t.z) >= Z_EPSILON) {
+            return A->t.z > B->t.z;
+        }
 
         // tie breaker
         return A < B;
@@ -508,12 +554,17 @@ gap_c::gap_c(csg_brush_c *B, csg_brush_c *T)
 gap_c::~gap_c() {}
 
 void gap_c::AddNeighbor(gap_c *N) {
-    if (!HasNeighbor(N)) neighbors.push_back(N);
+    if (!HasNeighbor(N)) {
+        neighbors.push_back(N);
+    }
 }
 
 bool gap_c::HasNeighbor(gap_c *N) const {
-    for (unsigned int i = 0; i < neighbors.size(); i++)
-        if (neighbors[i] == N) return true;
+    for (unsigned int i = 0; i < neighbors.size(); i++) {
+        if (neighbors[i] == N) {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -541,14 +592,26 @@ void bsp_node_c::ComputeBBox() {
     bb_x1 = bb_y1 = +9e9;
     bb_x2 = bb_y2 = -9e9;
 
-    if (front_node) AddBBox(front_node);
-    if (front_leaf) AddBBox(front_leaf);
+    if (front_node) {
+        AddBBox(front_node);
+    }
+    if (front_leaf) {
+        AddBBox(front_leaf);
+    }
 
-    if (back_node) AddBBox(back_node);
-    if (back_leaf) AddBBox(back_leaf);
+    if (back_node) {
+        AddBBox(back_node);
+    }
+    if (back_leaf) {
+        AddBBox(back_leaf);
+    }
 
-    if (bb_x1 > bb_x2) bb_x1 = bb_x2 = 0;
-    if (bb_y1 > bb_y2) bb_y1 = bb_y2 = 0;
+    if (bb_x1 > bb_x2) {
+        bb_x1 = bb_x2 = 0;
+    }
+    if (bb_y1 > bb_y2) {
+        bb_y1 = bb_y2 = 0;
+    }
 }
 
 void bsp_node_c::AddBBox(bsp_node_c *node) {
@@ -594,11 +657,15 @@ static bool OnSameLine(double x1, double y1, double x2, double y2,
                        const snag_c *S, double DIST) {
     double d1 = PerpDist(S->x1, S->y1, x1, y1, x2, y2);
 
-    if (fabs(d1) > DIST) return false;
+    if (fabs(d1) > DIST) {
+        return false;
+    }
 
     double d2 = PerpDist(S->x2, S->y2, x1, y1, x2, y2);
 
-    if (fabs(d2) > DIST) return false;
+    if (fabs(d2) > DIST) {
+        return false;
+    }
 
     return true;
 }
@@ -639,13 +706,16 @@ bool region_c::HasFlattened() const {
 
     double DIST = QUANTIZE_GRID / 1.98;
 
-    if (fabs(right_x - left_x) < DIST) return true;
+    if (fabs(right_x - left_x) < DIST) {
+        return true;
+    }
 
     for (k = 0; k < snags.size(); k++) {
         snag_c *S = snags[k];
 
-        if (!OnSameLine(left_x, left_y, right_x, right_y, S, DIST))
+        if (!OnSameLine(left_x, left_y, right_x, right_y, S, DIST)) {
             return false;
+        }
     }
 
     return true;
@@ -661,7 +731,9 @@ static void CreateRegion(group_c &root, csg_brush_c *P) {
         return;
     }
 
-    if (P->bflags & (BFLAG_Detail | BFLAG_NoClip | BFLAG_NoDraw)) return;
+    if (P->bflags & (BFLAG_Detail | BFLAG_NoClip | BFLAG_NoDraw)) {
+        return;
+    }
 
     region_c *R = new region_c;
 
@@ -689,8 +761,9 @@ static void CreateRegion(group_c &root, csg_brush_c *P) {
         QuantizeVert(v1, &qx1, &qy1);
         QuantizeVert(v2, &qx2, &qy2);
 
-        if (qx1 == qx2 && qy1 == qy2)  // degenerate ?
+        if (qx1 == qx2 && qy1 == qy2) {  // degenerate ?
             continue;
+        }
 
 #if 0  // vertex quantization is disabled -- probably a bad idea
 		snag_c *S = new snag_c(v2, v1->x, qx1 * QUANTIZE_GRID, qy1 * QUANTIZE_GRID,
@@ -749,8 +822,12 @@ int region_c::TestSide(partition_c *part) {
             S->on_node = part;
         }
 
-        if (a_side > 0 || b_side > 0) has_front = true;
-        if (a_side < 0 || b_side < 0) has_back = true;
+        if (a_side > 0 || b_side > 0) {
+            has_front = true;
+        }
+        if (a_side < 0 || b_side < 0) {
+            has_back = true;
+        }
 
 #if 0  // NOTE: this probably wasn't a good idea after all
        // adjust vertices which sit "nearly" on the line
@@ -759,7 +836,9 @@ int region_c::TestSide(partition_c *part) {
 #endif
     }
 
-    if (has_back && has_front) return 0;
+    if (has_back && has_front) {
+        return 0;
+    }
 
     return has_back ? -1 : +1;
 }
@@ -898,14 +977,16 @@ static void DivideOneRegion(region_c *R, partition_c *part, group_c &front,
     if (R->snags.size() < 3) {
         R->degenerate = true;
         LogPrintf("WARNING: region degenerated (%u snags)\n", R->snags.size());
-    } else
+    } else {
         front.AddRegion(R);
+    }
 
     if (N->snags.size() < 3) {
         N->degenerate = true;
         LogPrintf("WARNING: region degenerated (%u snags)\n", N->snags.size());
-    } else
+    } else {
         back.AddRegion(N);
+    }
 }
 
 static region_c *MergeGroup(group_c &group) {
@@ -920,7 +1001,9 @@ static region_c *MergeGroup(group_c &group) {
 
     // can now set the 'region' field of snags
 
-    for (unsigned int k = 0; k < R->snags.size(); k++) R->snags[k]->region = R;
+    for (unsigned int k = 0; k < R->snags.size(); k++) {
+        R->snags[k]->region = R;
+    }
 
     // snags themselves get merged/etc in HandleOverlaps()
 
@@ -997,7 +1080,9 @@ static partition_c *ChoosePartition(group_c &group, bool *reached_chunk) {
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             snag_c *S = R->snags[k];
 
-            if (S->on_node) continue;
+            if (S->on_node) {
+                continue;
+            }
 
             // we prefer an axis-aligned node
             if (S->x1 == S->x2 || S->y1 == S->y2) {
@@ -1009,7 +1094,9 @@ static partition_c *ChoosePartition(group_c &group, bool *reached_chunk) {
         }
     }
 
-    if (poss) return AddPartition(poss);
+    if (poss) {
+        return AddPartition(poss);
+    }
 
     return NULL;
 }
@@ -1018,10 +1105,11 @@ static void DivideOneEntity(csg_entity_c *E, partition_c *part, group_c &front,
                             group_c &back) {
     double d = PerpDist(E->x, E->y, part->x1, part->y1, part->x2, part->y2);
 
-    if (d >= 0)
+    if (d >= 0) {
         front.AddEntity(E);
-    else
+    } else {
         back.AddEntity(E);
+    }
 }
 
 static void SplitGroup(group_c &group, bool reached_chunk, region_c **leaf_out,
@@ -1052,11 +1140,13 @@ static void SplitGroup(group_c &group, bool reached_chunk, region_c **leaf_out,
         group_c front;
         group_c back;
 
-        for (unsigned int i = 0; i < group.regs.size(); i++)
+        for (unsigned int i = 0; i < group.regs.size(); i++) {
             DivideOneRegion(group.regs[i], part, front, back);
+        }
 
-        for (unsigned int k = 0; k < group.ents.size(); k++)
+        for (unsigned int k = 0; k < group.ents.size(); k++) {
             DivideOneEntity(group.ents[k], part, front, back);
+        }
 
         region_c *front_leaf;
         region_c *back_leaf;
@@ -1111,7 +1201,9 @@ static void MergeSnags(snag_c *A, snag_c *B) {
         A->TransferSides(B);
     }
 
-    if (B->partner && B->partner->partner == B) B->partner->partner = NULL;
+    if (B->partner && B->partner->partner == B) {
+        B->partner->partner = NULL;
+    }
 
     B->region->RemoveSnag(B);
 }
@@ -1139,7 +1231,9 @@ static bool TestOverlap(std::vector<snag_c *> &list, int i, int k) {
     snag_c *A = list[i];
     snag_c *B = list[k];
 
-    if (!A || !B) return false;
+    if (!A || !B) {
+        return false;
+    }
 
     int a_min = MIN(A->q_along1, A->q_along2);
     int a_max = MAX(A->q_along1, A->q_along2);
@@ -1147,23 +1241,29 @@ static bool TestOverlap(std::vector<snag_c *> &list, int i, int k) {
     int b_min = MIN(B->q_along1, B->q_along2);
     int b_max = MAX(B->q_along1, B->q_along2);
 
-    if (a_min >= b_max || a_max <= b_min) return false;
+    if (a_min >= b_max || a_max <= b_min) {
+        return false;
+    }
 
     // Note: it's possible one of the new (split off) snags is still
     //       overlapping another one.  This will be detected and handled
     //       in a future pass.
 
-    if (B->q_along1 > a_min && B->q_along1 < a_max)
+    if (B->q_along1 > a_min && B->q_along1 < a_max) {
         return SplitSnag(A, B->x1, B->y1, list);
+    }
 
-    if (B->q_along2 > a_min && B->q_along2 < a_max)
+    if (B->q_along2 > a_min && B->q_along2 < a_max) {
         return SplitSnag(A, B->x2, B->y2, list);
+    }
 
-    if (A->q_along1 > b_min && A->q_along1 < b_max)
+    if (A->q_along1 > b_min && A->q_along1 < b_max) {
         return SplitSnag(B, A->x1, A->y1, list);
+    }
 
-    if (A->q_along2 > b_min && A->q_along2 < b_max)
+    if (A->q_along2 > b_min && A->q_along2 < b_max) {
         return SplitSnag(B, A->x2, A->y2, list);
+    }
 
     // to get here, the snags must be directly overlapping.
 
@@ -1192,8 +1292,9 @@ static void ProcessOverlapList(std::vector<snag_c *> &overlap_list) {
 
     //  fprintf(stderr, "ProcessOverlapList: %u snags\n", overlap_list.size());
 
-    for (unsigned int i = 0; i < overlap_list.size(); i++)
+    for (unsigned int i = 0; i < overlap_list.size(); i++) {
         overlap_list[i]->CalcAlongs();
+    }
 
     // TODO: sort list by MIN(q_along), take advantage of that
 
@@ -1216,10 +1317,13 @@ static void ProcessOverlapList(std::vector<snag_c *> &overlap_list) {
         // Note that new snags may get added (due to splits) while we are
         // iterating over them.  Removed snags become NULL in the list.
 
-        for (int i = 0; i < (int)overlap_list.size(); i++)
+        for (int i = 0; i < (int)overlap_list.size(); i++) {
             for (int k = i + 1; k < (int)overlap_list.size(); k++) {
-                if (TestOverlap(overlap_list, i, k)) changes++;
+                if (TestOverlap(overlap_list, i, k)) {
+                    changes++;
+                }
             }
+        }
 
     } while (changes > 0);
 }
@@ -1234,7 +1338,9 @@ static void CollectAllSnags(std::vector<snag_c *> &list) {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->degenerate) continue;
+        if (R->degenerate) {
+            continue;
+        }
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             snag_c *S = R->snags[k];
@@ -1263,8 +1369,9 @@ static void HandleOverlaps() {
         k = i;
 
         while (k + 1 < total &&
-               all_snags[k + 1]->on_node == all_snags[k]->on_node)
+               all_snags[k + 1]->on_node == all_snags[k]->on_node) {
             k++;
+        }
 
         // fprintf(stderr, "ON NODE %p : %u snags\n", all_snags[i]->on_node,
         // k-i+1);
@@ -1273,7 +1380,9 @@ static void HandleOverlaps() {
             // copy into a new list, a place where split pieces can go
             std::vector<snag_c *> overlap_list;
 
-            for (; i <= k; i++) overlap_list.push_back(all_snags[i]);
+            for (; i <= k; i++) {
+                overlap_list.push_back(all_snags[i]);
+            }
 
             ProcessOverlapList(overlap_list);
         }
@@ -1373,7 +1482,9 @@ static void PruneBSPTree(bsp_node_c * node)
 
 void DumpCSGTree(const bsp_node_c *node, const region_c *leaf = NULL,
                  int level = 0) {
-    for (int i = 0; i < level; i++) fprintf(stderr, "  ");
+    for (int i = 0; i < level; i++) {
+        fprintf(stderr, "  ");
+    }
 
     if (node) {
         fprintf(stderr,
@@ -1384,10 +1495,11 @@ void DumpCSGTree(const bsp_node_c *node, const region_c *leaf = NULL,
 
         DumpCSGTree(node->front_node, node->front_leaf, level + 1);
         DumpCSGTree(node->back_node, node->back_leaf, level + 1);
-    } else if (leaf)
+    } else if (leaf) {
         fprintf(stderr, "region %p\n", leaf);
-    else
+    } else {
         fprintf(stderr, "NULL!!");
+    }
 }
 
 static void RemoveDeadRegions() {
@@ -1439,10 +1551,14 @@ static bool CanSwallowBrush(region_c *R, int i, int k) {
     csg_brush_c *A = R->brushes[i];
     csg_brush_c *B = R->brushes[k];
 
-    if (A->bkind != BKIND_Solid) return false;
+    if (A->bkind != BKIND_Solid) {
+        return false;
+    }
 
     // liquids are handled elsewhere
-    if (B->bkind == BKIND_Liquid) return false;
+    if (B->bkind == BKIND_Liquid) {
+        return false;
+    }
 
     return (B->b.z > A->b.z - Z_EPSILON) && (B->t.z < A->t.z + Z_EPSILON);
 }
@@ -1461,13 +1577,14 @@ void CSG_SwallowBrushes() {
 
         R->SortBrushes();
 
-        for (int i = 0; i < (int)R->brushes.size(); i++)
+        for (int i = 0; i < (int)R->brushes.size(); i++) {
             for (int k = (int)R->brushes.size() - 1; k > i; k--) {
                 if (CanSwallowBrush(R, i, k)) {
                     R->RemoveBrush(k);
                     count++;
                 }
             }
+        }
     }
 
     LogPrintf("Swallowed %d brushes (of %d)\n", count, total);
@@ -1502,11 +1619,14 @@ static void MarkGapsWithEntities() {
 
             // ignore lights and boxes
             if (E->Match("light") || E->Match("oblige_sun") ||
-                E->Match("oblige_rtlight") || E->Match("oblige_box"))
+                E->Match("oblige_rtlight") || E->Match("oblige_box")) {
                 continue;
+            }
 
             // ignore map models
-            if (E->props.getStr("model")) continue;
+            if (E->props.getStr("model")) {
+                continue;
+            }
 
             gap_c *gap = GapForEntity(R, E);
 
@@ -1555,10 +1675,11 @@ static void CompareRegionGaps(region_c *R1, region_c *R2) {
         B->AddNeighbor(F);
         F->AddNeighbor(B);
 
-        if (F_z2 < B_z2)
+        if (F_z2 < B_z2) {
             f_idx++;
-        else
+        } else {
             b_idx++;
+        }
     }
 }
 
@@ -1570,15 +1691,23 @@ static void BuildNeighborMap() {
             snag_c *S = R->snags[k];
             snag_c *T = S->partner;
 
-            if (!S->region) continue;
+            if (!S->region) {
+                continue;
+            }
 
-            if (!T || !T->region) continue;
+            if (!T || !T->region) {
+                continue;
+            }
 
             // FIXME??  SYS_ASSERT(T->region != R);
-            if (T->region == R) continue;
+            if (T->region == R) {
+                continue;
+            }
 
             // no need to repeat the checks (only do one side)
-            if (T->region >= R) continue;
+            if (T->region >= R) {
+                continue;
+            }
 
             CompareRegionGaps(R, T->region);
         }
@@ -1617,7 +1746,9 @@ static void SpreadReachability(void) {
             for (unsigned int k = 0; k < R->gaps.size(); k++) {
                 gap_c *G = R->gaps[k];
 
-                if (!G->reachable) continue;
+                if (!G->reachable) {
+                    continue;
+                }
 
                 for (unsigned int n = 0; n < G->neighbors.size(); n++) {
                     gap_c *H = G->neighbors[n];
@@ -1688,10 +1819,14 @@ static void DiscoverThemGaps() {
         for (unsigned int n = 0; n < R->brushes.size(); n++) {
             csg_brush_c *B = R->brushes[n];
 
-            if (B->bkind == BKIND_Solid) solids.push_back(B);
+            if (B->bkind == BKIND_Solid) {
+                solids.push_back(B);
+            }
         }
 
-        if (solids.size() <= 1) continue;
+        if (solids.size() <= 1) {
+            continue;
+        }
 
         std::sort(solids.begin(), solids.end(), csg_brush_bz_Compare());
 
@@ -1713,7 +1848,9 @@ static void DiscoverThemGaps() {
             // no gap implies that these two brushes touch/overlap,
             // hence update the highest one.
 
-            if (R->TopZ(A) > R->TopZ(high)) high = A;
+            if (R->TopZ(A) > R->TopZ(high)) {
+                high = A;
+            }
         }
     }
 }
@@ -1722,7 +1859,9 @@ void DetermineLiquids() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->gaps.empty()) continue;
+        if (R->gaps.empty()) {
+            continue;
+        }
 
         double low_z = R->gaps.front()->bottom->b.z;
         double high_z = R->gaps.back()->top->t.z;
@@ -1730,11 +1869,14 @@ void DetermineLiquids() {
         for (int k = (int)R->brushes.size() - 1; k >= 0; k--) {
             csg_brush_c *B = R->brushes[k];
 
-            if (B->bkind != BKIND_Liquid) continue;
+            if (B->bkind != BKIND_Liquid) {
+                continue;
+            }
 
             // liquid is completely in the void?
-            if (B->t.z < low_z + Z_EPSILON || B->b.z > high_z - Z_EPSILON)
+            if (B->t.z < low_z + Z_EPSILON || B->b.z > high_z - Z_EPSILON) {
                 continue;
+            }
 
             // find gap for this liquid
             // FIXME: improve how slopes are handled
@@ -1779,11 +1921,13 @@ void CSG_BSP(double grid, bool is_clip_hull) {
     group_c root;
 
     // create a region for every brush
-    for (unsigned int i = 0; i < all_brushes.size(); i++)
+    for (unsigned int i = 0; i < all_brushes.size(); i++) {
         CreateRegion(root, all_brushes[i]);
+    }
 
-    for (unsigned int i = 0; i < all_entities.size(); i++)
+    for (unsigned int i = 0; i < all_entities.size(); i++) {
         root.AddEntity(all_entities[i]);
+    }
 
     // create a rectangle region around whole map
     AddBoundingRegion(root);
@@ -1793,7 +1937,9 @@ void CSG_BSP(double grid, bool is_clip_hull) {
     SplitGroup(root, false /* reached_chunk */, &bsp_leaf, &bsp_root);
 
     // all valid maps will get a root node -- this is only for sanity
-    if (!bsp_root) bsp_root = new bsp_node_c(0, 0, 0, 777);
+    if (!bsp_root) {
+        bsp_root = new bsp_node_c(0, 0, 0, 777);
+    }
 
     bsp_root->ComputeBBox();
 
@@ -1823,7 +1969,9 @@ region_c *CSG_PointInRegion(double x, double y) {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->ContainsPoint(x, y)) return R;
+        if (R->ContainsPoint(x, y)) {
+            return R;
+        }
     }
 
     return NULL;  // not found
@@ -1832,11 +1980,17 @@ region_c *CSG_PointInRegion(double x, double y) {
 void CSG_BSP_Free() {
     unsigned int i;
 
-    for (i = 0; i < all_partitions.size(); i++) delete all_partitions[i];
+    for (i = 0; i < all_partitions.size(); i++) {
+        delete all_partitions[i];
+    }
 
-    for (i = 0; i < all_regions.size(); i++) delete all_regions[i];
+    for (i = 0; i < all_regions.size(); i++) {
+        delete all_regions[i];
+    }
 
-    for (i = 0; i < dead_regions.size(); i++) delete dead_regions[i];
+    for (i = 0; i < dead_regions.size(); i++) {
+        delete dead_regions[i];
+    }
 
     all_partitions.clear();
     all_regions.clear();

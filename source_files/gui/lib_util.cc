@@ -31,7 +31,9 @@
 int StringCaseCmp(const char *A, const char *B) {
     for (; *A || *B; A++, B++) {
         // this test also catches end-of-string conditions
-        if (toupper(*A) != toupper(*B)) return (toupper(*A) - toupper(*B));
+        if (toupper(*A) != toupper(*B)) {
+            return (toupper(*A) - toupper(*B));
+        }
     }
 
     return 0;
@@ -44,7 +46,9 @@ int StringCaseCmpPartial(const char *A, const char *B) {
 
     for (; *B; A++, B++) {
         // this test also catches end-of-string conditions
-        if (toupper(*A) != toupper(*B)) return (toupper(*A) - toupper(*B));
+        if (toupper(*A) != toupper(*B)) {
+            return (toupper(*A) - toupper(*B));
+        }
     }
 
     return 0;
@@ -61,7 +65,9 @@ void StringMaxCopy(char *dest, const char *src, int max) {
 char *StringUpper(const char *name) {
     char *copy = StringDup(name);
 
-    for (char *p = copy; *p; p++) *p = toupper(*p);
+    for (char *p = copy; *p; p++) {
+        *p = toupper(*p);
+    }
 
     return copy;
 }
@@ -71,18 +77,24 @@ char *StringNew(int length) {
 
     char *s = (char *)calloc(length + 1, 1);
 
-    if (!s) AssertFail("Out of memory (%d bytes for string)\n", length);
+    if (!s) {
+        AssertFail("Out of memory (%d bytes for string)\n", length);
+    }
 
     return s;
 }
 
 char *StringDup(const char *orig, int limit) {
-    if (!orig) orig = "(null)";
+    if (!orig) {
+        orig = "(null)";
+    }
 
     if (limit < 0) {
         char *s = strdup(orig);
 
-        if (!s) AssertFail("Out of memory (copy string)\n");
+        if (!s) {
+            AssertFail("Out of memory (copy string)\n");
+        }
 
         return s;
     }
@@ -108,7 +120,9 @@ char *StringPrintf(const char *str, ...) {
         buf_size *= 2;
 
         buf = (char *)realloc(buf, buf_size);
-        if (!buf) AssertFail("Out of memory (formatting string)");
+        if (!buf) {
+            AssertFail("Out of memory (formatting string)");
+        }
 
         va_start(args, str);
         out_len = vsnprintf(buf, buf_size, str, args);
@@ -116,7 +130,9 @@ char *StringPrintf(const char *str, ...) {
 
         // old versions of vsnprintf() simply return -1 when
         // the output doesn't fit.
-        if (out_len < 0 || out_len >= buf_size) continue;
+        if (out_len < 0 || out_len >= buf_size) {
+            continue;
+        }
 
         return buf;
     }
@@ -131,9 +147,13 @@ void StringFree(const char *str) {
 void StringRemoveCRLF(char *str) {
     size_t len = strlen(str);
 
-    if (len > 0 && str[len - 1] == '\n') str[--len] = 0;
+    if (len > 0 && str[len - 1] == '\n') {
+        str[--len] = 0;
+    }
 
-    if (len > 0 && str[len - 1] == '\r') str[--len] = 0;
+    if (len > 0 && str[len - 1] == '\r') {
+        str[--len] = 0;
+    }
 }
 
 void StringReplaceChar(char *str, char old_ch, char new_ch) {
@@ -147,7 +167,9 @@ void StringReplaceChar(char *str, char old_ch, char new_ch) {
         if (*str == old_ch) {
             str++;
 
-            if (new_ch) *dest++ = new_ch;
+            if (new_ch) {
+                *dest++ = new_ch;
+            }
         } else {
             *dest++ = *str++;
         }
@@ -168,13 +190,17 @@ char *mem_gets(char *buf, int size, const char **str_ptr) {
 
     const char *p = *str_ptr;
 
-    if (!*p) return NULL;
+    if (!*p) {
+        return NULL;
+    }
 
     char *dest = buf;
     char *dest_end = dest + (size - 2);
 
     for (; *p && *p != '\n'; p++) {
-        if (dest < dest_end) *dest++ = *p;
+        if (dest < dest_end) {
+            *dest++ = *p;
+        }
     }
 
     if (*p == '\n') {
@@ -205,8 +231,11 @@ u32_t IntHash(u32_t key) {
 u32_t StringHash(const char *str) {
     u32_t hash = 0;
 
-    if (str)
-        while (*str) hash = (hash << 5) - hash + *str++;
+    if (str) {
+        while (*str) {
+            hash = (hash << 5) - hash + *str++;
+        }
+    }
 
     return hash;
 }
@@ -247,13 +276,19 @@ double CalcAngle(double sx, double sy, double ex, double ey) {
     ex -= sx;
     ey -= sy;
 
-    if (fabs(ex) < 0.0001) return (ey > 0) ? 90.0 : 270.0;
+    if (fabs(ex) < 0.0001) {
+        return (ey > 0) ? 90.0 : 270.0;
+    }
 
-    if (fabs(ey) < 0.0001) return (ex > 0) ? 0.0 : 180.0;
+    if (fabs(ey) < 0.0001) {
+        return (ex > 0) ? 0.0 : 180.0;
+    }
 
     double angle = atan2(ey, ex) * 180.0 / M_PI;
 
-    if (angle < 0) angle += 360.0;
+    if (angle < 0) {
+        angle += 360.0;
+    }
 
     return angle;
 }
@@ -264,8 +299,12 @@ double DiffAngle(double A, double B) {
 
     double D = B - A;
 
-    while (D > 180.0) D = D - 360.0;
-    while (D < -180.0) D = D + 360.0;
+    while (D > 180.0) {
+        D = D - 360.0;
+    }
+    while (D < -180.0) {
+        D = D + 360.0;
+    }
 
     return D;
 }
@@ -298,15 +337,16 @@ double PointLineDist(double x, double y, double x1, double y1, double x2,
     //   (b) off the "right" side (closest to end point)
     //   (c) in-between : use the perpendicular distance
 
-    if (along_frac <= 0)
+    if (along_frac <= 0) {
         return sqrt(x * x + y * y);
 
-    else if (along_frac >= 1)
+    } else if (along_frac >= 1) {
         return ComputeDist(x, y, x2, y2);
 
-    else
+    } else {
         // perp dist
         return fabs(x * y2 - y * x2) / sqrt(len_squared);
+    }
 }
 
 void CalcIntersection(double nx1, double ny1, double nx2, double ny2,

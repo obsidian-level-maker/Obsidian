@@ -118,15 +118,18 @@ void Signal_Raise(const char *name) {
 
     for (;;) {
         loop_count++;
-        if (loop_count >= EXCESSIVE_LOOPS)
+        if (loop_count >= EXCESSIVE_LOOPS) {
             Main_FatalError("Signal_Raise(%s) : excessive looping!\n", name);
+        }
 
         signal_in_progress = name;
 
         for (unsigned int i = 0; i < sig_list.size(); i++) {
             signal_pair_c *P = sig_list[i];
 
-            if (strcmp(P->name, name) != 0) continue;
+            if (strcmp(P->name, name) != 0) {
+                continue;
+            }
 
             (*P->func)(name, P->priv_dat);
         }
@@ -135,7 +138,9 @@ void Signal_Raise(const char *name) {
 
         StringFree(name);
 
-        if (pending_sigs.empty()) break;
+        if (pending_sigs.empty()) {
+            break;
+        }
 
         name = pending_sigs.front();
         pending_sigs.pop_front();

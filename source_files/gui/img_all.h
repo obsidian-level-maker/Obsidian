@@ -21,6 +21,8 @@
 #ifndef __OBLIGE_LOGOS_H__
 #define __OBLIGE_LOGOS_H__
 
+#include "sys_type.h"
+
 typedef struct {
     const char *name;
 

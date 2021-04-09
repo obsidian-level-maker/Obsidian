@@ -61,16 +61,24 @@ static void Parse_Option(const char *name, const char *value) {
 
 static bool Options_ParseLine(char *buf) {
     // remove whitespace
-    while (isspace(*buf)) buf++;
+    while (isspace(*buf)) {
+        buf++;
+    }
 
     int len = strlen(buf);
 
-    while (len > 0 && isspace(buf[len - 1])) buf[--len] = 0;
+    while (len > 0 && isspace(buf[len - 1])) {
+        buf[--len] = 0;
+    }
 
     // ignore blank lines and comments
-    if (*buf == 0) return true;
+    if (*buf == 0) {
+        return true;
+    }
 
-    if (buf[0] == '-' && buf[1] == '-') return true;
+    if (buf[0] == '-' && buf[1] == '-') {
+        return true;
+    }
 
     if (!isalpha(*buf)) {
         LogPrintf("Weird option line: [%s]\n", buf);
@@ -87,7 +95,9 @@ static bool Options_ParseLine(char *buf) {
          buf++) { /* nothing here */
     }
 
-    while (isspace(*buf)) *buf++ = 0;
+    while (isspace(*buf)) {
+        *buf++ = 0;
+    }
 
     if (*buf != '=') {
         LogPrintf("Option line missing '=': [%s]\n", buf);
@@ -96,7 +106,9 @@ static bool Options_ParseLine(char *buf) {
 
     *buf++ = 0;
 
-    if (isspace(*buf)) *buf++ = 0;
+    if (isspace(*buf)) {
+        *buf++ = 0;
+    }
 
     // everything after the " = " (note: single space) is the value,
     // and it does not need escaping since our values never contain
@@ -127,13 +139,17 @@ bool Options_Load(const char *filename) {
 
     int error_count = 0;
 
-    while (fgets(buffer, MSG_BUF_LEN - 2, option_fp))
-        if (!Options_ParseLine(buffer)) error_count += 1;
+    while (fgets(buffer, MSG_BUF_LEN - 2, option_fp)) {
+        if (!Options_ParseLine(buffer)) {
+            error_count += 1;
+        }
+    }
 
-    if (error_count > 0)
+    if (error_count > 0) {
         LogPrintf("DONE (found %d parse errors)\n\n", error_count);
-    else
+    } else {
         LogPrintf("DONE.\n\n");
+    }
 
     fclose(option_fp);
 
@@ -223,14 +239,18 @@ class UI_OptionsWin : public Fl_Window {
         for (int i = 0;; i++) {
             const char *fullname = Trans_GetAvailLanguage(i);
 
-            if (!fullname) break;
+            if (!fullname) {
+                break;
+            }
 
             opt_language->add(fullname);
 
             // check for match against current language
             const char *lc = Trans_GetAvailCode(i);
 
-            if (strcmp(lc, t_language) == 0) opt_language->value(i + 1);
+            if (strcmp(lc, t_language) == 0) {
+                opt_language->value(i + 1);
+            }
         }
     }
 
@@ -252,7 +272,9 @@ class UI_OptionsWin : public Fl_Window {
             t_language = Trans_GetAvailCode(val - 1);
 
             // this should not happen
-            if (!t_language) t_language = "AUTO";
+            if (!t_language) {
+                t_language = "AUTO";
+            }
         }
     }
 
@@ -429,7 +451,9 @@ int UI_OptionsWin::handle(int event) {
         }
 
         // eat all other function keys
-        if (FL_F + 1 <= key && key <= FL_F + 12) return 1;
+        if (FL_F + 1 <= key && key <= FL_F + 12) {
+            return 1;
+        }
     }
 
     return Fl_Window::handle(event);
@@ -451,7 +475,9 @@ void DLG_OptionsEditor(void) {
     option_window->show();
 
     // run the GUI until the user closes
-    while (!option_window->WantQuit()) Fl::wait();
+    while (!option_window->WantQuit()) {
+        Fl::wait();
+    }
 
     option_window->set_non_modal();
     option_window->hide();

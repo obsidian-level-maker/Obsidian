@@ -130,10 +130,11 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1,
     size = 64;
 
     for (int i = 0; i < MIP_LEVELS; i++) {
-        for (int y = 0; y < size; y++)
+        for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 lump->Append(pixels + (((x ^ y) & (size / 4)) ? 1 : 0), 1);
             }
+        }
 
         size /= 2;
     }
@@ -167,12 +168,13 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data,
     int scale = 1;
 
     for (int i = 0; i < MIP_LEVELS; i++) {
-        for (int y = 0; y < size; y++)
+        for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 byte pixel = colors[data[(y * scale) * 64 + x * scale] >> 5];
 
                 lump->Append(&pixel, 1);
             }
+        }
 
         size /= 2;
         scale *= 2;
@@ -216,8 +218,9 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
         while (length > 0) {
             int actual = MIN(1024, length);
 
-            if (!WAD2_ReadData(entry, pos, actual, buffer))
+            if (!WAD2_ReadData(entry, pos, actual, buffer)) {
                 Main_FatalError("Error reading texture data in wad!");
+            }
 
             lump->Append(buffer, actual);
 
@@ -394,7 +397,9 @@ static void Q1_ClearTexInfo(void) {
 }
 
 u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4) {
-    if (!texture[0]) texture = "error";
+    if (!texture[0]) {
+        texture = "error";
+    }
 
     int miptex = Q1_AddMipTex(texture);
 
@@ -415,7 +420,9 @@ u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4) {
 
     SYS_ASSERT(hash >= 0);
 
-    if (!texinfo_hashtab[hash]) texinfo_hashtab[hash] = new std::vector<int>;
+    if (!texinfo_hashtab[hash]) {
+        texinfo_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = texinfo_hashtab[hash];
 
@@ -424,8 +431,9 @@ u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4) {
 
         SYS_ASSERT(index < (int)q1_texinfos.size());
 
-        if (memcmp(&raw_tex, &q1_texinfos[index], sizeof(raw_tex)) == 0)
+        if (memcmp(&raw_tex, &q1_texinfos[index], sizeof(raw_tex)) == 0) {
             return index;  // found it
+        }
     }
 
     // not found, so add new one
@@ -439,9 +447,10 @@ u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4) {
 }
 
 static void Q1_WriteTexInfo(void) {
-    if (q1_texinfos.size() >= MAX_MAP_TEXINFO)
+    if (q1_texinfos.size() >= MAX_MAP_TEXINFO) {
         Main_FatalError("Quake build failure: exceeded limit of %d TEXINFOS\n",
                         MAX_MAP_TEXINFO);
+    }
 
     qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
@@ -616,7 +625,9 @@ static void Q1_WriteFace(quake_face_c *face) {
     if (face->lmap) {
         raw_face.lightofs = face->lmap->offset;
 
-        for (int n = 0; n < 4; n++) raw_face.styles[n] = face->lmap->styles[n];
+        for (int n = 0; n < 4; n++) {
+            raw_face.styles[n] = face->lmap->styles[n];
+        }
     }
 
     const char *texture = face->texture.c_str();
@@ -667,7 +678,9 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf) {
     SYS_ASSERT(leaf->medium >= 0);
     SYS_ASSERT(leaf->medium <= MEDIUM_SOLID);
 
-    if (leaf == qk_solid_leaf) return;
+    if (leaf == qk_solid_leaf) {
+        return;
+    }
 
     dleaf_t raw_leaf;
 
@@ -743,15 +756,17 @@ static void Q1_WriteNode(quake_node_c *node) {
 
     raw_node.planenum = BSP_AddPlane(&node->plane, &flipped);
 
-    if (node->front_N)
+    if (node->front_N) {
         raw_node.children[0] = (u16_t)node->front_N->index;
-    else
+    } else {
         raw_node.children[0] = (u16_t)(-1 - node->front_L->index);
+    }
 
-    if (node->back_N)
+    if (node->back_N) {
         raw_node.children[1] = (u16_t)node->back_N->index;
-    else
+    } else {
         raw_node.children[1] = (u16_t)(-1 - node->back_L->index);
+    }
 
     if (flipped) {
         short int node0 = raw_node.children[0];
@@ -779,15 +794,17 @@ static void Q1_WriteNode(quake_node_c *node) {
 
     // recurse now, AFTER adding the current node
 
-    if (node->front_N)
+    if (node->front_N) {
         Q1_WriteNode(node->front_N);
-    else
+    } else {
         Q1_WriteLeaf(node->front_L);
+    }
 
-    if (node->back_N)
+    if (node->back_N) {
         Q1_WriteNode(node->back_N);
-    else
+    } else {
         Q1_WriteLeaf(node->back_L);
+    }
 }
 
 static void Q1_WriteBSP() {
@@ -809,17 +826,20 @@ static void Q1_WriteBSP() {
 
     Q1_WriteNode(qk_bsp_root);
 
-    if (q1_total_faces >= MAX_MAP_FACES)
+    if (q1_total_faces >= MAX_MAP_FACES) {
         Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
                         MAX_MAP_FACES);
+    }
 
-    if (q1_total_leafs >= MAX_MAP_LEAFS)
+    if (q1_total_leafs >= MAX_MAP_LEAFS) {
         Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
                         MAX_MAP_LEAFS);
+    }
 
-    if (q1_total_nodes >= MAX_MAP_NODES)
+    if (q1_total_nodes >= MAX_MAP_NODES) {
         Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
                         MAX_MAP_NODES);
+    }
 }
 
 //------------------------------------------------------------------------
@@ -1003,7 +1023,9 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
 
     int flags = 0;
 
-    if (strstr(texture, "trigger") != NULL) flags |= TEX_SPECIAL;
+    if (strstr(texture, "trigger") != NULL) {
+        flags |= TEX_SPECIAL;
+    }
 
     raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
@@ -1060,7 +1082,7 @@ static void MapModel_Nodes(quake_mapmodel_c *model, float *mins, float *maxs) {
             raw_node.children[0] = node1;
             raw_node.children[1] = node0;
             //			std::swap(raw_node.children[0],
-            //raw_node.children[1]);
+            // raw_node.children[1]);
         }
 
         raw_node.firstface = face_base + face;
@@ -1141,19 +1163,25 @@ static void Q1_WriteModels() {
 //------------------------------------------------------------------------
 
 static void Q1_LightWorld() {
-    if (main_win) main_win->build_box->Prog_Step("Light");
+    if (main_win) {
+        main_win->build_box->Prog_Step("Light");
+    }
 
     QLIT_LightAllFaces();
 
     int max_size = MAX_MAP_LIGHTING;
 
-    if (qk_sub_format == SUBFMT_HalfLife) max_size = HL_MAX_MAP_LIGHTING;
+    if (qk_sub_format == SUBFMT_HalfLife) {
+        max_size = HL_MAX_MAP_LIGHTING;
+    }
 
     QLIT_BuildLightingLump(LUMP_LIGHTING, max_size);
 }
 
 static void Q1_VisWorld(int base_leafs) {
-    if (main_win) main_win->build_box->Prog_Step("Vis");
+    if (main_win) {
+        main_win->build_box->Prog_Step("Vis");
+    }
 
     // take the solid leaf into account
     int numleafs = 1 + base_leafs;
@@ -1169,7 +1197,9 @@ static void Q1_VisWorld(int base_leafs) {
 static void Q1_CreateBSPFile(const char *name) {
     q_mono_lighting = true;
 
-    if (qk_sub_format == SUBFMT_HalfLife) q_mono_lighting = false;
+    if (qk_sub_format == SUBFMT_HalfLife) {
+        q_mono_lighting = false;
+    }
 
     BSP_OpenLevel(name);
 
@@ -1218,7 +1248,9 @@ int Q1_add_tex_wad(lua_State *L) {
 
     // TODO: support more than one
 
-    if (qk_texture_wad) StringFree(qk_texture_wad);
+    if (qk_texture_wad) {
+        StringFree(qk_texture_wad);
+    }
 
     qk_texture_wad = StringDup(name);
 
@@ -1273,17 +1305,20 @@ bool quake1_game_interface_c::Start(const char *preset) {
 
     QLIT_InitProperties();
 
-    if (batch_mode)
+    if (batch_mode) {
         filename = StringDup(batch_output_file);
-    else
+    } else {
         filename = DLG_OutputFilename("pak");
+    }
 
     if (!filename) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
-    if (create_backups) Main_BackupFile(filename, "old");
+    if (create_backups) {
+        Main_BackupFile(filename, "old");
+    }
 
     if (!PAK_OpenWrite(filename)) {
         Main_ProgStatus(_("Error (create file)"));
@@ -1292,7 +1327,9 @@ bool quake1_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
-    if (main_win) main_win->build_box->Prog_Init(0, StepsForGame(0));
+    if (main_win) {
+        main_win->build_box->Prog_Init(0, StepsForGame(0));
+    }
 
     return true;
 }
@@ -1301,10 +1338,11 @@ bool quake1_game_interface_c::Finish(bool build_ok) {
     PAK_CloseWrite();
 
     // remove the file if an error occurred
-    if (!build_ok)
+    if (!build_ok) {
         FileDelete(filename);
-    else
+    } else {
         Recent_AddFile(RECG_Output, filename);
+    }
 
     return build_ok;
 }
@@ -1325,18 +1363,20 @@ void quake1_game_interface_c::Property(const char *key, const char *value) {
     } else if (StringCaseCmp(key, "description") == 0) {
         description = StringDup(value);
     } else if (StringCaseCmp(key, "sub_format") == 0) {
-        if (StringCaseCmp(value, "quake") == 0)
+        if (StringCaseCmp(value, "quake") == 0) {
             qk_sub_format = 0;
-        else if (StringCaseCmp(value, "hexen2") == 0)
+        } else if (StringCaseCmp(value, "hexen2") == 0) {
             qk_sub_format = SUBFMT_Hexen2;
-        else if (StringCaseCmp(value, "halflife") == 0)
+        } else if (StringCaseCmp(value, "halflife") == 0) {
             qk_sub_format = SUBFMT_HalfLife;
-        else
+        } else {
             LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value);
+        }
 
         // this assumes the sub_format is only set once at the start
-        if (main_win)
+        if (main_win) {
             main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
+        }
     } else if (StringCaseCmp(key, "worldtype") == 0) {
         qk_worldtype = atoi(value);
     } else {
@@ -1345,12 +1385,14 @@ void quake1_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void quake1_game_interface_c::EndLevel() {
-    if (!level_name)
+    if (!level_name) {
         Main_FatalError("Script problem: did not set level name!\n");
+    }
 
-    if (strlen(level_name) >= 32)
+    if (strlen(level_name) >= 32) {
         Main_FatalError("Script problem: level name too long: %s\n",
                         level_name);
+    }
 
     char entry_in_pak[64];
     sprintf(entry_in_pak, "maps/%s.bsp", level_name);
@@ -1359,9 +1401,13 @@ void quake1_game_interface_c::EndLevel() {
 
     StringFree(level_name);
 
-    if (description) StringFree(description);
+    if (description) {
+        StringFree(description);
+    }
 
-    if (qk_texture_wad) StringFree(qk_texture_wad);
+    if (qk_texture_wad) {
+        StringFree(qk_texture_wad);
+    }
 }
 
 game_interface_c *Quake1_GameObject(void) {
