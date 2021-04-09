@@ -5,6 +5,7 @@ add_subdirectory(source_files/acc_src)
 add_subdirectory(source_files/ajpoly_src)
 add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
+add_subdirectory(source_files/slump)
 
 project(obsidian LANGUAGES CXX VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 11)
@@ -129,6 +130,7 @@ target_include_directories(obsidian PRIVATE source_files/physfs_src)
 target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
+target_include_directories(obsidian PRIVATE source_files/slump)
 
 if(UNIX)
     target_compile_definitions(obsidian PRIVATE UNIX)
@@ -144,4 +146,5 @@ target_link_libraries(obsidian PRIVATE
     obsidian_acc 
     obsidian_ajpoly 
     obsidian_zdbsp
+    obsidian_slump
 )
