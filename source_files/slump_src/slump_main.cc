@@ -396,7 +396,7 @@ void machioize(config *c,float amount) {
 	}
 }
 
-int slump_main(int argc, char *argv[]) {
+int slump_main(s_config slump_config) {
 
   /* A stubby but functional main() */
 
@@ -412,7 +412,7 @@ int slump_main(int argc, char *argv[]) {
 		  "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
            SOURCE_VERSION,SOURCE_SERIAL,SOURCE_PATCHLEVEL);
 
-  ThisConfig = get_config(argc,argv);
+  ThisConfig = get_config(slump_config);
   if (ThisConfig==NULL) {
     Usage();
     return 100;

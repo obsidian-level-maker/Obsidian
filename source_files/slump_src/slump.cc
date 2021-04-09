@@ -1372,7 +1372,7 @@ void secretize_config(config *c)
 /* 3. Parse the arglist to get overrides to switches,         */
 /* 4. Read the config for non-switches (flats, themes, etc).  */
 /* 5. Do postproduction defaults and calculations and such.   */
-config *get_config(int argc, char *argv[])
+config *get_config(s_config slump_config)
 {
   config *answer;
   int i;
@@ -1382,11 +1382,8 @@ config *get_config(int argc, char *argv[])
 
   /* Set various defaults and stuff */
   answer->configfile = strdup("SLUMP.CFG");  /* So's we kin free() it */
-  answer->outfile = NULL;
+  answer->outfile = slump_config.outfile;
   answer->cwadonly = FALSE;
-
-  /* Do initial parsing for possible other config file */
-  if (!do_switches(argc,argv,answer,"Command line",1)) return NULL;
 
   ok_to_roll = TRUE;
 
@@ -1496,9 +1493,6 @@ config *get_config(int argc, char *argv[])
 
   /* Read switch-defaults from the config file */
   if (!read_switches(answer)) return NULL;
-
-  /* Now scan the command line again */
-  if (!do_switches(argc,argv,answer,"Command line",0)) return NULL;
 
   /* And finally read in all the hard stuff from the file */
   if (!nonswitch_config(answer)) return NULL;
