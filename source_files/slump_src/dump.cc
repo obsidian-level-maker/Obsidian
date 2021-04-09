@@ -67,8 +67,8 @@ dumphandle OpenDump(config *c)
   dumphandle answer;
   struct {
     char tag[4];
-    u_int32_t lmpcount;
-    u_int32_t inxoffset;
+    unsigned int lmpcount;
+    unsigned int inxoffset;
   } headerstuff;
 
   answer = (dumphandle)malloc(sizeof (*answer));
@@ -93,8 +93,8 @@ dumphandle OpenDump(config *c)
 void CloseDump(dumphandle dh)
 {
   struct {
-    u_int32_t offset;
-    u_int32_t length;
+    unsigned int offset;
+    unsigned int length;
     char lumpname[8];
   } directory_entry;
 

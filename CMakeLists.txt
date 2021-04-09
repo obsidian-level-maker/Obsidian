@@ -6,6 +6,8 @@ add_subdirectory(source_files/ajpoly_src)
 add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
 add_subdirectory(source_files/slump_src)
+add_subdirectory(source_files/fltk_src)
+add_subdirectory(source_files/zlib_src)
 
 project(obsidian LANGUAGES CXX VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 11)
@@ -131,15 +133,15 @@ target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
+target_include_directories(obsidian PRIVATE source_files/fltk_src)
+target_include_directories(obsidian PRIVATE source_files/zlib_src)    
 
-if(UNIX)
-    target_compile_definitions(obsidian PRIVATE UNIX)
-endif()
-
-find_package(FLTK REQUIRED)
+target_compile_definitions(obsidian PRIVATE UNIX)
 
 target_link_libraries(obsidian PRIVATE 
-    ${FLTK_LIBRARIES} 
+    fltk
+    fltk_images
+    zlib
     z 
     obsidian_lua
     obsidian_physfs 
@@ -148,3 +150,4 @@ target_link_libraries(obsidian PRIVATE
     obsidian_zdbsp
     obsidian_slump
 )
+
