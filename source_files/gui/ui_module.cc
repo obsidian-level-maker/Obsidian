@@ -46,7 +46,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labelfont(FL_HELVETICA_BOLD);
 
-    if (Is_UI()) heading->labelsize(header_font_size);
+    if (Is_UI()) {
+        heading->labelsize(header_font_size);
+    }
 
     if (tip) {
         mod_button->tooltip(tip);
@@ -92,7 +94,9 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     rch->align(FL_ALIGN_TOP_LEFT);
     rch->selection_color(select_col);
 
-    if (!tip) tip = "";
+    if (!tip) {
+        tip = "";
+    }
     rch->tooltip(tip);
 
     opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
@@ -101,7 +105,9 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
     rch->callback(callback_OptChange, cb_data);
 
-    if (!mod_button->value()) rch->hide();
+    if (!mod_button->value()) {
+        rch->hide();
+    }
 
     add(rch);
 
@@ -114,10 +120,11 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 }
 
 int UI_Module::CalcHeight() const {
-    if (mod_button->value())
+    if (mod_button->value()) {
         return cur_opt_y + kf_h(6);
-    else
+    } else {
         return kf_h(34);
+    }
 }
 
 void UI_Module::update_Enable() {
@@ -126,10 +133,11 @@ void UI_Module::update_Enable() {
     for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
         UI_RChoice *M = IT->second;
 
-        if (mod_button->value())
+        if (mod_button->value()) {
             M->show();
-        else
+        } else {
             M->hide();
+        }
     }
 }
 
@@ -150,7 +158,9 @@ void UI_Module::AddOptionChoice(const char *option, const char *id,
 bool UI_Module::SetOption(const char *option, const char *value) {
     UI_RChoice *rch = FindOpt(option);
 
-    if (!rch) return false;
+    if (!rch) {
+        return false;
+    }
 
     rch->ChangeTo(value);
 
@@ -158,7 +168,9 @@ bool UI_Module::SetOption(const char *option, const char *value) {
 }
 
 UI_RChoice *UI_Module::FindOpt(const char *option) {
-    if (choice_map.find(option) == choice_map.end()) return NULL;
+    if (choice_map.find(option) == choice_map.end()) {
+        return NULL;
+    }
 
     return choice_map[option];
 }
@@ -239,7 +251,9 @@ void UI_CustomMods::AddModule(const char *id, const char *label,
     cb_data->mod = M;
     cb_data->parent = this;
 
-    if (!M->Is_UI()) M->mod_button->callback(callback_ModEnable, cb_data);
+    if (!M->Is_UI()) {
+        M->mod_button->callback(callback_ModEnable, cb_data);
+    }
 
     mod_pack->add(M);
 
@@ -250,7 +264,9 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
                               const char *label, const char *tip, int gap) {
     UI_Module *M = FindID(module);
 
-    if (!M) return false;
+    if (!M) {
+        return false;
+    }
 
     M->AddOption(option, label, tip, gap, button_col);
 
@@ -263,7 +279,9 @@ void UI_CustomMods::AddOptionChoice(const char *module, const char *option,
                                     const char *id, const char *label) {
     UI_Module *M = FindID(module);
 
-    if (!M) return;
+    if (!M) {
+        return;
+    }
 
     M->AddOptionChoice(option, id, label);
 }
@@ -273,16 +291,21 @@ bool UI_CustomMods::ShowModule(const char *id, bool new_shown) {
 
     UI_Module *M = FindID(id);
 
-    if (!M) return false;
+    if (!M) {
+        return false;
+    }
 
-    if ((M->visible() ? 1 : 0) == (new_shown ? 1 : 0)) return true;
+    if ((M->visible() ? 1 : 0) == (new_shown ? 1 : 0)) {
+        return true;
+    }
 
     // visibility definitely changed
 
-    if (new_shown)
+    if (new_shown) {
         M->show();
-    else
+    } else {
         M->hide();
+    }
 
     PositionAll();
 
@@ -293,7 +316,9 @@ bool UI_CustomMods::SetOption(const char *module, const char *option,
                               const char *value) {
     UI_Module *M = FindID(module);
 
-    if (!M) return false;
+    if (!M) {
+        return false;
+    }
 
     return M->SetOption(option, value);
 }
@@ -303,10 +328,13 @@ bool UI_CustomMods::EnableMod(const char *id, bool enable) {
 
     UI_Module *M = FindID(id);
 
-    if (!M) return false;
+    if (!M) {
+        return false;
+    }
 
-    if ((M->mod_button->value() ? 1 : 0) == (enable ? 1 : 0))
+    if ((M->mod_button->value() ? 1 : 0) == (enable ? 1 : 0)) {
         return true;  // no change
+    }
 
     M->mod_button->value(enable ? 1 : 0);
     M->update_Enable();
@@ -328,7 +356,9 @@ void UI_CustomMods::PositionAll(UI_Module *focus) {
             UI_Module *M = (UI_Module *)mod_pack->child(j);
             SYS_ASSERT(M);
 
-            if (!M->visible() || M->y() < my || M->y() >= my + mh) continue;
+            if (!M->visible() || M->y() < my || M->y() >= my + mh) {
+                continue;
+            }
 
             int dist = M->y() - my;
 
@@ -347,7 +377,9 @@ void UI_CustomMods::PositionAll(UI_Module *focus) {
         UI_Module *M = (UI_Module *)mod_pack->child(k);
         SYS_ASSERT(M);
 
-        if (M->visible()) new_height += M->CalcHeight() + spacing;
+        if (M->visible()) {
+            new_height += M->CalcHeight() + spacing;
+        }
     }
 
     // determine new offset_y
@@ -370,7 +402,9 @@ void UI_CustomMods::PositionAll(UI_Module *focus) {
         offset_y = MIN(offset_y, new_height - mh);
     } else {
         // when not shrinking, offset_y will remain valid
-        if (new_height < total_h) offset_y = 0;
+        if (new_height < total_h) {
+            offset_y = 0;
+        }
     }
 
     total_h = new_height;
@@ -391,7 +425,9 @@ void UI_CustomMods::PositionAll(UI_Module *focus) {
             M->resize(M->x(), ny, M->w(), nh);
         }
 
-        if (M->visible()) ny += M->CalcHeight() + spacing;
+        if (M->visible()) {
+            ny += M->CalcHeight() + spacing;
+        }
     }
 
     // p = position, first line displayed
@@ -429,7 +465,9 @@ void UI_Module::resize(int X, int Y, int W, int H) {
         dw = W - (p[1] - p[0]);
         dy = Y - p[2];
         dh = H - (p[3] - p[2]);
-        if (type() >= FL_WINDOW) dx = dy = 0;
+        if (type() >= FL_WINDOW) {
+            dx = dy = 0;
+        }
         p += 4;
 
         // get initial size of resizable():
@@ -443,30 +481,34 @@ void UI_Module::resize(int X, int Y, int W, int H) {
             Fl_Widget *o = *a++;
 #if 1
             int XX = *p++;
-            if (XX >= IR)
+            if (XX >= IR) {
                 XX += dw;
-            else if (XX > IX)
+            } else if (XX > IX) {
                 XX = IX +
                      ((XX - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
             int R = *p++;
-            if (R >= IR)
+            if (R >= IR) {
                 R += dw;
-            else if (R > IX)
+            } else if (R > IX) {
                 R = IX +
                     ((R - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
 
             int YY = *p++;
-            if (YY >= IB)
+            if (YY >= IB) {
                 YY += dh;
-            else if (YY > IY)
+            } else if (YY > IY) {
                 YY = IY +
                      ((YY - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
             int B = *p++;
-            if (B >= IB)
+            if (B >= IB) {
                 B += dh;
-            else if (B > IY)
+            } else if (B > IY) {
                 B = IY +
                     ((B - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
 #else  // much simpler code from Francois Ostiguy:
             int XX = *p++;
             if (XX >= IR)
@@ -527,7 +569,9 @@ void UI_CustomMods::resize(int X, int Y, int W, int H) {
         dw = W - (p[1] - p[0]);
         dy = Y - p[2];
         dh = H - (p[3] - p[2]);
-        if (type() >= FL_WINDOW) dx = dy = 0;
+        if (type() >= FL_WINDOW) {
+            dx = dy = 0;
+        }
         p += 4;
 
         // get initial size of resizable():
@@ -541,30 +585,34 @@ void UI_CustomMods::resize(int X, int Y, int W, int H) {
             Fl_Widget *o = *a++;
 #if 1
             int XX = *p++;
-            if (XX >= IR)
+            if (XX >= IR) {
                 XX += dw;
-            else if (XX > IX)
+            } else if (XX > IX) {
                 XX = IX +
                      ((XX - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
             int R = *p++;
-            if (R >= IR)
+            if (R >= IR) {
                 R += dw;
-            else if (R > IX)
+            } else if (R > IX) {
                 R = IX +
                     ((R - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
 
             int YY = *p++;
-            if (YY >= IB)
+            if (YY >= IB) {
                 YY += dh;
-            else if (YY > IY)
+            } else if (YY > IY) {
                 YY = IY +
                      ((YY - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
             int B = *p++;
-            if (B >= IB)
+            if (B >= IB) {
                 B += dh;
-            else if (B > IY)
+            } else if (B > IY) {
                 B = IY +
                     ((B - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
 #else  // much simpler code from Francois Ostiguy:
             int XX = *p++;
             if (XX >= IR)
@@ -600,7 +648,9 @@ void UI_CustomMods::resize(int X, int Y, int W, int H) {
         UI_Module *M = (UI_Module *)mod_pack->child(k);
         SYS_ASSERT(M);
 
-        if (M->visible()) new_height += M->CalcHeight() + spacing;
+        if (M->visible()) {
+            new_height += M->CalcHeight() + spacing;
+        }
     }
 
     // determine new offset_y
@@ -626,7 +676,9 @@ void UI_CustomMods::resize(int X, int Y, int W, int H) {
             M->resize(M->x(), ny, M->w(), nh);
         }
 
-        if (M->visible()) ny += M->CalcHeight() + spacing;
+        if (M->visible()) {
+            ny += M->CalcHeight() + spacing;
+        }
     }
 
     // p = position, first line displayed
@@ -682,7 +734,9 @@ UI_Module *UI_CustomMods::FindID(const char *id) const {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);
 
-        if (strcmp(M->id_name.c_str(), id) == 0) return M;
+        if (strcmp(M->id_name.c_str(), id) == 0) {
+            return M;
+        }
     }
 
     return NULL;

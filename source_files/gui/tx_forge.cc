@@ -101,7 +101,9 @@ static void fourn(float data[], int nn[], int ndim, int isign) {
     (b) = tempr
 
     ntot = 1;
-    for (idim = 1; idim <= ndim; idim++) ntot *= nn[idim];
+    for (idim = 1; idim <= ndim; idim++) {
+        ntot *= nn[idim];
+    }
     nprev = 1;
     for (idim = ndim; idim >= 1; idim--) {
         n = nn[idim];
@@ -177,7 +179,9 @@ static void init_gauss(void) {
 static double rand_gauss(void) {
     double sum = 0.0;
 
-    for (int i = 0; i < NRAND; i++) sum += (twister_UInt() & 0xFFFF);
+    for (int i = 0; i < NRAND; i++) {
+        sum += (twister_UInt() & 0xFFFF);
+    }
 
     return sum * gauss_mul - gauss_add;
 }
@@ -192,15 +196,16 @@ static double rand_phase(void) { return 2 * M_PI * twister_Double(); }
 static void spectral_synth(int n, double h) {
     int i, j;
 
-    for (i = 0; i <= n / 2; i++)
+    for (i = 0; i <= n / 2; i++) {
         for (j = 0; j <= n / 2; j++) {
             double phase = rand_phase();
             double rad;
 
-            if (i == 0 && j == 0)
+            if (i == 0 && j == 0) {
                 rad = 0;
-            else
+            } else {
                 rad = pow((double)(i * i + j * j), -(h + 1) / 2) * rand_gauss();
+            }
 
             double rcos = rad * cos(phase);
             double rsin = rad * sin(phase);
@@ -213,12 +218,13 @@ static void spectral_synth(int n, double h) {
             Real(i0, j0) = rcos;
             Imag(i0, j0) = -rsin;
         }
+    }
 
     Imag(n / 2, 0) = 0;
     Imag(0, n / 2) = 0;
     Imag(n / 2, n / 2) = 0;
 
-    for (i = 1; i <= n / 2 - 1; i++)
+    for (i = 1; i <= n / 2 - 1; i++) {
         for (j = 1; j <= n / 2 - 1; j++) {
             double phase = rand_phase();
             double rad =
@@ -232,6 +238,7 @@ static void spectral_synth(int n, double h) {
             Real(n - i, j) = rcos;
             Imag(n - i, j) = -rsin;
         }
+    }
 
     int nsize[3];
 
@@ -248,24 +255,28 @@ static void copy_and_scale(float *buf) {
 
     int i, j;
 
-    for (i = 0; i < meshsize; i++)
+    for (i = 0; i < meshsize; i++) {
         for (j = 0; j < meshsize; j++) {
             double r = Real(i, j);
 
             rmin = MIN(rmin, r);
             rmax = MAX(rmax, r);
         }
+    }
 
     //  fprintf(stderr, "MESH RANGE : %1.5f .. %1.5f\n", rmin, rmax);
 
     double range = (rmax - rmin);
 
-    if (fabs(range) < 0.0001) range = 0.0001;
+    if (fabs(range) < 0.0001) {
+        range = 0.0001;
+    }
 
-    for (i = 0; i < meshsize; i++)
+    for (i = 0; i < meshsize; i++) {
         for (j = 0; j < meshsize; j++) {
             *buf++ = (Real(i, j) - rmin) / range;
         }
+    }
 }
 
 static void power_law_scale(float *buf, double powscale) {
@@ -286,9 +297,10 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
 
     // NOTE : width *must* be a power of two
     for (int test = width; test > 1; test >>= 1) {
-        if (test & 1)
+        if (test & 1) {
             Main_FatalError(
                 "TX_SpectralSynth: width '%d' is not a power of two\n", width);
+        }
     }
 
     twister_Reseed(seed);
@@ -301,7 +313,9 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
 
     copy_and_scale(buf);
 
-    if (fabs(powscale - 1.0) > 0.01) power_law_scale(buf, powscale);
+    if (fabs(powscale - 1.0) > 0.01) {
+        power_law_scale(buf, powscale);
+    }
 
     free_mesh();
 }
@@ -316,7 +330,7 @@ void TX_TestSynth(void) {
 
     fprintf(fp, "P6\n128 128 255\n");
 
-    for (int y = 0; y < 128; y++)
+    for (int y = 0; y < 128; y++) {
         for (int x = 0; x < 128; x++) {
             float f = buf[y * 128 + x];
 
@@ -326,6 +340,7 @@ void TX_TestSynth(void) {
             fputc(ity, fp);
             fputc(ity, fp);
         }
+    }
 
     fclose(fp);
 

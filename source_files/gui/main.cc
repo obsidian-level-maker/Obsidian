@@ -142,16 +142,21 @@ void Determine_WorkingPath(const char *argv0) {
 #else
     char *path = StringNew(FL_PATH_MAX + 4);
 
-    if (fl_filename_expand(path, "$HOME/.obsidian") == 0)
+    if (fl_filename_expand(path, "$HOME/.obsidian") == 0) {
         Main_FatalError("Unable to find $HOME directory!\n");
+    }
 
     home_dir = path;
 
     // try to create it (doesn't matter if it already exists)
-    if (home_dir) FileMakeDir(home_dir);
+    if (home_dir) {
+        FileMakeDir(home_dir);
+    }
 #endif
 
-    if (!home_dir) home_dir = StringDup(".");
+    if (!home_dir) {
+        home_dir = StringDup(".");
+    }
 }
 
 static bool Verify_InstallDir(const char *path) {
@@ -184,7 +189,9 @@ void Determine_InstallDir(const char *argv0) {
 
         install_dir = StringDup(arg_list[inst_arg + 1]);
 
-        if (Verify_InstallDir(install_dir)) return;
+        if (Verify_InstallDir(install_dir)) {
+            return;
+        }
 
         Main_FatalError("Bad install directory specified!\n");
     }
@@ -208,15 +215,18 @@ void Determine_InstallDir(const char *argv0) {
     for (int i = 0; prefixes[i]; i++) {
         install_dir = StringPrintf("%s/share/obsidian", prefixes[i]);
 
-        if (Verify_InstallDir(install_dir)) return;
+        if (Verify_InstallDir(install_dir)) {
+            return;
+        }
 
         StringFree(install_dir);
         install_dir = NULL;
     }
 #endif
 
-    if (!install_dir)
+    if (!install_dir) {
         Main_FatalError("Unable to find Obsidian's install directory!\n");
+    }
 }
 
 void Determine_ConfigFile() {
@@ -263,7 +273,9 @@ void Determine_LoggingFile() {
         // test that it can be created
         FILE *fp = fopen(logging_file, "w");
 
-        if (!fp) Main_FatalError("Cannot create log file: %s\n", logging_file);
+        if (!fp) {
+            Main_FatalError("Cannot create log file: %s\n", logging_file);
+        }
 
         fclose(fp);
     } else if (!batch_mode) {
@@ -297,19 +309,37 @@ int Main_DetermineScaling() {
     /* computation of the Kromulent factor */
 
     // command-line overrides
-    if (ArgvFind(0, "tiny") >= 0) return -1;
-    if (ArgvFind(0, "small") >= 0) return 0;
-    if (ArgvFind(0, "medium") >= 0) return 1;
-    if (ArgvFind(0, "large") >= 0) return 2;
-    if (ArgvFind(0, "huge") >= 0) return 3;
+    if (ArgvFind(0, "tiny") >= 0) {
+        return -1;
+    }
+    if (ArgvFind(0, "small") >= 0) {
+        return 0;
+    }
+    if (ArgvFind(0, "medium") >= 0) {
+        return 1;
+    }
+    if (ArgvFind(0, "large") >= 0) {
+        return 2;
+    }
+    if (ArgvFind(0, "huge") >= 0) {
+        return 3;
+    }
 
     // user option setting
-    if (window_size > 0) return window_size - 2;
+    if (window_size > 0) {
+        return window_size - 2;
+    }
 
     // automatic selection
-    if (screen_w >= 1600 && screen_h >= 800) return 2;
-    if (screen_w >= 1200 && screen_h >= 672) return 1;
-    if (screen_w <= 640 && screen_h <= 480) return -1;
+    if (screen_w >= 1600 && screen_h >= 800) {
+        return 2;
+    }
+    if (screen_w >= 1200 && screen_h >= 672) {
+        return 1;
+    }
+    if (screen_w <= 640 && screen_h <= 480) {
+        return -1;
+    }
 
     return 0;
 }
@@ -382,7 +412,9 @@ void Main_Shutdown(bool error) {
     if (main_win) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
-        if (config_file && !error) Cookie_Save(config_file);
+        if (config_file && !error) {
+            Cookie_Save(config_file);
+        }
 
         delete main_win;
         main_win = NULL;
@@ -408,7 +440,9 @@ void Main_FatalError(const char *msg, ...) {
 
     Main_Shutdown(true);
 
-    if (batch_mode) fprintf(stderr, "ERROR!\n");
+    if (batch_mode) {
+        fprintf(stderr, "ERROR!\n");
+    }
 
     exit(9);
 }
@@ -432,7 +466,9 @@ void Main_ProgStatus(const char *msg, ...) {
 }
 
 int Main_key_handler(int event) {
-    if (event != FL_SHORTCUT) return 0;
+    if (event != FL_SHORTCUT) {
+        return 0;
+    }
 
     switch (Fl::event_key()) {
         case FL_Escape:
@@ -481,31 +517,33 @@ bool Build_Cool_Shit() {
 
     const char *format = ob_game_format();
 
-    if (!format || strlen(format) == 0)
+    if (!format || strlen(format) == 0) {
         Main_FatalError("ERROR: missing 'format' for game?!?\n");
+    }
 
     // create game object
     {
-        if (StringCaseCmp(format, "doom") == 0)
+        if (StringCaseCmp(format, "doom") == 0) {
             game_object = Doom_GameObject();
 
-        else if (StringCaseCmp(format, "nukem") == 0)
+        } else if (StringCaseCmp(format, "nukem") == 0) {
             game_object = Nukem_GameObject();
 
-        /// else if (StringCaseCmp(format, "wolf3d") == 0)
-        ///   game_object = Wolf_GameObject();
+            /// else if (StringCaseCmp(format, "wolf3d") == 0)
+            ///   game_object = Wolf_GameObject();
 
-        else if (StringCaseCmp(format, "quake") == 0)
+        } else if (StringCaseCmp(format, "quake") == 0) {
             game_object = Quake1_GameObject();
 
-        else if (StringCaseCmp(format, "quake2") == 0)
+        } else if (StringCaseCmp(format, "quake2") == 0) {
             game_object = Quake2_GameObject();
 
-        else if (StringCaseCmp(format, "quake3") == 0)
+        } else if (StringCaseCmp(format, "quake3") == 0) {
             game_object = Quake3_GameObject();
 
-        else
+        } else {
             Main_FatalError("ERROR: unknown format: '%s'\n", format);
+        }
     }
 
     const char *def_filename = ob_default_filename();
@@ -527,7 +565,9 @@ bool Build_Cool_Shit() {
     bool was_ok = game_object->Start(def_filename);
 
     // coerce FLTK to redraw the main window
-    for (int r_loop = 0; r_loop < 6; r_loop++) Fl::wait(0.06);
+    for (int r_loop = 0; r_loop < 6; r_loop++) {
+        Fl::wait(0.06);
+    }
 
     if (was_ok) {
         // run the scripts Scotty!
@@ -544,19 +584,19 @@ bool Build_Cool_Shit() {
 
         LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
     } else {
-		if (main_win) {
-			main_win->build_box->seed_disp->copy_label("Seed: -");
-			main_win->build_box->seed_disp->redraw();
-			main_win->build_box->name_disp->copy_label("");
-			main_win->build_box->name_disp->redraw();					
-		}
-	}
+        if (main_win) {
+            main_win->build_box->seed_disp->copy_label("Seed: -");
+            main_win->build_box->seed_disp->redraw();
+            main_win->build_box->name_disp->copy_label("");
+            main_win->build_box->name_disp->redraw();
+        }
+    }
 
-	if (main_win) {
-		main_win->build_box->Prog_Finish();
-		main_win->game_box->SetAbortButton(false);
-		main_win->Locked(false);
-	}
+    if (main_win) {
+        main_win->build_box->Prog_Finish();
+        main_win->game_box->SetAbortButton(false);
+        main_win->Locked(false);
+    }
 
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
@@ -605,11 +645,14 @@ int main(int argc, char **argv) {
 
     LogInit(logging_file);
 
-    if (ArgvFind('d', "debug") >= 0) debug_messages = true;
+    if (ArgvFind('d', "debug") >= 0) {
+        debug_messages = true;
+    }
 
     // accept -t and --terminal for backwards compatibility
-    if (ArgvFind('v', "verbose") >= 0 || ArgvFind('t', "terminal") >= 0)
+    if (ArgvFind('v', "verbose") >= 0 || ArgvFind('t', "terminal") >= 0) {
         LogEnableTerminal(true);
+    }
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
@@ -667,9 +710,11 @@ int main(int argc, char **argv) {
 
         // batch mode never reads/writes the normal config file.
         // but we can load settings from a explicitly specified file...
-        if (load_file)
-            if (!Cookie_Load(load_file))
+        if (load_file) {
+            if (!Cookie_Load(load_file)) {
                 Main_FatalError(_("No such config file: %s\n"), load_file);
+            }
+        }
 
         Cookie_ParseArguments();
 
@@ -715,9 +760,11 @@ int main(int argc, char **argv) {
         LogPrintf("Missing config file -- using defaults.\n\n");
     }
 
-    if (load_file)
-        if (!Cookie_Load(load_file))
+    if (load_file) {
+        if (!Cookie_Load(load_file)) {
             Main_FatalError(_("No such config file: %s\n"), load_file);
+        }
+    }
 
     Cookie_ParseArguments();
 
@@ -749,7 +796,9 @@ int main(int argc, char **argv) {
         for (;;) {
             Fl::wait(0.2);
 
-            if (main_action == MAIN_QUIT) break;
+            if (main_action == MAIN_QUIT) {
+                break;
+            }
 
             if (main_action == MAIN_BUILD) {
                 main_action = 0;

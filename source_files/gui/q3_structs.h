@@ -38,6 +38,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 // little-endian "IBSP"
+#include "sys_macro.h"
+#include "sys_type.h"
+
 #define IDBSPHEADER (('P' << 24) + ('S' << 16) + ('B' << 8) + 'I')
 
 #define BSP_VERSION 46

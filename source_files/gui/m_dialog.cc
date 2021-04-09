@@ -56,9 +56,13 @@ static void DialogShowAndRun(const char *message, const char *title,
     fl_font(FL_HELVETICA, FONT_SIZE);
     fl_measure(message, mesg_W, mesg_H);
 
-    if (mesg_W < kf_w(200)) mesg_W = kf_w(200);
+    if (mesg_W < kf_w(200)) {
+        mesg_W = kf_w(200);
+    }
 
-    if (mesg_H < ICON_H) mesg_H = ICON_H;
+    if (mesg_H < ICON_H) {
+        mesg_H = ICON_H;
+    }
 
     // add a little wiggle room
     mesg_W += kf_w(16);
@@ -67,7 +71,9 @@ static void DialogShowAndRun(const char *message, const char *title,
     int total_W = ICON_W + mesg_W + kf_w(30);
     int total_H = mesg_H + BTN_H + kf_h(30);
 
-    if (link_title) total_H += FONT_SIZE + kf_h(10);
+    if (link_title) {
+        total_H += FONT_SIZE + kf_h(10);
+    }
 
     // create window...
     Fl_Window *dialog = new Fl_Window(0, 0, total_W, total_H, title);
@@ -145,7 +151,9 @@ static void ParseHyperLink(char *buffer, unsigned int buf_len,
 
     char *pos = strstr(buffer, "<a ");
 
-    if (!pos) return;
+    if (!pos) {
+        return;
+    }
 
     // terminate the rest of the message here
     pos[0] = '\n';
@@ -157,8 +165,9 @@ static void ParseHyperLink(char *buffer, unsigned int buf_len,
 
     pos = strstr(pos, ">");
 
-    if (!pos)  // malformed : oh well
+    if (!pos) {  // malformed : oh well
         return;
+    }
 
     // terminate the URL here
     pos[0] = 0;
@@ -169,7 +178,9 @@ static void ParseHyperLink(char *buffer, unsigned int buf_len,
 
     pos = strstr(pos, "<");
 
-    if (pos) pos[0] = 0;
+    if (pos) {
+        pos[0] = 0;
+    }
 }
 
 void DLG_ShowError(const char *msg, ...) {
@@ -191,9 +202,10 @@ void DLG_ShowError(const char *msg, ...) {
     // handle error messages with a hyperlink at the end
     ParseHyperLink(buffer, sizeof(buffer), &link_title, &link_url);
 
-    if (!batch_mode)
+    if (!batch_mode) {
         DialogShowAndRun(buffer, _("OBSIDIAN - Error Message"), link_title,
                          link_url);
+    }
 }
 
 //----------------------------------------------------------------------
@@ -204,7 +216,9 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
     sprintf(kind_buf, "%s files\t*.%s", ext, ext);
 
     // uppercase the first word
-    for (char *p = kind_buf; *p && *p != ' '; p++) *p = toupper(*p);
+    for (char *p = kind_buf; *p && *p != ' '; p++) {
+        *p = toupper(*p);
+    }
 
     // save and restore the font height
     // (because FLTK's own browser get totally borked)
@@ -216,14 +230,19 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
     chooser.title(_("Select output file"));
     chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 
-    if (overwrite_warning)
+    if (overwrite_warning) {
         chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
+    }
 
     chooser.filter(kind_buf);
 
-    if (last_directory) chooser.directory(last_directory);
+    if (last_directory) {
+        chooser.directory(last_directory);
+    }
 
-    if (preset) chooser.preset_file(preset);
+    if (preset) {
+        chooser.preset_file(preset);
+    }
 
     int result = chooser.show();
 
@@ -263,7 +282,9 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
 
     FilenameGetPath(dir_name, sizeof(dir_name), src_name);
 
-    if (strlen(dir_name) > 0) last_directory = StringDup(dir_name);
+    if (strlen(dir_name) > 0) {
+        last_directory = StringDup(dir_name);
+    }
 
     // add extension if missing
     char *pos = (char *)fl_filename_ext(filename);
@@ -276,8 +297,9 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
         if (fp) {
             fclose(fp);
             if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
-                           Fl_Native_File_Chooser::file_exists_message))
+                           Fl_Native_File_Chooser::file_exists_message)) {
                 return NULL;  // cancelled
+            }
         }
     }
 
@@ -294,7 +316,9 @@ void DLG_EditSeed(void) {
     const char *user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
 
     // cancelled?
-    if (!user_buf) return;
+    if (!user_buf) {
+        return;
+    }
 
     std::string word = user_buf;
     try {
@@ -450,8 +474,11 @@ void UI_LogViewer::JumpEnd() {
 int UI_LogViewer::CountSelectedLines() const {
     int count = 0;
 
-    for (int i = 1; i <= browser->size(); i++)
-        if (browser->selected(i)) count++;
+    for (int i = 1; i <= browser->size(); i++) {
+        if (browser->selected(i)) {
+            count++;
+        }
+    }
 
     return count;
 }
@@ -460,10 +487,14 @@ char *UI_LogViewer::GetSelectedText() const {
     char *buf = StringDup("");
 
     for (int i = 1; i <= browser->size(); i++) {
-        if (!browser->selected(i)) continue;
+        if (!browser->selected(i)) {
+            continue;
+        }
 
         const char *line_text = browser->text(i);
-        if (!line_text) continue;
+        if (!line_text) {
+            continue;
+        }
 
         // append current line onto previous ones
 
@@ -503,7 +534,9 @@ void UI_LogViewer::WriteLogs(FILE *fp) {
     for (int n = 1; n <= browser->size(); n++) {
         const char *str = browser->text(n);
 
-        if (str) fprintf(fp, "%s\n", str);
+        if (str) {
+            fprintf(fp, "%s\n", str);
+        }
     }
 }
 
@@ -517,10 +550,11 @@ void UI_LogViewer::select_callback(Fl_Widget *w, void *data) {
     UI_LogViewer *that = (UI_LogViewer *)data;
 
     // require 2 or more lines to activate Copy button
-    if (that->CountSelectedLines() >= 2)
+    if (that->CountSelectedLines() >= 2) {
         that->copy_but->activate();
-    else
+    } else {
         that->copy_but->deactivate();
+    }
 }
 
 void UI_LogViewer::copy_callback(Fl_Widget *w, void *data) {
@@ -544,7 +578,9 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
     chooser.filter("Text files\t*.txt");
 
-    if (last_directory) chooser.directory(last_directory);
+    if (last_directory) {
+        chooser.directory(last_directory);
+    }
 
     switch (chooser.show()) {
         case -1:
@@ -565,7 +601,9 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 
     strcpy(filename, chooser.filename());
 
-    if (!HasExtension(filename)) strcat(filename, ".txt");
+    if (!HasExtension(filename)) {
+        strcat(filename, ".txt");
+    }
 
     FILE *fp = fopen(filename, "w");
 
@@ -594,7 +632,9 @@ void DLG_ViewLogs(void) {
     log_viewer->show();
 
     // run the dialog until the user closes it
-    while (!log_viewer->WantQuit()) Fl::wait();
+    while (!log_viewer->WantQuit()) {
+        Fl::wait();
+    }
 
     delete log_viewer;
 }

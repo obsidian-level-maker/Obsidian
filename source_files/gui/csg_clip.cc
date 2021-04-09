@@ -85,11 +85,17 @@ class clip_side_c {
     double Length() const { return ComputeDist(x1, y1, x2, y2); }
 
     bool TwoSided() const {
-        if (!snag->partner) return false;
+        if (!snag->partner) {
+            return false;
+        }
 
-        if (!snag->partner->region) return false;
+        if (!snag->partner->region) {
+            return false;
+        }
 
-        if (snag->partner->region->index == 0) return false;
+        if (snag->partner->region->index == 0) {
+            return false;
+        }
 
         return true;
     }
@@ -283,8 +289,12 @@ class clip_node_c {
           index(-1) {}
 
     ~clip_node_c() {
-        if (front) delete front;
-        if (back) delete back;
+        if (front) {
+            delete front;
+        }
+        if (back) {
+            delete back;
+        }
     }
 
     inline bool IsNode() const { return contents == CONTENT__NODE; }
@@ -294,8 +304,11 @@ class clip_node_c {
     inline bool HasFlat() const { return !flats.empty(); }
 
     bool HasSide() const {
-        for (unsigned int i = 0; i < sides.size(); i++)
-            if (!sides[i]->on_node) return true;
+        for (unsigned int i = 0; i < sides.size(); i++) {
+            if (!sides[i]->on_node) {
+                return true;
+            }
+        }
 
         return false;
     }
@@ -307,8 +320,9 @@ class clip_node_c {
     void NewSide(snag_c *S) { AddSide(new clip_side_c(S)); }
 
     void CopySides(clip_node_c *other) {
-        for (unsigned int i = 0; i < other->sides.size(); i++)
+        for (unsigned int i = 0; i < other->sides.size(); i++) {
             AddSide(other->sides[i]);
+        }
     }
 
     void MakeNode(const clip_partition_c *_part) {
@@ -338,10 +352,18 @@ class clip_node_c {
             double x2 = MAX(S->x1, S->x2);
             double y2 = MAX(S->y1, S->y2);
 
-            if (x1 < *lx) *lx = x1;
-            if (y1 < *ly) *ly = y1;
-            if (x2 > hx) hx = x2;
-            if (y2 > hy) hy = y2;
+            if (x1 < *lx) {
+                *lx = x1;
+            }
+            if (y1 < *ly) {
+                *ly = y1;
+            }
+            if (x2 > hx) {
+                hx = x2;
+            }
+            if (y2 > hy) {
+                hy = y2;
+            }
         }
 
         *w = (*lx > hx) ? 0 : (hx - *lx);
@@ -351,8 +373,9 @@ class clip_node_c {
     void AddFlat(clip_flat_c *F) { flats.push_back(F); }
 
     void CopyFlats(clip_node_c *other) {
-        for (unsigned int i = 0; i < other->flats.size(); i++)
+        for (unsigned int i = 0; i < other->flats.size(); i++) {
             AddFlat(other->flats[i]);
+        }
     }
 
     void CreateFlats() {
@@ -381,7 +404,9 @@ static void SaveBrushes() {
 
 static void RestoreBrushes() {
     // free our modified ones
-    for (unsigned int i = 0; i < all_brushes.size(); i++) delete all_brushes[i];
+    for (unsigned int i = 0; i < all_brushes.size(); i++) {
+        delete all_brushes[i];
+    }
 
     all_brushes.clear();
 
@@ -441,8 +466,9 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
     // can skip this vertex altogether.
 
     if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) <
-        4.0 * CLIP_EPSILON)
+        4.0 * CLIP_EPSILON) {
         return;
+    }
 
     double pdx = kv->x - pv->x;
     double pdy = kv->y - pv->y;
@@ -457,21 +483,37 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
     int nx_side = 0, ny_side = 0;
 
     if (fabs(pdx) * factor > fabs(pdy)) {
-        if (pv->x < kv->x) px_side = -1;
-        if (pv->x > kv->x) px_side = +1;
+        if (pv->x < kv->x) {
+            px_side = -1;
+        }
+        if (pv->x > kv->x) {
+            px_side = +1;
+        }
     }
     if (fabs(pdy) * factor > fabs(pdx)) {
-        if (pv->y < kv->y) py_side = -1;
-        if (pv->y > kv->y) py_side = +1;
+        if (pv->y < kv->y) {
+            py_side = -1;
+        }
+        if (pv->y > kv->y) {
+            py_side = +1;
+        }
     }
 
     if (fabs(ndx) * factor > fabs(ndy)) {
-        if (nv->x < kv->x) nx_side = -1;
-        if (nv->x > kv->x) nx_side = +1;
+        if (nv->x < kv->x) {
+            nx_side = -1;
+        }
+        if (nv->x > kv->x) {
+            nx_side = +1;
+        }
     }
     if (fabs(ndy) * factor > fabs(ndx)) {
-        if (nv->y < kv->y) ny_side = -1;
-        if (nv->y > kv->y) ny_side = +1;
+        if (nv->y < kv->y) {
+            ny_side = -1;
+        }
+        if (nv->y > kv->y) {
+            ny_side = +1;
+        }
     }
 
     // NOTE: these normals face OUTWARDS (anti-normals?)
@@ -487,8 +529,12 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
 
     double ix, iy;
 
-    if (x_side) ix = kv->x - x_side * pad;
-    if (y_side) iy = kv->y - y_side * pad;
+    if (x_side) {
+        ix = kv->x - x_side * pad;
+    }
+    if (y_side) {
+        iy = kv->y - y_side * pad;
+    }
 
     if (x_side && y_side) {
         // When both vertices are in the same quadrant,
@@ -575,9 +621,13 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b) {
     for (unsigned int i = 0; i < saved_all_brushes.size(); i++) {
         csg_brush_c *P = saved_all_brushes[i];
 
-        if (P->bkind != BKIND_Solid) continue;
+        if (P->bkind != BKIND_Solid) {
+            continue;
+        }
 
-        if (P->bflags & BFLAG_NoClip) continue;
+        if (P->bflags & BFLAG_NoClip) {
+            continue;
+        }
 
         // clone it, except vertices or slopes
         csg_brush_c *P2 = new csg_brush_c(P);
@@ -617,7 +667,9 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b) {
 //------------------------------------------------------------------------
 
 static bool ClipSameGaps(region_c *R, region_c *N) {
-    if (R->gaps.size() != N->gaps.size()) return false;
+    if (R->gaps.size() != N->gaps.size()) {
+        return false;
+    }
 
     for (unsigned int i = 0; i < R->gaps.size(); i++) {
         gap_c *A = R->gaps[i];
@@ -625,15 +677,23 @@ static bool ClipSameGaps(region_c *R, region_c *N) {
 
         if (A->bottom != B->bottom) {
             // slopes are deal breakers
-            if (A->bottom->t.slope) return false;
+            if (A->bottom->t.slope) {
+                return false;
+            }
 
-            if (fabs(A->bottom->t.z - B->bottom->t.z) > 0.01) return false;
+            if (fabs(A->bottom->t.z - B->bottom->t.z) > 0.01) {
+                return false;
+            }
         }
 
         if (A->top != B->top) {
-            if (A->top->b.slope) return false;
+            if (A->top->b.slope) {
+                return false;
+            }
 
-            if (fabs(A->top->b.z - B->top->b.z) > 0.01) return false;
+            if (fabs(A->top->b.z - B->top->b.z) > 0.01) {
+                return false;
+            }
         }
     }
 
@@ -647,14 +707,18 @@ static int SpreadClipEquiv() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index == 0) continue;
+        if (R->index == 0) {
+            continue;
+        }
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             snag_c *S = R->snags[k];
 
             region_c *N = S->partner ? S->partner->region : NULL;
 
-            if (!N || N->index == 0) continue;
+            if (!N || N->index == 0) {
+                continue;
+            }
 
             // use '>' so that we only check the relationship once
             if (N->index > R->index && ClipSameGaps(R, N)) {
@@ -674,10 +738,11 @@ static void CoalesceClipRegions() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->gaps.empty())
+        if (R->gaps.empty()) {
             R->index = 0;  // all solid regions become ZERO
-        else
+        } else {
             R->index = 1 + (int)i;
+        }
     }
 
     while (SpreadClipEquiv() > 0) {
@@ -770,12 +835,16 @@ static clip_side_c *FindPartition_XY(clip_group_c &group) {
     for (unsigned int i = 0; i < group.sides.size(); i++) {
         clip_side_c *S = group.sides[i];
 
-        if (S->on_node) continue;
+        if (S->on_node) {
+            continue;
+        }
 
         // MUST choose 2-sided snag BEFORE any 1-sided snag
 
         if (!S->TwoSided()) {
-            if (!poss1 || (S->x1 == S->x2) || (S->y1 == S->y2)) poss1 = S;
+            if (!poss1 || (S->x1 == S->x2) || (S->y1 == S->y2)) {
+                poss1 = S;
+            }
 
             continue;
         }
@@ -807,11 +876,19 @@ static clip_side_c *FindPartition_XY(clip_group_c &group) {
         return ((hi_x - lo_x) > (hi_y - lo_y)) ? best_V : best_H;
     }
 
-    if (best_V) return best_V;
-    if (best_H) return best_H;
+    if (best_V) {
+        return best_V;
+    }
+    if (best_H) {
+        return best_H;
+    }
 
-    if (poss2) return poss2;
-    if (poss1) return poss1;
+    if (poss2) {
+        return poss2;
+    }
+    if (poss1) {
+        return poss1;
+    }
 
     return NULL;
 }
@@ -865,10 +942,11 @@ static clip_node_c *PartitionGroup(clip_group_c &group) {
         // the front should never be empty
         node->front = PartitionGroup(front);
 
-        if (back.sides.empty())
+        if (back.sides.empty()) {
             node->back = new clip_node_c(CONTENTS_SOLID);
-        else
+        } else {
             node->back = PartitionGroup(back);
+        }
 
         // input group has been consumed now
 
@@ -885,7 +963,9 @@ static clip_node_c *PartitionGroup(clip_group_c &group) {
 //------------------------------------------------------------------------
 
 static void AssignIndexes(clip_node_c *node, int *cur_index) {
-    if (!node->IsNode()) return;
+    if (!node->IsNode()) {
+        return;
+    }
 
     node->index = *cur_index;
 
@@ -915,7 +995,9 @@ static void DoWriteClip(dclipnode_t &raw_clip, bool flip) {
 }
 
 static void WriteClipNodes(clip_node_c *node) {
-    if (!node->IsNode()) return;
+    if (!node->IsNode()) {
+        return;
+    }
 
     dclipnode_t raw_clip;
 
@@ -934,15 +1016,17 @@ static void WriteClipNodes(clip_node_c *node) {
 
     node->CheckValid();
 
-    if (node->front->IsNode())
+    if (node->front->IsNode()) {
         raw_clip.children[0] = (u16_t)node->front->index;
-    else
+    } else {
         raw_clip.children[0] = (u16_t)node->front->contents;
+    }
 
-    if (node->back->IsNode())
+    if (node->back->IsNode()) {
         raw_clip.children[1] = (u16_t)node->back->index;
-    else
+    } else {
         raw_clip.children[1] = (u16_t)node->back->contents;
+    }
 
     DoWriteClip(raw_clip, flipped);
 
@@ -956,14 +1040,18 @@ static void CreateClipSides(clip_group_c &group) {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index == 0) continue;
+        if (R->index == 0) {
+            continue;
+        }
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             snag_c *S = R->snags[k];
 
             region_c *N = S->partner ? S->partner->region : NULL;
 
-            if (N && N->index == R->index) continue;
+            if (N && N->index == R->index) {
+                continue;
+            }
 
             clip_side_c *CS = new clip_side_c(S);
 
@@ -1060,29 +1148,40 @@ static void Q1_ClipMapModel(quake_mapmodel_c *model, int hull, double pad_w,
 void Q1_ClippingHull(int hull) {
     int clip_hulls = 2;
 
-    if (qk_sub_format == SUBFMT_HalfLife) clip_hulls = 3;
-    if (qk_sub_format == SUBFMT_Hexen2) clip_hulls = 5;
+    if (qk_sub_format == SUBFMT_HalfLife) {
+        clip_hulls = 3;
+    }
+    if (qk_sub_format == SUBFMT_Hexen2) {
+        clip_hulls = 5;
+    }
 
     SYS_ASSERT(hull >= 1);
 
-    if (hull > clip_hulls) return;
+    if (hull > clip_hulls) {
+        return;
+    }
 
-    if (main_action >= MAIN_CANCEL) return;
+    if (main_action >= MAIN_CANCEL) {
+        return;
+    }
 
     LogPrintf("\nClipping Hull %d...\n", hull);
 
-    if (main_win) main_win->build_box->Prog_Step("Hull");
+    if (main_win) {
+        main_win->build_box->Prog_Step("Hull");
+    }
 
     ///???  FreeAll();
 
     double *pads;
 
-    if (qk_sub_format == SUBFMT_Hexen2)
+    if (qk_sub_format == SUBFMT_Hexen2) {
         pads = H2_hull_sizes[hull - 1];
-    else if (qk_sub_format == SUBFMT_HalfLife)
+    } else if (qk_sub_format == SUBFMT_HalfLife) {
         pads = HL_hull_sizes[hull - 1];
-    else
+    } else {
         pads = Q1_hull_sizes[hull - 1];
+    }
 
     // first clip the world, then the map-models
 
@@ -1092,9 +1191,10 @@ void Q1_ClippingHull(int hull) {
         Q1_ClipMapModel(qk_all_mapmodels[m], hull, pads[0], pads[1], pads[2]);
     }
 
-    if (q1_total_clip >= MAX_MAP_CLIPNODES)
+    if (q1_total_clip >= MAX_MAP_CLIPNODES) {
         Main_FatalError("Quake build failure: exceeded limit of %d CLIPNODES\n",
                         MAX_MAP_CLIPNODES);
+    }
 }
 
 //--- editor settings ---

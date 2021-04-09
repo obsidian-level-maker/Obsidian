@@ -58,13 +58,17 @@ void ArgvInit(int argc, const char **argv) {
 #endif
 
         // support GNU-style long options
-        if (cur[0] == '-' && cur[1] == '-' && isalnum(cur[2])) cur++;
+        if (cur[0] == '-' && cur[1] == '-' && isalnum(cur[2])) {
+            cur++;
+        }
 
         arg_list[dest] = strdup(cur);
 
         // support DOS-style short options
-        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') && cur[2] == 0)
+        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') &&
+            cur[2] == 0) {
             *(char *)(arg_list[dest]) = '-';
+        }
 
         dest++;
     }
@@ -73,35 +77,50 @@ void ArgvInit(int argc, const char **argv) {
 }
 
 void ArgvClose(void) {
-    while (arg_count-- > 0) free((void *)arg_list[arg_count]);
+    while (arg_count-- > 0) {
+        free((void *)arg_list[arg_count]);
+    }
 
-    if (arg_list) delete[] arg_list;
+    if (arg_list) {
+        delete[] arg_list;
+    }
 }
 
 int ArgvFind(char short_name, const char *long_name, int *num_params) {
     SYS_ASSERT(short_name || long_name);
 
-    if (num_params) *num_params = 0;
+    if (num_params) {
+        *num_params = 0;
+    }
 
     int p = 0;
 
     for (; p < arg_count; p++) {
-        if (!ArgvIsOption(p)) continue;
+        if (!ArgvIsOption(p)) {
+            continue;
+        }
 
         const char *str = arg_list[p];
 
-        if (short_name && (short_name == tolower(str[1])) && str[2] == 0) break;
+        if (short_name && (short_name == tolower(str[1])) && str[2] == 0) {
+            break;
+        }
 
-        if (long_name && (StringCaseCmp(long_name, str + 1) == 0)) break;
+        if (long_name && (StringCaseCmp(long_name, str + 1) == 0)) {
+            break;
+        }
     }
 
-    if (p >= arg_count)  // NOT FOUND
+    if (p >= arg_count) {  // NOT FOUND
         return -1;
+    }
 
     if (num_params) {
         int q = p + 1;
 
-        while ((q < arg_count) && !ArgvIsOption(q)) q++;
+        while ((q < arg_count) && !ArgvIsOption(q)) {
+            q++;
+        }
 
         *num_params = q - p - 1;
     }
