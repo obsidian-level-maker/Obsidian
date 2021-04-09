@@ -5,11 +5,15 @@ add_subdirectory(source_files/acc_src)
 add_subdirectory(source_files/ajpoly_src)
 add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
+add_subdirectory(source_files/slump_src)
+add_subdirectory(source_files/fltk_src)
+add_subdirectory(source_files/zlib_src)
 
 project(obsidian LANGUAGES CXX VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
+set(CMAKE_CXX_CLANG_TIDY clang-tidy --config=)
 
 add_executable(obsidian 
     source_files/gui/csg_bsp.cc
@@ -128,21 +132,22 @@ target_include_directories(obsidian PRIVATE source_files/physfs_src)
 target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
+target_include_directories(obsidian PRIVATE source_files/slump_src)
+target_include_directories(obsidian PRIVATE source_files/fltk_src)
+target_include_directories(obsidian PRIVATE source_files/zlib_src)    
 
-if(UNIX)
-    target_compile_definitions(obsidian PRIVATE UNIX)
-endif()
-
-find_package(FLTK REQUIRED)
-#find_package(Lua REQUIRED)
+target_compile_definitions(obsidian PRIVATE UNIX)
 
 target_link_libraries(obsidian PRIVATE 
-    ${FLTK_LIBRARIES} 
-#    ${LUA_LIBRARIES}
+    fltk
+    fltk_images
+    zlib
     z 
     obsidian_lua
     obsidian_physfs 
     obsidian_acc 
     obsidian_ajpoly 
     obsidian_zdbsp
+    obsidian_slump
 )
+

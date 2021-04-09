@@ -175,13 +175,17 @@ class doom_sector_c {
     void AddExtrafloor(extrafloor_c *EF) { exfloors.push_back(EF); }
 
     bool SameExtraFloors(const doom_sector_c *other) const {
-        if (exfloors.size() != other->exfloors.size()) return false;
+        if (exfloors.size() != other->exfloors.size()) {
+            return false;
+        }
 
         for (unsigned int i = 0; i < exfloors.size(); i++) {
             extrafloor_c *A = exfloors[i];
             extrafloor_c *B = other->exfloors[i];
 
-            if (A == B || A->Match(B)) continue;
+            if (A == B || A->Match(B)) {
+                continue;
+            }
 
             return false;
         }
@@ -254,8 +258,11 @@ class doom_vertex_c {
     ~doom_vertex_c() {}
 
     int getNumLines() const {
-        for (int i = 0; i < 4; i++)
-            if (!lines[i]) return i;
+        for (int i = 0; i < 4; i++) {
+            if (!lines[i]) {
+                return i;
+            }
+        }
 
         return 4;
     }
@@ -263,28 +270,36 @@ class doom_vertex_c {
     void Kill() {
         rounded_half = false;
 
-        for (int i = 0; i < 4; i++) lines[i] = NULL;
+        for (int i = 0; i < 4; i++) {
+            lines[i] = NULL;
+        }
     }
 
     int FindLine(const doom_linedef_c *L) const {
-        for (int i = 0; i < 4; i++)
-            if (lines[i] == L) return i;
+        for (int i = 0; i < 4; i++) {
+            if (lines[i] == L) {
+                return i;
+            }
+        }
 
         return -1;
     }
 
     void AddLine(doom_linedef_c *L) {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) {
             if (!lines[i]) {
                 lines[i] = L;
                 return;
             }
+        }
     }
 
     void RemoveLine(doom_linedef_c *L) {
         int i = FindLine(L);
 
-        if (i < 0) return;
+        if (i < 0) {
+            return;
+        }
 
         for (; i < 3; i++) {
             lines[i] = lines[i + 1];
@@ -294,21 +309,26 @@ class doom_vertex_c {
     }
 
     void ReplaceLine(doom_linedef_c *old_L, doom_linedef_c *new_L) {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) {
             if (lines[i] == old_L) {
                 lines[i] = new_L;
                 return;
             }
+        }
     }
 
     doom_linedef_c *SecondLine(const doom_linedef_c *L) const {
-        if (lines[2])  // three or more lines?
+        if (lines[2]) {  // three or more lines?
             return NULL;
+        }
 
-        if (!lines[1])  // only one line?
+        if (!lines[1]) {  // only one line?
             return NULL;
+        }
 
-        if (lines[0] == L) return lines[1];
+        if (lines[0] == L) {
+            return lines[1];
+        }
 
         SYS_ASSERT(lines[1] == L);
         return lines[0];
@@ -411,9 +431,13 @@ class doom_linedef_c {
           sim_prev(NULL),
           sim_next(NULL) {
         // NOTE: be sure to add these sidedefs into dm_sidedefs!
-        if (other.front) front = new doom_sidedef_c(*other.front);
+        if (other.front) {
+            front = new doom_sidedef_c(*other.front);
+        }
 
-        if (other.back) back = new doom_sidedef_c(*other.back);
+        if (other.back) {
+            back = new doom_sidedef_c(*other.back);
+        }
     }
 
     void CalcLength() {
@@ -421,7 +445,9 @@ class doom_linedef_c {
     }
 
     inline doom_vertex_c *OtherVert(const doom_vertex_c *V) const {
-        if (start == V) return end;
+        if (start == V) {
+            return end;
+        }
 
         SYS_ASSERT(end == V);
         return start;
@@ -431,9 +457,13 @@ class doom_linedef_c {
 
     bool TouchesCoord(int x, int y) const {
         if (isValid()) {
-            if (start->x == x && start->y == y) return true;
+            if (start->x == x && start->y == y) {
+                return true;
+            }
 
-            if (end->x == x && end->y == y) return true;
+            if (end->x == x && end->y == y) {
+                return true;
+            }
         }
 
         return false;
@@ -453,50 +483,73 @@ class doom_linedef_c {
     }
 
     inline bool ShouldFlip() const {
-        if (!front) return true;
+        if (!front) {
+            return true;
+        }
 
-        if (!back) return false;
+        if (!back) {
+            return false;
+        }
 
         doom_sector_c *F = front->sector;
         doom_sector_c *B = back->sector;
 
         // TODO: a way to ensure a certain orientation (from Lua)
 
-        if (F->f_h != B->f_h) return (F->f_h > B->f_h);
-        if (F->c_h != B->c_h) return (F->c_h < B->c_h);
+        if (F->f_h != B->f_h) {
+            return (F->f_h > B->f_h);
+        }
+        if (F->c_h != B->c_h) {
+            return (F->c_h < B->c_h);
+        }
 
         return false;
     }
 
     bool hasRail() const {
-        if (front && front->mid[0] != '-') return true;
-        if (back && back->mid[0] != '-') return true;
+        if (front && front->mid[0] != '-') {
+            return true;
+        }
+        if (back && back->mid[0] != '-') {
+            return true;
+        }
 
         return false;
     }
 
     inline bool CanMergeSides(const doom_sidedef_c *A,
                               const doom_sidedef_c *B) const {
-        if (!A || !B) return (!A && !B);
+        if (!A || !B) {
+            return (!A && !B);
+        }
 
-        if (A->sector != B->sector) return false;
+        if (A->sector != B->sector) {
+            return false;
+        }
 
         // X offsets not done here
 
         if (A->y_offset != B->y_offset && A->y_offset != IVAL_NONE &&
-            B->y_offset != IVAL_NONE)
+            B->y_offset != IVAL_NONE) {
             return false;
+        }
 
         return A->SameTex(B);
     }
 
     bool ColinearWith(const doom_linedef_c *B) const {
         // never merge a pure horizontal/vertical with a diagonal
-        if (start->x == end->x) return B->start->x == B->end->x;
+        if (start->x == end->x) {
+            return B->start->x == B->end->x;
+        }
 
-        if (start->y == end->y) return B->start->y == B->end->y;
+        if (start->y == end->y) {
+            return B->start->y == B->end->y;
+        }
 
-        if (B->start->x == B->end->x || B->start->y == B->end->y) return false;
+        if (B->start->x == B->end->x || B->start->y == B->end->y) {
+            return false;
+        }
 
         float adx = end->x - start->x;
         float ady = end->y - start->y;
@@ -526,7 +579,9 @@ class doom_linedef_c {
    private:
     bool TryMerge3(doom_linedef_c *B) {
         // meh, this should not be possible (but it CAN happen)
-        if (start == B->end) return false;
+        if (start == B->end) {
+            return false;
+        }
 
         // test sidedefs
         doom_sidedef_c *B_front = B->front;
@@ -535,8 +590,12 @@ class doom_linedef_c {
         int A_len = I_ROUND(length);
         int B_len = I_ROUND(B->length);
 
-        if (!CanMergeSides(front, B_front)) return false;
-        if (!CanMergeSides(back, B_back)) return false;
+        if (!CanMergeSides(front, B_front)) {
+            return false;
+        }
+        if (!CanMergeSides(back, B_back)) {
+            return false;
+        }
 
         if (front) {
             int ax = front->x_offset;
@@ -550,7 +609,9 @@ class doom_linedef_c {
                 int diff = (ax + A_len) - bx;
 
                 // the < 4 accounts for precision loss after multiple merges
-                if (abs(diff) >= 4) return false;
+                if (abs(diff) >= 4) {
+                    return false;
+                }
             }
         }
 
@@ -565,13 +626,17 @@ class doom_linedef_c {
             } else {
                 int diff = (bx + B_len) - ax;
 
-                if (abs(diff) >= 4) return false;
+                if (abs(diff) >= 4) {
+                    return false;
+                }
             }
         }
 
         /* CAN MERGE THEM */
 
-        if (back && back->x_offset != IVAL_NONE) back->x_offset -= B_len;
+        if (back && back->x_offset != IVAL_NONE) {
+            back->x_offset -= B_len;
+        }
 
         end->Kill();
 
@@ -587,11 +652,15 @@ class doom_linedef_c {
     }
 
     bool TryMerge2(doom_linedef_c *B) {
-        if (end != B->end) return TryMerge3(B);
+        if (end != B->end) {
+            return TryMerge3(B);
+        }
 
         B->Flip();
 
-        if (TryMerge3(B)) return true;  // B has been killed
+        if (TryMerge3(B)) {
+            return true;  // B has been killed
+        }
 
         B->Flip();
 
@@ -600,17 +669,27 @@ class doom_linedef_c {
 
    public:
     bool TryMerge(doom_linedef_c *B) {
-        if (!ColinearWith(B)) return false;
+        if (!ColinearWith(B)) {
+            return false;
+        }
 
         // must have matching special, tag and flags
-        if (B->special != special) return false;
-        if (B->tag != tag) return false;
-        if (B->flags != flags) return false;
+        if (B->special != special) {
+            return false;
+        }
+        if (B->tag != tag) {
+            return false;
+        }
+        if (B->flags != flags) {
+            return false;
+        }
 
         // this flip malarkey is to ensure that B's start == A's end,
         // which greatly simplifies the offset tests.
 
-        if (!(start == B->start || start == B->end)) return TryMerge2(B);
+        if (!(start == B->start || start == B->end)) {
+            return TryMerge2(B);
+        }
 
         Flip();
 
@@ -626,14 +705,19 @@ class doom_linedef_c {
     bool isHoriz() const { return start->y == end->y; }
 
     bool isFrontSimilar(const doom_linedef_c *P) const {
-        if (!back && !P->back)
+        if (!back && !P->back) {
             return (strcmp(front->mid.c_str(), P->front->mid.c_str()) == 0);
+        }
 
-        if (back && P->back) return front->SameTex(P->front);
+        if (back && P->back) {
+            return front->SameTex(P->front);
+        }
 
         const doom_linedef_c *L = this;
 
-        if (back) std::swap(L, P);
+        if (back) {
+            std::swap(L, P);
+        }
 
         // now L is single sided and P is double sided.
 
@@ -803,7 +887,9 @@ static void DM_LightInSector(doom_sector_c *S, region_c *R,
     if (S->special) {
         int delta = c_face->getInt("fx_delta");
 
-        if (delta == 0) delta = f_face->getInt("fx_delta");
+        if (delta == 0) {
+            delta = f_face->getInt("fx_delta");
+        }
 
         if (delta > 0) {
             S->light2 = S->light - delta;
@@ -846,9 +932,13 @@ static void DM_MakeSector(region_c *R) {
 
     // when delta-ing up the floor, limit it to the ceiling
     // (this can be important in outdoor rooms)
-    if (f_delta > (fabs(c_delta) + 7) && S->f_h > S->c_h) S->f_h = S->c_h;
+    if (f_delta > (fabs(c_delta) + 7) && S->f_h > S->c_h) {
+        S->f_h = S->c_h;
+    }
 
-    if (S->c_h < S->f_h) S->c_h = S->f_h;
+    if (S->c_h < S->f_h) {
+        S->c_h = S->f_h;
+    }
 
     S->f_tex = f_face->getStr("tex", dummy_plane_tex.c_str());
     S->c_tex = c_face->getStr("tex", dummy_plane_tex.c_str());
@@ -910,14 +1000,18 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx) {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index != sec_idx) continue;
+        if (R->index != sec_idx) {
+            continue;
+        }
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             snag_c *S = R->snags[k];
 
             region_c *N = S->partner ? S->partner->region : NULL;
 
-            if (!N || N->index < 0) continue;
+            if (!N || N->index < 0) {
+                continue;
+            }
 
             // require partner in a different sector
 
@@ -925,9 +1019,13 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx) {
 
             SYS_ASSERT(!D2->isUnused());
 
-            if (D2 == D1) continue;
+            if (D2 == D1) {
+                continue;
+            }
 
-            if (D2->f_h >= D1->f_h) continue;
+            if (D2->f_h >= D1->f_h) {
+                continue;
+            }
 
             if (got_floor != IVAL_NONE && D2->f_h != got_floor) {
                 // Failed : two neighbors at different heights
@@ -956,7 +1054,9 @@ static void DM_GrabNeighborFloors() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index < 0) continue;
+        if (R->index < 0) {
+            continue;
+        }
 
         doom_sector_c *D1 = dm_sectors[R->index];
 
@@ -974,7 +1074,9 @@ static int DM_CoalescePass() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index < 0) continue;
+        if (R->index < 0) {
+            continue;
+        }
 
         doom_sector_c *D1 = dm_sectors[R->index];
 
@@ -983,10 +1085,14 @@ static int DM_CoalescePass() {
 
             region_c *N = S->partner ? S->partner->region : NULL;
 
-            if (!N || N->index < 0) continue;
+            if (!N || N->index < 0) {
+                continue;
+            }
 
             // only check the relationship once
-            if (N->index <= R->index) continue;
+            if (N->index <= R->index) {
+                continue;
+            }
 
             doom_sector_c *D2 = dm_sectors[N->index];
 
@@ -1040,10 +1146,11 @@ static doom_vertex_c *DM_MakeVertex(int x, int y) {
 static int NaturalXOffset(doom_linedef_c *L, int side) {
     double along;
 
-    if (side == 0)
+    if (side == 0) {
         along = AlongDist(0, 0, L->start->x, L->start->y, L->end->x, L->end->y);
-    else
+    } else {
         along = AlongDist(0, 0, L->end->x, L->end->y, L->start->x, L->start->y);
+    }
 
     return I_ROUND(-along);
 }
@@ -1059,10 +1166,11 @@ static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox) {
 }
 
 static int NormalizeYOffset(int oy) {
-    if (oy >= 256)
+    if (oy >= 256) {
         oy &= 255;
-    else if (oy < -256)
+    } else if (oy < -256) {
         oy = -(-oy & 255);
+    }
 
     return oy;
 }
@@ -1071,7 +1179,9 @@ static doom_sidedef_c *DM_MakeSidedef(doom_linedef_c *L, doom_sector_c *sec,
                                       doom_sector_c *back, snag_c *snag,
                                       snag_c *other, brush_vert_c *rail,
                                       bool unpeg_L, bool unpeg_U) {
-    if (!sec) return NULL;
+    if (!sec) {
+        return NULL;
+    }
 
     doom_sidedef_c *SD = new doom_sidedef_c;
 
@@ -1106,9 +1216,13 @@ static doom_sidedef_c *DM_MakeSidedef(doom_linedef_c *L, doom_sector_c *sec,
             int ox = lower->face.getInt("u1", IVAL_NONE);
             int oy = lower->face.getInt("v1", IVAL_NONE);
 
-            if (ox != IVAL_NONE) SD->x_offset = CalcXOffset(snag, lower, ox);
+            if (ox != IVAL_NONE) {
+                SD->x_offset = CalcXOffset(snag, lower, ox);
+            }
 
-            if (oy != IVAL_NONE) SD->y_offset = oy;
+            if (oy != IVAL_NONE) {
+                SD->y_offset = oy;
+            }
         }
     } else {
         // Two Sided Line
@@ -1163,23 +1277,29 @@ static doom_sidedef_c *DM_MakeSidedef(doom_linedef_c *L, doom_sector_c *sec,
             unpeg_L = false;
         }
 
-        if (r_ox != IVAL_NONE)
+        if (r_ox != IVAL_NONE) {
             SD->x_offset = CalcXOffset(snag, rail, r_ox);
-        else if (l_ox != IVAL_NONE)
+        } else if (l_ox != IVAL_NONE) {
             SD->x_offset = CalcXOffset(snag, lower, l_ox);
-        else if (u_ox != IVAL_NONE)
+        } else if (u_ox != IVAL_NONE) {
             SD->x_offset = CalcXOffset(snag, upper, u_ox);
+        }
 
-        if (r_oy != IVAL_NONE)
+        if (r_oy != IVAL_NONE) {
             SD->y_offset = r_oy;
-        else if (l_oy != IVAL_NONE)
+        } else if (l_oy != IVAL_NONE) {
             SD->y_offset = l_oy;
-        else if (u_oy != IVAL_NONE)
+        } else if (u_oy != IVAL_NONE) {
             SD->y_offset = u_oy;
+        }
 
         // get textures, but fallback to something safe
-        if (!lower) lower = l_brush->verts[0];
-        if (!upper) upper = u_brush->verts[0];
+        if (!lower) {
+            lower = l_brush->verts[0];
+        }
+        if (!upper) {
+            upper = u_brush->verts[0];
+        }
 
         SD->lower = lower->face.getStr("tex", dummy_tex);
         SD->upper = upper->face.getStr("tex", dummy_tex);
@@ -1193,27 +1313,39 @@ static doom_sidedef_c *DM_MakeSidedef(doom_linedef_c *L, doom_sector_c *sec,
 static csg_property_set_c *DM_FindTrigger(snag_c *S, doom_sector_c *front,
                                           doom_sector_c *back) {
     // triggers require a two-sided line
-    if (!front || !back) return NULL;
+    if (!front || !back) {
+        return NULL;
+    }
 
     float f_max = MAX(front->f_h, back->f_h) + 4;
     float c_min = MIN(front->c_h, back->c_h) - 4;
 
-    if (f_max >= c_min) return NULL;
+    if (f_max >= c_min) {
+        return NULL;
+    }
 
     for (int side = 0; side < 2; side++) {
         snag_c *test_S = (side == 0) ? S->partner : S;
 
-        if (!test_S) continue;
+        if (!test_S) {
+            continue;
+        }
 
         for (unsigned int k = 0; k < test_S->sides.size(); k++) {
             brush_vert_c *V = test_S->sides[k];
 
-            if (V->parent->bkind != BKIND_Trigger) continue;
+            if (V->parent->bkind != BKIND_Trigger) {
+                continue;
+            }
 
             // is the trigger in lala land?
-            if (V->parent->b.z > c_min || V->parent->t.z < f_max) continue;
+            if (V->parent->b.z > c_min || V->parent->t.z < f_max) {
+                continue;
+            }
 
-            if (!V->face.getStr("special")) continue;
+            if (!V->face.getStr("special")) {
+                continue;
+            }
 
             return &V->face;  // found it
         }
@@ -1237,33 +1369,40 @@ static csg_property_set_c *DM_FindSpecial(snag_c *S, region_c *R1,
         // try partner first
         snag_c *test_S = (side == 0) ? S->partner : S;
 
-        if (!test_S) continue;
+        if (!test_S) {
+            continue;
+        }
 
         if (pass < 2) {
             // region to test is one _behind_ the snag
             region_c *test_R = (side == 0) ? R1 : R2;
 
-            if (!test_R || test_R->gaps.empty()) continue;
+            if (!test_R || test_R->gaps.empty()) {
+                continue;
+            }
 
             V = test_S->FindBrushVert(test_R->gaps.front()->bottom);
 
             if (V && V->face.getStr("special") &&
-                V->parent->bkind != BKIND_Trigger)
+                V->parent->bkind != BKIND_Trigger) {
                 return &V->face;
+            }
 
             V = test_S->FindBrushVert(test_R->gaps.back()->top);
 
             if (V && V->face.getStr("special") &&
-                V->parent->bkind != BKIND_Trigger)
+                V->parent->bkind != BKIND_Trigger) {
                 return &V->face;
+            }
         } else {
             // check every brush_vert in the snag
             for (unsigned int i = 0; i < test_S->sides.size(); i++) {
                 V = test_S->sides[i];
 
                 if (V && V->face.getStr("special") &&
-                    V->parent->bkind != BKIND_Trigger)
+                    V->parent->bkind != BKIND_Trigger) {
                     return &V->face;
+                }
             }
         }
     }
@@ -1273,19 +1412,29 @@ static csg_property_set_c *DM_FindSpecial(snag_c *S, region_c *R1,
 
 static brush_vert_c *DM_FindRail(const snag_c *S, const region_c *R,
                                  const region_c *N) {
-    if (!S) return NULL;
+    if (!S) {
+        return NULL;
+    }
 
     // railings require a two-sided line
-    if (!R || !N || !S->partner) return NULL;
+    if (!R || !N || !S->partner) {
+        return NULL;
+    }
 
-    if (R->gaps.size() == 0 || N->gaps.size() == 0) return NULL;
+    if (R->gaps.size() == 0 || N->gaps.size() == 0) {
+        return NULL;
+    }
 
     for (unsigned int k = 0; k < S->sides.size(); k++) {
         brush_vert_c *V = S->sides[k];
 
-        if (V->parent->bkind != BKIND_Rail) continue;
+        if (V->parent->bkind != BKIND_Rail) {
+            continue;
+        }
 
-        if (V->face.getStr("tex", NULL)) return V;  // found it!
+        if (V->face.getStr("tex", NULL)) {
+            return V;  // found it!
+        }
     }
 
     return NULL;
@@ -1294,7 +1443,9 @@ static brush_vert_c *DM_FindRail(const snag_c *S, const region_c *R,
 static void DM_DeterminePegging(doom_linedef_c *L, region_c *front,
                                 region_c *back, bool has_rail) {
     // sanity check
-    if (front->gaps.empty()) return;
+    if (front->gaps.empty()) {
+        return;
+    }
 
     // one-sided?
     // set LOWER-UNPEG only when ceiling is a door
@@ -1342,11 +1493,15 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     region_c *N = S->partner ? S->partner->region : NULL;
 
     // for two-sided snags, only make one linedef from the pair
-    if (S->seen) return;
+    if (S->seen) {
+        return;
+    }
 
     S->seen = true;
 
-    if (S->partner) S->partner->seen = true;
+    if (S->partner) {
+        S->partner->seen = true;
+    }
 
     // skip snags which would become zero length linedefs
     int x1 = I_ROUND(S->x1);
@@ -1356,15 +1511,17 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     int y2 = I_ROUND(S->y2);
 
     if (x1 == x2 && y1 == y2) {
-        //		LogPrintf("WARNING: degenerate linedef @ (%1.0f %1.0f)\n",
-        //S->x1, S->y1);
+        //		LogPrintf("WARNING: degenerate linedef @ (%1.0f
+        //%1.0f)\n", S->x1, S->y1);
         return;
     }
 
     doom_sector_c *front = dm_sectors[R->index];
     doom_sector_c *back = NULL;
 
-    if (N && N->index >= 0) back = dm_sectors[N->index];
+    if (N && N->index >= 0) {
+        back = dm_sectors[N->index];
+    }
 
     brush_vert_c *f_rail = DM_FindRail(S->partner, R, N);
     brush_vert_c *b_rail = DM_FindRail(S, N, R);
@@ -1392,7 +1549,9 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     }
 
     // skip the line if same on both sides, except when it has a rail or special
-    if (front == back && !f_rail && !b_rail && !L_special) return;
+    if (front == back && !f_rail && !b_rail && !L_special) {
+        return;
+    }
 
     // update map's bounding box
     map_bound_x1 = MIN(map_bound_x1, MIN(x1, x2));
@@ -1440,10 +1599,11 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     L->special = L_special;
     L->tag = L_tag;
 
-    if (use_trig)
+    if (use_trig) {
         trig->getHexenArgs(L->args);
-    else if (spec)
+    } else if (spec) {
         spec->getHexenArgs(L->args);
+    }
 
     // flags...
 
@@ -1453,9 +1613,15 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
         L->flags |= MLF_TwoSided;
     }
 
-    if (f_rail) L->flags |= f_rail->face.getInt("flags");
-    if (b_rail) L->flags |= b_rail->face.getInt("flags");
-    if (spec) L->flags |= spec->getInt("flags");
+    if (f_rail) {
+        L->flags |= f_rail->face.getInt("flags");
+    }
+    if (b_rail) {
+        L->flags |= b_rail->face.getInt("flags");
+    }
+    if (spec) {
+        L->flags |= spec->getInt("flags");
+    }
 
     if (L->special == LIN_FAKE_UNPEGGED) {
         L->special = 0;
@@ -1477,7 +1643,9 @@ static void DM_CreateLinedefs() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index < 0) continue;
+        if (R->index < 0) {
+            continue;
+        }
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             DM_MakeLine(R, R->snags[k]);
@@ -1504,12 +1672,19 @@ static bool DM_TryMergeLine(doom_vertex_c *V) {
 static void DM_MergeColinearLines(bool show_count = true) {
     int count = 0;
 
-    for (int pass = 0; pass < 3; pass++)
-        for (int i = 0; i < (int)dm_vertices.size(); i++)
-            if (dm_vertices[i]->getNumLines() == 2)
-                if (DM_TryMergeLine(dm_vertices[i])) count++;
+    for (int pass = 0; pass < 3; pass++) {
+        for (int i = 0; i < (int)dm_vertices.size(); i++) {
+            if (dm_vertices[i]->getNumLines() == 2) {
+                if (DM_TryMergeLine(dm_vertices[i])) {
+                    count++;
+                }
+            }
+        }
+    }
 
-    if (show_count) LogPrintf("Merged %d colinear lines\n", count);
+    if (show_count) {
+        LogPrintf("Merged %d colinear lines\n", count);
+    }
 }
 
 static doom_linedef_c *DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V) {
@@ -1519,18 +1694,28 @@ static doom_linedef_c *DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V) {
     for (int i = 0; i < 4; i++) {
         doom_linedef_c *M = V->lines[i];
 
-        if (!M) break;
-        if (M == L) continue;
+        if (!M) {
+            break;
+        }
+        if (M == L) {
+            continue;
+        }
 
         SYS_ASSERT(M->isValid());
 
-        if (!L->isFrontSimilar(M)) continue;
+        if (!L->isFrontSimilar(M)) {
+            continue;
+        }
 
         int score = 0;
 
-        if (!L->back && !M->back) score += 20;
+        if (!L->back && !M->back) {
+            score += 20;
+        }
 
-        if (L->ColinearWith(M)) score += 10;
+        if (L->ColinearWith(M)) {
+            score += 10;
+        }
 
         if (score > best_score) {
             best = M;
@@ -1548,16 +1733,20 @@ static void DM_AlignTextures() {
     for (i = 0; i < (int)dm_linedefs.size(); i++) {
         doom_linedef_c *L = dm_linedefs[i];
 
-        if (!L->isValid()) continue;
+        if (!L->isValid()) {
+            continue;
+        }
 
         L->sim_prev = DM_FindSimilarLine(L, L->start);
         L->sim_next = DM_FindSimilarLine(L, L->end);
 
-        if (L->front->x_offset == IVAL_NONE && !L->sim_prev && !L->sim_next)
+        if (L->front->x_offset == IVAL_NONE && !L->sim_prev && !L->sim_next) {
             L->front->x_offset = NaturalXOffset(L, 0);
+        }
 
-        if (L->back && L->back->x_offset == IVAL_NONE)
+        if (L->back && L->back->x_offset == IVAL_NONE) {
             L->back->x_offset = NaturalXOffset(L, 1);
+        }
     }
 
     // when there are line loops where every x_offset is IVAL_NONE, then
@@ -1573,10 +1762,14 @@ static void DM_AlignTextures() {
         for (i = 0; i < (int)dm_linedefs.size(); i++) {
             doom_linedef_c *L = dm_linedefs[i];
 
-            if (!L->isValid()) continue;
+            if (!L->isValid()) {
+                continue;
+            }
 
             if (L->front->x_offset == IVAL_NONE) {
-                if (pass >= 12) continue;
+                if (pass >= 12) {
+                    continue;
+                }
 
                 int mask = (1 << pass) - 1;
 
@@ -1627,32 +1820,45 @@ static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
     for (unsigned int i = 0; i < dm_vertices.size(); i++) {
         const doom_vertex_c *V = dm_vertices[i];
 
-        if (V == ignore1 || V == ignore2 || V == ignore3) continue;
-
-        if (!V->lines[0])  // dud vertex?
+        if (V == ignore1 || V == ignore2 || V == ignore3) {
             continue;
+        }
+
+        if (!V->lines[0]) {  // dud vertex?
+            continue;
+        }
 
         // allow vertex at opposite corner
         // (this is the cheesy way -- the proper way would be to check if the
         //  vertex is within the triangle).
-        if (V->x == ox && V->y == oy) continue;
+        if (V->x == ox && V->y == oy) {
+            continue;
+        }
 
-        if (x1 <= V->x && V->x <= x2 && y1 <= V->y && V->y <= y2) return true;
+        if (x1 <= V->x && V->x <= x2 && y1 <= V->y && V->y <= y2) {
+            return true;
+        }
     }
 
     return false;  // OK
 }
 
 static int TryRoundAtVertex(doom_vertex_c *V) {
-    if (V->getNumLines() != 2) return 0;
+    if (V->getNumLines() != 2) {
+        return 0;
+    }
 
     doom_linedef_c *LX = V->lines[0];
     doom_linedef_c *LY = V->lines[1];
 
     // this probably cannot happen, but just in case...
-    if (!LX->isValid() || !LY->isValid()) return 0;
+    if (!LX->isValid() || !LY->isValid()) {
+        return 0;
+    }
 
-    if (LX->hasRail() || LY->hasRail()) return 0;
+    if (LX->hasRail() || LY->hasRail()) {
+        return 0;
+    }
 
     SYS_ASSERT(LX->start == V || LX->end == V);
     SYS_ASSERT(LY->start == V || LY->end == V);
@@ -1666,17 +1872,29 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
     }
 
     // must be two-sided lines, sectors only differ by light level
-    if (!(LX->front && LX->back)) return 0;
-    if (!(LY->front && LY->back)) return 0;
+    if (!(LX->front && LX->back)) {
+        return 0;
+    }
+    if (!(LY->front && LY->back)) {
+        return 0;
+    }
 
     // must be in a cave
-    if (!LX->front->sector->is_cave) return 0;
-    if (!LY->front->sector->is_cave) return 0;
+    if (!LX->front->sector->is_cave) {
+        return 0;
+    }
+    if (!LY->front->sector->is_cave) {
+        return 0;
+    }
 
-    if (!LX->front->sector->MatchNoLight(LX->back->sector)) return 0;
+    if (!LX->front->sector->MatchNoLight(LX->back->sector)) {
+        return 0;
+    }
 
     // too short?
-    if (LX->length < 16 || LY->length < 16) return 0;
+    if (LX->length < 16 || LY->length < 16) {
+        return 0;
+    }
 
     int x_len = LX->length;
     int y_len = LY->length;
@@ -1705,8 +1923,12 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
     int x_dir = (LX->start->x < LX->end->x) ? +1 : -1;
     int y_dir = (LY->start->y < LY->end->y) ? +1 : -1;
 
-    if (LX->end == V) x_dir = -x_dir;
-    if (LY->end == V) y_dir = -y_dir;
+    if (LX->end == V) {
+        x_dir = -x_dir;
+    }
+    if (LY->end == V) {
+        y_dir = -y_dir;
+    }
 
     int x_other = V->x + x_dir * x_len;
     int y_other = V->y + y_dir * y_len;
@@ -1715,8 +1937,9 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
     // (only need to see if a used vertex lies inside the triangle)
 
     if (RoundWouldClobber(V->x, V->y, x_other, y_other, V, LX->OtherVert(V),
-                          LY->OtherVert(V)))
+                          LY->OtherVert(V))) {
         return 0;
+    }
 
     /* handle four cases :
      *   1. no new vertices
@@ -1730,10 +1953,11 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
 
         V2->ReplaceLine(LY, LX);
 
-        if (LX->start == V)
+        if (LX->start == V) {
             LX->start = V2;
-        else
+        } else {
             LX->end = V2;
+        }
 
         SYS_ASSERT(LX->start != LX->end);
 
@@ -1791,8 +2015,12 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
 
     L = new doom_linedef_c(*LX);
 
-    if (L->front) dm_sidedefs.push_back(L->front);
-    if (L->back) dm_sidedefs.push_back(L->back);
+    if (L->front) {
+        dm_sidedefs.push_back(L->front);
+    }
+    if (L->back) {
+        dm_sidedefs.push_back(L->back);
+    }
 
     dm_linedefs.push_back(L);
 
@@ -1800,7 +2028,9 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
     L->start = VX;
     L->end = VY;
 
-    if (LX->start == V) std::swap(L->start, L->end);
+    if (LX->start == V) {
+        std::swap(L->start, L->end);
+    }
 
     L->CalcLength();
 
@@ -1811,15 +2041,17 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
     VY->AddLine(LY);
 
 finished:
-    if (LX->start == V)
+    if (LX->start == V) {
         LX->start = VX;
-    else
+    } else {
         LX->end = VX;
+    }
 
-    if (LY->start == V)
+    if (LY->start == V) {
         LY->start = VY;
-    else
+    } else {
         LY->end = VY;
+    }
 
     SYS_ASSERT(LX->start != LX->end);
     SYS_ASSERT(LY->start != LY->end);
@@ -1844,10 +2076,13 @@ static void DM_RoundCorners() {
 
     int count = 0;
 
-    for (int pass = 0; pass < 2; pass++)
-        for (int i = 0; i < (int)dm_vertices.size(); i++)
-            if (dm_vertices[i]->getNumLines() == 2)
+    for (int pass = 0; pass < 2; pass++) {
+        for (int i = 0; i < (int)dm_vertices.size(); i++) {
+            if (dm_vertices[i]->getNumLines() == 2) {
                 count += TryRoundAtVertex(dm_vertices[i]);
+            }
+        }
+    }
 
     LogPrintf("Rounded %d square corners\n", count);
 
@@ -1889,11 +2124,15 @@ class dummy_sector_c {
    public:
     dummy_sector_c(doom_sector_c *_sec = NULL, doom_sector_c *_pair = NULL)
         : sector(_sec), pair(_pair), share_count(0) {
-        for (int i = 0; i < DUMMY_MAX_SHARE; i++) info[i] = NULL;
+        for (int i = 0; i < DUMMY_MAX_SHARE; i++) {
+            info[i] = NULL;
+        }
     }
 
     ~dummy_sector_c() {
-        for (int i = 0; i < DUMMY_MAX_SHARE; i++) delete info[i];
+        for (int i = 0; i < DUMMY_MAX_SHARE; i++) {
+            delete info[i];
+        }
     }
 
     bool isFull() const { return (share_count >= DUMMY_MAX_SHARE); }
@@ -1907,7 +2146,9 @@ class dummy_sector_c {
     /// construction ///
 
     doom_sidedef_c *MakeSidedef(int what, int other_what, int index) {
-        if (what == 0) return NULL;
+        if (what == 0) {
+            return NULL;
+        }
 
         doom_sector_c *cur_sec = (what == 2) ? pair : sector;
 
@@ -1930,7 +2171,9 @@ class dummy_sector_c {
         }
 
         // on two-sided line, don't set railing
-        if (other_what > 0) SD->mid = std::string("-");
+        if (other_what > 0) {
+            SD->mid = std::string("-");
+        }
 
         SD->x_offset = 0;
         SD->y_offset = 0;
@@ -1956,10 +2199,16 @@ class dummy_sector_c {
 
         SYS_ASSERT(sector);
 
-        if (front == 2 && !pair) front = 1;
-        if (back == 2 && !pair) back = 1;
+        if (front == 2 && !pair) {
+            front = 1;
+        }
+        if (back == 2 && !pair) {
+            back = 1;
+        }
 
-        if (front == back) return;
+        if (front == back) {
+            return;
+        }
 
         doom_linedef_c *L = new doom_linedef_c;
 
@@ -1980,7 +2229,9 @@ class dummy_sector_c {
 
         L->flags |= MLF_BlockAll | MLF_DontDraw;
 
-        if (front > 0 && back > 0) L->flags |= MLF_TwoSided;
+        if (front > 0 && back > 0) {
+            L->flags |= MLF_TwoSided;
+        }
 
         L->front = MakeSidedef(front, back, index);
         L->back = MakeSidedef(back, front, index);
@@ -2031,7 +2282,9 @@ static dummy_sector_c *Dummy_FindMatch(doom_sector_c *new_sec) {
     for (unsigned int i = 0; i < dm_dummies.size(); i++) {
         dummy_sector_c *dum = dm_dummies[i];
 
-        if (dum->isFull()) continue;
+        if (dum->isFull()) {
+            continue;
+        }
 
         if (new_sec->MatchMost(dum->sector)) {
             // won't need the newly created sector now
@@ -2062,7 +2315,9 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2) {
     EF->u_light = gap2->bottom->b.face.getInt("light", sec->light - 24);
     EF->u_tag = gap2->bottom->b.face.getInt("tag");
 
-    if (EF->u_light < 112) EF->u_light = 112;
+    if (EF->u_light < 112) {
+        EF->u_light = 112;
+    }
 
     if (sec->misc_flags & SEC_FLOOR_SPECIAL) {
         if (ef_solid_type == 281)  // Legacy mode
@@ -2150,14 +2405,20 @@ static void DM_ExtraFloorNeighbors() {
     for (unsigned int i = 0; i < dm_linedefs.size(); i++) {
         doom_linedef_c *L = dm_linedefs[i];
 
-        if (!L->isValid()) continue;
+        if (!L->isValid()) {
+            continue;
+        }
 
-        if (!L->back) continue;
+        if (!L->back) {
+            continue;
+        }
 
         doom_sector_c *front_S = L->front->sector;
         doom_sector_c *back_S = L->back->sector;
 
-        if (front_S == back_S) continue;
+        if (front_S == back_S) {
+            continue;
+        }
 
         SYS_ASSERT(!front_S->unused);
         SYS_ASSERT(!back_S->unused);
@@ -2203,7 +2464,9 @@ static void EXFL_SpreadTag(doom_sector_c *S, int tag) {
         for (unsigned int k = 0; k < S->ef_neighbors.size(); k++) {
             doom_sector_c *N = S->ef_neighbors[k];
 
-            if (N->tag == 0) visits.push_back(N);
+            if (N->tag == 0) {
+                visits.push_back(N);
+            }
         }
     }
 }
@@ -2216,10 +2479,13 @@ static void DM_ProcessExtraFloors() {
     for (unsigned int i = 0; i < dm_sectors.size(); i++) {
         doom_sector_c *S = dm_sectors[i];
 
-        if (S->unused || S->exfloors.empty()) continue;
-
-        if (S->tag > 0)  // SHIT
+        if (S->unused || S->exfloors.empty()) {
             continue;
+        }
+
+        if (S->tag > 0) {  // SHIT
+            continue;
+        }
 
         EXFL_SpreadTag(S, tag);
 
@@ -2240,14 +2506,20 @@ static int DM_CalcDoorLight(const doom_sector_c *S) {
     for (unsigned int i = 0; i < dm_linedefs.size(); i++) {
         const doom_linedef_c *L = dm_linedefs[i];
 
-        if (!L->isValid()) continue;
+        if (!L->isValid()) {
+            continue;
+        }
 
-        if (!L->back) continue;
+        if (!L->back) {
+            continue;
+        }
 
         doom_sector_c *front = L->front->sector;
         doom_sector_c *back = L->back->sector;
 
-        if (front == back) continue;
+        if (front == back) {
+            continue;
+        }
 
         // we ignore closed neighbors
 
@@ -2280,7 +2552,9 @@ static void DM_ProcessLightFX() {
     for (unsigned int i = 0; i < dm_sectors.size(); i++) {
         doom_sector_c *S = dm_sectors[i];
 
-        if (S->unused) continue;
+        if (S->unused) {
+            continue;
+        }
 
         // handle lighting for closed doors -- get level from a neighbor
         if (S->f_h == S->c_h) {
@@ -2310,14 +2584,18 @@ static doom_sector_c *DM_FindDepotPeer() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index < 0) continue;
+        if (R->index < 0) {
+            continue;
+        }
 
         doom_sector_c *S = dm_sectors[R->index];
 
         for (unsigned int k = 0; k < R->entities.size(); k++) {
             csg_entity_c *E = R->entities[k];
 
-            if (strcmp(E->id.c_str(), "oblige_depot") == 0) return S;
+            if (strcmp(E->id.c_str(), "oblige_depot") == 0) {
+                return S;
+            }
         }
     }
 
@@ -2332,14 +2610,18 @@ void DM_ProcessSecrets() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index < 0) continue;
+        if (R->index < 0) {
+            continue;
+        }
 
         doom_sector_c *S = dm_sectors[R->index];
 
         for (unsigned int k = 0; k < R->entities.size(); k++) {
             csg_entity_c *E = R->entities[k];
 
-            if (strcmp(E->id.c_str(), "oblige_secret") == 0) S->special = 9;
+            if (strcmp(E->id.c_str(), "oblige_secret") == 0) {
+                S->special = 9;
+            }
         }
     }
 }
@@ -2348,7 +2630,9 @@ static void DM_ConvertSectorToOther(doom_sector_c *src, doom_sector_c *dest) {
     for (unsigned int i = 0; i < dm_sidedefs.size(); i++) {
         doom_sidedef_c *SD = dm_sidedefs[i];
 
-        if (SD->sector == src) SD->sector = dest;
+        if (SD->sector == src) {
+            SD->sector = dest;
+        }
     }
 }
 
@@ -2360,14 +2644,18 @@ static void DM_ProcessDepots() {
     for (unsigned int i = 0; i < dm_sectors.size(); i++) {
         doom_sector_c *S = dm_sectors[i];
 
-        if (S->unused) continue;
+        if (S->unused) {
+            continue;
+        }
 
         if (S->special == SEC_DEPOT_PEER) {
             S->special = 0;
 
             doom_sector_c *peer = DM_FindDepotPeer();
 
-            if (peer) DM_ConvertSectorToOther(S, peer);
+            if (peer) {
+                DM_ConvertSectorToOther(S, peer);
+            }
         }
     }
 }
@@ -2386,7 +2674,9 @@ int doom_vertex_c::Write() {
 }
 
 int doom_sector_c::Write() {
-    if (special == SEC_GRAB_NB_FLOOR) special = 0;
+    if (special == SEC_GRAB_NB_FLOOR) {
+        special = 0;
+    }
 
     if (index < 0)  // not written yet?
     {
@@ -2429,8 +2719,11 @@ static void DM_WriteLinedefs() {
     // this triggers everything else (Sidedefs, Sectors, Vertices) to be
     // written as well.
 
-    for (int i = 0; i < (int)dm_linedefs.size(); i++)
-        if (dm_linedefs[i]->isValid()) dm_linedefs[i]->Write();
+    for (int i = 0; i < (int)dm_linedefs.size(); i++) {
+        if (dm_linedefs[i]->isValid()) {
+            dm_linedefs[i]->Write();
+        }
+    }
 }
 
 static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
@@ -2460,8 +2753,9 @@ static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
 static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
     // ignore light entities and boxes
     if (strcmp(E->id.c_str(), "light") == 0 ||
-        strncmp(E->id.c_str(), "oblige_", 7) == 0)
+        strncmp(E->id.c_str(), "oblige_", 7) == 0) {
         return;
+    }
 
     int type = atoi(E->id.c_str());
 
@@ -2476,7 +2770,9 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
 
     int h = z - S->f_h;
 
-    if (h < 0) h = 0;
+    if (h < 0) {
+        h = 0;
+    }
 
     // parse entity properties
     int angle = E->props.getInt("angle");
@@ -2485,9 +2781,13 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
     int options = E->props.getInt("flags", MTF_ALL_SKILLS);
 
     if (dm_sub_format == SUBFMT_Hexen) {
-        if ((options & MTF_HEXEN_CLASSES) == 0) options |= MTF_HEXEN_CLASSES;
+        if ((options & MTF_HEXEN_CLASSES) == 0) {
+            options |= MTF_HEXEN_CLASSES;
+        }
 
-        if ((options & MTF_HEXEN_MODES) == 0) options |= MTF_HEXEN_MODES;
+        if ((options & MTF_HEXEN_MODES) == 0) {
+            options |= MTF_HEXEN_MODES;
+        }
     }
 
     byte args[5] = {0, 0, 0, 0, 0};
@@ -2515,7 +2815,9 @@ static void DM_WriteThings() {
     for (unsigned int i = 0; i < all_regions.size(); i++) {
         region_c *R = all_regions[i];
 
-        if (R->index < 0) continue;
+        if (R->index < 0) {
+            continue;
+        }
 
         doom_sector_c *S = dm_sectors[R->index];
 
@@ -2530,7 +2832,9 @@ static void DM_WriteFraggleScript() {
 
     // WISHLIST: support adding script text from Lua
 
-    if (ef_thing_mode != 1) return;
+    if (ef_thing_mode != 1) {
+        return;
+    }
 
     // We create three scripts:
     //
@@ -2553,14 +2857,17 @@ static void DM_WriteFraggleScript() {
 
             int which;  // which script to use
 
-            if (thing.options & MTF_Easy)
+            if (thing.options & MTF_Easy) {
                 which = 1;
-            else if (thing.options & MTF_Medium)
+            } else if (thing.options & MTF_Medium) {
                 which = 2;
-            else
+            } else {
                 which = 3;
+            }
 
-            if (which != i) continue;
+            if (which != i) {
+                continue;
+            }
 
             DM_HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n", thing.fs_name,
                             thing.x, thing.y, thing.angle, thing.z);
@@ -2579,13 +2886,25 @@ static void DM_WriteFraggleScript() {
 void DM_FreeStuff() {
     unsigned int i;
 
-    for (i = 0; i < dm_vertices.size(); i++) delete dm_vertices[i];
-    for (i = 0; i < dm_linedefs.size(); i++) delete dm_linedefs[i];
-    for (i = 0; i < dm_sidedefs.size(); i++) delete dm_sidedefs[i];
-    for (i = 0; i < dm_sectors.size(); i++) delete dm_sectors[i];
+    for (i = 0; i < dm_vertices.size(); i++) {
+        delete dm_vertices[i];
+    }
+    for (i = 0; i < dm_linedefs.size(); i++) {
+        delete dm_linedefs[i];
+    }
+    for (i = 0; i < dm_sidedefs.size(); i++) {
+        delete dm_sidedefs[i];
+    }
+    for (i = 0; i < dm_sectors.size(); i++) {
+        delete dm_sectors[i];
+    }
 
-    for (i = 0; i < dm_exfloors.size(); i++) delete dm_exfloors[i];
-    for (i = 0; i < dm_dummies.size(); i++) delete dm_dummies[i];
+    for (i = 0; i < dm_exfloors.size(); i++) {
+        delete dm_exfloors[i];
+    }
+    for (i = 0; i < dm_dummies.size(); i++) {
+        delete dm_dummies[i];
+    }
 
     dm_vertices.clear();
     dm_linedefs.clear();

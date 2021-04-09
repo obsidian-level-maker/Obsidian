@@ -36,7 +36,9 @@ void Fl_Menu_Across::draw() {
     // int Y = y()+(h()-H)/2;
     draw_box(pressed_across_menu_ == this ? fl_down(box()) : box(), color());
     draw_label(x() + Fl::box_dx(box()), y(), X - x() + 2, h());
-    if (Fl::focus() == this) draw_focus();
+    if (Fl::focus() == this) {
+        draw_focus();
+    }
 }
 
 /**
@@ -54,18 +56,24 @@ const Fl_Menu_Item *Fl_Menu_Across::popup() {
     m = menu()->pulldown(x() + w() - 4, y() - h(), w(), h(), 0, this);
     picked(m);
     pressed_across_menu_ = 0;
-    if (mb.exists()) redraw();
+    if (mb.exists()) {
+        redraw();
+    }
     return m;
 }
 
 int Fl_Menu_Across::handle(int e) {
-    if (!menu() || !menu()->text) return 0;
+    if (!menu() || !menu()->text) {
+        return 0;
+    }
     switch (e) {
         case FL_ENTER: /* FALLTHROUGH */
         case FL_LEAVE:
             return 1;
         case FL_PUSH:
-            if (Fl::visible_focus()) Fl::focus(this);
+            if (Fl::visible_focus()) {
+                Fl::focus(this);
+            }
             popup();
             return 1;
         case FL_KEYBOARD:
@@ -74,8 +82,9 @@ int Fl_Menu_Across::handle(int e) {
                   (FL_SHIFT | FL_CTRL | FL_ALT | FL_META))) {
                 popup();
                 return 1;
-            } else
+            } else {
                 return 0;
+            }
         case FL_SHORTCUT:
             if (Fl_Widget::test_shortcut()) {
                 popup();

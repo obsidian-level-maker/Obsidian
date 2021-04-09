@@ -26,17 +26,27 @@
 
 choice_data_c::choice_data_c(const char *_id, const char *_label)
     : id(NULL), label(NULL), enabled(false), mapped(-1), widget(NULL) {
-    if (_id) id = StringDup(_id);
-    if (_label) label = StringDup(_label);
+    if (_id) {
+        id = StringDup(_id);
+    }
+    if (_label) {
+        label = StringDup(_label);
+    }
 }
 
 choice_data_c::~choice_data_c() {
-    if (id) StringFree(id);
-    if (label) StringFree(label);
+    if (id) {
+        StringFree(id);
+    }
+    if (label) {
+        StringFree(label);
+    }
 
     // ignore 'widget' field when enabled, we assume it exists in
     // an Fl_Group and hence FLTK will take care to delete it.
-    if (!enabled) delete widget;
+    if (!enabled) {
+        delete widget;
+    }
 }
 
 //----------------------------------------------------------------
@@ -57,7 +67,9 @@ void UI_RChoice::AddChoice(const char *id, const char *label) {
         StringFree(opt->label);
         opt->label = StringDup(label);
 
-        if (opt->enabled) Recreate();
+        if (opt->enabled) {
+            Recreate();
+        }
     } else {
         opt = new choice_data_c(id, label);
 
@@ -73,7 +85,9 @@ bool UI_RChoice::EnableChoice(const char *id, bool enable_it) {
 
     choice_data_c *P = FindID(id);
 
-    if (!P) return false;
+    if (!P) {
+        return false;
+    }
 
     if (P->enabled != enable_it) {
         P->enabled = enable_it;
@@ -100,7 +114,9 @@ bool UI_RChoice::ChangeTo(const char *id) {
 
     choice_data_c *P = FindID(id);
 
-    if (!P || P->mapped < 0) return false;
+    if (!P || P->mapped < 0) {
+        return false;
+    }
 
     value(P->mapped);
 
@@ -148,7 +164,9 @@ choice_data_c *UI_RChoice::FindID(const char *id) const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
-        if (strcmp(P->id, id) == 0) return P;
+        if (strcmp(P->id, id) == 0) {
+            return P;
+        }
     }
 
     return NULL;
@@ -158,7 +176,9 @@ choice_data_c *UI_RChoice::FindMapped() const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
-        if (P->mapped >= 0 && P->mapped == value()) return P;
+        if (P->mapped >= 0 && P->mapped == value()) {
+            return P;
+        }
     }
 
     return NULL;
@@ -201,10 +221,11 @@ void UI_RChoice::GotoNext() {
 
 int UI_RChoice::handle(int event) {
     if (wheel_can_bump && event == FL_MOUSEWHEEL && Fl::belowmouse() == this) {
-        if (Fl::event_dy() < 0)
+        if (Fl::event_dy() < 0) {
             GotoPrevious();
-        else if (Fl::event_dy() > 0)
+        } else if (Fl::event_dy() > 0) {
             GotoNext();
+        }
 
         return 1;  // eat it
     }
@@ -218,7 +239,9 @@ choice_data_c *UI_RSlide::FindMapped() const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
-        if (P->mapped >= 0 && P->mapped == value()) return P;
+        if (P->mapped >= 0 && P->mapped == value()) {
+            return P;
+        }
     }
 
     return NULL;
@@ -241,7 +264,9 @@ bool UI_RSlide::ChangeTo(const char *id) {
 
     choice_data_c *P = FindID(id);
 
-    if (!P || P->mapped < 0) return false;
+    if (!P || P->mapped < 0) {
+        return false;
+    }
 
     value(P->mapped);
 
@@ -252,7 +277,9 @@ choice_data_c *UI_RSlide::FindID(const char *id) const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
-        if (strcmp(P->id, id) == 0) return P;
+        if (strcmp(P->id, id) == 0) {
+            return P;
+        }
     }
 
     return NULL;

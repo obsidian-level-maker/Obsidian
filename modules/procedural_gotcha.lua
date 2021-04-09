@@ -68,6 +68,7 @@ OB_MODULES["procedural_gotcha"] =
 {
   label = _("Procedural Gotcha Options"),
 
+  engine = "!vanilla",
   side = "right",
   priority = 92,
 

@@ -53,7 +53,9 @@ class UI_About : public Fl_Window {
             }
 
             // eat all other function keys
-            if (FL_F + 1 <= key && key <= FL_F + 12) return 1;
+            if (FL_F + 1 <= key && key <= FL_F + 12) {
+                return 1;
+            }
         }
 
         return Fl_Window::handle(event);
@@ -94,7 +96,9 @@ UI_About::UI_About(int W, int H, const char *label)
     // non-resizable
     size_range(W, H, W, H);
 
-    if (alternate_look) color(FL_LIGHT3, FL_LIGHT3);
+    if (alternate_look) {
+        color(FL_LIGHT3, FL_LIGHT3);
+    }
 
     callback(callback_Quit, this);
 
@@ -131,7 +135,9 @@ UI_About::UI_About(int W, int H, const char *label)
     link->align(FL_ALIGN_CENTER);
     link->labelsize(FL_NORMAL_SIZE * 2 / 2);
 
-    if (alternate_look) link->color(FL_LIGHT3, FL_LIGHT3);
+    if (alternate_look) {
+        link->color(FL_LIGHT3, FL_LIGHT3);
+    }
 
     cy += link->h() + kf_h(16);
 
@@ -169,7 +175,9 @@ void DLG_AboutText(void) {
     about_window->show();
 
     // run the GUI until the user closes
-    while (!about_window->WantQuit()) Fl::wait();
+    while (!about_window->WantQuit()) {
+        Fl::wait();
+    }
 
     about_window->set_non_modal();
     about_window->hide();

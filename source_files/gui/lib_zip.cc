@@ -129,13 +129,16 @@ class zip_read_state_c {
         int want = MIN(remaining, ZIPF_BUFFER - in_length);
 
         if (!have_seeked) {
-            if (fseek(r_zip_fp, in_position + in_length, SEEK_SET) != 0)
+            if (fseek(r_zip_fp, in_position + in_length, SEEK_SET) != 0) {
                 return false;
+            }
 
             have_seeked = true;
         }
 
-        if (fread(in_buffer + in_length, want, 1, r_zip_fp) != 1) return false;
+        if (fread(in_buffer + in_length, want, 1, r_zip_fp) != 1) {
+            return false;
+        }
 
         in_length += want;
         Z.avail_in += want;
@@ -146,7 +149,9 @@ class zip_read_state_c {
     void Consume() {
         int used = Z.next_in - in_buffer;
 
-        if (used == 0) return;
+        if (used == 0) {
+            return;
+        }
 
         SYS_ASSERT(1 <= used && used <= in_length);
 
@@ -191,17 +196,22 @@ static int find_end_part() {
 
     while (position > 0) {
         // move back through file
-        if (position > ZIPF_BUFFER - 12)
+        if (position > ZIPF_BUFFER - 12) {
             position -= (ZIPF_BUFFER - 12);
-        else
+        } else {
             position = 0;
+        }
 
-        if (fseek(r_zip_fp, position, SEEK_SET) != 0) break;
+        if (fseek(r_zip_fp, position, SEEK_SET) != 0) {
+            break;
+        }
 
         int length = fread(buffer, 1, ZIPF_BUFFER, r_zip_fp);
 
         // stop on read error
-        if (length <= 0 || ferror(r_zip_fp)) break;
+        if (length <= 0 || ferror(r_zip_fp)) {
+            break;
+        }
 
         for (int offset = length - 4; offset >= 0; offset--) {
             if (buffer[offset] == ZIPF_END_MAGIC[0] &&
@@ -252,7 +262,9 @@ static bool read_directory_entry(zip_central_entry_t *E) {
 
     int res = fread(&E->hdr, sizeof(raw_zip_central_header_t), 1, r_zip_fp);
 
-    if (res != 1 || ferror(r_zip_fp)) return false;
+    if (res != 1 || ferror(r_zip_fp)) {
+        return false;
+    }
 
     // check signature
     if (memcmp(E->hdr.magic, ZIPF_CENTRAL_MAGIC, 4) != 0) {
@@ -380,14 +392,18 @@ void ZIPF_CloseRead(void) {
     delete[] r_directory;
     r_directory = NULL;
 
-    if (r_read_state) destroy_read_state();
+    if (r_read_state) {
+        destroy_read_state();
+    }
 }
 
 int ZIPF_NumEntries(void) { return (int)r_end_part.total_entries; }
 
 int ZIPF_FindEntry(const char *name) {
     for (unsigned int i = 0; i < r_end_part.total_entries; i++) {
-        if (StringCaseCmp(name, r_directory[i].name) == 0) return i;
+        if (StringCaseCmp(name, r_directory[i].name) == 0) {
+            return i;
+        }
     }
 
     return -1;  // not found
@@ -454,7 +470,9 @@ static bool decompressing_read(int length, byte *buffer) {
         if (r_read_state->in_length == 0) {
             //    DebugPrintf("  fill buffer...\n");
 
-            if (!r_read_state->Fill()) return false;
+            if (!r_read_state->Fill()) {
+                return false;
+            }
         }
 
         //  DebugPrintf("  in_position: 0x%08x  in_length: %d\n",
@@ -474,7 +492,9 @@ static bool decompressing_read(int length, byte *buffer) {
         //  buffer);
 
         // all done?
-        if (res == Z_STREAM_END) break;
+        if (res == Z_STREAM_END) {
+            break;
+        }
 
         if (res == Z_BUF_ERROR) {
             //    DebugPrintf("  refill buffer...\n");
@@ -506,7 +526,9 @@ static bool seek_read_state(int offset) {
     }
 
     // for compressed stream, only need to handle an unexpected offset
-    if (offset == r_read_state->cur_offset) return true;
+    if (offset == r_read_state->cur_offset) {
+        return true;
+    }
 
     if (offset < r_read_state->cur_offset) {
         // GO BACK TO START
@@ -522,7 +544,9 @@ static bool seek_read_state(int offset) {
     while (count > 0) {
         int skip_len = MIN(count, ZIPF_BUFFER);
 
-        if (!decompressing_read(skip_len, buffer)) return false;
+        if (!decompressing_read(skip_len, buffer)) {
+            return false;
+        }
 
         count -= skip_len;
     }
@@ -547,7 +571,9 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer) {
 
     // need a new read_state for a new entry
     if (!(r_read_state && r_read_state->entry == entry)) {
-        if (r_read_state) destroy_read_state();
+        if (r_read_state) {
+            destroy_read_state();
+        }
 
         create_read_state(entry);
     }
@@ -555,10 +581,14 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer) {
     r_read_state->have_seeked = false;
 
     // check if enough data left (i.e. EOF)
-    if ((u32_t)offset + (u32_t)length > E->hdr.full_size) return false;
+    if ((u32_t)offset + (u32_t)length > E->hdr.full_size) {
+        return false;
+    }
 
     // move to where we want to read from
-    if (!seek_read_state(offset)) return false;
+    if (!seek_read_state(offset)) {
+        return false;
+    }
 
     if (E->hdr.comp_method == ZIPF_COMP_STORE) {
         // direct read
@@ -668,8 +698,9 @@ void ZIPF_CloseWrite(void) {
 }
 
 void ZIPF_NewLump(const char *name) {
-    if (strlen(name) + 1 >= ZIPF_MAX_PATH)
+    if (strlen(name) + 1 >= ZIPF_MAX_PATH) {
         Main_FatalError("ZIPF_NewLump: name too long (>= %d)\n", ZIPF_MAX_PATH);
+    }
 
     // remember position
     w_local_start = (int)ftell(w_zip_fp);
@@ -704,11 +735,15 @@ void ZIPF_NewLump(const char *name) {
 }
 
 bool ZIPF_AppendData(const void *data, int length) {
-    if (length == 0) return true;
+    if (length == 0) {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 
-    if (fwrite(data, length, 1, w_zip_fp) != 1) return false;
+    if (fwrite(data, length, 1, w_zip_fp) != 1) {
+        return false;
+    }
 
     // compute the CRC -- use function from zlib
     w_local.hdr.crc = crc32(w_local.hdr.crc, (const Bytef *)data, (uInt)length);

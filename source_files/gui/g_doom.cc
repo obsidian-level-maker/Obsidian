@@ -38,6 +38,9 @@
 #include "main.h"
 #include "q_common.h"  // qLump_c
 
+// SLUMP for Vanilla Doom
+#include "slump_main.h"
+
 extern void CSG_DOOM_Write();
 
 // extern void CSG_TestRegions_Doom();
@@ -100,6 +103,15 @@ static const char *section_markers[NUM_SECTIONS][2] = {
     {"FF_START", "F_END"}};
 
 //------------------------------------------------------------------------
+//  SLUMP WAD Creation for Vanilla Doom
+//------------------------------------------------------------------------
+int Slump_MakeWAD(const char* filename) {
+	s_config slump_config;
+	slump_config.outfile = (char *)filename;
+	return slump_main(slump_config);    
+}	
+
+//------------------------------------------------------------------------
 //  WAD OUTPUT
 //------------------------------------------------------------------------
 
@@ -135,7 +147,9 @@ static void DM_WriteBehavior() {
 
 static void DM_ClearSections() {
     for (int k = 0; k < NUM_SECTIONS; k++) {
-        if (!sections[k]) sections[k] = new lump_bag_t;
+        if (!sections[k]) {
+            sections[k] = new lump_bag_t;
+        }
 
         for (unsigned int n = 0; n < sections[k]->size(); n++) {
             delete sections[k]->at(n);
@@ -148,7 +162,9 @@ static void DM_ClearSections() {
 
 static void DM_WriteSections() {
     for (int k = 0; k < NUM_SECTIONS; k++) {
-        if (sections[k]->size() == 0) continue;
+        if (sections[k]->size() == 0) {
+            continue;
+        }
 
         DM_WriteLump(section_markers[k][0], NULL, 0);
 
@@ -283,9 +299,13 @@ void DM_EndLevel(const char *level_name) {
         DM_WriteLump("SSECTORS", NULL, 0);
         DM_WriteLump("NODES", NULL, 0);
         DM_WriteLump("SECTORS", sector_lump);
-        if (dm_sub_format == SUBFMT_Hexen) DM_WriteBehavior();
+        if (dm_sub_format == SUBFMT_Hexen) {
+            DM_WriteBehavior();
+        }
     } else {
-        if (dm_sub_format == SUBFMT_Hexen) DM_WriteBehavior();
+        if (dm_sub_format == SUBFMT_Hexen) {
+            DM_WriteBehavior();
+        }
         DM_WriteLump("ENDMAP", NULL, 0);
     }
 
@@ -411,23 +431,36 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             textmap_lump->Printf("\targ0 = %d;\n", tag);
             textmap_lump->Printf("\tspecial = %d;\n", type);
             std::bitset<16> udmf_flags(flags);
-            if (udmf_flags.test(0))
+            if (udmf_flags.test(0)) {
                 textmap_lump->Printf("\tblocking = true;\n");
-            if (udmf_flags.test(1))
+            }
+            if (udmf_flags.test(1)) {
                 textmap_lump->Printf("\tblockmonsters = true;\n");
-            if (udmf_flags.test(2))
+            }
+            if (udmf_flags.test(2)) {
                 textmap_lump->Printf("\ttwosided = true;\n");
-            if (udmf_flags.test(3))
+            }
+            if (udmf_flags.test(3)) {
                 textmap_lump->Printf("\tdontpegtop = true;\n");
-            if (udmf_flags.test(4))
+            }
+            if (udmf_flags.test(4)) {
                 textmap_lump->Printf("\tdontpegbottom = true;\n");
-            if (udmf_flags.test(5)) textmap_lump->Printf("\tsecret = true;\n");
-            if (udmf_flags.test(6))
+            }
+            if (udmf_flags.test(5)) {
+                textmap_lump->Printf("\tsecret = true;\n");
+            }
+            if (udmf_flags.test(6)) {
                 textmap_lump->Printf("\tblocksound = true;\n");
-            if (udmf_flags.test(7))
+            }
+            if (udmf_flags.test(7)) {
                 textmap_lump->Printf("\tdontdraw = true;\n");
-            if (udmf_flags.test(8)) textmap_lump->Printf("\tmapped = true;\n");
-            if (udmf_flags.test(9)) textmap_lump->Printf("\tpassuse = true;\n");
+            }
+            if (udmf_flags.test(8)) {
+                textmap_lump->Printf("\tmapped = true;\n");
+            }
+            if (udmf_flags.test(9)) {
+                textmap_lump->Printf("\tpassuse = true;\n");
+            }
             textmap_lump->Printf("}\n");
             udmf_linedefs += 1;
         }
@@ -450,7 +483,9 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
 
             // tag value is UNUSED
 
-            if (args) memcpy(line.args, args, 5);
+            if (args) {
+                memcpy(line.args, args, 5);
+            }
 
             linedef_lump->Append(&line, sizeof(line));
         } else {
@@ -474,32 +509,56 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             textmap_lump->Printf("\targ3 = %d;\n", args[3]);
             textmap_lump->Printf("\targ4 = %d;\n", args[4]);
             std::bitset<16> udmf_flags(flags);
-            if (udmf_flags.test(0))
+            if (udmf_flags.test(0)) {
                 textmap_lump->Printf("\tblocking = true;\n");
-            if (udmf_flags.test(1))
+            }
+            if (udmf_flags.test(1)) {
                 textmap_lump->Printf("\tblockmonsters = true;\n");
-            if (udmf_flags.test(2))
+            }
+            if (udmf_flags.test(2)) {
                 textmap_lump->Printf("\ttwosided = true;\n");
-            if (udmf_flags.test(3))
+            }
+            if (udmf_flags.test(3)) {
                 textmap_lump->Printf("\tdontpegtop = true;\n");
-            if (udmf_flags.test(4))
+            }
+            if (udmf_flags.test(4)) {
                 textmap_lump->Printf("\tdontpegbottom = true;\n");
-            if (udmf_flags.test(5)) textmap_lump->Printf("\tsecret = true;\n");
-            if (udmf_flags.test(6))
+            }
+            if (udmf_flags.test(5)) {
+                textmap_lump->Printf("\tsecret = true;\n");
+            }
+            if (udmf_flags.test(6)) {
                 textmap_lump->Printf("\tblocksound = true;\n");
-            if (udmf_flags.test(7))
+            }
+            if (udmf_flags.test(7)) {
                 textmap_lump->Printf("\tdontdraw = true;\n");
-            if (udmf_flags.test(8)) textmap_lump->Printf("\tmapped = true;\n");
-            if (udmf_flags.test(9))
+            }
+            if (udmf_flags.test(8)) {
+                textmap_lump->Printf("\tmapped = true;\n");
+            }
+            if (udmf_flags.test(9)) {
                 textmap_lump->Printf("\trepeatspecial = true;\n");
+            }
             int spac = (flags & 0x1C00) >> 10;
             if (type > 0) {
-                if (spac == 0) textmap_lump->Printf("\tplayercross = true;\n");
-                if (spac == 1) textmap_lump->Printf("\tplayeruse = true;\n");
-                if (spac == 2) textmap_lump->Printf("\tmonstercross = true;\n");
-                if (spac == 3) textmap_lump->Printf("\timpact = true;\n");
-                if (spac == 4) textmap_lump->Printf("\tplayerpush = true;\n");
-                if (spac == 5) textmap_lump->Printf("\tmissilecross = true;\n");
+                if (spac == 0) {
+                    textmap_lump->Printf("\tplayercross = true;\n");
+                }
+                if (spac == 1) {
+                    textmap_lump->Printf("\tplayeruse = true;\n");
+                }
+                if (spac == 2) {
+                    textmap_lump->Printf("\tmonstercross = true;\n");
+                }
+                if (spac == 3) {
+                    textmap_lump->Printf("\timpact = true;\n");
+                }
+                if (spac == 4) {
+                    textmap_lump->Printf("\tplayerpush = true;\n");
+                }
+                if (spac == 5) {
+                    textmap_lump->Printf("\tmissilecross = true;\n");
+                }
             }
             textmap_lump->Printf("}\n");
             udmf_linedefs += 1;
@@ -536,12 +595,16 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
                 textmap_lump->Printf("\tskill1 = true;\n");
                 textmap_lump->Printf("\tskill2 = true;\n");
             }
-            if (udmf_flags.test(1)) textmap_lump->Printf("\tskill3 = true;\n");
+            if (udmf_flags.test(1)) {
+                textmap_lump->Printf("\tskill3 = true;\n");
+            }
             if (udmf_flags.test(2)) {
                 textmap_lump->Printf("\tskill4 = true;\n");
                 textmap_lump->Printf("\tskill5 = true;\n");
             }
-            if (udmf_flags.test(3)) textmap_lump->Printf("\tambush = true;\n");
+            if (udmf_flags.test(3)) {
+                textmap_lump->Printf("\tambush = true;\n");
+            }
             if (udmf_flags.test(4)) {
                 textmap_lump->Printf("\tsingle = false;\n");
             } else {
@@ -560,7 +623,8 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
             if (udmf_flags.test(7)) {
                 textmap_lump->Printf("\tfriend = true;\n");
             }
-            // Testing fix for compatibility with ZDoom mods that add classes in games other than Hexen
+            // Testing fix for compatibility with ZDoom mods that add classes in
+            // games other than Hexen
             textmap_lump->Printf("\tclass1 = true;\n");
             textmap_lump->Printf("\tclass2 = true;\n");
             textmap_lump->Printf("\tclass3 = true;\n");
@@ -586,7 +650,9 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
             thing.tid = LE_S16(tid);
             thing.special = special;
 
-            if (args) memcpy(thing.args, args, 5);
+            if (args) {
+                memcpy(thing.args, args, 5);
+            }
 
             thing_lump->Append(&thing, sizeof(thing));
         } else {
@@ -602,12 +668,16 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
                 textmap_lump->Printf("\tskill1 = true;\n");
                 textmap_lump->Printf("\tskill2 = true;\n");
             }
-            if (udmf_flags.test(1)) textmap_lump->Printf("\tskill3 = true;\n");
+            if (udmf_flags.test(1)) {
+                textmap_lump->Printf("\tskill3 = true;\n");
+            }
             if (udmf_flags.test(2)) {
                 textmap_lump->Printf("\tskill4 = true;\n");
                 textmap_lump->Printf("\tskill5 = true;\n");
             }
-            if (udmf_flags.test(3)) textmap_lump->Printf("\tambush = true;\n");
+            if (udmf_flags.test(3)) {
+                textmap_lump->Printf("\tambush = true;\n");
+            }
             if (udmf_flags.test(4)) {
                 textmap_lump->Printf("\tdormant = true;\n");
             }
@@ -669,8 +739,9 @@ int DM_NumSidedefs() {
 
 int DM_NumLinedefs() {
     if (not UDMF_mode) {
-        if (dm_sub_format == SUBFMT_Hexen)
+        if (dm_sub_format == SUBFMT_Hexen) {
             return linedef_lump->GetSize() / sizeof(raw_hexen_linedef_t);
+        }
 
         return linedef_lump->GetSize() / sizeof(raw_linedef_t);
     } else {
@@ -680,8 +751,9 @@ int DM_NumLinedefs() {
 
 int DM_NumThings() {
     if (not UDMF_mode) {
-        if (dm_sub_format == SUBFMT_Hexen)
+        if (dm_sub_format == SUBFMT_Hexen) {
             return thing_lump->GetSize() / sizeof(raw_hexen_thing_t);
+        }
 
         return thing_lump->GetSize() / sizeof(raw_thing_t);
     } else {
@@ -699,7 +771,16 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     LogPrintf("\n");
 
     zdbsp_options options;
-    if (current_engine == "nolimit" || current_engine == "boom") {
+    if (current_engine == "vanilla") {
+        options.build_nodes = true;
+        options.build_gl_nodes = false;
+        options.build_gl_only = false;
+        options.reject_mode = ERM_CreateZeroes;
+        options.check_polyobjs = false;
+        options.compress_nodes = false;
+        options.compress_gl_nodes = false;
+        options.force_compression = false;    	
+    } else if (current_engine == "nolimit" || current_engine == "boom") {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
@@ -797,17 +878,32 @@ bool doom_game_interface_c::Start(const char *preset) {
     ef_liquid_type = 0;
     ef_thing_mode = 0;
 
-    if (batch_mode)
+    if (batch_mode) {
         filename = StringDup(batch_output_file);
-    else
+    } else {
         filename = DLG_OutputFilename("wad", preset);
+    }
 
     if (!filename) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
-    if (create_backups) Main_BackupFile(filename, "old");
+    if (create_backups) {
+        Main_BackupFile(filename, "old");
+    }
+
+	// Need to preempt the rest of this process if we are using Vanilla Doom
+	if (main_win) {
+		current_engine = main_win->game_box->engine->GetID();
+		if (current_engine == "vanilla") {
+			if (Slump_MakeWAD(filename) == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
     if (!DM_StartWAD(filename)) {
         Main_ProgStatus(_("Error (create file)"));
@@ -818,7 +914,6 @@ bool doom_game_interface_c::Start(const char *preset) {
         main_win->build_box->name_disp->copy_label(FindBaseName(filename));
         main_win->build_box->name_disp->redraw();
         main_win->build_box->Prog_Init(20, N_("CSG"));
-        current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "zdoom") {
             build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")
                                ->FindOpt("build_reject_zdoom")
@@ -864,9 +959,12 @@ bool doom_game_interface_c::BuildNodes() {
 }
 
 bool doom_game_interface_c::Finish(bool build_ok) {
-    // TODO: handle write errors
-    DM_EndWAD();
-
+	// Skip DM_EndWAD if using Vanilla Doom
+	if (current_engine != "vanilla") {
+		   // TODO: handle write errors
+    		DM_EndWAD();
+	}
+	
     if (build_ok) {
         build_ok = BuildNodes();
     }
@@ -899,14 +997,15 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
         // ignored (for now)
         // [another mechanism sets the description via BEX/DDF]
     } else if (StringCaseCmp(key, "sub_format") == 0) {
-        if (StringCaseCmp(value, "doom") == 0)
+        if (StringCaseCmp(value, "doom") == 0) {
             dm_sub_format = 0;
-        else if (StringCaseCmp(value, "hexen") == 0)
+        } else if (StringCaseCmp(value, "hexen") == 0) {
             dm_sub_format = SUBFMT_Hexen;
-        else if (StringCaseCmp(value, "strife") == 0)
+        } else if (StringCaseCmp(value, "strife") == 0) {
             dm_sub_format = SUBFMT_Strife;
-        else
+        } else {
             LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
+        }
     } else if (StringCaseCmp(key, "offset_map") == 0) {
         dm_offset_map = atoi(value);
     } else if (StringCaseCmp(key, "ef_solid_type") == 0) {
@@ -921,10 +1020,13 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void doom_game_interface_c::EndLevel() {
-    if (!level_name)
+    if (!level_name) {
         Main_FatalError("Script problem: did not set level name!\n");
+    }
 
-    if (main_win) main_win->build_box->Prog_Step("CSG");
+    if (main_win) {
+        main_win->build_box->Prog_Step("CSG");
+    }
 
     CSG_DOOM_Write();
 #if 0

@@ -59,18 +59,24 @@ void UI_HyperLink::checkLink() {
     // needs to be called (since it can be expensive).
 
     if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H)) {
-        if (!hover) fl_cursor(FL_CURSOR_HAND);
+        if (!hover) {
+            fl_cursor(FL_CURSOR_HAND);
+        }
 
         hover = true;
     } else {
-        if (hover) fl_cursor(FL_CURSOR_DEFAULT);
+        if (hover) {
+            fl_cursor(FL_CURSOR_DEFAULT);
+        }
 
         hover = false;
     }
 }
 
 int UI_HyperLink::handle(int event) {
-    if (!active_r()) return Fl_Button::handle(event);
+    if (!active_r()) {
+        return Fl_Button::handle(event);
+    }
 
     switch (event) {
         case FL_MOVE: {
@@ -98,7 +104,9 @@ int UI_HyperLink::handle(int event) {
 }
 
 void UI_HyperLink::draw() {
-    if (type() == FL_HIDDEN_BUTTON) return;
+    if (type() == FL_HIDDEN_BUTTON) {
+        return;
+    }
 
     // determine where to draw the label
 
@@ -107,12 +115,13 @@ void UI_HyperLink::draw() {
     fl_font(labelfont(), labelsize());
     fl_measure(label(), label_W, label_H, 1);
 
-    if (align() & FL_ALIGN_LEFT)
+    if (align() & FL_ALIGN_LEFT) {
         label_X = 2;
-    else if (align() & FL_ALIGN_RIGHT)
+    } else if (align() & FL_ALIGN_RIGHT) {
         label_X = w() - label_W - 2;
-    else
+    } else {
         label_X = (w() - label_W) / 2;
+    }
 
     label_Y += h() / 2 - labelsize() / 2 - 2;
 
