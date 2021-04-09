@@ -1279,6 +1279,11 @@ ARMAETUS_MATERIALS = {
   OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
   OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
 
+  -- 128-wide techy brown walls
+  G8_BRNW1 = { t="G8_BRNW1", f="SLIME16"},
+  G8_BRNW2 = { t="G8_BRNW2", f="FLOOR4_1"},
+  G8_BRNW3 = { t="G8_BRNW3", f="FLOOR4_5"},
+
   -- 128-wide techy brick walls
   OBTBSLB1 = { t="OBTBSLB1", f="SHINY03"},
   OBTBSLB2 = { t="OBTBSLB2", f="FLOOR4_8"},
@@ -1307,6 +1312,9 @@ ARMAETUS_MATERIALS = {
   OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
   OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
+
+  -- 256-wide doors
+  G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
   ----------------------
   -- Special Textures --
