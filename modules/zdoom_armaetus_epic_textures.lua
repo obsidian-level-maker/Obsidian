@@ -1033,7 +1033,7 @@ OB_MODULES["armaetus_epic_textures"] =
   label = _("ZDoom: Armaetus Texture Pack"),
 
   side = "left",
-  priority = 70,
+  priority = 75,
 
   engine = "zdoom",
 
