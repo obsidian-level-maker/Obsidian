@@ -343,7 +343,7 @@
      allow different-size openings at either end of a link?
        (tapered stair-walls, e.g.)
      have special deliverers for weapons if c->weapons_are_special
-       (and then sometimes set that TRUE)
+       (and then sometimes set that SLUMP_TRUE)
      more global (per-level or per-config) restrictions on style;
        never moving jambs, always soundproof doors, doorceilings
        always/never copy room ceiling, etc, etc?  Also pillars
@@ -378,7 +378,7 @@
 /* Global variables */
 int current_level_number = 0;
 int global_verbosity = 0;    /* Oooh, a global variable! */
-boolean ok_to_roll = FALSE;  /* Stop breaking -seed...   */
+boolean ok_to_roll = SLUMP_FALSE;  /* Stop breaking -seed...   */
 
 /* Machoize: Make a given level harder
  * config c: The configuration for this setup
@@ -421,8 +421,8 @@ int slump_main(s_config slump_config) {
     dh = OpenDump(ThisConfig);
     if (dh==NULL) return 28;
     record_custom_textures(dh,ThisConfig);
-    record_custom_flats(dh,ThisConfig,TRUE);   /* record all flats */
-    record_custom_patches(dh,ThisConfig,TRUE);   /* and patches */
+    record_custom_flats(dh,ThisConfig,SLUMP_TRUE);   /* record all flats */
+    record_custom_patches(dh,ThisConfig,SLUMP_TRUE);   /* and patches */
     CloseDump(dh);
     printf("\nDone: wrote customization WAD %s.\n",ThisConfig->outfile);
     return 0;
@@ -437,7 +437,7 @@ int slump_main(s_config slump_config) {
       if (ThisHaa) free(ThisHaa);
       ThisHaa = starting_haa();
     }
-    if ((i+1)==(ThisConfig->levelcount)) ThisConfig->last_mission = TRUE;
+    if ((i+1)==(ThisConfig->levelcount)) ThisConfig->last_mission = SLUMP_TRUE;
     /* Each level starts with a new ThisHaa */
     free(ThisHaa);
     ThisHaa = starting_haa();
@@ -466,8 +466,8 @@ int slump_main(s_config slump_config) {
   }
   if (!(ThisConfig->gamemask&DOOMI_BIT)) {
     record_custom_textures(dh,ThisConfig);
-    record_custom_flats(dh,ThisConfig,FALSE);
-    record_custom_patches(dh,ThisConfig,FALSE);
+    record_custom_flats(dh,ThisConfig,SLUMP_FALSE);
+    record_custom_patches(dh,ThisConfig,SLUMP_FALSE);
   }
   CloseDump(dh);
   printf("\nDone: wrote %s.\n",ThisConfig->outfile);

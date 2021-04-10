@@ -342,7 +342,7 @@
      allow different-size openings at either end of a link?
        (tapered stair-walls, e.g.)
      have special deliverers for weapons if c->weapons_are_special
-       (and then sometimes set that TRUE)
+       (and then sometimes set that SLUMP_TRUE)
      more global (per-level or per-config) restrictions on style;
        never moving jambs, always soundproof doors, doorceilings
        always/never copy room ceiling, etc, etc?  Also pillars
@@ -466,13 +466,13 @@ short new_tag(level *l)
 short new_key(level *l)
 {
   if ((!l->used_red)&&rollpercent(33)) {
-    l->used_red = TRUE;
+    l->used_red = SLUMP_TRUE;
     return (l->skullkeys) ? ID_REDKEY : ID_REDCARD;
   } else if ((!l->used_blue)&&rollpercent(50)) {
-    l->used_blue = TRUE;
+    l->used_blue = SLUMP_TRUE;
     return (l->skullkeys) ? ID_BLUEKEY : ID_BLUECARD;
   } else if ((!l->used_yellow)) {
-    l->used_yellow = TRUE;
+    l->used_yellow = SLUMP_TRUE;
     return (l->skullkeys) ? ID_YELLOWKEY : ID_YELLOWCARD;
   } else return 0;
 }
@@ -569,11 +569,11 @@ sector *new_sector(level *l,short fh, short ch, flat *ft, flat *ct)
   answer->marked = 0;
   answer->pstyle = NULL;
   answer->entry_x = answer->entry_y = 0;
-  answer->findrec_data_valid = FALSE;
-  answer->has_key = FALSE;
-  answer->has_dm = FALSE;
-  answer->has_dm_weapon = FALSE;
-  answer->middle_enhanced = FALSE;
+  answer->findrec_data_valid = SLUMP_FALSE;
+  answer->has_key = SLUMP_FALSE;
+  answer->has_dm = SLUMP_FALSE;
+  answer->has_dm_weapon = SLUMP_FALSE;
+  answer->middle_enhanced = SLUMP_FALSE;
   answer->pgate = NULL;
   answer->next = l->sector_anchor;
   l->sector_anchor = answer;
@@ -596,7 +596,7 @@ sidedef *new_sidedef(level *l, sector *s, config *c)
 {
   sidedef *answer;
 
-  if (s==NULL) announce(ERROR,"Null sector passed to new_sidedef!");
+  if (s==NULL) announce(SLUMP_ERROR,"Null sector passed to new_sidedef!");
   answer = (sidedef *)malloc(sizeof(*answer));
   answer->x_offset = 0;
   answer->x_misalign = 0;
@@ -742,7 +742,7 @@ arena *new_arena(level *l, config *c)
       answer->ammo = find_genus(c,ID_ROCKBOX);
       break;
     default:
-      announce(ERROR,"Arena missing a boss?");
+      announce(SLUMP_ERROR,"Arena missing a boss?");
   }
 
   answer->props = 0;
@@ -759,10 +759,10 @@ arena *new_arena(level *l, config *c)
     answer->floor = random_flat0(OUTDOOR,c,NULL);
     answer->walls = random_texture0(OUTDOOR,c,NULL);
   }
-  answer->placed_health = FALSE;
-  answer->placed_armor = FALSE;
-  answer->placed_ammo = FALSE;
-  answer->placed_weapon = FALSE;
+  answer->placed_health = SLUMP_FALSE;
+  answer->placed_armor = SLUMP_FALSE;
+  answer->placed_ammo = SLUMP_FALSE;
+  answer->placed_weapon = SLUMP_FALSE;
   answer->fromtag = 0;
   answer->next = l->arena_anchor;
   l->arena_anchor = answer;
@@ -913,7 +913,7 @@ linedef *random_marked_linedef(level *l,int i)
   }
 
   /* Gosh, I *hope* we never get here... */
-  announce(ERROR,"Not enough marked linedefs!");
+  announce(SLUMP_ERROR,"Not enough marked linedefs!");
   return NULL;
 
 }
@@ -977,7 +977,7 @@ flat *new_flat(config *c,char *name)
   answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
   answer->compatible = 0;
   answer->props = 0;
-  answer->used = FALSE;
+  answer->used = SLUMP_FALSE;
   answer->next = c->flat_anchor;
   c->flat_anchor = answer;
   return answer;
@@ -1120,7 +1120,7 @@ texture *new_texture(config *c,char *name)
   answer->y_bias = 0;
   answer->subtle = NULL;
   answer->switch_texture = NULL;
-  answer->used = FALSE;
+  answer->used = SLUMP_FALSE;
   answer->next = c->texture_anchor;
   c->texture_anchor = answer;
   return answer;
@@ -1206,7 +1206,7 @@ linedef *split_linedef(level *l, linedef *ld, int len, config *c)
 /* Put in any upper textures required */
 void patch_upper(linedef *ld,texture *t,config *c)
 {
-#ifdef TOLERATE_ERRORS
+#ifdef TOLERATE_SLUMP_ERRORS
   if (ld->left==NULL) return;
 #endif
   if (ld->right->psector->ceiling_height >
@@ -1230,7 +1230,7 @@ void patch_upper(linedef *ld,texture *t,config *c)
 /* Put in any lower textures required */
 void patch_lower(linedef *ld,texture *t,config *c)
 {
-#ifdef TOLERATE_ERRORS
+#ifdef TOLERATE_SLUMP_ERRORS
   if (ld->left==NULL) return;
 #endif
   if (ld->right->psector->floor_height <
@@ -1308,36 +1308,36 @@ void compact_config(config *c)
 /* level.  Add stuff to this over time! */
 void secretize_config(config *c)
 {
-  boolean something_special = FALSE;
+  boolean something_special = SLUMP_FALSE;
 
   c->minrooms = c->minrooms * 2 / 3;
   if (c->minrooms<4) c->minrooms = 4;
   if (c->minrooms>20) c->minrooms = 20;
-  c->allow_boring_rooms = FALSE;
-  c->lock_themes = TRUE;
-  if (rollpercent(25)) c->force_biggest = TRUE;   /* stub */
-  c->big_monsters = TRUE;
+  c->allow_boring_rooms = SLUMP_FALSE;
+  c->lock_themes = SLUMP_TRUE;
+  if (rollpercent(25)) c->force_biggest = SLUMP_TRUE;   /* stub */
+  c->big_monsters = SLUMP_TRUE;
 
   for (;!something_special;) {
 
     /* Sometimes bizarre theme */
     if (rollpercent(30)) {
-      c->secret_themes = TRUE;
-      something_special = TRUE;
+      c->secret_themes = SLUMP_TRUE;
+      something_special = SLUMP_TRUE;
       announce(VERBOSE,"Bizarre theme");
     }
 
     /* Sometimes lots and lots of nukage */
     if (rollpercent(30)) {
-      c->major_nukage = TRUE;
-      something_special = TRUE;
+      c->major_nukage = SLUMP_TRUE;
+      something_special = SLUMP_TRUE;
       announce(VERBOSE,"Nukage everywhere");
     }
 
     /* Sometimes some DooM II nazis */
     if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) {
       c->forbidden_monster_bits &= ~SPECIAL;
-      something_special = TRUE;
+      something_special = SLUMP_TRUE;
       if (rollpercent(50)) {
         c->required_monster_bits |= SPECIAL;
         c->required_monster_bits &= ~BIG;
@@ -1352,9 +1352,9 @@ void secretize_config(config *c)
       if (rollpercent(50)) {
         c->required_monster_bits |= BIG;
         c->required_monster_bits &= ~SPECIAL;
-        c->big_monsters = TRUE;
+        c->big_monsters = SLUMP_TRUE;
         announce(VERBOSE,"All big monsters");
-        something_special = TRUE;
+        something_special = SLUMP_TRUE;
       } else {
         /* Put in a favorite monster here! */
         /* and set something_special */
@@ -1383,9 +1383,9 @@ config *get_config(s_config slump_config)
   /* Set various defaults and stuff */
   answer->configfile = strdup("SLUMP.CFG");  /* So's we kin free() it */
   answer->outfile = slump_config.outfile;
-  answer->cwadonly = FALSE;
+  answer->cwadonly = SLUMP_FALSE;
 
-  ok_to_roll = TRUE;
+  ok_to_roll = SLUMP_TRUE;
 
   /* Set other defaults, possibly involving random numbers */
   answer->theme_anchor = NULL;
@@ -1399,9 +1399,9 @@ config *get_config(s_config slump_config)
   answer->sky_flat = NULL;
   answer->themecount = 0;
   answer->sthemecount = 0;
-  answer->secret_themes = FALSE;
-  answer->lock_themes = FALSE;
-  answer->major_nukage = FALSE;
+  answer->secret_themes = SLUMP_FALSE;
+  answer->lock_themes = SLUMP_FALSE;
+  answer->major_nukage = SLUMP_FALSE;
   answer->required_monster_bits = 0;
   answer->forbidden_monster_bits = SPECIAL;
  /* answer->minrooms = 18; */
@@ -1410,17 +1410,17 @@ config *get_config(s_config slump_config)
   answer->gamemask = DOOM2_BIT; /* FreeDoom is doom2 not doom1 */
   answer->episode = 0;
   answer->mission = 0;
-  answer->last_mission = FALSE;
+  answer->last_mission = SLUMP_FALSE;
   answer->levelcount = slump_config.levelcount; /* Default: Do a megawad */
-  answer->force_arena = TRUE;
-  answer->force_biggest = FALSE;
+  answer->force_arena = SLUMP_TRUE;
+  answer->force_biggest = SLUMP_FALSE;
   answer->do_music = 0;
-  answer->secret_monsters = FALSE;
+  answer->secret_monsters = SLUMP_FALSE;
   answer->do_dm = slump_config.do_dm;
-  answer->do_slinfo = TRUE;
-  answer->produce_null_lmps = FALSE;
-  answer->do_seclevels = TRUE;
-  answer->force_secret = FALSE;
+  answer->do_slinfo = SLUMP_TRUE;
+  answer->produce_null_lmps = SLUMP_FALSE;
+  answer->do_seclevels = SLUMP_TRUE;
+  answer->force_secret = SLUMP_FALSE;
   answer->map = 1;
   answer->minlight = 115;
   /* Is this the right place for all these? */
@@ -1461,8 +1461,8 @@ config *get_config(s_config slump_config)
     answer->rad_vary = 100;        /* But change other stuff more */
     answer->norm_vary = 60;
   }
-  answer->monsters_can_teleport = TRUE;
-  if (rollpercent(25)) answer->monsters_can_teleport = FALSE;
+  answer->monsters_can_teleport = SLUMP_TRUE;
+  if (rollpercent(25)) answer->monsters_can_teleport = SLUMP_FALSE;
   answer->window_airshafts = rollpercent(50);
   answer->homogenize_monsters = 0;
   if (rollpercent(8)) answer->homogenize_monsters = 90;
@@ -1472,7 +1472,7 @@ config *get_config(s_config slump_config)
   sprintf(s,"Homogenization %d.",answer->homogenize_monsters);
   announce(VERBOSE,s);
   }
-  answer->weapons_are_special = FALSE;  /* Just mix weapons in with ammo */
+  answer->weapons_are_special = SLUMP_FALSE;  /* Just mix weapons in with ammo */
   answer->recess_switches = rollpercent(95);
   answer->allow_boring_rooms = rollpercent(20);
   answer->both_doors = rollpercent(50);
@@ -1577,10 +1577,10 @@ void watermark_sector(level *l,sector *s, style *ThisStyle, config *c)
    rsd = new_sidedef(l,newsector,c);
    rsd->middle_texture = c->null_texture;
    rsd->upper_texture = ThisStyle->wall0;
-   rsd->isBoundary = FALSE;
+   rsd->isBoundary = SLUMP_FALSE;
    lsd = new_sidedef(l,s,c);
    lsd->middle_texture = c->null_texture;
-   lsd->isBoundary = FALSE;
+   lsd->isBoundary = SLUMP_FALSE;
 
    /* Now make a whole buncha linedefs */
 
@@ -1794,8 +1794,8 @@ int construct_family_for(config *c, style *s)
   for (cs=c->construct_anchor;cs;cs=cs->next) {
     if (!(cs->compatible&tmask)) continue;
     if ( (cs->gamemask & c->gamemask) != c->gamemask ) continue;
-    for (already=FALSE,i=0;i<compat_count;i++)
-      if (compats[i]==cs->family) already = TRUE;
+    for (already=SLUMP_FALSE,i=0;i<compat_count;i++)
+      if (compats[i]==cs->family) already = SLUMP_TRUE;
     if (already) continue;
     compats[compat_count++] = cs->family;
   }
@@ -1972,7 +1972,7 @@ style *copy_style(level *l,style *old,int themenumber,int vary,config *c)
     else answer->paint_recesses = rollpercent(60);
   if (!rollpercent(vary)) answer->gaudy_locks = old->gaudy_locks;
     else answer->gaudy_locks = rollpercent(10);
-  answer->lightboxes = FALSE;  /* Ephemeral; usually FALSE */
+  answer->lightboxes = SLUMP_FALSE;  /* Ephemeral; usually SLUMP_FALSE */
   if (!rollpercent(vary)) answer->auxheight = old->auxheight;
     else answer->auxheight = roll(2) * (8 + 8 * roll(8));
   if (!rollpercent(vary)) answer->auxspecial = old->auxspecial;
@@ -2122,18 +2122,18 @@ boolean enough_quest(level *l,sector *s,quest *ThisQuest,config *c)
 /* Process the switches in the given arg array, filling in the  */
 /* given config structure.  Use s in error messages.  If conly, */
 /* all we're parsing for here are -config and -seed.            */
-/* Print msg and return FALSE if error, else return TRUE.       */
+/* Print msg and return SLUMP_FALSE if error, else return SLUMP_TRUE.       */
 boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
 {
   int i;
 
   if (conly) {  /* config, seed, -v only; imperfect algorithm! Can be fooled. */
     for (i=1;i<argc;i++) {
-      if (!stricmp(argv[i],"-config")) {
+      if (!slump_stricmp(argv[i],"-config")) {
         if (i<(argc-1)) {   /* If -config is the last arg, just ignore it */
           c->configfile = strdup(argv[++i]);
         }  /* end if enough args */
-      } else if (!stricmp(argv[i],"-v")) {
+      } else if (!slump_stricmp(argv[i],"-v")) {
         global_verbosity = 1;
       }  /* end if -config arg */
     }  /* end for args */
@@ -2141,84 +2141,84 @@ boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
     for (i=1;i<argc;i++) {
       if (argv[i][0]!='-') {
         c->outfile = strdup(argv[i]);   /* Just take last if multiple */
-      } else if (!stricmp(argv[i],"-?")) {
+      } else if (!slump_stricmp(argv[i],"-?")) {
         Usage2();
         exit(100);
-      } else if (!stricmp(argv[i],"-outfile")) {
+      } else if (!slump_stricmp(argv[i],"-outfile")) {
         if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
           c->outfile = strdup(argv[++i]);
         }  /* end not last arg */
-      } else if (!stricmp(argv[i],"-doom")) {
+      } else if (!slump_stricmp(argv[i],"-doom")) {
         c->gamemask = DOOM1_BIT;
         if (c->episode==0) c->episode = c->mission = 1;
         c->map = 0;
-      } else if (!stricmp(argv[i],"-doom2")) {
+      } else if (!slump_stricmp(argv[i],"-doom2")) {
         c->gamemask = DOOM2_BIT;
         c->episode = c->mission = 0;
         if (c->map==0) c->map = 1;
-      } else if (!stricmp(argv[i],"-nogross")) {
+      } else if (!slump_stricmp(argv[i],"-nogross")) {
         c->gamemask |= DOOMC_BIT;
-      } else if (!stricmp(argv[i],"-v")) {
+      } else if (!slump_stricmp(argv[i],"-v")) {
         global_verbosity = 1;
-      } else if (!stricmp(argv[i],"-cwad")) {
-        c->cwadonly = TRUE;
-      } else if (!stricmp(argv[i],"-nocustom")) {
+      } else if (!slump_stricmp(argv[i],"-cwad")) {
+        c->cwadonly = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-nocustom")) {
         c->gamemask |= DOOMI_BIT;
-      } else if (!stricmp(argv[i],"-nulls")) {
-        c->produce_null_lmps = TRUE;
-      } else if (!stricmp(argv[i],"-noslinfo")) {
-        c->do_slinfo = FALSE;
-      } else if (!stricmp(argv[i],"-noseclevels")) {
-        c->do_seclevels = FALSE;
-      } else if (!stricmp(argv[i],"-bimo!")) {
-        c->force_biggest = TRUE;
-      } else if (!stricmp(argv[i],"-bimo")) {
-        c->big_monsters = TRUE;
-      } else if (!stricmp(argv[i],"-biwe")) {
-        c->big_weapons = TRUE;
-      } else if (!stricmp(argv[i],"-xsecret")) {
-        c->force_secret = TRUE;
-      } else if (!stricmp(argv[i],"-gross")) {
+      } else if (!slump_stricmp(argv[i],"-nulls")) {
+        c->produce_null_lmps = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-noslinfo")) {
+        c->do_slinfo = SLUMP_FALSE;
+      } else if (!slump_stricmp(argv[i],"-noseclevels")) {
+        c->do_seclevels = SLUMP_FALSE;
+      } else if (!slump_stricmp(argv[i],"-bimo!")) {
+        c->force_biggest = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-bimo")) {
+        c->big_monsters = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-biwe")) {
+        c->big_weapons = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-xsecret")) {
+        c->force_secret = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-gross")) {
         c->gamemask &= ~DOOMC_BIT;
-      } else if (!stricmp(argv[i],"-music")) {
-        c->do_music = TRUE;
-      } else if (!stricmp(argv[i],"-nosemo")) {
-        c->secret_monsters = FALSE;
-      } else if (!stricmp(argv[i],"-dm")) {
-        c->do_dm = TRUE;
-      } else if (!stricmp(argv[i],"-arena")) {
-        c->force_arena = TRUE;
-      } else if (!stricmp(argv[i],"-levels")) {
+      } else if (!slump_stricmp(argv[i],"-music")) {
+        c->do_music = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-nosemo")) {
+        c->secret_monsters = SLUMP_FALSE;
+      } else if (!slump_stricmp(argv[i],"-dm")) {
+        c->do_dm = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-arena")) {
+        c->force_arena = SLUMP_TRUE;
+      } else if (!slump_stricmp(argv[i],"-levels")) {
         if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
           c->levelcount = atoi(argv[++i]);
           if (c->levelcount==0) {
             fprintf(stderr,"%s error: invalid -levels arg <%s>.\n",
                                 s,argv[i]);
-            return FALSE;
+            return SLUMP_FALSE;
           }
         }  /* end if enough args */
-      } else if (!stricmp(argv[i],"-minlight")) {
+      } else if (!slump_stricmp(argv[i],"-minlight")) {
         if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
           c->minlight = atoi(argv[++i]);
           if (c->minlight==0) {
             fprintf(stderr,"%s error: invalid -minlight arg <%s>.\n",
                                 s,argv[i]);
-            return FALSE;
+            return SLUMP_FALSE;
           }
         }  /* end if enough args */
-      } else if (!stricmp(argv[i],"-macho")) {
+      } else if (!slump_stricmp(argv[i],"-macho")) {
         int mfac;
         if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
           mfac = atoi(argv[++i]);
           if ((mfac<1) || (mfac>100)) {
             fprintf(stderr,"%s error: -macho must be in [1,100], not <%s>.\n",
                                 s,argv[i]);
-            return FALSE;
+            return SLUMP_FALSE;
           }
           c->machoh = ((float)100 - (float)mfac/(float)4) / (float)100;
           c->machou = ((float)100 - (float)mfac/(float)2) / (float)100;
         }  /* end if enough args */
-      } else if (!stricmp(argv[i],"-restrict")) {
+      } else if (!slump_stricmp(argv[i],"-restrict")) {
         if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
           int j;
           i++;
@@ -2232,7 +2232,7 @@ boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
               else {
                 fprintf(stderr,"%s error: invalid -restrict arg <%s>.\n",
                                     s,argv[i]);
-                return FALSE;
+                return SLUMP_FALSE;
               }
           }  /* end for bits of next arg */
         }  /* end if enough args */
@@ -2241,17 +2241,17 @@ boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
                  ( (argv[i][3]=='M') || (argv[i][3]=='m') ) ) {
         if (2!=sscanf(argv[i],"-%*c%d%*c%d",&(c->episode),&(c->mission))) {
           fprintf(stderr,"%s error: Invalid -ExMx switch <%s>.\n",s,argv[i]);
-          return FALSE;
+          return SLUMP_FALSE;
         }
         c->map = 0;
-      } else if (!strnicmp(argv[i],"-map",4)) {
+      } else if (!slump_strnicmp(argv[i],"-map",4)) {
         c->map = atoi(argv[i]+4);
         if (c->map==0) {
           fprintf(stderr,"%s error: Invalid -MAPxx switch <%s>.\n",s,argv[i]);
-          return FALSE;
+          return SLUMP_FALSE;
         }
         c->episode = c->mission = 0;
-      } else if (!stricmp(argv[i],"-rooms")) {
+      } else if (!slump_stricmp(argv[i],"-rooms")) {
         if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
           c->minrooms = atoi(argv[++i]);
 	  if(c->minrooms < 2) 
@@ -2259,18 +2259,18 @@ boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
 	  if(c->minrooms > 37)
 		  c->minrooms = 37;
         }  /* end if enough args */
-      } else if (!stricmp(argv[i],"-config")) {
+      } else if (!slump_stricmp(argv[i],"-config")) {
         if (i<(argc-1)) i++;   /* Ignored in this stage */
-      } else if (!stricmp(argv[i],"-seed")) {
+      } else if (!slump_stricmp(argv[i],"-seed")) {
         if (i<(argc-1)) i++;   /* Ignored in this stage */
       } else {  /* Unknown switch */
         fprintf(stderr,"%s error: unknown switch <%s>.\n\n",s,argv[i]);
-        return FALSE;
+        return SLUMP_FALSE;
       }
     }  /* end for args */
   }  /* end not conly */
 
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Put this object in this sector.  It's a non-obstable object */
@@ -2281,7 +2281,7 @@ thing *place_required_pickable(level *l,sector *s,config *c,short id)
   answer = place_object(l,s,c,id,48,0,0,0,7);   /* 48 for nice-looking-ness */
   if (answer==NULL)
     answer = place_object(l,s,c,id,1,0,0,0,7); /* This had better work! */
-  if (answer==NULL) announce(ERROR,"Important object could not be placed.");
+  if (answer==NULL) announce(SLUMP_ERROR,"Important object could not be placed.");
   return answer;
 }
 
@@ -2684,7 +2684,7 @@ void find_rec(level *l, sector *s, int *minx, int *miny, int *maxx, int *maxy)
         }
     }
     s->minx = lx;  s->miny = ly;  s->maxx = hx;  s->maxy = hy;
-    s->findrec_data_valid = TRUE;
+    s->findrec_data_valid = SLUMP_TRUE;
   }
 
   *minx = s->minx;  *miny = s->miny;  *maxx = s->maxx;  *maxy = s->maxy;
@@ -2955,13 +2955,13 @@ boolean no_monsters_stuck_on(level *l, linedef *ld)
     if (dist<=(MONSTER_WIDTH(m)/2)) {
 #ifdef ALLOW_STUCK_MONSTERS_IN_BATHS
       announce(LOG,"Bath Bug!");
-      return TRUE;
+      return SLUMP_TRUE;
 #endif
-      return FALSE;
+      return SLUMP_FALSE;
     }
   }
 
-  return TRUE;
+  return SLUMP_TRUE;
 
 }
 
@@ -2976,14 +2976,14 @@ sector *point_sector(level *l,int x, int y, int *dist, boolean *danger)
   linedef *ld, *ldbest;
   sector *answer = NULL;
 
-  if (danger!=NULL) *danger = FALSE;
+  if (danger!=NULL) *danger = SLUMP_FALSE;
   closest = HUGE_NUMBER;
   for (ld=l->linedef_anchor;ld;ld=ld->next) {
     thisdist = point_from_linedef(l,x,y,ld);
     if (abs(thisdist)<49)
       if (ld->type!=LINEDEF_NORMAL)
         if (danger!=NULL)
-          *danger = TRUE;
+          *danger = SLUMP_TRUE;
     if (abs(thisdist)<closest) {
       if (thisdist>0) {
         answer = ld->right->psector;
@@ -3232,15 +3232,15 @@ void basic_background3(byte *fbuf, byte bottom, int range)
 /* Should there be a secret level after the current level? */
 boolean need_secret_level(config *c)
 {
-  if (c->do_seclevels==FALSE) return FALSE;
-  if (c->map==15) return TRUE;
-  if (c->map==31) return TRUE;
+  if (c->do_seclevels==SLUMP_FALSE) return SLUMP_FALSE;
+  if (c->map==15) return SLUMP_TRUE;
+  if (c->map==31) return SLUMP_TRUE;
   switch (c->episode) {
     case 1: return (c->mission == 3);
     case 2: return (c->mission == 5);
     case 3: return (c->mission == 6);
     case 4: return (c->mission == 2);
-    default: return FALSE;
+    default: return SLUMP_FALSE;
   }
 }
 
@@ -3249,23 +3249,23 @@ boolean need_secret_level(config *c)
 /* be locked, so it can false-negative sometimes safely.           */
 boolean link_fitsq(link *ThisLink,quest *ThisQuest)
 {
-  if (ThisQuest==NULL) return TRUE;  /* Nothing to fit */
+  if (ThisQuest==NULL) return SLUMP_TRUE;  /* Nothing to fit */
 
   if (ThisQuest->goal==GATE_GOAL) {
-    if (ThisLink->type==OPEN_LINK) return TRUE;  /* Easy */
-    return FALSE;        /* else punt */
+    if (ThisLink->type==OPEN_LINK) return SLUMP_TRUE;  /* Easy */
+    return SLUMP_FALSE;        /* else punt */
   }
 
   /* Keys and switches require doors */
   if ( (ThisQuest->goal==KEY_GOAL) || (ThisQuest->goal==SWITCH_GOAL) ) {
-    if (!(ThisLink->bits&LINK_NEAR_DOOR)) return FALSE;
-    if (!(ThisLink->type==BASIC_LINK)) return FALSE;
+    if (!(ThisLink->bits&LINK_NEAR_DOOR)) return SLUMP_FALSE;
+    if (!(ThisLink->type==BASIC_LINK)) return SLUMP_FALSE;
   }
   /* Actually because of nukage locks, SWITCH_GOALs don't require */
   /* doors.  Do something about that here. */
   /* For that matter, there are kinds of OPEN_LINK and GATE_LINK */
   /* that can fit a SWITCH_GOAL, also.  So fix that, too. */
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Will this link fit along this linedef? */
@@ -3290,12 +3290,12 @@ boolean link_fitsh(linedef *ldf,link *ThisLink,config *c)
    case GATE_LINK:
      /* No gate-links outgoing from a gate room, eh? */
      if (ldf->right->psector->pgate) {
-       return FALSE;
+       return SLUMP_FALSE;
      }
-     return TRUE;
+     return SLUMP_TRUE;
    default:
      announce(WARNING,"Funny type in link_fitsh");
-     return FALSE;
+     return SLUMP_FALSE;
    }
 
    return (available>=required);
@@ -3449,7 +3449,7 @@ boolean slitify(level *l,linedef *ldf1,linedef *ldf2, int slitwidth,
     announce(VERBOSE,"Slit");
   }
 
-  return TRUE;
+  return SLUMP_TRUE;
 
 }  /* end slitify */
 
@@ -3469,7 +3469,7 @@ void stairify(level *l,linedef *ldf1,linedef *ldf2,linedef *lde1,
   int minstepcount, maxstepcount, stepcount, stepheight;
   boolean need_lock = (ThisQuest!=NULL) && (ThisQuest->goal==SWITCH_GOAL);
   texture *front = ThisStyle->kickplate;
-  boolean do_edges = FALSE;
+  boolean do_edges = SLUMP_FALSE;
 
   nearsec = ldf1->right->psector;
   len = linelen(lde1);
@@ -3490,7 +3490,7 @@ void stairify(level *l,linedef *ldf1,linedef *ldf2,linedef *lde1,
     stepheight = (farheight-nearheight)/stepcount;
   }
   if (stepheight>24)
-    announce(ERROR,"Step too high to climb!");
+    announce(SLUMP_ERROR,"Step too high to climb!");
   if (need_lock) {
     announce(LOG,"Locked stairs");
     stepheight = 8;
@@ -3516,7 +3516,7 @@ void stairify(level *l,linedef *ldf1,linedef *ldf2,linedef *lde1,
       front = ThisStyle->walllight;
     } else if (ThisStyle->light_edges &&
                (linelen(ldf1)>=(64*l->hugeness)) && (stepheight>7) ) {
-      do_edges = TRUE;
+      do_edges = SLUMP_TRUE;
       announce(VERBOSE,"Step-edge lights");
     }
   }
@@ -3683,10 +3683,10 @@ boolean make_window_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
 
   /* Make sure a window is possible */
   if (nearsec->floor_height+ThisStyle->sillheight>farsec->ceiling_height-16)
-    return FALSE;
+    return SLUMP_FALSE;
   if (nearsec->floor_height+ThisStyle->sillheight+ThisStyle->windowheight<
     farsec->floor_height+16)
-      return FALSE;
+      return SLUMP_FALSE;
 
   if (ThisStyle->slitwindows) {
     return slitify(l,ldf1,ldf2,16+roll(17),NULL,ThisStyle,c);
@@ -3774,7 +3774,7 @@ boolean make_window_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
   patch_lower(ldf1,t1,c);
   patch_lower(ldf2,t2,c);
 
-  return TRUE;
+  return SLUMP_TRUE;
 
 }  /* end make_window_inner */
 
@@ -3931,7 +3931,7 @@ boolean make_decroom(level *l,linedef *ldf1,linedef *ldf2,config *c)
 
   place_plants(l,48,newsec,c);    /* Put in some plants for decor */
 
-  return TRUE;
+  return SLUMP_TRUE;
 
 }  /* end make_decroom */
 
@@ -4027,7 +4027,7 @@ short locked_linedef_for(short type,short key,config *c)
         case ID_YELLOWCARD:
           return LINEDEF_S1_OPEN_DOOR_YELLOW;
         default:
-          announce(ERROR,"Unknown key in l_l_f");
+          announce(SLUMP_ERROR,"Unknown key in l_l_f");
           return 0;
       }
     default: return 0;
@@ -4148,14 +4148,14 @@ linedef *borderize(level *l,linedef *ld,int width,boolean fancy,
   sector *nearsec = ld->right->psector;
   sector *lsec;
   linedef *ldt;
-  boolean try_keybox = TRUE;
+  boolean try_keybox = SLUMP_TRUE;
 
   answer = centerpart(l,ld,&ld2,width,ThisStyle,c);
 
   /* Now optionally do fancy things to ld and ld2 */
   /* Gotta think of some other fancy things! */
-  if (nearsec->ceiling_height - nearsec->floor_height < 88) try_keybox = FALSE;
-  if (painted_door) *painted_door = FALSE;
+  if (nearsec->ceiling_height - nearsec->floor_height < 88) try_keybox = SLUMP_FALSE;
+  if (painted_door) *painted_door = SLUMP_FALSE;
   if (ld!=ld2)
     if (fancy)
       if (ThisStyle->lightboxes)
@@ -4188,7 +4188,7 @@ linedef *borderize(level *l,linedef *ld,int width,boolean fancy,
             lsec->special = GLOW_BLINK;
             if (lsec->light_level<l->lit_light_level)
               lsec->light_level = l->lit_light_level;
-            if (painted_door) *painted_door = TRUE;
+            if (painted_door) *painted_door = SLUMP_TRUE;
             announce(LOG,"Keybox");
           } else if (ldt) {
             ldt->left->psector->light_level = box_light_level;
@@ -4205,7 +4205,7 @@ linedef *borderize(level *l,linedef *ld,int width,boolean fancy,
             lsec->special = GLOW_BLINK;
             if (lsec->light_level<l->lit_light_level)
               lsec->light_level = l->lit_light_level;
-            if (painted_door) *painted_door = TRUE;
+            if (painted_door) *painted_door = SLUMP_TRUE;
             announce(LOG,"Keybox");
           } else if (ldt) {
             ldt->left->psector->light_level = box_light_level;
@@ -4368,8 +4368,8 @@ void establish_link(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       short tag1, tag2;
       tag1 = new_tag(l);
       tag2 = new_tag(l);
-      ldf1->right->psector->pgate = new_gate(l,tag1,tag2,0,FALSE,c);
-      ldf2->right->psector->pgate = new_gate(l,tag2,tag1,0,TRUE,c);
+      ldf1->right->psector->pgate = new_gate(l,tag1,tag2,0,SLUMP_FALSE,c);
+      ldf2->right->psector->pgate = new_gate(l,tag2,tag1,0,SLUMP_TRUE,c);
       if (ThisQuest) {
         if (rollpercent(50)) {
           ThisQuest->type = LINEDEF_S1_OPEN_DOOR;
@@ -4382,7 +4382,7 @@ void establish_link(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       break;
     }
     default:
-      announce(ERROR,"Unknown linktype, sectors not linked.");
+      announce(SLUMP_ERROR,"Unknown linktype, sectors not linked.");
       return;
   }
 }
@@ -4451,9 +4451,9 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
   sector *sideseca, *sidesecb, *midsec;
   sector *nearsec, *farsec;
   int midwidth, len, sidefloor, dieroll;
-  boolean nukage = FALSE;
-  boolean high_sides = FALSE;
-  boolean sidesteps = FALSE;
+  boolean nukage = SLUMP_FALSE;
+  boolean high_sides = SLUMP_FALSE;
+  boolean sidesteps = SLUMP_FALSE;
 
   if (ThisLink->bits&LINK_LIFT)
     announce(VERBOSE,"Open lift");
@@ -4462,8 +4462,8 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       (!(ThisLink->bits&LINK_STEPS)))
     announce(WARNING,"Non-lift non-stair open link; oops!");
 
-  if (rollpercent(l->p_force_nukage) || rollpercent(10)) nukage = TRUE;
-  if ((ThisLink->bits&LINK_STEPS) && (ThisLink->bits&LINK_ALCOVE)) nukage=FALSE;
+  if (rollpercent(l->p_force_nukage) || rollpercent(10)) nukage = SLUMP_TRUE;
+  if ((ThisLink->bits&LINK_STEPS) && (ThisLink->bits&LINK_ALCOVE)) nukage=SLUMP_FALSE;
 
   nearsec = ldf1->right->psector;
   farsec = ldf2->right->psector;
@@ -4511,7 +4511,7 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       ldf2->left->middle_texture = ThisStyle->grating;
       ldf2->flags |= IMPASSIBLE | LOWER_UNPEGGED;   /* Lower the grating, eh? */
     }
-    farsec->pgate = new_gate(l,ThisQuest->tag,ThisQuest->tag2,0,TRUE,c);
+    farsec->pgate = new_gate(l,ThisQuest->tag,ThisQuest->tag2,0,SLUMP_TRUE,c);
     announce(LOG,"OL Gate quest");
     return;  /* and that's it */
   }
@@ -4530,7 +4530,7 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
   /* Decide if doing the sideways-step thing */
   if ( (ThisLink->bits&LINK_STEPS) && (ThisLink->bits&LINK_ALCOVE) &&
        (midwidth>=(farsec->floor_height - nearsec->floor_height)) ) {
-    sidesteps = TRUE;
+    sidesteps = SLUMP_TRUE;
   }
 
   /* Decide about nukage and side heights and stuff */
@@ -4540,13 +4540,13 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
   } else if ((dieroll<50)||nukage) {
     sidefloor = nearsec->floor_height;
   } else if (dieroll<75) {
-    nukage = FALSE;
-    high_sides = TRUE;
+    nukage = SLUMP_FALSE;
+    high_sides = SLUMP_TRUE;
     sidefloor = farsec->floor_height;
     if (sidefloor>nearsec->ceiling_height-57)
       sidefloor=nearsec->ceiling_height-57;
   } else {
-    nukage = FALSE;
+    nukage = SLUMP_FALSE;
     sidefloor = farsec->floor_height;
     if (sidefloor>nearsec->ceiling_height-57)
       sidefloor=nearsec->ceiling_height-57;
@@ -4626,7 +4626,7 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
     sideseca->special = NUKAGE1_SPECIAL;
     patch_lower(ldf1a,ThisStyle->support0,c);
     patch_lower(ldf2a,ThisStyle->support0,c);
-    nearsec->marked = farsec->marked = TRUE;
+    nearsec->marked = farsec->marked = SLUMP_TRUE;
     if (c->gunk_channels && empty_left_side(l,lde1,32)) {
       lefthand_box(l,lde1,32,ThisStyle,c)->right->middle_texture =
         ThisStyle->support0;
@@ -4638,7 +4638,7 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       patch_upper(lde1,NewStyle->wall0,c);
       announce(VERBOSE,"Channel");
     }
-    nearsec->marked = farsec->marked = FALSE;
+    nearsec->marked = farsec->marked = SLUMP_FALSE;
   }
 
   flip_linedef(ldf2b);
@@ -4665,7 +4665,7 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
     sidesecb->special = NUKAGE1_SPECIAL;
     patch_lower(ldf1b,ThisStyle->support0,c);
     patch_lower(ldf2b,ThisStyle->support0,c);
-    nearsec->marked = farsec->marked = TRUE;
+    nearsec->marked = farsec->marked = SLUMP_TRUE;
     if (c->gunk_channels && empty_left_side(l,lde2,32)) {
       lefthand_box(l,lde2,32,ThisStyle,c)->right->middle_texture =
         ThisStyle->support0;
@@ -4677,7 +4677,7 @@ void e_ol_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       patch_upper(lde2,NewStyle->wall0,c);
       announce(VERBOSE,"Channel");
     }
-    nearsec->marked = farsec->marked = FALSE;
+    nearsec->marked = farsec->marked = SLUMP_FALSE;
   }
 
   /* Could be more interesting... */
@@ -4804,7 +4804,7 @@ void establish_basic_link(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
 {
   ThisStyle->lightboxes = rollpercent(5);  /* Should be from style, or? */
   e_bl_inner(l,ldf1,ldf2,ThisLink,ThisQuest,ThisStyle,NewStyle,0,haa,c);
-  ThisStyle->lightboxes = FALSE;  /* Just to be neat */
+  ThisStyle->lightboxes = SLUMP_FALSE;  /* Just to be neat */
 }
 
 /* Implement the given link between the given (antiparallel) linedefs */
@@ -4819,7 +4819,7 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
   int len, border, maxtop;
   texture *t1, *t2;
   sector *nearsec, *farsec, *newsec = NULL;
-  boolean need_to_doorify = FALSE;
+  boolean need_to_doorify = SLUMP_FALSE;
   linedef *ldflip1a = NULL;
   linedef *ldflip1b = NULL;
   linedef *ldflip2a = NULL;
@@ -4828,9 +4828,9 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
   sector *sflip2 = NULL;
   linedef *ldedge1, *ldedge2;
   int tag1 = 0;
-  boolean trigger_lift = FALSE;
-  boolean trigger_door = FALSE;
-  boolean painted_door = FALSE;
+  boolean trigger_lift = SLUMP_FALSE;
+  boolean trigger_door = SLUMP_FALSE;
+  boolean painted_door = SLUMP_FALSE;
   int mminx, mminy, mmaxx, mmaxy, mangle;
   propertybits effective_left = ThisLink->bits&LINK_LEFT;
   propertybits litecol = LIGHT;
@@ -4925,7 +4925,7 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
     /* Now arrange for the gate and stuff */
     ThisQuest->tag = new_tag(l);
     ThisQuest->tag2 = new_tag(l);
-    farsec->pgate = new_gate(l,ThisQuest->tag,ThisQuest->tag2,0,TRUE,c);
+    farsec->pgate = new_gate(l,ThisQuest->tag,ThisQuest->tag2,0,SLUMP_TRUE,c);
     announce(LOG,"BL Gate quest");
     return;  /* and that's it */
   }
@@ -4974,14 +4974,14 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       ldf1 = split_linedef(l,ldf1,len-ThisLink->width1,c);
     } else {   /* No alcove or farness; simple centered borders */
       if (ThisQuest && ThisQuest->goal==KEY_GOAL && l->skullkeys) {
-        ldf1 = borderize(l,ldf1,ThisLink->width1,TRUE,ThisStyle,
+        ldf1 = borderize(l,ldf1,ThisLink->width1,SLUMP_TRUE,ThisStyle,
                          litecol,find_genus(c,ThisQuest->type),&painted_door,c);
       } else {
-        ldf1 = borderize(l,ldf1,ThisLink->width1,TRUE,ThisStyle,
+        ldf1 = borderize(l,ldf1,ThisLink->width1,SLUMP_TRUE,ThisStyle,
                          litecol,NULL,NULL,c);
       }
       /* Embellish only near side of the link linedef? */
-      ldf2 = borderize(l,ldf2,ThisLink->width1,FALSE,NewStyle,
+      ldf2 = borderize(l,ldf2,ThisLink->width1,SLUMP_FALSE,NewStyle,
                        litecol,NULL,NULL,c);
     }  /* end else no-alcove case */
   } else {
@@ -5002,7 +5002,7 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       (ThisLink->bits&LINK_ALCOVE)&&
       (!(ThisLink->bits&LINK_ANY_DOOR))&&
       (ThisLink->bits&LINK_TRIGGERED)) {
-    trigger_lift = TRUE;
+    trigger_lift = SLUMP_TRUE;
     announce(VERBOSE,"Walking lift");
     tag1 = new_tag(l);
     if (ThisLink->floordelta>0) {
@@ -5021,7 +5021,7 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       (ThisLink->bits&LINK_RECESS)&&
       (ThisLink->depth2>16)&&
       (ThisLink->bits&LINK_TRIGGERED)) {
-    trigger_door = TRUE;
+    trigger_door = SLUMP_TRUE;
     tag1 = new_tag(l);
     /* Don't always need both of these, but couldn't hurt... */
     ldf1->tag = tag1;
@@ -5038,7 +5038,7 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
       (!(ThisLink->bits&LINK_ANY_DOOR))&&
       (ThisLink->depth2>16)&&
       (ThisLink->bits&LINK_TRIGGERED)) {
-    trigger_lift = TRUE;
+    trigger_lift = SLUMP_TRUE;
     tag1 = new_tag(l);
     if (ThisLink->floordelta>0) {
       ldf1->tag = tag1;
@@ -5087,7 +5087,7 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
         ldedge1->right->psector->light_level=l->lit_light_level;
       announce(VERBOSE,"painted recess");
       if (rollpercent(75)) {
-        painted_door = TRUE;
+        painted_door = SLUMP_TRUE;
       } else {
         announce(VERBOSE,"Extra-painted recess");   /* Paint the door, too */
         ldedge1->flags |= LOWER_UNPEGGED;       /* and make it all line up */
@@ -5238,7 +5238,7 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
     /* no far sectors, and their linedefs need to be flipped */
     /* for the rest of the alg to work.  So record fixup info */
     /* for later. */
-    need_to_doorify = TRUE;  /* Need to flip when done */
+    need_to_doorify = SLUMP_TRUE;  /* Need to flip when done */
     if (ThisLink->bits&LINK_NEAR_DOOR) {
       ldflip1a = ldf1;
       ldflip1b = ldnew1;
@@ -5337,12 +5337,12 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
     int i, depth, stepdelta, x, y;
     texture *front = ThisStyle->kickplate;
     genus *g = ThisStyle->lamp0;
-    boolean add_lamps = FALSE;
+    boolean add_lamps = SLUMP_FALSE;
     if (g->height>ThisLink->height1) g = ThisStyle->shortlamp0;
     depth = ThisLink->depth3 / (ThisLink->stepcount+1);
     if ((ThisLink->bits&LINK_LAMPS) &&
         (g->width<=depth) && (g->width*2+64<=len)) {
-      add_lamps = TRUE;
+      add_lamps = SLUMP_TRUE;
       announce(VERBOSE,"stair lamps");
     }
     stepdelta = ThisLink->floordelta / ThisLink->stepcount;
@@ -5633,7 +5633,7 @@ void announce(int announcelevel, char *s)
     case LOG: break;
     case NOTE: printf("NOTE: "); break;
     case WARNING: printf("WARNING: "); break;
-    case ERROR: printf("ERROR: "); break;
+    case SLUMP_ERROR: printf("SLUMP_ERROR: "); break;
     default: printf("HEY: "); break;
   }
   printf("%s\n",s);
@@ -5652,12 +5652,12 @@ linedef *install_switch(level *l,linedef *ld,boolean recess,boolean fancy,
   texture *tx = NULL;
 
   if (fancy) {
-    ThisStyle->lightboxes = TRUE;
+    ThisStyle->lightboxes = SLUMP_TRUE;
     announce(VERBOSE,"fancy switch");
   }
-  ld = borderize(l,ld,64,TRUE,ThisStyle,LIGHT,NULL,NULL,c);
+  ld = borderize(l,ld,64,SLUMP_TRUE,ThisStyle,LIGHT,NULL,NULL,c);
   if (xld) *xld = ld;
-  ThisStyle->lightboxes = FALSE;
+  ThisStyle->lightboxes = SLUMP_FALSE;
   if (recess)
     if (key) {
       tx = texture_for_key(key,ThisStyle,c);
@@ -5697,17 +5697,17 @@ linedef *install_switch(level *l,linedef *ld,boolean recess,boolean fancy,
 /* already have one, and we're doing deathmatch stuff. */
 boolean maybe_add_dm_start(level *l, sector *s, config *c, boolean force) {
 
-  if (!c->do_dm) return FALSE;
-  if (s->has_dm && !force) return FALSE;
+  if (!c->do_dm) return SLUMP_FALSE;
+  if (s->has_dm && !force) return SLUMP_FALSE;
   if (place_object(l,s,c,ID_DM,34,-1,s->entry_x,s->entry_y,7)) {
-    s->has_dm = TRUE;
+    s->has_dm = SLUMP_TRUE;
     l->dm_count++;
     if (!s->has_dm_weapon)
       if (place_object(l,s,c,ID_SHOTGUN,24,0,0,0,0x17))
-        s->has_dm_weapon = TRUE;
-    return TRUE;
+        s->has_dm_weapon = SLUMP_TRUE;
+    return SLUMP_TRUE;
   }
-  return FALSE;
+  return SLUMP_FALSE;
 }
 
 /* Does anything involved with closing a quest that has to happen */
@@ -5718,11 +5718,11 @@ void close_quest_final(level *l, sector *s, quest *q, haa *haa, config *c)
 
   l->goal_room = s;
 
-  maybe_add_dm_start(l,s,c,FALSE);
+  maybe_add_dm_start(l,s,c,SLUMP_FALSE);
 
   if ( t && (q->auxtag) && (q->surprise)) {
     trigger_box(l,t,s,q->auxtag,LINEDEF_WR_OPEN_DOOR,c);
-    populate_linedef(l,q->surprise,haa,c,FALSE);
+    populate_linedef(l,q->surprise,haa,c,SLUMP_FALSE);
   }
 
   /* If we've put in the SL exit, but not yet the thing that */
@@ -5731,8 +5731,8 @@ void close_quest_final(level *l, sector *s, quest *q, haa *haa, config *c)
     t = place_required_small_pickable(l,s,c);
     if (t) {
       trigger_box(l,t,s,l->sl_tag,l->sl_type,c);
-      l->sl_done = TRUE;
-      l->sl_open_ok = FALSE;
+      l->sl_done = SLUMP_TRUE;
+      l->sl_open_ok = SLUMP_FALSE;
       announce(VERBOSE,"Did sl triggerbox");
     }
   }
@@ -5752,7 +5752,7 @@ void close_quest_final(level *l, sector *s, quest *q, haa *haa, config *c)
         else ldf->right->middle_texture = s->pstyle->support0;
       ldf->type = LINEDEF_S1_SEC_LEVEL;
       announce(LOG,"Last-ditch SL exit!");
-      l->sl_done = TRUE;
+      l->sl_done = SLUMP_TRUE;
     }
   }
 }
@@ -5776,7 +5776,7 @@ short death_room(level *l,linedef *ld,style *ThisStyle,config *c)
     ldnew->to->y = ldnew->from->y + 2 *
       (ldnew->to->y - ldnew->from->y);
   }
-  newsector = generate_room_outline(l,ldnew,ThisStyle,FALSE,c);
+  newsector = generate_room_outline(l,ldnew,ThisStyle,SLUMP_FALSE,c);
   newsector->pstyle = ThisStyle;
   paint_room(l,newsector,ThisStyle,c);
   newsector->tag = new_tag(l);
@@ -5802,12 +5802,12 @@ boolean e1m8_gate(level *l,linedef *ld,sector *s,haa *haa,config *c)
 {
   short tag = death_room(l,ld,s->pstyle,c);
 
-  if (tag==0) return FALSE;
-  s->pgate = new_gate(l,0,tag,0,FALSE,c);
-  install_gate(l,s,s->pstyle,haa,TRUE,c);
-  s->middle_enhanced = TRUE;
-  gate_populate(l,s,haa,FALSE,c);  /* safe/correct? */
-  return TRUE;
+  if (tag==0) return SLUMP_FALSE;
+  s->pgate = new_gate(l,0,tag,0,SLUMP_FALSE,c);
+  install_gate(l,s,s->pstyle,haa,SLUMP_TRUE,c);
+  s->middle_enhanced = SLUMP_TRUE;
+  gate_populate(l,s,haa,SLUMP_FALSE,c);  /* safe/correct? */
+  return SLUMP_TRUE;
 
 }
 
@@ -6093,7 +6093,7 @@ void arena_arrival(level *l,arena *a,haa *haa,config *c)
                        c,a->weapon->thingid,24,0,0,0,7))
     if (!place_object_in_region(l,minx,a->miny,maxx,a->maxy,
                          c,a->weapon->thingid,1,0,0,0,7))
-      announce(ERROR,"No room for important weapon!");
+      announce(SLUMP_ERROR,"No room for important weapon!");
   place_object_in_region(l,minx,a->miny,maxx,a->maxy,
                          c,ID_SOUL,24,0,0,0,1);
   ammo_value(a->weapon->thingid,haa,&f0,&f1,&f2);
@@ -6106,7 +6106,7 @@ void arena_arrival(level *l,arena *a,haa *haa,config *c)
                          c,a->ammo->thingid,24,0,0,0,mask))
       if (!place_object_in_region(l,minx,a->miny,maxx,a->maxy,
                            c,a->ammo->thingid,1,0,0,0,mask))
-        announce(ERROR,"No room for important ammo!");
+        announce(SLUMP_ERROR,"No room for important ammo!");
     na0 -= (float)f0;
     na1 -= (float)f1;
     na2 -= (float)f2;
@@ -6190,7 +6190,7 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
   /* STUB */
   int cx,cy;
   short facing;
-  boolean need_switch = TRUE;
+  boolean need_switch = SLUMP_TRUE;
 
   cx = a->minx + 5 * ( a->maxx - a->minx ) / 6;
   cy = (a->miny + a->maxy ) / 2;
@@ -6199,12 +6199,12 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
   if (a->boss_count>1)  /* Only 1 and 2 supported! */
     new_thing(l,cx,cy-(a->boss->width+8),facing,a->boss->thingid,7,c);
 
-  if ((c->episode==2)&&(c->mission==8)) need_switch = FALSE;
-  if ((c->episode==3)&&(c->mission==8)) need_switch = FALSE;
+  if ((c->episode==2)&&(c->mission==8)) need_switch = SLUMP_FALSE;
+  if ((c->episode==3)&&(c->mission==8)) need_switch = SLUMP_FALSE;
   if (((c->episode==4)&&(c->mission==8))||(c->map==7)) {
     linedef *ld1, *ld2, *ld3, *ld4;
     sector *newsec;
-    need_switch = FALSE;
+    need_switch = SLUMP_FALSE;
     cx -= 32;
     cx &= ~(63);
     cy += a->boss->width+72;
@@ -6235,7 +6235,7 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
     sector *newsec;
     short tag = death_room(l,NULL,a->innersec->pstyle,c);
     if (tag) {
-      need_switch = FALSE;
+      need_switch = SLUMP_FALSE;
       cx -= 32;
       cx &= ~(63);
       cy += a->boss->width+72;
@@ -6280,7 +6280,7 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
     /* install_switch uses empty_left_side(), which doesn't grok    */
     /* nested enclosing sectors, sigh!                              */
     a->outersec->marked = 1;
-    ld = install_switch(l,ld,TRUE,FALSE,0,a->innersec->pstyle,c,NULL);
+    ld = install_switch(l,ld,SLUMP_TRUE,SLUMP_FALSE,0,a->innersec->pstyle,c,NULL);
     a->outersec->marked = 0;
     ld->type = LINEDEF_S1_END_LEVEL;
     tm = random_texture0(EXITSWITCH,c,a->innersec->pstyle);
@@ -6301,10 +6301,10 @@ void arena_gate(level *l,sector *s,haa *haa,config *c)
   arena *ThisArena = new_arena(l,c);
 
   /* Put in an exit-style outgoing gate */
-  s->pgate = new_gate(l,0,new_tag(l),0,FALSE,c);
+  s->pgate = new_gate(l,0,new_tag(l),0,SLUMP_FALSE,c);
   ThisArena->fromtag = s->pgate->out_tag;
-  install_gate(l,s,s->pstyle,haa,FALSE,c);   /* Don't want EXIT style, eh? */
-  s->middle_enhanced = TRUE;
+  install_gate(l,s,s->pstyle,haa,SLUMP_FALSE,c);   /* Don't want EXIT style, eh? */
+  s->middle_enhanced = SLUMP_TRUE;
 
   /* Now put down some powerups and stuff in s... */
   prepare_arena_gate(l,s,ThisArena,haa,c);
@@ -6330,17 +6330,17 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
   int minx, miny, maxx, maxy;
   int xborder, yborder, depth;
   sector *newsec;
-  boolean did_trigger = FALSE;
+  boolean did_trigger = SLUMP_FALSE;
   linedef *ld1,*ld2,*ld3,*ld4;
   thing *t;
   short tid = rollpercent(50) ? ID_POTION : ID_HELMET;
 
-  if (s->pgate) return FALSE;
+  if (s->pgate) return SLUMP_FALSE;
 
   /* Make sure nice and huge */
   find_rec(l,s,&minx,&miny,&maxx,&maxy);
-  if (maxx-minx<320) return FALSE;
-  if (maxy-miny<320) return FALSE;
+  if (maxx-minx<320) return SLUMP_FALSE;
+  if (maxy-miny<320) return SLUMP_FALSE;
 
   xborder = (64 + roll((maxx-minx)-320)) / 2;
   yborder = (64 + roll((maxy-miny)-320)) / 2;
@@ -6356,7 +6356,7 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
   parallel_innersec_ex(l,s,newsec,NULL,s->pstyle->wall0,s->pstyle->support0,
                        minx+xborder,miny+yborder,maxx-xborder,maxy-yborder,
                        c,&ld1,&ld2,&ld3,&ld4);
-  s->middle_enhanced = TRUE;
+  s->middle_enhanced = SLUMP_TRUE;
 
   /* Point the right sides into the well, for pushing and find_rec */
   flip_linedef(ld1);
@@ -6370,7 +6370,7 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
     if (ThisQuest->auxtag==0)
       if (!(c->gamemask&DOOM0_BIT))
         if (rollpercent(80)) {
-          did_trigger = TRUE;
+          did_trigger = SLUMP_TRUE;
           trigger_box(l,t,newsec,newsec->tag,LINEDEF_W1_RAISE_FLOOR,c);
           announce(VERBOSE,"Zlooty");
         }
@@ -6382,7 +6382,7 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
       if (!(c->gamemask&DOOM0_BIT))
         if (rollpercent(50)) {
           t = new_thing(l,(minx+maxx)/2,(miny+maxy)/2,0,tid,7,c);
-          did_trigger = TRUE;
+          did_trigger = SLUMP_TRUE;
           trigger_box(l,t,newsec,newsec->tag,LINEDEF_W1_RAISE_FLOOR,c);
         }
   }
@@ -6405,7 +6405,7 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
   if (rollpercent(30)) place_timely_something(l,haa,c,minx+16+roll((maxx-minx)-31),maxy-16);
 
   /* Now populate the well */
-  populate(l,newsec,c,haa,FALSE);
+  populate(l,newsec,c,haa,SLUMP_FALSE);
 
   if (rollpercent(20)) {
     newsec->floor_flat = c->water_flat;       /* Eli's idea */
@@ -6414,7 +6414,7 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
 
   announce(VERBOSE,"Rising room");
 
-  return TRUE;
+  return SLUMP_TRUE;
 
 }
 
@@ -6426,9 +6426,9 @@ void close_quest(level *l,sector *s,quest *q,haa *haa,config *c)
   int i, j;
   thing *t;
   texture *tm;
-  boolean done = FALSE;
+  boolean done = SLUMP_FALSE;
 
-  s->has_key = TRUE;
+  s->has_key = SLUMP_TRUE;
 
   switch (q->goal) {
     case SWITCH_GOAL:
@@ -6438,9 +6438,9 @@ void close_quest(level *l,sector *s,quest *q,haa *haa,config *c)
       ld = random_marked_linedef(l,i);
       unmark_linedefs(l);
       if (ld==NULL) {
-        announce(ERROR,"No applicable linedef to put switch on!");
+        announce(SLUMP_ERROR,"No applicable linedef to put switch on!");
       } else {
-        ld = install_switch(l,ld,c->recess_switches,FALSE,0,s->pstyle,c,NULL);
+        ld = install_switch(l,ld,c->recess_switches,SLUMP_FALSE,0,s->pstyle,c,NULL);
         ld->type = q->type;
         ld->tag = q->tag;
       }
@@ -6459,7 +6459,7 @@ void close_quest(level *l,sector *s,quest *q,haa *haa,config *c)
       }
       unmark_linedefs(l);
       if (ld==NULL) {
-        announce(ERROR,"No applicable linedef to end level on!");
+        announce(SLUMP_ERROR,"No applicable linedef to end level on!");
       } else {
         if ((c->episode==1)&&(c->mission==8)) {  /* Try a fun thing! */
           if (e1m8_gate(l,ld,s,haa,c)) {
@@ -6478,29 +6478,29 @@ void close_quest(level *l,sector *s,quest *q,haa *haa,config *c)
             ld->left->psector->floor_flat = c->sky_flat;
             ld->left->psector->floor_height -= 16;
             announce(VERBOSE,"Hole ends level");
-            done = TRUE;
+            done = SLUMP_TRUE;
           }
         }
         if ((!done)&&(s->pgate==NULL)&&rollpercent(c->p_gate_ends_level)
             &&l->use_gates) {
           /* Do an exit gate */
-          s->pgate = new_gate(l,0,0,0,TRUE,c);
-          install_gate(l,s,s->pstyle,haa,FALSE,c);
-          gate_populate(l,s,haa,FALSE,c);  /* Some stuff */
-          s->middle_enhanced = TRUE;
+          s->pgate = new_gate(l,0,0,0,SLUMP_TRUE,c);
+          install_gate(l,s,s->pstyle,haa,SLUMP_FALSE,c);
+          gate_populate(l,s,haa,SLUMP_FALSE,c);  /* Some stuff */
+          s->middle_enhanced = SLUMP_TRUE;
           if (s->light_level>130) s->light_level=130;   /* To see "EXIT" */
           announce(VERBOSE,"Gate ends level");
-          done = TRUE;
+          done = SLUMP_TRUE;
         }
         /* Switch with recess, sometimes fancied-up */
         if (!done) {
-          ld = install_switch(l,ld,TRUE,rollpercent(10),0,s->pstyle,c,NULL);
+          ld = install_switch(l,ld,SLUMP_TRUE,rollpercent(10),0,s->pstyle,c,NULL);
           ld->type = q->type;
           ld->tag = q->tag;    /* Will be zero, actually */
           ld->right->psector->special = GLOW_BLINK;
           if (s->light_level>190) s->light_level = 190;  /* So the glow shows */
           ld->right->psector->light_level = 255;
-          done = TRUE;
+          done = SLUMP_TRUE;
           tm = random_texture0(EXITSWITCH,c,s->pstyle);
           if (tm) {
             ld->right->middle_texture = tm;
@@ -6510,7 +6510,7 @@ void close_quest(level *l,sector *s,quest *q,haa *haa,config *c)
         }
         if (need_secret_level(c) && !l->sl_done &&!l->sl_tag) {
           /* This sets sl_done if it works */
-          install_sl_exit(l,s,haa,s->pstyle,q,TRUE,c);
+          install_sl_exit(l,s,haa,s->pstyle,q,SLUMP_TRUE,c);
         }
       }
       break;
@@ -6520,7 +6520,7 @@ void close_quest(level *l,sector *s,quest *q,haa *haa,config *c)
       break;
     case GATE_GOAL:
       /* A teleporter to, and perhaps from, the goal room. */
-      s->pgate = new_gate(l,q->tag2,q->tag,0,FALSE,c);
+      s->pgate = new_gate(l,q->tag2,q->tag,0,SLUMP_FALSE,c);
       break;
     case KEY_GOAL:
       if (rollpercent(l->p_rising_room)) {
@@ -6541,7 +6541,7 @@ void close_quest(level *l,sector *s,quest *q,haa *haa,config *c)
       }
       break;
     default:
-      announce(ERROR,"Unfamiliar goal type; quest not ended.");
+      announce(SLUMP_ERROR,"Unfamiliar goal type; quest not ended.");
     }
   return;
 }
@@ -6573,7 +6573,7 @@ void maybe_push_quest(level *l,sector *s,quest *q,config *c)
   if (ld==NULL) return;
 
   /* Install the switch and hook it up */
-  ld = install_switch(l,ld,TRUE,rollpercent(50),newkey,s->pstyle,c,NULL);
+  ld = install_switch(l,ld,SLUMP_TRUE,rollpercent(50),newkey,s->pstyle,c,NULL);
   ld->type = locked_linedef_type;
   ld->tag = q->tag;
 
@@ -6646,7 +6646,7 @@ linedef *make_linkto(level *l,linedef *ld,link *ThisLink, style *ThisStyle,
     return ldnew;
   }
   default:
-    announce(ERROR,"Funny linktype in make_linkto.");
+    announce(SLUMP_ERROR,"Funny linktype in make_linkto.");
     depth = ThisLink->depth1;
   }
   return flip_linedef(make_parallel(l,ld,depth,old));
@@ -6659,12 +6659,12 @@ boolean link_fitsv(level *l,linedef *ldf1, linedef *ldf2, link *ThisLink)
 {
   boolean answer;
 
-  if (ThisLink->type==GATE_LINK) return TRUE;  /* These don't care */
+  if (ThisLink->type==GATE_LINK) return SLUMP_TRUE;  /* These don't care */
 
-  ldf1->from->marked = TRUE;
-  ldf1->to->marked = TRUE;
-  ldf2->from->marked = TRUE;
-  ldf2->to->marked = TRUE;
+  ldf1->from->marked = SLUMP_TRUE;
+  ldf1->to->marked = SLUMP_TRUE;
+  ldf2->from->marked = SLUMP_TRUE;
+  ldf2->to->marked = SLUMP_TRUE;
   if (ldf1->right) ldf1->right->psector->marked = 1;
   if (ldf2->right) ldf2->right->psector->marked = 1;
   answer = empty_rectangle(l,ldf1->from->x,ldf1->from->y,
@@ -6673,10 +6673,10 @@ boolean link_fitsv(level *l,linedef *ldf1, linedef *ldf2, link *ThisLink)
                              ldf2->to->x,ldf2->to->y);
   if (ldf1->right) ldf1->right->psector->marked = 0;
   if (ldf2->right) ldf2->right->psector->marked = 0;
-  ldf1->from->marked = FALSE;
-  ldf1->to->marked = FALSE;
-  ldf2->from->marked = FALSE;
-  ldf2->to->marked = FALSE;
+  ldf1->from->marked = SLUMP_FALSE;
+  ldf1->to->marked = SLUMP_FALSE;
+  ldf2->from->marked = SLUMP_FALSE;
+  ldf2->to->marked = SLUMP_FALSE;
   return answer;
 }
 
@@ -6708,11 +6708,11 @@ boolean ok_to_block_mid_tile(level *l, sector *s)
   find_rec(l,s,&minx,&miny,&maxx,&maxy);
   mid_tile(l,s,&tlx,&tly,&thx,&thy);
   /* Very strong rectangle assumptions here! */
-  if (tlx-minx<33) return FALSE;
-  if (tly-miny<33) return FALSE;
-  if (maxx-thx<33) return FALSE;
-  if (maxy-thy<33) return FALSE;
-  return TRUE;
+  if (tlx-minx<33) return SLUMP_FALSE;
+  if (tly-miny<33) return SLUMP_FALSE;
+  if (maxx-thx<33) return SLUMP_FALSE;
+  if (maxy-thy<33) return SLUMP_FALSE;
+  return SLUMP_TRUE;
 }
 
 /* Given a bare linedef, make a room extending from its right side. */
@@ -6818,12 +6818,12 @@ link *random_link(level *l,linedef *ld,style *ThisStyle,quest *ThisQuest,
                    config *c)
 {
   link *answer = NULL;
-  boolean open_ok = TRUE;
+  boolean open_ok = SLUMP_TRUE;
 
-  if (ld) if (linelen(ld)<100) open_ok = FALSE;
+  if (ld) if (linelen(ld)<100) open_ok = SLUMP_FALSE;
   if (ThisQuest)
     if (ThisQuest->goal==KEY_GOAL)
-      open_ok = FALSE;
+      open_ok = SLUMP_FALSE;
 
   if (l->use_gates)
     if (ThisQuest)
@@ -6919,8 +6919,8 @@ link *random_basic_link(level *l,linedef *ld,style *ThisStyle,quest *ThisQuest,
   link *answer;
   int dieroll;
   int len = 0;
-  boolean need_door = FALSE;
-  boolean nukage_core_trap = FALSE;
+  boolean need_door = SLUMP_FALSE;
+  boolean nukage_core_trap = SLUMP_FALSE;
 
   if (ld) len = linelen(ld);
 
@@ -6932,12 +6932,12 @@ link *random_basic_link(level *l,linedef *ld,style *ThisStyle,quest *ThisQuest,
   answer->bits = 0;
 
   if (ThisQuest) {
-    if (ThisQuest->goal==KEY_GOAL) need_door = TRUE;
+    if (ThisQuest->goal==KEY_GOAL) need_door = SLUMP_TRUE;
     /* So far the only tags we know of are door-opens and nukage traps */
     if (ThisQuest->goal==SWITCH_GOAL)
       if (rollpercent(30)||rollpercent(l->p_force_nukage))  /* Huh? */
-        need_door = TRUE;
-          else nukage_core_trap = TRUE;
+        need_door = SLUMP_TRUE;
+          else nukage_core_trap = SLUMP_TRUE;
   }
 
   /* Depth of the door sector, if any */
@@ -7287,8 +7287,8 @@ void swell_linedef(level *l,linedef *ld,style *ThisStyle,config *c,
 /* Should these textures be aligned as if they were the same? */
 boolean coalignable(texture *t1, texture *t2)
 {
-  if (t1->subtle==t2) return TRUE;
-  if (t2->subtle==t1) return TRUE;
+  if (t1->subtle==t2) return SLUMP_TRUE;
+  if (t2->subtle==t1) return SLUMP_TRUE;
   return (t1==t2);
 }
 
@@ -7301,17 +7301,17 @@ boolean room_at(level *l,genus *g,int x,int y,int width,config *c)
 
   /* Check for requested length */
   for (t=l->thing_anchor;t;t=t->next)
-    if (infinity_norm(t->x,t->y,x,y)<width) return FALSE;
+    if (infinity_norm(t->x,t->y,x,y)<width) return SLUMP_FALSE;
   /* If it's not pickable, make sure not stuck-together */
   if (!(g->bits&PICKABLE))
     for (t=l->thing_anchor;t;t=t->next) {
       if (t->pgenus->bits&PICKABLE) continue;
       /* This is overly conservative; the real check should */
       /* be against g->width/2 + t->pgenus->width/2, eh?     */
-      if (infinity_norm(t->x,t->y,x,y)<g->width) return FALSE;
-      if (infinity_norm(t->x,t->y,x,y)<t->pgenus->width) return FALSE;
+      if (infinity_norm(t->x,t->y,x,y)<g->width) return SLUMP_FALSE;
+      if (infinity_norm(t->x,t->y,x,y)<t->pgenus->width) return SLUMP_FALSE;
     }
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Try to put an object with the given thingid and width into the  */
@@ -7398,7 +7398,7 @@ thing *place_object_in_region(level *l,int minx, int miny, int maxx, int maxy,
   /* until one is OK, but shuffling is expensive, so for now     */
   /* we'll just use probes.                                      */
 
-  for (i=0;i<decksize;i++) deck[i].tried = FALSE;
+  for (i=0;i<decksize;i++) deck[i].tried = SLUMP_FALSE;
   for (i=0;i<10;i++) {
     n = roll(decksize);
     if (deck[n].tried) continue;
@@ -7415,7 +7415,7 @@ thing *place_object_in_region(level *l,int minx, int miny, int maxx, int maxy,
       }
       return answer;
     }
-    deck[n].tried = TRUE;
+    deck[n].tried = SLUMP_TRUE;
   }  /* end for ten probes */
 
   announce(NONE,"place_object failed");
@@ -7540,7 +7540,7 @@ void update_haa_for_armor(haa *haa,int levels,short armortype)
       }
       break;
     default:
-      announce(ERROR,"Odd armortype in u_h_f_armor");
+      announce(SLUMP_ERROR,"Odd armortype in u_h_f_armor");
   }
 
 }
@@ -7574,17 +7574,17 @@ int timely_ammo(haa *haa, int *rlevels, config *c)
   int i, ammotype = 0;
   boolean need_shotgun, need_plasgun, need_launcher;
 
-  need_shotgun = FALSE;
-  need_plasgun = FALSE;
-  need_launcher = FALSE;
+  need_shotgun = SLUMP_FALSE;
+  need_plasgun = SLUMP_FALSE;
+  need_launcher = SLUMP_FALSE;
 
   /* See which levels need more */
   for (i=0;i<3;i++) {  /* for each hardness level */
     levels >>= 1;
     if (haa->haas[i].ammo < c->usualammo[i]) levels |= 0x04;
-    if (haa->haas[i].can_use_shells == FALSE) need_shotgun = TRUE;
-    if (haa->haas[i].can_use_cells == FALSE) need_plasgun = TRUE;
-    if (haa->haas[i].can_use_rockets == FALSE) need_launcher = TRUE;
+    if (haa->haas[i].can_use_shells == SLUMP_FALSE) need_shotgun = SLUMP_TRUE;
+    if (haa->haas[i].can_use_cells == SLUMP_FALSE) need_plasgun = SLUMP_TRUE;
+    if (haa->haas[i].can_use_rockets == SLUMP_FALSE) need_launcher = SLUMP_TRUE;
   }
 
   *rlevels = levels;
@@ -7663,17 +7663,17 @@ int timely_ammo(haa *haa, int *rlevels, config *c)
 void ammo_value(short ammotype,haa *haa,int *f0,int *f1,int *f2)
 {
   int answer;
-  boolean special_case = FALSE;
+  boolean special_case = SLUMP_FALSE;
 
   /* These numbers should just be stored in the config, in the genus */
   switch (ammotype) {
     case ID_SSGUN:
     case ID_SHOTGUN: answer = 560;
-      special_case = TRUE; break;
+      special_case = SLUMP_TRUE; break;
     case ID_SHELLS: answer = 280;
-      special_case = TRUE; break;
+      special_case = SLUMP_TRUE; break;
     case ID_SHELLBOX: answer = 1400;
-      special_case = TRUE; break;
+      special_case = SLUMP_TRUE; break;
     case ID_PLASMA: answer = 880; break;
     case ID_BFG: answer = 880; break;   /* but a BFG is better, eh? */
     case ID_CHAINGUN: answer = 200; break;
@@ -7685,7 +7685,7 @@ void ammo_value(short ammotype,haa *haa,int *f0,int *f1,int *f2)
     case ID_ROCKET: answer = 100; break;
     case ID_ROCKBOX: answer = 500; break;
     default:
-      announce(ERROR,"Funny ammo type in a_v");
+      announce(SLUMP_ERROR,"Funny ammo type in a_v");
       answer = 0;
   }
   *f0 = *f1 = *f2 = answer;
@@ -7748,8 +7748,8 @@ boolean is_weapon(short thingid)
     case ID_PLASMA:
     case ID_BFG:
     case ID_LAUNCHER:
-      return TRUE;
-    default: return FALSE;
+      return SLUMP_TRUE;
+    default: return SLUMP_FALSE;
   }
 }
 
@@ -7770,7 +7770,7 @@ void place_ammo(level *l,sector *s,config *c,haa *haa)
     /* as well as the grab-through-wall effect. */
     if (NULL==place_object(l,s,c,ammotype,48,0,0,0,levels)) return;
     announce(NONE,"place_ammo placed some ammo");
-    if (levels==7) if (is_weapon(ammotype)) s->has_dm_weapon = TRUE;
+    if (levels==7) if (is_weapon(ammotype)) s->has_dm_weapon = SLUMP_TRUE;
     update_haa_for_ammo(haa,levels,ammotype);
     if (rollpercent(20)) return;   /* Reasonable? */
   }  /* end forever */
@@ -7787,17 +7787,17 @@ void update_haa_for_health(haa *haa,int levels,short healthtype)
     if (levels&0x01) {
       if (haa->haas[ITYTD].health<100)
         haa->haas[ITYTD].health=(float)100;
-      haa->haas[ITYTD].has_berserk = TRUE;
+      haa->haas[ITYTD].has_berserk = SLUMP_TRUE;
     }
     if (levels&0x02) {
       if (haa->haas[HMP].health<100)
         haa->haas[HMP].health=(float)100;
-      haa->haas[HMP].has_berserk = TRUE;
+      haa->haas[HMP].has_berserk = SLUMP_TRUE;
     }
     if (levels&0x04) {
       if (haa->haas[UV].health<100)
         haa->haas[UV].health=(float)100;
-      haa->haas[UV].has_berserk = TRUE;
+      haa->haas[UV].has_berserk = SLUMP_TRUE;
     }
   } else {
     switch (healthtype) {
@@ -7820,14 +7820,14 @@ void update_haa_for_health(haa *haa,int levels,short healthtype)
 short timely_health(haa *haa,int *levels,config *c)
 {
   int i;
-  boolean berserk_ok = FALSE;
+  boolean berserk_ok = SLUMP_FALSE;
   short healthtype;
 
   /* See which levels need more */
   for ((*levels)=0,i=0;i<3;i++) {  /* for each hardness level */
     (*levels) >>= 1;
     if (haa->haas[i].health < c->usualhealth[i]) (*levels) |= 0x04;
-    if (haa->haas[i].has_berserk==FALSE) berserk_ok = TRUE;
+    if (haa->haas[i].has_berserk==SLUMP_FALSE) berserk_ok = SLUMP_TRUE;
   }
 
   if ((*levels)==0) return 0;
@@ -7942,8 +7942,8 @@ boolean haa_monster_data(haa *haa,config *c, float *monster_size_health,
     }  /* end this level has excess health */
   }  /* end for difficulty levels determining limits */
   *monster_size_health += (float)5;  /* A little leeway */
-  if (*levels==0) return FALSE;  /* No excess health anywhere */
-  return TRUE;
+  if (*levels==0) return SLUMP_FALSE;  /* No excess health anywhere */
+  return SLUMP_TRUE;
 }
 
 /* Find a monster that fits the given health and ammo allowance, */
@@ -8069,12 +8069,12 @@ void haa_unpend(haa *haa)
 
   for (i=ITYTD;i<=UV;i++) {
     if (haa->haas[i].shells_pending) {
-      haa->haas[i].can_use_shells = TRUE;
-      haa->haas[i].shells_pending = FALSE;
+      haa->haas[i].can_use_shells = SLUMP_TRUE;
+      haa->haas[i].shells_pending = SLUMP_FALSE;
     }
     if (haa->haas[i].chaingun_pending) {
-      haa->haas[i].has_chaingun = TRUE;
-      haa->haas[i].chaingun_pending = FALSE;
+      haa->haas[i].has_chaingun = SLUMP_TRUE;
+      haa->haas[i].chaingun_pending = SLUMP_FALSE;
     }
   }
 }
@@ -8118,8 +8118,8 @@ void update_haa_for_monster(haa *haa,genus *m,int levels,int mno,config *c)
     haa->haas[i].ammo -= damage;
     haa->haas[i].ammo += m->ammo_provides;  /* Should be in stage two? */
     if (haa->haas[i].ammo<0) announce(VERBOSE,"Ammo estimate negative?");
-    if (m->thingid == ID_SERGEANT) haa->haas[i].shells_pending = TRUE;
-    if (m->thingid == ID_COMMANDO) haa->haas[i].chaingun_pending = TRUE;
+    if (m->thingid == ID_SERGEANT) haa->haas[i].shells_pending = SLUMP_TRUE;
+    if (m->thingid == ID_COMMANDO) haa->haas[i].chaingun_pending = SLUMP_TRUE;
 
   }  /* end for levels adjusting haa */
 
@@ -8565,7 +8565,7 @@ void load_config(config *c)
   char thisline[200];
   char *inc, *outc;
   long flen;
-  boolean blankmode = TRUE;   /* Strip leading blanks */
+  boolean blankmode = SLUMP_TRUE;   /* Strip leading blanks */
 
   f = fopen(c->configfile,"rb");
   if (f==NULL) {
@@ -8590,10 +8590,10 @@ void load_config(config *c)
         if (*inc==';') break;
         if (strchr(" \t\n\r",*inc)) {
           if (!blankmode) *(outc++) = '\0';
-          blankmode = TRUE;
+          blankmode = SLUMP_TRUE;
         } else {
           *(outc++) = *inc;
-          blankmode = FALSE;
+          blankmode = SLUMP_FALSE;
         }
       }  /* Done with line */
     }  /* Done reading file */
@@ -8619,12 +8619,12 @@ void unload_config(config *c)
 }
 
 /* Look through the config's config file, and fill in values for */
-/* the switch lines therein.  Return FALSE if error.  These are  */
+/* the switch lines therein.  Return SLUMP_FALSE if error.  These are  */
 /* of course overridable by command-line switches.               */
 boolean read_switches(config *c)
 {
   /* Dis here is a STUB */
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Allocate and return a new, empty construct */
@@ -8638,7 +8638,7 @@ construct *new_construct(config *c)
   answer->texture_cell_anchor = NULL;
   answer->flat_cell_anchor = NULL;
   answer->family = 0;
-  answer->marked = FALSE;
+  answer->marked = SLUMP_FALSE;
   answer->next = c->construct_anchor;
   c->construct_anchor = answer;
   return answer;
@@ -8664,7 +8664,7 @@ texture_cell *add_texture_cell(construct *cn,char *name,boolean primary,
   answer->y_offset1 = y1;
   answer->y_offset2 = y2;
   answer->primary = primary;
-  answer->marked = FALSE;
+  answer->marked = SLUMP_FALSE;
   answer->next = cn->texture_cell_anchor;
   cn->texture_cell_anchor = answer;
   return answer;
@@ -9028,7 +9028,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)1;
   m->bits |= SHOOTS;
   m->min_level = 1;
-  m->in_freedoom = TRUE;
+  m->in_freedoom = SLUMP_TRUE;
   /* Tropper with gun */
   m = find_monster(c,ID_SERGEANT);
   m->width = 42;
@@ -9044,7 +9044,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)1;
   m->bits |= SHOOTS;
   m->min_level = 2;
-  m->in_freedoom = TRUE;
+  m->in_freedoom = SLUMP_TRUE;
   /* Cobra-like thing in FreeDoom */
   m = find_monster(c,ID_IMP);
   m->width = 42;
@@ -9060,7 +9060,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)2;
   m->bits |= SHOOTS;
   m->min_level = 1;
-  m->in_freedoom = TRUE;
+  m->in_freedoom = SLUMP_TRUE;
   /* Pink dog/demon */
   m = find_monster(c,ID_PINK);
   m->width = 62;
@@ -9075,7 +9075,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[HMP] = (float)8;
   m->altdamage[UV] = (float)4;
   m->min_level = 3;
-  m->in_freedoom = TRUE;
+  m->in_freedoom = SLUMP_TRUE;
   /* Invisible dog/demon */
   m = find_monster(c,ID_SPECTRE);
   m->width = 62;
@@ -9090,7 +9090,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[HMP] = (float)8;
   m->altdamage[UV] = (float) 6;
   m->min_level = 7;
-  m->in_freedoom = TRUE;
+  m->in_freedoom = SLUMP_TRUE;
   /* Floating head */
   m = find_monster(c,ID_SKULL);
   m->width = 34;
@@ -9107,7 +9107,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)2;
   m->bits |= FLIES;
   m->min_level = 6;
-  m->in_freedoom = TRUE;
+  m->in_freedoom = SLUMP_TRUE;
   /* Spider thing (I think) */
   m = find_monster(c,ID_HEAD);
   m->width = 63;                 /* Or 62 or maybe 64 */
@@ -9125,7 +9125,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->bits |= SHOOTS;
   m->bits |= FLIES;
   m->min_level = 11;
-  m->in_freedoom = TRUE;
+  m->in_freedoom = SLUMP_TRUE;
 
   m = find_monster(c,ID_BARON);
   m->width = 50;                 /* Roughly */
@@ -9143,7 +9143,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)18;
   m->bits |= SHOOTS;
   m->min_level = 12;
-  m->in_freedoom = FALSE;
+  m->in_freedoom = SLUMP_FALSE;
 
   /* Other bosses; need to fill in data! */
   m = find_monster(c,ID_CYBER);
@@ -9163,7 +9163,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->ammo_to_kill[HMP] = (float)5000;
   m->ammo_to_kill[UV] = (float)4500;
   m->min_level=17;
-  m->in_freedoom = FALSE;
+  m->in_freedoom = SLUMP_FALSE;
 
   /* DOOM2 monsters */
   if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) {
@@ -9181,7 +9181,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)4;
     m->bits |= SHOOTS | SPECIAL;
     m->min_level = 1;
-    m->in_freedoom = TRUE;
+    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_COMMANDO);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -9197,7 +9197,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)10;
     m->bits |= SHOOTS;
     m->min_level = 5;
-    m->in_freedoom = TRUE;
+    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_SKEL);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -9214,7 +9214,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)25;
     m->bits |= SHOOTS;
     m->min_level = 7;
-    m->in_freedoom = FALSE;
+    m->in_freedoom = SLUMP_FALSE;
     m = find_monster(c,ID_HELL);
     m->gamemask = DOOM2_BIT;
     m->width = 50;
@@ -9231,7 +9231,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)35;
     m->bits |= SHOOTS;
     m->min_level = 11;
-    m->in_freedoom = FALSE;
+    m->in_freedoom = SLUMP_FALSE;
 
     /* DOOM2 bosses and underbosses; need to fill in data! */
     m = find_monster(c,ID_MANCUB);
@@ -9244,7 +9244,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->ammo_to_kill[HMP] = (float)50;
     m->ammo_to_kill[UV] = (float)40;
     m->min_level = 19;
-    m->in_freedoom = TRUE;
+    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_ARCHIE);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -9255,7 +9255,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->ammo_to_kill[HMP] = (float)1100;
     m->ammo_to_kill[UV] = (float)1000;
     m->min_level = 17;
-    m->in_freedoom = TRUE;
+    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_PAIN);
     m->gamemask = DOOM2_BIT;
     m->width = 63;
@@ -9273,10 +9273,10 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->ammo_to_kill[HMP] = (float)50;
     m->ammo_to_kill[UV] = (float)30;
     m->min_level = 23;
-    m->in_freedoom = TRUE;
+    m->in_freedoom = SLUMP_TRUE;
   }
 
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 
@@ -9290,28 +9290,28 @@ propertybits absorb_propertybit(char **r)
 
   p = *r;
 
-  if ((!stricmp(p,"wall")) || (!strcmp(p,"w"))) return WALL;
-  if ((!stricmp(p,"isswitch")) || (!strcmp(p,"i"))) return SWITCH;
-  if ((!stricmp(p,"lift")) || (!strcmp(p,"F"))) return LIFT_TEXTURE;
-  if ((!stricmp(p,"support")) || (!strcmp(p,"I"))) return SUPPORT;
-  if ((!stricmp(p,"jamb")) || (!strcmp(p,"j"))) return JAMB;
-  if ((!stricmp(p,"step")) || (!strcmp(p,"e"))) return STEP;
-  if ((!stricmp(p,"grating")) || (!strcmp(p,"g"))) return GRATING;
-  if ((!stricmp(p,"plaque")) || (!strcmp(p,"p"))) return PLAQUE;
-  if ((!stricmp(p,"vtiles")) || (!strcmp(p,"v"))) return VTILES;
-  if ((!stricmp(p,"half_plaque")) || (!strcmp(p,"H"))) return HALF_PLAQUE;
-  if ((!stricmp(p,"light")) || (!strcmp(p,"l"))) return LIGHT;
-  if ((!stricmp(p,"exitswitch")) || (!strcmp(p,"E"))) return EXITSWITCH;
-  if ((!stricmp(p,"door")) || (!strcmp(p,"d"))) return DOOR;
-  if ((!stricmp(p,"locked")) || (!strcmp(p,"L"))) return GATE;
-  if ((!stricmp(p,"outside")) || (!strcmp(p,"o"))) return OUTDOOR;
-  if ((!stricmp(p,"red")) || (!strcmp(p,"r"))) return RED;
-  if ((!stricmp(p,"blue")) || (!strcmp(p,"b"))) return BLUE;
-  if ((!stricmp(p,"yellow")) || (!strcmp(p,"y"))) return YELLOW;
-  if ((!stricmp(p,"floor")) || (!strcmp(p,"D"))) return FLOOR;
-  if ((!stricmp(p,"ceiling")) || (!strcmp(p,"U"))) return CEILING;
-  if ((!stricmp(p,"nukage")) || (!strcmp(p,"n"))) return NUKAGE;
-  if ((!stricmp(p,"gate")) || (!strcmp(p,"G"))) return GATE;
+  if ((!slump_stricmp(p,"wall")) || (!strcmp(p,"w"))) return WALL;
+  if ((!slump_stricmp(p,"isswitch")) || (!strcmp(p,"i"))) return SWITCH;
+  if ((!slump_stricmp(p,"lift")) || (!strcmp(p,"F"))) return LIFT_TEXTURE;
+  if ((!slump_stricmp(p,"support")) || (!strcmp(p,"I"))) return SUPPORT;
+  if ((!slump_stricmp(p,"jamb")) || (!strcmp(p,"j"))) return JAMB;
+  if ((!slump_stricmp(p,"step")) || (!strcmp(p,"e"))) return STEP;
+  if ((!slump_stricmp(p,"grating")) || (!strcmp(p,"g"))) return GRATING;
+  if ((!slump_stricmp(p,"plaque")) || (!strcmp(p,"p"))) return PLAQUE;
+  if ((!slump_stricmp(p,"vtiles")) || (!strcmp(p,"v"))) return VTILES;
+  if ((!slump_stricmp(p,"half_plaque")) || (!strcmp(p,"H"))) return HALF_PLAQUE;
+  if ((!slump_stricmp(p,"light")) || (!strcmp(p,"l"))) return LIGHT;
+  if ((!slump_stricmp(p,"exitswitch")) || (!strcmp(p,"E"))) return EXITSWITCH;
+  if ((!slump_stricmp(p,"door")) || (!strcmp(p,"d"))) return DOOR;
+  if ((!slump_stricmp(p,"locked")) || (!strcmp(p,"L"))) return GATE;
+  if ((!slump_stricmp(p,"outside")) || (!strcmp(p,"o"))) return OUTDOOR;
+  if ((!slump_stricmp(p,"red")) || (!strcmp(p,"r"))) return RED;
+  if ((!slump_stricmp(p,"blue")) || (!strcmp(p,"b"))) return BLUE;
+  if ((!slump_stricmp(p,"yellow")) || (!strcmp(p,"y"))) return YELLOW;
+  if ((!slump_stricmp(p,"floor")) || (!strcmp(p,"D"))) return FLOOR;
+  if ((!slump_stricmp(p,"ceiling")) || (!strcmp(p,"U"))) return CEILING;
+  if ((!slump_stricmp(p,"nukage")) || (!strcmp(p,"n"))) return NUKAGE;
+  if ((!slump_stricmp(p,"gate")) || (!strcmp(p,"G"))) return GATE;
 
   return 0;
 }
@@ -9326,11 +9326,11 @@ gamebits absorb_gamebit(char **r)
 
   p = *r;
 
-  if ((!stricmp(p,"nodoom0")) || (!strcmp(p,"0"))) return DOOM0_BIT;
-  if ((!stricmp(p,"nodoom1")) || (!strcmp(p,"1"))) return DOOM1_BIT;
-  if ((!stricmp(p,"nodoom2")) || (!strcmp(p,"2"))) return DOOM2_BIT;
-  if ((!stricmp(p,"gross")) || (!strcmp(p,"Q"))) return DOOMC_BIT;
-  if ((!stricmp(p,"custom")) || (!strcmp(p,"u"))) return DOOMI_BIT;
+  if ((!slump_stricmp(p,"nodoom0")) || (!strcmp(p,"0"))) return DOOM0_BIT;
+  if ((!slump_stricmp(p,"nodoom1")) || (!strcmp(p,"1"))) return DOOM1_BIT;
+  if ((!slump_stricmp(p,"nodoom2")) || (!strcmp(p,"2"))) return DOOM2_BIT;
+  if ((!slump_stricmp(p,"gross")) || (!strcmp(p,"Q"))) return DOOMC_BIT;
+  if ((!slump_stricmp(p,"custom")) || (!strcmp(p,"u"))) return DOOMI_BIT;
 
   return 0;
 }
@@ -9341,15 +9341,15 @@ char *absorb_theme(char *p, config *c)
 {
   char *q, *name;
   theme *t;
-  boolean b = FALSE;
+  boolean b = SLUMP_FALSE;
 
   p += 1+strlen(p);  /* That's the name */
   name = p;
 
   q = p + 1 + strlen(p);
-  if ((!stricmp(q,"secret")) || (!strcmp(q,"?"))) {
+  if ((!slump_stricmp(q,"secret")) || (!strcmp(q,"?"))) {
     p = q;
-    b = TRUE;
+    b = SLUMP_TRUE;
   }
 
   t = new_theme(c,name,b);
@@ -9364,7 +9364,7 @@ themebits themebit_for_name(char *name, config *c)
   themebits answer = 1;
 
   for (t=c->theme_anchor;t;t=t->next) {
-    if (!stricmp(t->name,name)) return answer;
+    if (!slump_stricmp(t->name,name)) return answer;
     answer <<= 1;
   }
   return 0;
@@ -9376,7 +9376,7 @@ themebits themebit_for_name(char *name, config *c)
 char *absorb_string(char **r,char *ln, char *sn)
 {
   /* Needs more error-checking.  Input Is Evil. */
-  if (stricmp(*r,ln) && strcmp(*r,sn)) return NULL;
+  if (slump_stricmp(*r,ln) && strcmp(*r,sn)) return NULL;
   (*r) += 1+strlen(*r);  /* That's the name */
   return *r;
 
@@ -9386,20 +9386,20 @@ char *absorb_string(char **r,char *ln, char *sn)
 boolean absorb_short(char **r,char *ln,char *sn,short *s)
 {
   char *v = absorb_string(r,ln,sn);
-  if (v==NULL) return FALSE;
+  if (v==NULL) return SLUMP_FALSE;
   *s = (short)atoi(v);
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Absorb a parameter like "size 5 6", etc etc etc, see above. */
 boolean absorb_two_shorts(char **r,char *ln,char *sn,short *s,short *t)
 {
   char *v = absorb_string(r,ln,sn);
-  if (v==NULL) return FALSE;
+  if (v==NULL) return SLUMP_FALSE;
   *s = (short)atoi(v);
   *r += 1 + strlen(*r);
   *t = (short)atoi(*r);
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Absorb a Texture record from the config data, returning the last */
@@ -9451,11 +9451,11 @@ char *absorb_texture(char *p, config *c)
     if (absorb_short(&q,"ybias","Y",&m)) { t->y_bias = m; continue; }
     if (absorb_two_shorts(&q,"size","z",&m,&n))
       { t->width = m; t->height = n; continue; }
-    if ((!stricmp(q,"error")) || (!stricmp(q,"!"))) {
+    if ((!slump_stricmp(q,"error")) || (!slump_stricmp(q,"!"))) {
       c->error_texture = t;
       continue;
     }
-    if ((!stricmp(q,"gateexitsign")) || (!stricmp(q,"X"))) {
+    if ((!slump_stricmp(q,"gateexitsign")) || (!slump_stricmp(q,"X"))) {
       c->gate_exitsign_texture = t;
       continue;
     }
@@ -9492,11 +9492,11 @@ char *absorb_flat(char *p, config *c)
       f->compatible |= tb;
       continue;
     }
-    if ((!stricmp(q,"sky")) || (!stricmp(q,"K"))) {
+    if ((!slump_stricmp(q,"sky")) || (!slump_stricmp(q,"K"))) {
       c->sky_flat = f;
       continue;
     }
-    if ((!stricmp(q,"water")) || (!stricmp(q,"W"))) {
+    if ((!slump_stricmp(q,"water")) || (!slump_stricmp(q,"W"))) {
       c->water_flat = f;
       continue;
     }
@@ -9535,8 +9535,8 @@ char *absorb_thing(char *p, config *c)
   return p;
 }
 
-/* Absorb a cell subrecord of a construct record, returning TRUE if */
-/* there is one there, or FALSE if not.  Update r to point to the */
+/* Absorb a cell subrecord of a construct record, returning SLUMP_TRUE if */
+/* there is one there, or SLUMP_FALSE if not.  Update r to point to the */
 /* last string we actually used. */
 boolean absorb_cell(construct *x,char **r,char *ln,char *sn,boolean b,config *c)
 {
@@ -9548,7 +9548,7 @@ boolean absorb_cell(construct *x,char **r,char *ln,char *sn,boolean b,config *c)
   short s,t;
 
   p=*r;
-  if (stricmp(p,ln) && strcmp(p,sn)) return FALSE;
+  if (slump_stricmp(p,ln) && strcmp(p,sn)) return SLUMP_FALSE;
   p += 1+strlen(p);  /* That's the name */
   name = p;
 
@@ -9566,7 +9566,7 @@ boolean absorb_cell(construct *x,char **r,char *ln,char *sn,boolean b,config *c)
   tc = add_texture_cell(x,name,b,o1,o2,c);
   tc->width = width;
 
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Absorb a Construct record from the config data, returning the last */
@@ -9599,8 +9599,8 @@ char *absorb_construct(char *p, config *c)
     }
     if (NULL != (name = absorb_string(&q,"top","O")))
       { add_flat_cell(x,name,c); continue; }
-    if (absorb_cell(x,&q,"primary","A",TRUE,c)) continue;
-    if (absorb_cell(x,&q,"secondary","B",FALSE,c)) continue;
+    if (absorb_cell(x,&q,"primary","A",SLUMP_TRUE,c)) continue;
+    if (absorb_cell(x,&q,"secondary","B",SLUMP_FALSE,c)) continue;
     break;
   }
   return p;
@@ -9609,7 +9609,7 @@ char *absorb_construct(char *p, config *c)
 
 
 /* Look through the config's config file, and fill in values for */
-/* all the non-switch lines therein.  Return FALSE if error.     */
+/* all the non-switch lines therein.  Return SLUMP_FALSE if error.     */
 boolean nonswitch_config(config *c)
 {
 
@@ -9619,7 +9619,7 @@ boolean nonswitch_config(config *c)
 
   /* Skip to the "[THEMES]" section */
   for (p=c->configdata;*p;p+=1+strlen(p))
-    if (!stricmp("[themes]",p)) break;
+    if (!slump_stricmp("[themes]",p)) break;
   if (!*p) {
     fprintf(stderr,"No [THEMES] section in config file.\n");
     exit(143);
@@ -9627,17 +9627,17 @@ boolean nonswitch_config(config *c)
   p+=1+strlen(p);
   for (;*p;p+=1+strlen(p)) {
     if (p[0]=='[') break;  /* End of section */
-    if ((!strcmp(p,"T")) || (!stricmp(p,"theme")))
+    if ((!strcmp(p,"T")) || (!slump_stricmp(p,"theme")))
       p = absorb_theme(p,c);
-     else if ((!strcmp(p,"t")) || (!stricmp(p,"texture")))
+     else if ((!strcmp(p,"t")) || (!slump_stricmp(p,"texture")))
       p = absorb_texture(p,c);
-     else if ((!strcmp(p,"f")) || (!stricmp(p,"flat")))
+     else if ((!strcmp(p,"f")) || (!slump_stricmp(p,"flat")))
       p = absorb_flat(p,c);
-     else if ((!strcmp(p,"x")) || (!stricmp(p,"construct")))
+     else if ((!strcmp(p,"x")) || (!slump_stricmp(p,"construct")))
       p = absorb_construct(p,c);
-     else if ((!strcmp(p,".")) || (!stricmp(p,"thing")))
+     else if ((!strcmp(p,".")) || (!slump_stricmp(p,"thing")))
       p = absorb_thing(p,c);
-     else if ((!strcmp(p,"#")) || (!stricmp(p,"hardwired1")))
+     else if ((!strcmp(p,"#")) || (!slump_stricmp(p,"hardwired1")))
       hardwired_nonswitch_nontheme_config(c);
      else {
        fprintf(stderr,"Nonsensical token <%s> in config file.\n",p);
@@ -9656,7 +9656,7 @@ boolean nonswitch_config(config *c)
   dump_foo(c);
 #endif
 
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Random parts for the style, based on the config, and other */
@@ -9914,7 +9914,7 @@ texture *random_liftface(config*c, style *s)
 /* Return a door-face that looks good on a wide door. */
 texture *random_widedoorface(config *c, style *s)
 {
-  return random_widedoorface_ex(c,s,FALSE);
+  return random_widedoorface_ex(c,s,SLUMP_FALSE);
 }
 
 /* Return a door-face that looks good on a wide door.  If needhigh, */
@@ -9938,7 +9938,7 @@ texture *random_widedoorface_ex(config *c, style *s, boolean needhigh)
     tcount++;
   }
   if (tcount==0) {
-    announce(ERROR,"No wide doorfaces for theme");   /* Bad! */
+    announce(SLUMP_ERROR,"No wide doorfaces for theme");   /* Bad! */
     return c->error_texture;
   }
   tcount = 1 + roll(tcount);
@@ -9959,7 +9959,7 @@ texture *random_widedoorface_ex(config *c, style *s, boolean needhigh)
 /* Return a door-face that looks good on a narrow door. */
 texture *random_narrowdoorface(config *c, style *s)
 {
-  texture *answer = random_narrowdoorface_ex(c,s,FALSE);
+  texture *answer = random_narrowdoorface_ex(c,s,SLUMP_FALSE);
   return answer;
 }
 
@@ -9984,7 +9984,7 @@ texture *random_narrowdoorface_ex(config *c, style *s, boolean needhigh)
     tcount++;
   }
   if (tcount==0) {
-    announce(ERROR,"No narrow doorfaces for theme");   /* Bad! */
+    announce(SLUMP_ERROR,"No narrow doorfaces for theme");   /* Bad! */
     return c->error_texture;
   }
   tcount = 1 + roll(tcount);
@@ -10008,7 +10008,7 @@ texture *random_narrowdoorface_ex(config *c, style *s, boolean needhigh)
 texture *random_twdoorface(config *c, style *s)
 {
   if (s->widedoorface->height>=128) return s->widedoorface;
-  return random_widedoorface_ex(c,s,TRUE);
+  return random_widedoorface_ex(c,s,SLUMP_TRUE);
 
 }
 
@@ -10018,7 +10018,7 @@ texture *random_tndoorface(config *c, style *s)
 {
   texture *answer;
   if (s->narrowdoorface->height>=128) answer = s->narrowdoorface;
-    else answer = random_narrowdoorface_ex(c,s,TRUE);
+    else answer = random_narrowdoorface_ex(c,s,SLUMP_TRUE);
   return answer;
 }
 
@@ -10214,8 +10214,8 @@ boolean ceiling_effect(level *l, sector *oldsector,
   boolean force_nukage = rollpercent(l->p_force_nukage);
   boolean force_sky = rollpercent(l->p_force_sky);
   boolean force_quad = rollpercent(15);
-  boolean edge_lights = FALSE;
-  boolean center_light = FALSE;
+  boolean edge_lights = SLUMP_FALSE;
+  boolean center_light = SLUMP_FALSE;
   texture *upt = oldsector->pstyle->wall0;
 
   if (g->height>(oldsector->ceiling_height-oldsector->floor_height))
@@ -10223,13 +10223,13 @@ boolean ceiling_effect(level *l, sector *oldsector,
   thing_id = g->thingid;
 
   /* Only do this sometimes! */
-  if (!(rollpercent(5)||force_nukage||force_sky)) return FALSE;
+  if (!(rollpercent(5)||force_nukage||force_sky)) return SLUMP_FALSE;
 
   /* Find the inner sector corners */
   find_rec(l,oldsector,&minx,&miny,&maxx,&maxy);
   offset = maxx - minx;
   if (maxy - miny < offset) offset = maxy - miny;
-  if (offset<96) return FALSE;   /* No sense making a really teeny one */
+  if (offset<96) return SLUMP_FALSE;   /* No sense making a really teeny one */
   offset = 16 + roll((offset>>1)-48);
   minx = minx + offset;
   miny = miny + offset;
@@ -10237,16 +10237,16 @@ boolean ceiling_effect(level *l, sector *oldsector,
   maxy = maxy - offset;
 
   /* Sometimes do four little effects */
-  if ((maxx-minx)<144) force_quad = FALSE;
-  if ((maxy-miny)<144) force_quad = FALSE;
+  if ((maxx-minx)<144) force_quad = SLUMP_FALSE;
+  if ((maxy-miny)<144) force_quad = SLUMP_FALSE;
   maxbeam = (maxx-minx)-128;
   if (((maxy-miny)-128)<maxbeam) maxbeam = (maxy-miny)-128;
   beamsize = 16+roll(maxbeam-15);
   if (beamsize>64) beamsize = 64;
   /* In that case, almost always force sky or nukage (why?) */
   if (force_quad && !force_nukage && !force_sky) {
-    if (rollpercent(45)) force_nukage = TRUE;
-      else if (rollpercent(82)) force_sky = TRUE;
+    if (rollpercent(45)) force_nukage = SLUMP_TRUE;
+      else if (rollpercent(82)) force_sky = SLUMP_TRUE;
   }
 
   /* With the box effect, sometimes put a Thing or Things, */
@@ -10255,16 +10255,16 @@ boolean ceiling_effect(level *l, sector *oldsector,
     if (maxx-minx>170)
       if (maxy-miny>170) {
         if (rollpercent(80)) {
-          edge_lights = TRUE;
+          edge_lights = SLUMP_TRUE;
         } else {
-          center_light = TRUE;
+          center_light = SLUMP_TRUE;
         }
         if (force_quad && rollpercent(50))
-          edge_lights = center_light = TRUE;
+          edge_lights = center_light = SLUMP_TRUE;
         if (offset<(38+8+g->width))
-          edge_lights = FALSE;
+          edge_lights = SLUMP_FALSE;
         if (force_quad && (beamsize<g->width))
-          center_light = FALSE;
+          center_light = SLUMP_FALSE;
         if (edge_lights &&
          room_at(l,g,minx-8,miny-8,g->width,c) &&
          room_at(l,g,minx-8,maxy+8,g->width,c) &&
@@ -10399,7 +10399,7 @@ boolean ceiling_effect(level *l, sector *oldsector,
   } else {
     /* Just an old fashioned square */
     linedef *ld1, *ld2, *ld3, *ld4;
-    boolean fancied = FALSE;
+    boolean fancied = SLUMP_FALSE;
     parallel_innersec_ex(l,oldsector,innersec,
                          NULL,upt,oldsector->pstyle->wall0,
                          minx,miny,maxx,maxy,c,
@@ -10435,7 +10435,7 @@ boolean ceiling_effect(level *l, sector *oldsector,
         ldnew->left->middle_texture = c->null_texture;
         patch_lower(ldnew,newsec->pstyle->wall0,c);
         ld3 = ldnew;
-        fancied = TRUE;
+        fancied = SLUMP_TRUE;
         if (rollpercent(30)) break;
       }  /* end loop-thing */
       if (innersec->floor_flat != ThisStyle->nukage1)
@@ -10474,7 +10474,7 @@ boolean ceiling_effect(level *l, sector *oldsector,
     }
   }
 
-  return TRUE;
+  return SLUMP_TRUE;
 
 }  /* end ceiling_effect() */
 
@@ -10584,16 +10584,16 @@ void do_pillar(level *l,sector *oldsector,style *ThisStyle,haa *haa,config *c)
 boolean construct_fits(construct *cs,int xsize, int ysize,sector *s,
                        style *ThisStyle, config *c)
 {
-  boolean good_primary = FALSE;
-  boolean x_fit = FALSE;
-  boolean y_fit = FALSE;
+  boolean good_primary = SLUMP_FALSE;
+  boolean x_fit = SLUMP_FALSE;
+  boolean y_fit = SLUMP_FALSE;
   texture_cell *tc;
 
   /* Needs to be room between the floor and ceiling */
-  if ( cs->height > (s->ceiling_height - s->floor_height) ) return FALSE;
+  if ( cs->height > (s->ceiling_height - s->floor_height) ) return SLUMP_FALSE;
 
   /* Needs to be in the right family */
-  if ( cs->family != ThisStyle->construct_family ) return FALSE;
+  if ( cs->family != ThisStyle->construct_family ) return SLUMP_FALSE;
 
   /* Need to have at least one primary texture that can fit on */
   /* one side, and at least one texture of any kind that can */
@@ -10601,12 +10601,12 @@ boolean construct_fits(construct *cs,int xsize, int ysize,sector *s,
   for (tc=cs->texture_cell_anchor;tc;tc=tc->next) {
     if ( (tc->ptexture->gamemask&c->gamemask)==c->gamemask) {
       if (tc->width<=xsize) {
-        x_fit = TRUE;
-        if (tc->primary) good_primary = TRUE;
+        x_fit = SLUMP_TRUE;
+        if (tc->primary) good_primary = SLUMP_TRUE;
       }
       if (tc->width<=ysize) {
-        y_fit = TRUE;
-        if (tc->primary) good_primary = TRUE;
+        y_fit = SLUMP_TRUE;
+        if (tc->primary) good_primary = SLUMP_TRUE;
       }
     }
   }
@@ -10622,11 +10622,11 @@ texture_cell *fitting_tc(construct *cs, int size, boolean accept_secondaries,
   texture_cell *answer = NULL;
   int ccount;
 
-  for (tc1=cs->texture_cell_anchor;tc1;tc1=tc1->next) tc1->marked=FALSE;
+  for (tc1=cs->texture_cell_anchor;tc1;tc1=tc1->next) tc1->marked=SLUMP_FALSE;
   for (ccount=0,tc1=cs->texture_cell_anchor;tc1;tc1=tc1->next) {
     if ( (accept_secondaries||tc1->primary)&&(tc1->width<=size)&&
          ( (tc1->ptexture->gamemask&c->gamemask) == c->gamemask) ) {
-      tc1->marked=TRUE;
+      tc1->marked=SLUMP_TRUE;
       ccount++;
     }
   }
@@ -10636,7 +10636,7 @@ texture_cell *fitting_tc(construct *cs, int size, boolean accept_secondaries,
       if (tc1->marked) if (0==ccount--) break;
     answer = tc1;
   }
-  for (tc1=cs->texture_cell_anchor;tc1;tc1=tc1->next) tc1->marked=FALSE;
+  for (tc1=cs->texture_cell_anchor;tc1;tc1=tc1->next) tc1->marked=SLUMP_FALSE;
   return answer;
 }
 
@@ -10649,21 +10649,21 @@ boolean install_construct(level *l,sector *oldsector,
   construct *cs, *cs2;
   sector *innersec;
   int ccount = 0;
-  boolean floor_to_ceiling, primary_on_x = FALSE;
+  boolean floor_to_ceiling, primary_on_x = SLUMP_FALSE;
   linedef *ld1, *ld2, *ld3, *ld4;
   texture_cell *tc1, *tc2, *tc3, *tc4, *tcp;
   flat_cell *fc;
   int xsize, ysize, mult;
 
   /* Mark just those constructs that fit */
-  for (cs=c->construct_anchor;cs;cs=cs->next) cs->marked = FALSE;
+  for (cs=c->construct_anchor;cs;cs=cs->next) cs->marked = SLUMP_FALSE;
   for (cs=c->construct_anchor;cs;cs=cs->next) {
     if (construct_fits(cs,maxx-minx,maxy-miny,oldsector,ThisStyle,c)) {
-      cs->marked = TRUE;
+      cs->marked = SLUMP_TRUE;
       ccount++;
     }
   }
-  if (ccount==0) return FALSE;   /* Give up if none */
+  if (ccount==0) return SLUMP_FALSE;   /* Give up if none */
   /* Otherwise pick a random marked one */
   ccount = roll(ccount);
   for (cs=c->construct_anchor;cs;cs=cs->next) {
@@ -10673,7 +10673,7 @@ boolean install_construct(level *l,sector *oldsector,
     }
   }
   /* Clean up */
-  for (cs2=c->construct_anchor;cs2;cs2=cs2->next) cs2->marked = FALSE;
+  for (cs2=c->construct_anchor;cs2;cs2=cs2->next) cs2->marked = SLUMP_FALSE;
 
   floor_to_ceiling =
     (oldsector->ceiling_height - oldsector->floor_height == cs->height);
@@ -10696,43 +10696,43 @@ boolean install_construct(level *l,sector *oldsector,
   /* Pick a primary texture (cell) */
   tcp = NULL;
   if (rollpercent(50)) {    /* Try X first */
-    tcp = fitting_tc(cs,maxy-miny,FALSE,c);
-    if (tcp!=NULL) primary_on_x = TRUE;
+    tcp = fitting_tc(cs,maxy-miny,SLUMP_FALSE,c);
+    if (tcp!=NULL) primary_on_x = SLUMP_TRUE;
   }
   if (tcp==NULL) {   /* Nothing yet, try Y */
-    tcp = fitting_tc(cs,maxx-minx,FALSE,c);
-    if (tcp!=NULL) primary_on_x = FALSE;
+    tcp = fitting_tc(cs,maxx-minx,SLUMP_FALSE,c);
+    if (tcp!=NULL) primary_on_x = SLUMP_FALSE;
   }
   if (tcp==NULL) {   /* Nothing yet, try X (again) */
-    tcp = fitting_tc(cs,maxy-miny,FALSE,c);
-    if (tcp!=NULL) primary_on_x = TRUE;
+    tcp = fitting_tc(cs,maxy-miny,SLUMP_FALSE,c);
+    if (tcp!=NULL) primary_on_x = SLUMP_TRUE;
   }
   if (tcp==NULL) {  /* Impossible! */
     announce(WARNING,"Some impossible error in construct-construction.");
-    return FALSE;
+    return SLUMP_FALSE;
   }
 
   /* Set all four cells */
   if (primary_on_x) {
     if (rollpercent(50)) {
       tc2 = tcp;
-      tc4 = fitting_tc(cs,maxy-miny,TRUE,c);
+      tc4 = fitting_tc(cs,maxy-miny,SLUMP_TRUE,c);
     } else {
       tc4 = tcp;
-      tc2 = fitting_tc(cs,maxy-miny,TRUE,c);
+      tc2 = fitting_tc(cs,maxy-miny,SLUMP_TRUE,c);
     }
-    tc1 = fitting_tc(cs,maxx-minx,TRUE,c);
-    tc3 = fitting_tc(cs,maxx-minx,TRUE,c);
+    tc1 = fitting_tc(cs,maxx-minx,SLUMP_TRUE,c);
+    tc3 = fitting_tc(cs,maxx-minx,SLUMP_TRUE,c);
   } else {
     if (rollpercent(50)) {
       tc1 = tcp;
-      tc3 = fitting_tc(cs,maxx-minx,TRUE,c);
+      tc3 = fitting_tc(cs,maxx-minx,SLUMP_TRUE,c);
     } else {
       tc3 = tcp;
-      tc1 = fitting_tc(cs,maxx-minx,TRUE,c);
+      tc1 = fitting_tc(cs,maxx-minx,SLUMP_TRUE,c);
     }
-    tc2 = fitting_tc(cs,maxy-miny,TRUE,c);
-    tc4 = fitting_tc(cs,maxy-miny,TRUE,c);
+    tc2 = fitting_tc(cs,maxy-miny,SLUMP_TRUE,c);
+    tc4 = fitting_tc(cs,maxy-miny,SLUMP_TRUE,c);
   }
 
   /* Now decide how large the X and Y dimensions should actually be */
@@ -10780,7 +10780,7 @@ boolean install_construct(level *l,sector *oldsector,
   ld4->right->y_offset = rollpercent(50) ? tc4->y_offset1 : tc4->y_offset2;
 
   announce(VERBOSE,"Construct");
-  return TRUE;
+  return SLUMP_TRUE;
 
 } /* end install_construct */
 
@@ -10802,19 +10802,19 @@ boolean do_new_pillar(level *l,sector *oldsector,sector *innersec,texture *t1,
   find_rec(l,oldsector,&minx,&miny,&maxx,&maxy);
   /* The room has to be >192 in each direction, for now */
   /* 64 for the pillar, and 64 on every side for monster checks */
-  if (maxx-minx<=192) return FALSE;
-  if (maxy-miny<=192) return FALSE;
+  if (maxx-minx<=192) return SLUMP_FALSE;
+  if (maxy-miny<=192) return SLUMP_FALSE;
   /* Pick a point we'd like the pillar to contain, */
   /* to guide the following algorithm */
   tx = minx + 1 + roll(maxx-(minx+1));
   ty = miny + 1 + roll(maxy-(miny+1));
   /* If that point is inside some existing pillar, fail */
-  if (oldsector!=point_sector(l,tx,ty,NULL,NULL)) return FALSE;
+  if (oldsector!=point_sector(l,tx,ty,NULL,NULL)) return SLUMP_FALSE;
   /* For each vertex, if the vertex is in the current range, */
   /* shrink the range so it misses the vertex, but still */
   /* contains the t point. */
   for (v=l->vertex_anchor;v;v=v->next) {
-    if (infinity_norm(tx,ty,v->x,v->y)<64) return FALSE;  /* Failure! */
+    if (infinity_norm(tx,ty,v->x,v->y)<64) return SLUMP_FALSE;  /* Failure! */
     if ( (v->x<minx) || (v->x>maxx) || (v->y<miny) || (v->y>maxy) ) continue;
     if (v->x>tx) maxx = v->x - 1;
       else minx = v->x + 1;
@@ -10824,7 +10824,7 @@ boolean do_new_pillar(level *l,sector *oldsector,sector *innersec,texture *t1,
   /* and the same for each thing, although in fact the requirement */
   /* to be 64 away from even pickables is overconservative */
   for (t=l->thing_anchor;t;t=t->next) {
-    if (infinity_norm(tx,ty,t->x,t->y)<64) return FALSE;  /* Failure! */
+    if (infinity_norm(tx,ty,t->x,t->y)<64) return SLUMP_FALSE;  /* Failure! */
     if ( (t->x<minx) || (t->x>maxx) || (t->y<miny) || (t->y>maxy) ) continue;
     if (t->x>tx) maxx = t->x - 1;
       else minx = t->x + 1;
@@ -10836,18 +10836,18 @@ boolean do_new_pillar(level *l,sector *oldsector,sector *innersec,texture *t1,
   maxx = maxx - 64;
   miny = miny + 64;
   maxy = maxy - 64;
-  if (minx>=maxx-15) return FALSE;
-  if (miny>=maxy-15) return FALSE;
+  if (minx>=maxx-15) return SLUMP_FALSE;
+  if (miny>=maxy-15) return SLUMP_FALSE;
   /* See if the result has any nasty intersections */
   for (ld=l->linedef_anchor;ld;ld=ld->next) {
     if (intersects(minx,miny,minx,maxy,ld->from->x,ld->from->y,ld->to->x,ld->to->y))
-      return FALSE;
+      return SLUMP_FALSE;
     if (intersects(minx,maxy,maxx,maxy,ld->from->x,ld->from->y,ld->to->x,ld->to->y))
-      return FALSE;
+      return SLUMP_FALSE;
     if (intersects(maxx,maxy,maxx,miny,ld->from->x,ld->from->y,ld->to->x,ld->to->y))
-      return FALSE;
+      return SLUMP_FALSE;
     if (intersects(maxx,miny,minx,miny,ld->from->x,ld->from->y,ld->to->x,ld->to->y))
-      return FALSE;
+      return SLUMP_FALSE;
   }
   /* If we made it this far, we found room! */
   /* Now decide how much to use (i.e. should sometimes shrink/narrow here) */
@@ -10883,7 +10883,7 @@ boolean do_new_pillar(level *l,sector *oldsector,sector *innersec,texture *t1,
   if (rollpercent(50)) righthand_monster(l,maxx,maxy,minx,maxy,haa,c);
   haa_unpend(haa);
 
-  return TRUE;
+  return SLUMP_TRUE;
 
 }  /* end do_new_pillar */
 
@@ -10914,7 +10914,7 @@ void do_new_pillars(level *l,sector *oldsector,style *ThisStyle,
    }
 
    /* Decide if the pillars should have a non-void inside sector */
-   if ((ThisStyle->do_constructs==FALSE)&&(rollpercent(100))) {   /* 100? */
+   if ((ThisStyle->do_constructs==SLUMP_FALSE)&&(rollpercent(100))) {   /* 100? */
      s = clone_sector(l,oldsector);
      if (rollpercent(30)) {
        s->light_level += 30 - roll(61);
@@ -10970,12 +10970,12 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
       case 0: bonustype = ID_MEDIKIT; bonusamount = 25; break;
       case 1: bonustype = ID_MEDIKIT; bonusamount = 25; break;
       case 2: bonustype = ID_STIMPACK; bonusamount = 10; break;
-      case 3: if ((FALSE==l->seen_suit)&&(rollpercent(l->p_force_nukage))) {
+      case 3: if ((SLUMP_FALSE==l->seen_suit)&&(rollpercent(l->p_force_nukage))) {
                 bonustype = ID_SUIT; bonusamount = 10;   /* Guess */
-                l->seen_suit = TRUE;
-              } else if ((FALSE==l->seen_map)&&rollpercent(30)) {
+                l->seen_suit = SLUMP_TRUE;
+              } else if ((SLUMP_FALSE==l->seen_map)&&rollpercent(30)) {
                 bonustype = ID_MAP; bonusamount = 0;
-                l->seen_map = TRUE;
+                l->seen_map = SLUMP_TRUE;
                 announce(VERBOSE,"Area map");
               } else {
                 bonustype = ID_INVIS; bonusamount = 10;  /* Also guess */
@@ -11000,19 +11000,19 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
     } else if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(20))) {
       bonustype = ID_CHAINSAW;
       bonusamount = 0;
-      haa->haas[2].has_chainsaw = TRUE;
+      haa->haas[2].has_chainsaw = SLUMP_TRUE;
     } else if (rollpercent(2)) {
       bonustype = ID_CHAINSAW;
       bonusamount = 0;
-      haa->haas[2].has_chainsaw = TRUE;
+      haa->haas[2].has_chainsaw = SLUMP_TRUE;
     } else switch (roll(3)) {
       case 1: bonustype = ID_SHELLBOX; bonusamount = 1400; break;
       case 2: bonustype = ID_BACKPACK;
         bonusamount = 380;
         if (haa->haas[1].can_use_rockets) bonusamount += 100;
         if (haa->haas[1].can_use_cells) bonusamount += 400;
-        haa->haas[1].has_backpack = TRUE;
-        haa->haas[2].has_backpack = TRUE;
+        haa->haas[1].has_backpack = SLUMP_TRUE;
+        haa->haas[2].has_backpack = SLUMP_TRUE;
         break;
       default: bonustype = ID_BULBOX; bonusamount = 500; break;
     }  /* end switch */
@@ -11025,8 +11025,8 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
     }
     /* Account for chainsaws; primitive */
     if (bonustype==ID_CHAINSAW) {
-      haa->haas[1].has_chainsaw = TRUE;   /* OK? */
-      haa->haas[2].has_chainsaw = TRUE;
+      haa->haas[1].has_chainsaw = SLUMP_TRUE;   /* OK? */
+      haa->haas[2].has_chainsaw = SLUMP_TRUE;
     }
   }  /* end ammo bonuses */
   new_thing(l,x,y,0,bonustype,7,c);  /* Place the bonus */
@@ -11341,7 +11341,7 @@ void make_extroom(level *l, sector *oldsector, haa *haa,
     if (outtex) hisec->floor_flat = losec->floor_flat =
       random_flat0(OUTDOOR,c,NULL);
     /* Now populate it and stuff */
-    populate(l,losec,c,haa,FALSE);
+    populate(l,losec,c,haa,SLUMP_FALSE);
     place_plants(l,128,losec,c);   /* 128? */
     announce(VERBOSE,"Patio");
   }
@@ -11413,7 +11413,7 @@ void make_extwindow(level *l, sector *oldsector, style *ThisStyle, config *c)
   }  /* end if found a linedef */
 }
 
-/* Special room all full of pillars and stuff.  TRUE if works. */
+/* Special room all full of pillars and stuff.  SLUMP_TRUE if works. */
 boolean grid_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
                quest *ThisQuest,boolean first, config *c)
 {
@@ -11433,8 +11433,8 @@ boolean grid_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
   boolean trying_constructs;
 
   find_rec(l,oldsector,&minx,&miny,&maxx,&maxy);
-  if (maxx-minx<192) return FALSE;
-  if (maxy-miny<192) return FALSE;
+  if (maxx-minx<192) return SLUMP_FALSE;
+  if (maxy-miny<192) return SLUMP_FALSE;
   xcount = (maxx-minx) / 96;
   xcount = 2 + roll(xcount-1);
   ycount = (maxy-miny) / 96;
@@ -11568,7 +11568,7 @@ boolean grid_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
   }
 
   announce(VERBOSE,"Grid room");
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Install a teleport gate in the room, and any attendant monsters */
@@ -11654,7 +11654,7 @@ void install_gate(level *l,sector *s,style *ThisStyle,haa *ThisHaa,
         announce(LOG,"Downlocked gate");
         break;
       default:
-        announce(ERROR,"Odd lock-type in install_gate");
+        announce(SLUMP_ERROR,"Odd lock-type in install_gate");
     }
     patch_upper(ld1,s->pstyle->wall0,c);
     patch_upper(ld2,s->pstyle->wall0,c);
@@ -11690,7 +11690,7 @@ void install_gate(level *l,sector *s,style *ThisStyle,haa *ThisHaa,
     ld4->flags |= tag_mask;      /* Always? */
     ld4->tag = s->pgate->out_tag;
   } else if (0==s->pgate->in_tag) {   /* Must be a level-end gate */
-    exit_style = TRUE;
+    exit_style = SLUMP_TRUE;
     ld1->type = LINEDEF_W1_END_LEVEL;
     ld1->flags |= tag_mask;
     ld2->type = LINEDEF_W1_END_LEVEL;
@@ -11713,7 +11713,7 @@ void install_gate(level *l,sector *s,style *ThisStyle,haa *ThisHaa,
         ld3->right->lower_texture =
         ld4->right->lower_texture = ThisStyle->support0;
     }
-    s->middle_enhanced = TRUE;
+    s->middle_enhanced = SLUMP_TRUE;
     innersec->ceiling_flat = gateflat;
   }
   if (s->pgate->out_tag || exit_gate)
@@ -11747,20 +11747,20 @@ boolean install_sl_exit(level *l,sector *oldsector,haa *ThisHaa,
   sector *newsec;
   boolean found;
 
-  for (found=FALSE,tries=0,ld=NULL;(!found)&&(tries<5);tries++) {
+  for (found=SLUMP_FALSE,tries=0,ld=NULL;(!found)&&(tries<5);tries++) {
     i = mark_decent_boundary_linedefs(l,oldsector,72);
     ld = random_marked_linedef(l,i);
     unmark_linedefs(l);
-    if (ld==NULL) return FALSE;
-    if (empty_left_side(l,ld,8)) found = TRUE;
+    if (ld==NULL) return SLUMP_FALSE;
+    if (empty_left_side(l,ld,8)) found = SLUMP_TRUE;
   }
-  ld2 = install_switch(l,ld,TRUE,FALSE,0,ThisStyle,c,&ld3);
+  ld2 = install_switch(l,ld,SLUMP_TRUE,SLUMP_FALSE,0,ThisStyle,c,&ld3);
   if (ld==ld2) {  /* Didn't recess after all?? */
     announce(WARNING,"Silly switch left sitting around?");
     /* Try to fix it */
     ld->right->middle_texture = ThisStyle->wall0;
     ld->type = LINEDEF_NORMAL;
-    return FALSE;
+    return SLUMP_FALSE;
   }
   tag = new_tag(l);
   ld2->type = LINEDEF_S1_SEC_LEVEL;
@@ -11772,21 +11772,21 @@ boolean install_sl_exit(level *l,sector *oldsector,haa *ThisHaa,
   if (opens) {
     ld3->type = LINEDEF_NORMAL_S1_DOOR;
     announce(VERBOSE,"Openable sl exit");
-    l->sl_done = TRUE;
+    l->sl_done = SLUMP_TRUE;
   } else {
     newsec->tag = tag;
     l->sl_type = LINEDEF_W1_OPEN_DOOR;       /* Or S1, eh?  So... */
     ld->flags |= SECRET_LINEDEF;
     if (ThisQuest->goal==LEVEL_END_GOAL) {
-      l->sl_open_ok = TRUE;
+      l->sl_open_ok = SLUMP_TRUE;
     } else {
-      l->sl_open_ok = FALSE;
+      l->sl_open_ok = SLUMP_FALSE;
       l->sl_open_start = ThisQuest->room;
     }
     l->sl_exit_sector = oldsector;
     announce(VERBOSE,"Installed sl exit");
   }
-  return TRUE;
+  return SLUMP_TRUE;
 }
 
 /* Try to put a triggerbox around something in this sector, */
@@ -11807,8 +11807,8 @@ void try_sl_triggerbox(level *l, sector *oldsector, config *c)
   }  /* end for things */
   if (t) {
     trigger_box(l,t,oldsector,l->sl_tag,l->sl_type,c);
-    l->sl_done = TRUE;
-    l->sl_open_ok = FALSE;
+    l->sl_done = SLUMP_TRUE;
+    l->sl_open_ok = SLUMP_FALSE;
     announce(VERBOSE,"Did sl triggerbox");
   }  /* if found a good thing */
 }
@@ -11817,13 +11817,13 @@ void try_sl_triggerbox(level *l, sector *oldsector, config *c)
 void enhance_room(level *l,sector *oldsector,haa *ThisHaa,style *ThisStyle,
                   quest *ThisQuest,boolean first, config *c)
 {
-  boolean done_room = FALSE;
-  boolean did_dm = FALSE;
+  boolean done_room = SLUMP_FALSE;
+  boolean did_dm = SLUMP_FALSE;
 
   if ((ThisQuest) && (ThisQuest->goal != NULL_GOAL) &&
       (need_secret_level(c)) && (l->sl_tag == 0) &&
       (rollpercent(20)||(ThisQuest->count+4>ThisQuest->minrooms)) ) {
-    install_sl_exit(l,oldsector,ThisHaa,ThisStyle,ThisQuest,FALSE,c);
+    install_sl_exit(l,oldsector,ThisHaa,ThisStyle,ThisQuest,SLUMP_FALSE,c);
   }
 
   if ((first)&&(oldsector->pgate)) {
@@ -11832,32 +11832,32 @@ void enhance_room(level *l,sector *oldsector,haa *ThisHaa,style *ThisStyle,
 
   if ((!done_room)&&oldsector->middle_enhanced) {
     /* Someone else did everything else */
-    embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,TRUE,c);
-    done_room = TRUE;
+    embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,SLUMP_TRUE,c);
+    done_room = SLUMP_TRUE;
   }
 
   if ((!done_room)&&oldsector->pgate) {
-    install_gate(l,oldsector,ThisStyle,ThisHaa,FALSE,c);
+    install_gate(l,oldsector,ThisStyle,ThisHaa,SLUMP_FALSE,c);
     gate_populate(l,oldsector,ThisHaa,first,c);  /* Very special-purpose! */
-    embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,TRUE,c);
-    done_room = TRUE;
+    embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,SLUMP_TRUE,c);
+    done_room = SLUMP_TRUE;
   }
 
   if ((!done_room)&&(!first)&&(!oldsector->has_key)
       &&rollpercent(l->p_special_room)) {
     if (grid_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,c)) {
-      embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,TRUE,c);
-      done_room = TRUE;
+      embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,SLUMP_TRUE,c);
+      done_room = SLUMP_TRUE;
     }
   }
 
   if (!done_room) {  /* Simple randomly-enhanced room */
     populate(l,oldsector,c,ThisHaa,first);  /* or after embellish? */
-    embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,FALSE,c);
+    embellish_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first,SLUMP_FALSE,c);
   }
 
   if (first || rollpercent(l->dm_rho)) {
-    did_dm = maybe_add_dm_start(l,oldsector,c,FALSE);
+    did_dm = maybe_add_dm_start(l,oldsector,c,SLUMP_FALSE);
   }
 
   if (did_dm) {
@@ -11882,7 +11882,7 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
   int switch_tag = 0;
   linedef *switch_ld = NULL;
   linedef *ld = 0;
-  boolean did_ceiling = FALSE;
+  boolean did_ceiling = SLUMP_FALSE;
   boolean install_closet, switch_closet;
 
   if (rollpercent(10))
@@ -11929,7 +11929,7 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
       linedef *ldnew, *ldedge1, *ldedge2;
       texture *t1;
       boolean sky_thing = rollpercent(l->skyclosets);
-      boolean crushing = FALSE;
+      boolean crushing = SLUMP_FALSE;
       n = 1+roll(3);
       for (k=0;k<n;k++) {
         i = mark_decent_boundary_linedefs(l,oldsector,64);
@@ -12019,7 +12019,7 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
                 outersec->tag = ld->tag;
                 outersec->ceiling_flat = random_flat0(RED,c,NULL);
                 if (outersec->light_level>120) outersec->light_level = 120;
-                crushing = TRUE;
+                crushing = SLUMP_TRUE;
                 announce(VERBOSE,"Crush ambush");
               } /* end if crushing */
               if (oldsector->light_level - outersec->light_level >= 16) {
@@ -12079,9 +12079,9 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
               } else {   /* Some ammo or whatever */
                 if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(5))) {
                   bonustype = ID_CHAINSAW;
-                  haa->haas[0].has_chainsaw = TRUE;
-                  haa->haas[1].has_chainsaw = TRUE;
-                  haa->haas[2].has_chainsaw = TRUE;
+                  haa->haas[0].has_chainsaw = SLUMP_TRUE;
+                  haa->haas[1].has_chainsaw = SLUMP_TRUE;
+                  haa->haas[2].has_chainsaw = SLUMP_TRUE;
                 } else {
                   switch (roll(2)) {   /* What about a cell? / a rocket */
                     case 0: bonustype = ID_CLIP; break;
@@ -12120,14 +12120,14 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
         if (ld!=NULL) {
           t1 = ld->right->middle_texture;
           ldlen = linelen(ld);
-          /* Use borderize(TRUE), to get possible lightboxes etc */
+          /* Use borderize(SLUMP_TRUE), to get possible lightboxes etc */
           if (rollpercent(5)) {
-            ThisStyle->lightboxes = TRUE;
+            ThisStyle->lightboxes = SLUMP_TRUE;
             ThisStyle->auxheight = pup;     /* "pheight" here is a nice bug! */
             announce(VERBOSE,"fancy plaque");
           }
-          ld = borderize(l,ld,128,TRUE,ThisStyle,LIGHT,NULL,NULL,c);
-          ThisStyle->lightboxes = FALSE;   /* Neaten up */
+          ld = borderize(l,ld,128,SLUMP_TRUE,ThisStyle,LIGHT,NULL,NULL,c);
+          ThisStyle->lightboxes = SLUMP_FALSE;   /* Neaten up */
           depth = 4 + roll(5) + roll(5);
           if (empty_left_side(l,ld,depth)) {
             announce(VERBOSE,"Putting in a plaque");
@@ -12163,8 +12163,8 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
             if (pup<25)
               if (rollpercent(80)) {   /* Put a secret thingie behind it! */
                 if (sync_doors) if (sync_tag==-1) sync_tag = new_tag(l);
-                if (NULL!=secret_closet(l,ldnew,ThisStyle,0,haa,c,TRUE,
-                                        sync_tag,oldsector->ceiling_height,TRUE)) {
+                if (NULL!=secret_closet(l,ldnew,ThisStyle,0,haa,c,SLUMP_TRUE,
+                                        sync_tag,oldsector->ceiling_height,SLUMP_TRUE)) {
                   announce(VERBOSE,"Plaque closet");
                   if (sync_doors) {
                     ldnew->tag = sync_tag;
@@ -12189,17 +12189,17 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
   }  /* end if 1/10 */
 
   /* The other kind(s) of secret closet */
-  install_closet = FALSE;
-  switch_closet = FALSE;
+  install_closet = SLUMP_FALSE;
+  switch_closet = SLUMP_FALSE;
   if (rollpercent(l->p_surprise)) {
-    install_closet = TRUE;
+    install_closet = SLUMP_TRUE;
   } else if (rollpercent(l->p_swcloset)) {
     int i = mark_decent_boundary_linedefs(l,oldsector,72);
     switch_ld = random_marked_linedef(l,i);
     unmark_linedefs(l);
     if (switch_ld && empty_left_side(l,switch_ld,8)) {
-      install_closet = TRUE;
-      switch_closet = TRUE;
+      install_closet = SLUMP_TRUE;
+      switch_closet = SLUMP_TRUE;
     }
   }
   if (install_closet) {
@@ -12225,13 +12225,13 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
         ld = split_linedef(l,ld,border,c);
         split_linedef(l,ld,plen,c);
       }
-      goal_trigger = FALSE;
+      goal_trigger = SLUMP_FALSE;
       if (empty_left_side(l,ld,72)) {     /* "72" is from secret_closet() */
         if (((ThisQuest->goal==KEY_GOAL)||(ThisQuest->goal==NULL_GOAL)) &&
             (!switch_closet) &&
             (ThisQuest->auxtag==0)&&(ThisQuest->surprise==NULL)) {
           /* Goal-triggered, if we can */
-          goal_trigger=TRUE;
+          goal_trigger=SLUMP_TRUE;
           tag = new_tag(l);
           ThisQuest->auxtag = tag;
         } else if (switch_closet) {    /* Switch-triggered */
@@ -12261,7 +12261,7 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
                            (boolean)(tag==-1));
         if (NULL!=ldc) {
           if (switch_closet) {
-            switch_ld = install_switch(l,switch_ld,TRUE,FALSE,0,ThisStyle,c,NULL);
+            switch_ld = install_switch(l,switch_ld,SLUMP_TRUE,SLUMP_FALSE,0,ThisStyle,c,NULL);
             switch_ld->tag = switch_tag;
             if (DOOM0_BIT&c->gamemask) switch_ld->type = LINEDEF_S1_OPEN_DOOR;
               else switch_ld->type = LINEDEF_S1_BLAZE_O_DOOR;
@@ -12271,7 +12271,7 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
             oldsector->floor_height) - 128;  /* 128 should be tex-height */
           ld->flags |= SECRET_LINEDEF;
           if (tag==-1) {  /* Need a subtle hint here */
-            boolean hinted=FALSE;
+            boolean hinted=SLUMP_FALSE;
             if (rollpercent(5)) {
               /* Use a barrel or candle */
               genus *g = random_barrel(c,ThisStyle);
@@ -12282,32 +12282,32 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
               point_from(ld->from->x,ld->from->y,x,y,
                 RIGHT_TURN,g->width/2,&x,&y);
               if (room_at(l,g,x,y,g->width/2,c)) {
-                hinted=TRUE;
+                hinted=SLUMP_TRUE;
                 new_thing(l,x,y,0,g->thingid,7,c);
               }
             }
             if ((!hinted) && had_map && rollpercent(15)) {
               /* Make 'em use the map! */
-              hinted = TRUE;
+              hinted = SLUMP_TRUE;
             }
             if ((!hinted)&&rollpercent(40)&&
                 (ld->right->upper_texture->y_hint!=0)) {
               /* Typical misalign-hint */
               ld->right->y_misalign = ld->right->upper_texture->y_hint;
-              hinted = TRUE;
+              hinted = SLUMP_TRUE;
             }
             if ((!hinted)&&rollpercent(90) &&
                 (ld->right->upper_texture->subtle!=NULL)) {
               /* Subtly different texture */
               ld->right->upper_texture = ld->right->upper_texture->subtle;
               announce(VERBOSE,"subtle");
-              hinted = TRUE;
+              hinted = SLUMP_TRUE;
             }
             if (!hinted) {
               /* Make it just show on the automap (always possible) */
               ld->flags &= ~SECRET_LINEDEF;
               announce(VERBOSE,"Map hint");
-              hinted = TRUE;
+              hinted = SLUMP_TRUE;
             }
           }
           if (goal_trigger) {
@@ -12413,7 +12413,7 @@ linedef *make_next_room(level *l,sector *oldsector,boolean radical,config *c,
   newldf = NULL;
   newsector = NULL;
   NewStyle = new_style(l,ThisStyle,radical,c);
-  for (try_reduction=FALSE;;) {
+  for (try_reduction=SLUMP_FALSE;;) {
     /* this loop is a hack, eh? */
     for (tries=0;tries<20;tries++) {
       i = mark_adequate_linedefs(l,oldsector,ThisStyle,c);
@@ -12450,7 +12450,7 @@ linedef *make_next_room(level *l,sector *oldsector,boolean radical,config *c,
     }  /* end until one works */
     if (newsector) break;
     if (try_reduction) break;
-    try_reduction = TRUE;
+    try_reduction = SLUMP_TRUE;
   }  /* end with and without reduction */
   if (newsector==NULL) {
     if (newldf) {  /* Avoid engine crashes! */
@@ -12510,20 +12510,20 @@ void empty_level(level *l, config *c)
    l->link_anchor = NULL;
    l->arena_anchor = NULL;
    l->gate_anchor = NULL;
-   l->used_red = FALSE;
-   l->used_blue = FALSE;
-   l->used_yellow = FALSE;
+   l->used_red = SLUMP_FALSE;
+   l->used_blue = SLUMP_FALSE;
+   l->used_yellow = SLUMP_FALSE;
    l->last_tag_used = 0;
    l->sl_tag = 0;
    l->sl_type = 0;
-   l->sl_done = FALSE;
-   l->sl_open_ok = FALSE;
+   l->sl_done = SLUMP_FALSE;
+   l->sl_open_ok = SLUMP_FALSE;
    l->sl_open_start = NULL;
    l->sl_exit_sector = NULL;
    l->first_room = NULL;
    l->goal_room = NULL;
-   l->seen_suit = FALSE;
-   l->seen_map = FALSE;
+   l->seen_suit = SLUMP_FALSE;
+   l->seen_map = SLUMP_FALSE;
    l->scrolling_keylights = rollpercent(5);
    l->support_misaligns = rollpercent(2);   /* Looks crummy! */
    l->skyclosets = 2;
@@ -12611,14 +12611,14 @@ void empty_level(level *l, config *c)
    l->use_gates = rollpercent(TELEPORTS_PERCENT);
    l->raise_gates = rollpercent(60);
    l->no_doors =
-     l->all_wide_links = FALSE;
+     l->all_wide_links = SLUMP_FALSE;
    if (rollpercent(15)) switch(roll(6)) {
      case 0:
      case 1:
      case 2: l->all_wide_links =
-               l->no_doors = TRUE; break;
-     case 3: l->all_wide_links = TRUE; break;
-     case 4: l->no_doors = TRUE; break;
+               l->no_doors = SLUMP_TRUE; break;
+     case 3: l->all_wide_links = SLUMP_TRUE; break;
+     case 4: l->no_doors = SLUMP_TRUE; break;
      default: break;
    }
    if (l->all_wide_links)
@@ -12661,8 +12661,8 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
    linedef *ldf, *newldf = NULL;
    sector *oldsector, *newsector = NULL;
    int i, forks, nullforks;
-   boolean done_quest = FALSE;
-   boolean first_room = TRUE;
+   boolean done_quest = SLUMP_FALSE;
+   boolean first_room = SLUMP_TRUE;
    int keys_used = 0;
 
    current_level_number = c->map + (9 * c->episode) + c->mission;
@@ -12673,7 +12673,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
    ThisQuest = starting_quest(l,c);
 
    ldf = starting_linedef(l,ThisStyle,c);
-   oldsector = generate_room_outline(l,ldf,ThisStyle,TRUE,c);
+   oldsector = generate_room_outline(l,ldf,ThisStyle,SLUMP_TRUE,c);
    l->first_room = oldsector;
 
    /* Make starting position(s) in the first sector */
@@ -12691,7 +12691,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
        else done_quest = 0;
 
      if (!done_quest) {
-       newldf = make_next_room(l,oldsector,FALSE,c,&ldf,&ThisLink,NULL);
+       newldf = make_next_room(l,oldsector,SLUMP_FALSE,c,&ldf,&ThisLink,NULL);
        if (newldf==NULL) {
          done_quest = 1;
          if (ThisQuest->next==NULL) {
@@ -12783,11 +12783,11 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
      }  /* end for */
 
      /* See if it's OK to put in a secret-level exit-opener yet */
-     if (oldsector==l->sl_open_start) l->sl_open_ok = TRUE;
+     if (oldsector==l->sl_open_start) l->sl_open_ok = SLUMP_TRUE;
 
      /* Fancy up and fill in the room itself */
      enhance_room(l,oldsector,ThisHaa,ThisStyle,ThisQuest,first_room,c);
-     first_room = FALSE;
+     first_room = SLUMP_FALSE;
 
      /* Now get ready for the next pass */
      if (!done_quest) {
@@ -12807,7 +12807,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
    /* Also turn off berserk effect */
    for (i=ITYTD;i<=UV;i++) {
      ThisHaa->haas[i].ammo *= (float)0.75;   /* awful! */
-     ThisHaa->haas[i].has_berserk = FALSE;
+     ThisHaa->haas[i].has_berserk = SLUMP_FALSE;
    }
 
    /* Sometimes turn on big stuff; probably too simple */
@@ -12829,9 +12829,9 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
    if (c->do_dm) {
      char s[80];
      for (;l->dm_count<4;) {
-       if (maybe_add_dm_start(l,l->first_room,c,TRUE)) continue;
-       if (maybe_add_dm_start(l,l->goal_room,c,TRUE)) continue;
-       announce(ERROR,"Not enough deathmatch starts!");
+       if (maybe_add_dm_start(l,l->first_room,c,SLUMP_TRUE)) continue;
+       if (maybe_add_dm_start(l,l->goal_room,c,SLUMP_TRUE)) continue;
+       announce(SLUMP_ERROR,"Not enough deathmatch starts!");
        break;
      }
      sprintf(s,"%d deathmatch starts.",l->dm_count);

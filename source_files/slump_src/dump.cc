@@ -375,13 +375,13 @@ void DumpLevel(dumphandle dh,config *c,level *l,int episode,int mission,int map)
     rawsidedef.y_offset = pSidedef->y_offset;
     memset(rawsidedef.upper_texture,0,8);
     memcpy(rawsidedef.upper_texture,pSidedef->upper_texture->realname,strlen(pSidedef->upper_texture->realname));
-    pSidedef->upper_texture->used = TRUE;
+    pSidedef->upper_texture->used = SLUMP_TRUE;
     memset(rawsidedef.lower_texture,0,8);
     memcpy(rawsidedef.lower_texture,pSidedef->lower_texture->realname,strlen(pSidedef->lower_texture->realname));
-    pSidedef->lower_texture->used = TRUE;
+    pSidedef->lower_texture->used = SLUMP_TRUE;
     memset(rawsidedef.middle_texture,0,8);
     memcpy(rawsidedef.middle_texture,pSidedef->middle_texture->realname,strlen(pSidedef->middle_texture->realname));
-    pSidedef->middle_texture->used = TRUE;
+    pSidedef->middle_texture->used = SLUMP_TRUE;
     rawsidedef.sector = (pSidedef->psector)->number;
 #ifdef ENDIAN_BIG
     rawsidedef.x_offset = swap_16(rawsidedef.x_offset);
@@ -409,10 +409,10 @@ void DumpLevel(dumphandle dh,config *c,level *l,int episode,int mission,int map)
     rawsector.ceiling_height = pSector->ceiling_height;
     memset(rawsector.floor_flat,0,8);
     memcpy(rawsector.floor_flat,pSector->floor_flat->name,strlen(pSector->floor_flat->name));
-    pSector->floor_flat->used = TRUE;
+    pSector->floor_flat->used = SLUMP_TRUE;
     memset(rawsector.ceiling_flat,0,8);
     memcpy(rawsector.ceiling_flat,pSector->ceiling_flat->name,strlen(pSector->ceiling_flat->name));
-    pSector->ceiling_flat->used = TRUE;
+    pSector->ceiling_flat->used = SLUMP_TRUE;
     if(pSector->light_level < ABSOLUTE_MINLIGHT) { /* Rooms can be too dark */
 	pSector->light_level = ABSOLUTE_MINLIGHT;
     }
@@ -609,12 +609,12 @@ byte pbuf[TLMPSIZE(0x80,0x40)];      /* Also */
 void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
 {
   short i,j,x,x2,y,dx,dy;
-  boolean started = FALSE;
+  boolean started = SLUMP_FALSE;
 
   if (even_unused || find_flat(c,"SLGRASS1")->used) {
 
     if (!started) RegisterLmp(dh,"FF_START",0);
-    started = TRUE;
+    started = SLUMP_TRUE;
     announce(VERBOSE,"SLGRASS1");
 
     basic_background2(fbuf,0x7c,4);
@@ -652,7 +652,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
   if (even_unused || find_flat(c,"SLSPARKS")->used) {
 
     if (!started) RegisterLmp(dh,"FF_START",0);
-    started = TRUE;
+    started = SLUMP_TRUE;
     announce(VERBOSE,"SLSPARKS");
     memset(fbuf,0,4096);
     for (i=512;i;i--)
@@ -664,7 +664,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
   if (even_unused || find_flat(c,"SLGATE1")->used) {
 
     if (!started) RegisterLmp(dh,"FF_START",0);
-    started = TRUE;
+    started = SLUMP_TRUE;
     announce(VERBOSE,"SLGATE1");
 
     basic_background2(fbuf,0x9c,4);
@@ -689,7 +689,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
   if (even_unused || find_flat(c,"SLLITE1")->used) {
 
     if (!started) RegisterLmp(dh,"FF_START",0);
-    started = TRUE;
+    started = SLUMP_TRUE;
     announce(VERBOSE,"SLLITE1");
 
     basic_background2(fbuf,0x94,4);
@@ -720,7 +720,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
   if (even_unused || find_flat(c,"SLFLAT01")->used) {
 
     if (!started) RegisterLmp(dh,"FF_START",0);
-    started = TRUE;
+    started = SLUMP_TRUE;
     announce(VERBOSE,"SLFLAT01");
 
     basic_background2(fbuf,0x6b,5);
@@ -749,23 +749,23 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
 {
   int rows, columns, i, j, lsize;
   byte *p, thispel;
-  boolean started = FALSE;
+  boolean started = SLUMP_FALSE;
 
 
 
-  if (even_unused || FALSE) {
+  if (even_unused || SLUMP_FALSE) {
 
     if (!started) {
       RegisterLmp(dh,"P_START",0);    /* Which?  Both? */
       RegisterLmp(dh,"PP_START",0);
     }
-    started = TRUE;
+    started = SLUMP_TRUE;
 
     rows = 0x80;
     columns = 0x40;
     lsize = TLMPSIZE(rows,columns);
     if (lsize>sizeof(pbuf))
-      announce(ERROR,"Buffer overflow in r_c_t()");
+      announce(SLUMP_ERROR,"Buffer overflow in r_c_t()");
     p = pbuf;
     /* The picture header */
 #ifndef ENDIAN_BIG
@@ -809,19 +809,19 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
     fwrite(pbuf,lsize,1,dh->f);
   }
 
-  if (even_unused || FALSE) {
+  if (even_unused || SLUMP_FALSE) {
 
     if (!started) {
       RegisterLmp(dh,"P_START",0);    /* Which?  Both? */
       RegisterLmp(dh,"PP_START",0);
     }
-    started = TRUE;
+    started = SLUMP_TRUE;
 
     rows = 0x80;
     columns = 0x40;
     lsize = TLMPSIZE(rows,columns);
     if (lsize>sizeof(pbuf))
-      announce(ERROR,"Buffer overflow in r_c_t()");
+      announce(SLUMP_ERROR,"Buffer overflow in r_c_t()");
     p = pbuf;
     /* The picture header */
 #ifndef ENDIAN_BIG
@@ -876,7 +876,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
       RegisterLmp(dh,"P_START",0);    /* Which?  Both? */
       RegisterLmp(dh,"PP_START",0);
     }
-    started = TRUE;
+    started = SLUMP_TRUE;
 
 
     /* First a little correlated noise for "dirtying" */
@@ -887,7 +887,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
     columns = 0x40;
     lsize = TLMPSIZE(rows,columns);
     if (lsize>sizeof(pbuf))
-      announce(ERROR,"Buffer overflow in r_c_t()");
+      announce(SLUMP_ERROR,"Buffer overflow in r_c_t()");
     p = pbuf;
     /* The picture header */
 #ifndef ENDIAN_BIG
@@ -982,7 +982,7 @@ void make_secret_level(dumphandle dh, haa *oldhaa, config *c)
                                    SecConfig->map);
   if (SecConfig->map==31) {
     SecConfig->map=32;
-    SecConfig->secret_themes = TRUE;
+    SecConfig->secret_themes = SLUMP_TRUE;
     NewLevel(&SecLevel,SecHaa,SecConfig);
     DumpLevel(dh,SecConfig,&SecLevel,SecConfig->episode,
                                      SecConfig->mission,

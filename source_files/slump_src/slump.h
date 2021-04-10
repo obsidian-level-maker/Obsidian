@@ -44,8 +44,8 @@
 #endif
 
 typedef unsigned char boolean;
-#define TRUE (1==1)
-#define FALSE (!TRUE)
+#define SLUMP_TRUE (1==1)
+#define SLUMP_FALSE (!SLUMP_TRUE)
 #define HUGE_NUMBER (1000000)
 
 #define LEVEL_MAX_BARS (30)
@@ -56,8 +56,8 @@ typedef unsigned char boolean;
 typedef unsigned char byte;
 
 #ifndef USE_STRICMP
-#define stricmp(x,y) strcasecmp(x,y)
-#define strnicmp(x,y,n) strncasecmp(x,y,n)
+#define slump_stricmp(x,y) strcasecmp(x,y)
+#define slump_strnicmp(x,y,n) strncasecmp(x,y,n)
 #endif
 
 #ifdef OK_TO_USE_REAL_MONSTER_WIDTH
@@ -965,7 +965,7 @@ boolean install_sl_exit(level *l,sector *oldsector,haa *ThisHaa,
 #define LOG 1
 #define NOTE 2
 #define WARNING 3
-#define ERROR 4
+#define SLUMP_ERROR 4
 void announce(int announcetype, char *s);
 
 #define RIGHT_TURN (90)

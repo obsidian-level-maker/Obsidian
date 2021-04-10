@@ -5,6 +5,7 @@ set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_C_COMPILER   /usr/bin/i686-w64-mingw32-gcc)
 set(CMAKE_CXX_COMPILER /usr/bin/i686-w64-mingw32-g++)
 set(CMAKE_RC_COMPILER /usr/bin/i686-w64-mingw32-windres)
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -lm -Isource_files/zlib_src/libzlibstatic.a -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 -lcomctl32 -lwsock32 -lsupc++")
 
 # here is where the target environment located
 set(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32)
