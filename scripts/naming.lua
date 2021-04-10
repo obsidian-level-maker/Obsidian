@@ -5426,9 +5426,11 @@ namelib.NAMES =
         ["You Think You Can Hide?"] = 25,
 
         -- MSSP adds names
+        ["Always Has Been"] = 20,
         ["Hell is Infinite"] = 50,
         ["Nobody Knows About Legacy 3D Lines"] = 20,
         ["Live! Work! SLAY!"] = 20,
+        ["Invest in ObCoin Now!"] = 20,
         ["Too Much Fabs, Too Few Fabs"] = 20,
         ["The Category is... DOOM!"] = 20,
 

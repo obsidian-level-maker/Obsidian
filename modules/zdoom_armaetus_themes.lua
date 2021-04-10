@@ -4341,7 +4341,8 @@ ARMAETUS_THEMES =
       gtd_wall_lit_box_white = 13,
       gtd_wall_lit_box_yellow = 13,
       --
-      gtd_wall_metal_warning = 25,
+      gtd_wall_metal_warning = 13,
+      gtd_wall_metal_warning_bottom = 13,
       --
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
@@ -4751,7 +4752,8 @@ ARMAETUS_THEMES =
       gtd_wall_lit_box_white = 12,
       gtd_wall_lit_box_yellow = 12,
       --
-      gtd_wall_metal_warning = 50,
+      gtd_wall_metal_warning = 25,
+      gtd_wall_metal_warning_bottom = 25,
       --
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
@@ -5172,7 +5174,9 @@ ARMAETUS_THEMES =
       armaetus_wallbodies_old = 12,
       armaetus_wallbodies_bones = 12,
       --
-      gtd_wall_metal_warning = 25,
+      gtd_wall_metal_warning = 13,
+      gtd_wall_metal_warning_bottom = 13,
+      --
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
