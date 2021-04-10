@@ -70,6 +70,7 @@ std::string current_engine;
 std::string map_format;
 std::string build_nodes;
 std::string build_reject;
+std::string levelcount;
 
 static bool UDMF_mode;
 
@@ -108,6 +109,24 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 int Slump_MakeWAD(const char* filename) {
 	s_config slump_config;
 	slump_config.outfile = (char *)filename;
+	levelcount = main_win->game_box->length->GetID();
+	if (levelcount == "single") {
+		slump_config.levelcount = 1;	
+	} else if (levelcount == "few") {
+		slump_config.levelcount = 4;
+	} else if (levelcount == "episode") {
+		slump_config.levelcount = 11;
+	} else {
+		slump_config.levelcount = 32; // "Full Game"
+	}
+	slump_config.minrooms = atoi(main_win->left_mods->FindID("ui_slump_left")
+							->FindOpt("minrooms")->GetID());
+	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_left")
+							->FindOpt("dm_starts")->GetID(), "yes")) {
+		slump_config.do_dm = true;
+	} else {
+		slump_config.do_dm = false;
+	}
 	return slump_main(slump_config);    
 }	
 

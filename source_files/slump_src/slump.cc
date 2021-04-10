@@ -1405,18 +1405,18 @@ config *get_config(s_config slump_config)
   answer->required_monster_bits = 0;
   answer->forbidden_monster_bits = SPECIAL;
  /* answer->minrooms = 18; */
-  answer->minrooms = 17; /* Medium size */
+  answer->minrooms = slump_config.minrooms; /* Medium size */
  /* answer->gamemask = DOOM1_BIT; */ /* All/Only things supported by DOOM 1.9 */
   answer->gamemask = DOOM2_BIT; /* FreeDoom is doom2 not doom1 */
   answer->episode = 0;
   answer->mission = 0;
   answer->last_mission = FALSE;
-  answer->levelcount = 30; /* Default: Do a megawad */
+  answer->levelcount = slump_config.levelcount; /* Default: Do a megawad */
   answer->force_arena = TRUE;
   answer->force_biggest = FALSE;
   answer->do_music = 0;
   answer->secret_monsters = FALSE;
-  answer->do_dm = 1;
+  answer->do_dm = slump_config.do_dm;
   answer->do_slinfo = TRUE;
   answer->produce_null_lmps = FALSE;
   answer->do_seclevels = TRUE;
@@ -8569,8 +8569,8 @@ void load_config(config *c)
 
   f = fopen(c->configfile,"rb");
   if (f==NULL) {
-    fprintf(stderr,"Could not open %s; using default configuration.\n",
-      c->configfile);
+    //fprintf(stderr,"Could not open %s; using default configuration.\n",
+      //c->configfile);
     load_default_config(c);
   } else {
     fseek(f,0,SEEK_END);
