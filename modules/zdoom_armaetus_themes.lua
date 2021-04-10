@@ -2019,6 +2019,219 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  hell_Outdoors_generic =
+  {
+    env  = "outdoor",
+    prob = 50,
+
+    floors =
+    {
+      FLOOR6_2 = 12,
+      FLAT5_7 = 20,
+      FLAT5_8 = 10,
+      RROCK03 = 30,
+      RROCK04 = 30,
+      RROCK09 = 15,
+      MFLR8_3 = 15,
+      SLIME13 = 10,
+      RROCK11 = 10,
+      RROCK12 = 10,
+      RROCK13 = 5,
+      RROCK01 = 5,
+      RROCK02 = 3,
+
+      BLACK0 = 10,
+      BMARB1 = 10,
+      BMARB2 = 10,
+      BMARB3 = 10,
+
+      DARKF01 = 10,
+      DARKF02 = 10,
+
+      FFLAT01 = 10,
+
+      FLOOR46D = 10,
+      FLOOR46E = 10,
+      
+      G01 = 10,
+      G02 = 10,
+      G03 = 10,
+      G04 = 10,
+      G05 = 10,
+      G06 = 10,
+      G07 = 10,
+      G08 = 10,
+      G09 = 10,
+      G10 = 10,
+      G11 = 10,
+      G12 = 10,
+      G13 = 10,
+      G14 = 10,
+      G15 = 10,
+      G16 = 10,
+      G17 = 10,
+      G18 = 10,
+      G19 = 10,
+      G20 = 10,
+      G21 = 10,
+
+      GMET02 = 10,
+      GMET03 = 10,
+      GMET04 = 10,
+      GMET05 = 10,
+      GMET06 = 10,
+      GMET07 = 10,
+      GRATE4 = 10,
+
+      GROUND01 = 10,
+      GROUND02 = 10,
+
+      GSTN01 = 10,
+      GSTN02 = 10,
+      GSTN03 = 10,
+      GSTN04 = 10,
+      GSTN05 = 10,
+
+      GWOD01 = 10,
+      GWOD02 = 10,
+      GWOD03 = 10,
+      GWOD04 = 10,
+
+      MEM01 = 10,
+
+      QFLAT01 = 10,
+      QFLAT02 = 10,
+      QFLAT03 = 10,
+      QFLAT04 = 10,
+      QFLAT05 = 10,
+      QFLAT06 = 10,
+      QFLAT07 = 10,
+      QFLAT08 = 10,
+      QFLAT09 = 10,
+      QFLAT10 = 10,
+
+      RMARB1 = 10,
+      RMARB2 = 10,
+      RMARB3 = 10,
+
+      URB1 = 10,
+
+      WOODTI2 = 10,
+      WOODTIL = 10,
+    },
+
+    naturals =
+    {
+      ROCKRED1 = 50,
+      SP_ROCK1 = 30,
+      ASHWALL2 = 30,
+      ASHWALL3  = 25,
+      ASHWALL6  = 20,
+      ASHWALL7  = 15,
+      ASHWALL4 = 30,
+      SKIN2 = 10,
+      SKSNAKE1 = 30,
+      SKSNAKE2 = 30
+    },
+
+    porch_floors =
+    {
+      CEIL3_5 = 10,
+      DEM1_5 = 35,
+      DEM1_6 = 35,
+      FLAT1_1 = 10,
+      FLAT1_2 = 10,
+      FLAT5_1 = 35,
+      FLAT5_2 = 35,
+      FLOOR4_6 = 10,
+      FLOOR5_4 = 10,
+      MFLR8_1 = 10,
+      RROCK09 = 10,
+      RROCK12 = 10,
+      RROCK13 = 10,
+      RROCK14 = 10,
+
+      BLACK0 = 10,
+      BMARB1 = 10,
+      BMARB2 = 10,
+      BMARB3 = 10,
+
+      DARKF01 = 10,
+      DARKF02 = 10,
+
+      FFLAT01 = 10,
+
+      FLOOR46D = 10,
+      FLOOR46E = 10,
+      
+      G01 = 10,
+      G02 = 10,
+      G03 = 10,
+      G04 = 10,
+      G05 = 10,
+      G06 = 10,
+      G07 = 10,
+      G08 = 10,
+      G09 = 10,
+      G10 = 10,
+      G11 = 10,
+      G12 = 10,
+      G13 = 10,
+      G14 = 10,
+      G15 = 10,
+      G16 = 10,
+      G17 = 10,
+      G18 = 10,
+      G19 = 10,
+      G20 = 10,
+      G21 = 10,
+
+      GMET02 = 10,
+      GMET03 = 10,
+      GMET04 = 10,
+      GMET05 = 10,
+      GMET06 = 10,
+      GMET07 = 10,
+      GRATE4 = 10,
+
+      GROUND01 = 10,
+      GROUND02 = 10,
+
+      GSTN01 = 10,
+      GSTN02 = 10,
+      GSTN03 = 10,
+      GSTN04 = 10,
+      GSTN05 = 10,
+
+      GWOD01 = 10,
+      GWOD02 = 10,
+      GWOD03 = 10,
+      GWOD04 = 10,
+
+      MEM01 = 10,
+
+      QFLAT01 = 10,
+      QFLAT02 = 10,
+      QFLAT03 = 10,
+      QFLAT04 = 10,
+      QFLAT05 = 10,
+      QFLAT06 = 10,
+      QFLAT07 = 10,
+      QFLAT08 = 10,
+      QFLAT09 = 10,
+      QFLAT10 = 10,
+
+      RMARB1 = 10,
+      RMARB2 = 10,
+      RMARB3 = 10,
+
+      URB1 = 10,
+
+      WOODTI2 = 10,
+      WOODTIL = 10,
+    }
+  },
+
 --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
   urban_ArmaetusBricks =
   {
@@ -3673,6 +3886,80 @@ ARMAETUS_THEMES =
       G8_BR3GY = 10
     },
 
+    fences = 
+    {
+      BRIKS31 = 30,
+      BRIKS32 = 30,
+
+      BRONZE5 = 30,
+      BRONZE6 = 30,
+
+      BRONZEG1 = 30,
+      BRONZEG2 = 30,
+      BRONZEG3 = 30,
+      BROWN2 = 30,
+      BROWN3 = 30,
+      BROWNGR2 = 30,
+      BROWNGR4 = 30,
+
+      CEM09 = 20,
+      CEM10 = 20,
+      CEM11 = 20,
+
+      DRKCMT05 = 10,
+      DRKCMT06 = 10,
+
+      GOTH15 = 15,
+      GOTH38 = 15,
+      GOTH39 = 15,
+
+      GOTH42 = 15,
+
+      GRAY6 = 30,
+      GRAY8 = 30,
+      GRAY9 = 30,
+
+      GRAYMET2 = 30,
+      GRAYMET3 = 30,
+      GRAYMET4 = 30,
+      GRAYMET5 = 30,
+
+      METAL10 = 20,
+      METAL8 = 20,
+      METAL9 = 20,
+      METL01 = 20,
+      METL02 = 20,
+      METL03 = 20,
+
+      SHAWGRY4 = 25,
+      SHAWN01C = 25,
+      SHAWN01D = 25,
+      SHAWN01E = 25,
+      SHAWN01F = 25,
+
+      SHAWN4 = 25,
+      SHAWN5 = 25,
+      SHAWSH04 = 25,
+
+      SNOWWAL1 = 30,
+      SNOWWAL2 = 30,
+      SNOWWAL3 = 30,
+      SNOWWAL4 = 30,
+
+      STON7 = 15,
+      STONE10 = 30,
+
+      TEKGRN01 = 25,
+      TEKGRY01 = 25,
+      TEKGRY02 = 25,
+      TEKSHAW = 25,
+
+      URBAN5 = 25,
+      URBAN6 = 25,
+      URBAN7 = 25,
+      URBAN8 = 25,
+    },
+
     fence_groups =
     {
       fence_firestorm_red = 25,
@@ -4206,6 +4493,157 @@ ARMAETUS_THEMES =
       G8_BRNW3 = 15,
       G8_BR2GY = 15,
       G8_BR3GY = 15
+    },
+
+    fences =
+    {
+      BIGSTON4 = 25,
+      BIGSTONE = 25,
+
+      BLAKMBGY = 25,
+
+      BRIKS01 = 15,
+      BRIKS02 = 15,
+      BRIKS03 = 15,
+      BRIKS07 = 15,
+
+      BRIKS10 = 10,
+      BRIKS11 = 10,
+      BRIKS15 = 10,
+      BRIKS16 = 10,
+      BRIKS17 = 10,
+
+      BRIKS22 = 10,
+      BRIKS24 = 10,
+      BRIKS26 = 10,
+      BRIKS27 = 10,
+      BRIKS28 = 10,
+
+      BRIKS33 = 10,
+      BRIKS35 = 10,
+      BRIKS36 = 10,
+
+      BRIKS39 = 10,
+      BRIKS40 = 10,
+      BRIKS41 = 10,
+      BRIKS42 = 10,
+
+      BRONZE5 = 25,
+      BRONZE6 = 25,
+      BRONZEG1 = 25,
+      BRONZEG2 = 25,
+      BRONZEG3 = 25,
+      BROWN2 = 25,
+      BROWN3 = 25,
+
+      DESBRIK1 = 10,
+      DESBRIK2 = 10,
+      DESBRIK3 = 10,
+      DESBRIK4 = 10,
+      DESBRIK5 = 10,
+      DESBRIK6 = 10,
+      DESBRIK7 = 10,
+
+      DESMARB2 = 10,
+
+      DRKCMT04 = 10,
+      DRKCMT05 = 15,
+      DRKCMT06 = 15,
+
+      GOTH06 = 20,
+      GOTH07 = 20,
+      GOTH08 = 20,
+      GOTH09 = 20,
+      GOTH10 = 20,
+      GOTH11 = 20,
+      GOTH12 = 20,
+      GOTH13 = 20,
+      GOTH14 = 20,
+      GOTH15 = 20,
+      GOTH16 = 20,
+      GOTH17 = 20,
+      GOTH18 = 20,
+
+      GOTH23 = 20,
+      GOTH24 = 20,
+      GOTH25 = 20,
+      GOTH26 = 20,
+      GOTH27 = 20,
+      GOTH29 = 20,
+      GOTH30 = 20,
+      GOTH31 = 20,
+      GOTH32 = 20,
+
+      GOTH34 = 20,
+      GOTH35 = 20,
+      GOTH36 = 20,
+      GOTH37 = 20,
+      GOTH38 = 20,
+      GOTH39 = 20,
+      GOTH40 = 20,
+      GOTH41 = 20,
+      GOTH42 = 20,
+      GOTH43 = 20,
+      GOTH44 = 20,
+      GOTH45 = 20,
+      GOTH46 = 20,
+      GOTH47 = 20,
+      GOTH48 = 20,
+      GOTH49 = 20,
+
+      HELLCMT7 = 10,
+      HELLCMT8 = 10,
+
+      HELMET1 = 20,
+      HELMET2 = 20,
+
+      KMARBLE1 = 25,
+      KMARBLE2 = 25,
+      KMARBLE3 = 25,
+
+      MARBLE4 = 25,
+      MARBLE5 = 25,
+      MARBLE6 = 25,
+      MARBLE7 = 25,
+      MARBLE8 = 25,
+
+      METL02 = 20,
+      METL03 = 20,
+
+      MM205 = 20,
+      MM206 = 10,
+      MM207 = 10,
+      MM208 = 10,
+
+      REDMARB1 = 15,
+      REDMARB2 = 15,
+      REDMARB3 = 15,
+
+      ROK03 = 20,
+      ROK05 = 20,
+      ROK07 = 20,
+      ROK13 = 20,
+      ROK18 = 20,
+      ROK19 = 20,
+
+      RUSTWAL2 = 25,
+      RUSTWALL = 25,
+
+      VINES1 = 20,
+      VINES2 = 20,
+
+      WD01 = 20,
+      WD02 = 20,
+      WD03 = 20,
+      WDMET01 = 20,
+      WDMET02 = 20,
+      WDMET03 = 20,
+
+      WOOD13 = 20,
+      WOOD14 = 20,
+      WOOD15 = 20,
+      WOOD16 = 20,
+      WOOD17 = 20,
     },
 
     wall_groups =
