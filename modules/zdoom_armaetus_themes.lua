@@ -1078,6 +1078,187 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
+  tech_Outdoors_generic =
+  {
+    env  = "outdoor",
+    prob = 50,
+
+    floors =
+    {
+      BROWN1 = 10,
+      FLAT1 = 40,
+      SLIME14 = 5,
+      SLIME15 = 6,
+
+      BROWN144 = 85,
+      GRASS1 = 25,
+      GRASS2 = 25,
+      RROCK19 = 15,
+
+      --
+
+      FLOOR4_7 = 20,
+      FLOOR46D = 20,
+      G09 = 20,
+      G10 = 20,
+
+      GMET02 = 10,
+      GMET03 = 10,
+      GMET04 = 10,
+      GMET05 = 10,
+      GMET06 = 10,
+
+      GRATE1 = 40,
+      GRATE2 = 40,
+      GRATE3 = 40,
+      GRATE4 = 40,
+      GRATE5 = 40,
+      GRATE6 = 40,
+      GRATE7 = 40,
+      GRATE8 = 40,
+
+      GROUND01 = 30,
+      GROUND02 = 30,
+      GROUND03 = 30,
+      GROUND04 = 30,
+
+      MEM01 = 15,
+
+      SHINY01 = 20,
+      SHINY02 = 20,
+      SHINY03 = 20,
+      SHINY04 = 20,
+
+      STARBR2F = 20,
+      STARG1F = 20,
+      STARGRF = 20,
+      STARTANF = 20,
+
+      TILES4 = 20,
+      TILES6 = 20,
+
+      G8_BRNF1 = 20,
+      G8_BRNF2 = 20,
+      G8_BRNF3 = 20,
+
+      OBTBSFL1 = 20,
+      OBTBSFL3 = 20,
+      OBTSVBF1 = 20,
+      OBTSVBF2 = 20,
+      OBTSVBF3 = 20,
+
+      OBTSBF1B = 20,
+      OBTSBF2B = 20,
+      OBTSBF3B = 20,
+    },
+
+    naturals =
+    {
+      RROCK17  = 50,
+      RROCK18  = 50,
+      RROCK19  = 50,
+      RROCK20  = 50,
+      ASHWALL2 = 20,
+      ASHWALL3 = 20,
+      ASHWALL4 = 20,
+      SP_ROCK1 = 70,
+      ZIMMER1  = 10,
+      ZIMMER2  = 10,
+      ZIMMER3  = 10,
+      ZIMMER4  = 10,
+      ZIMMER5  = 10,
+      ZIMMER7  = 10,
+      ROCK5    = 20,
+
+      GRASS1 = 50,
+      GRASS2 = 50,
+
+      GROUND01 = 50,
+      GROUND02 = 50,
+      GROUND03 = 50,
+      GROUND04 = 50,
+    },
+
+    porch_floors =
+    {
+      FLAT1 = 10,
+      FLAT3 = 10,
+      FLAT5 = 5,
+      FLAT5_4 = 10,
+      FLAT19 = 10,
+      FLAT20 = 15,
+      CEIL5_2 = 15,
+      FLOOR0_3 = 10,
+      FLOOR0_5 = 10,
+      FLOOR3_3 = 8,
+      FLOOR4_1 = 8,
+      FLOOR4_5 = 8,
+      FLOOR5_3 = 10,
+      FLOOR7_1 = 15,
+      SLIME14 = 10,
+      SLIME15 = 10,
+      SLIME16 = 10,
+
+      --
+
+      FLOOR4_7 = 20,
+      FLOOR46D = 20,
+      G09 = 20,
+      G10 = 20,
+
+      GMET02 = 10,
+      GMET03 = 10,
+      GMET04 = 10,
+      GMET05 = 10,
+      GMET06 = 10,
+
+      GRATE1 = 40,
+      GRATE2 = 40,
+      GRATE3 = 40,
+      GRATE4 = 40,
+      GRATE5 = 40,
+      GRATE6 = 40,
+      GRATE7 = 40,
+      GRATE8 = 40,
+
+      GROUND01 = 30,
+      GROUND02 = 30,
+      GROUND03 = 30,
+      GROUND04 = 30,
+
+      MEM01 = 15,
+
+      SHINY01 = 20,
+      SHINY02 = 20,
+      SHINY03 = 20,
+      SHINY04 = 20,
+
+      STARBR2F = 20,
+      STARG1F = 20,
+      STARGRF = 20,
+      STARTANF = 20,
+
+      TILES4 = 20,
+      TILES6 = 20,
+
+      G8_BRNF1 = 20,
+      G8_BRNF2 = 20,
+      G8_BRNF3 = 20,
+
+      OBTBSFL1 = 20,
+      OBTBSFL3 = 20,
+      OBTSVBF1 = 20,
+      OBTSVBF2 = 20,
+      OBTSVBF3 = 20,
+
+      OBTSBF1B = 20,
+      OBTSBF2B = 20,
+      OBTSBF3B = 20,
+    },
+  },
+
+-- END OF TECH THEMES
+
   hell_ArmaetusGothic =
   {
     env  = "building",
@@ -2232,6 +2413,8 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+-- END OF HELL THEMES
+
 --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
   urban_ArmaetusBricks =
   {
@@ -2760,6 +2943,182 @@ ARMAETUS_ROOM_THEMES =
       RROCK03 = 50,
       RROCK09 = 30,
       FLAT5_4 = 10
+    }
+  },
+
+  urban_Outdoors_generic =
+  {
+    env  = "outdoor",
+    prob = 50,
+
+    floors =
+    {
+      STONE    = 50,
+      RROCK18  = 35,
+      RROCK19  = 35,
+      FLAT5_2  = 15,
+      FLAT1    = 25,
+      RROCK17  = 20,
+      FLOOR7_1 = 20,
+      GRASS1   = 15,
+      GRASS2   = 15,
+      RROCK03  = 10,
+      MFLR8_3  = 10,
+      FLOOR6_2 = 5,
+
+
+      --
+
+      DARKF01 = 20,
+      DARKF02 = 20,
+      DARKF03 = 20,
+
+      FLOOR4_7 = 20,
+      FLOOR46D = 20,
+      FLOOR46E = 20,
+      FLOOR51C = 20,
+      FLOOR7_3 = 20,
+
+      G09 = 20,
+      G10 = 20,
+      G12 = 20,
+      G14 = 20,
+      G18 = 15,
+      G21 = 15,
+
+      GSTN03 = 20,
+      GSTN04 = 20,
+      GSTN05 = 20,
+
+      GWOD01 = 20,
+      GWOD02 = 20,
+      GWOD03 = 20,
+      GWOD04 = 20,
+
+      MEME01 = 20,
+
+      QFLAT02 = 20,
+      QFLAT05 = 20,
+      QFLAT06 = 20,
+      QFLAT10 = 20,
+
+      STARBR2F = 10,
+      STARG1F = 10,
+      STARGRF = 10,
+      STARTANF = 10,
+
+      TILES1 = 20,
+      TILES2 = 20,
+      TILES3 = 20,
+      TILES4 = 20,
+      TILES5 = 20,
+      TILES6 = 20
+    },
+
+    naturals =
+    {
+      ASHWALL2 = 50,
+      ASHWALL3 = 50,
+      FLAT10   = 40,
+      ASHWALL4 = 50,
+      ASHWALL6 = 35,
+      ASHWALL7 = 35,
+      TANROCK4 = 20,
+      TANROCK5 = 20,
+      SP_ROCK1 = 20,
+      BSTONE1  = 20,
+      BSTONE2  = 20,
+      ZIMMER1  = 15,
+      ZIMMER2  = 15,
+      ZIMMER3  = 15,
+      ZIMMER4  = 15,
+      ZIMMER5  = 15,
+      ZIMMER7  = 15,
+      ZIMMER8  = 15,
+      TANROCK7 = 15,
+      ROCK1    = 30,
+      ROCK2    = 20,
+      ROCK3    = 70,
+
+      GRASS1 = 50,
+      GRASS2 = 50,
+
+      GROUND01 = 50,
+      GROUND02 = 50,
+      GROUND03 = 50,
+      GROUND04 = 50,
+    },
+
+    porch_floors =
+    {
+      CEIL3_3 = 10,
+      CEIL3_5 = 10,
+      FLAT1 = 10,
+      FLAT1_1 = 10,
+      FLAT1_2 = 10,
+      FLAT19 = 10,
+      FLAT3 = 10,
+      FLAT5 = 10,
+      FLAT5_1 = 20,
+      FLAT5_2 = 20,
+      FLAT5_5 = 20,
+      FLOOR0_1 = 10,
+      FLOOR4_6 = 10,
+      FLOOR5_3 = 10,
+      FLOOR5_4 = 10,
+      FLOOR7_1 = 20,
+      MFLR8_1 = 10,
+      RROCK14 = 10,
+      SLIME14 = 10,
+      SLIME15 = 10,
+      SLIME16 = 10,
+
+      --
+
+      DARKF01 = 20,
+      DARKF02 = 20,
+      DARKF03 = 20,
+
+      FLOOR4_7 = 20,
+      FLOOR46D = 20,
+      FLOOR46E = 20,
+      FLOOR51C = 20,
+      FLOOR7_3 = 20,
+
+      G09 = 20,
+      G10 = 20,
+      G12 = 20,
+      G14 = 20,
+      G18 = 15,
+      G21 = 15,
+
+      GSTN03 = 20,
+      GSTN04 = 20,
+      GSTN05 = 20,
+
+      GWOD01 = 20,
+      GWOD02 = 20,
+      GWOD03 = 20,
+      GWOD04 = 20,
+
+      MEME01 = 20,
+
+      QFLAT02 = 20,
+      QFLAT05 = 20,
+      QFLAT06 = 20,
+      QFLAT10 = 20,
+
+      STARBR2F = 10,
+      STARG1F = 10,
+      STARGRF = 10,
+      STARTANF = 10,
+
+      TILES1 = 20,
+      TILES2 = 20,
+      TILES3 = 20,
+      TILES4 = 20,
+      TILES5 = 20,
+      TILES6 = 20
     }
   }
 }
