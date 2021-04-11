@@ -1227,11 +1227,6 @@ ARMAETUS_ROOM_THEMES =
       GRATE7 = 40,
       GRATE8 = 40,
 
-      GROUND01 = 30,
-      GROUND02 = 30,
-      GROUND03 = 30,
-      GROUND04 = 30,
-
       MEM01 = 15,
 
       SHINY01 = 20,
