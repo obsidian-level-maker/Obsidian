@@ -1260,6 +1260,27 @@ ARMAETUS_MATERIALS = {
   T_GHFLG = { t="G16", f="T_GHFLG" },
   T_GHFLP = { t="G16", f="T_GHFLP" },
 
+  -------------
+  -- DUKETEX --
+  -------------
+
+  -- store shelves
+  DNSTOR01 = { t="DNSTOR01", f="CEIL5_2"},
+  DNSTOR02 = { t="DNSTOR02", f="CEIL5_2"},
+  DNSTOR03 = { t="DNSTOR03", f="CEIL5_2"},
+  DNSTOR04 = { t="DNSTOR04", f="CEIL5_2"},
+  DNSTOR05 = { t="DNSTOR05", f="CEIL5_2"},
+  DNSTOR06 = { t="DNSTOR06", f="CEIL5_2"},
+  DNSTOR07 = { t="DNSTOR07", f="CEIL5_2"},
+  DNSTOR08 = { t="DNSTOR08", f="CEIL5_2"},
+  DNSTOR09 = { t="DNSTOR09", f="CEIL5_2"},
+  DNSTOR10 = { t="DNSTOR10", f="CEIL5_2"},
+  DNSTOR11 = { t="DNSTOR11", f="CEIL5_2"},
+  DNSTOR12 = { t="DNSTOR12", f="CEIL5_2"},
+  DNSTOR13 = { t="DNSTOR13", f="CEIL5_2"},
+  DNSTOR20 = { t="DNSTOR20", f="CEIL5_2"},
+  DNSTOR21 = { t="DNSTOR21", f="CEIL5_2"},
+
   ------------------
   -- MSSP Stuff --
   ------------------
