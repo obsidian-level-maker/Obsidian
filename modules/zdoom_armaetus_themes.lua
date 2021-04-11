@@ -1311,13 +1311,17 @@ ARMAETUS_ROOM_THEMES =
       GOTH48 = 15,
       GOTH49 = 15,
 
-      OBTBSLB3 = 10,
-      OBTBSLB4 = 10,
+      OBTBSLB3 = 15,
+      OBTBSLB4 = 15,
 
-      G8_BRNW1 = 20,
-      G8_BRNW3 = 20,
-      G8_BR1GY = 20,
-      G8_BR2GY = 20
+      G8_BRNW1 = 10,
+      G8_BRNW3 = 10,
+      G8_BR1GY = 10,
+      G8_BR2GY = 10,
+
+      G7_GOGN1 = 20,
+      G7_GOGN2 = 20,
+      G7_GOGN3 = 20
     },
 
     floors =
@@ -1804,6 +1808,8 @@ ARMAETUS_ROOM_THEMES =
       PIPEDRK1 = 5,
       RUSTWALL = 5,
 
+      -- MSSP stuff
+
       OBTBSLB2 = 5,
       OBTBSLB3 = 5,
       OBTBSLB4 = 5,
@@ -1819,7 +1825,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BR1GY = 10,
       G8_BR3GY = 10,
 
-      OBTSBGRE = 10
+      OBTSBGRE = 10,
+
+      G7_GOGN1 = 10,
+      G7_GOGN2 = 10,
+      G7_GOGN3 = 10,
     },
 
     floors =
@@ -5000,6 +5010,7 @@ ARMAETUS_THEMES =
       CRGRSWLL = 7,
       CRHRTWLL = 7,
 
+      -- MSSP stuff
       OBTBSLB2 = 15,
       OBTBSLB3 = 15,
       OBTBSLB4 = 15,
@@ -5007,7 +5018,11 @@ ARMAETUS_THEMES =
       G8_BRNW1 = 15,
       G8_BRNW3 = 15,
       G8_BR2GY = 15,
-      G8_BR3GY = 15
+      G8_BR3GY = 15,
+
+      G7_GOGN1 = 25,
+      G7_GOGN2 = 25,
+      G7_GOGN3 = 25
     },
 
     fences =

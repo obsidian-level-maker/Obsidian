@@ -1285,14 +1285,15 @@ ARMAETUS_MATERIALS = {
   -- MSSP Stuff --
   ------------------
 
-  -- 256-wide silver walls
+  -- MSSP-TECH --
+  -- silver walls (256px)
   OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
   OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
   OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
   OBTBSLV5 = { t="OBTBSLV4", f="FLAT3"},
 
-  -- 128-wide silver walls
+  -- silver walls (128px)
   OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},
   OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
   OBTBSTX3 = { t="OBTBSTX3", f="GRATE6"},
@@ -1300,7 +1301,7 @@ ARMAETUS_MATERIALS = {
   OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
   OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
 
-  -- 128-wide techy brown walls
+  -- techy brown walls (128px)
   G8_BRNW1 = { t="G8_BRNW1", f="SLIME16"},
   G8_BRNW2 = { t="G8_BRNW2", f="FLOOR4_1"},
   G8_BRNW3 = { t="G8_BRNW3", f="FLOOR4_5"},
@@ -1309,7 +1310,7 @@ ARMAETUS_MATERIALS = {
   G8_BR2GY = { t="G8_BRNW2", f="FLOOR4_8"},
   G8_BR3GY = { t="G8_BRNW3", f="G15"},
 
-  -- 256-wide techy brick walls
+  -- techy brick walls (256px)
   OBTBSLB1 = { t="OBTBSLB1", f="SHINY03"},
   OBTBSLB2 = { t="OBTBSLB2", f="FLOOR4_8"},
   OBTBSLB3 = { t="OBTBSLB3", f="SLIME14"},
@@ -1323,7 +1324,7 @@ ARMAETUS_MATERIALS = {
 
   OBTSBGRE = { t="OBTSBGRE", f="DARKF02"}, -- bloodied version of the hex bricks
 
-  -- flats (128x128)
+  -- silver flats (128px)
   OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
   OBTBSFL3 = { t="OBTBSTX1", f="OBTBSFL3"},
@@ -1343,6 +1344,15 @@ ARMAETUS_MATERIALS = {
   OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
   OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
+
+  -- MSSP-GOTH --
+  -- green-ish gothic metal walls with skulls (128px)
+  G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},
+  G7_GOGN2 = { t="G7_GOGN2", f="G7_GOGF1"},
+  G7_GOGN3 = { t="G7_GOGN3", f="G7_GOGF1"},
+
+  -- flats
+  G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
 
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
