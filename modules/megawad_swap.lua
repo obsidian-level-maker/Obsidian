@@ -92,7 +92,7 @@ OB_MODULES["megawad_swapper"] =
   label = _("Megawad Music Swapper"),
 
   side = "left",
-  priority = 80,
+  priority = 8,
 
   game = "doomish",
 
