@@ -32,7 +32,7 @@ PREFABS.Wall_gtd_computer_wall_3 =
 
 PREFABS.Wall_gtd_computer_diag_1 =
 {
-  file   = "wall/gtd_wall_comp_set.wad",
+  file   = "wall/gtd_wall_tech_comp_set.wad",
   map    = "MAP04",
 
   prob   = 50,
