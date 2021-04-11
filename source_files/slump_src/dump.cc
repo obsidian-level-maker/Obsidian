@@ -164,11 +164,11 @@ void record_music(dumphandle dh,musheader *mh,byte *buf,char *s,config *c)
   RegisterLmp(dh,s,lsize);
   /* It'll be a royal pain to endian swap the header, so we just don't
    * have custom music on big-endian machines */
-#ifndef ENDIAN_BIG
-  /* Disabled because this was never done 
-  fwrite(mh,sizeof(musheader),1,dh->f); */ /* Write fixed header */ /*
-  fwrite(buf,mh->patches*sizeof(short)+mh->muslength,1,dh->f); */
-#endif
+//#ifndef ENDIAN_BIG
+  // Disabled because this was never done 
+  fwrite(mh,sizeof(musheader),1,dh->f); // Write fixed header
+  fwrite(buf,mh->patches*sizeof(short)+mh->muslength,1,dh->f);
+//#endif
 }
 
 /* Make the special SLINFO lmp, containing whatever we like */

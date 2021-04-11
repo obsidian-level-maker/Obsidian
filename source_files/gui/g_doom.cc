@@ -71,6 +71,7 @@ std::string map_format;
 std::string build_nodes;
 std::string build_reject;
 std::string levelcount;
+std::string monvariety;
 
 static bool UDMF_mode;
 
@@ -119,14 +120,45 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.levelcount = 32; // "Full Game"
 	}
-	slump_config.minrooms = atoi(main_win->left_mods->FindID("ui_slump_left")
+	slump_config.minrooms = atoi(main_win->left_mods->FindID("ui_slump_arch")
 							->FindOpt("minrooms")->GetID());
-	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_left")
-							->FindOpt("dm_starts")->GetID(), "yes")) {
-		slump_config.do_dm = true;
+	int bigify = atoi(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("bigify")->GetID());
+	if (bigify > 0) {
+		slump_config.p_bigify = bigify;
 	} else {
-		slump_config.do_dm = false;
+		slump_config.p_bigify = roll(100);
 	}
+	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("dm_starts")->GetID(), "yes")) {
+		slump_config.do_dm = 1;
+	} else {
+		slump_config.do_dm = 0;
+	}
+	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("major_nukage")->GetID(), "yes")) {
+		slump_config.major_nukage = SLUMP_TRUE;
+	} else {
+		slump_config.major_nukage = SLUMP_FALSE;
+	}
+	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("immediate_monsters")->GetID(), "yes")) {
+		slump_config.immediate_monsters = SLUMP_FALSE;
+	} else {
+		slump_config.immediate_monsters = rollpercent(20);
+	}
+	monvariety = main_win->right_mods->FindID("ui_slump_mons")
+							->FindOpt("slump_mons")->GetID();
+	if (monvariety == "normal") {
+		slump_config.required_monster_bits = 0;
+		slump_config.forbidden_monster_bits = SPECIAL;
+	} else if (monvariety == "shooters") {
+		slump_config.required_monster_bits = SHOOTS;
+		slump_config.forbidden_monster_bits = SPECIAL;
+	} else {
+		slump_config.required_monster_bits = SPECIAL; // All Nazis
+		slump_config.forbidden_monster_bits = 0;
+	}						
 	return slump_main(slump_config);    
 }	
 

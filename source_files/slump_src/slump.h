@@ -227,7 +227,6 @@ typedef struct s_genus {
 #define ID_SKEL (0x042)
 #define ID_ARACH (0x044)
 #define ID_MANCUB (0x0043)
-/* The following monsers are not in FreeDoom 0.3 */
 #define ID_HELL (0x045)
 #define ID_BARON (0x0bbb)
 #define ID_PAIN (0x047)
@@ -238,7 +237,6 @@ typedef struct s_genus {
   short width;
   short height;
   int min_level; /* Minimum level to put monster in */
-  boolean in_freedoom; /* Whether the monster is in FreeDoom 0.3 */
   float ammo_to_kill[3];
   float ammo_provides;     /* For monsters / ammo / weapons */
   float damage[3];         /* damage[0] will be health provided by HEALTHs */

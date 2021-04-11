@@ -665,10 +665,9 @@ arena *new_arena(level *l, config *c)
 
   /*   How can we configify all the monsters and weapons in here??     */
 
-  /* Only allow bosses that are in FreeDoom; others are commented out */
   switch (bossno) {
     case 0:  /* Baron Brothers */
-/*      answer->boss = find_genus(c,ID_BARON);
+      answer->boss = find_genus(c,ID_BARON);
       answer->boss_count = 2;
       if (rollpercent(75)) {
         answer->weapon = find_genus(c,ID_LAUNCHER);
@@ -677,9 +676,9 @@ arena *new_arena(level *l, config *c)
         answer->weapon = find_genus(c,ID_CHAINGUN);
         answer->ammo = find_genus(c,ID_BULBOX);
       }
-      break; */
+      break;
     case 1:  /* Cybie */
-/*      answer->boss = find_genus(c,ID_CYBER);
+      answer->boss = find_genus(c,ID_CYBER);
       if (rollpercent(75)) {
         answer->weapon = find_genus(c,ID_LAUNCHER);
         answer->ammo = find_genus(c,ID_ROCKBOX);
@@ -687,9 +686,9 @@ arena *new_arena(level *l, config *c)
         answer->weapon = find_genus(c,ID_BFG);
         answer->ammo = find_genus(c,ID_CELLPACK);
       }
-      break; */
+      break;
     case 2:  /* Spiderboss */
-/*      answer->boss = find_genus(c,ID_SPIDERBOSS);
+      answer->boss = find_genus(c,ID_SPIDERBOSS);
       if (rollpercent(75)) {
         answer->weapon = find_genus(c,ID_BFG);
         answer->ammo = find_genus(c,ID_CELLPACK);
@@ -697,7 +696,7 @@ arena *new_arena(level *l, config *c)
         answer->weapon = find_genus(c,ID_LAUNCHER);
         answer->ammo = find_genus(c,ID_ROCKBOX);
       }
-      break; */
+      break;
     case 3:  /* Two mancubi (for MAP07, random) */
       answer->boss = find_genus(c,ID_MANCUB);
       answer->boss_count = 2;
@@ -710,7 +709,7 @@ arena *new_arena(level *l, config *c)
       }
       break;
     case 4:  /* Two pains */
-/*      answer->boss = find_genus(c,ID_PAIN);
+      answer->boss = find_genus(c,ID_PAIN);
       answer->boss_count = 2;
       if (rollpercent(50)) {
         answer->weapon = find_genus(c,ID_CHAINGUN);
@@ -719,11 +718,11 @@ arena *new_arena(level *l, config *c)
         answer->weapon = find_genus(c,ID_PLASMA);
         answer->ammo = find_genus(c,ID_CELLPACK);
       }
-      break; */
+      break; 
     case 5:
     case 6:
       switch (roll(2)) {
-        case 0: /* answer->boss = find_genus(c,ID_ARCHIE); break; */
+        case 0:  answer->boss = find_genus(c,ID_ARCHIE); break;
         default: answer->boss = find_genus(c,ID_ARACH); break;
       }
       answer->boss_count = 2;
@@ -1401,13 +1400,12 @@ config *get_config(s_config slump_config)
   answer->sthemecount = 0;
   answer->secret_themes = SLUMP_FALSE;
   answer->lock_themes = SLUMP_FALSE;
-  answer->major_nukage = SLUMP_FALSE;
-  answer->required_monster_bits = 0;
-  answer->forbidden_monster_bits = SPECIAL;
- /* answer->minrooms = 18; */
+  answer->major_nukage = slump_config.major_nukage;
+  answer->required_monster_bits = slump_config.required_monster_bits;
+  answer->forbidden_monster_bits = slump_config.forbidden_monster_bits;
   answer->minrooms = slump_config.minrooms; /* Medium size */
  /* answer->gamemask = DOOM1_BIT; */ /* All/Only things supported by DOOM 1.9 */
-  answer->gamemask = DOOM2_BIT; /* FreeDoom is doom2 not doom1 */
+  answer->gamemask = DOOM2_BIT;
   answer->episode = 0;
   answer->mission = 0;
   answer->last_mission = SLUMP_FALSE;
@@ -1424,7 +1422,7 @@ config *get_config(s_config slump_config)
   answer->map = 1;
   answer->minlight = 115;
   /* Is this the right place for all these? */
-  answer->immediate_monsters = rollpercent(10);
+  answer->immediate_monsters = slump_config.immediate_monsters;
   answer->p_hole_ends_level = 0;
   if (rollpercent(8)) answer->p_hole_ends_level = 100;
   if (rollpercent(3)) answer->p_hole_ends_level = roll(100);
@@ -1481,7 +1479,7 @@ config *get_config(s_config slump_config)
   answer->clights = rollpercent(50);
   answer->machoh = (float)1;
   answer->machou = (float)1;
-  answer->p_bigify = roll(100);   /* Less uniform? */
+  answer->p_bigify = slump_config.p_bigify;   /* Less uniform? */
 
   /* Initial defaults; at each level, some chance of turning on */
   answer->big_weapons = rollpercent(50);
@@ -8001,7 +7999,6 @@ genus *proper_monster(float health,float ammo,int bits,haa *haa,
 		continue;
 	        } */
 	}
-    if (m->in_freedoom == 0) continue; /* Only FreeDoom monsters */
     if (m->min_level > current_level_number) continue; /* Progression */
 #ifdef IMPOSSIBLE_MONSTERS_IN_CONFIG
     if ((m->gamemask&c->gamemask)!=c->gamemask) continue;
@@ -9028,7 +9025,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)1;
   m->bits |= SHOOTS;
   m->min_level = 1;
-  m->in_freedoom = SLUMP_TRUE;
   /* Tropper with gun */
   m = find_monster(c,ID_SERGEANT);
   m->width = 42;
@@ -9044,8 +9040,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)1;
   m->bits |= SHOOTS;
   m->min_level = 2;
-  m->in_freedoom = SLUMP_TRUE;
-  /* Cobra-like thing in FreeDoom */
+  /* Imp */
   m = find_monster(c,ID_IMP);
   m->width = 42;
   m->ammo_provides = (float)0;
@@ -9060,8 +9055,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)2;
   m->bits |= SHOOTS;
   m->min_level = 1;
-  m->in_freedoom = SLUMP_TRUE;
-  /* Pink dog/demon */
+  /* Pinky */
   m = find_monster(c,ID_PINK);
   m->width = 62;
   m->ammo_provides = (float)0;
@@ -9075,8 +9069,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[HMP] = (float)8;
   m->altdamage[UV] = (float)4;
   m->min_level = 3;
-  m->in_freedoom = SLUMP_TRUE;
-  /* Invisible dog/demon */
+  /* Invisible pinky */
   m = find_monster(c,ID_SPECTRE);
   m->width = 62;
   m->ammo_provides = (float)0;
@@ -9090,7 +9083,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[HMP] = (float)8;
   m->altdamage[UV] = (float) 6;
   m->min_level = 7;
-  m->in_freedoom = SLUMP_TRUE;
   /* Floating head */
   m = find_monster(c,ID_SKULL);
   m->width = 34;
@@ -9107,7 +9099,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)2;
   m->bits |= FLIES;
   m->min_level = 6;
-  m->in_freedoom = SLUMP_TRUE;
   /* Spider thing (I think) */
   m = find_monster(c,ID_HEAD);
   m->width = 63;                 /* Or 62 or maybe 64 */
@@ -9125,8 +9116,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->bits |= SHOOTS;
   m->bits |= FLIES;
   m->min_level = 11;
-  m->in_freedoom = SLUMP_TRUE;
-
+  /* Baron of Hell */
   m = find_monster(c,ID_BARON);
   m->width = 50;                 /* Roughly */
   m->height = 64;
@@ -9143,7 +9133,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->altdamage[UV] = (float)18;
   m->bits |= SHOOTS;
   m->min_level = 12;
-  m->in_freedoom = SLUMP_FALSE;
 
   /* Other bosses; need to fill in data! */
   m = find_monster(c,ID_CYBER);
@@ -9163,7 +9152,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->ammo_to_kill[HMP] = (float)5000;
   m->ammo_to_kill[UV] = (float)4500;
   m->min_level=17;
-  m->in_freedoom = SLUMP_FALSE;
 
   /* DOOM2 monsters */
   if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) {
@@ -9181,7 +9169,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)4;
     m->bits |= SHOOTS | SPECIAL;
     m->min_level = 1;
-    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_COMMANDO);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -9197,7 +9184,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)10;
     m->bits |= SHOOTS;
     m->min_level = 5;
-    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_SKEL);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -9214,7 +9200,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)25;
     m->bits |= SHOOTS;
     m->min_level = 7;
-    m->in_freedoom = SLUMP_FALSE;
     m = find_monster(c,ID_HELL);
     m->gamemask = DOOM2_BIT;
     m->width = 50;
@@ -9231,7 +9216,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)35;
     m->bits |= SHOOTS;
     m->min_level = 11;
-    m->in_freedoom = SLUMP_FALSE;
 
     /* DOOM2 bosses and underbosses; need to fill in data! */
     m = find_monster(c,ID_MANCUB);
@@ -9244,7 +9228,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->ammo_to_kill[HMP] = (float)50;
     m->ammo_to_kill[UV] = (float)40;
     m->min_level = 19;
-    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_ARCHIE);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -9255,7 +9238,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->ammo_to_kill[HMP] = (float)1100;
     m->ammo_to_kill[UV] = (float)1000;
     m->min_level = 17;
-    m->in_freedoom = SLUMP_TRUE;
     m = find_monster(c,ID_PAIN);
     m->gamemask = DOOM2_BIT;
     m->width = 63;
@@ -9273,7 +9255,6 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->ammo_to_kill[HMP] = (float)50;
     m->ammo_to_kill[UV] = (float)30;
     m->min_level = 23;
-    m->in_freedoom = SLUMP_TRUE;
   }
 
   return SLUMP_TRUE;
