@@ -1,6 +1,6 @@
 PREFABS.Wall_gtd_met_warning_wall =
 {
-  file   = "wall/gtd_wall_metal_warning_set.wad",
+  file   = "wall/gtd_wall_generic_metal_warning_set.wad",
   map    = "MAP01",
 
   prob   = 50,
