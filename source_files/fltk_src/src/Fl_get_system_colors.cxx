@@ -16,17 +16,17 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "flstring.h"
-#include "tile.xpm"
 #include <FL/Fl.H>
-#include <FL/Fl_Pixmap.H>
-#include <FL/Fl_Tiled_Image.H>
 #include <FL/fl_draw.H>
-#include <FL/fl_utf8.h>
-#include <FL/math.h>
 #include <FL/x.H>
+#include <FL/math.h>
+#include <FL/fl_utf8.h>
+#include "flstring.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <FL/Fl_Pixmap.H>
+#include <FL/Fl_Tiled_Image.H>
+#include "tile.xpm"
 
 #if defined(WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__)
 // Visual C++ 2005 incorrectly displays a warning about the use of POSIX APIs

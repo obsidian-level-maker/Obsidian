@@ -25,10 +25,10 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "Fluid_Image.h"
+#include <FL/Fl_Widget.H>
 #include <FL/Fl_Menu.H>
 #include <FL/Fl_Plugin.H>
-#include <FL/Fl_Widget.H>
+#include "Fluid_Image.h"
 #include <FL/fl_draw.H>
 #include <stdarg.h>
 
@@ -446,8 +446,8 @@ public:
   void redraw();
 };
 
-#include <FL/Fl_Pack.H>
 #include <FL/Fl_Tabs.H>
+#include <FL/Fl_Pack.H>
 #include <FL/Fl_Wizard.H>
 
 class igroup : public Fl_Group {
@@ -821,8 +821,8 @@ public:
   void copy_properties();
 };
 
-#include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Menu_Bar.H>
 class Fl_Menu_Bar_Type : public Fl_Menu_Type {
 public:
   virtual void ideal_size(int &w, int &h) {

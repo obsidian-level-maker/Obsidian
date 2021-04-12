@@ -19,9 +19,9 @@
 //     http://www.fltk.org/str.php
 // 
 #include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Choice.H>
-#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Image.H>
 #include <FL/Fl_Pixmap.H>
 

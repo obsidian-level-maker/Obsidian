@@ -20,15 +20,15 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <sys/wait.h>
+#include <stdio.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 #include <FL/Fl.H>
-#include <FL/Fl_Toggle_Button.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Toggle_Button.H>
 
 int running;	// actually the pid
 Fl_Toggle_Button *Button;

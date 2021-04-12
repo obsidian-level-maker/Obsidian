@@ -6,8 +6,8 @@
 #define FL_TREE_ITEM_H
 
 #include <FL/Fl.H>
-#include <FL/Fl_Image.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Image.H>
 #include <FL/fl_draw.H>
 
 #include <FL/Fl_Tree_Item_Array.H>

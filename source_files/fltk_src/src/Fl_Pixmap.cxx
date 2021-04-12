@@ -23,14 +23,14 @@
 // Implemented without using the xpm library (which I can't use because
 // it interferes with the color cube used by fl_draw_image).
 
+#include <config.h>
 #include <FL/Fl.H>
+#include <FL/fl_draw.H>
+#include <FL/x.H>
+#include <FL/Fl_Widget.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Printer.H>
-#include <FL/Fl_Widget.H>
-#include <FL/fl_draw.H>
-#include <FL/x.H>
-#include <config.h>
 
 #if defined(USE_X11)
 #  if HAVE_X11_XREGION_H
@@ -48,9 +48,9 @@ struct _XRegion {
 #  endif // HAVE_X11_XREGION_H
 #endif   // USE_X11
 
+#include <stdio.h>
 #include "flstring.h"
 #include <ctype.h>
-#include <stdio.h>
 
 #ifdef WIN32
 extern void fl_release_dc(HWND, HDC);      // located in Fl_win32.cxx

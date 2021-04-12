@@ -16,17 +16,17 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "Fl_Widget_Type.h"
-#include "../src/flstring.h"
-#include "alignment_panel.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
+#include <FL/Fl_Table.H>
 #include <FL/Fl_Input.H>
+#include "Fl_Widget_Type.h"
+#include "alignment_panel.h"
+#include <FL/fl_message.H>
 #include <FL/Fl_Slider.H>
 #include <FL/Fl_Spinner.H>
-#include <FL/Fl_Table.H>
 #include <FL/Fl_Window.H>
-#include <FL/fl_message.H>
+#include "../src/flstring.h"
 #include <stdio.h>
 #include <stdlib.h>
 

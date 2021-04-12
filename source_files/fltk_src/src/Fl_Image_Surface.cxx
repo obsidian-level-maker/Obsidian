@@ -16,9 +16,9 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl.H>
 #include <FL/Fl_Image_Surface.H>
 #include <FL/Fl_Printer.H>
+#include <FL/Fl.H>
 
 const char *Fl_Image_Surface::class_id = "Fl_Image_Surface";
 

@@ -18,8 +18,8 @@
 
 // Replace .ext with new extension
 
-#include "flstring.h"
 #include <FL/filename.H>
+#include "flstring.h"
 
 /**
    Replaces the extension in \p buf of max.<br>

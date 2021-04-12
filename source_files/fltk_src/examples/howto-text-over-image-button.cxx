@@ -26,9 +26,9 @@
 //     http://www.fltk.org/str.php
 //
 #include <FL/Fl.H>
+#include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Pixmap.H>
-#include <FL/Fl_Window.H>
 
 /* XPM */
 static const char * gradient_xpm[] = {

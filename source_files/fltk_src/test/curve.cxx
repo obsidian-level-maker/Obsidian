@@ -19,8 +19,8 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Hor_Value_Slider.H>
-#include <FL/Fl_Toggle_Button.H>
 #include <FL/fl_draw.H>
+#include <FL/Fl_Toggle_Button.H>
 
 double args[9] = {
   20,20, 50,200, 100,20, 200,200, 0};

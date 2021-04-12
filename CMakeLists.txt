@@ -33,7 +33,7 @@ cpmaddpackage(
   TheLartians/Format.cmake
   OPTIONS
   # set to "yes" to skip CMake formatting
-  "FORMAT_SKIP_CMAKE NO"
+  "FORMAT_SKIP_CMAKE YES"
   # path to exclude from formatting (optional + regex)
   "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake"
 )
@@ -167,14 +167,14 @@ else()
 endif()
 
 target_link_libraries(
-  obsidian
-  PRIVATE fltk
-          fltk_images
-          zlibstatic
-          obsidian_lua
-          obsidian_physfs
-          obsidian_acc
-          obsidian_ajpoly
-          obsidian_zdbsp
-          obsidian_slump
+    obsidian
+    PRIVATE fltk
+            fltk_images
+            zlibstatic
+            obsidian_lua
+            obsidian_physfs
+            obsidian_acc
+            obsidian_ajpoly
+            obsidian_zdbsp
+            obsidian_slump
 )

@@ -28,11 +28,11 @@
 // matt: the Quartz implementation purposely doesn't use the Quartz matrix
 //       operations for reasons of compatibility and maintainability
 
-#include <FL/Fl.H>
-#include <FL/fl_draw.H>
-#include <FL/math.h>
-#include <FL/x.H>
 #include <config.h>
+#include <FL/fl_draw.H>
+#include <FL/x.H>
+#include <FL/Fl.H>
+#include <FL/math.h>
 #include <stdlib.h>
 
 void Fl_Graphics_Driver::push_matrix() {

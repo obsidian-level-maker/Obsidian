@@ -24,9 +24,9 @@
 // and copy the first 16 colors from the default colormap so that we won't
 // get huge color changes when switching windows.
 
+#include <config.h>
 #include <FL/Fl.H>
 #include <FL/x.H>
-#include <config.h>
 
 /** \fn Fl::own_colormap()
     Makes FLTK use its <a href="fltk-colormap.png">own colormap</a>. This may make FLTK display better

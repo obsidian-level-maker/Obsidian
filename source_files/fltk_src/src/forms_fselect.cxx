@@ -18,8 +18,8 @@
 
 // Emulate the Forms file chooser using the fltk file chooser.
 
-#include "flstring.h"
 #include <FL/forms.H>
+#include "flstring.h"
 
 static char fl_directory[FL_PATH_MAX];
 static const char *fl_pattern;  // assumed passed value is static

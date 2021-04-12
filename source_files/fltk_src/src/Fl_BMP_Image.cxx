@@ -25,9 +25,9 @@
 // Include necessary header files...
 //
 
-#include <FL/Fl.H>
 #include <FL/Fl_BMP_Image.H>
 #include <FL/fl_utf8.h>
+#include <FL/Fl.H>
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>

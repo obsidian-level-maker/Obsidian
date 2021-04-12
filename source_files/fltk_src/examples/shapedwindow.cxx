@@ -16,16 +16,16 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "test/pixmaps/tile.xpm"
-#include <FL/Fl.H>
-#include <FL/Fl_Box.H>
+#include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
+#include <FL/Fl.H>
+#include <FL/fl_draw.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Image.H>
-#include <FL/Fl_Image_Surface.H>
 #include <FL/Fl_Tiled_Image.H>
-#include <FL/Fl_Window.H>
-#include <FL/fl_draw.H>
+#include <FL/Fl_Image_Surface.H>
+#include "test/pixmaps/tile.xpm"
 
 
 void cb(Fl_Widget *w, void *) {

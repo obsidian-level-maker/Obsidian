@@ -99,10 +99,10 @@
    where the bit pattern counting takes place.
  */
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define local static
 

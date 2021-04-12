@@ -62,13 +62,13 @@ static fl_wsk_fd_is_set_f fl_wsk_fd_is_set = 0;
 #endif
 
 #include <FL/Fl.H>
-#include <FL/Fl_Tooltip.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Tooltip.H>
 #include <FL/x.H>
 
-#include "flstring.h"
 #include <ctype.h>
 #include <stdlib.h>
+#include "flstring.h"
 
 #if defined(DEBUG) || defined(DEBUG_WATCH)
 #  include <stdio.h>

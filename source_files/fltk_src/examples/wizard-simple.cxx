@@ -17,13 +17,13 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <FL/Fl.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Multiline_Output.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Wizard.H>
 #include <stdlib.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Wizard.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Multiline_Output.H>
 //
 // Simple 'wizard' using fltk's new Fl_Wizard widget
 //

@@ -6,15 +6,15 @@
 #ifndef WIN32           /* This entire file unix only */
 
 #include <errno.h>      /* errno */
+#include <string.h>     /* strerror() */
+#include <sys/types.h>  /* stat().. */
+#include <sys/stat.h>
+#include <sys/wait.h>   /* waitpid().. */
 #include <fcntl.h>      /* open().. */
 #include <signal.h>     /* kill().. */
-#include <stdio.h>      /* snprintf().. */
-#include <stdlib.h>     /* free().. */
-#include <string.h>     /* strerror() */
-#include <sys/stat.h>
-#include <sys/types.h>  /* stat().. */
-#include <sys/wait.h>   /* waitpid().. */
 #include <unistd.h>
+#include <stdlib.h>     /* free().. */
+#include <stdio.h>      /* snprintf().. */
 
 #include <FL/Fl.H>      /* Fl_Timeout_Handler.. */
 #include <FL/fl_ask.H>  /* fl_alert() */

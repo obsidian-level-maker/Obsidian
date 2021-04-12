@@ -21,11 +21,11 @@
 // Fl_Window itself is a subclass of this, and most of the event
 // handling is designed so windows themselves work correctly.
 
+#include <stdio.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <FL/Fl_Input_Choice.H>

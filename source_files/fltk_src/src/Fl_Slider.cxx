@@ -16,16 +16,16 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "flstring.h"
 #include <FL/Fl.H>
+#include <FL/Fl_Slider.H>
 #include <FL/Fl_Fill_Slider.H>
+#include <FL/Fl_Hor_Slider.H>
 #include <FL/Fl_Hor_Fill_Slider.H>
 #include <FL/Fl_Hor_Nice_Slider.H>
-#include <FL/Fl_Hor_Slider.H>
 #include <FL/Fl_Nice_Slider.H>
-#include <FL/Fl_Slider.H>
 #include <FL/fl_draw.H>
 #include <math.h>
+#include "flstring.h"
 
 
 void Fl_Slider::_Fl_Slider() {

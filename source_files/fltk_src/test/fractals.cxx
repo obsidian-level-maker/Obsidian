@@ -54,14 +54,14 @@ int main(int, char**) {
  *
  */
 
-#include <FL/glu.h>
 #include <FL/glut.H>
+#include <FL/glu.h>
 
-#include <float.h>            /* FLT_MAX is atleast defined here */
-#include <limits.h>           /* ULONG_MAX is defined here */
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <limits.h>           /* ULONG_MAX is defined here */
+#include <float.h>            /* FLT_MAX is atleast defined here */
 
 #include <time.h>  /* for random seed */
 

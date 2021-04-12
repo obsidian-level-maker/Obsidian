@@ -17,13 +17,13 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_File_Input.H>
 #include <FL/Fl_Window.H>
-#include <FL/filename.H>
 #include <FL/fl_draw.H>
+#include <FL/filename.H>
 #include <stdio.h>
+#include "flstring.h"
 
 
 //

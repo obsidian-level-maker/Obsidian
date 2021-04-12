@@ -458,8 +458,8 @@
 
 /* This provides the non-ANSI (far) memory allocation routines. */
 #if defined(__TURBOC__) && defined(__MSDOS__)
-#  include <alloc.h>
 #  include <mem.h>
+#  include <alloc.h>
 #endif
 
 #if defined(WIN32) || defined(_Windows) || defined(_WINDOWS) || \
@@ -811,8 +811,8 @@
  */
 #ifndef PNG_VERSION_INFO_ONLY
 
-#include "pnginfo.h"
 #include "pngstruct.h"
+#include "pnginfo.h"
 
 /* Validate the include paths - the include path used to generate pnglibconf.h
  * must match that used in the build, or we must be using pnglibconf.h.prebuilt:

@@ -26,12 +26,12 @@
 // Also all fl_clip routines, since they are always linked in so
 // that minimal update works.
 
+#include <config.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Printer.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Printer.H>
 #include <FL/fl_draw.H>
 #include <FL/x.H>
-#include <config.h>
 
 // fl_line_width_ must contain the absolute value of the current
 // line width to be used for X11 clipping (see below).

@@ -23,11 +23,11 @@
 // which are used so that clicks outside the program's windows
 // can be used to dismiss the menus.
 
-#include <FL/Fl.H>
-#include <FL/Fl_Menu_Window.H>
-#include <FL/fl_draw.H>
-#include <FL/x.H>
 #include <config.h>
+#include <FL/Fl.H>
+#include <FL/x.H>
+#include <FL/fl_draw.H>
+#include <FL/Fl_Menu_Window.H>
 
 // WIN32 note: HAVE_OVERLAY is false
 #if HAVE_OVERLAY

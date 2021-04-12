@@ -17,8 +17,8 @@
 
 #define JPEG_INTERNALS
 #include "jinclude.h"
-#include "jmemsys.h"		/* import the system-dependent declarations */
 #include "jpeglib.h"
+#include "jmemsys.h"		/* import the system-dependent declarations */
 
 #ifndef HAVE_STDLIB_H		/* <stdlib.h> should declare malloc(),free() */
 extern void * malloc JPP((size_t size));

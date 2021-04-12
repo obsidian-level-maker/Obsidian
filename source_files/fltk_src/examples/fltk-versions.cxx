@@ -17,8 +17,8 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Box.H>
 #include <FL/fl_ask.H>
 
 static char version[8][80] = { "","","","","","","","" };

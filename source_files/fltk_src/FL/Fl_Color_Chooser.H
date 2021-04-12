@@ -26,10 +26,10 @@
 #ifndef Fl_Color_Chooser_H
 #define Fl_Color_Chooser_H
 
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Choice.H>
 #include <FL/Fl_Group.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Return_Button.H>
+#include <FL/Fl_Choice.H>
 #include <FL/Fl_Value_Input.H>
 
 #ifndef FL_DOXYGEN

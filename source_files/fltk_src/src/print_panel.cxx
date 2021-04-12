@@ -33,11 +33,11 @@
 //
 
 #include "print_panel.h"
-#include "../src/flstring.h"
-#include <FL/Fl_Int_Input.H>
-#include <FL/Fl_Preferences.H>
 #include <stdio.h>
 #include <stdlib.h>
+#include "../src/flstring.h"
+#include <FL/Fl_Preferences.H>
+#include <FL/Fl_Int_Input.H>
 
 static Fl_Preferences print_prefs(Fl_Preferences::USER, "fltk.org", "printers");
 static Fl_Double_Window *print_panel=(Fl_Double_Window *)0;

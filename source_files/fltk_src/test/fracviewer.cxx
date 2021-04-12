@@ -15,12 +15,12 @@
 #include <config.h>
 
 #if HAVE_GL && HAVE_GL_GLU_H
-#  include <FL/glu.h>
 #  include <FL/glut.H>
+#  include <FL/glu.h>
 
-#  include <math.h>
 #  include <stdio.h>
 #  include <stdlib.h>
+#  include <math.h>
 #  include <sys/types.h>
 #  include <time.h>
 #  if !defined(WIN32) && !defined(__EMX__)

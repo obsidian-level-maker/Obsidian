@@ -17,9 +17,9 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Bitmap.H>
-#include <FL/Fl_Button.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Bitmap.H>
 #include <stdio.h>
 
 #define sorceress_width 75

@@ -16,10 +16,10 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "Fl_Font.H"
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/x.H>
+#include "Fl_Font.H"
+#include "flstring.h"
 #include <stdlib.h>
 
 #ifdef WIN32

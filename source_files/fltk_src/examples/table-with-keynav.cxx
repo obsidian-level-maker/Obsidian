@@ -25,11 +25,11 @@
 //     http://www.fltk.org/str.php
 //
 #include <FL/Fl.H>
+#include <FL/fl_draw.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Toggle_Button.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Table_Row.H>
-#include <FL/Fl_Toggle_Button.H>
-#include <FL/fl_draw.H>
 #include <FL/names.h>
 #include <stdio.h>
 #include <stdlib.h>

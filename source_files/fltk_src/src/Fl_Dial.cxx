@@ -21,8 +21,8 @@
 #include <FL/Fl_Fill_Dial.H>
 #include <FL/Fl_Line_Dial.H>
 #include <FL/fl_draw.H>
-#include <FL/math.h>
 #include <stdlib.h>
+#include <FL/math.h>
 
 
 // All angles are measured with 0 to the right and counter-clockwise

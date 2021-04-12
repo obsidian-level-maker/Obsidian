@@ -21,10 +21,10 @@
 // to avoid linking if not used.
 
 #include <FL/Fl.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Image.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Group.H>
 #include <FL/fl_draw.H>
+#include <FL/Fl_Image.H>
 
 void
 fl_no_label(const Fl_Label*,int,int,int,int,Fl_Align) {}

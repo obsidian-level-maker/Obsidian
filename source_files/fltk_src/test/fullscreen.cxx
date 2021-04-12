@@ -50,21 +50,21 @@
 // can avoid this by making the Fl_Gl_Window a child of a normal
 // window.
 
+#include <config.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Browser.H>
+#include <FL/Fl_Single_Window.H>
 #include <FL/Fl_Hor_Slider.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Menu_Button.H>
-#include <FL/Fl_Single_Window.H>
 #include <FL/Fl_Toggle_Light_Button.H>
-#include <FL/fl_ask.H>
 #include <FL/math.h>
-#include <config.h>
+#include <FL/fl_ask.H>
+#include <FL/Fl_Browser.H>
 #include <stdio.h>
 
 #if HAVE_GL
-#include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
+#include <FL/Fl_Gl_Window.H>
 
 class shape_window : public Fl_Gl_Window {
   void draw();

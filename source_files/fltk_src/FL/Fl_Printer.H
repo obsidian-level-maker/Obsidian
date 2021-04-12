@@ -23,12 +23,12 @@
 #ifndef Fl_Printer_H
 #define Fl_Printer_H
 
-#include <FL/Fl_Bitmap.H>
+#include <FL/x.H>
 #include <FL/Fl_Paged_Device.H>
+#include <FL/fl_draw.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_RGB_Image.H>
-#include <FL/fl_draw.H>
-#include <FL/x.H>
+#include <FL/Fl_Bitmap.H>
 #include <stdio.h>
 #if !(defined(__APPLE__) || defined(WIN32))
 #include <FL/Fl_PostScript.H>

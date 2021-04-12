@@ -2,10 +2,10 @@
 
 /* this can do in-place conversion or be used as a pipe... */
 
-#include <errno.h>
 #include <stdio.h>
-#include <string.h>
+#include <errno.h>
 #include <unistd.h>
+#include <string.h>
 
 int main(int argc, char** argv) {
   int f,c;

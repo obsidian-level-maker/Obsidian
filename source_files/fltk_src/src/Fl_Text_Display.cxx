@@ -19,17 +19,17 @@
 // TODO: rendering of the "optional hyphen"
 // TODO: font background color control via style buffer
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <FL/fl_utf8.h>
 #include "flstring.h"
+#include <limits.h>
+#include <ctype.h>
+#include <string.h>	// strdup()
 #include <FL/Fl.H>
 #include <FL/Fl_Text_Buffer.H>
 #include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Window.H>
-#include <FL/fl_utf8.h>
-#include <ctype.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>	// strdup()
 
 #undef min
 #undef max

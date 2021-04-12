@@ -29,8 +29,8 @@
 # include <FL/Fl_Cairo.H>
 #endif
 
-#  include "Enumerations.H"
 #  include "fl_utf8.h"
+#  include "Enumerations.H"
 #  ifndef Fl_Object
 #    define Fl_Object Fl_Widget	/**< for back compatibility - use Fl_Widget! */
 #  endif
@@ -399,9 +399,9 @@ public:
   stdout with a fair degree of accuracy:
   
   \code
+#include <stdio.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
-#include <stdio.h>
 void callback(void*) {
   printf("TICK\n");
   Fl::repeat_timeout(1.0, callback);    // retrigger timeout

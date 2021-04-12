@@ -23,9 +23,9 @@
 // These box types are in separate files so they are not linked
 // in if not used.
 
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
+#include "flstring.h"
 
 //
 // Uncomment the following line to restore the old plastic box type

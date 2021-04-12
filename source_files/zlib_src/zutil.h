@@ -25,8 +25,8 @@
 #  if !(defined(_WIN32_WCE) && defined(_MSC_VER))
 #    include <stddef.h>
 #  endif
-#  include <stdlib.h>
 #  include <string.h>
+#  include <stdlib.h>
 #endif
 
 #ifdef Z_SOLO

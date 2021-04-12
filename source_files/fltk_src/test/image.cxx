@@ -21,12 +21,12 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Button.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Image.H>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 int width = 100;
 int height = 100;

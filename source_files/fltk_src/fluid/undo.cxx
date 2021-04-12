@@ -16,12 +16,12 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "undo.h"
-#include "../src/flstring.h"
-#include "Fl_Type.h"
 #include <FL/Fl.H>
+#include "Fl_Type.h"
+#include "undo.h"
 #include <FL/Fl_Preferences.H>
 #include <FL/filename.H>
+#include "../src/flstring.h"
 #if defined(WIN32) && !defined(__CYGWIN__)
 #  include <io.h>
 #  include <windows.h>

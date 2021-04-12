@@ -20,10 +20,10 @@
 // a "callback" which is called to draw rectangular areas that are moved
 // into the drawing area.
 
-#include <FL/Fl.H>
-#include <FL/fl_draw.H>
-#include <FL/x.H>
 #include <config.h>
+#include <FL/Fl.H>
+#include <FL/x.H>
+#include <FL/fl_draw.H>
 
 // scroll a rectangle and redraw the newly exposed portions:
 /**

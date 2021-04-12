@@ -30,8 +30,8 @@
 // Include necessary header files...
 //
 
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Wizard.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 
 

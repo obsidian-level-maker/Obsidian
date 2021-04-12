@@ -16,16 +16,16 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "Fluid_Image.h"
-#include "../src/flstring.h"
-#include "Fl_Type.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Widget.H>
-#include <FL/filename.H>
-#include <errno.h>
-#include <stdarg.h>
+#include "Fl_Type.h"
+#include "Fluid_Image.h"
+#include "../src/flstring.h"
 #include <stdio.h>
+#include <errno.h>
 #include <stdlib.h>
+#include <stdarg.h>
+#include <FL/filename.H>
 
 extern void goto_source_dir(); // in fluid.cxx
 extern void leave_source_dir(); // in fluid.cxx

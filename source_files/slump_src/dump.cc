@@ -31,10 +31,8 @@
 
 #include "slump.h"
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
-#include <time.h>
 
 /* Global variables */
 

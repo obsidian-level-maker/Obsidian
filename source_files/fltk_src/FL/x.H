@@ -39,8 +39,8 @@
 #    if defined(_ABIN32) || defined(_ABI64)
 #      pragma reset woff 3322
 #    endif
-#    include "Fl_Window.H"
 #    include <X11/Xatom.h>
+#    include "Fl_Window.H"
 // Mirror X definition of Region to Fl_Region, for portability...
 typedef Region Fl_Region;
 

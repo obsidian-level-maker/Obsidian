@@ -16,10 +16,10 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "Fl_Widget_Type.h"
-#include "undo.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
+#include "Fl_Widget_Type.h"
+#include "undo.h"
 
 /**
  * the first behaviour always uses the first selected widget as a reference

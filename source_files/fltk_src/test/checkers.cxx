@@ -51,10 +51,10 @@ const char* copyright =
 
 #undef check
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 #include <time.h>
 
 #ifdef VT100
@@ -856,11 +856,11 @@ int VT100main() {
 #ifdef FLTK
 
 #include <FL/Fl.H>
-#include <FL/Fl_Bitmap.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Bitmap.H>
+#include <FL/fl_draw.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/fl_ask.H>
-#include <FL/fl_draw.H>
 
 //----------------------------------------------------------------
 // old 4-level NeXT images have been seperated into bitmaps so they
@@ -872,14 +872,14 @@ int VT100main() {
 #include "pixmaps/black_2.xbm"
 #include "pixmaps/black_3.xbm"
 #include "pixmaps/black_4.xbm"
-#include "pixmaps/blackking_1.xbm"
-#include "pixmaps/blackking_2.xbm"
-#include "pixmaps/blackking_3.xbm"
-#include "pixmaps/blackking_4.xbm"
 #include "pixmaps/white_1.xbm"
 #include "pixmaps/white_2.xbm"
 #include "pixmaps/white_3.xbm"
 #include "pixmaps/white_4.xbm"
+#include "pixmaps/blackking_1.xbm"
+#include "pixmaps/blackking_2.xbm"
+#include "pixmaps/blackking_3.xbm"
+#include "pixmaps/blackking_4.xbm"
 #include "pixmaps/whiteking_1.xbm"
 #include "pixmaps/whiteking_2.xbm"
 #include "pixmaps/whiteking_3.xbm"

@@ -27,9 +27,9 @@
 #ifdef WIN32
 // #define _WIN32_WINNT	0x0501	// needed for OPENFILENAME's 'FlagsEx'
 #if defined(FL_LIBRARY) || FLTK_ABI_VERSION < 10304
+#  include <windows.h>
 #  include <commdlg.h>		// OPENFILENAMEW, GetOpenFileName()
 #  include <shlobj.h>		// BROWSEINFOW, SHBrowseForFolder()
-#  include <windows.h>
 typedef OPENFILENAMEW fl_OPENFILENAMEW;
 typedef BROWSEINFOW fl_BROWSEINFOW;
 #else

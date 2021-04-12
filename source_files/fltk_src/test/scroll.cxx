@@ -17,15 +17,15 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Choice.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Scroll.H>
+#include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Choice.H>
+#include <FL/Fl_Box.H>
+#include <string.h>
+#include <stdio.h>
 #include <FL/fl_draw.H>
 #include <FL/math.h>
-#include <stdio.h>
-#include <string.h>
 
 class Drawing : public Fl_Widget {
   void draw();

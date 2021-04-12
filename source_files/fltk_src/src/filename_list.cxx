@@ -18,9 +18,9 @@
 
 // Wrapper for scandir with const-correct function prototypes.
 
-#include "flstring.h"
 #include <FL/filename.H>
 #include <FL/fl_utf8.h>
+#include "flstring.h"
 #include <stdlib.h>
 #ifdef __APPLE__
 #include <FL/x.H>

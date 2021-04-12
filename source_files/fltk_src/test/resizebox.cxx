@@ -21,8 +21,8 @@
 #define W3 (5*W1+6*B)
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Radio_Button.H>
 #include <FL/fl_draw.H>
 #include <FL/fl_message.H>

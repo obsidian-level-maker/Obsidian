@@ -20,10 +20,10 @@
  */
 
 /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
-#include "jerror.h"
 #include "jinclude.h"
 #include "jpeglib.h"
 #include "jversion.h"
+#include "jerror.h"
 
 #ifdef USE_WINDOWS_MESSAGEBOX
 #include <windows.h>

@@ -19,8 +19,8 @@
  *    usable in C.
  */
 
-#include <stdio.h>
 #include <wchar.h>
+#include <stdio.h>
 
 char buffer[1000000];
 

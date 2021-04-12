@@ -23,14 +23,14 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Int_Input.H>
-#include <FL/Fl_Table.H>
-#include <FL/Fl_Value_Slider.H>
-#include <FL/fl_draw.H>
 #include <stdio.h>
 #include <stdlib.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Table.H>
+#include <FL/Fl_Int_Input.H>
+#include <FL/Fl_Value_Slider.H>
+#include <FL/fl_draw.H>
 
 const int MAX_COLS = 26;
 const int MAX_ROWS = 500;

@@ -39,10 +39,10 @@
 
 #if defined(WIN32) && !defined(FL_DLL) && !defined (__GNUC__)
 
-#  include <FL/fl_utf8.h>
+#  include <windows.h>
 #  include <stdio.h>
 #  include <stdlib.h>
-#  include <windows.h>
+#  include <FL/fl_utf8.h>
 
 extern int main(int, char *[]);
 

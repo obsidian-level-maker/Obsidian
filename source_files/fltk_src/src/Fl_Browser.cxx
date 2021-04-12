@@ -16,12 +16,12 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Browser.H>
 #include <FL/fl_draw.H>
-#include <math.h>
+#include "flstring.h"
 #include <stdlib.h>
+#include <math.h>
 
 #include <FL/Fl_Hold_Browser.H>
 #include <FL/Fl_Multi_Browser.H>

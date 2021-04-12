@@ -33,13 +33,13 @@
 // Include necessary headers...
 //
 
-#include <FL/Fl_Double_Window.H>
+#include <stdio.h>
 #include <FL/Fl_File_Chooser.H>
 #include <FL/Fl_File_Icon.H>
-#include <FL/Fl_Light_Button.H>
-#include <FL/Fl_PNM_Image.H>
 #include <FL/Fl_Shared_Image.H>
-#include <stdio.h>
+#include <FL/Fl_PNM_Image.H>
+#include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Double_Window.H>
 #include <string.h>
 
 

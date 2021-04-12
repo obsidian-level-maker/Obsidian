@@ -23,20 +23,20 @@
 // This file must be #include'd in Fl.cxx and not compiled separately.
 
 #ifndef FL_DOXYGEN
-#include "Fl_Font.H"
-#include "flstring.h"
-#include <FL/Enumerations.H>
 #include <FL/Fl.H>
-#include <FL/Fl_Paged_Device.H>
-#include <FL/Fl_Tooltip.H>
+#include <FL/fl_utf8.h>
 #include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
-#include <FL/fl_utf8.h>
-#include <signal.h>
+#include <FL/Enumerations.H>
+#include <FL/Fl_Tooltip.H>
+#include <FL/Fl_Paged_Device.H>
+#include "flstring.h"
+#include "Fl_Font.H"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <time.h>
+#include <signal.h>
 #ifdef __CYGWIN__
 #  include <sys/time.h>
 #  include <unistd.h>
@@ -2824,8 +2824,8 @@ void Fl_Paged_Device::draw_decorated_window(Fl_Window *win, int x_offset, int y_
 #ifdef USE_PRINT_BUTTON
 // to test the Fl_Printer class creating a "Print front window" button in a separate window
 // contains also preparePrintFront call above
-#include <FL/Fl_Button.H>
 #include <FL/Fl_Printer.H>
+#include <FL/Fl_Button.H>
 void printFront(Fl_Widget *o, void *data)
 {
   Fl_Printer printer;

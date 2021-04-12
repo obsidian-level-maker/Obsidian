@@ -17,11 +17,11 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Choice.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Hor_Value_Slider.H>
+#include <FL/Fl_Choice.H>
 #include <FL/fl_draw.H>
+#include <FL/Fl_Box.H>
 
 Fl_Cursor cursor = FL_CURSOR_DEFAULT;
 

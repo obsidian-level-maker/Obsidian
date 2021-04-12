@@ -78,8 +78,8 @@ inline int fl_filename_relative(char *to, const char *from) { return fl_filename
 struct dirent {char d_name[1];};
 
 #  elif defined(__WATCOMC__)
-#    include <direct.h>
 #    include <sys/types.h>
+#    include <direct.h>
 
 #  else
 /*

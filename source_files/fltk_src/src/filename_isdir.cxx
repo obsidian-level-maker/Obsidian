@@ -19,11 +19,11 @@
 // Used by fl_file_chooser
 
 #include "flstring.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <ctype.h>
 #include <FL/filename.H>
 #include <FL/fl_utf8.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 
 #if defined(WIN32) || defined(__EMX__) && !defined(__CYGWIN__)

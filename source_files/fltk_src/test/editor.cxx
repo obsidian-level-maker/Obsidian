@@ -22,29 +22,29 @@
 // Include necessary headers...
 //
 
-#include <ctype.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <errno.h>
 
 #ifdef __MWERKS__
 # define FL_DLL
 #endif
 
 #include <FL/Fl.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Double_Window.H>
+#include <FL/x.H> // for fl_open_callback
 #include <FL/Fl_Group.H>
-#include <FL/Fl_Input.H>
-#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/fl_ask.H>
 #include <FL/Fl_Native_File_Chooser.H>
+#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Text_Buffer.H>
 #include <FL/Fl_Text_Editor.H>
 #include <FL/filename.H>
-#include <FL/fl_ask.H>
-#include <FL/x.H> // for fl_open_callback
 
 int                changed = 0;
 char               filename[FL_PATH_MAX] = "";

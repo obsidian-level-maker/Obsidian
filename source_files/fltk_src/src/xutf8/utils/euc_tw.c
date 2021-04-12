@@ -17,9 +17,9 @@
  *    generate the "if(){} else if ..." structure of ucs2fontmap()
  */
 
-#include <iconv.h>
-#include <stdio.h>
 #include <wchar.h>
+#include <stdio.h>
+#include <iconv.h>
 char uni[0x10000];
 #include "../utf8Utils.c"
 

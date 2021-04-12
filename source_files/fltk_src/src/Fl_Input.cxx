@@ -22,20 +22,20 @@
 // In theory you can replace this code with another subclass to change
 // the keybindings.
 
-#include "flstring.h"
-#include <FL/Fl.H>
-#include <FL/Fl_Input.H>
-#include <FL/Fl_Window.H>
-#include <FL/fl_ask.H>
-#include <FL/fl_draw.H>
 #include <stdio.h>
 #include <stdlib.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Input.H>
+#include <FL/fl_draw.H>
+#include <FL/fl_ask.H>
+#include "flstring.h"
 
 #include <FL/Fl_Float_Input.H>
 #include <FL/Fl_Int_Input.H>
 #include <FL/Fl_Multiline_Input.H>
-#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Output.H>
+#include <FL/Fl_Multiline_Output.H>
 #include <FL/Fl_Secret_Input.H>
 
 #ifdef HAVE_LOCALE_H

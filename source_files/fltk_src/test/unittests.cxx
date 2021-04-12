@@ -24,11 +24,11 @@
 // v1.1 - Matthias seperated all tests into multiple source files for hopefully easier handling
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Help_View.H>
 #include <FL/Fl_Hold_Browser.H>
+#include <FL/Fl_Help_View.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Box.H>
 #include <FL/fl_draw.H>		// fl_text_extents()
 
 // WINDOW/WIDGET SIZES
@@ -143,16 +143,16 @@ public:
 //------- include the various unit tests as inline code -------
 
 #include "unittest_about.cxx"
-#include "unittest_circles.cxx"
-#include "unittest_images.cxx"
-#include "unittest_lines.cxx"
 #include "unittest_points.cxx"
+#include "unittest_lines.cxx"
 #include "unittest_rects.cxx"
-#include "unittest_schemes.cxx"
-#include "unittest_scrollbarsize.cxx"
-#include "unittest_symbol.cxx"
+#include "unittest_circles.cxx"
 #include "unittest_text.cxx"
+#include "unittest_symbol.cxx"
+#include "unittest_images.cxx"
 #include "unittest_viewport.cxx"
+#include "unittest_scrollbarsize.cxx"
+#include "unittest_schemes.cxx"
 
 // callback whenever the browser value changes
 void Browser_CB(Fl_Widget*, void*) {

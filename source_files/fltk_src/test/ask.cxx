@@ -19,14 +19,14 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Input.H>
-#include <FL/Fl_Return_Button.H>
 #include <stdio.h>
 #include <string.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Return_Button.H>
+#include <FL/Fl_Box.H>
 
 #include <FL/fl_ask.H>
 #include <stdlib.h>

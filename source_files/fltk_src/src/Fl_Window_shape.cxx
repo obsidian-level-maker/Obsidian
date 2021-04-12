@@ -16,13 +16,13 @@
 //     http://www.fltk.org/str.php
 //
 
+#include <config.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Bitmap.H>
-#include <FL/Fl_Pixmap.H>
-#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/x.H>
-#include <config.h>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Bitmap.H>
+#include <FL/Fl_Pixmap.H>
 #include <string.h>
 
 #ifdef WIN32

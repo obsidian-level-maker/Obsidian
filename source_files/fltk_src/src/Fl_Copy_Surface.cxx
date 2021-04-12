@@ -16,8 +16,8 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl.H>
 #include <FL/Fl_Copy_Surface.H>
+#include <FL/Fl.H>
 
 
 #if defined(__APPLE__)

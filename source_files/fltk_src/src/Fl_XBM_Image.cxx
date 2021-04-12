@@ -24,12 +24,12 @@
 // Include necessary header files...
 //
 
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_XBM_Image.H>
-#include <FL/fl_utf8.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <FL/fl_utf8.h>
+#include "flstring.h"
 
 //
 // 'Fl_XBM_Image::Fl_XBM_Image()' - Load an XBM file.

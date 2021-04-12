@@ -16,8 +16,8 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Box.H>
 
 
 Fl_Box::Fl_Box(int X, int Y, int W, int H, const char *l)

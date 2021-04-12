@@ -19,9 +19,9 @@
 // Startup method to set what display to use.
 // Using setenv makes programs that are exec'd use the same display.
 
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <stdlib.h>
+#include "flstring.h"
 
 /**
     Sets the X display to use for all windows.  Actually this just sets

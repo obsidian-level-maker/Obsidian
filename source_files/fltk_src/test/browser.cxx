@@ -53,16 +53,16 @@ That was a blank line above this.
 */
 
 #include <FL/Fl.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Choice.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Int_Input.H>
 #include <FL/Fl_Select_Browser.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Int_Input.H>
+#include <FL/Fl_Choice.H>
 #include <FL/fl_ask.H>
-#include <errno.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+#include <stdlib.h>
 
 Fl_Select_Browser *browser;
 Fl_Button	*top,

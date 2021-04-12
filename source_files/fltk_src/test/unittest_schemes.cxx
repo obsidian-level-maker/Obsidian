@@ -21,27 +21,27 @@
 #include <FL/Fl_Choice.H>
 
 // needed by Edmanuel's test layout
-#include <FL/Fl_Adjuster.H>
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Check_Button.H>
-#include <FL/Fl_Clock.H>
-#include <FL/Fl_Counter.H>
-#include <FL/Fl_File_Input.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Input.H>
-#include <FL/Fl_Light_Button.H>
-#include <FL/Fl_Output.H>
-#include <FL/Fl_Progress.H>
-#include <FL/Fl_Roller.H>
-#include <FL/Fl_Scrollbar.H>
-#include <FL/Fl_Slider.H>
 #include <FL/Fl_Tabs.H>
-#include <FL/Fl_Text_Display.H>
-#include <FL/Fl_Text_Editor.H>
-#include <FL/Fl_Value_Input.H>
-#include <FL/Fl_Value_Output.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Clock.H>
+#include <FL/Fl_Progress.H>
+#include <FL/Fl_Slider.H>
+#include <FL/Fl_Scrollbar.H>
 #include <FL/Fl_Value_Slider.H>
+#include <FL/Fl_Value_Output.H>
+#include <FL/Fl_Adjuster.H>
+#include <FL/Fl_Counter.H>
+#include <FL/Fl_Roller.H>
+#include <FL/Fl_Value_Input.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Output.H>
+#include <FL/Fl_Text_Editor.H>
+#include <FL/Fl_Text_Display.H>
+#include <FL/Fl_File_Input.H>
+#include <FL/Fl_Box.H>
+#include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Check_Button.H>
 
 class SchemesTest : public Fl_Group {
   Fl_Choice *schemechoice;

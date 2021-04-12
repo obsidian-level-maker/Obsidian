@@ -25,12 +25,12 @@
 #ifndef Fl_Device_H
 #define Fl_Device_H
 
-#include <FL/Fl_Bitmap.H>
-#include <FL/Fl_Image.H>
-#include <FL/Fl_Pixmap.H>
-#include <FL/Fl_Plugin.H>
-#include <FL/Fl_RGB_Image.H>
 #include <FL/x.H>
+#include <FL/Fl_Plugin.H>
+#include <FL/Fl_Image.H>
+#include <FL/Fl_Bitmap.H>
+#include <FL/Fl_Pixmap.H>
+#include <FL/Fl_RGB_Image.H>
 #include <stdlib.h>
 
 class Fl_Graphics_Driver;

@@ -20,15 +20,15 @@
 // in.  Search other files for "WIN32" or filenames ending in _win32.cxx
 // for other system-specific code.
 
-#include "flstring.h"
 #include <FL/Fl.H>
+#include <FL/x.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_utf8.h>
-#include <FL/x.H>
-#include <objidl.h>
+#include "flstring.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <objidl.h>
 #include <time.h>
 #if defined(__CYGWIN__)
 #include <sys/time.h>

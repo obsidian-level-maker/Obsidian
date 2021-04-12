@@ -36,11 +36,11 @@
 #endif
 
 // Select fonts from the FLTK font table.
-#include "Fl_Font.H"
 #include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
 #include <FL/x.H>
+#include "Fl_Font.H"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -189,9 +189,9 @@ int Fl::awake(Fl_Awake_Handler func, void *data) {
     See also: \ref advanced_multithreading
 */
 #ifdef WIN32
-#  include <FL/x.H>
-#  include <process.h>
 #  include <windows.h>
+#  include <process.h>
+#  include <FL/x.H>
 
 // These pointers are in Fl_win32.cxx:
 extern void (*fl_lock_function)();
@@ -256,9 +256,9 @@ void Fl::awake(void* msg) {
 ////////////////////////////////////////////////////////////////
 // POSIX threading...
 #elif defined(HAVE_PTHREAD)
+#  include <unistd.h>
 #  include <fcntl.h>
 #  include <pthread.h>
-#  include <unistd.h>
 
 // Pipe for thread messaging via Fl::awake()...
 static int thread_filedes[2];

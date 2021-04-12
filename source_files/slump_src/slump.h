@@ -29,6 +29,8 @@
  * - Please do not call any derivative of this program SLIGE.
  */
 
+#include <cstdio>
+
 /* Slump 0.003.02 */
 #define SOURCE_VERSION (0)
 #define SOURCE_SERIAL (003)

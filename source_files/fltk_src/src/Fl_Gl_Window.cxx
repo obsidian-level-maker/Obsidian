@@ -21,16 +21,16 @@
 
 extern int fl_gl_load_plugin;
 
-#include "Fl_Gl_Choice.H"
 #include <FL/Fl.H>
 #include <FL/x.H>
+#include "Fl_Gl_Choice.H"
 #ifdef __APPLE__
 #include <FL/gl.h>
 #include <OpenGL/OpenGL.h>
 #endif
 #include <FL/Fl_Gl_Window.H>
-#include <FL/fl_utf8.h>
 #include <stdlib.h>
+#include <FL/fl_utf8.h>
 
 ////////////////////////////////////////////////////////////////
 

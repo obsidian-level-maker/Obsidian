@@ -18,11 +18,11 @@
 
 #ifndef __CYGWIN__
 /* Emulation of posix scandir() call */
-#include "flstring.h"
-#include <FL/filename.H>
 #include <FL/fl_utf8.h>
-#include <stdlib.h>
+#include <FL/filename.H>
+#include "flstring.h"
 #include <windows.h>
+#include <stdlib.h>
 
 int fl_scandir(const char *dirname, struct dirent ***namelist,
 	       int (*select)(struct dirent *),

@@ -31,12 +31,12 @@
 #include <config.h>
 #if HAVE_GL
 
-#include "Fl_Gl_Choice.H"
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
+#include <FL/x.H>
 #include <FL/fl_draw.H>
 #include <FL/gl.h>
-#include <FL/x.H>
+#include "Fl_Gl_Choice.H"
 
 static GLContext context;
 static int clip_state_number=-1;

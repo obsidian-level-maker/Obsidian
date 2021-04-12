@@ -22,8 +22,8 @@
 #ifndef Fl_Preferences_H
 #  define Fl_Preferences_H
 
-#  include "Fl_Export.H" 
 #  include <stdio.h>
+#  include "Fl_Export.H" 
 
 /**
    \brief Fl_Preferences provides methods to store user

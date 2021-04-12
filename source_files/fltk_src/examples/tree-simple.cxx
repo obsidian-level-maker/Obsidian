@@ -16,10 +16,10 @@
 //
 //     http://www.fltk.org/str.php
 //
+#include <stdio.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Tree.H>
-#include <stdio.h>
 
 // Tree's callback
 //    Invoked whenever an item's state changes.

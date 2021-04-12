@@ -9,8 +9,8 @@
 #include <stdio.h>
 
 #ifdef STDC
-#  include <stdlib.h>
 #  include <string.h>
+#  include <stdlib.h>
 #endif
 
 #if defined(VMS) || defined(RISCOS)

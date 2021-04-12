@@ -114,8 +114,8 @@ typedef struct flCocoaRegion {
   CGRect *rects;
 } *Fl_Region;  // a region is the union of a series of rectangles
 
-#  include "../src/Fl_Font.H"
 #  include "Fl_Window.H"
+#  include "../src/Fl_Font.H"
 
 // Some random X equivalents
 struct XPoint { int x, y; };

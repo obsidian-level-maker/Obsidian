@@ -36,20 +36,20 @@ extern "C" {
 #include <pthread.h>
 }
 
-#include <FL/Fl.H>
-#include <FL/Fl_Copy_Surface.H>
-#include <FL/Fl_Printer.H>
-#include <FL/Fl_Tooltip.H>
-#include <FL/Fl_Window.H>
 #include <FL/x.H>
-#include <dlfcn.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Tooltip.H>
+#include <FL/Fl_Printer.H>
+#include <FL/Fl_Copy_Surface.H>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#include <stdarg.h>
+#include <math.h>
+#include <limits.h>
+#include <dlfcn.h>
+#include <string.h>
 
 #import <Cocoa/Cocoa.h>
 

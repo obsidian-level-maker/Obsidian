@@ -32,13 +32,13 @@
 // This allows punctuation shortcuts like "#" to work (rather than
 // calling it "shift+3" on a US keyboard)
 
-#include "flstring.h"
 #include <FL/Fl.H>
-#include <FL/Fl_Button.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Button.H>
 #include <FL/fl_draw.H>
-#include <ctype.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include "flstring.h"
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <FL/x.H>
 #endif

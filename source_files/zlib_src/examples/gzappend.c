@@ -77,12 +77,12 @@
    as the trailer of the gzip file.
  */
 
-#include "zlib.h"
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include <unistd.h>
+#include "zlib.h"
 
 #define local static
 #define LGCHUNK 14

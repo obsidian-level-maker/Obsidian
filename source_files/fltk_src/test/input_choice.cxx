@@ -16,10 +16,10 @@
 //     http://www.fltk.org/str.php
 //
 
+#include <stdio.h>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Input_Choice.H>
-#include <stdio.h>
 
 void buttcb(Fl_Widget*,void*data) {
     Fl_Input_Choice *in=(Fl_Input_Choice *)data;

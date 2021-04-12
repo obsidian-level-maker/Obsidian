@@ -24,11 +24,11 @@
 #ifndef FL_TEXT_DISPLAY_H
 #define FL_TEXT_DISPLAY_H
 
+#include "fl_draw.H"
 #include "Fl_Group.H"
+#include "Fl_Widget.H"
 #include "Fl_Scrollbar.H"
 #include "Fl_Text_Buffer.H"
-#include "Fl_Widget.H"
-#include "fl_draw.H"
 
 /**
  \brief Rich text display widget.

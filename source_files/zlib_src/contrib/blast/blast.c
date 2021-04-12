@@ -29,9 +29,9 @@
  *                      - Enable the provision of initial input to blast()
  */
 
-#include "blast.h"              /* prototype for blast() */
-#include <setjmp.h>             /* for setjmp(), longjmp(), and jmp_buf */
 #include <stddef.h>             /* for NULL */
+#include <setjmp.h>             /* for setjmp(), longjmp(), and jmp_buf */
+#include "blast.h"              /* prototype for blast() */
 
 #define local static            /* for local function definitions */
 #define MAXBITS 13              /* maximum code length */

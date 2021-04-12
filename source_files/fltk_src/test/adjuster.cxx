@@ -16,11 +16,11 @@
 //     http://www.fltk.org/str.php
 //
 
+#include <stdlib.h>
 #include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Adjuster.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Double_Window.H>
-#include <stdlib.h>
 
 void adjcb(Fl_Widget *o, void *v) {
   Fl_Adjuster *a = (Fl_Adjuster*)o;

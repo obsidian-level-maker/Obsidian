@@ -22,8 +22,8 @@
 #define widget_panel_h
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Group.H>
 #include <FL/Fl_Tabs.H>
+#include <FL/Fl_Group.H>
 extern void propagate_load(Fl_Group*, void*);
 #include <FL/Fl_Input.H>
 extern void label_cb(Fl_Input*, void*);
@@ -91,8 +91,8 @@ extern void name_public_member_cb(Fl_Choice*, void*);
 extern void name_public_cb(Fl_Choice*, void*);
 extern void v_input_cb(Fl_Input*, void*);
 extern Fl_Input *v_input[4];
-#include <FL/Fl_Text_Editor.H>
 #include <FL/Fl_Tile.H>
+#include <FL/Fl_Text_Editor.H>
 extern Fl_Text_Editor *wComment;
 #include "CodeEditor.h"
 extern void callback_cb(CodeEditor*, void*);

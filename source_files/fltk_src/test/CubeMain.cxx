@@ -16,9 +16,9 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "CubeViewUI.h"
-#include <FL/Fl.H>
 #include <config.h>
+#include <FL/Fl.H>
+#include "CubeViewUI.h"
 
 int
 main(int argc, char **argv) {

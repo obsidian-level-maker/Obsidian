@@ -27,14 +27,14 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Hor_Slider.H>
 #include <FL/Fl_Single_Window.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Box.H>
 #include <FL/fl_draw.H>
+#include <FL/Fl_Hor_Slider.H>
+#include <stdlib.h>
 #include <FL/math.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 // this purposely draws each line 10 times to be slow:
 void star(int w, int h, int n) {

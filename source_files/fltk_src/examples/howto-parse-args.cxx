@@ -23,11 +23,11 @@
 //
 //     http://www.fltk.org/str.php
 //
+#include <stdio.h>
+#include <string.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Window.H>
-#include <stdio.h>
-#include <string.h>
 
 int helpFlag = 0;
 char *optionString = 0;

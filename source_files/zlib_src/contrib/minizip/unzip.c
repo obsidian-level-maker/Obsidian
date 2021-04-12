@@ -72,13 +72,13 @@
         #define NOUNCRYPT
 #endif
 
-#include "unzip.h"
 #include "zlib.h"
+#include "unzip.h"
 
 #ifdef STDC
 #  include <stddef.h>
-#  include <stdlib.h>
 #  include <string.h>
+#  include <stdlib.h>
 #endif
 #ifdef NO_ERRNO_H
     extern int errno;

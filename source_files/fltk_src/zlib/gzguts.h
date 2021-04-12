@@ -18,12 +18,12 @@
 #  define ZLIB_INTERNAL
 #endif
 
-#include "zlib.h"
 #include <stdio.h>
+#include "zlib.h"
 #ifdef STDC
-#  include <limits.h>
-#  include <stdlib.h>
 #  include <string.h>
+#  include <stdlib.h>
+#  include <limits.h>
 #endif
 #include <fcntl.h>
 

@@ -18,8 +18,8 @@
 
 #ifndef CUBEVIEW_H
 #define CUBEVIEW_H 1
-#include <FL/Fl.H>
 #include <config.h>
+#include <FL/Fl.H>
 #if HAVE_GL
 #  include <FL/Fl_Gl_Window.H>
 #  include <FL/gl.h>

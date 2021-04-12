@@ -3,10 +3,10 @@
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
-#include "infback9.h"
-#include "inflate9.h"
-#include "inftree9.h"
 #include "zutil.h"
+#include "infback9.h"
+#include "inftree9.h"
+#include "inflate9.h"
 
 #define WSIZE 65536UL
 

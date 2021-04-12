@@ -17,8 +17,8 @@
 /*	
  *    generate the "if(){} else if ..." structure of ucs2fontmap()
  */
-#include <stdio.h>
 #include <wchar.h>
+#include <stdio.h>
 char buffer[1000000];
 
 int main(int argc, char **argv) {

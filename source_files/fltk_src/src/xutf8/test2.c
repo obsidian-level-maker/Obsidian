@@ -49,16 +49,16 @@ export LD_PRELOAD="/usr/src/x11/xc/exports/lib/libX11.so /usr/src/x11/xc/exports
 
 */
 
-#include <X11/Intrinsic.h>
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xlocale.h>
-#include <X11/Xmd.h>
-#include <X11/Xutil.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <wchar.h>
+#include <X11/Xlocale.h>
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Intrinsic.h>
+#include <X11/Xmd.h>
 
 char *jp_txt = "é  UTF-8 e\xCC\x82=\xC3\xAA"
 	       "  \357\274\270\357\274\254\357\274\246\357\274"

@@ -19,13 +19,13 @@
  Fl_Double_Window implementation.
  */
 
+#include <config.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Overlay_Window.H>
 #include <FL/Fl_Printer.H>
-#include <FL/fl_draw.H>
 #include <FL/x.H>
-#include <config.h>
+#include <FL/fl_draw.H>
 
 // On systems that support double buffering "naturally" the base
 // Fl_Window class will probably do double-buffer and this subclass

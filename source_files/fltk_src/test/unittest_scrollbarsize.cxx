@@ -16,10 +16,10 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl_Browser.H>
 #include <FL/Fl_Group.H>
-#include <FL/Fl_Table.H>
+#include <FL/Fl_Browser.H>
 #include <FL/Fl_Tree.H>
+#include <FL/Fl_Table.H>
 #include <FL/Fl_Value_Slider.H>
 
 //

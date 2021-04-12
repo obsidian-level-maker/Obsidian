@@ -53,11 +53,11 @@
    versions of zlib earlier than 1.2.3.
  */
 
-#include "zlib.h"
-#include <fcntl.h>      /* open() */
 #include <stdio.h>      /* fputs(), fprintf(), fwrite(), putc() */
 #include <stdlib.h>     /* exit(), malloc(), free() */
+#include <fcntl.h>      /* open() */
 #include <unistd.h>     /* close(), read(), lseek() */
+#include "zlib.h"
     /* crc32(), crc32_combine(), inflateInit2(), inflate(), inflateEnd() */
 
 #define local static

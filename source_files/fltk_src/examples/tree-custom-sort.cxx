@@ -17,13 +17,13 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <FL/Fl.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Tree.H>
 #include <stdio.h>
 #include <stdlib.h>	/* qsort(3), srand(3).. */
 #include <time.h>	/* time(2) */
+#include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Tree.H>
+#include <FL/Fl_Button.H>
 
 Fl_Tree *G_tree = 0;
 

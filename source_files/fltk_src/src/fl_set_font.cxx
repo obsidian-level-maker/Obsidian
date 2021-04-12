@@ -19,11 +19,11 @@
 // Add a font to the internal table.
 // Also see fl_set_fonts.cxx which adds all possible fonts.
 
-#include "Fl_Font.H"
-#include "flstring.h"
 #include <FL/Fl.H>
-#include <FL/fl_draw.H>
 #include <FL/x.H>
+#include <FL/fl_draw.H>
+#include "flstring.h"
+#include "Fl_Font.H"
 #include <stdlib.h>
 
 static int table_size;

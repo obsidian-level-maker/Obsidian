@@ -16,22 +16,22 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Enumerations.H>
 #include <FL/Fl.H>
-#include <FL/Fl_Button.H>
+#include <FL/Enumerations.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Group.H>
+#include <FL/fl_ask.H>
+#include <FL/fl_draw.H>
 #include <FL/Fl_Help_Dialog.H>
 #include <FL/Fl_Preferences.H>
 #include <FL/Fl_Sys_Menu_Bar.H>
-#include <FL/fl_ask.H>
-#include <FL/fl_draw.H>
-#include <FL/math.h>
 #include <FL/x.H>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <FL/math.h>
 
 #ifdef WIN32
 #  include "sudokurc.h"

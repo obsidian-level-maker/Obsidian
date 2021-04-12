@@ -50,8 +50,8 @@ static int fl_create_thread(Fl_Thread& t, Fl_Thread_Func* f, void* p) {
 
 #  elif defined(WIN32) && !defined(__WATCOMC__) // Use Windows threading...
 
-#    include <process.h>
 #    include <windows.h>
+#    include <process.h>
 
 typedef unsigned long Fl_Thread;
 extern "C" {

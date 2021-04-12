@@ -24,8 +24,8 @@
 //     http://www.fltk.org/str.php
 //
 #include <FL/Fl.H>
-#include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Text_Display.H>
 int main() {
    // Style table
    Fl_Text_Display::Style_Table_Entry stable[] = {

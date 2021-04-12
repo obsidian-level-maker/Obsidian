@@ -16,16 +16,16 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "flstring.h"
-#include <FL/fl_utf8.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <FL/fl_utf8.h>
+#include "flstring.h"
 
 #include <FL/Fl.H>
-#include <FL/Fl_Preferences.H>
 #include <FL/Fl_Shared_Image.H>
 #include <FL/Fl_XBM_Image.H>
 #include <FL/Fl_XPM_Image.H>
+#include <FL/Fl_Preferences.H>
 #include <FL/fl_draw.H>
 
 //

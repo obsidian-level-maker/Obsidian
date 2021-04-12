@@ -16,9 +16,9 @@
 //     http://www.fltk.org/str.php
 //
 
+#include <config.h>
 #include <FL/Fl.H>
 #include <FL/x.H>
-#include <config.h>
 
 ////////////////////////////////////////////////////////////////
 // "Grab" is done while menu systems are up.  This has several effects:

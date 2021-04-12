@@ -16,16 +16,16 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Input_.H>
 #include <FL/Fl_Window.H>
-#include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
-#include <FL/fl_utf8.h>
-#include <ctype.h>
+#include <FL/fl_ask.H>
 #include <math.h>
+#include <FL/fl_utf8.h>
+#include "flstring.h"
 #include <stdlib.h>
+#include <ctype.h>
 
 #define MAXBUF 1024
 #if defined(USE_X11) && !USE_XFT

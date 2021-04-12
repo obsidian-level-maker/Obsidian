@@ -39,8 +39,8 @@
 #ifndef CGDEBUG
 #define CGDEBUG
 
-#include <Carbon/Carbon.h>
 #include <stdio.h>
+#include <Carbon/Carbon.h>
 
 //+BitmapContextCreate
 //+BitmapContextGetData

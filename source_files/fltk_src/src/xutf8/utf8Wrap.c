@@ -22,9 +22,9 @@
 #include "../Xutf8.h"
 #include <X11/Xlib.h>
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /* External auto generated functions : */
 #include "ucs2fontmap.c"

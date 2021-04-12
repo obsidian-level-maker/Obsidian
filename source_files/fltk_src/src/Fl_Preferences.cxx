@@ -17,42 +17,42 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Plugin.H>
 #include <FL/Fl_Preferences.H>
+#include <FL/Fl_Plugin.H>
 #include <FL/filename.H>
 
-#include "flstring.h"
-#include <FL/fl_utf8.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
+#include <FL/fl_utf8.h>
+#include "flstring.h"
 #include <sys/stat.h>
 #include <time.h>
 
 #if defined(WIN32) && !defined(__CYGWIN__)
+#  include <windows.h>
 #  include <direct.h>
 #  include <io.h>
-#  include <windows.h>
 // Visual C++ 2005 incorrectly displays a warning about the use of POSIX APIs
 // on Windows, which is supposed to be POSIX compliant...
 #  define access _access
 #  define mkdir _mkdir
 #elif defined (__APPLE__)
 #  include <ApplicationServices/ApplicationServices.h>
+#  include <unistd.h>
 #  include <config.h>
 #  include <dlfcn.h>
-#  include <unistd.h>
 #else
-#  include <config.h>
 #  include <unistd.h>
+#  include <config.h>
 #  if HAVE_DLFCN_H
 #    include <dlfcn.h>
 #  endif
 #endif
 
 #ifdef WIN32
-#  include <rpc.h>
 #  include <windows.h>
+#  include <rpc.h>
 // function pointer for the UuidCreate Function
 // RPC_STATUS RPC_ENTRY UuidCreate(UUID __RPC_FAR *Uuid);
 typedef RPC_STATUS (WINAPI* uuid_func)(UUID __RPC_FAR *Uuid);

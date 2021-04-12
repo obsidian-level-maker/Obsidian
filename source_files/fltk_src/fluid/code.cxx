@@ -16,14 +16,14 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "../src/flstring.h"
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "../src/flstring.h"
+#include <stdarg.h>
 
+#include <FL/Fl.H>
 #include "Fl_Type.h"
 #include "alignment_panel.h"
-#include <FL/Fl.H>
 
 static FILE *code_file;
 static FILE *header_file;

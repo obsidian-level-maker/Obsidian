@@ -17,8 +17,8 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Clock.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Clock.H>
 #include <FL/Fl_Round_Clock.H>
 
 int main(int argc, char **argv) {

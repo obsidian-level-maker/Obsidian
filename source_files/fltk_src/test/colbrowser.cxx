@@ -18,17 +18,17 @@
 
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Button.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Hold_Browser.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Value_Slider.H>
+#include <FL/Fl_Hold_Browser.H>
+#include <FL/Fl_Box.H>
 
-#include <FL/filename.H>
 #include <FL/fl_ask.H>
+#include <FL/filename.H>
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 

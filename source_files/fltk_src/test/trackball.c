@@ -49,8 +49,8 @@
  * Much mucking with by:
  * Gavin Bell
  */
-#include "trackball.h"
 #include <math.h>
+#include "trackball.h"
 
 /*
  * This size should really be based on the distance from the center of

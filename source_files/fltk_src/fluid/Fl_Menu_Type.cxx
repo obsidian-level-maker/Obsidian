@@ -22,15 +22,15 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "../src/flstring.h"
+#include <FL/Fl.H>
 #include "Fl_Widget_Type.h"
 #include "alignment_panel.h"
-#include <FL/Fl.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Menu_.H>
-#include <FL/Fl_Text_Display.H>
-#include <FL/Fl_Value_Input.H>
 #include <FL/fl_message.H>
+#include <FL/Fl_Menu_.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Value_Input.H>
+#include <FL/Fl_Text_Display.H>
+#include "../src/flstring.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -566,8 +566,8 @@ Fl_Menu_Bar_Type Fl_Menu_Bar_type;
 ////////////////////////////////////////////////////////////////
 // Shortcut entry item in panel:
 
-#include "Shortcut_Button.h"
 #include <FL/Fl_Output.H>
+#include "Shortcut_Button.h"
 #include <FL/fl_draw.H>
 
 void Shortcut_Button::draw() {

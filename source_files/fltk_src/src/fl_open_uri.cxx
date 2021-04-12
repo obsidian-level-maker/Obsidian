@@ -24,19 +24,19 @@
 // Include necessary headers...
 //
 
-#include "flstring.h"
 #include <FL/filename.H>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <sys/types.h>
+#include "flstring.h"
 #ifdef WIN32
-#  include <shellapi.h>
 #  include <windows.h>
+#  include <shellapi.h>
 #else
-#  include <fcntl.h>
-#  include <signal.h>
 #  include <sys/wait.h>
+#  include <signal.h>
+#  include <fcntl.h>
 #  include <unistd.h>
 #endif // WIN32
 

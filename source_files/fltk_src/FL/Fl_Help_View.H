@@ -27,13 +27,13 @@
 // Include necessary header files...
 //
 
+#  include <stdio.h>
 #  include "Fl.H"
 #  include "Fl_Group.H"
 #  include "Fl_Scrollbar.H"
+#  include "fl_draw.H"
 #  include "Fl_Shared_Image.H"
 #  include "filename.H"
-#  include "fl_draw.H"
-#  include <stdio.h>
 
 
 //

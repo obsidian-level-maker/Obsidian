@@ -22,11 +22,11 @@
 // Each child widget is a card, and its label() is printed on the card tab.
 // Clicking the tab makes that card visible.
 
+#include <stdio.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Tabs.H>
-#include <FL/Fl_Tooltip.H>
 #include <FL/fl_draw.H>
-#include <stdio.h>
+#include <FL/Fl_Tooltip.H>
 
 #define BORDER 2
 #define EXTRASPACE 10

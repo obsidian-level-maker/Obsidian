@@ -26,14 +26,14 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Table_Row.H>
 #include <FL/fl_draw.H>
+#include <FL/Fl_Table_Row.H>
 
-#include <algorithm>            // STL sort
-#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <vector>
+#include <algorithm>            // STL sort
 
 #define MARGIN 20
 

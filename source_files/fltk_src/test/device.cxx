@@ -16,23 +16,23 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl.H>
 #include <math.h>
+#include <FL/Fl.H>
 
-#include "pixmaps/porsche.xpm"
-#include <FL/Fl_Bitmap.H>
-#include <FL/Fl_Clock.H>
-#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Overlay_Window.H>
-#include <FL/Fl_Pixmap.H>
+#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Radio_Round_Button.H>
-#include <FL/Fl_Round_Button.H>
 #include <FL/fl_draw.H>
+#include <FL/Fl_Clock.H>
+#include "pixmaps/porsche.xpm"
+#include <FL/Fl_Pixmap.H>
+#include <FL/Fl_Bitmap.H>
+#include <FL/Fl_Round_Button.H>
 
 
+#include <FL/Fl_Printer.H>
 #include <FL/Fl_Copy_Surface.H>
 #include <FL/Fl_Image_Surface.H>
-#include <FL/Fl_Printer.H>
 
 #include <FL/Fl_File_Chooser.H>
 #include <FL/fl_draw.H>

@@ -22,10 +22,10 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <FL/Fl.H>
-#include <FL/Fl_Multi_Browser.H>
-#include <FL/Fl_Window.H>
 #include <stdio.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Multi_Browser.H>
 
 #ifdef WIN32
 #  define PING_CMD "ping -n 10 localhost"	// 'slow command' under windows

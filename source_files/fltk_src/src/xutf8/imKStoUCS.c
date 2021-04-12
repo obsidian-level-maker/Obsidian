@@ -1,7 +1,7 @@
 /* $XFree86: xc/lib/X11/imKStoUCS.c,v 1.5 2003/11/17 22:20:11 dawes Exp $ */
 
-#include "Ximint.h"
 #include "Xlibint.h"
+#include "Ximint.h"
 
 static unsigned short const keysym_to_unicode_1a1_1ff[] = {
             0x0104, 0x02d8, 0x0141, 0x0000, 0x013d, 0x015a, 0x0000, /* 0x01a0-0x01a7 */

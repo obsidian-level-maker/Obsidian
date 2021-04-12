@@ -17,13 +17,13 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Button.H>
 #include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Tiled_Image.H>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "pixmaps/tile.xpm"
 

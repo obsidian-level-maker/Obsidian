@@ -19,14 +19,14 @@
 #include <stdio.h>
 
 #ifdef STDC
-#  include <stdlib.h>
 #  include <string.h>
+#  include <stdlib.h>
 #endif
 
 #ifdef USE_MMAP
+#  include <sys/types.h>
 #  include <sys/mman.h>
 #  include <sys/stat.h>
-#  include <sys/types.h>
 #endif
 
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)

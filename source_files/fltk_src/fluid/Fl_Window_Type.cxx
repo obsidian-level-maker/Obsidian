@@ -20,19 +20,19 @@
 //     http://www.fltk.org/str.php
 //
 
-#include "Fl_Widget_Type.h"
-#include "alignment_panel.h"
-#include "undo.h"
 #include <FL/Fl.H>
-#include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Overlay_Window.H>
-#include <FL/Fl_Round_Button.H>
-#include <FL/fl_draw.H>
 #include <FL/fl_message.H>
+#include <FL/fl_draw.H>
 #include <FL/x.H>
+#include <FL/Fl_Menu_Item.H>
+#include <FL/Fl_Round_Button.H>
+#include "Fl_Widget_Type.h"
+#include "undo.h"
 #include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include "alignment_panel.h"
+#include <stdio.h>
 
 extern int gridx;
 extern int gridy;
@@ -1341,8 +1341,8 @@ int Fl_Window_Type::handle(int event) {
 
 ////////////////////////////////////////////////////////////////
 
-#include "../src/flstring.h"
 #include <stdio.h>
+#include "../src/flstring.h"
 
 void Fl_Window_Type::write_code1() {
   Fl_Widget_Type::write_code1();

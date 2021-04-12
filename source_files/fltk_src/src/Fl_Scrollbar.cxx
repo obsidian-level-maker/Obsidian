@@ -17,11 +17,11 @@
 //
 
 
-#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Scrollbar.H>
 #include <FL/fl_draw.H>
 #include <math.h>
+#include "flstring.h"
 
 #define INITIALREPEAT .5
 #define REPEAT .05
