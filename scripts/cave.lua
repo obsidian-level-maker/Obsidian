@@ -2998,7 +2998,6 @@ function Cave_build_a_park(R, entry_h)
     assert(BLOB.floor_mat)
 
     if area.room then
-      local R = area.room
       area.room.floor_mats[BLOB.floor_h] = BLOB.floor_mat
     end
 
