@@ -33,7 +33,7 @@
 ## Linux Compilation
 
 Assuming all those dependencies are met, then the following steps
-command will build the Oblige binary. (The '>' is just the prompt)
+will build the Oblige binary. (The '>' is just the prompt)
 
     > mkdir build
     > cd build
