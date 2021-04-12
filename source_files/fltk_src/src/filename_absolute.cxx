@@ -22,11 +22,11 @@
    Returns true if any changes were made.
 */
 
+#include "flstring.h"
 #include <FL/filename.H>
 #include <FL/fl_utf8.h>
-#include <stdlib.h>
-#include "flstring.h"
 #include <ctype.h>
+#include <stdlib.h>
 #if defined(WIN32) && !defined(__CYGWIN__)
 # include <direct.h>
 #else

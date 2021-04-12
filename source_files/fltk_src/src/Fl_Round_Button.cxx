@@ -21,8 +21,8 @@
 // another box type, for compatibility with Forms.
 
 #include <FL/Fl.H>
-#include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Radio_Round_Button.H>
+#include <FL/Fl_Round_Button.H>
 
 /**
   Creates a new Fl_Round_Button widget using the given position, size, and label string.

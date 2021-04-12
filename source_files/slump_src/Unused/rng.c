@@ -30,9 +30,9 @@
  *
  */
 
+#include "rng-api-fst.h"
 #include <stdlib.h>
 #include <sys/types.h>
-#include "rng-api-fst.h"
 typedef unsigned char boolean;
 
 #define R_TABLE_SIZE 1024

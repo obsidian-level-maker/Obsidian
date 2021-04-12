@@ -16,16 +16,16 @@
 //
 //     http://www.fltk.org/str.php
 //
+#include <FL/Fl.H>
+#include <FL/Fl_Box.H>
+#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Native_File_Chooser.H>
+#include <FL/Fl_Window.H>
+#include <FL/fl_ask.H>
+#include <errno.h>	// errno
 #include <stdio.h>	// printf
 #include <stdlib.h>	// exit,malloc
 #include <string.h>	// strerror
-#include <errno.h>	// errno
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Menu_Bar.H>
-#include <FL/Fl_Native_File_Chooser.H>
-#include <FL/Fl_Box.H>
-#include <FL/fl_ask.H>
 
 class Application : public Fl_Window {
   Fl_Native_File_Chooser *fc;

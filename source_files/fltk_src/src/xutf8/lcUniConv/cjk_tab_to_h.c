@@ -20,9 +20,9 @@
  *   ./cjk_tab_to_h JOHAB johab > johab.h < JOHAB.TXT
  */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 
 typedef struct {

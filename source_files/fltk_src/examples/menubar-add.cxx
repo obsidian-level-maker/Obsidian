@@ -25,13 +25,13 @@
 //
 //     http://www.fltk.org/str.php
 //
+#include <FL/Fl.H>
+#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Window.H>
+#include <FL/filename.H>		// fl_open_uri()
 #include <stdio.h>			// fprintf()
 #include <stdlib.h>			// exit()
 #include <string.h>			// strcmp()
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Menu_Bar.H>
-#include <FL/filename.H>		// fl_open_uri()
 
 // This callback is invoked whenever the user clicks an item in the menu bar
 static void MyMenuCallback(Fl_Widget *w, void *) {

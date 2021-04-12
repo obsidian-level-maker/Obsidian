@@ -16,13 +16,13 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <stdio.h>
-#include <stdlib.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Table.H>
 #include <FL/Fl_Int_Input.H>
+#include <FL/Fl_Table.H>
 #include <FL/fl_draw.H>
+#include <stdio.h>
+#include <stdlib.h>
 
 const int MAX_COLS = 10;
 const int MAX_ROWS = 10;

@@ -139,8 +139,8 @@ void Fl_FormsText::draw() {
 
 // Create a forms button by selecting correct fltk subclass:
 
-#include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Repeat_Button.H>
+#include <FL/Fl_Return_Button.H>
 
 Fl_Button *fl_add_button(uchar t,int x,int y,int w,int h,const char *l) {
   Fl_Button *b;

@@ -22,15 +22,15 @@
 #include "flstring.h"
 #if HAVE_GL || defined(FL_DOXYGEN)
 
+#include "Fl_Font.H"
+#include "Fl_Gl_Choice.H"
 #include <FL/Fl.H>
+#include <FL/Fl_Device.H>
+#include <FL/fl_draw.H>
+#include <FL/fl_utf8.h>
 #include <FL/gl.h>
 #include <FL/gl_draw.H>
 #include <FL/x.H>
-#include <FL/fl_draw.H>
-#include <FL/Fl_Device.H>
-#include "Fl_Gl_Choice.H"
-#include "Fl_Font.H"
-#include <FL/fl_utf8.h>
 
 #if !defined(WIN32) && !defined(__APPLE__)
 #include "Xutf8.h"

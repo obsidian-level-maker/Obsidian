@@ -17,12 +17,12 @@
 //
 
 #include <FL/Fl.H>
+#include <FL/Fl_Box.H>
+#include <FL/Fl_Check_Button.H>
+#include <FL/Fl_Choice.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Value_Slider.H>
 #include <FL/fl_draw.H>
-#include <FL/Fl_Choice.H>
-#include <FL/Fl_Check_Button.H>
-#include <FL/Fl_Box.H>
 
 Fl_Double_Window *form;
 Fl_Slider *sliders[9];

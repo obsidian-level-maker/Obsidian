@@ -16,10 +16,10 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/x.H>
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
-#include "flstring.h"
+#include <FL/x.H>
 
 #ifdef DEBUG
 #  include <stdio.h>
@@ -28,10 +28,10 @@
 #if defined(__APPLE__)
 #  include "fl_read_image_mac.cxx"
 #else
+#  include <FL/Fl_Device.H>
+#  include <FL/Fl_Plugin.H>
 #  include <FL/Fl_RGB_Image.H>
 #  include <FL/Fl_Window.H>
-#  include <FL/Fl_Plugin.H>
-#  include <FL/Fl_Device.H>
 
 static uchar *read_win_rectangle(uchar *p, int X, int Y, int w, int h, int alpha);
 

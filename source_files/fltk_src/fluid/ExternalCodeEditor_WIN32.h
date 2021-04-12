@@ -24,8 +24,8 @@
 # define _WIN32_WINNT 0x0500
 #endif
 
-#include <windows.h>                /* CreateFile().. */
 #include <string.h>                 /* sprintf().. */
+#include <windows.h>                /* CreateFile().. */
 
 class ExternalCodeEditor {
   PROCESS_INFORMATION pinfo_;       // CreateProcess() handle to running process 

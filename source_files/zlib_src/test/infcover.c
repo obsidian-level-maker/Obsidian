@@ -5,17 +5,17 @@
 
 /* to use, do: ./configure --cover && make cover */
 
+#include "zlib.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-#include "zlib.h"
 
 /* get definition of internal structure so we can mess with it (see pull()),
    and so we can call inflate_trees() (see cover5()) */
 #define ZLIB_INTERNAL
-#include "inftrees.h"
 #include "inflate.h"
+#include "inftrees.h"
 
 #define local static
 

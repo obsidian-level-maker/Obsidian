@@ -20,9 +20,9 @@
 // be one of these it allows an infinte number!)
 
 #include <FL/Fl.H>
-#include <FL/Fl_Widget.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Multi_Label.H>
+#include <FL/Fl_Widget.H>
 
 static void multi_labeltype(
     const Fl_Label* o, int x, int y, int w, int h, Fl_Align a)

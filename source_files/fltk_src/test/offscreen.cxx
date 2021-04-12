@@ -22,10 +22,10 @@
 
 /* Fltk headers */
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/x.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
+#include <FL/x.H>
 
 static Fl_Double_Window *main_window = 0;
 

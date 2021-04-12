@@ -16,14 +16,14 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdarg.h>
 #include <FL/Fl.H>
-#include <FL/x.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Gl_Window.H>
 #include <FL/Fl_Light_Button.H>
-#include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Text_Buffer.H>
+#include <FL/Fl_Text_Display.H>
+#include <FL/Fl_Window.H>
+#include <FL/x.H>
+#include <stdarg.h>
 #if defined(__APPLE__)
 #  include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
 #else

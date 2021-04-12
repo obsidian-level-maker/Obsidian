@@ -223,18 +223,18 @@
    - Log the repair with a date stamp in foo.repairs
  */
 
-#include <sys/types.h>
+#include <fcntl.h>      /* open */
 #include <stdio.h>      /* rename, fopen, fprintf, fclose */
 #include <stdlib.h>     /* malloc, free */
 #include <string.h>     /* strlen, strrchr, strcpy, strncpy, strcmp */
-#include <fcntl.h>      /* open */
+#include <sys/types.h>
 #include <unistd.h>     /* lseek, read, write, close, unlink, sleep, */
                         /* ftruncate, fsync */
+#include "zlib.h"       /* crc32 */
 #include <errno.h>      /* errno */
-#include <time.h>       /* time, ctime */
 #include <sys/stat.h>   /* stat */
 #include <sys/time.h>   /* utimes */
-#include "zlib.h"       /* crc32 */
+#include <time.h>       /* time, ctime */
 
 #include "gzlog.h"      /* header for external access */
 

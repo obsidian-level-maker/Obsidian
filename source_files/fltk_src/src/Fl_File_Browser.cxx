@@ -30,19 +30,19 @@
 // Include necessary header files...
 //
 
+#include "flstring.h"
 #include <FL/Fl_File_Browser.H>
-#include <FL/fl_draw.H>
-#include <FL/filename.H>
 #include <FL/Fl_Image.H>	// icon
+#include <FL/filename.H>
+#include <FL/fl_draw.H>
 #include <stdio.h>
 #include <stdlib.h>
-#include "flstring.h"
 
 #ifdef __CYGWIN__
 #  include <mntent.h>
 #elif defined(WIN32)
-#  include <windows.h>
 #  include <direct.h>
+#  include <windows.h>
 // Apparently Borland C++ defines DIRECTORY in <direct.h>, which
 // interfers with the Fl_File_Icon enumeration of the same name.
 #  ifdef DIRECTORY
@@ -57,16 +57,16 @@
 #endif // __EMX__
 
 #if defined(__APPLE__)
+#  include <sys/mount.h>
 #  include <sys/param.h>
 #  include <sys/ucred.h>
-#  include <sys/mount.h>
 #endif // __APPLE__
 
 #if defined(_AIX)
 extern "C" {
+#  include <sys/mntctl.h>
 #  include <sys/types.h>
 #  include <sys/vmount.h>
-#  include <sys/mntctl.h>
   // Older AIX versions don't expose this prototype
   int
   mntctl(int, int, char *);
@@ -77,8 +77,8 @@ extern "C" {
 extern "C" {
 #  include <sys/param.h>  // For '__NetBSD_Version__' definition
 #  if defined(__NetBSD_Version__) && (__NetBSD_Version__ >= 300000000)
-#    include <sys/types.h>
 #    include <sys/statvfs.h>
+#    include <sys/types.h>
 #    if defined(HAVE_PTHREAD) && defined(HAVE_PTHREAD_H)
 #      include <pthread.h>
 #    endif  // HAVE_PTHREAD && HAVE_PTHREAD_H

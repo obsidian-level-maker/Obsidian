@@ -38,8 +38,8 @@
 
 #  include "Fl_XColor.H"
 #  include <FL/Fl.H>
-#  include <FL/x.H>
 #  include <FL/fl_draw.H>
+#  include <FL/x.H>
 
 ////////////////////////////////////////////////////////////////
 // figure_out_visual() calculates masks & shifts for generating

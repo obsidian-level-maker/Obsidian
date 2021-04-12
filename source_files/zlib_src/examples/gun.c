@@ -57,16 +57,16 @@
  */
 
 /* external functions and related types and constants */
+#include "zlib.h"           /* inflateBackInit(), inflateBack(), */
+#include <errno.h>          /* errno */
+#include <fcntl.h>          /* open() */
 #include <stdio.h>          /* fprintf() */
 #include <stdlib.h>         /* malloc(), free() */
 #include <string.h>         /* strerror(), strcmp(), strlen(), memcpy() */
-#include <errno.h>          /* errno */
-#include <fcntl.h>          /* open() */
-#include <unistd.h>         /* read(), write(), close(), chown(), unlink() */
-#include <sys/types.h>
 #include <sys/stat.h>       /* stat(), chmod() */
+#include <sys/types.h>
+#include <unistd.h>         /* read(), write(), close(), chown(), unlink() */
 #include <utime.h>          /* utime() */
-#include "zlib.h"           /* inflateBackInit(), inflateBack(), */
                             /* inflateBackEnd(), crc32() */
 
 /* function declaration */

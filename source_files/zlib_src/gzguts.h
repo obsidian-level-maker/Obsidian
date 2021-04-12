@@ -18,12 +18,12 @@
 #  define ZLIB_INTERNAL
 #endif
 
-#include <stdio.h>
 #include "zlib.h"
+#include <stdio.h>
 #ifdef STDC
-#  include <string.h>
-#  include <stdlib.h>
 #  include <limits.h>
+#  include <stdlib.h>
+#  include <string.h>
 #endif
 
 #ifndef _POSIX_SOURCE

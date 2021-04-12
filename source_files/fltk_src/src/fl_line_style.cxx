@@ -21,11 +21,11 @@
   \brief Line style drawing utility hiding different platforms.
 */
 
+#include "flstring.h"
 #include <FL/Fl.H>
+#include <FL/Fl_Printer.H>
 #include <FL/fl_draw.H>
 #include <FL/x.H>
-#include <FL/Fl_Printer.H>
-#include "flstring.h"
 #include <stdio.h>
 
 // We save the current line width (absolute value) here.

@@ -1,12 +1,12 @@
 // An adaptation of the Quake vis utility.
 
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
-#include "zdbsp.h"
 #include "nodebuild.h"
 #include "rejectbuilder.h"
 #include "templates.h"
+#include "zdbsp.h"
 
 bool		FastVis=0;
 bool		NoPassageVis=1;

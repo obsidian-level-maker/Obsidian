@@ -18,13 +18,13 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <config.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Radio_Light_Button.H>
 #include <FL/Fl_Slider.H>
+#include <FL/Fl_Window.H>
+#include <config.h>
 #include <stdlib.h>
 
 #if !HAVE_GL
@@ -149,8 +149,8 @@ void makeform(const char *name) {
 }
 
 // added to demo printing
-#include <FL/Fl_Sys_Menu_Bar.H>
 #include <FL/Fl_Printer.H>
+#include <FL/Fl_Sys_Menu_Bar.H>
 
 void print_cb(Fl_Widget *w, void *data)
 {

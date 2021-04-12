@@ -16,13 +16,13 @@
 
 #if !defined(WIN32) && !defined(__APPLE__)
 
-#include <config.h>
 #include "../Xutf8.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <string.h>
+#include <config.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef HAVE_LIBC_ICONV
 #include <iconv.h>
@@ -46,8 +46,8 @@ typedef struct {
 #ifndef X_HAVE_UTF8_STRING
 #define NEED_TOWC /* indicates what part of these include files is needed here (avoid compilation warnings) */
 #include "lcUniConv/big5.h"
-#include "lcUniConv/gb2312.h"
 #include "lcUniConv/cp936ext.h"
+#include "lcUniConv/gb2312.h"
 #include "lcUniConv/jisx0201.h"
 #include "lcUniConv/jisx0208.h"
 #include "lcUniConv/jisx0212.h"

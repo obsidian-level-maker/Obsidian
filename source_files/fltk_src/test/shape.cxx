@@ -16,16 +16,16 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <config.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Hor_Slider.H>
+#include <FL/Fl_Window.H>
 #include <FL/math.h>
+#include <config.h>
 
 #if HAVE_GL
 
-#include <FL/gl.h>
 #include <FL/Fl_Gl_Window.H>
+#include <FL/gl.h>
 
 class shape_window : public Fl_Gl_Window {
   void draw();

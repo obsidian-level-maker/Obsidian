@@ -22,8 +22,8 @@
 #ifndef Fl_Value_Input_H
 #define Fl_Value_Input_H
 
-#include "Fl_Valuator.H"
 #include "Fl_Input.H"
+#include "Fl_Valuator.H"
 
 /**
   The Fl_Value_Input widget displays a numeric value.

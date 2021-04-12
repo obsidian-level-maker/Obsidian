@@ -20,13 +20,13 @@
 // This is the system-independent portions.  The huge amount of 
 // crap you need to do to communicate with X is in Fl_x.cxx, the
 // equivalent (but totally different) crap for MSWindows is in Fl_win32.cxx
-#include <config.h>
+#include "flstring.h"
 #include <FL/Fl.H>
-#include <FL/x.H>
 #include <FL/Fl_RGB_Image.H>
 #include <FL/Fl_Window.H>
+#include <FL/x.H>
+#include <config.h>
 #include <stdlib.h>
-#include "flstring.h"
 
 #ifdef __APPLE_QUARTZ__
 #include <FL/fl_draw.H>

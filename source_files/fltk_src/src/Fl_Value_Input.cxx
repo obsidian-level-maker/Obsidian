@@ -21,10 +21,10 @@
 // though this object is *not* an Fl_Group.  May be a kludge?
 
 #include <FL/Fl.H>
-#include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Group.H>
-#include <stdlib.h>
+#include <FL/Fl_Value_Input.H>
 #include <FL/math.h>
+#include <stdlib.h>
 
 
 void Fl_Value_Input::input_cb(Fl_Widget*, void* v) {

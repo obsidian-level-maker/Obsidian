@@ -29,10 +29,10 @@
 #include <FL/Fl.H>
 #include <FL/Fl_PNG_Image.H>
 #include <FL/Fl_Shared_Image.H>
+#include <FL/fl_utf8.h>
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <FL/fl_utf8.h>
 
 #if defined(HAVE_LIBPNG) && defined(HAVE_LIBZ)
 extern "C"

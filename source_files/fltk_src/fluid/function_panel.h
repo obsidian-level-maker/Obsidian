@@ -23,8 +23,8 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 extern Fl_Double_Window *function_panel;
-#include <FL/Fl_Group.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Group.H>
 extern Fl_Choice *f_public_member_choice;
 extern Fl_Choice *f_public_choice;
 #include <FL/Fl_Light_Button.H>

@@ -16,10 +16,10 @@
 //     http://www.fltk.org/str.php
 //
 
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/x.H>
-#include "flstring.h"
 
 
 extern Atom fl_XdndAware;

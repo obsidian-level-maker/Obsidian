@@ -16,11 +16,11 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <stdio.h>
-#include <time.h>		/* ctime.. */
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Tree.H>
+#include <stdio.h>
+#include <time.h>		/* ctime.. */
 
 #ifndef MAX
 #define MAX(a,b) ((a)>(b))?(a):(b)

@@ -18,14 +18,14 @@
 
 #ifndef FL_DOXYGEN
 
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 #include <string.h>
 
-#include <FL/Fl_PostScript.H>
 #include <FL/Fl.H>
-#include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Bitmap.H>
+#include <FL/Fl_Pixmap.H>
+#include <FL/Fl_PostScript.H>
 
 
 //

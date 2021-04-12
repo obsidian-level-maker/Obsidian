@@ -16,15 +16,15 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/Fl_Printer.H>
-#include <config.h>
 #include <FL/Fl.H>
+#include <FL/Fl_Native_File_Chooser.H>
+#include <FL/Fl_PostScript.H>
+#include <FL/Fl_Printer.H>
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
-#include <stdio.h>
-#include <FL/Fl_PostScript.H>
-#include <FL/Fl_Native_File_Chooser.H>
+#include <config.h>
 #include <stdarg.h>
+#include <stdio.h>
 #if defined(USE_X11)
 #include "Fl_Font.H"
 #if USE_XFT

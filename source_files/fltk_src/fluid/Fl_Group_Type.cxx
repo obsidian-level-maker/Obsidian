@@ -20,12 +20,12 @@
 //     http://www.fltk.org/str.php
 //
 
+#include "../src/flstring.h"
+#include "Fl_Widget_Type.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Table.H>
 #include <FL/fl_message.H>
-#include "Fl_Widget_Type.h"
-#include "../src/flstring.h"
 
 // Override group's resize behavior to do nothing to children:
 void igroup::resize(int X, int Y, int W, int H) {

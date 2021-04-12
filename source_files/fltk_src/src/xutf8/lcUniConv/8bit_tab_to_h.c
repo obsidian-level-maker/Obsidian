@@ -46,9 +46,9 @@
  *   ./8bit_tab_to_h KOI8-R koi8_r < KOI8-R.TXT
  */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 
 int main (int argc, char *argv[])

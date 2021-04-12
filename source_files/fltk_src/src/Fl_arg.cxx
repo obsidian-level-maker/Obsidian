@@ -19,14 +19,14 @@
 // OPTIONAL initialization code for a program using fltk.
 // You do not need to call this!  Feel free to make up your own switches.
 
+#include "flstring.h"
 #include <FL/Fl.H>
-#include <FL/x.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Tooltip.H>
+#include <FL/Fl_Window.H>
 #include <FL/filename.H>
 #include <FL/fl_draw.H>
+#include <FL/x.H>
 #include <ctype.h>
-#include "flstring.h"
 
 #if defined(WIN32) || defined(__APPLE__)
 int XParseGeometry(const char*, int*, int*, unsigned int*, unsigned int*);

@@ -32,13 +32,13 @@
 // Include necessary header files...
 //
 
+#include "flstring.h"
+#include <FL/fl_utf8.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <FL/fl_utf8.h>
-#include "flstring.h"
-#include <errno.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #if (defined(WIN32) && ! defined(__CYGWIN__)) || defined(__EMX__)
 #  include <io.h>
 #  define F_OK	0
@@ -48,8 +48,8 @@
 
 #include <FL/Fl_File_Icon.H>
 #include <FL/Fl_Widget.H>
-#include <FL/fl_draw.H>
 #include <FL/filename.H>
+#include <FL/fl_draw.H>
 
 
 //

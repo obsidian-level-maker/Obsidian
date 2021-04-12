@@ -367,13 +367,13 @@
 
 */
 
+#include "slump.h"
+#include "twister.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <assert.h>
-#include "slump.h"
-#include "twister.h"
 
 // Shim functions to replace old SLUMP RNG
 int roll(int n) {

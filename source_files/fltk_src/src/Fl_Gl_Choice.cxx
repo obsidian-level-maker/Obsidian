@@ -19,13 +19,13 @@
 #include <config.h>
 #if HAVE_GL
 
+#  include "Fl_Gl_Choice.H"
+#  include "flstring.h"
 #  include <FL/Fl.H>
+#  include <FL/fl_utf8.h>
+#  include <FL/gl_draw.H>
 #  include <FL/x.H>
 #  include <stdlib.h>
-#  include "Fl_Gl_Choice.H"
-#  include <FL/gl_draw.H>
-#  include "flstring.h"
-#  include <FL/fl_utf8.h>
 
 #  ifdef WIN32
 void fl_save_dc(HWND, HDC);

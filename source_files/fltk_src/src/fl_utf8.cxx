@@ -17,22 +17,22 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <config.h>
 #include <FL/filename.H>
+#include <config.h>
 #include <stdarg.h>
 
 #if defined(WIN32) || defined(__CYGWIN__)
 # include <ctype.h>
 # include <io.h>
-# include <windows.h>
-# include <winbase.h>
 # include <process.h>
+# include <winbase.h>
+# include <windows.h>
 # ifdef __CYGWIN__
-#  include  <wchar.h>
-#  include <sys/types.h>
-#  include <sys/stat.h>
 #  include <fcntl.h>
+#  include <sys/stat.h>
+#  include <sys/types.h>
 #  include <unistd.h>
+#  include  <wchar.h>
 # else
 #  include  <direct.h>
 # endif
@@ -45,11 +45,11 @@ extern "C" {
 # include <time.h>
 //# include <unix.h>
 # include <fcntl.h>
+# include <stdlib.h>
+# include <sys/stat.h>
+#   include <sys/types.h>
 # include <unistd.h>
 # include <wchar.h>
-# include <stdlib.h>
-#   include <sys/types.h>
-# include <sys/stat.h>
 
 extern "C" {
   int XUtf8Tolower(int ucs);
@@ -59,15 +59,15 @@ extern "C" {
 #else // X-windows platform
 
 # include "Xutf8.h"
-# include <sys/types.h>
-# include <sys/stat.h>
 # include <fcntl.h>
+# include <sys/stat.h>
+# include <sys/types.h>
 # include <unistd.h>
 #endif // WIN32
 
 #include <FL/fl_utf8.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #undef fl_open
 

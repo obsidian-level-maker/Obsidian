@@ -26,9 +26,9 @@
 // mostly.  In most cases it is easier to get a multi-line message
 // by putting newlines in the message.
 
-#include <stdio.h>
-#include <stdarg.h>
 #include "flstring.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 #include <FL/Fl.H>
 
@@ -36,12 +36,12 @@
 
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Return_Button.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Secret_Input.H>
-#include <FL/x.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
+#include <FL/x.H>
 
 static Fl_Window *message_form;
 static Fl_Box *message;

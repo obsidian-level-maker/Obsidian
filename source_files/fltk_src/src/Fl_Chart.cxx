@@ -16,11 +16,11 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <FL/math.h>
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Chart.H>
 #include <FL/fl_draw.H>
-#include "flstring.h"
+#include <FL/math.h>
 #include <stdlib.h>
 
 #define ARCINC	(2.0*M_PI/360.0)

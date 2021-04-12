@@ -17,8 +17,8 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Hor_Value_Slider.H>
+#include <FL/Fl_Value_Slider.H>
 #include <FL/fl_draw.H>
 #include <math.h>
 

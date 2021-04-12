@@ -26,28 +26,28 @@
 /**** Define this if your keyboard lacks a backspace key... ****/
 /* #define BACKSPACE_HACK 1 */
 
-#  include <config.h>
+#  include "Xutf8.h"
+#  include "flstring.h"
 #  include <FL/Fl.H>
-#  include <FL/x.H>
-#  include <FL/Fl_Window.H>
-#  include <FL/fl_utf8.h>
-#  include <FL/Fl_Tooltip.H>
-#  include <FL/fl_draw.H>
 #  include <FL/Fl_Paged_Device.H>
 #  include <FL/Fl_Shared_Image.H>
-#  include <FL/fl_ask.H>
+#  include <FL/Fl_Tooltip.H>
+#  include <FL/Fl_Window.H>
 #  include <FL/filename.H>
+#  include <FL/fl_ask.H>
+#  include <FL/fl_draw.H>
+#  include <FL/fl_utf8.h>
+#  include <FL/x.H>
+#  include <X11/Xlib.h>
+#  include <X11/Xlocale.h>
+#  include <X11/Xmd.h>
+#  include <X11/keysym.h>
+#  include <config.h>
 #  include <stdio.h>
 #  include <stdlib.h>
-#  include "flstring.h"
-#  include <unistd.h>
-#  include <time.h>
 #  include <sys/time.h>
-#  include <X11/Xmd.h>
-#  include <X11/Xlocale.h>
-#  include <X11/Xlib.h>
-#  include <X11/keysym.h>
-#  include "Xutf8.h"
+#  include <time.h>
+#  include <unistd.h>
 #define USE_XRANDR (HAVE_DLSYM && HAVE_DLFCN_H) // means attempt to dynamically load libXrandr.so
 #if USE_XRANDR
 #include <dlfcn.h>
@@ -3086,8 +3086,8 @@ void Fl_Paged_Device::draw_decorated_window(Fl_Window *win, int x_offset, int y_
 #ifdef USE_PRINT_BUTTON
 // to test the Fl_Printer class creating a "Print front window" button in a separate window
 // contains also preparePrintFront call above
-#include <FL/Fl_Printer.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Printer.H>
 void printFront(Fl_Widget *o, void *data)
 {
   Fl_Printer printer;

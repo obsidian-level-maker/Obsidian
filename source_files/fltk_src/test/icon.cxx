@@ -15,8 +15,8 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_RGB_Image.H>
 
 static Fl_Double_Window *win;

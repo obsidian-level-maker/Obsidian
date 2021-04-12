@@ -18,9 +18,9 @@
 
 #ifndef keyboard_h
 #  define keyboard_h
-#  include <stdio.h>
 #  include <FL/Fl.H>
 #  include <FL/Fl_Window.H>
+#  include <stdio.h>
 
 class MyWindow : public Fl_Window {
   int handle(int);
