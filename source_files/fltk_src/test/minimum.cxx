@@ -35,12 +35,12 @@
 // stopped!
 //
 
-#include <stdlib.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Slider.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Return_Button.H>
+#include <FL/Fl_Slider.H>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
   Fl_Double_Window *window = new Fl_Double_Window(400,320,argv[0]);

@@ -61,10 +61,10 @@
 
   Example use:
   \code
-  #include <stdio.h>
   #include <FL/Fl.H>
   #include <FL/Fl_Double_Window.H>
   #include <FL/Fl_Input_Choice.H>
+  #include <stdio.h>
   void choice_cb(Fl_Widget *w, void *userdata) {
     // Show info about the picked item
     Fl_Input_Choice *choice = (Fl_Input_Choice*)w;

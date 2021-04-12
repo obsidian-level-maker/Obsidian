@@ -20,8 +20,8 @@
 
 #ifdef FLTK_HAVE_CAIRO
 #include <FL/Fl.H>
-#include <FL/x.H>
 #include <FL/Fl_Window.H>
+#include <FL/x.H>
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
 #endif

@@ -26,8 +26,8 @@
 #include <windows.h>
 #endif
 
-#include "Fl_Group.H"
 #include "Fl_Bitmap.H"
+#include "Fl_Group.H"
 #include <stdlib.h>
 
 #define FL_WINDOW 0xF0		///< window type id all subclasses have type() >= this

@@ -19,14 +19,14 @@
 #include <config.h>
 
 #if defined(HAVE_PTHREAD) || defined(WIN32)
+#  include "threads.h"
 #  include <FL/Fl.H>
-#  include <FL/Fl_Double_Window.H>
 #  include <FL/Fl_Browser.H>
+#  include <FL/Fl_Double_Window.H>
 #  include <FL/Fl_Value_Output.H>
 #  include <FL/fl_ask.H>
-#  include "threads.h"
-#  include <stdio.h>
 #  include <math.h>
+#  include <stdio.h>
 
 Fl_Thread prime_thread;
 

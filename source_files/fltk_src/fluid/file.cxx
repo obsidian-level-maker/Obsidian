@@ -21,13 +21,13 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "../src/flstring.h"
-#include <stdarg.h>
+#include "Fl_Widget_Type.h"
 #include "alignment_panel.h"
 #include <FL/Fl.H>
-#include "Fl_Widget_Type.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 ////////////////////////////////////////////////////////////////
 // BASIC FILE WRITING:

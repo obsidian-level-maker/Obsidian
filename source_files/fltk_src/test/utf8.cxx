@@ -17,24 +17,24 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Scroll.H>
-#include <FL/Fl_Choice.H>
-#include <FL/Fl_Input.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Tile.H>
-#include <FL/Fl_Hold_Browser.H>
-#include <FL/Fl_Value_Output.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
+#include <FL/Fl_Choice.H>
+#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Hold_Browser.H>
+#include <FL/Fl_Input.H>
 #include <FL/Fl_Output.H>
+#include <FL/Fl_Scroll.H>
+#include <FL/Fl_Tile.H>
+#include <FL/Fl_Value_Output.H>
 #include <FL/fl_draw.H>
 #include <FL/fl_utf8.h>
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 //
 // Font chooser widget for the Fast Light Tool Kit(FLTK).

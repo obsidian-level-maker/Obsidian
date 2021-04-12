@@ -20,11 +20,11 @@
 // do not need to be included in Fl.cxx:
 // You can also override this by redefining all of these.
 
+#include "flstring.h"
 #include <FL/Fl.H>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
-#include "flstring.h"
 
 #ifdef WIN32
 #  include <windows.h>

@@ -15,15 +15,14 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Preferences.H>
-#include <FL/Fl_File_Chooser.H>
-#include "Fl_Type.h"
-#include <FL/fl_show_input.H>
-#include <FL/Fl_File_Chooser.H>
-#include "alignment_panel.h"
 #include "../src/flstring.h"
+#include "Fl_Type.h"
+#include "alignment_panel.h"
+#include <FL/Fl.H>
+#include <FL/Fl_File_Chooser.H>
+#include <FL/Fl_Preferences.H>
+#include <FL/Fl_Window.H>
+#include <FL/fl_show_input.H>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

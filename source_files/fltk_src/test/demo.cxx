@@ -17,8 +17,8 @@
 //
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #if defined(WIN32) && !defined(__CYGWIN__)
 #  include <direct.h>
 #  ifndef __WATCOMC__
@@ -29,18 +29,18 @@
 #  endif // !__WATCOMC__
 #elif defined __APPLE__
 #include <ApplicationServices/ApplicationServices.h>
-#include <unistd.h> // for chdir()
 #include <stdio.h>
 #include <stdlib.h> // for system()
 #include <string.h>
+#include <unistd.h> // for chdir()
 #else
 #  include <unistd.h>
 #endif
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/filename.H>
 #include <FL/x.H>
 

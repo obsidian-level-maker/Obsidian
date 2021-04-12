@@ -494,9 +494,9 @@ Fl_Color_Chooser::Fl_Color_Chooser(int X, int Y, int W, int H, const char* L)
 ////////////////////////////////////////////////////////////////
 // fl_color_chooser():
 
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Return_Button.H>
+#include <FL/Fl_Window.H>
 
 class ColorChip : public Fl_Widget {
   void draw();

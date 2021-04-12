@@ -12,8 +12,8 @@
 #include <errno.h>      /* errno */
 #include <string.h>     /* strerror() */
 
-#include <sys/types.h>  /* stat().. */
 #include <sys/stat.h>
+#include <sys/types.h>  /* stat().. */
 #include <unistd.h>
 
 class ExternalCodeEditor {

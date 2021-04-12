@@ -18,9 +18,9 @@
 
 // Set the default visual according to passed switches:
 
-#include <config.h>
 #include <FL/Fl.H>
 #include <FL/x.H>
+#include <config.h>
 
 /** \fn  Fl::visual(int flags)
     Selects a visual so that your graphics are drawn correctly.  This is

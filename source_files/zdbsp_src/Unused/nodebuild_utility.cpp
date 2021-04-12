@@ -17,12 +17,12 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 */
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
-#include "zdbsp.h"
 #include "nodebuild.h"
 #include "templates.h"
+#include "zdbsp.h"
 
 static const int PO_LINE_START = 1;
 static const int PO_LINE_EXPLICIT = 5;

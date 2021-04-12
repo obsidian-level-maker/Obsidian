@@ -16,12 +16,12 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
+#include <stdio.h>
+#include <stdlib.h>
 
 int N = 0;
 #define W 200

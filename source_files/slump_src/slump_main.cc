@@ -368,12 +368,12 @@
 
 */
 
+#include "slump.h" 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <assert.h>
-#include "slump.h" 
 
 /* Global variables */
 int current_level_number = 0;

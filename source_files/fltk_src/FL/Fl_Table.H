@@ -20,8 +20,8 @@
 #ifndef _FL_TABLE_H
 #define _FL_TABLE_H
 
-#include <sys/types.h>
 #include <string.h>		// memcpy
+#include <sys/types.h>
 #ifdef WIN32
 #include <malloc.h>		// WINDOWS: malloc/realloc
 #else /*WIN32*/
@@ -29,9 +29,9 @@
 #endif /*WIN32*/
 
 #include <FL/Fl.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Scroll.H>
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Scrollbar.H>
 
 /**

@@ -40,13 +40,13 @@
 #  define _POSIX_C_SOURCE  199506L
 #endif  /* HAVE_PTHREAD */
 
-#include <sys/types.h>        /* XPG2 require this for '*dir()' functions */
 #include <dirent.h>
 #include <errno.h>
-#include <stdlib.h>           /* For 'malloc()', 'realloc()' and 'qsort()' */
-#include <stddef.h>           /* For 'offsetof()', 'NULL' and 'size_t' */
 #include <limits.h>           /* For 'INT_MAX' */
+#include <stddef.h>           /* For 'offsetof()', 'NULL' and 'size_t' */
+#include <stdlib.h>           /* For 'malloc()', 'realloc()' and 'qsort()' */
 #include <string.h>           /* For 'memcpy()' */
+#include <sys/types.h>        /* XPG2 require this for '*dir()' functions */
 #if defined(HAVE_PTHREAD) && defined(HAVE_PTHREAD_H)
 #  include <pthread.h>
 #endif  /* HAVE_PTHREAD */

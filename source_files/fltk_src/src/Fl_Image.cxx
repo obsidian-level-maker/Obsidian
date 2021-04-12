@@ -16,14 +16,14 @@
 //     http://www.fltk.org/str.php
 //
 
+#include "flstring.h"
 #include <FL/Fl.H>
+#include <FL/Fl_Image.H>
+#include <FL/Fl_Menu_Item.H>
+#include <FL/Fl_Printer.H>
+#include <FL/Fl_Widget.H>
 #include <FL/fl_draw.H>
 #include <FL/x.H>
-#include <FL/Fl_Widget.H>
-#include <FL/Fl_Menu_Item.H>
-#include <FL/Fl_Image.H>
-#include <FL/Fl_Printer.H>
-#include "flstring.h"
 
 #ifdef WIN32
 void fl_release_dc(HWND, HDC); // from Fl_win32.cxx

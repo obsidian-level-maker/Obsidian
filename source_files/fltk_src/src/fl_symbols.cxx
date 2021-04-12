@@ -25,10 +25,10 @@
 // Version 2.1 a
 // Date: Oct  2, 1992
 
+#include "flstring.h"
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
 #include <FL/math.h>
-#include "flstring.h"
 
 typedef struct {
   const char *name;

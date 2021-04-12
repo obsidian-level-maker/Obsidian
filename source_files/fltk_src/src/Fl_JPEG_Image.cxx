@@ -25,14 +25,14 @@
 // Include necessary header files...
 //
 
+#include <FL/Fl.H>
 #include <FL/Fl_JPEG_Image.H>
 #include <FL/Fl_Shared_Image.H>
 #include <FL/fl_utf8.h>
-#include <FL/Fl.H>
 #include <config.h>
+#include <setjmp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <setjmp.h>
 
 
 // Some releases of the Cygwin JPEG libraries don't have a correctly

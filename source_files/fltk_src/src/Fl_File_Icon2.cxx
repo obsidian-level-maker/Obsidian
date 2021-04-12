@@ -33,15 +33,15 @@
 // Include necessary header files...
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <FL/fl_utf8.h>
 #include "flstring.h"
+#include <FL/fl_utf8.h>
+#include <FL/math.h>
 #include <ctype.h>
 #include <errno.h>
-#include <FL/math.h>
-#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #if defined(WIN32) && !defined(__CYGWIN__)
 #  include <io.h>
 #  define F_OK	0
@@ -55,8 +55,8 @@
 #include <FL/Fl_File_Icon.H>
 #include <FL/Fl_Shared_Image.H>
 #include <FL/Fl_Widget.H>
-#include <FL/fl_draw.H>
 #include <FL/filename.H>
+#include <FL/fl_draw.H>
 
 
 //

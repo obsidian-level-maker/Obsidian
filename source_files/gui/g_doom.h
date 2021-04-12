@@ -73,7 +73,7 @@ int DM_NumSidedefs();
 int DM_NumLinedefs();
 int DM_NumThings();
 
-int Slump_MakeWAD(const char* filename);
+int Slump_MakeWAD(const char *filename);
 
 /* ----- Level structures ---------------------- */
 

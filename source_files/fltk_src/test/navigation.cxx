@@ -19,12 +19,12 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <FL/Fl.H>
-#include <FL/Fl_Window.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Window.H>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define WIDTH 600
 #define HEIGHT 300

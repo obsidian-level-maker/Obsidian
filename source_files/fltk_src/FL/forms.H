@@ -661,8 +661,8 @@ inline int fl_show_choices(const char* c,int n,const char* b1,const char* b2,
   return fl_show_choice(0,c,0,n,b1,b2,b3);
 }
 
-#include "filename.H"
 #include "Fl_File_Chooser.H"
+#include "filename.H"
 inline int do_matching(char* a, const char* b) {return fl_filename_match(a,b);}
 
 // Forms-compatible file chooser (implementation in fselect.C):

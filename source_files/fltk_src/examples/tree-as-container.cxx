@@ -16,12 +16,12 @@
 //
 //     http://www.fltk.org/str.php
 //
-#include <stdio.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Tree.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Tree.H>
+#include <stdio.h>
 
 #define MAX_ROWS     20000
 #define MAX_FIELDS   5

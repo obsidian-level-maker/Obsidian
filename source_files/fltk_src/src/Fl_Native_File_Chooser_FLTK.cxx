@@ -16,19 +16,19 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <config.h>
-#include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_File_Icon.H>
+#include <FL/Fl_Native_File_Chooser.H>
+#include <config.h>
 #define FLTK_CHOOSER_SINGLE    Fl_File_Chooser::SINGLE
 #define FLTK_CHOOSER_DIRECTORY Fl_File_Chooser::DIRECTORY
 #define FLTK_CHOOSER_MULTI     Fl_File_Chooser::MULTI
 #define FLTK_CHOOSER_CREATE    Fl_File_Chooser::CREATE
 
-#include "Fl_Native_File_Chooser_common.cxx"
 #include "Fl_Native_File_Chooser_GTK.cxx"
+#include "Fl_Native_File_Chooser_common.cxx"
 
-#include <sys/stat.h>
 #include <string.h>
+#include <sys/stat.h>
 
 int Fl_Native_File_Chooser::have_looked_for_GTK_libs = 0;
 

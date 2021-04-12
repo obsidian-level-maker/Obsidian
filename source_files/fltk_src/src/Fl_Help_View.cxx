@@ -49,22 +49,22 @@
 // Include necessary header files...
 //
 
-#include <FL/Fl_Help_View.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Pixmap.H>
-#include <FL/x.H>
-#include <stdio.h>
-#include <stdlib.h>
-#include <FL/fl_utf8.h>
-#include <FL/filename.H>	// fl_open_uri()
 #include "flstring.h"
+#include <FL/Fl_Help_View.H>
+#include <FL/Fl_Pixmap.H>
+#include <FL/Fl_Window.H>
+#include <FL/filename.H>	// fl_open_uri()
+#include <FL/fl_utf8.h>
+#include <FL/x.H>
 #include <ctype.h>
 #include <errno.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #if defined(WIN32) && ! defined(__CYGWIN__)
-#  include <io.h>
 #  include <direct.h>
+#  include <io.h>
 #else
 #  include <unistd.h>
 #endif // WIN32

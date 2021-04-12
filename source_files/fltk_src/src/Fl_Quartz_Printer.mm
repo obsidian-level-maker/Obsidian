@@ -19,10 +19,10 @@
 #ifdef __APPLE__
 #include <FL/Fl_Printer.H>
 
+#import <Cocoa/Cocoa.h>
 #include <FL/Fl.H>
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
-#import <Cocoa/Cocoa.h>
 
 typedef OSStatus (*PMSessionSetDocumentFormatGeneration_type)(
                                      PMPrintSession   printSession,

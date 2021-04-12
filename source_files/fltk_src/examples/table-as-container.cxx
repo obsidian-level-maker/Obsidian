@@ -26,13 +26,13 @@
 //     http://www.fltk.org/str.php
 //
 
-#include <stdio.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Input.H>
-#include <FL/fl_draw.H>
+#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Table.H>
+#include <FL/fl_draw.H>
+#include <stdio.h>
 
 void button_cb(Fl_Widget *w, void*);
 

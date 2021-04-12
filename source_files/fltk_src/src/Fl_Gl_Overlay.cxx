@@ -19,10 +19,10 @@
 #include <config.h>
 #if HAVE_GL
 
-#include <FL/Fl.H>
-#include <FL/x.H>
 #include "Fl_Gl_Choice.H"
+#include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
+#include <FL/x.H>
 #include <stdlib.h>
 
 #if !HAVE_GL_OVERLAY

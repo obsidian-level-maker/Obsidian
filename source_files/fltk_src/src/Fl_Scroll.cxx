@@ -17,8 +17,8 @@
 //
 
 #include <FL/Fl.H>
-#include <FL/Fl_Tiled_Image.H>
 #include <FL/Fl_Scroll.H>
+#include <FL/Fl_Tiled_Image.H>
 #include <FL/fl_draw.H>
 
 /** Clear all but the scrollbars... */

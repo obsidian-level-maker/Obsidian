@@ -20,11 +20,11 @@
 
 #ifdef FLTK_HAVE_CAIRO
 
-#include <FL/Fl_Cairo_Window.H>
 #include <FL/Fl_Box.H>
-#include <FL/x.H>
+#include <FL/Fl_Cairo_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/math.h>
+#include <FL/x.H>
 #define DEF_WIDTH 0.03
 
 // uncomment the following line to enable cairo context autolink feature:

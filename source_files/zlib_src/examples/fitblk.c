@@ -51,10 +51,10 @@
    to complete in all cases.
  */
 
+#include "zlib.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#include "zlib.h"
 
 #define local static
 

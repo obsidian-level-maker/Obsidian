@@ -25,10 +25,10 @@
 // being used to index arrays.  So I always copy them to an integer
 // before use.
 
-#include <config.h>
 #include <FL/Fl.H>
-#include <FL/x.H>
 #include <FL/fl_draw.H>
+#include <FL/x.H>
+#include <config.h>
 
 static unsigned fl_cmap[256] = {
 #include "fl_cmap.h" // this is a file produced by "cmap.cxx":
