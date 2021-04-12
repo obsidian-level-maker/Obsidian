@@ -21,12 +21,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define _WIN32_WINNT 0x0400
-#include <windows.h>
-#include "resource.h"
-#include "zdbsp.h"
 #include "doomdata.h"
-#include "templates.h"
+#include "resource.h"
 #include "tarray.h"
+#include "templates.h"
+#include "zdbsp.h"
+#include <windows.h>
 
 static int MapWidthDiff, MapHeightDiff;
 static int ButtonsLeftOffset, ButtonsTopOffset;

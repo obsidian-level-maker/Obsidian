@@ -2155,7 +2155,9 @@ DOOM.THEMES =
       gtd_wall_candalebra = 12,
       gtd_wall_blue_torch = 12,
       gtd_wall_green_torch = 12,
-      gtd_wall_red_torch = 12
+      gtd_wall_red_torch = 12,
+      --
+      gtd_wall_hell_mindscrew = 25
     },
 
     outdoor_wall_groups =

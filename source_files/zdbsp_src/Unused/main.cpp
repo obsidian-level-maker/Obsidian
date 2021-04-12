@@ -44,20 +44,20 @@
 	if (!NoTiming) printf (l, double(e - s) / CLOCKS_PER_SEC);
 
 // Need these to check if input/output are the same file
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #endif
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
 
-#include "zdbsp.h"
-#include "wad.h"
-#include "processor.h"
 #include "getopt.h"
+#include "processor.h"
+#include "wad.h"
+#include "zdbsp.h"
 
 // MACROS ------------------------------------------------------------------
 

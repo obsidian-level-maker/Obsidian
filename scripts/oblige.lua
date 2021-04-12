@@ -1416,10 +1416,12 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
+  if OB_CONFIG.engine == "vanilla" then return "ok" end -- Skip if using Vanilla Doom/SLUMP
+
   gui.printf("\n\n")
   gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
   gui.printf("-- CONFIG FILE : OBSIDIAN Beta\n\n")
-
+    
   ob_read_all_config(false, "log_only")
 
   gui.ticker()

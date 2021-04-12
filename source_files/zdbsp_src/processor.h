@@ -11,7 +11,7 @@
 #include "tarray.h"
 #include "workdata.h"
 #include "zdwad.h"
-#include "zlib/zlib.h"
+#include "zlib.h"
 
 class ZLibOut {
    public:

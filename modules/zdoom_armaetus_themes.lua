@@ -1062,9 +1062,9 @@ ARMAETUS_ROOM_THEMES =
       OBTSBF2B = 15,
       OBTSBF3B = 15,
 
-      G8_BRNW1 = 15,
-      G8_BRNW2 = 15,
-      G8_BRNW3 = 15
+      G8_BRNF1 = 15,
+      G8_BRNF2 = 15,
+      G8_BRNF3 = 15
     },
 
     ceilings =
@@ -1078,9 +1078,9 @@ ARMAETUS_ROOM_THEMES =
       FLOOR5_4 = 10,
       QFLAT09 = 5,
 
-      G8_BRNW1 = 10,
-      G8_BRNW2 = 10,
-      G8_BRNW3 = 10
+      G8_BRNF1 = 10,
+      G8_BRNF2 = 10,
+      G8_BRNF3 = 10
     },
   },
 
@@ -1227,11 +1227,6 @@ ARMAETUS_ROOM_THEMES =
       GRATE7 = 40,
       GRATE8 = 40,
 
-      GROUND01 = 30,
-      GROUND02 = 30,
-      GROUND03 = 30,
-      GROUND04 = 30,
-
       MEM01 = 15,
 
       SHINY01 = 20,
@@ -1311,13 +1306,17 @@ ARMAETUS_ROOM_THEMES =
       GOTH48 = 15,
       GOTH49 = 15,
 
-      OBTBSLB3 = 10,
-      OBTBSLB4 = 10,
+      OBTBSLB3 = 15,
+      OBTBSLB4 = 15,
 
-      G8_BRNW1 = 20,
-      G8_BRNW3 = 20,
-      G8_BR1GY = 20,
-      G8_BR2GY = 20
+      G8_BRNW1 = 10,
+      G8_BRNW3 = 10,
+      G8_BR1GY = 10,
+      G8_BR2GY = 10,
+
+      G7_GOGN1 = 20,
+      G7_GOGN2 = 20,
+      G7_GOGN3 = 20
     },
 
     floors =
@@ -1376,9 +1375,9 @@ ARMAETUS_ROOM_THEMES =
       OBTSBF2R = 30,
       OBTSBF3R = 30,
 
-      G8_BRNW1 = 30,
-      G8_BRNW2 = 30,
-      G8_BRNW3 = 30
+      G8_BRNF1 = 10,
+      G8_BRNF2 = 10,
+      G8_BRNF3 = 10,
     },
 
     ceilings =
@@ -1804,6 +1803,8 @@ ARMAETUS_ROOM_THEMES =
       PIPEDRK1 = 5,
       RUSTWALL = 5,
 
+      -- MSSP stuff
+
       OBTBSLB2 = 5,
       OBTBSLB3 = 5,
       OBTBSLB4 = 5,
@@ -1819,7 +1820,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BR1GY = 10,
       G8_BR3GY = 10,
 
-      OBTSBGRE = 10
+      OBTSBGRE = 10,
+
+      G7_GOGN1 = 10,
+      G7_GOGN2 = 10,
+      G7_GOGN3 = 10,
     },
 
     floors =
@@ -2423,7 +2428,7 @@ ARMAETUS_ROOM_THEMES =
 
 -- END OF HELL THEMES
 
---  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
+  --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
   urban_ArmaetusBricks =
   {
     env = "building",
@@ -3131,6 +3136,8 @@ ARMAETUS_ROOM_THEMES =
       TILES6 = 20
     }
   }
+
+-- END OF URBAN THEMES
 }
 
 -- Custom liquids
@@ -4228,6 +4235,7 @@ ARMAETUS_THEMES =
       OBTBSLV2 = 15,
       OBTBSLV3 = 15,
       OBTBSLV4 = 15,
+      OBTBSLV5 = 10,
 
       OBTBSTX1 = 20,
       OBTBSTX2 = 20,
@@ -5000,6 +5008,7 @@ ARMAETUS_THEMES =
       CRGRSWLL = 7,
       CRHRTWLL = 7,
 
+      -- MSSP stuff
       OBTBSLB2 = 15,
       OBTBSLB3 = 15,
       OBTBSLB4 = 15,
@@ -5007,7 +5016,11 @@ ARMAETUS_THEMES =
       G8_BRNW1 = 15,
       G8_BRNW3 = 15,
       G8_BR2GY = 15,
-      G8_BR3GY = 15
+      G8_BR3GY = 15,
+
+      G7_GOGN1 = 25,
+      G7_GOGN2 = 25,
+      G7_GOGN3 = 25
     },
 
     fences =
