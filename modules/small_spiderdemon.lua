@@ -16,7 +16,9 @@
 --
 ------------------------------------------------------------------------
 
-SMALL_SPIDERDEMON = {}
+-- MSSP: Disabled for now - honestly will convert it to an external addon instead.
+
+--[[SMALL_SPIDERDEMON = {}
 
 
 function SMALL_SPIDERDEMON.setup(self)
@@ -46,5 +48,22 @@ OB_MODULES["small_spiderdemon"] =
     "which allows her to be placed in maps more often " ..
     "(her default size is so large that there is rarely enough space)")
 
-}
+}]]
 
+  -- honor the "Smaller Mastermind" module, use the DEHACKED lump to
+  -- reduce the size of the Spider Mastermind monster from 128 to 80
+  -- units so that she fits more reliably on maps.
+--[[  if PARAM.small_spiderdemon then
+    table.insert(data, "Thing 20 (Spiderdemon)\n")
+    table.insert(data, "Width = 5242880\n")  -- 80 units
+    table.insert(data, "\n")
+  end
+
+  -- honor the "Smaller Mastermind" module
+  if PARAM.small_spiderdemon then
+    local info = GAME.MONSTERS["Spiderdemon"]
+    if info and info.r > 80 then
+      info.r = 80
+    end
+  end
+]]
