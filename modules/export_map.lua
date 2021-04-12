@@ -268,6 +268,7 @@ OB_MODULES["export_map"] =
 
   side = "left",
   priority = -75,
+  engine = "!vanilla",
 
   tables =
   {

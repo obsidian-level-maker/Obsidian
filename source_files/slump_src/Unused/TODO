@@ -1,0 +1,19 @@
+For Slump 0.4:
+
+* Convert RNG in to RadioGatun-32 (my tests show that disabling linenum
+  in roll() does not result in different maps at different optimization 
+  levels)
+
+* Looks like Freedoom 0.5 has some more monsters drawn; add them.
+
+* Add the ability to have bosses in levels
+
+* Add an optional "Have non-Freedoom monsters" flag
+
+* Add an optional "Continuous HAA" mode where we don't calculate the
+  HAA of each level in isolation.
+
+* An an optional "Room count does not affect seed" flag
+
+* Fix arena problem (Maybe)
+

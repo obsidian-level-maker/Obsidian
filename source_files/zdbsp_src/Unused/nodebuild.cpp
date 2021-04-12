@@ -18,17 +18,17 @@
 
 */
 
-#include <stdlib.h>
 #include <assert.h>
-#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #ifndef _WIN32
 #include <unistd.h>
 #endif
 
-#include "zdbsp.h"
 #include "nodebuild.h"
 #include "templates.h"
+#include "zdbsp.h"
 
 #define Printf printf
 #define STACK_ARGS
@@ -1062,8 +1062,8 @@ void FNodeBuilder::PrintSet (int l, DWORD set)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #else
-#include <sys/mman.h>
 #include <limits.h>
+#include <sys/mman.h>
 #endif
 
 #ifdef __GNUC__

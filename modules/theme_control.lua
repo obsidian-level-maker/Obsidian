@@ -117,6 +117,7 @@ OB_MODULES["theme_ctl_doom2"] =
   label = _("[Exp] Doom 2 Theme Control"),
 
   game = "doom2",
+  engine = "!vanilla",
 
   hooks =
   {
@@ -140,6 +141,7 @@ OB_MODULES["level_control"] =
   label = _("Level/Theme Control"),
 
 --  game = "doomish",
+  engine = "!vanilla",
 
   priority = 103,
 
@@ -238,6 +240,7 @@ OB_MODULES["theme_ctl_doom1"] =
   label = _("[Exp] Doom 1 Theme Control"),
 
   game = "doom1",
+  engine = "!vanilla",
 
   hooks =
   {

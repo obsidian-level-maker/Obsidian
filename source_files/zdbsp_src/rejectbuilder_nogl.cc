@@ -271,12 +271,18 @@ void FRejectBuilderNoGL::BuildReject() {
 
             HullSides(*sb1, *sb2, HullPts);
 
-            for (FBlockChain *chain = BlockChains; chain != NULL;
-                 chain = chain->Next) {
+            FBlockChain *chain = BlockChains;
+
+            for (chain; chain != NULL; chain = chain->Next) {
                 if (ChainBlocks(chain, &HullBounds, HullPts)) {
                     break;
                 }
             }
+
+            if (chain == NULL)
+			{
+				continue;
+			}
 
             Reject[pos >> 3] |= 1 << (pos & 7);
             pos = s2 * Level.NumSectors() + s1;

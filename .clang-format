@@ -2,3 +2,4 @@ BasedOnStyle: Google
 IndentWidth: 4
 DerivePointerAlignment: false
 PointerAlignment: Right
+SortIncludes: false

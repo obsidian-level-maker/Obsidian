@@ -38,6 +38,9 @@
 #include "main.h"
 #include "q_common.h"  // qLump_c
 
+// SLUMP for Vanilla Doom
+#include "slump_main.h"
+
 extern void CSG_DOOM_Write();
 
 // extern void CSG_TestRegions_Doom();
@@ -67,6 +70,8 @@ std::string current_engine;
 std::string map_format;
 std::string build_nodes;
 std::string build_reject;
+std::string levelcount;
+std::string monvariety;
 
 static bool UDMF_mode;
 
@@ -98,6 +103,65 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 
     // flats must end with F_END (a single 'F') to be vanilla compatible
     {"FF_START", "F_END"}};
+
+//------------------------------------------------------------------------
+//  SLUMP WAD Creation for Vanilla Doom
+//------------------------------------------------------------------------
+int Slump_MakeWAD(const char* filename) {
+	s_config slump_config;
+	slump_config.outfile = (char *)filename;
+	levelcount = main_win->game_box->length->GetID();
+	if (levelcount == "single") {
+		slump_config.levelcount = 1;	
+	} else if (levelcount == "few") {
+		slump_config.levelcount = 4;
+	} else if (levelcount == "episode") {
+		slump_config.levelcount = 11;
+	} else {
+		slump_config.levelcount = 32; // "Full Game"
+	}
+	slump_config.minrooms = atoi(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("minrooms")->GetID());
+	int bigify = atoi(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("bigify")->GetID());
+	if (bigify > 0) {
+		slump_config.p_bigify = bigify;
+	} else {
+		slump_config.p_bigify = roll(100);
+	}
+	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("dm_starts")->GetID(), "yes")) {
+		slump_config.do_dm = 1;
+	} else {
+		slump_config.do_dm = 0;
+	}
+	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("major_nukage")->GetID(), "yes")) {
+		slump_config.major_nukage = SLUMP_TRUE;
+	} else {
+		slump_config.major_nukage = SLUMP_FALSE;
+	}
+	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("immediate_monsters")->GetID(), "yes")) {
+		slump_config.immediate_monsters = SLUMP_FALSE;
+	} else {
+		slump_config.immediate_monsters = rollpercent(20);
+	}
+	monvariety = main_win->right_mods->FindID("ui_slump_mons")
+							->FindOpt("slump_mons")->GetID();
+	if (monvariety == "normal") {
+		slump_config.required_monster_bits = 0;
+		slump_config.forbidden_monster_bits = SPECIAL;
+	} else if (monvariety == "shooters") {
+		slump_config.required_monster_bits = SHOOTS;
+		slump_config.forbidden_monster_bits = SPECIAL;
+	} else {
+		slump_config.required_monster_bits = SPECIAL; // All Nazis
+		slump_config.forbidden_monster_bits = 0;
+	}						
+	return slump_main(slump_config);    
+}	
+
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -759,7 +823,20 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     LogPrintf("\n");
 
     zdbsp_options options;
-    if (current_engine == "nolimit" || current_engine == "boom") {
+    if (current_engine == "vanilla") {
+        options.build_nodes = true;
+        options.build_gl_nodes = false;
+        options.build_gl_only = false;
+        if (build_reject == "yes") {
+            options.reject_mode = ERM_Rebuild_NoGL;
+        } else {
+            options.reject_mode = ERM_CreateZeroes;
+        }
+        options.check_polyobjs = false;
+        options.compress_nodes = false;
+        options.compress_gl_nodes = false;
+        options.force_compression = false;
+    } else if (current_engine == "nolimit" || current_engine == "boom") {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
@@ -872,6 +949,21 @@ bool doom_game_interface_c::Start(const char *preset) {
         Main_BackupFile(filename, "old");
     }
 
+    // Need to preempt the rest of this process if we are using Vanilla Doom
+    if (main_win) {
+        current_engine = main_win->game_box->engine->GetID();
+        if (current_engine == "vanilla") {
+            build_reject = main_win->left_mods->FindID("ui_reject_options")
+                           ->FindOpt("build_reject")
+                           ->GetID();
+            if (Slump_MakeWAD(filename) == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     if (!DM_StartWAD(filename)) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
@@ -881,7 +973,6 @@ bool doom_game_interface_c::Start(const char *preset) {
         main_win->build_box->name_disp->copy_label(FindBaseName(filename));
         main_win->build_box->name_disp->redraw();
         main_win->build_box->Prog_Init(20, N_("CSG"));
-        current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "zdoom") {
             build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")
                                ->FindOpt("build_reject_zdoom")
@@ -927,8 +1018,11 @@ bool doom_game_interface_c::BuildNodes() {
 }
 
 bool doom_game_interface_c::Finish(bool build_ok) {
-    // TODO: handle write errors
-    DM_EndWAD();
+    // Skip DM_EndWAD if using Vanilla Doom
+    if (current_engine != "vanilla") {
+        // TODO: handle write errors
+        DM_EndWAD();
+    }
 
     if (build_ok) {
         build_ok = BuildNodes();

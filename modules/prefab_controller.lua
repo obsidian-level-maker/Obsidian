@@ -155,6 +155,7 @@ OB_MODULES["prefab_control"] =
   priority = 95,
 
   game = "doomish",
+  engine = "!vanilla",
 
   hooks =
   {

@@ -120,6 +120,7 @@ OB_MODULES["ui_arch"] =
 
   side = "left",
   priority = 104,
+  engine = "!vanilla",
 
   options =
   {
