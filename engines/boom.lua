@@ -51,7 +51,7 @@ function BOOM.create_dehacked()
   local data =
   {
     "#\n",
-    "# BEX LUMP created by OBLIGE\n",
+    "# BEX LUMP created by Obsidian\n",
     "#\n\n"
   }
 
@@ -209,12 +209,12 @@ OB_ENGINES["prboom"] =
   {
     PRBOOM
   },
-  
+
   hooks =
   {
-  
+
   }
-  
+
 }
 
 ----------------------------------------------------------------
@@ -246,11 +246,11 @@ OB_ENGINES["woof"] =
   {
     WOOF
   },
-  
+
   hooks =
   {
-  
+
   }
-  
+
 }
 

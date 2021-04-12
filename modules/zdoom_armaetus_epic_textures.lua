@@ -1,9 +1,10 @@
 ------------------------------------------------------------------------
---  MODULE: Epic Textures Pack Mod
+--  MODULE: Obsidian Texture Resources
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2019-2021 Armaetus
 --  Copyright (C) 2019-2021 MsrSgtShooterPerson
+--  Copyright (C) 2020-2021 Craneo
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -17,8 +18,6 @@
 --
 -------------------------------------------------------------------
 
--- Armaetus: I'm not renaming all these functions. If you wanna do it MSSP,
--- you are free to do it lol. Remove these lines when that is done, if done.
 gui.import("zdoom_armaetus_materials.lua")
 gui.import("zdoom_armaetus_themes.lua")
 
@@ -27,6 +26,8 @@ gui.import("zdoom_armaetus_doom1_themes.lua")
 
 gui.import("zdoom_armaetus_epic_texturex_lump.lua")
 
+-- Rename to OBSIDIAN_TEXTURES? I am not the only author putting the
+-- texture pack together, includes MSSP and Craneo as well.
 ARMAETUS_EPIC_TEXTURES = { }
 
 ARMAETUS_EPIC_TEXTURES.YES_NO =
@@ -54,6 +55,8 @@ ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES =
   "no",        _("No"),
 }
 
+-- Armaetus: Do we really need the template here anymore? I have not
+-- seen this in use or was superceded by the Tree/Flora module.
 ARMAETUS_EPIC_TEXTURES.TEMPLATES =
 {
    ZS_TREES =
@@ -982,12 +985,14 @@ end
 function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   local wad_file = "games/doom/data/ObAddon_Textures.wad"
   local wad_file_2 = "games/doom/data/ObAddon_Textures_2.wad"
+  local wad_file_3 = "games/doom/data/ObAddon_Textures_3.wad"
 
   if PARAM.include_package ~= "no" then
     gui.wad_transfer_lump(wad_file, "ANIMDEFS", "ANIMDEFS")
     gui.wad_transfer_lump(wad_file, "CREDITS", "CREDITS")
     gui.wad_merge_sections(wad_file)
     gui.wad_merge_sections(wad_file_2)
+    gui.wad_merge_sections(wad_file_3)
 
     local dir = "games/doom/data/"
     -- wad_merge_sections currently does not support merging HI_START
@@ -1012,7 +1017,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_insert_file(dir .. "ROAD2.png", "ROAD2")
     gui.wad_insert_file(dir .. "ROAD3.png", "ROAD3")
     gui.wad_insert_file(dir .. "ROAD4.png", "ROAD4")
-    gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE")
+    gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE") -- Do we need this here anymore?
     gui.wad_add_binary_lump("HI_END",{})
   end
 
@@ -1030,10 +1035,10 @@ end
 
 OB_MODULES["armaetus_epic_textures"] =
 {
-  label = _("ZDoom: Armaetus Texture Pack"),
+  label = _("ZDoom: Obsidian Textures"),
 
   side = "left",
-  priority = 70,
+  priority = 75,
 
   engine = "zdoom",
 
@@ -1048,7 +1053,7 @@ OB_MODULES["armaetus_epic_textures"] =
     all_done = ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in
   },
 
-  tooltip = "If enabled, adds textures from Armaetus's Texture Pack, which also includes a few new custom texture exclusive prefabs.",
+  tooltip = "If enabled, adds textures from the Obsidian Texture Pack, which also includes some new custom texture exclusive prefabs.",
 
   options =
   {
@@ -1058,7 +1063,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("Custom Liquids"),
       choices = ARMAETUS_EPIC_TEXTURES.YES_NO,
       default = "yes",
-      tooltip = "Adds new custom Textures liquid flats.",
+      tooltip = "Utilize custom liquid flats or not.",
       priority=4
     },
 
@@ -1076,6 +1081,7 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=3
     },
 
+    -- Is this still under construction?
     environment_themes =
     {
       name = "environment_themes",
@@ -1109,7 +1115,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("Include Brightmaps"),
       choices = ARMAETUS_EPIC_TEXTURES.YES_NO,
       default = "yes",
-      tooltip = "Allows merging Epic Textures brightmaps into the WAD. Does not include brightmaps for" ..
+      tooltip = "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for" ..
         " base resources from any of the games.",
       priority = 0
     }

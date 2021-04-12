@@ -902,18 +902,22 @@ function Grower_calc_rule_probs()
     gui.printf("This level is not absurd...\n\n")
   end
 
-  local function Grower_reset_absurdities()
-    for _,rule in pairs(GAME.SHAPE_GRAMMAR) do
-      if not rule.initial_env then goto continue end
-
-      if rule.initial_env == "none" then rule.env = nil
-      else rule.env = rule.initial_env end
-
-      ::continue::
-    end
-  end
 
   local function Grower_absurdify()
+    
+    local function Grower_reset_absurdities()
+      for _,rule in pairs(GAME.SHAPE_GRAMMAR) do
+        if not rule.initial_env then goto continue end
+
+        if rule.initial_env == "none" then rule.env = nil
+        else rule.env = rule.initial_env end
+
+        ::continue::
+      end
+    end
+
+    Grower_reset_absurdities()
+    
     local rules_to_absurdify = rand.pick({1,2,2,2,3,3,3,4,4,5,6,7,8})
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
@@ -977,7 +981,6 @@ function Grower_calc_rule_probs()
     end
   end
 
-  Grower_reset_absurdities()
   if LEVEL.is_absurd then
     Grower_absurdify()
     gui.printf("\n\n")
@@ -3465,7 +3468,7 @@ end
     end
 
     if is_emergency then
-      gui.printf("Emergency in ROOM_" .. R.id .. " is resolved OMG AMAZING!!!!\n")
+      gui.debugf("Emergency in ROOM_" .. R.id .. " is resolved OMG AMAZING!!!!\n")
       if not R.emergency_sprout_attempts then
         R.emergency_sprout_attempts = 1
       else
@@ -3474,7 +3477,7 @@ end
     end
 
     if R.emergency_sprout_attempts then
-      gui.printf(R.id .. " Emergency Sprout attempts: " .. R.emergency_sprout_attempts .. "\n")
+      gui.debugf(R.id .. " Emergency Sprout attempts: " .. R.emergency_sprout_attempts .. "\n")
     end
   end
 

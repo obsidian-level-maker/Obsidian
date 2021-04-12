@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: Armaetus Materials
+--  MODULE: Obsidian Texture Materials
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2021 MsrSgtShooterPerson
@@ -16,6 +16,10 @@
 --  GNU General Public License for more details.
 --
 ------------------------------------------------------------------
+
+-- Reminder: Please keep texture material additions alphabetized
+-- and in categories for a more manageable setup when the file is
+-- modified, thanks!
 
 ARMAETUS_LIQUID_DEFS =
 {
@@ -168,8 +172,7 @@ ARMAETUS_MATERIALS = {
   URBAN7 = { t="URBAN7", f="FLAT1" }, -- Gray
   URBAN8 = { t="URBAN8", f="FLAT1" }, -- Gray, warning lines
 
-
-  -- Cement
+ -- Cement
  -- Copies of the CEMENT# textures so they can be used normally.
   CEM01  = { t="CEM01",  f="FLAT19" }, --CEMENT7,
   CEM02  = { t="CEM02",  f="FLAT19" }, --CEMENT9,
@@ -820,12 +823,11 @@ ARMAETUS_MATERIALS = {
   MIDWIND7 = { t="MIDWIND7", f="CEIL5_1", rail_h = 128 }, -- 32x128,
   MIDWIND8 = { t="MIDWIND8", f="CEIL5_1", rail_h = 128 }, -- 128x128,
 
-
-  -- Oblige flags
+  -- Obsidian flags
   -- Note: Due to being over 128 height, we may need to use HI_START/HI_END lumps if
   -- we have problems with the textures being cut off in-game.
-  OBDNBNR1 = { t="OBDNBNR1", f="CRATOP2" }, -- OBLIGE flag, yellow
-  OBDNBNR2 = { t="OBDNBNR2", f="SFLR6_4" }, -- OBLIGE flag, hellish
+  OBDNBNR1 = { t="OBDNBNR1", f="CRATOP2" }, -- Obsidian flag, yellow
+  OBDNBNR2 = { t="OBDNBNR2", f="SFLR6_4" }, -- Obsidian flag, hellish
 
   -- Vending machine textures (from vending_machine_textures.wad) --
   OBVNMCH1 = { t="OBVNMCH1", f="CEIL5_1" },
@@ -842,6 +844,43 @@ ARMAETUS_MATERIALS = {
   FIREWALA = { t="FIREWALA", f="FLOOR6_1" },
   FIRELAV2 = { t="FIRELAV2", f="FLOOR6_1" },
   TEKWALL4 = { t="TEKWALL4", f="TEKFLR4" },
+
+  ---------------------------
+  -- StalungCraft textures --
+  ---------------------------
+
+  -- TODO: Use better flats used here if possible!
+
+  -- Wood & bookcases
+  BKCASE1A = { t="BKCASE1A", f="RROCK20" }, -- Tan bookshelf, filled with books, 64x128
+  BKCASE2A = { t="BKCASE2A", f="RROCK20" }, -- Tam bookshelf, filled with books, 96x128
+  BKCASE3A = { t="BKCASE3A", f="RROCK20" }, -- Tan bookshelf, filled with books, 128x128
+  BKSIDE1A = { t="BKSIDE1A", f="RROCK20" }, -- Bookshelf side texture, 64x128
+
+  -- Brick walls
+  BRIC9GRN = { t="BRIC9GRN", f="FLOOR7_2" }, -- Light green bricks with ledge, 128x128
+  BRIC9GRY = { t="BRIC9GRY", f="FLAT5_4" }, -- Gray bricks with ledge, 128x128
+  BRIC9TAN = { t="BRIC9TAN", f="FLOOR7_1" }, -- Tan bricks with ledge, 128x128
+  BRICEGRN = { t="BRICEGRN", f="FLOOR7_2" }, -- Big green bricks, 128x128
+  BRICEGRY = { t="BRICEGRY", f="FLOOR7_1" }, -- Big gray bricks, 128x128
+  BRICETAN = { t="BRICETAN", f="RROCK20" }, -- Big tan bricks, 128x128
+
+  DECO1BLK = { t="DECO1BLK", f="BLACK0" }, -- Decorative black wall bits, 64x128
+  DECO1BRN = { t="DECO1BRN", f="FLOOR7_1" }, -- Decorative brown wall bits, 64x128
+  DECO1GRN = { t="DECO1GRN", f="FLOOR7_2" }, -- Decorative green wall bits, 64x128
+  DECO1GRY = { t="DECO1GRY", f="FLAT1" }, -- Decorative gray wall bits, 64x128
+  DECO1RED = { t="DECO1RED", f="FLOOR1_6" }, -- Decorative red wall bits, 64x128
+  DECO1TAN = { t="DECO1TAN", f="RROCK20" }, -- Decorative tan wall bits, 64x128
+
+  -- Decorative brick
+  ENGRAV1 = { t="ENGRAV1", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Knight)
+  ENGRAV2 = { t="ENGRAV2", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Cross?)
+  ENGRAV3 = { t="ENGRAV3", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Cross!)
+  ENGRAV4 = { t="ENGRAV4", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Skull)
+  ENGRAV5 = { t="ENGRAV5", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x128 (Battle)
+  ENGRAV6 = { t="ENGRAV6", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Gathering?)
+  ENGRAV7 = { t="ENGRAV7", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Figures)
+  ENGRAV8 = { t="ENGRAV8", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Figures)
 
   --------------------
   --------------------
@@ -974,7 +1013,6 @@ ARMAETUS_MATERIALS = {
   RMARB1 = { t="REDMARB1",  f="RMARB1" },
   RMARB2 = { t="REDMARB3",  f="RMARB2" },
   RMARB3 = { t="REDMARB2",  f="RMARB3" },
-
 
   -- Grating
   GRATE1 = { t="METL01",  f="GRATE1" },
@@ -1139,7 +1177,6 @@ ARMAETUS_MATERIALS = {
   QLAVA1   = { t="LFAL21", f="QLAVA1", sane=1 },
   PURW1   = { t="PURFAL1", f="PURW1", sane=1 },
 
-
   -- Warning Strip --
   WARN1 = { t="WARN1", f="WARN2" },
   WARN2 = { t="WARN2", f="WARN1" },
@@ -1260,16 +1297,40 @@ ARMAETUS_MATERIALS = {
   T_GHFLG = { t="G16", f="T_GHFLG" },
   T_GHFLP = { t="G16", f="T_GHFLP" },
 
+  -------------
+  -- DUKETEX --
+  -------------
+
+  -- store shelves
+  DNSTOR01 = { t="DNSTOR01", f="CEIL5_2"},
+  DNSTOR02 = { t="DNSTOR02", f="CEIL5_2"},
+  DNSTOR03 = { t="DNSTOR03", f="CEIL5_2"},
+  DNSTOR04 = { t="DNSTOR04", f="CEIL5_2"},
+  DNSTOR05 = { t="DNSTOR05", f="CEIL5_2"},
+  DNSTOR06 = { t="DNSTOR06", f="CEIL5_2"},
+  DNSTOR07 = { t="DNSTOR07", f="CEIL5_2"},
+  DNSTOR08 = { t="DNSTOR08", f="CEIL5_2"},
+  DNSTOR09 = { t="DNSTOR09", f="CEIL5_2"},
+  DNSTOR10 = { t="DNSTOR10", f="CEIL5_2"},
+  DNSTOR11 = { t="DNSTOR11", f="CEIL5_2"},
+  DNSTOR12 = { t="DNSTOR12", f="CEIL5_2"},
+  DNSTOR13 = { t="DNSTOR13", f="CEIL5_2"},
+  DNSTOR20 = { t="DNSTOR20", f="CEIL5_2"},
+  DNSTOR21 = { t="DNSTOR21", f="CEIL5_2"},
+
   ------------------
   -- MSSP Stuff --
   ------------------
-  -- walls
+
+  -- MSSP-TECH --
+  -- silver walls (256px)
   OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
   OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
   OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
   OBTBSLV5 = { t="OBTBSLV4", f="FLAT3"},
 
+  -- silver walls (128px)
   OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},
   OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
   OBTBSTX3 = { t="OBTBSTX3", f="GRATE6"},
@@ -1277,10 +1338,61 @@ ARMAETUS_MATERIALS = {
   OBTSTX1B = { t="OBTSTX1B", f="STARTANF"}, -- brown recolor composite
   OBTSTX1G = { t="OBTSTX1G", f="STARG1F"}, -- green recolor composite
 
-  -- flats
-  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"},
+  -- techy brown walls (128px)
+  G8_BRNW1 = { t="G8_BRNW1", f="SLIME16"},
+  G8_BRNW2 = { t="G8_BRNW2", f="FLOOR4_1"},
+  G8_BRNW3 = { t="G8_BRNW3", f="FLOOR4_5"},
+
+  G8_BR1GY = { t="G8_BRNW1", f="GRATE2"}, -- grey recolor composite
+  G8_BR2GY = { t="G8_BRNW2", f="FLOOR4_8"},
+  G8_BR3GY = { t="G8_BRNW3", f="G15"},
+
+  -- techy brick walls (256px)
+  OBTBSLB1 = { t="OBTBSLB1", f="SHINY03"},
+  OBTBSLB2 = { t="OBTBSLB2", f="FLOOR4_8"},
+  OBTBSLB3 = { t="OBTBSLB3", f="SLIME14"},
+  OBTBSLB4 = { t="OBTBSLB4", f="SLIME15"},
+  OBTBSLB5 = { t="OBTBSLB5", f="MFLR8_1"},
+
+  OBTBSB2B = { t="OBTBSB2B", f="FLOOR5_3"}, -- brown color composite
+  OBTBSB3B = { t="OBTBSB3B", f="SLIME16"},
+  OBTBSB4B = { t="OBTBSB4B", f="FLOOR4_1"},
+  OBTBSB5B = { t="OBTBSB5B", f="FLAT5"},
+
+  OBTSBGRE = { t="OBTSBGRE", f="DARKF02"}, -- bloodied version of the hex bricks
+
+  -- silver flats (128px)
+  OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
   OBTBSFL3 = { t="OBTBSTX1", f="OBTBSFL3"},
+
+  OBTSVBF1 = { t="OBTBSLB2", f="OBTSVBF1"}, --< brick
+  OBTSVBF2 = { t="OBTBSLB3", f="OBTSVBF2"},
+  OBTSVBF3 = { t="OBTBSLB4", f="OBTSVBF3"},
+
+  G8_BRNF1 = { t="G8_BRNW1", f="G8_BRNF1"}, --< brown floors/ceils
+  G8_BRNF2 = { t="G8_BRNW3", f="G8_BRNF2"},
+  G8_BRNF3 = { t="G8_BRNW2", f="G8_BRNF3"},
+
+  OBTSBF1B = { t="OBTBSLB2", f="OBTSBF1B"}, -- brown color composite
+  OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"},
+  OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"},
+
+  OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
+  OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
+  OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
+
+  -- MSSP-GOTH --
+  -- green-ish gothic metal walls with skulls (128px)
+  G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},
+  G7_GOGN2 = { t="G7_GOGN2", f="G7_GOGF1"},
+  G7_GOGN3 = { t="G7_GOGN3", f="G7_GOGF1"},
+
+  -- flats
+  G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
+
+  -- 256-wide doors
+  G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
   ----------------------
   -- Special Textures --
@@ -1396,7 +1508,7 @@ brightmap texture SILVER2G
 }
 
 // vent (the only one that needs a brightmap TBH
-brightmap texture COMPVEN2,
+brightmap texture COMPVEN2
 {
   map OBRCPVN2
 }
@@ -1466,6 +1578,36 @@ brightmap texture NOISE4
 {
   map OBRNOIS1
 }
+
+// quad monitors
+brightmap texture COMPSD1
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD2
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD3
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD4
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD6
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD7
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD8
+{
+  map OBRCPSD1
+}
 //
 brightmap texture NOISE2A
 {
@@ -1501,7 +1643,7 @@ brightmap texture NOISE3D
   map OBRNOIS3
 }
 
-// lite5 recolors - excluding the original lite5,
+// lite5 recolors - excluding the original lite5
 brightmap texture T_VSLTEG
 {
   map OBRLITE5

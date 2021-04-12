@@ -5,6 +5,8 @@ PREFABS.Cage_teleporter_ambush_tech =
 
   theme  = "!hell",
 
+  filter = "sight_ambush_cage",
+
   prob   = 500,
 
   where  = "seeds",
@@ -27,6 +29,8 @@ PREFABS.Cage_teleporter_ambush_hell =
   map      = "MAP02",
 
   theme    = "hell",
+
+  filter = "sight_ambush_cage",
 
   x_fit    = "frame",
 }

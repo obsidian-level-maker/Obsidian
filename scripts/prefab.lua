@@ -2534,6 +2534,7 @@ function Fab_find_matches(reqs, match_state)
     -- sink check
     if reqs.is_sink and def.sink_mode == "never" then return 0 end
     if reqs.is_sink == "liquid" and def.sink_mode == "never_liquids" then return 0 end
+    if reqs.is_sink == "sky" and def.sink_mode == "never_sky" then return 0 end
 
     -- darkness check
     if def.dark_map and not LEVEL.is_dark then return 0 end

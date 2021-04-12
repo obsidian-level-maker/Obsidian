@@ -3072,7 +3072,6 @@ function Quest_room_themes()
       end
 
       gui.printf("\nLevel light group: " .. light_grouping .. "\n")
-      gui.printf(table.tostr(LEVEL.light_group) .. "\n")
     end
   end
 

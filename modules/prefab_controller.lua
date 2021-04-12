@@ -87,6 +87,7 @@ PREFAB_CONTROL.FILTER_CATEGORIES =
   gamble = "pf_gamble",
   crushers = "pf_crushers",
   dexterity = "pf_dexterity",
+  sight_ambush_cage = "pf_sight_ambushes",
   mirror_maze = "pf_mirror_mazes",
   dark_maze = "pf_dark_mazes"
 }
