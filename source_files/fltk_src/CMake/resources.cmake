@@ -6,20 +6,20 @@
 #
 # Copyright 1998-2015 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     http://www.fltk.org/COPYING.php
+# http://www.fltk.org/COPYING.php
 #
 # Please report all bugs and problems on the following page:
 #
-#     http://www.fltk.org/str.php
+# http://www.fltk.org/str.php
 #
 
-#######################################################################
+# ##############################################################################
 # check for headers, libraries and functions
-#######################################################################
+# ##############################################################################
 # headers
 find_file(HAVE_ALSA_ASOUNDLIB_H alsa/asoundlib.h)
 find_file(HAVE_DLFCN_H dlfcn.h)
@@ -38,22 +38,22 @@ find_file(HAVE_SYS_STDTYPES_H sys/stdtypes.h)
 find_file(HAVE_X11_XREGION_H X11/Xregion.h)
 find_path(HAVE_XDBE_H Xdbe.h PATH_SUFFIXES X11/extensions extensions)
 
-if (MSVC)
+if(MSVC)
   message(STATUS "Note: The following three headers should all be found!")
   message(STATUS "HAVE_GL_GL_H = '${HAVE_GL_GL_H}'")
   message(STATUS "HAVE_GL_GLU_H = '${HAVE_GL_GLU_H}'")
   message(STATUS "HAVE_LOCALE_H = '${HAVE_LOCALE_H}'")
   message(STATUS "If one of these headers was not found, run cmake-gui ...")
   message(STATUS "... again from a Visual Studio developer command prompt!")
-endif (MSVC)
+endif(MSVC)
 
 # Simulate the behavior of autoconf macro AC_HEADER_DIRENT, see:
 # https://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Particular-Headers.html
-# "Check for the following header files. For the first one that is found
-#  and defines ‘DIR’, define the listed C preprocessor macro ..."
+# "Check for the following header files. For the first one that is found and
+# defines ‘DIR’, define the listed C preprocessor macro ..."
 #
-# Note: we don't check if it really defines 'DIR', but we stop processing
-# once we found the first suitable header file.
+# Note: we don't check if it really defines 'DIR', but we stop processing once
+# we found the first suitable header file.
 
 find_file(HAVE_DIRENT_H dirent.h)
 if(NOT HAVE_DIRENT_H)
@@ -79,11 +79,11 @@ mark_as_advanced(HAVE_X11_XREGION_H)
 find_path(FREETYPE_PATH freetype.h PATH_SUFFIXES freetype2)
 find_path(FREETYPE_PATH freetype/freetype.h PATH_SUFFIXES freetype2)
 if(FREETYPE_PATH)
-   include_directories(${FREETYPE_PATH})
+  include_directories(${FREETYPE_PATH})
 endif(FREETYPE_PATH)
 mark_as_advanced(FREETYPE_PATH)
 
-#######################################################################
+# ##############################################################################
 # libraries
 find_library(LIB_CAIRO cairo)
 find_library(LIB_dl dl)
@@ -99,7 +99,7 @@ mark_as_advanced(LIB_CAIRO LIB_dl LIB_fontconfig LIB_freetype)
 mark_as_advanced(LIB_GL LIB_MesaGL)
 mark_as_advanced(LIB_jpeg LIB_png LIB_zlib)
 
-#######################################################################
+# ##############################################################################
 # functions
 include(CheckFunctionExists)
 
@@ -112,50 +112,51 @@ endif(DEFINED CMAKE_REQUIRED_LIBRARIES)
 set(CMAKE_REQUIRED_LIBRARIES)
 
 if(HAVE_DLFCN_H)
-   set(HAVE_DLFCN_H 1)
+  set(HAVE_DLFCN_H 1)
 endif(HAVE_DLFCN_H)
 
 set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
-CHECK_FUNCTION_EXISTS(dlsym			HAVE_DLSYM)
+check_function_exists(dlsym HAVE_DLSYM)
 set(CMAKE_REQUIRED_LIBRARIES)
 
-CHECK_FUNCTION_EXISTS(localeconv		HAVE_LOCALECONV)
+check_function_exists(localeconv HAVE_LOCALECONV)
 
 if(LIB_png)
   set(CMAKE_REQUIRED_LIBRARIES ${LIB_png})
-  CHECK_FUNCTION_EXISTS(png_get_valid		HAVE_PNG_GET_VALID)
-  CHECK_FUNCTION_EXISTS(png_set_tRNS_to_alpha	HAVE_PNG_SET_TRNS_TO_ALPHA)
+  check_function_exists(png_get_valid HAVE_PNG_GET_VALID)
+  check_function_exists(png_set_tRNS_to_alpha HAVE_PNG_SET_TRNS_TO_ALPHA)
   set(CMAKE_REQUIRED_LIBRARIES)
 endif(LIB_png)
 
-CHECK_FUNCTION_EXISTS(scandir                HAVE_SCANDIR)
-CHECK_FUNCTION_EXISTS(snprintf               HAVE_SNPRINTF)
+check_function_exists(scandir HAVE_SCANDIR)
+check_function_exists(snprintf HAVE_SNPRINTF)
 
-# not really true but we convert strcasecmp calls to _stricmp calls in flstring.h
+# not really true but we convert strcasecmp calls to _stricmp calls in
+# flstring.h
 if(MSVC)
-   set(HAVE_STRCASECMP 1)
+  set(HAVE_STRCASECMP 1)
 endif(MSVC)
 
-CHECK_FUNCTION_EXISTS(strcasecmp             HAVE_STRCASECMP)
+check_function_exists(strcasecmp HAVE_STRCASECMP)
 
-CHECK_FUNCTION_EXISTS(strlcat                HAVE_STRLCAT)
-CHECK_FUNCTION_EXISTS(strlcpy                HAVE_STRLCPY)
-CHECK_FUNCTION_EXISTS(vsnprintf              HAVE_VSNPRINTF)
+check_function_exists(strlcat HAVE_STRLCAT)
+check_function_exists(strlcpy HAVE_STRLCPY)
+check_function_exists(vsnprintf HAVE_VSNPRINTF)
 
 if(HAVE_SCANDIR AND NOT HAVE_SCANDIR_POSIX)
-   set(MSG "POSIX compatible scandir")
-   message(STATUS "Looking for ${MSG}")
-   try_compile(V
-      ${FLTK_BINARY_DIR}
-      ${FLTK_SOURCE_DIR}/CMake/posixScandir.cxx
-      )
-   if(V)
-      message(STATUS "${MSG} - found")
-      set(HAVE_SCANDIR_POSIX 1 CACHE INTERNAL "")
-   else()
-      message(STATUS "${MSG} - not found")
-      set(HAVE_SCANDIR_POSIX HAVE_SCANDIR_POSIX-NOTFOUND)
-   endif(V)
+  set(MSG "POSIX compatible scandir")
+  message(STATUS "Looking for ${MSG}")
+  try_compile(V ${FLTK_BINARY_DIR} ${FLTK_SOURCE_DIR}/CMake/posixScandir.cxx)
+  if(V)
+    message(STATUS "${MSG} - found")
+    set(HAVE_SCANDIR_POSIX
+        1
+        CACHE INTERNAL ""
+    )
+  else()
+    message(STATUS "${MSG} - not found")
+    set(HAVE_SCANDIR_POSIX HAVE_SCANDIR_POSIX-NOTFOUND)
+  endif(V)
 endif(HAVE_SCANDIR AND NOT HAVE_SCANDIR_POSIX)
 mark_as_advanced(HAVE_SCANDIR_POSIX)
 
@@ -167,28 +168,27 @@ else(DEFINED SAVED_REQUIRED_LIBRARIES)
   unset(CMAKE_REQUIRED_LIBRARIES)
 endif(DEFINED SAVED_REQUIRED_LIBRARIES)
 
-#######################################################################
+# ##############################################################################
 # packages
 
 # Doxygen: necessary for HTML and PDF docs
-#find_package(Doxygen)
+find_package(Doxygen)
 
 # LaTex: necessary for PDF docs (note: FindLATEX doesn't return LATEX_FOUND)
 
-# Note: we only check existence of `latex' (LATEX_COMPILER), hence
-# building the pdf docs may still fail because of other missing tools.
+# Note: we only check existence of `latex' (LATEX_COMPILER), hence building the
+# pdf docs may still fail because of other missing tools.
 
-#set (LATEX_FOUND)
-#if (DOXYGEN_FOUND)
-#  find_package(LATEX)
-#  if (LATEX_COMPILER AND NOT LATEX_FOUND)
-#    set(LATEX_FOUND YES)
-#  endif (LATEX_COMPILER AND NOT LATEX_FOUND)
-#endif (DOXYGEN_FOUND)
+set(LATEX_FOUND)
+if(DOXYGEN_FOUND)
+  find_package(LATEX)
+  if(LATEX_COMPILER AND NOT LATEX_FOUND)
+    set(LATEX_FOUND YES)
+  endif(LATEX_COMPILER AND NOT LATEX_FOUND)
+endif(DOXYGEN_FOUND)
 
-# message("Doxygen  found : ${DOXYGEN_FOUND}")
-# message("LaTex    found : ${LATEX_FOUND}")
-# message("LaTex Compiler : ${LATEX_COMPILER}")
+# message("Doxygen  found : ${DOXYGEN_FOUND}") message("LaTex    found :
+# ${LATEX_FOUND}") message("LaTex Compiler : ${LATEX_COMPILER}")
 
 #
 # End of "$Id$".
