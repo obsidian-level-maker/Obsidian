@@ -2690,9 +2690,10 @@ void dump_link(linedef *ldf1,linedef *ldf2,link *ThisLink,const char *s1)
 {
   char s[200];
 
-  sprintf(s,"%s Link",s1);
-  if (ldf1) {
-    sprintf(s,"%s between (%d,%d)-(%d,%d) and (%d,%d)-(%d,%d).",s,
+  if (!ldf1) {
+    sprintf(s,"%s Link",s1);
+  } else {
+    sprintf(s,"%s Link between (%d,%d)-(%d,%d) and (%d,%d)-(%d,%d).",s1,
       ldf1->from->x,ldf1->from->y,ldf1->to->x,ldf1->to->y,
       ldf2->from->x,ldf2->from->y,ldf2->to->x,ldf2->to->y);
   }
