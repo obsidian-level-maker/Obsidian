@@ -827,7 +827,11 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
-        options.reject_mode = ERM_CreateZeroes;
+        if (build_reject == "yes") {
+            options.reject_mode = ERM_Rebuild_NoGL;
+        } else {
+            options.reject_mode = ERM_CreateZeroes;
+        }
         options.check_polyobjs = false;
         options.compress_nodes = false;
         options.compress_gl_nodes = false;
@@ -949,6 +953,9 @@ bool doom_game_interface_c::Start(const char *preset) {
     if (main_win) {
         current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "vanilla") {
+            build_reject = main_win->left_mods->FindID("ui_reject_options")
+                           ->FindOpt("build_reject")
+                           ->GetID();
             if (Slump_MakeWAD(filename) == 0) {
                 return true;
             } else {
