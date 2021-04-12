@@ -954,7 +954,7 @@ unsigned short psi_sqrt(int v)
 
 /* Find a flat with the given name, creating one if */
 /* it doesn't already exist.                        */
-flat *find_flat(config *c, char *name)
+flat *find_flat(config *c, const char *name)
 {
   flat *t = NULL;
 
@@ -964,7 +964,7 @@ flat *find_flat(config *c, char *name)
 }
 
 /* Return a new flat with the given name */
-flat *new_flat(config *c,char *name)
+flat *new_flat(config *c,const char *name)
 {
   flat *answer;
 
@@ -1089,7 +1089,7 @@ genus *find_genus(config *c, int thingid)
 
 /* Find a texture with the given name, creating one if */
 /* it doesn't already exist.                           */
-texture *find_texture(config *c, char *name)
+texture *find_texture(config *c, const char *name)
 {
   texture *t = NULL;
 
@@ -1099,7 +1099,7 @@ texture *find_texture(config *c, char *name)
 }
 
 /* Return a new texture with the given name */
-texture *new_texture(config *c,char *name)
+texture *new_texture(config *c,const char *name)
 {
   texture *answer;
 
@@ -2686,7 +2686,7 @@ void find_rec(level *l, sector *s, int *minx, int *miny, int *maxx, int *maxy)
   *minx = s->minx;  *miny = s->miny;  *maxx = s->maxx;  *maxy = s->maxy;
 }
 
-void dump_link(linedef *ldf1,linedef *ldf2,link *ThisLink,char *s1)
+void dump_link(linedef *ldf1,linedef *ldf2,link *ThisLink,const char *s1)
 {
   char s[200];
 
@@ -3052,7 +3052,7 @@ byte *one_piece(musheader *pmh)
 }
 
 /* Allocate, initialize, and return a new lmp for custom textures */
-texture_lmp *new_texture_lmp(char *name)
+texture_lmp *new_texture_lmp(const char *name)
 {
   texture_lmp *answer = (texture_lmp *)malloc(sizeof(*answer));
 
@@ -3063,7 +3063,7 @@ texture_lmp *new_texture_lmp(char *name)
 
 /* Allocate, initialize, register with the given lmp, and return */
 /* a new custom texture record structure thing */
-custom_texture *new_custom_texture(texture_lmp *tl,char *name,
+custom_texture *new_custom_texture(texture_lmp *tl,const char *name,
                                    short xsize, short ysize)
 {
   custom_texture *answer = (custom_texture *)malloc(sizeof(*answer));
@@ -5621,7 +5621,7 @@ void point_from(int x1, int y1, int x2, int y2, int angle, int len,
 }
 
 /* Print, log, whatever.  Really ought to support real log files. */
-void announce(int announcelevel, char *s)
+void announce(int announcelevel, const char *s)
 {
   switch (announcelevel) {
     case NONE: return;
@@ -9352,7 +9352,7 @@ themebits themebit_for_name(char *name, config *c)
 /* Absorb a parameter like "thing stringval", returning stringval.  If */
 /* neither the short nor long "thing"s given match, return NULL.  Update */
 /* *r to point to the last string we used. */
-char *absorb_string(char **r,char *ln, char *sn)
+char *absorb_string(char **r,const char *ln, const char *sn)
 {
   /* Needs more error-checking.  Input Is Evil. */
   if (slump_stricmp(*r,ln) && strcmp(*r,sn)) return NULL;
@@ -9362,7 +9362,7 @@ char *absorb_string(char **r,char *ln, char *sn)
 }
 
 /* Absorb a parameter like "yhint 5", etc etc etc, see above. */
-boolean absorb_short(char **r,char *ln,char *sn,short *s)
+boolean absorb_short(char **r,const char *ln,const char *sn,short *s)
 {
   char *v = absorb_string(r,ln,sn);
   if (v==NULL) return SLUMP_FALSE;
@@ -9371,7 +9371,7 @@ boolean absorb_short(char **r,char *ln,char *sn,short *s)
 }
 
 /* Absorb a parameter like "size 5 6", etc etc etc, see above. */
-boolean absorb_two_shorts(char **r,char *ln,char *sn,short *s,short *t)
+boolean absorb_two_shorts(char **r,const char *ln,const char *sn,short *s,short *t)
 {
   char *v = absorb_string(r,ln,sn);
   if (v==NULL) return SLUMP_FALSE;
@@ -9517,7 +9517,7 @@ char *absorb_thing(char *p, config *c)
 /* Absorb a cell subrecord of a construct record, returning SLUMP_TRUE if */
 /* there is one there, or SLUMP_FALSE if not.  Update r to point to the */
 /* last string we actually used. */
-boolean absorb_cell(construct *x,char **r,char *ln,char *sn,boolean b,config *c)
+boolean absorb_cell(construct *x,char **r,const char *ln,const char *sn,boolean b,config *c)
 {
   char *p, *q, *name;
   texture_cell *tc;

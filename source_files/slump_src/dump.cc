@@ -131,7 +131,7 @@ void CloseDump(dumphandle dh)
 }
 
 /* Record the information about a new lmp of the given size */
-void RegisterLmp(dumphandle dh,char *s,unsigned int size)
+void RegisterLmp(dumphandle dh,const char *s,unsigned int size)
 {
   index_entry *ie, *ie2;
 
@@ -154,7 +154,7 @@ void RegisterLmp(dumphandle dh,char *s,unsigned int size)
 /* Given a dumphandle, a music header, a music buffer, a lump name, */
 /* and for some reason a config, do what's necessary to record it   */
 /* in the file and index and stuff. */
-void record_music(dumphandle dh,musheader *mh,byte *buf,char *s,config *c)
+void record_music(dumphandle dh,musheader *mh,byte *buf,const char *s,config *c)
 {
   unsigned int lsize;
 
