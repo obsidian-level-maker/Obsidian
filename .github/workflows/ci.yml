@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - obsidian
-      - ci
   pull_request:
     branches:
       - obsidian
