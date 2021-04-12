@@ -2997,6 +2997,11 @@ function Cave_build_a_park(R, entry_h)
     assert(BLOB.floor_h)
     assert(BLOB.floor_mat)
 
+    if area.room then
+      local R = area.room
+      area.room.floor_mats[BLOB.floor_h] = BLOB.floor_mat
+    end
+
     temp_install_blob(BLOB, B)
 
     table.insert(area.walk_floors, BLOB)
@@ -4652,9 +4657,12 @@ stderrf("  picked chain from blob %d --> %d\n", B.id, C.id)
           end
           x = x + 1
         end
-
       end
+    end
 
+    -- distribute proper materials to closets
+    for _,CL in pairs(area.room.closets) do
+      CL.floor_mat = area.room.floor_mats[CL.floor_h]
     end
   end
 

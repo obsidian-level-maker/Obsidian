@@ -2640,7 +2640,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   elseif chunk.from_area then
     skin.wall  = Junction_calc_wall_tex(chunk.from_area, A)
-    skin.floor = chunk.from_area.floor_mat
+    skin.floor = chunk.floor_mat or chunk.from_area.floor_mat
     skin.ceil  = chunk.from_area.ceil_mat
   end
 
