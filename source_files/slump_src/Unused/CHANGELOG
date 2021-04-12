@@ -1,0 +1,57 @@
+2007.10.29: Slump 0.003.02 bugfix-only release: 
+            1) Made absolute minimum light 128 (no fun to play when 
+               you can't really see the monsters).  
+
+            2) Fixed bug where teleports would not have a destination 
+               (happened about once every 80 large levels created); now we 
+               validate the teleports and convert any teleport without a 
+               destination in to an end-of-level.
+
+            3) Seed fixed to always have a 15-bit instead of a 10-bit range 
+               (the 003.01 code was inconsistent on this matter)
+
+2006.06.09: Slump 0.003.01 release: Changed handling of teleport gates so
+            rooms should always be big enough to fit them.  Made it so
+            changing the number of rooms on a level gives the RNG completely
+            different numbers.  Changed default number of rooms to 17;
+            increased range for RNG seed.
+
+2005.05.30: Slump 0.002.04 release: Changed how monsters/health/ammo are
+            calculated to make it so a level created in isolation (slump
+            -map17 -seed 1 now makes the same map as map17 in slump -seed 1).
+
+2005.05.29: Slump 0.002.03 release: This version generates the same wads
+            on little-endian and big-endian systems if the program is
+            compiled with the ENDIAN_BIG flag in big-endian systems.
+
+2005.05.25: Slump 0.002.02 release: I have contacted David Chess and
+            he has given me permission to GPL his SLIGE code.  There are
+            two non-mandatory requests added to the license to honor 
+            DC's wishes.  All programs have been relicensed with the GPL.
+
+2005.05.24: Slump 0.002.01 release: Fixed errors in COPYING doc.
+
+            SLINFO LMP now has version/serial/patchlevel + seed
+
+            Default seed is now time % 1000 (1-999); seed can only be
+            set from 1-1001 on the command line
+
+            Make sure each level has a single-barrel shotgun at the start;
+            this takes care of the earlier levels (since the HMA calculator
+            assumes the player always has a basic shotgun), and gives a
+            player who respawns after dying a little more than a pea shooter.
+
+	    Minimum number of rooms is now 2; maximum is 37.  I won't allow
+            more rooms until I can set things up so maps are more likely in
+            bigger levels.
+
+2005.05.23: Slump 0.002 release: Only FreeDoom monsters put in maps; 
+            progression of monsters (monsters get nastier as the level number
+            goes up); defaults to making 30 levels with dm starts placed
+            and no monsters in secrets.  Default number of rooms: 7
+            Default seed: 1 (instead of the time; use -seed to make
+            another map)
+
+2005.05.22: Initial Slump 0.001 release; normalized RNG to always generate
+            the same map
+

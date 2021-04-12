@@ -22,7 +22,7 @@
 #ifndef __UI_HYPER_H__
 #define __UI_HYPER_H__
 
-#include <Fl/Fl_Button.H>
+#include <FL/Fl_Button.H>
 
 class UI_HyperLink : public Fl_Button {
    private:

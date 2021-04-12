@@ -17,9 +17,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 */
-#include <assert.h>
-#include "zdbsp.h"
 #include "nodebuild.h"
+#include "zdbsp.h"
+#include <assert.h>
 
 #define Printf printf
 

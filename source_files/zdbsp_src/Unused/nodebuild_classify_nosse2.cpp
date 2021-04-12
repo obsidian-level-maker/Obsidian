@@ -18,8 +18,8 @@
 
 */
 
-#include "zdbsp.h"
 #include "nodebuild.h"
+#include "zdbsp.h"
 
 #define FAR_ENOUGH 17179869184.f		// 4<<32
 

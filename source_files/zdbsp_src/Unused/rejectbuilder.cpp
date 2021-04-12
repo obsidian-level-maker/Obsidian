@@ -16,13 +16,13 @@
 // of a REJECT lump is debatable, I have chosen to not compile this module
 // in with ZDBSP. Save yourself some space and run ZDBSP with the -r option.
 
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
-#include "zdbsp.h"
 #include "nodebuild.h"
 #include "rejectbuilder.h"
 #include "templates.h"
+#include "zdbsp.h"
 
 bool		MergeVis=1;
 
