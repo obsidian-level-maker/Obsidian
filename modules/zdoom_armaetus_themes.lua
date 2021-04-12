@@ -4235,6 +4235,7 @@ ARMAETUS_THEMES =
       OBTBSLV2 = 15,
       OBTBSLV3 = 15,
       OBTBSLV4 = 15,
+      OBTBSLV5 = 10,
 
       OBTBSTX1 = 20,
       OBTBSTX2 = 20,
