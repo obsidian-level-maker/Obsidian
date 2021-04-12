@@ -1062,9 +1062,9 @@ ARMAETUS_ROOM_THEMES =
       OBTSBF2B = 15,
       OBTSBF3B = 15,
 
-      G8_BRNW1 = 15,
-      G8_BRNW2 = 15,
-      G8_BRNW3 = 15
+      G8_BRNF1 = 15,
+      G8_BRNF2 = 15,
+      G8_BRNF3 = 15
     },
 
     ceilings =
@@ -1078,9 +1078,9 @@ ARMAETUS_ROOM_THEMES =
       FLOOR5_4 = 10,
       QFLAT09 = 5,
 
-      G8_BRNW1 = 10,
-      G8_BRNW2 = 10,
-      G8_BRNW3 = 10
+      G8_BRNF1 = 10,
+      G8_BRNF2 = 10,
+      G8_BRNF3 = 10
     },
   },
 
@@ -1375,9 +1375,9 @@ ARMAETUS_ROOM_THEMES =
       OBTSBF2R = 30,
       OBTSBF3R = 30,
 
-      G8_BRNW1 = 30,
-      G8_BRNW2 = 30,
-      G8_BRNW3 = 30
+      G8_BRNF1 = 10,
+      G8_BRNF2 = 10,
+      G8_BRNF3 = 10,
     },
 
     ceilings =
