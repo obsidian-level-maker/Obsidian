@@ -5,7 +5,7 @@ PREFABS.Decor_hell_box_of_people_1 =
 
   height = 72,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never_sky",
 
   prob   = 2500,
   theme  = "hell",
@@ -29,7 +29,7 @@ PREFABS.Decor_hell_box_of_people_3 =
   template = "Decor_hell_box_of_people_1",
   map = "MAP03",
 
-  prob = 3500,
+  prob = 2500,
 
   height = 128,
 

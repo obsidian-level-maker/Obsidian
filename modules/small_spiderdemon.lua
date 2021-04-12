@@ -32,7 +32,7 @@ OB_MODULES["small_spiderdemon"] =
   game = "doomish",
 
   side = "left",
-  priority = 92,
+  priority = 5,
 
   engine = "boom",
 

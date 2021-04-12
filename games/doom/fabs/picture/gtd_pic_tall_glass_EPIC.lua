@@ -52,6 +52,8 @@ PREFABS.Pic_pic_tall_glass_yellow =
   tex_GLASS12 = "GLASS11"
 }
 
+--
+
 PREFABS.Pic_pic_tall_glass_yellow_shrine =
 {
   template = "Pic_pic_tall_glass_orange",
@@ -68,6 +70,16 @@ PREFABS.Pic_pic_tall_glass_red_shrine =
   map = "MAP03",
 
   group = "gtd_tall_glass_epic_red",
+
+  z_fit = { 88,96 }
+}
+
+PREFABS.Pic_pic_tall_glass_blue_shrine =
+{
+  template = "Pic_pic_tall_glass_orange",
+  map = "MAP04",
+
+  group = "gtd_tall_glass_epic_blue",
 
   z_fit = { 88,96 }
 }

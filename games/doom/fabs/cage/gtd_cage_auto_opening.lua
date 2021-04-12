@@ -5,6 +5,8 @@ PREFABS.Cage_auto_open =
 
   prob   = 500,
 
+  filter = "sight_ambush_cage",
+
   theme  = "!hell",
 
   where  = "seeds",
@@ -26,6 +28,8 @@ PREFABS.Cage_auto_open_smaller =
   map      = "MAP02",
 
   theme    = "!hell",
+
+  filter = "sight_ambush_cage",
 
   seed_w = 2,
   seed_h = 2,
