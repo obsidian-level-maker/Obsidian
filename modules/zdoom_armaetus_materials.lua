@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: Armaetus Materials
+--  MODULE: Obsidian Texture Materials
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2021 MsrSgtShooterPerson
@@ -16,6 +16,10 @@
 --  GNU General Public License for more details.
 --
 ------------------------------------------------------------------
+
+-- Reminder: Please keep texture material additions alphabetized
+-- and in categories for a more manageable setup when the file is
+-- modified, thanks!
 
 ARMAETUS_LIQUID_DEFS =
 {
@@ -168,8 +172,7 @@ ARMAETUS_MATERIALS = {
   URBAN7 = { t="URBAN7", f="FLAT1" }, -- Gray
   URBAN8 = { t="URBAN8", f="FLAT1" }, -- Gray, warning lines
 
-
-  -- Cement
+ -- Cement
  -- Copies of the CEMENT# textures so they can be used normally.
   CEM01  = { t="CEM01",  f="FLAT19" }, --CEMENT7,
   CEM02  = { t="CEM02",  f="FLAT19" }, --CEMENT9,
@@ -820,12 +823,11 @@ ARMAETUS_MATERIALS = {
   MIDWIND7 = { t="MIDWIND7", f="CEIL5_1", rail_h = 128 }, -- 32x128,
   MIDWIND8 = { t="MIDWIND8", f="CEIL5_1", rail_h = 128 }, -- 128x128,
 
-
-  -- Oblige flags
+  -- Obsidian flags
   -- Note: Due to being over 128 height, we may need to use HI_START/HI_END lumps if
   -- we have problems with the textures being cut off in-game.
-  OBDNBNR1 = { t="OBDNBNR1", f="CRATOP2" }, -- OBLIGE flag, yellow
-  OBDNBNR2 = { t="OBDNBNR2", f="SFLR6_4" }, -- OBLIGE flag, hellish
+  OBDNBNR1 = { t="OBDNBNR1", f="CRATOP2" }, -- Obsidian flag, yellow
+  OBDNBNR2 = { t="OBDNBNR2", f="SFLR6_4" }, -- Obsidian flag, hellish
 
   -- Vending machine textures (from vending_machine_textures.wad) --
   OBVNMCH1 = { t="OBVNMCH1", f="CEIL5_1" },
@@ -842,6 +844,43 @@ ARMAETUS_MATERIALS = {
   FIREWALA = { t="FIREWALA", f="FLOOR6_1" },
   FIRELAV2 = { t="FIRELAV2", f="FLOOR6_1" },
   TEKWALL4 = { t="TEKWALL4", f="TEKFLR4" },
+
+  ---------------------------
+  -- StalungCraft textures --
+  ---------------------------
+
+  -- TODO: Use better flats used here if possible!
+
+  -- Wood & bookcases
+  BKCASE1A = { t="BKCASE1A", f="RROCK20" }, -- Tan bookshelf, filled with books, 64x128
+  BKCASE2A = { t="BKCASE2A", f="RROCK20" }, -- Tam bookshelf, filled with books, 96x128
+  BKCASE3A = { t="BKCASE3A", f="RROCK20" }, -- Tan bookshelf, filled with books, 128x128
+  BKSIDE1A = { t="BKSIDE1A", f="RROCK20" }, -- Bookshelf side texture, 64x128
+
+  -- Brick walls
+  BRIC9GRN = { t="BRIC9GRN", f="FLOOR7_2" }, -- Light green bricks with ledge, 128x128
+  BRIC9GRY = { t="BRIC9GRY", f="FLAT5_4" }, -- Gray bricks with ledge, 128x128
+  BRIC9TAN = { t="BRIC9TAN", f="FLOOR7_1" }, -- Tan bricks with ledge, 128x128
+  BRICEGRN = { t="BRICEGRN", f="FLOOR7_2" }, -- Big green bricks, 128x128
+  BRICEGRY = { t="BRICEGRY", f="FLOOR7_1" }, -- Big gray bricks, 128x128
+  BRICETAN = { t="BRICETAN", f="RROCK20" }, -- Big tan bricks, 128x128
+
+  DECO1BLK = { t="DECO1BLK", f="BLACK0" }, -- Decorative black wall bits, 64x128
+  DECO1BRN = { t="DECO1BRN", f="FLOOR7_1" }, -- Decorative brown wall bits, 64x128
+  DECO1GRN = { t="DECO1GRN", f="FLOOR7_2" }, -- Decorative green wall bits, 64x128
+  DECO1GRY = { t="DECO1GRY", f="FLAT1" }, -- Decorative gray wall bits, 64x128
+  DECO1RED = { t="DECO1RED", f="FLOOR1_6" }, -- Decorative red wall bits, 64x128
+  DECO1TAN = { t="DECO1TAN", f="RROCK20" }, -- Decorative tan wall bits, 64x128
+
+  -- Decorative brick
+  ENGRAV1 = { t="ENGRAV1", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Knight)
+  ENGRAV2 = { t="ENGRAV2", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Cross?)
+  ENGRAV3 = { t="ENGRAV3", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Cross!)
+  ENGRAV4 = { t="ENGRAV4", f="FLAT5_4" }, -- Medieval style brick/stone decor, 64x128 (Skull)
+  ENGRAV5 = { t="ENGRAV5", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x128 (Battle)
+  ENGRAV6 = { t="ENGRAV6", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Gathering?)
+  ENGRAV7 = { t="ENGRAV7", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Figures)
+  ENGRAV8 = { t="ENGRAV8", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Figures)
 
   --------------------
   --------------------
@@ -974,7 +1013,6 @@ ARMAETUS_MATERIALS = {
   RMARB1 = { t="REDMARB1",  f="RMARB1" },
   RMARB2 = { t="REDMARB3",  f="RMARB2" },
   RMARB3 = { t="REDMARB2",  f="RMARB3" },
-
 
   -- Grating
   GRATE1 = { t="METL01",  f="GRATE1" },
@@ -1138,7 +1176,6 @@ ARMAETUS_MATERIALS = {
   XLAV1   = { t="LFALL1", f="XLAV1", sane=1 },
   QLAVA1   = { t="LFAL21", f="QLAVA1", sane=1 },
   PURW1   = { t="PURFAL1", f="PURW1", sane=1 },
-
 
   -- Warning Strip --
   WARN1 = { t="WARN1", f="WARN2" },
