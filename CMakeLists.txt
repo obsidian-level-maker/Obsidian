@@ -33,7 +33,7 @@ cpmaddpackage(
   TheLartians/Format.cmake
   OPTIONS
   # set to "yes" to skip CMake formatting
-  "FORMAT_SKIP_CMAKE YES"
+  "FORMAT_SKIP_CMAKE NO"
   # path to exclude from formatting (optional + regex)
   "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake"
 )
