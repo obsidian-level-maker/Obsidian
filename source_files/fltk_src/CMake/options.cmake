@@ -141,7 +141,7 @@ endif((OPTION_CAIRO OR OPTION_CAIROEXT) AND NOT PKG_CAIRO_FOUND)
 set(HAVE_GL LIB_GL OR LIB_MesaGL)
 
 if(HAVE_GL)
-  option(OPTION_USE_GL "use OpenGL" ON)
+  option(OPTION_USE_GL "use OpenGL" OFF)
 endif(HAVE_GL)
 
 if(OPTION_USE_GL)
@@ -175,7 +175,7 @@ else()
 endif(OPENGL_FOUND)
 
 # ##############################################################################
-option(OPTION_USE_THREADS "use multi-threading" ON)
+option(OPTION_USE_THREADS "use multi-threading" OFF)
 
 if(OPTION_USE_THREADS)
   include(FindThreads)
@@ -218,7 +218,7 @@ if(OPTION_LARGE_FILE)
 endif(OPTION_LARGE_FILE)
 
 # ##############################################################################
-option(OPTION_USE_SYSTEM_ZLIB "use system zlib" OFF)
+option(OPTION_USE_SYSTEM_ZLIB "use system zlib" ON)
 
 if(OPTION_USE_SYSTEM_ZLIB AND LIB_zlib)
   include(FindZLIB)

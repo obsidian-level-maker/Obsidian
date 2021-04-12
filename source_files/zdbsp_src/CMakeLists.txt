@@ -36,11 +36,6 @@ add_library(
   zdmain.h
   zdwad.cc
   zdwad.h
-  zlib/crc32.h
-  zlib/deflate.h
-  zlib/gzguts.h
-  zlib/trees.h
-  zlib/zconf.h
-  zlib/zlib.h
-  zlib/zutil.h
 )
+
+target_include_directories(obsidian_zdbsp PRIVATE ../zlib_src)

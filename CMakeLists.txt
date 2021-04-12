@@ -20,7 +20,9 @@ project(
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
-set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+if(clang)
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+endif()
 
 cpmaddpackage(
   NAME
@@ -158,14 +160,17 @@ target_include_directories(obsidian PRIVATE source_files/slump_src)
 target_include_directories(obsidian PRIVATE source_files/fltk_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
 
-target_compile_definitions(obsidian PRIVATE UNIX)
+if(MINGW)
+    target_compile_definitions(obsidian PRIVATE WIN32)
+else()
+    target_compile_definitions(obsidian PRIVATE UNIX)
+endif()
 
 target_link_libraries(
   obsidian
   PRIVATE fltk
           fltk_images
-          zlib
-          z
+          zlibstatic
           obsidian_lua
           obsidian_physfs
           obsidian_acc
