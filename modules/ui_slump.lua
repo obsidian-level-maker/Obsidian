@@ -29,6 +29,7 @@ UI_SLUMP.SIZES =
   "25", _("25 Rooms"),
   "30", _("30 Rooms"),
   "35", _("35 Rooms"),
+  "99", _("Surprise Me")
 }
 
 UI_SLUMP.BIGIFY=
@@ -41,6 +42,15 @@ UI_SLUMP.BIGIFY=
   "101", _("Supersize Me")
 }
 
+UI_SLUMP.FORKINESS=
+{
+  "0", _("None"),
+  "25", _("25%"),
+  "50", _("50%"),
+  "75", _("75%"),
+  "101", _("100%")
+}
+
 UI_SLUMP.YES_NO =
 {
   "yes", _("Yes"),
@@ -51,6 +61,7 @@ UI_SLUMP.MON_VARIETY =
 {
   "normal", _("Normal"),
   "shooters", _("Ranged Only"),
+  "noflyzone", _("No Fly Zone"),
   "nazis", _("Oops! All Nazis!")
 }
 
@@ -74,6 +85,15 @@ OB_MODULES["ui_slump_arch"] =
       choices = UI_SLUMP.BIGIFY,
       default = "0",
       tooltip = "Default will leave things to chance."
+    },
+    
+    {
+      name = "forkiness",
+      label = _("Forkiness"),
+      choices = UI_SLUMP.FORKINESS,
+      default = "50",
+      tooltip = "Chance that a room will attempt to fork as the level grows. "..
+                "'None' should be a bunch of murder hallways."
     },
 
     {

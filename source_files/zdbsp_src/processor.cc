@@ -1418,7 +1418,8 @@ ZLibOut::~ZLibOut() {
     }
     deflateEnd(&Stream);
     if (err != Z_STREAM_END) {
-        throw std::runtime_error("Error deflating data.");
+        std::runtime_error("Error deflating data.");
+        std::terminate();
     }
     Out.AddToLump(Buffer, BUFFER_SIZE - Stream.avail_out);
 }

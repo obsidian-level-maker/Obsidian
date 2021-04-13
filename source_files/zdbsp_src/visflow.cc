@@ -80,6 +80,7 @@ FRejectBuilder::FWinding *FRejectBuilder::AllocStackWinding(
         throw std::runtime_error("AllocStackWinding: failed");
     } catch (std::runtime_error &msg) {
         printf("%s\n", msg.what());
+        std::terminate();
     }
 }
 

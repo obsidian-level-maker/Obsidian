@@ -28,6 +28,8 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
+Modified SLUMP level builder included for Vanilla Doom usage.
+
 Revised default visual style.
 
 ZDBSP as the internal nodebuilder, replacing GLBSP.
