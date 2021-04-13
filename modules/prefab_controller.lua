@@ -89,7 +89,8 @@ PREFAB_CONTROL.FILTER_CATEGORIES =
   dexterity = "pf_dexterity",
   sight_ambush_cage = "pf_sight_ambushes",
   mirror_maze = "pf_mirror_mazes",
-  dark_maze = "pf_dark_mazes"
+  dark_maze = "pf_dark_mazes",
+  stair_ladder = "pf_stair_ladders"
 }
 
 function PREFAB_CONTROL.setup(self)
@@ -323,6 +324,14 @@ OB_MODULES["prefab_control"] =
       tooltip="Changes probabilities for dark/eye maze joiners in hell theme.",
       default="1",
       priority = 9,
+    },
+    
+    pf_stair_ladders =
+    {
+      name = "pf_stair_ladders", label=_("Stair Ladders"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
+      tooltip="Changes probabilities for high-step ladders (stairs).",
+      default="1",
+      priority = 8,
       gap = 1
     },
 
