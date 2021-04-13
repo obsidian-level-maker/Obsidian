@@ -31,7 +31,7 @@ PREFABS.Start_armaetus_fans_urban =
   theme = "urban",
 
   flat_CEIL4_2 = "FLAT5_1",
-  wall_COMPBLUE = "STEP2",
+  tex_COMPBLUE = "STEP2",
   tex_SW1BLUE = "SW1BLUE"
 }
 
@@ -42,6 +42,6 @@ PREFABS.Start_armaetus_fans_hell =
   theme = "hell",
 
   flat_CEIL4_2 = "DEM1_6",
-  wall_COMPBLUE = "MARBLE1",
+  tex_COMPBLUE = "MARBLE1",
   tex_SW1BLUE = "SW1GOTH"
 }
