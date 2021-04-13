@@ -799,6 +799,7 @@ typedef struct s_config {
   /* These are *not* actually static */
   int episode, mission, map;  /* What map/mission we're on now. */
   boolean last_mission;       /* This the last one we're doing? */
+  int forkiness; // Controls percentage rolls for room forking
 } config, *pconfig;
 
 /* Lots and lots and lots of functions */
