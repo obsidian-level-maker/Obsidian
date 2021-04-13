@@ -1,6 +1,6 @@
 PREFABS.Wall_gtd_g99_1 =
 {
-  file   = "wall/gtd_wall_g99_set.wad",
+  file   = "wall/gtd_wall_hell_g99_set.wad",
   map    = "MAP01",
 
   prob   = 50,

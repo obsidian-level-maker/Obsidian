@@ -313,7 +313,7 @@ PREFABS.Wall_holo_marquee =
 
   deep = 48,
 
-  z_fit = "top",
+  z_fit = { 48,104 },
 
   tex_COMPBLUE =
   {
