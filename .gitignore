@@ -1,5 +1,7 @@
 Obsidian
+obsidian
 Obsidian.exe
+obsidian.exe
 
 *.o
 .f
@@ -9,6 +11,10 @@ Obsidian.exe
 build/
 .cache/
 .vscode/
+
+# CLion
+.idea/
+cmake-build-*
 
 # User dirs
 addons/*.pk3

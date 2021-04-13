@@ -891,13 +891,13 @@ boolean read_switches(config *c);
 boolean nonswitch_config(config *c);
 void load_config(config *c);
 void unload_config(config *c);
-texture *new_texture(config *c, char *name);
-texture *find_texture(config *c, char *name);
+texture *new_texture(config *c, const char *name);
+texture *find_texture(config *c, const char *name);
 genus *find_genus(config *c, int thingid);
 genus *new_genus(config *c,int thingid);
-flat *new_flat(config *c, char *name);
-flat *find_flat(config *c, char *name);
-theme *new_theme(config *c, char *name, boolean secret);
+flat *new_flat(config *c, const char *name);
+flat *find_flat(config *c, const char *name);
+theme *new_theme(config *c, const char *name, boolean secret);
 gate *new_gate(level *l,short in,short out,short lock,boolean entry,config *c);
 void patch_upper(linedef *ld,texture *t,config *c);
 void patch_lower(linedef *ld,texture *t,config *c);
@@ -966,7 +966,7 @@ boolean install_sl_exit(level *l,sector *oldsector,haa *ThisHaa,
 #define NOTE 2
 #define WARNING 3
 #define SLUMP_ERROR 4
-void announce(int announcetype, char *s);
+void announce(int announcetype, const char *s);
 
 #define RIGHT_TURN (90)
 #define LEFT_TURN (270)
@@ -1034,9 +1034,9 @@ void global_align_group_etc_backward(level *l,linedef *ld);
 
 void basic_background2(byte *fbuf, byte bottom, int range);
 byte *one_piece(musheader *pmh);
-texture_lmp *new_texture_lmp(char *name);
+texture_lmp *new_texture_lmp(const char *name);
 void free_texture_lmp(texture_lmp *tl);
-custom_texture *new_custom_texture(texture_lmp *tl,char *name,
+custom_texture *new_custom_texture(texture_lmp *tl,const char *name,
                                    short xsize, short ysize);
 boolean hardwired_nonswitch_nontheme_config(config *c);
 
