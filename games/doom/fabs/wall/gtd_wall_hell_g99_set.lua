@@ -15,25 +15,13 @@ PREFABS.Wall_gtd_g99_1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  z_fit = { 56,72 },
+  z_fit = { 56,72 }
 }
 
 PREFABS.Wall_gtd_g99_diag_1 =
 {
-  file   = "wall/gtd_wall_g99_set.wad",
+  template = "Wall_gtd_g99_1",
   map    = "MAP02",
 
-  prob   = 50,
-  group  = "gtd_g99",
-
-  where  = "diagonal",
-
-  deep   = 16,
-
-  height = 128,
-
-  bound_z1 = 0,
-  bound_z2 = 128,
-
-  z_fit = { 56,72 },
+  where  = "diagonal"
 }
