@@ -42,6 +42,8 @@ class UI_Module : public Fl_Group {
     Fl_Check_Button *mod_button;
 
     std::map<std::string, UI_RChoice *> choice_map;
+    
+    std::map<std::string, UI_RSlide *> choice_map_slider;
 
     // only used while positioning the options (as they are added)
     int cur_opt_y;
@@ -54,9 +56,17 @@ class UI_Module : public Fl_Group {
     void AddOption(const char *option, const char *label, const char *tip,
                    int gap, Fl_Color select_col);
 
+	void AddSliderOption(const char *option, const char *label, const char *tip,
+                          int gap, double min, double max, double inc, Fl_Color select_col);
+
     void AddOptionChoice(const char *option, const char *id, const char *label);
+    
+	void AddOptionSliderChoice(const char *option, double minimum, double maximum,
+                                double increment);
 
     bool SetOption(const char *option, const char *value);
+    
+    bool SetSliderOption(const char *option, double value);
 
     bool Is_UI() const;
 
@@ -66,6 +76,8 @@ class UI_Module : public Fl_Group {
     void update_Enable();
 
     UI_RChoice *FindOpt(const char *opt);  // const;
+    
+    UI_RSlide *FindSliderOpt(const char *opt);  // const;
 
    protected:
    private:
@@ -107,11 +119,16 @@ class UI_CustomMods : public Fl_Group {
 
     bool AddOption(const char *module, const char *option, const char *label,
                    const char *tip, int gap);
+                   
+	bool AddSliderOption(const char *module, const char *option, const char *label,
+                   const char *tip, int gap, double min, double max, double inc);
 
     void AddOptionChoice(const char *module, const char *option, const char *id,
                          const char *label);
 
     bool SetOption(const char *module, const char *option, const char *value);
+    
+    bool SetSliderOption(const char *module, const char *option, double value);
 
     void Locked(bool value);
 

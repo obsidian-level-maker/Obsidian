@@ -136,8 +136,11 @@ OB_MODULES["ui_slump_mons"] =
     {
       name = "slump_mons",
       label = _("Monster Variety"),
-      choices = UI_SLUMP.MON_VARIETY,
-      default = "normal",
+      valuator = "slider",
+      min = 0,
+      max = 10.0,
+      increment = 0.1,
+      default = 5.0,
       tooltip = "Control what types of monsters are available"
     },
   }

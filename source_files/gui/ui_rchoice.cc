@@ -235,54 +235,13 @@ int UI_RChoice::handle(int event) {
 
 //----------------------------------------------------------------
 
-choice_data_c *UI_RSlide::FindMapped() const {
-    for (unsigned int j = 0; j < opt_list.size(); j++) {
-        choice_data_c *P = opt_list[j];
+UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
+    : Fl_Hor_Value_Slider(x, y, w, h, label) {}
 
-        if (P->mapped >= 0 && P->mapped == value()) {
-            return P;
-        }
-    }
+UI_RSlide::~UI_RSlide() {}
 
-    return NULL;
-}
-
-const char *UI_RSlide::GetID() const {
-    choice_data_c *P = FindMapped();
-
-    return P ? P->id : "";
-}
-
-const char *UI_RSlide::GetLabel() const {
-    choice_data_c *P = FindMapped();
-
-    return P ? P->label : "";
-}
-
-bool UI_RSlide::ChangeTo(const char *id) {
-    SYS_ASSERT(id);
-
-    choice_data_c *P = FindID(id);
-
-    if (!P || P->mapped < 0) {
-        return false;
-    }
-
-    value(P->mapped);
-
-    return true;
-}
-
-choice_data_c *UI_RSlide::FindID(const char *id) const {
-    for (unsigned int j = 0; j < opt_list.size(); j++) {
-        choice_data_c *P = opt_list[j];
-
-        if (strcmp(P->id, id) == 0) {
-            return P;
-        }
-    }
-
-    return NULL;
+double UI_RSlide::GetValue() {
+    return value();
 }
 
 //--- editor settings ---
