@@ -134,7 +134,7 @@ OB_MODULES["ui_slump_mons"] =
   options =
   {
     {
-      name = "slump_mons",
+      name = "float_slump_mons",
       label = _("Monster Variety"),
       valuator = "slider",
       min = 0,

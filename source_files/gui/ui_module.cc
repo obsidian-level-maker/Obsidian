@@ -139,7 +139,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->selection_color(select_col);
     rsl->minimum(min);
     rsl->maximum(max);
-    rsl->increment(inc, 1);
+    rsl->step(inc);
     if (!tip) {
         tip = "";
     }
@@ -337,7 +337,7 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
                               const char *label, const char *tip, int gap, double min, double max, double inc) {
-    UI_Module *M = FindID(module);
+    UI_Module *M = FindSliderID(module);
 
     if (!M) {
         return false;
@@ -399,7 +399,7 @@ bool UI_CustomMods::SetOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::SetSliderOption(const char *module, const char *option, double value) {
-    UI_Module *M = FindID(module);
+    UI_Module *M = FindSliderID(module);
 
     if (!M) {
         return false;
@@ -815,6 +815,19 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data) {
 }
 
 UI_Module *UI_CustomMods::FindID(const char *id) const {
+    for (int j = 0; j < mod_pack->children(); j++) {
+        UI_Module *M = (UI_Module *)mod_pack->child(j);
+        SYS_ASSERT(M);
+
+        if (strcmp(M->id_name.c_str(), id) == 0) {
+            return M;
+        }
+    }
+
+    return NULL;
+}
+
+UI_Module *UI_CustomMods::FindSliderID(const char *id) const {
     for (int j = 0; j < mod_pack->children(); j++) {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);

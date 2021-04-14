@@ -36,6 +36,7 @@
 
 class choice_data_c {
     friend class UI_RChoice;
+    friend class UI_RSlide; 
 
    public:
     const char *id;     // terse identifier
@@ -51,25 +52,6 @@ class choice_data_c {
    public:
     choice_data_c(const char *_id = NULL, const char *_label = NULL);
     ~choice_data_c();
-};
-
-class choice_data_s {
-    friend class UI_RSlide;
-
-   public:
-    const char *id;     // terse identifier
-    const char *label;  // description (for the UI)
-
-    bool enabled;  // shown to the user
-
-    // the index in the current list, or -1 if not present
-    int mapped;
-
-    Fl_Check_Button *widget;
-
-   public:
-    choice_data_s(const char *_id = NULL, const char *_label = NULL);
-    ~choice_data_s();
 };
 
 class UI_RChoice : public Fl_Choice {
@@ -123,10 +105,14 @@ class UI_RChoice : public Fl_Choice {
 };
 
 class UI_RSlide : public Fl_Hor_Value_Slider {
+   private:
+    std::vector<choice_data_c *> opt_list;
 
    public:
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
+    
+    choice_data_c *FindSliderID(const char *id) const;
 
    public:
     double GetValue();

@@ -582,22 +582,16 @@ function ob_set_mod_option(name, option, value)
   end
 
   opt.value = value
-
+  
   if not opt.valuator then
     gui.set_module_option(name, option, value)
   else
-    gui.set_module_slider_option(name, option, value)
+    gui.set_module_slider_option(name, option, tonumber(value))
   end
 
   -- no need to call ob_update_all
   -- (nothing ever depends on custom options)
 end
-
---function ob_get_config(name)
-  
---    if OB_CONFIG[name] return OB_CONFIG[name] else return "NULL" end
-    
---end
 
 function ob_set_config(name, value)
   -- See the document 'doc/Config_Flow.txt' for a good
@@ -606,12 +600,11 @@ function ob_set_config(name, value)
 
   assert(name and value and type(value) == "string")
 
-  if name == "seed" then
+  if name == "seed" or string.match(name, "float_") then
     OB_CONFIG[name] = tonumber(value) or 0
     return
   end
-
-
+  
   -- check all the UI modules for a matching option
   -- [ this is only needed when parsing the CONFIG.txt file ]
   for _,mod in pairs(OB_MODULES) do
@@ -737,6 +730,9 @@ function ob_read_all_config(need_full, log_only)
       do_line("")
 
       for _,opt in pairs(def.options) do
+        if string.match(opt.name, "float_") then
+          print("FLOAT VALUE: " .. gui.get_module_slider_value(name, opt.name))
+        end
         do_value(opt.name, opt.value)
       end
 
