@@ -1259,7 +1259,8 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 50,
+      gtd_ribbed_lights = 25,
+      gtd_ribbed_lights_no3d = 25,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1652,7 +1653,8 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 25,
+      gtd_ribbed_lights = 20,
+      gtd_ribbed_lights_no3d = 20,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
