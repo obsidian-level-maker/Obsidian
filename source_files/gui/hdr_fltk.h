@@ -49,7 +49,7 @@
 #include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Scroll.H>
 #include <FL/Fl_Scrollbar.H>
-#include <FL/Fl_Slider.H>
+#include <FL/Fl_Hor_Slider.H>
 #ifdef __APPLE__
 #include <FL/Fl_Sys_Menu_Bar.H>
 #endif
