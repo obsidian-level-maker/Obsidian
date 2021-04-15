@@ -620,8 +620,7 @@ int gui_set_module_slider_option(lua_State *L) {
     return 0;
 }
 
-// LUA: set_module_option(module, option, value)
-//
+// LUA: get_module_slider_value(module, option)
 int gui_get_module_slider_value(lua_State *L) {
     const char *module = luaL_checkstring(L, 1);
     const char *option = luaL_checkstring(L, 2);
@@ -637,18 +636,22 @@ int gui_get_module_slider_value(lua_State *L) {
 	
 	double value;
 	
-	if (main_win->left_mods->FindSliderID(module)->FindSliderOpt(option)) {
-		value = main_win->left_mods->FindSliderID(module)->FindSliderOpt(option)->GetValue();
-		lua_pushnumber(L, value);		
-	} else if (main_win->right_mods->FindSliderID(module)->FindSliderOpt(option)) {
-		value = main_win->right_mods->FindSliderID(module)->FindSliderOpt(option)->GetValue();
-		lua_pushnumber(L, value); 
+	if (main_win->left_mods->FindID(module)) {
+		if (main_win->left_mods->FindID(module)->FindSliderOpt(option)) {
+			value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->value();
+			lua_pushnumber(L, value);	
+		}	
+	} else if (main_win->right_mods->FindID(module)) {
+		if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
+			value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->value();
+			lua_pushnumber(L, value);	
+		}	
 	} else {
 		return luaL_error(L, "get_module_slider_value: unknown option '%s.%s'\n",
                           module, option);
     }
     
-    return 0;
+    return 1;
 }
 
 // LUA: at_level(name, idx, total)

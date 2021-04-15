@@ -240,21 +240,5 @@ UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
 
 UI_RSlide::~UI_RSlide() {}
 
-double UI_RSlide::GetValue() {
-    return value();
-}
-
-choice_data_c *UI_RSlide::FindSliderID(const char *id) const {
-    for (unsigned int j = 0; j < opt_list.size(); j++) {
-        choice_data_c *P = opt_list[j];
-
-        if (strcmp(P->id, id) == 0) {
-            return P;
-        }
-    }
-
-    return NULL;
-}
-
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

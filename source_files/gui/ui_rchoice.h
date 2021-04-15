@@ -111,11 +111,6 @@ class UI_RSlide : public Fl_Hor_Value_Slider {
    public:
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
-    
-    choice_data_c *FindSliderID(const char *id) const;
-
-   public:
-    double GetValue();
 };
 
 #endif /* __UI_RCHOICE_H__ */

@@ -133,8 +133,6 @@ class UI_CustomMods : public Fl_Group {
     void Locked(bool value);
 
     UI_Module *FindID(const char *id) const;
-    
-	UI_Module *FindSliderID(const char *id) const;
 
    private:
     void PositionAll(UI_Module *focus = NULL);
