@@ -240,5 +240,12 @@ UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
 
 UI_RSlide::~UI_RSlide() {}
 
+//----------------------------------------------------------------
+
+UI_RLight::UI_RLight(int x, int y, int w, int h, const char *label)
+    : Fl_Light_Button(x, y, w, h, label), opt_list() { }
+
+UI_RLight::~UI_RLight() {}
+
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
