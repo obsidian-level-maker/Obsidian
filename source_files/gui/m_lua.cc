@@ -597,10 +597,7 @@ int gui_set_module_slider_option(lua_State *L) {
     const char *option = luaL_checkstring(L, 2);
     double value = luaL_checknumber(L, 3);
 
-    SYS_ASSERT(module && option && value);
-
-    //	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option,
-    // value);
+    SYS_ASSERT(module && option && !isnan(value));
 
     if (!main_win) {
         return 0;

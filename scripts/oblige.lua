@@ -730,7 +730,11 @@ function ob_read_all_config(need_full, log_only)
       do_line("")
 
       for _,opt in pairs(def.options) do
+        if string.match(opt.name, "float_") then
+          do_value(opt.name, gui.get_module_slider_value(name, opt.name))
+        else
           do_value(opt.name, opt.value)
+        end
       end
 
       do_line("")

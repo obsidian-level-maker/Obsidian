@@ -74,7 +74,8 @@ OB_MODULES["ui_slump_arch"] =
       increment = 1,
       default = 50,
       tooltip = "% chance that a room will attempt to fork as the level grows. "..
-                "0% should be a bunch of murder hallways."
+                "0% should be a bunch of murder hallways. Forks are not guaranteed " ..
+                "to succeed, especially if the room bigification chance is increased."
     },
 
     {
