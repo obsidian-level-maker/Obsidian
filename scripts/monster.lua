@@ -834,15 +834,15 @@ function Monster_fill_room(R)
     local l_factor = MONSTER_KIND_TAB.few
     local u_factor = MONSTER_KIND_TAB.heaps
 
-    --if OB_CONFIG.mons == "mixed" then
-      --factor = rand.range(l_factor, u_factor)
-    --elseif OB_CONFIG.mons == "prog" then
-      --factor = l_factor + (u_factor * LEVEL.game_along)
-    --else
-      factor = gui.get_module_slider_value("ui_mons", "float_mons")
-      assert(factor)
-    --end
+    factor = gui.get_module_slider_value("ui_mons", "float_mons")
+    assert(factor)
 
+    if factor == -0.05 then
+      factor = rand.range(l_factor, u_factor)
+    elseif factor == -0.10 then
+      factor = l_factor + (u_factor * LEVEL.game_along)
+    end
+    
     -- apply 'mon_variety' style
     -- [ this style is only set via the Level Control module ]
     factor = factor * style_sel("mon_variety", 0, 0.5, 1.0, 2.1)
@@ -889,18 +889,17 @@ function Monster_fill_room(R)
     local u_range = math.max(min_range, max_range)
     local l_range = math.min(min_range, max_range)
 
-    --if OB_CONFIG.mons == "mixed" then
-      --if l_range == u_range then
-        --qty = l_range
-      --end
-      --qty = rand.range(l_range, u_range)
-    --elseif OB_CONFIG.mons == "prog" then
-      --qty = l_range + (u_range * LEVEL.game_along)
-    --else
-      qty = gui.get_module_slider_value("ui_mons", "float_mons")
-      assert(qty)
-      print("MONSTER QUANTITY: " .. qty)
-    --end
+    qty = gui.get_module_slider_value("ui_mons", "float_mons")
+    assert(qty)
+
+    if qty == -0.05 then
+      if l_range == u_range then
+        qty = l_range
+      end
+      qty = rand.range(l_range, u_range)
+    elseif qty == -0.10 then
+      qty = l_range + (u_range * LEVEL.game_along)
+    end
 
     -- oh the pain
     if LEVEL.is_procedural_gotcha then
