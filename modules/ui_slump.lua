@@ -20,37 +20,6 @@
 
 UI_SLUMP = { }
 
-UI_SLUMP.SIZES =
-{
-  "5", _("5 Rooms"),
-  "10", _("10 Rooms"),
-  "15", _("15 Rooms"),
-  "20", _("20 Rooms"),
-  "25", _("25 Rooms"),
-  "30", _("30 Rooms"),
-  "35", _("35 Rooms"),
-  "99", _("Surprise Me")
-}
-
-UI_SLUMP.BIGIFY=
-{
-  "0", _("Default"),
-  "5", _("Claustrophobic"),
-  "25", _("Mostly Small"),
-  "50", _("A Good Mix"),
-  "75", _("Mostly Large"),
-  "101", _("Supersize Me")
-}
-
-UI_SLUMP.FORKINESS=
-{
-  "0", _("None"),
-  "25", _("25%"),
-  "50", _("50%"),
-  "75", _("75%"),
-  "101", _("100%")
-}
-
 UI_SLUMP.YES_NO =
 {
   "yes", _("Yes"),
@@ -75,25 +44,37 @@ OB_MODULES["ui_slump_arch"] =
 
   options =
   {
-    { name="minrooms", label=_("Level Size"), choices=UI_SLUMP.SIZES,  default="15",
+    { name="float_minrooms",
+      label=_("Level Size"),
+      valuator = "slider",
+      min = 2,
+      max = 37,
+      increment = 1,
+      default = 15,
       tooltip = "Minimum number of rooms per level."
     },
 
     {
-      name = "bigify",
-      label = _("Average Room Size"),
-      choices = UI_SLUMP.BIGIFY,
-      default = "0",
-      tooltip = "Default will leave things to chance."
+      name = "float_bigify",
+      label = _("Room Bigification Chance"),
+      valuator = "slider",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 50,
+      tooltip = "% chance that SLUMP will attempt to grow a room."
     },
     
     {
-      name = "forkiness",
+      name = "float_forkiness",
       label = _("Forkiness"),
-      choices = UI_SLUMP.FORKINESS,
-      default = "50",
-      tooltip = "Chance that a room will attempt to fork as the level grows. "..
-                "'None' should be a bunch of murder hallways."
+      valuator = "slider",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 50,
+      tooltip = "% chance that a room will attempt to fork as the level grows. "..
+                "0% should be a bunch of murder hallways."
     },
 
     {
@@ -134,13 +115,10 @@ OB_MODULES["ui_slump_mons"] =
   options =
   {
     {
-      name = "float_slump_mons",
+      name = "slump_mons",
       label = _("Monster Variety"),
-      valuator = "slider",
-      min = 0,
-      max = 10.0,
-      increment = 0.1,
-      default = 5.0,
+      choices = UI_SLUMP.MON_VARIETY,
+      default = "normal",
       tooltip = "Control what types of monsters are available"
     },
   }

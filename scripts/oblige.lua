@@ -600,7 +600,7 @@ function ob_set_config(name, value)
 
   assert(name and value and type(value) == "string")
 
-  if name == "seed" or string.match(name, "float_") then
+  if name == "seed" then
     OB_CONFIG[name] = tonumber(value) or 0
     return
   end
@@ -730,10 +730,7 @@ function ob_read_all_config(need_full, log_only)
       do_line("")
 
       for _,opt in pairs(def.options) do
-        if string.match(opt.name, "float_") then
-          print("FLOAT VALUE: " .. gui.get_module_slider_value(name, opt.name))
-        end
-        do_value(opt.name, opt.value)
+          do_value(opt.name, opt.value)
       end
 
       do_line("")
