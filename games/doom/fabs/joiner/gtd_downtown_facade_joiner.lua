@@ -89,3 +89,31 @@ PREFABS.Joiner_downtown_facade_flipped =
 
   y_fit = { 24,64 },
 }
+
+
+PREFABS.Joiner_downtown_facade_flipped_commercial1 =
+{
+  template = "Joiner_downtown_facade",
+  map = "MAP01",
+
+  env = "building",
+  neighbor = "outdoor",
+
+  group = "dem_wall_commercial",
+
+}
+
+PREFABS.Joiner_downtown_facade_flipped_commercial2 =
+{
+  template = "Joiner_downtown_facade",
+  map = "MAP02",
+
+  env = "building",
+  neighbor = "outdoor",
+
+  group = "dem_wall_commercial",
+
+  y_fit = { 24,64 },
+}
+
+

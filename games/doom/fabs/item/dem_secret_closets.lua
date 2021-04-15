@@ -66,6 +66,13 @@ PREFABS.Item_secret_store_closet =
 
   can_flip = true,
 
+
+  thing_2014 =
+  {
+    potion = 50,
+    helmet = 50,
+  },
+
   tex_BRICK9 = {
     BRICK1=50, BRICK10=50, BRICK11=50,
     BRICK2=50, BRICK4=50,
@@ -822,6 +829,43 @@ PREFABS.Item_dem_gtd_alcove_secret =
   x_fit = "frame",
   y_fit  = "top",
   z_fit  = "top",
+
+  thing_2014 =
+  {
+    potion = 50,
+    helmet = 50,
+  }
+}
+
+-- Phytolizer's secret cave nook for Hell's mass 2021---
+
+PREFABS.Item_dem_cavein7_secret =
+{
+  file   = "item/dem_secret_closets.wad",
+  map    = "MAP29",
+
+  rank  = 1,
+
+  prob   = 1000000,
+
+  key   = "secret",
+
+  env = "cave",
+
+  where  = "seeds",
+  height = 128,
+
+  seed_w = 2,
+  seed_h = 2,
+
+  deep = 16,
+  over = -16,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  x_fit = "stretch",
+  z_fit = { 56,64 },
 
   thing_2014 =
   {

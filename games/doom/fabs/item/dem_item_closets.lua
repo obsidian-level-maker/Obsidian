@@ -109,8 +109,6 @@ PREFABS.Item_dem_grocerystore_closet =
   env   = "outdoor",
   prob  = 100,
 
-  key   = "secret",
-
   where  = "seeds",
   seed_w = 3,
   seed_h = 2,
