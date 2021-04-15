@@ -1,13 +1,15 @@
 PREFABS.Ladder_128_rustic =
 {
-  file   = "stairs/gtd_stair_ladder_128.wad",
-  map    = "MAP01",
+  file = "stairs/gtd_stair_ladder_128.wad",
+  map = "MAP01",
 
-  prob   = 3,
-  style  = "steepness",
+  prob = 3,
+  style = "steepness",
 
-  where  = "seeds",
-  shape  = "I",
+  filter = "stair_ladder",
+
+  where = "seeds",
+  shape = "I",
 
   seed_w = 1,
   seed_h = 1,
@@ -55,8 +57,10 @@ PREFABS.Ladder_thin =
   prob = 9,
   style = "steepness",
 
-  where  = "seeds",
-  shape  = "I",
+  filter = "stair_ladder",
+
+  where = "seeds",
+  shape = "I",
 
   seed_w = 1,
   seed_h = 1,

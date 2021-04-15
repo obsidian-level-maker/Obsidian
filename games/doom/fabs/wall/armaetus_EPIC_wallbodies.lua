@@ -2,7 +2,7 @@
 
 PREFABS.Wall_epic_wallbodies =
 {
-  file   = "wall/gtd_EPIC_wall_light_column_set.wad",
+  file   = "wall/gtd_wall_tech_light_column_set_EPIC.wad",
   map    = "MAP01",
 
   prob   = 50,
@@ -27,7 +27,7 @@ PREFABS.Wall_epic_wallbodies =
 
 PREFABS.Wall_epic_wallbodies_diagonal =
 {
-  file   = "wall/gtd_EPIC_wall_light_column_set.wad",
+  file   = "wall/gtd_wall_tech_light_column_set_EPIC.wad",
   map    = "MAP02",
 
   prob   = 50,
