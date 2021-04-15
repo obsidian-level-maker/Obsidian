@@ -140,11 +140,12 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->minimum(min);
     rsl->maximum(max);
     rsl->step(inc);
+    rsl->original_label = new_label;
     if (!tip) {
         tip = "";
     }
     rsl->tooltip(tip);
-
+    rsl->callback(callback_MixItCheck, NULL);
     if (!mod_button->value()) {
         rsl->hide();
     }
@@ -215,7 +216,7 @@ bool UI_Module::SetSliderOption(const char *option, double value) {
     }
 
     rsl->value(value);
-
+	rsl->do_callback();
     return true;
 }
 
@@ -246,6 +247,36 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     UI_Module *M = cb_data->mod;
 
     ob_set_mod_option(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
+}
+
+void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
+    UI_RSlide *rsl = (UI_RSlide *)w;
+
+    SYS_ASSERT(rsl);
+
+	double value = rsl->value();
+	
+	if (value == -0) {
+		value = 0; // Silly, but keeps "negative zero" from being show on the label
+	}
+	
+	std::string new_label = rsl->original_label;
+
+	rsl->copy_label(new_label.append(20, ' ').c_str()); // To prevent visual errors with labels of different lengths
+
+	new_label = rsl->original_label;
+
+	if (value == (-1 * rsl->step())) {
+		rsl->copy_label(new_label.append("Mix It Up").c_str());
+	} else if (value == (-2 * rsl->step())) {
+		rsl->copy_label(new_label.append("Progressive").c_str());
+	} else if (value == (-3 * rsl->step())) {
+		rsl->copy_label(new_label.append("Jumbled").c_str());
+	} else {	
+		char value_string[10];
+		sprintf(value_string, "%.2f", value);
+		rsl->copy_label(new_label.append((const char*)value_string).c_str());
+	}
 }
 
 //----------------------------------------------------------------

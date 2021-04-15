@@ -25,7 +25,7 @@
 
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
-#include "FL/Fl_Slider.H"
+#include "FL/Fl_Hor_Slider.H"
 
 //
 // DESCRIPTION:
@@ -104,13 +104,15 @@ class UI_RChoice : public Fl_Choice {
     void GotoNext();
 };
 
-class UI_RSlide : public Fl_Hor_Value_Slider {
+class UI_RSlide : public Fl_Hor_Slider {
    private:
     std::vector<choice_data_c *> opt_list;
 
    public:
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
+    
+    std::string original_label;
 };
 
 #endif /* __UI_RCHOICE_H__ */
