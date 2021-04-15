@@ -1520,6 +1520,8 @@ config *get_config(s_config slump_config)
   }
 
   if (answer->force_secret) secretize_config(answer);
+  
+  answer->forkiness = slump_config.forkiness;
 
   /* And finally compact out any unneeded/dangerous stuff */
   compact_config(answer);
@@ -8236,7 +8238,49 @@ boolean isAdequate(level *l,linedef *ld,style *ThisStyle,config *c)
 void load_default_config(config *c)
 {
   char *p;
-  c->configdata = strdup(    /* So we can free() it */
+  
+  /* Legend In Progress - Dasho
+  T = Theme, followed by the name or first letter of theme name
+  ? = Secret, add after the theme name
+  t = texture
+  0 = noDoom0 (not in DOOM 1.2)
+  1 = noDoom1 (not in Doom 1, period)
+  2 = noDoom2 (not in DOOM 2)
+  u = only intrinsic textures (need to clarify)
+  G = for clean mode (no Gross things)
+  c (first occurrence) = core <theme> (Should occur often in a theme)
+  c (second occurrence) = comp <theme> (Compatible, but less common)
+  i = isswitch , followed by comp <theme>
+  w = wall
+  S = subtle <texture> (identifies as a variant of <texture> for secret hints)
+  f = flat
+  G = gate (must be after a flat)
+  d = door
+  F = lift texture
+  I = support
+  j = jamb
+  e = step
+  E = exit switch
+  L = locked
+  o = outside
+  U = ceiling
+  n = nukage
+  p = plaque
+  v = vtiles
+  H = half plaque
+  l = light
+  r = red
+  b = blue
+  y = yellow
+  ! = error texture
+  X = exit sign texture
+  Y = y bias
+  @ = y_hint ?
+  K = sky flat
+  = = real texture name, followed by the real texture name
+  W = water flat  */
+  
+  c->configdata = strdup(    // So we can free() it
     "[THEMES] T M T B T W T R ? "
     "t PANEL5 0 1 "
     "t PANCASE2 0 1 "
@@ -12712,7 +12756,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
        short newkey;
        if (done_quest) break;
        if (nullforks) break;    /* Only one of these at a time */
-       if ((forks==0)&!rollpercent(45)) break;  /* 55% of rooms don't fork */
+       if ((forks==0)&!rollpercent(c->forkiness)) break;  /* Read from Obsidian options */
        if ((forks!=0)&!rollpercent(60)) break;  /* 40% don't fork any more */
        /* This next bit should be in a routine */
        ThisQuest = push_quest(ThisQuest);

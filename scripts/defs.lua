@@ -136,26 +136,6 @@ SPOT_LEDGE    = 3
 
 
 -- monster and item stuff
-MONSTER_QUANTITIES =
-{
-  rarest = 0.15,
-  rarer  = 0.35,
-  rare   = 0.7,
-  scarce = 1.0,
-  few    = 1.3,
-  less   = 1.5,
-  normal = 2.0,
-  more   = 2.5,
-  heaps  = 3.0,
-  legions = 3.5,
-  insane = 4.0,
-  deranged = 4.5,
-  nuts   = 5.0,
-  chaotic = 5.5,
-  unhinged = 6.0,
-  ludicrous = 6.66
-}
-
 MONSTER_KIND_TAB =
 {
   none   = 0.1,

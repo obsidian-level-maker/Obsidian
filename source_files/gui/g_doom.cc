@@ -120,15 +120,12 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.levelcount = 32; // "Full Game"
 	}
-	slump_config.minrooms = atoi(main_win->left_mods->FindID("ui_slump_arch")
-							->FindOpt("minrooms")->GetID());
-	int bigify = atoi(main_win->left_mods->FindID("ui_slump_arch")
-							->FindOpt("bigify")->GetID());
-	if (bigify > 0) {
-		slump_config.p_bigify = bigify;
-	} else {
-		slump_config.p_bigify = roll(100);
-	}
+	slump_config.minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
+							->FindSliderOpt("float_minrooms")->value();
+	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
+							->FindSliderOpt("float_bigify")->value();
+	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
+							->FindSliderOpt("float_forkiness")->value();
 	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
 							->FindOpt("dm_starts")->GetID(), "yes")) {
 		slump_config.do_dm = 1;
@@ -155,10 +152,13 @@ int Slump_MakeWAD(const char* filename) {
 	} else if (monvariety == "shooters") {
 		slump_config.required_monster_bits = SHOOTS;
 		slump_config.forbidden_monster_bits = SPECIAL;
+	} else if (monvariety == "noflyzone") {
+		slump_config.required_monster_bits = 0;
+		slump_config.forbidden_monster_bits = FLIES + SPECIAL;
 	} else {
 		slump_config.required_monster_bits = SPECIAL; // All Nazis
 		slump_config.forbidden_monster_bits = 0;
-	}						
+	}					
 	return slump_main(slump_config);    
 }	
 

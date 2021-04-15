@@ -676,6 +676,7 @@ DOOM.MATERIALS =
   XMIDVINE  = { t="MIDVINE1", f="MIDVINE1" },
   XFLAT3  = { t="FLAT3", f="FLAT3" },
   XG19  = { t="G19", f="G19" },
+  XGRAY1  = { t="GRAY1", f="GRAY1" },
 
   -- Allows compatibility with Egypt theme prefabs (if Prefabs are set to not match Theme)
   MURAL2   = { t="MARBFAC3",   f="FLAT1_1" },
