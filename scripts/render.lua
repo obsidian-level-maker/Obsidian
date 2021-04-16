@@ -319,7 +319,7 @@ function Render_edge(E)
         -- choose a flat wall fab instead
         if chunk.content and chunk.content ~= "MON_TELEPORT" then
           if chunk.prefab_def and chunk.prefab_def.size then
-            reqs.deep = math.clamp(16, chunk.space - chunk.prefab_def.size, 9999)
+            reqs.deep = math.clamp(16, chunk.space - (chunk.prefab_def.size + 32), 9999)
 
           -- prefabs without a size definition are assumed to occupy the whole chunk
           -- mostly for exit fabs
@@ -2640,7 +2640,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   elseif chunk.from_area then
     skin.wall  = Junction_calc_wall_tex(chunk.from_area, A)
-    skin.floor = chunk.from_area.floor_mat
+    skin.floor = chunk.floor_mat or chunk.from_area.floor_mat
     skin.ceil  = chunk.from_area.ceil_mat
   end
 

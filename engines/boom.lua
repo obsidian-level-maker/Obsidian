@@ -71,17 +71,6 @@ function BOOM.create_dehacked()
 
 
 
-  --- monster stuff ---
-
-  -- honor the "Smaller Mastermind" module, use the DEHACKED lump to
-  -- reduce the size of the Spider Mastermind monster from 128 to 80
-  -- units so that she fits more reliably on maps.
-  if PARAM.small_spiderdemon then
-    table.insert(data, "Thing 20 (Spiderdemon)\n")
-    table.insert(data, "Width = 5242880\n")  -- 80 units
-    table.insert(data, "\n")
-  end
-
   --- level names ---
 
   for _,L in pairs(GAME.levels) do
@@ -141,16 +130,6 @@ function BOOM.create_dehacked()
 end
 
 
-function BOOM.setup()
-  -- honor the "Smaller Mastermind" module
-  if PARAM.small_spiderdemon then
-    local info = GAME.MONSTERS["Spiderdemon"]
-    if info and info.r > 80 then
-      info.r = 80
-    end
-  end
-end
-
 
 function BOOM.all_done()
   BOOM.create_dehacked()
@@ -175,7 +154,6 @@ OB_ENGINES["boom"] =
 
   hooks =
   {
-    setup2   = BOOM.setup,
     all_done = BOOM.all_done
   }
 }

@@ -2,7 +2,7 @@
 
 PREFABS.Wall_epic_collite_inset_straight_green =
 {
-  file   = "wall/gtd_EPIC_wall_light_column_set.wad",
+  file   = "wall/gtd_wall_tech_light_column_set_EPIC.wad",
   map    = "MAP01",
 
   prob   = 50,
@@ -25,7 +25,7 @@ PREFABS.Wall_epic_collite_inset_straight_green =
 
 PREFABS.Wall_epic_collite_inset_diagonal_green =
 {
-  file   = "wall/gtd_EPIC_wall_light_column_set.wad",
+  file   = "wall/gtd_wall_tech_light_column_set_EPIC.wad",
   map    = "MAP02",
 
   prob   = 50,
