@@ -126,20 +126,20 @@ int Slump_MakeWAD(const char* filename) {
 							->FindSliderOpt("float_bigify")->value();
 	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
 							->FindSliderOpt("float_forkiness")->value();
-	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
-							->FindOpt("dm_starts")->GetID(), "yes")) {
+	if (main_win->left_mods->FindID("ui_slump_arch")
+							->FindButtonOpt("bool_dm_starts")->value()) {
 		slump_config.do_dm = 1;
 	} else {
 		slump_config.do_dm = 0;
 	}
-	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
-							->FindOpt("major_nukage")->GetID(), "yes")) {
+	if (main_win->left_mods->FindID("ui_slump_arch")
+							->FindButtonOpt("bool_major_nukage")->value()) {
 		slump_config.major_nukage = SLUMP_TRUE;
 	} else {
 		slump_config.major_nukage = SLUMP_FALSE;
 	}
-	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
-							->FindOpt("immediate_monsters")->GetID(), "yes")) {
+	if (main_win->left_mods->FindID("ui_slump_arch")
+							->FindButtonOpt("bool_immediate_monsters")->value()) {
 		slump_config.immediate_monsters = SLUMP_FALSE;
 	} else {
 		slump_config.immediate_monsters = rollpercent(20);
@@ -827,7 +827,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
-        if (build_reject == 1) {
+        if (build_reject) {
             options.reject_mode = ERM_Rebuild_NoGL;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -840,7 +840,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
-        if (build_reject == 1) {
+        if (build_reject) {
             options.reject_mode = ERM_Rebuild_NoGL;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -853,7 +853,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = true;
         options.build_gl_only = true;
-        if (build_reject == 1) {
+        if (build_reject) {
             options.reject_mode = ERM_Rebuild;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -866,7 +866,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
-        if (build_reject == 1) {
+        if (build_reject) {
             options.reject_mode = ERM_Rebuild_NoGL;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -876,7 +876,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.compress_gl_nodes = false;
         options.force_compression = true;
     } else if (current_engine == "zdoom") {
-        if (build_nodes == 0) {
+        if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
             FileRename(filename, out_name);
             return true;
@@ -884,7 +884,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = true;
         options.build_gl_only = true;
-        if (build_reject == 1) {
+        if (build_reject) {
             options.reject_mode = ERM_Rebuild;
         } else {
             options.reject_mode = ERM_DontTouch;
