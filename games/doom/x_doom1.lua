@@ -3291,7 +3291,7 @@ function ULTDOOM.get_levels()
       end
 
       -- prebuilt levels
-      if OB_CONFIG.prebuilt_levels == "yes" then
+      if gui.get_module_button_value("ui_arch", "bool_prebuilt_levels") == 1 then
         LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
       end
 

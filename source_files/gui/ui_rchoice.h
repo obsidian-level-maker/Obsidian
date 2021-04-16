@@ -26,6 +26,7 @@
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
 #include "FL/Fl_Hor_Slider.H"
+#include "FL/Fl_Light_Button.H"
 
 //
 // DESCRIPTION:
@@ -37,7 +38,7 @@
 class choice_data_c {
     friend class UI_RChoice;
     friend class UI_RSlide; 
-    friend class UI_RLight;
+    friend class UI_RButton;
 
    public:
     const char *id;     // terse identifier
@@ -114,15 +115,20 @@ class UI_RSlide : public Fl_Hor_Slider {
     virtual ~UI_RSlide();
     
     std::string original_label;
+    
+    std::vector<std::string> nan_choices;   
 };
 
-class UI_RLight : public Fl_Light_Button {
+class UI_RButton : public Fl_Light_Button {
    private:
     std::vector<choice_data_c *> opt_list;
 
    public:
-    UI_RLight(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RLight();
+    UI_RButton(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RButton();
+    
+   private:
+   void draw();
 };
 
 #endif /* __UI_RCHOICE_H__ */

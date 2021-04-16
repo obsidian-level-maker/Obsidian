@@ -20,12 +20,6 @@
 
 UI_SLUMP = { }
 
-UI_SLUMP.YES_NO =
-{
-  "yes", _("Yes"),
-  "no",  _("No")
-}
-
 UI_SLUMP.MON_VARIETY =
 {
   "normal", _("Normal"),
@@ -51,6 +45,9 @@ OB_MODULES["ui_slump_arch"] =
       max = 37,
       increment = 1,
       default = 15,
+      nan1 = "",
+      nan2 = "",
+      nan3 = "",
       tooltip = "Minimum number of rooms per level."
     },
 
@@ -62,6 +59,9 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
+      nan1 = "",
+      nan2 = "",
+      nan3 = "",
       tooltip = "% chance that SLUMP will attempt to grow a room."
     },
     
@@ -73,32 +73,35 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
+      nan1 = "",
+      nan2 = "",
+      nan3 = "",
       tooltip = "% chance that a room will attempt to fork as the level grows. "..
                 "0% should be a bunch of murder hallways. Forks are not guaranteed " ..
                 "to succeed, especially if the room bigification chance is increased."
     },
 
     {
-      name = "dm_starts",
+      name = "bool_dm_starts",
       label = _("Deathmatch Spawns"),
-      choices = UI_SLUMP.YES_NO,
-      default = "no",
+      valuator = "button",
+      default = 0,
       tooltip = "Add Deathmatch starts to generated levels."
     },
     
     {
-      name = "major_nukage",
+      name = "bool_major_nukage",
       label = _("Major Nukage Mode"),
-      choices = UI_SLUMP.YES_NO,
-      default = "no",
+      valuator = "button",
+      default = 0,
       tooltip = "Watch your step!"
     },
     
     {
-      name = "immediate_monsters",
+      name = "bool_immediate_monsters",
       label = _("Quiet Start"),
-      choices = UI_SLUMP.YES_NO,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = "Prevents monsters from spawning in the starting room. Monsters in other rooms may still have" ..
                 " a line of sight to you, so be careful!"
     }

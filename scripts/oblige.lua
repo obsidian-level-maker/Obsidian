@@ -586,7 +586,11 @@ function ob_set_mod_option(name, option, value)
   if not opt.valuator then
     gui.set_module_option(name, option, value)
   else
-    gui.set_module_slider_option(name, option, tonumber(value))
+    if opt.valuator == "slider" then
+      gui.set_module_slider_option(name, option, tonumber(value))
+    elseif opt.valuator == "button" then
+      gui.set_module_button_option(name, option, tonumber(value))
+    end
   end
 
   -- no need to call ob_update_all
@@ -732,6 +736,8 @@ function ob_read_all_config(need_full, log_only)
       for _,opt in pairs(def.options) do
         if string.match(opt.name, "float_") then
           do_value(opt.name, gui.get_module_slider_value(name, opt.name))
+        elseif string.match(opt.name, "bool_") then
+          do_value(opt.name, gui.get_module_button_value(name, opt.name))
         else
           do_value(opt.name, opt.value)
         end
@@ -758,11 +764,23 @@ function ob_read_all_config(need_full, log_only)
       if def.options and not table.empty(def.options) then
         if def.options[1] then
           for _,opt in pairs(def.options) do
-            do_mod_value(opt.name, opt.value)
+            if string.match(opt.name, "float_") then
+              do_mod_value(opt.name, gui.get_module_slider_value(name, opt.name))
+            elseif string.match(opt.name, "bool_") then
+              do_mod_value(opt.name, gui.get_module_button_value(name, opt.name))
+            else
+              do_mod_value(opt.name, opt.value)
+            end
           end
         else
           for o_name,opt in pairs(def.options) do
-            do_mod_value(o_name, opt.value)
+            if string.match(o_name, "float_") then
+              do_mod_value(o_name, gui.get_module_slider_value(name, opt.name))
+            elseif string.match(o_name, "bool_") then
+              do_mod_value(o_name, gui.get_module_button_value(name, opt.name))
+            else
+              do_mod_value(o_name, opt.value)
+            end
           end
         end
       end
@@ -1055,13 +1073,22 @@ function ob_init()
             assert(opt.choices)
           end
                   
-          if opt.valuator and opt.valuator == "slider" then
-            gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap, opt.min, opt.max, opt.increment)
-            if not opt.default then
-              opt.default = (opt.min + opt.max) / 2
+          if opt.valuator then
+            if opt.valuator == "slider" then
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap, opt.min, opt.max, opt.increment, opt.nan1, opt.nan2, opt.nan3)
+              if not opt.default then
+                opt.default = (opt.min + opt.max) / 2
+              end
+              opt.value = opt.default
+              gui.set_module_slider_option(mod.name, opt.name, opt.value)
+            elseif opt.valuator == "button" then
+              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
+              if not opt.default then
+                opt.default = 0
+              end
+              opt.value = opt.default
+              gui.set_module_button_option(mod.name, opt.name, opt.value)
             end
-            opt.value = opt.default
-            gui.set_module_slider_option(mod.name, opt.name, opt.value)
           else
             gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
             opt.avail_choices = {}

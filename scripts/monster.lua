@@ -837,9 +837,9 @@ function Monster_fill_room(R)
     factor = gui.get_module_slider_value("ui_mons", "float_mons")
     assert(factor)
 
-    if factor == -0.05 then
+    if factor == -0.10 then
       factor = rand.range(l_factor, u_factor)
-    elseif factor == -0.10 then
+    elseif factor == -0.05 then
       factor = l_factor + (u_factor * LEVEL.game_along)
     end
     
@@ -892,12 +892,12 @@ function Monster_fill_room(R)
     qty = gui.get_module_slider_value("ui_mons", "float_mons")
     assert(qty)
 
-    if qty == -0.05 then
+    if qty == -0.10 then
       if l_range == u_range then
         qty = l_range
       end
       qty = rand.range(l_range, u_range)
-    elseif qty == -0.10 then
+    elseif qty == -0.05 then
       qty = l_range + (u_range * LEVEL.game_along)
     end
 
