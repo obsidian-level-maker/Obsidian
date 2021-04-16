@@ -170,6 +170,38 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     choice_map_slider[opt] = rsl;
 }
 
+void UI_Module::AddButtonOption(const char *opt, const char *label, const char *tip,
+                          int gap, Fl_Color select_col) {
+    int nw = this->parent()->w();
+    //	int nh = kf_h(30);
+
+    int nx = x() + kf_w(6);
+    int ny = y() + cur_opt_y - kf_h(15);
+
+    UI_RButton *rbt =
+        new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24), label);
+    rbt->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+    rbt->selection_color(select_col);
+    
+    if (!tip) {
+        tip = "";
+    }
+    rbt->tooltip(tip);
+
+    if (!mod_button->value()) {
+        rbt->hide();
+    }
+
+    add(rbt);
+
+    cur_opt_y += gap ? kf_h(45) : kf_h(30);
+
+    resize(x(), y(), w(), CalcHeight());
+    redraw();
+    
+    choice_map_button[opt] = rbt;
+}
+
 int UI_Module::CalcHeight() const {
     if (mod_button->value()) {
         return cur_opt_y + kf_h(6);
@@ -230,6 +262,17 @@ bool UI_Module::SetSliderOption(const char *option, double value) {
     return true;
 }
 
+bool UI_Module::SetButtonOption(const char *option, int value) {
+    UI_RButton *rbt = FindButtonOpt(option);
+
+    if (!rbt) {
+        return false;
+    }
+
+    rbt->value(value);
+	return true;
+}
+
 UI_RChoice *UI_Module::FindOpt(const char *option) {
     if (choice_map.find(option) == choice_map.end()) {
         return NULL;
@@ -244,6 +287,14 @@ UI_RSlide *UI_Module::FindSliderOpt(const char *option) {
     }
 
     return choice_map_slider[option];
+}
+
+UI_RButton *UI_Module::FindButtonOpt(const char *option) {
+    if (choice_map_button.find(option) == choice_map_button.end()) {
+        return NULL;
+    }
+
+    return choice_map_button[option];
 }
 
 void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
@@ -404,6 +455,21 @@ bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
     return true;
 }
 
+bool UI_CustomMods::AddButtonOption(const char *module, const char *option,
+                              const char *label, const char *tip, int gap) {
+    UI_Module *M = FindID(module);
+
+    if (!M) {
+        return false;
+    }
+
+    M->AddButtonOption(option, label, tip, gap, button_col);
+
+    PositionAll();
+
+    return true;
+}
+
 void UI_CustomMods::AddOptionChoice(const char *module, const char *option,
                                     const char *id, const char *label) {
     UI_Module *M = FindID(module);
@@ -460,6 +526,16 @@ bool UI_CustomMods::SetSliderOption(const char *module, const char *option, doub
     }
 
     return M->SetSliderOption(option, value);
+}
+
+bool UI_CustomMods::SetButtonOption(const char *module, const char *option, int value) {
+    UI_Module *M = FindID(module);
+
+    if (!M) {
+        return false;
+    }
+
+    return M->SetButtonOption(option, value);
 }
 
 bool UI_CustomMods::EnableMod(const char *id, bool enable) {

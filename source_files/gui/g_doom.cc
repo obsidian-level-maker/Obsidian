@@ -69,7 +69,7 @@ static int errors_seen;
 std::string current_engine;
 std::string map_format;
 std::string build_nodes;
-std::string build_reject;
+int build_reject;
 std::string levelcount;
 std::string monvariety;
 
@@ -827,7 +827,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
-        if (build_reject == "yes") {
+        if (build_reject == 1) {
             options.reject_mode = ERM_Rebuild_NoGL;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -840,7 +840,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
-        if (build_reject == "yes") {
+        if (build_reject == 1) {
             options.reject_mode = ERM_Rebuild_NoGL;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -853,7 +853,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = true;
         options.build_gl_only = true;
-        if (build_reject == "yes") {
+        if (build_reject == 1) {
             options.reject_mode = ERM_Rebuild;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -866,7 +866,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
-        if (build_reject == "yes") {
+        if (build_reject == 1) {
             options.reject_mode = ERM_Rebuild_NoGL;
         } else {
             options.reject_mode = ERM_CreateZeroes;
@@ -884,7 +884,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = true;
         options.build_gl_only = true;
-        if (build_reject == "yes") {
+        if (build_reject == 1) {
             options.reject_mode = ERM_Rebuild;
         } else {
             options.reject_mode = ERM_DontTouch;
@@ -954,8 +954,8 @@ bool doom_game_interface_c::Start(const char *preset) {
         current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "vanilla") {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
-                           ->FindOpt("build_reject")
-                           ->GetID();
+                           ->FindButtonOpt("build_reject")
+                           ->value();
             if (Slump_MakeWAD(filename) == 0) {
                 return true;
             } else {
@@ -975,12 +975,12 @@ bool doom_game_interface_c::Start(const char *preset) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
         if (current_engine == "zdoom") {
             build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")
-                               ->FindOpt("build_reject_zdoom")
-                               ->GetID();
+                               ->FindButtonOpt("build_reject_zdoom")
+                               ->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
-                               ->FindOpt("build_reject")
-                               ->GetID();
+                               ->FindButtonOpt("build_reject")
+                               ->value();
         }
         map_format = main_win->left_mods->FindID("ui_zdoom_map_options")
                          ->FindOpt("map_format")
