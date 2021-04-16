@@ -18,6 +18,12 @@
 
 UI_ZDOOM_MAP_OPTIONS = { }
 
+UI_ZDOOM_MAP_OPTIONS.YES_NO =
+{
+  "yes", _("Yes"),
+  "no",  _("No"),
+}
+
 UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES = 
 {
   "binary",  _("Binary"),
@@ -36,17 +42,10 @@ OB_MODULES["ui_zdoom_map_options"] =
   options =
   {
     {
-      name = "bool_build_reject_zdoom",
-      label = _("Build REJECT"),
-      valuator = "button",
-      default = 0,
-      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
-    },
-    {
-      name = "bool_build_nodes",
+      name = "build_nodes",
       label = _("Build Nodes"),
-      valuator = "button",
-      default = 0,
+      choices = UI_ZDOOM_MAP_OPTIONS.YES_NO,
+      default = "no",
       tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
       "upon loading the map.",
     },
@@ -56,6 +55,13 @@ OB_MODULES["ui_zdoom_map_options"] =
       choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
       tooltip = "Choose between UDMF and binary map format.",
+    },
+    {
+      name = "build_reject_zdoom",
+      label = _("Build REJECT"),
+      choices = UI_ZDOOM_MAP_OPTIONS.YES_NO,
+      default = "no",
+      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
     }
   }
 }

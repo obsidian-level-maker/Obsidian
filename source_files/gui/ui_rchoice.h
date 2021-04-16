@@ -25,8 +25,7 @@
 
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
-#include "FL/Fl_Hor_Slider.H"
-#include "FL/Fl_Light_Button.H"
+#include "FL/Fl_Slider.H"
 
 //
 // DESCRIPTION:
@@ -37,8 +36,7 @@
 
 class choice_data_c {
     friend class UI_RChoice;
-    friend class UI_RSlide; 
-    friend class UI_RButton;
+    friend class UI_RSlide;
 
    public:
     const char *id;     // terse identifier
@@ -106,29 +104,29 @@ class UI_RChoice : public Fl_Choice {
     void GotoNext();
 };
 
-class UI_RSlide : public Fl_Hor_Slider {
+class UI_RSlide : public Fl_Slider {
    private:
     std::vector<choice_data_c *> opt_list;
 
    public:
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
-    
-    std::string original_label;
-    
-    std::vector<std::string> nan_choices;   
-};
-
-class UI_RButton : public Fl_Light_Button {
-   private:
-    std::vector<choice_data_c *> opt_list;
 
    public:
-    UI_RButton(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RButton();
-    
+    // get the id string for the currently shown value.
+    // Returns the string "none" if there are no choices.
+    const char *GetID() const;
+
+    // change the currently shown value via the new 'id'.
+    // If does not exist, returns false and nothing was changed.
+    bool ChangeTo(const char *id);
+
+    const char *GetLabel() const;
+
+    choice_data_c *FindID(const char *id) const;
+
    private:
-   void draw();
+    choice_data_c *FindMapped() const;
 };
 
 #endif /* __UI_RCHOICE_H__ */

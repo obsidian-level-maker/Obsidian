@@ -68,6 +68,12 @@ UI_ARCH.ZDOOM_SKYBOX_CHOICES =
   "disable",  _("Disable")
 }
 
+UI_ARCH.YES_NO =
+{
+  "yes", _("Yes"),
+  "no",  _("No")
+}
+
 UI_ARCH.PROC_GOTCHA_CHOICES =
 {
   "none",  _("NONE"),
@@ -163,10 +169,9 @@ OB_MODULES["ui_arch"] =
     { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1 },
 
     {
-      name="bool_prebuilt_levels",
+      name="prebuilt_levels",
       label=_("Prebuilt Levels"),
-      valuator = "button",
-      default = 1,
+      choices=UI_ARCH.YES_NO,
       tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."
     },
 

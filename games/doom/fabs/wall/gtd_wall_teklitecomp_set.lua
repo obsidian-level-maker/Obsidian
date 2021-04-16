@@ -1,6 +1,6 @@
 PREFABS.Wall_tech_teklitecomp_red =
 {
-  file   = "wall/gtd_wall_tech_teklitecomp_set.wad",
+  file   = "wall/gtd_wall_teklitecomp_set.wad",
   map    = "MAP01",
 
   prob   = 50,

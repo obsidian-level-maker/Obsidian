@@ -1,6 +1,6 @@
 PREFABS.Wall_tall_glass_EPIC_yellow =
 {
-  file   = "wall/gtd_wall_gothic_tall_glass_EPIC.wad",
+  file   = "wall/gtd_wall_tall_glass_EPIC.wad",
   map    = "MAP01",
 
   prob   = 50,
@@ -20,7 +20,7 @@ PREFABS.Wall_tall_glass_EPIC_yellow =
 
 PREFABS.Wall_tall_glass_EPIC_yellow_diag =
 {
-  file   = "wall/gtd_wall_gothic_tall_glass_EPIC.wad",
+  file   = "wall/gtd_wall_tall_glass_EPIC.wad",
   map    = "MAP02",
 
   prob   = 50,

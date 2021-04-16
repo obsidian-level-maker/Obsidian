@@ -20,6 +20,43 @@
 
 UI_SLUMP = { }
 
+UI_SLUMP.SIZES =
+{
+  "5", _("5 Rooms"),
+  "10", _("10 Rooms"),
+  "15", _("15 Rooms"),
+  "20", _("20 Rooms"),
+  "25", _("25 Rooms"),
+  "30", _("30 Rooms"),
+  "35", _("35 Rooms"),
+  "99", _("Surprise Me")
+}
+
+UI_SLUMP.BIGIFY=
+{
+  "0", _("Default"),
+  "5", _("Claustrophobic"),
+  "25", _("Mostly Small"),
+  "50", _("A Good Mix"),
+  "75", _("Mostly Large"),
+  "101", _("Supersize Me")
+}
+
+UI_SLUMP.FORKINESS=
+{
+  "0", _("None"),
+  "25", _("25%"),
+  "50", _("50%"),
+  "75", _("75%"),
+  "101", _("100%")
+}
+
+UI_SLUMP.YES_NO =
+{
+  "yes", _("Yes"),
+  "no",  _("No")
+}
+
 UI_SLUMP.MON_VARIETY =
 {
   "normal", _("Normal"),
@@ -38,70 +75,48 @@ OB_MODULES["ui_slump_arch"] =
 
   options =
   {
-    { name="float_minrooms",
-      label=_("Level Size"),
-      valuator = "slider",
-      min = 2,
-      max = 37,
-      increment = 1,
-      default = 15,
-      nan1 = "",
-      nan2 = "",
-      nan3 = "",
+    { name="minrooms", label=_("Level Size"), choices=UI_SLUMP.SIZES,  default="15",
       tooltip = "Minimum number of rooms per level."
     },
 
     {
-      name = "float_bigify",
-      label = _("Room Bigification Chance"),
-      valuator = "slider",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 50,
-      nan1 = "",
-      nan2 = "",
-      nan3 = "",
-      tooltip = "% chance that SLUMP will attempt to grow a room."
+      name = "bigify",
+      label = _("Average Room Size"),
+      choices = UI_SLUMP.BIGIFY,
+      default = "0",
+      tooltip = "Default will leave things to chance."
     },
     
     {
-      name = "float_forkiness",
+      name = "forkiness",
       label = _("Forkiness"),
-      valuator = "slider",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 50,
-      nan1 = "",
-      nan2 = "",
-      nan3 = "",
-      tooltip = "% chance that a room will attempt to fork as the level grows. "..
-                "0% should be a bunch of murder hallways. Forks are not guaranteed " ..
-                "to succeed, especially if the room bigification chance is increased."
+      choices = UI_SLUMP.FORKINESS,
+      default = "50",
+      tooltip = "Chance that a room will attempt to fork as the level grows. "..
+                "'None' should be a bunch of murder hallways."
     },
 
     {
-      name = "bool_dm_starts",
+      name = "dm_starts",
       label = _("Deathmatch Spawns"),
-      valuator = "button",
-      default = 0,
+      choices = UI_SLUMP.YES_NO,
+      default = "no",
       tooltip = "Add Deathmatch starts to generated levels."
     },
     
     {
-      name = "bool_major_nukage",
+      name = "major_nukage",
       label = _("Major Nukage Mode"),
-      valuator = "button",
-      default = 0,
+      choices = UI_SLUMP.YES_NO,
+      default = "no",
       tooltip = "Watch your step!"
     },
     
     {
-      name = "bool_immediate_monsters",
+      name = "immediate_monsters",
       label = _("Quiet Start"),
-      valuator = "button",
-      default = 1,
+      choices = UI_SLUMP.YES_NO,
+      default = "yes",
       tooltip = "Prevents monsters from spawning in the starting room. Monsters in other rooms may still have" ..
                 " a line of sight to you, so be careful!"
     }

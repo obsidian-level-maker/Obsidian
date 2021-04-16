@@ -1259,8 +1259,7 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 25,
-      gtd_ribbed_lights_no3d = 25,
+      gtd_ribbed_lights = 50,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1653,8 +1652,7 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 20,
-      gtd_ribbed_lights_no3d = 20,
+      gtd_ribbed_lights = 25,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -2157,9 +2155,7 @@ DOOM.THEMES =
       gtd_wall_candalebra = 12,
       gtd_wall_blue_torch = 12,
       gtd_wall_green_torch = 12,
-      gtd_wall_red_torch = 12,
-      --
-      gtd_wall_hell_mindscrew = 25
+      gtd_wall_red_torch = 12
     },
 
     outdoor_wall_groups =

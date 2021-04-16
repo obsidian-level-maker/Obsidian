@@ -50,23 +50,3 @@ PREFABS.Wall_gtd_ribbed_lights_diag_fallback =
 
   where = "diagonal"
 }
-
---
-
-PREFABS.Wall_gtd_ribbed_lights_no3d =
-{
-  template = "Wall_gtd_ribbed_lights",
-  map = "MAP03",
-
-  group = "gtd_ribbed_lights_no3d"
-}
-
-PREFABS.Wall_gtd_ribbed_lights_no3d_diag =
-{
-  template = "Wall_gtd_ribbed_lights",
-  map = "MAP04",
-
-  where = "diagonal",
-
-  group = "gtd_ribbed_lights_no3d"
-}
