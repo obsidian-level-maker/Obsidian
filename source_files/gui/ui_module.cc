@@ -119,47 +119,6 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     choice_map[opt] = rch;
 }
 
-void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
-                          int gap, double min, double max, double inc, Fl_Color select_col) {
-    int nw = this->parent()->w();
-    //	int nh = kf_h(30);
-
-    int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y;
-
-    // make label with ': ' suffixed
-    int len = strlen(label);
-    char *new_label = StringNew(len + 4);
-    strcpy(new_label, label);
-    strcat(new_label, ": ");
-
-    UI_RSlide *rsl =
-        new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
-    rsl->align(FL_ALIGN_TOP_LEFT);
-    rsl->selection_color(select_col);
-    rsl->minimum(min);
-    rsl->maximum(max);
-    rsl->step(inc);
-    rsl->original_label = new_label;
-    if (!tip) {
-        tip = "";
-    }
-    rsl->tooltip(tip);
-    rsl->callback(callback_MixItCheck, NULL);
-    if (!mod_button->value()) {
-        rsl->hide();
-    }
-
-    add(rsl);
-
-    cur_opt_y += gap ? kf_h(59) : kf_h(45);
-
-    resize(x(), y(), w(), CalcHeight());
-    redraw();
-    
-    choice_map_slider[opt] = rsl;
-}
-
 int UI_Module::CalcHeight() const {
     if (mod_button->value()) {
         return cur_opt_y + kf_h(6);
@@ -208,32 +167,12 @@ bool UI_Module::SetOption(const char *option, const char *value) {
     return true;
 }
 
-bool UI_Module::SetSliderOption(const char *option, double value) {
-    UI_RSlide *rsl = FindSliderOpt(option);
-
-    if (!rsl) {
-        return false;
-    }
-
-    rsl->value(value);
-	rsl->do_callback();
-    return true;
-}
-
 UI_RChoice *UI_Module::FindOpt(const char *option) {
     if (choice_map.find(option) == choice_map.end()) {
         return NULL;
     }
 
     return choice_map[option];
-}
-
-UI_RSlide *UI_Module::FindSliderOpt(const char *option) {
-    if (choice_map_slider.find(option) == choice_map_slider.end()) {
-        return NULL;
-    }
-
-    return choice_map_slider[option];
 }
 
 void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
@@ -247,36 +186,6 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     UI_Module *M = cb_data->mod;
 
     ob_set_mod_option(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
-}
-
-void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
-    UI_RSlide *rsl = (UI_RSlide *)w;
-
-    SYS_ASSERT(rsl);
-
-	double value = rsl->value();
-	
-	if (value == -0) {
-		value = 0; // Silly, but keeps "negative zero" from being show on the label
-	}
-	
-	std::string new_label = rsl->original_label;
-
-	rsl->copy_label(new_label.append(20, ' ').c_str()); // To prevent visual errors with labels of different lengths
-
-	new_label = rsl->original_label;
-
-	if (value == (-1 * rsl->step())) {
-		rsl->copy_label(new_label.append("Mix It Up").c_str());
-	} else if (value == (-2 * rsl->step())) {
-		rsl->copy_label(new_label.append("Progressive").c_str());
-	} else if (value == (-3 * rsl->step())) {
-		rsl->copy_label(new_label.append("Jumbled").c_str());
-	} else {	
-		char value_string[10];
-		sprintf(value_string, "%.2f", value);
-		rsl->copy_label(new_label.append((const char*)value_string).c_str());
-	}
 }
 
 //----------------------------------------------------------------
@@ -366,21 +275,6 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
     return true;
 }
 
-bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
-                              const char *label, const char *tip, int gap, double min, double max, double inc) {
-    UI_Module *M = FindID(module);
-
-    if (!M) {
-        return false;
-    }
-
-    M->AddSliderOption(option, label, tip, gap, min, max, inc, button_col);
-
-    PositionAll();
-
-    return true;
-}
-
 void UI_CustomMods::AddOptionChoice(const char *module, const char *option,
                                     const char *id, const char *label) {
     UI_Module *M = FindID(module);
@@ -427,16 +321,6 @@ bool UI_CustomMods::SetOption(const char *module, const char *option,
     }
 
     return M->SetOption(option, value);
-}
-
-bool UI_CustomMods::SetSliderOption(const char *module, const char *option, double value) {
-    UI_Module *M = FindID(module);
-
-    if (!M) {
-        return false;
-    }
-
-    return M->SetSliderOption(option, value);
 }
 
 bool UI_CustomMods::EnableMod(const char *id, bool enable) {

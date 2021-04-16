@@ -120,12 +120,18 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.levelcount = 32; // "Full Game"
 	}
-	slump_config.minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_minrooms")->value();
-	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_bigify")->value();
-	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_forkiness")->value();
+	slump_config.minrooms = atoi(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("minrooms")->GetID());
+	if (slump_config.minrooms == 99) {
+		slump_config.minrooms = roll(37);
+	}
+	slump_config.p_bigify = atoi(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("bigify")->GetID());
+	if (slump_config.p_bigify == 0) {
+		slump_config.p_bigify = roll(100);
+	}
+	slump_config.forkiness = atoi(main_win->left_mods->FindID("ui_slump_arch")
+							->FindOpt("forkiness")->GetID());
 	if (!StringCaseCmp(main_win->left_mods->FindID("ui_slump_arch")
 							->FindOpt("dm_starts")->GetID(), "yes")) {
 		slump_config.do_dm = 1;

@@ -494,42 +494,6 @@ int gui_add_module_option(lua_State *L) {
     return 0;
 }
 
-// LUA: add_module_option(module, option, label, tooltip, gap)
-//
-int gui_add_module_slider_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
-
-    const char *label = luaL_checkstring(L, 3);
-    const char *tip = luaL_optstring(L, 4, NULL);
-
-    int gap = luaL_optinteger(L, 5, 0);
-    
-    double min = luaL_checknumber(L, 6);
-    double max = luaL_checknumber(L, 7);
-    double inc = luaL_checknumber(L, 8);
-
-    SYS_ASSERT(module && option);
-
-    //	DebugPrintf("  add_module_option: %s.%s\n", module, option);
-
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main_FatalError("Script problem: gui.add_module_option called late.\n");
-    }
-
-    // FIXME : error if module is unknown
-
-    main_win->left_mods->AddSliderOption(module, option, label, tip, gap, min, max, inc);
-    main_win->right_mods->AddSliderOption(module, option, label, tip, gap, min, max, inc);
-
-    return 0;
-}
-
 // LUA: add_option_choice(module, option, id, label)
 //
 int gui_add_option_choice(lua_State *L) {
@@ -588,67 +552,6 @@ int gui_set_module_option(lua_State *L) {
     }
 
     return 0;
-}
-
-// LUA: set_module_option(module, option, value)
-//
-int gui_set_module_slider_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
-    double value = luaL_checknumber(L, 3);
-
-    SYS_ASSERT(module && option && !isnan(value));
-
-    if (!main_win) {
-        return 0;
-    }
-
-    if (StringCaseCmp(option, "self") == 0) {
-        return luaL_error(L, "set_module_option: cannot use 'self' here\n",
-                          option);
-    }
-
-    if (!(main_win->left_mods->SetSliderOption(module, option, value) ||
-          main_win->right_mods->SetSliderOption(module, option, value))) {
-        return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                          module, option);
-    }
-
-    return 0;
-}
-
-// LUA: get_module_slider_value(module, option)
-int gui_get_module_slider_value(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
-
-    SYS_ASSERT(module && option);
-
-    //	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option,
-    // value);
-
-    if (!main_win) {
-        return 0;
-    }
-	
-	double value;
-	
-	if (main_win->left_mods->FindID(module)) {
-		if (main_win->left_mods->FindID(module)->FindSliderOpt(option)) {
-			value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->value();
-			lua_pushnumber(L, value);	
-		}	
-	} else if (main_win->right_mods->FindID(module)) {
-		if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
-			value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->value();
-			lua_pushnumber(L, value);	
-		}	
-	} else {
-		return luaL_error(L, "get_module_slider_value: unknown option '%s.%s'\n",
-                          module, option);
-    }
-    
-    return 1;
 }
 
 // LUA: at_level(name, idx, total)
@@ -933,11 +836,8 @@ static const luaL_Reg gui_script_funcs[] = {
     {"set_module", gui_set_module},
 
     {"add_module_option", gui_add_module_option},
-    {"add_module_slider_option", gui_add_module_slider_option},
     {"add_option_choice", gui_add_option_choice},
     {"set_module_option", gui_set_module_option},
-    {"set_module_slider_option", gui_set_module_slider_option},
-    {"get_module_slider_value", gui_get_module_slider_value},
 
     {"at_level", gui_at_level},
     {"prog_step", gui_prog_step},
@@ -1336,6 +1236,38 @@ bool ob_set_config(const char *key, const char *value) {
 
     return Script_CallFunc("ob_set_config", 0, params);
 }
+
+/*const char * ob_get_config(const char *key)
+{
+        // See the document 'doc/Config_Flow.txt' for a good
+        // description of the flow of configuration values
+        // between the C++ GUI and the Lua scripts.
+
+        SYS_NULL_CHECK(key);
+
+        if (! has_loaded)
+        {
+                DebugPrintf("ob_set_config(%s) called before loaded!\n", key);
+                return NULL;
+        }
+
+        const char *params[2];
+
+        params[0] = key;
+        params[1] = NULL; // end of list
+
+        Script_CallFunc("ob_get_config", 0, params);
+
+        const char *res = lua_tolstring(LUA_ST, -1, NULL);
+
+        if (res)
+                res = StringDup(res);
+
+        // remove result from lua stack
+        lua_pop(LUA_ST, 1);
+
+        return res;
+}*/
 
 bool ob_set_mod_option(const char *module, const char *option,
                        const char *value) {

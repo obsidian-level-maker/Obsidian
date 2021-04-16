@@ -49,29 +49,3 @@ PREFABS.Wall_quakish_insets_2_limit =
 
   line_344 = 0
 }
-
-PREFABS.Wall_quakish_insets_2_diag =
-{
-  template = "Wall_quakish_insets_1",
-  map = "MAP04",
-
-  where = "diagonal",
-
-  engine = "zdoom",
-
-  group = "gtd_wall_quakish_insets_2"
-}
-
-PREFABS.Wall_quakish_insets_2_diag_limit =
-{
-  template = "Wall_quakish_insets_1",
-  map = "MAP04",
-
-  engine = "!zdoom",
-
-  where = "diagonal",
-
-  group = "gtd_wall_quakish_insets_2",
-
-  line_344 = 0
-}
