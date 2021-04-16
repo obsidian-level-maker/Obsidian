@@ -68,7 +68,7 @@ static int errors_seen;
 
 std::string current_engine;
 std::string map_format;
-std::string build_nodes;
+int build_nodes;
 int build_reject;
 std::string levelcount;
 std::string monvariety;
@@ -876,7 +876,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.compress_gl_nodes = false;
         options.force_compression = true;
     } else if (current_engine == "zdoom") {
-        if (build_nodes == "no") {
+        if (build_nodes == 0) {
             LogPrintf("Skipping nodes per user selection...\n");
             FileRename(filename, out_name);
             return true;
@@ -954,7 +954,7 @@ bool doom_game_interface_c::Start(const char *preset) {
         current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "vanilla") {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
-                           ->FindButtonOpt("build_reject")
+                           ->FindButtonOpt("bool_build_reject")
                            ->value();
             if (Slump_MakeWAD(filename) == 0) {
                 return true;
@@ -975,19 +975,19 @@ bool doom_game_interface_c::Start(const char *preset) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
         if (current_engine == "zdoom") {
             build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")
-                               ->FindButtonOpt("build_reject_zdoom")
+                               ->FindButtonOpt("bool_build_reject_zdoom")
                                ->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
-                               ->FindButtonOpt("build_reject")
+                               ->FindButtonOpt("bool_build_reject")
                                ->value();
         }
         map_format = main_win->left_mods->FindID("ui_zdoom_map_options")
                          ->FindOpt("map_format")
                          ->GetID();
         build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")
-                          ->FindOpt("build_nodes")
-                          ->GetID();
+                          ->FindButtonOpt("bool_build_nodes")
+                          ->value();
         if (current_engine == "zdoom" && map_format == "udmf") {
             UDMF_mode = true;
         } else {
