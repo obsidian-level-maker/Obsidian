@@ -113,6 +113,9 @@ class UI_RSlide : public Fl_Hor_Slider {
     virtual ~UI_RSlide();
     
     std::string original_label;
+    
+    std::vector<std::string> nan_choices;
+    
 };
 
 #endif /* __UI_RCHOICE_H__ */

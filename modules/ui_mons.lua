@@ -142,6 +142,9 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = 1.00,
+      nan1 = "Progressive",
+      nan2 = "Mix It Up",
+      nan3 = "",
       tooltip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
               "Mix It Up: randomizes quantities based on the prefered selection " ..
               "under the Fine Tune options below.\n\n" ..

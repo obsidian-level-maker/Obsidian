@@ -51,6 +51,9 @@ OB_MODULES["ui_slump_arch"] =
       max = 37,
       increment = 1,
       default = 15,
+      nan1 = "",
+      nan2 = "",
+      nan3 = "",
       tooltip = "Minimum number of rooms per level."
     },
 
@@ -62,6 +65,9 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
+      nan1 = "",
+      nan2 = "",
+      nan3 = "",
       tooltip = "% chance that SLUMP will attempt to grow a room."
     },
     
@@ -73,6 +79,9 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
+      nan1 = "",
+      nan2 = "",
+      nan3 = "",
       tooltip = "% chance that a room will attempt to fork as the level grows. "..
                 "0% should be a bunch of murder hallways. Forks are not guaranteed " ..
                 "to succeed, especially if the room bigification chance is increased."

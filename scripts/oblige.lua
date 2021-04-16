@@ -1056,7 +1056,7 @@ function ob_init()
           end
                   
           if opt.valuator and opt.valuator == "slider" then
-            gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap, opt.min, opt.max, opt.increment)
+            gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap, opt.min, opt.max, opt.increment, opt.nan1, opt.nan2, opt.nan3)
             if not opt.default then
               opt.default = (opt.min + opt.max) / 2
             end
