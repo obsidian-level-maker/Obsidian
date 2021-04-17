@@ -968,7 +968,7 @@ function Episode_plan_monsters()
     if boss_type ~= "tough" then count = count ^ 1.5 end
 
     -- user quantity setting
-    local factor = gui.get_module_slider_value("ui_mons", "float_mons") or 1
+    local factor = MONSTER_QUANTITIES[OB_CONFIG.mons] or 1
     if factor > 1 then factor = (factor + 1) / 2 end
 
     count = count * factor
@@ -1041,7 +1041,7 @@ function Episode_plan_monsters()
     local count = 2 * (1.5 + LEV.game_along)
 
     -- user quantity setting
-    local factor = gui.get_module_slider_value("ui_mons", "float_mons") or 1
+    local factor = MONSTER_QUANTITIES[OB_CONFIG.mons] or 1
     if factor > 1 then factor = (factor + 1) / 2 end
 
     count = count * factor

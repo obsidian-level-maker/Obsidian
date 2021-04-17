@@ -173,6 +173,7 @@ ARMAETUS_ROOM_THEMES =
       FLAT1 = 1
     }
   },
+  -- END OF HALLWAY THEMES
 
   tech_GrayMet =
   {
@@ -225,6 +226,18 @@ ARMAETUS_ROOM_THEMES =
 
       TEKWALL2 = 15,
       TEKWALL7 = 15,
+    
+      PIPEWAL2 = 10,
+      PIPES = 10,
+      BROWNPIP = 10,
+      PIPE2 = 10,
+
+      PIPEDRK1 = 15,
+      PIPESV1 = 10,
+      PIPESV2 = 10,
+      PIPESV3 = 10,
+      PIPEWAL5 = 15,
+
       TEKWALL8 = 15,
       TEKWALL9 = 15,
       TEKWALLA = 10,
@@ -1183,6 +1196,30 @@ ARMAETUS_ROOM_THEMES =
       GROUND02 = 50,
       GROUND03 = 50,
       GROUND04 = 50,
+
+      ALTASH = 20,
+      ASH05 = 20,
+      ROK04 = 30,
+      ROK05 = 10,
+      ROK06 = 30,
+      ROK12 = 50,
+      ROK13 = 30,
+      ROK14 = 30,
+      ROK15 = 30,
+      ROK20 = 20,
+      ROK21 = 50,
+      ROK22 = 30,
+      ROK23 = 20,
+      VINES1 = 10,
+      VINES2 = 10,
+      VINES3 = 10,
+      VINES4 = 10,
+      MOSROK3 = 10,
+
+      GRNSTONE = 20,
+      GREEN01 = 20,
+      GREEN02 = 20,
+      GREEN03 = 20,
     },
 
     porch_floors =
@@ -2325,7 +2362,30 @@ ARMAETUS_ROOM_THEMES =
       ASHWALL4 = 30,
       SKIN2 = 10,
       SKSNAKE1 = 30,
-      SKSNAKE2 = 30
+      SKSNAKE2 = 30,
+
+      ALTASH = 20,
+      ASH05 = 40,
+      ASHWALL1 = 10,
+      ROK05 = 15,
+      ROK12 = 10,
+      ROK21 = 15,
+      HELLROK1 = 40,
+      RDROK1 = 30,
+      RDROK2 = 35,
+      SKIN3 = 6,
+      SKIN4 = 6,
+      VINES1 = 3,
+      VINES2 = 3,
+      VINES3 = 3,
+      VINES4 = 3,
+
+      GRNSTONE = 20,
+
+      CREYEWLL = 5,
+      CRFSHWLL = 5,
+      CRGRSWLL = 5,
+      CRHRTWLL = 5,
     },
 
     porch_floors =
@@ -2981,7 +3041,6 @@ ARMAETUS_ROOM_THEMES =
       MFLR8_3  = 10,
       FLOOR6_2 = 5,
 
-
       --
 
       DARKF01 = 20,
@@ -2992,7 +3051,6 @@ ARMAETUS_ROOM_THEMES =
       FLOOR46D = 20,
       FLOOR46E = 20,
       FLOOR51C = 20,
-      FLOOR7_3 = 20,
 
       G09 = 20,
       G10 = 20,
@@ -3062,6 +3120,30 @@ ARMAETUS_ROOM_THEMES =
       GROUND02 = 50,
       GROUND03 = 50,
       GROUND04 = 50,
+
+      ALTASH = 15,
+      ROK03 = 20,
+      ROK04 = 30,
+      ROK05 = 20,
+      ROK06 = 40,
+      ROK12 = 60,
+      ROK13 = 40,
+      ROK14 = 35,
+      ROK15 = 50,
+      ROK20 = 40,
+      ROK21 = 35,
+      ROK22 = 30,
+      ROK23 = 20,
+      VINES1 = 20,
+      VINES2 = 20,
+      VINES3 = 20,
+      VINES4 = 20,
+      MOSROK3 = 20,
+
+      GRNSTONE = 20,
+      GREEN01 = 20,
+      GREEN02 = 20,
+      GREEN03 = 20,
     },
 
     porch_floors =
@@ -3098,7 +3180,6 @@ ARMAETUS_ROOM_THEMES =
       FLOOR46D = 20,
       FLOOR46E = 20,
       FLOOR51C = 20,
-      FLOOR7_3 = 20,
 
       G09 = 20,
       G10 = 20,
@@ -4588,9 +4669,6 @@ ARMAETUS_THEMES =
       OBTBSTX1 = 15,
       OBTBSTX3 = 15,
 
-      OBTSTX1B = 20,
-      OBTSTX1G = 20,
-
       OBTBSLB1 = 20,
       OBTBSLB2 = 20,
       OBTBSLB3 = 20,
@@ -5311,99 +5389,6 @@ ARMAETUS_THEMES =
       Skybox_city_bridge_EPIC = 15,
       Skybox_g99_hell_tower_EPIC = 50,
       Skybox_city_hell_bloodfalls_EPIC = 50,
-    },
-  },
-}
-
--- Natural textures for outdoor parks.
-ARMAETUS_NATURALS =
-{
-  tech =
-  {
-    naturals =
-    {
-      ALTASH = 20,
-      ASH05 = 20,
-      ROK04 = 30,
-      ROK05 = 10,
-      ROK06 = 30,
-      ROK12 = 50,
-      ROK13 = 30,
-      ROK14 = 30,
-      ROK15 = 30,
-      ROK20 = 20,
-      ROK21 = 50,
-      ROK22 = 30,
-      ROK23 = 20,
-      VINES1 = 10,
-      VINES2 = 10,
-      VINES3 = 10,
-      VINES4 = 10,
-      MOSROK3 = 10,
-
-      GRNSTONE = 20,
-      GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
-    },
-  },
-
-  urban =
-  {
-    naturals =
-    {
-      ALTASH = 15,
-      ROK03 = 20,
-      ROK04 = 30,
-      ROK05 = 20,
-      ROK06 = 40,
-      ROK12 = 60,
-      ROK13 = 40,
-      ROK14 = 35,
-      ROK15 = 50,
-      ROK20 = 40,
-      ROK21 = 35,
-      ROK22 = 30,
-      ROK23 = 20,
-      VINES1 = 20,
-      VINES2 = 20,
-      VINES3 = 20,
-      VINES4 = 20,
-      MOSROK3 = 20,
-
-      GRNSTONE = 20,
-      GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
-    },
-  },
-
-  hell =
-  {
-    naturals =
-    {
-      ALTASH = 20,
-      ASH05 = 40,
-      ASHWALL1 = 10,
-      ROK05 = 15,
-      ROK12 = 10,
-      ROK21 = 15,
-      HELLROK1 = 40,
-      RDROK1 = 30,
-      RDROK2 = 35,
-      SKIN3 = 6,
-      SKIN4 = 6,
-      VINES1 = 3,
-      VINES2 = 3,
-      VINES3 = 3,
-      VINES4 = 3,
-
-      GRNSTONE = 20,
-
-      CREYEWLL = 5,
-      CRFSHWLL = 5,
-      CRGRSWLL = 5,
-      CRHRTWLL = 5,
     },
   },
 }

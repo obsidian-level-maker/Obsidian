@@ -834,13 +834,13 @@ function Monster_fill_room(R)
     local l_factor = MONSTER_KIND_TAB.few
     local u_factor = MONSTER_KIND_TAB.heaps
 
-    factor = gui.get_module_slider_value("ui_mons", "float_mons")
-    assert(factor)
-
-    if factor == -0.05 then
+    if OB_CONFIG.mons == "mixed" then
       factor = rand.range(l_factor, u_factor)
-    elseif factor == -0.10 then
+    elseif OB_CONFIG.mons == "prog" then
       factor = l_factor + (u_factor * LEVEL.game_along)
+    else
+      factor = MONSTER_KIND_TAB[OB_CONFIG.mons]
+      assert(factor)
     end
     
     -- apply 'mon_variety' style
@@ -875,30 +875,22 @@ function Monster_fill_room(R)
     --
     -- result is a percentage (how many spots to use)
     --
-    local max_range
-    local min_range   
-    
-    for _,v in pairs(OB_MODULES.ui_mons.options) do 
-        for k,v in pairs(v) do
-          if k == "max" then max_range = tonumber(v) end
-          if k == "min" then min_range = tonumber(v) end
-        end
-    end
-
     local qty
+    local max_range = MONSTER_QUANTITIES[OB_CONFIG.mix_it_up_upper_range]
+    local min_range = MONSTER_QUANTITIES[OB_CONFIG.mix_it_up_lower_range]
     local u_range = math.max(min_range, max_range)
     local l_range = math.min(min_range, max_range)
 
-    qty = gui.get_module_slider_value("ui_mons", "float_mons")
-    assert(qty)
-
-    if qty == -0.05 then
+    if OB_CONFIG.mons == "mixed" then
       if l_range == u_range then
         qty = l_range
       end
       qty = rand.range(l_range, u_range)
-    elseif qty == -0.10 then
+    elseif OB_CONFIG.mons == "prog" then
       qty = l_range + (u_range * LEVEL.game_along)
+    else
+      qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
+      assert(qty)
     end
 
     -- oh the pain
@@ -2354,7 +2346,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
 
   local function should_add_monsters()
-    if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
+    if OB_CONFIG.mons == "none" then
       return false
     end
 

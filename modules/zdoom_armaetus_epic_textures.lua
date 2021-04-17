@@ -933,9 +933,6 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
     -- ROOM THEMES
     GAME.ROOM_THEMES = table.deep_merge(GAME.ROOM_THEMES, ARMAETUS_ROOM_THEMES, 2)
 
-    -- NATURALS
-    GAME.ROOM_THEMES = table.deep_merge(GAME.ROOM_THEMES, ARMAETUS_NATURALS, 2)
-
     -- definitions
     GAME.SINKS = table.deep_merge(GAME.SINKS, ARMAETUS_SINK_DEFS, 2)
     GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_THEMES, 2)
