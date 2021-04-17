@@ -173,6 +173,7 @@ ARMAETUS_ROOM_THEMES =
       FLAT1 = 1
     }
   },
+  -- END OF HALLWAY THEMES
 
   tech_GrayMet =
   {
@@ -225,6 +226,18 @@ ARMAETUS_ROOM_THEMES =
 
       TEKWALL2 = 15,
       TEKWALL7 = 15,
+    
+      PIPEWAL2 = 10,
+      PIPES = 10,
+      BROWNPIP = 10,
+      PIPE2 = 10,
+
+      PIPEDRK1 = 15,
+      PIPESV1 = 10,
+      PIPESV2 = 10,
+      PIPESV3 = 10,
+      PIPEWAL5 = 15,
+
       TEKWALL8 = 15,
       TEKWALL9 = 15,
       TEKWALLA = 10,
