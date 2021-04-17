@@ -842,7 +842,7 @@ function Monster_fill_room(R)
       factor = MONSTER_KIND_TAB[OB_CONFIG.mons]
       assert(factor)
     end
-
+    
     -- apply 'mon_variety' style
     -- [ this style is only set via the Level Control module ]
     factor = factor * style_sel("mon_variety", 0, 0.5, 1.0, 2.1)
@@ -875,7 +875,6 @@ function Monster_fill_room(R)
     --
     -- result is a percentage (how many spots to use)
     --
-
     local qty
     local max_range = MONSTER_QUANTITIES[OB_CONFIG.mix_it_up_upper_range]
     local min_range = MONSTER_QUANTITIES[OB_CONFIG.mix_it_up_lower_range]

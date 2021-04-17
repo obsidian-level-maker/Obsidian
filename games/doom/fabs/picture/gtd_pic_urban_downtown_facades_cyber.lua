@@ -46,6 +46,7 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     BLAKWAL2 = 5,
   },
 
+  -- texture for the terraced wall
   tex_CITY02 =
   {
     BLAKWAL1 = 1,
@@ -64,22 +65,68 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CITY14 = 1,
   },
 
+  -- texture for the top third
   tex_CITY05 =
   {
-    BLAKWAL1 = 1,
-    BLAKWAL2 = 1,
-    MODWALL3 = 1,
-    MODWALL4 = 1,
-    CITY02 = 1,
-    CITY03 = 1,
-    CITY04 = 1,
-    CITY05 = 1,
-    CITY06 = 1,
-    CITY07 = 1,
-    CITY11 = 1,
-    CITY12 = 1,
-    CITY13 = 1,
-    CITY14 = 1
+    BLAKWAL1 = 2,
+    BLAKWAL2 = 2,
+    MODWALL3 = 2,
+    MODWALL4 = 2,
+    CITY02 = 2,
+    CITY03 = 2,
+    CITY04 = 2,
+    CITY05 = 2,
+    CITY06 = 2,
+    CITY07 = 2,
+    CITY11 = 2,
+    CITY12 = 2,
+    CITY13 = 2,
+    CITY14 = 2,
+
+    -- technological-looking facades
+    COMPOHSO = 5,
+    CMPTILE = 5,
+    --
+    COMPBLAK = 1,
+    COMPGREN = 1,
+    COMPBLUE = 1,
+    COMPRED = 1,
+    --
+    COMPTIL2 = 1,
+    COMPTIL3 = 1,
+    COMPTIL4 = 1,
+    COMPTIL5 = 1,
+    COMPTIL6 = 1,
+    --
+    SHAWHOSO = 2,
+    SHAWNDR = 2,
+    SHAWVENT = 2,
+    SHAWVEN2 = 2,
+    SILVBLU1 = 2,
+    TEKGRBLU = 2,
+    --
+    GRAYMET4 = 1,
+    GRAYMET6 = 1,
+    GRAYMET7 = 1,
+    GRAYMET8 = 1,
+    GRAYMET9 = 1,
+    GRAYMETA = 1,
+    GRAYMETB = 1,
+    GRAYMETC = 1,
+    --
+    TEKWALL8 = 1,
+    TEKWALL9 = 1,
+    TEKWALLA = 1,
+    TEKWALLB = 1,
+    TEKWALLC = 1,
+    TEKWALLD = 1,
+    TEKWALLE = 1,
+
+    BIGBRIK3 = 5,
+    BRONZE4 = 5,
+    TEKGREN5 = 5,
+    METAL6 = 5,
+    METAL7 = 5,
   },
 
   tex_FENCE1 =

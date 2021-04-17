@@ -57,13 +57,11 @@ PREFABS.Item_secret_niche2 =
 
   thing_34 =
   {
-    nothing = 50,
     pool_blood_1 = 30,
     pool_blood_2 = 30,
     pool_brains = 8,
     gibbed_player = 10,
     dead_player = 10,
-    barrel = 20,
   },
 
   tex_TEKWALL4 = { TEKWALL4=50, METAL2=50, COMPBLUE=50, COMPSPAN=50, BRONZE1=50, METAL1=50, SHAWN2=50, SPACEW4=50, STARG1=50, STARGR1=50, STONE2=50, STONE3=50, STONE4=50 },
@@ -81,14 +79,11 @@ PREFABS.Item_secret_niche2_urban =
 
   thing_34 =
   {
-    nothing = 50,
     pool_blood_1 = 30,
     pool_blood_2 = 30,
     pool_brains = 10,
     gibbed_player = 10,
     dead_player = 10,
-    barrel = 15,
-    candle = 15,
   },
 
   tex_TEKWALL4 = { BROWNHUG=50, BIGBRIK1=50, BIGBRIK2=50, BLAKWAL2=50, BRICK4=50, BRICK5=50, CEMENT9=50, METAL1=50, METAL2=50, MODWALL1=50, MODWALL3=50, STONE2=50, STONE3=50 }
@@ -103,14 +98,11 @@ PREFABS.Item_secret_niche2_hell =
 
   thing_34 =
   {
-    nothing = 50,
     pool_blood_1 = 30,
     pool_blood_2 = 30,
     pool_brains = 10,
     gibbed_player = 10,
     dead_player = 10,
-    barrel = 5,
-    candle = 25,
   },
 
   tex_TEKWALL4 = { BROWNHUG=50, ASHWALL2=50, ASHWALL4=50, ASHWALL7=50, FIREBLU1=50, GRAYVINE=50, GSTONE1=50, GSTVINE1=50, GSTVINE2=50, SP_HOT1=50, METAL=50, SKIN2=50, SKINFACE=50, STONE6=50 }

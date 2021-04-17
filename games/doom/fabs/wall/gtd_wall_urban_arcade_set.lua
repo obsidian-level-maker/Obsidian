@@ -1,6 +1,6 @@
 PREFABS.Wall_gtd_arcade_machine_wall =
 {
-  file   = "wall/gtd_wall_arcade_set.wad",
+  file   = "wall/gtd_wall_urban_arcade_set.wad",
   map    = "MAP01",
 
   prob   = 20,
