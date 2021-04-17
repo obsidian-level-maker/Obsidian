@@ -173,7 +173,7 @@ ARMAETUS_ROOM_THEMES =
       FLAT1 = 1
     }
   },
-  -- END OF HALLWAY THEMES
+-- END OF HALLWAY THEMES
 
   tech_GrayMet =
   {
@@ -263,7 +263,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BR2GY = 20,
       G8_BR3GY = 20,
 
-      OBTSBGRE = 10
+      OBTSBGRE = 10,
+
+      OBTSVBZ1 = 20,
+      OBTSVBZ2 = 20,
+      OBTSVBZ3 = 20,
     },
 
     floors =
@@ -800,7 +804,12 @@ ARMAETUS_ROOM_THEMES =
 
       OBTBSTX1 = 15,
       OBTBSTX2 = 15,
-      OBTBSTX3 = 15
+      OBTBSTX3 = 15,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
+
     },
 
     floors =
@@ -871,6 +880,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BR3GY = 10,
 
       OBTSBGRE = 8,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10,
+
     },
 
     floors =
@@ -980,7 +994,12 @@ ARMAETUS_ROOM_THEMES =
       G8_BR2GY = 20,
       G8_BR3GY = 20,
 
-      OBTSBGRE = 8
+      OBTSBGRE = 8,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
+
     },
 
     floors =
@@ -1051,7 +1070,11 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNW1 = 20,
       G8_BRNW2 = 20,
-      G8_BRNW3 = 20
+      G8_BRNW3 = 20,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10,
     },
 
     floors =
@@ -1343,6 +1366,14 @@ ARMAETUS_ROOM_THEMES =
       GOTH48 = 15,
       GOTH49 = 15,
 
+      --
+      BRIC9GRN = 15,
+      BRIC9GRY = 15,
+      BRIC9TAN = 15,
+      BRICEGRN = 15,
+      BRICEGRY = 15,
+
+      --
       OBTBSLB3 = 15,
       OBTBSLB4 = 15,
 
@@ -1528,6 +1559,10 @@ ARMAETUS_ROOM_THEMES =
       HELLCMT2 = 20,
       HELLCMT7 = 15,
       HELLCMT8 = 15,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
     },
 
     floors =
@@ -1739,6 +1774,8 @@ ARMAETUS_ROOM_THEMES =
       EGYPT04 = 50,
       EGYPT05 = 50,
       EGYPT06 = 50,
+
+      BRIC9TAN = 50,
     },
 
     floors =
@@ -1862,6 +1899,10 @@ ARMAETUS_ROOM_THEMES =
       G7_GOGN1 = 10,
       G7_GOGN2 = 10,
       G7_GOGN3 = 10,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10,
     },
 
     floors =
@@ -2791,7 +2832,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BRNW3 = 10,
       G8_BR1GY = 10,
       G8_BR2GY = 10,
-      G8_BR3GY = 10
+      G8_BR3GY = 10,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10
     },
 
     floors =
@@ -4341,7 +4386,11 @@ ARMAETUS_THEMES =
       G8_BRNW3 = 10,
       G8_BR1GY = 10,
       G8_BR2GY = 10,
-      G8_BR3GY = 10
+      G8_BR3GY = 10,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
     },
 
     fences = 
@@ -4663,6 +4712,14 @@ ARMAETUS_THEMES =
       BRONZE1 = 10,
       BRONZE3 = 10,
 
+      --
+      BRIC9GRN = 15,
+      BRIC9GRY = 15,
+      BRIC9TAN = 15,
+      BRICEGRN = 15,
+      BRICEGRY = 15,
+
+      --
       OBTBSLV1 = 15,
       OBTBSLV2 = 15,
 
@@ -4676,7 +4733,11 @@ ARMAETUS_THEMES =
 
       OBTBSB2B = 15,
       OBTBSB3B = 15,
-      OBTBSB4B = 15
+      OBTBSB4B = 15,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
     },
 
     fences =
@@ -5087,6 +5148,13 @@ ARMAETUS_THEMES =
       CRFSHWLL = 7,
       CRGRSWLL = 7,
       CRHRTWLL = 7,
+
+      --
+      BRIC9GRN = 15,
+      BRIC9GRY = 15,
+      BRIC9TAN = 15,
+      BRICEGRN = 15,
+      BRICEGRY = 15,
 
       -- MSSP stuff
       OBTBSLB2 = 15,
