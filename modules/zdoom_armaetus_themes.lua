@@ -4893,6 +4893,7 @@ ARMAETUS_THEMES =
     wall_groups =
     {
       dem_wall_commercial = 50,
+      gtd_grocery = 50,
       --
       gtd_tall_glass_epic_yellow = 8,
       gtd_tall_glass_epic_orange = 8,

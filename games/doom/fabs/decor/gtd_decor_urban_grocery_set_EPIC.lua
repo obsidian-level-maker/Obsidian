@@ -1,0 +1,77 @@
+PREFABS.Decor_grocery_shelf_1x =
+{
+  file = "decor/gtd_decor_urban_grocery_set_EPIC.wad",
+  map = "MAP01",
+
+  prob = 5000,
+
+  where = "point",
+
+  size = 104,
+  height = 128,
+
+  group = "gtd_grocery",
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  tex_DNSTOR02 =
+  {
+    DNSTOR02 = 5,
+    DNSTOR03 = 5,
+    DNSTOR04 = 5,
+    DNSTOR05 = 5,
+    DNSTOR06 = 20,
+  },
+
+  tex_DNSTOR03 =
+  {
+    DNSTOR02 = 5,
+    DNSTOR03 = 5,
+    DNSTOR04 = 5,
+    DNSTOR05 = 5,
+    DNSTOR06 = 20,
+  }
+}
+
+PREFABS.Decor_grocery_shelf_2x =
+{
+  template = "Decor_grocery_shelf_1x",
+  map = "MAP02",
+
+  tex_DNSTOR02 =
+  {
+    DNSTOR02 = 5,
+    DNSTOR03 = 5,
+    DNSTOR04 = 5,
+    DNSTOR05 = 5,
+    DNSTOR06 = 20,
+  },
+
+  tex_DNSTOR03 =
+  {
+    DNSTOR02 = 5,
+    DNSTOR03 = 5,
+    DNSTOR04 = 5,
+    DNSTOR05 = 5,
+    DNSTOR06 = 20,
+  },
+  
+  tex_DNSTOR04 =
+  {
+    DNSTOR02 = 5,
+    DNSTOR03 = 5,
+    DNSTOR04 = 5,
+    DNSTOR05 = 5,
+    DNSTOR06 = 20,
+  },
+
+  tex_DNSTOR05 =
+  {
+    DNSTOR02 = 5,
+    DNSTOR03 = 5,
+    DNSTOR04 = 5,
+    DNSTOR05 = 5,
+    DNSTOR06 = 20,
+  }
+}
