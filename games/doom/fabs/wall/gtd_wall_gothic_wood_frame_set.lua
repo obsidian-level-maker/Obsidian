@@ -38,6 +38,7 @@ PREFABS.Wall_gtd_wood_frame_edge_green =
 PREFABS.Wall_gtd_wood_frame_diag_green =
 {
   template = "Wall_gtd_wood_frame_edge",
+  map = "MAP02",
 
   group = "gtd_woodframe_green",
 
