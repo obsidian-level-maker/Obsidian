@@ -75,3 +75,30 @@ PREFABS.Decor_grocery_shelf_2x =
     DNSTOR06 = 20,
   }
 }
+
+PREFABS.Decor_grocery_counter =
+{
+  template = "Decor_grocery_shelf_1x",
+  map = "MAP03",
+
+  prob = 1500,
+
+  height = 72,
+
+  size = 80,
+
+  tex_DNSTOR03 = "DNSTOR03"
+}
+
+PREFABS.Decor_grocery_shelf_square =
+{
+  template = "Decor_grocery_shelf_1x",
+  map = "MAP04",
+
+  height = 88,
+
+  size = 80,
+
+  tex_DNSTOR02 = "DNSTOR02",
+  tex_DNSTOR04 = "DNSTOR04"
+}
