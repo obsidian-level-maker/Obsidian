@@ -1330,6 +1330,11 @@ ARMAETUS_MATERIALS = {
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
   OBTBSLV5 = { t="OBTBSLV5", f="FLAT3"},
 
+  -- silver wall, bronze-framed (256px)
+  OBTSVBZ1 = { t="OBTSVBZ1", f="G8_BRNF1"},
+  OBTSVBZ2 = { t="OBTSVBZ2", f="G8_BRNF2"},
+  OBTSVBZ3 = { t="OBTSVBZ3", f="G8_BRNF3"},
+
   -- silver walls (128px)
   OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},
   OBTBSTX2 = { t="OBTBSTX2", f="GRATE1"},
