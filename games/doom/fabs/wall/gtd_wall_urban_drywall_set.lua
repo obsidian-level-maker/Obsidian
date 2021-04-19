@@ -30,7 +30,7 @@ PREFABS.Wall_gtd_drywall_wall_2 =
 
 PREFABS.Wall_gtd_drywall_diag_1 =
 {
-  file   = "wall/gtd_wall_drywall_set.wad",
+  file   = "wall/gtd_wall_urban_drywall_set.wad",
   map    = "MAP03",
 
   prob   = 50,
