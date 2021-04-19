@@ -4932,6 +4932,8 @@ ARMAETUS_THEMES =
       gtd_wall_teklitecomp_blue = 8,
       --
       gtd_wall_grated_machines_epic = 25,
+      --
+      gtd_library_tall = 35,
     },
 
     window_groups =
@@ -5351,7 +5353,10 @@ ARMAETUS_THEMES =
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
-      gtd_wall_hell_bottom_glass = 25
+      --
+      gtd_wall_hell_bottom_glass = 25,
+      --
+      gtd_library_tall = 35,
     },
 
     window_groups =
