@@ -2378,7 +2378,6 @@ ARMAETUS_ROOM_THEMES =
       QFLAT05 = 10,
       QFLAT06 = 10,
       QFLAT07 = 10,
-      QFLAT08 = 10,
       QFLAT09 = 10,
       QFLAT10 = 10,
 
@@ -2512,7 +2511,6 @@ ARMAETUS_ROOM_THEMES =
       QFLAT05 = 10,
       QFLAT06 = 10,
       QFLAT07 = 10,
-      QFLAT08 = 10,
       QFLAT09 = 10,
       QFLAT10 = 10,
 
