@@ -120,8 +120,8 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 }
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
-                          int gap, double min, double max, double inc, const char *nan1,
-                          const char *nan2, const char *nan3, Fl_Color select_col) {
+                          int gap, double min, double max, double inc, 
+                          const char *nan, Fl_Color select_col) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -142,15 +142,19 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->maximum(max);
     rsl->step(inc);
     rsl->original_label = new_label;
-    if (nan1) {
-    	rsl->nan_choices.push_back(nan1);
-    }
-    if (nan2) {
-    	rsl->nan_choices.push_back(nan2);
-    }
-    if (nan3) {
-    	rsl->nan_choices.push_back(nan3);
-    }
+    
+    // Populate the nan_choices string vector
+	std::string nan_string = nan;
+	std::string::size_type oldpos = 0;
+	std::string::size_type pos = 0;
+	while (pos != -1) {
+		pos = nan_string.find(';', oldpos);
+		if (pos != -1) {
+			rsl->nan_choices.push_back(nan_string.substr(oldpos, pos-oldpos));		
+		}
+		oldpos = pos + 1;
+	}    
+	
     if (!tip) {
         tip = "";
     }
@@ -349,29 +353,25 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 
 	new_label = rsl->original_label;
 
-	if (value == (-1 * rsl->step())) {
-		try {
-        	rsl->copy_label(new_label.append(rsl->nan_choices.at(0)).c_str());
-    	} catch (std::out_of_range const& exc) {
-        	LogPrintf("%s\n", exc.what());
-    	}
-	} else if (value == (-2 * rsl->step())) {
-		try {
-        	rsl->copy_label(new_label.append(rsl->nan_choices.at(1)).c_str());
-    	} catch (std::out_of_range const& exc) {
-        	LogPrintf("%s\n", exc.what());
-    	}
-	} else if (value == (-3 * rsl->step())) {
-		try {
-        	rsl->copy_label(new_label.append(rsl->nan_choices.at(2)).c_str());
-    	} catch (std::out_of_range const& exc) {
-        	LogPrintf("%s\n", exc.what());
-    	}
-	} else {	
-		char value_string[10];
-		sprintf(value_string, "%.2f", value);
-		rsl->copy_label(new_label.append((const char*)value_string).c_str());
-	}
+	// Iterate through the nan_choices vector
+
+	if (!rsl->nan_choices.empty()) {
+		for (int i=0; i < rsl->nan_choices.size(); i++) {
+			if (value == (-(i + 1) * rsl->step())) {
+				try {
+					rsl->copy_label(new_label.append(rsl->nan_choices.at(i)).c_str());
+					goto end;
+				} catch (std::out_of_range const& exc) {
+					LogPrintf("%s\n", exc.what());
+				}
+			}
+		}
+	} 
+	char value_string[10];
+	sprintf(value_string, "%.2f", value);
+	rsl->copy_label(new_label.append((const char*)value_string).c_str());
+	// Jump here if NaN label applied
+	end: ;
 }
 
 //----------------------------------------------------------------
@@ -463,14 +463,14 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
                               const char *label, const char *tip, int gap, double min, double max, double inc,
-                              const char *nan1, const char *nan2, const char *nan3) {
+                              const char *nan) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddSliderOption(option, label, tip, gap, min, max, inc, nan1, nan2, nan3, button_col);
+    M->AddSliderOption(option, label, tip, gap, min, max, inc, nan, button_col);
 
     PositionAll();
 
