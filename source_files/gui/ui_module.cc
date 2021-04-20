@@ -150,9 +150,9 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	while (pos != -1) {
 		pos = nan_string.find(';', oldpos);
 		if (pos != -1) {
-			rsl->nan_choices.push_back(nan_string.substr(oldpos, pos-oldpos));		
+			rsl->nan_choices.push_back(nan_string.substr(oldpos, pos-oldpos));
+			oldpos = pos + 1;		
 		}
-		oldpos = pos + 1;
 	}    
 	
     if (!tip) {
