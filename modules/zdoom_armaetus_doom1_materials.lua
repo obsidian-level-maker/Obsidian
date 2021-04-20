@@ -678,9 +678,6 @@ ARMAETUS_DOOM1_MATERIALS = {
   COLLITE2 = { t="COLLITE2", f="ORANFLOR" }, --Orange version of REDWALL1,
   COLLITE3 = { t="COLLITE3", f="CEIL4_2" }, --Blue version of REDWALL1,
   DFAN1 = { t="DFAN1", f="METAL" }, -- Essentially a wall version of FAN1,
-  EXITDOR2 = { t="EXITDOR2", f="CEIL5_1" }, -- Hellish style exit door
-  EXITSIG2 = { t="EXITSIG2", f="CEIL5_2" }, -- Rusty vertical exit sign
-  EXITSIG3 = { t="EXITSIG3", f="FLAT1" }, -- Gray techy vertical exit sign
   LITE2 = { t="LITE2", f="FLOOR0_1" }, -- BROWN1 variant w/ lights. From Doom1,
   LITE4 = { t="LITE4", f="FLAT19" }, -- LITE5 and bigger light on bottom. From Doom1,
   LITE96 = { t="LITE96", f="FLOOR7_1" }, -- BROWN96 variant w/ lights. From Doom1,
