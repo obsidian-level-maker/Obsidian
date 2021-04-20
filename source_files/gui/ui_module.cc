@@ -212,9 +212,31 @@ int UI_Module::CalcHeight() const {
 
 void UI_Module::update_Enable() {
     std::map<std::string, UI_RChoice *>::const_iterator IT;
+    std::map<std::string, UI_RSlide *>::const_iterator IT2;
+    std::map<std::string, UI_RButton *>::const_iterator IT3;
 
     for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
         UI_RChoice *M = IT->second;
+
+        if (mod_button->value()) {
+            M->show();
+        } else {
+            M->hide();
+        }
+    }
+    
+    for (IT2 = choice_map_slider.begin(); IT2 != choice_map_slider.end(); IT2++) {
+        UI_RSlide *M = IT2->second;
+
+        if (mod_button->value()) {
+            M->show();
+        } else {
+            M->hide();
+        }
+    }
+    
+    for (IT3 = choice_map_button.begin(); IT3 != choice_map_button.end(); IT3++) {
+        UI_RButton *M = IT3->second;
 
         if (mod_button->value()) {
             M->show();
