@@ -1027,19 +1027,6 @@ OB_MODULES["modded_game_extras"] =
       gap = 1,
     },
 
-    hd_cover_walls =
-    {
-      name = "hd_cover_walls",
-      label=_("HD Cover Walls"),
-      choices=MODDED_GAME_EXTRAS.ENABLE_DISABLE,
-      tooltip = "Adds some Hideous Destructor-specific fabs such as walls with " ..
-      "cover to serve Hideous Destructor gameplay better. " ..
-      "It is recommended to keep this disabled if you are not " ..
-      "playing Hideous Destructor as these fabs will interfere with non-HD gameplay.",
-      default = "disable",
-      priority = 3,
-    },
-
     qcde_lootboxes =
     {
       name = "qcde_lootboxes",
