@@ -1315,6 +1315,9 @@ ARMAETUS_MATERIALS = {
   DNSTOR20 = { t="DNSTOR20", f="CEIL5_2"},
   DNSTOR21 = { t="DNSTOR21", f="CEIL5_2"},
 
+  -- 8px step
+  DNSTEP01 = { t="DNSTEP01", f="FLAT5_4"},
+
   ------------------
   -- MSSP Stuff --
   ------------------
