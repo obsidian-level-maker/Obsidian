@@ -15,7 +15,7 @@ PREFABS.Wall_gtd_library_tall =
   bound_z1 = 0,
   bound_z2 = 96,
 
-  z_fit = "bottom"
+  z_fit = { 90,92 }
 }
 
 PREFABS.Wall_gtd_library_tall_1 =
