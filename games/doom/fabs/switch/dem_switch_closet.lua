@@ -11,7 +11,7 @@ PREFABS.Switch_Dem_closet1 =
   prob   = 50,
   engine = "zdoom",
   theme  = "tech",
-  env = "!outdoor",
+  env = "building",
 
   where  = "seeds",
 
