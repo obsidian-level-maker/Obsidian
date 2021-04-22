@@ -35,6 +35,10 @@ PREFABS.Wall_urban_grocery_2 =
   template = "Wall_urban_grocery_1",
   map = "MAP02",
 
+  height = 129,
+
+  bound_z2 = 129,
+
   tex_DNSTOR07 =
   {
     DNSTOR07 = 5,
