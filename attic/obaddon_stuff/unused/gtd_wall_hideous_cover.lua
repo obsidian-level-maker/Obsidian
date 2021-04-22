@@ -7,9 +7,6 @@ PREFABS.Wall_HD_crate_pile =
   file   = "wall/gtd_wall_hideous_cover.wad",
   map    = "MAP01",
 
-  is_hideous_destructor_fab = true,
-  on_liquids = "never",
-
   prob   = 15,
   env   = "building",
 
