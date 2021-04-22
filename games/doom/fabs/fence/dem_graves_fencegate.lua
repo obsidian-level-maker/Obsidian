@@ -9,11 +9,7 @@ PREFABS.Fence_dem_graves_barred =
 
   group = "dem_wall_graveyard",
 
-rank = 1,
-
-  prob   = 120000,
-  theme  = "!tech",
-  env    = "park",
+  prob   = 5000,
 
   where  = "edge",
   key    = "barred",
@@ -29,21 +25,15 @@ rank = 1,
   bound_z1 = 0,
 
   tag_1  = "?door_tag",
-  door_action = "S1_LowerFloor",
+  door_action = "S1_LowerFloor"
 }
 
-
-PREFABS.Fence_dem_graves_barred_diag =
+--[[PREFABS.Fence_dem_graves_barred_diag =
 {
   file   = "fence/dem_graves_fencegate.wad",
   map    = "MAP02",
 
-
-rank = 1,
-
-  prob   = 120000,
-  theme  = "!tech",
-  env    = "park",
+  prob   = 5000,
 
   where  = "diagonal",
   key    = "barred",
@@ -53,5 +43,5 @@ rank = 1,
   tag_1  = "?door_tag",
   door_action = "S1_LowerFloor",
 
-  bound_z1 = 0,
-}
+  bound_z1 = 0
+}]]

@@ -9,21 +9,19 @@ PREFABS.Fence_dem_graves =
 
   group = "dem_wall_graveyard",
 
-rank = 1,
-
-  prob   = 5000000,
-  theme  = "!tech",
-  env    = "park",
+  prob   = 50,
 
   where  = "edge",
 
   deep   = 16,
   over   = 16,
 
-  fence_h  = 32,
-  bound_z1 = 0,
-}
+  post_offset_h = 96,
 
+  fence_h  = 32,
+
+  bound_z1 = 0
+}
 
 PREFABS.Fence_dem_graves_diag =
 {
@@ -32,17 +30,13 @@ PREFABS.Fence_dem_graves_diag =
 
   group = "dem_wall_graveyard",
 
-rank = 1,
-
-  prob   = 5000000,
-  theme  = "!tech",
-  env    = "park",
-
   prob   = 50,
 
   where  = "diagonal",
 
+  post_offset_h = 96,
+
   fence_h = 32,
 
-  bound_z1 = 0,
+  bound_z1 = 0
 }

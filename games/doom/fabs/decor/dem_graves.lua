@@ -9,11 +9,11 @@ PREFABS.Decor_Dem_Grave1 =
   file   = "decor/dem_graves.wad",
   map    = "MAP01",
 
-  group = "dem_wall_graveyard",
+  -- group = "dem_wall_graveyard", --MSSP-TODO: Re-add later
 
   engine = "zdoom",
 
-  prob   = 100,
+  prob   = 15000, --100
   theme  = "!tech",
   env    = "park",
 
@@ -28,9 +28,6 @@ PREFABS.Decor_Dem_Grave1 =
   z_fit = "top",
 
   on_liquids = "never",
-
-  sink_mode = "never_liquids",
-
 }
 
 -- a dug up grave with an open casket
@@ -39,7 +36,6 @@ PREFABS.Decor_Dem_Grave2 =
 {
   template = "Decor_Dem_Grave1",
   map = "MAP02",
-
 }
 
 -- a dug up grave
@@ -59,57 +55,46 @@ PREFABS.Decor_Dem_Grave3 =
     dead_imp = 50,
     Nothing = 50,
   },
-
 }
 
 -- a regular grave
 
 PREFABS.Decor_Dem_Grave4 =
 {
-
   template = "Decor_Dem_Grave1",
   map = "MAP04",
-
 }
 
 -- a fancier regular grave
 
 PREFABS.Decor_Dem_Grave5 =
 {
-
   template = "Decor_Dem_Grave1",
   map = "MAP05",
-
 }
 
 -- a tall regular grave
 
 PREFABS.Decor_Dem_Grave6 =
 {
-
   template = "Decor_Dem_Grave1",
   map = "MAP06",
 
   texture_pack = "armaetus",
-
 }
 
 -- a fresh regular grave
 
 PREFABS.Decor_Dem_Grave7 =
 {
-
   template = "Decor_Dem_Grave1",
   map = "MAP07",
-
 }
 
 -- a fresh regular grave2
 
 PREFABS.Decor_Dem_Grave8 =
 {
-
   template = "Decor_Dem_Grave1",
   map = "MAP08",
-
 }

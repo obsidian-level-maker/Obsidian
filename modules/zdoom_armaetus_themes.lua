@@ -4881,6 +4881,7 @@ ARMAETUS_THEMES =
     {
       fence_construction = 50,
       fence_highway_bars_warnstep = 25,
+      dem_wall_graveyard = 25,
     },
 
     wall_groups =
@@ -5316,6 +5317,11 @@ ARMAETUS_THEMES =
       WOOD15 = 20,
       WOOD16 = 20,
       WOOD17 = 20,
+    },
+
+    fence_groups =
+    {
+      dem_wall_graveyard = 50,
     },
 
     wall_groups =
