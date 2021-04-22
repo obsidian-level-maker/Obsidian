@@ -3843,8 +3843,6 @@ end
 function Grower_sprout_room(R)
   if R.is_dead or R.is_street then return end
 
-  Grower_grammatical_room(R, "sprout")
-
   if rand.odds(LEVEL.squareishness) and not R.is_cave and not R.is_park
   and not R.is_hallway and not R.is_street then
 
@@ -3853,6 +3851,8 @@ function Grower_sprout_room(R)
     Grower_grammatical_room(R, "square_out")
     R.is_squarified = true
   end
+
+  Grower_grammatical_room(R, "sprout")
 
   -- if hallway did not sprout, try again
   if R.is_hallway and R:prelim_conn_num() < 2 then
