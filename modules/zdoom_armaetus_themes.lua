@@ -1239,10 +1239,7 @@ ARMAETUS_ROOM_THEMES =
       VINES4 = 10,
       MOSROK3 = 10,
 
-      GRNSTONE = 20,
       GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
     },
 
     porch_floors =
@@ -2420,12 +2417,14 @@ ARMAETUS_ROOM_THEMES =
       VINES3 = 3,
       VINES4 = 3,
 
-      GRNSTONE = 20,
-
       CREYEWLL = 5,
       CRFSHWLL = 5,
       CRGRSWLL = 5,
       CRHRTWLL = 5,
+  
+      GRNSTONE = 20,
+      GREEN02 = 15,
+      GREEN03 = 15,
     },
 
     porch_floors =
@@ -3182,10 +3181,7 @@ ARMAETUS_ROOM_THEMES =
       VINES4 = 20,
       MOSROK3 = 20,
 
-      GRNSTONE = 20,
       GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
     },
 
     porch_floors =
