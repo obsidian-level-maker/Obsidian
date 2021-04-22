@@ -116,7 +116,9 @@ class UI_RSlide : public Fl_Hor_Slider {
     
     std::string original_label;
     
-    std::vector<std::string> nan_choices;   
+    std::vector<std::string> nan_choices;
+    
+    double num_min; 
 };
 
 class UI_RButton : public Fl_Light_Button {

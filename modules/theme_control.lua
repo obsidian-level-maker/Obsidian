@@ -166,24 +166,32 @@ OB_MODULES["level_control"] =
       gap = 1,
     },
 
-    level_upper_bound =
     {
-      name = "level_upper_bound",
+      name = "float_level_upper_bound",
       label = _("Upper Bound"),
       priority = 6,
+      valuator = "slider",
+      min = 10,
+      num_min = 10,
+      max = 75,
+      increment = 1,
+      default = 75,
+      nan = "",
       tooltip = "Fine tune upper limit for Level Size Episodic, Progressive and Mixed options.",
-      choices = THEME_CONTROL.SIZE_CHOICES,
-      default = "trans",
     },
 
-    level_lower_bound =
     {
-      name = "level_lower_bound",
+      name = "float_level_lower_bound",
       label = _("Lower Bound"),
       priority = 5,
+      valuator = "slider",
+      min = 10,
+      num_min = 10,
+      max = 75,
+      increment = 1,
+      default = 10,
+      nan = "",
       tooltip = "Fine tune lower limit for Level Size Episodic, Progressive and Mixed options.",
-      choices = THEME_CONTROL.SIZE_CHOICES,
-      default = "micro",
       gap = 1,
     },
 

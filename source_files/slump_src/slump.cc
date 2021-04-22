@@ -374,7 +374,7 @@
 #include <string.h>
 
 // Shim functions to replace old SLUMP RNG
-int roll(int n) {
+int roll(int n) {   
     if (n<1) {
         return 0;
     }

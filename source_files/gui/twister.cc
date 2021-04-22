@@ -29,3 +29,8 @@ void twister_Reseed(unsigned long long random) { twister.seed(random); }
 unsigned long long twister_UInt() { return twister(); }
 
 double twister_Double() { return ldexp(twister(), -63); }
+
+int twister_Between(int low, int high) {
+    std::uniform_int_distribution<> roll(low, high);
+    return roll(twister);
+}

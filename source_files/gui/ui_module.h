@@ -59,7 +59,7 @@ class UI_Module : public Fl_Group {
                    int gap, Fl_Color select_col);
 
 	void AddSliderOption(const char *option, const char *label, const char *tip,
-                          int gap, double min, double max, double inc,
+                          int gap, double min, double num_min, double max, double inc,
                           const char *nan, Fl_Color select_col);
                          
     void AddButtonOption(const char *opt, const char *label, const char *tip,
@@ -132,8 +132,8 @@ class UI_CustomMods : public Fl_Group {
                    const char *tip, int gap);
                    
 	bool AddSliderOption(const char *module, const char *option, const char *label,
-                   const char *tip, int gap, double min, double max, double inc,
-                   const char *nan);
+                   const char *tip, int gap, double min, double num_min, double max, 
+                   double inc, const char *nan);
                    
     bool AddButtonOption(const char *module, const char *option,
                          const char *label, const char *tip, int gap);

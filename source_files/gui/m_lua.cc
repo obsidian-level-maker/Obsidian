@@ -506,10 +506,11 @@ int gui_add_module_slider_option(lua_State *L) {
     int gap = luaL_optinteger(L, 5, 0);
     
     double min = luaL_checknumber(L, 6);
-    double max = luaL_checknumber(L, 7);
-    double inc = luaL_checknumber(L, 8);
+    double num_min = luaL_checknumber(L, 7);
+    double max = luaL_checknumber(L, 8);
+    double inc = luaL_checknumber(L, 9);
 
-	const char *nan = luaL_checkstring(L, 9);
+	const char *nan = luaL_checkstring(L, 10);
 
     SYS_ASSERT(module && option);
 
@@ -526,8 +527,8 @@ int gui_add_module_slider_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddSliderOption(module, option, label, tip, gap, min, max, inc, nan);
-    main_win->right_mods->AddSliderOption(module, option, label, tip, gap, min, max, inc, nan);
+    main_win->left_mods->AddSliderOption(module, option, label, tip, gap, min, num_min, max, inc, nan);
+    main_win->right_mods->AddSliderOption(module, option, label, tip, gap, min, num_min, max, inc, nan);
 
     return 0;
 }
@@ -822,6 +823,14 @@ int gui_random_int(lua_State *L) {
     return 1;
 }
 
+int gui_random_between(lua_State *L) {
+	int low = luaL_checkinteger(L, 1);
+	int high = luaL_checkinteger(L, 2);	
+    lua_Integer value = twister_Between(low, high);
+    lua_pushnumber(L, value);
+    return 1;
+}
+
 // LUA: bit_and(A, B) --> number
 //
 int gui_bit_and(lua_State *L) {
@@ -1044,6 +1053,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"rand_seed", gui_rand_seed},
     {"random", gui_random},
     {"random_int", gui_random_int},
+    {"random_between", gui_random_between},
 
     // file & directory functions
     {"import", gui_import},

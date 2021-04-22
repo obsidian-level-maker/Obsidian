@@ -20,27 +20,6 @@
 
 UI_ARCH = { }
 
-UI_ARCH.SIZES =
-{
-  "epi",     _("Episodic"),
-  "prog",    _("Progressive"),
-  "mixed",   _("Mix It Up"),
-
-  -- this is a separator (not a usable choice)
-  "_",       "_",
-
-  "micro",    _("Microscopic"),
-  "mini",     _("Miniscule"),
-  "tiny",     _("Tiny"),
-  "small",    _("Small"),
-  "average",  _("Average"),
-  "large",    _("Large"),
-  "huge",     _("Huge"),
-  "colossal", _("Colossal"),
-  "gargan",   _("Gargantuan"),
-  "trans",    _("Transcendent")
-}
-
 UI_ARCH.ABSURDITY_CHOICES =
 {
   "none", _("NONE"),
@@ -118,10 +97,19 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-    { name="size", label=_("Level Size"), choices=UI_ARCH.SIZES,  default="epi",
+    { 
+      name="float_size", 
+      label=_("Level Size"),
+      valuator = "slider",
+      min = 7,
+      num_min = 10,
+      max = 75,
+      increment = 1,
+      default = 7,
+      nan= "Progressive;Episodic;Mix It Up;",
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
-      "at sizes of Huge and above, Autodetail is required on. (on by default if you do not have " ..
-      "Prefab Control module on. The stability of maps with sizes Colossal and beyond is not predictable."
+      "at sizes of 50 and above, Autodetail is required on. (on by default if you do not have " ..
+      "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable."
     },
 
     {

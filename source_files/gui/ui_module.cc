@@ -120,7 +120,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 }
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
-                          int gap, double min, double max, double inc, 
+                          int gap, double min, double num_min, double max, double inc, 
                           const char *nan, Fl_Color select_col) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
@@ -142,6 +142,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->maximum(max);
     rsl->step(inc);
     rsl->original_label = new_label;
+    rsl->num_min = num_min;
     
     // Populate the nan_choices string vector
 	std::string nan_string = nan;
@@ -357,7 +358,7 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 
 	if (!rsl->nan_choices.empty()) {
 		for (int i=0; i < rsl->nan_choices.size(); i++) {
-			if (value == (-(i + 1) * rsl->step())) {
+			if (value == rsl->num_min - ((i + 1) * rsl->step())) {
 				try {
 					rsl->copy_label(new_label.append(rsl->nan_choices.at(i)).c_str());
 					goto end;
@@ -462,15 +463,15 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
-                              const char *label, const char *tip, int gap, double min, double max, double inc,
-                              const char *nan) {
+                              const char *label, const char *tip, int gap, double min, 
+                              double num_min, double max, double inc, const char *nan) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddSliderOption(option, label, tip, gap, min, max, inc, nan, button_col);
+    M->AddSliderOption(option, label, tip, gap, min, num_min, max, inc, nan, button_col);
 
     PositionAll();
 
