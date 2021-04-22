@@ -779,7 +779,7 @@ function Episode_plan_monsters()
             bprob = 0
           end
         end
-        if PARAM.boss_gen_types == "yes" and info.prob == 0 then
+        if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_types") == 1 and info.prob == 0 then
           bprob = 0
         end
         tab[name] = bprob
