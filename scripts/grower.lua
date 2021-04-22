@@ -3883,6 +3883,14 @@ function Grower_make_street(R)
   end
 
   Grower_grammatical_room(R, "streets")
+
+  -- sanity check: failed street rooms shall now become just
+  -- regular rooms
+  if R.areas[1].svolume < 16 then
+    R.is_street = false
+    return
+  end
+
   Grower_grammatical_room(R, "street_fixer")
 
   for _,A in pairs(R.areas) do
@@ -3896,14 +3904,6 @@ function Grower_make_street(R)
   --[[if not R.is_start then
     Grower_grammatical_room(R, "building_entrance")
   end]]
-
-  -- sanity check: failed street rooms shall now become just
-  -- regular rooms
-  if R.areas[1].svolume < 16 then
-    R.is_street = false
-    R.areas[1].is_road = false
-    return
-  end
 
   for _,A in pairs(R.areas) do
     if not A.is_road then
