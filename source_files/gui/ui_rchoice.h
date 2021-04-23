@@ -116,6 +116,8 @@ class UI_RSlide : public Fl_Hor_Slider {
     
     std::string original_label;
     
+    std::string units;
+    
     std::vector<std::string> nan_choices;
     
     double num_min; 

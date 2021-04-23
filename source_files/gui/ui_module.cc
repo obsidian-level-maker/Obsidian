@@ -120,8 +120,8 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 }
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
-                          int gap, double min, double num_min, double max, double inc, 
-                          const char *nan, Fl_Color select_col) {
+                          int gap, double min, double num_min, double max, double inc,
+                          const char *units, const char *nan, Fl_Color select_col) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -143,6 +143,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->step(inc);
     rsl->original_label = new_label;
     rsl->num_min = num_min;
+    rsl->units = units;
     
     // Populate the nan_choices string vector
 	std::string nan_string = nan;
@@ -369,8 +370,8 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 		}
 	} 
 	char value_string[10];
-	sprintf(value_string, "%.2f", value);
-	rsl->copy_label(new_label.append((const char*)value_string).c_str());
+	sprintf(value_string, "%.2g", value);
+	rsl->copy_label(new_label.append((const char*)value_string).append(rsl->units).c_str());
 	// Jump here if NaN label applied
 	end: ;
 }
@@ -464,14 +465,15 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
                               const char *label, const char *tip, int gap, double min, 
-                              double num_min, double max, double inc, const char *nan) {
+                              double num_min, double max, double inc, 
+                              const char *units, const char *nan) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddSliderOption(option, label, tip, gap, min, num_min, max, inc, nan, button_col);
+    M->AddSliderOption(option, label, tip, gap, min, num_min, max, inc, units, nan, button_col);
 
     PositionAll();
 

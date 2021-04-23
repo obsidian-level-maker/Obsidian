@@ -101,6 +101,7 @@ OB_MODULES["ui_arch"] =
       name="float_size", 
       label=_("Level Size"),
       valuator = "slider",
+      units = "",
       min = 7,
       num_min = 10,
       max = 75,

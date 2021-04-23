@@ -138,6 +138,7 @@ OB_MODULES["ui_mons"] =
       name="float_mons",
       label=_("Quantity"),
       valuator = "slider",
+      units = "",
       min = -0.10,
       num_min = 0.0,
       max = 10.00,

@@ -510,7 +510,8 @@ int gui_add_module_slider_option(lua_State *L) {
     double max = luaL_checknumber(L, 8);
     double inc = luaL_checknumber(L, 9);
 
-	const char *nan = luaL_checkstring(L, 10);
+	const char *units = luaL_checkstring(L, 10);
+	const char *nan = luaL_checkstring(L, 11);
 
     SYS_ASSERT(module && option);
 
@@ -527,8 +528,8 @@ int gui_add_module_slider_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddSliderOption(module, option, label, tip, gap, min, num_min, max, inc, nan);
-    main_win->right_mods->AddSliderOption(module, option, label, tip, gap, min, num_min, max, inc, nan);
+    main_win->left_mods->AddSliderOption(module, option, label, tip, gap, min, num_min, max, inc, units, nan);
+    main_win->right_mods->AddSliderOption(module, option, label, tip, gap, min, num_min, max, inc, units, nan);
 
     return 0;
 }
