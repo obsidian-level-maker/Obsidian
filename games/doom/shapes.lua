@@ -4423,7 +4423,7 @@ GROW_STAIRED_L =
 GROW_SQUEEZE_STRAIGHT_NEW_AREA =
 {
   prob = 15,
-  skip_prob = 70,
+  skip_prob = 85,
 
   structure =
   {
@@ -5659,7 +5659,7 @@ GROW_NARROW_CANAL_OUTER_CURVE =
 GROW_MAZE_STRAIGHT =
 {
   prob = 2,
-  skip_prob = 75,
+  skip_prob = 85,
 
   structure =
   {
@@ -5724,8 +5724,8 @@ GROW_MAZE_ZIGZAG_DOUBLE =
 
 GROW_MAZE_STRAIGHT_NEW_AREA =
 {
-  prob = 2,
-  skip_prob = 35,
+  prob = 1,
+  skip_prob = 75,
 
   structure =
   {

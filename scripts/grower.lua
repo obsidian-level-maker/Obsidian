@@ -3843,8 +3843,6 @@ end
 function Grower_sprout_room(R)
   if R.is_dead or R.is_street then return end
 
-  Grower_grammatical_room(R, "sprout")
-
   if rand.odds(LEVEL.squareishness) and not R.is_cave and not R.is_park
   and not R.is_hallway and not R.is_street then
 
@@ -3853,6 +3851,8 @@ function Grower_sprout_room(R)
     Grower_grammatical_room(R, "square_out")
     R.is_squarified = true
   end
+
+  Grower_grammatical_room(R, "sprout")
 
   -- if hallway did not sprout, try again
   if R.is_hallway and R:prelim_conn_num() < 2 then
@@ -3883,6 +3883,15 @@ function Grower_make_street(R)
   end
 
   Grower_grammatical_room(R, "streets")
+
+  -- sanity check: failed street rooms shall now become just
+  -- regular rooms
+  R.areas[1]:calc_volume()
+  if R.areas[1].svolume < 16 then
+    R.is_street = false
+    return
+  end
+
   Grower_grammatical_room(R, "street_fixer")
 
   for _,A in pairs(R.areas) do
@@ -3896,14 +3905,6 @@ function Grower_make_street(R)
   --[[if not R.is_start then
     Grower_grammatical_room(R, "building_entrance")
   end]]
-
-  -- sanity check: failed street rooms shall now become just
-  -- regular rooms
-  if R.areas[1].svolume < 16 then
-    R.is_street = false
-    R.areas[1].is_road = false
-    return
-  end
 
   for _,A in pairs(R.areas) do
     if not A.is_road then

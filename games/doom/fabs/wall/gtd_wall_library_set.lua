@@ -1,14 +1,14 @@
 PREFABS.Wall_gtd_library_1 =
 {
-  file   = "wall/gtd_wall_library_set.wad",
-  map    = "MAP01",
+  file = "wall/gtd_wall_library_set.wad",
+  map = "MAP01",
 
-  prob   = 10,
-  group  = "gtd_library",
+  prob = 10,
+  group = "gtd_library",
 
-  where  = "edge",
+  where = "edge",
 
-  deep   = 16,
+  deep = 16,
 
   height = 128,
 
@@ -28,20 +28,8 @@ PREFABS.Wall_gtd_library_wall_2 =
 
 PREFABS.Wall_gtd_library_diag_1 =
 {
-  file   = "wall/gtd_wall_library_set.wad",
+  template = "Wall_gtd_library_1",
   map    = "MAP03",
 
-  prob   = 50,
-  group  = "gtd_library",
-
   where  = "diagonal",
-
-  deep   = 16,
-
-  height = 128,
-
-  bound_z1 = 0,
-  bound_z2 = 128,
-
-  z_fit = "top",
 }

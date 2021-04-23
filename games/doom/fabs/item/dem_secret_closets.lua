@@ -844,9 +844,9 @@ PREFABS.Item_dem_cavein7_secret =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP29",
 
-  rank  = 1,
+  engine = "zdoom",
 
-  prob   = 1000000,
+  prob   = 100,
 
   key   = "secret",
 

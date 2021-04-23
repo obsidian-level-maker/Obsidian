@@ -4541,7 +4541,6 @@ DOOM.ROOM_THEMES =
       ZIMMER5  = 15,
       ZIMMER7  = 15,
       ZIMMER8  = 15,
-      TANROCK7 = 15,
       ROCK1    = 30,
       ROCK2    = 20,
       ROCK3    = 70

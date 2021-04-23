@@ -1239,10 +1239,7 @@ ARMAETUS_ROOM_THEMES =
       VINES4 = 10,
       MOSROK3 = 10,
 
-      GRNSTONE = 20,
       GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
     },
 
     porch_floors =
@@ -2378,7 +2375,6 @@ ARMAETUS_ROOM_THEMES =
       QFLAT05 = 10,
       QFLAT06 = 10,
       QFLAT07 = 10,
-      QFLAT08 = 10,
       QFLAT09 = 10,
       QFLAT10 = 10,
 
@@ -2421,12 +2417,14 @@ ARMAETUS_ROOM_THEMES =
       VINES3 = 3,
       VINES4 = 3,
 
-      GRNSTONE = 20,
-
       CREYEWLL = 5,
       CRFSHWLL = 5,
       CRGRSWLL = 5,
       CRHRTWLL = 5,
+  
+      GRNSTONE = 20,
+      GREEN02 = 15,
+      GREEN03 = 15,
     },
 
     porch_floors =
@@ -2512,7 +2510,6 @@ ARMAETUS_ROOM_THEMES =
       QFLAT05 = 10,
       QFLAT06 = 10,
       QFLAT07 = 10,
-      QFLAT08 = 10,
       QFLAT09 = 10,
       QFLAT10 = 10,
 
@@ -3153,7 +3150,6 @@ ARMAETUS_ROOM_THEMES =
       ZIMMER5  = 15,
       ZIMMER7  = 15,
       ZIMMER8  = 15,
-      TANROCK7 = 15,
       ROCK1    = 30,
       ROCK2    = 20,
       ROCK3    = 70,
@@ -3185,10 +3181,7 @@ ARMAETUS_ROOM_THEMES =
       VINES4 = 20,
       MOSROK3 = 20,
 
-      GRNSTONE = 20,
       GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
     },
 
     porch_floors =
@@ -4888,11 +4881,13 @@ ARMAETUS_THEMES =
     {
       fence_construction = 50,
       fence_highway_bars_warnstep = 25,
+      dem_wall_graveyard = 25,
     },
 
     wall_groups =
     {
       dem_wall_commercial = 50,
+      gtd_grocery = 50,
       --
       gtd_tall_glass_epic_yellow = 8,
       gtd_tall_glass_epic_orange = 8,
@@ -4932,6 +4927,8 @@ ARMAETUS_THEMES =
       gtd_wall_teklitecomp_blue = 8,
       --
       gtd_wall_grated_machines_epic = 25,
+      --
+      gtd_library_tall = 35,
     },
 
     window_groups =
@@ -5322,6 +5319,11 @@ ARMAETUS_THEMES =
       WOOD17 = 20,
     },
 
+    fence_groups =
+    {
+      dem_wall_graveyard = 50,
+    },
+
     wall_groups =
     {
       gtd_tall_glass_epic_yellow = 15,
@@ -5351,7 +5353,10 @@ ARMAETUS_THEMES =
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
-      gtd_wall_hell_bottom_glass = 25
+      --
+      gtd_wall_hell_bottom_glass = 25,
+      --
+      gtd_library_tall = 35,
     },
 
     window_groups =

@@ -574,24 +574,24 @@ function ob_set_mod_option(name, option, value)
 
   -- this can only happen while parsing the CONFIG.TXT file
   -- (containing some no-longer-used value).
-  if not opt.valuator then 
-    if not opt.avail_choices[value] then
-      warning("invalid choice: %s (for option %s.%s)\n", value, name, option)
-      return
-    end
+  if not opt.avail_choices[value] then
+    warning("invalid choice: %s (for option %s.%s)\n", value, name, option)
+    return
   end
 
   opt.value = value
-  
-  if not opt.valuator then
-    gui.set_module_option(name, option, value)
-  else
-    gui.set_module_slider_option(name, option, tonumber(value))
-  end
+
+  gui.set_module_option(name, option, value)
 
   -- no need to call ob_update_all
   -- (nothing ever depends on custom options)
 end
+
+--function ob_get_config(name)
+  
+--    if OB_CONFIG[name] return OB_CONFIG[name] else return "NULL" end
+    
+--end
 
 function ob_set_config(name, value)
   -- See the document 'doc/Config_Flow.txt' for a good
@@ -604,7 +604,8 @@ function ob_set_config(name, value)
     OB_CONFIG[name] = tonumber(value) or 0
     return
   end
-  
+
+
   -- check all the UI modules for a matching option
   -- [ this is only needed when parsing the CONFIG.txt file ]
   for _,mod in pairs(OB_MODULES) do
@@ -730,11 +731,7 @@ function ob_read_all_config(need_full, log_only)
       do_line("")
 
       for _,opt in pairs(def.options) do
-        if string.match(opt.name, "float_") then
-          do_value(opt.name, gui.get_module_slider_value(name, opt.name))
-        else
-          do_value(opt.name, opt.value)
-        end
+        do_value(opt.name, opt.value)
       end
 
       do_line("")
@@ -1051,42 +1048,33 @@ function ob_init()
 
         for _,opt in pairs(list) do
           assert(opt.label)
-          if not opt.valuator then
-            assert(opt.choices)
+          assert(opt.choices)
+
+          gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
+
+          opt.avail_choices = {}
+
+          for i = 1,#opt.choices,2 do
+            local id    = opt.choices[i]
+            local label = opt.choices[i+1]
+
+            gui.add_option_choice(mod.name, opt.name, id, label)
+            opt.avail_choices[id] = 1
           end
-                  
-          if opt.valuator and opt.valuator == "slider" then
-            gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap, opt.min, opt.max, opt.increment)
-            if not opt.default then
-              opt.default = (opt.min + opt.max) / 2
+
+          -- select a default value
+          if not opt.default then
+                if opt.avail_choices["default"] then opt.default = "default"
+            elseif opt.avail_choices["normal"]  then opt.default = "normal"
+            elseif opt.avail_choices["medium"]  then opt.default = "medium"
+            elseif opt.avail_choices["mixed"]   then opt.default = "mixed"
+            else   opt.default = opt.choices[1]
             end
-            opt.value = opt.default
-            gui.set_module_slider_option(mod.name, opt.name, opt.value)
-          else
-            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
-            opt.avail_choices = {}
-
-            for i = 1,#opt.choices,2 do
-              local id    = opt.choices[i]
-              local label = opt.choices[i+1]
-
-              gui.add_option_choice(mod.name, opt.name, id, label)
-              opt.avail_choices[id] = 1
-            end
-
-            -- select a default value
-            if not opt.default then
-              if opt.avail_choices["default"] then opt.default = "default"
-              elseif opt.avail_choices["normal"]  then opt.default = "normal"
-              elseif opt.avail_choices["medium"]  then opt.default = "medium"
-              elseif opt.avail_choices["mixed"]   then opt.default = "mixed"
-              else   opt.default = opt.choices[1]
-              end
-            end
-
-            opt.value = opt.default
-            gui.set_module_option(mod.name, opt.name, opt.value)
           end
+
+          opt.value = opt.default
+
+          gui.set_module_option(mod.name, opt.name, opt.value)
         end -- for opt
       end
     end -- for mod

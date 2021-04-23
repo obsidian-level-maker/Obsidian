@@ -21,7 +21,6 @@
 gui.import("zdoom_armaetus_materials.lua")
 gui.import("zdoom_armaetus_themes.lua")
 
-gui.import("zdoom_armaetus_doom1_materials.lua")
 gui.import("zdoom_armaetus_doom1_themes.lua")
 
 gui.import("zdoom_armaetus_epic_texturex_lump.lua")
@@ -940,9 +939,9 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
 
   if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
     -- material definitions
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_DOOM1_MATERIALS,
+    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_MATERIALS,
       GAME.MATERIALS)
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_DOOM1_LIQUID_MATS,
+    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_LIQUID_DEFS,
       GAME.LIQUIDS)
 
     -- put the custom theme definitions in the themes table!!!

@@ -107,7 +107,9 @@ PREFABS.Wall_modquake_top_heavy_brace_set =
 
   rank = 2,
 
-  group = "gtd_modquake_top_heavy_brace"
+  group = "gtd_modquake_top_heavy_brace",
+
+  z_fit = { 104,112 }
 }
 
 -- LIMIT-SAFE:
@@ -123,7 +125,9 @@ PREFABS.Wall_modquake_top_heavy_brace_set_limit =
 
   group = "gtd_modquake_top_heavy_brace",
 
-  line_344 = 0
+  line_344 = 0,
+
+  z_fit = { 104,112 }
 }
 
 -- sloped brace textured with the eponymous TEKWALL4
