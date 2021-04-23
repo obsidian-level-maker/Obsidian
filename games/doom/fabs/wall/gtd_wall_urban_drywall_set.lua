@@ -15,7 +15,7 @@ PREFABS.Wall_gtd_drywall_1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  z_fit = { 64-4,64+4 },
+  z_fit = { 56,72 }
 }
 
 PREFABS.Wall_gtd_drywall_wall_2 =
@@ -25,7 +25,7 @@ PREFABS.Wall_gtd_drywall_wall_2 =
 
   engine = "zdoom",
 
-  z_fit = { 64-4,64+4 },
+  z_fit = { 56,72 }
 }
 
 PREFABS.Wall_gtd_drywall_diag_1 =
@@ -45,13 +45,13 @@ PREFABS.Wall_gtd_drywall_diag_1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  z_fit = { 64-4,64+4 },
+  z_fit = { 56,72 }
 }
 
 PREFABS.Wall_gtd_drywall_3_bars =
 {
   template = "Wall_gtd_drywall_1",
-  map = "MAP04",
+  map = "MAP04"
 }
 
 PREFABS.Wall_gtd_drywall_hole_in_wall =
@@ -61,5 +61,5 @@ PREFABS.Wall_gtd_drywall_hole_in_wall =
 
   prob = 15,
 
-  z_fit = { 94,100 },
+  z_fit = { 94,100 }
 }

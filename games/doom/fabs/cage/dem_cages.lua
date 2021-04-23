@@ -466,5 +466,37 @@ PREFABS.Cage_dem_cabinamb =
     dead_zombie = 50,
     dead_shooter = 50,
     dead_imp = 50,
-  }
+  },
 }
+
+---- a dug up grave with a monster rising when you get close. ----
+
+PREFABS.Decor_Dem_Graveamb1 =
+{
+  file   = "cage/dem_cages.wad",
+  map    = "MAP49",
+
+  group = "dem_wall_graveyard",
+
+  engine = "zdoom",
+
+  prob   = 100,
+  theme  = "!tech",
+  env    = "park",
+
+  where  = "point",
+  size   = 128,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  delta = 116,
+
+  z_fit = "top",
+
+  on_liquids = "never",
+
+  sink_mode = "never_liquids",
+
+}
+

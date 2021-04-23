@@ -19,7 +19,6 @@ PREFABS.Light_gtd_detailed =
 
   -- use the occasional-blink FX (fairly rarely)
   sector_1  = { [0]=90, [1]=15 }
-
 }
 
 -- red circles with green cover
@@ -72,6 +71,7 @@ PREFABS.Light_gtd_flourescent_lamp_alt =
   flat_FLAT23 = "FLAT14",
 }
 
+--
 PREFABS.Light_gtd_round =
 {
   template = "Light_gtd_detailed",
@@ -97,6 +97,7 @@ PREFABS.Light_gtd_round_alt =
   flat_FLAT23 = "FLAT22",
 }
 
+--
 PREFABS.Light_gtd_tall_light =
 {
   template = "Light_gtd_detailed",
@@ -124,4 +125,110 @@ PREFABS.Light_gtd_tall_light_alt =
 
   tex_EXITDOOR = "LITEBLU1",
   flat_FLAT23 = "FLAT14",
+}
+
+----------------------------------------------
+-- TLITE circles arranged in a quad pattern --
+----------------------------------------------
+PREFABS.Light_gtd_circle_quad_tight =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP05",
+
+  light_color = "beige"
+}
+
+PREFABS.Light_gtd_circle_quad_tight_red =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP05",
+
+  light_color = "red",
+
+  flat_TLITE6_6 = "TLITE6_5"
+}
+
+-- epic versions
+PREFABS.Light_gtd_circle_quad_tightwhite_EPIC =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP05",
+
+  light_color = "white",
+
+  texture_pack = "armaetus",
+
+  flat_TLITE6_6 = "TLITE5_3"
+}
+
+PREFABS.Light_gtd_circle_quad_tight_blue_EPIC =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP05",
+
+  light_color = "blue",
+
+  texture_pack = "armaetus",
+
+  flat_TLITE6_6 = "TLITE65B"
+}
+
+PREFABS.Light_gtd_circle_quad_tight_green_EPIC =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP05",
+
+  light_color = "green",
+
+  texture_pack = "armaetus",
+
+  flat_TLITE6_6 = "TLITE65G"
+}
+
+PREFABS.Light_gtd_circle_quad_tight_orange_EPIC =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP05",
+
+  light_color = "orange",
+
+  texture_pack = "armaetus",
+
+  flat_TLITE6_6 = "TLITE65O"
+}
+
+PREFABS.Light_gtd_circle_quad_tight_yellow_EPIC =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP05",
+
+  light_color = "yellow",
+
+  texture_pack = "armaetus",
+
+  flat_TLITE6_6 = "TLITE65Y"
+}
+
+----------------------------------------------
+-- TLITE circles arranged in a quad pattern --
+----------------------------------------------
+PREFABS.Light_gtd_diamond_tight =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP06",
+
+  light_color = "beige"
+}
+
+-- epic version
+PREFABS.Light_gtd_diamond_tight_white_EPIC =
+{
+  template = "Light_gtd_detailed",
+  map = "MAP06",
+
+  light_color = "white",
+
+  texture_pack = "armaetus",
+
+  flat_TLITE6_4 = "TLITE5_1"
 }

@@ -168,13 +168,6 @@ function Fab_load_all_definitions()
 
   local function calc_prob(def)
 
-    -- attachment for the Hideous Destructor cover walls
-    if PARAM["hd_cover_walls"] ~= "enable" then
-      if def.is_hideous_destructor_fab == true then
-        def.skip_prob = 100
-      end
-    end
-
     -- attachment for fabs that use Armaetus's Epic textures
     if def.texture_pack then
       if def.texture_pack == "armaetus"
