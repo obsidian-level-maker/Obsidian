@@ -566,8 +566,7 @@ ARMAETUS_MATERIALS = {
   SILVER2Y = { t="SILVER2Y", f="FLAT23" },
   SILVER2W = { t="SILVER2W", f="FLAT23" },
 
-  UACCRT1 = { t="UACCRT2", f="FLAT23" },
-  UACCRT2 = { t="UACCRT2", f="FLAT23" },
+  UACCRT1 = { t="UACCRT1", f="FLAT23" },
 
   -- Skin and Hell
   BODIES1 = { t="BODIES1", f="BODIESFL" }, -- Copy of AASHITTY

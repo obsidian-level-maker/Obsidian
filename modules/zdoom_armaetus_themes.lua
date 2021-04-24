@@ -4472,6 +4472,8 @@ ARMAETUS_THEMES =
     {
       gtd_wall_server_room2 = 50,
       --
+      gtd_storage_shawn = 50,
+      --
       gtd_collite_set_green = 13,
       gtd_collite_set_orange = 13,
       gtd_collite_set_blue = 13,
@@ -4888,6 +4890,8 @@ ARMAETUS_THEMES =
     {
       dem_wall_commercial = 50,
       gtd_grocery = 50,
+      --
+      gtd_storage_shawn = 50,
       --
       gtd_tall_glass_epic_yellow = 8,
       gtd_tall_glass_epic_orange = 8,
