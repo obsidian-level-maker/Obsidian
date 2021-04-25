@@ -263,6 +263,7 @@ function Render_edge(E)
 
       if A.room and A.room.is_exit and LEVEL.alt_outdoor_wall_group then
         reqs.group = LEVEL.alt_outdoor_wall_group
+        if reqs.group == "none" then reqs.group = nil end
       end
 
       if reqs.group == "PLAIN" or rand.odds(10) then

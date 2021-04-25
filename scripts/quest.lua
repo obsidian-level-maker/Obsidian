@@ -3284,7 +3284,9 @@ function Quest_room_themes()
     local wg_tab = GAME.THEMES[next_theme].outdoor_wall_groups
 
     if wg_tab then
-      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab) or "PLAIN"
+      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab)
+    else
+      LEVEL.alt_outdoor_wall_group = "none"
     end
 
     if exit_room.is_outdoor and not exit_room.is_park then
