@@ -364,8 +364,8 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 	if (rsl->nan_choices.count(value) == 1) {
 		rsl->copy_label(new_label.append(rsl->nan_choices[value].c_str()).c_str());
 	} else {
-		char value_string[10];
-		sprintf(value_string, "%.2g", value);
+		char value_string[20];
+		sprintf(value_string, "%g", value);
 		rsl->copy_label(new_label.append((const char*)value_string).append(rsl->units).c_str());
 	}
 }
