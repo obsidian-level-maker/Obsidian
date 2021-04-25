@@ -374,7 +374,7 @@
 #include <string.h>
 
 // Shim functions to replace old SLUMP RNG
-int roll(int n) {
+int roll(int n) {   
     if (n<1) {
         return 0;
     }
@@ -3028,7 +3028,7 @@ byte *one_piece(musheader *pmh)
   pmh->dummy = 0;
   pmh->patches = 1;
   pmh->headerlength = sizeof(musheader)+pmh->patches*sizeof(short);
-  pmh->muslength = 17;
+  pmh->muslength = 16;
   answer = (byte *)malloc( pmh->patches*sizeof(short)+pmh->muslength );
   answer[0] = patch;  /* instrument */
   answer[1] = 0;
@@ -3050,7 +3050,7 @@ byte *one_piece(musheader *pmh)
   answer[16] = 70;  /* delay */
 
   answer[17] = 0x60;  /* end score */
-  answer[18] = 0x4d;  /* maybe? */
+  //answer[18] = 0x4d;  /* maybe? */
   return answer;
 }
 

@@ -20,38 +20,6 @@
 
 UI_ARCH = { }
 
-UI_ARCH.SIZES =
-{
-  "epi",     _("Episodic"),
-  "prog",    _("Progressive"),
-  "mixed",   _("Mix It Up"),
-
-  -- this is a separator (not a usable choice)
-  "_",       "_",
-
-  "micro",    _("Microscopic"),
-  "mini",     _("Miniscule"),
-  "tiny",     _("Tiny"),
-  "small",    _("Small"),
-  "average",  _("Average"),
-  "large",    _("Large"),
-  "huge",     _("Huge"),
-  "colossal", _("Colossal"),
-  "gargan",   _("Gargantuan"),
-  "trans",    _("Transcendent")
-}
-
-UI_ARCH.ABSURDITY_CHOICES =
-{
-  "none", _("NONE"),
-  "100",  _("Every Level"),
-  "85",   _("85% of Levels"),
-  "75",   _("75% of Levels"),
-  "50",   _("50% of Levels"),
-  "25",   _("25% of Levels"),
-  "10",   _("10% of Levels")
-}
-
 UI_ARCH.ZDOOM_VISTA_CHOICES =
 {
   "enable",        _("Enable"),
@@ -66,12 +34,6 @@ UI_ARCH.ZDOOM_SKYBOX_CHOICES =
   "random",   _("Random"),
   "generic",  _("Generic"),
   "disable",  _("Disable")
-}
-
-UI_ARCH.YES_NO =
-{
-  "yes", _("Yes"),
-  "no",  _("No")
 }
 
 UI_ARCH.PROC_GOTCHA_CHOICES =
@@ -103,17 +65,6 @@ UI_ARCH.STREETS_CHOICES =
   "no",       _("NONE")
 }
 
-UI_ARCH.LEVEL_PERCENTAGE_CHOICES =
-{
-  "all",  _("All Levels"),
-  "75",   _("75% of All Levels"),
-  "50",   _("50% of All Levels"),
-  "25",   _("25% of All Levels"),
-  "10",   _("10% of All Levels"),
-  "5",    _("5% of All Levels"),
-  "none", _("NONE")
-}
-
 OB_MODULES["ui_arch"] =
 {
   label = _("Architecture"),
@@ -124,10 +75,21 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-    { name="size", label=_("Level Size"), choices=UI_ARCH.SIZES,  default="epi",
+    { 
+      name="float_size", 
+      label=_("Level Size"),
+      valuator = "slider",
+      units = "",
+      min = 7,
+      max = 75,
+      increment = 1,
+      default = 7,
+      nan= "7:Mix It Up,8:Episodic,9:Progressive,10:10 (Microscopic),16:16 (Miniature)," ..
+      "22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal)," ..
+      "66:66 (Gargantuan),75:75 (Transcendent),",
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
-      "at sizes of Huge and above, Autodetail is required on. (on by default if you do not have " ..
-      "Prefab Control module on. The stability of maps with sizes Colossal and beyond is not predictable."
+      "at sizes of 50 and above, Autodetail is required on. (on by default if you do not have " ..
+      "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable."
     },
 
     {
@@ -139,10 +101,15 @@ OB_MODULES["ui_arch"] =
     },
 
     {
-      name = "linear_mode",
+      name = "float_linear_mode",
       label = _("Linear Mode"),
-      choices = UI_ARCH.LEVEL_PERCENTAGE_CHOICES,
-      default = "none",
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
       tooltip = "Creates linear levels, where rooms are connected along a " ..
       "linear layout from start to exit. \n\nNote: Due to the nature of linear levels, " ..
       "you may encounter teleports even if you have teleports off. This is necessary " ..
@@ -151,12 +118,17 @@ OB_MODULES["ui_arch"] =
     },
 
     {
-      name = "nature_mode",
+      name = "float_nature_mode",
       label = _("Nature Mode"),
-      choices = UI_ARCH.LEVEL_PERCENTAGE_CHOICES,
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
-      default = "10",
       gap = 1
     },
 
@@ -169,9 +141,10 @@ OB_MODULES["ui_arch"] =
     { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1 },
 
     {
-      name="prebuilt_levels",
+      name="bool_prebuilt_levels",
       label=_("Prebuilt Levels"),
-      choices=UI_ARCH.YES_NO,
+      valuator = "button",
+      default = 1,
       tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."
     },
 
@@ -188,10 +161,15 @@ OB_MODULES["ui_arch"] =
     },
 
     {
-      name = "layout_absurdity",
+      name = "float_layout_absurdity",
       label = _("Layout Absurdity"),
-      choices=UI_ARCH.ABSURDITY_CHOICES,
-      default="50",
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
       tooltip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
       "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
       "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..

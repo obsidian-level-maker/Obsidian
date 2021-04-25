@@ -834,13 +834,13 @@ function Monster_fill_room(R)
     local l_factor = MONSTER_KIND_TAB.few
     local u_factor = MONSTER_KIND_TAB.heaps
 
-    if OB_CONFIG.mons == "mixed" then
+    factor = gui.get_module_slider_value("ui_mons", "float_mons")
+    assert(factor)
+
+    if factor == -0.10 then
       factor = rand.range(l_factor, u_factor)
-    elseif OB_CONFIG.mons == "prog" then
+    elseif factor == -0.05 then
       factor = l_factor + (u_factor * LEVEL.game_along)
-    else
-      factor = MONSTER_KIND_TAB[OB_CONFIG.mons]
-      assert(factor)
     end
     
     -- apply 'mon_variety' style
@@ -875,22 +875,33 @@ function Monster_fill_room(R)
     --
     -- result is a percentage (how many spots to use)
     --
-    local qty
-    local max_range = MONSTER_QUANTITIES[OB_CONFIG.mix_it_up_upper_range]
-    local min_range = MONSTER_QUANTITIES[OB_CONFIG.mix_it_up_lower_range]
-    local u_range = math.max(min_range, max_range)
-    local l_range = math.min(min_range, max_range)
+    local max_range
+    local min_range   
+    
+    for _,v in pairs(OB_MODULES.ui_mons.options) do 
+        for k,v in pairs(v) do
+          if k == "max" then max_range = tonumber(v) end
+          if k == "min" then min_range = tonumber(v) end
+        end
+    end
 
-    if OB_CONFIG.mons == "mixed" then
+    local qty = gui.get_module_slider_value("ui_mons", "float_mons")
+    local u_range = gui.get_module_slider_value("ui_mons", "float_mix_it_up_upper_range")
+    local l_range = gui.get_module_slider_value("ui_mons", "float_mix_it_up_lower_range")
+    
+    --Mix It Up
+    if qty == -0.10 then
       if l_range == u_range then
         qty = l_range
       end
       qty = rand.range(l_range, u_range)
-    elseif OB_CONFIG.mons == "prog" then
-      qty = l_range + (u_range * LEVEL.game_along)
-    else
-      qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
-      assert(qty)
+    --Progressive
+    elseif qty == -0.05 then
+      if l_range > u_range then
+        qty = u_range + (l_range * LEVEL.game_along)
+      else    
+        qty = l_range + (u_range * LEVEL.game_along)
+      end
     end
 
     -- oh the pain
@@ -1196,12 +1207,13 @@ function Monster_fill_room(R)
       end
     end
 
-    if OB_CONFIG.strength == "weak"   then return 1 / (1.7 ^ factor) end
-    if OB_CONFIG.strength == "easier" then return 1 / (1.3 ^ factor) end
+    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
 
-    if OB_CONFIG.strength == "harder" then return 1.3 ^ factor end
-    if OB_CONFIG.strength == "tough"  then return 1.7 ^ factor end
-    if OB_CONFIG.strength == "fierce"  then return 2.5 ^ factor end
+    if mon_strength < 1.0 then 
+      return 1 / ((1 + mon_strength) ^ factor)
+    elseif mon_strength > 1.0 then
+      return mon_strength ^ factor
+    end
 
     return 1.0
   end
@@ -1285,7 +1297,7 @@ function Monster_fill_room(R)
     local d = info.density or 1
 
     -- level check
-    if OB_CONFIG.strength ~= "crazy" or LEVEL.is_procedural_gotcha == false then
+    if gui.get_module_slider_value("ui_mons", "float_strength") < 12 or LEVEL.is_procedural_gotcha == false then
       local max_level = LEVEL.monster_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
@@ -2247,15 +2259,17 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
 
   local function add_monsters()
 
+    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+
     -- sometimes prevent monster replacements
-    if rand.odds(40) or OB_CONFIG.strength == "crazy" then
+    if rand.odds(40) or mon_strength == 12 then
       R.no_replacement = true
     end
 
 
     local palette
 
-    if OB_CONFIG.strength == "crazy" then
+    if mon_strength == 12 then
       palette = crazy_palette()
     else
       palette = room_palette()
@@ -2346,14 +2360,14 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
 
   local function should_add_monsters()
-    if OB_CONFIG.mons == "none" then
+    if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
       return false
     end
 
     --if R.no_monsters then return false end
     if R.is_secret and OB_CONFIG.secret_monsters == "no" then return false end
 
-    if R.is_start and OB_CONFIG.quiet_start == "yes" then
+    if R.is_start and gui.get_module_button_value("ui_mons", "bool_quiet_start") == 1 then
       if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
         -- your face is a tree
       else

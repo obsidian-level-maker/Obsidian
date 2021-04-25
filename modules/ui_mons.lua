@@ -20,77 +20,12 @@
 
 UI_MONS = { }
 
-UI_MONS.QUANTITIES =
-{
-    "none",      _("[0] None"),
-    "rarest",    _("[0.15] Trivial"),
-    "rarer",     _("[0.35] Sporadic"),
-    "rare",      _("[0.7] Meager"),
-    "scarce",    _("[1.0] Easy"),
-    "few",       _("[1.3] Modest"),
-    "less",      _("[1.5] Bearable"),
-    "normal",    _("[2.0] Rough"),
-    "more",      _("[2.5] Strenuous"),
-    "heaps",     _("[3.0] Formidable"),
-    "legions",   _("[3.5] Harsh"),
-    "insane",    _("[4.0] Painful"),
-    "deranged",  _("[4.5] Unforgiving"),
-    "nuts",      _("[5.0] Punishing"),
-    "chaotic",   _("[5.5] Brutal"),
-    "unhinged",  _("[6.0] Draconian"),
-    "ludicrous", _("[6.66] Merciless"),
-    "mixed",     _("Mix It Up"),
-    "prog",      _("Progressive"),
-}
-
-UI_MONS.MIX_QUANTITIES =
-{
-    "rarest",    _("[0.15] Trivial"),
-    "rarer",     _("[0.35] Sporadic"),
-    "rare",      _("[0.7] Meager"),
-    "scarce",    _("[1.0] Easy"),
-    "few",       _("[1.3] Modest"),
-    "less",      _("[1.5] Bearable"),
-    "normal",    _("[2.0] Rough"),
-    "more",      _("[2.5] Strenuous"),
-    "heaps",     _("[3.0] Formidable"),
-    "legions",   _("[3.5] Harsh"),
-    "insane",    _("[4.0] Painful"),
-    "deranged",  _("[4.5] Unforgiving"),
-    "nuts",      _("[5.0] Punishing"),
-    "chaotic",   _("[5.5] Brutal"),
-    "unhinged",  _("[6.0] Draconian"),
-    "ludicrous", _("[6.66] Merciless"),
-}
-
-UI_MONS.STRENGTHS =
-{
-  "weak",   _("[0.59] Weak"),
-  "easier", _("[0.77] Easier"),
-  "medium", _("[1] Average"),
-  "harder", _("[1.3] Harder"),
-  "tough",  _("[1.7] Tough"),
-  "fierce", _("[2.5] Fierce"),
-  "crazy",  _("[12] CRAZY"),
-}
-
 UI_MONS.BOSSES =
 {
   "none",   _("NONE"),
   "easier", _("Easier"),
   "medium", _("Average"),
   "harder", _("Harder"),
-}
-
-UI_MONS.RAMPS =
-{
-  "veryslow", _("Very Slow"),
-  "slow",     _("Slow"),
-  "medium",   _("Average"),
-  "fast",     _("Fast"),
-  "veryfast", _("Very Fast"),
-  "extfast",  _("Extremely Fast"),
-  "epi",      _("Episodic"),
 }
 
 UI_MONS.TRAP_STYLE =
@@ -124,12 +59,6 @@ UI_MONS.SECRET_MONSTERS =
   "no",     _("No"),
 }
 
-UI_MONS.START_ROOM_MON_CHOICES =
-{
-  "no",  _("No"),
-  "yes", _("Yes"),
-}
-
 UI_MONS.MONSTER_KIND_JUMPSTART_CHOICES =
 {
   "default", _("DEFAULT"),
@@ -158,9 +87,15 @@ OB_MODULES["ui_mons"] =
   options =
   {
     {
-      name="mons",
+      name="float_mons",
       label=_("Quantity"),
-      choices=UI_MONS.QUANTITIES,
+      valuator = "slider",
+      units = "",
+      min = -0.10,
+      max = 10.00,
+      increment = .05,
+      default = -0.10,
+      nan = "-0.10:Mix It Up,-0.05:Progressive,",
       tooltip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
               "Mix It Up: randomizes quantities based on the prefered selection " ..
               "under the Fine Tune options below.\n\n" ..
@@ -168,29 +103,61 @@ OB_MODULES["ui_mons"] =
               "also based on the Fine Tune options below.\n\n" ..
               "It does not matter if your Upper/Lower Bound selections are reversed. " ..
               "Progressive will pick the min VS max quantities selected.",
-      default="scarce",
-      gap = 1,
     },
 
     {
-      name="mix_it_up_upper_range",
+      name="float_mix_it_up_upper_range",
       label=_("Upper Bound"),
-      choices=UI_MONS.MIX_QUANTITIES,
-      default="nuts",
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10.00,
+      increment = .05,
+      default = 10,
+      nan = "",
       tooltip="If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored.",
     },
 
     {
-      name="mix_it_up_lower_range",
+      name="float_mix_it_up_lower_range",
       label=_("Lower Bound"),
-      choices=UI_MONS.MIX_QUANTITIES,
-      default="scarce",
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10.00,
+      increment = .05,
+      default = 0,
+      nan = "",
       tooltip="If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored.",
       gap = 1,
     },
 
-    { name="strength",  label=_("Strength"),  choices=UI_MONS.STRENGTHS},
-    { name="ramp_up",   label=_("Ramp Up"),   choices=UI_MONS.RAMPS},
+    {
+      name="float_strength",
+      label=_("Strength"),
+      valuator = "slider",
+      units = "",
+      min = 0.55,
+      max = 12,
+      increment = .05,
+      default = 1,
+      nan = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
+    },
+
+    {
+      name="float_ramp_up",
+      label=_("Ramp Up"),
+      valuator = "slider",
+      units = "",
+      min = 0.45,
+      max = 3,
+      increment = .05,
+      default = 1,
+      nan = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Medium),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
+      tooltip = "Rate at which monster strength increases as you progress through levels.",
+      gap = 1,
+    },
+    
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES,
       tooltip= "Affects how many different monster types can " ..
                "appear in each room.\n" ..
@@ -245,13 +212,14 @@ OB_MODULES["ui_mons"] =
       tooltip="I'm in your secret rooms, placing some monsters. Note: default is none.",
       default="no",
     },
+    
     {
-      name="quiet_start",
+      name="bool_quiet_start",
       label=_("Quiet Start"),
-      choices=UI_MONS.START_ROOM_MON_CHOICES,
+      valuator = "button",
+      default = 0,
       tooltip="Makes start rooms mostly safe - no enemies and all outlooking windows are removed. " ..
       "(windows are retained on Procedural Gotchas) Default Oblige behavior is 'no'.",
-      default="no",
     },
   },
 }

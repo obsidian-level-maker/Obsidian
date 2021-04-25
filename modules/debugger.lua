@@ -18,12 +18,6 @@
 
 DEBUG_CONTROL = { }
 
-DEBUG_CONTROL.YES_NO =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
-}
-
 DEBUG_CONTROL.NAME_GEN_CHOICES =
 {
   "32l",  _("Test Level Names"),
@@ -87,19 +81,19 @@ function DEBUG_CONTROL.setup(self)
 end
 
 function DEBUG_CONTROL.get_levels()
-  if PARAM.custom_error_texture and PARAM.custom_error_texture == "yes" then
+  if PARAM.custom_error_texture and gui.get_module_button_value("debugger", "bool_custom_error_texture") == 1 then
     GAME.MATERIALS._ERROR.t = "ZZWOLF7"
   end
 end
 
 function DEBUG_CONTROL.all_done()
-  --[[if PARAM.attach_debug_info and PARAM.attach_debug_info == "yes" then
+  --[[if PARAM.attach_debug_info and gui.get_module_button_value("debugger", "bool_attach_debug_info") == 1 then
     local log_text = {}
 
     gui.wad_add_text_lump("OBLOGS", log_text)
   end]]
 
-  if PARAM.custom_error_texture and PARAM.custom_error_texture == "yes" then
+  if PARAM.custom_error_texture and gui.get_module_button_value("debugger", "bool_custom_error_texture") == 1 then
     gui.wad_merge_sections("games/doom/data/error_wall.wad")
   end
 end
@@ -139,22 +133,22 @@ OB_MODULES["debugger"] =
 
     print_prefab_use =
     {
-      name = "print_prefab_use",
+      name = "bool_print_prefab_use",
       label=_("Print Prefab Usage"),
-      choices=DEBUG_CONTROL.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip="Lists prefabs spawned per map.",
-      default="yes",
       priority=98,
     },
 
     print_story_strings =
     {
-      name = "print_story_strings",
+      name = "bool_print_story_strings",
       label=_("Print ZDoom Strings"),
-      choices=DEBUG_CONTROL.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip="Displays the story generator and custom quit message strings "..
               "added by the ZDoom Special Addons: Story Generator.",
-      default="yes",
       priority=97,
     },
 
@@ -171,44 +165,44 @@ OB_MODULES["debugger"] =
 
     shape_rule_stats =
     {
-      name = "shape_rule_stats",
+      name = "bool_shape_rule_stats",
       label = _("Shape Rule Stats"),
-      choices=DEBUG_CONTROL.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip = "Displays usage statistics for shape grammar rules.",
-      default = "no",
       priority=95,
     },
     
     save_svg =
     {
-      name = "save_svg",
+      name = "bool_save_svg",
       label = _("Save Map Previews"),
-      choices=DEBUG_CONTROL.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip = "Saves SVG format images of generated map thumbnails.",
-      default = "no",
       priority=94,
       gap = 1,
     },
 
     extra_games =
     {
-      name = "extra_games",
+      name = "bool_extra_games",
       label = _("Extra Games"),
-      choices = DEBUG_CONTROL.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip = "Enables games other than Doom 2 in Game Settings list.",
-      default = "no",
       priority = 60,
       gap = 1,
     },
 
     custom_error_texture =
     {
-      name = "custom_error_texture",
+      name = "bool_custom_error_texture",
       label = _("Custom Error Texture"),
-      choices = DEBUG_CONTROL.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip = "Replaces Obsidian's default texture with a high visibility version " ..
         "for easier detection of broken level geometry or missing textures.",
-      default = "no",
       priority = 50,
       gap = 1,
     },
@@ -216,9 +210,10 @@ OB_MODULES["debugger"] =
 --[[
     attach_debug_info =
     {
-      name = "attach_debug_info",
+      name = "bool_attach_debug_info",
       label = _("Attach DEBUG Info")
-      choices = DEBUG_CONTROL.YES_NO
+      valuator = "button",
+      default = 0,
       tooltip = "Attaches certain debug info into an OBLOGS text lump in the generated WAD.",
       priority = 91,
     }
