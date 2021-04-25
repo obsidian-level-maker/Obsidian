@@ -250,7 +250,7 @@ OB_MODULES["misc"] =
       tooltip=_("Determines if rooms should have a height limit or should exaggerate their height. " ..
       "Short means room areas strictly have at most 128 units of height, tall means rooms immediately have " ..
       "doubled heights. Normal is the default Oblige behavior."),
-      default="normal",
+      default="mixed",
       gap=1,
     },
 
@@ -399,6 +399,7 @@ OB_MODULES["misc"] =
       name="live_minimap",
       label=_("Live Growth Minimap"),
       choices=MISC_STUFF.LIVEMAP_CHOICES,
+      default="none",
       tooltip=_("Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed.")
     },
 
