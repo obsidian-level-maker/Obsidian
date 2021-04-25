@@ -70,3 +70,23 @@ PREFABS.Wall_gtd_ribbed_lights_no3d_diag =
 
   group = "gtd_ribbed_lights_no3d"
 }
+
+--
+
+PREFABS.Wall_gtd_ribbed_lights_slump =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP05",
+
+  group = "gtd_ribbed_lights_slump"
+}
+
+PREFABS.Wall_gtd_ribbed_lights_slump_diag =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP06",
+
+  where = "diagonal",
+
+  group = "gtd_ribbed_lights_slump"
+}
