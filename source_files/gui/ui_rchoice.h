@@ -21,7 +21,7 @@
 #ifndef __UI_RCHOICE_H__
 #define __UI_RCHOICE_H__
 
-#include <vector>
+#include <map>
 
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
@@ -118,9 +118,7 @@ class UI_RSlide : public Fl_Hor_Slider {
     
     std::string units;
     
-    std::vector<std::string> nan_choices;
-    
-    double num_min; 
+    std::map<double, std::string> nan_choices;
 };
 
 class UI_RButton : public Fl_Light_Button {

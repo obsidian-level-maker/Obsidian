@@ -140,11 +140,10 @@ OB_MODULES["ui_mons"] =
       valuator = "slider",
       units = "",
       min = -0.10,
-      num_min = 0.0,
       max = 10.00,
       increment = .05,
       default = -0.10,
-      nan = "Progressive;Mix It Up;",
+      nan = "-0.10:Mix It Up,-0.05:Progressive,",
       tooltip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
               "Mix It Up: randomizes quantities based on the prefered selection " ..
               "under the Fine Tune options below.\n\n" ..

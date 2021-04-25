@@ -25,6 +25,7 @@
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include <string>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
                      const char *label, const char *tip)
@@ -120,7 +121,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 }
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
-                          int gap, double min, double num_min, double max, double inc,
+                          int gap, double min, double max, double inc,
                           const char *units, const char *nan, Fl_Color select_col) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
@@ -142,17 +143,20 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->maximum(max);
     rsl->step(inc);
     rsl->original_label = new_label;
-    rsl->num_min = num_min;
     rsl->units = units;
     
-    // Populate the nan_choices string vector
+    // Populate the nan_choices map
 	std::string nan_string = nan;
 	std::string::size_type oldpos = 0;
 	std::string::size_type pos = 0;
 	while (pos != -1) {
-		pos = nan_string.find(';', oldpos);
+		pos = nan_string.find(',', oldpos);
 		if (pos != -1) {
-			rsl->nan_choices.push_back(nan_string.substr(oldpos, pos-oldpos));
+			std::string map_string = nan_string.substr(oldpos, pos-oldpos);
+			std::string::size_type temp_pos = map_string.find(':');
+			double key = std::stod(map_string.substr(0, temp_pos));
+			std::string value = map_string.substr(temp_pos + 1);			
+			rsl->nan_choices[key] = value;
 			oldpos = pos + 1;		
 		}
 	}    
@@ -351,29 +355,19 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 	
 	std::string new_label = rsl->original_label;
 
-	rsl->copy_label(new_label.append(20, ' ').c_str()); // To prevent visual errors with labels of different lengths
+	rsl->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 
 	new_label = rsl->original_label;
 
-	// Iterate through the nan_choices vector
+	// Check against the nan_choices map
 
-	if (!rsl->nan_choices.empty()) {
-		for (int i=0; i < rsl->nan_choices.size(); i++) {
-			if (value == rsl->num_min - ((i + 1) * rsl->step())) {
-				try {
-					rsl->copy_label(new_label.append(rsl->nan_choices.at(i)).c_str());
-					goto end;
-				} catch (std::out_of_range const& exc) {
-					LogPrintf("%s\n", exc.what());
-				}
-			}
-		}
-	} 
-	char value_string[10];
-	sprintf(value_string, "%.2g", value);
-	rsl->copy_label(new_label.append((const char*)value_string).append(rsl->units).c_str());
-	// Jump here if NaN label applied
-	end: ;
+	if (rsl->nan_choices.count(value) == 1) {
+		rsl->copy_label(new_label.append(rsl->nan_choices[value].c_str()).c_str());
+	} else {
+		char value_string[10];
+		sprintf(value_string, "%.2g", value);
+		rsl->copy_label(new_label.append((const char*)value_string).append(rsl->units).c_str());
+	}
 }
 
 //----------------------------------------------------------------
@@ -465,15 +459,14 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
                               const char *label, const char *tip, int gap, double min, 
-                              double num_min, double max, double inc, 
-                              const char *units, const char *nan) {
+                              double max, double inc, const char *units, const char *nan) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddSliderOption(option, label, tip, gap, min, num_min, max, inc, units, nan, button_col);
+    M->AddSliderOption(option, label, tip, gap, min, max, inc, units, nan, button_col);
 
     PositionAll();
 

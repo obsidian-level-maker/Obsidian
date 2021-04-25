@@ -103,11 +103,12 @@ OB_MODULES["ui_arch"] =
       valuator = "slider",
       units = "",
       min = 7,
-      num_min = 10,
       max = 75,
       increment = 1,
       default = 7,
-      nan= "Progressive;Episodic;Mix It Up;",
+      nan= "7:Mix It Up,8:Episodic,9:Progressive,10:10(Microscopic),16:16(Miniature)," ..
+      "22:22(Tiny),30:30(Small),36:36(Average),42:42(Large),48:48(Huge),58:58(Colossal)," ..
+      "66:66(Gargantuan),75:75(Transcendent),",
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
       "at sizes of 50 and above, Autodetail is required on. (on by default if you do not have " ..
       "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable."

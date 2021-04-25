@@ -38,12 +38,12 @@ OB_MODULES["ui_slump_arch"] =
 
   options =
   {
-    { name="float_minrooms",
+    { 
+      name="float_minrooms",
       label=_("Level Size"),
       valuator = "slider",
       units = " Rooms",
       min = 2,
-      num_min = 2,
       max = 37,
       increment = 1,
       default = 15,
@@ -57,7 +57,6 @@ OB_MODULES["ui_slump_arch"] =
       valuator = "slider",
       units = "%",
       min = 0,
-      num_min = 0,
       max = 100,
       increment = 1,
       default = 50,
@@ -71,7 +70,6 @@ OB_MODULES["ui_slump_arch"] =
       valuator = "slider",
       units = "%",
       min = 0,
-      num_min = 0,
       max = 100,
       increment = 1,
       default = 50,
