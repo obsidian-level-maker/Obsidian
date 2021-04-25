@@ -30,7 +30,7 @@ PREFABS.Wall_urban_storage2_expensive_shit =
   template = "Wall_urban_storage1",
   map = "MAP02",
 
-  prob = 25,
+  prob = 5,
 
   texture_pack = "armaetus",
 
