@@ -177,7 +177,16 @@ OB_MODULES["level_control"] =
       max = 75,
       increment = 1,
       default = 75,
-      nan = "",
+      nan = "10:10 (Microscopic)," ..
+      "16:16 (Miniature)," ..
+      "22:22 (Tiny)," ..
+      "30:30 (Small)," ..
+      "36:36 (Average)," ..
+      "42:42 (Large)," ..
+      "48:48 (Huge)," ..
+      "58:58 (Colossal)," ..
+      "66:66 (Gargantuan)," ..
+      "75:75 (Transcendent),",
       tooltip = "Fine tune upper limit for Level Size Episodic, Progressive and Mixed options.",
     },
 
@@ -192,7 +201,16 @@ OB_MODULES["level_control"] =
       max = 75,
       increment = 1,
       default = 10,
-      nan = "",
+      nan = "10:10 (Microscopic)," ..
+      "16:16 (Miniature)," ..
+      "22:22 (Tiny)," ..
+      "30:30 (Small)," ..
+      "36:36 (Average)," ..
+      "42:42 (Large)," ..
+      "48:48 (Huge)," ..
+      "58:58 (Colossal)," ..
+      "66:66 (Gargantuan)," ..
+      "75:75 (Transcendent),",
       tooltip = "Fine tune lower limit for Level Size Episodic, Progressive and Mixed options.",
       gap = 1,
     },

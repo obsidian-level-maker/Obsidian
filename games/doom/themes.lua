@@ -1259,8 +1259,9 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 25,
-      gtd_ribbed_lights_no3d = 25,
+      gtd_ribbed_lights = 20,
+      gtd_ribbed_lights_no3d = 20,
+      gtd_ribbed_lights_slump = 20,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1363,7 +1364,8 @@ DOOM.THEMES =
       gtd_window_weabdows = 15,
       gtd_window_metal_frames = 30,
       gtd_window_construction_frames = 5,
-      gtd_window_hexagon = 30
+      gtd_window_hexagon = 30,
+      gtd_window_slump_tall = 30
     },
 
     fence_groups =
@@ -1653,8 +1655,9 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 20,
-      gtd_ribbed_lights_no3d = 20,
+      gtd_ribbed_lights = 17,
+      gtd_ribbed_lights_no3d = 17,
+      gtd_ribbed_lights_slump = 17,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1732,7 +1735,8 @@ DOOM.THEMES =
       gtd_window_metal_frames = 70,
       gtd_window_pencil_holes = 35,
       gtd_window_construction_frames = 65,
-      gtd_window_hexagon = 25
+      gtd_window_hexagon = 25,
+      gtd_window_slump_tall = 65
     },
 
     fence_groups =
@@ -2220,7 +2224,8 @@ DOOM.THEMES =
       gtd_window_arrowslit = 60,
       gtd_window_metal_frames = 60,
       gtd_window_pencil_holes = 60,
-      gtd_window_construction_frames = 60
+      gtd_window_construction_frames = 60,
+      gtd_window_slump_tall = 40
     },
 
     fence_groups =
