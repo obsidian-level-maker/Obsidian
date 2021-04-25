@@ -469,8 +469,8 @@ function Item_simulate_battle(R)
     ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
 
     if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
-      ammo_mul = ammo_mul * (tonumber(PARAM.boss_gen_ammo) * PARAM.boss_gen_mult)
-      heal_mul = heal_mul * tonumber(PARAM.boss_gen_heal)
+      ammo_mul = ammo_mul * (gui.get_module_slider_value("gzdoom_boss_gen", "boss_gen_ammo") * PARAM.boss_gen_mult)
+      heal_mul = heal_mul * gui.get_module_slider_value("gzdoom_boss_gen", "boss_gen_heal")
     end
 
     -- give less ammo in later maps (to counter the build-up over an episode)

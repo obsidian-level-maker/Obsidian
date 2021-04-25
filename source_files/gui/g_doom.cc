@@ -37,6 +37,7 @@
 #include "m_lua.h"
 #include "main.h"
 #include "q_common.h"  // qLump_c
+#include "twister.h"
 
 // SLUMP for Vanilla Doom
 #include "slump_main.h"
@@ -120,8 +121,13 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.levelcount = 32; // "Full Game"
 	}
-	slump_config.minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
+	int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
 							->FindSliderOpt("float_minrooms")->value();
+	if (minrooms == 1) {
+		slump_config.minrooms = twister_Between(2, 37);
+	} else {
+		slump_config.minrooms = minrooms;
+	}
 	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
 							->FindSliderOpt("float_bigify")->value();
 	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
