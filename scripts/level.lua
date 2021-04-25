@@ -448,9 +448,10 @@ function Episode_plan_monsters()
     end
 
     local mon_along = LEV.game_along
+    local ramp_up = gui.get_module_slider_value("ui_mons", "float_ramp_up")
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
-    if PARAM.episodic_monsters or OB_CONFIG.ramp_up == "epi" then
+    if PARAM.episodic_monsters or ramp_up == 0.45 then
       mon_along = (LEV.ep_along + LEV.game_along) / 2
     end
 
@@ -472,7 +473,7 @@ function Episode_plan_monsters()
     -- apply the user Ramp-up setting
     -- [ and some tweaks for the Strength setting ]
 
-    local factor = RAMP_UP_FACTORS[OB_CONFIG.ramp_up] or 1.0
+    local factor = ramp_up
 
     mon_along = mon_along * factor
 

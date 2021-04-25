@@ -28,17 +28,6 @@ UI_MONS.BOSSES =
   "harder", _("Harder"),
 }
 
-UI_MONS.RAMPS =
-{
-  "veryslow", _("Very Slow"),
-  "slow",     _("Slow"),
-  "medium",   _("Average"),
-  "fast",     _("Fast"),
-  "veryfast", _("Very Fast"),
-  "extfast",  _("Extremely Fast"),
-  "epi",      _("Episodic"),
-}
-
 UI_MONS.TRAP_STYLE =
 {
   "default",   _("DEFAULT"),
@@ -68,12 +57,6 @@ UI_MONS.SECRET_MONSTERS =
   "yesyes", _("Yes - Full Strength"),
   "yes",    _("Yes - Weak"),
   "no",     _("No"),
-}
-
-UI_MONS.START_ROOM_MON_CHOICES =
-{
-  "no",  _("No"),
-  "yes", _("Yes"),
 }
 
 UI_MONS.MONSTER_KIND_JUMPSTART_CHOICES =
@@ -120,7 +103,6 @@ OB_MODULES["ui_mons"] =
               "also based on the Fine Tune options below.\n\n" ..
               "It does not matter if your Upper/Lower Bound selections are reversed. " ..
               "Progressive will pick the min VS max quantities selected.",
-      gap = 1,
     },
 
     {
@@ -160,10 +142,21 @@ OB_MODULES["ui_mons"] =
       increment = .05,
       default = 1,
       nan = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
+    },
+
+    {
+      name="float_ramp_up",
+      label=_("Ramp Up"),
+      valuator = "slider",
+      units = "",
+      min = 0.45,
+      max = 3,
+      increment = .05,
+      default = 1,
+      nan = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Medium),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
+      tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
     },
-    
-    { name="ramp_up",   label=_("Ramp Up"),   choices=UI_MONS.RAMPS},
     
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES,
       tooltip= "Affects how many different monster types can " ..
@@ -219,13 +212,14 @@ OB_MODULES["ui_mons"] =
       tooltip="I'm in your secret rooms, placing some monsters. Note: default is none.",
       default="no",
     },
+    
     {
-      name="quiet_start",
+      name="bool_quiet_start",
       label=_("Quiet Start"),
-      choices=UI_MONS.START_ROOM_MON_CHOICES,
+      valuator = "button",
+      default = 0,
       tooltip="Makes start rooms mostly safe - no enemies and all outlooking windows are removed. " ..
       "(windows are retained on Procedural Gotchas) Default Oblige behavior is 'no'.",
-      default="no",
     },
   },
 }

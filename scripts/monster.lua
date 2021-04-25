@@ -2367,7 +2367,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
     --if R.no_monsters then return false end
     if R.is_secret and OB_CONFIG.secret_monsters == "no" then return false end
 
-    if R.is_start and OB_CONFIG.quiet_start == "yes" then
+    if R.is_start and gui.get_module_button_value("ui_mons", "bool_quiet_start") == 1 then
       if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
         -- your face is a tree
       else

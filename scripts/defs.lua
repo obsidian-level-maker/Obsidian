@@ -198,16 +198,6 @@ MONSTER_KIND_JUMPSTART_LEVELS =
   crazier = 12
 }
 
-RAMP_UP_FACTORS =
-{
-  veryslow = 0.5,
-  slow   = 0.75,
-  medium = 1.00,
-  fast   = 1.50,
-  veryfast = 2.00,
-  extfast = 3.00
-}
-
 BOSS_FACTORS =
 {
   easier = 0.30,
