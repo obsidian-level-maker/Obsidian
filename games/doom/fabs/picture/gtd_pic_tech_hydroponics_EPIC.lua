@@ -26,5 +26,5 @@ PREFABS.Pic_tech_hydroponics_2 =
   template = "Pic_tech_hydroponics_1", 
   map = "MAP02",
 
-  x_fit = { 52,60 , 100,108 , 148,156 , 196,204 }
+  x_fit = "frame"
 }
