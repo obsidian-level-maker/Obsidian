@@ -20,29 +20,6 @@
 
 UI_MONS = { }
 
-UI_MONS.QUANTITIES =
-{
-    "none",      _("[0] None"),
-    "rarest",    _("[0.15] Trivial"),
-    "rarer",     _("[0.35] Sporadic"),
-    "rare",      _("[0.7] Meager"),
-    "scarce",    _("[1.0] Easy"),
-    "few",       _("[1.3] Modest"),
-    "less",      _("[1.5] Bearable"),
-    "normal",    _("[2.0] Rough"),
-    "more",      _("[2.5] Strenuous"),
-    "heaps",     _("[3.0] Formidable"),
-    "legions",   _("[3.5] Harsh"),
-    "insane",    _("[4.0] Painful"),
-    "deranged",  _("[4.5] Unforgiving"),
-    "nuts",      _("[5.0] Punishing"),
-    "chaotic",   _("[5.5] Brutal"),
-    "unhinged",  _("[6.0] Draconian"),
-    "ludicrous", _("[6.66] Merciless"),
-    "mixed",     _("Mix It Up"),
-    "prog",      _("Progressive"),
-}
-
 UI_MONS.MIX_QUANTITIES =
 {
     "rarest",    _("[0.15] Trivial"),
@@ -158,9 +135,15 @@ OB_MODULES["ui_mons"] =
   options =
   {
     {
-      name="mons",
+      name="float_mons",
       label=_("Quantity"),
-      choices=UI_MONS.QUANTITIES,
+      valuator = "slider",
+      units = "",
+      min = -0.10,
+      max = 10.00,
+      increment = .05,
+      default = -0.10,
+      nan = "-0.10:Mix It Up,-0.05:Progressive,",
       tooltip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
               "Mix It Up: randomizes quantities based on the prefered selection " ..
               "under the Fine Tune options below.\n\n" ..
@@ -168,7 +151,6 @@ OB_MODULES["ui_mons"] =
               "also based on the Fine Tune options below.\n\n" ..
               "It does not matter if your Upper/Lower Bound selections are reversed. " ..
               "Progressive will pick the min VS max quantities selected.",
-      default="scarce",
       gap = 1,
     },
 

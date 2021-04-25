@@ -32,18 +32,6 @@ BOSS_GEN_TUNE.BOSS_HEALTH_CHOICES =
   "demiosmode",  _("Increased by 200%"),
 }
 
-BOSS_GEN_TUNE.BOSS_HEALTH_BAR =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
-}
-
-BOSS_GEN_TUNE.BOSS_MUSIC =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
-}
-
 BOSS_GEN_TUNE.BOSS_LESS_HITSCAN =
 {
   "default",  _("Default"),
@@ -81,12 +69,6 @@ BOSS_GEN_TUNE.REINFORCER =
   "harder",  _("Fast"),
   "tougher",  _("Faster"),
   "serious", _("Nightmare"),
-}
-
-BOSS_GEN_TUNE.BOSS_TYPES =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
 }
 
 BOSS_GEN_TUNE.BOSS_WEAP =
@@ -1405,7 +1387,7 @@ function BOSS_GEN_TUNE.check_gotchas_enabled()
   and PARAM.boss_gen then
     error("Procedural gotchas must be enabled for boss generator!")
   end
-  if OB_CONFIG.mons == "none" then
+  if gui.get_module_slider_value("ui_mons", "float_mons") then
     error("Monsters must be enabled for boss generator!")
   end
 end
@@ -1508,7 +1490,7 @@ function BOSS_GEN_TUNE.all_done()
     return
   end
 
-  if OB_CONFIG.mons == "none" then
+  if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
     -- no monsters, no boss, duh
     warning("No monsters found by boss generator")
     PARAM.boss_count = -1
@@ -1517,14 +1499,14 @@ function BOSS_GEN_TUNE.all_done()
 
   scripty = string.gsub(scripty, "LEVELCODE", PARAM.lvlstr)
 
-  if PARAM.boss_gen_hpbar == "yes" then
+  if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_hpbar") == 1 then
     BOSS_GEN_TUNE.game_specific_hpbar()
     scripty = string.gsub(scripty, "BOSSHPBAR", BOSS_GEN_TUNE.TEMPLATES.BAR)
   else
     scripty = string.gsub(scripty, "BOSSHPBAR", "")
   end
 
-  if PARAM.boss_gen_music == "yes" then
+  if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_music") == 1 then
     scripty = string.gsub(scripty, "MUSIC", BOSS_GEN_TUNE.TEMPLATES.MUS)
   else
     scripty = string.gsub(scripty, "MUSIC", "")
@@ -1713,21 +1695,21 @@ OB_MODULES["gzdoom_boss_gen"] =
 
     boss_gen_hpbar =
     {
-      name = "boss_gen_hpbar",
+      name = "bool_boss_gen_hpbar",
       label = _("Visible Health Bar"),
       priority = 96,
-      choices = BOSS_GEN_TUNE.BOSS_HEALTH_BAR,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = "If enabled, an hp bar will appear on UI while boss is active.",
     },
 
     boss_gen_music =
     {
-      name = "boss_gen_music",
+      name = "bool_boss_gen_music",
       label=_("Enable Boss Music"),
       priority = 95,
-      choices=BOSS_GEN_TUNE.BOSS_MUSIC,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = "If enabled, encountering a boss will start boss theme music." ..
       "(For now you have to have your own music files with lumps named D_BOSSx where x is boss number)",
       gap = 1,
@@ -1766,11 +1748,11 @@ OB_MODULES["gzdoom_boss_gen"] =
 
     boss_gen_types =
     {
-      name = "boss_gen_types",
+      name = "bool_boss_gen_types",
       label = _("Respect zero prob"),
       priority = 91,
-      choices = BOSS_GEN_TUNE.BOSS_TYPES,
-      default = "no",
+      valuator = "button",
+      default = 0,
       tooltip = "If enabled, monsters disabled in monster control module cant be chosen as a boss.",
     },
 
