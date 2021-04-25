@@ -173,6 +173,7 @@ ARMAETUS_ROOM_THEMES =
       FLAT1 = 1
     }
   },
+-- END OF HALLWAY THEMES
 
   tech_GrayMet =
   {
@@ -225,6 +226,18 @@ ARMAETUS_ROOM_THEMES =
 
       TEKWALL2 = 15,
       TEKWALL7 = 15,
+    
+      PIPEWAL2 = 10,
+      PIPES = 10,
+      BROWNPIP = 10,
+      PIPE2 = 10,
+
+      PIPEDRK1 = 15,
+      PIPESV1 = 10,
+      PIPESV2 = 10,
+      PIPESV3 = 10,
+      PIPEWAL5 = 15,
+
       TEKWALL8 = 15,
       TEKWALL9 = 15,
       TEKWALLA = 10,
@@ -250,7 +263,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BR2GY = 20,
       G8_BR3GY = 20,
 
-      OBTSBGRE = 10
+      OBTSBGRE = 10,
+
+      OBTSVBZ1 = 20,
+      OBTSVBZ2 = 20,
+      OBTSVBZ3 = 20,
     },
 
     floors =
@@ -787,7 +804,12 @@ ARMAETUS_ROOM_THEMES =
 
       OBTBSTX1 = 15,
       OBTBSTX2 = 15,
-      OBTBSTX3 = 15
+      OBTBSTX3 = 15,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
+
     },
 
     floors =
@@ -858,6 +880,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BR3GY = 10,
 
       OBTSBGRE = 8,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10,
+
     },
 
     floors =
@@ -967,7 +994,12 @@ ARMAETUS_ROOM_THEMES =
       G8_BR2GY = 20,
       G8_BR3GY = 20,
 
-      OBTSBGRE = 8
+      OBTSBGRE = 8,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
+
     },
 
     floors =
@@ -1038,7 +1070,11 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNW1 = 20,
       G8_BRNW2 = 20,
-      G8_BRNW3 = 20
+      G8_BRNW3 = 20,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10,
     },
 
     floors =
@@ -1183,6 +1219,27 @@ ARMAETUS_ROOM_THEMES =
       GROUND02 = 50,
       GROUND03 = 50,
       GROUND04 = 50,
+
+      ALTASH = 20,
+      ASH05 = 20,
+      ROK04 = 30,
+      ROK05 = 10,
+      ROK06 = 30,
+      ROK12 = 50,
+      ROK13 = 30,
+      ROK14 = 30,
+      ROK15 = 30,
+      ROK20 = 20,
+      ROK21 = 50,
+      ROK22 = 30,
+      ROK23 = 20,
+      VINES1 = 10,
+      VINES2 = 10,
+      VINES3 = 10,
+      VINES4 = 10,
+      MOSROK3 = 10,
+
+      GREEN01 = 20,
     },
 
     porch_floors =
@@ -1306,6 +1363,14 @@ ARMAETUS_ROOM_THEMES =
       GOTH48 = 15,
       GOTH49 = 15,
 
+      --
+      BRIC9GRN = 15,
+      BRIC9GRY = 15,
+      BRIC9TAN = 15,
+      BRICEGRN = 15,
+      BRICEGRY = 15,
+
+      --
       OBTBSLB3 = 15,
       OBTBSLB4 = 15,
 
@@ -1491,6 +1556,10 @@ ARMAETUS_ROOM_THEMES =
       HELLCMT2 = 20,
       HELLCMT7 = 15,
       HELLCMT8 = 15,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
     },
 
     floors =
@@ -1702,6 +1771,8 @@ ARMAETUS_ROOM_THEMES =
       EGYPT04 = 50,
       EGYPT05 = 50,
       EGYPT06 = 50,
+
+      BRIC9TAN = 50,
     },
 
     floors =
@@ -1825,6 +1896,10 @@ ARMAETUS_ROOM_THEMES =
       G7_GOGN1 = 10,
       G7_GOGN2 = 10,
       G7_GOGN3 = 10,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10,
     },
 
     floors =
@@ -2300,7 +2375,6 @@ ARMAETUS_ROOM_THEMES =
       QFLAT05 = 10,
       QFLAT06 = 10,
       QFLAT07 = 10,
-      QFLAT08 = 10,
       QFLAT09 = 10,
       QFLAT10 = 10,
 
@@ -2325,7 +2399,32 @@ ARMAETUS_ROOM_THEMES =
       ASHWALL4 = 30,
       SKIN2 = 10,
       SKSNAKE1 = 30,
-      SKSNAKE2 = 30
+      SKSNAKE2 = 30,
+
+      ALTASH = 20,
+      ASH05 = 40,
+      ASHWALL1 = 10,
+      ROK05 = 15,
+      ROK12 = 10,
+      ROK21 = 15,
+      HELLROK1 = 40,
+      RDROK1 = 30,
+      RDROK2 = 35,
+      SKIN3 = 6,
+      SKIN4 = 6,
+      VINES1 = 3,
+      VINES2 = 3,
+      VINES3 = 3,
+      VINES4 = 3,
+
+      CREYEWLL = 5,
+      CRFSHWLL = 5,
+      CRGRSWLL = 5,
+      CRHRTWLL = 5,
+  
+      GRNSTONE = 20,
+      GREEN02 = 15,
+      GREEN03 = 15,
     },
 
     porch_floors =
@@ -2411,7 +2510,6 @@ ARMAETUS_ROOM_THEMES =
       QFLAT05 = 10,
       QFLAT06 = 10,
       QFLAT07 = 10,
-      QFLAT08 = 10,
       QFLAT09 = 10,
       QFLAT10 = 10,
 
@@ -2731,7 +2829,11 @@ ARMAETUS_ROOM_THEMES =
       G8_BRNW3 = 10,
       G8_BR1GY = 10,
       G8_BR2GY = 10,
-      G8_BR3GY = 10
+      G8_BR3GY = 10,
+
+      OBTSVBZ1 = 10,
+      OBTSVBZ2 = 10,
+      OBTSVBZ3 = 10
     },
 
     floors =
@@ -2981,7 +3083,6 @@ ARMAETUS_ROOM_THEMES =
       MFLR8_3  = 10,
       FLOOR6_2 = 5,
 
-
       --
 
       DARKF01 = 20,
@@ -2992,7 +3093,6 @@ ARMAETUS_ROOM_THEMES =
       FLOOR46D = 20,
       FLOOR46E = 20,
       FLOOR51C = 20,
-      FLOOR7_3 = 20,
 
       G09 = 20,
       G10 = 20,
@@ -3050,7 +3150,6 @@ ARMAETUS_ROOM_THEMES =
       ZIMMER5  = 15,
       ZIMMER7  = 15,
       ZIMMER8  = 15,
-      TANROCK7 = 15,
       ROCK1    = 30,
       ROCK2    = 20,
       ROCK3    = 70,
@@ -3062,6 +3161,27 @@ ARMAETUS_ROOM_THEMES =
       GROUND02 = 50,
       GROUND03 = 50,
       GROUND04 = 50,
+
+      ALTASH = 15,
+      ROK03 = 20,
+      ROK04 = 30,
+      ROK05 = 20,
+      ROK06 = 40,
+      ROK12 = 60,
+      ROK13 = 40,
+      ROK14 = 35,
+      ROK15 = 50,
+      ROK20 = 40,
+      ROK21 = 35,
+      ROK22 = 30,
+      ROK23 = 20,
+      VINES1 = 20,
+      VINES2 = 20,
+      VINES3 = 20,
+      VINES4 = 20,
+      MOSROK3 = 20,
+
+      GREEN01 = 20,
     },
 
     porch_floors =
@@ -3098,7 +3218,6 @@ ARMAETUS_ROOM_THEMES =
       FLOOR46D = 20,
       FLOOR46E = 20,
       FLOOR51C = 20,
-      FLOOR7_3 = 20,
 
       G09 = 20,
       G10 = 20,
@@ -4260,7 +4379,11 @@ ARMAETUS_THEMES =
       G8_BRNW3 = 10,
       G8_BR1GY = 10,
       G8_BR2GY = 10,
-      G8_BR3GY = 10
+      G8_BR3GY = 10,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
     },
 
     fences = 
@@ -4582,14 +4705,19 @@ ARMAETUS_THEMES =
       BRONZE1 = 10,
       BRONZE3 = 10,
 
+      --
+      BRIC9GRN = 15,
+      BRIC9GRY = 15,
+      BRIC9TAN = 15,
+      BRICEGRN = 15,
+      BRICEGRY = 15,
+
+      --
       OBTBSLV1 = 15,
       OBTBSLV2 = 15,
 
       OBTBSTX1 = 15,
       OBTBSTX3 = 15,
-
-      OBTSTX1B = 20,
-      OBTSTX1G = 20,
 
       OBTBSLB1 = 20,
       OBTBSLB2 = 20,
@@ -4598,7 +4726,11 @@ ARMAETUS_THEMES =
 
       OBTBSB2B = 15,
       OBTBSB3B = 15,
-      OBTBSB4B = 15
+      OBTBSB4B = 15,
+
+      OBTSVBZ1 = 15,
+      OBTSVBZ2 = 15,
+      OBTSVBZ3 = 15,
     },
 
     fences =
@@ -4749,10 +4881,14 @@ ARMAETUS_THEMES =
     {
       fence_construction = 50,
       fence_highway_bars_warnstep = 25,
+      dem_wall_graveyard = 25,
     },
 
     wall_groups =
     {
+      dem_wall_commercial = 50,
+      gtd_grocery = 50,
+      --
       gtd_tall_glass_epic_yellow = 8,
       gtd_tall_glass_epic_orange = 8,
       gtd_tall_glass_epic_red = 8,
@@ -4791,6 +4927,8 @@ ARMAETUS_THEMES =
       gtd_wall_teklitecomp_blue = 8,
       --
       gtd_wall_grated_machines_epic = 25,
+      --
+      gtd_library_tall = 35,
     },
 
     window_groups =
@@ -5008,6 +5146,13 @@ ARMAETUS_THEMES =
       CRGRSWLL = 7,
       CRHRTWLL = 7,
 
+      --
+      BRIC9GRN = 15,
+      BRIC9GRY = 15,
+      BRIC9TAN = 15,
+      BRICEGRN = 15,
+      BRICEGRY = 15,
+
       -- MSSP stuff
       OBTBSLB2 = 15,
       OBTBSLB3 = 15,
@@ -5174,6 +5319,11 @@ ARMAETUS_THEMES =
       WOOD17 = 20,
     },
 
+    fence_groups =
+    {
+      dem_wall_graveyard = 50,
+    },
+
     wall_groups =
     {
       gtd_tall_glass_epic_yellow = 15,
@@ -5203,7 +5353,10 @@ ARMAETUS_THEMES =
       gtd_wall_vertical_light_1 = 16,
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
-      gtd_wall_hell_bottom_glass = 25
+      --
+      gtd_wall_hell_bottom_glass = 25,
+      --
+      gtd_library_tall = 35,
     },
 
     window_groups =
@@ -5309,99 +5462,6 @@ ARMAETUS_THEMES =
       Skybox_city_bridge_EPIC = 15,
       Skybox_g99_hell_tower_EPIC = 50,
       Skybox_city_hell_bloodfalls_EPIC = 50,
-    },
-  },
-}
-
--- Natural textures for outdoor parks.
-ARMAETUS_NATURALS =
-{
-  tech =
-  {
-    naturals =
-    {
-      ALTASH = 20,
-      ASH05 = 20,
-      ROK04 = 30,
-      ROK05 = 10,
-      ROK06 = 30,
-      ROK12 = 50,
-      ROK13 = 30,
-      ROK14 = 30,
-      ROK15 = 30,
-      ROK20 = 20,
-      ROK21 = 50,
-      ROK22 = 30,
-      ROK23 = 20,
-      VINES1 = 10,
-      VINES2 = 10,
-      VINES3 = 10,
-      VINES4 = 10,
-      MOSROK3 = 10,
-
-      GRNSTONE = 20,
-      GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
-    },
-  },
-
-  urban =
-  {
-    naturals =
-    {
-      ALTASH = 15,
-      ROK03 = 20,
-      ROK04 = 30,
-      ROK05 = 20,
-      ROK06 = 40,
-      ROK12 = 60,
-      ROK13 = 40,
-      ROK14 = 35,
-      ROK15 = 50,
-      ROK20 = 40,
-      ROK21 = 35,
-      ROK22 = 30,
-      ROK23 = 20,
-      VINES1 = 20,
-      VINES2 = 20,
-      VINES3 = 20,
-      VINES4 = 20,
-      MOSROK3 = 20,
-
-      GRNSTONE = 20,
-      GREEN01 = 20,
-      GREEN02 = 20,
-      GREEN03 = 20,
-    },
-  },
-
-  hell =
-  {
-    naturals =
-    {
-      ALTASH = 20,
-      ASH05 = 40,
-      ASHWALL1 = 10,
-      ROK05 = 15,
-      ROK12 = 10,
-      ROK21 = 15,
-      HELLROK1 = 40,
-      RDROK1 = 30,
-      RDROK2 = 35,
-      SKIN3 = 6,
-      SKIN4 = 6,
-      VINES1 = 3,
-      VINES2 = 3,
-      VINES3 = 3,
-      VINES4 = 3,
-
-      GRNSTONE = 20,
-
-      CREYEWLL = 5,
-      CRFSHWLL = 5,
-      CRGRSWLL = 5,
-      CRHRTWLL = 5,
     },
   },
 }

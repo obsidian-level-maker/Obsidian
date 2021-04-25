@@ -26,3 +26,18 @@ PREFABS.Wall_hell_mindscrew_diag =
 
   where  = "diagonal",
 }
+
+--
+
+PREFABS.Wall_hell_mindscrew_skywall =
+{
+  template = "Wall_hell_mindscrew",
+  map = "MAP03",
+
+  seed_w = 1,
+
+  group = "gtd_wall_hell_mindscrew_skywall",
+
+  x_fit = { 56,72 },
+  z_fit = { 56,72 }
+}

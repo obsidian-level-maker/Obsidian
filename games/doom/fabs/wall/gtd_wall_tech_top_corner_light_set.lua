@@ -30,6 +30,7 @@ PREFABS.Wall_tech_windows_top_corner_light_diag =
 PREFABS.Wall_tech_windows_top_corner_light_hell =
 {
   template = "Wall_tech_windows_top_corner_light",
+
   theme = "hell",
 
   tex_TEKLITE2 = "SKINEDGE",
@@ -39,6 +40,8 @@ PREFABS.Wall_tech_windows_top_corner_light_hell =
 PREFABS.Wall_tech_windows_top_corner_light_diag_hell =
 {
   template = "Wall_tech_windows_top_corner_light",
+  map = "MAP02",
+
   theme = "hell",
 
   where  = "diagonal",

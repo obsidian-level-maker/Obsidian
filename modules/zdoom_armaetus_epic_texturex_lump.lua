@@ -564,7 +564,7 @@ Texture "G8_BR1GY", 128, 128
 {
 	Patch "G8_BRNW1", 0, 0
 	{
-		Blend "#FFFFFF"
+		Translation "0:255=#[128,128,128]"
 	}
 }
 
@@ -572,7 +572,7 @@ Texture "G8_BR2GY", 128, 128
 {
 	Patch "G8_BRNW2", 0, 0
 	{
-		Blend "#FFFFFF"
+		Translation "0:255=#[128,128,128]"
 	}
 }
 
@@ -580,7 +580,7 @@ Texture "G8_BR3GY", 128, 128
 {
 	Patch "G8_BRNW3", 0, 0
 	{
-		Blend "#FFFFFF"
+		Translation "0:255=#[128,128,128]"
 	}
 }
 ]]

@@ -690,9 +690,6 @@ ARMAETUS_MATERIALS = {
   COLLITE2 = { t="COLLITE2", f="ORANFLOR" }, --Orange version of REDWALL1,
   COLLITE3 = { t="COLLITE3", f="CEIL4_2" }, --Blue version of REDWALL1,
   DFAN1 = { t="DFAN1", f="METAL" }, -- Essentially a wall version of FAN1,
-  EXITDOR2 = { t="EXITDOR2", f="CEIL5_1" }, -- Hellish style exit door
-  EXITSIG2 = { t="EXITSIG2", f="CEIL5_2" }, -- Rusty vertical exit sign
-  EXITSIG3 = { t="EXITSIG3", f="FLAT1" }, -- Gray techy vertical exit sign
   LITE2 = { t="LITE2", f="FLOOR0_1" }, -- BROWN1 variant w/ lights. From Doom1,
   LITE4 = { t="LITE4", f="FLAT19" }, -- LITE5 and bigger light on bottom. From Doom1,
   LITE96 = { t="LITE96", f="FLOOR7_1" }, -- BROWN96 variant w/ lights. From Doom1,
@@ -1318,6 +1315,9 @@ ARMAETUS_MATERIALS = {
   DNSTOR20 = { t="DNSTOR20", f="CEIL5_2"},
   DNSTOR21 = { t="DNSTOR21", f="CEIL5_2"},
 
+  -- 8px step
+  DNSTEP01 = { t="DNSTEP01", f="FLAT5_4"},
+
   ------------------
   -- MSSP Stuff --
   ------------------
@@ -1328,7 +1328,12 @@ ARMAETUS_MATERIALS = {
   OBTBSLV2 = { t="OBTBSLV2", f="SHINY02"},
   OBTBSLV3 = { t="OBTBSLV3", f="SHINY04"},
   OBTBSLV4 = { t="OBTBSLV4", f="SHINY03"},
-  OBTBSLV5 = { t="OBTBSLV4", f="FLAT3"},
+  OBTBSLV5 = { t="OBTBSLV5", f="FLAT3"},
+
+  -- silver wall, bronze-framed (256px)
+  OBTSVBZ1 = { t="OBTSVBZ1", f="G8_BRNF1"},
+  OBTSVBZ2 = { t="OBTSVBZ2", f="G8_BRNF2"},
+  OBTSVBZ3 = { t="OBTSVBZ3", f="G8_BRNF3"},
 
   -- silver walls (128px)
   OBTBSTX1 = { t="OBTBSTX1", f="SHINY03"},

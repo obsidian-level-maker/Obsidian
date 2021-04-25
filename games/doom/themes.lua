@@ -2159,7 +2159,8 @@ DOOM.THEMES =
       gtd_wall_green_torch = 12,
       gtd_wall_red_torch = 12,
       --
-      gtd_wall_hell_mindscrew = 25
+      gtd_wall_hell_mindscrew = 25,
+      gtd_wall_hell_mindscrew_skywall = 25
     },
 
     outdoor_wall_groups =
@@ -4540,7 +4541,6 @@ DOOM.ROOM_THEMES =
       ZIMMER5  = 15,
       ZIMMER7  = 15,
       ZIMMER8  = 15,
-      TANROCK7 = 15,
       ROCK1    = 30,
       ROCK2    = 20,
       ROCK3    = 70

@@ -10,7 +10,6 @@ PREFABS.Wall_plain =
   prob   = 50,
 
   where  = "edge",
-  long   = 128,
   deep   = 16,
 
   bound_z1 = 0,
