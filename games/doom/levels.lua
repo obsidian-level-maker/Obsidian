@@ -268,22 +268,14 @@ function DOOM.get_levels()
 
     -- handling for linear mode chance choices
     if not LEV.prebuilt then
-      if OB_CONFIG.linear_mode == "all" then
+      if gui.random_between(0, 100) <= gui.get_module_slider_value("ui_arch", "float_linear_mode") then
         LEV.is_linear = true
-      elseif OB_CONFIG.linear_mode ~= "none" then
-        if rand.odds(int(OB_CONFIG.linear_mode)) then
-          LEV.is_linear = true
-        end
       end
 
       -- nature mode
       if OB_CONFIG.nature_mode and not LEV.has_streets then
-        if OB_CONFIG.nature_mode == "all" then
+        if gui.random_between(0, 100) <= gui.get_module_slider_value("ui_arch", "float_nature_mode") then
           LEV.is_nature = true
-        elseif OB_CONFIG.nature_mode ~= "none" then
-          if rand.odds(int(OB_CONFIG.nature_mode)) then
-            LEV.is_nature = true
-          end
         end
       end
 

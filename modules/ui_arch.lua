@@ -76,17 +76,6 @@ UI_ARCH.STREETS_CHOICES =
   "no",       _("NONE")
 }
 
-UI_ARCH.LEVEL_PERCENTAGE_CHOICES =
-{
-  "all",  _("All Levels"),
-  "75",   _("75% of All Levels"),
-  "50",   _("50% of All Levels"),
-  "25",   _("25% of All Levels"),
-  "10",   _("10% of All Levels"),
-  "5",    _("5% of All Levels"),
-  "none", _("NONE")
-}
-
 OB_MODULES["ui_arch"] =
 {
   label = _("Architecture"),
@@ -123,10 +112,15 @@ OB_MODULES["ui_arch"] =
     },
 
     {
-      name = "linear_mode",
+      name = "float_linear_mode",
       label = _("Linear Mode"),
-      choices = UI_ARCH.LEVEL_PERCENTAGE_CHOICES,
-      default = "none",
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
       tooltip = "Creates linear levels, where rooms are connected along a " ..
       "linear layout from start to exit. \n\nNote: Due to the nature of linear levels, " ..
       "you may encounter teleports even if you have teleports off. This is necessary " ..
@@ -135,12 +129,17 @@ OB_MODULES["ui_arch"] =
     },
 
     {
-      name = "nature_mode",
+      name = "float_nature_mode",
       label = _("Nature Mode"),
-      choices = UI_ARCH.LEVEL_PERCENTAGE_CHOICES,
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
-      default = "10",
       gap = 1
     },
 
