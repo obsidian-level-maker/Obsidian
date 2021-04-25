@@ -439,8 +439,11 @@ function Episode_plan_monsters()
 
 
   local function calc_monster_level(LEV)
-    if OB_CONFIG.strength == "crazy" then
-      LEV.monster_level = 12
+  
+    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+  
+    if mon_strength == 12 then
+      LEV.monster_level = mon_strength
       return
     end
 
@@ -473,8 +476,8 @@ function Episode_plan_monsters()
 
     mon_along = mon_along * factor
 
-    if OB_CONFIG.strength == "harder" then mon_along = mon_along + 0.1 end
-    if OB_CONFIG.strength == "tough"  then mon_along = mon_along + 0.2 end
+    -- New adjustments for Monster Strength slider...may need to tune
+    mon_along = mon_along + (mon_strength / 10)
 
     mon_along = 1.0 + (PARAM.mon_along_factor or 8.0) * mon_along
 
@@ -519,7 +522,7 @@ function Episode_plan_monsters()
     if not info.theme then return true end
 
     -- anything goes in CRAZY mode
-    if OB_CONFIG.strength == "crazy" then return true end
+    if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then return true end
 
     return info.theme == LEV.theme_name
   end
@@ -610,7 +613,7 @@ function Episode_plan_monsters()
 
     for name,_ in pairs(LEV.seen_monsters) do
       local info = GAME.MONSTERS[name]
-      if not info.boss_type or OB_CONFIG.strength == "crazy" or LEV.is_procedural_gotcha then
+      if not info.boss_type or gui.get_module_slider_value("ui_mons", "float_strength") == 12 or LEV.is_procedural_gotcha then
         LEV.global_pal[name] = 1
       elseif info.boss_type and OB_CONFIG.bossesnormal ~= "no" then
         if info.boss_type == "minor" then
@@ -1033,7 +1036,7 @@ function Episode_plan_monsters()
       if LEV.prebuilt  then goto continue end
       if LEV.is_secret then goto continue end
 
-      if OB_CONFIG.strength == "crazy" then goto continue end
+      if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then goto continue end
       if OB_CONFIG.bosses   == "none"  then goto continue end
 
       pick_boss_quotas(LEV)
@@ -1678,7 +1681,7 @@ function Episode_plan_weapons()
 
     -- prefer simpler weapons for start rooms
     -- [ except in crazy monsters mode, player may need a bigger weapon! ]
-    if is_start and OB_CONFIG.strength ~= "crazy" or LEV.is_procedural_gotcha ~= "true" then
+    if is_start and gui.get_module_slider_value("ui_mons", "float_strength") < 12 or LEV.is_procedural_gotcha ~= "true" then
       if level <= 2 then prob = prob * 4 end
       if level == 3 then prob = prob * 2 end
 

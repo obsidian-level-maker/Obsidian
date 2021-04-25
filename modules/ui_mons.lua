@@ -20,17 +20,6 @@
 
 UI_MONS = { }
 
-UI_MONS.STRENGTHS =
-{
-  "weak",   _("[0.59] Weak"),
-  "easier", _("[0.77] Easier"),
-  "medium", _("[1] Average"),
-  "harder", _("[1.3] Harder"),
-  "tough",  _("[1.7] Tough"),
-  "fierce", _("[2.5] Fierce"),
-  "crazy",  _("[12] CRAZY"),
-}
-
 UI_MONS.BOSSES =
 {
   "none",   _("NONE"),
@@ -161,8 +150,21 @@ OB_MODULES["ui_mons"] =
       gap = 1,
     },
 
-    { name="strength",  label=_("Strength"),  choices=UI_MONS.STRENGTHS},
+    {
+      name="float_strength",
+      label=_("Strength"),
+      valuator = "slider",
+      units = "",
+      min = 0.55,
+      max = 12,
+      increment = .05,
+      default = 1,
+      nan = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
+      gap = 1,
+    },
+    
     { name="ramp_up",   label=_("Ramp Up"),   choices=UI_MONS.RAMPS},
+    
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES,
       tooltip= "Affects how many different monster types can " ..
                "appear in each room.\n" ..

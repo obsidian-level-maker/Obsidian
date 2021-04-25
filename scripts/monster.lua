@@ -1207,12 +1207,13 @@ function Monster_fill_room(R)
       end
     end
 
-    if OB_CONFIG.strength == "weak"   then return 1 / (1.7 ^ factor) end
-    if OB_CONFIG.strength == "easier" then return 1 / (1.3 ^ factor) end
+    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
 
-    if OB_CONFIG.strength == "harder" then return 1.3 ^ factor end
-    if OB_CONFIG.strength == "tough"  then return 1.7 ^ factor end
-    if OB_CONFIG.strength == "fierce"  then return 2.5 ^ factor end
+    if mon_strength < 1.0 then 
+      return 1 / ((1 + mon_strength) ^ factor)
+    elseif mon_strength > 1.0 then
+      return mon_strength ^ factor
+    end
 
     return 1.0
   end
@@ -1296,7 +1297,7 @@ function Monster_fill_room(R)
     local d = info.density or 1
 
     -- level check
-    if OB_CONFIG.strength ~= "crazy" or LEVEL.is_procedural_gotcha == false then
+    if gui.get_module_slider_value("ui_mons", "float_strength") < 12 or LEVEL.is_procedural_gotcha == false then
       local max_level = LEVEL.monster_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
@@ -2258,15 +2259,17 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
 
   local function add_monsters()
 
+    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+
     -- sometimes prevent monster replacements
-    if rand.odds(40) or OB_CONFIG.strength == "crazy" then
+    if rand.odds(40) or mon_strength == 12 then
       R.no_replacement = true
     end
 
 
     local palette
 
-    if OB_CONFIG.strength == "crazy" then
+    if mon_strength == 12 then
       palette = crazy_palette()
     else
       palette = room_palette()
