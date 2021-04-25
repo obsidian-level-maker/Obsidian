@@ -473,7 +473,13 @@ function Episode_plan_monsters()
     -- apply the user Ramp-up setting
     -- [ and some tweaks for the Strength setting ]
 
-    local factor = ramp_up
+    local factor
+
+    if ramp_up > 0.45 then
+      factor = ramp_up
+    else
+      factor = 1.0
+    end
 
     mon_along = mon_along * factor
 
