@@ -2320,7 +2320,7 @@ function Fabricate(room, def, T, skins)
 
   fab.state = "skinned"
 
-  if PARAM.print_prefab_use ~= "no" then
+  if gui.get_module_button_value("debugger", "bool_print_prefab_use") == 1 then
     if fab.where == "point" or fab.where == "seeds" then
       gui.printf(LEVEL.name .. ": Adding " .. fab.name .. " ")
     end
@@ -2335,7 +2335,7 @@ function Fabricate(room, def, T, skins)
   Fab_solid_entities(fab, room)
   Fab_process_spots(fab, room)
 
-  if PARAM.print_prefab_use ~= "no" then
+  if gui.get_module_button_value("debugger", "bool_print_prefab_use") == 1 then
     if fab.where == "point" or fab.where == "seeds" then
       gui.printf("{" .. T.add_x .. "," .. T.add_y .. "}")
       gui.printf("\n")

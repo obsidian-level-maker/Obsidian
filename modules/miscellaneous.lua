@@ -194,6 +194,7 @@ OB_MODULES["misc"] =
       name="pistol_starts",
       label=_("Pistol Starts"),
       choices=MISC_STUFF.YES_NO,
+      default = "yes",
       tooltip=_("Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)")
     },
     {

@@ -139,7 +139,7 @@ function STRIFE.get_levels()
     -- prebuilt levels
     local pb_name = LEV.name
 
-    if OB_CONFIG.prebuilt_levels == "yes" then
+    if gui.get_module_button_value("ui_arch", "bool_prebuilt_levels") == 1 then
       LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
     end
 
