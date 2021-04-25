@@ -885,20 +885,23 @@ function Monster_fill_room(R)
         end
     end
 
-    local qty
-    local u_range = math.max(min_range, max_range)
-    local l_range = math.min(min_range, max_range)
-
-    qty = gui.get_module_slider_value("ui_mons", "float_mons")
-    assert(qty)
-
+    local qty = gui.get_module_slider_value("ui_mons", "float_mons")
+    local u_range = gui.get_module_slider_value("ui_mons", "float_mix_it_up_upper_range")
+    local l_range = gui.get_module_slider_value("ui_mons", "float_mix_it_up_lower_range")
+    
+    --Mix It Up
     if qty == -0.10 then
       if l_range == u_range then
         qty = l_range
       end
       qty = rand.range(l_range, u_range)
+    --Progressive
     elseif qty == -0.05 then
-      qty = l_range + (u_range * LEVEL.game_along)
+      if l_range > u_range then
+        qty = u_range + (l_range * LEVEL.game_along)
+      else    
+        qty = l_range + (u_range * LEVEL.game_along)
+      end
     end
 
     -- oh the pain

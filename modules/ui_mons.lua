@@ -20,26 +20,6 @@
 
 UI_MONS = { }
 
-UI_MONS.MIX_QUANTITIES =
-{
-    "rarest",    _("[0.15] Trivial"),
-    "rarer",     _("[0.35] Sporadic"),
-    "rare",      _("[0.7] Meager"),
-    "scarce",    _("[1.0] Easy"),
-    "few",       _("[1.3] Modest"),
-    "less",      _("[1.5] Bearable"),
-    "normal",    _("[2.0] Rough"),
-    "more",      _("[2.5] Strenuous"),
-    "heaps",     _("[3.0] Formidable"),
-    "legions",   _("[3.5] Harsh"),
-    "insane",    _("[4.0] Painful"),
-    "deranged",  _("[4.5] Unforgiving"),
-    "nuts",      _("[5.0] Punishing"),
-    "chaotic",   _("[5.5] Brutal"),
-    "unhinged",  _("[6.0] Draconian"),
-    "ludicrous", _("[6.66] Merciless"),
-}
-
 UI_MONS.STRENGTHS =
 {
   "weak",   _("[0.59] Weak"),
@@ -155,18 +135,28 @@ OB_MODULES["ui_mons"] =
     },
 
     {
-      name="mix_it_up_upper_range",
+      name="float_mix_it_up_upper_range",
       label=_("Upper Bound"),
-      choices=UI_MONS.MIX_QUANTITIES,
-      default="nuts",
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10.00,
+      increment = .05,
+      default = 10,
+      nan = "",
       tooltip="If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored.",
     },
 
     {
-      name="mix_it_up_lower_range",
+      name="float_mix_it_up_lower_range",
       label=_("Lower Bound"),
-      choices=UI_MONS.MIX_QUANTITIES,
-      default="scarce",
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10.00,
+      increment = .05,
+      default = 0,
+      nan = "",
       tooltip="If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored.",
       gap = 1,
     },

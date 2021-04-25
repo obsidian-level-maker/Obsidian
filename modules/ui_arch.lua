@@ -20,17 +20,6 @@
 
 UI_ARCH = { }
 
-UI_ARCH.ABSURDITY_CHOICES =
-{
-  "none", _("NONE"),
-  "100",  _("Every Level"),
-  "85",   _("85% of Levels"),
-  "75",   _("75% of Levels"),
-  "50",   _("50% of Levels"),
-  "25",   _("25% of Levels"),
-  "10",   _("10% of Levels")
-}
-
 UI_ARCH.ZDOOM_VISTA_CHOICES =
 {
   "enable",        _("Enable"),
@@ -95,9 +84,9 @@ OB_MODULES["ui_arch"] =
       max = 75,
       increment = 1,
       default = 7,
-      nan= "7:Mix It Up,8:Episodic,9:Progressive,10:10(Microscopic),16:16(Miniature)," ..
-      "22:22(Tiny),30:30(Small),36:36(Average),42:42(Large),48:48(Huge),58:58(Colossal)," ..
-      "66:66(Gargantuan),75:75(Transcendent),",
+      nan= "7:Mix It Up,8:Episodic,9:Progressive,10:10 (Microscopic),16:16 (Miniature)," ..
+      "22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal)," ..
+      "66:66 (Gargantuan),75:75 (Transcendent),",
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
       "at sizes of 50 and above, Autodetail is required on. (on by default if you do not have " ..
       "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable."
@@ -172,10 +161,15 @@ OB_MODULES["ui_arch"] =
     },
 
     {
-      name = "layout_absurdity",
+      name = "float_layout_absurdity",
       label = _("Layout Absurdity"),
-      choices=UI_ARCH.ABSURDITY_CHOICES,
-      default="50",
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
       tooltip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
       "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
       "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
