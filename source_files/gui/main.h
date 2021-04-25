@@ -24,8 +24,8 @@
 #include <cstddef>
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
-#define OBSIDIAN_VERSION "Beta 17"
-#define OBSIDIAN_HEX_VER 0x011
+#define OBSIDIAN_VERSION "Beta 19 Preview"
+#define OBSIDIAN_HEX_VER 0x013
 #define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
 
 #define CONFIG_FILENAME "CONFIG.txt"
