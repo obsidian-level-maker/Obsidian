@@ -168,22 +168,50 @@ OB_MODULES["level_control"] =
 
     level_upper_bound =
     {
-      name = "level_upper_bound",
+      name = "float_level_upper_bound",
       label = _("Upper Bound"),
       priority = 6,
+      valuator = "slider",
+      units = "",
+      min = 10,
+      max = 75,
+      increment = 1,
+      default = 75,
+      nan = "10:10 (Microscopic)," ..
+      "16:16 (Miniature)," ..
+      "22:22 (Tiny)," ..
+      "30:30 (Small)," ..
+      "36:36 (Average)," ..
+      "42:42 (Large)," ..
+      "48:48 (Huge)," ..
+      "58:58 (Colossal)," ..
+      "66:66 (Gargantuan)," ..
+      "75:75 (Transcendent),",
       tooltip = "Fine tune upper limit for Level Size Episodic, Progressive and Mixed options.",
-      choices = THEME_CONTROL.SIZE_CHOICES,
-      default = "trans",
     },
 
     level_lower_bound =
     {
-      name = "level_lower_bound",
+      name = "float_level_lower_bound",
       label = _("Lower Bound"),
       priority = 5,
+      valuator = "slider",
+      units = "",
+      min = 10,
+      max = 75,
+      increment = 1,
+      default = 10,
+      nan = "10:10 (Microscopic)," ..
+      "16:16 (Miniature)," ..
+      "22:22 (Tiny)," ..
+      "30:30 (Small)," ..
+      "36:36 (Average)," ..
+      "42:42 (Large)," ..
+      "48:48 (Huge)," ..
+      "58:58 (Colossal)," ..
+      "66:66 (Gargantuan)," ..
+      "75:75 (Transcendent),",
       tooltip = "Fine tune lower limit for Level Size Episodic, Progressive and Mixed options.",
-      choices = THEME_CONTROL.SIZE_CHOICES,
-      default = "micro",
       gap = 1,
     },
 

@@ -49,12 +49,6 @@ MARINE_CLOSET_TUNE.TECH =
   "bfg",    _("BFG Fiesta"),
 }
 
-MARINE_CLOSET_TUNE.YN =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
-}
-
 MARINE_CLOSET_TUNE.HEALTH =
 {
   "50",    _("50"),
@@ -1336,7 +1330,7 @@ end
 function MARINE_CLOSET_TUNE.calc_closets()
   if rand.odds(tonumber(PARAM.m_c_chance))
   and not LEVEL.prebuilt
-  and not (PARAM.m_c_boss == "no" and LEVEL.is_procedural_gotcha) then
+  and not (gui.get_module_button_value("gzdoom_marine_closet", "bool_m_c_boss") == 0 and LEVEL.is_procedural_gotcha) then
     local rngmin
     local rngmax
 
@@ -1426,7 +1420,7 @@ function MARINE_CLOSET_TUNE.all_done()
 
   local scripty = MARINE_CLOSET_TUNE.TEMPLATES.ZSC
 
-  if PARAM.m_c_power == "yes" then
+  if gui.get_module_button_value("gzdoom_marine_closet", "bool_m_c_power") == 1 then
     if PARAM.m_c_sprites == "no" then
       scripty = scripty .. MARINE_CLOSET_TUNE.TEMPLATES.MSTRN
     else
@@ -1442,7 +1436,7 @@ function MARINE_CLOSET_TUNE.all_done()
 
   scripty = string.gsub(scripty, "MHEALTH", PARAM.m_c_health)
 
-  if PARAM.m_c_follow == "yes" then
+  if gui.get_module_button_value("gzdoom_marine_closet", "bool_m_c_follow") == 1 == "yes" then
     scripty = string.gsub(scripty, "MFOLLOW", "true")
   else
     scripty = string.gsub(scripty, "MFOLLOW", "false")
@@ -1614,21 +1608,21 @@ OB_MODULES["gzdoom_marine_closets"] =
 
     m_c_power =
     {
-      name = "m_c_power",
+      name = "bool_m_c_power",
       label = _("Strong Marines"),
       priority = 91,
-      choices = MARINE_CLOSET_TUNE.YN,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = "Influences whether marines are as accurate and rapid firing as player, or are weaker.",
     },
 
     m_c_follow =
     {
-      name = "m_c_follow",
+      name = "bool_m_c_follow",
       label = _("Followers"),
       priority = 90,
-      choices = MARINE_CLOSET_TUNE.YN,
-      default = "no",
+      valuator = "button",
+      default = 0,
       tooltip = "By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\n" ..
       "If this is enabled marines will much harder prioritize following player and will teleport if they are too far away.",
     },
@@ -1700,11 +1694,11 @@ OB_MODULES["gzdoom_marine_closets"] =
     },
     m_c_boss =
     {
-      name = "m_c_boss",
+      name = "bool_m_c_boss",
       label = _("Allow in Gotchas"),
       priority = 83,
-      choices = MARINE_CLOSET_TUNE.YN,
-      default = "no",
+      valuator = "button",
+      default = 0,
       tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
     },
     m_c_color =

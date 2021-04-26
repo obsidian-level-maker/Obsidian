@@ -149,29 +149,16 @@ function Level_determine_map_size(LEV)
 
   -- Since we have other sizes and Auto-Detail, we can have these bigger sizes
   -- now. -Armaetus, July 9th, 2019,
-  local SIZES =
-  {
-    micro=10,
-    mini=16,
-    tiny=22,
-    small=30,
-    average=36,
-    large=42,
-    huge=48,
-    colossal=58,
-    gargan=66,
-    trans=76,
-  }
 
-  local ob_size = OB_CONFIG.size
+  local ob_size = gui.get_module_slider_value("ui_arch", "float_size")
 
   local W, H
 
   -- there is no real "progression" when making a single level.
   -- hence use the average size instead.
   if OB_CONFIG.length == "single" then
-    if ob_size == "prog" or ob_size == "epi" then
-      ob_size = "average"
+    if ob_size == 8 or ob_size == 9 then
+      ob_size = 36
     end
   end
 
@@ -179,80 +166,33 @@ function Level_determine_map_size(LEV)
 
   -- Readjusted probabilities once again, added "Micro" size as suggested by activity
   -- in the Discord server. -Armaetus, June 30th, 2019,
-  if ob_size == "mixed" then
-    local MIXED_PROBS =
-    {
-      micro=6,
-      mini=15,
-      tiny=50,
-      small=110,
-      average=165,
-      large=80,
-      huge=60,
-      colossal=15,
-      gargan=5,
-      trans=3,
-    }
+  if ob_size == 7 then
 
-    local MIXED_PROBS_SKEW_SMALL =
-    {
-      micro=384,
-      mini=256,
-      tiny=170,
-      small=114,
-      average=76,
-      large=51,
-      huge=34,
-      colossal=23,
-      gargan=15,
-      trans=10,
-    }
-
-    local MIXED_PROBS_SKEW_LARGE =
-    {
-      micro=10,
-      mini=15,
-      tiny=23,
-      small=34,
-      average=51,
-      large=76,
-      huge=114,
-      colossal=170,
-      gargan=256,
-      trans=384,
-    }
-
-    local prob_table = MIXED_PROBS
+    local result_skew = 1.0
+    local low = 10
+    local high = 75
 
     if PARAM.level_size_bias then
       if PARAM.level_size_bias == "small" then
-        prob_table = MIXED_PROBS_SKEW_SMALL
+        result_skew = .80
       elseif PARAM.level_size_bias == "large" then
-        prob_table = MIXED_PROBS_SKEW_LARGE
+        result_skew = 1.20
       end
     end
 
     -- Level Control fine tune for Mix It Up
     if PARAM.level_upper_bound then
-      for k,LEV in pairs(prob_table) do
-        if SIZES[k] > SIZES[PARAM.level_upper_bound] then
-          prob_table[k] = 0
-        end
-      end
+      high = gui.get_module_slider_value("level_control", "level_upper_bound")
     end
 
     if PARAM.level_lower_bound then
-      for k,LEV in pairs(prob_table) do
-        if SIZES[k] < SIZES[PARAM.level_lower_bound] then
-          prob_table[k] = 0
-        end
-      end
+      low = gui.get_module_slider_value("level_control", "level_lower_bound")
     end
-
-    ob_size = rand.key_by_probs(prob_table)
+    
+    ob_size = math.clamp(10, int(gui.random_between(low, high) * result_skew), 75)
   end
 
-  if ob_size == "prog" or ob_size == "epi" then
+  if ob_size == 8 or ob_size == 9 then
 
     -- Progressive --
 
@@ -264,19 +204,19 @@ function Level_determine_map_size(LEV)
 
     local along = LEV.game_along ^ ramp_factor
 
-    if ob_size == "epi" then along = LEV.ep_along end
+    if ob_size == 8 then along = LEV.ep_along end
 
     along = math.clamp(0, along, 1)
 
     -- Level Control fine tune for Prog/Epi
 
-    -- default when Level Contro lis off: ramp from "small" --> "large",
+    -- default when Level Control is off: ramp from "small" --> "large",
     local def_small = 22
     local def_large = 24
 
     if PARAM.level_upper_bound then
-      def_small = SIZES[PARAM.level_lower_bound]
-      def_large = SIZES[PARAM.level_upper_bound] - def_small
+      def_small = gui.get_module_slider_value("level_control", "level_lower_bound")
+      def_large = gui.get_module_slider_value("level_control", "level_upper_bound") - def_small
     end
 
     -- this basically ramps up
@@ -285,11 +225,11 @@ function Level_determine_map_size(LEV)
 
     -- Single Size --
 
-    W = SIZES[ob_size]
+    W = ob_size
   end
 
   if not W then
-    error("Unknown size keyword: " .. tostring(ob_size))
+    error("Invalid value for size : " .. tostring(ob_size))
   end
 
   gui.printf("Initial size for " .. LEV.name .. ": " .. W .. "\n")
@@ -499,15 +439,19 @@ function Episode_plan_monsters()
 
 
   local function calc_monster_level(LEV)
-    if OB_CONFIG.strength == "crazy" then
-      LEV.monster_level = 12
+  
+    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+  
+    if mon_strength == 12 then
+      LEV.monster_level = mon_strength
       return
     end
 
     local mon_along = LEV.game_along
+    local ramp_up = gui.get_module_slider_value("ui_mons", "float_ramp_up")
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
-    if PARAM.episodic_monsters or OB_CONFIG.ramp_up == "epi" then
+    if PARAM.episodic_monsters or ramp_up == 0.45 then
       mon_along = (LEV.ep_along + LEV.game_along) / 2
     end
 
@@ -529,12 +473,18 @@ function Episode_plan_monsters()
     -- apply the user Ramp-up setting
     -- [ and some tweaks for the Strength setting ]
 
-    local factor = RAMP_UP_FACTORS[OB_CONFIG.ramp_up] or 1.0
+    local factor
+
+    if ramp_up > 0.45 then
+      factor = ramp_up
+    else
+      factor = 1.0
+    end
 
     mon_along = mon_along * factor
 
-    if OB_CONFIG.strength == "harder" then mon_along = mon_along + 0.1 end
-    if OB_CONFIG.strength == "tough"  then mon_along = mon_along + 0.2 end
+    -- New adjustments for Monster Strength slider...may need to tune
+    mon_along = mon_along + (mon_strength / 10)
 
     mon_along = 1.0 + (PARAM.mon_along_factor or 8.0) * mon_along
 
@@ -579,7 +529,7 @@ function Episode_plan_monsters()
     if not info.theme then return true end
 
     -- anything goes in CRAZY mode
-    if OB_CONFIG.strength == "crazy" then return true end
+    if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then return true end
 
     return info.theme == LEV.theme_name
   end
@@ -670,7 +620,7 @@ function Episode_plan_monsters()
 
     for name,_ in pairs(LEV.seen_monsters) do
       local info = GAME.MONSTERS[name]
-      if not info.boss_type or OB_CONFIG.strength == "crazy" or LEV.is_procedural_gotcha then
+      if not info.boss_type or gui.get_module_slider_value("ui_mons", "float_strength") == 12 or LEV.is_procedural_gotcha then
         LEV.global_pal[name] = 1
       elseif info.boss_type and OB_CONFIG.bossesnormal ~= "no" then
         if info.boss_type == "minor" then
@@ -779,7 +729,7 @@ function Episode_plan_monsters()
             bprob = 0
           end
         end
-        if PARAM.boss_gen_types == "yes" and info.prob == 0 then
+        if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_types") == 1 and info.prob == 0 then
           bprob = 0
         end
         tab[name] = bprob
@@ -1093,13 +1043,13 @@ function Episode_plan_monsters()
       if LEV.prebuilt  then goto continue end
       if LEV.is_secret then goto continue end
 
-      if OB_CONFIG.strength == "crazy" then goto continue end
+      if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then goto continue end
       if OB_CONFIG.bosses   == "none"  then goto continue end
 
       pick_boss_quotas(LEV)
 
       -- hax for procedural gotchas
-      if LEV.is_procedural_gotcha and PARAM.gotcha_boss_fight == "yes" then
+      if LEV.is_procedural_gotcha and gui.get_module_button_value("procedural_gotcha", "gotcha_boss_fight") == 1 then
         if LEV.game_along <= 0.33 then
           if LEV.boss_quotas.minor < 1 then LEV.boss_quotas.minor = 1 end
         elseif LEV.game_along > 0.33 and LEV.game_along <= 0.66 then
@@ -1738,7 +1688,7 @@ function Episode_plan_weapons()
 
     -- prefer simpler weapons for start rooms
     -- [ except in crazy monsters mode, player may need a bigger weapon! ]
-    if is_start and OB_CONFIG.strength ~= "crazy" or LEV.is_procedural_gotcha ~= "true" then
+    if is_start and gui.get_module_slider_value("ui_mons", "float_strength") < 12 or LEV.is_procedural_gotcha ~= "true" then
       if level <= 2 then prob = prob * 4 end
       if level == 3 then prob = prob * 2 end
 
@@ -2924,7 +2874,7 @@ function Level_make_all()
 
   -- semi-supported games warning
   if OB_CONFIG.game ~= "doom2" then
-    if not PARAM.extra_games or PARAM.extra_games ~= "yes" then
+    if not PARAM.extra_games or gui.get_module_button_value("debugger", "bool_extra_games") == 0 then
       error("Warning: ObAddon development is mostly focused " ..
     "on creating content for the Doom 2 game setting.\n\n" ..
     "As a consequence, other games available on the list are " ..

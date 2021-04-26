@@ -884,15 +884,13 @@ function Grower_calc_rule_probs()
 
   -- Layout Absurdifier
 
-  if OB_CONFIG.layout_absurdity then
+  if OB_CONFIG.float_layout_absurdity then
     gui.printf("\n--== Layout Absurdity Module ==--\n\n")
   end
 
   if not LEVEL.is_procedural_gotcha then
-    if OB_CONFIG.layout_absurdity ~= "none" then
-      if rand.odds(int(OB_CONFIG.layout_absurdity)) then
+    if gui.random_between(0, 100) <= gui.get_module_slider_value("ui_arch", "float_layout_absurdity") then
         LEVEL.is_absurd = true
-      end
     end
   end
 
@@ -4671,11 +4669,11 @@ function Grower_create_rooms()
   Seed_squarify()
 
   -- debugging aid
-  if OB_CONFIG.svg or (PARAM.save_svg and PARAM.save_svg == "yes") then
+  if OB_CONFIG.svg or (PARAM.save_svg and gui.get_module_button_value("debugger", "bool_save_svg") == 1) then
     Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
   end
 
-  if PARAM.shape_rule_stats == "yes" then
+  if gui.get_module_button_value("debugger", "bool_shape_rule_stats") == 1 then
     table.sort(GROWER_DEBUG_INFO, function(A,B)
     return (A.trials > B.trials) end)
 

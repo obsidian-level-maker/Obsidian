@@ -49,14 +49,6 @@ PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES =
   "tiny", _("Tiny")
 }
 
-PROCEDURAL_GOTCHA_FINE_TUNE.FORCE_BOSS_FIGHT_CHOICES =
-{
-  "yes", _("Yes"),
-  "no",  _("No")
-}
-
-
-
 function PROCEDURAL_GOTCHA_FINE_TUNE.setup(self)
   for name,opt in pairs(self.options) do
     local value = self.options[name].value
@@ -111,10 +103,10 @@ OB_MODULES["procedural_gotcha"] =
 
     gotcha_boss_fight =
     {
-      name = "gotcha_boss_fight",
+      name = "bool_gotcha_boss_fight",
       label=_("Force Boss Fight"),
-      choices=PROCEDURAL_GOTCHA_FINE_TUNE.FORCE_BOSS_FIGHT_CHOICES,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = "EXPERIMENTAL: Forces procedural gotchas to have guaranteed boss fights.",
     },
   },

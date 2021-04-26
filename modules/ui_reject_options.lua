@@ -18,12 +18,6 @@
 
 UI_REJECT_OPTIONS = { }
 
-UI_REJECT_OPTIONS.YES_NO =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
-}
-
 OB_MODULES["ui_reject_options"] =
 {
   label = _("Map Build Options"),
@@ -36,10 +30,10 @@ OB_MODULES["ui_reject_options"] =
   options =
   {
     {
-      name = "build_reject",
+      name = "bool_build_reject",
       label = _("Build REJECT"),
-      choices = UI_REJECT_OPTIONS.YES_NO,
-      default = "no",
+      valuator = "button",
+      default = 0,
       tooltip = "Choose to build a proper REJECT lump. WARNING: This can be very time consuming!",
     }
   }

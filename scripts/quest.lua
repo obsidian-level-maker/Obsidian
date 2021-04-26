@@ -2604,7 +2604,7 @@ function Quest_nice_items()
   -- collect all the items we might use
   start_items = start_palette()
 
-  if OB_CONFIG.strength == "crazy" then
+  if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then
     normal_items = crazy_palette()
   else
     normal_items = normal_palette()
@@ -3284,7 +3284,9 @@ function Quest_room_themes()
     local wg_tab = GAME.THEMES[next_theme].outdoor_wall_groups
 
     if wg_tab then
-      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab) or "PLAIN"
+      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab)
+    else
+      LEVEL.alt_outdoor_wall_group = "none"
     end
 
     if exit_room.is_outdoor and not exit_room.is_park then
