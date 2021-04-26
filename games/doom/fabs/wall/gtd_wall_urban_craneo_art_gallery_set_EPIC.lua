@@ -1,13 +1,11 @@
 PREFABS.Wall_epic_craneo_paintings =
 {
-  file   = "wall/gtd_EPIC_craneo_art_gallery_set.wad",
+  file   = "wall/gtd_wall_urban_craneo_art_gallery_set_EPIC.wad",
   map    = "MAP01",
 
   prob   = 50,
 
   group = "gtd_epic_craneo_paintings",
-
-  texture_pack = "armaetus",
 
   where  = "edge",
   height = 128,
@@ -31,6 +29,6 @@ PREFABS.Wall_epic_craneo_paintings =
     CPHRSEMN = 50,
     CPHRSMN2 = 50,
     CPSATRN = 50,
-    CPVLAD = 50,
-  },
+    CPVLAD = 50
+  }
 }
