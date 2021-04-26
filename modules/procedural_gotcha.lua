@@ -101,7 +101,7 @@ OB_MODULES["procedural_gotcha"] =
       tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
     },
 
-    gotcha_boss_fight =
+    bool_gotcha_boss_fight =
     {
       name = "bool_gotcha_boss_fight",
       label=_("Force Boss Fight"),
