@@ -559,4 +559,28 @@ Texture "OBTSBF3R", 128, 128
 		Blend "#E41818"
 	}
 }
+
+Texture "OBTBCMR1", 128, 128
+{
+	Patch "OBTBCEM1", 0, 0
+	{
+		Blend "#EB5454"
+	}
+}
+
+Texture "OBTBCMR2", 128, 128
+{
+	Patch "OBTBCEM2", 0, 0
+	{
+		Blend "#EB5454"
+	}
+}
+
+Texture "OBTBCMR3", 128, 128
+{
+	Patch "OBTBCEM3", 0, 0
+	{
+		Blend "#EB5454"
+	}
+}
 ]]

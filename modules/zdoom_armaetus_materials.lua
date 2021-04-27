@@ -1365,6 +1365,15 @@ ARMAETUS_MATERIALS = {
 
   OBTSBGRE = { t="OBTSBGRE", f="DARKF02"}, -- bloodied version of the hex bricks
 
+  -- custom cement walls (128px)
+  OBTBCEM1 = { t="OBTBCEM1", f="FLOOR3_3"},
+  OBTBCEM2 = { t="OBTBCEM2", f="SLIME16"},
+  OBTBCEM3 = { t="OBTBCEM3", f="DEM1_6"},
+
+  OBTBCMR1 = { t="OBTBCMR1", f="RMARB2"},
+  OBTBCMR2 = { t="OBTBCMR2", f="FLAT15"},
+  OBTBCMR3 = { t="OBTBCMR3", f="GMET02"},
+
   -- silver flats (128px)
   OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
@@ -1385,11 +1394,6 @@ ARMAETUS_MATERIALS = {
   OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
   OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
-
-  -- custom cement (128px)
-  OBTBCEM1 = { t="OBTBCEM1", f="FLOOR3_3"},
-  OBTBCEM2 = { t="OBTBCEM2", f="SLIME16"},
-  OBTBCEM3 = { t="OBTBCEM3", f="DEM1_6"},
 
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)

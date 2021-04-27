@@ -1502,8 +1502,10 @@ ARMAETUS_ROOM_THEMES =
       HELLCMT8 = 15,
 
       OBTBCEM1 = 30,
-      OBTBCEM2 = 30,
-      OBTBCEM3 = 30
+      OBTBCEM3 = 30,
+
+      OBTBCMR1 = 30,
+      OBTBCMR3 = 30,
     },
 
     floors =
@@ -1574,7 +1576,11 @@ ARMAETUS_ROOM_THEMES =
 
       OBTBCEM1 = 30,
       OBTBCEM2 = 30,
-      OBTBCEM3 = 30
+      OBTBCEM3 = 30,
+
+      OBTBCMR1 = 30,
+      OBTBCMR2 = 30,
+      OBTBCMR3 = 30,
     },
 
     floors =
@@ -1734,6 +1740,10 @@ ARMAETUS_ROOM_THEMES =
       REDMARB1 = 20,
       REDMARB2 = 60,
       REDMARB3 = 60,
+
+      OBTBCMR1 = 30,
+      OBTBCMR2 = 30,
+      OBTBCMR3 = 30,
     },
 
     floors =
