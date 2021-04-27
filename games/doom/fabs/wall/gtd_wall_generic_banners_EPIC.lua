@@ -1,6 +1,6 @@
 PREFABS.Wall_epic_obaddon_banner =
 {
-  file   = "wall/gtd_EPIC_wall_banners.wad",
+  file   = "wall/gtd_wall_generic_banners_EPIC.wad",
   map    = "MAP01",
 
   prob   = 35,
