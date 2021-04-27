@@ -48,3 +48,45 @@ PREFABS.Light_gtd_black_diamond_quad_blue =
 
   flat_LIGHTS3 = "LIGHTS4"
 }
+
+-----------
+-- MAP02 --
+-----------
+
+PREFABS.Light_gtd_tiny_single_red =
+{
+  template = "Light_gtd_black_diamond_quad_white",
+  map = "MAP02",
+
+  light_color = "red",
+}
+
+PREFABS.Light_gtd_tiny_single_blue =
+{
+  template = "Light_gtd_black_diamond_quad_white",
+  map = "MAP02",
+
+  light_color = "blue",
+
+  flat_LITES01 = "LITES02"
+}
+
+PREFABS.Light_gtd_tiny_single_orange =
+{
+  template = "Light_gtd_black_diamond_quad_white",
+  map = "MAP02",
+
+  light_color = "orange",
+
+  flat_LITES01 = "LITES03"
+}
+
+PREFABS.Light_gtd_tiny_single_green =
+{
+  template = "Light_gtd_black_diamond_quad_white",
+  map = "MAP02",
+
+  light_color = "green",
+
+  flat_LITES01 = "LITES04"
+}
