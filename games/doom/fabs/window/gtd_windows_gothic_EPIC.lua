@@ -1,6 +1,6 @@
 PREFABS.Window_gothic_epic_1 =
 {
-  file   = "window/gtd_wall_windows_gothic_EPIC.wad",
+  file   = "window/gtd_windows_gothic_EPIC.wad",
   map    = "MAP01",
 
   group  = "gtd_window_gothic_epic",
