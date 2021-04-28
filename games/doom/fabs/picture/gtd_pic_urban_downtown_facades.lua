@@ -134,7 +134,7 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     CITY14 = 25,
 
     -- technological-looking facades
-    COMPOHSO = 5,
+    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPBLAK = 2,
@@ -403,7 +403,7 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     CITY14 = 25,
 
     -- technological-looking facades
-    COMPOHSO = 5,
+    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPBLAK = 2,

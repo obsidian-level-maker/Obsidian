@@ -65,7 +65,7 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CITY14 = 15,
 
     -- technological-looking facades
-    COMPOHSO = 5,
+    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPBLAK = 2,
@@ -129,7 +129,7 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CITY14 = 15,
 
     -- technological-looking facades
-    COMPOHSO = 5,
+    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPBLAK = 2,
