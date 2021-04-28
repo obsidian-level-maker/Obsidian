@@ -4,6 +4,7 @@ PREFABS.Pic_in_wall_vending_machines =
   map = "MAP01",
 
   prob = 25,
+
   env = "building",
   theme = "!hell",
 
@@ -12,6 +13,8 @@ PREFABS.Pic_in_wall_vending_machines =
   where  = "seeds",
 
   height = 128,
+
+  deep = 16,
 
   seed_w = 2,
   seed_h = 1,
@@ -28,7 +31,8 @@ PREFABS.Pic_in_wall_vending_machines =
     OBVNMCH5 = 50,
   },
 
-  z_fit = "top",
+  x_fit = "frame",
+  y_fit = "top"
 
   --sound = "Vending_Machine_Hum", -- Needs ambient sound thing applied!
 }
