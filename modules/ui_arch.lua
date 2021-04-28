@@ -50,21 +50,6 @@ UI_ARCH.PROC_GOTCHA_CHOICES =
   "all",   _("Everything")
 }
 
-UI_ARCH.STREETS_CHOICES =
-{
-  "100urban", _("All Urban Maps"),
-  "75urban",  _("75% of Urban Maps"),
-  "50urban",  _("50% of Urban Maps"),
-  "25urban",  _("25% of Urban Maps"),
-  "13urban",  _("13% of Urban Maps"),
-  "all",      _("All Levels"),
-  "75",       _("75% of All Levels"),
-  "50",       _("50% of All Levels"),
-  "25",       _("25% of All Levels"),
-  "13",       _("13% of All Levels"),
-  "no",       _("NONE")
-}
-
 OB_MODULES["ui_arch"] =
 {
   label = _("Architecture"),
@@ -103,11 +88,24 @@ OB_MODULES["ui_arch"] =
     },
 
     {
-      name = "streets_mode",
+      name = "float_streets_mode",
       label = _("Streets Mode"),
-      choices = UI_ARCH.STREETS_CHOICES,
-      default = "no",
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 15,
+      nan = "",
       tooltip = "Allows Oblige to create large street-like outdoor rooms."
+    },
+
+    {
+      name = "bool_urban_streets_mode",
+      label=_("Urban Only Streets"),
+      valuator = "button",
+      default = 1,
+      tooltip="Changes streets mode percentage to affect all themes or only urban.",
     },
 
     {
