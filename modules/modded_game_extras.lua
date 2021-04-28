@@ -33,7 +33,7 @@ MODDED_GAME_EXTRAS.HN_CHOICES =
 MODDED_GAME_EXTRAS.ACTOR_NAME_GEN_CHOICES =
 {
   "zs",      _("ZScript - Universal"),
-  "zs_pb",   _("ZScript - Project Brutality"),
+  --"zs_pb",   _("ZScript - Project Brutality"), -- REMOVE-ME (and associated code)
   "none",    _("NONE"),
 }
 

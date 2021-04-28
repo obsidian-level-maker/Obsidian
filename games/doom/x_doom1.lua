@@ -3346,20 +3346,13 @@ function ULTDOOM.get_levels()
         end
       end
 
-      -- handling for street mode
-      if not LEV.is_procedural_gotcha or not LEV.prebuilt then
-        if OB_CONFIG.streets_mode == "75" and rand.odds(75) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "50" and rand.odds(50) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "25" and rand.odds(25) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "13" and rand.odds(13) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "all" then
-          LEV.has_streets = true
-        end
+    -- handling for street mode
+    -- actual handling for urban percentages are done
+    if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+      if rand.odds(gui.get_module_slider_value("ui_arch", "float_streets_mode")) then
+        LEV.has_streets = true
       end
+    end
 
       -- handling for linear mode chance choices
     if not LEV.prebuilt then

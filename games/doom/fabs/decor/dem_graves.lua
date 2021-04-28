@@ -14,6 +14,8 @@ PREFABS.Decor_Dem_Grave1 =
   engine = "zdoom",
 
   prob   = 15000, --100
+  skip_prob = 85,
+
   theme  = "!tech",
   env    = "park",
 

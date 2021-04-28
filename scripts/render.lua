@@ -374,7 +374,7 @@ function Render_edge(E)
     end
 
     -- when a wall group is not selected, use the ungrouped walls
-    if not def then
+    if not def or (def and def.stop_group) then
       reqs.group = nil
       def = Fab_pick(reqs)
     end

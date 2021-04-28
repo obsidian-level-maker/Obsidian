@@ -6,6 +6,7 @@ PREFABS.Pic_urban_mirrors_edge_wall =
   map    = "MAP01",
 
   prob   = 150,
+  skip_prob = 50,
   theme = "urban",
 
   env = "building",
@@ -38,6 +39,7 @@ PREFABS.Pic_urban_mirrors_edge_wall_EPIC =
   map    = "MAP01",
 
   prob   = 150,
+  skip_prob = 50,
   theme = "urban",
 
   env = "building",

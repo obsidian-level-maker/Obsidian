@@ -10,14 +10,14 @@ PREFABS.Window_slump_tall_1 =
   where  = "edge",
   seed_w = 1,
 
-  height = 128,
+  height = 96,
   deep   = 16,
   over   = 16,
 
   bound_z1 = 0,
-  bound_z2 = 128,
+  bound_z2 = 96,
 
-  z_fit = "top"
+  z_fit = { 56,72 }
 }
 
 PREFABS.Window_slump_tall_2 =

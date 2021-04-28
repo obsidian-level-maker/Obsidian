@@ -560,27 +560,27 @@ Texture "OBTSBF3R", 128, 128
 	}
 }
 
-Texture "G8_BR1GY", 128, 128
+Texture "OBTBCMR1", 128, 128
 {
-	Patch "G8_BRNW1", 0, 0
+	Patch "OBTBCEM1", 0, 0
 	{
-		Translation "0:255=#[128,128,128]"
+		Blend "#EB5454"
 	}
 }
 
-Texture "G8_BR2GY", 128, 128
+Texture "OBTBCMR2", 128, 128
 {
-	Patch "G8_BRNW2", 0, 0
+	Patch "OBTBCEM2", 0, 0
 	{
-		Translation "0:255=#[128,128,128]"
+		Blend "#EB5454"
 	}
 }
 
-Texture "G8_BR3GY", 128, 128
+Texture "OBTBCMR3", 128, 128
 {
-	Patch "G8_BRNW3", 0, 0
+	Patch "OBTBCEM3", 0, 0
 	{
-		Translation "0:255=#[128,128,128]"
+		Blend "#EB5454"
 	}
 }
 ]]

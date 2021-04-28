@@ -1,12 +1,12 @@
 PREFABS.Wall_hell_bottom_glass =
 {
-  file   = "wall/gtd_wall_hell_bottom_glass_set.wad",
+  file   = "wall/gtd_wall_gothic_bottom_glass_set.wad",
   map    = "MAP01",
 
   prob   = 50,
   env = "building",
 
-  group = "gtd_wall_hell_bottom_glass",
+  group = "gtd_wall_gothic_bottom_glass",
 
   where  = "edge",
   deep   = 16,
