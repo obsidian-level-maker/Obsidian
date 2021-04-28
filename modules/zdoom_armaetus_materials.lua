@@ -1365,6 +1365,15 @@ ARMAETUS_MATERIALS = {
 
   OBTSBGRE = { t="OBTSBGRE", f="DARKF02"}, -- bloodied version of the hex bricks
 
+  -- custom cement walls (128px)
+  OBTBCEM1 = { t="OBTBCEM1", f="FLOOR3_3"},
+  OBTBCEM2 = { t="OBTBCEM2", f="SLIME16"},
+  OBTBCEM3 = { t="OBTBCEM3", f="DEM1_6"},
+
+  OBTBCMR1 = { t="OBTBCMR1", f="RMARB2"},
+  OBTBCMR2 = { t="OBTBCMR2", f="FLAT15"},
+  OBTBCMR3 = { t="OBTBCMR3", f="GMET02"},
+
   -- silver flats (128px)
   OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
@@ -1378,9 +1387,9 @@ ARMAETUS_MATERIALS = {
   G8_BRNF2 = { t="G8_BRNW3", f="G8_BRNF2"},
   G8_BRNF3 = { t="G8_BRNW2", f="G8_BRNF3"},
 
-  OBTSBF1B = { t="OBTBSLB2", f="OBTSBF1B"}, -- brown color composite
-  OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"},
-  OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"},
+  OBTSBF1B = { t="OBTBSB3B", f="OBTSBF1B"}, -- brown color composite
+  OBTSBF2B = { t="OBTBSB4B", f="OBTSBF2B"},
+  OBTSBF3B = { t="OBTBSB5B", f="OBTSBF3B"},
 
   OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},

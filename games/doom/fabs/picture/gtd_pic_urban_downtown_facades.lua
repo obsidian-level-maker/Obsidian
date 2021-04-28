@@ -25,7 +25,15 @@ PREFABS.Pic_urban_downtown_facade1_vanilla =
     MODWALL3 = 50,
     MODWALL4 = 50,
     BLAKWAL1 = 50,
-    BLAKWAL2 = 50
+    BLAKWAL2 = 50,
+
+    BIGBRIK3 = 7,
+    BRONZE4 = 10,
+    METAL6 = 10,
+    METAL7 = 10,
+    SPCDOOR3 = 10,
+    TEKGREN5 = 10,
+    TEKBRON2 = 10
   },
 
   flat_TLITE6_6 =
@@ -112,6 +120,7 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     MODWALL4 = 25,
     BLAKWAL1 = 25,
     BLAKWAL2 = 25,
+
     CITY01 = 50,
     CITY02 = 50,
     CITY03 = 50,
@@ -122,7 +131,56 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     CITY11 = 25,
     CITY12 = 25,
     CITY13 = 25,
-    CITY14 = 25
+    CITY14 = 25,
+
+    -- technological-looking facades
+    COMPOHSO = 5,
+    CMPTILE = 5,
+    --
+    COMPBLAK = 2,
+    COMPGREN = 2,
+    COMPBLUE = 2,
+    COMPRED = 2,
+    --
+    COMPTIL2 = 2,
+    COMPTIL3 = 2,
+    COMPTIL4 = 2,
+    COMPTIL5 = 2,
+    COMPTIL6 = 2,
+    --
+    SHAWHOSO = 2,
+    SHAWNDR = 2,
+    SHAWVENT = 2,
+    SHAWVEN2 = 2,
+    SILVBLU1 = 2,
+    TEKGRBLU = 2,
+    --
+    GRAYMET4 = 2,
+    GRAYMET6 = 2,
+    GRAYMET7 = 2,
+    GRAYMET8 = 2,
+    GRAYMET9 = 2,
+    GRAYMETA = 2,
+    GRAYMETB = 2,
+    GRAYMETC = 2,
+    --
+    TEKWALL8 = 2,
+    TEKWALL9 = 2,
+    TEKWALLA = 2,
+    TEKWALLB = 2,
+    TEKWALLC = 2,
+    TEKWALLD = 2,
+    TEKWALLE = 2,
+
+    BIGBRIK3 = 5,
+    BRONZE4 = 5,
+    TEKGREN5 = 5,
+    METAL6 = 5,
+    METAL7 = 5,
+
+    SPCDOOR3 = 10,
+    TEKGREN5 = 10,
+    TEKBRON2 = 10
   },
 
   flat_TLITE6_6 =
@@ -242,7 +300,15 @@ PREFABS.Pic_urban_downtown_facade3_vanilla =
     MODWALL3 = 50,
     MODWALL4 = 50,
     BLAKWAL1 = 50,
-    BLAKWAL2 = 50
+    BLAKWAL2 = 50,
+
+    BIGBRIK3 = 7,
+    BRONZE4 = 10,
+    METAL6 = 10,
+    METAL7 = 10,
+    SPCDOOR3 = 10,
+    TEKGREN5 = 10,
+    TEKBRON2 = 10
   },
 
   flat_TLITE6_6 =
@@ -323,6 +389,7 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     MODWALL4 = 25,
     BLAKWAL1 = 25,
     BLAKWAL2 = 25,
+
     CITY01 = 50,
     CITY02 = 50,
     CITY03 = 50,
@@ -333,7 +400,56 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     CITY11 = 25,
     CITY12 = 25,
     CITY13 = 25,
-    CITY14 = 25
+    CITY14 = 25,
+
+    -- technological-looking facades
+    COMPOHSO = 5,
+    CMPTILE = 5,
+    --
+    COMPBLAK = 2,
+    COMPGREN = 2,
+    COMPBLUE = 2,
+    COMPRED = 2,
+    --
+    COMPTIL2 = 2,
+    COMPTIL3 = 2,
+    COMPTIL4 = 2,
+    COMPTIL5 = 2,
+    COMPTIL6 = 2,
+    --
+    SHAWHOSO = 2,
+    SHAWNDR = 2,
+    SHAWVENT = 2,
+    SHAWVEN2 = 2,
+    SILVBLU1 = 2,
+    TEKGRBLU = 2,
+    --
+    GRAYMET4 = 2,
+    GRAYMET6 = 2,
+    GRAYMET7 = 2,
+    GRAYMET8 = 2,
+    GRAYMET9 = 2,
+    GRAYMETA = 2,
+    GRAYMETB = 2,
+    GRAYMETC = 2,
+    --
+    TEKWALL8 = 2,
+    TEKWALL9 = 2,
+    TEKWALLA = 2,
+    TEKWALLB = 2,
+    TEKWALLC = 2,
+    TEKWALLD = 2,
+    TEKWALLE = 2,
+
+    BIGBRIK3 = 5,
+    BRONZE4 = 5,
+    TEKGREN5 = 5,
+    METAL6 = 5,
+    METAL7 = 5,
+
+    SPCDOOR3 = 10,
+    TEKGREN5 = 10,
+    TEKBRON2 = 10
   },
 
   tex_STEP4 =

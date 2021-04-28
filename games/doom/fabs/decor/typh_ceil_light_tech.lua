@@ -122,6 +122,9 @@ PREFABS.Light_typh_flourescent_lamp_alt5 =
   tex_LITE3 = "REDWALL",
 }
 
+-----------
+-- MAP03 --
+-----------
 PREFABS.Light_typh_sticks =
 {
   template = "Light_typh_tech",
@@ -133,7 +136,7 @@ PREFABS.Light_typh_sticks =
   bound_z1 = -16,
 }
 
-PREFABS.Light_typh_sticks_alt =
+PREFABS.Light_typh_sticks_blue =
 {
   template = "Light_typh_tech",
   map = "MAP03",
@@ -147,7 +150,7 @@ PREFABS.Light_typh_sticks_alt =
   flat_FLAT1 = "CEIL4_2"
 }
 
-PREFABS.Light_typh_sticks_alt2 =
+PREFABS.Light_typh_sticks_red =
 {
   template = "Light_typh_tech",
   map = "MAP03",
@@ -161,6 +164,26 @@ PREFABS.Light_typh_sticks_alt2 =
   flat_FLAT1 = "FLAT5_3"
 }
 
+-- epic versions
+PREFABS.Light_typh_sticks_red_EPIC =
+{
+  template = "Light_typh_tech",
+  map = "MAP03",
+  prob = 80,
+
+  replaces = "Light_typh_sticks_red",
+
+  bound_z1 = -16,
+
+  light_color = "red",
+
+  tex_LITE5 = "COMPRED",
+  flat_FLAT1 = "FLAT5_3"
+}
+
+-----------
+-- MAP04 --
+-----------
 PREFABS.Light_typh_short =
 {
   template = "Light_typh_tech",
