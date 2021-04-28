@@ -1330,7 +1330,7 @@ end
 function MARINE_CLOSET_TUNE.calc_closets()
   if rand.odds(tonumber(PARAM.m_c_chance))
   and not LEVEL.prebuilt
-  and not (gui.get_module_button_value("gzdoom_marine_closet", "bool_m_c_boss") == 0 and LEVEL.is_procedural_gotcha) then
+  and not (gui.get_module_button_value("gzdoom_marine_closets", "bool_m_c_boss") == 0 and LEVEL.is_procedural_gotcha) then
     local rngmin
     local rngmax
 
@@ -1420,7 +1420,7 @@ function MARINE_CLOSET_TUNE.all_done()
 
   local scripty = MARINE_CLOSET_TUNE.TEMPLATES.ZSC
 
-  if gui.get_module_button_value("gzdoom_marine_closet", "bool_m_c_power") == 1 then
+  if gui.get_module_button_value("gzdoom_marine_closets", "bool_m_c_power") == 1 then
     if PARAM.m_c_sprites == "no" then
       scripty = scripty .. MARINE_CLOSET_TUNE.TEMPLATES.MSTRN
     else
@@ -1436,7 +1436,7 @@ function MARINE_CLOSET_TUNE.all_done()
 
   scripty = string.gsub(scripty, "MHEALTH", PARAM.m_c_health)
 
-  if gui.get_module_button_value("gzdoom_marine_closet", "bool_m_c_follow") == 1 == "yes" then
+  if gui.get_module_button_value("gzdoom_marine_closets", "bool_m_c_follow") == 1 == "yes" then
     scripty = string.gsub(scripty, "MFOLLOW", "true")
   else
     scripty = string.gsub(scripty, "MFOLLOW", "false")
@@ -1606,7 +1606,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Progressive: Marines start with pistols and get more powerful weapons through episode/megawad",
     },
 
-    m_c_power =
+    bool_m_c_power =
     {
       name = "bool_m_c_power",
       label = _("Strong Marines"),
@@ -1616,7 +1616,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       tooltip = "Influences whether marines are as accurate and rapid firing as player, or are weaker.",
     },
 
-    m_c_follow =
+    bool_m_c_follow =
     {
       name = "bool_m_c_follow",
       label = _("Followers"),
@@ -1692,7 +1692,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "If this is enabled, marines will use special sprites according to weapon they carry.\n" ..
       "With merge option sprites will be merged into oblige wad, otherwise they need to be loaded separately.",
     },
-    m_c_boss =
+    bool_m_c_boss =
     {
       name = "bool_m_c_boss",
       label = _("Allow in Gotchas"),
