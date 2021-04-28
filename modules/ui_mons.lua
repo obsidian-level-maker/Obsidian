@@ -83,7 +83,6 @@ OB_MODULES["ui_mons"] =
   side = "right",
   priority = 105,
   engine = "!vanilla",
-
   options =
   {
     {
@@ -95,7 +94,25 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = -0.10,
-      nan = "-0.10:Mix It Up,-0.05:Progressive,",
+      nan = "-0.10:Mix It Up," ..
+      "-0.05:Progressive," ..
+      "0:None," ..
+      "0.15:0.15 (Trivial)," ..
+      "0.35:0.35 (Sporadic)," ..
+      "0.7:0.7 (Meager)," ..
+      "1.0:1.0 (Easy)," ..
+      "1.3:1.3 (Modest)," ..
+      "1.5:1.5 (Bearable)," ..
+      "2.0:2.0 (Rough)," ..
+      "2.5:2.5 (Strenuous)," ..
+      "3.0:3.0 (Formidable)," ..
+      "3.5:3.5 (Harsh)," ..
+      "4.0:4.0 (Painful)," ..
+      "4.5:4.5 (Unforgiving)," ..
+      "5.0:5.0 (Punishing)," ..
+      "5.5:5.5 (Brutal)," ..
+      "6.0:6.0 (Draconian)," ..
+      "6.65:6.66 (Merciless),",     
       tooltip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
               "Mix It Up: randomizes quantities based on the prefered selection " ..
               "under the Fine Tune options below.\n\n" ..
