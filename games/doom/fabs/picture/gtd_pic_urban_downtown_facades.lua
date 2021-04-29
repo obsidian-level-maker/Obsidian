@@ -31,7 +31,6 @@ PREFABS.Pic_urban_downtown_facade1_vanilla =
     BRONZE4 = 10,
     METAL6 = 10,
     METAL7 = 10,
-    SPCDOOR3 = 10,
     TEKGREN5 = 10,
     TEKBRON2 = 10
   },
@@ -137,11 +136,6 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     CMPOHSO = 5,
     CMPTILE = 5,
     --
-    COMPBLAK = 2,
-    COMPGREN = 2,
-    COMPBLUE = 2,
-    COMPRED = 2,
-    --
     COMPTIL2 = 2,
     COMPTIL3 = 2,
     COMPTIL4 = 2,
@@ -164,21 +158,13 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     GRAYMETB = 2,
     GRAYMETC = 2,
     --
-    TEKWALL8 = 2,
-    TEKWALL9 = 2,
-    TEKWALLA = 2,
-    TEKWALLB = 2,
-    TEKWALLC = 2,
-    TEKWALLD = 2,
-    TEKWALLE = 2,
-
+    BIGDOORF = 5,
     BIGBRIK3 = 5,
     BRONZE4 = 5,
     TEKGREN5 = 5,
     METAL6 = 5,
     METAL7 = 5,
 
-    SPCDOOR3 = 10,
     TEKGREN5 = 10,
     TEKBRON2 = 10
   },
@@ -306,7 +292,6 @@ PREFABS.Pic_urban_downtown_facade3_vanilla =
     BRONZE4 = 10,
     METAL6 = 10,
     METAL7 = 10,
-    SPCDOOR3 = 10,
     TEKGREN5 = 10,
     TEKBRON2 = 10
   },
@@ -406,11 +391,6 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     CMPOHSO = 5,
     CMPTILE = 5,
     --
-    COMPBLAK = 2,
-    COMPGREN = 2,
-    COMPBLUE = 2,
-    COMPRED = 2,
-    --
     COMPTIL2 = 2,
     COMPTIL3 = 2,
     COMPTIL4 = 2,
@@ -433,21 +413,13 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     GRAYMETB = 2,
     GRAYMETC = 2,
     --
-    TEKWALL8 = 2,
-    TEKWALL9 = 2,
-    TEKWALLA = 2,
-    TEKWALLB = 2,
-    TEKWALLC = 2,
-    TEKWALLD = 2,
-    TEKWALLE = 2,
-
+    BIGDOORF = 5,
     BIGBRIK3 = 5,
     BRONZE4 = 5,
     TEKGREN5 = 5,
     METAL6 = 5,
     METAL7 = 5,
 
-    SPCDOOR3 = 10,
     TEKGREN5 = 10,
     TEKBRON2 = 10
   },
@@ -489,7 +461,28 @@ PREFABS.Pic_urban_downtown_facade_fenced_out =
   prob = 200,
 
   y_fit = { 32,40 },
-  z_fit = "top"
+  z_fit = "top",
+
+  tex_CITY01 =
+  {
+    MODWALL2 = 25,
+    MODWALL3 = 25,
+    MODWALL4 = 25,
+    BLAKWAL1 = 25,
+    BLAKWAL2 = 25,
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25
+  }
 }
 
 PREFABS.Pic_urban_downtown_facade_alley =
@@ -506,7 +499,28 @@ PREFABS.Pic_urban_downtown_facade_alley =
   prob = 200,
 
   y_fit = { 32,40 },
-  z_fit = { 176,184 }
+  z_fit = { 176,184 },
+
+  tex_CITY01 =
+  {
+    MODWALL2 = 25,
+    MODWALL3 = 25,
+    MODWALL4 = 25,
+    BLAKWAL1 = 25,
+    BLAKWAL2 = 25,
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25
+  }
 }
 
 PREFABS.Pic_urban_downtown_facade_fenced_roof =

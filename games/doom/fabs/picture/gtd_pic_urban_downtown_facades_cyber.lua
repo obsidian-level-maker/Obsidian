@@ -68,11 +68,6 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CMPOHSO = 5,
     CMPTILE = 5,
     --
-    COMPBLAK = 2,
-    COMPGREN = 2,
-    COMPBLUE = 2,
-    COMPRED = 2,
-    --
     COMPTIL2 = 2,
     COMPTIL3 = 2,
     COMPTIL4 = 2,
@@ -102,7 +97,8 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     TEKWALLC = 2,
     TEKWALLD = 2,
     TEKWALLE = 2,
-
+  
+    BIGDOORF = 5,
     BIGBRIK3 = 5,
     BRONZE4 = 5,
     TEKGREN5 = 5,
@@ -132,11 +128,6 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CMPOHSO = 5,
     CMPTILE = 5,
     --
-    COMPBLAK = 2,
-    COMPGREN = 2,
-    COMPBLUE = 2,
-    COMPRED = 2,
-    --
     COMPTIL2 = 2,
     COMPTIL3 = 2,
     COMPTIL4 = 2,
@@ -159,14 +150,7 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     GRAYMETB = 2,
     GRAYMETC = 2,
     --
-    TEKWALL8 = 2,
-    TEKWALL9 = 2,
-    TEKWALLA = 2,
-    TEKWALLB = 2,
-    TEKWALLC = 2,
-    TEKWALLD = 2,
-    TEKWALLE = 2,
-
+    BIGDOORF = 5,
     BIGBRIK3 = 5,
     BRONZE4 = 5,
     TEKGREN5 = 5,
