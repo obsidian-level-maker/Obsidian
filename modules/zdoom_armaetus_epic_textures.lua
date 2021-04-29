@@ -653,11 +653,6 @@ actor AssIsHell : Inventory
 }
 
 function ARMAETUS_EPIC_TEXTURES.setup(self)
-  for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
-  end
-
   ARMAETUS_EPIC_TEXTURES.put_new_materials()
   PARAM.epic_textures_activated = true
 end

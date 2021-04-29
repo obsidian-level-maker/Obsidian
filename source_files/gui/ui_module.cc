@@ -247,7 +247,6 @@ void UI_Module::update_Enable() {
     
     for (IT3 = choice_map_button.begin(); IT3 != choice_map_button.end(); IT3++) {
         UI_RButton *M = IT3->second;
-
         if (mod_button->value()) {
             M->show();
         } else {
@@ -573,7 +572,7 @@ bool UI_CustomMods::EnableMod(const char *id, bool enable) {
     M->update_Enable();
 
     // no options => no height change => no need to reposition
-    if (M->choice_map.size() > 0) {
+    if (M->choice_map.size() > 0 || M->choice_map_slider.size() > 0 || M->choice_map_button.size() > 0) {
         PositionAll();
     }
 
@@ -954,7 +953,7 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data) {
     M->update_Enable();
 
     // no options => no height change => no need to reposition
-    if (M->choice_map.size() > 0) {
+    if (M->choice_map.size() > 0 || M->choice_map_slider.size() > 0 || M->choice_map_button.size() > 0) {
         cb_data->parent->PositionAll(M);
     }
 
