@@ -998,10 +998,6 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_insert_file(dir .. "OBVNMCH3.png", "OBVNMCH3")
     gui.wad_insert_file(dir .. "OBVNMCH4.png", "OBVNMCH4")
     gui.wad_insert_file(dir .. "OBVNMCH5.png", "OBVNMCH5")
-    gui.wad_insert_file(dir .. "ROAD1.png", "ROAD1")
-    gui.wad_insert_file(dir .. "ROAD2.png", "ROAD2")
-    gui.wad_insert_file(dir .. "ROAD3.png", "ROAD3")
-    gui.wad_insert_file(dir .. "ROAD4.png", "ROAD4")
     gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE") -- Do we need this here anymore?
     gui.wad_add_binary_lump("HI_END",{})
   end
