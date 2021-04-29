@@ -18,25 +18,6 @@
 
 MODDED_GAME_EXTRAS = { }
 
-MODDED_GAME_EXTRAS.ENABLE_DISABLE =
-{
-  "enable",  _("Enable"),
-  "disable", _("Disable"),
-}
-
-MODDED_GAME_EXTRAS.HN_CHOICES =
-{
-  "dec",  _("DECORATE"),
-  "none", _("NONE"),
-}
-
-MODDED_GAME_EXTRAS.ACTOR_NAME_GEN_CHOICES =
-{
-  "zs",      _("ZScript - Universal"),
-  --"zs_pb",   _("ZScript - Project Brutality"), -- REMOVE-ME (and associated code)
-  "none",    _("NONE"),
-}
-
 MODDED_GAME_EXTRAS.HELLSCAPE_NAVIGATOR_TEMPLATE =
 {
   BASE =
@@ -230,19 +211,19 @@ function MODDED_GAME_EXTRAS.setup(self)
     PARAM[name] = value
   end
 
-  if PARAM.hn_markers ~= "none" then
+  if gui.get_module_button_value("modded_game_extras", "bool_hn_markers") == 1 then
     MODDED_GAME_EXTRAS.init_hn_info()
   end
 
-  if PARAM.custom_actor_names ~= "none" then
-    MODDED_GAME_EXTRAS.generate_custom_actor_names(PARAM.custom_actor_names)
+  if gui.get_module_button_value("modded_game_extras", "bool_custom_actor_names") == 1 then
+    MODDED_GAME_EXTRAS.generate_custom_actor_names()
   end
 
-  if PARAM.qcde_lootboxes == "enable" then
+  if gui.get_module_button_value("modded_game_extras", "bool_qcde_lootboxes") == 1 then
     MODDED_GAME_EXTRAS.add_qcde_lootboxes()
   end
 
-  if PARAM.d4t_ents == "enable" then
+  if gui.get_module_button_value("modded_game_extras", "bool_d4t_ents") == 1 then
     MODDED_GAME_EXTRAS.add_d4t_ents()
   end
 end
@@ -260,7 +241,7 @@ function MODDED_GAME_EXTRAS.create_hn_info()
   if LEVEL.prebuilt then return end
   if LEVEL.is_procedural_gotcha then return end
 
-  if PARAM.hn_markers == "none" or not PARAM.hn_markers then
+  if gui.get_module_button_value("modded_game_extras", "bool_hn_markers") == 0 then
     return
   end
 
@@ -493,7 +474,7 @@ end
 
 function MODDED_GAME_EXTRAS.generate_hn_decorate()
 
-  if PARAM.hn_markers == "none" or not PARAM.hn_markers then
+  if gui.get_module_button_value("modded_game_extras", "bool_hn_markers") == 0 then
     return
   end
 
@@ -825,61 +806,7 @@ class ObAddonNameToken : Inventory
 }
 ]]
 
-MODDED_GAME_EXTRAS.PB_HUMAN_CHECK =
-[[    if (a is "PB_Zombieman") return true;
-    if (a is "PB_CarbineZombieman") return true;
-    if (a is "PB_HelmetZombieman") return true;
-    if (a is "PB_PistolZombieman2") return true;
-    if (a is "PB_PistolZombieman1") return true;
-    if (a is "PB_ZombieScientist") return true;
-    if (a is "Zombie_Man") return true;
-    if (a is "Labguy") return true;
-    if (a is "ShotgunGuy1") return true;
-    if (a is "ChaingunGuy1") return true;
-    if (a is "HellTrooper") return true;
-
-    if (a is "Marine_Rifle") return true;
-
-    if (a is "ImpaledMarineAlive1") return true;
-    if (a is "ImpaledMarineAlive2") return true;
-]]
-
-MODDED_GAME_EXTRAS.PB_LESSER_DEMONS_CHECK =
-[[
-    if (a is "NamiDarkImp") return true;
-    if (a is "NetherDarkImp") return true;
-    if (a is "STDarkImp") return true;
-    if (a is "VoidDarkImp") return true;
-    if (a is "Imp") return true;
-    if (a is "BullDemon") return true;
-]]
-
-MODDED_GAME_EXTRAS.PB_STANDARD_DEMONS_CHECK =
-[[
-    if (a is "Arachnophyte") return true;
-    if (a is "Aracnorb") return true;
-    if (a is "Daedabus") return true;
-    if (a is "Afrit") return true;
-    if (a is "Watcher") return true;
-    if (a is "Revenant1") return true;
-]]
-
-MODDED_GAME_EXTRAS.PB_GREATER_DEMONS_CHECK =
-[[
-    if (a is "OverLord") return true;
-    if (a is "Cyberbaron") return true;
-    if (a is "FleshWizard") return true;
-    if (a is "Hellion") return true;
-    if (a is "CyberPaladin") return true;
-    if (a is "ICEVILE") return true;
-
-    if (a is "BossBrainBase") return true;
-    if (a is "TheSpiderMastermind") return true;
-    if (a is "Motherdemon") return true;
-    if (a is "Juggernaut") return true;
-]]
-
-function MODDED_GAME_EXTRAS.generate_custom_actor_names(mode)
+function MODDED_GAME_EXTRAS.generate_custom_actor_names()
   local actor_name_script = ""
 
   local syl_list = "\n"
@@ -942,17 +869,10 @@ function MODDED_GAME_EXTRAS.generate_custom_actor_names(mode)
   actor_name_script = string.gsub( actor_name_script, "L_NUM", l_num)
   actor_name_script = string.gsub( actor_name_script, "NICK_NUM", t_num)
 
-  if mode == "zs_pb" then
-    actor_name_script = string.gsub( actor_name_script, "HUMAN_COMPAT_CHECKS", "\n" .. MODDED_GAME_EXTRAS.PB_HUMAN_CHECK)
-    actor_name_script = string.gsub( actor_name_script, "LDEMONS_COMPAT_CHECKS", "\n" .. MODDED_GAME_EXTRAS.PB_LESSER_DEMONS_CHECK)
-    actor_name_script = string.gsub( actor_name_script, "SDEMONS_COMPAT_CHECKS", "\n" .. MODDED_GAME_EXTRAS.PB_STANDARD_DEMONS_CHECK)
-    actor_name_script = string.gsub( actor_name_script, "GDEMONS_COMPAT_CHECKS", "\n" .. MODDED_GAME_EXTRAS.PB_GREATER_DEMONS_CHECK)
-  elseif mode == "zs" then
-    actor_name_script = string.gsub( actor_name_script, "HUMAN_COMPAT_CHECKS", " ")
-    actor_name_script = string.gsub( actor_name_script, "LDEMONS_COMPAT_CHECKS", " ")
-    actor_name_script = string.gsub( actor_name_script, "SDEMONS_COMPAT_CHECKS", " ")
-    actor_name_script = string.gsub( actor_name_script, "GDEMONS_COMPAT_CHECKS", " ")
-  end
+  actor_name_script = string.gsub( actor_name_script, "HUMAN_COMPAT_CHECKS", " ")
+  actor_name_script = string.gsub( actor_name_script, "LDEMONS_COMPAT_CHECKS", " ")
+  actor_name_script = string.gsub( actor_name_script, "SDEMONS_COMPAT_CHECKS", " ")
+  actor_name_script = string.gsub( actor_name_script, "GDEMONS_COMPAT_CHECKS", " ")
 
   SCRIPTS.actor_name_script = actor_name_script
 end
@@ -1000,51 +920,49 @@ OB_MODULES["modded_game_extras"] =
 
   options =
   {
-    hn_markers =
+    bool_hn_markers =
     {
-      name = "hn_markers",
+      name = "bool_hn_markers",
       label=_("HN Markers"),
-      choices=MODDED_GAME_EXTRAS.HN_CHOICES,
+      valuator = "button",
+      default = 0,
       tooltip = "Adds support for m8f's Hellscape Navigator by generating " ..
       "name markers in the map per room.",
-      default = "none",
       priority = 5,
-      gap = 1,
     },
 
-    custom_actor_names =
+    bool_custom_actor_names =
     {
-      name = "custom_actor_names",
+      name = "bool_custom_actor_names",
       label=_("Custom Actor Names"),
-      choices=MODDED_GAME_EXTRAS.ACTOR_NAME_GEN_CHOICES,
+      valuator = "button",
+      default = 0,
       tooltip = "Renames tags of monsters with generated names. Humans recieve human names, " ..
       "demons recieve exotic names.\n" ..
       "Best used with TargetSpy or other healthbar mods to see the name.\n" ..
       "Uses class inheritance and string comparisons to determine monster species (human or demon). "..
       "Use compatibility options only when necessary, preferably use Universal option instead.",
-      default = "none",
       priority = 4,
-      gap = 1,
     },
 
-    qcde_lootboxes =
+    bool_qcde_lootboxes =
     {
-      name = "qcde_lootboxes",
+      name = "bool_qcde_lootboxes",
       label = _("QC:DE Lootboxes"),
-      choices = MODDED_GAME_EXTRAS.ENABLE_DISABLE,
+      valuator = "button",
+      default = 0,
       tooltip = "Adds Quake Champions: Doom Edition Lootboxes as nice item pickups.",
-      default = "disable",
       priority = 2,
     },
 
-    d4t_ents =
+    bool_d4t_ents =
     {
-      name = "d4t_ents",
+      name = "bool_d4t_ents",
       label = _("D4T Entities"),
-      choices = MODDED_GAME_EXTRAS.ENABLE_DISABLE,
+      valuator = "button",
+      default = 0,
       tooltip = "Adds Death Foretold field drones into items table and " ..
                 "gore nests as potential minor boss monsters.",
-      default = "disable",
       priority = 1,
     },
   },
