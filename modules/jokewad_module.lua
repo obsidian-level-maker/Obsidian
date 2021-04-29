@@ -18,19 +18,6 @@
 
 JOKEWAD_MODULE = {}
 
-JOKEWAD_MODULE.ENABLE_DISABLE =
-{
-  "enable",  _("Enable"),
-  "disable", _("Disable")
-}
-
-function JOKEWAD_MODULE.setup(self)
-  for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
-  end
-end
-
 JOKEWAD_MODULE.SUPER_DEC =
 [[
 Actor ObE_LootValue : CustomInventory
@@ -231,7 +218,7 @@ JOKEWAD_MODULE.TISSUES =
 
 function JOKEWAD_MODULE.get_levels()
 
-  if PARAM.fireblu_mode == "enable" then
+  if gui.get_module_button_value("jokewad_module", "bool_fireblu_mode") == 1 then
     JOKEWAD_MODULE.go_fireblue()
   end
 
@@ -239,7 +226,7 @@ end
 
 function JOKEWAD_MODULE.end_level()
 
-  if PARAM.pandemic_mode == "enable" then
+  if gui.get_module_button_value("jokewad_module", "bool_pandemic_mode") == 1 then
     JOKEWAD_MODULE.add_tissues()
   end
 
@@ -417,7 +404,7 @@ end
 
 function JOKEWAD_MODULE.all_done()
 
-  if PARAM.pandemic_mode == "enable" then
+  if gui.get_module_button_value("jokewad_module", "bool_pandemic_mode") == 1 then
 
     SCRIPTS.tissue_doc = JOKEWAD_MODULE.SUPER_DEC
     local dir = "games/doom/data/"
@@ -439,7 +426,6 @@ OB_MODULES["jokewad_module"] =
 
   hooks =
   {
-    setup = JOKEWAD_MODULE.setup,
     get_levels = JOKEWAD_MODULE.get_levels,
     end_level = JOKEWAD_MODULE.end_level,
     all_done = JOKEWAD_MODULE.all_done
@@ -447,28 +433,28 @@ OB_MODULES["jokewad_module"] =
 
   options =
   {
-    fireblu_mode =
+    bool_fireblu_mode =
     {
-      name = "fireblu_mode",
+      name = "bool_fireblu_mode",
       label=_("FIREBLU Mode"),
-      choices = JOKEWAD_MODULE.ENABLE_DISABLE,
+      valuator = "button",
+      default = 0,
       tooltip = _(
         "Allows the creation of the greatest maps to ever be generated on " ..
         "on the face of the earth. Warning: ticking this waives any " ..
         "liability for potential emotional and physical damage on the " ..
         "part of the user. \n"),
-      default = "disable"
     },
 
-    pandemic_mode =
+    bool_pandemic_mode =
     {
-      name = "pandemic_mode",
+      name = "bool_pandemic_mode",
       label=_("Pandemic Mode"),
-      choices = JOKEWAD_MODULE.ENABLE_DISABLE,
+      valuator = "button",
+      default = 0,
       tooltip = _("Do your part in preventing the coronavirus crisis! Hell is taking " ..
       "away all our tissue rolls and hand sanitizers! It's up to the Slayer to take " ..
       "it back. Every square and every squeeze."),
-      default = "disable"
     }
   }
 }
