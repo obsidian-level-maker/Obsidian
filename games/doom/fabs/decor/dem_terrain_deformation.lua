@@ -423,8 +423,6 @@ PREFABS.Decor_Dem_Deformation32 =
 
   env    = "outdoor",
 
-rank = 1,
-
   size   = 128,
 
 }
@@ -437,8 +435,6 @@ PREFABS.Decor_Dem_Deformation33 =
   map = "MAP33",
 
   env    = "outdoor",
-
-rank = 1,
 
   size   = 128,
 
