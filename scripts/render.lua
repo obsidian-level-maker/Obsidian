@@ -21,6 +21,8 @@
 
 
 function Render_add_exit_sign(E, z)
+  if PARAM.exit_signs and PARAM.exit_signs == "no" then return end
+
   local def = PREFABS["Decor_exit_sign"]
   if not def then return end
 
@@ -1007,9 +1009,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      if PARAM.exit_signs then
-          Render_add_exit_sign(E, z)
-      end
+      Render_add_exit_sign(E, z)
     end
   end
 
@@ -2412,9 +2412,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       end
 
       if E and not E.area.room.is_hallway then
-        if PARAM.exit_signs then
-          Render_add_exit_sign(E, z1)
-        end
+        Render_add_exit_sign(E, z1)
       end
     end
   end
