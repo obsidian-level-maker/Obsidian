@@ -19,19 +19,6 @@
 
 FAUNA_MODULE = {}
 
-FAUNA_MODULE.ENABLE_DISABLE =
-{
-  "enable",  _("Enable"),
-  "disable", _("Disable"),
-}
-
-function FAUNA_MODULE.setup(self)
-  for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
-  end
-end
-
 FAUNA_MODULE.DEC =
 [[
 ACTOR Fauna
@@ -350,11 +337,11 @@ function FAUNA_MODULE.end_level()
 
   if LEVEL.prebuilt then return end
 
-  if PARAM.flies == "enable" then
+  if gui.get_module_button_value("fauna_module", "bool_flies") == 1 then
     FAUNA_MODULE.add_flies()
   end
 
-  if PARAM.rats == "enable" then
+  if gui.get_module_button_value("fauna_module", "bool_rats") == 1 then
     FAUNA_MODULE.add_rats()
   end
 
@@ -478,11 +465,11 @@ end
 
 function FAUNA_MODULE.all_done()
 
-  if (PARAM.flies == "enable" or PARAM.rats == "enable") then
+  if (gui.get_module_button_value("fauna_module", "bool_flies") == 1 or gui.get_module_button_value("fauna_module", "bool_rats") == 1) then
     SCRIPTS.fauna_SNDINFO = FAUNA_MODULE.SNDINFO
   end
 
-  if PARAM.flies == "enable" then
+  if gui.get_module_button_value("fauna_module", "bool_flies") == 1 then
     SCRIPTS.fauna_zsc = FAUNA_MODULE.ZSC
     SCRIPTS.fauna_mapinfo = FAUNA_MODULE.DOOMEDNUMS
     local dir = "games/doom/data/"
@@ -490,7 +477,7 @@ function FAUNA_MODULE.all_done()
     gui.wad_insert_file("data/sounds/FLYBUZZ.ogg", "FLYBUZZ")
   end
 
-  if PARAM.rats == "enable" then
+  if gui.get_module_button_value("fauna_module", "bool_rats") == 1 then
     SCRIPTS.fauna_dec = FAUNA_MODULE.DEC
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "Rats.wad")
@@ -516,7 +503,6 @@ OB_MODULES["fauna_module"] =
 
   hooks =
   {
-    setup = FAUNA_MODULE.setup,
     get_levels = FAUNA_MODULE.get_levels,
     end_level = FAUNA_MODULE.end_level,
     all_done = FAUNA_MODULE.all_done
@@ -524,22 +510,22 @@ OB_MODULES["fauna_module"] =
 
   options =
   {
-    flies =
+    bool_flies =
     {
-      name = "flies",
+      name = "bool_flies",
       label=_("Flies"),
-      choices = FAUNA_MODULE.ENABLE_DISABLE,
+      valuator = "button",
+      default = 0,
       tooltip = _("Adds flies to maps. \n"),
-      default = "disable",
     },
 
-    rats =
+    bool_rats =
     {
-      name = "rats",
+      name = "bool_rats",
       label=_("Rats"),
-      choices = FAUNA_MODULE.ENABLE_DISABLE,
+      valuator = "button",
+      default = 0,
       tooltip = _("Adds scurrying rats to maps. \n"),
-      default = "disable",
     },
   },
 }
