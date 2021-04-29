@@ -4752,9 +4752,6 @@ ARMAETUS_THEMES =
       BRICEGRY = 15,
 
       --
-      OBTBSLV1 = 15,
-      OBTBSLV2 = 15,
-
       OBTBSTX1 = 15,
       OBTBSTX3 = 15,
 
