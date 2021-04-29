@@ -166,7 +166,7 @@ OB_MODULES["level_control"] =
       gap = 1,
     },
 
-    level_upper_bound =
+    float_level_upper_bound =
     {
       name = "float_level_upper_bound",
       label = _("Upper Bound"),
@@ -190,7 +190,7 @@ OB_MODULES["level_control"] =
       tooltip = "Fine tune upper limit for Level Size Episodic, Progressive and Mixed options.",
     },
 
-    level_lower_bound =
+    float_level_lower_bound =
     {
       name = "float_level_lower_bound",
       label = _("Lower Bound"),
