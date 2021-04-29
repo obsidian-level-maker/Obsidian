@@ -1378,7 +1378,7 @@ function BOSS_GEN_TUNE.check_gotchas_enabled()
   and PARAM.boss_gen then
     error("Procedural gotchas must be enabled for boss generator!")
   end
-  if gui.get_module_slider_value("ui_mons", "float_mons") then
+  if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
     error("Monsters must be enabled for boss generator!")
   end
 end

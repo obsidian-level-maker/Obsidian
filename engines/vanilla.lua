@@ -21,7 +21,7 @@ OB_ENGINES["vanilla"] =
 {
   label = _("Vanilla DOOM"),
 
-  priority = 100,  -- this makes it toppest-most, and the most defaultest engine
+  priority = 100,
 
   game = "doomish",
 

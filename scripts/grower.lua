@@ -992,29 +992,12 @@ function Grower_decide_extents()
   -- decides how much of the map we can use for growing rooms.
   --
 
-  -- urban streets code, because level theme is not yet
-  -- determined if it was done from games/[game]/level.lua
-  -- MSSP-TODO: Clean this up, boi!
-  if LEVEL.theme_name == "urban" then
-    if OB_CONFIG.streets_mode == "100urban" then
-      LEVEL.has_streets = true
-    elseif OB_CONFIG.streets_mode == "75urban" then
-      if rand.odds(75) then
-        LEVEL.has_streets = true
-      end
-    elseif OB_CONFIG.streets_mode == "50urban" then
-      if rand.odds(50) then
-        LEVEL.has_streets = true
-      end
-    elseif OB_CONFIG.streets_mode == "25urban" then
-      if rand.odds(25) then
-        LEVEL.has_streets = true
-      end
-    elseif OB_CONFIG.streets_mode == "13urban" then
-      if rand.odds(13) then
-        LEVEL.has_streets = true
-      end
-    end
+  if gui.get_module_button_value("ui_arch", "bool_urban_streets_mode") == 1
+  and LEVEL.theme_name == "urban"
+  and rand.odds(gui.get_module_slider_value("ui_arch", "float_streets_mode")) then
+    LEVEL.has_streets = true
+  else
+    LEVEL.has_streets = false
   end
 
   -- let nature mode take precedence over streets mode
