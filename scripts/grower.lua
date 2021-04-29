@@ -993,7 +993,8 @@ function Grower_decide_extents()
   --
 
   if gui.get_module_button_value("ui_arch", "bool_urban_streets_mode") == 1
-  and LEVEL.has_streets and LEVEL.theme_name == "urban" then
+  and LEVEL.theme_name == "urban"
+  and rand.odds(gui.get_module_slider_value("ui_arch", "float_streets_mode")) then
     LEVEL.has_streets = true
   else
     LEVEL.has_streets = false
