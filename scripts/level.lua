@@ -1035,7 +1035,7 @@ function Episode_plan_monsters()
       pick_boss_quotas(LEV)
 
       -- hax for procedural gotchas
-      if LEV.is_procedural_gotcha and gui.get_module_button_value("procedural_gotcha", "gotcha_boss_fight") == 1 then
+      if LEV.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
         if LEV.game_along <= 0.33 then
           if LEV.boss_quotas.minor < 1 then LEV.boss_quotas.minor = 1 end
         elseif LEV.game_along > 0.33 and LEV.game_along <= 0.66 then

@@ -51,13 +51,24 @@ PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES =
 
 function PROCEDURAL_GOTCHA_FINE_TUNE.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 end
 
 OB_MODULES["procedural_gotcha"] =
 {
+
+  name = "procedural_gotcha",
+
   label = _("Procedural Gotcha Options"),
 
   engine = "!vanilla",
