@@ -171,6 +171,7 @@ PREFABS.Light_typh_sticks_red_EPIC =
   map = "MAP03",
   prob = 80,
 
+  texture_pack = "armaetus",
   replaces = "Light_typh_sticks_red",
 
   bound_z1 = -16,

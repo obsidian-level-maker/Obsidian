@@ -366,7 +366,7 @@ DOOM.MATERIALS =
 
   LFALL1   = { t="FIREMAG1", f="LAVA1", sane=1 },
   LAVA1    = { t="FIREMAG1", f="LAVA1", sane=1 },
-
+  FIREMAG1 = { t="FIREMAG1", f="LAVA1", sane=1 },
 
   -- other --
 

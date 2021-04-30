@@ -4538,6 +4538,8 @@ ARMAETUS_THEMES =
       gtd_wall_teklitecomp_blue = 16,
       --
       gtd_wall_grated_machines_epic = 50,
+      --
+      gtd_wall_tech_oven = 50
     },
 
     window_groups =

@@ -23,7 +23,7 @@ OB_ENGINES["vanilla"] =
 
   priority = 100,
 
-  game = "doomish",
+  game = "doom2",
 
   tables =
   {
