@@ -68,4 +68,6 @@ PREFABS.Pic_gtd_library_caged_shelves =
   map = "MAP02",
 
   tex_PANBOOK4 = "PANBOOK",
+  tex_PANBOOK3 = "PANBOOK",
+  tex_MIDWIND3 = "MIDGRATE",
 }
