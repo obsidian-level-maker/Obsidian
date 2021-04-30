@@ -1283,22 +1283,30 @@ function MARINE_CLOSET_TUNE.setup(self)
   PARAM.marine_tech = 1
 
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 end
 
 function MARINE_CLOSET_TUNE.calc_closets()
-  if rand.odds(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_chance"))
+  if rand.odds(PARAM.float_m_c_chance)
   and not LEVEL.prebuilt
-  and not (gui.get_module_button_value("gzdoom_marine_closets", "bool_m_c_boss") == 0 and LEVEL.is_procedural_gotcha) then
+  and not (PARAM.bool_m_c_boss == 0 and LEVEL.is_procedural_gotcha) then
     local rngmin
     local rngmax
 
     PARAM.level_has_marine_closets = true
 
-    rngmin = math.min(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_min"),gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_max"))
-    rngmax = math.max(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_min"),gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_max"))
+    rngmin = math.min(PARAM.float_m_c_min,PARAM.float_m_c_max)
+    rngmax = math.max(PARAM.float_m_c_min,PARAM.float_m_c_max)
 
     if PARAM.m_c_type == "default" then
       PARAM.marine_closets = rand.irange(rngmin,rngmax)
@@ -1311,8 +1319,8 @@ function MARINE_CLOSET_TUNE.calc_closets()
     elseif PARAM.m_c_type == "epi2" then
       PARAM.marine_closets = rngmax - math.round((rngmax - rngmin) * LEVEL.ep_along)
     end
-    rngmin = math.min(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_min"),gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_max"))
-    rngmax = math.max(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_min"),gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_max"))
+    rngmin = math.min(PARAM.float_m_c_m_min,PARAM.float_m_c_m_max)
+    rngmax = math.max(PARAM.float_m_c_m_min,PARAM.float_m_c_m_max)
 
     if PARAM.m_c_m_type == "default" then
       PARAM.marine_marines = rand.irange(rngmin,rngmax)
@@ -1372,8 +1380,8 @@ end
 
 function MARINE_CLOSET_TUNE.randomize_count()
    if PARAM.m_c_m_type ~= "default" then return end
-   local rngmin = math.min(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_min"),gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_max"))
-   local rngmax = math.max(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_min"),gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_m_max"))
+   local rngmin = math.min(PARAM.float_m_c_m_min,PARAM.float_m_c_m_max)
+   local rngmax = math.max(PARAM.float_m_c_m_min,PARAM.float_m_c_m_max)
    PARAM.marine_marines = rand.irange(rngmin,rngmax)
 end
 
@@ -1381,7 +1389,7 @@ function MARINE_CLOSET_TUNE.all_done()
 
   local scripty = MARINE_CLOSET_TUNE.TEMPLATES.ZSC
 
-  if gui.get_module_button_value("gzdoom_marine_closets", "bool_m_c_power") == 1 then
+  if PARAM.bool_m_c_power == 1 then
     if PARAM.m_c_sprites == "no" then
       scripty = scripty .. MARINE_CLOSET_TUNE.TEMPLATES.MSTRN
     else
@@ -1395,9 +1403,9 @@ function MARINE_CLOSET_TUNE.all_done()
     end
   end
 
-  scripty = string.gsub(scripty, "MHEALTH", tostring(gui.get_module_slider_value("gzdoom_marine_closets", "float_m_c_health")))
+  scripty = string.gsub(scripty, "MHEALTH", tostring(PARAM.float_m_c_health))
 
-  if gui.get_module_button_value("gzdoom_marine_closets", "bool_m_c_follow") == 1 then
+  if PARAM.bool_m_c_follow == 1 then
     scripty = string.gsub(scripty, "MFOLLOW", "true")
   else
     scripty = string.gsub(scripty, "MFOLLOW", "false")
