@@ -182,11 +182,11 @@ function Level_determine_map_size(LEV)
 
     -- Level Control fine tune for Mix It Up
     if PARAM.level_upper_bound then
-      high = gui.get_module_slider_value("level_control", "level_upper_bound")
+      high = gui.get_module_slider_value("level_control", "float_level_upper_bound")
     end
 
     if PARAM.level_lower_bound then
-      low = gui.get_module_slider_value("level_control", "level_lower_bound")
+      low = gui.get_module_slider_value("level_control", "float_level_lower_bound")
     end
     
     ob_size = math.clamp(10, int(rand.irange(low, high) * result_skew), 75)
