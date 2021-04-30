@@ -147,9 +147,9 @@ function MISC_STUFF.setup(self)
       PARAM[opt.name] = opt.value
     elseif opt.valuator then
       if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value("misc", opt.name)
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
       elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value("misc", opt.name)      
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
       end
     end
   end
