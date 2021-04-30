@@ -108,11 +108,18 @@ OB_MODULES["ui_mons"] =
       "3.0:3.0 (Formidable)," ..
       "3.5:3.5 (Harsh)," ..
       "4.0:4.0 (Painful)," ..
-      "4.5:4.5 (Unforgiving)," ..
-      "5.0:5.0 (Punishing)," ..
-      "5.5:5.5 (Brutal)," ..
-      "6.0:6.0 (Draconian)," ..
-      "6.65:6.66 (Merciless),",     
+      "4.5:4.5 (Ferocious)," ..
+      "5.0:5.0 (Unforgiving)," ..
+      "5.5:5.5 (Punishing)," ..
+      "6.0:6.0 (Murderous)," ..
+      "6.5:6.5 (Grueling)," ..
+      "7.0:7.0 (Unrelenting)," ..
+      "7.5:7.5 (Arduous)," ..
+      "8.0:8.0 (Barbaric)," ..
+      "8.5:8.5 (Savage)," ..
+      "9.0:9.0 (Brutal)," ..
+      "9.5:9.5 (Draconian)," ..
+      "10.0:10.00 (Merciless),",
       tooltip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
               "Mix It Up: randomizes quantities based on the prefered selection " ..
               "under the Fine Tune options below.\n\n" ..
@@ -174,14 +181,14 @@ OB_MODULES["ui_mons"] =
       tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
     },
-    
+
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES,
       tooltip= "Affects how many different monster types can " ..
                "appear in each room.\n" ..
                "Setting this to NONE will make each level use a single monster type",
     },
     {
-      name="mon_variety_jumpstart", label=_("Monster Variety Jumpstart"), 
+      name="mon_variety_jumpstart", label=_("Monster Variety Jumpstart"),
       choices=UI_MONS.MONSTER_KIND_JUMPSTART_CHOICES,
       default = "default",
       tooltip = "Affects how many monster variations initially appear at the very first map.",
@@ -229,7 +236,7 @@ OB_MODULES["ui_mons"] =
       tooltip="I'm in your secret rooms, placing some monsters. Note: default is none.",
       default="no",
     },
-    
+
     {
       name="bool_quiet_start",
       label=_("Quiet Start"),
