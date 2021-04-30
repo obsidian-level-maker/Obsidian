@@ -39,7 +39,7 @@
  * XChar2b which does not have this problem
  */
 
-#if defined(__GNUC__) && defined(__arm__) && !defined(__ARM_EABI__)
+#if defined(__GNUC__) && (defined(__aarch64__) || defined(__arm__)) && !defined(__ARM_EABI__)
 typedef struct {
   unsigned char byte1;
   unsigned char byte2;
