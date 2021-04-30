@@ -1169,7 +1169,7 @@ function Episode_plan_weapons()
     end
 
     -- more as game progresses
-    if PARAM.pistol_starts then
+    if PARAM.bool_pistol_starts == 1 then
       quota = quota + math.clamp(0, LEV.game_along, 0.5) * 3.1
     else
       quota = quota + math.clamp(0, LEV.game_along, 0.5) * 6.1

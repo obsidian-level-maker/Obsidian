@@ -21,7 +21,7 @@
 
 
 function Render_add_exit_sign(E, z)
-  if PARAM.exit_signs and PARAM.exit_signs == "no" then return end
+  if PARAM.bool_exit_signs and PARAM.bool_exit_signs == 0 then return end
 
   local def = PREFABS["Decor_exit_sign"]
   if not def then return end
@@ -2936,7 +2936,7 @@ function Render_all_areas()
 
   Render_skybox()
 
-  if LEVEL.has_streets and PARAM.road_markings == "yes" then
+  if LEVEL.has_streets and PARAM.bool_road_markings == 1 then
     Render_find_street_markings()
     Render_all_street_markings()
     Render_establish_street_lanes()
