@@ -3291,7 +3291,7 @@ function ULTDOOM.get_levels()
       end
 
       -- prebuilt levels
-      if gui.get_module_button_value("ui_arch", "bool_prebuilt_levels") == 1 then
+      if PARAM.bool_prebuilt_levels == 1 then
         LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
       end
 
@@ -3349,20 +3349,19 @@ function ULTDOOM.get_levels()
     -- handling for street mode
     -- actual handling for urban percentages are done
     if not LEV.is_procedural_gotcha or not LEV.prebuilt then
-      if rand.odds(gui.get_module_slider_value("ui_arch", "float_streets_mode")) then
+      if rand.odds(PARAM.float_streets_mode) then
         LEV.has_streets = true
       end
     end
 
-      -- handling for linear mode chance choices
     if not LEV.prebuilt then
-      if rand.odds(gui.get_module_slider_value("ui_arch", "float_linear_mode")) then
+      if rand.odds(PARAM.float_linear_mode) then
         LEV.is_linear = true
       end
 
       -- nature mode
       if OB_CONFIG.nature_mode and not LEV.has_streets then
-        if rand.odds(gui.get_module_slider_value("ui_arch", "float_nature_mode")) then
+        if rand.odds(PARAM.float_nature_mode) then
           LEV.is_nature = true
         end
       end

@@ -150,7 +150,7 @@ function Level_determine_map_size(LEV)
   -- Since we have other sizes and Auto-Detail, we can have these bigger sizes
   -- now. -Armaetus, July 9th, 2019,
 
-  local ob_size = gui.get_module_slider_value("ui_arch", "float_size")
+  local ob_size = PARAM.float_size
 
   local W, H
 

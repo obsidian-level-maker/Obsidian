@@ -889,7 +889,7 @@ function Grower_calc_rule_probs()
   end
 
   if not LEVEL.is_procedural_gotcha then
-    if rand.odds(gui.get_module_slider_value("ui_arch", "float_layout_absurdity")) then
+    if rand.odds(PARAM.float_layout_absurdity) then
         LEVEL.is_absurd = true
     end
   end
@@ -992,9 +992,9 @@ function Grower_decide_extents()
   -- decides how much of the map we can use for growing rooms.
   --
 
-  if gui.get_module_button_value("ui_arch", "bool_urban_streets_mode") == 1
+  if PARAM.bool_urban_streets_mode == 1
   and LEVEL.theme_name == "urban"
-  and rand.odds(gui.get_module_slider_value("ui_arch", "float_streets_mode")) then
+  and rand.odds(PARAM.float_streets_mode) then
     LEVEL.has_streets = true
   else
     LEVEL.has_streets = false
