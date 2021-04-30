@@ -216,7 +216,7 @@ JOKEWAD_MODULE.TISSUES =
   }
 }
 
-function JOKEWAD_MODULE.get_levels()
+function JOKEWAD_MODULE.get_levels(self)
 
   for _,opt in pairs(self.options) do
     if opt.valuator then
