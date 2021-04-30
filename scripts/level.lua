@@ -169,8 +169,8 @@ function Level_determine_map_size(LEV)
   if ob_size == 7 then
 
     local result_skew = 1.0
-    local low = gui.get_module_slider_value("level_control", "float_level_upper_bound") or 10
-    local high = gui.get_module_slider_value("level_control", "float_level_lower_bound") or 75
+    local low = PARAM.float_level_lower_bound or 10
+    local high = PARAM.float_level_upper_bound or 75
 
     if PARAM.level_size_bias then
       if PARAM.level_size_bias == "small" then
@@ -202,8 +202,8 @@ function Level_determine_map_size(LEV)
     -- Level Control fine tune for Prog/Epi
 
     -- default when Level Control is off: ramp from "small" --> "large",
-    local def_small = gui.get_module_slider_value("level_control", "float_level_lower_bound") or 30
-    local def_large = (gui.get_module_slider_value("level_control", "float_level_upper_bound") - def_small) or 42
+    local def_small = PARAM.float_level_lower_bound or 30
+    local def_large = PARAM.float_level_upper_bound - def_small or 42
 
     -- this basically ramps up
     W = int(def_small + along * def_large)

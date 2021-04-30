@@ -1460,6 +1460,9 @@ end
 
 OB_MODULES["gzdoom_marine_closets"] =
 {
+
+  name = "gzdoom_marine_closets",
+
   label = _("[Exp]GZDoom Marine Closets"),
 
   game = "doomish",
