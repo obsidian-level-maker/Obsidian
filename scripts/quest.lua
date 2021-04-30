@@ -1580,7 +1580,7 @@ function Quest_start_room()
 
   add_normal_start()
 
-  if PARAM.alt_starts then
+  if PARAM.bool_alt_starts == 1 then
     find_alternate_start()
   end
 end
@@ -2277,7 +2277,7 @@ function Quest_nice_items()
       if LEVEL.secret_weapon == name then return true end
 
       -- the weapon was given in an earlier map?
-      if not PARAM.pistol_starts and EPISODE.seen_weapons[name] then return true end
+      if PARAM.bool_pistol_starts == 0 and EPISODE.seen_weapons[name] then return true end
       ::continue::
     end
 
@@ -3326,7 +3326,7 @@ function Quest_room_themes()
   choose_hallway_themes()
   choose_other_themes()
 
-  if PARAM.foreshadowing_exit and PARAM.foreshadowing_exit == "yes" then
+  if PARAM.bool_foreshadowing_exit and PARAM.bool_foreshadowing_exit == 1 then
     choose_exit_theme()
   end
 

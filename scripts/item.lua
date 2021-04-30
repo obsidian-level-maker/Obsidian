@@ -474,7 +474,7 @@ function Item_simulate_battle(R)
     end
 
     -- give less ammo in later maps (to counter the build-up over an episode)
-    if not PARAM.pistol_starts then
+    if PARAM.bool_pistol_starts == 0 then
       local along = math.clamp(0, LEVEL.ep_along - 0.2, 0.8)
       local factor = 1.1 - along * 0.25
 
@@ -542,7 +542,7 @@ function Item_simulate_battle(R)
       end
     end
 
-    if not PARAM.pistol_starts then
+    if PARAM.bool_pistol_starts == 0 then
       -- allow weapons from previous levels
       for name,_ in pairs(EPISODE.seen_weapons) do
         if not seen[name] then
