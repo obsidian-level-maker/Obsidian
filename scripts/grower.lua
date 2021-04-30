@@ -889,7 +889,7 @@ function Grower_calc_rule_probs()
   end
 
   if not LEVEL.is_procedural_gotcha then
-    if rand.odds(gui.get_module_slider_value("ui_arch", "float_layout_absurdity")) then
+    if rand.odds(PARAM.float_layout_absurdity) then
         LEVEL.is_absurd = true
     end
   end
@@ -992,9 +992,9 @@ function Grower_decide_extents()
   -- decides how much of the map we can use for growing rooms.
   --
 
-  if gui.get_module_button_value("ui_arch", "bool_urban_streets_mode") == 1
+  if PARAM.bool_urban_streets_mode == 1
   and LEVEL.theme_name == "urban"
-  and rand.odds(gui.get_module_slider_value("ui_arch", "float_streets_mode")) then
+  and rand.odds(PARAM.float_streets_mode) then
     LEVEL.has_streets = true
   else
     LEVEL.has_streets = false
@@ -4652,11 +4652,11 @@ function Grower_create_rooms()
   Seed_squarify()
 
   -- debugging aid
-  if OB_CONFIG.svg or (PARAM.save_svg and gui.get_module_button_value("debugger", "bool_save_svg") == 1) then
+  if OB_CONFIG.svg or (PARAM.save_svg and PARAM.bool_save_svg == 1) then
     Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
   end
 
-  if gui.get_module_button_value("debugger", "bool_shape_rule_stats") == 1 then
+  if PARAM.bool_shape_rule_stats == 1 then
     table.sort(GROWER_DEBUG_INFO, function(A,B)
     return (A.trials > B.trials) end)
 

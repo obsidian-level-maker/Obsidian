@@ -330,18 +330,27 @@ FAUNA_MODULE.DOOMEDNUMS =
 ]]
 }
 
-function FAUNA_MODULE.get_levels()
+function FAUNA_MODULE.get_levels(self)
+  for _,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    end
+  end
 end
 
 function FAUNA_MODULE.end_level()
 
   if LEVEL.prebuilt then return end
 
-  if gui.get_module_button_value("fauna_module", "bool_flies") == 1 then
+  if PARAM.bool_flies == 1 then
     FAUNA_MODULE.add_flies()
   end
 
-  if gui.get_module_button_value("fauna_module", "bool_rats") == 1 then
+  if PARAM.bool_rats == 1 then
     FAUNA_MODULE.add_rats()
   end
 
@@ -465,11 +474,11 @@ end
 
 function FAUNA_MODULE.all_done()
 
-  if (gui.get_module_button_value("fauna_module", "bool_flies") == 1 or gui.get_module_button_value("fauna_module", "bool_rats") == 1) then
+  if PARAM.bool_flies == 1 or PARAM.bool_rats == 1 then
     SCRIPTS.fauna_SNDINFO = FAUNA_MODULE.SNDINFO
   end
 
-  if gui.get_module_button_value("fauna_module", "bool_flies") == 1 then
+  if PARAM.bool_flies == 1 then
     SCRIPTS.fauna_zsc = FAUNA_MODULE.ZSC
     SCRIPTS.fauna_mapinfo = FAUNA_MODULE.DOOMEDNUMS
     local dir = "games/doom/data/"
@@ -477,7 +486,7 @@ function FAUNA_MODULE.all_done()
     gui.wad_insert_file("data/sounds/FLYBUZZ.ogg", "FLYBUZZ")
   end
 
-  if gui.get_module_button_value("fauna_module", "bool_rats") == 1 then
+  if PARAM.bool_rats == 1 then
     SCRIPTS.fauna_dec = FAUNA_MODULE.DEC
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "Rats.wad")
@@ -492,6 +501,9 @@ end
 
 OB_MODULES["fauna_module"] =
 {
+
+  name = "fauna_module",
+
   label = _("GZDoom: Fauna"),
 
 --  game = "doomish",

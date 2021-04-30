@@ -1378,7 +1378,7 @@ function BOSS_GEN_TUNE.check_gotchas_enabled()
   and PARAM.boss_gen then
     error("Procedural gotchas must be enabled for boss generator!")
   end
-  if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
+  if PARAM.float_mons == 0 then
     error("Monsters must be enabled for boss generator!")
   end
 end
@@ -1393,8 +1393,16 @@ function BOSS_GEN_TUNE.setup(self)
   PARAM.epi_names = {}
 
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 
   if PARAM.boss_gen_health == "muchless" then
@@ -1481,7 +1489,7 @@ function BOSS_GEN_TUNE.all_done()
     return
   end
 
-  if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
+  if PARAM.float_mons == 0 then
     -- no monsters, no boss, duh
     warning("No monsters found by boss generator")
     PARAM.boss_count = -1
@@ -1490,14 +1498,14 @@ function BOSS_GEN_TUNE.all_done()
 
   scripty = string.gsub(scripty, "LEVELCODE", PARAM.lvlstr)
 
-  if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_hpbar") == 1 then
+  if PARAM.bool_boss_gen_hpbar == 1 then
     BOSS_GEN_TUNE.game_specific_hpbar()
     scripty = string.gsub(scripty, "BOSSHPBAR", BOSS_GEN_TUNE.TEMPLATES.BAR)
   else
     scripty = string.gsub(scripty, "BOSSHPBAR", "")
   end
 
-  if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_music") == 1 then
+  if PARAM.bool_boss_gen_music == 1 then
     scripty = string.gsub(scripty, "MUSIC", BOSS_GEN_TUNE.TEMPLATES.MUS)
   else
     scripty = string.gsub(scripty, "MUSIC", "")
@@ -1632,6 +1640,9 @@ end
 
 OB_MODULES["gzdoom_boss_gen"] =
 {
+
+  name = "gzdoom_boss_gen",
+
   label = _("[Exp]GZDoom Boss Generator"),
 
 --  game = "doomish",
@@ -1684,7 +1695,7 @@ OB_MODULES["gzdoom_boss_gen"] =
       tooltip = "Reduces chance of hitscan bosses spawning.",
     },
 
-    boss_gen_hpbar =
+    bool_boss_gen_hpbar =
     {
       name = "bool_boss_gen_hpbar",
       label = _("Visible Health Bar"),
@@ -1694,7 +1705,7 @@ OB_MODULES["gzdoom_boss_gen"] =
       tooltip = "If enabled, an hp bar will appear on UI while boss is active.",
     },
 
-    boss_gen_music =
+    bool_boss_gen_music =
     {
       name = "bool_boss_gen_music",
       label=_("Enable Boss Music"),
@@ -1737,7 +1748,7 @@ OB_MODULES["gzdoom_boss_gen"] =
       tooltip = "Influences the spawn rate of reinforcements summoned by bosses",
     },
 
-    boss_gen_types =
+    bool_boss_gen_types =
     {
       name = "bool_boss_gen_types",
       label = _("Respect zero prob"),
@@ -1780,7 +1791,7 @@ OB_MODULES["gzdoom_boss_gen"] =
       tooltip = "Changes exit type after boss has been destroyed.",
     },
 
-    boss_gen_ammo =
+    float_boss_gen_ammo =
     {
       name = "float_boss_gen_ammo",
       label = _("Ammo supplies mult"),
@@ -1795,7 +1806,7 @@ OB_MODULES["gzdoom_boss_gen"] =
       tooltip = "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier).",
     },
 
-    boss_gen_heal =
+    float_boss_gen_heal =
     {
       name = "float_boss_gen_heal",
       label = _("Healing supplies mult"),

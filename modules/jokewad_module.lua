@@ -218,7 +218,17 @@ JOKEWAD_MODULE.TISSUES =
 
 function JOKEWAD_MODULE.get_levels()
 
-  if gui.get_module_button_value("jokewad_module", "bool_fireblu_mode") == 1 then
+  for _,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    end
+  end
+
+  if PARAM.bool_fireblu_mode == 1 then
     JOKEWAD_MODULE.go_fireblue()
   end
 
@@ -226,7 +236,7 @@ end
 
 function JOKEWAD_MODULE.end_level()
 
-  if gui.get_module_button_value("jokewad_module", "bool_pandemic_mode") == 1 then
+  if PARAM.bool_pandemic_mode == 1 then
     JOKEWAD_MODULE.add_tissues()
   end
 
@@ -404,7 +414,7 @@ end
 
 function JOKEWAD_MODULE.all_done()
 
-  if gui.get_module_button_value("jokewad_module", "bool_pandemic_mode") == 1 then
+  if PARAM.bool_pandemic_mode == 1 then
 
     SCRIPTS.tissue_doc = JOKEWAD_MODULE.SUPER_DEC
     local dir = "games/doom/data/"
@@ -416,6 +426,9 @@ end
 
 OB_MODULES["jokewad_module"] =
 {
+
+  name = "jokewad_module",
+
   label = _("Jokewad Module"),
 
   game = "doomish",

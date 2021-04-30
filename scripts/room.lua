@@ -1397,7 +1397,7 @@ function Room_make_windows(A1, A2)
   end]]
 
   -- remove windows into quiet start rooms... but not on procedural gotchas
-  if gui.get_module_button_value("ui_mons", "bool_quiet_start") == 1 and not LEVEL.is_procedural_gotcha then
+  if PARAM.bool_quiet_start == 1 and not LEVEL.is_procedural_gotcha then
     if A1.room and A1.room.is_start then
       if A2.room then return end
     end

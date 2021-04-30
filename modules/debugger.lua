@@ -75,25 +75,33 @@ DEBUG_CONTROL.LEVEL_NUM_CHOICES =
 
 function DEBUG_CONTROL.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 end
 
 function DEBUG_CONTROL.get_levels()
-  if PARAM.custom_error_texture and gui.get_module_button_value("debugger", "bool_custom_error_texture") == 1 then
+  if PARAM.custom_error_texture and PARAM.bool_custom_error_texture == 1 then
     GAME.MATERIALS._ERROR.t = "ZZWOLF7"
   end
 end
 
 function DEBUG_CONTROL.all_done()
-  --[[if PARAM.attach_debug_info and gui.get_module_button_value("debugger", "bool_attach_debug_info") == 1 then
+  --[[if PARAM.attach_debug_info and PARAM.bool_attach_debug_info == 1 then
     local log_text = {}
 
     gui.wad_add_text_lump("OBLOGS", log_text)
   end]]
 
-  if PARAM.custom_error_texture and gui.get_module_button_value("debugger", "bool_custom_error_texture") == 1 then
+  if PARAM.custom_error_texture and PARAM.bool_custom_error_texture == 1 then
     gui.wad_merge_sections("games/doom/data/error_wall.wad")
   end
 end
@@ -102,6 +110,9 @@ end
 
 OB_MODULES["debugger"] =
 {
+
+  name = "debugger",
+
   label = _("Debug Control"),
 
   side = "left",
@@ -131,7 +142,7 @@ OB_MODULES["debugger"] =
       priority=100,
     },
 
-    print_prefab_use =
+    bool_print_prefab_use =
     {
       name = "bool_print_prefab_use",
       label=_("Print Prefab Usage"),
@@ -141,7 +152,7 @@ OB_MODULES["debugger"] =
       priority=98,
     },
 
-    print_story_strings =
+    bool_print_story_strings =
     {
       name = "bool_print_story_strings",
       label=_("Print ZDoom Strings"),
@@ -163,7 +174,7 @@ OB_MODULES["debugger"] =
       priority=96,
     },
 
-    shape_rule_stats =
+    bool_shape_rule_stats =
     {
       name = "bool_shape_rule_stats",
       label = _("Shape Rule Stats"),
@@ -184,7 +195,7 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    extra_games =
+    bool_extra_games =
     {
       name = "bool_extra_games",
       label = _("Extra Games"),
@@ -195,7 +206,7 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    custom_error_texture =
+    bool_custom_error_texture =
     {
       name = "bool_custom_error_texture",
       label = _("Custom Error Texture"),
@@ -208,7 +219,7 @@ OB_MODULES["debugger"] =
     },
 
 --[[
-    attach_debug_info =
+    bool_attach_debug_info =
     {
       name = "bool_attach_debug_info",
       label = _("Attach DEBUG Info")

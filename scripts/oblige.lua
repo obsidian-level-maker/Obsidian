@@ -1348,7 +1348,16 @@ function ob_invoke_hook(name, ...)
         func(mod, ...)
       end
     end
+    
+    for _,mod in pairs(OB_MODULES) do
+      if ob_check_ui_module(mod) then
+       local func = mod.hooks and mod.hooks[name]
 
+        if func then
+          func(mod, ...)
+        end
+      end
+    end
     name = name .. "2"
   end
 end

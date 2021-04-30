@@ -76,9 +76,31 @@ UI_MONS.BOSSREGULARS =
   "all", _("All Bosses"),
 }
 
+function UI_MONS.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for _,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    end
+  end
+end
+
 OB_MODULES["ui_mons"] =
 {
+
+  name = "ui_mons",
+
   label = _("Monsters"),
+
+  hooks = 
+  {
+    setup = UI_MONS.setup,
+  },
 
   side = "right",
   priority = 105,

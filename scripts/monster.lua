@@ -834,7 +834,7 @@ function Monster_fill_room(R)
     local l_factor = MONSTER_KIND_TAB.few
     local u_factor = MONSTER_KIND_TAB.heaps
 
-    factor = gui.get_module_slider_value("ui_mons", "float_mons")
+    factor = PARAM.float_mons
     assert(factor)
 
     if factor == -0.10 then
@@ -885,9 +885,9 @@ function Monster_fill_room(R)
         end
     end
 
-    local qty = gui.get_module_slider_value("ui_mons", "float_mons")
-    local u_range = gui.get_module_slider_value("ui_mons", "float_mix_it_up_upper_range")
-    local l_range = gui.get_module_slider_value("ui_mons", "float_mix_it_up_lower_range")
+    local qty = PARAM.float_mons
+    local u_range = PARAM.float_mix_it_up_upper_range
+    local l_range = PARAM.float_mix_it_up_lower_range
     
     --Mix It Up
     if qty == -0.10 then
@@ -1207,7 +1207,7 @@ function Monster_fill_room(R)
       end
     end
 
-    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+    local mon_strength = PARAM.float_strength
 
     if mon_strength < 1.0 then 
       return 1 / ((1 + mon_strength) ^ factor)
@@ -1297,7 +1297,7 @@ function Monster_fill_room(R)
     local d = info.density or 1
 
     -- level check
-    if gui.get_module_slider_value("ui_mons", "float_strength") < 12 or LEVEL.is_procedural_gotcha == false then
+    if PARAM.float_strength < 12 or LEVEL.is_procedural_gotcha == false then
       local max_level = LEVEL.monster_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
@@ -2259,7 +2259,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
 
   local function add_monsters()
 
-    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+    local mon_strength = PARAM.float_strength
 
     -- sometimes prevent monster replacements
     if rand.odds(40) or mon_strength == 12 then
@@ -2360,14 +2360,14 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
 
   local function should_add_monsters()
-    if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
+    if PARAM.float_mons == 0 then
       return false
     end
 
     --if R.no_monsters then return false end
     if R.is_secret and OB_CONFIG.secret_monsters == "no" then return false end
 
-    if R.is_start and gui.get_module_button_value("ui_mons", "bool_quiet_start") == 1 then
+    if R.is_start and PARAM.bool_quiet_start == 1 then
       if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
         -- your face is a tree
       else
