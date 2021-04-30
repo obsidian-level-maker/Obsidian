@@ -889,7 +889,7 @@ function Grower_calc_rule_probs()
   end
 
   if not LEVEL.is_procedural_gotcha then
-    if gui.random_between(0, 100) <= gui.get_module_slider_value("ui_arch", "float_layout_absurdity") then
+    if rand.odds(gui.get_module_slider_value("ui_arch", "float_layout_absurdity")) then
         LEVEL.is_absurd = true
     end
   end

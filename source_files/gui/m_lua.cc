@@ -823,14 +823,6 @@ int gui_random_int(lua_State *L) {
     return 1;
 }
 
-int gui_random_between(lua_State *L) {
-	int low = luaL_checkinteger(L, 1);
-	int high = luaL_checkinteger(L, 2);	
-    lua_Integer value = twister_Between(low, high);
-    lua_pushnumber(L, value);
-    return 1;
-}
-
 // LUA: bit_and(A, B) --> number
 //
 int gui_bit_and(lua_State *L) {
@@ -1053,7 +1045,6 @@ static const luaL_Reg gui_script_funcs[] = {
     {"rand_seed", gui_rand_seed},
     {"random", gui_random},
     {"random_int", gui_random_int},
-    {"random_between", gui_random_between},
 
     // file & directory functions
     {"import", gui_import},

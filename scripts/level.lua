@@ -189,7 +189,7 @@ function Level_determine_map_size(LEV)
       low = gui.get_module_slider_value("level_control", "level_lower_bound")
     end
     
-    ob_size = math.clamp(10, int(gui.random_between(low, high) * result_skew), 75)
+    ob_size = math.clamp(10, int(rand.irange(low, high) * result_skew), 75)
   end
 
   if ob_size == 8 or ob_size == 9 then
