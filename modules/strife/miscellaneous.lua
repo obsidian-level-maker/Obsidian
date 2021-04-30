@@ -20,12 +20,6 @@
 
 MISC_STUFF_STRIFE = { }
 
-MISC_STUFF_STRIFE.YES_NO =
-{
-  "no",  _("No"),
-  "yes", _("Yes"),
-}
-
 MISC_STUFF_STRIFE.LIGHTINGS =
 {
   "flat",    _("FLAT"),
@@ -101,6 +95,24 @@ MISC_STUFF_STRIFE.LINEAR_START_CHOICES =
   "default", _("DEFAULT"),
 }
 
+function MISC_STUFF_STRIFE.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for _,opt in pairs(self.options) do
+    if opt.name == "room_size_multiplier" or
+    opt.name == "room_area_multiplier" or
+    opt.name == "room_size_consistency" then
+      PARAM[opt.name] = opt.value
+    elseif opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    end
+  end
+end
+
 function MISC_STUFF_STRIFE.begin_level(self)
   for _,opt in pairs(self.options) do
     local name  = assert(opt.name)
@@ -126,6 +138,9 @@ end
 
 OB_MODULES["misc_strife"] =
 {
+
+  name = "misc_strife",
+
   label = _("Miscellaneous"),
 
   game = "strife",
@@ -135,29 +150,32 @@ OB_MODULES["misc_strife"] =
 
   hooks =
   {
+    setup = MISC_STUFF_STRIFE.setup,
     begin_level = MISC_STUFF_STRIFE.begin_level
   },
 
   options =
   {
     {
-      name="pistol_starts",
-      label=_("Pistol Starts"),
-      choices=MISC_STUFF_STRIFE.YES_NO,
-      tooltip=_("Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)")
+      name="bool_pistol_starts",
+      label=_("Crossbow Starts"),
+      valuator = "button",
+      default = 1,
+      tooltip=_("Ensure every map can be completed from a crossbow start (ignore weapons obtained from earlier maps)")
     },
     {
-      name="alt_starts",
+      name="bool_alt_starts",
       label=_("Alt-start Rooms"),
-      choices=MISC_STUFF_STRIFE.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip=_("For Co-operative games, sometimes have players start in different rooms")
     },
     {
-      name = "foreshadowing_exit",
+      name = "bool_foreshadowing_exit",
       label = _("Foreshadowing Exit"),
-      choices = MISC_STUFF_STRIFE.YES_NO,
+      valuator = "button",
+      default = 1,
       tooltip = "Gets exit room theme to follow the theme of the next level, if different.",
-      default = "yes",
       gap=1,
     },
 
@@ -263,10 +281,10 @@ OB_MODULES["misc_strife"] =
     { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES, gap=1 },
 
     {
-      name="road_markings",
+      name="bool_road_markings",
       label=_("Road Markings"),
-      choices=MISC_STUFF_STRIFE.YES_NO,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = _("Adds street markings to roads."),
     },
     {
@@ -279,11 +297,11 @@ OB_MODULES["misc_strife"] =
     },
 
     {
-      name="exit_signs",
+      name="bool_exit_signs",
       label=_("Exit Signs"),
-      choices=MISC_STUFF_STRIFE.YES_NO,
+      valuator = "button",
+      default = 1,
       tooltip=_("Places exit signs by exiting room"),
-      default = "yes",
       gap=1,
     },
 
