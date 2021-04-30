@@ -426,7 +426,7 @@ function Episode_plan_monsters()
 
   local function calc_monster_level(LEV)
   
-    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+    local mon_strength = PARAM.float_strength
   
     if mon_strength == 12 then
       LEV.monster_level = mon_strength
@@ -434,7 +434,7 @@ function Episode_plan_monsters()
     end
 
     local mon_along = LEV.game_along
-    local ramp_up = gui.get_module_slider_value("ui_mons", "float_ramp_up")
+    local ramp_up = PARAM.float_ramp_up
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
     if PARAM.episodic_monsters or ramp_up == 0.45 then
@@ -515,7 +515,7 @@ function Episode_plan_monsters()
     if not info.theme then return true end
 
     -- anything goes in CRAZY mode
-    if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then return true end
+    if PARAM.float_strength == 12 then return true end
 
     return info.theme == LEV.theme_name
   end
@@ -606,7 +606,7 @@ function Episode_plan_monsters()
 
     for name,_ in pairs(LEV.seen_monsters) do
       local info = GAME.MONSTERS[name]
-      if not info.boss_type or gui.get_module_slider_value("ui_mons", "float_strength") == 12 or LEV.is_procedural_gotcha then
+      if not info.boss_type or PARAM.float_strength == 12 or LEV.is_procedural_gotcha then
         LEV.global_pal[name] = 1
       elseif info.boss_type and OB_CONFIG.bossesnormal ~= "no" then
         if info.boss_type == "minor" then
@@ -1029,7 +1029,7 @@ function Episode_plan_monsters()
       if LEV.prebuilt  then goto continue end
       if LEV.is_secret then goto continue end
 
-      if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then goto continue end
+      if PARAM.float_strength == 12 then goto continue end
       if OB_CONFIG.bosses   == "none"  then goto continue end
 
       pick_boss_quotas(LEV)
@@ -1674,7 +1674,7 @@ function Episode_plan_weapons()
 
     -- prefer simpler weapons for start rooms
     -- [ except in crazy monsters mode, player may need a bigger weapon! ]
-    if is_start and gui.get_module_slider_value("ui_mons", "float_strength") < 12 or LEV.is_procedural_gotcha ~= "true" then
+    if is_start and PARAM.float_strength < 12 or LEV.is_procedural_gotcha ~= "true" then
       if level <= 2 then prob = prob * 4 end
       if level == 3 then prob = prob * 2 end
 

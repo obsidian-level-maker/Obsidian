@@ -939,7 +939,7 @@ function Item_pickups_for_class(CL)
       end
     end
 
-    if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then
+    if PARAM.float_strength == 12 then
       bonus = bonus * 2
     end
 

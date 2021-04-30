@@ -2604,7 +2604,7 @@ function Quest_nice_items()
   -- collect all the items we might use
   start_items = start_palette()
 
-  if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then
+  if PARAM.float_strength == 12 then
     normal_items = crazy_palette()
   else
     normal_items = normal_palette()
