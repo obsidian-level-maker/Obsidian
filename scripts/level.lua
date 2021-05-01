@@ -2683,9 +2683,9 @@ function Level_build_it()
 
   Seed_init()
 
-  if PARAM.build_levels then
-    if PARAM.build_levels ~= "all" then
-      if LEVEL.id ~= tonumber(PARAM.build_levels) then return "nope" end
+  if PARAM.float_build_levels then
+    if PARAM.float_build_levels ~= 0 then
+      if LEVEL.id ~= PARAM.float_build_levels then return "nope" end
     end
   end
 
