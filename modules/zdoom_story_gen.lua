@@ -229,8 +229,8 @@ function ZStoryGen_quitmessages()
   "\n",
   }
   -- custom quit message creation
-  PARAM.quit_messages = "yes"
-  if PARAM.quit_messages == "yes" then
+  PARAM.bool_quit_messages = 1
+  if PARAM.bool_quit_messages == 1 then
     x = 1
     local info = ZStoryGen_create_characters_and_stuff()
     for _,line in pairs(ZDOOM_STORIES.QUIT_MESSAGES) do
