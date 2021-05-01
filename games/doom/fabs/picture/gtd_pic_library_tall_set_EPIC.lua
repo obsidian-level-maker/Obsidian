@@ -19,5 +19,6 @@ PREFABS.Pic_gtd_library_tall_EPIC =
   bound_z2 = 128,
 
   x_fit = { 120,136 },
+  y_fit = "top",
   z_fit = { 56,72 }
 }
