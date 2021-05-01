@@ -10,13 +10,13 @@ PREFABS.Pic_urban_terraced_building_2x =
   env = "outdoor",
 
   where = "seeds",
-  height = 264,
+  height = 280,
 
   seed_h = 1,
   seed_w = 2,
 
   bound_z1 = 0,
-  bound_z2 = 264,
+  bound_z2 = 280,
 
   deep = 16,
 

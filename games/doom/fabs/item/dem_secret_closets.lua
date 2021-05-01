@@ -844,8 +844,6 @@ PREFABS.Item_dem_cavein7_secret =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP29",
 
-  engine = "zdoom",
-
   prob   = 100,
 
   key   = "secret",
@@ -865,7 +863,6 @@ PREFABS.Item_dem_cavein7_secret =
   bound_z2 = 128,
 
   x_fit = "stretch",
-  z_fit = { 56,64 },
 
   thing_2014 =
   {

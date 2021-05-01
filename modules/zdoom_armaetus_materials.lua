@@ -1743,6 +1743,34 @@ brightmap texture SW2CHN
   map OBRS2CN
 }
 
+// colorful churchy glass
+brightmap texture GLASS7
+{
+  map OBRGLAS7
+}
+
+brightmap texture GLASS8
+{
+  map OBRGLAS8
+}
+
+brightmap texture GLASS9
+{
+  map OBRGLAS9
+}
+
+// bookshelves
+
+brightmap texture PANBOOK2
+{
+  map OBRPNBK2
+}
+
+brightmap texture PANBOOK3
+{
+  map OBRPNBK3
+}
+
 // liquids
 
 // Oblige lava patch
