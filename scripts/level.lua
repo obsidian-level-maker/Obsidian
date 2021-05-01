@@ -2526,7 +2526,7 @@ function Level_choose_darkness()
 
   -- NOTE: this style is only set via the Level Control module
   -- MSSP: This can now be overriden (ignored) by the Sky Generator option.
-  if STYLE.darkness and PARAM.influence_map_darkness == "no" then
+  if STYLE.darkness and PARAM.bool_influence_map_darkness == 0 then
     prob = style_sel("darkness", 0, 15, 35, 100) -- 0, 15, 35, 97,
     --prob = style_sel("darkness", 0, 10, 30, 90) --Original
   end
