@@ -264,7 +264,7 @@ function ob_match_level_theme(T, override)
   if T.theme == "any" then return true end
 
   -- if match theme toggle is disabled, everything qualifies
-  if PARAM.fab_match_theme == "off" then return true end
+  if PARAM.bool_fab_match_theme == 0 then return true end
 
   local level_theme_name = LEVEL.theme_name
   if override then

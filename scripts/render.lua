@@ -2731,7 +2731,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   Ambient_push(A.lighting)
 
-  if PARAM.peered_exits and PARAM.peered_exits == "on" then
+  if PARAM.bool_peered_exits and PARAM.bool_peered_exits == 1 then
     local start_fab_override = check_peered_exits(def, chunk)
     if start_fab_override then
       def = start_fab_override

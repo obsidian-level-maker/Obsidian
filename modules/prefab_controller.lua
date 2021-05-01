@@ -47,23 +47,6 @@ PREFAB_CONTROL.POINT_CHOICES =
   "fab_heaps",   _("Heaps")
 }
 
-PREFAB_CONTROL.PERCENTAGE_CHOICES =
-{
-  "0",  _("NONE"),
-  "13", _("13% of Levels"),
-  "25", _("25% of Levels"),
-  "50", _("50% of Levels"),
-  "75", _("75% of Levels"),
-  "88", _("88% of Levels"),
-  "100", _("100% of Levels")
-}
-
-PREFAB_CONTROL.ON_OFF =
-{
-  "on",  _("On"),
-  "off", _("Off")
-}
-
 PREFAB_CONTROL.DAMAGING_HALLWAY_CHOICES =
 {
   "default", _("DEFAULT"),
@@ -95,8 +78,16 @@ PREFAB_CONTROL.FILTER_CATEGORIES =
 
 function PREFAB_CONTROL.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 end
 
@@ -150,6 +141,9 @@ end
 
 OB_MODULES["prefab_control"] =
 {
+
+  name = "prefab_control",
+
   label = _("Advanced Level Control"),
 
   side = "left",
@@ -166,14 +160,14 @@ OB_MODULES["prefab_control"] =
 
   options =
   {
-    autodetail =
+    bool_autodetail =
     {
-      name = "autodetail",
+      name = "bool_autodetail",
       label=("Auto Detailing"),
-      choices=PREFAB_CONTROL.ON_OFF,
+      valuator = "button",
+      default = 1,
       tooltip = "Reduces the amount of complex architecture in a map based on its size. " ..
         "Default is on in binary map format, off in UDMF map format.",
-      default = "on",
       priority = 150,
       gap = 1
     },
@@ -215,37 +209,47 @@ OB_MODULES["prefab_control"] =
 
     --
 
-    single_room_theme =
+    float_single_room_theme =
     {
-      name = "single_room_theme",
+      name = "float_single_room_theme",
       label = _("Single Room Themes"),
-      choices = PREFAB_CONTROL.PERCENTAGE_CHOICES,
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 50,
+      nan = "",
       tooltip = "Determines the odds at which a level would use a universal, single room theme " ..
                 "for all indoors (buildings). Default is 50%.",
-      default = "50", 
       priority = 50
     },
 
-    limit_wall_groups =
+    float_limit_wall_groups =
     {
-      name = "limit_wall_groups",
+      name = "float_limit_wall_groups",
       label = _("Limited Wall Groups"),
-      choices = PREFAB_CONTROL.PERCENTAGE_CHOICES,
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 50,
+      nan = "",
       tooltip = "Determines the odds at which a level would use fewer wall group choices but at greater quantites " ..
                 "for more consistent visuals. Default is 50%.",
-      default = "50",
       priority = 49,
       gap = 1
     },
 
     --
 
-    peered_exits =
+    bool_peered_exits =
     {
-      name = "peered_exits",
+      name = "bool_peered_exits",
       label = _("Peered Starts/Exits"),
-      choices = PREFAB_CONTROL.ON_OFF,
-      default = "on",
+      valuator = "button",
+      default = 1,
       priority = 48
     },
 
@@ -264,13 +268,13 @@ OB_MODULES["prefab_control"] =
       priority = 47
     },
 
-    start_room_size =
+    bool_start_room_size =
     {
-      name = "start_room_size",
+      name = "bool_start_room_size",
       label = _ ("Start Size Variance"),
-      choices = PREFAB_CONTROL.ON_OFF,
+      valuator = "button",
+      default = 1,
       tooltip = "Affects whether Room Size Variance also influences start rooms.",
-      default = "on",
       priority = 46,
       gap = 1
     },
@@ -348,13 +352,13 @@ OB_MODULES["prefab_control"] =
 
     --
 
-    fab_match_theme =
+    bool_fab_match_theme =
     {
-      name = "fab_match_theme",
+      name = "bool_fab_match_theme",
       label=("Match Theme"),
-      choices=PREFAB_CONTROL.ON_OFF,
+      valuator = "button",
+      default = 1,
       tooltip = "Ensures that prefabs selected match their intended Theme.",
-      default = "on",
       priority = 1
     }
   }

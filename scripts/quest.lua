@@ -2928,8 +2928,8 @@ function Quest_room_themes()
   local function choose_building_themes()
     local building_tab = collect_usable_themes("building")
 
-    local single_room_theme_prob = int(PARAM.single_room_theme or 50)
-    local limit_wall_group_prob = int(PARAM.limit_wall_groups or 50)
+    local single_room_theme_prob = int(PARAM.float_single_room_theme or 50)
+    local limit_wall_group_prob = int(PARAM.float_limit_wall_groups or 50)
 
     if not rand.odds(single_room_theme_prob) then
       -- distribute room themes (vanilla Oblige behavior)

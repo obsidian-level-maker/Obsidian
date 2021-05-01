@@ -39,12 +39,6 @@ PREFAB_CONTROL_HERETIC.POINT_CHOICES =
   "fab_heaps",   _("Heaps"),
 }
 
-PREFAB_CONTROL_HERETIC.ON_OFF =
-{
-  "on",  _("On"),
-  "off", _("Off"),
-}
-
 PREFAB_CONTROL_HERETIC.FINE_TUNE_MULT_FACTORS =
 {
   "0", _("NONE"),
@@ -59,8 +53,16 @@ PREFAB_CONTROL_HERETIC.FINE_TUNE_MULT_FACTORS =
 
 function PREFAB_CONTROL_HERETIC.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 end
 
@@ -108,7 +110,10 @@ end
 
 OB_MODULES["prefab_control_heretic"] =
 {
-  label = _("Prefab Control"),
+
+  name = "prefab_control_heretic",
+
+  label = _("Advanced Level Control"),
 
   side = "left",
   priority = 93,
@@ -123,13 +128,13 @@ OB_MODULES["prefab_control_heretic"] =
 
   options =
   {
-    autodetail =
+    bool_autodetail =
     {
-      name = "autodetail",
+      name = "bool_autodetail",
       label=("Auto Detailing"),
-      choices=PREFAB_CONTROL_HERETIC.ON_OFF,
+      valuator = "button",
+      default = 1,
       tooltip = "Reduces the amount of complex architecture in a map based on its size. Default is on.",
-      default = "on",
       priority = 102,
       gap = 1,
     },
@@ -201,13 +206,13 @@ OB_MODULES["prefab_control_heretic"] =
 
     --
 
-    fab_match_theme =
+    bool_fab_match_theme =
     {
-      name = "fab_match_theme",
+      name = "bool_fab_match_theme",
       label=("Match Theme"),
-      choices=PREFAB_CONTROL_HERETIC.ON_OFF,
+      valuator = "button",
+      default = 1,
       tooltip = "Ensures that prefabs selected match their intended Theme.",
-      default = "on",
       priority = 1,
     },
   },

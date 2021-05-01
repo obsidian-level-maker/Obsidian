@@ -2124,8 +2124,8 @@ function Room_choose_size(R, not_big)
   -- some extra size experiments - should be revised for
   -- more direct control. In fact, maybe this whole size
   -- decision code could use a clean-up
-  if (R.is_start and PARAM.start_room_size
-  and PARAM.start_room_size == "on")
+  if (R.is_start and PARAM.bool_start_room_size
+  and PARAM.bool_start_room_size == 1)
   or not R.is_secret then
     if LEVEL.size_multiplier then
       sum = sum * LEVEL.size_multiplier
@@ -2224,8 +2224,8 @@ function Room_choose_size(R, not_big)
 
   end
 
-  if (R.is_start and PARAM.start_room_size
-  and PARAM.start_room_size == "on")
+  if (R.is_start and PARAM.bool_start_room_size
+  and PARAM.bool_start_room_size == 1)
   or not R.is_secret then
     if LEVEL.area_multiplier then
       R.floor_limit = int(R.floor_limit * LEVEL.area_multiplier)
