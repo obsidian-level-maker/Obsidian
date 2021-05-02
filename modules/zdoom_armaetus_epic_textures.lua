@@ -655,7 +655,7 @@ actor AssIsHell : Inventory
 function ARMAETUS_EPIC_TEXTURES.setup(self)
   ARMAETUS_EPIC_TEXTURES.put_new_materials()
   PARAM.epic_textures_activated = true
-  for _,opt in pairs(self.options) do
+  for name,opt in pairs(self.options) do
     if opt.valuator then
       if opt.valuator == "button" then
         PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)

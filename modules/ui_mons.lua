@@ -79,7 +79,7 @@ UI_MONS.BOSSREGULARS =
 function UI_MONS.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
-  for _,opt in pairs(self.options) do
+  for name,opt in pairs(self.options) do
     if opt.valuator then
       if opt.valuator == "button" then
         PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
