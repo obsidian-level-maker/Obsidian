@@ -1,6 +1,6 @@
-PREFABS.Pic_in_wall_vending_machines =
+PREFABS.Pic_inset_vending_machines =
 {
-  file = "wall/armaetus_pic_EPIC_wall_vending.wad",
+  file = "picture/armaetus_pic_vending_inset_EPIC.wad",
   map = "MAP01",
 
   prob = 25,

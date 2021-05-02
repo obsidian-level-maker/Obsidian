@@ -3052,7 +3052,7 @@ function Quest_room_themes()
       }
     )
 
-    if PARAM.dynamic_lights == "yes" then
+    if PARAM.bool_dynamic_lights == 1 then
       LEVEL.light_group = {}
 
       if light_grouping == "plain" then

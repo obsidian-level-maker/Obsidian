@@ -4539,8 +4539,9 @@ ARMAETUS_THEMES =
       --
       gtd_wall_grated_machines_epic = 50,
       --
-      gtd_wall_tech_oven = 40,
-      gtd_wall_tech_freezer = 40
+      gtd_wall_tech_oven = 35,
+      gtd_wall_tech_freezer = 35,
+      gtd_wall_air_vents = 35
     },
 
     window_groups =
@@ -4975,6 +4976,8 @@ ARMAETUS_THEMES =
       gtd_wall_grated_machines_epic = 25,
       --
       gtd_library_tall = 35,
+      --
+      gtd_wall_air_vents = 50
     },
 
     window_groups =

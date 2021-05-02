@@ -2285,7 +2285,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local T = Trans.spot_transform(chunk.mx, chunk.my, ceil_h, chunk.prefab_dir or 2)
 
     -- dynamic light fabrication for ZDoom dynamic lights module
-    if PARAM.dynamic_lights == "yes" then
+    if PARAM.bool_dynamic_lights == 1 then
       if def.kind == "light" and def.light_color ~= "none" then
         local light_ent = {
           x = chunk.mx,
