@@ -410,8 +410,16 @@ SKY_GEN.themes =
 
 function SKY_GEN.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 
   PARAM.episode_sky_color = {}
@@ -713,14 +721,14 @@ OB_MODULES["sky_generator"] =
       gap = 1,
     },
 
-    influence_map_darkness =
+    bool_influence_map_darkness =
     {
       label=_("Sky Gen Lighting"),
-      choices=MISC_STUFF.YES_NO,
+      valuator = "button",
+      default = 0,
       priority = 4,
       tooltip = "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator " ..
       "creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish.",
-      default = "no",
     },
   },
 }

@@ -1496,6 +1496,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = 100,
       nan = "",
       tooltip = "Chance per map of marine closets spawning at all. E.G. at 50% theres 50% chance of each map being empty of marine closets.",
+      gap = 1
     },
 
     float_m_c_min =
@@ -1540,6 +1541,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Progressive: Goes from min to max through entire game\n" ..
       "Episodic: Goes from min to max through episode\n" ..
       "Regressive/Regressive episodic: Goes from max to min through game or episode" ,
+      gap = 1
     },
 
     float_m_c_m_min =
@@ -1571,12 +1573,27 @@ OB_MODULES["gzdoom_marine_closets"] =
       nan = "",
       tooltip = "Sets most amount of marines that can spawn per closet.",
     },
+    
+    float_m_c_health =
+    {
+      name = "float_m_c_health",
+      label = _("Marine Health"),
+      priority = 93,
+      valuator = "slider",
+      units = "",
+      min = 25,
+      max = 2000,
+      increment = 25,
+      default = 100,
+      nan = "",
+      tooltip = "Influences how much damage marines can take before dying.",
+    },
 
     m_c_m_type =
     {
       name = "m_c_m_type",
       label = _("Marine scaling type"),
-      priority = 93,
+      priority = 92,
       choices = MARINE_CLOSET_TUNE.SCALING,
       default = "default",
       tooltip = "Affects how min and max work for marine count:\n\n" ..
@@ -1590,7 +1607,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "m_c_ttech",
       label = _("Weapon tech level"),
-      priority = 92,
+      priority = 91,
       choices = MARINE_CLOSET_TUNE.TECH,
       default = "mid",
       tooltip = "Influences weapons that marines spawn with:\n\n" ..
@@ -1601,42 +1618,6 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Mix it up: Any weapon goes, let the dice decide!\n" ..
       "BFG Fiesta: BFG only, cyberdemons beware!\n" ..
       "Progressive: Marines start with pistols and get more powerful weapons through episode/megawad",
-    },
-
-    bool_m_c_power =
-    {
-      name = "bool_m_c_power",
-      label = _("Strong Marines"),
-      priority = 91,
-      valuator = "button",
-      default = 1,
-      tooltip = "Influences whether marines are as accurate and rapid firing as player, or are weaker.",
-    },
-
-    bool_m_c_follow =
-    {
-      name = "bool_m_c_follow",
-      label = _("Followers"),
-      priority = 90,
-      valuator = "button",
-      default = 0,
-      tooltip = "By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\n" ..
-      "If this is enabled marines will much harder prioritize following player and will teleport if they are too far away.",
-    },
-
-    float_m_c_health =
-    {
-      name = "float_m_c_health",
-      label = _("Marine Health"),
-      priority = 89,
-      valuator = "slider",
-      units = "",
-      min = 25,
-      max = 2000,
-      increment = 25,
-      default = 100,
-      nan = "",
-      tooltip = "Influences how much damage marines can take before dying.",
     },
 
     m_c_waker =
@@ -1652,31 +1633,22 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Close Range: same as range except requires player to be really really close.\n" ..
       "Map Start: Closets are active on map start.",
     },
-
-    m_c_quantity =
+    
+    m_c_color =
     {
-      name = "m_c_quantity",
-      label = _("Monster Quantity Multiplier"),
+      name = "m_c_color",
+      label = _("Marine Color"),
       priority = 87,
-      choices = MARINE_CLOSET_TUNE.QUANTITY,
-      default = "default",
-      tooltip = "Influences amount of monsters in rooms with a marine closet.",
+      choices = MARINE_CLOSET_TUNE.COLORS,
+      default = "MarAI1",
+      tooltip = "Lets you choose the color of marines, including option for random color per marine.",
     },
-
-    m_c_strength =
-    {
-      name = "m_c_strength",
-      label = _("Monster Strength Modifier"),
-      priority = 86,
-      choices = MARINE_CLOSET_TUNE.STRENGTH,
-      default = "default",
-      tooltip = "If set, this strength setting is used in the room with marine closet instead of normal one.",
-    },
+    
     m_c_ff =
     {
       name = "m_c_ff",
       label = _("Friendly Fire"),
-      priority = 85,
+      priority = 86,
       choices = MARINE_CLOSET_TUNE.FRIENDLYFIRE,
       default = "no",
       tooltip = "By default marines do no damage to player. However that means their use their own version of puffs and projectiles.\n" ..
@@ -1687,30 +1659,66 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "m_c_sprites",
       label = _("Weapon Sprites"),
-      priority = 84,
+      priority = 85,
       choices = MARINE_CLOSET_TUNE.SPRITES,
       default = "no",
       tooltip = "By default marines use default player sprite.\n" ..
       "If this is enabled, marines will use special sprites according to weapon they carry.\n" ..
       "With merge option sprites will be merged into oblige wad, otherwise they need to be loaded separately.",
+      gap = 1
     },
+
+    m_c_quantity =
+    {
+      name = "m_c_quantity",
+      label = _("Monster Quantity Multiplier"),
+      priority = 84,
+      choices = MARINE_CLOSET_TUNE.QUANTITY,
+      default = "default",
+      tooltip = "Influences amount of monsters in rooms with a marine closet.",
+    },
+
+    m_c_strength =
+    {
+      name = "m_c_strength",
+      label = _("Monster Strength Modifier"),
+      priority = 83,
+      choices = MARINE_CLOSET_TUNE.STRENGTH,
+      default = "default",
+      tooltip = "If set, this strength setting is used in the room with marine closet instead of normal one.",
+      gap = 1
+    },
+    
+    bool_m_c_power =
+    {
+      name = "bool_m_c_power",
+      label = _("Strong Marines"),
+      priority = 82,
+      valuator = "button",
+      default = 1,
+      tooltip = "Influences whether marines are as accurate and rapid firing as player, or are weaker.",
+    },
+
+    bool_m_c_follow =
+    {
+      name = "bool_m_c_follow",
+      label = _("Followers"),
+      priority = 81,
+      valuator = "button",
+      default = 0,
+      tooltip = "By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\n" ..
+      "If this is enabled marines will much harder prioritize following player and will teleport if they are too far away.",
+    },    
+    
     bool_m_c_boss =
     {
       name = "bool_m_c_boss",
       label = _("Allow in Gotchas"),
-      priority = 83,
+      priority = 80,
       valuator = "button",
       default = 0,
       tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
-    },
-    m_c_color =
-    {
-      name = "m_c_color",
-      label = _("Marine Color"),
-      priority = 82,
-      choices = MARINE_CLOSET_TUNE.COLORS,
-      default = "MarAI1",
-      tooltip = "Lets you choose the color of marines, including option for random color per marine.",
-    },
+    },   
+
   },
 }
