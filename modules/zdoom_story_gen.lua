@@ -182,6 +182,12 @@ function ZStoryGen_init()
   table.insert(PARAM.language_lump, "// The following stories are brought to you by\n")
   table.insert(PARAM.language_lump, "// the ObAddon Story Generator!\n")
   table.insert(PARAM.language_lump, "\n")
+
+
+  -- attach game title and subtitle
+  table.insert(PARAM.language_lump, "GAME_TITLE = " .. "\"" .. GAME.title .. "\"\n\n")
+  table.insert(PARAM.language_lump, "GAME_SUB_TITLE = " .. "\"" .. GAME.sub_title .. "\"\n\n")
+
   x = 1
   local y
   while x <= #GAME.episodes do
