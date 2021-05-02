@@ -662,6 +662,8 @@ function ARMAETUS_EPIC_TEXTURES.setup(self)
       elseif opt.valuator == "slider" then
         PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
       end
+    else
+      PARAM[name] = self.options[name].value
     end
   end
 end
@@ -1074,7 +1076,6 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=3
     },
 
-    -- Is this still under construction?
     environment_themes =
     {
       name = "environment_themes",
@@ -1082,7 +1083,6 @@ OB_MODULES["armaetus_epic_textures"] =
       choices = ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES,
       default = "random",
       tooltip =
-        "// THIS FEATURE IS CURRENTLY UNDER CONSTRUCTION \\\\\n" ..
         "Influences outdoor environments with different textures such as " ..
         "desert sand or icey snow.",
       priority=2,

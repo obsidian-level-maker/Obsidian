@@ -417,8 +417,7 @@ function SKY_GEN.setup(self)
         PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
       end
     else
-      local value = self.options[name].value
-      PARAM[name] = value
+      PARAM[name] = self.options[name].value
     end
   end
 
