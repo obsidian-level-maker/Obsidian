@@ -976,8 +976,6 @@ bool doom_game_interface_c::Start(const char *preset) {
     }
 
     if (main_win) {
-        main_win->build_box->name_disp->copy_label(FindBaseName(filename));
-        main_win->build_box->name_disp->redraw();
         main_win->build_box->Prog_Init(20, N_("CSG"));
         if (current_engine == "zdoom") {
             build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")
@@ -1059,8 +1057,8 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = StringDup(value);
     } else if (StringCaseCmp(key, "description") == 0) {
-        // ignored (for now)
-        // [another mechanism sets the description via BEX/DDF]
+        main_win->build_box->name_disp->copy_label(value);
+        main_win->build_box->name_disp->redraw();
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
             dm_sub_format = 0;

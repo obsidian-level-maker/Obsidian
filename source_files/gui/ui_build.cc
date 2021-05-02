@@ -58,7 +58,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
 
     name_disp = new Fl_Box(X + (W * .10), cy, mini_w, mini_h);
     name_disp->box(FL_NO_BOX);
-    name_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
+    name_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT | FL_ALIGN_CLIP);
     name_disp->labelcolor(FL_WHITE);
     name_disp->labelsize(name_disp->labelsize() * .60);
 
