@@ -21,7 +21,7 @@
 
 
 function Render_add_exit_sign(E, z)
-  if PARAM.bool_exit_signs and PARAM.bool_exit_signs == 0 then return end
+  if PARAM.bool_exit_signs and PARAM.bool_exit_signs ~= 1 then return end
 
   local def = PREFABS["Decor_exit_sign"]
   if not def then return end
