@@ -1250,7 +1250,11 @@ DOOM.THEMES =
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_server_room = 50,
       gtd_wall_sewer = 50,
-      gtd_generic_beamed_inset = 50,
+      --
+      gtd_generic_beamed_inset = 25,
+      gtd_generic_beamed_green_inset = 25,
+      gtd_generic_beamed_brown_inset = 25,
+      --
       gtd_computers = 50,
       gtd_writhing_mass = 10,
       gtd_wall_octagon_insets = 50,
@@ -1645,7 +1649,11 @@ DOOM.THEMES =
       gtd_wall_urban_storage = 50,
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_sewer = 40,
-      gtd_generic_beamed_inset = 50,
+      --
+      gtd_generic_beamed_inset = 25,
+      gtd_generic_beamed_green_inset = 25,
+      gtd_generic_beamed_brown_inset = 25,
+      --
       gtd_computers = 20,
       gtd_drywall = 50,
       gtd_writhing_mass = 20,
@@ -2100,7 +2108,10 @@ DOOM.THEMES =
       --
       gtd_wall_hell_bloodgutters = 25,
       gtd_wall_tech_top_corner_light_set = 50,
-      gtd_generic_beamed_inset = 50,
+      --
+      gtd_generic_beamed_inset = 35,
+      gtd_generic_beamed_brown_inset = 35,
+      --
       gtd_writhing_mass = 50,
       gtd_library = 50,
       --
