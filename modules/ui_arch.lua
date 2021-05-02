@@ -205,7 +205,7 @@ OB_MODULES["ui_arch"] =
 
     { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES },
     { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES },
-    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES },
+    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1 },
 
     {
       name = "zdoom_vista",
