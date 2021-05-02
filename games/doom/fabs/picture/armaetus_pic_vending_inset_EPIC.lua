@@ -3,7 +3,7 @@ PREFABS.Pic_inset_vending_machines =
   file = "picture/armaetus_pic_vending_inset_EPIC.wad",
   map = "MAP01",
 
-  prob = 25,
+  prob = 15,
 
   env = "building",
   theme = "!hell",
@@ -31,8 +31,23 @@ PREFABS.Pic_inset_vending_machines =
     OBVNMCH5 = 50,
   },
 
+  tex_OBVNMCH2 =
+  {
+    OBVNMCH1 = 50,
+    OBVNMCH2 = 50,
+    OBVNMCH3 = 50,
+    OBVNMCH4 = 50,
+    OBVNMCH5 = 50,
+  },
+
   x_fit = "frame",
   y_fit = "top"
 
   --sound = "Vending_Machine_Hum", -- Needs ambient sound thing applied!
+}
+
+PREFABS.Pic_inset_vending_machines_w_chair =
+{
+  template = "Pic_inset_vending_machines",
+  map = "MAP02"
 }
