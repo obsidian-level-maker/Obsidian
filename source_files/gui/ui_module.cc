@@ -26,7 +26,6 @@
 #include "m_lua.h"
 #include "main.h"
 #include <string>
-#include <limits>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
                      const char *label, const char *tip)
@@ -376,8 +375,6 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
     UI_RSlide *current_slider = (UI_RSlide*)mod_slider->parent();
    
 	double value = mod_slider->value();
-	
-	printf("SLIDER VALUE: %f\n", value);
 	
 	if (value == -0) {
 		value = 0; // Silly, but keeps "negative zero" from being show on the label
