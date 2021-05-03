@@ -26,6 +26,7 @@
 #include "m_lua.h"
 #include "main.h"
 #include <string>
+#include <limits>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
                      const char *label, const char *tip)
@@ -376,6 +377,8 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
    
 	double value = mod_slider->value();
 	
+	printf("SLIDER VALUE: %f\n", value);
+	
 	if (value == -0) {
 		value = 0; // Silly, but keeps "negative zero" from being show on the label
 	}
@@ -409,7 +412,7 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
 	int match = 0;
 	
 	do {
-		int temp_value = value - current_slider->mod_slider->step();
+		double temp_value = current_slider->mod_slider->increment(value, -1);
 		if (temp_value >= current_slider->mod_slider->minimum()) {
 			value = temp_value;
 		} else {
@@ -436,7 +439,7 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 	int match = 0;
 	
 	do {
-		int temp_value = value + current_slider->mod_slider->step();
+		double temp_value = current_slider->mod_slider->increment(value, 1);
 		if (temp_value <= current_slider->mod_slider->maximum()) {
 			value = temp_value;
 		} else {
