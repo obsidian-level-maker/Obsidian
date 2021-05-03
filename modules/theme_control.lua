@@ -88,8 +88,16 @@ end
 
 function THEME_CONTROL.get_levels(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      local value = self.options[name].value
+      PARAM[name] = value
+    end
   end
 
   for _,LEV in pairs(GAME.levels) do
@@ -114,6 +122,9 @@ end
 
 OB_MODULES["theme_ctl_doom2"] =
 {
+
+  name = "theme_ctl_doom2",
+
   label = _("[Exp] Doom 2 Theme Control"),
 
   game = "doom2",
@@ -138,6 +149,9 @@ OB_MODULES["theme_ctl_doom2"] =
 
 OB_MODULES["level_control"] =
 {
+
+  name = "level_control",
+
   label = _("Level/Theme Control"),
 
 --  game = "doomish",
@@ -265,6 +279,9 @@ THEME_CONTROL.DOOM1_CHOICES =
 
 OB_MODULES["theme_ctl_doom1"] =
 {
+
+  name = "theme_ctl_doom1",
+
   label = _("[Exp] Doom 1 Theme Control"),
 
   game = "doom1",

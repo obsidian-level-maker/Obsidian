@@ -207,23 +207,30 @@ MODDED_GAME_EXTRAS.D4T_MONS =
 
 function MODDED_GAME_EXTRAS.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
   end
 
-  if gui.get_module_button_value("modded_game_extras", "bool_hn_markers") == 1 then
+  if PARAM.bool_hn_markers == 1 then
     MODDED_GAME_EXTRAS.init_hn_info()
   end
 
-  if gui.get_module_button_value("modded_game_extras", "bool_custom_actor_names") == 1 then
+  if PARAM.bool_custom_actor_names == 1 then
     MODDED_GAME_EXTRAS.generate_custom_actor_names()
   end
 
-  if gui.get_module_button_value("modded_game_extras", "bool_qcde_lootboxes") == 1 then
+  if PARAM.bool_qcde_lootboxes == 1 then
     MODDED_GAME_EXTRAS.add_qcde_lootboxes()
   end
 
-  if gui.get_module_button_value("modded_game_extras", "bool_d4t_ents") == 1 then
+  if PARAM.bool_d4t_ents == 1 then
     MODDED_GAME_EXTRAS.add_d4t_ents()
   end
 end
@@ -241,7 +248,7 @@ function MODDED_GAME_EXTRAS.create_hn_info()
   if LEVEL.prebuilt then return end
   if LEVEL.is_procedural_gotcha then return end
 
-  if gui.get_module_button_value("modded_game_extras", "bool_hn_markers") == 0 then
+  if PARAM.bool_hn_markers == 0 then
     return
   end
 
@@ -474,7 +481,7 @@ end
 
 function MODDED_GAME_EXTRAS.generate_hn_decorate()
 
-  if gui.get_module_button_value("modded_game_extras", "bool_hn_markers") == 0 then
+  if PARAM.bool_hn_markers == 0 then
     return
   end
 
@@ -901,6 +908,9 @@ end
 
 OB_MODULES["modded_game_extras"] =
 {
+
+  name = "modded_game_extras",
+
   label = _("Modded Game Extras"),
 
   side = "left",

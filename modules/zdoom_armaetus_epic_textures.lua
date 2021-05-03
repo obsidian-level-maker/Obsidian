@@ -655,6 +655,17 @@ actor AssIsHell : Inventory
 function ARMAETUS_EPIC_TEXTURES.setup(self)
   ARMAETUS_EPIC_TEXTURES.put_new_materials()
   PARAM.epic_textures_activated = true
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
+  end
 end
 
 function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
@@ -914,7 +925,7 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
 
     -- put the custom theme definitions in the themes table!!!
     -- LIQUIDZ
-    if gui.get_module_button_value("armaetus_epic_textures", "bool_custom_liquids") == 1 then
+    if PARAM.bool_custom_liquids == 1 then
       GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_LIQUIDS, 2)
     end
 
@@ -935,7 +946,7 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
 
     -- put the custom theme definitions in the themes table!!!
     -- LIQUIDZ
-    if gui.get_module_button_value("armaetus_epic_textures", "bool_custom_liquids") == 1 then
+    if PARAM.bool_custom_liquids == 1 then
       GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_DOOM1_LIQUIDS, 2)
     end
 
@@ -972,7 +983,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   local wad_file_2 = "games/doom/data/ObAddon_Textures_2.wad"
   local wad_file_3 = "games/doom/data/ObAddon_Textures_3.wad"
 
-  if gui.get_module_button_value("armaetus_epic_textures", "bool_include_package") == 1 then
+  if PARAM.bool_include_package == 1 then
     gui.wad_transfer_lump(wad_file, "ANIMDEFS", "ANIMDEFS")
     gui.wad_transfer_lump(wad_file, "CREDITS", "CREDITS")
     gui.wad_merge_sections(wad_file)
@@ -1007,7 +1018,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_merge_sections(wad_file)
   end
 
-  if gui.get_module_button_value("armaetus_epic_textures", "bool_include_brightmaps") == 1 then
+  if PARAM.bool_include_brightmaps == 1 then
     wad_file = "games/doom/data/ObAddon_Textures_Brightmaps.wad"
     gui.wad_merge_sections(wad_file)
   end
@@ -1016,6 +1027,9 @@ end
 
 OB_MODULES["armaetus_epic_textures"] =
 {
+
+  name = "armaetus_epic_textures",
+
   label = _("ZDoom: Obsidian Textures"),
 
   side = "left",
@@ -1062,7 +1076,6 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=3
     },
 
-    -- Is this still under construction?
     environment_themes =
     {
       name = "environment_themes",
@@ -1070,7 +1083,6 @@ OB_MODULES["armaetus_epic_textures"] =
       choices = ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES,
       default = "random",
       tooltip =
-        "// THIS FEATURE IS CURRENTLY UNDER CONSTRUCTION \\\\\n" ..
         "Influences outdoor environments with different textures such as " ..
         "desert sand or icey snow.",
       priority=2,

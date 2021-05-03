@@ -62,7 +62,7 @@ function ZStoryGen_format_story_chunk(story_strings, info, store)
 
   -- remove the spaces left behind by Lua's square bracket stuff.
   story_strings = string.gsub(story_strings, "  ", "")
-  if gui.get_module_button_value("debugger", "bool_print_story_strings") == 1 then
+  if PARAM.bool_print_story_strings == 1 then
     gui.printf(story_strings .. "\n\n")
   end
   story_strings = string.gsub(story_strings, "\n", " ")
@@ -182,6 +182,12 @@ function ZStoryGen_init()
   table.insert(PARAM.language_lump, "// The following stories are brought to you by\n")
   table.insert(PARAM.language_lump, "// the ObAddon Story Generator!\n")
   table.insert(PARAM.language_lump, "\n")
+
+
+  -- attach game title and subtitle
+  table.insert(PARAM.language_lump, "GAME_TITLE = " .. "\"" .. GAME.title .. "\"\n\n")
+  table.insert(PARAM.language_lump, "GAME_SUB_TITLE = " .. "\"" .. GAME.sub_title .. "\"\n\n")
+
   x = 1
   local y
   while x <= #GAME.episodes do
@@ -229,8 +235,8 @@ function ZStoryGen_quitmessages()
   "\n",
   }
   -- custom quit message creation
-  PARAM.quit_messages = "yes"
-  if PARAM.quit_messages == "yes" then
+  PARAM.bool_quit_messages = 1
+  if PARAM.bool_quit_messages == 1 then
     x = 1
     local info = ZStoryGen_create_characters_and_stuff()
     for _,line in pairs(ZDOOM_STORIES.QUIT_MESSAGES) do

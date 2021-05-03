@@ -4511,6 +4511,8 @@ ARMAETUS_THEMES =
       --
       gtd_storage_shawn = 50,
       --
+      gtd_wall_cafeteria_set = 50,
+      --
       gtd_collite_set_green = 13,
       gtd_collite_set_orange = 13,
       gtd_collite_set_blue = 13,
@@ -4539,7 +4541,9 @@ ARMAETUS_THEMES =
       --
       gtd_wall_grated_machines_epic = 50,
       --
-      gtd_wall_tech_oven = 50
+      gtd_wall_tech_oven = 35,
+      gtd_wall_tech_freezer = 35,
+      gtd_wall_air_vents = 35
     },
 
     window_groups =
@@ -4932,6 +4936,8 @@ ARMAETUS_THEMES =
       gtd_grocery = 25,
       gtd_grocery_2 = 25,
       --
+      gtd_wall_cafeteria_set = 50,
+      --
       gtd_storage_shawn = 50,
       --
       gtd_tall_glass_epic_yellow = 8,
@@ -4974,6 +4980,8 @@ ARMAETUS_THEMES =
       gtd_wall_grated_machines_epic = 25,
       --
       gtd_library_tall = 35,
+      --
+      gtd_wall_air_vents = 50
     },
 
     window_groups =

@@ -21,7 +21,7 @@
 
 
 function Render_add_exit_sign(E, z)
-  if PARAM.exit_signs and PARAM.exit_signs == "no" then return end
+  if PARAM.bool_exit_signs and PARAM.bool_exit_signs ~= 1 then return end
 
   local def = PREFABS["Decor_exit_sign"]
   if not def then return end
@@ -2285,7 +2285,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local T = Trans.spot_transform(chunk.mx, chunk.my, ceil_h, chunk.prefab_dir or 2)
 
     -- dynamic light fabrication for ZDoom dynamic lights module
-    if PARAM.dynamic_lights == "yes" then
+    if PARAM.bool_dynamic_lights == 1 then
       if def.kind == "light" and def.light_color ~= "none" then
         local light_ent = {
           x = chunk.mx,
@@ -2731,7 +2731,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   Ambient_push(A.lighting)
 
-  if PARAM.peered_exits and PARAM.peered_exits == "on" then
+  if PARAM.bool_peered_exits and PARAM.bool_peered_exits == 1 then
     local start_fab_override = check_peered_exits(def, chunk)
     if start_fab_override then
       def = start_fab_override
@@ -2936,7 +2936,7 @@ function Render_all_areas()
 
   Render_skybox()
 
-  if LEVEL.has_streets and PARAM.road_markings == "yes" then
+  if LEVEL.has_streets and PARAM.bool_road_markings == 1 then
     Render_find_street_markings()
     Render_all_street_markings()
     Render_establish_street_lanes()

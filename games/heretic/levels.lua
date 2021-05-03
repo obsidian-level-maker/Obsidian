@@ -211,19 +211,19 @@ function HERETIC.get_levels()
     -- handling for street mode
     -- actual handling for urban percentages are done
     if not LEV.is_procedural_gotcha or not LEV.prebuilt then
-      if rand.odds(gui.get_module_slider_value("ui_arch", "float_streets_mode")) then
+      if rand.odds(PARAM.float_streets_mode) then
         LEV.has_streets = true
       end
     end
 
     if not LEV.prebuilt then
-      if rand.odds(gui.get_module_slider_value("ui_arch", "float_linear_mode")) then
+      if rand.odds(PARAM.float_linear_mode) then
         LEV.is_linear = true
       end
 
       -- nature mode
       if OB_CONFIG.nature_mode and not LEV.has_streets then
-        if rand.odds(gui.get_module_slider_value("ui_arch", "float_nature_mode")) then
+        if rand.odds(PARAM.float_nature_mode) then
           LEV.is_nature = true
         end
       end

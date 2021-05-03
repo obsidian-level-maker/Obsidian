@@ -150,7 +150,7 @@ function Level_determine_map_size(LEV)
   -- Since we have other sizes and Auto-Detail, we can have these bigger sizes
   -- now. -Armaetus, July 9th, 2019,
 
-  local ob_size = gui.get_module_slider_value("ui_arch", "float_size")
+  local ob_size = PARAM.float_size
 
   local W, H
 
@@ -169,8 +169,8 @@ function Level_determine_map_size(LEV)
   if ob_size == 7 then
 
     local result_skew = 1.0
-    local low = gui.get_module_slider_value("level_control", "float_level_upper_bound") or 10
-    local high = gui.get_module_slider_value("level_control", "float_level_lower_bound") or 75
+    local low = PARAM.float_level_lower_bound or 10
+    local high = PARAM.float_level_upper_bound or 75
 
     if PARAM.level_size_bias then
       if PARAM.level_size_bias == "small" then
@@ -202,8 +202,8 @@ function Level_determine_map_size(LEV)
     -- Level Control fine tune for Prog/Epi
 
     -- default when Level Control is off: ramp from "small" --> "large",
-    local def_small = gui.get_module_slider_value("level_control", "float_level_lower_bound") or 30
-    local def_large = (gui.get_module_slider_value("level_control", "float_level_upper_bound") - def_small) or 42
+    local def_small = PARAM.float_level_lower_bound or 30
+    local def_large = PARAM.float_level_upper_bound - def_small or 42
 
     -- this basically ramps up
     W = int(def_small + along * def_large)
@@ -426,7 +426,7 @@ function Episode_plan_monsters()
 
   local function calc_monster_level(LEV)
   
-    local mon_strength = gui.get_module_slider_value("ui_mons", "float_strength")
+    local mon_strength = PARAM.float_strength
   
     if mon_strength == 12 then
       LEV.monster_level = mon_strength
@@ -434,7 +434,7 @@ function Episode_plan_monsters()
     end
 
     local mon_along = LEV.game_along
-    local ramp_up = gui.get_module_slider_value("ui_mons", "float_ramp_up")
+    local ramp_up = PARAM.float_ramp_up
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
     if PARAM.episodic_monsters or ramp_up == 0.45 then
@@ -515,7 +515,7 @@ function Episode_plan_monsters()
     if not info.theme then return true end
 
     -- anything goes in CRAZY mode
-    if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then return true end
+    if PARAM.float_strength == 12 then return true end
 
     return info.theme == LEV.theme_name
   end
@@ -606,7 +606,7 @@ function Episode_plan_monsters()
 
     for name,_ in pairs(LEV.seen_monsters) do
       local info = GAME.MONSTERS[name]
-      if not info.boss_type or gui.get_module_slider_value("ui_mons", "float_strength") == 12 or LEV.is_procedural_gotcha then
+      if not info.boss_type or PARAM.float_strength == 12 or LEV.is_procedural_gotcha then
         LEV.global_pal[name] = 1
       elseif info.boss_type and OB_CONFIG.bossesnormal ~= "no" then
         if info.boss_type == "minor" then
@@ -715,7 +715,7 @@ function Episode_plan_monsters()
             bprob = 0
           end
         end
-        if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_types") == 1 and info.prob == 0 then
+        if PARAM.bool_boss_gen_types == 1 and info.prob == 0 then
           bprob = 0
         end
         tab[name] = bprob
@@ -1029,13 +1029,13 @@ function Episode_plan_monsters()
       if LEV.prebuilt  then goto continue end
       if LEV.is_secret then goto continue end
 
-      if gui.get_module_slider_value("ui_mons", "float_strength") == 12 then goto continue end
+      if PARAM.float_strength == 12 then goto continue end
       if OB_CONFIG.bosses   == "none"  then goto continue end
 
       pick_boss_quotas(LEV)
 
       -- hax for procedural gotchas
-      if LEV.is_procedural_gotcha and gui.get_module_button_value("procedural_gotcha", "gotcha_boss_fight") == 1 then
+      if LEV.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
         if LEV.game_along <= 0.33 then
           if LEV.boss_quotas.minor < 1 then LEV.boss_quotas.minor = 1 end
         elseif LEV.game_along > 0.33 and LEV.game_along <= 0.66 then
@@ -1169,7 +1169,7 @@ function Episode_plan_weapons()
     end
 
     -- more as game progresses
-    if PARAM.pistol_starts then
+    if PARAM.bool_pistol_starts == 1 then
       quota = quota + math.clamp(0, LEV.game_along, 0.5) * 3.1
     else
       quota = quota + math.clamp(0, LEV.game_along, 0.5) * 6.1
@@ -1674,7 +1674,7 @@ function Episode_plan_weapons()
 
     -- prefer simpler weapons for start rooms
     -- [ except in crazy monsters mode, player may need a bigger weapon! ]
-    if is_start and gui.get_module_slider_value("ui_mons", "float_strength") < 12 or LEV.is_procedural_gotcha ~= "true" then
+    if is_start and PARAM.float_strength < 12 or LEV.is_procedural_gotcha ~= "true" then
       if level <= 2 then prob = prob * 4 end
       if level == 3 then prob = prob * 2 end
 
@@ -2526,7 +2526,7 @@ function Level_choose_darkness()
 
   -- NOTE: this style is only set via the Level Control module
   -- MSSP: This can now be overriden (ignored) by the Sky Generator option.
-  if STYLE.darkness and PARAM.influence_map_darkness == "no" then
+  if STYLE.darkness and PARAM.bool_influence_map_darkness == 0 then
     prob = style_sel("darkness", 0, 15, 35, 100) -- 0, 15, 35, 97,
     --prob = style_sel("darkness", 0, 10, 30, 90) --Original
   end
@@ -2683,9 +2683,9 @@ function Level_build_it()
 
   Seed_init()
 
-  if PARAM.build_levels then
-    if PARAM.build_levels ~= "all" then
-      if LEVEL.id ~= tonumber(PARAM.build_levels) then return "nope" end
+  if PARAM.float_build_levels then
+    if PARAM.float_build_levels ~= 0 then
+      if LEVEL.id ~= PARAM.float_build_levels then return "nope" end
     end
   end
 
@@ -2860,7 +2860,7 @@ function Level_make_all()
 
   -- semi-supported games warning
   if OB_CONFIG.game ~= "doom2" then
-    if not PARAM.extra_games or gui.get_module_button_value("debugger", "bool_extra_games") == 0 then
+    if not PARAM.bool_extra_games or PARAM.bool_extra_games == 0 then
       error("Warning: ObAddon development is mostly focused " ..
     "on creating content for the Doom 2 game setting.\n\n" ..
     "As a consequence, other games available on the list are " ..

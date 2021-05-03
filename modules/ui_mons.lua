@@ -76,9 +76,33 @@ UI_MONS.BOSSREGULARS =
   "all", _("All Bosses"),
 }
 
+function UI_MONS.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
+  end
+end
+
 OB_MODULES["ui_mons"] =
 {
+
+  name = "ui_mons",
+
   label = _("Monsters"),
+
+  hooks = 
+  {
+    setup = UI_MONS.setup,
+  },
 
   side = "right",
   priority = 105,
@@ -182,6 +206,15 @@ OB_MODULES["ui_mons"] =
       gap = 1,
     },
 
+    {
+      name="bool_quiet_start",
+      label=_("Quiet Start"),
+      valuator = "button",
+      default = 0,
+      tooltip="Makes start rooms mostly safe - no enemies and all outlooking windows are removed. " ..
+      "(windows are retained on Procedural Gotchas) Default Oblige behavior is 'no'.",
+    },
+
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES,
       tooltip= "Affects how many different monster types can " ..
                "appear in each room.\n" ..
@@ -202,6 +235,7 @@ OB_MODULES["ui_mons"] =
       choices=UI_MONS.BOSSREGULARS,
       default="no",
       tooltip="Normally Archviles/Barons/Cyberdemons and other big monsters are excluded from normal monster pool and only can appear as guard for important objective e.g. key. With this option enabled they are allowed to(rarely) spawn as a regular monster. \n\n WARNING: This CAN make maps much more difficult than normal.",
+      gap = 1
     },
     { name="traps",     label=_("Traps"),     choices=STYLE_CHOICES },
     {
@@ -210,7 +244,6 @@ OB_MODULES["ui_mons"] =
       choices=UI_MONS.TRAP_STYLE,
       default="default",
       tooltip="This option selects between using only teleport or closet traps. DEFAULT means both are used.",
-      gap = 1,
     },
     {
       name="trap_qty",
@@ -218,7 +251,11 @@ OB_MODULES["ui_mons"] =
       choices=UI_MONS.CAGE_STRENGTH,
       default="default",
       tooltip="Changes the quantity of ambushing monsters from traps.",
+      gap = 1,
     },
+    
+    { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES },    
+    
     {
       name="cage_qty",
       label=_("Cage Monsters"),
@@ -227,7 +264,6 @@ OB_MODULES["ui_mons"] =
       tooltip="Changes the quantity of monsters in cages.",
       gap=1,
     },
-    { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES,  gap=1 },
 
     {
       name="secret_monsters",
@@ -237,13 +273,5 @@ OB_MODULES["ui_mons"] =
       default="no",
     },
 
-    {
-      name="bool_quiet_start",
-      label=_("Quiet Start"),
-      valuator = "button",
-      default = 0,
-      tooltip="Makes start rooms mostly safe - no enemies and all outlooking windows are removed. " ..
-      "(windows are retained on Procedural Gotchas) Default Oblige behavior is 'no'.",
-    },
   },
 }

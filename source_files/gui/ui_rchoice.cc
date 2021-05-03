@@ -52,7 +52,7 @@ choice_data_c::~choice_data_c() {
 //----------------------------------------------------------------
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label), opt_list() {}
+    : Fl_Choice(x, y, w, h, label), opt_list() {visible_focus(0);}
 
 UI_RChoice::~UI_RChoice() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
@@ -236,7 +236,7 @@ int UI_RChoice::handle(int event) {
 //----------------------------------------------------------------
 
 UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Hor_Slider(x, y, w, h, label), opt_list() { }
+    : Fl_Group(x, y, w, h, label), opt_list() {visible_focus(0);}
 
 UI_RSlide::~UI_RSlide() {}
 

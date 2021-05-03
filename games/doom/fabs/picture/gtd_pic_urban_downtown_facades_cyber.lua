@@ -65,7 +65,6 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CITY14 = 15,
 
     -- technological-looking facades
-    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPTIL2 = 2,
@@ -74,7 +73,6 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     COMPTIL5 = 2,
     COMPTIL6 = 2,
     --
-    SHAWHOSO = 2,
     SHAWNDR = 2,
     SHAWVENT = 2,
     SHAWVEN2 = 2,
@@ -125,7 +123,6 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     CITY14 = 15,
 
     -- technological-looking facades
-    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPTIL2 = 2,
@@ -134,7 +131,6 @@ PREFABS.Pic_urban_downtown_facade_cyber_mid_inset =
     COMPTIL5 = 2,
     COMPTIL6 = 2,
     --
-    SHAWHOSO = 2,
     SHAWNDR = 2,
     SHAWVENT = 2,
     SHAWVEN2 = 2,

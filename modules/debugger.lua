@@ -32,68 +32,34 @@ DEBUG_CONTROL.GROWTH_STEP_CHOICES =
   "no",       _("No"),
 }
 
-DEBUG_CONTROL.LEVEL_NUM_CHOICES =
-{
-  "all", _("All"),
-  "1",   _("1 only"),
-  "2",   _("2 only"),
-  "3",   _("3 only"),
-  "4",   _("4 only"),
-  "5",   _("5 only"),
-  "6",   _("6 only"),
-  "7",   _("7 only"),
-  "8",   _("8 only"),
-  "9",   _("9 only"),
-  "10",   _("10 only"),
-  "11",   _("11 only"),
-  "12",   _("12 only"),
-  "13",   _("13 only"),
-  "14",   _("14 only"),
-  "15",   _("15 only"),
-  "16",   _("16 only"),
-  "17",   _("17 only"),
-  "18",   _("18 only"),
-  "19",   _("19 only"),
-  "20",   _("20 only"),
-  "21",   _("21 only"),
-  "22",   _("22 only"),
-  "23",   _("23 only"),
-  "24",   _("24 only"),
-  "25",   _("25 only"),
-  "26",   _("26 only"),
-  "27",   _("27 only"),
-  "28",   _("28 only"),
-  "29",   _("29 only"),
-  "30",   _("30 only"),
-  "31",   _("31 only"),
-  "32",   _("32 only"),
-  "33",   _("33 only"),
-  "34",   _("34 only"),
-  "35",   _("35 only"),
-  "36",   _("36 only"),
-}
-
 function DEBUG_CONTROL.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
   end
 end
 
 function DEBUG_CONTROL.get_levels()
-  if PARAM.custom_error_texture and gui.get_module_button_value("debugger", "bool_custom_error_texture") == 1 then
+  if PARAM.custom_error_texture and PARAM.bool_custom_error_texture == 1 then
     GAME.MATERIALS._ERROR.t = "ZZWOLF7"
   end
 end
 
 function DEBUG_CONTROL.all_done()
-  --[[if PARAM.attach_debug_info and gui.get_module_button_value("debugger", "bool_attach_debug_info") == 1 then
+  --[[if PARAM.attach_debug_info and PARAM.bool_attach_debug_info == 1 then
     local log_text = {}
 
     gui.wad_add_text_lump("OBLOGS", log_text)
   end]]
 
-  if PARAM.custom_error_texture and gui.get_module_button_value("debugger", "bool_custom_error_texture") == 1 then
+  if PARAM.custom_error_texture and PARAM.bool_custom_error_texture == 1 then
     gui.wad_merge_sections("games/doom/data/error_wall.wad")
   end
 end
@@ -102,6 +68,9 @@ end
 
 OB_MODULES["debugger"] =
 {
+
+  name = "debugger",
+
   label = _("Debug Control"),
 
   side = "left",
@@ -131,7 +100,7 @@ OB_MODULES["debugger"] =
       priority=100,
     },
 
-    print_prefab_use =
+    bool_print_prefab_use =
     {
       name = "bool_print_prefab_use",
       label=_("Print Prefab Usage"),
@@ -141,7 +110,7 @@ OB_MODULES["debugger"] =
       priority=98,
     },
 
-    print_story_strings =
+    bool_print_story_strings =
     {
       name = "bool_print_story_strings",
       label=_("Print ZDoom Strings"),
@@ -152,18 +121,23 @@ OB_MODULES["debugger"] =
       priority=97,
     },
 
-    build_levels =
+    float_build_levels =
     {
-      name = "build_levels",
+      name = "float_build_levels",
       label = _("Build Level"),
-      choices=DEBUG_CONTROL.LEVEL_NUM_CHOICES,
+      valuator = "slider",
+      units = " only",
+      min = 0,
+      max = 36,
+      increment = 1,
+      default = 0,
+      nan = "0:All,",
       tooltip="Allows the skipping of level construction along the WAD " ..
               "for debugging purposes.",
-      default="all",
       priority=96,
     },
 
-    shape_rule_stats =
+    bool_shape_rule_stats =
     {
       name = "bool_shape_rule_stats",
       label = _("Shape Rule Stats"),
@@ -184,7 +158,7 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    extra_games =
+    bool_extra_games =
     {
       name = "bool_extra_games",
       label = _("Extra Games"),
@@ -195,7 +169,7 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    custom_error_texture =
+    bool_custom_error_texture =
     {
       name = "bool_custom_error_texture",
       label = _("Custom Error Texture"),
@@ -208,7 +182,7 @@ OB_MODULES["debugger"] =
     },
 
 --[[
-    attach_debug_info =
+    bool_attach_debug_info =
     {
       name = "bool_attach_debug_info",
       label = _("Attach DEBUG Info")

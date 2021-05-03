@@ -50,13 +50,35 @@ UI_ARCH.PROC_GOTCHA_CHOICES =
   "all",   _("Everything")
 }
 
+function UI_ARCH.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for _,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    end
+  end
+end
+
 OB_MODULES["ui_arch"] =
 {
+
+  name = "ui_arch",
+
   label = _("Architecture"),
 
   side = "left",
   priority = 104,
   engine = "!vanilla",
+
+  hooks = 
+  {
+    setup = UI_ARCH.setup,
+  },
 
   options =
   {
@@ -84,28 +106,8 @@ OB_MODULES["ui_arch"] =
       "75:75 (Transcendent),",
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
       "at sizes of 50 and above, Autodetail is required on. (on by default if you do not have " ..
-      "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable."
-    },
-
-    {
-      name = "float_streets_mode",
-      label = _("Streets Mode"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 15,
-      nan = "",
-      tooltip = "Allows Oblige to create large street-like outdoor rooms."
-    },
-
-    {
-      name = "bool_urban_streets_mode",
-      label=_("Urban Only Streets"),
-      valuator = "button",
-      default = 1,
-      tooltip="Changes streets mode percentage to affect all themes or only urban.",
+      "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable.",
+      gap = 1
     },
 
     {
@@ -137,16 +139,29 @@ OB_MODULES["ui_arch"] =
       nan = "",
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
-      gap = 1
     },
 
-    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES },
-    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES },
-    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES,  gap=1 },
+    {
+      name = "float_streets_mode",
+      label = _("Streets Mode"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 15,
+      nan = "",
+      tooltip = "Allows Oblige to create large street-like outdoor rooms.",
+    },
 
-    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES },
-    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES },
-    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1 },
+    {
+      name = "bool_urban_streets_mode",
+      label=_("Urban Only Streets"),
+      valuator = "button",
+      default = 1,
+      tooltip="Changes streets mode percentage to affect all themes or only urban.",
+      gap = 1
+    },
 
     {
       name="bool_prebuilt_levels",
@@ -154,18 +169,6 @@ OB_MODULES["ui_arch"] =
       valuator = "button",
       default = 1,
       tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."
-    },
-
-    {
-      name="procedural_gotchas",
-      label=_("Procedural Gotcha"),
-      choices=UI_ARCH.PROC_GOTCHA_CHOICES,
-      default="none",
-      tooltip = "Procedural Gotchas are two room maps, where the second is an immediate " ..
-      "but immensely-sized exit room with gratitiously intensified monster strength. " ..
-      "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
-      "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
-      gap=1
     },
 
     {
@@ -181,9 +184,28 @@ OB_MODULES["ui_arch"] =
       tooltip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
       "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
       "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
-      "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
-      gap=1
+      "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance."
     },
+
+    {
+      name="procedural_gotchas",
+      label=_("Procedural Gotcha"),
+      choices=UI_ARCH.PROC_GOTCHA_CHOICES,
+      default="none",
+      tooltip = "Procedural Gotchas are two room maps, where the second is an immediate " ..
+      "but immensely-sized exit room with gratitiously intensified monster strength. " ..
+      "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
+      "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
+      gap = 1
+    },
+
+    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES },
+    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES },
+    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES },
+
+    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES },
+    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES },
+    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1 },
 
     {
       name = "zdoom_vista",

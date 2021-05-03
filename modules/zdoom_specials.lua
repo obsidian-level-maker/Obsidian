@@ -20,12 +20,6 @@ gui.import("zdoom_story_gen.lua")
 
 ZDOOM_SPECIALS = { }
 
-ZDOOM_SPECIALS.YES_NO =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
-}
-
 ZDOOM_SPECIALS.MUSIC_SHUFFLER_CHOICES =
 {
   "yes", _("Yes"),
@@ -482,8 +476,15 @@ function ZDOOM_SPECIALS.setup(self)
   gui.printf("\n--== ZDoom Special Addons module active ==--\n\n")
 
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
   end
 end
 
@@ -770,7 +771,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
     end
 
     -- if fog tints sky, based on ZDoom GL specs
-    if PARAM.fog_affects_sky == "yes" then
+    if PARAM.bool_fog_affects_sky == 1 then
       fog_intensity_line = fog_intensity_line .. '  skyfog = ' .. fog_intensity + 16 .. '\n'
     end
 
@@ -869,7 +870,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
       end
     end
 
-    if PARAM.no_intermission == "yes" then
+    if PARAM.bool_no_intermission == 1 then
       special_attributes = special_attributes .. '  nointermission\n'
     end
 
@@ -1105,7 +1106,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
   PARAM.mapinfolump = {}
   PARAM.gameinfolump = {}
 
-  if PARAM.custom_quit_messages == "yes" then
+  if PARAM.bool_custom_quit_messages == 1 then
     local gamedef_lines = add_gamedef()
     for _,line in pairs(gamedef_lines) do
       table.insert(PARAM.gameinfolump,line)
@@ -1150,7 +1151,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
   end
 
   -- lines for episode definition
-  if PARAM.episode_selection == "yes" then
+  if PARAM.bool_episode_selection == 1 then
 
     -- for Doom2 (yes, there's no Doom2 episode splitting)
     -- but there is from now on
@@ -1268,28 +1269,31 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended.",
     },
 
-    fog_affects_sky = {
+    bool_fog_affects_sky = {
+      name = "bool_fog_affects_sky",
       label = _("Sky Fog"),
+      valuator = "button",
       priority = 9,
-      choices = ZDOOM_SPECIALS.YES_NO,
-      default = "yes",
+      default = 1,
       tooltip = "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection.",
       gap = 1,
     },
 
-    dynamic_lights = {
+    bool_dynamic_lights = {
+      name = "bool_dynamic_lights",
       label = _("Dynamic Lights"),
+      valuator = "button",
       priority = 8,
-      choices = ZDOOM_SPECIALS.YES_NO,
-      default = "yes",
+      default = 1,
       tooltip = "Generates dynamic point lights on ceiling light prefabs.",
     },
 
-    glowing_flats = {
+    bool_glowing_flats = {
+      name = "bool_glowing_flats",
       label = _("Glowing Flats"),
+      valuator = "button",
       priority = 7,
-      choices = ZDOOM_SPECIALS.YES_NO,
-      default = "yes",
+      default = 1,
       tooltip = "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. " ..
                 "Visible on Zandronum ports as well.",
       gap = 1,
@@ -1314,11 +1318,12 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Adds cluster information with generic or randomized story text into the MAPINFO structure!",
     },
 
-    custom_quit_messages = {
+    bool_custom_quit_messages = {
+      name = "bool_custom_quit_messages",
       label = _("Quit Messages"),
+      valuator = "button",
       priority = 4,
-      choices = ZDOOM_SPECIALS.YES_NO,
-      default = "yes",
+      default = 1,
       tooltip = "Adds custom quit messages into the MAPINFO game definition.",
     },
 
@@ -1330,20 +1335,22 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Changes the music playing during intermission screens.",
     },
 
-    episode_selection = {
+    bool_episode_selection = {
+      name = "bool_episode_selection",
       label = _("Episode Selection"),
+      valuator = "button",
       priority = 2,
-      choices = ZDOOM_SPECIALS.YES_NO,
-      default = "no",
+      default = 1,
       tooltip = "Creates a classic Doom/Ultimate Doom style episode selection.",
       gap = 1,
     },
 
-    no_intermission = {
+    bool_no_intermission = {
+      name = "bool_no_intermission",
       label = _("Disable Intermissions"),
+      valuator = "button",
       priority = 1,
-      choices = ZDOOM_SPECIALS.YES_NO,
-      default = "no",
+      default = 0,
       tooltip = "Removes end-level Intermission Screens (containing map completion data) but retains " ..
                 "Text Screens with story.",
     },

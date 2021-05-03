@@ -264,7 +264,7 @@ function ob_match_level_theme(T, override)
   if T.theme == "any" then return true end
 
   -- if match theme toggle is disabled, everything qualifies
-  if PARAM.fab_match_theme == "off" then return true end
+  if PARAM.bool_fab_match_theme == 0 then return true end
 
   local level_theme_name = LEVEL.theme_name
   if override then
@@ -1348,7 +1348,16 @@ function ob_invoke_hook(name, ...)
         func(mod, ...)
       end
     end
+    
+    for _,mod in pairs(OB_MODULES) do
+      if ob_check_ui_module(mod) then
+       local func = mod.hooks and mod.hooks[name]
 
+        if func then
+          func(mod, ...)
+        end
+      end
+    end
     name = name .. "2"
   end
 end
