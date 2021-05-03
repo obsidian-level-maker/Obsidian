@@ -236,7 +236,7 @@ int UI_RChoice::handle(int event) {
 //----------------------------------------------------------------
 
 UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Hor_Slider(x, y, w, h, label), opt_list() {visible_focus(0);}
+    : Fl_Group(x, y, w, h, label), opt_list() {visible_focus(0);}
 
 UI_RSlide::~UI_RSlide() {}
 

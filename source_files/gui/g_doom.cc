@@ -122,16 +122,16 @@ int Slump_MakeWAD(const char* filename) {
 		slump_config.levelcount = 32; // "Full Game"
 	}
 	int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_minrooms")->value();
+							->FindSliderOpt("float_minrooms")->mod_slider->value();
 	if (minrooms == 1) {
 		slump_config.minrooms = twister_Between(2, 37);
 	} else {
 		slump_config.minrooms = minrooms;
 	}
 	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_bigify")->value();
+							->FindSliderOpt("float_bigify")->mod_slider->value();
 	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_forkiness")->value();
+							->FindSliderOpt("float_forkiness")->mod_slider->value();
 	if (main_win->left_mods->FindID("ui_slump_arch")
 							->FindButtonOpt("bool_dm_starts")->value()) {
 		slump_config.do_dm = 1;

@@ -106,13 +106,19 @@ class UI_RChoice : public Fl_Choice {
     void GotoNext();
 };
 
-class UI_RSlide : public Fl_Hor_Slider {
+class UI_RSlide : public Fl_Group {
    private:
     std::vector<choice_data_c *> opt_list;
+       
+    Fl_Button *prev_preset;
+    
+    Fl_Button *next_preset;
 
    public:
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
+    
+    Fl_Hor_Slider *mod_slider;
     
     std::string original_label;
     
