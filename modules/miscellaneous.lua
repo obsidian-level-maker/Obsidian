@@ -157,6 +157,8 @@ end
 
 function MISC_STUFF.begin_level(self)
   for _,opt in pairs(self.options) do
+    if opt.valuator then goto continue end
+
     local name  = assert(opt.name)
     local value = opt.value
 
@@ -174,6 +176,8 @@ function MISC_STUFF.begin_level(self)
         PARAM[name] = value
       end
     end
+
+    ::continue::
   end
 end
 
