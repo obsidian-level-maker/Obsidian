@@ -141,13 +141,32 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     UI_RSlide *rsl =
         new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
     rsl->align(FL_ALIGN_TOP_LEFT);
-    rsl->selection_color(select_col);
-    rsl->minimum(min);
-    rsl->maximum(max);
-    rsl->step(inc);
+    
+    rsl->prev_button =
+        new Fl_Button(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");      
+    rsl->prev_button->align(FL_ALIGN_INSIDE);   
+    rsl->prev_button->labelcolor(select_col);
+    rsl->prev_button->labelsize(rsl->prev_button->labelsize() * .80);
+    rsl->prev_button->callback(callback_SliderPrevious, NULL);
+    
+    rsl->mod_slider =
+        new Fl_Hor_Slider(rsl->x() + rsl->w() * .10, rsl->y(), rsl->w() * .80, kf_h(24), "");
+    rsl->mod_slider->selection_color(select_col);
+    rsl->mod_slider->minimum(min);
+    rsl->mod_slider->maximum(max);
+    rsl->mod_slider->step(inc);
+    rsl->mod_slider->callback(callback_MixItCheck, NULL);
+    
+    rsl->next_button =
+        new Fl_Button(rsl->x() + rsl->w() * .90, rsl->y(), rsl->w() * .10, kf_h(24), "@>");   
+    rsl->next_button->align(FL_ALIGN_INSIDE);  
+    rsl->next_button->labelcolor(select_col);
+    rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
+    rsl->next_button->callback(callback_SliderNext, NULL);
+
     rsl->original_label = new_label;
     rsl->units = units;
-    
+   
     // Populate the nan_choices map
 	std::string nan_string = nan;
 	std::string::size_type oldpos = 0;
@@ -162,13 +181,17 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 			rsl->nan_choices[key] = value;
 			oldpos = pos + 1;		
 		}
-	}    
+	}
+	
+	if (rsl->nan_choices.empty()) {
+		rsl->prev_button->deactivate();
+		rsl->next_button->deactivate();
+	}   
 	
     if (!tip) {
         tip = "";
     }
     rsl->tooltip(tip);
-    rsl->callback(callback_MixItCheck, NULL);
     if (!mod_button->value()) {
         rsl->hide();
     }
@@ -291,8 +314,8 @@ bool UI_Module::SetSliderOption(const char *option, double value) {
         return false;
     }
 
-    rsl->value(value);
-	rsl->do_callback();
+    rsl->mod_slider->value(value);
+	rsl->mod_slider->do_callback();
     return true;
 }
 
@@ -345,31 +368,83 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
 }
 
 void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
-    UI_RSlide *rsl = (UI_RSlide *)w;
+    Fl_Hor_Slider *mod_slider = (Fl_Hor_Slider *)w;
 
-    SYS_ASSERT(rsl);
-
-	double value = rsl->value();
+    SYS_ASSERT(mod_slider);
+    
+    UI_RSlide *current_slider = (UI_RSlide*)mod_slider->parent();
+   
+	double value = mod_slider->value();
 	
 	if (value == -0) {
 		value = 0; // Silly, but keeps "negative zero" from being show on the label
 	}
+
+	std::string new_label = current_slider->original_label;
 	
-	std::string new_label = rsl->original_label;
+	current_slider->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 
-	rsl->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
-
-	new_label = rsl->original_label;
+	new_label = current_slider->original_label;
 
 	// Check against the nan_choices map
 
-	if (rsl->nan_choices.count(value) == 1) {
-		rsl->copy_label(new_label.append(rsl->nan_choices[value].c_str()).c_str());
+	if (current_slider->nan_choices.count(value) == 1) {
+		current_slider->copy_label(new_label.append(current_slider->nan_choices[value].c_str()).c_str());
 	} else {
 		char value_string[20];
 		sprintf(value_string, "%g", value);
-		rsl->copy_label(new_label.append((const char*)value_string).append(rsl->units).c_str());
+		current_slider->copy_label(new_label.append((const char*)value_string).append(current_slider->units).c_str());
 	}
+}
+
+void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
+    Fl_Button *prev_button = (Fl_Button *)w;
+
+    SYS_ASSERT(prev_button);
+    
+    UI_RSlide *current_slider = (UI_RSlide*)prev_button->parent();
+   
+	double value = current_slider->mod_slider->value();
+	
+	int match = 0;
+	
+	do {
+		int temp_value = value - current_slider->mod_slider->step();
+		if (temp_value >= current_slider->mod_slider->minimum()) {
+			value = temp_value;
+		} else {
+			break;
+		}
+		match = current_slider->nan_choices.count(value);
+	} while (match == 0);
+	
+	current_slider->mod_slider->value(value);
+	current_slider->mod_slider->do_callback();		
+}
+
+void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
+    Fl_Button *next_button = (Fl_Button *)w;
+
+    SYS_ASSERT(next_button);
+    
+    UI_RSlide *current_slider = (UI_RSlide*)next_button->parent();
+   
+	double value = current_slider->mod_slider->value();
+	
+	int match = 0;
+	
+	do {
+		int temp_value = value + current_slider->mod_slider->step();
+		if (temp_value <= current_slider->mod_slider->maximum()) {
+			value = temp_value;
+		} else {
+			break;
+		}
+		match = current_slider->nan_choices.count(value);
+	} while (match == 0);
+	
+	current_slider->mod_slider->value(value);
+	current_slider->mod_slider->do_callback();
 }
 
 //----------------------------------------------------------------

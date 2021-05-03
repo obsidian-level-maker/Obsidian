@@ -122,16 +122,16 @@ int Slump_MakeWAD(const char* filename) {
 		slump_config.levelcount = 32; // "Full Game"
 	}
 	int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_minrooms")->value();
+							->FindSliderOpt("float_minrooms")->mod_slider->value();
 	if (minrooms == 1) {
 		slump_config.minrooms = twister_Between(2, 37);
 	} else {
 		slump_config.minrooms = minrooms;
 	}
 	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_bigify")->value();
+							->FindSliderOpt("float_bigify")->mod_slider->value();
 	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_forkiness")->value();
+							->FindSliderOpt("float_forkiness")->mod_slider->value();
 	if (main_win->left_mods->FindID("ui_slump_arch")
 							->FindButtonOpt("bool_dm_starts")->value()) {
 		slump_config.do_dm = 1;
@@ -976,8 +976,6 @@ bool doom_game_interface_c::Start(const char *preset) {
     }
 
     if (main_win) {
-        main_win->build_box->name_disp->copy_label(FindBaseName(filename));
-        main_win->build_box->name_disp->redraw();
         main_win->build_box->Prog_Init(20, N_("CSG"));
         if (current_engine == "zdoom") {
             build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")
@@ -1059,8 +1057,8 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = StringDup(value);
     } else if (StringCaseCmp(key, "description") == 0) {
-        // ignored (for now)
-        // [another mechanism sets the description via BEX/DDF]
+        main_win->build_box->name_disp->copy_label(value);
+        main_win->build_box->name_disp->redraw();
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
             dm_sub_format = 0;
