@@ -133,7 +133,6 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     CITY14 = 25,
 
     -- technological-looking facades
-    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPTIL2 = 2,
@@ -142,7 +141,6 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
     COMPTIL5 = 2,
     COMPTIL6 = 2,
     --
-    SHAWHOSO = 2,
     SHAWNDR = 2,
     SHAWVENT = 2,
     SHAWVEN2 = 2,
@@ -388,7 +386,6 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     CITY14 = 25,
 
     -- technological-looking facades
-    CMPOHSO = 5,
     CMPTILE = 5,
     --
     COMPTIL2 = 2,
@@ -397,7 +394,6 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
     COMPTIL5 = 2,
     COMPTIL6 = 2,
     --
-    SHAWHOSO = 2,
     SHAWNDR = 2,
     SHAWVENT = 2,
     SHAWVEN2 = 2,
