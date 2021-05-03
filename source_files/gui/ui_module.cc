@@ -418,8 +418,10 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
 		match = current_slider->nan_choices.count(value);
 	} while (match == 0);
 	
-	current_slider->mod_slider->value(value);
-	current_slider->mod_slider->do_callback();		
+	if (match == 1) {
+		current_slider->mod_slider->value(value);
+		current_slider->mod_slider->do_callback();
+	}	
 }
 
 void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
@@ -443,8 +445,10 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 		match = current_slider->nan_choices.count(value);
 	} while (match == 0);
 	
-	current_slider->mod_slider->value(value);
-	current_slider->mod_slider->do_callback();
+	if (match == 1) {
+		current_slider->mod_slider->value(value);
+		current_slider->mod_slider->do_callback();
+	}
 }
 
 //----------------------------------------------------------------
