@@ -3,7 +3,7 @@ PREFABS.Exit_armaetus_superlift_up =
   file = "exit/armaetus_closet_superlift.wad",
   map = "MAP01",
 
-  prob = 200,
+  prob = 125,
 
   theme = "!hell",
 
