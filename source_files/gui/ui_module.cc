@@ -409,7 +409,7 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
 	int match = 0;
 	
 	do {
-		int temp_value = value - current_slider->mod_slider->step();
+		double temp_value = current_slider->mod_slider->increment(value, -1);
 		if (temp_value >= current_slider->mod_slider->minimum()) {
 			value = temp_value;
 		} else {
@@ -436,7 +436,7 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 	int match = 0;
 	
 	do {
-		int temp_value = value + current_slider->mod_slider->step();
+		double temp_value = current_slider->mod_slider->increment(value, 1);
 		if (temp_value <= current_slider->mod_slider->maximum()) {
 			value = temp_value;
 		} else {
