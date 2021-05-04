@@ -1403,9 +1403,9 @@ config *get_config(s_config slump_config)
   answer->forbidden_monster_bits = slump_config.forbidden_monster_bits;
   answer->minrooms = slump_config.minrooms; /* Medium size */
  /* answer->gamemask = DOOM1_BIT; */ /* All/Only things supported by DOOM 1.9 */
-  answer->gamemask = DOOM2_BIT;
-  answer->episode = 0;
-  answer->mission = 0;
+  answer->gamemask = slump_config.gamemask;
+  answer->episode = slump_config.episode;
+  answer->mission = slump_config.mission;
   answer->last_mission = SLUMP_FALSE;
   answer->levelcount = slump_config.levelcount; /* Default: Do a megawad */
   answer->force_arena = SLUMP_TRUE;
@@ -1417,7 +1417,7 @@ config *get_config(s_config slump_config)
   answer->produce_null_lmps = SLUMP_FALSE;
   answer->do_seclevels = SLUMP_TRUE;
   answer->force_secret = SLUMP_FALSE;
-  answer->map = 1;
+  answer->map = slump_config.map;
   answer->minlight = 115;
   /* Is this the right place for all these? */
   answer->immediate_monsters = slump_config.immediate_monsters;

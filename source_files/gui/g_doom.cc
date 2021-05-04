@@ -73,6 +73,7 @@ int build_nodes;
 int build_reject;
 std::string levelcount;
 std::string monvariety;
+std::string current_game;
 
 static bool UDMF_mode;
 
@@ -121,6 +122,18 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.levelcount = 32; // "Full Game"
 	}
+	current_game = main_win->game_box->game->GetID();
+	if (current_game == "doom1" || current_game == "ultdoom") {
+		slump_config.gamemask = DOOM1_BIT;
+		slump_config.map = 0;
+		slump_config.episode = 1;
+		slump_config.mission = 1;
+	} else {
+		slump_config.gamemask = DOOM2_BIT;
+		slump_config.map = 1;
+		slump_config.episode = 0;
+		slump_config.mission = 0;
+	}	
 	int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
 							->FindSliderOpt("float_minrooms")->mod_slider->value();
 	if (minrooms == 1) {
