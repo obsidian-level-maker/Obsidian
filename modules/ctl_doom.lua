@@ -146,7 +146,7 @@ function CTL_DOOM.weapon_setup(self)
 
     if W and PARAM[opt.name] ~= -0.02 then
       W.add_prob = PARAM[opt.name] * 100
-      W.pref     = PARAM[opt.name] * 0.28 + 1 -- Complete guesswork right now - Dasho
+      W.pref     = W.add_prob * 0.28 + 1 -- Complete guesswork right now - Dasho
 
       -- loosen some of the normal restrictions
       W.level = 1
