@@ -19,6 +19,7 @@ PREFABS.Pic_pic_tall_glass_orange =
   bound_z2 = 128,
 
   x_fit = "frame",
+  y_fit = "top",
   z_fit = { 24,72 }
 }
 

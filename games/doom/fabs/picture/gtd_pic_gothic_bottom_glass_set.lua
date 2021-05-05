@@ -17,12 +17,14 @@ PREFABS.Pic_gothic_bottom_glass_1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  x_fit = "frame",
-  y_fit = "top"
+  x_fit = { 72,184 },
+  y_fit = { 56,80 }
 }
 
 PREFABS.Pic_gothic_bottom_glass_2 =
 {
   template = "Pic_gothic_bottom_glass_1",
-  map = "MAP02"
+  map = "MAP02",
+
+  x_fit = { 12,28 , 228,248 }
 }

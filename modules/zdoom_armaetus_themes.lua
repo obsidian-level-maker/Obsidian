@@ -4966,10 +4966,10 @@ ARMAETUS_THEMES =
       --
       gtd_epic_craneo_paintings = 40,
       --
-      gtd_computers_shawn = 25,
-      gtd_computers_compsta = 25,
+      gtd_computers_shawn = 35,
+      gtd_computers_compsta = 35,
       --
-      gtd_wall_gothic_bottom_glass = 15,
+      gtd_wall_gothic_bottom_glass = 25,
       --
       gtd_wall_arcade = 50,
       --
@@ -5407,7 +5407,7 @@ ARMAETUS_THEMES =
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
       --
-      gtd_wall_gothic_bottom_glass = 25,
+      gtd_wall_gothic_bottom_glass = 45,
       --
       gtd_library_tall = 35,
     },

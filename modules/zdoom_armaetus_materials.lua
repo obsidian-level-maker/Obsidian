@@ -1233,6 +1233,11 @@ ARMAETUS_MATERIALS = {
   CPSATRN = { t="CPSATRN", f="CEIL4_3"},
   CPVLAD = { t="CPVLAD", f="CEIL4_3"},
 
+  -- Craneo's wall of guns
+  CRGNRCK1 = { t="CRGNRCK1", f="FLAT19"}, -- wall of vanilla weapons
+  CRGNRCK2 = { t="CRGNRCK2", f="FLAT19"}, -- wall of non-canonical weapons
+  CRGNRCK3 = { t="CRGNRCK3", f="FLAT19"}, -- empty wall
+
   ------------------------
   -- Composite textures --
   ------------------------

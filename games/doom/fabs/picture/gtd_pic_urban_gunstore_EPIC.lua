@@ -1,14 +1,14 @@
 PREFABS.Pic_locked_gunstore =
 {
-  file   = "picture/gtd_pic_urban_gunstore_EPIC.wad",
-  map    = "MAP01",
+  file = "picture/gtd_pic_urban_gunstore_EPIC.wad",
+  map = "MAP01",
 
-  prob   = 25,
+  prob = 25,
   theme = "urban",
 
-  env    = "!cave",
+  env = "!cave",
 
-  where  = "seeds",
+  where = "seeds",
   height = 128,
 
   texture_pack = "armaetus",
@@ -21,6 +21,6 @@ PREFABS.Pic_locked_gunstore =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  x_fit = "frame",
-  y_fit = "top",
+  x_fit = { 40,88 , 96,144 },
+  y_fit = "top"
 }
