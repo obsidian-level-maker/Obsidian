@@ -528,7 +528,7 @@ Texture "OBTSBF2B", 128, 128
 	}
 }
 
-Texture "OBTSBF3B", 128, 128
+Texture "OBTSBF3B", 64, 64
 {
 	Patch "OBTSVBF3", 0, 0
 	{
@@ -536,7 +536,7 @@ Texture "OBTSBF3B", 128, 128
 	}
 }
 
-Texture "OBTSBF1R", 128, 128
+Texture "OBTSBF1R", 64, 64
 {
 	Patch "OBTSVBF1", 0, 0
 	{
@@ -544,7 +544,7 @@ Texture "OBTSBF1R", 128, 128
 	}
 }
 
-Texture "OBTSBF2R", 128, 128
+Texture "OBTSBF2R", 64, 64
 {
 	Patch "OBTSVBF2", 0, 0
 	{
@@ -552,7 +552,7 @@ Texture "OBTSBF2R", 128, 128
 	}
 }
 
-Texture "OBTSBF3R", 128, 128
+Texture "OBTSBF3R", 64, 64
 {
 	Patch "OBTSVBF3", 0, 0
 	{
@@ -564,7 +564,7 @@ Texture "OBTBCMR1", 128, 128
 {
 	Patch "OBTBCEM1", 0, 0
 	{
-		Blend "#EB5454"
+		Blend "#B52020"
 	}
 }
 
@@ -572,7 +572,7 @@ Texture "OBTBCMR2", 128, 128
 {
 	Patch "OBTBCEM2", 0, 0
 	{
-		Blend "#EB5454"
+		Blend "#B52020"
 	}
 }
 
@@ -580,7 +580,7 @@ Texture "OBTBCMR3", 128, 128
 {
 	Patch "OBTBCEM3", 0, 0
 	{
-		Blend "#EB5454"
+		Blend "#B52020"
 	}
 }
 ]]
