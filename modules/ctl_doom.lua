@@ -28,7 +28,7 @@ function CTL_DOOM.monster_setup(self)
   for _,opt in pairs(self.options) do
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and opt.value ~= "default" then
+    if M and PARAM[opt.name] ~=-0.02 then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 
