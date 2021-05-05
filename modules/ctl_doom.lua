@@ -245,9 +245,19 @@ OB_MODULES["doom_weapon_control"] =
 
 function CTL_DOOM.item_setup(self)
 
+  for _,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    end
+  end
+
   local function change_probz(name, info)
-    if self.options[name] and self.options[name].value ~= "default" then
-      local mult = (CTL_DOOM.WEAPON_PROBS[self.options[name].value] * 0.01)
+    if self.options[name] and PARAM[name] ~= -0.02 then
+      local mult = PARAM[name]
 
       if info.add_prob then info.add_prob = info.add_prob * mult end
       if info.start_prob then info.start_prob = info.start_prob * mult end
@@ -269,6 +279,9 @@ end
 
 OB_MODULES["doom_item_control"] =
 {
+
+  name = "doom_item_control",
+
   label = _("Doom Item Control"),
 
   game = "doomish",
@@ -281,31 +294,446 @@ OB_MODULES["doom_item_control"] =
 
   options =
   {
-    potion = { label=_("Health Bonus"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 100 },
-    stimpack = { label=_("Stimpack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 99 },
-    medikit = { label=_("Medikit"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 98 },
-    helmet = { label=_("Armor Bonus"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 97, gap = 1 },
+     float_potion=
+     {
+      label = _("Health Bonus"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_stimpack=
+     {
+      label = _("Stimpack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_medikit=
+     {
+      label = _("Medikit"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_helmet=
+     {
+      label = _("Armor Bonus"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },     
+
     -- nice items
-    green_armor = { label=_("Green Armor"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 96 },
-    blue_armor = { label=_("Blue Armor"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 95 },
-    soul = { label=_("Soulsphere"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 94 },
-    backpack = { label=_("Backpack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 93 },
-    berserk = { label=_("Berserk Pack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 92 },
-    invis = { label=_("Invisibility"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 91 },
-    invul = { label=_("Invulnerability"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 90 },
-    allmap = { label=_("Map Computer"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 89 },
-    goggles = { label=_("Light Goggles"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 88 },
-    radsuit = { label=_("Radiation Suit"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 87 },
-    mega = { label=_("Megasphere"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 86, gap = 1 },
+    
+     float_green_armor=
+     {
+      label = _("Green Armor"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_blue_armor=
+     {
+      label = _("Blue Armor"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_soul=
+     {
+      label = _("Soulsphere"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_backpack=
+     {
+      label = _("Backpack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_berserk=
+     {
+      label = _("Berserk Pack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_invis=
+     {
+      label = _("Invisibility"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_invlu=
+     {
+      label = _("Invulnerability"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_allmap=
+     {
+      label = _("Map Computer"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_goggles=
+     {
+      label = _("Light Goggles"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_radsuit=
+     {
+      label = _("Radiation Suit"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_mega=
+     {
+      label = _("Megasphere"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
     -- ammo
-    bullets = { label=_("Clips"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 85,
-      tooltip = "Yes, it's supposed to be called 'Magazine', get over it." },
-    bullet_box = { label=_("Bullet Box"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 84 },
-    shells = { label=_("Shells"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 83 },
-    shell_box = { label=_("Shell Box"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 82 },
-    rocket = { label=_("Rocket"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 81 },
-    rocket_box = { label=_("Rocket Box"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 80 },
-    cells = { label=_("Cell"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 79 },
-    cell_pack = { label=_("Cell Pack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 78 },
+    
+     float_bullets=
+     {
+      label = _("Clips"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+      tooltip = "Yes, it's supposed to be called 'Magazine', get over it."
+     },
+
+     float_bullet_box=
+     {
+      label = _("Bullet Box"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_shells=
+     {
+      label = _("Shells"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_shell_box=
+     {
+      label = _("Shell Box"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_rocket=
+     {
+      label = _("Rocket"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_rocket_box=
+     {
+      label = _("Rocket Box"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_cells=
+     {
+      label = _("Cell"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_cell_pack=
+     {
+      label = _("Cell Pack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     }
   },
 }
