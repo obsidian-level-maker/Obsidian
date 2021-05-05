@@ -206,6 +206,9 @@ end
 
 OB_MODULES["doom_weapon_control"] =
 {
+
+  name = "doom_weapon_control",
+
   label = _("Doom Weapon Control"),
 
   game = "doomish",
@@ -246,13 +249,7 @@ OB_MODULES["doom_weapon_control"] =
 function CTL_DOOM.item_setup(self)
 
   for _,opt in pairs(self.options) do
-    if opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
-      end
-    end
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) -- They are all sliders in this case
   end
 
   local function change_probz(name, info)
