@@ -512,7 +512,7 @@ Texture "OBTBSB5B", 256, 128
 	}
 }
 
-Texture "OBTSBF1B", 128, 128
+Texture "OBTSBF1B", 64, 64
 {
 	Patch "OBTSVBF1", 0, 0
 	{
@@ -520,7 +520,7 @@ Texture "OBTSBF1B", 128, 128
 	}
 }
 
-Texture "OBTSBF2B", 128, 128
+Texture "OBTSBF2B", 64, 64
 {
 	Patch "OBTSVBF2", 0, 0
 	{
