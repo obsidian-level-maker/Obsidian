@@ -123,41 +123,6 @@ OB_MODULES["doom_mon_control"] =
 
 ----------------------------------------------------------------
 
-
-CTL_DOOM.WEAPON_CHOICES =
-{
-  "default", _("DEFAULT"),
-  "none",    _("None at all"),
-  "scarce",  _("Scarce"),
-  "less",    _("Less"),
-  "plenty",  _("Plenty"),
-  "more",    _("More"),
-  "heaps",   _("Heaps"),
-  "loveit",  _("I LOVE IT"),
-}
-
-CTL_DOOM.WEAPON_PROBS =
-{
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  loveit = 1000,
-}
-
-CTL_DOOM.WEAPON_PREFS =
-{
-  none   = 1,
-  scarce = 10,
-  less   = 25,
-  plenty = 40,
-  more   = 70,
-  heaps  = 100,
-  loveit = 170,
-}
-
 CTL_DOOM.WEAPON_PREF_CHOICES =
 {
   "normal",  _("Normal"),
@@ -167,12 +132,21 @@ CTL_DOOM.WEAPON_PREF_CHOICES =
 
 
 function CTL_DOOM.weapon_setup(self)
-  for name,opt in pairs(self.options) do
-    local W = GAME.WEAPONS[name]
 
-    if W and opt.value ~= "default" then
-      W.add_prob = CTL_DOOM.WEAPON_PROBS[opt.value]
-      W.pref     = CTL_DOOM.WEAPON_PREFS[opt.value]
+  for _,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) 
+      end
+    end
+  end
+  
+  for _,opt in pairs(self.options) do
+    local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
+
+    if W and PARAM[opt.name] ~= -0.02 then
+      W.add_prob = PARAM[opt.name] * 100
+      W.pref     = PARAM[opt.name] * 0.28 + 1 -- Complete guesswork right now - Dasho
 
       -- loosen some of the normal restrictions
       W.level = 1
@@ -221,12 +195,119 @@ OB_MODULES["doom_weapon_control"] =
 
   options =
   {
-    shotty   = { label=_("Shotgun"),         choices=CTL_DOOM.WEAPON_CHOICES },
-    super    = { label=_("Super Shotgun"),   choices=CTL_DOOM.WEAPON_CHOICES, gap = 1 },
-    chain    = { label=_("Chaingun"),        choices=CTL_DOOM.WEAPON_CHOICES },
-    launch   = { label=_("Rocket Launcher"), choices=CTL_DOOM.WEAPON_CHOICES },
-    plasma   = { label=_("Plasma Rifle"),    choices=CTL_DOOM.WEAPON_CHOICES },
-    bfg      = { label=_("BFG"),             choices=CTL_DOOM.WEAPON_CHOICES },
+     float_shotty=
+     {
+      label = _("Shotgun"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_super=
+     {
+      label = _("Super Shotgun"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },  
+
+     float_chain=
+     {
+      label = _("Chaingun"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_launch=
+     {
+      label = _("Rocket Launcher"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_plasma=
+     {
+      label = _("Plasma Rifle"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_bfg=
+     {
+      label = _("Health Bonus"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
 
     weapon_prefs =
     {
