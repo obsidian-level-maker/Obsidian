@@ -1793,4 +1793,51 @@ brightmap texture FIREMAG3
 {
   map OBRLFAL3
 }
+
+//urban
+brightmap texture CITY01
+{
+  map OBRCITY1
+}
+
+brightmap texture CITY02
+{
+  map OBRCITY1
+}
+
+brightmap texture CITY03
+{
+  map OBRCITY1
+}
+
+brightmap texture CITY04
+{
+  map OBRCITY4
+}
+
+brightmap texture CITY05
+{
+  map OBRCITY5
+}
+
+brightmap texture CITY06
+{
+  map OBRCITY4
+}
+
+brightmap texture CITY07
+{
+  map OBRCITY7
+}
+
+brightmap texture CITY12
+{
+  map OBRCTY12
+}
+
+brightmap texture CITY14
+{
+  map OBRCTY14
+}
+
 ]]
