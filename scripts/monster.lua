@@ -909,8 +909,8 @@ function Monster_fill_room(R)
 
       local gotcha_qty = 1.25
 
-      if PARAM.gotcha_qty then
-        gotcha_qty = PROC_GOTCHA_QUANTITY_MULTIPLIER[PARAM.gotcha_qty]
+      if PARAM.float_gotcha_qty then
+        gotcha_qty = PARAM.float_gotcha_qty
       end
 
       qty = qty * gotcha_qty

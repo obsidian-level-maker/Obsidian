@@ -492,8 +492,8 @@ function Episode_plan_monsters()
         elseif PARAM.boss_gen_reinforce == "nightmare" then
           gotcha_strength = 16
         end
-      elseif PARAM.gotcha_strength then
-        gotcha_strength = PROC_GOTCHA_STRENGTH_LEVEL[PARAM.gotcha_strength]
+      elseif PARAM.float_gotcha_strength then
+        gotcha_strength = PARAM.float_gotcha_strength
       end
 
       LEV.monster_level = mon_along + gotcha_strength
