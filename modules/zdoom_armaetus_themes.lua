@@ -4543,7 +4543,9 @@ ARMAETUS_THEMES =
       --
       gtd_wall_tech_oven = 35,
       gtd_wall_tech_freezer = 35,
-      gtd_wall_air_vents = 35
+      gtd_wall_air_vents = 35,
+      --
+      gtd_wall_of_guns = 50
     },
 
     window_groups =
@@ -4981,7 +4983,9 @@ ARMAETUS_THEMES =
       --
       gtd_library_tall = 35,
       --
-      gtd_wall_air_vents = 50
+      gtd_wall_air_vents = 50,
+      --
+      gtd_wall_of_guns = 50
     },
 
     window_groups =
