@@ -119,7 +119,7 @@ OB_MODULES["music_swapper"] =
 
   game = "doomish",
 
-  engine = "boom",
+  engine = "!zdoom",
 
   hooks =
   {
