@@ -18,29 +18,6 @@
 
 PROCEDURAL_GOTCHA_FINE_TUNE = {}
 
-PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_STRENGTH_CHOICES =
-{
-  "none",    _("NONE"),
-  "stronger", _("[+2] Stronger"),
-  "harder", _("[+4] Harder"),
-  "tougher", _("[+6] Tougher"),
-  "crazier", _("[+8] CRAZIER"),
-  "nightmarish", _("[+16] NIGHTMARISH")
-}
-
-PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_QUANTITY_CHOICES =
-{
-  "-50", _("-50% Monsters"),
-  "-25", _("-25% Monsters"),
-  "none",  _("NONE"),
-  "25",  _("+25% Monsters"),
-  "50",  _("+50% Monsters"),
-  "100", _("+100% Monsters"),
-  "150", _("+150% Monsters"),
-  "200",  _("+200% Monsters"),
-  "400", _("+400% Monsters")
-}
-
 PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES =
 {
   "large", _("Large"),
@@ -84,21 +61,36 @@ OB_MODULES["procedural_gotcha"] =
 
   options =
   {
-    gotcha_qty =
+    float_gotcha_qty =
     {
-      name="gotcha_qty",
+      name="float_gotcha_qty",
       label=_("Extra Quantity"),
-      choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_QUANTITY_CHOICES,
-      default="25",
+      valuator = "slider",
+      units = "% of Monsters",
+      min = -50,
+      max = 400,
+      increment = 5,
+      default = 25,
+      nan = "0:No Change,",
       tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
     },
 
-    gotcha_strength =
+    float_gotcha_strength =
     {
-      name="gotcha_strength",
+      name="float_gotcha_strength",
       label=_("Extra Strength"),
-      choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_STRENGTH_CHOICES,
-      default = "harder",
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 16,
+      increment = 1,
+      default = 4,
+      nan = "0:NONE," ..
+      "2:2 (Stronger)," ..
+      "4:4 (Harder)," ..
+      "6:6 (Tougher)," ..
+      "8:8 (CRAZIER)," ..
+      "16:16 (NIGHTMARISH),",
       tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
     },
 
