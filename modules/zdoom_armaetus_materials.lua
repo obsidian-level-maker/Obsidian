@@ -1840,4 +1840,38 @@ brightmap texture CITY14
   map OBRCTY14
 }
 
+brightmap texture GRAYMET6
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMET7
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMET8
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMET9
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMETA
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMETB
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMETC
+{
+  map OBRGRYMT
+}
 ]]
