@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  PANEL: ZDoom Map Options
+--  PANEL: UDMF Map Options
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2021 Dashodanger
@@ -16,19 +16,19 @@
 --
 ------------------------------------------------------------------------
 
-UI_ZDOOM_MAP_OPTIONS = { }
+UI_UDMF_MAP_OPTIONS = { }
 
-UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES = 
+UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES = 
 {
   "binary",  _("Binary"),
   "udmf", _("UDMF"),
 }
 
-OB_MODULES["ui_zdoom_map_options"] =
+OB_MODULES["ui_udmf_map_options"] =
 {
   label = _("Map Build Options"),
   
-  engine = "zdoom",
+  engine = {zdoom = 1, edge = 1},
 
   side = "left",
   priority = 105,
@@ -36,7 +36,7 @@ OB_MODULES["ui_zdoom_map_options"] =
   options =
   {
     {
-      name = "bool_build_reject_zdoom",
+      name = "bool_build_reject_udmf",
       label = _("Build REJECT"),
       valuator = "button",
       default = 0,
@@ -47,13 +47,13 @@ OB_MODULES["ui_zdoom_map_options"] =
       label = _("Build Nodes"),
       valuator = "button",
       default = 0,
-      tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map.",
+      tooltip = "For ZDoom Only: Choose to either build nodes or allow the engine itself to do so " ..
+      "upon loading the map. Other UDMF supporting engines require node building to be enabled.",
     },
     {
       name = "map_format",
       label = _("Map Format"),
-      choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
+      choices = UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
       tooltip = "Choose between UDMF and binary map format.",
     }
