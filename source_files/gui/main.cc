@@ -35,6 +35,7 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "twister.h"
+#include "tx_forge.h"
 
 #define TICKER_TIME 50 /* ms */
 
@@ -693,6 +694,8 @@ int main(int argc, char **argv) {
     twister_Init();
 
     Main_CalcNewSeed();
+    
+//	TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
     VFS_InitAddons(argv[0]);
 
