@@ -552,8 +552,13 @@ bool Build_Cool_Shit() {
     if (main_win) {
         std::string label = "Seed: ";
         std::string seed = std::to_string(next_rand_seed);
-        main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
-        main_win->build_box->seed_disp->redraw();
+        if (main_win->build_box->string_seed != "") {
+		    main_win->build_box->seed_disp->copy_label(label.append(main_win->build_box->string_seed).c_str());
+		    main_win->build_box->seed_disp->redraw();      
+        } else {
+		    main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
+		    main_win->build_box->seed_disp->redraw();
+        }
         main_win->game_box->SetAbortButton(true);
         main_win->build_box->SetStatus(_("Preparing..."));
         main_win->Locked(true);
@@ -583,12 +588,17 @@ bool Build_Cool_Shit() {
         u32_t total_time = end_time - start_time;
 
         LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
+        
+        if (main_win) {
+        	main_win->build_box->string_seed = "";
+        }
     } else {
         if (main_win) {
             main_win->build_box->seed_disp->copy_label("Seed: -");
             main_win->build_box->seed_disp->redraw();
             main_win->build_box->name_disp->copy_label("");
             main_win->build_box->name_disp->redraw();
+        	main_win->build_box->string_seed = "";
         }
     }
 
