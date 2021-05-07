@@ -227,7 +227,7 @@ namelib.NAMES =
         ["In the Grip of Madness"]=10,
         ["Creeping Brutality"]=10,
         ["Hopeless Despair"]=10,
-        ["Bells of Agony"]=10,
+        ["Bells of Agony"]=10
       },
 
       v =
