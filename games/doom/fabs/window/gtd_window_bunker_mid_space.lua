@@ -15,7 +15,28 @@ PREFABS.Window_thin_mid_space_1 =
 
   bound_z1 = 0,
   bound_z2 = 96,
+}
 
-  x_fit = { 88,168 },
-  z_fit = "top"
+PREFABS.Window_thin_mid_space_2 =
+{
+  template = "Window_thin_mid_space_1",
+  map = "MAP02",
+
+  seed_w = 2
+}
+
+PREFABS.Window_thin_mid_space_3 =
+{
+  template = "Window_thin_mid_space_1",
+  map = "MAP03",
+
+  seed_w = 3
+}
+
+PREFABS.Window_thin_mid_space_4 =
+{
+  template = "Window_thin_mid_space_1",
+  map = "MAP04",
+
+  seed_w = 4
 }
