@@ -2704,20 +2704,6 @@ function Area_divvy_up_borders()
   Seed_squarify()
 end
 
-function Area_squarify_seeds()
-  Seed_squarify()
-
-  -- update areas for merged seeds
-
-  for _,A in pairs(LEVEL.areas) do
-    for i = #A.seeds, 1, -1 do
-      if A.seeds[i].kind == "dead" then
-        table.remove(A.seeds, i)
-      end
-    end
-  end
-end
-
 function Area_building_facades()
 
   local all_groups = {}
