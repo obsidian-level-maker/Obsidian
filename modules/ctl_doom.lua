@@ -22,13 +22,11 @@ CTL_DOOM = {}
 function CTL_DOOM.monster_setup(self)
 
   for _,opt in pairs(self.options) do
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
-  end
+    PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
 
-  for _,opt in pairs(self.options) do
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and PARAM[opt.name] ~=-0.02 then
+    if M and PARAM[opt.name] ~= -0.02 then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 
@@ -427,14 +425,10 @@ CTL_DOOM.WEAPON_PREF_CHOICES =
 function CTL_DOOM.weapon_setup(self)
 
   for _,opt in pairs(self.options) do
-    if opt.valuator then
-      if opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) 
-      end
+    if opt.valuator and opt.valuator == "slider" then
+      PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) 
     end
-  end
-  
-  for _,opt in pairs(self.options) do
+
     local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
 
     if W and PARAM[opt.name] ~= -0.02 then
@@ -623,12 +617,13 @@ OB_MODULES["doom_weapon_control"] =
 function CTL_DOOM.item_setup(self)
 
   for _,opt in pairs(self.options) do
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) -- They are all sliders in this case
+    local param_name = string.gsub(opt.name, "float_", "") 
+    PARAM[param_name] = gui.get_module_slider_value(self.name, opt.name) -- They are all sliders in this case
   end
 
   local function change_probz(name, info)
-    if self.options[name] and PARAM[name] ~= -0.02 then
-      local mult = PARAM[name]
+    if PARAM[name] ~= -0.02 then
+      local mult = PARAM[name] or 0
 
       if info.add_prob then info.add_prob = info.add_prob * mult end
       if info.start_prob then info.start_prob = info.start_prob * mult end
@@ -857,7 +852,7 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
      
-     float_invlu=
+     float_invul=
      {
       label = _("Invulnerability"),
       valuator = "slider",
