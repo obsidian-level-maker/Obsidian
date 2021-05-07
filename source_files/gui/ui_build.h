@@ -34,6 +34,7 @@ class UI_Build : public Fl_Group {
     UI_MiniMap *mini_map;
     Fl_Box *seed_disp;
     Fl_Box *name_disp;
+    std::string string_seed = "";
 
    private:
     Fl_Box *status;

@@ -339,6 +339,7 @@ void DLG_EditSeed(void) {
     } catch (std::exception &e) {
         std::cout << e.what();
     }
+    main_win->build_box->string_seed = word;
     unsigned long long split_limit =
         (std::numeric_limits<unsigned long long>::max() / 127);
     next_rand_seed = split_limit;
