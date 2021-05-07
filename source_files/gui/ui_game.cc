@@ -88,6 +88,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     cy += y_step + kf_h(10);
 
     build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
+    build->visible_focus(0);
     build->labelfont(FL_HELVETICA_BOLD);
     build->labelsize(FL_NORMAL_SIZE + 2);
     build->callback(build_callback, this);
@@ -95,6 +96,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h,
                          _("Quit"));
+    quit->visible_focus(0);
     quit->callback(quit_callback, this);
     quit->shortcut(FL_COMMAND + 'q');
 

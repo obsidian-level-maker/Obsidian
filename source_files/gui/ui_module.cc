@@ -143,7 +143,8 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->align(FL_ALIGN_TOP_LEFT);
     
     rsl->prev_button =
-        new Fl_Button(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");      
+        new Fl_Button(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");
+    rsl->prev_button->visible_focus(0);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
     rsl->prev_button->labelcolor(select_col);
     rsl->prev_button->labelsize(rsl->prev_button->labelsize() * .80);
@@ -158,7 +159,8 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->callback(callback_MixItCheck, NULL);
     
     rsl->next_button =
-        new Fl_Button(rsl->x() + rsl->w() * .90, rsl->y(), rsl->w() * .10, kf_h(24), "@>");   
+        new Fl_Button(rsl->x() + rsl->w() * .90, rsl->y(), rsl->w() * .10, kf_h(24), "@>");
+    rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
     rsl->next_button->labelcolor(select_col);
     rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
