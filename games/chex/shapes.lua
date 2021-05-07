@@ -4682,13 +4682,13 @@ GROW_DIAGONAL_SIDE_BLOB_ALT =
 
   structure =
   {
-    "..xxx","AAxxx",
-    "..xxx","AAxxx",
-    "...xx","AA%xx",
-    "....x","AAA%x",
-    ".....","%AA/1",
-    "x....","x%/11",
-    "xx11x","xx11x",
+    "x..xxx","xAAxxx",
+    "x..xxx","xAAxxx",
+    "x...xx","xAA%xx",
+    "x....x","xAAA%x",
+    "!.....","!%AA/1",
+    "xx....","xx%/11",
+    "xxx111","xxx.11",
   },
 
   diagonals =
@@ -4700,7 +4700,7 @@ GROW_DIAGONAL_SIDE_BLOB_ALT =
   },
 },
 
-GROW_DIAGONAL_SIDE_BLOB_ALT =
+GROW_DIAGONAL_SIDE_BLOB_ALT_2 =
 {
   prob = 15,
   skip_prob = 75,
