@@ -1024,7 +1024,7 @@ function Weird_create_areas()
     if not S then return end
 
     -- blocked by an edge, cannot flood across it
-    if S.border[dir].edge_kind then return end
+    if S.edge[dir] then return end
 
     local N = S:neighbor(dir)
 
@@ -1048,7 +1048,7 @@ function Weird_create_areas()
       local S  = SEEDS[sx][sy]
       local S2 = S.top
 
-      for _,dir in geom.ALL_DIRS do
+      for _,dir in pairs(geom.ALL_DIRS) do
         flood_check_pair(S,  dir)
         flood_check_pair(S2, dir)
       end

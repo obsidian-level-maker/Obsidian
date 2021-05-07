@@ -47,7 +47,7 @@ gui.import("level")
 
 gui.import("script_manager")
 
---gui.import("weird") - Experimental - Dasho
+gui.import("weird") -- Experimental - Dasho
 
 function ob_traceback(msg)
 

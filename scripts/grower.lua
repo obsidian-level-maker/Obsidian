@@ -4634,6 +4634,8 @@ function Grower_create_rooms()
   -- we don't make real connections until later (Connect_stuff)
   LEVEL.prelim_conns = {}
 
+  --Weird_create_areas()
+
   Grower_setup_caves()
   Grower_calc_rule_probs()
 
