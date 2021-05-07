@@ -263,7 +263,7 @@ function DOOM.get_levels()
       end
 
       -- nature mode
-      if OB_CONFIG.nature_mode and not LEV.has_streets then
+      if PARAM.float_nature_mode and not LEV.has_streets then
         if rand.odds(PARAM.float_nature_mode) then
           LEV.is_nature = true
         end
