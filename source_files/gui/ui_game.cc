@@ -152,7 +152,9 @@ bool UI_Game::AddChoice(const char *button, const char *id, const char *label) {
         return true;
     }
     if (StringCaseCmp(button, "engine") == 0) {
-        engine->AddChoice(id, label);
+    	if (StringCaseCmp(id, "advanced") != 0) {
+        	engine->AddChoice(id, label);
+        }
         return true;
     }
     if (StringCaseCmp(button, "length") == 0) {

@@ -28,7 +28,7 @@ OB_MODULES["ui_udmf_map_options"] =
 {
   label = _("Map Build Options"),
   
-  engine = {zdoom = 1, edge = 1},
+  engine = "advanced",
 
   side = "left",
   priority = 105,
