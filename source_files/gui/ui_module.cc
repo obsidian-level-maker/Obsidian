@@ -183,11 +183,6 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 		}
 	}
 	
-	if (rsl->nan_choices.empty()) {
-		rsl->prev_button->deactivate();
-		rsl->next_button->deactivate();
-	}   
-	
     if (!tip) {
         tip = "";
     }
@@ -406,22 +401,33 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
    
 	double value = current_slider->mod_slider->value();
 	
-	int match = 0;
-	
-	do {
-		double temp_value = current_slider->mod_slider->increment(value, -1);
-		if (temp_value >= current_slider->mod_slider->minimum()) {
-			value = temp_value;
+	if (current_slider->nan_choices.empty()) {
+		int steps = (int)(current_slider->mod_slider->maximum() - current_slider->mod_slider->minimum()) / current_slider->mod_slider->step();
+		double temp_value = current_slider->mod_slider->increment(value, (int)-steps * .10);
+		if (temp_value < current_slider->mod_slider->minimum()) {
+			current_slider->mod_slider->value(current_slider->mod_slider->minimum());
+			current_slider->mod_slider->do_callback();
 		} else {
-			break;
+			current_slider->mod_slider->value(temp_value);
+			current_slider->mod_slider->do_callback();		
 		}
-		match = current_slider->nan_choices.count(value);
-	} while (match == 0);
-	
-	if (match == 1) {
-		current_slider->mod_slider->value(value);
-		current_slider->mod_slider->do_callback();
-	}	
+	} else {
+		int match = 0;	
+		do {
+			double temp_value = current_slider->mod_slider->increment(value, -1);
+			if (temp_value >= current_slider->mod_slider->minimum()) {
+				value = temp_value;
+			} else {
+				break;
+			}
+			match = current_slider->nan_choices.count(value);
+		} while (match == 0);
+		
+		if (match == 1) {
+			current_slider->mod_slider->value(value);
+			current_slider->mod_slider->do_callback();
+		}	
+	}
 }
 
 void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
@@ -433,21 +439,32 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
    
 	double value = current_slider->mod_slider->value();
 	
-	int match = 0;
-	
-	do {
-		double temp_value = current_slider->mod_slider->increment(value, 1);
-		if (temp_value <= current_slider->mod_slider->maximum()) {
-			value = temp_value;
+	if (current_slider->nan_choices.empty()) {
+		int steps = (int)(current_slider->mod_slider->maximum() - current_slider->mod_slider->minimum()) / current_slider->mod_slider->step();
+		double temp_value = current_slider->mod_slider->increment(value, (int)steps * .10);
+		if (temp_value > current_slider->mod_slider->maximum()) {
+			current_slider->mod_slider->value(current_slider->mod_slider->maximum());
+			current_slider->mod_slider->do_callback();
 		} else {
-			break;
+			current_slider->mod_slider->value(temp_value);
+			current_slider->mod_slider->do_callback();		
 		}
-		match = current_slider->nan_choices.count(value);
-	} while (match == 0);
-	
-	if (match == 1) {
-		current_slider->mod_slider->value(value);
-		current_slider->mod_slider->do_callback();
+	} else {
+		int match = 0;	
+		do {
+			double temp_value = current_slider->mod_slider->increment(value, 1);
+			if (temp_value <= current_slider->mod_slider->maximum()) {
+				value = temp_value;
+			} else {
+				break;
+			}
+			match = current_slider->nan_choices.count(value);
+		} while (match == 0);
+		
+		if (match == 1) {
+			current_slider->mod_slider->value(value);
+			current_slider->mod_slider->do_callback();
+		}
 	}
 }
 
