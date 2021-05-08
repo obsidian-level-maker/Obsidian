@@ -3057,8 +3057,7 @@ function Render_all_street_traffic()
   end
 
 
-  gui.printf("Found " .. #LEVEL.road_street_traffic_spots .. " places to park the car.\n")
-
+  gui.debugf("Found " .. #LEVEL.road_street_traffic_spots .. " places to park the car.\n")
 
   rand.shuffle(LEVEL.road_street_traffic_spots)
 
@@ -3111,10 +3110,9 @@ function Render_all_street_traffic()
       def = Fab_pick(reqs, "is_ok_man")
     end
 
-    -- capture the material of the road sink, damn it!
     local skin =
     {
-      floor = "CEIL5_1",
+      floor = SPOT.floor_mat
     }
 
     if def then
@@ -3440,6 +3438,9 @@ function Render_establish_street_lanes()
       height = S.area.ceil_h - 2,
       dir = cur_dir
     }
+
+    local A = S.area
+    spot.floor_mat = A.floor_group.sink.mat
 
     return spot
   end
