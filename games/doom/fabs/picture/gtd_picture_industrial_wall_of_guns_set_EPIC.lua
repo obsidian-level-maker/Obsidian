@@ -3,7 +3,9 @@ PREFABS.Pic_indust_wall_of_guns_1 =
   file = "picture/gtd_picture_industrial_wall_of_guns_set_EPIC.wad",
   map = "MAP01",
 
-  prob = 50,
+  prob = 25,
+  skip_prob = 50,
+
   theme = "!hell",
   env = "building",
 
@@ -35,6 +37,7 @@ PREFABS.Pic_indust_wall_of_guns_2 =
 PREFABS.Pic_indust_wall_of_guns_1_grouped =
 {
   template = "Pic_indust_wall_of_guns_1",
+  skip_prob = 0,
 
   theme = "any",
 
@@ -45,6 +48,7 @@ PREFABS.Pic_indust_wall_of_guns_2_grouped =
 {
   template = "Pic_indust_wall_of_guns_1",
   map = "MAP02",
+  skip_prob = 0,
 
   theme = "any",
 
