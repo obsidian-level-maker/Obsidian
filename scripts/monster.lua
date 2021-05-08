@@ -907,7 +907,7 @@ function Monster_fill_room(R)
     -- oh the pain
     if LEVEL.is_procedural_gotcha then
 
-      local gotcha_qty = 1.25
+      local gotcha_qty = 1.2
 
       if PARAM.float_gotcha_qty then
         gotcha_qty = PARAM.float_gotcha_qty

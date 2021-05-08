@@ -1557,12 +1557,11 @@ function Room_border_up()
 
 
   local function can_porch_wall(A1, A2)
-    if (A1.mode == "floor"
-    and A2.mode ~= "floor")
-    or (A1.mode ~= "floor"
-    and A2.mode == "floor") then
+    if (A1.mode == "floor" and A2.mode ~= "floor")
+    or (A1.mode ~= "floor" and A2.mode == "floor") then
       return false
     end
+
     return true
   end
 
@@ -1720,7 +1719,7 @@ function Room_border_up()
     end
 
 
-    -- the same room --
+    -- the same room / room to room --
 
     if A1.room == A2.room then
 
