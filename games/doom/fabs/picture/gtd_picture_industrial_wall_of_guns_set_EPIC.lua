@@ -5,6 +5,8 @@ PREFABS.Pic_indust_wall_of_guns_1 =
 
   prob = 150,
 
+  texture_pack = "armaetus",
+
   where = "seeds",
   height = 96,
 
@@ -24,4 +26,21 @@ PREFABS.Pic_indust_wall_of_guns_2 =
 {
   template = "Pic_indust_wall_of_guns_1",
   map = "MAP02"
+}
+
+--
+
+PREFABS.Pic_indust_wall_of_guns_1_grouped =
+{
+  template = "Pic_indust_wall_of_guns_1",
+
+  group = "gtd_wall_of_guns"
+}
+
+PREFABS.Pic_indust_wall_of_guns_2_grouped =
+{
+  template = "Pic_indust_wall_of_guns_1",
+  map = "MAP02",
+
+  group = "gtd_wall_of_guns"
 }
