@@ -18,48 +18,19 @@
 
 CTL_HERETIC = {}
 
-CTL_HERETIC.MON_CHOICES =
-{
-  "default", _("DEFAULT"),
-  "none",    _("None at all"),
-  "scarce",  _("Scarce"),
-  "less",    _("Less"),
-  "plenty",  _("Plenty"),
-  "more",    _("More"),
-  "heaps",   _("Heaps"),
-  "insane",  _("INSANE"),
-}
-
-CTL_HERETIC.MON_PROBS =
-{
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 2000
-}
-
-CTL_HERETIC.DENSITIES =
-{
-  none   = 0.1,
-  scarce = 0.2,
-  less   = 0.4,
-  plenty = 0.7,
-  more   = 1.2,
-  heaps  = 3.3,
-  insane = 9.9
-}
-
-
 function CTL_HERETIC.monster_setup(self)
-  for name,opt in pairs(self.options) do
-    local M = GAME.MONSTERS[name]
 
-    if M and opt.value ~= "default" then
-      M.prob    = CTL_HERETIC.MON_PROBS[opt.value]
-      M.density = CTL_HERETIC.DENSITIES[opt.value]
+  for _,opt in pairs(self.options) do
+    PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
+
+    local M = GAME.MONSTERS[string.sub(opt.name, 7)]
+
+    if M and PARAM[opt.name] ~= -0.02 then
+      M.prob    = PARAM[opt.name] * 100
+      M.density = M.prob * .006 + .1
+
+      -- allow Spectres to be controlled individually
+      M.replaces = nil
 
       -- loosen some of the normal restrictions
       M.skip_prob = nil
@@ -80,9 +51,13 @@ end
 
 OB_MODULES["heretic_mon_control"] =
 {
+
+  name = "heretic_mon_control",
+
   label = _("Heretic Monster Control"),
 
   game = "heretic",
+  engine = "!vanilla",
 
   hooks =
   {
@@ -91,83 +66,320 @@ OB_MODULES["heretic_mon_control"] =
 
   options =
   {
-    gargoyle   = { label="Gargoyle",      choices=CTL_HERETIC.MON_CHOICES },
-    fire_garg  = { label="Fire Gargoyle", choices=CTL_HERETIC.MON_CHOICES },
-    warrior    = { label="Warrior",       choices=CTL_HERETIC.MON_CHOICES },
-    warrior_ghost = { label="Warrior Ghost", choices=CTL_HERETIC.MON_CHOICES },
+     float_gargoyle=
+     {
+      label = _("Gargoyle"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
 
-    golem       = { label="Golem",         choices=CTL_HERETIC.MON_CHOICES },
-    golem_ghost = { label="Golem Ghost",   choices=CTL_HERETIC.MON_CHOICES },
-    nitro       = { label="Nitro",         choices=CTL_HERETIC.MON_CHOICES },
-    nitro_ghost = { label="Nitro Ghost",   choices=CTL_HERETIC.MON_CHOICES },
+     float_fire_garg=
+     {
+      label = _("Fire Gargoyle"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
 
-    disciple   = { label="Disciple",      choices=CTL_HERETIC.MON_CHOICES },
-    sabreclaw  = { label="Sabreclaw",     choices=CTL_HERETIC.MON_CHOICES },
-    weredragon = { label="Weredragon",    choices=CTL_HERETIC.MON_CHOICES },
-    ophidian   = { label="Ophidian",      choices=CTL_HERETIC.MON_CHOICES },
+     float_warrior=
+     {
+      label = _("Warrior"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
 
-    Ironlich  = { label="Ironlich",       choices=CTL_HERETIC.MON_CHOICES },
-    Maulotaur = { label="Maulotaur",      choices=CTL_HERETIC.MON_CHOICES },
-    D_Sparil  = { label="D'Sparil",       choices=CTL_HERETIC.MON_CHOICES }
+     float_warrior_ghost=
+     {
+      label = _("Warrior Ghost"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_golem=
+     {
+      label = _("Golem"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_golem_ghost=
+     {
+      label = _("Golem Ghost"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_nitro=
+     {
+      label = _("Nitro"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_nitro_ghost=
+     {
+      label = _("Nitro Ghost"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_disciple=
+     {
+      label = _("Disciple"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_sabreclaw=
+     {
+      label = _("Sabreclaw"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_weredragon=
+     {
+      label = _("Weredragon"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_ophidian=
+     {
+      label = _("Ophidian"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_Ironlich=
+     {
+      label = _("Ironlich"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_Maulotaur=
+     {
+      label = _("Maulotaur"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_D_Sparil=
+     {
+      label = _("D'Sparil"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
   }
 }
 
 
 ----------------------------------------------------------------
 
-
-CTL_HERETIC.WEAPON_CHOICES =
-{
-  "default", _("DEFAULT"),
-  "none",    _("None at all"),
-  "scarce",  _("Scarce"),
-  "less",    _("Less"),
-  "plenty",  _("Plenty"),
-  "more",    _("More"),
-  "heaps",   _("Heaps"),
-  "loveit",  _("I LOVE IT"),
-}
-
-CTL_HERETIC.WEAPON_PROBS =
-{
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  loveit = 1000
-}
-
-CTL_HERETIC.WEAPON_PREFS =
-{
-  none   = 1,
-  scarce = 10,
-  less   = 25,
-  plenty = 40,
-  more   = 70,
-  heaps  = 100,
-  loveit = 170
-}
-
-
 function CTL_HERETIC.weapon_setup(self)
-  for name,opt in pairs(self.options) do
-    local W = GAME.WEAPONS[name]
 
-    if W and opt.value ~= "default" then
-      W.add_prob = CTL_HERETIC.WEAPON_PROBS[opt.value]
-      W.pref     = CTL_HERETIC.WEAPON_PREFS[opt.value]
+  for _,opt in pairs(self.options) do
+    if opt.valuator and opt.valuator == "slider" then
+      PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) 
+    end
+
+    local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
+
+    if W and PARAM[opt.name] ~= -0.02 then
+      W.add_prob = PARAM[opt.name] * 100
+      W.pref     = W.add_prob * 0.28 + 1 -- Complete guesswork right now - Dasho
 
       -- loosen some of the normal restrictions
       W.level = 1
     end
   end -- for opt
-end
 
 
 OB_MODULES["heretic_weapon_control"] =
 {
+
+  name = "heretic_weapon_control",
+
   label = _("Heretic Weapon Control"),
 
   game = "heretic",
@@ -179,12 +391,119 @@ OB_MODULES["heretic_weapon_control"] =
 
   options =
   {
-    gauntlets  = { label="Gauntlets",    choices=CTL_HERETIC.WEAPON_CHOICES },
-    crossbow   = { label="Crossbow",     choices=CTL_HERETIC.WEAPON_CHOICES },
-    claw       = { label="Dragon Claw",  choices=CTL_HERETIC.WEAPON_CHOICES },
-    hellstaff  = { label="Hellstaff",    choices=CTL_HERETIC.WEAPON_CHOICES },
-    phoenix    = { label="Phoenix Rod",  choices=CTL_HERETIC.WEAPON_CHOICES },
-    firemace   = { label="Fire Mace",    choices=CTL_HERETIC.WEAPON_CHOICES }
+     float_gauntlets=
+     {
+      label = _("Gauntlets"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_crossbow=
+     {
+      label = _("Crossbow"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_claw=
+     {
+      label = _("Dragon Claw"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_hellstaff=
+     {
+      label = _("Hellstaff"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_phoenix=
+     {
+      label = _("Phoenix Rod"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_firemace=
+     {
+      label = _("Fire Mace"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
   }
 }
 
