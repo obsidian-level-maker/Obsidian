@@ -373,6 +373,7 @@ function CTL_HERETIC.weapon_setup(self)
       W.level = 1
     end
   end -- for opt
+end
 
 
 OB_MODULES["heretic_weapon_control"] =
