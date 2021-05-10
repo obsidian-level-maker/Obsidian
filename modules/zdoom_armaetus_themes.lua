@@ -1159,7 +1159,7 @@ ARMAETUS_ROOM_THEMES =
       RUSTWAL2 = 2
     },
 
-    floor =
+    floors =
     {
       FLAT1 = 5,
       FLOOR4_8 = 5,
