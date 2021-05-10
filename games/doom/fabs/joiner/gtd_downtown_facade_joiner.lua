@@ -37,9 +37,10 @@ PREFABS.Joiner_downtown_facade =
     CITY05 = 50,
     CITY06 = 50,
     CITY07 = 50,
-    CITY08 = 50,
-    CITY09 = 50,
-    CITY10 = 50,
+    CITY11 = 50,
+    CITY12 = 50,
+    CITY13 = 50,
+    CITY14 = 50,
   },
 
   flat_TLITE6_6 =
