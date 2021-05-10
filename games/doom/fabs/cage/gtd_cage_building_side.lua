@@ -32,9 +32,10 @@ PREFABS.Cage_wall_building_terrace =
     CITY05 = 50,
     CITY06 = 50,
     CITY07 = 50,
-    CITY08 = 50,
-    CITY09 = 50,
-    CITY10 = 50,
+    CITY11 = 50,
+    CITY12 = 50,
+    CITY13 = 50,
+    CITY14 = 50,
   },
 
   tex_RAIL1 =
@@ -76,5 +77,65 @@ PREFABS.Cage_wall_building_terrace =
     TLITE65O=50,
     TLITE65W=50,
     TLITE65Y=50,
+  }
+}
+
+PREFABS.Cage_wall_building_terrace_tall =
+{
+  template = "Cage_wall_building_terrace",
+  map = "MAP02",
+
+  tex_CITY02 =
+  {
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 50,
+    CITY12 = 50,
+    CITY13 = 50,
+    CITY14 = 50,
+  },  
+
+  tex_CITY05 =
+  {
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 50,
+    CITY12 = 50,
+    CITY13 = 50,
+    CITY14 = 50,
+  },
+
+  tex_MODWALL4 =
+  {
+    MODWALL2 = 50,
+    MODWALL3 = 50,
+    MODWALL4 = 50,
+    BLAKWAL1 = 50,
+    BLAKWAL2 = 50,
+    STEP1 = 50,
+    STEP2 = 50,
+    STEP3 = 50,
+    STEP4 = 50,
+    STEP5 = 50,
+    STEPLAD1 = 50
+  },
+  
+  tex_FENCE1 =
+  {
+    FENCE2 = 1,
+    FENCE3 = 1,
+    FENCE6 = 1,
+    FENCE7 = 1,
+    ZZWOLF10 = 5
   }
 }

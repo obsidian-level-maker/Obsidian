@@ -134,6 +134,7 @@ namelib.NAMES =
         ["Betrayal"]=10,
         ["Chaos"]=10,
         ["Contempt"]=10,
+        ["Corruption"]=10,
         ["Cowardice"]=10,
         ["Deconstruction"]=10,
         ["Dehumanized"]=10,
@@ -164,7 +165,69 @@ namelib.NAMES =
         ["Turmoil"]=10,
         ["Wasted"]=10,
         ["Woe"]=10,
-        ["Wrath"]=10
+        ["Wrath"]=10,
+
+        -- id software song name references..
+        ["At Obsidian's Gate"]=10,
+        ["The Doom Song"]=10,
+        ["Dark Halls"]=10,
+        ["RMG Ace"]=10,
+        ["Suspense"]=10,
+        ["On the Hunt"]=10,
+        ["Sign of Hell"]=10,
+        ["I Sawed the Imps"]=10,
+        ["Demons on the Prey"]=10,
+        ["Hiding the Goodies"]=10,
+        ["They Gonna Getcha"]=10,
+        ["Sinister"]=10,
+        ["Noone Told me about Obsidian"]=10,
+        ["Untitled"]=10, -- lol yes, E3M1 is titled this
+        ["Shooter to the Rescue"]=10,
+        ["Deep into the Lua"]=10,
+        ["Facing the Script Error"]=10,
+
+        -- Doom 2..
+        ["Entrance"]=10,
+        ["The Monster Closet Stalks"]=10,
+        ["Countdown to Hell"]=10,
+        ["Between Megawads"]=10,
+        ["OBSIDIAN"]=10,
+        ["In the Dark"]=10,
+        ["Dasho's got the Compiler"]=10,
+        ["Dave D. Taylor Blues"]=10,
+        ["Into Your Map Set"]=10,
+        ["The Demon's Dead"]=10,
+        ["Waiting for Craneo to Play"]=10,
+        ["Message from the Administrator"]=10,
+        ["Bye Bye Canadian Pie"]=10,
+        ["Armaetus's Asleep"]=10,
+        ["Getting Too Hot"]=10,
+        ["Opening to Evil"]=10,
+
+        -- Evilution..
+        ["Masochistic"]=10,
+        ["Smells like Burning Corpse"]=10,
+        ["Death's Bells"]=10,
+        ["Too Much"]=10,
+        ["Agony Rhapsody"]=10,
+        ["Soldier of Chaos"]=10,
+        ["Neverending"]=10,
+        ["Frigid Subtleness"]=10,
+        ["FightDieReloadSave"]=10,
+        ["Legion of the Lost"]=10,
+
+        -- PSX Doom..
+        ["Retribution Dawns"]=10,
+        ["The Broken Ones"]=10,
+        ["Sanity's Edge"]=10,
+        ["Hell's Churn"]=10,
+        ["Digitized Pain"]=10,
+        ["The Demonic Pulse"]=10,
+        ["Steadfast Extermination"]=10,
+        ["In the Grip of Madness"]=10,
+        ["Creeping Brutality"]=10,
+        ["Hopeless Despair"]=10,
+        ["Bells of Agony"]=10
       },
 
       v =

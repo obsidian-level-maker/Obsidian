@@ -4025,22 +4025,44 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      RROCK14  = 40,
-      MFLR8_2  = 40,
-      FLAT1_1  = 40,
+      MFLR8_2 = 40,
+    
+      FLAT1_1 = 40,
+      FLAT8 = 30,
+      FLOOR0_1 = 10,
+      FLOOR0_2 = 10,
+      FLOOR0_3 = 10,
+      FLOOR0_5 = 30,
+
       FLOOR3_3 = 20,
+      FLOOR4_6 = 20,
+      FLOOR5_3 = 10,
       FLOOR5_4 = 20,
-      FLOOR6_2 = 10
+      FLOOR6_1 = 10,
+      FLOOR6_2 = 10,
+
+      RROCK10 = 40,
+      RROCK14 = 40
     },
 
     ceilings =
     {
+      FLOOR5_3 = 10,
+      FLOOR5_4 = 20,
       FLOOR6_1 = 30,
-      FLAT5_1  = 20,
-      CEIL3_5  = 20,
-      FLAT8    = 10,
-      FLAT5_2  = 10,
-      FLAT5_4  = 5
+      FLAT5_1 = 20,
+      FLAT8 = 20,
+
+      CEIL3_3 = 20,
+      CEIL3_5 = 20,
+
+      FLAT8 = 10,
+      FLAT5_2 = 10,
+      FLAT5_4 = 5,
+
+      MFLR8_1 = 5,
+
+      SLIME16 = 20
     }
   },
 
