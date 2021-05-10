@@ -463,6 +463,63 @@ Texture "COMPYELL", 64, 128
   }
 }
 
+// Composites based on Vol. 3
+WallTexture "DECO1RED", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#FF0000"
+	}
+}
+
+WallTexture "DECO1GRN", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#20FF18"
+	}
+}
+
+WallTexture "DECO1TAN", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#FFAC04"
+	}
+}
+
+WallTexture "DECO1BRN", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#675333"
+	}
+}
+
+WallTexture "BRIC9GRN", 128, 128
+{
+	Patch "BRIC9GRY", 0, 0
+	{
+		Blend "#439337"
+	}
+}
+
+WallTexture "BRIC9TAN", 128, 128
+{
+	Patch "BRIC9GRY", 0, 0
+	{
+		Blend "#AF7B1F"
+	}
+}
+
+WallTexture "BRICEGRN", 128, 128
+{
+	Patch "BRICEGRY", 0, 0
+	{
+		Blend "#77FF6F"
+	}
+}
+
 // MSSP texture composites
 Texture "OBTSTX1B", 128, 128
 {
