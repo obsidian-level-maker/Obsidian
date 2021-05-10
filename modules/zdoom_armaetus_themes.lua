@@ -1127,6 +1127,87 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
+  tech_darkBronze =
+  {
+    env = "building",
+    prob = 40,
+
+    walls =
+    {
+      BRONZEG1 = 10,
+      BRONZEG2 = 10,
+      BRONZEG3 = 10,
+
+      BROWN2 = 8,
+      BROWN3 = 8,
+      
+      COMPBLAK = 1,
+      COMPTIL3 = 1,
+
+      DARKMET1 = 5,
+      GOTH17 = 5,
+      GOTH24 = 5,
+      GOTH31 = 5,
+      GOTH37 = 5,
+      GOTH38 = 5,
+
+      METAL8 = 7,
+      METAL9 = 7,
+      METAL10 = 7,
+
+      RUSTWALL = 2,
+      RUSTWAL2 = 2
+    },
+
+    floor =
+    {
+      FLAT1 = 5,
+      FLOOR4_8 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G06 = 5,
+      G10 = 5,
+      G15 = 8,
+      GMET03 = 5,
+      GMET05 = 5,
+      GRATE2 = 5,
+      GRATE3 = 5,
+      GRATE4 = 5,
+      GRATE7 = 5,
+      GRATE8 = 5,
+      QFLAT09 = 5,
+      MEM01 = 5
+    },
+
+    ceilings =
+    {
+      MFLR8_1 = 5,
+      FLOOR4_8 = 5,
+      
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G06 = 5,
+      G10 = 5,
+      G15 = 8,
+      GMET03 = 5,
+      GMET05 = 5,
+      GRATE2 = 5,
+      GRATE3 = 5,
+      GRATE4 = 5,
+      GRATE7 = 5,
+      GRATE8 = 5,
+      QFLAT09 = 5,
+      MEM01 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5
+    }
+  },
+
   tech_Outdoors_generic =
   {
     env  = "outdoor",
