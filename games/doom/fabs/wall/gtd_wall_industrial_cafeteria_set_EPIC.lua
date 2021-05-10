@@ -64,3 +64,23 @@ PREFABS.Wall_cafeteria_long_chair =
 
   deep = 40
 }
+
+PREFABS.Wall_cafeteria_food_dispenser =
+{
+  template = "Wall_cafeteria_food_trays",
+  map = "MAP06",
+
+  prob = 10,
+
+  deep = 16
+}
+
+PREFABS.Wall_cafeteria_disposal_chute =
+{
+  template = "Wall_cafeteria_food_trays",
+  map = "MAP07",
+
+  prob = 5,
+
+  deep = 16
+}
