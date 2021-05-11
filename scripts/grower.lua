@@ -1084,7 +1084,7 @@ function Grower_decide_extents()
   -- specific instructions for procedural gotcha
 
   if LEVEL.is_procedural_gotcha == true then
-    if PARAM.boss_gen == true then
+    if PARAM.bool_boss_gen == 1 then
       LEVEL.min_rooms = 1
       LEVEL.max_rooms = 1
     else

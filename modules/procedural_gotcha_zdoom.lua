@@ -1,20 +1,24 @@
---------------------------------------------------------------------
---  GZDoom Boss Generator
---------------------------------------------------------------------
+------------------------------------------------------------------------
+--  MODULE: Procedural Gotcha Fine Tune
+------------------------------------------------------------------------
 --
---  Copyright (C) 2019-2021 MsrShooterPerson
---  Copyright (C) [Insert anyone else who worked on this] 2020-2021,
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
 --  as published by the Free Software Foundation; either version 2,
 --  of the License, or (at your option) any later version.
 --
---------------------------------------------------------------------
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+------------------------------------------------------------------------
 
-BOSS_GEN_TUNE = {}
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM = {}
 
-BOSS_GEN_TUNE.BOSS_DIFF_CHOICES =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES =
 {
   "easier",    _("Easier"),
   "default", _("Moderate"),
@@ -22,7 +26,7 @@ BOSS_GEN_TUNE.BOSS_DIFF_CHOICES =
   "nightmare", _("Nightmare"),
 }
 
-BOSS_GEN_TUNE.BOSS_HEALTH_CHOICES =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES =
 {
   "muchless", _("Reduced by 50%"),
   "less", _("Reduced by 25%"),
@@ -32,7 +36,7 @@ BOSS_GEN_TUNE.BOSS_HEALTH_CHOICES =
   "demiosmode",  _("Increased by 200%"),
 }
 
-BOSS_GEN_TUNE.BOSS_LESS_HITSCAN =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LESS_HITSCAN =
 {
   "default",  _("Default"),
   "less",     _("50% less"),
@@ -40,7 +44,7 @@ BOSS_GEN_TUNE.BOSS_LESS_HITSCAN =
   "none", _("100% less"),
 }
 
-BOSS_GEN_TUNE.ARENA_STEEPNESS =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.ARENA_STEEPNESS =
 {
   "none",  _("NONE"),
   "rare",  _("Rare"),
@@ -50,7 +54,7 @@ BOSS_GEN_TUNE.ARENA_STEEPNESS =
   "mixed", _("Mix It Up"),
 }
 
-BOSS_GEN_TUNE.REINFORCE =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCE =
 {
   "none",  _("NONE"),
   "weaker",  _("Weaker"),
@@ -60,7 +64,7 @@ BOSS_GEN_TUNE.REINFORCE =
   "nightmare", _("Nightmare"),
 }
 
-BOSS_GEN_TUNE.REINFORCER =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCER =
 {
   "weakester",  _("Extremely slow"),
   "weakest",  _("Very slow"),
@@ -71,26 +75,26 @@ BOSS_GEN_TUNE.REINFORCER =
   "serious", _("Nightmare"),
 }
 
-BOSS_GEN_TUNE.BOSS_WEAP =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_WEAP =
 {
   "scatter", _("Scatter around arena"),
   "close",  _("Close to player start"),
 }
 
-BOSS_GEN_TUNE.BOSS_EXIT =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_EXIT =
 {
   "default", _("Exit after 10 seconds"),
   "item",  _("Spawn pickup that exits the level"),
 }
 
-BOSS_GEN_TUNE.BOSS_LIMITS =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LIMITS =
 {
   "hardlimit",  _("Hard Limit"),
   "softlimit",     _("Soft Limit"),
   "nolimit", _("No Limit"),
 }
 
-BOSS_GEN_TUNE.TEMPLATES =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES =
 {
   ZSC =
 [[
@@ -977,7 +981,7 @@ class bossabilitygiver_homing : bossabilitygiver { }
 ]]
 }
 
-BOSS_GEN_TUNE.TAUNTS =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TAUNTS =
 {
   -- Scionox
   ["YOU CANNOT HANDLE THE POWER OF THE INFINITE HELL"] = 50,
@@ -1090,7 +1094,7 @@ BOSS_GEN_TUNE.TAUNTS =
   ["YOUR STAY OF EXECUTION IS OVER. I HAVE COME TO DELIVER."] = 50,
 }
 
-BOSS_GEN_TUNE.DEATHS =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.DEATHS =
 {
   -- Scionox
   ["NOOOO, I SHALL RETURN!!!"] = 50,
@@ -1117,7 +1121,7 @@ BOSS_GEN_TUNE.DEATHS =
   ["YOU ARE NOW WORTHY OF FIGHTING MY MASTER"] = 50,
 }
 
-BOSS_GEN_TUNE.TRAITS =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TRAITS =
 {
   SPEED =
   {
@@ -1230,9 +1234,9 @@ BOSS_GEN_TUNE.TRAITS =
   },
 }
 
-function BOSS_GEN_TUNE.game_specific_hpbar()
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.game_specific_hpbar()
     if OB_CONFIG.game == "heretic" then
-     BOSS_GEN_TUNE.TEMPLATES.BAR = [[if(bossFound)
+     PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.BAR = [[if(bossFound)
         {
         ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");
         bossController mo;
@@ -1268,7 +1272,7 @@ function BOSS_GEN_TUNE.game_specific_hpbar()
         }
 ]]
     else
-     BOSS_GEN_TUNE.TEMPLATES.BAR = [[if(bossFound)
+     PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.BAR = [[if(bossFound)
         {
         ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");
         bossController mo;
@@ -1306,18 +1310,18 @@ function BOSS_GEN_TUNE.game_specific_hpbar()
     end
 end
 
-function BOSS_GEN_TUNE.grab_random_taunt()
-  return rand.key_by_probs(BOSS_GEN_TUNE.TAUNTS)
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_taunt()
+  return rand.key_by_probs(PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TAUNTS)
 end
 
-function BOSS_GEN_TUNE.grab_random_death()
-  return rand.key_by_probs(BOSS_GEN_TUNE.DEATHS)
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_death()
+  return rand.key_by_probs(PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.DEATHS)
 end
 
-function BOSS_GEN_TUNE.grab_random_trait(btype, etraits)
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(btype, etraits)
   local traits = {}
 
-  for name,info in pairs(BOSS_GEN_TUNE.TRAITS) do
+  for name,info in pairs(PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TRAITS) do
 
   local tprob
     local stack = 0
@@ -1363,7 +1367,7 @@ function BOSS_GEN_TUNE.grab_random_trait(btype, etraits)
   return trait
 end
 
-function BOSS_GEN_TUNE.syntaxize(str, str2)
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(str, str2)
   local final
   if str == "" then
     final = str .. str2
@@ -1373,82 +1377,18 @@ function BOSS_GEN_TUNE.syntaxize(str, str2)
   return final
 end
 
-function BOSS_GEN_TUNE.check_gotchas_enabled()
-  if OB_CONFIG.procedural_gotchas == "none"
-  and PARAM.boss_gen then
-    error("Procedural gotchas must be enabled for boss generator!")
-  end
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.check_monsters_enabled()
   if PARAM.float_mons == 0 then
     error("Monsters must be enabled for boss generator!")
   end
 end
 
-function BOSS_GEN_TUNE.setup(self)
-  PARAM.boss_gen = true
-  PARAM.boss_types = {}
-  PARAM.lvlstr = ""
-  PARAM.BOSSSCRIPT = ""
-  PARAM.boss_count = 1
-  PARAM.epi_bosses = {}
-  PARAM.epi_names = {}
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl()
 
-  for name,opt in pairs(self.options) do
-    if opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
-      end
-    else
-      local value = self.options[name].value
-      PARAM[name] = value
-    end
-  end
+  if PARAM.bool_boss_gen == 1 then
 
-  if PARAM.boss_gen_health == "muchless" then
-    PARAM.boss_gen_mult = 0.5
-  elseif PARAM.boss_gen_health == "less" then
-    PARAM.boss_gen_mult = 0.75
-  elseif PARAM.boss_gen_health == "default" then
-    PARAM.boss_gen_mult = 1.0
-  elseif PARAM.boss_gen_health == "more" then
-    PARAM.boss_gen_mult = 1.5
-  elseif PARAM.boss_gen_health == "muchmore" then
-    PARAM.boss_gen_mult = 2.0
-  elseif PARAM.boss_gen_health == "demiosmode" then
-    PARAM.boss_gen_mult = 3.0
-  end
-
-  if PARAM.boss_gen_diff == "easier" then
-    PARAM.boss_gen_dmult = -1.0
-  elseif PARAM.boss_gen_diff == "default" then
-    PARAM.boss_gen_dmult = 1.0
-  elseif PARAM.boss_gen_diff == "harder" then
-    PARAM.boss_gen_dmult = 2.0
-  elseif PARAM.boss_gen_diff == "nightmare" then
-    PARAM.boss_gen_dmult = 3.0
-  end
-
-  if PARAM.boss_gen_reinforcerate == "weakester" then
-    PARAM.boss_gen_rmult = 4.0
-  elseif PARAM.boss_gen_reinforcerate == "weakest" then
-    PARAM.boss_gen_rmult = 2.0
-  elseif PARAM.boss_gen_reinforcerate == "weaker" then
-    PARAM.boss_gen_rmult = 1.5
-  elseif PARAM.boss_gen_reinforcerate == "default" then
-    PARAM.boss_gen_rmult = 1.0
-  elseif PARAM.boss_gen_reinforcerate == "harder" then
-    PARAM.boss_gen_rmult = 0.75
-  elseif PARAM.boss_gen_reinforcerate == "tougher" then
-    PARAM.boss_gen_rmult = 0.5
-  elseif PARAM.boss_gen_reinforcerate == "serious" then
-    PARAM.boss_gen_rmult = 0.25
-  end
-end
-
-function BOSS_GEN_TUNE.end_lvl()
   if LEVEL.is_procedural_gotcha then
-    local scripty = BOSS_GEN_TUNE.TEMPLATES.LVL
+    local scripty = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.LVL
 
     scripty = string.gsub(scripty, "NUM", LEVEL.id)
     scripty = string.gsub(scripty, "CNT", PARAM.boss_count)
@@ -1470,11 +1410,16 @@ function BOSS_GEN_TUNE.end_lvl()
 
     PARAM.boss_count = PARAM.boss_count + 1
   end
+  
+  end
+  
 end
 
-function BOSS_GEN_TUNE.all_done()
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
 
-  local scripty = BOSS_GEN_TUNE.TEMPLATES.ZSC
+  if PARAM.bool_boss_gen == 1 then
+
+  local scripty = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.ZSC
   local btrait = ""
   local btrait2 = ""
   local btrait3 = ""
@@ -1499,20 +1444,20 @@ function BOSS_GEN_TUNE.all_done()
   scripty = string.gsub(scripty, "LEVELCODE", PARAM.lvlstr)
 
   if PARAM.bool_boss_gen_hpbar == 1 then
-    BOSS_GEN_TUNE.game_specific_hpbar()
-    scripty = string.gsub(scripty, "BOSSHPBAR", BOSS_GEN_TUNE.TEMPLATES.BAR)
+    PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.game_specific_hpbar()
+    scripty = string.gsub(scripty, "BOSSHPBAR", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.BAR)
   else
     scripty = string.gsub(scripty, "BOSSHPBAR", "")
   end
 
   if PARAM.bool_boss_gen_music == 1 then
-    scripty = string.gsub(scripty, "MUSIC", BOSS_GEN_TUNE.TEMPLATES.MUS)
+    scripty = string.gsub(scripty, "MUSIC", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.MUS)
   else
     scripty = string.gsub(scripty, "MUSIC", "")
   end
 
   if PARAM.boss_gen_reinforce ~= "none" then
-    scripty = string.gsub(scripty, "SUMCODE", BOSS_GEN_TUNE.TEMPLATES.SUM)
+    scripty = string.gsub(scripty, "SUMCODE", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.SUM)
   else
     scripty = string.gsub(scripty, "SUMCODE", "")
   end
@@ -1524,9 +1469,9 @@ function BOSS_GEN_TUNE.all_done()
   end
 
   if PARAM.boss_gen_exit == "item" then
-    scripty = string.gsub(scripty, "BEXIT", BOSS_GEN_TUNE.TEMPLATES.EXITEM)
+    scripty = string.gsub(scripty, "BEXIT", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.EXITEM)
   else
-    scripty = string.gsub(scripty, "BEXIT", BOSS_GEN_TUNE.TEMPLATES.EXNORMAL)
+    scripty = string.gsub(scripty, "BEXIT", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.EXNORMAL)
   end
 
   for name,info in pairs(PARAM.boss_types) do
@@ -1536,30 +1481,30 @@ function BOSS_GEN_TUNE.all_done()
     local ttrait
 
     if(bhp<2000) then
-      ttrait = BOSS_GEN_TUNE.grab_random_trait(batk,traitstack)
+      ttrait = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(batk,traitstack)
       table.insert(traitstack, ttrait)
-      btrait2 = BOSS_GEN_TUNE.syntaxize(btrait2,ttrait)
+      btrait2 = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait2,ttrait)
     else
-      btrait2 = BOSS_GEN_TUNE.syntaxize(btrait2,'"bossabilitygiver_nothing"')
+      btrait2 = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait2,'"bossabilitygiver_nothing"')
     end
 
     if(bhp<300) then
-      ttrait = BOSS_GEN_TUNE.grab_random_trait(batk,traitstack)
+      ttrait = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(batk,traitstack)
       table.insert(traitstack, ttrait)
-      btrait3 = BOSS_GEN_TUNE.syntaxize(btrait3,ttrait)
+      btrait3 = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait3,ttrait)
     else
-      btrait3 = BOSS_GEN_TUNE.syntaxize(btrait3,'"bossabilitygiver_nothing"')
+      btrait3 = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait3,'"bossabilitygiver_nothing"')
     end
 
     for i = 0,2,1 do
-      ttrait = BOSS_GEN_TUNE.grab_random_trait(batk,traitstack)
+      ttrait = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(batk,traitstack)
       table.insert(traitstack, ttrait)
-      btrait = BOSS_GEN_TUNE.syntaxize(btrait,ttrait)
+      btrait = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait,ttrait)
     end
 
     local batkx = "\"" .. batk .. "\""
 
-    btype = BOSS_GEN_TUNE.syntaxize(btype,batkx)
+    btype = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btype,batkx)
 
     local mult
     local hpcalc
@@ -1577,12 +1522,12 @@ function BOSS_GEN_TUNE.all_done()
 
     if batk == "hitscan" and PARAM.boss_gen_dmult<3.0 then hpcalc = hpcalc*0.75 end
 
-    bhealth = BOSS_GEN_TUNE.syntaxize(bhealth,hpcalc)
+    bhealth = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(bhealth,hpcalc)
 
     local sumcalc
 
     sumcalc = int(rand.pick({400,450,500,550,600})*PARAM.boss_gen_rmult)
-    bsummon = BOSS_GEN_TUNE.syntaxize(bsummon,sumcalc)
+    bsummon = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(bsummon,sumcalc)
 
   end
 
@@ -1626,80 +1571,248 @@ function BOSS_GEN_TUNE.all_done()
     local line = "BOSS_NAME" .. i .. ' = "' .. demon_name .. '";\n'
     table.insert(PARAM.BOSSLANG, line)
 
-    local taunt = BOSS_GEN_TUNE.grab_random_taunt()
+    local taunt = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_taunt()
     line = "BOSS_TAUNT" .. i .. ' = "' .. demon_name .. ": " .. taunt .. '";\n'
     table.insert(PARAM.BOSSLANG, line)
 
-    local dead = BOSS_GEN_TUNE.grab_random_death()
+    local dead = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_death()
     line = "BOSS_DEATH" .. i .. ' = "' .. demon_name .. ": " .. dead .. '";\n'
     table.insert(PARAM.BOSSLANG, line)
 
   end
+  
+  end
+  
 end
 
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.GOTCHA_MAP_SIZES =
+{
+  "large", _("Large"),
+  "regular", _("Regular"),
+  "small", _("Small"),
+  "tiny", _("Tiny")
+}
 
-OB_MODULES["gzdoom_boss_gen"] =
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.PROC_GOTCHA_CHOICES =
+{
+  "final", _("Final Map Only"),
+  "epi",   _("Episodic (MAP11, MAP20, MAP30)"),
+  "2epi",   _("2 per ep (5,11,16,20,25,30)"),
+  "3epi",   _("3 per ep (3,7,11,14,17,20,23,27,30)"),
+  "4epi",   _("4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"),
+  "_",     _("_"),
+  "5p",    _("5% Chance, Any Map After MAP04"),
+  "10p",   _("10% Chance, Any Map After MAP04"),
+  "all",   _("Everything")
+}
+
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup(self)
+
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
+  end
+  
+  if PARAM.bool_boss_gen == 1 then
+  
+    PARAM.boss_types = {}
+    PARAM.lvlstr = ""
+    PARAM.BOSSSCRIPT = ""
+    PARAM.boss_count = 1
+    PARAM.epi_bosses = {}
+    PARAM.epi_names = {}
+  
+    if PARAM.boss_gen_health == "muchless" then
+      PARAM.boss_gen_mult = 0.5
+    elseif PARAM.boss_gen_health == "less" then
+      PARAM.boss_gen_mult = 0.75
+    elseif PARAM.boss_gen_health == "default" then
+      PARAM.boss_gen_mult = 1.0
+    elseif PARAM.boss_gen_health == "more" then
+      PARAM.boss_gen_mult = 1.5
+    elseif PARAM.boss_gen_health == "muchmore" then
+      PARAM.boss_gen_mult = 2.0
+    elseif PARAM.boss_gen_health == "demiosmode" then
+      PARAM.boss_gen_mult = 3.0
+    end
+
+    if PARAM.boss_gen_diff == "easier" then
+      PARAM.boss_gen_dmult = -1.0
+    elseif PARAM.boss_gen_diff == "default" then
+      PARAM.boss_gen_dmult = 1.0
+    elseif PARAM.boss_gen_diff == "harder" then
+      PARAM.boss_gen_dmult = 2.0
+    elseif PARAM.boss_gen_diff == "nightmare" then
+      PARAM.boss_gen_dmult = 3.0
+    end
+
+    if PARAM.boss_gen_reinforcerate == "weakester" then
+      PARAM.boss_gen_rmult = 4.0
+    elseif PARAM.boss_gen_reinforcerate == "weakest" then
+      PARAM.boss_gen_rmult = 2.0
+    elseif PARAM.boss_gen_reinforcerate == "weaker" then
+      PARAM.boss_gen_rmult = 1.5
+    elseif PARAM.boss_gen_reinforcerate == "default" then
+      PARAM.boss_gen_rmult = 1.0
+    elseif PARAM.boss_gen_reinforcerate == "harder" then
+      PARAM.boss_gen_rmult = 0.75
+    elseif PARAM.boss_gen_reinforcerate == "tougher" then
+      PARAM.boss_gen_rmult = 0.5
+    elseif PARAM.boss_gen_reinforcerate == "serious" then
+      PARAM.boss_gen_rmult = 0.25
+    end
+    
+  end
+  
+end
+
+OB_MODULES["procedural_gotcha_zdoom"] =
 {
 
-  name = "gzdoom_boss_gen",
+  name = "procedural_gotcha_zdoom",
 
-  label = _("[Exp]GZDoom Boss Generator"),
+  label = _("ZDoom Procedural Gotchas"),
 
---  game = "doomish",
-
-  side = "right",
   engine = "zdoom",
+  side = "right",
   priority = 92,
 
   hooks =
   {
-    setup = BOSS_GEN_TUNE.setup,
-    begin_level = BOSS_GEN_TUNE.check_gotchas_enabled,
-    end_level = BOSS_GEN_TUNE.end_lvl,
-    all_done = BOSS_GEN_TUNE.all_done
+    setup = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup,
+    begin_level = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.check_monsters_enabled,
+    end_level = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl,
+    all_done = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done
   },
 
   tooltip=_(
-    "[WIP/Experimental]This module replaces procedural gotchas with boss fight arenas."),
+    "This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
 
   options =
   {
+     
+     gotcha_frequency=   
+     {
+      name="gotcha_frequency",
+      label=_("Gotcha Frequency"),
+      choices=PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.PROC_GOTCHA_CHOICES,
+      default="final",
+      tooltip = "Procedural Gotchas are two room maps, where the second is an immediate " ..
+      "but immensely-sized exit room with gratitiously intensified monster strength. " ..
+      "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
+      "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
+      priority = 105
+    },
+  
+    float_gotcha_qty =
+    {
+      name="float_gotcha_qty",
+      label=_("Extra Quantity"),
+      valuator = "slider",
+      units = "% of Monsters",
+      min = -50,
+      max = 400,
+      increment = 5,
+      default = 25,
+      nan = "0:No Change,",
+      tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
+      priority = 104
+    },
+
+    float_gotcha_strength =
+    {
+      name="float_gotcha_strength",
+      label=_("Extra Strength"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 16,
+      increment = 1,
+      default = 4,
+      nan = "0:NONE," ..
+      "2:2 (Stronger)," ..
+      "4:4 (Harder)," ..
+      "6:6 (Tougher)," ..
+      "8:8 (CRAZIER)," ..
+      "16:16 (NIGHTMARISH),",
+      tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
+      priority = 103
+    },
+
+    gotcha_map_size =
+    {
+      name="gotcha_map_size",
+      label=_("Map Size"),
+      choices=PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.GOTCHA_MAP_SIZES,
+      default = "small",
+      tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
+      priority = 102,
+      gap = 1
+    },
+    
+    bool_boss_gen =
+    {
+      name = "bool_boss_gen",
+      label=_("Enable Bosses"),
+      valuator = "button",
+      default = 1,
+      tooltip = "Toggles Boss Monster generation for Gotchas.",
+      priority = 101
+    },
+
+    bool_gotcha_boss_fight =
+    {
+      name = "bool_gotcha_boss_fight",
+      label=_("Force Boss Fight"),
+      valuator = "button",
+      default = 1,
+      tooltip = "EXPERIMENTAL: Forces procedural gotchas to have guaranteed boss fights.",
+      priority = 100
+    },
+    
     boss_gen_diff =
     {
       name = "boss_gen_diff",
-      label = _("Difficulty"),
-      priority = 99,
-      choices = BOSS_GEN_TUNE.BOSS_DIFF_CHOICES,
+      label = _("Boss Difficulty"),
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES,
       default = "default",
       tooltip = "Increases or reduces chances of boss being based off more powerful monster and getting more powerful traits.",
+      priority = 95
     },
 
     boss_gen_health =
     {
       name = "boss_gen_health",
-      label = _("Health Modifier"),
-      priority = 98,
-      choices = BOSS_GEN_TUNE.BOSS_HEALTH_CHOICES,
+      label = _("Boss Health Modifier"),
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES,
       default = "default",
       tooltip = "Makes boss health higher or lower than default, useful when playing with mods that have different average power level of weapons.",
-      gap = 1,
+      priority = 94
     },
 
     boss_gen_hitscan =
     {
       name = "boss_gen_hitscan",
       label = _("Hitscan Bosses"),
-      priority = 97,
-      choices = BOSS_GEN_TUNE.BOSS_LESS_HITSCAN,
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LESS_HITSCAN,
       default = "default",
       tooltip = "Reduces chance of hitscan bosses spawning.",
+      priority = 93,
+      gap = 1
     },
 
     bool_boss_gen_hpbar =
     {
       name = "bool_boss_gen_hpbar",
       label = _("Visible Health Bar"),
-      priority = 96,
+      priority = 99,
       valuator = "button",
       default = 1,
       tooltip = "If enabled, an hp bar will appear on UI while boss is active.",
@@ -1709,20 +1822,18 @@ OB_MODULES["gzdoom_boss_gen"] =
     {
       name = "bool_boss_gen_music",
       label=_("Enable Boss Music"),
-      priority = 95,
+      priority = 98,
       valuator = "button",
       default = 1,
       tooltip = "If enabled, encountering a boss will start boss theme music." ..
       "(For now you have to have your own music files with lumps named D_BOSSx where x is boss number)",
-      gap = 1,
     },
 
     boss_gen_steepness =
     {
       name = "boss_gen_steepness",
       label = _("Arena Steepness"),
-      priority = 94,
-      choices = BOSS_GEN_TUNE.ARENA_STEEPNESS,
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.ARENA_STEEPNESS,
       default = "none",
       tooltip = "Influences steepness settings for boss arenas. " ..
       "Boss arena steepness is capped to be less intrusive to boss movement.",
@@ -1732,8 +1843,7 @@ OB_MODULES["gzdoom_boss_gen"] =
     {
       name = "boss_gen_reinforce",
       label = _("Reinforcement Strength"),
-      priority = 93,
-      choices = BOSS_GEN_TUNE.REINFORCE,
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCE,
       default = "default",
       tooltip = "Influences the strength of reinforcements summoned by bosses",
     },
@@ -1742,8 +1852,7 @@ OB_MODULES["gzdoom_boss_gen"] =
     {
       name = "boss_gen_reinforcerate",
       label = _("Reinforcement Rate"),
-      priority = 92,
-      choices = BOSS_GEN_TUNE.REINFORCER,
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCER,
       default = "default",
       tooltip = "Influences the spawn rate of reinforcements summoned by bosses",
     },
@@ -1752,18 +1861,18 @@ OB_MODULES["gzdoom_boss_gen"] =
     {
       name = "bool_boss_gen_types",
       label = _("Respect zero prob"),
-      priority = 91,
+      priority = 96,
       valuator = "button",
       default = 0,
       tooltip = "If enabled, monsters disabled in monster control module cant be chosen as a boss.",
+      gap = 1
     },
 
     boss_gen_typelimit =
     {
       name = "boss_gen_typelimit",
       label = _("Monster limit type"),
-      priority = 90,
-      choices = BOSS_GEN_TUNE.BOSS_LIMITS,
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LIMITS,
       default = "softlimit",
       tooltip = "Influences how boss difficulty and megawad progression affects the monster type of boss.\n\n" ..
       "hard limit: doesnt allow monster types outside of range to ever spawn.\n\n" ..
@@ -1775,18 +1884,18 @@ OB_MODULES["gzdoom_boss_gen"] =
     {
       name = "boss_gen_weap",
       label = _("Weapon placement"),
-      priority = 89,
-      choices = BOSS_GEN_TUNE.BOSS_WEAP,
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_WEAP,
       default = "scatter",
       tooltip = "Influences weapon placement in boss arena.",
+      priority = 90,
+      gap = 1
     },
 
     boss_gen_exit =
     {
       name = "boss_gen_exit",
       label = _("Exit type"),
-      priority = 88,
-      choices = BOSS_GEN_TUNE.BOSS_EXIT,
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_EXIT,
       default = "default",
       tooltip = "Changes exit type after boss has been destroyed.",
     },
@@ -1795,7 +1904,6 @@ OB_MODULES["gzdoom_boss_gen"] =
     {
       name = "float_boss_gen_ammo",
       label = _("Ammo supplies mult"),
-      priority = 87,
       valuator = "slider",
       units = "x",
       min = 1,
@@ -1804,13 +1912,13 @@ OB_MODULES["gzdoom_boss_gen"] =
       default = 3,
       nan = "3:3x (Default),",
       tooltip = "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier).",
+      priority = 91
     },
 
     float_boss_gen_heal =
     {
       name = "float_boss_gen_heal",
       label = _("Healing supplies mult"),
-      priority = 86,
       valuator = "slider",
       units = "x",
       min = 1,
@@ -1819,6 +1927,7 @@ OB_MODULES["gzdoom_boss_gen"] =
       default = 3,
       nan = "3:3x (Default),",
       tooltip = "Changes multiplier of healing items on the boss arena.",
+      priority = 92
     },
   },
 }

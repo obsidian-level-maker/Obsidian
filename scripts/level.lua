@@ -236,7 +236,7 @@ function Episode_determine_map_sizes()
       if PARAM.gotcha_map_size then
         W = PROC_GOTCHA_MAP_SIZES[PARAM.gotcha_map_size]
       end
-      if PARAM.boss_gen then W = 16 end
+      if PARAM.bool_boss_gen == 1 then W = 16 end
       H = W
     end
 
@@ -480,7 +480,7 @@ function Episode_plan_monsters()
     if LEV.is_procedural_gotcha then
       local gotcha_strength = 2
 
-      if PARAM.boss_gen then
+      if PARAM.bool_boss_gen == 1 then
         if PARAM.boss_gen_reinforce == "weaker" then
           gotcha_strength = math.max(8, mon_along * 0.9) * -1
         elseif PARAM.boss_gen_reinforce == "default" then
@@ -659,7 +659,7 @@ function Episode_plan_monsters()
     local tab = {}
 
     for name,info in pairs(GAME.MONSTERS) do
-      if LEV.is_procedural_gotcha and PARAM.boss_gen then
+      if LEV.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         local bprob = 80
         if PARAM.boss_gen_typelimit ~= "nolimit" then
           local boss_diff = PARAM.boss_gen_diff
@@ -941,7 +941,7 @@ function Episode_plan_monsters()
     -- ensure first encounter with a boss only uses a single one
     count = math.min(count, 1 + (used_bosses[mon] or 0))
 
-    if LEV.is_procedural_gotcha and PARAM.boss_gen then
+    if LEV.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
       count = 1
     end
 
@@ -1021,7 +1021,7 @@ function Episode_plan_monsters()
 
       LEV.boss_quotas = { minor=0, nasty=0, tough=0 }
 
-      if LEV.is_procedural_gotcha and PARAM.boss_gen then
+      if LEV.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         create_fight(LEV, "tough", 1)
         goto continue
       end
@@ -2439,7 +2439,7 @@ function Level_do_styles()
     STYLE.symmetry = "more"
     STYLE.teleporters = "none"
 
-    if PARAM.boss_gen then
+    if PARAM.bool_boss_gen == 1 then
       if PARAM.boss_gen_steepness then
 
         if PARAM.boss_gen_steepness == "mixed" then

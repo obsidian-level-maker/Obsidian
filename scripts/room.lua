@@ -2250,7 +2250,7 @@ function Room_choose_size(R, not_big)
       R.is_big = true
 
       -- extra code for single-room gotchas
-      if PARAM.boss_gen then
+      if PARAM.bool_boss_gen == 1 then
         R.size_limit = LEVEL.map_W * 20
       end
     end

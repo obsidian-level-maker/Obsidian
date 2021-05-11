@@ -468,7 +468,7 @@ function Item_simulate_battle(R)
     heal_mul = heal_mul * (PARAM.health_factor or 1)
     ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
 
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
       ammo_mul = ammo_mul * (PARAM.float_boss_gen_ammo * PARAM.boss_gen_mult)
       heal_mul = heal_mul * PARAM.float_boss_gen_heal
     end

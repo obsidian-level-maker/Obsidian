@@ -49,16 +49,16 @@ function ScriptMan_assemble_mapinfo_lump()
   }
 
   local eventhandler_lines = "addeventhandlers = "
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
   end
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 and SCRIPTS.actor_name_script then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 and SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. ", "
   end
   if SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. '"bossNameHandler"'
   end
-  if (PARAM.boss_gen and PARAM.boss_count ~= -1) or SCRIPTS.actor_name_script then
+  if (PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1) or SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. "\n"
     table.insert(mapinfo_lines, eventhandler_lines)
   end
@@ -120,7 +120,7 @@ end
 function ScriptMan_assemble_zscript_lump()
   local zscript_lines = ""
 
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     zscript_lines = zscript_lines .. PARAM.BOSSSCRIPT .. "\n"
   end
   if PARAM.marine_gen then
@@ -240,7 +240,7 @@ function ScriptMan_assemble_language_lump()
       "[enu default]\n",
   }
 
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     for _,line in pairs(PARAM.BOSSLANG) do
       table.insert(language_lines,line)
     end
