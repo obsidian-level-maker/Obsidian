@@ -84,3 +84,13 @@ PREFABS.Wall_cafeteria_disposal_chute =
 
   deep = 16
 }
+
+PREFABS.Wall_cafeteria_food_dispenser_2 =
+{
+  template = "Wall_cafeteria_food_trays",
+  map = "MAP07"
+
+  prob = 10,
+
+  deep = 16
+}
