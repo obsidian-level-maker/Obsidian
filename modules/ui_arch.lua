@@ -36,6 +36,31 @@ UI_ARCH.ZDOOM_SKYBOX_CHOICES =
   "disable",  _("Disable")
 }
 
+UI_ARCH.MIXIN_CHOICES =
+{
+  "mostly", _("Mostly"),
+  "normal", _("Normal"),
+  "less",   _("Less"),
+}
+
+
+UI_ARCH.RAMP_FACTOR =
+{
+  "0.5",  _("Very Fast Curve"),
+  "0.66", _("Fast Curve"),
+  "1",    _("Linear"),
+  "1.5",  _("Slow Curve"),
+  "2",    _("Very Slow Curve"),
+}
+
+
+UI_ARCH.SIZE_BIAS =
+{
+  "small",   _("Smaller"),
+  "default", _("DEFAULT"),
+  "large",   _("Larger"),
+}
+
 function UI_ARCH.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
@@ -52,7 +77,6 @@ end
 
 OB_MODULES["ui_arch"] =
 {
-
   name = "ui_arch",
 
   label = _("Architecture"),
@@ -68,6 +92,7 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
+    float_size=
     { 
       name="float_size", 
       label=_("Level Size"),
@@ -93,9 +118,99 @@ OB_MODULES["ui_arch"] =
       tooltip = "WARNING! If you are planning to play on any choices that involve maps " ..
       "at sizes of 50 and above, Autodetail is required on. (on by default if you do not have " ..
       "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable.",
-      gap = 1
+      priority = 100
     },
 
+    mixin_type =
+    {
+      name = "mixin_type",
+      label = _("Mix-in Type"),
+      tooltip = "This replaces the -ish theme choices. By selecting mostly, this means " ..
+                "your selected theme is occasionally littered by other themes while setting it to " ..
+                "less means the original selected theme is what's littered in instead. " ..
+                "Default behavior is normal.",
+      choices = UI_ARCH.MIXIN_CHOICES,
+      default = "normal",
+      priority = 88
+    },
+
+    float_level_upper_bound =
+    {
+      name = "float_level_upper_bound",
+      label = _("Upper Bound"),
+      valuator = "slider",
+      units = "",
+      min = 10,
+      max = 75,
+      increment = 1,
+      default = 75,
+      nan = "10:10 (Microscopic)," ..
+      "16:16 (Miniature)," ..
+      "22:22 (Tiny)," ..
+      "30:30 (Small)," ..
+      "36:36 (Average)," ..
+      "42:42 (Large)," ..
+      "48:48 (Huge)," ..
+      "58:58 (Colossal)," ..
+      "66:66 (Gargantuan)," ..
+      "75:75 (Transcendent),",
+      tooltip = "Fine tune upper limit for Level Size Episodic, Progressive and Mixed options.",
+      priority = 99
+    },
+
+    float_level_lower_bound =
+    {
+      name = "float_level_lower_bound",
+      label = _("Lower Bound"),
+      valuator = "slider",
+      units = "",
+      min = 10,
+      max = 75,
+      increment = 1,
+      default = 10,
+      nan = "10:10 (Microscopic)," ..
+      "16:16 (Miniature)," ..
+      "22:22 (Tiny)," ..
+      "30:30 (Small)," ..
+      "36:36 (Average)," ..
+      "42:42 (Large)," ..
+      "48:48 (Huge)," ..
+      "58:58 (Colossal)," ..
+      "66:66 (Gargantuan)," ..
+      "75:75 (Transcendent),",
+      tooltip = "Fine tune lower limit for Level Size Episodic, Progressive and Mixed options.",
+      priority = 98
+    },
+
+    level_size_ramp_factor =
+    {
+      name = "level_size_ramp_factor",
+      label = _("Ramp Factor"),
+      tooltip = "Determines how fast or slow larger level sizes are reached in Progressive/Episodic mode.\n\n" ..
+      "Very Fast Curve: Reach half-size at 1/4th of the game.\n" ..
+      "Fast Curve: Reach half-size at 1/3rds.\n" ..
+      "Linear: Reach half-size at half the game.\n" ..
+      "Slow Curve: Reach half-size at 2/3rds.\n" ..
+      "Very Slow Curve: Reach half-size at 3/4ths.\n\n" ..
+      "Oblige default is Fast Curve.",
+      choices = UI_ARCH.RAMP_FACTOR,
+      default = "0.66",
+      priority = 97,
+    },
+
+    level_size_bias =
+    {
+      name = "level_size_bias",
+      label = _("Level Size Bias"),
+      tooltip = "Alters probability skew when using Mix It Up for level sizes. " ..
+      "DEFAULT is a normal curve where Average is the most common size while smaller or larger sizes " ..
+      "become rarer. Combine with Level Upper and Lower Bounds for greater control.",
+      choices = UI_ARCH.SIZE_BIAS,
+      default = "default",
+      priority = 96
+    },
+
+    float_linear_mode=
     {
       name = "float_linear_mode",
       label = _("Linear Mode"),
@@ -110,9 +225,11 @@ OB_MODULES["ui_arch"] =
       "linear layout from start to exit. \n\nNote: Due to the nature of linear levels, " ..
       "you may encounter teleports even if you have teleports off. This is necessary " ..
       "in order for linear levels not to prematuraly terminate and therefore become stunted " ..
-      "i.e. only have 2-5 rooms."
+      "i.e. only have 2-5 rooms.",
+      priority = 94
     },
 
+    float_nature_mode=
     {
       name = "float_nature_mode",
       label = _("Nature Mode"),
@@ -125,8 +242,10 @@ OB_MODULES["ui_arch"] =
       nan = "",
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
+      priority = 93
     },
 
+    float_streets_mode=
     {
       name = "float_streets_mode",
       label = _("Streets Mode"),
@@ -138,25 +257,32 @@ OB_MODULES["ui_arch"] =
       default = 15,
       nan = "",
       tooltip = "Allows Oblige to create large street-like outdoor rooms.",
+      priority = 92
     },
 
+    bool_urban_streets_mode=
     {
       name = "bool_urban_streets_mode",
       label=_("Urban Only Streets"),
       valuator = "button",
       default = 1,
       tooltip="Changes streets mode percentage to affect all themes or only urban.",
-      gap = 1
+      gap = 1,
+      priority = 91
     },
 
+    bool_prebuilt_levels=
     {
       name="bool_prebuilt_levels",
       label=_("Prebuilt Levels"),
       valuator = "button",
       default = 1,
-      tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."
+      tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead.",
+      priority = 95,
+      gap = 1
     },
 
+    float_layout_absurdity=
     {
       name = "float_layout_absurdity",
       label = _("Layout Absurdity"),
@@ -171,17 +297,18 @@ OB_MODULES["ui_arch"] =
       "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
       "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
       "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
-      gap = 1
+      gap = 1,
+      priority = 89
     },
 
-    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES },
-    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES },
-    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES },
+    outdoors = { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 87 },
+    caves = { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 86 },
+    liquids = { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 85 },
+    hallways = { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 84 },
+    teleporters = { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 83 },
+    steepness = { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 82 },
 
-    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES },
-    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES },
-    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1 },
-
+    zdoom_vista=
     {
       name = "zdoom_vista",
       label = _("Bottomless Vistas"),
@@ -191,9 +318,11 @@ OB_MODULES["ui_arch"] =
       "This does not prevent skybox tiling.\n" ..
       "Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n" ..
       "Sky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n" ..
-      "Disable - Old Oblige behavior - no bottomless vistas."
+      "Disable - Old Oblige behavior - no bottomless vistas.",
+      priority = 81
     },
 
+    zdoom_skybox=
     {
       name = "zdoom_skybox",
       label = _("ZDoom 3D Skybox"),
@@ -201,7 +330,8 @@ OB_MODULES["ui_arch"] =
       default="disable",
       tooltip = "If a ZDoom based engine is selected, one has the option " ..
       "to enable a custom 3D skybox to be rendered into the map. " ..
-      "It is preferable to put this on if you have ZDoom Vista enabled."
+      "It is preferable to put this on if you have ZDoom Vista enabled.",
+      priority = 80
     }
   },
 }
