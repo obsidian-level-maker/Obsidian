@@ -32,7 +32,7 @@ function ZStoryGen_heretic_format_story_chunk(story_strings, info, store)
       info.demon_name = info.contributor_name
     end
 
-    if store and PARAM.boss_gen then
+    if store and PARAM.bool_boss_gen == 1 then
       local mcevil
       if string.find(story_strings, "_RAND_DEMON") then
         mcevil = info.demon_name

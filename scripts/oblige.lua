@@ -251,6 +251,48 @@ function ob_match_engine(T)
   return not result
 end
 
+function ob_match_engine2(T)
+  if not T.engine2 then return true end
+  if T.engine2 == "any" then return true end
+
+  local engine = T.engine2
+  local result = true
+
+  -- Compatibility stub for old "gzdoom" selection
+  if engine == "gzdoom" then engine = "zdoom" end
+
+  -- negated check?
+  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
+    engine = string.sub(engine, 2)
+    result = not result
+  end
+
+  -- normal check
+  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+    return result
+  end
+  
+  
+
+  -- handle extended engines
+
+  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
+  while engine_def do
+    if not engine_def.extends then
+      break;
+    end
+
+    if ob_match_word_or_table(engine, engine_def.extends) then
+      return result
+    end
+
+    engine_def = OB_ENGINES[engine_def.extends]
+  end
+
+  return not result
+end
+
 
 function ob_match_playmode(T)
   -- TODO : remove this function
@@ -373,6 +415,7 @@ function ob_match_conf(T)
 
   if not ob_match_game(T)     then return false end
   if not ob_match_engine(T)   then return false end
+  if not ob_match_engine2(T)  then return false end
   if not ob_match_module(T)   then return false end
 
   return true --OK--

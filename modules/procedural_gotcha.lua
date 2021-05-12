@@ -26,6 +26,19 @@ PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES =
   "tiny", _("Tiny")
 }
 
+PROCEDURAL_GOTCHA_FINE_TUNE.PROC_GOTCHA_CHOICES =
+{
+  "final", _("Final Map Only"),
+  "epi",   _("Episodic (MAP11, MAP20, MAP30)"),
+  "2epi",   _("2 per ep (5,11,16,20,25,30)"),
+  "3epi",   _("3 per ep (3,7,11,14,17,20,23,27,30)"),
+  "4epi",   _("4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"),
+  "_",     _("_"),
+  "5p",    _("5% Chance, Any Map After MAP04"),
+  "10p",   _("10% Chance, Any Map After MAP04"),
+  "all",   _("Everything")
+}
+
 function PROCEDURAL_GOTCHA_FINE_TUNE.setup(self)
   for name,opt in pairs(self.options) do
     if opt.valuator then
@@ -45,9 +58,10 @@ OB_MODULES["procedural_gotcha"] =
 
   name = "procedural_gotcha",
 
-  label = _("Procedural Gotcha Options"),
+  label = _("Procedural Gotchas"),
 
   engine = "!vanilla",
+  engine2 = "!zdoom",
   side = "right",
   priority = 92,
 
@@ -61,6 +75,19 @@ OB_MODULES["procedural_gotcha"] =
 
   options =
   {
+    gotcha_frequency=   
+    {
+      name="gotcha_frequency",
+      label=_("Gotcha Frequency"),
+      choices=PROCEDURAL_GOTCHA_FINE_TUNE.PROC_GOTCHA_CHOICES,
+      default="final",
+      tooltip = "Procedural Gotchas are two room maps, where the second is an immediate " ..
+      "but immensely-sized exit room with gratitiously intensified monster strength. " ..
+      "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
+      "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
+      priority = 100
+    },
+    
     float_gotcha_qty =
     {
       name="float_gotcha_qty",
@@ -101,15 +128,6 @@ OB_MODULES["procedural_gotcha"] =
       choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES,
       default = "small",
       tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
-    },
-
-    bool_gotcha_boss_fight =
-    {
-      name = "bool_gotcha_boss_fight",
-      label=_("Force Boss Fight"),
-      valuator = "button",
-      default = 1,
-      tooltip = "EXPERIMENTAL: Forces procedural gotchas to have guaranteed boss fights.",
     },
   },
 }

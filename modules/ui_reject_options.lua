@@ -22,7 +22,7 @@ OB_MODULES["ui_reject_options"] =
 {
   label = _("Map Build Options"),
   
-  engine = "!zdoom",
+  engine = "!advanced",
 
   side = "left",
   priority = 105,

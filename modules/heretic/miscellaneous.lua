@@ -95,6 +95,42 @@ MISC_STUFF_HERETIC.LINEAR_START_CHOICES =
   "default", _("DEFAULT"),
 }
 
+MISC_STUFF_HERETIC.ROOM_SIZE_MULTIPLIER_CHOICES =
+{
+  "0.25", _("x0.25"),
+  "0.5", _("x0.5"),
+  "0.75", _("x0.75"),
+  "1", _("x1"),
+  "1.25", _("x1.25"),
+  "1.5", _("x1.5"),
+  "2", _("x2"),
+  "4", _("x4"),
+  "6", _("x6"),
+  "8", _("x8"),
+  "vanilla", _("Vanilla"),
+  "mixed", _("Mix It Up")
+}
+
+MISC_STUFF_HERETIC.AREA_COUNT_MULTIPLIER_CHOICES =
+{
+  "0.15", _("x0.15"),
+  "0.5", _("x0.5"),
+  "0.75", _("x0.75"),
+  "1", _("x1"),
+  "1.5", _("x1.5"),
+  "2", _("x2"),
+  "4", _("x4"),
+  "vanilla", _("Vanilla"),
+  "mixed", _("Mix It Up")
+}
+
+MISC_STUFF_HERETIC.ROOM_SIZE_CONSISTENCY_CHOICES =
+{
+  "normal", _("Vanilla"),
+  "strict", _("Strict"),
+  "mixed", _("Mix It Up")
+}
+
 function MISC_STUFF_HERETIC.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
@@ -174,15 +210,45 @@ OB_MODULES["misc_heretic"] =
       default = 0,
       tooltip=_("For Co-operative games, sometimes have players start in different rooms")
     },
---[[    {
+    
+    {
       name = "bool_foreshadowing_exit",
-      label = _("Foreshadowing Exit")
+      label = _("Foreshadowing Exit"),
       valuator = "button",
       default = 1,
       tooltip = "Gets exit room theme to follow the theme of the next level, if different.",
       gap=1,
     },
-]]
+
+    {
+      name="room_size_multiplier", label=_("Room Size Multiplier"),
+      choices = MISC_STUFF_HERETIC.ROOM_SIZE_MULTIPLIER_CHOICES,
+      default = "mixed",
+      tooltip = "Alters the general size and ground coverage of rooms.\n\n" ..
+        "Vanilla: No room size multipliers.\n\n" ..
+        "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest.",
+    },
+    {
+      name="room_area_multiplier", label=_("Area Count Multiplier"),
+      choices = MISC_STUFF_HERETIC.AREA_COUNT_MULTIPLIER_CHOICES,
+      default = "mixed",
+      tooltip = "Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or "..
+        "simply different ceilings if a level has no steepness.\n\n" ..
+        "Vanilla: No area quantity multipliers.\n\n" ..
+        "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest.",
+    },
+    {
+      name="room_size_consistency", label=_("Size Consistency"),
+      choices = MISC_STUFF_HERETIC.ROOM_SIZE_CONSISTENCY_CHOICES,
+      default = "mixed",
+      tooltip = "Changes whether rooms follow a strict single size or not. " ..
+        "Can be paired with above choices for more enforced results.\n\n" ..
+        "Vanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\n" ..
+        "Strict: All rooms in the level have a single set size/coverage.\n\n" ..
+        "Mix It Up: A mixture of 75% Vanilla, 25% Strict.",
+      gap = 1,
+    },
+
     { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES },
     { name="big_outdoor_rooms", label=_("Big Outdoors"), choices=STYLE_CHOICES },
     {
@@ -284,7 +350,11 @@ OB_MODULES["misc_heretic"] =
     },
 ]]
     { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES, gap=1 },
-
+    
+    { name="local_switches",    label=_("Switch Rooms"), choices=STYLE_CHOICES, 
+      tooltip = "Controls the chance same-room switches and locks.",
+      gap=1 
+    },
 --[[    {
       name="bool_road_markings",
       label=_("Road Markings"),

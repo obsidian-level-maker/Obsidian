@@ -320,15 +320,12 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
     free_mesh();
 }
 
-void TX_TestSynth(void) {
+void TX_TestSynth(unsigned long long seed) {
     float *buf = new float[128 * 128];
 
-    TX_SpectralSynth(2, buf, 128);
+    TX_SpectralSynth(seed, buf, 128);
 
-    FILE *fp = fopen("testsynth.ppm", "wb");
-    SYS_ASSERT(fp);
-
-    fprintf(fp, "P6\n128 128 255\n");
+   printf("P6\n128 128 255\n");
 
     for (int y = 0; y < 128; y++) {
         for (int x = 0; x < 128; x++) {
@@ -336,14 +333,10 @@ void TX_TestSynth(void) {
 
             int ity = (int)(1 + f * 253);
 
-            fputc(ity, fp);
-            fputc(ity, fp);
-            fputc(ity, fp);
+            printf("ITY: %d\n", ity);
         }
     }
-
-    fclose(fp);
-
+    
     delete[] buf;
 }
 

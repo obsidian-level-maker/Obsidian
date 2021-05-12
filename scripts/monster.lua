@@ -147,7 +147,7 @@ function Monster_pacing()
 
   local function handle_known_room(R)
     if R == LEVEL.exit_room 
-    or (LEVEL.is_procedural_gotcha and PARAM.boss_gen) then
+    or (LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1) then
       set_room(R, "high")
       return
     end
@@ -314,7 +314,7 @@ function Monster_assign_bosses()
     -- already has one?
     if R.boss_fight then return -1 end
 
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then return 1 end
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then return 1 end
 
     -- require a goal (e.g. a KEY)
     if #R.goals == 0 then return -1 end
@@ -1268,7 +1268,7 @@ function Monster_fill_room(R)
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if PARAM.boss_gen and LEVEL.is_procedural_gotcha then
+    if PARAM.bool_boss_gen == 1 and LEVEL.is_procedural_gotcha then
       local max_level = LEVEL.monster_level
       if info.level > max_level then
         prob = prob / 40
@@ -1473,7 +1473,7 @@ function Monster_fill_room(R)
       if away then
         ang = geom.angle_add(ang, 180)
       end
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen and spot.bossgen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
         return ang+LEVEL.id
       else
         return ang
@@ -1481,7 +1481,7 @@ function Monster_fill_room(R)
     end
 
     -- fallback : purely random angle
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen and spot.bossgen then
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
       return (rand.irange(0,7) * 45)+LEVEL.id
     else
       return rand.irange(0,7) * 45
@@ -2183,7 +2183,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
       local mon = bf.mon
       local spot
 
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         reqs.fatness = 4
         while reqs.fatness > 0
         do
@@ -2224,7 +2224,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
       end
 
       if not spot then
-        if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+        if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
           error("Cannot place generated boss based on " .. bf.mon .. "\n")
         else
           gui.printf("WARNING!! Cannot place boss monster: \n" ..
@@ -2233,7 +2233,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
         break;
       end
 
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         local info = GAME.MONSTERS[mon]
         spot.bossgen = true
 
@@ -2368,7 +2368,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
     if R.is_secret and OB_CONFIG.secret_monsters == "no" then return false end
 
     if R.is_start and PARAM.bool_quiet_start == 1 then
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         -- your face is a tree
       else
         return false

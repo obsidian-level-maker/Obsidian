@@ -231,9 +231,9 @@ function Layout_spot_for_wotsit(R, kind, required)
     -- already used?
     if chunk.content then return -1 end
 
-    if LEVEL.is_procedural_gotcha == true and PARAM.boss_gen and chunk.kind == "closet" then return -1 end
+    if LEVEL.is_procedural_gotcha == true and PARAM.bool_boss_gen == 1 and chunk.kind == "closet" then return -1 end
 
-    if LEVEL.is_procedural_gotcha == true and PARAM.boss_gen and kind == "WEAPON" then
+    if LEVEL.is_procedural_gotcha == true and PARAM.bool_boss_gen == 1 and kind == "WEAPON" then
       if PARAM.boss_gen_weap == "close" then
         for _,goal in pairs(R.goals) do
           if goal.chunk and goal.kind == "START" then
@@ -433,7 +433,7 @@ function Layout_place_importants(R, imp_pass)
         mx, my = point_in_front_of_closet(chunk, 96)
       end
 
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         R:add_exclusion("keep_empty", mx, my,  100)
       else
         R:add_exclusion("keep_empty", mx, my,  640)

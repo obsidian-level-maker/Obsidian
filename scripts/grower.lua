@@ -992,7 +992,7 @@ function Grower_decide_extents()
   -- decides how much of the map we can use for growing rooms.
   --
 
-  if PARAM.bool_urban_streets_mode == 0 or (PARAM.bool_urban_streets_mode == 1 and LEVEL.theme_name == "urban")
+  if (PARAM.bool_urban_streets_mode == 0 or (PARAM.bool_urban_streets_mode == 1 and LEVEL.theme_name == "urban"))
   and rand.odds(PARAM.float_streets_mode) then
     LEVEL.has_streets = true
   else
@@ -1084,7 +1084,7 @@ function Grower_decide_extents()
   -- specific instructions for procedural gotcha
 
   if LEVEL.is_procedural_gotcha == true then
-    if PARAM.boss_gen == true then
+    if PARAM.bool_boss_gen == 1 then
       LEVEL.min_rooms = 1
       LEVEL.max_rooms = 1
     else
