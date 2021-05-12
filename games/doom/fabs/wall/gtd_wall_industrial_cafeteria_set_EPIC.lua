@@ -88,7 +88,7 @@ PREFABS.Wall_cafeteria_disposal_chute =
 PREFABS.Wall_cafeteria_food_dispenser_2 =
 {
   template = "Wall_cafeteria_food_trays",
-  map = "MAP07"
+  map = "MAP07",
 
   prob = 10,
 
