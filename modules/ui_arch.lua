@@ -124,14 +124,15 @@ OB_MODULES["ui_arch"] =
     mixin_type =
     {
       name = "mixin_type",
-      label = _("Mix-in Type"),
+      label = _("Theme Mix-in Type"),
       tooltip = "This replaces the -ish theme choices. By selecting mostly, this means " ..
                 "your selected theme is occasionally littered by other themes while setting it to " ..
                 "less means the original selected theme is what's littered in instead. " ..
                 "Default behavior is normal.",
       choices = UI_ARCH.MIXIN_CHOICES,
       default = "normal",
-      priority = 88
+      priority = 88,
+      gap = 1
     },
 
     float_level_upper_bound =
