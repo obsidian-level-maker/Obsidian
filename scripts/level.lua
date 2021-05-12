@@ -2352,9 +2352,9 @@ function Level_choose_themes()
     theme = mostly_theme
   end
 
-  if PARAM.mixin_type == "mostly" then
+  if OB_CONFIG.mixin_type == "mostly" then
     do_mostly = true
-  elseif PARAM.mixin_type == "less" then
+  elseif OB_CONFIG.mixin_type == "less" then
     do_less = true
   end
 
