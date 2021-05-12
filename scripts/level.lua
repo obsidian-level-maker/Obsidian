@@ -172,10 +172,10 @@ function Level_determine_map_size(LEV)
     local low = PARAM.float_level_lower_bound or 10
     local high = PARAM.float_level_upper_bound or 75
 
-    if PARAM.level_size_bias then
-      if PARAM.level_size_bias == "small" then
+    if OB_CONFIG.level_size_bias then
+      if OB_CONFIG.level_size_bias == "small" then
         result_skew = .80
-      elseif PARAM.level_size_bias == "large" then
+      elseif OB_CONFIG.level_size_bias == "large" then
         result_skew = 1.20
       end
     end
@@ -189,8 +189,8 @@ function Level_determine_map_size(LEV)
 
     local ramp_factor = 0.66
 
-    if PARAM.level_size_ramp_factor then
-      ramp_factor = tonumber(PARAM.level_size_ramp_factor)
+    if OB_CONFIG.level_size_ramp_factor then
+      ramp_factor = tonumber(OB_CONFIG.level_size_ramp_factor)
     end
 
     local along = LEV.game_along ^ ramp_factor
