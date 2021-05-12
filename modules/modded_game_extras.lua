@@ -1547,6 +1547,12 @@ function MODDED_GAME_EXTRAS.add_complex_doom_things()
       M.crazy_prob = (M.crazy_prob or M.prob) * factor
     end
   end
+
+  -- These functions are required to merge the pickups and weapon tables.
+  -- They are commented out for now since it doesn't look like these tables
+  -- are added in from the original module.
+  --GAME.PICKUPS = MODDED_GAME_EXTRAS.COMPLEX_DOOM_PICKUPS
+  --GAME.WEAPONS = MODDED_GAME_EXTRAS.COMPLEX_DOOM_WEAPONS
 end
 
 ----------------------------------------------------------------
