@@ -232,3 +232,41 @@ OB_ENGINES["woof"] =
 
 }
 
+----------------------------------------------------------------
+
+-- This should not be visible in the Engine selection list; it's a shim to separate UDMF/advanced engines
+
+ADVANCED = {}
+
+
+ADVANCED.ENTITIES =
+{
+
+}
+
+
+ADVANCED.PARAMETERS =
+{
+
+}
+
+
+OB_ENGINES["advanced"] =
+{
+  label = _("Advanced"),
+  priority = 95,
+
+  extends = "boom",
+
+  tables =
+  {
+    ADVANCED
+  },
+
+  hooks =
+  {
+
+  }
+
+}
+

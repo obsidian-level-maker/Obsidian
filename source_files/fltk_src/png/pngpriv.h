@@ -124,7 +124,7 @@
     * check both variants.
     */
 #  if (defined(__ARM_NEON__) || defined(__ARM_NEON)) && \
-   defined(PNG_ALIGNED_MEMORY_SUPPORTED)
+   defined(PNG_ALIGNED_MEMORY_SUPPORTED) && !defined(__aarch64__)
 #     define PNG_ARM_NEON_OPT 2
 #  else
 #     define PNG_ARM_NEON_OPT 0

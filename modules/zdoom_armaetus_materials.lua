@@ -1874,4 +1874,14 @@ brightmap texture GRAYMETC
 {
   map OBRGRYMT
 }
+
+brightmap texture RDLITE01
+{
+  map OBRRDLT1
+}
+
+brightmap texture LITEBLU3
+{
+  map OBRLTBL3
+}
 ]]

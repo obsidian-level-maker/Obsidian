@@ -138,7 +138,7 @@ UNFINISHED["edge"] =
 {
   label = _("EDGE"),
 
-  extends = "boom",
+  extends = "advanced",
 
   game = "doomish",
 

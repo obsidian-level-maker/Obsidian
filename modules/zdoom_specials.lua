@@ -1224,6 +1224,9 @@ end
 
 OB_MODULES["zdoom_specials"] =
 {
+
+  name = "zdoom_specials",
+
   label = _("ZDoom Special Addons"),
 
   game = "doomish",

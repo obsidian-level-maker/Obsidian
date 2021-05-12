@@ -7,6 +7,8 @@
 
 void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
                       double fracdim = 2.4, double powscale = 1.2);
+                      
+void TX_TestSynth(unsigned long long seed);
 
 #endif /* __OBLIGE_TX_FORGE_H__ */
 

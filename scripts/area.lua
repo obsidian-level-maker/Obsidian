@@ -2704,8 +2704,6 @@ function Area_divvy_up_borders()
   Seed_squarify()
 end
 
-
-
 function Area_building_facades()
 
   local all_groups = {}
