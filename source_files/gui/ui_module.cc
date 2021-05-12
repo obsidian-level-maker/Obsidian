@@ -103,7 +103,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 		alignment = FL_ALIGN_TOP_LEFT;
 		x_multi = 0;
 	} else {
-		width_multi = .50;
+		width_multi = .55;
 		alignment = (FL_ALIGN_LEFT | FL_ALIGN_WRAP);
 		x_multi = .40;
 	}
@@ -162,7 +162,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 		alignment = FL_ALIGN_TOP_LEFT;
 		x_multi = 0;
 	} else {
-		width_multi = .50;
+		width_multi = .55;
 		alignment = (FL_ALIGN_LEFT | FL_ALIGN_WRAP);
 		x_multi = .40;
 	}
@@ -254,7 +254,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 		alignment = (FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 		x_multi = 0;
 	} else {
-		width_multi = .50;
+		width_multi = .55;
 		alignment = FL_ALIGN_LEFT;
 		x_multi = .40;
 	}
@@ -428,7 +428,7 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 
 	std::string new_label = current_slider->original_label;
 	
-	current_slider->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+	current_slider->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 
 	new_label = current_slider->original_label;
 
@@ -927,7 +927,7 @@ void UI_Module::resize(int X, int Y, int W, int H) {
 	} else {
 		for (int i = 0; i < this->children(); i++) {
 		    this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
-		                           w() * .50, this->child(i)->h());
+		                           w() * .55, this->child(i)->h());
 		    this->child(i)->redraw();
 		}	
 	}

@@ -78,13 +78,21 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);
 
-    game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));
+    double width_multi;
+    
+    if (!single_pane) {
+    	width_multi = 0;
+    } else {
+    	width_multi = .25;
+    }
+    
+    game_box = new UI_Game(0, kf_h(22), LEFT_W + (LEFT_W * width_multi), TOP_H - kf_h(22));
 
-    build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
+    build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W + (LEFT_W * width_multi), BOT_H);
 
 
 	if (single_pane) {
-		left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
+		left_mods = new UI_CustomMods(LEFT_W + (LEFT_W * width_multi) + kf_h(4), kf_h(22), MOD_W * 2 - (LEFT_W * width_multi),
 			                          H - kf_h(22), SELECTION);
 	} else {
 		right_mods =
