@@ -736,7 +736,7 @@ int gui_get_module_slider_value(lua_State *L) {
 			value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
 			lua_pushnumber(L, value);	
 		}	
-	} else if (!single_pane) {
+	} else if (main_win->right_mods) {
 		if (main_win->right_mods->FindID(module)) {
 			if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
 				value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
@@ -772,7 +772,7 @@ int gui_get_module_button_value(lua_State *L) {
 			value = main_win->left_mods->FindID(module)->FindButtonOpt(option)->value();
 			lua_pushnumber(L, value);	
 		}	
-	} else if (!single_pane) {
+	} else if (main_win->right_mods) {
 		if (main_win->right_mods->FindID(module)) {
 			if (main_win->right_mods->FindID(module)->FindButtonOpt(option)) {
 				value = main_win->right_mods->FindID(module)->FindButtonOpt(option)->value();
