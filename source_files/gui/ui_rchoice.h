@@ -26,7 +26,7 @@
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
 #include "FL/Fl_Hor_Slider.H"
-#include "FL/Fl_Light_Button.H"
+#include "FL/Fl_Check_Button.H"
 
 //
 // DESCRIPTION:
@@ -127,7 +127,7 @@ class UI_RSlide : public Fl_Group {
     std::map<double, std::string> nan_choices;
 };
 
-class UI_RButton : public Fl_Light_Button {
+class UI_RButton : public Fl_Check_Button {
    private:
     std::vector<choice_data_c *> opt_list;
 
