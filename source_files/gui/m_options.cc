@@ -44,6 +44,8 @@ static void Parse_Option(const char *name, const char *value) {
         window_size = CLAMP(0, window_size, 5);
     } else if (StringCaseCmp(name, "alternate_look") == 0) {
         alternate_look = atoi(value) ? true : false;
+    } else if (StringCaseCmp(name, "single_pane") == 0) {
+        single_pane = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "wheel_can_bump") == 0) {
         wheel_can_bump = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "create_backups") == 0) {
@@ -177,6 +179,7 @@ bool Options_Save(const char *filename) {
 
     fprintf(option_fp, "font_size      = %d\n", window_size);
     fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
+    fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
     fprintf(option_fp, "wheel_can_bump = %d\n", wheel_can_bump ? 1 : 0);
     fprintf(option_fp, "\n");
 
@@ -213,6 +216,7 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Choice *opt_font_size;
 
     Fl_Check_Button *opt_alt_look;
+    Fl_Check_Button *opt_single_pane;
     Fl_Check_Button *opt_wheel_bump;
 
     Fl_Check_Button *opt_backups;
@@ -290,6 +294,12 @@ class UI_OptionsWin : public Fl_Window {
         alternate_look = that->opt_alt_look->value() ? true : false;
         wheel_can_bump = that->opt_wheel_bump->value() ? true : false;
     }
+    
+    static void callback_SinglePane(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        single_pane = that->opt_single_pane->value() ? true : false;
+    }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
@@ -362,6 +372,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                        _(" Alternate Look"));
     opt_alt_look->value(alternate_look ? 1 : 0);
     opt_alt_look->callback(callback_AltLook, this);
+    
+    cy += opt_alt_look->h() + y_step;
+
+    opt_single_pane = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
+                                       _(" Single Pane Mode"));
+    opt_single_pane->value(single_pane ? 1 : 0);
+    opt_single_pane->callback(callback_SinglePane, this);
 
     cy += opt_alt_look->h() + y_step * 2 / 3;
 
