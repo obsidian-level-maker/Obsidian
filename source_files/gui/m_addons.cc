@@ -418,7 +418,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     box(FL_FLAT_BOX);
 
-    Fl_Color bg_col = alternate_look ? FL_DARK2 : fl_rgb_color(221, 221, 221);
+    Fl_Color bg_col = fl_rgb_color(221, 221, 221);
 
     color(bg_col, bg_col);
 

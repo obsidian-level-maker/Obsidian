@@ -96,10 +96,6 @@ UI_About::UI_About(int W, int H, const char *label)
     // non-resizable
     size_range(W, H, W, H);
 
-    if (alternate_look) {
-        color(FL_LIGHT3, FL_LIGHT3);
-    }
-
     callback(callback_Quit, this);
 
     int cy = kf_h(6);
@@ -134,10 +130,6 @@ UI_About::UI_About(int W, int H, const char *label)
         new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
     link->align(FL_ALIGN_CENTER);
     link->labelsize(FL_NORMAL_SIZE * 2 / 2);
-
-    if (alternate_look) {
-        link->color(FL_LIGHT3, FL_LIGHT3);
-    }
 
     cy += link->h() + kf_h(16);
 

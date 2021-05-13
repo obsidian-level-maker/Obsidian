@@ -81,12 +81,10 @@ void UI_MiniMap::MapClear() {
 void UI_MiniMap::MapFinish() {
     SYS_ASSERT(pixels);
 
-    if (!alternate_look) {
-        MapCorner(0, 0, 1, 1);
-        MapCorner(0, map_H - 1, 1, -1);
-        MapCorner(map_W - 1, 0, -1, 1);
-        MapCorner(map_W - 1, map_H - 1, -1, -1);
-    }
+    MapCorner(0, 0, 1, 1);
+    MapCorner(0, map_H - 1, 1, -1);
+    MapCorner(map_W - 1, 0, -1, 1);
+    MapCorner(map_W - 1, map_H - 1, -1, -1);
 
     if (cur_image) {
         image(NULL);

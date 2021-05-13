@@ -669,11 +669,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     : Fl_Double_Window(W, H, label), want_quit(false) {
     size_range(W, H);
 
-    if (alternate_look) {
-        color(FL_DARK2, FL_DARK2);
-    } else {
-        color(BG_COLOR, BG_COLOR);
-    }
+    color(BG_COLOR, BG_COLOR);
 
     callback(callback_Quit, this);
 

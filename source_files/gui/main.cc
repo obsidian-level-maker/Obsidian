@@ -58,7 +58,6 @@ const char *batch_output_file = NULL;
 
 // options
 int window_size = 0; /* AUTO */
-bool alternate_look = false;
 bool single_pane = true;
 bool wheel_can_bump = true;
 
@@ -348,14 +347,10 @@ int Main_DetermineScaling() {
 
 void Main_SetupFLTK() {
     Fl::visual(FL_DOUBLE | FL_RGB);
-
-    if (!alternate_look) {
-        Fl::background(221, 221, 221);
-        Fl::background2(255, 255, 255);
-        Fl::foreground(0, 0, 0);
-
-        Fl::scheme("gtk+");
-    }
+    Fl::background(221, 221, 221);
+    Fl::background2(255, 255, 255);
+    Fl::foreground(0, 0, 0);
+    Fl::scheme("gtk+");
 
     screen_w = Fl::w();
     screen_h = Fl::h();
@@ -789,14 +784,6 @@ int main(int argc, char **argv) {
         argv[1] = NULL;
 
         main_win->show(1 /* argc */, argv);
-    }
-
-    // kill the stupid bright background of the "plastic" scheme
-    if (!alternate_look) {
-        delete Fl::scheme_bg_;
-        Fl::scheme_bg_ = NULL;
-
-        main_win->image(NULL);
     }
 
     Fl::add_handler(Main_key_handler);

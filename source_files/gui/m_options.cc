@@ -42,8 +42,6 @@ static void Parse_Option(const char *name, const char *value) {
                StringCaseCmp(name, "window_size") == 0 /* backwards compat */) {
         window_size = atoi(value);
         window_size = CLAMP(0, window_size, 5);
-    } else if (StringCaseCmp(name, "alternate_look") == 0) {
-        alternate_look = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "wheel_can_bump") == 0) {
@@ -178,7 +176,6 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "\n");
 
     fprintf(option_fp, "font_size      = %d\n", window_size);
-    fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
     fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
     fprintf(option_fp, "wheel_can_bump = %d\n", wheel_can_bump ? 1 : 0);
     fprintf(option_fp, "\n");
@@ -287,14 +284,7 @@ class UI_OptionsWin : public Fl_Window {
 
         window_size = that->opt_font_size->value();
     }
-
-    static void callback_AltLook(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        alternate_look = that->opt_alt_look->value() ? true : false;
-        wheel_can_bump = that->opt_wheel_bump->value() ? true : false;
-    }
-    
+   
     static void callback_SinglePane(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
@@ -368,24 +358,16 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_font_size->h() + y_step;
 
-    opt_alt_look = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
-                                       _(" Alternate Look"));
-    opt_alt_look->value(alternate_look ? 1 : 0);
-    opt_alt_look->callback(callback_AltLook, this);
-    
-    cy += opt_alt_look->h() + y_step;
-
     opt_single_pane = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
                                        _(" Single Pane Mode"));
     opt_single_pane->value(single_pane ? 1 : 0);
     opt_single_pane->callback(callback_SinglePane, this);
 
-    cy += opt_alt_look->h() + y_step * 2 / 3;
+    cy += opt_single_pane->h() + y_step * 2 / 3;
 
     opt_wheel_bump = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
                                          _(" Change Settings via Mouse Wheel"));
     opt_wheel_bump->value(wheel_can_bump ? 1 : 0);
-    opt_wheel_bump->callback(callback_AltLook, this);
 
     cy += opt_wheel_bump->h() + y_step;
 
