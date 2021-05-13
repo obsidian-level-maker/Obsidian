@@ -433,7 +433,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                          _("File Options"));
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
-    heading->labelfont(FL_HELVETICA_BOLD);
+    heading->labelfont(font_style | FL_BOLD);
     heading->labelsize(header_font_size);
 
     cy += heading->h() + y_step;

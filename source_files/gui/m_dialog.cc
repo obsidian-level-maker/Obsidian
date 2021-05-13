@@ -88,7 +88,7 @@ static void DialogShowAndRun(const char *message, const char *title,
     icon->box(FL_OVAL_BOX);
     icon->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     icon->color(FL_RED, FL_RED);
-    icon->labelfont(FL_HELVETICA_BOLD);
+    icon->labelfont(font_style | FL_BOLD);
     icon->labelsize(24 + KF * 3);
     icon->labelcolor(FL_WHITE);
 
@@ -99,7 +99,7 @@ static void DialogShowAndRun(const char *message, const char *title,
         new Fl_Box(ICON_W + kf_w(20), kf_h(10), mesg_W, mesg_H, message);
 
     box->align(FL_ALIGN_LEFT | FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_WRAP);
-    box->labelfont(FL_HELVETICA);
+    box->labelfont(font_style);
     box->labelsize(FONT_SIZE);
 
     dialog->add(box);
@@ -112,7 +112,7 @@ static void DialogShowAndRun(const char *message, const char *title,
             new UI_HyperLink(ICON_W + kf_w(20), kf_h(10) + mesg_H, mesg_W, 24,
                              link_title, link_url);
         link->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
-        link->labelfont(FL_HELVETICA);
+        link->labelfont(font_style);
         link->labelsize(FONT_SIZE);
 
         dialog->add(link);
@@ -430,7 +430,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
         {
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, fl_close);
-            but->labelfont(FL_HELVETICA_BOLD);
+            but->labelfont(font_style | FL_BOLD);
             but->callback(quit_callback, this);
         }
 
