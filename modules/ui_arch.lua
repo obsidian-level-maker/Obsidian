@@ -121,19 +121,6 @@ OB_MODULES["ui_arch"] =
       priority = 100
     },
 
-    mixin_type =
-    {
-      name = "mixin_type",
-      label = _("Mix-in Type"),
-      tooltip = "This replaces the -ish theme choices. By selecting mostly, this means " ..
-                "your selected theme is occasionally littered by other themes while setting it to " ..
-                "less means the original selected theme is what's littered in instead. " ..
-                "Default behavior is normal.",
-      choices = UI_ARCH.MIXIN_CHOICES,
-      default = "normal",
-      priority = 88
-    },
-
     float_level_upper_bound =
     {
       name = "float_level_upper_bound",
@@ -179,7 +166,8 @@ OB_MODULES["ui_arch"] =
       "66:66 (Gargantuan)," ..
       "75:75 (Transcendent),",
       tooltip = "Fine tune lower limit for Level Size Episodic, Progressive and Mixed options.",
-      priority = 98
+      priority = 98,
+      gap = 1
     },
 
     level_size_ramp_factor =
@@ -210,6 +198,20 @@ OB_MODULES["ui_arch"] =
       priority = 96
     },
 
+    mixin_type =
+    {
+      name = "mixin_type",
+      label = _("Theme Mix-in Type"),
+      tooltip = "This replaces the -ish theme choices. By selecting mostly, this means " ..
+                "your selected theme is occasionally littered by other themes while setting it to " ..
+                "less means the original selected theme is what's littered in instead. " ..
+                "Default behavior is normal.",
+      choices = UI_ARCH.MIXIN_CHOICES,
+      default = "normal",
+      priority = 88,
+      gap = 1
+    },
+  
     float_linear_mode=
     {
       name = "float_linear_mode",
@@ -226,7 +228,7 @@ OB_MODULES["ui_arch"] =
       "you may encounter teleports even if you have teleports off. This is necessary " ..
       "in order for linear levels not to prematuraly terminate and therefore become stunted " ..
       "i.e. only have 2-5 rooms.",
-      priority = 94
+      priority = 85
     },
 
     float_nature_mode=
@@ -242,7 +244,7 @@ OB_MODULES["ui_arch"] =
       nan = "",
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
-      priority = 93
+      priority = 84
     },
 
     float_streets_mode=
@@ -257,7 +259,7 @@ OB_MODULES["ui_arch"] =
       default = 15,
       nan = "",
       tooltip = "Allows Oblige to create large street-like outdoor rooms.",
-      priority = 92
+      priority = 83
     },
 
     bool_urban_streets_mode=
@@ -268,7 +270,7 @@ OB_MODULES["ui_arch"] =
       default = 1,
       tooltip="Changes streets mode percentage to affect all themes or only urban.",
       gap = 1,
-      priority = 91
+      priority = 82
     },
 
     bool_prebuilt_levels=
@@ -278,7 +280,7 @@ OB_MODULES["ui_arch"] =
       valuator = "button",
       default = 1,
       tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead.",
-      priority = 95,
+      priority = 81,
       gap = 1
     },
 
@@ -298,7 +300,7 @@ OB_MODULES["ui_arch"] =
       "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
       "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
       gap = 1,
-      priority = 89
+      priority = 80
     },
 
     outdoors = { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 87 },
@@ -319,7 +321,7 @@ OB_MODULES["ui_arch"] =
       "Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n" ..
       "Sky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n" ..
       "Disable - Old Oblige behavior - no bottomless vistas.",
-      priority = 81
+      priority = 50
     },
 
     zdoom_skybox=
@@ -331,7 +333,7 @@ OB_MODULES["ui_arch"] =
       tooltip = "If a ZDoom based engine is selected, one has the option " ..
       "to enable a custom 3D skybox to be rendered into the map. " ..
       "It is preferable to put this on if you have ZDoom Vista enabled.",
-      priority = 80
+      priority = 49
     }
   },
 }

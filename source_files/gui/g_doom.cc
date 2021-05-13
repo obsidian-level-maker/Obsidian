@@ -163,7 +163,7 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.immediate_monsters = rollpercent(20);
 	}
-	monvariety = main_win->right_mods->FindID("ui_slump_mons")
+	monvariety = main_win->left_mods->FindID("ui_slump_mons")
 							->FindOpt("slump_mons")->GetID();
 	if (monvariety == "normal") {
 		slump_config.required_monster_bits = 0;

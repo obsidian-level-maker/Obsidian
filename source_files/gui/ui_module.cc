@@ -93,10 +93,25 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     strcpy(new_label, label);
     strcat(new_label, ": ");
 
-    UI_RChoice *rch =
-        new UI_RChoice(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
-    rch->align(FL_ALIGN_TOP_LEFT);
-    rch->selection_color(select_col);
+	double width_multi;
+	double x_multi;
+	Fl_Align alignment;
+	
+	
+	if (!single_pane) {
+		width_multi = .95;
+		alignment = FL_ALIGN_TOP_LEFT;
+		x_multi = 0;
+	} else {
+		width_multi = .55;
+		alignment = (FL_ALIGN_LEFT | FL_ALIGN_WRAP);
+		x_multi = .40;
+	}
+	
+	UI_RChoice *rch =
+		    new UI_RChoice(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
+	rch->align(alignment);
+	rch->selection_color(select_col);
 
     if (!tip) {
         tip = "";
@@ -138,10 +153,24 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     strcpy(new_label, label);
     strcat(new_label, ": ");
 
-    UI_RSlide *rsl =
-        new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(24), new_label);
-    rsl->align(FL_ALIGN_TOP_LEFT);
-    
+	double width_multi;
+	Fl_Align alignment;
+	double x_multi;
+
+	if (!single_pane) {
+		width_multi = .95;
+		alignment = FL_ALIGN_TOP_LEFT;
+		x_multi = 0;
+	} else {
+		width_multi = .55;
+		alignment = (FL_ALIGN_LEFT | FL_ALIGN_WRAP);
+		x_multi = .40;
+	}
+
+	UI_RSlide *rsl =
+		    new UI_RSlide(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
+	rsl->align(alignment);
+
     rsl->prev_button =
         new Fl_Button(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");
     rsl->prev_button->visible_focus(0);     
@@ -210,11 +239,31 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
+    int len = strlen(label);
+    char *new_label = StringNew(len + 4);
+    strcpy(new_label, label);
+    strcat(new_label, ": ");
 
-    UI_RButton *rbt =
-        new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24), label);
-    rbt->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    rbt->selection_color(select_col);
+	double width_multi;
+	Fl_Align alignment;
+	double x_multi;
+	
+	
+	if (!single_pane) {
+		width_multi = .95;
+		alignment = (FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+		x_multi = 0;
+	} else {
+		width_multi = .55;
+		alignment = FL_ALIGN_LEFT;
+		x_multi = .40;
+	}
+
+	UI_RButton *rbt =
+		    new UI_RButton(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
+	rbt->align(alignment);
+	rbt->selection_color(select_col);
+
     
     if (!tip) {
         tip = "";
@@ -379,7 +428,7 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 
 	std::string new_label = current_slider->original_label;
 	
-	current_slider->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+	current_slider->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 
 	new_label = current_slider->original_label;
 
@@ -869,11 +918,19 @@ void UI_Module::resize(int X, int Y, int W, int H) {
         }
     }
 
-    for (int i = 0; i < this->children(); i++) {
-        this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
-                               w() * .95, this->child(i)->h());
-        this->child(i)->redraw();
-    }
+	if (!single_pane) {
+		for (int i = 0; i < this->children(); i++) {
+		    this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
+		                           w() * .95, this->child(i)->h());
+		    this->child(i)->redraw();
+		}
+	} else {
+		for (int i = 0; i < this->children(); i++) {
+		    this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
+		                           w() * .55, this->child(i)->h());
+		    this->child(i)->redraw();
+		}	
+	}
 }
 
 // Normal FLTK resize except it will reset the scrollbar to the top
