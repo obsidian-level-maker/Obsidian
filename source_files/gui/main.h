@@ -58,6 +58,8 @@ extern int main_action;
 // Misc Options
 extern Fl_Boxtype box_style;
 extern Fl_Boxtype button_style;
+extern Fl_Font font_style;
+extern int font_theme;
 extern int box_theme;
 extern int button_theme;
 extern int widget_theme;

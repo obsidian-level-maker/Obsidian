@@ -38,10 +38,8 @@ static void Parse_Option(const char *name, const char *value) {
         VFS_OptParse(value);
     } else if (StringCaseCmp(name, "language") == 0) {
         t_language = StringDup(value);
-    } else if (StringCaseCmp(name, "font_size") == 0 ||
-               StringCaseCmp(name, "window_size") == 0 /* backwards compat */) {
-        window_size = atoi(value);
-        window_size = CLAMP(0, window_size, 5);
+    } else if (StringCaseCmp(name, "font_theme") == 0) {
+        font_theme = atoi(value);
     } else if (StringCaseCmp(name, "widget_theme") == 0) {
         widget_theme = atoi(value);
     } else if (StringCaseCmp(name, "box_theme") == 0) {
@@ -181,7 +179,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "language = %s\n", t_language);
     fprintf(option_fp, "\n");
 
-    fprintf(option_fp, "font_size      = %d\n", window_size);
+    fprintf(option_fp, "font_theme      = %d\n", font_theme);
     fprintf(option_fp, "widget_theme      = %d\n", widget_theme);
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
     fprintf(option_fp, "button_theme      = %d\n", button_theme);
@@ -219,7 +217,7 @@ class UI_OptionsWin : public Fl_Window {
 
    private:
     Fl_Choice *opt_language;
-    Fl_Choice *opt_font_size;
+    Fl_Choice *opt_font_theme;
     Fl_Choice *opt_widget_theme;
     Fl_Choice *opt_box_theme;
     Fl_Choice *opt_button_theme;
@@ -290,10 +288,10 @@ class UI_OptionsWin : public Fl_Window {
         }
     }
 
-    static void callback_FontSize(Fl_Widget *w, void *data) {
+    static void callback_FontTheme(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-        window_size = that->opt_font_size->value();
+        font_theme = that->opt_font_theme->value();
     }
     
     static void callback_WidgetTheme(Fl_Widget *w, void *data) {
@@ -364,7 +362,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                          _("Appearance"));
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
-    heading->labelfont(FL_HELVETICA_BOLD);
+    heading->labelfont(font_style | FL_BOLD);
     heading->labelsize(header_font_size);
 
     cy += heading->h();
@@ -378,14 +376,14 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_language->h() + y_step;
 
-    opt_font_size =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font Size: "));
-    opt_font_size->align(FL_ALIGN_LEFT);
-    opt_font_size->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
-    opt_font_size->callback(callback_FontSize, this);
-    opt_font_size->value(window_size);
+    opt_font_theme =
+        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font: "));
+    opt_font_theme->align(FL_ALIGN_LEFT);
+    opt_font_theme->add(_("Default|Courier|Times"));
+    opt_font_theme->callback(callback_FontTheme, this);
+    opt_font_theme->value(font_theme);
 
-    cy += opt_font_size->h() + y_step;
+    cy += opt_font_theme->h() + y_step;
     
     opt_widget_theme =
         new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Widget Theme: "));
