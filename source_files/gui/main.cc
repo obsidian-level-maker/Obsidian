@@ -57,7 +57,8 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
-Fl_Boxtype box_style = FL_FLAT_BOX;
+int box_theme = 0;
+Fl_Boxtype box_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
 int window_size = 0; /* AUTO */
 bool single_pane = true;
@@ -365,6 +366,24 @@ void Main_SetupFLTK() {
     	default : Fl::scheme("gtk+");
     			  break;    			     			 
     }
+    switch(box_theme) {
+    	case 0 : box_style = FL_THIN_UP_BOX;
+    			 break;
+    	case 1 : box_style = FL_SHADOW_BOX;
+    			 break;
+    	case 2 : box_style = FL_EMBOSSED_BOX;
+    			 break;
+    	case 3 : box_style = FL_ENGRAVED_BOX;
+    			 break;
+    	case 4 : box_style = FL_DOWN_BOX;
+    			 break;
+    	case 5 : box_style = FL_BORDER_BOX;
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : box_style = FL_THIN_UP_BOX;
+    			  break;    			     			 
+    }
+
 
     screen_w = Fl::w();
     screen_h = Fl::h();
@@ -798,6 +817,14 @@ int main(int argc, char **argv) {
         argv[1] = NULL;
 
         main_win->show(1 /* argc */, argv);
+    }
+
+    // kill the stupid bright background of the "plastic" scheme
+    if (widget_theme == 3) {
+        delete Fl::scheme_bg_;
+        Fl::scheme_bg_ = NULL;
+
+        main_win->image(NULL);
     }
 
     Fl::add_handler(Main_key_handler);

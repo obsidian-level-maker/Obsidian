@@ -57,6 +57,7 @@ extern int main_action;
 
 // Misc Options
 extern Fl_Boxtype box_style;
+extern int box_theme;
 extern int widget_theme;
 extern int window_size;  // 0 = Auto, 1 = Tiny ... 5 = Huge
 extern bool single_pane;

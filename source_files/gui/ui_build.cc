@@ -31,7 +31,7 @@
 
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     : Fl_Group(X, Y, W, H, label) {
-    box(FL_THIN_UP_BOX);
+    box(box_style);
     tooltip(
         "Progress and minimap display.\nMinimap Legend:\nWhite - Regular "
         "rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks");

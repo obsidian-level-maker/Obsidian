@@ -317,7 +317,7 @@ class UI_Addon : public Fl_Group {
    public:
     UI_Addon(int x, int y, int w, int h, addon_info_t *_info)
         : Fl_Group(x, y, w, h), info(_info) {
-        box(FL_THIN_UP_BOX);
+        box(box_style);
 
         // prefix the name with a space
         const char *name2 = StringPrintf(" %s", info->name);

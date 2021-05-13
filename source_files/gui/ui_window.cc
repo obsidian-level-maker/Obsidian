@@ -65,7 +65,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     int BOT_H = H - TOP_H - kf_h(4);
 
     menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
-    menu_bar->box(FL_FLAT_BOX);
+    menu_bar->box(box_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
     menu_bar->add("File/Options", FL_F + 4, menu_do_options);
     menu_bar->add("File/Addon List", FL_F + 3, menu_do_addons);

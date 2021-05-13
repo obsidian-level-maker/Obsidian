@@ -31,7 +31,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
                      const char *label, const char *tip)
     : Fl_Group(X, Y, W, H), id_name(id), choice_map(), cur_opt_y(0) {       
        
-    box(FL_THIN_UP_BOX);
+    box(box_style);
 
     mod_button =
         new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
