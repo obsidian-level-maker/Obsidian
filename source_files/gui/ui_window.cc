@@ -78,15 +78,23 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);
 
+    double width_multi;
+      
     game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
 
-    right_mods =
-        new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22), SELECTION);
 
-    left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W,
-                                  H - kf_h(22), SELECTION);
+	if (single_pane) {
+		left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
+			                          H - kf_h(22), SELECTION);
+	} else {
+		right_mods =
+		    new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22), SELECTION);
+
+		left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W,
+		                              H - kf_h(22), SELECTION);
+	}
 
     end();
 
@@ -117,7 +125,9 @@ void UI_MainWin::CalcWindowSize(int *W, int *H) {
 void UI_MainWin::Locked(bool value) {
     game_box->Locked(value);
     left_mods->Locked(value);
-    right_mods->Locked(value);
+    if (!single_pane) {
+    	right_mods->Locked(value);
+    }
 }
 
 void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }

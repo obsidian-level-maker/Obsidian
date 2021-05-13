@@ -59,6 +59,7 @@ const char *batch_output_file = NULL;
 // options
 int window_size = 0; /* AUTO */
 bool alternate_look = false;
+bool single_pane = true;
 bool wheel_can_bump = true;
 
 bool create_backups = true;
@@ -503,7 +504,7 @@ void Main_SetSeed() {
 }
 
 static void Module_Defaults() {
-    ob_set_mod_option("small_spiderdemon", "self", "1");
+    //ob_set_mod_option("small_spiderdemon", "self", "1");
     ob_set_mod_option("sky_generator", "self", "1");
     ob_set_mod_option("music_swapper", "self", "1");
 }
